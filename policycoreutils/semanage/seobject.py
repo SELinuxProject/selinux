@@ -1031,6 +1031,231 @@ class portRecords(semanageRecords):
 				rec += ", %s" % p
 			print rec
 
+class nodeRecords(semanageRecords):
+       def __init__(self, store = ""):
+               semanageRecords.__init__(self,store)
+
+       def add(self, addr, mask, proto, serange, ctype):
+               if addr == "":
+                       raise ValueError(_("Node Address is required"))
+
+               if mask == "":
+                       raise ValueError(_("Node Netmask is required"))
+
+	       if proto == "ipv4":
+                       proto = 0
+               elif proto == "ipv6":
+                       proto = 1
+               else:
+                      raise ValueError(_("Unknown or missing protocol"))
+
+
+               if is_mls_enabled == 1:
+                       if serange == "":
+                               serange = "s0"
+                       else:
+                               serange = untranslate(serange)
+
+               if ctype == "":
+                       raise ValueError(_("SELinux Type is required"))
+
+               (rc,k) = semanage_node_key_create(self.sh, addr, mask, proto)
+               if rc < 0:
+                       raise ValueError(_("Could not create key for %s") % addr)
+               if rc < 0:
+                       raise ValueError(_("Could not check if addr %s is defined") % addr)
+
+               (rc,exists) = semanage_node_exists(self.sh, k)
+               if exists:
+                       raise ValueError(_("Addr %s already defined") % addr)
+
+               (rc,node) = semanage_node_create(self.sh)
+               if rc < 0:
+                       raise ValueError(_("Could not create addr for %s") % addr)
+
+               rc = semanage_node_set_addr(self.sh, node, proto, addr)
+               (rc, con) = semanage_context_create(self.sh)
+               if rc < 0:
+                       raise ValueError(_("Could not create context for %s") % addr)
+
+               rc = semanage_node_set_mask(self.sh, node, proto, mask)
+               if rc < 0:
+                       raise ValueError(_("Could not set mask for %s") % addr)
+
+
+               rc = semanage_context_set_user(self.sh, con, "system_u")
+               if rc < 0:
+                       raise ValueError(_("Could not set user in addr context for %s") % addr)
+
+               rc = semanage_context_set_role(self.sh, con, "object_r")
+               if rc < 0:
+                       raise ValueError(_("Could not set role in addr context for %s") % addr)
+
+               rc = semanage_context_set_type(self.sh, con, ctype)
+               if rc < 0:
+                       raise ValueError(_("Could not set type in addr context for %s") % addr)
+
+               if serange != "":
+                       rc = semanage_context_set_mls(self.sh, con, serange)
+                       if rc < 0:
+                               raise ValueError(_("Could not set mls fields in addr context for %s") % addr)
+
+               rc = semanage_node_set_con(self.sh, node, con)
+               if rc < 0:
+                       raise ValueError(_("Could not set addr context for %s") % addr)
+
+               rc = semanage_begin_transaction(self.sh)
+               if rc < 0:
+                       raise ValueError(_("Could not start semanage transaction"))
+
+               rc = semanage_node_modify_local(self.sh, k, node)
+               if rc < 0:
+                       raise ValueError(_("Could not add addr %s") % addr)
+
+               rc = semanage_commit(self.sh)
+               if rc < 0:
+                       raise ValueError(_("Could not add addr %s") % addr)
+
+               semanage_context_free(con)
+               semanage_node_key_free(k)
+               semanage_node_free(node)
+
+       def modify(self, addr, mask, proto, serange, setype):
+               if addr == "":
+                       raise ValueError(_("Node Address is required"))
+
+               if mask == "":
+                       raise ValueError(_("Node Netmask is required"))
+               if proto == "ipv4":
+                       proto = 0
+               elif proto == "ipv6":
+                       proto = 1
+	       else:
+		      raise ValueError(_("Unknown or missing protocol"))
+
+
+               if serange == "" and setype == "":
+                       raise ValueError(_("Requires setype or serange"))
+
+               (rc,k) = semanage_node_key_create(self.sh, addr, mask, proto)
+               if rc < 0:
+                       raise ValueError(_("Could not create key for %s") % addr)
+
+               (rc,exists) = semanage_node_exists(self.sh, k)
+               if rc < 0:
+                       raise ValueError(_("Could not check if addr %s is defined") % addr)
+               if not exists:
+                       raise ValueError(_("Addr %s is not defined") % addr)
+
+               (rc,node) = semanage_node_query(self.sh, k)
+               if rc < 0:
+                       raise ValueError(_("Could not query addr %s") % addr)
+
+               con = semanage_node_get_con(node)
+
+               if serange != "":
+                       semanage_context_set_mls(self.sh, con, untranslate(serange))
+               if setype != "":
+                       semanage_context_set_type(self.sh, con, setype)
+
+               rc = semanage_begin_transaction(self.sh)
+               if rc < 0:
+                       raise ValueError(_("Could not start semanage transaction"))
+
+               rc = semanage_node_modify_local(self.sh, k, node)
+               if rc < 0:
+                       raise ValueError(_("Could not modify addr %s") % addr)
+
+               rc = semanage_commit(self.sh)
+               if rc < 0:
+                       raise ValueError(_("Could not modify addr %s") % addr)
+
+               semanage_node_key_free(k)
+               semanage_node_free(node)
+
+       def delete(self, addr, mask, proto):
+               if addr == "":
+                       raise ValueError(_("Node Address is required"))
+
+               if mask == "":
+                       raise ValueError(_("Node Netmask is required"))
+
+	       if proto == "ipv4":
+                       proto = 0
+               elif proto == "ipv6":
+                       proto = 1
+               else:
+                      raise ValueError(_("Unknown or missing protocol"))
+
+               (rc,k) = semanage_node_key_create(self.sh, addr, mask, proto)
+               if rc < 0:
+                       raise ValueError(_("Could not create key for %s") % addr)
+
+               (rc,exists) = semanage_node_exists(self.sh, k)
+               if rc < 0:
+                       raise ValueError(_("Could not check if addr %s is defined") % addr)
+               if not exists:
+                       raise ValueError(_("Addr %s is not defined") % addr)
+
+               (rc,exists) = semanage_node_exists_local(self.sh, k)
+               if rc < 0:
+                       raise ValueError(_("Could not check if addr %s is defined") % addr)
+               if not exists:
+                       raise ValueError(_("Addr %s is defined in policy, cannot be deleted") % addr)
+
+               rc = semanage_begin_transaction(self.sh)
+               if rc < 0:
+                       raise ValueError(_("Could not start semanage transaction"))
+
+               rc = semanage_node_del_local(self.sh, k)
+               if rc < 0:
+                       raise ValueError(_("Could not delete addr %s") % addr)
+
+               rc = semanage_commit(self.sh)
+               if rc < 0:
+                       raise ValueError(_("Could not delete addr %s") % addr)
+
+               semanage_node_key_free(k)
+
+       def get_all(self, locallist = 0):
+               ddict = {}
+	       if locallist :
+			(rc, self.ilist) = semanage_node_list_local(self.sh)
+	       else:
+	                (rc, self.ilist) = semanage_node_list(self.sh)
+               if rc < 0:
+                       raise ValueError(_("Could not list addrs"))
+
+               for node in self.ilist:
+                       con = semanage_node_get_con(node)
+                       addr = semanage_node_get_addr(self.sh, node)
+                       mask = semanage_node_get_mask(self.sh, node)
+                       proto = semanage_node_get_proto(node)
+		       if proto == 0:
+				proto = "ipv4"
+		       elif proto == 1:
+				proto = "ipv6"
+                       ddict[(addr[1], mask[1], proto)] = (semanage_context_get_user(con), semanage_context_get_role(con), semanage_context_get_type(con), semanage_context_get_mls(con))
+
+               return ddict
+
+       def list(self, heading = 1, locallist = 0):
+               if heading:
+                       print "%-18s %-18s %-5s %-5s\n" % ("IP Address", "Netmask", "Protocol", "Context")
+               ddict = self.get_all()
+               keys = ddict.keys()
+               keys.sort()
+               if is_mls_enabled:
+			for k in keys:
+				val = ''
+				for fields in k:
+					val = val + '\t' + str(fields)
+                                print "%-18s %-18s %-5s %s:%s:%s:%s " % (k[0],k[1],k[2],ddict[k][0], ddict[k][1],ddict[k][2], translate(ddict[k][3], False))
+               else:
+                       for k in keys:
+                               print "%-18s %-18s %-5s %s:%s:%s " % (k[0],k[1],k[2],ddict[k][0], ddict[k][1],ddict[k][2])
+
+
 class interfaceRecords(semanageRecords):
 	def __init__(self, store = ""):
 		semanageRecords.__init__(self, store)
