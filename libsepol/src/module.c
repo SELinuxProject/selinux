@@ -371,7 +371,7 @@ static int module_package_read_offsets(sepol_module_package_t * mod,
 	}
 	if (le32_to_cpu(buf[0]) != SEPOL_MODULE_PACKAGE_MAGIC) {
 		ERR(file->handle,
-		    "wrong magic number for module package:  expected %#08x, got %#08x",
+		    "wrong magic number for module package:  expected %u, got %u",
 		    SEPOL_MODULE_PACKAGE_MAGIC, le32_to_cpu(buf[0]));
 		goto err;
 	}

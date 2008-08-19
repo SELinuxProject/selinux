@@ -9,17 +9,9 @@
 /* Initial length guess for getting contexts. */
 #define INITCONTEXTLEN 255
 
-/* selinuxfs magic number */
-#define SELINUX_MAGIC 0xf97cff8c
-
-/* Preferred selinux mount location */
-#define SELINUXMNT "/selinux"
-
 /* selinuxfs mount point */
 extern char *selinux_mnt;
 
 #define FILECONTEXTS "/etc/security/selinux/file_contexts"
-
-#define DEFAULT_POLICY_VERSION 15
 
 #endif

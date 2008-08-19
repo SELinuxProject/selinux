@@ -1,0 +1,79 @@
+.\" Hey, Emacs! This is an -*- nroff -*- source file.
+.\" Copyright (c) 2005 Dan Walsh <dwalsh@redhat.com>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.\"
+.TH AUDIT2WHY "8" "May 2005" "Security Enhanced Linux" NSA
+.SH NAME
+audit2why \- Translates SELinux audit messages into a description of why the access was denied
+.SH SYNOPSIS
+.B audit2why
+.RI [ options "] "
+.SH OPTIONS
+.TP
+
+.B "\-\-help"
+Print a short usage message
+.TP
+.B "\-p <policyfile>"
+Specify an alternate policy file.
+.SH DESCRIPTION
+.PP
+This utility processes SELinux audit messages from standard
+input and and reports which component of the policy caused each
+permission denial based on the specified policy file if the -p option
+was used or the active policy otherwise.  There are three possible
+causes: 1) a missing or disabled TE allow rule, 2) a constraint violation, 
+or 3) a missing role allow rule.   In the first case, the TE allow
+rule may exist in the policy but may be disabled due to boolean settings.
+See 
+.BR booleans (8).
+If the allow rule is not present at all, it can be generated via
+.BR audit2allow (1).
+In the second case, a constraint is being violated; see policy/constraints
+or policy/mls to identify the particular constraint.  Typically, this can
+be resolved by adding a type attribute to the domain.  In the third case,
+a role transition was attempted but no allow rule existed for the role pair.
+This can be resolved by adding an allow rule for the role pair to the policy.
+.PP
+.SH EXAMPLE
+.nf
+$ /usr/sbin/audit2why < /var/log/audit/audit.log
+
+type=KERNEL msg=audit(1115316408.926:336418): avc:  denied  { getattr } for  path=/home/sds dev=hda5 ino=1175041 scontext=root:secadm_r:secadm_t:s0-s9:c0.c127 tcontext=user_u:object_r:user_home_dir_t:s0 tclass=dir
+        Was caused by:
+                Missing or disabled TE allow rule.
+                Allow rules may exist but be disabled by boolean settings; check boolean settings.
+                You can see the necessary allow rules by running audit2allow with this audit message as input.
+
+type=KERNEL msg=audit(1115320071.648:606858): avc:  denied  { append } for  name=.bash_history dev=hda5 ino=1175047 scontext=user_u:user_r:user_t:s1-s9:c0.c127 tcontext=user_u:object_r:user_home_t:s0 tclass=file
+        Was caused by:
+                Constraint violation.
+                Check policy/constraints.
+                Typically, you just need to add a type attribute to the domain to satisfy the constraint.
+.fi
+.PP
+.SH AUTHOR
+This manual page was written by 
+.I Dan Walsh <dwalsh@redhat.com>,
+.B audit2why
+utility was written by Stephen Smalley <sds@tycho.nsa.gov>.

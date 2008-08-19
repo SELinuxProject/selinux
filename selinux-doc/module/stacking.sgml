@@ -1,0 +1,74 @@
+<sect1 id="stacking"><title>Stacking with Other Modules</title>
+
+<para>
+This section describes the current support for stacking SELinux with
+other security modules.  LSM provides only minimal support for
+stacking security modules, providing hooks for this purpose but
+deferring the details of how stacking is handled to the primary
+security module.  Work is ongoing to enhance the stacking support of
+LSM as well as to provide a generic stacker module; see the
+linux-security-module mailing list for more information.  At present,
+the SELinux security module only functions as a primary security
+module and provides minimal support for using either the dummy
+security module (traditional superuser logic) or the capabilities
+security module as a secondary security module.  This allows SELinux
+to be combined with either the traditional superuser logic or with the
+Linux capabilities logic.
+</para>
+
+<para>
+As mentioned in <XRef LinkEnd="InitExit">, the
+<function>selinux_init</function> function initializes the
+secondary security module to the dummy security module, which is
+always resident in the kernel, prior to registering the SELinux
+security module.  This allows the SELinux hook functions to 
+safely call the secondary hook functions.  The
+<function>selinux_register_security</function> hook function sets the
+secondary security module to a different module, such as the
+capabilities module.  The
+<function>selinux_unregister_security</function> hook function
+restores the secondary security module to the dummy security module.
+</para>
+
+<para>
+The dummy and capabilities security modules only implement a very
+small subset of the hook functions.  Hence, at present, the SELinux
+security module only calls the secondary security module for this
+small set of hooks, along with a few other hooks that were added upon
+request for other security module writers.  Since some of the dummy
+and capability hook functions are implemented in terms of the
+<function>capable</function> function, stacking the
+<function>capable</function> hook is sufficient to cover several hooks
+without needing to explicitly call the secondary module from the
+individual hook.  However, in most cases, there would be no harm other
+than performance in always calling the secondary security module.
+</para>
+
+<para>
+There are a few exceptions where calling the secondary module would
+pose a problem for SELinux.  The capability
+<function>inode_removexattr</function> and
+<function>inode_setxattr</function> functions require
+<constant>CAP_SYS_ADMIN</constant> for all attributes in the security
+namespace, whereas SELinux applies its own finer-grained checking to
+the <constant>security.selinux</constant> attribute, so SELinux must
+completely override the secondary module for these hooks.  The
+capability <function>vm_enough_memory</function> function would
+perform duplicate vm accounting if SELinux called it, so SELinux must
+override it as well.  The capability <function>netlink_send</function>
+function sets the effective capability bitmap in the control buffer for
+the netlink message from the current process' credentials, whereas SELinux
+overrides this function with one that also applies SELinux permission checking.
+</para>
+
+<para>
+The dummy and capabilities security modules are easy to stack with
+SELinux because they do not use the security fields LSM added 
+to the kernel data structures.  Stacking the SELinux module with any
+module that does use these fields will require the definition of a
+common security object header with a module identifier and a link
+for chaining multiple security objects on a single security field.
+Work is ongoing in this area on the linux-security-module mailing list.
+</para>
+
+</sect1>

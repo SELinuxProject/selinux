@@ -64,16 +64,6 @@
 #define SECCLASS_PACKET                                  57
 #define SECCLASS_KEY                                     58
 #define SECCLASS_CONTEXT                                 59
-#define SECCLASS_DCCP_SOCKET                             60
-#define SECCLASS_MEMPROTECT                              61
-#define SECCLASS_DB_DATABASE                             62
-#define SECCLASS_DB_TABLE                                63
-#define SECCLASS_DB_PROCEDURE                            64
-#define SECCLASS_DB_COLUMN                               65
-#define SECCLASS_DB_TUPLE                                66
-#define SECCLASS_DB_BLOB                                 67
-#define SECCLASS_PEER                                    68
-#define SECCLASS_CAPABILITY2                             69
 
 /*
  * Security identifier indices for initial entities

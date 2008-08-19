@@ -22,7 +22,6 @@
 #include "test-linker.h"
 #include "test-expander.h"
 #include "test-deps.h"
-#include "test-downgrade.h"
 
 #include <CUnit/Basic.h>
 #include <CUnit/Console.h>
@@ -62,7 +61,6 @@ static int do_tests(int interactive, int verbose)
 	DECLARE_SUITE(linker);
 	DECLARE_SUITE(expander);
 	DECLARE_SUITE(deps);
-	DECLARE_SUITE(downgrade);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);

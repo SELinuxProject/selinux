@@ -16,7 +16,6 @@ sepol_handle_t *sepol_handle_create(void)
 
 	/* by default do not disable dontaudits */
 	sh->disable_dontaudit = 0;
-	sh->expand_consume_base = 0;
 
 	return sh;
 }
@@ -25,12 +24,6 @@ void sepol_set_disable_dontaudit(sepol_handle_t * sh, int disable_dontaudit)
 {
 	assert(sh !=NULL);
 	sh->disable_dontaudit = disable_dontaudit;
-}
-
-void sepol_set_expand_consume_base(sepol_handle_t *sh, int consume_base)
-{
-	assert(sh != NULL);
-	sh->expand_consume_base = consume_base;
 }
 
 void sepol_handle_destroy(sepol_handle_t * sh)

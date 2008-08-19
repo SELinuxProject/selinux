@@ -1,0 +1,564 @@
+<sect1 id="ipc"><title>System V IPC Hook Functions</title>
+<para>
+The SELinux System V Inter-Process Communication (IPC) hook functions
+manage the security fields and perform access control for System V
+semaphores, shared memory segments, and message queues. This section
+describes these hooks and their helper functions.
+</para>
+
+<sect2 id="IpcSecurity"><title>Managing System V IPC Security Fields</title>
+
+<sect3><title>IPC Security Structure</title>
+<para>
+The <structname>ipc_security_struct</structname> structure contains
+security information for IPC objects. This structure is defined as follows:
+</para>
+<programlisting>
+struct ipc_security_struct {
+        struct kern_ipc_perm *ipc_perm;
+        security_class_t sclass;
+        u32 sid;
+};
+</programlisting>
+
+<table id="IpcSecurityStructTable" frame="all">
+<title>ipc_security_struct</title>
+<tgroup cols="2" align="left">
+<colspec colwidth="20*">
+<colspec colwidth="80*">
+<thead>
+<row>
+    <entry>Field</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>ipc_perm</entry>
+    <entry>
+	Back pointer to the associated <structname>kern_ipc_perm</structname>.
+    </entry>
+</row>
+<row>
+    <entry>sclass</entry>
+    <entry>Security class for the IPC object (see 
+	<xref linkend="IpcAlloc">).
+    </entry>
+</row>
+<row>
+    <entry>sid</entry>
+    <entry>SID for the IPC object. </entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+Likewise, the <structname>msg_security_struct</structname> structure
+contains security information for IPC message objects. This structure
+is defined as follows:
+</para>
+<programlisting>
+struct msg_security_struct {
+        struct msg_msg *msg;
+        u32 sid;
+};
+</programlisting>
+<table frame="all">
+<title>msg_security_struct</title>
+<tgroup cols="2" align="left">
+<colspec colwidth="20*">
+<colspec colwidth="80*">
+<thead>
+<row>
+    <entry>Field</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>msg</entry>
+    <entry>
+	Back pointer to the associated IPC message;
+    </entry>
+</row>
+<row>
+    <entry>sid</entry>
+    <entry>SID for the IPC message. </entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+
+</sect3>
+
+<sect3 id="IpcAlloc"><title>ipc_alloc_security and ipc_free_security</title>
+<para>
+The <function>ipc_alloc_security</function> and
+<function>ipc_free_security</function> helper functions are the
+primitive allocation functions for the security structures for
+semaphores, shared memory segments, and message queues.  The kernel
+data structures for these objects share a common substructure,
+<structname>kern_ipc_perm</structname>, and the security field is
+located in this shared substructure; a single set of helper functions
+can be used for all three object types.  A new IPC object inherits its
+SID from the creating task.  The security class for the IPC object is
+passed by the caller; it will be one of
+<constant>SECCLASS_MSGQ</constant>, <constant>SECCLASS_SEM</constant>,
+or <constant>SECCLASS_SHM</constant>.
+</para>
+
+<para>
+The <function>ipc_alloc_security</function> helper function is called by the
+following allocation hook functions:
+<itemizedlist>
+<listitem><para><function>selinux_sem_alloc_security</function></para></listitem>
+<listitem><para><function>selinux_shm_alloc_security</function></para></listitem>
+<listitem><para><function>selinux_msg_queue_alloc_security</function></para></listitem>
+</itemizedlist>
+
+After calling the helper, the allocation hook functions set up
+auxiliary audit data and then call the AVC to check the
+<constant>create</constant> permission between the current task and
+the IPC object.  Hence, these hook functions have the unusual property
+of being used both for allocation and a permission check.  Using two
+separate hooks for this purpose would be cleaner but inefficient,
+since they would both be called at the same point.
+</para>
+
+<para>
+The <function>ipc_free_security</function> function is called upon
+a permission denial by the allocation hook functions as well as by the
+following deallocation hook functions:
+<itemizedlist>
+<listitem><para><function>selinux_sem_free_security</function></para></listitem>
+<listitem><para><function>selinux_shm_free_security</function></para></listitem>
+<listitem><para><function>selinux_msg_queue_free_security</function></para></listitem>
+</itemizedlist>
+
+These deallocation hook functions do not perform any other processing.
+</para>
+</sect3>
+
+<sect3><title>msg_msg_alloc_security and msg_msg_free_security</title>
+<para>
+The <function>msg_msg_alloc_security</function> and
+<function>msg_msg_free_security</function> helper functions are the
+primitive allocation functions for the security structures for
+individual messages on a message queue.  These helper functions
+provide all of the processing for the
+<function>selinux_msg_msg_alloc_security</function> and
+<function>selinux_msg_msg_free_security</function> hook functions.
+These helper functions simply provide the standard processing
+for primitive allocation functions, and initialize the message
+SID to the unlabeled SID.  
+</para>
+</sect3>
+
+</sect2>
+
+<sect2><title>Controlling General IPC Operations</title>
+
+<para>
+This section describes the helper and hook functions for controlling
+general IPC operations.  Although the allocation functions do perform a 
+<constant>create</constant> permission check, they are not listed
+here since they were discussed in the previous section.
+</para>
+
+<sect3><title>ipc_has_perm</title>
+<para>
+This helper function sets up the auxiliary audit data information and
+calls the AVC to check whether the current task has a particular
+permission to an IPC object.  The explicit passing of the security
+class of the IPC object is a legacy of the earlier handling for
+pre-existing objects prior to SELinux initialization via precondition
+functions and could be removed, using the sclass field from the security
+structure instead.
+</para>
+</sect3>
+
+<sect3 id="IpcPermission"><title>selinux_ipc_permission</title>
+<para>
+This hook function is called from the kernel
+<function>ipcperms</function> function, so it is called prior to all
+IPC operations that will read or modify the IPC object.  This hook
+function checks <constant>unix_read</constant> and/or
+<constant>unix_write</constant> permission to the IPC object based on
+the flag, as shown in <xref linkend="IpcpermTable">.  These
+permissions provide a coarse-grained equivalent to the Unix
+permissions, whereas the other IPC hooks check finer-grained
+permissions.  These coarse-grained permission checks are not strictly
+necessary, but ensure that all IPC accesses are mediated by the
+policy.
+
+<table id="IpcpermTable" frame="all">
+<title>ipc_permission Permission Checks</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+<entry>Flag</entry>
+<entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><constant>S_IRUGO</constant></entry>
+<entry>unix_read</entry>
+</row>
+<row>
+<entry><constant>S_IWUGO</constant></entry>
+<entry>unix_write</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</sect3>
+
+<sect3><title>selinux_*_associate</title>
+<para>
+When a task attempts to obtain an IPC object identifier for an
+existing object via one of the *get calls, the kernel calls the
+corresponding associate hook function for the object type.  The
+SELinux IPC associate hook functions are:
+<itemizedlist>
+<listitem><para><function>selinux_sem_associate</function></para></listitem>
+<listitem><para><function>selinux_shm_associate</function></para></listitem>
+<listitem><para><function>selinux_msg_queue_associate</function></para></listitem>
+</itemizedlist>
+
+These hook functions check <constant>associate</constant> permission
+between the current task and the IPC object.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2><title>Controlling Semaphore Operations</title>
+
+<sect3><title>selinux_semctl</title>
+<para>
+This hook function checks permissions before performing an operation on the
+specified semaphore; the specific permission is determined by the
+operation being performed. The permissions required for each operation
+are shown in <xref linkend="SemcontrolTable">.
+
+
+<table id="SemcontrolTable" frame="all">
+<title> Semaphore Control Permissions</title>
+<tgroup cols="4" align="left">
+<thead>
+<row>
+    <entry>Operation</entry>
+    <entry>Source</entry>
+    <entry>Target</entry>
+    <entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry><simplelist>
+        <member>IPC_INFO</member>
+        <member>SEM_INFO</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>System</entry>
+    <entry>ipc_info</entry>
+</row>
+<row>
+    <entry><simplelist>
+        <member>GETPID</member>
+        <member>GETNCNT</member>
+        <member>GETZCNT</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>Sem</entry>
+    <entry>getattr</entry>
+</row>
+<row>
+    <entry><simplelist>
+        <member>GETVAL</member>
+        <member>GETALL</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>Sem</entry>
+    <entry>read</entry>
+</row>
+<row>
+    <entry><simplelist>
+        <member>SETVAL</member>
+        <member>SETALL</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>Sem</entry>
+    <entry>write</entry>
+</row>
+<row>
+    <entry>IPC_RMID</entry>
+    <entry>Current</entry>
+    <entry>Sem</entry>
+    <entry>destroy</entry>
+</row>
+<row>
+    <entry>IPC_SET</entry>
+    <entry>Current</entry>
+    <entry>Sem</entry>
+    <entry>setattr</entry>
+</row>
+<row>
+    <entry><simplelist><member>IPC_STAT</member><member>SEM_STAT</member></simplelist></entry>
+    <entry>Current</entry>
+    <entry>Sem</entry>
+    <entry>getattr, associate</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</sect3>
+
+<sect3><title>selinux_semop</title>
+<para>
+This hook function checks permissions for semaphore operations.  It
+always checks <constant>read</constant> permission between the current
+task and the semaphore.  If the semaphore value is being altered, it
+also checks <constant>write</constant> permission between the current
+task and the semaphore.  Notice that these permissions are different
+from the <constant>unix_read</constant> and
+<constant>unix_write</constant> permissions checked by
+<function>selinux_ipc_permission</function>.
+</para>
+</sect3>
+</sect2>
+
+<sect2><title>Controlling Shared Memory Operations</title>
+
+<sect3><title>selinux_shm_shmctl</title>
+<para>
+This hook function checks permissions before performing an operation on the
+specified shared memory region; the specific permission is determined by the
+operation being performed. The permissions required for each operation
+are shown in <xref linkend="ShmcontrolTable">.
+
+<table id="ShmcontrolTable" frame="all">
+<title> Shared Memory Control Permissions</title>
+<tgroup cols="4" align="left">
+<thead>
+<row>
+    <entry>Operation</entry>
+    <entry>Source</entry>
+    <entry>Target</entry>
+    <entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry><simplelist>
+        <member>IPC_INFO</member>
+        <member>SHM_INFO</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>System</entry>
+    <entry>ipc_info</entry>
+</row>
+<row>
+    <entry><simplelist>
+        <member>IPC_STAT</member>
+        <member>SHM_STAT</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>Shm</entry>
+    <entry>getattr, associate</entry>
+</row>
+<row>
+    <entry>IPC_SET</entry>
+    <entry>Current</entry>
+    <entry>Shm</entry>
+    <entry>setattr</entry>
+</row>
+<row>
+    <entry><simplelist>
+        <member>SHM_LOCK</member>
+        <member>SHM_UNLOCK</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>Shm</entry>
+    <entry>lock</entry>
+</row>
+<row>
+    <entry>IPC_RMID</entry>
+    <entry>Current</entry>
+    <entry>Shm</entry>
+    <entry>destroy</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</sect3>
+
+<sect3><title>selinux_shm_shmat</title>
+<para>
+This hook function checks permissions for shared memory attach
+operations.  It always check <constant>read</constant> permission
+between the current task and the shared memory object.  If the
+<constant>SHM_RDONLY</constant> flag was not specified, then it also
+checks <constant>write</constant> permission between the current task
+and the shared memory object.  Notice that these permissions are
+different from the <constant>unix_read</constant> and
+<constant>unix_write</constant> permissions checked by
+<function>selinux_ipc_permission</function>.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2><title>Controlling Message Queue Operations</title>
+
+<sect3><title>selinux_msg_queue_msgctl</title>
+<para>
+This hook function checks permissions before performing an operation on the
+specified message queue; the specific permission is determined by the
+operation being performed.  The permissions required for each
+operation are shown in <xref linkend="MsgcontrolTable">.
+
+<table id="MsgcontrolTable" frame="all">
+<title> Message Queue Control Permissions</title>
+<tgroup cols="4" align="left">
+<thead>
+<row>
+    <entry>Operation</entry>
+    <entry>Source</entry>
+    <entry>Target</entry>
+    <entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry><simplelist>
+        <member>IPC_INFO</member>
+        <member>MSG_INFO</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>System</entry>
+    <entry>ipc_info</entry>
+</row>
+<row>
+    <entry><simplelist>
+        <member>IPC_STAT</member>
+        <member>MSG_STAT</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>MessageQueue</entry>
+    <entry>getattr, associate</entry>
+</row>
+<row>
+    <entry>IPC_SET</entry>
+    <entry>Current</entry>
+    <entry>MessageQueue</entry>
+    <entry>setattr</entry>
+</row>
+<row>
+    <entry>IPC_RMID</entry>
+    <entry>Current</entry>
+    <entry>MessageQueue</entry>
+    <entry>destroy</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</sect3>
+
+<sect3><title>selinux_msg_queue_msgsnd</title>
+<para>
+This hook function is called by the <function>msgsnd</function> system
+call to check the ability to place an individual message on a message
+queue.  It performs three permission checks, involving the current
+task, the message queue, and the individual message.  These checks are
+shown in <xref linkend="MsgsndTable">.  This hook function also sets
+the SID on the message if it is unlabeled.  It calls the
+<function>security_transition_sid</function> interface of the security
+server to obtain a SID based on the SID of the task and the SID of the
+message queue.
+
+<table id="MsgsndTable" frame="all">
+<title>Message Send Permissions</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+    <entry>Source</entry>
+    <entry>Target</entry>
+    <entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>Current</entry>
+    <entry>MessageQueue</entry>
+    <entry>write</entry>
+</row>
+<row>
+    <entry>Current</entry>
+    <entry>Message</entry>
+    <entry>send</entry>
+</row>
+<row>
+    <entry>Message</entry>
+    <entry>MessageQueue</entry>
+    <entry>enqueue</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</sect3>
+
+<sect3><title>selinux_msg_queue_msgrcv</title>
+<para>
+This hook function can be called by either the
+<function>msgsnd</function> system call (for a pipelined send) or by
+the <function>msgrcv</function> system call to check the ability to
+receive an individual message from a message queue.  Hence, the
+receiving task may not be the current task and is explicitly passed to
+the hook. This hook function performs two permission checks, involving
+the receiving task, the message queue, and the individual message.
+These permission checks are shown in <xref linkend="MsgrcvTable">.  It
+is important to note that an error return from this hook simply causes
+the individual message to be ignored in the same manner as if it had
+the wrong message type.  Hence, access denials on individual messages
+are not propagated to the calling process and may cause the calling
+process to block waiting for messages that are accessible.
+
+<table id="MsgrcvTable" frame="all">
+<title>Message Receive Permissions</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+    <entry>Source</entry>
+    <entry>Target</entry>
+    <entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>ReceiverTask</entry>
+    <entry>MessageQueue</entry>
+    <entry>read</entry>
+</row>
+<row>
+    <entry>ReceiverTask</entry>
+    <entry>Message</entry>
+    <entry>receive</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+</sect3>
+</sect2>
+
+</sect1>

@@ -16,9 +16,8 @@ CPPFLAGS += -I../include/ -I$(CHECKPOLICY)
 
 # test program object files
 objs := $(patsubst %.c,%.o,$(wildcard *.c))
-parserobjs := $(CHECKPOLICY)queue.o $(CHECKPOLICY)y.tab.o \
-	$(CHECKPOLICY)parse_util.o $(CHECKPOLICY)lex.yy.o \
-	$(CHECKPOLICY)policy_define.o $(CHECKPOLICY)module_compiler.o
+parserobjs := $(CHECKPOLICY)queue.o $(CHECKPOLICY)y.tab.o $(CHECKPOLICY)parse_util.o $(CHECKPOLICY)lex.yy.o \
+	$(CHECKPOLICY)module_compiler.o
 
 # test policy pieces
 m4support := $(wildcard policies/support/*.spt)
@@ -43,12 +42,8 @@ $(EXE): $(objs) $(parserobjs) $(LIBSEPOL)
 clean: 
 	rm -f $(objs) $(EXE)
 	rm -f $(policies)
-	rm -f policies/test-downgrade/policy.hi policies/test-downgrade/policy.lo
-	
 
 test: $(EXE) $(policies)
-	$(MKDIR) -p policies/test-downgrade
-	../../checkpolicy/checkpolicy -M policies/test-cond/refpolicy-base.conf -o policies/test-downgrade/policy.hi	
 	./$(EXE)
 
 .PHONY: all policies clean test

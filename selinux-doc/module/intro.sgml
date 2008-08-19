@@ -1,0 +1,58 @@
+<sect1 id="intro"><title>Introduction</title>
+
+<para>
+In March 2001, the National Security Agency (NSA) gave a presentation
+about Security-Enhanced Linux (SELinux) at the 2.5 Linux Kernel
+Summit.  SELinux is an implementation of flexible and fine-grained
+nondiscretionary access controls in the Linux kernel, originally
+implemented as its own particular kernel patch.  The design and
+implementation of the original SELinux prototype is described in
+<citation><XRef LinkEnd="LoscoccoFreenix01"></citation> and
+<citation><XRef LinkEnd="LoscoccoNSATR01"></citation>, both of which
+can be found at <ulink url="http://www.nsa.gov/selinux">the NSA
+SELinux web site</ulink>.
+</para>
+
+<para>
+In response to the NSA presentation, Linus Torvalds made a set of
+remarks that described a security framework he would be willing to
+consider for inclusion in the mainstream Linux kernel.  He described a
+general framework that would provide a set of security hooks to
+control operations on kernel objects and a set of opaque security
+fields in kernel data structures for maintaining security attributes.
+This framework could then be used by loadable kernel modules to
+implement any desired model of security.
+</para>
+
+<para>
+The Linux Security Modules (LSM) project was started by Immunix to
+develop such a framework.  LSM was a joint development effort by
+several security projects, including Immunix, SELinux, SGI and Janus,
+and several individuals, including Greg Kroah-Hartman and James
+Morris, to develop a Linux kernel patch that implements this
+framework.  The LSM framework is included as part of the Linux 2.6 series.
+</para>
+
+<para>
+The SELinux implementation was adapted to use the LSM framework rather
+than its own particular kernel patch.  This technical report documents
+the LSM-based SELinux security module.  The report begins by providing
+an overview of LSM and a review of the SELinux basic concepts.  It
+then provides an overview of how the LSM-based SELinux security module
+differs from the original SELinux kernel patch.  Several aspects of
+the SELinux security module are then described, including its internal
+architecture, its initialization code, its support for
+stacking with other security modules, and its approach for
+implementing the SELinux API.  The remainder of the
+report is then spent documenting the SELinux hook function
+implementations, organized into sections for each grouping of LSM
+hooks.  Typically, these hooks are grouped based on the relevant
+kernel object or kernel subsystem.
+</para>
+
+<para>
+<comment>Note:  This report predates modern enhancements to the SELinux kernel code, such as the introduction of labeled networking support (labeled IPSEC and NetLabel/CIPSO), the introduction of APIs for getting peer and datagram security contexts for INET and Unix socket IPC, and significant changes to the SELinux network access controls.  Thus, while much of the discussion herein is still applicable, much has changed in modern SELinux kernels.</comment>
+</para>
+
+</sect1>
+

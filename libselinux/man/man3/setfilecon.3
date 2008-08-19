@@ -1,4 +1,4 @@
-.TH "setfilecon" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.TH "setfilecon" "3" "1 January 2004" "russell@coker.com.au" "SE Linux API documentation"
 .SH "NAME"
 setfilecon, fsetfilecon, lsetfilecon \- set SELinux security context of a file
 
@@ -6,9 +6,9 @@ setfilecon, fsetfilecon, lsetfilecon \- set SELinux security context of a file
 .B #include <selinux/selinux.h>
 .sp
 .BI "int setfilecon(const char *" path ", security_context_t "con );
-
+.br 
 .BI "int lsetfilecon(const char *" path ", security_context_t "con );
-
+.br 
 .BI "int fsetfilecon(int "fd ", security_context_t "con );
 
 .SH "DESCRIPTION"

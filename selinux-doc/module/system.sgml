@@ -1,0 +1,167 @@
+<sect1 id="system"><title>Miscellaneous Hook Functions</title>
+<para>
+This section describes miscellaneous hook functions that do not
+fit into one of the prior sections.
+</para>
+
+<sect2><title>Capability-Related Hook Functions</title>
+
+<sect3><title>selinux_capable</title> 
+<para>
+This hook function is called by the kernel to determine whether a
+particular Linux capability is granted to a task.  After calling the
+secondary security module to perform the ordinary Linux capability
+test or superuser test, this hook function calls the
+<function>task_has_capability</function> helper function to check the
+corresponding SELinux capability permission.  Hence, the Linux
+capability must be granted by both the secondary security module and
+by SELinux.
+</para>
+</sect3>
+
+<sect3><title>selinux_capget</title>
+<para>
+This hook function is called by the kernel to get the capability sets
+associated with a task.  It first checks <constant>capget</constant>
+permission between the current and target tasks.  If this permission
+is granted, it then calls the secondary security module to obtain the
+capability sets, since SELinux does not maintain this information.
+Note that the returned capability sets are not modified to remove
+capabilities that would be denied by SELinux.
+</para>
+</sect3>
+
+<sect3><title>selinux_capset_check</title>
+<para>
+This hook function is called by the kernel to check permission before
+setting the capability sets associated with a task.  It calls the
+secondary module to allow it to apply the normal Linux capability
+checking logic, and then checks <constant>capset</constant> permission
+between the current and target task.  SELinux does not perform any
+checks on the individual capabilities being set, since it revalidates
+each capability on use in the <function>selinux_capable</function>
+hook.
+</para>
+</sect3>
+
+<sect3><title>selinux_capset_set</title>
+<para>
+This hook function is called by the kernel to set the capability sets
+associated with a task.  It simply calls the secondary module to set
+the capability sets, since SELinux does not maintain this information.
+</para>
+</sect3>
+
+<sect3><title>selinux_netlink_send</title>
+<para>
+This hook function is called to perform permission checking and to set
+the effective capability set in the control buffer for a netlink
+message when the message is sent. The function first calls the
+secondary module to initialize the effective capability set based on
+the sending task.  It then calls the AVC to compute the set of
+capabilities that would be allowed by SELinux and intersects this set
+with the effective capability set in the control buffer.  Finally, if
+the policy supports the fine-grained netlink classes and permissions,
+this hook function calls <function>selinux_nlmsg_perm</function> to
+apply further permission checks based on a mapping of netlink message
+types to read and write information flows (i.e. observing information
+or modifying information).
+</para>
+</sect3>
+
+<sect3><title>selinux_netlink_recv</title>
+<para>
+This hook function is called to check permission when a netlink
+message is received that requires privilege.  It checks the effective
+capability set associated with the netlink message to see if
+<constant>CAP_NET_ADMIN</constant> is set.
+</para>
+</sect3>
+
+<sect3><title>selinux_vm_enough_memory</title>
+<para>
+This hook function is called to check permissions and perform
+accounting when allocating a mapping. It was initially made into a
+security hook to avoid generating spurious audit messages upon
+checking CAP_SYS_ADMIN to determine whether to reserve some memory.
+The hook function calls the secondary module's capable function to
+check whether the task has CAP_SYS_ADMIN, and if so, it calls the AVC
+to check whether SELinux would allow this capability as well, using an
+interface that avoid audit generation.  The function then calls the
+kernel <function>__vm_enough_memory</function> function with a flag indicating
+whether the capability was granted.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="sysctl"><title>Sysctl Hook Function</title>
+<para>
+The <function>selinux_sysctl</function> hook function checks
+permission for the current task to access a sysctl entry.  It calls
+the <function>selinux_proc_get_sid</function> helper function to
+obtain the SID associated with the sysctl entry based on the
+<structname>proc_dir_entry</structname> tree.  This is also used by
+<function>inode_doinit_with_dentry</function> for other procfs inodes,
+as discussed in <xref linkend="InodeDoinit">.  If no match is found,
+then the hook function defaults to the sysctl initial SID.
+</para>
+
+<para>
+The hook function then performs a permission
+check based on the requested operation, treating the sysctl entry as a
+directory for search operations and as a file for read or write
+operations on a variable.  <xref linkend="SysctlpermTable"> shows the
+permission checks associated with each requested operation.
+<table id="SysctlpermTable" frame="all">
+<title>sysctl Permission Checks</title>
+<tgroup cols="4" align="left">
+<thead>
+<row>
+<entry>Operation Value</entry>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><constant>1</constant></entry>
+<entry>Current</entry>
+<entry>Entry</entry>
+<entry>Search</entry>
+</row>
+<row>
+<entry><constant>4</constant></entry>
+<entry>Current</entry>
+<entry>Entry</entry>
+<entry>read</entry>
+</row>
+<row>
+<entry><constant>2</constant></entry>
+<entry>Current</entry>
+<entry>Entry</entry>
+<entry>write</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+</sect2>
+
+<sect2><title>Syslog Hook Function</title>
+<para>
+The <function>selinux_syslog</function> hook function checks that the
+current task has permission to perform a given system logging command.
+For operations <constant>3</constant> (read last kernel messages) and
+<constant>10</constant> (return size of log buffer), the
+<constant>syslog_read</constant> system permission is checked. For
+operations that control logging to the console, the
+<constant>syslog_console</constant> system permission is checked. All
+other operations (including unknown ones) are checked with
+<constant>syslog_mod</constant> system permission.
+</para>
+</sect2>
+
+</sect1>

@@ -1,0 +1,286 @@
+This is a (partial) credits file of organizations and people who have
+contributed to the SELinux project.  It is modeled after the Linux
+kernel CREDITS file, i.e. it is sorted by name and uses the following
+fields for each entry: name (N), email (E), web-address (W), and
+description (D).  Unlike the Contributors web page
+(http://www.nsa.gov/selinux/info/contrib.cfm), this file does not
+partition the list into different categories of contributions;
+it is merely a flat listing of all contributors.
+
+---------
+
+N: Ryan Bergauer
+E: bergauer@rice.edu
+D: Developed Samba policy.
+
+N: Bastian Blank
+E: bastian@waldi.eu.org
+D: Contributed several code cleanups and 64bit fixes to 
+D: checkpolicy and libselinux with Joerg Hoh. 
+
+N: Thomas Bleher
+E: ThomasBleher@gmx.de
+W: http://www.cip.ifi.lmu.de/~bleher/selinux/
+D: Contributed several new policy files and many policy patches.
+D: Adapted policy configuration for SuSE.
+D: Ported and packaged SELinux userspace packages for SuSE.
+
+N: Joshua Brindle
+D: original setfiles altroot patch
+D: Ported and packaged SELinux for Hardened Gentoo with Chris PeBenito.
+
+N: Russell Coker
+E: russell@coker.com.au
+D: Significantly expanded and improved the example policy. 
+D: Enhanced the run_init and spasswd utilities.
+D: Developed a devfsd module for managing devfs file contexts.
+D: Implemented improvements to the setfiles program.
+D: Extended strace to trace SELinux system calls.
+D: Ported and packaged SELinux for Debian.
+D: Ported several SELinux application patches to the Debian base packages.
+D: Developed new SELinux patches for additional applications.
+
+N: Ulrich Drepper
+E: drepper@redhat.com
+D: Optimized libselinux (minimized relocations, eliminated local sym PLT use).
+D: Reworked Flask definition string table generation.
+D: Provided feedback and input on the SELinux patch for nscd.
+D: Provided input and feedback on controls over executable memory.
+
+N: Brian Fegler
+E: fegler@bigfoot.com
+D: Developed the cando script for analyzing rules from a policy.conf file.
+
+N: Lorenzo Hernandez Garcia-Hierro
+E: lorenzo@gnu.org
+W: http://selinux.tuxedo-es.org
+D: Developed execstack and execheap permission checks for controlling
+D: specific forms of executable memory based on input by Roland McGrath,
+D: Ulrich Drepper, and Ingo Molnar.
+
+N: Carsten Grohmann
+E: mail@carstengrohmann.de
+W: http://www.securityenhancedlinux.de
+D: Developed amanda policy.
+D: Contributed several patches to other policy files.
+D: Adapted the policy configuration for SuSE.
+D: Created a mailing list for German-language SELinux users.
+
+N: Steve Grubb
+E: linux_4ever@yahoo.com
+D: Contributed cleanup patches for libselinux and pam_selinux.
+D: Enhanced setsebool, togglesebool, and sestatus utilities.
+D: Improved checking in libselinux AVC netlink code.
+
+N: Ivan Gyurdiev
+E: ivg2@cornell.edu
+D: Contributed mplayer policy.
+D: Contributed several policy cleanups and improvements, including access_terminal macro, texrel_shlib_t marking, desktop policy, etc.
+D: Contributed patches for improved abstraction and organization in libsepol.  
+D: Developed support for managing and manipulating non-module policy components in libsepol, libsemanage, and policycoreutils.
+
+N: Serge Hallyn (IBM)
+D: Contributed bug fixes for a number of bugs found via Coverity.
+
+N: Joerg Hoh
+E: joerg@devone.org
+D: Contributed several code cleanups and 64bit fixes to 
+D: checkpolicy and libselinux with Bastian Blank. 
+
+N: Kaigai Kohei (NEC)
+D: Contributed AVC RCU patch, solving the major SELinux scalability problem.
+D: Contributed fixes for a couple of SELinux locking bugs.
+
+N: Paul Krumviede
+E: pwk@acm.org
+D: Contributed to the IPSEC policy configuration.
+
+N: Tom London
+E: selinux@gmail.com
+D: Contributed several policy patches.
+D: Contributed fix for audit2allow script.
+
+N: Brian May
+E: bam@snoopy.apana.org.au
+D: Contributed several new domains and patches to the policy.
+D: Maintaining SELinux packages for Debian stable, based on Russell Coker's work.
+
+N: Roland McGrath
+E: roland@redhat.com
+D: Provided input and feedback on AT_SECURE auxv entry patch.
+D: Added AT_SECURE support to glibc.
+D: Provided input and feedback on further inheritance controls on execve.
+D: Provided input and feedback on controls over executable memory.
+
+N: The MITRE Corporation
+E: aherzog@mitre.org
+W: http://www.mitre.org/about/ciis/selinux/
+D: Developed many new or modified utilities.
+D: Developed several application policies (e.g. Apache, sendmail, crond).
+
+N: James Morris (Red Hat)
+E: jmorris@redhat.com
+W: http://people.redhat.com/jmorris/selinux
+D: Developed the SELinux labeled networking support.
+D: Provided patches and feedback for the SELinux security module.
+D: Performed code cleanups and consolidation for SELinux.
+D: Added SELinux boot parameter.
+D: Restored and enhanced SELinux network access controls, including IPv6 support.
+D: Solved kernel socket issue for LSM/SELinux.
+D: Added fine-grained netlink controls.
+D: Added context mount option support and getpeercon support.
+D: Instrumented AVC and added AVC API.
+D: Is one of the maintainers of the upstream SELinux kernel code.
+
+N: Yuichi Nakamura
+E: ynakam@ori.hitachi-sk.co.jp
+D: Contributed the initial policy configuration for BIND.
+D: Developed several policy tools for SELinux.
+
+N: National Security Agency (NSA)
+E: selinux-team@epoch.ncsc.mil
+W: http://www.nsa.gov/selinux
+D: Designed and implemented the original SELinux kernel patch.
+D: Reworked the LSM-based SELinux for inclusion in Linux 2.6. 
+D: Is one of the maintainers of the upstream SELinux kernel code.
+
+N: Network Associates Laboratories (NAI Labs)
+E: selinux@nailabs.com
+D: Developed example policy configuration.
+D: Ported SELinux kernel patch to 2.4 kernel.
+D: Contributed to LSM kernel patch and adapted SELinux to LSM.
+
+N: Greg Norris
+E: haphazard@kc.rr.com
+D: Contributed several new policy files and policy patches.
+
+N: Chris PeBenito
+E: pebenito@gentoo.org
+D: Updated setfiles altroot patch to new API.
+D: Contributed patch for run_init to fix a leaked descriptor.
+D: Ported and packaged SELinux for Hardened Gentoo with Joshua Brindle.
+D: Contributed the sestatus and togglesebool utilities.
+D: Contributed the distcc policy.
+
+N: Red Hat
+W: http://www.redhat.com/security/innovative/selinux/
+W: http://fedora.redhat.com/projects/selinux/
+D: Contributed many new policy files and policy patches.
+D: Contributed numerous enhancements to the SELinux kernel and userspace code.
+D: Ported and maintained the original SELinux userspace patches.
+D: Developed new SELinux userspace patches for many additional packages.
+D: Integrated SELinux awareness into rpm package manager.
+D: Integrated SELinux awareness into admin tool.
+D: Integrated full SELinux support into Fedora Core distribution (starting with FC2).
+D: Integrated full SELinux support into Red Hat Enterprise Linux product (starting with RHEL4)
+
+N: Petre Rodan
+E: kaiowas@gentoo.org
+W: http://dev.gentoo.org/~kaiowas/
+D: Contributed several new policy files and many policy patches.
+
+N: Shaun Savage
+E: savages@savages.com
+D: Ported several of the SELinux utility patches to newer Red Hat base versions.
+D: Contributed several domains to the example policy configuration.
+
+N: Secure Computing Corporation (SCC)
+D: Developed preliminary policy configuration.
+D: Developed some new and modified utilities.
+
+N: Rogelio Serrano Jr.
+E: rogelio@evoworks.evoserve.com
+D: Implemented support for automatic type transitions for devfs pts nodes.
+
+N: Justin Smith
+E: jsmith@mcs.drexel.edu
+W: http://vorpal.mcs.drexel.edu
+D: Developed ipchains policy.
+D: Contributed some patches to the existing policy.
+D: Developed initial version of the newrules.pl script.
+
+N: Manoj Srivastava
+E: manoj.srivastava@stdc.com
+W: http://www.golden-gryphon.com/software/security/selinux.xhtml
+D: Contributed open_init_pty helper for run_init.
+D: Added man pages for audit2allow and genhomedircon.
+D: Contributed several build fixes.
+D: Wrote a SELinux UML howto
+D: Developed SELinux patch for xdm.
+D: Packaging non-policy SELinux components for Debian.
+D: Working on improved SELinux integration into Debian.
+
+N: Steve Tate (University of North Texas COPS Lab)
+E: srt@cs.unt.edu
+D: Developed a GUI browser for analyzing type enforcement rules.
+
+N: Tresys Technology
+E: selinux@tresys.com
+W: http://www.tresys.com/selinux
+D: Developed policy management patch.
+D: Extended checkpolicy username definition.
+D: Developed usermod+group* patch.
+D: Developed tools for policy analysis, user management, and policy customization.
+D: Wrote some policy primer documents for SELinux.
+D: Developed conditional policy extensions.
+D: Developed policy module support.
+D: Developed hierarchical type/role support.
+
+N: Trusted Computer Solutions
+N:   Specifically, the following individuals from TCS:
+N:   Bryan Ericson
+N:   Darrel Goeddel
+N:   Chad Hanson
+N:   Jonghoon Kim
+N:   Cory Olmo
+N:   Vic Serbe
+N:   Daniel Thayer
+N:   Venkatesh Yekkirala
+E: chanson@trustedcs.com
+W: www.trustedcs.com
+D: Contributed fixes for a couple of bugs in the kernel (compute_av, sk_free_security).
+D: Added support for runtime detection of optional MLS support.
+D: Contributed fixes for MLS support in kernel, checkpolicy, and libselinux.
+D: Enhanced checkpolicy to order nodecon entries and eliminate role dominance ordering dependency.
+D: Added support for dynamic context transitions (setcon).
+D: Added enhanced MLS support (constraint-based, runtime enable).
+
+N: Tom Vogt
+E: tom@lemuria.org
+D: Developed patches for the Apache and MySQL policies,
+D: Developed a SubVersion policy.
+
+N: Reino Wallin (Oribium Labs)
+E: reino@oribium.com
+D: Contributed some patches to the network policy configuration.
+D: Developed a policy for a proxy firewall.
+
+N: Dan Walsh (Red Hat)
+D: Ported original SELinux userspace patches to the 2.6 SELinux API.
+D: Ported original SELinux userspace patches to the Fedora Core packages.
+D: Developed patches for many additional userspace packages.
+D: Maintains the targeted policy.
+D: Contributed many policy files and fixes to strict and targeted policies.
+D: Created spec files for checkpolicy, libselinux, policycoreutils, policy.
+
+N: Colin Walters
+D: Contributed build patches and cleanups for checkpolicy, libselinux, policycoreutils.
+D: Enhanced chcon to accept individual field options.
+D: Contributed policy regression testing patch and package metadata patch.
+D: Ported and packaged 2.6-based SELinux for Debian.
+D: Enhanced setfiles to validate contexts against a binary policy.
+D: Enhanced SE-DBUS and developed dbusd policy.
+D: Contributed several other policy files and fixes.
+
+N: Mark Westerman
+E: mark.westerman@westcam.com
+D: Contributed several domains to the example policy.
+D: Developed the default user patch.
+D: Developed a patch for the GNOME Display Manager.
+D: Created RPMs for SELinux.
+
+N: David A. Wheeler
+E: dwheeler@ida.org
+D: Contributed several new domains to the policy configuration.
+D: Provided feedback on the existing configuration.
+D: Made helpful suggestions for improving the SELinux policy.

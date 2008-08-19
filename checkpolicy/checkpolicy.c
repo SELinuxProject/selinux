@@ -90,8 +90,8 @@ static sidtab_t sidtab;
 
 extern policydb_t *policydbp;
 extern int mlspol;
+extern int handle_unknown;
 
-static int handle_unknown = SEPOL_DENY_UNKNOWN;
 static char *txtfile = "policy.conf";
 static char *binfile = "policy";
 

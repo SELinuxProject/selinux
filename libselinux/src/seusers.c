@@ -89,62 +89,6 @@ static int process_seusers(const char *buffer,
 
 int require_seusers hidden = 0;
 
-#include <pwd.h>
-#include <grp.h>
-
-static gid_t get_default_gid(const char *name) {
-	struct passwd pwstorage, *pwent = NULL;
-	gid_t gid = -1;
-	/* Allocate space for the getpwnam_r buffer */
-	long rbuflen = sysconf(_SC_GETPW_R_SIZE_MAX);
-	if (rbuflen <= 0) return -1;
-	char *rbuf = malloc(rbuflen);
-	if (rbuf == NULL) return -1;
-
-	int retval = getpwnam_r(name, &pwstorage, rbuf, rbuflen, &pwent);
-	if (retval == 0 && pwent) {
-		gid = pwent->pw_gid;
-	}
-	free(rbuf);
-	return gid;
-}
-
-static int check_group(const char *group, const char *name, const gid_t gid) {
-	int match = 0;
-	int i, ng = 0;
-	gid_t *groups = NULL;
-	struct group gbuf, *grent = NULL;
-
-	long rbuflen = sysconf(_SC_GETGR_R_SIZE_MAX);
-	if (rbuflen <= 0)
-		return 0;
-	char *rbuf = malloc(rbuflen);
-	if (rbuf == NULL)
-		return 0;
-
-	if (getgrnam_r(group, &gbuf, rbuf, rbuflen, 
-		       &grent) != 0)
-		goto done;
-
-	if (getgrouplist(name, gid, NULL, &ng) < 0) {
-		groups = (gid_t *) malloc(sizeof (gid_t) * ng);
-		if (!groups) goto done;
-		if (getgrouplist(name, gid, groups, &ng) < 0) goto done;
-	}
-
-	for (i = 0; i < ng; i++) {
-		if (grent->gr_gid == groups[i]) {
-			match = 1;
-			goto done;
-		}
-	}
-
- done:
-	free(groups);
-	free(rbuf);
-	return match;
-}
-
 int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 {
 	FILE *cfg = NULL;
@@ -157,12 +101,8 @@ int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 	char *username = NULL;
 	char *seuser = NULL;
 	char *level = NULL;
-	char *groupseuser = NULL;
-	char *grouplevel = NULL;
 	char *defaultseuser = NULL;
 	char *defaultlevel = NULL;
-
-	gid_t gid = get_default_gid(name);
 
 	cfg = fopen(selinux_usersconf_path(), "r");
 	if (!cfg)
@@ -184,45 +124,28 @@ int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 		if (!strcmp(username, name))
 			break;
 
-		if (username[0] == '%' && 
-		    !groupseuser && 
-		    check_group(&username[1], name, gid)) {
-				groupseuser = seuser;
-				grouplevel = level;
+		if (!defaultseuser && !strcmp(username, "__default__")) {
+			free(username);
+			defaultseuser = seuser;
+			defaultlevel = level;
 		} else {
-			if (!defaultseuser && 
-			    !strcmp(username, "__default__")) {
-				defaultseuser = seuser;
-				defaultlevel = level;
-			} else {
-				free(seuser);
-				free(level);
-			}
+			free(username);
+			free(seuser);
+			free(level);
 		}
-		free(username);
-		username = NULL;
 		seuser = NULL;
 	}
 
-	free(buffer);
+	if (buffer)
+		free(buffer);
 	fclose(cfg);
 
 	if (seuser) {
 		free(username);
 		free(defaultseuser);
 		free(defaultlevel);
-		free(groupseuser);
-		free(grouplevel);
 		*r_seuser = seuser;
 		*r_level = level;
-		return 0;
-	}
-
-	if (groupseuser) {
-		free(defaultseuser);
-		free(defaultlevel);
-		*r_seuser = groupseuser;
-		*r_level = grouplevel;
 		return 0;
 	}
 

@@ -1,0 +1,27 @@
+<sect1 id="tips"><title>Tips</title>
+
+<itemizedlist>
+<listitem><para>The context returned by <function>avc_sid_to_context</function> must be freed by the caller using <function>freecon</function>.</para></listitem>
+
+<listitem><para>Remember that <function>avc_context_to_sid</function> increments SID reference counts.  If you pass the same context three times to this function, the SID for that context will have a count of 3.  This behavior supports obtaining SIDs to assign to newly created objects.</para></listitem>
+
+<listitem><para>libselinux has facilities for converting from security classes and access vectors into strings and vice versa.</para></listitem>
+
+<listitem><para><function>avc_has_perm_noaudit</function> can be used to perform a permission check without auditing.  The decision returned by this function can be passed to <function>avc_audit</function> to produce the message.  See the implementation of <function>avc_has_perm</function>.</para></listitem>
+
+<listitem><para>When experimenting with new policy, note that <function>avc_has_perm*</function> will return -1 with errno set to EINVAL on an invalid security context or security class (this is what <function>security_compute_av</function> returns).  No audit message is logged in this case.</para></listitem>
+
+<listitem><para>If a netlink socket error occurs in single-threaded mode, <function>avc_has_perm*</function> will log a message and return with errno set to whatever the socket routine returned.  Note that this value might be EACCES (the <quote>normal</quote> errno value for a policy denial).</para></listitem>
+
+<listitem><para>If a netlink socket error occurs in threaded mode, the netlink thread will log a message and then terminate.  At this point, <function>avc_has_perm*</function> will return EINVAL until the userspace AVC is destroyed and reinitialized.</para></listitem>
+
+<listitem><para>The userspace AVC produces a log message whenever a netlink notification is processed.  Note that in non-threaded mode netlink messages are not processed until the next call to <function>avc_has_perm*</function>.</para></listitem>
+
+<listitem><para>In addition to SIDs, consider storing an <structname>avc_entry_ref</structname> structure in each managed object.  These structures are passed to <function>avc_has_perm</function> and can increase performance on repeated permission checks.  Remember to initialize the structures with the <function>avc_entry_ref_init</function> macro.</para></listitem>
+
+<listitem><para><function>avc_cleanup</function> can be called periodically to free up memory in the userspace AVC.</para></listitem>
+
+<listitem><para><function>avc_reset</function> will flush all cached access decisions and reset the userspace AVC's internal statistics.  The SID table, however, is not affected.  A call to this function is made internally when a netlink policy change notification arrives.</para></listitem>
+</itemizedlist>
+
+</sect1>

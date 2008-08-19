@@ -1,0 +1,464 @@
+<sect1 id="socket"><title>Socket Hook Functions</title>
+<para>
+The SELinux socket hook function implementations manage the security
+fields of socket objects and perform access control for socket
+operations.  This section describes these hooks and their helper
+functions.
+</para>
+
+<sect2 id="SocketSecurity"><title>Managing Socket Security Fields</title>
+<sect3><title>Socket Security Structure</title>
+<para>
+Each user space socket structure (<structname>struct
+socket</structname>) has an associated inode structure, so the inode
+security structure is extensively used for socket objects as well.
+See <XRef LinkEnd="InodeSecurity"> for a discussion of inode security
+structure and associated functions.  A security field also exists in
+the network layer socket structure (<structname>struct
+sock</structname>), but this field can only be safely used for local/Unix
+domain sockets presently.  A change to the TCP code would be required
+to ensure proper handling of this field for newly created server
+sockets created by a connection; such a change was included in the LSM
+kernel patch, but did not make it into the mainline kernel due to the
+rejection of the LSM networking hooks.
+</para>
+
+<para>
+For local/Unix domain sockets, the
+<structname>sk_security_struct</structname> is used to store
+security information about the peer during connection establishment
+when the user socket is not yet allocated for the new connection.
+This structure is defined as follows:
+</para>
+
+<programlisting>
+struct sk_security_struct {
+        struct sock *sk;
+        security_id_t peer_sid;
+}
+</programlisting>
+
+<table frame="all">
+<title>sk_security_struct</title>
+<tgroup cols="2" align="left">
+<colspec colwidth="20*">
+<colspec colwidth="80*">
+<thead>
+<row>
+    <entry>Field</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>sk</entry>
+    <entry>Back pointer to the associated sock structure.</entry>
+</row>
+<row>
+    <entry>peer_sid</entry>
+    <entry>SID of the peer socket.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect3>
+
+<sect3><title>sk_alloc_security and sk_free_security</title>
+<para>
+The <function>sk_alloc_security</function> and
+<function>sk_free_security</function> helper functions are the
+primitive allocation functions for sock security structures.
+They immediately return if the socket family is anything other
+than the local/Unix domain, as they cannot safely handle other
+kinds of sockets.  Otherwise, they perform the usual allocation
+and initialization of the security structure.
+</para>
+</sect3>
+
+<sect3><title>selinux_socket_getpeersec</title>
+<para>
+This hook function is called to handle the SO_PEERSEC getsockopt option.
+It first checks whether the socket is local/Unix domain, and if not, returns an
+error. Otherwise, it extracts the peer SID from the sock security structure, converts it to a context, and copies it to the user buffer.
+</para>
+</sect3>
+
+<sect3 id="SocketPostCreate"><title>selinux_socket_post_create</title>
+<para>
+After a <structname>socket</structname> structure has been
+successfully created, this hook function is called to setup the inode
+security structure for the socket .  It set the security class using
+<function>socket_type_to_security_class</function>, as shown in <xref
+linkend="SockclassTable">.  The netlink socket class is further
+partitioned based the netlink protocol to support fine-grained
+control. If the socket does not match any of the specified types, it
+defaults to the generic socket security class. The hook function then
+sets the inode SID.  The hook function is passed a flag indicating
+whether the socket is being created for kernel-internal use (e.g. for
+RPC) or for userspace.  If the socket is for kernel-internal use, then
+it is labeled with the kernel initial SID.  Otherwise, it is labeled
+with the SID of the creating task.
+
+<table id="SockclassTable" frame="all">
+<title> Socket Security Classes</title>
+<tgroup cols="4" align="left">
+<thead>
+<row><entry>Protocol Family</entry><entry>Type</entry><entry>Protocol</entry>
+		<entry>Security Class</entry></row>
+</thead>
+<tbody>
+<row>
+	<entry><constant>PF_UNIX</constant></entry>
+	<entry><simplelist>
+	  <member>SOCK_STREAM</member>
+	  <member>SOCK_SEQPACKET</member>
+	</simplelist></entry>
+        <entry>ignored</entry>
+	<entry>unix_stream_socket</entry>
+</row>
+<row>
+	<entry><constant>PF_UNIX</constant></entry>
+	<entry><constant>SOCK_DGRAM</constant></entry>
+        <entry>ignored</entry>
+	<entry>unix_dgram_socket</entry>
+</row>
+<row>
+	<entry><constant>PF_INET/PF_INET6</constant></entry>
+	<entry><constant>SOCK_STREAM</constant></entry>
+	<entry><simplelist>
+	  <member>IPPROTO_IP</member>
+	  <member>IPPROTO_TCP</member>
+	</simplelist></entry>
+	<entry>tcp_socket</entry>
+</row>
+<row>
+	<entry><constant>PF_INET/PF_INET6</constant></entry>
+	<entry><constant>SOCK_DGRAM</constant></entry>
+	<entry><simplelist>
+	  <member>IPPROTO_IP</member>
+	  <member>IPPROTO_UDP</member>
+	</simplelist></entry>
+	<entry>udp_socket</entry>
+</row>
+<row>
+	<entry><constant>PF_INET/PF_INET6</constant></entry>
+	<entry>any other value</entry>
+	<entry>any other value</entry>
+	<entry>rawip_socket</entry>
+</row>
+<row>
+	<entry><constant>PF_NETLINK</constant></entry>
+	<entry>ignored</entry>
+        <entry>ignored</entry>
+	<entry>netlink_*_socket</entry>
+</row>
+<row>
+	<entry><constant>PF_PACKET</constant></entry>
+	<entry>ignored</entry>
+        <entry>ignored</entry>
+	<entry>packet_socket</entry>
+</row>
+<row>
+	<entry><constant>PF_KEY</constant></entry>
+	<entry>ignored</entry>
+        <entry>ignored</entry>
+	<entry>key_socket</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</sect3>
+
+<sect3 id="SocketAccept"><title>selinux_socket_accept</title>
+<para>
+This hook function is called after a new
+<structname>socket</structname> has been created for the connection
+but prior to calling the protocol family's accept function.  In
+addition to checking permission (discussed further in <XRef
+LinkEnd="SocketAc">), this hook function sets the SID and security
+class in the inode security structure for the new socket.  The new
+socket inherits the SID and security class of the listening socket.
+The new socket initialization must occur in this hook, since traffic
+can occur on the socket before the <function>post_accept</function>
+hook is called.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="SocketAc"><title>Controlling Socket Operations</title>
+
+<sect3><title>socket_has_perm</title> 
+<para>
+This helper function checks whether a task has a particular permission
+to a socket.  It first checks whether the socket is for kernel-internal
+use, and if so, returns success immediately.  Otherwise, it sets up the
+auxiliary audit data and calls the AVC to check the permission.
+</para>
+</sect3>
+
+<sect3><title>General Socket Layer Hooks</title> 
+
+<para>The socket layer access control hook functions first check a
+permission between the current task and the socket using the
+<function>socket_has_perm</function> helper function.  Some of the
+hook functions perform additional processing.  The hook functions and
+the initial permission that they check are shown in <xref
+linkend="SocklayerTable">.  Any additional processing for the hook
+functions is then described after this table.
+
+<table id="SocklayerTable" frame="all">
+<title>Socket Layer Hook Permission Checks</title>
+<tgroup cols="4" align="left">
+<colspec colwidth="35*">
+<colspec colwidth="20*">
+<colspec colwidth="20*">
+<colspec colwidth="25*">
+<thead>
+<row>
+    <entry>Hook Function</entry>
+    <entry>Source</entry>
+    <entry>Target</entry>
+    <entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+	<entry>selinux_socket_create</entry>
+	<entry>Current</entry>
+	<entry>NewSocket</entry>
+	<entry>create</entry>
+</row>
+<row>
+	<entry>selinux_socket_bind</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>bind</entry>
+</row>
+<row>
+	<entry>selinux_socket_connect</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>connect</entry>
+</row>
+<row>
+	<entry>selinux_socket_listen</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>listen</entry>
+</row>
+<row>
+	<entry>selinux_socket_accept</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>accept</entry>
+</row>
+<row>
+	<entry>selinux_socket_sendmsg</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>write</entry>
+</row>
+<row>
+	<entry>selinux_socket_recvmsg</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>read</entry>
+</row>
+<row>
+	<entry>selinux_socket_getsockname</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>getattr</entry>
+</row>
+<row>
+	<entry>selinux_socket_getpeername</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>getattr</entry>
+</row>
+<row>
+	<entry>selinux_socket_setsockopt</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>setopt</entry>
+</row>
+<row>
+	<entry>selinux_socket_getsockopt</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>getopt</entry>
+</row>
+<row>
+	<entry>selinux_socket_shutdown</entry>
+	<entry>Current</entry>
+	<entry>Socket</entry>
+	<entry>shutdown</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+The <function>selinux_socket_bind</function> hook function
+performs an additional <constant>name_bind</constant> permission
+check between the socket and the SID associated with the port number
+for ports that are outside the range used to automatically bind.
+It also performs an additional <constant>node_bind</constant> permission
+check between the socket and the SID associated with the IP address.
+</para>
+
+<para>
+The <function>selinux_socket_connect</function> hook function
+performs an additional <constant>name_connect</constant> permission
+check between the socket and the SID associated with the port number
+for TCP sockets.  This check provides control over outbound TCP
+connections to particular ports distinct from the general controls
+over sending and receiving packets.
+</para>
+
+</sect3>
+
+<sect3 id="SockRcvSkb"><title>Controlling Receipt of Packets</title> 
+<para>
+The <function>selinux_socket_sock_rcv_skb</function> hook function is
+called by the <function>sk_filter</function> kernel function prior to
+applying any socket filters to control receipt of individual packets
+on a socket at a point where the destination socket and the receiving
+network device information is available.  The hook function begins by
+checking whether the socket family corresponds with IPv4 or IPv6 and
+returning success immediately otherwise.  It then checks for mapped
+IPv4 packets arriving via IPv6 sockets and adjusts the family
+information accordingly for later use in translation of the headers.
+</para>
+
+<para>
+Unlike the previously discussed socket hook functions, this hook is
+passed a pointer to a network layer socket
+(<structname>sock</structname>) structure rather than a userspace
+<structname>socket</structname> structure.  This hook function must
+(while holding the appropriate lock) first dereference the
+<structfield>socket</structfield> field of the
+<structname>sock</structname> structure and then dereference the
+<structfield>inode</structfield> field of the resulting
+<structname>socket</structname> structure in order to obtain security
+information about the receiving socket.  However, security information
+is not always available, e.g. the socket may not be presently
+associated with an userspace socket (e.g. new server socket that has
+not yet been accepted, or a userspace socket that has been closed).
+</para>
+
+<para>
+After obtaining the socket security information, the hook function
+must also obtain security information for the receiving network
+device.  It calls the <function>sel_netif_sids</function> function to
+obtain the interface SID associated with the device. It then
+determines the right set of permissions to check based on the socket
+class, sets up auxiliary audit data, and calls
+<function>selinux_parse_skb</function> to parse the headers for
+address information to include in the audit data.  It then performs
+permission checks between the socket SID and the SIDs associated with
+the receiving network interface, the remote host, and the source port,
+as shown in <xref linkend="SockRcvSkbTable">.
+Note that these permission checks differ from the original set of
+permission checks for packet receipt prior to the redesign for Linux
+2.6.
+
+<table id="SockRcvSkbTable" frame="all">
+<title>Permission Checks for Receiving a Packet on a Socket</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Socket</entry>
+<entry>NetworkInterface</entry>
+<entry><simplelist><member>udp_recv</member><member>tcp_recv</member><member>rawip_recv</member></simplelist></entry>
+</row>
+<row>
+<entry>Socket</entry>
+<entry>RemoteNode (Host)</entry>
+<entry><simplelist><member>udp_recv</member><member>tcp_recv</member><member>rawip_recv</member></simplelist></entry>
+</row>
+<row>
+<entry>Socket</entry>
+<entry>SourcePort</entry>
+<entry>recv_msg</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+</para>
+</sect3>
+
+<sect3><title>Hooks for Unix Domain Socket IPC</title> 
+<para>
+LSM places calls to two hooks,
+<function>unix_stream_connect</function> and
+<function>unix_may_send</function>, within the Unix domain socket code
+to provide consistent control over Unix domain socket IPC.  These
+hooks are placed into the Unix domain socket code in order to have
+access to the destination socket, which is not available to the socket
+layer hooks.  For sockets that use the file namespace, the inode hook
+functions could be used to control IPC, but this would not address
+sockets that use the abstract namespace.  Hence, these two hooks were
+added by LSM.
+</para>
+
+<para>
+The <function>selinux_socket_unix_stream_connect</function> hook
+function is called for Unix stream connections.  It checks the
+<constant>connectto</constant> permission between the client socket
+and the listening socket.  It also sets the peer SID fields in each of
+the peer sockets' security structures for later use by
+<function>selinux_socket_getpeersec</function>.  The
+<function>selinux_socket_unix_may_send</function> hook function is
+called for Unix datagram communications.  It checks the
+<constant>sendto</constant> permission between the sending socket and
+the receiving socket.  These permission checks are summarized in <xref
+linkend="DomaincheckTable">.
+<table id="DomaincheckTable" frame="all">
+<title>Unix Domain Permission Checks</title>
+<tgroup cols="4" align="left">
+<colspec colwidth="40*">
+<colspec colwidth="20*">
+<colspec colwidth="20*">
+<colspec colwidth="20*">
+<thead>
+<row>
+    <entry>Hook</entry>
+    <entry>Source</entry>
+    <entry>Target</entry>
+    <entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+	<entry>unix_stream_connect</entry>
+	<entry>ClientSocket</entry>
+	<entry>ServerSocket</entry>
+	<entry>connectto</entry>
+</row>
+<row>
+	<entry>unix_may_send</entry>
+	<entry>SendingSocket</entry>
+	<entry>ReceivingSocket</entry>
+	<entry>sendto</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</sect3>
+
+</sect2>
+
+</sect1>

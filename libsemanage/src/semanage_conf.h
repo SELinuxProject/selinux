@@ -37,11 +37,11 @@ typedef struct semanage_conf {
 	int expand_check;
 	int save_previous;
 	int save_linked;
-	int disable_genhomedircon;
 	int handle_unknown;
 	mode_t file_mode;
 	struct external_prog *load_policy;
 	struct external_prog *setfiles;
+	struct external_prog *genhomedircon;
 	struct external_prog *mod_prog, *linked_prog, *kernel_prog;
 } semanage_conf_t;
 

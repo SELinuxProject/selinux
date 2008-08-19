@@ -829,10 +829,6 @@ int cond_read_list(policydb_t * p, cond_list_t ** list, void *fp)
 
 	len = le32_to_cpu(buf[0]);
 
-	rc = avtab_alloc(&p->te_cond_avtab, p->te_avtab.nel);
-	if (rc)
-		goto err;
-
 	for (i = 0; i < len; i++) {
 		node = malloc(sizeof(cond_node_t));
 		if (!node)

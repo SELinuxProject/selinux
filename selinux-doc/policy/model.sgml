@@ -1,0 +1,184 @@
+<sect1 id="model"><title>Security Model</title>
+
+<para>
+The example security server implements a security model that is a
+combination of a Type Enforcement (TE) model, a Role-Based Access
+Control (RBAC) model, and optionally a Multi-Level Security (MLS)
+model.  The TE model provides fine-grained control over processes and
+objects in the system, and the RBAC model provides a higher level of
+abstraction to simplify user management.  The optional MLS model is
+not (yet) documented in this report.  This section describes the TE
+and RBAC models, and then discusses the concept of user identity in
+SELinux.
+</para>
+
+<sect2 id="temodel"><title>TE Model</title>
+
+<para>
+A traditional TE model binds a security attribute called a domain to
+each process, and it binds a security attribute called a type to each
+object.  The traditional TE model treats all processes in the same
+domain identically and it treats all objects that have the same type
+identically.  Hence, domains and types can be viewed as security
+equivalence classes.  A pair of access matrices specify how domains
+can access types and how domains can interact with other domains. Each
+user is authorized to operate in certain domains.
+</para>
+
+<para>
+A TE model supports strong controls over program execution and domain
+transitions.  A program, like any other object, is assigned a type,
+and the TE access matrix specifies what types can be executed by each
+domain.  Furthermore, the TE access matrix specifies what types can be
+executed to initially enter a domain.  Hence, a domain can be
+associated with a particular entrypoint program and optionally with
+particular helper programs and/or shared libraries.  This
+characteristic of TE is useful in associating permissions with a
+particular set of code based on its function and trustworthiness and
+in protecting against the execution of malicious code.
+</para>
+
+<para>
+The SELinux TE model differs from the traditional TE model in that it
+uses a single type attribute in the security context for both
+processes and objects.  A domain is simply a type that can be
+associated with a process.  A single type can be used both as the
+domain of a process and as the type of a related object, e.g. the
+/proc/PID entries for a process.  A single access matrix specifies how
+types can access or interact with other types in terms of the
+permissions defined by the Flask architecture.  Although the example
+TE configuration often uses the term domain when referring to the type
+of a process, the SELinux TE model does not internally distinguish
+domains from types.
+</para>
+
+<para>
+The SELinux TE model also differs from the traditional TE model in
+that it uses the security class information provided by the Flask
+architecture.  A SELinux TE transition or access decision is based on a
+type pair and on the security class.  Hence, the policy can treat
+objects that have the same type but different security classes
+differently.  For example, the policy can distinguish a TCP socket
+created by a domain from a raw IP socket created by the same domain.
+</para>
+
+<para>
+A third difference between the SELinux TE model and the traditional TE
+model is that the SELinux TE model does not directly associate users
+with domains.  Instead, SELinux uses the RBAC model to provide an
+additional layer of abstraction between users and domains.  This
+approach is discussed further in the next subsection.
+</para>
+
+<para>
+A TE transition rule for a process specifies the new domain based on the
+current domain of the process and the type of the program. A TE
+transition rule for an object specifies the new type based on the domain
+of the creating process, the type of the related object, and the
+object security class.  If no matching rule is found in the TE
+configuration, then the SELinux TE model provides a default behavior
+appropriate for the class of object.  For a process, the domain of the
+process is left unchanged across the program execution.  For an
+object, the type of the related object (e.g. the parent directory for
+files) is used for the new object.
+</para>
+
+<para>
+A TE access vector rule specifies an access vector based on the type
+pair and object security class.  Rules can be specified for each kind
+of access vector, including the allowed, auditallow, and auditdeny
+vectors.  These access vector rules define the TE access matrix.  If
+no matching rule is found in the TE configuration, then the SELinux TE
+model defines a default behavior for each kind of access vector.
+Permissions are denied unless there is an explicit allow rule.  No
+permissions are audited when granted unless there is an explicit
+auditallow rule.  Permissions are always audited when denied unless
+there is an explicit dontaudit rule.
+</para>
+
+</sect2>
+
+<sect2 id="rbacmodel"><title>RBAC Model</title>
+<para>
+A traditional RBAC model authorizes users to act in certain roles, and
+assigns a set of permissions to each role.  The SELinux RBAC model
+authorizes each user for a set of roles, and authorizes each role for
+a set of TE domains.  A role dominance relationship can optionally be
+specified in the RBAC configuration to define a hierarchy among roles.
+The assignment of permissions is primarily deferred to the TE
+configuration.  This approach combines the ease of management provided
+by the RBAC model with the fine-grained protections provided by the TE
+model.
+</para>
+
+<para>
+The SELinux RBAC model maintains a role attribute in the security
+context of each process.  For objects, the role attribute is typically
+set to a generic <constant>object_r</constant> role and is unused.
+Role transitions for processes are controlled through a combination of
+the RBAC and TE models.  The RBAC configuration specifies authorized
+transitions between roles based on the pair of roles.  However, it is
+also desirable to limit role transitions to certain programs to ensure
+that malicious code cannot cause such transitions.  Hence, role
+transitions are typically limited to certain TE domains in the policy
+configuration.  
+</para>
+
+</sect2>
+
+<sect2 id="identitymodel"><title>User Identity Model</title>
+
+<para>
+The Linux user identity attributes are unsuitable for use by SELinux.
+Linux uids are often changed simply to express a change in permissions
+or privileges as opposed to a change in the actual user, posing
+problems for user accountability.  Linux uids can be changed at any
+time via the set*uid calls, providing no control over the inheritance
+of state or the initialization of the process in the new identity.
+Linux uids can be arbitrarily changed by superuser processes.  
+</para>
+
+<para>
+Rather than imposing new restrictions on the Linux user identity
+attributes, SELinux maintains a user identity attribute in the
+security context that is independent of the Linux user identity
+attributes.  By using a separate user identity attribute, the SELinux
+mandatory access controls remain completely orthogonal to the existing
+Linux access controls.  SELinux can enforce rigorous controls over
+changes to its user identity attribute without affecting compatibility
+with Linux uid semantics.
+</para>
+
+<para>
+The policy configuration limits the ability to change the SELinux user
+identity attribute to certain TE domains.  These domains are
+associated with certain programs, such as login, crond and sshd, that
+have been modified to call new library functions to set the SELinux
+user identity appropriately.  Hence, user login sessions and cron jobs
+are initially associated with the appropriate SELinux user identity,
+but subsequent changes in the Linux uid may not be reflected in the
+SELinux user identity.  In some cases, this is desirable in order to
+provide user accountability or to prevent security violations.  In
+some distributions that have integrated SELinux support, the su
+program also changes the SELinux user identity to the new user
+identity, while other distributions leave the SELinux user identity
+unchanged by su.
+</para>
+
+<para>
+Since the SELinux user identity is independent of the Linux uid, it is
+possible to maintain separate user identity spaces for SELinux and
+Linux, with an appropriate mapping performed by the programs that set
+the SELinux user identity.  For example, rather than maintaining a
+separate entry for each Linux user in the SELinux policy, it may be
+desirable to map most Linux users to a single SELinux user that is
+unprivileged.  This approach is suitable when it is not necessary to
+separate these users via the SELinux policy.
+</para>
+
+</sect2>
+
+
+
+</sect1>
+ 

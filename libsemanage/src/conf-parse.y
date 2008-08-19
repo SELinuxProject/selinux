@@ -57,7 +57,7 @@ static int parse_errors;
 }
 
 %token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED
-%token LOAD_POLICY_START SETFILES_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN
+%token LOAD_POLICY_START SETFILES_START GENHOMEDIRCON_START HANDLE_UNKNOWN
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
 %token PROG_PATH PROG_ARGS
 %token <s> ARG
@@ -80,7 +80,6 @@ single_opt:     module_store
         |       file_mode
         |       save_previous
         |       save_linked
-        |       disable_genhomedircon
         |       handle_unknown
         ;
 
@@ -139,17 +138,6 @@ save_linked:    SAVE_LINKED '=' ARG {
                 }
         ;
 
-disable_genhomedircon: DISABLE_GENHOMEDIRCON '=' ARG {
-	if (strcasecmp($3, "false") == 0) {
-		current_conf->disable_genhomedircon = 0;
-	} else if (strcasecmp($3, "true") == 0) {
-		current_conf->disable_genhomedircon = 1;
-	} else {
-		yyerror("disable-genhomedircon can only be 'true' or 'false'");
-	}
-	free($3);
- }
-
 handle_unknown: HANDLE_UNKNOWN '=' ARG {
 	if (strcasecmp($3, "deny") == 0) {
 		current_conf->handle_unknown = SEPOL_DENY_UNKNOWN;
@@ -185,6 +173,14 @@ command_start:
                         semanage_conf_external_prog_destroy(current_conf->setfiles);
                         current_conf->setfiles = NULL;
                         if (new_external_prog(&current_conf->setfiles) == -1) {
+                                parse_errors++;
+                                YYABORT;
+                        }
+                }
+        |       GENHOMEDIRCON_START {
+                        semanage_conf_external_prog_destroy(current_conf->genhomedircon);
+                        current_conf->genhomedircon = NULL;
+                        if (new_external_prog(&current_conf->genhomedircon) == -1) {
                                 parse_errors++;
                                 YYABORT;
                         }
@@ -257,6 +253,16 @@ static int semanage_conf_init(semanage_conf_t * conf)
 		return -1;
 	}
 
+	if ((conf->genhomedircon =
+	     calloc(1, sizeof(*(current_conf->genhomedircon)))) == NULL) {
+		return -1;
+	}
+	if ((conf->genhomedircon->path =
+	     strdup("/usr/sbin/genhomedircon")) == NULL
+	    || (conf->genhomedircon->args = strdup("-t $@")) == NULL) {
+		return -1;
+	}
+
 	return 0;
 }
 
@@ -311,6 +317,7 @@ void semanage_conf_destroy(semanage_conf_t * conf)
 		free(conf->store_path);
 		semanage_conf_external_prog_destroy(conf->load_policy);
 		semanage_conf_external_prog_destroy(conf->setfiles);
+		semanage_conf_external_prog_destroy(conf->genhomedircon);
 		semanage_conf_external_prog_destroy(conf->mod_prog);
 		semanage_conf_external_prog_destroy(conf->linked_prog);
 		semanage_conf_external_prog_destroy(conf->kernel_prog);

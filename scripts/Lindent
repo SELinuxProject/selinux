@@ -1,8 +1,2 @@
 #!/bin/sh
-
-perl -e 'undef $/;' -pi \
-     -e 's|#ifdef __cplusplus\n(.*?)\n#endif|//__CPP \1|g' "$@"
-
 indent -npro -kr -i8 -ts8 -sob -l80 -ss -ncs "$@"
-
-perl -pi -e 's|^//__CPP (.*)$|#ifdef __cplusplus\n\1\n#endif|' "$@"

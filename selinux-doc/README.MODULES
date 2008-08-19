@@ -1,0 +1,293 @@
+1. Overview
+
+The SELinux module framework provides a way for distributions,
+administrators and policy developers to dynamically deploy, update and
+modify SELinux policies in a secure and convenient manner without the
+need for the full policy source.
+
+2. Building a module
+
+An SELinux loadable module is a loadable format similar to the current
+kernel policy format, however it includes extra information from the
+source that is not present in the kernel policy. This allows us to
+build a module independantly of the rest of the policy and distribute
+the loadable to be linked in to the policy at the destination. To
+build a module use the checkmodule command:
+	# Build a module for a non-MLS/MCS system (i.e. pre-FC5) 
+	checkmodule -m syslogd.te -o syslogd.mod
+	# Build a module for a MLS/MCS system (FC5)
+	checkmodule -M -m syslogd.te -o syslogd.mod
+
+This will build a loadable module from the syslog module. Note that
+the syslog.te file must already be preprocessed by m4 if it contains
+macros.
+
+This syslog.mod contains the symbolic policy from syslog.te. For
+comprehensiveness it is also appropriate to add the file contexts for
+that particular module to it. To do this use the semodule_package
+command:
+	semodule_package -o syslogd.pp -m syslogd.mod -f syslogd.fc
+
+where syslogd.pp is the new policy package we can now install into the
+system policy, syslogd.mod is the module we just made with checkmodule
+and syslog.fc is the file contexts file that specifies labels for
+syslog related files.
+
+3. Adding a module to your system
+
+After building a policy.conf from your current policy you can
+use that as your base module. First we'll build it:
+	checkmodule [-M] policy.conf -o base.mod
+	semodule_package -o base.pp -m base.mod -f file_contexts/file_contexts
+
+Now that we have a base policy package we'll add it:
+	semodule -b base.pp
+
+Once you have a base module installed you can install a module:
+	semodule -i syslogd.pp
+
+So your system policy should now be loaded with only the base policy
+and syslogd, you can verify it with the semodule command:
+	semodule -l
+
+You should see the syslogd module installed at this point.
+
+4. Writing a policy module
+
+A base module is syntactically identical to a current policy so no
+changes will be necessary for it. The purpose of the base policy is to
+provide global parts of the policy such as kernel object class and
+permissions, attributes, assertions, genfs and net contexts.
+
+An applications policy module has new syntax and language features
+which will be discussed now.
+
+Every module will begin with an identifier declaring its name and a
+version:
+module syslogd 1.0;
+
+Next each module should have some number of required and optional
+symbols. This means that any type, attribute, role, user, boolean or
+object class you use in the module that is not declared within that
+module must be in a require or optional block:
+
+require { attribute domain; }
+
+The above statement specifies that this module requires the domain
+attribute; this attribute must be located somewhere else in the
+policy, in this case in the base policy. If this attribute is not
+present elsewhere this module will not be able to be added to the
+system policy.
+
+optional { 
+	require { type klogd_t; } 
+	allow klogd_t domain : process signal; 
+}
+
+In the above optional block, if the type klogd_t is declared in the
+base policy or another module then include the allow rule in the
+final policy.  Required identifiers may only be used within their
+optional block.
+
+5. Configuration file
+
+To change the default behavior of libsemanage you can edit 
+/etc/selinux/semanage.conf.
+
+First you can specify how semodule (via libsemanage) will interact
+with the module store:
+	module-store = direct
+This statement indicates that libsemanage will write directly to the
+store on the filesystem.  Other options to be supported in the future
+include a Unix domain socket path for communicating with a local
+policy management daemon, and a hostname:port pair for communicating
+with a remote policy management daemon.
+
+Next you can set the kernel policy version you wish to use. If you do
+not specify one it uses the latest that libsepol understands:
+	policy-version = 20
+This is only needed when there is a mismatch between the latest policy
+version supported by the kernel and the latest policy version
+supported by libsepol.
+
+Next you can specify several helper applications and their arguments
+used by semodule (via libsemanage).  These include helper applications
+for reloading the policy after adding or removing modules, checking
+file context validity against the policy, and verifying the policy at
+various stages:
+	[load_policy]
+	path = /usr/sbin/load_policy
+	args = -b $@
+	[end]
+
+	[setfiles]
+	path = /usr/sbin/setfiles
+	args = -q -c $@ $<
+	[end]
+
+	[verify module]
+	path = /path/to/modulepolicyverifier
+	args = $@ $<
+	[end]
+
+	[verify linked]
+	path = /path/to/linkedpolicyverifier
+	args = $@
+	[end]
+
+	[verify kernel]
+	path = /path/to/kernelpolicyverifier
+	args = $@
+	[end]
+
+
+6. Example syslogd policy
+
+#DESC Syslogd - System log daemon
+#
+# Authors:  Stephen Smalley  and Timothy Fraser  
+# X-Debian-Packages: sysklogd syslog-ng
+# Edited: Modularized by Joshua Brindle 
+#
+
+#################################
+#
+# Rules for the syslogd_t domain.
+#
+# syslogd_t is the domain of syslogd.
+# syslogd_exec_t is the type of the syslogd executable.
+# devlog_t is the type of the Unix domain socket created 
+# by syslogd.
+#
+module syslog 1.2;
+
+require {
+# in this policy all the module requirements are in one place but they can be spread throughout
+# the policy, such as when a macro declares its own dependancies.
+
+	bool allow_ypbind;
+	attribute domain, privmem, privlog, file_type, daemon;
+	attribute sysadmfile, exec_type, pidfile, dev_fs, polymember;
+	attribute tmpfile, port_type, reserved_port_type, unpriv_userdomain;
+	attribute privfd, fs_type, netif_type, node_type, ttyfile;
+	type init_t, root_t, usr_t, lib_t, etc_t, ld_so_t, texrel_shlib_t, autofs_t;
+	type shlib_t, ld_so_cache_t, device_t, null_device_t, proc_t, console_device_t;
+	type tconsole_device_t, sysfs_t, sysctl_t, sysctl_kernel_t, initrc_t;
+	type initrc_devpts_t, var_t, var_run_t, devtty_t, sysadm_home_dir_t;
+	type removable_t, locale_t, mount_t, net_conf_t, var_yp_t, var_log_t;
+	type reserved_port_t, port_t, tmp_t, initrc_var_run_t, proc_kmsg_t;
+	type kernel_t, file_t, tty_device_t, tmpfs_t, devpts_t, unlabeled_t, netif_t;
+	class fd { use };
+	class process { siginh noatsecure transition rlimitinh sigchld sigkill sigstop signull signal fork };
+	class dir { rmdir create rename setattr link reparent unlink write 
+		    add_name remove_name read getattr lock search ioctl };
+	class lnk_file { setattr unlink rename create link read getattr lock ioctl };
+	class file { entrypoint execute create ioctl read getattr lock write setattr append link unlink rename execmod };
+	class chr_file { ioctl read getattr lock write append };
+	class filesystem getattr;
+	class udp_socket { name_bind create ioctl read getattr write setattr append bind connect 
+			   getopt setopt shutdown send_msg recv_msg node_bind };
+	class tcp_socket { name_bind node_bind create ioctl read getattr write setattr append 
+			   bind connect getopt setopt shutdown listen accept send_msg recv_msg };
+	class netif { tcp_recv udp_recv rawip_recv tcp_send udp_send rawip_send };
+	class node { tcp_recv tcp_send udp_send rawip_send udp_recv rawip_recv };
+	class sock_file { create ioctl read getattr lock write setattr append link unlink rename };
+	class fifo_file { create ioctl read getattr lock write setattr append link unlink rename };
+	class capability { dac_override net_bind_service sys_resource sys_tty_config };
+	class unix_dgram_socket { sendto create ioctl read getattr write setattr append bind connect getopt 
+				  setopt shutdown name_bind };
+	class unix_stream_socket { name_bind create ioctl read getattr write setattr append bind connect getopt 
+				   setopt shutdown listen accept sendto connectto };
+	class system { syslog_mod syslog_console };
+}
+
+daemon_domain(syslogd, `, privmem')
+
+# can_network is for the UDP socket
+can_network(syslogd_t)
+can_ypbind(syslogd_t)
+
+r_dir_file(syslogd_t, sysfs_t)
+
+type devlog_t, file_type, sysadmfile, dev_fs;
+
+# if something can log to syslog they should be able to log to the console
+allow privlog console_device_t:chr_file { ioctl read write getattr };
+
+tmp_domain(syslogd)
+
+# read files in /etc
+allow syslogd_t etc_t:file r_file_perms;
+
+# Use capabilities.
+allow syslogd_t self:capability { dac_override net_bind_service sys_resource sys_tty_config };
+
+# Modify/create log files.
+create_append_log_file(syslogd_t, var_log_t)
+
+# Create and bind to /dev/log or /var/run/log.
+file_type_auto_trans(syslogd_t, { device_t var_run_t }, devlog_t, sock_file)
+allow syslogd_t self:unix_dgram_socket create_socket_perms;
+allow syslogd_t self:unix_dgram_socket { sendto };
+allow syslogd_t self:unix_stream_socket create_stream_socket_perms;
+allow syslogd_t self:fifo_file rw_file_perms;
+allow syslogd_t devlog_t:unix_stream_socket name_bind;
+allow syslogd_t devlog_t:unix_dgram_socket name_bind;
+
+# Domains with the privlog attribute may log to syslogd.
+allow privlog devlog_t:sock_file rw_file_perms;
+can_unix_send(privlog,syslogd_t)
+can_unix_connect(privlog,syslogd_t)
+# allow /dev/log to be a link elsewhere for chroot setup
+allow privlog devlog_t:lnk_file read;
+
+optional {
+	require {
+		type system_crond_t crond_log_t;
+	}
+	# Write to the cron log.
+	allow syslogd_t crond_log_t:file rw_file_perms;
+	# for daemon re-start
+	allow system_crond_t syslogd_t:lnk_file read;
+}
+
+optional {
+	require {
+		type logrotate_t;
+	}
+	allow logrotate_t syslogd_exec_t:file r_file_perms;
+}
+
+# for sending messages to logged in users
+allow syslogd_t initrc_var_run_t:file { read lock };
+dontaudit syslogd_t initrc_var_run_t:file write;
+allow syslogd_t ttyfile:chr_file { getattr write };
+
+optional {
+	require {
+		type klogd_t;
+	}
+	# Allow access to /proc/kmsg for syslog-ng
+	allow syslogd_t proc_t:dir search;
+	allow syslogd_t proc_kmsg_t:file { getattr read };
+	allow syslogd_t kernel_t:system { syslog_mod syslog_console };
+}
+
+#
+# Special case to handle crashes
+#
+allow syslogd_t { device_t file_t }:sock_file unlink;
+
+# Allow syslog to a terminal
+allow syslogd_t tty_device_t:chr_file { getattr write ioctl append };
+
+# Allow name_bind for remote logging
+type syslogd_port_t, port_type, reserved_port_type;
+allow syslogd_t syslogd_port_t:udp_socket name_bind;
+#
+# /initrd is not umounted before minilog starts
+#
+dontaudit syslogd_t file_t:dir search;
+allow syslogd_t { tmpfs_t devpts_t }:dir { search };
+dontaudit syslogd_t unlabeled_t:file read;
+dontaudit syslogd_t devpts_t:chr_file getattr;

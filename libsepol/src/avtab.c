@@ -1,13 +1,7 @@
 
 /* Author : Stephen Smalley, <sds@epoch.ncsc.mil> */
 
-/*
- * Updated: Yuichi Nakamura <ynakam@hitachisoft.jp>
- * 	Tuned number of hash slots for avtab to reduce memory usage
- */
-
-/* Updated: Frank Mayer <mayerf@tresys.com>
- *          and Karl MacMillan <kmacmillan@mentalrootkit.com>
+/* Updated: Frank Mayer <mayerf@tresys.com> and Karl MacMillan <kmacmillan@tresys.com>
  *
  * 	Added conditional policy language extensions
  *
@@ -15,10 +9,8 @@
  *
  *      Code cleanup
  *
- * Updated: Karl MacMillan <kmacmillan@mentalrootkit.com>
- *
  * Copyright (C) 2003 Tresys Technology, LLC
- * Copyright (C) 2003,2007 Red Hat, Inc.
+ * Copyright (C) 2003 Red Hat, Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -44,16 +36,15 @@
 #include <stdlib.h>
 #include <sepol/policydb/avtab.h>
 #include <sepol/policydb/policydb.h>
-#include <sepol/errcodes.h>
 
 #include "debug.h"
 #include "private.h"
 
-static inline int avtab_hash(struct avtab_key *keyp, uint16_t mask)
-{
-	return ((keyp->target_class + (keyp->target_type << 2) +
-		 (keyp->source_type << 9)) & mask);
-}
+#define AVTAB_HASH(keyp) \
+((keyp->target_class + \
+ (keyp->target_type << 2) + \
+ (keyp->source_type << 9)) & \
+ AVTAB_HASH_MASK)
 
 static avtab_ptr_t
 avtab_insert_node(avtab_t * h, int hvalue, avtab_ptr_t prev, avtab_key_t * key,
@@ -85,17 +76,17 @@ int avtab_insert(avtab_t * h, avtab_key_t * key, avtab_datum_t * datum)
 	uint16_t specified =
 	    key->specified & ~(AVTAB_ENABLED | AVTAB_ENABLED_OLD);
 
-	if (!h || !h->htable)
-		return SEPOL_ENOMEM;
+	if (!h)
+		return -ENOMEM;
 
-	hvalue = avtab_hash(key, h->mask);
+	hvalue = AVTAB_HASH(key);
 	for (prev = NULL, cur = h->htable[hvalue];
 	     cur; prev = cur, cur = cur->next) {
 		if (key->source_type == cur->key.source_type &&
 		    key->target_type == cur->key.target_type &&
 		    key->target_class == cur->key.target_class &&
 		    (specified & cur->key.specified))
-			return SEPOL_EEXIST;
+			return -EEXIST;
 		if (key->source_type < cur->key.source_type)
 			break;
 		if (key->source_type == cur->key.source_type &&
@@ -109,7 +100,7 @@ int avtab_insert(avtab_t * h, avtab_key_t * key, avtab_datum_t * datum)
 
 	newnode = avtab_insert_node(h, hvalue, prev, key, datum);
 	if (!newnode)
-		return SEPOL_ENOMEM;
+		return -ENOMEM;
 
 	return 0;
 }
@@ -126,9 +117,9 @@ avtab_insert_nonunique(avtab_t * h, avtab_key_t * key, avtab_datum_t * datum)
 	uint16_t specified =
 	    key->specified & ~(AVTAB_ENABLED | AVTAB_ENABLED_OLD);
 
-	if (!h || !h->htable)
+	if (!h)
 		return NULL;
-	hvalue = avtab_hash(key, h->mask);
+	hvalue = AVTAB_HASH(key);
 	for (prev = NULL, cur = h->htable[hvalue];
 	     cur; prev = cur, cur = cur->next) {
 		if (key->source_type == cur->key.source_type &&
@@ -158,10 +149,10 @@ avtab_datum_t *avtab_search(avtab_t * h, avtab_key_t * key)
 	uint16_t specified =
 	    key->specified & ~(AVTAB_ENABLED | AVTAB_ENABLED_OLD);
 
-	if (!h || !h->htable)
+	if (!h)
 		return NULL;
 
-	hvalue = avtab_hash(key, h->mask);
+	hvalue = AVTAB_HASH(key);
 	for (cur = h->htable[hvalue]; cur; cur = cur->next) {
 		if (key->source_type == cur->key.source_type &&
 		    key->target_type == cur->key.target_type &&
@@ -193,10 +184,10 @@ avtab_ptr_t avtab_search_node(avtab_t * h, avtab_key_t * key)
 	uint16_t specified =
 	    key->specified & ~(AVTAB_ENABLED | AVTAB_ENABLED_OLD);
 
-	if (!h || !h->htable)
+	if (!h)
 		return NULL;
 
-	hvalue = avtab_hash(key, h->mask);
+	hvalue = AVTAB_HASH(key);
 	for (cur = h->htable[hvalue]; cur; cur = cur->next) {
 		if (key->source_type == cur->key.source_type &&
 		    key->target_type == cur->key.target_type &&
@@ -247,13 +238,13 @@ avtab_ptr_t avtab_search_node_next(avtab_ptr_t node, int specified)
 
 void avtab_destroy(avtab_t * h)
 {
-	unsigned int i;
+	int i;
 	avtab_ptr_t cur, temp;
 
 	if (!h || !h->htable)
 		return;
 
-	for (i = 0; i < h->nslot; i++) {
+	for (i = 0; i < AVTAB_SIZE; i++) {
 		cur = h->htable[i];
 		while (cur != NULL) {
 			temp = cur;
@@ -264,22 +255,19 @@ void avtab_destroy(avtab_t * h)
 	}
 	free(h->htable);
 	h->htable = NULL;
-	h->nslot = 0;
-	h->mask = 0;
 }
 
 int avtab_map(avtab_t * h,
 	      int (*apply) (avtab_key_t * k,
 			    avtab_datum_t * d, void *args), void *args)
 {
-	unsigned int i;
-	int ret;
+	int i, ret;
 	avtab_ptr_t cur;
 
 	if (!h)
 		return 0;
 
-	for (i = 0; i < h->nslot; i++) {
+	for (i = 0; i < AVTAB_SIZE; i++) {
 		cur = h->htable[i];
 		while (cur != NULL) {
 			ret = apply(&cur->key, &cur->datum, args);
@@ -293,50 +281,25 @@ int avtab_map(avtab_t * h,
 
 int avtab_init(avtab_t * h)
 {
-	h->htable = NULL;
-	h->nel = 0;
-	return 0;
-}
+	int i;
 
-int avtab_alloc(avtab_t *h, uint32_t nrules)
-{
-	uint16_t mask = 0;
-	uint32_t shift = 0;
-	uint32_t work = nrules;
-	uint32_t nslot = 0;
-
-	if (nrules == 0)
-		goto out;
-
-	while (work) {
-		work  = work >> 1;
-		shift++;
-	}
-	if (shift > 2)
-		shift = shift - 2;
-	nslot = 1 << shift;
-	if (nslot > MAX_AVTAB_SIZE)
-		nslot = MAX_AVTAB_SIZE;
-	mask = nslot - 1;
-
-	h->htable = calloc(nslot, sizeof(avtab_ptr_t));
+	h->htable = malloc(sizeof(avtab_ptr_t) * AVTAB_SIZE);
 	if (!h->htable)
 		return -1;
-out:
+	for (i = 0; i < AVTAB_SIZE; i++)
+		h->htable[i] = (avtab_ptr_t) NULL;
 	h->nel = 0;
-	h->nslot = nslot;
-	h->mask = mask;
 	return 0;
 }
 
 void avtab_hash_eval(avtab_t * h, char *tag)
 {
-	unsigned int i, chain_len, slots_used, max_chain_len;
+	int i, chain_len, slots_used, max_chain_len;
 	avtab_ptr_t cur;
 
 	slots_used = 0;
 	max_chain_len = 0;
-	for (i = 0; i < h->nslot; i++) {
+	for (i = 0; i < AVTAB_SIZE; i++) {
 		cur = h->htable[i];
 		if (cur) {
 			slots_used++;
@@ -353,7 +316,7 @@ void avtab_hash_eval(avtab_t * h, char *tag)
 
 	printf
 	    ("%s:  %d entries and %d/%d buckets used, longest chain length %d\n",
-	     tag, h->nel, slots_used, h->nslot, max_chain_len);
+	     tag, h->nel, slots_used, AVTAB_SIZE, max_chain_len);
 }
 
 /* Ordering of datums in the original avtab format in the policy file. */
@@ -504,19 +467,12 @@ int avtab_read(avtab_t * a, struct policy_file *fp, uint32_t vers)
 		ERR(fp->handle, "table is empty");
 		goto bad;
 	}
-
-	rc = avtab_alloc(a, nel);
-	if (rc) {
-		ERR(fp->handle, "out of memory");
-		goto bad;
-	}
-
 	for (i = 0; i < nel; i++) {
 		rc = avtab_read_item(fp, vers, a, avtab_insertf, NULL);
 		if (rc) {
-			if (rc == SEPOL_ENOMEM)
+			if (rc == -ENOMEM)
 				ERR(fp->handle, "out of memory");
-			if (rc == SEPOL_EEXIST)
+			if (rc == -EEXIST)
 				ERR(fp->handle, "duplicate entry");
 			ERR(fp->handle, "failed on entry %d of %u", i, nel);
 			goto bad;

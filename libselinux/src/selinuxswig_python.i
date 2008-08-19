@@ -16,20 +16,6 @@
 	$result = SWIG_Python_AppendOutput($result, list);
 }
 
-/* return a sid along with the result */
-%typemap(argout) (security_id_t * sid) {
-	if (*$1) {
-                %append_output(SWIG_NewPointerObj(*$1, $descriptor(security_id_t), 0));
-	} else {
-		Py_INCREF(Py_None);
-		%append_output(Py_None);
-	}
-}
-
-%typemap(in,numinputs=0) security_id_t *(security_id_t temp) {
-  $1 = &temp;
-}
-
 /* Makes security_compute_user() return a Python list of contexts */
 %typemap(argout) (security_context_t **con) {
 	PyObject* plist;

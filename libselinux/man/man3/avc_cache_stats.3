@@ -1,12 +1,12 @@
 .\" Hey Emacs! This file is -*- nroff -*- source.
 .\"
-.\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2004
-.TH "avc_cache_stats" "3" "27 May 2004" "" "SELinux API documentation"
+.\" Author: Eamon Walsh (ewalsh@epoch.ncsc.mil) 2004
+.TH "avc_cache_stats" "3" "27 May 2004" "" "SE Linux API documentation"
 .SH "NAME"
 avc_cache_stats, avc_av_stats, avc_sid_stats \- obtain userspace SELinux AVC statistics.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
-
+.br
 .B #include <selinux/avc.h>
 .sp
 .BI "void avc_av_stats(void);"
@@ -89,7 +89,7 @@ When a policy change notification is received, a call to
 is made before the cache is flushed.
 
 .SH "AUTHOR"
-Eamon Walsh <ewalsh@tycho.nsa.gov>
+Eamon Walsh <ewalsh@epoch.ncsc.mil>
 
 .SH "SEE ALSO"
 .BR avc_init (3),

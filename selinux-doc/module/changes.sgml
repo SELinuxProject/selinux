@@ -1,0 +1,573 @@
+<sect1 id="changes"><title>Changes from the Original SELinux Kernel Patch</title>
+
+<para>
+This section summarizes the changes between the original SELinux
+kernel patch and the LSM-based SELinux security module.  At a high
+level, the LSM-based SELinux security module provides equivalent
+security functionality to the original SELinux kernel patch.  However,
+there have been some changes to the specific controls, partly driven
+by design constraints imposed by LSM and partly based on further
+review of the original SELinux controls.  There have also been
+significant changes in the underlying implementation, likewise partly
+driven by differences in LSM and partly based on a review of the
+original SELinux implementation.  The following subsections summarize
+the changes, grouped by category.
+</para>
+
+<sect2><title>General Changes</title>
+<para>
+This subsection describes general changes between the original SELinux
+kernel patch and the LSM-based SELinux security module.  These changes
+include adding a new level of indirection, dynamically allocating
+security fields, stacking with the capabilities module, redesigning
+the SELinux API, and leveraging the existing Linux functions for
+checking permissions.
+</para>
+
+<sect3><title>Adding a New Level of Indirection</title>
+<para>
+The original SELinux kernel patch provided clean separation between
+the policy enforcement code and the policy decision-making code by
+using the Flask security architecture and interfaces.  The policy
+enforcement code was directly inserted into the kernel code at
+appropriate points, and the policy decision-making code was
+encapsulated in the security server, with a well-defined interface
+between the two components.  Similarly, policy-independent data types
+for security information were directly inserted into kernel data
+structures, and only the security server could interpret these data
+types.  This level of separation permitted many different kinds of
+nondiscretionary access control policies to be implemented in the
+security server without any changes to the policy enforcement code.
+</para>
+
+<para>
+The LSM kernel patch inserts calls to hook functions on kernel objects
+into the kernel code at appropriate points, and it inserts
+<type>void*</type> security fields into the kernel data structures for
+kernel objects.  In the LSM-based SELinux security module, the policy
+enforcement code is implemented in the hook functions, and the
+policy-independent data types are stored using the security fields in
+the kernel data structures.  Internally, the SELinux code continues to
+use the Flask architecture and interfaces, and the security server
+remains as a separate component of the module.  Hence, LSM introduces
+an additional level of indirection for the SELinux code and data.
+The internal architecture of the SELinux security module is discussed
+further in <xref linkend="arch">. 
+</para>
+</sect3>
+
+<sect3><title>Dynamically Allocating Security Fields</title>
+<para>
+In the original SELinux kernel patch, fields for security data were
+inserted directly into the appropriate kernel objects and were
+allocated and freed with the kernel object.  Since LSM inserts only a
+single <type>void*</type> security field into each kernel object, the
+LSM-based SELinux security module must manage a dynamically allocated
+security structure for each kernel object unless it only needs to
+store a single word of security data.  The SELinux security module uses a
+dynamically-allocated security structure for the security fields
+of the kernel data structures.
+</para>
+</sect3>
+
+<sect3><title>Stacking with the Capabilities Module</title>
+<para>
+The original SELinux kernel patch added the SELinux nondiscretionary
+access controls as additional restrictions to the existing Linux
+access control logic.  This left the existing Linux logic intact and
+unchanged, including the discretionary access control logic and the
+capabilities logic.  LSM moves most of the capabilities logic into an
+optional capabilities security module and provides a dummy security
+module that implements traditional superuser logic.  Hence, the
+LSM-based SELinux security module provides support for stacking with
+either the capabilities module or the dummy module.  Since some
+existing applications (e.g. named, sendmail) expect capabilities to be
+present in Linux, it is recommended that the SELinux module always be
+stacked with the capabilities module.  The stacking support is
+discussed further in <xref linkend="stacking">.
+</para>
+</sect3>
+
+<sect3><title>Redesigning the SELinux API</title>
+<para>
+In the original SELinux kernel patch, extended system calls such as
+<function>execve_secure</function> and
+<function>stat_secure</function> were implemented by extending the
+internal kernel functions to optionally pass and process SID
+parameters.  Initially, in the LSM-based SELinux security module,
+these extended system calls were implemented using the security system
+call and by passing SID parameters to and from the hook functions via
+fields in the current task's security structure.  However, when the
+security system call was removed from LSM, the SELinux API was
+completely redesigned in order to gain acceptance into the mainline
+kernel.  This is discussed further in <xref linkend="syscalls">.
+</para>
+</sect3>
+
+<sect3 id="PermissionChanges"><title>Leveraging Linux Permission Functions</title>
+<para>
+The original SELinux kernel patch directly inserted its own permission
+checks throughout the kernel code rather than trying to leverage
+existing Linux permission functions such as
+<function>permission</function> and <function>ipcperms</function> due
+to the coarse-grained permissions supported by these functions and the
+need to perform permission checks in many locations where no Linux
+check already existed.  The one notable exception to this practice in
+the original SELinux kernel patch was the insertion of a SELinux
+permission check into the existing <function>capable</function> kernel
+function so that SELinux could perform a parallel check for the large
+number of existing calls to <function>capable</function>.
+</para>
+
+<para>
+In contrast, LSM inserts hook calls into all of the existing Linux
+permission functions in order to leverage these functions.  In some
+cases, LSM also inserts additional hook calls in specific operations
+to provide finer-grained control, but in other cases, it merely relies
+on a hook in one of the existing Linux permission functions to control
+an operation.  The LSM-based SELinux security module uses the hooks in
+the existing Linux permission functions to perform a parallel check
+for each Linux permission check.  These parallel checks for the Linux
+permission checks ensure that every Linux access control is also
+controlled by SELinux.  They also reduce the risk that future changes to
+Linux will introduce operations that are completely uncontrolled by
+SELinux.
+</para>
+<para>
+Using these hooks required defining some additional coarse-grained
+permissions for SELinux.  These permissions are discussed further in
+<xref linkend="InodePermsChanges"> and in <xref
+linkend="IpcPermsChanges">.  Whenever possible, the LSM-based
+SELinux security module leverages these hooks to provide control.  When
+SELinux requires finer-grained control, the module implements 
+these finer-grained SELinux controls using the additional LSM hooks.
+</para>
+</sect3>
+</sect2>
+
+<sect2 id="ExecPermsChanges"><title>Program Execution Changes</title>
+<para>
+This subsection describes general changes between the original SELinux
+kernel patch and the LSM-based SELinux security module related to
+program execution.  These changes include replacing the process
+<constant>execute</constant> permission with a new file
+<constant>execute_no_trans</constant> permission, and changing the 
+controls over the inheritance of state across a context-changing
+execve.  Each of these changes is described below.
+</para>
+
+<sect3><title>File <constant>execute_no_trans</constant> Permission</title>
+<para>
+In the original SELinux kernel patch, the file
+<constant>execute</constant> permission controlled the ability to
+initiate the execution of a program, while the process
+<constant>execute</constant> permission controlled the ability to
+execute code from an executable image.  The distinction was necessary
+because the SID of a task can be changed by program execution, so the
+SID of the initiator may differ from the SID of the transformed
+process.  However, the process <constant>execute</constant> permission
+was redundant with the process <constant>entrypoint</constant>
+permission when the SID of the task was changing, so it only served a
+useful purpose when the task SID was left unchanged.  Furthermore,
+since this permission was between a task SID and a program file SID,
+it properly belonged in the file class, not the process class.  
+</para>
+
+<para>
+Hence, the process <constant>execute</constant> permission was
+replaced by a new file <constant>execute_no_trans</constant>
+permission in the LSM-based SELinux security module.  Unlike the
+original process <constant>execute</constant> permission, the file
+<constant>execute_no_trans</constant> permission is only checked when
+the SID of the task would remain unchanged.  The process
+<constant>entrypoint</constant> permission was also moved into the
+file class for consistency.  The file <constant>execute</constant> and
+process <constant>transition</constant> permissions were left
+unchanged.  These checks are described further in <xref
+linkend="BprmSetSecurity">.
+</para>
+</sect3>
+
+<sect3 id="FdInheritChanges"><title>Inheritance of State</title>
+<para>
+Several changes were made to the controls over the inheritance of
+state across a context-changing execve.  These changes included
+changes to the file descriptor inheritance controls, changes to the controls
+over process tracing and state sharing, and the addition of new controls.
+</para>
+
+<para>
+The file descriptor inheritance permission checks during program
+execution were revised for the LSM-based SELinux security module.
+This is discussed in <xref linkend="FdPermsChanges">.  
+</para>
+
+<para>
+In the original SELinux kernel patch, checks for process tracing and
+sharing process state when the SID was changed were inserted into the
+<function>compute_creds</function> kernel function with the existing
+Linux tests for these conditions for setuid programs.  However, this
+function can not return an error, so SELinux merely left the task SID
+unchanged if these checks failed, just as Linux leaves the uid
+unchanged if its tests fail.  Additionally, the original SELinux
+kernel patch used a hardcoded test for process 1 to permit the kernel
+to transition to a new SID for <filename>init</filename> even though
+it was sharing state.  In the LSM-based SELinux security module, the
+ptrace and share checks were changed to also send a SIGKILL to the
+task to terminate it upon a permission failure, and a new process
+<constant>share</constant> permission was added to provide
+configurable control over process state sharing across SID
+transitions.  This is described further in <xref
+linkend="BprmApplyCreds">.
+</para>
+
+<para>
+New permission checks were implemented in the LSM-based SELinux to
+control inheritance of signal-related state and resource limits.
+These checks are also described in <xref
+linkend="BprmApplyCreds">.  Furthermore, a
+<constant>AT_SECURE</constant> flag was added to the ELF auxiliary
+table so that the SELinux module could inform glibc when to enable its
+own secure mode in order to sanitize the environment and other state
+on a context-changing exec.  This behavior is also controlled based on
+a permission check between the relevant contexts, and is described in
+<xref linkend="BprmSecureExec">.
+</para>
+
+</sect3>
+</sect2>
+
+<sect2><title>Filesystem Changes</title>
+<para>
+This subsection describes changes between the original SELinux kernel
+patch and the LSM-based SELinux security module related to the
+filesystem.  These changes include using extended attributes rather
+than the persistent label mapping for file security contexts on
+persistent filesystems, reimplementing file labeling support for
+pseudo filesystem types, leveraging the hook in the existing
+<function>permission</function> function, revising the file descriptor
+permission checks, and eliminating the pipe security class.  Each
+change is described below.
+</para>
+
+<sect3><title>Labeling of Persistent Files</title>
+<para>
+In the original SELinux kernel patch, a persistent label mapping was
+maintained in each filesystem that stored a mapping from integer
+persistent security identifiers (PSIDs) to security contexts, and a
+PSID was stored in a spare field of the on-disk ext2 inode.  Since LSM
+provides all of its file-related hooks in the VFS layer and does not
+provide any filesystem-specific hooks, the SELinux persistent label
+mapping was initially changed to maintain the inode-to-PSID mapping in
+a regular file rather than using a spare field in the ext2 on-disk
+inode.  This change allowed SELinux to support other file system types
+more easily, but had disadvantages in terms of performance and
+consistency.  Since support for extended attributes was integrated
+into the Linux 2.6 kernel, extended attribute handlers were created
+for a new security namespace, and SELinux was modified to store file
+security contexts as extended attributes.  This eliminated the need
+for the persistent label mapping.
+</para>
+</sect3>
+
+<sect3><title>Pseudo Filesystem Labeling</title>
+<para>
+In the original SELinux kernel patch, code was directly inserted into
+the procfs and devpts pseudo filesystem implementations to provide
+appropriate file labeling behaviors.  Since LSM did not provide
+filesystem-specific hooks, the LSM-based SELinux security module 
+had to reimplement this functionality using the hooks in the VFS layer.
+Subsequently, as part of the integration of SELinux into Linux 2.6,
+a LSM hook was introduced into the proc filesystem to better support 
+labeling of /proc/pid inodes, and a fake xattr handler was added to the
+devpts pseudo filesystem implementation to export pty labels to userspace.
+However, labeling of other proc inodes and the initial labeling of devpts
+inodes is still handled by the hooks called by the VFS layer.  The LSM-based
+SELinux also expanded and generalized support for pseudo filesystem labeling.
+The handling for these pseudo filesystem types is described in <xref
+linkend="InodeDoinit">.
+</para>
+</sect3>
+
+<sect3 id="InodePermsChanges"><title>Leveraging <function>permission</function></title>
+<para>
+As discussed in <xref linkend="PermissionChanges">, LSM inserts a
+hook into the existing Linux functions for permission checking,
+including the <function>permission</function> function for checking
+access to objects represented by inodes.  The LSM-based SELinux
+security module leverages this hook to perform a parallel check for
+each existing Linux inode permission check.  The use of this hook
+posed a problem for preserving the SELinux distinction between opening
+a file with append access vs. opening a file with write access,
+requiring an additional change to the Linux kernel.
+</para>
+
+<para>
+The use of this hook also posed a problem for the SELinux directory
+permissions, which partition traditional write access into separate
+permissions for adding entries (<constant>add_name</constant>),
+removing entries (<constant>remove_name</constant>), and reparenting
+the directory (<constant>reparent</constant>).  Since these
+distinctions are not possible in the
+<function>selinux_inode_permission</function> hook called by the
+<function>permission</function> kernel function, a directory
+<constant>write</constant> permission was added to SELinux.  This
+permission is checked by this hook when write access is requested, and
+the finer-grained directory permissions are checked by the additional
+hooks that are called when a directory operation is performed.  
+</para>
+
+<para>
+Hence, directory modifications require both a
+<constant>write</constant> permission and the appropriate
+finer-grained permission to the directory.  Whenever one of the
+finer-grained permissions is granted in the policy, the
+<constant>write</constant> permission should also be granted in the
+policy.  The <constant>write</constant> permission check on
+directories could be omitted, but it is present to ensure that all
+directory write accesses are controlled by SELinux.
+</para>
+</sect3>
+
+<sect3 id="FdPermsChanges"><title>File Descriptor Permissions</title>
+<para>
+In the original SELinux kernel patch, distinct file descriptor
+permissions were defined for getting the file offset or flags
+(<constant>getattr</constant>), setting the file offset or flags
+(<constant>setattr</constant>), inheriting the descriptor across an
+<function>execve</function> (<constant>inherit</constant>), and
+receiving the descriptor via socket IPC
+(<constant>receive</constant>).  These permissions were reduced to a
+single <constant>use</constant> permission in the LSM-based SELinux
+security module that is checked whenever the descriptor is inherited,
+received, or used.
+</para>
+
+<para>
+Additionally, in the original SELinux kernel patch, only the
+<constant>inherit</constant> or <constant>receive</constant>
+permissions were checked when a descriptor was inherited or received.
+The other descriptor permissions and the appropriate file permissions
+were only checked when an attempt was made to use the descriptor.  In
+the LSM-based SELinux security module, the <constant>use</constant>
+permission and the appropriate file permissions are checked whenever
+the descriptor is inherited, received, or used.  
+</para>
+
+<para>
+These changes to the SELinux file descriptor permission checks bring
+SELinux into conformity with the base Linux control model, where
+possession of a descriptor implies the right to use it in accordance
+with its mode and flags.  This reduces the risk of misuse of a
+descriptor by a process, and also reduces the risk that future changes
+to Linux will open vulnerabilities in the SELinux control model.  With
+these changes, the SELinux permission checks on calls such as
+<function>read</function> and <function>write</function> are only
+necessary to support revocation of access for relabeled files or
+policy changes.
+</para>
+</sect3>
+
+<sect3 id="PipeChanges"><title>Pipe Security Class</title>
+<para>
+In the original SELinux kernel patch, a separate security class was
+defined for pipes, although this security class merely inherited the
+common file permissions.  In the LSM-based SELinux security module,
+this class was eliminated, and the <constant>fifo_file</constant>
+security class is used for both pipes and for named FIFOs.  This
+has no impact on the ability to control pipe operations distinctly,
+since pipes are still labeled with the SID of the creating task while
+named FIFOs are labeled in the same manner as other files.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2><title>Socket IPC and Networking Changes</title>
+<para>
+This subsection describes changes between the original SELinux kernel
+patch and the LSM-based SELinux security module related to socket IPC
+and networking.  These changes include redesigning the SELinux
+network access controls, storing socket security
+information in the associated inode security field, reimplementing the
+SELinux access controls using minimally invasive hooks, changing the
+file descriptor transfer controls, omitting some of the low-level
+<function>ioctl</function> controls, and implementing the extended
+socket calls.
+</para>
+
+<sect3><title>Redesigning Network Access Controls</title>
+<para>
+As part of integrating SELinux into Linux 2.6, the network access
+controls were redesigned based on past experience and on what could be
+readily supported by the Linux 2.6 kernel, since most of the LSM
+networking hooks were rejected. This is discussed further in 
+<xref linkend="SockRcvSkb"> and <xref linkend="ip">.
+</para>
+</sect3>
+
+<sect3><title>Storing Socket Security Data</title>
+<para>
+The original SELinux kernel patch added security fields to the network
+layer <structname>sock</structname> structure for socket security
+data, and also mirrored the SID and security class of the socket in
+the <structname>inode</structname> structure associated with the
+socket.  LSM also provides a security field within the sock structure,
+but SELinux can only use this field to store peer security data for
+Unix stream connections during connection setup.  Otherwise, the
+LSM-based SELinux security module stores all socket security data in
+the security field of the associated inode once the user socket is
+established.  This is discussed further in <xref linkend="SocketSecurity"> and
+<xref linkend="ip">.
+</para>
+</sect3>
+
+<sect3><title>Minimally Invasive Hooks</title>
+<para>
+Since the original SELinux kernel patch added security fields to the
+lower-level <structname>struct sock</structname> structure, most of
+the SELinux changes were inserted directly into the specific protocol
+family implementations (e.g. the AF_INET and AF_UNIX code).  The
+original SELinux kernel patch was fairly invasive in inserting SELinux
+processing throughout the protocol family implementations, and did not
+try to leverage the existing Linux packet filtering support.  
+</para>
+
+<para>
+LSM provides a set of hooks in the abstract socket layer for
+controlling socket operations at a high level, and leverages the Linux
+NetFilter support for hooking network operations.  The LSM-based
+SELinux security module implements as many of the SELinux socket and
+network controls as possible using these socket layer hooks and
+NetFilter-based hooks.  Hence, NetFilter support should be enabled in
+the kernel configuration when using SELinux.  
+</para>
+
+<para>
+For the SELinux Unix domain IPC controls, the LSM-based SELinux
+security module leverages the hooks in the existing Linux permission
+functions but also required two additional hooks in the Unix domain
+protocol implementation due to the abstract namespace.  The SELinux
+socket access controls are described in <xref linkend="SocketAc"> and
+the SELinux network layer access controls are described in <xref
+linkend="ip">.
+</para>
+</sect3>
+
+<sect3><title>File Descriptor Transfer</title>
+<para>
+The file descriptor transfer permission checks during socket IPC
+were revised for the LSM-based SELinux security module.
+This is discussed in <xref linkend="FdPermsChanges">.
+</para>
+</sect3>
+
+<sect3><title>Omitting Low-Level <function>ioctl</function> Controls</title>
+<para>
+In the original SELinux kernel patch, a small set of controls were
+implemented in low-level <function>ioctl</function> routines to
+support fine-grained control over configuring network devices,
+accessing the kernel routing table, and accessing the kernel ARP and
+RARP tables.  During the development of LSM, the feasibility of
+providing hooks to support these controls was explored, but it was
+determined that providing hooks in every location necessary to control
+configuring network devices would be too invasive, and the other
+controls offered little benefit over the existing
+<function>capable</function> calls.  Hence, the LSM-based SELinux
+security module does not implement these controls, and control over
+these operations is handled based on the <function>capable</function>
+calls.
+</para>
+</sect3>
+
+<sect3><title>Extended Socket Calls</title>
+<para>
+In the original SELinux kernel patch, a set of extended socket calls
+were implemented.  These calls were reimplemented initially for the
+LSM-based SELinux, and an experimental labeled networking
+implementation was also contributed.  However, as part of the SELinux
+API redesign and the rejection of the LSM networking hooks, the
+extended socket calls and labeled networking do not exist in Linux
+2.6.  There is one exception: a getpeercon API has been implemented to
+support obtaining peer security contexts for Unix stream connections,
+and is available in Linux 2.6.
+<comment>Note:  The preceding statements are historical and no longer apply to modern SELinux systems, which do support labeled networking and APIs for getting peer and datagram contexts on both INET and Unix sockets.</comment>
+</para>
+</sect3>
+
+</sect2>
+
+<sect2><title>System V IPC Changes</title>
+<para>
+This subsection describes changes between the original SELinux kernel
+patch and the LSM-based SELinux security module related to System V
+IPC.  Since the System V IPC security enhancements were never ported
+from the 2.2 series to the 2.4 series prior to the transition to using
+LSM, the LSM-based SELinux security module had to adapt the
+implementation of the SELinux security enhancements to the 2.4 series.
+In addition to this adaptation, the changes include an easier solution
+for storing the IPC security data and leveraging the hook in the
+existing <function>ipcperms</function> function.
+</para>
+
+<sect3><title>Storing IPC Security Data</title>
+<para>
+In the original SELinux kernel patch for the 2.2 series, it was
+difficult to add security data to the semaphore and message queue
+structures because the kernel exported the same data structure that it
+used internally to applications.  Hence, the original SELinux kernel
+patch wrapped these data structures with private kernel data
+structures that contained both the original structure and the
+additional security data.  This required extensive changes to the IPC
+code to dereference fields in the original structure.  In the 2.4
+series, the IPC code was rewritten to use private kernel data
+structures for all of the IPC objects, and each of these structures
+included a <structname>struct kern_ipc_perm</structname> structure
+with common information.  Hence, LSM was able to add a single security
+field to this common structure and a single security field to the
+structure for individual messages.  This is discussed further in <xref
+linkend="IpcSecurity">.
+</para>
+</sect3>
+
+<sect3 id="IpcPermsChanges"><title>Leveraging <function>ipcperms</function></title>
+<para>
+As discussed in <xref linkend="PermissionChanges">, LSM inserts a
+hook into the existing Linux functions for permission checking,
+including the <function>ipcperms</function> function for checking
+access to IPC objects.  The LSM-based SELinux security module
+leverages this hook to perform a parallel check for each existing
+Linux IPC permission check.  However, since the SELinux IPC
+permissions are much finer-grained than the Linux concepts of read or
+write access to IPC objects, new <constant>unix_read</constant> and
+<constant>unix_write</constant> permissions were defined to correspond
+with the Linux permissions.  These new permissions are checked by the
+hook called by <function>ipcperms</function>, and the finer-grained
+SELinux permissions are checked by the other IPC hooks.  Hence, IPC
+operations require the <constant>unix_read</constant> or
+<constant>unix_write</constant> permission and the appropriate
+finer-grained permission.  The coarse-grained permission checks could
+be omitted, but they are present to ensure that all IPC accesses are
+controlled by SELinux.  These checks are discussed in <xref
+linkend="IpcPermission">.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2><title>Miscellaneous Changes</title>
+<para>
+In addition to the changes described above, the LSM-based SELinux
+security module had to reimplement the approach for controlling the
+<function>sysctl</function> call.  It also added new controls for some
+system operations that were not specifically addressed in the original
+SELinux kernel patch, such as <function>syslog</function>, which were
+formerly controlled only via the coarse-grained
+<function>capable</function> controls. Fine-grained controls over
+netlink operations were also introduced as part of the 2.6 SELinux.
+These controls are discussed in <xref linkend="system">.
+</para>
+</sect2>
+
+
+</sect1>

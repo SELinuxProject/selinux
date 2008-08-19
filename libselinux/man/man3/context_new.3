@@ -4,27 +4,27 @@ context_new, context_str, context_free, context_type_get, context_type_set, cont
 
 .SH "SYNOPSIS"
 .B #include <selinux/context.h>
-
+.br 
 .B "context_t context_new(const char *" context_str );
-
+.br 
 .B "const char * context_str(context_t " con );
-
+.br 
 .B "void context_free(context_t " con );
-
+.br 
 .B "const char * context_type_get(context_t " con );
-
+.br 
 .B "const char * context_range_get(context_t " con );
-
+.br 
 .B "const char * context_role_get(context_t " con );
-
+.br 
 .B "const char * context_user_get(context_t " con );
-
+.br 
 .B "const char * context_type_set(context_t " con ", const char* " type);
-
+.br 
 .B "const char * context_range_set(context_t " con ", const char* " range);
-
+.br 
 .B "const char * context_role_set(context_t " con ", const char* " role );
-
+.br 
 .B "const char * context_user_set(context_t " con ", const char* " user );
 
 .SH "DESCRIPTION"

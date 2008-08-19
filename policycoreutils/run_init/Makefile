@@ -10,7 +10,7 @@ AUDITH = $(shell ls /usr/include/libaudit.h 2>/dev/null)
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -I$(PREFIX)/include -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
-LDLIBS += -lselinux -L$(PREFIX)/lib
+LDLIBS += -lselinux -lsepol -L$(PREFIX)/lib
 ifeq (${PAMH}, /usr/include/security/pam_appl.h)
 	override CFLAGS += -DUSE_PAM
 	LDLIBS += -lpam -lpam_misc
@@ -34,8 +34,8 @@ open_init_pty: open_init_pty.c
 install: all
 	test -d $(SBINDIR)      || install -m 755 -d $(SBINDIR)
 	test -d $(MANDIR)/man1 || install -m 755 -d $(MANDIR)/man1
-	install -m 755 run_init $(SBINDIR)
-	install -m 755 open_init_pty $(SBINDIR)
+	install -m 555 run_init $(SBINDIR)
+	install -m 555 open_init_pty $(SBINDIR)
 	install -m 644 run_init.8 $(MANDIR)/man8/
 	install -m 644 open_init_pty.8 $(MANDIR)/man8/
 ifeq (${PAMH}, /usr/include/security/pam_appl.h)

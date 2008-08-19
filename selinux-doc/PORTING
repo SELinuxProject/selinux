@@ -1,0 +1,190 @@
+This file describes API and policy changes from the old SELinux, and
+includes useful information for porting SELinux applications and
+policies to the new SELinux.
+
+Summary of API Changes
+----------------------
+
+0) The removal of sys_security from 2.5 required the reworking of the
+SELinux API to gain acceptance into mainline Linux.  The SELinux API has
+been refactored into three components: a /proc/pid/attr API for
+process attributes, the existing xattr API for file attributes, and a
+selinuxfs pseudo filesystem for the security policy API.  Support for
+the SELinux extensions for System V and socket IPC will be
+investigated in the future.  All three components of the new API are
+encapsulated by libselinux.
+
+1) libsecure has been replaced with libselinux.  This library exports
+a collection of headers for SELinux applications that are summarized
+below:
+
+<selinux/selinux.h> - Basic types and calls for the SELinux API.
+<selinux/flask.h>   - Security class definitions.
+<selinux/av_permissions.h> - Access vector permission definitions.
+<selinux/context.h> - Calls for manipulating individual context fields.
+<selinux/get_context_list.h> - Calls for obtaining user security contexts.
+<selinux/get_default_type.h> - Call for obtaining the default type of a role.
+
+All applications that use the SELinux API should include
+<selinux/selinux.h>.  Applications that use the security policy API
+calls may also need to #include <selinux/flask.h> for security class
+definitions and/or #include <selinux/av_permissions.h> for access
+vector permission definitions.  The other headers only need to be
+included by applications that use the corresponding calls.
+
+2) SIDs are no longer exported to userspace.  All API calls now pass
+security contexts.  Many API calls have been renamed to reflect the
+use of contexts rather than SIDs.
+
+3) All calls that return contexts or context arrays provide automatic
+allocation of buffers of the right size.  The application no longer
+needs to allocate a buffer itself, but does need to free the buffer
+returned by the call when finished using freecon() for contexts or
+freeconary() for context arrays.
+
+4) The extended system calls have been replaced with separate
+set-attribute calls that precede an ordinary call.  For example,
+execve_secure() is replaced with setexeccon();execve() and
+open/mkdir_secure() is replaced with setfscreatecon();open/mkdir().
+The exec context and fscreate context are attributes of the process
+like the umask; if set, they are applied to all subsequent execve or
+file creation calls until they are explicitly cleared via
+setexeccon(NULL) or setfscreatecon(NULL) calls or they are
+automatically cleared after an execve (i.e. reset upon each new
+program execution).  These calls are implemented via writes to
+/proc/self/attr/{exec,fscreate} nodes; note that a process can only
+set its own exec and fscreate contexts.
+
+This API allows for simplification of applications that merely wish to
+set a single exec or fscreate context and have it applied for any
+subsequent execve or file creation call, since the setting of the
+context can be performed up front and the SID/context does not need to
+be passed around by the application functions.  The API also avoids
+the need to extend various library functions (e.g. execl*, execv*,
+popen/pclose, fopen) that internally perform execve or file creation
+calls, since the caller can simply set the exec or fscreate context
+prior to making the ordinary library function call and have the
+context automatically applied when the execve or file creation call is
+made by the library function.
+
+However, this API does require additional care to be taken in dealing
+with multi-threaded applications (unless the user-to-kernel threading
+model is 1-to-1, since the attribute is stored per kernel thread) and
+with signal handlers that call execve or a file creation call.
+
+5) Process contexts are now exported directly via a process attribute
+API rather than being indirectly exported via the file context of the
+/proc/pid inodes.  Applications that were performing a stat_secure of
+a /proc/pid inode to obtain the SID of a process should be changed to
+use the getpidcon() call provided by libselinux.  A getfilecon() call
+on the /proc/pid inodes will not succeed; proc does not provide xattr
+handlers.  Applications that simply want to obtain their own context
+or their context prior to the last exec should use the getcon() or
+getprevcon() calls provided by libselinux.  These two calls correspond
+to the getsecsid() and getosecsid() calls of the old API.  The process
+context API calls are implemented via reads of the /proc/pid/attr
+nodes; it is possible for a process to read the contexts of another
+process if authorized by the policy.
+
+6) The file context API is layered on top of the xattr API.
+[gs]etfilecon, l[gs]etfilecon, and f[gs]etfilecon calls are provided.
+These calls hide the use of xattr and the particular attribute name
+and handle allocation of context buffers automatically, so they are
+preferable to directly calling the xattr API.
+
+7) The security policy API is layered on top of selinuxfs, and has
+been revised.  Calls for converting between SIDs and contexts have
+been removed, and the call for obtaining the list of SIDs has been
+removed.  A security_check_context call has been added to support the
+validation of security contexts that was formerly provided via
+security_context_to_sid. The security_load_policy call now takes a
+(data,size) pair rather than a pathname; the application must supply
+the memory buffer containing the binary policy data.  The
+security_compute_av parameters have been reorganized.  Several
+security calls have been renamed to reflect the elimination of SIDs,
+to avoid common misunderstandings, and to provide a consistent naming
+convention.  The table below shows the old and new names of the
+renamed calls:
+
+OLD NAME                | NEW NAME                
+--------------------------------------------------
+security_transition_sid | security_compute_create 
+security_change_sid     | security_compute_relabel
+security_get_user_sids  | security_compute_user
+
+Each of these calls (as well as security_compute_av) computes a
+security policy decision and returns it to the caller.  None of these
+calls performs any state changes, e.g. security_compute_relabel
+obtains a relabeling decision but does not perform a file relabel;
+setfilecon() must be called to perform the relabel.  This was also
+true of the old API (where chsid() had to be called to perform the
+relabel), but was a common misunderstanding.
+
+Note that security_compute_user is typically not called directly by
+applications; most applications will want to use the
+get_ordered_context_list() or get_default_context() calls defined by
+<selinux/get_context_list.h>, which internally use
+security_compute_user() to obtain the full set of authorized security
+contexts and then order that set based on administrator and user
+specified prioritizations.  This was also true of the old API.
+
+
+Summary of Policy Changes
+-------------------------
+
+1) Several new process permissions have been defined for the new
+process attribute API:
+
+a) The getattr permission controls the ability of a source domain to
+get the attributes (contexts) of a target domain.  This permission
+check is performed in addition to the file permission checks that
+occur when the process tries to read the /proc/pid/attr files.
+
+b) The setexec and setfscreate permissions provide basic control over
+the ability of a domain to set its own exec or fscreate contexts at
+all, as opposed to being limited to the default labeling behavior
+defined by the policy.  This permission check is performed in addition
+to the file permission checks that occur when the process tries to
+write the /proc/pid/attr files.  The can_setexec() and
+can_setfscreate() macros contain the corresponding allow rules
+required for the setexeccon() and setfscreatecon() calls.  Note that
+the specified context is checked as part of the normal permission
+checks that occur during an execve or file creation operation, and
+must be separately authorized, typically using the domain_{auto_}trans
+and file_type_{auto_}trans macros.
+
+2) The security permissions were renamed and pruned in accordance with
+the changes to the security policy API, and the avc_toggle system
+permission was moved into the security class and renamed to
+setenforce.  These permission checks are performed in addition to the
+file permission checks that occur when a process tries to read or
+write the /selinux files.  The security_t type is assigned to the
+/selinux files via genfs_contexts.  The can_getsecurity() macro
+contains the allow rules required to get security policy decisions.
+The can_setenforce() macro contains the allow rules required to set
+the enforcing flag, and an auditallow rule to always audit this
+operation.  The can_loadpol() macro contains the allow rules required
+to load a policy configuration, and an auditallow rule to always audit
+this operation.
+
+3) The fs_use_psid statement has been removed, since the persistent
+label mapping code has been removed from the SELinux module.  A new
+fs_use_xattr statement has been added to indicate that SELinux should
+use the xattr API for getting and setting the security labels.  At
+present, xattr handlers are only implemented for ext[23].  There is
+also an xattr handler implemented for devpts, but fs_use_trans is
+still appropriate for devpts inode security initialization; the devpts
+xattr handler is _only_ to enable userspace access to get and set pty
+security labels, not for initializing them.
+
+4) With the exception of the proc filesystem, genfs_contexts can only
+presently be used to apply a single file security context to all
+entries of a given filesystem type (by specifying a single / entry
+with the desired context).  Pathnames can be reliably generated for
+proc inodes from the proc_dir_entry tree, so proc inodes and sysctl
+variables can still be mapped to individual security contexts using
+genfs_contexts (excluding /proc/pid, which is labeled based on the
+associated process).  Other filesystem types will have to evaluated on
+a case-by-case basis and appropriate support added to the SELinux
+"module" or implemented as an xattr handler in the filesystem.
+

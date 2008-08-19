@@ -1,0 +1,81 @@
+<sect1 id="build"><title>Building and Applying the Policy</title>
+
+<para>
+The policy configuration is compiled into a binary representation that
+can be loaded into the kernel.  In addition to compiling and loading
+the policy, filesystems must be labeled appropriately in order for the
+policy to be applied to a system.  This section describes how the
+policy is compiled and loaded, and how the file contexts configuration
+is applied to the filesystem.
+</para>
+
+<sect2 id="policybuild"><title>Compiling and Loading the Policy</title>
+<para>
+The policy configuration sources must be compiled into a binary
+representation before it can be read by the kernel.  The compilation
+is performed by running <command>make policy</command> in the
+<filename>/etc/selinux/(strict|targeted)/src/policy</filename>
+directory.  The compilation involves three steps.  First, the example
+policy configuration files are concatenated togther.  Second, the
+<command>m4</command> macro processor is applied to the resulting
+concatenation to expand macros, yielding the
+<filename>policy.conf</filename> file.  The
+<command>checkpolicy</command> policy compiler is then run on this
+file to generate the binary representation in the
+<filename>policy.VERSION</filename> file, where VERSION represents the
+version number.
+</para>
+
+<para>
+The <filename>policy.VERSION</filename> file can be installed into the
+<filename>/etc/selinux/(strict|targeted)/policy</filename> directory
+by running <command>make install</command>.  The policy will then be
+loaded into the kernel when the kernel is next rebooted.  If a runtime
+policy change is desired (and authorized by the policy configuration),
+then the <command>make load</command> command can be run to load the
+policy into a running kernel.
+</para>
+</sect2>
+
+<sect2 id="fileconapply"><title>Applying the File Contexts Configuration</title>
+<para>
+The file contexts configuration must be applied to the filesystem,
+creating or updating the extended attributes, before the extended
+attributes can be used by the kernel.  The extended attributes can be
+created or updated by running <command>make relabel</command> in the
+policy source directory or alternatively by running <command>fixfiles
+relabel</command>.  The <command>fixfiles</command> script is a
+contributed front-end wrapper for the <command>setfiles</command>
+program that applies setfiles to the installed file contexts
+configuration and all mounted filesystems that support the security
+extended attributes.  After SELinux has been installed, the extended
+attributes in each filesystem are maintained dynamically by the
+SELinux kernel to reflect create, delete, and relabel operations.
+However, <command>fixfiles relabel</command> can be run at any time
+to update the extended attributes with a new file contexts
+configuration or to reset the mappings to the original configuration.
+</para>
+
+<para>
+The contributed <command>restorecon</command> utility can be run to
+restore a specific list of files to their original settings from the
+file contexts configuration.  restorecon can also be applied
+recursively via the -R option, but this is not the default behavior,
+unlike setfiles.  Certain options to the <command>fixfiles</command>
+script use this utility internally rather than
+<command>setfiles</command> in order to apply selective relabeling.
+</para>
+
+<para>
+The <command>chcon</command> utility program can also be used to set
+the security context of a file to a specified value.  The usage of
+this utility is similar to the <command>chown</command> or
+<command>chmod</command> utilities.  Unlike restorecon or setfiles,
+chcon allows the specific security context to be specified rather than
+consulting the file contexts configuration, thereby allowing for
+customization of specific files to more specific security contexts
+than the defaults.
+</para>
+</sect2>
+
+</sect1>

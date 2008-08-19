@@ -1,0 +1,142 @@
+1.26.1 2008-03-07
+	* Added editorial comments to the policy and module reports noting
+	  that they do not reflect the current state of SELinux to avoid
+ 	  reader confusion.
+
+1.26 2006-03-14
+	* Updated version for release.
+
+1.25.2 2006-02-06
+	* Updated module report for removal of magic number fields
+	  from security structures (in 2.6.16).
+
+1.25.1 2005-12-14
+	* Updated inode hook section of module report for
+	  - change to inode classification logic
+	  - introduction of inode_init_security
+	  - removal of inode post hooks
+	  - generic VFS fallback for security xattrs
+	  - canonicalization of getxattr results
+	* Updated socket hook section of module report for
+	  - change to socket classification logic
+	  - name_connect check
+	* Updated file hook section of module report for
+	  - execheap and execstack checks
+
+1.24 2005-12-07
+	* Updated version for release.
+
+1.23.3 2005-11-15
+	* Updated CREDITS.
+
+1.23.2 2005-11-09
+	* Updated README.MODULES.
+
+1.23.1 2005-09-28
+	* Merged updated README.MODULES from Karl MacMillan (Tresys).
+	
+1.22 2005-09-07
+	* Updated version for release.
+
+1.21.1 2005-09-07
+	* Updated CREDITS.
+	* Added README.MODULES.
+	
+1.20 2005-06-20
+	* Updated version for release.
+
+1.19.6 2005-04-29
+	* Updated CREDITS.
+
+1.19.5 2005-04-15
+	* Added Ubuntu SELinux link to README.
+
+1.19.4 2005-04-14
+	* Updated README.MLS.
+
+1.19.3 2005-04-13
+	* Merged README.HIERARCHY from Tresys Technology.
+
+1.19.2 2005-04-06
+	* Merged top-level Makefile from Andreas Steinmetz.
+
+1.19.1 2005-03-23
+	* Updated README.MLS to reflect recent changes.
+
+1.18 2005-03-09
+	* Updated version for release.
+
+1.17.7 2005-02-17
+	* Updated CREDITS.
+
+1.17.6 2005-02-09
+	* Further revs to socket and network hook sections of module report.
+	* Further revs to the policy report.
+
+1.17.5 2005-02-08
+	* Minor revs to the module report.
+	* Updated policy report.
+
+1.17.4 2005-02-07
+	* Updated IP network hook section of module report.
+	* Updated miscellaneous hook section of module report.
+	* Completed first pass update of module report.
+
+1.17.3 2005-02-04
+	* Updated inode hook section of the module report.
+	* Updated file hook section of the module report.
+	* Updated ipc hook section of the module report.
+	* Updated socket hook section of the module report.
+	* Removed obsolete sections of the module report.
+
+1.17.2 2005-02-03
+	* Updated CREDITS.
+	* Updated README.CONDITIONAL.
+	* Updated README.MLS.
+	* Updated README.
+	* Updated task hooks section of the module report.
+	* Updated bprm hooks section of the module report.
+	* Updated superblock hooks section of the module report.
+
+1.17.1 2005-01-27
+	* Updated CREDITS.
+	* Minor rev to the stacking section of the module report.
+
+1.16 2005-01-06
+	* Updated more sections of module report.
+	* Updated CREDITS.
+	* Updated README.
+	* Merged SGML fixes from Manoj Srivastava.
+
+1.14 2004-06-16
+	* Updated README.
+	* Added userspace AVC writeup.
+
+1.12 2004-05-10
+	* Updated README.
+
+1.10 2004-04-05
+	* Changed to build and install other formats of reports.
+	* Started updating module report (in progress).
+
+1.8 2004-03-09
+	* Added module and policy technical reports.
+	* Changed license to Public Use License (see LICENSE file).
+
+1.6 2004-02-18
+	* Added README.CONDITIONAL.
+	* Updated README.
+
+1.4 2003-12-01
+	* Updated README.
+
+1.2 2003-09-30
+	* Updated README.
+	* Added README.MLS.
+	* Replaced global ChangeLog with per-package ChangeLog.
+
+1.1 2003-08-13
+	* Updated mkinitrd sample patch in README to umount /selinux.
+
+1.0 2003-07-11
+	* Initial public release.

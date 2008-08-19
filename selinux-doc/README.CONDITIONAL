@@ -1,0 +1,332 @@
+Readme -- SE Linux Conditional Policy Language Extensions
+---------------------------------------------------------
+
+1. Overview
+
+  The conditional policy extensions to SELinux allow runtime 
+modification of the security policy without having to load a new 
+policy. Using boolean variables and expressions, it is possible to 
+define sections of policy that are conditionally applied.
+
+
+2. Defining/Setting Booleans
+
+  Boolean variables are defined using the 'bool' statements, which 
+take a variable name and initial value as arguments. The syntax for 
+the 'bool' statement is:
+
+	bool varname true|false ;
+
+As an example, 
+
+	bool docked true ;
+
+defines a boolean variable named 'docked' and sets the initial value 
+to 'true'.
+
+  The values of boolean variables can be controlled at runtime by
+writing to files corresponding to each variable. These files are
+located in the directory /selinux/booleans. By writing the characters
+"1" (true) or "0" (false) to these files, the values are set. Some
+examples are:
+	
+	echo 1 > /selinux/booleans/docked
+	echo 0 > /selinux/booleans/audit_on
+
+After setting the values it is necessary to commit them in order to
+make them active. This is done by writing to a file.
+
+	echo 1 > /selinux/commit_pending_bools
+
+There are also two programs to help viewing and setting booleans. The
+program setsebool will change the value of one or more booleans and commit the
+values.
+
+	setsebool docked=1
+
+The -P option to setsebool may be used to make the boolean setting
+permanent, i.e. modify the system booleans configuration file to
+include the new value for use in any subsequent policy reloads or
+reboots.  Without the -P option, only the current value is changed and
+it will be reset upon a policy reload or reboot.
+
+The program getsebool will show the current value of one or more
+booleans.  getsebool -a will show all booleans and their values.
+
+
+3. Conditional Expressions
+
+  Conditional expressions use an if/else structure with a "C-like" 
+syntax, and expressions may be nested. The operators which are 
+available are all logical operators. These include:
+
+	&&	(AND)
+	||	(OR)
+	!	(NOT)
+	^	(XOR)
+	==	(Equivalence)
+	!=	(NOT EQUAL)
+
+Some examples of using these expressions and operators follow:
+
+	if (docked) {
+		<policy statements>
+	}
+
+	if (docked && network_on) {
+		<policy statements>
+	}
+
+	if (docked || network_on) {
+		<policy statements>
+	}
+
+	if (!network_on) {
+		<policy statements>
+	}
+
+	if (!boolean1 && (boolean2 == boolean3)) {
+		<policy statements>
+	} else {
+		<policy statements>
+	}
+
+
+4. Restrictions / Limitations / Rules
+
+  - Stack Depth
+
+      Boolean expressions are evaluated in the kernel using RPN 
+      (Reverse polish notation). Since parentheses used in boolean 
+      expressions can control the number of operands pushed onto the 
+      stack before computation begins, it is possible to overload the 
+      RPN stack. The current limit for the stack is 10. The following 
+      expression would overload the stack:
+
+      if (boolean01 && boolean02 && (boolean03 && (boolean04 && (boolean05 &&
+	 (boolean06 && (boolean07 && (boolean08 && (boolean09 && (boolean10 &&
+	 (boolean11 && boolean12)))))))))) {
+	  allow seltest_t policy_src_t:dir search;
+ 	  allow seltest_t seltest_data_t:file { read write getattr };
+	  auditallow seltest_t policy_src_t:dir search;
+	  auditallow seltest_t seltest_data_t:file { read write getattr };
+      }
+
+
+  - Valid policy statements
+
+      Currently, only the following types of statements are allowed 
+      inside of conditional policy blocks:
+
+	allow
+	auditallow
+	dontaudit
+	type_transition
+	type_change
+
+ 
+      Note that auditdeny statements are not permitted inside
+      conditional policy blocks.  Their logic may be expressed with
+      dontaudit statements.  This decision was made because, while all
+      dontaudit statements are converted internally to auditdeny's, a
+      problem arises when multiple conditional auditdeny/dontaudit fields
+      need to be combined.  Logically, auditdeny bit fields need to be OR'd
+      together to define which permission DENYs need to be audited.
+      Dontaudit bitfields express the policy writer's desire to turn _off_
+      the auditing of certain permission DENYs, and thus need to be AND'd
+      together.
+
+  - Policy conflicts with policy
+
+      Non-conditional policy rules take preference over conditional 
+      rules.  In most cases, a conflicting conditional rule is 
+      discarded. In some cases, the policy compiler will exit with an 
+      error. The list below describes the conflicts and the results:
+
+      - A conditional type rule conflicts with a non-conditional type 
+        rule
+
+	  The conditional type rule is discarded and the compiler issues
+	a warning.
+
+      - A conditional type rule in one conditional policy block 
+	conflicts with 	a conditional type rule in a different 
+	conditional policy block.
+
+	  The previously processed rule is kept, the second is discarded.
+
+5. Labeling of selinuxfs
+
+The files under /selinux/booleans can be individually labeled using
+the genfs_contexts configuration in the policy in order to provide
+fine-grained file permission control over what domains can set each
+boolean.  Note that a reboot may be necessary for a change to
+genfs_contexts to take affect for selinuxfs.  In addition to passing
+the file permissions check, a domain must also have the setbool
+permission to security_t:security.  This is typically expressed in the
+example policy using the can_setbool() macro.
+
+Example
+-------
+
+  As an example of how to use the conditional policy extensions, we 
+will modify the policy for the ping program. In the base policy, the 
+ping program can only be executed by processes that have the sysadm_r 
+or system_r roles.
+
+  It could be necessary, under certain conditions, to allow processes 
+that have the user_r (generic user) role to also execute /bin/ping. 
+This is a situation that lends itself well to a solution implemented 
+with the conditional policy extensions.
+
+The base ping policy (with added line numbers) looks like this:
+
+-------------------------------------------------------------------------------
+
+01  type ping_t, domain, privlog;
+02  type ping_exec_t, file_type, sysadmfile, exec_type;
+03  role sysadm_r types ping_t;
+04  role system_r types ping_t;
+05
+06  # Transition into this domain when you run this program.
+07  domain_auto_trans(sysadm_t, ping_exec_t, ping_t)
+08. domain_auto_trans(initrc_t, ping_exec_t, ping_t)
+09 
+10  uses_shlib(ping_t)
+11  can_network(ping_t)
+12  general_domain_access(ping_t)
+13  allow ping_t { etc_t resolv_conf_t }:file { getattr read };
+14  allow ping_t self:unix_stream_socket create_socket_perms;
+15 
+16  # Let ping create raw ICMP packets.
+17  allow ping_t self:rawip_socket {create ioctl read write bind getopt setopt};
+18  allow ping_t any_socket_t:rawip_socket sendto;
+19 
+20  auditallow ping_t any_socket_t:rawip_socket sendto;
+21
+22  # Let ping receive ICMP replies.
+23  allow ping_t { self icmp_socket_t }:rawip_socket recvfrom;
+24 
+25  # Use capabilities.
+26  allow ping_t self:capability { net_raw setuid };
+27  
+28  # Access the terminal.
+29  allow ping_t admin_tty_type:chr_file rw_file_perms;
+30  ifdef(`gnome-pty-helper.te', `allow ping_t sysadm_gph_t:fd use;')
+31  allow ping_t privfd:fd use;
+32 
+33  dontaudit ping_t fs_t:filesystem getattr;
+34 
+35  # it tries to access /var/run
+36  dontaudit ping_t var_t:dir search;
+
+-------------------------------------------------------------------------------
+
+  The first change that is necessary is to add a boolean variable that 
+will be used to control the conditional policy. We will add a 
+conditional policy statement to define a variable called 'userping' 
+with an initial value of 'false'. The statement could be placed after 
+line 5 and would look something like this:
+
+	  bool userping false;
+
+
+  The second change that needs to be made it to allow processes with 
+the user_r role to execute in the ping_t domain, which is the domain 
+where ping runs. Lines 3 and 4 handle the necessary setup for the 
+sysadm_r and system_r roles, so all that is needed is to add the 
+following line after line 4:
+
+	role user_r types ping_t;
+
+It should be noted that no features of the conditional policy 
+extensions are involved in this change since "role" statements are not 
+allowed inside of conditionals.
+
+
+  If you look at the policy, you can see that almost the only changes that 
+need to be made to allow other roles and types to execute ping concern 
+role statements and domain transition statements. The third change 
+that is necessary is to allow the user_t (generic user type/domain) to 
+transition to the ping_t domain when executing files that have the 
+ping_exec_t type. The only other minor addition is to allow ping_t to access
+the user console. In order to do this conditionally, the following 
+conditional statements could be added after line 9:
+
+	if (userping) {
+		domain_auto_trans(user_t, ping_exec_t, ping_t)
+		# allow access to the terminal
+		allow ping_t user_tty_device_t:chr_file rw_file_perms;
+		allow ping_t user_devpts_t:chr_file rw_file_perms;
+		ifdef(`gnome-pty-helper.te', `allow ping_t user_gph_t:fd use;')
+	}
+
+
+After making the necessary changes, the policy now looks like this:
+
+-------------------------------------------------------------------------------
+
+type ping_t, domain, privlog;
+type ping_exec_t, file_type, sysadmfile, exec_type;
+role sysadm_r types ping_t;
+role system_r types ping_t;
+role user_r types ping_t;
+
+bool userping false;
+
+# Transition into this domain when you run this program.
+domain_auto_trans(sysadm_t, ping_exec_t, ping_t)
+domain_auto_trans(initrc_t, ping_exec_t, ping_t)
+
+if (userping) {
+	domain_auto_trans(user_t, ping_exec_t, ping_t)
+	# allow access to the terminal
+	allow ping_t user_tty_device_t:chr_file rw_file_perms;
+	allow ping_t user_devpts_t:chr_file rw_file_perms;
+	ifdef(`gnome-pty-helper.te', `allow ping_t user_gph_t:fd use;')
+}
+
+uses_shlib(ping_t)
+can_network(ping_t)
+general_domain_access(ping_t)
+allow ping_t { etc_t resolv_conf_t }:file { getattr read };
+allow ping_t self:unix_stream_socket create_socket_perms;
+
+# Let ping create raw ICMP packets.
+allow ping_t self:rawip_socket { create ioctl read write bind getopt setopt };
+allow ping_t any_socket_t:rawip_socket sendto;
+
+auditallow ping_t any_socket_t:rawip_socket sendto;
+
+# Let ping receive ICMP replies.
+allow ping_t { self icmp_socket_t }:rawip_socket recvfrom;
+
+# Use capabilities.
+allow ping_t self:capability { net_raw setuid };
+
+# Access the terminal.
+allow ping_t admin_tty_type:chr_file rw_file_perms;
+ifdef(`gnome-pty-helper.te', `allow ping_t sysadm_gph_t:fd use;')
+allow ping_t privfd:fd use;
+
+dontaudit ping_t fs_t:filesystem getattr;
+
+# it tries to access /var/run
+dontaudit ping_t var_t:dir search;
+
+-------------------------------------------------------------------------------
+
+  At this point, all that needs to be done is set the value of 'userping' to
+whatever gives the desired effect.
+
+The command
+
+    setsebool userping=1
+
+will allow normal users to execute the ping program. The command
+
+    setsebool userping=0
+
+will restore the default behavior.
+
+

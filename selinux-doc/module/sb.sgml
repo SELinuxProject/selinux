@@ -1,0 +1,329 @@
+<sect1 id="sb"><title>Superblock Hook Functions</title>
+
+<para>
+The SELinux superblock hook function implementations manage the
+security fields of super_block structures and perform access control
+for filesystem operations.  This section begins by describing the
+superblock hook functions for managing the security fields.  It then
+discusses the superblock hook functions for performing access control.
+</para>
+
+<sect2 id="SbSecurity"><title>Managing Superblock Security Fields</title>
+<sect3><title>Superblock Security Structure</title>
+<para>
+The <structname>superblock_security_struct</structname> structure
+contains security information for superblock objects. This structure
+is defined as follows:
+</para>
+<programlisting>
+struct superblock_security_struct {
+        struct super_block *sb;
+        struct list_head list;
+        u32 sid;
+        u32 def_sid;
+        unsigned int behavior;
+        unsigned char initialized;
+        unsigned char proc;
+        struct semaphore sem;
+        struct list_head isec_head;
+        spinlock_t isec_lock;
+};
+</programlisting>
+
+<table frame="all">
+<title>superblock_security_struct</title>
+<tgroup cols="2" align="left">
+<colspec colwidth="20*">
+<colspec colwidth="80*">
+<thead>
+<row>
+    <entry>Field</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>sb</entry>
+    <entry>Back pointer to the associated superblock.</entry>
+</row>
+<row>
+    <entry>list</entry>
+    <entry>Link into list of superblock security structures setup prior to initial policy load.
+    </entry>
+</row>
+<row>
+    <entry>sid</entry>
+    <entry>SID for the file system.</entry>
+</row>
+<row>
+    <entry>def_sid</entry>
+    <entry>default SID for labeling</entry>
+</row>
+<row>
+    <entry>behavior</entry>
+    <entry>Labeling behavior to apply to inodes.</entry>
+</row>
+<row>
+    <entry>initialized</entry>
+    <entry>Flag indicating whether the security structure has been initialized.</entry>
+</row>
+<row>
+    <entry>sem</entry>
+    <entry>Semaphore used to synchronize initialization.</entry>
+</row>
+<row>
+    <entry>isec_head</entry>
+    <entry>List of inode security structures setup prior to superblock security initialization.</entry>
+</row>
+<row>
+    <entry>isec_lock</entry>
+    <entry>Lock for list of inode security structures.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect3>
+
+<sect3><title>superblock_alloc_security and superblock_free_security</title>
+<para>
+The <function>superblock_alloc_security</function> and
+<function>superblock_free_security</function> helper functions are
+the primitive allocation functions for super_block security structures.
+The <function>selinux_sb_alloc_security</function> and 
+<function>selinux_sb_free_security</function> hook functions
+call these helper functions.  
+</para>
+</sect3>
+
+<sect3><title>superblock_doinit</title>
+<para>
+This helper function performs initialization for superblock security
+structures.  It is normally called by the
+<function>selinux_sb_kern_mount</function> hook function.  However,
+since this helper function cannot perform full initialization until
+after the initial policy load, it is also called by the
+<function>selinux_complete_init</function> function to retroactively
+complete initialization of superblocks setup prior to the initial
+policy load.
+</para>
+
+<para>
+The <function>superblock_doinit</function> function begins by taking
+the semaphore to synchronize with any other attempts to initialize the
+superblock security data and then checks whether the superblock
+security structure has already been marked initialized.  If so, the
+function returns after releasing the semaphore.  Otherwise, it checks
+whether the initial policy load has completed.  If not, then the
+function adds the superblock security structure to a global list for
+deferred processing by <function>selinux_complete_init</function>,
+releases the semaphore and returns.
+</para>
+
+<para>
+If the initial policy load has completed, then
+<function>superblock_doinit</function> calls the security server's
+<function>security_fs_use</function> interface to determine the
+labeling behavior for the inodes associated with the superblock and to
+obtain a SID for the superblock itself.  It then calls the
+<function>try_context_mount</function> to handle any mount context
+options, which can override the labeling behavior and superblock SID
+returned by <function>security_fs_use</function>.  Context mount
+support is discussed further in <xref linkend="TryContextMount">.
+</para>
+
+<para>
+If the desired labeling behavior is to use extended attributes (xattr)
+<function>superblock_doinit</function> verifies that the filesystem
+supports xattr and the security namespace, returning an error
+otherwise.  If the superblock is for the proc pseudo filesystem, the
+function sets the proc flag in the superblock security structure for
+special handling upon inode initialization. The function then marks
+the superblock security structure as initialized.
+</para>
+
+<para>
+Next, <function>superblock_doinit</function> calls
+<function>inode_doinit_with_dentry</function> on the root inode to
+initialize its security structure.  The function likewise makes calls
+to initialize the inode security structures for any inodes that were
+setup prior to superblock security initialization (e.g. prior to
+initial policy load or during get_sb by a filesystem that directly
+populates itself).  Finally, the function releases the semaphore
+and returns.
+</para>
+</sect3>
+
+<sect3 id="SbCopyData"><title>selinux_sb_copy_data</title>
+<para>
+The <function>selinux_sb_copy_data</function> function is called to
+allow mount option data to be copied prior to parsing by the
+filesystem, so that the security module can extract security-specific
+mount options cleanly, especially since the filesystem code may modify
+the data while processing.  The hook function also allows the
+security-specific options to be stripped from the mount data so that
+the filesystem code does not need to be aware of them at all.  If the
+filesystem type uses binary mount data, then this hook function simply
+copies the binary data into the page for security data for later
+processing.  Otherwise, this hook function parses the mount option
+string and extracts any mount context options for later use.
+There are three kinds of mount context options: context,
+fscontext, and defcontext.
+</para>
+</sect3>
+
+<sect3 id="TryContextMount"><title>try_context_mount</title>
+<para>
+The <function>try_context_mount</function> function is called to
+handle any context mount options extracted earlier by <function>
+selinux_sb_copy_data</function>.  If the filesystem type uses binary
+mount data, then the function will extract context options if using a
+version of the binary mount data that includes them.  At present, only
+NFS has support for such options, and it only supports one of the
+context mount options (context=).  For string mount data, the function
+processes each context-related option, checking for invalid
+combinations.  The fscontext and defcontext options may be used
+together as well as individually, but no other combination of options
+is allowed.  If any context option is specified, the function applies
+several permission checks among the task SID, the original superblock
+SID, and the SID for the provided context to verify that the use of
+the option is authorized.
+</para>
+
+<para>
+For the context or fscontext options, the superblock SID is set to the
+SID for the provided context.  The context option further changes the
+labeling behavior to mountpoint labeling, which means that all inodes
+in the filesystem are treated as having the provided context as well,
+and the xattr API is not supported for the inodes in the filesystem
+even if the filesystem type itself supports xattrs.  In contrast, the
+fscontext option only sets the superblock SID and leaves the labeling
+behavior unchanged.  The defcontext option only sets the default SID
+(def_sid) for inodes in the filesystem, overriding the typical value
+of the file initial SID.
+</para>
+</sect3>
+
+<sect3><title>selinux_sb_kern_mount</title> 
+<para>
+This hook function is called to setup the superblock security structure
+and to check permissions for the mount of a particular superblock.  It
+calls <function>superblock_doinit</function> to perform the initialization
+and then calls <function>superblock_has_perm</function> to check filesystem
+mount permission to the superblock.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="SbAc"><title>Controlling Filesystem Operations</title>
+
+<sect3><title>superblock_has_perm</title> 
+<para>
+This helper function checks whether a task has a particular permission
+to a filesystem.  It takes the task, the super_block, the requested
+permissions, and optionally audit data as parameters.  This
+function simply calls the AVC with the appropriate parameters.
+</para>
+</sect3>
+
+<sect3><title>selinux_sb_statfs</title> 
+<para>
+This hook function is called to check permission when obtaining
+filesystem attributes.  It checks <constant>getattr</constant>
+permission between the current task and the filesystem.
+</para>
+</sect3>
+
+<sect3><title>selinux_mount</title> 
+<para>
+This hook function is called to check permission when mounting
+a filesystem prior to the actual reading of the superblock.  
+If the filesystem is being remounted (i.e. the
+mount flags are being changed), then this function checks 
+<constant>remount</constant> permission between the current
+task and the filesystem.  Otherwise, this function checks
+<constant>mounton</constant> permission between the current
+task and the mountpoint directory.
+</para>
+</sect3>
+
+<sect3><title>selinux_umount</title> 
+<para>
+This hook function is called to check permission when unmounting a
+filesystem.  This function checks <constant>unmount</constant>
+permission between the current task and the filesystem.
+</para>
+</sect3
+
+<sect3><title>selinux_quotactl</title>
+<para>
+The <function>selinux_quotactl</function> hook function checks that
+the current task has permission to perform a given quota control
+command on a filesystem.  If no filesystem was specified (i.e. a
+<constant>Q_SYNC</constant> or <constant>Q_GETSTATS</constant>
+command), then the hook simply returns success, since these operations
+require no control.  Otherwise, one of the
+<constant>quotamod</constant> or <constant>quotaget</constant>
+permissions is checked between the current task and the filesystem,
+depending on whether the command sets information or merely gets
+information related to quotas.
+</para>
+</sect3>
+
+<sect3><title>Summary of Filesystem Permission Checks</title>
+<para>
+The permission checks for the super_block hooks are summarized
+in <xref linkend="FspermTable">.
+
+<table id="FspermTable" frame="all">
+<title>Filesystem Permission Checks</title>
+<tgroup cols="4" align="left">
+<thead>
+<row>
+<entry>Hook</entry>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>selinux_sb_statfs</entry>
+<entry>Current</entry>
+<entry>Filesystem</entry>
+<entry>getattr</entry>
+</row>
+<row>
+<entry>selinux_mount</entry>
+<entry><simplelist><member>Current</member><member>Current</member></simplelist></entry>
+<entry><simplelist><member>MountDirectory</member><member>Filesystem</member></simplelist></entry>
+<entry><simplelist><member>mounton</member><member>remount</member></simplelist></entry>
+</row>
+<row>
+<entry>selinux_sb_kern_mount</entry>
+<entry>Current</entry>
+<entry>Filesystem</entry>
+<entry>mount</entry>
+</row>
+<row>
+<entry>selinux_umount</entry>
+<entry>Current</entry>
+<entry>Filesystem</entry>
+<entry>unmount</entry>
+</row>
+<row>
+<entry>selinux_quotactl</entry>
+<entry>Current</entry>
+<entry>Filesystem</entry>
+<entry><simplelist><member>quotamod</member><member>quotaget</member></simplelist></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+</para>
+</sect3>
+
+</sect2>
+
+</sect1>

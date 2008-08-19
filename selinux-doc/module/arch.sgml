@@ -1,0 +1,111 @@
+<sect1 id="arch"><title>Internal Architecture</title>
+
+<para>
+This section provides an overview of the SELinux security module
+internal architecture.  The module code is located within the
+<filename>security/selinux</filename> subdirectory of the kernel tree.
+All subsequent pathnames in this section are relative to this
+subdirectory, unless otherwise noted.  The module consists of six
+major components: the security server, the access vector cache (AVC),
+the network interface table, the netlink event notification code, the
+selinuxfs pseudo filesystem, and the hook function implementations.
+</para>
+
+<para>
+The security server provides general interfaces for obtaining security
+policy decisions, enabling the rest of the module to remain
+independent of the specific security policies used.  These interfaces
+are defined in the <filename>include/security.h</filename> header file
+under the SELinux module directory.  The specific implementation of
+the security server can be changed or completely replaced without
+requiring any changes to the rest of the module.  The example security
+server provided with SELinux implements a combination of Role-Based
+Access Control (RBAC), a generalization of Type Enforcement (TE), and
+optionally Multi-Level Security (MLS).  The RBAC and TE policies are
+highly configurable and can be used to meet many different security
+objectives.  The example security server code can be found in the
+<filename>ss</filename> subdirectory.
+</para>
+
+<para>
+The AVC provides caching of access decision computations obtained from
+the security server to minimize the performance overhead of the
+SELinux security mechanisms. It provides interfaces to the hook
+functions for efficiently checking permissions and it provides
+interfaces to the security server for managing the cache.  The AVC
+interfaces to the hook functions are defined in the
+<filename>include/avc.h</filename> header file, and the AVC interfaces
+to the security server are defined in the
+<filename>include/avc_ss.h</filename> header file.  The AVC code can
+be found in the <filename>avc.c</filename> file.
+</para>
+
+<para>
+The network interface table maps network devices to security contexts.
+Maintaining a separate table is necessary because the LSM network
+device security field was rejected.  Network devices are added to the
+table when they are first looked up by the hook functions, and are
+removed from the table when the device is configured down or the
+policy is reloaded.  The network interface table provides an
+interface, defined in <filename>include/netif.h</filename>, to the
+hook functions for looking up and obtaining the SIDs associated with a
+network device.  Callback functions are registered for device
+configuration changes and policy reloads.  The network interface table
+code can be found in the <filename>netif.c</filename> file.
+</para>
+
+<para>
+The netlink event notification code allows the SELinux module to
+notify processes when the policy has been reloaded and when the
+enforcing status is changed.  These notifications are used by the
+userspace AVC (part of libselinux) to keep its state consistent with
+the kernel.  The userspace AVC is used by userspace policy enforcers
+such as security-enhanced X and security-enhanced dbus.  The netlink
+event notification code can be found in the
+<filename>netlink.c</filename> file.
+</para>
+
+<para>
+The selinuxfs pseudo filesystem exports the security server policy API
+to processes.  The original SELinux kernel API was decomposed into
+three orthogonal components (process attributes, file attributes,
+policy API) as part of the redesign for inclusion in mainline Linux
+2.6, and selinuxfs provides the underlying support for the policy API
+calls.  All three components of the new kernel API are encapsulated by
+the higher level libselinux API.  The selinuxfs code can be found in the
+<filename>selinuxfs.c</filename> file.
+</para>
+
+<para>
+The hook function implementations manage the security information
+associated with kernel objects and perform the SELinux access controls
+for each kernel operation.  The hook functions call the security
+server and access vector cache to obtain security policy decisions and
+apply those decisions to label and control kernel objects.  The hook
+functions also call the filesystem extended attribute code to obtain and set
+security contexts on files.  The code for these hook functions is
+located in the file <filename>hooks.c</filename>, and the data
+structures for the security information associated with the kernel
+objects are defined in the file <filename>include/objsec.h</filename>.
+</para>
+
+<para>
+Abstractly, the hook function and data structure contents can be
+viewed as the same processing and data that was directly inserted into
+the kernel code and data structures by the original SELinux patch.
+However, in practice, it was often necessary to revisit the approach
+used by the original SELinux patch since the LSM hook locations did not
+always correspond to the insertion points of the original SELinux patch.  In
+part, this was because the LSM project placed a heavier emphasis on
+minimizing hooks, especially outside of the core kernel code.  For
+example, the lack of any filesystem-specific hooks required a
+different approach for labeling both persistent filesystems like ext3
+and pseudo filesystems like procfs.  Similarly, since LSM leverages
+the existing NetFilter framework to support hooking on many network
+operations, the implementation of the SELinux network access controls
+was changed.  Nonetheless, it was possible to provide the desired
+security semantics with the LSM hooks.
+</para>
+
+</sect1>
+

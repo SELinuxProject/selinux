@@ -1,194 +1,55 @@
-2.0.54 2008-08-05
-	* Add support for boolean files and group support for seusers from Dan Walsh.
-	* Ensure that setfiles -p output is newline terminated from Russell Coker.
+1.34.16 2008-06-06
+	* Fix genhomedircon to not skip user_u entries from Chris PeBenito.
 
-2.0.53 2008-07-29
-	* Change setfiles to validate all file_contexts files when using -c from Stephen Smalley.
-
-2.0.52 2008-07-02
-	* Add permissive domain capability to semanage from Dan Walsh.
-
-2.0.51 2008-06-28
-	* Add onboot option to fixfiles from Dan Walsh.
-	* Change restorecon.init to not run on boot by default from Dan Walsh.
-
-2.0.50 2008-06-30
-	* Fix audit2allow generation of role-type rules from Karl MacMillan.
-
-2.0.49 2008-05-16
-	* Remove security_check_context calls for prefix validation from semanage.
-
-2.0.48 2008-05-16
-	* Change setfiles and restorecon to not relabel if the file already has the correct context value even if -F/force is specified.
-
-2.0.47 2008-04-18
-	* Update semanage man page for booleans from Dan Walsh.
-	* Add further error checking to seobject.py for setting booleans.
-
-2.0.46 2008-03-18
-	* Update audit2allow to report dontaudit cases from Dan Walsh.
-
-2.0.45 2008-03-18
-	* Fix semanage port to use --proto from Caleb Case.
-
-2.0.44 2008-02-22
-	* Fixed semodule to correctly handle error when unable to create a handle.
-
-2.0.43 2008-02-08
-	* Merged fix fixfiles option processing from Vaclav Ovsik.
-
-2.0.42 2008-02-02
-	* Make semodule_expand use sepol_set_expand_consume_base to reduce
-	  peak memory usage.
-
-2.0.41 2008-01-28
-	* Merged audit2why fix and semanage boolean --on/--off/-1/-0 support from Dan Walsh.
-
-2.0.40 2008-01-25
-	* Merged a second fixfiles -C fix from Marshall Miller.
-
-2.0.39 2008-01-24
-	* Merged fixfiles -C fix from Marshall Miller.
-
-2.0.38 2008-01-24
-	* Merged audit2allow cleanups and boolean descriptions from Dan Walsh.
-	* Merged setfiles -0 support by Benny Amorsen via Dan Walsh.
-	* Merged fixfiles fixes and support for ext4 and gfs2 from Dan Walsh.
-
-2.0.37 2008-01-23
-	* Merged replacement for audit2why from Dan Walsh.
-
-2.0.36 2008-01-23
-	* Merged update to chcat, fixfiles, and semanage scripts from Dan Walsh.
-
-2.0.35 2007-12-21
-	* Merged support for non-interactive newrole command invocation from Tim Reed.
-
-2.0.34 2007-12-14
+1.34.15 2007-12-14
 	* Update Makefile to not build restorecond if
 	  /usr/include/sys/inotify.h is not present
 
-2.0.33 2007-12-07
-	* Drop verbose output on fixfiles -C from Dan Walsh.
-	* Fix argument handling in fixfiles from Dan Walsh.
-	* Enhance boolean support in semanage, including using the .xml description when available, from Dan Walsh.
-
-2.0.32 2007-10-16
-	* load_policy initial load option from Chad Sellers.
-
-2.0.31 2007-10-15
+1.34.14 2007-10-15
 	* Fix semodule option handling from Dan Walsh.
 
-2.0.30 2007-10-11
-	* Add deleteall support for ports and fcontexts in semanage from Dan Walsh.
-
-2.0.29 2007-10-05
-	* Add genhomedircon script to invoke semodule -Bn from Dan Walsh.
-
-2.0.28 2007-10-05
-	* Update semodule man page for -D from Dan Walsh.
-	* Add boolean, locallist, deleteall, and store support to semanage from Dan Walsh.
-
-2.0.27 2007-09-19
+1.34.13 2007-09-27
 	* Improve semodule reporting of system errors from Stephen Smalley.
 
-2.0.26 2007-09-18
-	* Fix setfiles selabel option flag setting for 64-bit from Stephen Smalley.
+1.34.12 2007-09-27
+	* Disable dontaudits via semodule -D from Joshua Brindle.
 
-2.0.25 2007-08-23
-	* Remove genhomedircon script (functionality is now provided
-	  within libsemanage) from Todd Miller.
-
-2.0.24 2007-08-23
-	* Fix genhomedircon searching for USER from Todd Miller
-	* Install run_init with mode 0755 from Dan Walsh.
+1.34.11 2007-08-23
+	* Fix genhomedircon matching of the USER template from Todd Miller.
 	* Fix chcat from Dan Walsh.
-	* Fix fixfiles pattern expansion and error reporting from Dan Walsh.	
-	* Optimize genhomedircon to compile regexes once from Dan Walsh.
-	* Fix semanage gettext call from Dan Walsh.
 
-2.0.23 2007-08-16
-	* Disable dontaudits via semodule -D
-
-2.0.22 2007-06-20
-	* Rebase setfiles to use new labeling interface.
-
-2.0.21 2007-06-13
-	* Fixed setsebool (falling through to error path on success).
-
-2.0.20 2007-06-05
-	* Merged genhomedircon fixes from Dan Walsh.
-	* Merged setfiles -c usage fix from Dan Walsh.
-	* Merged restorecon fix from Yuichi Nakamura.
-	* Dropped -lsepol where no longer needed.
-
-2.0.19 2007-05-11
-	* Merge newrole support for alternate pam configs from Ted X Toth.
-
-2.0.18 2007-05-11
-	* Merged merging of restorecon into setfiles from Stephen Smalley.
-
-2.0.17 2007-05-09
+1.34.10 2007-05-09
 	* Merged genhomedircon fix to find conflicting directories correctly from Dan Walsh.
 
-2.0.16 2007-05-03
+1.34.9 2007-05-03
 	* Merged support for modifying the prefix via semanage from Dan Walsh.
 
-2.0.15 2007-04-26
+1.34.8 2007-04-27
 	* Merged move of audit2why to /usr/bin from Dan Walsh.
-
-2.0.14 2007-04-25
-	* Build fix for setsebool.
-
-2.0.13 2007-04-24
-	* Merged setsebool patch to only use libsemanage for persistent boolean changes from Stephen Smalley.
-
-2.0.12 2007-04-24
 	* Merged genhomedircon patch to use the __default__ setting from Dan Walsh.
-
-2.0.11 2007-04-24
-	* Dropped -b option from load_policy in preparation for always preserving booleans across reloads in the kernel.
-
-2.0.10 2007-04-24
 	* Merged chcat, fixfiles, genhomedircon, restorecond, and restorecon patches from Dan Walsh.
 
-2.0.9 2007-04-12
+1.34.7 2007-04-12
 	* Merged seobject setransRecords patch to return the first alias from Xavier Toth.
 
-2.0.8 2007-04-10
-	* Merged updates to sepolgen-ifgen from Karl MacMillan.
-
-2.0.7 2007-03-01
-	* Merged restorecond init script LSB compliance patch from Steve Grubb.
+1.34.6 2007-03-01
+	* Merged restorecond init script LSB compliance patch from Steve Grubb.	
 	
-2.0.6 2007-02-22
+1.34.5 2007-02-22
 	* Merged newrole O_NONBLOCK fix from Linda Knippers.
 
-2.0.5 2007-02-22
-	* Merged sepolgen and audit2allow patches to leave generated files 
-	  in the current directory from Karl MacMillan.
-
-2.0.4 2007-02-22
+1.34.4 2007-02-22
 	* Merged restorecond memory leak fix from Steve Grubb.
 
-2.0.3 2007-02-21
+1.34.3 2007-02-21
 	* Merged translations update from Dan Walsh.
 	* Merged chcat fixes from Dan Walsh.
 	* Merged man page fixes from Dan Walsh.
-	* Merged seobject prefix validity checking from Dan Walsh.
+	* Merged seobject prefix validity checking from Dan Walsh.	
 
-2.0.2 2007-02-20
+1.34.2 2007-02-20
 	* Merged seobject exception handler fix from Caleb Case.
 	* Merged setfiles memory leak patch from Todd Miller.
-
-2.0.1 2007-02-08
-	* Merged small fix to correct include of errcodes.h in semodule_deps from Dan Walsh.
-
-2.0.0 2007-02-05
-	* Merged new audit2allow from Karl MacMillan.
-	  This audit2allow depends on the new sepolgen python module.
-	  Note that you must run the sepolgen-ifgen tool to generate
-	  the data needed by audit2allow to generate refpolicy. 
 
 1.34.1 2007-01-22
 	* Fixed newrole non-pam build.

@@ -2,7 +2,7 @@
 /*
  * Security object class definitions
  */
-    S_("null")
+S_("null")
     S_("security")
     S_("process")
     S_("system")
@@ -62,13 +62,3 @@
     S_("packet")
     S_("key")
     S_("context")
-    S_("dccp_socket")
-    S_("memprotect")
-    S_("db_database")
-    S_("db_table")
-    S_("db_procedure")
-    S_("db_column")
-    S_("db_tuple")
-    S_("db_blob")
-    S_("peer")
-    S_("capability2")

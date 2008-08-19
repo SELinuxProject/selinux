@@ -237,7 +237,7 @@ int sepol_user_modify(sepol_handle_t * handle,
 
 		tmp_ptr = realloc(policydb->sym_val_to_name[SYM_USERS],
 				  (policydb->p_users.nprim +
-				   1) * sizeof(char *));
+				   1) * sizeof(user_datum_t *));
 		if (!tmp_ptr)
 			goto omem;
 		policydb->sym_val_to_name[SYM_USERS] = tmp_ptr;

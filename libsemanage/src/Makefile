@@ -10,7 +10,7 @@ PYLIBDIR ?= $(LIBDIR)/${PYLIBVER}
 DEFAULT_SEMANAGE_CONF_LOCATION=$(DESTDIR)/etc/selinux/semanage.conf
 
 ifeq ($(DEBUG),1)
-	export CFLAGS = -g3 -O0 -gdwarf-2 -fno-strict-aliasing -Wall -Wshadow -Werror
+	export CFLAGS = -g3 -O0 -gdwarf-2 -fno-strict-aliasing -Wall -Wshadow 
 	export LDFLAGS = -g
 endif
 
@@ -31,7 +31,7 @@ SWIGFILES=$(SWIGSO) semanage.py
 LIBSO=$(TARGET).$(LIBVERSION)
 OBJS= $(patsubst %.c,%.o,$(filter-out $(SWIGCOUT),$(wildcard *.c))) conf-scan.o conf-parse.o
 LOBJS= $(patsubst %.c,%.lo,$(filter-out $(SWIGCOUT),$(wildcard *.c))) conf-scan.lo conf-parse.lo
-CFLAGS ?= -Wall -W -Wundef -Wshadow -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
+CFLAGS ?= -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
 
 override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE 
 
@@ -54,7 +54,7 @@ $(LIBA): $(OBJS)
 	ranlib $@
 
 $(LIBSO): $(LOBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -lsepol -lselinux -lustr -L$(LIBDIR) -Wl,-soname,$(LIBSO),--version-script=libsemanage.map,-z,defs
+	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -lsepol -lselinux -L$(LIBDIR) -Wl,-soname,$(LIBSO),--version-script=libsemanage.map,-z,defs
 	ln -sf $@ $(TARGET)
 
 conf-scan.c: conf-scan.l conf-parse.h
@@ -70,18 +70,6 @@ conf-parse.h: conf-parse.c
 
 %.lo:  %.c
 	$(CC) $(CFLAGS) -fPIC -DSHARED -c -o $@ $<
-
-conf-parse.o:  conf-parse.c
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -c -o $@ $<
-
-conf-parse.lo:  conf-parse.c
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -fPIC -DSHARED -c -o $@ $<
-
-conf-scan.o:  conf-scan.c
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -c -o $@ $<
-
-conf-scan.lo:  conf-scan.c
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGCOUT): $(SWIGIF)
 	$(SWIG) $^

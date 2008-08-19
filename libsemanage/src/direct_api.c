@@ -41,7 +41,6 @@
 #include "boolean_internal.h"
 #include "fcontext_internal.h"
 #include "node_internal.h"
-#include "genhomedircon.h"
 
 #include "debug.h"
 #include "handle.h"
@@ -643,9 +642,6 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		retval = semanage_expand_sandbox(sh, base, &out);
 		if (retval < 0)
 			goto cleanup;
-	
-		sepol_module_package_free(base);
-		base = NULL;
 
 		dbase_policydb_attach((dbase_policydb_t *) pusers_base->dbase,
 				      out);
@@ -705,28 +701,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	if (retval < 0)
 		goto cleanup;
 
-	/* run genhomedircon if its enabled, this should be the last operation
-	 * which requires the out policydb */
-	if (!sh->conf->disable_genhomedircon) {
-		if (out && (retval =
-		     semanage_genhomedircon(sh, out, 1)) != 0) {
-			ERR(sh, "semanage_genhomedircon returned error code %d.",
-			    retval);
-			goto cleanup;
-		}
-	} else {
-		WARN(sh, "WARNING: genhomedircon is disabled. \
-                               See /etc/selinux/semanage.conf if you need to enable it.");
-        }
-
-	/* free out, if we don't free it before calling semanage_install_sandbox 
-	 * then fork() may fail on low memory machines */
-	sepol_policydb_free(out);
-	out = NULL;
-
-	if (sh->do_rebuild || modified) {
-		retval = semanage_install_sandbox(sh);
-	}
+	retval = semanage_install_sandbox(sh);
 
       cleanup:
 	for (i = 0; mod_filenames != NULL && i < num_modfiles; i++) {
@@ -741,6 +716,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	dbase_policydb_detach((dbase_policydb_t *) pbools->dbase);
 
 	free(mod_filenames);
+	sepol_module_package_free(base);
 	sepol_policydb_free(out);
 	semanage_release_trans_lock(sh);
 

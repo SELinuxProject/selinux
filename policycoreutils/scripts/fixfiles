@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # fixfiles
 #
 # Script to restore labels on a SELinux box
@@ -36,8 +36,8 @@ SYSLOGFLAG="-l"
 LOGGER=/usr/sbin/logger
 SETFILES=/sbin/setfiles
 RESTORECON=/sbin/restorecon
-FILESYSTEMSRW=`mount | grep -v "context=" | egrep -v '\((|.*,)bind(,.*|)\)' | awk '/(ext[234]| ext4dev | gfs2 | xfs | jfs ).*\(rw/{print $3}';`
-FILESYSTEMSRO=`mount | grep -v "context=" | egrep -v '\((|.*,)bind(,.*|)\)' | awk '/(ext[234]| ext4dev | gfs2 | xfs | jfs ).*\(ro/{print $3}';`
+FILESYSTEMSRW=`mount | grep -v "context=" | egrep -v '\((|.*,)bind(,.*|)\)' | awk '/(ext[23]| xfs | jfs ).*\(rw/{print $3}';`
+FILESYSTEMSRO=`mount | grep -v "context=" | egrep -v '\((|.*,)bind(,.*|)\)' | awk '/(ext[23]| xfs | jfs ).*\(ro/{print $3}';`
 FILESYSTEMS="$FILESYSTEMSRW $FILESYSTEMSRO"
 SELINUXTYPE="targeted"
 if [ -e /etc/selinux/config ]; then
@@ -84,15 +84,15 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 	    do if ! echo "$pattern" | grep -q -f ${TEMPFILE} 2>/dev/null; then \
                   echo "$pattern"; \
                   case "$pattern" in *"*") \
-	               echo "$pattern" | sed -e 's,^,^,' -e 's,\*$,,g' >> ${TEMPFILE};;  
+	               echo "$pattern" | sed 's,\*$,,g' >> ${TEMPFILE};;  
                   esac; \
                fi; \
             done | \
-	while read pattern ; do sh -c "find $pattern \
-		      ! \( -fstype ext2 -o -fstype ext3 -o -fstype ext4 -o -fstype ext4dev  -o -fstype gfs2 -o -fstype jfs -o -fstype xfs \) -prune  -o \
-		      \( -wholename /home -o -wholename /root -o -wholename /tmp -wholename /dev \) -prune -o -print0"; \
+	while read pattern ; do find $pattern \
+		      ! \( -fstype ext2 -o -fstype ext3 -o -fstype jfs -o -fstype xfs \) -prune  -o \
+		      \( -wholename /home -o -wholename /root -o -wholename /tmp -wholename /dev \) -prune -o -print; \
 		      done 2> /dev/null | \
-	 ${RESTORECON} $* -0 -f - 
+	 ${RESTORECON} $2 -v -f - 
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }
@@ -108,7 +108,6 @@ fi
 
 rpmlist() {
 rpm -q --qf '[%{FILESTATES} %{FILENAMES}\n]' "$1" | grep '^0 ' | cut -f2- -d ' '
-[ ${PIPESTATUS[0]} != 0 ] && echo "$1 not found" >/dev/stderr
 }
 
 # 
@@ -117,7 +116,7 @@ rpm -q --qf '[%{FILESTATES} %{FILENAMES}\n]' "$1" | grep '^0 ' | cut -f2- -d ' '
 #
 restore () {
 if [ ! -z "$PREFC" ]; then
-    diff_filecontext $*
+    diff_filecontext $1
     exit $?
 fi
 if [ ! -z "$RPMFILES" ]; then
@@ -126,21 +125,20 @@ if [ ! -z "$RPMFILES" ]; then
     done
     exit $?
 fi
-if [ ! -z "$FILEPATH" ]; then
+if [ ! -z "$DIRS" ]; then
     if [ -x /usr/bin/find ]; then
-	/usr/bin/find "$FILEPATH" \
-	    ! \( -fstype ext2 -o -fstype ext3 -o -fstype ext4 -o -fstype ext4dev -o -fstype gfs2 -o -fstype jfs -o -fstype xfs \) -prune  -o -print0 | \
-	    ${RESTORECON} ${OUTFILES} ${FORCEFLAG} $* -0 -f - 2>&1 >> $LOGFILE
+	for d in ${DIRS} ; do find $d \
+	    ! \( -fstype ext2 -o -fstype ext3 -o -fstype jfs -o -fstype xfs \) -prune  -o -print | \
+	    ${RESTORECON} ${OUTFILES} ${FORCEFLAG} $* -f - 2>&1 >> $LOGFILE
+	done
     else
-	${RESTORECON} ${OUTFILES} ${FORCEFLAG} -R $* $FILEPATH 2>&1 >> $LOGFILE
+	${RESTORECON} ${OUTFILES} ${FORCEFLAG} -R $* $DIRS 2>&1 >> $LOGFILE
     fi
-    return
+
+    exit $?
 fi
 LogReadOnly
 ${SETFILES} -q ${OUTFILES} ${SYSLOGFLAG} ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 >> $LOGFILE
-rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-*
-find /tmp -context "*:file_t*" -exec chcon -t tmp_t {} \;
-find /var/tmp -context "*:file_t*" -exec chcon -t tmp_t {} \;
 exit $?
 }
 
@@ -174,29 +172,10 @@ relabel() {
     fi
 }
 
-process() {
-#
-# Make sure they specified one of the three valid commands
-#
-case "$1" in
-    restore) restore -p ;;
-    check) restore -n -v;;
-    verify) restore -n -o -;;
-    relabel) relabel;;
-    onboot)
-	touch /.autorelabel
-	echo "System will relabel on next boot"
-	;;
-    *)
-    usage
-    exit 1
-esac
-}
 usage() {
       	echo $"Usage: $0 [-l logfile ] [-o outputfile ] { check | restore|[-F] relabel } [[dir] ... ] "
 	echo or
       	echo $"Usage: $0 -R rpmpackage[,rpmpackage...] -C PREVIOUS_FILECONTEXT [-l logfile ] [-o outputfile ] { check | restore }"
-      	echo $"Usage: $0 onboot"
 }
 
 if [ $# = 0 ]; then
@@ -231,36 +210,38 @@ while getopts "C:Ffo:R:l:" i; do
 esac
 done
 
-# Move out processed options from arguments
-shift $(( OPTIND - 1 ))
 
 # Check for the command
-command=$1
+eval command=\$${OPTIND}
+let OPTIND=$OPTIND+1
 if [ -z $command ]; then
     usage
 fi
-
-# Move out command from arguments
-shift
 
 #
 # check if they specified both DIRS and RPMFILES
 #
 
 if [ ! -z "$RPMFILES" ]; then
-    process $command
-    if [ $# -gt 0 ]; then
+    if [ $OPTIND -le $# ]; then
 	    usage
     fi
 else
-    if [ -z "$1" ]; then
-	process $command
-    else
-	while [ -n "$1" ]; do 
-	    FILEPATH=$1
-	    process $command 
-	    shift
-    	done
-    fi
+    while [ $OPTIND -le $# ]; do
+	eval DIR=\$${OPTIND}
+	DIRS="$DIRS $DIR"
+	let OPTIND=$OPTIND+1
+    done
 fi
-exit $?
+#
+# Make sure they specified one of the three valid commands
+#
+case "$command" in
+    restore) restore -p ;;
+    check) restore -n -v ;;
+    verify) restore -n -o -;;
+    relabel) relabel;;
+    *)
+    usage
+    exit 1
+esac

@@ -1,5 +1,5 @@
 #! /usr/bin/python -E
-# Copyright (C) 2005, 2006, 2007 Red Hat 
+# Copyright (C) 2005 Red Hat 
 # see file 'COPYING' for use and warranty information
 #
 # semanage is a tool for managing SELinux configuration files
@@ -28,12 +28,13 @@ PROGNAME="policycoreutils"
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
+import codecs
+import locale
+sys.stderr = codecs.getwriter(locale.getpreferredencoding())(sys.__stderr__, 'replace')
+sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.__stdout__, 'replace')
 
 try:
-       gettext.install(PROGNAME,
-                       localedir="/usr/share/locale",
-                       unicode=False,
-                       codeset = 'utf-8')
+       gettext.install(PROGNAME, localedir="/usr/share/locale", unicode=1)
 except IOError:
        import __builtin__
        __builtin__.__dict__['_'] = unicode
@@ -43,53 +44,46 @@ is_mls_enabled=selinux.is_selinux_mls_enabled()
 if __name__ == '__main__':
 
 	def usage(message = ""):
-		print _("""
-semanage {boolean|login|user|port|interface|fcontext|translation} -{l|D} [-n] 
-semanage login -{a|d|m} [-sr] login_name | %groupname
-semanage user -{a|d|m} [-LrRP] selinux_name
-semanage port -{a|d|m} [-tr] [ -p proto ] port | port_range
-semanage interface -{a|d|m} [-tr] interface_spec
-semanage fcontext -{a|d|m} [-frst] file_spec
-semanage translation -{a|d|m} [-T] level
-semanage boolean -{d|m} [--on|--off|-1|-0] -F boolean | boolean_file
-semanage permissive -{d|a} type
-
-Primary Options:
-
-	-a, --add        Add a OBJECT record NAME
-	-d, --delete     Delete a OBJECT record NAME
-	-m, --modify     Modify a OBJECT record NAME
-	-l, --list       List the OBJECTS
-	-C, --locallist  List OBJECTS local customizations
-	-D, --deleteall  Remove all OBJECTS local customizations
-
-	-h, --help       Display this message
-	-n, --noheading  Do not print heading when listing OBJECTS
-        -S, --store      Select and alternate SELinux store to manage
-
-Object-specific Options (see above):
-
-	-f, --ftype      File Type of OBJECT 
-		"" (all files) 
-		-- (regular file) 
-		-d (directory) 
-		-c (character device) 
-		-b (block device) 
-		-s (socket) 
-		-l (symbolic link) 
-		-p (named pipe) 
-
-        -F, --file       Treat target as an input file for command, change multiple settings
-	-p, --proto      Port protocol (tcp or udp)
-	-P, --prefix     Prefix for home directory labeling
-	-L, --level      Default SELinux Level (MLS/MCS Systems only)
-	-R, --roles      SELinux Roles (ex: "sysadm_r staff_r")
-	-T, --trans      SELinux Level Translation (MLS/MCS Systems only)
-
-	-s, --seuser     SELinux User Name
-	-t, --type       SELinux Type for the object
-	-r, --range      MLS/MCS Security Range (MLS/MCS Systems only)
-""")
+		print _('\
+semanage {login|user|port|interface|fcontext|translation} -l [-n] \n\
+semanage login -{a|d|m} [-sr] login_name\n\
+semanage user -{a|d|m} [-LrRP] selinux_name\n\
+semanage port -{a|d|m} [-tr] [ -p protocol ] port | port_range\n\
+semanage interface -{a|d|m} [-tr] interface_spec\n\
+semanage fcontext -{a|d|m} [-frst] file_spec\n\
+semanage translation -{a|d|m} [-T] level\n\n\
+\
+Primary Options:\n\
+\
+	-a, --add        Add a OBJECT record NAME\n\
+	-d, --delete     Delete a OBJECT record NAME\n\
+	-m, --modify     Modify a OBJECT record NAME\n\
+	-l, --list       List the OBJECTS\n\n\
+\
+	-h, --help       Display this message\n\
+	-n, --noheading  Do not print heading when listing OBJECTS\n\n\
+\
+Object-specific Options (see above):\n\
+	-f, --ftype      File Type of OBJECT \n\
+		"" (all files) \n\
+		-- (regular file) \n\
+		-d (directory) \n\
+		-c (character device) \n\
+		-b (block device) \n\
+		-s (socket) \n\
+		-l (symbolic link) \n\
+		-p (named pipe) \n\n\
+\
+	-p, --proto      Port protocol (tcp or udp)\n\
+	-P, --prefix     Prefix for home directory labeling\n\
+	-L, --level      Default SELinux Level (MLS/MCS Systems only)\n\
+	-R, --roles      SELinux Roles (ex: "sysadm_r staff_r")\n\
+	-T, --trans      SELinux Level Translation (MLS/MCS Systems only)\n\n\
+\
+	-s, --seuser     SELinux User Name\n\
+	-t, --type       SELinux Type for the object\n\
+	-r, --range      MLS/MCS Security Range (MLS/MCS Systems only)\n\
+')
 		print message
 		sys.exit(1)
 		
@@ -101,23 +95,19 @@ Object-specific Options (see above):
 
 	def get_options():
 		valid_option={}
-		valid_everyone=[ '-a', '--add', '-d', '--delete', '-m', '--modify', '-l', '--list', '-h', '--help', '-n', '--noheading', '-C', '--locallist', '-D', '--deleteall', '-S', '--store' ]
+		valid_everyone=[ '-a', '--add', '-d', '--delete', '-m', '--modify', '-l', '--list', '-h', '--help', '-n', '--noheading' ]
 		valid_option["login"] = []
 		valid_option["login"] += valid_everyone + [ '-s', '--seuser', '-r', '--range']
 		valid_option["user"] = []
 		valid_option["user"] += valid_everyone + [ '-L', '--level', '-r', '--range', '-R', '--roles', '-P', '--prefix' ] 
 		valid_option["port"] = []
-		valid_option["port"] += valid_everyone + [ '-t', '--type', '-r', '--range', '-p', '--proto' ]
+		valid_option["port"] += valid_everyone + [ '-t', '--type', '-r', '--range', '-p', '--protocol' ] 
 		valid_option["interface"] = []
 		valid_option["interface"] += valid_everyone + [ '-t', '--type', '-r', '--range'] 
 		valid_option["fcontext"] = []
 		valid_option["fcontext"] += valid_everyone + [ '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range'] 
 		valid_option["translation"] = []
 		valid_option["translation"] += valid_everyone + [ '-T', '--trans' ] 
-		valid_option["boolean"] = []
-		valid_option["boolean"] += valid_everyone + [ '--on', "--off", "-1", "-0", "-F", "--file"] 
-		valid_option["permissive"] = []
-		valid_option["permissive"] += [ '-a', '--add', '-d', '--delete', '-l', '--list', '-h', '--help', '-n', '--noheading', '-D', '--deleteall' ]
 		return valid_option
 
 	#
@@ -135,17 +125,13 @@ Object-specific Options (see above):
 		setrans = ""
 		roles = ""
 		seuser = ""
-		prefix = "user"
-		heading = True
-		value = None
-		add = False
-		modify = False
-		delete = False
-		deleteall = False
-		list = False
-		locallist = False
-		use_file = False
-                store = ""
+		prefix = ""
+		heading=1
+
+		add = 0
+		modify = 0
+		delete = 0
+		list = 0
 		if len(sys.argv) < 3:
 			usage(_("Requires 2 or more arguments"))
 			
@@ -157,22 +143,16 @@ Object-specific Options (see above):
 		args = sys.argv[2:]
 
 		gopts, cmds = getopt.getopt(args,
-					    '01adf:lhmnp:s:FCDR:L:r:t:T:P:S:',
+					    'adf:lhmnp:s:R:L:r:t:T:P:',
 					    ['add',
 					     'delete',
-					     'deleteall',
 					     'ftype=',
-					     'file',
 					     'help',
 					     'list', 
 					     'modify',
 					     'noheading',
-					     'localist',
-                                             'off', 
-                                             'on', 
 					     'proto=',
 					     'seuser=',
-					     'store=',
 					     'range=',
 					     'level=',
 					     'roles=',
@@ -188,46 +168,32 @@ Object-specific Options (see above):
 			if o == "-a" or o == "--add":
 				if modify or delete:
 					usage()
-				add = True
+				add = 1
 				
 			if o == "-d"  or o == "--delete":
 				if modify or add:
 					usage()
-				delete = True
-			if o == "-D"  or o == "--deleteall":
-				if modify:
-                                       usage()
-				deleteall = True
+				delete = 1
 			if o == "-f"  or o == "--ftype":
 				ftype=a
-
-			if o == "-F"  or o == "--file":
-				use_file = True
-
 			if o == "-h" or o == "--help":
 				usage()
 
 			if o == "-n" or o == "--noheading":
-				heading = False
-
-			if o == "-C" or o == "--locallist":
-				locallist = True
+				heading=0
 
 			if o == "-m"or o == "--modify":
 				if delete or add:
 					usage()
-				modify = True
+				modify = 1
 				
-			if o == "-S" or o == '--store':
-				store = a
-
 			if o == "-r" or o == '--range':
 				if is_mls_enabled == 0:
 					errorExit(_("range not supported on Non MLS machines"))
 				serange = a
 
 			if o == "-l" or o == "--list":
-				list = True
+				list = 1
 
 			if o == "-L" or o == '--level':
 				if is_mls_enabled == 0:
@@ -252,50 +218,32 @@ Object-specific Options (see above):
 			if o == "-T" or o == "--trans":
 				setrans = a
 
-                        if o == "--on" or o == "-1":
-                               value = "on"
-                        if o == "--off" or o == "-0":
-                               value = "off"
-
 		if object == "login":
-			OBJECT = seobject.loginRecords(store)
+			OBJECT = seobject.loginRecords()
 
 		if object == "user":
-			OBJECT = seobject.seluserRecords(store)
+			OBJECT = seobject.seluserRecords()
 
 		if object == "port":
-			OBJECT = seobject.portRecords(store)
+			OBJECT = seobject.portRecords()
 		
 		if object == "interface":
-			OBJECT = seobject.interfaceRecords(store)
+			OBJECT = seobject.interfaceRecords()
 		
 		if object == "fcontext":
-			OBJECT = seobject.fcontextRecords(store)
-		
-		if object == "boolean":
-			OBJECT = seobject.booleanRecords(store)
+			OBJECT = seobject.fcontextRecords()
 		
 		if object == "translation":
 			OBJECT = seobject.setransRecords()
 		
-		if object == "permissive":
-			OBJECT = seobject.permissiveRecords(store)
-		
 		if list:
-			if object == "boolean":
-                               OBJECT.list(heading, locallist, use_file)
-			else:
-                               OBJECT.list(heading, locallist)
-			sys.exit(0);
-			
-		if deleteall:
-			OBJECT.deleteall()
+			OBJECT.list(heading)
 			sys.exit(0);
 			
 		if len(cmds) != 1:
 			usage()
-                        
-                target = cmds[0]
+
+		target = cmds[0]
 
 		if add:
 			if object == "login":
@@ -305,10 +253,12 @@ Object-specific Options (see above):
 				OBJECT.add(target, setrans)
 
 			if object == "user":
-                               rlist = []
-                               if not use_file:
-                                      rlist = roles.split()
-                               OBJECT.add(target, rlist, selevel, serange, prefix)
+				rlist = roles.split()
+				if len(rlist) == 0:
+					raise ValueError(_("You must specify a role"))
+				if prefix == "":
+					raise ValueError(_("You must specify a prefix"))
+				OBJECT.add(target, rlist, selevel, serange, prefix)
 
 			if object == "port":
 				OBJECT.add(target, proto, serange, setype)
@@ -318,15 +268,9 @@ Object-specific Options (see above):
 
 			if object == "fcontext":
 				OBJECT.add(target, setype, ftype, serange, seuser)
-			if object == "permissive":
-				OBJECT.add(target)
-
 			sys.exit(0);
 			
 		if modify:
-			if object == "boolean":
-                               OBJECT.modify(target, value, use_file)
-
 			if object == "login":
 				OBJECT.modify(target, seuser, serange)
 

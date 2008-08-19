@@ -1,0 +1,11 @@
+<sect1 id="ackno"><title>Acknowledgements</title>
+<para>
+We thank James Morris for his contributions to the SELinux security
+module and for his independent development of CIPSO/FIPS188 packet
+labeling for SELinux.  We thank the other contributors to the LSM
+kernel patch for their work, particularly Chris Wright, Greg
+Kroah-Hartman, James Morris, Serge Hallyn, and Lachlan McIlroy.  We
+also thank the users of SELinux for their feedback on the LSM-based
+SELinux releases.
+</para>
+</sect1>

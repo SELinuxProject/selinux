@@ -17,6 +17,7 @@
 #define SELINUXTAG "SELINUX="
 #define SETLOCALDEFS "SETLOCALDEFS="
 #define REQUIRESEUSERS "REQUIRESEUSERS="
+#define CACHETRANSTAG "CACHETRANS="
 
 /* Indices for file paths arrays. */
 #define BINPOLICY         0
@@ -38,8 +39,7 @@
 #define FILE_CONTEXTS_HOMEDIR 16
 #define FILE_CONTEXTS_LOCAL 17
 #define SECURETTY_TYPES   18
-#define X_CONTEXTS        19
-#define NEL               20
+#define NEL               19
 
 /* New layout is relative to SELINUXDIR/policytype. */
 static char *file_paths[NEL];
@@ -65,16 +65,44 @@ static const uint16_t file_path_suffixes_idx[NEL] = {
 #undef S_
 };
 
+/* Old layout had fixed locations. */
+#define SECURITYCONFIG "/etc/sysconfig/selinux"
+#define SECURITYDIR "/etc/security"
+static const union compat_file_path_data {
+	struct {
+#define S_(n, s) char L1(__LINE__)[sizeof(s)];
+#include "compat_file_path.h"
+#undef S_
+	};
+	char str[0];
+} compat_file_path_data = {
+	{
+#define S_(n, s) s,
+#include "compat_file_path.h"
+#undef S_
+	}
+};
+static const uint16_t compat_file_path_idx[NEL] = {
+#define S_(n, s) [n] = offsetof(union compat_file_path_data, L1(__LINE__)),
+#include "compat_file_path.h"
+#undef S_
+};
+
 #undef L1
 #undef L2
+
+static int use_compat_file_path;
 
 int selinux_getenforcemode(int *enforce)
 {
 	int ret = -1;
 	FILE *cfg = fopen(SELINUXCONFIG, "r");
+	char *buf;
+	int len = sizeof(SELINUXTAG) - 1;
+	if (!cfg) {
+		cfg = fopen(SECURITYCONFIG, "r");
+	}
 	if (cfg) {
-		char *buf;
-		int len = sizeof(SELINUXTAG) - 1;
 		buf = malloc(selinux_page_size);
 		if (!buf) {
 			fclose(cfg);
@@ -139,6 +167,12 @@ static void init_selinux_config(void)
 
 	if (selinux_policyroot)
 		return;
+	if (access(SELINUXDIR, F_OK) != 0) {
+		selinux_policyroot = SECURITYDIR;
+		selinux_rootpath = SECURITYDIR;
+		use_compat_file_path = 1;
+		return;
+	}
 
 	selinux_rootpath = SELINUXDIR;
 	fp = fopen(SELINUXCONFIG, "r");
@@ -174,6 +208,10 @@ static void init_selinux_config(void)
 					    sizeof(REQUIRESEUSERS) - 1)) {
 				value = buf_p + sizeof(REQUIRESEUSERS) - 1;
 				intptr = &require_seusers;
+			} else if (!strncmp(buf_p, CACHETRANSTAG,
+					    sizeof(CACHETRANSTAG) - 1)) {
+				value = buf_p + sizeof(CACHETRANSTAG) - 1;
+				intptr = &cache_trans;
 			} else {
 				continue;
 			}
@@ -206,6 +244,7 @@ static void init_selinux_config(void)
 			     file_path_suffixes_idx[i])
 		    == -1)
 			return;
+	use_compat_file_path = 0;
 }
 
 static void fini_selinux_policyroot(void) __attribute__ ((destructor));
@@ -213,6 +252,10 @@ static void fini_selinux_policyroot(void) __attribute__ ((destructor));
 static void fini_selinux_policyroot(void)
 {
 	int i;
+	if (use_compat_file_path) {
+		selinux_policyroot = NULL;
+		return;
+	}
 	free(selinux_policyroot);
 	selinux_policyroot = NULL;
 	for (i = 0; i < NEL; i++) {
@@ -223,15 +266,12 @@ static void fini_selinux_policyroot(void)
 	selinux_policytype = NULL;
 }
 
-void reset_selinux_config(void)
-{
-	fini_selinux_policyroot();
-	init_selinux_config();
-}
-
 static const char *get_path(int idx)
 {
-	return file_paths[idx];
+	if (!use_compat_file_path)
+		return file_paths[idx];
+
+	return compat_file_path_data.str + compat_file_path_idx[idx];
 }
 
 const char *selinux_default_type_path()
@@ -376,10 +416,3 @@ const char *selinux_file_context_local_path()
 }
 
 hidden_def(selinux_file_context_local_path)
-
-const char *selinux_x_context_path()
-{
-	return get_path(X_CONTEXTS);
-}
-
-hidden_def(selinux_x_context_path)

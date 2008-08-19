@@ -47,12 +47,6 @@ in which case they are supplied to the new shell.
 In particular, an argument of -- -c will cause the next argument to be
 treated as a command by most command interpreters.
 .PP
-If a command argument is specified to newrole and the command name is found
-in /etc/selinux/newrole_pam.conf, then the pam service name listed in that
-file for the command will be used rather than the normal newrole pam
-configuration.  This allows for per-command pam configuration when
-invoked via newrole, e.g. to skip the interactive re-authentication phase.
-.PP
 The new shell will be the shell specified in the user's entry in the 
 .I /etc/passwd
 file.
@@ -87,21 +81,13 @@ Changing sensitivity and clearance:
    # id -Z
    staff_u:sysadm_r:sysadm_t:Secret
 
-.PP
-Running a program in a given role or level:
-   # newrole -r sysadm_r -- -c "/path/to/app arg1 arg2..."
-   # newrole -l Secret -- -c "/path/to/app arg1 arg2..."
-
 .SH FILES
 /etc/passwd - user account information
 .br
 /etc/shadow - encrypted passwords and age information
 .br
 /etc/selinux/<policy>/contexts/default_type - default types for roles
-.br
 /etc/selinux/<policy>/contexts/securetty_types - securetty types for level changes
-.br
-/etc/selinux/newrole_pam.conf - optional mapping of commands to separate pam service names
 .br
 .SH SEE ALSO
 .B runcon

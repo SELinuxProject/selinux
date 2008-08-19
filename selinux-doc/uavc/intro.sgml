@@ -1,0 +1,19 @@
+<sect1 id="intro"><title>Introduction</title>
+
+<para>
+The Security-Enhanced Linux project has long focused on implementing mandatory access control using the Flask architecture in the Linux kernel.  The sample security server in the kernel is aware of a wide variety of object classes, including processes, files, and sockets.  Policy can be written governing access to these objects.
+</para>
+
+<para>
+Modern Linux systems, however, have a number of security-relevant userspace daemons and utilities which manage objects and provide services independently of the kernel.  Examples include the X Window System server, which manages the display, and the D-BUS daemon, a message-passing utility.  Recent research has focused on making these programs <quote>SELinux aware</quote> by having them label internal objects with security contexts and enforce policy over them, querying the kernel to obtain policy decisions.
+</para>
+
+<para>
+Starting with version 1.9, libselinux includes a userspace AVC which provides supporting functionality for userspace object managers.  This paper gives an overview of its architecture and includes sample code showing proper usage of the library.
+</para>
+
+<para>
+The full API for the userspace AVC is documented in the header file <filename>selinux/avc.h</filename>.  Additionally, man pages are included with libselinux starting with version 1.13.  <function>avc_init</function>(3) is a good starting point when using the man pages.
+</para>
+
+</sect1>

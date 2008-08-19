@@ -1,4 +1,4 @@
-.TH "getfscreatecon" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.TH "getfscreatecon" "3" "1 January 2004" "russell@coker.com.au" "SE Linux API documentation"
 .SH "NAME"
 getfscreatecon, setfscreatecon \- get or set the SELinux security context used for creating a new file system object.
 
@@ -6,7 +6,7 @@ getfscreatecon, setfscreatecon \- get or set the SELinux security context used f
 .B #include <selinux/selinux.h>
 .sp
 .BI "int getfscreatecon(security_context_t *" con );
-
+.br 
 .BI "int setfscreatecon(security_context_t "context );
 
 .SH "DESCRIPTION"
@@ -22,14 +22,14 @@ NULL can be passed to
 setfscreatecon to reset to the default policy behavior.  
 The fscreate context is automatically reset after the next execve, so a
 program doesn't need to explicitly sanitize it upon startup.  
-
+.br
 setfscreatecon can be applied prior to library
 functions that internally perform an file creation,
 in order to set an file context on the objects.
-
+.br
 
 Note: Signal handlers that perform an setfscreate must take care to
-save, reset, and restore the fscreate context to avoid unexpected behavior.
+save, reset, and restore the fscreate context to avoid unexpected behaviors.
 .SH "RETURN VALUE"
 On error -1 is returned.
 On success 0 is returned.

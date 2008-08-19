@@ -13,6 +13,5 @@
 	sepol_policy_kern_*;
 	sepol_policy_file_*;
 	sepol_set_disable_dontaudit;
-	sepol_set_expand_consume_base;
   local: *;
 };

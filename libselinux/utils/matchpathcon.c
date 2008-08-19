@@ -12,7 +12,7 @@
 void usage(const char *progname)
 {
 	fprintf(stderr,
-		"usage:  %s [-N] [-n] [-f file_contexts] [-p prefix] [-Vq] path...\n",
+		"usage:  %s [-N] [-n] [-f file_contexts] [-p prefix] [-V] path...\n",
 		progname);
 	exit(1);
 }
@@ -42,12 +42,11 @@ int main(int argc, char **argv)
 	int verify = 0;
 	int notrans = 0;
 	int error = 0;
-	int quiet = 0;
 
 	if (argc < 2)
 		usage(argv[0]);
 
-	while ((opt = getopt(argc, argv, "Nnf:p:Vq")) > 0) {
+	while ((opt = getopt(argc, argv, "Nnf:p:V")) > 0) {
 		switch (opt) {
 		case 'n':
 			header = 0;
@@ -91,9 +90,6 @@ int main(int argc, char **argv)
 				exit(1);
 			}
 			break;
-		case 'q':
-			quiet = 1;
-			break;
 		default:
 			usage(argv[0]);
 		}
@@ -105,18 +101,11 @@ int main(int argc, char **argv)
 			mode = buf.st_mode;
 
 		if (verify) {
-			if (quiet) {
-				if (selinux_file_context_verify(argv[i], 0))
-					continue;
-				else
-					exit(1);
-			}
 			if (selinux_file_context_verify(argv[i], 0)) {
 				printf("%s verified.\n", argv[i]);
 			} else {
 				security_context_t con;
 				int rc;
-				error = 1;
 				if (notrans)
 					rc = lgetfilecon_raw(argv[i], &con);
 				else
@@ -125,17 +114,19 @@ int main(int argc, char **argv)
 				if (rc >= 0) {
 					printf("%s has context %s, should be ",
 					       argv[i], con);
-					printmatchpathcon(argv[i], 0, mode);
+					error +=
+					    printmatchpathcon(argv[i], 0, mode);
 					freecon(con);
 				} else {
 					printf
 					    ("actual context unknown: %s, should be ",
 					     strerror(errno));
-					printmatchpathcon(argv[i], 0, mode);
+					error +=
+					    printmatchpathcon(argv[i], 0, mode);
 				}
 			}
 		} else {
-			error |= printmatchpathcon(argv[i], header, mode);
+			error += printmatchpathcon(argv[i], header, mode);
 		}
 	}
 	matchpathcon_fini();

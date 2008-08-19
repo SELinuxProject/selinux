@@ -1,0 +1,100 @@
+<sect1 id="syscalls"><title>SELinux API</title>
+
+<para>
+This section discusses how the SELinux API was implemented in the
+SELinux security module.  Prior to merging SELinux into the mainline
+Linux 2.6 kernel, the SELinux API was implemented using a security
+system call multiplexer provided by the LSM kernel patch.  However,
+this security system call was removed by the kernel developers during
+the Linux 2.5 development series, thereby requiring a reworking of the
+SELinux API to gain acceptance into mainline Linux.  The SELinux API
+has been refactored into three components: a new
+<filename>/proc/pid/attr</filename> API for process attributes, the
+existing xattr API for file attributes (using a new security
+namespace), and a selinuxfs pseudo filesystem for the security policy
+API. Support for the SELinux extensions for System V and socket IPC
+will be investigated in the future.  All three components of the new
+SELinux API are encapsulated by the libselinux library.
+</para>
+
+<para>
+As part of the redesign of the SELinux API for Linux 2.6, SIDs were
+removed from the API, and only security contexts are now passed by the
+API calls.  This approach provided a better fit with both the
+/proc-based interface and the xattr-based interface, as well as
+providing a better fit with the needs of most applications.  It also
+allows for future implementation of kernel tracking of SID usage and
+safe reclamation of unused SIDs.  For applications that would benefit
+from a SID abstraction, e.g. userspace object managers such as dbusd,
+nscd, or X, a userspace SID table was implemented in libselinux along
+with the userspace AVC.
+</para>
+
+<para>
+Prior to merging SELinux into mainline Linux 2.6, extended system
+calls such as <function>execve_secure</function>,
+<function>open_secure</function> and <function>stat_secure</function>
+were implemented by SELinux to allow security information to be
+provided or returned by a call.  In the original SELinux kernel patch,
+these calls were implemented internally by extending the internal
+kernel functions to optionally pass and process SID parameters.  This
+approach was viewed as enhancing the Linux API to incorporate security
+as a first class notion, retaining the original calls for
+compatibility but re-implementing them internally by passing default
+SIDs to the extended internal functions.  Later, in the LSM-based
+SELinux, to reduce the invasiveness of SELinux, the calls were
+re-implementing by passing SIDs via fields in the task security
+structure to and from the security hook functions.  However, this
+approach of a parallel set of extended calls for existing system calls
+was not welcomed by the kernel developers.
+</para>
+
+<para>
+Based on kernel developer feedback, the extended system calls of the
+original SELinux API were replaced with separate set-attribute calls
+that precede an ordinary call.  For example, a call to
+<function>execve_secure</function> is replaced with a call to
+<function>setexeccon</function> to set the desired exec security
+context followed by a call to <function>execve</function> to perform
+the exec.  Similarly, a call to <function>open_secure</function> or
+<function>mkdir_secure</function> is replaced with a call to
+<function>setfscreatecon</function> to set the desired filesystem
+creation context followed by a call to <function>open</function> or
+<function>mkdir</function> to perform the file creation.  The exec
+context and fscreate context are attributes of the process like the
+umask; if set, they are applied to all subsequent execve or file
+creation calls until they are explicitly cleared via
+<function>setexeccon</function> or <function>setfscreatecon</function>
+calls with a NULL argument or they are automatically cleared after an
+execve (i.e. reset upon each new program execution).  Within
+libselinux, these calls are implemented via writes to
+<filename>/proc/self/attr/exec</filename> and
+<filename>/proc/self/attr/fscreate</filename> nodes. Note that a
+process can only set its own exec and fscreate contexts.
+</para>
+
+<para>
+The new SELinux API allows for simplification of applications that
+merely wish to set a single exec or fscreate context and have it
+applied for any subsequent execve or file creation call, since the
+setting of the context can be performed up front and the SID/context
+does not need to be passed around by the application functions.  The
+API also avoids the need to extend various library functions
+(e.g. execl*, execv*, popen/pclose, fopen) that internally perform
+execve or file creation calls, since the caller can simply set the
+exec or fscreate context prior to making the ordinary library function
+call and have the context automatically applied when the execve or
+file creation call is made by the library function.
+</para>
+
+<para>
+However, this API does require additional care to be taken by library
+functions to save and restore the exec or fscreate contexts if they
+need to set them temporarily for their own processing (e.g. to
+preserve the security context on <filename>/etc/shadow</filename>) and
+by signal handlers to save, reset, and restore these contexts if the
+signal handler calls execve or a file creation call.  The setting of
+the /proc/pid/attr attributes is not supported for multi-threaded processes.
+</para>
+
+</sect1>

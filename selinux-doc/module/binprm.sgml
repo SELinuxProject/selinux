@@ -1,0 +1,357 @@
+<sect1 id="binprm"><title>Program Loading Hook Functions</title>
+
+<para>
+The SELinux binprm hook function implementations manage the security
+fields of <structname>linux_binprm</structname> structures and perform
+access control for program loading operations.  This section
+describes these hooks and their helper functions.
+</para>
+
+<sect2 id="BinprmSecurity"><title>Managing Binprm Security Fields</title>
+<sect3><title>Binprm Security Structure</title>
+<para>
+The <structname>bprm_security_struct</structname> structure contains
+security information for program loading. This structure is defined as follows:
+</para>
+<programlisting>
+struct bprm_security_struct {
+        struct linux_binprm *bprm;
+        u32 sid;
+        unsigned char set;
+        char unsafe;
+};
+</programlisting>
+
+<table frame="all">
+<title>task_security_struct</title>
+<tgroup cols="2" align="left">
+<colspec colwidth="20*">
+<colspec colwidth="80*">
+<thead>
+<row>
+    <entry>Field</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>bprm</entry>
+    <entry>Back pointer to the associated 
+	<structname>linux_binprm</structname> structure.
+    </entry>
+</row>
+<row>
+    <entry>sid</entry>
+    <entry>SID for the transformed process. </entry>
+</row>
+<row>
+    <entry>set</entry>
+    <entry>Flag indicating whether sid has been set.</entry>
+</row>
+<row>
+    <entry>unsafe</entry>
+    <entry>Flag indicating whether an unsafe transition was attempted.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect3>
+
+
+<sect3><title>selinux_bprm_alloc_security and selinux_bprm_free_security</title>
+<para>
+The <function>selinux_bprm_alloc_security</function> and
+<function>selinux_bprm_free_security</function> hook functions
+directly perform allocation and freeing of the linux_binprm security
+structures rather than using primitive helper functions.  However,
+they perform the same basic processing as described in <XRef
+LinkEnd="AllocFree">.   In earlier versions of the SELinux module,
+there was no bprm security structure and these functions did nothing
+for SELinux, as only the new SID for the transformed process was needed and it
+was stored directly in the linux_binprm security field.
+</para>
+</sect3>
+
+<sect3 id="BprmSetSecurity"><title>selinux_bprm_set_security</title>
+<para>
+The <function>selinux_bprm_set_security</function> hook function is
+called while loading a new program to fill in the
+<structname>linux_binprm</structname> security field and optionally to
+check permissions.  This hook function may be called multiple times
+during a single execve, e.g. for interpreted scripts.  This hook
+function first calls the secondary security module to support Linux
+capabilities.  If the set flag in the bprm security structure has
+already been set by a prior call to this hook, this hook merely
+returns without further processing.  This allows security transitions
+to occur on scripts if permitted by the policy.  Naturally, such
+transitions should only occur when the caller is more trusted than the
+new domain, as script invocation is subject to an inherent race and
+scripts are highly susceptible to influence by their caller.
+However, SELinux does allow transitions on scripts subject to policy,
+e.g. to support shedding of permissions upon script invocation where
+the caller is trusted.
+</para>
+
+<para>
+By default, this hook function sets the SID in the bprm security
+structure to the SID of the current task. It also clears any file
+creation SID set earlier by the task to ensure that the new program
+starts with a clean initial state.  This function checks the current
+task's security structure to see if the task specified an exec SID for
+the next execve call.  If so, then this exec SID is used and cleared.
+Otherwise, the security server is consulted using the
+<function>security_transition_sid</function> interface to see whether
+the SID should change based on the current SID of the task and the SID
+of the program.  If the filesystem is mounted
+<constant>nosuid</constant>, then any exec SID set previously or
+transition SID obtained from the security server is ignored, and the
+task SID is left unchanged.
+</para>
+
+<para>
+This hook function then performs different permission checks depending
+on whether the SID of the task is changing.  The permission checks for
+each case are described below.  The file <constant>execute</constant>
+permission check is performed by the
+<function>selinux_inode_permission</function> hook during
+<function>open_exec</function> processing, so it is not listed here.
+</para>
+
+<para>
+The file <constant>execute_no_trans</constant> permission is checked
+when a task would remain in the same SID upon executing a program, as
+shown in <xref linkend="NochangeSidTable">.  This permission check
+ensures that a task is allowed to execute a given program without
+changing its security attributes.  For example, although the login
+process can execute a user shell, it should always change its SID at
+the same time, so it does not need this permission to the shell
+program.
+
+<table id="NochangeSidTable" frame="all">
+<title>Permission Checks if Task SID is not changing on exec</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Current</entry>
+<entry>ProgramFile</entry>
+<entry>execute_no_trans</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+The process <constant>transition</constant> permission and the file
+<constant>entrypoint</constant> permission are checked when the SID of
+a task changes.  The <constant>transition</constant> permission check
+ensures that the old SID is allowed to transition to the new SID.  The
+<constant>entrypoint</constant> permission check ensures that the new
+SID can only be entered by executing particular programs.  Such
+programs are referred to as entrypoint programs for the SID.  These
+permission checks are shown in <xref linkend="ChangeSidTable">.  If
+all permission checks for a transition pass, then any unsafe personality
+bits are cleared and the new SID is saved in the bprm security structure
+for use by <function>selinux_bprm_apply_creds</function>.
+
+<table id="ChangeSidTable" frame="all">
+<title>Permission Checks if Task SID is changing on exec</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Current</entry>
+<entry>NewTaskSID</entry>
+<entry>transition</entry>
+</row>
+<row>
+<entry>NewTaskSID</entry>
+<entry>ProgramFile</entry>
+<entry>entrypoint</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+</sect3>
+
+<sect3 id="BprmApplyCreds"><title>selinux_bprm_apply_creds</title>
+<para>
+The <function>selinux_bprm_apply_creds</function> hook function is
+called to set the new security attributes for the transformed process
+upon an execve after checking for certain unsafe conditions with the
+task lock held.  This hook function first calls the secondary security
+module to support Linux capabilities.  This hook then extracts the new
+task SID from the bprm security structure, copies the current SID of
+the task into the old SID field of the task security structure, and
+clears the unsafe flag in the bprm security structure.  If the new SID
+is the same as the old SID, then nothing further is done by this hook.
+</para>
+
+<para>
+Two additional permission checks may occur when the SID of the task is
+changing.  If the task was created via <function>clone</function> and
+has shared state, then the <constant>share</constant> permission is
+checked between the old and new SIDs.  If the task is being traced,
+then the <constant>ptrace</constant> permission is checked between the
+tracer task (saved in the ptrace_sid field of the current task's
+security structure earlier upon ptrace_attach) and the new SID.  The
+permission checks are shown in <xref linkend="PtraceShareTable">.  If
+either of these permission checks fail, then the task SID is left
+unchanged, the unsafe flag is set in the bprm security structure for
+later use by the <function>selinux_bprm_post_apply_creds</function>
+hook, and the hook immediately returns.  If all permissions are
+granted, this hook function changes the SID of the task to the new
+SID and returns.
+
+<table id="PtraceShareTable" frame="all">
+<title>Permission Checks if Task SID is changing on exec</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>TracerTask</entry>
+<entry>NewTaskSID</entry>
+<entry>ptrace</entry>
+</row>
+<row>
+<entry>Current</entry>
+<entry>NewTaskSID</entry>
+<entry>share</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</sect3>
+
+<sect3 id="BprmPostApplyCreds"><title>selinux_bprm_post_apply_creds</title>
+<para>
+This hook function is called after the
+<function>selinux_bprm_apply_creds</function> without the task lock
+held to support further processing that cannot be done safely under
+the task lock or that does not require it to be held.  The hook
+function first checks whether the unsafe flag was set in the bprm
+security structure, and if so, it forces a SIGKILL to the task to
+terminate it and returns immediately.  This function then checks whether 
+the task SID has changed, and if not, it returns immediately, as no further
+processing is required.
+</para>
+
+<para>
+Otherwise, this hook function proceeds to call the
+<function>flush_unauthorized_files</function> helper function to
+revoke access to the controlling tty if the task is no longer allowed
+to access it and to close any file descriptors to which the task
+should no longer have access.  After revalidating access to the
+controlling tty and revoking it if necessary, the helper function
+calls <function>file_has_perm</function> on each open file with
+requested permissions that correspond to the file mode and flags, and
+closes the open file if these permissions are not granted under the
+new SID.  The <function>file_has_perm</function> function is described
+in <xref linkend="FileHasPerm">.  To avoid inducing errors in
+applications that expect certain descriptors to be open, this helper
+function also re-opens any descriptors it closes to refer to a null
+device node that was set up in selinuxfs during initialization.  The
+helper function then returns.
+</para>
+
+<para>
+The <function>selinux_bprm_post_apply_creds</function> hook function
+then applies two inheritance checks between the old and new SIDs, one
+to control the ability to inherit signal-related state and one to
+control the ability to inherit resource limits from the old SID.
+These checks are intended to protect the program in the new SID
+against certain forms of influence by the caller unless authorized by
+policy.  If the <constant>siginh</constant> permission is denied, then
+any itimers are cleared to avoid subsequent signal generation, pending
+signals are flushed and unblocked, and all signal handlers are reset
+to the default.  If the <constant>rlimitinh</constant> permission is
+denied, then all soft resource limits are reset to the lower of the
+current task's hard limit and the initial task's soft limit.  This
+control relies on the proper control of the
+<constant>setrlimit</constant> permission to prevent untrusted
+processes from lowering hard limits as well.  The inclusion of the
+initial task's soft limits into the computation is to avoid resetting
+soft limits higher than the default soft limit for cases where the
+default is lower than the hard limit,
+e.g. <constant>RLIMIT_CORE</constant> or
+<constant>RLIMIT_STACK</constant>.  These two inheritance checks 
+are shown in <xref linkend="InheritTable">.
+
+<table id="InheritTable" frame="all">
+<title>Inheritance Permission Checks if Task SID is changing on exec</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>OldTaskSID</entry>
+<entry>NewTaskSID</entry>
+<entry>siginh</entry>
+</row>
+<row>
+<entry>OldTaskSID</entry>
+<entry>NewTaskSID</entry>
+<entry>rlimitinh</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+Finally, this hook function wakes up the parent task if it is waiting
+on this task.  This allows the <function>selinux_task_wait</function>
+hook to recheck whether the parent task is allowed to wait on the task
+under its new SID and to handle a denial appropriately.
+</para>
+</sect3>
+
+<sect3 id="BprmSecureExec"><title>selinux_bprm_secureexec</title>
+<para>
+This hook function is called after
+<function>selinux_bprm_post_apply_creds</function> to determine
+whether the AT_SECURE flag in the ELF auxiliary table should be set to
+cause glibc to enable its secure mode in order to sanitize the
+environment and other state to protect the new program against certain
+forms of influence by the caller.  If the task SID has changed, then
+this hook function checks <constant>noatsecure</constant> permission
+between the old and new task SIDs.  If this permission is denied, the
+hook function will set the AT_SECURE flag so that libc secure mode
+will be enabled.  If the permission is allowed, the hook function
+calls the secondary security module to allow it to set the flag,
+e.g. if there is a change in uid, gid or capabilities.  Otherwise,
+the flag will not be set and libc secure mode will not be enabled.
+</para>
+</sect3>
+
+
+</sect2>
+
+</sect1>

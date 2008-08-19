@@ -92,10 +92,8 @@ static int bool_commit_list(semanage_handle_t * handle,
 {
 
 	SELboolean *blist = NULL;
-	const char *name;
 	unsigned int bcount = 0;
 	unsigned int i;
-	int curvalue, newvalue;
 
 	/* Allocate a sufficiently large array */
 	blist = malloc(sizeof(SELboolean) * count);
@@ -104,18 +102,11 @@ static int bool_commit_list(semanage_handle_t * handle,
 
 	/* Populate array */
 	for (i = 0; i < count; i++) {
-		name = semanage_bool_get_name(booleans[i]);
-		if (!name)
-			goto omem;	
-		newvalue = semanage_bool_get_value(booleans[i]);
-		curvalue = security_get_boolean_active(name);
-		if (newvalue == curvalue)
-			continue;
-		blist[bcount].name = strdup(name);
-		if (blist[bcount].name == NULL)
-			goto omem;
-		blist[bcount].value = newvalue;
+		blist[i].name = strdup(semanage_bool_get_name(booleans[i]));
 		bcount++;
+		if (blist[i].name == NULL)
+			goto omem;
+		blist[i].value = semanage_bool_get_value(booleans[i]);
 	}
 
 	/* Commit */

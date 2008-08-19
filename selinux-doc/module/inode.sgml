@@ -1,0 +1,829 @@
+<sect1 id="inode"><title>Inode Hook Functions</title>
+
+<para>
+The SELinux inode hook function implementations manage the security
+fields of inode structures and perform access control for inode
+operations.  Since inodes are used to represent pipes, files, and
+sockets, the hook functions must handle each of these abstractions.
+Furthermore, these hooks must handle multiple filesystem types,
+including both conventional disk-based filesystems like ext3 and
+pseudo filesystems like proc and tmpfs.  This section begins by
+describing the inode hook functions for managing the security fields.
+It then discusses the inode hook functions for performing access
+control.
+</para>
+
+<sect2 id="InodeSecurity"><title>Managing Inode Security Fields</title>
+<sect3><title>Inode Security Structure</title>
+<para>
+The <structname>inode_security_struct</structname> structure contains
+security information for inodes. This structure is defined as follows:
+</para>
+<programlisting>
+struct inode_security_struct {
+        struct inode *inode;
+        struct list_head list;
+        u32 task_sid;
+        u32 sid;
+        u16 sclass;
+        unsigned char initialized;
+        struct semaphore sem;
+};
+</programlisting>
+
+<table frame="all">
+<title>inode_security_struct</title>
+<tgroup cols="2" align="left">
+<colspec colwidth="20*">
+<colspec colwidth="80*">
+<thead>
+<row>
+    <entry>Field</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>inode</entry>
+    <entry>Back pointer to the associated inode.
+    </entry>
+</row>
+<row>
+    <entry>list</entry>
+    <entry>Link into list of inode security structures setup prior to superblock security initialization.</entry>
+</row>
+<row>
+    <entry>task_sid</entry>
+    <entry>SID of the task that allocated this inode. </entry>
+</row>
+<row>
+    <entry>sid</entry>
+    <entry>SID of this inode. </entry>
+</row>
+<row>
+    <entry>sclass</entry>
+    <entry>Security class of this inode. </entry>
+</row>
+<row>
+    <entry>initialized</entry>
+    <entry>Flag indicating whether the inode SID has been initialized.</entry>
+</row>
+<row>
+    <entry>sem</entry>
+    <entry>Semaphore for synchronizing initialization.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect3>
+
+<sect3><title>inode_alloc_security and inode_free_security</title>
+
+<para>
+The <function>inode_alloc_security</function> and
+<function>inode_free_security</function> helper functions are the
+primitive allocation functions for inode security structures.  In
+addition to the general processing for these primitive allocation
+functions, <function>inode_alloc_security</function> saves the SID of
+the allocating task in the <structfield>task_sid</structfield> field.
+The <function>selinux_inode_alloc_security</function> and
+<function>selinux_inode_free_security</function> hook functions merely
+calls these helper functions.
+</para>
+</sect3>
+
+<sect3 id="InodeDoinit"><title>inode_doinit, selinux_d_instantiate</title>
+<para>
+The <function>inode_doinit_with_dentry</function> helper function
+performs initialization for inode security structures.  It is normally
+called for file inodes by the
+<function>selinux_d_instantiate</function> hook function.  However,
+since this helper function cannot perform full initialization until
+after the superblock security initialization is complete for the
+associated superblock, it is also called by the
+<function>superblock_doinit</function> function to retroactively
+complete initialization of inodes setup prior to the superblock
+security initialization.  This includes both inodes setup prior to the
+initial policy load and any inodes directly populated by the
+filesystem code during get_sb processing.
+</para>
+
+<para>
+This helper function begins by checking the initialized flag to see
+whether the inode SID has already been initialized and, if so, jumps
+to the code for setting the inode security class.  Setting of the
+inode security class is always performed by this function if it has
+not been previously set to a more specific value than the initial
+default file class even even if the initialized flag has been
+previously set, as the inode mode is not always properly set at the
+time when an inode SID is first set.  In particular, this is the case
+for /proc/pid inodes.
+</para>
+
+<para>
+If the initialized flag has not been set, this function takes the
+semaphore to synchronize with any other attempts to initialize the
+inode SID and rechecks the initialized flag again.  The function
+then proceeds to check whether the superblock security structure has
+been initialized.  If not, the inode security structure is placed on
+the list maintained in the superblock security structure for deferred
+processingby <function>superblock_doinit</function> and the function
+returns after releasing the semaphore.
+</para>
+
+<para>
+If the superblock security structure has been initialized, then this
+function sets the inode SID based on the defined labeling behavior for
+the superblock.  If the labeling behavior is to use extended
+attributes (xattr), then this function invokes the getxattr method to
+fetch the context value and invokes
+<function>security_context_to_sid_default</function> to convert it to
+a SID, possibly inheriting some information from the default file SID
+associated with the superblock.  If the inode has no xattr value, then
+the inode is assigned the default SID from the superblock security
+structure, which is either the initial file SID or a SID specified via
+the defcontext mount option.
+</para>
+
+<para>
+If the labeling behavior is to inherit the inode SID directly from the
+allocating task, then the function copies the task SID from the inode
+security structure into its own SID field.  This behavior is used for
+private objects such as socket and pipes.
+</para>
+
+<para>
+If the labeling behavior is to compute the inode SID based on both the
+allocating task SID and the superblock SID, then the security
+servers's <function>security_transition_sid</function> function is
+invoked to obtain the inode SID.  This behavior is used for pseudo
+filesystems like devpts and tmpfs where the inodes are labeled with
+derived types reflecting both their creator and the kind of object
+(e.g. a pty, a temporary file).  As discussed in <xref
+linkend="TryContextMount">, the labeling behavior can be overridden via
+the context mount option, so tmpfs mounts can be assigned a particular
+security context instead, as is done for the tmpfs /dev used by udev.
+</para>
+
+<para>
+For any other labeling behavior, the inode SID defaults to the
+superblock SID.  There is a further refinement for the proc
+filesystem; if the inode is in the proc filesystem and is not a
+/proc/pid inode, then the <function>selinux_proc_get_sid</function>
+function is invoked to construct a pathname for the inode based on the
+<structname>proc_dir_entry</structname> information and then obtain a
+SID for that pathname via the security server's
+<function>security_genfs_sid</function> function.  The proc_dir_entry
+information is used to ensure a stable and reliable name mapping,
+unlike the filesystem namespace itself.  Note that /proc/pid inodes
+have their SIDs initialized separately by the
+<function>selinux_task_to_inode</function> hook function, as discussed
+in <xref linkend="TaskToInode">.
+</para>
+
+<para>
+After setting the inode SID, the function sets the initialized flag in
+the inode security structure to indicate that the SID has been set.
+Finally, the function determines the security class for the inode and
+sets the corresponding field in the inode security structure if the 
+security class has not already been set to a more specific value than
+the initial default file class.  The check for a more specific value than the
+default file class is to avoid overwriting the class value set by the socket hooks for socket inodes, as this function cannot properly classify socket inodes.
+The <function>inode_mode_to_security_class</function> function is used to
+obtain the security class based on the inode mode.  The mapping
+between inode modes and security classes is described in <xref
+linkend="InodeclassesTable">.  If the inode does not have any of the
+modes listed in <xref linkend="InodeclassesTable">, then it defaults
+to the file security class.
+
+<table id="InodeclassesTable" frame="all">
+<title>Inode Security Classes</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+<entry>Mode</entry>
+<entry>Security Class</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><constant>S_IFREG</constant></entry>
+<entry>file</entry>
+</row>
+<row>
+<entry><constant>S_IFDIR</constant></entry>
+<entry>dir</entry>
+</row>
+<row>
+<entry><constant>S_IFLNK</constant></entry>
+<entry>lnk_file</entry>
+</row>
+<row>
+<entry><constant>S_IFFIFO</constant></entry>
+<entry>fifo_file</entry>
+</row>
+<row>
+<entry><constant>S_IFSOCK</constant></entry>
+<entry>sock_file</entry>
+</row>
+<row>
+<entry><constant>S_IFBLK</constant></entry>
+<entry>blk_file</entry>
+</row>
+<row>
+<entry><constant>S_IFCHR</constant></entry>
+<entry>chr_file</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+</sect3>
+
+<sect3><title>selinux_inode_init_security</title> 
+<para>
+The <function>selinux_inode_init_security</function> hook function is
+called by the filesystem-specific code when creating a new file in
+order to obtain the security attribute to assign to the new inode
+and to set up the incore inode security structure for the new inode.
+This support allows new inodes to be atomically labeled as part of the inode
+creation transaction, ensuring that an inode is never visible without
+a security label.  This hook and the corresponding filesystem suppport
+was introduced in Linux 2.6.14; prior kernel versions used a different
+set of post creation hooks invoked by the VFS layer that did not provide
+atomicity, allowing the new inode to be temporarily visible in an unlabeled 
+state.  Support for atomic inode labeling was only implemented for the
+ext2, ext3, tmpfs, and jfs filesystems in 2.6.14; similar support for
+other filesystems like xfs and reiserfs has not yet been implemented at
+the time of this writing.
+</para>
+
+<para>
+This function first checks the current task's security structure to
+see if the task has set a fscreate SID for newly created files.  If so
+and mountpoint labeling is not being used for the filesystem, then
+this SID is used.  Otherwise, a SID is obtained from the security
+server by calling the <function>security_transition_sid</function>
+interface; passing in the creating task and parent directory SIDs.
+The <function>inode_security_set_sid</function> helper function is
+called to set the SID and security class in the incore inode security
+structure.
+</para>
+
+<para>
+If the filesystem is using mountpoint labeling, then no attribute
+should be set on disk, so the function returns an
+<constant>EOPNOTSUPP</constant> error to the filesystem code to
+skip setting of the on-disk attribute.  Otherwise, if the
+filesystem code supplied pointer arguments to receive the attribute name
+and value, the function generates the SELinux attribute name and the
+security context value for the inode and sets the arguments accordingly
+before returning successfully.  Certain filesystems such as tmpfs
+do not provide pointer arguments for receiving the attribute name and
+value because there is no attribute representation other than the incore
+representation, unlike the disk-based filesystems that have on-disk
+attribute storage.
+</para>
+
+</sect3>
+
+<sect3><title>selinux_inode_post_setxattr</title> 
+<para>
+This hook function is called to update the inode security structure
+after a successful setxattr operation while the inode semaphore is
+still held.  It first checks whether the changed attribute is the
+SELinux attribute; if not, it returns immediately.  Otherwise, it
+converts the attribute value to a SID and updates the inode SID.
+</para>
+</sect3>
+
+<sect3><title>selinux_inode_getsecurity</title> 
+<para>
+This hook function was originally called on getxattr(2) calls on
+attributes in the security namespace for filesystems that did not
+provide native support for xattrs.  It is now called (as of Linux
+2.6.15) on all getxattr(2) calls on attributes in the security
+namespace, even when the filesystem supports xattrs, in order to allow
+SELinux to provide the canonical form of the security context to
+userspace.  After checking that the requested attribute is the SELinux
+attribute, the function calls
+<function>security_sid_to_context</function> to convert the inode SID
+to a context and copies the context into the provided buffer.
+</para>
+</sect3>
+
+<sect3><title>selinux_inode_setsecurity</title> 
+<para>
+This hook function is called upon setxattr(2) calls on attributes in
+the security namespace for filesystems that do not provide native
+support for xattrs.  After checking that the attribute name is the
+SELinux attribute, the function calls the
+<function>security_context_to_sid</function> to convert the provided
+attribute value to a SID and sets the inode SID to it.
+</para>
+</sect3>
+
+<sect3><title>selinux_inode_listsecurity</title> 
+<para>
+This hook function is called upon listxattr(2) calls to return the
+names of any security attributes supported by the security module for
+filesystems that do not provide native support for xattrs.  It copies
+the name of the SELinux attribute into the provided buffer.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="InodeAc"><title>Controlling Inode Operations</title>
+
+<sect3><title>inode_has_perm</title>
+<para>
+This helper function checks whether a task has a particular permission
+to an inode.  In addition to taking the task, inode, and requested
+permission as parameters, this function takes an optional auxiliary
+audit data parameter.  This optional parameter allows other audit
+data, such as the particular <structname>dentry</structname>, to be
+passed for use if an audit message is generated.  This function sets
+up an auxiliary audit data structure if one is not provided and then
+calls the AVC to check the requested permission to the inode.
+</para>
+</sect3>
+
+<sect3><title>dentry_has_perm</title>
+<para>
+This helper function is the same as the
+<function>inode_has_perm</function> except that it takes a
+<structname>dentry</structname> as a parameter rather than an inode,
+and optionally takes a <structname>vfsmount</structname> parameter.
+This function saves the dentry and vfsmount in the audit data
+structure and then calls <function>inode_has_perm</function> with the
+appropriate parameters.
+</para>
+</sect3>
+
+<sect3><title>may_create</title>
+<para>
+This helper function checks whether the current task can create a
+file.  It takes the parent directory inode, the
+<structname>dentry</structname> for the new file, and the security
+class for the new file.  This function checks the current task's
+security structure to see if the task has set a fscreate SID for newly
+files.  If so and mountpoint labeling is not being used, then this SID
+is used.  Otherwise, a SID is obtained from the security server using
+the <function>security_transition_sid</function> interface.  The
+function then checks permissions as described in <xref
+linkend="CreatepermTable">.
+
+<table id="CreatepermTable" frame="all">
+<title>Create Permission Checks</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Current</entry>
+<entry>ParentDirectory</entry>
+<entry>search, add_name</entry>
+</row>
+<row>
+<entry>Current</entry>
+<entry>File</entry>
+<entry>create</entry>
+</row>
+<row>
+<entry>File</entry>
+<entry>Filesystem</entry>
+<entry>associate</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+This helper function is called by the following inode hook functions:
+<itemizedlist>
+<listitem><para><function>selinux_inode_create</function></para></listitem>
+<listitem><para><function>selinux_inode_symlink</function></para></listitem>
+<listitem><para><function>selinux_inode_mkdir</function></para></listitem>
+<listitem><para><function>selinux_inode_mknod</function></para></listitem>
+</itemizedlist>
+</para>
+
+</sect3>
+
+<sect3><title>may_link</title>
+<para>
+This helper function checks whether the current task can link, unlink, or rmdir
+a file or directory.  It takes the parent directory inode, the <structname>dentry</structname>
+of the file, and a flag indicating the requested operation.  The
+permission checks for these operations are shown in 
+<xref linkend="LinkpermTable"> and <xref linkend="UnlinkpermTable">.
+
+<table id="LinkpermTable" frame="all">
+<title>Link Permission Checks</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Current</entry>
+<entry>ParentDirectory</entry>
+<entry>search, add_name</entry>
+</row>
+<row>
+<entry>Current</entry>
+<entry>File</entry>
+<entry>link</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table id="UnlinkpermTable" frame="all">
+<title>Unlink or Rmdir Permission Checks</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Current</entry>
+<entry>ParentDirectory</entry>
+<entry>search, remove_name</entry>
+</row>
+<row>
+<entry>Current</entry>
+<entry>File</entry>
+<entry>unlink or rmdir</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+This helper function is called by the following inode hook functions:
+<itemizedlist>
+<listitem><para><function>selinux_inode_link</function></para></listitem>
+<listitem><para><function>selinux_inode_unlink</function></para></listitem>
+<listitem><para><function>selinux_inode_rmdir</function></para></listitem>
+</itemizedlist>
+</para>
+
+</sect3>
+
+<sect3><title>may_rename</title>
+<para>
+This function checks whether the current task can rename a file or
+directory.  It takes the inodes of the old and new parent directories,
+the <structname>dentry</structname> of an existing link to the file, and the new <structname>dentry</structname> for the
+file.  This function checks the permissions described in
+<xref linkend="RenamepermTable">, <xref linkend="AdditionalrenameTable">, 
+and <xref linkend="AdditionalparentTable">.
+The permissions in <xref linkend="RenamepermTable"> are always
+checked.  The permissions in <xref linkend="AdditionalrenameTable">
+are only checked if the new <structname>dentry</structname>
+already has an existing inode (i.e. a file already exists with the
+new name), in which case that file will be removed by the rename.  The
+permissions in <xref linkend="AdditionalparentTable"> are only
+checked if the file is a directory and its parent directory is being
+changed by the rename.
+
+<table id="RenamepermTable" frame="all">
+<title>Basic Rename Permission Checks</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Current</entry>
+<entry>OldParentDirectory</entry>
+<entry>search, remove_name</entry>
+</row>
+<row>
+<entry>Current</entry>
+<entry>File</entry>
+<entry>rename</entry>
+</row>
+<row>
+<entry>Current</entry>
+<entry>NewParentDirectory</entry>
+<entry>search, add_name</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table id="AdditionalrenameTable" frame="all">
+<title>Additional Rename Permission Checks if NewFile Exists</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Current</entry>
+<entry>NewParentDirectory</entry>
+<entry>remove_name</entry>
+</row>
+<row>
+<entry>Current</entry>
+<entry>NewFile</entry>
+<entry>unlink or rmdir</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table id="AdditionalparentTable" frame="all">
+<title>Additional Rename Permission Checks if Reparenting</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Current</entry>
+<entry>File</entry>
+<entry>reparent</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+This helper function is called by the following inode hook functions:
+<itemizedlist>
+<listitem><para><function>selinux_inode_rename</function></para></listitem>
+</itemizedlist>
+</para>
+
+</sect3>
+
+<sect3 id="InodePermission"><title>selinux_inode_permission</title>
+
+<para>
+This hook function is called by the kernel
+<function>permission</function> and
+<function>exec_permission_lite</function> functions to check
+permission when accessing an inode.  If the permission mask is null,
+then there is no permission to check and the function simply returns
+success.  This can occur upon file existence tests via access(2) with
+the <constant>F_OK</constant> mode.  Otherwise, this function converts
+the permission mask to an access vector using the
+<function>file_mask_to_av</function> function, and calls
+<function>inode_has_perm</function> with the appropriate parameters.
+<xref linkend="DirpermsTable"> specifies the SELinux permission that
+is checked for each permission mask flag when checking access to a
+directory.  <xref linkend="NondirpermTable"> provides the
+corresponding permission information when checking access to a
+non-directory file.
+</para>
+ 
+<para>
+In <xref linkend="DirpermsTable">, notice that a
+write permission mask causes the general <constant>write</constant>
+permission to be checked.  This hook function cannot distinguish among
+the various kinds of modification operations on directories, so it
+cannot use the finer-grained permissions
+(<constant>add_name</constant>, <constant>remove_name</constant>, or
+<constant>reparent</constant>).  Hence, directory modifications
+require both the general <constant>write</constant> permission and the
+appropriate finer-grained permission to be granted between the task
+and the inode.  The general <constant>write</constant> permission check
+could be omitted from this hook, but it is performed to ensure that all
+directory modifications are mediated by the policy.
+
+<table id="DirpermsTable" frame="all">
+<title>Directory Permission Checks</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+<entry>Mask</entry>
+<entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><constant>MAY_EXEC</constant></entry>
+<entry>search</entry>
+</row>
+<row>
+<entry><constant>MAY_READ</constant></entry>
+<entry>read</entry>
+</row>
+<row>
+<entry><constant>MAY_WRITE</constant></entry>
+<entry>write</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+</para>
+
+<para>
+
+In <xref linkend="NondirpermTable">, notice that a
+separate <constant>MAY_APPEND</constant> permission mask and
+<constant>append</constant> permission are listed.  This permission
+mask was added by the LSM kernel patch and is used (along with
+MAY_WRITE) when a file is opened with the
+<constant>O_APPEND</constant> flag.  This allows the security module
+to distinguish append access from general write access.  The 
+<function>selinux_file_fcntl</function> hook ensures that the 
+<constant>O_APPEND</constant> flag is not subsequently cleared unless
+the process has <constant>write</constant> permission to the file.
+
+<table id="NondirpermTable" frame="all">
+<title>Non-Directory Permission Checks</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+<entry>Mask</entry>
+<entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><constant>MAY_EXEC</constant></entry>
+<entry>execute</entry>
+</row>
+<row>
+<entry><constant>MAY_READ</constant></entry>
+<entry>read</entry>
+</row>
+<row>
+<entry><constant>MAY_APPEND</constant></entry>
+<entry>append</entry>
+</row>
+<row>
+<entry><constant>MAY_WRITE</constant></entry>
+<entry>write</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+</sect3>
+
+<sect3><title>selinux_inode_setxattr</title>
+<para>
+This hook function is called to check permissions prior to setting an
+extended attribute (xattr) for an inode.  If the attribute is not the
+SELinux attribute but is in the security namespace, then the function
+checks CAP_SYS_ADMIN to protect the security namespace for
+unprivileged processes.  If the attribute is not in the security
+namespace at all, then this function simply checks the 
+<constant>setattr</constant> permission to the inode.
+</para>
+
+<para>
+If the attribute is the SELinux attribute, then this function first
+checks whether mountpoint labeling is being used, in which case it
+immediately returns an error indicating that setxattr is not
+supported.  Otherwise, the function checks whether the process owns
+the file and if not, checks CAP_FOWNER capability, in order to provide
+a DAC restriction over file relabeling.  The function then applies a
+series of mandatory permission checks for file relabeling, as
+summarized in <xref linkend="RelabelPermTable">.  It also invokes the
+security server's <function>security_validate_transition</function>
+function to apply any checks based on all three security contexts (the
+old file context, the new file context, and the process context)
+together.  This function was introduced as part of the enhanced MLS
+support to support MLS upgrade and downgrade checks, but can be
+generally applied for other kinds of policy logic as well.
+
+<table id="RelabelPermTable" frame="all">
+<title>Setxattr Permission Checks</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Current</entry>
+<entry>OldFileContext</entry>
+<entry>relabelfrom</entry>
+</row>
+<row>
+<entry>Current</entry>
+<entry>NewFileContext</entry>
+<entry>relabelto</entry>
+</row>
+<row>
+<entry>File</entry>
+<entry>Filesystem</entry>
+<entry>associate</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+</sect3>
+
+<sect3><title>Other inode access control hook functions</title>
+<para>
+The remaining inode hook functions are called to check permissions
+for various operations.  Since each of these remaining hook functions
+only require a single permission between the current task and the
+file, the permission checks are all described in 
+<xref linkend="MiscinodeTable">.
+
+<table id="MiscinodeTable" frame="all">
+<title>Remaining Inode Hook Permission Checks</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+<entry>Hook</entry>
+<entry>Permission</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>selinux_inode_readlink</entry>
+<entry>read</entry>
+</row>
+<row>
+<entry>selinux_inode_follow_link</entry>
+<entry>read</entry>
+</row>
+<row>
+<entry>selinux_inode_setattr</entry>
+<entry>setattr or write</entry>
+</row>
+<row>
+<entry>selinux_inode_getattr</entry>
+<entry>getattr</entry>
+</row>
+<row>
+<entry>selinux_inode_getxattr</entry>
+<entry>getattr</entry>
+</row>
+<row>
+<entry>selinux_inode_listxattr</entry>
+<entry>getattr</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+Of these hooks, only two require further description.  First, the
+<function>selinux_inode_setattr</function> hook checks the
+<constant>setattr</constant> permission to the file if setting the
+file mode, uid, gid or explicitly setting the timestamps to a
+particular value via utimes; otherwise, it merely checks write
+permission.  Separate permissions could be defined for different kinds
+of setattr operations, e.g. chown, chmod, utimes, truncate.  However,
+this level of distinction does not seem to be necessary to support
+mandatory access control policies.  Second, the
+<function>selinux_inode_follow_link</function> hook checks the same
+permission as the <function>selinux_inode_readlink</function> hook,
+i.e. read permission.  While this is correct from an information flow
+perspective and while even reading a malicious symlink may constitute
+a hazard (e.g. for realpath(3)), it may be desirable in the future to
+introduce a separate follow permission to allow a trusted process to
+see all symlinks (e.g. for ls -l) without necessarily being able to
+follow them (in order to protect against malicious symlinks).
+</para>
+</sect3>
+
+</sect2>
+
+</sect1>

@@ -25,6 +25,10 @@
 import commands, sys, os, pwd, string, getopt, selinux
 import seobject
 import gettext
+import codecs
+import locale
+sys.stderr = codecs.getwriter(locale.getpreferredencoding())(sys.__stderr__, 'replace')
+sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.__stdout__, 'replace')
 
 try:
     gettext.install('policycoreutils')

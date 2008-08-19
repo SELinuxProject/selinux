@@ -1,12 +1,12 @@
 .\" Hey Emacs! This file is -*- nroff -*- source.
 .\"
-.\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2004
-.TH "avc_has_perm" "3" "27 May 2004" "" "SELinux API documentation"
+.\" Author: Eamon Walsh (ewalsh@epoch.ncsc.mil) 2004
+.TH "avc_has_perm" "3" "27 May 2004" "" "SE Linux API documentation"
 .SH "NAME"
 avc_has_perm, avc_has_perm_noaudit, avc_audit, avc_entry_ref_init \- obtain and audit SELinux access decisions.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
-
+.br
 .B #include <selinux/avc.h>
 .sp
 .BI "void avc_entry_ref_init(struct avc_entry_ref *" aeref ");"
@@ -14,21 +14,21 @@ avc_has_perm, avc_has_perm_noaudit, avc_audit, avc_entry_ref_init \- obtain and 
 .BI "int avc_has_perm(security_id_t " ssid ", security_id_t " tsid ,
 .in +\w'int avc_has_perm('u
 .BI "security_class_t " tclass ", access_vector_t " requested ,
-
+.br
 .BI "struct avc_entry_ref *" aeref ", void *" auditdata ");"
 .in
 .sp
 .BI "int avc_has_perm_noaudit(security_id_t " ssid ", security_id_t " tsid ,
 .in +\w'int avc_has_perm('u
 .BI "security_class_t " tclass ", access_vector_t " requested ,
-
+.br
 .BI "struct avc_entry_ref *" aeref ", struct av_decision *" avd ");"
 .in
 .sp
 .BI "void avc_audit(security_id_t " ssid ", security_id_t " tsid ,
 .in +\w'void avc_audit('u
 .BI "security_class_t " tclass ", access_vector_t " requested ,
-
+.br
 .BI "struct av_decision *" avd ", int " result ", void *" auditdata ");"
 .in
 .SH "DESCRIPTION"
@@ -144,7 +144,7 @@ Make sure that userspace object managers are granted appropriate access to
 netlink by the policy.
 
 .SH "AUTHOR"
-Eamon Walsh <ewalsh@tycho.nsa.gov>
+Eamon Walsh <ewalsh@epoch.ncsc.mil>
 
 .SH "SEE ALSO"
 .BR avc_init (3),

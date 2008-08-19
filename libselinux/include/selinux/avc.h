@@ -18,11 +18,11 @@ extern "C" {
 /*
  * SID format and operations
  */
-struct security_id {
-	security_context_t ctx;
-	unsigned int refcnt;
-};
-typedef struct security_id *security_id_t;
+	struct security_id {
+		security_context_t ctx;
+		unsigned int refcnt;
+	};
+	typedef struct security_id *security_id_t;
 
 #define SECSID_WILD (security_id_t)NULL	/* unspecified SID */
 
@@ -37,8 +37,8 @@ typedef struct security_id *security_id_t;
  * failure, with @errno set to %ENOMEM if insufficient memory was
  * available to make the copy, or %EINVAL if the input SID is invalid.
  */
-int avc_sid_to_context(security_id_t sid, security_context_t * ctx);
-int avc_sid_to_context_raw(security_id_t sid, security_context_t * ctx);
+	int avc_sid_to_context(security_id_t sid, security_context_t * ctx);
+	int avc_sid_to_context_raw(security_id_t sid, security_context_t * ctx);
 
 /**
  * avc_context_to_sid - get SID for context.
@@ -51,8 +51,8 @@ int avc_sid_to_context_raw(security_id_t sid, security_context_t * ctx);
  * to the SID structure into the memory referenced by @sid, 
  * returning %0 on success or -%1 on error with @errno set.  
  */
-int avc_context_to_sid(security_context_t ctx, security_id_t * sid);
-int avc_context_to_sid_raw(security_context_t ctx, security_id_t * sid);
+	int avc_context_to_sid(security_context_t ctx, security_id_t * sid);
+	int avc_context_to_sid_raw(security_context_t ctx, security_id_t * sid);
 
 /**
  * sidget - increment SID reference counter.
@@ -64,7 +64,7 @@ int avc_context_to_sid_raw(security_context_t ctx, security_id_t * sid);
  * reference count).  Note that avc_context_to_sid() also
  * increments reference counts.
  */
-int sidget(security_id_t sid);
+	int sidget(security_id_t sid);
 
 /**
  * sidput - decrement SID reference counter.
@@ -76,26 +76,15 @@ int sidget(security_id_t sid);
  * zero, the SID is invalid, and avc_context_to_sid() must
  * be called to obtain a new SID for the security context.
  */
-int sidput(security_id_t sid);
-
-/**
- * avc_get_initial_sid - get SID for an initial kernel security identifier
- * @name: input name of initial kernel security identifier
- * @sid: pointer to a SID reference
- *
- * Get the context for an initial kernel security identifier specified by 
- * @name using security_get_initial_context() and then call 
- * avc_context_to_sid() to get the corresponding SID.
- */
-int avc_get_initial_sid(const char *name, security_id_t * sid);
+	int sidput(security_id_t sid);
 
 /*
  * AVC entry
  */
-struct avc_entry;
-struct avc_entry_ref {
-	struct avc_entry *ae;
-};
+	struct avc_entry;
+	struct avc_entry_ref {
+		struct avc_entry *ae;
+	};
 
 /**
  * avc_entry_ref_init - initialize an AVC entry reference.
@@ -119,51 +108,42 @@ struct avc_entry_ref {
  * listening thread won't be started for kernel policy change messages.
  * If no locking callbacks are passed, no locking will take place.
  */
-struct avc_memory_callback {
-	/* malloc() equivalent. */
-	void *(*func_malloc) (size_t size);
-	/* free() equivalent. */
-	void (*func_free) (void *ptr);
-	/* Note that these functions should set errno on failure.
-	   If not, some avc routines may return -1 without errno set. */
-};
+	struct avc_memory_callback {
+		/* malloc() equivalent. */
+		void *(*func_malloc) (size_t size);
+		/* free() equivalent. */
+		void (*func_free) (void *ptr);
+		/* Note that these functions should set errno on failure.
+		   If not, some avc routines may return -1 without errno set. */
+	};
 
-struct avc_log_callback {
-	/* log the printf-style format and arguments. */
-	void (*func_log) (const char *fmt, ...);
-	/* store a string representation of auditdata (corresponding
-	   to the given security class) into msgbuf. */
-	void (*func_audit) (void *auditdata, security_class_t cls,
-			    char *msgbuf, size_t msgbufsize);
-};
+	struct avc_log_callback {
+		/* log the printf-style format and arguments. */
+		void (*func_log) (const char *fmt, ...);
+		/* store a string representation of auditdata (corresponding
+		   to the given security class) into msgbuf. */
+		void (*func_audit) (void *auditdata, security_class_t cls,
+				    char *msgbuf, size_t msgbufsize);
+	};
 
-struct avc_thread_callback {
-	/* create and start a thread, returning an opaque pointer to it; 
-	   the thread should run the given function. */
-	void *(*func_create_thread) (void (*run) (void));
-	/* cancel a given thread and free its resources. */
-	void (*func_stop_thread) (void *thread);
-};
+	struct avc_thread_callback {
+		/* create and start a thread, returning an opaque pointer to it; 
+		   the thread should run the given function. */
+		void *(*func_create_thread) (void (*run) (void));
+		/* cancel a given thread and free its resources. */
+		void (*func_stop_thread) (void *thread);
+	};
 
-struct avc_lock_callback {
-	/* create a lock and return an opaque pointer to it. */
-	void *(*func_alloc_lock) (void);
-	/* obtain a given lock, blocking if necessary. */
-	void (*func_get_lock) (void *lock);
-	/* release a given lock. */
-	void (*func_release_lock) (void *lock);
-	/* destroy a given lock (free memory, etc.) */
-	void (*func_free_lock) (void *lock);
-};
-
-/*
- * Available options
- */
-
-/* no-op option, useful for unused slots in an array of options */
-#define AVC_OPT_UNUSED		0
-/* override kernel enforcing mode (boolean value) */
-#define AVC_OPT_SETENFORCE	1
+	struct avc_lock_callback {
+		/* create a lock and return an opaque pointer to it. */
+		void *(*func_alloc_lock) (void);
+		/* obtain a given lock, blocking if necessary. */
+		void (*func_get_lock) (void *lock);
+		/* release a given lock. */
+		void (*func_release_lock) (void *lock);
+		/* destroy a given lock (free memory, etc.) */
+		void (*func_free_lock) (void *lock);
+	};
 
 /*
  * AVC operations
@@ -184,22 +164,11 @@ struct avc_lock_callback {
  * for those callbacks (see the definition of the callback
  * structures above).
  */
-int avc_init(const char *msgprefix,
-	     const struct avc_memory_callback *mem_callbacks,
-	     const struct avc_log_callback *log_callbacks,
-	     const struct avc_thread_callback *thread_callbacks,
-	     const struct avc_lock_callback *lock_callbacks);
-
-/**
- * avc_open - Initialize the AVC.
- * @opts: array of selabel_opt structures specifying AVC options or NULL.
- * @nopts: number of elements in opts array or zero for no options.
- *
- * This function is identical to avc_init(), except the message prefix
- * is set to "avc" and any callbacks desired should be specified via
- * selinux_set_callback().  Available options are listed above.
- */
-int avc_open(struct selinux_opt *opts, unsigned nopts);
+	int avc_init(const char *msgprefix,
+		     const struct avc_memory_callback *mem_callbacks,
+		     const struct avc_log_callback *log_callbacks,
+		     const struct avc_thread_callback *thread_callbacks,
+		     const struct avc_lock_callback *lock_callbacks);
 
 /**
  * avc_cleanup - Remove unused SIDs and AVC entries.
@@ -209,7 +178,7 @@ int avc_open(struct selinux_opt *opts, unsigned nopts);
  * AVC entries that reference them.  This can be used
  * to return memory to the system.
  */
-void avc_cleanup(void);
+	void avc_cleanup(void);
 
 /**
  * avc_reset - Flush the cache and reset statistics.
@@ -219,7 +188,7 @@ void avc_cleanup(void);
  * The SID mapping is not affected.  Return %0 on success, 
  * -%1 with @errno set on error.
  */
-int avc_reset(void);
+	int avc_reset(void);
 
 /**
  * avc_destroy - Free all AVC structures.
@@ -230,7 +199,7 @@ int avc_reset(void);
  * callbacks will not.  All SID's will be invalidated.
  * User must call avc_init() if further use of AVC is desired.
  */
-void avc_destroy(void);
+	void avc_destroy(void);
 
 /**
  * avc_has_perm_noaudit - Check permissions but perform no auditing.
@@ -253,11 +222,12 @@ void avc_destroy(void);
  * auditing, e.g. in cases where a lock must be held for the check but
  * should be released for the auditing.
  */
-int avc_has_perm_noaudit(security_id_t ssid,
-			 security_id_t tsid,
-			 security_class_t tclass,
-			 access_vector_t requested,
-			 struct avc_entry_ref *aeref, struct av_decision *avd);
+	int avc_has_perm_noaudit(security_id_t ssid,
+				 security_id_t tsid,
+				 security_class_t tclass,
+				 access_vector_t requested,
+				 struct avc_entry_ref *aeref,
+				 struct av_decision *avd);
 
 /**
  * avc_has_perm - Check permissions and perform any appropriate auditing.
@@ -277,9 +247,9 @@ int avc_has_perm_noaudit(security_id_t ssid,
  * permissions are granted, -%1 with @errno set to %EACCES if any permissions
  * are denied or to another value upon other errors.
  */
-int avc_has_perm(security_id_t ssid, security_id_t tsid,
-		 security_class_t tclass, access_vector_t requested,
-		 struct avc_entry_ref *aeref, void *auditdata);
+	int avc_has_perm(security_id_t ssid, security_id_t tsid,
+			 security_class_t tclass, access_vector_t requested,
+			 struct avc_entry_ref *aeref, void *auditdata);
 
 /**
  * avc_audit - Audit the granting or denial of permissions.
@@ -300,45 +270,9 @@ int avc_has_perm(security_id_t ssid, security_id_t tsid,
  * be performed under a lock, to allow the lock to be released
  * before calling the auditing code.
  */
-void avc_audit(security_id_t ssid, security_id_t tsid,
-	       security_class_t tclass, access_vector_t requested,
-	       struct av_decision *avd, int result, void *auditdata);
-
-/**
- * avc_compute_create - Compute SID for labeling a new object.
- * @ssid: source security identifier
- * @tsid: target security identifier
- * @tclass: target security class
- * @newsid: pointer to SID reference
- *
- * Call the security server to obtain a context for labeling a
- * new object.  Look up the context in the SID table, making
- * a new entry if not found.  Increment the reference counter
- * for the SID.  Store a pointer to the SID structure into the
- * memory referenced by @newsid, returning %0 on success or -%1 on
- * error with @errno set.  
- */
-int avc_compute_create(security_id_t ssid,
-		       security_id_t tsid,
-		       security_class_t tclass, security_id_t * newsid);
-
-/**
- * avc_compute_member - Compute SID for polyinstantation.
- * @ssid: source security identifier
- * @tsid: target security identifier
- * @tclass: target security class
- * @newsid: pointer to SID reference
- *
- * Call the security server to obtain a context for labeling an
- * object instance.  Look up the context in the SID table, making
- * a new entry if not found.  Increment the reference counter
- * for the SID.  Store a pointer to the SID structure into the
- * memory referenced by @newsid, returning %0 on success or -%1 on
- * error with @errno set.  
- */
-int avc_compute_member(security_id_t ssid,
-		       security_id_t tsid,
-		       security_class_t tclass, security_id_t * newsid);
+	void avc_audit(security_id_t ssid, security_id_t tsid,
+		       security_class_t tclass, access_vector_t requested,
+		       struct av_decision *avd, int result, void *auditdata);
 
 /* 
  * security event callback facility
@@ -369,14 +303,14 @@ int avc_compute_member(security_id_t ssid,
  * @perms based on @tclass.  Returns %0 on success or
  * -%1 if insufficient memory exists to add the callback.
  */
-int avc_add_callback(int (*callback)
-		      (uint32_t event, security_id_t ssid,
-		       security_id_t tsid, security_class_t tclass,
-		       access_vector_t perms,
-		       access_vector_t * out_retained),
-		     uint32_t events, security_id_t ssid,
-		     security_id_t tsid, security_class_t tclass,
-		     access_vector_t perms);
+	int avc_add_callback(int (*callback)
+			      (uint32_t event, security_id_t ssid,
+			       security_id_t tsid, security_class_t tclass,
+			       access_vector_t perms,
+			       access_vector_t * out_retained),
+			     uint32_t events, security_id_t ssid,
+			     security_id_t tsid, security_class_t tclass,
+			     access_vector_t perms);
 
 /*
  * AVC statistics 
@@ -387,16 +321,16 @@ int avc_add_callback(int (*callback)
  */
 #define AVC_CACHE_STATS     1
 
-struct avc_cache_stats {
-	unsigned entry_lookups;
-	unsigned entry_hits;
-	unsigned entry_misses;
-	unsigned entry_discards;
-	unsigned cav_lookups;
-	unsigned cav_hits;
-	unsigned cav_probes;
-	unsigned cav_misses;
-};
+	struct avc_cache_stats {
+		unsigned entry_lookups;
+		unsigned entry_hits;
+		unsigned entry_misses;
+		unsigned entry_discards;
+		unsigned cav_lookups;
+		unsigned cav_hits;
+		unsigned cav_probes;
+		unsigned cav_misses;
+	};
 
 /**
  * avc_cache_stats - get cache access statistics.
@@ -407,7 +341,7 @@ struct avc_cache_stats {
  * avc_reset().  See the structure definition for
  * details.
  */
-void avc_cache_stats(struct avc_cache_stats *stats);
+	void avc_cache_stats(struct avc_cache_stats *stats);
 
 /**
  * avc_av_stats - log av table statistics.
@@ -416,7 +350,7 @@ void avc_cache_stats(struct avc_cache_stats *stats);
  * distribution of the access vector table.  The audit
  * callback is used to print the message.
  */
-void avc_av_stats(void);
+	void avc_av_stats(void);
 
 /**
  * avc_sid_stats - log SID table statistics.
@@ -425,7 +359,7 @@ void avc_av_stats(void);
  * distribution of the SID table.  The audit callback
  * is used to print the message.
  */
-void avc_sid_stats(void);
+	void avc_sid_stats(void);
 
 #ifdef __cplusplus
 }

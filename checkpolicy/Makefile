@@ -10,12 +10,11 @@ TARGETS = checkpolicy checkmodule
 
 YACC = bison -y
 
-CFLAGS ?= -g -Wall -Werror -Wshadow -O2 -pipe -fno-strict-aliasing
+CFLAGS ?= -g -Wall -Werror -O2 -pipe -fno-strict-aliasing
 
 override CFLAGS += -I. -I${INCLUDEDIR}
 
-CHECKOBJS = y.tab.o lex.yy.o queue.o module_compiler.o parse_util.o \
-	    policy_define.o
+CHECKOBJS = y.tab.o lex.yy.o queue.o module_compiler.o parse_util.o
 CHECKPOLOBJS = $(CHECKOBJS) checkpolicy.o
 CHECKMODOBJS = $(CHECKOBJS) checkmodule.o
 
@@ -34,10 +33,10 @@ checkmodule: $(CHECKMODOBJS)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 y.tab.o: y.tab.c
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -o $@ -c $<
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 lex.yy.o: lex.yy.c
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -o $@ -c $<
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 y.tab.c: policy_parse.y
 	$(YACC) -d policy_parse.y

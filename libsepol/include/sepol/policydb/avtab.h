@@ -1,11 +1,6 @@
 
 /* Author : Stephen Smalley, <sds@epoch.ncsc.mil> */
 
-/*
- * Updated: Yuichi Nakamura <ynakam@hitachisoft.jp>
- * 	Tuned number of hash slots for avtab to reduce memory usage
- */
-
 /* Updated: Frank Mayer <mayerf@tresys.com> and Karl MacMillan <kmacmillan@tresys.com>
  *
  * 	Added conditional policy language extensions
@@ -80,12 +75,10 @@ struct avtab_node {
 typedef struct avtab {
 	avtab_ptr_t *htable;
 	uint32_t nel;		/* number of elements */
-	uint32_t nslot;         /* number of hash slots */
-	uint16_t mask;          /* mask to compute hash func */
 } avtab_t;
 
 extern int avtab_init(avtab_t *);
-extern int avtab_alloc(avtab_t *, uint32_t);
+
 extern int avtab_insert(avtab_t * h, avtab_key_t * k, avtab_datum_t * d);
 
 extern avtab_datum_t *avtab_search(avtab_t * h, avtab_key_t * k);
@@ -117,10 +110,11 @@ extern avtab_ptr_t avtab_search_node(avtab_t * h, avtab_key_t * key);
 
 extern avtab_ptr_t avtab_search_node_next(avtab_ptr_t node, int specified);
 
-#define MAX_AVTAB_HASH_BITS 13
-#define MAX_AVTAB_HASH_BUCKETS (1 << MAX_AVTAB_HASH_BITS)
-#define MAX_AVTAB_HASH_MASK (MAX_AVTAB_HASH_BUCKETS-1)
-#define MAX_AVTAB_SIZE MAX_AVTAB_HASH_BUCKETS
+#define AVTAB_HASH_BITS 15
+#define AVTAB_HASH_BUCKETS (1 << AVTAB_HASH_BITS)
+#define AVTAB_HASH_MASK (AVTAB_HASH_BUCKETS-1)
+
+#define AVTAB_SIZE AVTAB_HASH_BUCKETS
 
 #endif				/* _AVTAB_H_ */
 

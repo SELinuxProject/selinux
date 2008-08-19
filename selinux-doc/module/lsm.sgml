@@ -1,0 +1,115 @@
+<sect1 id="lsm"><title>LSM Overview</title>
+<para>
+This section provides an overview of the Linux Security Modules (LSM)
+framework.  This section contains an edited excerpt from the
+<filename>Documentation/DocBook/lsm.tmpl</filename> file in the
+kernel tree, updated to reflect recent changes made for the Linux 2.6
+integration.
+</para>
+
+<para>
+LSM provides a general kernel framework to support security modules.
+In particular, the LSM framework is primarily focused on supporting
+access control modules. By itself, the framework does not provide any
+additional security; it merely provides the infrastructure to support
+security modules.  The LSM framework also moves most of the
+capabilities logic into an optional capabilities security module, with
+the system defaulting to a dummy security module that implements the
+traditional superuser logic.
+</para>
+
+<para>
+The LSM framework adds security fields to kernel data structures and
+inserts calls to hook functions at critical points in the kernel code
+to manage the security fields and to perform access control.  It also
+adds functions for registering and unregistering security modules.
+Extended attribute handlers for a new security namespace were added to
+filesystems to support new file security attributes, and a
+<filename>/proc/pid/attr</filename> subdirectory was introduced to
+provide userspace access to new process security attributes.
+</para>
+
+<para>
+The LSM security fields are simply <type>void*</type> pointers.  For
+process and program execution security information, security fields
+were added to <structname>struct task_struct</structname> and
+<structname>struct linux_binprm</structname>.  For filesystem security
+information, a security field was added to <structname>struct
+super_block</structname>.  For pipe, file, and socket security
+information, security fields were added to <structname>struct
+inode</structname> and <structname>struct file</structname>.  Unix
+domain sockets may also use a security field added to the
+<structname>struct sock</structname>.  For System V IPC security
+information, security fields were added to <structname>struct
+kern_ipc_perm</structname> and <structname>struct
+msg_msg</structname>.
+</para>
+
+<para>
+Each LSM hook is a function pointer in a global table,
+security_ops. This table is a
+<structname>security_operations</structname> structure as defined by
+<filename>include/linux/security.h</filename>.  Detailed documentation
+for each hook is included in this header file.  The hooks are grouped
+into logical sets based on the kernel object (e.g. task, inode, file,
+sock, etc) as well as some miscellaneous hooks for
+system operations.  A static inline function is defined for each hook,
+so that most of the hook calls can easily be compiled away if desired,
+in which case only the default capabilities logic is included.
+</para>
+
+<para>
+The global security_ops table is initialized to a set of hook
+functions provided by a dummy security module that provides
+traditional superuser logic.  A <function>register_security</function>
+function (in <filename>security/security.c</filename>) is provided to
+allow a security module to set security_ops to refer to its own hook
+functions, and an <function>unregister_security</function> function is
+provided to revert security_ops to the dummy module hooks.  This
+mechanism is used to set the primary security module, which is
+responsible for making the final decision for each hook.
+</para>
+
+<para>
+LSM also provides a simple mechanism for stacking additional security
+modules with the primary security module.  It defines
+<function>register_security</function> and
+<function>unregister_security</function> hooks in the
+<structname>security_operations</structname> structure and provides
+<function>mod_reg_security</function> and
+<function>mod_unreg_security</function> functions that invoke these
+hooks after performing some sanity checking.  A security module can
+call these functions in order to stack with other modules.  However,
+the actual details of how this stacking is handled are deferred to the
+module, which can implement these hooks in any way it wishes
+(including always returning an error if it does not wish to support
+stacking).  In this manner, LSM defers the problem of
+composition to the module.
+</para>
+
+<para>
+Although the LSM hooks are organized based on kernel object, all of
+the hooks can be viewed as falling into two major categories: hooks
+that are used to manage the security fields and hooks that are used to
+perform access control.  Examples of the first category of hooks
+include the <function>alloc_security</function> and
+<function>free_security</function> hooks defined for each kernel data
+structure that has a security field.  These hooks are used to allocate
+and free security structures for kernel objects.  The first category
+of hooks also includes hooks that set information in the security
+field after allocation, such as the <function>d_instantiate</function>
+hook.  This hook is used to set security information for inodes,
+e.g. by calling getxattr to obtain an attribute value, when all the
+necessary object information is available.  An example of the second
+category of hooks is the <function>inode_permission</function> hook.
+This hook checks permissions when accessing an inode.
+</para>
+
+<para>
+Although LSM originally included a new security system call, this call
+was subsequently removed.  Most of its functionality can now be
+implemented using the extended attribute support and
+<filename>/proc/pid/attr</filename> interface, as mentioned above.
+</para>
+
+</sect1>

@@ -5,16 +5,11 @@
 %module selinux
 %{
 	#include "selinux/selinux.h"
-	#include "../include/selinux/avc.h"
-	#include "../include/selinux/selinux.h"
-	#include "../include/selinux/get_default_type.h"
-	#include "../include/selinux/get_context_list.h"
 %}
 %apply int *OUTPUT { int *enforce };
 %apply int *OUTPUT { size_t * };
 
 %typedef unsigned mode_t;
-%typedef unsigned pid_t;
 
 %typemap(in, numinputs=0) (char ***names, int *len) (char **temp1, int temp2) {
 	$1 = &temp1;
@@ -48,10 +43,6 @@
 %ignore set_matchpathcon_invalidcon;
 %ignore set_matchpathcon_canoncon;
 
-%ignore avc_add_callback;
-
 %include "../include/selinux/selinux.h"
-%include "../include/selinux/avc.h"
 %include "../include/selinux/get_default_type.h"
 %include "../include/selinux/get_context_list.h"
-

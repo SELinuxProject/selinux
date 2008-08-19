@@ -1,0 +1,192 @@
+<sect1 id="arch"><title>Architectural Concepts and Definitions</title>
+
+<para>
+The Flask operating system security architecture provides flexible
+support for mandatory access control (MAC) policies<citation><XRef
+LinkEnd="SpencerUsenixSec99"></citation>.  The SELinux implementation
+of the Flask architecture is described in <citation><XRef
+LinkEnd="LoscoccoFreenix01"></citation>.  This section discusses
+concepts defined by the Flask architecture that are important to
+configuring the SELinux policy.  It then discusses definitions
+specified by the Flask architecture that are used by both
+the policy enforcing code and by the policy configuration.
+</para>
+
+<sect2 id="archconcepts"><title>Flask Concepts</title>
+
+<para>
+Every subject (process) and object (e.g. file, socket, IPC object,
+etc) in the system is assigned a collection of security attributes,
+known as a security context.  A security context contains all of the
+security attributes associated with a particular subject or object
+that are relevant to the security policy.  The content and format of a
+security context depends on the particular security model, so a
+security context is only interpreted by the security server.  In order
+to better encapsulate security contexts and to provide greater
+efficiency, the policy enforcement code of SELinux typically handles
+security identifiers (SIDs) rather than security contexts.  A SID is
+an integer that is mapped by the security server to a security context
+at runtime.  SIDs are nonpersistent and local identifiers, and must be
+translated to security contexts for labeling persistent objects such
+as files or for labeled networking.  A small set of SID values are
+reserved for system initialization or predefined objects; these SID
+values are referred to as initial SIDs.  Kernel SIDs are not exported
+to userspace; the kernel only returns security contexts to userspace.
+However, userspace policy enforcers may have their own SID mappings
+maintained by the userspace AVC that is included in libselinux.
+</para>
+
+<para>
+When a security decision is required, the policy enforcement code
+passes a pair of SIDs (typically the SID of a subject and the SID of
+an object, but sometimes a pair of subject SIDs or a pair of object
+SIDs), and an object security class to the security server.  The
+object security class indicates the kind of object, e.g. a process, a
+regular file, a directory, a TCP socket, etc.  The security server
+looks up the security contexts for the SIDs.  It then bases its
+decision on the attributes within the security contexts and the object
+security class.  The security server provides two major kinds of
+security decisions to the policy enforcement code: labeling decisions
+and access decisions.
+</para>
+
+<para>
+Labeling decisions, also referred to as transition decisions, specify
+the default security attributes to use for a new subject or a new
+object.  A process transition decision is requested when a program is
+executed based on the current SID of the process and the SID of the
+program.  An object transition decision is requested when a new object
+is created based on the SID of the creating process and the SID of a
+related object, e.g. the parent directory for file creations.  These
+default labeling decisions can be overridden by security-aware
+applications using the SELinux API.  In either case, the
+use of the new label must be approved by an access decision or the
+operation will fail.
+</para>
+
+<para>
+The policy enforcement code is responsible for binding the labels to
+subjects and objects in the system.  For transient objects such as
+processes and sockets, a SID can be associated with the corresponding
+kernel object.  However, persistent files and directories require
+additional support to provide persistent labeling.  Security contexts
+are stored persistently for files and directories using extended
+attributes, specifically the security.selinux attribute.
+</para>
+
+<para>
+When converting an existing system to using SELinux, the extended
+attribute values for all files are typically initialized by a utility
+called <command>setfiles</command> from a file contexts configuration
+that specifies security contexts for files based on pathname regular
+expressions.  If the Linux distribution already includes SELinux
+support, then the extended attributes will typically be set at install
+time by the corresponding package manager for the distribution, which
+may also be enhanced to use the file contexts configuration to
+determine the appropriate security context.  Subsequently, the mapping
+is maintained dynamically by the policy enforcing code to reflect
+create, delete, and relabel operations.
+</para>
+
+<para>
+The file contexts configuration is logically separate from the policy
+configuration.  The file contexts configuration is not part of the
+kernel policy and is only used by userspace programs when initializing
+or resetting the extended attributes to their install-time values.
+The extended attribute values are then used at runtime by the policy
+enforcing code.  The policy configuration is used by the security
+server and is needed to obtain security decisions.  The policy
+configuration specifies security decisions based entirely on security
+attributes, whereas the file contexts configuration specifies security
+contexts for files based on pathnames.  Using the pathname is only
+suitable for initial installation of the file; subsequently, the
+security attributes of the file should be tracked during runtime based
+on policy.
+</para>
+
+<para>
+Access decisions specify whether or not a permission is granted for a
+given pair of SIDs and class.  Each object class has a set of
+associated permissions defined to control operations on objects with
+that class.  These permission sets are represented by a bitmap called
+an access vector.  When an access decision is requested, the security
+server returns an allowed access vector containing the decisions for
+all of the permissions defined for the object class.  These access
+vectors are cached by a component of the Flask architecture called the
+Access Vector Cache (AVC) for subsequent use by the policy enforcement
+code.  The AVC component provides an interface to the security server
+to support cache management for policy changes.
+</para>
+
+<para>
+In addition to providing an allowed access vector, the security server
+provides two access vectors related to auditing.  An auditallow
+decision indicates whether a permission check should be audited when
+it is granted.  For example, if a permission is associated with a
+highly sensitive operation, it may be desirable to audit every use of
+that operation.  An auditdeny decision indicates whether a permission
+check should be audited when it is denied.  
+</para>
+
+</sect2>
+
+<sect2 id="archdefs"><title>Flask Definitions</title>
+<para>
+A small set of configuration files are shared between the SELinux
+kernel module and the example policy configuration.  These files
+define the Flask security classes, initial SIDs, and access vector
+permissions.  This information is not specific to any particular
+security model, and should rarely change.  Changes to these files
+require recompilation of the module and policy, and will typically
+require updates to the module and policy to use the new values.  These
+files do not need to be modified to configure the security model
+implemented by the example security server.
+</para>
+
+<para>
+The meaning of the security classes and access vector permissions in
+the original SELinux implementation was described in <citation><XRef
+LinkEnd="LoscoccoNSATR01"></citation> and <citation><XRef
+LinkEnd="LoscoccoFreenix01"></citation>.  Changes made for the
+LSM-based SELinux implementation are described in <citation><XRef
+LinkEnd="SmalleyModuleTR01"></citation>.
+</para>
+
+<para>
+The source for these files is located in the
+<filename>policy/flask</filename> subdirectory of the policy sources.
+These files are installed into
+<filename>/etc/selinux/(targeted|strict)/src/policy/flask</filename>
+and are used when the policy configuration is compiled.  The Flask
+configuration files are listed in <xref linkend="flaskconfigtable">.
+
+<table id="flaskconfigtable" frame="all">
+<title>Architecture Configuration Files</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+    <entry>Filename</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>security_classes</entry>
+    <entry>Declares the security classes.</entry>
+</row>
+<row>
+    <entry>initial_sids</entry>
+    <entry>Declares initial SIDs.</entry>
+</row>
+<row>
+    <entry>access_vectors</entry>
+    <entry>Defines the access vector permissions for each class.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+</sect2>
+
+</sect1>

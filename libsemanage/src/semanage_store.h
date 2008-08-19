@@ -57,7 +57,6 @@ enum semanage_sandbox_defs {
 	SEMANAGE_SEUSERS,
 	SEMANAGE_USERS_EXTRA,
 	SEMANAGE_NC,
-	SEMANAGE_FC_HOMEDIRS,
 	SEMANAGE_STORE_NUM_PATHS
 };
 
@@ -82,6 +81,8 @@ int semanage_make_sandbox(semanage_handle_t * sh);
 
 int semanage_get_modules_names(semanage_handle_t * sh,
 			       char ***filenames, int *len);
+
+int semanage_install_sandbox(semanage_handle_t * sh);
 
 /* lock file routines */
 int semanage_get_trans_lock(semanage_handle_t * sh);

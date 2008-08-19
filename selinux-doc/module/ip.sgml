@@ -1,0 +1,83 @@
+<sect1 id="ip"><title>IP Networking Hook Functions</title>
+<para>
+The LSM kernel patch added a set of security fields and hooks to allow
+management of security data for several network-related data
+structures, including network buffers, network devices, and network
+layer sockets.  It also added a number of hooks to the IP network
+stack to support IP packet lifecycle management, particularly to
+support packet labeling using CIPSO-style options, that could not be
+directly supported via the existing NetFilter hooks.  The LSM-based
+SELinux network access control functionality was originally
+implemented using these security fields and hooks as well as several
+NetFilter hooks.  However, the LSM security fields and hooks for
+networking were not accepted for inclusion in Linux 2.6.  As a result,
+the SELinux network access controls were redesigned and implemented
+using only the socket layer hooks and NetFilter hooks, and some
+functionality such as packet labeling was dropped from SELinux.  This
+section describes the SELinux NetFilter hook functions.
+<comment>Note:  The preceding statements are historical and no longer apply to modern SELinux systems, which do include a set of network hooks and support packet labeling.</comment>
+</para>
+
+<para>
+The SELinux IPv4 and IPv6 NetFilter hook functions,
+<function>selinux_ipv4_postroute_last</function> and
+<function>selinux_ipv6_postroute_last</function>, perform permission
+checks for outgoing packets after routing has occurred.  Incoming
+packets are mediated by the
+<function>selinux_socket_sock_rcv_skb</function> LSM hook, which is
+described in <xref linkend="SockRcvSkb">.  Both of the NetFilter hook
+functions call a common helper,
+<function>selinux_ip_postroute_last</function>, to perform all
+processing.
+</para>
+
+<para>
+The helper function begins by extracting the socket security
+information from the associated inode security structure.  After
+obtaining the socket security information, the hook function must also
+obtain security information for the sending network device.  It
+calls the <function>sel_netif_sids</function> function to obtain the
+interface SID associated with the device. It then determines the right
+set of permissions to check based on the socket class, sets up
+auxiliary audit data, and calls <function>selinux_parse_skb</function>
+to parse the headers for address information to include in the audit
+data.  It then performs permission checks between the socket SID and
+the SIDs associated with the sending network interface, the remote
+host, and the destination port, as shown in <xref linkend="PostRouteTable">.
+Note that these permission checks differ from the original set of
+permission checks for packet receipt prior to the redesign for Linux
+2.6.
+
+<table id="PostRouteTable" frame="all">
+<title>Permission Checks for Sending a Packet from a Socket</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Socket</entry>
+<entry>NetworkInterface</entry>
+<entry><simplelist><member>udp_send</member><member>tcp_send</member><member>rawip_send</member></simplelist></entry>
+</row>
+<row>
+<entry>Socket</entry>
+<entry>RemoteNode (Host)</entry>
+<entry><simplelist><member>udp_send</member><member>tcp_send</member><member>rawip_send</member></simplelist></entry>
+</row>
+<row>
+<entry>Socket</entry>
+<entry>DestinationPort</entry>
+<entry>send_msg</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+</para>
+
+</sect1>

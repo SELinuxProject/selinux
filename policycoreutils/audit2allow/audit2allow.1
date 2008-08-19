@@ -24,12 +24,7 @@
 .\"
 .TH AUDIT2ALLOW "1" "January 2005" "Security Enhanced Linux" NSA
 .SH NAME
-.BR audit2allow
-	\- generate SELinux policy allow rules from logs of denied operations
-
-.BR audit2why  
-	\- translates SELinux audit messages into a description of why the access was denied (audit2allow -w)
-
+audit2allow \- generate SELinux policy allow rules from logs of denied operations
 .SH SYNOPSIS
 .B audit2allow
 .RI [ options "] "
@@ -70,20 +65,11 @@ append output to
 .B "\-r" | "\-\-requires"
 Generate require output syntax for loadable modules.
 .TP
-.B "\-N" | "\-\-noreference"
-Do not generate reference policy, traditional style allow rules.
-This is the default behavior.
-.TP
 .B "\-R" | "\-\-reference"
-Generate reference policy using installed macros.
-This attempts to match denials against interfaces and may be inaccurate.
+Generate reference policy using installed macros.  Requires the selinux-policy-devel package.
 .TP
 .B "\-t "  | "\-\-tefile"
 Indicates input file is a te (type enforcement) file.  This can be used to translate old te format to new policy format.
-.TP
-.B "\-w" | "\-\-why"
-Translates SELinux audit messages into a description of why the access wasn denied
-
 .TP
 .B "\-v" | "\-\-verbose"
 Turn on verbose output

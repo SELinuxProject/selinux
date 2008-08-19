@@ -1,0 +1,28 @@
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V3.1//EN"[
+<!ENTITY intro SYSTEM "intro.sgml">
+<!ENTITY arch SYSTEM "arch.sgml">
+<!ENTITY tips SYSTEM "tips.sgml">
+<!ENTITY api SYSTEM "api.sgml">
+<!ENTITY example SYSTEM "example.sgml">
+]>
+<article class="whitepaper" id="SELinuxUAVC" lang="en">
+ <artheader>
+ <title>SELinux Support for Userspace Object Managers</title>
+ <authorgroup>
+ <author>
+ <firstname>Eamon</firstname> 
+ <surname>Walsh</surname>
+ <affiliation>
+ <orgname>NSA</orgname>
+ <address><email>ewalsh@epoch.ncsc.mil</email></address>
+ </affiliation>
+ </author>
+ </authorgroup>
+ <pubdate>Initial:  May 2004, Last revised:  May 2004</pubdate>
+ </artheader>
+
+&intro
+&arch
+&tips
+&example
+</article>

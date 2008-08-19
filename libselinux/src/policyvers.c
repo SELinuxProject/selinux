@@ -10,6 +10,8 @@
 #include "dso.h"
 #include <limits.h>
 
+#define DEFAULT_POLICY_VERSION 15
+
 int security_policyvers(void)
 {
 	int fd, ret;

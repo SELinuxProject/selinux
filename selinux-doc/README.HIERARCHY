@@ -1,0 +1,148 @@
+1. Overview
+
+The hierarchical extensions introduce two new concepts into the SELinux policy 
+language. The first is the addition of hierarchy into some symbol namespaces, 
+allowing, currently, the creation of types and roles with a parent/child 
+relationship to other types or roles. This is done through the introduction of 
+the ‘.’ operator into the language. The second important concept is the addition 
+of implicit constraints based on the hierarchy. The specific semantics of the 
+constraints are defined on a per-namespace basis, but in general a child element 
+will no more access than its parent.
+
+This extension is meant to ease the creation of policies and introduction a way 
+to conceptualize polices that focuses on important security properties. This is 
+partially inspired by the SEFramework project. More information on SEFramework 
+can be found at http://www.selinux-symposium.org/2005/presentations/session6/6-
+1-wilson.pdf. Additionally, this extension is intended to make it possible to
+implement access control on the policy. More information on this work can be
+found at http://www.selinux-symposium.org/2005/presentations/session3/3-2-macmillan.pdf.
+
+2. Defining Hierarchical Symbols
+
+Hierarchical symbols are defined through the ‘.’ operator.  This operator is 
+currently valid in the type and role namespaces, but may be introduced in other 
+namespaces in the future. For example, consider the following type declarations:
+
+	type apache;
+	type apache.cgi;
+
+In this example, the type apache.cgi is a child of apache. A symbol can be both 
+a normal symbol and container for other symbols. The addition of hierarchy does 
+not otherwise change the syntax of the symbol declarations. It is possible, for 
+example, to include attributes and aliases in the declaration of types that 
+include hierarchy. The hierarchy can be of arbitrary depth, for example:
+
+	role admins;
+	role admins.junior;
+	role admins.junior.useradd;
+
+The hierarchy should not be confused with inheritance: children do not inherit 
+any access from parents. Like all of the other policy statements, access must be 
+explicitly granted.
+
+3. Hierarchical Constraints
+
+Each namespace has specific implicit constraints based on the hierarchy. The 
+details of the constraints are different for different namespaces, but the 
+general goal is the same: children are constrained to no more access than their 
+parents. Again, no access is inherited from parents, only constraints. The 
+constraints are defined only by the immediate parent. For example, given the 
+following types:
+
+	type apache;
+	type apache.cgi;
+	type apache.cgi.user;
+
+The type apache.cgi must have equal or less access that apache. If apache.cgi 
+has a subset of the access of apache, then apache.cgi.user must be constrained 
+to no more than that subset. The type apache.cgi.user cannot be granted access 
+that apache.cgi does not have even if apache has that access.
+
+The constraints are not order dependent; the constraints are checked after the 
+entire policy has been loaded, so the sum of all access for each symbol is 
+considered.
+
+3.1 Type Constraints
+
+Types are constrained based on both explicit access granted through allow rules 
+and indirectly based on attributes. This means that a child type can have no 
+more attributes than its parent. Audit rules and type transition rules are not 
+currently constrained. Take the following example:
+
+	type apache, domain, privlog;
+	type apache.cgi, domain, privlog;
+	type apache.cgi.user, domain;
+
+	type afile, file_type;
+
+	allow apache afile : file { read write getattr setattr }
+	allow apache.cgi afile : file { read getattr };
+	allow apache.cgi.user afile : file { read write getattr }
+
+In this example, the hierarchical constraints are satisfied for apache, because 
+it has no parent, and apache.cgi, because its access is a subset of its parent. 
+The hierarchical constraints are violated for apache.cgi.user, however, because 
+it has the permission write that apache.cgi does not.
+
+The hierarchical constraints for types are complicated by conditional 
+expressions. A conditional policy can be viewed as a set of N policies, with N 
+being the number of unique combinations of boolean settings. The implicit 
+constraints, in this model, should be checked for each of the N policies. This 
+is both complex programmatically and computationally. The current implementation 
+comprises and defines the implicit constrains in a way that is simpler to check, 
+but slightly more restrictive. In the current implementation the implicit 
+constraints for a child are defined as access granted to the parent that is 
+either unconditional or defined in the current conditional expression. For 
+example:
+
+	type foo;
+	type foo.bar;
+	type etc_file;
+	bool baz true;
+---
+VALID:
+
+	allow foo etc_file : file { read write append };
+	
+	if(baz) {
+		allow foo.bar etc_file : file { read write };
+	}
+---
+
+VALID:
+  
+	if (baz) {
+	 	allow foo etc_file : file { read write append };
+	 	allow foo.bar etc_file : file { read write append };
+	}
+---
+
+INVALID:
+
+	if (baz) {
+	  	allow foo etc_file : file { read write append };
+	} else {
+	  	allow foo.bar etc_file : file { read write };
+	}
+---
+
+INVALID:
+
+	allow foo.bar etc_file : file { read write };
+	
+	if (baz) {
+	  	allow foo etc_file : file { read write append };
+	}
+
+3.2 Role Constraints
+
+The role constraint simply says that any child role must have the same or fewer 
+types associated with it. For example:
+
+	role user types { foo_t bar_t baz_t  };
+	role user.guest types foo_t;
+
+The following, however, is not valid:
+
+	role user types foo_t;
+	role user.guest types { foo_t bar_t };

@@ -2,12 +2,9 @@
 
 /* Endian conversion for reading and writing binary policies */
 
-#include <sepol/policydb/policydb.h>
-
 #include <byteswap.h>
 #include <endian.h>
-#include <errno.h>
-#include <dso.h>
+#include <sepol/policydb/policydb.h>
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 #define cpu_to_le16(x) (x)
@@ -42,6 +39,52 @@ extern struct policydb_compat_info *policydb_lookup_compat(unsigned int version,
 							   unsigned int type);
 
 /* Reading from a policy "file". */
-extern int next_entry(void *buf, struct policy_file *fp, size_t bytes) hidden;
-extern size_t put_entry(const void *ptr, size_t size, size_t n,
-		        struct policy_file *fp) hidden;
+static inline int next_entry(void *buf, struct policy_file *fp, size_t bytes)
+{
+	size_t nread;
+
+	switch (fp->type) {
+	case PF_USE_STDIO:
+		nread = fread(buf, bytes, 1, fp->fp);
+		if (nread != 1)
+			return -1;
+		break;
+	case PF_USE_MEMORY:
+		if (bytes > fp->len)
+			return -1;
+		memcpy(buf, fp->data, bytes);
+		fp->data += bytes;
+		fp->len -= bytes;
+		break;
+	default:
+		return -1;
+	}
+	return 0;
+}
+
+static inline size_t put_entry(const void *ptr, size_t size, size_t n,
+			       struct policy_file *fp)
+{
+	size_t bytes = size * n;
+
+	switch (fp->type) {
+	case PF_USE_STDIO:
+		return fwrite(ptr, size, n, fp->fp);
+	case PF_USE_MEMORY:
+		if (bytes > fp->len) {
+			errno = ENOSPC;
+			return 0;
+		}
+
+		memcpy(fp->data, ptr, bytes);
+		fp->data += bytes;
+		fp->len -= bytes;
+		return n;
+	case PF_LEN:
+		fp->len += bytes;
+		return n;
+	default:
+		return 0;
+	}
+	return 0;
+}

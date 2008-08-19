@@ -1,10 +1,10 @@
-.TH "get_ordered_context_list" "3" "1 January 2004" "russell@coker.com.au" "SELinux"
+.TH "get_ordered_context_list" "3" "1 January 2004" "russell@coker.com.au" "SE Linux"
 .SH "NAME"
 get_ordered_context_list, get_ordered_context_list_with_level, get_default_context, get_default_context_with_level, get_default_context_with_role, get_default_context_with_rolelevel, query_user_context, manual_user_enter_context, get_default_role \- determine SELinux context(s) for user sessions
 
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
-
+.br
 .B #include <selinux/get_context_list.h>
 .sp
 .BI "int get_ordered_context_list(const char *" user ", security_context_t "fromcon ", security_context_t **" list );

@@ -1,7 +1,7 @@
 /* Authors: Karl MacMillan <kmacmillan@mentalrootkit.com>
  *
  * Copyright (C) 2006 Tresys Technology, LLC
- * Copyright (C) 2006-2007 Red Hat, Inc.
+ * Copyright (C) 2006 Red Hat, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * of avrule_blocks - even in an ABI safe way - seems undesirable.
  */
 #include <sepol/module.h>
-#include <sepol/errcodes.h>
 #include <sepol/policydb/policydb.h>
 
 #include <getopt.h>
@@ -202,15 +201,15 @@ static hashtab_t generate_requires(policydb_t * p)
 						    hashtab_insert(mods,
 								   mod_name,
 								   reqs);
-						if (ret != SEPOL_OK)
+						if (ret != HASHTAB_SUCCESS)
 							return NULL;
 					}
 					ret =
 					    hashtab_insert(reqs, req_name,
 							   NULL);
 					if (!
-					    (ret == SEPOL_EEXIST
-					     || ret == SEPOL_OK))
+					    (ret == HASHTAB_PRESENT
+					     || ret == HASHTAB_SUCCESS))
 						return NULL;
 				}
 			}

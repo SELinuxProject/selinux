@@ -7,15 +7,15 @@ security_get_boolean_pending \- routines for manipulating SELinux boolean values
 .B #include <selinux/selinux.h>
 .sp
 extern int security_load_booleans(char *path);
-
+.br
 extern int security_get_boolean_names(char ***names, int *len);
-
+.br
 extern int security_get_boolean_pending(const char *name);
-
+.br
 extern int security_get_boolean_active(const char *name);
-
+.br
 extern int security_set_boolean(const char *name, int value);
-
+.br
 extern int security_commit_booleans(void);
 
 
@@ -29,27 +29,27 @@ policy without having to load a new policy.
 The SELinux API allows for a transaction based update.  So you can set several boolean values and the commit them all at once.
 
 security_load_booleans
-
+.br
 Load policy boolean settings. Path may be NULL, in which case the booleans are loaded from the active policy boolean configuration file.
 
 security_get_boolean_names
-
+.br
 Returns a list of boolean names, currently supported by the loaded policy.
 
 security_set_boolean 
-
+.br
 Sets the pending value for boolean 
 
 security_get_boolean_pending
-
+.br
 Return pending value for boolean
 
 security_get_boolean_active
-
+.br
 Return active value for boolean
 
 security_commit_booleans
-
+.br
 Commit all pending values for the booleans.
 
 .SH AUTHOR	

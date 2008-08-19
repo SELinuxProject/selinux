@@ -5,10 +5,9 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#include <limits.h>
 #include "selinux_internal.h"
 #include "policy.h"
-#include "mapping.h"
+#include <limits.h>
 
 int security_compute_relabel_raw(security_context_t scon,
 				 security_context_t tcon,
@@ -36,7 +35,7 @@ int security_compute_relabel_raw(security_context_t scon,
 		ret = -1;
 		goto out;
 	}
-	snprintf(buf, size, "%s %s %hu", scon, tcon, unmap_class(tclass));
+	snprintf(buf, size, "%s %s %hu", scon, tcon, tclass);
 
 	ret = write(fd, buf, strlen(buf));
 	if (ret < 0)

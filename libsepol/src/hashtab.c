@@ -1,27 +1,6 @@
 
 /* Author : Stephen Smalley, <sds@epoch.ncsc.mil> */
 
-/*
- * Updated : Karl MacMillan <kmacmillan@mentalrootkit.com>
- *
- * Copyright (C) 2007 Red Hat, Inc.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
-
-
 /* FLASK */
 
 /*
@@ -69,7 +48,7 @@ int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 	hashtab_ptr_t prev, cur, newnode;
 
 	if (!h)
-		return SEPOL_ENOMEM;
+		return HASHTAB_OVERFLOW;
 
 	hvalue = h->hash_value(h, key);
 	prev = NULL;
@@ -80,11 +59,11 @@ int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 	}
 
 	if (cur && (h->keycmp(h, key, cur->key) == 0))
-		return SEPOL_EEXIST;
+		return HASHTAB_PRESENT;
 
 	newnode = (hashtab_ptr_t) malloc(sizeof(hashtab_node_t));
 	if (newnode == NULL)
-		return SEPOL_ENOMEM;
+		return HASHTAB_OVERFLOW;
 	memset(newnode, 0, sizeof(struct hashtab_node));
 	newnode->key = key;
 	newnode->datum = datum;
@@ -97,7 +76,7 @@ int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 	}
 
 	h->nel++;
-	return SEPOL_OK;
+	return HASHTAB_SUCCESS;
 }
 
 int hashtab_remove(hashtab_t h, hashtab_key_t key,
@@ -108,7 +87,7 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 	hashtab_ptr_t cur, last;
 
 	if (!h)
-		return SEPOL_ENOENT;
+		return HASHTAB_MISSING;
 
 	hvalue = h->hash_value(h, key);
 	last = NULL;
@@ -119,7 +98,7 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 	}
 
 	if (cur == NULL || (h->keycmp(h, key, cur->key) != 0))
-		return SEPOL_ENOENT;
+		return HASHTAB_MISSING;
 
 	if (last == NULL)
 		h->htable[hvalue] = cur->next;
@@ -130,7 +109,7 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 		destroy(cur->key, cur->datum, args);
 	free(cur);
 	h->nel--;
-	return SEPOL_OK;
+	return HASHTAB_SUCCESS;
 }
 
 int hashtab_replace(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum,
@@ -141,7 +120,7 @@ int hashtab_replace(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum,
 	hashtab_ptr_t prev, cur, newnode;
 
 	if (!h)
-		return SEPOL_ENOMEM;
+		return HASHTAB_OVERFLOW;
 
 	hvalue = h->hash_value(h, key);
 	prev = NULL;
@@ -159,7 +138,7 @@ int hashtab_replace(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum,
 	} else {
 		newnode = (hashtab_ptr_t) malloc(sizeof(hashtab_node_t));
 		if (newnode == NULL)
-			return SEPOL_ENOMEM;
+			return HASHTAB_OVERFLOW;
 		memset(newnode, 0, sizeof(struct hashtab_node));
 		newnode->key = key;
 		newnode->datum = datum;
@@ -172,7 +151,7 @@ int hashtab_replace(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum,
 		}
 	}
 
-	return SEPOL_OK;
+	return HASHTAB_SUCCESS;
 }
 
 hashtab_datum_t hashtab_search(hashtab_t h, const hashtab_key_t key)
@@ -227,7 +206,7 @@ int hashtab_map(hashtab_t h,
 	hashtab_ptr_t cur;
 
 	if (!h)
-		return SEPOL_OK;
+		return HASHTAB_SUCCESS;
 
 	for (i = 0; i < h->size; i++) {
 		cur = h->htable[i];
@@ -238,7 +217,7 @@ int hashtab_map(hashtab_t h,
 			cur = cur->next;
 		}
 	}
-	return SEPOL_OK;
+	return HASHTAB_SUCCESS;
 }
 
 void hashtab_map_remove_on_error(hashtab_t h,

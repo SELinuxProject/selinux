@@ -17,7 +17,7 @@
  *
  * Copyright (C) 2004-2005 Trusted Computer Solutions, Inc.
  * Copyright (C) 2003 - 2005 Tresys Technology, LLC
- * Copyright (C) 2003 - 2007 Red Hat, Inc.
+ * Copyright (C) 2003 - 2004 Red Hat, Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -99,18 +99,6 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .ocon_num = OCON_NODE6 + 1,
 	 },
 	{
-	 .type = POLICY_KERN,
-	 .version = POLICYDB_VERSION_POLCAP,
-	 .sym_num = SYM_NUM,
-	 .ocon_num = OCON_NODE6 + 1,
-	 },
-	{
-	 .type = POLICY_KERN,
-	 .version = POLICYDB_VERSION_PERMISSIVE,
-	 .sym_num = SYM_NUM,
-	 .ocon_num = OCON_NODE6 + 1,
-	 },
-	{
 	 .type = POLICY_BASE,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -125,18 +113,6 @@ static struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_BASE,
 	 .version = MOD_POLICYDB_VERSION_MLS_USERS,
-	 .sym_num = SYM_NUM,
-	 .ocon_num = OCON_NODE6 + 1,
-	 },
-	{
-	 .type = POLICY_BASE,
-	 .version = MOD_POLICYDB_VERSION_POLCAP,
-	 .sym_num = SYM_NUM,
-	 .ocon_num = OCON_NODE6 + 1,
-	 },
-	{
-	 .type = POLICY_BASE,
-	 .version = MOD_POLICYDB_VERSION_PERMISSIVE,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = OCON_NODE6 + 1,
 	 },
@@ -156,20 +132,7 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_MLS_USERS,
 	 .sym_num = SYM_NUM,
-	 .ocon_num = 0
-	 },
-	{
-	 .type = POLICY_MOD,
-	 .version = MOD_POLICYDB_VERSION_POLCAP,
-	 .sym_num = SYM_NUM,
-	 .ocon_num = 0
-	 },
-	{
-	 .type = POLICY_MOD,
-	 .version = MOD_POLICYDB_VERSION_PERMISSIVE,
-	 .sym_num = SYM_NUM,
-	 .ocon_num = 0
-	 },
+	 .ocon_num = 0},
 };
 
 #if 0
@@ -484,10 +447,6 @@ int policydb_init(policydb_t * p)
 
 	memset(p, 0, sizeof(policydb_t));
 
-	ebitmap_init(&p->policycaps);
-
-	ebitmap_init(&p->permissive_map);
-
 	for (i = 0; i < SYM_NUM; i++) {
 		p->sym_val_to_name[i] = NULL;
 		rc = symtab_init(&p->symtab[i], symtab_sizes[i]);
@@ -513,13 +472,16 @@ int policydb_init(policydb_t * p)
 
 	rc = roles_init(p);
 	if (rc)
-		goto out_free_symtab;
+		goto out_free_avtab;
 
 	rc = cond_policydb_init(p);
 	if (rc)
-		goto out_free_symtab;
+		goto out_free_avtab;
       out:
 	return rc;
+
+      out_free_avtab:
+	avtab_destroy(&p->te_avtab);
 
       out_free_symtab:
 	for (i = 0; i < SYM_NUM; i++) {
@@ -841,16 +803,14 @@ int policydb_index_others(sepol_handle_t * handle,
 	cond_init_bool_indexes(p);
 
 	for (i = SYM_ROLES; i < SYM_NUM; i++) {
-		free(p->sym_val_to_name[i]);
-		p->sym_val_to_name[i] = NULL;
-		if (p->symtab[i].nprim) {
-			p->sym_val_to_name[i] = (char **)
-			    calloc(p->symtab[i].nprim, sizeof(char *));
-			if (!p->sym_val_to_name[i])
-				return -1;
-			if (hashtab_map(p->symtab[i].table, index_f[i], p))
-				return -1;
-		}
+		if (p->sym_val_to_name[i])
+			free(p->sym_val_to_name[i]);
+		p->sym_val_to_name[i] = (char **)
+		    calloc(p->symtab[i].nprim, sizeof(char *));
+		if (!p->sym_val_to_name[i])
+			return -1;
+		if (hashtab_map(p->symtab[i].table, index_f[i], p))
+			return -1;
 	}
 
 	/* This pre-expands the roles and users for context validity checking */
@@ -1010,10 +970,6 @@ void policydb_destroy(policydb_t * p)
 
 	if (!p)
 		return;
-
-	ebitmap_destroy(&p->policycaps);
-
-	ebitmap_destroy(&p->permissive_map);
 
 	symtabs_destroy(p->symtab);
 
@@ -1215,13 +1171,21 @@ int symtab_insert(policydb_t * pol, uint32_t sym,
 	/* FIX ME - the failures after the hashtab_insert will leave
 	 * the policy in a inconsistent state. */
 	rc = hashtab_insert(pol->symtab[sym].table, key, datum);
-	if (rc == SEPOL_OK) {
+	if (rc == 0) {
 		/* if no value is passed in the symbol is not primary
 		 * (i.e. aliases) */
 		if (value)
 			*value = ++pol->symtab[sym].nprim;
-	} else if (rc == SEPOL_EEXIST) {
+	} else if (rc == HASHTAB_PRESENT && scope == SCOPE_REQ) {
 		retval = 1;	/* symbol not added -- need to free() later */
+	} else if (rc == HASHTAB_PRESENT && scope == SCOPE_DECL) {
+		if (sym == SYM_ROLES || sym == SYM_USERS) {
+			/* allow multiple declarations for these two */
+			retval = 1;
+		} else {
+			/* duplicate declarations not allowed for all else */
+			return -2;
+		}
 	} else {
 		return rc;
 	}
@@ -1248,15 +1212,21 @@ int symtab_insert(policydb_t * pol, uint32_t sym,
 			free(scope_datum);
 			return rc;
 		}
-	} else if (scope_datum->scope == SCOPE_DECL && scope == SCOPE_DECL) {
+	} else if (scope_datum->scope == SCOPE_DECL) {
 		/* disallow multiple declarations for non-roles/users */
 		if (sym != SYM_ROLES && sym != SYM_USERS) {
 			return -2;
 		}
 	} else if (scope_datum->scope == SCOPE_REQ && scope == SCOPE_DECL) {
-		scope_datum->scope = SCOPE_DECL;
+		/* appending to required symbol only allowed for roles/users */
+		if (sym == SYM_ROLES || sym == SYM_USERS) {
+			scope_datum->scope = SCOPE_DECL;
+		} else {
+			return -2;
+		}
+
 	} else if (scope_datum->scope != scope) {
-		/* This only happens in DECL then REQUIRE case, which is handled by caller */
+		/* scope does not match */
 		return -2;
 	}
 
@@ -1916,22 +1886,19 @@ static int type_read(policydb_t * p
 {
 	char *key = 0;
 	type_datum_t *typdatum;
-	uint32_t buf[5];
+	uint32_t buf[4];
 	size_t len;
-	int rc, to_read;
+	int rc;
 
 	typdatum = calloc(1, sizeof(type_datum_t));
 	if (!typdatum)
 		return -1;
 
-	if (p->policy_type == POLICY_KERN)
-		to_read = 3;
-	else if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
-		to_read = 5;
-	else
-		to_read = 4;
-
-	rc = next_entry(buf, fp, sizeof(uint32_t) * to_read);
+	if (p->policy_type == POLICY_KERN) {
+		rc = next_entry(buf, fp, sizeof(uint32_t) * 3);
+	} else {
+		rc = next_entry(buf, fp, sizeof(uint32_t) * 4);
+	}
 	if (rc < 0)
 		goto bad;
 
@@ -1940,8 +1907,6 @@ static int type_read(policydb_t * p
 	typdatum->primary = le32_to_cpu(buf[2]);
 	if (p->policy_type != POLICY_KERN) {
 		typdatum->flavor = le32_to_cpu(buf[3]);
-		if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
-			typdatum->flags = le32_to_cpu(buf[4]);
 		if (ebitmap_read(&typdatum->types, fp))
 			goto bad;
 	}
@@ -2992,7 +2957,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 	unsigned int i, j, r_policyvers;
 	uint32_t buf[5], config;
 	size_t len, nprim, nel;
-	char *policydb_str, *target_str = NULL, *alt_target_str = NULL;
+	char *policydb_str, *target_str = NULL;
 	struct policydb_compat_info *info;
 	unsigned int policy_type, bufindex;
 	ebitmap_node_t *tnode;
@@ -3010,7 +2975,6 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 	if (buf[0] == POLICYDB_MAGIC) {
 		policy_type = POLICY_KERN;
 		target_str = POLICYDB_STRING;
-		alt_target_str = POLICYDB_ALT_STRING;
 	} else if (buf[0] == POLICYDB_MOD_MAGIC) {
 		policy_type = POLICY_MOD;
 		target_str = POLICYDB_MOD_STRING;
@@ -3022,8 +2986,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 	}
 
 	len = buf[1];
-	if (len != strlen(target_str) &&
-	    (!alt_target_str || len != strlen(alt_target_str))) {
+	if (len != strlen(target_str)) {
 		ERR(fp->handle, "policydb string length %zu does not match "
 		    "expected length %zu", len, strlen(target_str));
 		return POLICYDB_ERROR;
@@ -3042,8 +3005,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		return POLICYDB_ERROR;
 	}
 	policydb_str[len] = 0;
-	if (strcmp(policydb_str, target_str) &&
-	    (!alt_target_str || strcmp(policydb_str, alt_target_str))) {
+	if (strcmp(policydb_str, target_str)) {
 		ERR(fp->handle, "policydb string %s does not match "
 		    "my string %s", policydb_str, target_str);
 		free(policydb_str);
@@ -3157,22 +3119,6 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 			goto bad;
 		}
 		p->version[len] = '\0';
-	}
-
-	if ((p->policyvers >= POLICYDB_VERSION_POLCAP &&
-	     p->policy_type == POLICY_KERN) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_POLCAP &&
-	     p->policy_type == POLICY_BASE) ||
-	    (p->policyvers >= MOD_POLICYDB_VERSION_POLCAP &&
-	     p->policy_type == POLICY_MOD)) {
-		if (ebitmap_read(&p->policycaps, fp))
-			goto bad;
-	}
-
-	if (p->policyvers >= POLICYDB_VERSION_PERMISSIVE &&
-	    p->policy_type == POLICY_KERN) {
-		if (ebitmap_read(&p->permissive_map, fp))
-			goto bad;
 	}
 
 	for (i = 0; i < info->sym_num; i++) {

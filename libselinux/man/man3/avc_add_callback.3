@@ -1,31 +1,31 @@
 .\" Hey Emacs! This file is -*- nroff -*- source.
 .\"
-.\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2004
-.TH "avc_add_callback" "3" "9 June 2004" "" "SELinux API documentation"
+.\" Author: Eamon Walsh (ewalsh@epoch.ncsc.mil) 2004
+.TH "avc_add_callback" "3" "9 June 2004" "" "SE Linux API documentation"
 .SH "NAME"
 avc_add_callback \- additional event notification for SELinux userspace object managers.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
-
+.br
 .B #include <selinux/avc.h>
 .sp
 .BI "int avc_add_callback(int (*" callback ")(uint32_t " event , 
 .in +\w'int avc_add_callback(int (*callback)('u
 .BI "security_id_t " ssid ,
-
+.br
 .BI "security_id_t " tsid ,
-
+.br
 .BI "security_class_t " tclass ,
-
+.br
 .BI "access_vector_t " perms ,
-
+.br
 .BI "access_vector_t *" out_retained "),"
 .in
 .in +\w'int avc_add_callback('u
 .BI "uint32_t " events ", security_id_t " ssid , 
-
+.br
 .BI "security_id_t " tsid ", security_class_t " tclass ,
-
+.br
 .BI "access_vector_t " perms ");"
 .in
 .SH "DESCRIPTION"
@@ -173,7 +173,7 @@ Support for dynamic revocation and retained permissions is mostly unimplemented 
 .BR AVC_CALLBACK_RESET .
 
 .SH "AUTHOR"
-Eamon Walsh <ewalsh@tycho.nsa.gov>
+Eamon Walsh <ewalsh@epoch.ncsc.mil>
 
 .SH "SEE ALSO"
 .BR avc_init (3),

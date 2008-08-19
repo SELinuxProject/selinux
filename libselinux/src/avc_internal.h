@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <selinux/avc.h>
-#include "callbacks.h"
 #include "dso.h"
 
 /* SID reference counter manipulation */
@@ -72,9 +71,7 @@ static inline void set_callbacks(const struct avc_memory_callback *mem_cb,
 /* message prefix and enforcing mode*/
 #define AVC_PREFIX_SIZE 16
 extern char avc_prefix[AVC_PREFIX_SIZE] hidden;
-extern int avc_running hidden;
 extern int avc_enforcing hidden;
-extern int avc_setenforce hidden;
 
 /* user-supplied callback interface for avc */
 static inline void *avc_malloc(size_t size)
@@ -95,15 +92,13 @@ static inline void avc_free(void *ptr)
   if (avc_func_log) \
     avc_func_log(format); \
   else \
-    selinux_log(SELINUX_ERROR, format);
+    fprintf(stderr, format)
 
 static inline void avc_suppl_audit(void *ptr, security_class_t class,
 				   char *buf, size_t len)
 {
 	if (avc_func_audit)
 		avc_func_audit(ptr, class, buf, len);
-	else
-		selinux_audit(ptr, class, buf, len);
 }
 
 static inline void *avc_create_thread(void (*run) (void))

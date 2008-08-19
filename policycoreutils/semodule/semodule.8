@@ -23,9 +23,6 @@ force a reload of policy
 .B \-B, \-\-build		
 force a rebuild of policy (also reloads unless -n is used)
 .TP
-.B \-D, \-\-disable_dontaudit
-Temporarily remove dontaudits from policy.  Reverts whenever policy is rebuilt
-.TP
 .B \-i,\-\-install=MODULE_PKG
 install/replace a module package
 .TP
@@ -61,10 +58,6 @@ $ semodule -b base.pp
 $ semodule -i httpd.pp
 # List non-base modules.
 $ semodule -l
-# Turn on all AVC Messages for which SELinux currently is "dontaudit"ing.
-$ semodule -DB
-# Turn "dontaudit" rules back on.
-$ semodule -B
 # Install or replace all non-base modules in the current directory.
 $ semodule -i *.pp
 # Install or replace all modules in the current directory.

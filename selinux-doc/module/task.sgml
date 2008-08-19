@@ -1,0 +1,389 @@
+<sect1 id="task"><title>Task Hook Functions</title>
+
+<para>
+The SELinux task hook function implementations manage the security
+fields of <structname>task_struct</structname> structures and perform
+access control for task operations.  This section
+describes these hooks and their helper functions.
+</para>
+
+<sect2 id="TaskSecurity"><title>Managing Task Security Fields</title>
+<sect3><title>Task Security Structure</title>
+<para>
+The <structname>task_security_struct</structname> structure contains
+security information for tasks. This structure is defined as follows:
+</para>
+<programlisting>
+struct task_security_struct {
+        struct task_struct *task;
+        u32 osid;
+        u32 sid;
+        u32 exec_sid;
+        u32 create_sid;
+        u32 ptrace_sid;
+};
+</programlisting>
+
+<table frame="all">
+<title>task_security_struct</title>
+<tgroup cols="2" align="left">
+<colspec colwidth="20*">
+<colspec colwidth="80*">
+<thead>
+<row>
+    <entry>Field</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>task</entry>
+    <entry>Back pointer to the associated 
+	<structname>task_struct</structname> structure.
+    </entry>
+</row>
+<row>
+    <entry>osid</entry>
+    <entry>SID prior to the last execve. </entry>
+</row>
+<row>
+    <entry>sid</entry>
+    <entry>current SID for the task. </entry>
+</row>
+<row>
+    <entry>exec_sid</entry>
+    <entry>SID for the task upon the next execve call.</entry>
+</row>
+<row>
+    <entry>create_sid</entry>
+    <entry>SID for files created by the task.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect3>
+<sect3><title>task_alloc_security and task_free_security</title>
+<para>
+The <function>task_alloc_security</function> and
+<function>task_free_security</function> helper functions are the
+primitive allocation functions for task security structures.  
+The <function>selinux_task_alloc_security</function> hook function
+calls <function>task_alloc_security</function> for the new task
+and then copies the SID fields from the current task into the new task.
+The <function>selinux_task_free_security</function> hook function
+simply calls the corresponding helper function.
+</para>
+</sect3>
+
+<sect3><title>selinux_task_reparent_to_init</title>
+<para>
+This hook function is called by the kernel
+<function>reparent_to_init</function> function to set the security
+attributes for a kernel task.   This hook function first calls the secondary
+security module to support Linux capabilities.  It then sets the SID
+of the task to the <constant>kernel</constant> initial SID.
+</para>
+</sect3>
+
+<sect3><title>selinux_task_post_setuid</title>
+<para>
+This hook function is
+called after a setuid operation has successfully completed.  Since
+the SELinux module does not use the Linux identity attributes, this
+hook function does not perform any SELinux processing.  However,
+it does call the secondary security module to support Linux capabilities.
+</para>
+</sect3>
+
+<sect3 id="TaskToInode"><title>selinux_task_to_inode</title>
+<para>
+This hook function is called by the procfs pseudo filesystem to set
+the security state for the /proc/pid inodes associated with a task.
+This function sets the inode SID from the task SID and marks the inode
+security structure as initialized.
+</para>
+</sect3>
+
+<sect3 id="GetProcAttr"><title>selinux_getprocattr</title>
+<para>
+This hook function is called by the procfs pseudo filesystem to get a
+process security attribute value from the security module upon an
+attempt to read a node under the /proc/pid/attr directory.  The hook
+function begins by checking <constant>getattr</constant> permission if
+the target task differs from the current task.  It then extracts the
+appropriate SID from the task security structure.  If the
+corresponding SID has not been set (e.g. if no explicit exec SID has
+been set and the task is using the default policy behavior), then the
+hook returns a zero length.  Otherwise, the hook function calls
+<function>security_sid_to_context</function> to obtain the security
+context associated with the SID, copies the context to the provided
+kernel buffer (if it is large enough), and returns its length.
+</para>
+</sect3>
+
+<sect3 id="SetProcAttr"><title>selinux_setprocattr</title>
+<para>
+This hook function is called by the procfs pseudo filesystem to set a
+process security attribute value from the security module upon an
+attempt to write a node under the /proc/pid/attr directory.  The hook
+function begins by checking whether the target task differs from the
+current task, returning an error in that case to prevent setting of a
+task's security attributes by another task.  The function then applies
+a permission check between the current task and the target task
+(always a self relationship due to the prior restriction) based on the
+particular attribute being set.  If a context was written to the node
+(as opposed to writing a zero length buffer to reset an exec or
+fscreate SID to the default policy behavior), then the function calls
+<function>security_context_to_sid</function> to convert it to a SID.
+</para>
+
+<para>
+If the attribute is the exec or fscreate context, then the function
+proceeds to set the corresponding SID in the task security structure.
+For these attributes, further permission checks based on the specified
+security context are not performed until the execve or file creation
+operation occurs, at which point that operation may fail due to a lack
+of permission.  This is partly a legacy of the original API, where
+extended system calls specified the SID for the operation as part of
+the operation call rather than separately setting a process attribute
+in advance.  While it would be possible to duplicate some of this
+checking within the <function>selinux_setprocattr</function> hook
+function (e.g. process transition permission check), the hook function
+lacks the full context of the execve or file creation operation,
+e.g. the entrypoint program for execve and the parent directory,
+filesystem, and specific file type for file creation.
+</para>
+
+<para>
+If the attribute is the current context (i.e. a dynamic context
+transition), then the hook function verifies that there are no other
+threads in the process, checks <constant>dyntransition</constant>
+permission between the old and new task SIDs, and if the process is
+being traced, checks <constant>ptrace</constant> permission between
+the tracer SID and the new SID.  If all checks pass, then the task SID
+is set to the new value.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="TaskAc"><title>Controlling Task Operations</title>
+
+<sect3><title>Helper Functions for Checking Task Permissions</title>
+<para>
+Several helper functions are provided for performing task permission
+checks.  These functions and their permission checks are summarized in
+<xref linkend="TskhelpTable">. The <function>task_has_perm</function> function
+checks whether a task has a particular permission to another task.
+The <function>task_has_capability</function> function checks whether a
+task has permission to use a particular Linux capability.  The
+<function>task_has_system</function> function checks whether a task
+has one of the permissions in the <constant>system</constant> security
+class.  This security class is used for permissions that control
+system operations when there is no existing capability check or the
+capability check is too coarse-grained.  The
+<function>task_has_security</function> function checks whether a task
+has permission to use one of the selinuxfs APIs.
+
+<table id="TskhelpTable" frame="all">
+<title>Task Helper Function Permission Checks</title>
+<tgroup cols="4" align="left">
+<thead>
+<row>
+<entry>Function</entry>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>task_has_perm</entry>
+<entry>SourceTask</entry>
+<entry>TargetTask</entry>
+<entry>ProcessPermission</entry>
+</row>
+<row>
+<entry>task_has_capability</entry>
+<entry>Task</entry>
+<entry>Task</entry>
+<entry>CapabilityPermission</entry>
+</row>
+<row>
+<entry>task_has_system</entry>
+<entry>Task</entry>
+<entry><constant>Kernel</constant></entry>
+<entry>SystemPermission</entry>
+</row>
+<row>
+<entry>task_has_security</entry>
+<entry>Task</entry>
+<entry><constant>Security</constant></entry>
+<entry>SecurityPermission</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+Except for <function>task_has_perm</function>, these permission checks
+are simply based on a single task, so the target SID is unnecessary.
+In the case of <function>task_has_capability</function>, the task's
+SID is passed for both the source and target SIDs.  For
+<function>task_has_system</function> and
+<function>task_has_security</function>, a distinct initial SID is used
+for the target SID.
+</para>
+
+</sect3>
+
+<sect3><title>Hook Functions for Controlling Task Operations</title>
+<para>
+The task hook functions that perform access control and their
+permission checks are summarized in <xref linkend="TskpermTable">.  These
+functions call the <function>task_has_perm</function> helper function.
+
+<table id="TskpermTable" frame="all">
+<title>Task Hook Function Permission Checks</title>
+<tgroup cols="4" align="left">
+<colspec colwidth="40*">
+<colspec colwidth="20*">
+<colspec colwidth="20*">
+<colspec colwidth="20*">
+<thead>
+<row>
+<entry>Hook</entry>
+<entry>Source</entry>
+<entry>Target</entry>
+<entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>selinux_task_create</entry>
+<entry>Current</entry>
+<entry>Current</entry>
+<entry>fork</entry>
+</row>
+<row>
+<entry>selinux_task_setpgid</entry>
+<entry>Current</entry>
+<entry>TargetTask</entry>
+<entry>setpgid</entry>
+</row>
+<row>
+<entry>selinux_task_getpgid</entry>
+<entry>Current</entry>
+<entry>TargetTask</entry>
+<entry>getpgid</entry>
+</row>
+<row>
+<entry>selinux_task_getsid</entry>
+<entry>Current</entry>
+<entry>TargetTask</entry>
+<entry>getsession</entry>
+</row>
+<row>
+<entry>selinux_task_getscheduler</entry>
+<entry>Current</entry>
+<entry>TargetTask</entry>
+<entry>getsched</entry>
+</row>
+<row>
+<entry><simplelist><member>selinux_task_setscheduler</member><member>selinux_task_setnice</member></simplelist></entry>
+<entry>Current</entry>
+<entry>TargetTask</entry>
+<entry>setsched</entry>
+</row>
+<row>
+<entry>selinux_task_kill</entry>
+<entry>Current</entry>
+<entry>TargetTask</entry>
+<entry><simplelist><member>signull</member><member>sigchld</member><member>sigkill</member><member>sigstop</member><member>signal</member></simplelist></entry>
+</row>
+<row>
+<entry>selinux_task_wait</entry>
+<entry>ChildTask</entry>
+<entry>Current</entry>
+<entry><simplelist><member>sigchld</member><member>sigkill</member><member>sigstop</member><member>signal</member></simplelist></entry>
+</row>
+<row>
+<entry>selinux_task_setrlimit</entry>
+<entry>Current</entry>
+<entry>Current</entry>
+<entry>setrlimit</entry>
+</row>
+<row>
+<entry>selinux_ptrace</entry>
+<entry>Parent</entry>
+<entry>Child</entry>
+<entry>ptrace</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+Only three of these hook functions require further explanation.  The
+<function>selinux_task_kill</function> hook function checks a
+permission between the current task and the target task based on the
+signal being sent.  The <function>selinux_task_wait</function> checks
+a permission between the child task and the current task based on the
+exit signal set for the child task.  This allows control over the
+ability of a process to reap a child process of a different SID.  In
+both hooks, the <constant>SIGKILL</constant> and
+<constant>SIGSTOP</constant> signals have their own distinct
+permissions because neither of these two signals can be blocked.  The
+<constant>SIGCHLD</constant> signal has its own distinct permission
+because it is commonly sent from child processes to parent processes.
+The <constant>signull</constant> permission is checked if a 0 signal
+is passed to kill, as this merely represents an existence test, not an
+actual signal delivery.  For all other signals, the generic
+<constant>signal</constant> permission is used. 
+</para>
+
+<para>
+The <function>selinux_task_rlimit</function> hook checks 
+<constant>setrlimit</constant> permission if a hard limit is being
+changed so that the hard limit can later be used as a safe reset point
+for the soft limit upon context transitions.  See the section on
+<function>selinux_bprm_apply_creds</function> for further discussion
+of the resource limit inheritance control.
+</para>
+
+<para>
+In addition to checking ptrace permission, the
+<function>selinux_ptrace</function> hook also sets the tracer SID in
+the child task's security structure for later use by
+<function>selinux_bprm_apply_creds</function> and
+<function>selinux_setprocattr</function>.  See <xref
+linkend="BprmApplyCreds"> and <xref linkend="SetProcAttr"> for further
+discussion.
+</para>
+
+<para>
+Several of the task hook functions for controlling operations are not
+used by the SELinux security module.  These hook functions are:
+<itemizedlist>
+<listitem><para>selinux_task_setuid</para></listitem>
+<listitem><para>selinux_task_setgid</para></listitem>
+<listitem><para>selinux_task_setgroups</para></listitem>
+<listitem><para>selinux_task_prctl</para></listitem>
+</itemizedlist>
+
+Since SELinux does not depend on the Linux identity attributes, and
+since these operations can only affect the current process, SELinux
+does not need to control these operations.  Privileged aspects of
+these operations are already controlled via the
+<function>selinux_capable</function> hook function.  However, it may
+be desirable in the future to add SELinux permissions to control these
+operations, e.g. to confine Linux identity changes at finer granularity.
+</para>
+
+</sect3>
+
+</sect2>
+
+</sect1>

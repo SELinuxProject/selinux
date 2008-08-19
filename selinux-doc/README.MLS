@@ -1,0 +1,166 @@
+The original experimental Multi-Level Security (MLS) implementation in
+SELinux has been replaced by an enhanced MLS implementation
+contributed by Trusted Computer Solutions (TCS) (see the CREDITS file
+for contact info).  The enhanced MLS implementation primarily made the
+following changes from the original implementation:
+
+1) Replaced the hardcoded MLS logic with a flexible system based on
+extensions to the constraints language, using mlsconstrain and
+mlsvalidatetrans statements in the mls config file.  The extensions to
+the constraints language includes support for defining boolean
+expressions based on level and clearance relationships and support for
+defining expressions based on fields from all three security contexts
+for relabeling operations.
+
+The use of constraints to define the MLS policy allows for
+fine-grained configurable overrides of MLS policy based on the process
+domain, using a set of type attributes for MLS privileges declared in
+attrib.te, assigned to specific domains in the policy, and used in the
+mlsconstrain and mlsvalidatetrans statements.  This set of type
+attributes is completely configurable and has no implicit meaning
+(i.e. its meaning is completely defined by the constraints
+themselves), unlike the previous coarse-grained and hardcoded
+mlstrusted* attributes.  The use of constraints also allows for easy
+customization of the MLS policy for specific requirements.
+
+The ability to define boolean expressions on all three security
+contexts (the old file security context, the new file security
+context, and the process security context) for a relabeling operation
+allows checks to be applied based on both the relationship between the
+old and new file security contexts and the security context of the
+process performing the relabeling operation.  These restrictions can
+be expressed in the mls config file via the mlsvalidatetrans statement
+and in the regular constraints config file via the validatetrans
+statement.  The triple-based checks are necessary for MLS upgrade and
+downgrade checks, but can also be applied for finer-grained type-based
+controls in the regular constraints configuration if desired.
+
+2) Changed the semantics of the MLS range in the security context of a
+process to signify its current level (via the low level field) and its
+clearance (via the high level field).  Previously, a ranged process
+could effectively act at any level within its range; with the new
+logic, a ranged process is access controlled based on its current
+level unless it has specific MLS privileges granted via the
+corresponding type attributes.  The user MLS properties were modified
+from a list of authorized ranges for processes associated with the
+user to a default level and an allowable range.  Also added a
+shorthand way of expressing category sets with contiguous sets of
+categories via a cat1.catN notation.
+
+3) Replaced the compile-time option for MLS support in the kernel and
+libsepol/checkpolicy with a policy load-time enable/disable based on
+whether or not MLS support was enabled in the binary policy when it
+was built.  This allows a single kernel and userspace to support both
+MLS and non-MLS policies. checkpolicy now uses the -M option to
+generate MLS policies.  The policy binary version was incremented to
+reflect the mainstreaming of the MLS support into the policy binary.
+Backward compatibility is provided for older non-MLS binary policies,
+but not for older MLS policies from the original MLS implementation.
+
+4) Replaced the example sensitivities and categories with a more
+compact notation and larger set of definitions (s0 - s9, c0 - c127)
+and authorized all combinations in the kernel policy.  The expected
+usage is that userspace will perform translation to human-readable MLS
+labels and deal with complex relationships that cannot be readily
+expressed directly in the kernel policy, e.g. handling restrictions.
+Changes to security-aware applications to invoke a set of translation
+functions to convert between human-readable security contexts and the
+kernel's security contexts have not yet been implemented.  A short
+term workaround is to patch libselinux to internally call such a
+translation library, but this has obvious issues with performing
+unnecessary translations for contexts that are never handled by users
+and with potentially missing direct application use of kernel APIs
+such as /proc/pid/attr and the xattr API.
+
+As before, the syntax for specifying a security context is changed if
+MLS is enabled.  The last component is a MLS range.  If left
+unspecified, the high MLS level defaults to the low MLS level.  The
+syntax of a valid security context with MLS enabled is:
+
+ user:role:type:sensitivity[:category,...][-sensitivity[:category,...]]
+
+One change in the security context format introduced by TCS is a
+shorthand way of expressing a series of contiguous categories within a
+category set using a '.' notation.  The notation 'c0.c8' represents
+a category bitmap with all categories from c0 through c8 enabled.
+This notation can be used in any category field rather than requiring
+explicit enumeration (e.g. c0,c1,c2,c3,c4,c5,c6,c7,c8).
+
+
+INSTALLATION
+------------
+
+Caveat: While the TCS enhancements have improved the MLS support in
+SELinux, it is still true that the MLS security model in SELinux has
+not received the level of attention that the TE and RBAC models have.
+Several desired features of a full MLS implementation are still
+missing from the upstream SELinux, the MLS aspects of the example
+policy are not mature, and the userspace does not yet fully support
+MLS operation.
+
+The following description assumes you have already successfully
+installed a non-MLS SELinux system.  If not, you'll need to also
+install the other SELinux components (see the README file).  Naturally,
+you should try this on a spare machine before doing it anywhere important.
+
+You will need a kernel, libsepol, and checkpolicy that includes the
+enhanced MLS support contributed by TCS.  At the time of this writing
+(23 March 2005), the kernel patch is included in the 2.6.11-selinux1
+patch from the SELinux release on nsa.gov, and has been upstreamed for
+inclusion in Linux 2.6.12.  The libsepol and checkpolicy support is
+included in libsepol >= 1.4 and checkpolicy >= 1.22 from the SELinux
+release on nsa.gov.
+
+To build a MLS policy from the example policy, first run 'make
+mlsconvert' once in the policy source directory.  This will convert
+all security contexts within the policy source tree (including kernel
+policy source, file contexts source, and application contexts source)
+to include MLS levels.  It will also add default level and range
+specifiers to all user entries in the policy.  This command should
+only be run once on a policy source tree.
+
+Perform any desired customization of the policy sources as usual,
+e.g. moving up .te files from domains/program/unused and
+domains/misc/unused that you want included in the policy, and
+defining any tunables you want enabled in the tunables/*.tun files.  Then,
+run 'make policy' to test building the policy in the current directory,
+followed by 'make install install-src' to install under /etc/selinux/mls.
+
+Shutdown to single-user mode and change /etc/selinux/config to set
+SELINUXTYPE=mls.  Reboot, and specify 'selinux=0 single' to the kernel
+to disable SELinux (so that you can still mount filesystems with
+non-MLS labels) and come up in single-user mode.  If your kernel
+includes the recent SELinux patch to allow mounting of filesystems
+with an invalid root inode security context, you can instead specify
+'enforcing=0 single' to the kernel to leave SELinux enabled but in
+permissive mode.
+
+Relabel all filesystems, e.g. /sbin/fixfiles -F relabel.  If you booted
+with SELinux disabled, note that you cannot use restorecon here as it
+only runs if SELinux is enabled.
+
+Umount each filesystem (including pseudo filesystems like
+/proc/bus/usb, /proc/sys/fs/binfmt_misc, /var/lib/nfs/rpc_pipefs,
+/proc, /sys and /selinux) in turn and manually relabel its mount point
+directory via setfiles or chcon if it is already labeled with a
+non-MLS context (e.g. due to a prior direct install with a non-MLS
+SELinux kernel, as in a Fedora Core 3 install).  Note that setfiles
+will do nothing if the mount point directory is marked <<none>> in
+file_contexts, which is the case for /tmp, /var/tmp, and the pseudo
+filesystems, so you will need to manually use chcon on any such mount
+point directories, e.g. 
+	chcon system_u:object_r:file_t:s0 /proc
+
+Reboot and specify 'enforcing=0 single' to the kernel, making sure
+that you boot the kernel that includes the MLS support.  Run
+restorecon /etc/mtab to fix its context since it is re-created during
+the shutdown and will lack a context from the prior kernel with
+selinux=0.  Then switch to enforcing mode via /usr/sbin/setenforce 1
+and exit the single-user shell to come up fully into multi-user mode.
+
+You should be able to login, defaulting to a current level of s0 and a
+clearance of s9:c0.c127, i.e. s0-s9:c0.c127.  You should then be able
+to use newrole -l to create a shell with a different level up to your
+clearance, e.g. newrole -l s1.  You may need to make your home
+directory and /tmp ranged to allow access by multiple levels in the
+absence of a polyinstantiated / multi-level directory mechanism.

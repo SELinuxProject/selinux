@@ -1,0 +1,376 @@
+COMPONENTS
+----------
+You will need the following components:
+
+1) Linux kernel with SELinux patch merged.
+The mainline Linux 2.6 kernel (as of 2.6.0-test3 and later) includes
+SELinux already, but there may be interim patches from the NSA site
+for the LSM framework and/or SELinux module that have not yet been
+upstreamed.
+
+2) checkpolicy
+The checkpolicy program compiles the policy sources into a binary
+representation that is used by the kernel security server.  The
+binary policy representation has changed from the old SELinux, so you
+must use this checkpolicy program to compile your policy for the new
+SELinux kernel.
+
+3) libselinux
+This library provides a set of interfaces for security-aware
+applications to get and set process and file security contexts and to
+invoke the policy API.  It provides a layer of abstraction over the
+/proc/pid/attr API, the xattr API, and the selinuxfs API for SELinux
+applications.  It also handles memory allocation for security
+contexts.  See PORTING for a discussion how the libselinux API differs
+from the old libsecure API.  The policy API calls assume that
+selinuxfs has already been mounted, which is typically done by /sbin/init
+prior to initial policy load.  If not, you can do the following:
+	mount -t selinuxfs none /selinux
+
+The libselinux/utils subdirectory contains simple utilities that
+permit experimentation with the SELinux API.
+
+4) policycoreutils
+This package contains the policy core utilities that are required for
+basic operation of a SELinux system.  These utilities include
+load_policy to load policies, setfiles to label filesystems, newrole
+to switch roles, and run_init to run /etc/init.d scripts in the proper
+context.  These utilities have been rewritten from the old SELinux to
+use the libselinux interfaces.
+
+5) policy
+This package contains the SELinux example policy configuration along
+with the Flask configuration information and the application
+configuration files.  The policy has been adapted for changes from the
+old SELinux.  See PORTING for a discussion of how the policy has
+changed from the old SELinux.
+
+6) patched daemons and utilities
+Several packages have been patched for SELinux.  The SELinux patches
+have been rewritten to use the libselinux interfaces (see PORTING).
+
+There is a patch to glibc to support secure transitions for
+role/domain changes, but this change has now been upstreamed (and is
+generalized for arbitrary Linux security modules).  Please verify that
+your glibc supports the AT_SECURE auxv entry.
+
+Of the other SELinux patches, the most critical patches are the ones
+for init (sysvinit-selinux.patch), pam (pam-selinux.patch), 
+sshd (openssh-selinux.patch) and crond (vixie-cron-selinux.patch).  
+These patches load the policy and initialize the user security context for 
+user sessions and cron jobs.  /etc/pam.d/login should be modified to include 
+pam_selinux, e.g.;
+	session    required     pam_selinux.so multiple
+The multiple argument is only if you want it to prompt the user for
+a security context when multiple authorized contexts are available
+for the user, as opposed to always just using the default for the user.
+It is presently only supported for login and su.
+
+The SELinux wrappers for programs that modify /etc/passwd and
+/etc/shadow (in order to preserve their security contexts and to
+ensure that uid 0 cannot arbitrarily change other users' information)
+have been reimplemented as direct patches to various packages
+(util-linux, shadow-utils, passwd, libuser, pam, pwdb, etc).
+
+SELinux patches also exist for many common utilities to provide
+support for manipulating process and file security contexts,
+e.g. coreutils, findutils, logrotate, procps, psmisc.
+
+Packages with the SELinux patches integrated exist for several Linux
+distributions, e.g.  
+Debian      	- See http://www.coker.com.au/selinux
+Fedora Core 3 or later - See http://fedora.redhat.com
+Gentoo		- See http://www.gentoo.org/proj/en/hardened/
+Red Hat Enterprise Linux 4 or later - See http://www.redhat.com/security/innovative/selinux/
+SuSE	    	- See http://www.cip.ifi.lmu.de/~bleher/selinux/suse/ and
+		      http://suse-selinux.leapster.org/
+Ubuntu		- See https://www.ubuntulinux.org/wiki/SELinux
+
+KERNEL CONFIGURATION
+--------------------
+When you configure your SELinux-patched kernel, you should note the
+following items:
+
+Under Filesystems, be sure to enable the Ext[23] extended attributes and
+Ext[23] Security Labels options (CONFIG_EXT[23]_FS_XATTR,
+CONFIG_EXT[23]_FS_SECURITY).  
+
+Under Pseudo Filesystems, be sure to enable the /dev/pts
+Extended Attributes and /dev/pts Security Labels options 
+(CONFIG_DEVPTS_FS_XATTR, CONFIG_DEVPTS_FS_SECURITY).
+
+Under Security, be sure to enable all of the following options:
+	Enable different security models (CONFIG_SECURITY)
+	Socket and Networking Security Hooks (CONFIG_SECURITY_NETWORK)
+	Capabilities Support (CONFIG_SECURITY_CAPABILITIES)
+	NSA SELinux Support (CONFIG_SECURITY_SELINUX)
+	NSA SELinux Development Support (CONFIG_SECURITY_SELINUX_DEVELOP)
+	NSA SELinux boot parameter (CONFIG_SECURITY_SELINUX_BOOTPARAM)
+
+BUILDING AND INSTALLING
+------------------------
+1) Configure, build and install the SELinux-patched kernel, and
+configure your boot manager so you can boot it.  Note that certain
+distributions, like Fedora Core 3 or Hardened Gentoo, already include
+SELinux support in the kernel.  If you are building the 2.6 SELinux kernel 
+from sources on the NSA site, the typical sequence of commands is:
+	cd linux-2.6		
+	make menuconfig		
+	make 
+	make modules_install
+	make install
+
+If you do not enable the NSA SELinux boot parameter option
+(CONFIG_SECURITY_SELINUX_BOOTPARAM) in your kernel configuration, then
+it is also recommended that you configure and build a separate kernel
+that has the Ext[23] Security Labels options enabled but SELinux
+disabled for use as a maintenance kernel.  This maintenance kernel can
+be used to manipulate the file security labels without interference by
+the SELinux module to perform emergency recovery.  If you did enable
+the NSA SELinux boot parameter option, then you can simply boot with
+"selinux=0" to disable the SELinux module at boot time to perform
+emergency recovery.
+
+You may want to configure and build a 2.4+EA kernel if you still want
+to boot 2.4 kernels on your system, as unmodified 2.4 kernels prior to
+2.4.25 will not boot after you have assigned the SELinux EAs to the 
+root filesystem.  Note:  The EA symlink compatibility fix was back ported 
+to the Fedora Core 1 kernel as of kernel-2.4.22-1.2149.nptl. 
+
+2) Build and install the new SELinux userland packages (checkpolicy,
+libselinux, policycoreutils, policy).  Note that these packages are already
+included in certain distributions, like Fedora Core 3 and Hardened Gentoo.
+
+You should customize your policy configuration.  If you have already
+installed a policy, the policy sources should be under
+/etc/selinux/(strict|targeted)/src.  Customization of the policy includes:
+
+- Edit policy/users for your users.  The policy/users file defines
+each user recognized by the system security policy.  It specifies the
+authorized roles for each user.  Be sure to authorize at least one
+user for the system administrator roles (staff_r, sysadm_r, and
+system_r).  Other users can be limited to the ordinary user role
+(user_r).  Remove the example users provided in the distributed users
+file (jadmin and jdoe).  Leave the system_u user unmodified, and do
+NOT add an entry for it to /etc/passwd.  Remove the user_u user if you
+do not want to allow any login access to any user who is not
+explicitly listed in policy/users; otherwise, all unlisted users will
+be mapped to user_u (and limited to the user_r role).
+
+- Move up any .te files from policy/domains/program/unused to
+policy/domains/program for services and applications that you run on
+your system.  Anything left in unused will not be included in the
+built policy.  If you installed from the Fedora Core policy-sources
+RPM, then most .te files should have been automatically moved up when
+the package was built.
+
+- Define any desired tunables in the policy/tunables/*.tun files.
+
+3) Install the SELinux-patched packages.
+
+Packages with the SELinux patches integrated exist for several Linux
+distributions, e.g.
+Debian      	- See http://www.coker.com.au/selinux.
+Fedora Core 3 or later - See http://fedora.redhat.com
+Gentoo		- See http://www.gentoo.org/proj/en/hardened/
+Red Hat Enterprise Linux 4 or later - See http://www.redhat.com/security/innovative/selinux/
+SuSE	    	- See http://www.cip.ifi.lmu.de/~bleher/selinux/suse/ and
+		      http://suse-selinux.leapster.org/
+Ubuntu		- See https://www.ubuntulinux.org/wiki/SELinux
+
+Fedora Core 3, Red Hat Enterprise Linux 4, and Hardened Gentoo already
+include the SELinux-patched packages; other distros may require
+separate installation of modified packages from the sites listed
+above.
+
+4) Create the /selinux mountpoint directory (i.e. mkdir /selinux)
+for the selinuxfs mount (which is performed by init).
+
+5) Boot the SELinux kernel.  Login as root with the sysadm_r role and
+sysadm_t domain.
+
+6) Assign extended attributes to your filesystems.  Caveat: We have
+encountered problems booting unmodified 2.4 kernels < 2.4.25 after
+assigning extended attributes to the root filesystem.  We are able to
+boot older 2.4 kernels patched with the EA patch or 2.4 kernels >=
+2.4.25.  A compatibility fix was back ported to the Fedora Core 1
+kernel as of kernel-2.4.22-1.2149.nptl.
+	cd /etc/selinux/(strict|targeted)/src/policy
+	make relabel
+
+7) Reboot the SELinux kernel.  Login as root with the sysadm_r role
+and sysadm_t domain.
+
+8) If you have installed the SELinux-patched utilities, then you can
+run 'id' to see your security context and you can run 'ps -eZ' to see
+the contexts of other processes.  As mentioned above, a security
+context has the syntax user:role:domain or user:role:type.
+
+System processes should have the system_u user identity and the
+system_r role.  Each system process with a different executable should
+have its own separate domain.  If some system processes are running in
+the initrc_t domain, then there are several possible reasons:
+- The .te file for the program wasn't moved up from the
+policy/domains/program/unused directory before building the policy.
+- The pathname for the program in its .fc file (in the
+ policy/file_contexts/program directory) doesn't match your system.
+- A domain has not yet been defined for the program in the example policy.
+
+You should either disable any system processes left in the initrc_t
+domain (if you do not need them) or place them into a different
+domain, possibly defining new domains if necessary.
+
+Your user processes should have your user identity and the sysadm_r
+role.  Your shell and most of its children will have the sysadm_t
+domain.  Some of the processes that you run may be in different
+domains because they require different privileges.
+
+9) If you have built and installed the patched utilities, then you
+can run 'ls -Z /'.  If not, you can run the getfilecon utility
+to see a particular file context.  Initially, the system_u user
+identity is used for all files at installation time.  When you create
+new files after installation, they will be assigned the user identity
+of the creating process.  The object_r role is used for all files,
+because roles are not relevant for files.  Files with different
+protection requirements will have different types, e.g. /boot has the
+boot_t type and /etc has the etc_t type.  Some files in the 'ls'
+output may show a (null) context which indicates that either
+permission was not granted to obtain the context of the file or the
+filesystem type does not provide an xattr handler.
+
+10) If the NSA SELinux Development Support option was enabled in the
+kernel configuration, then SELinux is built with development support.
+With this option, SELinux starts in permissive mode by default,
+logging permission failures but not enforcing them.  You can use
+permissive mode in order to determine what additional permissions are
+needed for your particular system and can then revise your policy
+configuration accordingly.  You can subseqently run 'echo 1 >
+/selinux/enforce' program to switch into enforcing mode.  Once in
+enforcing mode, you can only switch back to permissive mode with 'echo
+0 > /selinux/enforce' if authorized by the policy (in the example
+policy, only the sysadm_r role can do this).  
+
+Once you are satisfied that your policy configuration is sufficient
+for your system, you should either specify "enforcing=1" on the kernel
+command line to start in enforcing mode at boot time, or you should
+rebuild the kernel without this option so that it is always in
+enforcing mode.  The first option leaves open the possibility of
+switching back to permissive mode by an administrator, while the
+latter option provides stricter security.  If you choose the latter
+option, be sure to keep a kernel that is built with the Development
+Support option available for emergency recovery (e.g. if you make an
+error in your policy configuration that renders your system
+unuseable).
+
+You may find the audit2allow script useful in generating additional
+'allow' rules from the log messages for your policy, but the generated
+rules should be carefully reviewed to ensure that they are consistent
+with your security goals.  You may find it desirable to define new
+domains and/or types rather than simply granting the permission for an
+existing domain and/or type in order to preserve existing security
+guarantees.  You may also find that certain permission denials require
+other kinds of policy changes, e.g. changes to the RBAC or constraints
+configurations.  You may also find that certain permission denials are
+not fatal to the application and you may not want to grant these
+permissions due to your security goals.  In that case, you may wish to
+simply suppress logging of the denial via an 'dontaudit' rule.
+
+11) If you subsequently reboot with a non-SELinux kernel (or with
+"selinux=0"), be sure to run setfiles again before booting SELinux to
+reset your file security contexts properly.
+
+EXPERIMENTING WITH THE NEW API
+------------------------------
+1) Getting and setting process contexts
+
+The patched coreutils package provides an enhanced form of the id
+utility that displays the current security context.  The patched
+procps and psmisc packages provide enhanced forms of the standard
+process utilities that support options for displaying contexts of
+other processes.
+
+The patched coreutils package adds a runcon utility that is a superset
+of execcon; runcon also allows individual specification of particular
+fields of the context, e.g. runcon -t sysadm_t bash.
+
+The newrole and run_init utilities use the same mechanism to support
+secure role transitions and execution of init scripts in the proper
+context, e.g.:
+	newrole -r sysadm_r
+	run_init /etc/init.d/sshd restart
+
+2) Getting and setting file contexts
+
+You can run getfattr and setfattr to directly get and set
+individual file attributes, e.g.:
+	getfattr -n security.selinux /etc/shadow
+	setfattr -n security.selinux -v system_u:object_r:shadow_t /etc/shadow
+These utilities are directly implemented via getxattr and setxattr.
+
+However, it is preferable to run the getfilecon and setfilecon
+utilities, e.g.:
+	getfilecon /etc/shadow
+	setfilecon system_u:object_r:shadow_t /etc/shadow
+These utilities are implemented using the corresponding libselinux
+functions, and encapsulate the use of xattr and the particular
+attribute name.
+
+The patched coreutils package provides enhanced forms of the standard
+file utilities that support options for preserving the security
+context of files or for creating new files with a specified security
+context.  It also adds a chcon utility that is a more general form of
+setfilecon modeled after chmod/chown.
+
+3) Getting and setting policy information
+
+selinuxfs exports the security policy API via a set of nodes under
+/selinux.  libselinux provides API calls that internally read and
+write these nodes.  The /selinux nodes are:
+
+a) 'enforce' can be read or written to get or set the enforcing
+status, e.g. 'echo -n 1 > /selinux/enforce' switches into enforcing
+mode. Note that the enforcing status can only be changed if you built
+with the Development Support option enabled; otherwise, SELinux is
+always in enforcing mode.
+
+b) 'load' can be written to load a new policy configuration.
+libselinux provides a security_load_policy API call to access this
+node.  The load_policy utility opens and mmaps a binary policy file
+and then invokes this API call.
+
+c) 'context' can be written to check the validity of a security
+context.  libselinux provides a security_check_context API call to
+access this node.  The setfiles utility invokes this API call to check
+contexts in the file contexts specification, and the newrole utility
+invokes this API call to check the new context.  Several other
+libselinux functions also invoke this API call to validate contexts
+before returning them.
+
+d) 'access' can be written to request an access decision and can then
+be read to obtain the decision.  On a write, the decision is computed
+and saved in the open file private data, and will be returned on
+subsequent reads by that process until the file is closed.  libselinux
+provides a security_compute_av API call to access this node.  The
+patched crond invokes this API call to check entrypoint permission.
+
+e) 'create' can be written to request a labeling (transition) decision
+and can then be read to obtain the decision.  As with /selinux/access,
+the decision is saved in the open file private data for subsequent
+reads.  libselinux provides a security_compute_create API call to
+access this node.
+
+f) 'relabel' can be written to request a relabeling decision and can
+then be read to obtain the decision.  As with /selinux/access, the
+decision is saved in the open file private data for subsequent reads.
+libselinux provides a security_compute_relabel API call to access this
+node.  The newrole utility and the patched login and sshd invoke this
+API call to obtain the new tty/pty context.
+
+g) 'user' can be written to obtain the set of reachable user contexts
+and can then be read to obtain the set.  As with /selinux/access, the
+information is saved in the open file private data for subsequent reads.
+libselinux provides a security_compute_user API call to access this node.
+The patched login, sshd, and crond invoke this API call to obtain the
+set of authorized user contexts.
+
+End

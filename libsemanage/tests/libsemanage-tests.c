@@ -20,7 +20,6 @@
  */
 
 #include "test_semanage_store.h"
-#include "test_utilities.h"
 
 #include <CUnit/Basic.h>
 #include <CUnit/Console.h>
@@ -56,7 +55,6 @@ static int do_tests(int interactive, int verbose)
 		return CU_get_error();
 
 	DECLARE_SUITE(semanage_store);
-	DECLARE_SUITE(semanage_utilities);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);

@@ -1,0 +1,51 @@
+<sect1 id="intro"><title>Introduction</title>
+
+<para>
+NSA Security-Enhanced Linux (SELinux) is an implementation of a
+flexible and fine-grained mandatory access control (MAC) architecture
+called Flask in the Linux kernel<citation><XRef
+LinkEnd="LoscoccoFreenix01"></citation>.  SELinux can enforce an
+administratively-defined security policy over all processes and
+objects in the system, basing decisions on labels containing a variety
+of security-relevant information.  The architecture provides
+flexibility by cleanly separating the policy decision-making logic
+from the policy enforcement logic.  The policy decision-making logic
+is encapsulated within a single component known as the security server
+with a general security interface.  A wide range of security models
+can be implemented as security servers without requiring any changes
+to any other component of the system.
+</para>
+
+<para>
+To demonstrate the architecture, SELinux provides an example security
+server that implements a combination of Type Enforcement
+(TE)<citation><XRef LinkEnd="BoebertNCSC85"></citation>, Role-Based
+Access Control (RBAC)<citation><XRef
+LinkEnd="FerraioloNCSC92"></citation>, and optionally Multi-Level
+Security (MLS).  These security models provide significant flexibility
+through a set of policy configuration files.  An example security
+policy configuration was developed to demonstrate how SELinux can be
+used to meet certain security goals and to provide a starting point
+for users <citation><XRef
+LinkEnd="SmalleyNAITR01"></citation><citation><XRef
+LinkEnd="LoscoccoOLS01"></citation>.
+</para>
+
+<para>
+This technical report describes how to configure the SELinux security
+policy for the example security server.  <xref linkend="arch">
+explains concepts defined by the Flask architecture that are important
+to configuring the policy.  <xref linkend="model"> describes the
+security model implemented by the example security server.  The policy
+language and the example policy configuration are described in <xref
+linkend="lang">.  <xref linkend="build"> explains how the policy is
+built and applied to the system.  Configuration files for security-aware applications are discussed in <xref linkend="apps">.  <xref
+linkend="examples"> describes how to customize the policy for various
+purposes.
+</para>
+
+<para>
+<comment>Note:  This report predates the transition from using the original NSA example policy configuration to using the reference policy, and the transition from monolithic policy to modular/managed policy.  Thus, while some of the discussion herein is still applicable, much has changed in modern SELinux systems.</comment>
+</para>
+
+</sect1>

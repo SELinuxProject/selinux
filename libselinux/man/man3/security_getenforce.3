@@ -1,20 +1,20 @@
-.TH "security_getenforce" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.TH "security_getenforce" "3" "1 January 2004" "russell@coker.com.au" "SE Linux API documentation"
 .SH "NAME"
 security_getenforce, security_setenforce \- get or set the enforcing state of SELinux
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
 .B int security_getenforce();
-
+.br
 .BI "int security_setenforce(int "value );
 
 .SH "DESCRIPTION"
 .B security_getenforce
-returns 0 if SELinux is running in permissive mode, 1 if it is running in
+returns 0 if SE Linux is running in permissive mode, 1 if it is running in
 enforcing mode, and -1 on error.
 
 .B security_setenforce
-sets SELinux to enforcing mode if the value 1 is passed in, and sets it to
+sets SE Linux to enforcing mode if the value 1 is passed in, and sets it to
 permissive mode if 0 is passed in.  On success 0 is returned, on error -1 is
 returned.
 

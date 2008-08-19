@@ -1,4 +1,4 @@
-.TH "matchpathcon" "3" "16 March 2005" "sds@tycho.nsa.gov" "SELinux API documentation"
+.TH "matchpathcon" "3" "16 March 2005" "sds@tycho.nsa.gov" "SE Linux API documentation"
 .SH "NAME"
 matchpathcon \- get the default SELinux security context for the specified path from the file contexts configuration.
 
@@ -6,18 +6,18 @@ matchpathcon \- get the default SELinux security context for the specified path 
 .B #include <selinux/selinux.h>
 .sp
 .BI "int matchpathcon_init(const char *" path ");"
-
+.br
 .BI "int matchpathcon_fini(void);"
-
+.br
 .BI "int matchpathcon(const char *" path ", mode_t " mode ", security_context_t *" con);
 .sp
-
+.br 
 .BI "void set_matchpathcon_printf(void (*" f ")(const char *" fmt ", ...));"
-
+.br
 .BI "void set_matchpathcon_invalidcon(int (*" f ")(const char *"path ", unsigned " lineno ", char * " context "));"
-
+.br
 .BI "void set_matchpathcon_flags(unsigned int " flags ");"
-
+.br
 .SH "DESCRIPTION"
 .B matchpathcon_init
 loads the file contexts configuration specified by
@@ -40,7 +40,7 @@ and
 suffix are also looked up and loaded if present.  These files provide
 dynamically generated entries for user home directories and for local
 customizations.
-
+.br 
 .sp
 .B matchpathcon_fini
 frees the memory allocated by a prior call to
@@ -49,7 +49,7 @@ This function can be used to free and reset the internal state between multiple
 .B matchpathcon_init 
 calls, or to free memory when finished using 
 .B matchpathcon.
-
+.br
 .sp
 .B matchpathcon 
 matches the specified pathname and mode against the file contexts
@@ -72,14 +72,14 @@ its first invocation with a NULL
 .I path,
 defaulting to the active file contexts configuration.
 .sp
-
+.br
 .B set_matchpathcon_printf
 sets the function used by 
 .B matchpathcon_init
 when displaying errors about the file contexts configuration.  If not set, 
 then this defaults to fprintf(stderr, fmt, ...).  This can be set to redirect
 error reporting to a different destination.
-
+.br
 .sp
 .B set_matchpathcon_invalidcon
 sets the function used by 
@@ -100,7 +100,7 @@ may include the
 and
 .I lineno
 in such error messages.
-
+.br
 .sp
 .B set_matchpathcon_flags
 sets flags controlling the operation of 
@@ -111,7 +111,7 @@ If the
 .B MATCHPATHCON_BASEONLY
 flag is set, then only the base file contexts configuration file
 will be processed, not any dynamically generated entries or local customizations.
-
+.br
 .sp
 .SH "RETURN VALUE"
 Returns 0 on success or -1 otherwise.

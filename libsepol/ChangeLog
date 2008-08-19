@@ -1,110 +1,49 @@
-2.0.32 2008-07-07
-	* Allow require then declare in the source policy from Joshua Brindle.
+1.16.14 2008-06-10
+	* Merge r2886 from trunk:  merge user and role mapping support from Joshua Brindle.
 
-2.0.31 2008-06-13
-	* Fix mls_semantic_level_expand() to handle a user require w/o MLS information from Stephen Smalley.
-
-2.0.30 2008-06-06
+1.16.13 2008-06-06
 	* Fix endianness bug in the handling of network node addresses from Stephen Smalley.
 	  Only affects big endian platforms.
 	  Bug reported by John Weeks of Sun upon policy mismatch between x86 and sparc.
 
-2.0.29 2008-05-27
-	* Merge user and role mapping support from Joshua Brindle.
+1.16.12 2008-03-04
+	* Merge r2831 from trunk:  fix uninitialized use of handle in struct policy_file from Todd Miller.
 
-2.0.28 2008-05-05
-	* Fix mls_level_convert() to gracefully handle an empty user declaration/require from Stephen Smalley.
+1.16.11 2008-02-05
+	* Merge r2520 from trunk:  bug fix for disable dontaudit support.
 
-2.0.27 2008-04-18
-	* Belatedly merge test for policy downgrade from Todd Miller.
+1.16.10 2007-11-05
+	* Allow handle_unknown to be overridden by semanage.conf from Stephen Smalley.
 
-2.0.26 2008-03-24
-	* Add permissive domain support from Eric Paris.
-
-2.0.25 2008-03-04
-	* Drop unused ->buffer field from struct policy_file.
-
-2.0.24 2008-03-04
-	* Add policy_file_init() initalizer for struct policy_file and use it, from Todd C. Miller.
-
-2.0.23 2008-02-28
-	* Accept "Flask" as an alternate identifier string in kernel policies from Stephen Smalley.
-
-2.0.22 2008-02-28
-	* Add support for open_perms policy capability from Eric Paris.
-
-2.0.21 2008-02-20
-	* Fix invalid memory allocation in policydb_index_others() from Jason Tang.
-
-2.0.20 2008-02-04
-	* Port of Yuichi Nakamura's tune avtab to reduce memory usage patch from the kernel avtab to libsepol from Stephen Smalley.
-
-2.0.19 2008-02-02
-	* Add support for consuming avrule_blocks during expansion to reduce
-	  peak memory usage from Joshua Brindle.
-
-2.0.18 2008-01-02
-	* Added support for policy capabilities from Todd Miller.
-
-2.0.17 2007-12-21
-	* Prevent generation of policy.18 with MLS enabled from Todd Miller.
-
-2.0.16 2007-12-07
-	* print module magic number in hex on mismatch, from Todd Miller.
-
-2.0.15 2007-11-29
-	* clarify and reduce neverallow error reporting from Stephen Smalley.
-
-2.0.14 2007-11-05
-	* Reject self aliasing at link time from Stephen Smalley.
-
-2.0.13 2007-11-05
-	* Allow handle_unknown in base to be overridden by semanage.conf from Stephen Smalley.
-
-2.0.12 2007-10-11
+1.16.9 2007-10-11
 	* Fixed bug in require checking from Stephen Smalley.
-	* Added user hierarchy checking from Todd Miller.	
+	* Added user hierarchy checking from Todd Miller.       
 
-2.0.11 2007-09-24
-	* Pass CFLAGS to CC even on link command, per Dennis Gilmore.
-
-2.0.10 2007-09-18
+1.16.8 2007-09-27
 	* Merged support for the handle_unknown policydb flag from Eric Paris.
 
-2.0.9 2007-08-29
-	* Moved next_entry and put_entry out-of-line to reduce code size from Ulrich Drepper.
+1.16.7 2007-09-27
+	* Allow dontaudits to be turned off during policy expansion from Joshua Brindle.
 
-2.0.8 2007-08-28
+1.16.6 2007-09-24
+	* Pass CFLAGS to CC even on link command, per Dennis Gilmore.
+
+1.16.5 2007-08-28
 	* Fixed module_package_read_offsets bug introduced by the prior patch.
 
-2.0.7 2007-08-23
+1.16.4 2007-08-23
 	* Eliminate unaligned accesses from policy reading code from Stephen Smalley.
 
-2.0.6 2007-08-16
-	* Allow dontaudits to be turned off during policy expansion from
-	  Joshua Brindle.
-
-2.0.5 2007-08-01
-	* Fix sepol_context_clone to handle a NULL context correctly.
-          This happens for e.g. semanage_fcontext_set_con(sh, fcontext, NULL)
-	  to set the file context entry to "<<none>>".
-
-2.0.4 2007-06-20
-	* Merged error handling patch from Eamon Walsh.
-
-2.0.3 2007-04-13
+1.16.3 2007-04-13
 	* Merged add boolmap argument to expand_module_avrules() from Chris PeBenito.
 
-2.0.2 2007-03-30
+1.16.2 2007-03-30
 	* Merged fix from Karl to remap booleans at expand time to 
 	  avoid holes in the symbol table.
 
-2.0.1 2007-02-06
+1.16.1 2007-02-06
 	* Merged libsepol segfault fix from Stephen Smalley for when
 	  sensitivities are required but not present in the base.
-	
-2.0.0 2007-02-01
-	* Merged patch to add errcodes.h to libsepol by Karl MacMillan.
 	
 1.16.0 2007-01-18
 	* Updated version for stable branch.

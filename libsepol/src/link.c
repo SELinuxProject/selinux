@@ -1,9 +1,8 @@
-/* Authors: Karl MacMillan <kmacmillan@mentalrootkit.com>
+/* Authors: Karl MacMillan <kmacmillan@tresys.com>
  *	    Joshua Brindle <jbrindle@tresys.com>
  *          Jason Tang <jtang@tresys.com>
  *
  * Copyright (C) 2004-2005 Tresys Technology, LLC
- * Copyright (C) 2007 Red Hat, Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -149,14 +148,14 @@ static int permission_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			new_id = strdup(perm_id);
 			if (new_id == NULL) {
 				ERR(state->handle, "Memory error");
-				ret = SEPOL_ERR;
+				ret = -SEPOL_LINK_ERROR;
 				goto err;
 			}
 			new_perm =
 			    (perm_datum_t *) calloc(1, sizeof(perm_datum_t));
 			if (new_perm == NULL) {
 				ERR(state->handle, "Memory error");
-				ret = SEPOL_ERR;
+				ret = -SEPOL_LINK_ERROR;
 				goto err;
 			}
 			ret = hashtab_insert(dest_class->permissions.table,
@@ -175,7 +174,7 @@ static int permission_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			    "Module %s depends on permission %s in class %s, not satisfied",
 			    state->cur_mod_name, perm_id,
 			    state->dest_class_name);
-			return SEPOL_EREQ;
+			return -SEPOL_LINK_REQNOTMET;
 		}
 	}
 
@@ -228,7 +227,7 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		    hashtab_search(state->cur->policy->p_classes_scope.table,
 				   id);
 		if (scope == NULL) {
-			ret = SEPOL_ERR;
+			ret = -SEPOL_LINK_ERROR;
 			goto err;
 		}
 		if (scope->scope == SCOPE_DECL) {
@@ -236,7 +235,7 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			ERR(state->handle,
 			    "%s: Modules may not yet declare new classes.",
 			    state->cur_mod_name);
-			ret = SEPOL_ENOTSUP;
+			ret = -SEPOL_LINK_NOTSUP;
 			goto err;
 		} else {
 			/* It would be nice to error early here because the requirement is
@@ -253,18 +252,18 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			    (class_datum_t *) calloc(1, sizeof(class_datum_t));
 			if (new_class == NULL) {
 				ERR(state->handle, "Memory error\n");
-				ret = SEPOL_ERR;
+				ret = -SEPOL_LINK_ERROR;
 				goto err;
 			}
 			if (symtab_init
 			    (&new_class->permissions, PERM_SYMTAB_SIZE)) {
-				ret = SEPOL_ERR;
+				ret = -SEPOL_LINK_ERROR;
 				goto err;
 			}
 			new_id = strdup(id);
 			if (new_id == NULL) {
 				ERR(state->handle, "Memory error\n");
-				ret = SEPOL_ERR;
+				ret = -SEPOL_LINK_ERROR;
 				goto err;
 			}
 			ret = hashtab_insert(state->base->p_classes.table,
@@ -405,8 +404,6 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			    state->cur_mod_name, id);
 			return -1;
 		}
-		/* permissive should pass to the base type */
-		base_type->flags |= (type->flags & TYPE_FLAGS_PERMISSIVE);
 	} else {
 		if (state->verbose)
 			INFO(state->handle, "copying type %s", id);
@@ -420,7 +417,6 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			goto cleanup;
 		}
 		new_type->primary = type->primary;
-		new_type->flags = type->flags;
 		new_type->flavor = type->flavor;
 		/* for attributes, the writing of new_type->types is
 		   done in type_fix_callback() */
@@ -444,7 +440,6 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		}
 		new_type->primary = type->primary;
 		new_type->flavor = type->flavor;
-		new_type->flags = type->flags;
 		new_type->s.value = base_type->s.value;
 		if ((new_id = strdup(id)) == NULL) {
 			goto cleanup;
@@ -594,20 +589,20 @@ static int sens_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		scope =
 		    hashtab_search(state->cur->policy->p_sens_scope.table, id);
 		if (!scope)
-			return SEPOL_ERR;
+			return -SEPOL_LINK_ERROR;
 		if (scope->scope == SCOPE_DECL) {
 			/* disallow declarations in modules */
 			ERR(state->handle,
 			    "%s: Modules may not declare new sensitivities.",
 			    state->cur_mod_name);
-			return SEPOL_ENOTSUP;
+			return -SEPOL_LINK_NOTSUP;
 		}
 		if (scope->scope == SCOPE_REQ) {
 			/* unmet requirement */
 			ERR(state->handle,
-			    "%s: Sensitivity %s not declared by base.",
+			    "%s:  Sensitivity %s not declared by base.\n",
 			    state->cur_mod_name, id);
-			return SEPOL_ENOTSUP;
+			return -SEPOL_LINK_NOTSUP;
 		}
 	}
 
@@ -632,20 +627,20 @@ static int cat_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		scope =
 		    hashtab_search(state->cur->policy->p_cat_scope.table, id);
 		if (!scope)
-			return SEPOL_ERR;
+			return -SEPOL_LINK_ERROR;
 		if (scope->scope == SCOPE_DECL) {
 			/* disallow declarations in modules */
 			ERR(state->handle,
 			    "%s: Modules may not declare new categories.",
 			    state->cur_mod_name);
-			return SEPOL_ENOTSUP;
+			return -SEPOL_LINK_NOTSUP;
 		}
 		if (scope->scope == SCOPE_REQ) {
 			/* unmet requirement */
 			ERR(state->handle,
-			    "%s: Category %s not declared by base.",
+			    "%s:  Category %s not declared by base.\n",
 			    state->cur_mod_name, id);
-			return SEPOL_ENOTSUP;
+			return -SEPOL_LINK_NOTSUP;
 		}
 	}
 
@@ -706,8 +701,6 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return -1;
 	}
 
-	target_type->flags |= (type->flags & TYPE_FLAGS_PERMISSIVE);
-
 	base_type = hashtab_search(state->base->p_types.table, id);
 	if (base_type == NULL) {
 		if (state->verbose)
@@ -719,7 +712,6 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		}
 		/* the linked copy always has TYPE_ALIAS style aliases */
 		new_type->primary = target_type->s.value;
-		new_type->flags = target_type->flags;
 		new_type->flavor = TYPE_ALIAS;
 		new_type->s.value = state->base->p_types.nprim + 1;
 		if ((new_id = strdup(id)) == NULL) {
@@ -754,7 +746,6 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 
 		base_type->flavor = TYPE_ALIAS;
 		base_type->primary = target_type->s.value;
-		base_type->flags |= (target_type->flags & TYPE_FLAGS_PERMISSIVE);
 
 	}
 	/* the aliases map points from its value to its primary so when this module 
@@ -862,10 +853,6 @@ static int mls_level_convert(mls_semantic_level_t * src, mls_semantic_level_t * 
 	mls_semantic_cat_t *src_cat, *new_cat;
 
 	if (!mod->policy->mls)
-		return 0;
-
-	/* Required not declared. */
-	if (!src->sens)
 		return 0;
 
 	assert(mod->map[SYM_LEVELS][src->sens - 1]);
@@ -1947,7 +1934,7 @@ static int enable_avrules(link_state_t * state, policydb_t * pol)
 			}
 			rc = is_decl_requires_met(state, decl, &req);
 			if (rc < 0) {
-				ret = SEPOL_ERR;
+				ret = -SEPOL_LINK_ERROR;
 				goto out;
 			} else if (rc == 0) {
 				decl->enabled = 0;
@@ -1956,7 +1943,7 @@ static int enable_avrules(link_state_t * state, policydb_t * pol)
 				if (!(block->flags & AVRULE_OPTIONAL)) {
 					print_missing_requirements(state, block,
 								   &req);
-					ret = SEPOL_EREQ;
+					ret = -SEPOL_LINK_REQNOTMET;
 					goto out;
 				}
 			}
@@ -2240,7 +2227,7 @@ int link_modules(sepol_handle_t * handle,
 	}
 
 	if (enable_avrules(&state, state.base)) {
-		retval = SEPOL_EREQ;
+		retval = -SEPOL_LINK_REQNOTMET;
 		goto cleanup;
 	}
 

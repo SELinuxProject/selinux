@@ -1,0 +1,405 @@
+<sect1 id="file"><title>File Hook Functions</title>
+<para>
+The SELinux file hook functions manage the security fields of
+<structname>file</structname> structures and perform access control
+for file operations.  Each <structname>file</structname> structure
+contains state such as the file offset and file flags for an open
+file.  Since file descriptors may be inherited across
+<function>execve</function> calls and may be transferred through IPC,
+they can potentially be shared among processes with different security
+attributes, so it is desirable to separately label these structures
+and control the use of them.  Additionally, it is necessary to save
+task security information in these structures for <constant>SIGIO</constant>
+signals.
+</para>
+
+<sect2><title>Managing File Security Fields</title>
+<sect3><title>File Security Structure</title>
+<para>
+The <structname>file_security_struct</structname> structure contains
+security information for file objects. This structure is defined as
+follows:
+</para>
+<programlisting>
+struct file_security_struct {
+        struct file *file;
+        u32 sid;
+        u32 fown_sid;
+};
+</programlisting>
+
+<table frame="all">
+<title>file_security_struct</title>
+<tgroup cols="2" align="left">
+<colspec colwidth="20*">
+<colspec colwidth="80*">
+<thead>
+<row>
+    <entry>Field</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>file</entry>
+    <entry>
+	Back pointer to the associated <structname>file</structname>. 
+    </entry>
+</row>
+<row>
+    <entry>sid</entry>
+    <entry>SID of the open file descriptor. </entry>
+</row>
+<row>
+    <entry>fown_sid</entry>
+    <entry>SID of the file owner; used for <constant>SIGIO</constant>
+	events.
+    </entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect3>
+
+<sect3><title>file_alloc_security and file_free_security</title>
+<para>
+The <function>file_alloc_security</function> and
+<function>file_free_security</function> helper functions are the
+primitive allocation functions for file security structures. In
+addition to the general security field management,
+<function>file_alloc_security</function> associates the open file with
+the SID of the allocating task.  The
+<function>selinux_file_alloc_security</function> and
+<function>selinux_file_free_security</function> hook functions simply
+call the helper functions.
+</para>
+</sect3>
+
+<sect3 id="SetFowner"><title>selinux_file_set_fowner</title>
+<para>
+This hook function is called to save security information about the
+current task in the file security structure for later use by the
+<function>selinux_file_send_sigiotask</function> hook.  One example of
+where this hook is called is the <function>fcntl</function> call for
+the <constant>F_SETOWN</constant> command.  This hook saves the SID of
+the current task in the <structfield>fown_sid</structfield> field of
+the file security structure.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2><title>Controlling File Operations</title>
+
+<sect3 id="FileHasPerm"><title>file_has_perm</title>
+<para>
+This helper function checks whether a task can use an open file
+descriptor to access a file in a given way.  It takes the task, the
+file, and the requested file permissions as parameters.  This function
+first sets up the auxiliary audit data.  It then calls the AVC to
+check <constant>use</constant> permission between the task and the
+file descriptor.  If this permission is granted, then this function
+also checks the requested permissions to the file using the
+<function>inode_has_perm</function> helper function.  In some cases
+(e.g. certain ioctl and fcntl commands), this helper function is
+called with no requested file permissions in order to simply check the
+ability to use the descriptor.  In these cases, the latter check is
+omitted.
+</para>
+</sect3>
+
+<sect3><title>selinux_file_permission</title>
+<para>
+This hook function is called by operations such as
+<function>read</function>, <function>write</function>, and
+<function>sendfile</function> to revalidate permissions on use to
+support privilege bracketing or policy changes.  It takes the file and
+permission mask as parameters.  If the permission mask is null (an
+existence test), then the function returns success immediately.
+Otherwise, if the <constant>O_APPEND</constant> flag is set in the
+file flags, then this hook function first sets the
+<constant>MAY_APPEND</constant> flag in permission mask.  This
+function then converts the permission mask to an access vector using
+the <function>file_mask_to_av</function> function, and calls
+<function>file_has_perm</function> with the appropriate parameters.
+</para>
+</sect3>
+
+<sect3><title>selinux_file_ioctl</title>
+<para>
+This hook function is called by the <function>ioctl</function> system
+call.  It calls <function>file_has_perm</function> with a requested
+file permission based on the command argument.  For some commands, no
+file permission is specified so only the <constant>use</constant>
+permission is checked.  The generic <constant>ioctl</constant>
+file permission is used for commands that are not specifically handled.
+<xref linkend="IopermTable"> shows the permission checks performed for each
+command.
+
+<table id="IopermTable" frame="all">
+<title>I/O Control Permission Checks</title>
+<tgroup cols="4" align="left">
+<colspec colwidth="40*">
+<colspec colwidth="20*">
+<colspec colwidth="20*">
+<colspec colwidth="20*">
+<thead>
+<row>
+    <entry>Command</entry>
+    <entry>Source</entry>
+    <entry>Target</entry>
+    <entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry><simplelist>
+        <member>FIONREAD</member>
+        <member>FIBMAP</member>
+        <member>FIGETBSZ</member>
+        <member>EXT2_IOC_GETFLAGS</member>
+        <member>EXT2_IOC_GETVERSION</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry><simplelist>
+        <member>FileDescriptor</member>
+        <member>File</member>
+    </simplelist></entry>
+    <entry><simplelist>
+        <member>use</member>
+        <member>getattr</member>
+    </simplelist></entry>
+</row>
+<row>
+    <entry><simplelist>
+        <member>EXT2_IOC_SETFLAGS</member>
+        <member>EXT2_IOC_SETVERSION</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry><simplelist>
+        <member>FileDescriptor</member>
+        <member>File</member>
+    </simplelist></entry>
+    <entry><simplelist>
+        <member>use</member>
+        <member>setattr</member>
+    </simplelist></entry>
+</row>
+
+<row>
+    <entry><simplelist>
+        <member>FIONBIO</member>
+        <member>FIOASYNC</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>FileDescriptor</entry>
+    <entry>use</entry>
+</row>
+<row>
+    <entry>Other</entry>
+    <entry>Current</entry>
+    <entry><simplelist>
+        <member>FileDescriptor</member>
+        <member>File</member>
+    </simplelist></entry>
+    <entry><simplelist>
+        <member>use</member>
+        <member>ioctl</member>
+    </simplelist></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</sect3>
+
+<sect3><title>file_map_prot_check</title>
+<para>
+This helper function is called by the
+<function>selinux_file_mmap</function> and the
+<function>selinux_file_mprotect</function> hook functions to apply
+permission checks for attempts to create or change the protection of
+memory mappings.  The function first checks whether the caller is
+attempting to make executable an anonymous mapping or a private file
+mapping that will also be writable.  If so, it applies the process
+<constant>execmem</constant> permission check to control the ability
+to execute arbitrary code from memory.
+</para>
+
+<para>
+If a file is being mapped, then this function calls the
+<function>file_has_perm</function> with a set of permissions based on
+a flag indicating whether the mapping is shared and the requested
+protection.  Since read access is always possible with a mapping,
+the <constant>read</constant> permission is always required.  The
+<constant>write</constant> permission is only checked if the mapping
+is shared and <constant>PROT_WRITE</constant> was requested.  The
+<constant>execute</constant> permission is only checked if
+<constant>PROT_EXEC</constant> was requested.
+</para>
+
+<para>
+It should be noted that the protection on a mapping may subsequently
+become invalid due to a file relabel or a change in the security
+policy.  Hence, support for efficiently locating and invalidating the
+appropriate mappings upon such changes is needed to support full
+revocation.  This support has not yet been implemented for the
+SELinux security module.
+</para>
+
+</sect3>
+
+<sect3><title>selinux_file_mmap</title>
+<para>
+This hook function is called to check
+permission when creating a mapping.  The hook function determines whether
+the mapping will be shared based on the provided flags and calls the 
+<function>file_map_prot_check</function> helper.
+</para>
+</sect3>
+
+<sect3><title>selinux_file_mprotect</title>
+<para>
+This hook function is called to check the requested new protection for
+an existing mapping.  If the caller is attempting to make the mapping
+executable, this function first applies several specialized checks.
+If the mapping is in the brk region, then the process
+<constant>execheap</constant> permission is checked to control
+attempts to make the heap executable, which should normally never
+occur and is not portable; such memory if needed should be explicitly
+allocated via mmap.  If the mapping is a private file mapping that has
+had some copy-on-write done, indicating that it may include modified
+content, then this function performs a file
+<constant>execmod</constant> permission check.  Typically, this should
+only occur for text relocations, which if possible should be
+eliminated from the program or DSO.  If the mapping is in the main
+process stack, this function checks the process
+<constant>execstack</constant> permission to control attempts to make
+the stack executable; as with execheap, such memory if needed should
+be explicitly allocated via mmap.  This function then determines
+whether the mapping is shared based on the flags in the vm_area_struct
+and calls the <function>file_map_prot_check</function> helper to
+complete checking.  Note that in the execstack case, this will also
+trigger an <constant>execmem</constant> check, so both permissions would
+have to be allowed in order to permit making the stack executable; however,
+in practice, the more likely situation is that one would allow execmem
+to a particular program to permit legitimate runtime code generation while
+denying execstack to prevent making its stack executable.
+</para>
+</sect3>
+
+<sect3><title>selinux_file_lock</title>
+<para>
+This hook function is called to check permissions before performing file
+locking operations. It calls <function>file_has_perm</function> with the
+<constant>lock</constant> permission.
+</para>
+</sect3>
+
+<sect3><title>selinux_file_fcntl</title>
+<para>
+This hook function is called by the <function>fcntl</function> system
+call.  It calls <function>file_has_perm</function> with a requested
+file permission based on the command parameter.  
+The basic permission checks performed for each command are shown in
+<xref linkend="FilecontrolTable">.
+
+<table id="FilecontrolTable" frame="all">
+<title>File Control Permission Checks</title>
+<tgroup cols="4" align="left">
+<thead>
+<row>
+    <entry>Command</entry>
+    <entry>Source</entry>
+    <entry>Target</entry>
+    <entry>Permission(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry><simplelist>
+        <member>F_SETFL</member>
+        <member>F_SETOWN</member>
+        <member>F_SETSIG</member>
+        <member>F_GETFL</member>
+        <member>F_GETOWN</member>
+        <member>F_GETSIG</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry>FileDescriptor</entry>
+    <entry>use</entry>
+</row>
+<row>
+    <entry><simplelist>
+        <member>F_GETLK</member>
+        <member>F_SETLK</member>
+        <member>F_SETLKW</member>
+        <member>F_GETLK64</member>
+        <member>F_SETLK64</member>
+        <member>F_SETLKW64</member>
+    </simplelist></entry>
+    <entry>Current</entry>
+    <entry><simplelist>
+        <member>FileDescriptor</member>
+        <member>File</member>
+    </simplelist></entry>
+    <entry><simplelist>
+        <member>use</member>
+        <member>lock</member>
+    </simplelist></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+In addition to these basic checks, the <constant>write</constant>
+permission is checked if the <constant>F_SETFL</constant> command is
+used to clear the <constant>O_APPEND</constant> flag.  This ensures
+that a process that only has <constant>append</constant> permission to
+the file cannot subsequently obtain full write access after opening
+the file.
+</para>
+</sect3>
+
+<sect3 id="SendSigiotask"><title>selinux_file_send_sigiotask</title>
+<para>
+This hook function is called to check whether a signal generated by an
+event on a file descriptor can be sent to a task.  This function is
+sometimes called from interrupt.  It is passed the target task, a file
+owner structure and the signal that would be delivered (or 0 if SIGIO
+is to be used as the default).  Since the file owner structure is
+embedded in a file structure, the file structure and its security
+field can be extracted by the hook function.  The hook function calls
+the AVC to check the appropriate signal permission between the
+<structfield>fown_sid</structfield> in the file security structure and
+the target task SID.
+</para>
+</sect3>
+
+<sect3><title>selinux_file_receive</title>
+<para>
+This hook function is called to check whether the current task can
+receive an open file descriptor that was sent via socket IPC.  This
+function calls the <function>file_to_av</function> function to convert
+the file flags and mode to an access vector and then calls
+<function>file_has_perm</function> to check that the receiving task
+has these permissions to the file.  If this hook returns an error,
+then the kernel will cease processing the message and will pass
+a truncated message to the receiving task.
+</para>
+</sect3>
+
+<sect3><title>selinux_quota_on</title>
+<para>
+This hook function is called to check permissions when quotas are
+enabled to a particular quota file.  It calls 
+<function>file_has_perm</function> to check <constant>quotaon</constant>
+permission to the file.
+</para>
+</sect3>
+
+</sect2>
+
+</sect1>

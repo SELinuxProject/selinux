@@ -44,7 +44,6 @@ int main(int argc, char **argv)
 	sepol_policydb_t *out, *p;
 	FILE *fp, *outfile;
 	int check_assertions = 1;
-	sepol_handle_t *handle;
 
 	while ((ch = getopt(argc, argv, "c:Vva")) != EOF) {
 		switch (ch) {
@@ -106,10 +105,6 @@ int main(int argc, char **argv)
 	basename = argv[optind++];
 	outname = argv[optind];
 
-	handle = sepol_handle_create();
-	if (!handle)
-		exit(1);
-
 	if (sepol_policy_file_create(&pf)) {
 		fprintf(stderr, "%s:  Out of memory\n", argv[0]);
 		exit(1);
@@ -137,7 +132,7 @@ int main(int argc, char **argv)
 
 	/* linking the base takes care of enabling optional avrules */
 	p = sepol_module_package_get_policy(base);
-	if (sepol_link_modules(handle, p, NULL, 0, 0)) {
+	if (sepol_link_modules(NULL, p, NULL, 0, 0)) {
 		fprintf(stderr, "%s:  Error while enabling avrules\n", argv[0]);
 		exit(1);
 	}
@@ -149,9 +144,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	sepol_set_expand_consume_base(handle, 1);
-
-	if (sepol_expand_module(handle, p, out, verbose, check_assertions)) {
+	if (sepol_expand_module(NULL, p, out, verbose, check_assertions)) {
 		fprintf(stderr, "%s:  Error while expanding policy\n", argv[0]);
 		exit(1);
 	}
@@ -181,7 +174,6 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	fclose(outfile);
-	sepol_handle_destroy(handle);
 	sepol_policydb_free(out);
 	sepol_policy_file_free(pf);
 

@@ -1,107 +1,31 @@
-2.0.27 2008-08-05
-	* Modify genhomedircon to skip %groupname entries.
-	  Ultimately we need to expand them to the list of users to support per-role homedir labeling when using the %groupname syntax.
+1.10.9 2007-12-07
+	* Fix semanage_select_store to strdup the storename from Dan Walsh.
 
-2.0.26 2008-07-29
-	* Fix bug in genhomedircon fcontext matches logic from Dan Walsh.
-	  Strip any trailing slash before appending /*$.
+1.10.8 2007-11-05
+	* Allow handle unknown in base to be overridden by semanage.conf from Stephen Smalley.
 
-2.0.25 2008-04-21
-	* Do not call genhomedircon if the policy was not rebuilt from Stephen Smalley.
-	  Fixes semanage boolean -D seg fault (bug 441379).
-
-2.0.24 2008-02-26
-	* make swigify
-
-2.0.23 2008-02-04
-	* Use vfork rather than fork for libsemanage helpers to reduce memory overhead as suggested by Todd Miller.
-
-2.0.22 2008-02-04
-	* Free policydb before fork from Joshua Brindle.
-
-2.0.21 2008-02-04
-	* Drop the base module immediately after expanding to permit memory re-use from Stephen Smalley.
-
-2.0.12 2008-02-02
-	* Use sepol_set_expand_consume_base to reduce peak memory usage when
-	  using semodule from Joshua Brindle.
-
-2.0.19 2008-01-31
-	* Fix genhomedircon to not override a file context with a homedir context from Todd Miller.
-
-2.0.18 2008-01-28
-	* Fix spurious out of memory error reports.
-
-2.0.17 2008-01-25
-	* Merged second version of fix for genhomedircon handling from Caleb Case.
-
-2.0.16 2008-01-24
-	* Merged fix for genhomedircon handling of missing HOME_DIR or HOME_ROOT templates from Caleb Case.
-
-2.0.15 2007-12-05
-	* Fix genhomedircon handling of shells and missing user context template from Dan Walsh.
-	* Copy the store path in semanage_select_store from Dan Walsh.
-
-2.0.14 2007-11-05
-	* Call rmdir() rather than remove() on directory removal so that errno isn't polluted from Stephen Smalley.
-
-2.0.13 2007-11-05
-	* Allow handle_unknown in base to be overridden by semanage.conf from Stephen Smalley.
-
-2.0.12 2007-10-05
-	* ustr cleanups from James Antill.
-	* Ensure that /root gets labeled even if using the default context from Dan Walsh.
-
-2.0.11 2007-09-28
-	* Fix ordering of file_contexts.homedirs from Todd Miller and Dan Walsh.
-
-2.0.10 2007-09-28
-	* Fix error checking on getpw*_r functions from Todd Miller.
-	* Make genhomedircon skip invalid homedir contexts from Todd Miller.
-	* Set default user and prefix from seusers from Dan Walsh.
-	* Add swigify Makefile target from Dan Walsh.
-
-2.0.9 2007-09-24
-	* Pass CFLAGS to CC even on link command, per Dennis Gilmore.
-
-2.0.8 2007-09-19
-	* Clear errno on non-fatal errors to avoid reporting them upon a
-	  later error that does not set errno.
-
-2.0.7 2007-09-19
+1.10.7 2007-09-27
 	* Improve reporting of system errors, e.g. full filesystem or read-only filesystem from Stephen Smalley.
 
-2.0.6 2007-09-10
-	* Change to use getpw* function calls to the _r versions from Todd Miller.
+1.10.6 2007-09-27
+	* Allow dontaudits to be turned off via semanage interface when updating policy from Joshua Brindle.
 
-2.0.5 2007-08-23
-	* Replace genhomedircon script with equivalent functionality within
-	  libsemanage and introduce disable-genhomedircon option in
-	  semanage.conf from Todd Miller.
-	  Note:  Depends on ustr.
+1.10.5 2007-09-24
+	* Pass CFLAGS to CC even on link command, per Dennis Gilmore.
 
-2.0.4 2007-08-16
-	* Allow dontaudits to be turned off via semanage interface when
-	  updating policy from Joshua Brindle.
+1.10.4 2007-04-25
+	* Merged man page updates from Dan Walsh to make whatis work better
 
-2.0.3 2007-04-25
-	* Fix to libsemanage man patches so whatis will work better from Dan Walsh
-
-2.0.2 2007-04-24
-	* Merged optimizations from Stephen Smalley.
-	  - do not set all booleans upon commit, only those whose values have changed
-	  - only install the sandbox upon commit if something was rebuilt
-
-2.0.1 2007-03-12
+1.10.3 2007-03-12
 	* Merged dbase_file_flush patch from Dan Walsh.
 	  This removes any mention of specific tools (e.g. semanage)
 	  from the comment header of the auto-generated files,
-	  since there are multiple front-end tools.
+	  since there are multiple front-end tools.	
 
-2.0.0 2007-02-20
+1.10.2 2007-02-20
 	* Merged Makefile test target patch from Caleb Case.
 	* Merged get_commit_number function rename patch from Caleb Case.
-	* Merged strnlen -> strlen patch from Todd Miller.
+	* Merged strnlen -> strlen patch from Todd Miller.	
 
 1.10.1 2007-01-26
 	* Merged python binding fix from Dan Walsh.

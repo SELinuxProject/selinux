@@ -15,22 +15,18 @@ ifeq (${AUDITH}, /usr/include/libaudit.h)
 	LDLIBS += -laudit
 endif
 
-all: setfiles restorecon
+all: setfiles
 
 setfiles:  setfiles.o 
-
-restorecon: setfiles
-	ln -sf setfiles restorecon
 
 install: all
 	[ -d $(MANDIR)/man8 ] || mkdir -p $(MANDIR)/man8
 	-mkdir -p $(SBINDIR)
 	install -m 755 setfiles $(SBINDIR)
-	(cd $(SBINDIR) && ln -sf setfiles restorecon)
-	install -m 644 setfiles.8 restorecon.8 $(MANDIR)/man8
+	install -m 644 setfiles.8 $(MANDIR)/man8
 
 clean:
-	rm -f setfiles restorecon *.o 
+	rm -f setfiles *.o 
 
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])

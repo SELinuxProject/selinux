@@ -1,0 +1,62 @@
+<sect1 id="selinux"><title>SELinux Basic Concepts</title>
+<para>
+This section provides an overview of the SELinux basic concepts.  More
+background information about SELinux can be found in <citation><XRef
+LinkEnd="LoscoccoFreenix01"></citation>.
+</para>
+
+<para>
+SELinux is based on the Flask security architecture for flexible
+nondiscretionary access controls.  This architecture was previously
+implemented in the Fluke research operating system, as described in
+<citation><xref linkend="SpencerUsenixSec99"></citation>.  The Flask
+security architecture provides a clean separation between the policy
+enforcement code and the policy decision-making code.  The policy
+decision-making code is encapsulated in a separate component of the
+operating system called the security server.  The Flask security
+architecture includes an access vector cache (AVC) component that
+provides caching of access decision computations obtained from the
+security server to minimize the performance overhead of the SELinux
+access controls.  The policy enforcement code is integrated into the
+subsystems (e.g. the process management code, the filesystem code, the
+socket and networking code, and the IPC code) of the operating system.
+The policy enforcement code obtains security policy decisions from the
+security server and AVC, and applies those decisions to assign
+security labels to processes and objects and to control operations
+based on those security labels.
+</para>
+
+<para>
+Since different security policies require different kinds of security
+attributes, the Flask security architecture provides two
+policy-independent data types for security labels: the security
+context and the security identifier (SID).  A security context is a
+string representation of a security label, while a SID is an internal
+handle that is mapped by the security server to a security context.
+Kernel SIDs are not exported to userspace; the kernel only returns
+security contexts to userspace.  However, userspace policy enforcers
+may have their own SID mappings maintained by the userspace AVC that
+is included in libselinux.  Both SIDs and security contexts are
+handled opaquely by the policy enforcement code and can only be
+interpreted by the security server.  The policy enforcement code binds
+SIDs to active processes and objects, consulting the security server
+when a SID needs to be computed for a new subject or object.  The
+policy enforcement code in the filesystem code also stores file
+security contexts in each filesystem using extended attributes.
+</para>
+
+<para>
+The policy enforcement code consults the AVC to check permissions for
+operations, passing a pair of SIDs and a security class; the AVC
+obtains access decisions from the security server as needed.  The pair
+of SIDs are referred to as a source SID and a target SID.  Typically,
+the source SID is the SID of a process and the target SID is the SID
+of another process or an object, but it is also possible for
+permissions to be defined between two objects to control relationships
+among objects.  The security class identifies the kind of object.
+Each security class has an associated set of permissions that are used
+to control access to that object.  These permission sets are
+represented by a bitmap called an access vector.  
+</para>
+
+</sect1>

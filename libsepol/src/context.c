@@ -224,7 +224,6 @@ int context_from_record(sepol_handle_t * handle,
 	return STATUS_SUCCESS;
 
       err_destroy:
-	errno = EINVAL;
 	context_destroy(scontext);
 
       err:

@@ -1,344 +1,226 @@
 #! /usr/bin/python -E
-# Authors: Karl MacMillan <kmacmillan@mentalrootkit.com>
-#
-# Copyright (C) 2006-2007  Red Hat
+# Copyright (C) 2005 Red Hat 
 # see file 'COPYING' for use and warranty information
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; version 2 only
+# Audit2allow is a rewrite of prior perl script.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Based off original audit2allow perl script: which credits
+#    newrules.pl, Copyright (C) 2001 Justin R. Smith (jsmith@mcs.drexel.edu)
+#    2003 Oct 11: Add -l option by Yuichi Nakamura(ynakam@users.sourceforge.jp)
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+#    This program is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU General Public License as
+#    published by the Free Software Foundation; either version 2 of
+#    the License, or (at your option) any later version.
 #
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA     
+#                                        02111-1307  USA
+#
+#  
+from avc import *
 
-import sys
-
-import sepolgen.audit as audit
-import sepolgen.policygen as policygen
-import sepolgen.interfaces as interfaces
-import sepolgen.output as output
-import sepolgen.objectmodel as objectmodel
-import sepolgen.defaults as defaults
-import sepolgen.module as module
-from sepolgen.sepolgeni18n import _
-
-class AuditToPolicy:
-    VERSION = "%prog .1"
-    SYSLOG = "/var/log/messages"
-
-    def __init__(self):
-        self.__options = None
-        self.__parser = None
-        self.__avs = None
-
-    def __parse_options(self):
-        from optparse import OptionParser
-
-        parser = OptionParser(version=self.VERSION)
-        parser.add_option("-a", "--audit", action="store_true", dest="audit", default=False,
-                          help="read input from audit log - conflicts with -i")
-        parser.add_option("-d", "--dmesg", action="store_true", dest="dmesg", default=False,
-                          help="read input from dmesg - conflicts with --audit and --input")
-        parser.add_option("-i", "--input", dest="input",
-                          help="read input from <input> - conflicts with -a")
-        parser.add_option("-l", "--lastreload", action="store_true", dest="lastreload", default=False,
-                          help="read input only after the last reload")
-        parser.add_option("-r", "--requires", action="store_true", dest="requires", default=False,
-                          help="generate require statements for rules")
-        parser.add_option("-m", "--module", dest="module",
-                          help="set the module name - implies --requires")
-        parser.add_option("-M", "--module-package", dest="module_package",
-                          help="generate a module package - conflicts with -o and -m")
-        parser.add_option("-o", "--output", dest="output",
-                          help="append output to <filename>, conflicts with -M")
-        parser.add_option("-R", "--reference", action="store_true", dest="refpolicy",
-                          default=True, help="generate refpolicy style output")
-
-        parser.add_option("-N", "--noreference", action="store_false", dest="refpolicy",
-                          default=False, help="do not generate refpolicy style output")
-        parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
-                          default=False, help="explain generated output")
-        parser.add_option("-e", "--explain", action="store_true", dest="explain_long",
-                          default=False, help="fully explain generated output")
-        parser.add_option("-t", "--type", help="only process messages with a type that matches this regex",
-                          dest="type")
-        parser.add_option("--perm-map", dest="perm_map", help="file name of perm map")
-        parser.add_option("--interface-info", dest="interface_info", help="file name of interface information")
-        parser.add_option("--debug", dest="debug", action="store_true", default=False,
-                          help="leave generated modules for -M")
-
-        parser.add_option("-w", "--why", dest="audit2why",  action="store_true", default=False,
-                          help="Translates SELinux audit messages into a description of why the access was denied")
-
-        options, args = parser.parse_args()
-
-        # Make -d, -a, and -i conflict
-        if options.audit is True:
-            if options.input is not None:
-                sys.stderr.write("error: --audit conflicts with --input\n")
-            if options.dmesg is True:
-                sys.stderr.write("error: --audit conflicts with --dmesg\n")
-        if options.input is not None and options.dmesg is True:
-            sys.stderr.write("error: --input conflicts with --dmesg\n")
-
-        # Turn on requires generation if a module name is given. Also verify
-        # the module name.
-        if options.module:
-            name = options.module
-        else:
-            name = options.module_package
-        if name:
-            options.requires = True
-            if not module.is_valid_name(name):
-                sys.stderr.write("only letters and numbers allowed in module names\n")
-                sys.exit(2)
-
-        # Make -M and -o conflict
-        if options.module_package:
-            if options.output:
-                sys.stderr.write("error: --module-package conflicts with --output\n")
-                sys.exit(2)
-            if options.module:
-                sys.stderr.write("error: --module-package conflicts with --module\n")
-                sys.exit(2)
-
-        self.__options = options
-
-    def __read_input(self):
-        parser = audit.AuditParser(last_load_only=self.__options.lastreload)
-
-        filename = None
-        messages = None
-        f = None
-
-        # Figure out what input we want
-        if self.__options.input is not None:
-            filename = self.__options.input
-        elif self.__options.dmesg:
-            messages = audit.get_dmesg_msgs()
-        elif self.__options.audit:
-            try:
-                messages = audit.get_audit_msgs()
-            except OSError, e:
-                sys.stderr.write('could not run ausearch - "%s"\n' % str(e))
-                sys.exit(1)
-        else:
-            # This is the default if no input is specified
-            f = sys.stdin
-
-        # Get the input
-        if filename is not None:
-            try:
-                f = open(filename)
-            except IOError, e:
-                sys.stderr.write('could not open file %s - "%s"\n' % (filename, str(e)))
-                sys.exit(1)
-
-        if f is not None:
-            parser.parse_file(f)
-            f.close()
-
-        if messages is not None:
-            parser.parse_string(messages)
-
-        self.__parser = parser
-
-    def __process_input(self):
-        if self.__options.type:
-            avcfilter = audit.AVCTypeFilter(self.__options.type)
-            self.__avs = self.__parser.to_access(avcfilter)
-            csfilter = audit.ComputeSidTypeFilter(self.__options.type)
-            self.__role_types = self.__parser.to_role(csfilter)
-        else:
-            self.__avs = self.__parser.to_access()
-            self.__role_types = self.__parser.to_role()
-
-    def __load_interface_info(self):
-        # Load interface info file
-        if self.__options.interface_info:
-            fn = self.__options.interface_info
-        else:
-            fn = defaults.interface_info()
+if __name__ == '__main__':
+	import commands, sys, os, getopt, selinux
+        import gettext
+	import re
         try:
-            fd = open(fn)
+                gettext.install('policycoreutils')
         except:
-            sys.stderr.write("could not open interface info [%s]\n" % fn)
-            sys.exit(1)
+                pass
+	def get_mls_flag():
+		if selinux.is_selinux_mls_enabled():
+			return "-M"
+		else:
+			return ""
 
-        ifs = interfaces.InterfaceSet()
-        ifs.from_file(fd)
-        fd.close()
+	def usage(msg = ""):
+		print _('audit2allow [-adhilrv] [-t file ] [ -f fcfile ] [-i <inputfile> ] [[-m|-M] <modulename> ] [-o <outputfile>]\n\
+		-a, --all        read input from audit and message log, conflicts with -i\n\
+		-d, --dmesg      read input from output of /bin/dmesg\n\
+		-h, --help       display this message\n\
+		-i, --input      read input from <inputfile> conflicts with -a\n\
+		-l, --lastreload read input only after last \"load_policy\"\n\
+		-m, --module     generate module/require output <modulename> \n\
+		-M               generate loadable module package, conflicts with -o\n\
+		-o, --output     append output to <outputfile>, conflicts with -M\n\
+		-r, --requires   generate require output \n\
+		-t, --tefile     Add input from Existing Type Enforcement file\n\
+		-f, --fcfile     Existing Type Enforcement file, requires -M\n\
+		-v, --verbose    verbose output\n\
+                -A, --analyze    Analyze output\n\
+                ')
+		if msg != "":
+			print msg
+		sys.exit(1)
+		
+	def verify_module(module):
+		m = re.findall("[^a-zA-Z0-9]", module)
+		if len(m) != 0:
+			usage(_("Alphanumeric Charaters Only"))
+		
+	def errorExit(error):
+		sys.stderr.write("%s: " % sys.argv[0])
+		sys.stderr.write("%s\n" % error)
+		sys.stderr.flush()
+		sys.exit(1)
 
-        # Also load perm maps
-        if self.__options.perm_map:
-            fn = self.__options.perm_map
-        else:
-            fn = defaults.perm_map()
-        try:
-            fd = open(fn)
-        except:
-            sys.stderr.write("could not open perm map [%s]\n" % fn)
-            sys.exit(1)
+	#
+	# 
+	#
+	try:
+		last_reload = 0
+		inputfd = sys.stdin
+		output = sys.stdout
+		module = ""
+		requires = 0
+		verbose = 0
+		auditlogs = 0
+		buildPP = 0
+		input_ind = 0
+		output_ind = 0
+		ref_ind = False
+		analyze = False
+		te_inputs = []
 
-        perm_maps = objectmodel.PermMappings()
-        perm_maps.from_file(fd)
+		fc_file = ""
+		gopts, cmds = getopt.getopt(sys.argv[1:],
+					    'Aadf:hi:lm:M:o:rt:vR',
+					    ['all',
+                                             'analyze',
+                                             'dmesg',
+					     'fcfile=',
+					     'help',
+					     'input=',
+					     'lastreload',
+					     'module=',
+					     'output=',
+					     'requires',
+					     'reference',
+					     'tefile=',
+					     'verbose'
+					     ])
+		for o,a in gopts:
+			if o == "-a" or o == "--all":
+				if input_ind:
+					usage()
+				inputfd = open("/var/log/messages", "r")
+				auditlogs = 1
+			if o == "-d"  or o == "--dmesg":
+				inputfd = os.popen("/bin/dmesg", "r")
+			if o == "-f" or o == "--fcfile":
+				if a[0] == "-":
+					usage()
+				fc_file = a
+			if o == "-h" or o == "--help":
+				usage()
+			if o == "-i"or o == "--input":
+				if auditlogs  or a[0] == "-":
+					usage()
+				input_ind = 1
+				inputfd = open(a, "r")
+			if o == '--lastreload' or o == "-l":
+				last_reload = 1
+			if o == "-m" or o == "--module":
+				if module != "" or a[0] == "-":
+					usage()
+				module = a
+				verify_module(module)
+			if o == "-M":
+				if module != "" or output_ind  or a[0] == "-":
+					usage()
+				module = a
+				verify_module(module)
+				outfile = a+".te"
+				buildPP = 1
+				if not os.path.exists("/usr/bin/checkmodule"):
+					errorExit("-M Requires the checkmodule command, you need to install the checkpolicy rpm package")
+				output = open(outfile, "w")
+			if o == "-r" or o == "--requires":
+				requires = 1
+			if o == "-t" or o == "--tefile":
+				te_inputs.append(open(a, "r"))
+                                
+			if o == "-R" or o == "--reference":
+				ref_ind = True
+				
+			if o == "-o" or o == "--output":
+				if module != ""  or a[0] == "-":
+					usage()
+				output = open(a, "a")
+				output_ind = 1
+			if o == "-v" or o == "--verbose":
+				verbose = 1
+				
+			if o == "-A" or o == "--analyze":
+				analyze = True
+				
+		if len(cmds) != 0:
+			usage()
 
-        return (ifs, perm_maps)
+		if fc_file != "" and not buildPP:
+			usage("Error %s: Option -fc requires -M" % sys.argv[0])
+			
+                serules = SERules(last_reload, verbose)
 
-    def __output_modulepackage(self, writer, generator):
-        generator.set_module_name(self.__options.module_package)
-        filename = self.__options.module_package + ".te"
-        packagename = self.__options.module_package + ".pp"
+                for i in te_inputs:
+                    te = TERules(serules)
+                    te.load(i)
 
-        try:
-            fd = open(filename, "w")
-        except IOError, e:
-            sys.stderr.write("could not write output file: %s\n", str(e))
-            sys.exit(1)
+                serules.load(inputfd)
 
-        writer.write(generator.get_module(), fd)
-        fd.close()
 
-        mc = module.ModuleCompiler()
+		if ref_ind:
+			serules.gen_reference_policy()
 
-        try:
-            mc.create_module_package(filename, self.__options.refpolicy)
-        except RuntimeError, e:
-            print e
-            sys.exit(1)
+		if analyze:
+			serules.analyze()
+			sys.exit(0)
 
-        sys.stdout.write(_("******************** IMPORTANT ***********************\n"))
-        sys.stdout.write((_("To make this policy package active, execute:" +\
-                                "\n\nsemodule -i %s\n\n") % packagename))
+		if auditlogs and os.path.exists("/var/log/audit/audit.log"):
+			inputfd = os.popen("ausearch -m avc,MAC_POLICY_LOAD")
+			serules.load(inputfd)
 
-    def __output_audit2why(self):
-            import selinux
-            import selinux.audit2why as audit2why
-            import seobject
-            audit2why.init()
-            for i in self.__parser.avc_msgs:
-                rc, bools = audit2why.analyze(i.scontext.to_string(), i.tcontext.to_string(), i.tclass, i.accesses)
-                if rc >= 0:
-                    print "%s\n\tWas caused by:" % i.message
-                if rc == audit2why.NOPOLICY:
-                    raise RuntimeError("Must call policy_init first")
-                if rc == audit2why.BADTCON:
-                    print "Invalid Target Context %s\n" % i.tcontext
-                    continue
-                if rc == audit2why.BADSCON:
-                    print "Invalid Source Context %s\n" % i.scontext
-                    continue
-                if rc == audit2why.BADSCON:
-                    print "Invalid Type Class %s\n" % i.tclass
-                    continue
-                if rc == audit2why.BADPERM:
-                    print "Invalid permission %s\n" % i.accesses
-                    continue
-                if rc == audit2why. BADCOMPUTE:
-                    raise RuntimeError("Error during access vector computation")
-                if rc == audit2why.ALLOW:
-                    print "\t\tUnknown - would be allowed by active policy\n",
-                    print "\t\tPossible mismatch between this policy and the one under which the audit message was generated.\n"
-                    print "\t\tPossible mismatch between current in-memory boolean settings vs. permanent ones.\n"
-                    continue
-                if rc == audit2why.DONTAUDIT:
-                    print "\t\tUnknown - should be dontaudit'd by active policy\n",
-                    print "\t\tPossible mismatch between this policy and the one under which the audit message was generated.\n"
-                    print "\t\tPossible mismatch between current in-memory boolean settings vs. permanent ones.\n"
-                    continue
-                if rc == audit2why.BOOLEAN:
-                    if len(bools) > 1:
-                        print "\tOne of the following booleans was set incorrectly."
-                        for b in bools:
-                            print "\tDescription:\n\t%s\n"  % seobject.boolean_desc(b[0])
-                            print "\tAllow access by executing:\n\t# setsebool -P %s %d"  % (b[0], b[1])
-                    else:
-                        print "\tThe boolean %s was set incorrectly. " % (bools[0][0])
-                        print "\tDescription:\n\t%s\n"  % seobject.boolean_desc(bools[0][0])
-                        print "\tAllow access by executing:\n\t# setsebool -P %s %d"  % (bools[0][0], bools[0][1])
-                    continue
+		if buildPP:
+			print (_("Generating type enforcment file: %s.te") % module)
+		output.write(serules.out(requires, module))
+		output.flush()
+		if buildPP:
+			if ref_ind:
+				rc, type = selinux.selinux_getpolicytype()
+				cmd = "make -f /usr/share/selinux/%s/include/Makefile %s.pp" % (type, module)
+				print _("Compiling policy")
+				print cmd
+				rc = commands.getstatusoutput(cmd)
+			else:
+				cmd = "checkmodule %s -m -o %s.mod %s.te" % (get_mls_flag(), module, module)
+				print _("Compiling policy")
+				print cmd
+				rc = commands.getstatusoutput(cmd)
+				if rc[0] == 0:
+					cmd = "semodule_package -o %s.pp -m %s.mod" % (module, module)
+					if fc_file != "":
+						cmd = "%s -f %s" % (cmd, fc_file)
+					
+					print cmd
+					rc = commands.getstatusoutput(cmd)
+			if rc[0] == 0:
+				print _("\n******************** IMPORTANT ***********************\n")
+				print (_("In order to load this newly created policy package into the kernel,\nyou are required to execute \n\nsemodule -i %s.pp\n\n") % module)
+			else:
+				errorExit(rc[1])
 
-                if rc == audit2why.TERULE:
-                    print "\t\tMissing type enforcement (TE) allow rule.\n"
-                    print "\t\tYou can use audit2allow to generate a loadable module to allow this access.\n"
-                    continue
-
-                if rc == audit2why.CONSTRAINT:
-                    print "\t\tPolicy constraint violation.\n"
-                    print "\t\tMay require adding a type attribute to the domain or type to satisfy the constraint.\n"
-                    print "\t\tConstraints are defined in the policy sources in policy/constraints (general), policy/mcs (MCS), and policy/mls (MLS).\n"
-                    continue
-
-                if rc == audit2why.RBAC:
-                    print "\t\tMissing role allow rule.\n"
-                    print "\t\tAdd an allow rule for the role pair.\n"
-                    continue
-
-            audit2why.finish()
-            return
-
-    def __output(self):
-        
-        if self.__options.audit2why:
-            return self.__output_audit2why()
-
-        g = policygen.PolicyGenerator()
-
-        if self.__options.module:
-            g.set_module_name(self.__options.module)
-
-        # Interface generation
-        if self.__options.refpolicy:
-            ifs, perm_maps = self.__load_interface_info()
-            g.set_gen_refpol(ifs, perm_maps)
-
-        # Explanation
-        if self.__options.verbose:
-            g.set_gen_explain(policygen.SHORT_EXPLANATION)
-        if self.__options.explain_long:
-            g.set_gen_explain(policygen.LONG_EXPLANATION)
-
-        # Requires
-        if self.__options.requires:
-            g.set_gen_requires(True)
-
-        # Generate the policy
-        g.add_access(self.__avs)
-        g.add_role_types(self.__role_types)
-
-        # Output
-        writer = output.ModuleWriter()
-
-        # Module package
-        if self.__options.module_package:
-            self.__output_modulepackage(writer, g)
-        else:
-            # File or stdout
-            if self.__options.module:
-                g.set_module_name(self.__options.module)
-
-            if self.__options.output:
-                fd = open(self.__options.output, "w")
-            else:
-                fd = sys.stdout
-            writer.write(g.get_module(), fd)
-
-    def main(self):
-        try:
-            self.__parse_options()
-            self.__read_input()
-            self.__process_input()
-            self.__output()
-        except KeyboardInterrupt:
-            sys.exit(0)
-
-if __name__ == "__main__":
-    app = AuditToPolicy()
-    app.main()
+	except getopt.error, error:
+		errorExit(_("Options Error: %s ") % error.msg)
+	except ValueError, error:
+		errorExit(error.args[0])
+	except IOError, error:
+		errorExit(error)
+	except KeyboardInterrupt, error:
+		sys.exit(0)

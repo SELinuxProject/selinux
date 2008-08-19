@@ -210,10 +210,9 @@ static void restore(const char *filename)
 			}
 
 			if (fsetfilecon(fd, scontext) < 0) {
-				if (errno != EOPNOTSUPP) 
-					syslog(LOG_ERR,
-					       "set context %s->%s failed:'%s'\n",
-					       filename, scontext, strerror(errno));
+				syslog(LOG_ERR,
+				       "set context %s->%s failed:'%s'\n",
+				       filename, scontext, strerror(errno));
 				if (retcontext >= 0)
 					free(prev_context);
 				free(scontext);
@@ -226,9 +225,8 @@ static void restore(const char *filename)
 		if (retcontext >= 0)
 			free(prev_context);
 	} else {
-		if (errno != EOPNOTSUPP) 
-			syslog(LOG_ERR, "get context on %s failed: '%s'\n",
-			       filename, strerror(errno));
+		syslog(LOG_ERR, "get context on %s failed: '%s'\n",
+		       filename, strerror(errno));
 	}
 	free(scontext);
 	close(fd);

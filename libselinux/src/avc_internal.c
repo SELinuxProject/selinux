@@ -44,9 +44,7 @@ void (*avc_func_free_lock) (void *) = NULL;
 
 /* message prefix string and avc enforcing mode */
 char avc_prefix[AVC_PREFIX_SIZE] = "uavc";
-int avc_running = 0;
 int avc_enforcing = 1;
-int avc_setenforce = 0;
 int avc_netlink_trouble = 0;
 
 /* netlink socket code */
@@ -90,148 +88,221 @@ void avc_netlink_close(void)
 	close(fd);
 }
 
-static int avc_netlink_receive(char *buf, unsigned buflen)
+int avc_netlink_check_nb(void)
 {
 	int rc;
 	struct sockaddr_nl nladdr;
 	socklen_t nladdrlen = sizeof nladdr;
-	struct nlmsghdr *nlh = (struct nlmsghdr *)buf;
-
-	rc = recvfrom(fd, buf, buflen, 0, (struct sockaddr *)&nladdr,
-		      &nladdrlen);
-	if (rc < 0)
-		return rc;
-
-	if (nladdrlen != sizeof nladdr) {
-		avc_log("%s:  warning: netlink address truncated, len %d?\n",
-			avc_prefix, nladdrlen);
-		return -1;
-	}
-
-	if (nladdr.nl_pid) {
-		avc_log("%s:  warning: received spoofed netlink packet from: %d\n",
-			avc_prefix, nladdr.nl_pid);
-		return -1;
-	}
-
-	if (rc == 0) {
-		avc_log("%s:  warning: received EOF on netlink socket\n",
-			avc_prefix);
-		errno = EBADFD;
-		return -1;
-	}
-
-	if (nlh->nlmsg_flags & MSG_TRUNC || nlh->nlmsg_len > (unsigned)rc) {
-		avc_log("%s:  warning: incomplete netlink message\n",
-			avc_prefix);
-		return -1;
-	}
-
-	return 0;
-}
-
-static int avc_netlink_process(char *buf)
-{
-	int rc;
-	struct nlmsghdr *nlh = (struct nlmsghdr *)buf;
-
-	switch (nlh->nlmsg_type) {
-	case NLMSG_ERROR:{
-		struct nlmsgerr *err = NLMSG_DATA(nlh);
-
-		/* Netlink ack */
-		if (err->error == 0)
-			break;
-
-		errno = -err->error;
-		avc_log("%s:  netlink error: %d\n", avc_prefix, errno);
-		return -1;
-	}
-
-	case SELNL_MSG_SETENFORCE:{
-		struct selnl_msg_setenforce *msg = NLMSG_DATA(nlh);
-		avc_log("%s:  received setenforce notice (enforcing=%d)\n",
-			avc_prefix, msg->val);
-		if (avc_setenforce)
-			break;
-		avc_enforcing = msg->val;
-		if (avc_enforcing && (rc = avc_ss_reset(0)) < 0) {
-			avc_log("%s:  cache reset returned %d (errno %d)\n",
-				avc_prefix, rc, errno);
-			return rc;
-		}
-		break;
-	}
-
-	case SELNL_MSG_POLICYLOAD:{
-		struct selnl_msg_policyload *msg = NLMSG_DATA(nlh);
-		avc_log("%s:  received policyload notice (seqno=%d)\n",
-			avc_prefix, msg->seqno);
-		rc = avc_ss_reset(msg->seqno);
-		if (rc < 0) {
-			avc_log("%s:  cache reset returned %d (errno %d)\n",
-				avc_prefix, rc, errno);
-			return rc;
-		}
-		break;
-	}
-
-	default:
-		avc_log("%s:  warning: unknown netlink message %d\n",
-			avc_prefix, nlh->nlmsg_type);
-	}
-	return 0;
-}
-
-int avc_netlink_check_nb(void)
-{
-	int rc;
-	char buf[1024] __attribute__ ((aligned));
+	char buf[1024];
+	struct nlmsghdr *nlh;
 
 	while (1) {
-		errno = 0;
-		rc = avc_netlink_receive(buf, sizeof(buf));
+		rc = recvfrom(fd, buf, sizeof(buf), 0,
+			      (struct sockaddr *)&nladdr, &nladdrlen);
 		if (rc < 0) {
-			if (errno == EWOULDBLOCK)
-				return 0;
-			if (errno == 0 || errno == EINTR)
+			if (errno == EINTR)
 				continue;
-			else {
-				avc_log("%s:  netlink recvfrom: error %d\n",
+			if (errno != EAGAIN) {
+				avc_log("%s:  socket error during read: %d\n",
 					avc_prefix, errno);
-				return rc;
+			} else {
+				errno = 0;
+				rc = 0;
 			}
+			goto out;
 		}
 
-		(void)avc_netlink_process(buf);
+		if (nladdrlen != sizeof nladdr) {
+			avc_log
+			    ("%s:  warning: netlink address truncated, len %d?\n",
+			     avc_prefix, nladdrlen);
+			rc = -1;
+			goto out;
+		}
+
+		if (nladdr.nl_pid) {
+			avc_log
+			    ("%s:  warning: received spoofed netlink packet from: %d\n",
+			     avc_prefix, nladdr.nl_pid);
+			continue;
+		}
+
+		if (rc == 0) {
+			avc_log("%s:  warning: received EOF on socket\n",
+				avc_prefix);
+			goto out;
+		}
+
+		nlh = (struct nlmsghdr *)buf;
+
+		if (nlh->nlmsg_flags & MSG_TRUNC
+		    || nlh->nlmsg_len > (unsigned)rc) {
+			avc_log("%s:  warning: incomplete netlink message\n",
+				avc_prefix);
+			goto out;
+		}
+
+		rc = 0;
+		switch (nlh->nlmsg_type) {
+		case NLMSG_ERROR:{
+				struct nlmsgerr *err = NLMSG_DATA(nlh);
+
+				/* Netlink ack */
+				if (err->error == 0)
+					break;
+
+				errno = -err->error;
+				avc_log("%s:  netlink error: %d\n", avc_prefix,
+					errno);
+				rc = -1;
+				goto out;
+			}
+
+		case SELNL_MSG_SETENFORCE:{
+				struct selnl_msg_setenforce *msg =
+				    NLMSG_DATA(nlh);
+				avc_log
+				    ("%s:  received setenforce notice (enforcing=%d)\n",
+				     avc_prefix, msg->val);
+				avc_enforcing = msg->val;
+				if (avc_enforcing && (rc = avc_ss_reset(0)) < 0) {
+					avc_log
+					    ("%s:  cache reset returned %d (errno %d)\n",
+					     avc_prefix, rc, errno);
+					goto out;
+				}
+				break;
+			}
+
+		case SELNL_MSG_POLICYLOAD:{
+				struct selnl_msg_policyload *msg =
+				    NLMSG_DATA(nlh);
+				avc_log
+				    ("%s:  received policyload notice (seqno=%d)\n",
+				     avc_prefix, msg->seqno);
+				rc = avc_ss_reset(msg->seqno);
+				if (rc < 0) {
+					avc_log
+					    ("%s:  cache reset returned %d (errno %d)\n",
+					     avc_prefix, rc, errno);
+					goto out;
+				}
+				break;
+			}
+
+		default:
+			avc_log("%s:  warning: unknown netlink message %d\n",
+				avc_prefix, nlh->nlmsg_type);
+		}
 	}
-	return 0;
+      out:
+	return rc;
 }
 
 /* run routine for the netlink listening thread */
 void avc_netlink_loop(void)
 {
-	int rc;
-	char buf[1024] __attribute__ ((aligned));
+	int ret;
+	struct sockaddr_nl nladdr;
+	socklen_t nladdrlen = sizeof nladdr;
+	char buf[1024];
+	struct nlmsghdr *nlh;
 
 	while (1) {
-		errno = 0;
-		rc = avc_netlink_receive(buf, sizeof(buf));
-		if (rc < 0) {
-			if (errno == 0 || errno == EINTR)
+		ret =
+		    recvfrom(fd, buf, sizeof(buf), 0,
+			     (struct sockaddr *)&nladdr, &nladdrlen);
+		if (ret < 0) {
+			if (errno == EINTR)
 				continue;
-			else {
-				avc_log("%s:  netlink recvfrom: error %d\n",
-					avc_prefix, errno);
-				break;
-			}
+			avc_log("%s:  netlink thread: recvfrom: error %d\n",
+				avc_prefix, errno);
+			goto out;
 		}
 
-		rc = avc_netlink_process(buf);
-		if (rc < 0)
-			break;
-	}
+		if (nladdrlen != sizeof nladdr) {
+			avc_log
+			    ("%s:  warning: netlink address truncated, len %d?\n",
+			     avc_prefix, nladdrlen);
+			ret = -1;
+			goto out;
+		}
 
+		if (nladdr.nl_pid) {
+			avc_log
+			    ("%s:  warning: received spoofed netlink packet from: %d\n",
+			     avc_prefix, nladdr.nl_pid);
+			continue;
+		}
+
+		if (ret == 0) {
+			avc_log("%s:  netlink thread: received EOF on socket\n",
+				avc_prefix);
+			goto out;
+		}
+
+		nlh = (struct nlmsghdr *)buf;
+
+		if (nlh->nlmsg_flags & MSG_TRUNC
+		    || nlh->nlmsg_len > (unsigned)ret) {
+			avc_log
+			    ("%s:  netlink thread: incomplete netlink message\n",
+			     avc_prefix);
+			goto out;
+		}
+
+		switch (nlh->nlmsg_type) {
+		case NLMSG_ERROR:{
+				struct nlmsgerr *err = NLMSG_DATA(nlh);
+
+				/* Netlink ack */
+				if (err->error == 0)
+					break;
+
+				avc_log("%s:  netlink thread: msg: error %d\n",
+					avc_prefix, -err->error);
+				goto out;
+			}
+
+		case SELNL_MSG_SETENFORCE:{
+				struct selnl_msg_setenforce *msg =
+				    NLMSG_DATA(nlh);
+				avc_log
+				    ("%s:  received setenforce notice (enforcing=%d)\n",
+				     avc_prefix, msg->val);
+				avc_enforcing = msg->val;
+				if (avc_enforcing && (ret = avc_ss_reset(0)) < 0) {
+					avc_log
+					    ("%s:  cache reset returned %d (errno %d)\n",
+					     avc_prefix, ret, errno);
+					goto out;
+				}
+				break;
+			}
+
+		case SELNL_MSG_POLICYLOAD:{
+				struct selnl_msg_policyload *msg =
+				    NLMSG_DATA(nlh);
+				avc_log
+				    ("%s:  received policyload notice (seqno=%d)\n",
+				     avc_prefix, msg->seqno);
+				ret = avc_ss_reset(msg->seqno);
+				if (ret < 0) {
+					avc_log
+					    ("%s:  netlink thread: cache reset returned %d (errno %d)\n",
+					     avc_prefix, ret, errno);
+					goto out;
+				}
+				break;
+			}
+
+		default:
+			avc_log
+			    ("%s:  netlink thread: warning: unknown msg type %d\n",
+			     avc_prefix, nlh->nlmsg_type);
+		}
+	}
+      out:
 	close(fd);
 	avc_netlink_trouble = 1;
 	avc_log("%s:  netlink thread: errors encountered, terminating\n",

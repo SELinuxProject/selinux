@@ -1,0 +1,112 @@
+<bibliography>
+<title>References</title>
+
+<biblioentry id="LoscoccoFreenix01">
+  <abbrev>LoscoccoFreenix2001</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Peter</firstname><surname>Loscocco</surname></author>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+    </authorgroup>
+    <title>Integrating Flexible Support for Security Policies into the Linux Operating System</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>Proceedings of the FREENIX Track: 2001 USENIX Annual Technical Conference</title>
+    <publisher>
+      <publishername>The USENIX Association</publishername>
+    </publisher>
+    <pubdate>June 2001</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="LoscoccoNSATR01">
+  <abbrev>LoscoccoNSATR2001</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Peter</firstname><surname>Loscocco</surname></author>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+    </authorgroup>
+    <title>Integrating Flexible Support for Security Policies into the Linux Operating System</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>NSA Technical Report</title>
+    <pubdate>February 2001</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="LoscoccoNISS98">
+  <abbrev>LoscoccoNISS1998</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Peter</firstname><surname>Loscocco</surname></author>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+      <author><firstname>Patrick</firstname><surname>Muckelbauer</surname></author>
+      <author><firstname>Ruth</firstname><surname>Taylor</surname></author>
+      <author><firstname>S.</firstname><surname>Turner</surname></author>
+      <author><firstname>John</firstname><surname>Farrell</surname></author>
+    </authorgroup>
+    <title>The Inevitability of Failure:  The Flawed Assumption of Security in Modern Computing Environments</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>Proceedings of the 21st National Information Systems Security Conference</title>
+    <pubdate>October 1998</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="SpencerUsenixSec99">
+  <abbrev>SpencerUsenixSec1999</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Ray</firstname><surname>Spencer</surname></author>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+      <author><firstname>Peter</firstname><surname>Loscocco</surname></author>
+      <author><firstname>Mike</firstname><surname>Hibler</surname></author>
+      <author><firstname>David</firstname><surname>Andersen</surname></author>
+      <author><firstname>Jay</firstname><surname>Lepreau</surname></author>
+    </authorgroup>
+    <title>The Flask Security Architecture:  System Support for Diverse Security Policies</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>Proceedings of the Eighth USENIX Security Symposium</title>
+    <publisher>
+      <publishername>The USENIX Association</publishername>
+    </publisher>
+    <pubdate>August 1999</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="FIPS188">
+  <abbrev>FIPS188</abbrev>
+  <title>FIPS PUB 188: Standard Security Label for Information Transfer</title>
+  <publisher>
+    <publishername>U.S. Dept. of Commerce / National Institute of Standards and Technology</publishername>
+  </publisher>
+  <pubdate>September 6, 1994</pubdate>
+</biblioentry>
+
+<biblioentry id="MorrisSeloptOverview02">
+  <abbrev>MorrisSeloptOverview2002</abbrev>
+  <biblioset relation="article">
+    <author><firstname>James</firstname><surname>Morris</surname></author>
+    <title>Overview of SELinux Labeled Networking Support via CIPSO/FIPS-188 IP Options</title>
+  </biblioset>
+  <biblioset relation="file">
+    <title>selopt-overview.txt</title>
+    <pubdate>February 2002</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="MorrisSCMP01">
+  <abbrev>MorrisSCMP2001</abbrev>
+  <biblioset relation="article">
+    <author><firstname>James</firstname><surname>Morris</surname></author>
+    <title>Security Context Mapping Protocol</title>
+  </biblioset>
+  <biblioset relation="file">
+    <title>scmp-draft.txt</title>
+    <pubdate>December 30, 2001</pubdate>
+  </biblioset>
+</biblioentry>
+
+</bibliography>
+

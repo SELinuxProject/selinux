@@ -1,0 +1,1485 @@
+<sect1 id="lang"><title>Policy Language and the Example Policy Configuration</title>
+<para>
+The policy configuration is specified using a simple declarative
+language, originally documented informally in <citation><XRef
+LinkEnd="LoscoccoNSATR01"></citation>.  An example security policy
+configuration was written in this language to demonstrate how SELinux
+can be used to meet certain security goals and to provide a starting
+point for users.  The example policy configuration was originally
+documented in <citation><XRef LinkEnd="SmalleyNAITR01"></citation> and
+was also discussed in <citation><XRef
+LinkEnd="LoscoccoOLS01"></citation>.  This section describes the
+policy language, using the example configuration when possible to
+illustrate the language constructs.  This section also describes the
+logically separate file contexts configuration.  This section
+does not (yet) describe the optional MLS configuration, nor does
+it yet describe the conditional policy statement support.
+</para>
+
+<para>
+The complete grammar for the policy language is specified in the
+<filename>policy_parse.y</filename> yacc file in the source package
+for the <command>checkpolicy</command> program.  This section includes
+excerpts from the grammar, edited in some cases for readability or to
+omit obsolete elements.  The policy configuration source files are
+located in the
+<filename>/etc/selinux/(targeted|strict)/src/policy</filename>
+directory.  Since <command>m4</command> macros are extensively defined
+and used within the example policy configuration to ease
+specification, this section also describes some of the commonly used
+macros.  The macro definitions can be found in the
+<filename>policy/macros/global_macros.te</filename> or
+<filename>policy/macros/core_macros.te</filename> files unless
+otherwise noted.
+</para>
+
+<para>
+A policy configuration consists of the following top-level components:
+Flask definitions, TE and RBAC declarations and rules, user
+declarations, constraint definitions, and security context
+specifications.  The Flask definitions were discussed in <xref
+linkend="archdefs">.  The TE and RBAC declarations and rules specify
+the policy logic for the TE and RBAC models.  The user declarations
+define the users for the user identity model and authorize each user
+for particular roles.  The constraint definitions specify additional
+restrictions on permissions that can be based on a combination of
+information from the user identity, TE, and RBAC models.  The security
+context specifications provide security contexts for certain entities,
+such as initial SIDs, unlabeled filesystems, and network objects.
+The top-level production for a policy is:
+<programlisting>
+policy -> flask te_rbac users opt_constraints contexts
+</programlisting>
+</para>
+
+<sect2 id="terbaclang"><title>TE and RBAC Configuration Overview</title>
+<para>
+The TE and RBAC configuration declares the roles, domains, and types
+and defines the labeling and access vector rules for the TE and RBAC
+models. The policy language permits the TE and RBAC configuration to
+be intermingled freely.  The syntax of the TE and RBAC declarations
+and rules is shown below:
+<programlisting>
+te_rbac -> te_rbac_statement | te_rbac te_rbac_statement
+te_rbac_statement -> te_statement | rbac_statement
+te_statement -> attrib_decl |
+                type_decl | 
+                type_transition_rule | 
+                type_change_rule | 
+                te_av_rule | 
+                te_assertion
+rbac_statement -> role_decl | 
+                  role_dominance | 
+                  role_allow_rule
+</programlisting>
+</para>
+
+<para>
+A TE statement can be an attribute declaration, a type declaration, a
+type transition rule, a type change rule, an access vector rule, or an
+assertion.  A RBAC statement can be a role declaration, a role
+dominance definition, or a role allow rule.  The TE statements are
+described in <xref linkend="telang">, and the RBAC statements are
+described in <xref linkend="rbaclang">.
+</para>
+
+</sect2>
+
+<sect2 id="telang"><title>TE Statements</title>
+
+
+<sect3 id="attribdecl"><title>Attribute Declarations</title>
+
+<para>
+A type attribute is a name that can be used to identify a set of types
+with a similar property.  Each type can have any number of attributes,
+and each attribute can be associated with any number of types.
+Attributes are associated with types in type declarations, described
+in the next section.  Prior to the first use of an attribute in a type
+declaration, the attribute must be explicitly declared.  The syntax
+for an attribute declaration is as follows:
+<programlisting>
+attrib_decl -> ATTRIBUTE identifier ';'
+</programlisting>
+Several examples of attribute declarations are shown below:
+<programlisting>
+attribute domain;
+attribute privuser;
+attribute privrole;
+</programlisting>
+</para>
+
+<para>
+An attribute name can be used throughout the policy configuration to
+express the set of the types that are associated with that attribute.
+Attribute names exist within the same name space as types.  However,
+an attribute name cannot be used in the type field of a security
+context.  Attributes have no implicit meaning to SELinux.  The meaning
+of all other attributes are completely defined through their usage
+within the configuration, but should be documented as comments
+preceding the attribute declaration.
+</para>
+
+</sect3>
+
+<sect3 id="tedecl"><title>Type Declarations</title>
+
+<para>
+The TE configuration language requires that every type be declared.
+However, forward references to types are accepted, since the policy
+compiler performs two passes.  Each type declaration specifies a
+primary name for the type, an optional set of aliases for the type,
+and an optional set of attributes for the type.  The syntax for a type
+declaration is as follows:
+
+<programlisting>
+type_decl -> TYPE identifier opt_alias_def opt_attr_list ';'
+opt_alias_def -> ALIAS aliases | empty
+aliases -> identifier | '{' identifier_list '}'
+identifier_list -> identifier | identifier_list identifier
+opt_attr_list -> ',' attr_list | empty
+attr_list -> identifier | attr_list ',' identifier
+</programlisting>
+</para>
+
+<para>
+The primary name and any of the alias names can be used
+interchangeably within the TE configuration.  During runtime, the
+example security server always uses the primary name to identify the
+type when it returns the security context for a SID.  An application
+can use the primary name or any of the alias names to identify the
+type when requesting a SID for a context.  Aliases can be used to
+provide shorthand forms or synonyms for a type, but have no
+significance from a security perspective.  Primary names and alias
+names exist in a single type name space and must all be unique.  
+</para>
+
+<para>
+It is also possible to separately declare additional aliases and/or
+attributes for a type using the <command>typealias</command> and
+<command>typeattribute</command> statements.  These statements will
+add aliases and attributes to already declared types.  The syntax for
+these statements is as follows:
+
+<programlisting>
+typealias_decl -> TYPEALIAS identifier ALIAS aliases ';'
+typeattribute_decl -> TYPEATTRIBUTE identifier attr_list ';'
+</programlisting>
+</para>
+
+<para>
+Several type declarations from the example policy configuration
+related to the secure shell daemon are shown below:
+<programlisting>
+type sshd_t, domain, privuser, privrole, privlog, privowner;
+type sshd_exec_t, file_type, exec_type, sysadmfile;
+type sshd_tmp_t, file_type, sysadmfile, tmpfile;
+type sshd_var_run_t, file_type, sysadmfile, pidfile;
+</programlisting>
+
+The <constant>sshd_t</constant> type is the domain of the daemon
+process.  The <constant>sshd_exec_t</constant> type is the type of the
+<filename>sshd</filename> executable.  The
+<constant>sshd_tmp_t</constant> and
+<constant>sshd_var_run_t</constant> types are the types for temporary
+files and PID files, respectively, that are created by the daemon
+process.  Each of these types has a set of associated attributes that
+are used in rules within the TE configuration.  
+</para>
+
+</sect3>
+
+<sect3 id="telabel"><title>TE Transition Rules</title>
+<para>
+As described in <xref linkend="temodel">, TE transition rules specify the
+new domain for a process or the new type for an object.  In either
+case, the new type is based on a pair of types and a class.  For a
+process, the first type, referred to as the source type, is the
+current domain and the second type, referred to as the target type, is
+the type of the executable.  For an object, the source type is the
+domain of the creating process and the target type is the type of a
+related object, e.g. the parent directory for files.  A TE transition
+rule for a process or an object uses the following syntax:
+
+<programlisting>
+type_transition_rule -> TYPE_TRANSITION source_types target_types ':' classes new_type ';'
+source_types -> set
+target_types -> set
+classes -> set
+new_type -> identifier
+set -> '*' | identifier | '{' identifier_list '}' | '~' identifier | '~' '{' identifier_list '}'
+</programlisting>
+</para>
+
+<para>
+The syntax permits concise specification of multiple TE transition rules
+through the optional use of sets for the source type, target type, or
+security class fields.  Type attribute names can also be used to
+specify the source or target type fields to represent all types with
+that attribute.  The tilde (~) character can be used to indicate the
+complement of a set.  The asterisk (*) character can be used to
+represent all types or classes.  If multiple rules are specified for a
+given type pair and class, then warnings are issued by the policy
+compiler and the last such rule is used.
+</para>
+
+<para>
+Several TE transition rules from the example policy configuration
+related to the secure shell daemon are shown below:
+<programlisting>
+type_transition initrc_t sshd_exec_t:process sshd_t;
+type_transition sshd_t tmp_t:{ dir file lnk_file 
+                               sock_file fifo_file } sshd_tmp_t;
+type_transition sshd_t shell_exec_t:process user_t;
+</programlisting>
+
+The <constant>initrc_t</constant> type is the domain entered when the
+<filename>init</filename> process runs the <filename>/etc/rc.d</filename>
+scripts.  The first rule specifies that this domain should transition
+to the <constant>sshd_t</constant> domain when it executes a program
+with the <constant>sshd_exec_t</constant> type.  The
+<constant>tmp_t</constant> type is the type of the
+<filename>/tmp</filename> directory.  The second rule specifies that
+when the <constant>sshd_t</constant> domain creates a file in a
+directory with this type, the new subdirectory or file should be
+labeled with the <constant>sshd_tmp_t</constant> type.  The
+<constant>shell_exec_t</constant> type is the type of shell programs.
+The last rule specifies that the <constant>sshd_t</constant> domain
+should transition to the <constant>user_t</constant> domain when it
+executes a program with the type <constant>shell_exec_t</constant>.
+</para>
+
+<para>
+It is often desirable to specify a single TE transition rule that
+specifies the new type for a set of related classes, e.g. all file
+classes.  Hence, a set of macros are defined for related classes, as
+shown in <xref linkend="classmacros">.  Any one of these macros can be
+used in the class field of a TE transition rule, as shown in the
+following:
+<programlisting>
+type_transition sshd_t tmp_t:notdevfile_class_set sshd_tmp_t;
+type_transition cardmgr_t tmp_t:devfile_class_set cardmgr_dev_t;
+</programlisting>
+
+<table id="classmacros" frame="all">
+<title>Class Macros</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+    <entry>Macro Name</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>dir_file_class_set</entry>
+    <entry>All directory and file classes.</entry>
+</row>
+<row>
+    <entry>file_class_set</entry>
+    <entry>All file classes (excludes dir).</entry>
+</row>
+<row>
+    <entry>notdevfile_class_set</entry>
+    <entry>Non-device file classes.</entry>
+</row>
+<row>
+    <entry>devfile_class_set</entry>
+    <entry>Device file classes.</entry>
+</row>
+<row>
+    <entry>socket_class_set</entry>
+    <entry>All socket classes.</entry>
+</row>
+<row>
+    <entry>dgram_socket_class_set</entry>
+    <entry>Datagram socket classes.</entry>
+</row>
+<row>
+    <entry>stream_socket_class_set</entry>
+    <entry>Stream socket classes.</entry>
+</row>
+<row>
+    <entry>unpriv_socket_class_set</entry>
+    <entry>Unprivileged socket classes (excludes rawip, netlink, packet, key).</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+Since each TE transition rule requires a set of corresponding TE
+access vector rules to authorize the operation, macros are provided
+that expand to common combinations of TE labeling rules and TE access
+vector rules.  These macros are typically used instead of directly
+specifying TE transition rules.  The
+<constant>domain_auto_trans</constant> macro is defined for domain
+transitions, and the <constant>file_type_auto_trans</constant> macro
+is defined for file type transitions.  The
+<constant>domain_auto_trans</constant> macro takes the current domain,
+the program type, and the new domain as its parameters.  The
+<constant>file_type_auto_trans</constant> macro takes the creating
+domain, the parent directory type, the new file type, and optionally
+the set of file classes (defaulting to non-device file classes) as its
+parameters.  The initial set of example transition rules shown earlier
+in this section are specified indirectly in the example policy
+configuration by using these macros, as shown below:
+<programlisting>
+domain_auto_trans(initrc_t, sshd_exec_t, sshd_t)
+file_type_auto_trans(sshd_t, tmp_t, sshd_tmp_t)
+domain_auto_trans(sshd_t, shell_exec_t, user_t)
+</programlisting>
+</para>
+</sect3>
+
+<sect3 id="techange"><title>TE Change Rules</title>
+<para>
+In addition to supporting TE transition rules, the TE configuration
+language also permits specification of TE change rules.  These rules
+are not used by the kernel, but can be obtained and used by
+security-aware applications using the
+<function>security_compute_relabel</function> function.  A TE change
+rule specifies the new type to use for a relabeling operation based on
+the domain of a user process, the current type of the object, and the
+class of the object.  In the example policy configuration, these rules
+are used to specify the types to use when system daemons relabel
+terminal devices for user sessions.  The syntax is the same as a TE
+transition rule except for the use of the
+<constant>type_change</constant> keyword.
+</para>
+
+<para>
+Several examples of TE change rules are shown below:
+<programlisting>
+type_change user_t tty_device_t:chr_file user_tty_device_t;
+type_change sysadm_t tty_device_t:chr_file sysadm_tty_device_t;
+type_change user_t sshd_devpts_t:chr_file user_devpts_t;
+type_change sysadm_t sshd_devpts_t:chr_file sysadm_devpts_t;
+</programlisting>
+
+The first pair of rules specify the types for user and administrator
+terminals for ordinary terminal devices.  The
+<filename>login</filename> process obtains and uses the decisions
+specified by these rules when creating local user sessions.  The
+second pair of rules specify the types for user and administrator
+terminals for pseudo-terminal devices that were initially allocated by
+the <filename>sshd</filename> daemon.
+</para>
+</sect3>
+
+<sect3 id="teav"><title>TE Access Vector Rules</title>
+<para>
+A TE access vector rule specifies a set of permissions based on a type
+pair and an object security class.  These rules define the TE access
+matrix, as discussed in <xref linkend="temodel">.  Rules can be
+specified for each kind of access vector, including the allowed,
+auditallow, and auditdeny vectors.  The syntax of an access vector rule is:
+<programlisting>
+te_av_rule -> av_kind source_types target_types ':' classes permissions ';'
+av_kind -> ALLOW | AUDITALLOW | DONTAUDIT 
+source_types -> set
+target_types -> set
+classes -> set
+permissions -> set
+set -> '*' | identifier | nested_id_set | '~' identifier | '~' nested_id_set | identifier '-' identifier
+nested_id_set -> '{' nested_id_list '}'
+nested_id_list -> nested_id_element | nested_id_list nested_id_element
+nested_id_element -> identifier | '-' identifier | nested_id_set
+</programlisting>
+</para>
+
+<para>
+As with TE transition rules, the syntax permits concise specification
+of multiple TE access vector rules through the optional use of sets
+for the source type, target type, class, or permission fields.  Type
+attribute names can be used in any of the type fields.  The tilde (~)
+character and the asterisk (*) character can be used in any of the
+fields.  The minus (-) character may be used prior to a type or type
+attribute to exclude the type or set of types with the attribute from
+the type set, e.g. file_type - shadow_t would correspond to all types
+with the file_type attribute except for the shadow_t type. The
+identifier <constant>self</constant> can be used in the target type
+field to indicate that the rule should be applied between each source
+type and itself.  If multiple classes are specified in the class
+field, then each permission in the permission field must be defined
+for that class.  If multiple allow, auditallow, or dontaudit access
+vector rules are specified for a given type pair and class, then the
+union of the permission sets is used.
+</para>
+
+<para>
+Several TE access vector rules from the example policy configuration
+related to the secure shell daemon are shown below:
+<programlisting>
+allow sshd_t sshd_exec_t:file { read execute entrypoint };
+allow sshd_t sshd_tmp_t:file { create read write getattr setattr link unlink rename };
+allow sshd_t user_t:process transition;
+</programlisting>
+
+The first rule specifies that the <constant>sshd_t</constant> domain
+can read, execute, and be entered via a file with the
+<constant>sshd_exec_t</constant> type.  The second rule specifies that
+the domain can create and access files with the
+<constant>sshd_tmp_t</constant> type.  The third rule specifies that
+the domain can transition to the <constant>user_t</constant> domain.
+</para>
+
+<para>
+As with TE transition rules, a class macro can be used in the class
+field of a TE access vector rule.  Care should be taken in using these
+macros to avoid granting unintended accesses, e.g. using the
+<constant>file_class_set</constant> macro instead of the
+<constant>notdevfile_class_set</constant> macro in a rule will grant
+permissions to all file classes, including device files.
+Since SELinux defines a large number of fine-grained permissions for
+each class, macros are also defined for common groupings of
+permissions.  As with the class macros, care should
+be taken when using these macros to avoid granting unintended
+accesses.  Some of these macros are shown in <xref
+linkend="filepermmacros">, <xref linkend="socketpermmacros">, and
+<xref linkend="ipcpermmacros">.  Any one of these macros can be used in the
+permissions field of a TE transition rule, as shown in the following:
+<programlisting>
+allow sshd_t sshd_tmp_t:notdevfile_class_set create_file_perms;
+allow sshd_t sshd_tmp_t:dir create_dir_perms;
+</programlisting>
+
+<table id="filepermmacros" frame="all">
+<title>File Permission Macros</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+    <entry>Macro Name</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>stat_file_perms</entry>
+    <entry>Permissions to call stat or access on a file.</entry>
+</row>
+<row>
+    <entry>x_file_perms</entry>
+    <entry>Permissions to execute a file.</entry>
+</row>
+<row>
+    <entry>r_file_perms</entry>
+    <entry>Permissions to read a file.</entry>
+</row>
+<row>
+    <entry>rx_file_perms</entry>
+    <entry>Permissions to read and execute a file.</entry>
+</row>
+<row>
+    <entry>rw_file_perms</entry>
+    <entry>Permissions to read and write a file.</entry>
+</row>
+<row>
+    <entry>ra_file_perms</entry>
+    <entry>Permissions to read and append to a file.</entry>
+</row>
+<row>
+    <entry>link_file_perms</entry>
+    <entry>Permissions to link, unlink, or rename a file.</entry>
+</row>
+<row>
+    <entry>create_file_perms</entry>
+    <entry>Permissions to create, access, and delete a file.</entry>
+</row>
+<row>
+    <entry>r_dir_perms</entry>
+    <entry>Permissions to read and search a directory.</entry>
+</row>
+<row>
+    <entry>rw_dir_perms</entry>
+    <entry>Permissions to read and modify a directory.</entry>
+</row>
+<row>
+    <entry>ra_dir_perms</entry>
+    <entry>Permissions to read and add entries to a directory.</entry>
+</row>
+<row>
+    <entry>create_dir_perms</entry>
+    <entry>Permissions to create, access, and delete a directory.</entry>
+</row>
+<row>
+    <entry>mount_fs_perms</entry>
+    <entry>Permissions to mount and unmount a filesystem.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table id="socketpermmacros" frame="all">
+<title>Socket Permission Macros</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+    <entry>Macro Name</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>rw_socket_perms</entry>
+    <entry>Permissions to use a socket.</entry>
+</row>
+<row>
+    <entry>create_socket_perms</entry>
+    <entry>Permissions to create and use a socket.</entry>
+</row>
+<row>
+    <entry>rw_stream_socket_perms</entry>
+    <entry>Permissions to use a stream socket.</entry>
+</row>
+<row>
+    <entry>create_stream_socket_perms</entry>
+    <entry>Permissions to create and use a stream socket.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table id="ipcpermmacros" frame="all">
+<title>IPC Permission Macros</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+    <entry>Macro Name</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>r_sem_perms</entry>
+    <entry>Permissions to read a semaphore.</entry>
+</row>
+<row>
+    <entry>rw_sem_perms</entry>
+    <entry>Permissions to create and use a semaphore.</entry>
+</row>
+<row>
+    <entry>r_msgq_perms</entry>
+    <entry>Permissions to read a message queue.</entry>
+</row>
+<row>
+    <entry>rw_msgq_perms</entry>
+    <entry>Permissions to create and use a message queue.</entry>
+</row>
+<row>
+    <entry>r_shm_perms</entry>
+    <entry>Permissions to read shared memory.</entry>
+</row>
+<row>
+    <entry>rw_shm_perms</entry>
+    <entry>Permissions to create and use shared memory.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+As discussed in <xref linkend="telabel">, macros are defined for
+common groupings of TE transition rules and TE access vector rules,
+e.g. <constant>domain_auto_trans</constant> and
+<constant>file_type_auto_trans</constant>.  In some cases, it is
+desirable to grant the necessary permissions for a domain transition
+or file type transition without making it the default behavior.  For
+example, by default, <constant>sshd_t</constant> transitions to
+<constant>user_t</constant> when executing the shell, but it is also
+permitted to explicitly transition to <constant>sysadm_t</constant>.
+Hence, macros are also provided that expand to the necessary TE access
+vector rules without any TE transition rules:
+<constant>domain_trans</constant> and
+<constant>file_type_trans</constant>.  The following example shows
+how the two domain transition macros are used for the secure shell daemon:
+<programlisting>
+domain_auto_trans(sshd_t, shell_exec_t, user_t)
+domain_trans(sshd_t, shell_exec_t, sysadm_t)
+</programlisting>
+</para>
+
+<para>
+Other macros are also defined for common groupings of TE access vector
+rules.  Some of the macros are listed in <xref linkend="teavmacros">.
+As with other macros, care should be taken when using these macros to
+avoid granting unintended permissions.
+
+<table id="teavmacros" frame="all">
+<title>TE Access Vector Rule Macros</title>
+<tgroup cols="3" align="left">
+<thead>
+<row>
+    <entry>Macro Name</entry>
+    <entry>Parameters</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>general_domain_access</entry>
+    <entry>The current domain.</entry>
+    <entry>Authorizes a domain to access processes, /proc/PID files, file descriptors, pipes, Unix sockets, and System V IPC objects within the domain.  Also grants a few other common permissions for domains.</entry>
+</row>
+<row>
+    <entry>general_proc_read_access</entry>
+    <entry>The current domain.</entry>
+    <entry>Authorizes a domain to read most of /proc, excluding the /proc/PID files and certain sensitive files.</entry>
+</row>
+<row>
+    <entry>base_file_read_access</entry>
+    <entry>The current domain.</entry>
+    <entry>Authorizes a domain to read and search certain system file types.</entry>
+</row>
+<row>
+    <entry>uses_shlib</entry>
+    <entry>The current domain.</entry>
+    <entry>Authorizes a domain to execute the types for the dynamic linker and system shared libraries.</entry>
+</row>
+<row>
+    <entry>can_network</entry>
+    <entry>The current domain.</entry>
+    <entry>Authorizes a domain to create UDP and TCP sockets and to access the network.</entry>
+</row>
+<row>
+    <entry>domain_trans and domain_auto_trans</entry>
+    <entry><simplelist><member>The current domain.</member><member>The executable type.</member><member>The new domain.</member></simplelist></entry>
+    <entry>Authorizes a domain transition, and makes it the default in the latter macro.</entry>
+</row>
+<row>
+    <entry>file_type_trans and file_type_auto_trans</entry>
+    <entry><simplelist><member>The creating domain.</member><member>The parent directory type.</member><member>The new file type.</member><member>The file classes (optional)</member></simplelist></entry>
+    <entry>Authorizes a file type transition, and makes it the default in the latter macro.</entry>
+</row>
+<row>
+    <entry>can_exec</entry>
+    <entry><simplelist><member>The current domain.</member><member>The file type.</member></simplelist></entry>
+    <entry>Authorizes a domain to execute a type without changing domains.</entry>
+</row>
+<row>
+    <entry>can_exec_any</entry>
+    <entry>The current domain.</entry>
+    <entry>Authorizes a domain to execute the types for a variety of system files.</entry>
+</row>
+<row>
+    <entry>can_unix_connect</entry>
+    <entry><simplelist><member>The client domain.</member><member>The server domain.</member></simplelist></entry>
+    <entry>Authorizes one domain to connect to another via a Unix stream socket. A separate allow rule is needed to grant access to the type for the socket file.</entry> 
+</row>
+<row>
+    <entry>can_unix_send</entry>
+    <entry><simplelist><member>The sending domain.</member><member>The receiving domain.</member></simplelist></entry>
+    <entry>Authorizes one domain to send to another via a Unix datagram socket.  A separate allow rule is needed to grant access to the type for the socket file.</entry>
+</row>
+<row>
+    <entry>can_sysctl</entry>
+    <entry>The current domain.</entry>
+    <entry>Authorizes a domain to modify any sysctl parameters.</entry>
+</row>
+<row>
+    <entry>can_create_pty</entry>
+    <entry>The current domain's prefix (without the _t).</entry>
+    <entry>Defines a type transition for /dev/pts files and authorizes the domain for the pty type.</entry>
+</row>
+<row>
+    <entry>can_create_other_pty</entry>
+    <entry><simplelist><member>The creating domain's prefix.</member><member>The other domain's prefix.</member></simplelist></entry>
+    <entry>Authorizes a domain to create ptys for another domain.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+</sect3>
+
+<sect3 id="teassert"><title>TE Access Vector Assertions</title>
+<para>
+The TE configuration language allows the policy writer to define a set
+of access vector assertions that are checked by the policy compiler.
+An access vector assertion specifies permissions that should not be in
+an access vector for a given type pair and class.  If any of the
+specified permissions are in an access vector for that type pair and
+class, then the policy compiler will reject the TE configuration.
+Assertions can be used to detect errors in the TE access vector rules
+that may not be evident from a manual inspection of the rules, due to
+the use of sets, macros, aliases, and attributes. 
+</para>
+
+<para>
+At present, assertions can only be defined for the allowed access
+vectors, but support for assertions on the other kinds of access
+vectors could be easily added.  Assertions on the allowed access
+vector are specified using the <constant>neverallow</constant> keyword
+and otherwise use the same syntax as an access vector rule.  Some examples
+of assertions are shown below:
+<programlisting>
+neverallow domain ~domain:process transition;
+neverallow ~{ kmod_t insmod_t rmmod_t ifconfig_t } self:capability sys_module;
+neverallow local_login_t ~login_exec_t:file entrypoint;
+</programlisting>
+
+The <constant>domain</constant> attribute is associated with all types
+that are used as domains in the example policy configuration, and
+expands to that set of types when used in this rule.  The first
+assertion verifies that a domain can never transition to a non-domain.
+This ensures that every type that is used for a process is properly
+tagged with the <constant>domain</constant> attribute.  The second
+assertion verifies that only certain domains can use the
+<constant>sys_module</constant> capability.  The third assertion
+verifies that the <constant>local_login_t</constant> domain can only
+be entered via a program with the <constant>login_exec_t</constant>
+type.
+</para>
+</sect3>
+
+<sect3 id="temisc"><title>Unused TE Rules</title>
+<para>
+The TE configuration language defines another kind of TE rule:
+type member rules.  Type member rules specify the
+type for a member of a polyinstantiated object based on the domain of
+the process and the type of the polyinstantiated object.  Since
+SELinux does not yet implement polyinstantiation, these rules are not
+currently used and this report does not discuss them in detail.  The
+syntax of a type member rule is identical to a TE transition rule except
+for the use of a <constant>type_member</constant> keyword.
+Polyinstantiation is discussed in <citation><XRef
+LinkEnd="SpencerUsenixSec99"></citation>.
+</para>
+</sect3>
+
+<sect3 id="examplete"><title>Example TE Configuration</title>
+
+<para>
+Since the TE configuration specifies the fine-grained protections for
+processes and objects, it is the largest component of the example
+policy configuration.  The TE configuration is organized into a
+collection of files to ease management.  However, this internal
+structure is not imposed by the policy language and can be changed if
+desired.  The only ordering restriction is that the <command>m4</command> 
+macros must be defined prior to use.
+</para>
+
+<para>
+The TE configuration files are listed in <xref
+linkend="teconfigtable">.  The
+<filename>macros</filename> directory contains m4 macros that are
+used by the TE configuration.  The <filename>attrib.te</filename> file
+declares the type attributes.  The
+<filename>types</filename> directory contains declarations for general
+types and rules specifying relationships between these types.  The
+<filename>domains</filename> directory contains the declarations and
+rules for each domain, and is further subdivided into several logical
+groupings.  Types that are associated with a particular domain are
+declared in the appropriate domain definition file within this
+directory rather than in the <constant>types</constant> directory.
+The <filename>assert.te</filename> file specifies TE assertions.
+
+<table id="teconfigtable" frame="all">
+<title>TE Configuration Files</title>
+<tgroup cols="2" align="left">
+<thead>
+<row>
+    <entry>Filename</entry>
+    <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+    <entry>tunables/*.tun</entry>
+    <entry>Defines policy tunables for customization.</entry>
+</row>
+<row>
+    <entry>attrib.te</entry>
+    <entry>Defines type attributes.</entry>
+</row>
+<row>
+    <entry>macros/program/*.te</entry>
+    <entry>Defines macros for specific program domains.</entry>
+</row>
+<row>
+    <entry>macros/*.te</entry>
+    <entry>Defines commonly used macros.</entry>
+</row>
+<row>
+    <entry>types/*.te</entry>
+    <entry>Defines general types.</entry>
+</row>
+<row>
+    <entry>domains/user.te</entry>
+    <entry>Defines unprivileged user domains.</entry>
+</row>
+<row>
+    <entry>domains/admin.te</entry>
+    <entry>Defines administrator domains.</entry>
+</row>
+<row>
+    <entry>domains/misc/*.te</entry>
+    <entry>Defines miscellaneous domains not associated with a particular program.</entry>
+</row>
+<row>
+    <entry>domains/program/*.te</entry>
+    <entry>Defines domains for specific programs.</entry>
+</row>
+<row>
+    <entry>domains/program/unused/*.te</entry>
+    <entry>Optional domains for further programs.</entry>
+</row>
+<row>
+    <entry>assert.te</entry>
+    <entry>Defines assertions on the TE configuration.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+
+<para>
+The example TE configuration is focused on protecting the integrity of
+the base system, confining and protecting system processes, and
+protecting administrator processes.  It also includes an example of
+how to confine a user's browser.  Other kinds of security goals, such
+as trusted pipelines or data confidentiality, can be achieved through
+the TE configuration, but are not currently demonstrated in the
+example TE configuration.
+</para>
+
+<para>
+The example TE configuration defines types to protect the integrity of
+the kernel, system software, system configuration information, and
+system logs.  It defines domains for a large number of system
+processes and several privileged user programs, along with
+corresponding types for objects accessed by these processes. Three 
+domains are defined for user processes: the
+<constant>user_t</constant> domain for ordinary users and the
+<constant>staff_t</constant> and 
+<constant>sysadm_t</constant> domains for system administrators.  These
+domains are associated with the user's initial login shell.  These
+domains automatically transition to other domains to gain or shed
+permissions when user programs with certain types are run.  
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="rbaclang"><title>RBAC Statements</title>
+
+<sect3 id="roledecl"><title>Role Declarations and Dominance</title>
+<para>
+Roles are declared and authorized for particular domains (types)
+through role declarations and optionally through the role dominance
+relationship.  A role declaration specifies the name of the role and
+the set of domains for which the role is authorized.  The syntax for a
+role declaration is as follows:
+
+<programlisting>
+role_decl -> ROLE identifier TYPES types ';'
+types -> set
+set -> '*' | identifier | '{' identifier_list '}' | '~' identifier | '~' '{' identifier_list '}'
+</programlisting>
+</para>
+
+<para>
+The RBAC configuration language uses the <constant>types</constant>
+keyword in the role declaration because the SELinux TE model uses a
+single type abstraction.  However, specifying any type that is not a
+domain serves no purpose (but also does no harm).  Multiple role
+declarations can be specified for a single role, in which case the
+union of the types will be authorized for the role.  This feature
+in combination with the ability to intermingle RBAC and TE statements
+permits a role declaration for each domain to be located with the
+definition of the domain in the TE configuration if desired.  This
+approach is used in the example policy configuration.  Some examples of
+role declarations are shown below:
+<programlisting>
+role system_r types { kernel_t initrc_t getty_t klogd_t };
+role user_r types { user_t user_netscape_t };
+role sysadm_r types { sysadm_t run_init_t };
+</programlisting>
+</para>
+
+<para>
+Role dominance definitions can optionally be used to specify a
+hierarchy among roles.  A role automatically inherits any domains that
+are authorized for any role that it dominates in the hierarchy in
+addition to any domains specified in role declarations.  A role can be
+defined solely through a role dominance definition if desired, in
+which case the role will only be authorized for the domains of roles
+that it dominates.  Role dominance definitions are not used in the
+example policy configuration.  The syntax for a role dominance
+statement is as follows:
+
+<programlisting>
+role_dominance -> DOMINANCE '{' roles '}'
+roles -> role_def | roles role_def
+role_def -> ROLE identifier ';' | ROLE identifier '{' roles '}'
+</programlisting>
+</para>
+</sect3>
+
+<sect3 id="roleallow"><title>Role Allow Rules</title>
+<para>
+A role allow rule specifies authorized transitions between roles based
+on the pair of roles.  Unlike domain transitions, the RBAC policy does
+not control role transitions based on the type of the entrypoint
+program.  However, role transitions can be restricted based on type
+attributes using the constraints configuration, as discussed in <xref
+linkend="constraintlang">.  The syntax of a role allow rule is:
+<programlisting>
+role_allow_rule -> ALLOW current_roles new_roles ';'
+current_roles -> set
+new_roles -> set
+set -> '*' | identifier | '{' identifier_list '}' | '~' identifier | '~' '{' identifier_list '}'
+</programlisting>
+</para>
+
+<para>
+In the example policy configuration, role allow rules serve little
+purpose, since most pairings of roles need to be authorized to support
+normal transitions from system daemons to user or administrator
+shells, from user shells to administrator shells (via
+<filename>newrole</filename>), and from administrator shells to system
+daemons (via <filename>run_init</filename>).  The example policy
+configuration uses the constraints configuration to limit role
+transitions to certain TE domains that are associated with processes
+such as <filename>login</filename> and <filename>newrole</filename>.
+Examples of role allow rules are shown below:
+<programlisting>
+allow system_r { user_r sysadm_r };
+allow user_r sysadm_r;
+allow sysadm_r system_r;
+</programlisting>
+</para>
+</sect3>
+
+<sect3 id="rbacmisc"><title>Role Transition Rules</title>
+<para>
+The RBAC configuration language defines one other kind of RBAC rule:
+role transition rules.  A role transition rule specifies the new role
+of a process based on the current role of the process and the TE type
+of the executable.  If no matching rule is specified, then the process
+remains in the same role by default.  Although role transitions can be
+defined in the policy, the preferred technique for automatically
+changing permissions upon program execution is to define a domain
+transition while remaining in the same role.  Role changes should
+typically only occur explicitly at the request of the user, although
+automatic role transitions can be useful for operations such as
+restarting daemons.  The syntax of a role transition rule is:
+<programlisting>
+role_transition_rule -> ROLE_TRANSITION current_roles types new_role ';'
+current_roles -> set
+types -> set
+new_role -> identifier
+set -> '*' | identifier | '{' identifier_list '}' | '~' identifier | '~' '{' identifier_list '}'
+</programlisting>
+</para>
+</sect3>
+
+<sect3><title>Example RBAC Configuration</title>
+<para>
+The RBAC configuration was originally centralized in the
+<filename>rbac</filename> file, but has been decomposed into
+individual role declarations, role allow rules, and role transition
+rules throughout the TE configuration to support easy removal or
+adding of domains without modifying a centralized file each time.
+This also allowed the macros to properly instantiate role declarations
+and rules for domains.  The <filename>rbac</filename> file still
+exists and can contain other role rules as desired.
+The example RBAC configuration does not specify any role dominance
+declarations.
+</para>
+
+<para>
+The example RBAC configuration defines four roles for processes.  All
+system processes run in the <constant>system_r</constant> role.  This
+role is authorized for each of the domains defined for system
+processes.  The <constant>user_r</constant>,
+<constant>staff_r</constant> and <constant>sysadm_r</constant> roles
+are defined for ordinary users and administrators, with
+<constant>staff_r</constant> as the default login role for
+administrators and <constant>sysadm_r</constant> as the role they must
+enter in order to perform admin tasks.  Each of these roles is
+authorized for the corresponding <constant>user_t</constant>,
+<constant>staff_t</constant>, or <constant>sysadm_t</constant> domain,
+as well as for domains for appropriate user programs.  A
+<command>newrole</command> program was added to support role changes
+within a user session and a <command>run_init</command> program was
+added to support running <filename>rc</filename> scripts in the proper
+role and user identity.
+</para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="userlang"><title>User Declarations</title>
+<para>
+The user declarations define each user recognized by the policy and
+specifies the set of authorized roles for each of these users.  Only
+the user identities specified in this configuration can be used in a
+security context.  The user configuration has the following syntax:
+<programlisting>
+users -> user_decl | users user_decl
+user_decl -> USER identifier ROLES set ';'
+set -> '*' | identifier | '{' identifier_list '}' | '~' identifier | '~' '{' identifier_list '}'
+</programlisting>
+</para>
+
+<para>
+The user identity attribute in the security context remains unchanged
+by default when a program is executed.  Security-aware applications,
+such as the modified <filename>login</filename> or
+<filename>sshd</filename> programs, can explicitly specify a different
+user identity using the setexeccon function prior to an execve.  The
+ability to transition to a different user identity can be controlled
+based on the TE domain through the constraints configuration, as
+discussed in <xref linkend="constraintlang">.  There are no user
+transition or user allow rules in the policy language.  Examples of
+user declarations are shown below:
+<programlisting>
+user system_u roles system_r;
+user root roles { staff_r sysadm_r };
+user jdoe roles user_r;
+</programlisting>
+</para>
+
+<para>
+The example user configuration is located in the
+<filename>users</filename> file.  It defines a
+system user identity, a generic user identity,
+a root user identity, and a couple of example users.
+The example users should be removed during installation,
+as mentioned in the installation <filename>README</filename>.
+Each of the other users are discussed further below.
+</para>
+
+<para>
+The <constant>system_u</constant> user identity is defined for system
+processes and objects.  There should be no corresponding Linux user
+identity in <filename>/etc/passwd</filename> for
+<constant>system_u</constant>, and a user process should never be
+assigned this identity.  This user identity is authorized for the
+<constant>system_r</constant> role.
+</para>
+
+<para>
+The <constant>user_u</constant> user identity is a generic user
+identity for unprivileged users that do not need to be separated by
+the policy.  This concept was introduced in <xref
+linkend="identitymodel">.  There should be no corresponding Linux user
+identity in <filename>/etc/passwd</filename> for this user.  libselinux
+will map Linux users who do not have a particular
+entry defined in the <filename>users</filename> file to this generic
+user identity for the SELinux security context.  This user identity is
+authorized for the <constant>user_r</constant> role for ordinary
+users.  This identity can be removed if the administrator does not wish
+to grant any access to users who lack specific entries in the 
+<filename>users</filename> file.
+</para>
+
+<para>
+The remaining users listed in the configuration correspond to Linux
+user identities in <filename>/etc/passwd</filename>. These user
+identities are assigned to user processes when the login shell or cron
+job is created.  Entries are not required for pseudo users who do not
+perform logins or run cron jobs.  Furthermore, if the
+<constant>user_u</constant> user identity is retained in this file,
+then entries are only required for users who should have administrator
+access (or who otherwise need to be separated by the policy from other
+users, e.g. if additional roles and domains are defined for users).
+</para>
+
+<para>
+The <constant>root</constant> user identity is authorized for the
+<constant>staff_r</constant> and the <constant>sysadm_r</constant>
+roles.  It is important to note that processes that have the Linux
+root uid do not necessarily have the SELinux <constant>root</constant>
+user identity, since these identities are independent.  The SELinux
+user identity can only be set by certain TE domains such as the domain
+for <filename>login</filename>.  The SELinux <constant>root</constant>
+user identity is not assigned to setuid root programs or to system
+processes.  In some distributions that have integrated SELinux
+support, the SELinux user identity is set by the <command>su</command>
+program, while other distributions do not have <command>su</command>
+change the SELinux user identity.
+</para>
+
+</sect2>
+
+<sect2 id="constraintlang"><title>Constraint Definitions</title>
+<para>
+The constraint definitions specify additional constraints on
+permissions in the form of boolean expressions that must be satisfied
+in order for the specified permissions to be granted.  The boolean
+expressions can be based on the user identity, role, or type
+attributes in the pair of security contexts.  The syntax of the constraints
+configuration is as follows:
+<programlisting>
+opt_constraints -> constraints | empty
+constraints -> constraint_def | constraints constraint_def
+constraint_def -> CONSTRAIN classes permissions cexpr ';'
+classes -> set
+permissions -> set
+cexpr -> '(' cexpr ')' | not cexpr | expr and expr | expr or expr |
+          U1 op U2 | U1 op user_set | U2 op user_set |
+          R1 role_op R2 | R1 op role_set | R2 op role_set
+          T1 op T2 | T1 op type_set | T2 op type_set
+not -> '!' | NOT
+and -> '&&' | AND
+or -> '||' | OR
+op -> '==' | '!=' 
+role_op -> op | DOM | DOMBY | INCOMP
+user_set -> set
+role_set -> set
+type_set -> set
+set -> '*' | identifier | '{' identifier_list '}' | '~' identifier | '~' '{' identifier_list '}'
+</programlisting>
+</para>
+
+<para>
+The same constraint can be imposed on multiple classes and permissions
+by optionally specifying sets for the class or permission fields.  If
+multiple classes are specified, then each permission must be defined
+for each of the specified classes.  The boolean expression must then
+evaluated to true in order for the specified permissions to be
+granted.  Several primitives are supported in the boolean expression.
+The user identity attributes of the pair of security contexts,
+represented by <constant>u1</constant> and <constant>u2</constant>,
+can be compared with each other or with a particular set of user
+identities.  Likewise, the role attributes, represented by
+<constant>r1</constant> and <constant>r2</constant>, can be compared
+with each other or with a particular set of roles.  In addition to
+simple equality comparisons, the roles can be compared based on the
+dominance relationship.  The type attributes, represented by
+<constant>t1</constant> and <constant>t2</constant>, can be compared
+with each other or with a particular set of types.
+</para>
+
+<para>
+The example constraints configuration is located in the
+<filename>constraints</filename> file.  The example policy
+configuration uses constraints to restrict the ability to transition
+to different roles or user identities to certain TE domains.  To ease
+specification of these constraints, the example policy configuration
+defines type attributes for domains that are privileged with respect
+to setting the user identity on processes (the
+<constant>privuser</constant> attribute), domains that are privileged
+with respect to setting the role on processes (the
+<constant>privrole</constant> attribute), and domains that are
+privileged with respect to setting the user identity on files (the
+<constant>privowner</constant> attribute).  These attributes are then
+associated with the proper set of domains and used in the constraints
+configuration.  Example constraints are shown below:
+<programlisting>
+constrain process transition ( u1 == u2 or t1 == privuser );
+constrain process transition ( r1 == r2 or t1 == privrole );
+constrain dir_file_class_set { create relabelto relabelfrom }
+          ( u1 == u2 or t1 == privowner );
+</programlisting>
+
+The first constraint requires that the user identity remain the same
+on a process transition unless the current domain of the process is in
+the set of types with the <constant>privuser</constant> attribute.
+The second constraint likewise prevents role changes unless unless the
+current domain of the process is in the set of types with the
+<constant>privrole</constant> attribute.  The last constraint prevents
+a process from creating or relabeling a file with a different user
+identity unless it has the <constant>privowner</constant> attribute.
+</para>
+</sect2>
+
+<sect2 id="conlang"><title>Security Context Specifications</title>
+<para>
+The security contexts specifications provide security contexts for
+various entities such as initial SIDs, pseudo filesystem entries, and
+network objects.  It also specifies the labeling behavior to use for
+each filesystem type.  Each of these entities and the corresponding
+configuration is discussed in the following subsections.  The
+top-level production for the security contexts configuration is:
+<programlisting>
+contexts -> initial_sid_contexts fs_uses opt_genfs_contexts net_contexts
+</programlisting>
+</para>
+
+<sect3 id="initialsidcontexts"><title>Initial SID Contexts</title>
+<para>
+As discussed in <xref linkend="arch">, initial SIDs are SID values
+that are reserved for system initialization or predefined objects.
+The initial SID contexts configuration specifies a security context for
+each initial SID.  A security context consists of a user identity, a role,
+and a type.  The syntax of the initial SID contexts configuration is
+shown below:
+
+<programlisting>
+initial_sid_contexts -> initial_sid_context_def | 
+                        initial_sid_contexts initial_sid_context_def
+initial_sid_context_def -> SID identifier security_context
+security_context -> user ':' role ':' type 
+user -> identifier
+role -> identifier
+type -> identifier
+</programlisting>
+</para>
+
+<para>
+The example initial SID contexts configuration is located in the
+<filename>initial_sid_contexts</filename> file.  A separate domain or
+type is defined for each initial SID so that the TE configuration can
+distinguish among the initial SIDs.  All of the initial SID contexts
+use the <constant>system_u</constant> user identity, since they
+represent system processes and objects.  Initial SID contexts for
+processes use the <constant>system_r</constant> role, while those for
+objects use the <constant>object_r</constant> predefined role.
+Several examples of initial SID contexts entries are shown below:
+<programlisting>
+sid kernel system_u:system_r:kernel_t
+sid init   system_u:system_r:init_t
+sid proc   system_u:object_r:proc_t
+</programlisting>
+</para>
+</sect3>
+
+<sect3 id="fsuse"><title>Filesystem Labeling Behaviors</title>
+<para>
+When a filesystem is mounted by the SELinux kernel, the security
+server is consulted to determine the proper labeling behavior for
+inodes in the filesystem based on the filesystem type.  The labeling
+behavior for a filesystem type can be specified using the
+<filename>fs_use</filename> configuration or using the
+<filename>genfs_contexts</filename> configuration.  If no labeling
+behavior is specified for a filesystem type, then all inodes in that
+filesystem will be labeled with the security context associated with
+the <constant>unlabeled</constant> initial SID.
+</para>
+
+<para>
+For conventional disk-based filesystem types that support extended
+attributes and the security xattr namespace, SELinux can use the
+extended attributes to determine the security context of inodes within
+the filesystem.  This behavior is specified using a
+<constant>fs_use_xattr</constant> statement with the filesystem type
+name.  Several examples are shown below:
+<programlisting>
+fs_use_xattr ext2 system_u:object_r:fs_t;
+fs_use_xattr ext3 system_u:object_r:fs_t;
+fs_use_xattr xfs system_u:object_r:fs_t;
+</programlisting>
+</para>
+
+<para>
+For pseudo filesystem types representing pipe and socket objects,
+SELinux typically assigns the context of the creating process to the inode
+that represents the object.  This behavior is specified using the
+<constant>fs_use_task</constant> statement with the filesystem type
+name and a security context to use for the filesystem itself.  Two
+examples are shown below:
+<programlisting>
+fs_use_task pipefs system_u:object_r:fs_t;
+fs_use_task sockfs system_u:object_r:fs_t;
+</programlisting>
+</para>
+
+<para>
+For pseudo filesystems representing pseudo terminals and shared memory
+or temporary objects, SELinux typically assigns a context derived from
+both the context of the creating process and a context associated with
+the filesystem type.  These derived contexts are determined based on
+type transition rules within the configuration.  This behavior is
+specified using the <constant>fs_use_trans</constant> statement with
+the filesystem type name and a security context to use for the
+filesystem itself.  Two examples are shown below:
+<programlisting>
+fs_use_trans devpts system_u:object_r:devpts_t;
+fs_use_trans tmpfs system_u:object_r:tmpfs_t;
+</programlisting>
+</para>
+
+<para>
+The syntax of the <filename>fs_use</filename> configuration is:
+<programlisting>
+fs_uses -> fs_use_def | fs_uses fs_use_def
+fs_use_def -> FS_USE_XATTR fstype security_context ';' |
+              FS_USE_TASK fstype security_context ';'
+              FS_USE_TRANS fstype security_context ';'
+</programlisting>
+</para>
+</sect3>
+
+<sect3 id="genfscontexts"><title>Genfs Contexts</title>
+<para>
+For filesystem types that do not support security xattrs and can not
+use one of the fixed labeling schemes specified in
+<filename>fs_use</filename>, the <filename>genfs_contexts</filename>
+configuration is consulted to determine a security context based on
+the filesystem type, the file pathname, and optionally the file type.
+The filesystem is labeled with the same security context as the root
+directory when this configuration is used.  Except for proc and
+/selinux/booleans, all other filesystems are limited to a single entry
+(/) that covers all inodes in the filesystem with a default file
+context.  Extending support to other filesystem types requires
+enhancements to the SELinux module and requires an assessment of
+whether a pathname can be reliably generated for an inode in the
+filesystem type, as with proc (via the proc_dir_entry tree) and
+/selinux/booleans.
+</para>
+
+<para>
+Pathnames are specified relative to the root of the filesystem.  The
+specification with the longest matching pathname prefix and (if
+specified) a matching file type is used.  The file type is specified
+using the character shown in the mode field by <command>ls</command>.
+The syntax of the genfs contexts configuration is shown below:
+<programlisting>
+opt_genfs_contexts -> genfs_contexts | empty
+genfs_contexts -> genfs_context_def | genfs_contexts genfs_context_def
+genfs_context_def -> GENFSCON fstype pathprefix '-' file_type security_context |
+                     GENFSCON fstype pathprefix security_context
+file_type -> 'b' | 'c' | 'd' | 'p' | 'l' | 's' | '-'
+</programlisting>
+</para>
+
+<para>
+The example genfs contexts configuration is located in the
+<filename>genfs_contexts</filename> file.  It provides example
+definitions for several pseudo filesystem types, including
+<constant>proc</constant>, <constant>sysfs</constant>, and
+<constant>selinuxfs</constant> among others.  The example genfs
+contexts configuration assigns a single type to most of
+<filename>/proc</filename>, with distinct types assigned to the
+<filename>kmsg</filename> and <filename>kcore</filename> files as
+examples of finer-grained access.  The <filename>/proc/PID</filename>
+directories do not use this configuration, since their contexts are
+implicitly derived from the context of the associated process.
+Example entries for <filename>/proc</filename> are shown below:
+<programlisting>
+genfscon proc /				system_u:object_r:proc_t
+genfscon proc /kmsg			system_u:object_r:proc_kmsg_t
+genfscon proc /kcore			system_u:object_r:proc_kcore_t
+</programlisting>
+</para>
+
+</sect3>
+
+<sect3 id="netcontexts"><title>Network Object Contexts</title>
+<para>
+The network object contexts configuration permits the specification of
+security contexts for ports, network interfaces, and nodes (hosts).
+The security context associated with a port is used in permission
+checks to control the ability to bind to a given port and to send to
+or receive from a port.  A network interface has two associated
+security contexts: the context of the interface and the default
+context to assign to unlabeled packets received on the interface (the
+latter is not presently used; it is an artifact of the earlier labeled
+networking implementation).  A node has a single security context.
+The security contexts of network interface and nodes are used in the
+networking permission checks and can be used to control network
+traffic.  For each of these objects, an appropriate initial SID is
+defined to use as a default context if no matching entry is found in
+the configuration.  The syntax of the network object security contexts
+configuration is shown below:
+<programlisting>
+net_contexts -> opt_port_contexts opt_netif_contexts opt_node_contexts 
+opt_port_contexts -> port_contexts | empty
+port_contexts -> port_context_def | port_contexts port_context_def
+port_context_def -> PORTCON protocol port security_context |
+                    PORTCON protocol portrange security_context
+protocol -> 'tcp' | 'udp'
+port -> integer
+portrange -> port '-' port
+opt_netif_contexts -> netif_contexts | empty
+netif_contexts -> netif_context_def | netif_contexts netif_context_def
+netif_context_def -> NETIFCON interface device_context packet_context
+device_context -> security_context
+packet_context -> security_context
+opt_node_contexts -> node_contexts | empty
+node_contexts -> node_context_def | node_contexts node_context_def
+node_context_def -> NODECON ipv4_address ipv4_mask security_context
+</programlisting>
+</para>
+
+<para>
+The example network contexts configuration is located in the
+<filename>net_contexts</filename> file.  Security contexts are defined
+for many port numbers, including a general entry covering all
+otherwise unspecified reserved ports.  Other unspecified port numbers
+default to the <constant>port</constant> initial SID.  Likewise,
+examples are provided for security contexts for network interfaces and
+nodes.  Several examples of network contexts entries are shown below:
+<programlisting>
+# Ports
+portcon tcp 80  system_u:object_r:http_port_t
+portcon tcp 8080  system_u:object_r:http_port_t
+# Network interfaces
+netifcon eth0 system_u:object_r:netif_eth0_t system_u:object_r:netmsg_eth0_t
+netifcon eth1 system_u:object_r:netif_eth1_t system_u:object_r:netmsg_eth1_t
+# Nodes
+nodecon 10.33.10.66 255.255.255.255 system_u:object_r:node_zeus_t
+nodecon 10.33.10.0 255.255.255.0 system_u:object_r:node_any_t
+</programlisting>
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="fileconlang"><title>File Contexts Configuration</title>
+<para>
+As explained in <xref linkend="archconcepts">, the security contexts
+of persistent files are maintained using extended attributes in each
+filesystem. The extended attributes are initialized during
+installation using the <command>setfiles</command> program or the
+package manager software for the distro.  This program reads the file
+contexts configuration that specifies security contexts for files
+based on pathname regular expressions.  It then creates or updates the
+extended attributes.
+</para>
+
+<para>
+The file contexts configuration is located under the
+<filename>policy/file_contexts</filename> subdirectory.  It is
+generated from one base configuration file
+(<filename>types.fc</filename>) and a collection of configuration
+files specific to each program domain
+(<filename>program/*.fc</filename>).  Each specification within these
+configuration files has the syntax:
+<programlisting>
+file_context_spec -> pathname_regexp opt_security_context |
+                     pathname_regexp '-' file_type opt_security_context
+file_type -> 'b' | 'c' | 'd' | 'p' | 'l' | 's' | '-'
+opt_security_context -> &lt;&lt;none&gt;&gt; | user ':' role ':' type
+user -> identifier
+role -> identifier
+type -> identifier
+</programlisting>
+</para>
+
+<para>
+By default, each pathname regular expression is an anchored match on
+both ends, i.e. a caret (^) is prepended and a dollar sign ($) is
+appended automatically.  This default can be overridden by using .* at
+the beginning and/or end of the expression.  The optional file type
+field specifies the file type as shown in the mode field by
+<command>ls</command>.  If specified, then the specification must
+match both the pathname regular expression and the file type.  The
+value of '&lt;&lt;none&gt;&gt;' indicates that matching files should
+not be relabeled.  The last matching specification is used.  If there
+are multiple hard links to a file that match different specifications,
+then a warning is displayed by the <command>setfiles</command> utility
+but the file is still labeled based on the last matching specification
+other than '&lt;&lt;none&gt;&gt;'
+</para>
+
+<para>
+Several examples of file contexts specifications are shown below:
+<programlisting>
+/bin(|/.*)			system_u:object_r:bin_t
+/bin/login			system_u:object_r:login_exec_t
+/bin/bash			system_u:object_r:shell_exec_t
+/dev/[^/]*tty[^/]*		system_u:object_r:tty_device_t
+.*/lost\+found(|/.*)		system_u:object_r:lost_found_t
+</programlisting>
+</para>
+</sect2>
+
+</sect1>

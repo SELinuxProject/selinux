@@ -1,9 +1,6 @@
 all: 
 	$(MAKE) -C src all
 
-swigify:
-	$(MAKE) -C src swigify
-
 pywrap: 
 	$(MAKE) -C src pywrap
 

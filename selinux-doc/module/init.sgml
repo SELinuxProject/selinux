@@ -1,0 +1,98 @@
+<sect1 id="InitExit"><title>Initialization</title>
+
+<para>
+This section describes the initialization code for the SELinux
+security module.  SELinux initialization begins with the
+<function>selinux_init</function> function, which is registered as a
+security initcall and called early in the kernel initialization
+sequence.  Certain aspects of SELinux initialization must be deferred
+until later in the kernel initialization sequence and are handled by
+ordinary initcalls, including
+<function>selinux_nf_ip_init</function>,
+<function>sel_netif_init</function>, <function>selnl_init</function>,
+and <function>init_sel_fs</function>.  SELinux initialization is not
+fully completed until after the initial policy is loaded by
+/sbin/init, at which point the
+<function>selinux_complete_init</function> function is called.
+Each of these functions is described below.
+</para>
+
+<sect2><title>selinux_init</title>
+<para>
+This function, located in the <filename>hooks.c</filename> file,
+handles early initialization for the SELinux module.  The function
+starts by setting the security state for the initial task.  It then
+calls the <function>avc_init</function> function to initialize the
+AVC.  This initialization must be done prior to any permission
+checking calls to the AVC.  The function then sets the secondary
+security module to the original security module, typically the dummy
+module, to support stacking with the dummy or capabilities
+modules. This is discussed further in <XRef LinkEnd="stacking">.
+Finally, this function calls the LSM
+<function>register_security</function> function to register the
+SELinux security module as the primary security module for LSM.
+</para>
+
+</sect2>
+
+<sect2><title>selinux_nf_ip_init</title>
+<para>
+This function, also located in the <filename>hooks.c</filename> file,
+handles initialization of the SELinux NetFilter hooks used to apply
+permission checks on outgoing packets.  This function calls the
+<function>nf_register_hook</function> function to register the SELinux
+post-routing hook functions with the Netfilter framework for ipv4 and
+ipv6.  These hook functions are discussed further in <XRef
+LinkEnd="ip">.
+</para>
+</sect2>
+
+<sect2><title>sel_netif_init</title>
+<para>
+This function, located in the <filename>netif.h</filename> file,
+handles initialization of the SELinux network interface table that is
+used to look up the SIDs of network devices.  This function begins by
+initializing the SELinux network interface hash table.  It then
+registers a network device notifier so that it can flush entries for
+devices that are downed.  Finally, it also registers an AVC callback
+so that it can flush the entire table upon a policy reload.
+</para>
+</sect2>
+
+<sect2><title>selnl_init</title>
+<para>
+This function, located in the <filename>netlink.c</filename> file,
+handles initialization of the kernel SELinux netlink socket used to
+send notifications of setenforce and policy load events to userspace.
+The function creates the netlink socket and sets it to allow non-root
+processes to receive notifications so that userspace object managers
+are not required to run as root.
+</para>
+</sect2>
+
+<sect2><title>init_sel_fs</title>
+<para>
+This function, located in the <filename>selinuxfs.c</filename> file,
+handles initialization of the selinuxfs pseudo filesystem.  It
+registers the selinuxfs filesystem type and creates a private kernel
+mount of selinuxfs.  This results in a populated selinuxfs filesystem
+and sets up the special null device node used by SELinux when it
+closes unauthorized files upon a context-changing execve.
+</para>
+</sect2>
+
+<sect2><title>selinux_complete_init</title>
+<para>
+This function, located in the <filename>hooks.c</filename> file,
+completes the initialization of SELinux after the initial policy has
+been loaded by /sbin/init.  It traverses a list of superblocks that
+were initialized prior to the initial policy load and invokes the
+<function>superblock_doinit</function> function on each of them.  The
+<function>superblock_doinit</function> function proceeds to set up the
+security structure for each of these superblocks.  It also invokes the
+<function>inode_doinit</function> function to set up the security
+structure for any existing inodes associated with the superblock.
+</para>
+</sect2>
+
+</sect1>

@@ -34,7 +34,6 @@
 #include <sepol/policydb/link.h>
 #include <sepol/policydb/module.h>
 #include <sepol/policydb/util.h>
-#include <sepol/policydb/polcaps.h>
 
 #include <byteswap.h>
 #include <endian.h>
@@ -323,7 +322,7 @@ int display_type_callback(hashtab_key_t key, hashtab_datum_t datum, void *data)
 		fprintf(fp, "alias for type");
 		display_id(&policydb, fp, SYM_TYPES, type->s.value - 1, "");
 	}
-	fprintf(fp, " flags:%x\n", type->flags);
+	fprintf(fp, "\n");
 
 	return 0;
 }
@@ -767,26 +766,6 @@ static void link_module(policydb_t * base, FILE * out_fp)
 	return;
 }
 
-static void display_policycaps(policydb_t * p, FILE * fp)
-{
-	ebitmap_node_t *node;
-	const char *capname;
-	char buf[64];
-	int i;
-
-	fprintf(fp, "policy capabilities:\n");
-	ebitmap_for_each_bit(&p->policycaps, node, i) {
-		if (ebitmap_node_get_bit(node, i)) {
-			capname = sepol_polcap_getname(i);
-			if (capname == NULL) {
-				snprintf(buf, sizeof(buf), "unknown (%d)", i);
-				capname = buf;
-			}
-			fprintf(fp, "\t%s\n", capname);
-		}
-	}
-}
-
 int menu()
 {
 	printf("\nSelect a command:\n");
@@ -803,7 +782,6 @@ int menu()
 	printf("\n");
 	printf("a)  Display avrule requirements\n");
 	printf("b)  Display avrule declarations\n");
-	printf("c)  Display policy capabilities\n");
 	printf("l)  Link in a module\n");
 	printf("u)  Display the unknown handling setting\n");
 	printf("\n");
@@ -913,9 +891,6 @@ int main(int argc, char **argv)
 		case 'b':
 			fprintf(out_fp, "avrule block declarations:\n");
 			display_avblock(6, 0, &policydb, out_fp);
-			break;
-		case 'c':
-			display_policycaps(&policydb, out_fp);
 			break;
 		case 'u':
 		case 'U':

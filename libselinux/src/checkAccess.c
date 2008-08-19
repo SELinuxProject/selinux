@@ -13,17 +13,10 @@ int selinux_check_passwd_access(access_vector_t requested)
 	if (is_selinux_enabled() == 0)
 		return 0;
 	if (getprevcon_raw(&user_context) == 0) {
-		security_class_t passwd_class;
 		struct av_decision avd;
-		int retval;
-
-		passwd_class = string_to_security_class("passwd");
-		if (passwd_class == 0)
-			return 0;
-
-		retval = security_compute_av_raw(user_context,
+		int retval = security_compute_av_raw(user_context,
 						     user_context,
-						     passwd_class,
+						     SECCLASS_PASSWD,
 						     requested,
 						     &avd);
 

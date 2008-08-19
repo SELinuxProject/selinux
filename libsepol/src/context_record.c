@@ -1,4 +1,3 @@
-#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -154,12 +153,6 @@ int sepol_context_clone(sepol_handle_t * handle,
 {
 
 	sepol_context_t *new_con = NULL;
-
-	if (!con) {
-		*con_ptr = NULL;
-		return 0;
-	}
-	  
 	if (sepol_context_create(handle, &new_con) < 0)
 		goto err;
 
@@ -267,7 +260,6 @@ int sepol_context_from_string(sepol_handle_t * handle,
 	return STATUS_SUCCESS;
 
       mcontext:
-	errno = EINVAL;
 	ERR(handle, "malformed context \"%s\"", str);
 
       err:

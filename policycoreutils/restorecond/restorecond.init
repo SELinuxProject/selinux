@@ -2,7 +2,7 @@
 #
 # restorecond:		Daemon used to maintain path file context
 #
-# chkconfig:	- 12 87
+# chkconfig:	2345 12 87
 # description:	restorecond uses inotify to look for creation of new files \
 # listed in the /etc/selinux/restorecond.conf file, and restores the \
 # correct security context.

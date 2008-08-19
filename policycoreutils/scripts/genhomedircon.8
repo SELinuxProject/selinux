@@ -1,0 +1,82 @@
+.\" Hey, Emacs! This is an -*- nroff -*- source file.
+.\" Copyright (c) 2005 Manoj Srivastava <srivasta@debian.org>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.\"
+.TH GENHOMEDIRCON "8" "January 2005" "Security Enhanced Linux" ""
+.SH NAME
+genhomedircon \- generate SELinux file context configuration entries for user home directories 
+.SH SYNOPSIS
+.B genhomedircon [ -d selinuxdir ] [-n | --nopasswd] [-t selinuxtype ] [-h]
+
+.SH OPTIONS
+.TP
+.B "\-h"
+Print a short usage message
+.TP
+.B "\-d selinuxdir (\-\-directory)"
+Directory where selinux files are installed defaults to /etc/selinux
+.TP
+.B 
+\-n \-\-nopasswd
+Indicates to the utility not to read homedirectories out of the password database.  
+.TP
+\-t selinuxtype (\-\-type)
+Indicates the selinux type of this install.  Defaults to "targeted".
+.SH DESCRIPTION
+.PP
+This utility is used to generate file context configuration entries for 
+user home directories based on their 
+.B prefix 
+entry in the the 
+.B semanage user record.  
+genhomedircon is run when building 
+the policy. It is also run automaticaly when ever the 
+.B semanage 
+utility modifies 
+.B user
+or
+.B login
+records.
+Specifically, we replace HOME_ROOT, HOME_DIR, and ROLE macros in the 
+.I /etc/selinux/<<SELINUXTYPE>>/contexts/files/homedir_template 
+file with generic and user-specific values.  HOME_ROOT and HOME_DIR is replaced with each distinct location where login users homedirectories are located.  Defaults to /home. ROLE is replaced based on the prefix entry in the 
+.B user
+record.
+.PP 
+genhomedircon searches through all password entires for all "login" user home directories, (as opposed
+to system users).  Login users are those whose UID is greater than or equal 
+.I STARTING_UID
+(default 500) and whose login shell is not "/sbin/nologin", or
+"/bin/false". 
+.PP 
+.SH AUTHOR
+This manual page was originally written by 
+.I Manoj Srivastava <srivasta@debian.org>,
+for the Debian GNU/Linux system, based on the comments and the code
+in the utility, and then updated by Dan Walsh of Red Hat. The 
+.B genhomedircon
+utility was originally written by 
+.I Dan Walsh of Red Hat 
+with some modifications by 
+.I Tresys Technology, LLC.
+

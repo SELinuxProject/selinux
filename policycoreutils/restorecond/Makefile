@@ -7,7 +7,7 @@ SELINUXDIR = $(DESTDIR)/etc/selinux
 
 CFLAGS ?= -g -Werror -Wall -W
 override CFLAGS += -I$(PREFIX)/include -D_FILE_OFFSET_BITS=64
-LDLIBS += -lselinux -L$(PREFIX)/lib
+LDLIBS += -lselinux -lsepol -L$(PREFIX)/lib
 
 all: restorecond
 

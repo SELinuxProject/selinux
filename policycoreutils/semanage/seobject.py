@@ -1,5 +1,5 @@
 #! /usr/bin/python -E
-# Copyright (C) 2005, 2006, 2007, 2008 Red Hat 
+# Copyright (C) 2005 Red Hat 
 # see file 'COPYING' for use and warranty information
 #
 # semanage is a tool for managing SELinux configuration files
@@ -21,12 +21,10 @@
 #
 #  
 
-import pwd, grp, string, selinux, tempfile, os, re, sys
+import pwd, string, selinux, tempfile, os, re, sys
 from semanage import *;
 PROGNAME="policycoreutils"
-import sepolgen.module as module
 
-import commands
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
@@ -90,41 +88,6 @@ except:
 			
 mylog = logger()		
 
-import sys, os
-import re
-import xml.etree.ElementTree
-
-booleans_dict={}
-try:
-       tree=xml.etree.ElementTree.parse("/usr/share/selinux/devel/policy.xml")
-       for l in  tree.findall("layer"):
-              for m in  l.findall("module"):
-                     for b in  m.findall("tunable"):
-                            desc = b.find("desc").find("p").text.strip("\n")
-                            desc = re.sub("\n", " ", desc)
-                            booleans_dict[b.get('name')] = (m.get("name"), b.get('dftval'), desc)
-                     for b in  m.findall("bool"):
-                            desc = b.find("desc").find("p").text.strip("\n")
-                            desc = re.sub("\n", " ", desc)
-                            booleans_dict[b.get('name')] = (m.get("name"), b.get('dftval'), desc)
-              for i in  tree.findall("bool"):
-                     desc = i.find("desc").find("p").text.strip("\n")
-                     desc = re.sub("\n", " ", desc)
-                     booleans_dict[i.get('name')] = (_("global"), i.get('dftval'), desc)
-       for i in  tree.findall("tunable"):
-              desc = i.find("desc").find("p").text.strip("\n")
-              desc = re.sub("\n", " ", desc)
-              booleans_dict[i.get('name')] = (_("global"), i.get('dftval'), desc)
-except IOError, e:
-       #print _("Failed to translate booleans.\n%s") % e
-       pass
-
-def boolean_desc(boolean):
-       if boolean in booleans_dict:
-              return _(booleans_dict[boolean][2])
-       else:
-              return boolean
-
 def validate_level(raw):
 	sensitivity = "s[0-9]*"
 	category = "c[0-9]*"
@@ -176,7 +139,7 @@ class setransRecords:
 			translations = fd.readlines()
 			fd.close()
 		except IOError, e:
-			raise ValueError(_("Unable to open %s: translations not supported on non-MLS machines: %s") % (self.filename, e) )
+			raise ValueError(_("Unable to open %s: translations not supported on non-MLS machines") % (self.filename) )
 			
 		self.ddict = {}
 		self.comments = []
@@ -207,7 +170,7 @@ class setransRecords:
 			rec += "%s=%s\n" %  (k, self.ddict[k])
 		return rec
 	
-	def list(self,heading = 1, locallist = 0):
+	def list(self,heading = 1):
 		if heading:
 			print "\n%-25s %s\n" % (_("Level"), _("Translation"))
 		keys = self.ddict.keys()
@@ -247,113 +210,13 @@ class setransRecords:
 		os.write(fd, self.out())
 		os.close(fd)
 		os.rename(newfilename, self.filename)
-                os.system("/sbin/service mcstrans reload > /dev/null")
-
-class permissiveRecords:
-	def __init__(self, store):
-               self.store = store
-               self.sh = semanage_handle_create()
-               if not self.sh:
-                      raise ValueError(_("Could not create semanage handle"))
-               
-               if store != "":
-                      semanage_select_store(self.sh, store, SEMANAGE_CON_DIRECT);
-                      
-               self.semanaged = semanage_is_managed(self.sh)
-               
-               if not self.semanaged:
-                      semanage_handle_destroy(self.sh)
-                      raise ValueError(_("SELinux policy is not managed or store cannot be accessed."))
-
-               rc = semanage_access_check(self.sh)
-               if rc < SEMANAGE_CAN_READ:
-                      semanage_handle_destroy(self.sh)
-                      raise ValueError(_("Cannot read policy store."))
-
-               rc = semanage_connect(self.sh)
-               if rc < 0:
-                      semanage_handle_destroy(self.sh)
-                      raise ValueError(_("Could not establish semanage connection"))
-
-	def get_all(self):
-               l = []
-               (rc, mlist, number) = semanage_module_list(self.sh)
-               if rc < 0:
-                      raise ValueError(_("Could not list SELinux modules"))
-
-               for i in range(number):
-                      mod = semanage_module_list_nth(mlist, i)
-                      name = semanage_module_get_name(mod)
-                      if name and name.startswith("permissive_"):
-                             l.append(name.split("permissive_")[1])
-               return l
-
-	def list(self,heading = 1, locallist = 0):
-		if heading:
-			print "\n%-25s\n" % (_("Permissive Types"))
-                for t in self.get_all():
-                       print t
-
-
-	def add(self, type):
-               name = "permissive_%s" % type
-               dirname = "/var/lib/selinux"
-               os.chdir(dirname)
-               filename = "%s.te" % name
-               modtxt = """
-module %s 1.0;
-
-require {
-          type %s;
-}
-
-permissive %s;
-""" % (name, type, type)
-               fd = open(filename,'w')
-               fd.write(modtxt)
-               fd.close()
-               mc = module.ModuleCompiler()
-               mc.create_module_package(filename, 1)
-               fd = open("permissive_%s.pp" % type)
-               data = fd.read()
-               fd.close()
-
-               rc = semanage_module_install(self.sh, data, len(data));
-               if rc < 0:
-			raise ValueError(_("Could not set permissive domain %s (module installation failed)") % name)
-               rc = semanage_commit(self.sh)
-               if rc < 0:
-			raise ValueError(_("Could not set permissive domain %s (commit failed)") % name)
-               for root, dirs, files in os.walk("tmp", topdown=False):
-                      for name in files:
-                             os.remove(os.path.join(root, name))
-                      for name in dirs:
-                             os.rmdir(os.path.join(root, name))
-
-	def delete(self, name):
-		for n in name.split():
-			rc = semanage_module_remove(self.sh, "permissive_%s" % n)
-			if rc < 0:
-	                        raise ValueError(_("Could not remove permissive domain %s (remove failed)") % name)
-			rc = semanage_commit(self.sh)
-			if rc < 0:
-                               raise ValueError(_("Could not remove permissive domain %s (commit failed)") % name)
-			
-	def deleteall(self):
-               l = self.get_all()
-               if len(l) > 0:
-                      all = " ".join(l)
-                      self.delete(all)
-
+                
 class semanageRecords:
-	def __init__(self, store):
+	def __init__(self):
 		self.sh = semanage_handle_create()
 		if not self.sh:
 		       raise ValueError(_("Could not create semanage handle"))
 		
-                if store != "":
-                       semanage_select_store(self.sh, store, SEMANAGE_CON_DIRECT);
-
 		self.semanaged = semanage_is_managed(self.sh)
 
 		if not self.semanaged:
@@ -369,13 +232,10 @@ class semanageRecords:
 		if rc < 0:
 			semanage_handle_destroy(self.sh)
 			raise ValueError(_("Could not establish semanage connection"))
-        def deleteall(self):
-               raise ValueError(_("Not yet implemented"))
-               
 
 class loginRecords(semanageRecords):
-	def __init__(self, store = ""):
-		semanageRecords.__init__(self, store)
+	def __init__(self):
+		semanageRecords.__init__(self)
 
 	def add(self, name, sename, serange):
 		if is_mls_enabled == 1:
@@ -397,16 +257,10 @@ class loginRecords(semanageRecords):
 				raise ValueError(_("Could not check if login mapping for %s is defined") % name)
 			if exists:
 				raise ValueError(_("Login mapping for %s is already defined") % name)
-                        if name[0] == '%':
-                                try:
-                                       grp.getgrnam(name[1:])
-                                except:
-                                       raise ValueError(_("Linux Group %s does not exist") % name[1:])
-                        else:
-                                try:
-                                       pwd.getpwnam(name)
-                                except:
-                                       raise ValueError(_("Linux User %s does not exist") % name)
+			try:
+				pwd.getpwnam(name)
+			except:
+				raise ValueError(_("Linux User %s does not exist") % name)
 
 			(rc,u) = semanage_seuser_create(self.sh)
 			if rc < 0:
@@ -535,12 +389,10 @@ class loginRecords(semanageRecords):
 		mylog.log(1,"delete SELinux user mapping", name);
 		semanage_seuser_key_free(k)
 
-	def get_all(self, locallist = 0):
+		
+	def get_all(self):
 		ddict = {}
-                if locallist:
-                       (rc, self.ulist) = semanage_seuser_list_local(self.sh)
-                else:
-                       (rc, self.ulist) = semanage_seuser_list(self.sh)
+		(rc, self.ulist) = semanage_seuser_list(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not list login mappings"))
 
@@ -549,8 +401,8 @@ class loginRecords(semanageRecords):
 			ddict[name] = (semanage_seuser_get_sename(u), semanage_seuser_get_mlsrange(u))
 		return ddict
 
-	def list(self,heading = 1, locallist = 0):
-		ddict = self.get_all(locallist)
+	def list(self,heading = 1):
+		ddict = self.get_all()
 		keys = ddict.keys()
 		keys.sort()
 		if is_mls_enabled == 1:
@@ -565,8 +417,8 @@ class loginRecords(semanageRecords):
 				print "%-25s %-25s" % (k, ddict[k][0])
 
 class seluserRecords(semanageRecords):
-	def __init__(self, store = ""):
-		semanageRecords.__init__(self, store)
+	def __init__(self):
+		semanageRecords.__init__(self)
 
 	def add(self, name, roles, selevel, serange, prefix):
 		if is_mls_enabled == 1:
@@ -613,6 +465,8 @@ class seluserRecords(semanageRecords):
 				rc = semanage_user_set_mlslevel(self.sh, u, selevel)
 				if rc < 0:
 					raise ValueError(_("Could not set MLS level for %s") % name)
+                        if selinux.security_check_context("system_u:object_r:%s_home_t:s0" % prefix) != 0:
+                               raise ValueError(_("Invalid prefix %s") % prefix)
 			rc = semanage_user_set_prefix(self.sh, u, prefix)
 			if rc < 0:
 				raise ValueError(_("Could not add prefix %s for %s") % (r, prefix))
@@ -678,6 +532,8 @@ class seluserRecords(semanageRecords):
 				semanage_user_set_mlslevel(self.sh, u, untranslate(selevel))
 
 			if prefix != "":
+                               if selinux.security_check_context("system_u:object_r:%s_home_t" % prefix) != 0:
+                                      raise ValueError(_("Invalid prefix %s") % prefix)
                                semanage_user_set_prefix(self.sh, u, prefix)
 
 			if len(roles) != 0:
@@ -745,12 +601,9 @@ class seluserRecords(semanageRecords):
 		mylog.log(1,"delete SELinux user record", name)
 		semanage_user_key_free(k)		
 
-	def get_all(self, locallist = 0):
+	def get_all(self):
 		ddict = {}
-                if locallist:
-                       (rc, self.ulist) = semanage_user_list_local(self.sh)
-                else:
-                       (rc, self.ulist) = semanage_user_list(self.sh)
+		(rc, self.ulist) = semanage_user_list(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not list SELinux users"))
 
@@ -765,8 +618,8 @@ class seluserRecords(semanageRecords):
 
 		return ddict
 
-	def list(self, heading = 1, locallist = 0):
-		ddict = self.get_all(locallist)
+	def list(self, heading = 1):
+		ddict = self.get_all()
 		keys = ddict.keys()
 		keys.sort()
 		if is_mls_enabled == 1:
@@ -782,8 +635,8 @@ class seluserRecords(semanageRecords):
 				print "%-15s %s" % (k, ddict[k][3])
 
 class portRecords(semanageRecords):
-	def __init__(self, store = ""):
-		semanageRecords.__init__(self, store)
+	def __init__(self):
+		semanageRecords.__init__(self)
 
 	def __genkey(self, port, proto):
 		if proto == "tcp":
@@ -914,34 +767,6 @@ class portRecords(semanageRecords):
 		semanage_port_key_free(k)
 		semanage_port_free(p)
 
-	def deleteall(self):
-		(rc, plist) = semanage_port_list_local(self.sh)
-		if rc < 0:
-			raise ValueError(_("Could not list the ports"))
-
-		rc = semanage_begin_transaction(self.sh)
-		if rc < 0:
-			raise ValueError(_("Could not start semanage transaction"))
-
-		for port in plist:
-                       proto = semanage_port_get_proto(port)
-                       proto_str = semanage_port_get_proto_str(proto)
-                       low = semanage_port_get_low(port)
-                       high = semanage_port_get_high(port)
-                       port_str = "%s-%s" % (low, high)
-                       ( k, proto_d, low, high ) = self.__genkey(port_str , proto_str)
-                       if rc < 0:
-                              raise ValueError(_("Could not create a key for %s") % port_str)
-
-                       rc = semanage_port_del_local(self.sh, k)
-                       if rc < 0:
-                              raise ValueError(_("Could not delete the port %s") % port_str)
-                       semanage_port_key_free(k)
-	
-		rc = semanage_commit(self.sh)
-		if rc < 0:
-			raise ValueError(_("Could not delete the %s") % port_str)
-
 	def delete(self, port, proto):
 		( k, proto_d, low, high ) = self.__genkey(port, proto)
 		(rc,exists) = semanage_port_exists(self.sh, k)
@@ -970,12 +795,9 @@ class portRecords(semanageRecords):
 		
 		semanage_port_key_free(k)
 
-	def get_all(self, locallist = 0):
+	def get_all(self):
 		ddict = {}
-                if locallist:
-                       (rc, self.plist) = semanage_port_list_local(self.sh)
-                else:
-                       (rc, self.plist) = semanage_port_list(self.sh)
+		(rc, self.plist) = semanage_port_list(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not list ports"))
 
@@ -992,12 +814,9 @@ class portRecords(semanageRecords):
 			ddict[(low, high)] = (ctype, proto_str, level)
 		return ddict
 
-	def get_all_by_type(self, locallist = 0):
+	def get_all_by_type(self):
 		ddict = {}
-                if locallist:
-                       (rc, self.plist) = semanage_port_list_local(self.sh)
-                else:
-                       (rc, self.plist) = semanage_port_list(self.sh)
+		(rc, self.plist) = semanage_port_list(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not list ports"))
 
@@ -1018,10 +837,10 @@ class portRecords(semanageRecords):
 				ddict[(ctype,proto_str)].append("%d-%d" % (low, high))
 		return ddict
 
-	def list(self, heading = 1, locallist = 0):
+	def list(self, heading = 1):
 		if heading:
 			print "%-30s %-8s %s\n" % (_("SELinux Port Type"), _("Proto"), _("Port Number"))
-		ddict = self.get_all_by_type(locallist)
+		ddict = self.get_all_by_type()
 		keys = ddict.keys()
 		keys.sort()
 		for i in keys:
@@ -1032,8 +851,8 @@ class portRecords(semanageRecords):
 			print rec
 
 class interfaceRecords(semanageRecords):
-	def __init__(self, store = ""):
-		semanageRecords.__init__(self, store)
+	def __init__(self):
+		semanageRecords.__init__(self)
 
 	def add(self, interface, serange, ctype):
 		if is_mls_enabled == 1:
@@ -1176,12 +995,9 @@ class interfaceRecords(semanageRecords):
 		
 		semanage_iface_key_free(k)
 
-	def get_all(self, locallist = 0):
+	def get_all(self):
 		ddict = {}
-                if locallist:
-                       (rc, self.ilist) = semanage_iface_list_local(self.sh)
-                else:
-                       (rc, self.ilist) = semanage_iface_list(self.sh)
+		(rc, self.ilist) = semanage_iface_list(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not list interfaces"))
 
@@ -1191,10 +1007,10 @@ class interfaceRecords(semanageRecords):
 
 		return ddict
 			
-	def list(self, heading = 1, locallist = 0):
+	def list(self, heading = 1):
 		if heading:
 			print "%-30s %s\n" % (_("SELinux Interface"), _("Context"))
-		ddict = self.get_all(locallist)
+		ddict = self.get_all()
 		keys = ddict.keys()
 		keys.sort()
 		if is_mls_enabled:
@@ -1205,40 +1021,17 @@ class interfaceRecords(semanageRecords):
 				print "%-30s %s:%s:%s " % (k,ddict[k][0], ddict[k][1],ddict[k][2])
 			
 class fcontextRecords(semanageRecords):
-	def __init__(self, store = ""):
-		semanageRecords.__init__(self, store)
-
-        def createcon(self, target, seuser = "system_u"):
-                (rc, con) = semanage_context_create(self.sh)
-                if rc < 0:
-                       raise ValueError(_("Could not create context for %s") % target)
+	def __init__(self):
+		semanageRecords.__init__(self)
+		
+	def add(self, target, type, ftype = "", serange = "", seuser = "system_u"):
 		if seuser == "":
 			seuser = "system_u"
-
-                rc = semanage_context_set_user(self.sh, con, seuser)
-                if rc < 0:
-                       raise ValueError(_("Could not set user in file context for %s") % target)
-		
-                rc = semanage_context_set_role(self.sh, con, "object_r")
-                if rc < 0:
-                       raise ValueError(_("Could not set role in file context for %s") % target)
-
 		if is_mls_enabled == 1:
-                       rc = semanage_context_set_mls(self.sh, con, "s0")
-                       if rc < 0:
-                              raise ValueError(_("Could not set mls fields in file context for %s") % target)
-
-                return con
-               
-        def validate(self, target):
-               if target == "" or target.find("\n") >= 0:
-                      raise ValueError(_("Invalid file specification"))
-                      
-	def add(self, target, type, ftype = "", serange = "", seuser = "system_u"):
-                self.validate(target)
-
-		if is_mls_enabled == 1:
-                       serange = untranslate(serange)
+			if serange == "":
+				serange = "s0"
+			else:
+				serange = untranslate(serange)
 			
 		if type == "":
 			raise ValueError(_("SELinux Type is required"))
@@ -1258,22 +1051,32 @@ class fcontextRecords(semanageRecords):
 			raise ValueError(_("Could not create file context for %s") % target)
 		
 		rc = semanage_fcontext_set_expr(self.sh, fcontext, target)
-                if type != "<<none>>":
-                       con = self.createcon(target, seuser)
+		(rc, con) = semanage_context_create(self.sh)
+		if rc < 0:
+			raise ValueError(_("Could not create context for %s") % target)
 
-                       rc = semanage_context_set_type(self.sh, con, type)
-                       if rc < 0:
-                              raise ValueError(_("Could not set type in file context for %s") % target)
+		rc = semanage_context_set_user(self.sh, con, seuser)
+		if rc < 0:
+			raise ValueError(_("Could not set user in file context for %s") % target)
+		
+		rc = semanage_context_set_role(self.sh, con, "object_r")
+		if rc < 0:
+			raise ValueError(_("Could not set role in file context for %s") % target)
 
-                       if serange != "":
-                              rc = semanage_context_set_mls(self.sh, con, serange)
-                              if rc < 0:
-                                     raise ValueError(_("Could not set mls fields in file context for %s") % target)
-                       rc = semanage_fcontext_set_con(self.sh, fcontext, con)
-                       if rc < 0:
-                              raise ValueError(_("Could not set file context for %s") % target)
+		rc = semanage_context_set_type(self.sh, con, type)
+		if rc < 0:
+			raise ValueError(_("Could not set type in file context for %s") % target)
+
+		if serange != "":
+			rc = semanage_context_set_mls(self.sh, con, serange)
+			if rc < 0:
+				raise ValueError(_("Could not set mls fields in file context for %s") % target)
 
 		semanage_fcontext_set_type(fcontext, file_types[ftype])
+
+		rc = semanage_fcontext_set_con(self.sh, fcontext, con)
+		if rc < 0:
+			raise ValueError(_("Could not set file context for %s") % target)
 
 		rc = semanage_begin_transaction(self.sh)
 		if rc < 0:
@@ -1287,15 +1090,13 @@ class fcontextRecords(semanageRecords):
 		if rc < 0:
 			raise ValueError(_("Could not add file context for %s") % target)
 
-                if type != "<<none>>":
-                       semanage_context_free(con)
+		semanage_context_free(con)
 		semanage_fcontext_key_free(k)
 		semanage_fcontext_free(fcontext)
 
 	def modify(self, target, setype, ftype, serange, seuser):
 		if serange == "" and setype == "" and seuser == "":
 			raise ValueError(_("Requires setype, serange or seuser"))
-                self.validate(target)
 
 		(rc,k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
 		if rc < 0:
@@ -1311,29 +1112,16 @@ class fcontextRecords(semanageRecords):
 		if rc < 0:
 			raise ValueError(_("Could not query file context for %s") % target)
 
-                if setype != "<<none>>":
-                       con = semanage_fcontext_get_con(fcontext)
+		con = semanage_fcontext_get_con(fcontext)
 			
-                       if con == None:
-                              con = self.createcon(target)
-                              
-                       if serange != "":
-                              semanage_context_set_mls(self.sh, con, untranslate(serange))
-                       if seuser != "":
-                              semanage_context_set_user(self.sh, con, seuser)
-                              
-                       if setype != "":
-                              semanage_context_set_type(self.sh, con, setype)
+		if serange != "":
+			semanage_context_set_mls(self.sh, con, untranslate(serange))
+		if seuser != "":
+			semanage_context_set_user(self.sh, con, seuser)	
+		if setype != "":
+			semanage_context_set_type(self.sh, con, setype)
 
-                       rc = semanage_fcontext_set_con(self.sh, fcontext, con)
-                       if rc < 0:
-                              raise ValueError(_("Could not set file context for %s") % target)
-                else:
-                       rc = semanage_fcontext_set_con(self.sh, fcontext, None)
-                       if rc < 0:
-                              raise ValueError(_("Could not set file context for %s") % target)
-                       
-                rc = semanage_begin_transaction(self.sh)
+		rc = semanage_begin_transaction(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not start semanage transaction"))
 
@@ -1347,32 +1135,6 @@ class fcontextRecords(semanageRecords):
 		
 		semanage_fcontext_key_free(k)
 		semanage_fcontext_free(fcontext)
-
-	def deleteall(self):
-		(rc, flist) = semanage_fcontext_list_local(self.sh)
-		if rc < 0:
-			raise ValueError(_("Could not list the file contexts"))
-
-		rc = semanage_begin_transaction(self.sh)
-		if rc < 0:
-			raise ValueError(_("Could not start semanage transaction"))
-
-		for fcontext in flist:
-                       target = semanage_fcontext_get_expr(fcontext)
-                       ftype = semanage_fcontext_get_type(fcontext)
-                       ftype_str = semanage_fcontext_get_type_str(ftype)
-                       (rc,k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype_str])
-                       if rc < 0:
-                              raise ValueError(_("Could not create a key for %s") % target)
-
-                       rc = semanage_fcontext_del_local(self.sh, k)
-                       if rc < 0:
-                              raise ValueError(_("Could not delete the file context %s") % target)
-                       semanage_fcontext_key_free(k)
-	
-		rc = semanage_commit(self.sh)
-		if rc < 0:
-			raise ValueError(_("Could not delete the file context %s") % target)
 
 	def delete(self, target, ftype):
 		(rc,k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
@@ -1405,20 +1167,17 @@ class fcontextRecords(semanageRecords):
 
 		semanage_fcontext_key_free(k)		
 
-	def get_all(self, locallist = 0):
+	def get_all(self):
 		l = []
-                if locallist:
-                       (rc, self.flist) = semanage_fcontext_list_local(self.sh)
-                else:
-                       (rc, self.flist) = semanage_fcontext_list(self.sh)
-                       if rc < 0:
-                              raise ValueError(_("Could not list file contexts"))
+		(rc, self.flist) = semanage_fcontext_list(self.sh)
+		if rc < 0:
+			raise ValueError(_("Could not list file contexts"))
 
-                       (rc, fclocal) = semanage_fcontext_list_local(self.sh)
-                       if rc < 0:
-                              raise ValueError(_("Could not list local file contexts"))
+		(rc, fclocal) = semanage_fcontext_list_local(self.sh)
+		if rc < 0:
+			raise ValueError(_("Could not list local file contexts"))
 
-                       self.flist += fclocal
+		self.flist += fclocal
 
 		for fcontext in self.flist:
 			expr = semanage_fcontext_get_expr(fcontext)
@@ -1432,10 +1191,10 @@ class fcontextRecords(semanageRecords):
 
 		return l
 			
-	def list(self, heading = 1, locallist = 0 ):
+	def list(self, heading = 1):
 		if heading:
 			print "%-50s %-18s %s\n" % (_("SELinux fcontext"), _("type"), _("Context"))
-		fcon_list = self.get_all(locallist)
+		fcon_list = self.get_all()
 		for fcon in fcon_list:
 			if len(fcon) > 3:
 				if is_mls_enabled:
@@ -1446,74 +1205,51 @@ class fcontextRecords(semanageRecords):
 				print "%-50s %-18s <<None>>" % (fcon[0], fcon[1])
 				
 class booleanRecords(semanageRecords):
-	def __init__(self, store = ""):
-		semanageRecords.__init__(self, store)
-                self.dict={}
-                self.dict["TRUE"] = 1
-                self.dict["FALSE"] = 0
-                self.dict["ON"] = 1
-                self.dict["OFF"] = 0
-                self.dict["1"] = 1
-                self.dict["0"] = 0
+	def __init__(self):
+		semanageRecords.__init__(self)
+		
+	def modify(self, name, value = ""):
+		if value == "":
+			raise ValueError(_("Requires value"))
 
-	def __mod(self, name, value):
-                (rc,k) = semanage_bool_key_create(self.sh, name)
-                if rc < 0:
-                       raise ValueError(_("Could not create a key for %s") % name)
-                (rc,exists) = semanage_bool_exists(self.sh, k)
-                if rc < 0:
-                       raise ValueError(_("Could not check if boolean %s is defined") % name)
-                if not exists:
-                       raise ValueError(_("Boolean %s is not defined") % name)	
-                
-                (rc,b) = semanage_bool_query(self.sh, k)
-                if rc < 0:
-                       raise ValueError(_("Could not query file context %s") % name)
+		(rc,k) = semanage_bool_key_create(self.sh, name)
+		if rc < 0:
+			raise ValueError(_("Could not create a key for %s") % name)
 
-                if value.upper() in self.dict:
-                       semanage_bool_set_value(b, self.dict[value.upper()])
-                else:
-                       raise ValueError(_("You must specify one of the following values: %s") % ", ".join(self.dict.keys()) )
-                
-                rc = semanage_bool_set_active(self.sh, k, b)
-                if rc < 0:
-                       raise ValueError(_("Could not set active value of boolean %s") % name)
-                rc = semanage_bool_modify_local(self.sh, k, b)
-                if rc < 0:
-                       raise ValueError(_("Could not modify boolean %s") % name)
-		semanage_bool_key_free(k)
-		semanage_bool_free(b)
+		(rc,exists) = semanage_bool_exists(self.sh, k)
+		if rc < 0:
+			raise ValueError(_("Could not check if boolean %s is defined") % name)
+		if not exists:
+			raise ValueError(_("Boolean %s is not defined") % name)	
 
-	def modify(self, name, value=None, use_file=False):
-                
+		(rc,b) = semanage_bool_query(self.sh, k)
+		if rc < 0:
+			raise ValueError(_("Could not query file context %s") % name)
+
+		if value != "":
+			nvalue = int(value)
+			semanage_bool_set_value(b, nvalue)
+
 		rc = semanage_begin_transaction(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not start semanage transaction"))
-                if use_file:
-                       fd = open(name)
-                       for b in fd.read().split("\n"):
-                              b = b.strip()
-                              if len(b) == 0:
-                                     continue
 
-                              try:
-                                     boolname, val = b.split("=")
-                              except ValueError, e:
-                                     raise ValueError(_("Bad format %s: Record %s" % ( name, b) ))
-                              self.__mod(boolname.strip(), val.strip())
-                       fd.close()
-                else:
-                       self.__mod(name, value)
+		rc = semanage_bool_modify_local(self.sh, k, b)
+		if rc < 0:
+			raise ValueError(_("Could not modify boolean %s") % name)
 
 		rc = semanage_commit(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not modify boolean %s") % name)
 		
-	def delete(self, name):
+		semanage_bool_key_free(k)
+		semanage_bool_free(b)
 
-                (rc,k) = semanage_bool_key_create(self.sh, name)
-                if rc < 0:
-                      raise ValueError(_("Could not create a key for %s") % name)
+	def delete(self, name):
+		(rc,k) = semanage_bool_key_create(self.sh, name)
+		if rc < 0:
+			raise ValueError(_("Could not create a key for %s") % name)
+
 		(rc,exists) = semanage_bool_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if boolean %s is defined") % name)
@@ -1530,80 +1266,34 @@ class booleanRecords(semanageRecords):
 		if rc < 0:
 			raise ValueError(_("Could not start semanage transaction"))
 
-		rc = semanage_bool_del_local(self.sh, k)
+		rc = semanage_fcontext_del_local(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not delete boolean %s") % name)
 	
 		rc = semanage_commit(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not delete boolean %s") % name)
+		
 		semanage_bool_key_free(k)
 
-	def deleteall(self):
-		(rc, self.blist) = semanage_bool_list_local(self.sh)
-		if rc < 0:
-			raise ValueError(_("Could not list booleans"))
-
-		rc = semanage_begin_transaction(self.sh)
-		if rc < 0:
-			raise ValueError(_("Could not start semanage transaction"))
-
-		for boolean in self.blist:
-                       name = semanage_bool_get_name(boolean)
-                       (rc,k) = semanage_bool_key_create(self.sh, name)
-                       if rc < 0:
-                              raise ValueError(_("Could not create a key for %s") % name)
-
-                       rc = semanage_bool_del_local(self.sh, k)
-                       if rc < 0:
-                              raise ValueError(_("Could not delete boolean %s") % name)
-                       semanage_bool_key_free(k)
-	
-		rc = semanage_commit(self.sh)
-		if rc < 0:
-			raise ValueError(_("Could not delete boolean %s") % name)
-	def get_all(self, locallist = 0):
+	def get_all(self):
 		ddict = {}
-                if locallist:
-                       (rc, self.blist) = semanage_bool_list_local(self.sh)
-                else:
-                       (rc, self.blist) = semanage_bool_list(self.sh)
+		(rc, self.blist) = semanage_bool_list(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not list booleans"))
 
 		for boolean in self.blist:
-                       value = []
-                       name = semanage_bool_get_name(boolean)
-                       value.append(semanage_bool_get_value(boolean))
-                       value.append(selinux.security_get_boolean_pending(name))
-                       value.append(selinux.security_get_boolean_active(name))
-                       ddict[name] = value
+			name = semanage_bool_get_name(boolean)
+			value = semanage_bool_get_value(boolean)
+			ddict[name] = value
 
 		return ddict
 			
-        def get_desc(self, boolean):
-               return boolean_desc(boolean)
-
-        def get_category(self, boolean):
-               if boolean in booleans_dict:
-                      return _(booleans_dict[boolean][0])
-               else:
-                      return _("unknown")
-
-	def list(self, heading = True, locallist = False, use_file = False):
-                on_off = (_("off"),_("on")) 
-		if use_file:
-                       ddict = self.get_all(locallist)
-                       keys = ddict.keys()
-                       for k in keys:
-                              if ddict[k]:
-                                     print "%s=%s" %  (k, ddict[k][2])
-                       return
+	def list(self, heading = 1):
 		if heading:
-			print "%-40s %s\n" % (_("SELinux boolean"), _("Description"))
-		ddict = self.get_all(locallist)
+			print "%-50s %-18s\n" % (_("SELinux boolean"), _("value"))
+		ddict = self.get_all()
 		keys = ddict.keys()
 		for k in keys:
 			if ddict[k]:
-				print "%-30s -> %-5s %s" %  (k, on_off[ddict[k][2]], self.get_desc(k))
-
+				print "%-50s %-18s " % (k[0], ddict[k][0])

@@ -1,0 +1,352 @@
+<sect1 id="apidocs"><title>API Documentation</title>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>avc_sid_to_context</function></funcdef>
+<paramdef>security_id_t <parameter>sid</parameter></paramdef>
+<paramdef>security_context_t *<parameter>ctx</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<variablelist>
+<varlistentry><term><varname>sid</varname></term><listitem><para>input SID</para></listitem></varlistentry>
+<varlistentry><term><varname>ctx</varname></term><listitem><para>pointer to context reference</para></listitem></varlistentry>
+</variablelist>
+Return a copy of the security context corresponding to the input
+<varname>sid</varname> in the memory referenced by <varname>ctx</varname>.  The caller is expected to 
+free the context with <function>freecon</function>.  Return 0 on success, -1 on
+failure, with <varname>errno</varname> set to <constant>ENOMEM</constant> if insufficient memory was
+available to make the copy, or <constant>EINVAL</constant> if the input SID is invalid.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>avc_context_to_sid</function></funcdef>
+<paramdef>security_context_t <parameter>ctx</parameter></paramdef>
+<paramdef>security_id_t *<parameter>sid</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>ctx</varname></term><listitem><para>input security context</para></listitem></varlistentry>
+<varlistentry><term><varname>sid</varname></term><listitem><para>pointer to SID reference</para></listitem></varlistentry>
+</variablelist> -->
+Look up security context <varname>ctx</varname> in SID table, making
+a new entry if <varname>ctx</varname> is not found.  Increment the
+reference counter for the SID.  Store a pointer
+to the SID structure into the memory referenced by <varname>sid</varname>, 
+returning 0 on success or -1 on error with <varname>errno</varname> set.  
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>sidget</function></funcdef>
+<paramdef>security_id_t <parameter>sid</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>sid</varname></term><listitem><para>SID reference</para></listitem></varlistentry>
+</variablelist> -->
+Increment the reference counter for <varname>sid</varname>, indicating that
+<varname>sid</varname> is in use by an (additional) object.  Return the
+new reference count, or zero if <varname>sid</varname> is invalid (has zero
+reference count).  Note that <function>avc_context_to_sid</function> also
+increments reference counts.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>sidput</function></funcdef>
+<paramdef>security_id_t <parameter>sid</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>sid</varname></term><listitem><para>SID reference</para></listitem></varlistentry>
+</variablelist> -->
+Decrement the reference counter for <varname>sid</varname>, indicating that
+a reference to <varname>sid</varname> is no longer in use.  Return the 
+new reference count.  When the reference count reaches
+zero, the SID is invalid, and <function>avc_context_to_sid</function> must
+be called to obtain a new SID for the security context.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef><function>avc_entry_ref_init</function></funcdef>
+<paramdef><parameter>aeref</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>aeref</varname></term><listitem><para>pointer to avc entry reference structure</para></listitem></varlistentry>
+</variablelist> -->
+Use this macro to initialize an avc entry reference structure
+before first use.  These structures are passed to <function>avc_has_perm</function>,
+which stores cache entry references in them.  They can increase
+performance on repeated queries.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>avc_init</function></funcdef>
+<paramdef>const char *<parameter>msgprefix</parameter></paramdef>
+<paramdef>struct avc_memory_callback *<parameter>mem_callbacks</parameter></paramdef>
+<paramdef>struct avc_log_callback *<parameter>log_callbacks</parameter></paramdef>
+<paramdef>struct avc_thread_callback *<parameter>thread_callbacks</parameter></paramdef>
+<paramdef>struct avc_lock_callback *<parameter>lock_callbacks</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>msgprefix</varname></term><listitem><para>prefix for log messages</para></listitem></varlistentry>
+<varlistentry><term><varname>mem_callbacks</varname></term><listitem><para>user-supplied memory callbacks</para></listitem></varlistentry>
+<varlistentry><term><varname>log_callbacks</varname></term><listitem><para>user-supplied logging callbacks</para></listitem></varlistentry>
+<varlistentry><term><varname>thread_callbacks</varname></term><listitem><para>user-supplied threading callbacks</para></listitem></varlistentry>
+<varlistentry><term><varname>lock_callbacks</varname></term><listitem><para>user-supplied locking callbacks</para></listitem></varlistentry>
+</variablelist> -->
+Initialize the access vector cache.  Return 0 on
+success or -1 with <varname>errno</varname> set on failure.  
+If <varname>msgprefix</varname> is NULL, use &ldquo;uavc&rdquo;.  If any callback 
+structure references are NULL, use default methods 
+for those callbacks (see the definition of the callback
+structures above).
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>avc_cleanup</function></funcdef>
+<void>
+</funcprototype>
+</funcsynopsis>
+Search the SID table for SID structures with zero
+reference counts, and remove them along with all
+AVC entries that reference them.  This can be used
+to return memory to the system.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>avc_reset</function></funcdef>
+<void>
+</funcprototype>
+</funcsynopsis>
+Remove all entries from the cache and reset all access
+statistics (as returned by <function>avc_cache_stats</function>) to zero.
+The SID mapping is not affected.  Return 0 on success, 
+-1 with <varname>errno</varname> set on error.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>avc_destroy</function></funcdef>
+<void>
+</funcprototype>
+</funcsynopsis>
+Destroy all AVC structures and free all allocated
+memory.  User-supplied locking, memory, and audit
+callbacks will be retained, but security-event
+callbacks will not.  All SID's will be invalidated.
+User must call <function>avc_init</function> if further use of AVC is desired.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>avc_has_perm_noaudit</function></funcdef>
+<paramdef>security_id_t <parameter>ssid</parameter></paramdef>
+<paramdef>security_id_t <parameter>tsid</parameter></paramdef>
+<paramdef>security_class_t <parameter>tclass</parameter></paramdef>
+<paramdef>access_vector_t <parameter>requested</parameter></paramdef>
+<paramdef>struct avc_entry_ref *<parameter>aeref</parameter></paramdef>
+<paramdef>struct av_decision *<parameter>avd</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>ssid</varname></term><listitem><para>source security identifier</para></listitem></varlistentry>
+<varlistentry><term><varname>tsid</varname></term><listitem><para>target security identifier</para></listitem></varlistentry>
+<varlistentry><term><varname>tclass</varname></term><listitem><para>target security class</para></listitem></varlistentry>
+<varlistentry><term><varname>requested</varname></term><listitem><para>requested permissions, interpreted based on <varname>tclass</varname></para></listitem></varlistentry>
+<varlistentry><term><varname>aeref</varname></term><listitem><para> AVC entry reference</para></listitem></varlistentry>
+<varlistentry><term><varname>avd</varname></term><listitem><para>access vector decisions</para></listitem></varlistentry>
+</variablelist> -->
+Check the AVC to determine whether the <varname>requested</varname> permissions are granted
+for the SID pair (<varname>ssid</varname>, <varname>tsid</varname>), interpreting the permissions
+based on <varname>tclass</varname>, and call the security server on a cache miss to obtain
+a new decision and add it to the cache.  Update <varname>aeref</varname> to refer to an AVC
+entry with the resulting decisions, and return a copy of the decisions
+in <varname>avd</varname>.  Return 0 if all <varname>requested</varname> permissions are granted, -1 with
+<varname>errno</varname> set to <constant>EACCES</constant> if any permissions are denied, or to another value
+upon other errors.  This function is typically called by <function>avc_has_perm</function>,
+but may also be called directly to separate permission checking from
+auditing, e.g. in cases where a lock must be held for the check but
+should be released for the auditing.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>avc_has_perm</function></funcdef>
+<paramdef>security_id_t <parameter>ssid</parameter></paramdef>
+<paramdef>security_id_t <parameter>tsid</parameter></paramdef>
+<paramdef>security_class_t <parameter>tclass</parameter></paramdef>
+<paramdef>access_vector_t <parameter>requested</parameter></paramdef>
+<paramdef>struct avc_entry_ref *<parameter>aeref</parameter></paramdef>
+<paramdef>void *<parameter>auditdata</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>ssid</varname></term><listitem><para>source security identifier</para></listitem></varlistentry>
+<varlistentry><term><varname>tsid</varname></term><listitem><para>target security identifier</para></listitem></varlistentry>
+<varlistentry><term><varname>tclass</varname></term><listitem><para>target security class</para></listitem></varlistentry>
+<varlistentry><term><varname>requested</varname></term><listitem><para>requested permissions, interpreted based on <varname>tclass</varname></para></listitem></varlistentry>
+<varlistentry><term><varname>aeref</varname></term><listitem><para>AVC entry reference</para></listitem></varlistentry>
+<varlistentry><term><varname>auditdata</varname></term><listitem><para>auxiliary audit data</para></listitem></varlistentry>
+</variablelist> -->
+Check the AVC to determine whether the <varname>requested</varname> permissions are granted
+for the SID pair (<varname>ssid</varname>, <varname>tsid</varname>), interpreting the permissions
+based on <varname>tclass</varname>, and call the security server on a cache miss to obtain
+a new decision and add it to the cache.  Update <varname>aeref</varname> to refer to an AVC
+entry with the resulting decisions.  Audit the granting or denial of
+permissions in accordance with the policy.  Return 0 if all <varname>requested</varname>
+permissions are granted, -1 with <varname>errno</varname> set to <constant>EACCES</constant> if any permissions
+are denied or to another value upon other errors.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>avc_audit</function></funcdef>
+<paramdef>security_id_t <parameter>ssid</parameter></paramdef>
+<paramdef>security_id_t <parameter>tsid</parameter></paramdef>
+<paramdef>security_class_t <parameter>tclass</parameter></paramdef>
+<paramdef>access_vector_t <parameter>requested</parameter></paramdef>
+<paramdef>struct av_decision *<parameter>avd</parameter></paramdef>
+<paramdef>int <parameter>result</parameter></paramdef>
+<paramdef>void *<parameter>auditdata</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>ssid</varname></term><listitem><para>source security identifier</para></listitem></varlistentry>
+<varlistentry><term><varname>tsid</varname></term><listitem><para>target security identifier</para></listitem></varlistentry>
+<varlistentry><term><varname>tclass</varname></term><listitem><para>target security class</para></listitem></varlistentry>
+<varlistentry><term><varname>requested</varname></term><listitem><para>requested permissions</para></listitem></varlistentry>
+<varlistentry><term><varname>avd</varname></term><listitem><para>access vector decisions</para></listitem></varlistentry>
+<varlistentry><term><varname>result</varname></term><listitem><para>result from avc_has_perm_noaudit</para></listitem></varlistentry>
+<varlistentry><term><varname>auditdata</varname></term><listitem><para> auxiliary audit data</para></listitem></varlistentry>
+</variablelist> -->
+Audit the granting or denial of permissions in accordance
+with the policy.  This function is typically called by
+<function>avc_has_perm</function> after a permission check, but can also be
+called directly by callers who use <function>avc_has_perm_noaudit</function>
+in order to separate the permission check from the auditing.
+For example, this separation is useful when the permission check must
+be performed under a lock, to allow the lock to be released
+before calling the auditing code.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>int <function>avc_add_callback</function></funcdef>
+<paramdef>int <parameter>(*callback)</parameter>
+<funcparams>u_int32_t event, security_id_t ssid, security_id_t tsid, security_class_t tclass, access_vector_t perms, access_vector_t *out_retained</funcparams></paramdef>
+<paramdef>u_int32_t <parameter>events</parameter></paramdef>
+<paramdef>security_id_t <parameter>ssid</parameter></paramdef>
+<paramdef>security_id_t <parameter>tsid</parameter></paramdef>
+<paramdef>security_class_t <parameter>tclass</parameter></paramdef>
+<paramdef>access_vector_t <parameter>perms</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>callback</varname></term><listitem><para>callback function</para></listitem></varlistentry>
+<varlistentry><term><varname>events</varname></term><listitem><para>bitwise OR of desired security events</para></listitem></varlistentry>
+<varlistentry><term><varname>ssid</varname></term><listitem><para>source security identifier or <constant>SECSID_WILD</constant></para></listitem></varlistentry>
+<varlistentry><term><varname>tsid</varname></term><listitem><para>target security identifier or <constant>SECSID_WILD</constant></para></listitem></varlistentry>
+<varlistentry><term><varname>tclass</varname></term><listitem><para>target security class</para></listitem></varlistentry>
+<varlistentry><term><varname>perms</varname></term><listitem><para>permissions</para></listitem></varlistentry>
+</variablelist> -->
+Register a callback function for events in the set <varname>events</varname>
+related to the SID pair (<varname>ssid</varname>, <varname>tsid</varname>) and
+and the permissions <varname>perms</varname>, interpreting
+<varname>perms</varname> based on <varname>tclass</varname>.  Returns 0 on success or
+-1 if insufficient memory exists to add the callback.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>avc_cache_stats</function></funcdef>
+<paramdef>struct avc_cache_stats *<parameter>stats</parameter></paramdef>
+</funcprototype>
+</funcsynopsis>
+<!-- <variablelist>
+<varlistentry><term><varname>stats</varname></term><listitem><para>reference to statistics structure</para></listitem></varlistentry>
+</variablelist> -->
+Fill the supplied structure with information about AVC 
+activity since the last call to <function>avc_init</function> or
+<function>avc_reset</function>.  See the structure definition for
+details.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>avc_av_stats</function></funcdef>
+<void>
+</funcprototype>
+</funcsynopsis>
+Log a message with information about the size and
+distribution of the access vector table.  The audit
+callback is used to print the message.
+</para>
+
+<!-- function definition -->
+
+<para>
+<funcsynopsis>
+<funcprototype>
+<funcdef>void <function>avc_sid_stats</function></funcdef>
+<void>
+</funcprototype>
+</funcsynopsis>
+Log a message with information about the size and
+distribution of the SID table.  The audit callback
+is used to print the message.
+</para>
+
+</sect1>

@@ -5,10 +5,9 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#include <limits.h>
 #include "selinux_internal.h"
 #include "policy.h"
-#include "mapping.h"
+#include <limits.h>
 
 int security_compute_av_raw(security_context_t scon,
 			    security_context_t tcon,
@@ -37,8 +36,7 @@ int security_compute_av_raw(security_context_t scon,
 		goto out;
 	}
 
-	snprintf(buf, len, "%s %s %hu %x", scon, tcon,
-		 unmap_class(tclass), unmap_perm(tclass, requested));
+	snprintf(buf, len, "%s %s %hu %x", scon, tcon, tclass, requested);
 
 	ret = write(fd, buf, strlen(buf));
 	if (ret < 0)
@@ -55,8 +53,6 @@ int security_compute_av_raw(security_context_t scon,
 		ret = -1;
 		goto out2;
 	}
-
-	map_decision(tclass, avd);
 
 	ret = 0;
       out2:

@@ -58,7 +58,6 @@
 #include <stdio.h>
 #include <stdlib.h>		/* for malloc(), realloc(), free() */
 #include <pwd.h>		/* for getpwuid() */
-#include <ctype.h>
 #include <sys/types.h>		/* to make getuid() and getpwuid() happy */
 #include <sys/wait.h>		/* for wait() */
 #include <getopt.h>		/* for getopt_long() form of getopt() */
@@ -92,10 +91,6 @@
 
 /* USAGE_STRING describes the command-line args of this program. */
 #define USAGE_STRING "USAGE: newrole [ -r role ] [ -t type ] [ -l level ] [ -p ] [ -V ] [ -- args ]"
-
-#ifdef USE_PAM
-#define PAM_SERVICE_CONFIG "/etc/selinux/newrole_pam.conf";
-#endif
 
 #define DEFAULT_PATH "/usr/bin:/bin"
 #define DEFAULT_CONTEXT_SIZE 255	/* first guess at context size */
@@ -164,7 +159,7 @@ static char *build_new_range(char *newlevel, const char *range)
 #include <security/pam_appl.h>	/* for PAM functions */
 #include <security/pam_misc.h>	/* for misc_conv PAM utility function */
 
-char *service_name = "newrole";
+#define SERVICE_NAME "newrole"	/* the name of this program for PAM */
 
 /* authenticate_via_pam()
  *
@@ -180,24 +175,22 @@ char *service_name = "newrole";
  * program.  This is the only function in this program that makes PAM
  * calls.
  */
-int authenticate_via_pam(const char *ttyn, pam_handle_t * pam_handle)
+int authenticate_via_pam(const char *ttyn, pam_handle_t *pam_handle)
 {
 
 	int result = 0;		/* set to 0 (not authenticated) by default */
 	int pam_rc;		/* pam return code */
 	const char *tty_name;
 
-	if (ttyn) {
-		if (strncmp(ttyn, "/dev/", 5) == 0)
-			tty_name = ttyn + 5;
-		else
-			tty_name = ttyn;
+	if (strncmp(ttyn, "/dev/", 5) == 0)
+		tty_name = ttyn + 5;
+	else
+		tty_name = ttyn;
 
-		pam_rc = pam_set_item(pam_handle, PAM_TTY, tty_name);
-		if (pam_rc != PAM_SUCCESS) {
-			fprintf(stderr, _("failed to set PAM_TTY\n"));
-			goto out;
-		}
+	pam_rc = pam_set_item(pam_handle, PAM_TTY, tty_name);
+	if (pam_rc != PAM_SUCCESS) {
+		fprintf(stderr, _("failed to set PAM_TTY\n"));
+		goto out;
 	}
 
 	/* Ask PAM to authenticate the user running this program */
@@ -215,115 +208,6 @@ int authenticate_via_pam(const char *ttyn, pam_handle_t * pam_handle)
       out:
 	return result;
 }				/* authenticate_via_pam() */
-
-#include "hashtab.h"
-
-static int free_hashtab_entry(hashtab_key_t key, hashtab_datum_t d,
-			      void *args __attribute__ ((unused)))
-{
-	free(key);
-	free(d);
-	return 0;
-}
-
-static unsigned int reqsymhash(hashtab_t h, hashtab_key_t key)
-{
-	char *p, *keyp;
-	size_t size;
-	unsigned int val;
-
-	val = 0;
-	keyp = (char *)key;
-	size = strlen(keyp);
-	for (p = keyp; ((size_t) (p - keyp)) < size; p++)
-		val =
-		    (val << 4 | (val >> (8 * sizeof(unsigned int) - 4))) ^ (*p);
-	return val & (h->size - 1);
-}
-
-static int reqsymcmp(hashtab_t h
-		     __attribute__ ((unused)), hashtab_key_t key1,
-		     hashtab_key_t key2)
-{
-	char *keyp1, *keyp2;
-
-	keyp1 = (char *)key1;
-	keyp2 = (char *)key2;
-	return strcmp(keyp1, keyp2);
-}
-
-static hashtab_t app_service_names = NULL;
-#define PAM_SERVICE_SLOTS 64
-
-static int process_pam_config(FILE * cfg)
-{
-	const char *config_file_path = PAM_SERVICE_CONFIG;
-	char *line_buf = NULL;
-	unsigned long lineno = 0;
-	size_t len = 0;
-	char *app = NULL;
-	char *service = NULL;
-	int ret;
-
-	while (getline(&line_buf, &len, cfg) > 0) {
-		char *buffer = line_buf;
-		lineno++;
-		while (isspace(*buffer))
-			buffer++;
-		if (buffer[0] == '#')
-			continue;
-		if (buffer[0] == '\n' || buffer[0] == '\0')
-			continue;
-
-		app = service = NULL;
-		ret = sscanf(buffer, "%as %as\n", &app, &service);
-		if (ret < 2 || !app || !service)
-			goto err;
-
-		ret = hashtab_insert(app_service_names, app, service);
-		if (ret == HASHTAB_OVERFLOW) {
-			fprintf(stderr,
-				_
-				("newrole: service name configuration hashtable overflow\n"));
-			goto err;
-		}
-	}
-
-	free(line_buf);
-	return 0;
-      err:
-	free(app);
-	free(service);
-	fprintf(stderr, _("newrole:  %s:  error on line %lu.\n"),
-		config_file_path, lineno);
-	free(line_buf);
-	return -1;
-}
-
-/* 
- *  Read config file ignoring comment lines.
- *  Files specified one per line executable with a corresponding
- *  pam service name.
- */
-static int read_pam_config()
-{
-	const char *config_file_path = PAM_SERVICE_CONFIG;
-	FILE *cfg = NULL;
-	cfg = fopen(config_file_path, "r");
-	if (!cfg)
-		return 0;	/* This configuration is optional. */
-	app_service_names =
-	    hashtab_create(reqsymhash, reqsymcmp, PAM_SERVICE_SLOTS);
-	if (!app_service_names)
-		goto err;
-	if (process_pam_config(cfg))
-		goto err;
-	fclose(cfg);
-	return 0;
-      err:
-	fclose(cfg);
-	return -1;
-}
 
 #else				/* else !USE_PAM */
 
@@ -361,7 +245,7 @@ int authenticate_via_shadow_passwd(const char *uname)
 	endspent();
 	if (!(p_shadow_line)) {
 		fprintf(stderr, _("Cannot find your entry in the shadow "
-				  "passwd file.\n"));
+			"passwd file.\n"));
 		return 0;
 	}
 
@@ -388,7 +272,7 @@ static int verify_shell(const char *shell_name)
 	int found = 0;
 	const char *buf;
 
-	if (!(shell_name && shell_name[0]))
+	if (! (shell_name && shell_name[0]))
 		return found;
 
 	while ((buf = getusershell()) != NULL) {
@@ -443,7 +327,7 @@ int extract_pw_data(struct passwd *pw_copy)
 	pw->pw_dir = strdup(pw->pw_dir);
 	pw->pw_shell = strdup(pw->pw_shell);
 
-	if (!(pw->pw_name && pw->pw_dir && pw->pw_shell)) {
+	if (! (pw->pw_name && pw->pw_dir && pw->pw_shell)) {
 		fprintf(stderr, _("Out of memory!\n"));
 		goto out_free;
 	}
@@ -454,7 +338,7 @@ int extract_pw_data(struct passwd *pw_copy)
 	}
 	return 0;
 
-      out_free:
+out_free:
 	free(pw->pw_name);
 	free(pw->pw_dir);
 	free(pw->pw_shell);
@@ -477,8 +361,8 @@ static int restore_environment(int preserve_environment,
 	char const *term_env;
 	char const *display_env;
 	char const *xauthority_env;
-	char *term = NULL;	/* temporary container */
-	char *display = NULL;	/* temporary container */
+	char *term = NULL;		/* temporary container */
+	char *display = NULL;		/* temporary container */
 	char *xauthority = NULL;	/* temporary container */
 	int rc;
 
@@ -499,7 +383,7 @@ static int restore_environment(int preserve_environment,
 	if (xauthority_env)
 		xauthority = strdup(xauthority_env);
 	if ((term_env && !term) || (display_env && !display) ||
-	    (xauthority_env && !xauthority)) {
+	     (xauthority_env && !xauthority)) {
 		rc = -1;
 		goto out;
 	}
@@ -522,7 +406,7 @@ static int restore_environment(int preserve_environment,
 	rc |= setenv("USER", pw->pw_name, 1);
 	rc |= setenv("LOGNAME", pw->pw_name, 1);
 	rc |= setenv("PATH", DEFAULT_PATH, 1);
-      out:
+out:
 	free(term);
 	free(display);
 	free(xauthority);
@@ -597,7 +481,7 @@ static int drop_capabilities(void)
 			_("Error dropping SETUID capability, aborting\n"));
 		goto out;
 	}
-      out:
+out:
 	if (cap_free(tmp_caps) || cap_free(new_caps))
 		fprintf(stderr, _("Error freeing caps\n"));
 	return rc;
@@ -621,9 +505,8 @@ static int drop_capabilities(void)
 	int rc = 0;
 	cap_t new_caps;
 	cap_value_t cap_list[] = { CAP_AUDIT_WRITE, CAP_SETUID,
-		CAP_SYS_ADMIN, CAP_FOWNER, CAP_CHOWN,
-		CAP_DAC_OVERRIDE
-	};
+				   CAP_SYS_ADMIN, CAP_FOWNER, CAP_CHOWN,
+				   CAP_DAC_OVERRIDE };
 
 	if (!getuid())
 		return 0;
@@ -652,7 +535,7 @@ static int drop_capabilities(void)
 		fprintf(stderr, _("Error dropping capabilities, aborting\n"));
 		goto out;
 	}
-      out:
+out:
 	if (cap_free(new_caps))
 		fprintf(stderr, _("Error freeing caps\n"));
 	return rc;
@@ -743,16 +626,13 @@ static inline
  * in permissive mode.
  */
 static int relabel_tty(const char *ttyn, security_context_t new_context,
-		       security_context_t * tty_context,
-		       security_context_t * new_tty_context)
+			security_context_t *tty_context,
+			security_context_t *new_tty_context)
 {
 	int fd;
 	int enforcing = security_getenforce();
 	security_context_t tty_con = NULL;
 	security_context_t new_tty_con = NULL;
-
-	if (!ttyn)
-		return 0;
 
 	if (enforcing < 0) {
 		fprintf(stderr, _("Could not determine enforcing mode.\n"));
@@ -760,7 +640,7 @@ static int relabel_tty(const char *ttyn, security_context_t new_context,
 	}
 
 	/* Re-open TTY descriptor */
-	fd = open(ttyn, O_RDWR | O_NONBLOCK);
+	fd = open(ttyn, O_RDWR|O_NONBLOCK);
 	if (fd < 0) {
 		fprintf(stderr, _("Error!  Could not open %s.\n"), ttyn);
 		return fd;
@@ -769,7 +649,7 @@ static int relabel_tty(const char *ttyn, security_context_t new_context,
 
 	if (fgetfilecon(fd, &tty_con) < 0) {
 		fprintf(stderr, _("%s!  Could not get current context "
-				  "for %s, not relabeling tty.\n"),
+			"for %s, not relabeling tty.\n"),
 			enforcing ? "Error" : "Warning", ttyn);
 		if (enforcing)
 			goto close_fd;
@@ -778,8 +658,8 @@ static int relabel_tty(const char *ttyn, security_context_t new_context,
 	if (tty_con &&
 	    (security_compute_relabel(new_context, tty_con,
 				      SECCLASS_CHR_FILE, &new_tty_con) < 0)) {
-		fprintf(stderr, _("%s!  Could not get new context for %s, "
-				  "not relabeling tty.\n"),
+		fprintf(stderr,	_("%s!  Could not get new context for %s, "
+			"not relabeling tty.\n"),
 			enforcing ? "Error" : "Warning", ttyn);
 		if (enforcing)
 			goto close_fd;
@@ -800,7 +680,7 @@ static int relabel_tty(const char *ttyn, security_context_t new_context,
 	*new_tty_context = new_tty_con;
 	return fd;
 
-      close_fd:
+close_fd:
 	freecon(tty_con);
 	close(fd);
 	return -1;
@@ -822,9 +702,6 @@ static int restore_tty_label(int fd, const char *ttyn,
 	int rc = 0;
 	security_context_t chk_tty_context = NULL;
 
-	if (!ttyn)
-		goto skip_relabel;
-
 	if (!new_tty_context)
 		goto skip_relabel;
 
@@ -842,7 +719,7 @@ static int restore_tty_label(int fd, const char *ttyn,
 	if ((rc = fsetfilecon(fd, tty_context)) < 0)
 		fprintf(stderr,
 			_("Warning! Could not restore context for %s\n"), ttyn);
-      skip_relabel:
+skip_relabel:
 	freecon(chk_tty_context);
 	return rc;
 }
@@ -858,7 +735,7 @@ static int restore_tty_label(int fd, const char *ttyn,
  */
 static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 					security_context_t old_context,
-					security_context_t * new_context,
+					security_context_t *new_context,
 					int *preserve_environment)
 {
 	int flag_index;		/* flag index in argv[] */
@@ -870,7 +747,7 @@ static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 	char *range_ptr = NULL;
 	security_context_t new_con = NULL;
 	security_context_t tty_con = NULL;
-	context_t context = NULL;	/* manipulatable form of new_context */
+	context_t context = NULL; /* manipulatable form of new_context */
 	const struct option long_options[] = {
 		{"role", 1, 0, 'r'},
 		{"type", 1, 0, 't'},
@@ -914,26 +791,21 @@ static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 		case 'l':
 			if (!is_selinux_mls_enabled()) {
 				fprintf(stderr, _("Sorry, -l may be used with "
-						  "SELinux MLS support.\n"));
+					"SELinux MLS support.\n"));
 				return -1;
 			}
 			if (level_s) {
 				fprintf(stderr, _("Error: multiple levels "
-						  "specified\n"));
+					"specified\n"));
 				return -1;
 			}
-			if (ttyn) {
-				if (fgetfilecon(STDIN_FILENO, &tty_con) >= 0) {
-					if (selinux_check_securetty_context
-					    (tty_con) < 0) {
-						fprintf(stderr,
-							_
-							("Error: you are not allowed to change levels on a non secure terminal \n"));
-						freecon(tty_con);
-						return -1;
-					}
+			if (fgetfilecon(0,&tty_con) >= 0) {
+				if (selinux_check_securetty_context(tty_con) < 0) {
+					fprintf(stderr, _("Error: you are not allowed to change levels on a non secure terminal\n"));
 					freecon(tty_con);
+					return -1;
 				}
+				freecon(tty_con);
 			}
 
 			level_s = optarg;
@@ -952,7 +824,7 @@ static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 
 	/* Fill in a default type if one hasn't been specified. */
 	if (role_s && !type_s) {
-		/* get_default_type() returns malloc'd memory */
+	 	/* get_default_type() returns malloc'd memory */
 		if (get_default_type(role_s, &type_ptr)) {
 			fprintf(stderr, _("Couldn't get default type.\n"));
 			send_audit_message(0, old_context, new_con, ttyn);
@@ -984,8 +856,7 @@ static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 		}
 
 	if (level_s) {
-		range_ptr =
-		    build_new_range(level_s, context_range_get(context));
+		range_ptr = build_new_range(level_s,context_range_get(context));
 		if (!range_ptr) {
 			fprintf(stderr,
 				_("failed to build new range with level %s\n"),
@@ -1022,7 +893,7 @@ static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 	context_free(context);
 	return 0;
 
-      err_free:
+err_free:
 	free(type_ptr);
 	free(range_ptr);
 	/* Don't free new_con, context_free(context) handles this */
@@ -1065,7 +936,7 @@ int main(int argc, char *argv[])
 	security_context_t new_context = NULL;	/* target security context */
 	security_context_t old_context = NULL;	/* original securiy context */
 	security_context_t tty_context = NULL;	/* current context of tty */
-	security_context_t new_tty_context = NULL;	/* new context of tty */
+	security_context_t new_tty_context = NULL; /* new context of tty */
 
 	struct passwd pw;	/* struct derived from passwd file line */
 	char *ttyn = NULL;	/* tty path */
@@ -1079,8 +950,8 @@ int main(int argc, char *argv[])
 
 #ifdef USE_PAM
 	int rc;
-	int pam_status;		/* pam return code */
-	pam_handle_t *pam_handle;	/* opaque handle used by all PAM functions */
+	int pam_status;		   /* pam return code */
+	pam_handle_t *pam_handle;  /* opaque handle used by all PAM functions */
 
 	/* This is a jump table of functions for PAM to use when it wants to *
 	 * communicate with the user.  We'll be using misc_conv(), which is  *
@@ -1114,7 +985,7 @@ int main(int argc, char *argv[])
 
 	if (!is_selinux_enabled()) {
 		fprintf(stderr, _("Sorry, newrole may be used only on "
-				  "a SELinux kernel.\n"));
+			"a SELinux kernel.\n"));
 		return -1;
 	}
 
@@ -1134,10 +1005,11 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	ttyn = ttyname(STDIN_FILENO);
+	ttyn = ttyname(0);
 	if (!ttyn || *ttyn == '\0') {
 		fprintf(stderr,
-			_("Warning!  Could not retrieve tty information.\n"));
+			_("Error!  Could not retrieve tty information.\n"));
+		return -1;
 	}
 
 	if (parse_command_line_arguments(argc, argv, ttyn, old_context,
@@ -1155,33 +1027,9 @@ int main(int argc, char *argv[])
 	if (extract_pw_data(&pw))
 		goto err_free;
 
+	printf(_("Authenticating %s.\n"), pw.pw_name);
 #ifdef USE_PAM
-	if (read_pam_config()) {
-		fprintf(stderr,
-			_("error on reading PAM service configuration.\n"));
-		goto err_free;
-	}
-
-	if (app_service_names != NULL && optind < argc) {
-		if (strcmp(argv[optind], "-c") == 0 && optind < (argc - 1)) {
-			/*
-			 * Check for a separate pam service name for the 
-			 * command when invoked by newrole.
-			 */
-			char *cmd = NULL;
-			rc = sscanf(argv[optind + 1], "%as", &cmd);
-			if (rc != EOF && cmd) {
-				char *app_service_name =
-				    (char *)hashtab_search(app_service_names,
-							   cmd);
-				free(cmd);
-				if (app_service_name != NULL)
-					service_name = app_service_name;
-			}
-		}
-	}
-
-	pam_status = pam_start(service_name, pw.pw_name, &pam_conversation,
+	pam_status = pam_start(SERVICE_NAME, pw.pw_name, &pam_conversation,
 			       &pam_handle);
 	if (pam_status != PAM_SUCCESS) {
 		fprintf(stderr, _("failed to initialize PAM\n"));
@@ -1257,7 +1105,7 @@ int main(int argc, char *argv[])
 		}
 #ifdef USE_PAM
 #ifdef NAMESPACE_PRIV
-		pam_status = pam_close_session(pam_handle, 0);
+		pam_status = pam_close_session(pam_handle,0);
 		if (pam_status != PAM_SUCCESS) {
 			fprintf(stderr, "pam_close_session failed with %s\n",
 				pam_strerror(pam_handle, pam_status));
@@ -1270,8 +1118,6 @@ int main(int argc, char *argv[])
 				pam_strerror(pam_handle, rc));
 			exit_code = -1;
 		}
-		hashtab_map(app_service_names, free_hashtab_entry, NULL);
-		hashtab_destroy(app_service_names);
 #endif
 		free(pw.pw_name);
 		free(pw.pw_dir);
@@ -1282,25 +1128,23 @@ int main(int argc, char *argv[])
 
 	/* CHILD */
 	/* Close the tty and reopen descriptors 0 through 2 */
-	if (ttyn) {
-		if (close(fd) || close(0) || close(1) || close(2)) {
-			fprintf(stderr, _("Could not close descriptors.\n"));
-			goto err_close_pam;
-		}
-		fd = open(ttyn, O_RDONLY | O_NONBLOCK);
-		if (fd != 0)
-			goto err_close_pam;
-		fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) & ~O_NONBLOCK);
-		fd = open(ttyn, O_RDWR | O_NONBLOCK);
-		if (fd != 1)
-			goto err_close_pam;
-		fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) & ~O_NONBLOCK);
-		fd = open(ttyn, O_RDWR | O_NONBLOCK);
-		if (fd != 2)
-			goto err_close_pam;
-		fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) & ~O_NONBLOCK);
-
+	if (close(fd) || close(0) || close(1) || close(2)) {
+		fprintf(stderr, _("Could not close descriptors.\n"));
+		goto err_close_pam;
 	}
+	fd = open(ttyn, O_RDONLY|O_NONBLOCK);
+	if (fd != 0)
+		goto err_close_pam;
+	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) & ~O_NONBLOCK);
+	fd = open(ttyn, O_RDWR|O_NONBLOCK);
+	if (fd != 1)
+		goto err_close_pam;
+	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) & ~O_NONBLOCK);
+	fd = open(ttyn, O_RDWR|O_NONBLOCK);
+	if (fd != 2)
+		goto err_close_pam;
+	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) & ~O_NONBLOCK);
+
 	/*
 	 * Step 5:  Execute a new shell with the new context in `new_context'. 
 	 *
@@ -1315,16 +1159,17 @@ int main(int argc, char *argv[])
 		shell_argv0 = NULL;
 		goto err_close_pam;
 	}
-	argv[optind - 1] = shell_argv0;
+	argv[optind-1] = shell_argv0;
 
 	if (setexeccon(new_context)) {
 		fprintf(stderr, _("Could not set exec context to %s.\n"),
 			new_context);
 		goto err_close_pam;
 	}
+
 #ifdef NAMESPACE_PRIV
 	/* Ask PAM to setup session for user running this program */
-	pam_status = pam_open_session(pam_handle, 0);
+	pam_status = pam_open_session(pam_handle,0);
 	if (pam_status != PAM_SUCCESS) {
 		fprintf(stderr, "pam_open_session failed with %s\n",
 			pam_strerror(pam_handle, pam_status));
@@ -1344,7 +1189,7 @@ int main(int argc, char *argv[])
 	/* Handle environment changes */
 	if (restore_environment(preserve_environment, old_environ, &pw)) {
 		fprintf(stderr, _("Unable to restore the environment, "
-				  "aborting\n"));
+			"aborting\n"));
 		goto err_close_pam_session;
 	}
 	execv(pw.pw_shell, argv + optind - 1);
@@ -1355,21 +1200,21 @@ int main(int argc, char *argv[])
 	 * If we reach here, then we failed to exec the new shell.
 	 */
 	perror(_("failed to exec shell\n"));
-      err_close_pam_session:
+err_close_pam_session:
 #ifdef NAMESPACE_PRIV
-	pam_status = pam_close_session(pam_handle, 0);
-	if (pam_status != PAM_SUCCESS)
+	pam_status = pam_close_session(pam_handle,0);
+	if(pam_status != PAM_SUCCESS)
 		fprintf(stderr, "pam_close_session failed with %s\n",
 			pam_strerror(pam_handle, pam_status));
 #endif
-      err_close_pam:
+err_close_pam:
 #ifdef USE_PAM
 	rc = pam_end(pam_handle, pam_status);
 	if (rc != PAM_SUCCESS)
 		fprintf(stderr, "pam_end failed with %s\n",
 			pam_strerror(pam_handle, rc));
 #endif
-      err_free:
+err_free:
 	freecon(tty_context);
 	freecon(new_tty_context);
 	freecon(old_context);
@@ -1378,11 +1223,5 @@ int main(int argc, char *argv[])
 	free(pw.pw_dir);
 	free(pw.pw_shell);
 	free(shell_argv0);
-#ifdef USE_PAM
-	if (app_service_names) {
-		hashtab_map(app_service_names, free_hashtab_entry, NULL);
-		hashtab_destroy(app_service_names);
-	}
-#endif
 	return -1;
 }				/* main() */

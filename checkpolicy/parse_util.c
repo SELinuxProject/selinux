@@ -29,9 +29,9 @@ extern void yyrestart(FILE *);
 extern queue_t id_queue;
 extern unsigned int policydb_errors;
 extern unsigned long policydb_lineno;
+extern char source_file[];
 extern policydb_t *policydbp;
 extern int mlspol;
-extern void set_source_file(const char *name);
 
 int read_source_policy(policydb_t * p, const char *file, const char *progname)
 {
@@ -40,7 +40,6 @@ int read_source_policy(policydb_t * p, const char *file, const char *progname)
 		fprintf(stderr, "%s:  unable to open %s\n", progname, file);
 		return -1;
 	}
-	set_source_file(file);
 
 	if ((id_queue = queue_create()) == NULL) {
 		fprintf(stderr, "%s: out of memory!\n", progname);
@@ -59,7 +58,7 @@ int read_source_policy(policydb_t * p, const char *file, const char *progname)
 	}
 	rewind(yyin);
 	init_parser(2);
-	set_source_file(file);
+	source_file[0] = '\0';
 	yyrestart(yyin);
 	if (yyparse() || policydb_errors) {
 		fprintf(stderr,

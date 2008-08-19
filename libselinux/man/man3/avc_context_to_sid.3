@@ -1,12 +1,12 @@
 .\" Hey Emacs! This file is -*- nroff -*- source.
 .\"
-.\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2004
-.TH "avc_context_to_sid" "3" "27 May 2004" "" "SELinux API documentation"
+.\" Author: Eamon Walsh (ewalsh@epoch.ncsc.mil) 2004
+.TH "avc_context_to_sid" "3" "27 May 2004" "" "SE Linux API documentation"
 .SH "NAME"
-avc_context_to_sid, avc_sid_to_context, sidput, sidget, avc_get_initial_sid \- obtain and manipulate SELinux security ID's.
+avc_context_to_sid, avc_sid_to_context, sidput, sidget \- obtain and manipulate SELinux security ID's.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
-
+.br
 .B #include <selinux/avc.h>
 .sp
 .BI "int avc_context_to_sid(security_context_t " ctx ", security_id_t *" sid ");"
@@ -16,9 +16,6 @@ avc_context_to_sid, avc_sid_to_context, sidput, sidget, avc_get_initial_sid \- o
 .BI "int sidget(security_id_t " sid ");"
 .sp
 .BI "int sidput(security_id_t " sid ");"
-.sp
-.BI "int avc_get_initial_sid(const char *" name ", security_id_t *" sid ");"
-.sp
 .SH "DESCRIPTION"
 Security ID's (SID's) are reference-counted, opaque representations of security contexts.  
 
@@ -47,10 +44,6 @@ decrements the reference count of
 .I sid
 by 1.  If the count ever reaches zero, the SID becomes
 invalid and must not be used any further.
-
-.B avc_get_initial_sid
-returns a SID for the kernel initial security identifier specified by 
-.I name
 
 .SH "RETURN VALUE"
 .B sidget
@@ -86,7 +79,7 @@ will be called on a SID when its object is duplicated, and
 will be called on a SID when its object is destroyed.  Proper reference counting is necessary to ensure that SID's and associated cache entries are reclaimed from memory when no longer needed.
 
 .SH "AUTHOR"
-Eamon Walsh <ewalsh@tycho.nsa.gov>
+Eamon Walsh <ewalsh@epoch.ncsc.mil>
 
 .SH "SEE ALSO"
 .BR avc_init (3),

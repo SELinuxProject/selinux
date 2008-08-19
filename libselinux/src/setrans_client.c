@@ -1,10 +1,4 @@
-/* Author: Trusted Computer Solutions, Inc. 
- * 
- * Modified:
- * Yuichi Nakamura <ynakam@hitachisoft.jp> 
- - Stubs are used when DISABLE_SETRANS is defined, 
-   it is to reduce size for such as embedded devices.
-*/
+/* Author: Trusted Computer Solutions, Inc. */
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -13,7 +7,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <netdb.h>
-#include <fcntl.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -22,7 +16,6 @@
 #include "selinux_internal.h"
 #include "setrans_internal.h"
 
-#ifndef DISABLE_SETRANS
 static int mls_enabled = -1;
 
 // Simple cache
@@ -30,6 +23,8 @@ static __thread security_context_t prev_t2r_trans = NULL;
 static __thread security_context_t prev_t2r_raw = NULL;
 static __thread security_context_t prev_r2t_trans = NULL;
 static __thread security_context_t prev_r2t_raw = NULL;
+
+int cache_trans hidden = 1;
 
 /*
  * setransd_open
@@ -42,17 +37,11 @@ static int setransd_open(void)
 {
 	struct sockaddr_un addr;
 	int fd;
-#ifdef SOCK_CLOEXEC
-	fd = socket(PF_UNIX, SOCK_STREAM|SOCK_CLOEXEC, 0);
-	if (fd < 0 && errno == EINVAL)
-#endif
-	{
-		fd = socket(PF_UNIX, SOCK_STREAM, 0);
-		if (fd >= 0)
-			fcntl(fd, F_SETFD, FD_CLOEXEC);
-	}
-	if (fd < 0)
+
+	fd = socket(PF_UNIX, SOCK_STREAM, 0);
+	if (fd < 0) {
 		return -1;
+	}
 
 	memset(&addr, 0, sizeof(addr));
 	addr.sun_family = AF_UNIX;
@@ -214,10 +203,12 @@ static int trans_to_raw_context(char *trans, char **rawp)
 
 hidden void fini_context_translations(void)
 {
-	free(prev_r2t_trans);
-	free(prev_r2t_raw);
-	free(prev_t2r_trans);
-	free(prev_t2r_raw);
+	if (cache_trans) {
+		free(prev_r2t_trans);
+		free(prev_r2t_raw);
+		free(prev_t2r_trans);
+		free(prev_t2r_raw);
+	}
 }
 
 hidden int init_context_translations(void)
@@ -239,26 +230,29 @@ int selinux_trans_to_raw_context(security_context_t trans,
 		goto out;
 	}
 
-	if (prev_t2r_trans && strcmp(prev_t2r_trans, trans) == 0) {
-		*rawp = strdup(prev_t2r_raw);
-	} else {
-		free(prev_t2r_trans);
-		prev_t2r_trans = NULL;
-		free(prev_t2r_raw);
-		prev_t2r_raw = NULL;
-		if (trans_to_raw_context(trans, rawp))
-			*rawp = strdup(trans);
-		if (*rawp) {
-			prev_t2r_trans = strdup(trans);
-			if (!prev_t2r_trans)
-				goto out;
-			prev_t2r_raw = strdup(*rawp);
-			if (!prev_t2r_raw) {
-				free(prev_t2r_trans);
-				prev_t2r_trans = NULL;
+	if (cache_trans) {
+		if (prev_t2r_trans && strcmp(prev_t2r_trans, trans) == 0) {
+			*rawp = strdup(prev_t2r_raw);
+		} else {
+			free(prev_t2r_trans);
+			prev_t2r_trans = NULL;
+			free(prev_t2r_raw);
+			prev_t2r_raw = NULL;
+			if (trans_to_raw_context(trans, rawp))
+				*rawp = strdup(trans);
+			if (*rawp) {
+				prev_t2r_trans = strdup(trans);
+				if (!prev_t2r_trans)
+					goto out;
+				prev_t2r_raw = strdup(*rawp);
+				if (!prev_t2r_raw) {
+					free(prev_t2r_trans);
+					prev_t2r_trans = NULL;
+				}
 			}
 		}
-	}
+	} else if (trans_to_raw_context(trans, rawp))
+		*rawp = strdup(trans);
       out:
 	return *rawp ? 0 : -1;
 }
@@ -278,68 +272,31 @@ int selinux_raw_to_trans_context(security_context_t raw,
 		goto out;
 	}
 
-	if (prev_r2t_raw && strcmp(prev_r2t_raw, raw) == 0) {
-		*transp = strdup(prev_r2t_trans);
-	} else {
-		free(prev_r2t_raw);
-		prev_r2t_raw = NULL;
-		free(prev_r2t_trans);
-		prev_r2t_trans = NULL;
-		if (raw_to_trans_context(raw, transp))
-			*transp = strdup(raw);
-		if (*transp) {
-			prev_r2t_raw = strdup(raw);
-			if (!prev_r2t_raw)
-				goto out;
-			prev_r2t_trans = strdup(*transp);
-			if (!prev_r2t_trans) {
-				free(prev_r2t_raw);
-				prev_r2t_raw = NULL;
+	if (cache_trans) {
+		if (prev_r2t_raw && strcmp(prev_r2t_raw, raw) == 0) {
+			*transp = strdup(prev_r2t_trans);
+		} else {
+			free(prev_r2t_raw);
+			prev_r2t_raw = NULL;
+			free(prev_r2t_trans);
+			prev_r2t_trans = NULL;
+			if (raw_to_trans_context(raw, transp))
+				*transp = strdup(raw);
+			if (*transp) {
+				prev_r2t_raw = strdup(raw);
+				if (!prev_r2t_raw)
+					goto out;
+				prev_r2t_trans = strdup(*transp);
+				if (!prev_r2t_trans) {
+					free(prev_r2t_raw);
+					prev_r2t_raw = NULL;
+				}
 			}
 		}
-	}
+	} else if (raw_to_trans_context(raw, transp))
+		*transp = strdup(raw);
       out:
 	return *transp ? 0 : -1;
 }
 
 hidden_def(selinux_raw_to_trans_context)
-#else /*DISABLE_SETRANS*/
-
-hidden void fini_context_translations(void)
-{
-}
-
-hidden int init_context_translations(void)
-{
-	return 0;
-}
-
-int selinux_trans_to_raw_context(security_context_t trans,
-				 security_context_t * rawp)
-{
-	if (!trans) {
-		*rawp = NULL;
-		return 0;
-	}
-
-	*rawp = strdup(trans);
-	
-	return *rawp ? 0 : -1;
-}
-
-hidden_def(selinux_trans_to_raw_context)
-
-int selinux_raw_to_trans_context(security_context_t raw,
-				 security_context_t * transp)
-{
-	if (!raw) {
-		*transp = NULL;
-		return 0;
-	}
-	*transp = strdup(raw);
-	
-	return *transp ? 0 : -1;
-}
-
-hidden_def(selinux_raw_to_trans_context)
-#endif /*DISABLE_SETRANS*/

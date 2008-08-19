@@ -23,7 +23,6 @@
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/expand.h>
 #include <sepol/policydb/util.h>
-#include <sepol/policydb/polcaps.h>
 #include <getopt.h>
 #include <assert.h>
 #include <unistd.h>
@@ -169,7 +168,7 @@ int display_avtab(avtab_t * a, uint32_t what, policydb_t * p, FILE * fp)
 	}
 
 	/* hmm...should have used avtab_map. */
-	for (i = 0; i < expa.nslot; i++) {
+	for (i = 0; i < AVTAB_SIZE; i++) {
 		for (cur = expa.htable[i]; cur; cur = cur->next) {
 			render_av_rule(&cur->key, &cur->datum, what, p, fp);
 		}
@@ -299,48 +298,6 @@ int change_bool(char *name, int state, policydb_t * p, FILE * fp)
 	return 0;
 }
 
-static void display_policycaps(policydb_t * p, FILE * fp)
-{
-	ebitmap_node_t *node;
-	const char *capname;
-	char buf[64];
-	int i;
-
-	fprintf(fp, "policy capabilities:\n");
-	ebitmap_for_each_bit(&p->policycaps, node, i) {
-		if (ebitmap_node_get_bit(node, i)) {
-			capname = sepol_polcap_getname(i);
-			if (capname == NULL) {
-				snprintf(buf, sizeof(buf), "unknown (%d)", i);
-				capname = buf;
-			}
-			fprintf(fp, "\t%s\n", capname);
-		}
-	}
-}
-
-static void display_id(policydb_t *p, FILE *fp, uint32_t symbol_type,
-		       uint32_t symbol_value, char *prefix)
-{
-	char *id = p->sym_val_to_name[symbol_type][symbol_value];
-	fprintf(fp, " %s%s", prefix, id);
-}
-
-static void display_permissive(policydb_t *p, FILE *fp)
-{
-	ebitmap_node_t *node;
-	int i;
-
-	fprintf(fp, "permissive sids:\n");
-	ebitmap_for_each_bit(&p->permissive_map, node, i) {
-		if (ebitmap_node_get_bit(node, i)) {
-			fprintf(fp, "\t");
-			display_id(p, fp, SYM_TYPES, i - 1, "");
-			fprintf(fp, "\n");
-		}
-	}
-}
-
 int menu()
 {
 	printf("\nSelect a command:\n");
@@ -352,8 +309,6 @@ int menu()
 	printf("6)  display conditional expressions\n");
 	printf("7)  change a boolean value\n");
 	printf("\n");
-	printf("c)  display policy capabilities\n");
-	printf("p)  display the list of permissive types\n");
 	printf("u)  display unknown handling setting\n");
 	printf("f)  set output file\n");
 	printf("m)  display menu\n");
@@ -466,12 +421,6 @@ int main(int argc, char **argv)
 
 			change_bool(name, state, &policydb, out_fp);
 			free(name);
-			break;
-		case 'c':
-			display_policycaps(&policydb, out_fp);
-			break;
-		case 'p':
-			display_permissive(&policydb, out_fp);
 			break;
 		case 'u':
 		case 'U':

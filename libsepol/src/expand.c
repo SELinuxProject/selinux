@@ -1,9 +1,8 @@
-/* Authors: Karl MacMillan <kmacmillan@mentalrootkit.com>
+/* Authors: Karl MacMillan <kmacmillan@tresys.com>
  *          Jason Tang <jtang@tresys.com>
  *	    Joshua Brindle <jbrindle@tresys.com>
  *
  * Copyright (C) 2004-2005 Tresys Technology, LLC
- * Copyright (C) 2007 Red Hat, Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -106,12 +105,11 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (!new_type) {
 		ERR(state->handle, "Out of memory!");
 		free(new_id);
-		return SEPOL_ENOMEM;
+		return -ENOMEM;
 	}
 	memset(new_type, 0, sizeof(type_datum_t));
 
 	new_type->flavor = type->flavor;
-	new_type->flags = type->flags;
 	new_type->s.value = ++state->out->p_types.nprim;
 	if (new_type->s.value > UINT16_MAX) {
 		free(new_id);
@@ -131,12 +129,6 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		ERR(state->handle, "hashtab overflow");
 		return -1;
 	}
-
-	if (new_type->flags & TYPE_FLAGS_PERMISSIVE)
-		if (ebitmap_set_bit(&state->out->permissive_map, new_type->s.value, 1)) {
-			ERR(state->handle, "Out of memory!\n");
-			return -1;
-		}
 
 	return 0;
 }
@@ -504,7 +496,7 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (!new_alias) {
 		ERR(state->handle, "Out of memory!");
 		free(new_id);
-		return SEPOL_ENOMEM;
+		return -ENOMEM;
 	}
 	memset(new_alias, 0, sizeof(type_datum_t));
 	if (alias->flavor == TYPE_TYPE)
@@ -513,8 +505,6 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		new_alias->s.value = state->typemap[alias->primary - 1];
 	else
 		assert(0);	/* unreachable */
-
-	new_alias->flags = alias->flags;
 
 	ret = hashtab_insert(state->out->p_types.table,
 			     (hashtab_key_t) new_id,
@@ -528,13 +518,6 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	}
 
 	state->typemap[alias->s.value - 1] = new_alias->s.value;
-
-	if (new_alias->flags & TYPE_FLAGS_PERMISSIVE)
-		if (ebitmap_set_bit(&state->out->permissive_map, new_alias->s.value, 1)) {
-			ERR(state->handle, "Out of memory!");
-			return -1;
-		}
-
 	return 0;
 }
 
@@ -654,10 +637,6 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 	mls_level_init(l);
 
 	if (!p->mls)
-		return 0;
-
-	/* Required not declared. */
-	if (!sl->sens)
 		return 0;
 
 	l->sens = sl->sens;
@@ -2193,27 +2172,17 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
  */
 static int copy_and_expand_avrule_block(expand_state_t * state)
 {
-	avrule_block_t *curblock = state->base->global;
-	avrule_block_t *prevblock;
+	avrule_block_t *curblock;
 	int retval = -1;
 
-	if (avtab_alloc(&state->out->te_avtab, MAX_AVTAB_SIZE)) {
- 		ERR(state->handle, "Out of Memory!");
- 		return -1;
- 	}
- 
- 	if (avtab_alloc(&state->out->te_cond_avtab, MAX_AVTAB_SIZE)) {
- 		ERR(state->handle, "Out of Memory!");
- 		return -1;
- 	}
-
-	while (curblock) {
+	for (curblock = state->base->global; curblock != NULL;
+	     curblock = curblock->next) {
 		avrule_decl_t *decl = curblock->enabled;
 		avrule_t *cur_avrule;
 
 		if (decl == NULL) {
 			/* nothing was enabled within this block */
-			goto cont;
+			continue;
 		}
 
 		/* copy role allows and role trans */
@@ -2255,18 +2224,6 @@ static int copy_and_expand_avrule_block(expand_state_t * state)
 		/* copy conditional rules */
 		if (cond_node_copy(state, decl->cond_list))
 			goto cleanup;
-
-      cont:
-		prevblock = curblock;
-		curblock = curblock->next;
-
-		if (state->handle && state->handle->expand_consume_base) {
-			/* set base top avrule block in case there
- 			 * is an error condition and the policy needs 
- 			 * to be destroyed */
-			state->base->global = curblock;
-			avrule_block_destroy(prevblock);
-		}
 	}
 
 	retval = 0;
@@ -2335,12 +2292,6 @@ int expand_module(sepol_handle_t * handle,
 	/* Copy mls state from base to out */
 	out->mls = base->mls;
 	out->handle_unknown = base->handle_unknown;
-
-	/* Copy policy capabilities */
-	if (ebitmap_cpy(&out->policycaps, &base->policycaps)) {
-		ERR(handle, "Out of memory!");
-		goto cleanup;
-	}
 
 	if ((state.typemap =
 	     (uint32_t *) calloc(state.base->p_types.nprim,
@@ -2651,11 +2602,6 @@ int expand_avtab(policydb_t * p, avtab_t * a, avtab_t * expa)
 {
 	struct expand_avtab_data data;
 
-	if (avtab_alloc(expa, MAX_AVTAB_SIZE)) {
-		ERR(NULL, "Out of memory!");
-		return -1;
-	}
-
 	data.expa = expa;
 	data.p = p;
 	return avtab_map(a, expand_avtab_node, &data);
@@ -2783,11 +2729,6 @@ int expand_cond_av_list(policydb_t * p, cond_av_list_t * l,
 	cond_av_list_t *cur;
 	avtab_ptr_t node;
 	int rc;
-
-	if (avtab_alloc(expa, MAX_AVTAB_SIZE)) {
-		ERR(NULL, "Out of memory!");
-		return -1;
-	}
 
 	*newl = NULL;
 	for (cur = l; cur; cur = cur->next) {

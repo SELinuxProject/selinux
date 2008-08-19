@@ -1,0 +1,77 @@
+<sect1 id="helper"><title>Helper Functions for Hook Functions</title>
+
+<para>
+The SELinux security module provides a set of helper functions that
+are used extensively by the SELinux hook implementations.  This
+section provides an overview of these helper functions.  More
+detailed descriptions of individual helper functions are provided
+in the appropriate hooks section.
+</para>
+
+<sect2 id="AllocFree"><title>Primitive Allocation Helper Functions</title>
+
+<para>
+For most SELinux security data structures defined in
+<filename>include/objsec.h</filename>, the SELinux module provides a
+primitive <function>alloc_security</function> and
+<function>free_security</function> helper function,
+e.g. <function>task_alloc_security</function> and
+<function>task_free_security</function>.  These helper functions are
+used by the <function>alloc_security</function> and
+<function>free_security</function> hook functions, which may contain
+additional processing beyond the basic initialization performed by
+these helpers.
+</para>
+
+<para>
+Each primitive <function>alloc_security</function> helper function allocates a security
+structure of the appropriate type, sets a back pointer to the kernel data
+structure, initializes the security information, and sets the object
+security field to refer to this new security structure.  
+Each primitive <function>free_security</function> helper function clears
+the security field and frees the security structure.
+</para>
+
+</sect2>
+
+<sect2 id="inithelper"><title>Initialization Helper Functions</title>
+
+<para>
+The SELinux security module defines initialization helper functions for certain
+security structures (e.g. <function>inode_doinit</function>,
+<function>superblock_doinit</function>, etc).  These initialization
+helper functions are called by certain SELinux hook functions, and
+are discussed further in later sections.
+</para>
+
+</sect2>
+
+<sect2 id="permcheck"><title>Permission Checking Helper Functions</title>
+<para>
+A set of helper functions on kernel objects and permissions are
+provided that dereference the security fields, set up auxiliary audit
+data, and then invoke the access vector cache (AVC) to perform the
+permission check with the right set of parameters.  These helper
+functions simplify the code for many of the hook functions that
+perform permission checks.  A few examples of these functions include
+<function>task_has_perm</function>,
+<function>inode_has_perm</function>, and
+<function>may_create</function>.
+</para>
+
+<para>
+Although these helper functions can be convenient, hook functions are
+free to directly call the AVC to perform permission checks.  This is
+done in a couple of cases.  First, some permission checks involve a
+security identifier (SID) that is not associated with a kernel object,
+e.g. a SID specified by an application using the SELinux API calls or
+a SID obtained from the security server for an object that is about to
+be created.  Second, some operations require multiple permission
+checks to be performed that are based on some of the same SIDs.  In
+the latter case, using the helper functions would cause redundant
+processing in order to extract the same SIDs multiple times.
+</para>
+
+</sect2>
+
+</sect1>

@@ -1,0 +1,41 @@
+<sect1 id="arch"><title>Architecture</title>
+
+<para>
+The SELinux pseudo-filesystem includes a file <filename>access</filename> which is used to obtain policy decisions from the kernel.  The libselinux routine <function>security_compute_av</function> encapsulates this functionality.  However, this routine has the overhead of a kernel trap on each call.
+</para>
+
+<para>
+The userspace AVC is essentially a cache built on top of <function>security_compute_av</function>.  It provides a cleaner interface to the caller, including:
+</para>
+
+<itemizedlist>
+<listitem><para>Optional user-provided callbacks for auditing, memory allocation, and threading.</para></listitem>
+<listitem><para>A mapping of security contexts to opaque, reference-counted <quote>security ID's</quote> (SIDs).</para></listitem>
+<listitem><para>Automatic monitoring of permissive vs. enforcing mode.</para></listitem>
+<listitem><para>Automatic cache flushing on policy changes.</para></listitem>
+<listitem><para>Tracking of cache statistics.</para></listitem>
+<listitem><para>Convenience functions for converting between string representations of security classes and access permissions and their actual numeric policy values.</para></listitem>
+</itemizedlist>
+
+<para>
+After initialization, a userspace program passes security contexts to <function>avc_context_to_sid</function> to obtain SIDs.  SIDs are reference-counted; in addition to <function>avc_context_to_sid</function>, which increments the reference count, the functions <function>sidget</function> and <function>sidput</function> increment and decrement the count, respectively.  The function <function>avc_sid_to_context</function> returns a copy of the context corresponding to a given SID.
+</para>
+
+<para>
+Policy decisions are determined using <function>avc_has_perm</function>, which takes subject and object SIDs, the object class, and the requested access permissions.  The return value of <function>avc_has_perm</function> is zero on grant, nonzero (with errno set) otherwise.  The function also takes a cache entry reference that speeds cache lookups on repeated queries, and a pointer to supplementary audit data associated with the security class.  <function>avc_has_perm</function> makes a call to <function>avc_audit</function>; use <function>avc_has_perm_noaudit</function> if you wish to separate these two actions.
+</para>
+
+<para>
+<function>avc_audit</function> prints the familiar avc <quote>denied</quote> messages on a policy denial.  The default is to print them on standard error.  However, userspace programs can provide a printf-style callback to handle the messages themselves &mdash; via syslog, for example.  Userspace programs can also provide a callback to interpret the extra auditing data passed to <function>avc_has_perm</function> and <function>avc_audit</function>.  This can make the audit messages easier to track and interpret.
+</para>
+
+<para>
+Starting with version 2.6.4, the Linux kernel supports netlink notification of policy and enforcing-mode changes.  The userspace AVC listens for these notifications and takes the appropriate action (e.g. cache flush) automatically.  In the default, single-threaded mode, the userspace AVC must check the netlink socket during each call to <function>avc_has_perm*</function>.  Performance-critical programs can provide threading and locking callbacks to the userspace AVC which will be used to start a dedicated thread to wait on the socket.  The example code below shows how to set up the threading callbacks using the pthread library.
+</para>
+
+<para>
+The userspace AVC provides three functions for obtaining statistics.  The first two, <function>avc_av_stats</function> and <function>avc_sid_stats</function>, produce audit messages that indicate the status of the hash tables storing access vectors and SID's, respectively.  The messages contain the number of entries, number of hash buckets used, and longest chain of entries in a single bucket.  The third statistics function, <function>avc_cache_stats</function>, populates an <structname>avc_cache_stats</structname> structure whose fields describe access vector cache activity (number of lookups performed, hit rate, etc.)
+</para>
+
+</sect1>
+

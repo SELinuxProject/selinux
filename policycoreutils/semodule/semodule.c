@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
 	if (!sh) {
 		fprintf(stderr, "%s:  Could not create semanage handle\n",
 			argv[0]);
-		goto cleanup_nohandle;
+		goto cleanup;
 	}
 
 	if (store) {
@@ -473,8 +473,6 @@ int main(int argc, char *argv[])
 		}
 	}
 	semanage_handle_destroy(sh);
-
-      cleanup_nohandle:
 	cleanup();
 	exit(status);
 }

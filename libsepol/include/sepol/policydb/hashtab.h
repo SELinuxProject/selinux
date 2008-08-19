@@ -14,9 +14,8 @@
 #ifndef _SEPOL_POLICYDB_HASHTAB_H_
 #define _SEPOL_POLICYDB_HASHTAB_H_
 
-#include <sepol/errcodes.h>
-
 #include <stdint.h>
+#include <errno.h>
 #include <stdio.h>
 
 typedef char *hashtab_key_t;	/* generic key type */
@@ -40,6 +39,12 @@ typedef struct hashtab_val {
 
 typedef hashtab_val_t *hashtab_t;
 
+/* Define status codes for hash table functions */
+#define HASHTAB_SUCCESS     0
+#define HASHTAB_OVERFLOW    -ENOMEM
+#define HASHTAB_PRESENT     -EEXIST
+#define HASHTAB_MISSING     -ENOENT
+
 /*
    Creates a new hash table with the specified characteristics.
 
@@ -56,9 +61,9 @@ extern hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
 /*
    Inserts the specified (key, datum) pair into the specified hash table.
 
-   Returns SEPOL_ENOMEM if insufficient space is available or
-   SEPOL_EEXIST  if there is already an entry with the same key or
-   SEPOL_OK otherwise.
+   Returns HASHTAB_OVERFLOW if insufficient space is available or
+   HASHTAB_PRESENT  if there is already an entry with the same key or
+   HASHTAB_SUCCESS otherwise.
  */
 extern int hashtab_insert(hashtab_t h, hashtab_key_t k, hashtab_datum_t d);
 
@@ -67,8 +72,8 @@ extern int hashtab_insert(hashtab_t h, hashtab_key_t k, hashtab_datum_t d);
    Applies the specified destroy function to (key,datum,args) for
    the entry.
 
-   Returns SEPOL_ENOENT if no entry has the specified key or
-   SEPOL_OK otherwise.
+   Returns HASHTAB_MISSING if no entry has the specified key or
+   HASHTAB_SUCCESS otherwise.
  */
 extern int hashtab_remove(hashtab_t h, hashtab_key_t k,
 			  void (*destroy) (hashtab_key_t k,
@@ -81,8 +86,8 @@ extern int hashtab_remove(hashtab_t h, hashtab_key_t k,
    then the specified destroy function is applied to (key,datum,args)
    for the entry prior to replacing the entry's contents.
 
-   Returns SEPOL_ENOMEM if insufficient space is available or
-   SEPOL_OK otherwise.
+   Returns HASHTAB_OVERFLOW if insufficient space is available or
+   HASHTAB_SUCCESS otherwise.
  */
 extern int hashtab_replace(hashtab_t h, hashtab_key_t k, hashtab_datum_t d,
 			   void (*destroy) (hashtab_key_t k,

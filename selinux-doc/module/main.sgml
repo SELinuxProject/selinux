@@ -1,0 +1,77 @@
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V3.1//EN"[
+<!ENTITY intro SYSTEM "intro.sgml">
+<!ENTITY lsm SYSTEM "lsm.sgml">
+<!ENTITY selinux SYSTEM "selinux.sgml">
+<!ENTITY changes SYSTEM "changes.sgml">
+<!ENTITY arch SYSTEM "arch.sgml">
+<!ENTITY init SYSTEM "init.sgml">
+<!ENTITY stacking SYSTEM "stacking.sgml">
+<!ENTITY syscalls SYSTEM "syscalls.sgml">
+<!ENTITY helper SYSTEM "helper.sgml">
+<!ENTITY task SYSTEM "task.sgml">
+<!ENTITY binprm SYSTEM "binprm.sgml">
+<!ENTITY sb SYSTEM "sb.sgml">
+<!ENTITY inode SYSTEM "inode.sgml">
+<!ENTITY file SYSTEM "file.sgml">
+<!ENTITY ipc SYSTEM "ipc.sgml">
+<!ENTITY socket SYSTEM "socket.sgml">
+<!ENTITY ip SYSTEM "ip.sgml">
+<!ENTITY system SYSTEM "system.sgml">
+<!ENTITY ackno SYSTEM "ackno.sgml">
+<!ENTITY biblio SYSTEM "biblio.sgml">
+]>
+<article class="whitepaper" id="SELinuxModule" lang="en">
+ <artheader>
+ <title>Implementing SELinux as a Linux Security Module</title>
+ <authorgroup>
+ <author>
+ <firstname>Stephen</firstname> 
+ <surname>Smalley</surname>
+ <affiliation>
+ <orgname>NSA</orgname>
+ <address><email>sds@epoch.ncsc.mil</email></address>
+ </affiliation>
+ </author>
+ <author>
+ <firstname>Chris</firstname>
+ <surname>Vance</surname>
+ <affiliation>
+ <orgname>NAI Labs</orgname>
+ <address><email>cvance@nai.com</email></address>
+ </affiliation>
+ </author>
+ <author>
+ <firstname>Wayne</firstname>
+ <surname>Salamon</surname>
+ <affiliation>
+ <orgname>NAI Labs</orgname>
+ <address><email>wsalamon@nai.com</email></address>
+ </affiliation>
+ </author>
+ </authorgroup>
+ <pubsnumber>NAI Labs Report #01-043</pubsnumber>
+ <pubdate>Initial:  December 2001, Last revised:  Feb 2006</pubdate>
+ <contractsponsor>This work supported by NSA contract MDA904-01-C-0926 (SELinux)</contractsponsor>
+ </artheader>
+
+&intro
+&ackno
+&lsm
+&selinux
+&changes
+&arch
+&init
+&stacking
+&syscalls
+&helper
+&task
+&binprm
+&sb
+&inode
+&file
+&ipc
+&socket
+&ip
+&system
+&biblio
+</article>

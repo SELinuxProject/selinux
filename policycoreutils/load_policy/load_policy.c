@@ -19,13 +19,13 @@
 
 void usage(char *progname)
 {
-	fprintf(stderr, _("usage:  %s [-qi]\n"), progname);
+	fprintf(stderr, _("usage:  %s [-bq]\n"), progname);
 	exit(1);
 }
 
 int main(int argc, char **argv)
 {
-	int ret, opt, quiet = 0, nargs, init=0, enforce=0;
+	int ret, opt, quiet = 0, preservebools = 1, nargs;
 
 #ifdef USE_NLS
 	setlocale(LC_ALL, "");
@@ -33,18 +33,14 @@ int main(int argc, char **argv)
 	textdomain(PACKAGE);
 #endif
 
-	while ((opt = getopt(argc, argv, "bqi")) > 0) {
+	while ((opt = getopt(argc, argv, "bq")) > 0) {
 		switch (opt) {
 		case 'b':
-			fprintf(stderr, "%s:  Warning! The -b option is no longer supported, booleans are always preserved across reloads.  Continuing...\n",
-				argv[0]);
+			preservebools = 0;
 			break;
 		case 'q':
 			quiet = 1;
 			sepol_debug(0);
-			break;
-		case 'i':
-			init = 1;
 			break;
 		default:
 			usage(argv[0]);
@@ -64,28 +60,8 @@ int main(int argc, char **argv)
 			"%s:  Warning!  Boolean file argument (%s) is no longer supported, installed booleans file is always used.  Continuing...\n",
 			argv[0], argv[optind++]);
 	}
-	if (init) {
-		if (is_selinux_enabled() == 1) {
-			/* SELinux is already enabled, we should not do an initial load again */
-			fprintf(stderr,
-					_("%s:  Policy is already loaded and initial load requested\n"),
-					argv[0]);
-			exit(2);
-		}
-		ret = selinux_init_load_policy(&enforce);
-		if (ret != 0 ) {
-			if (enforce > 0) {
-				/* SELinux in enforcing mode but load_policy failed */
-				fprintf(stderr,
-						_("%s:  Can't load policy and enforcing mode requested:  %s\n"),
-						argv[0], strerror(errno));
-				exit(3);
-			}
-		}
-	}
-	else {
-		ret = selinux_mkload_policy(1);
-	}
+
+	ret = selinux_mkload_policy(preservebools);
 	if (ret < 0) {
 		fprintf(stderr, _("%s:  Can't load policy:  %s\n"),
 			argv[0], strerror(errno));

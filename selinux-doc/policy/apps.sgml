@@ -1,0 +1,92 @@
+<sect1 id="apps"><title>Configuration Files for Security-Aware Applications</title>
+<para>
+SELinux includes a set of new and modified applications that have some
+degree of awareness of the mandatory access controls.  Some of these
+applications require their own configuration files that are related to
+the policy.  This section describes these application configuration
+files.
+</para>
+
+<para>
+The application configuration file sources are located in the
+<filename>/etc/selinux/(strict|targeted)/src/policy/appconfig</filename>
+directory.  The configuration files used at runtime are installed
+under the <filename>/etc/selinux/(strict|targeted)/contexts</filename>
+directory.  The most commonly used configuration files are discussed
+below, but there are a number of other configuration files included in
+the example policy and used by additional applications that are not
+discussed here.
+</para>
+
+<sect2 id="DefaultContexts"><title>Default_Contexts</title>
+<para>
+Applications that need to set security contexts for user processes use
+the <function>get_default_context</function> or
+<function>get_ordered_context_list</function> libselinux functions.
+Internally, these functions consult the kernel policy to determine the
+set of legal security contexts for the user that are reachable by the
+application and then refine and order this set based on the
+<filename>default_contexts</filename> configuration file.  Any context
+in a default_contexts configuration that is not within the set of
+legal contexts for the user that can be reached from the application
+will be ignored.
+</para>
+
+<para>
+Each line of the default_contexts file specifies an entry consisting
+of a partial context for the application followed by a list of one or
+more partial contexts for users in the desired prioritization order.
+A partial context is a context without a user identity value.  Partial
+contexts are used in the list of user contexts since the user identity
+can be inferred (it is the user who was authenticated or whose crontab
+file was read).  Partial contexts are used for the application as the
+application may run under different user identities at different
+times.  In the simplest form, an entry identifies the application
+context and then provides a single user context to use as the default.
+</para>
+
+<para>
+In the example default_contexts file, login and ssh sessions default
+to user_r:user_t or staff_r:staff_t.  Users can then use newrole to
+change to a different role if authorized for another role.  System
+cron jobs default to system_r:system_crond_t, while user cron jobs
+default to user_r:user_crond_t.  A derived domain (user_crond_t) is
+used so that the policy can grant different permissions to user cron
+jobs than to user sessions.
+</para>
+
+<para>
+An administrator may also create a per-user default_contexts file in
+the <filename>/etc/selinux/(strict|targeted)/contexts/users</filename>
+directory with a filename identical to the username.  If such a file
+exists for the user, then any entries in it are given higher priority
+than the entries in the system-wide default_contexts file.  For
+example, the root user typically has such a per-user default_contexts
+file so that he will default to sysadm_r:sysadm_t for local logins.
+</para>
+</sect2>
+
+<sect2 id="DefaultType"><title>Default_Type</title>
+<para>
+The <filename>default_type</filename> file defines the default type
+(domain) for each role.  Each line specifies a role:type pair, and the
+appropriate type is selected by matching the role field.  This file is
+used by programs like newrole to automatically provide a default
+domain when the user selects a role.  If no entry is specified, then
+the user must explicitly specify a domain.
+</para>
+</sect2>
+
+<sect2 id="InitrcContext"><title>Initrc_Context</title>
+<para>
+The <filename>initrc_context</filename> file defines the security
+context for running <filename>/etc/rc.d</filename> scripts via the
+<command>run_init</command> program.  It consists of a single line
+specifying the proper security context.  The <command>run_init</command>
+program transitions to this security context and then runs the
+specified script.  This ensures that the scripts are executed from
+the same context as when they are run by <filename>init</filename>.
+</para>
+</sect2>
+
+</sect1>

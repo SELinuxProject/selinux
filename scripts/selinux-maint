@@ -104,13 +104,13 @@ def apply(args):
         os.chdir(patch_dir)
         
     patchfd = open(patch_name)
-    retcode = subprocess.call(["patch", patch_level, "--dry-run", "-l"], stdin=patchfd)
+    retcode = subprocess.call(["patch", patch_level, "--dry-run"], stdin=patchfd)
     resp = raw_input("apply [y/n]: ")
     if resp != "y":
         sys.exit(0)
 
     patchfd = open(patch_name)
-    patch_output = subprocess.Popen(["patch", patch_level, "-l"], stdin=patchfd,
+    patch_output = subprocess.Popen(["patch", patch_level], stdin=patchfd,
                                     stdout=subprocess.PIPE).communicate()[0]
 
     status_output = subprocess.Popen(["svn", "status"], stdout=subprocess.PIPE).communicate()[0]

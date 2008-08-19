@@ -143,8 +143,6 @@ typedef struct type_datum {
 #define TYPE_ALIAS 2		/* alias in modular policy */
 	uint32_t flavor;
 	ebitmap_t types;	/* types with this attribute */
-#define TYPE_FLAGS_PERMISSIVE	0x01
-	uint32_t flags;
 } type_datum_t;
 
 /* User attributes */
@@ -470,12 +468,6 @@ typedef struct policydb {
 
 	ebitmap_t *attr_type_map;	/* not saved in the binary policy */
 
-	ebitmap_t policycaps;
-
-	/* this bitmap is referenced by type NOT the typical type-1 used in other
-	   bitmaps.  Someday the 0 bit may be used for global permissive */
-	ebitmap_t permissive_map;
-
 	unsigned policyvers;
 
 	unsigned handle_unknown;
@@ -567,6 +559,7 @@ typedef struct policy_file {
 	size_t size;
 	FILE *fp;
 	struct sepol_handle *handle;
+	unsigned char buffer[BUFSIZ];
 } policy_file_t;
 
 struct sepol_policy_file {
@@ -593,12 +586,10 @@ extern int policydb_write(struct policydb *p, struct policy_file *pf);
 #define POLICYDB_VERSION_MLS		19
 #define POLICYDB_VERSION_AVTAB		20
 #define POLICYDB_VERSION_RANGETRANS	21
-#define POLICYDB_VERSION_POLCAP		22
-#define POLICYDB_VERSION_PERMISSIVE	23
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_PERMISSIVE
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_RANGETRANS
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE	   4
@@ -606,11 +597,9 @@ extern int policydb_write(struct policydb *p, struct policy_file *pf);
 #define MOD_POLICYDB_VERSION_MLS	   5
 #define MOD_POLICYDB_VERSION_RANGETRANS	   6
 #define MOD_POLICYDB_VERSION_MLS_USERS	   6
-#define MOD_POLICYDB_VERSION_POLCAP	   7
-#define MOD_POLICYDB_VERSION_PERMISSIVE	   8
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_PERMISSIVE
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_MLS_USERS
 
 #define POLICYDB_CONFIG_MLS    1
 
@@ -626,7 +615,6 @@ extern int policydb_write(struct policydb *p, struct policy_file *pf);
 
 #define POLICYDB_MAGIC SELINUX_MAGIC
 #define POLICYDB_STRING "SE Linux"
-#define POLICYDB_ALT_STRING "Flask"
 #define POLICYDB_MOD_MAGIC SELINUX_MOD_MAGIC
 #define POLICYDB_MOD_STRING "SE Linux Module"
 

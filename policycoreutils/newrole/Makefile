@@ -21,12 +21,10 @@ LSPP_PRIV ?= n
 VERSION = $(shell cat ../VERSION)
 
 CFLAGS ?= -Werror -Wall -W
-EXTRA_OBJS =
 override CFLAGS += -DVERSION=\"$(VERSION)\" $(LDFLAGS) -I$(PREFIX)/include -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
-LDLIBS += -lselinux -L$(PREFIX)/lib
+LDLIBS += -lselinux -lsepol -L$(PREFIX)/lib
 ifeq (${PAMH}, /usr/include/security/pam_appl.h)
 	override CFLAGS += -DUSE_PAM
-	EXTRA_OBJS += hashtab.o
 	LDLIBS += -lpam -lpam_misc
 else
 	override CFLAGS += -D_XOPEN_SOURCE=500
@@ -55,10 +53,9 @@ else
 	MODE := 0555
 endif
 
-all: newrole
+TARGETS=$(patsubst %.c,%,$(wildcard *.c))
 
-newrole: newrole.o $(EXTRA_OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+all: $(TARGETS)
 
 install: all
 	test -d $(BINDIR)      || install -m 755 -d $(BINDIR)
@@ -76,7 +73,7 @@ endif
 endif
 
 clean:
-	rm -f newrole *.o 
+	rm -f $(TARGETS) *.o 
 
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])

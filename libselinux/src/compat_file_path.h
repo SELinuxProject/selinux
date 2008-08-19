@@ -1,0 +1,12 @@
+/* Compatibility file name suffixes.  */
+S_(BINPOLICY, SECURITYDIR "/selinux/policy")
+    S_(CONTEXTS_DIR, SECURITYDIR)
+    S_(FILE_CONTEXTS, SECURITYDIR "/selinux/file_contexts")
+    S_(HOMEDIR_CONTEXTS, SECURITYDIR "/homedir_template")
+    S_(DEFAULT_CONTEXTS, SECURITYDIR "/default_contexts")
+    S_(USER_CONTEXTS, SECURITYDIR "/default_contexts.user/")
+    S_(FAILSAFE_CONTEXT, SECURITYDIR "/failsafe_context")
+    S_(DEFAULT_TYPE, SECURITYDIR "/default_type")
+    S_(BOOLEANS, SECURITYDIR "/booleans")
+    S_(MEDIA_CONTEXTS, SECURITYDIR "/default_media")
+    S_(REMOVABLE_CONTEXT, SECURITYDIR "/removable_context")

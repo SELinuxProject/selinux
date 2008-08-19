@@ -2,7 +2,7 @@
 # Copyright (C) Christian Rose <menthos@menthos.com>, 2006.
 # Copyright (C) Magnus Larsson <fedoratrans@gmail.com>, 2007.
 #
-# $Id: sv.po 2244 2007-02-21 17:04:57Z ssmalley $
+# $Id: sv.po 2250 2007-02-21 17:38:15Z ssmalley $
 #
 msgid ""
 msgstr ""

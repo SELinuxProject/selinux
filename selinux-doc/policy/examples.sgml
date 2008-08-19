@@ -1,0 +1,385 @@
+<sect1 id="examples"><title>Customizing the Policy</title>
+
+<para>
+This section describes how to customize the policy.  It discusses how
+to perform various common changes to the policy, from adding users and
+permissions to defining entirely new domains, types, and roles.
+</para>
+
+<sect2 id="adduser"><title>Adding Users</title>
+<para>
+When a user is added to the system, the policy may need to be updated
+to recognize the user.  As discussed in <xref linkend="identitymodel">
+and <xref linkend="userlang">, it may be appropriate to simply map the
+new user to the generic <constant>user_u</constant> user identity
+if the new user only requires unprivileged access and does not need
+to be separated from other such users by the policy.  In that case,
+no updates to the policy are required.
+</para>
+
+<para>
+If the user must be recognized by the policy, then the administrator
+must add the user to the <filename>policy/users</filename> file,
+specifying the set of authorized roles for the user, and reload the
+policy via <command>make load</command> in the
+<filename>policy</filename> directory.
+</para>
+
+<para>
+As an example, suppose that the administrator has added a user
+<constant>steve</constant> to the system who should be authorized for
+both the <constant>staff_r</constant> and <constant>sysadm_r</constant>
+roles.  To update the policy, the administrator would add an entry to
+the <filename>policy/users</filename> file as shown below, and
+run <command>make load</command> to reload the policy:
+<programlisting>
+user steve roles { staff_r sysadm_r };
+</programlisting>
+</para>
+</sect2>
+
+<sect2 id="addperms"><title>Adding Permissions</title>
+<para>
+After installing SELinux, the administrator may discover that
+additional permissions must be allowed in order for the system to
+function properly.  It is advisable to run SELinux in permissive mode
+initially and to exercise the standard operations of the system in
+order to generate audit messages for all operations that would have
+been denied by the example policy.  These messages can typically be
+found in the <command>dmesg</command> output or
+<filename>/var/log/messages</filename> with the prefix <constant>avc:
+denied</constant>.  A couple of example audit messages that
+might be generated during the execution of system cron jobs are shown below:
+<programlisting>
+avc:  denied  { rename } for  pid=26878 exe=/usr/sbin/logrotate 
+      path=/var/log/messages.4 dev=03:02 ino=1345261
+      scontext=system_u:system_r:system_crond_t 
+      tcontext=system_u:object_r:var_log_t tclass=file
+avc:  denied  { create } for  pid=26878 exe=/usr/sbin/logrotate 
+      path=/var/log/messages dev=03:02 ino=1345261
+      scontext=system_u:system_r:system_crond_t 
+      tcontext=system_u:object_r:var_log_t tclass=file
+</programlisting>
+</para>
+
+<para>
+The critical fields of each avc denied message are the list of
+permissions, the source security context (scontext), the target
+security context (tcontext), and the target security class (tclass).
+These example audit messages show that the
+<constant>system_crond_t</constant> domain is being denied permissions
+to rename and create files with the <constant>var_log_t</constant>
+type.  The other fields in each audit message provide any information
+about the specific processes and objects that can be determined when
+the audit message is generated.  These messages show that the
+process was running the <command>logrotate</command> program and was
+attempting to access files in the <filename>/var/log</filename> directory.
+</para>
+
+<para>
+The audit messages should be carefully reviewed to determine whether
+the denied permission should be allowed via a TE
+allow rule (described in <xref linkend="teav">).
+The <command>audit2allow</command> script provides
+an example of how to automatically convert the audit messages to TE
+allow rules that grant the denied permissions,
+but these rules should be reviewed to ensure that they do not violate
+the desired security goals.  Other options include placing the process
+into a different domain or placing the object into a different type,
+possibly requiring the definition of new domains and/or types.  It is
+also sometimes desirable to continue denying the permission, but to
+disable auditing of the permission via a TE
+dontaudit rule.
+</para>
+
+<para>
+In the case of the example audit messages, the denied permissions could
+be allowed by adding the following rule to the
+<filename>policy/domains/program/crond.te</filename> file:
+<programlisting>
+allow system_crond_t var_log_t:file { rename create setattr unlink };
+</programlisting>
+However, granting these permissions to the
+<constant>system_crond_t</constant> domain allows all system cron jobs
+to access these files.  A better approach would be to define a
+separate domain for the <filename>logrotate</filename> program that
+has these permissions. This approach is discussed further in <xref
+linkend="adddomain">.
+</para>
+
+<para>
+Not all permission denials can be solved simply through modifying the
+TE configuration.  It may be necessary to modify the RBAC
+configuration (described in <xref linkend="rbaclang">) or the
+constraints configuration (described in <xref
+linkend="constraintlang">) as well.  In the example policy, these
+configurations are relevant for the process transition permission when
+the role or user identity changes and for the file create or relabel
+permissions when the user identity of the file differs from the
+process.
+</para>
+
+<para>
+After updating the policy configuration to allow the denied
+permissions, the administrator must then build and load the new policy
+by running <command>make load</command> in the
+<filename>policy</filename> directory. The permissions should then be
+granted on subsequent operations.  If the same denials persist, then
+it is likely that the permission is being denied by the RBAC or
+constraints configuration and that these configurations were not
+updated by the administrator.
+</para>
+</sect2>
+
+<sect2 id="addprogram"><title>Adding Programs to an Existing
+Domain</title>
+<para>
+An administrator may wish to add a program to an existing domain
+that is already being used for related programs that require similar
+permissions.  First, the administrator should locate an appropriate
+domain by examining the existing program domains under
+<filename>policy/domains/program</filename> and by examining how existing
+programs are associated with the executable types for those domains in
+<filename>policy/file_contexts/program</filename>.  After selecting an
+appropriate domain, the administrator should verify that a domain
+transition is defined from the desired starting domain to the new
+domain.  If not, then an appropriate
+<constant>domain_auto_trans</constant> rule should be added to the
+domain's <filename>.te</filename> file and the policy should be
+reloaded via <command>make load</command>.
+</para>
+
+<para>
+The administrator must then relabel the program with the executable
+type for the domain.  This relabeling can be performed either using
+<command>chcon</command> or by updating the file contexts
+configuration and using <command>restorecon</command>, as discussed in
+<xref linkend="fileconapply">.  If a process is already running the
+program, the administrator must then restart the process in order to
+place it into the domain, typically using <command>run_init</command>
+for system processes.
+</para>
+
+<para>
+As an example, suppose that an administrator wants to add a new
+filesystem administration utility to the system that requires similar
+permissions to the <filename>fsck</filename> program.  Looking at the
+file contexts configuration, the administrator would see that
+<filename>fsck</filename> is labeled with the
+<constant>fsadm_exec_t</constant> type.  Looking under the
+<filename>policy/domains/program</filename> directory, the
+administrator would find the <filename>fsadm.te</filename> file with
+the definitions for the corresponding <constant>fsadm_t</constant>
+domain.  After verifying that this domain is appropriate for the new
+utility, the administrator can add an entry to
+<filename>policy/file_contexts/program/fsadm.fc</filename> for the new
+utility and run <command>restorecon</command> on the program or use
+<command>chcon</command> to manually set the context on the program.
+</para>
+</sect2>
+
+<sect2 id="adddomain"><title>Creating a New Domain</title>
+<para>
+After installing SELinux or after installing a new software package,
+the administrator may discover that some system processes are left in
+the <constant>initrc_t</constant> domain in the output of <command>ps
+-eZ</command>.  These system processes should either be
+disabled or placed into an appropriate domain.  This may simply
+involve adding the program to an existing domain, as discussed in
+<xref linkend="addprogram">, or it may require creating a new domain.
+The administrator may also discover that new domains are needed 
+to address denied permissions, as discussed in <xref linkend="addperms">,
+for system processes or user programs.  New domains are also needed
+when new roles are defined.
+</para>
+
+<para>
+To create a new domain, the administrator should first create a new
+<filename>.te</filename> file under the 
+<filename>policy/domains</filename> directory and populate it with
+appropriate TE declarations and rules.  As an example, the creation of
+the <filename>policy/domains/program/logrotate.te</filename> file for
+the <filename>logrotate</filename> program will be discussed.  The
+need for a separate domain for the <filename>logrotate</filename>
+program was introduced in <xref linkend="addperms">.  The domain
+definition begins by declaring the domain and its executable type
+using type declaration rules (described in <xref linkend="tedecl">),
+as shown below:
+<programlisting>
+type logrotate_t, domain, privowner;
+type logrotate_exec_t, file_type, sysadmfile, exec_type;
+</programlisting>
+To grant the new domain a basic set of starting permissions, the 
+<constant>general_domain_access</constant> macro (described in <xref linkend="teavmacros"> in <xref linkend="teav">) can be used as shown below:
+<programlisting>
+general_domain_access(logrotate_t)
+</programlisting>
+For least privilege purposes, it may be desirable to instead 
+individually define specific rules tailored for the new domain.
+</para>
+
+<para>
+If the program is known to create files in shared directories, e.g.
+<filename>/tmp</filename> files, then the administrator can declare
+types for these files and file type transition rules (described in
+<xref linkend="telabel">).  An example type declaration and file type
+transition rule for temporary files created by
+<filename>logrotate</filename> is shown below:
+<programlisting>
+type logrotate_tmp_t, file_type, sysadmfile, tmpfile;
+file_type_auto_trans(logrotate_t, tmp_t, logrotate_tmp_t)
+</programlisting>
+More concisely, this same set of rules could be expressed using
+the <constant>tmp_domain</constant> macro.
+Likewise, if the program is known to require certain permissions, then
+these permissions can be allowed by the administrator.  Since the
+administrator knows that the program requires permissions to the
+<filename>/var/log</filename> files, the following rules might be
+initially specified:
+<programlisting>
+allow logrotate_t var_log_t:dir rw_dir_perms;
+allow logrotate_t var_log_t:file create_file_perms;
+</programlisting>
+To cause the domain to be entered automatically from system cron jobs
+and from administrator shells when <filename>logrotate</filename> is
+executed, domain transition rules (described in <xref
+linkend="telabel">) should be added for the appropriate domains.  These
+rules can either be placed in the new domain's <filename>.te</filename>
+file or in the files for the source domains.  Typically, if the source
+domain transitions to many different domains (e.g. every daemon or many
+programs), it is preferable to place the rule in the target domain to
+ease adding new domains and provide better encapsulation.
+Examples of these rules
+are shown below:
+<programlisting>
+domain_auto_trans(system_crond_t, logrotate_exec_t, logrotate_t)
+domain_auto_trans(sysadm_t, logrotate_exec_t, logrotate_t)
+</programlisting>
+The first rule along with some related allow rules that are typically
+needed for system cron jobs can be more concisely written using the
+<constant>system_crond_entry</constant> macro.
+</para>
+
+<para>
+After providing a minimal definition of the domain and transitions
+into the domain, the administrator should authorize roles for the
+domain.  Role declarations (described in <xref linkend="roledecl">)
+can be placed either in the domain's <filename>.te</filename> file or
+in the <filename>policy/rbac</filename> file.  The former approach is
+preferable in order to encapsulate the domain's definition.  Role
+declarations for the <constant>logrotate_t</constant> domain are shown
+below:
+<programlisting>
+role system_r types logrotate_t;
+role sysadm_r types logrotate_t;
+</programlisting>
+</para>
+
+<para>
+The updated policy configuration can then be compiled and loaded by
+running <command>make load</command> in the
+<filename>policy</filename> directory.  The administrator should then
+add the program to the file contexts configuration and run
+<command>restorecon</command> on the program or run
+<command>chcon</command> to manually set the context.  A
+<filename>policy/file_contexts/program/logrotate.fc</filename>
+configuration file for <filename>logrotate</filename> is shown below:
+<programlisting>
+/usr/sbin/logrotate		system_u:object_r:logrotate_exec_t
+</programlisting>
+</para>
+
+<para>
+The administrator can then try running the program in its new domain
+to discover whether additional permissions are required.  If the
+program is to be run as a system process, the administrator should use
+<command>run_init</command> to start it.
+If additional permissions are required, then the
+steps in <xref linkend="addperms"> can be followed to complete the domain.
+</para>
+</sect2>
+
+<sect2 id="addtype"><title>Creating a New Type</title>
+<para>
+New types can be created to provide distinct protection for specific
+objects.  An administrator may also discover that new types are needed
+to address denied permissions, as discussed in <xref
+linkend="addperms">.  To create a new type, the administrator should
+first add a type declaration (described in <xref linkend="tedecl">) to
+the TE configuration.  If the type is associated with a particular
+domain, then the declaration should be placed in the domain's
+<filename>.te</filename> file.  If the type is a general type, then
+the declaration can be placed in one of the files under
+<filename>policy/types</filename>.
+</para>
+
+<para>
+If automatic transitions to this type are desired, then the
+administrator should define type transition (described in <xref
+linkend="telabel">) rules for the appropriate domains.  The
+administrator should add appropriate TE allow rules to the TE
+configuration to permit authorized domains to access the type.  The
+administrator can then build and reload the policy via <command>make
+load</command>.  After updating the policy, the administrator can then
+apply the type to a file by updating the file contexts configuration
+and running <command>restorecon</command> on the file or by using
+<command>chcon</command>.
+</para>
+
+<para>
+As an example, consider the <filename>/dev/initctl</filename> named
+pipe, which is used to interact with the <filename>init</filename>
+process.  The <constant>initctl_t</constant> type was defined for this
+file in the <filename>policy/domains/program/init.te</filename> file,
+as shown below:
+<programlisting>
+type initctl_t, file_type, sysadmfile;
+</programlisting>
+Since this file is created at runtime, a file type transition rule must
+be specified to ensure that it is always created with this type.
+The file type transition rule for this type is:
+<programlisting>
+file_type_auto_trans(init_t, device_t, initctl_t)
+</programlisting>
+Two other domains need to access this object: the domain for the
+<filename>/etc/rc.d</filename> scripts and the domain for the system
+administrator.  Hence, the following TE allow rules are added to 
+the <filename>policy/domains/program/initrc.te</filename> and
+<filename>policy/domains/admin.te</filename> files:
+<programlisting>
+allow initrc_t initctl_t:fifo_file rw_file_perms;
+allow sysadm_t initctl_t:fifo_file rw_file_perms;
+</programlisting>
+The policy can then be reloaded via <command>make load</command>.  The
+administrator would then add the following entry to
+<filename>policy/file_contexts/program/init.fc</filename> and apply restorecon to the file:
+<programlisting>
+/dev/initctl			system_u:object_r:initctl_t
+</programlisting>
+</para>
+</sect2>
+
+<sect2 id="addrole"><title>Creating a New Role</title>
+<para>
+New roles can be created to provide separation among users beyond the
+simple division between ordinary users and administrators.  To add a
+new role, the administrator should use the
+<constant>full_user_role</constant> macro to instantiate a role and a
+set of domain definitions for the initial login domain for the role
+and for programs run from the role.  To allow transitions between the
+new role and other roles, the
+<constant>role_tty_type_change</constant> macro in
+<filename>domains/user.te</filename> may be used.  Appropriate users
+should be authorized for the new role in
+<filename>policy/users</filename>.  The policy can then be reloaded
+via <command>make load</command>.
+</para>
+
+<para>
+After updating the policy, the administrator should add an entry for the
+role to the <filename>/etc/selinux/(strict|targeted)/contexts/default_type</filename> application
+configuration file.  
+</para>
+</sect2>
+
+</sect1>

@@ -1,0 +1,223 @@
+<sect1 id="example"><title>Example Usage</title>
+
+<para>
+The following example application illustrates the use of the userspace AVC.  The program reads file pathnames on standard input and checks for read, write, and delete access.  The pthread library is used for threading and locking.  All output, including audit messages, is printed on standard output.
+</para>
+
+<programlisting>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stdarg.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;selinux/flask.h&gt;
+#include &lt;selinux/selinux.h&gt;
+#include &lt;selinux/avc.h&gt;
+#include &lt;selinux/av_permissions.h&gt;
+
+/* ---------- auditing callbacks ---------- */
+void audit_print(const char *fmt, ...)
+{
+    /* we use stdout instead of the default stderr */
+    va_list ap;
+    va_start(ap, fmt);
+    vprintf(fmt, ap);
+    va_end(ap);
+}
+    
+void audit_interp(void *data, security_class_t class, 
+                  char *buf, size_t buflen)
+{
+    /* data is a filename */
+    snprintf(buf, buflen, (char*)data);
+}
+
+/* ---------- threading callbacks ---------- */
+void* create_thread_helper(void *arg)
+{
+    /* arg is the function we need to run */
+    void (*run)(void) = (void (*)(void))arg;
+  
+    /* set ourself to immediate cancel mode */
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+
+    /* go do our work */
+    run();
+
+    /* should never get here */
+    return NULL;
+}
+
+void* create_thread(void (*run)(void))
+{
+    int rc;
+    pthread_t *t = (pthread_t*)malloc(sizeof(pthread_t));
+    if (!t) {
+        puts("create_thread: out of memory");
+        exit(99);
+    }
+    /* have the new thread run the helper function above */
+    rc = pthread_create(t, NULL, create_thread_helper, (void*)run);
+    if (rc) {
+        puts("create_thread failed");
+        exit(2);
+    }
+    return t;
+}
+
+void stop_thread(void *thread)
+{
+    int rc = pthread_cancel(*((pthread_t*)thread));
+    if (rc) {
+        puts("trouble stopping thread");
+        exit(2);
+    }
+    free(thread);
+}
+
+/* ---------- locking callbacks ---------- */
+void* alloc_lock(void)
+{
+    int rc;
+    pthread_mutexattr_t pma;
+    pthread_mutex_t *m = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+    if (!m) {
+        puts("alloc_lock: out of memory");
+        exit(99);
+    }
+    /* set the lock to error checking mode for debugging purposes */
+    rc = pthread_mutexattr_init(&amp;pma);
+    rc |= pthread_mutexattr_settype(&amp;pma, PTHREAD_MUTEX_ERRORCHECK_NP);
+    rc |= pthread_mutex_init(m, &amp;pma);
+    rc |= pthread_mutexattr_destroy(&amp;pma);
+    if (rc) {
+        puts("trouble initializing lock");
+        exit(3);
+    }
+    return m;
+}
+
+void get_lock(void *lock)
+{
+    int rc = pthread_mutex_lock((pthread_mutex_t*)lock);
+    if (rc) {
+        puts("trouble obtaining lock");
+        exit(3);
+    }
+}
+
+void release_lock(void *lock)
+{
+    int rc = pthread_mutex_unlock((pthread_mutex_t*)lock);
+    if (rc) { 
+        puts("trouble releasing lock");
+        exit(3);
+    }
+}
+
+void free_lock(void *lock)
+{
+    int rc = pthread_mutex_destroy((pthread_mutex_t*)lock);
+    if (rc) {
+        puts("trouble destroying lock");
+        exit(3);
+    }
+    free(lock);
+}
+
+/* ---------- main routine ---------- */
+int main (int argc, char **argv) {
+    security_context_t scon, fcon;
+    security_id_t ssid, fsid;
+    char buf[1024];
+    struct avc_entry_ref aeref;
+    struct avc_cache_stats acs;
+    int rc, short_of_memory = 0;
+
+    /* logging callbacks */
+    struct avc_log_callback alc = {
+        audit_print,
+        audit_interp
+    };
+
+    /* thread callbacks */
+    struct avc_thread_callback atc = {
+        create_thread,
+        stop_thread
+    };
+
+    /* locking callbacks */
+    struct avc_lock_callback akc = {
+        alloc_lock,
+        get_lock,
+        release_lock,
+        free_lock
+    };
+
+    avc_entry_ref_init(&amp;aeref);
+
+    /* use standard malloc/free for the memory callbacks */
+    if (avc_init("myprog", NULL, &amp;alc, &amp;atc, &amp;akc) &lt; 0) {
+        puts("could not initialize avc");
+        exit(1);
+    }
+
+    /* get our process security context and a SID for it */
+    if (getcon(&amp;scon) &lt; 0) {
+        puts("could not get self context");
+        exit(5);
+    }
+    if (avc_context_to_sid(scon, &amp;ssid) &lt; 0) {
+        puts("could not get self sid");
+        exit(5);
+    }
+
+    /* read filenames from stdin */
+    while (scanf("%s", buf) != EOF)
+    {
+        /* force unused cache entries to be freed if necessary */
+        if (short_of_memory)
+            avc_cleanup();
+     
+        /* get security context and SID for file */
+        if (getfilecon(buf, &amp;fcon) &lt; 0) {
+            printf("couldn't get file context for '%s'\n", buf);
+            continue;
+        }
+        if (avc_context_to_sid(fcon, &amp;fsid) &lt; 0) {
+            printf("could not get file sid for '%s'\n", buf);
+            exit(5);
+        }
+
+        /* see if we can do some things to file */
+        errno = 0;
+        rc = avc_has_perm(ssid, fsid, SECCLASS_FILE, 
+                          FILE__READ | FILE__WRITE | FILE__UNLINK, 
+                          &amp;aeref, buf);
+        if (rc == 0)
+            printf("%s: granted\n", buf);
+        else if (errno == EACCES)
+            printf("%s: denied\n", buf);
+        else
+            printf("%s: unexpected error: %s\n", buf, strerror(errno));
+    }
+
+    /* print out statistics */
+    avc_av_stats();
+    avc_sid_stats();
+    avc_cache_stats(&amp;acs);
+    printf("entry_lookups:\t%d\n", acs.entry_lookups);
+    printf("entry_hits:\t%d\n", acs.entry_hits);
+    printf("entry_misses:\t%d\n", acs.entry_misses);
+    printf("entry_discards:\t%d\n", acs.entry_discards);
+    printf("cav_lookups:\t%d\n", acs.cav_lookups);
+    printf("cav_hits:\t%d\n", acs.cav_hits);
+    printf("cav_probes:\t%d\n", acs.cav_probes);
+    printf("cav_misses:\t%d\n", acs.cav_misses);
+
+    /* free all AVC resources */
+    avc_destroy();
+
+    return 0;
+}
+</programlisting>
+</sect1>

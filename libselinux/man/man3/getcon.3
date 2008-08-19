@@ -1,21 +1,21 @@
-.TH "getcon" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.TH "getcon" "3" "1 January 2004" "russell@coker.com.au" "SE Linux API documentation"
 .SH "NAME"
 getcon, getprevcon, getpidcon \- get SELinux security context of a process.
-
+.br
 getpeercon - get security context of a peer socket.
-
+.br
 setcon - set current security context of a process.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
 .BI "int getcon(security_context_t *" context );
-
+.br 
 .BI "int getprevcon(security_context_t *" context );
-
+.br
 .BI "int getpidcon(pid_t " pid ", security_context_t *" context );
-
+.br
 .BI "int getpeercon(int " fd ", security_context_t *" context);
-
+.br
 .BI "int setcon(security_context_t " context);
 
 .SH "DESCRIPTION"

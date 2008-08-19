@@ -1,0 +1,35 @@
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V3.1//EN"[
+<!ENTITY intro SYSTEM "intro.sgml">
+<!ENTITY arch SYSTEM "arch.sgml">
+<!ENTITY model SYSTEM "model.sgml">
+<!ENTITY lang SYSTEM "lang.sgml">
+<!ENTITY build SYSTEM "build.sgml">
+<!ENTITY apps SYSTEM "apps.sgml">
+<!ENTITY examples SYSTEM "examples.sgml">
+<!ENTITY biblio SYSTEM "biblio.sgml">
+]>
+<article class="whitepaper" id="SELinuxPolicy" lang="en">
+ <artheader>
+ <title>Configuring the SELinux Policy</title>
+ <author>
+ <firstname>Stephen</firstname> 
+ <surname>Smalley</surname>
+ <affiliation>
+ <orgname>NSA</orgname>
+ <address><email>sds@epoch.ncsc.mil</email></address>
+ </affiliation>
+ </author>
+ <pubsnumber>NAI Labs Report #02-007</pubsnumber>
+ <pubdate>Initial:  February 2002, Last revised:  Feb 2005</pubdate>
+ <contractsponsor>This work supported by NSA contract MDA904-01-C-0926 (SELinux)</contractsponsor>
+ </artheader>
+
+&intro
+&arch
+&model
+&lang
+&build
+&apps
+&examples
+&biblio
+</article>

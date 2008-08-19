@@ -1,0 +1,136 @@
+<bibliography>
+<title>References</title>
+
+<biblioentry id="BoebertNCSC85">
+  <abbrev>BoebertNCSC1985</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>W.</firstname><surname>Boebert</surname></author>
+      <author><firstname>R.</firstname><surname>Kain</surname></author>
+    </authorgroup>
+    <title>A Practical Alternative to Hierarchical Integrity Policies</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>Proceedings of the Eighth National Computer Security Conference</title>
+    <pubdate>1985</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="FerraioloNCSC92">
+  <abbrev>FerraioloNCSC1992</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>David</firstname><surname>Ferraiolo</surname></author>
+      <author><firstname>Richard</firstname><surname>Kuhn</surname></author>
+    </authorgroup>
+    <title>Role-Based Access Controls</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>Proceedings of the 15th National Computer Security Conference</title>
+    <pubdate>October 1992</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="LoscoccoFreenix01">
+  <abbrev>LoscoccoFreenix2001</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Peter</firstname><surname>Loscocco</surname></author>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+    </authorgroup>
+    <title>Integrating Flexible Support for Security Policies into the Linux Operating System</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>Proceedings of the FREENIX Track: 2001 USENIX Annual Technical Conference</title>
+    <publisher>
+      <publishername>The USENIX Association</publishername>
+    </publisher>
+    <pubdate>June 2001</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="LoscoccoOLS01">
+  <abbrev>LoscoccoOLS2001</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Peter</firstname><surname>Loscocco</surname></author>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+    </authorgroup>
+    <title>Meeting Critical Security Objectives with Security-Enhanced Linux</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>Proceedings of the 2001 Ottawa Linux Symposium</title>
+    <pubdate>July 2001</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="LoscoccoNSATR01">
+  <abbrev>LoscoccoNSATR2001</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Peter</firstname><surname>Loscocco</surname></author>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+    </authorgroup>
+    <title>Integrating Flexible Support for Security Policies into the Linux Operating System</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>NSA Technical Report</title>
+    <pubdate>February 2001</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="SmalleyNAITR01">
+  <abbrev>SmalleyNAITR2001</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+      <author><firstname>Timothy</firstname><surname>Fraser</surname></author>
+    </authorgroup>
+    <title>A Security Policy Configuration for the Security-Enhanced Linux</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>NAI Labs Technical Report</title>
+    <pubdate>February 2001</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="SmalleyModuleTR01">
+  <abbrev>SmalleyModuleTR2001</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+      <author><firstname>Chris</firstname><surname>Vance</surname></author>
+      <author><firstname>Wayne</firstname><surname>Salamon</surname></author>
+    </authorgroup>
+    <title>Implementing SELinux as a Linux Security Module</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>NAI Labs Report #01-043</title>
+    <pubdate>December 2001</pubdate>
+  </biblioset>
+</biblioentry>
+
+<biblioentry id="SpencerUsenixSec99">
+  <abbrev>SpencerUsenixSec1999</abbrev>
+  <biblioset relation="article">
+    <authorgroup>
+      <author><firstname>Ray</firstname><surname>Spencer</surname></author>
+      <author><firstname>Stephen</firstname><surname>Smalley</surname></author>
+      <author><firstname>Peter</firstname><surname>Loscocco</surname></author>
+      <author><firstname>Mike</firstname><surname>Hibler</surname></author>
+      <author><firstname>David</firstname><surname>Andersen</surname></author>
+      <author><firstname>Jay</firstname><surname>Lepreau</surname></author>
+    </authorgroup>
+    <title>The Flask Security Architecture:  System Support for Diverse Security Policies</title>
+  </biblioset>
+  <biblioset relation="journal">
+    <title>Proceedings of the Eighth USENIX Security Symposium</title>
+    <publisher>
+      <publishername>The USENIX Association</publishername>
+    </publisher>
+    <pubdate>August 1999</pubdate>
+  </biblioset>
+</biblioentry>
+
+</bibliography>
+

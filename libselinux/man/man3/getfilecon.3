@@ -1,13 +1,13 @@
-.TH "getfilecon" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.TH "getfilecon" "3" "1 January 2004" "russell@coker.com.au" "SE Linux API documentation"
 .SH "NAME"
 getfilecon, fgetfilecon, lgetfilecon \- get SELinux security context of a file
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
 .BI "int getfilecon(const char *" path ", security_context_t *" con );
-
+.br 
 .BI "int lgetfilecon(const char *" path ", security_context_t *" con );
-
+.br 
 .BI "int fgetfilecon(int "fd ", security_context_t *" con );
 .SH "DESCRIPTION"
 .B getfilecon
@@ -22,6 +22,7 @@ link itself is interrogated, not the file that it refers to.
 is identical to getfilecon, only the open file pointed to by filedes (as
 returned by open(2)) is interrogated in place of path.
 
+.br
 
 The returned context should be freed with freecon if non-NULL.  
 .SH "RETURN VALUE"

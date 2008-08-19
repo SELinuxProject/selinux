@@ -6,63 +6,50 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
-#include <stdio_ext.h>
 #include "policy.h"
 
 int is_selinux_enabled(void)
 {
-	char *buf=NULL;
-	FILE *fp;
-	ssize_t num;
-	size_t len;
+	char *buf;
+	size_t size;
+	int fd;
+	ssize_t ret;
 	int enabled = 0;
 	security_context_t con;
 
-	/* init_selinuxmnt() gets called before this function. We
- 	 * will assume that if a selinux file system is mounted, then
- 	 * selinux is enabled. */
-	if (selinux_mnt) {
-
-		/* Since a file system is mounted, we consider selinux
-		 * enabled. If getcon_raw fails, selinux is still enabled.
-		 * We only consider it disabled if no policy is loaded. */
-		enabled = 1;
-		if (getcon_raw(&con) == 0) {
-			if (!strcmp(con, "kernel"))
-				enabled = 0;
-			freecon(con);
-		}
-		return enabled;
-        }
-
-	/* Drop back to detecting it the long way. */
-	fp = fopen("/proc/filesystems", "r");
-	if (!fp)
+	fd = open("/proc/filesystems", O_RDONLY);
+	if (fd < 0)
 		return -1;
 
-	__fsetlocking(fp, FSETLOCKING_BYCALLER);
-	while ((num = getline(&buf, &len, fp)) != -1) {
-		if (strstr(buf, "selinuxfs")) {
-			enabled = 1;
-			break;
-		}
+	size = selinux_page_size;
+	buf = malloc(size);
+	if (!buf) {
+		enabled = -1;
+		goto out;
 	}
 
-	if (num < 0)
-		goto out;
+	memset(buf, 0, size);
 
-	/* Since an selinux file system is available, we consider
-	 * selinux enabled. If getcon_raw fails, selinux is still
-	 * enabled. We only consider it disabled if no policy is loaded. */
+	ret = read(fd, buf, size - 1);
+	if (ret < 0) {
+		enabled = -1;
+		goto out2;
+	}
+
+	if (!strstr(buf, "selinuxfs"))
+		goto out2;
+
+	enabled = 1;
+
 	if (getcon_raw(&con) == 0) {
 		if (!strcmp(con, "kernel"))
 			enabled = 0;
 		freecon(con);
 	}
-
-      out:
+      out2:
 	free(buf);
-	fclose(fp);
+      out:
+	close(fd);
 	return enabled;
 }
 
@@ -88,9 +75,7 @@ int is_selinux_mls_enabled(void)
 
 	memset(buf, 0, sizeof buf);
 
-	do {
-		ret = read(fd, buf, sizeof buf - 1);
-	} while (ret < 0 && errno == EINTR);
+	ret = read(fd, buf, sizeof buf - 1);
 	close(fd);
 	if (ret < 0)
 		return enabled;

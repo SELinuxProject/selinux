@@ -65,7 +65,6 @@ hidden_proto(selinux_mkload_policy)
     hidden_proto(selinux_booleans_path)
     hidden_proto(selinux_customizable_types_path)
     hidden_proto(selinux_media_context_path)
-    hidden_proto(selinux_x_context_path)
     hidden_proto(selinux_path)
     hidden_proto(selinux_check_passwd_access)
     hidden_proto(selinux_check_securetty_context)
@@ -77,10 +76,8 @@ hidden_proto(selinux_getenforcemode);
 hidden_proto(selinux_getpolicytype);
 hidden_proto(selinux_raw_to_trans_context);
 hidden_proto(selinux_trans_to_raw_context);
-hidden_proto(security_get_initial_context);
-hidden_proto(security_get_initial_context_raw);
 
-extern void reset_selinux_config(void) hidden;
 extern int load_setlocaldefs hidden;
 extern int require_seusers hidden;
 extern int selinux_page_size hidden;
+extern int cache_trans hidden;

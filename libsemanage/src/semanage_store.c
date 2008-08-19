@@ -60,9 +60,6 @@ typedef struct dbase_policydb dbase_t;
 #define SEMANAGE_CONF_FILE "semanage.conf"
 /* relative path names to enum semanage_paths to special files and
  * directories for the module store */
-
-#define TRUE 1
-
 enum semanage_file_defs {
 	SEMANAGE_ROOT,
 	SEMANAGE_TRANS_LOCK,
@@ -113,7 +110,6 @@ static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"/seusers.final",
 	"/users_extra",
 	"/netfilter_contexts",
-	"/file_contexts.homedirs",
 };
 
 /* A node used in a linked list of file contexts; used for sorting.
@@ -911,14 +907,14 @@ static int semanage_exec_prog(semanage_handle_t * sh,
 
 	/* no need to use pthread_atfork() -- child will not be using
 	 * any mutexes. */
-	if ((forkval = vfork()) == -1) {
+	if ((forkval = fork()) == -1) {
 		ERR(sh, "Error while forking process.");
 		return -1;
 	} else if (forkval == 0) {
 		/* child process.  file descriptors will be closed
 		 * because they were set as close-on-exec. */
 		execve(e->path, argv, NULL);
-		_exit(EXIT_FAILURE);	/* if execve() failed */
+		exit(EXIT_FAILURE);	/* if execve() failed */
 	} else {
 		/* parent process.  wait for child to finish */
 		int status = 0;
@@ -1025,15 +1021,14 @@ static int semanage_install_active(semanage_handle_t * sh)
 	const char *active_fc = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC);
 	const char *active_fc_loc =
 	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC_LOCAL);
+	const char *active_hd =
+	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_HOMEDIR_TMPL);
 	const char *active_seusers =
 	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_SEUSERS);
 	const char *active_nc = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_NC);
-	const char *active_fc_hd =
-	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC_HOMEDIRS);
 
 	const char *running_fc = selinux_file_context_path();
 	const char *running_fc_loc = selinux_file_context_local_path();
-	const char *running_fc_hd = selinux_file_context_homedir_path();
 	const char *running_hd = selinux_homedir_context_path();
 	const char *running_policy = selinux_binary_policy_path();
 	const char *running_seusers = selinux_usersconf_path();
@@ -1045,15 +1040,14 @@ static int semanage_install_active(semanage_handle_t * sh)
 	 * POLICYTYPE and should probably be done in the future. */
 	char store_fc[PATH_MAX];
 	char store_fc_loc[PATH_MAX];
+	char store_hd[PATH_MAX];
 	char store_pol[PATH_MAX];
 	char store_seusers[PATH_MAX];
 	char store_nc[PATH_MAX];
-	char store_fc_hd[PATH_MAX];
 
 	len = strlen(really_active_store);
 	running_fc += len;
 	running_fc_loc += len;
-	running_fc_hd += len;
 	running_hd += len;
 	running_policy += len;
 	running_seusers += len;
@@ -1074,13 +1068,10 @@ static int semanage_install_active(semanage_handle_t * sh)
 		goto cleanup;
 	}
 
-	if (!sh->conf->disable_genhomedircon) {
-		snprintf(store_fc_hd, PATH_MAX, "%s%s", storepath, running_fc_hd);
-		if (semanage_copy_file(active_fc_hd, store_fc_hd, sh->conf->file_mode)
-			== -1) {
-			ERR(sh, "Could not copy %s to %s.", active_fc_hd, store_fc_hd);
-			goto cleanup;
-		}
+	snprintf(store_hd, PATH_MAX, "%s%s", storepath, running_hd);
+	if (semanage_copy_file(active_hd, store_hd, sh->conf->file_mode) == -1) {
+		ERR(sh, "Could not copy %s to %s.", active_hd, store_hd);
+		goto cleanup;
 	}
 
 	snprintf(store_fc, PATH_MAX, "%s%s", storepath, running_fc);
@@ -1224,10 +1215,6 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 		retval = -1;
 		goto cleanup;
 	}
-
-	/* clean up some files from the sandbox before install */
-	/* remove homedir_template from sandbox */
-
 	if (rename(sandbox, active) == -1) {
 		ERR(sh, "Error while renaming %s to %s.", sandbox, active);
 		/* note that if an error occurs during the next
@@ -1294,6 +1281,13 @@ int semanage_install_sandbox(semanage_handle_t * sh)
 
 	if ((commit_num = semanage_commit_sandbox(sh)) < 0) {
 		retval = commit_num;
+		goto cleanup;
+	}
+
+	if ((retval =
+	     semanage_exec_prog(sh, sh->conf->genhomedircon,
+				sh->conf->store_path, "")) != 0) {
+		ERR(sh, "genhomedircon returned error code %d.", retval);
 		goto cleanup;
 	}
 
@@ -1622,8 +1616,6 @@ int semanage_expand_sandbox(semanage_handle_t * sh,
 
 	if (sepol_policydb_create(&out))
 		goto err;
-
-	sepol_set_expand_consume_base(sh->sepolh, 1);
 
 	if (sepol_expand_module(sh->sepolh,
 				sepol_module_package_get_policy(base), out, 0,
