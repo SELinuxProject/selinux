@@ -1,0 +1,34 @@
+CONFIG=CFLAGS=-I$(PREFIX)/include LDFLAGS=-L$(PREFIX)/lib --prefix=$(PREFIX) --enable-static
+
+# libsepol and libselinux must be first, in order to resolve deps
+# libsemanage must be before policycoreutils
+
+VPATH = .
+
+MAKEFILES =	libsepol/Makefile \
+		libselinux/Makefile \
+		libsemanage/Makefile \
+		checkpolicy/Makefile \
+		policycoreutils/Makefile
+
+CONFIGUREFILES = libsepol/configure \
+		libselinux/configure \
+		libsemanage/configure \
+		checkpolicy/configure \
+		policycoreutils/configure 
+	
+%/Makefile: %/configure
+	cd $(patsubst %/configure,%,$<) && ./configure $(CONFIG) && make install
+
+build: $(MAKEFILES)
+
+install: $(MAKEFILES)
+	for i in $^; do make -C $(dir $$i) install  ; done 
+	
+%/configure: %/configure.ac
+	cd $(patsubst %/configure.ac,%,$<) && touch NEWS README AUTHORS && autoreconf -i && automake --add-missing
+
+autoconf: $(CONFIGUREFILES)
+
+clean:
+	rm -f $(MAKEFILES)
