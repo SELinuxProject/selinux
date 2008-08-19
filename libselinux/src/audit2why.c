@@ -424,9 +424,9 @@ static PyMethodDef audit2whyMethods[] = {
 };
 
 PyMODINIT_FUNC
-initaudit2why(void)
+initlibpyaudit2why(void)
 {
-	PyObject *m = Py_InitModule("audit2why", audit2whyMethods);
+	PyObject *m = Py_InitModule("libpyaudit2why", audit2whyMethods);
 	PyModule_AddIntConstant(m,"UNKNOWN", UNKNOWN);
 	PyModule_AddIntConstant(m,"BADSCON", BADSCON);
 	PyModule_AddIntConstant(m,"BADTCON", BADTCON);

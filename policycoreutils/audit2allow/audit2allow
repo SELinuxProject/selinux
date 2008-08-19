@@ -220,7 +220,7 @@ class AuditToPolicy:
 
     def __output_audit2why(self):
             import selinux
-            import selinux.audit2why as audit2why
+            import selinux.libpyaudit2why as audit2why
             import seobject
             audit2why.init()
             for i in self.__parser.avc_msgs:
