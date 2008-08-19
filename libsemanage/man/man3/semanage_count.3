@@ -1,0 +1,40 @@
+.TH semanage_count 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux Management API
+
+.SH "SYNOPSIS"
+The following count function is supported for any semanage record.
+.br
+Replace the function and object name as necessary.
+
+.B extern int COUNT_FUNCTION (
+.br
+.BI "	semanage_handle_t *" handle ","
+.br
+.BI "	unsigned int* " response ");"
+
+.SH "DESCRIPTION"
+.TP
+.B Behavior:
+The count function will return the number of all objects in the selected location.
+
+.TP
+.B Parameters:
+The 
+.I handle
+is used to track persistent state across semanage calls, and for error reporting. The number of objects will be stored at the location poined by 
+.I response.
+
+.TP
+.B Requirements:
+This function requires an semanage connection to be established (see 
+.BR semanage_connect "(3)"
+)
+
+.SH "RETURN VALUE"
+In case of failure, -1 is returned, and the semanage error callback is invoked, describing the error.
+Otherwise a non-negative integer is returned (a commit number). The same number will be returned by all other semanage object read calls until the next commit.
+
+.SH "SEE ALSO"
+.BR semanage_handle_create "(3), " semanage_connect "(3), "

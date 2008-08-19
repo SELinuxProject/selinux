@@ -1,0 +1,123 @@
+.TH "semanage" "8" "2005111103" "" ""
+.SH "NAME"
+semanage \- SELinux Policy Management tool
+
+.SH "SYNOPSIS"
+.B semanage {boolean|login|user|port|interface|fcontext|translation} \-{l|D} [\-n] [\-S store] 
+.br
+.B semanage boolean \-{d|m} [\-\-on|\-\-off|\-1|\-0] -F boolean | boolean_file
+.br
+.B semanage login \-{a|d|m} [\-sr] login_name | %groupname
+.br
+.B semanage user \-{a|d|m} [\-LrRP] selinux_name
+.br
+.B semanage port \-{a|d|m} [\-tr] [\-p proto] port | port_range
+.br
+.B semanage interface \-{a|d|m} [\-tr] interface_spec
+.br
+.B semanage fcontext \-{a|d|m} [\-frst] file_spec
+.br
+.B semanage permissive \-{a|d} type
+.br
+.B semanage translation \-{a|d|m} [\-T] level
+.P
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of
+SELinux policy without requiring modification to or recompilation
+from policy sources.  This includes the mapping from Linux usernames
+to SELinux user identities (which controls the initial security context
+assigned to Linux users when they login and bounds their authorized role set)
+as well as security context mappings for various kinds of objects, such
+as network ports, interfaces, and nodes (hosts) as well as the file
+context mapping. See the EXAMPLES section below for some examples
+of common usage.  Note that the semanage login command deals with the
+mapping from Linux usernames (logins) to SELinux user identities,
+while the semanage user command deals with the mapping from SELinux
+user identities to authorized role sets.  In most cases, only the
+former mapping needs to be adjusted by the administrator; the latter
+is principally defined by the base policy and usually does not require
+modification.
+
+.SH "OPTIONS"
+.TP
+.I                \-a, \-\-add        
+Add a OBJECT record NAME
+.TP
+.I                \-d, \-\-delete     
+Delete a OBJECT record NAME
+.TP
+.I                \-D, \-\-deleteall
+Remove all OBJECTS local customizations
+.TP
+.I                \-f, \-\-ftype
+File Type.   This is used with fcontext.
+Requires a file type as shown in the mode field by ls, e.g. use -d to match only directories or -- to match only regular files.
+.TP
+.I                \-F, \-\-file
+Set multiple records from the input file.  When used with the \-l \-\-list, it will output the current settings to stdout in the proper format.
+
+Currently booleans only.
+.TP
+.I                \-h, \-\-help       
+display this message
+.TP
+.I                \-l, \-\-list       
+List the OBJECTS
+.TP
+.I                \-C, \-\-locallist
+List only locally defined settings, not base policy settings.
+.TP
+.I                \-L, \-\-level
+Default SELinux Level for SELinux use, s0 Default. (MLS/MCS Systems only)
+.TP
+.I                \-m, \-\-modify     
+Modify a OBJECT record NAME
+.TP
+.I                \-n, \-\-noheading  
+Do not print heading when listing OBJECTS.
+.TP
+.I                \-p, \-\-proto
+Protocol for the specified port (tcp|udp).
+.TP
+.I                \-r, \-\-range      
+MLS/MCS Security Range (MLS/MCS Systems only)
+.TP
+.I                \-R, \-\-role
+SELinux Roles.  You must enclose multiple roles within quotes, separate by spaces. Or specify \-R multiple times.
+.TP
+.I                \-P, \-\-prefix
+SELinux Prefix.  Prefix added to home_dir_t and home_t for labeling users home directories.
+.TP
+.I                \-s, \-\-seuser     
+SELinux user name
+.TP
+.I                \-S, \-\-store
+Select and alternate SELinux store to manage
+.TP
+.I                \-t, \-\-type       
+SELinux Type for the object
+.TP
+.I                \-T, \-\-trans
+SELinux Translation
+
+.SH EXAMPLE
+.nf
+# View SELinux user mappings
+$ semanage user -l
+# Allow joe to login as staff_u
+$ semanage login -a -s staff_u joe
+# Allow the group clerks to login as user_u
+$ semanage login -a -s user_u %clerks
+# Add file-context for everything under /web (used by restorecon)
+$ semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?"
+# Allow Apache to listen on port 81
+$ semanage port -a -t http_port_t -p tcp 81
+# Change apache to a permissive domain
+$ semanage permissive -a httpd_t
+.fi
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com> and
+Russell Coker <rcoker@redhat.com>.
+Examples by Thomas Bleher <ThomasBleher@gmx.de>.

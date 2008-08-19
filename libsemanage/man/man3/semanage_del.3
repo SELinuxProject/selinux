@@ -1,0 +1,47 @@
+.TH semanage_del 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux Management API
+
+.SH "SYNOPSIS"
+The following delete function is supported for any semanage record.
+.br
+Replace the function and object name as necessary.
+
+.B extern int DELETE_FUNCTION (
+.br
+.BI "	semanage_handle_t *" handle ","
+.br
+.BI "	const semanage_OBJECT_key_t *" key ");"
+
+.SH "DESCRIPTION"
+.TP
+.B Behavior:
+The delete function will remove the object corresponding to the provided key from the local store. If no match is found, no action is taken. Changes will become permanent when  
+.BR semanage_commit "(3)" 
+is invoked. Additional checks may be performed at that time to ensure the system is left in a valid state. 
+
+.TP
+.B Parameters:
+The 
+.I handle
+is used to track persistent state across semanage calls, and for error reporting. The
+.I key 
+identifies the 
+.I data
+object, which will be deleted from the local store. The key is a property of the caller, and will not be stored or modified internally.
+
+.TP
+.B Requirements:
+This function requires an semanage connection to be established (see 
+.BR semanage_connect "(3)"
+), and must be executed in a transaction (see 
+.BR semanage_begin_transaction "(3)"
+).
+
+.SH "RETURN VALUE"
+In case of failure, -1 is returned, and the semanage error callback is invoked, describing the error.
+Otherwise 0 is returned.
+
+.SH "SEE ALSO"
+.BR semanage_handle_create "(3), " semanage_begin_transaction "(3), " semanage_connect "(3), " semanage_commit "(3). "

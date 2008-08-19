@@ -1,0 +1,54 @@
+.TH "sepol_genusers" "3" "15 March 2005" "sds@tycho.nsa.gov" "SE Linux binary policy API documentation"
+.SH "NAME"
+sepol_genusers \- Generate a new binary policy image with a customized user configuration
+.SH "SYNOPSIS"
+.B #include <sepol/sepol.h>
+.sp
+.BI "int sepol_genusers(void *" data ", size_t "len ", const char *" usersdir ", void *" newdata ", size_t *" newlen);
+.sp
+.BI "void sepol_set_delusers(int " on ");"
+
+.SH "DESCRIPTION"
+.B sepol_genusers
+generates a new binary policy image from 
+an existing binary policy image stored in the memory region described by
+the starting address
+.I data
+and the length
+.I len
+and a pair of user configuration files named 
+.B system.users 
+and
+.B local.users
+from the directory specified by
+.I usersdir.
+The resulting binary policy is placed into dynamically allocated
+memory and the variables
+.I newdata
+and
+.I newlen
+are set to refer to the new binary image's starting address and length.
+The original binary policy image is not modified.
+
+By default, 
+.B sepol_genusers
+will preserve user entries that are defined in the original binary policy image
+but not defined in the user configuration files.  If such user entries
+should instead by omitted entirely from the new binary policy image, then
+the
+.B sepol_set_delusers
+function may be called with 
+.I on
+set to 1 prior to calling
+.B sepol_genusers
+in order to enable deletion of such users.
+
+.SH "RETURN VALUE"
+Returns 0 on success or -1 otherwise, with errno set appropriately.
+An errno of ENOENT indicates that one or both of the user
+configuration files did not exist.  An errno of EINVAL indicates that
+either the original binary policy image or the generated one were
+invalid.  An errno of ENOMEM indicates that insufficient memory was
+available to process the original binary policy image or to generate
+the new policy image.  Invalid entries in the user configuration files
+are skipped with a warning.

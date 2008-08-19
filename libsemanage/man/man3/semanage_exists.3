@@ -1,0 +1,45 @@
+.TH semanage_exists 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux Management API
+
+.SH "SYNOPSIS"
+The following exists function is supported for any semanage record.
+.br
+Replace the function and object name as necessary.
+
+.B extern int EXISTS_FUNCTION (
+.br
+.BI "	semanage_handle_t *" handle ","
+.br
+.BI "	const semanage_OBJECT_key_t *" key ","
+.br
+.BI "	semanage_OBJECT_t **" response ");"
+
+.SH "DESCRIPTION"
+.TP
+.B Behavior:
+The exists function will return 0 if a matching key is not found, and 1 otherwise. 
+
+.TP
+.B Parameters:
+The 
+.I handle
+is used to track persistent state across semanage calls, and for error reporting. The
+.I key 
+identifies the object being checked. The result of the test will be stored in the address pointed by 
+.I response
+The key is a property of the caller, and will not be stored or modified internally. 
+
+.TP
+.B Requirements:
+This function requires an semanage connection to be established (see 
+.BR semanage_connect "(3)"
+)
+
+.SH "RETURN VALUE"
+In case of failure, -1 is returned, and the semanage error callback is invoked, describing the error.
+Otherwise a non-negative integer is returned (a commit number). The same number will be returned by all other read calls to the semanage database until the next commit.
+
+.SH "SEE ALSO"
+.BR semanage_handle_create "(3), " semanage_connect "(3), "

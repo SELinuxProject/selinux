@@ -1,0 +1,37 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.\"
+.\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2007
+.TH "selabel_media" "5" "18 Jun 2007" "" "SELinux API documentation"
+.SH "NAME"
+selabel_media \- userspace SELinux labeling interface: media contexts backend.
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+
+.B #include <selinux/label.h>
+.sp
+.BI "int selabel_lookup(struct selabel_handle *" hnd ,
+.in +\w'int selabel_lookup('u
+.BI "security_context_t *" context ,
+
+.BI "const char *" device_name ", int " unused ");"
+
+.SH "DESCRIPTION"
+The media contexts backend maps from media device names such as "cdrom" or "floppy" into security contexts.  It is used to find the appropriate context for establishing context mounts on these devices.
+
+The integer lookup argument is currently unused and should be set to zero.
+
+.SH "OPTIONS"
+In addition to the global options described in 
+.BR selabel_open (3),
+this backend recognizes the following options:
+
+.TP
+.B SELABEL_OPT_PATH
+A non-null value for this option specifies a path to a file that will be opened in lieu of the standard media contexts file.  
+
+.SH "SEE ALSO"
+.BR selabel_open (3),
+.BR selabel_lookup (3),
+.BR selabel_stats (3),
+.BR selinux (8)
+

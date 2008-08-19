@@ -1,0 +1,1052 @@
+# translation of policycoreutils to Hungarian
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Arpad Biro <biro_arpad@yahoo.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hu\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-21 14:21-0500\n"
+"PO-Revision-Date: 2006-09-15 17:27+0200\n"
+"Last-Translator: Arpad Biro <biro_arpad@yahoo.com>\n"
+"Language-Team: Hungarian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.10.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-bq]\n"
+msgstr "használat: %s [-bq]\n"
+
+#: ../load_policy/load_policy.c:66
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s: szabályzat nem betölthető: %s\n"
+
+#: ../newrole/newrole.c:188
+#, c-format
+msgid "failed to set PAM_TTY\n"
+msgstr "nem sikerült beállítani ezt: PAM_TTY\n"
+
+#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
+msgid "Password:"
+msgstr "Jelszó:"
+
+#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "Az Ön bejegyzése nem található az árnyék-jelszófájlban.\n"
+
+#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "A getpass nem tudja megnyitni ezt: /dev/tty\n"
+
+#: ../newrole/newrole.c:316
+#, fuzzy, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "Az Ön bejegyzése nem található a jelszófájlban.\n"
+
+#: ../newrole/newrole.c:327
+#, c-format
+msgid "Out of memory!\n"
+msgstr "Elfogyott a memória.\n"
+
+#: ../newrole/newrole.c:332
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "Hiba: a parancsértelmező érvénytelen.\n"
+
+#: ../newrole/newrole.c:389
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr ""
+
+#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "Hiba a képességek inicializálásakor; megszakítás.\n"
+
+#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
+#, fuzzy, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "Hiba a képességek inicializálásakor; megszakítás.\n"
+
+#: ../newrole/newrole.c:450
+#, fuzzy, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "Hiba a KEEPCAPS visszaállításakor; megszakítás.\n"
+
+#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "Hiba a képességek eldobásakor; megszakítás.\n"
+
+#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "Hiba a uid módosításakor; megszakítás.\n"
+
+#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "Hiba a KEEPCAPS visszaállításakor; megszakítás.\n"
+
+#: ../newrole/newrole.c:477
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "Hiba a SETUID képesség eldobásakor; megszakítás.\n"
+
+#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
+#, c-format
+msgid "Error freeing caps\n"
+msgstr ""
+
+#: ../newrole/newrole.c:580
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "Hiba az auditálási rendszerhez való csatlakozáskor.\n"
+
+#: ../newrole/newrole.c:586
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "Memóriafoglalási hiba.\n"
+
+#: ../newrole/newrole.c:593
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "Hiba az auditálási üzenet küldésekor.\n"
+
+#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "Nem sikerült meghatározni a kikényszerítési módot.\n"
+
+#: ../newrole/newrole.c:641
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "Hiba: nem lehet megnyitni ezt: %s.\n"
+
+#: ../newrole/newrole.c:646
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr ""
+"%s: nem sikerült meghatározni a jelenlegi kontextust ehhez: %s - a tty nem "
+"lesz újracímkézve.\n"
+
+#: ../newrole/newrole.c:656
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr ""
+"%s: nem sikerült meghatározni az új kontextust ehhez: %s - a tty nem lesz "
+"újracímkézve.\n"
+
+#: ../newrole/newrole.c:666
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s: nem sikerült beállítani az új kontextust ehhez: %s\n"
+
+#: ../newrole/newrole.c:710
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s címkét módosított.\n"
+
+#: ../newrole/newrole.c:716
+#, fuzzy, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "Figyelmeztetés: nem sikerült visszaállítani a kontextust ehhez: %s\n"
+
+#: ../newrole/newrole.c:772
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "Hiba: több szerep lett megadva\n"
+
+#: ../newrole/newrole.c:780
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "Hiba: több típus lett megadva\n"
+
+#: ../newrole/newrole.c:787
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "A -l használata SELinux MLS-támogatás esetén lehetséges.\n"
+
+#: ../newrole/newrole.c:792
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "Hiba: több szint lett megadva\n"
+
+#: ../newrole/newrole.c:814
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "Nem sikerült meghatározni az alapértelmezett típust.\n"
+
+#: ../newrole/newrole.c:824
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "Nem sikerült meghatározni az új kontextust.\n"
+
+#: ../newrole/newrole.c:831
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "nem sikerült beállítani ezt az új szerepet: %s\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "nem sikerült beállítani ezt az új típust: %s\n"
+
+#: ../newrole/newrole.c:847
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "nem sikerült új tartományt készíteni ezzel a szinttel: %s\n"
+
+#: ../newrole/newrole.c:852
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "nem sikerült beállítani ezt az új tartományt: %s\n"
+
+#: ../newrole/newrole.c:860
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "nem sikerült szöveggé alakítani az új kontextust\n"
+
+#: ../newrole/newrole.c:865
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s nem egy érvényes kontextus\n"
+
+#: ../newrole/newrole.c:872
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr ""
+
+#: ../newrole/newrole.c:898
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr ""
+
+#: ../newrole/newrole.c:906
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr ""
+
+#: ../newrole/newrole.c:972
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "A newrole funkció csak SELinux-kernelen használható.\n"
+
+#: ../newrole/newrole.c:989
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "Nem sikerült meghatározni a régi kontextust.\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "Error!  Could not retrieve tty information.\n"
+msgstr "Hiba: nem sikerült lekérdezni a tty-információkat.\n"
+
+#: ../newrole/newrole.c:1015
+#, c-format
+msgid "Authenticating %s.\n"
+msgstr "%s azonosítása.\n"
+
+#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "nem sikerült inicializálni a PAM-et\n"
+
+#: ../newrole/newrole.c:1029
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "newrole: helytelen jelszó ehhez a felhasználóhoz: %s\n"
+
+#: ../newrole/newrole.c:1056
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "newrole: nem sikerült létrehozni új folyamatot: %s"
+
+#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
+#, fuzzy, c-format
+msgid "Failed to close tty properly\n"
+msgstr "nem sikerült beállítani ezt az új típust: %s\n"
+
+#: ../newrole/newrole.c:1117
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "Nem sikerült lezárni a leírókat.\n"
+
+#: ../newrole/newrole.c:1140
+#, fuzzy, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "Memóriafoglalási hiba.\n"
+
+#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
+#, c-format
+msgid "Could not set exec context to %s.\n"
+msgstr "Nem sikerült beállítani a végrehajtási kontextust erre: %s.\n"
+
+#: ../newrole/newrole.c:1173
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1184
+msgid "failed to exec shell\n"
+msgstr "nem sikerült végrehajtani a parancsértelmezőt\n"
+
+#: ../run_init/run_init.c:67
+msgid ""
+"USAGE: run_init <script> <args ...>\n"
+"  where: <script> is the name of the init script to run,\n"
+"         <args ...> are the arguments to that script."
+msgstr ""
+"Használat: run_init <szkript> <argumentumok ...>\n"
+"  ahol <szkript> a futtatandó inicializálási szkript neve,\n"
+"       <argumentumok ...> pedig ezen szkript argumentumai."
+
+#: ../run_init/run_init.c:139
+#, fuzzy, c-format
+msgid "failed to get account information\n"
+msgstr "Nem sikerült meghatározni az új kontextust.\n"
+
+#: ../run_init/run_init.c:275
+#, c-format
+msgid "run_init: incorrect password for %s\n"
+msgstr "run_init: helytelen jelszó ehhez a felhasználóhoz: %s\n"
+
+#: ../run_init/run_init.c:309
+#, c-format
+msgid "Could not open file %s\n"
+msgstr "Nem sikerült megnyitni ezt a fájlt: %s\n"
+
+#: ../run_init/run_init.c:336
+#, c-format
+msgid "No context in file %s\n"
+msgstr "Nincs kontextus ebben a fájlban: %s\n"
+
+#: ../run_init/run_init.c:361
+#, c-format
+msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
+msgstr "A run_init funkció csak SELinux-kernelen használható.\n"
+
+#: ../run_init/run_init.c:380
+#, c-format
+msgid "authentication failed.\n"
+msgstr "Az azonosítás nem sikerült.\n"
+
+#: ../scripts/chcat:75 ../scripts/chcat:145
+msgid "Requires at least one category"
+msgstr "Legalább 1 kategóriát igényel"
+
+#: ../scripts/chcat:89 ../scripts/chcat:159
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "Az érzékenységi szintek nem módosíthatók \"+\" használatával ezen: %s"
+
+#: ../scripts/chcat:93
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s már benne van ebben: %s"
+
+#: ../scripts/chcat:164 ../scripts/chcat:174
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s nincs benne ebben: %s"
+
+#: ../scripts/chcat:237 ../scripts/chcat:242
+msgid "Can not combine +/- with other types of categories"
+msgstr "A +/- nem kombinálható egyéb fajta kategóriákkal"
+
+#: ../scripts/chcat:287
+msgid "Can not have multiple sensitivities"
+msgstr "Nem lehet több érzékenység"
+
+#: ../scripts/chcat:293
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "Használat: %s kategória fájl ..."
+
+#: ../scripts/chcat:294
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "Használat: %s -l kategória felhasználó ..."
+
+#: ../scripts/chcat:295
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "Használat: %s [[+|-]kategória],...]q fájl ..."
+
+#: ../scripts/chcat:296
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "Használat: %s -l [[+|-]kategória],...]q felhasználó ..."
+
+#: ../scripts/chcat:297
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "Használat: %s -d fájl ..."
+
+#: ../scripts/chcat:298
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "Használat: %s -l -d felhasználó ..."
+
+#: ../scripts/chcat:299
+#, c-format
+msgid "Usage %s -L"
+msgstr "Használat: %s -L"
+
+#: ../scripts/chcat:300
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "Használat: %s -L -l felhasználó"
+
+#: ../scripts/chcat:301
+msgid "Use -- to end option list.  For example"
+msgstr "Az argumentumlista a -- jellel zárható le. Példa:"
+
+#: ../scripts/chcat:302
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -Bizalmas /docs/üzletiterv.odt"
+
+#: ../scripts/chcat:303
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +Bizalmas felhasználó1"
+
+#: ../semanage/semanage:127
+msgid "Requires 2 or more arguments"
+msgstr "Meg kell adni legalább 2 argumentumot"
+
+#: ../semanage/semanage:132
+#, c-format
+msgid "%s not defined"
+msgstr "%s nincs definiálva"
+
+#: ../semanage/semanage:156
+#, c-format
+msgid "%s not valid for %s objects\n"
+msgstr "\"%s\" nem érvényes \"%s\" objektumokhoz\n"
+
+#: ../semanage/semanage:183 ../semanage/semanage:191
+msgid "range not supported on Non MLS machines"
+msgstr "a tartomány nem támogatott a nem MLS-es gépeken"
+
+#: ../semanage/semanage:249
+msgid "You must specify a role"
+msgstr "Meg kell adni egy szerepet"
+
+#: ../semanage/semanage:251
+msgid "You must specify a prefix"
+msgstr "Meg kell adni egy előtagot"
+
+#: ../semanage/semanage:300
+#, c-format
+msgid "Options Error %s "
+msgstr "Hiba az opciókban: %s "
+
+#: ../semanage/semanage:304
+#, c-format
+msgid "Invalid value %s"
+msgstr "Érvénytelen érték: %s"
+
+#: ../semanage/seobject.py:132
+msgid "translations not supported on non-MLS machines"
+msgstr "a fordítások nem támogatottak a nem MLS-es gépeken"
+
+#: ../semanage/seobject.py:139
+#, python-format
+msgid "Unable to open %s: translations not supported on non-MLS machines"
+msgstr ""
+"Nem lehet megnyitni ezt: %s: a fordítások nem támogatottak a nem MLS-es "
+"gépeken"
+
+#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#, python-format
+msgid "Translations can not contain spaces '%s' "
+msgstr "A fordítások nem tartalmazhatnak szóközöket - \"%s\" "
+
+#: ../semanage/seobject.py:182
+#, python-format
+msgid "Invalid Level '%s' "
+msgstr "Érvénytelen szint: \"%s\" "
+
+#: ../semanage/seobject.py:185
+#, python-format
+msgid "%s already defined in translations"
+msgstr "%s már definiálva van a fordításokban"
+
+#: ../semanage/seobject.py:197
+#, python-format
+msgid "%s not defined in translations"
+msgstr "%s nincs definiálva a fordításokban"
+
+#: ../semanage/seobject.py:218
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "Az SELinux-szabályzat nem kezelt, vagy nem lehet elérni a tárolót."
+
+#: ../semanage/seobject.py:223
+msgid "Cannot read policy store."
+msgstr "Nem lehet olvasni a szabályzat-tárolót."
+
+#: ../semanage/seobject.py:228
+msgid "Could not establish semanage connection"
+msgstr "Nem sikerült létrehozni Semanage-kapcsolatot"
+
+#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
+#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
+#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
+#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
+#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "Nem sikerült létrehozni kulcsot ehhez: %s"
+
+#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
+#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr ""
+"Nem sikerült ellenőrizni, hogy van-e definiálva bejelentkezési hozzárendelés "
+"ehhez: %s"
+
+#: ../semanage/seobject.py:253
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "Már van definiálva bejelentkezési hozzárendelés ehhez: %s"
+
+#: ../semanage/seobject.py:257
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "Nem létezik %s nevű Linux-felhasználó"
+
+#: ../semanage/seobject.py:261
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "Nem sikerült létrehozni bejelentkezési hozzárendelést ehhez: %s"
+
+#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
+#, python-format
+msgid "Could not set name for %s"
+msgstr "Nem sikerült nevet beállítani ehhez: %s"
+
+#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "Nem sikerült MLS-tartományt beállítani ehhez: %s"
+
+#: ../semanage/seobject.py:274
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "Nem sikerült SELinux-felhasználót beállítani ehhez: %s"
+
+#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
+#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
+#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
+#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
+#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
+#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
+#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
+#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1257
+msgid "Could not start semanage transaction"
+msgstr "Nem sikerült elindítani az Semanage-tranzakciót"
+
+#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "Nem sikerült felvenni bejelentkezési hozzárendelést ehhez: %s"
+
+#: ../semanage/seobject.py:301
+msgid "Requires seuser or serange"
+msgstr "Seuser vagy Serange szükséges"
+
+#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "Nincs definiálva bejelentkezési hozzárendelés ehhez: %s"
+
+#: ../semanage/seobject.py:315
+#, python-format
+msgid "Could not query seuser for %s"
+msgstr "Nem sikerült végrehajtani Seuser-lekérdezést erre: %s"
+
+#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "Nem sikerült módosítani \"%s\" bejelentkezési hozzárendelését"
+
+#: ../semanage/seobject.py:364
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr ""
+"%s bejelentkezési hozzárendelése szabályzatban van definiálva - nem törölhető"
+
+#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
+#, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "Nem sikerült törölni \"%s\" bejelentkezési hozzárendelését"
+
+#: ../semanage/seobject.py:391
+msgid "Could not list login mappings"
+msgstr "Nem sikerült listázni a bejelentkezési hozzárendeléseket"
+
+#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
+#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr ""
+"Nem sikerült ellenőrizni, hogy van-e definiálva \"%s\" SELinux-felhasználó"
+
+#: ../semanage/seobject.py:439
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "Már van definiálva \"%s\" nevű SELinux-felhasználó"
+
+#: ../semanage/seobject.py:443
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "Nem sikerült létrehozni SELinux-felhasználót ehhez: %s"
+
+#: ../semanage/seobject.py:452
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "Nem sikerült felvenni \"%s\" szerepet ehhez: %s"
+
+#: ../semanage/seobject.py:461
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "Nem sikerült beállítani az MLS-szintet ehhez: %s"
+
+#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
+#, fuzzy, python-format
+msgid "Invalid prefix %s"
+msgstr "Érvénytelen érték: %s"
+
+#: ../semanage/seobject.py:466
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "Nem sikerült felvenni \"%s\" előtagot ehhez: %s"
+
+#: ../semanage/seobject.py:469
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "Nem sikerült kinyerni a kulcsot ehhez: %s"
+
+#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "Nem sikerült felvenni \"%s\" SELinux-felhasználót"
+
+#: ../semanage/seobject.py:498
+msgid "Requires prefix, roles, level or range"
+msgstr "Szükség van előtagra, szerepekre, szintre vagy tartományra"
+
+#: ../semanage/seobject.py:500
+msgid "Requires prefix or roles"
+msgstr "Szükség van előtagra vagy szerepekre"
+
+#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "\"%s\" SELinux-felhasználó nincs definiálva"
+
+#: ../semanage/seobject.py:514
+#, python-format
+msgid "Could not query user for %s"
+msgstr "Nem sikerült lekérdezni a felhasználót ehhez: %s"
+
+#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
+#, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "Nem sikerült módosítani a(z) \"%s\" SELinux-felhasználót"
+
+#: ../semanage/seobject.py:574
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr ""
+"\"%s\" SELinux-felhasználó szabályzatban van definiálva - nem törölhető"
+
+#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "Nem sikerült törölni a(z) \"%s\" SELinux-felhasználót"
+
+#: ../semanage/seobject.py:598
+msgid "Could not list SELinux users"
+msgstr "Nem sikerült listázni az SELinux-felhasználókat"
+
+#: ../semanage/seobject.py:604
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "Nem sikerült listázni a(z) \"%s\" felhasználó szerepeit"
+
+#: ../semanage/seobject.py:638
+msgid "Protocol udp or tcp is required"
+msgstr "UDP vagy TCP protokoll szükséges"
+
+#: ../semanage/seobject.py:640
+msgid "Port is required"
+msgstr "Meg kell adni portot"
+
+#: ../semanage/seobject.py:651
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "Nem sikerült létrehozni kulcsot ehhez: %s/%s"
+
+#: ../semanage/seobject.py:662
+msgid "Type is required"
+msgstr "Meg kell adni típust"
+
+#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "Nem sikerült ellenőrizni, hogy definiálva van-e a(z) %s/%s port"
+
+#: ../semanage/seobject.py:670
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "A(z) %s/%s port már definiálva van"
+
+#: ../semanage/seobject.py:674
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "Nem sikerült létrehozni portot ehhez: %s/%s"
+
+#: ../semanage/seobject.py:680
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "Nem sikerült létrehozni kontextust ehhez: %s/%s"
+
+#: ../semanage/seobject.py:684
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "Nem sikerült beállítani a felhasználót %s/%s portkontextusban"
+
+#: ../semanage/seobject.py:688
+#, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "Nem sikerült beállítani a szerepet %s/%s portkontextusban"
+
+#: ../semanage/seobject.py:692
+#, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "Nem sikerült beállítani a típust %s/%s portkontextusban"
+
+#: ../semanage/seobject.py:697
+#, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr "Nem sikerült beállítani az MLS-mezőket %s/%s portkontextusban"
+
+#: ../semanage/seobject.py:701
+#, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "Nem sikerült beállítani a portkontextust ehhez: %s/%s"
+
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#, python-format
+msgid "Could not add port %s/%s"
+msgstr "Nem sikerült felvenni ezt a portot: %s/%s"
+
+#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+msgid "Requires setype or serange"
+msgstr "Setype vagy Serange szükséges"
+
+#: ../semanage/seobject.py:724
+msgid "Requires setype"
+msgstr "Setype szükséges"
+
+#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#, python-format
+msgid "Port %s/%s is not defined"
+msgstr "%s/%s port nincs definiálva"
+
+#: ../semanage/seobject.py:736
+#, python-format
+msgid "Could not query port %s/%s"
+msgstr "Nem sikerült lekérdezni ezt a portot: %s/%s"
+
+#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#, python-format
+msgid "Could not modify port %s/%s"
+msgstr "Nem sikerült módosítani ezt a portot: %s/%s"
+
+#: ../semanage/seobject.py:772
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr "A(z) %s/%s port szabályzatban van definiálva - nem törölhető"
+
+#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#, python-format
+msgid "Could not delete port %s/%s"
+msgstr "Nem sikerült törölni ezt a portot: %s/%s"
+
+#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+msgid "Could not list ports"
+msgstr "Nem sikerült listázni a portokat"
+
+#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+msgid "SELinux Type is required"
+msgstr "Meg kell adni SELinux-típust"
+
+#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
+#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#, python-format
+msgid "Could not create key for %s"
+msgstr "Nem sikerült létrehozni kulcsot ehhez: %s"
+
+#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
+#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "Nem sikerült ellenőrizni, hogy definiálva van-e ez a csatoló: %s"
+
+#: ../semanage/seobject.py:865
+#, python-format
+msgid "Interface %s already defined"
+msgstr "%s csatoló már definiálva van"
+
+#: ../semanage/seobject.py:869
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "Nem sikerült létrehozni csatolót ehhez: %s"
+
+#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
+#, python-format
+msgid "Could not create context for %s"
+msgstr "Nem sikerült létrehozni kontextust ehhez: %s"
+
+#: ../semanage/seobject.py:878
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "Nem sikerült beállítani a felhasználót %s csatolókontextusban"
+
+#: ../semanage/seobject.py:882
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "Nem sikerült beállítani a szerepet %s csatolókontextusban"
+
+#: ../semanage/seobject.py:886
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "Nem sikerült beállítani a típust %s csatolókontextusban"
+
+#: ../semanage/seobject.py:891
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "Nem sikerült beállítani az MLS-mezőket %s csatolókontextusban"
+
+#: ../semanage/seobject.py:895
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "Nem sikerült beállítani a csatolókontextust ehhez: %s"
+
+#: ../semanage/seobject.py:899
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "Nem sikerült beállítani az üzenetkontextust ehhez: %s"
+
+#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
+#, python-format
+msgid "Could not add interface %s"
+msgstr "Nem sikerült felvenni ezt a csatolót: %s"
+
+#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "%s csatoló nincs definiálva"
+
+#: ../semanage/seobject.py:933
+#, python-format
+msgid "Could not query interface %s"
+msgstr "Nem sikerült lekérdezni ezt a csatolót: %s"
+
+#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "Nem sikerült módosítani ezt a csatolót: %s"
+
+#: ../semanage/seobject.py:972
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "A(z) %s csatoló szabályzatban van definiálva - nem törölhető"
+
+#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "Nem sikerült törölni ezt a csatolót: %s"
+
+#: ../semanage/seobject.py:992
+msgid "Could not list interfaces"
+msgstr "Nem sikerült listázni a csatolókat"
+
+#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr ""
+"Nem sikerült ellenőrizni, hogy van-e definiálva fájlkontextus ehhez: %s"
+
+#: ../semanage/seobject.py:1037
+#, python-format
+msgid "File context for %s already defined"
+msgstr "Már van definiálva fájlkontextus ehhez: %s"
+
+#: ../semanage/seobject.py:1041
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "Nem sikerült létrehozni fájlkontextust ehhez: %s"
+
+#: ../semanage/seobject.py:1050
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "Nem sikerült beállítani a felhasználót %s fájlkontextusban"
+
+#: ../semanage/seobject.py:1054
+#, python-format
+msgid "Could not set role in file context for %s"
+msgstr "Nem sikerült beállítani a szerepet %s fájlkontextusban"
+
+#: ../semanage/seobject.py:1058
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "Nem sikerült beállítani a típust %s fájlkontextusban"
+
+#: ../semanage/seobject.py:1063
+#, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "Nem sikerült beállítani az MLS-mezőket %s fájlkontextusban"
+
+#: ../semanage/seobject.py:1069
+#, python-format
+msgid "Could not set file context for %s"
+msgstr "Nem sikerült beállítani a fájlkontextust ehhez: %s"
+
+#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#, python-format
+msgid "Could not add file context for %s"
+msgstr "Nem sikerült felvenni fájlkontextust ehhez: %s"
+
+#: ../semanage/seobject.py:1089
+msgid "Requires setype, serange or seuser"
+msgstr "Setype, Serange vagy Seuser szükséges"
+
+#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "Nincs definiálva fájlkontextus ehhez: %s"
+
+#: ../semanage/seobject.py:1103
+#, python-format
+msgid "Could not query file context for %s"
+msgstr "Nem sikerült lekérdezni a fájlkontextust ehhez: %s"
+
+#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#, python-format
+msgid "Could not modify file context for %s"
+msgstr "Nem sikerült módosítani a fájlkontextust ehhez: %s"
+
+#: ../semanage/seobject.py:1142
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr "%s fájlkontextusa szabályzatban van definiálva - nem törölhető"
+
+#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#, python-format
+msgid "Could not delete file context for %s"
+msgstr "Nem sikerült törölni %s fájlkontextusát"
+
+#: ../semanage/seobject.py:1164
+msgid "Could not list file contexts"
+msgstr "Nem sikerült listázni a fájlkontextusokat"
+
+#: ../semanage/seobject.py:1168
+#, fuzzy
+msgid "Could not list local file contexts"
+msgstr "Nem sikerült listázni a fájlkontextusokat"
+
+#: ../semanage/seobject.py:1203
+msgid "Requires value"
+msgstr "Meg kell adni egy értéket"
+
+#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
+#: ../semanage/seobject.py:1251
+#, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "Nem sikerült ellenőrizni, hogy \"%s\" logikai érték definiálva van-e"
+
+#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#, python-format
+msgid "Boolean %s is not defined"
+msgstr "\"%s\" logikai érték nincs definiálva"
+
+#: ../semanage/seobject.py:1217
+#, python-format
+msgid "Could not query file context %s"
+msgstr "Nem sikerült lekérdezni a fájlkontextust ehhez: %s"
+
+#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#, python-format
+msgid "Could not modify boolean %s"
+msgstr "Nem sikerült módosítani a(z) \"%s\" logikai értéket"
+
+#: ../semanage/seobject.py:1253
+#, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "A(z) \"%s\" logikai érték szabályzatban van definiálva - nem törölhető"
+
+#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#, python-format
+msgid "Could not delete boolean %s"
+msgstr "Nem sikerült törölni a(z) \"%s\" logikai értéket"
+
+#: ../semanage/seobject.py:1273
+msgid "Could not list booleans"
+msgstr "Nem sikerült listázni a logikai értékeket"
+
+#: ../audit2allow/audit2allow:183
+#, c-format
+msgid "Generating type enforcment file: %s.te"
+msgstr "Típuskényszerítési fájl készítése: %s.te"
+
+#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
+msgid "Compiling policy"
+msgstr "Szabályzat elkészítése"
+
+#: ../audit2allow/audit2allow:205
+msgid ""
+"\n"
+"******************** IMPORTANT ***********************\n"
+msgstr ""
+"\n"
+"*********************** FONTOS ***********************\n"
+
+#: ../audit2allow/audit2allow:206
+#, c-format
+msgid ""
+"In order to load this newly created policy package into the kernel,\n"
+"you are required to execute \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+msgstr ""
+"Az újonnan elkészített szabályzatcsomagnak a kernelbe való\n"
+"betöltéséhez végre kell hajtania a következő parancsot:\n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+
+#: ../audit2allow/audit2allow:211
+#, c-format
+msgid "Options Error: %s "
+msgstr "Hiba az opciókban: %s "

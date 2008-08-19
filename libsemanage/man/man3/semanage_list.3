@@ -1,0 +1,46 @@
+.TH semanage_list 3 "16 March 2006" "ivg2@cornell.edu" "SELinux managent API documentation"
+
+.SH "NAME" 
+SELinux Lists Management API
+
+.SH "SYNOPSIS"
+The following list function is supported for any SELinux managent record.
+.br
+Replace the function and object name as necessary.
+
+.B extern int LIST_FUNCTION (
+.br
+.BI "	semanage_handle_t *" handle ","
+.br
+.BI "	semanage_OBJECT_t ***" objects ","
+.br
+.BI "	unsigned int* " count ");"
+
+.SH "DESCRIPTION"
+.TP
+.B Behavior:
+The list function will return an array of all the objects in the selected location.
+
+.TP
+.B Parameters:
+The 
+.I handle
+is used to track persistent state across semanage calls, and for error reporting. The function will allocate and populate the the array of objects, and store it at the location pointed by  
+.I objects.
+It will write the number of objects at the location pointed by 
+.I count.
+The array, and all its objects become property of the caller. Each object must be freed with 
+.B semanage_OBJECT_free. 
+
+.TP
+.B Requirements:
+This function requires an semanage connection to be established (see 
+.BR semanage_connect "(3)"
+)
+
+.SH "RETURN VALUE"
+In case of failure, -1 is returned, and the semanage error callback is invoked, describing the error.
+Otherwise a non-negative integer is returned (a commit number). The same number will be returned by all other semanage object read calls until the next commit.
+
+.SH "SEE ALSO"
+.BR semanage_handle_create "(3), " semanage_connect "(3), "

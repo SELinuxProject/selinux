@@ -1,0 +1,90 @@
+#!/bin/sh
+#
+# restorecond:		Daemon used to maintain path file context
+#
+# chkconfig:	- 12 87
+# description:	restorecond uses inotify to look for creation of new files \
+# listed in the /etc/selinux/restorecond.conf file, and restores the \
+# correct security context.
+#
+# processname: /usr/sbin/restorecond
+# config: /etc/selinux/restorecond.conf 
+# pidfile: /var/run/restorecond.pid
+#
+# Return values according to LSB for all commands but status:
+# 0 - success
+# 1 - generic or unspecified error
+# 2 - invalid or excess argument(s)
+# 3 - unimplemented feature (e.g. "reload")
+# 4 - insufficient privilege
+# 5 - program is not installed
+# 6 - program is not configured
+# 7 - program is not running
+
+PATH=/sbin:/bin:/usr/bin:/usr/sbin
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+[ -x /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled || exit 0
+
+# Check that we are root ... so non-root users stop here
+test $EUID = 0  || exit 4
+
+test -x /usr/sbin/restorecond  || exit 5
+test -f /etc/selinux/restorecond.conf  || exit 6
+
+RETVAL=0
+
+start() 
+{
+        echo -n $"Starting restorecond: "
+	unset HOME MAIL USER USERNAME
+        daemon /usr/sbin/restorecond 
+	RETVAL=$?
+	touch /var/lock/subsys/restorecond
+        echo
+	return $RETVAL
+}
+
+stop() 
+{
+        echo -n $"Shutting down restorecond: "
+	killproc restorecond
+	RETVAL=$?
+	rm -f  /var/lock/subsys/restorecond
+        echo
+	return $RETVAL
+}
+
+restart() 
+{
+    stop
+    start
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+        ;;
+  stop)
+	stop
+        ;;
+  status)
+	status restorecond
+	RETVAL=$?
+	;;
+  restart|reload)
+	restart
+	;;
+  condrestart)
+	[ -e /var/lock/subsys/restorecond ] && restart || :
+	;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|reload|condrestart}"
+        RETVAL=3
+esac
+
+exit $RETVAL
+

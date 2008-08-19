@@ -1,0 +1,169 @@
+.TH semanage_port 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux Network Ports Management API
+
+.SH "SYNOPSIS"
+.B #include <semanage/port_record.h>
+.br
+.B #include <semanage/ports_policy.h>
+.br
+.B #include <semanage/ports_local.h>
+
+.PP
+This object contains properties associated with a range of network ports.
+
+.PP
+For details on a specific function, see its manual page.
+
+.SH "Record API Overview"
+
+.HP 
+.BR semanage_port_create "(3)" \- 
+.br
+create a port range
+
+.HP
+.BR semanage_port_free "(3)" \-
+.br
+release resources for this port range
+
+.HP
+.BR semanage_port_key_create "(3)" \-
+.br
+create a key, which can be used to identify a port range
+
+.HP
+.BR semanage_port_key_free "(3)" \-
+.br
+release resources for this port range key
+
+.HP
+.BR semanage_port_key_extract "(3)" \- 
+.br
+create a key matching this port range
+
+.HP
+.BR semanage_port_clone "(3)" \- 
+.br
+create an identical port range (deep-copy clone)
+
+.HP
+.BR semanage_port_compare "(3)" \- 
+.br
+compare this port range to the provided key
+
+.HP
+.BR semanage_port_compare2 "(3)" \-
+.br
+compare this port range to another
+
+.SH "Properties API Overview"
+
+.HP
+.BR semanage_port_get_proto "(3)" \-
+.br
+return the protocol for this port range
+
+.HP
+.BR semanage_port_get_proto_str "(3)" \-
+.br
+return a string representation of the given port protocol
+
+.HP
+.BR semanage_port_set_proto "(3)" \-
+.br
+set the protocol for this port range
+
+.HP
+.BR semanage_port_get_low "(3)" \-
+.br
+return the low port number for this port range
+
+.HP
+.BR semanage_port_get_high "(3)" \-
+.br
+return the high port number for this port range
+
+.HP
+.BR semanage_port_set_port "(3)" \-
+.br
+set the port number (same low and high) for this port range
+
+.HP
+.BR semanage_port_set_range "(3)" \-
+.br
+set the low and high port number for this port range
+
+.HP
+.BR semanage_port_get_con "(3)" \-
+.br
+return the SELinux context for this port range
+
+.HP
+.BR semanage_port_set_con "(3)" \-
+.br
+set the SELinux context for this port range
+
+
+.SH "Record Store API Overview"
+
+.HP
+.BR semanage_port_modify_local "(3)" \- 
+.br
+add or update a port range in the local store
+
+.HP
+.BR semanage_port_del_local "(3)" \-
+.br
+delete a port range from the local store
+
+.HP
+.BR semanage_port_exists "(3)" \-
+.br
+check if a port range is defined in the persistent policy
+
+.HP
+.BR semanage_port_exists_local "(3)" \-
+.br
+check if a port range is defined in the local store
+
+.HP
+.BR semanage_port_query "(3)" \-
+.br
+query a port range in the persistent policy
+
+.HP
+.BR semanage_port_query_local "(3)" \- 
+.br
+query a port range in the local store
+
+.HP
+.BR semanage_port_count "(3)" \-
+.br
+count the number of port ranges defined in the persistent policy
+
+.HP
+.BR semanage_port_count_local "(3)" \-
+.br
+count the number of port ranges defined in the local store
+
+.HP
+.BR semanage_port_iterate "(3)" \-
+.br
+execute a callback for each port range in the persistent policy
+
+.HP
+.BR semanage_port_iterate_local "(3)" \-
+.br
+execute a callback for each port range in the local store
+
+.HP
+.BR semanage_port_list "(3)" \-
+.br
+return an array containing all port ranges in the persistent policy
+
+.HP
+.BR semanage_port_list_local "(3)" \-
+.br
+return an array containing all port ranges in the local store 

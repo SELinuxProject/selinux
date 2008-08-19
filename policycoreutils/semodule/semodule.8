@@ -1,0 +1,79 @@
+.TH SEMODULE "8" "Nov 2005" "Security Enhanced Linux" NSA
+.SH NAME 
+semodule \- Manage SELinux policy modules.
+
+.SH SYNOPSIS
+.B semodule [options]... MODE [MODES]...
+.br
+.SH DESCRIPTION
+.PP
+semodule is the tool used to manage SELinux policy modules,
+including installing, upgrading, listing and removing modules.  
+semodule may also be used to force a rebuild of policy from the
+module store and/or to force a reload of policy without performing
+any other transaction.  semodule acts on module packages created
+by semodule_package.  Conventionally, these files have a .pp suffix
+(policy package), although this is not mandated in any way.
+
+.SH "OPTIONS"
+.TP
+.B \-R, \-\-reload
+force a reload of policy
+.TP
+.B \-B, \-\-build		
+force a rebuild of policy (also reloads unless -n is used)
+.TP
+.B \-D, \-\-disable_dontaudit
+Temporarily remove dontaudits from policy.  Reverts whenever policy is rebuilt
+.TP
+.B \-i,\-\-install=MODULE_PKG
+install/replace a module package
+.TP
+.B  \-u,\-\-upgrade=MODULE_PKG
+upgrade an existing module package
+.TP
+.B  \-b,\-\-base=MODULE_PKG   
+install/replace base module package
+.TP
+.B  \-r,\-\-remove=MODULE_NAME
+remove existing module
+.TP
+.B  \-l,\-\-list-modules      
+display list of installed modules (other than base)
+.TP
+.B  \-s,\-\-store	   
+name of the store to operate on
+.TP
+.B  \-n,\-\-noreload	
+do not reload policy after commit
+.TP
+.B  \-h,\-\-help        
+prints help message and quit
+.TP
+.B  \-v,\-\-verbose     
+be verbose
+
+.SH EXAMPLE
+.nf
+# Install or replace a base policy package.
+$ semodule -b base.pp
+# Install or replace a non-base policy package.
+$ semodule -i httpd.pp
+# List non-base modules.
+$ semodule -l
+# Turn on all AVC Messages for which SELinux currently is "dontaudit"ing.
+$ semodule -DB
+# Turn "dontaudit" rules back on.
+$ semodule -B
+# Install or replace all non-base modules in the current directory.
+$ semodule -i *.pp
+# Install or replace all modules in the current directory.
+$ ls *.pp | grep -Ev "base.pp|enableaudit.pp" | xargs /usr/sbin/semodule -b base.pp -i
+.fi
+
+.SH SEE ALSO
+.B checkmodule(8), semodule_package(8)
+.SH AUTHORS
+.nf
+This manual page was written by Dan Walsh <dwalsh@redhat.com>.
+The program was written by Karl MacMillan <kmacmillan@tresys.com>, Joshua Brindle <jbrindle@tresys.com>, Jason Tang <jtang@tresys.com>

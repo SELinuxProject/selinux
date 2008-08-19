@@ -1,0 +1,195 @@
+.TH semanage_user 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux User Management API
+
+.SH "SYNOPSIS"
+.B #include <semanage/user_record.h>
+.br
+.B #include <semanage/users_policy.h>
+.br
+.B #include <semanage/users_local.h>
+
+.PP
+This object contains properties associated with a SELinux user. 
+Typically many Unix users are mapped to the same SELinux user. See 
+.BR semanage_seuser "(3)"
+for overview of the Unix user API. 
+
+.PP
+For details on a specific function, see its manual page.
+
+.SH "Record API Overview"
+
+.HP 
+.BR semanage_user_create "(3)" \- 
+.br
+create a user 
+
+.HP
+.BR semanage_user_free "(3)" \-
+.br
+release resources for this user
+
+.HP
+.BR semanage_user_key_create "(3)" \-
+.br
+create a key, which can be used to identify a user
+
+.HP
+.BR semanage_user_key_free "(3)" \-
+.br
+release resources for this user key
+
+.HP
+.BR semanage_user_key_extract "(3)" \- 
+.br
+create a key matching this user
+
+.HP
+.BR semanage_user_clone "(3)" \- 
+.br
+create an identical user (deep-copy clone)
+
+.HP
+.BR semanage_user_compare "(3)" \- 
+.br
+compare this user to the provided key
+
+.HP
+.BR semanage_user_compare2 "(3)" \-
+.br
+compare this user to another
+
+.SH "Properties API Overview"
+
+.HP
+.BR semanage_user_get_name "(3)" \- 
+.br
+return the name of this user
+
+.HP
+.BR semanage_user_set_name "(3)" \-
+.br
+set the name of this user
+
+.HP
+.BR semanage_user_get_prefix "(3)" \-
+.br
+return the labeling prefix for this user, used to control the contexts of user directories
+
+.HP
+.BR semanage_user_set_prefix "(3)" \-
+.br
+set the labeling prefix for this user
+
+.HP
+.BR semanage_user_get_mlslevel "(3)" \-
+.br
+return the default MLS level, which is assigned to this user at login time
+
+.HP
+.BR semanage_user_set_mlslevel "(3)" \-
+.br
+set the default MLS level
+
+.HP
+.BR semanage_user_get_mlsrange "(3)" \-
+.br
+return the range of valid MLS sensitivities and categories for this user
+
+.HP
+.BR semanage_user_set_mlsrange "(3)" \-
+.br
+set the range of valid MLS sensitivities and categories for this user
+
+.HP
+.BR semanage_user_add_role "(3)" \-
+.br
+add a role to the user's list of valid roles
+
+.HP
+.BR semanage_user_del_role "(3)" \-
+.br
+remove a role from the user's list of valid roles
+
+.HP
+.BR semanage_user_has_role "(3)" \-
+.br
+check if a role is valid for this user
+
+.HP
+.BR semanage_user_get_num_roles "(3)" \-
+.br
+return the number of valid roles for this user
+
+.HP
+.BR semanage_user_get_roles "(3)" \-
+.br
+return an array containing the roles for this user
+
+.HP
+.BR semanage_user_set_roles "(3)" \-
+set the roles for this user
+
+.SH "Record Store API Overview"
+
+.HP
+.BR semanage_user_modify_local "(3)" \- 
+.br
+add or update a user in the local store
+
+.HP
+.BR semanage_user_del_local "(3)" \-
+.br
+delete a user from the local store
+
+.HP
+.BR semanage_user_exists "(3)" \-
+.br
+check if a user is defined in the persistent policy
+
+.HP
+.BR semanage_user_exists_local "(3)" \-
+.br
+check if a user is defined in the local store
+
+.HP
+.BR semanage_user_query "(3)" \-
+.br
+query a user in the persistent policy
+
+.HP
+.BR semanage_user_query_local "(3)" \- 
+.br
+query a user in the local store
+
+.HP
+.BR semanage_user_count "(3)" \-
+.br
+count the number of users defined in the persistent policy
+
+.HP
+.BR semanage_user_count_local "(3)" \-
+.br
+count the number of users defined in the local store
+
+.HP
+.BR semanage_user_iterate "(3)" \-
+.br
+execute a callback for each user in the persistent policy
+
+.HP
+.BR semanage_user_iterate_local "(3)" \-
+.br
+execute a callback for each user in the local store
+
+.HP
+.BR semanage_user_list "(3)" \-
+.br
+return an array containing all users in the persistent policy
+
+.HP
+.BR semanage_user_list_local "(3)" \-
+.br
+return an array containing all users in the local store

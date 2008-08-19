@@ -1,0 +1,64 @@
+Notes on tests
+============================
+The semanage_access_check test in the semanage_store suite simulates a
+read-only filesystem by using DAC permissions. Consequently, these tests
+will fail if run as root, as root can override DAC permissions.
+
+
+How to add and use unit tests 
+=============================
+
+We are using the CUnit unit testing framework.  This framework--and the
+official documentation of the framework--may be found here:
+
+http://cunit.sourceforge.net/
+
+If you have not yet installed CUnit, first do that.  (There is an RPM,
+or you can compile from source.)  Once installed, follow these steps to
+add unit tests for your code:
+
+1. Create a .h and .c file corresponding to the .c file you want to test.
+   For example, test_semanage_store.c provides tests of the functions in
+   semanage_store.c.   Your new .h/.c files represent a suite of related
+   tests.
+
+2. Write or add new tests to a suite.  Tests are simply functions that 
+   take the form:
+
+	void test_my_function(void)
+
+   These tests are where you will make calls to the CUnit assertions.
+ 
+   If you are making a new test suite, also add the suite init/cleanup
+   functions.  These take the form:
+
+   	int <suite_name>_test_init(void)
+    int <suite_name>_cleanup(void)
+
+   These functions will be called before and after the test functions
+   in your suite, respectively.  They return 0 on success, 1 on failure.
+
+3. Update libsemanage-tests.c to add your new suite and/or your new tests
+   using the DECLARE_SUITE macro in do_tests().
+
+4. Update the Makefile:
+     + Make sure that the TESTSRC variable is set to the location
+	   of the libsemanage source code you want to test.
+
+5. Compile the libsemanage source code you will be testing, to ensure
+   the object files are available and up to date.
+
+6. Run your tests.  Rejoice or despair, as appropriate.
+
+
+A note on the the utilities.c: Add functions that can be commonly used 
+here.  For example, it is handy to have a dummy message callback 
+function to silence error messages produced by libsemanage and keep 
+your output pretty.  To do this, include utilities.h and specify the
+callback like so:
+
+        semanage_handle_t *sh;
+        sh = semanage_handle_create();
+        sh->msg_callback = test_msg_handler;
+
+Feel free to add other such functions here as well.

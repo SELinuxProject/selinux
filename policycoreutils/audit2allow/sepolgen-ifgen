@@ -1,0 +1,89 @@
+#! /usr/bin/python -E
+#
+# Authors: Karl MacMillan <kmacmillan@mentalrootkit.com>
+#
+# Copyright (C) 2006 Red Hat 
+# see file 'COPYING' for use and warranty information
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; version 2 only
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+#
+
+# Parse interfaces and output extracted information about them
+# suitable for policy generation. By default writes the output
+# to the default location (obtained from sepolgen.defaults), but
+# will output to another file provided as an argument:
+#   sepolgen-ifgen [headers] [output-filename]
+
+
+import sys
+import os
+
+import sepolgen.refparser as refparser
+import sepolgen.defaults as defaults
+import sepolgen.interfaces as interfaces
+
+
+VERSION = "%prog .1"
+
+def parse_options():
+    from optparse import OptionParser
+
+    parser = OptionParser(version=VERSION)
+    parser.add_option("-o", "--output", dest="output", default=defaults.interface_info(),
+                      help="filename to store output")
+    parser.add_option("-i", "--interfaces", dest="headers", default=defaults.headers(),
+                      help="location of the interface header files")
+    parser.add_option("-v", "--verbose", action="store_true", default=False,
+                      help="print debuging output")
+    parser.add_option("-d", "--debug", action="store_true", default=False,
+                     help="extra debugging output")
+    options, args = parser.parse_args()
+    
+    return options
+
+
+def main():
+    options = parse_options()
+
+    # Open the output first to generate errors before parsing
+    try:
+        f = open(options.output, "w")
+    except IOError, e:
+        sys.stderr.write("could not open output file [%s]\n" % options.output)
+        return 1
+
+    if options.verbose:
+        log = sys.stdout
+    else:
+        log = None
+
+    try:
+        headers = refparser.parse_headers(options.headers, output=log, debug=options.debug)
+    except ValueError, e:
+        print "error parsing headers"
+        print str(e)
+        return 1
+
+    if_set = interfaces.InterfaceSet(output=log)
+    if_set.add_headers(headers)
+    if_set.to_file(f)
+    f.close()
+
+    if refparser.success:
+        return 0
+    else:
+        return 1
+    
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,48 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.\"
+.\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2007
+.TH "selabel_file" "5" "18 Jun 2007" "" "SELinux API documentation"
+.SH "NAME"
+selabel_file \- userspace SELinux labeling interface: file contexts backend.
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+
+.B #include <selinux/label.h>
+.sp
+.BI "int selabel_lookup(struct selabel_handle *" hnd ,
+.in +\w'int selabel_lookup('u
+.BI "security_context_t *" context ,
+
+.BI "const char *" path ", int " mode ");"
+
+.SH "DESCRIPTION"
+The file contexts backend maps from pathname/mode combinations into security contexts.  It is used to find the appropriate context for each file when relabeling a file system.
+
+The
+.I path
+argument should be set to the full pathname of the file whose assigned context is being checked.  The 
+.I mode
+argument should be set to the mode bits of the file, as determined by 
+.BR lstat (2).
+
+.SH "OPTIONS"
+In addition to the global options described in 
+.BR selabel_open (3),
+this backend recognizes the following options:
+
+.TP
+.B SELABEL_OPT_PATH
+A non-null value for this option specifies a path to a file that will be opened in lieu of the standard file contexts file.  This value is also used as the base name for determining the names of local customization files.
+.TP
+.B SELABEL_OPT_BASEONLY
+A non-null value for this option indicates that any local customizations to the file contexts mapping should be ignored.
+.TP
+.B SELABEL_OPT_SUBSET
+A non-null value for this option is interpreted as a path prefix, for example "/etc".  Only file context specifications starting with the given prefix are loaded.  This may increase lookup performance, however any attempt to look up a path not starting with the given prefix will fail.
+
+.SH "SEE ALSO"
+.BR selabel_open (3),
+.BR selabel_lookup (3),
+.BR selabel_stats (3),
+.BR selinux (8)
+

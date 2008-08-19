@@ -1,0 +1,26 @@
+.TH RUN_INIT "8" "May 2003" "Security Enhanced Linux" NSA
+.SH NAME
+run_init \- run an init script in the proper SELinux context
+.SH SYNOPSIS
+.B run_init 
+\fISCRIPT\fR [[\fIARGS\fR]...] 
+.br
+.SH DESCRIPTION
+.PP
+Run a init script under the proper context, which is specified in 
+/etc/selinux/POLICYTYPE/contexts/initrc_context.
+.SH FILES
+/etc/passwd - user account information
+.br
+/etc/shadow - encrypted passwords and age information
+.br
+/etc/selinux/POLICYTYPE/contexts/initrc_context - contains the context to run init scripts under
+.SH SEE ALSO
+.B newrole
+(1),
+.B runcon
+(1)
+.SH AUTHORS
+.nf
+Wayne Salamon (wsalamon@tislabs.com) 
+Dan Walsh (dwalsh@redhat.com) 

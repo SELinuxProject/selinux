@@ -1,0 +1,48 @@
+.TH semanage_bool_set_local 3 "4 January 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+.SH "NAME"
+.B semanage_bool_set_active \- 
+update an existing SELinux boolean in the currently active policy
+
+.SH "SYNOPSIS"
+.B #include <semanage/booleans_active.h>
+.br
+.sp
+.B extern int semanage_bool_set_active (
+.br
+.BI "	semanage_handle_t *" handle ","
+.br
+.BI "	const semanage_bool_key_t *" key ","
+.br
+.BI "	const semanage_bool_t *" data ");"
+
+.SH "DESCRIPTION"
+.TP
+.B Behavior:
+The set function will fail if no matching key is found in the local store. Otherwise, the provided object will replace the current one. When 
+.BR semanage_commit "(3)" 
+is invoked, changes will be written permanently into the local store, and will be loaded into policy. Validity of the object being added is checked at commit time. 
+
+.TP
+.B Parameters:
+The 
+.I handle
+is used to track persistent state across semanage calls, and for error reporting. The
+.I key 
+identifies the 
+.I data
+object, which will be written into the store. The key are data are properties of the caller, and are not stored or modified internally.
+
+.TP
+.B Requirements:
+This function requires an semanage connection to be established (see 
+.BR semanage_connect "(3)"
+), and must be executed in a transaction (see 
+.BR semanage_begin_transaction "(3)"
+).
+
+.SH "RETURN VALUE"
+In case of failure, -1 is returned, and the semanage error callback is invoked, describing the error.
+Otherwise 0 is returned.
+
+.SH "SEE ALSO"
+.BR semanage_handle_create "(3), " semanage_begin_transaction "(3), " semanage_connect "(3), " semanage_commit "(3). "

@@ -1,0 +1,436 @@
+#include <sys/stat.h>
+#include <string.h>
+#include <errno.h>
+#include <stdio.h>
+#include "selinux_internal.h"
+#include "label_internal.h"
+#include "callbacks.h"
+
+static __thread struct selabel_handle *hnd;
+
+/*
+ * An array for mapping integers to contexts
+ */
+static __thread char **con_array;
+static __thread int con_array_size;
+static __thread int con_array_used;
+
+static int add_array_elt(char *con)
+{
+	if (con_array_size) {
+		while (con_array_used >= con_array_size) {
+			con_array_size *= 2;
+			con_array = (char **)realloc(con_array, sizeof(char*) *
+						     con_array_size);
+			if (!con_array) {
+				con_array_size = con_array_used = 0;
+				return -1;
+			}
+		}
+	} else {
+		con_array_size = 1000;
+		con_array = (char **)malloc(sizeof(char*) * con_array_size);
+		if (!con_array) {
+			con_array_size = con_array_used = 0;
+			return -1;
+		}
+	}
+
+	con_array[con_array_used] = strdup(con);
+	if (!con_array[con_array_used])
+		return -1;
+	return con_array_used++;
+}
+
+static void free_array_elts(void)
+{
+	con_array_size = con_array_used = 0;
+	free(con_array);
+	con_array = NULL;
+}
+
+static void
+#ifdef __GNUC__
+    __attribute__ ((format(printf, 1, 2)))
+#endif
+    default_printf(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	va_end(ap);
+}
+
+void
+#ifdef __GNUC__
+    __attribute__ ((format(printf, 1, 2)))
+#endif
+    (*myprintf) (const char *fmt,...) = &default_printf;
+int myprintf_compat = 0;
+
+void set_matchpathcon_printf(void (*f) (const char *fmt, ...))
+{
+	myprintf = f ? f : &default_printf;
+	myprintf_compat = 1;
+}
+
+static int (*myinvalidcon) (const char *p, unsigned l, char *c) = NULL;
+
+void set_matchpathcon_invalidcon(int (*f) (const char *p, unsigned l, char *c))
+{
+	myinvalidcon = f;
+}
+
+static int default_canoncon(const char *path, unsigned lineno, char **context)
+{
+	char *tmpcon;
+	if (security_canonicalize_context_raw(*context, &tmpcon) < 0) {
+		if (errno == ENOENT)
+			return 0;
+		if (lineno)
+			myprintf("%s:  line %u has invalid context %s\n", path,
+				 lineno, *context);
+		else
+			myprintf("%s:  invalid context %s\n", path, *context);
+		return 1;
+	}
+	free(*context);
+	*context = tmpcon;
+	return 0;
+}
+
+static int (*mycanoncon) (const char *p, unsigned l, char **c) =
+    NULL;
+
+void set_matchpathcon_canoncon(int (*f) (const char *p, unsigned l, char **c))
+{
+	if (f)
+		mycanoncon = f;
+	else
+		mycanoncon = &default_canoncon;
+}
+
+static __thread struct selinux_opt options[SELABEL_NOPT];
+static __thread int notrans;
+
+void set_matchpathcon_flags(unsigned int flags)
+{
+	int i;
+	memset(options, 0, sizeof(options));
+	i = SELABEL_OPT_BASEONLY;
+	options[i].type = i;
+	options[i].value = (flags & MATCHPATHCON_BASEONLY) ? (char*)1 : NULL;
+	i = SELABEL_OPT_VALIDATE;
+	options[i].type = i;
+	options[i].value = (flags & MATCHPATHCON_VALIDATE) ? (char*)1 : NULL;
+	notrans = flags & MATCHPATHCON_NOTRANS;
+}
+
+/*
+ * An association between an inode and a 
+ * specification.  
+ */
+typedef struct file_spec {
+	ino_t ino;		/* inode number */
+	int specind;		/* index of specification in spec */
+	char *file;		/* full pathname for diagnostic messages about conflicts */
+	struct file_spec *next;	/* next association in hash bucket chain */
+} file_spec_t;
+
+/*
+ * The hash table of associations, hashed by inode number.
+ * Chaining is used for collisions, with elements ordered
+ * by inode number in each bucket.  Each hash bucket has a dummy 
+ * header.
+ */
+#define HASH_BITS 16
+#define HASH_BUCKETS (1 << HASH_BITS)
+#define HASH_MASK (HASH_BUCKETS-1)
+static file_spec_t *fl_head;
+
+/*
+ * Try to add an association between an inode and
+ * a specification.  If there is already an association
+ * for the inode and it conflicts with this specification,
+ * then use the specification that occurs later in the
+ * specification array.
+ */
+int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
+{
+	file_spec_t *prevfl, *fl;
+	int h, ret;
+	struct stat sb;
+
+	if (!fl_head) {
+		fl_head = malloc(sizeof(file_spec_t) * HASH_BUCKETS);
+		if (!fl_head)
+			goto oom;
+		memset(fl_head, 0, sizeof(file_spec_t) * HASH_BUCKETS);
+	}
+
+	h = (ino + (ino >> HASH_BITS)) & HASH_MASK;
+	for (prevfl = &fl_head[h], fl = fl_head[h].next; fl;
+	     prevfl = fl, fl = fl->next) {
+		if (ino == fl->ino) {
+			ret = lstat(fl->file, &sb);
+			if (ret < 0 || sb.st_ino != ino) {
+				fl->specind = specind;
+				free(fl->file);
+				fl->file = malloc(strlen(file) + 1);
+				if (!fl->file)
+					goto oom;
+				strcpy(fl->file, file);
+				return fl->specind;
+
+			}
+
+			if (!strcmp(con_array[fl->specind],
+				    con_array[specind]))
+				return fl->specind;
+
+			myprintf
+			    ("%s:  conflicting specifications for %s and %s, using %s.\n",
+			     __FUNCTION__, file, fl->file,
+			     con_array[fl->specind]);
+			free(fl->file);
+			fl->file = malloc(strlen(file) + 1);
+			if (!fl->file)
+				goto oom;
+			strcpy(fl->file, file);
+			return fl->specind;
+		}
+
+		if (ino > fl->ino)
+			break;
+	}
+
+	fl = malloc(sizeof(file_spec_t));
+	if (!fl)
+		goto oom;
+	fl->ino = ino;
+	fl->specind = specind;
+	fl->file = malloc(strlen(file) + 1);
+	if (!fl->file)
+		goto oom_freefl;
+	strcpy(fl->file, file);
+	fl->next = prevfl->next;
+	prevfl->next = fl;
+	return fl->specind;
+      oom_freefl:
+	free(fl);
+      oom:
+	myprintf("%s:  insufficient memory for file label entry for %s\n",
+		 __FUNCTION__, file);
+	return -1;
+}
+
+/*
+ * Evaluate the association hash table distribution.
+ */
+void matchpathcon_filespec_eval(void)
+{
+	file_spec_t *fl;
+	int h, used, nel, len, longest;
+
+	if (!fl_head)
+		return;
+
+	used = 0;
+	longest = 0;
+	nel = 0;
+	for (h = 0; h < HASH_BUCKETS; h++) {
+		len = 0;
+		for (fl = fl_head[h].next; fl; fl = fl->next) {
+			len++;
+		}
+		if (len)
+			used++;
+		if (len > longest)
+			longest = len;
+		nel += len;
+	}
+
+	myprintf
+	    ("%s:  hash table stats: %d elements, %d/%d buckets used, longest chain length %d\n",
+	     __FUNCTION__, nel, used, HASH_BUCKETS, longest);
+}
+
+/*
+ * Destroy the association hash table.
+ */
+void matchpathcon_filespec_destroy(void)
+{
+	file_spec_t *fl, *tmp;
+	int h;
+
+	free_array_elts();
+
+	if (!fl_head)
+		return;
+
+	for (h = 0; h < HASH_BUCKETS; h++) {
+		fl = fl_head[h].next;
+		while (fl) {
+			tmp = fl;
+			fl = fl->next;
+			free(tmp->file);
+			free(tmp);
+		}
+		fl_head[h].next = NULL;
+	}
+	free(fl_head);
+	fl_head = NULL;
+}
+
+int matchpathcon_init_prefix(const char *path, const char *subset)
+{
+	if (!mycanoncon)
+		mycanoncon = default_canoncon;
+
+	options[SELABEL_OPT_SUBSET].type = SELABEL_OPT_SUBSET;
+	options[SELABEL_OPT_SUBSET].value = subset;
+	options[SELABEL_OPT_PATH].type = SELABEL_OPT_PATH;
+	options[SELABEL_OPT_PATH].value = path;
+
+	hnd = selabel_open(SELABEL_CTX_FILE, options, SELABEL_NOPT);
+	return hnd ? 0 : -1;
+}
+
+hidden_def(matchpathcon_init_prefix)
+
+int matchpathcon_init(const char *path)
+{
+	return matchpathcon_init_prefix(path, NULL);
+}
+
+void matchpathcon_fini(void)
+{
+	if (hnd) {
+		selabel_close(hnd);
+		hnd = NULL;
+	}
+}
+
+int matchpathcon(const char *name, mode_t mode, security_context_t * con)
+{
+	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0))
+			return -1;
+
+	return notrans ?
+		selabel_lookup_raw(hnd, con, name, mode) :
+		selabel_lookup(hnd, con, name, mode);
+}
+
+int matchpathcon_index(const char *name, mode_t mode, security_context_t * con)
+{
+	int i = matchpathcon(name, mode, con);
+
+	if (i < 0)
+		return -1;
+
+	return add_array_elt(*con);
+}
+
+void matchpathcon_checkmatches(char *str __attribute__((unused)))
+{
+	selabel_stats(hnd);
+}
+
+/* Compare two contexts to see if their differences are "significant",
+ * or whether the only difference is in the user. */
+int selinux_file_context_cmp(const security_context_t a,
+			     const security_context_t b)
+{
+	char *rest_a, *rest_b;	/* Rest of the context after the user */
+	if (!a && !b)
+		return 0;
+	if (!a)
+		return -1;
+	if (!b)
+		return 1;
+	rest_a = strchr((char *)a, ':');
+	rest_b = strchr((char *)b, ':');
+	if (!rest_a && !rest_b)
+		return 0;
+	if (!rest_a)
+		return -1;
+	if (!rest_b)
+		return 1;
+	return strcmp(rest_a, rest_b);
+}
+
+int selinux_file_context_verify(const char *path, mode_t mode)
+{
+	security_context_t con = NULL;
+	security_context_t fcontext = NULL;
+	int rc = 0;
+
+	rc = lgetfilecon_raw(path, &con);
+	if (rc == -1) {
+		if (errno != ENOTSUP)
+			return 1;
+		else
+			return 0;
+	}
+	
+	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0))
+			return -1;
+
+	if (selabel_lookup_raw(hnd, &fcontext, path, mode) != 0) {
+		if (errno != ENOENT)
+			rc = 1;
+		else
+			rc = 0;
+	} else
+		rc = (selinux_file_context_cmp(fcontext, con) == 0);
+
+	freecon(con);
+	freecon(fcontext);
+	return rc;
+}
+
+int selinux_lsetfilecon_default(const char *path)
+{
+	struct stat st;
+	int rc = -1;
+	security_context_t scontext = NULL;
+	if (lstat(path, &st) != 0)
+		return rc;
+
+	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0))
+			return -1;
+
+	/* If there's an error determining the context, or it has none, 
+	   return to allow default context */
+	if (selabel_lookup_raw(hnd, &scontext, path, st.st_mode)) {
+		if (errno == ENOENT)
+			rc = 0;
+	} else {
+		rc = lsetfilecon_raw(path, scontext);
+		freecon(scontext);
+	}
+	return rc;
+}
+
+int compat_validate(struct selabel_handle *rec,
+		    struct selabel_lookup_rec *contexts,
+		    const char *path, unsigned lineno)
+{
+	int rc;
+	char **ctx = &contexts->ctx_raw;
+
+	if (myinvalidcon)
+		rc = myinvalidcon(path, lineno, *ctx);
+	else if (mycanoncon)
+		rc = mycanoncon(path, lineno, ctx);
+	else {
+		rc = selabel_validate(rec, contexts);
+		if (rc < 0) {
+			COMPAT_LOG(SELINUX_WARNING,
+				    "%s:  line %d has invalid context %s\n",
+				    path, lineno, *ctx);
+		}
+	}
+
+	return rc ? -1 : 0;
+}

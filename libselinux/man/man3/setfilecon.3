@@ -1,0 +1,41 @@
+.TH "setfilecon" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.SH "NAME"
+setfilecon, fsetfilecon, lsetfilecon \- set SELinux security context of a file
+
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+.sp
+.BI "int setfilecon(const char *" path ", security_context_t "con );
+
+.BI "int lsetfilecon(const char *" path ", security_context_t "con );
+
+.BI "int fsetfilecon(int "fd ", security_context_t "con );
+
+.SH "DESCRIPTION"
+.B setfilecon
+sets the security context of the file system object.
+
+.B lsetfilecon
+is identical to setfilecon, except in the case of a symbolic link, where the
+link itself has it's context set, not the file that it refers to.
+
+.B fsetfilecon
+is identical to setfilecon, only the open file pointed to by filedes (as
+returned by open(2)) has it's context set in place of path.
+
+.SH "RETURN VALUE"
+On success, zero is returned. On failure, -1 is returned and errno is
+set appropriately.
+
+If there is insufficient space remaining to store the extended
+attribute, errno is set to either ENOSPC, or EDQUOT if quota enforce-
+ment was the cause.
+
+If extended attributes are not supported by the filesystem, or are dis-
+abled, errno is set to ENOTSUP.
+
+The errors documented for the stat(2) system call are also applicable
+here.
+
+.SH "SEE ALSO"
+.BR selinux "(3), " freecon "(3), " getfilecon "(3), " setfscreatecon "(3)"

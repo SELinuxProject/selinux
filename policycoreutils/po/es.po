@@ -1,0 +1,1043 @@
+# Domingo E. Becker <beckerde@hotmail.com>, 2006.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-21 14:21-0500\n"
+"PO-Revision-Date: 2006-11-22 18:57-0300\n"
+"Last-Translator: Domingo E. Becker <beckerde@hotmail.com>\n"
+"Language-Team:  <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-bq]\n"
+msgstr "uso:  %s [-bq]\n"
+
+#: ../load_policy/load_policy.c:66
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s:  no se puede cargar la política:  %s\n"
+
+#: ../newrole/newrole.c:188
+#, c-format
+msgid "failed to set PAM_TTY\n"
+msgstr "fallo al fijar PAM_TTY\n"
+
+#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
+msgid "Password:"
+msgstr "Contraseña:"
+
+#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "No se puede encontrar su registro en el archivo shadow passwd.\n"
+
+#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "getpass no puede abrir /dev/tty\n"
+
+#: ../newrole/newrole.c:316
+#, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "no se puede encontrar un registro válido en el archivo passwd.\n"
+
+#: ../newrole/newrole.c:327
+#, c-format
+msgid "Out of memory!\n"
+msgstr "Falta memoria!\n"
+
+#: ../newrole/newrole.c:332
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "Error! El shell no es válido.\n"
+
+#: ../newrole/newrole.c:389
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr "No se pudo limpiar el entorno\n"
+
+#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "Error al hacer init en las capacidades, abortando.\n"
+
+#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
+#, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "Error al configurar las capacidades, abortando.\n"
+
+#: ../newrole/newrole.c:450
+#, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "Error al configurar KEEPCAPS, abortando\n"
+
+#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "Error al desechar las capacidades, abortando\n"
+
+#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "Error al cambiar uid, abortando.\n"
+
+#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "Error al resetear KEEPCAPS, abortando\n"
+
+#: ../newrole/newrole.c:477
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "Error al desechar la capacidad SETUID, abortando\n"
+
+#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
+#, c-format
+msgid "Error freeing caps\n"
+msgstr "Error al liberar caps\n"
+
+#: ../newrole/newrole.c:580
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "Error al conectar al sistema de auditoría.\n"
+
+#: ../newrole/newrole.c:586
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "Error al asignar memoria.\n"
+
+#: ../newrole/newrole.c:593
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "Error al enviar un mensaje de auditoría.\n"
+
+#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "No se pudo determinar el modo de obediencia.\n"
+
+#: ../newrole/newrole.c:641
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "Error! No se pudo abrir %s.\n"
+
+#: ../newrole/newrole.c:646
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr ""
+"%s!  No se pudo obtener el contexto actual para %s, no se reetiqueta el "
+"tty.\n"
+
+#: ../newrole/newrole.c:656
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr ""
+"%s!  No se pudo obtener un contexto nuevo para %s, no se reetiqueta el tty.\n"
+
+#: ../newrole/newrole.c:666
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s!  No se pudo fijar el nuevo contexto para %s\n"
+
+#: ../newrole/newrole.c:710
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s etiquetas cambiadas.\n"
+
+#: ../newrole/newrole.c:716
+#, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "Precaución!  No se pudo restablecer el contexto para %s\n"
+
+#: ../newrole/newrole.c:772
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "Error: se especificaron roles múltiples\n"
+
+#: ../newrole/newrole.c:780
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "Error: se especificaron tipos múltiples\n"
+
+#: ../newrole/newrole.c:787
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "Lo siento, -l se puede usar cuando hay soporte para SELinux MLS.\n"
+
+#: ../newrole/newrole.c:792
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "Error: se especificaron múltiples niveles\n"
+
+#: ../newrole/newrole.c:814
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "No se pudo obtener el tipo por defecto.\n"
+
+#: ../newrole/newrole.c:824
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "fallo al obtener el contexto nuevo.\n"
+
+#: ../newrole/newrole.c:831
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "fallo al fijar nuevo rol %s\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "fallo al fijar el tipo nuevo %s\n"
+
+#: ../newrole/newrole.c:847
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "fallo al construir el rango nuevo con el nivel %s\n"
+
+#: ../newrole/newrole.c:852
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "fallo al fijar el rango n uevo %s\n"
+
+#: ../newrole/newrole.c:860
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "fallo al convertir el contexto nuevo a cadena\n"
+
+#: ../newrole/newrole.c:865
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s no es un contexto válido\n"
+
+#: ../newrole/newrole.c:872
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr "No se pudo asignar memoria para el new_context"
+
+#: ../newrole/newrole.c:898
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr "Imposible obtener señal de vacío\n"
+
+#: ../newrole/newrole.c:906
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr "Imposible poner el manejador SIGHUP\n"
+
+#: ../newrole/newrole.c:972
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "Lo siento, newrole sólo se puede usar en un kernel SELinux.\n"
+
+#: ../newrole/newrole.c:989
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "fallo al obtener old_context.\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "Error!  Could not retrieve tty information.\n"
+msgstr "Error! No se pudo obtener la información de tty.\n"
+
+#: ../newrole/newrole.c:1015
+#, c-format
+msgid "Authenticating %s.\n"
+msgstr "Autenticando %s.\n"
+
+#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "fallo al inicializar PAM\n"
+
+#: ../newrole/newrole.c:1029
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "newrole: contraseña incorrecta para %s\n"
+
+#: ../newrole/newrole.c:1056
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "newrole: error al crear proceso: %s"
+
+#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr "Imposible restaurar la etiqueta tty...\n"
+
+#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
+#, c-format
+msgid "Failed to close tty properly\n"
+msgstr "Fallo al cerrar tty adecuadamente\n"
+
+#: ../newrole/newrole.c:1117
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "No se pudo cerrar los descriptores.\n"
+
+#: ../newrole/newrole.c:1140
+#, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "Error al asignar argv0 del shell.\n"
+
+#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
+#, c-format
+msgid "Could not set exec context to %s.\n"
+msgstr "No se pudo fijar el contexto de ejecución a %s.\n"
+
+#: ../newrole/newrole.c:1173
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr "Imposible restaurar el entorno, abortando\n"
+
+#: ../newrole/newrole.c:1184
+msgid "failed to exec shell\n"
+msgstr "fallo al ejecutar shell\n"
+
+#: ../run_init/run_init.c:67
+msgid ""
+"USAGE: run_init <script> <args ...>\n"
+"  where: <script> is the name of the init script to run,\n"
+"         <args ...> are the arguments to that script."
+msgstr ""
+"USO: run_init <script> <args ...>\n"
+"  donde: <script> es el nombre del script de inicio a ejecutar,\n"
+"         <args ...> son los argumentos al script."
+
+#: ../run_init/run_init.c:139
+#, c-format
+msgid "failed to get account information\n"
+msgstr "fallo al obtener la información de la cuenta.\n"
+
+#: ../run_init/run_init.c:275
+#, c-format
+msgid "run_init: incorrect password for %s\n"
+msgstr "run_init: contraseña incorrecta para %s\n"
+
+#: ../run_init/run_init.c:309
+#, c-format
+msgid "Could not open file %s\n"
+msgstr "No se pudo abrir el archivo %s\n"
+
+#: ../run_init/run_init.c:336
+#, c-format
+msgid "No context in file %s\n"
+msgstr "No hay contexto en el archivo %s\n"
+
+#: ../run_init/run_init.c:361
+#, c-format
+msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
+msgstr "Lo siento, run_init sólo se puede usar en un kernel SELinux.\n"
+
+#: ../run_init/run_init.c:380
+#, c-format
+msgid "authentication failed.\n"
+msgstr "falló la autenticación.\n"
+
+#: ../scripts/chcat:75 ../scripts/chcat:145
+msgid "Requires at least one category"
+msgstr "Se requiere al menos una categoría"
+
+#: ../scripts/chcat:89 ../scripts/chcat:159
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "No se puede modificar los niveles de sensibilidad usando '+' en %s"
+
+#: ../scripts/chcat:93
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s ya está en %s"
+
+#: ../scripts/chcat:164 ../scripts/chcat:174
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s no está en %s"
+
+#: ../scripts/chcat:237 ../scripts/chcat:242
+msgid "Can not combine +/- with other types of categories"
+msgstr "No se puede combinar +/- con otros tipos de categorías"
+
+#: ../scripts/chcat:287
+msgid "Can not have multiple sensitivities"
+msgstr "No se puede tener múltiples sensibilidades"
+
+#: ../scripts/chcat:293
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "Use %s CATEGORY Archivo ..."
+
+#: ../scripts/chcat:294
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "Use %s -l CATEGORY usuario ..."
+
+#: ../scripts/chcat:295
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "Use %s [[+|-]CATEGORY],...]q Archivo ..."
+
+#: ../scripts/chcat:296
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "Use %s -l [[+|-]CATEGORY],...]q usuario ..."
+
+#: ../scripts/chcat:297
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "Use %s -d Archivo ..."
+
+#: ../scripts/chcat:298
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "Use %s -l -d usuario ..."
+
+#: ../scripts/chcat:299
+#, c-format
+msgid "Usage %s -L"
+msgstr "Use %s -L"
+
+#: ../scripts/chcat:300
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "Use %s -L -l usuario"
+
+#: ../scripts/chcat:301
+msgid "Use -- to end option list.  For example"
+msgstr "Use -- to finalizar la lista de ociones. Por ejemplo"
+
+#: ../scripts/chcat:302
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -ConfidencialEmpresa /docs/plandenegocios.odt"
+
+#: ../scripts/chcat:303
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +ConfidencialEmpresa juser"
+
+#: ../semanage/semanage:127
+msgid "Requires 2 or more arguments"
+msgstr "Se requieren 2 o más argumentos"
+
+#: ../semanage/semanage:132
+#, c-format
+msgid "%s not defined"
+msgstr "%s no está definido"
+
+#: ../semanage/semanage:156
+#, c-format
+msgid "%s not valid for %s objects\n"
+msgstr "%s no es válido para los objetos %s\n"
+
+#: ../semanage/semanage:183 ../semanage/semanage:191
+msgid "range not supported on Non MLS machines"
+msgstr "el rango no es soportado en máquinas no MLS"
+
+#: ../semanage/semanage:249
+msgid "You must specify a role"
+msgstr "Debe especificar un rol"
+
+#: ../semanage/semanage:251
+msgid "You must specify a prefix"
+msgstr "Debe especificar un prefijo"
+
+#: ../semanage/semanage:300
+#, c-format
+msgid "Options Error %s "
+msgstr "Error en Opciones %s"
+
+#: ../semanage/semanage:304
+#, c-format
+msgid "Invalid value %s"
+msgstr "Valor inválido %s"
+
+#: ../semanage/seobject.py:132
+msgid "translations not supported on non-MLS machines"
+msgstr "traducciones no soportadas en máquinas no MLS"
+
+#: ../semanage/seobject.py:139
+#, python-format
+msgid "Unable to open %s: translations not supported on non-MLS machines"
+msgstr "No se pudo abrir %s: traducciones no soportadas en máquinas no MLS"
+
+#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#, python-format
+msgid "Translations can not contain spaces '%s' "
+msgstr "Las traducciones no pueden tener espacios '%s'"
+
+#: ../semanage/seobject.py:182
+#, python-format
+msgid "Invalid Level '%s' "
+msgstr "Nivel inválido '%s'"
+
+#: ../semanage/seobject.py:185
+#, python-format
+msgid "%s already defined in translations"
+msgstr "%s ya definido en traducciones"
+
+#: ../semanage/seobject.py:197
+#, python-format
+msgid "%s not defined in translations"
+msgstr "%s no definido en traducciones"
+
+#: ../semanage/seobject.py:218
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr ""
+"La política SELinux es no manejada o no se puede acceder al almacenamiento."
+
+#: ../semanage/seobject.py:223
+msgid "Cannot read policy store."
+msgstr "No se puede leer el almacenamiento de políticas."
+
+#: ../semanage/seobject.py:228
+msgid "Could not establish semanage connection"
+msgstr "No se pudo establecer una conexión semanage"
+
+#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
+#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
+#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
+#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
+#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "No se pudo crear una clave para %s"
+
+#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
+#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "No se pudo chequear si está definido el mapeo de login para %s"
+
+#: ../semanage/seobject.py:253
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "El mapeo de login para %s ya fue definido"
+
+#: ../semanage/seobject.py:257
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "El Usuario de Linux %s no existe"
+
+#: ../semanage/seobject.py:261
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "No se pudo crear mapeo de login para %s"
+
+#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
+#, python-format
+msgid "Could not set name for %s"
+msgstr "No se pudo fijar el nombre para %s"
+
+#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "No se pudo fijar el rango MLS para %s"
+
+#: ../semanage/seobject.py:274
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "No se pudo fijar el usuario SELinux para %s"
+
+#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
+#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
+#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
+#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
+#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
+#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
+#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
+#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1257
+msgid "Could not start semanage transaction"
+msgstr "No se puede iniciar transacción·semanage"
+
+#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "No se pudo agregar el mapeo de ingreso para %s"
+
+#: ../semanage/seobject.py:301
+msgid "Requires seuser or serange"
+msgstr "Se requiere seuser o serange"
+
+#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "El mapeo de ingreso para %s no está definido"
+
+#: ../semanage/seobject.py:315
+#, python-format
+msgid "Could not query seuser for %s"
+msgstr "No se pudo consultar seuser para %s"
+
+#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "No se pudo modificar el mapeo de ingreso para %s"
+
+#: ../semanage/seobject.py:364
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr ""
+"El mapeo de ingreso para %s se definió en la política, no se puede eliminar"
+
+#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
+#, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "No se pudo eliminar el mapeo de ingreso para %s"
+
+#: ../semanage/seobject.py:391
+msgid "Could not list login mappings"
+msgstr "No se pudo listar los mapeos de ingreso"
+
+#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
+#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "No se pudo chequear si el usuario SELinux %s está definido"
+
+#: ../semanage/seobject.py:439
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "El usuario SELinux %s ya está definido"
+
+#: ../semanage/seobject.py:443
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "N o se pudo crear el usuario SELinux para %s"
+
+#: ../semanage/seobject.py:452
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "No se pudo agregar el rol %s para %s"
+
+#: ../semanage/seobject.py:461
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "No se pudo fijar el nivel MLS para %s"
+
+#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
+#, python-format
+msgid "Invalid prefix %s"
+msgstr "Prefijo inválido %s"
+
+#: ../semanage/seobject.py:466
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "No se pudo agregar el prefijo %s para %s"
+
+#: ../semanage/seobject.py:469
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "No se pudo extraer la clave para %s"
+
+#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "no se pudo agregar el usuario SELinux %s"
+
+#: ../semanage/seobject.py:498
+msgid "Requires prefix, roles, level or range"
+msgstr "Se requiere prefijo, roles, nivel o rango"
+
+#: ../semanage/seobject.py:500
+msgid "Requires prefix or roles"
+msgstr "Se requiere prefijo o roles"
+
+#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "El usuario SELinux %s no es definido"
+
+#: ../semanage/seobject.py:514
+#, python-format
+msgid "Could not query user for %s"
+msgstr "No se pudo consultar usuario para %s"
+
+#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
+#, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "No se pudo modificar el usuario SELinux %s"
+
+#: ../semanage/seobject.py:574
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "El usuario SELinux %s está definido en política, no puede ser borrado"
+
+#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "No se pudo borrar el usuario SELinux %s"
+
+#: ../semanage/seobject.py:598
+msgid "Could not list SELinux users"
+msgstr "No se pudieron listar los usuarios SELinux"
+
+#: ../semanage/seobject.py:604
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "No se pudieron listar los roles para el usuario %s"
+
+#: ../semanage/seobject.py:638
+msgid "Protocol udp or tcp is required"
+msgstr "Se requiere protocolo udp o tcp"
+
+#: ../semanage/seobject.py:640
+msgid "Port is required"
+msgstr "Se requiere un puerto"
+
+#: ../semanage/seobject.py:651
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "No se pudo crear una clave para %s/%s"
+
+#: ../semanage/seobject.py:662
+msgid "Type is required"
+msgstr "Se requiere tipo"
+
+#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "No se pudo chequear si el puerto %s/%s está definido"
+
+#: ../semanage/seobject.py:670
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "El puerto %s/%s ya está definido"
+
+#: ../semanage/seobject.py:674
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "No se pudo crear el puerto para %s/%s"
+
+#: ../semanage/seobject.py:680
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "No se pudo crear el contexto para %s/%s"
+
+#: ../semanage/seobject.py:684
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "No se pudo poner al usuario en el contexto de puerto para %s/%s"
+
+#: ../semanage/seobject.py:688
+#, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "No se pudo poner el rol en el contexto de puerto para %s/%s"
+
+#: ../semanage/seobject.py:692
+#, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "No se pudo poner el tipo en el contexto de puerto para %s/%s"
+
+#: ../semanage/seobject.py:697
+#, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr " No se pudo fijar los campos mls en el contexto de puerto para %s/%s"
+
+#: ../semanage/seobject.py:701
+#, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "No se pudo poner el contexto de puerto para %s/%s"
+
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#, python-format
+msgid "Could not add port %s/%s"
+msgstr "No se pudo agregar puerto %s/%s"
+
+#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+msgid "Requires setype or serange"
+msgstr "Se requiere setype o serange"
+
+#: ../semanage/seobject.py:724
+msgid "Requires setype"
+msgstr "Se requiere setype"
+
+#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#, python-format
+msgid "Port %s/%s is not defined"
+msgstr "El puerto %s/%s no está definido"
+
+#: ../semanage/seobject.py:736
+#, python-format
+msgid "Could not query port %s/%s"
+msgstr "No se pudo consultar el puerto %s/%s"
+
+#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#, python-format
+msgid "Could not modify port %s/%s"
+msgstr "No se pudo modificar el puerto %s/%s"
+
+#: ../semanage/seobject.py:772
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr "El puerto %s/%s está definido en la política, no se puede borrar"
+
+#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#, python-format
+msgid "Could not delete port %s/%s"
+msgstr "No se puede borrar el puerto %s/%s"
+
+#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+msgid "Could not list ports"
+msgstr "No se pueden listar los puertos"
+
+#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+msgid "SELinux Type is required"
+msgstr "Se requiere el tipo SELinux "
+
+#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
+#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#, python-format
+msgid "Could not create key for %s"
+msgstr "No se pudo crear clave para %s"
+
+#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
+#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "No se pudo chequear si la interfase %s está definida"
+
+#: ../semanage/seobject.py:865
+#, python-format
+msgid "Interface %s already defined"
+msgstr "La interfase %s ya está definida"
+
+#: ../semanage/seobject.py:869
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "No se pudo crear la interfase para %s"
+
+#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
+#, python-format
+msgid "Could not create context for %s"
+msgstr "No se pudo crear el contexto para %s"
+
+#: ../semanage/seobject.py:878
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "No se pudo poner el usuario en el contexto de interfase para %s"
+
+#: ../semanage/seobject.py:882
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "No se pudo fijar el rol en el contexto de interfase para %s"
+
+#: ../semanage/seobject.py:886
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "No se pudo poner el tipo en el contexto de interfase para %s"
+
+#: ../semanage/seobject.py:891
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr ""
+"No se pudieron poner los campos mls en el contexto de interfase para %s"
+
+#: ../semanage/seobject.py:895
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "No se pudo poner el contexto de interfase para %s"
+
+#: ../semanage/seobject.py:899
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "No se pudo poner el contexto de mensaje para %s"
+
+#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
+#, python-format
+msgid "Could not add interface %s"
+msgstr "No se pudo agregar la interfase %s"
+
+#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "La interfase %s no está definida"
+
+#: ../semanage/seobject.py:933
+#, python-format
+msgid "Could not query interface %s"
+msgstr "No se pudo consultar la interfase %s"
+
+#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "No se pudo modificar la interfase %s"
+
+#: ../semanage/seobject.py:972
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "La interfase %s está definida en la política, no se puede borrar"
+
+#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "No se pudo borrar la interfase %s"
+
+#: ../semanage/seobject.py:992
+msgid "Could not list interfaces"
+msgstr "No se pudieron listar las interfases"
+
+#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "No se pudo chequear si el contexto de archivo para %s está definido"
+
+#: ../semanage/seobject.py:1037
+#, python-format
+msgid "File context for %s already defined"
+msgstr "El contexto de archivo para %s ya está definido"
+
+#: ../semanage/seobject.py:1041
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "No se pudo crear el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1050
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "No se pudo poner al usuario en el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1054
+#, python-format
+msgid "Could not set role in file context for %s"
+msgstr "No se pudo poner el rol en el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1058
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "No se pudo poner el tipo en el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1063
+#, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "No se pudieron poner los campos mls en el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1069
+#, python-format
+msgid "Could not set file context for %s"
+msgstr "No se pudo poner el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#, python-format
+msgid "Could not add file context for %s"
+msgstr "No se pudo agregar el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1089
+msgid "Requires setype, serange or seuser"
+msgstr "Se requiere setype, serange o seuser"
+
+#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "El contexto de archivo para %s no está definido"
+
+#: ../semanage/seobject.py:1103
+#, python-format
+msgid "Could not query file context for %s"
+msgstr "No se pudo consultar el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#, python-format
+msgid "Could not modify file context for %s"
+msgstr "No se pudo modificar el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1142
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr ""
+"El contexto de archivo para %s está definido en la política, no se puede "
+"borrar"
+
+#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#, python-format
+msgid "Could not delete file context for %s"
+msgstr "No se pudo borrar el contexto de archivo para %s"
+
+#: ../semanage/seobject.py:1164
+msgid "Could not list file contexts"
+msgstr "No se pudieron listar los contextos de archivo"
+
+#: ../semanage/seobject.py:1168
+msgid "Could not list local file contexts"
+msgstr "No se pudieron listar los contextos de archivo"
+
+#: ../semanage/seobject.py:1203
+msgid "Requires value"
+msgstr "Se requiere un valor"
+
+#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
+#: ../semanage/seobject.py:1251
+#, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "No se pudo chequear si el booleano %s está definido"
+
+#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#, python-format
+msgid "Boolean %s is not defined"
+msgstr "El booleano %s no está definido"
+
+#: ../semanage/seobject.py:1217
+#, python-format
+msgid "Could not query file context %s"
+msgstr "No se udo consultar el contexto de archivo %s"
+
+#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#, python-format
+msgid "Could not modify boolean %s"
+msgstr "No se pudo modificar el booleano %s"
+
+#: ../semanage/seobject.py:1253
+#, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "El booleano %s está definido en la política, no se puede borrar"
+
+#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#, python-format
+msgid "Could not delete boolean %s"
+msgstr "No se puede borrar el booleano %s"
+
+#: ../semanage/seobject.py:1273
+msgid "Could not list booleans"
+msgstr "No se pueden listar los booleanos"
+
+#: ../audit2allow/audit2allow:183
+#, c-format
+msgid "Generating type enforcment file: %s.te"
+msgstr "Generando archivo de obediencia de tipo: %s.te"
+
+#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
+msgid "Compiling policy"
+msgstr "Compilando·política"
+
+#: ../audit2allow/audit2allow:205
+msgid ""
+"\n"
+"******************** IMPORTANT ***********************\n"
+msgstr ""
+"\n"
+"******************** IMPORTANTE **********************\n"
+
+#: ../audit2allow/audit2allow:206
+#, c-format
+msgid ""
+"In order to load this newly created policy package into the kernel,\n"
+"you are required to execute \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+msgstr ""
+"Para cargar esta nuevo paquete de políticas en el kernel,\n"
+"debe ejecutar·\n"
+"\n"
+"semodule·-i·%s.pp\n"
+"\n"
+
+#: ../audit2allow/audit2allow:211
+#, c-format
+msgid "Options Error: %s "
+msgstr "Error Opciones:·%s·"

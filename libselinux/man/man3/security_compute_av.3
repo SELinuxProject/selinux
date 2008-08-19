@@ -1,0 +1,68 @@
+.TH "security_compute_av" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.SH "NAME"
+security_compute_av, security_compute_create, security_compute_relabel,
+security_compute_member, security_compute_user, security_get_initial_context \- query
+the SELinux policy database in the kernel.
+
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+
+.B #include <selinux/flask.h>
+.sp
+.BI "int security_compute_av(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.sp
+.BI "int security_compute_create(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
+.sp
+.BI "int security_compute_relabel(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
+.sp
+.BI "int security_compute_member(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
+.sp
+.BI "int security_compute_user(security_context_t "scon ", const char *" username ", security_context_t **" con );
+.sp
+.BI "int security_get_initial_context(const char *" name ", security_context_t
+"con );
+.sp
+.BI "int checkPasswdAccess(access_vector_t " requested );
+
+.SH "DESCRIPTION"
+.B security_compute_av
+queries whether the policy permits the source context
+.B scon
+to access the target context
+.B tcon
+via class
+.B tclass
+with the
+.B requested
+access vector. See the cron source for a usage example.
+
+.B security_compute_create
+is used to compute a context to use for labeling a new object in a particular
+class based on a SID pair.
+
+.B security_compute_relabel
+is used to compute the new context to use when relabeling an object, it is used
+in the pam_selinux.so source and the newrole source to determine the correct
+label for the tty at login time, but can be used for other things.
+
+.B security_compute_member
+is used to compute the context to use when labeling a polyinstantiated object
+instance.
+
+.B security_compute_user
+is used to determine the set of user contexts that can be reached from a
+source context. Is mainly used by
+.B get_ordered_context_list.
+
+.B security_get_initial_context
+is used to get the context of a kernel initial security identifier specified by 
+.I name
+
+.B checkPasswdAccess
+This functions is a helper functions that allows you to check for a permission in the passwd class. checkPasswdAccess uses getprevcon() for the source and target security contexts.
+
+.SH "RETURN VALUE"
+0 for success and on error -1 is returned.
+
+.SH "SEE ALSO"
+.BR selinux "(8), " getcon "(3), " getfilecon "(3), " get_ordered_context_list "(3)"

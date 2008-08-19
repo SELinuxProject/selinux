@@ -1,0 +1,81 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.\"
+.\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2007
+.TH "selabel_x" "5" "18 Jun 2007" "" "SELinux API documentation"
+.SH "NAME"
+selabel_x \- userspace SELinux labeling interface: X Window System contexts backend.
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+
+.B #include <selinux/label.h>
+.sp
+.BI "int selabel_lookup(struct selabel_handle *" hnd ,
+.in +\w'int selabel_lookup('u
+.BI "security_context_t *" context ,
+
+.BI "const char *" object_name ", int " object_type ");"
+
+.SH "DESCRIPTION"
+The X contexts backend maps from X Window System object names into security contexts.  It is used to find the appropriate context for X Window System objects whose significance and/or usage semantics are determined primarily by name.  This backend is also used to determine the default context for labeling remotely connected X clients.
+
+The
+.I object_type
+argument should be set to one of the following values:
+.TP
+.B SELABEL_X_PROP
+The
+.I object_name
+argument specifies the name of a window property, such as "WM_NAME".
+.TP
+.B SELABEL_X_SELN
+The
+.I object_name
+argument specifies the name of a selection, such as "PRIMARY".
+.TP
+.B SELABEL_X_EXT
+The
+.I object_name
+argument specifies the name of a protocol extension, such as "RENDER".
+.TP
+.B SELABEL_X_EVENT
+The
+.I object_name
+argument specifies the name of an event type, such as "X11:ButtonPress".
+.TP
+.B SELABEL_X_CLIENT
+The
+.I object_name
+argument is ignored and should be set to NULL.  The default context for labeling remote X clients is returned.
+.TP
+.B SELABEL_X_POLYPROP
+Like
+.BR SELABEL_X_PROP ,
+but checks if the property was marked as being polyinstantiated.  See
+.B NOTES
+below.
+.TP
+.B SELABEL_X_POLYSELN
+Like
+.BR SELABEL_X_SELN ,
+but checks if the selection was marked as being polyinstantiated.  See
+.B NOTES
+below.
+
+.SH "OPTIONS"
+In addition to the global options described in 
+.BR selabel_open (3),
+this backend recognizes the following options:
+
+.TP
+.B SELABEL_OPT_PATH
+A non-null value for this option specifies a path to a file that will be opened in lieu of the standard X contexts file.  
+
+.SH "NOTES"
+Properties and selections are marked as either polyinstantiated or not.  For these name types, the "POLY" option searches only the names marked as being polyinstantiated, while the other option searches only the names marked as not being polyinstantiated.  Users of the interface should check both mappings, optionally taking action based on the result (e.g. polyinstantiating the object).
+
+.SH "SEE ALSO"
+.BR selabel_open (3),
+.BR selabel_lookup (3),
+.BR selabel_stats (3),
+.BR selinux (8)
+

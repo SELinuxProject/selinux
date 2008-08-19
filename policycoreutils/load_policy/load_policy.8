@@ -1,0 +1,43 @@
+.TH LOAD_POLICY "8" "May 2003" "Security Enhanced Linux" NSA
+.SH NAME
+load_policy \- load a new SELinux policy into the kernel
+
+.SH SYNOPSIS
+.B load_policy 
+[-qi]
+.br
+.SH DESCRIPTION
+.PP
+load_policy loads the installed policy file into the kernel.
+The existing policy boolean values are automatically preserved
+across policy reloads rather than being reset to the default
+values in the policy file.
+
+.SH "OPTIONS"
+.TP
+.B \-q
+suppress warning messages.
+.TP
+.B \-i
+inital policy load. Only use this if this is the first time policy is being loaded since boot (usually called from initramfs).
+
+.SH "EXIT STATUS"
+.TP
+.B 0
+Success
+.TP
+.B 1
+Invalid option
+.TP
+.B 2
+Policy load failed
+.TP
+.B 3
+Initial policy load failed and enforcing mode requested
+.SH SEE ALSO
+.B booleans
+(8),
+.SH AUTHORS
+.nf
+This manual page was written by Dan Walsh <dwalsh@redhat.com>.
+The program was written by Stephen Smalley <sds@epoch.ncsc.mil>.

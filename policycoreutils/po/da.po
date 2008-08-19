@@ -1,0 +1,1042 @@
+# Danish messages for policycoreutils.
+# Copyright (C) 2006 Christian Rose.
+# Christian Rose <menthos@menthos.com>, 2006.
+# Keld Simonsen <keld@dkuug.dk>, 2006.
+#
+# $Id: da.po 2193 2007-01-18 14:49:39Z ssmalley $
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: policycoreutils\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-21 14:21-0500\n"
+"PO-Revision-Date: 2006-08-28 02:52-0400\n"
+"Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-bq]\n"
+msgstr "brug: %s [-bq]\n"
+
+#: ../load_policy/load_policy.c:66
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s: Kan ikke indlæse policy: %s\n"
+
+#: ../newrole/newrole.c:188
+#, c-format
+msgid "failed to set PAM_TTY\n"
+msgstr "kunne ikke sætte PAM_TTY\n"
+
+#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
+msgid "Password:"
+msgstr "Adgangskode:"
+
+#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "Kan ikke finde din post i skyggeadgangskodesfilen.\n"
+
+#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "getpass kan ikke åbne /dev/tty\n"
+
+#: ../newrole/newrole.c:316
+#, fuzzy, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "kan ikke finde din indgang i passwd-filen.\n"
+
+#: ../newrole/newrole.c:327
+#, c-format
+msgid "Out of memory!\n"
+msgstr "Ikke mere hukommelse!\n"
+
+#: ../newrole/newrole.c:332
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "Fejl! Skallen er ikke gyldig.\n"
+
+#: ../newrole/newrole.c:389
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr ""
+
+#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "Fejl ved initiering af kapabiliteter, afbryder.\n"
+
+#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
+#, fuzzy, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "Fejl ved initiering af kapabiliteter, afbryder.\n"
+
+#: ../newrole/newrole.c:450
+#, fuzzy, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "Fejl ved nulstilling af KEEPCAPS, afbryder\n"
+
+#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "Fejl ved fjernelse af kapabiliteter, afbryder\n"
+
+#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "Fejl ved skift af uid, afbryder.\n"
+
+#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "Fejl ved nulstilling af KEEPCAPS, afbryder\n"
+
+#: ../newrole/newrole.c:477
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "Fejl ved fjernelse af SETUID kapabilitet, afbryder\n"
+
+#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
+#, c-format
+msgid "Error freeing caps\n"
+msgstr ""
+
+#: ../newrole/newrole.c:580
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "Fejl ved forbindelse til auditeringssystem.\n"
+
+#: ../newrole/newrole.c:586
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "Fejl ved hukommelsesallokering.\n"
+
+#: ../newrole/newrole.c:593
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "Fejl ved sending af auditeringsmeddelelse.\n"
+
+#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "Kunne ikke bestemme gennemtvingnings-tilstand.\n"
+
+#: ../newrole/newrole.c:641
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "Fejl! Kunne ikke åbne %s.\n"
+
+#: ../newrole/newrole.c:646
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr "%s!  Kunne ikke hente aktuel kontekst for %s, ommærker ikke tty.\n"
+
+#: ../newrole/newrole.c:656
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr "%s!  Kunne ikke få ny kontekst for %s, ommærker ikke tty.\n"
+
+#: ../newrole/newrole.c:666
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s!  Kunne ikke sætte ny kontekst for %s\n"
+
+#: ../newrole/newrole.c:710
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s ændrede mærkninger.\n"
+
+#: ../newrole/newrole.c:716
+#, fuzzy, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "Advarsel!  Kunne ikke genetablere kontekst for %s\n"
+
+#: ../newrole/newrole.c:772
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "Fejl: flere roller specificeret\n"
+
+#: ../newrole/newrole.c:780
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "Fejl: flere typer angivet\n"
+
+#: ../newrole/newrole.c:787
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "Desværre, -l kan bruges med SELinux MLS understøttelse.\n"
+
+#: ../newrole/newrole.c:792
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "Fejl: flere niveauer angivet\n"
+
+#: ../newrole/newrole.c:814
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "Kunne ikke få fat i standardtype.\n"
+
+#: ../newrole/newrole.c:824
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "kunne ikke få fat i ny kontekst.\n"
+
+#: ../newrole/newrole.c:831
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "kunne ikke sætte ny rolle %s\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "kunne ikke sætte ny type %s\n"
+
+#: ../newrole/newrole.c:847
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "kunne ikke bygge nyt interval med niveau %s\n"
+
+#: ../newrole/newrole.c:852
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "kunne ikke sætte nyt interval %s\n"
+
+#: ../newrole/newrole.c:860
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "kunne ikke konvertere ny kontekst til streng\n"
+
+#: ../newrole/newrole.c:865
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s er ikke en gyldig kontekst\n"
+
+#: ../newrole/newrole.c:872
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr ""
+
+#: ../newrole/newrole.c:898
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr ""
+
+#: ../newrole/newrole.c:906
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr ""
+
+#: ../newrole/newrole.c:972
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "Desværre, newrole kan kun bruges på en SELinux-kerne.\n"
+
+#: ../newrole/newrole.c:989
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "kunne ikke få fat i old_context.\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "Error!  Could not retrieve tty information.\n"
+msgstr "Fejl! Kunne ikke få fat på tty-information.\n"
+
+#: ../newrole/newrole.c:1015
+#, c-format
+msgid "Authenticating %s.\n"
+msgstr "Autentifiserer %s.\n"
+
+#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "kunne ikke initiere PAM\n"
+
+#: ../newrole/newrole.c:1029
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "newrole: fejlagtig adgangskode for %s\n"
+
+#: ../newrole/newrole.c:1056
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "newrole: fejl ved forgrening: %s"
+
+#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
+#, fuzzy, c-format
+msgid "Failed to close tty properly\n"
+msgstr "kunne ikke sætte ny type %s\n"
+
+#: ../newrole/newrole.c:1117
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "Kunne ikke lukke deskriptorerne.\n"
+
+#: ../newrole/newrole.c:1140
+#, fuzzy, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "Fejl ved hukommelsesallokering.\n"
+
+#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
+#, c-format
+msgid "Could not set exec context to %s.\n"
+msgstr "Kunne ikke sætte kørselskontekst til %s.\n"
+
+#: ../newrole/newrole.c:1173
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1184
+msgid "failed to exec shell\n"
+msgstr "kunne ikke udføre skál\n"
+
+#: ../run_init/run_init.c:67
+msgid ""
+"USAGE: run_init <script> <args ...>\n"
+"  where: <script> is the name of the init script to run,\n"
+"         <args ...> are the arguments to that script."
+msgstr ""
+"BRUG: run_init <skript> <args ...>\n"
+"  hvor: <skript> er navnet på init skript som skal køres,\n"
+"         <args ...> er argumenter til dette skript."
+
+#: ../run_init/run_init.c:139
+#, fuzzy, c-format
+msgid "failed to get account information\n"
+msgstr "kunne ikke få fat i ny kontekst.\n"
+
+#: ../run_init/run_init.c:275
+#, c-format
+msgid "run_init: incorrect password for %s\n"
+msgstr "run_init: forkert adgangskode for %s\n"
+
+#: ../run_init/run_init.c:309
+#, c-format
+msgid "Could not open file %s\n"
+msgstr "Kunne ikke åbne filen %s\n"
+
+#: ../run_init/run_init.c:336
+#, c-format
+msgid "No context in file %s\n"
+msgstr "Ingen kontekst i filen %s\n"
+
+#: ../run_init/run_init.c:361
+#, c-format
+msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
+msgstr "Desværre, run_init kan kun bruges på en SELinux-kerne.\n"
+
+#: ../run_init/run_init.c:380
+#, c-format
+msgid "authentication failed.\n"
+msgstr "autentisering mislykkedes.\n"
+
+#: ../scripts/chcat:75 ../scripts/chcat:145
+msgid "Requires at least one category"
+msgstr "Kræver mindst én kategori"
+
+#: ../scripts/chcat:89 ../scripts/chcat:159
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "Kan ikke ændre følsomhedsniveau ved at bruge '+' på %s"
+
+#: ../scripts/chcat:93
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s er allerede i %s"
+
+#: ../scripts/chcat:164 ../scripts/chcat:174
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s findes ikke i %s"
+
+#: ../scripts/chcat:237 ../scripts/chcat:242
+msgid "Can not combine +/- with other types of categories"
+msgstr "Kan ikke kombinere +/- med andre typer af kategorier"
+
+#: ../scripts/chcat:287
+msgid "Can not have multiple sensitivities"
+msgstr "Kan ikke have flere følsomheder"
+
+#: ../scripts/chcat:293
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "Brug %s KATEGORI fil ..."
+
+#: ../scripts/chcat:294
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "Brug %s -l KATEGORI bruger ..."
+
+#: ../scripts/chcat:295
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "Brug %s [[+|-]KATEGORI],...]q fil ..."
+
+#: ../scripts/chcat:296
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "Brug %s -l [[+|-]KATEGORI],...]q bruger ..."
+
+#: ../scripts/chcat:297
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "Brug %s -d fil ..."
+
+#: ../scripts/chcat:298
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "Brug %s -l -d bruger ..."
+
+#: ../scripts/chcat:299
+#, c-format
+msgid "Usage %s -L"
+msgstr "Brug %s -L"
+
+#: ../scripts/chcat:300
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "Brug %s -L -l bruger"
+
+#: ../scripts/chcat:301
+msgid "Use -- to end option list.  For example"
+msgstr "Brug -- for afslutte option-listen.  For eksempel"
+
+#: ../scripts/chcat:302
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -Hemmeligt /dok/forretningsplan.odt"
+
+#: ../scripts/chcat:303
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +Hemmeligt juser"
+
+#: ../semanage/semanage:127
+msgid "Requires 2 or more arguments"
+msgstr "Kræver 2 eller flere argumenter"
+
+#: ../semanage/semanage:132
+#, c-format
+msgid "%s not defined"
+msgstr "%s er ikke defineret"
+
+#: ../semanage/semanage:156
+#, c-format
+msgid "%s not valid for %s objects\n"
+msgstr "%s ikke gyldig for %s objekt\n"
+
+#: ../semanage/semanage:183 ../semanage/semanage:191
+msgid "range not supported on Non MLS machines"
+msgstr "interval understøttes ikke af ikke-MLS maskiner"
+
+#: ../semanage/semanage:249
+msgid "You must specify a role"
+msgstr "Du skal angive en rolle"
+
+#: ../semanage/semanage:251
+msgid "You must specify a prefix"
+msgstr "Du skal angive et præfiks"
+
+#: ../semanage/semanage:300
+#, c-format
+msgid "Options Error %s "
+msgstr "Flagfejl %s "
+
+#: ../semanage/semanage:304
+#, c-format
+msgid "Invalid value %s"
+msgstr "Ugyldigxt værdi %s"
+
+#: ../semanage/seobject.py:132
+msgid "translations not supported on non-MLS machines"
+msgstr "oversættelser understøttes ikke på maskiner som ikke har MLS"
+
+#: ../semanage/seobject.py:139
+#, python-format
+msgid "Unable to open %s: translations not supported on non-MLS machines"
+msgstr ""
+"Kan ikke åbne %s: oversættelser understøttes ikke på maskiner som ikke har "
+"MLS"
+
+#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#, python-format
+msgid "Translations can not contain spaces '%s' "
+msgstr "oversættelser kan ikke indeholde mellemrum \"%s\" "
+
+#: ../semanage/seobject.py:182
+#, python-format
+msgid "Invalid Level '%s' "
+msgstr "Ugyldigt niveau \"%s\" "
+
+#: ../semanage/seobject.py:185
+#, python-format
+msgid "%s already defined in translations"
+msgstr "%s er allerede defineret i oversættelser"
+
+#: ../semanage/seobject.py:197
+#, python-format
+msgid "%s not defined in translations"
+msgstr "%s er ikke defineret i oversættelser"
+
+#: ../semanage/seobject.py:218
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "SELinux policy er ikke håndteret, eller der er ikke adgang til lager."
+
+#: ../semanage/seobject.py:223
+msgid "Cannot read policy store."
+msgstr "Kan ikke læse policylager."
+
+#: ../semanage/seobject.py:228
+msgid "Could not establish semanage connection"
+msgstr "Kunne ikke sætte en semanage-opkobling op"
+
+#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
+#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
+#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
+#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
+#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "Kunne ikke oprette en nøgle for %s"
+
+#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
+#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "Kunne ikke kontrollere om indlogningskortlægning for %s er defineret"
+
+#: ../semanage/seobject.py:253
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "Indlogningskortlægning for %s er allerede defineret"
+
+#: ../semanage/seobject.py:257
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "Linuxbruger %s findes ikke"
+
+#: ../semanage/seobject.py:261
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "Kunne ikke oprette indlogningskortlægning for %s"
+
+#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
+#, python-format
+msgid "Could not set name for %s"
+msgstr "Kunne ikke sætte navn for %s"
+
+#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "Kunne ikke sætte MLS-interval for %s"
+
+#: ../semanage/seobject.py:274
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "Kunne ikke sætte SELinux-bruger for %s"
+
+#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
+#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
+#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
+#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
+#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
+#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
+#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
+#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1257
+msgid "Could not start semanage transaction"
+msgstr "Kunne ikke starte semanage-transaktion"
+
+#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "Kunne ikke tilføje indlogningskortlægning for %s"
+
+#: ../semanage/seobject.py:301
+msgid "Requires seuser or serange"
+msgstr "Kræver seuser eller serange"
+
+#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "Indlogningskortlægning for %s er ikke defineret"
+
+#: ../semanage/seobject.py:315
+#, python-format
+msgid "Could not query seuser for %s"
+msgstr "Kunne ikke forespørge seuser om %s"
+
+#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "Kunne ikke ændre indlognings-kortlægning for %s"
+
+#: ../semanage/seobject.py:364
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr "Indlogningskortlægning for %s er defineret i policy, kan ikke fjernes"
+
+#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
+#, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "Kunne ikke fjerne indlogningkortlægning for %s"
+
+#: ../semanage/seobject.py:391
+msgid "Could not list login mappings"
+msgstr "Kunne ikke liste indlogningskortlægninger"
+
+#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
+#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "Kunne ikke kontrollere om SELinux-bruger %s er defineret"
+
+#: ../semanage/seobject.py:439
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "SELinux-bruger %s er allerede defineret"
+
+#: ../semanage/seobject.py:443
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "Kunne ikke oprette SELinux-bruger for %s"
+
+#: ../semanage/seobject.py:452
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "Kunne ikke tilføje rolle %s for %s"
+
+#: ../semanage/seobject.py:461
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "Kunne ikke sætte MLS-niveau for %s"
+
+#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
+#, fuzzy, python-format
+msgid "Invalid prefix %s"
+msgstr "Ugyldigxt værdi %s"
+
+#: ../semanage/seobject.py:466
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "Kunne ikke tilføje præfiks %s for %s"
+
+#: ../semanage/seobject.py:469
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "Kunne ikke finde nøgle for %s"
+
+#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "Kunne ikke tilføje SELinux-bruger %s"
+
+#: ../semanage/seobject.py:498
+msgid "Requires prefix, roles, level or range"
+msgstr "Kræver præfiks, roller, niveau eller område"
+
+#: ../semanage/seobject.py:500
+msgid "Requires prefix or roles"
+msgstr "Kræver præfiks eller roller"
+
+#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux-bruger %s er ikke defineret"
+
+#: ../semanage/seobject.py:514
+#, python-format
+msgid "Could not query user for %s"
+msgstr "Kan ikke forespørge bruger om %s"
+
+#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
+#, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "Kan ikke ændre SELinux-bruger %s"
+
+#: ../semanage/seobject.py:574
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "SELinux-bruger %s er defineret i policy, kan ikke fjernes"
+
+#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "Kan ikke fjerne SELinuxtbruger %s"
+
+#: ../semanage/seobject.py:598
+msgid "Could not list SELinux users"
+msgstr "Kan ikke liste SELinuxtbrugere"
+
+#: ../semanage/seobject.py:604
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "Kan ikke liste roller for bruger %s"
+
+#: ../semanage/seobject.py:638
+msgid "Protocol udp or tcp is required"
+msgstr "Protokol udp eller tcp kræves"
+
+#: ../semanage/seobject.py:640
+msgid "Port is required"
+msgstr "Port kræves"
+
+#: ../semanage/seobject.py:651
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "Kunne ikke oprette en nøgle for %s/%s"
+
+#: ../semanage/seobject.py:662
+msgid "Type is required"
+msgstr "Type kræves"
+
+#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "Kunne ikke kontrollere om port %s/%s er defineret"
+
+#: ../semanage/seobject.py:670
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "Port %s/%s allerede defineret"
+
+#: ../semanage/seobject.py:674
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "Kunne ikke oprette port for %s/%s"
+
+#: ../semanage/seobject.py:680
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "Kunne ikke oprette kontekst for %s/%s"
+
+#: ../semanage/seobject.py:684
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "Kunne ikke sætte bruger i port-kontekst for %s/%s"
+
+#: ../semanage/seobject.py:688
+#, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "Kunne ikke sætte rolle i port-kontekst for %s/%s"
+
+#: ../semanage/seobject.py:692
+#, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "Kunne ikke sætte type i port-kontekst for %s/%s"
+
+#: ../semanage/seobject.py:697
+#, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr "Kunne ikke sætte mls-felter i port-kontekst for %s/%s"
+
+#: ../semanage/seobject.py:701
+#, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "Kunne ikke sætte port-kontekst for %s/%s"
+
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#, python-format
+msgid "Could not add port %s/%s"
+msgstr "Kunne ikke tilføje port %s/%s"
+
+#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+msgid "Requires setype or serange"
+msgstr "Kræver setype eller serange"
+
+#: ../semanage/seobject.py:724
+msgid "Requires setype"
+msgstr "Kræver setype"
+
+#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#, python-format
+msgid "Port %s/%s is not defined"
+msgstr "Port %s/%s er ikke defineret"
+
+#: ../semanage/seobject.py:736
+#, python-format
+msgid "Could not query port %s/%s"
+msgstr "Kunne ikke forespørge port %s/%s"
+
+#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#, python-format
+msgid "Could not modify port %s/%s"
+msgstr "Kunne ikke ændre port %s/%s"
+
+#: ../semanage/seobject.py:772
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr "Port %s/%s er defineret i policy, kan ikke fjernes"
+
+#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#, python-format
+msgid "Could not delete port %s/%s"
+msgstr "Kan ikke fjerne port %s/%s"
+
+#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+msgid "Could not list ports"
+msgstr "Kunne ikke liste porte"
+
+#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+msgid "SELinux Type is required"
+msgstr "SELinux Type kræves"
+
+#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
+#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#, python-format
+msgid "Could not create key for %s"
+msgstr "Kunne ikke oprette nøgle for %s"
+
+#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
+#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "Kunne ikke kontrollere om grænsefladen %s er defineret"
+
+#: ../semanage/seobject.py:865
+#, python-format
+msgid "Interface %s already defined"
+msgstr "Grænsefladen %s er allerede defineret"
+
+#: ../semanage/seobject.py:869
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "Kunne ikke oprette grænseflade for %s"
+
+#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
+#, python-format
+msgid "Could not create context for %s"
+msgstr "Kunne ikke oprette-kontekst for %s"
+
+#: ../semanage/seobject.py:878
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "Kunne ikke sætte bruger i grænseflade-kontekst for %s"
+
+#: ../semanage/seobject.py:882
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "Kunne ikke sætte rolle i grænseflade-kontekst for %s"
+
+#: ../semanage/seobject.py:886
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "Kan ikke sætte type i grænseflade-kontekst for %s"
+
+#: ../semanage/seobject.py:891
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "Kan ikke sætte mls-felt i grænseflade-kontekst for %s"
+
+#: ../semanage/seobject.py:895
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "Kan ikke sætte grænseflade-kontekst for %s"
+
+#: ../semanage/seobject.py:899
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "Kan ikke sætte meddelelse-kontekst for %s"
+
+#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
+#, python-format
+msgid "Could not add interface %s"
+msgstr "Kunne ikke tilføje grænsefladen %s"
+
+#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "Grænsefladen %s er ikke defineret"
+
+#: ../semanage/seobject.py:933
+#, python-format
+msgid "Could not query interface %s"
+msgstr "Kunne ikke spørge grænsefladen %s"
+
+#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "Kunne ikke ændre grænsefladen %s"
+
+#: ../semanage/seobject.py:972
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "Grænseflade %s er defineret i policy, kan ikke fjernes"
+
+#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "Kunne ikke fjerne grænsefladen %s"
+
+#: ../semanage/seobject.py:992
+msgid "Could not list interfaces"
+msgstr "Kunne ikke liste grænseflader"
+
+#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "Kan ikke kontrollere om fil-kontekst for %s er defineret"
+
+#: ../semanage/seobject.py:1037
+#, python-format
+msgid "File context for %s already defined"
+msgstr "Filkontekst for %s allerede defineret"
+
+#: ../semanage/seobject.py:1041
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "Kunne ikke oprette filkontekst for %s"
+
+#: ../semanage/seobject.py:1050
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "Kunne ikke sætte bruger i filkontekst for %s"
+
+#: ../semanage/seobject.py:1054
+#, python-format
+msgid "Could not set role in file context for %s"
+msgstr "Kunne ikke sætte rolle i filkontekst for %s"
+
+#: ../semanage/seobject.py:1058
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "Kunne ikke sætte type i filkontekst for %s"
+
+#: ../semanage/seobject.py:1063
+#, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "Kunne ikke sætte mls-felter i filkontekst for %s"
+
+#: ../semanage/seobject.py:1069
+#, python-format
+msgid "Could not set file context for %s"
+msgstr "Kunne ikke sætte filkontekst for %s"
+
+#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#, python-format
+msgid "Could not add file context for %s"
+msgstr "Kunne ikke tilføje filkontekst for %s"
+
+#: ../semanage/seobject.py:1089
+msgid "Requires setype, serange or seuser"
+msgstr "Kræver setype, serange eller seuser"
+
+#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "Filkontekst for %s er ikke defineret"
+
+#: ../semanage/seobject.py:1103
+#, python-format
+msgid "Could not query file context for %s"
+msgstr "Kunne ikke spørge filkontekst for %s"
+
+#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#, python-format
+msgid "Could not modify file context for %s"
+msgstr "Kunne ikke ændre filkontekst for %s"
+
+#: ../semanage/seobject.py:1142
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr "Filkontekst for %s er defineret i policy, kan ikke fjernes"
+
+#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#, python-format
+msgid "Could not delete file context for %s"
+msgstr "Kunne ikke slette filkontekst for %s"
+
+#: ../semanage/seobject.py:1164
+msgid "Could not list file contexts"
+msgstr "Kunne ikke liste filkontekst"
+
+#: ../semanage/seobject.py:1168
+#, fuzzy
+msgid "Could not list local file contexts"
+msgstr "Kunne ikke liste filkontekst"
+
+#: ../semanage/seobject.py:1203
+msgid "Requires value"
+msgstr "Kræver værdi"
+
+#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
+#: ../semanage/seobject.py:1251
+#, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "Kunne ikke kontrollere om flaget %s er defineret"
+
+#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#, python-format
+msgid "Boolean %s is not defined"
+msgstr "Flaget %s er ikke defineret"
+
+#: ../semanage/seobject.py:1217
+#, python-format
+msgid "Could not query file context %s"
+msgstr "Kunne ikke forespørge filkontekst %s"
+
+#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#, python-format
+msgid "Could not modify boolean %s"
+msgstr "Kunne ikke ændre flag %s"
+
+#: ../semanage/seobject.py:1253
+#, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "Flag %s er defineret i policy, kan ikke fjernes"
+
+#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#, python-format
+msgid "Could not delete boolean %s"
+msgstr "Kunne ikke fjerne flag %s"
+
+#: ../semanage/seobject.py:1273
+msgid "Could not list booleans"
+msgstr "Kunne ikke liste flag"
+
+#: ../audit2allow/audit2allow:183
+#, c-format
+msgid "Generating type enforcment file: %s.te"
+msgstr "Genererer gennemtvingnings-type fil: %s.te"
+
+#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
+msgid "Compiling policy"
+msgstr "Kompilerer policy"
+
+#: ../audit2allow/audit2allow:205
+msgid ""
+"\n"
+"******************** IMPORTANT ***********************\n"
+msgstr ""
+"\n"
+"********************* VIGTIGT ************************\n"
+
+#: ../audit2allow/audit2allow:206
+#, c-format
+msgid ""
+"In order to load this newly created policy package into the kernel,\n"
+"you are required to execute \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+msgstr ""
+"For at indlæse denne nye policy-pakke in i kernen,\n"
+"skal du køre \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+
+#: ../audit2allow/audit2allow:211
+#, c-format
+msgid "Options Error: %s "
+msgstr "Flagfejl: %s "

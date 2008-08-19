@@ -1,0 +1,116 @@
+.TH NEWROLE "1" "October 2000" "Security Enhanced Linux" NSA
+.SH NAME
+newrole \- run a shell with a new SELinux role
+.SH SYNOPSIS
+.B newrole
+[\fB-r\fR|\fB--role\fR]
+\fIROLE\fR
+[\fB-t\fR|\fB--type\fR]
+\fITYPE\fR
+[\fB-l\fR|\fB--level\fR]
+\fILEVEL\fR [-- [\fIARGS\fR]...]
+.SH DESCRIPTION
+.PP
+Run a new shell in a new context.  The new context is derived from the 
+old context in which
+.B newrole
+is originally executed.  If the
+.B -r
+or
+.B --role
+option is specified, then the new context will have the role specified by
+\fIROLE\fR.
+If the 
+.B -t
+or
+.B --type
+option is specified, then the new context will have the type (domain)
+specified by
+\fITYPE\fR.
+If a role is specified, but no type is specified, the default type is derived
+from the specified role.  If the
+.B -l
+or
+.B --level
+option is specified, then the new context will have the sensitivity level
+specified by
+\fILEVEL\fR.
+If
+\fILEVEL\fR
+is a range, the new context will have the sensitivity level and clearance
+specified by that range.
+.PP
+Additional arguments
+.I ARGS
+may be provided after a -- option,
+in which case they are supplied to the new shell.
+In particular, an argument of -- -c will cause the next argument to be
+treated as a command by most command interpreters.
+.PP
+If a command argument is specified to newrole and the command name is found
+in /etc/selinux/newrole_pam.conf, then the pam service name listed in that
+file for the command will be used rather than the normal newrole pam
+configuration.  This allows for per-command pam configuration when
+invoked via newrole, e.g. to skip the interactive re-authentication phase.
+.PP
+The new shell will be the shell specified in the user's entry in the 
+.I /etc/passwd
+file.
+.PP
+The
+.B -V
+or 
+.B --version
+shows the current version of newrole
+.PP
+.SH EXAMPLE
+.br
+Changing role:
+   # id -Z
+   staff_u:staff_r:staff_t:SystemLow-SystemHigh
+   # newrole -r sysadm_r
+   # id -Z
+   staff_u:sysadm_r:sysadm_t:SystemLow-SystemHigh
+
+Changing sensitivity only:
+   # id -Z
+   staff_u:sysadm_r:sysadm_t:Unclassified-SystemHigh
+   # newrole -l Secret
+   # id -Z
+   staff_u:sysadm_r:sysadm_t:Secret-SystemHigh
+
+.PP
+Changing sensitivity and clearance:
+   # id -Z
+   staff_u:sysadm_r:sysadm_t:Unclassified-SystemHigh
+   # newrole -l Secret-Secret
+   # id -Z
+   staff_u:sysadm_r:sysadm_t:Secret
+
+.PP
+Running a program in a given role or level:
+   # newrole -r sysadm_r -- -c "/path/to/app arg1 arg2..."
+   # newrole -l Secret -- -c "/path/to/app arg1 arg2..."
+
+.SH FILES
+/etc/passwd - user account information
+.br
+/etc/shadow - encrypted passwords and age information
+.br
+/etc/selinux/<policy>/contexts/default_type - default types for roles
+.br
+/etc/selinux/<policy>/contexts/securetty_types - securetty types for level changes
+.br
+/etc/selinux/newrole_pam.conf - optional mapping of commands to separate pam service names
+.br
+.SH SEE ALSO
+.B runcon
+(1)
+.SH AUTHORS
+.nf
+Anthony Colatrella
+Tim Fraser
+Steve Grubb <sgrubb@redhat.com>
+Darrel Goeddel <DGoeddel@trustedcs.com>
+Michael Thompson <mcthomps@us.ibm.com>
+Dan Walsh <dwalsh@redhat.com>

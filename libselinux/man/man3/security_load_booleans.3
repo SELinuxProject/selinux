@@ -1,0 +1,59 @@
+.TH "security_get_boolean_names" "3" "15 November 2004" "dwalsh@redhat.com" "SELinux API Documentation"
+.SH "NAME"
+security_load_booleans, security_set_boolean, security_commit_booleans, 
+security_get_boolean_names, security_get_boolean_active,
+security_get_boolean_pending \- routines for manipulating SELinux boolean values
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+.sp
+extern int security_load_booleans(char *path);
+
+extern int security_get_boolean_names(char ***names, int *len);
+
+extern int security_get_boolean_pending(const char *name);
+
+extern int security_get_boolean_active(const char *name);
+
+extern int security_set_boolean(const char *name, int value);
+
+extern int security_commit_booleans(void);
+
+
+.SH "DESCRIPTION"
+
+The SELinux policy can include conditional rules that are enabled or
+disabled based on the current values of a set of policy booleans.
+These policy booleans allow runtime modification of the security
+policy without having to load a new policy.  
+
+The SELinux API allows for a transaction based update.  So you can set several boolean values and the commit them all at once.
+
+security_load_booleans
+
+Load policy boolean settings. Path may be NULL, in which case the booleans are loaded from the active policy boolean configuration file.
+
+security_get_boolean_names
+
+Returns a list of boolean names, currently supported by the loaded policy.
+
+security_set_boolean 
+
+Sets the pending value for boolean 
+
+security_get_boolean_pending
+
+Return pending value for boolean
+
+security_get_boolean_active
+
+Return active value for boolean
+
+security_commit_booleans
+
+Commit all pending values for the booleans.
+
+.SH AUTHOR	
+This manual page was written by Dan Walsh <dwalsh@redhat.com>.
+
+.SH "SEE ALSO"
+selinux(8), getsebool(8), booleans(8), togglesebool(8)

@@ -1,0 +1,79 @@
+Code Overview
+=============
+
+The source for Sepolgen is divided into the python library (sepolgen)
+and tools (e.g., audit2allow).
+
+The library is structured to give flexibility to the application using
+it - it avoids assumptions and close coupling of components where
+possible. The audit2allow application demonstrates how to hook the
+components together.
+
+There is a test suite in the test subdirectory. The run-tests.py
+script will run all of the tests.
+
+The library is is divided into several functional areas:
+
+Reference Policy Representation (sepolgen.refpolicy)
+-------------------------------------------------------------
+
+Objects for representing policies and the reference policy
+interfaces. Includes basic components (security contexts, allow rules,
+etc.) and reference policy specific components (interfaces, modules,
+etc.).
+
+This representation can be used as output from the parser to represent
+the reference policy interfaces. It can also be used to generate
+policy by building up the relevent data structures and then outputting
+them. See sepolgen.policygen and sepolgen.output for information on how
+this can be done.
+
+Access (sepolgen.access, sepolgen.interfaces, sepolgen.matching)
+-------------------------------------------------------------
+
+Objects and algorithms for representing access and sets of access in
+an abstract way and searching that access. The basic concept is that
+of an access vector (source type, target type, object class, and
+permissions). These can be grouped into sets without overlapping
+access. Access vectors and access vector sets can be matched against
+other access vectors - this forms the backbone of how we turn audit
+messages into interface calls.
+
+The highest-level form of access represented in interfaces - which
+includes algorithms to turn the raw output of the parser into access
+vector sets representing the access allowed by each interface.
+
+Parsing (sepolgen.refparser)
+-------------------------------------------------------------
+
+Parser for reference policy "headers" - i.e.,
+/usr/share/selinux/devel/include. This uses the LGPL parsing library
+[PLY](http://www.dabeaz.com/ply/) which is included in the source
+distribution in the files lex.py and yacc.py. It may be necessary to
+switch to a more powerful parsing library in the future, but for now
+this is fast and easy.
+
+Audit Messages (sepolgen.audit)
+-------------------------------------------------------------
+
+Infrastructure for parsing SELinux related messages as produced by the
+audit system. This is not a general purpose audit parsing library - it
+is only meant to capture SELinux messages - primarily access vector
+cache (AVC) messages and policy load messages.
+
+Policy Generation (sepolgen.policygen and sepolgen.output)
+-------------------------------------------------------------
+
+Infrastructure for generating policy based on required access. This
+deliberately only loosely coupled to the audit parsing to allow
+required accesses to be feed in from anywhere.
+
+Object Model (sepolgen.objectmodel)
+-------------------------------------------------------------
+
+Information about the SELinux object classes. This is semantic
+information about the object classes - including information flow. It
+is separated to keep the core from being concerned about the details
+of the object classes.
+
+[selist]: http://www.nsa.gov/selinux/info/list.cfm

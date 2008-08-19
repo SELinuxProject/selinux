@@ -1,0 +1,49 @@
+.TH "sestatus" "8" "2005111103" "" ""
+.SH "NAME"
+sestatus \- SELinux status tool
+
+.SH "SYNOPSIS"
+.B sestatus
+.I [\-v] [\-b]  
+.P
+This tool is used to get the status of a system running SELinux.
+
+.SH "DESCRIPTION"
+This manual page describes the
+.BR sestatus
+program.
+.br
+This tool is used to get the status of a system running SELinux.  It displays data about whether SELinux is enabled, disabled, the loaded policy and whether it is in enforcing or permissive mode.  It can also be used to display the security context of files and processes listed in the /etc/sestatus.conf file.
+
+> sestatus
+.br
+SELinux status:         enabled
+.br
+SELinuxfs mount:        /selinux
+.br
+Current Mode:           permissive
+.br
+Policy version:         16
+
+.SH "OPTIONS"
+.TP 
+
+.B \-v
+.P
+ Checks the contexts of a files , and a processes listed in the /etc/sestatus.conf file.  It also checks the context of the target, in cases of
+symlinks.
+
+.B \-b
+.P
+Display the current state of booleans.
+
+
+.SH "FILES"
+/etc/sestatus.conf
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>.
+.br
+The program was written by Chris PeBenito <pebenito@gentoo.org>
+
+

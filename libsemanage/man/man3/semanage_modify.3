@@ -1,0 +1,49 @@
+.TH semanage_modify 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux Management API
+
+.SH "SYNOPSIS"
+The following modify function is supported for any semanage record.
+.br
+Replace the function and object name as necessary.
+
+.B extern int MODIFY_FUNCTION (
+.br
+.BI "	semanage_handle_t *" handle ","
+.br
+.BI "	const semanage_OBJECT_key_t *" key ","
+.br
+.BI "	const semanage_OBJECT_t *" data ");"
+
+.SH "DESCRIPTION"
+.TP
+.B Behavior:
+If a matching key is found in the local store, the provided object will replace the current one. Otherwise, it will be added to the store. When
+.BR semanage_commit "(3)" 
+is invoked, changes will be permanently written into the local store, and then loaded into policy. Validity of the object being added is checked at commit time. Adding new objects with respect to policy is allowed, except in the case of booleans. Attempt to add new booleans with respect to policy will fail at commit time.
+
+.TP
+.B Parameters:
+The 
+.I handle
+is used to track persistent state across semanage calls, and for error reporting. The
+.I key 
+identifies the 
+.I data
+object, which will be written into the store. The key are data are properties of the caller, and are not stored or modified internally.
+
+.TP
+.B Requirements:
+This function requires an semanage connection to be established (see 
+.BR semanage_connect "(3)"
+), and must be executed in a transaction (see 
+.BR semanage_begin_transaction "(3)"
+).
+
+.SH "RETURN VALUE"
+In case of failure, -1 is returned, and the semanage error callback is invoked, describing the error.
+Otherwise 0 is returned.
+
+.SH "SEE ALSO"
+.BR semanage_handle_create "(3), " semanage_begin_transaction "(3), " semanage_connect "(3), " semanage_commit "(3). "

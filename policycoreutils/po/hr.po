@@ -1,0 +1,1113 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: policycoreutils\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-21 14:21-0500\n"
+"PO-Revision-Date: 2006-11-28 20:15+0100\n"
+"Last-Translator: Renato Pavicic <renato@translator-shop.org>\n"
+"Language-Team: Croatian <www.translator-shop.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Croatian\n"
+"X-Poedit-Country: CROATIA\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-bq]\n"
+msgstr "upotreba:  %s [-bq]\n"
+
+#: ../load_policy/load_policy.c:66
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s: Pravilo nije moguće učitati: %s\n"
+
+#: ../newrole/newrole.c:188
+#, c-format
+msgid "failed to set PAM_TTY\n"
+msgstr "Zadavanje PAM_TTY nije uspjelo\n"
+
+#: ../newrole/newrole.c:218
+#: ../run_init/run_init.c:162
+msgid "Password:"
+msgstr "Lozinka:"
+
+#: ../newrole/newrole.c:243
+#: ../run_init/run_init.c:197
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "Vaš unos u datoteci lozinka u sjeni nije moguće pronaći.\n"
+
+#: ../newrole/newrole.c:250
+#: ../run_init/run_init.c:203
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "'getpass' ne može otvoriti /dev/tty\n"
+
+#: ../newrole/newrole.c:316
+#, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "Valjani unos u datoteci lozinka nije moguće pronaći.\n"
+
+#: ../newrole/newrole.c:327
+#, c-format
+msgid "Out of memory!\n"
+msgstr "Nedovoljno memorije!\n"
+
+#: ../newrole/newrole.c:332
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "Pogreška! Ljuska nije valjana.\n"
+
+#: ../newrole/newrole.c:389
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr "Čišćenje okruženje nije moguće\n"
+
+#: ../newrole/newrole.c:436
+#: ../newrole/newrole.c:513
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "Pogreška pri inicijalizaciji sposobnosti. Bit će prekinuto.\n"
+
+#: ../newrole/newrole.c:444
+#: ../newrole/newrole.c:519
+#, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "Pogreška pri postavljanju sposobnosti. Bit će prekinuto.\n"
+
+#: ../newrole/newrole.c:450
+#, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "Pogreška postavljanju KEEPCAPS. Bit će prekinuto.\n"
+
+#: ../newrole/newrole.c:458
+#: ../newrole/newrole.c:531
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "Pogreška pri ispuštanju sposobnosti. Bit će prekinuto.\n"
+
+#: ../newrole/newrole.c:464
+#: ../newrole/newrole.c:562
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "Pogreška pri izmjeni UID. Bit će prekinuto.\n"
+
+#: ../newrole/newrole.c:470
+#: ../newrole/newrole.c:525
+#: ../newrole/newrole.c:557
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "Pogreška vraćanju KEEPCAPS na izvorne postavke. Bit će prekinuto.\n"
+
+#: ../newrole/newrole.c:477
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "Pogreška pri ispuštanju SETUID sposobnosti. Bit će prekinuto.\n"
+
+#: ../newrole/newrole.c:482
+#: ../newrole/newrole.c:536
+#, c-format
+msgid "Error freeing caps\n"
+msgstr "Pogreška pri oslobađanju sposobnosti\n"
+
+#: ../newrole/newrole.c:580
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "Pogreška pri povezivanju sa sustavom provjere.\n"
+
+#: ../newrole/newrole.c:586
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "Pogreška pri dodjeljivanju memorije.\n"
+
+#: ../newrole/newrole.c:593
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "Pogreška pri slanju poruke provjere.\n"
+
+#: ../newrole/newrole.c:634
+#: ../newrole/newrole.c:978
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "Određivanje načina prisiljavanja nije moguće.\n"
+
+#: ../newrole/newrole.c:641
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "Pogreška! Nije moguće otvoriti %s.\n"
+
+#: ../newrole/newrole.c:646
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr "%s! Dohvaćanje trenutnog konteksta za %s nije moguće. TTY neće biti ponovno označen.\n"
+
+#: ../newrole/newrole.c:656
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr "%s! Dohvaćanje novog konteksta za %s nije moguće. TTY neće biti ponovno označen.\n"
+
+#: ../newrole/newrole.c:666
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s! Zadavanje novog konteksta za %s nije moguće.\n"
+
+#: ../newrole/newrole.c:710
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s je izmijenio oznake.\n"
+
+#: ../newrole/newrole.c:716
+#, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "Upozorenje! Obnavljanje konteksta za %s nije moguće.\n"
+
+#: ../newrole/newrole.c:772
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "Pogreška: Određene su višestruke uloge\n"
+
+#: ../newrole/newrole.c:780
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "Pogreška: Određene su višestruke vrste\n"
+
+#: ../newrole/newrole.c:787
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "Nažalost, opcija -l može se upotrijebiti uz SELinux MLS podršku.\n"
+
+#: ../newrole/newrole.c:792
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "Pogreška: Određene su višestruke razine\n"
+
+#: ../newrole/newrole.c:814
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "Dohvaćanje zadane vrste nije moguće.\n"
+
+#: ../newrole/newrole.c:824
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "Dohvaćanje novog konteksta nije uspjelo.\n"
+
+#: ../newrole/newrole.c:831
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "Zadavanje nove %s uloge nije uspjelo.\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "Zadavanje nove vrste %s nije uspjelo.\n"
+
+#: ../newrole/newrole.c:847
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "Izrada novog opsega s razinom %s nije uspjelo.\n"
+
+#: ../newrole/newrole.c:852
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "Zadavanje novog opsega %s nije uspjelo.\n"
+
+#: ../newrole/newrole.c:860
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "Pretvaranje novog konteksta u niz nije uspjelo.\n"
+
+#: ../newrole/newrole.c:865
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s nije valjani kontekst\n"
+
+#: ../newrole/newrole.c:872
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr "Dodjeljivanje memorije za new_context nije moguće"
+
+#: ../newrole/newrole.c:898
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr "Dohvaćanje praznog kompleta signala nije moguće\n"
+
+#: ../newrole/newrole.c:906
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr "Postavljanje SIGHUP rukovanja nije moguće\n"
+
+#: ../newrole/newrole.c:972
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "Nažalost, nova uloga može se upotrijebiti samo na SELinux kernelu.\n"
+
+#: ../newrole/newrole.c:989
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "Dohvaćanje starog konteksta nije uspjelo.\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "Error!  Could not retrieve tty information.\n"
+msgstr "Pogreška! Dohvaćanje TTY podataka nije moguće.\n"
+
+#: ../newrole/newrole.c:1015
+#, c-format
+msgid "Authenticating %s.\n"
+msgstr "Provjera autentičnosti %s.\n"
+
+#: ../newrole/newrole.c:1020
+#: ../run_init/run_init.c:126
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "Inicijalizacija PAM nije uspjela\n"
+
+#: ../newrole/newrole.c:1029
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "newrole: neispravna lozinka za %s.\n"
+
+#: ../newrole/newrole.c:1056
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "newrole: 'forking' neuspjeh: %s"
+
+#: ../newrole/newrole.c:1059
+#: ../newrole/newrole.c:1082
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr "Obnavljanje tty oznake nije moguće...\n"
+
+#: ../newrole/newrole.c:1061
+#: ../newrole/newrole.c:1088
+#, c-format
+msgid "Failed to close tty properly\n"
+msgstr "Ispravno zatvaranje tty nije uspjelo\n"
+
+#: ../newrole/newrole.c:1117
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "Nije moguće zatvoriti deskriptore. \n"
+
+#: ../newrole/newrole.c:1140
+#, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "Pogreška pri dodjeljivanju argv0 ljuske.\n"
+
+#: ../newrole/newrole.c:1147
+#: ../run_init/run_init.c:405
+#, c-format
+msgid "Could not set exec context to %s.\n"
+msgstr "Nije moguće postaviti exec kontekst za %s.\n"
+
+#: ../newrole/newrole.c:1173
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr "Obnavljanje okruženja nije moguće. Prekidanje radnje.\n"
+
+#: ../newrole/newrole.c:1184
+msgid "failed to exec shell\n"
+msgstr "Izvršavanje ljuske nije uspjelo\n"
+
+#: ../run_init/run_init.c:67
+msgid ""
+"USAGE: run_init <script> <args ...>\n"
+"  where: <script> is the name of the init script to run,\n"
+"         <args ...> are the arguments to that script."
+msgstr ""
+"UPOTREBA: run_init <skripta> <argumenti ...>\n"
+"  gdje je <skripta> naziv init skripte koju je potrebno pokrenuti,\n"
+"         <argumenti ...> argumenti za tu skriptu."
+
+#: ../run_init/run_init.c:139
+#, c-format
+msgid "failed to get account information\n"
+msgstr "Dohvaćanje podataka o nalogu nije uspjelo\n"
+
+#: ../run_init/run_init.c:275
+#, c-format
+msgid "run_init: incorrect password for %s\n"
+msgstr "run_init: neispravna lozinka za %s\n"
+
+#: ../run_init/run_init.c:309
+#, c-format
+msgid "Could not open file %s\n"
+msgstr "Datoteku %s nije bilo moguće otvoriti\n"
+
+#: ../run_init/run_init.c:336
+#, c-format
+msgid "No context in file %s\n"
+msgstr "U datoteci %s nema konteksta\n"
+
+#: ../run_init/run_init.c:361
+#, c-format
+msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
+msgstr "Nažalost, run_init može se upotrijebiti samo na SELinux kernelu.\n"
+
+#: ../run_init/run_init.c:380
+#, c-format
+msgid "authentication failed.\n"
+msgstr "Provjere autentičnosti nije uspjela.\n"
+
+#: ../scripts/chcat:75
+#: ../scripts/chcat:145
+msgid "Requires at least one category"
+msgstr "Zahtijeva najmanje jednu kategoriju"
+
+#: ../scripts/chcat:89
+#: ../scripts/chcat:159
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "Nije moguće urediti razine osjetljivosti upotrebom '+' na %s"
+
+#: ../scripts/chcat:93
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s već je unutar %s"
+
+#: ../scripts/chcat:164
+#: ../scripts/chcat:174
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s nije unutar %s"
+
+#: ../scripts/chcat:237
+#: ../scripts/chcat:242
+msgid "Can not combine +/- with other types of categories"
+msgstr "Kombiniranje +/- s ostalim vrstama kategorija nije moguće"
+
+#: ../scripts/chcat:287
+msgid "Can not have multiple sensitivities"
+msgstr "Nije moguće imati višestruke osjetljivosti"
+
+#: ../scripts/chcat:293
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "Upotreba %s KATEGORIJA datoteka ..."
+
+#: ../scripts/chcat:294
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "Upotreba %s -l KATEGORIJA korisnik..."
+
+#: ../scripts/chcat:295
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "Upotreba %s [[+|-]KATEGORIJA],...]q datoteka ..."
+
+#: ../scripts/chcat:296
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "Upotreba %s -l [[+|-]KATEGORIJA],...]q korisnik ..."
+
+#: ../scripts/chcat:297
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "Upotreba %s -d datoteka ..."
+
+#: ../scripts/chcat:298
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "Upotreba %s -l -d korisnik ..."
+
+#: ../scripts/chcat:299
+#, c-format
+msgid "Usage %s -L"
+msgstr "Upotreba %s -L"
+
+#: ../scripts/chcat:300
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "Upotreba %s -L -l korisnik"
+
+#: ../scripts/chcat:301
+msgid "Use -- to end option list.  For example"
+msgstr "Za završetak popisa opcija upotrijebite -- . Na primjer"
+
+#: ../scripts/chcat:302
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -TvrtkaPovjerljivo /docs/poslovniplan.odt"
+
+#: ../scripts/chcat:303
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +TvrtkaPovjerljivo juser"
+
+#: ../semanage/semanage:127
+msgid "Requires 2 or more arguments"
+msgstr "Zahtijeva 2 ili više argumenta"
+
+#: ../semanage/semanage:132
+#, c-format
+msgid "%s not defined"
+msgstr "%s nije određen"
+
+#: ../semanage/semanage:156
+#, c-format
+msgid "%s not valid for %s objects\n"
+msgstr "%s nije valjan za %s objekata\n"
+
+#: ../semanage/semanage:183
+#: ../semanage/semanage:191
+msgid "range not supported on Non MLS machines"
+msgstr "Opseg nije podržan na ne-MLS računalima"
+
+#: ../semanage/semanage:249
+msgid "You must specify a role"
+msgstr "Potrebno je odrediti ulogu"
+
+#: ../semanage/semanage:251
+msgid "You must specify a prefix"
+msgstr "Potrebno je odrediti prefiks"
+
+#: ../semanage/semanage:300
+#, c-format
+msgid "Options Error %s "
+msgstr "Pogreška opcija %s "
+
+#: ../semanage/semanage:304
+#, c-format
+msgid "Invalid value %s"
+msgstr "Neispravna vrijednost '%s'. "
+
+#: ../semanage/seobject.py:132
+msgid "translations not supported on non-MLS machines"
+msgstr "Prijevodi nisu podržani na ne-MLS računalima"
+
+#: ../semanage/seobject.py:139
+#, python-format
+msgid "Unable to open %s: translations not supported on non-MLS machines"
+msgstr "Otvaranje %s nije moguće: Prijevodi nisu podržani na ne-MLS računalima"
+
+#: ../semanage/seobject.py:179
+#: ../semanage/seobject.py:193
+#, python-format
+msgid "Translations can not contain spaces '%s' "
+msgstr "Prijevodi ne mogu sadržavati prazna mjesta (razmake) '%s' "
+
+#: ../semanage/seobject.py:182
+#, python-format
+msgid "Invalid Level '%s' "
+msgstr "Neispravna razina '%s'. "
+
+#: ../semanage/seobject.py:185
+#, python-format
+msgid "%s already defined in translations"
+msgstr "%s već je definiran u prijevodima"
+
+#: ../semanage/seobject.py:197
+#, python-format
+msgid "%s not defined in translations"
+msgstr "%s nije definiran u prijevodima"
+
+#: ../semanage/seobject.py:218
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "SELinux pravilima se ne upravlja ili pristup pohrani nije moguć."
+
+#: ../semanage/seobject.py:223
+msgid "Cannot read policy store."
+msgstr "Čitanje pohrane pravila nije moguće."
+
+#: ../semanage/seobject.py:228
+msgid "Could not establish semanage connection"
+msgstr "Uspostavljanje semanage veze nije moguće"
+
+#: ../semanage/seobject.py:247
+#: ../semanage/seobject.py:305
+#: ../semanage/seobject.py:352
+#: ../semanage/seobject.py:433
+#: ../semanage/seobject.py:504
+#: ../semanage/seobject.py:562
+#: ../semanage/seobject.py:1093
+#: ../semanage/seobject.py:1132
+#: ../semanage/seobject.py:1207
+#: ../semanage/seobject.py:1241
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "Izrada ključa za %s nije moguća"
+
+#: ../semanage/seobject.py:251
+#: ../semanage/seobject.py:309
+#: ../semanage/seobject.py:356
+#: ../semanage/seobject.py:362
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "Nije moguće provjeriti je li mapiranje za prijavu %s određeno"
+
+#: ../semanage/seobject.py:253
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "Mapiranje prijave za %s već je određeno"
+
+#: ../semanage/seobject.py:257
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "Linux korisnik %s ne postoji"
+
+#: ../semanage/seobject.py:261
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "Izrada mapiranja prijave za %s nije moguća"
+
+#: ../semanage/seobject.py:265
+#: ../semanage/seobject.py:447
+#, python-format
+msgid "Could not set name for %s"
+msgstr "Zadavanje naziva za %s nije moguće"
+
+#: ../semanage/seobject.py:270
+#: ../semanage/seobject.py:457
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "Zadavanje MLS raspona za %s nije moguće"
+
+#: ../semanage/seobject.py:274
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "Zadavanje SELinux korisnika za %s nije moguće"
+
+#: ../semanage/seobject.py:278
+#: ../semanage/seobject.py:330
+#: ../semanage/seobject.py:368
+#: ../semanage/seobject.py:473
+#: ../semanage/seobject.py:539
+#: ../semanage/seobject.py:578
+#: ../semanage/seobject.py:705
+#: ../semanage/seobject.py:747
+#: ../semanage/seobject.py:776
+#: ../semanage/seobject.py:903
+#: ../semanage/seobject.py:944
+#: ../semanage/seobject.py:976
+#: ../semanage/seobject.py:1073
+#: ../semanage/seobject.py:1116
+#: ../semanage/seobject.py:1148
+#: ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1257
+msgid "Could not start semanage transaction"
+msgstr "Semanage transakciju nije moguće pokrenuti"
+
+#: ../semanage/seobject.py:282
+#: ../semanage/seobject.py:286
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "Dodavanje mapiranja prijave za %s nije moguće"
+
+#: ../semanage/seobject.py:301
+msgid "Requires seuser or serange"
+msgstr "Zahtijeva seuser ili serange"
+
+#: ../semanage/seobject.py:311
+#: ../semanage/seobject.py:358
+#, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "Mapiranje prijave za %s nije određeno"
+
+#: ../semanage/seobject.py:315
+#, python-format
+msgid "Could not query seuser for %s"
+msgstr "Propitivanje seusera za %s nije moguće"
+
+#: ../semanage/seobject.py:334
+#: ../semanage/seobject.py:338
+#, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "Uređivanje mapiranja prijave za %s nije moguće"
+
+#: ../semanage/seobject.py:364
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr "Mapiranje prijave za %s određeno je u pravilima. Brisanje nije moguće."
+
+#: ../semanage/seobject.py:373
+#: ../semanage/seobject.py:377
+#, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "Brisanje mapiranja prijave za %s nije moguće"
+
+#: ../semanage/seobject.py:391
+msgid "Could not list login mappings"
+msgstr "Ispisivanje popisa mapiranja prijava nije moguće"
+
+#: ../semanage/seobject.py:437
+#: ../semanage/seobject.py:508
+#: ../semanage/seobject.py:566
+#: ../semanage/seobject.py:572
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "Nije moguće provjeriti je li SELinux korisnik %s određen"
+
+#: ../semanage/seobject.py:439
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "SELinux korisnik %s već je određen"
+
+#: ../semanage/seobject.py:443
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "Izrada SELinux korisnika za %s nije moguća"
+
+#: ../semanage/seobject.py:452
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "Dodavanje uloge %s za %s nije moguće"
+
+#: ../semanage/seobject.py:461
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "Zadavanje MLS razine za %s nije moguće"
+
+#: ../semanage/seobject.py:463
+#: ../semanage/seobject.py:530
+#, python-format
+msgid "Invalid prefix %s"
+msgstr "Neispravan prefiks %s"
+
+#: ../semanage/seobject.py:466
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "Dodavanje prefiksa %s za %s nije moguće"
+
+#: ../semanage/seobject.py:469
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "Izvlačenje ključa za %s nije moguće"
+
+#: ../semanage/seobject.py:477
+#: ../semanage/seobject.py:481
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "Dodavanje SELinux korisnika %s nije moguće"
+
+#: ../semanage/seobject.py:498
+msgid "Requires prefix, roles, level or range"
+msgstr "Zahtijeva prefiks, uloge, razinu ili raspon"
+
+#: ../semanage/seobject.py:500
+msgid "Requires prefix or roles"
+msgstr "Zahtijeva prefiks ili uloge"
+
+#: ../semanage/seobject.py:510
+#: ../semanage/seobject.py:568
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux korisnik %s nije određen"
+
+#: ../semanage/seobject.py:514
+#, python-format
+msgid "Could not query user for %s"
+msgstr "Propitivanje korisnika za %s nije moguće"
+
+#: ../semanage/seobject.py:543
+#: ../semanage/seobject.py:547
+#, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "Uređivanje SELinux korisnika %s nije moguće"
+
+#: ../semanage/seobject.py:574
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "SELinux korisnik %s određen je u pravilima. Brisanje nije moguće."
+
+#: ../semanage/seobject.py:582
+#: ../semanage/seobject.py:586
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "Brisanje SELinux korisnika %s nije moguće"
+
+#: ../semanage/seobject.py:598
+msgid "Could not list SELinux users"
+msgstr "Ispisivanje popisa SELinux korisnika nije moguće"
+
+#: ../semanage/seobject.py:604
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "Ispisivanje popisa uloga korisnika %s nije moguće"
+
+#: ../semanage/seobject.py:638
+msgid "Protocol udp or tcp is required"
+msgstr "Potreban je UDP ili TCP protokol"
+
+#: ../semanage/seobject.py:640
+msgid "Port is required"
+msgstr "Potreban je port"
+
+#: ../semanage/seobject.py:651
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "Izrada ključa za %s/%s nije moguća"
+
+#: ../semanage/seobject.py:662
+msgid "Type is required"
+msgstr "Potrebna je vrsta"
+
+#: ../semanage/seobject.py:668
+#: ../semanage/seobject.py:730
+#: ../semanage/seobject.py:764
+#: ../semanage/seobject.py:770
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "Nije moguće provjeriti je li port %s/%s određen"
+
+#: ../semanage/seobject.py:670
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "Port %s/%s već je određen"
+
+#: ../semanage/seobject.py:674
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "Izrada porta za %s/%s nije moguća"
+
+#: ../semanage/seobject.py:680
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "Izrada konteksta za %s/%s nije moguća"
+
+#: ../semanage/seobject.py:684
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "Zadavanje korisnika u kontekstu porta za %s/%s nije moguće"
+
+#: ../semanage/seobject.py:688
+#, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "Zadavanje uloge u kontekstu porta za %s/%s nije moguće"
+
+#: ../semanage/seobject.py:692
+#, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "Zadavanje vrste u kontekstu porta za %s/%s nije moguće"
+
+#: ../semanage/seobject.py:697
+#, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr "Zadavanje MLS polja u kontekstu porta za %s/%s nije moguće"
+
+#: ../semanage/seobject.py:701
+#, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "Zadavanje konteksta porta za %s/%s nije moguće"
+
+#: ../semanage/seobject.py:709
+#: ../semanage/seobject.py:713
+#, python-format
+msgid "Could not add port %s/%s"
+msgstr "Dodavanje porta %s/%s nije moguće"
+
+#: ../semanage/seobject.py:722
+#: ../semanage/seobject.py:919
+msgid "Requires setype or serange"
+msgstr "Zahtijeva setype ili serange"
+
+#: ../semanage/seobject.py:724
+msgid "Requires setype"
+msgstr "Zahtijeva setype"
+
+#: ../semanage/seobject.py:732
+#: ../semanage/seobject.py:766
+#, python-format
+msgid "Port %s/%s is not defined"
+msgstr "Port %s/%s nije određen"
+
+#: ../semanage/seobject.py:736
+#, python-format
+msgid "Could not query port %s/%s"
+msgstr "Propitivanje porta %s/%s nije moguće"
+
+#: ../semanage/seobject.py:751
+#: ../semanage/seobject.py:755
+#, python-format
+msgid "Could not modify port %s/%s"
+msgstr "Uređivanje porta %s/%s nije moguće"
+
+#: ../semanage/seobject.py:772
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr "Port %s/%s određen je u pravilima. Brisanje nije moguće."
+
+#: ../semanage/seobject.py:780
+#: ../semanage/seobject.py:784
+#, python-format
+msgid "Could not delete port %s/%s"
+msgstr "Brisanje porta %s/%s nije moguće"
+
+#: ../semanage/seobject.py:792
+#: ../semanage/seobject.py:811
+msgid "Could not list ports"
+msgstr "Ispisivanje popisa portova nije moguće"
+
+#: ../semanage/seobject.py:855
+#: ../semanage/seobject.py:1027
+msgid "SELinux Type is required"
+msgstr "Potrebna je SELinux vrsta"
+
+#: ../semanage/seobject.py:859
+#: ../semanage/seobject.py:923
+#: ../semanage/seobject.py:960
+#: ../semanage/seobject.py:1031
+#, python-format
+msgid "Could not create key for %s"
+msgstr "Izrada ključa za %s nije moguća"
+
+#: ../semanage/seobject.py:863
+#: ../semanage/seobject.py:927
+#: ../semanage/seobject.py:964
+#: ../semanage/seobject.py:970
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "Nije moguće provjeriti je li sučelje %s određeno"
+
+#: ../semanage/seobject.py:865
+#, python-format
+msgid "Interface %s already defined"
+msgstr "Sučelje %s već je određeno"
+
+#: ../semanage/seobject.py:869
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "Izrada sučelja za %s nije moguće"
+
+#: ../semanage/seobject.py:874
+#: ../semanage/seobject.py:1046
+#, python-format
+msgid "Could not create context for %s"
+msgstr "Izrada konteksta za %s nije moguća"
+
+#: ../semanage/seobject.py:878
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "Zadavanje korisnika u kontekstu sučelja za %s nije moguće"
+
+#: ../semanage/seobject.py:882
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "Zadavanje uloge u kontekstu sučelja za %s nije moguće"
+
+#: ../semanage/seobject.py:886
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "Zadavanje vrste u kontekstu sučelja za %s nije moguće"
+
+#: ../semanage/seobject.py:891
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "Zadavanje MLS polja u kontekstu sučelja za %s nije moguće"
+
+#: ../semanage/seobject.py:895
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "Zadavanje konteksta sučelja za %s nije moguće"
+
+#: ../semanage/seobject.py:899
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "Zadavanje konteksta poruke za %s nije moguće"
+
+#: ../semanage/seobject.py:907
+#: ../semanage/seobject.py:911
+#, python-format
+msgid "Could not add interface %s"
+msgstr "Dodavanje sučelja %s nije moguće"
+
+#: ../semanage/seobject.py:929
+#: ../semanage/seobject.py:966
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "Sučelje %s nije određeno"
+
+#: ../semanage/seobject.py:933
+#, python-format
+msgid "Could not query interface %s"
+msgstr "Propitivanje sučelja %s nije moguće"
+
+#: ../semanage/seobject.py:948
+#: ../semanage/seobject.py:952
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "Uređivanje sučelja %s nije moguće"
+
+#: ../semanage/seobject.py:972
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "Sučelje %s određeno je u pravilima. Brisanje nije moguće."
+
+#: ../semanage/seobject.py:980
+#: ../semanage/seobject.py:984
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "Brisanje sučelja %s nije moguće"
+
+#: ../semanage/seobject.py:992
+msgid "Could not list interfaces"
+msgstr "Ispisivanje popisa sučelja nije moguće"
+
+#: ../semanage/seobject.py:1035
+#: ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1136
+#: ../semanage/seobject.py:1140
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "Nije moguće provjeriti je li kontekst datoteke za %s određen"
+
+#: ../semanage/seobject.py:1037
+#, python-format
+msgid "File context for %s already defined"
+msgstr "Kontekst datoteke za %s već je određen"
+
+#: ../semanage/seobject.py:1041
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "Izrada konteksta datoteke za %s nije moguća"
+
+#: ../semanage/seobject.py:1050
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "Zadavanje korisnika u kontekstu datoteke za %s nije moguće"
+
+#: ../semanage/seobject.py:1054
+#, python-format
+msgid "Could not set role in file context for %s"
+msgstr "Zadavanje uloge u kontekstu datoteke za %s nije moguće"
+
+#: ../semanage/seobject.py:1058
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "Zadavanje vrste u kontekstu datoteke za %s nije moguće"
+
+#: ../semanage/seobject.py:1063
+#, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "Zadavanje MLS polja u kontekstu datoteke za %s nije moguće"
+
+#: ../semanage/seobject.py:1069
+#, python-format
+msgid "Could not set file context for %s"
+msgstr "Zadavanje konteksta datoteke za %s nije moguće"
+
+#: ../semanage/seobject.py:1077
+#: ../semanage/seobject.py:1081
+#, python-format
+msgid "Could not add file context for %s"
+msgstr "Dodavanje konteksta datoteke za %s nije moguće"
+
+#: ../semanage/seobject.py:1089
+msgid "Requires setype, serange or seuser"
+msgstr "Zahtijeva setype, serange ili seuser"
+
+#: ../semanage/seobject.py:1099
+#: ../semanage/seobject.py:1144
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "Kontekst datoteke za %s nije određen"
+
+#: ../semanage/seobject.py:1103
+#, python-format
+msgid "Could not query file context for %s"
+msgstr "Propitivanje konteksta datoteke za %s nije moguće"
+
+#: ../semanage/seobject.py:1120
+#: ../semanage/seobject.py:1124
+#, python-format
+msgid "Could not modify file context for %s"
+msgstr "Uređivanje konteksta datoteke za %s nije moguće"
+
+#: ../semanage/seobject.py:1142
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr "Kontekst datoteke za %s određen je u pravilima. Brisanje nije moguće."
+
+#: ../semanage/seobject.py:1152
+#: ../semanage/seobject.py:1156
+#, python-format
+msgid "Could not delete file context for %s"
+msgstr "Brisanje konteksta datoteke za %s nije moguće"
+
+#: ../semanage/seobject.py:1164
+msgid "Could not list file contexts"
+msgstr "Ispisivanje popisa konteksta datoteke nije moguće"
+
+#: ../semanage/seobject.py:1168
+msgid "Could not list local file contexts"
+msgstr "Izrada popisa konteksta lokalnih datoteka nije moguća"
+
+#: ../semanage/seobject.py:1203
+msgid "Requires value"
+msgstr "Zahtijeva vrijednost"
+
+#: ../semanage/seobject.py:1211
+#: ../semanage/seobject.py:1245
+#: ../semanage/seobject.py:1251
+#, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "Nije moguće provjeriti je li Booleova vrijednost %s određena"
+
+#: ../semanage/seobject.py:1213
+#: ../semanage/seobject.py:1247
+#, python-format
+msgid "Boolean %s is not defined"
+msgstr "Booleova vrijednost %s nije određena"
+
+#: ../semanage/seobject.py:1217
+#, python-format
+msgid "Could not query file context %s"
+msgstr "Propitivanje konteksta datoteke %s nije moguće"
+
+#: ../semanage/seobject.py:1229
+#: ../semanage/seobject.py:1233
+#, python-format
+msgid "Could not modify boolean %s"
+msgstr "Uređivanje Booleove vrijednosti %s nije moguće"
+
+#: ../semanage/seobject.py:1253
+#, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "Booleova vrijednost %s određena je u pravilima. Brisanje nije moguće."
+
+#: ../semanage/seobject.py:1261
+#: ../semanage/seobject.py:1265
+#, python-format
+msgid "Could not delete boolean %s"
+msgstr "Brisanje Booleove vrijednosti %s nije moguće"
+
+#: ../semanage/seobject.py:1273
+msgid "Could not list booleans"
+msgstr "Ispisivanje popisa Booleovih vrijednosti nije moguće"
+
+#: ../audit2allow/audit2allow:183
+#, c-format
+msgid "Generating type enforcment file: %s.te"
+msgstr "Generiranje datoteke prisile vrste: %s.te"
+
+#: ../audit2allow/audit2allow:189
+#: ../audit2allow/audit2allow:194
+msgid "Compiling policy"
+msgstr "Pravila prevođenja"
+
+#: ../audit2allow/audit2allow:205
+msgid ""
+"\n"
+"******************** IMPORTANT ***********************\n"
+msgstr ""
+"\n"
+"********************  VAŽNO  ***********************\n"
+
+#: ../audit2allow/audit2allow:206
+#, c-format
+msgid ""
+"In order to load this newly created policy package into the kernel,\n"
+"you are required to execute \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+msgstr ""
+"Da bi se ovaj novoizrađeni paket pravila učitao u kernel,\n"
+"potrebno je da izvršite naredbu \n"
+"\n"
+"semodule -I %s.pp\n"
+"\n"
+
+#: ../audit2allow/audit2allow:211
+#, c-format
+msgid "Options Error: %s "
+msgstr "Pogreška opcija: %s "
+

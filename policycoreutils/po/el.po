@@ -1,0 +1,1079 @@
+# translation of el.po to Greek
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Simos Xenitellis <simos@gnome.org>, 2006.
+# Dimitris Glezos <dimitris@glezos.com>, 2006.
+msgid ""
+msgstr ""
+"Project-Id-Version: el\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-21 14:21-0500\n"
+"PO-Revision-Date: 2006-09-18 14:49+0100\n"
+"Last-Translator: Dimitris Glezos <dimitris@glezos.com>\n"
+"Language-Team: Greek <fedora-trans-el@redhat.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-bq]\n"
+msgstr ""
+
+#: ../load_policy/load_policy.c:66
+#, fuzzy, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "(tt) %s: αδυναμία φόρτωσης πρόσοψης: %s\n"
+
+#
+#: ../newrole/newrole.c:188
+#, fuzzy, c-format
+msgid "failed to set PAM_TTY\n"
+msgstr "Αποτυχία ορίσματος του PAM_TTY=%s"
+
+# #-#-#-#-#  gdm2.gnome-2-14.el.po (el)  #-#-#-#-#
+#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
+msgid "Password:"
+msgstr "Συνθηματικό:"
+
+#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr ""
+
+#: ../newrole/newrole.c:316
+#, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:327
+#, fuzzy, c-format
+msgid "Out of memory!\n"
+msgstr "Η μνήμη εξαντλήθηκε"
+
+#: ../newrole/newrole.c:332
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:389
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr ""
+
+#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
+#, fuzzy, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "Σφάλμα κατά την ολοκλήρωση της μορφοποίησης"
+
+#: ../newrole/newrole.c:450
+#, fuzzy, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "Σφάλμα διαγραφής εικόνας boot"
+
+#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
+#, fuzzy, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "Σφάλμα κατά την ολοκλήρωση της μορφοποίησης"
+
+#
+#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
+#, fuzzy, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "Σφάλμα στην ανάγνωση... ματαίωση"
+
+#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
+#, fuzzy, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "Σφάλμα διαγραφής εικόνας boot"
+
+#: ../newrole/newrole.c:477
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr ""
+
+#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
+#, c-format
+msgid "Error freeing caps\n"
+msgstr ""
+
+#: ../newrole/newrole.c:580
+#, fuzzy, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "Σφάλμα εγγραφής στο δίσκο"
+
+#: ../newrole/newrole.c:586
+#, fuzzy, c-format
+msgid "Error allocating memory.\n"
+msgstr "Σφάλμα φόρτωσης λίστας memo"
+
+#: ../newrole/newrole.c:593
+#, fuzzy, c-format
+msgid "Error sending audit message.\n"
+msgstr "Σφάλμα ανάκτησης μηνύματος"
+
+#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
+#, fuzzy, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "Αδύνατος ο προσδιορισμός της τρέχουσας γεωμετρίας δισκέτας."
+
+#: ../newrole/newrole.c:641
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "Σφάλμα! Αδυναμία ανοίγματος %s.\n"
+
+#
+#: ../newrole/newrole.c:646
+#, fuzzy, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr "%s: Αποτυχία δημιουργίας περιβάλλοντος για %s. Διακοπή."
+
+#
+#: ../newrole/newrole.c:656
+#, fuzzy, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr "%s: Αποτυχία δημιουργίας περιβάλλοντος για %s. Διακοπή."
+
+#
+#: ../newrole/newrole.c:666
+#, fuzzy, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s: Αποτυχία δημιουργίας νέου αρχείου cookie σε %s"
+
+#: ../newrole/newrole.c:710
+#, c-format
+msgid "%s changed labels.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:716
+#, fuzzy, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../newrole/newrole.c:772
+#, fuzzy, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "Να επιτρέπεται η επιλογή πολλαπλών γραμμών"
+
+#: ../newrole/newrole.c:780
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr ""
+
+#: ../newrole/newrole.c:787
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:792
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr ""
+
+#: ../newrole/newrole.c:814
+#, fuzzy, c-format
+msgid "Couldn't get default type.\n"
+msgstr "Δεν ήταν δυνατή η λήψη μηνύματος"
+
+#: ../newrole/newrole.c:824
+#, fuzzy, c-format
+msgid "failed to get new context.\n"
+msgstr "Αποτυχία ορισμού εύρεσης κειμένου: %s."
+
+#: ../newrole/newrole.c:831
+#, fuzzy, c-format
+msgid "failed to set new role %s\n"
+msgstr "Αποτυχία ορισμού τιμής: %s."
+
+#: ../newrole/newrole.c:838
+#, fuzzy, c-format
+msgid "failed to set new type %s\n"
+msgstr "Αποτυχία ορισμού εύρεσης κειμένου: %s."
+
+#: ../newrole/newrole.c:847
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr ""
+
+#: ../newrole/newrole.c:852
+#, fuzzy, c-format
+msgid "failed to set new range %s\n"
+msgstr "Αποτυχία ορισμού γλώσσας: %s."
+
+#: ../newrole/newrole.c:860
+#, fuzzy, c-format
+msgid "failed to convert new context to string\n"
+msgstr "αποτυχία αποστολής επόμενου αλφαριθμητικού \"%s\" στην ομιλία"
+
+#: ../newrole/newrole.c:865
+#, fuzzy, c-format
+msgid "%s is not a valid context\n"
+msgstr "Το %s δεν είναι έγκυρη τοποθεσία"
+
+#: ../newrole/newrole.c:872
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr ""
+
+#: ../newrole/newrole.c:898
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr ""
+
+#: ../newrole/newrole.c:906
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr ""
+
+#: ../newrole/newrole.c:972
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:989
+#, fuzzy, c-format
+msgid "failed to get old_context.\n"
+msgstr "Αποτυχία ορισμού αρίθμησης: %s."
+
+#: ../newrole/newrole.c:996
+#, fuzzy, c-format
+msgid "Error!  Could not retrieve tty information.\n"
+msgstr "Αδυναμία ανάκτησης δεδομένων μετοχών."
+
+#: ../newrole/newrole.c:1015
+#, c-format
+msgid "Authenticating %s.\n"
+msgstr "Πιστοποίηση %s.\n"
+
+#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
+#, fuzzy, c-format
+msgid "failed to initialize PAM\n"
+msgstr "Αδυναμία αρχικοποίησης φωνών\n"
+
+#: ../newrole/newrole.c:1029
+#, fuzzy, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "Εισάγετε συνθηματικό για %s"
+
+#: ../newrole/newrole.c:1056
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr ""
+
+#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
+#, fuzzy, c-format
+msgid "Failed to close tty properly\n"
+msgstr "Αποτυχία ορισμού εύρεσης κειμένου: %s."
+
+#: ../newrole/newrole.c:1117
+#, fuzzy, c-format
+msgid "Could not close descriptors.\n"
+msgstr "Δεν ήταν δυνατό το κλείσιμο του προσωρινού φακέλου:%s"
+
+#: ../newrole/newrole.c:1140
+#, fuzzy, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "Σφάλμα φόρτωσης λίστας memo"
+
+#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
+#, fuzzy, c-format
+msgid "Could not set exec context to %s.\n"
+msgstr "Αδυναμία εκτέλεσης '%s': %s\n"
+
+#: ../newrole/newrole.c:1173
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1184
+#, fuzzy
+msgid "failed to exec shell\n"
+msgstr "Αποτυχία εκτέλεσης gpg: %s"
+
+#: ../run_init/run_init.c:67
+msgid ""
+"USAGE: run_init <script> <args ...>\n"
+"  where: <script> is the name of the init script to run,\n"
+"         <args ...> are the arguments to that script."
+msgstr ""
+
+#: ../run_init/run_init.c:139
+#, fuzzy, c-format
+msgid "failed to get account information\n"
+msgstr "Αποτυχία ορισμού εύρεσης κειμένου: %s."
+
+#: ../run_init/run_init.c:275
+#, c-format
+msgid "run_init: incorrect password for %s\n"
+msgstr "run_init: λανθασμένο συνθηματικό για %s\n"
+
+#: ../run_init/run_init.c:309
+#, fuzzy, c-format
+msgid "Could not open file %s\n"
+msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
+
+#: ../run_init/run_init.c:336
+#, fuzzy, c-format
+msgid "No context in file %s\n"
+msgstr "Αδυναμία ανοίγματος αρχείου %s.\n"
+
+#: ../run_init/run_init.c:361
+#, c-format
+msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
+msgstr ""
+
+#: ../run_init/run_init.c:380
+#, c-format
+msgid "authentication failed.\n"
+msgstr "αποτυχία πιστοποίησης.\n"
+
+#: ../scripts/chcat:75 ../scripts/chcat:145
+#, fuzzy
+msgid "Requires at least one category"
+msgstr "Απαιτούμενα άτομα και έ_νας πόρος"
+
+#: ../scripts/chcat:89 ../scripts/chcat:159
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr ""
+
+#: ../scripts/chcat:93
+#, fuzzy, c-format
+msgid "%s is already in %s"
+msgstr "%s είναι ήδη στη λίστα"
+
+# #-#-#-#-#  nautilus.gnome-2-14.el.po (el)  #-#-#-#-#
+#
+#: ../scripts/chcat:164 ../scripts/chcat:174
+#, fuzzy, c-format
+msgid "%s is not in %s"
+msgstr "%s σε %s"
+
+#: ../scripts/chcat:237 ../scripts/chcat:242
+msgid "Can not combine +/- with other types of categories"
+msgstr ""
+
+#: ../scripts/chcat:287
+msgid "Can not have multiple sensitivities"
+msgstr ""
+
+#: ../scripts/chcat:293
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr ""
+
+#: ../scripts/chcat:294
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr ""
+
+#: ../scripts/chcat:295
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr ""
+
+#: ../scripts/chcat:296
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr ""
+
+#: ../scripts/chcat:297
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr ""
+
+#: ../scripts/chcat:298
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr ""
+
+#: ../scripts/chcat:299
+#, fuzzy, c-format
+msgid "Usage %s -L"
+msgstr "Χρήση: %s\n"
+
+#: ../scripts/chcat:300
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr ""
+
+#: ../scripts/chcat:301
+msgid "Use -- to end option list.  For example"
+msgstr ""
+
+#: ../scripts/chcat:302
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr ""
+
+#: ../scripts/chcat:303
+msgid "chcat -l +CompanyConfidential juser"
+msgstr ""
+
+#: ../semanage/semanage:127
+#, fuzzy
+msgid "Requires 2 or more arguments"
+msgstr "Μεταβλητή ή εντολή προγράμματος"
+
+#: ../semanage/semanage:132
+#, fuzzy, c-format
+msgid "%s not defined"
+msgstr "%s: δεν έχουν ορισθεί γραμματοσειρές\n"
+
+#: ../semanage/semanage:156
+#, fuzzy, c-format
+msgid "%s not valid for %s objects\n"
+msgstr "Μή έγκυρο αντικείμενο"
+
+#: ../semanage/semanage:183 ../semanage/semanage:191
+#, fuzzy
+msgid "range not supported on Non MLS machines"
+msgstr ""
+"#-#-#-#-#  epiphany.gnome-2-14.el.po (el)  #-#-#-#-#\n"
+"Δεν υποστηρίζεται η εκτύπωση σε αυτόν τον εκτυπωτή\n"
+"#-#-#-#-#  yelp.gnome-2-14.el.po (el)  #-#-#-#-#\n"
+"Η εκτύπωση δεν υποστηρίζεται σε αυτόν τον εκτυπωτή"
+
+#: ../semanage/semanage:249
+#, fuzzy
+msgid "You must specify a role"
+msgstr "Πρέπει να καθορίσετε ένα κατάλογο."
+
+#: ../semanage/semanage:251
+#, fuzzy
+msgid "You must specify a prefix"
+msgstr "Θα πρέπει να καθορίσετε ένα μοτίβο"
+
+#: ../semanage/semanage:300
+#, fuzzy, c-format
+msgid "Options Error %s "
+msgstr "Σφάλμα πιστοποίησης: %s"
+
+#: ../semanage/semanage:304
+#, fuzzy, c-format
+msgid "Invalid value %s"
+msgstr "Μη έγκυρη τιμή VGA"
+
+#: ../semanage/seobject.py:132
+#, fuzzy
+msgid "translations not supported on non-MLS machines"
+msgstr ""
+"#-#-#-#-#  epiphany.gnome-2-14.el.po (el)  #-#-#-#-#\n"
+"Δεν υποστηρίζεται η εκτύπωση σε αυτόν τον εκτυπωτή\n"
+"#-#-#-#-#  yelp.gnome-2-14.el.po (el)  #-#-#-#-#\n"
+"Η εκτύπωση δεν υποστηρίζεται σε αυτόν τον εκτυπωτή"
+
+#: ../semanage/seobject.py:139
+#, python-format
+msgid "Unable to open %s: translations not supported on non-MLS machines"
+msgstr ""
+
+#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#, fuzzy, python-format
+msgid "Translations can not contain spaces '%s' "
+msgstr "Ο φάκελος δεν είναι δυνατό να περιέχει το χαρακτήρα '/'"
+
+#: ../semanage/seobject.py:182
+#, fuzzy, python-format
+msgid "Invalid Level '%s' "
+msgstr "Μη έγκυρη στρατηγική '%s'"
+
+#: ../semanage/seobject.py:185
+#, fuzzy, python-format
+msgid "%s already defined in translations"
+msgstr "%s είναι ήδη στη λίστα"
+
+#: ../semanage/seobject.py:197
+#, fuzzy, python-format
+msgid "%s not defined in translations"
+msgstr "η γραμματοσειρά %d δεν έχει ορισθεί στο postamble\n"
+
+#: ../semanage/seobject.py:218
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr ""
+
+#: ../semanage/seobject.py:223
+#, fuzzy
+msgid "Cannot read policy store."
+msgstr "Αδυναμία δημιουργίας συσκευής αναπαραγωγής"
+
+#: ../semanage/seobject.py:228
+#, fuzzy
+msgid "Could not establish semanage connection"
+msgstr "Αδυναμία δημιουργίας σύνδεσης σε “%s” ."
+
+#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
+#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
+#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
+#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
+#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
+#, fuzzy, python-format
+msgid "Could not create a key for %s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
+#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
+#, fuzzy, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "Δεν ήταν δυνατό να ελεγχθεί το αρχείο μηνυμάτων %s: %s"
+
+#: ../semanage/seobject.py:253
+#, fuzzy, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "Constant \"%s\" έχει ήδη καθορισθεί"
+
+#: ../semanage/seobject.py:257
+#, fuzzy, python-format
+msgid "Linux User %s does not exist"
+msgstr "Ο φάκελος `%s' δεν υπάρχει."
+
+#: ../semanage/seobject.py:261
+#, fuzzy, python-format
+msgid "Could not create login mapping for %s"
+msgstr "Αδυναμία δημιουργίας journal για %s"
+
+#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
+#, fuzzy, python-format
+msgid "Could not set name for %s"
+msgstr "Δεν ήταν δυνατή η μετονομασία του φακέλου : %s"
+
+#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
+#, fuzzy, python-format
+msgid "Could not set MLS range for %s"
+msgstr "Αδυναμία αποθήκευσης φακέλου : %s"
+
+#: ../semanage/seobject.py:274
+#, fuzzy, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "Αδυναμία δημιουργίας journal για %s"
+
+#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
+#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
+#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
+#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
+#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
+#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
+#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
+#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1257
+#, fuzzy
+msgid "Could not start semanage transaction"
+msgstr "Αδυναμία έναρξης αλληλουχίας κατάστασης: %s"
+
+#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
+#, fuzzy, python-format
+msgid "Could not add login mapping for %s"
+msgstr "Δεν ήταν δυνατή η φόρτωση της περίληψης για  %s"
+
+#: ../semanage/seobject.py:301
+msgid "Requires seuser or serange"
+msgstr ""
+
+#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#, fuzzy, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "η γραμματοσειρά %d δεν έχει ορισθεί\n"
+
+#: ../semanage/seobject.py:315
+#, fuzzy, python-format
+msgid "Could not query seuser for %s"
+msgstr "Δεν ήταν δυνατή η φόρτωση της περίληψης για  %s"
+
+#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#, fuzzy, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "Δεν είναι δυνατή η ανάγνωση πληροφοριών συμβολικού δεσμού για %s"
+
+#: ../semanage/seobject.py:364
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr ""
+
+#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
+#, fuzzy, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "Αδυναμία δημιουργίας journal για %s"
+
+#: ../semanage/seobject.py:391
+#, fuzzy
+msgid "Could not list login mappings"
+msgstr "Αποτυχία δημιουργίας δεσμού στο pipeline"
+
+#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
+#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
+#, fuzzy, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "Δεν ήταν δυνατό να ελεγχθεί το αρχείο μηνυμάτων %s: %s"
+
+#: ../semanage/seobject.py:439
+#, fuzzy, python-format
+msgid "SELinux user %s is already defined"
+msgstr "Constant \"%s\" έχει ήδη καθορισθεί"
+
+#: ../semanage/seobject.py:443
+#, fuzzy, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "Αδυναμία δημιουργίας journal για %s"
+
+#: ../semanage/seobject.py:452
+#, fuzzy, python-format
+msgid "Could not add role %s for %s"
+msgstr "Αδυναμία προσθήκης αγαπημένου: %s"
+
+#
+#: ../semanage/seobject.py:461
+#, fuzzy, python-format
+msgid "Could not set MLS level for %s"
+msgstr "Αποτυχία ρύθμισης των διαπιστευτηρίων για %s"
+
+#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
+#, fuzzy, python-format
+msgid "Invalid prefix %s"
+msgstr "Μη έγκυρη τιμή VGA"
+
+#: ../semanage/seobject.py:466
+#, fuzzy, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "Αδυναμία προσθήκης αγαπημένου: %s"
+
+#: ../semanage/seobject.py:469
+#, fuzzy, python-format
+msgid "Could not extract key for %s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
+#, fuzzy, python-format
+msgid "Could not add SELinux user %s"
+msgstr "Αδυναμία προσθήκης αγαπημένου: %s"
+
+#: ../semanage/seobject.py:498
+msgid "Requires prefix, roles, level or range"
+msgstr ""
+
+#: ../semanage/seobject.py:500
+#, fuzzy
+msgid "Requires prefix or roles"
+msgstr "_Απαιτούμενα άτομα"
+
+#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
+#, fuzzy, python-format
+msgid "SELinux user %s is not defined"
+msgstr "η γραμματοσειρά %d δεν έχει ορισθεί\n"
+
+#: ../semanage/seobject.py:514
+#, fuzzy, python-format
+msgid "Could not query user for %s"
+msgstr "Αδυναμία δημιουργίας journal για %s"
+
+#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
+#, fuzzy, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "Αδυναμία φόρτωσης εικονιδίου \"%s\": %s\n"
+
+#: ../semanage/seobject.py:574
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr ""
+
+#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
+#, fuzzy, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "Αδυναμία ενεργοποίησης της διεπαφής %s"
+
+#: ../semanage/seobject.py:598
+#, fuzzy
+msgid "Could not list SELinux users"
+msgstr "Αδυναμία εκκίνησης Sound Juicer"
+
+#: ../semanage/seobject.py:604
+#, fuzzy, python-format
+msgid "Could not list roles for user %s"
+msgstr "Αδυναμία αποθήκευσης φακέλου : %s"
+
+#: ../semanage/seobject.py:638
+#, fuzzy
+msgid "Protocol udp or tcp is required"
+msgstr "Δεν υποστηρίζεται το πρωτόκολλο"
+
+#: ../semanage/seobject.py:640
+#, fuzzy
+msgid "Port is required"
+msgstr "Απαιτείται κωδικός."
+
+#: ../semanage/seobject.py:651
+#, fuzzy, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:662
+#, fuzzy
+msgid "Type is required"
+msgstr "Απαιτείται πληρωμή"
+
+#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
+#, fuzzy, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "Δεν ήταν δυνατό να ελεγχθεί το αρχείο μηνυμάτων %s: %s"
+
+#: ../semanage/seobject.py:670
+#, fuzzy, python-format
+msgid "Port %s/%s already defined"
+msgstr "Constant \"%s\" έχει ήδη καθορισθεί"
+
+#: ../semanage/seobject.py:674
+#, fuzzy, python-format
+msgid "Could not create port for %s/%s"
+msgstr "Αδυναμία δημιουργίας journal για %s"
+
+#: ../semanage/seobject.py:680
+#, fuzzy, python-format
+msgid "Could not create context for %s/%s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:684
+#, fuzzy, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "Δεν ήταν δυνατό το κλείσιμο του φακέλου πηγής %s: %s"
+
+#: ../semanage/seobject.py:688
+#, fuzzy, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "Δεν είναι δυνατή η ανάγνωση πληροφοριών συμβολικού δεσμού για %s"
+
+#: ../semanage/seobject.py:692
+#, fuzzy, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "Αδυναμία συγχρονισμού φακέλου spool %s: %s"
+
+#: ../semanage/seobject.py:697
+#, fuzzy, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr "Δεν ήταν δυνατή η δημιουργία αρχείου κλειδώματος για %s: %s"
+
+#: ../semanage/seobject.py:701
+#, fuzzy, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "Δεν ήταν δυνατό το κλείσιμο του φακέλου πηγής %s: %s"
+
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#, fuzzy, python-format
+msgid "Could not add port %s/%s"
+msgstr "Αδυναμία προσθήκης αγαπημένου: %s"
+
+#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+msgid "Requires setype or serange"
+msgstr ""
+
+#: ../semanage/seobject.py:724
+#, fuzzy
+msgid "Requires setype"
+msgstr "_Απαιτούμενα άτομα"
+
+#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#, fuzzy, python-format
+msgid "Port %s/%s is not defined"
+msgstr "η γραμματοσειρά %d δεν έχει ορισθεί\n"
+
+#: ../semanage/seobject.py:736
+#, fuzzy, python-format
+msgid "Could not query port %s/%s"
+msgstr "Δεν ήταν δυνατή η φόρτωση της περίληψης για  %s"
+
+#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#, fuzzy, python-format
+msgid "Could not modify port %s/%s"
+msgstr "Δεν ήταν δυνατή η δικράνωση: %s"
+
+#: ../semanage/seobject.py:772
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr ""
+
+#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#, fuzzy, python-format
+msgid "Could not delete port %s/%s"
+msgstr "Δεν ήταν δυνατή η διαγραφή του φακέλου `%s': %s"
+
+#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+#, fuzzy
+msgid "Could not list ports"
+msgstr "Αδυναμία αποθήκευσης φακέλου : %s"
+
+#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+#, fuzzy
+msgid "SELinux Type is required"
+msgstr "Χρειάζεται ένας διοργανωτής."
+
+#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
+#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#, fuzzy, python-format
+msgid "Could not create key for %s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
+#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
+#, fuzzy, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "Αδυναμία σύνδεσης στο περιβάλλον χρήσης '%s'"
+
+#: ../semanage/seobject.py:865
+#, fuzzy, python-format
+msgid "Interface %s already defined"
+msgstr "Constant \"%s\" έχει ήδη καθορισθεί"
+
+#: ../semanage/seobject.py:869
+#, fuzzy, python-format
+msgid "Could not create interface for %s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
+#, fuzzy, python-format
+msgid "Could not create context for %s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:878
+#, fuzzy, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "Αδυναμία ανάλυσης ονόματος διεπαφής από  '%s'"
+
+#: ../semanage/seobject.py:882
+#, fuzzy, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "Αδυναμία ανάλυσης ονόματος διεπαφής από  '%s'"
+
+#: ../semanage/seobject.py:886
+#, fuzzy, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "Αδυναμία ανάλυσης ονόματος διεπαφής από  '%s'"
+
+#: ../semanage/seobject.py:891
+#, fuzzy, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "Αδυναμία ανάλυσης ονόματος διεπαφής από  '%s'"
+
+#: ../semanage/seobject.py:895
+#, fuzzy, python-format
+msgid "Could not set interface context for %s"
+msgstr "Αδυναμία ανάλυσης ονόματος διεπαφής από  '%s'"
+
+#: ../semanage/seobject.py:899
+#, fuzzy, python-format
+msgid "Could not set message context for %s"
+msgstr "Δεν είναι δυνατή η αποστολή του μηνύματος : %s"
+
+#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
+#, fuzzy, python-format
+msgid "Could not add interface %s"
+msgstr "Αδυναμία ενεργοποίησης της διεπαφής %s"
+
+#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
+#, fuzzy, python-format
+msgid "Interface %s is not defined"
+msgstr "η γραμματοσειρά %d δεν έχει ορισθεί\n"
+
+#: ../semanage/seobject.py:933
+#, fuzzy, python-format
+msgid "Could not query interface %s"
+msgstr "Αδυναμία ενεργοποίησης της διεπαφής %s"
+
+#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
+#, fuzzy, python-format
+msgid "Could not modify interface %s"
+msgstr ""
+"#-#-#-#-#  gnome-control-center.gnome-2-14.el.po (el)  #-#-#-#-#\n"
+"Αδυναμία φόρτωσης της κύριας επιφάνειας χρήστη\n"
+"#-#-#-#-#  gnome-screensaver.gnome-2-14.el.po (el)  #-#-#-#-#\n"
+"Αδυναμία φόρτωση της κύριας επιφάνειας χρήσης\n"
+"#-#-#-#-#  gnome-volume-manager.HEAD.el.po (el)  #-#-#-#-#\n"
+"Αδυναμία φόρτωσης κύριας διεπαφής"
+
+#: ../semanage/seobject.py:972
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr ""
+
+#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
+#, fuzzy, python-format
+msgid "Could not delete interface %s"
+msgstr "Αδυναμία ενεργοποίησης της διεπαφής %s"
+
+#: ../semanage/seobject.py:992
+#, fuzzy
+msgid "Could not list interfaces"
+msgstr "Αδυναμία ενεργοποίησης της διεπαφής %s"
+
+#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
+#, fuzzy, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "Δεν ήταν δυνατό να ελεγχθεί το αρχείο μηνυμάτων %s: %s"
+
+#: ../semanage/seobject.py:1037
+#, fuzzy, python-format
+msgid "File context for %s already defined"
+msgstr "Constant \"%s\" έχει ήδη καθορισθεί"
+
+#: ../semanage/seobject.py:1041
+#, fuzzy, python-format
+msgid "Could not create file context for %s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:1050
+#, fuzzy, python-format
+msgid "Could not set user in file context for %s"
+msgstr "Αδυναμία αναγνώρισης τύπου αρχείου %s"
+
+#: ../semanage/seobject.py:1054
+#, fuzzy, python-format
+msgid "Could not set role in file context for %s"
+msgstr "Αδυναμία αναγνώρισης τύπου αρχείου %s"
+
+#: ../semanage/seobject.py:1058
+#, fuzzy, python-format
+msgid "Could not set type in file context for %s"
+msgstr "Αδυναμία αποθήκευσης του αρχείου  %s."
+
+#: ../semanage/seobject.py:1063
+#, fuzzy, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "Δεν είναι δυνατή η ανάγνωση πληροφοριών συμβολικού δεσμού για %s"
+
+#: ../semanage/seobject.py:1069
+#, fuzzy, python-format
+msgid "Could not set file context for %s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#, fuzzy, python-format
+msgid "Could not add file context for %s"
+msgstr "Αδυναμία φόρτωσης εικονιδίου για %s"
+
+#: ../semanage/seobject.py:1089
+msgid "Requires setype, serange or seuser"
+msgstr ""
+
+#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#, fuzzy, python-format
+msgid "File context for %s is not defined"
+msgstr "η γραμματοσειρά %d δεν έχει ορισθεί\n"
+
+#: ../semanage/seobject.py:1103
+#, fuzzy, python-format
+msgid "Could not query file context for %s"
+msgstr "Αδυναμία δημιουργίας cache για %s"
+
+#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#, fuzzy, python-format
+msgid "Could not modify file context for %s"
+msgstr "Αδυναμία φόρτωσης εικονιδίου για %s"
+
+#: ../semanage/seobject.py:1142
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr ""
+
+#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#, fuzzy, python-format
+msgid "Could not delete file context for %s"
+msgstr ""
+"Δεν ήταν δυνατή η διαγραφή του αρχείου περιεχομένων του φακέλου `%s': %s"
+
+#: ../semanage/seobject.py:1164
+#, fuzzy
+msgid "Could not list file contexts"
+msgstr "Αδυναμία προβολής περιεχομένου."
+
+#: ../semanage/seobject.py:1168
+#, fuzzy
+msgid "Could not list local file contexts"
+msgstr "Αδυναμία προβολής περιεχομένου."
+
+#: ../semanage/seobject.py:1203
+#, fuzzy
+msgid "Requires value"
+msgstr "Απόκρυψη τιμής"
+
+#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
+#: ../semanage/seobject.py:1251
+#, fuzzy, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "Δεν ήταν δυνατό να ελεγχθεί το αρχείο μηνυμάτων %s: %s"
+
+#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#, fuzzy, python-format
+msgid "Boolean %s is not defined"
+msgstr "η γραμματοσειρά %d δεν έχει ορισθεί\n"
+
+#: ../semanage/seobject.py:1217
+#, fuzzy, python-format
+msgid "Could not query file context %s"
+msgstr "Δεν είναι δυνατό το άνοιγμα του αρχείου: %s: %s"
+
+#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#, fuzzy, python-format
+msgid "Could not modify boolean %s"
+msgstr "Αδυναμία ανοίγματος \"%s\""
+
+#: ../semanage/seobject.py:1253
+#, fuzzy, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "Οι φάκελοι spool δε μπορούν να διαγραφούν"
+
+#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#, fuzzy, python-format
+msgid "Could not delete boolean %s"
+msgstr "Δεν ήταν δυνατή η διαγραφή του φακέλου `%s': %s"
+
+#: ../semanage/seobject.py:1273
+#, fuzzy
+msgid "Could not list booleans"
+msgstr "Αδυναμία αποθήκευσης φακέλου : %s"
+
+#: ../audit2allow/audit2allow:183
+#, c-format
+msgid "Generating type enforcment file: %s.te"
+msgstr ""
+
+#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
+#, fuzzy
+msgid "Compiling policy"
+msgstr "Γίνεται αντιγραφή δίσκου"
+
+#: ../audit2allow/audit2allow:205
+msgid ""
+"\n"
+"******************** IMPORTANT ***********************\n"
+msgstr ""
+
+#: ../audit2allow/audit2allow:206
+#, c-format
+msgid ""
+"In order to load this newly created policy package into the kernel,\n"
+"you are required to execute \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+msgstr ""
+
+#: ../audit2allow/audit2allow:211
+#, fuzzy, c-format
+msgid "Options Error: %s "
+msgstr "Σφάλμα πιστοποίησης: %s"

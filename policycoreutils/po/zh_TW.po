@@ -1,0 +1,1040 @@
+# translation of zh_TW.po to Chinese, Traditional
+# translation of zh_TW.po to
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Chester Cheng <ccheng@redhat.com>, 2006.
+# Chester Cheng <ccheng@brisbane.redhat.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: zh_TW\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-21 14:21-0500\n"
+"PO-Revision-Date: 2006-11-29 15:00+1000\n"
+"Last-Translator: Chester Cheng <ccheng@redhat.com>\n"
+"Language-Team: Chinese, Traditional <zh_TW@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.9.1\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-bq]\n"
+msgstr "用法：%s [-bq]\n"
+
+#: ../load_policy/load_policy.c:66
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s：無法載入政策：%s\n"
+
+#: ../newrole/newrole.c:188
+#, c-format
+msgid "failed to set PAM_TTY\n"
+msgstr "設定 PAM_TTY 失敗\n"
+
+#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
+msgid "Password:"
+msgstr "密碼："
+
+#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "在 shadow passwd 檔案中，找不到您的紀錄。\n"
+
+#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "getpass 無法開啟 /dev/tty\n"
+
+#: ../newrole/newrole.c:316
+#, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "在 passwd 檔案中找不到有效的紀錄。\n"
+
+#: ../newrole/newrole.c:327
+#, c-format
+msgid "Out of memory!\n"
+msgstr "記憶體不足！\n"
+
+#: ../newrole/newrole.c:332
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "錯誤！Shell 無效。\n"
+
+#: ../newrole/newrole.c:389
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr "無法清除環境\n"
+
+#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "起始功能時發生錯誤，放棄。\n"
+
+#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
+#, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "設定功能時發生錯誤，放棄\n"
+
+#: ../newrole/newrole.c:450
+#, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "設定 KEEPCAPS 錯誤，放棄\n"
+
+#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "丟棄功能時發生錯誤，放棄。\n"
+
+#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "變更 uid 錯誤，放棄。\n"
+
+#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "重設 KEEPCAPS 錯誤，放棄\n"
+
+#: ../newrole/newrole.c:477
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "丟棄 SETUID 功能錯誤，放棄\n"
+
+#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
+#, c-format
+msgid "Error freeing caps\n"
+msgstr "釋放功能時發生錯誤\n"
+
+#: ../newrole/newrole.c:580
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "連接稽核系統錯誤。\n"
+
+#: ../newrole/newrole.c:586
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "分配記憶體錯誤。\n"
+
+#: ../newrole/newrole.c:593
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "發送稽核訊息時錯誤。\n"
+
+#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "無法決定 enforcing 模式。\n"
+
+#: ../newrole/newrole.c:641
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "錯誤！無法開啟 %s。\n"
+
+#: ../newrole/newrole.c:646
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr "%s！無法取得 %s 目前的內文，無法為 tty 重新標記。\n"
+
+#: ../newrole/newrole.c:656
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr "%s！無法取得 %s 新的內文，無法為 tty 重新標記。\n"
+
+#: ../newrole/newrole.c:666
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s！無法為 %s 設定新的內文\n"
+
+#: ../newrole/newrole.c:710
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s 改變了標籤。\n"
+
+#: ../newrole/newrole.c:716
+#, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "無法為 %s 回復內文\n"
+
+#: ../newrole/newrole.c:772
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "錯誤：指定了多個角色\n"
+
+#: ../newrole/newrole.c:780
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "錯誤：指定了多個類型\n"
+
+#: ../newrole/newrole.c:787
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "對不起，-l 也許能與 SELinux MLS 的支援合用。\n"
+
+#: ../newrole/newrole.c:792
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "錯誤：指令的多個等級\n"
+
+#: ../newrole/newrole.c:814
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "無法取得預設類型。\n"
+
+#: ../newrole/newrole.c:824
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "無法取得新的內文。\n"
+
+#: ../newrole/newrole.c:831
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "無法設定新的角色 %s\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "無法設定新的類型 %s\n"
+
+#: ../newrole/newrole.c:847
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "無法以 %s 等級建立新的範圍\n"
+
+#: ../newrole/newrole.c:852
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "設定新範圍 %s 失敗\n"
+
+#: ../newrole/newrole.c:860
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "無法將新的內文轉為字串\n"
+
+#: ../newrole/newrole.c:865
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s 不是有效的內文\n"
+
+#: ../newrole/newrole.c:872
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr "無法為新的內文（new_context）分配記憶體"
+
+#: ../newrole/newrole.c:898
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr "無法獲得空的訊號組\n"
+
+#: ../newrole/newrole.c:906
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr "無法設定 SIGHUP 處理器\n"
+
+#: ../newrole/newrole.c:972
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "很抱歉，newrole 只能在 SELinux 核心中使用。\n"
+
+#: ../newrole/newrole.c:989
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "無法取得舊的內文（old_context）。\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "Error!  Could not retrieve tty information.\n"
+msgstr "錯誤！無法擷取 tty 資訊。\n"
+
+#: ../newrole/newrole.c:1015
+#, c-format
+msgid "Authenticating %s.\n"
+msgstr "認證 %s。\n"
+
+#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "初始化 PAM 失敗\n"
+
+#: ../newrole/newrole.c:1029
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "newrole：%s 的密碼錯誤\n"
+
+#: ../newrole/newrole.c:1056
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "newrole：無法分支（fork）：%s"
+
+#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr "無法回復 tty 標籤...\n"
+
+#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
+#, c-format
+msgid "Failed to close tty properly\n"
+msgstr "無法正確地關閉 tty\n"
+
+#: ../newrole/newrole.c:1117
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "無法關閉描述者。\n"
+
+#: ../newrole/newrole.c:1140
+#, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "無法分配 shell 的 argv0。\n"
+
+#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
+#, c-format
+msgid "Could not set exec context to %s.\n"
+msgstr "無法將 exec 內文設定至 %s。\n"
+
+#: ../newrole/newrole.c:1173
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr "無法復原環境；放棄\n"
+
+#: ../newrole/newrole.c:1184
+msgid "failed to exec shell\n"
+msgstr "無法 exec shell\n"
+
+#: ../run_init/run_init.c:67
+msgid ""
+"USAGE: run_init <script> <args ...>\n"
+"  where: <script> is the name of the init script to run,\n"
+"         <args ...> are the arguments to that script."
+msgstr ""
+"USAGE: run_init <script> <args ...>\n"
+"  其中：<script> 是要執行的 init 程序檔，\n"
+"         <args ...> 是程序檔的參數。"
+
+#: ../run_init/run_init.c:139
+#, c-format
+msgid "failed to get account information\n"
+msgstr "取得帳號資訊時失敗\n"
+
+#: ../run_init/run_init.c:275
+#, c-format
+msgid "run_init: incorrect password for %s\n"
+msgstr "run_init：給 %s 的密碼不正確\n"
+
+#: ../run_init/run_init.c:309
+#, c-format
+msgid "Could not open file %s\n"
+msgstr "無法開啟 %s 檔案\n"
+
+#: ../run_init/run_init.c:336
+#, c-format
+msgid "No context in file %s\n"
+msgstr "檔案 %s 中沒有內文\n"
+
+#: ../run_init/run_init.c:361
+#, c-format
+msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
+msgstr "對不起，run_init 可能只能用在 SELinux 的核心上。\n"
+
+#: ../run_init/run_init.c:380
+#, c-format
+msgid "authentication failed.\n"
+msgstr "認證失敗。\n"
+
+#: ../scripts/chcat:75 ../scripts/chcat:145
+msgid "Requires at least one category"
+msgstr "需要至少一個分類"
+
+#: ../scripts/chcat:89 ../scripts/chcat:159
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "無法在 %s 上使用「+」來修改敏感等級。"
+
+#: ../scripts/chcat:93
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s 已經在 %s 中執行"
+
+#: ../scripts/chcat:164 ../scripts/chcat:174
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s 不在 %s 中"
+
+#: ../scripts/chcat:237 ../scripts/chcat:242
+msgid "Can not combine +/- with other types of categories"
+msgstr "+/- 不能與其他類別結合"
+
+#: ../scripts/chcat:287
+msgid "Can not have multiple sensitivities"
+msgstr "不能擁有多種敏感度"
+
+#: ../scripts/chcat:293
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "使用 %s CATEGORY 檔案..."
+
+#: ../scripts/chcat:294
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "用法 %s -l CATEGORY user ..."
+
+#: ../scripts/chcat:295
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "用法 %s [[+|-]CATEGORY],...]q File ..."
+
+#: ../scripts/chcat:296
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "用法 %s -l [[+|-]CATEGORY],...]q user ..."
+
+#: ../scripts/chcat:297
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "用法 %s -d File ..."
+
+#: ../scripts/chcat:298
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "用法 %s -l -d user ..."
+
+#: ../scripts/chcat:299
+#, c-format
+msgid "Usage %s -L"
+msgstr "用法 %s -L"
+
+#: ../scripts/chcat:300
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "用法 %s -L -l user"
+
+#: ../scripts/chcat:301
+msgid "Use -- to end option list.  For example"
+msgstr "用法 -- 表示選項清單的結尾。例如"
+
+#: ../scripts/chcat:302
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -CompanyConfidential /docs/businessplan.odt"
+
+#: ../scripts/chcat:303
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +CompanyConfidential juser"
+
+#: ../semanage/semanage:127
+msgid "Requires 2 or more arguments"
+msgstr "需要兩個以上的參數"
+
+#: ../semanage/semanage:132
+#, c-format
+msgid "%s not defined"
+msgstr "%s 未定義"
+
+#: ../semanage/semanage:156
+#, c-format
+msgid "%s not valid for %s objects\n"
+msgstr "%s 對 %s 物件來說是無效的\n"
+
+#: ../semanage/semanage:183 ../semanage/semanage:191
+msgid "range not supported on Non MLS machines"
+msgstr "非 MLS 機器上並不支援範圍"
+
+#: ../semanage/semanage:249
+msgid "You must specify a role"
+msgstr "您必須指定角色"
+
+#: ../semanage/semanage:251
+msgid "You must specify a prefix"
+msgstr "您必須指定前綴"
+
+#: ../semanage/semanage:300
+#, c-format
+msgid "Options Error %s "
+msgstr "選項錯誤 %s"
+
+#: ../semanage/semanage:304
+#, c-format
+msgid "Invalid value %s"
+msgstr "無效的數值 %s"
+
+#: ../semanage/seobject.py:132
+msgid "translations not supported on non-MLS machines"
+msgstr "非 MLS 機器上並不支援翻譯"
+
+#: ../semanage/seobject.py:139
+#, python-format
+msgid "Unable to open %s: translations not supported on non-MLS machines"
+msgstr "無法開啟 %s：非 MLS 機器上並不支援翻譯"
+
+#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#, python-format
+msgid "Translations can not contain spaces '%s' "
+msgstr "翻譯不能包括「%s」"
+
+#: ../semanage/seobject.py:182
+#, python-format
+msgid "Invalid Level '%s' "
+msgstr "無效的等級「%s」"
+
+#: ../semanage/seobject.py:185
+#, python-format
+msgid "%s already defined in translations"
+msgstr "%s 已經在翻譯中定義"
+
+#: ../semanage/seobject.py:197
+#, python-format
+msgid "%s not defined in translations"
+msgstr "%s 在翻譯中未定義"
+
+#: ../semanage/seobject.py:218
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "SELinux 政策並不受管理，或無法存取 store。"
+
+#: ../semanage/seobject.py:223
+msgid "Cannot read policy store."
+msgstr "無法讀取政策 store。"
+
+#: ../semanage/seobject.py:228
+msgid "Could not establish semanage connection"
+msgstr "無法建立 semanage 連線"
+
+#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
+#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
+#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
+#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
+#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "無法為 %s 建立金鑰"
+
+#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
+#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "無法檢查 %s 的登入對應是否已經定義"
+
+#: ../semanage/seobject.py:253
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "%s 的登入對應已經定義"
+
+#: ../semanage/seobject.py:257
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "Linux 使用者 %s 不存在"
+
+#: ../semanage/seobject.py:261
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "無法為 %s 建立登入對應"
+
+#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
+#, python-format
+msgid "Could not set name for %s"
+msgstr "無法為 %s 設定名稱"
+
+#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "無法為 %s 設定 MLS 範圍"
+
+#: ../semanage/seobject.py:274
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "無法為 %s 設定 SELinux 使用者"
+
+#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
+#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
+#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
+#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
+#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
+#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
+#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
+#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1257
+msgid "Could not start semanage transaction"
+msgstr "無法開始 semanage 交易"
+
+#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "無法為 %s 新增登入對應"
+
+#: ../semanage/seobject.py:301
+msgid "Requires seuser or serange"
+msgstr "需要 seuser 或 serange"
+
+#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "%s 的登入對應並未定義"
+
+#: ../semanage/seobject.py:315
+#, python-format
+msgid "Could not query seuser for %s"
+msgstr "無法為 %s 查詢 seuser"
+
+#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "無法為 %s 修改登入對應"
+
+#: ../semanage/seobject.py:364
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr "%s 的登入對應定義在政策中，無法刪除"
+
+#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
+#, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "無法為 %s 刪除登入對應"
+
+#: ../semanage/seobject.py:391
+msgid "Could not list login mappings"
+msgstr "無法列出登入對應"
+
+#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
+#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "無法檢查 SELinux 使用者 %s 是否已經定義"
+
+#: ../semanage/seobject.py:439
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "SELinux 使用者 %s 已經定義"
+
+#: ../semanage/seobject.py:443
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "無法為 %s 建立 SELinux 使用者"
+
+#: ../semanage/seobject.py:452
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "無法新增 %s 角色給 %s"
+
+#: ../semanage/seobject.py:461
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "無法為 %s 設定 MLS 等級"
+
+#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
+#, python-format
+msgid "Invalid prefix %s"
+msgstr "無效的前綴 %s"
+
+#: ../semanage/seobject.py:466
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "無法新增前綴 %s 到 %s"
+
+#: ../semanage/seobject.py:469
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "無法為 %s 擷取金鑰"
+
+#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "無法新增 SELinux 使用者 %s"
+
+#: ../semanage/seobject.py:498
+msgid "Requires prefix, roles, level or range"
+msgstr "需要前綴、角色、等級或範圍"
+
+#: ../semanage/seobject.py:500
+msgid "Requires prefix or roles"
+msgstr "需要前綴或角色"
+
+#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux 使用者 %s 未定義"
+
+#: ../semanage/seobject.py:514
+#, python-format
+msgid "Could not query user for %s"
+msgstr "無法為 %s 查詢使用者"
+
+#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
+#, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "無法修改 SELinux 使用者 %s"
+
+#: ../semanage/seobject.py:574
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "SELinux 使用者 %s 定義在政策中，無法刪除"
+
+#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "無法刪除 SELinux 使用者 %s"
+
+#: ../semanage/seobject.py:598
+msgid "Could not list SELinux users"
+msgstr "無法列出 SELinux 使用者"
+
+#: ../semanage/seobject.py:604
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "無法列出使用者 %s 的角色"
+
+#: ../semanage/seobject.py:638
+msgid "Protocol udp or tcp is required"
+msgstr "需要 udp 或 tcp 通訊協定"
+
+#: ../semanage/seobject.py:640
+msgid "Port is required"
+msgstr "需要連接埠"
+
+#: ../semanage/seobject.py:651
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "無法為 %s/%s 建立金鑰"
+
+#: ../semanage/seobject.py:662
+msgid "Type is required"
+msgstr "需要類型"
+
+#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "無法檢查連接埠 %s/%s 是否已經定義"
+
+#: ../semanage/seobject.py:670
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "連接埠 %s/%s 已經定義"
+
+#: ../semanage/seobject.py:674
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "無法為 %s/%s 建立連接埠"
+
+#: ../semanage/seobject.py:680
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "無法為 %s/%s 建立內文"
+
+#: ../semanage/seobject.py:684
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "無法為 %s/%s 的連接埠內文中，設定使用者"
+
+#: ../semanage/seobject.py:688
+#, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "無法為 %s/%s 的連接埠內文中，設定角色"
+
+#: ../semanage/seobject.py:692
+#, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "無法為 %s/%s 的連接埠內文中，設定類型"
+
+#: ../semanage/seobject.py:697
+#, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr "無法為 %s/%s 的連接埠內文中，設定 mls 欄位"
+
+#: ../semanage/seobject.py:701
+#, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "無法為 %s/%s 設定連接埠內文"
+
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#, python-format
+msgid "Could not add port %s/%s"
+msgstr "無法新增連接埠 %s/%s"
+
+#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+msgid "Requires setype or serange"
+msgstr "需要 setype 或 serange"
+
+#: ../semanage/seobject.py:724
+msgid "Requires setype"
+msgstr "需要 setype"
+
+#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#, python-format
+msgid "Port %s/%s is not defined"
+msgstr "連接埠 %s/%s 未定義"
+
+#: ../semanage/seobject.py:736
+#, python-format
+msgid "Could not query port %s/%s"
+msgstr "無法查詢連接埠 %s/%s"
+
+#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#, python-format
+msgid "Could not modify port %s/%s"
+msgstr "無法修改連接埠 %s/%s"
+
+#: ../semanage/seobject.py:772
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr "連接埠 %s/%s 已經在政策中定義，無法刪除"
+
+#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#, python-format
+msgid "Could not delete port %s/%s"
+msgstr "無法刪除連接埠 %s/%s"
+
+#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+msgid "Could not list ports"
+msgstr "無法列出連接埠"
+
+#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+msgid "SELinux Type is required"
+msgstr "需要 SELinux 類型"
+
+#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
+#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#, python-format
+msgid "Could not create key for %s"
+msgstr "無法為 %s 建立金鑰"
+
+#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
+#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "無法檢查介面 %s 是否已經定義"
+
+#: ../semanage/seobject.py:865
+#, python-format
+msgid "Interface %s already defined"
+msgstr "介面 %s 已經定義"
+
+#: ../semanage/seobject.py:869
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "無法為 %s 建立介面"
+
+#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
+#, python-format
+msgid "Could not create context for %s"
+msgstr "無法為 %s 建立內文"
+
+#: ../semanage/seobject.py:878
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "無法為 %s 設定介面內文中的使用者"
+
+#: ../semanage/seobject.py:882
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "無法為 %s 設定介面內文中的角色"
+
+#: ../semanage/seobject.py:886
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "無法為 %s 設定介面內文中的類型"
+
+#: ../semanage/seobject.py:891
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "無法為 %s 設定介面內文中的 mls 欄位"
+
+#: ../semanage/seobject.py:895
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "無法為 %s 設定介面內文"
+
+#: ../semanage/seobject.py:899
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "無法為 %s 設定訊息內文"
+
+#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
+#, python-format
+msgid "Could not add interface %s"
+msgstr "無法新增介面 %s"
+
+#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "介面 %s 未定義"
+
+#: ../semanage/seobject.py:933
+#, python-format
+msgid "Could not query interface %s"
+msgstr "無法查詢介面 %s"
+
+#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "無法修改介面 %s"
+
+#: ../semanage/seobject.py:972
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "介面 %s 定義在政策中，無法刪除"
+
+#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "無法刪除介面 %s"
+
+#: ../semanage/seobject.py:992
+msgid "Could not list interfaces"
+msgstr "無法列出介面"
+
+#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "無法檢查 %s 的檔案內文是否已經定義"
+
+#: ../semanage/seobject.py:1037
+#, python-format
+msgid "File context for %s already defined"
+msgstr "%s 的檔案內文已經定義"
+
+#: ../semanage/seobject.py:1041
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "無法為 %s 建立檔案內文"
+
+#: ../semanage/seobject.py:1050
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "無法為 %s 的檔案內文設定使用者"
+
+#: ../semanage/seobject.py:1054
+#, python-format
+msgid "Could not set role in file context for %s"
+msgstr "無法為 %s 的檔案內文設定角色"
+
+#: ../semanage/seobject.py:1058
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "無法為 %s 的檔案內文設定類型"
+
+#: ../semanage/seobject.py:1063
+#, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "無法為 %s 的檔案內文設定 mls 欄位"
+
+#: ../semanage/seobject.py:1069
+#, python-format
+msgid "Could not set file context for %s"
+msgstr "無法為 %s 設定檔案內文"
+
+#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#, python-format
+msgid "Could not add file context for %s"
+msgstr "無法為 %s 新增檔案內文"
+
+#: ../semanage/seobject.py:1089
+msgid "Requires setype, serange or seuser"
+msgstr "需要 setype、serange 或 seuser"
+
+#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "%s 的檔案內文未定義"
+
+#: ../semanage/seobject.py:1103
+#, python-format
+msgid "Could not query file context for %s"
+msgstr "無法為 %s 查詢檔案內文"
+
+#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#, python-format
+msgid "Could not modify file context for %s"
+msgstr "無法為 %s 修改檔案內文"
+
+#: ../semanage/seobject.py:1142
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr "%s 的檔案內文已經定義在政策中，無法刪除"
+
+#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#, python-format
+msgid "Could not delete file context for %s"
+msgstr "無法為 %s 刪除檔案內文"
+
+#: ../semanage/seobject.py:1164
+msgid "Could not list file contexts"
+msgstr "無法列出檔案內文"
+
+#: ../semanage/seobject.py:1168
+msgid "Could not list local file contexts"
+msgstr "無法列出本地的檔案內文"
+
+#: ../semanage/seobject.py:1203
+msgid "Requires value"
+msgstr "需要數值"
+
+#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
+#: ../semanage/seobject.py:1251
+#, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "無法檢查布林值 %s 是否已經定義"
+
+#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#, python-format
+msgid "Boolean %s is not defined"
+msgstr "布林值 %s 未定義"
+
+#: ../semanage/seobject.py:1217
+#, python-format
+msgid "Could not query file context %s"
+msgstr "無法查詢檔案內文 %s"
+
+#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#, python-format
+msgid "Could not modify boolean %s"
+msgstr "無法修改布林值 %s"
+
+#: ../semanage/seobject.py:1253
+#, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "布林值 %s 已經定義在政策中，無法刪除"
+
+#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#, python-format
+msgid "Could not delete boolean %s"
+msgstr "無法刪除布林值 %s"
+
+#: ../semanage/seobject.py:1273
+msgid "Could not list booleans"
+msgstr "無法列出布林值"
+
+#: ../audit2allow/audit2allow:183
+#, c-format
+msgid "Generating type enforcment file: %s.te"
+msgstr "產生政策強制檔：%s.te"
+
+#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
+msgid "Compiling policy"
+msgstr "編譯政策"
+
+#: ../audit2allow/audit2allow:205
+msgid ""
+"\n"
+"******************** IMPORTANT ***********************\n"
+msgstr ""
+"\n"
+"******************** 重要 ***********************\n"
+
+#: ../audit2allow/audit2allow:206
+#, c-format
+msgid ""
+"In order to load this newly created policy package into the kernel,\n"
+"you are required to execute \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+msgstr ""
+"為了要讓這個新建立的政策套件加入核心中，\n"
+"您需要執行\n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+
+#: ../audit2allow/audit2allow:211
+#, c-format
+msgid "Options Error: %s "
+msgstr "選項錯誤：%s"

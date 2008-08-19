@@ -1,0 +1,185 @@
+.\" Hey, Emacs! This is an -*- nroff -*- source file.
+.\" Copyright (c) 2005 Manoj Srivastava <srivasta@debian.org>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.\"
+.TH AUDIT2ALLOW "1" "January 2005" "Security Enhanced Linux" NSA
+.SH NAME
+.BR audit2allow
+	\- generate SELinux policy allow rules from logs of denied operations
+
+.BR audit2why  
+	\- translates SELinux audit messages into a description of why the access was denied (audit2allow -w)
+
+.SH SYNOPSIS
+.B audit2allow
+.RI [ options "] "
+.SH OPTIONS
+.TP
+.B "\-a" | "\-\-all"
+Read input from audit and message log, conflicts with -i
+.TP
+.B "\-d" | "\-\-dmesg"
+Read input from output of 
+.I /bin/dmesg.
+Note that all audit messages are not available via dmesg when
+auditd is running; use "ausearch -m avc | audit2allow"  or "-a" instead.
+.TP
+.B "\-f" | "\-\-fcfile" <File Context File>
+Add File Context File to generated Module Package. Requires -M option.
+.TP
+.B "\-h" | "\-\-help"
+Print a short usage message
+.TP
+.B "\-i  <inputfile>" | "\-\-input <inputfile>"
+read input from 
+.I <inputfile>
+.TP
+.B "\-l" | "\-\-lastreload"
+read input only after last policy reload
+.TP
+.B "\-m <modulename>" | "\-\-module <modulename>"
+Generate module/require output <modulename>
+.TP
+.B "\-M <modulename>" 
+Generate loadable module package, conflicts with -o
+.TP
+.B "\-o <outputfile>"  | "\-\-output <outputfile>"
+append output to 
+.I <outputfile>
+.TP
+.B "\-r" | "\-\-requires"
+Generate require output syntax for loadable modules.
+.TP
+.B "\-N" | "\-\-noreference"
+Do not generate reference policy, traditional style allow rules.
+This is the default behavior.
+.TP
+.B "\-R" | "\-\-reference"
+Generate reference policy using installed macros.
+This attempts to match denials against interfaces and may be inaccurate.
+.TP
+.B "\-t "  | "\-\-tefile"
+Indicates input file is a te (type enforcement) file.  This can be used to translate old te format to new policy format.
+.TP
+.B "\-w" | "\-\-why"
+Translates SELinux audit messages into a description of why the access wasn denied
+
+.TP
+.B "\-v" | "\-\-verbose"
+Turn on verbose output
+
+.SH DESCRIPTION
+.PP
+This utility scans the logs for messages logged when the system denied
+permission for operations, and generates a snippet of policy rules
+which, if loaded into policy, might have allowed those operations to
+succeed. However, this utility only generates Type Enforcement (TE) allow 
+rules.  Certain permission denials may require other kinds of policy changes,
+e.g. adding an attribute to a type declaration to satisfy an existing
+constraint, adding a role allow rule, or modifying a constraint.  The
+.BR audit2why (8) 
+utility may be used to diagnose the reason when it is unclear.
+.PP
+Care must be exercised while acting on the output of this utility to
+ensure that the operations being permitted do not pose a security
+threat. Often it is better to define new domains and/or types, or make other
+structural changes to narrowly allow an optimal set of operations to
+succeed, as opposed to blindly implementing the sometimes broad
+changes recommended by this utility.   Certain permission denials are 
+not fatal to the application, in which case it may be preferable to
+simply suppress logging of the denial via a 'dontaudit' rule rather than
+an 'allow' rule.
+.PP
+.SH EXAMPLE
+.nf
+.B NOTE: These examples are for systems using the audit package.  If you do 
+.B not use the audit package,  the AVC messages will be in /var/log/messages.
+.B Please substitute /var/log/messages for /var/log/audit/audit.log in the 
+.B examples.
+.PP
+.B Using audit2allow to generate monolithic (non-module) policy
+$ cd /etc/selinux/$SELINUXTYPE/src/policy
+$ cat /var/log/audit/audit.log | audit2allow >> domains/misc/local.te
+$ cat domains/misc/local.te
+allow cupsd_config_t unconfined_t:fifo_file { getattr ioctl };
+<review domains/misc/local.te and customize as desired>
+$ make load
+
+.B Using audit2allow to generate module policy
+
+$ cat /var/log/audit/audit.log | audit2allow -m local > local.te
+$ cat local.te
+module local 1.0;
+
+require {
+        role system_r;
+
+
+        class fifo_file {  getattr ioctl };
+
+
+        type cupsd_config_t;
+        type unconfined_t;
+ };
+
+
+allow cupsd_config_t unconfined_t:fifo_file { getattr ioctl };
+<review local.te and customize as desired>
+
+.B Building module policy manually
+
+# Compile the module
+$ checkmodule -M -m -o local.mod local.te
+# Create the package 
+$ semodule_package -o local.pp -m local.mod
+# Load the module into the kernel
+$ semodule -i local.pp
+
+.B Using audit2allow to generate and build module policy
+$ cat /var/log/audit/audit.log | audit2allow -M local
+Generating type enforcment file: local.te
+Compiling policy: checkmodule -M -m -o local.mod local.te
+Building package: semodule_package -o local.pp -m local.mod
+
+******************** IMPORTANT ***********************
+
+In order to load this newly created policy package into the kernel,
+you are required to execute
+
+semodule -i local.pp
+
+.fi
+.PP
+.SH AUTHOR
+This manual page was written by 
+.I Manoj Srivastava <srivasta@debian.org>,
+for the Debian GNU/Linux system. It was updated by Dan Walsh <dwalsh@redhat.com>
+.PP
+The 
+.B audit2allow
+utility has contributions from several people, including 
+.I Justin R. Smith 
+and 
+.I Yuichi Nakamura.
+and 
+.I Dan Walsh

@@ -1,0 +1,10 @@
+	../load_policy/load_policy.c \
+	../newrole/newrole.c \
+	../run_init/run_init.c \
+	../setfiles/setfiles.c \
+	../scripts/genhomedircon  \
+	../scripts/chcat  \
+	../semanage/semanage  \
+	../semanage/seobject.py  \
+	../audit2allow/audit2allow \
+	../audit2allow/avc.py  

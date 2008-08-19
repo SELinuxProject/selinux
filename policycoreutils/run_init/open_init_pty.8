@@ -1,0 +1,48 @@
+.\" Hey, Emacs! This is an -*- nroff -*- source file.
+.\" Copyright (c) 2005 Manoj Srivastava <srivasta@debian.org>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.\"
+.TH OPEN_INIT_PTY "8" "January 2005" "Security Enhanced Linux" NSA
+.SH NAME
+open_init_pty \- run an program under a psuedo terminal
+.SH SYNOPSIS
+.B open_init_pty
+\fISCRIPT\fR [[\fIARGS\fR]...] 
+.br
+.SH DESCRIPTION
+.PP
+Run a program under a psuedo terminal. This is used by 
+.B run_init
+to run actually run the program after setting up the proper
+context. This program acquires a new Psuedo terminal, forks a child
+process that binds to the psueado terminal, and then sits around and
+connects the physical terminal it was invoked upon with the pseudo
+terminal, passing keyboard input into to the child process, and passing the
+output of the child process to the physical terminal.
+.PP
+It sets up the pseudo terminal properly based on the physical terminal
+attributes, and then sets the user's terminal to RAW mode, taking care
+to reset it on exit.
+.SH AUTHOR
+This manual page was written by Manoj Srivastava <srivasta@debian.org>,
+for the Debian GNU/Linux system.

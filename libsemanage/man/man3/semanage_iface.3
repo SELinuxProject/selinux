@@ -1,0 +1,153 @@
+.TH semanage_iface 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux Network Interfaces Management API
+
+.SH "SYNOPSIS"
+.B #include <semanage/iface_record.h>
+.br
+.B #include <semanage/interfaces_policy.h>
+.br
+.B #include <semanage/interfaces_local.h>
+
+.PP
+This object contains properties associated with a network interface. 
+
+.PP
+For details on a specific function, see its manual page.
+
+.SH "Record API Overview"
+
+.HP 
+.BR semanage_iface_create "(3)" \- 
+.br
+create an interface
+
+.HP
+.BR semanage_iface_free "(3)" \-
+.br
+release resources for this interface
+
+.HP
+.BR semanage_iface_key_create "(3)" \-
+.br
+create a key, which can be used to identify an interface
+
+.HP
+.BR semanage_iface_key_free "(3)" \-
+.br
+release resources for this interface key
+
+.HP
+.BR semanage_iface_key_extract "(3)" \- 
+.br
+create a key matching this interface
+
+.HP
+.BR semanage_iface_clone "(3)" \- 
+.br
+create an identical interface (deep-copy clone)
+
+.HP
+.BR semanage_iface_compare "(3)" \- 
+.br
+compare this interface to the provided key
+
+.HP
+.BR semanage_iface_compare2 "(3)" \-
+.br
+compare this interface to another
+
+.SH "Properties API Overview"
+
+.HP
+.BR semanage_iface_get_name "(3)" \- 
+.br
+return the name of this interface 
+
+.HP
+.BR semanage_iface_set_name "(3)" \-
+.br
+set the name of this interface 
+
+.HP
+.BR semanage_iface_get_ifcon "(3)" \-
+.br
+return the SELinux context associated with this interface
+
+.HP
+.BR semanage_iface_set_ifcon "(3)" \-
+.br
+set the SELinux context associated with this interface
+
+.HP
+.BR semanage_iface_get_msgcon "(3)" \-
+.br
+return the SELinux context associated with packets sent over this interface
+
+.HP
+.BR semanage_iface_set_msgcon "(3)" \-
+.br
+set the SELinux context associated with packets sent over this interface
+
+.SH "Record Store API Overview"
+
+.HP
+.BR semanage_iface_modify_local "(3)" \- 
+.br
+add or update an interface in the local store
+
+.HP
+.BR semanage_iface_del_local "(3)" \-
+.br
+delete an interface from the local store
+
+.HP
+.BR semanage_iface_exists "(3)" \-
+.br
+check if an interface is defined in the persistent policy
+
+.HP
+.BR semanage_iface_exists_local "(3)" \-
+.br
+check if an interface is defined in the local store
+
+.HP
+.BR semanage_iface_query "(3)" \-
+.br
+query an interface in the persistent policy
+
+.HP
+.BR semanage_iface_query_local "(3)" \- 
+.br
+query an interface in the local store
+
+.HP
+.BR semanage_iface_count "(3)" \-
+.br
+count the number of interfaces defined in the persistent policy
+
+.HP
+.BR semanage_iface_count_local "(3)" \-
+.br
+count the number of interfaces defined in the local store
+
+.HP
+.BR semanage_iface_iterate "(3)" \-
+.br
+execute a callback for each interface in the persistent policy
+
+.HP
+.BR semanage_iface_iterate_local "(3)" \-
+.br
+execute a callback for each interface in the local store
+
+.HP
+.BR semanage_iface_list "(3)" \-
+.br
+return an array containing all interfaces in the persistent policy
+
+.HP
+.BR semanage_iface_list_local "(3)" \-
+.br
+return an array containing all interfaces in the local store

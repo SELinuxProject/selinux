@@ -1,0 +1,177 @@
+.TH semanage_bool 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux Policy Booleans Management API
+
+.SH "SYNOPSIS"
+.B #include <semanage/boolean_record.h>
+.br
+.B #include <semanage/booleans_active.h>
+.br
+.B #include <semanage/booleans_policy.h>
+.br
+.B #include <semanage/booleans_local.h>
+
+.PP
+This object contains properties associated with a SELinux policy boolean
+
+.PP
+For details on a specific function, see its manual page.
+
+.SH "Record API Overview"
+
+.HP 
+.BR semanage_bool_create "(3)" \- 
+.br
+create a boolean
+
+.HP
+.BR semanage_bool_free "(3)" \-
+.br
+release resources for this boolean
+
+.HP
+.BR semanage_bool_key_create "(3)" \-
+.br
+create a key, which can be used to identify a boolean
+
+.HP
+.BR semanage_bool_key_free "(3)" \-
+.br
+release resources for this boolean key
+
+.HP
+.BR semanage_bool_key_extract "(3)" \- 
+.br
+create a key matching this boolean
+
+.HP
+.BR semanage_bool_clone "(3)" \- 
+.br
+create an identical boolean (deep-copy clone)
+
+.HP
+.BR semanage_bool_compare "(3)" \- 
+.br
+compare this boolean to the provided key
+
+.HP
+.BR semanage_bool_compare2 "(3)" \-
+.br
+compare this boolean to another
+
+
+.SH "Properties API Overview"
+
+.HP
+.BR semanage_bool_get_name "(3)" \-
+.br
+return the name of this boolean
+
+.HP
+.BR semanage_bool_set_name "(3)" \-
+.br
+set the name of this boolean
+
+.HP
+.BR semanage_bool_get_value "(3)" \-
+.br
+return the value of this boolean
+
+.HP
+.BR semanage_bool_set_value "(3)" \-
+.br
+set the value of this boolean
+
+
+.SH "Record Store API Overview"
+
+.HP
+.BR semanage_bool_modify_local "(3)" \- 
+.br
+add or update a boolean in the local store
+
+.HP
+.BR semanage_bool_set_active "(3)" \-
+.br
+update a boolean in the currently active policy
+
+.HP
+.BR semanage_bool_del_local "(3)" \-
+.br
+delete a boolean from the local store
+
+.HP
+.BR semanage_bool_exists "(3)" \-
+.br
+check if a boolean is defined in the persistent policy
+
+.HP
+.BR semanage_bool_exists_local "(3)" \-
+.br
+check if a boolean is defined in the local store
+
+.HP
+.BR semanage_bool_exists_active "(3)" \-
+.br
+check if a boolean is defined in the currently active policy
+
+.HP
+.BR semanage_bool_query "(3)" \-
+.br
+query a boolean in the persistent policy
+
+.HP
+.BR semanage_bool_query_local "(3)" \- 
+.br
+query a boolean in the local store
+
+.HP
+.BR semanage_bool_query_active "(3)" \-
+.br
+query a boolean in the currently active policy
+
+.HP
+.BR semanage_bool_count "(3)" \-
+.br
+count the number of booleans defined in the persistent policy
+
+.HP
+.BR semanage_bool_count_local "(3)" \-
+.br
+count the number of booleans defined in the local store
+
+.HP
+.BR semanage_bool_count_active "(3)" \-
+.br
+count the number of booleans defined in the currently active policy
+
+.HP
+.BR semanage_bool_iterate "(3)" \-
+.br
+execute a callback for each boolean in the persistent policy
+
+.HP
+.BR semanage_bool_iterate_local "(3)" \-
+.br
+execute a callback for each boolean in the local store
+
+.HP
+.BR semanage_bool_iterate_active "(3)" \-
+.br
+execute a callback for each boolean in the currently active policy
+
+.HP
+.BR semanage_bool_list "(3)" \-
+.br
+return an array containing all booleans in the persistent policy
+
+.HP
+.BR semanage_bool_list_local "(3)" \-
+.br
+return an array containing all booleans in the local store
+
+.HP
+.BR semanage_bool_list_active "(3)" \-
+.br
+return an array containing all booleans in the currently active policy 

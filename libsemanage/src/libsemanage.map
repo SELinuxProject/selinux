@@ -1,0 +1,18 @@
+LIBSEMANAGE_1.0 {
+  global: semanage_handle_create; semanage_handle_destroy; 
+          semanage_is_managed; semanage_connect; semanage_disconnect; 
+	  semanage_msg_*;
+          semanage_begin_transaction; semanage_commit;
+          semanage_module_install; semanage_module_upgrade;
+	  semanage_module_install_base; semanage_module_remove;
+	  semanage_module_list; semanage_module_info_datum_destroy;
+	  semanage_module_list_nth; semanage_module_get_name;
+	  semanage_module_get_version; semanage_select_store;
+	  semanage_reload_policy; semanage_set_reload; semanage_set_rebuild;
+	  semanage_user_*; semanage_bool_*; semanage_seuser_*;
+	  semanage_iface_*; semanage_port_*; semanage_context_*;
+	  semanage_node_*;
+	  semanage_fcontext_*; semanage_access_check; semanage_set_create_store;
+	  semanage_is_connected; semanage_set_disable_dontaudit;
+  local: *;
+};

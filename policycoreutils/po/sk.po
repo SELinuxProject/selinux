@@ -1,0 +1,1042 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: policycoreutils\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-21 14:21-0500\n"
+"PO-Revision-Date: 2006-09-04 17:56+0100\n"
+"Last-Translator: Mike Karas <zoliqe@gmail.com>\n"
+"Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Slovak\n"
+"X-Poedit-Country: SLOVAKIA\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-bq]\n"
+msgstr "použitie:  %s [-bq]\n"
+
+#: ../load_policy/load_policy.c:66
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s:  Nemožno načítať politiku:  %s\n"
+
+#: ../newrole/newrole.c:188
+#, c-format
+msgid "failed to set PAM_TTY\n"
+msgstr "zlyhanie nastavenia PAM_TTY\n"
+
+#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
+msgid "Password:"
+msgstr "Heslo:"
+
+#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "Nemožno nájsť vašu položku v súbore shadow passwd.\n"
+
+#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "getpass nemôže otvoriť /dev/tty\n"
+
+#: ../newrole/newrole.c:316
+#, fuzzy, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "nemožno nájsť vašu položku v súbore passwd.\n"
+
+#: ../newrole/newrole.c:327
+#, c-format
+msgid "Out of memory!\n"
+msgstr "Nedostatok pamäte!\n"
+
+#: ../newrole/newrole.c:332
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "Chyba! Shell nie je správny.\n"
+
+#: ../newrole/newrole.c:389
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr ""
+
+#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "Chyba pri inite schopností, končím.\n"
+
+#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
+#, fuzzy, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "Chyba pri inite schopností, končím.\n"
+
+#: ../newrole/newrole.c:450
+#, fuzzy, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "Chyba resetu KEEPCAPS, končím\n"
+
+#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "Chyba pri zahadzovaní schopností, končím.\n"
+
+#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "Chyba zmeny uid, končím.\n"
+
+#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "Chyba resetu KEEPCAPS, končím\n"
+
+#: ../newrole/newrole.c:477
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "Chyba zahadzovania SETUID schopnosti, končím\n"
+
+#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
+#, c-format
+msgid "Error freeing caps\n"
+msgstr ""
+
+#: ../newrole/newrole.c:580
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "Chyba pripojenia do audit systému.\n"
+
+#: ../newrole/newrole.c:586
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "Chyba alokácie pamäte.\n"
+
+#: ../newrole/newrole.c:593
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "Chyba odosielania audit správy.\n"
+
+#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "Nemožno určiť vynucovací režim.\n"
+
+#: ../newrole/newrole.c:641
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "Chyba! Nemožno otvoriť %s.\n"
+
+#: ../newrole/newrole.c:646
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr "%s!  Nemožno zistiť súčasný kontext pre %s, ne-reklasifikujem tty.\n"
+
+#: ../newrole/newrole.c:656
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr "%s! Nemožno zistiť nový kontext pre %s, ne-reklasifikujem tty.\n"
+
+#: ../newrole/newrole.c:666
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s! Nemožno nastaviť nový kontext pre %s\n"
+
+#: ../newrole/newrole.c:710
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s zmenených klasifikácii.\n"
+
+#: ../newrole/newrole.c:716
+#, fuzzy, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "Varovanie! Nemožno obnoviť kontext pre %s\n"
+
+#: ../newrole/newrole.c:772
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "Chyba: zadané viacnásobné role\n"
+
+#: ../newrole/newrole.c:780
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "Chyba: zadané viacnásobné typy\n"
+
+#: ../newrole/newrole.c:787
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "-l môže byť použité s podporou SELinux MLS.\n"
+
+#: ../newrole/newrole.c:792
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "Chyba: zadané viacnásobné úrovne\n"
+
+#: ../newrole/newrole.c:814
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "Nemožno zistiť implicitný typ.\n"
+
+#: ../newrole/newrole.c:824
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "zlyhanie zistenia nového kontextu.\n"
+
+#: ../newrole/newrole.c:831
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "zlyhanie nastavenia novej role %s\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "zlyhanie nastavenia nového typu %s\n"
+
+#: ../newrole/newrole.c:847
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "zlyhanie vytvorenia nového rozsahu s úrovňou %s\n"
+
+#: ../newrole/newrole.c:852
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "zlyhanie nastavenia nového rozsahu %s\n"
+
+#: ../newrole/newrole.c:860
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "zlyhanie konverzie nového kontextu na reťazec\n"
+
+#: ../newrole/newrole.c:865
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s nie je správny kontext\n"
+
+#: ../newrole/newrole.c:872
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr ""
+
+#: ../newrole/newrole.c:898
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr ""
+
+#: ../newrole/newrole.c:906
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr ""
+
+#: ../newrole/newrole.c:972
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "Nová rola môže byť použitá iba na SELinux jadre.\n"
+
+#: ../newrole/newrole.c:989
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "zlyhanie získania old_context.\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "Error!  Could not retrieve tty information.\n"
+msgstr "Chyba: Nemožno získať informáciu o tty.\n"
+
+#: ../newrole/newrole.c:1015
+#, c-format
+msgid "Authenticating %s.\n"
+msgstr "Autentifikácia %s.\n"
+
+#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "zlyhanie inicializácie PAM\n"
+
+#: ../newrole/newrole.c:1029
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "nová rola: nesprávne heslo pre %s\n"
+
+#: ../newrole/newrole.c:1056
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "nová rola: zlyhanie rozdeľovania: %s"
+
+#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
+#, fuzzy, c-format
+msgid "Failed to close tty properly\n"
+msgstr "zlyhanie nastavenia nového typu %s\n"
+
+#: ../newrole/newrole.c:1117
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "Nemožno zatvoriť popisovače.\n"
+
+#: ../newrole/newrole.c:1140
+#, fuzzy, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "Chyba alokácie pamäte.\n"
+
+#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
+#, c-format
+msgid "Could not set exec context to %s.\n"
+msgstr "Nemožno nastaviť exec kontext pre %s.\n"
+
+#: ../newrole/newrole.c:1173
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1184
+msgid "failed to exec shell\n"
+msgstr "zlyhanie spustenia shell-u\n"
+
+#: ../run_init/run_init.c:67
+msgid ""
+"USAGE: run_init <script> <args ...>\n"
+"  where: <script> is the name of the init script to run,\n"
+"         <args ...> are the arguments to that script."
+msgstr ""
+"POUŽITIE: run_init <skript> <params ...>\n"
+"  kde: <skript> je názov init skriptu pre spustenie,\n"
+"         <params ...> sú parametre pre tento skript."
+
+#: ../run_init/run_init.c:139
+#, fuzzy, c-format
+msgid "failed to get account information\n"
+msgstr "zlyhanie zistenia nového kontextu.\n"
+
+#: ../run_init/run_init.c:275
+#, c-format
+msgid "run_init: incorrect password for %s\n"
+msgstr "run_init: nesprávne heslo pre %s\n"
+
+#: ../run_init/run_init.c:309
+#, c-format
+msgid "Could not open file %s\n"
+msgstr "Nemožno otvoriť súbor %s\n"
+
+#: ../run_init/run_init.c:336
+#, c-format
+msgid "No context in file %s\n"
+msgstr "Žiaden kontext v súbore %s\n"
+
+#: ../run_init/run_init.c:361
+#, c-format
+msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
+msgstr "run_init môže byť použitý len na SELinux jadre.\n"
+
+#: ../run_init/run_init.c:380
+#, c-format
+msgid "authentication failed.\n"
+msgstr "autentifikácia zlyhala.\n"
+
+#: ../scripts/chcat:75 ../scripts/chcat:145
+msgid "Requires at least one category"
+msgstr "Vyžaduje najmenej jednu kategóriu"
+
+#: ../scripts/chcat:89 ../scripts/chcat:159
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "Nemožno zmeniť úrovne citlivosti použitím '+' na %s"
+
+#: ../scripts/chcat:93
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s je už v %s"
+
+#: ../scripts/chcat:164 ../scripts/chcat:174
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s nie je v %s"
+
+#: ../scripts/chcat:237 ../scripts/chcat:242
+msgid "Can not combine +/- with other types of categories"
+msgstr "Nemožno kombinovať +/- s inými typmi kategorii"
+
+#: ../scripts/chcat:287
+msgid "Can not have multiple sensitivities"
+msgstr "Nemožno mať viacnásobné citlivosti"
+
+#: ../scripts/chcat:293
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "Použitie %s KATEGORIA Súbor ..."
+
+#: ../scripts/chcat:294
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "Použitie %s -l KATEGORIA užívateľ ..."
+
+#: ../scripts/chcat:295
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "Použitie %s [[+|-]KATEGORIA],...]q Súbor ..."
+
+#: ../scripts/chcat:296
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "Použitie %s -l [[+|-]KATEGORIA],...]q užívateľ ..."
+
+#: ../scripts/chcat:297
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "Použitie %s -d Súbor ..."
+
+#: ../scripts/chcat:298
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "Použitie %s -l -d užívateľ ..."
+
+#: ../scripts/chcat:299
+#, c-format
+msgid "Usage %s -L"
+msgstr "Použitie %s -L"
+
+#: ../scripts/chcat:300
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "Použitie %s -L -l užívateľ"
+
+#: ../scripts/chcat:301
+msgid "Use -- to end option list.  For example"
+msgstr "Použite -- pre ukončenie zoznamu volieb.  Napríklad"
+
+#: ../scripts/chcat:302
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -CompanyConfidential /docs/businessplan.odt"
+
+#: ../scripts/chcat:303
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +CompanyConfidential juser"
+
+#: ../semanage/semanage:127
+msgid "Requires 2 or more arguments"
+msgstr "Vyžaduje 2 alebo viac parametrov"
+
+#: ../semanage/semanage:132
+#, c-format
+msgid "%s not defined"
+msgstr "%s nie je definované"
+
+#: ../semanage/semanage:156
+#, c-format
+msgid "%s not valid for %s objects\n"
+msgstr "%s nie je platné pre %s objekty\n"
+
+#: ../semanage/semanage:183 ../semanage/semanage:191
+msgid "range not supported on Non MLS machines"
+msgstr "rozsah nie je podporovaný na nie-MLS strojoch"
+
+#: ../semanage/semanage:249
+msgid "You must specify a role"
+msgstr "Musíte zadať rolu"
+
+#: ../semanage/semanage:251
+msgid "You must specify a prefix"
+msgstr "Musíte zadať prefix"
+
+#: ../semanage/semanage:300
+#, c-format
+msgid "Options Error %s "
+msgstr "Chyba volieb %s"
+
+#: ../semanage/semanage:304
+#, c-format
+msgid "Invalid value %s"
+msgstr "Neplatná hodnota %s"
+
+#: ../semanage/seobject.py:132
+msgid "translations not supported on non-MLS machines"
+msgstr "preklady nie sú podporované na nie-MLS strojoch"
+
+#: ../semanage/seobject.py:139
+#, python-format
+msgid "Unable to open %s: translations not supported on non-MLS machines"
+msgstr ""
+"Nepodarilo sa otvoriť %s: preklady nie sú podporované na nie-MLS strojoch"
+
+#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#, python-format
+msgid "Translations can not contain spaces '%s' "
+msgstr "Preklady nemôžu obsahovať medzery '%s'"
+
+#: ../semanage/seobject.py:182
+#, python-format
+msgid "Invalid Level '%s' "
+msgstr "Neplatná úroveň '%s'"
+
+#: ../semanage/seobject.py:185
+#, python-format
+msgid "%s already defined in translations"
+msgstr "%s je už definované v prekladoch"
+
+#: ../semanage/seobject.py:197
+#, python-format
+msgid "%s not defined in translations"
+msgstr "%s nie je definované v prekladoch"
+
+#: ../semanage/seobject.py:218
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr ""
+"Pravidlá SELinuxu nie sú spravované, alebo nemožno pristupovať k pamäti."
+
+#: ../semanage/seobject.py:223
+msgid "Cannot read policy store."
+msgstr "Nemožno načítať pravidlo z pamäte."
+
+#: ../semanage/seobject.py:228
+msgid "Could not establish semanage connection"
+msgstr "Nemožno vytvoriť spojenie na semanage"
+
+#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
+#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
+#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
+#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
+#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "Nemožno vytvoriť kľúč pre %s"
+
+#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
+#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "Nemožno skontrolovať či mapovanie loginu pre %s je definované"
+
+#: ../semanage/seobject.py:253
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "Mapovanie loginu pre %s je už definované"
+
+#: ../semanage/seobject.py:257
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "Linuxový užívateľ %s neexistuje"
+
+#: ../semanage/seobject.py:261
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "Nemožno vytvoriť mapovanie loginu pre %s"
+
+#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
+#, python-format
+msgid "Could not set name for %s"
+msgstr "Nemožno nastaviť meno pre %s"
+
+#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "Nemožno nastavit MLS rozsah pre %s"
+
+#: ../semanage/seobject.py:274
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "Nemožno nastaviť SELinux užívateľa pre %s"
+
+#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
+#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
+#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
+#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
+#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
+#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
+#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
+#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1257
+msgid "Could not start semanage transaction"
+msgstr "Nemožno začať semanage prenos"
+
+#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "Nemožno pridat mapovanie loginu pre %s"
+
+#: ../semanage/seobject.py:301
+msgid "Requires seuser or serange"
+msgstr "Vyžaduje seuser alebo serange"
+
+#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "Mapovanie loginu pre %s nie je definované"
+
+#: ../semanage/seobject.py:315
+#, python-format
+msgid "Could not query seuser for %s"
+msgstr "Nemožno overiť seuser pre %s"
+
+#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "Nemožno zmeniť mapovanie loginu pre %s"
+
+#: ../semanage/seobject.py:364
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr "Mapovanie loginu pre %s je definované v pravidlách, nemôže byť zmazané"
+
+#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
+#, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "Nemožno zmazať mapovanie loginu pre %s"
+
+#: ../semanage/seobject.py:391
+msgid "Could not list login mappings"
+msgstr "Nemožno listovať mapovaniami loginov"
+
+#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
+#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "Nemožno skontrolovať či SELinux užívateľ %s je definovaný"
+
+#: ../semanage/seobject.py:439
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "SELinux užívateľ %s je už definovaný"
+
+#: ../semanage/seobject.py:443
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "Nemožno vytvoriť SELinux užívateľa pre %s"
+
+#: ../semanage/seobject.py:452
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "Nemožno pridať rolu %s pre %s"
+
+#: ../semanage/seobject.py:461
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "Nemožno nastaviť MLS úroveň pre %s"
+
+#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
+#, fuzzy, python-format
+msgid "Invalid prefix %s"
+msgstr "Neplatná hodnota %s"
+
+#: ../semanage/seobject.py:466
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "Nemožno pridať prefix %s pre %s"
+
+#: ../semanage/seobject.py:469
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "Nemožno extrahovať kľúč pre %s"
+
+#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "Nemožno pridať SELinux užívateľa %s"
+
+#: ../semanage/seobject.py:498
+msgid "Requires prefix, roles, level or range"
+msgstr "Požaduje prefix, role, úroveň alebo rozsah"
+
+#: ../semanage/seobject.py:500
+msgid "Requires prefix or roles"
+msgstr "Požaduje prefix alebo role"
+
+#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux užívateľ %s nie je definovaný"
+
+#: ../semanage/seobject.py:514
+#, python-format
+msgid "Could not query user for %s"
+msgstr "Nemožno overiť užívateľa pre %s"
+
+#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
+#, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "Nemožno zmeniť SELinux užívateľa %s"
+
+#: ../semanage/seobject.py:574
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "SELinux užívateľ %s je definovaný v pravidlách, nemožno ho zmazať"
+
+#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "Nemožno zmazať SELinux užívateľa %s"
+
+#: ../semanage/seobject.py:598
+msgid "Could not list SELinux users"
+msgstr "Nemožno listovať SELinux užívateľmi"
+
+#: ../semanage/seobject.py:604
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "Nemožno listovať rolami pre užívateľa %s"
+
+#: ../semanage/seobject.py:638
+msgid "Protocol udp or tcp is required"
+msgstr "Protokol udp alebo tcp je požadovaný"
+
+#: ../semanage/seobject.py:640
+msgid "Port is required"
+msgstr "Port je požadovaný"
+
+#: ../semanage/seobject.py:651
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "Nemožno vytvoriť kľúč pre %s/%s"
+
+#: ../semanage/seobject.py:662
+msgid "Type is required"
+msgstr "Typ je požadovaný"
+
+#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "Nemožno skontrolovať či port %s/%s je definovaný"
+
+#: ../semanage/seobject.py:670
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "Port %s/%s je už definovaný"
+
+#: ../semanage/seobject.py:674
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "Nemožno vytvoriť port pre %s/%s"
+
+#: ../semanage/seobject.py:680
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "Nemožno vytvoriť kontext pre %s/%s"
+
+#: ../semanage/seobject.py:684
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "Nemožno nastaviť užívateľa v kontexte portu pre %s/%s"
+
+#: ../semanage/seobject.py:688
+#, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "Nemožno nastaviť rolu v kontexte portu pre %s/%s"
+
+#: ../semanage/seobject.py:692
+#, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "Nemožno nastaviť typ v kontexte portu pre %s/%s"
+
+#: ../semanage/seobject.py:697
+#, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr "Nemožno nastaviť mls pole v kontexte portu pre %s/%s"
+
+#: ../semanage/seobject.py:701
+#, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "Nemožno nastaviť kontext portu pre %s/%s"
+
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#, python-format
+msgid "Could not add port %s/%s"
+msgstr "Nemožno pridať port %s/%s"
+
+#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+msgid "Requires setype or serange"
+msgstr "Požaduje setype alebo serange"
+
+#: ../semanage/seobject.py:724
+msgid "Requires setype"
+msgstr "Požaduje setype"
+
+#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#, python-format
+msgid "Port %s/%s is not defined"
+msgstr "Por %s/%s nie je definovaný"
+
+#: ../semanage/seobject.py:736
+#, python-format
+msgid "Could not query port %s/%s"
+msgstr "Nemožno overiť port %s/%s"
+
+#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#, python-format
+msgid "Could not modify port %s/%s"
+msgstr "Nemožno zmeniť port %s/%s"
+
+#: ../semanage/seobject.py:772
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr "Port %s/%s je definovaný v pravidlách, nemôže byť zmazaný"
+
+#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#, python-format
+msgid "Could not delete port %s/%s"
+msgstr "Nemožno zmazať port %s/%s"
+
+#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+msgid "Could not list ports"
+msgstr "Nemožno listovať portami"
+
+#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+msgid "SELinux Type is required"
+msgstr "SELinux typ je požadovaný"
+
+#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
+#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#, python-format
+msgid "Could not create key for %s"
+msgstr "Nemožno vytvoriť kľúč pre %s"
+
+#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
+#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "Nemožno skontrolovať či rozhranie %s je definované"
+
+#: ../semanage/seobject.py:865
+#, python-format
+msgid "Interface %s already defined"
+msgstr "Rozhranie %s je už definované"
+
+#: ../semanage/seobject.py:869
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "Nemožno vytvoriť rozhranie pre %s"
+
+#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
+#, python-format
+msgid "Could not create context for %s"
+msgstr "Nemožno vytvoriť kontext pre %s"
+
+#: ../semanage/seobject.py:878
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "Nemožno nastaviť užívateľa v kontexte rozhrania pre %s"
+
+#: ../semanage/seobject.py:882
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "Nemožno nastaviť rolu v kontexte rozhrania pre %s"
+
+#: ../semanage/seobject.py:886
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "Nemožno nastaviť typ v kontexte rozhrania pre %s"
+
+#: ../semanage/seobject.py:891
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "Nemožno nastaviť mls pole v kontexte rozhrania pre %s"
+
+#: ../semanage/seobject.py:895
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "Nemožno nastaviť kontext rozhrania pre %s"
+
+#: ../semanage/seobject.py:899
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "Nemožno nastaviť kontext správy pre %s"
+
+#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
+#, python-format
+msgid "Could not add interface %s"
+msgstr "Nemožno pridať rozhranie %s"
+
+#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "Rozhranie %s nie je definované"
+
+#: ../semanage/seobject.py:933
+#, python-format
+msgid "Could not query interface %s"
+msgstr "Nemožno overiť rozhranie %s"
+
+#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "Nemožno zmeniť rozhranie %s"
+
+#: ../semanage/seobject.py:972
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "Rozhranie %s je definované v pravidlách, nemôže byť zmazané"
+
+#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "Nemožno zmazať rozhranie %s"
+
+#: ../semanage/seobject.py:992
+msgid "Could not list interfaces"
+msgstr "Nemožno listovať rozhraniami"
+
+#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "Nemožno skontrolovať či kontext súboru pre %s je definovaný"
+
+#: ../semanage/seobject.py:1037
+#, python-format
+msgid "File context for %s already defined"
+msgstr "Kontext súboru pre %s je už definovaný"
+
+#: ../semanage/seobject.py:1041
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "Nemožno vytvoriť kontext súboru pre %s"
+
+#: ../semanage/seobject.py:1050
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "Nemožno nastaviť užívateľa v kontexte súboru pre %s"
+
+#: ../semanage/seobject.py:1054
+#, python-format
+msgid "Could not set role in file context for %s"
+msgstr "Nemožno nastaviť rolu v kontexte súboru pre %s"
+
+#: ../semanage/seobject.py:1058
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "Nemožno nastaviť typ v kontexte súboru pre %s"
+
+#: ../semanage/seobject.py:1063
+#, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "Nemožno nastaviť mls pole v kontexte súboru pre %s"
+
+#: ../semanage/seobject.py:1069
+#, python-format
+msgid "Could not set file context for %s"
+msgstr "Nemožno nastavit kontext súboru pre %s"
+
+#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#, python-format
+msgid "Could not add file context for %s"
+msgstr "Nemožno pridať kontext súboru pre %s"
+
+#: ../semanage/seobject.py:1089
+msgid "Requires setype, serange or seuser"
+msgstr "Požaduje setype, serange alebo seuser"
+
+#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "Kontext súboru pre %s nie je definovaný"
+
+#: ../semanage/seobject.py:1103
+#, python-format
+msgid "Could not query file context for %s"
+msgstr "Nemožno overiť kontext súboru pre %s"
+
+#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#, python-format
+msgid "Could not modify file context for %s"
+msgstr "Nemožno zmeniť kontext súboru pre %s"
+
+#: ../semanage/seobject.py:1142
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr "Kontext súboru pre %s je definovaný v pravidlách, nemôže byť zmazaný"
+
+#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#, python-format
+msgid "Could not delete file context for %s"
+msgstr "Nemožno zmazať kontext súboru pre %s"
+
+#: ../semanage/seobject.py:1164
+msgid "Could not list file contexts"
+msgstr "Nemožno listovať kontextami súboru"
+
+#: ../semanage/seobject.py:1168
+#, fuzzy
+msgid "Could not list local file contexts"
+msgstr "Nemožno listovať kontextami súboru"
+
+#: ../semanage/seobject.py:1203
+msgid "Requires value"
+msgstr "Požaduje hodnotu"
+
+#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
+#: ../semanage/seobject.py:1251
+#, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "Nemožno skontrolovať či logická hodnota %s je definovaná"
+
+#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#, python-format
+msgid "Boolean %s is not defined"
+msgstr "Logická hodnota %s nie je definovaná"
+
+#: ../semanage/seobject.py:1217
+#, python-format
+msgid "Could not query file context %s"
+msgstr "Nemožno overiť kontext súboru %s"
+
+#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#, python-format
+msgid "Could not modify boolean %s"
+msgstr "Nemožno zmeniť logickú hodnotu %s"
+
+#: ../semanage/seobject.py:1253
+#, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "Logická hodnota %s je definovaná v pravidlách, nemožno ju zmazať"
+
+#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#, python-format
+msgid "Could not delete boolean %s"
+msgstr "Nemožno zmazať logickú hodnotu %s"
+
+#: ../semanage/seobject.py:1273
+msgid "Could not list booleans"
+msgstr "Nemožno listovať logickými hodnotami"
+
+#: ../audit2allow/audit2allow:183
+#, c-format
+msgid "Generating type enforcment file: %s.te"
+msgstr "Vytváranie súboru vynútenia typov: %s.te"
+
+#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
+msgid "Compiling policy"
+msgstr "Zostavujem pravidlá"
+
+#: ../audit2allow/audit2allow:205
+msgid ""
+"\n"
+"******************** IMPORTANT ***********************\n"
+msgstr ""
+"\n"
+"******************** DÔLEŽITÉ ***********************\n"
+
+#: ../audit2allow/audit2allow:206
+#, c-format
+msgid ""
+"In order to load this newly created policy package into the kernel,\n"
+"you are required to execute \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+msgstr ""
+"Pre načítanie novo vytvoreného balíka pravidiel do jadra,\n"
+"musíte spustiť \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+
+#: ../audit2allow/audit2allow:211
+#, c-format
+msgid "Options Error: %s "
+msgstr "Chyba volieb: %s"

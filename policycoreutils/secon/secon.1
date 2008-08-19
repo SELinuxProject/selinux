@@ -1,0 +1,111 @@
+.TH SECON "1" "April 2006" "Security Enhanced Linux" NSA
+.SH NAME
+secon \- See an SELinux context, from a file, program or user input.
+.SH SYNOPSIS
+.B secon
+[\fB-hVurtscmPRfLp\fR]
+[\fICONTEXT\fR]
+.br
+[\fB--file\fR]
+\fIFILE\fR
+.br
+[\fB--link\fR]
+\fIFILE\fR
+.br
+[\fB--pid\fR]
+\fIPID\fR
+.SH DESCRIPTION
+.PP
+See a part of a context. The context is taken from a file, pid, user input or
+the context in which
+.B secon
+is originally executed.
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+shows the current version of secon
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+shows the usage information for secon
+.TP
+\fB\-P\fR, \fB\-\-prompt\fR
+outputs data in a format suitable for a prompt
+.TP
+\fB\-u\fR, \fB\-\-user\fR
+show the user of the security context
+.TP
+\fB\-r\fR, \fB\-\-role\fR
+show the role of the security context
+.TP
+\fB\-t\fR, \fB\-\-type\fR
+show the type of the security context
+.TP
+\fB\-s\fR, \fB\-\-sensitivity\fR
+show the sensitivity level of the security context
+.TP
+\fB\-c\fR, \fB\-\-clearance\fR
+show the clearance level of the security context
+.TP
+\fB\-m\fR, \fB\-\-mls-range\fR
+show the sensitivity level and clearance, as a range, of the security context
+.TP
+\fB\-R\fR, \fB\-\-raw\fR
+outputs  the sensitivity level and clearance in an untranslated format.
+.TP
+\fB\-f\fR, \fB\-\-file\fR
+gets the context from the specified file FILE
+.TP
+\fB\-L\fR, \fB\-\-link\fR
+gets the context from the specified file FILE (doesn't follow symlinks)
+.TP
+\fB\-p\fR, \fB\-\-pid\fR
+gets the context from the specified process PID
+.TP
+\fB\-\-pid\-exec\fR
+gets the exec context from the specified process PID
+.TP
+\fB\-\-pid\-fs\fR
+gets the fscreate context from the specified process PID
+.TP
+\fB\-\-current\fR, \fB\-\-self\fR
+gets the context from the current process
+.TP
+\fB\-\-current\-exec\fR, \fB\-\-self\-exec\fR
+gets the exec context from the current process
+.TP
+\fB\-\-current\-fs\fR, \fB\-\-self\-fs\fR
+gets the fscreate context from the current process
+.TP
+\fB\-\-parent\fR
+gets the context from the parent of the current process
+.TP
+\fB\-\-parent\-exec\fR
+gets the exec context from the parent of the current process
+.TP
+\fB\-\-parent\-fs\fR
+gets the fscreate context from the parent of the current process
+.PP
+Additional argument
+.I CONTEXT
+may be provided and will be used if no options have been specified to make
+.B secon
+get it's context from another source.
+If that argument is
+.I -
+then the context will be read from stdin.
+.br
+If there is no arugment, 
+.B secon
+will try reading a context from stdin, if that is not a tty, otherwise 
+.B secon
+will act as though \fB\-\-self\fR had been passed.
+.PP
+If none of \fB\-\-user\fR, \fB\-\-role\fR, \fB\-\-type\fR, \fB\-\-level\fR or
+\fB\-\-mls\-range\fR is passed.
+Then all of them will be output.
+.PP
+.SH SEE ALSO
+.B chcon
+(1)
+.SH AUTHORS
+.nf
+James Antill (james.antill@redhat.com) 

@@ -1,0 +1,25 @@
+*mangle
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:selinux_input - [0:0]
+:selinux_output - [0:0]
+:selinux_new_input - [0:0]
+:selinux_new_output - [0:0]
+-A INPUT -j selinux_input
+-A OUTPUT -j selinux_output
+-A selinux_input -m state --state NEW -j selinux_new_input
+-A selinux_input -m state --state RELATED,ESTABLISHED -j CONNSECMARK --restore
+-A selinux_output -m state --state NEW -j selinux_new_output
+-A selinux_output -m state --state RELATED,ESTABLISHED -j CONNSECMARK --restore
+-A selinux_new_input -j SECMARK --selctx system_u:object_r:server_packet_t
+-A selinux_new_output -j SECMARK --selctx system_u:object_r:client_packet_t
+-A selinux_new_input -p tcp --dport 80 -j SECMARK --selctx system_u:object_r:http_server_packet_t
+-A selinux_new_output -p tcp --dport 80 -j SECMARK --selctx system_u:object_r:http_client_packet_t
+-A selinux_new_input -j CONNSECMARK --save
+-A selinux_new_input -j RETURN
+-A selinux_new_output -j CONNSECMARK --save
+-A selinux_new_output -j RETURN
+COMMIT

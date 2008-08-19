@@ -1,0 +1,27 @@
+pre *mangle
+pre :PREROUTING ACCEPT [0:0]
+pre :INPUT ACCEPT [0:0]
+pre :FORWARD ACCEPT [0:0]
+pre :OUTPUT ACCEPT [0:0]
+pre :POSTROUTING ACCEPT [0:0]
+pre :selinux_input - [0:0]
+pre :selinux_output - [0:0]
+pre :selinux_new_input - [0:0]
+pre :selinux_new_output - [0:0]
+# a comment
+pre -A INPUT -j selinux_input
+pre -A OUTPUT -j selinux_output
+pre -A selinux_input -m state --state NEW -j selinux_new_input
+pre -A selinux_input -m state --state RELATED,ESTABLISHED -j CONNSECMARK --restore
+pre -A selinux_output -m state --state NEW -j selinux_new_output
+	# another comment
+pre -A selinux_output -m state --state RELATED,ESTABLISHED -j CONNSECMARK --restore
+base-A selinux_new_input -j SECMARK --selctx system_u:object_r:server_packet_t
+module -A selinux_new_input -p tcp --dport 80 -j SECMARK --selctx system_u:object_r:http_server_packet_t
+post -A selinux_new_input -j CONNSECMARK --save
+post -A selinux_new_input -j RETURN
+base -A selinux_new_output -j SECMARK --selctx system_u:object_r:client_packet_t
+module -A selinux_new_output -p tcp --dport 80 -j SECMARK --selctx system_u:object_r:http_client_packet_t
+post -A selinux_new_output -j CONNSECMARK --save
+post -A selinux_new_output -j RETURN
+post COMMIT

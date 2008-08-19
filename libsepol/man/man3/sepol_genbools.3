@@ -1,0 +1,30 @@
+.TH "sepol_genbools" "3" "11 August 2004" "sds@epoch.ncsc.mil" "SE Linux binary policy API documentation"
+.SH "NAME"
+sepol_genbools \- Rewrite a binary policy with different boolean settings
+.SH "SYNOPSIS"
+.B #include <sepol/sepol.h>
+.sp
+.BI "int sepol_genbools(void *" data ", size_t "len ", char *" boolpath );
+.br
+.BI "int sepol_genbools_array(void *" data ", size_t " len ", char **" names ", int *" values ", int " nel );
+
+.SH "DESCRIPTION"
+.B sepol_genbools
+rewrites a binary policy stored in the memory region described by
+(data, len) to use the boolean settings specified in the file named by
+boolpath.  The boolean settings are specified by name=value lines
+where value may be 0 or false to disable or 1 or true to enable.  The
+binary policy is rewritten in place in memory.
+
+.B sepol_genbools_array
+does likewise, but obtains the boolean settings from the parallel arrays
+(names, values) with nel elements each.
+
+.SH "RETURN VALUE"
+Returns 0 on success or -1 otherwise, with errno set appropriately.
+An errno of ENOENT indicates that the boolean file did not exist.
+An errno of EINVAL indicates that one or more booleans listed in the
+boolean file was undefined in the policy or had an invalid value specified;
+in this case, the binary policy is still rewritten but any invalid
+boolean settings are ignored.
+

@@ -1,0 +1,32 @@
+.TH SEMODULE_EXPAND "8" "Nov 2005" "Security Enhanced Linux" NSA
+.SH NAME 
+semodule_expand \- Expand a SELinux policy module package.
+
+.SH SYNOPSIS
+.B semodule_expand [-V -c [version]] basemodpkg outputfile
+.br
+.SH DESCRIPTION
+.PP
+semodule_expand is a developer tool for manually expanding
+a base policy module package into a kernel binary policy file.
+This tool is not necessary for normal operation of SELinux.  In normal
+operation, such expanding is performed internally by libsemanage in
+response to semodule commands.  Base policy module packages can be
+created directly by semodule_package or by semodule_link (when linking
+together a set of packages into a single package).
+
+.SH "OPTIONS"
+.TP
+.B \-V
+show version
+.TP
+.B \-c [version]
+policy version to create
+
+.SH SEE ALSO
+.B checkmodule(8), semodule_package(8), semodule(8), semodule_link(8)
+(8),
+.SH AUTHORS
+.nf
+This manual page was written by Dan Walsh <dwalsh@redhat.com>.
+The program was written by Karl MacMillan <kmacmillan@tresys.com>, Joshua Brindle <jbrindle@tresys.com>

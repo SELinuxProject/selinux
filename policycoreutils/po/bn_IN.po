@@ -1,0 +1,1079 @@
+# translation of bn_IN.po to Bengali India
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# translation of bn_IN.po to Bangla (INDIA)
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Runa Bhattacharjee <runab@redhat.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bn_IN\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-21 14:21-0500\n"
+"PO-Revision-Date: 2006-11-22 10:44+0530\n"
+"Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
+"Language-Team: Bengali India\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.9.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"\n"
+"\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-bq]\n"
+msgstr "ব্যবহারপ্রণালী:  %s [-bq]\n"
+
+#: ../load_policy/load_policy.c:66
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s:  চিহ্নিত নিয়মনীতি লোড করা যায়নি:  %s\n"
+
+#: ../newrole/newrole.c:188
+#, c-format
+msgid "failed to set PAM_TTY\n"
+msgstr "PAM_TTY নির্ধারণ করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
+msgid "Password:"
+msgstr "পাসওয়ার্ড:"
+
+#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "shadow passwd ফাইলের মধ্যে আপনার তথ্য পাওয়া যায়নি।\n"
+
+#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "getpass'র দ্বারা /dev/tty খোলা সম্ভব হয়নি\n"
+
+#: ../newrole/newrole.c:316
+#, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "passwd ফাইলের মধ্যে বৈধ এন্ট্রি পাওয়া যায়নি।\n"
+
+#: ../newrole/newrole.c:327
+#, c-format
+msgid "Out of memory!\n"
+msgstr "মেমরি অবশিষ্ট নেই!\n"
+
+#: ../newrole/newrole.c:332
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "ত্রুটি!  বৈধ শেল ব্যবহার করা হয়নি।\n"
+
+#: ../newrole/newrole.c:389
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr "পরিবেশ পরিশ্রুত করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "কর্ম init করতে ব্যর্থ, পরিত্যাগ করা হচ্ছে।\n"
+
+#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
+#, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "ক্ষমতা নির্ধারণ করতে ব্যর্থ, পরিত্যাগ করা হচ্ছে।\n"
+
+#: ../newrole/newrole.c:450
+#, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "KEEPCAPS'র মান নির্ধারণ করতে ব্যর্থ, পরিত্যাগ করা হচ্ছে\n"
+
+#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "ক্ষমতা drop করতে ব্যর্থ, পরিত্যাগ করা হচ্ছে।\n"
+
+#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "uid পরিবর্তন করতে ব্যর্থ, পরিত্যাগ করা হচ্ছে।\n"
+
+#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "KEEPCAPS'র মান পুনরায় নির্ধারণ করতে ব্যর্থ, পরিত্যাগ করা হচ্ছে\n"
+
+#: ../newrole/newrole.c:477
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "SETUID বৈশিষ্ট্য drop করতে ব্যর্থ, পরিত্যাগ করা হচ্ছে\n"
+
+#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
+#, c-format
+msgid "Error freeing caps\n"
+msgstr "caps মুক্ত করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:580
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "অডিট সিস্টেমের সাথে সংযোগ করতে ব্যর্থ।\n"
+
+#: ../newrole/newrole.c:586
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "মেমরি নির্ধারণ করতে ব্যর্থ।\n"
+
+#: ../newrole/newrole.c:593
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "অডিট সংক্রান্ত বার্তা পাঠাতে ব্যর্থ।\n"
+
+#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "enforcing মোড নির্ধারণ করা যায়নি।\n"
+
+#: ../newrole/newrole.c:641
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "ত্রুটি!  %s খুলতে ব্যর্থ।\n"
+
+#: ../newrole/newrole.c:646
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr ""
+"%s!  %s'র ক্ষেত্রে বর্তমান context প্রাপ্ত করা যায়নি, tty'র লেবেল পরিবর্তন করা হবে "
+"না।\n"
+
+#: ../newrole/newrole.c:656
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr ""
+"%s!  %s'র ক্ষেত্রে নতুন context প্রাপ্ত করা যায়নি, tty'র লেবেল পরিবর্তন করা হবে "
+"না।\n"
+
+#: ../newrole/newrole.c:666
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s!  %s'র ক্ষেত্রে নতুন context স্থাপন করা যায়নি\n"
+
+#: ../newrole/newrole.c:710
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s'র লেবেল পরিবর্তিত হয়েছে।\n"
+
+#: ../newrole/newrole.c:716
+#, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "সতর্কবার্তা!  %s'র context পুনরুদ্ধার করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:772
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "ত্রুটি: একাধিক ভূমিকা উল্লিখিত হয়েছে\n"
+
+#: ../newrole/newrole.c:780
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "ত্রুটি: একাধিক ধরনের ফাইল নির্ধারিত হয়েছে\n"
+
+#: ../newrole/newrole.c:787
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "দূঃক্ষিত, -l শুধুমাত্র SELinux MLS সমর্থনের সাথে ব্যবহার করা যাবে\n"
+
+#: ../newrole/newrole.c:792
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "ত্রুটি: একাধিক স্তর নির্ধারিত হয়েছে\n"
+
+#: ../newrole/newrole.c:814
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "ডিফল্ট প্রকৃতি সনাক্ত করা যায়নি।\n"
+
+#: ../newrole/newrole.c:824
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "new context প্রাপ্ত করতে ব্যর্থ।\n"
+
+#: ../newrole/newrole.c:831
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "নতুন ভূমিকা %s স্থাপন করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "নতুন ধরন %s স্থাপন করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:847
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "%s স্তর সহ নতুন রেঞ্জ নির্মাণ করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:852
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "নতুন রেঞ্জ %s স্থাপন করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:860
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "নতুন context'কে string হিসাবে রূপান্তর করা যায়নি\n"
+
+#: ../newrole/newrole.c:865
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s বৈধ context নয়\n"
+
+#: ../newrole/newrole.c:872
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr "new_context'র জন্য মেমরি বরাদ্দ করতে ব্যর্থ"
+
+#: ../newrole/newrole.c:898
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr "ফাঁকা সিগন্যাল সংকলন প্রাপ্ত করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:906
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr "SIGHUP হ্যান্ডলার নির্ধারণ করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:972
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "দুঃক্ষিত, newrole শুধুমাত্র একটি SELinux কার্নেলে ব্যবহার করা যাবে।\n"
+
+#: ../newrole/newrole.c:989
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "old_context প্রাপ্ত করতে ব্যর্থ।\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "Error!  Could not retrieve tty information.\n"
+msgstr "ত্রুটি!  tty সংক্রান্ত তথ্য প্রাপ্ত করা যায়নি।\n"
+
+#: ../newrole/newrole.c:1015
+#, c-format
+msgid "Authenticating %s.\n"
+msgstr "%s'র পরিচয় প্রমাণিত করা হচ্ছে।\n"
+
+#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "PAM আরম্ভ করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:1029
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "newrole: %s'র পাসওয়ার্ড সঠিক নয়\n"
+
+#: ../newrole/newrole.c:1056
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "newrole: fork করতে ব্যর্থ: %s"
+
+#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr "tty লেবেল পুনরায় স্থাপন করতে ব্যর্থ...\n"
+
+#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
+#, c-format
+msgid "Failed to close tty properly\n"
+msgstr "tty সঠিকরূপে বন্ধ করতে ব্যর্থ\n"
+
+#: ../newrole/newrole.c:1117
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "বিবরণ প্রদর্শন বন্ধ করা যায়নি।\n"
+
+#: ../newrole/newrole.c:1140
+#, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "শেল'র argv0 বরাদ্দ করতে ব্যর্থ।\n"
+
+#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
+#, c-format
+msgid "Could not set exec context to %s.\n"
+msgstr "exec context %s হিসাবে স্থাপন করা যায়নি।\n"
+
+#: ../newrole/newrole.c:1173
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr "পরিবেশ পুনরুদ্ধার করতে ব্যর্থ, পরিত্যাগ করা হচ্ছে\n"
+
+#: ../newrole/newrole.c:1184
+msgid "failed to exec shell\n"
+msgstr "শেল exec করতে ব্যর্থ\n"
+
+#: ../run_init/run_init.c:67
+msgid ""
+"USAGE: run_init <script> <args ...>\n"
+"  where: <script> is the name of the init script to run,\n"
+"         <args ...> are the arguments to that script."
+msgstr ""
+"ব্যবহারপ্রণালী: run_init <script> <args ...>\n"
+"  এই ক্ষেত্রে: <script> দ্বারা সঞ্চালনের উদ্দেশ্যে init স্ক্রিপ্ট চিহ্নিত করা হয়,\n"
+"         <args ...>'র মধ্যে উপরোক্ত স্ক্রিপ্টের আর্গুমেন্ট উল্লিখিত হয়।"
+
+#: ../run_init/run_init.c:139
+#, c-format
+msgid "failed to get account information\n"
+msgstr "অ্যাকাউন্ট সংক্রান্ত তথ্য প্রাপ্ত করতে ব্যর্থ।\n"
+
+#: ../run_init/run_init.c:275
+#, c-format
+msgid "run_init: incorrect password for %s\n"
+msgstr "run_init: %s'র পাসওয়ার্ড সঠিক নয়\n"
+
+#: ../run_init/run_init.c:309
+#, c-format
+msgid "Could not open file %s\n"
+msgstr "%s ফাইল খুলতে ব্যর্থ\n"
+
+#: ../run_init/run_init.c:336
+#, c-format
+msgid "No context in file %s\n"
+msgstr "%s ফাইলে কোনো context উপস্থিত নেই\n"
+
+#: ../run_init/run_init.c:361
+#, c-format
+msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
+msgstr "দুঃক্ষিত, run_init শুধুমাত্র SELinux কার্নেলের সাথে ব্যবহারযোগ্য।\n"
+
+#: ../run_init/run_init.c:380
+#, c-format
+msgid "authentication failed.\n"
+msgstr "অনুমোদন করতে ব্যর্থ।\n"
+
+#: ../scripts/chcat:75 ../scripts/chcat:145
+msgid "Requires at least one category"
+msgstr "অন্তত একটি শ্রেণী উল্লেখ করা আবশ্যক"
+
+#: ../scripts/chcat:89 ../scripts/chcat:159
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "%s'র সাথে '+' সহযোগে সংবেদনশীলতার মাত্রা পরিবর্তন করা যাবে না"
+
+#: ../scripts/chcat:93
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s, বর্তমানে %s'র মধ্যে উপস্থিত রয়েছে"
+
+#: ../scripts/chcat:164 ../scripts/chcat:174
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s, বর্তমানে %s'র মধ্যে নেই"
+
+#: ../scripts/chcat:237 ../scripts/chcat:242
+msgid "Can not combine +/- with other types of categories"
+msgstr "অন্যান্য শ্রেণী বিভাগের সাথে +/- ব্যবহার করা যাবে না"
+
+#: ../scripts/chcat:287
+msgid "Can not have multiple sensitivities"
+msgstr "একাধিক প্রকৃতির সংবেদনশীলতা থাকা সম্ভব হবে না"
+
+#: ../scripts/chcat:293
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "ব্যবহারপ্রণালী %s CATEGORY File ..."
+
+#: ../scripts/chcat:294
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "ব্যবহারপ্রণালী %s -l CATEGORY user ..."
+
+#: ../scripts/chcat:295
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "ব্যবহারপ্রণালী %s [[+|-]CATEGORY],...]q File ..."
+
+#: ../scripts/chcat:296
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "ব্যবহারপ্রণালী %s -l [[+|-]CATEGORY],...]q user ..."
+
+#: ../scripts/chcat:297
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "ব্যবহারপ্রণালী %s -d File ..."
+
+#: ../scripts/chcat:298
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "ব্যবহারপ্রণালী %s -l -d user ..."
+
+#: ../scripts/chcat:299
+#, c-format
+msgid "Usage %s -L"
+msgstr "ব্যবহারপ্রণালী %s -L"
+
+#: ../scripts/chcat:300
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "ব্যবহারপ্রণালী %s -L -l user"
+
+#: ../scripts/chcat:301
+msgid "Use -- to end option list.  For example"
+msgstr "বিকল্পের তালিকা সমাপ্ত করতে -- প্রয়োগ করুন।  উদাহরণস্বরূপ"
+
+#: ../scripts/chcat:302
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -CompanyConfidential /docs/businessplan.odt"
+
+#: ../scripts/chcat:303
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +CompanyConfidential juser"
+
+#: ../semanage/semanage:127
+msgid "Requires 2 or more arguments"
+msgstr "২ অথবা অধিক সংখ্যক আর্গুমেন্ট আবশ্যক"
+
+#: ../semanage/semanage:132
+#, c-format
+msgid "%s not defined"
+msgstr "%s পোর্ট নির্ধারিত হয়নি"
+
+#: ../semanage/semanage:156
+#, c-format
+msgid "%s not valid for %s objects\n"
+msgstr "%s, %s অবজেক্টের জন্য বৈধ নয়\n"
+
+#: ../semanage/semanage:183 ../semanage/semanage:191
+msgid "range not supported on Non MLS machines"
+msgstr "MLS-বিহীন মেশিনে রেঞ্জ সমর্থন করা হয় না"
+
+#: ../semanage/semanage:249
+msgid "You must specify a role"
+msgstr "ভূমিকা নির্ধারণ করা আবশ্যক"
+
+#: ../semanage/semanage:251
+msgid "You must specify a prefix"
+msgstr "প্রে-ফিক্স উল্লেখ করা আবশ্যক"
+
+#: ../semanage/semanage:300
+#, c-format
+msgid "Options Error %s "
+msgstr "বিকল্প সংক্রান্ত ত্রুটি %s "
+
+#: ../semanage/semanage:304
+#, c-format
+msgid "Invalid value %s"
+msgstr "মান বৈধ নয় %s "
+
+#: ../semanage/seobject.py:132
+msgid "translations not supported on non-MLS machines"
+msgstr "MLS-বিহীন মেশিনে অনুবাদ সমর্থন করা হয় না"
+
+#: ../semanage/seobject.py:139
+#, python-format
+msgid "Unable to open %s: translations not supported on non-MLS machines"
+msgstr "%s খুলতে ব্যর্থ: MLS-বিহীন মেশিনে অনুবাদ সমর্থন করা হয় না"
+
+#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#, python-format
+msgid "Translations can not contain spaces '%s' "
+msgstr "অনুবাদের মধ্যে শূণ্যস্থান ব্যবহার করা যাবে না '%s' "
+
+#: ../semanage/seobject.py:182
+#, python-format
+msgid "Invalid Level '%s' "
+msgstr "স্তর বৈধ নয় '%s' "
+
+#: ../semanage/seobject.py:185
+#, python-format
+msgid "%s already defined in translations"
+msgstr "অনুবাদের মধ্যে %s বর্তমানে ব্যাখ্যা করা হয়েছে"
+
+#: ../semanage/seobject.py:197
+#, python-format
+msgid "%s not defined in translations"
+msgstr "অনুবাদের মধ্যে %s'র ব্যাখ্যা করা হয়নি"
+
+#: ../semanage/seobject.py:218
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "SELinux নিয়মনীতি বর্তমানে পরিচালিত নয় অথবা সংগ্রহস্থল ব্যবহার করা সম্ভব নয়।"
+
+#: ../semanage/seobject.py:223
+msgid "Cannot read policy store."
+msgstr "নিয়মনীতির সংগ্রহস্থল পড়া যায়নি।"
+
+#: ../semanage/seobject.py:228
+msgid "Could not establish semanage connection"
+msgstr "semanage সংযোগ স্থাপন করা যায়নি"
+
+#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
+#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
+#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
+#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
+#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "%s'র জন্য কি নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
+#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "%s'র ক্ষেত্রে লগ-ইন ম্যাপিং ব্যবস্থা নির্ধারিত হয়েছে কিনা পরীক্ষা করা যায়নি"
+
+#: ../semanage/seobject.py:253
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "%s'র ক্ষেত্রে লগ-ইন ম্যাপিং ব্যবস্থা বর্তমানে নির্ধারিত হয়েছে"
+
+#: ../semanage/seobject.py:257
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "Linux ব্যবহারকারী %s বর্তমানে উপস্থিত নেই"
+
+#: ../semanage/seobject.py:261
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "%s'র ক্ষেত্রে লগ-ইন ম্যাপিং ব্যবস্থা নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
+#, python-format
+msgid "Could not set name for %s"
+msgstr "%s'র নাম নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "%s'র ক্ষেত্রে MLS রেঞ্জ নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:274
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "%s'র ক্ষেত্রে SELinux ব্যবহারকারী নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
+#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
+#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
+#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
+#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
+#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
+#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
+#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1257
+msgid "Could not start semanage transaction"
+msgstr "semanage আদান-প্রদান আরম্ভ করা যায়নি"
+
+#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "%s'র ক্ষেত্রে লগ-ইন ম্যাপিং ব্যবস্থা যোগ করা যায়নি"
+
+#: ../semanage/seobject.py:301
+msgid "Requires seuser or serange"
+msgstr "seuser অথবা serange আবশ্যক"
+
+#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "%s'র ক্ষেত্রে লগ-ইন ম্যাপিং ব্যবস্থা নির্ধারিত হয়নি"
+
+#: ../semanage/seobject.py:315
+#, python-format
+msgid "Could not query seuser for %s"
+msgstr "%s'র ক্ষেত্রে seuser কোয়েরি করা যায়নি"
+
+#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "%s'র ক্ষেত্রে লগ-ইন ম্যাপিং ব্যবস্থা পরিবর্তন করা যায়নি"
+
+#: ../semanage/seobject.py:364
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr ""
+"%s'র জন্য লগ-ইন ম্যাপিং ব্যবস্থা নিয়মনীতির মধ্যে নির্ধারিত হওয়ার ফলে মুছে ফেলা সম্ভব "
+"নয়"
+
+#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
+#, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "%s'র ক্ষেত্রে লগ-ইন ম্যাপিং মুছে ফেলা যায়নি"
+
+#: ../semanage/seobject.py:391
+msgid "Could not list login mappings"
+msgstr "লগ-ইন ম্যাপিং তালিকাভুক্ত করা যায়নি"
+
+#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
+#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "SELinux ব্যবহারকারী %s'র বৈশিষ্ট্য নির্ধারিত কিনা পরীক্ষা করা যায়নি"
+
+#: ../semanage/seobject.py:439
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "SELinux ব্যবহারকারী %s'র বৈশিষ্ট্য বর্তমানে নির্ধারিত হয়েছে"
+
+#: ../semanage/seobject.py:443
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "%s'র জন্য SELinux ব্যবহারকারী নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:452
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "%s ভূমিকাটি, %s'র জন্য নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:461
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "%s'র ক্ষেত্রে MLS স্তর নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
+#, python-format
+msgid "Invalid prefix %s"
+msgstr "প্রেফিক্স বৈধ নয় %s"
+
+#: ../semanage/seobject.py:466
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "%s প্রেফিক্সটি %s'র ক্ষেত্রে যোগ করা যায়নি"
+
+#: ../semanage/seobject.py:469
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "%s'র জন্য কি প্রাপ্ত করা যায়নি"
+
+#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "SELinux ব্যবহারকারী %s যোগ করা যায়নি"
+
+#: ../semanage/seobject.py:498
+msgid "Requires prefix, roles, level or range"
+msgstr "প্রেফিক্স, ভূমিকা, স্তর অথবা রেঞ্জ উল্লেখ করা আবশ্যক"
+
+#: ../semanage/seobject.py:500
+msgid "Requires prefix or roles"
+msgstr "প্রেফিক্স অথবা ভূমিকা উল্লেখ করা আবশ্যক"
+
+#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux ব্যবহারকারী %s'র বৈশিষ্ট্য নির্ধারিত হয়নি"
+
+#: ../semanage/seobject.py:514
+#, python-format
+msgid "Could not query user for %s"
+msgstr "%s'র জন্য ব্যবহারকারী কোয়েরি করা যায়নি"
+
+#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
+#, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "SELinux ব্যবহারকারী %s'র বৈশিষ্ট্য পরিবর্তন করা যায়নি"
+
+#: ../semanage/seobject.py:574
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr ""
+"SELinux ব্যবহারকারী %s'র বৈশিষ্ট্য নিয়মনীতির মধ্যে নির্ধারিত হয়েছে যার ফলে "
+"অপসারণযোগ্য নয়"
+
+#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "SELinux ব্যবহারকারী %s মুছে ফেলা যায়নি"
+
+#: ../semanage/seobject.py:598
+msgid "Could not list SELinux users"
+msgstr "SELinux ব্যবহারকারীদের তালিকা নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:604
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "ব্যবহারকারী %s'র ভূমিকার তালিকা নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:638
+msgid "Protocol udp or tcp is required"
+msgstr "udp অথবা tcp প্রোটোকল আবশ্যক"
+
+#: ../semanage/seobject.py:640
+msgid "Port is required"
+msgstr "পোর্ট উল্লেখ করা আবশ্যক"
+
+#: ../semanage/seobject.py:651
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "%s/%s'র জন্য কি নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:662
+msgid "Type is required"
+msgstr "ধরন উল্লেখ করা আবশ্যক"
+
+#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "পোর্ট %s/%s নির্ধারিত হয়েছে কিনা পরীক্ষা করা যায়নি"
+
+#: ../semanage/seobject.py:670
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "পোর্ট %s/%s বর্তমানে নির্ধারিত আছে"
+
+#: ../semanage/seobject.py:674
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "%s/%s'র জন্য পোর্ট নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:680
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "%s/%s'র জন্য context নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:684
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "%s/%s'র ক্ষেত্রে পোর্ট context'র মধ্যে ব্যবহারকারী নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:688
+#, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "%s/%s'র ক্ষেত্রে পোর্ট context'র মধ্যে ভূমিকা নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:692
+#, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "%s/%s'র ক্ষেত্রে পোর্ট context'র মধ্যে ধরন নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:697
+#, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr "%s/%s'র ক্ষেত্রে পোর্ট context'র মধ্যে mls ক্ষেত্র নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:701
+#, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "%s/%s'র ক্ষেত্রে পোর্ট context নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#, python-format
+msgid "Could not add port %s/%s"
+msgstr "%s/%s পোর্ট যোগ করা যায়নি"
+
+#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+msgid "Requires setype or serange"
+msgstr "setype অথবা serange আবশ্যক"
+
+#: ../semanage/seobject.py:724
+msgid "Requires setype"
+msgstr "setype আবশ্যক"
+
+#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#, python-format
+msgid "Port %s/%s is not defined"
+msgstr "%s/%s পোর্ট নির্ধারিত হয়নি"
+
+#: ../semanage/seobject.py:736
+#, python-format
+msgid "Could not query port %s/%s"
+msgstr "%s/%s পোর্ট কোয়েরি করা যায়নি"
+
+#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#, python-format
+msgid "Could not modify port %s/%s"
+msgstr "%s/%s পোর্ট পরিবর্তন করা যায়নি"
+
+#: ../semanage/seobject.py:772
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr "%s/%s পোর্টটি নিয়মনীতির মধ্যে নির্ধারিত হওয়ার ফলে অপসারণযোগ্য নয়"
+
+#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#, python-format
+msgid "Could not delete port %s/%s"
+msgstr "%s/%s পোর্ট মুছে ফেলা যায়নি"
+
+#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+msgid "Could not list ports"
+msgstr "পোর্টের তালিকা নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+msgid "SELinux Type is required"
+msgstr "SELinux Type আবশ্যক"
+
+#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
+#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#, python-format
+msgid "Could not create key for %s"
+msgstr "%s'র কি নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
+#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "%s প্রেক্ষাপটের বৈশিষ্ট্য নির্ধারিত হয়েছে কিনা পরীক্ষা করা যায়নিis defined"
+
+#: ../semanage/seobject.py:865
+#, python-format
+msgid "Interface %s already defined"
+msgstr "%s প্রেক্ষাপট বর্তমানে নির্ধারিত রয়েছে"
+
+#: ../semanage/seobject.py:869
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "%s'র প্রেক্ষাপট নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
+#, python-format
+msgid "Could not create context for %s"
+msgstr "%s'র জন্য context নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:878
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "%s'র ক্ষেত্রে প্রেক্ষাপটের context'এ ব্যবহারকারী বৈশিষ্ট্য নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:882
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "%s'র ক্ষেত্রে প্রেক্ষাপটের context'এ ভূমিকার বৈশিষ্ট্য নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:886
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "%s'র ক্ষেত্রে প্রেক্ষাপটের context'এ ধরন নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:891
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "%s'র ক্ষেত্রে প্রেক্ষাপটের context'এ mls ক্ষেত্র নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:895
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "%s'র ক্ষেত্রে প্রেক্ষাপটের context'র বৈশিষ্ট্য নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:899
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "%s'র ক্ষেত্রে বার্তার context নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
+#, python-format
+msgid "Could not add interface %s"
+msgstr "%s প্রেক্ষাপট যোগ করা যায়নি"
+
+#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "%s প্রেক্ষাপটের বৈশিষ্ট্য নির্ধারিত হয়নি"
+
+#: ../semanage/seobject.py:933
+#, python-format
+msgid "Could not query interface %s"
+msgstr "%s প্রেক্ষাপট কোয়েরি করা যায়নি"
+
+#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "%s প্রেক্ষাপট পরিবর্তন করা যায়নি"
+
+#: ../semanage/seobject.py:972
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "%s প্রেক্ষাপটটি নিয়মনীতির মধ্যে নির্ধারিত হয়েছে এবং অপসারণযোগ্য নয়"
+
+#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "%s প্রেক্ষাপট মুছে ফেলা যায়নি"
+
+#: ../semanage/seobject.py:992
+msgid "Could not list interfaces"
+msgstr "প্রেক্ষাপটের তালিকা নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "%s'র ফাইল context নির্ধারিত হয়েছে কিনা পরীক্ষা করা যায়নি"
+
+#: ../semanage/seobject.py:1037
+#, python-format
+msgid "File context for %s already defined"
+msgstr "%s'র ফাইল context বর্তমানে নির্ধারিত রয়েছে"
+
+#: ../semanage/seobject.py:1041
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "%s'র ফাইল contex নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:1050
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "%s'র ক্ষেত্রে ফাইলের context'এ ব্যবহারকারী বৈশিষ্ট্য নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:1054
+#, python-format
+msgid "Could not set role in file context for %s"
+msgstr "%s'র ক্ষেত্রে ফাইলের context'এ ভূমিকা নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:1058
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "%s'র ক্ষেত্রে ফাইলের context'এ ধরন নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:1063
+#, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "%s'র ক্ষেত্রে ফাইলের context'এ mls ক্ষেত্র নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:1069
+#, python-format
+msgid "Could not set file context for %s"
+msgstr "%s'র ক্ষেত্রে ফাইলের context নির্ধারণ করা যায়নি"
+
+#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#, python-format
+msgid "Could not add file context for %s"
+msgstr "%s'র ক্ষেত্রে ফাইল context যোগ করা যায়নি"
+
+#: ../semanage/seobject.py:1089
+msgid "Requires setype, serange or seuser"
+msgstr "setype, serange অথবা seuser আবশ্যক"
+
+#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "%s'র ফাইল context আবশ্যক"
+
+#: ../semanage/seobject.py:1103
+#, python-format
+msgid "Could not query file context for %s"
+msgstr "%s'র জন্য ফাইল context কোয়েরি করা যায়নি"
+
+#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#, python-format
+msgid "Could not modify file context for %s"
+msgstr "%s'র জন্য ফাইল context পরিবর্তন করা যায়নি"
+
+#: ../semanage/seobject.py:1142
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr ""
+"%s'র ফাইল context নিয়মনীতির মধ্যে নির্ধারিত হওয়ার ফলে তা অপসারণ করা সম্ভব নয়"
+
+#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#, python-format
+msgid "Could not delete file context for %s"
+msgstr "%s'র ফাইল context মুছে ফেলা যায়নি"
+
+#: ../semanage/seobject.py:1164
+msgid "Could not list file contexts"
+msgstr "ফাইল context'র তালিকা নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:1168
+msgid "Could not list local file contexts"
+msgstr "স্থানীয় ফাইলের context'র তালিকা নির্মাণ করা যায়নি"
+
+#: ../semanage/seobject.py:1203
+msgid "Requires value"
+msgstr "মান আবশ্যক"
+
+#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
+#: ../semanage/seobject.py:1251
+#, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "বুলিয়ান %s'র বৈশিষ্ট্য নির্ধারিত হয়েছে কিনা তা পরীক্ষা করা যায়নি"
+
+#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#, python-format
+msgid "Boolean %s is not defined"
+msgstr "বুলিয়ান %s'র মান বর্তমানে নির্ধারিত রয়েছে"
+
+#: ../semanage/seobject.py:1217
+#, python-format
+msgid "Could not query file context %s"
+msgstr "%s'র ফাইল context কোয়েরি করা যায়নি"
+
+#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#, python-format
+msgid "Could not modify boolean %s"
+msgstr "%s বুলিয়ানের মান পরিবর্তন করা যায়নি"
+
+#: ../semanage/seobject.py:1253
+#, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "বুলিয়ান %s'র মান নিয়মনীতির মধ্যে নির্ধারিত হওয়ার ফলে অপসারণযোগ্য নয়"
+
+#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#, python-format
+msgid "Could not delete boolean %s"
+msgstr "বুলিয়ান %s মুছে ফেলা যায়নি"
+
+#: ../semanage/seobject.py:1273
+msgid "Could not list booleans"
+msgstr "বুলিয়ানের তালিকা নির্মাণ করা যায়নি"
+
+#: ../audit2allow/audit2allow:183
+#, c-format
+msgid "Generating type enforcment file: %s.te"
+msgstr "আবশ্যক ধরন নির্ধারণকারী (type enforcement) ফাইল নির্মাণ: %s.te"
+
+#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
+msgid "Compiling policy"
+msgstr "নিয়মনীতি কম্পাইল করা হচ্ছে"
+
+#: ../audit2allow/audit2allow:205
+msgid ""
+"\n"
+"******************** IMPORTANT ***********************\n"
+msgstr ""
+"\n"
+"******************** গুরুত্বপূর্ণ ***********************\n"
+
+#: ../audit2allow/audit2allow:206
+#, c-format
+msgid ""
+"In order to load this newly created policy package into the kernel,\n"
+"you are required to execute \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+msgstr ""
+"কার্নেলের মধ্যে নবনির্মিত এই নিয়মনীতির প্যাকেজ লোড করার জন্য\n"
+"নিম্নলিখিত কমান্ড প্রয়োগ করুন \n"
+"\n"
+"semodule -i %s.pp\n"
+"\n"
+
+#: ../audit2allow/audit2allow:211
+#, c-format
+msgid "Options Error: %s "
+msgstr "বিকল্প সংক্রান্ত ত্রুটি: %s"

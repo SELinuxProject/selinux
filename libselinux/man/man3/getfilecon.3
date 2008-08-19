@@ -1,0 +1,42 @@
+.TH "getfilecon" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.SH "NAME"
+getfilecon, fgetfilecon, lgetfilecon \- get SELinux security context of a file
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+.sp
+.BI "int getfilecon(const char *" path ", security_context_t *" con );
+
+.BI "int lgetfilecon(const char *" path ", security_context_t *" con );
+
+.BI "int fgetfilecon(int "fd ", security_context_t *" con );
+.SH "DESCRIPTION"
+.B getfilecon
+retrieves the context associated with the given path in the file system, the
+length of the context is returned.
+
+.B lgetfilecon
+is identical to getfilecon, except in the case of a symbolic link, where the
+link itself is interrogated, not the file that it refers to.
+
+.B fgetfilecon
+is identical to getfilecon, only the open file pointed to by filedes (as
+returned by open(2)) is interrogated in place of path.
+
+
+The returned context should be freed with freecon if non-NULL.  
+.SH "RETURN VALUE"
+On success, a positive number is returned indicating the size of the
+extended attribute value. On failure, \-1 is returned and errno is  set
+appropriately.
+
+If the context does not exist, or the process has no access to
+this attribute, errno is set to ENODATA.
+
+If extended attributes are not supported by the filesystem, or are dis\-
+abled, errno is set to ENOTSUP.
+
+The errors documented for the stat(2) system call are also applicable
+here.
+
+.SH "SEE ALSO"
+.BR selinux "(8), " freecon "(3), " setfilecon "(3), " setfscreatecon "(3)"

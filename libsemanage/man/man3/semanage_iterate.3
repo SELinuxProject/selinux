@@ -1,0 +1,57 @@
+.TH semanage_iterate 3 "15 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux Management API
+
+.SH "SYNOPSIS"
+The following iterate function is supported for any semanage record.
+.br
+Replace the function and object name as necessary.
+
+.B extern int ITERATE_FUNCTION (
+.br
+.BI "	semanage_handle_t *" handle ","
+.br
+.BI "	int (*handler) (
+.br
+.BI "                   const semanage_OBJECT_t *" object ","
+.br
+.BI "                   void *" varg "),"
+.br
+.BI "	void *" handler_arg ");"
+
+.SH "DESCRIPTION"
+.TP
+.B Behavior:
+The iterate function will execute the specified handler over all objects in the selected location. An arbitrary argument can be passed into the handler function along with each object. 
+
+The object passed in is property of the libsemanage library, and may not be modified or preserved - use 
+.B semanage_OBJECT_clone 
+if that is necessary.
+
+The handler code may not invoke any semanage write requests for the same object type (i.e. modifying the underlying store is not allowed). The iterate function is reentrant only while inside a transaction (see
+.B semanage_begin_transaction
+). It is not safe to execute other semanage read or write requests within iterate if not inside a transaction. The handler may return -1 to signal error exit, 0 to signal continue, and 1 to signal successful exit early (the iterate function will stop accordingly). 
+
+.TP
+.B Parameters:
+The 
+.I handle
+is used to track persistent state across semanage calls, and for error reporting. The
+.I handler
+is the function to execute, with 
+.I handler_arg
+as its second parameter, and each object as its first parameter.
+
+.TP
+.B Requirements:
+This function requires an semanage connection to be established (see 
+.BR semanage_connect "(3)"
+)
+
+.SH "RETURN VALUE"
+In case of failure, -1 is returned, and the semanage error callback is invoked, describing the error.
+Otherwise a non-negative integer is returned (a commit number). The same number will be returned by all other semanage object read calls until the next commit.
+
+.SH "SEE ALSO"
+.BR semanage_handle_create "(3), " semanage_connect "(3), "

@@ -1,0 +1,188 @@
+.TH semanage_node 3 "16 March 2006" "ivg2@cornell.edu" "Libsemanage API documentation"
+
+.SH "NAME" 
+SELinux Network Nodes Management API
+
+.SH "SYNOPSIS"
+.B #include <semanage/node_record.h>
+.br
+.B #include <semanage/nodes_policy.h>
+.br
+.B #include <semanage/nodes_local.h>
+
+.PP
+This object contains properties associated with a network node. 
+
+.PP
+For details on a specific function, see its manual page.
+
+.SH "Record API Overview"
+
+.HP 
+.BR semanage_node_create "(3)" \- 
+.br
+create a node 
+
+.HP
+.BR semanage_node_free "(3)" \-
+.br
+release resources for this node 
+
+.HP
+.BR semanage_node_key_create "(3)" \-
+.br
+create a key, which can be used to identify a node 
+
+.HP
+.BR semanage_node_key_free "(3)" \-
+.br
+release resources for this node key
+
+.HP
+.BR semanage_node_key_extract "(3)" \- 
+.br
+create a key matching this node 
+
+.HP
+.BR semanage_node_clone "(3)" \- 
+.br
+create an identical node (deep-copy clone)
+
+.HP
+.BR semanage_node_compare "(3)" \- 
+.br
+compare this node to the provided key
+
+.HP
+.BR semanage_node_compare2 "(3)" \-
+.br
+compare this node to another
+
+.SH "Properties API Overview"
+
+.HP
+.BR semanage_node_get_addr "(3)" \- 
+.br
+return the IP address of this node in string representation
+
+.HP
+.BR semanage_node_set_addr "(3)" \-
+.br
+set the IP address of this node from the provided string representation and protocol
+
+.HP
+.BR semanage_node_get_addr_bytes "(3)" \-
+.br
+return the IP address of this node as a byte array in network byte order
+
+.HP
+.BR semanage_node_set_addr_bytes "(3)" \-
+.br
+set the IP address of this node from the provided byte array in network byte order
+
+.HP
+.BR semanage_node_get_mask "(3)" \-
+.br
+return the IP mask of this node in string representation
+
+.HP
+.BR semanage_node_set_mask "(3)" \-
+.br
+set the IP mask of this node from the provided string representation and protocol version
+
+.HP
+.BR semanage_node_get_mask_bytes "(3)" \-
+.br
+return the IP mask of this node as a byte array in network byte order
+
+.HP
+.BR semanage_node_set_mask_bytes "(3)" \-
+.br
+set the IP mask of this node from the provided byte array in network byte order
+
+.HP
+.BR semanage_node_get_proto "(3)" \-
+.br
+return the IP protocol version for this node
+
+.HP
+.BR semanage_node_get_proto_str "(3)" \-
+.br
+return a string representation of the given node protocol
+
+.HP
+.BR semanage_node_set_proto "(3)" \-
+.br
+set the IP protocol version for this node
+
+.HP
+.BR semanage_node_get_con "(3)" \-
+.br
+return the SELinux context associated with this node 
+
+.HP
+.BR semanage_node_set_con "(3)" \-
+.br
+set the SELinux context associated with this node 
+
+.SH "Record Store API Overview"
+
+.HP
+.BR semanage_node_modify_local "(3)" \- 
+.br
+add or update an interface in the local store
+
+.HP
+.BR semanage_node_del_local "(3)" \-
+.br
+delete an interface from the local store
+
+.HP
+.BR semanage_node_exists "(3)" \-
+.br
+check if an interface is defined in the persistent policy
+
+.HP
+.BR semanage_node_exists_local "(3)" \-
+.br
+check if an interface is defined in the local store
+
+.HP
+.BR semanage_node_query "(3)" \-
+.br
+query an interface in the persistent policy
+
+.HP
+.BR semanage_node_query_local "(3)" \- 
+.br
+query an interface in the local store
+
+.HP
+.BR semanage_node_count "(3)" \-
+.br
+count the number of nodes defined in the persistent policy
+
+.HP
+.BR semanage_node_count_local "(3)" \-
+.br
+count the number of nodes defined in the local store
+
+.HP
+.BR semanage_node_iterate "(3)" \-
+.br
+execute a callback for each interface in the persistent policy
+
+.HP
+.BR semanage_node_iterate_local "(3)" \-
+.br
+execute a callback for each interface in the local store
+
+.HP
+.BR semanage_node_list "(3)" \-
+.br
+return an array containing all nodes in the persistent policy
+
+.HP
+.BR semanage_node_list_local "(3)" \-
+.br
+return an array containing all nodes in the local store

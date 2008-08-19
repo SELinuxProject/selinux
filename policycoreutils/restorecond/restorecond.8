@@ -1,0 +1,31 @@
+.TH "restorecond" "8" "2002031409" "" ""
+.SH "NAME"
+restorecond \- daemon that watches for file creation and then sets the default SELinux file context
+
+.SH "SYNOPSIS"
+.B restorecond  [\-d]
+.P
+
+.SH "DESCRIPTION"
+This manual page describes the
+.BR restorecond
+program.
+.P
+This daemon uses inotify to watch files listed in the /etc/selinux/restorecond.conf, when they are created, this daemon will make sure they have 
+the correct file context associated with the policy.
+
+.SH "OPTIONS"
+.TP 
+.B \-d
+Turns on debugging mode.   Application will stay in the foreground and lots of
+debugs messages start printing.
+
+.SH "AUTHOR"
+This man page was written by Dan Walsh <dwalsh@redhat.com>.
+The program was written by Dan Walsh <dwalsh@redhat.com>.
+
+.SH "FILES"
+/etc/selinux/restorecond.conf
+
+.SH "SEE ALSO"
+.BR restorecon (8),

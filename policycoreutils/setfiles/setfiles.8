@@ -1,0 +1,98 @@
+.TH "setfiles" "8" "2002031409" "" ""
+.SH "NAME"
+setfiles \- set file SELinux security contexts.
+
+.SH "SYNOPSIS"
+.B setfiles
+.I [\-c policy ] [\-d] [\-l] [\-n] [\-e directory ] [\-o filename ] [\-q] [\-s] [\-v] [\-vv] [\-W] [\-F] spec_file pathname...
+.SH "DESCRIPTION"
+This manual page describes the
+.BR setfiles
+program.
+.P
+This program is primarily used to initialise the security context
+database (extended attributes) on one or more filesystems.  This
+program is initially run as part of the SE Linux installation process.
+.P
+It can also be run at any time to correct errors, to add support for
+new policy, or with the \-n option it can just check whether the file
+contexts are all as you expect.
+
+.SH "OPTIONS"
+.TP 
+.B \-c
+check the validity of the contexts against the specified binary policy.
+.TP
+.B \-d
+show what specification matched each file.
+.TP 
+.B \-l
+log changes in file labels to syslog.
+.TP
+.B \-n
+don't change any file labels.
+.TP 
+.B \-q
+suppress non-error output.
+.TP 
+.B \-r rootpath
+use an alternate root path
+.TP 
+.B \-e directory
+directory to exclude (repeat option for more than one directory.)
+.TP 
+.B \-F
+Force reset of context to match file_context for customizable files
+.TP 
+.B \-o filename
+save list of files with incorrect context in filename.
+.TP 
+.B \-s
+take a list of files from standard input instead of using a pathname on the
+command line.
+.TP
+.B \-v
+show changes in file labels, if type or role are changing.
+.TP 
+.B \-vv
+show changes in file labels, if type, role, or user are changing.
+.TP 
+.B \-W
+display warnings about entries that had no matching files.
+.TP 
+.B \-0
+Input items are terminated by a null character instead of by whitespace,  and the quotes and backslash are not special (every character is taken literally).  Disables the end of file string, which  is  treated  like  any other argument.  Useful when input items might contain white space, quote  marks,  or  backslashes.The  GNU  find  -print0  option produces input suitable for this mode.
+
+.SH "ARGUMENTS"
+.B spec_file
+The specification file which contains lines of the following form
+.br
+.B regexp [ \-type ] ( context | <<none>> )
+.br
+The regular expression is anchored at both ends.  The optional type field 
+specifies the file type as shown in the mode field by the
+.B ls(1)
+program, e.g. \-\- to match only regular files or \-d to match only
+directories.  The context can be an ordinary security context or the
+string <<none>> to specify that the file is not to have its context
+changed.
+.br
+The last matching specification is used. If there are multiple hard
+links to a file that match different specifications and those
+specifications indicate different security contexts, then a warning is
+displayed but the file is still labeled based on the last matching
+specification other than <<none>>.
+.TP 
+.B pathname...
+The pathname for the root directory of each file system to be relabeled. 
+Not used if the
+.B \-s
+option is used.
+
+.SH "AUTHOR"
+This man page was written by Russell Coker <russell@coker.com.au>.
+The program was written by Stephen Smalley <sds@epoch.ncsc.mil>
+
+.SH "SEE ALSO"
+.BR load_policy (8),
+.BR checkpolicy (8)
