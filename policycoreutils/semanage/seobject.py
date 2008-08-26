@@ -1242,7 +1242,7 @@ class nodeRecords(semanageRecords):
        def list(self, heading = 1, locallist = 0):
                if heading:
                        print "%-18s %-18s %-5s %-5s\n" % ("IP Address", "Netmask", "Protocol", "Context")
-               ddict = self.get_all()
+               ddict = self.get_all(locallist)
                keys = ddict.keys()
                keys.sort()
                if is_mls_enabled:
