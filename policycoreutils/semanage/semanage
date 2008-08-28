@@ -44,11 +44,12 @@ if __name__ == '__main__':
 
 	def usage(message = ""):
 		print _("""
-semanage {boolean|login|user|port|interface|fcontext|translation} -{l|D} [-n] 
+semanage {boolean|login|user|port|interface|node|fcontext|translation} -{l|D} [-n]
 semanage login -{a|d|m} [-sr] login_name | %groupname
 semanage user -{a|d|m} [-LrRP] selinux_name
 semanage port -{a|d|m} [-tr] [ -p proto ] port | port_range
 semanage interface -{a|d|m} [-tr] interface_spec
+semanage node -{a|d|m} [-tr] [ -p protocol ] [-M netmask] addr
 semanage fcontext -{a|d|m} [-frst] file_spec
 semanage translation -{a|d|m} [-T] level
 semanage boolean -{d|m} [--on|--off|-1|-0] -F boolean | boolean_file
@@ -80,7 +81,8 @@ Object-specific Options (see above):
 		-p (named pipe) 
 
         -F, --file       Treat target as an input file for command, change multiple settings
-	-p, --proto      Port protocol (tcp or udp)
+	-p, --proto      Port protocol (tcp or udp) or internet protocol version of node (ipv4 or ipv6)
+	-M, --mask       Netmask
 	-P, --prefix     Prefix for home directory labeling
 	-L, --level      Default SELinux Level (MLS/MCS Systems only)
 	-R, --roles      SELinux Roles (ex: "sysadm_r staff_r")
@@ -109,7 +111,9 @@ Object-specific Options (see above):
 		valid_option["port"] = []
 		valid_option["port"] += valid_everyone + [ '-t', '--type', '-r', '--range', '-p', '--proto' ]
 		valid_option["interface"] = []
-		valid_option["interface"] += valid_everyone + [ '-t', '--type', '-r', '--range'] 
+		valid_option["interface"] += valid_everyone + [ '-t', '--type', '-r', '--range']
+		valid_option["node"] = []
+		valid_option["node"] += valid_everyone + [ '-M', '--mask', '-t', '--type', '-r', '--range', '-p', '--protocol']
 		valid_option["fcontext"] = []
 		valid_option["fcontext"] += valid_everyone + [ '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range'] 
 		valid_option["translation"] = []
@@ -129,6 +133,7 @@ Object-specific Options (see above):
 		serange = ""
 		port = ""
 		proto = ""
+		mask = ""
 		selevel = ""
 		setype = ""
 		ftype = ""
@@ -157,7 +162,7 @@ Object-specific Options (see above):
 		args = sys.argv[2:]
 
 		gopts, cmds = getopt.getopt(args,
-					    '01adf:lhmnp:s:FCDR:L:r:t:T:P:S:',
+					    '01adf:lhmnp:s:FCDR:L:r:t:T:P:S:M:',
 					    ['add',
 					     'delete',
 					     'deleteall',
@@ -178,7 +183,8 @@ Object-specific Options (see above):
 					     'roles=',
 					     'type=',
 					     'trans=',
-					     'prefix='
+					     'prefix=',
+                         'mask='
 					     ])
 		for o, a in gopts:
 			if o not in option_dict[object]:
@@ -246,6 +252,9 @@ Object-specific Options (see above):
 			if o == "-s" or o == "--seuser":
 				seuser = a
 
+			if o == "-M" or o == '--mask':
+				mask = a
+
 			if o == "-t" or o == "--type":
 				setype = a
 
@@ -268,6 +277,9 @@ Object-specific Options (see above):
 		
 		if object == "interface":
 			OBJECT = seobject.interfaceRecords(store)
+
+		if object == "node":
+			OBJECT = seobject.nodeRecords(store)
 		
 		if object == "fcontext":
 			OBJECT = seobject.fcontextRecords(store)
@@ -316,6 +328,9 @@ Object-specific Options (see above):
 			if object == "interface":
 				OBJECT.add(target, serange, setype)
 
+			if object == "node":
+				OBJECT.add(target, mask, proto, serange, setype)
+
 			if object == "fcontext":
 				OBJECT.add(target, setype, ftype, serange, seuser)
 			if object == "permissive":
@@ -343,6 +358,9 @@ Object-specific Options (see above):
 			if object == "interface":
 				OBJECT.modify(target, serange, setype)
 
+			if object == "node":
+				OBJECT.modify(target, mask, proto, serange, setype)
+
 			if object == "fcontext":
 				OBJECT.modify(target, setype, ftype, serange, seuser)
 
@@ -354,6 +372,9 @@ Object-specific Options (see above):
 
 			elif object == "fcontext":
 				OBJECT.delete(target, ftype)
+
+			elif object == "node":
+				OBJECT.delete(target, mask, proto)
 
 			else:
 				OBJECT.delete(target)

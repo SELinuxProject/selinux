@@ -1,3 +1,6 @@
+2.0.55 2008-08-26
+	* Merged semanage node support from Christian Kuester.
+
 2.0.54 2008-08-05
 	* Add support for boolean files and group support for seusers from Dan Walsh.
 	* Ensure that setfiles -p output is newline terminated from Russell Coker.

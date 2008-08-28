@@ -3,7 +3,7 @@
 semanage \- SELinux Policy Management tool
 
 .SH "SYNOPSIS"
-.B semanage {boolean|login|user|port|interface|fcontext|translation} \-{l|D} [\-n] [\-S store] 
+.B semanage {boolean|login|user|port|interface|node|fcontext|translation} \-{l|D} [\-n] [\-S store]
 .br
 .B semanage boolean \-{d|m} [\-\-on|\-\-off|\-1|\-0] -F boolean | boolean_file
 .br
@@ -14,6 +14,8 @@ semanage \- SELinux Policy Management tool
 .B semanage port \-{a|d|m} [\-tr] [\-p proto] port | port_range
 .br
 .B semanage interface \-{a|d|m} [\-tr] interface_spec
+.br
+.B semanage node -{a|d|m} [-tr] [ -p protocol ] [-M netmask] address
 .br
 .B semanage fcontext \-{a|d|m} [\-frst] file_spec
 .br
@@ -78,7 +80,7 @@ Modify a OBJECT record NAME
 Do not print heading when listing OBJECTS.
 .TP
 .I                \-p, \-\-proto
-Protocol for the specified port (tcp|udp).
+Protocol for the specified port (tcp|udp) or internet protocol version for the specified node (ipv4|ipv6).
 .TP
 .I                \-r, \-\-range      
 MLS/MCS Security Range (MLS/MCS Systems only)

@@ -51,12 +51,12 @@ int selinux_mkload_policy(int preservebools)
 	int kernvers = security_policyvers();
 	int maxvers = kernvers, minvers = DEFAULT_POLICY_VERSION, vers;
 	int setlocaldefs = load_setlocaldefs;
-	char path[PATH_MAX], **names;
+	char path[PATH_MAX];
 	struct stat sb;
 	struct utsname uts;
 	size_t size;
 	void *map, *data;
-	int fd, rc = -1, *values, len, i, prot;
+	int fd, rc = -1, prot;
 	sepol_policydb_t *policydb;
 	sepol_policy_file_t *pf;
 	int usesepol = 0;
@@ -251,6 +251,8 @@ checkbool:
 		
 #ifndef DISABLE_BOOL
 		if (preservebools) {
+			int *values, len, i;
+			char **names;
 			rc = security_get_boolean_names(&names, &len);
 			if (!rc) {
 				values = malloc(sizeof(int) * len);
