@@ -54,6 +54,14 @@ AC_FUNC_REALLOC
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([memset strcasecmp strchr strdup strerror strncasecmp strrchr])
 
+AC_ARG_ENABLE([tests],
+        [AC_HELP_STRING([--enable-tests],[Enables building of tests])],
+        [enable_tests=$enableval],
+        [enable_tests=no]
+)
+
+AM_CONDITIONAL([BUILD_tests],[test "$enable_tests]" = "yes"])
+
 AC_CONFIG_FILES([Makefile
                  include/Makefile
                  man/Makefile

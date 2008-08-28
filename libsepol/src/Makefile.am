@@ -11,7 +11,6 @@ lib_LTLIBRARIES		= libsepol.la
 libsepol_la_SOURCES	= $(COMMONSRC)
 libsepol_la_CPPFLAGS	= \
 	-D_GNU_SOURCE -fPIC \
-	-include $(abs_top_srcdir)/libtool_compat.h \
 	-I$(abs_top_srcdir)/include
 libsepol_la_LDFLAGS	= -version-info 1
 AM_LDFLAGS		= -Wl,--as-needed

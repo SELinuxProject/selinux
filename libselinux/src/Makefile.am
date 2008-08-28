@@ -36,7 +36,6 @@ config:Makefile
 PACKAGE				= selinux
 extra_lib			=
 libselinux_la_SOURCES		= $(BUILDSRC)
-libselinux_la_CPPFLAGS		= -include $(abs_top_srcdir)/libtool_compat.h
 libselinux_la_LDFLAGS		= -Wl,--as-needed -version-info 1
 if enable_python
 selinuxswig_wrap.c: Makefile selinuxswig.i selinuxswig_python.i
@@ -44,7 +43,6 @@ selinuxswig_wrap.c: Makefile selinuxswig.i selinuxswig_python.i
 extra_lib			+= libpyselinux.la
 libpyselinux_la_SOURCES		= selinuxswig_wrap.c
 libpyselinux_la_CPPFLAGS	= \
-	-include $(abs_top_srcdir)/libtool_compat.h \
 	-I@PYTHON_INCLUDE_DIR@
 libpyselinux_la_LDFLAGS		= -Wl,--as-needed -lselinux -L$(builddir)
 libpyselinux_la_DEPENDENCIES	= $(builddir)/libselinux.la
@@ -52,7 +50,6 @@ if have_sepol
 extra_lib			+= libpyaudit2why.la
 libpyaudit2why_la_SOURCES	= audit2why.c
 libpyaudit2why_la_CPPFLAGS	= \
-	-include $(abs_top_srcdir)/libtool_compat.h \
 	-I@PYTHON_INCLUDE_DIR@
 libpyaudit2why_la_DEPENDENCIES	= $(LIBSEPOL_A_PATH) $(builddir)/libselinux.la
 libpyaudit2why_la_LDFLAGS	= -Wl,--as-needed -lselinux -L$(builddir) 
