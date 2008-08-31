@@ -33,11 +33,6 @@ sysconf_DATA			= config
 config:Makefile
 	echo -e "SELINUXTYPE=$(policyname)\nSELINUX=enforcing" > $@ 
 		
-# When the upstream tree is patched this should be removed
-# and selinux.py must be renamed to __init__.py
-__init__.py : selinux.py
-	cp selinux.py $@
-
 PACKAGE				= selinux
 extra_lib			=
 libselinux_la_SOURCES		= $(BUILDSRC)
@@ -45,7 +40,7 @@ libselinux_la_CPPFLAGS		= -include $(abs_top_srcdir)/libtool_compat.h
 libselinux_la_LDFLAGS		= -Wl,--as-needed -version-info 1
 if enable_python
 selinuxswig_wrap.c: Makefile selinuxswig.i selinuxswig_python.i
-	$(SWIG) -o $@ $(SWIG_FLAGS) -interface libpyselinux selinuxswig_python.i 
+	$(SWIG) -o $@ $(SWIG_FLAGS) -interface libpyselinux $(srcdir)/selinuxswig_python.i 
 extra_lib			+= libpyselinux.la
 libpyselinux_la_SOURCES		= selinuxswig_wrap.c
 libpyselinux_la_CPPFLAGS	= \

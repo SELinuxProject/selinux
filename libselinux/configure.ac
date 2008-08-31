@@ -165,15 +165,16 @@ AC_ARG_WITH([policyname],
 AC_SUBST([policyname],[$with_policyname])
 
 AC_ARG_ENABLE([swig],
-	[AC_HELP_STRING([--enable-swig],
-		[Cause regeneration of python c interface (default=no)])],
+	[AC_HELP_STRING([--disable-swig],
+		[Disable regeneration of python c interface (default=no)])],
 	[_enable_swig=$enableval],
-	[_enable_swig=no]
+	[_enable_swig=yes]
 )
 # Hault the config if we are asked for swig, but not swig is found
 if test "$_enable_swig" = "yes" -a -z "$SWIG" ; then
 	AC_MSG_ERROR([Cannot find swig interface gemerator in PATH, 
-		Disable python c-inteferace regeneration with --disable-swig])
+		Disable python c-inteferace regeneration with --disable-swig, 
+		or install swig])
 fi
 
 # slip in fake swig if needed

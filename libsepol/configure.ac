@@ -12,7 +12,8 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
 # semodule_deps in policycoreutils builds against libsepol.a
-AC_DISABLE_STATIC
+# Uncomment to change default behavior
+#AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 AM_PROG_CC_C_O
 

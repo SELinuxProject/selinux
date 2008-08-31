@@ -8,7 +8,7 @@ nobase_include_HEADERS	= \
 	sepol/context_record.h  	sepol/policydb/avtab.h \
 	sepol/policydb/hierarchy.h 	sepol/port_record.h \
 	sepol/debug.h           	sepol/policydb/conditional.h \
-	sepol/policydb/link.h		sepol/ports.h \	
+	sepol/policydb/link.h		sepol/ports.h \
 	sepol/errcodes.h 		sepol/policydb/constraint.h \
 	sepol/policydb/mls_types.h	sepol/roles.h \
 	sepol/handle.h			sepol/policydb/context.h \

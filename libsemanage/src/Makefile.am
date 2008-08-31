@@ -25,8 +25,7 @@ BUILT_SOURCES 			= conf-parse.h conf-parse.c conf-scan.c
 lib_LTLIBRARIES			= libsemanage.la
 libsemanage_la_SOURCES		= $(COMMONSRC) conf-scan.l conf-parse.y 
 libsemanage_la_CPPFLAGS 	= \
-	-I$(abs_top_srcdir)/include \
-	-include $(abs_top_srcdir)/libtool_compat.h
+	-I$(abs_top_srcdir)/include 
 libsemanage_la_LDFLAGS		= \
 	-Wl,--as-needed \
 	--version-script=$(srcdir)/libsemanage.map,-z,defs \
@@ -41,14 +40,9 @@ py_libs				=
 
 SWIG_FLAGS			= -Wall -python -outdir $(srcdir)
 
-# When the upstream tree is patched this should be removed
-# and semanage.py must be renamed to __init__.py
-__init__.py : semanage.py
-	cp $^ $@
-
 if enable_python
 semanageswig_wrap.c: Makefile semanageswig.i semanageswig_python.i
-	$(SWIG) -o $@ $(SWIG_FLAGS) -interface libpysemanage semanageswig_python.i 
+	$(SWIG) -o $@ $(SWIG_FLAGS) -interface libpysemanage $(srcdir)/semanageswig_python.i 
 
 py_libs				+= libpysemanage.la
 libpysemanage_la_SOURCES	= semanageswig_wrap.c
@@ -56,7 +50,6 @@ libpysemanage_la_LDFLAGS	=  -Wl,--as-needed,-z,defs -lsemanage  -L$(builddir)
 libpysemanage_la_DEPENDENCIES	= $(lib_LTLIBRARIES)
 libpysemanage_la_CPPFLAGS	= \
 	-I$(abs_top_srcdir)/include \
-	-include $(abs_top_srcdir)/libtool_compat.h \
 	-I@PYTHON_INCLUDE_DIR@
 endif
 AM_LDFLAGS			= -Wl,--as-needed

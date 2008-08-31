@@ -12,7 +12,7 @@ man_MANS		= run_init.8 open_init_pty.8
 if HAVE_PAM
 extra_cppflags		+= -DUSE_PAM
 extra_ldflags		+= -lpam -lpam_misc
-pam_DATA		= run_init.pamd
+pam_DATA		= run_init
 else
 extra_cppflags		+= -D_XOPEN_SOURCE=500
 extra_ldflags		+= -lcrypt

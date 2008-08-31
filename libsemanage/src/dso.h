@@ -1,7 +1,7 @@
 #ifndef _SEPOL_DSO_H
 #define _SEPOL_DSO_H	1
 
-#ifdef SHARED
+#ifdef PIC
 # define hidden __attribute__ ((visibility ("hidden")))
 # define hidden_proto(fct) __hidden_proto (fct, fct##_internal)
 # define __hidden_proto(fct, internal)	\

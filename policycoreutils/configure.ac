@@ -30,15 +30,19 @@ AC_CHECK_LIB([dl], [dlopen])
 
 AC_SEARCH_LIBS([selinux_init_load_policy],[selinux],
         [],
-        [echo -n -e "********************************************************\n"]
-        [AC_MSG_ERROR([[SELinux library was not found. Aborted]])]
+        [AC_MSG_ERROR([[Compatible libselinux not found.]])]
 )
 
 AC_SEARCH_LIBS([sepol_policydb_read],[sepol],
         [],
-        [echo -n -e "********************************************************\n"]
-        [AC_MSG_ERROR([[SELinux Policy library was not found. Aborted]])]
+        [AC_MSG_ERROR([[Compatible libsepol not found.]])]
 )
+
+AC_SEARCH_LIBS([sepol_set_expand_consume_base],[sepol],
+        [],
+        [AC_MSG_ERROR([[Compatible libsepol not found.]])]
+)
+
 
 AC_ARG_WITH([static-libsepol],
 	[AC_HELP_STRING([--with-static-libsepol=PATH],
@@ -159,7 +163,10 @@ AC_CHECK_HEADERS([fcntl.h libintl.h \
 AC_CHECK_HEADERS([sys/inotify.h])
 
 AC_CHECK_HEADERS([selinux/selinux.h],[],
-	[AC_MSG_ERROR([SELinux header file missing])])
+	[AC_MSG_ERROR([libselinux header files missing])])
+
+AC_CHECK_HEADERS([semanage/modules.h],[],
+	[AC_MSG_ERROR([libsepol header files missing])])
 
 #AM_PATH_PYTHON(,, [:])
 #AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])

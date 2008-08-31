@@ -29,7 +29,7 @@ if HAVE_PAM
 extra_cppflags		+= -DUSE_PAM
 extra_src		+= hashtab.c
 extra_ldflags		+= -lpam -lpam_misc
-pam_DATA		= newrole.pamd
+pam_DATA		= newrole
 else
 extra_cppflags		+= -D_XOPEN_SOURCE=500
 extra_ldflags		+= -lcrypt

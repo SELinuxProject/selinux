@@ -102,10 +102,10 @@ AC_SUBST([pythondir],[$libdir/python$with_pythonver/site-packages])
 AC_SUBST([pyexecdir],[$libdir/python$with_pythonver/site-packages])
 
 AC_ARG_ENABLE([swig],
-	[AC_HELP_STRING([--enable-swig],
-		[Cause regeneration of python c interface (default=no)])],
+	[AC_HELP_STRING([--disable-swig],
+		[Disable regeneration of python c interface (default=no)])],
 	[_enable_swig=$enableval],
-	[_enable_swig=no]
+	[_enable_swig=yes]
 )
 
 # Hault the config if we are asked for swig, but not swig is found

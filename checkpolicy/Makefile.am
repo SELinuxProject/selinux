@@ -1,4 +1,4 @@
-bin_PROGRAMS		= checkmodule checkpolicy
+bin_PROGRAMS		= checkmodule checkpolicy $(extras)
 checkmodule_SOURCES	= $(COMMONSRC)  checkmodule.c
 checkmodule_DEPENDENCIES= $(LIBSEPOL_A_PATH)
 checkmodule_LDADD	= $(LIBSEPOL_A_PATH)
@@ -16,3 +16,8 @@ COMMONSRC		= \
 
 y.tab.h y.tab.c : policy_parse.y
 	$(YACC) -d $<
+
+extras	=
+if BUILD_tests
+extras	+= dispol dismod
+endif

@@ -74,7 +74,7 @@ int selinux_mkload_policy(int preservebools)
 	int (*genusers)(void *data, size_t len, const char *usersdir, void **newdata, size_t * newlen) = NULL;
 	int (*genbools)(void *data, size_t len, char *boolpath) = NULL;
 
-#ifdef SHARED
+#ifdef PIC
 	char *errormsg = NULL;
 	void *libsepolh = NULL;
 	libsepolh = dlopen("libsepol.so.1", RTLD_NOW);
@@ -290,7 +290,7 @@ checkbool:
       close:
 	close(fd);
       dlclose:
-#ifdef SHARED
+#ifdef PIC
 	if (errormsg)
 		fprintf(stderr, "libselinux:  %s\n", errormsg);
 	if (libsepolh)
