@@ -20,7 +20,10 @@ RPMSRC				= rpm.c
 BUILDSRC			= $(COMMONSRC) 
 AM_CFLAGS			= \
 	-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
-	-I$(abs_top_srcdir)/include
+	-I$(abs_top_srcdir)/include \
+	$(extra_cflags)
+
+extra_cflags			=
 AM_LDFLAGS			= -Wl,--as-needed
 SWIG_FLAGS			= -Wall -python -outdir $(srcdir)
 lib_LTLIBRARIES			= libselinux.la
@@ -59,9 +62,13 @@ endif # have_sepol
 endif # have python
 if enable_avc
 BUILDSRC += $(AVCSRC)
+else
+extra_cflags += -DDISABLE_AVC
 endif
 if enable_bool 
 BUILDSRC += $(BOOLSRC)
+else
+extra_cflags += -DDISABLE_BOOL
 endif
 if enable_rpm
 BUILDSRC += $(RPMSRC)
