@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Red Hat 
+ * Copyright (C) 2006, 2008 Red Hat 
  * see file 'COPYING' for use and warranty information
  *
  * This program is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include "stringslist.h"
 #include "restorecond.h"
+#include <fnmatch.h>
 
 /* Sorted lists */
 void strings_list_add(struct stringsList **list, const char *string)
@@ -57,11 +58,9 @@ void strings_list_add(struct stringsList **list, const char *string)
 int strings_list_find(struct stringsList *ptr, const char *string)
 {
 	while (ptr) {
-		int cmp = strcmp(string, ptr->string);
-		if (cmp < 0)
-			return -1;	/* Not on list break out to add */
-		if (cmp == 0)
-			return 0;	/* Already on list */
+		int cmp = fnmatch(ptr->string, string, 0);
+		if (cmp == 0) 
+			return 0;	/* Match found */
 		ptr = ptr->next;
 	}
 	return -1;
@@ -120,6 +119,7 @@ int main(int argc, char **argv)
 	if (strings_list_diff(list, list1) == 0)
 		printf("strings_list_diff test2 bug\n");
 	strings_list_add(&list1, "/etc/walsh");
+	strings_list_add(&list1, "/etc/walsh/*");
 	strings_list_add(&list1, "/etc/resolv.conf");
 	strings_list_add(&list1, "/etc/mtab1");
 	if (strings_list_diff(list, list1) == 0)
@@ -127,6 +127,7 @@ int main(int argc, char **argv)
 	printf("strings list\n");
 	strings_list_print(list);
 	printf("strings list1\n");
+	strings_list_find(list1, "/etc/walsh/dan");
 	strings_list_print(list1);
 	strings_list_free(list);
 	strings_list_free(list1);
