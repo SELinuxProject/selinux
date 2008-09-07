@@ -134,6 +134,10 @@ class PolicyGenerator:
             m.refpolicy = False
 
     def get_module(self):
+        # Generate the requires
+        if self.gen_requires:
+            gen_requires(self.module)
+
         """Return the generated module"""
         return self.module
 
@@ -163,17 +167,9 @@ class PolicyGenerator:
         # Generate the raw allow rules from the filtered list
         self.__add_allow_rules(raw_allow)
 
-        # Generate the requires
-        if self.gen_requires:
-            gen_requires(self.module)
-
     def add_role_types(self, role_type_set):
         for role_type in role_type_set:
             self.module.children.append(role_type)
-
-        # Generate the requires
-        if self.gen_requires:
-            gen_requires(self.module)
 
 def explain_access(av, ml=None, verbosity=SHORT_EXPLANATION):
     """Explain why a policy statement was generated.
