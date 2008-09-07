@@ -20,7 +20,7 @@
 #                                        02111-1307  USA
 #
 #  
-import os, sys, getopt
+import sys, getopt, re
 import seobject
 import selinux
 PROGNAME="policycoreutils"
@@ -43,7 +43,9 @@ is_mls_enabled=selinux.is_selinux_mls_enabled()
 if __name__ == '__main__':
 
 	def usage(message = ""):
-		print _("""
+               raise ValueError(_("""
+semanage [ -S store ] -i [ input_file | - ]
+
 semanage {boolean|login|user|port|interface|node|fcontext|translation} -{l|D} [-n]
 semanage login -{a|d|m} [-sr] login_name | %groupname
 semanage user -{a|d|m} [-LrRP] selinux_name
@@ -60,6 +62,7 @@ Primary Options:
 	-a, --add        Add a OBJECT record NAME
 	-d, --delete     Delete a OBJECT record NAME
 	-m, --modify     Modify a OBJECT record NAME
+        -i, --input      Input multiple semange commands in a transaction 
 	-l, --list       List the OBJECTS
 	-C, --locallist  List OBJECTS local customizations
 	-D, --deleteall  Remove all OBJECTS local customizations
@@ -91,9 +94,8 @@ Object-specific Options (see above):
 	-s, --seuser     SELinux User Name
 	-t, --type       SELinux Type for the object
 	-r, --range      MLS/MCS Security Range (MLS/MCS Systems only)
-""")
-		print message
-		sys.exit(1)
+%s
+""") % message)
 		
 	def errorExit(error):
 		sys.stderr.write("%s: " % sys.argv[0])
@@ -124,12 +126,53 @@ Object-specific Options (see above):
 		valid_option["permissive"] += [ '-a', '--add', '-d', '--delete', '-l', '--list', '-h', '--help', '-n', '--noheading', '-D', '--deleteall' ]
 		return valid_option
 
-	#
-	# 
-	#
-	try:
-		input = sys.stdin
-		output = sys.stdout
+        def mkargv(line):
+               dquote = "\""
+               squote = "\'"
+               l = line.split()
+               ret = []
+               i = 0
+               while i < len(l):
+                      cnt = len(re.findall(dquote, l[i]))
+                      if cnt > 1:
+                             ret.append(l[i].strip(dquote))
+                             i = i + 1
+                             continue
+                      if cnt == 1:
+                             quote = [ l[i].strip(dquote) ]
+                             i = i + 1
+                             
+                             while i < len(l) and  dquote not in l[i]:
+                                    quote.append(l[i])
+                                    i = i + 1
+                             quote.append(l[i].strip(dquote))
+                             ret.append(" ".join(quote))
+                             i = i + 1
+                             continue
+
+                      cnt = len(re.findall(squote, l[i]))
+                      if cnt > 1:
+                             ret.append(l[i].strip(squote))
+                             i = i + 1
+                             continue
+                      if cnt == 1:
+                             quote = [ l[i].strip(squote) ]
+                             i = i + 1
+                             while i < len(l) and  squote not in l[i]:
+                                    quote.append(l[i])
+                                    i = i + 1
+
+                             quote.append(l[i].strip(squote))
+                             ret.append(" ".join(quote))
+                             i = i + 1
+                             continue
+
+                      ret.append(l[i])
+                      i = i + 1
+
+               return ret
+
+        def process_args(argv):
 		serange = ""
 		port = ""
 		proto = ""
@@ -151,24 +194,23 @@ Object-specific Options (see above):
 		locallist = False
 		use_file = False
                 store = ""
-		if len(sys.argv) < 3:
-			usage(_("Requires 2 or more arguments"))
 			
-		object = sys.argv[1]
+		object = argv[0]
 		option_dict=get_options()
 		if object not in option_dict.keys():
 			usage(_("%s not defined") % object)
 			
-		args = sys.argv[2:]
+		args = argv[1:]
 
 		gopts, cmds = getopt.getopt(args,
-					    '01adf:lhmnp:s:FCDR:L:r:t:T:P:S:M:',
+					    '01adf:i:lhmnp:s:FCDR:L:r:t:T:P:S:M:',
 					    ['add',
 					     'delete',
 					     'deleteall',
 					     'ftype=',
 					     'file',
 					     'help',
+                                             'input=',
 					     'list', 
 					     'modify',
 					     'noheading',
@@ -184,7 +226,7 @@ Object-specific Options (see above):
 					     'type=',
 					     'trans=',
 					     'prefix=',
-                         'mask='
+                                             'mask='
 					     ])
 		for o, a in gopts:
 			if o not in option_dict[object]:
@@ -193,16 +235,16 @@ Object-specific Options (see above):
 		for o,a in gopts:
 			if o == "-a" or o == "--add":
 				if modify or delete:
-					usage()
+                                       raise ValueError(_("%s bad option") % o)
 				add = True
 				
 			if o == "-d"  or o == "--delete":
 				if modify or add:
-					usage()
+                                       raise ValueError(_("%s bad option") % o)
 				delete = True
 			if o == "-D"  or o == "--deleteall":
 				if modify:
-                                       usage()
+                                       raise ValueError(_("%s bad option") % o)
 				deleteall = True
 			if o == "-f"  or o == "--ftype":
 				ftype=a
@@ -211,7 +253,7 @@ Object-specific Options (see above):
 				use_file = True
 
 			if o == "-h" or o == "--help":
-				usage()
+                               raise ValueError(_("%s bad option") % o)
 
 			if o == "-n" or o == "--noheading":
 				heading = False
@@ -221,7 +263,7 @@ Object-specific Options (see above):
 
 			if o == "-m"or o == "--modify":
 				if delete or add:
-					usage()
+                                       raise ValueError(_("%s bad option") % o)
 				modify = True
 				
 			if o == "-S" or o == '--store':
@@ -229,7 +271,7 @@ Object-specific Options (see above):
 
 			if o == "-r" or o == '--range':
 				if is_mls_enabled == 0:
-					errorExit(_("range not supported on Non MLS machines"))
+                                       raise ValueError(_("range not supported on Non MLS machines"))
 				serange = a
 
 			if o == "-l" or o == "--list":
@@ -237,7 +279,7 @@ Object-specific Options (see above):
 
 			if o == "-L" or o == '--level':
 				if is_mls_enabled == 0:
-					errorExit(_("range not supported on Non MLS machines"))
+                                       raise ValueError(_("range not supported on Non MLS machines"))
 				selevel = a
 
 			if o == "-p" or o == '--proto':
@@ -280,7 +322,7 @@ Object-specific Options (see above):
 
 		if object == "node":
 			OBJECT = seobject.nodeRecords(store)
-		
+
 		if object == "fcontext":
 			OBJECT = seobject.fcontextRecords(store)
 		
@@ -298,14 +340,14 @@ Object-specific Options (see above):
                                OBJECT.list(heading, locallist, use_file)
 			else:
                                OBJECT.list(heading, locallist)
-			sys.exit(0);
+                        return
 			
 		if deleteall:
 			OBJECT.deleteall()
-			sys.exit(0);
+                        return
 			
 		if len(cmds) != 1:
-			usage()
+                       raise ValueError(_("%s bad option") % o)
                         
                 target = cmds[0]
 
@@ -317,10 +359,7 @@ Object-specific Options (see above):
 				OBJECT.add(target, setrans)
 
 			if object == "user":
-                               rlist = []
-                               if not use_file:
-                                      rlist = roles.split()
-                               OBJECT.add(target, rlist, selevel, serange, prefix)
+				OBJECT.add(target, roles.split(), selevel, serange, prefix)
 
 			if object == "port":
 				OBJECT.add(target, proto, serange, setype)
@@ -336,7 +375,7 @@ Object-specific Options (see above):
 			if object == "permissive":
 				OBJECT.add(target)
 
-			sys.exit(0);
+                        return
 			
 		if modify:
 			if object == "boolean":
@@ -364,7 +403,7 @@ Object-specific Options (see above):
 			if object == "fcontext":
 				OBJECT.modify(target, setype, ftype, serange, seuser)
 
-			sys.exit(0);
+                        return
 
 		if delete:
 			if object == "port":
@@ -379,16 +418,69 @@ Object-specific Options (see above):
 			else:
 				OBJECT.delete(target)
 
-			sys.exit(0);
-		usage()
+                        return
+
+                raise ValueError(_("Invalid command") % " ".join(argv))
+
+	#
+	# 
+	#
+	try:
+               input = None
+               store = ""
+
+               if len(sys.argv) < 3:
+                      usage(_("Requires 2 or more arguments"))
+                
+               gopts, cmds = getopt.getopt(sys.argv[1:],
+                                           '01adf:i:lhmnp:s:FCDR:L:r:t:T:P:S:',
+                                           ['add',
+                                            'delete',
+                                            'deleteall',
+                                            'ftype=',
+                                            'file',
+                                            'help',
+                                            'input=',
+                                            'list', 
+                                            'modify',
+                                            'noheading',
+                                            'localist',
+                                            'off', 
+                                            'on', 
+                                            'proto=',
+                                            'seuser=',
+                                            'store=',
+                                            'range=',
+                                            'level=',
+                                            'roles=',
+                                            'type=',
+                                            'trans=',
+                                            'prefix='
+                                            ])
+               for o, a in gopts:
+                      if o == "-S" or o == '--store':
+                             store = a
+                      if o == "-i" or o == '--input':
+                             input = a
+
+               if input != None:
+                      if input == "-":
+                             fd = sys.stdin
+                      else:
+                             fd = open(input, 'r')
+                      trans = seobject.semanageRecords(store)
+                      trans.begin()
+                      for l in fd.readlines():
+                             process_args(mkargv(l))
+                      trans.commit()
+               else:
+                      process_args(sys.argv[1:])
 			
 	except getopt.error, error:
-		errorExit(_("Options Error %s ") % error.msg)
+		usage(_("Options Error %s ") % error.msg)
 	except ValueError, error:
 		errorExit(error.args[0])
 	except KeyError, error:
 		errorExit(_("Invalid value %s") % error.args[0])
 	except IOError, error:
 		errorExit(error.args[1])
-	except KeyboardInterrupt, error:
-		sys.exit(0)
