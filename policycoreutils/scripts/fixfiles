@@ -139,14 +139,14 @@ fi
 LogReadOnly
 ${SETFILES} -q ${OUTFILES} ${SYSLOGFLAG} ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 >> $LOGFILE
 rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-*
-find /tmp -context "*:file_t*" -exec chcon -t tmp_t {} \;
-find /var/tmp -context "*:file_t*" -exec chcon -t tmp_t {} \;
+find /tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
+find /var/tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
 exit $?
 }
 
 fullrelabel() {
     logit "Cleaning out /tmp"
-    rm -rf /tmp/.??* /tmp/*
+    find /tmp/ -mindepth 1 -print0 | xargs -0 /bin/rm -f
     LogReadOnly
     restore
 }
