@@ -43,7 +43,7 @@ is_mls_enabled=selinux.is_selinux_mls_enabled()
 if __name__ == '__main__':
 
 	def usage(message = ""):
-               raise ValueError(_("""
+               text = _("""
 semanage [ -S store ] -i [ input_file | - ]
 
 semanage {boolean|login|user|port|interface|node|fcontext|translation} -{l|D} [-n]
@@ -94,8 +94,8 @@ Object-specific Options (see above):
 	-s, --seuser     SELinux User Name
 	-t, --type       SELinux Type for the object
 	-r, --range      MLS/MCS Security Range (MLS/MCS Systems only)
-%s
-""") % message)
+""")
+               raise ValueError("%s\n%s" % (text, message))
 		
 	def errorExit(error):
 		sys.stderr.write("%s: " % sys.argv[0])
@@ -198,7 +198,7 @@ Object-specific Options (see above):
 		object = argv[0]
 		option_dict=get_options()
 		if object not in option_dict.keys():
-			usage(_("%s not defined") % object)
+			usage(_("Invalid parameter %s not defined") % object)
 			
 		args = argv[1:]
 
