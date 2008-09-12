@@ -1,3 +1,6 @@
+1.0.14 2008-09-12
+	* fix multiple gen_requires block generation from Dan Walsh.
+
 1.0.13 2008-07-29
 	* Only append s0 suffix if MLS is enabled from Karl MacMillan.
 

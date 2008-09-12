@@ -1,3 +1,10 @@
+2.0.56 2008-09-12
+	* fixfiles will now remove all files in /tmp and will check for
+	  unlabeled_t in /tmp and /var/tmp from Dan Walsh.
+	* add glob support to restorecond from Dan Walsh.
+	* allow semanage to handle multi-line commands in a single transaction
+	  from Dan Walsh.
+
 2.0.55 2008-08-26
 	* Merged semanage node support from Christian Kuester.
 
