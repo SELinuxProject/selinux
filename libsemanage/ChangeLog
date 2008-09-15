@@ -1,3 +1,6 @@
+2.0.28 2008-09-15
+	* allow fcontext and seuser changes without rebuilding the policy from Dan Walsh
+
 2.0.27 2008-08-05
 	* Modify genhomedircon to skip %groupname entries.
 	  Ultimately we need to expand them to the list of users to support per-role homedir labeling when using the %groupname syntax.
