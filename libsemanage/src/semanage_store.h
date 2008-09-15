@@ -93,9 +93,15 @@ int semanage_direct_get_serial(semanage_handle_t * sh);
 int semanage_link_sandbox(semanage_handle_t * sh,
 			  sepol_module_package_t ** base);
 
+int semanage_link_base(semanage_handle_t * sh,
+		       sepol_module_package_t ** base);
+
 int semanage_expand_sandbox(semanage_handle_t * sh,
 			    sepol_module_package_t * base,
 			    sepol_policydb_t ** policydb);
+
+int semanage_read_policydb(semanage_handle_t * sh,
+			    sepol_policydb_t * policydb);
 
 int semanage_write_policydb(semanage_handle_t * sh,
 			    sepol_policydb_t * policydb);

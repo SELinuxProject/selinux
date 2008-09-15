@@ -1608,6 +1608,41 @@ int semanage_link_sandbox(semanage_handle_t * sh,
 	return retval;
 }
 
+/* Links only the base module within the sandbox into the base module.
+ * '*base' will point to the module package that contains everything
+ * linked together (caller must call sepol_module_package_destroy() on
+ * it afterwards).  '*base' will be set to NULL upon entering this
+ * function.  Returns 0 on success, -1 on error.
+ */
+int semanage_link_base(semanage_handle_t * sh,
+			  sepol_module_package_t ** base)
+{
+	const char *base_filename = NULL;
+	int retval = -1;
+
+	*base = NULL;
+
+	/* first make sure that base module is readable */
+	if ((base_filename =
+	     semanage_path(SEMANAGE_TMP, SEMANAGE_BASE)) == NULL) {
+		goto cleanup;
+	}
+	if (access(base_filename, R_OK) == -1) {
+		ERR(sh, "Could not access sandbox base file %s.",
+		    base_filename);
+		goto cleanup;
+	}
+
+	if (semanage_load_module(sh, base_filename, base) == -1) {
+		goto cleanup;
+	}
+
+	retval = 0;
+
+      cleanup:
+	return retval;
+}
+
 /* 
  * Expands the policy contained within *base 
  */
@@ -1647,6 +1682,47 @@ int semanage_expand_sandbox(semanage_handle_t * sh,
 	return STATUS_ERR;
 }
 
+/**
+ * Read the policy from the sandbox (kernel)
+ */
+int semanage_read_policydb(semanage_handle_t * sh, sepol_policydb_t * in)
+{
+
+	int retval = STATUS_ERR;
+	const char *kernel_filename = NULL;
+	struct sepol_policy_file *pf = NULL;
+	FILE *infile = NULL;
+
+	if ((kernel_filename =
+	     semanage_path(SEMANAGE_ACTIVE, SEMANAGE_KERNEL)) == NULL) {
+		goto cleanup;
+	}
+	if ((infile = fopen(kernel_filename, "r")) == NULL) {
+		ERR(sh, "Could not open kernel policy %s for reading.",
+		    kernel_filename);
+		goto cleanup;
+	}
+	__fsetlocking(infile, FSETLOCKING_BYCALLER);
+	if (sepol_policy_file_create(&pf)) {
+		ERR(sh, "Out of memory!");
+		goto cleanup;
+	}
+	sepol_policy_file_set_fp(pf, infile);
+	sepol_policy_file_set_handle(pf, sh->sepolh);
+	if (sepol_policydb_read(in, pf) == -1) {
+		ERR(sh, "Error while reading kernel policy from %s.",
+		    kernel_filename);
+		goto cleanup;
+	}
+	retval = STATUS_SUCCESS;
+
+      cleanup:
+	if (infile != NULL) {
+		fclose(infile);
+	}
+	sepol_policy_file_free(pf);
+	return retval;
+}
 /**
  * Writes the final policy to the sandbox (kernel)
  */

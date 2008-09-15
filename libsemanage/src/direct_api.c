@@ -430,6 +430,58 @@ static int semanage_write_module(semanage_handle_t * sh,
 	}
 	return 0;
 }
+static int semanage_direct_update_user_extra(semanage_handle_t * sh, sepol_module_package_t *base ) {
+	const char *ofilename = NULL;
+	int retval = -1;
+
+	dbase_config_t *pusers_extra = semanage_user_extra_dbase_policy(sh);
+
+	if (sepol_module_package_get_user_extra_len(base)) {
+		ofilename = semanage_path(SEMANAGE_TMP, SEMANAGE_USERS_EXTRA);
+		if (ofilename == NULL) {
+			return retval;
+		}
+		retval = write_file(sh, ofilename,
+				    sepol_module_package_get_user_extra(base),
+				    sepol_module_package_get_user_extra_len(base));
+		if (retval < 0)
+			return retval;
+
+		pusers_extra->dtable->drop_cache(pusers_extra->dbase);
+		
+	} else {
+		retval =  pusers_extra->dtable->clear(sh, pusers_extra->dbase);
+	}
+
+	return retval;
+}
+	
+
+static int semanage_direct_update_seuser(semanage_handle_t * sh, sepol_module_package_t *base ) {
+
+	const char *ofilename = NULL;
+	int retval = -1;
+
+	dbase_config_t *pseusers = semanage_seuser_dbase_policy(sh);
+
+	if (sepol_module_package_get_seusers_len(base)) {
+		ofilename = semanage_path(SEMANAGE_TMP, SEMANAGE_SEUSERS);
+		if (ofilename == NULL) {
+			return -1;
+		}
+		retval = write_file(sh, ofilename,
+				    sepol_module_package_get_seusers(base),
+				    sepol_module_package_get_seusers_len(base));
+		if (retval < 0)
+			return retval;
+		
+		pseusers->dtable->drop_cache(pseusers->dbase);
+		
+	} else {
+		retval = pseusers->dtable->clear(sh, pseusers->dbase);
+	}
+	return retval;
+}
 
 /********************* direct API functions ********************/
 
@@ -453,7 +505,6 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	dbase_config_t *users_base = semanage_user_base_dbase_local(sh);
 	dbase_config_t *pusers_base = semanage_user_base_dbase_policy(sh);
 	dbase_config_t *users_extra = semanage_user_extra_dbase_local(sh);
-	dbase_config_t *pusers_extra = semanage_user_extra_dbase_policy(sh);
 	dbase_config_t *ports = semanage_port_dbase_local(sh);
 	dbase_config_t *pports = semanage_port_dbase_policy(sh);
 	dbase_config_t *bools = semanage_bool_dbase_local(sh);
@@ -465,7 +516,6 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	dbase_config_t *fcontexts = semanage_fcontext_dbase_local(sh);
 	dbase_config_t *pfcontexts = semanage_fcontext_dbase_policy(sh);
 	dbase_config_t *seusers = semanage_seuser_dbase_local(sh);
-	dbase_config_t *pseusers = semanage_seuser_dbase_policy(sh);
 
 	/* Before we do anything else, flush the join to its component parts.
 	 * This *does not* flush to disk automatically */
@@ -488,12 +538,6 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	modified |= bools->dtable->is_modified(bools->dbase);
 	modified |= ifaces->dtable->is_modified(ifaces->dbase);
 	modified |= nodes->dtable->is_modified(nodes->dbase);
-
-	/* FIXME: get rid of these, once we support loading the existing policy,
-	 * instead of rebuilding it */
-	modified |= seusers_modified;
-	modified |= fcontexts_modified;
-	modified |= users_extra_modified;
 
 	/* If there were policy changes, or explicitly requested, rebuild the policy */
 	if (sh->do_rebuild || modified) {
@@ -575,46 +619,13 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 
 		pfcontexts->dtable->drop_cache(pfcontexts->dbase);
 
-		/* Seusers */
-		if (sepol_module_package_get_seusers_len(base)) {
-			ofilename = semanage_path(SEMANAGE_TMP, SEMANAGE_SEUSERS);
-			if (ofilename == NULL) {
-				retval = -1;
-				goto cleanup;
-			}
-			retval = write_file(sh, ofilename,
-					    sepol_module_package_get_seusers(base),
-					    sepol_module_package_get_seusers_len(base));
-			if (retval < 0)
-				goto cleanup;
+		retval = semanage_direct_update_seuser(sh, base );
+		if (retval < 0)
+			goto cleanup;
 
-			pseusers->dtable->drop_cache(pseusers->dbase);
-
-		} else {
-			retval = pseusers->dtable->clear(sh, pseusers->dbase);
-			if (retval < 0)
-				goto cleanup;
-		}
-
-		/* Users_extra */
-		if (sepol_module_package_get_user_extra_len(base)) {
-			ofilename = semanage_path(SEMANAGE_TMP, SEMANAGE_USERS_EXTRA);
-			if (ofilename == NULL) {
-				retval = -1;
-				goto cleanup;
-			}
-			retval = write_file(sh, ofilename,
-					    sepol_module_package_get_user_extra(base),
-					    sepol_module_package_get_user_extra_len(base));
-			if (retval < 0)
-				goto cleanup;
-			pusers_extra->dtable->drop_cache(pusers_extra->dbase);
-
-		} else {
-			retval = pusers_extra->dtable->clear(sh, pusers_extra->dbase);
-			if (retval < 0)
-				goto cleanup;
-		}
+		retval = semanage_direct_update_user_extra(sh, base );
+		if (retval < 0)
+			goto cleanup;
 
 		/* Netfilter Contexts */
 		/* Sort the netfilter contexts. */
@@ -667,11 +678,41 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		retval = semanage_verify_kernel(sh);
 		if (retval < 0)
 			goto cleanup;
+	} else {
+		retval = sepol_policydb_create(&out);
+		if (retval < 0)
+			goto cleanup;
+
+		retval = semanage_read_policydb(sh, out);
+		if (retval < 0)
+			goto cleanup;
+		
+		if (seusers_modified || users_extra_modified) {
+			retval = semanage_link_base(sh, &base);
+			if (retval < 0)
+				goto cleanup;
+
+			if (seusers_modified) {
+				retval = semanage_direct_update_seuser(sh, base );
+				if (retval < 0)
+					goto cleanup;
+			}
+			if (users_extra_modified) {
+				/* Users_extra */
+				retval = semanage_direct_update_user_extra(sh, base );
+				if (retval < 0)
+					goto cleanup;
+			}
+
+			sepol_module_package_free(base);
+			base = NULL;
+		}
+
+		retval = semanage_base_merge_components(sh);
+		if (retval < 0)
+		  goto cleanup;
+
 	}
-
-	/* FIXME: else if !modified, but seusers_modified, 
-	 * load the existing policy instead of rebuilding */
-
 	/* ======= Post-process: Validate non-policydb components ===== */
 
 	/* Validate local modifications to file contexts.
@@ -724,7 +765,8 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	sepol_policydb_free(out);
 	out = NULL;
 
-	if (sh->do_rebuild || modified) {
+	if (sh->do_rebuild || modified || 
+	    seusers_modified || fcontexts_modified || users_extra_modified) {
 		retval = semanage_install_sandbox(sh);
 	}
 
@@ -733,12 +775,14 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		free(mod_filenames[i]);
 	}
 
-	/* Detach from policydb, so it can be freed */
-	dbase_policydb_detach((dbase_policydb_t *) pusers_base->dbase);
-	dbase_policydb_detach((dbase_policydb_t *) pports->dbase);
-	dbase_policydb_detach((dbase_policydb_t *) pifaces->dbase);
-	dbase_policydb_detach((dbase_policydb_t *) pnodes->dbase);
-	dbase_policydb_detach((dbase_policydb_t *) pbools->dbase);
+	if (modified) {
+		/* Detach from policydb, so it can be freed */
+		dbase_policydb_detach((dbase_policydb_t *) pusers_base->dbase);
+		dbase_policydb_detach((dbase_policydb_t *) pports->dbase);
+		dbase_policydb_detach((dbase_policydb_t *) pifaces->dbase);
+		dbase_policydb_detach((dbase_policydb_t *) pnodes->dbase);
+		dbase_policydb_detach((dbase_policydb_t *) pbools->dbase);
+	}
 
 	free(mod_filenames);
 	sepol_policydb_free(out);
