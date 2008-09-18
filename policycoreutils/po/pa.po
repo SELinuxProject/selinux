@@ -1,304 +1,23 @@
 # translation of pa.po to Punjabi
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
 #
 # A S Alam <apbrar@gmail.com>, 2006.
+# Jaswinder Singh <jsingh@redhat.com>, 2006, 2007, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: pa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-21 14:21-0500\n"
-"PO-Revision-Date: 2006-11-24 09:13+0530\n"
-"Last-Translator: A S Alam <apbrar@gmail.com>\n"
+"POT-Creation-Date: 2008-09-09 13:24-0400\n"
+"PO-Revision-Date: 2008-03-26 16:08+0530\n"
+"Last-Translator: Jaswinder Singh <jsingh@redhat.com>\n"
 "Language-Team: Punjabi <fedora-trans-pa@redhat.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: ../load_policy/load_policy.c:22
-#, c-format
-msgid "usage:  %s [-bq]\n"
-msgstr "ਵਰਤੋਂ:  %s [-bq]\n"
-
-#: ../load_policy/load_policy.c:66
-#, c-format
-msgid "%s:  Can't load policy:  %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:188
-#, c-format
-msgid "failed to set PAM_TTY\n"
-msgstr ""
-
-#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
-msgid "Password:"
-msgstr "ਗੁਪਤ-ਕੋਡ:"
-
-#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
-#, c-format
-msgid "Cannot find your entry in the shadow passwd file.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
-#, c-format
-msgid "getpass cannot open /dev/tty\n"
-msgstr ""
-
-#: ../newrole/newrole.c:316
-#, c-format
-msgid "cannot find valid entry in the passwd file.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:327
-#, c-format
-msgid "Out of memory!\n"
-msgstr "ਮੈਮੋਰੀ ਖਤਮ ਹੋ ਗਈ ਹੈ!\n"
-
-#: ../newrole/newrole.c:332
-#, c-format
-msgid "Error!  Shell is not valid.\n"
-msgstr "ਗਲਤੀ!  ਸ਼ੈੱਲ ਗਲਤ ਹੈ।\n"
-
-#: ../newrole/newrole.c:389
-#, c-format
-msgid "Unable to clear environment\n"
-msgstr "ਵਾਤਾਵਰਨ ਸਾਫ਼ ਕਰਨ ਲਈ ਅਸਫ਼ਲ\n"
-
-#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
-#, c-format
-msgid "Error initing capabilities, aborting.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
-#, c-format
-msgid "Error setting capabilities, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:450
-#, c-format
-msgid "Error setting KEEPCAPS, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
-#, c-format
-msgid "Error dropping capabilities, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
-#, c-format
-msgid "Error changing uid, aborting.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
-#, c-format
-msgid "Error resetting KEEPCAPS, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:477
-#, c-format
-msgid "Error dropping SETUID capability, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
-#, c-format
-msgid "Error freeing caps\n"
-msgstr ""
-
-#: ../newrole/newrole.c:580
-#, c-format
-msgid "Error connecting to audit system.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:586
-#, c-format
-msgid "Error allocating memory.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:593
-#, c-format
-msgid "Error sending audit message.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
-#, c-format
-msgid "Could not determine enforcing mode.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:641
-#, c-format
-msgid "Error!  Could not open %s.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:646
-#, c-format
-msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:656
-#, c-format
-msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:666
-#, c-format
-msgid "%s!  Could not set new context for %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:710
-#, c-format
-msgid "%s changed labels.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:716
-#, c-format
-msgid "Warning! Could not restore context for %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:772
-#, c-format
-msgid "Error: multiple roles specified\n"
-msgstr ""
-
-#: ../newrole/newrole.c:780
-#, c-format
-msgid "Error: multiple types specified\n"
-msgstr ""
-
-#: ../newrole/newrole.c:787
-#, c-format
-msgid "Sorry, -l may be used with SELinux MLS support.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:792
-#, c-format
-msgid "Error: multiple levels specified\n"
-msgstr ""
-
-#: ../newrole/newrole.c:814
-#, c-format
-msgid "Couldn't get default type.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:824
-#, c-format
-msgid "failed to get new context.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:831
-#, c-format
-msgid "failed to set new role %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:838
-#, c-format
-msgid "failed to set new type %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:847
-#, c-format
-msgid "failed to build new range with level %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:852
-#, c-format
-msgid "failed to set new range %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:860
-#, c-format
-msgid "failed to convert new context to string\n"
-msgstr ""
-
-#: ../newrole/newrole.c:865
-#, c-format
-msgid "%s is not a valid context\n"
-msgstr ""
-
-#: ../newrole/newrole.c:872
-#, c-format
-msgid "Unable to allocate memory for new_context"
-msgstr ""
-
-#: ../newrole/newrole.c:898
-#, c-format
-msgid "Unable to obtain empty signal set\n"
-msgstr ""
-
-#: ../newrole/newrole.c:906
-#, c-format
-msgid "Unable to set SIGHUP handler\n"
-msgstr ""
-
-#: ../newrole/newrole.c:972
-#, c-format
-msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:989
-#, c-format
-msgid "failed to get old_context.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:996
-#, c-format
-msgid "Error!  Could not retrieve tty information.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1015
-#, c-format
-msgid "Authenticating %s.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
-#, c-format
-msgid "failed to initialize PAM\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1029
-#, c-format
-msgid "newrole: incorrect password for %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1056
-#, c-format
-msgid "newrole: failure forking: %s"
-msgstr ""
-
-#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
-#, c-format
-msgid "Unable to restore tty label...\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
-#, c-format
-msgid "Failed to close tty properly\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1117
-#, c-format
-msgid "Could not close descriptors.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1140
-#, c-format
-msgid "Error allocating shell's argv0.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
-#, c-format
-msgid "Could not set exec context to %s.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1173
-#, c-format
-msgid "Unable to restore the environment, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1184
-msgid "failed to exec shell\n"
-msgstr ""
+"Plural-Forms: Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -306,726 +25,3474 @@ msgid ""
 "  where: <script> is the name of the init script to run,\n"
 "         <args ...> are the arguments to that script."
 msgstr ""
+"USAGE: run_init <script> <args ...>\n"
+"  ਜਿੱਥੇ: <script> ਚੱਲਣ ਵਾਲੀ init ਸਕਰਿਪਟ ਦਾ ਨਾਂ ਹੈ,\n"
+"         <args ...> ਉਸ ਸਕਰਿਪਟ ਦੇ ਆਰਗੂਮੈਂਟ ਹਨ।"
+
+#: ../run_init/run_init.c:126 ../newrole/newrole.c:1187
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "PAM ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਫੇਲ\n"
 
 #: ../run_init/run_init.c:139
 #, c-format
 msgid "failed to get account information\n"
-msgstr ""
+msgstr "ਖਾਤਾ ਜਾਣਕਾਰੀ ਪਤਾ ਕਰਨ ਵਿੱਚ ਫੇਲ\n"
+
+#: ../run_init/run_init.c:162 ../newrole/newrole.c:338
+msgid "Password:"
+msgstr "ਗੁਪਤ-ਕੋਡ:"
+
+#: ../run_init/run_init.c:197 ../newrole/newrole.c:363
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "ਤੁਹਾਡੀ ਇੰਦਰਾਜ shadow passwd ਫਾਇਲ ਵਿੱਚ ਨਹੀਂ ਲੱਭੀ।\n"
+
+#: ../run_init/run_init.c:203 ../newrole/newrole.c:370
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "getpass ਨਾਲ /dev/tty ਖੁੱਲ ਨਹੀਂ ਸਕੀ\n"
 
 #: ../run_init/run_init.c:275
 #, c-format
 msgid "run_init: incorrect password for %s\n"
-msgstr ""
+msgstr "run_init: %s ਲਈ ਗਲਤ ਗੁਪਤ-ਕੋਡ\n"
 
 #: ../run_init/run_init.c:309
 #, c-format
 msgid "Could not open file %s\n"
-msgstr ""
+msgstr "ਫਾਇਲ %s ਨੂੰ ਖੋਲ ਨਹੀਂ ਸਕਦਾ\n"
 
 #: ../run_init/run_init.c:336
 #, c-format
 msgid "No context in file %s\n"
-msgstr ""
+msgstr "ਫਾਇਲ %s ਵਿੱਚ ਕੋਈ ਪ੍ਰਸੰਗ ਨਹੀਂ ਹੈ\n"
 
 #: ../run_init/run_init.c:361
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
-msgstr ""
+msgstr "ਮਾਫ ਕਰਨਾ, run_init ਸਿਰਫ SELinux ਕਰਨਲ ਉੱਪਰ ਵਰਤਿਆ ਹੋ ਸਕਦਾ ਹੈ।\n"
 
 #: ../run_init/run_init.c:380
 #, c-format
 msgid "authentication failed.\n"
-msgstr ""
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਫੇਲ ਹੋਈ।\n"
 
-#: ../scripts/chcat:75 ../scripts/chcat:145
-msgid "Requires at least one category"
-msgstr ""
-
-#: ../scripts/chcat:89 ../scripts/chcat:159
+#: ../run_init/run_init.c:405 ../newrole/newrole.c:1321
 #, c-format
-msgid "Can not modify sensitivity levels using '+' on %s"
-msgstr ""
+msgid "Could not set exec context to %s.\n"
+msgstr "exec ਪ੍ਰਸੰਗ ਨੂੰ %s ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ।\n"
 
-#: ../scripts/chcat:93
-#, c-format
-msgid "%s is already in %s"
-msgstr ""
+#: ../audit2allow/audit2allow:217
+msgid "******************** IMPORTANT ***********************\n"
+msgstr "******************** ਖਾਸ ***********************\n"
 
-#: ../scripts/chcat:164 ../scripts/chcat:174
-#, c-format
-msgid "%s is not in %s"
-msgstr ""
+#: ../audit2allow/audit2allow:218
+msgid "To make this policy package active, execute:"
+msgstr "ਇਹ ਪਾਲਿਸੀ ਪੈਕੇਜ ਸਰਗਰਮ ਕਰਨ ਲਈ, ਇਹ ਚਲਾਓ:"
 
-#: ../scripts/chcat:237 ../scripts/chcat:242
-msgid "Can not combine +/- with other types of categories"
-msgstr ""
+#: ../semanage/seobject.py:49
+msgid "Could not create semanage handle"
+msgstr "semanage ਹੈਂਡਲ ਬਣਾ ਨਹੀਂ ਸਕਦਾ"
 
-#: ../scripts/chcat:287
-msgid "Can not have multiple sensitivities"
-msgstr ""
+#: ../semanage/seobject.py:56
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "SELinux ਪਾਲਿਸੀ ਦਾ ਪਰਬੰਧਨ ਨਹੀਂ ਕੀਤਾ ਜਾਂ ਵਰਤੀ ਨਹੀਂ ਜਾ ਸਕਦੀ।"
 
-#: ../scripts/chcat:293
-#, c-format
-msgid "Usage %s CATEGORY File ..."
-msgstr ""
+#: ../semanage/seobject.py:61
+msgid "Cannot read policy store."
+msgstr "ਪਾਲਿਸੀ ਸਟੋਰ ਪੜ ਨਹੀਂ ਸਕਦਾ।"
 
-#: ../scripts/chcat:294
-#, c-format
-msgid "Usage %s -l CATEGORY user ..."
-msgstr ""
+#: ../semanage/seobject.py:66
+msgid "Could not establish semanage connection"
+msgstr "semanage ਕੁਨੈਕਸ਼ਨ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
 
-#: ../scripts/chcat:295
-#, c-format
-msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
-msgstr ""
+#: ../semanage/seobject.py:137 ../semanage/seobject.py:141
+msgid "global"
+msgstr "ਗਲੋਬਲ"
 
-#: ../scripts/chcat:296
-#, c-format
-msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
-msgstr ""
-
-#: ../scripts/chcat:297
-#, c-format
-msgid "Usage %s -d File ..."
-msgstr ""
-
-#: ../scripts/chcat:298
-#, c-format
-msgid "Usage %s -l -d user ..."
-msgstr ""
-
-#: ../scripts/chcat:299
-#, c-format
-msgid "Usage %s -L"
-msgstr "ਵਰਤੋਂ %s -L"
-
-#: ../scripts/chcat:300
-#, c-format
-msgid "Usage %s -L -l user"
-msgstr ""
-
-#: ../scripts/chcat:301
-msgid "Use -- to end option list.  For example"
-msgstr ""
-
-#: ../scripts/chcat:302
-msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
-msgstr ""
-
-#: ../scripts/chcat:303
-msgid "chcat -l +CompanyConfidential juser"
-msgstr ""
-
-#: ../semanage/semanage:127
-msgid "Requires 2 or more arguments"
-msgstr ""
-
-#: ../semanage/semanage:132
-#, c-format
-msgid "%s not defined"
-msgstr ""
-
-#: ../semanage/semanage:156
-#, c-format
-msgid "%s not valid for %s objects\n"
-msgstr ""
-
-#: ../semanage/semanage:183 ../semanage/semanage:191
-msgid "range not supported on Non MLS machines"
-msgstr ""
-
-#: ../semanage/semanage:249
-msgid "You must specify a role"
-msgstr ""
-
-#: ../semanage/semanage:251
-msgid "You must specify a prefix"
-msgstr ""
-
-#: ../semanage/semanage:300
-#, c-format
-msgid "Options Error %s "
-msgstr "ਚੋਣ ਗਲਤੀ %s "
-
-#: ../semanage/semanage:304
-#, c-format
-msgid "Invalid value %s"
-msgstr ""
-
-#: ../semanage/seobject.py:132
+#: ../semanage/seobject.py:196
 msgid "translations not supported on non-MLS machines"
-msgstr ""
+msgstr "ਅਨੁਵਾਦ ਨੂੰ ਨਾਨ-MLS ਮਸ਼ੀਨਾਂ ਉੱਪਰ ਸਹਿਯੋਗ ਨਹੀਂ ਹੈ"
 
-#: ../semanage/seobject.py:139
+#: ../semanage/seobject.py:203
 #, python-format
-msgid "Unable to open %s: translations not supported on non-MLS machines"
-msgstr ""
+msgid "Unable to open %s: translations not supported on non-MLS machines: %s"
+msgstr "%s ਨੂੰ ਖੋਲ ਨਹੀਂ ਸਕਦਾ: ਅਨੁਵਾਦ ਨੂੰ ਨਾਨ-MLS ਮਸ਼ੀਨਾਂ ਉੱਪਰ ਸਹਿਯੋਗ ਨਹੀਂ ਹੈ: %s"
 
-#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#: ../semanage/seobject.py:236
+msgid "Level"
+msgstr "ਲੈਵਲ"
+
+#: ../semanage/seobject.py:236 ../gui/system-config-selinux.glade:651
+#: ../gui/translationsPage.py:43 ../gui/translationsPage.py:59
+msgid "Translation"
+msgstr "ਅਨੁਵਾਦ"
+
+#: ../semanage/seobject.py:244 ../semanage/seobject.py:258
 #, python-format
 msgid "Translations can not contain spaces '%s' "
-msgstr ""
+msgstr "ਅਨੁਵਾਦ ਵਿੱਚ ਸਪੇਸ '%s' ਨਹੀਂ ਹੈ"
 
-#: ../semanage/seobject.py:182
+#: ../semanage/seobject.py:247
 #, python-format
 msgid "Invalid Level '%s' "
-msgstr ""
+msgstr "ਗਲਤ ਲੈਵਲ '%s' "
 
-#: ../semanage/seobject.py:185
+#: ../semanage/seobject.py:250
 #, python-format
 msgid "%s already defined in translations"
-msgstr ""
+msgstr "%s ਪਹਿਲਾਂ ਹੀ ਅਨੁਵਾਦ ਵਿੱਚ ਪਰਿਭਾਸ਼ਤ ਹੈ"
 
-#: ../semanage/seobject.py:197
+#: ../semanage/seobject.py:262
 #, python-format
 msgid "%s not defined in translations"
-msgstr ""
+msgstr "%s ਅਨੁਵਾਦ ਵਿੱਚ ਪਰਿਭਾਸ਼ਤ ਨਹੀਂ ਹੈ"
 
-#: ../semanage/seobject.py:218
-msgid "SELinux policy is not managed or store cannot be accessed."
-msgstr ""
+#: ../semanage/seobject.py:288
+msgid "Not yet implemented"
+msgstr "ਹਾਲੇ ਲਾਗੂ ਨਹੀਂ ਕੀਤਾ"
 
-#: ../semanage/seobject.py:223
-msgid "Cannot read policy store."
-msgstr ""
-
-#: ../semanage/seobject.py:228
-msgid "Could not establish semanage connection"
-msgstr ""
-
-#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
-#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
-#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
-#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
-#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
-#, python-format
-msgid "Could not create a key for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
-#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
-#, python-format
-msgid "Could not check if login mapping for %s is defined"
-msgstr ""
-
-#: ../semanage/seobject.py:253
-#, python-format
-msgid "Login mapping for %s is already defined"
-msgstr ""
-
-#: ../semanage/seobject.py:257
-#, python-format
-msgid "Linux User %s does not exist"
-msgstr ""
-
-#: ../semanage/seobject.py:261
-#, python-format
-msgid "Could not create login mapping for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
-#, python-format
-msgid "Could not set name for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
-#, python-format
-msgid "Could not set MLS range for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:274
-#, python-format
-msgid "Could not set SELinux user for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
-#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
-#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
-#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
-#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
-#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
-#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
-#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
-#: ../semanage/seobject.py:1257
+#: ../semanage/seobject.py:295
 msgid "Could not start semanage transaction"
-msgstr ""
-
-#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
-#, python-format
-msgid "Could not add login mapping for %s"
-msgstr ""
+msgstr "semanage ਤਬਦੀਲੀ ਚਾਲੂ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
 #: ../semanage/seobject.py:301
-msgid "Requires seuser or serange"
+#, fuzzy
+msgid "Could not commit semanage transaction"
+msgstr "semanage ਤਬਦੀਲੀ ਚਾਲੂ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:311
+#, fuzzy
+msgid "Could not list SELinux modules"
+msgstr "SELinux ਉਪਭੋਗੀਆਂ ਨੂੰ ਵੇਖਾ ਨਹੀਂ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:322
+#, fuzzy
+msgid "Permissive Types"
+msgstr "ਚੇਤਾਵਨੀ"
+
+#: ../semanage/seobject.py:352
+#, python-format
+msgid "Could not set permissive domain %s (module installation failed)"
 msgstr ""
 
-#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#: ../semanage/seobject.py:366
+#, python-format
+msgid "Could not remove permissive domain %s (remove failed)"
+msgstr ""
+
+#: ../semanage/seobject.py:392 ../semanage/seobject.py:452
+#: ../semanage/seobject.py:498 ../semanage/seobject.py:580
+#: ../semanage/seobject.py:647 ../semanage/seobject.py:705
+#: ../semanage/seobject.py:915 ../semanage/seobject.py:1482
+#: ../semanage/seobject.py:1542 ../semanage/seobject.py:1554
+#: ../semanage/seobject.py:1633 ../semanage/seobject.py:1684
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "%s ਲਈ ਕੁੰਜੀ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:396 ../semanage/seobject.py:456
+#: ../semanage/seobject.py:502 ../semanage/seobject.py:508
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "ਜਾਂਚ ਨਹੀਂ ਕਰ ਸਕਦਾ ਜੇ %s ਲਈ ਲਾਗਇਨ ਮੈਪ ਪਰਿਭਾਸ਼ਤ ਨਹੀਂ"
+
+#: ../semanage/seobject.py:398
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "%s ਲਈ ਲਾਗਇਨ ਮੈਪ ਪਹਿਲਾਂ ਹੀ ਪਰਿਭਾਸ਼ਤ ਹੈ"
+
+#: ../semanage/seobject.py:403
+#, fuzzy, python-format
+msgid "Linux Group %s does not exist"
+msgstr "ਲੀਨਕਸ ਉਪਭੋਗੀ %s ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
+
+#: ../semanage/seobject.py:408
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "ਲੀਨਕਸ ਉਪਭੋਗੀ %s ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
+
+#: ../semanage/seobject.py:412
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "%s ਲਈ ਲਾਗਇਨ ਮੈਪ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:416 ../semanage/seobject.py:594
+#, python-format
+msgid "Could not set name for %s"
+msgstr "%s ਲਈ ਨਾਂ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:421 ../semanage/seobject.py:604
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "%s ਲਈ MLS ਰੇਂਜ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:425
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "%s ਲਈ SELinux ਉਪਭੋਗੀ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:429
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "%s ਲਈ ਲਾਗਇਨ ਮਿਲਾਪ ਸ਼ਾਮਿਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:441 ../semanage/seobject.py:444
+msgid "add SELinux user mapping"
+msgstr "SELinux ਉਪਭੋਗੀ ਮੇਲ ਸ਼ਾਮਿਲ ਕਰੋ"
+
+#: ../semanage/seobject.py:448
+msgid "Requires seuser or serange"
+msgstr "seuser ਜਾਂ serange ਦੀ ਲੋੜ ਹੈ"
+
+#: ../semanage/seobject.py:458 ../semanage/seobject.py:504
 #, python-format
 msgid "Login mapping for %s is not defined"
-msgstr ""
+msgstr "%s ਲਈ ਲਾਗਇਨ ਮੈਪ ਪਰਿਭਾਸ਼ਤ ਨਹੀਂ ਹੈ"
 
-#: ../semanage/seobject.py:315
+#: ../semanage/seobject.py:462
 #, python-format
 msgid "Could not query seuser for %s"
-msgstr ""
+msgstr "seuser ਨੂੰ %s ਲਈ ਕਿਊਰੀ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#: ../semanage/seobject.py:478
 #, python-format
 msgid "Could not modify login mapping for %s"
-msgstr ""
+msgstr "%s ਲਈ ਲਾਗਇਨ ਮੈਪਿੰਗ ਤਬਦੀਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:364
+#: ../semanage/seobject.py:510
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
-msgstr ""
-
-#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
-#, python-format
-msgid "Could not delete login mapping for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:391
-msgid "Could not list login mappings"
-msgstr ""
-
-#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
-#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
-#, python-format
-msgid "Could not check if SELinux user %s is defined"
-msgstr ""
-
-#: ../semanage/seobject.py:439
-#, python-format
-msgid "SELinux user %s is already defined"
-msgstr ""
-
-#: ../semanage/seobject.py:443
-#, python-format
-msgid "Could not create SELinux user for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:452
-#, python-format
-msgid "Could not add role %s for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:461
-#, python-format
-msgid "Could not set MLS level for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
-#, python-format
-msgid "Invalid prefix %s"
-msgstr ""
-
-#: ../semanage/seobject.py:466
-#, python-format
-msgid "Could not add prefix %s for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:469
-#, python-format
-msgid "Could not extract key for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
-#, python-format
-msgid "Could not add SELinux user %s"
-msgstr ""
-
-#: ../semanage/seobject.py:498
-msgid "Requires prefix, roles, level or range"
-msgstr ""
-
-#: ../semanage/seobject.py:500
-msgid "Requires prefix or roles"
-msgstr ""
-
-#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
-#, python-format
-msgid "SELinux user %s is not defined"
-msgstr ""
+msgstr "%s ਲਈ ਲਾਗਇਨ ਮੈਪਿੰਗ, ਪਾਲਿਸੀ ਵਿੱਚ ਪਰਿਭਾਸ਼ਿਤ ਕੀਤੀ ਹੈ, ਹਟਾਈ ਨਹੀਂ ਜਾ ਸਕਦੀ"
 
 #: ../semanage/seobject.py:514
 #, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "%s ਲਈ ਲਾਗਇਨ ਮੈਪਿੰਗ ਹਟਾ ਨਹੀਂ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:537
+msgid "Could not list login mappings"
+msgstr "ਲਾਗਇਨ ਮੈਪਿੰਗ ਵੇਖਾ ਨਹੀਂ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:550 ../semanage/seobject.py:555
+#: ../gui/system-config-selinux.glade:100
+msgid "Login Name"
+msgstr "ਲਾਗਇਨ ਨਾਂ"
+
+#: ../semanage/seobject.py:550 ../semanage/seobject.py:555
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:769
+#: ../gui/system-config-selinux.glade:128
+#: ../gui/system-config-selinux.glade:1107
+msgid "SELinux User"
+msgstr "SELinux ਉਪਭੋਗੀ"
+
+#: ../semanage/seobject.py:550 ../gui/system-config-selinux.glade:156
+#: ../gui/system-config-selinux.glade:1135
+msgid "MLS/MCS Range"
+msgstr "MLS/MCS ਰੇਂਜ"
+
+#: ../semanage/seobject.py:576
+#, fuzzy, python-format
+msgid "You must add at least one role for %s"
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਸ਼ਾਮਿਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:584 ../semanage/seobject.py:651
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:715
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "ਜਾਂਚ ਨਹੀਂ ਕਰ ਸਕਦਾ ਜੇ SELinux ਉਪਭੋਗੀ %s ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
+
+#: ../semanage/seobject.py:586
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "SELinux ਉਪਭੋਗੀ %s ਪਹਿਲਾਂ ਹੀ ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
+
+#: ../semanage/seobject.py:590
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "%s ਲਈ SELinux ਉਪਭੋਗੀ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:599
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "ਰੋਲ %s ਨੂੰ %s ਲਈ ਸ਼ਾਮਿਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:608
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "%s ਲਈ MLS ਲੈਵਲ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:611
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "ਅਗੇਤਰ %s ਨੂੰ %s ਲਈ ਸ਼ਾਮਿਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:614
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "%s ਲਈ ਕੁੰਜੀ ਪਤਾ ਨਹੀਂ ਲਗਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:618
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "SELinux ਉਪਭੋਗੀ %s ਸ਼ਾਮਿਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:641
+msgid "Requires prefix, roles, level or range"
+msgstr "ਅਗੇਤਰ, ਰੋਲ, ਲੈਵਲ ਜਾਂ ਰੇਂਜ ਦੀ ਲੋੜ ਹੈ"
+
+#: ../semanage/seobject.py:643
+msgid "Requires prefix or roles"
+msgstr "ਅਗੇਤਰ ਜਾਂ ਰੋਲ ਦੀ ਲੋੜ ਹੈ"
+
+#: ../semanage/seobject.py:653 ../semanage/seobject.py:711
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux ਉਪਭੋਗੀ %s ਪਰਿਭਾਸ਼ਿਤ ਨਹੀਂ ਹੈ"
+
+#: ../semanage/seobject.py:657
+#, python-format
 msgid "Could not query user for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
-#, python-format
-msgid "Could not modify SELinux user %s"
-msgstr ""
-
-#: ../semanage/seobject.py:574
-#, python-format
-msgid "SELinux user %s is defined in policy, cannot be deleted"
-msgstr ""
-
-#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
-#, python-format
-msgid "Could not delete SELinux user %s"
-msgstr ""
-
-#: ../semanage/seobject.py:598
-msgid "Could not list SELinux users"
-msgstr ""
-
-#: ../semanage/seobject.py:604
-#, python-format
-msgid "Could not list roles for user %s"
-msgstr ""
-
-#: ../semanage/seobject.py:638
-msgid "Protocol udp or tcp is required"
-msgstr ""
-
-#: ../semanage/seobject.py:640
-msgid "Port is required"
-msgstr ""
-
-#: ../semanage/seobject.py:651
-#, python-format
-msgid "Could not create a key for %s/%s"
-msgstr ""
-
-#: ../semanage/seobject.py:662
-msgid "Type is required"
-msgstr ""
-
-#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
-#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
-#, python-format
-msgid "Could not check if port %s/%s is defined"
-msgstr ""
-
-#: ../semanage/seobject.py:670
-#, python-format
-msgid "Port %s/%s already defined"
-msgstr ""
-
-#: ../semanage/seobject.py:674
-#, python-format
-msgid "Could not create port for %s/%s"
-msgstr ""
-
-#: ../semanage/seobject.py:680
-#, python-format
-msgid "Could not create context for %s/%s"
-msgstr ""
+msgstr "%s ਲਈ ਉਪਭੋਗੀ ਕਿਊਰੀ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
 #: ../semanage/seobject.py:684
 #, python-format
-msgid "Could not set user in port context for %s/%s"
-msgstr ""
+msgid "Could not modify SELinux user %s"
+msgstr "SELinux ਉਪਭੋਗੀ %s ਤਬਦੀਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:688
+#: ../semanage/seobject.py:717
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "SELinux ਉਪਭੋਗੀ %s ਨੂੰ ਪਾਲਿਸੀ ਵਿੱਚ ਪਰਿਭਾਸ਼ਿਤ ਕੀਤਾ ਹੈ, ਹਟਾਈ ਨਹੀਂ ਜਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:721
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "SELinux ਉਪਭੋਗੀ ਨੂੰ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ %s"
+
+#: ../semanage/seobject.py:744
+msgid "Could not list SELinux users"
+msgstr "SELinux ਉਪਭੋਗੀਆਂ ਨੂੰ ਵੇਖਾ ਨਹੀਂ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:750
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "ਉਪਭੋਗੀ %s ਲਈ ਰੋਲ ਨਹੀਂ ਵੇਖਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:763
+msgid "Labeling"
+msgstr "ਲੇਬਲਿੰਗ"
+
+#: ../semanage/seobject.py:763
+msgid "MLS/"
+msgstr "MLS/"
+
+#: ../semanage/seobject.py:764
+msgid "Prefix"
+msgstr "ਅਗੇਤਰ"
+
+#: ../semanage/seobject.py:764
+msgid "MCS Level"
+msgstr "MCS ਲੈਵਲ"
+
+#: ../semanage/seobject.py:764
+msgid "MCS Range"
+msgstr "MCS ਰੇਂਜ"
+
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:769
+#: ../gui/system-config-selinux.glade:1184 ../gui/usersPage.py:59
+msgid "SELinux Roles"
+msgstr "SELinux ਰੋਲ"
+
+#: ../semanage/seobject.py:784
+msgid "Protocol udp or tcp is required"
+msgstr "ਪਰੋਟੋਕਾਲ udp ਜਾਂ tcp ਦੀ ਲੋੜ ਹੈ"
+
+#: ../semanage/seobject.py:786
+msgid "Port is required"
+msgstr "ਪੋਰਟ ਦੀ ਲੋੜ ਹੈ"
+
+#: ../semanage/seobject.py:797
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "%s/%s ਲਈ ਕੁੰਜੀ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:808
+msgid "Type is required"
+msgstr "ਕਿਸਮ ਦੀ ਲੋੜ ਹੈ"
+
+#: ../semanage/seobject.py:814 ../semanage/seobject.py:873
+#: ../semanage/seobject.py:928 ../semanage/seobject.py:934
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "ਜਾਂਚ ਨਹੀਂ ਕਰ ਸਕਦਾ ਜੇ ਪੋਰਟ %s/%s ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
+
+#: ../semanage/seobject.py:816
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "ਪੋਰਟ %s/%s ਪਹਿਲਾਂ ਹੀ ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
+
+#: ../semanage/seobject.py:820
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "%s/%s ਲਈ ਪੋਰਟ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:826
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "%s/%s ਲਈ ਪ੍ਰਸੰਗ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:830
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "%s/%s ਲਈ ਪੋਰਟ ਪ੍ਰਸੰਗ ਵਿੱਚ ਉਪਭੋਗੀ ਨਹੀਂ ਨਿਰਧਾਰਤ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:834
 #, python-format
 msgid "Could not set role in port context for %s/%s"
-msgstr ""
+msgstr "%s/%s ਲਈ ਪੋਰਟ ਪ੍ਰਸੰਗ ਵਿੱਚ ਰੋਲ ਨਹੀਂ ਦੇ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:692
+#: ../semanage/seobject.py:838
 #, python-format
 msgid "Could not set type in port context for %s/%s"
-msgstr ""
+msgstr "%s/%s ਲਈ ਪੋਰਟ ਪ੍ਰਸੰਗ ਵਿੱਚ ਕਿਸਮ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:697
+#: ../semanage/seobject.py:843
 #, python-format
 msgid "Could not set mls fields in port context for %s/%s"
-msgstr ""
+msgstr "%s/%s ਲਈ ਪੋਰਟ ਪ੍ਰਸੰਗ ਵਿੱਚ mls ਖੇਤਰ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:701
+#: ../semanage/seobject.py:847
 #, python-format
 msgid "Could not set port context for %s/%s"
-msgstr ""
+msgstr "%s/%s ਲਈ ਪੋਰਟ ਪ੍ਰਸੰਗ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#: ../semanage/seobject.py:851
 #, python-format
 msgid "Could not add port %s/%s"
-msgstr ""
+msgstr "ਪੋਰਟ %s/%s ਸ਼ਾਮਿਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+#: ../semanage/seobject.py:865 ../semanage/seobject.py:1111
+#: ../semanage/seobject.py:1299
 msgid "Requires setype or serange"
-msgstr ""
+msgstr "setype ਜਾਂ serange ਦੀ ਲੋੜ ਹੈ"
 
-#: ../semanage/seobject.py:724
+#: ../semanage/seobject.py:867
 msgid "Requires setype"
-msgstr "setype ਲੋੜੀਦਾ"
+msgstr "setype ਲੋੜੀਂਦਾ ਹੈ"
 
-#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#: ../semanage/seobject.py:875 ../semanage/seobject.py:930
 #, python-format
 msgid "Port %s/%s is not defined"
 msgstr "ਪੋਰਟ %s/%s ਦਿੱਤੀ ਨਹੀਂ ਗਈ"
 
-#: ../semanage/seobject.py:736
+#: ../semanage/seobject.py:879
 #, python-format
 msgid "Could not query port %s/%s"
-msgstr ""
+msgstr "ਪੋਰਟ %s/%s ਕਿਊਰੀ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#: ../semanage/seobject.py:890
 #, python-format
 msgid "Could not modify port %s/%s"
-msgstr ""
+msgstr "ਪੋਰਟ %s/%s ਨੂੰ ਤਬਦੀਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:772
+#: ../semanage/seobject.py:903
+msgid "Could not list the ports"
+msgstr "ਪੋਰਟਾਂ ਨਹੀਂ ਵੇਖਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:919
+#, python-format
+msgid "Could not delete the port %s"
+msgstr "ਪੋਰਟ %s ਹਟਾਈ ਨਹੀਂ ਜਾ ਸਕਦੀ"
+
+#: ../semanage/seobject.py:936
 #, python-format
 msgid "Port %s/%s is defined in policy, cannot be deleted"
-msgstr ""
+msgstr "ਪੋਰਟ %s/%s ਪਾਲਿਸੀ ਵਿੱਚ ਪਰਿਭਾਸ਼ਿਤ ਹੈ, ਹਟਾਈ ਨਹੀਂ ਜਾ ਸਕਦੀ"
 
-#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#: ../semanage/seobject.py:940
 #, python-format
 msgid "Could not delete port %s/%s"
-msgstr ""
+msgstr "ਪੋਰਟ %s/%s ਹਟਾਈ ਨਹੀਂ ਜਾ ਸਕਦੀ"
 
-#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+#: ../semanage/seobject.py:956 ../semanage/seobject.py:978
 msgid "Could not list ports"
+msgstr "ਪੋਰਟਾਂ ਨਹੀਂ ਵੇਖਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:999
+msgid "SELinux Port Type"
+msgstr "SELinux ਪੋਰਟ ਕਿਸਮ"
+
+#: ../semanage/seobject.py:999
+msgid "Proto"
+msgstr "ਪਰੋਟੋ"
+
+#: ../semanage/seobject.py:999 ../gui/system-config-selinux.glade:335
+msgid "Port Number"
+msgstr "ਪੋਰਟ ਨੰਬਰ"
+
+#: ../semanage/seobject.py:1016 ../semanage/seobject.py:1098
+#: ../semanage/seobject.py:1148
+#, fuzzy
+msgid "Node Address is required"
+msgstr "ਪੋਰਟ ਦੀ ਲੋੜ ਹੈ"
+
+#: ../semanage/seobject.py:1019 ../semanage/seobject.py:1101
+#: ../semanage/seobject.py:1151
+#, fuzzy
+msgid "Node Netmask is required"
+msgstr "ਪੋਰਟ ਦੀ ਲੋੜ ਹੈ"
+
+#: ../semanage/seobject.py:1026 ../semanage/seobject.py:1107
+#: ../semanage/seobject.py:1158
+msgid "Unknown or missing protocol"
 msgstr ""
 
-#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+#: ../semanage/seobject.py:1036 ../semanage/seobject.py:1238
+#: ../semanage/seobject.py:1427
 msgid "SELinux Type is required"
-msgstr ""
+msgstr "SELinux ਕਿਸਮ ਦੀ ਲੋੜ ਹੈ"
 
-#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
-#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#: ../semanage/seobject.py:1040 ../semanage/seobject.py:1115
+#: ../semanage/seobject.py:1162 ../semanage/seobject.py:1242
+#: ../semanage/seobject.py:1303 ../semanage/seobject.py:1337
+#: ../semanage/seobject.py:1431
 #, python-format
 msgid "Could not create key for %s"
 msgstr "%s ਲਈ ਕੁੰਜੀ ਬਣਾਈ ਨਹੀਂ ਜਾ ਸਕੀ"
 
-#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
-#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
+#: ../semanage/seobject.py:1042 ../semanage/seobject.py:1119
+#: ../semanage/seobject.py:1166 ../semanage/seobject.py:1172
+#, fuzzy, python-format
+msgid "Could not check if addr %s is defined"
+msgstr "ਜਾਂਚ ਨਹੀਂ ਕਰ ਸਕਦਾ ਜੇ ਪੋਰਟ %s/%s ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
+
+#: ../semanage/seobject.py:1046
+#, fuzzy, python-format
+msgid "Addr %s already defined"
+msgstr "ਪੋਰਟ %s/%s ਪਹਿਲਾਂ ਹੀ ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
+
+#: ../semanage/seobject.py:1050
+#, fuzzy, python-format
+msgid "Could not create addr for %s"
+msgstr "%s ਲਈ ਕੁੰਜੀ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1055 ../semanage/seobject.py:1257
+#: ../semanage/seobject.py:1397
+#, python-format
+msgid "Could not create context for %s"
+msgstr "%s ਲਈ ਪ੍ਰਸੰਗ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1059
+#, fuzzy, python-format
+msgid "Could not set mask for %s"
+msgstr "%s ਲਈ ਨਾਂ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1064
+#, fuzzy, python-format
+msgid "Could not set user in addr context for %s"
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਵਿੱਚ ਉਪਭੋਗੀ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1068
+#, fuzzy, python-format
+msgid "Could not set role in addr context for %s"
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਵਿੱਚ ਰੋਲ ਨਹੀਂ ਦੇ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1072
+#, fuzzy, python-format
+msgid "Could not set type in addr context for %s"
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਵਿੱਚ ਕਿਸਮ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1077
+#, fuzzy, python-format
+msgid "Could not set mls fields in addr context for %s"
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਵਿੱਚ mlf ਖੇਤਰ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1081
+#, fuzzy, python-format
+msgid "Could not set addr context for %s"
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1085
+#, fuzzy, python-format
+msgid "Could not add addr %s"
+msgstr "ਪੋਰਟ %s/%s ਸ਼ਾਮਿਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1121 ../semanage/seobject.py:1168
+#, fuzzy, python-format
+msgid "Addr %s is not defined"
+msgstr "ਪੋਰਟ %s/%s ਦਿੱਤੀ ਨਹੀਂ ਗਈ"
+
+#: ../semanage/seobject.py:1125
+#, fuzzy, python-format
+msgid "Could not query addr %s"
+msgstr "ਪੋਰਟ %s/%s ਕਿਊਰੀ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1136
+#, fuzzy, python-format
+msgid "Could not modify addr %s"
+msgstr "ਪੋਰਟ %s/%s ਨੂੰ ਤਬਦੀਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1174
+#, fuzzy, python-format
+msgid "Addr %s is defined in policy, cannot be deleted"
+msgstr "ਪੋਰਟ %s/%s ਪਾਲਿਸੀ ਵਿੱਚ ਪਰਿਭਾਸ਼ਿਤ ਹੈ, ਹਟਾਈ ਨਹੀਂ ਜਾ ਸਕਦੀ"
+
+#: ../semanage/seobject.py:1178
+#, fuzzy, python-format
+msgid "Could not delete addr %s"
+msgstr "%s ਨੂੰ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1194
+#, fuzzy
+msgid "Could not list addrs"
+msgstr "ਪੋਰਟਾਂ ਨਹੀਂ ਵੇਖਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1246 ../semanage/seobject.py:1307
+#: ../semanage/seobject.py:1341 ../semanage/seobject.py:1347
 #, python-format
 msgid "Could not check if interface %s is defined"
-msgstr ""
+msgstr "ਜਾਂਚ ਨਹੀਂ ਕਰ ਸਕਦਾ ਜੇ ਇੰਟਰਫੇਸ %s ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
 
-#: ../semanage/seobject.py:865
+#: ../semanage/seobject.py:1248
 #, python-format
 msgid "Interface %s already defined"
 msgstr "ਇੰਟਰਫੇਸ %s ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ"
 
-#: ../semanage/seobject.py:869
+#: ../semanage/seobject.py:1252
 #, python-format
 msgid "Could not create interface for %s"
 msgstr "%s ਲਈ ਇੰਟਰਫੇਸ ਬਣਾਇਆ ਨਹੀਂ ਜਾ ਸਕਿਆ"
 
-#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
-#, python-format
-msgid "Could not create context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:878
+#: ../semanage/seobject.py:1261
 #, python-format
 msgid "Could not set user in interface context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਇੰਟਰਫੇਸ ਪ੍ਰਸੰਗ ਵਿੱਚ ਉਪਭੋਗੀ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:882
+#: ../semanage/seobject.py:1265
 #, python-format
 msgid "Could not set role in interface context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਇੰਟਰਫੇਸ ਪ੍ਰਸੰਗ ਵਿੱਚ ਰੋਲ ਨਹੀਂ ਦੇ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:886
+#: ../semanage/seobject.py:1269
 #, python-format
 msgid "Could not set type in interface context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਇੰਟਰਫੇਸ ਪ੍ਰਸੰਗ ਵਿੱਚ ਕਿਸਮ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:891
+#: ../semanage/seobject.py:1274
 #, python-format
 msgid "Could not set mls fields in interface context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਇੰਟਰਫੇਸ ਪ੍ਰਸੰਗ ਵਿੱਚ mls ਖੇਤਰ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:895
+#: ../semanage/seobject.py:1278
 #, python-format
 msgid "Could not set interface context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਇੰਟਰਫੇਸ ਪ੍ਰਸੰਗ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:899
+#: ../semanage/seobject.py:1282
 #, python-format
 msgid "Could not set message context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਸੁਨੇਹਾ ਪ੍ਰਸੰਗ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
+#: ../semanage/seobject.py:1286
 #, python-format
 msgid "Could not add interface %s"
-msgstr ""
+msgstr "ਇੰਟਰਫੇਸ %s ਸ਼ਾਮਿਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
+#: ../semanage/seobject.py:1309 ../semanage/seobject.py:1343
 #, python-format
 msgid "Interface %s is not defined"
 msgstr "ਇੰਟਰਫੇਸ %s ਦਿੱਤਾ ਨਹੀਂ ਗਿਆ"
 
-#: ../semanage/seobject.py:933
+#: ../semanage/seobject.py:1313
 #, python-format
 msgid "Could not query interface %s"
-msgstr ""
+msgstr "ਇੰਟਰਫੇਸ %s ਨੂੰ ਕਿਊਰੀ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
+#: ../semanage/seobject.py:1324
 #, python-format
 msgid "Could not modify interface %s"
-msgstr ""
+msgstr "ਇੰਟਰਫੇਸ %s ਨੂੰ ਤਬਦੀਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:972
+#: ../semanage/seobject.py:1349
 #, python-format
 msgid "Interface %s is defined in policy, cannot be deleted"
-msgstr ""
+msgstr "ਇੰਟਰਫੇਸ %s ਪਾਲਿਸੀ ਵਿੱਚ ਪਰਿਭਾਸ਼ਿਤ ਹੈ, ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
+#: ../semanage/seobject.py:1353
 #, python-format
 msgid "Could not delete interface %s"
-msgstr ""
+msgstr "ਇੰਟਰਫੇਸ %s ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:992
+#: ../semanage/seobject.py:1369
 msgid "Could not list interfaces"
-msgstr ""
+msgstr "ਇੰਟਰਫੇਸ ਸੂਚੀ ਨਹੀਂ ਵੇਖਾ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
-#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
-#, python-format
-msgid "Could not check if file context for %s is defined"
-msgstr ""
+#: ../semanage/seobject.py:1379
+msgid "SELinux Interface"
+msgstr "SELinux ਇੰਟਰਫੇਸ"
 
-#: ../semanage/seobject.py:1037
-#, python-format
-msgid "File context for %s already defined"
-msgstr ""
+#: ../semanage/seobject.py:1379 ../semanage/seobject.py:1608
+msgid "Context"
+msgstr "ਪ੍ਰਸੰਗ"
 
-#: ../semanage/seobject.py:1041
-#, python-format
-msgid "Could not create file context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:1050
+#: ../semanage/seobject.py:1403
 #, python-format
 msgid "Could not set user in file context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਵਿੱਚ ਉਪਭੋਗੀ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1054
+#: ../semanage/seobject.py:1407
 #, python-format
 msgid "Could not set role in file context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਵਿੱਚ ਰੋਲ ਨਹੀਂ ਦੇ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1058
-#, python-format
-msgid "Could not set type in file context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:1063
+#: ../semanage/seobject.py:1412 ../semanage/seobject.py:1454
 #, python-format
 msgid "Could not set mls fields in file context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਵਿੱਚ mlf ਖੇਤਰ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1069
+#: ../semanage/seobject.py:1418
+msgid "Invalid file specification"
+msgstr "ਗਲਤ ਫਾਇਲ ਨਿਰਧਾਰਨ"
+
+#: ../semanage/seobject.py:1435 ../semanage/seobject.py:1486
+#: ../semanage/seobject.py:1558 ../semanage/seobject.py:1562
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "ਜਾਂਚ ਨਹੀਂ ਕਰ ਸਕਦਾ ਜੇ %s ਲਈ ਪ੍ਰਸੰਗ ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
+
+#: ../semanage/seobject.py:1437
+#, python-format
+msgid "File context for %s already defined"
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਪਹਿਲਾਂ ਹੀ ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
+
+#: ../semanage/seobject.py:1441
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਨਹੀਂ ਬਣਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1449
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਵਿੱਚ ਕਿਸਮ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1457 ../semanage/seobject.py:1510
+#: ../semanage/seobject.py:1514
 #, python-format
 msgid "Could not set file context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#: ../semanage/seobject.py:1463
 #, python-format
 msgid "Could not add file context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਸ਼ਾਮਿਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1089
+#: ../semanage/seobject.py:1477
 msgid "Requires setype, serange or seuser"
-msgstr ""
+msgstr "setype, serange ਜਾਂ seuser ਦੀ ਲੋੜ ਹੈ"
 
-#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#: ../semanage/seobject.py:1488 ../semanage/seobject.py:1566
 #, python-format
 msgid "File context for %s is not defined"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਪਰਿਭਾਸ਼ਿਤ ਨਹੀਂ ਹੈ"
 
-#: ../semanage/seobject.py:1103
+#: ../semanage/seobject.py:1492
 #, python-format
 msgid "Could not query file context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਕਿਊਰੀ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#: ../semanage/seobject.py:1518
 #, python-format
 msgid "Could not modify file context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਤਬਦੀਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1142
+#: ../semanage/seobject.py:1532
+msgid "Could not list the file contexts"
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ ਵੇਖਾ ਨਹੀਂ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1546
+#, python-format
+msgid "Could not delete the file context %s"
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ %s ਨੂੰ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1564
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਪਾਲਿਸੀ ਵਿੱਚ ਪਰਿਭਾਸ਼ਿਤ ਹੈ, ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#: ../semanage/seobject.py:1570
 #, python-format
 msgid "Could not delete file context for %s"
-msgstr ""
+msgstr "%s ਲਈ ਫਾਇਲ ਪ੍ਰਸੰਗ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1164
+#: ../semanage/seobject.py:1586
 msgid "Could not list file contexts"
-msgstr ""
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ ਵੇਖਾ ਨਹੀਂ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1168
+#: ../semanage/seobject.py:1590
 msgid "Could not list local file contexts"
-msgstr ""
+msgstr "ਲੋਕਲ ਫਾਇਲ ਪ੍ਰਸੰਗ ਵੇਖਾ ਨਹੀਂ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1203
-msgid "Requires value"
-msgstr "ਮੁੱਲ ਲੋੜੀਦਾ ਹੈ"
+#: ../semanage/seobject.py:1608
+msgid "SELinux fcontext"
+msgstr "SELinux fcontext"
 
-#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
-#: ../semanage/seobject.py:1251
+#: ../semanage/seobject.py:1608
+msgid "type"
+msgstr "ਕਿਸਮ"
+
+#: ../semanage/seobject.py:1636 ../semanage/seobject.py:1687
+#: ../semanage/seobject.py:1693
 #, python-format
 msgid "Could not check if boolean %s is defined"
-msgstr ""
+msgstr "ਜਾਂਚ ਨਹੀਂ ਕਰ ਸਕਦਾ ਜੇ ਬੂਲੀਅਨ %s ਪਰਿਭਾਸ਼ਿਤ ਹੈ"
 
-#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#: ../semanage/seobject.py:1638 ../semanage/seobject.py:1689
 #, python-format
 msgid "Boolean %s is not defined"
-msgstr ""
+msgstr "ਬੂਲੀਅਨ %s ਪਰਿਭਾਸ਼ਿਤ ਨਹੀਂ ਹੈ"
 
-#: ../semanage/seobject.py:1217
+#: ../semanage/seobject.py:1642
 #, python-format
 msgid "Could not query file context %s"
-msgstr ""
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ %s ਕਿਊਰੀ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#: ../semanage/seobject.py:1647
+#, fuzzy, python-format
+msgid "You must specify one of the following values: %s"
+msgstr "ਤੁਹਾਨੂੰ ਇੱਕ ਮੁੱਲ ਦੇਣਾ ਚਾਹੀਦਾ ਹੈ"
+
+#: ../semanage/seobject.py:1651
+#, fuzzy, python-format
+msgid "Could not set active value of boolean %s"
+msgstr "ਬੂਲੀਅਨ %s ਨੂੰ ਹਟਾ ਨਹੀਂ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1654
 #, python-format
 msgid "Could not modify boolean %s"
+msgstr "ਬੂਲੀਅਨ %s ਨੂੰ ਤਬਦੀਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../semanage/seobject.py:1672
+#, python-format
+msgid "Bad format %s: Record %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1253
+#: ../semanage/seobject.py:1695
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
-msgstr ""
+msgstr "ਬੂਲੀਅਨ %s ਪਾਲਿਸੀ ਵਿੱਚ ਪਰਿਭਾਸ਼ਿਤ ਹੈ, ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#: ../semanage/seobject.py:1699
 #, python-format
 msgid "Could not delete boolean %s"
-msgstr ""
+msgstr "ਬੂਲੀਅਨ %s ਨੂੰ ਹਟਾ ਨਹੀਂ ਸਕਦਾ"
 
-#: ../semanage/seobject.py:1273
+#: ../semanage/seobject.py:1711 ../semanage/seobject.py:1728
 msgid "Could not list booleans"
-msgstr ""
+msgstr "ਬੂਲੀਅਨ ਵੇਖਾ ਨਹੀਂ ਸਕਦਾ"
 
-#: ../audit2allow/audit2allow:183
+#: ../semanage/seobject.py:1747
+msgid "unknown"
+msgstr "ਅਣਜਾਣ"
+
+#: ../semanage/seobject.py:1750
+msgid "off"
+msgstr "ਬੰਦ"
+
+#: ../semanage/seobject.py:1750
+msgid "on"
+msgstr "on"
+
+#: ../semanage/seobject.py:1759
+msgid "SELinux boolean"
+msgstr "SELinux ਬੂਲੀਅਨ"
+
+#: ../semanage/seobject.py:1759 ../gui/polgen.glade:3207
+#: ../gui/polgengui.py:169
+msgid "Description"
+msgstr "ਵੇਰਵਾ"
+
+#: ../newrole/newrole.c:198
 #, c-format
-msgid "Generating type enforcment file: %s.te"
-msgstr ""
+msgid "failed to set PAM_TTY\n"
+msgstr "PAM_TTY ਨਿਰਧਾਰਤ ਕਰਨ ਵਿੱਚ ਫੇਲ\n"
 
-#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
-msgid "Compiling policy"
-msgstr ""
+#: ../newrole/newrole.c:287
+#, c-format
+msgid "newrole: service name configuration hashtable overflow\n"
+msgstr "newrole: ਸਰਵਿਸ ਨਾਂ ਸੰਰਚਨਾ hashtable ਓਵਰਫਲੋ\n"
 
-#: ../audit2allow/audit2allow:205
+#: ../newrole/newrole.c:297
+#, c-format
+msgid "newrole:  %s:  error on line %lu.\n"
+msgstr "newrole:  %s:  ਗਲਤੀ %lu ਸਤਰ ਵਿੱਚ।\n"
+
+#: ../newrole/newrole.c:436
+#, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "passwd ਫਾਇਲ ਵਿੱਚ ਯੋਗ ਇੰਦਰਾਜ ਨਹੀਂ ਲੱਭੀ।\n"
+
+#: ../newrole/newrole.c:447
+#, c-format
+msgid "Out of memory!\n"
+msgstr "ਮੈਮੋਰੀ ਖਤਮ ਹੋ ਗਈ ਹੈ!\n"
+
+#: ../newrole/newrole.c:452
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "ਗਲਤੀ!  ਸ਼ੈੱਲ ਗਲਤ ਹੈ।\n"
+
+#: ../newrole/newrole.c:509
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr "ਵਾਤਾਵਰਨ ਸਾਫ਼ ਕਰਨ ਲਈ ਅਸਫ਼ਲ\n"
+
+#: ../newrole/newrole.c:556 ../newrole/newrole.c:634
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "ਯੋਗਤਾਵਾਂ ਚਾਲੂ ਕਰਨ ਵਿੱਚ ਗਲਤੀ, ਅਧੂਰਾ ਰੱਦ ਕਰ ਰਿਹਾ ਹੈ।\n"
+
+#: ../newrole/newrole.c:564 ../newrole/newrole.c:640
+#, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "ਯੋਗਤਾਵਾਂ ਦੀ ਸਥਾਪਨ ਕਰਨ ਵਿੱਚ ਗਲਤੀ, ਅਧੂਰਾ ਛੱਡਿਆ ਜਾ ਰਿਹਾ ਹੈ\n"
+
+#: ../newrole/newrole.c:570
+#, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "KEEPCAPS ਸਥਾਪਨ ਕਰਨ ਵਿੱਚ ਗਲਤੀ, ਅਧੂਰਾ ਛੱਡਿਆ ਜਾ ਰਿਹਾ ਹੈ\n"
+
+#: ../newrole/newrole.c:578 ../newrole/newrole.c:652
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "ਯੋਗਤਾਵਾਂ ਛੱਡਣ ਵਿੱਚ ਗਲਤੀ, ਅਧੂਰਾ ਛੱਡਿਆ ਜਾ ਰਿਹਾ ਹੈ\n"
+
+#: ../newrole/newrole.c:584 ../newrole/newrole.c:683
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "uid ਤਬਦੀਲ ਕਰਨ ਵਿੱਚ ਗਲਤੀ, ਅਧੂਰਾ ਛੱਡਿਆ ਜਾ ਰਿਹਾ ਹੈ।\n"
+
+#: ../newrole/newrole.c:590 ../newrole/newrole.c:646 ../newrole/newrole.c:678
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "KEEPCAPS ਮੁੜ-ਨਿਰਧਾਰਤ ਕਰਨ ਵਿੱਚ ਗਲਤੀ, ਅਧੂਰਾ ਛੱਡਿਆ ਜਾ ਰਿਹਾ ਹੈ\n"
+
+#: ../newrole/newrole.c:597
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "SETUID ਸਹੂਲਤ ਛੱਡਣ ਵਿੱਚ ਗਲਤੀ, ਅਧੂਰਾ ਛੱਡਿਆ ਜਾ ਰਿਹਾ ਹੈ\n"
+
+#: ../newrole/newrole.c:602 ../newrole/newrole.c:657
+#, c-format
+msgid "Error freeing caps\n"
+msgstr "caps ਛੱਡਣ ਵਿੱਚ ਗਲਤੀ\n"
+
+#: ../newrole/newrole.c:701
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "ਆਡਿਟ ਸਿਸਟਮ ਨਾ ਜੁੜਨ ਸਮੇਂ ਗਲਤੀ\n"
+
+#: ../newrole/newrole.c:707
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "ਮੈਮੋਰੀ ਜਾਰੀ ਕਰਨ ਵਿੱਚ ਗਲਤੀ।\n"
+
+#: ../newrole/newrole.c:714
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "ਆਡਿਟ ਸੁਨੇਹੇ ਭੇਜਣ ਵਿੱਚ ਗਲਤੀ।\n"
+
+#: ../newrole/newrole.c:758 ../newrole/newrole.c:1122
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "enforcing ਮੋਡ ਪਤਾ ਨਹੀਂ ਕਰ ਸਕਿਆ।\n"
+
+#: ../newrole/newrole.c:765
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "ਗਲਤੀ!  %s ਨੂੰ ਖੋਲ ਨਹੀਂ ਸਕਿਆ।\n"
+
+#: ../newrole/newrole.c:771
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr "%s!  %s ਲਈ ਮੌਜੂਦਾ ਪ੍ਰਸੰਗ ਨਹੀਂ ਪਤਾ ਕਰ ਸਕਿਆ, tty ਨੂੰ ਰੀ-ਲੇਬਲਿੰਗ ਨਹੀਂ ਕਰ ਸਕਿਆ।\n"
+
+#: ../newrole/newrole.c:781
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr "%s!  %s ਲਈ ਨਵਾਂ ਪ੍ਰਸੰਗ ਨਹੀਂ ਪਤਾ ਕਰ ਸਕਿਆ, tty ਨੂੰ ਰੀ-ਲੇਬਲਿੰਗ ਨਹੀਂ ਕਰ ਰਿਹਾ।\n"
+
+#: ../newrole/newrole.c:791
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s!  %s ਲਈ ਨਵਾਂ ਪ੍ਰਸੰਗ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਿਆ\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s ਤਬਦੀਲ ਕੀਤੇ ਲੇਬਲ।\n"
+
+#: ../newrole/newrole.c:844
+#, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "ਚੇਤਾਵਨੀ! %s ਲਈ ਪ੍ਰਸੰਗ ਮੁੜ-ਪ੍ਰਾਪਤ ਨਹੀਂ ਸਕਦਾ\n"
+
+#: ../newrole/newrole.c:901
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "ਗਲਤੀ: ਮਲਟੀਪਲ ਰੋਲ ਦਿੱਤੇ ਗਏ ਹਨ\n"
+
+#: ../newrole/newrole.c:909
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "ਗਲਤੀ: ਬਹੁਤੀਆਂ ਕਿਸਮਾਂ ਦਰਸਾਈਆਂ ਹਨ\n"
+
+#: ../newrole/newrole.c:916
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "ਮਾਫ ਕਰਨਾ, - ਮੈਂ SELinux MLS ਸਹਿਯੋਗ ਵਰਤਿਆ ਹੋ ਸਕਦਾ ਹੈ।\n"
+
+#: ../newrole/newrole.c:921
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "ਗਲਤੀ: ਮਲਟੀਪਲ ਲੈਵਲ ਦਿੱਤੇ ਗਏ ਹਨ\n"
+
+#: ../newrole/newrole.c:931
+#, c-format
+msgid "Error: you are not allowed to change levels on a non secure terminal \n"
+msgstr "ਗਲਤੀ: ਤੁਹਾਨੂੰ ਨਾ ਸੁਰੱਖਿਅਤ ਟਰਮੀਨਲ ਤੇ ਲੈਵਲ ਤਬਦੀਲ ਕਰਨ ਦਾ ਅਧਿਕਾਰ ਨਹੀਂ ਹੈ\n"
+
+#: ../newrole/newrole.c:957
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "ਮੂਲ ਕਿਸਮ ਪ੍ਰਾਪਤ ਨਹੀਂ ਕਰ ਸਕਦਾ।\n"
+
+#: ../newrole/newrole.c:967
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "ਨਵਾਂ ਪ੍ਰਸੰਗ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਫੇਲ।\n"
+
+#: ../newrole/newrole.c:974
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "ਨਵਾਂ ਰੋਲ %s ਨਿਰਧਾਰਤ ਕਰਨ ਵਿੱਚ ਫੇਲ\n"
+
+#: ../newrole/newrole.c:981
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "ਨਵੀਂ ਕਿਸਮ %s ਨਿਰਧਾਰਤ ਕਰਨ ਵਿੱਚ ਫੇਲ\n"
+
+#: ../newrole/newrole.c:991
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "ਲੈਵਲ %s ਨਾਲ ਨਵੀਂ ਰੇਂਜ ਬਣਾਉਣ ਵਿੱਚ ਫੇਲ\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "ਨਵੀਂ ਰੇਂਜ %s ਨਿਰਧਾਰਤ ਕਰਨ ਵਿੱਚ ਫੇਲ\n"
+
+#: ../newrole/newrole.c:1004
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "ਨਵੇਂ ਪ੍ਰਸੰਗ ਨੂੰ ਸਤਰ ਵਿੱਚ ਤਬਦੀਲ ਕਰਨ ਵਿੱਚ ਫੇਲ\n"
+
+#: ../newrole/newrole.c:1009
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s ਇੱਕ ਯੋਗ ਪ੍ਰਸੰਗ ਨਹੀਂ ਹੈ\n"
+
+#: ../newrole/newrole.c:1016
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr "new_context ਲਈ ਮੈਮੋਰੀ ਜਾਰੀ ਕਰਨ ਵਿੱਚ ਅਸਮਰਥ"
+
+#: ../newrole/newrole.c:1042
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr "ਖਾਲੀ ਸਿਗਨਲ ਸੈੱਟ ਪਤਾ ਲਗਾਉਣ ਦੇ ਅਸਮਰਥ\n"
+
+#: ../newrole/newrole.c:1050
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr "SIGHUP ਹੈਂਡਲਰ ਨਿਰਧਾਰਤ ਕਰਨ ਵਿੱਚ ਫੇਲ\n"
+
+#: ../newrole/newrole.c:1116
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "ਮਾਫ ਕਰਨਾ, ਨਵਾਂ-ਰੋਲ ਸਿਰਫ SELinux ਕਰਨਲ ਉੱਪਰ ਹੀ ਵਰਤਿਆ ਹੋ ਸਕਦਾ ਹੈ।\n"
+
+#: ../newrole/newrole.c:1133
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "old_context ਪਤਾ ਲਗਾਉਣ ਵਿੱਚ ਫੇਲ।\n"
+
+#: ../newrole/newrole.c:1140
+#, c-format
+msgid "Warning!  Could not retrieve tty information.\n"
+msgstr "ਗਲਤੀ!  tty ਜਾਣਕਾਰੀ ਪ੍ਰਾਪਤ ਕਰਨ ਨਹੀਂ ਕਰ ਸਕਿਆ।\n"
+
+#: ../newrole/newrole.c:1161
+#, c-format
+msgid "error on reading PAM service configuration.\n"
+msgstr "error on reading PAM service configuration.\n"
+
+#: ../newrole/newrole.c:1196
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "ਨਵਾਂ-ਰੋਲ: %s ਲਈ ਗਲਤ ਗੁਪਤ-ਕੋਡ\n"
+
+#: ../newrole/newrole.c:1223
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "ਨਵਾਂ-ਰੋਲ: ਵੱਖ ਕਰਨ ਵਿੱਚ ਫੇਲ: %s"
+
+#: ../newrole/newrole.c:1226 ../newrole/newrole.c:1249
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr "tty ਲੇਬਲ ਮੁੜ-ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਮਰਥ...\n"
+
+#: ../newrole/newrole.c:1228 ../newrole/newrole.c:1255
+#, c-format
+msgid "Failed to close tty properly\n"
+msgstr "tty ਨੂੰ ਠੀਕ ਤਰਾਂ ਬੰਦ ਕਰਨ ਵਿੱਚ ਫੇਲ\n"
+
+#: ../newrole/newrole.c:1287
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "ਵਰਣਨ ਕਰਤਾ ਨੂੰ ਬੰਦ ਨਹੀਂ ਕਰ ਸਕਦਾ।\n"
+
+#: ../newrole/newrole.c:1314
+#, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "ਸ਼ੈੱਲ ਦੇ argv0 ਨੂੰ ਜਾਰੀ ਕਰਨ ਵਿੱਚ ਗਲਤੀ।\n"
+
+#: ../newrole/newrole.c:1346
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr "ਵਾਤਾਵਰਨ ਮੁੜ-ਪ੍ਰਾਪਤ ਨਹੀਂ ਸਕਦਾ, ਅਧੂਰਾ ਛੱਡ ਰਿਹਾ\n"
+
+#: ../newrole/newrole.c:1357
+msgid "failed to exec shell\n"
+msgstr "ਸ਼ੈੱਲ ਚਲਾਉਣ ਵਿੱਚ ਫੇਲ\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-qi]\n"
+msgstr "ਉਪਯੋਗਤਾ:  %s [-qi]\n"
+
+#: ../load_policy/load_policy.c:71
+#, c-format
+msgid "%s:  Policy is already loaded and initial load requested\n"
+msgstr "%s:  ਪਾਲਿਸੀ ਪਹਿਲਾਂ ਹੀ ਲੋਡ ਕੀਤੀ ਹੈ ਅਤੇ ਸ਼ੁਰੂਆਤੀ ਲੋਡ ਦੀ ਮੰਗ ਕੀਤੀ ਹੈ\n"
+
+#: ../load_policy/load_policy.c:80
+#, c-format
+msgid "%s:  Can't load policy and enforcing mode requested:  %s\n"
+msgstr "%s:  ਪਾਲਿਸੀ ਅਤੇ ਮਜਬੂਰ ਢੰਗ ਲੋਡ ਨਹੀਂ ਕਰ ਸਕਦਾ:  %s\n"
+
+#: ../load_policy/load_policy.c:90
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s:  ਪਾਲਿਸੀ ਲੋਡ ਨਹੀਂ ਕਰ ਸਕਦਾ:  %s\n"
+
+#: ../scripts/chcat:92 ../scripts/chcat:169
+msgid "Requires at least one category"
+msgstr "ਘੱਟੋ-ਘੱਟ ਇੱਕ ਸ਼੍ਰੇਣੀ ਦੀ ਲੋੜ ਹੈ"
+
+#: ../scripts/chcat:106 ../scripts/chcat:183
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "%s ਉੱਤੇ '+' ਵਰਤੇ ਕੇ ਸੰਵੇਦਨਸ਼ੀਲਤਾ ਲੈਵਲ ਤਬਦੀਲ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: ../scripts/chcat:110
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s ਪਹਿਲਾਂ ਹੀ %s ਵਿੱਚ ਮੌਜੂਦ ਹੈ"
+
+#: ../scripts/chcat:188 ../scripts/chcat:198
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s %s ਵਿੱਚ ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
+
+#: ../scripts/chcat:267 ../scripts/chcat:272
+msgid "Can not combine +/- with other types of categories"
+msgstr "+/- ਨੂੰ ਹੋਰ ਸ਼੍ਰੇਣੀ ਕਿਸਮਾਂ ਨਾਲ ਜੋੜ ਨਹੀਂ ਸਕਦਾ"
+
+#: ../scripts/chcat:317
+msgid "Can not have multiple sensitivities"
+msgstr "ਮਲਟੀਪਲ ਸੰਵੇਦਨਸ਼ੀਲ ਨਹੀਂ ਹੋ ਸਕਦੀ"
+
+#: ../scripts/chcat:323
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "Usage %s CATEGORY File ..."
+
+#: ../scripts/chcat:324
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "Usage %s -l CATEGORY user ..."
+
+#: ../scripts/chcat:325
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "Usage %s [[+|-]CATEGORY],...]q File ..."
+
+#: ../scripts/chcat:326
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+
+#: ../scripts/chcat:327
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "Usage %s -d File ..."
+
+#: ../scripts/chcat:328
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "Usage %s -l -d user ..."
+
+#: ../scripts/chcat:329
+#, c-format
+msgid "Usage %s -L"
+msgstr "Usage %s -L"
+
+#: ../scripts/chcat:330
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "Usage %s -L -l user"
+
+#: ../scripts/chcat:331
+msgid "Use -- to end option list.  For example"
+msgstr "-- ਨੂੰ ਚੋਣ ਸੂਚੀ ਦੇ ਅੰਤ ਵਿੱਚ ਵਰਤੋ।  ਉਦਾਹਰਨ ਲਈ"
+
+#: ../scripts/chcat:332
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -CompanyConfidential /docs/businessplan.odt"
+
+#: ../scripts/chcat:333
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +CompanyConfidential juser"
+
+#: ../scripts/chcat:397
+#, c-format
+msgid "Options Error %s "
+msgstr "ਚੋਣ ਗਲਤੀ %s "
+
+#: ../gui/booleansPage.py:184
+msgid "Boolean"
+msgstr "ਬੂਲੀਅਨ"
+
+#: ../gui/booleansPage.py:231 ../gui/semanagePage.py:163
+msgid "all"
+msgstr "ਸਭ"
+
+#: ../gui/booleansPage.py:233 ../gui/semanagePage.py:165
+#: ../gui/system-config-selinux.glade:1808
+#: ../gui/system-config-selinux.glade:2030
+#: ../gui/system-config-selinux.glade:2830
+msgid "Customized"
+msgstr "ਸੋਧਿਆ"
+
+#: ../gui/fcontextPage.py:64
+msgid "File Labeling"
+msgstr "ਫਾਇਲ ਲੇਬਲਿੰਗ"
+
+#: ../gui/fcontextPage.py:74
 msgid ""
-"\n"
-"******************** IMPORTANT ***********************\n"
+"File\n"
+"Specification"
 msgstr ""
-"\n"
-"******************** ਖਾਸ ***********************\n"
+"ਫਾਇਲ\n"
+"ਨਿਰਧਾਰਨ"
 
-#: ../audit2allow/audit2allow:206
-#, c-format
+#: ../gui/fcontextPage.py:81
 msgid ""
-"In order to load this newly created policy package into the kernel,\n"
-"you are required to execute \n"
+"Selinux\n"
+"File Type"
+msgstr ""
+"Selinux\n"
+"ਫਾਇਲ ਕਿਸਮ"
+
+#: ../gui/fcontextPage.py:88
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"ਫਾਇਲ\n"
+"ਕਿਸਮ"
+
+#: ../gui/loginsPage.py:48
+msgid "User Mapping"
+msgstr "ਉਪਭੋਗੀ ਮੈਪਿੰਗ"
+
+#: ../gui/loginsPage.py:52
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"ਲਾਗਇਨ\n"
+"ਨਾਂ"
+
+#: ../gui/loginsPage.py:56 ../gui/usersPage.py:50
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux\n"
+"ਉਪਭੋਗੀ"
+
+#: ../gui/loginsPage.py:59 ../gui/usersPage.py:55
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"MLS/\n"
+"MCS ਰੇਂਜ"
+
+#: ../gui/loginsPage.py:133
+#, python-format
+msgid "Login '%s' is required"
+msgstr "ਲਾਗਇਨ '%s' ਦੀ ਲੋੜ ਹੈ"
+
+#: ../gui/modulesPage.py:48
+msgid "Policy Module"
+msgstr "ਪਾਲਿਸੀ ਮੈਡਿਊਲ"
+
+#: ../gui/modulesPage.py:57
+msgid "Module Name"
+msgstr "ਮੈਡਿਊਲ ਨਾਂ"
+
+#: ../gui/modulesPage.py:62
+msgid "Version"
+msgstr "ਵਰਜਨ"
+
+#: ../gui/modulesPage.py:134
+msgid "Disable Audit"
+msgstr "ਆਡਿਟ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/modulesPage.py:137 ../gui/system-config-selinux.glade:3054
+msgid "Enable Audit"
+msgstr "ਆਡਿਟ ਯੋਗ ਕਰੋ"
+
+#: ../gui/modulesPage.py:162
+msgid "Load Policy Module"
+msgstr "ਪਾਲਿਸੀ ਮੈਡਿਊਲ ਲੋਡ ਕਰੋ"
+
+#: ../gui/polgen.glade:79
+msgid "Polgen"
+msgstr "Polgen"
+
+#: ../gui/polgen.glade:80
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../gui/polgen.glade:81
+msgid "GPL"
+msgstr "GPL"
+
+#: ../gui/polgen.glade:85 ../gui/system-config-selinux.glade:17
+msgid "translator-credits"
+msgstr "ਜਸਵਿੰਦਰ ਸਿੰਘ <j.phulewala@gmail.com>"
+
+#: ../gui/polgen.glade:91 ../gui/polgen.glade:124
+msgid "SELinux Policy Generation Tool"
+msgstr "SELinux ਪਾਲਿਸੀ ਨਿਰਮਾਣ ਜੰਤਰ"
+
+#: ../gui/polgen.glade:125
+msgid ""
+"This tool can be used to generate a policy framework, to confine "
+"applications or users using SELinux.   \n"
 "\n"
-"semodule -i %s.pp\n"
+"The tool generates:\n"
+"Type enforcement file (te)\n"
+"Interface file (if)\n"
+"File context file (fc)\n"
+"Shell script (sh) - used to compile and install the policy. "
+msgstr ""
+"ਇਹ ਜੰਤਰ ਪਾਲਿਸੀ ਫਰੇਮਵਰਕ ਬਣਾਉਣ ਲਈ ਕਾਰਜਾਂ ਅਤੇ ਉਪਭੋਗੀਆਂ ਜੋ SELinux ਵਰਤਦੇ ਹਨ, ਬੰਦ ਕਰਨ ਲਈ "
+"ਵਰਤਿਆ ਜਾ ਸਕਦਾ ਹੈ।   \n"
 "\n"
+"ਜੰਤਰ ਜੋ ਬਣਾਉਂਦਾ ਹੈ ਇਸ ਤਰਾਂ ਹਨ:\n"
+"ਕਿਸਮ ਲਾਗੂ ਕਰਨ ਵਾਲੀ ਫਾਇਲ (te)\n"
+"ਇੰਟਰਫੇਸ ਫਾਇਲ (if)\n"
+"ਫਾਇਲ ਪ੍ਰਸੰਗ ਫਾਇਲ (fc)\n"
+"ਸ਼ੈੱਲ ਸਕਰਿਪਟ (sh) - ਪਾਲਿਸੀ ਨੂੰ ਕੰਪਾਈਲ ਅਤੇ ਇੰਸਟਾਲ ਕਰਨ ਲਈ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ। "
+
+#: ../gui/polgen.glade:165
+msgid "Select type of the application/user role to be confined"
+msgstr "ਕਾਰਜ/ਉਪਭੋਗੀ ਰੋਲ ਦੀ ਕਿਸਮ ਚੁਣੋ ਜਿਨਾਂ ਤੇ ਪਾਬੰਦੀ ਲਾਉਣੀ ਹੈ"
+
+#: ../gui/polgen.glade:196
+msgid "<b>Applications</b>"
+msgstr "<b>ਕਾਰਜ</b>"
+
+#: ../gui/polgen.glade:258
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"ਸਟੈਂਡਰਡ Init ਡੈਮਨ ਉਹ ਡੈਮਨ ਹਨ ਜੋ ਬੂਟ ਹੋਣ ਤੇ init ਸਕਰਿਪਟਾਂ ਦੁਆਰਾ ਚੱਲਦੇ ਹਨ।  ਆਮ ਕਰਕੇ /etc/"
+"init.d ਵਿੱਚ ਇੱਕ ਸਕਰਿਪਟ ਹੋਣੀ ਜਰੂਰੀ ਹੈ"
+
+#: ../gui/polgen.glade:260
+msgid "Standard Init Daemon"
+msgstr "ਸਟੈਂਡਰਡ Init ਡੈਮਨ"
+
+#: ../gui/polgen.glade:278
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "ਇੰਟਰਨੈੱਟ ਸਰਵਿਸ ਡੈਮਨ ਉਹ ਡੈਮਨ ਹਨ ਜੋ xinetd ਦੁਆਰਾ ਚੱਲਦੇ ਹਨ"
+
+#: ../gui/polgen.glade:280
+msgid "Internet Services Daemon (inetd)"
+msgstr "ਇੰਟਰਨੈੱਟ ਸਰਵਿਸ ਡੈਮਨ (inetd)"
+
+#: ../gui/polgen.glade:299
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr "ਵੈੱਬ ਕਾਰਜ/ਸਕਰਿਪਟ (CGI) CGI ਸਕਰਿਪਟਾਂ ਵੈੱਬ ਸਰਵਰ (apache) ਦੁਆਰਾ ਚੱਲਦੀਆਂ ਹਨ"
+
+#: ../gui/polgen.glade:301
+msgid "Web Application/Script (CGI)"
+msgstr "ਵੈੱਬ ਕਾਰਜ/ਸਕਰਿਪਟ (CGI)"
+
+#: ../gui/polgen.glade:320
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr "ਉਪਭੋਗੀ ਕਾਰਜ ਉਹ ਕਾਰਜ ਹਨ ਜਿਨਾਂ ਤੇ ਤੁਸੀਂ ਪਾਬੰਦੀ ਲਾਉਣੀ ਹੈ ਤੇ ਜੋ ਉਪਭੋਗੀ ਦੁਆਰਾ ਚੱਲਦੇ ਹਨ"
+
+#: ../gui/polgen.glade:322
+msgid "User Application"
+msgstr "ਉਪਭੋਗੀ ਕਾਰਜ"
+
+#: ../gui/polgen.glade:368
+msgid "<b>Login Users</b>"
+msgstr "<b>ਲਾਗਇਨ ਉਪਭੋਗੀ</b>"
+
+#: ../gui/polgen.glade:430
+msgid "Modify an existing login user record."
+msgstr "ਇੱਕ ਮੌਜੂਦਾ ਲਾਗਇਨ ਉਪਭੋਗੀ ਰਿਕਾਰਡ"
+
+#: ../gui/polgen.glade:432
+msgid "Existing User Roles"
+msgstr "ਮੌਜੂਦਾ ਉਪਭੋਗੀ ਰੋਲ"
+
+#: ../gui/polgen.glade:451
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"ਇਹ ਉਪਭੋਗੀ ਮਸ਼ੀਨ ਉੱਪਰ ਸਿਰਫ ਟਰਮੀਨਲ ਜਾਂ ਰਿਮੋਟ ਲਾਗਇਨ ਰਾਹੀਂ ਲਾਗਇਨ ਕਰ ਸਕਦਾ ਹੈ।  ਮੂਲ ਰੂਪ ਵਿੱਚ "
+"ਇਸ ਉਪਭੋਗੀ ਦਾ ਕੋਈ setuid, ਨੈੱਟਵਰਕਿੰਗ, su, sudo ਨਹੀਂ ਹੈ।"
+
+#: ../gui/polgen.glade:453
+msgid "Minimal Terminal User Role"
+msgstr "ਘੱਟੋ-ਘੱਟ ਟਰਮੀਨਲ ਉਪਭੋਗੀ ਰੋਲ"
+
+#: ../gui/polgen.glade:472
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"ਇਹ ਉਪਭੋਗੀ ਮਸ਼ੀਨ ਉੱਪਰ X ਜਾਂ ਟਰਮੀਨਲ ਰਾਹੀਂ ਲਾਗਇਨ ਕਰ ਸਕਦਾ ਹੈ।  ਮੂਲ ਰੂਪ ਵਿੱਚ ਇਸ ਉਪਭੋਗੀ ਦਾ "
+"ਕੋਈ setuid, ਨੈੱਟਵਰਕਿੰਗ, sudo, su ਨਹੀਂ ਹੈ।"
+
+#: ../gui/polgen.glade:474
+msgid "Minimal X Windows User Role"
+msgstr "ਘੱਟੋ-ਘੱਟ X ਵਿੰਡੋ ਉਪਭੋਗੀ ਰੋਲ"
+
+#: ../gui/polgen.glade:493
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr "ਪੂਰੀ ਨੈੱਟਵਰਕਿੰਗ ਵਾਲੇ ਉਪਭੋਗੀ, ਕੋਈ setuid ਕਾਰਜ ਬਿਨਾਂ ਤਬਦੀਲੀ, ਕੋਈ sudo, ਕੋਈ su ਨਹੀਂ।"
+
+#: ../gui/polgen.glade:495
+msgid "User Role"
+msgstr "ਉਪਭੋਗੀ ਰੋਲ"
+
+#: ../gui/polgen.glade:514
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"ਪੂਰੀ ਨੈੱਟਵਰਕਿੰਗ ਵਾਲੇ ਉਪਭੋਗੀ, ਕੋਈ setuid ਕਾਰਜ ਤਬਦੀਲੀ ਬਿਨਾਂ, ਕੋਈ su, ਰੂਟ ਪਰਬੰਧਿਕ ਰੋਲ ਲਈ "
+"sudo ਕਰ ਸਕਦਾ ਹੈ"
+
+#: ../gui/polgen.glade:516
+msgid "Admin User Role"
+msgstr "ਪਰਬੰਧਕ ਉਪਭੋਗੀ ਰੋਲ"
+
+#: ../gui/polgen.glade:562
+msgid "<b>Root Users</b>"
+msgstr "<b>ਪਰਬੰਧਕ ਉਪਭੋਗੀ</b>"
+
+#: ../gui/polgen.glade:624
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"ਰੂਟ ਉਪਭੋਗੀ ਚੁਣੋ, ਜੇ ਇਹ ਉਪਭੋਗੀ ਮਸ਼ੀਨ ਦਾ ਪਰਬੰਧਨ ਕਰੇਗਾ ਜਦੋਂ ਪਰਬੰਧਕ ਤੌਰ ਤੇ ਚੱਲਦੀ ਹੈ।  ਇਹ ਉਪਭੋਗੀ "
+"ਸਿਸਟਮ ਉੱਪਰ ਸਿੱਧੇ ਤੌਰ ਤੇ ਲਾਗਇਨ ਨਹੀਂ ਕਰ ਸਕਦਾ ਹੈ।"
+
+#: ../gui/polgen.glade:626
+msgid "Root Admin User Role"
+msgstr "ਰੂਟ ਪਰਬੰਧਕ ਉਪਭੋਗੀ ਰੋਲ"
+
+#: ../gui/polgen.glade:711
+msgid "Enter name of application or user role to be confined"
+msgstr "ਕਾਰਜ ਜਾਂ ਉਪਭੋਗੀ ਰੋਲ ਦਾ ਨਾਂ ਦਿਓ ਜਿਨਾਂ ਤੇ ਪਾਬੰਦੀ ਲਾਉਣੀ ਹੈ"
+
+#: ../gui/polgen.glade:732 ../gui/polgengui.py:167
+msgid "Name"
+msgstr "ਨਾਂ"
+
+#: ../gui/polgen.glade:760
+msgid "Enter complete path for executable to be confined."
+msgstr "ਪਾਬੰਦੀ ਵਾਲੇ ਐਗਜ਼ੀਕਿਊਟੇਬਲ ਲਈ ਪੂਰਾ ਮਾਰਗ ਦਿਓ।"
+
+#: ../gui/polgen.glade:783 ../gui/polgen.glade:903 ../gui/polgen.glade:2906
+msgid "..."
+msgstr "..."
+
+#: ../gui/polgen.glade:802
+msgid "Enter unique name for the confined application or user role."
+msgstr "ਪਾਬੰਦੀ ਵਾਲੇ ਕਾਰਜ ਜਾਂ ਉਪਭੋਗੀ ਰੋਲ ਲਈ ਵੱਖਰਾ ਨਾਂ ਦਿਓ।"
+
+#: ../gui/polgen.glade:824
+msgid "Executable"
+msgstr "ਐਗਜ਼ੀਕਿਊਟੇਬਲ"
+
+#: ../gui/polgen.glade:852
+msgid "Init script"
+msgstr "Init ਸਕਰਿਪਟ"
+
+#: ../gui/polgen.glade:880
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr "ਪਾਬੰਦ ਕਾਰਜ ਚਲਾਉਣ ਵਾਲੀ init ਸਕਰਿਪਟ ਦਾ ਪੂਰਾ ਮਾਰਗ ਦਿਓ।"
+
+#: ../gui/polgen.glade:960
+msgid "Select user roles that you want to customize"
+msgstr "ਉਪਭੋਗੀ ਰੋਲ ਚੁਣੋ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਸੋਧਣਾ ਚਾਹੁੰਦੇ ਹੋ"
+
+#: ../gui/polgen.glade:981 ../gui/polgen.glade:1129
+msgid "Select the user roles that will transiton to this applications domains."
+msgstr "ਉਪਭੋਗੀ ਰੋਲ ਚੁਣੋ ਜੋ ਇਸ ਕਾਰਜ ਡੋਮੇਨਾਂ ਵਿੱਚ ਤਬਦੀਲ ਹੋਵੇਗਾ।"
+
+#: ../gui/polgen.glade:1034
+msgid "Select additional domains to which this user role will transition"
+msgstr "ਵਾਧੂ ਉਪਭੋਗੀ ਡੋਮੇਨ ਚੁਣੋ ਜਿਸ ਦਾ ਇਹ ਉਪਭੋਗੀ ਰੋਲ ਅਨੁਵਾਦ ਕਰੇਗਾ"
+
+#: ../gui/polgen.glade:1055
+msgid ""
+"Select the applications domains that you would like this user role to "
+"transition to."
+msgstr "ਕਾਰਜ ਡੋਮੇਨ ਚੁਣੋ ਜਿਸ ਵਿੱਚ ਤੁਸੀਂ ਇਸ ਉਪਭੋਗੀ ਨੂੰ ਤਬਦੀਲ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ।"
+
+#: ../gui/polgen.glade:1108
+msgid "Select user roles that will transition to this domain"
+msgstr "ਉਪਭੋਗੀ ਰੋਲ ਚੁਣੋ ਜੋ ਇਸ ਡੋਮੇਨ ਵਿੱਚ ਤਬਦੀਲ ਹੋਵੇਗਾ"
+
+#: ../gui/polgen.glade:1182
+msgid "Select additional domains that this user role will administer"
+msgstr "ਵਾਧੂ ਡੋਮੇਨ ਚੁਣੋ ਜਿਸਦਾ ਇਹ ਉਪਭੋਗੀ ਰੋਲ ਪਰਬੰਧਨ ਕਰੇਗਾ"
+
+#: ../gui/polgen.glade:1203 ../gui/polgen.glade:1277
+msgid "Select the domains that you would like this user administer."
+msgstr "ਡੋਮੇਨ ਚੁਣੋ ਜਿਸ ਦਾ ਪਰਬੰਧਨ ਇਸ ਉਪਭੋਗੀ ਤੋਂ ਕਰਾਉਣਾ ਹੈ।"
+
+#: ../gui/polgen.glade:1256
+msgid "Select additional roles for this user"
+msgstr "ਇਸ ਉਪਭੋਗੀ ਲਈ ਵਾਧੂ ਰੋਲ ਚੁਣੋ"
+
+#: ../gui/polgen.glade:1330
+msgid "Enter network ports that application/user role listens to"
+msgstr "ਨੈੱਟਵਰਕ ਪੋਰਟਾਂ ਦਿਓ ਜਿਨਾਂ ਨਾਲ ਕਾਰਜ/ਉਪਭੋਗੀ ਰੋਲ ਸੁਣਦੇ ਹਨ।"
+
+#: ../gui/polgen.glade:1348 ../gui/polgen.glade:1831
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP ਪੋਰਟ</b>"
+
+#: ../gui/polgen.glade:1416 ../gui/polgen.glade:1636
+msgid "Allows confined application/user role to bind to any udp port"
+msgstr "ਪਾਬੰਦ ਕਾਰਜ/ਉਪਭੋਗੀ ਰੋਲ ਨੂੰ ਕਿਸੇ ਵੀ udp ਪੋਰਟ ਨਾਲ ਜੁੜਨ ਦਿੰਦਾ ਹੈ"
+
+#: ../gui/polgen.glade:1418 ../gui/polgen.glade:1638 ../gui/polgen.glade:1894
+#: ../gui/polgen.glade:2047
+msgid "All"
+msgstr "ਸਭ"
+
+#: ../gui/polgen.glade:1436 ../gui/polgen.glade:1656
+msgid ""
+"Allow application/user role to call bindresvport with 0. Binding to port 600-"
+"1024"
+msgstr ""
+"ਕਾਰਜ/ਉਪਭੋਗੀ ਰੋਲ ਨੂੰ bindresvport ਨੂੰ 0 ਨਾਲ ਕਾਲ ਕਰਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ। ਪੋਰਟ 600-1024 ਨਾਲ "
+"ਜੁੜ ਰਿਹਾ ਹੈ"
+
+#: ../gui/polgen.glade:1438 ../gui/polgen.glade:1658
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../gui/polgen.glade:1456 ../gui/polgen.glade:1676
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that "
+"application/user role binds to. Example: 612, 650-660"
+msgstr ""
+"ਕਾਮਿਆਂ ਨਾਲ ਵੱਖ ਕੀਤੀ udp ਪੋਰਟਾਂ ਦੀ ਸੂਚੀ ਦਿਓ ਜਿਨਾਂ ਨਾਲ ਕਾਰਜ/ਉਪਭੋਗੀ ਜੁੜਦੇ ਹਨ। ਉਦਾਹਰਨ: "
+"612, 650-660"
+
+#: ../gui/polgen.glade:1458 ../gui/polgen.glade:1678
+msgid "Unreserved Ports (>1024)"
+msgstr "ਨਾ-ਰਾਖਵੇਂ ਪੋਰਟ (>1024)"
+
+#: ../gui/polgen.glade:1489 ../gui/polgen.glade:1709 ../gui/polgen.glade:1912
+#: ../gui/polgen.glade:2065
+msgid "Select Ports"
+msgstr "ਪੋਰਟ ਚੁਣੋ"
+
+#: ../gui/polgen.glade:1514 ../gui/polgen.glade:1734
+msgid "Allows application/user role to bind to any udp ports > 1024"
+msgstr "ਕਾਰਜ/ਉਪਭੋਗੀ ਰੋਲ ਨੂੰ ਕਿਸੇ udp ਪੋਰਟ ਨਾਲ ਜੁੜਨ ਦਿੰਦਾ ਹੈ > 1024"
+
+#: ../gui/polgen.glade:1568 ../gui/polgen.glade:1984
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP ਪੋਰਟ</b>"
+
+#: ../gui/polgen.glade:1813
+msgid "Enter network ports that application/user role connects to"
+msgstr "ਨੈੱਟਵਰਕ ਪੋਰਟਾਂ ਦਿਓ ਜਿਨਾਂ ਨਾਲ ਕਾਰਜ/ਉਪਭੋਗੀ ਰੋਲ ਜੁੜਦੇ ਹਨ।"
+
+#: ../gui/polgen.glade:1937
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that "
+"application/user role connects to. Example: 612, 650-660"
+msgstr ""
+"ਕਾਮਿਆਂ ਨਾਲ ਵੱਖ ਕੀਤੀ udp ਪੋਰਟਾਂ ਦੀ ਸੂਚੀ ਦਿਓ ਜਿਨਾਂ ਨਾਲ ਕਾਰਜ/ਉਪਭੋਗੀ ਰੋਲ ਜੁੜਦੇ ਹਨ। ਉਦਾਹਰਨ: "
+"612, 650-660"
+
+#: ../gui/polgen.glade:2090
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that "
+"application/user role connects to. Example: 612, 650-660"
+msgstr ""
+"ਕਾਮਿਆਂ ਨਾਲ ਵੱਖ ਕੀਤੀ udp ਪੋਰਟਾਂ ਦੀ ਸੂਚੀ ਦਿਓ ਜਿਨਾਂ ਨਾਲ ਕਾਰਜ/ਉਪਭੋਗੀ ਜੁੜਦੇ ਹਨ। ਉਦਾਹਰਨ: "
+"612, 650-660"
+
+#: ../gui/polgen.glade:2162
+msgid "Select common application traits"
+msgstr "ਆਮ ਕਾਰਜ ਗੁਣ ਚੁਣੋ"
+
+#: ../gui/polgen.glade:2181
+msgid "Writes syslog messages\t"
+msgstr "syslog ਸੁਨੇਹੇ ਲਿਖਦਾ ਹੈ\t"
+
+#: ../gui/polgen.glade:2200
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "/tmp ਵਿਚਲੀਆਂ ਫਾਇਲਾਂ ਬਣਾਓ/ਸੋਧੋ"
+
+#: ../gui/polgen.glade:2219
+msgid "Uses Pam for authentication"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਲਈ Pam ਨੂੰ ਵਰਤਦੇ ਹਨ"
+
+#: ../gui/polgen.glade:2238
+msgid "Uses nsswitch or getpw* calls"
+msgstr "nsswitch ਜਾਂ getpw* ਕਾਲਾਂ ਵਰਤਦਾ ਹੈ"
+
+#: ../gui/polgen.glade:2257
+msgid "Uses dbus"
+msgstr "dbus ਵਰਤਦਾ ਹੈ"
+
+#: ../gui/polgen.glade:2276
+msgid "Sends audit messages"
+msgstr "ਆਡਿਟ ਸੁਨੇਹੇ ਭੇਜਦਾ ਹੈ"
+
+#: ../gui/polgen.glade:2295
+msgid "Interacts with the terminal"
+msgstr "ਟਰਮੀਨਲ ਨਾਲ ਸੰਪਰਕ ਕਰਦਾ ਹੈ"
+
+#: ../gui/polgen.glade:2314
+msgid "Sends email"
+msgstr "ਈ-ਮੇਲ ਭੇਜਦਾ ਹੈ"
+
+#: ../gui/polgen.glade:2370
+msgid "Select files/directories that the application manages"
+msgstr "ਫਾਇਲਾਂ/ਡਾਇਰੈਕਟਰੀ ਚੁਣੋ ਜਿਨਾ ਦਾ ਪਰਬੰਧਨ ਕਾਰਜ ਕਰਦਾ ਹੈ"
+
+#: ../gui/polgen.glade:2586
+msgid ""
+"Add Files/Directories that application will need to \"Write\" to. Pid Files, "
+"Log Files, /var/lib Files ..."
+msgstr ""
+"ਫਾਇਲਾਂ/ਡਾਇਰੈਕਟਰੀਆਂ ਸ਼ਾਮਿਲ ਕਰੋ ਜਿਨਾਂ ਨੂੰ ਇਹ ਕਾਰਜ \"ਲਿਖੇਗਾ\"। Pid ਫਾਇਲਾਂ, ਲਾਗ ਫਾਇਲਾਂ, /"
+"var/lib ਫਾਇਲਾਂ ..."
+
+#: ../gui/polgen.glade:2646
+msgid "Select booleans that the application uses"
+msgstr "ਬੂਲੀਅਨ ਚੁਣੋ ਜੋ ਇਹ ਕਾਰਜ ਵਰਤਦੇ ਹਨ"
+
+#: ../gui/polgen.glade:2783
+msgid "Add/Remove booleans used for this confined application/user"
+msgstr "ਇਸ ਪਾਬੰਦ ਕਾਰਜ/ਉਪਭੋਗੀ ਲਈ ਵਰਤਿਆ ਜਾਣ ਵਾਲਾ ਬੂਲੀਅਨ ਜੋੜੋ/ਹਟਾਓ"
+
+#: ../gui/polgen.glade:2843
+msgid "Select directory to generate policy in"
+msgstr "ਡਾਇਰੈਕਟਰੀ ਚੁਣੋ ਜਿਸ ਵਿੱਚ ਪਾਲਿਸੀ ਬਣਾਉਣੀ ਹੈ"
+
+#: ../gui/polgen.glade:2861
+msgid "Policy Directory"
+msgstr "ਪਾਲਿਸੀ ਡਾਇਰੈਕਟਰੀ"
+
+#: ../gui/polgen.glade:2960 ../gui/polgen.glade:3003
+msgid "Generated Policy Files"
+msgstr "ਬਣਾਈਆਂ ਪਾਲਿਸੀ ਫਾਇਲਾਂ"
+
+#: ../gui/polgen.glade:2961
+msgid ""
+"This tool will generate the following: \n"
+"Type Enforcement(te), File Context(fc), Interface(if), Shell Script(sh)\n"
+"Execute shell script as root to compile/install and relabel files/"
+"directories.  \n"
+"Use semanage or useradd to map Linux login users to user roles.\n"
+"Put the machine in permissive mode (setenforce 0). \n"
+"Login as the user and test this user role.\n"
+"Use audit2allow -R to generate additional rules for the te file.\n"
+msgstr ""
+"ਇਹ ਜੰਤਰ ਹੇਠ ਦਿੱਤੇ ਸਭ ਬਣਾਉਂਦਾ ਹੈ: ਕਿਸਮ ਲਾਗੂ ਕਰਨ ਵਾਲੀ ਫਾਇਲ(te), ਫਾਇਲ ਪ੍ਰਸੰਗ(fc), ਇੰਟਰਫੇਸ"
+"(if), ਸ਼ੈੱਲ ਸਕਰਿਪਟ(sh)।\n"
+"ਫਾਇਲ/ਡਾਇਰੈਕਟਰੀਆਂ ਨੂੰ ਕੰਪਾਈਲ/ਇੰਸਟਾਲ ਕਰਨਲ ਲਈ ਅਤੇ ਮੁੜ-ਲੇਬਲ ਕਰਨ ਲਈ ਸ਼ੈੱਲਸਕਰਿਪਟ ਚਲਾਓ।  ਹੁਣ ਤੁਸੀਂ "
+"ਮਸ਼ੀਨ ਨੂੰ ਮਜਬੂਰ ਢੰਗ (setenforce 0) ਵਿੱਚ ਲਿਜਾ ਸਕਦੇ ਹੋ। \n"
+"avc ਸੁਨੇਹੇ ਬਣਾਉਣ ਲਈ ਕਾਰਜ ਚਲਾਓ/ਮੁੜ-ਚਲਾਓ।\n"
+"te ਫਾਇਲ ਲਈ ਵਾਧੂ ਨਿਯਮ ਬਣਾਉਣ ਲਈ audit2allow -R ਵਰਤੋ।\n"
+
+#: ../gui/polgen.glade:3004
+msgid ""
+"This tool will generate the following: \n"
+"Type Enforcement(te), File Context(fc), Interface(if), Shell Script(sh)\n"
+"\n"
+"Execute shell script to compile/install and relabel files/directories.  \n"
+"Put the machine in permissive mode (setenforce 0). \n"
+"Run/restart the application to generate avc messages.\n"
+"Use audit2allow -R to generate additional rules for the te file.\n"
+msgstr ""
+"ਇਹ ਜੰਤਰ ਹੇਠ ਦਿੱਤੇ ਸਭ ਬਣਾਉਂਦਾ ਹੈ: ਕਿਸਮ ਲਾਗੂ ਕਰਨ ਵਾਲੀ ਫਾਇਲ(te), ਫਾਇਲ ਪ੍ਰਸੰਗ(fc), ਇੰਟਰਫੇਸ"
+"(if), ਸ਼ੈੱਲ ਸਕਰਿਪਟ(sh)।\n"
+"ਫਾਇਲ/ਡਾਇਰੈਕਟਰੀਆਂ ਨੂੰ ਕੰਪਾਈਲ/ਇੰਸਟਾਲ ਕਰਨਲ ਲਈ ਅਤੇ ਮੁੜ-ਲੇਬਲ ਕਰਨ ਲਈ ਸ਼ੈੱਲਸਕਰਿਪਟ ਚਲਾਓ।  ਹੁਣ ਤੁਸੀਂ "
+"ਮਸ਼ੀਨ ਨੂੰ ਮਜਬੂਰ ਢੰਗ (setenforce 0) ਵਿੱਚ ਲਿਜਾ ਸਕਦੇ ਹੋ। \n"
+"avc ਸੁਨੇਹੇ ਬਣਾਉਣ ਲਈ ਕਾਰਜ ਚਲਾਓ/ਮੁੜ-ਚਲਾਓ।\n"
+"te ਫਾਇਲ ਲਈ ਵਾਧੂ ਨਿਯਮ ਬਣਾਉਣ ਲਈ audit2allow -R ਵਰਤੋ।\n"
+
+#: ../gui/polgen.glade:3106
+msgid "Add Booleans Dialog"
+msgstr "ਬੂਲੀਅਨ ਵਾਰਤਾਲਾਪ ਜੋੜੋ"
+
+#: ../gui/polgen.glade:3179
+msgid "Boolean Name"
+msgstr "ਬੂਲੀਅਨ ਨਾਂ"
+
+#: ../gui/polgengui.py:177
+msgid "Role"
+msgstr "ਰੋਲ"
+
+#: ../gui/polgengui.py:184
+msgid "Existing_User"
+msgstr "ਮੌਜੂਦਾ ਉਪਭੋਗੀ(_U)"
+
+#: ../gui/polgengui.py:199 ../gui/polgengui.py:207 ../gui/polgengui.py:221
+msgid "Application"
+msgstr "ਕਾਰਜ"
+
+#: ../gui/polgengui.py:269
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s ਇੱਕ ਡਾਇਰੈਕਟਰੀ ਹੋਣੀ ਜਰੂਰੀ ਹੈ"
+
+#: ../gui/polgengui.py:328 ../gui/polgengui.py:595
+msgid "You must select a user"
+msgstr "ਤੁਹਾਨੂੰ ਇੱਕ ਉਪਭੋਗੀ ਚੁਣਨਾ ਜਰੂਰੀ ਹੈ"
+
+#: ../gui/polgengui.py:451
+msgid "Select executable file to be confined."
+msgstr "ਪਾਬੰਦ ਕਰਨ ਲਈ ਐਗਜ਼ੀਕਿਊਟੇਬਲ ਫਾਇਲ ਚੁਣੋ।"
+
+#: ../gui/polgengui.py:462
+msgid "Select init script file to be confined."
+msgstr "ਪਾਬੰਦੀ ਵਾਲੀ init ਸਕਰਿਪਟ ਚੁਣੋ।"
+
+#: ../gui/polgengui.py:472
+msgid "Select file(s) that confined application creates or writes"
+msgstr "ਫਾਇਲਾਂ ਚੁਣੋ ਜੋ ਪਾਬੰਦੀ ਵਾਲੇ ਕਾਰਜ ਨੇ ਬਣਾਈਆਂ ਜਾਂ ਲਿਖੀਆਂ ਹਨ"
+
+#: ../gui/polgengui.py:479
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr "ਡਾਇਰੈਕਟਰੀ ਚੁਣੋ ਜੋ ਪਾਬੰਦੀ ਵਾਲੇ ਕਾਰਜਾਂ ਦੇ ਅਧੀਨ ਹਨ ਅਤੇ ਲਿਖੀਆਂ ਹਨ"
+
+#: ../gui/polgengui.py:538
+msgid "Select directory to generate policy files in"
+msgstr "ਡਾਇਰੈਕਟਰੀ ਚੁਣੋ ਜਿਸ ਵਿੱਚ ਪਾਲਿਸੀ ਫਾਇਲਾਂ ਬਣਾਉਣੀਆਂ ਹਨ"
+
+#: ../gui/polgengui.py:551
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"ਕਿਸਮ %s_t ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦਾ ਪਾਲਿਸੀ ਵਿੱਚ ਪਰਿਭਾਸ਼ਿਤ ਕੀਤੀ ਸੀ।\n"
+"ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਰਹਿਣਾ ਚਾਹੁੰਦੇ ਹੈ?"
+
+#: ../gui/polgengui.py:551 ../gui/polgengui.py:555
+msgid "Verify Name"
+msgstr "ਨਾਂ ਦੀ ਜਾਂਚ ਕਰੋ"
+
+#: ../gui/polgengui.py:555
+#, python-format
+msgid ""
+"Module %s.pp already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"ਮੈਡਿਊਲ %s.pp ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦਾ ਪਾਲਿਸੀ ਵਿੱਚ ਲੋਡ ਹੋਈ ਹੈ।\n"
+"ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਰਹਿਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: ../gui/polgengui.py:601
+msgid "You must enter a name"
+msgstr "ਤੁਹਾਨੂੰ ਇੱਕ ਨਾਂ ਦੇਣਾ ਚਾਹੀਦਾ ਹੈ"
+
+#: ../gui/polgengui.py:607
+msgid "You must enter a executable"
+msgstr "ਤੁਹਾਨੂੰ ਇੱਕ ਐਗਜ਼ੀਕਿਊਟੇਬਲ ਦੇਣਾ ਚਾਹੀਦਾ ਹੈ"
+
+#: ../gui/polgengui.py:611 ../gui/system-config-selinux.py:174
+msgid "Configue SELinux"
+msgstr "SELinux ਸੰਰਚਨਾ"
+
+#: ../gui/polgen.py:163
+#, fuzzy, python-format
+msgid "Ports must be numbers or ranges of numbers from 1 to %d "
+msgstr "ਪੋਰਟਾਂ ਨੰਬਰ ਜਾਂ 1 ਤੋਂ %d ਤੱਕ ਨੰਬਰਾਂ ਦੀ ਰੇਂਜ ਹੋਣੇ ਜਰੂਰੀ ਹਨ"
+
+#: ../gui/polgen.py:192
+msgid "You must enter a name for your confined process/user"
+msgstr "ਤੁਹਾਨੂੰ ਆਪਣੇ ਪਾਬੰਦੀ ਕਾਰਜਾਂ/ਉਪਭੋਗੀਆਂ ਲਈ ਨਾਂ ਦੇਣਾ ਜਰੂਰੀ ਹੈ"
+
+#: ../gui/polgen.py:270
+msgid "USER Types are not allowed executables"
+msgstr "USER ਕਿਸਮਾਂ ਨੂੰ ਐਗਜ਼ੀਕਿਊਟੇਬਲਾਂ ਲਈ ਮਨਜੂਰੀ ਨਹੀਂ ਹੈ"
+
+#: ../gui/polgen.py:276
+msgid "Only DAEMON apps can use an init script"
+msgstr "DAEMON ਕਾਰਜ init ਸਕਰਿਪਟ ਨੂੰ ਵਰਤ ਸਕਦੇ ਹਨ"
+
+#: ../gui/polgen.py:294
+msgid "use_syslog must be a boolean value "
+msgstr "use_syslog ਦਾ ਮੁੱਲ ਬੂਲੀਅਨ ਹੋਣਾ ਜਰੂਰੀ ਹੈ"
+
+#: ../gui/polgen.py:315
+#, fuzzy
+msgid "USER Types automatically get a tmp type"
+msgstr "USER ਕਿਸਮ ਆਟੋਮੈਟਿਕ ਹੀ tmp ਕਿਸਮ ਲੈ ਲੈਂਦੀ ਹੈ"
+
+#: ../gui/polgen.py:711
+msgid "You must enter the executable path for your confined process"
+msgstr "ਤੁਹਾਨੂੰ ਆਪਣੇ ਪਾਬੰਦ ਕਾਰਜ ਲਈ ਆਗਜ਼ੀਕਿਊਟੇਬਲ ਮਾਰਗ ਦੇਣਾ ਜਰੂਰੀ ਹੈ"
+
+#: ../gui/polgen.py:830
+#, fuzzy
+msgid "Type Enforcement file"
+msgstr "enforcment ਫਾਇਲ ਟਾਈਪ ਕਰੋ"
+
+#: ../gui/polgen.py:831
+msgid "Interface file"
+msgstr "ਇੰਟਰਫੇਸ ਫਾਇਲ"
+
+#: ../gui/polgen.py:832
+msgid "File Contexts file"
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ ਫਾਇਲ"
+
+#: ../gui/polgen.py:833
+msgid "Setup Script"
+msgstr "ਸੈੱਟਅੱਪ ਸਕਰਿਪਟ"
+
+#: ../gui/portsPage.py:85
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"SELinux ਪੋਰਟ\n"
+"ਕਿਸਮ"
+
+#: ../gui/portsPage.py:91 ../gui/system-config-selinux.glade:363
+msgid "Protocol"
+msgstr "ਪਰੋਟੋਕਾਲ"
+
+#: ../gui/portsPage.py:96 ../gui/system-config-selinux.glade:479
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"ਲੈਵਲ"
+
+#: ../gui/portsPage.py:101
+msgid "Port"
+msgstr "ਪੋਰਟ"
+
+#: ../gui/portsPage.py:207
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "ਪੋਰਟ ਨੰਬਰ \"%s\" ਠੀਕ ਨਹੀਂ ਹੈ  0 < PORT_NUMBER < 65536 "
+
+#: ../gui/portsPage.py:252
+msgid "List View"
+msgstr "ਸੂਚੀ ਦਰਿਸ਼"
+
+#: ../gui/portsPage.py:255 ../gui/system-config-selinux.glade:2812
+msgid "Group View"
+msgstr "ਗਰੁੱਪ ਦਰਿਸ਼"
+
+#: ../gui/selinux.tbl:1 ../gui/selinux.tbl:30 ../gui/selinux.tbl:31
+#: ../gui/selinux.tbl:32 ../gui/selinux.tbl:33 ../gui/selinux.tbl:34
+#: ../gui/selinux.tbl:36 ../gui/selinux.tbl:37 ../gui/selinux.tbl:38
+#: ../gui/selinux.tbl:39 ../gui/selinux.tbl:40 ../gui/selinux.tbl:42
+#: ../gui/selinux.tbl:43 ../gui/selinux.tbl:44 ../gui/selinux.tbl:45
+#: ../gui/selinux.tbl:46 ../gui/selinux.tbl:47 ../gui/selinux.tbl:48
+#: ../gui/selinux.tbl:49 ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
+#: ../gui/selinux.tbl:52 ../gui/selinux.tbl:53 ../gui/selinux.tbl:59
+#: ../gui/selinux.tbl:60 ../gui/selinux.tbl:61 ../gui/selinux.tbl:62
+#: ../gui/selinux.tbl:63 ../gui/selinux.tbl:64 ../gui/selinux.tbl:65
+#: ../gui/selinux.tbl:66 ../gui/selinux.tbl:67 ../gui/selinux.tbl:68
+#: ../gui/selinux.tbl:69 ../gui/selinux.tbl:75 ../gui/selinux.tbl:76
+#: ../gui/selinux.tbl:77 ../gui/selinux.tbl:78 ../gui/selinux.tbl:79
+#: ../gui/selinux.tbl:80 ../gui/selinux.tbl:81 ../gui/selinux.tbl:82
+#: ../gui/selinux.tbl:83 ../gui/selinux.tbl:84 ../gui/selinux.tbl:86
+#: ../gui/selinux.tbl:88 ../gui/selinux.tbl:89 ../gui/selinux.tbl:90
+#: ../gui/selinux.tbl:92 ../gui/selinux.tbl:94 ../gui/selinux.tbl:95
+#: ../gui/selinux.tbl:96 ../gui/selinux.tbl:97 ../gui/selinux.tbl:98
+#: ../gui/selinux.tbl:99 ../gui/selinux.tbl:100 ../gui/selinux.tbl:101
+#: ../gui/selinux.tbl:102 ../gui/selinux.tbl:103 ../gui/selinux.tbl:104
+#: ../gui/selinux.tbl:106 ../gui/selinux.tbl:108 ../gui/selinux.tbl:109
+#: ../gui/selinux.tbl:110 ../gui/selinux.tbl:111 ../gui/selinux.tbl:112
+#: ../gui/selinux.tbl:113 ../gui/selinux.tbl:114 ../gui/selinux.tbl:116
+#: ../gui/selinux.tbl:117 ../gui/selinux.tbl:119 ../gui/selinux.tbl:121
+#: ../gui/selinux.tbl:123 ../gui/selinux.tbl:124 ../gui/selinux.tbl:127
+#: ../gui/selinux.tbl:129 ../gui/selinux.tbl:130 ../gui/selinux.tbl:131
+#: ../gui/selinux.tbl:132 ../gui/selinux.tbl:133 ../gui/selinux.tbl:134
+#: ../gui/selinux.tbl:135 ../gui/selinux.tbl:136 ../gui/selinux.tbl:137
+#: ../gui/selinux.tbl:138 ../gui/selinux.tbl:139 ../gui/selinux.tbl:142
+#: ../gui/selinux.tbl:143 ../gui/selinux.tbl:144 ../gui/selinux.tbl:145
+#: ../gui/selinux.tbl:146 ../gui/selinux.tbl:147 ../gui/selinux.tbl:148
+#: ../gui/selinux.tbl:149 ../gui/selinux.tbl:150 ../gui/selinux.tbl:151
+#: ../gui/selinux.tbl:152 ../gui/selinux.tbl:154 ../gui/selinux.tbl:155
+#: ../gui/selinux.tbl:156 ../gui/selinux.tbl:157 ../gui/selinux.tbl:158
+#: ../gui/selinux.tbl:159 ../gui/selinux.tbl:160 ../gui/selinux.tbl:167
+#: ../gui/selinux.tbl:171 ../gui/selinux.tbl:172 ../gui/selinux.tbl:173
+#: ../gui/selinux.tbl:174 ../gui/selinux.tbl:175 ../gui/selinux.tbl:177
+#: ../gui/selinux.tbl:178 ../gui/selinux.tbl:179 ../gui/selinux.tbl:180
+#: ../gui/selinux.tbl:184 ../gui/selinux.tbl:192 ../gui/selinux.tbl:193
+#: ../gui/selinux.tbl:194 ../gui/selinux.tbl:195 ../gui/selinux.tbl:196
+#: ../gui/selinux.tbl:197 ../gui/selinux.tbl:198 ../gui/selinux.tbl:199
+#: ../gui/selinux.tbl:200 ../gui/selinux.tbl:201 ../gui/selinux.tbl:206
+#: ../gui/selinux.tbl:207 ../gui/selinux.tbl:218 ../gui/selinux.tbl:219
+#: ../gui/selinux.tbl:220 ../gui/selinux.tbl:222 ../gui/selinux.tbl:224
+#: ../gui/selinux.tbl:226 ../gui/selinux.tbl:227 ../gui/selinux.tbl:230
+msgid "SELinux Service Protection"
+msgstr "SELinux ਸਰਵਿਸ ਸੁਰੱਖਿਆ"
+
+#: ../gui/selinux.tbl:1
+msgid "Disable SELinux protection for acct daemon"
+msgstr "acct ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:2 ../gui/selinux.tbl:3 ../gui/selinux.tbl:70
+#: ../gui/selinux.tbl:153 ../gui/selinux.tbl:168 ../gui/selinux.tbl:169
+#: ../gui/selinux.tbl:170 ../gui/selinux.tbl:189 ../gui/selinux.tbl:202
+#: ../gui/selinux.tbl:203 ../gui/selinux.tbl:204 ../gui/selinux.tbl:205
+msgid "Admin"
+msgstr "ਪਰਬੰਧ"
+
+#: ../gui/selinux.tbl:2
+msgid "Allow all daemons to write corefiles to /"
+msgstr "ਸਭ ਡੈਮਨਾਂ ਰਾਹੀਂ ਮੁੱਖ-ਫਾਇਲਾਂ ਨੂੰ / ਤੋ ਲਿਖਣ ਲਈ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:3
+msgid "Allow all daemons the ability to use unallocated ttys"
+msgstr "ਨਾ-ਨਿਰਧਾਰਤ ttys ਵਰਤਣ ਲਈ ਸਭ ਡੈਮਨਾਂ ਨੂੰ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:4 ../gui/selinux.tbl:5 ../gui/selinux.tbl:11
+#: ../gui/selinux.tbl:12 ../gui/selinux.tbl:13 ../gui/selinux.tbl:15
+#: ../gui/selinux.tbl:20 ../gui/selinux.tbl:41 ../gui/selinux.tbl:208
+#: ../gui/selinux.tbl:210 ../gui/selinux.tbl:211 ../gui/selinux.tbl:212
+#: ../gui/selinux.tbl:213 ../gui/selinux.tbl:214 ../gui/selinux.tbl:215
+#: ../gui/selinux.tbl:216 ../gui/selinux.tbl:217
+msgid "User Privs"
+msgstr "ਉਪਭੋਗੀ Privs"
+
+#: ../gui/selinux.tbl:4
+#, fuzzy
+msgid ""
+"Allow gadmin SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"gadmin SELinux ਉਪਭੋਗੀ ਖਾਤਿਆਂ ਨੂੰ ਆਪਣੀ home ਡਾਇਰੈਕਟਰੀ ਜਾਂ /tmp ਵਿਚਲੀਆਂ ਫਾਇਲਾਂ ਚਲਾਉਣ "
+"ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:5
+#, fuzzy
+msgid ""
+"Allow guest SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"ਗਿਸਟ SELinux ਉਪਭੋਗੀ ਖਾਤਿਆਂ ਨੂੰ ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੀਆਂ ਜਾਂ /tmp ਵਿੱਚ ਫਾਇਲਾਂ ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:6 ../gui/selinux.tbl:9 ../gui/selinux.tbl:16
+msgid "Memory Protection"
+msgstr "ਮੈਮੋਰੀ ਸੁਰੱਖਿਆ"
+
+#: ../gui/selinux.tbl:6
+msgid "Allow java executable stack"
+msgstr "java ਆਗਜ਼ੀਕਿਊਟੇਬਲ ਸਟੈਕ ਨੂੰ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:7 ../gui/selinux.tbl:8 ../gui/selinux.tbl:35
+#: ../gui/selinux.tbl:209
+msgid "Mount"
+msgstr "ਮਾਊਂਟ"
+
+#: ../gui/selinux.tbl:7
+msgid "Allow mount to mount any file"
+msgstr "ਕਿਸੇ ਫਾਇਲ ਨੂੰ ਮਾਊਂਟ ਕਰਨ ਲਈ mount ਮਨਜੂਰ ਕਰੋ"
+
+#: ../gui/selinux.tbl:8
+msgid "Allow mount to mount any directory"
+msgstr "ਕਿਸੇ ਡਾਇਰੈਕਟਰੀ ਨੂੰ ਮਾਊਂਟ ਕਰਨ ਲਈ mount ਮਨਜੂਰ ਕਰੋ"
+
+#: ../gui/selinux.tbl:9
+msgid "Allow mplayer executable stack"
+msgstr "mplayer ਐਗਜ਼ੀਕਿਊਟੇਬਲ ਸਟੈਕ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:10 ../gui/selinux.tbl:162 ../gui/selinux.tbl:187
+#: ../gui/selinux.tbl:188
+msgid "SSH"
+msgstr "SSH"
+
+#: ../gui/selinux.tbl:10
+msgid "Allow ssh to run ssh-keysign"
+msgstr "ssh ਨੂੰ ssh-keysign ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:11
+#, fuzzy
+msgid ""
+"Allow staff SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"ਸਟਾਫ SELinux ਉਪਭੋਗੀ ਖਾਤਿਆਂ ਨੂੰ ਆਪਣੀ ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੀ ਜਾਂ /tmp ਵਿੱਚ ਫਾਇਲਾਂ ਚਲਾਉਣ ਦੀ "
+"ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:12
+#, fuzzy
+msgid ""
+"Allow sysadm SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"sysadm SELinux ਉਪਭੋਗੀ ਖਾਤਿਆਂ ਨੂੰ ਆਪਣੀ ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੀ ਜਾਂ /tmp ਵਿੱਚ ਫਾਇਲਾਂ ਚਲਾਉਣ ਦੀ "
+"ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:13
+#, fuzzy
+msgid ""
+"Allow unconfined SELinux user account to execute files in home directory or /"
+"tmp"
+msgstr ""
+"ਨਾ-ਪਾਬੰਦ SELinux ਉਪਭੋਗੀ ਖਾਤਿਆਂ ਨੂੰ ਆਪਣੀ ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੀ ਜਾਂ /tmp ਵਿੱਚ ਫਾਇਲਾਂ ਚਲਾਉਣ ਦੀ "
+"ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:14
+msgid "Network Configuration"
+msgstr "ਨੈੱਟਵਰਕ ਸੰਰਚਨਾ"
+
+#: ../gui/selinux.tbl:14
+msgid "Allow unlabeled packets to flow on the network"
+msgstr "ਬਿਨਾਂ-ਲੇਬਲ ਪੈਕਟਾਂ ਨੂੰ ਨੈੱਟਵਰਕ ਤੇ ਜਾਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:15
+#, fuzzy
+msgid ""
+"Allow user SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"ਉਪਭੋਗੀ SELinux ਉਪਭੋਗੀ ਖਾਤਿਆਂ ਨੂੰ ਆਪਣੀ ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੀ ਜਾਂ /tmp ਵਿੱਚ ਫਾਇਲਾਂ ਚਲਾਉਣ ਦੀ "
+"ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:16
+msgid "Allow unconfined to dyntrans to unconfined_execmem"
+msgstr "unconfined ਨੂੰ unconfined_execmem ਵੱਲ ਆਰਜੀ ਤਬਦੀਲ ਕਰਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:17 ../gui/selinux.tbl:18 ../gui/selinux.tbl:120
+#: ../gui/selinux.tbl:140
+msgid "Databases"
+msgstr "ਡਾਟਾਬੇਸ"
+
+#: ../gui/selinux.tbl:17
+msgid "Allow user to connect to mysql socket"
+msgstr "ਉਪਭੋਗੀ ਨੂੰ mysql ਸਾਕਟ ਨਾਲ ਜੁੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:18
+msgid "Allow user to connect to postgres socket"
+msgstr "ਉਪਭੋਗੀ ਨੂੰ postgres ਸਾਕਟ ਨਾਲ ਜੁੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:19 ../gui/selinux.tbl:165 ../gui/selinux.tbl:223
+msgid "XServer"
+msgstr "XServer"
+
+#: ../gui/selinux.tbl:19
+msgid "Allow clients to write to X shared memory"
+msgstr "ਕਲਾਂਈਟ ਨੂੰ X ਸ਼ੇਅਰ ਮੈਮੋਰੀ ਤੇ ਲਿਖਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:20
+#, fuzzy
+msgid ""
+"Allow xguest SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"xguest SELinux ਉਪਭੋਗੀ ਖਾਤਿਆਂ ਨੂੰ ਆਪਣੀ ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੀ ਜਾਂ /tmp ਵਿੱਚ ਫਾਇਲਾਂ ਚਲਾਉਣ ਦੀ "
+"ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:21 ../gui/selinux.tbl:228 ../gui/selinux.tbl:229
+#: ../gui/selinux.tbl:231
+msgid "NIS"
+msgstr "NIS"
+
+#: ../gui/selinux.tbl:21
+msgid "Allow daemons to run with NIS"
+msgstr "ਡੈਮਨਾਂ ਨੂੰ NIS ਨਾਲ ਚੱਲਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:22 ../gui/selinux.tbl:23 ../gui/selinux.tbl:24
+#: ../gui/selinux.tbl:25 ../gui/selinux.tbl:26 ../gui/selinux.tbl:27
+#: ../gui/selinux.tbl:28 ../gui/selinux.tbl:29 ../gui/selinux.tbl:71
+#: ../gui/selinux.tbl:73 ../gui/selinux.tbl:74 ../gui/selinux.tbl:115
+#: ../gui/selinux.tbl:118
+msgid "Web Applications"
+msgstr "ਵੈੱਬ ਕਾਰਜ"
+
+#: ../gui/selinux.tbl:22
+msgid "Transition staff SELinux user to Web Browser Domain"
+msgstr "ਸਟਾਫ SELinux ਉਪਭੋਗੀ ਨੂੰ ਵੈੱਬ ਬਰਾਊਜ਼ਰ ਡੋਮੇਨ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/selinux.tbl:23
+msgid "Transition sysadm SELinux user to Web Browser Domain"
+msgstr "sysadm SELinux ਉਪਭੋਗੀ ਨੂੰ ਵੈੱਬ ਬਰਾਊਜ਼ਰ ਡੋਮੇਨ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/selinux.tbl:24
+msgid "Transition user SELinux user to Web Browser Domain"
+msgstr "ਉਪਭੋਗੀ SELinux ਉਪਭੋਗੀ ਨੂੰ ਵੈੱਬ ਬਰਾਊਜ਼ਰ ਡੋਮੇਨ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/selinux.tbl:25
+msgid "Transition xguest SELinux user to Web Browser Domain"
+msgstr "xguest SELinux ਉਪਭੋਗੀ ਨੂੰ ਵੈੱਬ ਬਰਾਊਜਰ ਡੋਮੇਨ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/selinux.tbl:26 ../gui/selinux.tbl:27 ../gui/selinux.tbl:28
+#: ../gui/selinux.tbl:29
+msgid "Allow staff Web Browsers to write to home directories"
+msgstr "ਸਟਾਫ ਵੈੱਬ ਬਰਾਊਜ਼ਰ ਨੂੰ home ਡਾਇਰੈਕਟਰੀਆਂ ਵਿੱਚ ਲਿਖਣ ਦੀ ਮਨਜੂਰੀ"
+
+#: ../gui/selinux.tbl:30
+msgid "Disable SELinux protection for amanda"
+msgstr "amanda ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:31
+msgid "Disable SELinux protection for amavis"
+msgstr "amavis ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:32
+msgid "Disable SELinux protection for apmd daemon"
+msgstr "apmd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:33
+msgid "Disable SELinux protection for arpwatch daemon"
+msgstr "arpwatch ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:34
+msgid "Disable SELinux protection for auditd daemon"
+msgstr "auditd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:35
+msgid "Disable SELinux protection for automount daemon"
+msgstr "automount ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:36
+msgid "Disable SELinux protection for avahi"
+msgstr "avahi ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:37
+msgid "Disable SELinux protection for bluetooth daemon"
+msgstr "bluetooth ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:38
+msgid "Disable SELinux protection for canna daemon"
+msgstr "canna ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:39
+msgid "Disable SELinux protection for cardmgr daemon"
+msgstr "cardmgr ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:40
+msgid "Disable SELinux protection for Cluster Server"
+msgstr "ਕਲੱਸਟਰ ਸਰਵਰ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:41
+msgid ""
+"Allow cdrecord to read various content. nfs, samba, removable devices, user "
+"temp and untrusted content files"
+msgstr ""
+"cdrecord ਨੂੰ ਵੱਖ-ਵੱਖ ਹਿੱਸੇ ਪੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ। nfs, samba, ਹਟਾਉਣ-ਯੋਗ ਜੰਤਰ, ਉਪਭੋਗੀ temp "
+"ਅਤੇ ਨਾ-ਭਰੇਸੋਯੋਗ ਸੰਖੇਪ ਫਾਇਲਾਂ"
+
+#: ../gui/selinux.tbl:42
+msgid "Disable SELinux protection for ciped daemon"
+msgstr "ciped ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:43
+msgid "Disable SELinux protection for clamd daemon"
+msgstr "clamd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:44
+msgid "Disable SELinux protection for clamscan"
+msgstr "clamscan ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:45
+msgid "Disable SELinux protection for clvmd"
+msgstr "clvmd ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:46
+msgid "Disable SELinux protection for comsat daemon"
+msgstr "comsat ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:47 ../gui/selinux.tbl:48 ../gui/selinux.tbl:49
+#: ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
+msgid "Disable SELinux protection for courier daemon"
+msgstr "courier ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:52
+msgid "Disable SELinux protection for cpucontrol daemon"
+msgstr "cpucontrol ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:53
+msgid "Disable SELinux protection for cpuspeed daemon"
+msgstr "cpuspeed ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:54
+msgid "Cron"
+msgstr "Cron"
+
+#: ../gui/selinux.tbl:54
+msgid "Disable SELinux protection for crond daemon"
+msgstr "crond ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:55 ../gui/selinux.tbl:56 ../gui/selinux.tbl:57
+#: ../gui/selinux.tbl:91
+msgid "Printing"
+msgstr "ਪ੍ਰਿੰਟਿੰਗ"
+
+#: ../gui/selinux.tbl:55
+msgid "Disable SELinux protection for cupsd back end server"
+msgstr "cupsd ਬੈਕਐਂਡ ਸਰਵਰ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:56
+msgid "Disable SELinux protection for cupsd daemon"
+msgstr "cupsd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:57
+msgid "Disable SELinux protection for cupsd_lpd"
+msgstr "cupsd_lpd ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:58
+msgid "CVS"
+msgstr "CVS"
+
+#: ../gui/selinux.tbl:58
+msgid "Disable SELinux protection for cvs daemon"
+msgstr "cvs ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:59
+msgid "Disable SELinux protection for cyrus daemon"
+msgstr "cyrus ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:60
+msgid "Disable SELinux protection for dbskkd daemon"
+msgstr "dbskkd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:61
+msgid "Disable SELinux protection for dbusd daemon"
+msgstr "dbusd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:62
+msgid "Disable SELinux protection for dccd"
+msgstr "dccd ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:63
+msgid "Disable SELinux protection for dccifd"
+msgstr "dccifd ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:64
+msgid "Disable SELinux protection for dccm"
+msgstr "dccm ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:65
+msgid "Disable SELinux protection for ddt daemon"
+msgstr "ddt ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:66
+msgid "Disable SELinux protection for devfsd daemon"
+msgstr "devfsd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:67
+msgid "Disable SELinux protection for dhcpc daemon"
+msgstr "dhcpc ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:68
+msgid "Disable SELinux protection for dhcpd daemon"
+msgstr "dhcpd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:69
+msgid "Disable SELinux protection for dictd daemon"
+msgstr "dictd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:70
+msgid "Allow sysadm_t to directly start daemons"
+msgstr "sysadm_t ਨੂੰ ਸਿੱਧਾ ਹੀ ਡੈਮਨ ਚਾਲੂ ਕਰਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:71
+msgid "Disable SELinux protection for Evolution"
+msgstr "ਏਵੋਲੂਸ਼ਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:72
+msgid "Games"
+msgstr "ਖੇਡਾਂ"
+
+#: ../gui/selinux.tbl:72
+msgid "Disable SELinux protection for games"
+msgstr "ਖੇਡਾਂ ਲਈ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:73
+msgid "Disable SELinux protection for the web browsers"
+msgstr "ਵੈੱਬ ਬਰਾਊਜ਼ਰਾਂ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:74
+msgid "Disable SELinux protection for Thunderbird"
+msgstr "ਥੰਡਰਬਰਡ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:75
+msgid "Disable SELinux protection for distccd daemon"
+msgstr "distccd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:76
+msgid "Disable SELinux protection for dmesg daemon"
+msgstr "dmesg ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:77
+msgid "Disable SELinux protection for dnsmasq daemon"
+msgstr "dnsmasq ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:78
+msgid "Disable SELinux protection for dovecot daemon"
+msgstr "dovecot ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:79
+msgid "Disable SELinux protection for entropyd daemon"
+msgstr "entropyd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:80
+msgid "Disable SELinux protection for fetchmail"
+msgstr "fetchmail ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:81
+msgid "Disable SELinux protection for fingerd daemon"
+msgstr "fingerd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:82
+msgid "Disable SELinux protection for freshclam daemon"
+msgstr "freshclam ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:83
+msgid "Disable SELinux protection for fsdaemon daemon"
+msgstr "fsdaemon ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:84
+msgid "Disable SELinux protection for gpm daemon"
+msgstr "gpm ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:85 ../gui/selinux.tbl:125
+msgid "NFS"
+msgstr "NFS"
+
+#: ../gui/selinux.tbl:85
+msgid "Disable SELinux protection for gss daemon"
+msgstr "gss ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:86
+msgid "Disable SELinux protection for Hal daemon"
+msgstr "Hal ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:87
+msgid "Compatibility"
+msgstr "ਅਨੁਕੂਲਤਾ"
+
+#: ../gui/selinux.tbl:87
+msgid ""
+"Do not audit things that we know to be broken but which are not security "
+"risks"
+msgstr ""
+"ਉਹ ਚੀਜਾਂ ਆਡਿਟ ਨਾ ਕਰੋ ਜੋ ਤੁਹਾਨੂੰ ਲੱਗਦਾ ਹੈ ਕਿ ਰੁਕਾਵਟ ਪਾਉਂਦੀਆਂ ਹਨ ਅਤੇ ਸੁਰੱਖਿਆ ਨੂੰ ਕੋਈ ਖਤਰਾ ਨਹੀਂ ਹੈ।"
+
+#: ../gui/selinux.tbl:88
+msgid "Disable SELinux protection for hostname daemon"
+msgstr "hostname ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:89
+msgid "Disable SELinux protection for hotplug daemon"
+msgstr "hotplug ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:90
+msgid "Disable SELinux protection for howl daemon"
+msgstr "howl ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:91
+msgid "Disable SELinux protection for cups hplip daemon"
+msgstr "cups hplip ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:92
+msgid "Disable SELinux protection for httpd rotatelogs"
+msgstr "httpd rotatelogs ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:93 ../gui/selinux.tbl:232 ../gui/selinux.tbl:233
+msgid "HTTPD Service"
+msgstr "HTTPD ਸਰਵਿਸ"
+
+#: ../gui/selinux.tbl:93
+msgid "Disable SELinux protection for http suexec"
+msgstr "http suexec ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:94
+msgid "Disable SELinux protection for hwclock daemon"
+msgstr "hwclock ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:95
+msgid "Disable SELinux protection for i18n daemon"
+msgstr "i18n ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:96
+msgid "Disable SELinux protection for imazesrv daemon"
+msgstr "imazesrv ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:97
+msgid "Disable SELinux protection for inetd child daemons"
+msgstr "inetd ਅਧੀਨ ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:98
+msgid "Disable SELinux protection for inetd daemon"
+msgstr "inetd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:99
+msgid "Disable SELinux protection for innd daemon"
+msgstr "innd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:100
+msgid "Disable SELinux protection for iptables daemon"
+msgstr "iptables ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:101
+msgid "Disable SELinux protection for ircd daemon"
+msgstr "ircd ਡੈਮਨ "
+
+#: ../gui/selinux.tbl:102
+msgid "Disable SELinux protection for irqbalance daemon"
+msgstr "irqbalance ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:103
+msgid "Disable SELinux protection for iscsi daemon"
+msgstr "iscsi ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:104
+msgid "Disable SELinux protection for jabberd daemon"
+msgstr "jabberd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:105 ../gui/selinux.tbl:107
+msgid "Kerberos"
+msgstr "ਕਰਬੀਰੋਸ"
+
+#: ../gui/selinux.tbl:105
+msgid "Disable SELinux protection for kadmind daemon"
+msgstr "kadmind ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:106
+msgid "Disable SELinux protection for klogd daemon"
+msgstr "klogd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:107
+msgid "Disable SELinux protection for krb5kdc daemon"
+msgstr "krb5kdc ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:108
+msgid "Disable SELinux protection for ktalk daemons"
+msgstr "ktalk ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:109
+msgid "Disable SELinux protection for kudzu daemon"
+msgstr "kudzu ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:110
+msgid "Disable SELinux protection for locate daemon"
+msgstr "locate ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:111
+msgid "Disable SELinux protection for lpd daemon"
+msgstr "lpd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:112
+msgid "Disable SELinux protection for lrrd daemon"
+msgstr "lrrd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:113
+msgid "Disable SELinux protection for lvm daemon"
+msgstr "lvm ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:114
+msgid "Disable SELinux protection for mailman"
+msgstr "mailman ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:115
+msgid "Allow evolution and thunderbird to read user files"
+msgstr "ਏਵੋਲੂਸ਼ਨ ਅਤੇ ਥੰਡਰਬਰਡ ਨੂੰ ਉਪਭੋਗੀ ਫਾਇਲਾਂ ਪੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:116
+msgid "Disable SELinux protection for mdadm daemon"
+msgstr "mdadm ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:117
+msgid "Disable SELinux protection for monopd daemon"
+msgstr "monopd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:118
+msgid "Allow the mozilla browser to read user files"
+msgstr "ਮੋਜ਼ੀਲਾ ਬਰਾਊਜ਼ਰ ਨੂੰ ਉਪਭੋਗੀ ਫਾਇਲਾਂ ਪੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:119
+msgid "Disable SELinux protection for mrtg daemon"
+msgstr "mrtg ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:120
+msgid "Disable SELinux protection for mysqld daemon"
+msgstr "mysqld ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:121
+msgid "Disable SELinux protection for nagios daemon"
+msgstr "nagios ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:122 ../gui/selinux.tbl:128
+msgid "Name Service"
+msgstr "ਨਾਂ ਸਰਵਿਸ"
+
+#: ../gui/selinux.tbl:122
+msgid "Disable SELinux protection for named daemon"
+msgstr "named ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:123
+msgid "Disable SELinux protection for nessusd daemon"
+msgstr "nessusd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:124
+msgid "Disable SELinux protection for NetworkManager"
+msgstr "NetworkManager ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:125
+msgid "Disable SELinux protection for nfsd daemon"
+msgstr "nfsd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:126 ../gui/selinux.tbl:163 ../gui/selinux.tbl:176
+#: ../gui/selinux.tbl:221
+msgid "Samba"
+msgstr "Samba"
+
+#: ../gui/selinux.tbl:126
+msgid "Disable SELinux protection for nmbd daemon"
+msgstr "nmbd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:127
+msgid "Disable SELinux protection for nrpe daemon"
+msgstr "nrpe ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:128
+msgid "Disable SELinux protection for nscd daemon"
+msgstr "nscd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:129
+msgid "Disable SELinux protection for nsd daemon"
+msgstr "nsd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:130
+msgid "Disable SELinux protection for ntpd daemon"
+msgstr "ntpd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:131
+msgid "Disable SELinux protection for oddjob"
+msgstr "oddjob ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:132
+msgid "Disable SELinux protection for oddjob_mkhomedir"
+msgstr "oddjob_mkhomedir ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:133
+msgid "Disable SELinux protection for openvpn daemon"
+msgstr "openvpn ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:134
+msgid "Disable SELinux protection for pam daemon"
+msgstr "pam ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:135
+msgid "Disable SELinux protection for pegasus"
+msgstr "pegasus ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:136
+msgid "Disable SELinux protection for perdition daemon"
+msgstr "perdition ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:137
+msgid "Disable SELinux protection for portmap daemon"
+msgstr "portmap ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:138
+msgid "Disable SELinux protection for portslave daemon"
+msgstr "portslave ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:139
+msgid "Disable SELinux protection for postfix"
+msgstr "postfix ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:140
+msgid "Disable SELinux protection for postgresql daemon"
+msgstr "postgresql ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:141
+msgid "pppd"
+msgstr "pppd"
+
+#: ../gui/selinux.tbl:141
+msgid "Allow pppd to be run for a regular user"
+msgstr "pppd ਨੂੰ ਰੈਗੂਲਰ ਉਪਭੋਗੀ ਲਈ ਚੱਲਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:142
+msgid "Disable SELinux protection for pptp"
+msgstr "pptp ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:143
+msgid "Disable SELinux protection for prelink daemon"
+msgstr "prelink ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:144
+msgid "Disable SELinux protection for privoxy daemon"
+msgstr "privoxy ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:145
+msgid "Disable SELinux protection for ptal daemon"
+msgstr "ptal ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:146
+msgid "Disable SELinux protection for pxe daemon"
+msgstr "pxe ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:147
+msgid "Disable SELinux protection for pyzord"
+msgstr "pyzord ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:148
+msgid "Disable SELinux protection for quota daemon"
+msgstr "quota ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:149
+msgid "Disable SELinux protection for radiusd daemon"
+msgstr "radiusd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:150
+msgid "Disable SELinux protection for radvd daemon"
+msgstr "radvd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:151
+msgid "Disable SELinux protection for rdisc"
+msgstr "rdisc ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:152
+msgid "Disable SELinux protection for readahead"
+msgstr "readahead ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:153
+msgid "Allow programs to read files in non-standard locations (default_t)"
+msgstr "ਪਰੋਗਰਾਮਾਂ ਨੂੰ ਬਿਨਾ-ਮਿਆਰ (default_t) ਸਥਿਤੀਆਂ ਤੋਂ ਫਾਇਲਾਂ ਪੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:154
+msgid "Disable SELinux protection for restorecond"
+msgstr "restorecond ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:155
+msgid "Disable SELinux protection for rhgb daemon"
+msgstr "rhgb ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:156
+msgid "Disable SELinux protection for ricci"
+msgstr "ricci ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:157
+msgid "Disable SELinux protection for ricci_modclusterd"
+msgstr "ricci_modclusterd ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:158
+msgid "Disable SELinux protection for rlogind daemon"
+msgstr "rlogind ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:159
+msgid "Disable SELinux protection for rpcd daemon"
+msgstr "rpcd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:160
+msgid "Disable SELinux protection for rshd"
+msgstr "rshd ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:161
+msgid "rsync"
+msgstr "rsync"
+
+#: ../gui/selinux.tbl:161
+msgid "Disable SELinux protection for rsync daemon"
+msgstr "rsync ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:162
+msgid "Allow ssh to run from inetd instead of as a daemon"
+msgstr "ssh ਨੂੰ ਡੈਮਨ ਦੀ ਬਜਾਇ inetd ਤੋਂ ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:163
+msgid "Allow Samba to share nfs directories"
+msgstr "Samba ਨੂੰ nfs ਡਾਇਰੈਕਟਰੀ ਸ਼ੇਅਰ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:164 ../gui/selinux.tbl:166
+msgid "SASL authentication server"
+msgstr "SASL ਪ੍ਰਮਾਣਿਕਤਾ ਸਰਵਰ"
+
+#: ../gui/selinux.tbl:164
+msgid "Allow sasl authentication server to read /etc/shadow"
+msgstr "sasl ਪ੍ਰਮਾਣਿਕਤਾ ਸਰਵਰ ਨੂੰ /etc/shadow ਪੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:165
+msgid ""
+"Allow X-Windows server to map a memory region as both executable and writable"
+msgstr ""
+"X-ਵਿੰਡੋ ਸਰਵਰ ਨੂੰ ਮੈਮੋਰੀ ਮੈਪ ਕਰਨ ਲਈ ਮਨਜੂਰੀ ਦਿਓ ਤਾਂ ਕਿ ਇਹ ਐਗਜ਼ੀਕਿਊਟੇਬਲ ਅਤੇ ਲਿਖਣਯੋਗ ਹੋ ਸਕੇ"
+
+#: ../gui/selinux.tbl:166
+msgid "Disable SELinux protection for saslauthd daemon"
+msgstr "saslauthd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:167
+msgid "Disable SELinux protection for scannerdaemon daemon"
+msgstr "scannerdaemon ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:168
+msgid "Do not allow transition to sysadm_t, sudo and su effected"
+msgstr "sysadm_t, sudo ਅਤੇ su ਪ੍ਰਭਾਵੀ ਤਬਦੀਲੀ ਮਨਜੂਰ ਨਾ ਕਰੋ"
+
+#: ../gui/selinux.tbl:169
+msgid "Do not allow any processes to load kernel modules"
+msgstr "ਕਿਸੇ ਵੀ ਕਾਰਜ ਨੂੰ ਕਰਨਲ ਮੈਡਿਊਲ ਲੋਡ ਨਾ ਕਰਨ ਦਿਓ"
+
+#: ../gui/selinux.tbl:170
+msgid "Do not allow any processes to modify kernel SELinux policy"
+msgstr "ਕਰਨਲ SELinux ਪਾਲਿਸੀ ਨੂੰ ਕਿਸੇ ਵੀ ਕਾਰਜ ਦੁਆਰਾ ਸੋਧਣ ਨਾ ਦਿਓ"
+
+#: ../gui/selinux.tbl:171
+msgid "Disable SELinux protection for sendmail daemon"
+msgstr "sendmail ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:172
+msgid "Disable SELinux protection for setrans"
+msgstr "setrans ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:173
+msgid "Disable SELinux protection for setroubleshoot daemon"
+msgstr "setroublesoot ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:174
+msgid "Disable SELinux protection for slapd daemon"
+msgstr "slapd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:175
+msgid "Disable SELinux protection for slrnpull daemon"
+msgstr "slrnpull ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:176
+msgid "Disable SELinux protection for smbd daemon"
+msgstr "smbd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:177
+msgid "Disable SELinux protection for snmpd daemon"
+msgstr "snmpd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:178
+msgid "Disable SELinux protection for snort daemon"
+msgstr "snort ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:179
+msgid "Disable SELinux protection for soundd daemon"
+msgstr "soundd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:180
+msgid "Disable SELinux protection for sound daemon"
+msgstr "sound ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:181 ../gui/selinux.tbl:182 ../gui/selinux.tbl:183
+msgid "Spam Protection"
+msgstr "spam ਸੁਰੱਖਿਆ"
+
+#: ../gui/selinux.tbl:181
+msgid "Disable SELinux protection for spamd daemon"
+msgstr "spamd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:182
+msgid "Allow spamd to access home directories"
+msgstr "spamd ਨੂੰ ਨੈੱਟਵਰਕ ਵਰਤਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:183
+msgid "Allow Spam Assassin daemon network access"
+msgstr "Spam Assasin ਡੈਮਨ ਨੂੰ ਨੈੱਟਵਰਕ ਪਹੁੰਚ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:184
+msgid "Disable SELinux protection for speedmgmt daemon"
+msgstr "speedmgmt ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:185 ../gui/selinux.tbl:186
+msgid "Squid"
+msgstr "Squid"
+
+#: ../gui/selinux.tbl:185
+msgid "Allow squid daemon to connect to the network"
+msgstr "squid ਡੈਮਨ ਨੂੰ ਨੈੱਟਵਰਕ ਨਾਲ ਜੁੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:186
+msgid "Disable SELinux protection for squid daemon"
+msgstr "squid ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:187
+msgid "Disable SELinux protection for ssh daemon"
+msgstr "ssh ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:188
+msgid "Allow ssh logins as sysadm_r:sysadm_t"
+msgstr "ssh ਲਾਗਇਨ ਨੂੰ sysadm_r:sysadm_t ਤੌਰ ਤੇ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:189
+msgid ""
+"Allow staff_r users to search the sysadm home dir and read files (such as ~/."
+"bashrc)"
+msgstr ""
+"staff_r ਉਪਭੋਗੀਆਂ ਨੂੰ ਪਰਬੰਧਕ ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੈਕਟਰੀ ਖੋਜਣ ਅਤੇ ਫਾਇਲਾਂ (ਜਿਵੇਂ ~/.bashrc) ਪੜਨ ਦੀ "
+"ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:190 ../gui/selinux.tbl:191
+msgid "Universal SSL tunnel"
+msgstr "ਯੂਨੀਵਰਸਲ SSL tunnel"
+
+#: ../gui/selinux.tbl:190
+msgid "Disable SELinux protection for stunnel daemon"
+msgstr "stunnel ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:191
+msgid "Allow stunnel daemon to run as standalone, outside of xinetd"
+msgstr "stunnel ਡੈਮਨ ਨੂੰ xinetd ਦੇ ਬਾਹਰ, ਸਟੈਂਡਅਲੋਨ ਚੱਲਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:192
+msgid "Disable SELinux protection for swat daemon"
+msgstr "swat ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:193
+msgid "Disable SELinux protection for sxid daemon"
+msgstr "sxid ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:194
+msgid "Disable SELinux protection for syslogd daemon"
+msgstr "syslogd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:195
+msgid "Disable SELinux protection for system cron jobs"
+msgstr "ਸਿਸਟਮ cron jobs ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:196
+msgid "Disable SELinux protection for tcp daemon"
+msgstr "tcp ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:197
+msgid "Disable SELinux protection for telnet daemon"
+msgstr "telnet ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:198
+msgid "Disable SELinux protection for tftpd daemon"
+msgstr "tftpd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:199
+msgid "Disable SELinux protection for transproxy daemon"
+msgstr "transproxy ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:200
+msgid "Disable SELinux protection for udev daemon"
+msgstr "udev ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:201
+msgid "Disable SELinux protection for uml daemon"
+msgstr "uml ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:202
+msgid ""
+"Allow xinetd to run unconfined, including any services it starts that do not "
+"have a domain transition explicitly defined"
+msgstr ""
+"xinetd ਨੂੰ ਨਾ-ਪਾਬੰਦ ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ, ਜਿਵੇਂ ਕਿ ਸਰਵਿਸਾਂ ਜੋ ਇਹ ਚਲਾਉਂਦਾ ਹੈ ਤੇ ਜਿਸ ਜੀ "
+"ਡੋਮੇਨ ਤਬਦੀਲੀ ਪਰਿਭਾਸ਼ਿਤ ਨਹੀਂ ਕੀਤੀ ਹੈ"
+
+#: ../gui/selinux.tbl:203
+msgid ""
+"Allow rc scripts to run unconfined, including any daemon started by an rc "
+"script that does not have a domain transition explicitly defined"
+msgstr ""
+"rc ਸਕਰਿਪਟਾਂ ਨੂੰ ਨਾ-ਪਾਬੰਦ ਚਲਾਉਣ ਲਈ ਮਨਜੂਰੀ ਦਿਓ, ਜਿਵੇਂ ਕਿ ਕੋਈ ਵੀ ਡੈਮਨ ਜੋ rc ਸਕਰਿਪਟ ਦੁਆਰਾ "
+"ਚਲਾਇਆ ਗਿਆ ਹੈ ਤੇ ਜਿਸ ਦੀ ਡੋਮੇਨ ਤਬਦੀਲੀ ਪਰਿਭਾਸ਼ਿਤ ਨਹੀਂ ਕੀਤੀ ਹੈ"
+
+#: ../gui/selinux.tbl:204
+msgid "Allow rpm to run unconfined"
+msgstr "rpm ਨੂੰ unconfined ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:205
+msgid "Allow privileged utilities like hotplug and insmod to run unconfined"
+msgstr "ਪ੍ਰਮਾਣਿਤ ਸਹੂਲਤਾਂ ਜਿਵੇਂ hotplug ਅਤੇ insmod ਨੂੰ ਨਾ-ਪਾਬੰਦ ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:206
+msgid "Disable SELinux protection for updfstab daemon"
+msgstr "updfstab ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:207
+msgid "Disable SELinux protection for uptimed daemon"
+msgstr "uptimed ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:208
+msgid ""
+"Allow user_r to reach sysadm_r via su, sudo, or userhelper. Otherwise, only "
+"staff_r can do so"
+msgstr ""
+"user_r ਨੂੰ sysadm_r ਤੱਕ su, sudo, ਜਾਂ userhelper ਰਾਹੀਂ ਪਹੁੰਚਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ। ਨਹੀਂ ਤਾਂ, "
+"ਸਿਰਫ staff_r ਹੀ ਅਜਿਹਾ ਕਰ ਸਕਦਾ ਹੈ"
+
+#: ../gui/selinux.tbl:209
+msgid "Allow users to execute the mount command"
+msgstr "ਉਪਭੋਗੀ ਨੂੰ mount ਕਮਾਂਡ ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:210
+msgid "Allow regular users direct mouse access (only allow the X server)"
+msgstr "ਰੈਗੂਲਰ ਉਪਭੋਗੀਆਂ ਨੂੰ ਸਿੱਧੀ ਮਾਊਸ ਵਰਤੋਂ ਲਈ ਮਨਜੂਰੀ ਦਿਓ (ਸਿਰਫ X ਸਰਵਰ ਨੂੰ ਮਨਜੂਰ ਕਰੋ)"
+
+#: ../gui/selinux.tbl:211
+msgid "Allow users to run the dmesg command"
+msgstr "ਉਪਭੋਗੀ ਨੂੰ dmesg ਕਮਾਂਡ ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:212
+msgid "Allow users to control network interfaces (also needs USERCTL=true)"
+msgstr "ਉਪਭੋਗੀ ਨੂੰ ਨੈੱਟਵਰਕ ਇੰਟਰਫੇਸ ਕੰਟਰੋਲ ਕਰਨ ਦੀ ਮਨਜੂਰੀ ਦਿੰਦਾ ਹੈ (USERCTL=true ਦੀ ਵੀ ਲੋੜ ਹੈ)"
+
+#: ../gui/selinux.tbl:213
+msgid "Allow normal user to execute ping"
+msgstr "ਆਮ ਉਪਭੋਗੀ ਨੂੰ ping ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:214
+msgid "Allow user to r/w noextattrfile (FAT, CDROM, FLOPPY)"
+msgstr "ਉਪਭੋਗੀ ਨੂੰ r/w noextattrfile (FAT, CDROM, FLOPPY) ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:215
+msgid "Allow users to rw usb devices"
+msgstr "ਉਪਭੋਗੀ ਨੂੰ rw usb ਜੰਤਰ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:216
+msgid ""
+"Allow users to run TCP servers (bind to ports and accept connection from the "
+"same domain and outside users)  disabling this forces FTP passive mode and "
+"may change other protocols"
+msgstr ""
+"ਉਪਭੋਗੀਆਂ ਨੂੰ TCP ਸਰਵਰ ਚਲਾਉਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ (ਪੋਰਟਾਂ ਨਾਲ ਜੋੜੋ ਅਤੇ ਉਸੇ ਡੋਮੇਨ ਜਾਂ ਬਾਹਰਲੇ ਉਪਭੋਗੀਆਂ "
+"ਤੋਂ ਕੁਨੈਕਸ਼ਨ ਸਵੀਕਾਰ ਕਰੋ)  ਇਸ ਨੂੰ ਅਯੋਗ ਕਰਨ ਨਾਲ FTP passive ਮੋਡ ਨੂੰ ਮਜਬੂਰ ਕਰਦਾ ਹੈ ਅਤੇ ਹੋਰ "
+"ਪਰੋਟੋਕਾਲ ਤਬਦੀਲੀਆਂ ਕਰਦਾ ਹੈ"
+
+#: ../gui/selinux.tbl:217
+msgid "Allow user to stat ttyfiles"
+msgstr "ਉਪਭੋਗੀ ਨੂੰ stat ttyfiles ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:218
+msgid "Disable SELinux protection for uucpd daemon"
+msgstr "uucpd ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:219
+msgid "Disable SELinux protection for vmware daemon"
+msgstr "vmware ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:220
+msgid "Disable SELinux protection for watchdog daemon"
+msgstr "watchdog ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:221
+msgid "Disable SELinux protection for winbind daemon"
+msgstr "winbind ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:222
+msgid "Disable SELinux protection for xdm daemon"
+msgstr "xdm ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:223
+msgid "Allow xdm logins as sysadm_r:sysadm_t"
+msgstr "xdm ਲਾਗਇਨ ਨੂੰ sysadm_r:sysadm_t ਤੌਰ ਤੇ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:224
+msgid "Disable SELinux protection for xen daemon"
+msgstr "xen ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:225
+msgid "XEN"
+msgstr "XEN"
+
+#: ../gui/selinux.tbl:225
+msgid "Allow xen to read/write physical disk devices"
+msgstr "xen ਨੂੰ ਭੌਤਿਕ ਡਿਸਕ ਜੰਤਰ ਪੜਨ/ਲਿਖਣ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:226
+msgid "Disable SELinux protection for xfs daemon"
+msgstr "xfs ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:227
+msgid "Disable SELinux protection for xen control"
+msgstr "xen constrol ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:228
+msgid "Disable SELinux protection for ypbind daemon"
+msgstr "ypbind ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:229
+msgid "Disable SELinux protection for NIS Password Daemon"
+msgstr "NIS ਪਾਸਵਰਡ ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:230
+msgid "Disable SELinux protection for ypserv daemon"
+msgstr "ypserv ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:231
+msgid "Disable SELinux protection for NIS Transfer Daemon"
+msgstr "NIS ਟਰਾਂਸਫਰ ਡੈਮਨ ਲਈ SELinux ਸੁਰੱਖਿਆ ਅਯੋਗ ਕਰੋ"
+
+#: ../gui/selinux.tbl:232
+msgid "Allow SELinux webadm user to manage unprivileged users home directories"
+msgstr ""
+"SELinux webadm ਉਪਭੋਗੀ ਨੂੰ ਨਾ-ਪ੍ਰਮਾਣਿਤ ਉਪਭੋਗੀ ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੀਆਂ ਦੇ ਪਰਬੰਧਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/selinux.tbl:233
+msgid "Allow SELinux webadm user to read unprivileged users home directories"
+msgstr ""
+"SELinux webadm ਉਪਭੋਗੀ ਨੂੰ ਨਾ-ਪ੍ਰਮਾਣਿਤ ਉਪਭੋਗੀ ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੀਆਂ ਨੂੰ ਪੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../gui/semanagePage.py:126
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ %s '%s' ਨੂੰ ਹਟਾਉਣਾ ਚੀਹੁੰਦੇ ਹੋ?"
+
+#: ../gui/semanagePage.py:126
+#, python-format
+msgid "Delete %s"
+msgstr "%s ਹਟਾਓ"
+
+#: ../gui/semanagePage.py:134
+#, python-format
+msgid "Add %s"
+msgstr "%s ਸ਼ਾਮਿਲ"
+
+#: ../gui/semanagePage.py:149
+#, python-format
+msgid "Modify %s"
+msgstr "%s ਸੋਧ"
+
+#: ../gui/statusPage.py:69
+msgid "Permissive"
+msgstr "ਚੇਤਾਵਨੀ"
+
+#: ../gui/statusPage.py:70
+msgid "Enforcing"
+msgstr "ਮਜਬੂਰ"
+
+#: ../gui/statusPage.py:75
+msgid "Disabled"
+msgstr "ਅਯੋਗ"
+
+#: ../gui/statusPage.py:94
+msgid "Status"
+msgstr "ਹਾਲਤ"
+
+#: ../gui/statusPage.py:133
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"ਪਾਲਿਸੀ ਕਿਸਮ ਤਬਦੀਲ ਕਰਨ ਨਾਲ ਅਗਲੀ ਵਾਰ ਬੂਟ ਹੋਣ ਤੇ ਪੂਰਾ ਫਾਇਲ ਸਿਸਟਮ ਮੁੜ ਲੇਬਲ ਕੀਤਾ ਜਾਏਗਾ। "
+"ਮੁੜ-ਲੇਬਲ ਹੋਣ ਤੇ ਫਾਇਲ ਸਿਸਟਮ ਦੇ ਅਕਾਰ ਮੁਤਾਬਿਕ ਕੁਝ ਸਮਾਂ ਲੱਗਦਾ ਹੈ।  ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਕਰਨਾ ਹੈ?"
+
+#: ../gui/statusPage.py:147
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"SELinux ਅਯੋਗ ਕਰਨ ਲਈ ਮੁੜ-ਚਾਲੂ ਕਰਨਾ ਪਵੇਗਾ। ਇਸ ਦੀ ਸਿਫਾਰਸ਼ ਨਹੀਂ ਕੀਤੀ ਜਾਂਦੀ।  ਜੇ ਤੁਸੀਂ ਬਾਅਦ "
+"ਵਿੱਚ SELinux ਵੱਲ ਪਿੱਛੇ ਜਾਣਾ ਚਾਹੁੰਦੇ ਹੋ, ਤਾਂ ਸਿਸਟਮ ਮੁੜ-ਲੇਬਲ ਕਰੇਗਾ।  ਜਿਸ ਤੁਸੀਂ ਇਹ ਵੇਖਣਾ ਚਾਹੁੰਦੇ "
+"ਹੋ ਜੇ SELinux ਤੁਹਾਡੇ ਸਿਸਟਮ ਉੱਪਰ ਸਮੱਸਿਆ ਪੈਦਾ ਕਰ ਰਿਹਾ ਹੈ, ਤੁਸੀਂ permissive ਮੋਡ ਵਿੱਚ ਜਾ ਸਕਦੇ "
+"ਹੋ ਜੋ ਸਿਰਫ ਗਲਤੀਆਂ ਦਾ ਲਾਗ ਰੱਖਦਾ ਹੈ ਅਤੇ enforce SELinux ਪਾਲਿਸੀ ਨਹੀਂ।  Permissive ਮੋਡ "
+"ਲਈ ਮੁੜ-ਚਾਲੂ ਕਰਨ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ    ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: ../gui/statusPage.py:152
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"SELinux ਯੋਗ ਕਰਨ ਨਾਲ ਅਗਲੀ ਵਾਰ ਬੂਟ ਹੋਣ ਤੇ ਪੂਰਾ ਫਾਇਲ ਸਿਸਟਮ ਮੁੜ ਲੇਬਲ ਕੀਤਾ ਜਾਏਗਾ। ਮੁੜ-ਲੇਬਲ "
+"ਹੋਣ ਤੇ ਫਾਇਲ ਸਿਸਟਮ ਦੇ ਅਕਾਰ ਮੁਤਾਬਿਕ ਕੁਝ ਸਮਾਂ ਲੱਗਦਾ ਹੈ।  ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਕਰਨਾ ਹੈ?"
+
+#: ../gui/system-config-selinux.glade:11
+msgid "system-config-selinux"
+msgstr "system-config-selinux"
+
+#: ../gui/system-config-selinux.glade:12
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../gui/system-config-selinux.glade:22
+#: ../gui/system-config-selinux.glade:544
+#: ../gui/system-config-selinux.glade:736
+msgid "Add SELinux Login Mapping"
+msgstr "SELinux ਲਾਗਿੰਗ ਮੈਪਿੰਗ ਜੋੜੋ"
+
+#: ../gui/system-config-selinux.glade:257
+msgid "Add SELinux Network Ports"
+msgstr "SELinux ਨੈੱਟਵਰਕ ਪੋਰਟਾਂ ਜੋੜੋ"
+
+#: ../gui/system-config-selinux.glade:391
+#: ../gui/system-config-selinux.glade:870
+msgid "SELinux Type"
+msgstr "SELinux ਕਿਸਮ"
+
+#: ../gui/system-config-selinux.glade:440
+msgid ""
+"tcp\n"
+"udp"
+msgstr ""
+"tcp\n"
+"udp"
+
+#: ../gui/system-config-selinux.glade:622
+msgid ""
+"SELinux MLS/MCS\n"
+"Level"
+msgstr ""
+"SELinux MLS/MCS\n"
+"ਲੈਵਲ"
+
+#: ../gui/system-config-selinux.glade:814
+msgid "File Specification"
+msgstr "ਫਾਇਲ ਨਿਰਧਾਰਨ"
+
+#: ../gui/system-config-selinux.glade:842
+msgid "File Type"
+msgstr "ਫਾਇਲ ਕਿਸਮ"
+
+#: ../gui/system-config-selinux.glade:919
+msgid ""
+"all files\n"
+"regular file\n"
+"directory\n"
+"character device\n"
+"block device\n"
+"socket\n"
+"symbolic link\n"
+"named pipe\n"
+msgstr ""
+"ਸਭ ਫਾਇਲਾਂ\n"
+"ਰੈਗੂਲਰ ਫਾਇਲ\n"
+"ਡਾਇਰੈਕਟਰੀ\n"
+"ਅੱਖਰ ਜੰਤਰ\n"
+"ਬਲਾਕ ਜੰਤਰ\n"
+"ਸਾਕਟ\n"
+"ਚਿੰਨ ਸੰਬੰਧ\n"
+"named ਪਾਈਪ\n"
+
+#: ../gui/system-config-selinux.glade:965
+msgid "MLS"
+msgstr "MLS"
+
+#: ../gui/system-config-selinux.glade:1029
+#: ../gui/system-config-selinux.glade:2557
+#: ../gui/system-config-selinux.glade:2589
+msgid "Add SELinux User"
+msgstr "SELinux ਉਪਭੋਗੀ ਸ਼ਾਮਿਲ"
+
+#: ../gui/system-config-selinux.glade:1271
+msgid "SELinux Administration"
+msgstr "SELinux ਪਰਬੰਧਨ"
+
+#: ../gui/system-config-selinux.glade:1314
+msgid "Add"
+msgstr "ਸ਼ਾਮਿਲ"
+
+#: ../gui/system-config-selinux.glade:1336
+msgid "_Properties"
+msgstr "ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ(_P)"
+
+#: ../gui/system-config-selinux.glade:1358
+msgid "_Delete"
+msgstr "ਹਟਾਓ(_D)"
+
+#: ../gui/system-config-selinux.glade:1449
+msgid "Select Management Object"
+msgstr "ਮੈਨੇਜਮੈਂਟ ਆਬਜੈਕਟ ਚੁਣੋ"
+
+#: ../gui/system-config-selinux.glade:1466
+msgid "<b>Select:</b>"
+msgstr "<b>ਚੁਣੋ:</b>"
+
+#: ../gui/system-config-selinux.glade:1519
+msgid "System Default Enforcing Mode"
+msgstr "ਸਿਸਟਮ ਮੂਲ ਮਜਬੂਰ ਮੋਡ"
+
+#: ../gui/system-config-selinux.glade:1547
+msgid ""
+"Disabled\n"
+"Permissive\n"
+"Enforcing\n"
 msgstr ""
 
-#: ../audit2allow/audit2allow:211
-#, c-format
-msgid "Options Error: %s "
-msgstr "ਚੋਣ ਗਲਤੀ:%s "
+#: ../gui/system-config-selinux.glade:1566
+msgid "Current Enforcing Mode"
+msgstr "ਵਰਤਮਾਨ ਮਜਬੂਰ ਮੋਡ"
+
+#: ../gui/system-config-selinux.glade:1611
+msgid "System Default Policy Type: "
+msgstr "ਸਿਸਟਮ ਮੂਲ ਪਾਲਿਸੀ ਕਿਸਮ: "
+
+#: ../gui/system-config-selinux.glade:1656
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"ਚੁਣੋ ਜੇ ਤੁਸੀਂ ਅਗਲੀ ਵਾਰ ਮੁੜ-ਚਾਲੂ ਹੋਣ ਤੇ ਪੂਰਾ ਫਾਇਲ ਸਿਸਟਮ ਮੁੜ-ਲੇਬਲ ਕਰਨਾ ਹੈ।  ਮੁੜ-ਲੇਬਲ ਹੋਣ ਤੇ "
+"ਸਿਸਟਮ ਦੇ ਅਕਾਰ ਮੁਤਾਬਿਕ ਕਾਫੀ ਸਮਾਂ ਲੱਗ ਲਕਦਾ ਹੈ। ਜੇ ਤੁਸੀਂ ਪਾਲਿਸੀ ਕਿਸਮ ਤਬਦੀਲ ਕਰ ਦਿੱਤੀ ਜਾਂ "
+"ਅਯੋਗ ਤੋਂ ਮਜਬੂਰ ਤਬਦੀਲ ਕਰ ਰਹੇ ਹੋ, ਤਾਂ ਮੁੜ-ਲੇਬਲ ਕਰਨ ਦੀ ਲੋੜ ਹੈ।"
+
+#: ../gui/system-config-selinux.glade:1702
+msgid "Relabel on next reboot."
+msgstr "ਫਿਰ ਚਾਲੂ ਹੋਣ ਤੇ ਮੁੜ-ਲੇਬਲ ਕਰੋ।"
+
+#: ../gui/system-config-selinux.glade:1754
+msgid "label37"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:1791
+msgid "Revert boolean setting to system default"
+msgstr "ਬੂਲੀਅਨ ਸੈਟਿੰਗ ਨੂੰ ਸਿਸਟਮ ਮੂਲ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:1807
+msgid "Toggle between Customized and All Booleans"
+msgstr "ਸੋਧੇ ਅਤੇ ਸਭ ਬੂਲੀਅਨਾਂ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:1825
+msgid "Run booleans lockdown wizard"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:1826
+msgid "Lockdown..."
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:1856
+#: ../gui/system-config-selinux.glade:2060
+#: ../gui/system-config-selinux.glade:2246
+#: ../gui/system-config-selinux.glade:2432
+#: ../gui/system-config-selinux.glade:2618
+#: ../gui/system-config-selinux.glade:2860
+#: ../gui/system-config-selinux.glade:3084
+msgid "Filter"
+msgstr "ਫਿਲਟਰ"
+
+#: ../gui/system-config-selinux.glade:1944
+msgid "label50"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:1981
+msgid "Add File Context"
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ ਸ਼ਾਮਿਲ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:1997
+msgid "Modify File Context"
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ ਸੋਧੋ"
+
+#: ../gui/system-config-selinux.glade:2013
+msgid "Delete File Context"
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ ਹਟਾਓ"
+
+#: ../gui/system-config-selinux.glade:2029
+msgid "Toggle between all and customized file context"
+msgstr "ਸਭ ਅਤੇ ਸੋਧੇ ਫਾਇਲ ਪ੍ਰਸੰਗ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:2148
+msgid "label38"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:2185
+msgid "Add SELinux User Mapping"
+msgstr "SELinux ਉਪਭੋਗੀ ਮੈਪਿੰਗ ਜੋੜੋ"
+
+#: ../gui/system-config-selinux.glade:2201
+msgid "Modify SELinux User Mapping"
+msgstr "SELinux ਉਪਭੋਗੀ ਮੇਲ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:2217
+msgid "Delete SELinux User Mapping"
+msgstr "SELinux ਉਪਭੋਗੀ ਮੇਲ ਹਟਾਓ"
+
+#: ../gui/system-config-selinux.glade:2334
+msgid "label39"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:2371
+msgid "Add Translation"
+msgstr "ਅਨੁਵਾਦ ਸ਼ਾਮਿਲ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:2387
+msgid "Modify Translation"
+msgstr "ਅਨੁਵਾਦ ਸੋਧ"
+
+#: ../gui/system-config-selinux.glade:2403
+msgid "Delete Translation"
+msgstr "ਅਨੁਵਾਦ ਹਟਾਓ"
+
+#: ../gui/system-config-selinux.glade:2520
+msgid "label41"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:2573
+msgid "Modify SELinux User"
+msgstr "SELinux ਉਪਭੋਗੀ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:2706
+msgid "label40"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:2743
+msgid "Add Network Port"
+msgstr "ਨੈੱਟਵਰਕ ਪੋਰਟ ਸ਼ਾਮਿਲ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:2759
+msgid "Edit Network Port"
+msgstr "ਨੈੱਟਵਰਕ ਪੋਰਟ ਸੋਧ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:2775
+msgid "Delete Network Port"
+msgstr "ਨੈੱਟਵਰਕ ਪੋਰਟ ਹਟਾਓ"
+
+#: ../gui/system-config-selinux.glade:2811
+#: ../gui/system-config-selinux.glade:2829
+msgid "Toggle between Customized and All Ports"
+msgstr "ਸੋਧੇ ਅਤੇ ਸਭ ਪੋਰਟਾਂ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:2948
+msgid "label42"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:2985
+msgid "Generate new policy module"
+msgstr "ਨਵਾਂ ਪਾਲਿਸੀ ਮੈਡਿਊਲ ਬਣਾਓ"
+
+#: ../gui/system-config-selinux.glade:3001
+msgid "Load policy module"
+msgstr "ਪਾਲਿਸੀ ਮੈਡਿਊਲ ਲੋਡ ਕਰੋ"
+
+#: ../gui/system-config-selinux.glade:3017
+msgid "Remove loadable policy module"
+msgstr "ਲੋਡ ਹੋਣਯੋਗ ਪਾਲਿਸੀ ਮੈਡਿਊਲ ਹਟਾਓ"
+
+#: ../gui/system-config-selinux.glade:3053
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr "ਵਾਧੂ ਆਡਿਟ ਨਿਯਮ ਯੋਗ/ਅਯੋਗ ਕਰੋ, ਜੋ ਆਮ ਤੌਰ ਤੇ ਲਾਗ ਫਾਇਲਾਂ ਵਿੱਚ ਨਹੀਂ ਦਿੱਤੇ ਗਏ ਹਨ।"
+
+#: ../gui/system-config-selinux.glade:3172
+msgid "label44"
+msgstr ""
+
+#: ../gui/translationsPage.py:53
+msgid "Sensitvity Level"
+msgstr "ਸੰਵੇਦਨਸ਼ੀਲਤਾ ਲੈਵਲ"
+
+#: ../gui/usersPage.py:138
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "SELinux ਉਪਭੋਗੀ '%s' ਦੀ ਲੋੜ ਹੈ"
+
+#~ msgid "Requires value"
+#~ msgstr "ਮੁੱਲ ਲੋੜੀਂਦਾ ਹੈ"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "semodule -i %s\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "semodule -i %s\n"
+#~ "\n"
+
+#~ msgid "Invalid prefix %s"
+#~ msgstr "ਗਲਤ ਅਗੇਤਰ %s"
+
+#~ msgid "Allow application/user role to bind to any tcp ports > 1024"
+#~ msgstr "ਕਾਰਜ/ਉਪਭੋਗੀ ਨੂੰ ਕਿਸੇ ਵੀ tcp ਪੋਰਟਾਂ ਨਾਲ ਜੁੜਨ ਦਿੰਦਾ ਹੈ > 1024"
+
+#~ msgid "Allows confined application/user role to bind to any tcp port"
+#~ msgstr "ਪਾਬੰਦ ਕਾਰਜ/ਉਪਭੋਗੀ ਰੋਲ ਨੂੰ ਕਿਸੇ ਵੀ tcp ਪੋਰਟ ਨਾਲ ਜੁੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#~ msgid ""
+#~ "Enter a comma separated list of tcp ports or ranges of ports that "
+#~ "application/user role binds to. Example: 612, 650-660"
+#~ msgstr ""
+#~ "ਕਾਮਿਆਂ ਨਾਲ ਵੱਖ tcp ਪੋਰਟਾਂ ਜਾਂ ਪੋਰਚਾਂ ਦੀ ਰੇਂਜ ਦੀ ਸੂਚੀ ਦਿਓ ਜਿਨਾਂ ਨਾਲ ਇਹ ਕਾਰਜ/ਉਪਭੋਗੀ ਰੋਲ "
+#~ "ਜੁੜਿਆ ਹੈ। ਉਦਾਹਰਨ: 612, 650-660"
+
+#~ msgid "SELinux Policy Generation Druid"
+#~ msgstr "SELinux ਪਾਲਿਸੀ ਨਿਰਮਾਣ ਡਰਾਊਡ"
+
+#~ msgid "Unreserved Ports  (> 1024)"
+#~ msgstr "ਨਾ-ਰਾਖਵੇਂ ਪੋਰਟ  (> 1024)"
+
+#~ msgid "Use this checkbutton if your app calls bindresvport with 0."
+#~ msgstr "ਇਹ ਚੋਣਬਟਨ ਵਰਤੋ ਜੇ ਤੁਹਾਡਾ ਕਾਰਜ bindresvport ਨੂੰ 0 ਨਾਲ ਕਾਲ ਕਰਦਾ ਹੈ।"
+
+#~ msgid ""
+#~ "Enforcing\n"
+#~ "Permissive\n"
+#~ "Disabled\n"
+#~ msgstr ""
+#~ "ਮਜਬੂਰ\n"
+#~ "ਚੇਤਾਵਨੀ\n"
+#~ "ਅਯੋਗ\n"

@@ -1,1038 +1,3337 @@
-# translation of ru.po to Russian
+# translation of policycoreutils.HEAD.ru.po to
 #
-# Andrew Martynov <andrewm@inventa.ru>, 2006.
+# Andrew Martynov <andrewm@inventa.ru>, 2006, 2007.
 # Yulia Poyarkova <ypoyarko@redhat.com>, 2006.
+# Anatoliy Guskov <anatoliy.guskov@gmail.com>, 2008.
+# Yulia Poyarkova <yulia.poyarkova@redhat.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: ru\n"
+"Project-Id-Version: policycoreutils.HEAD.ru\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-21 14:21-0500\n"
-"PO-Revision-Date: 2006-12-01 03:12+0300\n"
-"Last-Translator: Andrew Martynov <andrewm@inventa.ru>\n"
-"Language-Team: Russian <fedora-trans-ru@redhat.com>\n"
+"POT-Creation-Date: 2008-09-10 01:17+0000\n"
+"PO-Revision-Date: 2008-09-10 17:53+1000\n"
+"Last-Translator: Yulia Poyarkova <yulia.poyarkova@redhat.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=KOI8-R\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../load_policy/load_policy.c:22
-#, c-format
-msgid "usage:  %s [-bq]\n"
-msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣:  %s [-bq]\n"
-
-#: ../load_policy/load_policy.c:66
-#, c-format
-msgid "%s:  Can't load policy:  %s\n"
-msgstr "%s:  п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟пЁя─я┐п╥п╦я┌я▄ п©п╬п╩п╦я┌п╦п╨я┐:  %s\n"
-
-#: ../newrole/newrole.c:188
-#, c-format
-msgid "failed to set PAM_TTY\n"
-msgstr "я│п╠п╬п╧ я┐я│я┌п╟п╫п╬п╡п╨п╦ PAM_TTY\n"
-
-#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
-msgid "Password:"
-msgstr "п÷п╟я─п╬п╩я▄:"
-
-#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
-#, c-format
-msgid "Cannot find your entry in the shadow passwd file.\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╫п╟п╧я┌п╦ п╡п╟я┬я┐ п╥п╟п©п╦я│я▄ п╡ я┌п╣п╫п╣п╡п╬п╪ я└п╟п╧п╩п╣ п©п╟я─п╬п╩п╣п╧.\n"
-
-#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
-#, c-format
-msgid "getpass cannot open /dev/tty\n"
-msgstr "getpass п╫п╣ п╪п╬п╤п╣я┌ п╬я┌п╨я─я▀я┌я▄ /dev/tty\n"
-
-#: ../newrole/newrole.c:316
-#, c-format
-msgid "cannot find valid entry in the passwd file.\n"
-msgstr "п╫п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╫п╟п╧я┌п╦ п╨п╬я─я─п╣п╨я┌п╫я┐я▌ п╥п╟п©п╦я│я▄ п╡ я└п╟п╧п╩п╣ passwd.\n"
-
-#: ../newrole/newrole.c:327
-#, c-format
-msgid "Out of memory!\n"
-msgstr "п²п╣п╢п╬я│я┌п╟я┌п╬я┤п╫п╬ п©п╟п╪я▐я┌п╦!\n"
-
-#: ../newrole/newrole.c:332
-#, c-format
-msgid "Error!  Shell is not valid.\n"
-msgstr "п·я┬п╦п╠п╨п╟!  п·п╠п╬п╩п╬я┤п╨п╟ п╫п╣ п╡п╣я─п╫п╟.\n"
-
-#: ../newrole/newrole.c:389
-#, c-format
-msgid "Unable to clear environment\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╬я┤п╦я│я┌п╦я┌я▄ п╬п╨я─я┐п╤п╣п╫п╦п╣\n"
-
-#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
-#, c-format
-msgid "Error initing capabilities, aborting.\n"
-msgstr "п·я┬п╦п╠п╨п╟ п╦п╫п╦я├п╦п╟п╩п╦п╥п╟я├п╦п╦, п╟п╡п╟я─п╦п╧п╫п╬п╣ п╥п╟п╡п╣я─я┬п╣п╫п╦п╣.\n"
-
-#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
-#, c-format
-msgid "Error setting capabilities, aborting\n"
-msgstr "п·я┬п╦п╠п╨п╟ п╫п╟я│я┌я─п╬п╧п╨п╦ п╡п╬п╥п╪п╬п╤п╫п╬я│я┌п╣п╧, п╟п╡п╟я─п╦п╧п╫п╬п╣ п╥п╟п╡п╣я─я┬п╣п╫п╦п╣\n"
-
-#: ../newrole/newrole.c:450
-#, c-format
-msgid "Error setting KEEPCAPS, aborting\n"
-msgstr "п·я┬п╦п╠п╨п╟ я┐я│я┌п╟п╫п╬п╡п╨п╦ KEEPCAPS, п╟п╡п╟я─п╦п╧п╫п╬п╣ п╥п╟п╡п╣я─я┬п╣п╫п╦п╣.\n"
-
-#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
-#, c-format
-msgid "Error dropping capabilities, aborting\n"
-msgstr "п·я┬п╦п╠п╨п╟ я│п╠я─п╬я│п╟ п╡п╬п╥п╪п╬п╤п╫п╬я│я┌п╣п╧, п╟п╡п╟я─п╦п╧п╫п╬п╣ п╥п╟п╡п╣я─я┬п╣п╫п╦п╣.\n"
-
-#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
-#, c-format
-msgid "Error changing uid, aborting.\n"
-msgstr "п·я┬п╦п╠п╨п╟ я│п╪п╣п╫я▀ uid, п╟п╡п╟я─п╦п╧п╫п╬п╣ п╥п╟п╡п╣я─я┬п╣п╫п╦п╣.\n"
-
-#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
-#, c-format
-msgid "Error resetting KEEPCAPS, aborting\n"
-msgstr "п·я┬п╦п╠п╨п╟ я│п╠я─п╬я│п╟ KEEPCAPS, п╟п╡п╟я─п╦п╧п╫п╬п╣ п╥п╟п╡п╣я─я┬п╣п╫п╦п╣.\n"
-
-#: ../newrole/newrole.c:477
-#, c-format
-msgid "Error dropping SETUID capability, aborting\n"
-msgstr "п·я┬п╦п╠п╨п╟ я│п╠я─п╬я│п╟ п╡п╬п╥п╪п╬п╤п╫п╬я│я┌п╦ SETUID, п╟п╡п╟я─п╦п╧п╫п╬п╣ п╥п╟п╡п╣я─я┬п╣п╫п╦п╣.\n"
-
-#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
-#, c-format
-msgid "Error freeing caps\n"
-msgstr "п·я┬п╦п╠п╨п╟ п╬я│п╡п╬п╠п╬п╤п╢п╣п╫п╦я▐ п╡п╬п╥п╪п╬п╤п╫п╬я│я┌п╣п╧\n"
-
-#: ../newrole/newrole.c:580
-#, c-format
-msgid "Error connecting to audit system.\n"
-msgstr "п·я┬п╦п╠п╨п╟ я│п╬п╣п╢п╦п╫п╣п╫п╦я▐ я│ я│п╦я│я┌п╣п╪п╬п╧ п╟я┐п╢п╦я┌п╟.\n"
-
-#: ../newrole/newrole.c:586
-#, c-format
-msgid "Error allocating memory.\n"
-msgstr "п·я┬п╦п╠п╨п╟ п╡я▀п╢п╣п╩п╣п╫п╦я▐ п©п╟п╪я▐я┌п╦.\n"
-
-#: ../newrole/newrole.c:593
-#, c-format
-msgid "Error sending audit message.\n"
-msgstr "п·я┬п╦п╠п╨п╟ п╬я┌п©я─п╟п╡п╨п╦ я│п╬п╬п╠я┴п╣п╫п╦я▐ п╟я┐п╢п╦я┌п╟.\n"
-
-#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
-#, c-format
-msgid "Could not determine enforcing mode.\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╬п©я─п╣п╢п╣п╩п╦я┌я▄ я─п╣п╤п╦п╪ п╠п╩п╬п╨п╦я─п╬п╡п╬п╨ (enforcing).\n"
-
-#: ../newrole/newrole.c:641
-#, c-format
-msgid "Error!  Could not open %s.\n"
-msgstr "п·я┬п╦п╠п╨п╟!  п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╬я┌п╨я─я▀я┌я▄ %s.\n"
-
-#: ../newrole/newrole.c:646
-#, c-format
-msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
-msgstr "%s!  п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©п╬п╩я┐я┤п╦я┌я▄ я┌п╣п╨я┐я┴п╦п╧ п╨п╬п╫я┌п╣п╨я│я┌ п╢п╩я▐ %s, п╪п╣я┌п╨п╟ tty п╫п╣ п╦п╥п╪п╣п╫я▐п╣я┌я│я▐.\n"
-
-#: ../newrole/newrole.c:656
-#, c-format
-msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
-msgstr "%s!  п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©п╬п╩я┐я┤п╦я┌я▄ п╫п╬п╡я▀п╧ п╨п╬п╫я┌п╣п╨я│я┌ п╢п╩я▐ %s, п╪п╣я┌п╨п╟ tty п╫п╣ п╦п╥п╪п╣п╫я▐п╣я┌я│я▐.\n"
-
-#: ../newrole/newrole.c:666
-#, c-format
-msgid "%s!  Could not set new context for %s\n"
-msgstr "%s!  п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п╫п╬п╡я▀п╧ п╨п╬п╫я┌п╣п╨я│я┌ п╢п╩я▐ %s\n"
-
-#: ../newrole/newrole.c:710
-#, c-format
-msgid "%s changed labels.\n"
-msgstr "%s п╦п╥п╪п╣п╫п╦п╩п╬ п╪п╣я┌п╨п╦.\n"
-
-#: ../newrole/newrole.c:716
-#, c-format
-msgid "Warning! Could not restore context for %s\n"
-msgstr "п▓п╫п╦п╪п╟п╫п╦п╣! п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡п╬я│я│я┌п╟п╫п╬п╡п╦я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ п╢п╩я▐ %s\n"
-
-#: ../newrole/newrole.c:772
-#, c-format
-msgid "Error: multiple roles specified\n"
-msgstr "п·я┬п╦п╠п╨п╟: я┐п╨п╟п╥п╟п╫п╬ п╫п╣я│п╨п╬п╩я▄п╨п╬ я─п╬п╩п╣п╧\n"
-
-#: ../newrole/newrole.c:780
-#, c-format
-msgid "Error: multiple types specified\n"
-msgstr "п·я┬п╦п╠п╨п╟: я┐п╨п╟п╥п╟п╫п╬ п╫п╣я│п╨п╬п╩я▄п╨п╬ я┌п╦п©п╬п╡\n"
-
-#: ../newrole/newrole.c:787
-#, c-format
-msgid "Sorry, -l may be used with SELinux MLS support.\n"
-msgstr "п≤п╥п╡п╦п╫п╦я┌п╣, -l п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╟ я│ п©п╬п╢п╢п╣я─п╤п╨п╬п╧ SELinux MLS.\n"
-
-#: ../newrole/newrole.c:792
-#, c-format
-msgid "Error: multiple levels specified\n"
-msgstr "п·я┬п╦п╠п╨п╟: я┐п╨п╟п╥п╟п╫п╬ п╫п╣я│п╨п╬п╩я▄п╨п╬ я┐я─п╬п╡п╫п╣п╧\n"
-
-#: ../newrole/newrole.c:814
-#, c-format
-msgid "Couldn't get default type.\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©п╬п╩я┐я┤п╦я┌я▄ я┌п╦п© п©п╬ я┐п╪п╬п╩я┤п╟п╫п╦я▌.\n"
-
-#: ../newrole/newrole.c:824
-#, c-format
-msgid "failed to get new context.\n"
-msgstr "я│п╠п╬п╧ п©п╬п╩я┐я┤п╣п╫п╦я▐ п╫п╬п╡п╬пЁп╬ п╨п╬п╫я┌п╣п╨я│я┌п╟.\n"
-
-#: ../newrole/newrole.c:831
-#, c-format
-msgid "failed to set new role %s\n"
-msgstr "я│п╠п╬п╧ п╥п╟п╢п╟п╫п╦я▐ п╫п╬п╡п╬п╧ я─п╬п╩п╦ %s\n"
-
-#: ../newrole/newrole.c:838
-#, c-format
-msgid "failed to set new type %s\n"
-msgstr "я│п╠п╬п╧ п╥п╟п╢п╟п╫п╦я▐ п╫п╬п╡п╬пЁп╬ я┌п╦п©п╟ %s\n"
-
-#: ../newrole/newrole.c:847
-#, c-format
-msgid "failed to build new range with level %s\n"
-msgstr "я│п╠п╬п╧ п©п╬я│я┌я─п╬п╣п╫п╦я▐ п╫п╬п╡п╬пЁп╬ п╢п╦п╟п©п╟п╥п╬п╫п╟ я│ я┐я─п╬п╡п╫п╣п╪ %s\n"
-
-#: ../newrole/newrole.c:852
-#, c-format
-msgid "failed to set new range %s\n"
-msgstr "я│п╠п╬п╧ п╥п╟п╢п╟п╫п╦я▐ п╫п╬п╡п╬пЁп╬ п╢п╦п╟п©п╟п╥п╬п╫п╟ %s\n"
-
-#: ../newrole/newrole.c:860
-#, c-format
-msgid "failed to convert new context to string\n"
-msgstr "я│п╠п╬п╧ п©я─п╣п╬п╠я─п╟п╥п╬п╡п╟п╫п╦я▐ п╫п╬п╡п╬пЁп╬ п╨п╬п╫я┌п╣п╨я│я┌п╟ п╡ я│я┌я─п╬п╨я┐\n"
-
-#: ../newrole/newrole.c:865
-#, c-format
-msgid "%s is not a valid context\n"
-msgstr "%s п╫п╣ я▐п╡п╩я▐п╣я┌я│я▐ п╡п╣я─п╫я▀п╪ п╨п╬п╫я┌п╣п╨я│я┌п╬п╪\n"
-
-#: ../newrole/newrole.c:872
-#, c-format
-msgid "Unable to allocate memory for new_context"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡я▀п╢п╣п╩п╦я┌я▄ п©п╟п╪я▐я┌я▄ п╢п╩я▐ new_context"
-
-#: ../newrole/newrole.c:898
-#, c-format
-msgid "Unable to obtain empty signal set\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©п╬п╩я┐я┤п╦я┌я▄ п╫п╟п╠п╬я─ п©я┐я│я┌я▀я┘ я│п╦пЁп╫п╟п╩п╬п╡\n"
-
-#: ../newrole/newrole.c:906
-#, c-format
-msgid "Unable to set SIGHUP handler\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©п╬п╩я┐я┤п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ SIGHUP\n"
-
-#: ../newrole/newrole.c:972
-#, c-format
-msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
-msgstr "п≤п╥п╡п╦п╫п╦я┌п╣. newrole п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╟ я┌п╬п╩я▄п╨п╬ п╢п╩я▐ я▐п╢я─п╟ я│ SELinux.\n"
-
-#: ../newrole/newrole.c:989
-#, c-format
-msgid "failed to get old_context.\n"
-msgstr "я│п╠п╬п╧ п©п╬п╩я┐я┤п╣п╫п╦я▐ я│я┌п╟я─п╬пЁп╬_п╨п╬п╫я┌п╣п╨я│я┌п╟.\n"
-
-#: ../newrole/newrole.c:996
-#, c-format
-msgid "Error!  Could not retrieve tty information.\n"
-msgstr "п·я┬п╦п╠п╨п╟!  п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©п╬п╩я┐я┤п╦я┌я▄ п╦п╫я└п╬я─п╪п╟я├п╦я▌ п╬ tty.\n"
-
-#: ../newrole/newrole.c:1015
-#, c-format
-msgid "Authenticating %s.\n"
-msgstr "п÷я─п╬п╡п╣я─п╨п╟ п©п╬п╢п╩п╦п╫п╫п╬я│я┌п╦ %s.\n"
-
-#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
-#, c-format
-msgid "failed to initialize PAM\n"
-msgstr "я│п╠п╬п╧ п╦п╫п╦я├п╦п╟п╩п╦п╥п╟я├п╦п╦ PAM\n"
-
-#: ../newrole/newrole.c:1029
-#, c-format
-msgid "newrole: incorrect password for %s\n"
-msgstr "newrole: п╫п╣п╡п╣я─п╫я▀п╧ п©п╟я─п╬п╩я▄ %s\n"
-
-#: ../newrole/newrole.c:1056
-#, c-format
-msgid "newrole: failure forking: %s"
-msgstr "newrole: я│п╠п╬п╧ п╡я▀п©п╬п╩п╫п╣п╫п╦я▐ fork: %s"
-
-#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
-#, c-format
-msgid "Unable to restore tty label...\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡п╬я│я│я┌п╟п╫п╬п╡п╦я┌я▄ п╪п╣я┌п╨я┐ tty...\n"
-
-#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
-#, c-format
-msgid "Failed to close tty properly\n"
-msgstr "п·я┬п╦п╠п╨п╟ п╨п╬я─я─п╣п╨я┌п╫п╬пЁп╬ п╥п╟п╨я─я▀я┌п╦я▐ tty\n"
-
-#: ../newrole/newrole.c:1117
-#, c-format
-msgid "Could not close descriptors.\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╨я─я▀я┌я▄ п╢п╣я│п╨я─п╦п©я┌п╬я─я▀.\n"
-
-#: ../newrole/newrole.c:1140
-#, c-format
-msgid "Error allocating shell's argv0.\n"
-msgstr "п·я┬п╦п╠п╨п╟ п╡я▀п╢п╣п╩п╣п╫п╦я▐ argv0 п╬п╠п╬п╩п╬я┤п╨п╦.\n"
-
-#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
-#, c-format
-msgid "Could not set exec context to %s.\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ п╦я│п©п╬п╩п╫п╣п╫п╦я▐ п╢п╩я▐ %s.\n"
-
-#: ../newrole/newrole.c:1173
-#, c-format
-msgid "Unable to restore the environment, aborting\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡п╬я│я│я┌п╟п╫п╬п╡п╦я┌я▄ п╬п╨я─я┐п╤п╣п╫п╦п╣, п╟п╡п╟я─п╦п╧п╫п╬п╣ п╥п╟п╡п╣я─я┬п╣п╫п╦п╣\n"
-
-#: ../newrole/newrole.c:1184
-msgid "failed to exec shell\n"
-msgstr "я│п╠п╬п╧ п╥п╟п©я┐я│п╨п╟ п╬п╠п╬п╩п╬я┤п╨п╦\n"
-
+#. USAGE_STRING describes the command-line args of this program.
 #: ../run_init/run_init.c:67
 msgid ""
 "USAGE: run_init <script> <args ...>\n"
 "  where: <script> is the name of the init script to run,\n"
 "         <args ...> are the arguments to that script."
 msgstr ""
-"п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣: run_init <я│я├п╣п╫п╟я─п╦п╧> <п╟я─пЁя┐п╪п╣п╫я┌я▀ ...>\n"
-"  пЁп╢п╣: <я│я├п╣п╫п╟я─п╦п╧> - я█я┌п╬ п╦п╪я▐ п╥п╟п©я┐я│п╨п╟п╣п╪п╬пЁп╬ я│я├п╣п╫п╟я─п╦я▐ п╦п╫п╦я├п╦п╟п╩п╦п╥п╟я├п╦п╦,\n"
-"       <п╟я─пЁя┐п╪п╣п╫я┌я▀ ...>  - п©п╣я─п╣п╢п╟п╡п╟п╣п╪я▀п╣ я│я├п╣п╫п╟я─п╦я▌ п╟я─пЁя┐п╪п╣п╫я┌я▀."
+"Использование: run_init <сценарий> <аргументы ...>\n"
+"  где: <сценарий> - это имя запускаемого сценария инициализации,\n"
+"       <аргументы ...>  - передаваемые сценарию аргументы."
+
+#: ../run_init/run_init.c:126 ../newrole/newrole.c:1187
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "сбой инициализации PAM\n"
 
 #: ../run_init/run_init.c:139
 #, c-format
 msgid "failed to get account information\n"
-msgstr "я│п╠п╬п╧ п©п╬п╩я┐я┤п╣п╫п╦я▐ я│п╡п╣п╢п╣п╫п╦п╧ я┐я┤п╣я┌п╫п╬п╧ п╥п╟п©п╦я│п╦\n"
+msgstr "сбой получения сведений учетной записи\n"
+
+#: ../run_init/run_init.c:162 ../newrole/newrole.c:338
+msgid "Password:"
+msgstr "Пароль:"
+
+#: ../run_init/run_init.c:197 ../newrole/newrole.c:363
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "Невозможно найти вашу запись в теневом файле паролей.\n"
+
+#: ../run_init/run_init.c:203 ../newrole/newrole.c:370
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "getpass не может открыть /dev/tty\n"
 
 #: ../run_init/run_init.c:275
 #, c-format
 msgid "run_init: incorrect password for %s\n"
-msgstr "run_init: п╫п╣п╡п╣я─п╫я▀п╧ п©п╟я─п╬п╩я▄ п╢п╩я▐ %s\n"
+msgstr "run_init: неверный пароль для %s\n"
 
 #: ../run_init/run_init.c:309
 #, c-format
 msgid "Could not open file %s\n"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╬я┌п╨я─я▀я┌я▄ я└п╟п╧п╩ %s\n"
+msgstr "Невозможно открыть файл %s\n"
 
 #: ../run_init/run_init.c:336
 #, c-format
 msgid "No context in file %s\n"
-msgstr "п²п╣я┌ п╨п╬п╫я┌п╣п╨я│я┌п╟ п╡ я└п╟п╧п╩п╣ %s\n"
+msgstr "Нет контекста в файле %s\n"
 
 #: ../run_init/run_init.c:361
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
-msgstr "п≤п╥п╡п╦п╫п╦я┌п╣, run_init п╪п╬п╤п╣я┌ п╠я▀я┌я▄ п╦я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╬ я┌п╬п╩я▄п╨п╬ п╢п╩я▐ я▐п╢я─п╟ я│ SELinux.\n"
+msgstr "Извините, run_init может быть использовано только для ядра с SELinux.\n"
 
 #: ../run_init/run_init.c:380
 #, c-format
 msgid "authentication failed.\n"
-msgstr "я│п╠п╬п╧ п©я─п╬п╡п╣я─п╨п╦ п©п╬п╢п╩п╦п╫п╫п╬я│я┌п╦.\n"
+msgstr "сбой проверки подлинности.\n"
 
-#: ../scripts/chcat:75 ../scripts/chcat:145
-msgid "Requires at least one category"
-msgstr "п╒я─п╣п╠я┐п╣я┌я│я▐ п╨п╟п╨ п╪п╦п╫п╦п╪я┐п╪ п╬п╢п╫п╟ п╨п╟я┌п╣пЁп╬я─п╦я▐"
-
-#: ../scripts/chcat:89 ../scripts/chcat:159
+#: ../run_init/run_init.c:405 ../newrole/newrole.c:1321
 #, c-format
-msgid "Can not modify sensitivity levels using '+' on %s"
-msgstr "п²п╣п╩я▄п╥я▐ п╦п╥п╪п╣п╫п╦я┌я▄ я┐я─п╬п╡п╣п╫я▄ я┤я┐п╡я│я┌п╡п╦я┌п╣п╩я▄п╫п╬я│я┌п╦ п╦я│п©п╬п╩я▄п╥я┐я▐  '+' п╫п╟ %s"
+msgid "Could not set exec context to %s.\n"
+msgstr "Невозможно задать контекст исполнения для %s.\n"
 
-#: ../scripts/chcat:93
+#: ../audit2allow/audit2allow:217
+msgid "******************** IMPORTANT ***********************\n"
+msgstr "********************* ВАЖНО ************************\n"
+
+#: ../audit2allow/audit2allow:218
+msgid "To make this policy package active, execute:"
+msgstr "Для активации пакета политики выполните:"
+
+#: ../audit2allow/audit2allow:219
 #, c-format
-msgid "%s is already in %s"
-msgstr "%s я┐п╤п╣ п╡ %s"
+msgid ""
+"\n"
+"\n"
+"semodule -i %s\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"semodule -i %s\n"
+"\n"
 
-#: ../scripts/chcat:164 ../scripts/chcat:174
-#, c-format
-msgid "%s is not in %s"
-msgstr "%s п╫п╣ п╡ %s"
+#: ../semanage/seobject.py:49
+msgid "Could not create semanage handle"
+msgstr "Не удалось создать управление semanage"
 
-#: ../scripts/chcat:237 ../scripts/chcat:242
-msgid "Can not combine +/- with other types of categories"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╬п╠я┼п╣п╢п╦п╫п╦я┌я▄ +/- я│ п╢я─я┐пЁп╦п╪п╦ я┌п╦п©п╟п╪п╦ п╨п╟я┌п╣пЁп╬я─п╦п╧"
+#: ../semanage/seobject.py:56
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "Политика SELinux не поддерживает управление или хранилище недоступно."
 
-#: ../scripts/chcat:287
-msgid "Can not have multiple sensitivities"
-msgstr "п²п╣п╩я▄п╥я▐ п╦п╪п╣я┌я▄ п╫п╣я│п╨п╬п╩я▄п╨п╬ я┐я─п╬п╡п╫п╣п╧ я┤я┐п╡я│я┌п╡п╦я┌п╣п╩я▄п╫п╬я│я┌п╦"
+#: ../semanage/seobject.py:61
+msgid "Cannot read policy store."
+msgstr "Невозможно прочитать хранилище политики."
 
-#: ../scripts/chcat:293
-#, c-format
-msgid "Usage %s CATEGORY File ..."
-msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ %s п п░п╒п∙п⌠п·п═п≤п╞ п╓п╟п╧п╩ ..."
+#: ../semanage/seobject.py:66
+msgid "Could not establish semanage connection"
+msgstr "Невозможно установить semanage соединение"
 
-#: ../scripts/chcat:294
-#, c-format
-msgid "Usage %s -l CATEGORY user ..."
-msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ %s -l п п░п╒п∙п⌠п·п═п≤п╞ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ ..."
+#: ../semanage/seobject.py:137 ../semanage/seobject.py:141
+msgid "global"
+msgstr ""
 
-#: ../scripts/chcat:295
-#, c-format
-msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
-msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ %s [[+|-]п п░п╒п∙п⌠п·п═п≤п╞],...]q п╓п╟п╧п╩ ..."
-
-#: ../scripts/chcat:296
-#, c-format
-msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
-msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ %s -l [[+|-]п п░п╒п∙п⌠п·п═п≤п╞],...]q п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ ..."
-
-#: ../scripts/chcat:297
-#, c-format
-msgid "Usage %s -d File ..."
-msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ %s -d п╓п╟п╧п╩ ..."
-
-#: ../scripts/chcat:298
-#, c-format
-msgid "Usage %s -l -d user ..."
-msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ %s -l -d п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ ..."
-
-#: ../scripts/chcat:299
-#, c-format
-msgid "Usage %s -L"
-msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ %s -L"
-
-#: ../scripts/chcat:300
-#, c-format
-msgid "Usage %s -L -l user"
-msgstr "п≤я│п©п╬п╩я▄п╥п╬п╡п╟п╫п╦п╣ %s -L -l п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄"
-
-#: ../scripts/chcat:301
-msgid "Use -- to end option list.  For example"
-msgstr "п≤я│п©п╬п╩я▄п╥я┐п╧я┌п╣ -- я┤я┌п╬п╠я▀ я┐п╨п╟п╥п╟я┌я▄ п╥п╟п╡п╣я─я┬п╣п╫п╦п╣ я│п©п╦я│п╨п╟ п©п╟я─п╟п╪п╣я┌я─п╬п╡. п²п╟ п©я─п╦п╪п╣я─"
-
-#: ../scripts/chcat:302
-msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
-msgstr "chcat -- -CompanyConfidential /docs/businessplan.odt"
-
-#: ../scripts/chcat:303
-msgid "chcat -l +CompanyConfidential juser"
-msgstr "chcat -l +CompanyConfidential juser"
-
-#: ../semanage/semanage:127
-msgid "Requires 2 or more arguments"
-msgstr "п╒я─п╣п╠я┐п╣я┌я│п╣ 2 п╦п╩п╦ п╠п╬п╩п╣п╣ п╟я─пЁя┐п╪п╣п╫я┌п╟"
-
-#: ../semanage/semanage:132
-#, c-format
-msgid "%s not defined"
-msgstr "%s п╫п╣ п╬п©я─п╣п╢п╣п╩п╣п╫"
-
-#: ../semanage/semanage:156
-#, c-format
-msgid "%s not valid for %s objects\n"
-msgstr "%s п╫п╣ я▐п╡п╩я▐п╣я┌я│я▐ п╢п╬п©я┐я│я┌п╦п╪п╬п╧ п╢п╩я▐ п╬п╠я┼п╣п╨я┌п╬п╡ %s\n"
-
-#: ../semanage/semanage:183 ../semanage/semanage:191
-msgid "range not supported on Non MLS machines"
-msgstr "п╢п╦п╟п©п╟п╥п╬п╫я▀ п╫п╣ п©п╬п╢п╢п╣я─п╤п╦п╡п╟я▌я┌я│я▐ п╫п╟ п╪п╟я┬п╦п╫п╟я┘ п╠п╣п╥ MLS"
-
-#: ../semanage/semanage:249
-msgid "You must specify a role"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪п╬ я┐п╨п╟п╥п╟я┌я▄ я─п╬п╩я▄"
-
-#: ../semanage/semanage:251
-msgid "You must specify a prefix"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪п╬ я┐п╨п╟п╥п╟я┌я▄ п©я─п╣я└п╦п╨я│"
-
-#: ../semanage/semanage:300
-#, c-format
-msgid "Options Error %s "
-msgstr "п·я┬п╦п╠п╨п╟ п©п╟я─п╟п╪п╣я┌я─п╬п╡ %s "
-
-#: ../semanage/semanage:304
-#, c-format
-msgid "Invalid value %s"
-msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪п╬п╣ п╥п╫п╟я┤п╣п╫п╦п╣ %s"
-
-#: ../semanage/seobject.py:132
+#: ../semanage/seobject.py:196
 msgid "translations not supported on non-MLS machines"
-msgstr "п©п╣я─п╣п╡п╬п╢я▀ п╫п╣ п©п╬п╢п╢п╣я─п╤п╦п╡п╟я▌я┌я│я▐ п╢п╩я▐ п╪п╟я┬п╦п╫ п╠п╣п╥ MLS"
+msgstr "переводы не поддерживаются для машин без MLS"
 
-#: ../semanage/seobject.py:139
+#: ../semanage/seobject.py:203
 #, python-format
-msgid "Unable to open %s: translations not supported on non-MLS machines"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╬я┌п╨я─я▀я┌я▄ %s: п©п╣я─п╣п╡п╬п╢я▀ п╫п╣ п©п╬п╢п╢п╣я─п╤п╦п╡п╟я▌я┌я│я▐ п╫п╟ п╪п╟я┬п╦п╫п╟я┘ п╠п╣п╥ MLS"
+msgid "Unable to open %s: translations not supported on non-MLS machines: %s"
+msgstr "Не удается открыть %s: переводы не поддерживаются на машинах без MLS: %s"
 
-#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#: ../semanage/seobject.py:236
+msgid "Level"
+msgstr "Уровень"
+
+#: ../semanage/seobject.py:236 ../gui/system-config-selinux.glade.h:60
+#: ../gui/translationsPage.py:43 ../gui/translationsPage.py:59
+msgid "Translation"
+msgstr "Перевод"
+
+#: ../semanage/seobject.py:244 ../semanage/seobject.py:258
 #, python-format
 msgid "Translations can not contain spaces '%s' "
-msgstr "п÷п╣я─п╣п╡п╬п╢я▀ п╫п╣ п╪п╬пЁя┐я┌ п╡п╨п╩я▌я┤п╟я┌я▄ п©я─п╬п╠п╣п╩я▀ '%s' "
+msgstr "Переводы не могут включать пробелы '%s' "
 
-#: ../semanage/seobject.py:182
+#: ../semanage/seobject.py:247
 #, python-format
 msgid "Invalid Level '%s' "
-msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ я┐я─п╬п╡п╣п╫я▄ '%s' "
+msgstr "Недопустимый уровень '%s' "
 
-#: ../semanage/seobject.py:185
+#: ../semanage/seobject.py:250
 #, python-format
 msgid "%s already defined in translations"
-msgstr "%s я┐п╤п╣ п╬п©я─п╣п╢п╣п╩п╣п╫ п╡ п©п╣я─п╣п╡п╬п╢п╣"
+msgstr "%s уже определен в переводе"
 
-#: ../semanage/seobject.py:197
+#: ../semanage/seobject.py:262
 #, python-format
 msgid "%s not defined in translations"
-msgstr "%s п╫п╣ п╬п©я─п╣п╢п╣п╩п╣п╫п╬ п╡ п©п╣я─п╣п╡п╬п╢п╣"
+msgstr "%s не определено в переводе"
 
-#: ../semanage/seobject.py:218
-msgid "SELinux policy is not managed or store cannot be accessed."
-msgstr "п÷п╬п╩п╦я┌п╦п╨п╟ SELinux п╫п╣ п©п╬п╢п╢п╣я─п╤п╦п╡п╟п╣я┌ я┐п©я─п╟п╡п╩п╣п╫п╦п╣ п╦п╩п╦ я┘я─п╟п╫п╦п╩п╦я┴п╣ п╫п╣п╢п╬я│я┌я┐п©п╫п╬."
+#: ../semanage/seobject.py:288
+msgid "Not yet implemented"
+msgstr "Функциональность еще не реализована"
 
-#: ../semanage/seobject.py:223
-msgid "Cannot read policy store."
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©я─п╬я┤п╦я┌п╟я┌я▄ я┘я─п╟п╫п╦п╩п╦я┴п╣ п©п╬п╩п╦я┌п╦п╨п╦."
-
-#: ../semanage/seobject.py:228
-msgid "Could not establish semanage connection"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я┐я│я┌п╟п╫п╬п╡п╦я┌я▄ semanage я│п╬п╣п╢п╦п╫п╣п╫п╦п╣"
-
-#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
-#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
-#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
-#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
-#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
-#, python-format
-msgid "Could not create a key for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ п╨п╩я▌я┤ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
-#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
-#, python-format
-msgid "Could not check if login mapping for %s is defined"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©я─п╬п╡п╣я─п╦я┌я▄, п╬п©я─п╣п╢п╣п╩п╣п╫п╬ п╩п╦ я│п╬п©п╬я│я┌п╟п╡п╩п╣п╫п╦п╣ п╡я┘п╬п╢п╟ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:253
-#, python-format
-msgid "Login mapping for %s is already defined"
-msgstr "п║п╬п©п╬я│я┌п╟п╡п╩п╣п╫п╦п╣ п╡я┘п╬п╢п╟ п╢п╩я▐ %s я┐п╤п╣ п╬п©я─п╣п╢п╣п╩п╣п╫п╬"
-
-#: ../semanage/seobject.py:257
-#, python-format
-msgid "Linux User %s does not exist"
-msgstr "Linux п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ %s п╫п╣ я│я┐я┴п╣я│я┌п╡я┐п╣я┌"
-
-#: ../semanage/seobject.py:261
-#, python-format
-msgid "Could not create login mapping for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ я│п╬п©п╬я│я┌п╟п╡п╩п╣п╫п╦п╣ п╡я┘п╬п╢п╟ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
-#, python-format
-msgid "Could not set name for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п╦п╪я▐ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
-#, python-format
-msgid "Could not set MLS range for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п╢п╦п╟п©п╟п╥п╬п╫ MLS п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:274
-#, python-format
-msgid "Could not set SELinux user for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ SELinux п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
-#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
-#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
-#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
-#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
-#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
-#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
-#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
-#: ../semanage/seobject.py:1257
+#: ../semanage/seobject.py:295
 msgid "Could not start semanage transaction"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╫п╟я┤п╟я┌я▄ semanage я┌я─п╟п╫п╥п╟п╨я├п╦я▌"
-
-#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
-#, python-format
-msgid "Could not add login mapping for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╢п╬п╠п╟п╡п╦я┌я▄ я│п╬п©п╬я│я┌п╟п╡п╩п╣п╫п╦п╣ п╡я┘п╬п╢п╟ п╢п╩я▐ %s"
+msgstr "Невозможно начать semanage транзакцию"
 
 #: ../semanage/seobject.py:301
-msgid "Requires seuser or serange"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪ seuser п╦п╩п╦ serange"
+msgid "Could not commit semanage transaction"
+msgstr "Не удается отправить транзакцию semanage"
 
-#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#: ../semanage/seobject.py:311
+msgid "Could not list SELinux modules"
+msgstr "Не удается получить список модулей SELinux"
+
+#: ../semanage/seobject.py:322
+msgid "Permissive Types"
+msgstr ""
+
+#: ../semanage/seobject.py:352
+#, python-format
+msgid "Could not set permissive domain %s (module installation failed)"
+msgstr "Не удалось задать разрешающий домен %s (ошибка установки модуля)"
+
+#: ../semanage/seobject.py:366
+#, python-format
+msgid "Could not remove permissive domain %s (remove failed)"
+msgstr "Не удалось удалить разрешающий домен %s (ошибка удаления)"
+
+#: ../semanage/seobject.py:392 ../semanage/seobject.py:452
+#: ../semanage/seobject.py:498 ../semanage/seobject.py:580
+#: ../semanage/seobject.py:647 ../semanage/seobject.py:705
+#: ../semanage/seobject.py:915 ../semanage/seobject.py:1482
+#: ../semanage/seobject.py:1542 ../semanage/seobject.py:1554
+#: ../semanage/seobject.py:1633 ../semanage/seobject.py:1684
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "Невозможно создать ключ для %s"
+
+#: ../semanage/seobject.py:396 ../semanage/seobject.py:456
+#: ../semanage/seobject.py:502 ../semanage/seobject.py:508
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "Невозможно проверить, определено ли сопоставление входа для %s"
+
+#: ../semanage/seobject.py:398
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "Сопоставление входа для %s уже определено"
+
+#: ../semanage/seobject.py:403
+#, python-format
+msgid "Linux Group %s does not exist"
+msgstr "Linux-группа %s не существует"
+
+#: ../semanage/seobject.py:408
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "Linux-пользователь %s не существует"
+
+#: ../semanage/seobject.py:412
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "Невозможно создать сопоставление входа для %s"
+
+#: ../semanage/seobject.py:416 ../semanage/seobject.py:594
+#, python-format
+msgid "Could not set name for %s"
+msgstr "Невозможно задать имя для %s"
+
+#: ../semanage/seobject.py:421 ../semanage/seobject.py:604
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "Невозможно задать диапазон MLS для %s"
+
+#: ../semanage/seobject.py:425
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "Невозможно задать пользователя SELinux для %s"
+
+#: ../semanage/seobject.py:429
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "Невозможно добавить сопоставление входа для %s"
+
+#: ../semanage/seobject.py:441 ../semanage/seobject.py:444
+msgid "add SELinux user mapping"
+msgstr "добавить сопоставление пользователя SELinux"
+
+#: ../semanage/seobject.py:448
+msgid "Requires seuser or serange"
+msgstr "Необходим seuser или serange"
+
+#: ../semanage/seobject.py:458 ../semanage/seobject.py:504
 #, python-format
 msgid "Login mapping for %s is not defined"
-msgstr "п║п╬п©п╬я│я┌п╟п╡п╩п╣п╫п╦п╣ п╡я┘п╬п╢п╟ п╢п╩я▐ %s п╫п╣ п╬п©я─п╣п╢п╣п╩п╣п╫п╬"
+msgstr "Сопоставление входа для %s не определено"
 
-#: ../semanage/seobject.py:315
+#: ../semanage/seobject.py:462
 #, python-format
 msgid "Could not query seuser for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©я─п╬я│п╦я┌я▄ seuser п╢п╩я▐ %s"
+msgstr "Невозможно запросить seuser для %s"
 
-#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#: ../semanage/seobject.py:478
 #, python-format
 msgid "Could not modify login mapping for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦п╥п╪п╣п╫п╦я┌я▄ я│п╬п©п╬я│я┌п╟п╡п╩п╣п╫п╦п╣ п╡я┘п╬п╢п╟ п╢п╩я▐ %s"
+msgstr "Невозможно изменить сопоставление входа для %s"
 
-#: ../semanage/seobject.py:364
+#: ../semanage/seobject.py:510
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
-msgstr "п║п╬п©п╬я│я┌п╟п╡п╩п╣п╫п╦п╣ п╡я┘п╬п╢п╟ п╢п╩я▐ %s п╬п©я─п╣п╢п╣п╩п╣п╫п╬ п╡ п©п╬п╩п╦я┌п╦п╨п╣ п╦ п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ я┐п╢п╟п╩п╣п╫п╬"
-
-#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
-#, python-format
-msgid "Could not delete login mapping for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я┐п╢п╟п╩п╦я┌я▄ я│п╬п©п╬я│я┌п╟п╡п╩п╣п╫п╦п╣ п╡я┘п╬п╢п╟ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:391
-msgid "Could not list login mappings"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡я▀п©п╬п╩п╫п╦я┌я▄ п©п╣я─п╣я┤п╦я│п╩п╣п╫п╦п╣ я│п╬п©п╬я│я┌п╟п╡п╩п╣п╫п╦п╧ п╡я┘п╬п╢п╟"
-
-#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
-#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
-#, python-format
-msgid "Could not check if SELinux user %s is defined"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©я─п╬п╡п╣я─п╦я┌я▄, п╬п©я─п╣п╢п╣п╩п╣п╫ п╩п╦ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ SELinux %s"
-
-#: ../semanage/seobject.py:439
-#, python-format
-msgid "SELinux user %s is already defined"
-msgstr "SELinux п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ %s я┐п╤п╣ п╬п©я─п╣п╢п╣п╩п╣п╫"
-
-#: ../semanage/seobject.py:443
-#, python-format
-msgid "Could not create SELinux user for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ SELinux п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:452
-#, python-format
-msgid "Could not add role %s for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╢п╬п╠п╟п╡п╦я┌я▄ я─п╬п╩я▄ %s п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:461
-#, python-format
-msgid "Could not set MLS level for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ я┐я─п╬п╡п╣п╫я▄ MLS п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
-#, python-format
-msgid "Invalid prefix %s"
-msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ п©я─п╣я└п╦п╨я│ %s"
-
-#: ../semanage/seobject.py:466
-#, python-format
-msgid "Could not add prefix %s for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╢п╬п╠п╟п╡п╦я┌я▄ п©я─п╣я└п╦п╨я│ %s п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:469
-#, python-format
-msgid "Could not extract key for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦п╥п╡п╩п╣я┤я▄ п╨п╩я▌я┤ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
-#, python-format
-msgid "Could not add SELinux user %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╢п╬п╠п╟п╡п╦я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ SELinux %s"
-
-#: ../semanage/seobject.py:498
-msgid "Requires prefix, roles, level or range"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪ п©я─п╣я└п╦п╨я│, я─п╬п╩я▄, я┐я─п╬п╡п╣п╫я▄ п╦п╩п╦ п╢п╦п╟п©п╟п╥п╬п╫"
-
-#: ../semanage/seobject.py:500
-msgid "Requires prefix or roles"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪ п©я─п╣я└п╦п╨я│ п╦п╩п╦ я─п╬п╩я▄"
-
-#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
-#, python-format
-msgid "SELinux user %s is not defined"
-msgstr "SELinux п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ %s п╫п╣ п╬п©я─п╣п╢п╣п╩п╣п╫"
+msgstr "Сопоставление входа для %s определено в политике и не может быть удалено"
 
 #: ../semanage/seobject.py:514
 #, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "Невозможно удалить сопоставление входа для %s"
+
+#: ../semanage/seobject.py:537
+msgid "Could not list login mappings"
+msgstr "Невозможно выполнить перечисление сопоставлений входа"
+
+#: ../semanage/seobject.py:550 ../semanage/seobject.py:555
+#: ../gui/system-config-selinux.glade.h:32
+msgid "Login Name"
+msgstr "Имя входа"
+
+#: ../semanage/seobject.py:550 ../semanage/seobject.py:555
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:769
+#: ../gui/system-config-selinux.glade.h:52
+msgid "SELinux User"
+msgstr "Пользовтель SELinux"
+
+#: ../semanage/seobject.py:550 ../gui/system-config-selinux.glade.h:36
+msgid "MLS/MCS Range"
+msgstr "Диапазон MLS/MCS"
+
+#: ../semanage/seobject.py:576
+#, python-format
+msgid "You must add at least one role for %s"
+msgstr "Необходимо добавить как минимум одну роль для %s"
+
+#: ../semanage/seobject.py:584 ../semanage/seobject.py:651
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:715
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "Не удалось проверить, определен ли пользователь SELinux %s"
+
+#: ../semanage/seobject.py:586
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "SELinux пользователь %s уже определен"
+
+#: ../semanage/seobject.py:590
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "Невозможно создать пользователя SELinux для %s"
+
+#: ../semanage/seobject.py:599
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "Невозможно добавить роль %s для %s"
+
+#: ../semanage/seobject.py:608
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "Невозможно задать уровень MLS для %s"
+
+#: ../semanage/seobject.py:611
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "Невозможно добавить префикс %s для %s"
+
+#: ../semanage/seobject.py:614
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "Невозможно извлечь ключ для %s"
+
+#: ../semanage/seobject.py:618
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "Невозможно добавить пользователя SELinux %s"
+
+#: ../semanage/seobject.py:641
+msgid "Requires prefix, roles, level or range"
+msgstr "Необходим префикс, роль, уровень или диапазон"
+
+#: ../semanage/seobject.py:643
+msgid "Requires prefix or roles"
+msgstr "Необходим префикс или роль"
+
+#: ../semanage/seobject.py:653 ../semanage/seobject.py:711
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux пользователь %s не определен"
+
+#: ../semanage/seobject.py:657
+#, python-format
 msgid "Could not query user for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©я─п╬я│п╦я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ %s"
-
-#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
-#, python-format
-msgid "Could not modify SELinux user %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦п╥п╪п╣п╫п╦я┌я▄ SELinux п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ %s"
-
-#: ../semanage/seobject.py:574
-#, python-format
-msgid "SELinux user %s is defined in policy, cannot be deleted"
-msgstr "SELinux п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ %s п╬п©я─п╣п╢п╣п╩п╣п╫ п╡ п©п╬п╩п╦я┌п╦п╨п╣ п╦ п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ я┐п╢п╟п╩п╣п╫"
-
-#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
-#, python-format
-msgid "Could not delete SELinux user %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я┐п╢п╟п╩п╦я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ SELinux %s"
-
-#: ../semanage/seobject.py:598
-msgid "Could not list SELinux users"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡я▀п©п╬п╩п╫п╦я┌я▄ п©п╣я─п╣я┤п╦я│п╩п╣п╫п╦п╣ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╣п╧ SELinux"
-
-#: ../semanage/seobject.py:604
-#, python-format
-msgid "Could not list roles for user %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡я▀п©п╬п╩п╫п╦я┌я▄ п©п╣я─п╣я┤п╦я│п╩п╣п╫п╦п╣ я─п╬п╩п╣п╧ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ %s"
-
-#: ../semanage/seobject.py:638
-msgid "Protocol udp or tcp is required"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪п╬ п╥п╟п╢п╟п╫п╦п╣ tcp п╦п╩п╦ udp п©я─п╬я┌п╬п╨п╬п╩п╟"
-
-#: ../semanage/seobject.py:640
-msgid "Port is required"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪п╬ п╥п╫п╟я┤п╣п╫п╦п╣ п©п╬я─я┌п╟"
-
-#: ../semanage/seobject.py:651
-#, python-format
-msgid "Could not create a key for %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ п╨п╩я▌я┤ п╢п╩я▐ %s/%s"
-
-#: ../semanage/seobject.py:662
-msgid "Type is required"
-msgstr "п╒я─п╣п╠я┐п╣я┌я│я▐ п╥п╟п╢п╟п╫п╦п╣ я┌п╦п©п╟"
-
-#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
-#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
-#, python-format
-msgid "Could not check if port %s/%s is defined"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©я─п╬п╡п╣я─п╦я┌я▄, п╬п©я─п╣п╢п╣п╩п╣п╫ п╩п╦ п©п╬я─я┌ %s/%s"
-
-#: ../semanage/seobject.py:670
-#, python-format
-msgid "Port %s/%s already defined"
-msgstr "п÷п╬я─я┌ %s/%s я┐п╤п╣ п╬п©я─п╣п╢п╣п╩п╣п╫"
-
-#: ../semanage/seobject.py:674
-#, python-format
-msgid "Could not create port for %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ п©п╬я─я┌ п╢п╩я▐ %s/%s"
-
-#: ../semanage/seobject.py:680
-#, python-format
-msgid "Could not create context for %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ %s/%s"
+msgstr "Невозможно запросить пользователя %s"
 
 #: ../semanage/seobject.py:684
 #, python-format
-msgid "Could not set user in port context for %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ п©п╬я─я┌п╟ п╢п╩я▐ %s/%s"
+msgid "Could not modify SELinux user %s"
+msgstr "Невозможно изменить SELinux пользователя %s"
 
-#: ../semanage/seobject.py:688
+#: ../semanage/seobject.py:717
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "SELinux пользователь %s определен в политике и не может быть удален"
+
+#: ../semanage/seobject.py:721
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "Невозможно удалить пользователя SELinux %s"
+
+#: ../semanage/seobject.py:744
+msgid "Could not list SELinux users"
+msgstr "Невозможно выполнить перечисление пользователей SELinux"
+
+#: ../semanage/seobject.py:750
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "Невозможно выполнить перечисление ролей пользователя %s"
+
+#: ../semanage/seobject.py:763
+msgid "Labeling"
+msgstr ""
+
+#: ../semanage/seobject.py:763
+msgid "MLS/"
+msgstr "MLS/"
+
+#: ../semanage/seobject.py:764
+msgid "Prefix"
+msgstr "Префикс"
+
+#: ../semanage/seobject.py:764
+msgid "MCS Level"
+msgstr "MCS Уровень"
+
+#: ../semanage/seobject.py:764
+msgid "MCS Range"
+msgstr "MCS Диапазон"
+
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:769
+#: ../gui/system-config-selinux.glade.h:50 ../gui/usersPage.py:59
+msgid "SELinux Roles"
+msgstr "Роли SELinux"
+
+#: ../semanage/seobject.py:784
+msgid "Protocol udp or tcp is required"
+msgstr "Необходимо задание tcp или udp протокола"
+
+#: ../semanage/seobject.py:786
+msgid "Port is required"
+msgstr "Необходимо значение порта"
+
+#: ../semanage/seobject.py:797
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "Невозможно создать ключ для %s/%s"
+
+#: ../semanage/seobject.py:808
+msgid "Type is required"
+msgstr "Требуется задание типа"
+
+#: ../semanage/seobject.py:814 ../semanage/seobject.py:873
+#: ../semanage/seobject.py:928 ../semanage/seobject.py:934
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "Невозможно проверить, определен ли порт %s/%s"
+
+#: ../semanage/seobject.py:816
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "Порт %s/%s уже определен"
+
+#: ../semanage/seobject.py:820
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "Невозможно создать порт для %s/%s"
+
+#: ../semanage/seobject.py:826
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "Невозможно создать контекст %s/%s"
+
+#: ../semanage/seobject.py:830
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "Невозможно задать пользователя в контексте порта для %s/%s"
+
+#: ../semanage/seobject.py:834
 #, python-format
 msgid "Could not set role in port context for %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ я─п╬п╩я▄ п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ п©п╬я─я┌п╟ п╢п╩я▐ %s/%s"
+msgstr "Невозможно задать роль в контексте порта для %s/%s"
 
-#: ../semanage/seobject.py:692
+#: ../semanage/seobject.py:838
 #, python-format
 msgid "Could not set type in port context for %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ я┌п╦п© п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ п©п╬я─я┌п╟ п╢п╩я▐ %s/%s"
+msgstr "Невозможно задать тип в контексте порта для %s/%s"
 
-#: ../semanage/seobject.py:697
+#: ../semanage/seobject.py:843
 #, python-format
 msgid "Could not set mls fields in port context for %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п©п╬п╩я▐ mls п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ п©п╬я─я┌п╟ п╢п╩я▐ %s/%s"
+msgstr "Невозможно задать поля mls в контексте порта для %s/%s"
 
-#: ../semanage/seobject.py:701
+#: ../semanage/seobject.py:847
 #, python-format
 msgid "Could not set port context for %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ п©п╬я─я┌п╟ п╢п╩я▐ %s/%s"
+msgstr "Невозможно задать контекст порта для %s/%s"
 
-#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#: ../semanage/seobject.py:851
 #, python-format
 msgid "Could not add port %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╢п╬п╠п╟п╡п╦я┌я▄ п©п╬я─я┌ %s/%s"
+msgstr "Невозможно добавить порт %s/%s"
 
-#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+#: ../semanage/seobject.py:865 ../semanage/seobject.py:1111
+#: ../semanage/seobject.py:1299
 msgid "Requires setype or serange"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪ setype п╦п╩п╦ serange"
+msgstr "Необходим setype или serange"
 
-#: ../semanage/seobject.py:724
+#: ../semanage/seobject.py:867
 msgid "Requires setype"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪ setype"
+msgstr "Необходим setype"
 
-#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#: ../semanage/seobject.py:875 ../semanage/seobject.py:930
 #, python-format
 msgid "Port %s/%s is not defined"
-msgstr "п÷п╬я─я┌ %s/%s п╫п╣ п╬п©я─п╣п╢п╣п╩п╣п╫"
+msgstr "Порт %s/%s не определен"
 
-#: ../semanage/seobject.py:736
+#: ../semanage/seobject.py:879
 #, python-format
 msgid "Could not query port %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©я─п╬я│п╦я┌я▄ п©п╬я─я┌ %s/%s"
+msgstr "Невозможно запросить порт %s/%s"
 
-#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#: ../semanage/seobject.py:890
 #, python-format
 msgid "Could not modify port %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦п╥п╪п╣п╫п╦я┌я▄ п©п╬я─я┌ %s/%s"
+msgstr "Невозможно изменить порт %s/%s"
 
-#: ../semanage/seobject.py:772
+#: ../semanage/seobject.py:903
+msgid "Could not list the ports"
+msgstr "Не удалось получить список портов"
+
+#: ../semanage/seobject.py:919
+#, python-format
+msgid "Could not delete the port %s"
+msgstr "Невозможно удалить порт %s"
+
+#: ../semanage/seobject.py:936
 #, python-format
 msgid "Port %s/%s is defined in policy, cannot be deleted"
-msgstr "п÷п╬я─я┌ %s/%s п╬п©я─п╣п╢п╣п╩п╣п╫ п╡ п©п╬п╩п╦я┌п╦п╨п╣ п╦ п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ я┐п╢п╟п╩п╣п╫"
+msgstr "Порт %s/%s определен в политике и не может быть удален"
 
-#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#: ../semanage/seobject.py:940
 #, python-format
 msgid "Could not delete port %s/%s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я┐п╢п╟п╩п╦я┌я▄ п©п╬я─я┌ %s/%s"
+msgstr "Невозможно удалить порт %s/%s"
 
-#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+#: ../semanage/seobject.py:956 ../semanage/seobject.py:978
 msgid "Could not list ports"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡я▀п©п╬п╩п╫п╦я┌я▄ п©п╣я─п╣я┤п╦я│п╩п╣п╫п╦п╣ п©п╬я─я┌п╬п╡"
+msgstr "Невозможно выполнить перечисление портов"
 
-#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+#: ../semanage/seobject.py:999
+msgid "SELinux Port Type"
+msgstr "Тип порта SELinux"
+
+#: ../semanage/seobject.py:999
+msgid "Proto"
+msgstr ""
+
+#: ../semanage/seobject.py:999 ../gui/system-config-selinux.glade.h:41
+msgid "Port Number"
+msgstr "Номер Порта"
+
+#: ../semanage/seobject.py:1016 ../semanage/seobject.py:1098
+#: ../semanage/seobject.py:1148
+msgid "Node Address is required"
+msgstr "Требуется адрес узла"
+
+#: ../semanage/seobject.py:1019 ../semanage/seobject.py:1101
+#: ../semanage/seobject.py:1151
+msgid "Node Netmask is required"
+msgstr "Необходимо значение порта"
+
+#: ../semanage/seobject.py:1026 ../semanage/seobject.py:1107
+#: ../semanage/seobject.py:1158
+msgid "Unknown or missing protocol"
+msgstr "Протокол отсутствует или неизвестен"
+
+#: ../semanage/seobject.py:1036 ../semanage/seobject.py:1238
+#: ../semanage/seobject.py:1427
 msgid "SELinux Type is required"
-msgstr "п╒я─п╣п╠я┐п╣я┌я│я▐ SELinux Type"
+msgstr "Требуется SELinux Type"
 
-#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
-#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#: ../semanage/seobject.py:1040 ../semanage/seobject.py:1115
+#: ../semanage/seobject.py:1162 ../semanage/seobject.py:1242
+#: ../semanage/seobject.py:1303 ../semanage/seobject.py:1337
+#: ../semanage/seobject.py:1431
 #, python-format
 msgid "Could not create key for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ п╨п╩я▌я┤ п╢п╩я▐ %s"
+msgstr "Невозможно создать ключ для %s"
 
-#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
-#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
+#: ../semanage/seobject.py:1042 ../semanage/seobject.py:1119
+#: ../semanage/seobject.py:1166 ../semanage/seobject.py:1172
 #, python-format
-msgid "Could not check if interface %s is defined"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©я─п╬п╡п╣я─п╦я┌я▄, п╬п©я─п╣п╢п╣п╩п╣п╫ п╩п╦ п╦п╫я┌п╣я─я└п╣п╧я│ %s"
+msgid "Could not check if addr %s is defined"
+msgstr "Не удалось проверить, определен ли адрес %s"
 
-#: ../semanage/seobject.py:865
+#: ../semanage/seobject.py:1046
 #, python-format
-msgid "Interface %s already defined"
-msgstr "п≤п╫я┌п╣я─я└п╣п╧я│ %s я┐п╤п╣ п╬п©я─п╣п╢п╣п╩п╣п╫"
-
-#: ../semanage/seobject.py:869
-#, python-format
-msgid "Could not create interface for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ п╦п╫я┌п╣я─я└п╣я│ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
-#, python-format
-msgid "Could not create context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:878
-#, python-format
-msgid "Could not set user in interface context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ п╦п╫я┌п╣я─я└п╣п╧я│п╟ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:882
-#, python-format
-msgid "Could not set role in interface context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ я─п╬п╩я▄ п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ п╦п╫я┌п╣я─я└п╣п╧я│п╟ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:886
-#, python-format
-msgid "Could not set type in interface context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ я┌п╦п© п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ п╦п╫я┌п╣я─я└п╣п╧я│п╟ п╢п╩я▐ %s."
-
-#: ../semanage/seobject.py:891
-#, python-format
-msgid "Could not set mls fields in interface context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п©п╬п╩я▐ mls п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ п╦п╫я┌п╣я─я└п╣п╧я│п╟ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:895
-#, python-format
-msgid "Could not set interface context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ п╦п╫я┌п╣я─я└п╣п╧я│п╟ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:899
-#, python-format
-msgid "Could not set message context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ я│п╬п╬п╠я┴п╣п╫п╦я▐ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
-#, python-format
-msgid "Could not add interface %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╢п╬п╠п╟п╡п╦я┌я▄ п╦п╫я┌п╣я─я└п╣п╧я│ %s"
-
-#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
-#, python-format
-msgid "Interface %s is not defined"
-msgstr "п≤п╫я┌п╣я─я└п╣п╧я│ %s yt п╬п©я─п╣п╢п╣п╩п╣п╫"
-
-#: ../semanage/seobject.py:933
-#, python-format
-msgid "Could not query interface %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©я─п╬я│п╦я┌я▄ п╦п╫я┌п╣я─я└п╣п╧я│ %s"
-
-#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
-#, python-format
-msgid "Could not modify interface %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦п╥п╪п╣п╫п╦я┌я▄ п╦п╫я┌п╣я─я└п╣п╧я│ %s"
-
-#: ../semanage/seobject.py:972
-#, python-format
-msgid "Interface %s is defined in policy, cannot be deleted"
-msgstr "п≤п╫я┌п╣я─я└п╣п╧я│ %s п╬п©я─п╣п╢п╣п╩п╣п╫ п╡ п©п╬п╩п╦я┌п╦п╨п╣ п╦ п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ я┐п╢п╟п╩п╣п╫"
-
-#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
-#, python-format
-msgid "Could not delete interface %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я┐п╢п╟п╩п╦я┌я▄ п╦п╫я┌п╣я─я└п╣п╧я│ %s"
-
-#: ../semanage/seobject.py:992
-msgid "Could not list interfaces"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡я▀п©п╬п╩п╫п╦я┌я▄ п©п╣я─п╣я┤п╦я│п╩п╣п╫п╦п╣ п╦п╫я┌п╣я─я└п╣п╧я│п╬п╡"
-
-#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
-#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
-#, python-format
-msgid "Could not check if file context for %s is defined"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©я─п╬п╡п╣я─п╦я┌я▄, п╬п©я─п╣п╢п╣п╩п╣п╫ п╩п╦ п╨п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:1037
-#, python-format
-msgid "File context for %s already defined"
-msgstr "п п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s я┐п╤п╣ п╬п©я─п╣п╢п╣п╩п╣п╫"
-
-#: ../semanage/seobject.py:1041
-#, python-format
-msgid "Could not create file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я│п╬п╥п╢п╟я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
+msgid "Addr %s already defined"
+msgstr "Адрес %s уже определен"
 
 #: ../semanage/seobject.py:1050
 #, python-format
-msgid "Could not set user in file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
+msgid "Could not create addr for %s"
+msgstr "Не удалось создать адрес для %s"
 
-#: ../semanage/seobject.py:1054
+#: ../semanage/seobject.py:1055 ../semanage/seobject.py:1257
+#: ../semanage/seobject.py:1397
+#, python-format
+msgid "Could not create context for %s"
+msgstr "Невозможно создать контекст для %s"
+
+#: ../semanage/seobject.py:1059
+#, python-format
+msgid "Could not set mask for %s"
+msgstr "Не удается задать маску %s"
+
+#: ../semanage/seobject.py:1064
+#, python-format
+msgid "Could not set user in addr context for %s"
+msgstr "Не удается задать пользователя в контексте адреса для %s"
+
+#: ../semanage/seobject.py:1068
+#, python-format
+msgid "Could not set role in addr context for %s"
+msgstr "Не удается задать роль в контексте адреса для %s"
+
+#: ../semanage/seobject.py:1072
+#, python-format
+msgid "Could not set type in addr context for %s"
+msgstr "Не удается задать тип в контексте адреса для %s"
+
+#: ../semanage/seobject.py:1077
+#, python-format
+msgid "Could not set mls fields in addr context for %s"
+msgstr "Не удается задать поля mls в контексте адреса для %s"
+
+#: ../semanage/seobject.py:1081
+#, python-format
+msgid "Could not set addr context for %s"
+msgstr "Не удается задать контекст addr для %s"
+
+#: ../semanage/seobject.py:1085
+#, python-format
+msgid "Could not add addr %s"
+msgstr "Не удается добавить addr %s"
+
+#: ../semanage/seobject.py:1121 ../semanage/seobject.py:1168
+#, python-format
+msgid "Addr %s is not defined"
+msgstr "Addr %s не определен"
+
+#: ../semanage/seobject.py:1125
+#, python-format
+msgid "Could not query addr %s"
+msgstr "Не удается запросить addr %s"
+
+#: ../semanage/seobject.py:1136
+#, python-format
+msgid "Could not modify addr %s"
+msgstr "Не удается изменить addr %s"
+
+#: ../semanage/seobject.py:1174
+#, python-format
+msgid "Addr %s is defined in policy, cannot be deleted"
+msgstr "Addr %s определен в политике и не может быть удален"
+
+#: ../semanage/seobject.py:1178
+#, python-format
+msgid "Could not delete addr %s"
+msgstr "Не удается удалить addr %s"
+
+#: ../semanage/seobject.py:1194
+msgid "Could not list addrs"
+msgstr "Не удается получить список addr"
+
+#: ../semanage/seobject.py:1246 ../semanage/seobject.py:1307
+#: ../semanage/seobject.py:1341 ../semanage/seobject.py:1347
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "Невозможно проверить, определен ли интерфейс %s"
+
+#: ../semanage/seobject.py:1248
+#, python-format
+msgid "Interface %s already defined"
+msgstr "Интерфейс %s уже определен"
+
+#: ../semanage/seobject.py:1252
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "Невозможно создать интерфес для %s"
+
+#: ../semanage/seobject.py:1261
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "Невозможно задать пользователя в контексте интерфейса для %s"
+
+#: ../semanage/seobject.py:1265
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "Невозможно задать роль в контексте интерфейса для %s"
+
+#: ../semanage/seobject.py:1269
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "Невозможно задать тип в контексте интерфейса для %s."
+
+#: ../semanage/seobject.py:1274
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "Невозможно задать поля mls в контексте интерфейса для %s"
+
+#: ../semanage/seobject.py:1278
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "Невозможно задать контекст интерфейса для %s"
+
+#: ../semanage/seobject.py:1282
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "Невозможно задать контекст сообщения для %s"
+
+#: ../semanage/seobject.py:1286
+#, python-format
+msgid "Could not add interface %s"
+msgstr "Невозможно добавить интерфейс %s"
+
+#: ../semanage/seobject.py:1309 ../semanage/seobject.py:1343
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "Интерфейс %s yt определен"
+
+#: ../semanage/seobject.py:1313
+#, python-format
+msgid "Could not query interface %s"
+msgstr "Невозможно запросить интерфейс %s"
+
+#: ../semanage/seobject.py:1324
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "Невозможно изменить интерфейс %s"
+
+#: ../semanage/seobject.py:1349
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "Интерфейс %s определен в политике и не может быть удален"
+
+#: ../semanage/seobject.py:1353
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "Невозможно удалить интерфейс %s"
+
+#: ../semanage/seobject.py:1369
+msgid "Could not list interfaces"
+msgstr "Невозможно выполнить перечисление интерфейсов"
+
+#: ../semanage/seobject.py:1379
+msgid "SELinux Interface"
+msgstr "Интерфейс SELinux"
+
+#: ../semanage/seobject.py:1379 ../semanage/seobject.py:1608
+msgid "Context"
+msgstr "Контекст"
+
+#: ../semanage/seobject.py:1403
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "Невозможно задать пользователя в контексте файла для %s"
+
+#: ../semanage/seobject.py:1407
 #, python-format
 msgid "Could not set role in file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ я─п╬п╩я▄ п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
+msgstr "Невозможно задать роль в контексте файла для %s"
 
-#: ../semanage/seobject.py:1058
-#, python-format
-msgid "Could not set type in file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ я┌п╦п© п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
-
-#: ../semanage/seobject.py:1063
+#: ../semanage/seobject.py:1412 ../semanage/seobject.py:1454
 #, python-format
 msgid "Could not set mls fields in file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п©п╬п╩я▐ msl п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
+msgstr "Невозможно задать поля msl в контексте файла для %s"
 
-#: ../semanage/seobject.py:1069
+#: ../semanage/seobject.py:1418
+msgid "Invalid file specification"
+msgstr "Неверная спецификация файла"
+
+#: ../semanage/seobject.py:1435 ../semanage/seobject.py:1486
+#: ../semanage/seobject.py:1558 ../semanage/seobject.py:1562
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "Невозможно проверить, определен ли контекст файла для %s"
+
+#: ../semanage/seobject.py:1437
+#, python-format
+msgid "File context for %s already defined"
+msgstr "Контекст файла для %s уже определен"
+
+#: ../semanage/seobject.py:1441
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "Невозможно создать контекст файла для %s"
+
+#: ../semanage/seobject.py:1449
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "Невозможно задать тип в контексте файла для %s"
+
+#: ../semanage/seobject.py:1457 ../semanage/seobject.py:1510
+#: ../semanage/seobject.py:1514
 #, python-format
 msgid "Could not set file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п╢п╟я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
+msgstr "Невозможно задать контекст файла для %s"
 
-#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#: ../semanage/seobject.py:1463
 #, python-format
 msgid "Could not add file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╢п╬п╠п╟п╡п╦я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
+msgstr "Невозможно добавить контекст файла для %s"
 
-#: ../semanage/seobject.py:1089
+#: ../semanage/seobject.py:1477
 msgid "Requires setype, serange or seuser"
-msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪ setyp, serange п╦п╩п╦ seuser"
+msgstr "Необходим setyp, serange или seuser"
 
-#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#: ../semanage/seobject.py:1488 ../semanage/seobject.py:1566
 #, python-format
 msgid "File context for %s is not defined"
-msgstr "п п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s п╫п╣ п╬п©я─п╣п╢п╣п╩п╣п╫"
+msgstr "Контекст файла для %s не определен"
 
-#: ../semanage/seobject.py:1103
+#: ../semanage/seobject.py:1492
 #, python-format
 msgid "Could not query file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©я─п╬я│п╦я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
+msgstr "Невозможно запросить контекст файла для %s"
 
-#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#: ../semanage/seobject.py:1518
 #, python-format
 msgid "Could not modify file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦п╥п╪п╣п╫п╦я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
+msgstr "Невозможно изменить контекст файла для %s"
 
-#: ../semanage/seobject.py:1142
+#: ../semanage/seobject.py:1532
+msgid "Could not list the file contexts"
+msgstr "Не удается получить список контекстов файлов"
+
+#: ../semanage/seobject.py:1546
+#, python-format
+msgid "Could not delete the file context %s"
+msgstr "Не удалется удалить контекст файла для %s"
+
+#: ../semanage/seobject.py:1564
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
-msgstr "п п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s п╬п©я─п╣п╢п╣п╩п╣п╫ п╡ п©п╬п╩п╦я┌п╦п╨п╣ п╦ п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ я┐п╢п╟п╩п╣п╫"
+msgstr "Контекст файла для %s определен в политике и не может быть удален"
 
-#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#: ../semanage/seobject.py:1570
 #, python-format
 msgid "Could not delete file context for %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я┐п╢п╟п╩п╦я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ п╢п╩я▐ %s"
+msgstr "Невозможно удалить контекст файла для %s"
 
-#: ../semanage/seobject.py:1164
+#: ../semanage/seobject.py:1586
 msgid "Could not list file contexts"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡я▀п©п╬п╩п╫п╦я┌я▄ п©п╣я─п╣я┤п╦я│п╩п╣п╫п╦п╣ п╨п╬п╫я┌п╣п╨я│я┌п╬п╡ я└п╟п╧п╩п╬п╡"
+msgstr "Невозможно выполнить перечисление контекстов файлов"
 
-#: ../semanage/seobject.py:1168
+#: ../semanage/seobject.py:1590
 msgid "Could not list local file contexts"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╬я┌п╬п╠я─п╟п╥п╦я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ п╩п╬п╨п╟п╩я▄п╫я▀я┘ я└п╟п╧п╩п╬п╡"
+msgstr "Невозможно отобразить контекст локальных файлов"
 
-#: ../semanage/seobject.py:1203
-msgid "Requires value"
-msgstr "п╒я─п╣п╠я┐п╣я┌я│я▐ п╥п╫п╟я┤п╣п╫п╦п╣"
+#: ../semanage/seobject.py:1608
+msgid "SELinux fcontext"
+msgstr "Контекст файла SELinux"
 
-#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
-#: ../semanage/seobject.py:1251
+#: ../semanage/seobject.py:1608
+msgid "type"
+msgstr "тип"
+
+#: ../semanage/seobject.py:1636 ../semanage/seobject.py:1687
+#: ../semanage/seobject.py:1693
 #, python-format
 msgid "Could not check if boolean %s is defined"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п©я─п╬п╡п╣я─п╦я┌я▄, п╬п©я─п╣п╢п╣п╩п╣п╫ п╩п╦ п©п╣я─п╣п╨п╩я▌я┤п╟я┌п╣п╩я▄ %s"
+msgstr "Невозможно проверить, определен ли переключатель %s"
 
-#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#: ../semanage/seobject.py:1638 ../semanage/seobject.py:1689
 #, python-format
 msgid "Boolean %s is not defined"
-msgstr "п÷п╣я─п╣п╨п╩я▌я┤п╟я┌п╣п╩я▄ %s п╫п╣ п╬п©я─п╣п╢п╣п╩п╣п╫"
+msgstr "Переключатель %s не определен"
 
-#: ../semanage/seobject.py:1217
+#: ../semanage/seobject.py:1642
 #, python-format
 msgid "Could not query file context %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╥п╟п©я─п╬я│п╦я┌я▄ п╨п╬п╫я┌п╣п╨я│я┌ я└п╟п╧п╩п╟ %s"
+msgstr "Невозможно запросить контекст файла %s"
 
-#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#: ../semanage/seobject.py:1647
+#, python-format
+msgid "You must specify one of the following values: %s"
+msgstr "Необходимо указать значение: %s"
+
+#: ../semanage/seobject.py:1651
+#, python-format
+msgid "Could not set active value of boolean %s"
+msgstr "Не удается задать активное значение переключателя %s"
+
+#: ../semanage/seobject.py:1654
 #, python-format
 msgid "Could not modify boolean %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╦п╥п╪п╣п╫п╦я┌я▄ п©п╣я─п╣п╨п╩я▌я┤п╟я┌п╣п╩я▄ %s"
+msgstr "Невозможно изменить переключатель %s"
 
-#: ../semanage/seobject.py:1253
+#: ../semanage/seobject.py:1672
+#, python-format
+msgid "Bad format %s: Record %s"
+msgstr "Неверный формат %s: Запись %s"
+
+#: ../semanage/seobject.py:1695
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
-msgstr "п÷п╣я─п╣п╨п╩я▌я┤п╟я┌п╣п╩я▄ %s п╫п╣ п╬п©я─п╣п╢п╣п╩п╣п╫ п╡ п©п╬п╩п╦я┌п╦п╨п╣ п╦ п╫п╣ п╪п╬п╤п╣я┌ п╠я▀я┌я▄ я┐п╢п╟п╩п╣п╫"
+msgstr "Переключатель %s не определен в политике и не может быть удален"
 
-#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#: ../semanage/seobject.py:1699
 #, python-format
 msgid "Could not delete boolean %s"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ я┐п╢п╟п╩п╦я┌я▄ п©п╣я─п╣п╨п╩я▌я┤п╟я┌п╣п╩я▄ %s"
+msgstr "Невозможно удалить переключатель %s"
 
-#: ../semanage/seobject.py:1273
+#: ../semanage/seobject.py:1711 ../semanage/seobject.py:1728
 msgid "Could not list booleans"
-msgstr "п²п╣п╡п╬п╥п╪п╬п╤п╫п╬ п╡я▀п©п╬п╩п╫п╦я┌я▄ п©п╣я─п╣я┤п╦я│п╩п╣п╫п╦п╣ п©п╣я─п╣п╨п╩я▌я┤п╟я┌п╣п╩п╣п╧"
+msgstr "Невозможно выполнить перечисление переключателей"
 
-#: ../audit2allow/audit2allow:183
+#: ../semanage/seobject.py:1747
+msgid "unknown"
+msgstr "неизвестный"
+
+#: ../semanage/seobject.py:1750
+msgid "off"
+msgstr "выкл."
+
+#: ../semanage/seobject.py:1750
+msgid "on"
+msgstr "вкл."
+
+#: ../semanage/seobject.py:1759
+msgid "SELinux boolean"
+msgstr "Переключатель SELinux"
+
+#: ../semanage/seobject.py:1759 ../gui/polgen.glade.h:18
+#: ../gui/polgengui.py:169
+msgid "Description"
+msgstr "Описание"
+
+#: ../newrole/newrole.c:198
 #, c-format
-msgid "Generating type enforcment file: %s.te"
-msgstr "п║п╬п╥п╢п╟п╣я┌я│я▐ п╫п╬п╡я▀п╧ type enforcment я└п╟п╧п╩: %s.te"
+msgid "failed to set PAM_TTY\n"
+msgstr "сбой установки PAM_TTY\n"
 
-#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
-msgid "Compiling policy"
-msgstr "п п╬п╪п©п╦п╩я▐я├п╦я▐ п©п╬п╩п╦я┌п╦п╨п╦"
-
-#: ../audit2allow/audit2allow:205
-msgid ""
-"\n"
-"******************** IMPORTANT ***********************\n"
+#: ../newrole/newrole.c:287
+#, c-format
+msgid "newrole: service name configuration hashtable overflow\n"
 msgstr ""
-"\n"
-"******************** п▓ п░ п√ п² п· ***********************\n"
 
-#: ../audit2allow/audit2allow:206
+#: ../newrole/newrole.c:297
 #, c-format
-msgid ""
-"In order to load this newly created policy package into the kernel,\n"
-"you are required to execute \n"
-"\n"
-"semodule -i %s.pp\n"
-"\n"
+msgid "newrole:  %s:  error on line %lu.\n"
+msgstr "newrole:  %s:  ошибка в строке %lu.\n"
+
+#: ../newrole/newrole.c:436
+#, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "не удается найти корректную запись в файле passwd.\n"
+
+#: ../newrole/newrole.c:447
+#, c-format
+msgid "Out of memory!\n"
+msgstr "Недостаточно памяти!\n"
+
+#: ../newrole/newrole.c:452
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "Ошибка!  Оболочка не верна.\n"
+
+#: ../newrole/newrole.c:509
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr "Невозможно очистить окружение\n"
+
+#: ../newrole/newrole.c:556 ../newrole/newrole.c:634
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "Ошибка инициализации, аварийное завершение.\n"
+
+#: ../newrole/newrole.c:564 ../newrole/newrole.c:640
+#, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "Ошибка настройки возможностей, аварийное завершение\n"
+
+#: ../newrole/newrole.c:570
+#, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "Ошибка установки KEEPCAPS, аварийное завершение.\n"
+
+#: ../newrole/newrole.c:578 ../newrole/newrole.c:652
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "Ошибка сброса возможностей, аварийное завершение.\n"
+
+#: ../newrole/newrole.c:584 ../newrole/newrole.c:683
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "Ошибка смены uid, аварийное завершение.\n"
+
+#: ../newrole/newrole.c:590 ../newrole/newrole.c:646 ../newrole/newrole.c:678
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "Ошибка сброса KEEPCAPS, аварийное завершение.\n"
+
+#: ../newrole/newrole.c:597
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "Ошибка сброса возможности SETUID, аварийное завершение.\n"
+
+#: ../newrole/newrole.c:602 ../newrole/newrole.c:657
+#, c-format
+msgid "Error freeing caps\n"
+msgstr "Ошибка освобождения возможностей\n"
+
+#: ../newrole/newrole.c:701
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "Ошибка соединения с системой аудита.\n"
+
+#: ../newrole/newrole.c:707
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "Ошибка выделения памяти.\n"
+
+#: ../newrole/newrole.c:714
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "Ошибка отправки сообщения аудита.\n"
+
+#: ../newrole/newrole.c:758 ../newrole/newrole.c:1122
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "Невозможно определить режим блокировок (enforcing).\n"
+
+#: ../newrole/newrole.c:765
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "Ошибка!  Невозможно открыть %s.\n"
+
+#: ../newrole/newrole.c:771
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr "%s!  Невозможно получить текущий контекст для %s, метка tty не изменяется.\n"
+
+#: ../newrole/newrole.c:781
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr "%s!  Невозможно получить новый контекст для %s, метка tty не изменяется.\n"
+
+#: ../newrole/newrole.c:791
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s!  Невозможно задать новый контекст для %s\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s изменило метки.\n"
+
+#: ../newrole/newrole.c:844
+#, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "Внимание! Невозможно восстановить контекст для %s\n"
+
+#: ../newrole/newrole.c:901
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "Ошибка: указано несколько ролей\n"
+
+#: ../newrole/newrole.c:909
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "Ошибка: указано несколько типов\n"
+
+#: ../newrole/newrole.c:916
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "Извините, -l может быть использована с поддержкой SELinux MLS.\n"
+
+#: ../newrole/newrole.c:921
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "Ошибка: указано несколько уровней\n"
+
+#: ../newrole/newrole.c:931
+#, c-format
+msgid "Error: you are not allowed to change levels on a non secure terminal \n"
+msgstr "Ошибка: Вы не можете изменять уровень в небезопасном терминале\n"
+
+#: ../newrole/newrole.c:957
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "Невозможно получить тип по умолчанию.\n"
+
+#: ../newrole/newrole.c:967
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "сбой получения нового контекста.\n"
+
+#: ../newrole/newrole.c:974
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "сбой задания новой роли %s\n"
+
+#: ../newrole/newrole.c:981
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "сбой задания нового типа %s\n"
+
+#: ../newrole/newrole.c:991
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "сбой построения нового диапазона с уровнем %s\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "сбой задания нового диапазона %s\n"
+
+#: ../newrole/newrole.c:1004
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "сбой преобразования нового контекста в строку\n"
+
+#: ../newrole/newrole.c:1009
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s не является верным контекстом\n"
+
+#: ../newrole/newrole.c:1016
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr "Невозможно выделить память для new_context"
+
+#: ../newrole/newrole.c:1042
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr "Невозможно получить набор пустых сигналов\n"
+
+#: ../newrole/newrole.c:1050
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr "Невозможно получить обработчик SIGHUP\n"
+
+#: ../newrole/newrole.c:1116
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "Извините. newrole может быть использована только для ядра с SELinux.\n"
+
+#: ../newrole/newrole.c:1133
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "сбой получения старого_контекста.\n"
+
+#: ../newrole/newrole.c:1140
+#, c-format
+msgid "Warning!  Could not retrieve tty information.\n"
+msgstr "Внимание!  Не удается получить информацию о tty.\n"
+
+#: ../newrole/newrole.c:1161
+#, c-format
+msgid "error on reading PAM service configuration.\n"
+msgstr "ошибка чтения конфигурации службы PAM.\n"
+
+#: ../newrole/newrole.c:1196
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "newrole: неверный пароль %s\n"
+
+#: ../newrole/newrole.c:1223
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "newrole: сбой выполнения fork: %s"
+
+#: ../newrole/newrole.c:1226 ../newrole/newrole.c:1249
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr "Невозможно восстановить метку tty...\n"
+
+#: ../newrole/newrole.c:1228 ../newrole/newrole.c:1255
+#, c-format
+msgid "Failed to close tty properly\n"
+msgstr "Ошибка корректного закрытия tty\n"
+
+#: ../newrole/newrole.c:1287
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "Невозможно закрыть дескрипторы.\n"
+
+#: ../newrole/newrole.c:1314
+#, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "Ошибка выделения argv0 оболочки.\n"
+
+#: ../newrole/newrole.c:1346
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr "Невозможно восстановить окружение, аварийное завершение\n"
+
+#.
+#. * Error path cleanup
+#. *
+#. * If we reach here, then we failed to exec the new shell.
+#.
+#: ../newrole/newrole.c:1357
+msgid "failed to exec shell\n"
+msgstr "сбой запуска оболочки\n"
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-qi]\n"
+msgstr "использование:  %s [-qi]\n"
+
+#: ../load_policy/load_policy.c:71
+#, c-format
+msgid "%s:  Policy is already loaded and initial load requested\n"
+msgstr "%s:  Политика уже загружена, исходная загрузка запрошена\n"
+
+#: ../load_policy/load_policy.c:80
+#, c-format
+msgid "%s:  Can't load policy and enforcing mode requested:  %s\n"
+msgstr "%s:  Не удается загрузить запрошенную политику и режим принуждения:  %s\n"
+
+#: ../load_policy/load_policy.c:90
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s:  Невозможно загрузить политику:  %s\n"
+
+#: ../scripts/chcat:92 ../scripts/chcat:169
+msgid "Requires at least one category"
+msgstr "Требуется как минимум одна категория"
+
+#: ../scripts/chcat:106 ../scripts/chcat:183
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "Нельзя изменить уровень чувствительности используя  '+' на %s"
+
+#: ../scripts/chcat:110
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s уже в %s"
+
+#: ../scripts/chcat:188 ../scripts/chcat:198
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s не в %s"
+
+#: ../scripts/chcat:267 ../scripts/chcat:272
+msgid "Can not combine +/- with other types of categories"
+msgstr "Невозможно объединить +/- с другими типами категорий"
+
+#: ../scripts/chcat:317
+msgid "Can not have multiple sensitivities"
+msgstr "Нельзя иметь несколько уровней чувствительности"
+
+#: ../scripts/chcat:323
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "Использование %s КАТЕГОРИЯ Файл ..."
+
+#: ../scripts/chcat:324
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "Использование %s -l КАТЕГОРИЯ пользователь ..."
+
+#: ../scripts/chcat:325
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "Использование %s [[+|-]КАТЕГОРИЯ],...]q Файл ..."
+
+#: ../scripts/chcat:326
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "Использование %s -l [[+|-]КАТЕГОРИЯ],...]q пользователь ..."
+
+#: ../scripts/chcat:327
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "Использование %s -d Файл ..."
+
+#: ../scripts/chcat:328
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "Использование %s -l -d пользователь ..."
+
+#: ../scripts/chcat:329
+#, c-format
+msgid "Usage %s -L"
+msgstr "Использование %s -L"
+
+#: ../scripts/chcat:330
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "Использование %s -L -l пользователь"
+
+#: ../scripts/chcat:331
+msgid "Use -- to end option list.  For example"
+msgstr "Используйте -- чтобы указать завершение списка параметров. На пример"
+
+#: ../scripts/chcat:332
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -CompanyConfidential /docs/businessplan.odt"
+
+#: ../scripts/chcat:333
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +CompanyConfidential juser"
+
+#: ../scripts/chcat:397
+#, c-format
+msgid "Options Error %s "
+msgstr "Ошибка параметров %s "
+
+#: ../gui/booleansPage.py:184
+msgid "Boolean"
+msgstr "Переключатель"
+
+#: ../gui/booleansPage.py:231 ../gui/semanagePage.py:163
+msgid "all"
+msgstr "все"
+
+#: ../gui/booleansPage.py:233 ../gui/semanagePage.py:165
+#: ../gui/system-config-selinux.glade.h:13
+msgid "Customized"
+msgstr "Произвольный"
+
+#: ../gui/fcontextPage.py:64
+msgid "File Labeling"
 msgstr ""
-"п■п╩я▐ я┌п╬пЁп╬, я┤я┌п╬п╠я▀ п╥п╟пЁя─я┐п╥п╦я┌я▄ я┌п╬п╩я▄п╨п╬ я┤я┌п╬ я│п╬п╥п╢п╟п╫п╫я▀п╧ п©п╟п╨п╣я┌ п©п╬п╩п╦я┌п╦п╨п╦ п╡ я▐п╢я─п╬,\n"
-"п╡п╟п╪ п╫п╣п╬п╠я┘п╬п╢п╦п╪п╬ п╡я▀п©п╬п╩п╫п╦я┌я▄ п╨п╬п╪п╟п╫п╢я┐ \n"
-"\n"
-"semodule -i %s.pp\n"
-"\n"
 
-#: ../audit2allow/audit2allow:211
-#, c-format
-msgid "Options Error: %s "
-msgstr "п·я┬п╦п╠п╨п╟ п©п╟я─п╟п╪п╣я┌я─п╬п╡: %s "
+#: ../gui/fcontextPage.py:74
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"Определение\n"
+"файлов"
+
+#: ../gui/fcontextPage.py:81
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"SELinux\n"
+"Тип Файла"
+
+#: ../gui/fcontextPage.py:88
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"Фаил\n"
+"Тип"
+
+#: ../gui/loginsPage.py:48
+msgid "User Mapping"
+msgstr "Сопоставление пользователей"
+
+#: ../gui/loginsPage.py:52
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"Логин\n"
+"Имя"
+
+#: ../gui/loginsPage.py:56 ../gui/usersPage.py:50
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux\n"
+"Пользователь"
+
+#: ../gui/loginsPage.py:59 ../gui/usersPage.py:55
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"Диапазон\n"
+"MLS/MCS"
+
+#: ../gui/loginsPage.py:133
+#, python-format
+msgid "Login '%s' is required"
+msgstr "Требуется авторизация '%s'"
+
+#: ../gui/modulesPage.py:48
+msgid "Policy Module"
+msgstr "Модуль политики"
+
+#: ../gui/modulesPage.py:57
+msgid "Module Name"
+msgstr "Имя модуля"
+
+#: ../gui/modulesPage.py:62
+msgid "Version"
+msgstr "Версия"
+
+#: ../gui/modulesPage.py:134
+msgid "Disable Audit"
+msgstr "Выключить аудит"
+
+#: ../gui/modulesPage.py:137 ../gui/system-config-selinux.glade.h:23
+msgid "Enable Audit"
+msgstr "Включить аудит"
+
+#: ../gui/modulesPage.py:162
+msgid "Load Policy Module"
+msgstr "Загрузить модуль политики"
+
+#: ../gui/polgen.glade.h:1
+msgid "..."
+msgstr "..."
+
+#: ../gui/polgen.glade.h:2
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../gui/polgen.glade.h:3
+msgid "<b>Applications</b>"
+msgstr "<b>Приложения</b>"
+
+#: ../gui/polgen.glade.h:4
+msgid "<b>Login Users</b>"
+msgstr ""
+
+#: ../gui/polgen.glade.h:5
+msgid "<b>Root Users</b>"
+msgstr "<b>Пользователи root</b>"
+
+#: ../gui/polgen.glade.h:6
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP Порты</b>"
+
+#: ../gui/polgen.glade.h:7
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP Порты</b>"
+
+#: ../gui/polgen.glade.h:8
+msgid "Add Booleans Dialog"
+msgstr "Добавить диалог для переключателей"
+
+#: ../gui/polgen.glade.h:9
+msgid ""
+"Add Files/Directories that application will need to \"Write\" to. Pid Files, "
+"Log Files, /var/lib Files ..."
+msgstr "Добавить файлы и каталоги, в которые приложение будет осуществлять запись. Файлы PID, журналы, /var/lib"
+
+#: ../gui/polgen.glade.h:10
+msgid "Add/Remove booleans used for this confined application/user"
+msgstr "Добавить/ удалить переключатели, используемые для этого приложения/ пользователя"
+
+#: ../gui/polgen.glade.h:11
+msgid "Admin User Role"
+msgstr "Роль администратора"
+
+#: ../gui/polgen.glade.h:12
+msgid "All"
+msgstr "Все"
+
+#: ../gui/polgen.glade.h:13
+msgid ""
+"Allow application/user role to call bindresvport with 0. Binding to port 600-"
+"1024"
+msgstr "Разрешить приложению/ пользователю осуществлять вызов bindresvport с 0. Используется порт 600-1024"
+
+#: ../gui/polgen.glade.h:14
+msgid "Allows application/user role to bind to any udp ports > 1024"
+msgstr ""
+
+#: ../gui/polgen.glade.h:15
+msgid "Allows confined application/user role to bind to any udp port"
+msgstr ""
+
+#: ../gui/polgen.glade.h:16
+msgid "Boolean Name"
+msgstr "Имя переключателя"
+
+#: ../gui/polgen.glade.h:17
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "Создавать и обрабатывать временные файлы в каталоге /tmp"
+
+#: ../gui/polgen.glade.h:19
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that "
+"application/user role connects to. Example: 612, 650-660"
+msgstr "Введите список TCP-портов или диапазонов портов, разделенных запятой, к которым будет осуществляться подключение. Пример: 612, 650-660"
+
+#: ../gui/polgen.glade.h:20
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that "
+"application/user role binds to. Example: 612, 650-660"
+msgstr "Введите список UDP-портов или диапазонов портов, разделенных запятой, для которых будет выполнено сопоставление. Пример: 612, 650-660"
+
+#: ../gui/polgen.glade.h:21
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that "
+"application/user role connects to. Example: 612, 650-660"
+msgstr "Введите список UDP-портов или диапазонов портов, разделенных запятой, к которым будет осуществляться подключение. Пример: 612, 650-660"
+
+#: ../gui/polgen.glade.h:22
+msgid "Enter complete path for executable to be confined."
+msgstr ""
+
+#: ../gui/polgen.glade.h:23
+msgid "Enter complete path to init script used to start the confined application."
+msgstr ""
+
+#: ../gui/polgen.glade.h:24
+msgid "Enter name of application or user role to be confined"
+msgstr ""
+
+#: ../gui/polgen.glade.h:25
+msgid "Enter network ports that application/user role connects to"
+msgstr "Укажите сетевые порты, к которым подключается роль приложения/ пользователя"
+
+#: ../gui/polgen.glade.h:26
+msgid "Enter network ports that application/user role listens to"
+msgstr "Укажите сетевые порты, которые роль приложения/ пользователя будет прослушивать"
+
+#: ../gui/polgen.glade.h:27
+msgid "Enter unique name for the confined application or user role."
+msgstr ""
+
+#: ../gui/polgen.glade.h:28
+msgid "Executable"
+msgstr "Исполняемый компонент"
+
+#: ../gui/polgen.glade.h:29
+msgid "Existing User Roles"
+msgstr "Существующие роли пользователей"
+
+#: ../gui/polgen.glade.h:30
+msgid "GPL"
+msgstr "GPL"
+
+#: ../gui/polgen.glade.h:31
+msgid "Generated Policy Files"
+msgstr "Сгенерированные файлы политики"
+
+#: ../gui/polgen.glade.h:32
+msgid "Init script"
+msgstr "Cценарий init"
+
+#: ../gui/polgen.glade.h:33
+msgid "Interacts with the terminal"
+msgstr "Взаимодействует с терминалом"
+
+#: ../gui/polgen.glade.h:34
+msgid "Internet Services Daemon (inetd)"
+msgstr "Демон Интернет-служб (inetd)"
+
+#: ../gui/polgen.glade.h:35
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "initd запускается демоном xinetd"
+
+#: ../gui/polgen.glade.h:36
+msgid "Minimal Terminal User Role"
+msgstr ""
+
+#: ../gui/polgen.glade.h:37
+msgid "Minimal X Windows User Role"
+msgstr ""
+
+#: ../gui/polgen.glade.h:38
+msgid "Modify an existing login user record."
+msgstr "Изменить существующую запись авторизации пользователя."
+
+#: ../gui/polgen.glade.h:39 ../gui/polgengui.py:167
+msgid "Name"
+msgstr "Имя"
+
+#: ../gui/polgen.glade.h:40
+msgid "Polgen"
+msgstr "Polgen"
+
+#: ../gui/polgen.glade.h:41
+msgid "Policy Directory"
+msgstr "Каталог политики"
+
+#: ../gui/polgen.glade.h:42
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../gui/polgen.glade.h:43
+msgid "Root Admin User Role"
+msgstr "Роль администратора root"
+
+#: ../gui/polgen.glade.h:44
+msgid "SELinux Policy Generation Tool"
+msgstr "Утилита генерации политики SELinux"
+
+#: ../gui/polgen.glade.h:45
+msgid "Select Ports"
+msgstr "Выберите Порты"
+
+#: ../gui/polgen.glade.h:46
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr "Выберите роль администратора root, если этот пользователь также администрирует систему в режиме root. При этом пользователь не сможет авторизоваться в системе напрямую."
+
+#: ../gui/polgen.glade.h:47
+msgid "Select additional domains that this user role will administer"
+msgstr "Выберите дополнительные домены, которыми будет управлять этот пользователь"
+
+#: ../gui/polgen.glade.h:48
+msgid "Select additional domains to which this user role will transition"
+msgstr "Выберите дополнительные домены, в которых должна присутствовать эта роль"
+
+#: ../gui/polgen.glade.h:49
+msgid "Select additional roles for this user"
+msgstr "Выберите дополнительные роли для этого пользователя"
+
+#: ../gui/polgen.glade.h:50
+msgid "Select booleans that the application uses"
+msgstr "Выберите переключатели для использования приложением"
+
+#: ../gui/polgen.glade.h:51
+msgid "Select common application traits"
+msgstr ""
+
+#: ../gui/polgen.glade.h:52
+msgid "Select directory to generate policy in"
+msgstr "Выберите каталог, в котором будет генерироваться политика"
+
+#: ../gui/polgen.glade.h:53
+msgid "Select files/directories that the application manages"
+msgstr "Выберите файлы и каталоги, которыми будет управлять приложение"
+
+#: ../gui/polgen.glade.h:54
+msgid ""
+"Select the applications domains that you would like this user role to "
+"transition to."
+msgstr "Выберите домены приложений, на которые следует перенести эту роль пользователя."
+
+#: ../gui/polgen.glade.h:55
+msgid "Select the domains that you would like this user administer."
+msgstr "Выберите домены, которыми должен управлять этот пользователь."
+
+#: ../gui/polgen.glade.h:56
+msgid "Select the user roles that will transiton to this applications domains."
+msgstr "Выберите роли пользователей, которые следует перенести в домены приложений."
+
+#: ../gui/polgen.glade.h:57
+msgid "Select type of the application/user role to be confined"
+msgstr ""
+
+#: ../gui/polgen.glade.h:58
+msgid "Select user roles that will transition to this domain"
+msgstr "Выберите роли пользователей, которые должны быть перенесены в этот домен"
+
+#: ../gui/polgen.glade.h:59
+msgid "Select user roles that you want to customize"
+msgstr "Выберите роли пользователей, которые вы хотите модифицировать"
+
+#: ../gui/polgen.glade.h:60
+msgid "Sends audit messages"
+msgstr "Отправка audit сообщений "
+
+#: ../gui/polgen.glade.h:61
+msgid "Sends email"
+msgstr "Отправляет сообщение по эл.почте"
+
+#: ../gui/polgen.glade.h:62
+msgid "Standard Init Daemon"
+msgstr "Стандартный Init Демон"
+
+#: ../gui/polgen.glade.h:63
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr "Стандартные демоны инициализации запускаются при загрузке с помощью сценариев init, которые обычно расположены в /etc/rc.d/init.d"
+
+#: ../gui/polgen.glade.h:64
+msgid ""
+"This tool can be used to generate a policy framework, to confine "
+"applications or users using SELinux.   \n"
+"\n"
+"The tool generates:\n"
+"Type enforcement file (te)\n"
+"Interface file (if)\n"
+"File context file (fc)\n"
+"Shell script (sh) - used to compile and install the policy. "
+msgstr ""
+"С помощью этой утилиты можно генерировать инфраструктуру политики, ограничить работу приложений и пользователей с помощью SELinux.\n"
+"\n"
+"Утилита генерирует:\n"
+"Файл принуждения типа (te)\n"
+"Файл интерфейса (if)\n"
+"Файл контекста (fc)\n"
+"Сценарий оболочки (sh) для компиляции и установки политики."
+
+#: ../gui/polgen.glade.h:71
+msgid ""
+"This tool will generate the following: \n"
+"Type Enforcement(te), File Context(fc), Interface(if), Shell Script(sh)\n"
+"\n"
+"Execute shell script to compile/install and relabel files/directories.  \n"
+"Put the machine in permissive mode (setenforce 0). \n"
+"Run/restart the application to generate avc messages.\n"
+"Use audit2allow -R to generate additional rules for the te file.\n"
+msgstr ""
+"Эта утилита генерирует:\n"
+"Файл принуждения типа (te), файл интерфейса (if), файловый контекст (fc),\n"
+"сценарий оболочки (sh).\n"
+"\n"
+"Выполните сценарий оболочки, чтобы скомпилировать/ установить и присвоить метки файлам\n"
+"и каталогам.\n"
+"Включите разрешающий режим (setenforce 0). \n"
+"Запустите приложение для генерации сообщений avc.\n"
+"Выполните команду audit2allow -R, чтобы создать дополнительные правила для файла te.\n"
+
+#: ../gui/polgen.glade.h:79
+msgid ""
+"This tool will generate the following: \n"
+"Type Enforcement(te), File Context(fc), Interface(if), Shell Script(sh)\n"
+"Execute shell script as root to compile/install and relabel files/"
+"directories.  \n"
+"Use semanage or useradd to map Linux login users to user roles.\n"
+"Put the machine in permissive mode (setenforce 0). \n"
+"Login as the user and test this user role.\n"
+"Use audit2allow -R to generate additional rules for the te file.\n"
+msgstr ""
+"Эта утилита генерирует:\n"
+"Файл принуждения типа (te), файл интерфейса (if), файловый контекст (fc),\n"
+"сценарий оболочки (sh).\n"
+"\n"
+"Выполните сценарий оболочки в режиме root, чтобы скомпилировать/ установить\n"
+"и присвоить метки файлам и каталогам.\n"
+"Чтобы сопоставить роли пользователям Linux, используйте semanage или useradd.\n"
+"Включите разрешающий режим (setenforce 0). \n"
+"Авторизуйтесь и проверьте роль пользователя.\n"
+"Выполните команду audit2allow -R, чтобы создать дополнительные правила для файла te.\n"
+
+#: ../gui/polgen.glade.h:87
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr "Этот пользователь может авторизоваться с помощью X или терминала. Изначально для пользователя не настроены setuid, sudo, su и сетевое окружение."
+
+#: ../gui/polgen.glade.h:88
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr "Пользователь сможет авторизоваться только удаленно или в терминале. Изначально для пользователя не настроены setuid, sudo, su и сетевое окружение."
+
+#: ../gui/polgen.glade.h:89
+msgid "Unreserved Ports (>1024)"
+msgstr "Незарезервированные Порты (>1024)"
+
+#: ../gui/polgen.glade.h:90
+msgid "User Application"
+msgstr "Пользовательское Приложение"
+
+#: ../gui/polgen.glade.h:91
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+
+#: ../gui/polgen.glade.h:92
+msgid "User Role"
+msgstr ""
+
+#: ../gui/polgen.glade.h:93
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+
+#: ../gui/polgen.glade.h:94
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+
+#: ../gui/polgen.glade.h:95
+msgid "Uses Pam for authentication"
+msgstr "Используется Pam для аутентификации"
+
+#: ../gui/polgen.glade.h:96
+msgid "Uses dbus"
+msgstr "Используется dbus"
+
+#: ../gui/polgen.glade.h:97
+msgid "Uses nsswitch or getpw* calls"
+msgstr "Используются nsswitch или getpw* вызовы"
+
+#: ../gui/polgen.glade.h:98
+msgid "Web Application/Script (CGI)"
+msgstr ""
+
+#: ../gui/polgen.glade.h:99
+msgid "Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr ""
+
+#: ../gui/polgen.glade.h:100
+msgid "Writes syslog messages\t"
+msgstr ""
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../gui/polgen.glade.h:102 ../gui/system-config-selinux.glade.h:76
+msgid "translator-credits"
+msgstr ""
+
+#: ../gui/polgengui.py:177
+msgid "Role"
+msgstr "Роль"
+
+#: ../gui/polgengui.py:184
+msgid "Existing_User"
+msgstr ""
+
+#: ../gui/polgengui.py:199 ../gui/polgengui.py:207 ../gui/polgengui.py:221
+msgid "Application"
+msgstr "Приложения"
+
+#: ../gui/polgengui.py:269
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s должна быть директорией"
+
+#: ../gui/polgengui.py:328 ../gui/polgengui.py:595
+msgid "You must select a user"
+msgstr "Необходимо указать пользователя"
+
+#: ../gui/polgengui.py:451
+msgid "Select executable file to be confined."
+msgstr ""
+
+#: ../gui/polgengui.py:462
+msgid "Select init script file to be confined."
+msgstr ""
+
+#: ../gui/polgengui.py:472
+msgid "Select file(s) that confined application creates or writes"
+msgstr ""
+
+#: ../gui/polgengui.py:479
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr ""
+
+#: ../gui/polgengui.py:538
+msgid "Select directory to generate policy files in"
+msgstr ""
+
+#: ../gui/polgengui.py:551
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: ../gui/polgengui.py:551 ../gui/polgengui.py:555
+msgid "Verify Name"
+msgstr "Проверка имени"
+
+#: ../gui/polgengui.py:555
+#, python-format
+msgid ""
+"Module %s.pp already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: ../gui/polgengui.py:601
+msgid "You must enter a name"
+msgstr "Необходимо ввести имя"
+
+#: ../gui/polgengui.py:607
+#, fuzzy
+msgid "You must enter a executable"
+msgstr "Необходимо указать роль"
+
+#: ../gui/polgengui.py:611 ../gui/system-config-selinux.py:174
+msgid "Configue SELinux"
+msgstr "Настройка SELinux"
+
+#: ../gui/polgen.py:163
+#, python-format
+msgid "Ports must be numbers or ranges of numbers from 1 to %d "
+msgstr ""
+
+#: ../gui/polgen.py:192
+msgid "You must enter a name for your confined process/user"
+msgstr ""
+
+#: ../gui/polgen.py:270
+msgid "USER Types are not allowed executables"
+msgstr ""
+
+#: ../gui/polgen.py:276
+msgid "Only DAEMON apps can use an init script"
+msgstr ""
+
+#: ../gui/polgen.py:294
+msgid "use_syslog must be a boolean value "
+msgstr ""
+
+#: ../gui/polgen.py:315
+msgid "USER Types automatically get a tmp type"
+msgstr ""
+
+#: ../gui/polgen.py:711
+msgid "You must enter the executable path for your confined process"
+msgstr ""
+
+#: ../gui/polgen.py:830
+msgid "Type Enforcement file"
+msgstr "Файл принуждения типа"
+
+#: ../gui/polgen.py:831
+#, fuzzy
+msgid "Interface file"
+msgstr "Фаил интерфейса"
+
+#: ../gui/polgen.py:832
+#, fuzzy
+msgid "File Contexts file"
+msgstr "Контекст файла для %s не определен"
+
+#: ../gui/polgen.py:833
+msgid "Setup Script"
+msgstr ""
+
+#: ../gui/portsPage.py:85
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"SELinux Порт\n"
+"Тип"
+
+#: ../gui/portsPage.py:91 ../gui/system-config-selinux.glade.h:42
+msgid "Protocol"
+msgstr "Протокол"
+
+#: ../gui/portsPage.py:96 ../gui/system-config-selinux.glade.h:34
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"Уровень"
+
+#: ../gui/portsPage.py:101
+msgid "Port"
+msgstr "Порт"
+
+#: ../gui/portsPage.py:207
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr ""
+
+#: ../gui/portsPage.py:252
+msgid "List View"
+msgstr ""
+
+#: ../gui/portsPage.py:255 ../gui/system-config-selinux.glade.h:29
+msgid "Group View"
+msgstr ""
+
+#: ../gui/selinux.tbl:1 ../gui/selinux.tbl:30 ../gui/selinux.tbl:31
+#: ../gui/selinux.tbl:32 ../gui/selinux.tbl:33 ../gui/selinux.tbl:34
+#: ../gui/selinux.tbl:36 ../gui/selinux.tbl:37 ../gui/selinux.tbl:38
+#: ../gui/selinux.tbl:39 ../gui/selinux.tbl:40 ../gui/selinux.tbl:42
+#: ../gui/selinux.tbl:43 ../gui/selinux.tbl:44 ../gui/selinux.tbl:45
+#: ../gui/selinux.tbl:46 ../gui/selinux.tbl:47 ../gui/selinux.tbl:48
+#: ../gui/selinux.tbl:49 ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
+#: ../gui/selinux.tbl:52 ../gui/selinux.tbl:53 ../gui/selinux.tbl:59
+#: ../gui/selinux.tbl:60 ../gui/selinux.tbl:61 ../gui/selinux.tbl:62
+#: ../gui/selinux.tbl:63 ../gui/selinux.tbl:64 ../gui/selinux.tbl:65
+#: ../gui/selinux.tbl:66 ../gui/selinux.tbl:67 ../gui/selinux.tbl:68
+#: ../gui/selinux.tbl:69 ../gui/selinux.tbl:75 ../gui/selinux.tbl:76
+#: ../gui/selinux.tbl:77 ../gui/selinux.tbl:78 ../gui/selinux.tbl:79
+#: ../gui/selinux.tbl:80 ../gui/selinux.tbl:81 ../gui/selinux.tbl:82
+#: ../gui/selinux.tbl:83 ../gui/selinux.tbl:84 ../gui/selinux.tbl:86
+#: ../gui/selinux.tbl:88 ../gui/selinux.tbl:89 ../gui/selinux.tbl:90
+#: ../gui/selinux.tbl:92 ../gui/selinux.tbl:94 ../gui/selinux.tbl:95
+#: ../gui/selinux.tbl:96 ../gui/selinux.tbl:97 ../gui/selinux.tbl:98
+#: ../gui/selinux.tbl:99 ../gui/selinux.tbl:100 ../gui/selinux.tbl:101
+#: ../gui/selinux.tbl:102 ../gui/selinux.tbl:103 ../gui/selinux.tbl:104
+#: ../gui/selinux.tbl:106 ../gui/selinux.tbl:108 ../gui/selinux.tbl:109
+#: ../gui/selinux.tbl:110 ../gui/selinux.tbl:111 ../gui/selinux.tbl:112
+#: ../gui/selinux.tbl:113 ../gui/selinux.tbl:114 ../gui/selinux.tbl:116
+#: ../gui/selinux.tbl:117 ../gui/selinux.tbl:119 ../gui/selinux.tbl:121
+#: ../gui/selinux.tbl:123 ../gui/selinux.tbl:124 ../gui/selinux.tbl:127
+#: ../gui/selinux.tbl:129 ../gui/selinux.tbl:130 ../gui/selinux.tbl:131
+#: ../gui/selinux.tbl:132 ../gui/selinux.tbl:133 ../gui/selinux.tbl:134
+#: ../gui/selinux.tbl:135 ../gui/selinux.tbl:136 ../gui/selinux.tbl:137
+#: ../gui/selinux.tbl:138 ../gui/selinux.tbl:139 ../gui/selinux.tbl:142
+#: ../gui/selinux.tbl:143 ../gui/selinux.tbl:144 ../gui/selinux.tbl:145
+#: ../gui/selinux.tbl:146 ../gui/selinux.tbl:147 ../gui/selinux.tbl:148
+#: ../gui/selinux.tbl:149 ../gui/selinux.tbl:150 ../gui/selinux.tbl:151
+#: ../gui/selinux.tbl:152 ../gui/selinux.tbl:154 ../gui/selinux.tbl:155
+#: ../gui/selinux.tbl:156 ../gui/selinux.tbl:157 ../gui/selinux.tbl:158
+#: ../gui/selinux.tbl:159 ../gui/selinux.tbl:160 ../gui/selinux.tbl:167
+#: ../gui/selinux.tbl:171 ../gui/selinux.tbl:172 ../gui/selinux.tbl:173
+#: ../gui/selinux.tbl:174 ../gui/selinux.tbl:175 ../gui/selinux.tbl:177
+#: ../gui/selinux.tbl:178 ../gui/selinux.tbl:179 ../gui/selinux.tbl:180
+#: ../gui/selinux.tbl:184 ../gui/selinux.tbl:192 ../gui/selinux.tbl:193
+#: ../gui/selinux.tbl:194 ../gui/selinux.tbl:195 ../gui/selinux.tbl:196
+#: ../gui/selinux.tbl:197 ../gui/selinux.tbl:198 ../gui/selinux.tbl:199
+#: ../gui/selinux.tbl:200 ../gui/selinux.tbl:201 ../gui/selinux.tbl:206
+#: ../gui/selinux.tbl:207 ../gui/selinux.tbl:218 ../gui/selinux.tbl:219
+#: ../gui/selinux.tbl:220 ../gui/selinux.tbl:222 ../gui/selinux.tbl:224
+#: ../gui/selinux.tbl:226 ../gui/selinux.tbl:227 ../gui/selinux.tbl:230
+#, fuzzy
+msgid "SELinux Service Protection"
+msgstr "Служба Защиты SELinux"
+
+#: ../gui/selinux.tbl:1
+msgid "Disable SELinux protection for acct daemon"
+msgstr ""
+
+#: ../gui/selinux.tbl:2 ../gui/selinux.tbl:3 ../gui/selinux.tbl:70
+#: ../gui/selinux.tbl:153 ../gui/selinux.tbl:168 ../gui/selinux.tbl:169
+#: ../gui/selinux.tbl:170 ../gui/selinux.tbl:189 ../gui/selinux.tbl:202
+#: ../gui/selinux.tbl:203 ../gui/selinux.tbl:204 ../gui/selinux.tbl:205
+msgid "Admin"
+msgstr "Админ"
+
+#: ../gui/selinux.tbl:2
+msgid "Allow all daemons to write corefiles to /"
+msgstr ""
+
+#: ../gui/selinux.tbl:3
+msgid "Allow all daemons the ability to use unallocated ttys"
+msgstr ""
+
+#: ../gui/selinux.tbl:4 ../gui/selinux.tbl:5 ../gui/selinux.tbl:11
+#: ../gui/selinux.tbl:12 ../gui/selinux.tbl:13 ../gui/selinux.tbl:15
+#: ../gui/selinux.tbl:20 ../gui/selinux.tbl:41 ../gui/selinux.tbl:208
+#: ../gui/selinux.tbl:210 ../gui/selinux.tbl:211 ../gui/selinux.tbl:212
+#: ../gui/selinux.tbl:213 ../gui/selinux.tbl:214 ../gui/selinux.tbl:215
+#: ../gui/selinux.tbl:216 ../gui/selinux.tbl:217
+msgid "User Privs"
+msgstr ""
+
+#: ../gui/selinux.tbl:4
+msgid "Allow gadmin SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+
+#: ../gui/selinux.tbl:5
+msgid "Allow guest SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+
+#: ../gui/selinux.tbl:6 ../gui/selinux.tbl:9 ../gui/selinux.tbl:16
+msgid "Memory Protection"
+msgstr "Защита Памяти"
+
+#: ../gui/selinux.tbl:6
+msgid "Allow java executable stack"
+msgstr ""
+
+#: ../gui/selinux.tbl:7 ../gui/selinux.tbl:8 ../gui/selinux.tbl:35
+#: ../gui/selinux.tbl:209
+#, fuzzy
+msgid "Mount"
+msgstr "Монтировать"
+
+#: ../gui/selinux.tbl:7
+msgid "Allow mount to mount any file"
+msgstr ""
+
+#: ../gui/selinux.tbl:8
+msgid "Allow mount to mount any directory"
+msgstr ""
+
+#: ../gui/selinux.tbl:9
+msgid "Allow mplayer executable stack"
+msgstr ""
+
+#: ../gui/selinux.tbl:10 ../gui/selinux.tbl:162 ../gui/selinux.tbl:187
+#: ../gui/selinux.tbl:188
+msgid "SSH"
+msgstr "SSH"
+
+#: ../gui/selinux.tbl:10
+msgid "Allow ssh to run ssh-keysign"
+msgstr ""
+
+#: ../gui/selinux.tbl:11
+msgid "Allow staff SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+
+#: ../gui/selinux.tbl:12
+msgid "Allow sysadm SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+
+#: ../gui/selinux.tbl:13
+msgid ""
+"Allow unconfined SELinux user account to execute files in home directory or /"
+"tmp"
+msgstr ""
+
+#: ../gui/selinux.tbl:14
+msgid "Network Configuration"
+msgstr ""
+
+#: ../gui/selinux.tbl:14
+msgid "Allow unlabeled packets to flow on the network"
+msgstr ""
+
+#: ../gui/selinux.tbl:15
+msgid "Allow user SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+
+#: ../gui/selinux.tbl:16
+msgid "Allow unconfined to dyntrans to unconfined_execmem"
+msgstr ""
+
+#: ../gui/selinux.tbl:17 ../gui/selinux.tbl:18 ../gui/selinux.tbl:120
+#: ../gui/selinux.tbl:140
+msgid "Databases"
+msgstr ""
+
+#: ../gui/selinux.tbl:17
+msgid "Allow user to connect to mysql socket"
+msgstr ""
+
+#: ../gui/selinux.tbl:18
+msgid "Allow user to connect to postgres socket"
+msgstr ""
+
+#: ../gui/selinux.tbl:19 ../gui/selinux.tbl:165 ../gui/selinux.tbl:223
+msgid "XServer"
+msgstr ""
+
+#: ../gui/selinux.tbl:19
+msgid "Allow clients to write to X shared memory"
+msgstr ""
+
+#: ../gui/selinux.tbl:20
+msgid "Allow xguest SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+
+#: ../gui/selinux.tbl:21 ../gui/selinux.tbl:228 ../gui/selinux.tbl:229
+#: ../gui/selinux.tbl:231
+msgid "NIS"
+msgstr "NIS"
+
+#: ../gui/selinux.tbl:21
+msgid "Allow daemons to run with NIS"
+msgstr ""
+
+#: ../gui/selinux.tbl:22 ../gui/selinux.tbl:23 ../gui/selinux.tbl:24
+#: ../gui/selinux.tbl:25 ../gui/selinux.tbl:26 ../gui/selinux.tbl:27
+#: ../gui/selinux.tbl:28 ../gui/selinux.tbl:29 ../gui/selinux.tbl:71
+#: ../gui/selinux.tbl:73 ../gui/selinux.tbl:74 ../gui/selinux.tbl:115
+#: ../gui/selinux.tbl:118
+msgid "Web Applications"
+msgstr "Web Приложения"
+
+#: ../gui/selinux.tbl:22
+msgid "Transition staff SELinux user to Web Browser Domain"
+msgstr ""
+
+#: ../gui/selinux.tbl:23
+msgid "Transition sysadm SELinux user to Web Browser Domain"
+msgstr ""
+
+#: ../gui/selinux.tbl:24
+msgid "Transition user SELinux user to Web Browser Domain"
+msgstr ""
+
+#: ../gui/selinux.tbl:25
+msgid "Transition xguest SELinux user to Web Browser Domain"
+msgstr ""
+
+#: ../gui/selinux.tbl:26 ../gui/selinux.tbl:27 ../gui/selinux.tbl:28
+#: ../gui/selinux.tbl:29
+msgid "Allow staff Web Browsers to write to home directories"
+msgstr ""
+
+#: ../gui/selinux.tbl:30
+msgid "Disable SELinux protection for amanda"
+msgstr "Защита SELinux для amanda отключена"
+
+#: ../gui/selinux.tbl:31
+msgid "Disable SELinux protection for amavis"
+msgstr "Защита SELinux для amavis отключена"
+
+#: ../gui/selinux.tbl:32
+msgid "Disable SELinux protection for apmd daemon"
+msgstr "Защита SELinux для демона apmd отключена"
+
+#: ../gui/selinux.tbl:33
+msgid "Disable SELinux protection for arpwatch daemon"
+msgstr "Защита·SELinux·для демона arpwatch отключена"
+
+#: ../gui/selinux.tbl:34
+msgid "Disable SELinux protection for auditd daemon"
+msgstr "Защита·SELinux·для демона auditd отключена"
+
+#: ../gui/selinux.tbl:35
+msgid "Disable SELinux protection for automount daemon"
+msgstr "Защита·SELinux·для демона automount отключена"
+
+#: ../gui/selinux.tbl:36
+msgid "Disable SELinux protection for avahi"
+msgstr "Защита·SELinux·для avahi отключена"
+
+#: ../gui/selinux.tbl:37
+msgid "Disable SELinux protection for bluetooth daemon"
+msgstr "Защита·SELinux·для демона bluetooth отключена"
+
+#: ../gui/selinux.tbl:38
+msgid "Disable SELinux protection for canna daemon"
+msgstr "Защита·SELinux·для демона canna отключена"
+
+#: ../gui/selinux.tbl:39
+msgid "Disable SELinux protection for cardmgr daemon"
+msgstr "Защита·SELinux·для демона cardmgr отключена"
+
+#: ../gui/selinux.tbl:40
+msgid "Disable SELinux protection for Cluster Server"
+msgstr "Защита·SELinux·для Cluster Server отключена"
+
+#: ../gui/selinux.tbl:41
+msgid ""
+"Allow cdrecord to read various content. nfs, samba, removable devices, user "
+"temp and untrusted content files"
+msgstr ""
+
+#: ../gui/selinux.tbl:42
+msgid "Disable SELinux protection for ciped daemon"
+msgstr "Защита SELinux для демона ciped отключена"
+
+#: ../gui/selinux.tbl:43
+msgid "Disable SELinux protection for clamd daemon"
+msgstr "Защита·SELinux·для демона clamd отключена"
+
+#: ../gui/selinux.tbl:44
+msgid "Disable SELinux protection for clamscan"
+msgstr "Защита·SELinux·для clamscan отключена"
+
+#: ../gui/selinux.tbl:45
+msgid "Disable SELinux protection for clvmd"
+msgstr "Защита·SELinux·для clvmd отключена"
+
+#: ../gui/selinux.tbl:46
+msgid "Disable SELinux protection for comsat daemon"
+msgstr "Защита·SELinux·для демона comsat отключена"
+
+#: ../gui/selinux.tbl:47 ../gui/selinux.tbl:48 ../gui/selinux.tbl:49
+#: ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
+msgid "Disable SELinux protection for courier daemon"
+msgstr "Защита·SELinux·для демона courier отключена"
+
+#: ../gui/selinux.tbl:52
+msgid "Disable SELinux protection for cpucontrol daemon"
+msgstr "Защита·SELinux·для демона cpucontrol отключена"
+
+#: ../gui/selinux.tbl:53
+msgid "Disable SELinux protection for cpuspeed daemon"
+msgstr "Защита·SELinux·для демона cpuspeed отключена"
+
+#: ../gui/selinux.tbl:54
+msgid "Cron"
+msgstr "Cron"
+
+#: ../gui/selinux.tbl:54
+msgid "Disable SELinux protection for crond daemon"
+msgstr "Защита·SELinux·для демона crond отключена"
+
+#: ../gui/selinux.tbl:55 ../gui/selinux.tbl:56 ../gui/selinux.tbl:57
+#: ../gui/selinux.tbl:91
+msgid "Printing"
+msgstr ""
+
+#: ../gui/selinux.tbl:55
+#, fuzzy
+msgid "Disable SELinux protection for cupsd back end server"
+msgstr "Защита·SELinux·для cupsd back end server отключена"
+
+#: ../gui/selinux.tbl:56
+msgid "Disable SELinux protection for cupsd daemon"
+msgstr "Защита·SELinux·для демона cupsd отключена"
+
+#: ../gui/selinux.tbl:57
+msgid "Disable SELinux protection for cupsd_lpd"
+msgstr "Защита·SELinux·для cupsd_lpd отключена"
+
+#: ../gui/selinux.tbl:58
+msgid "CVS"
+msgstr "CVS"
+
+#: ../gui/selinux.tbl:58
+msgid "Disable SELinux protection for cvs daemon"
+msgstr "Защита·SELinux·для демона cvs отключена"
+
+#: ../gui/selinux.tbl:59
+msgid "Disable SELinux protection for cyrus daemon"
+msgstr "Защита·SELinux·для демона cyrus отключена"
+
+#: ../gui/selinux.tbl:60
+msgid "Disable SELinux protection for dbskkd daemon"
+msgstr "Защита·SELinux·для демона dbskkd отключена"
+
+#: ../gui/selinux.tbl:61
+msgid "Disable SELinux protection for dbusd daemon"
+msgstr "Защита·SELinux·для демона dbusd отключена"
+
+#: ../gui/selinux.tbl:62
+msgid "Disable SELinux protection for dccd"
+msgstr "Защита·SELinux·для dccd отключена"
+
+#: ../gui/selinux.tbl:63
+msgid "Disable SELinux protection for dccifd"
+msgstr "Защита·SELinux·для dccifd отключена"
+
+#: ../gui/selinux.tbl:64
+msgid "Disable SELinux protection for dccm"
+msgstr "Выключена·защита·SELinux·для·dccm"
+
+#: ../gui/selinux.tbl:65
+msgid "Disable SELinux protection for ddt daemon"
+msgstr "Выключена·защита·SELinux·для·демона·ddt"
+
+#: ../gui/selinux.tbl:66
+msgid "Disable SELinux protection for devfsd daemon"
+msgstr "Выключена·защита·SELinux·для·демона·devfsd"
+
+#: ../gui/selinux.tbl:67
+msgid "Disable SELinux protection for dhcpc daemon"
+msgstr "Защита·SELinux·для·демона·dhcpc отключена·"
+
+#: ../gui/selinux.tbl:68
+msgid "Disable SELinux protection for dhcpd daemon"
+msgstr "Защита·SELinux·для демона dhcpd отключена"
+
+#: ../gui/selinux.tbl:69
+msgid "Disable SELinux protection for dictd daemon"
+msgstr "Защита·SELinux·для демона dictd отключена"
+
+#: ../gui/selinux.tbl:70
+msgid "Allow sysadm_t to directly start daemons"
+msgstr ""
+
+#: ../gui/selinux.tbl:71
+msgid "Disable SELinux protection for Evolution"
+msgstr "Защита·SELinux·для Evolution отключена"
+
+#: ../gui/selinux.tbl:72
+msgid "Games"
+msgstr "Игры"
+
+#: ../gui/selinux.tbl:72
+msgid "Disable SELinux protection for games"
+msgstr "Защита·SELinux·для games отключена"
+
+#: ../gui/selinux.tbl:73
+msgid "Disable SELinux protection for the web browsers"
+msgstr "Защита·SELinux·для web браузеров отключена"
+
+#: ../gui/selinux.tbl:74
+msgid "Disable SELinux protection for Thunderbird"
+msgstr "Защита·SELinux·для Thunderbird отключена"
+
+#: ../gui/selinux.tbl:75
+msgid "Disable SELinux protection for distccd daemon"
+msgstr "Защита·SELinux·для демона distccd отключена"
+
+#: ../gui/selinux.tbl:76
+msgid "Disable SELinux protection for dmesg daemon"
+msgstr "Защита·SELinux·для демона dmesg отключена"
+
+#: ../gui/selinux.tbl:77
+msgid "Disable SELinux protection for dnsmasq daemon"
+msgstr "Защита·SELinux·для демона dnsmasq отключена"
+
+#: ../gui/selinux.tbl:78
+msgid "Disable SELinux protection for dovecot daemon"
+msgstr "Защита SELinux для демона dovecot отключена"
+
+#: ../gui/selinux.tbl:79
+msgid "Disable SELinux protection for entropyd daemon"
+msgstr "Защита SELinux для демона entropyd отключена"
+
+#: ../gui/selinux.tbl:80
+msgid "Disable SELinux protection for fetchmail"
+msgstr "Защита SELinux для fetchmail отключена"
+
+#: ../gui/selinux.tbl:81
+msgid "Disable SELinux protection for fingerd daemon"
+msgstr "Защита SELinux для демона fingerd отключена"
+
+#: ../gui/selinux.tbl:82
+msgid "Disable SELinux protection for freshclam daemon"
+msgstr "Защита SELinux для демона freshclam отключена"
+
+#: ../gui/selinux.tbl:83
+msgid "Disable SELinux protection for fsdaemon daemon"
+msgstr "Защита SELinux для демона fsdaemon отключена"
+
+#: ../gui/selinux.tbl:84
+msgid "Disable SELinux protection for gpm daemon"
+msgstr "Защита SELinux для демона gpm отключена"
+
+#: ../gui/selinux.tbl:85 ../gui/selinux.tbl:125
+msgid "NFS"
+msgstr "NFS"
+
+#: ../gui/selinux.tbl:85
+msgid "Disable SELinux protection for gss daemon"
+msgstr "Защита SELinux для демона gss отключена"
+
+#: ../gui/selinux.tbl:86
+msgid "Disable SELinux protection for Hal daemon"
+msgstr "Защита SELinux для демона Hal отключена"
+
+#: ../gui/selinux.tbl:87
+msgid "Compatibility"
+msgstr "Совместимость"
+
+#: ../gui/selinux.tbl:87
+msgid ""
+"Do not audit things that we know to be broken but which are not security "
+"risks"
+msgstr ""
+
+#: ../gui/selinux.tbl:88
+msgid "Disable SELinux protection for hostname daemon"
+msgstr "Защита SELinux для hostname отключена"
+
+#: ../gui/selinux.tbl:89
+msgid "Disable SELinux protection for hotplug daemon"
+msgstr "Защита SELinux для демона hotplug отключена"
+
+#: ../gui/selinux.tbl:90
+msgid "Disable SELinux protection for howl daemon"
+msgstr "Защита SELinux для демона howl отключена"
+
+#: ../gui/selinux.tbl:91
+msgid "Disable SELinux protection for cups hplip daemon"
+msgstr "Защита SELinux для демона cups hplip отключена"
+
+#: ../gui/selinux.tbl:92
+msgid "Disable SELinux protection for httpd rotatelogs"
+msgstr "Защита SELinux для демона httpd rotatelogs отключена"
+
+#: ../gui/selinux.tbl:93 ../gui/selinux.tbl:232 ../gui/selinux.tbl:233
+msgid "HTTPD Service"
+msgstr "Служба HTTPD"
+
+#: ../gui/selinux.tbl:93
+msgid "Disable SELinux protection for http suexec"
+msgstr "Защита SELinux для http suexec отключена"
+
+#: ../gui/selinux.tbl:94
+msgid "Disable SELinux protection for hwclock daemon"
+msgstr "Защита SELinux для демона hwclock отключена"
+
+#: ../gui/selinux.tbl:95
+msgid "Disable SELinux protection for i18n daemon"
+msgstr "Защита SELinux для демона i18n отключена"
+
+#: ../gui/selinux.tbl:96
+msgid "Disable SELinux protection for imazesrv daemon"
+msgstr "Защита SELinux для демона imazesrv отключена"
+
+#: ../gui/selinux.tbl:97
+msgid "Disable SELinux protection for inetd child daemons"
+msgstr "Защита SELinux для демона inetd child отключена"
+
+#: ../gui/selinux.tbl:98
+msgid "Disable SELinux protection for inetd daemon"
+msgstr "Защита SELinux для демона inetd отключена"
+
+#: ../gui/selinux.tbl:99
+msgid "Disable SELinux protection for innd daemon"
+msgstr "Защита SELinux для демона innd отключена"
+
+#: ../gui/selinux.tbl:100
+msgid "Disable SELinux protection for iptables daemon"
+msgstr "Защита SELinux для демона iptables отключена"
+
+#: ../gui/selinux.tbl:101
+msgid "Disable SELinux protection for ircd daemon"
+msgstr "Защита SELinux для демона ircd отключена"
+
+#: ../gui/selinux.tbl:102
+msgid "Disable SELinux protection for irqbalance daemon"
+msgstr "Защита SELinux для демона irqbalance отключена"
+
+#: ../gui/selinux.tbl:103
+msgid "Disable SELinux protection for iscsi daemon"
+msgstr "Защита SELinux для демона iscsi отключена"
+
+#: ../gui/selinux.tbl:104
+msgid "Disable SELinux protection for jabberd daemon"
+msgstr "Защита SELinux для демона jabberd отключена"
+
+#: ../gui/selinux.tbl:105 ../gui/selinux.tbl:107
+msgid "Kerberos"
+msgstr "Kerberos"
+
+#: ../gui/selinux.tbl:105
+msgid "Disable SELinux protection for kadmind daemon"
+msgstr "Защита SELinux для демона kadmind отключена"
+
+#: ../gui/selinux.tbl:106
+msgid "Disable SELinux protection for klogd daemon"
+msgstr "Защита SELinux для демона klogd отключена"
+
+#: ../gui/selinux.tbl:107
+msgid "Disable SELinux protection for krb5kdc daemon"
+msgstr "Защита SELinux для демона krb5kdc отключена"
+
+#: ../gui/selinux.tbl:108
+msgid "Disable SELinux protection for ktalk daemons"
+msgstr "Защита SELinux для демона ktalk отключена"
+
+#: ../gui/selinux.tbl:109
+msgid "Disable SELinux protection for kudzu daemon"
+msgstr "Защита SELinux для демона kudzu отключена"
+
+#: ../gui/selinux.tbl:110
+msgid "Disable SELinux protection for locate daemon"
+msgstr "Защита SELinux для демона locate отключена"
+
+#: ../gui/selinux.tbl:111
+msgid "Disable SELinux protection for lpd daemon"
+msgstr "Защита SELinux для демона lpd отключена"
+
+#: ../gui/selinux.tbl:112
+msgid "Disable SELinux protection for lrrd daemon"
+msgstr "Защита SELinux для демона lrrd отключена"
+
+#: ../gui/selinux.tbl:113
+msgid "Disable SELinux protection for lvm daemon"
+msgstr "Защита SELinux для демона lvm отключена"
+
+#: ../gui/selinux.tbl:114
+msgid "Disable SELinux protection for mailman"
+msgstr "Защита SELinux для mailman отключена"
+
+#: ../gui/selinux.tbl:115
+msgid "Allow evolution and thunderbird to read user files"
+msgstr ""
+
+#: ../gui/selinux.tbl:116
+msgid "Disable SELinux protection for mdadm daemon"
+msgstr "Защита SELinux для демона mdadm отключена"
+
+#: ../gui/selinux.tbl:117
+msgid "Disable SELinux protection for monopd daemon"
+msgstr "Защита SELinux для демона monopd отключена"
+
+#: ../gui/selinux.tbl:118
+msgid "Allow the mozilla browser to read user files"
+msgstr ""
+
+#: ../gui/selinux.tbl:119
+msgid "Disable SELinux protection for mrtg daemon"
+msgstr "Защита SELinux для демона mrtg отключена"
+
+#: ../gui/selinux.tbl:120
+msgid "Disable SELinux protection for mysqld daemon"
+msgstr "Защита SELinux для демона mysqld отключена"
+
+#: ../gui/selinux.tbl:121
+msgid "Disable SELinux protection for nagios daemon"
+msgstr "Защита SELinux для демона nagios отключена"
+
+#: ../gui/selinux.tbl:122 ../gui/selinux.tbl:128
+msgid "Name Service"
+msgstr "Служба Имен"
+
+#: ../gui/selinux.tbl:122
+msgid "Disable SELinux protection for named daemon"
+msgstr "Защита SELinux для демона named отключена"
+
+#: ../gui/selinux.tbl:123
+msgid "Disable SELinux protection for nessusd daemon"
+msgstr "Защита SELinux для демона nessusd отключена"
+
+#: ../gui/selinux.tbl:124
+msgid "Disable SELinux protection for NetworkManager"
+msgstr "Защита SELinux для NetworkManager отключена"
+
+#: ../gui/selinux.tbl:125
+msgid "Disable SELinux protection for nfsd daemon"
+msgstr "Защита SELinux для демона nfsd отключена"
+
+#: ../gui/selinux.tbl:126 ../gui/selinux.tbl:163 ../gui/selinux.tbl:176
+#: ../gui/selinux.tbl:221
+msgid "Samba"
+msgstr "Samba"
+
+#: ../gui/selinux.tbl:126
+msgid "Disable SELinux protection for nmbd daemon"
+msgstr "Защита SELinux для демона nmbd отключена"
+
+#: ../gui/selinux.tbl:127
+msgid "Disable SELinux protection for nrpe daemon"
+msgstr "Защита SELinux для демона nrpe отключена"
+
+#: ../gui/selinux.tbl:128
+msgid "Disable SELinux protection for nscd daemon"
+msgstr "Защита SELinux для демона nscd отключена"
+
+#: ../gui/selinux.tbl:129
+msgid "Disable SELinux protection for nsd daemon"
+msgstr "Защита SELinux для демона nsd отключена"
+
+#: ../gui/selinux.tbl:130
+msgid "Disable SELinux protection for ntpd daemon"
+msgstr "Защита SELinux для демона ntpd отключена"
+
+#: ../gui/selinux.tbl:131
+msgid "Disable SELinux protection for oddjob"
+msgstr "Защита SELinux для oddjob отключена"
+
+#: ../gui/selinux.tbl:132
+msgid "Disable SELinux protection for oddjob_mkhomedir"
+msgstr "Защита SELinux для oddjob_mkhomedir отключена"
+
+#: ../gui/selinux.tbl:133
+msgid "Disable SELinux protection for openvpn daemon"
+msgstr "Защита SELinux для демона openvpn отключена"
+
+#: ../gui/selinux.tbl:134
+msgid "Disable SELinux protection for pam daemon"
+msgstr "Защита SELinux для демона pam отключена"
+
+#: ../gui/selinux.tbl:135
+msgid "Disable SELinux protection for pegasus"
+msgstr "Защита SELinux для pegasus отключена"
+
+#: ../gui/selinux.tbl:136
+msgid "Disable SELinux protection for perdition daemon"
+msgstr "Защита SELinux для демона perdition отключена"
+
+#: ../gui/selinux.tbl:137
+msgid "Disable SELinux protection for portmap daemon"
+msgstr "Защита SELinux для демона portmap отключена"
+
+#: ../gui/selinux.tbl:138
+msgid "Disable SELinux protection for portslave daemon"
+msgstr "Защита SELinux для демона portslave отключена"
+
+#: ../gui/selinux.tbl:139
+msgid "Disable SELinux protection for postfix"
+msgstr "Защита SELinux для postfix отключена"
+
+#: ../gui/selinux.tbl:140
+msgid "Disable SELinux protection for postgresql daemon"
+msgstr "Защита SELinux для демона postgresql отключена"
+
+#: ../gui/selinux.tbl:141
+msgid "pppd"
+msgstr "pppd"
+
+#: ../gui/selinux.tbl:141
+msgid "Allow pppd to be run for a regular user"
+msgstr ""
+
+#: ../gui/selinux.tbl:142
+msgid "Disable SELinux protection for pptp"
+msgstr "Защита SELinux для pptp отключена"
+
+#: ../gui/selinux.tbl:143
+msgid "Disable SELinux protection for prelink daemon"
+msgstr "Защита SELinux для демона prelink отключена"
+
+#: ../gui/selinux.tbl:144
+msgid "Disable SELinux protection for privoxy daemon"
+msgstr "Защита SELinux для демона privoxy отключена"
+
+#: ../gui/selinux.tbl:145
+msgid "Disable SELinux protection for ptal daemon"
+msgstr "Защита SELinux для демона ptal отключена"
+
+#: ../gui/selinux.tbl:146
+msgid "Disable SELinux protection for pxe daemon"
+msgstr "Защита SELinux для демона pxe отключена"
+
+#: ../gui/selinux.tbl:147
+msgid "Disable SELinux protection for pyzord"
+msgstr "Защита SELinux для pyzord отключена"
+
+#: ../gui/selinux.tbl:148
+msgid "Disable SELinux protection for quota daemon"
+msgstr "Защита SELinux для демона quota отключена"
+
+#: ../gui/selinux.tbl:149
+msgid "Disable SELinux protection for radiusd daemon"
+msgstr "Защита SELinux для демона radiusd отключена"
+
+#: ../gui/selinux.tbl:150
+msgid "Disable SELinux protection for radvd daemon"
+msgstr "Защита SELinux для демона radvd отключена"
+
+#: ../gui/selinux.tbl:151
+msgid "Disable SELinux protection for rdisc"
+msgstr "Защита SELinux для rdisc отключена"
+
+#: ../gui/selinux.tbl:152
+msgid "Disable SELinux protection for readahead"
+msgstr "Защита SELinux для readahead отключена"
+
+#: ../gui/selinux.tbl:153
+msgid "Allow programs to read files in non-standard locations (default_t)"
+msgstr ""
+
+#: ../gui/selinux.tbl:154
+msgid "Disable SELinux protection for restorecond"
+msgstr "Защита SELinux для restorecond отключена"
+
+#: ../gui/selinux.tbl:155
+msgid "Disable SELinux protection for rhgb daemon"
+msgstr "Защита SELinux для демона rhgb отключена"
+
+#: ../gui/selinux.tbl:156
+msgid "Disable SELinux protection for ricci"
+msgstr "Защита SELinux для ricci отключена"
+
+#: ../gui/selinux.tbl:157
+msgid "Disable SELinux protection for ricci_modclusterd"
+msgstr "Защита SELinux для ricci_modclusterd отключена"
+
+#: ../gui/selinux.tbl:158
+msgid "Disable SELinux protection for rlogind daemon"
+msgstr "Защита SELinux для демона rlogind отключена"
+
+#: ../gui/selinux.tbl:159
+msgid "Disable SELinux protection for rpcd daemon"
+msgstr "Защита SELinux для демона rpcd отключена"
+
+#: ../gui/selinux.tbl:160
+msgid "Disable SELinux protection for rshd"
+msgstr "Защита SELinux для rshd отключена"
+
+#: ../gui/selinux.tbl:161
+msgid "rsync"
+msgstr "rsync"
+
+#: ../gui/selinux.tbl:161
+msgid "Disable SELinux protection for rsync daemon"
+msgstr "Защита SELinux для демона rsync отключена"
+
+#: ../gui/selinux.tbl:162
+msgid "Allow ssh to run from inetd instead of as a daemon"
+msgstr ""
+
+#: ../gui/selinux.tbl:163
+msgid "Allow Samba to share nfs directories"
+msgstr ""
+
+#: ../gui/selinux.tbl:164 ../gui/selinux.tbl:166
+msgid "SASL authentication server"
+msgstr "сервер авторизации SASL"
+
+#: ../gui/selinux.tbl:164
+msgid "Allow sasl authentication server to read /etc/shadow"
+msgstr ""
+
+#: ../gui/selinux.tbl:165
+msgid "Allow X-Windows server to map a memory region as both executable and writable"
+msgstr ""
+
+#: ../gui/selinux.tbl:166
+msgid "Disable SELinux protection for saslauthd daemon"
+msgstr "Защита SELinux для демона saslauthd отключена"
+
+#: ../gui/selinux.tbl:167
+msgid "Disable SELinux protection for scannerdaemon daemon"
+msgstr "Защита SELinux для демона scannerdaemon отключена"
+
+#: ../gui/selinux.tbl:168
+msgid "Do not allow transition to sysadm_t, sudo and su effected"
+msgstr ""
+
+#: ../gui/selinux.tbl:169
+msgid "Do not allow any processes to load kernel modules"
+msgstr ""
+
+#: ../gui/selinux.tbl:170
+msgid "Do not allow any processes to modify kernel SELinux policy"
+msgstr ""
+
+#: ../gui/selinux.tbl:171
+msgid "Disable SELinux protection for sendmail daemon"
+msgstr "Защита SELinux для демона sendmail отключена"
+
+#: ../gui/selinux.tbl:172
+msgid "Disable SELinux protection for setrans"
+msgstr "Защита SELinux для setrans отключена"
+
+#: ../gui/selinux.tbl:173
+msgid "Disable SELinux protection for setroubleshoot daemon"
+msgstr "Защита SELinux для демона setroubleshoot отключена"
+
+#: ../gui/selinux.tbl:174
+msgid "Disable SELinux protection for slapd daemon"
+msgstr "Защита SELinux для демона slapd отключена"
+
+#: ../gui/selinux.tbl:175
+msgid "Disable SELinux protection for slrnpull daemon"
+msgstr "Защита SELinux для демона slrnpull отключена"
+
+#: ../gui/selinux.tbl:176
+msgid "Disable SELinux protection for smbd daemon"
+msgstr "Защита SELinux для демона smbd отключена"
+
+#: ../gui/selinux.tbl:177
+msgid "Disable SELinux protection for snmpd daemon"
+msgstr "Защита SELinux для демона snmpd отключена"
+
+#: ../gui/selinux.tbl:178
+msgid "Disable SELinux protection for snort daemon"
+msgstr "Защита SELinux для демона snort отключена"
+
+#: ../gui/selinux.tbl:179
+msgid "Disable SELinux protection for soundd daemon"
+msgstr "Защита SELinux для демона soundd отключена"
+
+#: ../gui/selinux.tbl:180
+msgid "Disable SELinux protection for sound daemon"
+msgstr "Защита SELinux для демона sound отключена"
+
+#: ../gui/selinux.tbl:181 ../gui/selinux.tbl:182 ../gui/selinux.tbl:183
+msgid "Spam Protection"
+msgstr "Защита от Спама"
+
+#: ../gui/selinux.tbl:181
+msgid "Disable SELinux protection for spamd daemon"
+msgstr "Защита SELinux для демона spamd отключена"
+
+#: ../gui/selinux.tbl:182
+msgid "Allow spamd to access home directories"
+msgstr ""
+
+#: ../gui/selinux.tbl:183
+msgid "Allow Spam Assassin daemon network access"
+msgstr ""
+
+#: ../gui/selinux.tbl:184
+msgid "Disable SELinux protection for speedmgmt daemon"
+msgstr "Защита SELinux для демона speedmgmt отключена"
+
+#: ../gui/selinux.tbl:185 ../gui/selinux.tbl:186
+msgid "Squid"
+msgstr "Squid"
+
+#: ../gui/selinux.tbl:185
+msgid "Allow squid daemon to connect to the network"
+msgstr ""
+
+#: ../gui/selinux.tbl:186
+msgid "Disable SELinux protection for squid daemon"
+msgstr "Защита SELinux для демона squid отключена"
+
+#: ../gui/selinux.tbl:187
+msgid "Disable SELinux protection for ssh daemon"
+msgstr "Защита SELinux для демона ssh отключена"
+
+#: ../gui/selinux.tbl:188
+msgid "Allow ssh logins as sysadm_r:sysadm_t"
+msgstr ""
+
+#: ../gui/selinux.tbl:189
+msgid ""
+"Allow staff_r users to search the sysadm home dir and read files (such as ~/."
+"bashrc)"
+msgstr ""
+
+#: ../gui/selinux.tbl:190 ../gui/selinux.tbl:191
+msgid "Universal SSL tunnel"
+msgstr ""
+
+#: ../gui/selinux.tbl:190
+msgid "Disable SELinux protection for stunnel daemon"
+msgstr "Защита SELinux для демона stunnel отключена"
+
+#: ../gui/selinux.tbl:191
+msgid "Allow stunnel daemon to run as standalone, outside of xinetd"
+msgstr ""
+
+#: ../gui/selinux.tbl:192
+msgid "Disable SELinux protection for swat daemon"
+msgstr "Защита SELinux для демона swat отключена"
+
+#: ../gui/selinux.tbl:193
+msgid "Disable SELinux protection for sxid daemon"
+msgstr "Защита SELinux для демона sxid отключена"
+
+#: ../gui/selinux.tbl:194
+msgid "Disable SELinux protection for syslogd daemon"
+msgstr "Защита SELinux для демона syslogd отключена"
+
+#: ../gui/selinux.tbl:195
+msgid "Disable SELinux protection for system cron jobs"
+msgstr "Защита SELinux для системы заданий cron jobs отключена"
+
+#: ../gui/selinux.tbl:196
+msgid "Disable SELinux protection for tcp daemon"
+msgstr "Защита SELinux для демона tcp отключена"
+
+#: ../gui/selinux.tbl:197
+msgid "Disable SELinux protection for telnet daemon"
+msgstr "Защита SELinux для демона telnet отключена"
+
+#: ../gui/selinux.tbl:198
+msgid "Disable SELinux protection for tftpd daemon"
+msgstr "Защита SELinux для демона tftpd отключена"
+
+#: ../gui/selinux.tbl:199
+msgid "Disable SELinux protection for transproxy daemon"
+msgstr "Защита SELinux для демона transproxy отключена"
+
+#: ../gui/selinux.tbl:200
+msgid "Disable SELinux protection for udev daemon"
+msgstr "Защита SELinux для демона udev отключена"
+
+#: ../gui/selinux.tbl:201
+msgid "Disable SELinux protection for uml daemon"
+msgstr "Защита SELinux для демона uml отключена"
+
+#: ../gui/selinux.tbl:202
+msgid ""
+"Allow xinetd to run unconfined, including any services it starts that do not "
+"have a domain transition explicitly defined"
+msgstr ""
+
+#: ../gui/selinux.tbl:203
+msgid ""
+"Allow rc scripts to run unconfined, including any daemon started by an rc "
+"script that does not have a domain transition explicitly defined"
+msgstr ""
+
+#: ../gui/selinux.tbl:204
+msgid "Allow rpm to run unconfined"
+msgstr ""
+
+#: ../gui/selinux.tbl:205
+msgid "Allow privileged utilities like hotplug and insmod to run unconfined"
+msgstr ""
+
+#: ../gui/selinux.tbl:206
+msgid "Disable SELinux protection for updfstab daemon"
+msgstr "Защита SELinux для демона updfstab отключена"
+
+#: ../gui/selinux.tbl:207
+msgid "Disable SELinux protection for uptimed daemon"
+msgstr "Защита SELinux для демона uptimed отключена"
+
+#: ../gui/selinux.tbl:208
+msgid ""
+"Allow user_r to reach sysadm_r via su, sudo, or userhelper. Otherwise, only "
+"staff_r can do so"
+msgstr ""
+
+#: ../gui/selinux.tbl:209
+msgid "Allow users to execute the mount command"
+msgstr ""
+
+#: ../gui/selinux.tbl:210
+msgid "Allow regular users direct mouse access (only allow the X server)"
+msgstr ""
+
+#: ../gui/selinux.tbl:211
+msgid "Allow users to run the dmesg command"
+msgstr ""
+
+#: ../gui/selinux.tbl:212
+msgid "Allow users to control network interfaces (also needs USERCTL=true)"
+msgstr ""
+
+#: ../gui/selinux.tbl:213
+msgid "Allow normal user to execute ping"
+msgstr ""
+
+#: ../gui/selinux.tbl:214
+msgid "Allow user to r/w noextattrfile (FAT, CDROM, FLOPPY)"
+msgstr ""
+
+#: ../gui/selinux.tbl:215
+msgid "Allow users to rw usb devices"
+msgstr ""
+
+#: ../gui/selinux.tbl:216
+msgid ""
+"Allow users to run TCP servers (bind to ports and accept connection from the "
+"same domain and outside users)  disabling this forces FTP passive mode and "
+"may change other protocols"
+msgstr ""
+
+#: ../gui/selinux.tbl:217
+msgid "Allow user to stat ttyfiles"
+msgstr ""
+
+#: ../gui/selinux.tbl:218
+msgid "Disable SELinux protection for uucpd daemon"
+msgstr "Защита SELinux для демона uucpd отключена"
+
+#: ../gui/selinux.tbl:219
+msgid "Disable SELinux protection for vmware daemon"
+msgstr "Защита SELinux для демона vmware отключена"
+
+#: ../gui/selinux.tbl:220
+msgid "Disable SELinux protection for watchdog daemon"
+msgstr "Защита SELinux для демона watchdog отключена"
+
+#: ../gui/selinux.tbl:221
+msgid "Disable SELinux protection for winbind daemon"
+msgstr "Защита SELinux для демона winbind отключена"
+
+#: ../gui/selinux.tbl:222
+msgid "Disable SELinux protection for xdm daemon"
+msgstr "Защита SELinux для демона xdm отключена"
+
+#: ../gui/selinux.tbl:223
+msgid "Allow xdm logins as sysadm_r:sysadm_t"
+msgstr ""
+
+#: ../gui/selinux.tbl:224
+msgid "Disable SELinux protection for xen daemon"
+msgstr "Защита SELinux для демона xen отключена"
+
+#: ../gui/selinux.tbl:225
+msgid "XEN"
+msgstr "XEN"
+
+#: ../gui/selinux.tbl:225
+msgid "Allow xen to read/write physical disk devices"
+msgstr ""
+
+#: ../gui/selinux.tbl:226
+msgid "Disable SELinux protection for xfs daemon"
+msgstr "Защита SELinux для демона xfs отключена"
+
+#: ../gui/selinux.tbl:227
+msgid "Disable SELinux protection for xen control"
+msgstr "Защита SELinux для управления xen отключена"
+
+#: ../gui/selinux.tbl:228
+msgid "Disable SELinux protection for ypbind daemon"
+msgstr "Защита SELinux для домона ypbind отключена"
+
+#: ../gui/selinux.tbl:229
+msgid "Disable SELinux protection for NIS Password Daemon"
+msgstr "Защита SELinux для NIS Password Daemon отключена"
+
+#: ../gui/selinux.tbl:230
+msgid "Disable SELinux protection for ypserv daemon"
+msgstr "Защита SELinux для демона ypserv отключена"
+
+#: ../gui/selinux.tbl:231
+msgid "Disable SELinux protection for NIS Transfer Daemon"
+msgstr "Защита SELinux для NIS Transfer Daemon отключена"
+
+#: ../gui/selinux.tbl:232
+msgid "Allow SELinux webadm user to manage unprivileged users home directories"
+msgstr ""
+
+#: ../gui/selinux.tbl:233
+msgid "Allow SELinux webadm user to read unprivileged users home directories"
+msgstr ""
+
+#: ../gui/semanagePage.py:126
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr ""
+
+#: ../gui/semanagePage.py:126
+#, python-format
+msgid "Delete %s"
+msgstr "Удалить %s"
+
+#: ../gui/semanagePage.py:134
+#, python-format
+msgid "Add %s"
+msgstr "Добаить %s"
+
+#: ../gui/semanagePage.py:149
+#, python-format
+msgid "Modify %s"
+msgstr "Изменить %s"
+
+#: ../gui/statusPage.py:69
+msgid "Permissive"
+msgstr ""
+
+#: ../gui/statusPage.py:70
+msgid "Enforcing"
+msgstr ""
+
+#: ../gui/statusPage.py:75
+#, fuzzy
+msgid "Disabled"
+msgstr "Выключено"
+
+#: ../gui/statusPage.py:94
+msgid "Status"
+msgstr "Статус"
+
+#: ../gui/statusPage.py:133
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+
+#: ../gui/statusPage.py:147
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+
+#: ../gui/statusPage.py:152
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:1
+msgid "<b>Select:</b>"
+msgstr "<b>Выбор:</b>"
+
+#: ../gui/system-config-selinux.glade.h:2
+msgid "Add"
+msgstr "Добавить"
+
+#: ../gui/system-config-selinux.glade.h:3
+msgid "Add File Context"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:4
+msgid "Add Network Port"
+msgstr "Добавить Сетевой Порт"
+
+#: ../gui/system-config-selinux.glade.h:5
+msgid "Add SELinux Login Mapping"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:6
+msgid "Add SELinux Network Ports"
+msgstr "Добавить Сетевой Порт SELinux"
+
+#: ../gui/system-config-selinux.glade.h:7
+msgid "Add SELinux User"
+msgstr "Добавить Пользователя SELinux"
+
+#: ../gui/system-config-selinux.glade.h:8
+msgid "Add SELinux User Mapping"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:9
+msgid "Add Translation"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:10
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:12
+msgid "Current Enforcing Mode"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:14
+msgid "Delete File Context"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:15
+msgid "Delete Network Port"
+msgstr "Удалить Сетевой Порт"
+
+#: ../gui/system-config-selinux.glade.h:16
+#, fuzzy
+msgid "Delete SELinux User Mapping"
+msgstr "Невозможно удалить пользователя SELinux %s"
+
+#: ../gui/system-config-selinux.glade.h:17
+msgid "Delete Translation"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:18
+msgid ""
+"Disabled\n"
+"Permissive\n"
+"Enforcing\n"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:22
+msgid "Edit Network Port"
+msgstr "Редактировать Сетевой Порт"
+
+#: ../gui/system-config-selinux.glade.h:24
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:25
+msgid "File Specification"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:26
+msgid "File Type"
+msgstr "Тип Файла"
+
+#: ../gui/system-config-selinux.glade.h:27
+msgid "Filter"
+msgstr "Фильтер"
+
+#: ../gui/system-config-selinux.glade.h:28
+msgid "Generate new policy module"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:30
+#, fuzzy
+msgid "Load policy module"
+msgstr "Невозможно прочитать хранилище политики."
+
+#: ../gui/system-config-selinux.glade.h:31
+msgid "Lockdown..."
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:33
+msgid "MLS"
+msgstr "MLS"
+
+#: ../gui/system-config-selinux.glade.h:37
+msgid "Modify File Context"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:38
+#, fuzzy
+msgid "Modify SELinux User"
+msgstr "Невозможно изменить SELinux пользователя %s"
+
+#: ../gui/system-config-selinux.glade.h:39
+#, fuzzy
+msgid "Modify SELinux User Mapping"
+msgstr "Невозможно изменить SELinux пользователя %s"
+
+#: ../gui/system-config-selinux.glade.h:40
+msgid "Modify Translation"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:43
+msgid "Relabel on next reboot."
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:44
+msgid "Remove loadable policy module"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:45
+msgid "Revert boolean setting to system default"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:46
+msgid "Run booleans lockdown wizard"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:47
+msgid "SELinux Administration"
+msgstr "Администрирование SELinux"
+
+#: ../gui/system-config-selinux.glade.h:48
+msgid ""
+"SELinux MLS/MCS\n"
+"Level"
+msgstr ""
+"SELinux MLS/MCS\n"
+"Уровень"
+
+#: ../gui/system-config-selinux.glade.h:51
+msgid "SELinux Type"
+msgstr "Тип SELinux"
+
+#: ../gui/system-config-selinux.glade.h:53
+msgid "Select Management Object"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:54
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:55
+msgid "System Default Enforcing Mode"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:56
+msgid "System Default Policy Type: "
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:57
+msgid "Toggle between Customized and All Booleans"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:58
+msgid "Toggle between Customized and All Ports"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:59
+msgid "Toggle between all and customized file context"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:61
+msgid "_Delete"
+msgstr "_Удалить"
+
+#: ../gui/system-config-selinux.glade.h:62
+msgid "_Properties"
+msgstr "_Свойство"
+
+#: ../gui/system-config-selinux.glade.h:63
+msgid ""
+"all files\n"
+"regular file\n"
+"directory\n"
+"character device\n"
+"block device\n"
+"socket\n"
+"symbolic link\n"
+"named pipe\n"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:72
+msgid "system-config-selinux"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade.h:73
+msgid ""
+"tcp\n"
+"udp"
+msgstr ""
+"tcp\n"
+"udp"
+
+#: ../gui/translationsPage.py:53
+#, fuzzy
+msgid "Sensitvity Level"
+msgstr "Уровень Чувствительности"
+
+#: ../gui/usersPage.py:138
+#, fuzzy, python-format
+msgid "SELinux user '%s' is required"
+msgstr "необходим SELinux пользователь '%s' "
 
