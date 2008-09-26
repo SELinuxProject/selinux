@@ -1,3 +1,6 @@
+2.0.57 2008-09-18
+	* Update po files from Dan Walsh.
+
 2.0.56 2008-09-12
 	* fixfiles will now remove all files in /tmp and will check for
 	  unlabeled_t in /tmp and /var/tmp from Dan Walsh.

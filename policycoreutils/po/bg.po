@@ -1,303 +1,20 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# translation of policycoreutils.pot to Bulgarian
+# Copyright (C) 2008 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Doncho N. Gunchev <gunchev@gmail.com>, 2007.
+# Alexander Todorov <atodorov@redhat.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: policycoreutils\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-21 14:21-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-09-09 13:24-0400\n"
+"PO-Revision-Date: 2008-03-10 21:37+0100\n"
+"Last-Translator: Alexander Todorov <atodorov@redhat.com>\n"
+"Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: ../load_policy/load_policy.c:22
-#, c-format
-msgid "usage:  %s [-bq]\n"
-msgstr ""
-
-#: ../load_policy/load_policy.c:66
-#, c-format
-msgid "%s:  Can't load policy:  %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:188
-#, c-format
-msgid "failed to set PAM_TTY\n"
-msgstr ""
-
-#: ../newrole/newrole.c:218 ../run_init/run_init.c:162
-msgid "Password:"
-msgstr ""
-
-#: ../newrole/newrole.c:243 ../run_init/run_init.c:197
-#, c-format
-msgid "Cannot find your entry in the shadow passwd file.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:250 ../run_init/run_init.c:203
-#, c-format
-msgid "getpass cannot open /dev/tty\n"
-msgstr ""
-
-#: ../newrole/newrole.c:316
-#, c-format
-msgid "cannot find valid entry in the passwd file.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:327
-#, c-format
-msgid "Out of memory!\n"
-msgstr ""
-
-#: ../newrole/newrole.c:332
-#, c-format
-msgid "Error!  Shell is not valid.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:389
-#, c-format
-msgid "Unable to clear environment\n"
-msgstr ""
-
-#: ../newrole/newrole.c:436 ../newrole/newrole.c:513
-#, c-format
-msgid "Error initing capabilities, aborting.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:444 ../newrole/newrole.c:519
-#, c-format
-msgid "Error setting capabilities, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:450
-#, c-format
-msgid "Error setting KEEPCAPS, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:458 ../newrole/newrole.c:531
-#, c-format
-msgid "Error dropping capabilities, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:464 ../newrole/newrole.c:562
-#, c-format
-msgid "Error changing uid, aborting.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:470 ../newrole/newrole.c:525 ../newrole/newrole.c:557
-#, c-format
-msgid "Error resetting KEEPCAPS, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:477
-#, c-format
-msgid "Error dropping SETUID capability, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:482 ../newrole/newrole.c:536
-#, c-format
-msgid "Error freeing caps\n"
-msgstr ""
-
-#: ../newrole/newrole.c:580
-#, c-format
-msgid "Error connecting to audit system.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:586
-#, c-format
-msgid "Error allocating memory.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:593
-#, c-format
-msgid "Error sending audit message.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:634 ../newrole/newrole.c:978
-#, c-format
-msgid "Could not determine enforcing mode.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:641
-#, c-format
-msgid "Error!  Could not open %s.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:646
-#, c-format
-msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:656
-#, c-format
-msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:666
-#, c-format
-msgid "%s!  Could not set new context for %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:710
-#, c-format
-msgid "%s changed labels.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:716
-#, c-format
-msgid "Warning! Could not restore context for %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:772
-#, c-format
-msgid "Error: multiple roles specified\n"
-msgstr ""
-
-#: ../newrole/newrole.c:780
-#, c-format
-msgid "Error: multiple types specified\n"
-msgstr ""
-
-#: ../newrole/newrole.c:787
-#, c-format
-msgid "Sorry, -l may be used with SELinux MLS support.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:792
-#, c-format
-msgid "Error: multiple levels specified\n"
-msgstr ""
-
-#: ../newrole/newrole.c:814
-#, c-format
-msgid "Couldn't get default type.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:824
-#, c-format
-msgid "failed to get new context.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:831
-#, c-format
-msgid "failed to set new role %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:838
-#, c-format
-msgid "failed to set new type %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:847
-#, c-format
-msgid "failed to build new range with level %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:852
-#, c-format
-msgid "failed to set new range %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:860
-#, c-format
-msgid "failed to convert new context to string\n"
-msgstr ""
-
-#: ../newrole/newrole.c:865
-#, c-format
-msgid "%s is not a valid context\n"
-msgstr ""
-
-#: ../newrole/newrole.c:872
-#, c-format
-msgid "Unable to allocate memory for new_context"
-msgstr ""
-
-#: ../newrole/newrole.c:898
-#, c-format
-msgid "Unable to obtain empty signal set\n"
-msgstr ""
-
-#: ../newrole/newrole.c:906
-#, c-format
-msgid "Unable to set SIGHUP handler\n"
-msgstr ""
-
-#: ../newrole/newrole.c:972
-#, c-format
-msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:989
-#, c-format
-msgid "failed to get old_context.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:996
-#, c-format
-msgid "Error!  Could not retrieve tty information.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1015
-#, c-format
-msgid "Authenticating %s.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1020 ../run_init/run_init.c:126
-#, c-format
-msgid "failed to initialize PAM\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1029
-#, c-format
-msgid "newrole: incorrect password for %s\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1056
-#, c-format
-msgid "newrole: failure forking: %s"
-msgstr ""
-
-#: ../newrole/newrole.c:1059 ../newrole/newrole.c:1082
-#, c-format
-msgid "Unable to restore tty label...\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1061 ../newrole/newrole.c:1088
-#, c-format
-msgid "Failed to close tty properly\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1117
-#, c-format
-msgid "Could not close descriptors.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1140
-#, c-format
-msgid "Error allocating shell's argv0.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1147 ../run_init/run_init.c:405
-#, c-format
-msgid "Could not set exec context to %s.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1173
-#, c-format
-msgid "Unable to restore the environment, aborting\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1184
-msgid "failed to exec shell\n"
-msgstr ""
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -305,724 +22,3986 @@ msgid ""
 "  where: <script> is the name of the init script to run,\n"
 "         <args ...> are the arguments to that script."
 msgstr ""
+"УПОТРЕБА: run_init <скрипт> <аргументи ...>\n"
+"  където: <скрипт> е името на инициализационния скрипт за изпълнение,\n"
+"         <аргументи ...> са аргументите към този скрипт."
+
+#: ../run_init/run_init.c:126 ../newrole/newrole.c:1187
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "неуспешна инициализация на PAM\n"
 
 #: ../run_init/run_init.c:139
 #, c-format
 msgid "failed to get account information\n"
-msgstr ""
+msgstr "неуспешно извличане на информация за акаунта\n"
+
+#: ../run_init/run_init.c:162 ../newrole/newrole.c:338
+msgid "Password:"
+msgstr "Парола:"
+
+#: ../run_init/run_init.c:197 ../newrole/newrole.c:363
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr "Не може да се намери вашия запис във файла shadow.\n"
+
+#: ../run_init/run_init.c:203 ../newrole/newrole.c:370
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr "getpass не може да се отвори /dev/tty\n"
 
 #: ../run_init/run_init.c:275
 #, c-format
 msgid "run_init: incorrect password for %s\n"
-msgstr ""
+msgstr "run_init: грешна парола за %s\n"
 
 #: ../run_init/run_init.c:309
 #, c-format
 msgid "Could not open file %s\n"
-msgstr ""
+msgstr "Не може да се отвори файл %s\n"
 
 #: ../run_init/run_init.c:336
 #, c-format
 msgid "No context in file %s\n"
-msgstr ""
+msgstr "Няма контекст във файла %s\n"
 
 #: ../run_init/run_init.c:361
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
-msgstr ""
+msgstr "Съжаляваме, run_init може да се ползва само със SELinux ядро.\n"
 
 #: ../run_init/run_init.c:380
 #, c-format
 msgid "authentication failed.\n"
-msgstr ""
+msgstr "неуспешно удостоверяване.\n"
 
-#: ../scripts/chcat:75 ../scripts/chcat:145
-msgid "Requires at least one category"
-msgstr ""
-
-#: ../scripts/chcat:89 ../scripts/chcat:159
+#: ../run_init/run_init.c:405 ../newrole/newrole.c:1321
 #, c-format
-msgid "Can not modify sensitivity levels using '+' on %s"
+msgid "Could not set exec context to %s.\n"
+msgstr "Неуспешно установяване контекста на изпълнение на %s.\n"
+
+#: ../audit2allow/audit2allow:217
+msgid "******************** IMPORTANT ***********************\n"
+msgstr "********************** ВАЖНО *************************\n"
+
+#: ../audit2allow/audit2allow:218
+msgid "To make this policy package active, execute:"
+msgstr "За да активирате този пакет с политика, изпълнете:"
+
+#: ../semanage/seobject.py:49
+msgid "Could not create semanage handle"
+msgstr "Не може да се създаде semanage обект за управление"
+
+#: ../semanage/seobject.py:56
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "SELinux политиката не е управлявана или хранилището не е достъпно."
+
+#: ../semanage/seobject.py:61
+msgid "Cannot read policy store."
+msgstr "Не може да се прочете хранилището с политики."
+
+#: ../semanage/seobject.py:66
+msgid "Could not establish semanage connection"
+msgstr "Не може да се направи semanage връзка"
+
+#: ../semanage/seobject.py:137 ../semanage/seobject.py:141
+msgid "global"
 msgstr ""
 
-#: ../scripts/chcat:93
-#, c-format
-msgid "%s is already in %s"
-msgstr ""
-
-#: ../scripts/chcat:164 ../scripts/chcat:174
-#, c-format
-msgid "%s is not in %s"
-msgstr ""
-
-#: ../scripts/chcat:237 ../scripts/chcat:242
-msgid "Can not combine +/- with other types of categories"
-msgstr ""
-
-#: ../scripts/chcat:287
-msgid "Can not have multiple sensitivities"
-msgstr ""
-
-#: ../scripts/chcat:293
-#, c-format
-msgid "Usage %s CATEGORY File ..."
-msgstr ""
-
-#: ../scripts/chcat:294
-#, c-format
-msgid "Usage %s -l CATEGORY user ..."
-msgstr ""
-
-#: ../scripts/chcat:295
-#, c-format
-msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
-msgstr ""
-
-#: ../scripts/chcat:296
-#, c-format
-msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
-msgstr ""
-
-#: ../scripts/chcat:297
-#, c-format
-msgid "Usage %s -d File ..."
-msgstr ""
-
-#: ../scripts/chcat:298
-#, c-format
-msgid "Usage %s -l -d user ..."
-msgstr ""
-
-#: ../scripts/chcat:299
-#, c-format
-msgid "Usage %s -L"
-msgstr ""
-
-#: ../scripts/chcat:300
-#, c-format
-msgid "Usage %s -L -l user"
-msgstr ""
-
-#: ../scripts/chcat:301
-msgid "Use -- to end option list.  For example"
-msgstr ""
-
-#: ../scripts/chcat:302
-msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
-msgstr ""
-
-#: ../scripts/chcat:303
-msgid "chcat -l +CompanyConfidential juser"
-msgstr ""
-
-#: ../semanage/semanage:127
-msgid "Requires 2 or more arguments"
-msgstr ""
-
-#: ../semanage/semanage:132
-#, c-format
-msgid "%s not defined"
-msgstr ""
-
-#: ../semanage/semanage:156
-#, c-format
-msgid "%s not valid for %s objects\n"
-msgstr ""
-
-#: ../semanage/semanage:183 ../semanage/semanage:191
-msgid "range not supported on Non MLS machines"
-msgstr ""
-
-#: ../semanage/semanage:249
-msgid "You must specify a role"
-msgstr ""
-
-#: ../semanage/semanage:251
-msgid "You must specify a prefix"
-msgstr ""
-
-#: ../semanage/semanage:300
-#, c-format
-msgid "Options Error %s "
-msgstr ""
-
-#: ../semanage/semanage:304
-#, c-format
-msgid "Invalid value %s"
-msgstr ""
-
-#: ../semanage/seobject.py:132
+#: ../semanage/seobject.py:196
 msgid "translations not supported on non-MLS machines"
-msgstr ""
+msgstr "не се поддържат преводи на машини без MLS"
 
-#: ../semanage/seobject.py:139
-#, python-format
-msgid "Unable to open %s: translations not supported on non-MLS machines"
-msgstr ""
+#: ../semanage/seobject.py:203
+#, fuzzy, python-format
+msgid "Unable to open %s: translations not supported on non-MLS machines: %s"
+msgstr "Не може да се отвори %s: не се поддържат преводи на машини без MLS"
 
-#: ../semanage/seobject.py:179 ../semanage/seobject.py:193
+#: ../semanage/seobject.py:236
+msgid "Level"
+msgstr "Ниво"
+
+#: ../semanage/seobject.py:236 ../gui/system-config-selinux.glade:651
+#: ../gui/translationsPage.py:43 ../gui/translationsPage.py:59
+msgid "Translation"
+msgstr "Превод"
+
+#: ../semanage/seobject.py:244 ../semanage/seobject.py:258
 #, python-format
 msgid "Translations can not contain spaces '%s' "
-msgstr ""
+msgstr "Преводите не могат да съдържат интервали '%s' "
 
-#: ../semanage/seobject.py:182
+#: ../semanage/seobject.py:247
 #, python-format
 msgid "Invalid Level '%s' "
-msgstr ""
+msgstr "Невалидно ниво '%s' "
 
-#: ../semanage/seobject.py:185
+#: ../semanage/seobject.py:250
 #, python-format
 msgid "%s already defined in translations"
-msgstr ""
+msgstr "%s вече е дефиниран в преводите"
 
-#: ../semanage/seobject.py:197
+#: ../semanage/seobject.py:262
 #, python-format
 msgid "%s not defined in translations"
+msgstr "%s не е дефиниран в преводите"
+
+#: ../semanage/seobject.py:288
+msgid "Not yet implemented"
 msgstr ""
 
-#: ../semanage/seobject.py:218
-msgid "SELinux policy is not managed or store cannot be accessed."
-msgstr ""
-
-#: ../semanage/seobject.py:223
-msgid "Cannot read policy store."
-msgstr ""
-
-#: ../semanage/seobject.py:228
-msgid "Could not establish semanage connection"
-msgstr ""
-
-#: ../semanage/seobject.py:247 ../semanage/seobject.py:305
-#: ../semanage/seobject.py:352 ../semanage/seobject.py:433
-#: ../semanage/seobject.py:504 ../semanage/seobject.py:562
-#: ../semanage/seobject.py:1093 ../semanage/seobject.py:1132
-#: ../semanage/seobject.py:1207 ../semanage/seobject.py:1241
-#, python-format
-msgid "Could not create a key for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:251 ../semanage/seobject.py:309
-#: ../semanage/seobject.py:356 ../semanage/seobject.py:362
-#, python-format
-msgid "Could not check if login mapping for %s is defined"
-msgstr ""
-
-#: ../semanage/seobject.py:253
-#, python-format
-msgid "Login mapping for %s is already defined"
-msgstr ""
-
-#: ../semanage/seobject.py:257
-#, python-format
-msgid "Linux User %s does not exist"
-msgstr ""
-
-#: ../semanage/seobject.py:261
-#, python-format
-msgid "Could not create login mapping for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:265 ../semanage/seobject.py:447
-#, python-format
-msgid "Could not set name for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:270 ../semanage/seobject.py:457
-#, python-format
-msgid "Could not set MLS range for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:274
-#, python-format
-msgid "Could not set SELinux user for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:278 ../semanage/seobject.py:330
-#: ../semanage/seobject.py:368 ../semanage/seobject.py:473
-#: ../semanage/seobject.py:539 ../semanage/seobject.py:578
-#: ../semanage/seobject.py:705 ../semanage/seobject.py:747
-#: ../semanage/seobject.py:776 ../semanage/seobject.py:903
-#: ../semanage/seobject.py:944 ../semanage/seobject.py:976
-#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1116
-#: ../semanage/seobject.py:1148 ../semanage/seobject.py:1225
-#: ../semanage/seobject.py:1257
+#: ../semanage/seobject.py:295
 msgid "Could not start semanage transaction"
-msgstr ""
-
-#: ../semanage/seobject.py:282 ../semanage/seobject.py:286
-#, python-format
-msgid "Could not add login mapping for %s"
-msgstr ""
+msgstr "Не може да се стартира semanage транзакция"
 
 #: ../semanage/seobject.py:301
-msgid "Requires seuser or serange"
+#, fuzzy
+msgid "Could not commit semanage transaction"
+msgstr "Не може да се стартира semanage транзакция"
+
+#: ../semanage/seobject.py:311
+#, fuzzy
+msgid "Could not list SELinux modules"
+msgstr "Не могат да бъдат получени SELinux потребителите"
+
+#: ../semanage/seobject.py:322
+#, fuzzy
+msgid "Permissive Types"
+msgstr "Пасивен"
+
+#: ../semanage/seobject.py:352
+#, python-format
+msgid "Could not set permissive domain %s (module installation failed)"
 msgstr ""
 
-#: ../semanage/seobject.py:311 ../semanage/seobject.py:358
+#: ../semanage/seobject.py:366
+#, python-format
+msgid "Could not remove permissive domain %s (remove failed)"
+msgstr ""
+
+#: ../semanage/seobject.py:392 ../semanage/seobject.py:452
+#: ../semanage/seobject.py:498 ../semanage/seobject.py:580
+#: ../semanage/seobject.py:647 ../semanage/seobject.py:705
+#: ../semanage/seobject.py:915 ../semanage/seobject.py:1482
+#: ../semanage/seobject.py:1542 ../semanage/seobject.py:1554
+#: ../semanage/seobject.py:1633 ../semanage/seobject.py:1684
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "Не може да се създаде ключ за %s"
+
+#: ../semanage/seobject.py:396 ../semanage/seobject.py:456
+#: ../semanage/seobject.py:502 ../semanage/seobject.py:508
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "Не може да се провери дали е дефинирано съответствие за вход на %s"
+
+#: ../semanage/seobject.py:398
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr "Вече е дефинирано съответствие за вход на %s"
+
+#: ../semanage/seobject.py:403
+#, fuzzy, python-format
+msgid "Linux Group %s does not exist"
+msgstr "Linux потребител %s не съществува"
+
+#: ../semanage/seobject.py:408
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "Linux потребител %s не съществува"
+
+#: ../semanage/seobject.py:412
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "Не може да се създаде съответствие за вход за %s"
+
+#: ../semanage/seobject.py:416 ../semanage/seobject.py:594
+#, python-format
+msgid "Could not set name for %s"
+msgstr "Не може да се зададе името за %s"
+
+#: ../semanage/seobject.py:421 ../semanage/seobject.py:604
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "Не може да се зададе MLS диапазон за %s"
+
+#: ../semanage/seobject.py:425
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "Не може да се зададе SELinux потребител за %s"
+
+#: ../semanage/seobject.py:429
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "Не може да се добави съответствие за вход за %s"
+
+#: ../semanage/seobject.py:441 ../semanage/seobject.py:444
+msgid "add SELinux user mapping"
+msgstr "добавяне на SELinux съответствие за потребител"
+
+#: ../semanage/seobject.py:448
+msgid "Requires seuser or serange"
+msgstr "Изисква seuser или serange"
+
+#: ../semanage/seobject.py:458 ../semanage/seobject.py:504
 #, python-format
 msgid "Login mapping for %s is not defined"
-msgstr ""
+msgstr "Не е дефинирано съответствие за вход за %s"
 
-#: ../semanage/seobject.py:315
+#: ../semanage/seobject.py:462
 #, python-format
 msgid "Could not query seuser for %s"
-msgstr ""
+msgstr "Не може да се запита seuser за %s"
 
-#: ../semanage/seobject.py:334 ../semanage/seobject.py:338
+#: ../semanage/seobject.py:478
 #, python-format
 msgid "Could not modify login mapping for %s"
-msgstr ""
+msgstr "Не може да се промени съответствието за вход за %s"
 
-#: ../semanage/seobject.py:364
+#: ../semanage/seobject.py:510
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
 msgstr ""
-
-#: ../semanage/seobject.py:373 ../semanage/seobject.py:377
-#, python-format
-msgid "Could not delete login mapping for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:391
-msgid "Could not list login mappings"
-msgstr ""
-
-#: ../semanage/seobject.py:437 ../semanage/seobject.py:508
-#: ../semanage/seobject.py:566 ../semanage/seobject.py:572
-#, python-format
-msgid "Could not check if SELinux user %s is defined"
-msgstr ""
-
-#: ../semanage/seobject.py:439
-#, python-format
-msgid "SELinux user %s is already defined"
-msgstr ""
-
-#: ../semanage/seobject.py:443
-#, python-format
-msgid "Could not create SELinux user for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:452
-#, python-format
-msgid "Could not add role %s for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:461
-#, python-format
-msgid "Could not set MLS level for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:463 ../semanage/seobject.py:530
-#, python-format
-msgid "Invalid prefix %s"
-msgstr ""
-
-#: ../semanage/seobject.py:466
-#, python-format
-msgid "Could not add prefix %s for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:469
-#, python-format
-msgid "Could not extract key for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:477 ../semanage/seobject.py:481
-#, python-format
-msgid "Could not add SELinux user %s"
-msgstr ""
-
-#: ../semanage/seobject.py:498
-msgid "Requires prefix, roles, level or range"
-msgstr ""
-
-#: ../semanage/seobject.py:500
-msgid "Requires prefix or roles"
-msgstr ""
-
-#: ../semanage/seobject.py:510 ../semanage/seobject.py:568
-#, python-format
-msgid "SELinux user %s is not defined"
-msgstr ""
+"Съответствие за вход за %s е дефинирано в политиката, не може да бъде изтрито"
 
 #: ../semanage/seobject.py:514
 #, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "Не може да се изтрие съответствието за вход за %s"
+
+#: ../semanage/seobject.py:537
+msgid "Could not list login mappings"
+msgstr "Грешка при получаване на съответствията за вход"
+
+#: ../semanage/seobject.py:550 ../semanage/seobject.py:555
+#: ../gui/system-config-selinux.glade:100
+msgid "Login Name"
+msgstr "Потребителско име"
+
+#: ../semanage/seobject.py:550 ../semanage/seobject.py:555
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:769
+#: ../gui/system-config-selinux.glade:128
+#: ../gui/system-config-selinux.glade:1107
+msgid "SELinux User"
+msgstr "SELinux потребител"
+
+#: ../semanage/seobject.py:550 ../gui/system-config-selinux.glade:156
+#: ../gui/system-config-selinux.glade:1135
+msgid "MLS/MCS Range"
+msgstr "MLS/MCS интервал"
+
+#: ../semanage/seobject.py:576
+#, fuzzy, python-format
+msgid "You must add at least one role for %s"
+msgstr "Не може да се добави контекст на файл за %s"
+
+#: ../semanage/seobject.py:584 ../semanage/seobject.py:651
+#: ../semanage/seobject.py:709 ../semanage/seobject.py:715
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "Не може да се провери дали SELinux потребител %s е дефиниран"
+
+#: ../semanage/seobject.py:586
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr "SELinux потребител %s вече е дефиниран"
+
+#: ../semanage/seobject.py:590
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "Не може да се създаде SELinux потребител за %s"
+
+#: ../semanage/seobject.py:599
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "Не може да се добави роля %s за %s"
+
+#: ../semanage/seobject.py:608
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "Не може да се зададе MLS ниво за %s"
+
+#: ../semanage/seobject.py:611
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "Не може да се добави префикс %s за %s"
+
+#: ../semanage/seobject.py:614
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "Не може да се извлече ключ за %s"
+
+#: ../semanage/seobject.py:618
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "Не може да се добави SELinux потребител %s"
+
+#: ../semanage/seobject.py:641
+msgid "Requires prefix, roles, level or range"
+msgstr "Изисква префикс, роли, ниво или диапазон"
+
+#: ../semanage/seobject.py:643
+msgid "Requires prefix or roles"
+msgstr "Изисква префикс или роли"
+
+#: ../semanage/seobject.py:653 ../semanage/seobject.py:711
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux потребител %s не е дефиниран"
+
+#: ../semanage/seobject.py:657
+#, python-format
 msgid "Could not query user for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:543 ../semanage/seobject.py:547
-#, python-format
-msgid "Could not modify SELinux user %s"
-msgstr ""
-
-#: ../semanage/seobject.py:574
-#, python-format
-msgid "SELinux user %s is defined in policy, cannot be deleted"
-msgstr ""
-
-#: ../semanage/seobject.py:582 ../semanage/seobject.py:586
-#, python-format
-msgid "Could not delete SELinux user %s"
-msgstr ""
-
-#: ../semanage/seobject.py:598
-msgid "Could not list SELinux users"
-msgstr ""
-
-#: ../semanage/seobject.py:604
-#, python-format
-msgid "Could not list roles for user %s"
-msgstr ""
-
-#: ../semanage/seobject.py:638
-msgid "Protocol udp or tcp is required"
-msgstr ""
-
-#: ../semanage/seobject.py:640
-msgid "Port is required"
-msgstr ""
-
-#: ../semanage/seobject.py:651
-#, python-format
-msgid "Could not create a key for %s/%s"
-msgstr ""
-
-#: ../semanage/seobject.py:662
-msgid "Type is required"
-msgstr ""
-
-#: ../semanage/seobject.py:668 ../semanage/seobject.py:730
-#: ../semanage/seobject.py:764 ../semanage/seobject.py:770
-#, python-format
-msgid "Could not check if port %s/%s is defined"
-msgstr ""
-
-#: ../semanage/seobject.py:670
-#, python-format
-msgid "Port %s/%s already defined"
-msgstr ""
-
-#: ../semanage/seobject.py:674
-#, python-format
-msgid "Could not create port for %s/%s"
-msgstr ""
-
-#: ../semanage/seobject.py:680
-#, python-format
-msgid "Could not create context for %s/%s"
-msgstr ""
+msgstr "Не може да се провери потребителя за %s"
 
 #: ../semanage/seobject.py:684
 #, python-format
-msgid "Could not set user in port context for %s/%s"
-msgstr ""
+msgid "Could not modify SELinux user %s"
+msgstr "Не може да се промени SELinux потребител %s"
 
-#: ../semanage/seobject.py:688
+#: ../semanage/seobject.py:717
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "SELinux потребител %s е дефиниран в политиката, не може да се изтрие"
+
+#: ../semanage/seobject.py:721
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "Не може да се изтрие SELinux потребител %s"
+
+#: ../semanage/seobject.py:744
+msgid "Could not list SELinux users"
+msgstr "Не могат да бъдат получени SELinux потребителите"
+
+#: ../semanage/seobject.py:750
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "Не могат да бъдат получени ролите за потребител %s"
+
+#: ../semanage/seobject.py:763
+msgid "Labeling"
+msgstr "Етикиране"
+
+#: ../semanage/seobject.py:763
+msgid "MLS/"
+msgstr "MLS/"
+
+#: ../semanage/seobject.py:764
+msgid "Prefix"
+msgstr "Префикс"
+
+#: ../semanage/seobject.py:764
+msgid "MCS Level"
+msgstr "MCS ниво"
+
+#: ../semanage/seobject.py:764
+msgid "MCS Range"
+msgstr "MCS интервал"
+
+#: ../semanage/seobject.py:764 ../semanage/seobject.py:769
+#: ../gui/system-config-selinux.glade:1184 ../gui/usersPage.py:59
+msgid "SELinux Roles"
+msgstr "SELinux роли"
+
+#: ../semanage/seobject.py:784
+msgid "Protocol udp or tcp is required"
+msgstr "Изисква се протокол udp или tcp"
+
+#: ../semanage/seobject.py:786
+msgid "Port is required"
+msgstr "Изисква се порт"
+
+#: ../semanage/seobject.py:797
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "Не може да се създаде ключ за %s/%s"
+
+#: ../semanage/seobject.py:808
+msgid "Type is required"
+msgstr "Изисква се тип"
+
+#: ../semanage/seobject.py:814 ../semanage/seobject.py:873
+#: ../semanage/seobject.py:928 ../semanage/seobject.py:934
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "Не може да се провери дали порт %s/%s е дефиниран"
+
+#: ../semanage/seobject.py:816
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "Порт %s/%s вече е дефиниран"
+
+#: ../semanage/seobject.py:820
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "Не може да се създаде порт за %s/%s"
+
+#: ../semanage/seobject.py:826
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "Не може да се създаде контекст за %s/%s"
+
+#: ../semanage/seobject.py:830
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "Не може да се приведе потребителя в контекст на порта за %s/%s"
+
+#: ../semanage/seobject.py:834
 #, python-format
 msgid "Could not set role in port context for %s/%s"
-msgstr ""
+msgstr "Не може да се приведе ролята в контекст на порта за %s/%s"
 
-#: ../semanage/seobject.py:692
+#: ../semanage/seobject.py:838
 #, python-format
 msgid "Could not set type in port context for %s/%s"
-msgstr ""
+msgstr "Не може да се приведе типа в контекст на порта за %s/%s"
 
-#: ../semanage/seobject.py:697
+#: ../semanage/seobject.py:843
 #, python-format
 msgid "Could not set mls fields in port context for %s/%s"
-msgstr ""
+msgstr "Не могат да се приведат mls полетата в контекст на порта за %s/%s"
 
-#: ../semanage/seobject.py:701
+#: ../semanage/seobject.py:847
 #, python-format
 msgid "Could not set port context for %s/%s"
-msgstr ""
+msgstr "Не може да се приведе контекста на порта за %s/%s"
 
-#: ../semanage/seobject.py:709 ../semanage/seobject.py:713
+#: ../semanage/seobject.py:851
 #, python-format
 msgid "Could not add port %s/%s"
-msgstr ""
+msgstr "Не може да се добави порт %s/%s"
 
-#: ../semanage/seobject.py:722 ../semanage/seobject.py:919
+#: ../semanage/seobject.py:865 ../semanage/seobject.py:1111
+#: ../semanage/seobject.py:1299
 msgid "Requires setype or serange"
-msgstr ""
+msgstr "Необходим е setype или serange"
 
-#: ../semanage/seobject.py:724
+#: ../semanage/seobject.py:867
 msgid "Requires setype"
-msgstr ""
+msgstr "Необходим е setype"
 
-#: ../semanage/seobject.py:732 ../semanage/seobject.py:766
+#: ../semanage/seobject.py:875 ../semanage/seobject.py:930
 #, python-format
 msgid "Port %s/%s is not defined"
-msgstr ""
+msgstr "Порт %s/%s не е дефиниран"
 
-#: ../semanage/seobject.py:736
+#: ../semanage/seobject.py:879
 #, python-format
 msgid "Could not query port %s/%s"
-msgstr ""
+msgstr "Не може да се провери порт %s/%s"
 
-#: ../semanage/seobject.py:751 ../semanage/seobject.py:755
+#: ../semanage/seobject.py:890
 #, python-format
 msgid "Could not modify port %s/%s"
-msgstr ""
+msgstr "Не може да се промени порт %s/%s"
 
-#: ../semanage/seobject.py:772
+#: ../semanage/seobject.py:903
+#, fuzzy
+msgid "Could not list the ports"
+msgstr "Не може да се получи списък на портовете"
+
+#: ../semanage/seobject.py:919
+#, fuzzy, python-format
+msgid "Could not delete the port %s"
+msgstr "Не може да се изтрие порт %s/%s"
+
+#: ../semanage/seobject.py:936
 #, python-format
 msgid "Port %s/%s is defined in policy, cannot be deleted"
-msgstr ""
+msgstr "Порт %s/%s е дефиниран в политиката, не може да се изтрие"
 
-#: ../semanage/seobject.py:780 ../semanage/seobject.py:784
+#: ../semanage/seobject.py:940
 #, python-format
 msgid "Could not delete port %s/%s"
-msgstr ""
+msgstr "Не може да се изтрие порт %s/%s"
 
-#: ../semanage/seobject.py:792 ../semanage/seobject.py:811
+#: ../semanage/seobject.py:956 ../semanage/seobject.py:978
 msgid "Could not list ports"
+msgstr "Не може да се получи списък на портовете"
+
+#: ../semanage/seobject.py:999
+msgid "SELinux Port Type"
+msgstr "SELinux тип порт"
+
+#: ../semanage/seobject.py:999
+msgid "Proto"
+msgstr "Протокол"
+
+#: ../semanage/seobject.py:999 ../gui/system-config-selinux.glade:335
+msgid "Port Number"
+msgstr "Номер на порт"
+
+#: ../semanage/seobject.py:1016 ../semanage/seobject.py:1098
+#: ../semanage/seobject.py:1148
+#, fuzzy
+msgid "Node Address is required"
+msgstr "Изисква се порт"
+
+#: ../semanage/seobject.py:1019 ../semanage/seobject.py:1101
+#: ../semanage/seobject.py:1151
+#, fuzzy
+msgid "Node Netmask is required"
+msgstr "Изисква се порт"
+
+#: ../semanage/seobject.py:1026 ../semanage/seobject.py:1107
+#: ../semanage/seobject.py:1158
+msgid "Unknown or missing protocol"
 msgstr ""
 
-#: ../semanage/seobject.py:855 ../semanage/seobject.py:1027
+#: ../semanage/seobject.py:1036 ../semanage/seobject.py:1238
+#: ../semanage/seobject.py:1427
 msgid "SELinux Type is required"
-msgstr ""
+msgstr "Необходим е SELinux тип"
 
-#: ../semanage/seobject.py:859 ../semanage/seobject.py:923
-#: ../semanage/seobject.py:960 ../semanage/seobject.py:1031
+#: ../semanage/seobject.py:1040 ../semanage/seobject.py:1115
+#: ../semanage/seobject.py:1162 ../semanage/seobject.py:1242
+#: ../semanage/seobject.py:1303 ../semanage/seobject.py:1337
+#: ../semanage/seobject.py:1431
 #, python-format
 msgid "Could not create key for %s"
-msgstr ""
+msgstr "Не може да се създаде ключ за %s"
 
-#: ../semanage/seobject.py:863 ../semanage/seobject.py:927
-#: ../semanage/seobject.py:964 ../semanage/seobject.py:970
-#, python-format
-msgid "Could not check if interface %s is defined"
-msgstr ""
+#: ../semanage/seobject.py:1042 ../semanage/seobject.py:1119
+#: ../semanage/seobject.py:1166 ../semanage/seobject.py:1172
+#, fuzzy, python-format
+msgid "Could not check if addr %s is defined"
+msgstr "Не може да се провери дали порт %s/%s е дефиниран"
 
-#: ../semanage/seobject.py:865
-#, python-format
-msgid "Interface %s already defined"
-msgstr ""
-
-#: ../semanage/seobject.py:869
-#, python-format
-msgid "Could not create interface for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:874 ../semanage/seobject.py:1046
-#, python-format
-msgid "Could not create context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:878
-#, python-format
-msgid "Could not set user in interface context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:882
-#, python-format
-msgid "Could not set role in interface context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:886
-#, python-format
-msgid "Could not set type in interface context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:891
-#, python-format
-msgid "Could not set mls fields in interface context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:895
-#, python-format
-msgid "Could not set interface context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:899
-#, python-format
-msgid "Could not set message context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:907 ../semanage/seobject.py:911
-#, python-format
-msgid "Could not add interface %s"
-msgstr ""
-
-#: ../semanage/seobject.py:929 ../semanage/seobject.py:966
-#, python-format
-msgid "Interface %s is not defined"
-msgstr ""
-
-#: ../semanage/seobject.py:933
-#, python-format
-msgid "Could not query interface %s"
-msgstr ""
-
-#: ../semanage/seobject.py:948 ../semanage/seobject.py:952
-#, python-format
-msgid "Could not modify interface %s"
-msgstr ""
-
-#: ../semanage/seobject.py:972
-#, python-format
-msgid "Interface %s is defined in policy, cannot be deleted"
-msgstr ""
-
-#: ../semanage/seobject.py:980 ../semanage/seobject.py:984
-#, python-format
-msgid "Could not delete interface %s"
-msgstr ""
-
-#: ../semanage/seobject.py:992
-msgid "Could not list interfaces"
-msgstr ""
-
-#: ../semanage/seobject.py:1035 ../semanage/seobject.py:1097
-#: ../semanage/seobject.py:1136 ../semanage/seobject.py:1140
-#, python-format
-msgid "Could not check if file context for %s is defined"
-msgstr ""
-
-#: ../semanage/seobject.py:1037
-#, python-format
-msgid "File context for %s already defined"
-msgstr ""
-
-#: ../semanage/seobject.py:1041
-#, python-format
-msgid "Could not create file context for %s"
-msgstr ""
+#: ../semanage/seobject.py:1046
+#, fuzzy, python-format
+msgid "Addr %s already defined"
+msgstr "Порт %s/%s вече е дефиниран"
 
 #: ../semanage/seobject.py:1050
+#, fuzzy, python-format
+msgid "Could not create addr for %s"
+msgstr "Не може да се създаде ключ за %s"
+
+#: ../semanage/seobject.py:1055 ../semanage/seobject.py:1257
+#: ../semanage/seobject.py:1397
+#, python-format
+msgid "Could not create context for %s"
+msgstr "Не може да се създаде контекст за %s"
+
+#: ../semanage/seobject.py:1059
+#, fuzzy, python-format
+msgid "Could not set mask for %s"
+msgstr "Не може да се зададе името за %s"
+
+#: ../semanage/seobject.py:1064
+#, fuzzy, python-format
+msgid "Could not set user in addr context for %s"
+msgstr "Не може да се приведе потребителя в контекст на файл за %s"
+
+#: ../semanage/seobject.py:1068
+#, fuzzy, python-format
+msgid "Could not set role in addr context for %s"
+msgstr "Не може да се приведе ролята в контекст на файл за %s"
+
+#: ../semanage/seobject.py:1072
+#, fuzzy, python-format
+msgid "Could not set type in addr context for %s"
+msgstr "Не може да се приведе типа в контекст на файл за %s"
+
+#: ../semanage/seobject.py:1077
+#, fuzzy, python-format
+msgid "Could not set mls fields in addr context for %s"
+msgstr "Не могат да се приведат mls полетата в контекст на файл за %s"
+
+#: ../semanage/seobject.py:1081
+#, fuzzy, python-format
+msgid "Could not set addr context for %s"
+msgstr "Не може да се установи контекст на файл за %s"
+
+#: ../semanage/seobject.py:1085
+#, fuzzy, python-format
+msgid "Could not add addr %s"
+msgstr "Не може да се добави порт %s/%s"
+
+#: ../semanage/seobject.py:1121 ../semanage/seobject.py:1168
+#, fuzzy, python-format
+msgid "Addr %s is not defined"
+msgstr "Порт %s/%s не е дефиниран"
+
+#: ../semanage/seobject.py:1125
+#, fuzzy, python-format
+msgid "Could not query addr %s"
+msgstr "Не може да се провери порт %s/%s"
+
+#: ../semanage/seobject.py:1136
+#, fuzzy, python-format
+msgid "Could not modify addr %s"
+msgstr "Не може да се промени порт %s/%s"
+
+#: ../semanage/seobject.py:1174
+#, fuzzy, python-format
+msgid "Addr %s is defined in policy, cannot be deleted"
+msgstr "Порт %s/%s е дефиниран в политиката, не може да се изтрие"
+
+#: ../semanage/seobject.py:1178
+#, fuzzy, python-format
+msgid "Could not delete addr %s"
+msgstr "Не може да се изтрие интерфейс %s"
+
+#: ../semanage/seobject.py:1194
+#, fuzzy
+msgid "Could not list addrs"
+msgstr "Не може да се получи списък на портовете"
+
+#: ../semanage/seobject.py:1246 ../semanage/seobject.py:1307
+#: ../semanage/seobject.py:1341 ../semanage/seobject.py:1347
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "Не може да се провери дали интерфейс %s е дефинирано"
+
+#: ../semanage/seobject.py:1248
+#, python-format
+msgid "Interface %s already defined"
+msgstr "Интерфейс %s вече е дефиниран"
+
+#: ../semanage/seobject.py:1252
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "Не може да се създаде интерфейс за %s"
+
+#: ../semanage/seobject.py:1261
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "Не може да се приведе потребителя в интерфейсен контекст за %s"
+
+#: ../semanage/seobject.py:1265
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "Не може да се приведе ролята в интерфейсен контекст за %s"
+
+#: ../semanage/seobject.py:1269
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "Не може да се приведе типа в интерфейсен контекст за %s"
+
+#: ../semanage/seobject.py:1274
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "Не могат да се приведат mls полетата в интерфейсен контекст за %s"
+
+#: ../semanage/seobject.py:1278
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "Не може да се установи интерфейсен контекст за %s"
+
+#: ../semanage/seobject.py:1282
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "Не може да се установи контекста на съобщението за %s"
+
+#: ../semanage/seobject.py:1286
+#, python-format
+msgid "Could not add interface %s"
+msgstr "Не може да се добави интерфейс %s"
+
+#: ../semanage/seobject.py:1309 ../semanage/seobject.py:1343
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "Интерфейс %s не е дефиниран"
+
+#: ../semanage/seobject.py:1313
+#, python-format
+msgid "Could not query interface %s"
+msgstr "Не може да се провери интерфейс %s"
+
+#: ../semanage/seobject.py:1324
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "Не може да се промени интерфейс %s"
+
+#: ../semanage/seobject.py:1349
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "Интерфейс %s е дефиниран в политиката, не може да се изтрие"
+
+#: ../semanage/seobject.py:1353
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "Не може да се изтрие интерфейс %s"
+
+#: ../semanage/seobject.py:1369
+msgid "Could not list interfaces"
+msgstr "Не може да се получи списък с интерфейсите"
+
+#: ../semanage/seobject.py:1379
+msgid "SELinux Interface"
+msgstr "SELinux интерфейс"
+
+#: ../semanage/seobject.py:1379 ../semanage/seobject.py:1608
+msgid "Context"
+msgstr "Контекст"
+
+#: ../semanage/seobject.py:1403
 #, python-format
 msgid "Could not set user in file context for %s"
-msgstr ""
+msgstr "Не може да се приведе потребителя в контекст на файл за %s"
 
-#: ../semanage/seobject.py:1054
+#: ../semanage/seobject.py:1407
 #, python-format
 msgid "Could not set role in file context for %s"
-msgstr ""
+msgstr "Не може да се приведе ролята в контекст на файл за %s"
 
-#: ../semanage/seobject.py:1058
-#, python-format
-msgid "Could not set type in file context for %s"
-msgstr ""
-
-#: ../semanage/seobject.py:1063
+#: ../semanage/seobject.py:1412 ../semanage/seobject.py:1454
 #, python-format
 msgid "Could not set mls fields in file context for %s"
-msgstr ""
+msgstr "Не могат да се приведат mls полетата в контекст на файл за %s"
 
-#: ../semanage/seobject.py:1069
+#: ../semanage/seobject.py:1418
+#, fuzzy
+msgid "Invalid file specification"
+msgstr "Файлова спецификация"
+
+#: ../semanage/seobject.py:1435 ../semanage/seobject.py:1486
+#: ../semanage/seobject.py:1558 ../semanage/seobject.py:1562
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "Не може да се провери дали файловия контекст за %s е дефиниран"
+
+#: ../semanage/seobject.py:1437
+#, python-format
+msgid "File context for %s already defined"
+msgstr "Файловия контекст за %s вече е дефиниран"
+
+#: ../semanage/seobject.py:1441
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "Не може да се създаде файлов контекст за %s"
+
+#: ../semanage/seobject.py:1449
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "Не може да се приведе типа в контекст на файл за %s"
+
+#: ../semanage/seobject.py:1457 ../semanage/seobject.py:1510
+#: ../semanage/seobject.py:1514
 #, python-format
 msgid "Could not set file context for %s"
-msgstr ""
+msgstr "Не може да се установи контекст на файл за %s"
 
-#: ../semanage/seobject.py:1077 ../semanage/seobject.py:1081
+#: ../semanage/seobject.py:1463
 #, python-format
 msgid "Could not add file context for %s"
-msgstr ""
+msgstr "Не може да се добави контекст на файл за %s"
 
-#: ../semanage/seobject.py:1089
+#: ../semanage/seobject.py:1477
 msgid "Requires setype, serange or seuser"
-msgstr ""
+msgstr "Изисква setype, serange или seuser"
 
-#: ../semanage/seobject.py:1099 ../semanage/seobject.py:1144
+#: ../semanage/seobject.py:1488 ../semanage/seobject.py:1566
 #, python-format
 msgid "File context for %s is not defined"
-msgstr ""
+msgstr "Не е дефиниран файлов контекст за %s"
 
-#: ../semanage/seobject.py:1103
+#: ../semanage/seobject.py:1492
 #, python-format
 msgid "Could not query file context for %s"
-msgstr ""
+msgstr "Не може да се провери файловия контекст за %s"
 
-#: ../semanage/seobject.py:1120 ../semanage/seobject.py:1124
+#: ../semanage/seobject.py:1518
 #, python-format
 msgid "Could not modify file context for %s"
-msgstr ""
+msgstr "Не може да се промени файловия контекст за %s"
 
-#: ../semanage/seobject.py:1142
+#: ../semanage/seobject.py:1532
+#, fuzzy
+msgid "Could not list the file contexts"
+msgstr "Не може да се получат файловите контексти"
+
+#: ../semanage/seobject.py:1546
+#, fuzzy, python-format
+msgid "Could not delete the file context %s"
+msgstr "Не може да се изтрие файловия контекст за %s"
+
+#: ../semanage/seobject.py:1564
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
 msgstr ""
+"Файловия контекст за %s е дефиниран в политиката, не може да бъде изтрит"
 
-#: ../semanage/seobject.py:1152 ../semanage/seobject.py:1156
+#: ../semanage/seobject.py:1570
 #, python-format
 msgid "Could not delete file context for %s"
-msgstr ""
+msgstr "Не може да се изтрие файловия контекст за %s"
 
-#: ../semanage/seobject.py:1164
+#: ../semanage/seobject.py:1586
 msgid "Could not list file contexts"
-msgstr ""
+msgstr "Не може да се получат файловите контексти"
 
-#: ../semanage/seobject.py:1168
+#: ../semanage/seobject.py:1590
 msgid "Could not list local file contexts"
-msgstr ""
+msgstr "Не може да се получат локалните файловите контексти"
 
-#: ../semanage/seobject.py:1203
-msgid "Requires value"
-msgstr ""
+#: ../semanage/seobject.py:1608
+msgid "SELinux fcontext"
+msgstr "SELinux ф.контекст"
 
-#: ../semanage/seobject.py:1211 ../semanage/seobject.py:1245
-#: ../semanage/seobject.py:1251
+#: ../semanage/seobject.py:1608
+msgid "type"
+msgstr "тип"
+
+#: ../semanage/seobject.py:1636 ../semanage/seobject.py:1687
+#: ../semanage/seobject.py:1693
 #, python-format
 msgid "Could not check if boolean %s is defined"
-msgstr ""
+msgstr "Не може да се провери дали булевата променлива %s е дефинирана"
 
-#: ../semanage/seobject.py:1213 ../semanage/seobject.py:1247
+#: ../semanage/seobject.py:1638 ../semanage/seobject.py:1689
 #, python-format
 msgid "Boolean %s is not defined"
-msgstr ""
+msgstr "Булева променлива %s не е дефинирана"
 
-#: ../semanage/seobject.py:1217
+#: ../semanage/seobject.py:1642
 #, python-format
 msgid "Could not query file context %s"
-msgstr ""
+msgstr "Не може да се провери файловия контекст %s"
 
-#: ../semanage/seobject.py:1229 ../semanage/seobject.py:1233
+#: ../semanage/seobject.py:1647
+#, fuzzy, python-format
+msgid "You must specify one of the following values: %s"
+msgstr "Следва да въведете име"
+
+#: ../semanage/seobject.py:1651
+#, fuzzy, python-format
+msgid "Could not set active value of boolean %s"
+msgstr "Не може да се изтрие булева променлива %s"
+
+#: ../semanage/seobject.py:1654
 #, python-format
 msgid "Could not modify boolean %s"
+msgstr "Не може да се промени булевата променлива %s"
+
+#: ../semanage/seobject.py:1672
+#, python-format
+msgid "Bad format %s: Record %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1253
+#: ../semanage/seobject.py:1695
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
-msgstr ""
+msgstr "Булевата променлива %s е дефинирана в политика, не може да се изтрие"
 
-#: ../semanage/seobject.py:1261 ../semanage/seobject.py:1265
+#: ../semanage/seobject.py:1699
 #, python-format
 msgid "Could not delete boolean %s"
-msgstr ""
+msgstr "Не може да се изтрие булева променлива %s"
 
-#: ../semanage/seobject.py:1273
+#: ../semanage/seobject.py:1711 ../semanage/seobject.py:1728
 msgid "Could not list booleans"
+msgstr "Не могат да се получат булевите променливи"
+
+#: ../semanage/seobject.py:1747
+msgid "unknown"
 msgstr ""
 
-#: ../audit2allow/audit2allow:183
+#: ../semanage/seobject.py:1750
+msgid "off"
+msgstr ""
+
+#: ../semanage/seobject.py:1750
+#, fuzzy
+msgid "on"
+msgstr "Cron"
+
+#: ../semanage/seobject.py:1759
+msgid "SELinux boolean"
+msgstr "SELinux булева"
+
+#: ../semanage/seobject.py:1759 ../gui/polgen.glade:3207
+#: ../gui/polgengui.py:169
+msgid "Description"
+msgstr ""
+
+#: ../newrole/newrole.c:198
 #, c-format
-msgid "Generating type enforcment file: %s.te"
+msgid "failed to set PAM_TTY\n"
+msgstr "неуспешна настройка на PAM_TTY\n"
+
+#: ../newrole/newrole.c:287
+#, c-format
+msgid "newrole: service name configuration hashtable overflow\n"
+msgstr ""
+"newrole: препълване на хеш таблицата на конфигурацията на услугата за имена\n"
+
+#: ../newrole/newrole.c:297
+#, c-format
+msgid "newrole:  %s:  error on line %lu.\n"
+msgstr "newrole:  %s:  грешка на ред %lu.\n"
+
+#: ../newrole/newrole.c:436
+#, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr "не може да се намери валиден запис във файла passwd.\n"
+
+#: ../newrole/newrole.c:447
+#, c-format
+msgid "Out of memory!\n"
+msgstr "Паметта свърши!\n"
+
+#: ../newrole/newrole.c:452
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr "Грешка!  Обвивката не е валидна.\n"
+
+#: ../newrole/newrole.c:509
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr "Не може да бъде почистена средата\n"
+
+#: ../newrole/newrole.c:556 ../newrole/newrole.c:634
+#, c-format
+msgid "Error initing capabilities, aborting.\n"
+msgstr "Грешка при инициализиране на правата, авариен изход.\n"
+
+#: ../newrole/newrole.c:564 ../newrole/newrole.c:640
+#, c-format
+msgid "Error setting capabilities, aborting\n"
+msgstr "Грешка при настройка на правата, авариен изход.\n"
+
+#: ../newrole/newrole.c:570
+#, c-format
+msgid "Error setting KEEPCAPS, aborting\n"
+msgstr "Грешка при настройка на KEEPCAPS, авариен изход\n"
+
+#: ../newrole/newrole.c:578 ../newrole/newrole.c:652
+#, c-format
+msgid "Error dropping capabilities, aborting\n"
+msgstr "Грешка при отказ от правата, авариен изход.\n"
+
+#: ../newrole/newrole.c:584 ../newrole/newrole.c:683
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr "Грешка при смяна на uid, авариен изход.\n"
+
+#: ../newrole/newrole.c:590 ../newrole/newrole.c:646 ../newrole/newrole.c:678
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr "Грешка при връщане на KEEPCAPS, авариен изход\n"
+
+#: ../newrole/newrole.c:597
+#, c-format
+msgid "Error dropping SETUID capability, aborting\n"
+msgstr "Грешка при отказ от SETUID права, авариен изход\n"
+
+#: ../newrole/newrole.c:602 ../newrole/newrole.c:657
+#, c-format
+msgid "Error freeing caps\n"
+msgstr "Грешка при освобождаване на права\n"
+
+#: ../newrole/newrole.c:701
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr "Грешка при връзка със системата за одит.\n"
+
+#: ../newrole/newrole.c:707
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr "Грешка при заделяне на памет.\n"
+
+#: ../newrole/newrole.c:714
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr "Грешка при изпращане на одит съобщение.\n"
+
+#: ../newrole/newrole.c:758 ../newrole/newrole.c:1122
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr "Не може да се определи режима на налагане.\n"
+
+#: ../newrole/newrole.c:765
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr "Грешка!  Не може да се отвори %s.\n"
+
+#: ../newrole/newrole.c:771
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr ""
+"%s!  Не може да се определи текущия контекст за %s, tty няма да се "
+"преетикира.\n"
+
+#: ../newrole/newrole.c:781
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr ""
+"%s!  Не може да се определи новия контекст за %s, tty няма да се "
+"преетикира.\n"
+
+#: ../newrole/newrole.c:791
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr "%s!  Не може да се определи новия контекст за %s\n"
+
+#: ../newrole/newrole.c:838
+#, c-format
+msgid "%s changed labels.\n"
+msgstr "%s промяна на етикетите.\n"
+
+#: ../newrole/newrole.c:844
+#, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr "Предупреждение! Не може да се възстанови контекста на %s\n"
+
+#: ../newrole/newrole.c:901
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr "Грешка: указани са няколко роли\n"
+
+#: ../newrole/newrole.c:909
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr "Грешка: указани са няколко типа\n"
+
+#: ../newrole/newrole.c:916
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr "Съжаляваме, -l може да се ползва с поддръжка на SELinux MLS.\n"
+
+#: ../newrole/newrole.c:921
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr "Грешка: указани са няколко нива\n"
+
+#: ../newrole/newrole.c:931
+#, fuzzy, c-format
+msgid "Error: you are not allowed to change levels on a non secure terminal \n"
+msgstr "Грешка: не Ви е позволено да променяте нивата на несигурен терминал\n"
+
+#: ../newrole/newrole.c:957
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr "Не може да се определи подразбиращия се тип.\n"
+
+#: ../newrole/newrole.c:967
+#, c-format
+msgid "failed to get new context.\n"
+msgstr "неуспешно извличане на нов контекст.\n"
+
+#: ../newrole/newrole.c:974
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "неуспешно установяване на нова роля %s\n"
+
+#: ../newrole/newrole.c:981
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "неуспешно установяване на нов тип %s\n"
+
+#: ../newrole/newrole.c:991
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr "неуспешно изграждане на нов диапазон с ниво %s\n"
+
+#: ../newrole/newrole.c:996
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr "неуспешно установяване на нов диапазон %s\n"
+
+#: ../newrole/newrole.c:1004
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr "неуспешно конвертиране на новия контекст към низ\n"
+
+#: ../newrole/newrole.c:1009
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr "%s не е валиден контекст\n"
+
+#: ../newrole/newrole.c:1016
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr "Не може да се задели памет за нов_контекст"
+
+#: ../newrole/newrole.c:1042
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr "Не може да се определи празния набор сигнали\n"
+
+#: ../newrole/newrole.c:1050
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr "Не може да се установи обработката на SIGHUP\n"
+
+#: ../newrole/newrole.c:1116
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr "Съжаляваме, newrole може да се ползва само със SELinux ядро.\n"
+
+#: ../newrole/newrole.c:1133
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr "неуспешно извличане на стар_контекст.\n"
+
+#: ../newrole/newrole.c:1140
+#, fuzzy, c-format
+msgid "Warning!  Could not retrieve tty information.\n"
+msgstr "Грешка!  Не може да се получи информация за tty.\n"
+
+#: ../newrole/newrole.c:1161
+#, c-format
+msgid "error on reading PAM service configuration.\n"
+msgstr "грешка при четене на конфигурацията на PAM услуга.\n"
+
+#: ../newrole/newrole.c:1196
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr "newrole: грешна парола за %s\n"
+
+#: ../newrole/newrole.c:1223
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr "newrole: неуспешно изпълнение на fork: %s"
+
+#: ../newrole/newrole.c:1226 ../newrole/newrole.c:1249
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr "Не може да се възстанови етикета на tty...\n"
+
+#: ../newrole/newrole.c:1228 ../newrole/newrole.c:1255
+#, c-format
+msgid "Failed to close tty properly\n"
+msgstr "Не може да се затвори tty коректно\n"
+
+#: ../newrole/newrole.c:1287
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr "Не могат да се затворят дескриптори.\n"
+
+#: ../newrole/newrole.c:1314
+#, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr "Грешка при заделяне argv0 на обвивката.\n"
+
+#: ../newrole/newrole.c:1346
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr "Не може да бъде възстановена средата, авариен изход\n"
+
+#: ../newrole/newrole.c:1357
+msgid "failed to exec shell\n"
+msgstr "неуспешно пускане на обвивката\n"
+
+#: ../load_policy/load_policy.c:22
+#, fuzzy, c-format
+msgid "usage:  %s [-qi]\n"
+msgstr "употреба:  %s [-q]\n"
+
+#: ../load_policy/load_policy.c:71
+#, c-format
+msgid "%s:  Policy is already loaded and initial load requested\n"
 msgstr ""
 
-#: ../audit2allow/audit2allow:189 ../audit2allow/audit2allow:194
-msgid "Compiling policy"
+#: ../load_policy/load_policy.c:80
+#, fuzzy, c-format
+msgid "%s:  Can't load policy and enforcing mode requested:  %s\n"
+msgstr "%s:  Не може да се зареди политика:  %s\n"
+
+#: ../load_policy/load_policy.c:90
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr "%s:  Не може да се зареди политика:  %s\n"
+
+#: ../scripts/chcat:92 ../scripts/chcat:169
+msgid "Requires at least one category"
+msgstr "Изисква поне една категория"
+
+#: ../scripts/chcat:106 ../scripts/chcat:183
+#, c-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "Не може да се промени нивото на чувствителност ползвайки '+' на %s"
+
+#: ../scripts/chcat:110
+#, c-format
+msgid "%s is already in %s"
+msgstr "%s вече е в %s"
+
+#: ../scripts/chcat:188 ../scripts/chcat:198
+#, c-format
+msgid "%s is not in %s"
+msgstr "%s не е в %s"
+
+#: ../scripts/chcat:267 ../scripts/chcat:272
+msgid "Can not combine +/- with other types of categories"
+msgstr "Не може да се комбинира +/- с други типове категории"
+
+#: ../scripts/chcat:317
+msgid "Can not have multiple sensitivities"
+msgstr "Не може да има няколко чувствителности"
+
+#: ../scripts/chcat:323
+#, c-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "Употреба %s КАТЕГОРИЯ Файл ..."
+
+#: ../scripts/chcat:324
+#, c-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "Употреба %s -l КАТЕГОРИЯ потребител ..."
+
+#: ../scripts/chcat:325
+#, c-format
+msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
+msgstr "Употреба %s [[+|-]КАТЕГОРИЯ],...]q Файл ..."
+
+#: ../scripts/chcat:326
+#, c-format
+msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
+msgstr "Употреба %s -l [[+|-]КАТЕГОРИЯ],...]q потребител ..."
+
+#: ../scripts/chcat:327
+#, c-format
+msgid "Usage %s -d File ..."
+msgstr "Употреба %s -d Файл ..."
+
+#: ../scripts/chcat:328
+#, c-format
+msgid "Usage %s -l -d user ..."
+msgstr "Употреба %s -l -d потребител ..."
+
+#: ../scripts/chcat:329
+#, c-format
+msgid "Usage %s -L"
+msgstr "Употреба %s -L"
+
+#: ../scripts/chcat:330
+#, c-format
+msgid "Usage %s -L -l user"
+msgstr "Употреба %s -L -l потребител"
+
+#: ../scripts/chcat:331
+msgid "Use -- to end option list.  For example"
+msgstr "Ползвайте -- за кран на списъка с опции.  Например"
+
+#: ../scripts/chcat:332
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -КонфиденциалноЗаКомпанията /документи/бизнесплан.odt"
+
+#: ../scripts/chcat:333
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +КонфиденциалноЗаКомпанията спотребител"
+
+#: ../scripts/chcat:397
+#, c-format
+msgid "Options Error %s "
+msgstr "Грешка в опциите %s "
+
+#: ../gui/booleansPage.py:184
+msgid "Boolean"
+msgstr "Булева"
+
+#: ../gui/booleansPage.py:231 ../gui/semanagePage.py:163
+#, fuzzy
+msgid "all"
+msgstr "Всички"
+
+#: ../gui/booleansPage.py:233 ../gui/semanagePage.py:165
+#: ../gui/system-config-selinux.glade:1808
+#: ../gui/system-config-selinux.glade:2030
+#: ../gui/system-config-selinux.glade:2830
+msgid "Customized"
 msgstr ""
 
-#: ../audit2allow/audit2allow:205
+#: ../gui/fcontextPage.py:64
+msgid "File Labeling"
+msgstr "Етикиране на файл"
+
+#: ../gui/fcontextPage.py:74
 msgid ""
-"\n"
-"******************** IMPORTANT ***********************\n"
+"File\n"
+"Specification"
 msgstr ""
+"Файлова\n"
+"спецификация"
 
-#: ../audit2allow/audit2allow:206
-#, c-format
+#: ../gui/fcontextPage.py:81
+#, fuzzy
 msgid ""
-"In order to load this newly created policy package into the kernel,\n"
-"you are required to execute \n"
+"Selinux\n"
+"File Type"
+msgstr ""
+"Selinux\n"
+"файлов контекст"
+
+#: ../gui/fcontextPage.py:88
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"Файлов\n"
+"Тип"
+
+#: ../gui/loginsPage.py:48
+msgid "User Mapping"
+msgstr "Съответствия за потребител"
+
+#: ../gui/loginsPage.py:52
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"Потребителско\n"
+"Име"
+
+#: ../gui/loginsPage.py:56 ../gui/usersPage.py:50
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux\n"
+"Потребител"
+
+#: ../gui/loginsPage.py:59 ../gui/usersPage.py:55
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"MLS/\n"
+"MCS интервал"
+
+#: ../gui/loginsPage.py:133
+#, python-format
+msgid "Login '%s' is required"
+msgstr "Изисква се '%s' за вход"
+
+#: ../gui/modulesPage.py:48
+msgid "Policy Module"
+msgstr "Модул с политика"
+
+#: ../gui/modulesPage.py:57
+msgid "Module Name"
+msgstr "Име на модула"
+
+#: ../gui/modulesPage.py:62
+msgid "Version"
+msgstr "Версия"
+
+#: ../gui/modulesPage.py:134
+msgid "Disable Audit"
+msgstr "Изключване на одита"
+
+#: ../gui/modulesPage.py:137 ../gui/system-config-selinux.glade:3054
+msgid "Enable Audit"
+msgstr "Включване на одита"
+
+#: ../gui/modulesPage.py:162
+msgid "Load Policy Module"
+msgstr "Зареждане на модул с политика"
+
+#: ../gui/polgen.glade:79
+msgid "Polgen"
+msgstr "Polgen"
+
+#: ../gui/polgen.glade:80
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../gui/polgen.glade:81
+msgid "GPL"
+msgstr "ОПЛ"
+
+#: ../gui/polgen.glade:85 ../gui/system-config-selinux.glade:17
+msgid "translator-credits"
+msgstr "Doncho N. Gunchev <gunchev@gmail.com>, 2007."
+
+#: ../gui/polgen.glade:91 ../gui/polgen.glade:124
+msgid "SELinux Policy Generation Tool"
+msgstr "Инструмент за генериране на SELinux политики"
+
+#: ../gui/polgen.glade:125
+msgid ""
+"This tool can be used to generate a policy framework, to confine "
+"applications or users using SELinux.   \n"
 "\n"
-"semodule -i %s.pp\n"
+"The tool generates:\n"
+"Type enforcement file (te)\n"
+"Interface file (if)\n"
+"File context file (fc)\n"
+"Shell script (sh) - used to compile and install the policy. "
+msgstr ""
+"С този инструмент можете да генерирате политики за ограничаване на "
+"приложения или потребители чрез SELinux.   \n"
 "\n"
+"Инструмента генерира:\n"
+"Файлове за налагане на тип (te)\n"
+"Интерфейсни файлове (if)\n"
+"Файлове за контекст (fc)\n"
+"Скриптове на средата (sh) - ползват се за компилиране и инсталиране на "
+"политиката. "
+
+#: ../gui/polgen.glade:165
+#, fuzzy
+msgid "Select type of the application/user role to be confined"
+msgstr "Изберете приложение или потребителска роля за ограничаване."
+
+#: ../gui/polgen.glade:196
+msgid "<b>Applications</b>"
+msgstr "<b>Приложения</b>"
+
+#: ../gui/polgen.glade:258
+#, fuzzy
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"Стандартен init демон са тези демони, които се стартират при зареждане от "
+"init скриптовете.  Обикновено изисква скрипт в /etc/init.d"
+
+#: ../gui/polgen.glade:260
+msgid "Standard Init Daemon"
+msgstr "Стандартен init демон"
+
+#: ../gui/polgen.glade:278
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "Демони за Интернет услуги са демони, които се стартират от xinetd"
+
+#: ../gui/polgen.glade:280
+msgid "Internet Services Daemon (inetd)"
+msgstr "Демони за Интернет услуги (inetd)"
+
+#: ../gui/polgen.glade:299
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr ""
+"Уеб приложения/Скриптове (CGI) са скриптове стартирани от уеб сървъра "
+"(apache)"
+
+#: ../gui/polgen.glade:301
+msgid "Web Application/Script (CGI)"
+msgstr "Уеб приложения/Скриптове (CGI)"
+
+#: ../gui/polgen.glade:320
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+"Потребителски приложения са всички приложения, които бихте искали да "
+"ограничите, стартирани от потребител"
+
+#: ../gui/polgen.glade:322
+msgid "User Application"
+msgstr "Потребителски приложения"
+
+#: ../gui/polgen.glade:368
+#, fuzzy
+msgid "<b>Login Users</b>"
+msgstr "<b>Потребители</b>"
+
+#: ../gui/polgen.glade:430
+msgid "Modify an existing login user record."
 msgstr ""
 
-#: ../audit2allow/audit2allow:211
-#, c-format
-msgid "Options Error: %s "
+#: ../gui/polgen.glade:432
+msgid "Existing User Roles"
 msgstr ""
+
+#: ../gui/polgen.glade:451
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+
+#: ../gui/polgen.glade:453
+msgid "Minimal Terminal User Role"
+msgstr ""
+
+#: ../gui/polgen.glade:472
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+
+#: ../gui/polgen.glade:474
+msgid "Minimal X Windows User Role"
+msgstr ""
+
+#: ../gui/polgen.glade:493
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+
+#: ../gui/polgen.glade:495
+#, fuzzy
+msgid "User Role"
+msgstr "Роля"
+
+#: ../gui/polgen.glade:514
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+
+#: ../gui/polgen.glade:516
+msgid "Admin User Role"
+msgstr ""
+
+#: ../gui/polgen.glade:562
+#, fuzzy
+msgid "<b>Root Users</b>"
+msgstr "<b>Потребители</b>"
+
+#: ../gui/polgen.glade:624
+#, fuzzy
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"Изберете root потребител ако този потребител ще се ползва за администриране "
+"на машината работейки като root.  Този потребител няма да може да влиза в "
+"системата директно."
+
+#: ../gui/polgen.glade:626
+#, fuzzy
+msgid "Root Admin User Role"
+msgstr "Root потребител"
+
+#: ../gui/polgen.glade:711
+#, fuzzy
+msgid "Enter name of application or user role to be confined"
+msgstr "Изберете приложение или потребителска роля за ограничаване."
+
+#: ../gui/polgen.glade:732 ../gui/polgengui.py:167
+msgid "Name"
+msgstr "Име"
+
+#: ../gui/polgen.glade:760
+msgid "Enter complete path for executable to be confined."
+msgstr "Въведете пълния път за изпълнимия файл за ограничаване."
+
+#: ../gui/polgen.glade:783 ../gui/polgen.glade:903 ../gui/polgen.glade:2906
+msgid "..."
+msgstr "..."
+
+#: ../gui/polgen.glade:802
+#, fuzzy
+msgid "Enter unique name for the confined application or user role."
+msgstr ""
+"Въведете уникално име на тип за конфигурирания потребител или приложение."
+
+#: ../gui/polgen.glade:824
+msgid "Executable"
+msgstr "Изпълним файл"
+
+#: ../gui/polgen.glade:852
+msgid "Init script"
+msgstr "Init скрипт"
+
+#: ../gui/polgen.glade:880
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr ""
+"Въведете пълния път на init скрипта ползван за стартиране на ограничаваното "
+"приложение."
+
+#: ../gui/polgen.glade:960
+#, fuzzy
+msgid "Select user roles that you want to customize"
+msgstr "Изберете ролите, които този потребител ще може да приема"
+
+#: ../gui/polgen.glade:981 ../gui/polgen.glade:1129
+msgid "Select the user roles that will transiton to this applications domains."
+msgstr ""
+
+#: ../gui/polgen.glade:1034
+#, fuzzy
+msgid "Select additional domains to which this user role will transition"
+msgstr "Изберете допълнителни потребителски домейни за преход"
+
+#: ../gui/polgen.glade:1055
+#, fuzzy
+msgid ""
+"Select the applications domains that you would like this user role to "
+"transition to."
+msgstr ""
+"Изберете домейните за приложения, към които бихте искали този потребител да "
+"преминава."
+
+#: ../gui/polgen.glade:1108
+msgid "Select user roles that will transition to this domain"
+msgstr ""
+
+#: ../gui/polgen.glade:1182
+#, fuzzy
+msgid "Select additional domains that this user role will administer"
+msgstr "Изберете домейните, които този потребител ще администрира"
+
+#: ../gui/polgen.glade:1203 ../gui/polgen.glade:1277
+msgid "Select the domains that you would like this user administer."
+msgstr ""
+"Изберете домейните, които бихте искали този потребител да администрира."
+
+#: ../gui/polgen.glade:1256
+#, fuzzy
+msgid "Select additional roles for this user"
+msgstr "Изберете допълнителни потребителски домейни за преход"
+
+#: ../gui/polgen.glade:1330
+#, fuzzy
+msgid "Enter network ports that application/user role listens to"
+msgstr ""
+"Въведете разделен със запетаи списък от udp портове, към които приложението/"
+"потребителя се свързва."
+
+#: ../gui/polgen.glade:1348 ../gui/polgen.glade:1831
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP портове</b>"
+
+#: ../gui/polgen.glade:1416 ../gui/polgen.glade:1636
+#, fuzzy
+msgid "Allows confined application/user role to bind to any udp port"
+msgstr ""
+"Разрешаване на ограничаваното приложение/потребител да се слуша на всеки udp "
+"порт"
+
+#: ../gui/polgen.glade:1418 ../gui/polgen.glade:1638 ../gui/polgen.glade:1894
+#: ../gui/polgen.glade:2047
+msgid "All"
+msgstr "Всички"
+
+#: ../gui/polgen.glade:1436 ../gui/polgen.glade:1656
+#, fuzzy
+msgid ""
+"Allow application/user role to call bindresvport with 0. Binding to port 600-"
+"1024"
+msgstr ""
+"Разрешаване на приложението/потребителя да извиква bindresvport с 0. Слушане "
+"на портове 600-1024"
+
+#: ../gui/polgen.glade:1438 ../gui/polgen.glade:1658
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../gui/polgen.glade:1456 ../gui/polgen.glade:1676
+#, fuzzy
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that "
+"application/user role binds to. Example: 612, 650-660"
+msgstr ""
+"Въведете разделен със запетаи списък от udp портове, към които приложението/"
+"потребителя се свързва."
+
+#: ../gui/polgen.glade:1458 ../gui/polgen.glade:1678
+msgid "Unreserved Ports (>1024)"
+msgstr "Нерезервирани портове (> 1024)"
+
+#: ../gui/polgen.glade:1489 ../gui/polgen.glade:1709 ../gui/polgen.glade:1912
+#: ../gui/polgen.glade:2065
+msgid "Select Ports"
+msgstr "Избор на портове"
+
+#: ../gui/polgen.glade:1514 ../gui/polgen.glade:1734
+#, fuzzy
+msgid "Allows application/user role to bind to any udp ports > 1024"
+msgstr ""
+"Разрешаване на приложението/потребителя да слуша на всеки udp порт > 1024"
+
+#: ../gui/polgen.glade:1568 ../gui/polgen.glade:1984
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP портове</b>"
+
+#: ../gui/polgen.glade:1813
+#, fuzzy
+msgid "Enter network ports that application/user role connects to"
+msgstr ""
+"Въведете разделен със запетаи списък от udp портове, към които приложението/"
+"потребителя се свързва."
+
+#: ../gui/polgen.glade:1937
+#, fuzzy
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that "
+"application/user role connects to. Example: 612, 650-660"
+msgstr ""
+"Въведете разделен със запетаи списък от udp портове, към които приложението/"
+"потребителя се свързва."
+
+#: ../gui/polgen.glade:2090
+#, fuzzy
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that "
+"application/user role connects to. Example: 612, 650-660"
+msgstr ""
+"Въведете разделен със запетаи списък от udp портове, към които приложението/"
+"потребителя се свързва."
+
+#: ../gui/polgen.glade:2162
+#, fuzzy
+msgid "Select common application traits"
+msgstr "Общи белези на приложението"
+
+#: ../gui/polgen.glade:2181
+#, fuzzy
+msgid "Writes syslog messages\t"
+msgstr "Приложението ползва syslog за запис в дневник\t"
+
+#: ../gui/polgen.glade:2200
+#, fuzzy
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "Приложението ползва /tmp за създаваме/манипулиран на временни файлове"
+
+#: ../gui/polgen.glade:2219
+#, fuzzy
+msgid "Uses Pam for authentication"
+msgstr "Приложението ползва PAM за удостоверяване"
+
+#: ../gui/polgen.glade:2238
+msgid "Uses nsswitch or getpw* calls"
+msgstr ""
+
+#: ../gui/polgen.glade:2257
+msgid "Uses dbus"
+msgstr ""
+
+#: ../gui/polgen.glade:2276
+#, fuzzy
+msgid "Sends audit messages"
+msgstr "Грешка при изпращане на одит съобщение.\n"
+
+#: ../gui/polgen.glade:2295
+msgid "Interacts with the terminal"
+msgstr ""
+
+#: ../gui/polgen.glade:2314
+msgid "Sends email"
+msgstr ""
+
+#: ../gui/polgen.glade:2370
+#, fuzzy
+msgid "Select files/directories that the application manages"
+msgstr ""
+"Изберете директориите които ограничаваното приложение притежава и в които то "
+"пише"
+
+#: ../gui/polgen.glade:2586
+#, fuzzy
+msgid ""
+"Add Files/Directories that application will need to \"Write\" to. Pid Files, "
+"Log Files, /var/lib Files ..."
+msgstr ""
+"Добавяне на файлове/директории, в които това приложение ще трябва да може да "
+"пише. Pid файлове, дневници, /var/lib файлове ..."
+
+#: ../gui/polgen.glade:2646
+#, fuzzy
+msgid "Select booleans that the application uses"
+msgstr "Изберете файл(овете) които ограничаваното приложение създава/пише"
+
+#: ../gui/polgen.glade:2783
+#, fuzzy
+msgid "Add/Remove booleans used for this confined application/user"
+msgstr ""
+"Въведете пълния път на init скрипта ползван за стартиране на ограничаваното "
+"приложение."
+
+#: ../gui/polgen.glade:2843
+#, fuzzy
+msgid "Select directory to generate policy in"
+msgstr "Изберете директория в която да се генерират файловете на политиката"
+
+#: ../gui/polgen.glade:2861
+msgid "Policy Directory"
+msgstr "Директория с политики"
+
+#: ../gui/polgen.glade:2960 ../gui/polgen.glade:3003
+msgid "Generated Policy Files"
+msgstr "Генериране на файловете на политиката"
+
+#: ../gui/polgen.glade:2961
+#, fuzzy
+msgid ""
+"This tool will generate the following: \n"
+"Type Enforcement(te), File Context(fc), Interface(if), Shell Script(sh)\n"
+"Execute shell script as root to compile/install and relabel files/"
+"directories.  \n"
+"Use semanage or useradd to map Linux login users to user roles.\n"
+"Put the machine in permissive mode (setenforce 0). \n"
+"Login as the user and test this user role.\n"
+"Use audit2allow -R to generate additional rules for the te file.\n"
+msgstr ""
+"Този инструмент ще генерира следното: Файлове за налагане на тип (te), "
+"файлове за контекст (fc), интерфейсни файлове (if), скриптове на средата "
+"(sh).\n"
+"Стартирайте скрипта за средата за компилиране/инсталиране и преетикиране на "
+"файлове/директории.  Сега можете да превключите SELinux в пасивен режим "
+"(setenforce 0). \n"
+"(Ре)стартирайте приложението за да се генерират avc съобщения.\n"
+"Ползвайте audit2allow -R за генериране на допълнителни правила за te файла.\n"
+
+#: ../gui/polgen.glade:3004
+#, fuzzy
+msgid ""
+"This tool will generate the following: \n"
+"Type Enforcement(te), File Context(fc), Interface(if), Shell Script(sh)\n"
+"\n"
+"Execute shell script to compile/install and relabel files/directories.  \n"
+"Put the machine in permissive mode (setenforce 0). \n"
+"Run/restart the application to generate avc messages.\n"
+"Use audit2allow -R to generate additional rules for the te file.\n"
+msgstr ""
+"Този инструмент ще генерира следното: Файлове за налагане на тип (te), "
+"файлове за контекст (fc), интерфейсни файлове (if), скриптове на средата "
+"(sh).\n"
+"Стартирайте скрипта за средата за компилиране/инсталиране и преетикиране на "
+"файлове/директории.  Сега можете да превключите SELinux в пасивен режим "
+"(setenforce 0). \n"
+"(Ре)стартирайте приложението за да се генерират avc съобщения.\n"
+"Ползвайте audit2allow -R за генериране на допълнителни правила за te файла.\n"
+
+#: ../gui/polgen.glade:3106
+msgid "Add Booleans Dialog"
+msgstr ""
+
+#: ../gui/polgen.glade:3179
+#, fuzzy
+msgid "Boolean Name"
+msgstr "Булева"
+
+#: ../gui/polgengui.py:177
+msgid "Role"
+msgstr "Роля"
+
+#: ../gui/polgengui.py:184
+msgid "Existing_User"
+msgstr ""
+
+#: ../gui/polgengui.py:199 ../gui/polgengui.py:207 ../gui/polgengui.py:221
+msgid "Application"
+msgstr "Приложение"
+
+#: ../gui/polgengui.py:269
+#, fuzzy, python-format
+msgid "%s must be a directory"
+msgstr "Разрешаване на mount да монтира всяка директория"
+
+#: ../gui/polgengui.py:328 ../gui/polgengui.py:595
+#, fuzzy
+msgid "You must select a user"
+msgstr "Следва да въведете име"
+
+#: ../gui/polgengui.py:451
+msgid "Select executable file to be confined."
+msgstr "Изберете изпълнимия файл за ограничаване."
+
+#: ../gui/polgengui.py:462
+msgid "Select init script file to be confined."
+msgstr "Изберете init скрипта за ограничаване."
+
+#: ../gui/polgengui.py:472
+msgid "Select file(s) that confined application creates or writes"
+msgstr "Изберете файл(овете) които ограничаваното приложение създава/пише"
+
+#: ../gui/polgengui.py:479
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr ""
+"Изберете директориите които ограничаваното приложение притежава и в които то "
+"пише"
+
+#: ../gui/polgengui.py:538
+msgid "Select directory to generate policy files in"
+msgstr "Изберете директория в която да се генерират файловете на политиката"
+
+#: ../gui/polgengui.py:551
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: ../gui/polgengui.py:551 ../gui/polgengui.py:555
+msgid "Verify Name"
+msgstr ""
+
+#: ../gui/polgengui.py:555
+#, python-format
+msgid ""
+"Module %s.pp already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: ../gui/polgengui.py:601
+msgid "You must enter a name"
+msgstr "Следва да въведете име"
+
+#: ../gui/polgengui.py:607
+msgid "You must enter a executable"
+msgstr "Следва да укажете изпълним файл"
+
+#: ../gui/polgengui.py:611 ../gui/system-config-selinux.py:174
+msgid "Configue SELinux"
+msgstr "Настройка на SELinux"
+
+#: ../gui/polgen.py:163
+#, fuzzy, python-format
+msgid "Ports must be numbers or ranges of numbers from 1 to %d "
+msgstr "Портовете трябва да са числа от 1 до %d "
+
+#: ../gui/polgen.py:192
+#, fuzzy
+msgid "You must enter a name for your confined process/user"
+msgstr "Следва да въведете име за конфигурирания от Вас процес"
+
+#: ../gui/polgen.py:270
+msgid "USER Types are not allowed executables"
+msgstr "Типовете ПОТРЕБИТЕЛ не са позволени за програми"
+
+#: ../gui/polgen.py:276
+msgid "Only DAEMON apps can use an init script"
+msgstr "Само ДЕМОНИТЕ могат да ползват init скрипт"
+
+#: ../gui/polgen.py:294
+msgid "use_syslog must be a boolean value "
+msgstr "use_syslog трябва да бъде булева стойност "
+
+#: ../gui/polgen.py:315
+#, fuzzy
+msgid "USER Types automatically get a tmp type"
+msgstr "Типовете ПОТРЕБИТЕЛ автоматично получават временен тип"
+
+#: ../gui/polgen.py:711
+msgid "You must enter the executable path for your confined process"
+msgstr "Трябва да въведете пътя на изпълнимия файл за вашия ограничаван процес"
+
+#: ../gui/polgen.py:830
+#, fuzzy
+msgid "Type Enforcement file"
+msgstr "Файл за налагане на тип"
+
+#: ../gui/polgen.py:831
+msgid "Interface file"
+msgstr "Интерфейсен файл"
+
+#: ../gui/polgen.py:832
+msgid "File Contexts file"
+msgstr "Файл с контексти"
+
+#: ../gui/polgen.py:833
+msgid "Setup Script"
+msgstr "Настройващ скрипт"
+
+#: ../gui/portsPage.py:85
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"SELinux\n"
+"тип порт"
+
+#: ../gui/portsPage.py:91 ../gui/system-config-selinux.glade:363
+msgid "Protocol"
+msgstr "Протокол "
+
+#: ../gui/portsPage.py:96 ../gui/system-config-selinux.glade:479
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"Ниво"
+
+#: ../gui/portsPage.py:101
+msgid "Port"
+msgstr "Порт"
+
+#: ../gui/portsPage.py:207
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "Номера на порт \"%s\" не е валиден.  0 < НОМЕР_НА_ПОРТ < 65536 "
+
+#: ../gui/portsPage.py:252
+msgid "List View"
+msgstr ""
+
+#: ../gui/portsPage.py:255 ../gui/system-config-selinux.glade:2812
+msgid "Group View"
+msgstr "Групов преглед"
+
+#: ../gui/selinux.tbl:1 ../gui/selinux.tbl:30 ../gui/selinux.tbl:31
+#: ../gui/selinux.tbl:32 ../gui/selinux.tbl:33 ../gui/selinux.tbl:34
+#: ../gui/selinux.tbl:36 ../gui/selinux.tbl:37 ../gui/selinux.tbl:38
+#: ../gui/selinux.tbl:39 ../gui/selinux.tbl:40 ../gui/selinux.tbl:42
+#: ../gui/selinux.tbl:43 ../gui/selinux.tbl:44 ../gui/selinux.tbl:45
+#: ../gui/selinux.tbl:46 ../gui/selinux.tbl:47 ../gui/selinux.tbl:48
+#: ../gui/selinux.tbl:49 ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
+#: ../gui/selinux.tbl:52 ../gui/selinux.tbl:53 ../gui/selinux.tbl:59
+#: ../gui/selinux.tbl:60 ../gui/selinux.tbl:61 ../gui/selinux.tbl:62
+#: ../gui/selinux.tbl:63 ../gui/selinux.tbl:64 ../gui/selinux.tbl:65
+#: ../gui/selinux.tbl:66 ../gui/selinux.tbl:67 ../gui/selinux.tbl:68
+#: ../gui/selinux.tbl:69 ../gui/selinux.tbl:75 ../gui/selinux.tbl:76
+#: ../gui/selinux.tbl:77 ../gui/selinux.tbl:78 ../gui/selinux.tbl:79
+#: ../gui/selinux.tbl:80 ../gui/selinux.tbl:81 ../gui/selinux.tbl:82
+#: ../gui/selinux.tbl:83 ../gui/selinux.tbl:84 ../gui/selinux.tbl:86
+#: ../gui/selinux.tbl:88 ../gui/selinux.tbl:89 ../gui/selinux.tbl:90
+#: ../gui/selinux.tbl:92 ../gui/selinux.tbl:94 ../gui/selinux.tbl:95
+#: ../gui/selinux.tbl:96 ../gui/selinux.tbl:97 ../gui/selinux.tbl:98
+#: ../gui/selinux.tbl:99 ../gui/selinux.tbl:100 ../gui/selinux.tbl:101
+#: ../gui/selinux.tbl:102 ../gui/selinux.tbl:103 ../gui/selinux.tbl:104
+#: ../gui/selinux.tbl:106 ../gui/selinux.tbl:108 ../gui/selinux.tbl:109
+#: ../gui/selinux.tbl:110 ../gui/selinux.tbl:111 ../gui/selinux.tbl:112
+#: ../gui/selinux.tbl:113 ../gui/selinux.tbl:114 ../gui/selinux.tbl:116
+#: ../gui/selinux.tbl:117 ../gui/selinux.tbl:119 ../gui/selinux.tbl:121
+#: ../gui/selinux.tbl:123 ../gui/selinux.tbl:124 ../gui/selinux.tbl:127
+#: ../gui/selinux.tbl:129 ../gui/selinux.tbl:130 ../gui/selinux.tbl:131
+#: ../gui/selinux.tbl:132 ../gui/selinux.tbl:133 ../gui/selinux.tbl:134
+#: ../gui/selinux.tbl:135 ../gui/selinux.tbl:136 ../gui/selinux.tbl:137
+#: ../gui/selinux.tbl:138 ../gui/selinux.tbl:139 ../gui/selinux.tbl:142
+#: ../gui/selinux.tbl:143 ../gui/selinux.tbl:144 ../gui/selinux.tbl:145
+#: ../gui/selinux.tbl:146 ../gui/selinux.tbl:147 ../gui/selinux.tbl:148
+#: ../gui/selinux.tbl:149 ../gui/selinux.tbl:150 ../gui/selinux.tbl:151
+#: ../gui/selinux.tbl:152 ../gui/selinux.tbl:154 ../gui/selinux.tbl:155
+#: ../gui/selinux.tbl:156 ../gui/selinux.tbl:157 ../gui/selinux.tbl:158
+#: ../gui/selinux.tbl:159 ../gui/selinux.tbl:160 ../gui/selinux.tbl:167
+#: ../gui/selinux.tbl:171 ../gui/selinux.tbl:172 ../gui/selinux.tbl:173
+#: ../gui/selinux.tbl:174 ../gui/selinux.tbl:175 ../gui/selinux.tbl:177
+#: ../gui/selinux.tbl:178 ../gui/selinux.tbl:179 ../gui/selinux.tbl:180
+#: ../gui/selinux.tbl:184 ../gui/selinux.tbl:192 ../gui/selinux.tbl:193
+#: ../gui/selinux.tbl:194 ../gui/selinux.tbl:195 ../gui/selinux.tbl:196
+#: ../gui/selinux.tbl:197 ../gui/selinux.tbl:198 ../gui/selinux.tbl:199
+#: ../gui/selinux.tbl:200 ../gui/selinux.tbl:201 ../gui/selinux.tbl:206
+#: ../gui/selinux.tbl:207 ../gui/selinux.tbl:218 ../gui/selinux.tbl:219
+#: ../gui/selinux.tbl:220 ../gui/selinux.tbl:222 ../gui/selinux.tbl:224
+#: ../gui/selinux.tbl:226 ../gui/selinux.tbl:227 ../gui/selinux.tbl:230
+msgid "SELinux Service Protection"
+msgstr "SELinux защита на услугите"
+
+#: ../gui/selinux.tbl:1
+msgid "Disable SELinux protection for acct daemon"
+msgstr "Изключване на SELinux защитата за демона acct"
+
+#: ../gui/selinux.tbl:2 ../gui/selinux.tbl:3 ../gui/selinux.tbl:70
+#: ../gui/selinux.tbl:153 ../gui/selinux.tbl:168 ../gui/selinux.tbl:169
+#: ../gui/selinux.tbl:170 ../gui/selinux.tbl:189 ../gui/selinux.tbl:202
+#: ../gui/selinux.tbl:203 ../gui/selinux.tbl:204 ../gui/selinux.tbl:205
+msgid "Admin"
+msgstr "Администратор"
+
+#: ../gui/selinux.tbl:2
+msgid "Allow all daemons to write corefiles to /"
+msgstr "Разрешаване на всички демони да пишат core файлове в /"
+
+#: ../gui/selinux.tbl:3
+msgid "Allow all daemons the ability to use unallocated ttys"
+msgstr "Разрешаване на всички демони да ползват незаделени tty конзоли"
+
+#: ../gui/selinux.tbl:4 ../gui/selinux.tbl:5 ../gui/selinux.tbl:11
+#: ../gui/selinux.tbl:12 ../gui/selinux.tbl:13 ../gui/selinux.tbl:15
+#: ../gui/selinux.tbl:20 ../gui/selinux.tbl:41 ../gui/selinux.tbl:208
+#: ../gui/selinux.tbl:210 ../gui/selinux.tbl:211 ../gui/selinux.tbl:212
+#: ../gui/selinux.tbl:213 ../gui/selinux.tbl:214 ../gui/selinux.tbl:215
+#: ../gui/selinux.tbl:216 ../gui/selinux.tbl:217
+msgid "User Privs"
+msgstr "Потребителски привилегии"
+
+#: ../gui/selinux.tbl:4
+#, fuzzy
+msgid ""
+"Allow gadmin SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"Разрешаване на gadmin SELinux потребителските акаунти да стартират файлове в "
+"домашната си директория или в /tmp"
+
+#: ../gui/selinux.tbl:5
+#, fuzzy
+msgid ""
+"Allow guest SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"Разрешаване на SELinux гост акаунта да стартира файлове в домашната си "
+"директория или /tmp"
+
+#: ../gui/selinux.tbl:6 ../gui/selinux.tbl:9 ../gui/selinux.tbl:16
+msgid "Memory Protection"
+msgstr "Защита на паметта"
+
+#: ../gui/selinux.tbl:6
+msgid "Allow java executable stack"
+msgstr "Разрешаване на изпълним стек за java"
+
+#: ../gui/selinux.tbl:7 ../gui/selinux.tbl:8 ../gui/selinux.tbl:35
+#: ../gui/selinux.tbl:209
+msgid "Mount"
+msgstr "Монтиране"
+
+#: ../gui/selinux.tbl:7
+msgid "Allow mount to mount any file"
+msgstr "Разрешаване на mount да монтира всеки файл"
+
+#: ../gui/selinux.tbl:8
+msgid "Allow mount to mount any directory"
+msgstr "Разрешаване на mount да монтира всяка директория"
+
+#: ../gui/selinux.tbl:9
+msgid "Allow mplayer executable stack"
+msgstr "Разрешаване на изпълним стек за mplayer"
+
+#: ../gui/selinux.tbl:10 ../gui/selinux.tbl:162 ../gui/selinux.tbl:187
+#: ../gui/selinux.tbl:188
+msgid "SSH"
+msgstr "SSH"
+
+#: ../gui/selinux.tbl:10
+msgid "Allow ssh to run ssh-keysign"
+msgstr "Разрешаване на ssh да стартира ssh-keysign"
+
+#: ../gui/selinux.tbl:11
+#, fuzzy
+msgid ""
+"Allow staff SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"Разрешаване на staff SELinux потребителските акаунти да изпълняват файлове в "
+"домашната си директория или /tmp"
+
+#: ../gui/selinux.tbl:12
+#, fuzzy
+msgid ""
+"Allow sysadm SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"Разрешаване на sysadm SELinux потребителските акаунти да изпълняват файлове "
+"в домашната си директория или /tmp"
+
+#: ../gui/selinux.tbl:13
+#, fuzzy
+msgid ""
+"Allow unconfined SELinux user account to execute files in home directory or /"
+"tmp"
+msgstr ""
+"Разрешаване на неограничените SELinux потребителски акаунти да изпълняват "
+"файлове в домашната си директория или /tmp"
+
+#: ../gui/selinux.tbl:14
+msgid "Network Configuration"
+msgstr "Мрежова конфигурация"
+
+#: ../gui/selinux.tbl:14
+msgid "Allow unlabeled packets to flow on the network"
+msgstr "Разрешаване на неетикирани пакети да пътуват в мрежата"
+
+#: ../gui/selinux.tbl:15
+#, fuzzy
+msgid ""
+"Allow user SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"Разрешаване на user SELinux потребителските акаунти да изпълняват файлове в "
+"домашната си директория или /tmp"
+
+#: ../gui/selinux.tbl:16
+msgid "Allow unconfined to dyntrans to unconfined_execmem"
+msgstr ""
+"Разрешаване на unconfined (неограничените) динамично да преминава към "
+"unconfined_execmem"
+
+#: ../gui/selinux.tbl:17 ../gui/selinux.tbl:18 ../gui/selinux.tbl:120
+#: ../gui/selinux.tbl:140
+msgid "Databases"
+msgstr "Бази данни"
+
+#: ../gui/selinux.tbl:17
+msgid "Allow user to connect to mysql socket"
+msgstr "Разрешаване на потребителите да се свързват с mysql гнездо"
+
+#: ../gui/selinux.tbl:18
+msgid "Allow user to connect to postgres socket"
+msgstr "Разрешаване на потребителите да се свързват с postgres гнездо"
+
+#: ../gui/selinux.tbl:19 ../gui/selinux.tbl:165 ../gui/selinux.tbl:223
+msgid "XServer"
+msgstr "XServer"
+
+#: ../gui/selinux.tbl:19
+msgid "Allow clients to write to X shared memory"
+msgstr "Разрешаване на клиентите да пишат в споделената памет на X"
+
+#: ../gui/selinux.tbl:20
+#, fuzzy
+msgid ""
+"Allow xguest SELinux user account to execute files in home directory or /tmp"
+msgstr ""
+"Разрешаване на xguest SELinux потребителските акаунти да изпълняват файлове "
+"в домашната си директория или /tmp"
+
+#: ../gui/selinux.tbl:21 ../gui/selinux.tbl:228 ../gui/selinux.tbl:229
+#: ../gui/selinux.tbl:231
+msgid "NIS"
+msgstr "NIS"
+
+#: ../gui/selinux.tbl:21
+msgid "Allow daemons to run with NIS"
+msgstr "Разрешаване на демоните да работят с NIS"
+
+#: ../gui/selinux.tbl:22 ../gui/selinux.tbl:23 ../gui/selinux.tbl:24
+#: ../gui/selinux.tbl:25 ../gui/selinux.tbl:26 ../gui/selinux.tbl:27
+#: ../gui/selinux.tbl:28 ../gui/selinux.tbl:29 ../gui/selinux.tbl:71
+#: ../gui/selinux.tbl:73 ../gui/selinux.tbl:74 ../gui/selinux.tbl:115
+#: ../gui/selinux.tbl:118
+msgid "Web Applications"
+msgstr "Уеб приложения"
+
+#: ../gui/selinux.tbl:22
+msgid "Transition staff SELinux user to Web Browser Domain"
+msgstr "Преход на staff SELinux потребителите към уеб браузър домейна"
+
+#: ../gui/selinux.tbl:23
+msgid "Transition sysadm SELinux user to Web Browser Domain"
+msgstr "Преход на sysadm SELinux потребителите към уеб браузър домейна"
+
+#: ../gui/selinux.tbl:24
+msgid "Transition user SELinux user to Web Browser Domain"
+msgstr "Преход на user SELinux потребителите към уеб браузър домейна"
+
+#: ../gui/selinux.tbl:25
+msgid "Transition xguest SELinux user to Web Browser Domain"
+msgstr "Преход на xguest SELinux потребителите към уеб браузър домейна"
+
+#: ../gui/selinux.tbl:26 ../gui/selinux.tbl:27 ../gui/selinux.tbl:28
+#: ../gui/selinux.tbl:29
+msgid "Allow staff Web Browsers to write to home directories"
+msgstr "Разрешаване на staff уеб браузърите да пишат в домашните директории"
+
+#: ../gui/selinux.tbl:30
+msgid "Disable SELinux protection for amanda"
+msgstr "Изключване на SELinux защитата за amanda"
+
+#: ../gui/selinux.tbl:31
+msgid "Disable SELinux protection for amavis"
+msgstr "Изключване на SELinux защитата за amavis"
+
+#: ../gui/selinux.tbl:32
+msgid "Disable SELinux protection for apmd daemon"
+msgstr "Изключване на SELinux защитата за демона apmd"
+
+#: ../gui/selinux.tbl:33
+msgid "Disable SELinux protection for arpwatch daemon"
+msgstr "Изключване на SELinux защитата за демона arpwatch"
+
+#: ../gui/selinux.tbl:34
+msgid "Disable SELinux protection for auditd daemon"
+msgstr "Изключване на SELinux защитата за демона auditd"
+
+#: ../gui/selinux.tbl:35
+msgid "Disable SELinux protection for automount daemon"
+msgstr "Изключване на SELinux защитата за демона automount"
+
+#: ../gui/selinux.tbl:36
+msgid "Disable SELinux protection for avahi"
+msgstr "Изключване на SELinux защитата за avahi"
+
+#: ../gui/selinux.tbl:37
+msgid "Disable SELinux protection for bluetooth daemon"
+msgstr "Изключване на SELinux защитата за демона bluetooth"
+
+#: ../gui/selinux.tbl:38
+msgid "Disable SELinux protection for canna daemon"
+msgstr "Изключване на SELinux защитата за демона canna"
+
+#: ../gui/selinux.tbl:39
+msgid "Disable SELinux protection for cardmgr daemon"
+msgstr "Изключване на SELinux защитата за демона cardmgr"
+
+#: ../gui/selinux.tbl:40
+msgid "Disable SELinux protection for Cluster Server"
+msgstr "Изключване на SELinux защитата за Cluster Server"
+
+#: ../gui/selinux.tbl:41
+msgid ""
+"Allow cdrecord to read various content. nfs, samba, removable devices, user "
+"temp and untrusted content files"
+msgstr ""
+"Разрешаване на cdrecord да чете разнородно съдържание. nfs, samba, преносими "
+"устройства, потребителски временни файлове и файлове с несигурно съдържание"
+
+#: ../gui/selinux.tbl:42
+msgid "Disable SELinux protection for ciped daemon"
+msgstr "Изключване на SELinux защитата за демона ciped"
+
+#: ../gui/selinux.tbl:43
+msgid "Disable SELinux protection for clamd daemon"
+msgstr "Изключване на SELinux защитата за демона clamd"
+
+#: ../gui/selinux.tbl:44
+msgid "Disable SELinux protection for clamscan"
+msgstr "Изключване на SELinux защитата за clamscan"
+
+#: ../gui/selinux.tbl:45
+msgid "Disable SELinux protection for clvmd"
+msgstr "Изключване на SELinux защитата за clvmd"
+
+#: ../gui/selinux.tbl:46
+msgid "Disable SELinux protection for comsat daemon"
+msgstr "Изключване на SELinux защитата за демона comsat"
+
+#: ../gui/selinux.tbl:47 ../gui/selinux.tbl:48 ../gui/selinux.tbl:49
+#: ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
+msgid "Disable SELinux protection for courier daemon"
+msgstr "Изключване на SELinux защитата за демона courier"
+
+#: ../gui/selinux.tbl:52
+msgid "Disable SELinux protection for cpucontrol daemon"
+msgstr "Изключване на SELinux защитата за демона cpucontrol"
+
+#: ../gui/selinux.tbl:53
+msgid "Disable SELinux protection for cpuspeed daemon"
+msgstr "Изключване на SELinux защитата за демона cpuspeed"
+
+#: ../gui/selinux.tbl:54
+msgid "Cron"
+msgstr "Cron"
+
+#: ../gui/selinux.tbl:54
+msgid "Disable SELinux protection for crond daemon"
+msgstr "Изключване на SELinux защитата за демона crond"
+
+#: ../gui/selinux.tbl:55 ../gui/selinux.tbl:56 ../gui/selinux.tbl:57
+#: ../gui/selinux.tbl:91
+msgid "Printing"
+msgstr "Печат"
+
+#: ../gui/selinux.tbl:55
+#, fuzzy
+msgid "Disable SELinux protection for cupsd back end server"
+msgstr "Изключване на SELinux защитата за сървъра на ниско ниво на cupsd"
+
+#: ../gui/selinux.tbl:56
+msgid "Disable SELinux protection for cupsd daemon"
+msgstr "Изключване на SELinux защитата за демона cupsd"
+
+#: ../gui/selinux.tbl:57
+msgid "Disable SELinux protection for cupsd_lpd"
+msgstr "Изключване на SELinux защитата за cupsd_lpd"
+
+#: ../gui/selinux.tbl:58
+msgid "CVS"
+msgstr "CVS"
+
+#: ../gui/selinux.tbl:58
+msgid "Disable SELinux protection for cvs daemon"
+msgstr "Изключване на SELinux защитата за демона cvs"
+
+#: ../gui/selinux.tbl:59
+msgid "Disable SELinux protection for cyrus daemon"
+msgstr "Изключване на SELinux защитата за демона cyrus"
+
+#: ../gui/selinux.tbl:60
+msgid "Disable SELinux protection for dbskkd daemon"
+msgstr "Изключване на SELinux защитата за демона dbskkd"
+
+#: ../gui/selinux.tbl:61
+msgid "Disable SELinux protection for dbusd daemon"
+msgstr "Изключване на SELinux защитата за демона dbusd"
+
+#: ../gui/selinux.tbl:62
+msgid "Disable SELinux protection for dccd"
+msgstr "Изключване на SELinux защитата за dccd"
+
+#: ../gui/selinux.tbl:63
+msgid "Disable SELinux protection for dccifd"
+msgstr "Изключване на SELinux защитата за dccifd"
+
+#: ../gui/selinux.tbl:64
+msgid "Disable SELinux protection for dccm"
+msgstr "Изключване на SELinux защитата за dccm"
+
+#: ../gui/selinux.tbl:65
+msgid "Disable SELinux protection for ddt daemon"
+msgstr "Изключване на SELinux защитата за демона ddt"
+
+#: ../gui/selinux.tbl:66
+msgid "Disable SELinux protection for devfsd daemon"
+msgstr "Изключване на SELinux защитата за демона devfsd"
+
+#: ../gui/selinux.tbl:67
+msgid "Disable SELinux protection for dhcpc daemon"
+msgstr "Изключване на SELinux защитата за демона dhcpc"
+
+#: ../gui/selinux.tbl:68
+msgid "Disable SELinux protection for dhcpd daemon"
+msgstr "Изключване на SELinux защитата за демона dhcpd"
+
+#: ../gui/selinux.tbl:69
+msgid "Disable SELinux protection for dictd daemon"
+msgstr "Изключване на SELinux защитата за демона dictd"
+
+#: ../gui/selinux.tbl:70
+msgid "Allow sysadm_t to directly start daemons"
+msgstr "Разрешаване на sysadm_t да стартира директно демони"
+
+#: ../gui/selinux.tbl:71
+msgid "Disable SELinux protection for Evolution"
+msgstr "Изключване на SELinux защитата за Evolution"
+
+#: ../gui/selinux.tbl:72
+msgid "Games"
+msgstr "Игри"
+
+#: ../gui/selinux.tbl:72
+msgid "Disable SELinux protection for games"
+msgstr "Изключване на SELinux защитата за игрите"
+
+#: ../gui/selinux.tbl:73
+msgid "Disable SELinux protection for the web browsers"
+msgstr "Изключване на SELinux защитата за уеб браузърите"
+
+#: ../gui/selinux.tbl:74
+msgid "Disable SELinux protection for Thunderbird"
+msgstr "Изключване на SELinux защитата за Thunderbird"
+
+#: ../gui/selinux.tbl:75
+msgid "Disable SELinux protection for distccd daemon"
+msgstr "Изключване на SELinux защитата за демона distccd"
+
+#: ../gui/selinux.tbl:76
+msgid "Disable SELinux protection for dmesg daemon"
+msgstr "Изключване на SELinux защитата за демона dmesg"
+
+#: ../gui/selinux.tbl:77
+msgid "Disable SELinux protection for dnsmasq daemon"
+msgstr "Изключване на SELinux защитата за демона dnsmasq"
+
+#: ../gui/selinux.tbl:78
+msgid "Disable SELinux protection for dovecot daemon"
+msgstr "Изключване на SELinux защитата за демона dovecot"
+
+#: ../gui/selinux.tbl:79
+msgid "Disable SELinux protection for entropyd daemon"
+msgstr "Изключване на SELinux защитата за демона entropyd"
+
+#: ../gui/selinux.tbl:80
+msgid "Disable SELinux protection for fetchmail"
+msgstr "Изключване на SELinux защитата за fetchmail"
+
+#: ../gui/selinux.tbl:81
+msgid "Disable SELinux protection for fingerd daemon"
+msgstr "Изключване на SELinux защитата за демона fingerd"
+
+#: ../gui/selinux.tbl:82
+msgid "Disable SELinux protection for freshclam daemon"
+msgstr "Изключване на SELinux защитата за демона freshclam"
+
+#: ../gui/selinux.tbl:83
+msgid "Disable SELinux protection for fsdaemon daemon"
+msgstr "Изключване на SELinux защитата за демона fsdaemon"
+
+#: ../gui/selinux.tbl:84
+msgid "Disable SELinux protection for gpm daemon"
+msgstr "Изключване на SELinux защитата за демона gpm"
+
+#: ../gui/selinux.tbl:85 ../gui/selinux.tbl:125
+msgid "NFS"
+msgstr "NFS"
+
+#: ../gui/selinux.tbl:85
+msgid "Disable SELinux protection for gss daemon"
+msgstr "Изключване на SELinux защитата за демона gss"
+
+#: ../gui/selinux.tbl:86
+#, fuzzy
+msgid "Disable SELinux protection for Hal daemon"
+msgstr "Изключване на SELinux защитата за демона hal"
+
+#: ../gui/selinux.tbl:87
+msgid "Compatibility"
+msgstr "Съвместимост"
+
+#: ../gui/selinux.tbl:87
+msgid ""
+"Do not audit things that we know to be broken but which are not security "
+"risks"
+msgstr ""
+"Да не се прави одит на неща, които се знае че са счупени, но не "
+"представляват риск за сигурността"
+
+#: ../gui/selinux.tbl:88
+msgid "Disable SELinux protection for hostname daemon"
+msgstr "Изключване на SELinux защитата за демона hostname"
+
+#: ../gui/selinux.tbl:89
+msgid "Disable SELinux protection for hotplug daemon"
+msgstr "Изключване на SELinux защитата за демона hotplug"
+
+#: ../gui/selinux.tbl:90
+msgid "Disable SELinux protection for howl daemon"
+msgstr "Изключване на SELinux защитата за демона howl"
+
+#: ../gui/selinux.tbl:91
+msgid "Disable SELinux protection for cups hplip daemon"
+msgstr "Изключване на SELinux защитата за демона cups hplip"
+
+#: ../gui/selinux.tbl:92
+msgid "Disable SELinux protection for httpd rotatelogs"
+msgstr "Изключване на SELinux защитата за превъртане на httpd дневниците"
+
+#: ../gui/selinux.tbl:93 ../gui/selinux.tbl:232 ../gui/selinux.tbl:233
+msgid "HTTPD Service"
+msgstr "HTTPD услуга"
+
+#: ../gui/selinux.tbl:93
+msgid "Disable SELinux protection for http suexec"
+msgstr "Изключване на SELinux защитата за http suexec"
+
+#: ../gui/selinux.tbl:94
+msgid "Disable SELinux protection for hwclock daemon"
+msgstr "Изключване на SELinux защитата за демона hwclock"
+
+#: ../gui/selinux.tbl:95
+msgid "Disable SELinux protection for i18n daemon"
+msgstr "Изключване на SELinux защитата за демона i18n"
+
+#: ../gui/selinux.tbl:96
+msgid "Disable SELinux protection for imazesrv daemon"
+msgstr "Изключване на SELinux защитата за демона imazesrv"
+
+#: ../gui/selinux.tbl:97
+msgid "Disable SELinux protection for inetd child daemons"
+msgstr "Изключване на SELinux защитата за демоните деца на inetd"
+
+#: ../gui/selinux.tbl:98
+msgid "Disable SELinux protection for inetd daemon"
+msgstr "Изключване на SELinux защитата за демона inetd"
+
+#: ../gui/selinux.tbl:99
+msgid "Disable SELinux protection for innd daemon"
+msgstr "Изключване на SELinux защитата за демона innd"
+
+#: ../gui/selinux.tbl:100
+msgid "Disable SELinux protection for iptables daemon"
+msgstr "Изключване на SELinux защитата за демона iptables"
+
+#: ../gui/selinux.tbl:101
+msgid "Disable SELinux protection for ircd daemon"
+msgstr "Изключване на SELinux защитата за демона ircd"
+
+#: ../gui/selinux.tbl:102
+msgid "Disable SELinux protection for irqbalance daemon"
+msgstr "Изключване на SELinux защитата за демона irqbalance"
+
+#: ../gui/selinux.tbl:103
+msgid "Disable SELinux protection for iscsi daemon"
+msgstr "Изключване на SELinux защитата за демона iscsi"
+
+#: ../gui/selinux.tbl:104
+msgid "Disable SELinux protection for jabberd daemon"
+msgstr "Изключване на SELinux защитата за демона jabberd"
+
+#: ../gui/selinux.tbl:105 ../gui/selinux.tbl:107
+msgid "Kerberos"
+msgstr "Kerberos"
+
+#: ../gui/selinux.tbl:105
+msgid "Disable SELinux protection for kadmind daemon"
+msgstr "Изключване на SELinux защитата за демона kadmind"
+
+#: ../gui/selinux.tbl:106
+msgid "Disable SELinux protection for klogd daemon"
+msgstr "Изключване на SELinux защитата за демона klogd"
+
+#: ../gui/selinux.tbl:107
+msgid "Disable SELinux protection for krb5kdc daemon"
+msgstr "Изключване на SELinux защитата за демона krb5kdc"
+
+#: ../gui/selinux.tbl:108
+msgid "Disable SELinux protection for ktalk daemons"
+msgstr "Изключване на SELinux защитата за демоните ktalk"
+
+#: ../gui/selinux.tbl:109
+msgid "Disable SELinux protection for kudzu daemon"
+msgstr "Изключване на SELinux защитата за демона kudzu"
+
+#: ../gui/selinux.tbl:110
+msgid "Disable SELinux protection for locate daemon"
+msgstr "Изключване на SELinux защитата за демона locate"
+
+#: ../gui/selinux.tbl:111
+msgid "Disable SELinux protection for lpd daemon"
+msgstr "Изключване на SELinux защитата за демона lpd"
+
+#: ../gui/selinux.tbl:112
+msgid "Disable SELinux protection for lrrd daemon"
+msgstr "Изключване на SELinux защитата за демона lrrd"
+
+#: ../gui/selinux.tbl:113
+msgid "Disable SELinux protection for lvm daemon"
+msgstr "Изключване на SELinux защитата за демона lvm"
+
+#: ../gui/selinux.tbl:114
+msgid "Disable SELinux protection for mailman"
+msgstr "Изключване на SELinux защитата за mailman"
+
+#: ../gui/selinux.tbl:115
+msgid "Allow evolution and thunderbird to read user files"
+msgstr "Разрешаване на evolution и thunderbird да четат потребителски файлове"
+
+#: ../gui/selinux.tbl:116
+msgid "Disable SELinux protection for mdadm daemon"
+msgstr "Изключване на SELinux защитата за демона mdadm"
+
+#: ../gui/selinux.tbl:117
+msgid "Disable SELinux protection for monopd daemon"
+msgstr "Изключване на SELinux защитата за демона monopd"
+
+#: ../gui/selinux.tbl:118
+msgid "Allow the mozilla browser to read user files"
+msgstr "Разрешаване на mozilla браузъра да чете потребителски файлове"
+
+#: ../gui/selinux.tbl:119
+msgid "Disable SELinux protection for mrtg daemon"
+msgstr "Изключване на SELinux защитата за демона mrtg"
+
+#: ../gui/selinux.tbl:120
+msgid "Disable SELinux protection for mysqld daemon"
+msgstr "Изключване на SELinux защитата за демона mysqld"
+
+#: ../gui/selinux.tbl:121
+msgid "Disable SELinux protection for nagios daemon"
+msgstr "Изключване на SELinux защитата за демона nagios"
+
+#: ../gui/selinux.tbl:122 ../gui/selinux.tbl:128
+msgid "Name Service"
+msgstr "Услуга за имена"
+
+#: ../gui/selinux.tbl:122
+msgid "Disable SELinux protection for named daemon"
+msgstr "Изключване на SELinux защитата за демона named"
+
+#: ../gui/selinux.tbl:123
+msgid "Disable SELinux protection for nessusd daemon"
+msgstr "Изключване на SELinux защитата за демона nessusd"
+
+#: ../gui/selinux.tbl:124
+msgid "Disable SELinux protection for NetworkManager"
+msgstr "Изключване на SELinux защитата за NetworkManager"
+
+#: ../gui/selinux.tbl:125
+msgid "Disable SELinux protection for nfsd daemon"
+msgstr "Изключване на SELinux защитата за демона nfsd"
+
+#: ../gui/selinux.tbl:126 ../gui/selinux.tbl:163 ../gui/selinux.tbl:176
+#: ../gui/selinux.tbl:221
+msgid "Samba"
+msgstr "Samba"
+
+#: ../gui/selinux.tbl:126
+msgid "Disable SELinux protection for nmbd daemon"
+msgstr "Изключване на SELinux защитата за демона nmbd"
+
+#: ../gui/selinux.tbl:127
+msgid "Disable SELinux protection for nrpe daemon"
+msgstr "Изключване на SELinux защитата за демона nrpe"
+
+#: ../gui/selinux.tbl:128
+msgid "Disable SELinux protection for nscd daemon"
+msgstr "Изключване на SELinux защитата за демона nscd"
+
+#: ../gui/selinux.tbl:129
+msgid "Disable SELinux protection for nsd daemon"
+msgstr "Изключване на SELinux защитата за демона nsd"
+
+#: ../gui/selinux.tbl:130
+msgid "Disable SELinux protection for ntpd daemon"
+msgstr "Изключване на SELinux защитата за демона ntpd"
+
+#: ../gui/selinux.tbl:131
+msgid "Disable SELinux protection for oddjob"
+msgstr "Изключване на SELinux защитата за oddjob"
+
+#: ../gui/selinux.tbl:132
+msgid "Disable SELinux protection for oddjob_mkhomedir"
+msgstr "Изключване на SELinux защитата за oddjob_mkhomedir"
+
+#: ../gui/selinux.tbl:133
+msgid "Disable SELinux protection for openvpn daemon"
+msgstr "Изключване на SELinux защитата за демона openvpn"
+
+#: ../gui/selinux.tbl:134
+msgid "Disable SELinux protection for pam daemon"
+msgstr "Изключване на SELinux защитата за демона pam"
+
+#: ../gui/selinux.tbl:135
+msgid "Disable SELinux protection for pegasus"
+msgstr "Изключване на SELinux защитата за pegasus"
+
+#: ../gui/selinux.tbl:136
+msgid "Disable SELinux protection for perdition daemon"
+msgstr "Изключване на SELinux защитата за демона  perdition"
+
+#: ../gui/selinux.tbl:137
+msgid "Disable SELinux protection for portmap daemon"
+msgstr "Изключване на SELinux защитата за демона portmap"
+
+#: ../gui/selinux.tbl:138
+msgid "Disable SELinux protection for portslave daemon"
+msgstr "Изключване на SELinux защитата за демона portslave"
+
+#: ../gui/selinux.tbl:139
+msgid "Disable SELinux protection for postfix"
+msgstr "Изключване на SELinux защитата за postfix"
+
+#: ../gui/selinux.tbl:140
+msgid "Disable SELinux protection for postgresql daemon"
+msgstr "Изключване на SELinux защитата за демона postgresql"
+
+#: ../gui/selinux.tbl:141
+msgid "pppd"
+msgstr "pppd"
+
+#: ../gui/selinux.tbl:141
+msgid "Allow pppd to be run for a regular user"
+msgstr "Разрешаване pppd да се стартира за обикновен потребител"
+
+#: ../gui/selinux.tbl:142
+msgid "Disable SELinux protection for pptp"
+msgstr "Изключване на SELinux защитата за pptp"
+
+#: ../gui/selinux.tbl:143
+msgid "Disable SELinux protection for prelink daemon"
+msgstr "Изключване на SELinux защитата за демона prelink"
+
+#: ../gui/selinux.tbl:144
+msgid "Disable SELinux protection for privoxy daemon"
+msgstr "Изключване на SELinux защитата за демона privoxy"
+
+#: ../gui/selinux.tbl:145
+msgid "Disable SELinux protection for ptal daemon"
+msgstr "Изключване на SELinux защитата за демона ptal"
+
+#: ../gui/selinux.tbl:146
+msgid "Disable SELinux protection for pxe daemon"
+msgstr "Изключване на SELinux защитата за демона pxe"
+
+#: ../gui/selinux.tbl:147
+msgid "Disable SELinux protection for pyzord"
+msgstr "Изключване на SELinux защитата за pyzord"
+
+#: ../gui/selinux.tbl:148
+msgid "Disable SELinux protection for quota daemon"
+msgstr "Изключване на SELinux защитата за демона quota"
+
+#: ../gui/selinux.tbl:149
+msgid "Disable SELinux protection for radiusd daemon"
+msgstr "Изключване на SELinux защитата за демона radiusd"
+
+#: ../gui/selinux.tbl:150
+msgid "Disable SELinux protection for radvd daemon"
+msgstr "Изключване на SELinux защитата за демона radvd"
+
+#: ../gui/selinux.tbl:151
+msgid "Disable SELinux protection for rdisc"
+msgstr "Изключване на SELinux защитата за rdisc"
+
+#: ../gui/selinux.tbl:152
+msgid "Disable SELinux protection for readahead"
+msgstr "Изключване на SELinux защитата за readahead"
+
+#: ../gui/selinux.tbl:153
+msgid "Allow programs to read files in non-standard locations (default_t)"
+msgstr ""
+"Разрешаване на програмите да четат файлове от настандартни места (default_t)"
+
+#: ../gui/selinux.tbl:154
+msgid "Disable SELinux protection for restorecond"
+msgstr "Изключване на SELinux защитата за restorecond"
+
+#: ../gui/selinux.tbl:155
+msgid "Disable SELinux protection for rhgb daemon"
+msgstr "Изключване на SELinux защитата за демона rhgb"
+
+#: ../gui/selinux.tbl:156
+msgid "Disable SELinux protection for ricci"
+msgstr "Изключване на SELinux защитата за ricci"
+
+#: ../gui/selinux.tbl:157
+msgid "Disable SELinux protection for ricci_modclusterd"
+msgstr "Изключване на SELinux защитата за ricci_modclusterd"
+
+#: ../gui/selinux.tbl:158
+msgid "Disable SELinux protection for rlogind daemon"
+msgstr "Изключване на SELinux защитата за демона rlogind"
+
+#: ../gui/selinux.tbl:159
+msgid "Disable SELinux protection for rpcd daemon"
+msgstr "Изключване на SELinux защитата за демона rpcd"
+
+#: ../gui/selinux.tbl:160
+msgid "Disable SELinux protection for rshd"
+msgstr "Изключване на SELinux защитата за rshd"
+
+#: ../gui/selinux.tbl:161
+msgid "rsync"
+msgstr "rsync"
+
+#: ../gui/selinux.tbl:161
+msgid "Disable SELinux protection for rsync daemon"
+msgstr "Изключване на SELinux защитата за демона rsync"
+
+#: ../gui/selinux.tbl:162
+msgid "Allow ssh to run from inetd instead of as a daemon"
+msgstr "Разрешаване ssh да се стартира от inetd вместо като демон"
+
+#: ../gui/selinux.tbl:163
+msgid "Allow Samba to share nfs directories"
+msgstr "Разрешаване на Samba да споделя nfs директории"
+
+#: ../gui/selinux.tbl:164 ../gui/selinux.tbl:166
+msgid "SASL authentication server"
+msgstr "SASL сървър за удостоверяване"
+
+#: ../gui/selinux.tbl:164
+msgid "Allow sasl authentication server to read /etc/shadow"
+msgstr "Разрешаване на удостоверяващия сървър sasl да чете /etc/shadow"
+
+#: ../gui/selinux.tbl:165
+msgid ""
+"Allow X-Windows server to map a memory region as both executable and writable"
+msgstr ""
+"Разрешаване на сървъра X-Windows да ползва части от паметта едновременно за "
+"писане и изпълнение"
+
+#: ../gui/selinux.tbl:166
+msgid "Disable SELinux protection for saslauthd daemon"
+msgstr "Изключване на SELinux защитата за демона saslauthd"
+
+#: ../gui/selinux.tbl:167
+msgid "Disable SELinux protection for scannerdaemon daemon"
+msgstr "Изключване на SELinux защитата за демона scannerdaemon"
+
+#: ../gui/selinux.tbl:168
+msgid "Do not allow transition to sysadm_t, sudo and su effected"
+msgstr "Забрана за преход към sysadm_t, засягат се sudo и su"
+
+#: ../gui/selinux.tbl:169
+msgid "Do not allow any processes to load kernel modules"
+msgstr "Забрана на всички процеси да зареждат модули в ядрото"
+
+#: ../gui/selinux.tbl:170
+msgid "Do not allow any processes to modify kernel SELinux policy"
+msgstr "Забрана на всички процеси да променят SELinux политиката в ядрото"
+
+#: ../gui/selinux.tbl:171
+msgid "Disable SELinux protection for sendmail daemon"
+msgstr "Изключване на SELinux защитата за демона sendmail"
+
+#: ../gui/selinux.tbl:172
+msgid "Disable SELinux protection for setrans"
+msgstr "Изключване на SELinux защитата за setrans"
+
+#: ../gui/selinux.tbl:173
+#, fuzzy
+msgid "Disable SELinux protection for setroubleshoot daemon"
+msgstr "Изключване на SELinux защитата за демона setroublesoot"
+
+#: ../gui/selinux.tbl:174
+msgid "Disable SELinux protection for slapd daemon"
+msgstr "Изключване на SELinux защитата за демона slapd"
+
+#: ../gui/selinux.tbl:175
+msgid "Disable SELinux protection for slrnpull daemon"
+msgstr "Изключване на SELinux защитата за демона slrnpull"
+
+#: ../gui/selinux.tbl:176
+msgid "Disable SELinux protection for smbd daemon"
+msgstr "Изключване на SELinux защитата за демона smbd"
+
+#: ../gui/selinux.tbl:177
+msgid "Disable SELinux protection for snmpd daemon"
+msgstr "Изключване на SELinux защитата за демона snmpd"
+
+#: ../gui/selinux.tbl:178
+msgid "Disable SELinux protection for snort daemon"
+msgstr "Изключване на SELinux защитата за демона snort"
+
+#: ../gui/selinux.tbl:179
+msgid "Disable SELinux protection for soundd daemon"
+msgstr "Изключване на SELinux защитата за демона soundd"
+
+#: ../gui/selinux.tbl:180
+msgid "Disable SELinux protection for sound daemon"
+msgstr "Изключване на SELinux защитата за демона sound"
+
+#: ../gui/selinux.tbl:181 ../gui/selinux.tbl:182 ../gui/selinux.tbl:183
+#, fuzzy
+msgid "Spam Protection"
+msgstr "Spam защита"
+
+#: ../gui/selinux.tbl:181
+msgid "Disable SELinux protection for spamd daemon"
+msgstr "Изключване на SELinux защитата за демона spamd"
+
+#: ../gui/selinux.tbl:182
+msgid "Allow spamd to access home directories"
+msgstr "Разрешаване на достъп до домашните директории на spamd"
+
+#: ../gui/selinux.tbl:183
+#, fuzzy
+msgid "Allow Spam Assassin daemon network access"
+msgstr "Разрешаване на мрежов достъп на демона Spam Assasin"
+
+#: ../gui/selinux.tbl:184
+msgid "Disable SELinux protection for speedmgmt daemon"
+msgstr "Изключване на SELinux защитата за демона speedmgmt"
+
+#: ../gui/selinux.tbl:185 ../gui/selinux.tbl:186
+msgid "Squid"
+msgstr "Squid"
+
+#: ../gui/selinux.tbl:185
+msgid "Allow squid daemon to connect to the network"
+msgstr "Разрешаване на мрежов достъп на демона squid"
+
+#: ../gui/selinux.tbl:186
+msgid "Disable SELinux protection for squid daemon"
+msgstr "Изключване на SELinux защитата за демона squid"
+
+#: ../gui/selinux.tbl:187
+msgid "Disable SELinux protection for ssh daemon"
+msgstr "Изключване на SELinux защитата за демона ssh"
+
+#: ../gui/selinux.tbl:188
+msgid "Allow ssh logins as sysadm_r:sysadm_t"
+msgstr "Разрешаване на ssh вход като sysadm_r:sysadm_t"
+
+#: ../gui/selinux.tbl:189
+msgid ""
+"Allow staff_r users to search the sysadm home dir and read files (such as ~/."
+"bashrc)"
+msgstr ""
+"Разрешаване на staff_r потребителите да претърсват sysadm домашната "
+"директория и да четат файлове (като ~/.bashrc примерно)"
+
+#: ../gui/selinux.tbl:190 ../gui/selinux.tbl:191
+msgid "Universal SSL tunnel"
+msgstr "Универсален SSL тунел"
+
+#: ../gui/selinux.tbl:190
+msgid "Disable SELinux protection for stunnel daemon"
+msgstr "Изключване на SELinux защитата за демона stunnel"
+
+#: ../gui/selinux.tbl:191
+msgid "Allow stunnel daemon to run as standalone, outside of xinetd"
+msgstr "Разрешаване на демона stunnel да работи самостоятелно, извън xinetd"
+
+#: ../gui/selinux.tbl:192
+msgid "Disable SELinux protection for swat daemon"
+msgstr "Изключване на SELinux защитата за демона swat"
+
+#: ../gui/selinux.tbl:193
+msgid "Disable SELinux protection for sxid daemon"
+msgstr "Изключване на SELinux защитата за демона sxid"
+
+#: ../gui/selinux.tbl:194
+msgid "Disable SELinux protection for syslogd daemon"
+msgstr "Изключване на SELinux защитата за демона syslogd"
+
+#: ../gui/selinux.tbl:195
+msgid "Disable SELinux protection for system cron jobs"
+msgstr "Изключване на SELinux защитата за системните cron задачи"
+
+#: ../gui/selinux.tbl:196
+msgid "Disable SELinux protection for tcp daemon"
+msgstr "Изключване на SELinux защитата за демона tcp"
+
+#: ../gui/selinux.tbl:197
+msgid "Disable SELinux protection for telnet daemon"
+msgstr "Изключване на SELinux защитата за демона telnet"
+
+#: ../gui/selinux.tbl:198
+msgid "Disable SELinux protection for tftpd daemon"
+msgstr "Изключване на SELinux защитата за демона tftpd"
+
+#: ../gui/selinux.tbl:199
+msgid "Disable SELinux protection for transproxy daemon"
+msgstr "Изключване на SELinux защитата за демона transproxy"
+
+#: ../gui/selinux.tbl:200
+msgid "Disable SELinux protection for udev daemon"
+msgstr "Изключване на SELinux защитата за демона udev"
+
+#: ../gui/selinux.tbl:201
+msgid "Disable SELinux protection for uml daemon"
+msgstr "Изключване на SELinux защитата за демона uml"
+
+#: ../gui/selinux.tbl:202
+msgid ""
+"Allow xinetd to run unconfined, including any services it starts that do not "
+"have a domain transition explicitly defined"
+msgstr ""
+"Разрешаване на xinetd да стартира неограничени, включително нямащи изрично "
+"дефиниран преход към домейн услуги"
+
+#: ../gui/selinux.tbl:203
+msgid ""
+"Allow rc scripts to run unconfined, including any daemon started by an rc "
+"script that does not have a domain transition explicitly defined"
+msgstr ""
+"Разрешаване на rc скриптовете да стартират неограничени, включително всеки "
+"rc скрипт, който няма изрично дефиниран преход към домейн"
+
+#: ../gui/selinux.tbl:204
+msgid "Allow rpm to run unconfined"
+msgstr "Разрешаване на rpm да стартира неограничен"
+
+#: ../gui/selinux.tbl:205
+msgid "Allow privileged utilities like hotplug and insmod to run unconfined"
+msgstr ""
+"Разрешаване на привилегировани инструменти като hotplug и insmod да работят "
+"неограничени"
+
+#: ../gui/selinux.tbl:206
+msgid "Disable SELinux protection for updfstab daemon"
+msgstr "Изключване на SELinux защитата за демона updfstab"
+
+#: ../gui/selinux.tbl:207
+msgid "Disable SELinux protection for uptimed daemon"
+msgstr "Изключване на SELinux защитата за демона uptimed"
+
+#: ../gui/selinux.tbl:208
+msgid ""
+"Allow user_r to reach sysadm_r via su, sudo, or userhelper. Otherwise, only "
+"staff_r can do so"
+msgstr ""
+"Разрешаване на user_r преход към sysadm_r чрез su, sudo, или userhelper. В "
+"противен случай, само staff_r може да го прави"
+
+#: ../gui/selinux.tbl:209
+msgid "Allow users to execute the mount command"
+msgstr "Разрешаване на потребителите да изпълняват командата mount"
+
+#: ../gui/selinux.tbl:210
+msgid "Allow regular users direct mouse access (only allow the X server)"
+msgstr ""
+"Разрешаване на обикновените потребители директен достъп до мишката (само на "
+"X сървъра)"
+
+#: ../gui/selinux.tbl:211
+msgid "Allow users to run the dmesg command"
+msgstr "Разрешаване на потребителите да стартират командата dmesg"
+
+#: ../gui/selinux.tbl:212
+msgid "Allow users to control network interfaces (also needs USERCTL=true)"
+msgstr ""
+"Разрешаване на потребителите да контролират мрежови интерфейси (трябва и "
+"USERCTL=true за интерфейса)"
+
+#: ../gui/selinux.tbl:213
+msgid "Allow normal user to execute ping"
+msgstr "Разрешаване на нормалните потребители да стартират ping"
+
+#: ../gui/selinux.tbl:214
+msgid "Allow user to r/w noextattrfile (FAT, CDROM, FLOPPY)"
+msgstr "Разрешаване на потребителите ч/з noextattrfile (FAT, CDROM, FLOPPY)"
+
+#: ../gui/selinux.tbl:215
+msgid "Allow users to rw usb devices"
+msgstr "Разрешаване на потребителите ч/з на usb устройства"
+
+#: ../gui/selinux.tbl:216
+msgid ""
+"Allow users to run TCP servers (bind to ports and accept connection from the "
+"same domain and outside users)  disabling this forces FTP passive mode and "
+"may change other protocols"
+msgstr ""
+"Разрешаване на потребителите да стартират TCP услуги (се закачат на портове "
+"и да приемат връзки от същия домейн и външни потребители).  Забраната на "
+"това налага ползването на пасивен FTP режим и може да промени и други "
+"протоколи"
+
+#: ../gui/selinux.tbl:217
+msgid "Allow user to stat ttyfiles"
+msgstr "Разрешаване на потребителите stat върху tty файлове"
+
+#: ../gui/selinux.tbl:218
+msgid "Disable SELinux protection for uucpd daemon"
+msgstr "Изключване на SELinux защитата за демона uucpd"
+
+#: ../gui/selinux.tbl:219
+msgid "Disable SELinux protection for vmware daemon"
+msgstr "Изключване на SELinux защитата за демона vmware"
+
+#: ../gui/selinux.tbl:220
+msgid "Disable SELinux protection for watchdog daemon"
+msgstr "Изключване на SELinux защитата за демона watchdog"
+
+#: ../gui/selinux.tbl:221
+msgid "Disable SELinux protection for winbind daemon"
+msgstr "Изключване на SELinux защитата за демона winbind"
+
+#: ../gui/selinux.tbl:222
+msgid "Disable SELinux protection for xdm daemon"
+msgstr "Изключване на SELinux защитата за демона xdm"
+
+#: ../gui/selinux.tbl:223
+msgid "Allow xdm logins as sysadm_r:sysadm_t"
+msgstr "Разрешаване на xdm вход като sysadm_r:sysadm_t"
+
+#: ../gui/selinux.tbl:224
+msgid "Disable SELinux protection for xen daemon"
+msgstr "Изключване на SELinux защитата за демона xen"
+
+#: ../gui/selinux.tbl:225
+msgid "XEN"
+msgstr "XEN"
+
+#: ../gui/selinux.tbl:225
+msgid "Allow xen to read/write physical disk devices"
+msgstr "Разрешаване на xen да чете/пише физически дискови устройства"
+
+#: ../gui/selinux.tbl:226
+msgid "Disable SELinux protection for xfs daemon"
+msgstr "Изключване на SELinux защитата за демона xfs"
+
+#: ../gui/selinux.tbl:227
+#, fuzzy
+msgid "Disable SELinux protection for xen control"
+msgstr "Изключване на SELinux защитата за xen constrol"
+
+#: ../gui/selinux.tbl:228
+msgid "Disable SELinux protection for ypbind daemon"
+msgstr "Изключване на SELinux защитата за демона ypbind"
+
+#: ../gui/selinux.tbl:229
+msgid "Disable SELinux protection for NIS Password Daemon"
+msgstr "Изключване на SELinux защитата за демона за NIS пароли"
+
+#: ../gui/selinux.tbl:230
+msgid "Disable SELinux protection for ypserv daemon"
+msgstr "Изключване на SELinux защитата за демона ypserv"
+
+#: ../gui/selinux.tbl:231
+msgid "Disable SELinux protection for NIS Transfer Daemon"
+msgstr "Изключване на SELinux защитата за демона NIS трансфери"
+
+#: ../gui/selinux.tbl:232
+#, fuzzy
+msgid "Allow SELinux webadm user to manage unprivileged users home directories"
+msgstr ""
+"Разрешаване на SELinux webadm потребителя да управлява домашните директории "
+"на непривилегированите потребители"
+
+#: ../gui/selinux.tbl:233
+#, fuzzy
+msgid "Allow SELinux webadm user to read unprivileged users home directories"
+msgstr ""
+"Разрешаване на SELinux webadm потребителя да чете домашните директории на "
+"непривилегированите потребители"
+
+#: ../gui/semanagePage.py:126
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "Сигурни ли сте, че искате да изтриете %s '%s'?"
+
+#: ../gui/semanagePage.py:126
+#, python-format
+msgid "Delete %s"
+msgstr "Изтриване на %s"
+
+#: ../gui/semanagePage.py:134
+#, python-format
+msgid "Add %s"
+msgstr "Добавяне на %s"
+
+#: ../gui/semanagePage.py:149
+#, python-format
+msgid "Modify %s"
+msgstr "Промяна на %s"
+
+#: ../gui/statusPage.py:69
+msgid "Permissive"
+msgstr "Пасивен"
+
+#: ../gui/statusPage.py:70
+msgid "Enforcing"
+msgstr "Активен"
+
+#: ../gui/statusPage.py:75
+msgid "Disabled"
+msgstr "Изключен"
+
+#: ../gui/statusPage.py:94
+msgid "Status"
+msgstr "Състояние"
+
+#: ../gui/statusPage.py:133
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"Смяната на типа на политиката ще предизвика преетикиране на цялата система "
+"следващия рестарт. Преетикирането отнема много време в зависимост от размера "
+"на файловата система.  Искате ли да продължите?"
+
+#: ../gui/statusPage.py:147
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"Изключването на SELinux изисква рестарт.  Не е препоръчително.  Ако по-късно "
+"решите да включите отново SELinux, системата ще трябва да се преетикира.  "
+"Ако просто искате да видите дали SELinux предизвиква проблем във Вашата "
+"система, можете да преминете в пасивен режим, който само ще рапортува в "
+"дневниците грешките и няма да налага SELinux политиката.  Пасивния режим не "
+"изисква рестарт. Искате ли да продължите?"
+
+#: ../gui/statusPage.py:152
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"Включването на SELinux ще предизвика преетикиране на цялата файлова система "
+"следващия рестарт. Преетикирането отнема много време в зависимост от размера "
+"на файловата система.  Искате ли да продължите?"
+
+#: ../gui/system-config-selinux.glade:11
+msgid "system-config-selinux"
+msgstr "system-config-selinux"
+
+#: ../gui/system-config-selinux.glade:12
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../gui/system-config-selinux.glade:22
+#: ../gui/system-config-selinux.glade:544
+#: ../gui/system-config-selinux.glade:736
+msgid "Add SELinux Login Mapping"
+msgstr "Добавяне на SELinux входно съответствие"
+
+#: ../gui/system-config-selinux.glade:257
+msgid "Add SELinux Network Ports"
+msgstr "Добавяне на SELinux мрежови портове"
+
+#: ../gui/system-config-selinux.glade:391
+#: ../gui/system-config-selinux.glade:870
+msgid "SELinux Type"
+msgstr "SELinux тип"
+
+#: ../gui/system-config-selinux.glade:440
+msgid ""
+"tcp\n"
+"udp"
+msgstr ""
+"tcp\n"
+"udp"
+
+#: ../gui/system-config-selinux.glade:622
+msgid ""
+"SELinux MLS/MCS\n"
+"Level"
+msgstr ""
+"SELinux MLS/MCS\n"
+"ниво"
+
+#: ../gui/system-config-selinux.glade:814
+msgid "File Specification"
+msgstr "Файлова спецификация"
+
+#: ../gui/system-config-selinux.glade:842
+msgid "File Type"
+msgstr "Файлов тип"
+
+#: ../gui/system-config-selinux.glade:919
+msgid ""
+"all files\n"
+"regular file\n"
+"directory\n"
+"character device\n"
+"block device\n"
+"socket\n"
+"symbolic link\n"
+"named pipe\n"
+msgstr ""
+"всички файлове\n"
+"нормален файл\n"
+"директория\n"
+"знаково устройство\n"
+"блоково устройство\n"
+"гнездо\n"
+"символна връзка\n"
+"именована тръба\n"
+
+#: ../gui/system-config-selinux.glade:965
+msgid "MLS"
+msgstr "MLS"
+
+#: ../gui/system-config-selinux.glade:1029
+#: ../gui/system-config-selinux.glade:2557
+#: ../gui/system-config-selinux.glade:2589
+msgid "Add SELinux User"
+msgstr "Добавяне на SELinux потребител"
+
+#: ../gui/system-config-selinux.glade:1271
+msgid "SELinux Administration"
+msgstr "SELinux администрация"
+
+#: ../gui/system-config-selinux.glade:1314
+msgid "Add"
+msgstr "Добавяне"
+
+#: ../gui/system-config-selinux.glade:1336
+msgid "_Properties"
+msgstr "_Свойства"
+
+#: ../gui/system-config-selinux.glade:1358
+msgid "_Delete"
+msgstr "_Изтриване"
+
+#: ../gui/system-config-selinux.glade:1449
+msgid "Select Management Object"
+msgstr "Избор на обект за менажиране"
+
+#: ../gui/system-config-selinux.glade:1466
+msgid "<b>Select:</b>"
+msgstr "<b>Изберете:</b>"
+
+#: ../gui/system-config-selinux.glade:1519
+msgid "System Default Enforcing Mode"
+msgstr "Основен режим на системата: "
+
+#: ../gui/system-config-selinux.glade:1547
+msgid ""
+"Disabled\n"
+"Permissive\n"
+"Enforcing\n"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:1566
+msgid "Current Enforcing Mode"
+msgstr "Текущ активен режим"
+
+#: ../gui/system-config-selinux.glade:1611
+msgid "System Default Policy Type: "
+msgstr "Основен тип политика на системата: "
+
+#: ../gui/system-config-selinux.glade:1656
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"Изберете дали искате да преетикирате цялата файлова система на следващото "
+"рестартиране. Преетикирането може да отнеме много дълго време, в зависимост "
+"от размера на файловата система.  Ако променяте типове от политиката или "
+"преминавате от изключена към активна политика, то преетикирането е "
+"необходимо."
+
+#: ../gui/system-config-selinux.glade:1702
+msgid "Relabel on next reboot."
+msgstr "Преетикиране на следващия рестарт."
+
+#: ../gui/system-config-selinux.glade:1754
+msgid "label37"
+msgstr "label37"
+
+#: ../gui/system-config-selinux.glade:1791
+msgid "Revert boolean setting to system default"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:1807
+msgid "Toggle between Customized and All Booleans"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:1825
+msgid "Run booleans lockdown wizard"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:1826
+msgid "Lockdown..."
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:1856
+#: ../gui/system-config-selinux.glade:2060
+#: ../gui/system-config-selinux.glade:2246
+#: ../gui/system-config-selinux.glade:2432
+#: ../gui/system-config-selinux.glade:2618
+#: ../gui/system-config-selinux.glade:2860
+#: ../gui/system-config-selinux.glade:3084
+msgid "Filter"
+msgstr "Филтър"
+
+#: ../gui/system-config-selinux.glade:1944
+msgid "label50"
+msgstr "label50"
+
+#: ../gui/system-config-selinux.glade:1981
+msgid "Add File Context"
+msgstr "Добавяне на файлов контекст"
+
+#: ../gui/system-config-selinux.glade:1997
+msgid "Modify File Context"
+msgstr "Промяна на файлов контекст"
+
+#: ../gui/system-config-selinux.glade:2013
+msgid "Delete File Context"
+msgstr "Изтриване на файлов контекст"
+
+#: ../gui/system-config-selinux.glade:2029
+msgid "Toggle between all and customized file context"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:2148
+msgid "label38"
+msgstr "label38"
+
+#: ../gui/system-config-selinux.glade:2185
+msgid "Add SELinux User Mapping"
+msgstr "Добавяне на SELinux съответствие за потребител"
+
+#: ../gui/system-config-selinux.glade:2201
+msgid "Modify SELinux User Mapping"
+msgstr "Промяна на SELinux съответствие за потребител"
+
+#: ../gui/system-config-selinux.glade:2217
+msgid "Delete SELinux User Mapping"
+msgstr "Изтриване на SELinux съответствие за потребител"
+
+#: ../gui/system-config-selinux.glade:2334
+msgid "label39"
+msgstr "label39"
+
+#: ../gui/system-config-selinux.glade:2371
+msgid "Add Translation"
+msgstr "Добавяне на превод"
+
+#: ../gui/system-config-selinux.glade:2387
+msgid "Modify Translation"
+msgstr "Промяна на превод"
+
+#: ../gui/system-config-selinux.glade:2403
+msgid "Delete Translation"
+msgstr "Изтриване на превод"
+
+#: ../gui/system-config-selinux.glade:2520
+msgid "label41"
+msgstr "label41"
+
+#: ../gui/system-config-selinux.glade:2573
+msgid "Modify SELinux User"
+msgstr "Промяна на SELinux потребител"
+
+#: ../gui/system-config-selinux.glade:2706
+msgid "label40"
+msgstr "label40"
+
+#: ../gui/system-config-selinux.glade:2743
+msgid "Add Network Port"
+msgstr "Добавяне на мрежов порт"
+
+#: ../gui/system-config-selinux.glade:2759
+msgid "Edit Network Port"
+msgstr "Редакция на мрежов порт"
+
+#: ../gui/system-config-selinux.glade:2775
+msgid "Delete Network Port"
+msgstr "Изтриване на мрежов порт"
+
+#: ../gui/system-config-selinux.glade:2811
+#: ../gui/system-config-selinux.glade:2829
+msgid "Toggle between Customized and All Ports"
+msgstr ""
+
+#: ../gui/system-config-selinux.glade:2948
+msgid "label42"
+msgstr "label42"
+
+#: ../gui/system-config-selinux.glade:2985
+msgid "Generate new policy module"
+msgstr "Генериране на нов модул с политика"
+
+#: ../gui/system-config-selinux.glade:3001
+msgid "Load policy module"
+msgstr "Зареждане на модул с политика"
+
+#: ../gui/system-config-selinux.glade:3017
+msgid "Remove loadable policy module"
+msgstr "Деактивиране на зареждаем модул с политика"
+
+#: ../gui/system-config-selinux.glade:3053
+#, fuzzy
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr ""
+"Спиране на допълнителните одит правила, които нормално не се рапортуват във "
+"файловете на дневника."
+
+#: ../gui/system-config-selinux.glade:3172
+msgid "label44"
+msgstr "label44"
+
+#: ../gui/translationsPage.py:53
+msgid "Sensitvity Level"
+msgstr "Ниво на чувствителност"
+
+#: ../gui/usersPage.py:138
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "Необходим е SELinux потребител '%s'"
+
+#~ msgid "Requires value"
+#~ msgstr "Изисква стойност"
+
+#~ msgid "Invalid prefix %s"
+#~ msgstr "Невалиден префикс %s"
+
+#~ msgid "SELinux Policy Generation Druid"
+#~ msgstr "Друид за генериране на SELinux политики"
+
+#~ msgid "label25"
+#~ msgstr "label25"
+
+#~ msgid "label26"
+#~ msgstr "label26"
+
+#~ msgid "label28"
+#~ msgstr "label28"
+
+#~ msgid "label30"
+#~ msgstr "label30"
+
+#~ msgid "label31"
+#~ msgstr "label31"
+
+#~ msgid "label32"
+#~ msgstr "label32"
+
+#~ msgid "label33"
+#~ msgstr "label33"
+
+#, fuzzy
+#~ msgid "Allows confined application/user role to bind to any tcp port"
+#~ msgstr ""
+#~ "Разрешаване на ограничаваното приложение/потребител да се слуша на всеки "
+#~ "tcp порт"
+
+#~ msgid "Use this checkbutton if your app calls bindresvport with 0."
+#~ msgstr ""
+#~ "Ползвайте този бутон отметка, ако вашето приложение извиква bindresvport "
+#~ "с 0."
+
+#, fuzzy
+#~ msgid "Allow application/user role to bind to any tcp ports > 1024"
+#~ msgstr ""
+#~ "Разрешаване на приложението/потребителя да слуша на всеки tcp порт > 1024"
+
+#~ msgid "Unreserved Ports  (> 1024)"
+#~ msgstr "Нерезервирани портове  (> 1024)"
+
+#, fuzzy
+#~ msgid ""
+#~ "Enter a comma separated list of tcp ports or ranges of ports that "
+#~ "application/user role binds to. Example: 612, 650-660"
+#~ msgstr ""
+#~ "Въведете разделен с запетаи списък от tcp портове, на които това "
+#~ "приложение слуша. "
+
+#~ msgid "label34"
+#~ msgstr "label34"
+
+#~ msgid "label35"
+#~ msgstr "label35"
+
+#, fuzzy
+#~ msgid "label51"
+#~ msgstr "label25"
+
+#~ msgid ""
+#~ "Enforcing\n"
+#~ "Permissive\n"
+#~ "Disabled\n"
+#~ msgstr ""
+#~ "Активен\n"
+#~ "Пасивен\n"
+#~ "Изключен\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "semodule -i %s\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "semodule·-i·%s\n"
+#~ "\n"
+
+#~ msgid "value"
+#~ msgstr "стойност"
+
+#~ msgid "Other"
+#~ msgstr "Друго"
+
+#~ msgid ""
+#~ "Application uses nsswitch or translates UID's (daemons that run as non "
+#~ "root)"
+#~ msgstr ""
+#~ "Приложението ползва nsswitch или превежда потребителски ID-та (UID, "
+#~ "демони, които работят не като root)"
+
+#~ msgid "Files and Directories"
+#~ msgstr "Файлове и директории"
+
+#~ msgid "Generate policy in this directory"
+#~ msgstr "Генериране на политика в тази директория"
+
+#~ msgid "Incoming Network Port Connections"
+#~ msgstr "Входящи портове за мрежови връзки"
+
+#~ msgid "Name of application to be confined"
+#~ msgstr "Име на приложението за ограничаване"
+
+#~ msgid "Outgoing Network Port Connections"
+#~ msgstr "Изходящи мрежови връзки"
+
+#~ msgid ""
+#~ "Select Terminal Login User, if this user will login to a machine only via "
+#~ "a terminal or remote login"
+#~ msgstr ""
+#~ "Изберете конзолен потребител ако това е потребител, който ще влиза на "
+#~ "машина само през терминал или отдалечено"
+
+#~ msgid ""
+#~ "Select XWindows login user, if this is a user who will login to a machine "
+#~ "via X"
+#~ msgstr ""
+#~ "Изберете XWindows потребител ако това е потребител, който ще влиза на "
+#~ "машината през X"
+
+#~ msgid "Terminal Login User"
+#~ msgstr "Конзолен потребител"
+
+#~ msgid "XWindows Login User"
+#~ msgstr "XWindows потребител"
+
+#~ msgid "Login"
+#~ msgstr "Потребител"
+
+#~ msgid "Allow direct login to the console device. Requiered for System 390"
+#~ msgstr ""
+#~ "Разрешаване на директен вход на конзолното устройство. Необходимо е за "
+#~ "System 390"
+
+#~ msgid "Allow cvs daemon to read shadow"
+#~ msgstr "Разрешаване на cvs демона да чете shadow файла"
+
+#~ msgid ""
+#~ "Allow unconfined executables to make their heap memory executable.  Doing "
+#~ "this is a really bad idea. Probably indicates a badly coded executable, "
+#~ "but could indicate an attack. This executable should be reported in "
+#~ "bugzilla"
+#~ msgstr ""
+#~ "Разрешаване на неконфигурирани програми да правят своята динамична памет "
+#~ "изпълнима.  Това наистина е много лоша идея. По всяка вероятност индикира "
+#~ "зле кодирано приложение, но може да индикира атака. Това приложение "
+#~ "следва да се рапортува в bugzilla"
+
+#~ msgid ""
+#~ "Allow unconfined executables to map a memory region as both executable "
+#~ "and writable, this is dangerous and the executable should be reported in "
+#~ "bugzilla"
+#~ msgstr ""
+#~ "Разрешаване на неограничените изпълними файлове да заделят области памет "
+#~ "за изпълнение и писане едновременно, това е опасно и тези файлове следва "
+#~ "да се рапортуват в bugzilla"
+
+#~ msgid ""
+#~ "Allow all unconfined executables to use libraries requiring text "
+#~ "relocation that are not labeled textrel_shlib_t"
+#~ msgstr ""
+#~ "Разрешаване на всички неограничени приложения да ползват библиотеки, "
+#~ "които изискват преместване на кода, а не са етикирани като textrel_shlib_t"
+
+#~ msgid ""
+#~ "Allow unconfined executables to make their stack executable.  This should "
+#~ "never, ever be neessary. Probably indicates a badly coded executable, but "
+#~ "could indicate an attack. This executable should be reported in bugzilla"
+#~ msgstr ""
+#~ "Разрешаване на всички неограничени програми да правят стека си изпълним.  "
+#~ "Това абсолютно никога не би трябвало да е необходимо. По всяка вероятност "
+#~ "индикира зле кодирано приложение, но може да показва и атака. Това "
+#~ "приложение следва да се рапортува в bugzilla"
+
+#~ msgid "FTP"
+#~ msgstr "FTP"
+
+#~ msgid "Allow ftpd to full access to the system"
+#~ msgstr "Разрешаване на ftpd пълен достъп до системата"
+
+#~ msgid ""
+#~ "Allow ftpd to upload files to directories labeled public_content_rw_t"
+#~ msgstr ""
+#~ "Разрешаване на ftpd да качва файлове в директории етикирани като "
+#~ "public_content_rw_t"
+
+#~ msgid "Allow ftp servers to use cifs used for public file transfer services"
+#~ msgstr ""
+#~ "Разрешаване на ftp сървърите да ползват cifs за публични услуги за "
+#~ "споделяне на файлове"
+
+#~ msgid "Allow ftp servers to use nfs used for public file transfer services"
+#~ msgstr ""
+#~ "Разрешаване на ftp сървърите да ползват nfs за публични услуги за "
+#~ "споделяне на файлове"
+
+#~ msgid "Allow gpg executable stack"
+#~ msgstr "Разрешаване на gpg на изпълним стек"
+
+#~ msgid "Allow gssd to read temp directory"
+#~ msgstr "Разрешаване на gssd да чете /tmp"
+
+#~ msgid ""
+#~ "Allow httpd daemon to write files in directories labeled "
+#~ "public_content_rw_t"
+#~ msgstr ""
+#~ "Разрешаване на демона httpd да пише файлове в директории етикирани като "
+#~ "public_content_rw_t"
+
+#~ msgid "Allow Apache to communicate with avahi service"
+#~ msgstr "Разрешаване на Apache да комуникира с услугата avahi"
+
+#~ msgid "Allow Apache to use mod_auth_pam"
+#~ msgstr "Разрешаване на Apache да ползва mod_auth_pam"
+
+#~ msgid ""
+#~ "Allow httpd scripts to write files in directories labeled "
+#~ "public_content_rw_t"
+#~ msgstr ""
+#~ "Разрешаване на httpd скриптовете да пишат файлове в директориите "
+#~ "етикирани като public_content_rw_t"
+
+#~ msgid "Allow daemons to use kerberos files"
+#~ msgstr "Разрешаване на демоните да ползват kerberos файлове"
+
+#~ msgid ""
+#~ "Allow nfs servers to modify public files used for public file transfer "
+#~ "services"
+#~ msgstr ""
+#~ "Разрешаване на nfs сървърите да променят публични файлове ползвани за "
+#~ "общодостъпни услуги за трансфер на файлове"
+
+#~ msgid "Polyinstatiation"
+#~ msgstr "Полиинстанциране"
+
+#~ msgid "Enable polyinstantiated directory support"
+#~ msgstr "Включване на поддръжката за полиинстанциране на директории"
+
+#~ msgid "Allow sysadm_t to debug or ptrace applications"
+#~ msgstr ""
+#~ "Разрешаване на sysadm_t да търси грешки в или ползва ptrace върху "
+#~ "приложения"
+
+#~ msgid ""
+#~ "Allow rsync to write files in directories labeled public_content_rw_t"
+#~ msgstr ""
+#~ "Разрешаване на rsync да пише файлове в директории етикирани като "
+#~ "public_content_rw_t"
+
+#~ msgid ""
+#~ "Allow Samba to write files in directories labeled public_content_rw_t"
+#~ msgstr ""
+#~ "Разрешаване на Samba да пише файлове в директории етикирани като "
+#~ "public_content_rw_t"
+
+#~ msgid "Zebra"
+#~ msgstr "Zebra"
+
+#~ msgid "Allow zebra daemon to write it configuration files"
+#~ msgstr "Разрешаване на zebra демона да пише в конфигурационните си файлове"
+
+#~ msgid ""
+#~ "Allow system cron jobs to relabel filesystem for restoring file contexts"
+#~ msgstr ""
+#~ "Разрешаване на системните cron задачи да преетикират файловата система с "
+#~ "цел възстановяване на контекста на файловете"
+
+#~ msgid "Enable extra rules in the cron domain to support fcron"
+#~ msgstr ""
+#~ "Включване на допълнителни правила в домейна на cron за поддръжка на fcron"
+
+#~ msgid "Disable SELinux protection for ftpd daemon"
+#~ msgstr "Изключване на SELinux защитата за демона ftpd"
+
+#~ msgid "Allow ftpd to run directly without inetd"
+#~ msgstr "Разрешаване на ftpd да работи директно, без inetd"
+
+#~ msgid "Allow ftp to read/write files in the user home directories"
+#~ msgstr ""
+#~ "Разрешаване на ftp да чете/пише файлове в домашните директории на "
+#~ "потребителите"
+
+#~ msgid ""
+#~ "This should be enabled when all programs are compiled with ProPolice/SSP "
+#~ "stack smashing protection.  All domains will be allowed to read from /dev/"
+#~ "urandom"
+#~ msgstr ""
+#~ "Това следва да бъде включено когато всички програми са компилирани с "
+#~ "ProPolice/SSP защита от счупване на стека.  На всички домейни ще бъде "
+#~ "разрешено да четат от /dev/urandom"
+
+#~ msgid "Allow HTTPD to support built-in scripting"
+#~ msgstr "Разрешаване на HTTPD да поддържа вградените му скриптове"
+
+#~ msgid "Allow HTTPD to send mail"
+#~ msgstr "Разрешаване на HTTPD да изпраща поща"
+
+#~ msgid "Allow HTTPD scripts and modules to network connect to databases"
+#~ msgstr ""
+#~ "Разрешаване на HTTPD скриптове и модули да се свързват мрежово с бази "
+#~ "данни"
+
+#~ msgid "Allow HTTPD scripts and modules to connect to the network"
+#~ msgstr "Разрешаване на HTTPD скриптове и модули да се свързват в мрежата"
+
+#~ msgid "Allow httpd to act as a relay"
+#~ msgstr "Разрешаване на httpd да работи като ретранслатор"
+
+#~ msgid "Disable SELinux protection for httpd daemon"
+#~ msgstr "Изключване на SELinux защитата за демона httpd"
+
+#~ msgid "Allow HTTPD cgi support"
+#~ msgstr "Разрешаване на HTTPD на cgi поддръжка"
+
+#~ msgid "Allow HTTPD to run as a ftp server"
+#~ msgstr "Разрешаване на HTTPD да работи като ftp сървър"
+
+#~ msgid "Allow HTTPD to read home directories"
+#~ msgstr "Разрешаване на HTTPD да чете домашните директории"
+
+#~ msgid ""
+#~ "Allow HTTPD to run SSI executables in the same domain as system CGI "
+#~ "scripts"
+#~ msgstr ""
+#~ "Разрешаване на HTTPD да стартира SSI програми в същия домейн като "
+#~ "системните CGI скриптове"
+
+#~ msgid ""
+#~ "Unify HTTPD to communicate with the terminal.  Needed for handling "
+#~ "certificates"
+#~ msgstr ""
+#~ "Разрешаване на HTTPD да комуникира със терминала.  Необходимо е за "
+#~ "поддръжка на сертификати (с парола)"
+
+#~ msgid "Unify HTTPD handling of all content files"
+#~ msgstr "Унифициране работата на HTTPD с всички файлове със съдържание"
+
+#~ msgid "Allow named to overwrite master zone files"
+#~ msgstr "Разрешаване на named да презаписва главните зонови файлове"
+
+#~ msgid "Allow NFS to share any file/directory read only"
+#~ msgstr "Разрешаване на NFS да споделя всеки файл/директория за четене"
+
+#~ msgid "Allow NFS to share any file/directory read/write"
+#~ msgstr "Разрешаване на NFS да споделя всеки файл/директория за четене/запис"
+
+#~ msgid "Allow openvpn service access to users home directories"
+#~ msgstr ""
+#~ "Разрешаване на openvpn услугата достъп до потребителските домашни "
+#~ "директории"
+
+#~ msgid "Allow pppd daemon to insert modules into the kernel"
+#~ msgstr "Разрешаване на демона pppd да вмъква модули в ядрото"
+
+#~ msgid "Disable SELinux protection for pppd daemon"
+#~ msgstr "Изключване на SELinux защитата за демона pppd"
+
+#~ msgid "Disable SELinux protection for the mozilla ppp daemon"
+#~ msgstr "Изключване на SELinux защитата за демона mozilla ppp"
+
+#~ msgid "Allow programs to read untrusted content without relabel"
+#~ msgstr ""
+#~ "Разрешаване на програмите да четат несигурно съдържание без преетикиране"
+
+#~ msgid "Allow Samba to share users home directories"
+#~ msgstr "Разрешаване на Samba да споделя потребителски домашни директории"
+
+#~ msgid "Spam Assassin"
+#~ msgstr "Spam Assassin"
+
+#~ msgid "Allow spammassasin to access the network"
+#~ msgstr "Разрешаване на мрежов достъп на spammassasin"
+
+#~ msgid "Use lpd server instead of cups"
+#~ msgstr "Ползване на lpd сървър вместо cups"
+
+#~ msgid "Support NFS home directories"
+#~ msgstr "Поддръжка на NFS домашни директории"
+
+#~ msgid "Allow users to login with CIFS home directories"
+#~ msgstr "Разрешаване на потребителите да влизат с CIFS домашна директория"
+
+#~ msgid ""
+#~ "Allow web applications to write untrusted content to disk (implies read)"
+#~ msgstr ""
+#~ "Разрешаване на уеб приложенията да пишат несигурно съдържание върху диска "
+#~ "(включва четене)"
+
+#~ msgid "Disable SELinux protection for zebra daemon"
+#~ msgstr "Изключване на SELinux защитата за демона zebra"
+
+#~ msgid "Allow httpd to access samba/cifs file systems"
+#~ msgstr "Разрешаване достъп на httpd до samba/cifs файлови системи"
+
+#~ msgid "Allow httpd to access nfs file systems"
+#~ msgstr "Разрешаване достъп на httpd до nfs файлови системи"
+
+#~ msgid ""
+#~ "Allow samba to act as the domain controller, add users, groups and change "
+#~ "passwords"
+#~ msgstr ""
+#~ "Разрешаване на samba да работи като домейн контролер, добавя потребители, "
+#~ "групи и да променя пароли"
+
+#~ msgid "Allow Samba to share any file/directory read only"
+#~ msgstr ""
+#~ "Разрешаване на Samba да споделя всеки файл/директория само за четене"
+
+#~ msgid "Allow Samba to share any file/directory read/write"
+#~ msgstr ""
+#~ "Разрешаване на Samba да споделя всеки файл/директория за четене/запис"
+
+#~ msgid ""
+#~ "Allow Samba to run unconfined scripts in /var/lib/samba/scripts directory"
+#~ msgstr ""
+#~ "Разрешаване на Samba да стартира неконфигурирани скриптове в директория /"
+#~ "var/lib/samba/scripts"
+
+#~ msgid ""
+#~ "Enable additional audit rules, that are normally not reported in the log "
+#~ "files."
+#~ msgstr ""
+#~ "Разрешаване на допълнителните одит правила, които нормално не се "
+#~ "рапортуват във файловете на дневника."
+
+#~ msgid "Group/ungroup network ports by SELinux type."
+#~ msgstr "Групиране/разгрупиране на мрежовите портове по SELinux тип."
+
+#~ msgid "Label Prefix"
+#~ msgstr "Префикс на етикета"
+
+#~ msgid "MLS/MCS Level"
+#~ msgstr "MLS/MCS ниво"
+
+#~ msgid ""
+#~ "Labeling\n"
+#~ "Prefix"
+#~ msgstr ""
+#~ "Префикс\n"
+#~ "на етикета"
+
+#~ msgid ""
+#~ "MLS/\n"
+#~ "MCS Level"
+#~ msgstr ""
+#~ "MLS/\n"
+#~ "MCS ниво"
+
+#~ msgid "You must be root to run %s."
+#~ msgstr "Следва да сте root за да стартирате %s."
