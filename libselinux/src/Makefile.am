@@ -30,7 +30,7 @@ lib_LTLIBRARIES			= libselinux.la
 selinux_pyexecdir		= $(pyexecdir)/selinux
 selinux_pythondir		= $(pythondir)/selinux
 selinux_pyexec_LTLIBRARIES	= $(extra_lib)
-selinux_python_PYTHON		= __init__.py
+selinux_python_PYTHON		= $(extra_py) 
 
 sysconf_DATA			= config
 config:Makefile
@@ -38,12 +38,14 @@ config:Makefile
 		
 PACKAGE				= selinux
 extra_lib			=
+extra_py			=
 libselinux_la_SOURCES		= $(BUILDSRC)
 libselinux_la_LDFLAGS		= -Wl,--as-needed -version-info 1
 if enable_python
 selinuxswig_wrap.c: Makefile selinuxswig.i selinuxswig_python.i
 	$(SWIG) -o $@ $(SWIG_FLAGS) -interface libpyselinux $(srcdir)/selinuxswig_python.i 
 extra_lib			+= libpyselinux.la
+extra_py			+= __init__.py
 libpyselinux_la_SOURCES		= selinuxswig_wrap.c
 libpyselinux_la_CPPFLAGS	= \
 	-I@PYTHON_INCLUDE_DIR@

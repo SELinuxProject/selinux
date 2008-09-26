@@ -92,15 +92,18 @@ AM_CONDITIONAL([enable_avc], [ test "$_enable_avc" = yes])
 AM_CONDITIONAL([enable_bool], [ test "$_enable_bool" = yes])
 AM_CONDITIONAL([enable_docs], [ test "$_enable_docs" = yes])
 
-AC_ARG_WITH([pythonver],
-	[AC_HELP_STRING([--with-pythonver=x],[Python version (eg 2.4) ])],
-        [],
-        [with_pythonver=$PYTHON_VERSION]
+AC_ARG_WITH([python-site],
+	[AC_HELP_STRING([--with-python-site=PATH],
+			[Optional path to python site-packages folder,
+			eg /usr/lib/python2.4/site-packages])],
+	[]
 )
 
-if test -n "$with_pythonver" ; then
-        AC_SUBST([pythondir],[$libdir/python$with_pythonver/site-packages])
-        AC_SUBST([pyexecdir],[$libdir/python$with_pythonver/site-packages])
+if test -n "$with_python_site" ; then
+	AC_SUBST([pythondir],[$with_python_site])
+	AC_SUBST([pyexecdir],[$with_python_site])
+else
+	AC_MSG_WARN([Python site folder not specified, guessing...])
 fi
 
 AC_ARG_WITH([python],
@@ -138,7 +141,7 @@ AC_ARG_WITH([static-libsepol],
         else
                 AC_MSG_RESULT([no found])
                 AC_MSG_WARN([[Cannot build libpyaudit2why.so python wrappper. 
-			Try --with-static-libsepol=PATH]])
+		Try --with-static-libsepol=PATH]])
 
         fi],
         [AC_MSG_CHECKING([for libsepol.a in $prefix/lib])]
@@ -148,7 +151,7 @@ AC_ARG_WITH([static-libsepol],
         else
                 AC_MSG_RESULT([not found])
                 AC_MSG_WARN([[Cannot build libpyaudit2why.so python wrappper. 
-			Try --with-static-libsepol=PATH]])
+		Try --with-static-libsepol=PATH]])
         fi]
 )
 
@@ -177,6 +180,14 @@ if test "$_enable_swig" = "yes" -a -z "$SWIG" ; then
 		or install swig])
 fi
 
+# If libpy*.so wrapper cannot be built, then do not rebuild swig interface
+# even if swig is available, and do not install selinux/__init__.py
+if test "$have_python" != "yes" ; then
+	_enable_swig=no
+	AC_MSG_NOTICE([Swig interface does not need to be regenerated 
+		because libpyselinux.so wrapper cannot be built])
+fi
+
 # slip in fake swig if needed
 if test "$_enable_swig" != "yes" ; then
 	AC_SUBST([SWIG],[/bin/true])
@@ -201,10 +212,12 @@ $PRINT "\n*** Libselinux Configuration summary ***\n"
 if test "$have_python" != yes ; then
  $PRINT "\taudit2why\t\t= no "
  $PRINT "(try --with-python=/usr/include/python$PYTHON_VERSION) \n"
- $PRINT "\tlibpyselinux.so\t\t= no\n"
+ $PRINT "\tlibpyselinux.so\t\t= no "
+ $PRINT "(try --with-python=/usr/include/python$PYTHON_VERSION) \n"
 else
  $PRINT "\taudit2why\t\t= yes (Using python headers $with_python) \n"
  $PRINT "\tlibpyselinux.so\t\t= yes\n"
+ $PRINT "\tPython site folder\t= $pythondir\n"
 fi
 
 if test -n "$LIBSEPOL_A_PATH" ; then
@@ -221,5 +234,4 @@ $PRINT "\tSELinux utlities\t= yes\n"
 $PRINT "\tInstall Man pages\t= $_enable_docs\n"
 $PRINT "\tSELinux Type\t\t= $with_policyname\n"
 $PRINT "\tRegenerate py wrapper\t= $_enable_swig\n"
-$PRINT "\tPython Packages folder\t= $pythondir\n"
 $PRINT "------------------------------------------------------------\n" 
