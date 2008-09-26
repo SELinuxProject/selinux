@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT([libsepol], [1] BUG-REPORT-ADDRESS)
+AC_INIT([libsepol], 2.0.32, selinux@tycho.nsa.gov)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([utils/chkcon.c])
 AC_CONFIG_HEADER([config.h])
