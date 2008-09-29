@@ -1,0 +1,38 @@
+.TH "getkeycreatecon" "3" "9 September 2008" "dwalsh@redhat.com from russell@coker.com.au" "SELinux API documentation"
+.SH "NAME"
+getkeycreatecon, setkeycreatecon \- get or set the SELinux security context used for creating a new kernel keyrings.
+
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+.sp
+.BI "int getkeycreatecon(security_context_t *" con );
+
+.BI "int setkeycreatecon(security_context_t "context );
+
+.SH "DESCRIPTION"
+.B getkeycreatecon
+retrieves the context used for creating a new kernel keyring.
+This returned context should be freed with freecon if non-NULL.  
+getkeycreatecon sets *con to NULL if no keycreate context has been explicitly 
+set by the program (i.e. using the default policy behavior).
+
+.B setkeycreatecon
+sets the context used for creating a new kernel keyring.
+NULL can be passed to
+setkeycreatecon to reset to the default policy behavior.  
+The keycreate context is automatically reset after the next execve, so a
+program doesn't need to explicitly sanitize it upon startup.  
+
+setkeycreatecon can be applied prior to library
+functions that internally perform an file creation,
+in order to set an file context on the objects.
+
+
+Note: Signal handlers that perform an setkeycreate must take care to
+save, reset, and restore the keycreate context to avoid unexpected behavior.
+.SH "RETURN VALUE"
+On error -1 is returned.
+On success 0 is returned.
+
+.SH "SEE ALSO"
+.BR selinux "(8), " freecon "(3), " getcon "(3), " getexeccon "(3)"

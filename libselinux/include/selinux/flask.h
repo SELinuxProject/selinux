@@ -35,18 +35,18 @@
 #define SECCLASS_SHM                                     28
 #define SECCLASS_IPC                                     29
 #define SECCLASS_PASSWD                                  30
-#define SECCLASS_DRAWABLE                                31
-#define SECCLASS_WINDOW                                  32
-#define SECCLASS_GC                                      33
-#define SECCLASS_FONT                                    34
-#define SECCLASS_COLORMAP                                35
-#define SECCLASS_PROPERTY                                36
-#define SECCLASS_CURSOR                                  37
-#define SECCLASS_XCLIENT                                 38
-#define SECCLASS_XINPUT                                  39
-#define SECCLASS_XSERVER                                 40
-#define SECCLASS_XEXTENSION                              41
-#define SECCLASS_PAX                                     42
+#define SECCLASS_X_DRAWABLE                              31
+#define SECCLASS_X_SCREEN                                32
+#define SECCLASS_X_GC                                    33
+#define SECCLASS_X_FONT                                  34
+#define SECCLASS_X_COLORMAP                              35
+#define SECCLASS_X_PROPERTY                              36
+#define SECCLASS_X_SELECTION                             37
+#define SECCLASS_X_CURSOR                                38
+#define SECCLASS_X_CLIENT                                39
+#define SECCLASS_X_DEVICE                                40
+#define SECCLASS_X_SERVER                                41
+#define SECCLASS_X_EXTENSION                             42
 #define SECCLASS_NETLINK_ROUTE_SOCKET                    43
 #define SECCLASS_NETLINK_FIREWALL_SOCKET                 44
 #define SECCLASS_NETLINK_TCPDIAG_SOCKET                  45
@@ -74,6 +74,10 @@
 #define SECCLASS_DB_BLOB                                 67
 #define SECCLASS_PEER                                    68
 #define SECCLASS_CAPABILITY2                             69
+#define SECCLASS_X_RESOURCE                              70
+#define SECCLASS_X_EVENT                                 71
+#define SECCLASS_X_SYNTHETIC_EVENT                       72
+#define SECCLASS_X_APPLICATION_DATA                      73
 
 /*
  * Security identifier indices for initial entities
