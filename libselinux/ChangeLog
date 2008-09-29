@@ -1,3 +1,7 @@
+2.0.72 2008-09-29
+	* New man pages from Dan Walsh.
+	* Update flask headers from refpolicy trunk from Dan Walsh.
+
 2.0.71 2008-08-05
 	* Add group support to seusers using %groupname syntax from Dan Walsh.
 	* Mark setrans socket close-on-exec from Stephen Smalley.
