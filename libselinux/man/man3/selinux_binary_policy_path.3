@@ -1,6 +1,6 @@
 .TH "selinux_binary_policy_path" "3" "15 November 2004" "dwalsh@redhat.com" "SELinux API Documentation"
 .SH "NAME"
-selinux_policy_root, selinux_binary_policy_path,
+selinux_path, selinux_policy_root, selinux_binary_policy_path,
 selinux_failsafe_context_path, selinux_removable_context_path,
 selinux_default_context_path, selinux_user_contexts_path,
 selinux_file_context_path, selinux_media_context_path,
@@ -10,6 +10,8 @@ directories and files.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
+
+extern const char *selinux_path(void);
 
 extern const char *selinux_policy_root(void);
 
@@ -22,6 +24,10 @@ extern const char *selinux_removable_context_path(void);
 extern const char *selinux_default_context_path(void);
 
 extern const char *selinux_user_contexts_path(void);
+
+extern const char *selinux_usersconf_path(void);
+
+extern const char *selinux_x_context_path(void);
 
 extern const char *selinux_file_context_path(void);
 
@@ -40,9 +46,13 @@ These functions return the paths to the active policy configuration
 directories and files based on the settings in /etc/selinux/config.
 
 .sp
+selinux_path() - top-level SELinux configuration directory
+.sp
 selinux_policy_root() - top-level policy directory 
 .sp
 selinux_binary_policy_path() - binary policy file loaded into kernel
+.sp
+selinux_default_type_path - context file mapping roles to default types.
 .sp
 selinux_failsafe_context_path() - failsafe context for emergency logins
 .sp
@@ -52,7 +62,17 @@ selinux_default_context_path() - system-wide default contexts for user sessions
 .sp
 selinux_user_contexts_path() - directory containing per-user default contexts
 .sp
-selinux_file_context_path() - file contexts configuration
+selinux_usersconf_path() - file containing mapping between Linux Users and SELinux users
+.sp
+selinux_x_context_path() - file containing configuration for XSELinux extension
+.sp
+selinux_netfilter_context_path - default netfilter context 
+.sp
+selinux_file_context_path() - default sysstem file contexts configuration
+.sp
+selinux_file_context_local_path() - local customization file contexts configuration
+.sp
+selinux_file_context_homedir_path() - home directory file contexts configuration
 .sp
 selinux_media_context_path() - file contexts for media device nodes
 .sp
@@ -67,4 +87,3 @@ This manual page was written by Dan Walsh <dwalsh@redhat.com>.
 
 .SH "SEE ALSO"
 .BR selinux "(8)"
-
