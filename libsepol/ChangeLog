@@ -1,3 +1,6 @@
+2.0.33 2008-09-29
+	* Revert patch that removed expand_rule.
+
 2.0.32 2008-07-07
 	* Allow require then declare in the source policy from Joshua Brindle.
 
