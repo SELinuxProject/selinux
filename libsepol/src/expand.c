@@ -1917,6 +1917,35 @@ int expand_convert_type_set(policydb_t * p, uint32_t * typemap,
 	return 0;
 }
 
+/* Expand a rule into a given avtab - checking for conflicting type
+ * rules.  Return 1 on success, 0 if the rule conflicts with something
+ * (and hence was not added), or -1 on error. */
+int expand_rule(sepol_handle_t * handle,
+		policydb_t * source_pol,
+		avrule_t * source_rule, avtab_t * dest_avtab,
+		cond_av_list_t ** cond, cond_av_list_t ** other, int enabled)
+{
+	int retval;
+	ebitmap_t stypes, ttypes;
+
+	if (source_rule->specified & AVRULE_NEVERALLOW)
+		return 1;
+
+	ebitmap_init(&stypes);
+	ebitmap_init(&ttypes);
+
+	if (type_set_expand(&source_rule->stypes, &stypes, source_pol, 1))
+		return -1;
+	if (type_set_expand(&source_rule->ttypes, &ttypes, source_pol, 1))
+		return -1;
+	retval = expand_rule_helper(handle, source_pol, NULL,
+				    source_rule, dest_avtab,
+				    cond, other, enabled, &stypes, &ttypes);
+	ebitmap_destroy(&stypes);
+	ebitmap_destroy(&ttypes);
+	return retval;
+}
+
 int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * p, uint32_t * rolemap)
 {
 	unsigned int i;
