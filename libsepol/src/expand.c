@@ -478,6 +478,7 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	char *id, *new_id;
 	type_datum_t *alias, *new_alias;
 	expand_state_t *state;
+	uint32_t prival;
 
 	id = (char *)key;
 	alias = (type_datum_t *) datum;
@@ -491,6 +492,18 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (alias->flavor == TYPE_ATTRIB)
 		return 0;
 
+	if (alias->flavor == TYPE_ALIAS) 
+		prival = alias->primary;
+	else 
+		prival = alias->s.value;
+
+	if (!is_id_enabled(state->base->p_type_val_to_name[prival - 1],
+			state->base, SYM_TYPES)) {
+		/* The primary type for this alias is not enabled, the alias 
+ 		 * shouldn't be either */
+		return 0;
+	}
+		
 	if (state->verbose)
 		INFO(state->handle, "copying alias %s", id);
 
