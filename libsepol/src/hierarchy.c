@@ -1,10 +1,15 @@
 /* Authors: Joshua Brindle <jbrindle@tresys.com>
  * 	    Jason Tang <jtang@tresys.com>
  *
+ * Updates: KaiGai Kohei <kaigai@ak.jp.nec.com>
+ *          adds checks based on newer boundary facility.
+ *
  * A set of utility functions that aid policy decision when dealing
  * with hierarchal namespaces.
  *
  * Copyright (C) 2005 Tresys Technology, LLC
+ *
+ * Copyright (c) 2008 NEC Corporation
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -41,36 +46,77 @@ typedef struct hierarchy_args {
 	int numerr;
 } hierarchy_args_t;
 
-/* This merely returns the string part before the last '.'
- * it does no verification of the existance of the parent
- * in the policy, you must do this yourself.
+/*
+ * find_parent_(type|role|user)
  *
- * Caller must free parent after use.
+ * This function returns the parent datum of given XXX_datum_t
+ * object or NULL, if it doesn't exist.
+ *
+ * If the given datum has a valid bounds, this function merely
+ * returns the indicated object. Otherwise, it looks up the
+ * parent based on the based hierarchy.
  */
-static int find_parent(char *type, char **parent)
+#define find_parent_template(prefix)				\
+int find_parent_##prefix(hierarchy_args_t *a,			\
+			 prefix##_datum_t *datum,		\
+			 prefix##_datum_t **parent)		\
+{								\
+	char *parent_name, *datum_name, *tmp;			\
+								\
+	if (datum->bounds)						\
+		*parent = a->p->prefix##_val_to_struct[datum->bounds - 1]; \
+	else {								\
+		datum_name = a->p->p_##prefix##_val_to_name[datum->s.value - 1]; \
+									\
+		tmp = strrchr(datum_name, '.');				\
+		/* no '.' means it has no parent */			\
+		if (!tmp) {						\
+			*parent = NULL;					\
+			return 0;					\
+		}							\
+									\
+		parent_name = strdup(datum_name);			\
+		if (!parent_name)					\
+			return -1;					\
+		parent_name[tmp - datum_name] = '\0';			\
+									\
+		*parent = hashtab_search(a->p->p_##prefix##s.table, parent_name); \
+		if (!*parent) {						\
+			/* Orphan type/role/user */			\
+			ERR(a->handle,					\
+			    "%s doesn't exist, %s is an orphan",	\
+			    parent_name,				\
+			    a->p->p_##prefix##_val_to_name[datum->s.value - 1]); \
+			free(parent_name);				\
+			return -1;					\
+		}							\
+		free(parent_name);					\
+	}								\
+									\
+	return 0;							\
+}
+
+static find_parent_template(type)
+static find_parent_template(role)
+static find_parent_template(user)
+
+static void compute_avtab_datum(hierarchy_args_t *args,
+				avtab_key_t *key,
+				avtab_datum_t *result)
 {
-	char *tmp;
-	int len;
+	avtab_datum_t *avdatp;
+	uint32_t av = 0;
 
-	assert(type);
-
-	tmp = strrchr(type, '.');
-	/* no '.' means it has no parent */
-	if (!tmp) {
-		*parent = NULL;
-		return 0;
+	avdatp = avtab_search(args->expa, key);
+	if (avdatp)
+		av = avdatp->data;
+	if (args->opt_cond_list) {
+		avdatp = cond_av_list_search(key, args->opt_cond_list);
+		if (avdatp)
+			av |= avdatp->data;
 	}
 
-	/* allocate buffer for part of string before the '.' */
-	len = tmp - type;
-	*parent = (char *)malloc(sizeof(char) * (len + 1));
-
-	if (!(*parent))
-		return -1;
-	memcpy(*parent, type, len);
-	(*parent)[len] = '\0';
-
-	return 0;
+	result->data = av;
 }
 
 /* This function verifies that the type passed in either has a parent or is in the 
@@ -79,41 +125,26 @@ static int find_parent(char *type, char **parent)
 static int check_type_hierarchy_callback(hashtab_key_t k, hashtab_datum_t d,
 					 void *args)
 {
-	char *parent;
 	hierarchy_args_t *a;
-	type_datum_t *t, *t2;
-	char *key;
+	type_datum_t *t, *tp;
 
 	a = (hierarchy_args_t *) args;
 	t = (type_datum_t *) d;
-	key = (char *)k;
 
 	if (t->flavor == TYPE_ATTRIB) {
 		/* It's an attribute, we don't care */
 		return 0;
 	}
-
-	if (find_parent(key, &parent))
+	if (find_parent_type(a, t, &tp) < 0)
 		return -1;
 
-	if (!parent) {
-		/* This type is in the root namespace */
-		return 0;
-	}
-
-	t2 = hashtab_search(a->p->p_types.table, parent);
-	if (!t2) {
-		/* If the parent does not exist this type is an orphan, not legal */
-		ERR(a->handle, "type %s does not exist, %s is an orphan",
-		    parent, a->p->p_type_val_to_name[t->s.value - 1]);
-		a->numerr++;
-	} else if (t2->flavor == TYPE_ATTRIB) {
+	if (tp && tp->flavor == TYPE_ATTRIB) {
 		/* The parent is an attribute but the child isn't, not legal */
-		ERR(a->handle, "type %s is a child of an attribute",
-		    a->p->p_type_val_to_name[t->s.value - 1]);
+		ERR(a->handle, "type %s is a child of an attribute %s",
+		    (char *) k, a->p->p_type_val_to_name[tp->s.value - 1]);
 		a->numerr++;
+		return -1;
 	}
-	free(parent);
 	return 0;
 }
 
@@ -126,134 +157,174 @@ static int check_type_hierarchy_callback(hashtab_key_t k, hashtab_datum_t d,
 static int check_avtab_hierarchy_callback(avtab_key_t * k, avtab_datum_t * d,
 					  void *args)
 {
-	char *parent;
 	avtab_key_t key;
-	avtab_datum_t *avdatump;
-	hierarchy_args_t *a;
-	uint32_t av = 0;
-	type_datum_t *t = NULL, *t2 = NULL;
+	hierarchy_args_t *a = (hierarchy_args_t *) args;
+	type_datum_t *s, *t1 = NULL, *t2 = NULL;
+	avtab_datum_t av;
 
 	if (!(k->specified & AVTAB_ALLOWED)) {
 		/* This is not an allow rule, no checking done */
 		return 0;
 	}
 
-	a = (hierarchy_args_t *) args;
-	if (find_parent(a->p->p_type_val_to_name[k->source_type - 1], &parent))
-		return -1;
-
 	/* search for parent first */
-	if (parent) {
-		t = hashtab_search(a->p->p_types.table, parent);
-		if (!t) {
-			/* This error was already covered by type_check_hierarchy */
-			free(parent);
-			return 0;
-		}
-		free(parent);
-
-		key.source_type = t->s.value;
+	s = a->p->type_val_to_struct[k->source_type - 1];
+	if (find_parent_type(a, s, &t1) < 0)
+		return -1;
+	if (t1) {
+		/*
+		 * search for access allowed between type 1's
+		 * parent and type 2.
+		 */
+		key.source_type = t1->s.value;
 		key.target_type = k->target_type;
 		key.target_class = k->target_class;
 		key.specified = AVTAB_ALLOWED;
+		compute_avtab_datum(a, &key, &av);
 
-		avdatump = avtab_search(a->expa, &key);
-		if (avdatump) {
-			/* search for access allowed between type 1's parent and type 2 */
-			if ((avdatump->data & d->data) == d->data) {
-				return 0;
-			}
-			av = avdatump->data;
-		}
-		if (a->opt_cond_list) {
-			/* if a conditional list is present search it before continuing */
-			avdatump = cond_av_list_search(&key, a->opt_cond_list);
-			if (avdatump) {
-				if (((av | avdatump->data) & d->data) ==
-				    d->data) {
-					return 0;
-				}
-			}
-		}
+		if ((av.data & d->data) == d->data)
+			return 0;
 	}
 
 	/* next we try type 1 and type 2's parent */
-	if (find_parent(a->p->p_type_val_to_name[k->target_type - 1], &parent))
+	s = a->p->type_val_to_struct[k->target_type - 1];
+	if (find_parent_type(a, s, &t2) < 0)
 		return -1;
-
-	if (parent) {
-		t2 = hashtab_search(a->p->p_types.table, parent);
-		if (!t2) {
-			/* This error was already covered by type_check_hierarchy */
-			free(parent);
-			return 0;
-		}
-		free(parent);
-
+	if (t2) {
+		/*
+		 * search for access allowed between type 1 and
+		 * type 2's parent.
+		 */
 		key.source_type = k->source_type;
 		key.target_type = t2->s.value;
 		key.target_class = k->target_class;
 		key.specified = AVTAB_ALLOWED;
+		compute_avtab_datum(a, &key, &av);
 
-		avdatump = avtab_search(a->expa, &key);
-		if (avdatump) {
-			if ((avdatump->data & d->data) == d->data) {
-				return 0;
-			}
-			av = avdatump->data;
-		}
-		if (a->opt_cond_list) {
-			/* if a conditional list is present search it before continuing */
-			avdatump = cond_av_list_search(&key, a->opt_cond_list);
-			if (avdatump) {
-				if (((av | avdatump->data) & d->data) ==
-				    d->data) {
-					return 0;
-				}
-			}
-		}
+		if ((av.data & d->data) == d->data)
+			return 0;
 	}
 
-	if (t && t2) {
-		key.source_type = t->s.value;
+	if (t1 && t2) {
+		/*
+                 * search for access allowed between type 1's parent
+                 * and type 2's parent.
+                 */
+		key.source_type = t1->s.value;
 		key.target_type = t2->s.value;
 		key.target_class = k->target_class;
 		key.specified = AVTAB_ALLOWED;
+		compute_avtab_datum(a, &key, &av);
 
-		avdatump = avtab_search(a->expa, &key);
-		if (avdatump) {
-			if ((avdatump->data & d->data) == d->data) {
-				return 0;
-			}
-			av = avdatump->data;
-		}
-		if (a->opt_cond_list) {
-			/* if a conditional list is present search it before continuing */
-			avdatump = cond_av_list_search(&key, a->opt_cond_list);
-			if (avdatump) {
-				if (((av | avdatump->data) & d->data) ==
-				    d->data) {
-					return 0;
-				}
-			}
-		}
+		if ((av.data & d->data) == d->data)
+			return 0;
 	}
 
-	if (!t && !t2) {
-		/* Neither one of these types have parents and 
-		 * therefore the hierarchical constraint does not apply */
+	/*
+	 * Neither one of these types have parents and 
+	 * therefore the hierarchical constraint does not apply
+	 */
+	if (!t1 && !t2)
 		return 0;
-	}
 
-	/* At this point there is a violation of the hierarchal constraint, send error condition back */
+	/*
+	 * At this point there is a violation of the hierarchal
+	 * constraint, send error condition back
+	 */
 	ERR(a->handle,
 	    "hierarchy violation between types %s and %s : %s { %s }",
 	    a->p->p_type_val_to_name[k->source_type - 1],
 	    a->p->p_type_val_to_name[k->target_type - 1],
 	    a->p->p_class_val_to_name[k->target_class - 1],
-	    sepol_av_to_string(a->p, k->target_class, d->data & ~av));
+	    sepol_av_to_string(a->p, k->target_class, d->data & ~av.data));
 	a->numerr++;
 	return 0;
+}
+
+/*
+ * If same permissions are allowed for same combination of
+ * source and target, we can evaluate them as unconditional
+ * one.
+ * See the following example. A_t type is bounds of B_t type,
+ * so B_t can never have wider permissions then A_t.
+ * A_t has conditional permission on X_t, however, a part of
+ * them (getattr and read) are unconditionaly allowed to A_t.
+ *
+ * Example)
+ * typebounds A_t B_t;
+ *
+ * allow B_t X_t : file { getattr };
+ * if (foo_bool) {
+ *     allow A_t X_t : file { getattr read };
+ * } else {
+ *     allow A_t X_t : file { getattr read write };
+ * }
+ *
+ * We have to pull up them as unconditional ones in this case,
+ * because it seems to us B_t is violated to bounds constraints
+ * during unconditional policy checking.
+ */
+static int pullup_unconditional_perms(cond_list_t * cond_list,
+				      hierarchy_args_t * args)
+{
+	cond_list_t *cur_node;
+	cond_av_list_t *cur_av, *expl_true = NULL, *expl_false = NULL;
+	avtab_t expa_true, expa_false;
+	avtab_datum_t *avdatp;
+	avtab_datum_t avdat;
+	avtab_ptr_t avnode;
+
+	for (cur_node = cond_list; cur_node; cur_node = cur_node->next) {
+		if (avtab_init(&expa_true))
+			goto oom0;
+		if (avtab_init(&expa_false))
+			goto oom1;
+		if (expand_cond_av_list(args->p, cur_node->true_list,
+					&expl_true, &expa_true))
+			goto oom2;
+		if (expand_cond_av_list(args->p, cur_node->false_list,
+					&expl_false, &expa_false))
+			goto oom3;
+		for (cur_av = expl_true; cur_av; cur_av = cur_av->next) {
+			avdatp = avtab_search(&expa_false,
+					      &cur_av->node->key);
+			if (!avdatp)
+				continue;
+
+			avdat.data = (cur_av->node->datum.data
+				      & avdatp->data);
+			if (!avdat.data)
+				continue;
+
+			avnode = avtab_search_node(args->expa,
+						   &cur_av->node->key);
+			if (avnode) {
+				avnode->datum.data |= avdat.data;
+			} else {
+				if (avtab_insert(args->expa,
+						 &cur_av->node->key,
+						 &avdat))
+					goto oom4;
+			}
+		}
+		cond_av_list_destroy(expl_false);
+		cond_av_list_destroy(expl_true);
+		avtab_destroy(&expa_false);
+		avtab_destroy(&expa_true);
+	}
+	return 0;
+
+oom4:
+	cond_av_list_destroy(expl_false);
+oom3:
+	cond_av_list_destroy(expl_true);
+oom2:
+	avtab_destroy(&expa_false);
+oom1:
+	avtab_destroy(&expa_true);
+oom0:
+	ERR(args->handle, "out of memory on conditional av list expansion");
+        return 1;
 }
 
 static int check_cond_avtab_hierarchy(cond_list_t * cond_list,
@@ -264,37 +335,51 @@ static int check_cond_avtab_hierarchy(cond_list_t * cond_list,
 	cond_av_list_t *cur_av, *expl = NULL;
 	avtab_t expa;
 	hierarchy_args_t *a = (hierarchy_args_t *) args;
+	avtab_datum_t avdat, *uncond;
 
-	for (cur_node = cond_list; cur_node != NULL; cur_node = cur_node->next) {
+	for (cur_node = cond_list; cur_node; cur_node = cur_node->next) {
+		/*
+		 * Check true condition
+		 */
 		if (avtab_init(&expa))
 			goto oom;
-		if (expand_cond_av_list
-		    (args->p, cur_node->true_list, &expl, &expa)) {
+		if (expand_cond_av_list(args->p, cur_node->true_list,
+					&expl, &expa)) {
 			avtab_destroy(&expa);
 			goto oom;
 		}
 		args->opt_cond_list = expl;
-		for (cur_av = expl; cur_av != NULL; cur_av = cur_av->next) {
+		for (cur_av = expl; cur_av; cur_av = cur_av->next) {
+			avdat.data = cur_av->node->datum.data;
+			uncond = avtab_search(a->expa, &cur_av->node->key);
+			if (uncond)
+				avdat.data |= uncond->data;
 			rc = check_avtab_hierarchy_callback(&cur_av->node->key,
-							    &cur_av->node->
-							    datum, args);
+							    &avdat, args);
 			if (rc)
-				a->numerr++;
+				args->numerr++;
 		}
 		cond_av_list_destroy(expl);
-		avtab_destroy(&expa);
+
+		/*
+		 * Check false condition
+		 */
 		if (avtab_init(&expa))
 			goto oom;
-		if (expand_cond_av_list
-		    (args->p, cur_node->false_list, &expl, &expa)) {
+		if (expand_cond_av_list(args->p, cur_node->false_list,
+					&expl, &expa)) {
 			avtab_destroy(&expa);
 			goto oom;
 		}
 		args->opt_cond_list = expl;
-		for (cur_av = expl; cur_av != NULL; cur_av = cur_av->next) {
+		for (cur_av = expl; cur_av; cur_av = cur_av->next) {
+			avdat.data = cur_av->node->datum.data;
+			uncond = avtab_search(a->expa, &cur_av->node->key);
+			if (uncond)
+				avdat.data |= uncond->data;
+
 			rc = check_avtab_hierarchy_callback(&cur_av->node->key,
-							    &cur_av->node->
-							    datum, args);
+							    &avdat, args);
 			if (rc)
 				a->numerr++;
 		}
@@ -317,40 +402,21 @@ static int check_role_hierarchy_callback(hashtab_key_t k
 					 __attribute__ ((unused)),
 					 hashtab_datum_t d, void *args)
 {
-	char *parent;
 	hierarchy_args_t *a;
 	role_datum_t *r, *rp;
 
 	a = (hierarchy_args_t *) args;
 	r = (role_datum_t *) d;
 
-	if (find_parent(a->p->p_role_val_to_name[r->s.value - 1], &parent))
+	if (find_parent_role(a, r, &rp) < 0)
 		return -1;
 
-	if (!parent) {
-		/* This role has no parent */
-		return 0;
-	}
-
-	rp = hashtab_search(a->p->p_roles.table, parent);
-	if (!rp) {
-		/* Orphan role */
-		ERR(a->handle, "role %s doesn't exist, %s is an orphan",
-		    parent, a->p->p_role_val_to_name[r->s.value - 1]);
-		free(parent);
-		a->numerr++;
-		return 0;
-	}
-
-	if (!ebitmap_contains(&rp->types.types, &r->types.types)) {
-		/* This is a violation of the hiearchal constraint, return error condition */
+	if (rp && !ebitmap_contains(&rp->types.types, &r->types.types)) {
+		/* hierarchical constraint violation, return error */
 		ERR(a->handle, "Role hierarchy violation, %s exceeds %s",
-		    a->p->p_role_val_to_name[r->s.value - 1], parent);
+		    (char *) k, a->p->p_role_val_to_name[rp->s.value - 1]);
 		a->numerr++;
 	}
-
-	free(parent);
-
 	return 0;
 }
 
@@ -362,40 +428,21 @@ static int check_user_hierarchy_callback(hashtab_key_t k
 					 __attribute__ ((unused)),
 					 hashtab_datum_t d, void *args)
 {
-	char *parent;
 	hierarchy_args_t *a;
 	user_datum_t *u, *up;
 
 	a = (hierarchy_args_t *) args;
 	u = (user_datum_t *) d;
 
-	if (find_parent(a->p->p_user_val_to_name[u->s.value - 1], &parent))
+	if (find_parent_user(a, u, &up) < 0)
 		return -1;
 
-	if (!parent) {
-		/* This user has no parent */
-		return 0;
-	}
-
-	up = hashtab_search(a->p->p_users.table, parent);
-	if (!up) {
-		/* Orphan user */
-		ERR(a->handle, "user %s doesn't exist, %s is an orphan",
-		    parent, a->p->p_user_val_to_name[u->s.value - 1]);
-		free(parent);
-		a->numerr++;
-		return 0;
-	}
-
-	if (!ebitmap_contains(&up->roles.roles, &u->roles.roles)) {
+	if (up && !ebitmap_contains(&up->roles.roles, &u->roles.roles)) {
 		/* hierarchical constraint violation, return error */
 		ERR(a->handle, "User hierarchy violation, %s exceeds %s",
-		    a->p->p_user_val_to_name[u->s.value - 1], parent);
+		    (char *) k, a->p->p_user_val_to_name[up->s.value - 1]);
 		a->numerr++;
 	}
-
-	free(parent);
-
 	return 0;
 }
 
@@ -419,6 +466,9 @@ int hierarchy_check_constraints(sepol_handle_t * handle, policydb_t * p)
 
 	if (hashtab_map(p->p_types.table, check_type_hierarchy_callback, &args))
 		goto bad;
+
+	if (pullup_unconditional_perms(p->cond_list, &args))
+		return -1;
 
 	if (avtab_map(&expa, check_avtab_hierarchy_callback, &args))
 		goto bad;
