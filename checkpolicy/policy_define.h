@@ -47,6 +47,7 @@ int define_sens(void);
 int define_te_avtab(int which);
 int define_typealias(void);
 int define_typeattribute(void);
+int define_typebounds(void);
 int define_type(int alias);
 int define_user(void);
 int define_validatetrans(constraint_expr_t *expr);
