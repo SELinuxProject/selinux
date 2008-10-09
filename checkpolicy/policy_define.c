@@ -1127,6 +1127,77 @@ int define_typeattribute(void)
 	return 0;
 }
 
+static int define_typebounds_helper(char *bounds_id, char *type_id)
+{
+	type_datum_t *bounds, *type;
+
+	if (!is_id_in_scope(SYM_TYPES, bounds_id)) {
+		yyerror2("type %s is not within scope", bounds_id);
+		return -1;
+	}
+
+	bounds = hashtab_search(policydbp->p_types.table, bounds_id);
+	if (!bounds || bounds->flavor == TYPE_ATTRIB) {
+		yyerror2("hoge unknown type %s", bounds_id);
+		return -1;
+	}
+
+	if (!is_id_in_scope(SYM_TYPES, type_id)) {
+		yyerror2("type %s is not within scope", type_id);
+		return -1;
+	}
+
+	type = hashtab_search(policydbp->p_types.table, type_id);
+	if (!type || type->flavor == TYPE_ATTRIB) {
+		yyerror2("type %s is not declared", type_id);
+		return -1;
+	}
+
+	if (type->flavor == TYPE_TYPE && !type->primary) {
+		type = policydbp->type_val_to_struct[type->s.value - 1];
+	} else if (type->flavor == TYPE_ALIAS) {
+		type = policydbp->type_val_to_struct[type->primary - 1];
+	}
+
+	if (!type->bounds)
+		type->bounds = bounds->s.value;
+	else if (type->bounds != bounds->s.value) {
+		yyerror2("type %s has inconsistent master {%s,%s}",
+			 type_id,
+			 policydbp->p_type_val_to_name[type->bounds - 1],
+			 policydbp->p_type_val_to_name[bounds->s.value - 1]);
+		return -1;
+	}
+
+	return 0;
+}
+
+int define_typebounds(void)
+{
+	char *bounds, *id;
+
+	if (pass == 1) {
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		return 0;
+	}
+
+	bounds = (char *) queue_remove(id_queue);
+	if (!bounds) {
+		yyerror("no type name for typebounds definition?");
+		return -1;
+	}
+
+	while ((id = queue_remove(id_queue))) {
+		if (define_typebounds_helper(bounds, id))
+			return -1;
+		free(id);
+	}
+	free(bounds);
+
+	return 0;
+}
+
 int define_type(int alias)
 {
 	char *id;
@@ -1134,12 +1205,32 @@ int define_type(int alias)
 	int newattr = 0;
 
 	if (pass == 2) {
-		while ((id = queue_remove(id_queue)))
+		/*
+		 * If type name contains ".", we have to define boundary
+		 * relationship implicitly to keep compatibility with
+		 * old name based hierarchy.
+		 */
+		if ((id = queue_remove(id_queue))) {
+			char *bounds, *delim;
+
+			if ((delim = strrchr(id, '.'))
+			    && (bounds = strdup(id))) {
+				bounds[(size_t)(delim - id)] = '\0';
+
+				if (define_typebounds_helper(bounds, id))
+					return -1;
+				free(bounds);
+			}
 			free(id);
+		}
+
 		if (alias) {
 			while ((id = queue_remove(id_queue)))
 				free(id);
 		}
+
+		while ((id = queue_remove(id_queue)))
+			free(id);
 		return 0;
 	}
 

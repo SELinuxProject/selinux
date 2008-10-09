@@ -82,6 +82,8 @@ TYPEALIAS |
 typealias			{ return(TYPEALIAS); }
 TYPEATTRIBUTE |
 typeattribute			{ return(TYPEATTRIBUTE); }
+TYPEBOUNDS |
+typebounds			{ return(TYPEBOUNDS); }
 TYPE |
 type				{ return(TYPE); }
 BOOL |

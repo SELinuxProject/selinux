@@ -466,6 +466,100 @@ static int constraint_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return 0;
 }
 
+/*
+ * The boundaries have to be copied after the types/roles/users are copied,
+ * because it refers hashtab to lookup destinated objects.
+ */
+static int type_bounds_copy_callback(hashtab_key_t key,
+				     hashtab_datum_t datum, void *data)
+{
+	expand_state_t *state = (expand_state_t *) data;
+	type_datum_t *type = (type_datum_t *) datum;
+	type_datum_t *dest;
+	uint32_t bounds_val;
+
+	if (!type->bounds)
+		return 0;
+
+	if (!is_id_enabled((char *)key, state->base, SYM_TYPES))
+		return 0;
+
+	bounds_val = state->typemap[type->bounds - 1];
+
+	dest = hashtab_search(state->out->p_types.table, (char *)key);
+	if (!dest) {
+		ERR(state->handle, "Type lookup failed for %s", (char *)key);
+		return -1;
+	}
+	if (dest->bounds != 0 && dest->bounds != bounds_val) {
+		ERR(state->handle, "Inconsistent boundary for %s", (char *)key);
+		return -1;
+	}
+	dest->bounds = bounds_val;
+
+	return 0;
+}
+
+static int role_bounds_copy_callback(hashtab_key_t key,
+				     hashtab_datum_t datum, void *data)
+{
+	expand_state_t *state = (expand_state_t *) data;
+	role_datum_t *role = (role_datum_t *) datum;
+	role_datum_t *dest;
+	uint32_t bounds_val;
+
+	if (!role->bounds)
+		return 0;
+
+	if (!is_id_enabled((char *)key, state->base, SYM_ROLES))
+		return 0;
+
+	bounds_val = state->rolemap[role->bounds - 1];
+
+	dest = hashtab_search(state->out->p_roles.table, (char *)key);
+	if (!dest) {
+		ERR(state->handle, "Role lookup failed for %s", (char *)key);
+		return -1;
+	}
+	if (dest->bounds != 0 && dest->bounds != bounds_val) {
+		ERR(state->handle, "Inconsistent boundary for %s", (char *)key);
+		return -1;
+	}
+	dest->bounds = bounds_val;
+
+	return 0;
+}
+
+static int user_bounds_copy_callback(hashtab_key_t key,
+				     hashtab_datum_t datum, void *data)
+{
+	expand_state_t *state = (expand_state_t *) data;
+	user_datum_t *user = (user_datum_t *) datum;
+	user_datum_t *dest;
+	uint32_t bounds_val;
+
+	if (!user->bounds)
+		return 0;
+
+	if (!is_id_enabled((char *)key, state->base, SYM_USERS))
+		return 0;
+
+	bounds_val = state->usermap[user->bounds - 1];
+
+	dest = hashtab_search(state->out->p_users.table, (char *)key);
+	if (!dest) {
+		ERR(state->handle, "User lookup failed for %s", (char *)key);
+		return -1;
+	}
+	if (dest->bounds != 0 && dest->bounds != bounds_val) {
+		ERR(state->handle, "Inconsistent boundary for %s", (char *)key);
+		return -1;
+	}
+	dest->bounds = bounds_val;
+
+	return 0;
+}
+
 /* The aliases have to be copied after the types and attributes to be certain that
  * the out symbol table will have the type that the alias refers. Otherwise, we
  * won't be able to find the type value for the alias. We can't depend on the
@@ -478,6 +572,7 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	char *id, *new_id;
 	type_datum_t *alias, *new_alias;
 	expand_state_t *state;
+	uint32_t prival;
 
 	id = (char *)key;
 	alias = (type_datum_t *) datum;
@@ -491,6 +586,18 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	if (alias->flavor == TYPE_ATTRIB)
 		return 0;
 
+	if (alias->flavor == TYPE_ALIAS) 
+		prival = alias->primary;
+	else 
+		prival = alias->s.value;
+
+	if (!is_id_enabled(state->base->p_type_val_to_name[prival - 1],
+			state->base, SYM_TYPES)) {
+		/* The primary type for this alias is not enabled, the alias 
+ 		 * shouldn't be either */
+		return 0;
+	}
+		
 	if (state->verbose)
 		INFO(state->handle, "copying alias %s", id);
 
@@ -1865,31 +1972,6 @@ static int type_attr_map(hashtab_key_t key
 	return 0;
 }
 
-static void type_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
-			 __attribute__ ((unused)))
-{
-	free(key);
-	type_datum_destroy((type_datum_t *) datum);
-	free(datum);
-}
-
-static int type_attr_remove(hashtab_key_t key
-			    __attribute__ ((unused)), hashtab_datum_t datum,
-			    void *args)
-{
-	type_datum_t *typdatum;
-	policydb_t *p;
-
-	typdatum = (type_datum_t *) datum;
-	p = (policydb_t *) args;
-	if (typdatum->flavor == TYPE_ATTRIB) {
-		p->type_val_to_struct[typdatum->s.value - 1] = NULL;
-		p->p_type_val_to_name[typdatum->s.value - 1] = NULL;
-		return 1;
-	}
-	return 0;
-}
-
 /* converts typeset using typemap and expands into ebitmap_t types using the attributes in the passed in policy.
  * this should not be called until after all the blocks have been processed and the attributes in target policy
  * are complete. */
@@ -2393,6 +2475,11 @@ int expand_module(sepol_handle_t * handle,
 		goto cleanup;
 	}
 
+	/* copy type bounds */
+	if (hashtab_map(state.base->p_types.table,
+			type_bounds_copy_callback, &state))
+		goto cleanup;
+
 	/* copy aliases */
 	if (hashtab_map(state.base->p_types.table, alias_copy_callback, &state))
 		goto cleanup;
@@ -2405,6 +2492,9 @@ int expand_module(sepol_handle_t * handle,
 
 	/* copy roles */
 	if (hashtab_map(state.base->p_roles.table, role_copy_callback, &state))
+		goto cleanup;
+	if (hashtab_map(state.base->p_roles.table,
+			role_bounds_copy_callback, &state))
 		goto cleanup;
 
 	/* copy MLS's sensitivity level and categories - this needs to be done
@@ -2420,6 +2510,9 @@ int expand_module(sepol_handle_t * handle,
 
 	/* copy users */
 	if (hashtab_map(state.base->p_users.table, user_copy_callback, &state))
+		goto cleanup;
+	if (hashtab_map(state.base->p_users.table,
+			user_bounds_copy_callback, &state))
 		goto cleanup;
 
 	/* copy bools */
@@ -2510,8 +2603,6 @@ int expand_module(sepol_handle_t * handle,
 	}
 	if (hashtab_map(state.out->p_types.table, type_attr_map, &state))
 		goto cleanup;
-	hashtab_map_remove_on_error(state.out->p_types.table,
-				    type_attr_remove, type_destroy, state.out);
 	if (check) {
 		if (hierarchy_check_constraints(handle, state.out))
 			goto cleanup;

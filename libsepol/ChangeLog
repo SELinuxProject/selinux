@@ -1,3 +1,7 @@
+2.0.34 2008-10-09
+	* Add bounds support from KaiGai Kohei.
+	* Fix invalid aliases bug from Joshua Brindle.
+
 2.0.33 2008-09-29
 	* Revert patch that removed expand_rule.
 

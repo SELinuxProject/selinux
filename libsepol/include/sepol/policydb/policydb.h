@@ -119,6 +119,7 @@ typedef struct role_datum {
 	ebitmap_t dominates;	/* set of roles dominated by this role */
 	type_set_t types;	/* set of authorized types for role */
 	ebitmap_t cache;	/* This is an expanded set used for context validation during parsing */
+	uint32_t bounds;	/* bounds role, if exist */
 } role_datum_t;
 
 typedef struct role_trans {
@@ -145,7 +146,17 @@ typedef struct type_datum {
 	ebitmap_t types;	/* types with this attribute */
 #define TYPE_FLAGS_PERMISSIVE	0x01
 	uint32_t flags;
+	uint32_t bounds;	/* bounds type, if exist */
 } type_datum_t;
+
+/*
+ * Properties of type_datum
+ * available on the policy version >= (MOD_)POLICYDB_VERSION_BOUNDARY
+ */
+#define TYPEDATUM_PROPERTY_PRIMARY	0x0001
+#define TYPEDATUM_PROPERTY_ATTRIBUTE	0x0002
+#define TYPEDATUM_PROPERTY_ALIAS	0x0004	/* userspace only */
+#define TYPEDATUM_PROPERTY_PERMISSIVE	0x0008	/* userspace only */
 
 /* User attributes */
 typedef struct user_datum {
@@ -156,6 +167,7 @@ typedef struct user_datum {
 	ebitmap_t cache;	/* This is an expanded set used for context validation during parsing */
 	mls_range_t exp_range;     /* expanded range used for validation */
 	mls_level_t exp_dfltlevel; /* expanded range used for validation */
+	uint32_t bounds;	/* bounds user, if exist */
 } user_datum_t;
 
 /* Sensitivity attributes */
@@ -595,10 +607,11 @@ extern int policydb_write(struct policydb *p, struct policy_file *pf);
 #define POLICYDB_VERSION_RANGETRANS	21
 #define POLICYDB_VERSION_POLCAP		22
 #define POLICYDB_VERSION_PERMISSIVE	23
+#define POLICYDB_VERSION_BOUNDARY	24
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_PERMISSIVE
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_BOUNDARY
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE	   4
@@ -608,11 +621,22 @@ extern int policydb_write(struct policydb *p, struct policy_file *pf);
 #define MOD_POLICYDB_VERSION_MLS_USERS	   6
 #define MOD_POLICYDB_VERSION_POLCAP	   7
 #define MOD_POLICYDB_VERSION_PERMISSIVE	   8
+#define MOD_POLICYDB_VERSION_BOUNDARY      9
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_PERMISSIVE
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_BOUNDARY
 
 #define POLICYDB_CONFIG_MLS    1
+
+/* macros to check policy feature */
+
+/* TODO: add other features here */
+
+#define policydb_has_boundary_feature(p)			\
+	(((p)->policy_type == POLICY_KERN			\
+	  && p->policyvers >= POLICYDB_VERSION_BOUNDARY) ||	\
+	 ((p)->policy_type != POLICY_KERN			\
+	  && p->policyvers >= MOD_POLICYDB_VERSION_BOUNDARY))
 
 /* the config flags related to unknown classes/perms are bits 2 and 3 */
 #define DENY_UNKNOWN	SEPOL_DENY_UNKNOWN

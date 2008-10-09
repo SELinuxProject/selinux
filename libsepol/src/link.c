@@ -660,6 +660,97 @@ NULL, class_copy_callback, role_copy_callback, type_copy_callback,
 	    user_copy_callback, bool_copy_callback, sens_copy_callback,
 	    cat_copy_callback};
 
+/*
+ * The boundaries have to be copied after the types/roles/users are copied,
+ * because it refers hashtab to lookup destinated objects.
+ */
+static int type_bounds_copy_callback(hashtab_key_t key,
+				     hashtab_datum_t datum, void *data)
+{
+	link_state_t *state = (link_state_t *) data;
+	type_datum_t *type = (type_datum_t *) datum;
+	type_datum_t *dest;
+	uint32_t bounds_val;
+
+	if (!type->bounds)
+		return 0;
+
+	bounds_val = state->cur->map[SYM_TYPES][type->bounds - 1];
+
+	dest = hashtab_search(state->base->p_types.table, key);
+	if (!dest) {
+		ERR(state->handle,
+		    "Type lookup failed for %s", (char *)key);
+		return -1;
+	}
+	if (dest->bounds != 0 && dest->bounds != bounds_val) {
+		ERR(state->handle,
+		    "Inconsistent boundary for %s", (char *)key);
+		return -1;
+	}
+	dest->bounds = bounds_val;
+
+	return 0;
+}
+
+static int role_bounds_copy_callback(hashtab_key_t key,
+				     hashtab_datum_t datum, void *data)
+{
+	link_state_t *state = (link_state_t *) data;
+	role_datum_t *role = (role_datum_t *) datum;
+	role_datum_t *dest;
+	uint32_t bounds_val;
+
+	if (!role->bounds)
+		return 0;
+
+	bounds_val = state->cur->map[SYM_ROLES][role->bounds - 1];
+
+	dest = hashtab_search(state->base->p_roles.table, key);
+	if (!dest) {
+		ERR(state->handle,
+		    "Role lookup failed for %s", (char *)key);
+		return -1;
+	}
+	if (dest->bounds != 0 && dest->bounds != bounds_val) {
+		ERR(state->handle,
+		    "Inconsistent boundary for %s", (char *)key);
+		return -1;
+	}
+	dest->bounds = bounds_val;
+
+	return 0;
+}
+
+static int user_bounds_copy_callback(hashtab_key_t key,
+				     hashtab_datum_t datum, void *data)
+{
+	link_state_t *state = (link_state_t *) data;
+	user_datum_t *user = (user_datum_t *) datum;
+	user_datum_t *dest;
+	uint32_t bounds_val;
+
+	if (!user->bounds)
+		return 0;
+
+	bounds_val = state->cur->map[SYM_USERS][user->bounds - 1];
+
+	dest = hashtab_search(state->base->p_users.table, key);
+	if (!dest) {
+		ERR(state->handle,
+		    "User lookup failed for %s", (char *)key);
+		return -1;
+	}
+	if (dest->bounds != 0 && dest->bounds != bounds_val) {
+		ERR(state->handle,
+		    "Inconsistent boundary for %s", (char *)key);
+		return -1;
+	}
+	dest->bounds = bounds_val;
+
+	return 0;
+}
+
 /* The aliases have to be copied after the types and attributes to be
  * certain that the base symbol table will have the type that the
  * alias refers. Otherwise, we won't be able to find the type value
@@ -1362,10 +1453,21 @@ static int copy_identifiers(link_state_t * state, symtab_t * src_symtab,
 		}
 	}
 
-	if (hashtab_map
-	    (src_symtab[SYM_TYPES].table, alias_copy_callback, state)) {
+	if (hashtab_map(src_symtab[SYM_TYPES].table,
+			type_bounds_copy_callback, state))
 		return -1;
-	}
+
+	if (hashtab_map(src_symtab[SYM_TYPES].table,
+			alias_copy_callback, state))
+		return -1;
+
+	if (hashtab_map(src_symtab[SYM_ROLES].table,
+			role_bounds_copy_callback, state))
+		return -1;
+
+	if (hashtab_map(src_symtab[SYM_USERS].table,
+			user_bounds_copy_callback, state))
+		return -1;
 
 	/* then fix bitmaps associated with those newly copied identifiers */
 	for (i = 0; i < SYM_NUM; i++) {

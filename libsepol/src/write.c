@@ -920,6 +920,8 @@ static int role_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	items = 0;
 	buf[items++] = cpu_to_le32(len);
 	buf[items++] = cpu_to_le32(role->s.value);
+	if (policydb_has_boundary_feature(p))
+		buf[items++] = cpu_to_le32(role->bounds);
 	items2 = put_entry(buf, sizeof(uint32_t), items, fp);
 	if (items != items2)
 		return POLICYDB_ERROR;
@@ -952,19 +954,51 @@ static int type_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 
 	typdatum = (type_datum_t *) datum;
 
+	/*
+	 * The kernel policy version less than 24 (= POLICYDB_VERSION_BOUNDARY)
+	 * does not support to load entries of attribute, so we skip to write it.
+	 */
+	if (p->policy_type == POLICY_KERN
+	    && p->policyvers < POLICYDB_VERSION_BOUNDARY
+	    && typdatum->flavor == TYPE_ATTRIB)
+		return POLICYDB_SUCCESS;
+
 	len = strlen(key);
 	items = 0;
 	buf[items++] = cpu_to_le32(len);
 	buf[items++] = cpu_to_le32(typdatum->s.value);
-	buf[items++] = cpu_to_le32(typdatum->primary);
-	if (p->policy_type != POLICY_KERN) {
-		buf[items++] = cpu_to_le32(typdatum->flavor);
-		if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
-			buf[items++] = cpu_to_le32(typdatum->flags);
-		else if (typdatum->flags & TYPE_FLAGS_PERMISSIVE)
-			WARN(fp->handle, "Warning! Module policy version %d cannnot "
-			     "support permissive types, but one was defined",
-			     p->policyvers);
+	if (policydb_has_boundary_feature(p)) {
+		uint32_t properties = 0;
+
+		if (typdatum->primary)
+			properties |= TYPEDATUM_PROPERTY_PRIMARY;
+
+		if (typdatum->flavor == TYPE_ATTRIB) {
+			properties |= TYPEDATUM_PROPERTY_ATTRIBUTE;
+		} else if (typdatum->flavor == TYPE_ALIAS
+			   && p->policy_type != POLICY_KERN)
+			properties |= TYPEDATUM_PROPERTY_ALIAS;
+
+		if (typdatum->flags & TYPE_FLAGS_PERMISSIVE
+		    && p->policy_type != POLICY_KERN)
+			properties |= TYPEDATUM_PROPERTY_PERMISSIVE;
+
+		buf[items++] = cpu_to_le32(properties);
+		buf[items++] = cpu_to_le32(typdatum->bounds);
+	} else {
+		buf[items++] = cpu_to_le32(typdatum->primary);
+
+		if (p->policy_type != POLICY_KERN) {
+			buf[items++] = cpu_to_le32(typdatum->flavor);
+
+			if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
+				buf[items++] = cpu_to_le32(typdatum->flags);
+			else if (typdatum->flags & TYPE_FLAGS_PERMISSIVE)
+				WARN(fp->handle, "Warning! Module policy "
+				     "version %d cannnot suport permissive "
+				     "types, but one was defined",
+				     p->policyvers);
+		}
 	}
 	items2 = put_entry(buf, sizeof(uint32_t), items, fp);
 	if (items != items2)
@@ -997,6 +1031,8 @@ static int user_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	items = 0;
 	buf[items++] = cpu_to_le32(len);
 	buf[items++] = cpu_to_le32(usrdatum->s.value);
+	if (policydb_has_boundary_feature(p))
+		buf[items++] = cpu_to_le32(usrdatum->bounds);
 	items2 = put_entry(buf, sizeof(uint32_t), items, fp);
 	if (items != items2)
 		return POLICYDB_ERROR;
@@ -1515,6 +1551,19 @@ static int scope_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	return POLICYDB_SUCCESS;
 }
 
+static int type_attr_uncount(hashtab_key_t key __attribute__ ((unused)),
+			     hashtab_datum_t datum, void *args)
+{
+	type_datum_t *typdatum = datum;
+	uint32_t *p_nel = args;
+
+	if (typdatum->flavor == TYPE_ATTRIB) {
+		/* uncount attribute from total number of types */
+		(*p_nel)--;
+	}
+	return 0;
+}
+
 /*
  * Write the configuration data in a policy database
  * structure to a policy database binary representation
@@ -1646,6 +1695,18 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 	for (i = 0; i < num_syms; i++) {
 		buf[0] = cpu_to_le32(p->symtab[i].nprim);
 		buf[1] = cpu_to_le32(p->symtab[i].table->nel);
+
+		/*
+		 * A special case when writing type/attribute symbol table.
+		 * The kernel policy version less than 24 does not support
+		 * to load entries of attribute, so we have to re-calculate
+		 * the actual number of types except for attributes.
+		 */
+		if (i == SYM_TYPES &&
+		    p->policyvers < POLICYDB_VERSION_BOUNDARY &&
+		    p->policy_type == POLICY_KERN) {
+			hashtab_map(p->symtab[i].table, type_attr_uncount, &buf[1]);
+		}
 		items = put_entry(buf, sizeof(uint32_t), 2, fp);
 		if (items != 2)
 			return POLICYDB_ERROR;
