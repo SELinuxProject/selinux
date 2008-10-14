@@ -18,6 +18,11 @@ matchpathcon \- get the default SELinux security context for the specified path 
 
 .BI "void set_matchpathcon_flags(unsigned int " flags ");"
 
+.BI "int selinux_file_context_cmp(const security_context_t a,
+				     const security_context_t b);"
+
+.BI "int selinux_file_context_verify(const char *path, mode_t mode);"
+
 .SH "DESCRIPTION"
 .B matchpathcon_init
 loads the file contexts configuration specified by
@@ -111,6 +116,12 @@ If the
 .B MATCHPATHCON_BASEONLY
 flag is set, then only the base file contexts configuration file
 will be processed, not any dynamically generated entries or local customizations.
+.sp
+.B selinux_file_context_cmp
+compares two file contexts to see if their differences are "significant", the function runs the strcmp function ignoring the user componant of the file context.  
+.sp
+.B selinux_file_context_verify
+compares the file context on disk to the system default.
 
 .sp
 .SH "RETURN VALUE"
