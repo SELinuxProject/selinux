@@ -106,12 +106,12 @@ int main(int argc, char **argv)
 
 		if (verify) {
 			if (quiet) {
-				if (selinux_file_context_verify(argv[i], 0))
+				if (selinux_file_context_verify(argv[i], mode))
 					continue;
 				else
 					exit(1);
 			}
-			if (selinux_file_context_verify(argv[i], 0)) {
+			if (selinux_file_context_verify(argv[i], mode)) {
 				printf("%s verified.\n", argv[i]);
 			} else {
 				security_context_t con;
