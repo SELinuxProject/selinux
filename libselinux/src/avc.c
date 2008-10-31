@@ -199,13 +199,17 @@ int avc_init(const char *prefix,
 
 	rc = sidtab_init(&avc_sidtab);
 	if (rc) {
-		avc_log("%s:  unable to initialize SID table\n", avc_prefix);
+		avc_log(SELINUX_ERROR,
+			"%s:  unable to initialize SID table\n",
+			avc_prefix);
 		goto out;
 	}
 
 	avc_audit_buf = (char *)avc_malloc(AVC_AUDIT_BUFSIZE);
 	if (!avc_audit_buf) {
-		avc_log("%s:  unable to allocate audit buffer\n", avc_prefix);
+		avc_log(SELINUX_ERROR,
+			"%s:  unable to allocate audit buffer\n",
+			avc_prefix);
 		rc = -1;
 		goto out;
 	}
@@ -213,7 +217,8 @@ int avc_init(const char *prefix,
 	for (i = 0; i < AVC_CACHE_MAXNODES; i++) {
 		new = avc_malloc(sizeof(*new));
 		if (!new) {
-			avc_log("%s:  warning: only got %d av entries\n",
+			avc_log(SELINUX_WARNING,
+				"%s:  warning: only got %d av entries\n",
 				avc_prefix, i);
 			break;
 		}
@@ -225,7 +230,8 @@ int avc_init(const char *prefix,
 	if (!avc_setenforce) {
 		rc = security_getenforce();
 		if (rc < 0) {
-			avc_log("%s:  could not determine enforcing mode\n",
+			avc_log(SELINUX_ERROR,
+				"%s:  could not determine enforcing mode\n",
 				avc_prefix);
 			goto out;
 		}
@@ -234,8 +240,9 @@ int avc_init(const char *prefix,
 
 	rc = avc_netlink_open(avc_using_threads);
 	if (rc < 0) {
-		avc_log("%s:  can't open netlink socket: %d (%s)\n", avc_prefix,
-			errno, strerror(errno));
+		avc_log(SELINUX_ERROR,
+			"%s:  can't open netlink socket: %d (%s)\n",
+			avc_prefix, errno, strerror(errno));
 		goto out;
 	}
 	if (avc_using_threads) {
@@ -258,7 +265,7 @@ void avc_sid_stats(void)
 	avc_get_lock(avc_lock);
 	sidtab_sid_stats(&avc_sidtab, avc_audit_buf, AVC_AUDIT_BUFSIZE);
 	avc_release_lock(avc_lock);
-	avc_log("%s", avc_audit_buf);
+	avc_log(SELINUX_INFO, "%s", avc_audit_buf);
 	avc_release_lock(avc_log_lock);
 }
 
@@ -287,7 +294,7 @@ void avc_av_stats(void)
 
 	avc_release_lock(avc_lock);
 
-	avc_log("%s:  %d AV entries and %d/%d buckets used, "
+	avc_log(SELINUX_INFO, "%s:  %d AV entries and %d/%d buckets used, "
 		"longest chain length %d\n", avc_prefix,
 		avc_cache.active_nodes,
 		slots_used, AVC_CACHE_SLOTS, max_chain_len);
@@ -463,7 +470,8 @@ static int avc_insert(security_id_t ssid, security_id_t tsid,
 	int rc = 0;
 
 	if (ae->avd.seqno < avc_cache.latest_notif) {
-		avc_log("%s:  seqno %d < latest_notif %d\n", avc_prefix,
+		avc_log(SELINUX_WARNING,
+			"%s:  seqno %d < latest_notif %d\n", avc_prefix,
 			ae->avd.seqno, avc_cache.latest_notif);
 		errno = EAGAIN;
 		rc = -1;
@@ -665,7 +673,8 @@ static int avc_ratelimit(void)
 		toks -= AVC_MSG_COST;
 		avc_release_lock(ratelimit_lock);
 		if (lost) {
-			avc_log("%s:  %d messages suppressed.\n", avc_prefix,
+			avc_log(SELINUX_WARNING,
+				"%s:  %d messages suppressed.\n", avc_prefix,
 				lost);
 		}
 		rc = 1;
@@ -784,7 +793,7 @@ void avc_audit(security_id_t ssid, security_id_t tsid,
 	log_append(avc_audit_buf, " ");
 	avc_dump_query(ssid, tsid, tclass);
 	log_append(avc_audit_buf, "\n");
-	avc_log("%s", avc_audit_buf);
+	avc_log(SELINUX_AVC, "%s", avc_audit_buf);
 
 	avc_release_lock(avc_log_lock);
 }
