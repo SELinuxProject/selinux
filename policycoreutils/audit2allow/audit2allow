@@ -287,7 +287,11 @@ class AuditToPolicy:
     def __output(self):
         
         if self.__options.audit2why:
-            return self.__output_audit2why()
+            try:
+                return self.__output_audit2why()
+            except RuntimeError, e:
+                print e
+                sys.exit(1)
 
         g = policygen.PolicyGenerator()
 
