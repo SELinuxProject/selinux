@@ -1433,8 +1433,14 @@ class fcontextRecords(semanageRecords):
 		(rc,exists) = semanage_fcontext_exists_local(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if file context for %s is defined") % target)
-		if exists:
-			raise ValueError(_("File context for %s already defined") % target)
+
+		if not exists:
+                       (rc,exists) = semanage_fcontext_exists_local(self.sh, k)
+                       if rc < 0:
+                              raise ValueError(_("Could not check if file context for %s is defined") % target)
+
+                if exists:
+                       raise ValueError(_("File context for %s already defined") % target)
 
 		(rc,fcontext) = semanage_fcontext_create(self.sh)
 		if rc < 0:
@@ -1481,15 +1487,19 @@ class fcontextRecords(semanageRecords):
 		if rc < 0:
 			raise ValueError(_("Could not create a key for %s") % target)
 
-		(rc,exists) = semanage_fcontext_exists_local(self.sh, k)
+		(rc,exists) = semanage_fcontext_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if file context for %s is defined") % target)
 		if not exists:
-			raise ValueError(_("File context for %s is not defined") % target)
+                       (rc,exists) = semanage_fcontext_exists_local(self.sh, k)
+                       if not exists:
+                              raise ValueError(_("File context for %s is not defined") % target)
 		
 		(rc,fcontext) = semanage_fcontext_query_local(self.sh, k)
 		if rc < 0:
-			raise ValueError(_("Could not query file context for %s") % target)
+                       (rc,fcontext) = semanage_fcontext_query(self.sh, k)
+                       if rc < 0:
+                              raise ValueError(_("Could not query file context for %s") % target)
 
                 if setype != "<<none>>":
                        con = semanage_fcontext_get_con(fcontext)
@@ -1577,7 +1587,6 @@ class fcontextRecords(semanageRecords):
                 self.commit()
 
 	def get_all(self, locallist = 0):
-		l = []
                 if locallist:
                        (rc, self.flist) = semanage_fcontext_list_local(self.sh)
                 else:
@@ -1591,30 +1600,33 @@ class fcontextRecords(semanageRecords):
 
                        self.flist += fclocal
 
+                ddict = {}
 		for fcontext in self.flist:
 			expr = semanage_fcontext_get_expr(fcontext)
 			ftype = semanage_fcontext_get_type(fcontext)
 			ftype_str = semanage_fcontext_get_type_str(ftype)
 			con = semanage_fcontext_get_con(fcontext)
 			if con:
-				l.append((expr, ftype_str, semanage_context_get_user(con), semanage_context_get_role(con), semanage_context_get_type(con), semanage_context_get_mls(con)))
+                               ddict[(expr, ftype_str)] = (semanage_context_get_user(con), semanage_context_get_role(con), semanage_context_get_type(con), semanage_context_get_mls(con))
 			else:
-				l.append((expr, ftype_str, con))
+				ddict[(expr, ftype_str)] = con
 
-		return l
+		return ddict
 			
 	def list(self, heading = 1, locallist = 0 ):
 		if heading:
 			print "%-50s %-18s %s\n" % (_("SELinux fcontext"), _("type"), _("Context"))
-		fcon_list = self.get_all(locallist)
-		for fcon in fcon_list:
-			if len(fcon) > 3:
+		fcon_dict = self.get_all(locallist)
+                keys = fcon_dict.keys()
+                keys.sort()
+		for k in keys:
+			if fcon_dict[k]:
 				if is_mls_enabled:
-					print "%-50s %-18s %s:%s:%s:%s " % (fcon[0], fcon[1], fcon[2], fcon[3], fcon[4], translate(fcon[5],False))
+					print "%-50s %-18s %s:%s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1], fcon_dict[k][2], translate(fcon_dict[k][3],False))
 				else:
-					print "%-50s %-18s %s:%s:%s " % (fcon[0], fcon[1], fcon[2], fcon[3],fcon[4])
+					print "%-50s %-18s %s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1],fcon_dict[k][2])
 			else:
-				print "%-50s %-18s <<None>>" % (fcon[0], fcon[1])
+				print "%-50s %-18s <<None>>" % (k[0], k[1])
 				
 class booleanRecords(semanageRecords):
 	def __init__(self, store = ""):
