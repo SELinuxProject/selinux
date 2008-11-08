@@ -1,3 +1,9 @@
+2.0.58 2008-11-09
+	* Allow local file context entries to override policy entries in
+	semanage from Dan Walsh.
+	* Newrole error message corrections from Dan Walsh.
+	* Add exception to audit2why call in audit2allow from Dan Walsh.
+
 2.0.57 2008-09-18
 	* Update po files from Dan Walsh.
 
