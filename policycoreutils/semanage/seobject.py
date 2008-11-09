@@ -1430,7 +1430,7 @@ class fcontextRecords(semanageRecords):
 		if rc < 0:
 			raise ValueError(_("Could not create key for %s") % target)
 
-		(rc,exists) = semanage_fcontext_exists_local(self.sh, k)
+		(rc,exists) = semanage_fcontext_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if file context for %s is defined") % target)
 
