@@ -91,11 +91,11 @@ static inline void avc_free(void *ptr)
 }
 
 /* this is a macro in order to use the variadic capability. */
-#define avc_log(format...) \
+#define avc_log(type, format...) \
   if (avc_func_log) \
     avc_func_log(format); \
   else \
-    selinux_log(SELINUX_ERROR, format);
+    selinux_log(type, format);
 
 static inline void avc_suppl_audit(void *ptr, security_class_t class,
 				   char *buf, size_t len)

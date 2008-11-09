@@ -103,26 +103,30 @@ static int avc_netlink_receive(char *buf, unsigned buflen)
 		return rc;
 
 	if (nladdrlen != sizeof nladdr) {
-		avc_log("%s:  warning: netlink address truncated, len %d?\n",
+		avc_log(SELINUX_WARNING,
+			"%s:  warning: netlink address truncated, len %d?\n",
 			avc_prefix, nladdrlen);
 		return -1;
 	}
 
 	if (nladdr.nl_pid) {
-		avc_log("%s:  warning: received spoofed netlink packet from: %d\n",
+		avc_log(SELINUX_WARNING,
+			"%s:  warning: received spoofed netlink packet from: %d\n",
 			avc_prefix, nladdr.nl_pid);
 		return -1;
 	}
 
 	if (rc == 0) {
-		avc_log("%s:  warning: received EOF on netlink socket\n",
+		avc_log(SELINUX_WARNING,
+			"%s:  warning: received EOF on netlink socket\n",
 			avc_prefix);
 		errno = EBADFD;
 		return -1;
 	}
 
 	if (nlh->nlmsg_flags & MSG_TRUNC || nlh->nlmsg_len > (unsigned)rc) {
-		avc_log("%s:  warning: incomplete netlink message\n",
+		avc_log(SELINUX_WARNING,
+			"%s:  warning: incomplete netlink message\n",
 			avc_prefix);
 		return -1;
 	}
@@ -144,19 +148,22 @@ static int avc_netlink_process(char *buf)
 			break;
 
 		errno = -err->error;
-		avc_log("%s:  netlink error: %d\n", avc_prefix, errno);
+		avc_log(SELINUX_ERROR,
+			"%s:  netlink error: %d\n", avc_prefix, errno);
 		return -1;
 	}
 
 	case SELNL_MSG_SETENFORCE:{
 		struct selnl_msg_setenforce *msg = NLMSG_DATA(nlh);
-		avc_log("%s:  received setenforce notice (enforcing=%d)\n",
+		avc_log(SELINUX_INFO,
+			"%s:  received setenforce notice (enforcing=%d)\n",
 			avc_prefix, msg->val);
 		if (avc_setenforce)
 			break;
 		avc_enforcing = msg->val;
 		if (avc_enforcing && (rc = avc_ss_reset(0)) < 0) {
-			avc_log("%s:  cache reset returned %d (errno %d)\n",
+			avc_log(SELINUX_ERROR,
+				"%s:  cache reset returned %d (errno %d)\n",
 				avc_prefix, rc, errno);
 			return rc;
 		}
@@ -165,11 +172,13 @@ static int avc_netlink_process(char *buf)
 
 	case SELNL_MSG_POLICYLOAD:{
 		struct selnl_msg_policyload *msg = NLMSG_DATA(nlh);
-		avc_log("%s:  received policyload notice (seqno=%d)\n",
+		avc_log(SELINUX_INFO,
+			"%s:  received policyload notice (seqno=%d)\n",
 			avc_prefix, msg->seqno);
 		rc = avc_ss_reset(msg->seqno);
 		if (rc < 0) {
-			avc_log("%s:  cache reset returned %d (errno %d)\n",
+			avc_log(SELINUX_ERROR,
+				"%s:  cache reset returned %d (errno %d)\n",
 				avc_prefix, rc, errno);
 			return rc;
 		}
@@ -177,7 +186,8 @@ static int avc_netlink_process(char *buf)
 	}
 
 	default:
-		avc_log("%s:  warning: unknown netlink message %d\n",
+		avc_log(SELINUX_WARNING,
+			"%s:  warning: unknown netlink message %d\n",
 			avc_prefix, nlh->nlmsg_type);
 	}
 	return 0;
@@ -197,7 +207,8 @@ int avc_netlink_check_nb(void)
 			if (errno == 0 || errno == EINTR)
 				continue;
 			else {
-				avc_log("%s:  netlink recvfrom: error %d\n",
+				avc_log(SELINUX_ERROR,
+					"%s:  netlink recvfrom: error %d\n",
 					avc_prefix, errno);
 				return rc;
 			}
@@ -221,7 +232,8 @@ void avc_netlink_loop(void)
 			if (errno == 0 || errno == EINTR)
 				continue;
 			else {
-				avc_log("%s:  netlink recvfrom: error %d\n",
+				avc_log(SELINUX_ERROR,
+					"%s:  netlink recvfrom: error %d\n",
 					avc_prefix, errno);
 				break;
 			}
@@ -234,6 +246,7 @@ void avc_netlink_loop(void)
 
 	close(fd);
 	avc_netlink_trouble = 1;
-	avc_log("%s:  netlink thread: errors encountered, terminating\n",
+	avc_log(SELINUX_ERROR,
+		"%s:  netlink thread: errors encountered, terminating\n",
 		avc_prefix);
 }

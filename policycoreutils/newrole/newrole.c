@@ -553,7 +553,7 @@ static int drop_capabilities(void)
 	new_caps = cap_init();
 	tmp_caps = cap_init();
 	if (!new_caps || !tmp_caps) {
-		fprintf(stderr, _("Error initing capabilities, aborting.\n"));
+		fprintf(stderr, _("Error initializing capabilities, aborting.\n"));
 		return -1;
 	}
 	rc |= cap_set_flag(new_caps, CAP_PERMITTED, 1, cap_list, CAP_SET);
@@ -631,7 +631,7 @@ static int drop_capabilities(void)
 	/* Non-root caller, suid root path */
 	new_caps = cap_init();
 	if (!new_caps) {
-		fprintf(stderr, _("Error initing capabilities, aborting.\n"));
+		fprintf(stderr, _("Error initializing capabilities, aborting.\n"));
 		return -1;
 	}
 	rc |= cap_set_flag(new_caps, CAP_PERMITTED, 6, cap_list, CAP_SET);
