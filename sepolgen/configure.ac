@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(sepolgen, VERSION, BUG-REPORT-ADDRESS)
+AC_INIT(sepolgen, VERSION, selinux@tycho.nsa.gov)
 AM_INIT_AUTOMAKE
 
 
@@ -29,10 +29,10 @@ AC_CONFIG_FILES([Makefile
                  src/share/Makefile])
 
 
-
+# Pickup the version info from the source directory if available
 VERSION=`cat $srcdir/VERSION`
 if test "$VERSION" = "" ; then
-        VERSION=svn
+        VERSION=git
 fi
 
 AC_OUTPUT

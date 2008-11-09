@@ -1,1 +1,1 @@
-SUBDIRS		=  include man src utils 
+SUBDIRS		=  include man src utils tests

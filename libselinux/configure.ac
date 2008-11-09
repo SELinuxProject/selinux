@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT([libselinux], [VERSION], BUG-REPORT-ADDRESS)
+AC_INIT([libselinux], 2.0.73, selinux@tycho.nsa.gov)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([utils/compute_create.c])
 AC_CONFIG_HEADER([config.h])
@@ -99,13 +99,6 @@ AC_ARG_WITH([python-site],
 	[]
 )
 
-if test -n "$with_python_site" ; then
-	AC_SUBST([pythondir],[$with_python_site])
-	AC_SUBST([pyexecdir],[$with_python_site])
-else
-	AC_MSG_WARN([Python site folder not specified, guessing...])
-fi
-
 AC_ARG_WITH([python],
 	[AC_HELP_STRING(
 		[--with-python=PATH],
@@ -186,6 +179,16 @@ if test "$have_python" != "yes" ; then
 	_enable_swig=no
 	AC_MSG_NOTICE([Swig interface does not need to be regenerated 
 		because libpyselinux.so wrapper cannot be built])
+else
+	# Use what the user specified, otherwise fallback on autoconf
+        # internal default and display warning to user.
+        # autoconf default = libdir/pythonX.X/site-packages
+	if test -n "$with_python_site" ; then
+	        AC_SUBST([pythondir],[$with_python_site])
+	        AC_SUBST([pyexecdir],[$with_python_site])
+	else
+	        AC_MSG_WARN([Python site folder not specified, guessing...])
+	fi
 fi
 
 # slip in fake swig if needed
@@ -198,11 +201,6 @@ AC_CONFIG_FILES([Makefile
 		utils/Makefile
 		man/Makefile
 		include/Makefile])
-
-VERSION=`cat $srcdir/VERSION`
-if test "$VERSION" = "" ; then
-	VERSION=svn
-fi
 
 AC_OUTPUT
 

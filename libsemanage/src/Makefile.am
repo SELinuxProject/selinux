@@ -17,7 +17,16 @@ COMMONSRC = \
 	parse_utils.c		seusers_policy.c 	database_file.c		\
 	iface_record.c		policy_components.c	user_base_record.c 	\
 	database_join.c		interfaces_file.c	port_record.c   	\
-	user_extra_record.c
+	user_extra_record.c \
+	boolean_internal.h	context_internal.h	database_activedb.h	\
+	database_file.h		database.h		database_join.h		\
+	database_llist.h	database_policydb.h	debug.h			\
+	direct_api.h		dso.h			fcontext_internal.h	\
+	genhomedircon.h		handle.h		handle_internal.h	\
+	iface_internal.h	module_internal.h	modules.h		\
+	node_internal.h		parse_utils.h		policy.h		\
+	port_internal.h		semanage_conf.h		semanage_store.h	\
+	seuser_internal.h	user_internal.h		utilities.h
 
 
 CLEANFILES			= $(BUILT_SOURCES)
@@ -59,4 +68,4 @@ AM_YFLAGS			= -d
 # allowing the configure conftest to pass but this make rule to fail.
 # This is why -o lex.yy.c is given here.
 AM_LFLAGS			= -o lex.yy.c -s
-sysconf_DATA			= semanage.conf
+dist_sysconf_DATA		= semanage.conf

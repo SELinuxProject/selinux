@@ -9,7 +9,13 @@ COMMONSRC = \
 	policyvers.c freeconary.c label.c procattr.c check_context.c \
 	freecon.c label_file.c query_user_context.c compute_av.c fsetfilecon.c \
 	label_media.c compute_create.c get_context_list.c label_x.c \
-	selinux_check_securetty_context.c
+	selinux_check_securetty_context.c \
+	avc_internal.h avc_sidtab.h av_inherit.h av_perm_to_string.h \
+	callbacks.h class_to_string.h common_perm_to_string.h \
+	context_internal.h dso.h file_path_suffixes.h \
+	get_context_list_internal.h get_default_type_internal.h \
+	label_internal.h mapping.h policy.h selinux_internal.h \
+	selinux_netlink.h setrans_internal.h
 
 AVCSRC	= \
 	avc.c avc_internal.c avc_sidtab.c \
@@ -33,6 +39,7 @@ selinux_pyexec_LTLIBRARIES	= $(extra_lib)
 selinux_python_PYTHON		= $(extra_py) 
 
 sysconf_DATA			= config
+CLEANFILES			= config
 config:Makefile
 	echo -e "SELINUXTYPE=$(policyname)\nSELINUX=enforcing" > $@ 
 		

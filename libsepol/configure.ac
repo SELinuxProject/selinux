@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT([libsepol], 2.0.32, selinux@tycho.nsa.gov)
+AC_INIT([libsepol], 2.0.33, selinux@tycho.nsa.gov)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([utils/chkcon.c])
 AC_CONFIG_HEADER([config.h])
@@ -55,23 +55,26 @@ AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([memset strcasecmp strchr strdup strerror strncasecmp strrchr])
 
 AC_ARG_ENABLE([tests],
-        [AC_HELP_STRING([--enable-tests],[Enables building of tests])],
+        [AC_HELP_STRING([--disable-tests],[Disable building tests])],
         [enable_tests=$enableval],
-        [enable_tests=no]
+        [enable_tests=yes]
 )
 
-AM_CONDITIONAL([BUILD_tests],[test "$enable_tests]" = "yes"])
+AM_CONDITIONAL([BUILD_tests],[test "$enable_tests" = "yes"])
 
 AC_CONFIG_FILES([Makefile
                  include/Makefile
                  man/Makefile
                  src/Makefile
-                 utils/Makefile])
+                 utils/Makefile
+		 tests/Makefile])
+
 AC_OUTPUT
 
 PRINT='echo -n -e '
 $PRINT "\n*** Libsepol Configuration Summary ***\n"
 $PRINT "\tBuilding static lib\t= $enable_static\n"
 $PRINT "\tBuilding shared object\t= $enable_shared\n"
+$PRINT "\tBuilding tests\t\t= $enable_tests\n"
 $PRINT "------------------------------------------------------------\n" 
 

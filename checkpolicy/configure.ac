@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT([checkpolicy], VERSION, BUG-REPORT-ADDRESS)
+AC_INIT([checkpolicy], VERSION, selinux@tycho.nsa.gov)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([module_compiler.h])
 AC_CONFIG_HEADER([config.h])
@@ -85,7 +85,7 @@ AC_ARG_ENABLE([tests],
 	[enable_tests=no]
 )
 
-AM_CONDITIONAL([BUILD_tests],[test "$enable_tests]" = "yes"])
+AM_CONDITIONAL([BUILD_tests],[test "$enable_tests" = "yes"])
 		
 # Checks for header files.
 AC_HEADER_STDC
@@ -114,7 +114,14 @@ AC_FUNC_MMAP
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset strcasecmp strchr strdup strerror strtol strtoul])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile test/Makefile])
+
+# Pickup the version info from the source directory if available
+VERSION=`cat $srcdir/VERSION`
+if test "$VERSION" = "" ; then
+        VERSION=git
+fi
+
 AC_OUTPUT
 
 PRINT='echo -n -e '

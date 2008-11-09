@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(policycoreutils, VERSION, BUG-REPORT-ADDRESS)
+AC_INIT(policycoreutils, VERSION, selinux@tycho.nsa.gov)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([run_init/run_init.c])
 AC_CONFIG_HEADER([config.h])
@@ -219,10 +219,10 @@ AC_CONFIG_FILES([
 	setfiles/Makefile
 	Makefile])
 
-
+# Pickup the version info from the source directory if available
 VERSION=`cat $srcdir/VERSION`
 if test "$VERSION" = "" ; then
-        VERSION=svn
+        VERSION=git
 fi
 
 AC_OUTPUT

@@ -16,6 +16,6 @@ BUILDS += $(BOOL)
 endif
 
 bin_PROGRAMS	= $(BUILDS)
-AM_LDFLAGS	= -Wl,--as-needed -lselinux -L$(builddir)/../src
-AM_CPPFLAGS	= -I$(srcdir)/../include
-BUILT_SOURCES	= $(builddir)/../src/libselinux.la
+AM_LDFLAGS	= -Wl,--as-needed -lselinux -L$(top_builddir)/src
+AM_CPPFLAGS	= -I$(top_srcdir)/include
+BUILT_SOURCES	= $(top_builddir)/src/libselinux.la

@@ -1,4 +1,6 @@
-bin_PROGRAMS		= checkmodule checkpolicy $(extras)
+SUBDIRS			= test
+bin_PROGRAMS		= checkmodule checkpolicy
+
 checkmodule_SOURCES	= $(COMMONSRC)  checkmodule.c
 checkmodule_DEPENDENCIES= $(LIBSEPOL_A_PATH)
 checkmodule_LDADD	= $(LIBSEPOL_A_PATH)
@@ -12,12 +14,9 @@ AM_LDFLAGS		= -Wl,--as-needed
 COMMONSRC		= \
 	queue.c		module_compiler.c \
 	parse_util.c	policy_define.c \
-	policy_parse.y	policy_scan.l
+	policy_parse.y	policy_scan.l \
+	module_compiler.h 
 
 y.tab.h y.tab.c : policy_parse.y
 	$(YACC) -d $<
 
-extras	=
-if BUILD_tests
-extras	+= dispol dismod
-endif
