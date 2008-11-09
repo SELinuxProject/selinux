@@ -1,3 +1,6 @@
+2.0.59 2008-11-11
+	* fcontext add checked local records twice, fix from Dan Walsh. 
+
 2.0.58 2008-11-09
 	* Allow local file context entries to override policy entries in
 	semanage from Dan Walsh.

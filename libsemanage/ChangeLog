@@ -1,3 +1,6 @@
+2.0.29 2008-11-11
+	* Add USER to lines to homedir_template context file from Chris PeBenito.
+
 2.0.28 2008-09-15
 	* allow fcontext and seuser changes without rebuilding the policy from Dan Walsh
 
