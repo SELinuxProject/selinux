@@ -37,4 +37,6 @@ int semanage_direct_is_managed(struct semanage_handle *sh);
 
 int semanage_direct_access_check(struct semanage_handle *sh);
 
+int semanage_direct_mls_enabled(struct semanage_handle *sh);
+
 #endif

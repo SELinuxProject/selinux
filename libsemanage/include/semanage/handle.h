@@ -117,6 +117,9 @@ int semanage_access_check(semanage_handle_t * sh);
 /* returns 0 if not connected, 1 if connected */
 int semanage_is_connected(semanage_handle_t * sh);
 
+/* returns 1 if policy is MLS, 0 otherwise. */
+int semanage_mls_enabled(semanage_handle_t *sh);
+
 /* META NOTES
  *
  * For all functions a non-negative number indicates success. For some

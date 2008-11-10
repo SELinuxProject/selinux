@@ -157,6 +157,20 @@ int semanage_is_managed(semanage_handle_t * sh)
 	return -1;
 }
 
+int semanage_mls_enabled(semanage_handle_t * sh)
+{
+	assert(sh != NULL);
+	switch (sh->conf->store_type) {
+	case SEMANAGE_CON_DIRECT:
+		return semanage_direct_mls_enabled(sh);
+	default:
+		ERR(sh,
+		    "The connection type specified within your semanage.conf file has not been implemented yet.");
+		/* fall through */
+	}
+	return -1;
+}
+
 int semanage_connect(semanage_handle_t * sh)
 {
 	assert(sh != NULL);

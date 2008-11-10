@@ -3400,6 +3400,28 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_semanage_mls_enabled(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  semanage_handle_t *arg1 = (semanage_handle_t *) 0 ;
+  int result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+
+  if (!PyArg_ParseTuple(args,(char *)"O:semanage_mls_enabled",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_semanage_handle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "semanage_mls_enabled" "', argument " "1"" of type '" "semanage_handle_t *""'");
+  }
+  arg1 = (semanage_handle_t *)(argp1);
+  result = (int)semanage_mls_enabled(arg1);
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_semanage_module_install(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   semanage_handle_t *arg1 = (semanage_handle_t *) 0 ;
@@ -11391,6 +11413,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"semanage_commit", _wrap_semanage_commit, METH_VARARGS, NULL},
 	 { (char *)"semanage_access_check", _wrap_semanage_access_check, METH_VARARGS, NULL},
 	 { (char *)"semanage_is_connected", _wrap_semanage_is_connected, METH_VARARGS, NULL},
+	 { (char *)"semanage_mls_enabled", _wrap_semanage_mls_enabled, METH_VARARGS, NULL},
 	 { (char *)"semanage_module_install", _wrap_semanage_module_install, METH_VARARGS, NULL},
 	 { (char *)"semanage_module_upgrade", _wrap_semanage_module_upgrade, METH_VARARGS, NULL},
 	 { (char *)"semanage_module_install_base", _wrap_semanage_module_install_base, METH_VARARGS, NULL},

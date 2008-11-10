@@ -76,6 +76,7 @@ SEMANAGE_CAN_READ = _semanage.SEMANAGE_CAN_READ
 SEMANAGE_CAN_WRITE = _semanage.SEMANAGE_CAN_WRITE
 semanage_access_check = _semanage.semanage_access_check
 semanage_is_connected = _semanage.semanage_is_connected
+semanage_mls_enabled = _semanage.semanage_mls_enabled
 semanage_module_install = _semanage.semanage_module_install
 semanage_module_upgrade = _semanage.semanage_module_upgrade
 semanage_module_install_base = _semanage.semanage_module_install_base

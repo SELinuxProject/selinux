@@ -1050,3 +1050,22 @@ int semanage_direct_access_check(semanage_handle_t * sh)
 
 	return semanage_store_access_check(sh);
 }
+
+int semanage_direct_mls_enabled(semanage_handle_t * sh)
+{
+	sepol_policydb_t *p = NULL;
+	int retval;
+
+	retval = sepol_policydb_create(&p);
+	if (retval < 0)
+		goto cleanup;
+
+	retval = semanage_read_policydb(sh, p);
+	if (retval < 0)
+		goto cleanup;
+
+	retval = sepol_policydb_mls_enabled(p);
+cleanup:
+	sepol_policydb_free(p);
+	return retval;
+}
