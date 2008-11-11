@@ -983,7 +983,8 @@ int semanage_split_fc(semanage_handle_t * sh)
 
 	while (fgets_unlocked(buf, PATH_MAX, file_con)) {
 		if (!strncmp(buf, "HOME_DIR", 8) ||
-		    !strncmp(buf, "HOME_ROOT", 9) || strstr(buf, "ROLE")) {
+		    !strncmp(buf, "HOME_ROOT", 9) || strstr(buf, "ROLE") ||
+		    strstr(buf, "USER")) {
 			/* This contains one of the template variables, write it to homedir.template */
 			if (write(hd, buf, strlen(buf)) < 0) {
 				ERR(sh, "Write to %s failed.",
