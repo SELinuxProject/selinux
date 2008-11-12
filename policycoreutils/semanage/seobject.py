@@ -35,14 +35,13 @@ except IOError:
        import __builtin__
        __builtin__.__dict__['_'] = unicode
 
-is_mls_enabled = selinux.is_selinux_mls_enabled()
-
 import syslog
 
 handle = None
 
 def get_handle(store):
        global handle
+       global is_mls_enabled
 
        handle = semanage_handle_create()
        if not handle:
@@ -63,7 +62,13 @@ def get_handle(store):
        rc = semanage_connect(handle)
        if rc < 0:
               semanage_handle_destroy(handle)
-              raise ValueError(_("Could not establish semanage connection"))       
+              raise ValueError(_("Could not establish semanage connection"))
+
+       is_mls_enabled = semanage_mls_enabled(handle)
+       if is_mls_enabled < 0:
+              semanage_handle_destroy(handle)
+              raise ValueError(_("Could not test MLS enabled status"))
+
        return handle
 
 file_types = {}
@@ -192,8 +197,6 @@ def untranslate(trans, prepend = 1):
 	
 class setransRecords:
 	def __init__(self):
-		if not is_mls_enabled:
-			raise ValueError(_("translations not supported on non-MLS machines"))			
 		self.filename = selinux.selinux_translations_path()
 		try:
 			fd = open(self.filename, "r")

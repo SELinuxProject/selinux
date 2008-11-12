@@ -38,8 +38,6 @@ except IOError:
        import __builtin__
        __builtin__.__dict__['_'] = unicode
 
-is_mls_enabled=selinux.is_selinux_mls_enabled()
-
 if __name__ == '__main__':
 
 	def usage(message = ""):
@@ -270,16 +268,12 @@ Object-specific Options (see above):
 				store = a
 
 			if o == "-r" or o == '--range':
-				if is_mls_enabled == 0:
-                                       raise ValueError(_("range not supported on Non MLS machines"))
 				serange = a
 
 			if o == "-l" or o == "--list":
 				list = True
 
 			if o == "-L" or o == '--level':
-				if is_mls_enabled == 0:
-                                       raise ValueError(_("range not supported on Non MLS machines"))
 				selevel = a
 
 			if o == "-p" or o == '--proto':
