@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
+#include <fnmatch.h>
 #include "callbacks.h"
 #include "label_internal.h"
 
@@ -199,9 +200,7 @@ static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 	for (i = 0; i < data->nspec; i++) {
 		if (spec_arr[i].type != type)
 			continue;
-		if (!strncmp(spec_arr[i].key, "*", 2))
-			break;
-		if (!strncmp(spec_arr[i].key, key, strlen(key) + 1))
+		if (!fnmatch(spec_arr[i].key, key, 0))
 			break;
 	}
 
