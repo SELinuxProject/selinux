@@ -30,6 +30,8 @@ static __thread security_context_t prev_t2r_trans = NULL;
 static __thread security_context_t prev_t2r_raw = NULL;
 static __thread security_context_t prev_r2t_trans = NULL;
 static __thread security_context_t prev_r2t_raw = NULL;
+static __thread char *prev_r2c_trans = NULL;
+static __thread security_context_t prev_r2c_raw = NULL;
 
 /*
  * setransd_open
@@ -212,12 +214,38 @@ static int trans_to_raw_context(char *trans, char **rawp)
 	return ret;
 }
 
+static int raw_context_to_color(char *raw, char **colors)
+{
+	int ret;
+	int32_t ret_val;
+	int fd;
+
+	fd = setransd_open();
+	if (fd < 0)
+		return fd;
+
+	ret = send_request(fd, RAW_CONTEXT_TO_COLOR, raw, NULL);
+	if (ret)
+		goto out;
+
+	ret = receive_response(fd, RAW_CONTEXT_TO_COLOR, colors, &ret_val);
+	if (ret)
+		goto out;
+
+	ret = ret_val;
+out:
+	close(fd);
+	return ret;
+}
+
 hidden void fini_context_translations(void)
 {
 	free(prev_r2t_trans);
 	free(prev_r2t_raw);
 	free(prev_t2r_trans);
 	free(prev_t2r_raw);
+	free(prev_r2c_trans);
+	free(prev_r2c_raw);
 }
 
 hidden int init_context_translations(void)
@@ -303,6 +331,39 @@ int selinux_raw_to_trans_context(security_context_t raw,
 }
 
 hidden_def(selinux_raw_to_trans_context)
+
+int selinux_raw_context_to_color(security_context_t raw, char **transp)
+{
+	if (!raw) {
+		*transp = NULL;
+		return -1;
+	}
+
+	if (prev_r2c_raw && strcmp(prev_r2c_raw, raw) == 0) {
+		*transp = strdup(prev_r2c_trans);
+	} else {
+		free(prev_r2c_raw);
+		prev_r2c_raw = NULL;
+		free(prev_r2c_trans);
+		prev_r2c_trans = NULL;
+		if (raw_context_to_color(raw, transp))
+			return -1;
+		if (*transp) {
+			prev_r2c_raw = strdup(raw);
+			if (!prev_r2c_raw)
+				goto out;
+			prev_r2c_trans = strdup(*transp);
+			if (!prev_r2c_trans) {
+				free(prev_r2c_raw);
+				prev_r2c_raw = NULL;
+			}
+		}
+	}
+      out:
+	return *transp ? 0 : -1;
+}
+
+hidden_def(selinux_raw_context_to_color)
 #else /*DISABLE_SETRANS*/
 
 hidden void fini_context_translations(void)

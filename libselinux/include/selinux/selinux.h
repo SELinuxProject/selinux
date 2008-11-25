@@ -504,6 +504,14 @@ extern int selinux_trans_to_raw_context(security_context_t trans,
 extern int selinux_raw_to_trans_context(security_context_t raw,
 					security_context_t * transp);
 
+/* Perform context translation between security contexts
+   and display colors.  Returns a space-separated list of ten
+   ten hex RGB triples prefixed by hash marks, e.g. "#ff0000".
+   Caller must free the resulting string via free.
+   Returns -1 upon an error or 0 otherwise. */
+extern int selinux_raw_context_to_color(security_context_t raw,
+					char **color_str);
+
 /* Get the SELinux username and level to use for a given Linux username. 
    These values may then be passed into the get_ordered_context_list*
    and get_default_context* functions to obtain a context for the user.
