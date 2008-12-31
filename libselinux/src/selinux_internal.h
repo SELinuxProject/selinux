@@ -73,6 +73,7 @@ hidden_proto(selinux_mkload_policy)
     hidden_proto(selinux_users_path)
     hidden_proto(selinux_usersconf_path);
 hidden_proto(selinux_translations_path);
+hidden_proto(selinux_colors_path);
 hidden_proto(selinux_getenforcemode);
 hidden_proto(selinux_getpolicytype);
 hidden_proto(selinux_raw_to_trans_context);

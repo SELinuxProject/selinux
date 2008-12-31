@@ -39,7 +39,8 @@
 #define FILE_CONTEXTS_LOCAL 17
 #define SECURETTY_TYPES   18
 #define X_CONTEXTS        19
-#define NEL               20
+#define COLORS            20
+#define NEL               21
 
 /* New layout is relative to SELINUXDIR/policytype. */
 static char *file_paths[NEL];
@@ -355,6 +356,13 @@ const char *selinux_translations_path()
 }
 
 hidden_def(selinux_translations_path)
+
+const char *selinux_colors_path()
+{
+	return get_path(COLORS);
+}
+
+hidden_def(selinux_colors_path)
 
 const char *selinux_netfilter_context_path()
 {

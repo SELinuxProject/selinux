@@ -467,6 +467,7 @@ extern const char *selinux_customizable_types_path(void);
 extern const char *selinux_users_path(void);
 extern const char *selinux_usersconf_path(void);
 extern const char *selinux_translations_path(void);
+extern const char *selinux_colors_path(void);
 extern const char *selinux_netfilter_context_path(void);
 extern const char *selinux_path(void);
 
