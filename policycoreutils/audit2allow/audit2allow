@@ -42,10 +42,10 @@ class AuditToPolicy:
         from optparse import OptionParser
 
         parser = OptionParser(version=self.VERSION)
-        parser.add_option("-a", "--audit", action="store_true", dest="audit", default=False,
+        parser.add_option("-a", "--all", action="store_true", dest="audit", default=False,
                           help="read input from audit log - conflicts with -i")
         parser.add_option("-d", "--dmesg", action="store_true", dest="dmesg", default=False,
-                          help="read input from dmesg - conflicts with --audit and --input")
+                          help="read input from dmesg - conflicts with --all and --input")
         parser.add_option("-i", "--input", dest="input",
                           help="read input from <input> - conflicts with -a")
         parser.add_option("-l", "--lastreload", action="store_true", dest="lastreload", default=False,
@@ -82,9 +82,9 @@ class AuditToPolicy:
         # Make -d, -a, and -i conflict
         if options.audit is True:
             if options.input is not None:
-                sys.stderr.write("error: --audit conflicts with --input\n")
+                sys.stderr.write("error: --all conflicts with --input\n")
             if options.dmesg is True:
-                sys.stderr.write("error: --audit conflicts with --dmesg\n")
+                sys.stderr.write("error: --all conflicts with --dmesg\n")
         if options.input is not None and options.dmesg is True:
             sys.stderr.write("error: --input conflicts with --dmesg\n")
 
@@ -200,7 +200,7 @@ class AuditToPolicy:
         try:
             fd = open(filename, "w")
         except IOError, e:
-            sys.stderr.write("could not write output file: %s\n", str(e))
+            sys.stderr.write("could not write output file: %s\n" % str(e))
             sys.exit(1)
 
         writer.write(generator.get_module(), fd)
