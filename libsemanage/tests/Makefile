@@ -12,8 +12,8 @@ LIBS = ../src/libsemanage.a ../../libselinux/src/libselinux.a ../../libsepol/src
 EXECUTABLE = libsemanage-tests
 CC = gcc
 CFLAGS = -c -g -o0 -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
-INCLUDE = -I$(TESTSRC) -I$(TESTSRC)/../include/semanage
-LDFLAGS = -lcunit -lustr
+INCLUDE = -I$(TESTSRC) -I$(TESTSRC)/../include
+LDFLAGS = -lcunit -lustr -lbz2
 OBJECTS = $(SOURCES:.c=.o) 
 
 all: $(EXECUTABLE) 
