@@ -60,24 +60,6 @@ static void cleanup(void)
 	free(commands);
 }
 
-/* mmap() a file to '*data', returning the total number of bytes in
- * the file.  Returns 0 if file could not be opened or mapped. */
-static size_t map_file(char *filename, char **data)
-{
-	int fd;
-	struct stat sb;
-	if ((fd = open(filename, O_RDONLY)) == -1) {
-		return 0;
-	}
-	if (fstat(fd, &sb) == -1 ||
-	    (*data = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) ==
-	    MAP_FAILED) {
-		sb.st_size = 0;
-	}
-	close(fd);
-	return sb.st_size;
-}
-
 /* Signal handlers. */
 static void handle_signal(int sig_num)
 {
@@ -339,16 +321,6 @@ int main(int argc, char *argv[])
 	for (i = 0; i < num_commands; i++) {
 		enum client_modes mode = commands[i].mode;
 		char *mode_arg = commands[i].arg;
-		char *data = NULL;
-		size_t data_len = 0;
-		if (mode == INSTALL_M || mode == UPGRADE_M || mode == BASE_M) {
-			if ((data_len = map_file(mode_arg, &data)) == 0) {
-				fprintf(stderr,
-					"%s:  Could not read file '%s': %s\n",
-					argv[0], mode_arg, errno ? strerror(errno) : "");
-				goto cleanup;
-			}
-		}
 		switch (mode) {
 		case INSTALL_M:{
 				if (verbose) {
@@ -357,7 +329,7 @@ int main(int argc, char *argv[])
 					     mode_arg);
 				}
 				result =
-				    semanage_module_install(sh, data, data_len);
+				    semanage_module_install_file(sh, mode_arg);
 				break;
 			}
 		case UPGRADE_M:{
@@ -367,7 +339,7 @@ int main(int argc, char *argv[])
 					     mode_arg);
 				}
 				result =
-				    semanage_module_upgrade(sh, data, data_len);
+				    semanage_module_upgrade_file(sh, mode_arg);
 				break;
 			}
 		case BASE_M:{
@@ -377,8 +349,7 @@ int main(int argc, char *argv[])
 					     mode_arg);
 				}
 				result =
-				    semanage_module_install_base(sh, data,
-								 data_len);
+				    semanage_module_install_base_file(sh, mode_arg);
 				break;
 			}
 		case REMOVE_M:{
@@ -429,9 +400,6 @@ int main(int argc, char *argv[])
 			}
 		}
 		commit += do_commit[mode];
-		if (mode == INSTALL_M || mode == UPGRADE_M || mode == BASE_M) {
-			munmap(data, data_len);
-		}
 		if (result < 0) {
 			fprintf(stderr, "%s:  Failed on %s!\n", argv[0],
 				mode_arg ? : "list");
