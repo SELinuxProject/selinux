@@ -52,6 +52,25 @@ int semanage_module_install(semanage_handle_t * sh,
 	return sh->funcs->install(sh, module_data, data_len);
 }
 
+int semanage_module_install_file(semanage_handle_t * sh,
+				 const char *module_name) {
+
+	if (sh->funcs->install_file == NULL) {
+		ERR(sh,
+		    "No install function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	} else if (!sh->is_in_transaction) {
+		if (semanage_begin_transaction(sh) < 0) {
+			return -1;
+		}
+	}
+	sh->modules_modified = 1;
+	return sh->funcs->install_file(sh, module_name);
+}
+
 int semanage_module_upgrade(semanage_handle_t * sh,
 			    char *module_data, size_t data_len)
 {
@@ -71,6 +90,25 @@ int semanage_module_upgrade(semanage_handle_t * sh,
 	return sh->funcs->upgrade(sh, module_data, data_len);
 }
 
+int semanage_module_upgrade_file(semanage_handle_t * sh,
+				 const char *module_name) {
+
+	if (sh->funcs->upgrade_file == NULL) {
+		ERR(sh,
+		    "No upgrade function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	} else if (!sh->is_in_transaction) {
+		if (semanage_begin_transaction(sh) < 0) {
+			return -1;
+		}
+	}
+	sh->modules_modified = 1;
+	return sh->funcs->upgrade_file(sh, module_name);
+}
+
 int semanage_module_install_base(semanage_handle_t * sh,
 				 char *module_data, size_t data_len)
 {
@@ -88,6 +126,25 @@ int semanage_module_install_base(semanage_handle_t * sh,
 	}
 	sh->modules_modified = 1;
 	return sh->funcs->install_base(sh, module_data, data_len);
+}
+
+int semanage_module_install_base_file(semanage_handle_t * sh,
+				 const char *module_name) {
+
+	if (sh->funcs->install_base_file == NULL) {
+		ERR(sh,
+		    "No install base function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	} else if (!sh->is_in_transaction) {
+		if (semanage_begin_transaction(sh) < 0) {
+			return -1;
+		}
+	}
+	sh->modules_modified = 1;
+	return sh->funcs->install_base_file(sh, module_name);
 }
 
 int semanage_module_remove(semanage_handle_t * sh, char *module_name)

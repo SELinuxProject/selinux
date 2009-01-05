@@ -39,4 +39,8 @@ int semanage_direct_access_check(struct semanage_handle *sh);
 
 int semanage_direct_mls_enabled(struct semanage_handle *sh);
 
+#include <stdio.h>
+#include <unistd.h>
+ssize_t bunzip(FILE *f, char **data);
+
 #endif

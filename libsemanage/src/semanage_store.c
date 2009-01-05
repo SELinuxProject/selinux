@@ -440,6 +440,8 @@ static int semanage_copy_file(const char *src, const char *dst, mode_t mode)
 	char tmp[PATH_MAX];
 	char buf[4192];
 
+	if (link(src,dst) == 0) return 0;
+
 	n = snprintf(tmp, PATH_MAX, "%s.tmp", dst);
 	if (n < 0 || n >= PATH_MAX)
 		return -1;
@@ -1523,16 +1525,30 @@ static int semanage_load_module(semanage_handle_t * sh, const char *filename,
 		ERR(sh, "Could not open module file %s for reading.", filename);
 		goto cleanup;
 	}
+	ssize_t size;
+	char *data = NULL;
+
+	if ((size = bunzip(fp, &data)) > 0) {
+		fclose(fp);
+		fp = fmemopen(data, size, "rb");
+		if (!fp) {
+			ERR(sh, "Out of memory!");
+			goto cleanup;
+		}
+	}
+	rewind(fp);
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
 	sepol_policy_file_set_fp(pf, fp);
 	sepol_policy_file_set_handle(pf, sh->sepolh);
 	if (sepol_module_package_read(*package, pf, 0) == -1) {
 		ERR(sh, "Error while reading from module file %s.", filename);
 		fclose(fp);
+		free(data);
 		goto cleanup;
 	}
 	sepol_policy_file_free(pf);
 	fclose(fp);
+	free(data);
 	return retval;
 
       cleanup:

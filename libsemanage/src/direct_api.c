@@ -50,6 +50,7 @@
 #include "semanage_store.h"
 #include "database_policydb.h"
 #include "policy.h"
+#include <sys/mman.h>
 
 static void semanage_direct_destroy(semanage_handle_t * sh);
 static int semanage_direct_disconnect(semanage_handle_t * sh);
@@ -57,10 +58,13 @@ static int semanage_direct_begintrans(semanage_handle_t * sh);
 static int semanage_direct_commit(semanage_handle_t * sh);
 static int semanage_direct_install(semanage_handle_t * sh, char *data,
 				   size_t data_len);
+static int semanage_direct_install_file(semanage_handle_t * sh, const char *module_name);
 static int semanage_direct_upgrade(semanage_handle_t * sh, char *data,
 				   size_t data_len);
+static int semanage_direct_upgrade_file(semanage_handle_t * sh, const char *module_name);
 static int semanage_direct_install_base(semanage_handle_t * sh, char *base_data,
 					size_t data_len);
+static int semanage_direct_install_base_file(semanage_handle_t * sh, const char *module_name);
 static int semanage_direct_remove(semanage_handle_t * sh, char *module_name);
 static int semanage_direct_list(semanage_handle_t * sh,
 				semanage_module_info_t ** modinfo,
@@ -73,8 +77,11 @@ static struct semanage_policy_table direct_funcs = {
 	.begin_trans = semanage_direct_begintrans,
 	.commit = semanage_direct_commit,
 	.install = semanage_direct_install,
+	.install_file = semanage_direct_install_file,
 	.upgrade = semanage_direct_upgrade,
+	.upgrade_file = semanage_direct_upgrade_file,
 	.install_base = semanage_direct_install_base,
+	.install_base_file = semanage_direct_install_base_file,
 	.remove = semanage_direct_remove,
 	.list = semanage_direct_list
 };
@@ -378,12 +385,157 @@ static int parse_base_headers(semanage_handle_t * sh,
 	return 0;
 }
 
+#include <stdlib.h>
+#include <bzlib.h>
+#include <string.h>
+#include <sys/sendfile.h>
+
+/* bzip() a data to a file, returning the total number of compressed bytes
+ * in the file.  Returns -1 if file could not be compressed. */
+static ssize_t bzip(const char *filename, char *data, size_t num_bytes) {
+	BZFILE* b;
+	size_t  size = 1<<16;
+	int     bzerror;
+	size_t  total = 0;
+	size_t len = 0;
+	FILE *f;
+
+	if ((f = fopen(filename, "wb")) == NULL) {
+		return -1;
+	}
+
+	b = BZ2_bzWriteOpen( &bzerror, f, 9, 0, 0);
+	if (bzerror != BZ_OK) {
+		BZ2_bzWriteClose ( &bzerror, b, 1, 0, 0 );
+		return -1;
+	}
+	
+	while ( num_bytes > total ) {
+		if (num_bytes - total > size) {
+			len = size;
+		} else {
+			len = num_bytes - total;
+		}
+		BZ2_bzWrite ( &bzerror, b, &data[total], len );
+		if (bzerror == BZ_IO_ERROR) { 
+			BZ2_bzWriteClose ( &bzerror, b, 1, 0, 0 );
+			return -1;
+		}
+		total += len;
+	}
+
+	BZ2_bzWriteClose ( &bzerror, b, 0, 0, 0 );
+	fclose(f);
+	if (bzerror == BZ_IO_ERROR) {
+		return -1;
+	}
+	return total;
+}
+
+/* bunzip() a file to '*data', returning the total number of uncompressed bytes
+ * in the file.  Returns -1 if file could not be decompressed. */
+ssize_t bunzip(FILE *f, char **data) {
+	BZFILE* b;
+	size_t  nBuf;
+	char    buf[1<<18];
+	size_t  size = sizeof(buf);
+	int     bzerror;
+	size_t  total=0;
+	
+	b = BZ2_bzReadOpen ( &bzerror, f, 0, 0, NULL, 0 );
+	if ( bzerror != BZ_OK ) {
+		BZ2_bzReadClose ( &bzerror, b );
+		return -1;
+	}
+	
+	char *uncompress = realloc(NULL, size);
+	
+	while ( bzerror == BZ_OK) {
+		nBuf = BZ2_bzRead ( &bzerror, b, buf, sizeof(buf));
+		if (( bzerror == BZ_OK ) || ( bzerror == BZ_STREAM_END )) {
+			if (total + nBuf > size) {
+				size *= 2;
+				uncompress = realloc(uncompress, size);
+			}
+			memcpy(&uncompress[total], buf, nBuf);
+			total += nBuf;
+		}
+	}
+	if ( bzerror != BZ_STREAM_END ) {
+		BZ2_bzReadClose ( &bzerror, b );
+		free(uncompress);
+		return -1;
+	}
+	BZ2_bzReadClose ( &bzerror, b );
+
+	*data = uncompress;
+	return  total;
+}
+
+/* mmap() a file to '*data',
+ *  If the file is bzip compressed map_file will uncompress 
+ * the file into '*data'.
+ * Returns the total number of bytes in memory .
+ * Returns -1 if file could not be opened or mapped. */
+static ssize_t map_file(int fd, char **data, int *compressed)
+{
+	ssize_t size = -1;
+	char *uncompress;
+	if ((size = bunzip(fdopen(fd, "r"), &uncompress)) > 0) {
+		*data = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+		if (*data == MAP_FAILED) {
+			free(uncompress);
+			return -1;
+		} else {
+			memcpy(*data, uncompress, size);
+		}
+		free(uncompress);
+		*compressed = 1;
+	} else {
+		struct stat sb;
+		if (fstat(fd, &sb) == -1 ||
+		    (*data = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) ==
+		    MAP_FAILED) {
+			size = -1;
+		} else {
+			size = sb.st_size;
+		}
+		*compressed = 0;
+	} 
+
+	return size;
+}
+
+static int dupfile( const char *dest, int src_fd) {
+	int dest_fd = -1;
+	int retval = 0;
+	int cnt;
+	char    buf[1<<18];
+
+	if (lseek(src_fd, 0, SEEK_SET)  == -1 ) return -1;
+
+	if ((dest_fd = open(dest, O_WRONLY | O_CREAT | O_TRUNC,
+			   S_IRUSR | S_IWUSR)) == -1) {
+		return -1;
+	}
+
+	while (( retval == 0 ) && 
+	       ( cnt = read(src_fd, buf, sizeof(buf)))> 0 ) {
+		if (write(dest_fd, buf, cnt) < cnt) retval = -1;
+	}
+	close(dest_fd);
+	return retval;
+}
+
 /* Writes a block of data to a file.  Returns 0 on success, -1 on
  * error. */
 static int write_file(semanage_handle_t * sh,
 		      const char *filename, char *data, size_t num_bytes)
 {
 	int out;
+
+	/* Unlink no matter what, incase this file is a hard link, ignore error */
+	unlink(filename);
 	if ((out =
 	     open(filename, O_WRONLY | O_CREAT | O_TRUNC,
 		  S_IRUSR | S_IWUSR)) == -1) {
@@ -499,7 +651,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	sepol_policydb_t *out = NULL;
 
 	/* Declare some variables */
-	int modified, fcontexts_modified, ports_modified,
+	int modified = 0, fcontexts_modified, ports_modified,
 	    seusers_modified, users_extra_modified;
 	dbase_config_t *users = semanage_user_dbase_local(sh);
 	dbase_config_t *users_base = semanage_user_base_dbase_local(sh);
@@ -815,8 +967,10 @@ static int semanage_direct_install(semanage_handle_t * sh,
 					   &filename)) != 0) {
 		goto cleanup;
 	}
-	if (write_file(sh, filename, data, data_len) == -1) {
+	if (bzip(filename, data, data_len) <= 0) {
+		ERR(sh, "Error while writing to %s.", filename);
 		retval = -3;
+		goto cleanup;
 	}
 	retval = 0;
       cleanup:
@@ -826,17 +980,58 @@ static int semanage_direct_install(semanage_handle_t * sh,
 	return retval;
 }
 
-/* Similar to semanage_direct_install(), except that it checks that
- * there already exists a module with the same name and that the
- * module is an older version then the one in 'data'.  Returns 0 on
- * success, -1 if out of memory, -2 if the data does not represent a
- * valid module file, -3 if error while writing file or reading
- * modules directory, -4 if there does not exist an older module or if
- * the previous module is same or newer than 'data'.
- */
-static int semanage_direct_upgrade(semanage_handle_t * sh,
-				   char *data, size_t data_len)
+/* Attempts to link a module to the sandbox's module directory, unlinking any
+ * previous module stored within.  Returns 0 on success, -1 if out of memory, -2 if the
+ * data does not represent a valid module file, -3 if error while
+ * writing file. */
+
+static int semanage_direct_install_file(semanage_handle_t * sh,
+					const char *install_filename)
 {
+
+	int retval = -1;
+	char *data = NULL;
+	size_t data_len = 0;
+	int compressed = 0;
+	int in_fd = -1;
+
+	if ((in_fd = open(install_filename, O_RDONLY)) == -1) {
+		return -1;
+	}
+
+	if ((data_len = map_file(in_fd, &data, &compressed)) == 0) {
+		goto cleanup;
+	}
+		
+	if (compressed) {
+		char *module_name = NULL, *version = NULL, *filename = NULL;
+		if ((retval = parse_module_headers(sh, data, data_len,
+						   &module_name, &version,
+						   &filename)) != 0) {
+			goto cleanup;
+		}
+
+		if (data_len > 0) munmap(data, data_len);
+		data_len = 0;
+		retval = dupfile(filename, in_fd);
+		free(version);
+		free(filename);
+		free(module_name);
+
+	} else {
+		retval = semanage_direct_install(sh, data, data_len);
+	}
+
+      cleanup:
+	close(in_fd);
+	if (data_len > 0) munmap(data, data_len);
+
+	return retval;
+}
+
+
+static int get_direct_upgrade_filename(semanage_handle_t * sh,
+				       char *data, size_t data_len, char **outfilename) {
 	int i, retval, num_modules = 0;
 	char *module_name = NULL, *version = NULL, *filename = NULL;
 	semanage_module_info_t *modinfo = NULL;
@@ -868,14 +1063,9 @@ static int semanage_direct_upgrade(semanage_handle_t * sh,
 	if (retval == -4) {
 		ERR(sh, "There does not already exist a module named %s.",
 		    module_name);
-		goto cleanup;
-	}
-	if (write_file(sh, filename, data, data_len) == -1) {
-		retval = -3;
 	}
       cleanup:
 	free(version);
-	free(filename);
 	free(module_name);
 	for (i = 0; modinfo != NULL && i < num_modules; i++) {
 		semanage_module_info_t *m =
@@ -883,6 +1073,80 @@ static int semanage_direct_upgrade(semanage_handle_t * sh,
 		semanage_module_info_datum_destroy(m);
 	}
 	free(modinfo);
+	if (retval == 0) {
+		*outfilename = filename;
+	} else {
+		free(filename);
+	}
+	return retval;
+}
+
+/* Similar to semanage_direct_install(), except that it checks that
+ * there already exists a module with the same name and that the
+ * module is an older version then the one in 'data'.  Returns 0 on
+ * success, -1 if out of memory, -2 if the data does not represent a
+ * valid module file, -3 if error while writing file or reading
+ * modules directory, -4 if there does not exist an older module or if
+ * the previous module is same or newer than 'data'.
+ */
+static int semanage_direct_upgrade(semanage_handle_t * sh,
+				   char *data, size_t data_len)
+{
+	char *filename = NULL;
+	int retval = get_direct_upgrade_filename(sh,
+						 data, data_len, 
+						 &filename);
+	if (retval == 0) {
+		if (bzip(filename, data, data_len) <= 0) {
+			ERR(sh, "Error while writing to %s.", filename);
+			retval = -3;
+		}
+		free(filename);
+	}
+	return retval;
+}
+
+/* Attempts to link a module to the sandbox's module directory, unlinking any
+ * previous module stored within.  
+ * Returns 0 on success, -1 if out of memory, -2 if the
+ * data does not represent a valid module file, -3 if error while
+ * writing file. */
+
+static int semanage_direct_upgrade_file(semanage_handle_t * sh,
+					const char *module_filename)
+{
+	int retval = -1;
+	char *data = NULL;
+	size_t data_len = 0;
+	int compressed = 0;
+	int in_fd = -1;
+
+	if ((in_fd = open(module_filename, O_RDONLY)) == -1) {
+		return -1;
+	}
+
+	if ((data_len = map_file(in_fd, &data, &compressed)) == 0) {
+		goto cleanup;
+	}
+
+	if (compressed) {
+		char *filename = NULL;
+		retval = get_direct_upgrade_filename(sh,
+					 	     data, data_len, 
+						     &filename);
+		
+		if (retval != 0)  goto cleanup;
+
+		retval = dupfile(filename, in_fd);
+		free(filename);
+	} else {
+		retval = semanage_direct_upgrade(sh, data, data_len);
+	}
+
+      cleanup:
+	close(in_fd);
+	if (data_len > 0) munmap(data, data_len);
+
 	return retval;
 }
 
@@ -903,11 +1167,56 @@ static int semanage_direct_install_base(semanage_handle_t * sh,
 	if ((filename = semanage_path(SEMANAGE_TMP, SEMANAGE_BASE)) == NULL) {
 		goto cleanup;
 	}
-	if (write_file(sh, filename, base_data, data_len) == -1) {
+	if (bzip(filename, base_data, data_len) <= 0) {
+		ERR(sh, "Error while writing to %s.", filename);
 		retval = -3;
+		goto cleanup;
 	}
 	retval = 0;
       cleanup:
+	return retval;
+}
+
+/* Writes a base module into a sandbox, overwriting any previous base
+ * module.  
+ * Returns 0 on success, -1 if out of memory, -2 if the data does not represent
+ * a valid base module file, -3 if error while writing file.
+ */
+static int semanage_direct_install_base_file(semanage_handle_t * sh,
+					     const char *install_filename)
+{
+	int retval = -1;
+	char *data = NULL;
+	size_t data_len = 0;
+	int compressed = 0;
+	int in_fd;
+
+	if ((in_fd = open(install_filename, O_RDONLY)) == -1) {
+		return -1;
+	}
+
+	if ((data_len = map_file(in_fd, &data, &compressed)) == 0) {
+		goto cleanup;
+	}
+		
+	if (compressed) {
+		const char *filename = NULL;
+		if ((retval = parse_base_headers(sh, data, data_len)) != 0) {
+			goto cleanup;
+		}
+		if ((filename = semanage_path(SEMANAGE_TMP, SEMANAGE_BASE)) == NULL) {
+			goto cleanup;
+		}
+
+		retval = dupfile(filename, in_fd);
+	} else {
+		retval = semanage_direct_install_base(sh, data, data_len);
+	}
+
+      cleanup:
+	close(in_fd);
+	if (data_len > 0) munmap(data, data_len);
+
 	return retval;
 }
 
@@ -1005,15 +1314,29 @@ static int semanage_direct_list(semanage_handle_t * sh,
 			 * report it */
 			continue;
 		}
+		ssize_t size;
+		char *data = NULL;
+
+		if ((size = bunzip(fp, &data)) > 0) {
+			fclose(fp);
+			fp = fmemopen(data, size, "rb");
+			if (!fp) {
+				ERR(sh, "Out of memory!");
+				goto cleanup;
+			}
+		}
+		rewind(fp);
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
 		sepol_policy_file_set_fp(pf, fp);
 		if (sepol_module_package_info(pf, &type, &name, &version)) {
 			fclose(fp);
+			free(data);
 			free(name);
 			free(version);
 			continue;
 		}
 		fclose(fp);
+		free(data);
 		if (type == SEPOL_POLICY_MOD) {
 			(*modinfo)[*num_modules].name = name;
 			(*modinfo)[*num_modules].version = version;
