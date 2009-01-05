@@ -291,6 +291,8 @@ def expandCats(cats):
             for i in c.split(","):
                 if i not in newcats:
                     newcats.append(i)
+    if len(newcats) > 25:
+        return cats
     return newcats
 
 def translate(cats):
