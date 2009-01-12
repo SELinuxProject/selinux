@@ -1,3 +1,6 @@
+1.0.15 2009-01-12
+	* fix to return length of role dict for len(roles) from Dan Walsh.
+
 1.0.14 2008-09-12
 	* fix multiple gen_requires block generation from Dan Walsh.
 
