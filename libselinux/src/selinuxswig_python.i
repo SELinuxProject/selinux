@@ -6,6 +6,23 @@
 	#include "selinux/selinux.h"
 %}
 
+%pythoncode %{
+
+import shutil, os, stat
+
+def restorecon(path, recursive=False):
+    """ Restore SELinux context on a given path """
+    mode = os.lstat(path)[stat.ST_MODE]
+    status, context = matchpathcon(path, mode)
+    if status == 0:
+        lsetfilecon(path, context)
+        if recursive:
+            os.path.walk(path, lambda arg, dirname, fnames:
+                             map(restorecon, [os.path.join(dirname, fname)
+                                              for fname in fnames]), None)
+
+%}
+
 /* security_get_boolean_names() typemap */
 %typemap(argout) (char ***names, int *len) {
 	PyObject* list = PyList_New(*$2);
