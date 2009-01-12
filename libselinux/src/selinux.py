@@ -48,6 +48,20 @@ except AttributeError:
 del types
 
 
+import shutil, os, stat
+
+def restorecon(path, recursive=False):
+    """ Restore SELinux context on a given path """
+    mode = os.lstat(path)[stat.ST_MODE]
+    status, context = matchpathcon(path, mode)
+    if status == 0:
+        lsetfilecon(path, context)
+        if recursive:
+            os.path.walk(path, lambda arg, dirname, fnames:
+                             map(restorecon, [os.path.join(dirname, fname)
+                                              for fname in fnames]), None)
+
+
 is_selinux_enabled = _selinux.is_selinux_enabled
 is_selinux_mls_enabled = _selinux.is_selinux_mls_enabled
 getcon = _selinux.getcon
