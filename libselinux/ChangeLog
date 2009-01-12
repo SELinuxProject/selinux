@@ -1,5 +1,8 @@
-2.0.76 2009-01-12
+2.0.77 2009-01-12
 	* add restorecon to python bindings from Dan Walsh.
+
+2.0.76 2009-01-08
+	* Client support for translating raw contexts to colors via setrans.
 
 2.0.75 2008-11-18
 	* Allow shell-style wildcards in x_contexts file.
