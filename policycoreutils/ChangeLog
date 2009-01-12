@@ -1,3 +1,9 @@
+2.0.61 2009-01-12
+	* chcat: cut categories at arbitrary point (25) from Dan Walsh
+	* semodule: use new interfaces in libsemanage for compressed files
+	  from Dan Walsh
+	* audit2allow: string changes for usage
+
 2.0.60 2008-11-12
 	* semanage: use semanage_mls_enabled() from Stephen Smalley.
 
