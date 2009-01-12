@@ -1,3 +1,7 @@
+2.0.31 2009-01-12
+	* Policy module compression (bzip) support from Dan Walsh.
+	* Hard link files between tmp/active/previous from Dan Walsh.
+
 2.0.30 2008-11-12
 	* Add semanage_mls_enabled() interface from Stephen Smalley.
 
