@@ -970,6 +970,11 @@ static int type_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	if (policydb_has_boundary_feature(p)) {
 		uint32_t properties = 0;
 
+		if (p->policy_type != POLICY_KERN
+		    && p->policyvers >= MOD_POLICYDB_VERSION_BOUNDARY_ALIAS) {
+			buf[items++] = cpu_to_le32(typdatum->primary);
+		}
+
 		if (typdatum->primary)
 			properties |= TYPEDATUM_PROPERTY_PRIMARY;
 

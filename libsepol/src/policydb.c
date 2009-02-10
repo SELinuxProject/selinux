@@ -153,6 +153,12 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .ocon_num = OCON_NODE6 + 1,
 	},
 	{
+	 .type = POLICY_BASE,
+	 .version = MOD_POLICYDB_VERSION_BOUNDARY_ALIAS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_NODE6 + 1,
+	},
+	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -185,6 +191,12 @@ static struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_BOUNDARY,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = 0
+	},
+	{
+	 .type = POLICY_MOD,
+	 .version = MOD_POLICYDB_VERSION_BOUNDARY_ALIAS,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = 0
 	},
@@ -1942,13 +1954,19 @@ static int type_read(policydb_t * p
 	uint32_t buf[5];
 	size_t len;
 	int rc, to_read;
+	int pos = 0;
 
 	typdatum = calloc(1, sizeof(type_datum_t));
 	if (!typdatum)
 		return -1;
 
-	if (policydb_has_boundary_feature(p))
-		to_read = 4;
+	if (policydb_has_boundary_feature(p)) {
+		if (p->policy_type != POLICY_KERN
+		    && p->policyvers >= MOD_POLICYDB_VERSION_BOUNDARY_ALIAS)
+			to_read = 5;
+		else
+			to_read = 4;
+	}
 	else if (p->policy_type == POLICY_KERN)
 		to_read = 3;
 	else if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
@@ -1960,13 +1978,23 @@ static int type_read(policydb_t * p
 	if (rc < 0)
 		goto bad;
 
-	len = le32_to_cpu(buf[0]);
-	typdatum->s.value = le32_to_cpu(buf[1]);
+	len = le32_to_cpu(buf[pos]);
+	typdatum->s.value = le32_to_cpu(buf[++pos]);
 	if (policydb_has_boundary_feature(p)) {
-		uint32_t properties = le32_to_cpu(buf[2]);
+		uint32_t properties;
 
-		if (properties & TYPEDATUM_PROPERTY_PRIMARY)
-			typdatum->primary = 1;
+		if (p->policy_type != POLICY_KERN
+		    && p->policyvers >= MOD_POLICYDB_VERSION_BOUNDARY_ALIAS) {
+			typdatum->primary = le32_to_cpu(buf[++pos]);
+			properties = le32_to_cpu(buf[++pos]);
+		}
+		else {
+			properties = le32_to_cpu(buf[++pos]);
+
+			if (properties & TYPEDATUM_PROPERTY_PRIMARY)
+				typdatum->primary = 1;
+		}
+
 		if (properties & TYPEDATUM_PROPERTY_ATTRIBUTE)
 			typdatum->flavor = TYPE_ATTRIB;
 		if (properties & TYPEDATUM_PROPERTY_ALIAS
@@ -1976,13 +2004,13 @@ static int type_read(policydb_t * p
 		    && p->policy_type != POLICY_KERN)
 			typdatum->flags |= TYPE_FLAGS_PERMISSIVE;
 
-		typdatum->bounds = le32_to_cpu(buf[3]);
+		typdatum->bounds = le32_to_cpu(buf[++pos]);
 	} else {
-		typdatum->primary = le32_to_cpu(buf[2]);
+		typdatum->primary = le32_to_cpu(buf[++pos]);
 		if (p->policy_type != POLICY_KERN) {
-			typdatum->flavor = le32_to_cpu(buf[3]);
+			typdatum->flavor = le32_to_cpu(buf[++pos]);
 			if (p->policyvers >= MOD_POLICYDB_VERSION_PERMISSIVE)
-				typdatum->flags = le32_to_cpu(buf[4]);
+				typdatum->flags = le32_to_cpu(buf[++pos]);
 		}
 	}
 

@@ -1015,8 +1015,19 @@ static int add_aliases_to_type(type_datum_t * type)
 				yyerror("could not declare alias here");
 				goto cleanup;
 			}
-		case 0:
+		case 0:	 	break;
 		case 1:{
+				/* ret == 1 means the alias was required and therefore already
+				 * has a value. Set it up as an alias with a different primary. */
+				type_datum_destroy(aliasdatum);
+				free(aliasdatum);
+
+				aliasdatum = hashtab_search(policydbp->symtab[SYM_TYPES].table, id);
+				assert(aliasdatum);
+
+				aliasdatum->primary = type->s.value;
+				aliasdatum->flavor = TYPE_ALIAS;
+
 				break;
 			}
 		default:{

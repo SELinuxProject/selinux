@@ -136,7 +136,7 @@ int declare_symbol(uint32_t symbol_type,
 	}
 	retval = symtab_insert(policydbp, symbol_type, key, datum,
 			       SCOPE_DECL, decl->decl_id, dest_value);
-	if (retval == 1) {
+	if (retval == 1 && dest_value) {
 		symtab_datum_t *s =
 		    (symtab_datum_t *) hashtab_search(policydbp->
 						      symtab[symbol_type].table,
