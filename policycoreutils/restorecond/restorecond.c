@@ -283,6 +283,8 @@ static void read_config(int fd)
 	inotify_rm_watch(fd, master_wd);
 	master_wd =
 	    inotify_add_watch(fd, watch_file_path, IN_MOVED_FROM | IN_MODIFY);
+	if (master_wd == -1)
+		exitApp("Error watching config file.");
 }
 
 /* 
@@ -411,7 +413,14 @@ void watch_list_add(int fd, const char *path)
 
 	if (!ptr)
 		exitApp("Out of Memory");
+
 	ptr->wd = inotify_add_watch(fd, dir, IN_CREATE | IN_MOVED_TO);
+	if (ptr->wd == -1) {
+		free(ptr);
+		syslog(LOG_ERR, "Unable to watch (%s) %s\n",
+		       path, strerror(errno));
+		return;
+	}
 
 	ptr->dir = strdup(dir);
 	if (!ptr->dir)

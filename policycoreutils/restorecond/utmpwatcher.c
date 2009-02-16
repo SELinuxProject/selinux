@@ -57,7 +57,7 @@ unsigned int utmpwatcher_handle(int inotify_fd, int wd)
 	utmp_ptr = NULL;
 	FILE *cfg = fopen(utmp_path, "r");
 	if (!cfg)
-		exitApp("Error reading config file.");
+		exitApp("Error reading utmp file.");
 
 	while (fread(&u, sizeof(struct utmp), 1, cfg) > 0) {
 		if (u.ut_type == USER_PROCESS)
@@ -69,6 +69,9 @@ unsigned int utmpwatcher_handle(int inotify_fd, int wd)
 
 	utmp_wd =
 	    inotify_add_watch(inotify_fd, utmp_path, IN_MOVED_FROM | IN_MODIFY);
+	if (utmp_wd == -1)
+		exitApp("Error watching utmp file.");
+
 	if (prev_utmp_ptr) {
 		changed = strings_list_diff(prev_utmp_ptr, utmp_ptr);
 		strings_list_free(prev_utmp_ptr);
