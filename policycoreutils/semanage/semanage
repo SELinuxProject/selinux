@@ -219,6 +219,7 @@ Object-specific Options (see above):
 					     'seuser=',
 					     'store=',
 					     'range=',
+					     'locallist=',
 					     'level=',
 					     'roles=',
 					     'type=',
