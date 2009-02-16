@@ -359,6 +359,9 @@ int main(int argc, char *argv[])
 					     mode_arg);
 				}
 				result = semanage_module_remove(sh, mode_arg);
+				if ( result == -2 ) { 
+					continue;
+				}
 				break;
 			}
 		case LIST_M:{
