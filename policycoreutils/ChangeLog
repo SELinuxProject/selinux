@@ -1,3 +1,11 @@
+2.0.62 2009-02-19
+	* Add btrfs to fixfiles from Dan Walsh.
+	* Remove restorecond error for matching globs with multiple hard links
+ 	  and fix some error messages from Dan Walsh.
+	* Make removing a non-existant module a warning rather than an error
+	  from Dan Walsh.
+	* Man page fixes from Dan Walsh.
+
 2.0.61 2009-01-12
 	* chcat: cut categories at arbitrary point (25) from Dan Walsh
 	* semodule: use new interfaces in libsemanage for compressed files
