@@ -1,3 +1,7 @@
+2.0.19 2009-02-18
+	* Fix alias field in module format, caused by boundary format change
+	  from Caleb Case.
+
 2.0.18 2008-10-14
 	* Properly escape regex symbols in the lexer from Stephen Smalley.
 
