@@ -1,7 +1,7 @@
 /*
  * restorecond
  *
- * Copyright (C) 2006 Red Hat 
+ * Copyright (C) 2006-2009 Red Hat 
  * see file 'COPYING' for use and warranty information
  *
  * This program is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@ static int terminate = 0;
 static int debug_mode = 0;
 static int verbose_mode = 0;
 
-static void restore(const char *filename);
+static void restore(const char *filename, int exact);
 
 struct watchList {
 	struct watchList *next;
@@ -113,12 +113,13 @@ static int watch_list_find(int wd, const char *file)
 		printf("%d: File=%s\n", wd, file);
 	while (ptr != NULL) {
 		if (ptr->wd == wd) {
-			if (strings_list_find(ptr->files, file) == 0) {
+			int exact=0;
+			if (strings_list_find(ptr->files, file, &exact) == 0) {
 				char *path = NULL;
 				if (asprintf(&path, "%s/%s", ptr->dir, file) <
 				    0)
 					exitApp("Error allocating memory.");
-				restore(path);
+				restore(path, exact);
 				free(path);
 				return 0;
 			}
@@ -155,7 +156,7 @@ static void watch_list_free(int fd)
    Set the file context to the default file context for this system.
    Same as restorecon.
 */
-static void restore(const char *filename)
+static void restore(const char *filename, int exact)
 {
 	int retcontext = 0;
 	security_context_t scontext = NULL;
@@ -181,9 +182,11 @@ static void restore(const char *filename)
 	}
 
 	if (!(st.st_mode & S_IFDIR) && st.st_nlink > 1) {
-		syslog(LOG_ERR,
-		       "Will not restore a file with more than one hard link (%s) %s\n",
-		       filename, strerror(errno));
+		if (exact) { 
+			syslog(LOG_ERR,
+			       "Will not restore a file with more than one hard link (%s) %s\n",
+			       filename, strerror(errno));
+		}
 		close(fd);
 		return;
 	}
@@ -398,7 +401,7 @@ void watch_list_add(int fd, const char *path)
 	char *file = basename(path);
 	ptr = firstDir;
 
-	restore(path);
+	restore(path, 1);
 
 	while (ptr != NULL) {
 		if (strcmp(dir, ptr->dir) == 0) {

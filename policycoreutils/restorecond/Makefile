@@ -20,7 +20,7 @@ install: all
 	install -m 755 restorecond $(SBINDIR)
 	install -m 644 restorecond.8 $(MANDIR)/man8
 	-mkdir -p $(INITDIR)
-	install -m 644 restorecond.init $(INITDIR)/restorecond
+	install -m 755 restorecond.init $(INITDIR)/restorecond
 	-mkdir -p $(SELINUXDIR)
 	install -m 600 restorecond.conf $(SELINUXDIR)/restorecond.conf
 

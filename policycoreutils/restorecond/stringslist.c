@@ -55,9 +55,10 @@ void strings_list_add(struct stringsList **list, const char *string)
 		*list = newptr;
 }
 
-int strings_list_find(struct stringsList *ptr, const char *string)
+int strings_list_find(struct stringsList *ptr, const char *string, int *exact)
 {
 	while (ptr) {
+		*exact = strcmp(ptr->string, string) == 0;
 		int cmp = fnmatch(ptr->string, string, 0);
 		if (cmp == 0) 
 			return 0;	/* Match found */

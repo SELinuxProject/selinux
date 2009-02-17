@@ -31,7 +31,7 @@ struct stringsList {
 void strings_list_free(struct stringsList *list);
 void strings_list_add(struct stringsList **list, const char *string);
 void strings_list_print(struct stringsList *list);
-int strings_list_find(struct stringsList *list, const char *string);
+int strings_list_find(struct stringsList *list, const char *string, int *exact);
 int strings_list_diff(struct stringsList *from, struct stringsList *to);
 
 #endif
