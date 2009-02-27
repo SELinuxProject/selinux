@@ -225,7 +225,7 @@ static struct discover_class_node * discover_class(const char *s)
 	if (ret < 0)
 		goto err3;
 
-	if (sscanf(buf, "%u", (unsigned int*)&node->value) != 1)
+	if (sscanf(buf, "%hu", &node->value) != 1)
 		goto err3;
 
 	/* load up permission indicies */
