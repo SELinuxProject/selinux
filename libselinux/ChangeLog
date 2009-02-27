@@ -1,3 +1,6 @@
+2.0.78 2009-02-27
+	* Fix incorrect conversion in discover_class code.
+
 2.0.77 2009-01-12
 	* add restorecon to python bindings from Dan Walsh.
 
