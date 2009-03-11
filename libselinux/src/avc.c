@@ -20,6 +20,7 @@ struct avc_entry {
 	security_id_t tsid;
 	security_class_t tclass;
 	struct av_decision avd;
+	security_id_t	create_sid;
 	int used;		/* used recently */
 };
 
@@ -340,6 +341,15 @@ static inline struct avc_node *avc_reclaim_node(void)
 	return cur;
 }
 
+static inline void avc_clear_avc_entry(struct avc_entry *ae)
+{
+	ae->ssid = ae->tsid = ae->create_sid = NULL;
+	ae->tclass = 0;
+	ae->avd.allowed = ae->avd.decided = 0;
+	ae->avd.auditallow = ae->avd.auditdeny = 0;
+	ae->used = 0;
+}
+
 static inline struct avc_node *avc_claim_node(security_id_t ssid,
 					      security_id_t tsid,
 					      security_class_t tclass)
@@ -361,6 +371,7 @@ static inline struct avc_node *avc_claim_node(security_id_t ssid,
 	}
 
 	hvalue = avc_hash(ssid, tsid, tclass);
+	avc_clear_avc_entry(&new->ae);
 	new->ae.used = 1;
 	new->ae.ssid = ssid;
 	new->ae.tsid = tsid;
@@ -498,8 +509,8 @@ static int avc_insert(security_id_t ssid, security_id_t tsid,
  * avc_remove - Remove AVC and sidtab entries for SID.
  * @sid: security identifier to be removed
  *
- * Remove all AVC entries containing @sid as source
- * or target, and remove @sid from the SID table.
+ * Remove all AVC entries containing @sid as source, target, or
+ * create_sid, and remove @sid from the SID table.
  * Free the memory allocated for the structure corresponding
  * to @sid.  After this function has been called, @sid must
  * not be used until another call to avc_context_to_sid() has
@@ -514,19 +525,15 @@ static void avc_remove(security_id_t sid)
 		cur = avc_cache.slots[i];
 		prev = NULL;
 		while (cur) {
-			if (sid == cur->ae.ssid || sid == cur->ae.tsid) {
+			if (sid == cur->ae.ssid || sid == cur->ae.tsid ||
+			    sid == cur->ae.create_sid) {
 				if (prev)
 					prev->next = cur->next;
 				else
 					avc_cache.slots[i] = cur->next;
 				tmp = cur;
 				cur = cur->next;
-				tmp->ae.ssid = tmp->ae.tsid = NULL;
-				tmp->ae.tclass = 0;
-				tmp->ae.avd.allowed = tmp->ae.avd.decided = 0;
-				tmp->ae.avd.auditallow = tmp->ae.avd.auditdeny =
-				    0;
-				tmp->ae.used = 0;
+				avc_clear_avc_entry(&tmp->ae);
 				tmp->next = avc_node_freelist;
 				avc_node_freelist = tmp;
 				avc_cache.active_nodes--;
@@ -570,11 +577,7 @@ int avc_reset(void)
 		while (node) {
 			tmp = node;
 			node = node->next;
-			tmp->ae.ssid = tmp->ae.tsid = NULL;
-			tmp->ae.tclass = 0;
-			tmp->ae.avd.allowed = tmp->ae.avd.decided = 0;
-			tmp->ae.avd.auditallow = tmp->ae.avd.auditdeny = 0;
-			tmp->ae.used = 0;
+			avc_clear_avc_entry(&tmp->ae);
 			tmp->next = avc_node_freelist;
 			avc_node_freelist = tmp;
 			avc_cache.active_nodes--;
@@ -896,23 +899,55 @@ int avc_compute_create(security_id_t ssid,  security_id_t tsid,
 		       security_class_t tclass, security_id_t *newsid)
 {
 	int rc;
+	struct avc_entry_ref aeref;
+	struct avc_entry entry;
+	security_context_t ctx;
+
 	*newsid = NULL;
+	avc_entry_ref_init(&aeref);
+
 	avc_get_lock(avc_lock);
-	if (ssid->refcnt > 0 && tsid->refcnt > 0) {
-		security_context_t ctx = NULL;
+	if (ssid->refcnt <= 0 || tsid->refcnt <= 0) {
+		errno = EINVAL;	/* bad reference count */
+		rc = -1;
+		goto out;
+	}
+
+	/* check for a cached entry */
+	rc = avc_lookup(ssid, tsid, tclass, 0, &aeref);
+	if (rc) {
+		/* need to make a cache entry for this tuple */
+		rc = security_compute_av_raw(ssid->ctx, tsid->ctx,
+					     tclass, 0, &entry.avd);
+		if (rc)
+			goto out;
+		rc = avc_insert(ssid, tsid, tclass, &entry, &aeref);
+		if (rc)
+			goto out;
+	}
+
+	/* check for a saved compute_create value */
+	if (!aeref.ae->create_sid) {
+		/* need to query the kernel policy */
 		rc = security_compute_create_raw(ssid->ctx, tsid->ctx, tclass,
 						 &ctx);
 		if (rc)
 			goto out;
 		rc = sidtab_context_to_sid(&avc_sidtab, ctx, newsid);
-		if (!rc)
-			(*newsid)->refcnt++;
 		freecon(ctx);
+		if (rc)
+			goto out;
+
+		aeref.ae->create_sid = *newsid;
 	} else {
-		errno = EINVAL;	/* bad reference count */
-		rc = -1;
+		/* found saved value */
+		*newsid = aeref.ae->create_sid;
 	}
+
+	rc = 0;
 out:
+	if (*newsid)
+		(*newsid)->refcnt++;
 	avc_release_lock(avc_lock);
 	return rc;
 }
