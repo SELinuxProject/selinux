@@ -812,7 +812,7 @@ int avc_has_perm_noaudit(security_id_t ssid,
 	access_vector_t denied;
 	struct avc_entry_ref ref;
 
-	if (!avc_using_threads) {
+	if (!avc_using_threads && !avc_app_main_loop) {
 		(void)avc_netlink_check_nb();
 	}
 

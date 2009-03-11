@@ -427,6 +427,29 @@ void avc_av_stats(void);
  */
 void avc_sid_stats(void);
 
+/**
+ * avc_netlink_acquire_fd - Acquire netlink socket fd.
+ *
+ * Allows the application to manage messages from the netlink socket in
+ * its own main loop.
+ */
+int avc_netlink_acquire_fd(void);
+
+/**
+ * avc_netlink_release_fd - Release netlink socket fd.
+ *
+ * Returns ownership of the netlink socket to the library.
+ */
+void avc_netlink_release_fd(void);
+
+/**
+ * avc_netlink_check_nb - Check netlink socket for new messages.
+ *
+ * Called by the application when using avc_netlink_acquire_fd() to
+ * process kernel netlink events.
+ */
+int avc_netlink_check_nb(void);
+
 #ifdef __cplusplus
 }
 #endif

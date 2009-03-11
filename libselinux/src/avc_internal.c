@@ -34,6 +34,7 @@ void (*avc_func_log) (const char *, ...) = NULL;
 void (*avc_func_audit) (void *, security_class_t, char *, size_t) = NULL;
 
 int avc_using_threads = 0;
+int avc_app_main_loop = 0;
 void *(*avc_func_create_thread) (void (*)(void)) = NULL;
 void (*avc_func_stop_thread) (void *) = NULL;
 
@@ -249,4 +250,16 @@ void avc_netlink_loop(void)
 	avc_log(SELINUX_ERROR,
 		"%s:  netlink thread: errors encountered, terminating\n",
 		avc_prefix);
+}
+
+int avc_netlink_acquire_fd(void)
+{
+    avc_app_main_loop = 1;
+
+    return fd;
+}
+
+void avc_netlink_release_fd(void)
+{
+    avc_app_main_loop = 0;
 }
