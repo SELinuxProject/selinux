@@ -35,6 +35,7 @@ extern void (*avc_func_log) (const char *, ...)hidden;
 extern void (*avc_func_audit) (void *, security_class_t, char *, size_t)hidden;
 
 extern int avc_using_threads hidden;
+extern int avc_app_main_loop hidden;
 extern void *(*avc_func_create_thread) (void (*)(void))hidden;
 extern void (*avc_func_stop_thread) (void *)hidden;
 
@@ -184,7 +185,6 @@ int avc_ss_set_auditdeny(security_id_t ssid, security_id_t tsid,
 /* netlink kernel message code */
 extern int avc_netlink_trouble hidden;
 int avc_netlink_open(int blocking) hidden;
-int avc_netlink_check_nb(void) hidden;
 void avc_netlink_loop(void) hidden;
 void avc_netlink_close(void) hidden;
 

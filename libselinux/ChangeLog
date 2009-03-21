@@ -1,3 +1,10 @@
+2.0.79 2009-03-11
+	* Netlink socket handoff patch from Adam Jackson.
+	* AVC caching of compute_create results by Eric Paris.
+
+2.0.78 2009-02-27
+	* Fix incorrect conversion in discover_class code.
+
 2.0.77 2009-01-12
 	* add restorecon to python bindings from Dan Walsh.
 

@@ -50,6 +50,11 @@
 
 %ignore avc_add_callback;
 
+/* Ignore netlink stuff for now */
+%ignore avc_netlink_acquire_fd;
+%ignore avc_netlink_release_fd;
+%ignore avc_netlink_check_nb;
+
 %include "../include/selinux/selinux.h"
 %include "../include/selinux/avc.h"
 %include "../include/selinux/get_default_type.h"
