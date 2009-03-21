@@ -540,6 +540,7 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	char *id = key, *new_id = NULL;
 	cond_bool_datum_t *booldatum, *base_bool, *new_bool = NULL;
 	link_state_t *state = (link_state_t *) data;
+	scope_datum_t *scope;
 
 	booldatum = (cond_bool_datum_t *) datum;
 
@@ -556,7 +557,6 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		     (cond_bool_datum_t *) malloc(sizeof(*new_bool))) == NULL) {
 			goto cleanup;
 		}
-		new_bool->state = booldatum->state;
 		new_bool->s.value = state->base->p_bools.nprim + 1;
 
 		ret = hashtab_insert(state->base->p_bools.table,
@@ -569,6 +569,14 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		base_bool = new_bool;
 
 	}
+
+	/* Get the scope info for this boolean to see if this is the declaration, 
+ 	 * if so set the state */
+	scope = hashtab_search(state->cur->policy->p_bools_scope.table, id);
+	if (!scope)
+		return SEPOL_ERR;
+	if (scope->scope == SCOPE_DECL)  
+		base_bool->state = booldatum->state;
 
 	state->cur->map[SYM_BOOLS][booldatum->s.value - 1] = base_bool->s.value;
 	return 0;
