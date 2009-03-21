@@ -1,3 +1,6 @@
+2.0.36 2009-03-25
+	* Fix boolean state smashing from Joshua Brindle.
+
 2.0.35 2009-02-19
         * Fix alias field in module format, caused by boundary format change
           from Caleb Case.
