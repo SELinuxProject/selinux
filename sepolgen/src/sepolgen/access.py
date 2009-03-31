@@ -313,7 +313,7 @@ class RoleTypeSet:
 
     def __len__(self):
         """Return the unique number of role allow statements."""
-        return len(self.role_type.keys())
+        return len(self.role_types.keys())
 
     def add(self, role, type):
         if self.role_types.has_key(role):
