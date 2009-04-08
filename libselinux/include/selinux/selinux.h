@@ -153,11 +153,17 @@ __attribute__ ((format(printf, 2, 3)))
 			   char *msgbuf, size_t msgbufsize);
 	/* validate the supplied context, modifying if necessary */
 	int (*func_validate) (security_context_t *ctx);
+	/* netlink callback for setenforce message */
+	int (*func_setenforce) (int enforcing);
+	/* netlink callback for policyload message */
+	int (*func_policyload) (int seqno);
 };
 
 #define SELINUX_CB_LOG		0
 #define SELINUX_CB_AUDIT	1
 #define SELINUX_CB_VALIDATE	2
+#define SELINUX_CB_SETENFORCE	3
+#define SELINUX_CB_POLICYLOAD	4
 
 extern union selinux_callback selinux_get_callback(int type);
 extern void selinux_set_callback(int type, union selinux_callback cb);

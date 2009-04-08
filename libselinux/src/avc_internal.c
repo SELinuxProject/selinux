@@ -19,6 +19,7 @@
 #include <sys/socket.h>
 #include <linux/types.h>
 #include <linux/netlink.h>
+#include "callbacks.h"
 #include "selinux_netlink.h"
 #include "avc_internal.h"
 
@@ -168,6 +169,9 @@ static int avc_netlink_process(char *buf)
 				avc_prefix, rc, errno);
 			return rc;
 		}
+		rc = selinux_netlink_setenforce(msg->val);
+		if (rc < 0)
+			return rc;
 		break;
 	}
 
@@ -183,6 +187,9 @@ static int avc_netlink_process(char *buf)
 				avc_prefix, rc, errno);
 			return rc;
 		}
+		rc = selinux_netlink_policyload(msg->seqno);
+		if (rc < 0)
+			return rc;
 		break;
 	}
 

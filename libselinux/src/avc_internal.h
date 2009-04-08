@@ -184,9 +184,6 @@ int avc_ss_set_auditdeny(security_id_t ssid, security_id_t tsid,
 
 /* netlink kernel message code */
 extern int avc_netlink_trouble hidden;
-int avc_netlink_open(int blocking) hidden;
-void avc_netlink_loop(void) hidden;
-void avc_netlink_close(void) hidden;
 
 hidden_proto(avc_av_stats)
     hidden_proto(avc_cleanup)

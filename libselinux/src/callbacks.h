@@ -21,4 +21,10 @@ extern int
 extern int
 (*selinux_validate)(security_context_t *ctx) hidden;
 
+extern int
+(*selinux_netlink_setenforce) (int enforcing) hidden;
+
+extern int
+(*selinux_netlink_policyload) (int seqno) hidden;
+
 #endif				/* _SELINUX_CALLBACKS_H_ */

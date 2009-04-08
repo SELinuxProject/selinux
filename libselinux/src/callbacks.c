@@ -37,6 +37,18 @@ default_selinux_validate(security_context_t *ctx)
 	return security_check_context(*ctx);
 }
 
+static int
+default_selinux_setenforce(int enforcing __attribute__((unused)))
+{
+	return 0;
+}
+
+static int
+default_selinux_policyload(int seqno __attribute__((unused)))
+{
+	return 0;
+}
+
 /* callback pointers */
 int __attribute__ ((format(printf, 2, 3)))
 (*selinux_log)(int, const char *, ...) =
@@ -49,6 +61,14 @@ int
 int
 (*selinux_validate)(security_context_t *ctx) =
 	default_selinux_validate;
+
+int
+(*selinux_netlink_setenforce) (int enforcing) =
+	default_selinux_setenforce;
+
+int
+(*selinux_netlink_policyload) (int seqno) =
+	default_selinux_policyload;
 
 /* callback setting function */
 void
@@ -63,6 +83,12 @@ selinux_set_callback(int type, union selinux_callback cb)
 		break;
 	case SELINUX_CB_VALIDATE:
 		selinux_validate = cb.func_validate;
+		break;
+	case SELINUX_CB_SETENFORCE:
+		selinux_netlink_setenforce = cb.func_setenforce;
+		break;
+	case SELINUX_CB_POLICYLOAD:
+		selinux_netlink_policyload = cb.func_policyload;
 		break;
 	}
 }
@@ -82,6 +108,12 @@ selinux_get_callback(int type)
 		break;
 	case SELINUX_CB_VALIDATE:
 		cb.func_validate = selinux_validate;
+		break;
+	case SELINUX_CB_SETENFORCE:
+		cb.func_setenforce = selinux_netlink_setenforce;
+		break;
+	case SELINUX_CB_POLICYLOAD:
+		cb.func_policyload = selinux_netlink_policyload;
 		break;
 	default:
 		memset(&cb, 0, sizeof(cb));

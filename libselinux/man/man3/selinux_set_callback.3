@@ -79,6 +79,28 @@ should be set to
 .B EINVAL
 to indicate an invalid context.
 
+.TP
+.B SELINUX_CB_SETENFORCE
+.BI "int (*" func_setenforce ") (int " enforcing ");"
+
+This callback is invoked when the system enforcing state changes.
+The
+.I enforcing
+argument indicates the new value and is set to
+.I 1
+for enforcing mode, and
+.I 0
+for permissive mode.
+
+.TP
+.B SELINUX_CB_POLICYLOAD
+.BI "int (*" func_policyload ") (int " seqno ");"
+
+This callback is invoked when the system security policy is reloaded.
+The
+.I seqno
+argument is the current sequential number of the policy generation in the system.
+
 .SH "RETURN VALUE"
 None.
 
@@ -91,5 +113,6 @@ Eamon Walsh <ewalsh@tycho.nsa.gov>
 .SH "SEE ALSO"
 .BR selabel_open (3),
 .BR avc_init (3),
+.BR avc_netlink_open(3),
 .BR selinux (8)
 

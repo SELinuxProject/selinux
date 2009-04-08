@@ -428,6 +428,21 @@ void avc_av_stats(void);
 void avc_sid_stats(void);
 
 /**
+ * avc_netlink_open - Create a netlink socket and connect to the kernel.
+ */
+int avc_netlink_open(int blocking);
+
+/**
+ * avc_netlink_loop - Wait for netlink messages from the kernel
+ */
+void avc_netlink_loop(void);
+
+/**
+ * avc_netlink_close - Close the netlink socket
+ */
+void avc_netlink_close(void);
+
+/**
  * avc_netlink_acquire_fd - Acquire netlink socket fd.
  *
  * Allows the application to manage messages from the netlink socket in
