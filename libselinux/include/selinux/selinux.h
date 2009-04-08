@@ -130,7 +130,11 @@ struct av_decision {
 	access_vector_t auditallow;
 	access_vector_t auditdeny;
 	unsigned int seqno;
+	unsigned int flags;
 };
+
+/* Definitions of av_decision.flags */
+#define SELINUX_AVD_FLAGS_PERMISSIVE	0x0001
 
 /* Structure for passing options, used by AVC and label subsystems */
 struct selinux_opt {
@@ -185,6 +189,17 @@ extern int security_compute_av_raw(security_context_t scon,
 				   security_class_t tclass,
 				   access_vector_t requested,
 				   struct av_decision *avd);
+
+extern int security_compute_av_flags(security_context_t scon,
+				     security_context_t tcon,
+				     security_class_t tclass,
+				     access_vector_t requested,
+				     struct av_decision *avd);
+extern int security_compute_av_flags_raw(security_context_t scon,
+					 security_context_t tcon,
+					 security_class_t tclass,
+					 access_vector_t requested,
+					 struct av_decision *avd);
 
 /* Compute a labeling decision and set *newcon to refer to it.
    Caller must free via freecon. */

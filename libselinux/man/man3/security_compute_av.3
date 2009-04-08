@@ -1,6 +1,6 @@
 .TH "security_compute_av" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
 .SH "NAME"
-security_compute_av, security_compute_create, security_compute_relabel,
+security_compute_av, security_compute_av_flags, security_compute_create, security_compute_relabel,
 security_compute_member, security_compute_user, security_get_initial_context \- query
 the SELinux policy database in the kernel.
 
@@ -10,6 +10,8 @@ the SELinux policy database in the kernel.
 .B #include <selinux/flask.h>
 .sp
 .BI "int security_compute_av(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.sp
+.BI "int security_compute_av_flags(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
 .BI "int security_compute_create(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
 .sp
@@ -34,7 +36,19 @@ via class
 .B tclass
 with the
 .B requested
-access vector. See the cron source for a usage example.
+access vector.  The decision is returned in
+.BR avd .
+
+.B security_compute_av_flags
+is identical to
+.B security_compute_av
+but additionally sets the
+.B flags
+field of
+.BR avd .
+Currently one flag is supported:
+.BR SELINUX_AVD_FLAGS_PERMISSIVE ,
+which indicates the decision is computed on a permissive domain.
 
 .B security_compute_create
 is used to compute a context to use for labeling a new object in a particular

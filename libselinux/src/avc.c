@@ -849,9 +849,9 @@ int avc_has_perm_noaudit(security_id_t ssid,
 				rc = -1;
 				goto out;
 			}
-			rc = security_compute_av_raw(ssid->ctx, tsid->ctx,
-						     tclass, requested,
-						     &entry.avd);
+			rc = security_compute_av_flags_raw(ssid->ctx, tsid->ctx,
+							   tclass, requested,
+							   &entry.avd);
 			if (rc)
 				goto out;
 			rc = avc_insert(ssid, tsid, tclass, &entry, aeref);
@@ -867,11 +867,13 @@ int avc_has_perm_noaudit(security_id_t ssid,
 	denied = requested & ~(ae->avd.allowed);
 
 	if (!requested || denied) {
-		if (avc_enforcing) {
+		if (!avc_enforcing ||
+		    (ae->avd.flags & SELINUX_AVD_FLAGS_PERMISSIVE))
+			ae->avd.allowed |= requested;
+		else {
 			errno = EACCES;
 			rc = -1;
-		} else
-			ae->avd.allowed |= requested;
+		}
 	}
 
       out:
@@ -885,8 +887,10 @@ int avc_has_perm(security_id_t ssid, security_id_t tsid,
 		 security_class_t tclass, access_vector_t requested,
 		 struct avc_entry_ref *aeref, void *auditdata)
 {
-	struct av_decision avd = { 0, 0, 0, 0, 0 };
+	struct av_decision avd;
 	int errsave, rc;
+
+	memset(&avd, 0, sizeof(avd));
 
 	rc = avc_has_perm_noaudit(ssid, tsid, tclass, requested, aeref, &avd);
 	errsave = errno;
@@ -917,8 +921,8 @@ int avc_compute_create(security_id_t ssid,  security_id_t tsid,
 	rc = avc_lookup(ssid, tsid, tclass, 0, &aeref);
 	if (rc) {
 		/* need to make a cache entry for this tuple */
-		rc = security_compute_av_raw(ssid->ctx, tsid->ctx,
-					     tclass, 0, &entry.avd);
+		rc = security_compute_av_flags_raw(ssid->ctx, tsid->ctx,
+						   tclass, 0, &entry.avd);
 		if (rc)
 			goto out;
 		rc = avc_insert(ssid, tsid, tclass, &entry, &aeref);
