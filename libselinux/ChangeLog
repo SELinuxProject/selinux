@@ -1,3 +1,8 @@
+2.0.80 2009-04-07
+	* deny_unknown wrapper function from KaiGai Kohei.
+	* security_compute_av_flags API from KaiGai Kohei.
+	* Netlink socket management and callbacks from KaiGai Kohei.
+
 2.0.79 2009-03-11
 	* Netlink socket handoff patch from Adam Jackson.
 	* AVC caching of compute_create results by Eric Paris.
