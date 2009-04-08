@@ -316,6 +316,9 @@ extern int security_getenforce(void);
 /* Set the enforce flag value. */
 extern int security_setenforce(int value);
 
+/* Get the behavior for undefined classes/permissions */
+extern int security_deny_unknown(void);
+
 /* Disable SELinux at runtime (must be done prior to initial policy load). */
 extern int security_disable(void);
 
