@@ -464,10 +464,10 @@ Object-specific Options (see above):
                       else:
                              fd = open(input, 'r')
                       trans = seobject.semanageRecords(store)
-                      trans.begin()
+                      trans.start()
                       for l in fd.readlines():
                              process_args(mkargv(l))
-                      trans.commit()
+                      trans.finish()
                else:
                       process_args(sys.argv[1:])
 			

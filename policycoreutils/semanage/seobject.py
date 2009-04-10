@@ -281,14 +281,19 @@ class semanageRecords:
                global handle
                       
                if handle != None:
-                      self.transaction = True
                       self.sh = handle
                else:
                       self.sh=get_handle(store)
-                      self.transaction = False
+               self.transaction = False
 
         def deleteall(self):
                raise ValueError(_("Not yet implemented"))
+
+        def start(self):
+               if self.transaction:
+                      raise ValueError(_("Semanage transaction already in progress"))
+               self.begin()
+               self.transaction = True
 
         def begin(self):
                if self.transaction:
@@ -302,6 +307,12 @@ class semanageRecords:
                rc = semanage_commit(self.sh) 
                if rc < 0:
                       raise ValueError(_("Could not commit semanage transaction"))
+
+        def finish(self):
+               if not self.transaction:
+                      raise ValueError(_("Semanage transaction not in progress"))
+               self.transaction = False
+               self.commit()
 
 class permissiveRecords(semanageRecords):
 	def __init__(self, store):
