@@ -101,6 +101,11 @@ int main(int argc, char **argv)
 	for (i = optind; i < argc; i++) {
 		int mode = 0;
 		struct stat buf;
+		int len = strlen(argv[i]);
+		if (len > 1  && argv[i][len - 1 ] == '/') {
+			argv[i][len - 1 ] = '\0';
+		}
+
 		if (lstat(argv[i], &buf) == 0)
 			mode = buf.st_mode;
 
