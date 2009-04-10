@@ -339,6 +339,7 @@ class permissiveRecords(semanageRecords):
 
 
 	def add(self, type):
+               import glob
                name = "permissive_%s" % type
                dirname = "/var/lib/selinux"
                os.chdir(dirname)
@@ -362,16 +363,19 @@ permissive %s;
                fd.close()
 
                rc = semanage_module_install(self.sh, data, len(data));
-               if rc < 0:
-			raise ValueError(_("Could not set permissive domain %s (module installation failed)") % name)
-
-               self.commit()
+               if rc >= 0:
+                      self.commit()
 
                for root, dirs, files in os.walk("tmp", topdown=False):
                       for name in files:
                              os.remove(os.path.join(root, name))
                       for name in dirs:
                              os.rmdir(os.path.join(root, name))
+               os.removedirs("tmp")
+               for i in glob.glob("permissive_%s.*" % type):
+                      os.remove(i)
+               if rc < 0:
+			raise ValueError(_("Could not set permissive domain %s (module installation failed)") % name)
 
 	def delete(self, name):
                for n in name.split():
