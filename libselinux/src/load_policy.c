@@ -348,7 +348,9 @@ int selinux_init_load_policy(int *enforce)
 		fclose(cfg);
 		free(buf);
 	}
+#ifndef MNT_DETACH
 #define MNT_DETACH 2
+#endif
 	if (rc == 0)
 		umount2("/proc", MNT_DETACH);
 
