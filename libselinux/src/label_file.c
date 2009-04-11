@@ -299,6 +299,8 @@ static int process_line(struct selabel_handle *rec,
 		COMPAT_LOG(SELINUX_WARNING,
 			    "%s:  line %d is missing fields, skipping\n", path,
 			    lineno);
+		if (items == 1)
+			free(regex);
 		return 0;
 	} else if (items == 2) {
 		/* The type field is optional. */
