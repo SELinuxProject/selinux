@@ -1,3 +1,9 @@
+2.0.63 2009-05-15
+	* Fix transaction checking from Dan Walsh.
+	* Make fixfiles -R (for rpm) recursive.
+	* Make semanage permissive clean up after itself from Dan Walsh.
+	* add /root/.ssh/* to restorecond.conf
+
 2.0.62 2009-02-19
 	* Add btrfs to fixfiles from Dan Walsh.
 	* Remove restorecond error for matching globs with multiple hard links
