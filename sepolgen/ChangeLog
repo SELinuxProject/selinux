@@ -1,3 +1,6 @@
+1.0.17 2009-05-15
+	* Fix typo in RoleTypeSet from Marshall Miller.
+
 1.0.16 2009-02-18
 	* Convert sepolgen to using hashlib instead of the deprecated md5
 	  module from Dan Walsh.
