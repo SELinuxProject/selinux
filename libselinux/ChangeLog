@@ -1,3 +1,9 @@
+2.0.81 2009-05-15
+	* Trim / from the end of input paths to matchpathcon from Dan Walsh.
+	* Fix leak in process_line in label_file.c from Hiroshi Shinji.
+	* Move matchpathcon to /sbin, add matchpathcon to clean target from Dan Walsh.
+	* getdefaultcon to print just the correct match and add verbose option from Dan Walsh.
+
 2.0.80 2009-04-07
 	* deny_unknown wrapper function from KaiGai Kohei.
 	* security_compute_av_flags API from KaiGai Kohei.
