@@ -6,6 +6,10 @@ INCLUDEDIR ?= $(PREFIX)/include
 PYLIBVER ?= $(shell python -c 'import sys;print "python%d.%d" % sys.version_info[0:2]')
 PYINC ?= /usr/include/${PYLIBVER}
 PYLIBDIR ?= $(LIBDIR)/${PYLIBVER}
+RUBYLIBVER ?= $(shell ruby -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
+RUBYPLATFORM ?= $(shell ruby -e 'print RUBY_PLATFORM')
+RUBYINC ?= $(LIBDIR)/ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
+RUBYINSTALL ?= $(LIBDIR)/ruby/site_ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 
 DEFAULT_SEMANAGE_CONF_LOCATION=$(DESTDIR)/etc/selinux/semanage.conf
 
@@ -24,30 +28,48 @@ LIBVERSION = 1
 LIBA=libsemanage.a
 TARGET=libsemanage.so
 SWIGIF= semanageswig_python.i
+SWIGRUBYIF= semanageswig_ruby.i
 SWIGCOUT= semanageswig_wrap.c
+SWIGRUBYCOUT= semanageswig_ruby_wrap.c
 SWIGLOBJ:= $(patsubst %.c,%.lo,$(SWIGCOUT)) 
+SWIGRUBYLOBJ:= $(patsubst %.c,%.lo,$(SWIGRUBYCOUT)) 
 SWIGSO=_semanage.so
 SWIGFILES=$(SWIGSO) semanage.py 
+SWIGRUBYSO=_rubysemanage.so
 LIBSO=$(TARGET).$(LIBVERSION)
-OBJS= $(patsubst %.c,%.o,$(filter-out $(SWIGCOUT),$(wildcard *.c))) conf-scan.o conf-parse.o
-LOBJS= $(patsubst %.c,%.lo,$(filter-out $(SWIGCOUT),$(wildcard *.c))) conf-scan.lo conf-parse.lo
+
+SWIGGEN=$(SWIGCOUT) $(SWIGRUBYCOUT)
+SRCS= $(filter-out $(SWIGGEN),$(wildcard *.c))
+
+OBJS= $(patsubst %.c,%.o,$(SRCS)) conf-scan.o conf-parse.o
+LOBJS= $(patsubst %.c,%.lo,$(SRCS)) conf-scan.lo conf-parse.lo
 CFLAGS ?= -Wall -W -Wundef -Wshadow -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
 
 override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE 
 
 SWIG = swig -Wall -python -o $(SWIGCOUT) -outdir ./
 
-GENERATED=$(SWIGCOUT) $(wildcard conf-*.[ch])
+SWIGRUBY = swig -Wall -ruby -o $(SWIGRUBYCOUT) -outdir ./
+
+GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT) $(wildcard conf-*.[ch])
 
 all: $(LIBA) $(LIBSO) 
 
 pywrap: all $(SWIGLOBJ) $(SWIGSO) 
 
+rubywrap: all $(SWIGRUBYSO)
+
 $(SWIGLOBJ): $(SWIGCOUT)
 	$(CC) $(filter-out -Werror, $(CFLAGS)) -I$(PYINC) -fPIC -DSHARED -c -o $@ $<
 
+$(SWIGRUBYLOBJ): $(SWIGRUBYCOUT)
+	$(CC) $(filter-out -Werror,$(CFLAGS)) -I$(RUBYINC) -fPIC -DSHARED -c -o $@ $<
+
 $(SWIGSO): $(SWIGLOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $< -L. -lsemanage -l$(PYLIBVER) -L$(LIBDIR) -Wl,-soname,$@,-z,defs
+
+$(SWIGRUBYSO): $(SWIGRUBYLOBJ)
+	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -L. -lsemanage -L$(LIBDIR) -Wl,-soname,$@
 
 $(LIBA): $(OBJS)
 	$(AR) rcs $@ $^
@@ -86,6 +108,9 @@ conf-scan.lo:  conf-scan.c
 $(SWIGCOUT): $(SWIGIF)
 	$(SWIG) $^
 
+$(SWIGRUBYCOUT): $(SWIGRUBYIF)
+	$(SWIGRUBY) $^
+
 swigify: $(SWIGIF)
 	$(SWIG) $^
 
@@ -101,6 +126,10 @@ install-pywrap: pywrap
 	test -d $(PYLIBDIR)/site-packages || install -m 755 -d $(PYLIBDIR)/site-packages
 	install -m 755 $(SWIGFILES) $(PYLIBDIR)/site-packages
 
+install-rubywrap: rubywrap
+	test -d $(RUBYINSTALL) || install -m 755 -d $(RUBYINSTALL) 
+	install -m 755 $(SWIGRUBYSO) $(RUBYINSTALL)/semanage.so
+
 relabel:
 	/sbin/restorecon $(SHLIBDIR)/$(LIBSO)
 
@@ -113,4 +142,4 @@ distclean: clean
 indent:
 	../../scripts/Lindent $(filter-out $(GENERATED),$(wildcard *.[ch]))
 
-.PHONY: all clean pywrap swigify install install-pywrap distclean
+.PHONY: all clean pywrap rubywrap swigify install install-pywrap install-rubywrap distclean
