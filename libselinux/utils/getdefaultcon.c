@@ -22,14 +22,18 @@ int main(int argc, char **argv)
 	security_context_t usercon = NULL, cur_context = NULL;
 	char *user = NULL, *level = NULL, *role=NULL, *seuser=NULL, *dlevel=NULL;
 	int ret, opt;
+	int verbose = 0;
 
-	while ((opt = getopt(argc, argv, "l:r:")) > 0) {
+	while ((opt = getopt(argc, argv, "l:r:v")) > 0) {
 		switch (opt) {
 		case 'l':
 			level = strdup(optarg);
 			break;
 		case 'r':
 			role = strdup(optarg);
+			break;
+		case 'v':
+			verbose = 1;
 			break;
 		default:
 			usage(argv[0], "invalid option", 1);
@@ -66,9 +70,13 @@ int main(int argc, char **argv)
 	}
 	if (ret < 0)
 		perror(argv[0]);
-	else
-		printf("%s: %s from %s %s %s %s -> %s\n", argv[0], user, cur_context, seuser, role, level, usercon);
-
+	else {
+		if (verbose) {
+			printf("%s: %s from %s %s %s %s -> %s\n", argv[0], user, cur_context, seuser, role, level, usercon);
+		} else {
+			printf("%s", usercon);
+		}
+	}
 
 	free(role);
 	free(seuser);
@@ -76,5 +84,5 @@ int main(int argc, char **argv)
 	free(dlevel);
 	free(usercon);
 
-	return 0;
+	return ret >= 0;
 }
