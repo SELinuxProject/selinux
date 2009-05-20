@@ -369,7 +369,7 @@ int selinux_init_load_policy(int *enforce)
 	 * Check for the existence of SELinux via selinuxfs, and 
 	 * mount it if present for use in the calls below.  
 	 */
-	if (mount("none", SELINUXMNT, "selinuxfs", 0, 0) < 0) {
+	if (mount("none", SELINUXMNT, "selinuxfs", 0, 0) < 0 && errno != EBUSY) {
 		if (errno == ENODEV) {
 			/*
 			 * SELinux was disabled in the kernel, either
@@ -416,8 +416,11 @@ int selinux_init_load_policy(int *enforce)
 		goto noload;
 	if (orig_enforce != *enforce) {
 		rc = security_setenforce(*enforce);
-		if (rc < 0)
-			goto noload;
+		if (rc < 0) {
+			fprintf(stderr, "SELinux:  Unable to switch to %s mode:  %s\n", (*enforce ? "enforcing" : "permissive"), strerror(errno));
+			if (*enforce)
+				goto noload;
+		}
 	}
 
 	/* Load the policy. */
