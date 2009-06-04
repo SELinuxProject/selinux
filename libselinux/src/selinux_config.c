@@ -40,7 +40,10 @@
 #define SECURETTY_TYPES   18
 #define X_CONTEXTS        19
 #define COLORS            20
-#define NEL               21
+#define VIRTUAL_DOMAIN    21
+#define VIRTUAL_IMAGE     22
+#define FILE_CONTEXT_SUBS 23
+#define NEL               24
 
 /* New layout is relative to SELINUXDIR/policytype. */
 static char *file_paths[NEL];
@@ -391,3 +394,24 @@ const char *selinux_x_context_path()
 }
 
 hidden_def(selinux_x_context_path)
+
+const char *selinux_virtual_domain_context_path()
+{
+	return get_path(VIRTUAL_DOMAIN);
+}
+
+hidden_def(selinux_virtual_domain_context_path)
+
+const char *selinux_virtual_image_context_path()
+{
+	return get_path(VIRTUAL_IMAGE);
+}
+
+hidden_def(selinux_virtual_image_context_path)
+
+const char * selinux_file_context_subs_path(void) {
+	return get_path(FILE_CONTEXT_SUBS);
+}
+
+hidden_def(selinux_file_context_subs_path)
+

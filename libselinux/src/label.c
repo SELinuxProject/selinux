@@ -5,10 +5,12 @@
  */
 
 #include <sys/types.h>
+#include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <selinux/selinux.h>
 #include "callbacks.h"
 #include "label_internal.h"
 
@@ -22,6 +24,96 @@ static selabel_initfunc initfuncs[] = {
 	&selabel_media_init,
 	&selabel_x_init
 };
+
+typedef struct selabel_sub {
+	char *src;
+	int slen;
+	char *dst;
+	struct selabel_sub *next;
+} SELABELSUB;
+
+SELABELSUB *selabelsublist = NULL;
+
+static void selabel_subs_fini(void)
+{
+	SELABELSUB *ptr = selabelsublist;
+	SELABELSUB *next = NULL;
+	while (ptr) {
+		next = ptr->next;
+		free(ptr->src);
+		free(ptr->dst);
+		free(ptr);
+		ptr = next;
+	}
+	selabelsublist = NULL;
+}
+
+static char *selabel_sub(const char *src) 
+{
+	char *dst = NULL;
+	SELABELSUB *ptr = selabelsublist;
+	while (ptr) {
+		if (strncmp(src, ptr->src, ptr->slen) == 0 ) {
+			if (src[ptr->slen] == '/' || 
+			    src[ptr->slen] == 0) {
+				asprintf(&dst, "%s%s", ptr->dst, &src[ptr->slen]);
+				return dst;
+			}
+		}
+		ptr = ptr->next;
+	}
+	return NULL;
+}
+
+static int selabel_subs_init(void)
+{
+	char buf[1024];
+	FILE *cfg = fopen(selinux_file_context_subs_path(), "r");
+	if (cfg) {
+		while (fgets_unlocked(buf, sizeof(buf) - 1, cfg)) {
+			char *ptr = NULL;
+			char *src = buf;
+			char *dst = NULL;
+
+			while (*src && isspace(*src))
+				src++;
+			if (src[0] == '#') continue;
+			ptr = src;
+			while (*ptr && ! isspace(*ptr))
+				ptr++;
+			*ptr++ = 0;
+			if (! *src) continue;
+
+			dst = ptr;
+			while (*dst && isspace(*dst))
+				dst++;
+			ptr=dst;
+			while (*ptr && ! isspace(*ptr))
+				ptr++;
+			*ptr=0;
+			if (! *dst) continue;
+
+			SELABELSUB *sub = (SELABELSUB*) malloc(sizeof(SELABELSUB));
+			if (! sub) return -1;
+			sub->src=strdup(src);
+			if (! sub->src) {
+				free(sub);
+				return -1;
+			}
+			sub->dst=strdup(dst);
+			if (! sub->dst) {
+				free(sub->src);
+				free(sub);
+				return -1;
+			}
+			sub->slen = strlen(src);
+			sub->next = selabelsublist;
+			selabelsublist = sub;
+		}
+		fclose(cfg);
+	}
+	return 0;
+}
 
 /*
  * Validation functions
@@ -67,6 +159,8 @@ struct selabel_handle *selabel_open(unsigned int backend,
 		goto out;
 	}
 
+	selabel_subs_init();
+
 	rec = (struct selabel_handle *)malloc(sizeof(*rec));
 	if (!rec)
 		goto out;
@@ -88,7 +182,14 @@ static struct selabel_lookup_rec *
 selabel_lookup_common(struct selabel_handle *rec, int translating,
 		      const char *key, int type)
 {
-	struct selabel_lookup_rec *lr = rec->func_lookup(rec, key, type);
+	struct selabel_lookup_rec *lr;
+	char *ptr = selabel_sub(key);
+	if (ptr) {
+		lr = rec->func_lookup(rec, ptr, type); 
+		free(ptr);
+	} else {
+		lr = rec->func_lookup(rec, key, type); 
+	}
 	if (!lr)
 		return NULL;
 
@@ -132,6 +233,8 @@ void selabel_close(struct selabel_handle *rec)
 {
 	rec->func_close(rec);
 	free(rec);
+
+	selabel_subs_fini();
 }
 
 void selabel_stats(struct selabel_handle *rec)
