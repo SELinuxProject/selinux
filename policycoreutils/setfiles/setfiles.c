@@ -29,6 +29,8 @@
 static int mass_relabel;
 static int mass_relabel_errs;
 
+#define STAR_COUNT 1000
+
 static FILE *outfile = NULL;
 static int force = 0;
 #define STAT_BLOCK_SIZE 1
@@ -444,11 +446,11 @@ static int restore(const char *file)
 
 	if (progress) {
 		count++;
-		if (count % 80000 == 0) {
+		if (count % (80 * STAR_COUNT) == 0) {
 			fprintf(stdout, "\n");
 			fflush(stdout);
 		}
-		if (count % 1000 == 0) {
+		if (count % STAR_COUNT == 0) {
 			fprintf(stdout, "*");
 			fflush(stdout);
 		}
@@ -1017,7 +1019,7 @@ int main(int argc, char **argv)
 		free(excludeArray[i].directory);
 	}
 
-       if (progress)
+       if (progress && count >= STAR_COUNT)
                printf("\n");
 	exit(errors);
 }
