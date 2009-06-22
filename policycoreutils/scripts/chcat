@@ -281,14 +281,14 @@ def isSensitivity(sensitivity):
 def expandCats(cats):
     newcats = []
     for c in cats:
-        if c.find(".") != -1:
-            c = c.split(".")
-            for i in range(int(c[0][1:]), int(c[1][1:]) + 1):
-                x = ("c%d" % i)
-                if x not in newcats:
-                    newcats.append("c%d" % i)
-        else:
-            for i in c.split(","):
+        for i in c.split(","):
+            if i.find(".") != -1:
+                j = i.split(".")
+                for k in range(int(j[0][1:]), int(j[1][1:]) + 1):
+                    x = ("c%d" % k)
+                    if x not in newcats:
+                        newcats.append(x)
+            else:
                 if i not in newcats:
                     newcats.append(i)
     if len(newcats) > 25:
