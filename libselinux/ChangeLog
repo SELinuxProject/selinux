@@ -1,3 +1,8 @@
+2.0.82 2009-06-19
+	* Fix improper use of thread local storage from Tomas Mraz <tmraz@redhat.com>.
+	* Label substitution support from Dan Walsh.
+	* Support for labeling virtual machine images from Dan Walsh.
+
 2.0.81 2009-05-15
 	* Trim / from the end of input paths to matchpathcon from Dan Walsh.
 	* Fix leak in process_line in label_file.c from Hiroshi Shinji.
