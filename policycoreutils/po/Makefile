@@ -45,34 +45,6 @@ POTFILES = \
 	../restorecond/stringslist.h \
 	../restorecond/restorecond.c \
 	../restorecond/utmpwatcher.c \
-	../gui/booleansPage.py \
-	../gui/fcontextPage.py \
-	../gui/loginsPage.py \
-	../gui/mappingsPage.py \
-	../gui/modulesPage.py \
-	../gui/polgen.glade \
-	../gui/polgengui.py \
-	../gui/polgen.py \
-	../gui/portsPage.py \
-	../gui/selinux.tbl \
-	../gui/semanagePage.py \
-	../gui/statusPage.py \
-	../gui/system-config-selinux.glade \
-	../gui/system-config-selinux.py \
-	../gui/translationsPage.py \
-	../gui/usersPage.py \
-	../gui/templates/executable.py \
-	../gui/templates/__init__.py \
-	../gui/templates/network.py \
-	../gui/templates/rw.py \
-	../gui/templates/script.py \
-	../gui/templates/semodule.py \
-	../gui/templates/tmp.py \
-	../gui/templates/user.py \
-	../gui/templates/var_lib.py \
-	../gui/templates/var_log.py \
-	../gui/templates/var_run.py \
-	../gui/templates/var_spool.py \
 	../secon/secon.c \
 
 #default:: clean
