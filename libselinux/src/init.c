@@ -28,6 +28,7 @@ static void init_selinuxmnt(void)
 	int rc;
 	size_t len;
 	ssize_t num;
+	int exists = 0;
 
 	if (selinux_mnt)
 		return;
@@ -43,6 +44,23 @@ static void init_selinuxmnt(void)
 			return;
 		}
 	} 
+
+	/* Drop back to detecting it the long way. */
+	fp = fopen("/proc/filesystems", "r");
+	if (!fp)
+		return;
+
+	__fsetlocking(fp, FSETLOCKING_BYCALLER);
+	while ((num = getline(&buf, &len, fp)) != -1) {
+		if (strstr(buf, "selinuxfs")) {
+			exists = 1;
+			break;
+		}
+	}
+	fclose(fp);
+
+	if (!exists)
+		return;
 
 	/* At this point, the usual spot doesn't have an selinuxfs so
 	 * we look around for it */
