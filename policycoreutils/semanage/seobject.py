@@ -1,5 +1,5 @@
 #! /usr/bin/python -E
-# Copyright (C) 2005, 2006, 2007, 2008 Red Hat 
+# Copyright (C) 2005, 2006, 2007, 2008, 2009 Red Hat 
 # see file 'COPYING' for use and warranty information
 #
 # semanage is a tool for managing SELinux configuration files
@@ -23,14 +23,14 @@
 
 import pwd, grp, string, selinux, tempfile, os, re, sys
 from semanage import *;
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 import sepolgen.module as module
 
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
 try:
-       gettext.install(PROGNAME, localedir="/usr/share/locale", unicode=1)
+       gettext.install(PROGNAME, localedir = "/usr/share/locale", unicode = 1)
 except IOError:
        import __builtin__
        __builtin__.__dict__['_'] = unicode
@@ -96,7 +96,7 @@ try:
 			self.audit_fd = audit.audit_open()
 
 		def log(self, success, msg, name = "", sename = "", serole = "", serange = "", old_sename = "", old_serole = "", old_serange = ""):
-			audit.audit_log_semanage_message(self.audit_fd, audit.AUDIT_USER_ROLE_CHANGE, sys.argv[0],str(msg), name, 0, sename, serole, serange, old_sename, old_serole, old_serange, "", "", "", success);
+			audit.audit_log_semanage_message(self.audit_fd, audit.AUDIT_USER_ROLE_CHANGE, sys.argv[0], str(msg), name, 0, sename, serole, serange, old_sename, old_serole, old_serange, "", "", "", success);
 except:
 	class logger:
 		def log(self, success, msg, name = "", sename = "", serole = "", serange = "", old_sename = "", old_serole = "", old_serange = ""):
@@ -104,7 +104,7 @@ except:
 				message = "Successful: "
 			else:
 				message = "Failed: "
-			message += " %s name=%s" % (msg,name)
+			message += " %s name=%s" % (msg, name)
 			if sename != "":
 				message += " sename=" + sename
 			if old_sename != "":
@@ -123,9 +123,9 @@ mylog = logger()
 
 import xml.etree.ElementTree
 
-booleans_dict={}
+booleans_dict = {}
 try:
-       tree=xml.etree.ElementTree.parse("/usr/share/selinux/devel/policy.xml")
+       tree = xml.etree.ElementTree.parse("/usr/share/selinux/devel/policy.xml")
        for l in  tree.findall("layer"):
               for m in  l.findall("module"):
                      for b in  m.findall("tunable"):
@@ -160,12 +160,12 @@ def validate_level(raw):
 	cat_range = category + "(\." + category +")?"
 	categories = cat_range + "(\," + cat_range + ")*"
 	reg = sensitivity + "(-" + sensitivity + ")?" + "(:" + categories + ")?"
-	return re.search("^" + reg +"$",raw)
+	return re.search("^" + reg +"$", raw)
 
 def translate(raw, prepend = 1):
-        filler="a:b:c:"
+        filler = "a:b:c:"
         if prepend == 1:
-		context = "%s%s" % (filler,raw)
+		context = "%s%s" % (filler, raw)
 	else:
 		context = raw
 	(rc, trans) = selinux.selinux_raw_to_trans_context(context)
@@ -179,9 +179,9 @@ def translate(raw, prepend = 1):
 		return trans
 	
 def untranslate(trans, prepend = 1):
-        filler="a:b:c:"
+        filler = "a:b:c:"
  	if prepend == 1:
-		context = "%s%s" % (filler,trans)
+		context = "%s%s" % (filler, trans)
 	else:
 		context = trans
 
@@ -234,7 +234,7 @@ class setransRecords:
 			rec += "%s=%s\n" %  (k, self.ddict[k])
 		return rec
 	
-	def list(self,heading = 1, locallist = 0):
+	def list(self, heading = 1, locallist = 0):
 		if heading:
 			print "\n%-25s %s\n" % (_("Level"), _("Translation"))
 		keys = self.ddict.keys()
@@ -283,7 +283,7 @@ class semanageRecords:
                if handle != None:
                       self.sh = handle
                else:
-                      self.sh=get_handle(store)
+                      self.sh = get_handle(store)
                self.transaction = False
 
         def deleteall(self):
@@ -331,7 +331,7 @@ class permissiveRecords(semanageRecords):
                              l.append(name.split("permissive_")[1])
                return l
 
-	def list(self,heading = 1, locallist = 0):
+	def list(self, heading = 1, locallist = 0):
 		if heading:
 			print "\n%-25s\n" % (_("Permissive Types"))
                 for t in self.get_all():
@@ -353,7 +353,7 @@ require {
 
 permissive %s;
 """ % (name, type, type)
-               fd = open(filename,'w')
+               fd = open(filename, 'w')
                fd.write(modtxt)
                fd.close()
                mc = module.ModuleCompiler()
@@ -366,7 +366,7 @@ permissive %s;
                if rc >= 0:
                       self.commit()
 
-               for root, dirs, files in os.walk("tmp", topdown=False):
+               for root, dirs, files in os.walk("tmp", topdown = False):
                       for name in files:
                              os.remove(os.path.join(root, name))
                       for name in dirs:
@@ -405,11 +405,11 @@ class loginRecords(semanageRecords):
 		if sename == "":
 			sename = "user_u"
 			
-		(rc,k) = semanage_seuser_key_create(self.sh, name)
+		(rc, k) = semanage_seuser_key_create(self.sh, name)
 		if rc < 0:
 			raise ValueError(_("Could not create a key for %s") % name)
 
-		(rc,exists) = semanage_seuser_exists(self.sh, k)
+		(rc, exists) = semanage_seuser_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if login mapping for %s is defined") % name)
 		if exists:
@@ -425,7 +425,7 @@ class loginRecords(semanageRecords):
                        except:
                               raise ValueError(_("Linux User %s does not exist") % name)
 
-                (rc,u) = semanage_seuser_create(self.sh)
+                (rc, u) = semanage_seuser_create(self.sh)
                 if rc < 0:
                        raise ValueError(_("Could not create login mapping for %s") % name)
 
@@ -465,17 +465,17 @@ class loginRecords(semanageRecords):
                if sename == "" and serange == "":
                       raise ValueError(_("Requires seuser or serange"))
 
-               (rc,k) = semanage_seuser_key_create(self.sh, name)
+               (rc, k) = semanage_seuser_key_create(self.sh, name)
                if rc < 0:
                       raise ValueError(_("Could not create a key for %s") % name)
 
-               (rc,exists) = semanage_seuser_exists(self.sh, k)
+               (rc, exists) = semanage_seuser_exists(self.sh, k)
                if rc < 0:
                       raise ValueError(_("Could not check if login mapping for %s is defined") % name)
                if not exists:
                       raise ValueError(_("Login mapping for %s is not defined") % name)
 
-               (rc,u) = semanage_seuser_query(self.sh, k)
+               (rc, u) = semanage_seuser_query(self.sh, k)
                if rc < 0:
                       raise ValueError(_("Could not query seuser for %s") % name)
 
@@ -498,7 +498,7 @@ class loginRecords(semanageRecords):
                semanage_seuser_key_free(k)
                semanage_seuser_free(u)
 
-               mylog.log(1,"modify selinux user mapping", name, sename, "", serange, oldsename, "", oldserange);
+               mylog.log(1, "modify selinux user mapping", name, sename, "", serange, oldsename, "", oldserange);
 
 	def modify(self, name, sename = "", serange = ""):
 		try:
@@ -507,21 +507,21 @@ class loginRecords(semanageRecords):
                         self.commit()
 
 		except ValueError, error:
-			mylog.log(0,"modify selinux user mapping", name, sename,"", serange, "", "", "");
+			mylog.log(0, "modify selinux user mapping", name, sename, "", serange, "", "", "");
 			raise error
 		
 	def __delete(self, name):
-               (rc,k) = semanage_seuser_key_create(self.sh, name)
+               (rc, k) = semanage_seuser_key_create(self.sh, name)
                if rc < 0:
                       raise ValueError(_("Could not create a key for %s") % name)
 
-               (rc,exists) = semanage_seuser_exists(self.sh, k)
+               (rc, exists) = semanage_seuser_exists(self.sh, k)
                if rc < 0:
                       raise ValueError(_("Could not check if login mapping for %s is defined") % name)
                if not exists:
                       raise ValueError(_("Login mapping for %s is not defined") % name)
 
-               (rc,exists) = semanage_seuser_exists_local(self.sh, k)
+               (rc, exists) = semanage_seuser_exists_local(self.sh, k)
                if rc < 0:
                       raise ValueError(_("Could not check if login mapping for %s is defined") % name)
                if not exists:
@@ -540,10 +540,10 @@ class loginRecords(semanageRecords):
                        self.commit()
 
 		except ValueError, error:
-			mylog.log(0,"delete SELinux user mapping", name);
+			mylog.log(0, "delete SELinux user mapping", name);
 			raise error
 		
-		mylog.log(1,"delete SELinux user mapping", name);
+		mylog.log(1, "delete SELinux user mapping", name);
 
 	def get_all(self, locallist = 0):
 		ddict = {}
@@ -593,17 +593,17 @@ class seluserRecords(semanageRecords):
                 if len(roles) < 1:
                        raise ValueError(_("You must add at least one role for %s") % name)
                        
-                (rc,k) = semanage_user_key_create(self.sh, name)
+                (rc, k) = semanage_user_key_create(self.sh, name)
                 if rc < 0:
                        raise ValueError(_("Could not create a key for %s") % name)
 
-                (rc,exists) = semanage_user_exists(self.sh, k)
+                (rc, exists) = semanage_user_exists(self.sh, k)
                 if rc < 0:
                        raise ValueError(_("Could not check if SELinux user %s is defined") % name)
                 if exists:
                        raise ValueError(_("SELinux user %s is already defined") % name)
 
-                (rc,u) = semanage_user_create(self.sh)
+                (rc, u) = semanage_user_create(self.sh)
                 if rc < 0:
                        raise ValueError(_("Could not create SELinux user for %s") % name)
 
@@ -627,7 +627,7 @@ class seluserRecords(semanageRecords):
                 rc = semanage_user_set_prefix(self.sh, u, prefix)
                 if rc < 0:
                        raise ValueError(_("Could not add prefix %s for %s") % (r, prefix))
-                (rc,key) = semanage_user_key_extract(self.sh,u)
+                (rc, key) = semanage_user_key_extract(self.sh,u)
                 if rc < 0:
                        raise ValueError(_("Could not extract key for %s") % name)
 
@@ -660,17 +660,17 @@ class seluserRecords(semanageRecords):
                        else:
                               raise ValueError(_("Requires prefix or roles"))
 
-                (rc,k) = semanage_user_key_create(self.sh, name)
+                (rc, k) = semanage_user_key_create(self.sh, name)
                 if rc < 0:
                        raise ValueError(_("Could not create a key for %s") % name)
 
-                (rc,exists) = semanage_user_exists(self.sh, k)
+                (rc, exists) = semanage_user_exists(self.sh, k)
                 if rc < 0:
                        raise ValueError(_("Could not check if SELinux user %s is defined") % name)
                 if not exists:
                        raise ValueError(_("SELinux user %s is not defined") % name)
 
-                (rc,u) = semanage_user_query(self.sh, k)
+                (rc, u) = semanage_user_query(self.sh, k)
                 if rc < 0:
                        raise ValueError(_("Could not query user for %s") % name)
 
@@ -718,17 +718,17 @@ class seluserRecords(semanageRecords):
 			raise error
 
 	def __delete(self, name):
-               (rc,k) = semanage_user_key_create(self.sh, name)
+               (rc, k) = semanage_user_key_create(self.sh, name)
                if rc < 0:
                       raise ValueError(_("Could not create a key for %s") % name)
 			
-               (rc,exists) = semanage_user_exists(self.sh, k)
+               (rc, exists) = semanage_user_exists(self.sh, k)
                if rc < 0:
                       raise ValueError(_("Could not check if SELinux user %s is defined") % name)		
                if not exists:
                       raise ValueError(_("SELinux user %s is not defined") % name)
 
-               (rc,exists) = semanage_user_exists_local(self.sh, k)
+               (rc, exists) = semanage_user_exists_local(self.sh, k)
                if rc < 0:
                       raise ValueError(_("Could not check if SELinux user %s is defined") % name)
                if not exists:
@@ -810,7 +810,7 @@ class portRecords(semanageRecords):
 			low = int(ports[0])
 			high = int(ports[1])
 
-		(rc,k) = semanage_port_key_create(self.sh, low, high, proto_d)
+		(rc, k) = semanage_port_key_create(self.sh, low, high, proto_d)
 		if rc < 0:
 			raise ValueError(_("Could not create a key for %s/%s") % (proto, port))
 		return ( k, proto_d, low, high )
@@ -827,13 +827,13 @@ class portRecords(semanageRecords):
 
 		( k, proto_d, low, high ) = self.__genkey(port, proto)			
 
-		(rc,exists) = semanage_port_exists(self.sh, k)
+		(rc, exists) = semanage_port_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if port %s/%s is defined") % (proto, port))
 		if exists:
 			raise ValueError(_("Port %s/%s already defined") % (proto, port))
 
-		(rc,p) = semanage_port_create(self.sh)
+		(rc, p) = semanage_port_create(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not create port for %s/%s") % (proto, port))
 		
@@ -886,13 +886,13 @@ class portRecords(semanageRecords):
 
 		( k, proto_d, low, high ) = self.__genkey(port, proto)
 
-		(rc,exists) = semanage_port_exists(self.sh, k)
+		(rc, exists) = semanage_port_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if port %s/%s is defined") % (proto, port))
 		if not exists:
 			raise ValueError(_("Port %s/%s is not defined") % (proto,port))
 	
-		(rc,p) = semanage_port_query(self.sh, k)
+		(rc, p) = semanage_port_query(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not query port %s/%s") % (proto, port))
 
@@ -941,13 +941,13 @@ class portRecords(semanageRecords):
 
 	def __delete(self, port, proto):
 		( k, proto_d, low, high ) = self.__genkey(port, proto)
-		(rc,exists) = semanage_port_exists(self.sh, k)
+		(rc, exists) = semanage_port_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if port %s/%s is defined") % (proto, port))
 		if not exists:
 			raise ValueError(_("Port %s/%s is not defined") % (proto, port))
 		
-		(rc,exists) = semanage_port_exists_local(self.sh, k)
+		(rc, exists) = semanage_port_exists_local(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if port %s/%s is defined") % (proto, port))
 		if not exists:
@@ -1053,17 +1053,17 @@ class nodeRecords(semanageRecords):
                if ctype == "":
                        raise ValueError(_("SELinux Type is required"))
 
-               (rc,k) = semanage_node_key_create(self.sh, addr, mask, proto)
+               (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
                if rc < 0:
                        raise ValueError(_("Could not create key for %s") % addr)
                if rc < 0:
                        raise ValueError(_("Could not check if addr %s is defined") % addr)
 
-               (rc,exists) = semanage_node_exists(self.sh, k)
+               (rc, exists) = semanage_node_exists(self.sh, k)
                if exists:
                        raise ValueError(_("Addr %s already defined") % addr)
 
-               (rc,node) = semanage_node_create(self.sh)
+               (rc, node) = semanage_node_create(self.sh)
                if rc < 0:
                        raise ValueError(_("Could not create addr for %s") % addr)
 
@@ -1128,17 +1128,17 @@ class nodeRecords(semanageRecords):
                if serange == "" and setype == "":
                        raise ValueError(_("Requires setype or serange"))
 
-               (rc,k) = semanage_node_key_create(self.sh, addr, mask, proto)
+               (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
                if rc < 0:
                        raise ValueError(_("Could not create key for %s") % addr)
 
-               (rc,exists) = semanage_node_exists(self.sh, k)
+               (rc, exists) = semanage_node_exists(self.sh, k)
                if rc < 0:
                        raise ValueError(_("Could not check if addr %s is defined") % addr)
                if not exists:
                        raise ValueError(_("Addr %s is not defined") % addr)
 
-               (rc,node) = semanage_node_query(self.sh, k)
+               (rc, node) = semanage_node_query(self.sh, k)
                if rc < 0:
                        raise ValueError(_("Could not query addr %s") % addr)
 
@@ -1175,17 +1175,17 @@ class nodeRecords(semanageRecords):
                else:
                       raise ValueError(_("Unknown or missing protocol"))
 
-               (rc,k) = semanage_node_key_create(self.sh, addr, mask, proto)
+               (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
                if rc < 0:
                        raise ValueError(_("Could not create key for %s") % addr)
 
-               (rc,exists) = semanage_node_exists(self.sh, k)
+               (rc, exists) = semanage_node_exists(self.sh, k)
                if rc < 0:
                        raise ValueError(_("Could not check if addr %s is defined") % addr)
                if not exists:
                        raise ValueError(_("Addr %s is not defined") % addr)
 
-               (rc,exists) = semanage_node_exists_local(self.sh, k)
+               (rc, exists) = semanage_node_exists_local(self.sh, k)
                if rc < 0:
                        raise ValueError(_("Could not check if addr %s is defined") % addr)
                if not exists:
@@ -1255,17 +1255,17 @@ class interfaceRecords(semanageRecords):
 		if ctype == "":
 			raise ValueError(_("SELinux Type is required"))
 
-		(rc,k) = semanage_iface_key_create(self.sh, interface)
+		(rc, k) = semanage_iface_key_create(self.sh, interface)
 		if rc < 0:
 			raise ValueError(_("Could not create key for %s") % interface)
 
-		(rc,exists) = semanage_iface_exists(self.sh, k)
+		(rc, exists) = semanage_iface_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if interface %s is defined") % interface)
 		if exists:
 			raise ValueError(_("Interface %s already defined") % interface)
 
-		(rc,iface) = semanage_iface_create(self.sh)
+		(rc, iface) = semanage_iface_create(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not create interface for %s") % interface)
 		
@@ -1316,17 +1316,17 @@ class interfaceRecords(semanageRecords):
 		if serange == "" and setype == "":
 			raise ValueError(_("Requires setype or serange"))
 
-		(rc,k) = semanage_iface_key_create(self.sh, interface)
+		(rc, k) = semanage_iface_key_create(self.sh, interface)
 		if rc < 0:
 			raise ValueError(_("Could not create key for %s") % interface)
 
-		(rc,exists) = semanage_iface_exists(self.sh, k)
+		(rc, exists) = semanage_iface_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if interface %s is defined") % interface)
 		if not exists:
 			raise ValueError(_("Interface %s is not defined") % interface)
 	
-		(rc,iface) = semanage_iface_query(self.sh, k)
+		(rc, iface) = semanage_iface_query(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not query interface %s") % interface)
 
@@ -1350,17 +1350,17 @@ class interfaceRecords(semanageRecords):
                 self.commit()
 
 	def __delete(self, interface):
-		(rc,k) = semanage_iface_key_create(self.sh, interface)
+		(rc, k) = semanage_iface_key_create(self.sh, interface)
 		if rc < 0:
 			raise ValueError(_("Could not create key for %s") % interface)
 
-		(rc,exists) = semanage_iface_exists(self.sh, k)
+		(rc, exists) = semanage_iface_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if interface %s is defined") % interface)
 		if not exists:
 			raise ValueError(_("Interface %s is not defined") % interface)
 
-		(rc,exists) = semanage_iface_exists_local(self.sh, k)
+		(rc, exists) = semanage_iface_exists_local(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if interface %s is defined") % interface)
 		if not exists:
@@ -1444,23 +1444,23 @@ class fcontextRecords(semanageRecords):
 		if type == "":
 			raise ValueError(_("SELinux Type is required"))
 
-		(rc,k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
+		(rc, k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
 		if rc < 0:
 			raise ValueError(_("Could not create key for %s") % target)
 
-		(rc,exists) = semanage_fcontext_exists(self.sh, k)
+		(rc, exists) = semanage_fcontext_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if file context for %s is defined") % target)
 
 		if not exists:
-                       (rc,exists) = semanage_fcontext_exists_local(self.sh, k)
+                       (rc, exists) = semanage_fcontext_exists_local(self.sh, k)
                        if rc < 0:
                               raise ValueError(_("Could not check if file context for %s is defined") % target)
 
                 if exists:
                        raise ValueError(_("File context for %s already defined") % target)
 
-		(rc,fcontext) = semanage_fcontext_create(self.sh)
+		(rc, fcontext) = semanage_fcontext_create(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not create file context for %s") % target)
 		
@@ -1501,21 +1501,21 @@ class fcontextRecords(semanageRecords):
 			raise ValueError(_("Requires setype, serange or seuser"))
                 self.validate(target)
 
-		(rc,k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
+		(rc, k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
 		if rc < 0:
 			raise ValueError(_("Could not create a key for %s") % target)
 
-		(rc,exists) = semanage_fcontext_exists(self.sh, k)
+		(rc, exists) = semanage_fcontext_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if file context for %s is defined") % target)
 		if not exists:
-                       (rc,exists) = semanage_fcontext_exists_local(self.sh, k)
+                       (rc, exists) = semanage_fcontext_exists_local(self.sh, k)
                        if not exists:
                               raise ValueError(_("File context for %s is not defined") % target)
 		
-		(rc,fcontext) = semanage_fcontext_query_local(self.sh, k)
+		(rc, fcontext) = semanage_fcontext_query_local(self.sh, k)
 		if rc < 0:
-                       (rc,fcontext) = semanage_fcontext_query(self.sh, k)
+                       (rc, fcontext) = semanage_fcontext_query(self.sh, k)
                        if rc < 0:
                               raise ValueError(_("Could not query file context for %s") % target)
 
@@ -1565,7 +1565,7 @@ class fcontextRecords(semanageRecords):
                        target = semanage_fcontext_get_expr(fcontext)
                        ftype = semanage_fcontext_get_type(fcontext)
                        ftype_str = semanage_fcontext_get_type_str(ftype)
-                       (rc,k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype_str])
+                       (rc, k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype_str])
                        if rc < 0:
                               raise ValueError(_("Could not create a key for %s") % target)
 
@@ -1581,11 +1581,11 @@ class fcontextRecords(semanageRecords):
 		if rc < 0:
 			raise ValueError(_("Could not create a key for %s") % target)
 
-		(rc,exists) = semanage_fcontext_exists_local(self.sh, k)
+		(rc, exists) = semanage_fcontext_exists_local(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if file context for %s is defined") % target)
 		if not exists:
-			(rc,exists) = semanage_fcontext_exists(self.sh, k)
+			(rc, exists) = semanage_fcontext_exists(self.sh, k)
 			if rc < 0:
 				raise ValueError(_("Could not check if file context for %s is defined") % target)
 			if exists:
@@ -1645,11 +1645,17 @@ class fcontextRecords(semanageRecords):
 					print "%-50s %-18s %s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1],fcon_dict[k][2])
 			else:
 				print "%-50s %-18s <<None>>" % (k[0], k[1])
+                if len(self.equiv.keys()) > 0:
+                       if heading:
+                              print _("\nSELinux fcontext Equivalence \n")
+                       
+                       for src in self.equiv.keys():
+                              print "%s == %s" % (src, self.equiv[src])
 				
 class booleanRecords(semanageRecords):
 	def __init__(self, store = ""):
 		semanageRecords.__init__(self, store)
-                self.dict={}
+                self.dict = {}
                 self.dict["TRUE"] = 1
                 self.dict["FALSE"] = 0
                 self.dict["ON"] = 1
@@ -1658,16 +1664,16 @@ class booleanRecords(semanageRecords):
                 self.dict["0"] = 0
 
 	def __mod(self, name, value):
-                (rc,k) = semanage_bool_key_create(self.sh, name)
+                (rc, k) = semanage_bool_key_create(self.sh, name)
                 if rc < 0:
                        raise ValueError(_("Could not create a key for %s") % name)
-                (rc,exists) = semanage_bool_exists(self.sh, k)
+                (rc, exists) = semanage_bool_exists(self.sh, k)
                 if rc < 0:
                        raise ValueError(_("Could not check if boolean %s is defined") % name)
                 if not exists:
                        raise ValueError(_("Boolean %s is not defined") % name)	
                 
-                (rc,b) = semanage_bool_query(self.sh, k)
+                (rc, b) = semanage_bool_query(self.sh, k)
                 if rc < 0:
                        raise ValueError(_("Could not query file context %s") % name)
 
@@ -1685,7 +1691,7 @@ class booleanRecords(semanageRecords):
 		semanage_bool_key_free(k)
 		semanage_bool_free(b)
 
-	def modify(self, name, value=None, use_file=False):
+	def modify(self, name, value = None, use_file = False):
                 
                 self.begin()
 
@@ -1709,16 +1715,16 @@ class booleanRecords(semanageRecords):
 		
 	def __delete(self, name):
 
-                (rc,k) = semanage_bool_key_create(self.sh, name)
+                (rc, k) = semanage_bool_key_create(self.sh, name)
                 if rc < 0:
                       raise ValueError(_("Could not create a key for %s") % name)
-		(rc,exists) = semanage_bool_exists(self.sh, k)
+		(rc, exists) = semanage_bool_exists(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if boolean %s is defined") % name)
 		if not exists:
 			raise ValueError(_("Boolean %s is not defined") % name)
 	
-		(rc,exists) = semanage_bool_exists_local(self.sh, k)
+		(rc, exists) = semanage_bool_exists_local(self.sh, k)
 		if rc < 0:
 			raise ValueError(_("Could not check if boolean %s is defined") % name)
 		if not exists:
@@ -1777,7 +1783,7 @@ class booleanRecords(semanageRecords):
                       return _("unknown")
 
 	def list(self, heading = True, locallist = False, use_file = False):
-                on_off = (_("off"),_("on")) 
+                on_off = (_("off"), _("on")) 
 		if use_file:
                        ddict = self.get_all(locallist)
                        keys = ddict.keys()
