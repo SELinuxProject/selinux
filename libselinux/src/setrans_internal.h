@@ -7,5 +7,3 @@
 #define RAW_CONTEXT_TO_COLOR		4
 #define MAX_DATA_BUF			8192
 
-extern int init_context_translations(void);
-extern void fini_context_translations(void);

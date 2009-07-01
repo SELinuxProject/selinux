@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "selinux_internal.h"
 #include "get_default_type_internal.h"
 
@@ -44,6 +45,10 @@
 #define VIRTUAL_IMAGE     22
 #define FILE_CONTEXT_SUBS 23
 #define NEL               24
+
+/* Part of one-time lazy init */
+static pthread_once_t once = PTHREAD_ONCE_INIT;
+static void init_selinux_config(void);
 
 /* New layout is relative to SELINUXDIR/policytype. */
 static char *file_paths[NEL];
@@ -120,6 +125,7 @@ static char *selinux_policytype;
 
 int selinux_getpolicytype(char **type)
 {
+	__selinux_once(once, init_selinux_config);
 	if (!selinux_policytype)
 		return -1;
 	*type = strdup(selinux_policytype);
@@ -129,9 +135,7 @@ int selinux_getpolicytype(char **type)
 hidden_def(selinux_getpolicytype)
 
 static char *selinux_policyroot = NULL;
-static char *selinux_rootpath = NULL;
-
-static void init_selinux_config(void) __attribute__ ((constructor));
+static const char *selinux_rootpath = SELINUXDIR;
 
 static void init_selinux_config(void)
 {
@@ -144,7 +148,6 @@ static void init_selinux_config(void)
 	if (selinux_policyroot)
 		return;
 
-	selinux_rootpath = SELINUXDIR;
 	fp = fopen(SELINUXCONFIG, "r");
 	if (fp) {
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
@@ -235,6 +238,7 @@ void reset_selinux_config(void)
 
 static const char *get_path(int idx)
 {
+	__selinux_once(once, init_selinux_config);
 	return file_paths[idx];
 }
 
@@ -247,6 +251,7 @@ hidden_def(selinux_default_type_path)
 
 const char *selinux_policy_root()
 {
+	__selinux_once(once, init_selinux_config);
 	return selinux_policyroot;
 }
 

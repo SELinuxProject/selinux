@@ -33,6 +33,8 @@ static __thread security_context_t prev_r2t_raw = NULL;
 static __thread char *prev_r2c_trans = NULL;
 static __thread security_context_t prev_r2c_raw = NULL;
 
+static pthread_once_t once = PTHREAD_ONCE_INIT;
+
 /*
  * setransd_open
  *
@@ -238,20 +240,9 @@ out:
 	return ret;
 }
 
-hidden void fini_context_translations(void)
-{
-	free(prev_r2t_trans);
-	free(prev_r2t_raw);
-	free(prev_t2r_trans);
-	free(prev_t2r_raw);
-	free(prev_r2c_trans);
-	free(prev_r2c_raw);
-}
-
-hidden int init_context_translations(void)
+static void init_context_translations(void)
 {
 	mls_enabled = is_selinux_mls_enabled();
-	return 0;
 }
 
 int selinux_trans_to_raw_context(security_context_t trans,
@@ -261,6 +252,8 @@ int selinux_trans_to_raw_context(security_context_t trans,
 		*rawp = NULL;
 		return 0;
 	}
+
+	__selinux_once(once, init_context_translations);
 
 	if (!mls_enabled) {
 		*rawp = strdup(trans);
@@ -300,6 +293,8 @@ int selinux_raw_to_trans_context(security_context_t raw,
 		*transp = NULL;
 		return 0;
 	}
+
+	__selinux_once(once, init_context_translations);
 
 	if (!mls_enabled) {
 		*transp = strdup(raw);
@@ -365,15 +360,6 @@ int selinux_raw_context_to_color(security_context_t raw, char **transp)
 
 hidden_def(selinux_raw_context_to_color)
 #else /*DISABLE_SETRANS*/
-
-hidden void fini_context_translations(void)
-{
-}
-
-hidden int init_context_translations(void)
-{
-	return 0;
-}
 
 int selinux_trans_to_raw_context(security_context_t trans,
 				 security_context_t * rawp)

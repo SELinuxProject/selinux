@@ -1,4 +1,5 @@
 #include <selinux/selinux.h>
+#include <pthread.h>
 #include "dso.h"
 
 hidden_proto(selinux_mkload_policy)
@@ -92,3 +93,19 @@ extern void reset_selinux_config(void) hidden;
 extern int load_setlocaldefs hidden;
 extern int require_seusers hidden;
 extern int selinux_page_size hidden;
+
+/* Make pthread_once optional */
+#pragma weak pthread_once
+
+/* Call handler iff the first call.  */
+#define __selinux_once(ONCE_CONTROL, INIT_FUNCTION)	\
+	do {						\
+		if (pthread_once != NULL)		\
+			pthread_once (&(ONCE_CONTROL), (INIT_FUNCTION));  \
+		else if ((ONCE_CONTROL) == PTHREAD_ONCE_INIT) {		  \
+			INIT_FUNCTION ();		\
+			(ONCE_CONTROL) = 2;		\
+		}					\
+	} while (0)
+
+

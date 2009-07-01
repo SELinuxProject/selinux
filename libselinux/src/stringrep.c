@@ -152,7 +152,25 @@ static const struct av_inherit {
 #define NVECTORS ARRAY_SIZE(av_perm_to_string)
 #define MAXVECTORS 8*sizeof(access_vector_t)
 
-extern int obj_class_compat;
+static pthread_once_t once = PTHREAD_ONCE_INIT;
+
+static int obj_class_compat;
+
+static void init_obj_class_compat(void)
+{
+	char path[PATH_MAX];
+	struct stat s;
+
+	if (!selinux_mnt)
+		return;
+
+	snprintf(path,PATH_MAX,"%s/class",selinux_mnt);
+	if (stat(path,&s) < 0)
+		return;
+
+	if (S_ISDIR(s.st_mode))
+		obj_class_compat = 0;
+}
 
 struct discover_class_node {
 	char *name;
@@ -420,6 +438,8 @@ security_class_t string_to_security_class(const char *s)
 {
 	struct discover_class_node *node;
 
+	__selinux_once(once, init_obj_class_compat);
+
 	if (obj_class_compat)
 		return string_to_security_class_compat(s);
 
@@ -440,6 +460,8 @@ access_vector_t string_to_av_perm(security_class_t tclass, const char *s)
 {
 	struct discover_class_node *node;
 	security_class_t kclass = unmap_class(tclass);
+
+	__selinux_once(once, init_obj_class_compat);
 
 	if (obj_class_compat)
 		return map_perm(tclass, string_to_av_perm_compat(kclass, s));
@@ -462,6 +484,8 @@ const char *security_class_to_string(security_class_t tclass)
 
 	tclass = unmap_class(tclass);
 
+	__selinux_once(once, init_obj_class_compat);
+
 	if (obj_class_compat)
 		return security_class_to_string_compat(tclass);
 
@@ -480,6 +504,8 @@ const char *security_av_perm_to_string(security_class_t tclass,
 
 	av = unmap_perm(tclass, av);
 	tclass = unmap_class(tclass);
+
+	__selinux_once(once, init_obj_class_compat);
 
 	if (obj_class_compat)
 		return security_av_perm_to_string_compat(tclass,av);

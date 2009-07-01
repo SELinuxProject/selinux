@@ -107,40 +107,15 @@ void set_selinuxmnt(char *mnt)
 
 hidden_def(set_selinuxmnt)
 
-static void init_obj_class_compat(void)
-{
-	char path[PATH_MAX];
-	struct stat s;
-
-	if (!selinux_mnt)
-		return;
-
-	snprintf(path,PATH_MAX,"%s/class",selinux_mnt);
-	if (stat(path,&s) < 0)
-		return;
-
-	if (S_ISDIR(s.st_mode))
-		obj_class_compat = 0;
-}
-
-static void fini_obj_class_compat(void)
-{
-	obj_class_compat = 1;
-}
-
 static void init_lib(void) __attribute__ ((constructor));
 static void init_lib(void)
 {
 	selinux_page_size = sysconf(_SC_PAGE_SIZE);
 	init_selinuxmnt();
-	init_obj_class_compat();
-	init_context_translations();
 }
 
 static void fini_lib(void) __attribute__ ((destructor));
 static void fini_lib(void)
 {
 	fini_selinuxmnt();
-	fini_obj_class_compat();
-	fini_context_translations();
 }
