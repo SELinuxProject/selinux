@@ -421,6 +421,9 @@ int main(int argc, char *argv[])
 			semanage_set_rebuild(sh, 1);
 		if (disable_dontaudit)
 			semanage_set_disable_dontaudit(sh, 1);
+		else if (build)
+			semanage_set_disable_dontaudit(sh, 0);
+
 		result = semanage_commit(sh);
 	}
 
