@@ -7,6 +7,12 @@ typedef struct sepol_handle sepol_handle_t;
 /* Create and return a sepol handle. */
 sepol_handle_t *sepol_handle_create(void);
 
+/* Get whether or not dontaudits will be disabled, same values as
+ * specified by set_disable_dontaudit. This value reflects the state
+ * your system will be set to upon commit, not necessarily its
+ * current state.*/
+int sepol_get_disable_dontaudit(sepol_handle_t * sh);
+
 /* Set whether or not to disable dontaudits, 0 is default and does 
  * not disable dontaudits, 1 disables them */
 void sepol_set_disable_dontaudit(sepol_handle_t * sh, int disable_dontaudit);

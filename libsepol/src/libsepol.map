@@ -12,6 +12,7 @@
 	sepol_policydb_*; sepol_set_policydb_from_file; 
 	sepol_policy_kern_*;
 	sepol_policy_file_*;
+	sepol_get_disable_dontaudit;
 	sepol_set_disable_dontaudit;
 	sepol_set_expand_consume_base;
   local: *;
