@@ -243,3 +243,67 @@ int getseuserbyname(const char *name, char **r_seuser, char **r_level)
 	*r_level = NULL;
 	return 0;
 }
+
+int getseuser(const char *username, const char *service, 
+	      char **r_seuser, char **r_level) {
+	int ret = -1;
+	int len = 0;
+	char *seuser = NULL;
+	char *level = NULL;
+	char *buffer = NULL;
+	size_t size = 0;
+	size_t lineno = 0;
+	char *rec = NULL;
+	char *path=NULL;
+	if (asprintf(&path,"%s/logins/%s", selinux_policy_root(), username) <  0)
+		goto err;
+	FILE *fp = fopen(path, "r");
+	free(path);
+	if (fp == NULL) goto err;
+	__fsetlocking(fp, FSETLOCKING_BYCALLER);
+	while (getline(&buffer, &size, fp) > 0) {
+		++lineno;
+
+		if (strncmp(buffer, "*:", 2) == 0) {
+			free(rec);
+			rec = strdup(buffer);
+			continue;
+		}
+		len = strlen(service);
+		if ((strncmp(buffer, service, len) == 0) &&
+		    (buffer[len] == ':')) {
+			free(rec);
+			rec = strdup(buffer);
+			break;
+		}
+	}
+
+	if (! rec)  goto err;
+	seuser = strchr(rec, ':');
+	if (! seuser) goto err;
+
+	seuser++;
+	level = strchr(seuser, ':');
+	*level = 0;
+	level++;
+	*r_seuser = strdup(seuser);
+	if (! *r_seuser) goto err;
+
+	len = strlen(level);
+	if (len && level[len-1] == '\n')
+		level[len-1] = 0;
+
+	*r_level = strdup(level);
+	if (! *r_level) {
+		free(*r_seuser);
+		goto err;
+	}
+	ret = 0;
+
+	err:
+	free(buffer);
+	if (fp) fclose(fp);
+	free(rec);
+
+	return (ret ? getseuserbyname(username, r_seuser, r_level) : ret);
+}

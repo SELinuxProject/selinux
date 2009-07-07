@@ -547,6 +547,14 @@ extern int selinux_raw_context_to_color(security_context_t raw,
    Caller must free the returned strings via free. */
 extern int getseuserbyname(const char *linuxuser, char **seuser, char **level);
 
+/* Get the SELinux username and level to use for a given Linux username and service. 
+   These values may then be passed into the get_ordered_context_list*
+   and get_default_context* functions to obtain a context for the user.
+   Returns 0 on success or -1 otherwise.
+   Caller must free the returned strings via free. */
+extern int getseuser(const char *username, const char *service, 
+		     char **r_seuser, char **r_level);
+
 /* Compare two file contexts, return 0 if equivalent. */
 int selinux_file_context_cmp(const security_context_t a,
 			     const security_context_t b);
