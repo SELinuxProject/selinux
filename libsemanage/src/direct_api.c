@@ -20,6 +20,7 @@
  */
 
 #include <sepol/module.h>
+#include <sepol/handle.h>
 #include <selinux/selinux.h>
 
 #include <assert.h>
@@ -111,6 +112,7 @@ int semanage_direct_is_managed(semanage_handle_t * sh)
 int semanage_direct_connect(semanage_handle_t * sh)
 {
 	char polpath[PATH_MAX];
+	const char *path;
 
 	snprintf(polpath, PATH_MAX, "%s%s", selinux_path(),
 		 sh->conf->store_path);
@@ -222,6 +224,13 @@ int semanage_direct_connect(semanage_handle_t * sh)
 	/* Active kernel policy */
 	if (bool_activedb_dbase_init(sh, semanage_bool_dbase_active(sh)) < 0)
 		goto err;
+
+	/* set the disable dontaudit value */
+	path = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_DISABLE_DONTAUDIT);
+	if (access(path, F_OK) == 0)
+		sepol_set_disable_dontaudit(sh->sepolh, 1);
+	else
+		sepol_set_disable_dontaudit(sh->sepolh, 0);
 
 	return STATUS_SUCCESS;
 
@@ -645,7 +654,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	char **mod_filenames = NULL;
 	char *sorted_fc_buffer = NULL, *sorted_nc_buffer = NULL;
 	size_t sorted_fc_buffer_len = 0, sorted_nc_buffer_len = 0;
-	const char *linked_filename = NULL, *ofilename = NULL;
+	const char *linked_filename = NULL, *ofilename = NULL, *path;
 	sepol_module_package_t *base = NULL;
 	int retval = -1, num_modfiles = 0, i;
 	sepol_policydb_t *out = NULL;
@@ -668,6 +677,27 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	dbase_config_t *fcontexts = semanage_fcontext_dbase_local(sh);
 	dbase_config_t *pfcontexts = semanage_fcontext_dbase_policy(sh);
 	dbase_config_t *seusers = semanage_seuser_dbase_local(sh);
+
+	/* Create or remove the disable_dontaudit flag file. */
+	path = semanage_path(SEMANAGE_TMP, SEMANAGE_DISABLE_DONTAUDIT);
+	if (sepol_get_disable_dontaudit(sh->sepolh) == 1) {
+		FILE *touch;
+		touch = fopen(path, "w");
+		if (touch != NULL) {
+			if (fclose(touch) != 0) {
+				ERR(sh, "Error attempting to create disable_dontaudit flag.");
+				goto cleanup;
+			}
+		} else {
+			ERR(sh, "Error attempting to create disable_dontaudit flag.");
+			goto cleanup;
+		}
+	} else {
+		if (remove(path) == -1 && errno != ENOENT) {
+			ERR(sh, "Error removing the disable_dontaudit flag.");
+			goto cleanup;
+		}
+	}
 
 	/* Before we do anything else, flush the join to its component parts.
 	 * This *does not* flush to disk automatically */
