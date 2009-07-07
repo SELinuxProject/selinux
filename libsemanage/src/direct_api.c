@@ -991,7 +991,7 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 
 	int retval = -1;
 	char *data = NULL;
-	size_t data_len = 0;
+	ssize_t data_len = 0;
 	int compressed = 0;
 	int in_fd = -1;
 
@@ -999,7 +999,7 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 		return -1;
 	}
 
-	if ((data_len = map_file(in_fd, &data, &compressed)) == 0) {
+	if ((data_len = map_file(in_fd, &data, &compressed)) <= 0) {
 		goto cleanup;
 	}
 		
@@ -1117,7 +1117,7 @@ static int semanage_direct_upgrade_file(semanage_handle_t * sh,
 {
 	int retval = -1;
 	char *data = NULL;
-	size_t data_len = 0;
+	ssize_t data_len = 0;
 	int compressed = 0;
 	int in_fd = -1;
 
@@ -1125,7 +1125,7 @@ static int semanage_direct_upgrade_file(semanage_handle_t * sh,
 		return -1;
 	}
 
-	if ((data_len = map_file(in_fd, &data, &compressed)) == 0) {
+	if ((data_len = map_file(in_fd, &data, &compressed)) <= 0) {
 		goto cleanup;
 	}
 
@@ -1187,7 +1187,7 @@ static int semanage_direct_install_base_file(semanage_handle_t * sh,
 {
 	int retval = -1;
 	char *data = NULL;
-	size_t data_len = 0;
+	ssize_t data_len = 0;
 	int compressed = 0;
 	int in_fd;
 
@@ -1195,7 +1195,7 @@ static int semanage_direct_install_base_file(semanage_handle_t * sh,
 		return -1;
 	}
 
-	if ((data_len = map_file(in_fd, &data, &compressed)) == 0) {
+	if ((data_len = map_file(in_fd, &data, &compressed)) <= 0) {
 		goto cleanup;
 	}
 		
