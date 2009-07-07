@@ -1,3 +1,7 @@
+2.0.83 2009-07-07
+	* Check /proc/filesystems before /proc/mounts for selinuxfs from Eric
+	Paris.
+
 2.0.82 2009-06-19
 	* Fix improper use of thread local storage from Tomas Mraz <tmraz@redhat.com>.
 	* Label substitution support from Dan Walsh.
