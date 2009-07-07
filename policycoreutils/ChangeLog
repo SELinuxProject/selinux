@@ -1,3 +1,7 @@
+2.0.67 2009-07-07
+	* Re-enable disable_dontaudit rules upon semodule -B from Christopher
+	Pardy and Dan Walsh.
+
 2.0.66 2009-07-07
 	* setfiles converted to fts from Thomas Liu.
 

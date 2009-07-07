@@ -21,6 +21,12 @@ sepol_handle_t *sepol_handle_create(void)
 	return sh;
 }
 
+int sepol_get_disable_dontaudit(sepol_handle_t *sh)
+{
+	assert(sh !=NULL);
+	return sh->disable_dontaudit;
+}
+
 void sepol_set_disable_dontaudit(sepol_handle_t * sh, int disable_dontaudit)
 {
 	assert(sh !=NULL);
