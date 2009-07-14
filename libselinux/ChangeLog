@@ -1,3 +1,10 @@
+2.0.85 2009-07-14
+	* Reverted Tomas Mraz's fix for freeing thread local storage to avoid
+	pthread dependency.
+	* Removed fini_context_translations() altogether.
+	* Merged lazy init patch from Stephen Smalley based on original patch
+	by Steve Grubb.
+
 2.0.84 2009-07-07
 	* Add per-service seuser support from Dan Walsh.
 	* Let load_policy gracefully handle selinuxfs being mounted from Stephen Smalley.
