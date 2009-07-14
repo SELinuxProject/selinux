@@ -18,7 +18,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
-#include <pthread.h>
 #include "dso.h"
 #include "selinux_internal.h"
 #include "setrans_internal.h"
@@ -27,13 +26,12 @@
 static int mls_enabled = -1;
 
 // Simple cache
-static pthread_key_t prev_t2r_trans_key;
-static pthread_key_t prev_t2r_raw_key;
-static pthread_key_t prev_r2t_trans_key;
-static pthread_key_t prev_r2t_raw_key;
-static pthread_key_t prev_r2c_trans_key;
-static pthread_key_t prev_r2c_raw_key;
-static pthread_once_t make_keys_once = PTHREAD_ONCE_INIT;
+static __thread security_context_t prev_t2r_trans = NULL;
+static __thread security_context_t prev_t2r_raw = NULL;
+static __thread security_context_t prev_r2t_trans = NULL;
+static __thread security_context_t prev_r2t_raw = NULL;
+static __thread char *prev_r2c_trans = NULL;
+static __thread security_context_t prev_r2c_raw = NULL;
 
 /*
  * setransd_open
@@ -240,87 +238,20 @@ out:
 	return ret;
 }
 
-static void delete_value(void *value)
-{
-	free(value);
-}
-
-static void drop_cached_value(pthread_key_t cache_key)
-{
-	void *value;
-	value = pthread_getspecific(cache_key);
-	if (value) {
-		pthread_setspecific(cache_key, NULL);
-		delete_value(value);
-	}
-}
-
 hidden void fini_context_translations(void)
 {
-/* this is not necessary but if we are single threaded
-   we can free the data earlier than on exit */
-	drop_cached_value(prev_r2t_trans_key);
-	drop_cached_value(prev_r2t_raw_key);
-	drop_cached_value(prev_t2r_trans_key);
-	drop_cached_value(prev_t2r_raw_key);
-	drop_cached_value(prev_r2c_trans_key);
-	drop_cached_value(prev_r2c_raw_key);
-}
-
-static void make_keys(void)
-{
-	(void)pthread_key_create(&prev_t2r_trans_key, delete_value);
-	(void)pthread_key_create(&prev_t2r_raw_key, delete_value);
-	(void)pthread_key_create(&prev_r2t_trans_key, delete_value);
-	(void)pthread_key_create(&prev_r2t_raw_key, delete_value);
-	(void)pthread_key_create(&prev_r2c_trans_key, delete_value);
-	(void)pthread_key_create(&prev_r2c_raw_key, delete_value);
+	free(prev_r2t_trans);
+	free(prev_r2t_raw);
+	free(prev_t2r_trans);
+	free(prev_t2r_raw);
+	free(prev_r2c_trans);
+	free(prev_r2c_raw);
 }
 
 hidden int init_context_translations(void)
 {
 	mls_enabled = is_selinux_mls_enabled();
-	(void)pthread_once(&make_keys_once, make_keys);
 	return 0;
-}
-
-static void *match_cached_value(pthread_key_t cache_from,
-			 pthread_key_t cache_to,
-			 const char *match_from)
-{
-	void *from, *to;
-
-	from = pthread_getspecific(cache_from);
-	to = pthread_getspecific(cache_to);
-	if (from && strcmp(from, match_from) == 0) {
-		return strdup(to);
-	} else {
-		pthread_setspecific(cache_from, NULL);
-		delete_value(from);
-		pthread_setspecific(cache_to, NULL);
-		delete_value(to);
-		errno = 0;
-		return NULL;
-	}
-}
-
-void set_cached_value(pthread_key_t cache_from,
-		      pthread_key_t cache_to,
-		      void *from,
-		      void *to)
-{
-	from = strdup(from);
-	if (from == NULL)
-		return;
-
-	to = strdup(to);
-	if (to == NULL) {
-		free(from);
-		return;
-	}
-
-	pthread_setspecific(cache_from, from);
-	pthread_setspecific(cache_to, to);
 }
 
 int selinux_trans_to_raw_context(security_context_t trans,
@@ -336,13 +267,24 @@ int selinux_trans_to_raw_context(security_context_t trans,
 		goto out;
 	}
 
-	if ((*rawp = match_cached_value(prev_t2r_trans_key, prev_t2r_raw_key, trans)) == NULL
-	    && errno == 0) {
+	if (prev_t2r_trans && strcmp(prev_t2r_trans, trans) == 0) {
+		*rawp = strdup(prev_t2r_raw);
+	} else {
+		free(prev_t2r_trans);
+		prev_t2r_trans = NULL;
+		free(prev_t2r_raw);
+		prev_t2r_raw = NULL;
 		if (trans_to_raw_context(trans, rawp))
 			*rawp = strdup(trans);
 		if (*rawp) {
-			set_cached_value(prev_t2r_trans_key, prev_t2r_raw_key,
-					 trans, *rawp);
+			prev_t2r_trans = strdup(trans);
+			if (!prev_t2r_trans)
+				goto out;
+			prev_t2r_raw = strdup(*rawp);
+			if (!prev_t2r_raw) {
+				free(prev_t2r_trans);
+				prev_t2r_trans = NULL;
+			}
 		}
 	}
       out:
@@ -364,13 +306,24 @@ int selinux_raw_to_trans_context(security_context_t raw,
 		goto out;
 	}
 
-	if ((*transp = match_cached_value(prev_r2t_raw_key, prev_r2t_trans_key, raw)) == NULL
-	    && errno == 0) {
+	if (prev_r2t_raw && strcmp(prev_r2t_raw, raw) == 0) {
+		*transp = strdup(prev_r2t_trans);
+	} else {
+		free(prev_r2t_raw);
+		prev_r2t_raw = NULL;
+		free(prev_r2t_trans);
+		prev_r2t_trans = NULL;
 		if (raw_to_trans_context(raw, transp))
 			*transp = strdup(raw);
 		if (*transp) {
-			set_cached_value(prev_r2t_raw_key, prev_r2t_trans_key,
-					 raw, *transp);
+			prev_r2t_raw = strdup(raw);
+			if (!prev_r2t_raw)
+				goto out;
+			prev_r2t_trans = strdup(*transp);
+			if (!prev_r2t_trans) {
+				free(prev_r2t_raw);
+				prev_r2t_raw = NULL;
+			}
 		}
 	}
       out:
@@ -386,15 +339,27 @@ int selinux_raw_context_to_color(security_context_t raw, char **transp)
 		return -1;
 	}
 
-	if ((*transp = match_cached_value(prev_r2c_raw_key, prev_r2c_trans_key, raw)) == NULL
-	    && errno == 0) {
+	if (prev_r2c_raw && strcmp(prev_r2c_raw, raw) == 0) {
+		*transp = strdup(prev_r2c_trans);
+	} else {
+		free(prev_r2c_raw);
+		prev_r2c_raw = NULL;
+		free(prev_r2c_trans);
+		prev_r2c_trans = NULL;
 		if (raw_context_to_color(raw, transp))
 			return -1;
 		if (*transp) {
-			set_cached_value(prev_r2c_raw_key, prev_r2c_trans_key,
-					 raw, *transp);
+			prev_r2c_raw = strdup(raw);
+			if (!prev_r2c_raw)
+				goto out;
+			prev_r2c_trans = strdup(*transp);
+			if (!prev_r2c_trans) {
+				free(prev_r2c_raw);
+				prev_r2c_raw = NULL;
+			}
 		}
 	}
+      out:
 	return *transp ? 0 : -1;
 }
 
