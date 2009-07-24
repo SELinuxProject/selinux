@@ -1,3 +1,7 @@
+2.0.68 2009-07-24
+	* Modify setfiles to exclude mounts without seclabel option in
+	/proc/mounts on kernels >= 2.6.30 from Thomas Liu.
+
 2.0.67 2009-07-07
 	* Re-enable disable_dontaudit rules upon semodule -B from Christopher
 	Pardy and Dan Walsh.
