@@ -281,6 +281,7 @@ static void remove_exclude(const char *directory)
 	int i = 0;
 	for (i = 0; i < excludeCtr; i++) {
 		if (strcmp(directory, excludeArray[i].directory) == 0) {
+			free(excludeArray[i].directory);
 			if (i != excludeCtr-1)
 				excludeArray[i] = excludeArray[excludeCtr-1];
 			excludeCtr--;
@@ -728,9 +729,11 @@ static void exclude_non_seclabel_mounts()
 	int index = 0, found = 0;
 	char *mount_info[4];
 	char *buf = NULL, *item;
+
 	/* Check to see if the kernel supports seclabel */
 	if (uname(&uts) == 0 && strverscmp(uts.release, "2.6.30") < 0)
 		return;
+
 	fp = fopen("/proc/mounts", "r");
 	if (!fp)
 		return;
@@ -769,6 +772,8 @@ static void exclude_non_seclabel_mounts()
 		if (!found)
 			add_exclude(mount_info[1]);
 	}
+
+	free(buf);
 }
 
 int main(int argc, char **argv)
