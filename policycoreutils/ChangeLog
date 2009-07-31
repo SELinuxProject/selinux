@@ -1,3 +1,7 @@
+2.0.69 2009-07-30
+	* Fix typo in fixfiles that prevented it from relabeling btrfs 
+	  filesystems from Dan Walsh.
+
 2.0.68 2009-07-24
 	* Modify setfiles to exclude mounts without seclabel option in
 	/proc/mounts on kernels >= 2.6.30 from Thomas Liu.
