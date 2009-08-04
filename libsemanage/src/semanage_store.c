@@ -1529,7 +1529,7 @@ static int semanage_load_module(semanage_handle_t * sh, const char *filename,
 	ssize_t size;
 	char *data = NULL;
 
-	if ((size = bunzip(fp, &data)) > 0) {
+	if ((size = bunzip(sh, fp, &data)) > 0) {
 		fclose(fp);
 		fp = fmemopen(data, size, "rb");
 		if (!fp) {

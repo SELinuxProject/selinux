@@ -58,6 +58,7 @@ static int parse_errors;
 
 %token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED
 %token LOAD_POLICY_START SETFILES_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN
+%token BZIP_BLOCKSIZE BZIP_SMALL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
 %token PROG_PATH PROG_ARGS
 %token <s> ARG
@@ -82,6 +83,8 @@ single_opt:     module_store
         |       save_linked
         |       disable_genhomedircon
         |       handle_unknown
+	|	bzip_blocksize
+	|	bzip_small
         ;
 
 module_store:   MODULE_STORE '=' ARG {
@@ -163,6 +166,26 @@ handle_unknown: HANDLE_UNKNOWN '=' ARG {
 	free($3);
  }
 
+bzip_blocksize:  BZIP_BLOCKSIZE '=' ARG {
+	int blocksize = atoi($3);
+	free($3);
+	if (blocksize > 9)
+		yyerror("bzip-blocksize can only be in the range 0-9");
+	else
+		current_conf->bzip_blocksize = blocksize;
+}
+
+bzip_small:  BZIP_SMALL '=' ARG {
+	if (strcasecmp($3, "false") == 0) {
+		current_conf->bzip_small = 0;
+	} else if (strcasecmp($3, "true") == 0) {
+		current_conf->bzip_small = 1;
+	} else {
+		yyerror("bzip-small can only be 'true' or 'false'");
+	}
+	free($3);
+}
+
 command_block: 
                 command_start external_opts BLOCK_END  {
                         if (new_external->path == NULL) {
@@ -230,6 +253,8 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	conf->expand_check = 1;
 	conf->handle_unknown = -1;
 	conf->file_mode = 0644;
+	conf->bzip_blocksize = 9;
+	conf->bzip_small = 0;
 
 	conf->save_previous = 0;
 	conf->save_linked = 0;

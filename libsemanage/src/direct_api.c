@@ -401,7 +401,9 @@ static int parse_base_headers(semanage_handle_t * sh,
 
 /* bzip() a data to a file, returning the total number of compressed bytes
  * in the file.  Returns -1 if file could not be compressed. */
-static ssize_t bzip(const char *filename, char *data, size_t num_bytes) {
+static ssize_t bzip(semanage_handle_t *sh, const char *filename, char *data,
+			size_t num_bytes)
+{
 	BZFILE* b;
 	size_t  size = 1<<16;
 	int     bzerror;
@@ -413,7 +415,16 @@ static ssize_t bzip(const char *filename, char *data, size_t num_bytes) {
 		return -1;
 	}
 
-	b = BZ2_bzWriteOpen( &bzerror, f, 9, 0, 0);
+	if (!sh->conf->bzip_blocksize) {
+		if (fwrite(data, 1, num_bytes, f) < num_bytes) {
+			fclose(f);
+			return -1;
+		}
+		fclose(f);
+		return num_bytes;
+	}
+
+	b = BZ2_bzWriteOpen( &bzerror, f, sh->conf->bzip_blocksize, 0, 0);
 	if (bzerror != BZ_OK) {
 		BZ2_bzWriteClose ( &bzerror, b, 1, 0, 0 );
 		return -1;
@@ -443,15 +454,19 @@ static ssize_t bzip(const char *filename, char *data, size_t num_bytes) {
 
 /* bunzip() a file to '*data', returning the total number of uncompressed bytes
  * in the file.  Returns -1 if file could not be decompressed. */
-ssize_t bunzip(FILE *f, char **data) {
+ssize_t bunzip(semanage_handle_t *sh, FILE *f, char **data)
+{
 	BZFILE* b;
 	size_t  nBuf;
 	char    buf[1<<18];
 	size_t  size = sizeof(buf);
 	int     bzerror;
 	size_t  total=0;
+
+	if (!sh->conf->bzip_blocksize)
+		return -1;
 	
-	b = BZ2_bzReadOpen ( &bzerror, f, 0, 0, NULL, 0 );
+	b = BZ2_bzReadOpen ( &bzerror, f, 0, sh->conf->bzip_small, NULL, 0 );
 	if ( bzerror != BZ_OK ) {
 		BZ2_bzReadClose ( &bzerror, b );
 		return -1;
@@ -486,11 +501,12 @@ ssize_t bunzip(FILE *f, char **data) {
  * the file into '*data'.
  * Returns the total number of bytes in memory .
  * Returns -1 if file could not be opened or mapped. */
-static ssize_t map_file(int fd, char **data, int *compressed)
+static ssize_t map_file(semanage_handle_t *sh, int fd, char **data,
+			int *compressed)
 {
 	ssize_t size = -1;
 	char *uncompress;
-	if ((size = bunzip(fdopen(fd, "r"), &uncompress)) > 0) {
+	if ((size = bunzip(sh, fdopen(fd, "r"), &uncompress)) > 0) {
 		*data = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
 		if (*data == MAP_FAILED) {
 			free(uncompress);
@@ -997,7 +1013,7 @@ static int semanage_direct_install(semanage_handle_t * sh,
 					   &filename)) != 0) {
 		goto cleanup;
 	}
-	if (bzip(filename, data, data_len) <= 0) {
+	if (bzip(sh, filename, data, data_len) <= 0) {
 		ERR(sh, "Error while writing to %s.", filename);
 		retval = -3;
 		goto cleanup;
@@ -1029,7 +1045,7 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 		return -1;
 	}
 
-	if ((data_len = map_file(in_fd, &data, &compressed)) <= 0) {
+	if ((data_len = map_file(sh, in_fd, &data, &compressed)) <= 0) {
 		goto cleanup;
 	}
 		
@@ -1127,7 +1143,7 @@ static int semanage_direct_upgrade(semanage_handle_t * sh,
 						 data, data_len, 
 						 &filename);
 	if (retval == 0) {
-		if (bzip(filename, data, data_len) <= 0) {
+		if (bzip(sh, filename, data, data_len) <= 0) {
 			ERR(sh, "Error while writing to %s.", filename);
 			retval = -3;
 		}
@@ -1155,7 +1171,7 @@ static int semanage_direct_upgrade_file(semanage_handle_t * sh,
 		return -1;
 	}
 
-	if ((data_len = map_file(in_fd, &data, &compressed)) <= 0) {
+	if ((data_len = map_file(sh, in_fd, &data, &compressed)) <= 0) {
 		goto cleanup;
 	}
 
@@ -1197,7 +1213,7 @@ static int semanage_direct_install_base(semanage_handle_t * sh,
 	if ((filename = semanage_path(SEMANAGE_TMP, SEMANAGE_BASE)) == NULL) {
 		goto cleanup;
 	}
-	if (bzip(filename, base_data, data_len) <= 0) {
+	if (bzip(sh, filename, base_data, data_len) <= 0) {
 		ERR(sh, "Error while writing to %s.", filename);
 		retval = -3;
 		goto cleanup;
@@ -1225,7 +1241,7 @@ static int semanage_direct_install_base_file(semanage_handle_t * sh,
 		return -1;
 	}
 
-	if ((data_len = map_file(in_fd, &data, &compressed)) <= 0) {
+	if ((data_len = map_file(sh, in_fd, &data, &compressed)) <= 0) {
 		goto cleanup;
 	}
 		
@@ -1347,7 +1363,7 @@ static int semanage_direct_list(semanage_handle_t * sh,
 		ssize_t size;
 		char *data = NULL;
 
-		if ((size = bunzip(fp, &data)) > 0) {
+		if ((size = bunzip(sh, fp, &data)) > 0) {
 			fclose(fp);
 			fp = fmemopen(data, size, "rb");
 			if (!fp) {

@@ -47,6 +47,8 @@ save-previous     return SAVE_PREVIOUS;
 save-linked       return SAVE_LINKED;
 disable-genhomedircon return DISABLE_GENHOMEDIRCON;
 handle-unknown    return HANDLE_UNKNOWN;
+bzip-blocksize	return BZIP_BLOCKSIZE;
+bzip-small	return BZIP_SMALL;
 "[load_policy]"   return LOAD_POLICY_START;
 "[setfiles]"      return SETFILES_START;
 "[verify module]" return VERIFY_MOD_START;
