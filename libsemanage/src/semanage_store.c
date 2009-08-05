@@ -441,8 +441,6 @@ static int semanage_copy_file(const char *src, const char *dst, mode_t mode)
 	char tmp[PATH_MAX];
 	char buf[4192];
 
-	if (link(src,dst) == 0) return 0;
-
 	n = snprintf(tmp, PATH_MAX, "%s.tmp", dst);
 	if (n < 0 || n >= PATH_MAX)
 		return -1;

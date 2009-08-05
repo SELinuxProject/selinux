@@ -559,8 +559,6 @@ static int write_file(semanage_handle_t * sh,
 {
 	int out;
 
-	/* Unlink no matter what, incase this file is a hard link, ignore error */
-	unlink(filename);
 	if ((out =
 	     open(filename, O_WRONLY | O_CREAT | O_TRUNC,
 		  S_IRUSR | S_IWUSR)) == -1) {
