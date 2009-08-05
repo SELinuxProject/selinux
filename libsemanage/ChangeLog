@@ -1,3 +1,6 @@
+2.0.35 2009-08-05
+	* Revert hard linking of files between tmp/active/previous.
+
 2.0.34 2009-08-05
 	* Enable configuration of bzip behavior from Stephen Smalley.
 	  bzip-blocksize=0 to disable compression and decompression support.
