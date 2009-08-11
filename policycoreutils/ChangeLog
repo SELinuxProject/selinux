@@ -1,3 +1,10 @@
+2.0.71 2009-08-11
+	* Modify setfiles/restorecon checking of exclude paths.  Only check
+	user-supplied exclude paths (not automatically generated ones based on
+	lack of seclabel support), don't require them to be directories, and
+	ignore permission denied errors on them (it is ok to exclude a path to
+	which the caller lacks permission).
+
 2.0.70 2009-08-04
 	* Modify restorecon to only call realpath() on user-supplied pathnames
 	from Stephen Smalley.
