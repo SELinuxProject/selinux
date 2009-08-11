@@ -236,25 +236,13 @@ void filespec_destroy(void)
 
 static int add_exclude(const char *directory)
 {
-	struct stat sb;
 	size_t len = 0;
+
 	if (directory == NULL || directory[0] != '/') {
 		fprintf(stderr, "Full path required for exclude: %s.\n",
 			directory);
 		return 1;
 	}
-	if (lstat(directory, &sb)) {
-		fprintf(stderr, "Can't stat directory \"%s\", %s.\n",
-			directory, strerror(errno));
-		return 0;
-	}
-	if ((sb.st_mode & S_IFDIR) == 0) {
-		fprintf(stderr,
-			"\"%s\" is not a Directory: mode %o, ignoring\n",
-			directory, sb.st_mode);
-		return 0;
-	}
-
 	if (excludeCtr == MAX_EXCLUDES) {
 		fprintf(stderr, "Maximum excludes %d exceeded.\n",
 			MAX_EXCLUDES);
@@ -840,6 +828,11 @@ int main(int argc, char **argv)
 			}
 		case 'e':
 			remove_exclude(optarg);
+			if (lstat(optarg, &sb) < 0 && errno != EACCES) {
+				fprintf(stderr, "Can't stat exclude path \"%s\", %s - ignoring.\n",
+					optarg, strerror(errno));
+				break;
+			}
 			if (add_exclude(optarg))
 				exit(1);
 			break;
