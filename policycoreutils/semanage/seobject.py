@@ -21,7 +21,7 @@
 #
 #  
 
-import pwd, grp, string, selinux, tempfile, os, re, sys
+import pwd, grp, string, selinux, tempfile, os, re, sys, stat
 from semanage import *;
 PROGNAME = "policycoreutils"
 import sepolgen.module as module
@@ -273,6 +273,7 @@ class setransRecords:
 		(fd, newfilename) = tempfile.mkstemp('', self.filename)
 		os.write(fd, self.out())
 		os.close(fd)
+		os.chmod(newfilename, os.stat(self.filename)[stat.ST_MODE])
 		os.rename(newfilename, self.filename)
                 os.system("/sbin/service mcstrans reload > /dev/null")
 
@@ -983,7 +984,7 @@ class portRecords(semanageRecords):
 			proto_str = semanage_port_get_proto_str(proto)
 			low = semanage_port_get_low(port)
 			high = semanage_port_get_high(port)
-			ddict[(low, high)] = (ctype, proto_str, level)
+			ddict[(low, high, proto_str)] = (ctype, level)
 		return ddict
 
 	def get_all_by_type(self, locallist = 0):
