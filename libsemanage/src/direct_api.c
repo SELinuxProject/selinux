@@ -452,6 +452,9 @@ static ssize_t bzip(semanage_handle_t *sh, const char *filename, char *data,
 	return total;
 }
 
+#define BZ2_MAGICSTR "BZh"
+#define BZ2_MAGICLEN (sizeof(BZ2_MAGICSTR)-1)
+
 /* bunzip() a file to '*data', returning the total number of uncompressed bytes
  * in the file.  Returns -1 if file could not be decompressed. */
 ssize_t bunzip(semanage_handle_t *sh, FILE *f, char **data)
@@ -463,8 +466,13 @@ ssize_t bunzip(semanage_handle_t *sh, FILE *f, char **data)
 	int     bzerror;
 	size_t  total=0;
 
-	if (!sh->conf->bzip_blocksize)
-		return -1;
+	if (!sh->conf->bzip_blocksize) {
+		bzerror = fread(buf, 1, BZ2_MAGICLEN, f);
+		rewind(f);
+		if ((bzerror != BZ2_MAGICLEN) || memcmp(buf, BZ2_MAGICSTR, BZ2_MAGICLEN))
+			return -1;
+		/* fall through */
+	}
 	
 	b = BZ2_bzReadOpen ( &bzerror, f, 0, sh->conf->bzip_small, NULL, 0 );
 	if ( bzerror != BZ_OK ) {
