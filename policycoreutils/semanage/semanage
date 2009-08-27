@@ -54,6 +54,7 @@ semanage fcontext -{a|d|m} [-frst] file_spec
 semanage translation -{a|d|m} [-T] level
 semanage boolean -{d|m} [--on|--off|-1|-0] -F boolean | boolean_file
 semanage permissive -{d|a} type
+semanage dontaudit [ on | off ]
 
 Primary Options:
 
@@ -116,6 +117,7 @@ Object-specific Options (see above):
 		valid_option["node"] += valid_everyone + [ '-M', '--mask', '-t', '--type', '-r', '--range', '-p', '--protocol']
 		valid_option["fcontext"] = []
 		valid_option["fcontext"] += valid_everyone + [ '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range'] 
+		valid_option["dontaudit"] = [ '-S', '--store' ]
 		valid_option["translation"] = []
 		valid_option["translation"] += valid_everyone + [ '-T', '--trans' ] 
 		valid_option["boolean"] = []
@@ -346,6 +348,12 @@ Object-specific Options (see above):
                         
                 target = cmds[0]
 
+
+		if object == "dontaudit":
+			OBJECT = seobject.dontauditClass(store)
+                        OBJECT.toggle(target)
+                        return
+                              
 		if add:
 			if object == "login":
 				OBJECT.add(target, seuser, serange)

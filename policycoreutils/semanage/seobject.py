@@ -315,6 +315,17 @@ class semanageRecords:
                self.transaction = False
                self.commit()
 
+class dontauditClass(semanageRecords):
+	def __init__(self, store):
+               semanageRecords.__init__(self, store)
+
+	def toggle(self, dontaudit):
+               if dontaudit not in [ "on", "off" ]:
+                      raise ValueError(_("dontaudit requires either 'on' or 'off'"))
+               self.begin()
+               rc = semanage_set_disable_dontaudit(self.sh, dontaudit == "off")
+               self.commit()
+               
 class permissiveRecords(semanageRecords):
 	def __init__(self, store):
                semanageRecords.__init__(self, store)

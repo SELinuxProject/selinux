@@ -21,6 +21,8 @@ semanage \- SELinux Policy Management tool
 .br
 .B semanage permissive \-{a|d} type
 .br
+.B semanage dontaudit [ on | off ]
+.br
 .B semanage translation \-{a|d|m} [\-T] level
 .P
 
@@ -117,6 +119,8 @@ $ semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?"
 $ semanage port -a -t http_port_t -p tcp 81
 # Change apache to a permissive domain
 $ semanage permissive -a httpd_t
+# Turn off dontaudit rules
+$ semanage dontaudit off
 .fi
 
 .SH "AUTHOR"
