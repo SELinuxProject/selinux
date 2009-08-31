@@ -409,13 +409,19 @@ static int module_package_read_offsets(sepol_module_package_t * mod,
 			ERR(file->handle, "offsets are not increasing (at %u, "
 			    "offset %zu -> %zu", i, off[i - 1],
 			    off[i]);
-			return -1;
+			goto err;
 		}
 	}
 
-	free(buf); 	
 	off[nsec] = policy_file_length(file);
+	if (nsec && off[nsec] < off[nsec-1]) {
+		ERR(file->handle, "offset greater than file size (at %u, "
+		    "offset %zu -> %zu", nsec, off[nsec - 1],
+		    off[nsec]);
+		goto err;
+	}
 	*offsets = off;
+	free(buf);
 	return 0;
 
 err:
