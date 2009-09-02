@@ -545,25 +545,53 @@ int canoncon(char **contextp)
 	return rc;
 }
 
-static int process_one(char *name)
+static int symlink_realpath(char *name, char *path)
+{
+	char *p = NULL, *file_sep;
+	char *tmp_path = strdupa(name);
+	size_t len = 0;
+
+	if (!tmp_path) {
+		fprintf(stderr, "strdupa on %s failed:  %s\n", name,
+			strerror(errno));
+		return -1;
+	}
+	file_sep = strrchr(tmp_path, '/');
+	if (file_sep == tmp_path) {
+		file_sep++;
+		p = strcpy(path, "");
+	} else if (file_sep) {
+		*file_sep = 0;
+		file_sep++;
+		p = realpath(tmp_path, path);
+	} else {
+		file_sep = tmp_path;
+		p = realpath("./", path);
+	}
+	if (p)
+		len = strlen(p);
+	if (!p || len + strlen(file_sep) + 2 > PATH_MAX) {
+		fprintf(stderr, "symlink_realpath(%s) failed %s\n", name,
+			strerror(errno));
+		return -1;
+	}
+	p += len;
+	/* ensure trailing slash of directory name */
+	if (len == 0 || *(p - 1) != '/') {
+		*p = '/';
+		p++;
+	}
+	strcpy(p, file_sep);
+	return 0;
+}
+
+static int process_one(char *name, int recurse_this_path)
 {
 	int rc = 0;
 	const char *namelist[2];
 	dev_t dev_num = 0;
 	FTS *fts_handle;
 	FTSENT *ftsent;
-
-	if (expand_realpath) {
-		char *p;
-		p = realpath(name, NULL);
-		if (!p) {
-			fprintf(stderr, "realpath(%s) failed %s\n", name,
-				strerror(errno));
-			return -1;
-		}
-		name = p;
-	}
-
 
 	if (!strcmp(name, "/"))
 		mass_relabel = 1;
@@ -604,7 +632,7 @@ static int process_one(char *name)
 			fts_set(fts_handle, ftsent, FTS_SKIP);
 		if (rc == ERR)
 			goto err;
-		if (!recurse)
+		if (!recurse_this_path)
 			break;
 	} while ((ftsent = fts_read(fts_handle)) != NULL);
 
@@ -619,8 +647,6 @@ out:
 	}
 	if (fts_handle)
 		fts_close(fts_handle);
-	if (expand_realpath)
-		free(name);
 	return rc;
 
 err:
@@ -628,6 +654,52 @@ err:
 		mass_relabel_errs = 1;
 	rc = -1;
 	goto out;
+}
+
+static int process_one_realpath(char *name)
+{
+	int rc = 0;
+	char *p;
+	struct stat sb;
+
+	if (!expand_realpath) {
+		return process_one(name, recurse);
+	} else {
+		rc = lstat(name, &sb);
+		if (rc < 0) {
+			fprintf(stderr, "%s:  lstat(%s) failed:  %s\n",
+				progname, name,	strerror(errno));
+			return -1;
+		}
+
+		if (S_ISLNK(sb.st_mode)) {
+			char path[PATH_MAX + 1];
+
+			rc = symlink_realpath(name, path);
+			if (rc < 0)
+				return rc;
+			rc = process_one(path, 0);
+			if (rc < 0)
+				return rc;
+
+			p = realpath(name, NULL);
+			if (p) {
+				rc = process_one(p, recurse);
+				free(p);
+			}
+			return rc;
+		} else {
+			p = realpath(name, NULL);
+			if (!p) {
+				fprintf(stderr, "realpath(%s) failed %s\n", name,
+					strerror(errno));
+				return -1;
+			}
+			rc = process_one(p, recurse);
+			free(p);
+			return rc;
+		}
+	}
 }
 
 #ifndef USE_AUDIT
@@ -987,13 +1059,13 @@ int main(int argc, char **argv)
 		delim = (null_terminated != 0) ? '\0' : '\n';
 		while ((len = getdelim(&buf, &buf_len, delim, f)) > 0) {
 			buf[len - 1] = 0;
-			errors |= process_one(buf);
+			errors |= process_one_realpath(buf);
 		}
 		if (strcmp(input_filename, "-") != 0)
 			fclose(f);
 	} else {
 		for (i = optind; i < argc; i++) {
-			errors |= process_one(argv[i]);
+			errors |= process_one_realpath(argv[i]);
 		}
 	}
 
