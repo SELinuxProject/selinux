@@ -26,8 +26,6 @@ struct sidtab {
 
 int sidtab_init(struct sidtab *s) hidden;
 int sidtab_insert(struct sidtab *s, security_context_t ctx) hidden;
-void sidtab_remove(struct sidtab *s, security_id_t sid) hidden;
-security_id_t sidtab_claim_sid(struct sidtab *s) hidden;
 
 int sidtab_context_to_sid(struct sidtab *s,
 			  security_context_t ctx, security_id_t * sid) hidden;

@@ -16,17 +16,6 @@
 #include "callbacks.h"
 #include "dso.h"
 
-/* SID reference counter manipulation */
-static inline int sid_inc_refcnt(security_id_t sid)
-{
-	return sid->refcnt = (sid->refcnt > 0) ? sid->refcnt + 1 : 0;
-}
-
-static inline int sid_dec_refcnt(security_id_t sid)
-{
-	return sid->refcnt = (sid->refcnt > 0) ? sid->refcnt - 1 : 0;
-}
-
 /* callback pointers */
 extern void *(*avc_func_malloc) (size_t) hidden;
 extern void (*avc_func_free) (void *)hidden;

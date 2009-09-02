@@ -71,8 +71,6 @@ int avc_context_to_sid_raw(security_context_t ctx, security_id_t * sid)
 	int rc;
 	avc_get_lock(avc_lock);
 	rc = sidtab_context_to_sid(&avc_sidtab, ctx, sid);
-	if (!rc)
-		(*sid)->refcnt++;
 	avc_release_lock(avc_lock);
 	return rc;
 }
@@ -97,13 +95,8 @@ int avc_sid_to_context_raw(security_id_t sid, security_context_t * ctx)
 	int rc;
 	*ctx = NULL;
 	avc_get_lock(avc_lock);
-	if (sid->refcnt > 0) {
-		*ctx = strdup(sid->ctx);	/* caller must free via freecon */
-		rc = *ctx ? 0 : -1;
-	} else {
-		errno = EINVAL;	/* bad reference count */
-		rc = -1;
-	}
+	*ctx = strdup(sid->ctx);	/* caller must free via freecon */
+	rc = *ctx ? 0 : -1;
 	avc_release_lock(avc_lock);
 	return rc;
 }
@@ -123,24 +116,14 @@ int avc_sid_to_context(security_id_t sid, security_context_t * ctx)
 	return ret;
 }
 
-int sidget(security_id_t sid)
+int sidget(security_id_t sid __attribute__((unused)))
 {
-	int rc;
-	avc_get_lock(avc_lock);
-	rc = sid_inc_refcnt(sid);
-	avc_release_lock(avc_lock);
-	return rc;
+	return 1;
 }
 
-int sidput(security_id_t sid)
+int sidput(security_id_t sid __attribute__((unused)))
 {
-	int rc;
-	if (!sid)
-	    return 0;
-	avc_get_lock(avc_lock);
-	rc = sid_dec_refcnt(sid);
-	avc_release_lock(avc_lock);
-	return rc;
+	return 1;
 }
 
 int avc_get_initial_sid(const char * name, security_id_t * sid)
@@ -505,57 +488,8 @@ static int avc_insert(security_id_t ssid, security_id_t tsid,
 	return rc;
 }
 
-/**
- * avc_remove - Remove AVC and sidtab entries for SID.
- * @sid: security identifier to be removed
- *
- * Remove all AVC entries containing @sid as source, target, or
- * create_sid, and remove @sid from the SID table.
- * Free the memory allocated for the structure corresponding
- * to @sid.  After this function has been called, @sid must
- * not be used until another call to avc_context_to_sid() has
- * been made for this SID.
- */
-static void avc_remove(security_id_t sid)
-{
-	struct avc_node *prev, *cur, *tmp;
-	int i;
-
-	for (i = 0; i < AVC_CACHE_SLOTS; i++) {
-		cur = avc_cache.slots[i];
-		prev = NULL;
-		while (cur) {
-			if (sid == cur->ae.ssid || sid == cur->ae.tsid ||
-			    sid == cur->ae.create_sid) {
-				if (prev)
-					prev->next = cur->next;
-				else
-					avc_cache.slots[i] = cur->next;
-				tmp = cur;
-				cur = cur->next;
-				avc_clear_avc_entry(&tmp->ae);
-				tmp->next = avc_node_freelist;
-				avc_node_freelist = tmp;
-				avc_cache.active_nodes--;
-			} else {
-				prev = cur;
-				cur = cur->next;
-			}
-		}
-	}
-	sidtab_remove(&avc_sidtab, sid);
-}
-
 void avc_cleanup(void)
 {
-	security_id_t sid;
-
-	avc_get_lock(avc_lock);
-
-	while (NULL != (sid = sidtab_claim_sid(&avc_sidtab)))
-		avc_remove(sid);
-
-	avc_release_lock(avc_lock);
 }
 
 hidden_def(avc_cleanup)
@@ -745,15 +679,8 @@ static void avc_dump_query(security_id_t ssid, security_id_t tsid,
 {
 	avc_get_lock(avc_lock);
 
-	if (ssid->refcnt > 0)
-		log_append(avc_audit_buf, "scontext=%s", ssid->ctx);
-	else
-		log_append(avc_audit_buf, "ssid=%p", ssid);
-
-	if (tsid->refcnt > 0)
-		log_append(avc_audit_buf, " tcontext=%s", tsid->ctx);
-	else
-		log_append(avc_audit_buf, " tsid=%p", tsid);
+	log_append(avc_audit_buf, "scontext=%s tcontext=%s",
+		   ssid->ctx, tsid->ctx);
 
 	avc_release_lock(avc_lock);
 	log_append(avc_audit_buf, " tclass=%s",
@@ -844,11 +771,6 @@ int avc_has_perm_noaudit(security_id_t ssid,
 		avc_cache_stats_incr(entry_misses);
 		rc = avc_lookup(ssid, tsid, tclass, requested, aeref);
 		if (rc) {
-			if ((ssid->refcnt <= 0) || (tsid->refcnt <= 0)) {
-				errno = EINVAL;
-				rc = -1;
-				goto out;
-			}
 			rc = security_compute_av_flags_raw(ssid->ctx, tsid->ctx,
 							   tclass, requested,
 							   &entry.avd);
@@ -911,11 +833,6 @@ int avc_compute_create(security_id_t ssid,  security_id_t tsid,
 	avc_entry_ref_init(&aeref);
 
 	avc_get_lock(avc_lock);
-	if (ssid->refcnt <= 0 || tsid->refcnt <= 0) {
-		errno = EINVAL;	/* bad reference count */
-		rc = -1;
-		goto out;
-	}
 
 	/* check for a cached entry */
 	rc = avc_lookup(ssid, tsid, tclass, 0, &aeref);
@@ -950,8 +867,6 @@ int avc_compute_create(security_id_t ssid,  security_id_t tsid,
 
 	rc = 0;
 out:
-	if (*newsid)
-		(*newsid)->refcnt++;
 	avc_release_lock(avc_lock);
 	return rc;
 }
@@ -960,22 +875,15 @@ int avc_compute_member(security_id_t ssid,  security_id_t tsid,
 		       security_class_t tclass, security_id_t *newsid)
 {
 	int rc;
+	security_context_t ctx = NULL;
 	*newsid = NULL;
 	avc_get_lock(avc_lock);
-	if (ssid->refcnt > 0 && tsid->refcnt > 0) {
-		security_context_t ctx = NULL;
-		rc = security_compute_member_raw(ssid->ctx, tsid->ctx, tclass,
-						 &ctx);
-		if (rc)
-			goto out;
-		rc = sidtab_context_to_sid(&avc_sidtab, ctx, newsid);
-		if (!rc)
-			(*newsid)->refcnt++;
-		freecon(ctx);
-	} else {
-		errno = EINVAL;	/* bad reference count */
-		rc = -1;
-	}
+
+	rc = security_compute_member_raw(ssid->ctx, tsid->ctx, tclass, &ctx);
+	if (rc)
+		goto out;
+	rc = sidtab_context_to_sid(&avc_sidtab, ctx, newsid);
+	freecon(ctx);
 out:
 	avc_release_lock(avc_lock);
 	return rc;

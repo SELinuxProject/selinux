@@ -67,51 +67,11 @@ int sidtab_insert(struct sidtab *s, security_context_t ctx)
 	hvalue = sidtab_hash(newctx);
 	newnode->next = s->htable[hvalue];
 	newnode->sid_s.ctx = newctx;
-	newnode->sid_s.refcnt = 0;	/* caller should increment */
+	newnode->sid_s.refcnt = 1;	/* unused */
 	s->htable[hvalue] = newnode;
 	s->nel++;
       out:
 	return rc;
-}
-
-void sidtab_remove(struct sidtab *s, security_id_t sid)
-{
-	int hvalue;
-	struct sidtab_node *cur, *prev;
-
-	hvalue = sidtab_hash(sid->ctx);
-	cur = s->htable[hvalue];
-	prev = NULL;
-	while (cur) {
-		if (sid == &cur->sid_s) {
-			if (prev)
-				prev->next = cur->next;
-			else
-				s->htable[hvalue] = cur->next;
-			avc_free(cur);
-			s->nel--;
-			return;
-		} else {
-			prev = cur;
-			cur = cur->next;
-		}
-	}
-}
-
-security_id_t sidtab_claim_sid(struct sidtab *s)
-{
-	int i;
-	struct sidtab_node *cur;
-
-	for (i = 0; i < SIDTAB_SIZE; i++) {
-		cur = s->htable[i];
-		while (cur) {
-			if (!cur->sid_s.refcnt)
-				return &cur->sid_s;
-			cur = cur->next;
-		}
-	}
-	return NULL;
 }
 
 int
