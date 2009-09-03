@@ -31,7 +31,7 @@ flushes the userspace AVC, causing it to forget any cached access decisions.  Th
 below.
 
 .B avc_cleanup
-forces the userspace AVC to search for and free all unused SID's and any access decision entries that refer to them.  Normally, the userspace AVC lazily reclaims unused SID's.  
+attempts to free unused memory within the userspace AVC, but does not flush any cached access decisions.  Under normal operation, calling this function should not be necessary.
 
 .SH "OPTIONS"
 The userspace AVC obeys callbacks set via

@@ -31,8 +31,7 @@ but does not require converting from userspace SID's to contexts and back again.
 
 These functions
 return a SID for the computed context in the memory referenced by
-.IR sid ,
-incrementing its reference count by 1.
+.IR sid .
 
 .SH "RETURN VALUE"
 On success, zero is returned.  On error, \-1 is returned and
@@ -48,11 +47,7 @@ and/or the security contexts referenced by
 .I ssid
 and
 .I tsid
-are not recognized by the currently loaded policy, or 
-.I tsid
-or
-.I ssid
-has a zero reference count and is invalid.
+are not recognized by the currently loaded policy.
 
 .TP
 .B ENOMEM
