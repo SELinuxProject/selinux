@@ -1,3 +1,8 @@
+2.0.73 2009-09-04
+        * Add semanage dontaudit to turn off dontaudits from Dan Walsh.
+        * Fix semanage to set correct mode for setrans file from Dan Walsh.
+        * Fix malformed dictionary in portRecord from Dan Walsh.
+
 2.0.72 2009-09-03
 	* Restore symlink handling support to restorecon based on a patch by
 	Martin Orr.  This fixes the restorecon /dev/stdin performed by Debian
