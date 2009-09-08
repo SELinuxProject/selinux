@@ -314,7 +314,7 @@ class AuditParser:
             elif i == "security_compute_sid:":
                 msg = ComputeSidMessage(line)
                 found = True
-            elif i == "type=MAC_POLICY_LOAD":
+            elif i == "type=MAC_POLICY_LOAD" or i == "type=1403":
                 msg = PolicyLoadMessage(line)
                 found = True
             elif i == "type=AVC_PATH":
