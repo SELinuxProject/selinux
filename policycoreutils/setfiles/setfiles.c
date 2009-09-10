@@ -1,26 +1,12 @@
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
+#include "restore.h"
 #include <unistd.h>
-#include <stdlib.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <stdio_ext.h>
-#include <string.h>
-#include <errno.h>
 #include <ctype.h>
 #include <regex.h>
 #include <sys/vfs.h>
 #include <sys/utsname.h>
 #define __USE_XOPEN_EXTENDED 1	/* nftw */
-#define SKIP -2
-#define ERR -1
-#include <fts.h>
-#include <limits.h>
-#include <sepol/sepol.h>
-#include <selinux/selinux.h>
-#include <selinux/label.h>
-#include <syslog.h>
 #include <libgen.h>
 #ifdef USE_AUDIT
 #include <libaudit.h>
@@ -32,286 +18,27 @@
 static int mass_relabel;
 static int mass_relabel_errs;
 
-#define STAR_COUNT 1000
 
-static FILE *outfile = NULL;
-static int force = 0;
-#define STAT_BLOCK_SIZE 1
-static int progress = 0;
-static unsigned long long count = 0;
+/* cmdline opts*/
 
-#define MAX_EXCLUDES 1000
-static int excludeCtr = 0;
-struct edir {
-	char *directory;
-	size_t size;
-};
-static struct edir excludeArray[MAX_EXCLUDES];
-
-/*
- * Command-line options.
- */
 static char *policyfile = NULL;
-static int debug = 0;
-static int change = 1;
-static int quiet = 0;
-static int ignore_enoent;
-static int verbose = 0;
-static int logging = 0;
 static int warn_no_match = 0;
 static int null_terminated = 0;
-static char *rootpath = NULL;
-static int rootpathlen = 0;
-static int recurse; /* Recursive descent. */
 static int errors;
+static int ignore_enoent;
+static struct restore_opts r_opts;
 
-static char *progname;
+#define STAT_BLOCK_SIZE 1
+
+
 
 #define SETFILES "setfiles"
 #define RESTORECON "restorecon"
 static int iamrestorecon;
 
 /* Behavior flags determined based on setfiles vs. restorecon */
-static int expand_realpath;  /* Expand paths via realpath. */
-static int abort_on_error; /* Abort the file tree walk upon an error. */
-static int add_assoc; /* Track inode associations for conflict detection. */
-static int fts_flags; /* Flags to fts, e.g. follow links, follow mounts */
 static int ctx_validate; /* Validate contexts */
 static const char *altpath; /* Alternate path to file_contexts */
-
-/* Label interface handle */
-static struct selabel_handle *hnd;
-
-/*
- * An association between an inode and a context.
- */
-typedef struct file_spec {
-	ino_t ino;		/* inode number */
-	char *con;		/* matched context */
-	char *file;		/* full pathname */
-	struct file_spec *next;	/* next association in hash bucket chain */
-} file_spec_t;
-
-/*
- * The hash table of associations, hashed by inode number.
- * Chaining is used for collisions, with elements ordered
- * by inode number in each bucket.  Each hash bucket has a dummy 
- * header.
- */
-#define HASH_BITS 16
-#define HASH_BUCKETS (1 << HASH_BITS)
-#define HASH_MASK (HASH_BUCKETS-1)
-static file_spec_t *fl_head;
-
-/*
- * Try to add an association between an inode and a context.
- * If there is a different context that matched the inode,
- * then use the first context that matched.
- */
-int filespec_add(ino_t ino, const security_context_t con, const char *file)
-{
-	file_spec_t *prevfl, *fl;
-	int h, ret;
-	struct stat sb;
-
-	if (!fl_head) {
-		fl_head = malloc(sizeof(file_spec_t) * HASH_BUCKETS);
-		if (!fl_head)
-			goto oom;
-		memset(fl_head, 0, sizeof(file_spec_t) * HASH_BUCKETS);
-	}
-
-	h = (ino + (ino >> HASH_BITS)) & HASH_MASK;
-	for (prevfl = &fl_head[h], fl = fl_head[h].next; fl;
-	     prevfl = fl, fl = fl->next) {
-		if (ino == fl->ino) {
-			ret = lstat(fl->file, &sb);
-			if (ret < 0 || sb.st_ino != ino) {
-				freecon(fl->con);
-				free(fl->file);
-				fl->file = strdup(file);
-				if (!fl->file)
-					goto oom;
-				fl->con = strdup(con);
-				if (!fl->con)
-					goto oom;
-				return 1;
-			}
-
-			if (strcmp(fl->con, con) == 0)
-				return 1;
-
-			fprintf(stderr,
-				"%s:  conflicting specifications for %s and %s, using %s.\n",
-				__FUNCTION__, file, fl->file, fl->con);
-			free(fl->file);
-			fl->file = strdup(file);
-			if (!fl->file)
-				goto oom;
-			return 1;
-		}
-
-		if (ino > fl->ino)
-			break;
-	}
-
-	fl = malloc(sizeof(file_spec_t));
-	if (!fl)
-		goto oom;
-	fl->ino = ino;
-	fl->con = strdup(con);
-	if (!fl->con)
-		goto oom_freefl;
-	fl->file = strdup(file);
-	if (!fl->file)
-		goto oom_freefl;
-	fl->next = prevfl->next;
-	prevfl->next = fl;
-	return 0;
-      oom_freefl:
-	free(fl);
-      oom:
-	fprintf(stderr,
-		"%s:  insufficient memory for file label entry for %s\n",
-		__FUNCTION__, file);
-	return -1;
-}
-
-/*
- * Evaluate the association hash table distribution.
- */
-void filespec_eval(void)
-{
-	file_spec_t *fl;
-	int h, used, nel, len, longest;
-
-	if (!fl_head)
-		return;
-
-	used = 0;
-	longest = 0;
-	nel = 0;
-	for (h = 0; h < HASH_BUCKETS; h++) {
-		len = 0;
-		for (fl = fl_head[h].next; fl; fl = fl->next) {
-			len++;
-		}
-		if (len)
-			used++;
-		if (len > longest)
-			longest = len;
-		nel += len;
-	}
-
-	printf
-	    ("%s:  hash table stats: %d elements, %d/%d buckets used, longest chain length %d\n",
-	     __FUNCTION__, nel, used, HASH_BUCKETS, longest);
-}
-
-/*
- * Destroy the association hash table.
- */
-void filespec_destroy(void)
-{
-	file_spec_t *fl, *tmp;
-	int h;
-
-	if (!fl_head)
-		return;
-
-	for (h = 0; h < HASH_BUCKETS; h++) {
-		fl = fl_head[h].next;
-		while (fl) {
-			tmp = fl;
-			fl = fl->next;
-			freecon(tmp->con);
-			free(tmp->file);
-			free(tmp);
-		}
-		fl_head[h].next = NULL;
-	}
-	free(fl_head);
-	fl_head = NULL;
-}
-
-static int add_exclude(const char *directory)
-{
-	size_t len = 0;
-
-	if (directory == NULL || directory[0] != '/') {
-		fprintf(stderr, "Full path required for exclude: %s.\n",
-			directory);
-		return 1;
-	}
-	if (excludeCtr == MAX_EXCLUDES) {
-		fprintf(stderr, "Maximum excludes %d exceeded.\n",
-			MAX_EXCLUDES);
-		return 1;
-	}
-
-	len = strlen(directory);
-	while (len > 1 && directory[len - 1] == '/') {
-		len--;
-	}
-	excludeArray[excludeCtr].directory = strndup(directory, len);
-
-	if (excludeArray[excludeCtr].directory == NULL) {
-		fprintf(stderr, "Out of memory.\n");
-		return 1;
-	}
-	excludeArray[excludeCtr++].size = len;
-
-	return 0;
-}
-
-static void remove_exclude(const char *directory)
-{
-	int i = 0;
-	for (i = 0; i < excludeCtr; i++) {
-		if (strcmp(directory, excludeArray[i].directory) == 0) {
-			free(excludeArray[i].directory);
-			if (i != excludeCtr-1)
-				excludeArray[i] = excludeArray[excludeCtr-1];
-			excludeCtr--;
-			return;
-		}
-	}
-	return;
-}
-
-static int exclude(const char *file)
-{
-	int i = 0;
-	for (i = 0; i < excludeCtr; i++) {
-		if (strncmp
-		    (file, excludeArray[i].directory,
-		     excludeArray[i].size) == 0) {
-			if (file[excludeArray[i].size] == 0
-			    || file[excludeArray[i].size] == '/') {
-				return 1;
-			}
-		}
-	}
-	return 0;
-}
-
-int match(const char *name, struct stat *sb, char **con)
-{
-	if (NULL != rootpath) {
-		if (0 != strncmp(rootpath, name, rootpathlen)) {
-			fprintf(stderr, "%s:  %s is not located in %s\n",
-				progname, name, rootpath);
-			return -1;
-		}
-		name += rootpathlen;
-	}
-
-	if (rootpath != NULL && name[0] == '\0')
-		/* this is actually the root dir of the alt root */
-		return selabel_lookup_raw(hnd, con, "/", sb->st_mode);
-	else
-		return selabel_lookup_raw(hnd, con, name, sb->st_mode);
-}
 
 void usage(const char *const name)
 {
@@ -334,194 +61,30 @@ static int nerr = 0;
 void inc_err()
 {
 	nerr++;
-	if (nerr > 9 && !debug) {
+	if (nerr > 9 && !r_opts.debug) {
 		fprintf(stderr, "Exiting after 10 errors.\n");
 		exit(1);
 	}
 }
 
-/* Compare two contexts to see if their differences are "significant",
- * or whether the only difference is in the user. */
-static int only_changed_user(const char *a, const char *b)
-{
-	char *rest_a, *rest_b;	/* Rest of the context after the user */
-	if (force)
-		return 0;
-	if (!a || !b)
-		return 0;
-	rest_a = strchr(a, ':');
-	rest_b = strchr(b, ':');
-	if (!rest_a || !rest_b)
-		return 0;
-	return (strcmp(rest_a, rest_b) == 0);
-}
 
-static int restore(FTSENT *ftsent)
-{
-	char *my_file = strdupa(ftsent->fts_path);
-	int ret;
-	char *context, *newcon;
-	int user_only_changed = 0;
-
-	if (match(my_file, ftsent->fts_statp, &newcon) < 0)
-		/* Check for no matching specification. */
-		return (errno == ENOENT) ? 0 : -1;
-
-	if (progress) {
-		count++;
-		if (count % (80 * STAR_COUNT) == 0) {
-			fprintf(stdout, "\n");
-			fflush(stdout);
-		}
-		if (count % STAR_COUNT == 0) {
-			fprintf(stdout, "*");
-			fflush(stdout);
-		}
-	}
-
-	/*
-	 * Try to add an association between this inode and
-	 * this specification.  If there is already an association
-	 * for this inode and it conflicts with this specification,
-	 * then use the last matching specification.
-	 */
-	if (add_assoc) {
-		ret = filespec_add(ftsent->fts_statp->st_ino, newcon, my_file);
-		if (ret < 0)
-			goto err;
-
-		if (ret > 0)
-			/* There was already an association and it took precedence. */
-			goto out;
-	}
-
-	if (debug) {
-		printf("%s:  %s matched by %s\n", progname, my_file, newcon);
-	}
-
-	/* Get the current context of the file. */
-	ret = lgetfilecon_raw(ftsent->fts_accpath, &context);
-	if (ret < 0) {
-		if (errno == ENODATA) {
-			context = NULL;
-		} else {
-			fprintf(stderr, "%s get context on %s failed: '%s'\n",
-				progname, my_file, strerror(errno));
-			goto err;
-		}
-		user_only_changed = 0;
-	} else
-		user_only_changed = only_changed_user(context, newcon);
-
-	/*
-	 * Do not relabel the file if the matching specification is 
-	 * <<none>> or the file is already labeled according to the 
-	 * specification.
-	 */
-	if ((strcmp(newcon, "<<none>>") == 0) ||
-	    (context && (strcmp(context, newcon) == 0))) {
-		freecon(context);
-		goto out;
-	}
-
-	if (!force && context && (is_context_customizable(context) > 0)) {
-		if (verbose > 1) {
-			fprintf(stderr,
-				"%s: %s not reset customized by admin to %s\n",
-				progname, my_file, context);
-		}
-		freecon(context);
-		goto out;
-	}
-
-	if (verbose) {
-		/* If we're just doing "-v", trim out any relabels where
-		 * the user has changed but the role and type are the
-		 * same.  For "-vv", emit everything. */
-		if (verbose > 1 || !user_only_changed) {
-			printf("%s reset %s context %s->%s\n",
-			       progname, my_file, context ?: "", newcon);
-		}
-	}
-
-	if (logging && !user_only_changed) {
-		if (context)
-			syslog(LOG_INFO, "relabeling %s from %s to %s\n",
-			       my_file, context, newcon);
-		else
-			syslog(LOG_INFO, "labeling %s to %s\n",
-			       my_file, newcon);
-	}
-
-	if (outfile && !user_only_changed)
-		fprintf(outfile, "%s\n", my_file);
-
-	if (context)
-		freecon(context);
-
-	/*
-	 * Do not relabel the file if -n was used.
-	 */
-	if (!change || user_only_changed)
-		goto out;
-
-	/*
-	 * Relabel the file to the specified context.
-	 */
-	ret = lsetfilecon(ftsent->fts_accpath, newcon);
-	if (ret) {
-		fprintf(stderr, "%s set context %s->%s failed:'%s'\n",
-			progname, my_file, newcon, strerror(errno));
-		goto skip;
-	}
-out:
-	freecon(newcon);
-	return 0;
-skip:
-	freecon(newcon);
-	return SKIP;
-err:
-	freecon(newcon);
-	return ERR;
-}
-
-/*
- * Apply the last matching specification to a file.
- * This function is called by fts on each file during
- * the directory traversal.
- */
-static int apply_spec(FTSENT *ftsent)
-{
-	if (ftsent->fts_info == FTS_DNR) {
-		fprintf(stderr, "%s:  unable to read directory %s\n",
-			progname, ftsent->fts_path);
-		return SKIP;
-	}
-
-	int rc = restore(ftsent);
-	if (rc == ERR) {
-		if (!abort_on_error)
-			return SKIP;
-	}
-	return rc;
-}
 
 void set_rootpath(const char *arg)
 {
 	int len;
 
-	rootpath = strdup(arg);
-	if (NULL == rootpath) {
-		fprintf(stderr, "%s:  insufficient memory for rootpath\n",
-			progname);
+	r_opts.rootpath = strdup(arg);
+	if (NULL == r_opts.rootpath) {
+		fprintf(stderr, "%s:  insufficient memory for r_opts.rootpath\n",
+			r_opts.progname);
 		exit(1);
 	}
 
 	/* trim trailing /, if present */
-	len = strlen(rootpath);
-	while (len && ('/' == rootpath[len - 1]))
-		rootpath[--len] = 0;
-	rootpathlen = len;
+	len = strlen(r_opts.rootpath);
+	while (len && ('/' == r_opts.rootpath[len - 1]))
+		r_opts.rootpath[--len] = 0;
+	r_opts.rootpathlen = len;
 }
 
 int canoncon(char **contextp)
@@ -543,163 +106,6 @@ int canoncon(char **contextp)
 	}
 
 	return rc;
-}
-
-static int symlink_realpath(char *name, char *path)
-{
-	char *p = NULL, *file_sep;
-	char *tmp_path = strdupa(name);
-	size_t len = 0;
-
-	if (!tmp_path) {
-		fprintf(stderr, "strdupa on %s failed:  %s\n", name,
-			strerror(errno));
-		return -1;
-	}
-	file_sep = strrchr(tmp_path, '/');
-	if (file_sep == tmp_path) {
-		file_sep++;
-		p = strcpy(path, "");
-	} else if (file_sep) {
-		*file_sep = 0;
-		file_sep++;
-		p = realpath(tmp_path, path);
-	} else {
-		file_sep = tmp_path;
-		p = realpath("./", path);
-	}
-	if (p)
-		len = strlen(p);
-	if (!p || len + strlen(file_sep) + 2 > PATH_MAX) {
-		fprintf(stderr, "symlink_realpath(%s) failed %s\n", name,
-			strerror(errno));
-		return -1;
-	}
-	p += len;
-	/* ensure trailing slash of directory name */
-	if (len == 0 || *(p - 1) != '/') {
-		*p = '/';
-		p++;
-	}
-	strcpy(p, file_sep);
-	return 0;
-}
-
-static int process_one(char *name, int recurse_this_path)
-{
-	int rc = 0;
-	const char *namelist[2];
-	dev_t dev_num = 0;
-	FTS *fts_handle;
-	FTSENT *ftsent;
-
-	if (!strcmp(name, "/"))
-		mass_relabel = 1;
-
-	namelist[0] = name;
-	namelist[1] = NULL;
-	fts_handle = fts_open((char **)namelist, fts_flags, NULL);
-	if (fts_handle  == NULL) {
-		fprintf(stderr,
-			"%s: error while labeling %s:  %s\n",
-			progname, namelist[0], strerror(errno));
-		goto err;
-	}
-
-
-	ftsent = fts_read(fts_handle);
-	if (ftsent != NULL) {
-		/* Keep the inode of the first one. */
-		dev_num = ftsent->fts_statp->st_dev;
-	}
-
-	do {
-		/* Skip the post order nodes. */
-		if (ftsent->fts_info == FTS_DP)
-			continue;
-		/* If the XDEV flag is set and the device is different */
-		if (ftsent->fts_statp->st_dev != dev_num &&
-		    FTS_XDEV == (fts_flags & FTS_XDEV))
-			continue;
-		if (excludeCtr > 0) {
-			if (exclude(ftsent->fts_path)) {
-				fts_set(fts_handle, ftsent, FTS_SKIP);
-				continue;
-			}
-		}
-		int rc = apply_spec(ftsent);
-		if (rc == SKIP)
-			fts_set(fts_handle, ftsent, FTS_SKIP);
-		if (rc == ERR)
-			goto err;
-		if (!recurse_this_path)
-			break;
-	} while ((ftsent = fts_read(fts_handle)) != NULL);
-
-	if (!strcmp(name, "/"))
-		mass_relabel_errs = 0;
-
-out:
-	if (add_assoc) {
-		if (!quiet)
-			filespec_eval();
-		filespec_destroy();
-	}
-	if (fts_handle)
-		fts_close(fts_handle);
-	return rc;
-
-err:
-	if (!strcmp(name, "/"))
-		mass_relabel_errs = 1;
-	rc = -1;
-	goto out;
-}
-
-static int process_one_realpath(char *name)
-{
-	int rc = 0;
-	char *p;
-	struct stat sb;
-
-	if (!expand_realpath) {
-		return process_one(name, recurse);
-	} else {
-		rc = lstat(name, &sb);
-		if (rc < 0) {
-			fprintf(stderr, "%s:  lstat(%s) failed:  %s\n",
-				progname, name,	strerror(errno));
-			return -1;
-		}
-
-		if (S_ISLNK(sb.st_mode)) {
-			char path[PATH_MAX + 1];
-
-			rc = symlink_realpath(name, path);
-			if (rc < 0)
-				return rc;
-			rc = process_one(path, 0);
-			if (rc < 0)
-				return rc;
-
-			p = realpath(name, NULL);
-			if (p) {
-				rc = process_one(p, recurse);
-				free(p);
-			}
-			return rc;
-		} else {
-			p = realpath(name, NULL);
-			if (!p) {
-				fprintf(stderr, "realpath(%s) failed %s\n", name,
-					strerror(errno));
-				return -1;
-			}
-			rc = process_one(p, recurse);
-			free(p);
-			return rc;
-		}
-	}
 }
 
 #ifndef USE_AUDIT
@@ -803,21 +209,32 @@ int main(int argc, char **argv)
 	int use_input_file = 0;
 	char *buf = NULL;
 	size_t buf_len;
+	int recurse; /* Recursive descent. */
 	char *base;
-	struct selinux_opt opts[] = {
-		{ SELABEL_OPT_VALIDATE, NULL },
-		{ SELABEL_OPT_PATH, NULL }
-	};
+	
+	memset(&r_opts, 0, sizeof(r_opts));
 
-	memset(excludeArray, 0, sizeof(excludeArray));
+	/* Initialize variables */
+	r_opts.progress = 0;
+	r_opts.count = 0;
+	r_opts.debug = 0;
+	r_opts.change = 1;
+	r_opts.verbose = 0;
+	r_opts.logging = 0;
+	r_opts.rootpath = NULL;
+	r_opts.rootpathlen = 0;
+	r_opts.outfile = NULL;
+	r_opts.force = 0;
+	r_opts.hard_links = 1;
+
 	altpath = NULL;
 
-	progname = strdup(argv[0]);
-	if (!progname) {
+	r_opts.progname = strdup(argv[0]);
+	if (!r_opts.progname) {
 		fprintf(stderr, "%s:  Out of memory!\n", argv[0]);
 		exit(1);
 	}
-	base = basename(progname);
+	base = basename(r_opts.progname);
 	
 	if (!strcmp(base, SETFILES)) {
 		/* 
@@ -831,10 +248,10 @@ int main(int argc, char **argv)
 		 */
 		iamrestorecon = 0;
 		recurse = 1;
-		expand_realpath = 0;
-		abort_on_error = 1;
-		add_assoc = 1;
-		fts_flags = FTS_PHYSICAL | FTS_XDEV;
+		r_opts.expand_realpath = 0;
+		r_opts.abort_on_error = 1;
+		r_opts.add_assoc = 1;
+		r_opts.fts_flags = FTS_PHYSICAL | FTS_XDEV;
 		ctx_validate = 1;
 	} else {
 		/*
@@ -846,14 +263,14 @@ int main(int argc, char **argv)
 		 * Follows mounts,
 		 * Does lazy validation of contexts upon use. 
 		 */
-		if (strcmp(base, RESTORECON) && !quiet) 
+		if (strcmp(base, RESTORECON) && !r_opts.quiet) 
 			printf("Executed with an unrecognized name (%s), defaulting to %s behavior.\n", base, RESTORECON);
 		iamrestorecon = 1;
 		recurse = 0;
-		expand_realpath = 1;
-		abort_on_error = 0;
-		add_assoc = 0;
-		fts_flags = FTS_PHYSICAL;
+		r_opts.expand_realpath = 1;
+		r_opts.abort_on_error = 0;
+		r_opts.add_assoc = 0;
+		r_opts.fts_flags = FTS_PHYSICAL;
 		ctx_validate = 0;
 
 		/* restorecon only:  silent exit if no SELinux.
@@ -915,37 +332,37 @@ int main(int argc, char **argv)
 			input_filename = optarg;
 			break;			
 		case 'd':
-			debug = 1;
+			r_opts.debug = 1;
 			break;
 		case 'i':
 			ignore_enoent = 1;
 			break;
 		case 'l':
-			logging = 1;
+			r_opts.logging = 1;
 			break;
 		case 'F':
-			force = 1;
+			r_opts.force = 1;
 			break;
 		case 'n':
-			change = 0;
+			r_opts.change = 0;
 			break;
 		case 'o':
 			if (strcmp(optarg, "-") == 0) {
-				outfile = stdout;
+				r_opts.outfile = stdout;
 				break;
 			}
 
-			outfile = fopen(optarg, "w");
-			if (!outfile) {
+			r_opts.outfile = fopen(optarg, "w");
+			if (!r_opts.outfile) {
 				fprintf(stderr, "Error opening %s: %s\n",
 					optarg, strerror(errno));
 
 				usage(argv[0]);
 			}
-			__fsetlocking(outfile, FSETLOCKING_BYCALLER);
+			__fsetlocking(r_opts.outfile, FSETLOCKING_BYCALLER);
 			break;
 		case 'q':
-			quiet = 1;
+			r_opts.quiet = 1;
 			break;
 		case 'R':
 		case 'r':
@@ -954,11 +371,11 @@ int main(int argc, char **argv)
 				break;
 			}
 			if (optind + 1 >= argc) {
-				fprintf(stderr, "usage:  %s -r rootpath\n",
+				fprintf(stderr, "usage:  %s -r r_opts.rootpath\n",
 					argv[0]);
 				exit(1);
 			}
-			if (NULL != rootpath) {
+			if (NULL != r_opts.rootpath) {
 				fprintf(stderr,
 					"%s: only one -r can be specified\n",
 					argv[0]);
@@ -969,23 +386,23 @@ int main(int argc, char **argv)
 		case 's':
 			use_input_file = 1;
 			input_filename = "-";
-			add_assoc = 0;
+			r_opts.add_assoc = 0;
 			break;
 		case 'v':
-			if (progress) {
+			if (r_opts.progress) {
 				fprintf(stderr,
 					"Progress and Verbose mutually exclusive\n");
 				exit(1);
 			}
-			verbose++;
+			r_opts.verbose++;
 			break;
 		case 'p':
-			if (verbose) {
+			if (r_opts.verbose) {
 				fprintf(stderr,
 					"Progress and Verbose mutually exclusive\n");
 				usage(argv[0]);
 			}
-			progress = 1;
+			r_opts.progress = 1;
 			break;
 		case 'W':
 			warn_no_match = 1;
@@ -1033,18 +450,13 @@ int main(int argc, char **argv)
 	}
 
 	/* Load the file contexts configuration and check it. */
-	opts[0].value = (ctx_validate ? (char*)1 : NULL);
-	opts[1].value = altpath;
-
-	hnd = selabel_open(SELABEL_CTX_FILE, opts, 2);
-	if (!hnd) {
-		perror(altpath);
-		exit(1);
-	}
+	r_opts.selabel_opt_validate = (ctx_validate ? (char *)1 : NULL);
+	r_opts.selabel_opt_path = altpath;
 
 	if (nerr)
 		exit(1);
 
+	restore_init(&r_opts);
 	if (use_input_file) {
 		FILE *f = stdin;
 		ssize_t len;
@@ -1061,31 +473,34 @@ int main(int argc, char **argv)
 		delim = (null_terminated != 0) ? '\0' : '\n';
 		while ((len = getdelim(&buf, &buf_len, delim, f)) > 0) {
 			buf[len - 1] = 0;
-			errors |= process_one_realpath(buf);
+			if (!strcmp(buf, "/"))
+				mass_relabel = 1;
+			errors |= process_one_realpath(buf, recurse) < 0;
 		}
 		if (strcmp(input_filename, "-") != 0)
 			fclose(f);
 	} else {
 		for (i = optind; i < argc; i++) {
-			errors |= process_one_realpath(argv[i]);
+			if (!strcmp(argv[i], "/"))
+				mass_relabel = 1;
+			errors |= process_one_realpath(argv[i], recurse) < 0;
 		}
 	}
-
+	
+	if (mass_relabel)
+		mass_relabel_errs = errors;
 	maybe_audit_mass_relabel();
 
 	if (warn_no_match)
-		selabel_stats(hnd);
+		selabel_stats(r_opts.hnd);
 
-	selabel_close(hnd);
+	selabel_close(r_opts.hnd);
+	restore_finish();
 
-	if (outfile)
-		fclose(outfile);
+	if (r_opts.outfile)
+		fclose(r_opts.outfile);
 
-	for (i = 0; i < excludeCtr; i++) {
-		free(excludeArray[i].directory);
-	}
-
-       if (progress && count >= STAR_COUNT)
+       if (r_opts.progress && r_opts.count >= STAR_COUNT)
                printf("\n");
 	exit(errors);
 }

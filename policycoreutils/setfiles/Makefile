@@ -5,7 +5,7 @@ MANDIR = $(PREFIX)/share/man
 LIBDIR ?= $(PREFIX)/lib
 AUDITH = $(shell ls /usr/include/libaudit.h 2>/dev/null)
 
-CFLAGS = -Werror -Wall -W
+CFLAGS = -g -Werror -Wall -W
 override CFLAGS += -I$(PREFIX)/include
 LDLIBS = -lselinux -lsepol -L$(LIBDIR)
 
@@ -16,7 +16,7 @@ endif
 
 all: setfiles restorecon
 
-setfiles:  setfiles.o 
+setfiles:  setfiles.o restore.o
 
 restorecon: setfiles
 	ln -sf setfiles restorecon
