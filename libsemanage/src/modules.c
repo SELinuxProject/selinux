@@ -87,7 +87,11 @@ int semanage_module_upgrade(semanage_handle_t * sh,
 		}
 	}
 	sh->modules_modified = 1;
-	return sh->funcs->upgrade(sh, module_data, data_len);
+	int rc = sh->funcs->upgrade(sh, module_data, data_len);
+	if (rc == -5) /* module did not exist */
+		rc = sh->funcs->install(sh, module_data, data_len);
+	return rc;
+	
 }
 
 int semanage_module_upgrade_file(semanage_handle_t * sh,
@@ -106,7 +110,10 @@ int semanage_module_upgrade_file(semanage_handle_t * sh,
 		}
 	}
 	sh->modules_modified = 1;
-	return sh->funcs->upgrade_file(sh, module_name);
+	int rc = sh->funcs->upgrade_file(sh, module_name);
+	if (rc == -5) /* module did not exist */
+		rc = sh->funcs->install_file(sh, module_name);
+	return rc;
 }
 
 int semanage_module_install_base(semanage_handle_t * sh,

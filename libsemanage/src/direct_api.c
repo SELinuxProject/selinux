@@ -1100,7 +1100,7 @@ static int get_direct_upgrade_filename(semanage_handle_t * sh,
 	if (semanage_direct_list(sh, &modinfo, &num_modules) < 0) {
 		goto cleanup;
 	}
-	retval = -4;
+	retval = -5;
 	for (i = 0; i < num_modules; i++) {
 		semanage_module_info_t *m =
 		    semanage_module_list_nth(modinfo, i);
@@ -1116,10 +1116,6 @@ static int get_direct_upgrade_filename(semanage_handle_t * sh,
 				goto cleanup;
 			}
 		}
-	}
-	if (retval == -4) {
-		ERR(sh, "There does not already exist a module named %s.",
-		    module_name);
 	}
       cleanup:
 	free(version);
@@ -1143,8 +1139,8 @@ static int get_direct_upgrade_filename(semanage_handle_t * sh,
  * module is an older version then the one in 'data'.  Returns 0 on
  * success, -1 if out of memory, -2 if the data does not represent a
  * valid module file, -3 if error while writing file or reading
- * modules directory, -4 if there does not exist an older module or if
- * the previous module is same or newer than 'data'.
+ * modules directory, -4 if the previous module is same or newer than 'data', 
+ * -5 if there does not exist an older module.
  */
 static int semanage_direct_upgrade(semanage_handle_t * sh,
 				   char *data, size_t data_len)
