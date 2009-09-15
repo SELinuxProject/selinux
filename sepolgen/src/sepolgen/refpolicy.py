@@ -618,6 +618,41 @@ class NetifCon(Leaf):
     def to_string(self):
         return "netifcon %s %s %s" % (self.interface, str(self.interface_context),
                                    str(self.packet_context))
+class PirqCon(Leaf):
+    def __init__(self, parent=None):
+        Leaf.__init__(self, parent)
+        self.pirq_number = ""
+        self.context = None
+
+    def to_string(self):
+        return "pirqcon %s %s" % (self.pirq_number, str(self.context))
+
+class IomemCon(Leaf):
+    def __init__(self, parent=None):
+        Leaf.__init__(self, parent)
+        self.device_mem = ""
+        self.context = None
+
+    def to_string(self):
+        return "iomemcon %s %s" % (self.device_mem, str(self.context))
+
+class IoportCon(Leaf):
+    def __init__(self, parent=None):
+        Leaf.__init__(self, parent)
+        self.ioport = ""
+        self.context = None
+
+    def to_string(self):
+        return "ioportcon %s %s" % (self.ioport, str(self.context))
+
+class PciDeviceCon(Leaf):
+    def __init__(self, parent=None):
+        Leaf.__init__(self, parent)
+        self.device = ""
+        self.context = None
+
+    def to_string(self):
+        return "pcidevicecon %s %s" % (self.device, str(self.context))
 
 # Reference policy specific types
 

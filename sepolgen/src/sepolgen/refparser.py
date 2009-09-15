@@ -83,6 +83,10 @@ tokens = (
     'PORTCON',
     'NODECON',
     'NETIFCON',
+    'PIRQCON',
+    'IOMEMCON',
+    'IOPORTCON',
+    'PCIDEVICECON',
     #   object classes
     'CLASS',
     #   types and attributes
@@ -140,6 +144,10 @@ reserved = {
     'portcon' : 'PORTCON',
     'nodecon' : 'NODECON',
     'netifcon' : 'NETIFCON',
+    'pirqcon' : 'PIRQCON',
+    'iomemcon' : 'IOMEMCON',
+    'ioportcon' : 'IOPORTCON',
+    'pcidevicecon' : 'PCIDEVICECON',
     # object classes
     'class' : 'CLASS',
     # types and attributes
@@ -495,6 +503,10 @@ def p_policy_stmt(p):
                    | portcon
                    | nodecon
                    | netifcon
+                   | pirqcon
+                   | iomemcon
+                   | ioportcon
+                   | pcidevicecon
     '''
     if p[1]:
         p[0] = [p[1]]
@@ -630,6 +642,48 @@ def p_netifcon(p):
     n.packet_context = p[4]
 
     p[0] = n
+
+def p_pirqcon(p):
+    'pirqcon : PIRQCON NUMBER context'
+    c = refpolicy.PirqCon()
+    c.pirq_number = p[2]
+    c.context = p[3]
+
+    p[0] = c
+
+def p_iomemcon(p):
+    '''iomemcon : IOMEMCON NUMBER context
+                | IOMEMCON NUMBER MINUS NUMBER context'''
+    c = refpolicy.IomemCon()
+    if len(p) == 4:
+        c.device_mem = p[2]
+        c.context = p[3]
+    else:
+        c.device_mem = p[2] + "-" + p[3]
+        c.context = p[4]
+
+    p[0] = c
+
+def p_ioportcon(p):
+    '''ioportcon : IOPORTCON NUMBER context
+                | IOPORTCON NUMBER MINUS NUMBER context'''
+    c = refpolicy.IoportCon()
+    if len(p) == 4:
+        c.ioport = p[2]
+        c.context = p[3]
+    else:
+        c.ioport = p[2] + "-" + p[3]
+        c.context = p[4]
+
+    p[0] = c
+
+def p_pcidevicecon(p):
+    'pcidevicecon : PCIDEVICECON NUMBER context'
+    c = refpolicy.PciDeviceCon()
+    c.device = p[2]
+    c.context = p[3]
+
+    p[0] = c
 
 def p_mls_range_def(p):
     '''mls_range_def : mls_level_def MINUS mls_level_def
