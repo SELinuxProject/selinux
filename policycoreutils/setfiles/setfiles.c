@@ -750,6 +750,8 @@ static void exclude_non_seclabel_mounts()
 	/* Check to see if the kernel supports seclabel */
 	if (uname(&uts) == 0 && strverscmp(uts.release, "2.6.30") < 0)
 		return;
+	if (is_selinux_enabled() <= 0)
+		return;
 
 	fp = fopen("/proc/mounts", "r");
 	if (!fp)
