@@ -304,6 +304,10 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 			continue;
 		if (!semanage_list_find(shells, pwbuf->pw_shell))
 			continue;
+		int len = strlen(pwbuf->pw_dir) -1;
+		for(; len > 0 && pwbuf->pw_dir[len] == '/'; len--) {
+			pwbuf->pw_dir[len] = '\0';
+		}
 		if (strcmp(pwbuf->pw_dir, "/") == 0)
 			continue;
 		if (semanage_str_count(pwbuf->pw_dir, '/') <= 1)
@@ -786,6 +790,11 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 			WARN(s->h_semanage,
 			     "user %s not in password file", name);
 			continue;
+		}
+
+		int len = strlen(pwent->pw_dir) -1;
+		for(; len > 0 && pwent->pw_dir[len] == '/'; len--) {
+			pwent->pw_dir[len] = '\0';
 		}
 
 		if (strcmp(pwent->pw_dir, "/") == 0) {
