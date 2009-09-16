@@ -346,7 +346,7 @@ struct security_class_mapping {
 	const char *perms[sizeof(access_vector_t) * 8 + 1];
 };
 
-int selinux_set_mapping(struct security_class_mapping *map);
+extern int selinux_set_mapping(struct security_class_mapping *map);
 
 /* Common helpers */
 
@@ -556,17 +556,17 @@ extern int getseuser(const char *username, const char *service,
 		     char **r_seuser, char **r_level);
 
 /* Compare two file contexts, return 0 if equivalent. */
-int selinux_file_context_cmp(const security_context_t a,
+extern int selinux_file_context_cmp(const security_context_t a,
 			     const security_context_t b);
 
 /* 
  * Verify the context of the file 'path' against policy.
  * Return 0 if correct. 
  */
-int selinux_file_context_verify(const char *path, mode_t mode);
+extern int selinux_file_context_verify(const char *path, mode_t mode);
 
 /* This function sets the file context on to the system defaults returns 0 on success */
-int selinux_lsetfilecon_default(const char *path);
+extern int selinux_lsetfilecon_default(const char *path);
 
 #ifdef __cplusplus
 }

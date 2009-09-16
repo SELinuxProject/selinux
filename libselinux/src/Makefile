@@ -82,6 +82,9 @@ $(LIBSO): $(LOBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -ldl -L$(LIBDIR) -Wl,-soname,$(LIBSO),-z,defs,-z,relro
 	ln -sf $@ $(TARGET) 
 
+selinuxswig_python_exception.i: ../include/selinux/selinux.h
+	sh exception.sh > $@ 
+
 audit2why.lo: audit2why.c
 	$(CC) $(CFLAGS) -I$(PYINC) -fPIC -DSHARED -c -o $@ $<
 
@@ -100,8 +103,8 @@ $(SWIGCOUT): $(SWIGIF)
 $(SWIGRUBYCOUT): $(SWIGRUBYIF)
 	$(SWIGRUBY) $^
 
-swigify: $(SWIGIF)
-	$(SWIG) $^
+swigify: $(SWIGIF) selinuxswig_python_exception.i
+	$(SWIG) $<
 
 install: all 
 	test -d $(LIBDIR) || install -m 755 -d $(LIBDIR)
@@ -124,7 +127,7 @@ relabel:
 	/sbin/restorecon $(SHLIBDIR)/$(LIBSO)
 
 clean: 
-	-rm -f $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) $(AUDIT2WHYSO) *.o *.lo *~
+	-rm -f $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) $(AUDIT2WHYSO) *.o *.lo *~ selinuxswig_python_exception.i
 
 distclean: clean
 	rm -f $(GENERATED) $(SWIGFILES)

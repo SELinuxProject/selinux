@@ -21,6 +21,15 @@ def restorecon(path, recursive=False):
                              map(restorecon, [os.path.join(dirname, fname)
                                               for fname in fnames]), None)
 
+def copytree(src, dest):
+    """ An SELinux-friendly shutil.copytree method """
+    shutil.copytree(src, dest)
+    restorecon(dest, recursive=True)
+
+def install(src, dest):
+    """ An SELinux-friendly shutil.move method """
+    shutil.move(src, dest)
+    restorecon(dest, recursive=True)
 %}
 
 /* security_get_boolean_names() typemap */
@@ -150,4 +159,5 @@ def restorecon(path, recursive=False):
 	free($1);
 }
 
+%include "selinuxswig_python_exception.i"
 %include "selinuxswig.i"

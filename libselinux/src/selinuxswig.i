@@ -4,11 +4,14 @@
 
 %module selinux
 %{
-	#include "selinux/selinux.h"
 	#include "../include/selinux/avc.h"
-	#include "../include/selinux/selinux.h"
-	#include "../include/selinux/get_default_type.h"
+	#include "../include/selinux/av_permissions.h"
+	#include "../include/selinux/context.h"
+	#include "../include/selinux/flask.h"
 	#include "../include/selinux/get_context_list.h"
+	#include "../include/selinux/get_default_type.h"
+	#include "../include/selinux/label.h"
+	#include "../include/selinux/selinux.h"
 %}
 %apply int *OUTPUT { int *enforce };
 %apply int *OUTPUT { size_t * };
@@ -55,8 +58,11 @@
 %ignore avc_netlink_release_fd;
 %ignore avc_netlink_check_nb;
 
-%include "../include/selinux/selinux.h"
 %include "../include/selinux/avc.h"
-%include "../include/selinux/get_default_type.h"
+%include "../include/selinux/av_permissions.h"
+%include "../include/selinux/context.h"
+%include "../include/selinux/flask.h"
 %include "../include/selinux/get_context_list.h"
-
+%include "../include/selinux/get_default_type.h"
+%include "../include/selinux/label.h"
+%include "../include/selinux/selinux.h"
