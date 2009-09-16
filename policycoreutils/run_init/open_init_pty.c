@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (child_pid < 0) {
-		perror("Fork:");
+		perror("forkpty():");
 		fflush(stdout);
 		fflush(stderr);
 		exit(EX_OSERR);
