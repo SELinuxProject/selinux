@@ -1,3 +1,8 @@
+2.0.38 2009-09-16
+	* Change semodule upgrade behavior to install even if the module
+	  is not present from Dan Walsh.
+	* Make genhomedircon trim excess '/' from homedirs from Dan Walsh.
+
 2.0.37 2009-09-04
         * Fix persistent dontaudit support to rebuild policy if the 
           dontaudit state is changed from Chad Sellers.

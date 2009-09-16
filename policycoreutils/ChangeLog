@@ -1,3 +1,10 @@
+2.0.74 2009-09-16
+	* Change semodule upgrade behavior to install even if the module
+	  is not present from Dan Walsh.
+	* Make setfiles label if selinux is disabled and a seclabel aware
+	  kernel is running from Caleb Case.
+	* Clarify forkpty() error message in run_init from Manoj Srivastava.
+
 2.0.73 2009-09-04
         * Add semanage dontaudit to turn off dontaudits from Dan Walsh.
         * Fix semanage to set correct mode for setrans file from Dan Walsh.
