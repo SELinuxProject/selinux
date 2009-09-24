@@ -315,21 +315,24 @@ static int watch(int fd)
 			printf("wd=%d mask=%u cookie=%u len=%u\n",
 			       event->wd, event->mask,
 			       event->cookie, event->len);
-		if (event->wd == master_wd)
-			read_config(fd);
-		else {
-			switch (utmpwatcher_handle(fd, event->wd)) {
-			case -1:	/* Message was not for utmpwatcher */
-				if (event->len)
-					watch_list_find(event->wd, event->name);
-				break;
 
-			case 1:	/* utmp has changed need to reload */
+		if (event->mask & ~IN_IGNORED) {
+			if (event->wd == master_wd)
 				read_config(fd);
-				break;
+			else {
+				switch (utmpwatcher_handle(fd, event->wd)) {
+				case -1:	/* Message was not for utmpwatcher */
+					if (event->len)
+						watch_list_find(event->wd, event->name);
+					break;
 
-			default:	/* No users logged in or out */
-				break;
+				case 1:	/* utmp has changed need to reload */
+					read_config(fd);
+					break;
+
+				default:	/* No users logged in or out */
+					break;
+				}
 			}
 		}
 
