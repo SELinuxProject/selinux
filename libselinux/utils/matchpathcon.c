@@ -22,9 +22,13 @@ int printmatchpathcon(char *path, int header, int mode)
 	char *buf;
 	int rc = matchpathcon(path, mode, &buf);
 	if (rc < 0) {
-		fprintf(stderr, "matchpathcon(%s) failed: %s\n", path,
-			strerror(errno));
-		return 1;
+		if (errno == ENOENT) {
+			buf=strdup("<<none>>");
+		} else {
+			fprintf(stderr, "matchpathcon(%s) failed: %s\n", path,
+				strerror(errno));
+			return 1;
+		}
 	}
 	if (header)
 		printf("%s\t%s\n", path, buf);
