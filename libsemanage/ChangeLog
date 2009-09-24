@@ -1,3 +1,6 @@
+2.0.39 2009-09-24
+	* make swigify
+
 2.0.38 2009-09-16
 	* Change semodule upgrade behavior to install even if the module
 	  is not present from Dan Walsh.

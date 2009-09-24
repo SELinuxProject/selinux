@@ -1,3 +1,9 @@
+2.0.87 2009-09-25
+	* Add exception handling in libselinux from Dan Walsh. This uses a
+	  shell script called exception.sh to generate a swig interface file.
+	* make swigify
+	* Make matchpathcon print <<none>> if path not found in fcontext file.
+
 2.0.86 2009-09-02
 	* Removal of reference counting on userspace AVC SID's.
 
