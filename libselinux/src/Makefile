@@ -16,14 +16,14 @@ LIBVERSION = 1
 
 LIBA=libselinux.a 
 TARGET=libselinux.so
-SWIGIF= selinuxswig_python.i
+SWIGIF= selinuxswig_python.i selinuxswig_python_exception.i
 SWIGRUBYIF= selinuxswig_ruby.i
 SWIGCOUT= selinuxswig_wrap.c
 SWIGRUBYCOUT= selinuxswig_ruby_wrap.c
 SWIGLOBJ:= $(patsubst %.c,%.lo,$(SWIGCOUT)) 
 SWIGRUBYLOBJ:= $(patsubst %.c,%.lo,$(SWIGRUBYCOUT)) 
 SWIGSO=_selinux.so
-SWIGFILES=$(SWIGSO) selinux.py 
+SWIGFILES=$(SWIGSO) selinux.py selinuxswig_python_exception.i
 SWIGRUBYSO=_rubyselinux.so
 LIBSO=$(TARGET).$(LIBVERSION)
 AUDIT2WHYSO=audit2why.so
@@ -103,7 +103,7 @@ $(SWIGCOUT): $(SWIGIF)
 $(SWIGRUBYCOUT): $(SWIGRUBYIF)
 	$(SWIGRUBY) $^
 
-swigify: $(SWIGIF) selinuxswig_python_exception.i
+swigify: $(SWIGIF)
 	$(SWIG) $<
 
 install: all 
@@ -127,7 +127,7 @@ relabel:
 	/sbin/restorecon $(SHLIBDIR)/$(LIBSO)
 
 clean: 
-	-rm -f $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) $(AUDIT2WHYSO) *.o *.lo *~ selinuxswig_python_exception.i
+	-rm -f $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) $(AUDIT2WHYSO) *.o *.lo *~ 
 
 distclean: clean
 	rm -f $(GENERATED) $(SWIGFILES)
