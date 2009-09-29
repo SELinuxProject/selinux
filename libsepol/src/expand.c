@@ -1819,7 +1819,60 @@ static int context_copy(context_struct_t * dst, context_struct_t * src,
 	return mls_context_cpy(dst, src);
 }
 
-static int ocontext_copy(expand_state_t * state)
+static int ocontext_copy_xen(expand_state_t *state)
+{
+	unsigned int i;
+	ocontext_t *c, *n, *l;
+
+	for (i = 0; i < OCON_NUM; i++) {
+		l = NULL;
+		for (c = state->base->ocontexts[i]; c; c = c->next) {
+			n = malloc(sizeof(ocontext_t));
+			if (!n) {
+				ERR(state->handle, "Out of memory!");
+				return -1;
+			}
+			memset(n, 0, sizeof(ocontext_t));
+			if (l)
+				l->next = n;
+			else
+				state->out->ocontexts[i] = n;
+			l = n;
+			if (context_copy(&n->context[0], &c->context[0],
+				state)) {
+				ERR(state->handle, "Out of memory!");
+				return -1;
+			}
+			switch (i) {
+			case OCON_XEN_ISID:
+				n->sid[0] = c->sid[0];
+				break;
+			case OCON_XEN_PIRQ:
+				n->u.pirq = c->u.pirq;
+				break;
+			case OCON_XEN_IOPORT:
+				n->u.ioport.low_ioport = c->u.ioport.low_ioport;
+				n->u.ioport.high_ioport =
+					c->u.ioport.high_ioport;
+				break;
+			case OCON_XEN_IOMEM:
+				n->u.iomem.low_iomem  = c->u.iomem.low_iomem;
+				n->u.iomem.high_iomem = c->u.iomem.high_iomem;
+				break;
+			case OCON_XEN_PCIDEVICE:
+				n->u.device = c->u.device;
+				break;
+			default:
+				/* shouldn't get here */
+				ERR(state->handle, "Unknown ocontext");
+				return -1;
+			}
+		}
+	}
+	return 0;
+}
+
+static int ocontext_copy_selinux(expand_state_t *state)
 {
 	unsigned int i, j;
 	ocontext_t *c, *n, *l;
@@ -1833,11 +1886,10 @@ static int ocontext_copy(expand_state_t * state)
 				return -1;
 			}
 			memset(n, 0, sizeof(ocontext_t));
-			if (l) {
+			if (l)
 				l->next = n;
-			} else {
+			else
 				state->out->ocontexts[i] = n;
-			}
 			l = n;
 			if (context_copy(&n->context[0], &c->context[0], state)) {
 				ERR(state->handle, "Out of memory!");
@@ -1885,11 +1937,29 @@ static int ocontext_copy(expand_state_t * state)
 				break;
 			default:
 				/* shouldn't get here */
-				assert(0);
+				ERR(state->handle, "Unknown ocontext");
+				return -1;
 			}
 		}
 	}
 	return 0;
+}
+
+static int ocontext_copy(expand_state_t *state, uint32_t target)
+{
+	int rc = -1;
+	switch (target) {
+	case SEPOL_TARGET_SELINUX:
+		rc = ocontext_copy_selinux(state);
+		break;
+	case SEPOL_TARGET_XEN:
+		rc = ocontext_copy_xen(state);
+		break;
+	default:
+		ERR(state->handle, "Unknown target");
+		return -1;
+	}
+	return rc;
 }
 
 static int genfs_copy(expand_state_t * state)
@@ -2418,6 +2488,9 @@ int expand_module(sepol_handle_t * handle,
 	out->mls = base->mls;
 	out->handle_unknown = base->handle_unknown;
 
+	/* Copy target from base to out */
+	out->target_platform = base->target_platform;
+
 	/* Copy policy capabilities */
 	if (ebitmap_cpy(&out->policycaps, &base->policycaps)) {
 		ERR(handle, "Out of memory!");
@@ -2576,7 +2649,7 @@ int expand_module(sepol_handle_t * handle,
 	evaluate_conds(state.out);
 
 	/* copy ocontexts */
-	if (ocontext_copy(&state))
+	if (ocontext_copy(&state, out->target_platform))
 		goto cleanup;
 
 	/* copy genfs */

@@ -6,4 +6,5 @@
 
 hidden_proto(sepol_policydb_create)
     hidden_proto(sepol_policydb_free)
+extern char *policydb_target_strings[];
 #endif

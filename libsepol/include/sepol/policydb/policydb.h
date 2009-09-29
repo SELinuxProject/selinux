@@ -276,6 +276,16 @@ typedef struct ocontext {
 			uint32_t addr[4]; /* network order */
 			uint32_t mask[4]; /* network order */
 		} node6;	/* IPv6 node information */
+		uint32_t device;
+		uint16_t pirq;
+		struct {
+			uint32_t low_iomem;
+			uint32_t high_iomem;
+		} iomem;
+		struct {
+			uint32_t low_ioport;
+			uint32_t high_ioport;
+		} ioport;
 	} u;
 	union {
 		uint32_t sclass;	/* security class for genfs */
@@ -311,6 +321,16 @@ typedef struct genfs {
 #define OCON_NODE  4		/* nodes */
 #define OCON_FSUSE 5		/* fs_use */
 #define OCON_NODE6 6		/* IPv6 nodes */
+#define OCON_GENFS 7            /* needed for ocontext_supported */
+
+/* object context array indices for Xen */
+#define OCON_XEN_ISID  	    0    /* initial SIDs */
+#define OCON_XEN_PIRQ       1    /* physical irqs */
+#define OCON_XEN_IOPORT     2    /* io ports */
+#define OCON_XEN_IOMEM	    3    /* io memory */
+#define OCON_XEN_PCIDEVICE  4    /* pci devices */
+
+/* OCON_NUM needs to be the largest index in any platform's ocontext array */
 #define OCON_NUM   7
 
 /* section: module information */
@@ -400,6 +420,7 @@ typedef struct policydb {
 	uint32_t policy_type;
 	char *name;
 	char *version;
+	int  target_platform;
 
 	/* Set when the policydb is modified such that writing is unsupported */
 	int unsupported_format;
@@ -593,6 +614,7 @@ extern int avrule_read_list(policydb_t * p, avrule_t ** avrules,
 			    struct policy_file *fp);
 
 extern int policydb_write(struct policydb *p, struct policy_file *pf);
+extern int policydb_set_target_platform(policydb_t *p, int platform);
 
 #define PERM_SYMTAB_SIZE 32
 
@@ -651,9 +673,13 @@ extern int policydb_write(struct policydb *p, struct policy_file *pf);
 
 #define POLICYDB_MAGIC SELINUX_MAGIC
 #define POLICYDB_STRING "SE Linux"
-#define POLICYDB_ALT_STRING "Flask"
+#define POLICYDB_XEN_STRING "XenFlask"
+#define POLICYDB_STRING_MAX_LENGTH 32
 #define POLICYDB_MOD_MAGIC SELINUX_MOD_MAGIC
 #define POLICYDB_MOD_STRING "SE Linux Module"
+#define SEPOL_TARGET_SELINUX 0
+#define SEPOL_TARGET_XEN     1
+
 
 #endif				/* _POLICYDB_H_ */
 

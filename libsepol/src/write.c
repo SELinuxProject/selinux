@@ -1084,8 +1084,77 @@ static int (*write_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
 common_write, class_write, role_write, type_write, user_write,
 	    cond_write_bool, sens_write, cat_write,};
 
-static int ocontext_write(struct policydb_compat_info *info, policydb_t * p,
+static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 			  struct policy_file *fp)
+{
+	unsigned int i, j;
+	size_t nel, items;
+	uint32_t buf[32];
+	ocontext_t *c;
+	for (i = 0; i < info->ocon_num; i++) {
+		nel = 0;
+		for (c = p->ocontexts[i]; c; c = c->next)
+			nel++;
+		buf[0] = cpu_to_le32(nel);
+		items = put_entry(buf, sizeof(uint32_t), 1, fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+		for (c = p->ocontexts[i]; c; c = c->next) {
+			switch (i) {
+			case OCON_XEN_ISID:
+				buf[0] = cpu_to_le32(c->sid[0]);
+				items = put_entry(buf, sizeof(uint32_t), 1, fp);
+				if (items != 1)
+					return POLICYDB_ERROR;
+				if (context_write(p, &c->context[0], fp))
+					return POLICYDB_ERROR;
+				break;
+			case OCON_XEN_PIRQ:
+				buf[0] = cpu_to_le32(c->u.pirq);
+				items = put_entry(buf, sizeof(uint32_t), 1, fp);
+				if (items != 1)
+					return POLICYDB_ERROR;
+				if (context_write(p, &c->context[0], fp))
+					return POLICYDB_ERROR;
+				break;
+			case OCON_XEN_IOPORT:
+				buf[0] = c->u.ioport.low_ioport;
+				buf[1] = c->u.ioport.high_ioport;
+				for (j = 0; j < 2; j++)
+					buf[j] = cpu_to_le32(buf[j]);
+				items = put_entry(buf, sizeof(uint32_t), 2, fp);
+				if (items != 2)
+					return POLICYDB_ERROR;
+				if (context_write(p, &c->context[0], fp))
+					return POLICYDB_ERROR;
+				break;
+			case OCON_XEN_IOMEM:
+				buf[0] = c->u.iomem.low_iomem;
+				buf[1] = c->u.iomem.high_iomem;
+				for (j = 0; j < 2; j++)
+					buf[j] = cpu_to_le32(buf[j]);
+				items = put_entry(buf, sizeof(uint32_t), 2, fp);
+				if (items != 2)
+					return POLICYDB_ERROR;
+				if (context_write(p, &c->context[0], fp))
+					return POLICYDB_ERROR;
+				break;
+			case OCON_XEN_PCIDEVICE:
+				buf[0] = cpu_to_le32(c->u.device);
+				items = put_entry(buf, sizeof(uint32_t), 1, fp);
+				if (items != 1)
+					return POLICYDB_ERROR;
+				if (context_write(p, &c->context[0], fp))
+					return POLICYDB_ERROR;
+				break;
+			}
+		}
+	}
+	return POLICYDB_SUCCESS;
+}
+
+static int ocontext_write_selinux(struct policydb_compat_info *info,
+	policydb_t *p, struct policy_file *fp)
 {
 	unsigned int i, j;
 	size_t nel, items, len;
@@ -1174,6 +1243,21 @@ static int ocontext_write(struct policydb_compat_info *info, policydb_t * p,
 		}
 	}
 	return POLICYDB_SUCCESS;
+}
+
+static int ocontext_write(struct policydb_compat_info *info, policydb_t * p,
+	struct policy_file *fp)
+{
+	int rc = POLICYDB_ERROR;
+	switch (p->target_platform) {
+	case SEPOL_TARGET_SELINUX:
+		rc = ocontext_write_selinux(info, p, fp);
+		break;
+	case SEPOL_TARGET_XEN:
+		rc = ocontext_write_xen(info, p, fp);
+		break;
+	}
+	return rc;
 }
 
 static int genfs_write(policydb_t * p, struct policy_file *fp)
@@ -1610,8 +1694,8 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 	items = 0;
 	if (p->policy_type == POLICY_KERN) {
 		buf[items++] = cpu_to_le32(POLICYDB_MAGIC);
-		len = strlen(POLICYDB_STRING);
-		policydb_str = POLICYDB_STRING;
+		len = strlen(policydb_target_strings[p->target_platform]);
+		policydb_str = policydb_target_strings[p->target_platform];
 	} else {
 		buf[items++] = cpu_to_le32(POLICYDB_MOD_MAGIC);
 		len = strlen(POLICYDB_MOD_STRING);
@@ -1627,7 +1711,8 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 
 	/* Write the version, config, and table sizes. */
 	items = 0;
-	info = policydb_lookup_compat(p->policyvers, p->policy_type);
+	info = policydb_lookup_compat(p->policyvers, p->policy_type,
+					p->target_platform);
 	if (!info) {
 		ERR(fp->handle, "compatibility lookup failed for policy "
 		    "version %d", p->policyvers);
