@@ -100,7 +100,9 @@ unsigned int policyvers = POLICYDB_VERSION_MAX;
 void usage(char *progname)
 {
 	printf
-	    ("usage:  %s [-b] [-d] [-U handle_unknown (allow,deny,reject) [-M] [-c policyvers (%d-%d)] [-o output_file] [input_file]\n",
+	    ("usage:  %s [-b] [-d] [-U handle_unknown (allow,deny,reject) [-M]"
+	     "[-c policyvers (%d-%d)] [-o output_file] [-t platform]"
+	     "[input_file]\n",
 	     progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
 	exit(1);
 }
@@ -381,7 +383,7 @@ int main(int argc, char **argv)
 	unsigned int protocol, port;
 	unsigned int binary = 0, debug = 0;
 	struct val_to_name v;
-	int ret, ch, fd;
+	int ret, ch, fd, target = SEPOL_TARGET_SELINUX;
 	unsigned int nel, uret;
 	struct stat sb;
 	void *map;
@@ -391,10 +393,21 @@ int main(int argc, char **argv)
 	int show_version = 0;
 	struct policy_file pf;
 
-	while ((ch = getopt(argc, argv, "o:dbU:MVc:")) != EOF) {
+	while ((ch = getopt(argc, argv, "o:t:dbU:MVc:")) != EOF) {
 		switch (ch) {
 		case 'o':
 			outfile = optarg;
+			break;
+		case 't':
+			if (!strcasecmp(optarg, "Xen"))
+				target = SEPOL_TARGET_XEN;
+			else if (!strcasecmp(optarg, "SELinux"))
+				target = SEPOL_TARGET_SELINUX;
+			else{
+				fprintf(stderr, "%s:  Unknown target platform:"
+					"%s\n", argv[0], optarg);
+				exit(1);
+			}
 			break;
 		case 'b':
 			binary = 1;
@@ -528,6 +541,7 @@ int main(int argc, char **argv)
 			exit(1);
 		/* We build this as a base policy first since that is all the parser understands */
 		parse_policy.policy_type = POLICY_BASE;
+		policydb_set_target_platform(&parse_policy, target);
 
 		/* Let sepol know if we are dealing with MLS support */
 		parse_policy.mls = mlspol;

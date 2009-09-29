@@ -3320,6 +3320,11 @@ int define_fs_context(unsigned int major, unsigned int minor)
 {
 	ocontext_t *newc, *c, *head;
 
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("fscon not supported for target");
+		return -1;
+	}
+
 	if (pass == 1) {
 		parse_security_context(NULL);
 		parse_security_context(NULL);
@@ -3372,11 +3377,253 @@ int define_fs_context(unsigned int major, unsigned int minor)
 	return 0;
 }
 
+int define_pirq_context(unsigned int pirq)
+{
+	ocontext_t *newc, *c, *l, *head;
+	char *id;
+
+	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
+		yyerror("pirqcon not supported for target");
+		return -1;
+	}
+
+	if (pass == 1) {
+		id = (char *) queue_remove(id_queue);
+		free(id);
+		parse_security_context(NULL);
+		return 0;
+	}
+
+	newc = malloc(sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+	memset(newc, 0, sizeof(ocontext_t));
+
+	newc->u.pirq = pirq;
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc);
+		return -1;
+	}
+
+	head = policydbp->ocontexts[OCON_XEN_PIRQ];
+	for (l = NULL, c = head; c; l = c, c = c->next) {
+		unsigned int pirq2;
+
+		pirq2 = c->u.pirq;
+		if (pirq == pirq2) {
+			yyerror2("duplicate pirqcon entry for %d ", pirq);
+			goto bad;
+		}
+	}
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_XEN_PIRQ] = newc;
+
+	return 0;
+
+bad:
+	free(newc);
+	return -1;
+}
+
+int define_iomem_context(unsigned long low, unsigned long high)
+{
+	ocontext_t *newc, *c, *l, *head;
+	char *id;
+
+	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
+		yyerror("iomemcon not supported for target");
+		return -1;
+	}
+
+	if (pass == 1) {
+		id = (char *)queue_remove(id_queue);
+		free(id);
+		parse_security_context(NULL);
+		return 0;
+	}
+
+	newc = malloc(sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+	memset(newc, 0, sizeof(ocontext_t));
+
+	newc->u.iomem.low_iomem  = low;
+	newc->u.iomem.high_iomem = high;
+
+	if (low > high) {
+		yyerror2("low memory 0x%x exceeds high memory 0x%x", low, high);
+		free(newc);
+		return -1;
+	}
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc);
+		return -1;
+	}
+
+	head = policydbp->ocontexts[OCON_XEN_IOMEM];
+	for (l = NULL, c = head; c; l = c, c = c->next) {
+		unsigned int low2, high2;
+
+		low2 = c->u.iomem.low_iomem;
+		high2 = c->u.iomem.high_iomem;
+		if (low <= high2 && low2 <= high) {
+			yyerror2("iomemcon entry for 0x%x-0x%x overlaps with "
+				"earlier entry 0x%x-0x%x", low, high,
+				low2, high2);
+			goto bad;
+		}
+	}
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_XEN_IOMEM] = newc;
+
+	return 0;
+
+bad:
+	free(newc);
+	return -1;
+}
+
+int define_ioport_context(unsigned long low, unsigned long high)
+{
+	ocontext_t *newc, *c, *l, *head;
+	char *id;
+
+	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
+		yyerror("ioportcon not supported for target");
+		return -1;
+	}
+
+	if (pass == 1) {
+		id = (char *)queue_remove(id_queue);
+		free(id);
+		parse_security_context(NULL);
+		return 0;
+	}
+
+	newc = malloc(sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+	memset(newc, 0, sizeof(ocontext_t));
+
+	newc->u.ioport.low_ioport  = low;
+	newc->u.ioport.high_ioport = high;
+
+	if (low > high) {
+		yyerror2("low ioport 0x%x exceeds high ioport 0x%x", low, high);
+		free(newc);
+		return -1;
+	}
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc);
+		return -1;
+	}
+
+	head = policydbp->ocontexts[OCON_XEN_IOPORT];
+	for (l = NULL, c = head; c; l = c, c = c->next) {
+		unsigned int low2, high2;
+
+		low2 = c->u.ioport.low_ioport;
+		high2 = c->u.ioport.high_ioport;
+		if (low <= high2 && low2 <= high) {
+			yyerror2("ioportcon entry for 0x%x-0x%x overlaps with"
+				"earlier entry 0x%x-0x%x", low, high,
+				low2, high2);
+			goto bad;
+		}
+	}
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_XEN_IOPORT] = newc;
+
+	return 0;
+
+bad:
+	free(newc);
+	return -1;
+}
+
+int define_pcidevice_context(unsigned long device)
+{
+	ocontext_t *newc, *c, *l, *head;
+	char *id;
+
+	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
+		yyerror("pcidevicecon not supported for target");
+		return -1;
+	}
+
+	if (pass == 1) {
+		id = (char *) queue_remove(id_queue);
+		free(id);
+		parse_security_context(NULL);
+		return 0;
+	}
+
+	newc = malloc(sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+	memset(newc, 0, sizeof(ocontext_t));
+
+	newc->u.device = device;
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc);
+		return -1;
+	}
+
+	head = policydbp->ocontexts[OCON_XEN_PCIDEVICE];
+	for (l = NULL, c = head; c; l = c, c = c->next) {
+		unsigned int device2;
+
+		device2 = c->u.device;
+		if (device == device2) {
+			yyerror2("duplicate pcidevicecon entry for 0x%x ",
+				 device);
+			goto bad;
+		}
+	}
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_XEN_PCIDEVICE] = newc;
+
+	return 0;
+
+bad:
+	free(newc);
+	return -1;
+}
+
 int define_port_context(unsigned int low, unsigned int high)
 {
 	ocontext_t *newc, *c, *l, *head;
 	unsigned int protocol;
 	char *id;
+
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("portcon not supported for target");
+		return -1;
+	}
 
 	if (pass == 1) {
 		id = (char *)queue_remove(id_queue);
@@ -3460,6 +3707,11 @@ int define_netif_context(void)
 {
 	ocontext_t *newc, *c, *head;
 
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("netifcon not supported for target");
+		return -1;
+	}
+
 	if (pass == 1) {
 		free(queue_remove(id_queue));
 		parse_security_context(NULL);
@@ -3515,6 +3767,11 @@ int define_ipv4_node_context()
 	int rc = 0;
 	struct in_addr addr, mask;
 	ocontext_t *newc, *c, *l, *head;
+
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("nodecon not supported for target");
+		return -1;
+	}
 
 	if (pass == 1) {
 		free(queue_remove(id_queue));
@@ -3597,6 +3854,11 @@ int define_ipv6_node_context(void)
 	struct in6_addr addr, mask;
 	ocontext_t *newc, *c, *l, *head;
 
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("nodecon not supported for target");
+		return -1;
+	}
+
 	if (pass == 1) {
 		free(queue_remove(id_queue));
 		free(queue_remove(id_queue));
@@ -3677,6 +3939,11 @@ int define_fs_use(int behavior)
 {
 	ocontext_t *newc, *c, *head;
 
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("fsuse not supported for target");
+		return -1;
+	}
+
 	if (pass == 1) {
 		free(queue_remove(id_queue));
 		parse_security_context(NULL);
@@ -3726,6 +3993,11 @@ int define_genfs_context_helper(char *fstype, int has_type)
 	ocontext_t *newc, *c, *head, *p;
 	char *type = NULL;
 	int len, len2;
+
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("genfs not supported for target");
+		return -1;
+	}
 
 	if (pass == 1) {
 		free(fstype);
