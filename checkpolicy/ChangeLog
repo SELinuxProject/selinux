@@ -1,3 +1,6 @@
+2.0.20 2009-10-14
+	* Add support for building Xen policies from Paul Nuzzi.
+
 2.0.19 2009-02-18
 	* Fix alias field in module format, caused by boundary format change
 	  from Caleb Case.

@@ -1,3 +1,6 @@
+1.0.18 2009-10-14
+	* Add support for Xen ocontexts from Paul Nuzzi.
+
 1.0.17 2009-05-15
 	* Fix typo in RoleTypeSet from Marshall Miller.
 

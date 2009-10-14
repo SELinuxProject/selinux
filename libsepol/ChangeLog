@@ -1,3 +1,6 @@
+2.0.39 2009-10-14
+	* Add support for building Xen policies from Paul Nuzzi.
+
 2.0.38 2009-09-01
 	* Check last offset in the module package against the file size.
 	Reported by Manoj Srivastava for bug filed by Max Kellermann.
