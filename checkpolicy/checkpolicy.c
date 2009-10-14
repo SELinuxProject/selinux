@@ -100,8 +100,8 @@ unsigned int policyvers = POLICYDB_VERSION_MAX;
 void usage(char *progname)
 {
 	printf
-	    ("usage:  %s [-b] [-d] [-U handle_unknown (allow,deny,reject) [-M]"
-	     "[-c policyvers (%d-%d)] [-o output_file] [-t platform]"
+	    ("usage:  %s [-b] [-d] [-U handle_unknown (allow,deny,reject)] [-M]"
+	     "[-c policyvers (%d-%d)] [-o output_file] [-t target_platform (selinux,xen)]"
 	     "[input_file]\n",
 	     progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
 	exit(1);
