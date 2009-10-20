@@ -88,7 +88,7 @@ $(LIBPC): $(LIBPC).in
 	sed -e 's/@VERSION@/$(VERSION)/; s:@prefix@:$(PREFIX):; s:@libdir@:$(LIBDIR):; s:@includedir@:$(INCLUDEDIR):' < $< > $@
 
 selinuxswig_python_exception.i: ../include/selinux/selinux.h
-	sh exception.sh > $@ 
+	bash exception.sh > $@ 
 
 audit2why.lo: audit2why.c
 	$(CC) $(CFLAGS) -I$(PYINC) -fPIC -DSHARED -c -o $@ $<
