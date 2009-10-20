@@ -320,7 +320,7 @@ int selinux_init_load_policy(int *enforce)
 	 * Example:  Caller has chroot'd and is now loading policy from
 	 * chroot'd environment.
 	 */
-	reset_selinux_config();
+	selinux_reset_config();
 
 	/*
 	 * Get desired mode (disabled, permissive, enforcing) from 

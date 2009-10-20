@@ -230,11 +230,13 @@ static void fini_selinux_policyroot(void)
 	selinux_policytype = NULL;
 }
 
-void reset_selinux_config(void)
+void selinux_reset_config(void)
 {
 	fini_selinux_policyroot();
 	init_selinux_config();
 }
+
+hidden_def(selinux_reset_config)
 
 static const char *get_path(int idx)
 {

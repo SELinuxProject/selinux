@@ -568,6 +568,13 @@ extern int selinux_file_context_verify(const char *path, mode_t mode);
 /* This function sets the file context on to the system defaults returns 0 on success */
 extern int selinux_lsetfilecon_default(const char *path);
 
+/* 
+ * Force a reset of the loaded configuration
+ * WARNING: This is not thread safe. Be very sure that no other threads
+ * are calling into libselinux when this is called.
+ */
+extern void selinux_reset_config(void);
+
 #ifdef __cplusplus
 }
 #endif
