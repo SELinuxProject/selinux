@@ -1149,7 +1149,7 @@ static int semanage_install_active(semanage_handle_t * sh)
 
       skip_reload:
 
-	if ((r =
+	if (sh->do_check_contexts && (r =
 	     semanage_exec_prog(sh, sh->conf->setfiles, store_pol,
 				store_fc)) != 0) {
 		ERR(sh, "setfiles returned error code %d.", r);

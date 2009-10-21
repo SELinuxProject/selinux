@@ -17,5 +17,6 @@ LIBSEMANAGE_1.0 {
 	  semanage_fcontext_*; semanage_access_check; semanage_set_create_store;
 	  semanage_is_connected; semanage_get_disable_dontaudit; semanage_set_disable_dontaudit;
 	  semanage_mls_enabled;
+	  semanage_set_check_contexts;
   local: *;
 };

@@ -62,6 +62,7 @@ struct semanage_handle {
 	int modules_modified;
 	int create_store;	/* whether to create the store if it does not exist
 				 * this will only have an effect on direct connections */
+	int do_check_contexts;	/* whether to run setfiles check the file contexts file */
 
 	/* This timeout is used for transactions and waiting for lock
 	   -1 means wait indefinetely

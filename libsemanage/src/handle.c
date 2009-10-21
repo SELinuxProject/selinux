@@ -66,6 +66,9 @@ semanage_handle_t *semanage_handle_create(void)
 	/* By default always reload policy after commit if SELinux is enabled. */
 	sh->do_reload = (is_selinux_enabled() > 0);
 
+	/* By default always check the file contexts file. */
+	sh->do_check_contexts = 1;
+
 	/* By default do not create store */
 	sh->create_store = 0;
 
@@ -122,6 +125,15 @@ void semanage_set_disable_dontaudit(semanage_handle_t * sh, int disable_dontaudi
 	assert(sh != NULL);
 	
 	sepol_set_disable_dontaudit(sh->sepolh, disable_dontaudit);
+	return;
+}
+
+void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts)
+{
+
+	assert(sh != NULL);
+
+	sh->do_check_contexts = do_check_contexts;
 	return;
 }
 

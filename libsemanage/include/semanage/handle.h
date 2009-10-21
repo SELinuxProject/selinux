@@ -75,6 +75,9 @@ int semanage_get_disable_dontaudit(semanage_handle_t * handle);
 /* Set whether or not to disable dontaudits upon commit */
 void semanage_set_disable_dontaudit(semanage_handle_t * handle, int disable_dontaudit);
 
+/* Set whether or not to execute setfiles to check file contexts upon commit */
+void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts);
+
 /* Check whether policy is managed via libsemanage on this system.
  * Must be called prior to trying to connect.
  * Return 1 if policy is managed via libsemanage on this system,
