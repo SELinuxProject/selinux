@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=@includedir@
+
+Name: libselinux
+Description: SELinux utility library
+Version: @VERSION@
+URL: http://userspace.selinuxproject.org/
+Requires.private: libsepol
+Libs: -L${libdir} -lselinux
+Cflags: -I${includedir}

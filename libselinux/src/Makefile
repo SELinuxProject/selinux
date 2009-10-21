@@ -12,10 +12,12 @@ RUBYPLATFORM ?= $(shell ruby -e 'print RUBY_PLATFORM')
 RUBYINC ?= $(LIBDIR)/ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 RUBYINSTALL ?= $(LIBDIR)/ruby/site_ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 
+VERSION = $(shell cat ../VERSION)
 LIBVERSION = 1
 
 LIBA=libselinux.a 
 TARGET=libselinux.so
+LIBPC=libselinux.pc
 SWIGIF= selinuxswig_python.i selinuxswig_python_exception.i
 SWIGRUBYIF= selinuxswig_ruby.i
 SWIGCOUT= selinuxswig_wrap.c
@@ -56,7 +58,7 @@ SWIG = swig -Wall -python -o $(SWIGCOUT) -outdir ./
 
 SWIGRUBY = swig -Wall -ruby -o $(SWIGRUBYCOUT) -outdir ./
 
-all: $(LIBA) $(LIBSO) 
+all: $(LIBA) $(LIBSO) $(LIBPC)
 
 pywrap: all $(SWIGSO) $(AUDIT2WHYSO)
 
@@ -81,6 +83,9 @@ $(SWIGRUBYSO): $(SWIGRUBYLOBJ)
 $(LIBSO): $(LOBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -ldl -L$(LIBDIR) -Wl,-soname,$(LIBSO),-z,defs,-z,relro
 	ln -sf $@ $(TARGET) 
+
+$(LIBPC): $(LIBPC).in
+	sed -e 's/@VERSION@/$(VERSION)/; s:@prefix@:$(PREFIX):; s:@libdir@:$(LIBDIR):; s:@includedir@:$(INCLUDEDIR):' < $< > $@
 
 selinuxswig_python_exception.i: ../include/selinux/selinux.h
 	sh exception.sh > $@ 
@@ -111,6 +116,8 @@ install: all
 	install -m 644 $(LIBA) $(LIBDIR)
 	test -d $(SHLIBDIR) || install -m 755 -d $(SHLIBDIR)
 	install -m 755 $(LIBSO) $(SHLIBDIR)
+	test -d $(LIBDIR)/pkgconfig || install -m 755 -d $(LIBDIR)/pkgconfig
+	install -m 644 $(LIBPC) $(LIBDIR)/pkgconfig
 	cd $(LIBDIR) && ln -sf ../../`basename $(SHLIBDIR)`/$(LIBSO) $(TARGET)
 
 install-pywrap: pywrap
@@ -127,7 +134,7 @@ relabel:
 	/sbin/restorecon $(SHLIBDIR)/$(LIBSO)
 
 clean: 
-	-rm -f $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) $(AUDIT2WHYSO) *.o *.lo *~ 
+	-rm -f $(LIBPC) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) $(AUDIT2WHYSO) *.o *.lo *~
 
 distclean: clean
 	rm -f $(GENERATED) $(SWIGFILES)

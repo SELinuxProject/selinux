@@ -23,10 +23,12 @@ LFLAGS = -s
 YACC = bison
 YFLAGS = -d
 
+VERSION = $(shell cat ../VERSION)
 LIBVERSION = 1
 
 LIBA=libsemanage.a
 TARGET=libsemanage.so
+LIBPC=libsemanage.pc
 SWIGIF= semanageswig_python.i
 SWIGRUBYIF= semanageswig_ruby.i
 SWIGCOUT= semanageswig_wrap.c
@@ -53,7 +55,7 @@ SWIGRUBY = swig -Wall -ruby -o $(SWIGRUBYCOUT) -outdir ./
 
 GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT) $(wildcard conf-*.[ch])
 
-all: $(LIBA) $(LIBSO) 
+all: $(LIBA) $(LIBSO) $(LIBPC)
 
 pywrap: all $(SWIGLOBJ) $(SWIGSO) 
 
@@ -78,6 +80,9 @@ $(LIBA): $(OBJS)
 $(LIBSO): $(LOBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -lsepol -lselinux -lbz2 -lustr -L$(LIBDIR) -Wl,-soname,$(LIBSO),--version-script=libsemanage.map,-z,defs
 	ln -sf $@ $(TARGET)
+
+$(LIBPC): $(LIBPC).in
+	sed -e 's/@VERSION@/$(VERSION)/; s:@prefix@:$(PREFIX):; s:@libdir@:$(LIBDIR):; s:@includedir@:$(INCLUDEDIR):' < $< > $@
 
 conf-scan.c: conf-scan.l conf-parse.h
 	$(LEX) $(LFLAGS) -t $< > $@
@@ -119,6 +124,8 @@ install: all
 	install -m 644 $(LIBA) $(LIBDIR)
 	test -d $(SHLIBDIR) || install -m 755 -d $(SHLIBDIR)
 	install -m 755 $(LIBSO) $(SHLIBDIR)
+	test -d $(LIBDIR)/pkgconfig || install -m 755 -d $(LIBDIR)/pkgconfig
+	install -m 644 $(LIBPC) $(LIBDIR)/pkgconfig
 	test -f $(DEFAULT_SEMANAGE_CONF_LOCATION) || install -m 644 -D semanage.conf $(DEFAULT_SEMANAGE_CONF_LOCATION)
 	cd $(LIBDIR) && ln -sf ../../`basename $(SHLIBDIR)`/$(LIBSO) $(TARGET)
 
@@ -134,7 +141,7 @@ relabel:
 	/sbin/restorecon $(SHLIBDIR)/$(LIBSO)
 
 clean: 
-	rm -f $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) conf-parse.c conf-parse.h conf-scan.c
+	rm -f $(LIBPC) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) conf-parse.c conf-parse.h conf-scan.c
 
 distclean: clean
 	rm -f $(SWIGCOUT) $(SWIGFILES)
