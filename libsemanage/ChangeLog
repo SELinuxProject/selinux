@@ -1,3 +1,7 @@
+2.0.40 2009-10-22
+	* Add semanage_set_check_contexts() function to disable calling
+	  setfiles
+
 2.0.39 2009-09-24
 	* make swigify
 

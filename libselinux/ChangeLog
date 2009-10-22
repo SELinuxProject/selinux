@@ -1,3 +1,6 @@
+2.0.88 2009-10-22
+	* Rename and export selinux_reset_config()
+
 2.0.87 2009-09-25
 	* Add exception handling in libselinux from Dan Walsh. This uses a
 	  shell script called exception.sh to generate a swig interface file.
