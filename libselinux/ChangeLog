@@ -1,3 +1,6 @@
+2.0.89 2009-10-29
+	* Add pkgconfig file from Eamon Walsh.
+
 2.0.88 2009-10-22
 	* Rename and export selinux_reset_config()
 

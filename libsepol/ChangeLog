@@ -1,3 +1,6 @@
+2.0.40 2009-10-29
+	* Add pkgconfig file from Eamon Walsh.
+
 2.0.39 2009-10-14
 	* Add support for building Xen policies from Paul Nuzzi.
 
