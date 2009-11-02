@@ -1,3 +1,6 @@
+2.0.75 2009-11-02
+	* Factor out restoring logic from setfiles.c into restore.c
+
 2.0.74 2009-09-16
 	* Change semodule upgrade behavior to install even if the module
 	  is not present from Dan Walsh.
