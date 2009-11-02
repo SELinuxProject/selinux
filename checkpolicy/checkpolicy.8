@@ -18,20 +18,32 @@ policy.conf or policy, depending on whether the -b flag is specified.
 
 .SH OPTIONS
 .TP
-.B \-b
+.B \-b,\-\-binary
 Read an existing binary policy file rather than a source policy.conf file.
 .TP
-.B \-d
+.B \-d,\-\-debug
 Enter debug mode after loading the policy.
 .TP
-.B \-M
+.B \-M,\-\-mls
 Enable the MLS policy when checking and compiling the policy.
 .TP
-.B \-o filename
+.B \-o,\-\-output filename
 Write a binary policy file to the specified filename.
 .TP
 .B \-c policyvers
 Specify the policy version, defaults to the latest.
+.TP
+.B \-t,\-\-target
+Specify the target platform (selinux or xen).
+.TP
+.B \-U,\-\-handle-unknown <action>
+Specify how the kernel should handle unknown classes or permissions (deny, allow or reject).
+.TP
+.B \-V,\-\-version
+Show version information.
+.TP
+.B \-h,\-\-help
+Show usage information.
 
 .SH "SEE ALSO"
 SELinux documentation at http://www.nsa.gov/selinux,

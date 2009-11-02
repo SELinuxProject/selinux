@@ -163,8 +163,18 @@ int main(int argc, char **argv)
 	int ch;
 	int show_version = 0;
 	policydb_t modpolicydb;
+	struct option long_options[] = {
+		{"help", no_argument, NULL, 'h'},
+		{"output", required_argument, NULL, 'o'},
+		{"binary", no_argument, NULL, 'b'},
+		{"version", no_argument, NULL, 'V'},
+		{"handle-unknown", optional_argument, NULL, 'U'},
+		{"debug", no_argument, NULL, 'd'},
+		{"mls", no_argument, NULL, 'M'},
+		{NULL, 0, NULL, 0}
+	};
 
-	while ((ch = getopt(argc, argv, "ho:dbVU:mM")) != EOF) {
+	while ((ch = getopt_long(argc, argv, "ho:bVU:mM", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'h':
 			usage(argv[0]);

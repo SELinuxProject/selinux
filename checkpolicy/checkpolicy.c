@@ -392,8 +392,19 @@ int main(int argc, char **argv)
 	int state;
 	int show_version = 0;
 	struct policy_file pf;
+	struct option long_options[] = {
+		{"output", required_argument, NULL, 'o'},
+		{"target", required_argument, NULL, 't'},
+		{"binary", no_argument, NULL, 'b'},
+		{"debug", no_argument, NULL, 'd'},
+		{"version", no_argument, NULL, 'V'},
+		{"handle-unknown", optional_argument, NULL, 'U'},
+		{"mls", no_argument, NULL, 'M'},
+		{"help", no_argument, NULL, 'h'},
+		{NULL, 0, NULL, 0}
+	};
 
-	while ((ch = getopt(argc, argv, "o:t:dbU:MVc:")) != EOF) {
+	while ((ch = getopt_long(argc, argv, "o:t:dbU:MVc:h", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'o':
 			outfile = optarg;
@@ -458,6 +469,7 @@ int main(int argc, char **argv)
 					policyvers = n;
 				break;
 			}
+		case 'h':
 		default:
 			usage(argv[0]);
 		}

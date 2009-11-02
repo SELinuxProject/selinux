@@ -21,23 +21,26 @@ the module package into the module store and load the resulting policy.
 
 .SH OPTIONS
 .TP
-.B \-b
+.B \-b,\-\-binary
 Read an existing binary policy module file rather than a source policy
 module file.  This option is a development/debugging aid.
 .TP
 .B \-m
 Generate a non-base policy module.
 .TP
-.B \-M
+.B \-M,\-\-mls
 Enable the MLS/MCS support when checking and compiling the policy module.
 .TP
-.B \-V
+.B \-V,\-\-version
  Show policy versions created by this program
 .TP
-.B \-o filename
+.B \-o,\-\-output filename
 Write a binary policy module file to the specified filename.
 Otherwise, checkmodule will only check the syntax of the module source file
 and will not generate a binary module at all.
+.TP
+.B \-U,\-\-handle-unknown <action>
+Specify how the kernel should handle unknown classes or permissions (deny, allow or reject).
 
 .SH EXAMPLE
 .nf
