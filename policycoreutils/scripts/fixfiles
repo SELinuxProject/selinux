@@ -27,7 +27,6 @@ fullFlag=0
 FORCEFLAG=""
 DIRS=""
 RPMILES=""
-OUTFILES=""
 LOGFILE=`tty`
 if [ $? != 0 ]; then
     LOGFILE="/dev/null"
@@ -122,7 +121,7 @@ if [ ! -z "$PREFC" ]; then
 fi
 if [ ! -z "$RPMFILES" ]; then
     for i in `echo "$RPMFILES" | sed 's/,/ /g'`; do
-	rpmlist $i | ${RESTORECON} ${OUTFILES} ${FORCEFLAG} $* -R -i -f - 2>&1 >> $LOGFILE
+	rpmlist $i | ${RESTORECON} ${FORCEFLAG} $* -R -i -f - 2>&1 >> $LOGFILE
     done
     exit $?
 fi
@@ -130,14 +129,15 @@ if [ ! -z "$FILEPATH" ]; then
     if [ -x /usr/bin/find ]; then
 	/usr/bin/find "$FILEPATH" \
 	    ! \( -fstype ext2 -o -fstype ext3 -o -fstype ext4 -o -fstype ext4dev -o -fstype gfs2 -o -fstype jfs -o -fstype xfs -o -fstype btrfs \) -prune  -o -print0 | \
-	    ${RESTORECON} ${OUTFILES} ${FORCEFLAG} $* -0 -f - 2>&1 >> $LOGFILE
+	    ${RESTORECON} ${FORCEFLAG} $* -0 -f - 2>&1 >> $LOGFILE
     else
-	${RESTORECON} ${OUTFILES} ${FORCEFLAG} -R $* $FILEPATH 2>&1 >> $LOGFILE
+	${RESTORECON} ${FORCEFLAG} -R $* $FILEPATH 2>&1 >> $LOGFILE
     fi
     return
 fi
+[ -x /usr/sbin/genhomedircon ] && /usr/sbin/genhomedircon
 LogReadOnly
-${SETFILES} -q ${OUTFILES} ${SYSLOGFLAG} ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 >> $LOGFILE
+${SETFILES} -q ${SYSLOGFLAG} ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 >> $LOGFILE
 rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-*
 find /tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
 find /var/tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
@@ -193,10 +193,15 @@ case "$1" in
 esac
 }
 usage() {
-      	echo $"Usage: $0 [-l logfile ] [-o outputfile ] { check | restore|[-F] relabel } [[dir] ... ] "
-	echo or
-      	echo $"Usage: $0 -R rpmpackage[,rpmpackage...] -C PREVIOUS_FILECONTEXT [-l logfile ] [-o outputfile ] { check | restore }"
-      	echo $"Usage: $0 onboot"
+      	echo $"""
+Usage: $0 [-F] [-l logfile ] { check | restore| [-f] relabel | verify } [[dir/file] ... ] 
+or
+Usage: $0 [-F] -R rpmpackage[,rpmpackage...] [-l logfile ] { check | restore | verify }
+or
+Usage: $0 [-F] -C PREVIOUS_FILECONTEXT { check | restore | verify }
+or
+Usage: $0 onboot
+"""
 }
 
 if [ $# = 0 ]; then
@@ -205,16 +210,13 @@ if [ $# = 0 ]; then
 fi
 
 # See how we were called.
-while getopts "C:Ffo:R:l:" i; do
+while getopts "C:FfR:l:" i; do
     case "$i" in
 	f)
 		fullFlag=1
 		;;
         R)
 		RPMFILES=$OPTARG
-		;;
-        o)
-		OUTFILES=$OPTARG
 		;;
         l)
 		LOGFILE=$OPTARG

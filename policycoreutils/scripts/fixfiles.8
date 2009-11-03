@@ -3,11 +3,18 @@
 fixfiles \- fix file SELinux security contexts.
 
 .SH "SYNOPSIS"
-.B fixfiles [-F] [ -R rpmpackagename[,rpmpackagename...] ] [ -C PREVIOUS_FILECONTEXT ] [-l logfile ] [-o outputfile ] { check | restore | [-F] relabel | verify }"
 
-.B fixfiles [-F] [-l logfile ] [-o outputfile ] { check | restore|[-f] relabel | verify } [[dir/file] ... ] 
+.B fixfiles 
+.I [-F] [-l logfile ] { check | restore|[-f] relabel | verify } [[dir/file] ... ] 
 
-.B fixfiles onboot
+.B fixfiles 
+.I [-F] [ -R rpmpackagename[,rpmpackagename...] ] [-l logfile ] { check | restore | verify }
+
+.B fixfiles 
+.I [ -C PREVIOUS_FILECONTEXT ] [-l logfile ] { check | restore | verify }
+
+.B fixfiles 
+.I onboot
 
 .SH "DESCRIPTION"
 This manual page describes the
@@ -30,10 +37,6 @@ will setup the machine to relabel on the next reboot.
 .TP 
 .B -l logfile
 Save the output to the specified logfile
-.TP 
-.B -o outputfile
-Save all files that have file_context that differs from the default, in outputfile.
-
 .TP 
 .B -F
 Force  reset  of  context to match file_context for customizable files
