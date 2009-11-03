@@ -435,6 +435,8 @@ if __name__ == '__main__':
                     continue
     except ValueError, e:
         error(e)
+    except OSError, e:
+        error(e)
     
     sys.exit(errors)
     

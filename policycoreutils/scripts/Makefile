@@ -5,7 +5,7 @@ SBINDIR ?= $(PREFIX)/sbin
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= /usr/share/locale
 
-all: fixfiles genhomedircon
+all: fixfiles genhomedircon chcat
 
 install: all
 	-mkdir -p $(BINDIR)
