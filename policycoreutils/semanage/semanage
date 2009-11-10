@@ -44,14 +44,13 @@ if __name__ == '__main__':
                text = _("""
 semanage [ -S store ] -i [ input_file | - ]
 
-semanage {boolean|login|user|port|interface|node|fcontext|translation} -{l|D} [-n]
+semanage {boolean|login|user|port|interface|node|fcontext} -{l|D} [-n]
 semanage login -{a|d|m} [-sr] login_name | %groupname
 semanage user -{a|d|m} [-LrRP] selinux_name
 semanage port -{a|d|m} [-tr] [ -p proto ] port | port_range
 semanage interface -{a|d|m} [-tr] interface_spec
 semanage node -{a|d|m} [-tr] [ -p protocol ] [-M netmask] addr
 semanage fcontext -{a|d|m} [-frst] file_spec
-semanage translation -{a|d|m} [-T] level
 semanage boolean -{d|m} [--on|--off|-1|-0] -F boolean | boolean_file
 semanage permissive -{d|a} type
 semanage dontaudit [ on | off ]
@@ -88,8 +87,6 @@ Object-specific Options (see above):
 	-P, --prefix     Prefix for home directory labeling
 	-L, --level      Default SELinux Level (MLS/MCS Systems only)
 	-R, --roles      SELinux Roles (ex: "sysadm_r staff_r")
-	-T, --trans      SELinux Level Translation (MLS/MCS Systems only)
-
 	-s, --seuser     SELinux User Name
 	-t, --type       SELinux Type for the object
 	-r, --range      MLS/MCS Security Range (MLS/MCS Systems only)
@@ -118,8 +115,6 @@ Object-specific Options (see above):
 		valid_option["fcontext"] = []
 		valid_option["fcontext"] += valid_everyone + [ '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range'] 
 		valid_option["dontaudit"] = [ '-S', '--store' ]
-		valid_option["translation"] = []
-		valid_option["translation"] += valid_everyone + [ '-T', '--trans' ] 
 		valid_option["boolean"] = []
 		valid_option["boolean"] += valid_everyone + [ '--on', "--off", "-1", "-0", "-F", "--file"] 
 		valid_option["permissive"] = []
@@ -180,7 +175,6 @@ Object-specific Options (see above):
 		selevel = ""
 		setype = ""
 		ftype = ""
-		setrans = ""
 		roles = ""
 		seuser = ""
 		prefix = "user"
@@ -203,7 +197,7 @@ Object-specific Options (see above):
 		args = argv[1:]
 
 		gopts, cmds = getopt.getopt(args,
-					    '01adf:i:lhmnp:s:FCDR:L:r:t:T:P:S:M:',
+					    '01adf:i:lhmnp:s:FCDR:L:r:t:P:S:M:',
 					    ['add',
 					     'delete',
 					     'deleteall',
@@ -225,7 +219,6 @@ Object-specific Options (see above):
 					     'level=',
 					     'roles=',
 					     'type=',
-					     'trans=',
 					     'prefix=',
                                              'mask='
 					     ])
@@ -297,9 +290,6 @@ Object-specific Options (see above):
 			if o == "-t" or o == "--type":
 				setype = a
 
-			if o == "-T" or o == "--trans":
-				setrans = a
-
                         if o == "--on" or o == "-1":
                                value = "on"
                         if o == "--off" or o == "-0":
@@ -325,9 +315,6 @@ Object-specific Options (see above):
 		
 		if object == "boolean":
 			OBJECT = seobject.booleanRecords(store)
-		
-		if object == "translation":
-			OBJECT = seobject.setransRecords()
 		
 		if object == "permissive":
 			OBJECT = seobject.permissiveRecords(store)
@@ -358,9 +345,6 @@ Object-specific Options (see above):
 			if object == "login":
 				OBJECT.add(target, seuser, serange)
 
-			if object == "translation":
-				OBJECT.add(target, setrans)
-
 			if object == "user":
 				OBJECT.add(target, roles.split(), selevel, serange, prefix)
 
@@ -386,9 +370,6 @@ Object-specific Options (see above):
 
 			if object == "login":
 				OBJECT.modify(target, seuser, serange)
-
-			if object == "translation":
-				OBJECT.modify(target, setrans)
 
 			if object == "user":
 				rlist = roles.split()
@@ -457,7 +438,6 @@ Object-specific Options (see above):
                                             'level=',
                                             'roles=',
                                             'type=',
-                                            'trans=',
                                             'prefix='
                                             ])
                for o, a in gopts:

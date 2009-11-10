@@ -3,7 +3,7 @@
 semanage \- SELinux Policy Management tool
 
 .SH "SYNOPSIS"
-.B semanage {boolean|login|user|port|interface|node|fcontext|translation} \-{l|D} [\-n] [\-S store]
+.B semanage {boolean|login|user|port|interface|node|fcontext} \-{l|D} [\-n] [\-S store]
 .br
 .B semanage boolean \-{d|m} [\-\-on|\-\-off|\-1|\-0] -F boolean | boolean_file
 .br
@@ -22,8 +22,6 @@ semanage \- SELinux Policy Management tool
 .B semanage permissive \-{a|d} type
 .br
 .B semanage dontaudit [ on | off ]
-.br
-.B semanage translation \-{a|d|m} [\-T] level
 .P
 
 .SH "DESCRIPTION"
@@ -101,9 +99,6 @@ Select and alternate SELinux store to manage
 .TP
 .I                \-t, \-\-type       
 SELinux Type for the object
-.TP
-.I                \-T, \-\-trans
-SELinux Translation
 
 .SH EXAMPLE
 .nf
