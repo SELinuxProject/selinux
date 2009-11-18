@@ -1,6 +1,7 @@
 # Installation directories.
 PREFIX ?= ${DESTDIR}/usr
-SBINDIR ?= $(PREFIX)/sbin
+SBINDIR ?= $(DESTDIR)/sbin
+USRSBINDIR ?= $(PREFIX)/sbin
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= /usr/share/locale
 
@@ -17,6 +18,8 @@ install: all
 	install -m 755 $(TARGETS) $(SBINDIR)
 	test -d $(MANDIR)/man8 || install -m 755 -d $(MANDIR)/man8
 	install -m 644 load_policy.8 $(MANDIR)/man8/
+	-mkdir -p $(USRSBINDIR)
+	ln -sf /sbin/load_policy $(USRSBINDIR)/load_policy
 
 clean:
 	-rm -f $(TARGETS) *.o 

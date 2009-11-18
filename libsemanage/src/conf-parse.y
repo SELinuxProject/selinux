@@ -263,7 +263,13 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	     calloc(1, sizeof(*(current_conf->load_policy)))) == NULL) {
 		return -1;
 	}
-	if ((conf->load_policy->path = strdup("/usr/sbin/load_policy")) == NULL) {
+
+	if (access("/sbin/load_policy", X_OK) == 0) {
+		conf->load_policy->path = strdup("/sbin/load_policy");
+	} else {
+		conf->load_policy->path = strdup("/usr/sbin/load_policy");
+	}
+	if (conf->load_policy->path == NULL) {
 		return -1;
 	}
 	conf->load_policy->args = NULL;
