@@ -1000,7 +1000,7 @@ static int type_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 				buf[items++] = cpu_to_le32(typdatum->flags);
 			else if (typdatum->flags & TYPE_FLAGS_PERMISSIVE)
 				WARN(fp->handle, "Warning! Module policy "
-				     "version %d cannnot suport permissive "
+				     "version %d cannot support permissive "
 				     "types, but one was defined",
 				     p->policyvers);
 		}
