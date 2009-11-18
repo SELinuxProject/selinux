@@ -1,3 +1,8 @@
+2.0.76 2009-11-18
+	* Remove setrans management from semanage, as it does not work
+	  from Dan Walsh.
+	* Move load_policy from /usr/sbin to /sbin from Dan Walsh.
+
 2.0.75 2009-11-02
 	* Factor out restoring logic from setfiles.c into restore.c
 

@@ -1,3 +1,6 @@
+2.0.41 2009-11-18
+	* Fixed typo in error message from Manoj Srivastava.
+
 2.0.40 2009-10-29
 	* Add pkgconfig file from Eamon Walsh.
 

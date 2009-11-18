@@ -1,3 +1,6 @@
+2.0.42 2009-11-18
+	* Move load_policy from /usr/sbin to /sbin from Dan Walsh.
+
 2.0.41 2009-10-29
 	* Add pkgconfig file from Eamon Walsh.
 
