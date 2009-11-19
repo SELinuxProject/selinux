@@ -1038,7 +1038,7 @@ class nodeRecords(semanageRecords):
 
        def add(self, addr, mask, proto, serange, ctype):
                 self.begin()
-                self.__add(self, addr, mask, proto, serange, ctype)
+                self.__add(addr, mask, proto, serange, ctype)
                 self.commit()
 
        def __modify(self, addr, mask, proto, serange, setype):
