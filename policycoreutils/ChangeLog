@@ -1,3 +1,9 @@
+2.0.77 2009-11-19
+	* Fixed bug preventing semanage node -a from working
+	  from Chad Sellers
+	* Fixed bug preventing semanage fcontext -l from working
+	  from Chad Sellers
+
 2.0.76 2009-11-18
 	* Remove setrans management from semanage, as it does not work
 	  from Dan Walsh.
