@@ -1575,12 +1575,6 @@ class fcontextRecords(semanageRecords):
 					print "%-50s %-18s %s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1],fcon_dict[k][2])
 			else:
 				print "%-50s %-18s <<None>>" % (k[0], k[1])
-                if len(self.equiv.keys()) > 0:
-                       if heading:
-                              print _("\nSELinux fcontext Equivalence \n")
-                       
-                       for src in self.equiv.keys():
-                              print "%s == %s" % (src, self.equiv[src])
 				
 class booleanRecords(semanageRecords):
 	def __init__(self, store = ""):
