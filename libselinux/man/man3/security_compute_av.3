@@ -24,6 +24,8 @@ the SELinux policy database in the kernel.
 .BI "int security_get_initial_context(const char *" name ", security_context_t
 "con );
 .sp
+.BI "int selinux_check_passwd_access(access_vector_t " requested );
+.sp
 .BI "int checkPasswdAccess(access_vector_t " requested );
 
 .SH "DESCRIPTION"
@@ -65,18 +67,27 @@ instance.
 
 .B security_compute_user
 is used to determine the set of user contexts that can be reached from a
-source context. Is mainly used by
+source context. It is mainly used by
 .B get_ordered_context_list.
 
 .B security_get_initial_context
 is used to get the context of a kernel initial security identifier specified by 
 .I name
 
+.B selinux_check_passwd_access
+is used to check for a permission in the
+.I passwd
+class.
+.B selinux_check_passwd_access
+uses getprevcon() for the source and target security contexts.
+
 .B checkPasswdAccess
-This functions is a helper functions that allows you to check for a permission in the passwd class. checkPasswdAccess uses getprevcon() for the source and target security contexts.
+is a deprecated alias of the
+.B selinux_check_passwd_access
+function.
 
 .SH "RETURN VALUE"
-0 for success and on error -1 is returned.
+Returns zero on success or \-1 on error.
 
 .SH "SEE ALSO"
 .BR selinux "(8), " getcon "(3), " getfilecon "(3), " get_ordered_context_list "(3)"

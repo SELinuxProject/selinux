@@ -1,1 +1,25 @@
-.so man3/matchpathcon.3
+.TH "selinux_file_context_cmp" "3" "21 November 2009" "sds@tycho.nsa.gov" "SELinux API documentation"
+.SH "NAME"
+selinux_file_context_cmp, selinux_file_context_verify \- comparison of two file contexts.
+
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+.sp
+
+.BI "int selinux_file_context_cmp(const security_context_t " a ", const security_context_t " b ");"
+
+.BI "int selinux_file_context_verify(const char *" path ", mode_t " mode ");"
+
+.SH "DESCRIPTION"
+.B selinux_file_context_cmp
+compares two file contexts to see if their differences are "significant", the function runs the strcmp function ignoring the user componant of the file context.  
+.sp
+.B selinux_file_context_verify
+compares the file context on disk to the system default.
+.sp
+
+.SH "RETURN VALUE"
+Returns zero on success or \-1 otherwise.
+
+.SH "SEE ALSO"
+.BR selinux "(8), " selinux_lsetfilecon "(3), " matchpathcon "(3), " freecon "(3), " setfilecon "(3), " setfscreatecon "(3)"

@@ -1,0 +1,28 @@
+.TH "security_disable" "3" "21 Nov 2009" "" "SELinux API documentation"
+.SH "NAME"
+security_disable \- disable the SELinux kernel code at runtime.
+
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+.sp
+.BI "int security_disable(void);"
+
+.SH "DESCRIPTION"
+.B security_disable
+disables the SELinux kernel code, unregisters selinuxfs from /proc/filesystems,
+and then unmounts /selinux.
+.sp
+This function can only be called at runtime and prior to the initial policy
+load. After the initial policy load, the SELinux kernel code cannot be disabled,
+but only placed in "permissive" mode by using
+.B setenforce(1).
+
+.SH "RETURN VALUE"
+.B security_disable
+returns zero on success or \-1 on error.
+
+.SH "AUTHOR"
+This manual page has been written by Guido Trentalancia <guido@trentalancia.com>
+
+.SH "SEE ALSO"
+.BR selinux (8), " setenforce "(3)

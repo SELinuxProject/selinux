@@ -6,6 +6,8 @@
 security_class_to_string, security_av_perm_to_string, string_to_security_class, string_to_av_perm, security_av_string \- convert
 between SELinux class and permission values and string names.
 
+print_access_vector \- display an access vector in human-readable form. 
+
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 
@@ -20,6 +22,8 @@ between SELinux class and permission values and string names.
 .BI "security_class_t string_to_security_class(const char *" name ");"
 .sp
 .BI "access_vector_t string_to_av_perm(security_class_t " tclass ", const char *" name ");"
+.sp
+.BI "void print_access_vector(security_class_t " tclass ", access_vector_t " av ");"
 
 .SH "DESCRIPTION"
 .B security_class_to_string
@@ -56,11 +60,17 @@ and security class
 .IR tclass ,
 or zero if no such value exists.
 
+.B print_access_vector
+displays an access vector in human-readable form on the standard output
+stream.
+
 .SH "RETURN VALUE"
 .B security_av_string
-returns returns zero on success or \-1 on error with
+returns zero on success or \-1 on error with
 .I errno
-set appropriately.  All other functions return zero or NULL on error.
+set appropriately.
+.B print_access_vector
+does not return a value. All other functions return zero or NULL on error.
 
 .SH "ERRORS"
 .TP

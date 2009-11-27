@@ -1,27 +1,22 @@
-.TH "matchpathcon" "3" "16 March 2005" "sds@tycho.nsa.gov" "SELinux API documentation"
+.TH "matchpathcon" "3" "21 November 2009" "sds@tycho.nsa.gov" "SELinux API documentation"
 .SH "NAME"
-matchpathcon \- get the default SELinux security context for the specified path from the file contexts configuration.
+matchpathcon, matchpathcon_index \- get the default SELinux security context for the specified path from the file contexts configuration.
 
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
+
 .BI "int matchpathcon_init(const char *" path ");"
 
-.BI "int matchpathcon_fini(void);"
+.BI "int matchpathcon_init_prefix(const char *" path ", const char *" subset ");"
 
-.BI "int matchpathcon(const char *" path ", mode_t " mode ", security_context_t *" con);
+.BI "int matchpathcon_fini(void);"
 .sp
 
-.BI "void set_matchpathcon_printf(void (*" f ")(const char *" fmt ", ...));"
+.BI "int matchpathcon(const char *" path ", mode_t " mode ", security_context_t *" con ");
+.sp
 
-.BI "void set_matchpathcon_invalidcon(int (*" f ")(const char *"path ", unsigned " lineno ", char * " context "));"
-
-.BI "void set_matchpathcon_flags(unsigned int " flags ");"
-
-.BI "int selinux_file_context_cmp(const security_context_t a,
-				     const security_context_t b);"
-
-.BI "int selinux_file_context_verify(const char *path, mode_t mode);"
+.BI "int matchpathcon_index(const char *" name ", mode_t " mode ", security_context_t * " con ");"
 
 .SH "DESCRIPTION"
 .B matchpathcon_init
@@ -37,7 +32,7 @@ i.e. the path returned by
 Unless the 
 .B MATCHPATHCON_BASEONLY 
 flag has been set via 
-.B set_matchpathcon_flags,
+.B set_matchpathcon_flags(3),
 files with the same path prefix but a 
 .B .homedirs
 and
@@ -45,6 +40,14 @@ and
 suffix are also looked up and loaded if present.  These files provide
 dynamically generated entries for user home directories and for local
 customizations.
+
+.sp
+.B matchpathcon_init_prefix
+is the same as
+.B matchpathcon_init
+but only loads entries with regular expressions that have stems prefixed
+by
+.I prefix.
 
 .sp
 .B matchpathcon_fini
@@ -63,7 +66,9 @@ configuration and sets the security context
 to refer to the
 resulting context. The caller must free the returned security context 
 .I con
-using freecon when finished using it.
+using
+.B freecon(3)
+when finished using it.
 .I mode
 can be 0 to disable mode matching, but
 should be provided whenever possible, as it may affect the matching.
@@ -78,54 +83,16 @@ its first invocation with a NULL
 defaulting to the active file contexts configuration.
 .sp
 
-.B set_matchpathcon_printf
-sets the function used by 
-.B matchpathcon_init
-when displaying errors about the file contexts configuration.  If not set, 
-then this defaults to fprintf(stderr, fmt, ...).  This can be set to redirect
-error reporting to a different destination.
+.B matchpathcon_index
+is the same as
+.B matchpathcon
+but returns a specification index that can later be used in a
+.B matchpathcon_filespec_add(3)
+call.
+.sp
 
-.sp
-.B set_matchpathcon_invalidcon
-sets the function used by 
-.B matchpathcon_init
-when checking the validity of a context in the file contexts
-configuration.  If not set, then this defaults to a test based 
-on 
-.B security_check_context(3),
-which checks validity against the active policy on a SELinux system.
-This can be set to instead perform checking based on a binary policy file,
-e.g. using 
-.B sepol_check_context(3),
-as is done by 
-.B setfiles -c.
-The function is also responsible for reporting any such error, and
-may include the 
-.I path
-and
-.I lineno
-in such error messages.
-
-.sp
-.B set_matchpathcon_flags
-sets flags controlling the operation of 
-.B matchpathcon_init
-or
-.B matchpathcon.
-If the 
-.B MATCHPATHCON_BASEONLY
-flag is set, then only the base file contexts configuration file
-will be processed, not any dynamically generated entries or local customizations.
-.sp
-.B selinux_file_context_cmp
-compares two file contexts to see if their differences are "significant", the function runs the strcmp function ignoring the user componant of the file context.  
-.sp
-.B selinux_file_context_verify
-compares the file context on disk to the system default.
-
-.sp
 .SH "RETURN VALUE"
-Returns 0 on success or -1 otherwise.
+Returns zero on success or \-1 otherwise.
 
 .SH "SEE ALSO"
-.BR selinux "(8), " freecon "(3), " setfilecon "(3), " setfscreatecon "(3)"
+.BR selinux "(8), " set_matchpathcon_flags "(3), " set_matchpathcon_invalidcon "(3), " set_matchpathcon_printf "(3), " matchpathcon_filespec_add "(3), " matchpathcon_checkmatches "(3), " freecon "(3), " setfilecon "(3), " setfscreatecon "(3)"
