@@ -1,3 +1,7 @@
+2.0.43 2009-11-27
+	* Move libsemanage.so to /usr/lib
+	* Add NAME lines to man pages from Manoj Srivastava<srivasta@debian.org>
+
 2.0.42 2009-11-18
 	* Move load_policy from /usr/sbin to /sbin from Dan Walsh.
 

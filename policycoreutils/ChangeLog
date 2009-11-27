@@ -1,3 +1,7 @@
+2.0.78 2009-11-27
+	* Remove non-working OUTFILE from fixfiles from Dan Walsh.
+	* Additional exception handling in chcat from Dan Walsh.
+
 2.0.77 2009-11-19
 	* Fixed bug preventing semanage node -a from working
 	  from Chad Sellers
