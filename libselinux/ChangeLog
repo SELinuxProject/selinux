@@ -1,3 +1,7 @@
+2.0.90 2009-11-27
+	* add/reformat man pages by Guido Trentalancia <guido@trentalancia.com>.
+	* Change exception.sh to be called with bash by Manoj Srivastava <srivasta@debian.org>
+
 2.0.89 2009-10-29
 	* Add pkgconfig file from Eamon Walsh.
 

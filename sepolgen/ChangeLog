@@ -1,3 +1,7 @@
+1.0.19 2009-11-27
+	* fix sepolgen to read a "type 1403" msg as a policy load by Stephen
+	  Smalley <sds@tycho.nsa.gov>
+
 1.0.18 2009-10-14
 	* Add support for Xen ocontexts from Paul Nuzzi.
 

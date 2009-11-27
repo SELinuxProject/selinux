@@ -1,3 +1,7 @@
+2.0.21 2009-11-27
+	* Add long options to checkpolicy and checkmodule by Guido
+	  Trentalancia <guido@trentalancia.com>
+
 2.0.20 2009-10-14
 	* Add support for building Xen policies from Paul Nuzzi.
 
