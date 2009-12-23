@@ -153,4 +153,14 @@ int semanage_nc_sort(semanage_handle_t * sh,
 		     size_t buf_len,
 		     char **sorted_buf, size_t * sorted_buf_len);
 
+/* Locates the highest priority enabled base module
+ * and fills @path in with that value. @path must be
+ * pre-allocated with size @len.
+ *
+ * Returns 0 on success and -1 on error.
+ */
+int semanage_base_path(semanage_handle_t *sh,
+		       char *path,
+		       size_t len);
+
 #endif
