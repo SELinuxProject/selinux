@@ -246,6 +246,8 @@ int semanage_module_info_create(semanage_handle_t *sh,
 	return semanage_module_info_init(sh, *modinfo);
 }
 
+hidden_def(semanage_module_info_create)
+
 int semanage_module_info_destroy(semanage_handle_t *sh,
 				 semanage_module_info_t *modinfo)
 {
@@ -261,6 +263,8 @@ int semanage_module_info_destroy(semanage_handle_t *sh,
 
 	return semanage_module_info_init(sh, modinfo);
 }
+
+hidden_def(semanage_module_info_destroy)
 
 int semanage_module_info_init(semanage_handle_t *sh,
 			      semanage_module_info_t *modinfo)
@@ -342,6 +346,8 @@ int semanage_module_info_get_priority(semanage_handle_t *sh,
 	return 0;
 }
 
+hidden_def(semanage_module_info_get_priority)
+
 int semanage_module_info_get_name(semanage_handle_t *sh,
 				  semanage_module_info_t *modinfo,
 				  const char **name)
@@ -354,6 +360,8 @@ int semanage_module_info_get_name(semanage_handle_t *sh,
 
 	return 0;
 }
+
+hidden_def(semanage_module_info_get_name)
 
 int semanage_module_info_get_version(semanage_handle_t *sh,
 				     semanage_module_info_t *modinfo,
@@ -368,6 +376,8 @@ int semanage_module_info_get_version(semanage_handle_t *sh,
 	return 0;
 }
 
+hidden_def(semanage_module_info_get_version)
+
 int semanage_module_info_get_lang_ext(semanage_handle_t *sh,
 				      semanage_module_info_t *modinfo,
 				      const char **lang_ext)
@@ -381,6 +391,8 @@ int semanage_module_info_get_lang_ext(semanage_handle_t *sh,
 	return 0;
 }
 
+hidden_def(semanage_module_info_get_lang_ext)
+
 int semanage_module_info_get_enabled(semanage_handle_t *sh,
 				     semanage_module_info_t *modinfo,
 				     int *enabled)
@@ -393,6 +405,8 @@ int semanage_module_info_get_enabled(semanage_handle_t *sh,
 
 	return 0;
 }
+
+hidden_def(semanage_module_info_get_enabled)
 
 int semanage_module_info_set_priority(semanage_handle_t *sh,
 				      semanage_module_info_t *modinfo,
@@ -412,6 +426,8 @@ int semanage_module_info_set_priority(semanage_handle_t *sh,
 
 	return 0;
 }
+
+hidden_def(semanage_module_info_set_priority)
 
 int semanage_module_info_set_name(semanage_handle_t *sh,
 				  semanage_module_info_t *modinfo,
@@ -441,6 +457,8 @@ int semanage_module_info_set_name(semanage_handle_t *sh,
 	return 0;
 }
 
+hidden_def(semanage_module_info_set_name)
+
 int semanage_module_info_set_version(semanage_handle_t *sh,
 				     semanage_module_info_t *modinfo,
 				     const char *version)
@@ -468,6 +486,8 @@ int semanage_module_info_set_version(semanage_handle_t *sh,
 
 	return 0;
 }
+
+hidden_def(semanage_module_info_set_version)
 
 int semanage_module_info_set_lang_ext(semanage_handle_t *sh,
 				      semanage_module_info_t *modinfo,
@@ -497,6 +517,8 @@ int semanage_module_info_set_lang_ext(semanage_handle_t *sh,
 	return 0;
 }
 
+hidden_def(semanage_module_info_set_lang_ext)
+
 int semanage_module_info_set_enabled(semanage_handle_t *sh,
 				     semanage_module_info_t *modinfo,
 				     int enabled)
@@ -515,6 +537,8 @@ int semanage_module_info_set_enabled(semanage_handle_t *sh,
 
 	return 0;
 }
+
+hidden_def(semanage_module_info_set_enabled)
 
 int semanage_module_get_path(semanage_handle_t *sh,
 			     const semanage_module_info_t *modinfo,
@@ -721,6 +745,8 @@ int semanage_module_key_create(semanage_handle_t *sh,
 	return semanage_module_key_init(sh, *modkey);
 }
 
+hidden_def(semanage_module_key_create)
+
 int semanage_module_key_destroy(semanage_handle_t *sh,
 				semanage_module_key_t *modkey)
 {
@@ -732,6 +758,8 @@ int semanage_module_key_destroy(semanage_handle_t *sh,
 
 	return semanage_module_key_init(sh, modkey);
 }
+
+hidden_def(semanage_module_key_destroy)
 
 int semanage_module_key_init(semanage_handle_t *sh,
 			     semanage_module_key_t *modkey)
@@ -758,6 +786,8 @@ int semanage_module_key_get_name(semanage_handle_t *sh,
 	return 0;
 }
 
+hidden_def(semanage_module_key_get_name)
+
 int semanage_module_key_get_priority(semanage_handle_t *sh,
 				     semanage_module_key_t *modkey,
 				     uint16_t *priority)
@@ -770,6 +800,8 @@ int semanage_module_key_get_priority(semanage_handle_t *sh,
 
 	return 0;
 }
+
+hidden_def(semanage_module_key_get_priority)
 
 int semanage_module_key_set_name(semanage_handle_t *sh,
 				 semanage_module_key_t *modkey,
@@ -801,6 +833,8 @@ cleanup:
 	return status;
 }
 
+hidden_def(semanage_module_key_set_name)
+
 int semanage_module_key_set_priority(semanage_handle_t *sh,
 				     semanage_module_key_t *modkey,
 				     uint16_t priority)
@@ -818,6 +852,8 @@ int semanage_module_key_set_priority(semanage_handle_t *sh,
 
 	return 0;
 }
+
+hidden_def(semanage_module_key_set_priority)
 
 int semanage_module_get_enabled(semanage_handle_t *sh,
 				const semanage_module_key_t *modkey,
@@ -838,6 +874,8 @@ int semanage_module_get_enabled(semanage_handle_t *sh,
 
 	return sh->funcs->get_enabled(sh, modkey, enabled);
 }
+
+hidden_def(semanage_module_get_enabled)
 
 int semanage_module_set_enabled(semanage_handle_t *sh,
 				const semanage_module_key_t *modkey,
@@ -862,6 +900,8 @@ int semanage_module_set_enabled(semanage_handle_t *sh,
 	sh->modules_modified = 1;
 	return sh->funcs->set_enabled(sh, modkey, enabled);
 }
+
+hidden_def(semanage_module_set_enabled)
 
 /* Converts a string to a priority
  *

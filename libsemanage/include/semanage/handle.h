@@ -21,6 +21,8 @@
 #ifndef _SEMANAGE_HANDLE_H_
 #define _SEMANAGE_HANDLE_H_
 
+#include <stdint.h>
+
 /* All accesses with semanage are through a "semanage_handle".  The
  * handle may ultimately reference local config files,
  * the binary policy file, a module store, or a policy management server. 
@@ -77,6 +79,12 @@ void semanage_set_disable_dontaudit(semanage_handle_t * handle, int disable_dont
 
 /* Set whether or not to execute setfiles to check file contexts upon commit */
 void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts);
+
+/* Get the default priority. */
+uint16_t semanage_get_default_priority(semanage_handle_t *sh);
+
+/* Set the default priority. */
+int semanage_set_default_priority(semanage_handle_t *sh, uint16_t priority);
 
 /* Check whether policy is managed via libsemanage on this system.
  * Must be called prior to trying to connect.
