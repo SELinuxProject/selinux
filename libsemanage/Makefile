@@ -14,6 +14,7 @@ install:
 	$(MAKE) -C include install
 	$(MAKE) -C src install
 	$(MAKE) -C man install
+	$(MAKE) -C utils install
 
 install-pywrap: 
 	$(MAKE) -C src install-pywrap
