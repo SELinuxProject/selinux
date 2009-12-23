@@ -215,3 +215,20 @@ const char *semanage_module_get_version(semanage_module_info_t * modinfo)
 }
 
 hidden_def(semanage_module_get_version)
+
+#define PRIORITY_MIN 1
+#define PRIORITY_MAX 999
+
+/* Validates priority.
+ *
+ * returns -1 if priority is not in the valid range, returns 0 otherwise
+ */
+int semanage_module_validate_priority(uint16_t priority)
+{
+	if (priority >= PRIORITY_MIN && priority <= PRIORITY_MAX) {
+		return 0;
+	}
+
+	return -1;
+}
+

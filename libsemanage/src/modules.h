@@ -21,11 +21,15 @@
 #ifndef _SEMANAGE_INTERNAL_MODULES_H_
 #define _SEMANAGE_INTERNAL_MODULES_H_
 
+#include <stdint.h>
+
 #include "module_internal.h"
 
 struct semanage_module_info {
 	char *name;		/* Key */
 	char *version;
 };
+
+int semanage_module_validate_priority(uint16_t priority);
 
 #endif

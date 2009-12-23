@@ -23,6 +23,7 @@
 #ifndef _SEMANAGE_INTERNAL_HANDLE_H_
 #define _SEMANAGE_INTERNAL_HANDLE_H_
 
+#include <stdint.h>
 #include <stddef.h>
 #include "handle_internal.h"
 #include <sepol/handle.h>
@@ -55,6 +56,8 @@ struct semanage_handle {
 	sepol_handle_t *sepolh;
 
 	semanage_conf_t *conf;
+
+	uint16_t priority;
 	int is_connected;
 	int is_in_transaction;
 	int do_reload;		/* whether to reload policy after commit */

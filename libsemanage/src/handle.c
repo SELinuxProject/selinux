@@ -59,6 +59,9 @@ semanage_handle_t *semanage_handle_create(void)
 		goto err;
 	sepol_msg_set_callback(sh->sepolh, semanage_msg_relay_handler, sh);
 
+	/* Default priority is 400 */
+	sh->priority = 400;
+
 	/* By default do not rebuild the policy on commit
 	 * If any changes are made, this flag is ignored */
 	sh->do_rebuild = 0;
@@ -148,6 +151,26 @@ void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts)
 
 	sh->do_check_contexts = do_check_contexts;
 	return;
+}
+
+uint16_t semanage_get_default_priority(semanage_handle_t *sh)
+{
+	assert(sh != NULL);
+	return sh->priority;
+}
+
+int semanage_set_default_priority(semanage_handle_t *sh, uint16_t priority)
+{
+	assert(sh != NULL);
+
+	/* Verify priority */
+	if (semanage_module_validate_priority(priority) < 0) {
+		ERR(sh, "Priority %d is invalid.", priority);
+		return -1;
+	}
+
+	sh->priority = priority;
+	return 0;
 }
 
 int semanage_is_connected(semanage_handle_t * sh)
