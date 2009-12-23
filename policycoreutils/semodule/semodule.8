@@ -38,8 +38,25 @@ install/replace base module package
 .B  \-r,\-\-remove=MODULE_NAME
 remove existing module
 .TP
-.B  \-l,\-\-list-modules      
+.B  \-l,\-\-list-modules=[KIND]
 display list of installed modules (other than base)
+.TP
+.B  KIND:
+.TP
+standard
+list highest priority, enabled, non-base modules
+.TP
+full
+list all modules
+.TP
+.B  \-X,\-\-priority=PRIORITY
+set priority for following operations (1-999)
+.TP
+.B  \-e,\-\-enabled=MODULE_NAME
+enable module
+.TP
+.B  \-d,\-\-disable=MODULE_NAME
+disable module
 .TP
 .B  \-s,\-\-store	   
 name of the store to operate on
@@ -72,6 +89,12 @@ $ semodule \-B
 $ semodule \-i *.pp
 # Install or replace all modules in the current directory.
 $ ls *.pp | grep \-Ev "base.pp|enableaudit.pp" | xargs /usr/sbin/semodule \-b base.pp \-i
+# Disable a module.
+$ semodule \-d alsa
+# Install a module at a specific priority.
+$ semodule \-X 100 \-i alsa.pp
+# List all modules.
+$ semodule \-l full
 .fi
 
 .SH SEE ALSO
