@@ -3,8 +3,9 @@
  *	    Jason Tang <jtang@tresys.com>
  *          Christopher Ashworth <cashworth@tresys.com>
  *          Chris PeBenito <cpebenito@tresys.com>
+ *	    Caleb Case <ccase@tresys.com>
  *
- * Copyright (C) 2004-2006 Tresys Technology, LLC
+ * Copyright (C) 2004-2006,2009 Tresys Technology, LLC
  * Copyright (C) 2005 Red Hat, Inc.
  *
  *  This library is free software; you can redistribute it and/or
@@ -88,8 +89,6 @@ static const char *semanage_store_paths[SEMANAGE_NUM_STORES] = {
 	"/tmp"
 };
 
-/* this is the module store path relative to selinux_policy_root() */
-#define SEMANAGE_MOD_DIR "/modules"
 /* relative path names to enum sandbox_paths for special files within
  * a sandbox */
 static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
@@ -158,14 +157,14 @@ static int semanage_init_paths(const char *root)
 	if (!root)
 		return -1;
 
-	prefix_len = (strlen(root) + strlen(SEMANAGE_MOD_DIR));
+	prefix_len = strlen(root);
 
 	for (i = 0; i < SEMANAGE_NUM_FILES; i++) {
 		len = (strlen(semanage_relative_files[i]) + prefix_len);
 		semanage_files[i] = calloc(len + 1, sizeof(char));
 		if (!semanage_files[i])
 			return -1;
-		sprintf(semanage_files[i], "%s%s%s", root, SEMANAGE_MOD_DIR,
+		sprintf(semanage_files[i], "%s%s", root,
 			semanage_relative_files[i]);
 	}
 
@@ -187,16 +186,11 @@ static int semanage_init_store_paths(const char *root)
 	int i, j;
 	size_t len;
 	size_t prefix_len;
-	char *prefix;
 
 	if (!root)
 		return -1;
 
-	prefix_len = (strlen(root) + strlen(SEMANAGE_MOD_DIR));
-	prefix = calloc(prefix_len + 1, sizeof(char));
-	if (!prefix)
-		return -1;
-	sprintf(prefix, "%s%s", root, SEMANAGE_MOD_DIR);
+	prefix_len = strlen(root);
 
 	for (i = 0; i < SEMANAGE_NUM_STORES; i++) {
 		for (j = 0; j < SEMANAGE_STORE_NUM_PATHS; j++) {
@@ -205,14 +199,13 @@ static int semanage_init_store_paths(const char *root)
 			semanage_paths[i][j] = calloc(len + 1, sizeof(char));
 			if (!semanage_paths[i][j])
 				goto cleanup;
-			sprintf(semanage_paths[i][j], "%s%s%s", prefix,
+			sprintf(semanage_paths[i][j], "%s%s%s", root,
 				semanage_store_paths[i],
 				semanage_sandbox_paths[j]);
 		}
 	}
 
       cleanup:
-	free(prefix);
 	return 0;
 }
 
@@ -224,16 +217,28 @@ static int semanage_init_store_paths(const char *root)
  *
  * Note that this function is NOT thread-safe.
  */
-int semanage_check_init(const char *root)
+int semanage_check_init(semanage_handle_t *sh, const char *prefix)
 {
 	int rc;
 	if (semanage_paths_initialized == 0) {
+		char root[PATH_MAX];
+
+		rc = snprintf(root,
+			      sizeof(root),
+			      "%s/%s",
+			      prefix,
+			      sh->conf->store_path);
+		if (rc < 0 || rc >= (int)sizeof(root))
+			return -1;
+
 		rc = semanage_init_paths(root);
 		if (rc)
 			return rc;
+
 		rc = semanage_init_store_paths(root);
 		if (rc)
 			return rc;
+
 		semanage_paths_initialized = 1;
 	}
 	return 0;
@@ -258,6 +263,12 @@ const char *semanage_path(enum semanage_store_defs store,
 {
 	assert(semanage_paths[store][path_name]);
 	return semanage_paths[store][path_name];
+}
+
+/* Return the root of the semanage store. */
+const char *semanage_store_root_path(void)
+{
+	return "/var/lib/selinux";
 }
 
 /* Return a fully-qualified path + filename to the semanage

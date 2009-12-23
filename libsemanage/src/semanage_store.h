@@ -63,11 +63,14 @@ enum semanage_sandbox_defs {
 	SEMANAGE_STORE_NUM_PATHS
 };
 
+const char *semanage_store_root_path(void);
+
 /* FIXME: this needs to be made a module store specific init and the
  * global configuration moved to another file.
  */
 const char *semanage_conf_path(void);
-int semanage_check_init(const char *root);
+
+int semanage_check_init(semanage_handle_t *sh, const char *prefix);
 
 extern const char *semanage_fname(enum semanage_sandbox_defs file_enum);
 
