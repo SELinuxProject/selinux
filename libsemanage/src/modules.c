@@ -819,6 +819,49 @@ int semanage_module_key_set_priority(semanage_handle_t *sh,
 	return 0;
 }
 
+int semanage_module_get_enabled(semanage_handle_t *sh,
+				const semanage_module_key_t *modkey,
+				int *enabled)
+{
+	assert(sh);
+	assert(modkey);
+	assert(enabled);
+
+	if (sh->funcs->get_enabled == NULL) {
+		ERR(sh,
+		    "No get_enabled function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	}
+
+	return sh->funcs->get_enabled(sh, modkey, enabled);
+}
+
+int semanage_module_set_enabled(semanage_handle_t *sh,
+				const semanage_module_key_t *modkey,
+				int enabled)
+{
+	assert(sh);
+	assert(modkey);
+
+	if (sh->funcs->set_enabled == NULL) {
+		ERR(sh,
+		    "No set_enabled function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	} else if (!sh->is_in_transaction) {
+		if (semanage_begin_transaction(sh) < 0) {
+			return -1;
+		}
+	}
+
+	sh->modules_modified = 1;
+	return sh->funcs->set_enabled(sh, modkey, enabled);
+}
 
 /* Converts a string to a priority
  *
@@ -1026,5 +1069,45 @@ int semanage_module_validate_version(const char *version)
 
 exit:
 	return status;
+}
+
+int semanage_module_get_module_info(semanage_handle_t *sh,
+				    const semanage_module_key_t *modkey,
+				    semanage_module_info_t **modinfo)
+{
+	assert(sh);
+	assert(modkey);
+	assert(modinfo);
+
+	if (sh->funcs->get_module_info == NULL) {
+		ERR(sh,
+		    "No get module info function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	}
+
+	return sh->funcs->get_module_info(sh, modkey, modinfo);
+}
+
+int semanage_module_list_all(semanage_handle_t *sh,
+			     semanage_module_info_t **modinfos,
+			     int *modinfos_len)
+{
+	assert(sh);
+	assert(modinfos);
+	assert(modinfos_len);
+
+	if (sh->funcs->list_all == NULL) {
+		ERR(sh,
+		    "No list all function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	}
+
+	return sh->funcs->list_all(sh, modinfos, modinfos_len);
 }
 

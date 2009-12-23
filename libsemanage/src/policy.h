@@ -70,6 +70,27 @@ struct semanage_policy_table {
 
 	/* Install a base module */
 	int (*install_base_file) (struct semanage_handle *, const char *);
+
+	/* Get module enabled status */
+	int (*get_enabled) (struct semanage_handle *sh,
+			    const semanage_module_key_t *key,
+			    int *enabled);
+
+	/* Set module enabled status */
+	int (*set_enabled) (struct semanage_handle *sh,
+			    const semanage_module_key_t *key,
+			    int enabled);
+
+	/* Get a module info */
+	int (*get_module_info) (struct semanage_handle *,
+				const semanage_module_key_t *,
+				semanage_module_info_t **);
+
+	/* List all policy modules */
+	int (*list_all) (struct semanage_handle *,
+			 semanage_module_info_t **,
+			 int *);
+
 };
 
 /* Should be backend independent */

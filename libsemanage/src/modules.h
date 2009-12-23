@@ -255,4 +255,48 @@ int semanage_module_get_path(semanage_handle_t *sh,
 			     char *path,
 			     size_t len);
 
+/* Module Enabled */
+
+/* Get module @enabled status from @modkey. Modules are enabled on a per
+ * module name basis (across all priorities). @modkey only needs to have
+ * name set (priority is ignored).
+ *
+ * Returns 0 on success and -1 on error.
+ */
+int semanage_module_get_enabled(semanage_handle_t *sh,
+				const semanage_module_key_t *modkey,
+				int *enabled);
+
+/* Set module @enabled status from @modkey. Modules are enabled on a per
+ * module name basis (across all priorities). @modkey only needs to have
+ * name set (priority is ignored).
+ *
+ * Returns 0 on success and -1 on error.
+ */
+int semanage_module_set_enabled(semanage_handle_t *sh,
+				const semanage_module_key_t *modkey,
+				int enabled);
+
+/* Lookup @modinfo by @modkey. Caller should use
+ * semanage_module_info_destroy and free on @modinfo.
+ * 
+ * Returns 0 on success and -1 on error.
+ */
+int semanage_module_get_module_info(semanage_handle_t *sh,
+				    const semanage_module_key_t *modkey,
+				    semanage_module_info_t **modinfo);
+
+/* Create a list of all modules in @modinfos of length @modinfos_len.
+ * The list will be sorted from high priority to low and alphabetically
+ * by module name within a priority.
+ *
+ * Caller should use semanage_module_info_destroy on each modinfo in
+ * @modinfos and free on @modinfos.
+ *
+ * Returns 0 on success and -1 on error.
+ */
+int semanage_module_list_all(semanage_handle_t *sh,
+			     semanage_module_info_t **modinfos,
+			     int *modinfos_len);
+
 #endif
