@@ -94,10 +94,8 @@ static const char *semanage_store_paths[SEMANAGE_NUM_STORES] = {
 static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"",
 	"/modules",
-	"/policy.kern",
 	"/base.pp",
 	"/base.linked",
-	"/file_contexts",
 	"/homedir_template",
 	"/file_contexts.template",
 	"/commit_num",
@@ -105,17 +103,23 @@ static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"/interfaces.local",
 	"/nodes.local",
 	"/booleans.local",
-	"/file_contexts.local",
-	"/seusers",
+	"/seusers.local",
 	"/users.local",
 	"/users_extra.local",
-	"/seusers.final",
 	"/users_extra",
-	"/netfilter_contexts",
-	"/file_contexts.homedirs",
 	"/disable_dontaudit",
 	"/preserve_tunables",
+	"/modules/disabled",
 };
+
+static char const * const semanage_final_prefix[SEMANAGE_FINAL_NUM] = {
+	"/tmp",
+	"",
+};
+
+static char *semanage_final[SEMANAGE_FINAL_NUM] = { NULL };
+static char *semanage_final_suffix[SEMANAGE_FINAL_PATH_NUM] = { NULL };
+static char *semanage_final_paths[SEMANAGE_FINAL_NUM][SEMANAGE_FINAL_PATH_NUM] = {{ NULL }};
 
 /* A node used in a linked list of file contexts; used for sorting.
  */
@@ -172,7 +176,7 @@ static int semanage_init_paths(const char *root)
 	semanage_conf = calloc(len + 1, sizeof(char));
 	if (!semanage_conf)
 		return -1;
-	snprintf(semanage_conf, len, "%s%s", selinux_path(),
+	snprintf(semanage_conf, len + 1, "%s%s", selinux_path(),
 		 SEMANAGE_CONF_FILE);
 
 	return 0;
@@ -209,6 +213,185 @@ static int semanage_init_store_paths(const char *root)
 	return 0;
 }
 
+static int semanage_init_final(semanage_handle_t *sh, const char *prefix)
+{
+	assert(sh);
+	assert(prefix);
+
+	int status = 0;
+	size_t len;
+	const char *store_path = sh->conf->store_path;
+	size_t store_len = strlen(store_path);
+
+	/* SEMANAGE_FINAL_TMP */
+	len = strlen(prefix) +
+	      strlen("/") +
+	      strlen(semanage_final_prefix[SEMANAGE_FINAL_TMP]) +
+	      store_len;
+	semanage_final[SEMANAGE_FINAL_TMP] = malloc(len + 1);
+	if (semanage_final[SEMANAGE_FINAL_TMP] == NULL) {
+		status = -1;
+		goto cleanup;
+	}
+
+	sprintf(semanage_final[SEMANAGE_FINAL_TMP],
+		"%s%s/%s",
+		prefix,
+		semanage_final_prefix[SEMANAGE_FINAL_TMP],
+		store_path);
+
+	/* SEMANAGE_FINAL_SELINUX */
+	const char *selinux_root = selinux_path();
+	len = strlen(selinux_root) +
+	      strlen(semanage_final_prefix[SEMANAGE_FINAL_SELINUX]) +
+	      store_len;
+	semanage_final[SEMANAGE_FINAL_SELINUX] = malloc(len + 1);
+	if (semanage_final[SEMANAGE_FINAL_SELINUX] == NULL) {
+		status = -1;
+		goto cleanup;
+	}
+
+	sprintf(semanage_final[SEMANAGE_FINAL_SELINUX],
+		"%s%s%s",
+		selinux_root,
+		semanage_final_prefix[SEMANAGE_FINAL_SELINUX],
+		store_path);
+
+cleanup:
+	if (status != 0) {
+		int i;
+		for (i = 0; i < SEMANAGE_FINAL_NUM; i++) {
+			free(semanage_final[i]);
+			semanage_final[i] = NULL;
+		}
+	}
+
+	return status;
+}
+
+static int semanage_init_final_suffix(semanage_handle_t *sh)
+{
+	int ret = 0;
+	int status = 0;
+	char path[PATH_MAX];
+	size_t offset = strlen(selinux_policy_root());
+
+	semanage_final_suffix[SEMANAGE_FINAL_TOPLEVEL] = strdup("");
+	if (semanage_final_suffix[SEMANAGE_FINAL_TOPLEVEL] == NULL) {
+		ERR(sh, "Unable to allocate space for policy top level path.");
+		status = -1;
+		goto cleanup;
+	}
+
+	semanage_final_suffix[SEMANAGE_FC] =
+		strdup(selinux_file_context_path() + offset);
+	if (semanage_final_suffix[SEMANAGE_FC] == NULL) {
+		ERR(sh, "Unable to allocate space for file context path.");
+		status = -1;
+		goto cleanup;
+	}
+
+	semanage_final_suffix[SEMANAGE_FC_HOMEDIRS] =
+		strdup(selinux_file_context_homedir_path() + offset);
+	if (semanage_final_suffix[SEMANAGE_FC_HOMEDIRS] == NULL) {
+		ERR(sh, "Unable to allocate space for file context home directory path.");
+		status = -1;
+		goto cleanup;
+	}
+
+	semanage_final_suffix[SEMANAGE_FC_LOCAL] =
+		strdup(selinux_file_context_local_path() + offset);
+	if (semanage_final_suffix[SEMANAGE_FC_LOCAL] == NULL) {
+		ERR(sh, "Unable to allocate space for local file context path.");
+		status = -1;
+		goto cleanup;
+	}
+
+	semanage_final_suffix[SEMANAGE_NC] =
+		strdup(selinux_netfilter_context_path() + offset);
+	if (semanage_final_suffix[SEMANAGE_NC] == NULL) {
+		ERR(sh, "Unable to allocate space for netfilter context path.");
+		status = -1;
+		goto cleanup;
+	}
+
+	semanage_final_suffix[SEMANAGE_SEUSERS] =
+		strdup(selinux_usersconf_path() + offset);
+	if (semanage_final_suffix[SEMANAGE_SEUSERS] == NULL) {
+		ERR(sh, "Unable to allocate space for userconf path.");
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = snprintf(path,
+		       sizeof(path),
+		       "%s.%d",
+		       selinux_binary_policy_path() + offset,
+		       sh->conf->policyvers);
+	if (ret < 0 || ret >= (int)sizeof(path)) {
+		ERR(sh, "Unable to compose policy binary path.");
+		status = -1;
+		goto cleanup;
+	}
+
+	semanage_final_suffix[SEMANAGE_KERNEL] = strdup(path);
+	if (semanage_final_suffix[SEMANAGE_KERNEL] == NULL) {
+		ERR(sh, "Unable to allocate space for policy binary path.");
+		status = -1;
+		goto cleanup;
+	}
+
+cleanup:
+	if (status != 0) {
+		int i;
+		for (i = 0; i < SEMANAGE_FINAL_PATH_NUM; i++) {
+			free(semanage_final_suffix[i]);
+			semanage_final_suffix[i] = NULL;
+		}
+	}
+
+	return status;
+}
+
+/* Initialize final paths. */
+static int semanage_init_final_paths(semanage_handle_t *sh)
+{
+	int status = 0;
+	int i, j;
+	size_t len;
+
+	for (i = 0; i < SEMANAGE_FINAL_NUM; i++) {
+		for (j = 0; j < SEMANAGE_FINAL_PATH_NUM; j++) {
+			len = 	  strlen(semanage_final[i])
+				+ strlen(semanage_final_suffix[j]);
+
+			semanage_final_paths[i][j] = malloc(len + 1);
+			if (semanage_final_paths[i][j] == NULL) {
+				ERR(sh, "Unable to allocate space for policy final path.");
+				status = -1;
+				goto cleanup;
+			}
+
+			sprintf(semanage_final_paths[i][j],
+				"%s%s",
+				semanage_final[i],
+				semanage_final_suffix[j]);
+		}
+	}
+
+cleanup:
+	if (status != 0) {
+		for (i = 0; i < SEMANAGE_FINAL_NUM; i++) {
+			for (j = 0; j < SEMANAGE_FINAL_PATH_NUM; j++) {
+				free(semanage_final_paths[i][j]);
+				semanage_final_paths[i][j] = NULL;
+			}
+		}
+	}
+
+	return status;
+}
+
 /* THIS MUST BE THE FIRST FUNCTION CALLED IN THIS LIBRARY.  If the
  * library has nnot been initialized yet then call the functions that
  * initialize the path variables.  This function does nothing if it
@@ -239,6 +422,18 @@ int semanage_check_init(semanage_handle_t *sh, const char *prefix)
 		if (rc)
 			return rc;
 
+		rc = semanage_init_final(sh, prefix);
+		if (rc)
+			return rc;
+
+		rc = semanage_init_final_suffix(sh);
+		if (rc)
+			return rc;
+
+		rc = semanage_init_final_paths(sh);
+		if (rc)
+			return rc;
+
 		semanage_paths_initialized = 1;
 	}
 	return 0;
@@ -263,6 +458,21 @@ const char *semanage_path(enum semanage_store_defs store,
 {
 	assert(semanage_paths[store][path_name]);
 	return semanage_paths[store][path_name];
+}
+
+/* Given a store location (tmp or selinux) and a definition
+ * number, return a fully-qualified path to that file or directory.
+ * The caller must not alter the string returned (and hence why this
+ * function return type is const).
+ *
+ * This function shall never return a NULL, assuming that
+ * semanage_check_init() was previously called.
+ */
+const char *semanage_final_path(enum semanage_final_defs store,
+				enum semanage_final_path_defs path_name)
+{
+	assert(semanage_final_paths[store][path_name]);
+	return semanage_final_paths[store][path_name];
 }
 
 /* Return the root of the semanage store. */
@@ -499,9 +709,19 @@ out:
 	return retval;
 }
 
+static int semanage_copy_dir_flags(const char *src, const char *dst, int flag);
+
 /* Copies all of the files from src to dst, recursing into
  * subdirectories.  Returns 0 on success, -1 on error. */
 static int semanage_copy_dir(const char *src, const char *dst)
+{
+	return semanage_copy_dir_flags(src, dst, 1);
+}
+
+/* Copies all of the dirs from src to dst, recursing into
+ * subdirectories. If flag == 1, then copy regular files as
+ * well. Returns 0 on success, -1 on error. */
+static int semanage_copy_dir_flags(const char *src, const char *dst, int flag)
 {
 	int i, len = 0, retval = -1;
 	struct stat sb;
@@ -509,8 +729,17 @@ static int semanage_copy_dir(const char *src, const char *dst)
 	char path[PATH_MAX], path2[PATH_MAX];
 
 	if ((len = scandir(src, &names, semanage_filename_select, NULL)) == -1) {
+		fprintf(stderr, "Could not read the contents of %s: %s\n", src, strerror(errno));
 		return -1;
 	}
+
+	if (stat(dst, &sb) != 0) {
+		if (mkdir(dst, S_IRWXU) != 0) {
+			fprintf(stderr, "Could not create %s: %s\n", dst, strerror(errno));
+			goto cleanup;
+		}
+	}
+
 	for (i = 0; i < len; i++) {
 		snprintf(path, sizeof(path), "%s/%s", src, names[i]->d_name);
 		/* stat() to see if this entry is a file or not since
@@ -521,11 +750,11 @@ static int semanage_copy_dir(const char *src, const char *dst)
 		snprintf(path2, sizeof(path2), "%s/%s", dst, names[i]->d_name);
 		if (S_ISDIR(sb.st_mode)) {
 			if (mkdir(path2, 0700) == -1 ||
-			    semanage_copy_dir(path, path2) == -1) {
+			    semanage_copy_dir_flags(path, path2, flag) == -1) {
 				goto cleanup;
 			}
-		} else if (S_ISREG(sb.st_mode)) {
-			if (semanage_copy_file(path, path2, sb.st_mode) == -1) {
+		} else if (S_ISREG(sb.st_mode) && flag == 1) {
+			if (semanage_copy_file(path, path2, sb.st_mode) < 0) {
 				goto cleanup;
 			}
 		}
@@ -575,6 +804,62 @@ int semanage_remove_directory(const char *path)
 	return 0;
 }
 
+int semanage_mkpath(semanage_handle_t *sh, const char *path)
+{
+	char fn[PATH_MAX];
+	char *c;
+	int rc = 0;
+
+	if (strlen(path) >= PATH_MAX) {
+		return -1;
+	}
+
+	for (c = strcpy(fn, path) + 1; *c != '\0'; c++) {
+		if (*c != '/') {
+			continue;
+		}
+
+		*c = '\0';
+		rc = semanage_mkdir(sh, fn);
+		if (rc < 0) {
+			goto cleanup;
+		}
+		*c = '/';
+	}
+	rc = semanage_mkdir(sh, fn);
+
+cleanup:
+	return rc;
+}
+
+int semanage_mkdir(semanage_handle_t *sh, const char *path)
+{
+	int status = 0;
+	struct stat sb;
+
+	/* check if directory already exists */
+	if (stat(path, &sb) != 0) {
+		/* make the modules directory */
+		if (mkdir(path, S_IRWXU) != 0) {
+			ERR(sh, "Cannot make directory at %s", path);
+			status = -1;
+			goto cleanup;
+
+		}
+	}
+	else {
+		/* check that it really is a directory */
+		if (!S_ISDIR(sb.st_mode)) {
+			ERR(sh, "Directory path taken by non-directory file at %s.", path);
+			status = -1;
+			goto cleanup;
+		}
+	}
+
+cleanup:
+	return status;
+}
+
 /********************* sandbox management routines *********************/
 
 /* Creates a sandbox for a single client. Returns 0 if a
@@ -614,6 +899,69 @@ int semanage_make_sandbox(semanage_handle_t * sh)
 	semanage_remove_directory(sandbox);
 	errno = errsv;
 	return -1;
+}
+
+/* Create final temporary space. Returns -1 on error 0 on success. */
+int semanage_make_final(semanage_handle_t *sh)
+{
+	int status = 0;
+	int ret = 0;
+	char fn[PATH_MAX];
+
+	/* Create tmp dir if it does not exist. */
+	ret = snprintf(fn,
+		       sizeof(fn),
+		       "%s%s",
+		       semanage_store_root_path(),
+		       semanage_final_prefix[SEMANAGE_FINAL_TMP]);
+	if (ret < 0 || ret >= (int)sizeof(fn)) {
+		ERR(sh, "Unable to compose the final tmp path.");
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_mkdir(sh, fn);
+	if (ret != 0) {
+		ERR(sh, "Unable to create temporary directory for final files at %s", fn);
+		status = -1;
+		goto cleanup;
+	}
+
+	/* Delete store specific dir if it exists. */
+	ret = semanage_remove_directory(
+		semanage_final_path(SEMANAGE_FINAL_TMP,
+				    SEMANAGE_FINAL_TOPLEVEL));
+	if (ret < -1) {
+		status = -1;
+		goto cleanup;
+	}
+
+	/* Copy in exported databases.
+	 * i = 1 to avoid copying the top level directory.
+	 */
+	int i;
+	for (i = 1; i < SEMANAGE_FINAL_PATH_NUM; i++) {
+		if (strlen(semanage_final_path(SEMANAGE_FINAL_TMP, i)) >= sizeof(fn)) {
+			ERR(sh, "Unable to compose the final paths.");
+			status = -1;
+			goto cleanup;
+		}
+		strcpy(fn, semanage_final_path(SEMANAGE_FINAL_TMP, i));
+		ret = semanage_mkpath(sh, dirname(fn));
+		if (ret < 0) {
+			status = -1;
+			goto cleanup;
+		}
+
+		semanage_copy_file(
+			semanage_final_path(SEMANAGE_FINAL_SELINUX, i),
+			semanage_final_path(SEMANAGE_FINAL_TMP, i),
+			sh->conf->file_mode);
+		/* ignore errors, these files may not exist */
+	}
+
+cleanup:
+	return status;
 }
 
 /* Scans the modules directory for the current semanage handler.  This
@@ -961,11 +1309,11 @@ int semanage_split_fc(semanage_handle_t * sh)
 		goto cleanup;
 	}
 
-	fc = open(semanage_path(SEMANAGE_TMP, SEMANAGE_FC),
+	fc = open(semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC),
 		  O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-	if (!fc) {
+	if (fc < 0) {
 		ERR(sh, "Could not open %s for writing.",
-		    semanage_path(SEMANAGE_TMP, SEMANAGE_FC));
+		    semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC));
 		goto cleanup;
 	}
 	hd = open(semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL),
@@ -990,7 +1338,8 @@ int semanage_split_fc(semanage_handle_t * sh)
 		} else {
 			if (write(fc, buf, strlen(buf)) < 0) {
 				ERR(sh, "Write to %s failed.",
-				    semanage_path(SEMANAGE_TMP, SEMANAGE_FC));
+				    semanage_final_path(SEMANAGE_FINAL_TMP,
+							SEMANAGE_FC));
 				goto cleanup;
 			}
 		}
@@ -1025,110 +1374,60 @@ static int sefcontext_compile(semanage_handle_t * sh, const char *path) {
 	return 0;
 }
 
-/* Actually load the contents of the current active directory into the
- * kernel.  Return 0 on success, -3 on error. */
-static int semanage_install_active(semanage_handle_t * sh)
+/* Load the contexts of the final tmp into the final selinux directory.
+ * Return 0 on success, -3 on error.
+ */
+static int semanage_install_final_tmp(semanage_handle_t * sh)
 {
-	int retval = -3, r, len;
-	char *storepath = NULL;
-	struct stat astore, istore;
-	const char *active_kernel = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_KERNEL);
-	const char *active_fc = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC);
-	const char *active_fc_loc = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC_LOCAL);
-	const char *active_seusers = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_SEUSERS);
-	const char *active_nc = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_NC);
-	const char *active_fc_hd = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC_HOMEDIRS);
+	int status = -3;
+	int ret = 0;
+	int i = 0;
+	const char *src = NULL;
+	const char *dst = NULL;
+	struct stat sb;
+	char fn[PATH_MAX];
 
-	const char *running_fc = selinux_file_context_path();
-	const char *running_fc_loc = selinux_file_context_local_path();
-	const char *running_fc_hd = selinux_file_context_homedir_path();
-	const char *running_hd = selinux_homedir_context_path();
-	const char *running_policy = selinux_binary_policy_path();
-	const char *running_seusers = selinux_usersconf_path();
-	const char *running_nc = selinux_netfilter_context_path();
-	const char *really_active_store = selinux_policy_root();
+	/* For each of the final files install it if it exists.
+	 * i = 1 to avoid copying the top level directory.
+	 */
+	for (i = 1; i < SEMANAGE_FINAL_PATH_NUM; i++) {
+		src = semanage_final_path(SEMANAGE_FINAL_TMP, i);
+		dst = semanage_final_path(SEMANAGE_FINAL_SELINUX, i);
 
-	/* This is very unelegant, the right thing to do is export the path 
-	 * building code in libselinux so that you can get paths for a given 
-	 * POLICYTYPE and should probably be done in the future. */
-	char store_fc[PATH_MAX];
-	char store_fc_loc[PATH_MAX];
-	char store_pol[PATH_MAX];
-	char store_seusers[PATH_MAX];
-	char store_nc[PATH_MAX];
-	char store_fc_hd[PATH_MAX];
+		/* skip file if src doesn't exist */
+		if (stat(src, &sb) != 0) continue;
 
-	len = strlen(really_active_store);
-	running_fc += len;
-	running_fc_loc += len;
-	running_fc_hd += len;
-	running_hd += len;
-	running_policy += len;
-	running_seusers += len;
-	running_nc += len;
+		/* skip genhomedircon if configured */
+		if (sh->conf->disable_genhomedircon &&
+		    i == SEMANAGE_FC_HOMEDIRS) continue;
+		
+		strcpy(fn, dst);
+		ret = semanage_mkpath(sh, dirname(fn));
+		if (ret < 0) {
+			goto cleanup;
+		}
 
-	if (asprintf(&storepath, "%s%s", selinux_path(), sh->conf->store_path) < 0)
-		return retval;
-
-	snprintf(store_pol, PATH_MAX, "%s%s.%d", storepath,
-		 running_policy, sh->conf->policyvers);
-	if (semanage_copy_file(active_kernel, store_pol, sh->conf->file_mode) ==
-	    -1) {
-		ERR(sh, "Could not copy %s to %s.", active_kernel, store_pol);
-		goto cleanup;
-	}
-
-	if (!sh->conf->disable_genhomedircon) {
-		snprintf(store_fc_hd, PATH_MAX, "%s%s", storepath, running_fc_hd);
-		if (semanage_copy_file(active_fc_hd, store_fc_hd, sh->conf->file_mode)
-			== -1) {
-			ERR(sh, "Could not copy %s to %s.", active_fc_hd, store_fc_hd);
+		ret = semanage_copy_file(src, dst, sh->conf->file_mode);
+		if (ret < 0) {
+			ERR(sh, "Could not copy %s to %s.", src, dst);
 			goto cleanup;
 		}
 	}
-
-	snprintf(store_fc, PATH_MAX, "%s%s", storepath, running_fc);
-	if (semanage_copy_file(active_fc, store_fc, sh->conf->file_mode) == -1) {
-		ERR(sh, "Could not copy %s to %s.", active_fc, store_fc);
-		goto cleanup;
-	}
-
-	snprintf(store_fc_loc, PATH_MAX, "%s%s", storepath, running_fc_loc);
-	if (semanage_copy_file(active_fc_loc, store_fc_loc, sh->conf->file_mode)
-	    == -1 && errno != ENOENT) {
-		ERR(sh, "Could not copy %s to %s.", active_fc_loc,
-		    store_fc_loc);
-		goto cleanup;
-	}
-	errno = 0;
-
-	snprintf(store_seusers, PATH_MAX, "%s%s", storepath, running_seusers);
-	if (semanage_copy_file
-	    (active_seusers, store_seusers, sh->conf->file_mode) == -1
-	    && errno != ENOENT) {
-		ERR(sh, "Could not copy %s to %s.", active_seusers,
-		    store_seusers);
-		goto cleanup;
-	}
-	errno = 0;
-
-	snprintf(store_nc, PATH_MAX, "%s%s", storepath, running_nc);
-	if (semanage_copy_file(active_nc, store_nc, sh->conf->file_mode) == -1
-	    && errno != ENOENT) {
-		ERR(sh, "Could not copy %s to %s.", active_nc, store_nc);
-		goto cleanup;
-	}
-	errno = 0;
 
 	if (!sh->do_reload)
 		goto skip_reload;
 
 	/* This stats what libselinux says the active store is (according to config)
 	 * and what we are installing to, to decide if they are the same store. If
-	 * they are not then we do not reload policy */
+	 * they are not then we do not reload policy.
+	 */
+	const char *really_active_store = selinux_policy_root();
+	struct stat astore;
+	struct stat istore;
+	const char *storepath = semanage_final_path(SEMANAGE_FINAL_SELINUX,
+						    SEMANAGE_FINAL_TOPLEVEL);
 
 	if (stat(really_active_store, &astore) == 0) {
-
 		if (stat(storepath, &istore)) {
 			ERR(sh, "Could not stat store path %s.", storepath);
 			goto cleanup;
@@ -1149,33 +1448,39 @@ static int semanage_install_active(semanage_handle_t * sh)
 		goto cleanup;
 	}
 
-      skip_reload:
-
-	if (sh->do_check_contexts && (r =
-	     semanage_exec_prog(sh, sh->conf->setfiles, store_pol,
-				store_fc)) != 0) {
-		ERR(sh, "setfiles returned error code %d.", r);
-		goto cleanup;
+skip_reload:
+	if (sh->do_check_contexts) {
+		ret = semanage_exec_prog(
+			sh,
+			sh->conf->setfiles,
+			semanage_final_path(SEMANAGE_FINAL_SELINUX,
+					    SEMANAGE_KERNEL),
+			semanage_final_path(SEMANAGE_FINAL_SELINUX,
+					    SEMANAGE_FC));
+		if (ret != 0) {
+			ERR(sh, "setfiles returned error code %d.", ret);
+			goto cleanup;
+		}
 	}
 
-	if (sefcontext_compile(sh, store_fc) != 0) {
-		goto cleanup;
-	}
-	if (sefcontext_compile(sh, store_fc_loc) != 0) {
-		goto cleanup;
-	}
-	if (sefcontext_compile(sh, store_fc_hd) != 0) {
+	if (sefcontext_compile(sh,
+		    semanage_final_path(SEMANAGE_FINAL_SELINUX, SEMANAGE_FC)) != 0) {
 		goto cleanup;
 	}
 
-	retval = 0;
-      cleanup:
-	(void) unlink(active_kernel);
-	if (symlink(store_pol, active_kernel) < 0) {
-		ERR(sh, "Unable to create sybolic link from %s to %s error code %d.", active_kernel, store_pol, r);
+	if (sefcontext_compile(sh,
+		    semanage_final_path(SEMANAGE_FINAL_SELINUX, SEMANAGE_FC_LOCAL)) != 0) {
+		goto cleanup;
 	}
-	free(storepath);
-	return retval;
+
+	if (sefcontext_compile(sh,
+		    semanage_final_path(SEMANAGE_FINAL_SELINUX, SEMANAGE_FC_HOMEDIRS)) != 0) {
+		goto cleanup;
+	}
+
+	status = 0;
+cleanup:
+	return status;
 }
 
 /* Prepare the sandbox to be installed by making a backup of the
@@ -1257,7 +1562,7 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 		retval = -1;
 		goto cleanup;
 	}
-	if (semanage_install_active(sh) != 0) {
+	if (semanage_install_final_tmp(sh) != 0) {
 		/* note that if an error occurs during the next three
 		 * function then the store will be left in an
 		 * inconsistent state */
@@ -1269,7 +1574,7 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 			ERR(sh, "Error while renaming %s back to %s.", backup,
 			    active);
 		else
-			semanage_install_active(sh);
+			semanage_install_final_tmp(sh);
 		errno = errsv;
 		retval = -1;
 		goto cleanup;
@@ -1727,7 +2032,8 @@ int semanage_read_policydb(semanage_handle_t * sh, sepol_policydb_t * in)
 	FILE *infile = NULL;
 
 	if ((kernel_filename =
-	     semanage_path(SEMANAGE_ACTIVE, SEMANAGE_KERNEL)) == NULL) {
+	     semanage_final_path(SEMANAGE_FINAL_SELINUX,
+				 SEMANAGE_KERNEL)) == NULL) {
 		goto cleanup;
 	}
 	if ((infile = fopen(kernel_filename, "r")) == NULL) {
@@ -1768,7 +2074,7 @@ int semanage_write_policydb(semanage_handle_t * sh, sepol_policydb_t * out)
 	FILE *outfile = NULL;
 
 	if ((kernel_filename =
-	     semanage_path(SEMANAGE_TMP, SEMANAGE_KERNEL)) == NULL) {
+	     semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_KERNEL)) == NULL) {
 		goto cleanup;
 	}
 	if ((outfile = fopen(kernel_filename, "wb")) == NULL) {
@@ -1853,7 +2159,7 @@ int semanage_verify_kernel(semanage_handle_t * sh)
 {
 	int retval = -1;
 	const char *kernel_filename =
-	    semanage_path(SEMANAGE_TMP, SEMANAGE_KERNEL);
+	    semanage_path(SEMANAGE_FINAL_TMP, SEMANAGE_KERNEL);
 	semanage_conf_t *conf = sh->conf;
 	external_prog_t *e;
 	if (conf->kernel_prog == NULL) {

@@ -30,7 +30,9 @@ hidden_proto(semanage_seuser_clone)
 extern record_table_t SEMANAGE_SEUSER_RTABLE;
 
 extern int seuser_file_dbase_init(semanage_handle_t * handle,
-				  const char *fname, dbase_config_t * dconfig);
+				  const char *path_ro,
+				  const char *path_rw,
+				  dbase_config_t * dconfig);
 
 extern void seuser_file_dbase_release(dbase_config_t * dconfig);
 

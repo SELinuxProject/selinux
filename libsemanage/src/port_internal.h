@@ -30,7 +30,9 @@ hidden_proto(semanage_port_create)
 extern record_table_t SEMANAGE_PORT_RTABLE;
 
 extern int port_file_dbase_init(semanage_handle_t * handle,
-				const char *fname, dbase_config_t * dconfig);
+				const char *path_ro,
+				const char *path_rw,
+				dbase_config_t * dconfig);
 
 extern void port_file_dbase_release(dbase_config_t * dconfig);
 

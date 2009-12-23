@@ -32,6 +32,7 @@ typedef struct dbase_policydb dbase_t;
 #include "node_internal.h"
 #include "debug.h"
 #include "database_policydb.h"
+#include "semanage_store.h"
 
 /* NODE RECORD (SEPOL): POLICYDB extension : method table */
 record_policydb_table_t SEMANAGE_NODE_POLICYDB_RTABLE = {
@@ -49,7 +50,10 @@ int node_policydb_dbase_init(semanage_handle_t * handle,
 {
 
 	if (dbase_policydb_init(handle,
-				"policy.kern",
+				semanage_final_path(SEMANAGE_FINAL_SELINUX,
+						    SEMANAGE_KERNEL),
+				semanage_final_path(SEMANAGE_FINAL_TMP,
+						    SEMANAGE_KERNEL),
 				&SEMANAGE_NODE_RTABLE,
 				&SEMANAGE_NODE_POLICYDB_RTABLE,
 				&dconfig->dbase) < 0)

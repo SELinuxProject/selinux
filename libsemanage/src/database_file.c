@@ -30,33 +30,12 @@ struct dbase_file {
 	 * a linked list to store the records */
 	dbase_llist_t llist;
 
-	/* Backing file suffix */
-	const char *suffix;
+	/* Backing path for read-only[0] and transaction[1] */
+	const char *path[2];
 
 	/* FILE extension */
 	record_file_table_t *rftable;
 };
-
-static int construct_filename(semanage_handle_t * handle,
-			      dbase_file_t * dbase, char **filename)
-{
-
-	const char *path = (handle->is_in_transaction) ?
-	    semanage_path(SEMANAGE_TMP, SEMANAGE_TOPLEVEL) :
-	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_TOPLEVEL);
-
-	size_t fname_length = strlen(path) + strlen(dbase->suffix) + 2;
-
-	char *fname = malloc(fname_length);
-	if (!fname) {
-		ERR(handle, "out of memory, could not construct filename");
-		return STATUS_ERR;
-	}
-	snprintf(fname, fname_length, "%s/%s", path, dbase->suffix);
-
-	*filename = fname;
-	return STATUS_SUCCESS;
-}
 
 static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 {
@@ -68,7 +47,7 @@ static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 	int pstatus = STATUS_SUCCESS;
 
 	parse_info_t *parse_info = NULL;
-	char *fname = NULL;
+	const char *fname = NULL;
 
 	/* Already cached */
 	if (!dbase_llist_needs_resync(handle, &dbase->llist))
@@ -79,8 +58,7 @@ static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 	if (dbase_llist_set_serial(handle, &dbase->llist) < 0)
 		goto err;
 
-	if (construct_filename(handle, dbase, &fname) < 0)
-		goto err;
+	fname = dbase->path[handle->is_in_transaction];
 
 	if (parse_init(handle, fname, NULL, &parse_info) < 0)
 		goto err;
@@ -119,7 +97,6 @@ static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 	rtable->free(process_record);
 	parse_close(parse_info);
 	parse_release(parse_info);
-	free(fname);
 	return STATUS_SUCCESS;
 
       err:
@@ -130,7 +107,6 @@ static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 		parse_release(parse_info);
 	}
 	dbase_llist_drop_cache(&dbase->llist);
-	free(fname);
 	return STATUS_ERR;
 }
 
@@ -141,14 +117,13 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 	record_file_table_t *rftable = dbase->rftable;
 
 	cache_entry_t *ptr;
-	char *fname = NULL;
+	const char *fname = NULL;
 	FILE *str = NULL;
 
 	if (!dbase_llist_is_modified(&dbase->llist))
 		return STATUS_SUCCESS;
 
-	if (construct_filename(handle, dbase, &fname) < 0)
-		goto err;
+	fname = dbase->path[handle->is_in_transaction];
 
 	str = fopen(fname, "w");
 	if (!str) {
@@ -172,7 +147,6 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 
 	dbase_llist_set_modified(&dbase->llist, 0);
 	fclose(str);
-	free(fname);
 	return STATUS_SUCCESS;
 
       err:
@@ -180,12 +154,12 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 		fclose(str);
 
 	ERR(handle, "could not flush database to file");
-	free(fname);
 	return STATUS_ERR;
 }
 
 int dbase_file_init(semanage_handle_t * handle,
-		    const char *suffix,
+		    const char *path_ro,
+		    const char *path_rw,
 		    record_table_t * rtable,
 		    record_file_table_t * rftable, dbase_file_t ** dbase)
 {
@@ -195,7 +169,8 @@ int dbase_file_init(semanage_handle_t * handle,
 	if (!tmp_dbase)
 		goto omem;
 
-	tmp_dbase->suffix = suffix;
+	tmp_dbase->path[0] = path_ro;
+	tmp_dbase->path[1] = path_rw;
 	tmp_dbase->rftable = rftable;
 	dbase_llist_init(&tmp_dbase->llist, rtable, &SEMANAGE_FILE_DTABLE);
 

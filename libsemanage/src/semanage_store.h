@@ -39,10 +39,8 @@ enum semanage_store_defs {
 enum semanage_sandbox_defs {
 	SEMANAGE_TOPLEVEL,
 	SEMANAGE_MODULES,
-	SEMANAGE_KERNEL,
 	SEMANAGE_BASE,
 	SEMANAGE_LINKED,
-	SEMANAGE_FC,
 	SEMANAGE_HOMEDIR_TMPL,
 	SEMANAGE_FC_TMPL,
 	SEMANAGE_COMMIT_NUM_FILE,
@@ -50,17 +48,31 @@ enum semanage_sandbox_defs {
 	SEMANAGE_INTERFACES_LOCAL,
 	SEMANAGE_NODES_LOCAL,
 	SEMANAGE_BOOLEANS_LOCAL,
-	SEMANAGE_FC_LOCAL,
 	SEMANAGE_SEUSERS_LOCAL,
 	SEMANAGE_USERS_BASE_LOCAL,
 	SEMANAGE_USERS_EXTRA_LOCAL,
-	SEMANAGE_SEUSERS,
 	SEMANAGE_USERS_EXTRA,
-	SEMANAGE_NC,
-	SEMANAGE_FC_HOMEDIRS,
 	SEMANAGE_DISABLE_DONTAUDIT,
 	SEMANAGE_PRESERVE_TUNABLES,
+	SEMANAGE_MODULES_DISABLED,
 	SEMANAGE_STORE_NUM_PATHS
+};
+
+enum semanage_final_defs {
+	SEMANAGE_FINAL_TMP,
+	SEMANAGE_FINAL_SELINUX,
+	SEMANAGE_FINAL_NUM
+};
+
+enum semanage_final_path_defs {
+	SEMANAGE_FINAL_TOPLEVEL,
+	SEMANAGE_FC,
+	SEMANAGE_FC_HOMEDIRS,
+	SEMANAGE_FC_LOCAL,
+	SEMANAGE_KERNEL,
+	SEMANAGE_NC,
+	SEMANAGE_SEUSERS,
+	SEMANAGE_FINAL_PATH_NUM
 };
 
 const char *semanage_store_root_path(void);
@@ -77,13 +89,22 @@ extern const char *semanage_fname(enum semanage_sandbox_defs file_enum);
 extern const char *semanage_path(enum semanage_store_defs store,
 				 enum semanage_sandbox_defs file);
 
+extern const char *semanage_final_path(enum semanage_final_defs root,
+				       enum semanage_final_path_defs suffix);
+
 int semanage_create_store(semanage_handle_t * sh, int create);
 
 int semanage_store_access_check(void);
 
 int semanage_remove_directory(const char *path);
 
+int semanage_mkdir(semanage_handle_t *sh, const char *path);
+
+int semanage_mkpath(semanage_handle_t *sh, const char *path);
+
 int semanage_make_sandbox(semanage_handle_t * sh);
+
+int semanage_make_final(semanage_handle_t * sh);
 
 int semanage_get_modules_names(semanage_handle_t * sh,
 			       char ***filenames, int *len);

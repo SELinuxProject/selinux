@@ -126,13 +126,18 @@ int semanage_direct_connect(semanage_handle_t * sh)
 
 	/* Object databases: local modifications */
 	if (user_base_file_dbase_init(sh,
-				      semanage_fname(SEMANAGE_USERS_BASE_LOCAL),
+				      semanage_path(SEMANAGE_ACTIVE,
+						    SEMANAGE_USERS_BASE_LOCAL),
+				      semanage_path(SEMANAGE_TMP,
+						    SEMANAGE_USERS_BASE_LOCAL),
 				      semanage_user_base_dbase_local(sh)) < 0)
 		goto err;
 
 	if (user_extra_file_dbase_init(sh,
-				       semanage_fname
-				       (SEMANAGE_USERS_EXTRA_LOCAL),
+				       semanage_path(SEMANAGE_ACTIVE,
+						     SEMANAGE_USERS_EXTRA_LOCAL),
+				       semanage_path(SEMANAGE_TMP,
+						     SEMANAGE_USERS_EXTRA_LOCAL),
 				       semanage_user_extra_dbase_local(sh)) < 0)
 		goto err;
 
@@ -143,32 +148,50 @@ int semanage_direct_connect(semanage_handle_t * sh)
 		goto err;
 
 	if (port_file_dbase_init(sh,
-				 semanage_fname(SEMANAGE_PORTS_LOCAL),
+				 semanage_path(SEMANAGE_ACTIVE,
+					       SEMANAGE_PORTS_LOCAL),
+				 semanage_path(SEMANAGE_TMP,
+					       SEMANAGE_PORTS_LOCAL),
 				 semanage_port_dbase_local(sh)) < 0)
 		goto err;
 
 	if (iface_file_dbase_init(sh,
-				  semanage_fname(SEMANAGE_INTERFACES_LOCAL),
+				  semanage_path(SEMANAGE_ACTIVE,
+						SEMANAGE_INTERFACES_LOCAL),
+				  semanage_path(SEMANAGE_TMP,
+						SEMANAGE_INTERFACES_LOCAL),
 				  semanage_iface_dbase_local(sh)) < 0)
 		goto err;
 
 	if (bool_file_dbase_init(sh,
-				 semanage_fname(SEMANAGE_BOOLEANS_LOCAL),
+				 semanage_path(SEMANAGE_ACTIVE,
+					       SEMANAGE_BOOLEANS_LOCAL),
+				 semanage_path(SEMANAGE_TMP,
+					       SEMANAGE_BOOLEANS_LOCAL),
 				 semanage_bool_dbase_local(sh)) < 0)
 		goto err;
 
 	if (fcontext_file_dbase_init(sh,
-				     semanage_fname(SEMANAGE_FC_LOCAL),
+				     semanage_final_path(SEMANAGE_FINAL_SELINUX,
+							 SEMANAGE_FC_LOCAL),
+				     semanage_final_path(SEMANAGE_FINAL_TMP,
+							 SEMANAGE_FC_LOCAL),
 				     semanage_fcontext_dbase_local(sh)) < 0)
 		goto err;
 
 	if (seuser_file_dbase_init(sh,
-				   semanage_fname(SEMANAGE_SEUSERS_LOCAL),
+				   semanage_path(SEMANAGE_ACTIVE,
+						 SEMANAGE_SEUSERS_LOCAL),
+				   semanage_path(SEMANAGE_TMP,
+						 SEMANAGE_SEUSERS_LOCAL),
 				   semanage_seuser_dbase_local(sh)) < 0)
 		goto err;
 
 	if (node_file_dbase_init(sh,
-				 semanage_fname(SEMANAGE_NODES_LOCAL),
+				 semanage_path(SEMANAGE_ACTIVE,
+					       SEMANAGE_NODES_LOCAL),
+				 semanage_path(SEMANAGE_TMP,
+					       SEMANAGE_NODES_LOCAL),
 				 semanage_node_dbase_local(sh)) < 0)
 		goto err;
 
@@ -179,7 +202,10 @@ int semanage_direct_connect(semanage_handle_t * sh)
 		goto err;
 
 	if (user_extra_file_dbase_init(sh,
-				       semanage_fname(SEMANAGE_USERS_EXTRA),
+				       semanage_path(SEMANAGE_ACTIVE,
+						     SEMANAGE_USERS_EXTRA),
+				       semanage_path(SEMANAGE_TMP,
+						     SEMANAGE_USERS_EXTRA),
 				       semanage_user_extra_dbase_policy(sh)) <
 	    0)
 		goto err;
@@ -200,12 +226,18 @@ int semanage_direct_connect(semanage_handle_t * sh)
 		goto err;
 
 	if (fcontext_file_dbase_init(sh,
-				     semanage_fname(SEMANAGE_FC),
+				     semanage_final_path(SEMANAGE_FINAL_SELINUX,
+							 SEMANAGE_FC),
+				     semanage_final_path(SEMANAGE_FINAL_TMP,
+							 SEMANAGE_FC),
 				     semanage_fcontext_dbase_policy(sh)) < 0)
 		goto err;
 
 	if (seuser_file_dbase_init(sh,
-				   semanage_fname(SEMANAGE_SEUSERS),
+				   semanage_final_path(SEMANAGE_FINAL_SELINUX,
+						       SEMANAGE_SEUSERS),
+				   semanage_final_path(SEMANAGE_FINAL_TMP,
+						       SEMANAGE_SEUSERS),
 				   semanage_seuser_dbase_policy(sh)) < 0)
 		goto err;
 
@@ -246,6 +278,14 @@ static int semanage_direct_disconnect(semanage_handle_t * sh)
 		    (semanage_path(SEMANAGE_TMP, SEMANAGE_TOPLEVEL)) < 0) {
 			ERR(sh, "Could not cleanly remove sandbox %s.",
 			    semanage_path(SEMANAGE_TMP, SEMANAGE_TOPLEVEL));
+			return -1;
+		}
+		if (semanage_remove_directory
+		    (semanage_final_path(SEMANAGE_FINAL_TMP,
+					 SEMANAGE_FINAL_TOPLEVEL)) < 0) {
+			ERR(sh, "Could not cleanly remove tmp %s.",
+			    semanage_final_path(SEMANAGE_FINAL_TMP,
+						SEMANAGE_FINAL_TOPLEVEL));
 			return -1;
 		}
 		semanage_release_trans_lock(sh);
@@ -289,6 +329,9 @@ static int semanage_direct_begintrans(semanage_handle_t * sh)
 		return -1;
 	}
 	if ((semanage_make_sandbox(sh)) < 0) {
+		return -1;
+	}
+	if ((semanage_make_final(sh)) < 0) {
 		return -1;
 	}
 	return 0;
@@ -640,7 +683,8 @@ static int semanage_direct_update_seuser(semanage_handle_t * sh, sepol_module_pa
 	dbase_config_t *pseusers = semanage_seuser_dbase_policy(sh);
 
 	if (sepol_module_package_get_seusers_len(base)) {
-		ofilename = semanage_path(SEMANAGE_TMP, SEMANAGE_SEUSERS);
+		ofilename = semanage_final_path(SEMANAGE_FINAL_TMP,
+						SEMANAGE_SEUSERS);
 		if (ofilename == NULL) {
 			return -1;
 		}
@@ -868,7 +912,8 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		/* Write the contexts to a single file.  The buffer returned by
 		 * the sort function has a trailing \0 character, which we do
 		 * NOT want to write out to disk, so we pass sorted_fc_buffer_len-1. */
-		ofilename = semanage_path(SEMANAGE_TMP, SEMANAGE_NC);
+		ofilename = semanage_final_path(SEMANAGE_FINAL_TMP,
+						SEMANAGE_NC);
 		retval = write_file
 		    (sh, ofilename, sorted_nc_buffer, sorted_nc_buffer_len - 1);
 
@@ -1027,6 +1072,9 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	   sandbox if it is still there */
 	semanage_remove_directory(semanage_path
 				  (SEMANAGE_TMP, SEMANAGE_TOPLEVEL));
+	semanage_remove_directory(semanage_final_path
+				  (SEMANAGE_FINAL_TMP,
+				   SEMANAGE_FINAL_TOPLEVEL));
 	return retval;
 }
 

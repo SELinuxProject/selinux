@@ -28,7 +28,8 @@ typedef struct record_file_table {
 
 /* FILE - initialization */
 extern int dbase_file_init(semanage_handle_t * handle,
-			   const char *suffix,
+			   const char *path_ro,
+			   const char *path_rw,
 			   record_table_t * rtable,
 			   record_file_table_t * rftable,
 			   dbase_file_t ** dbase);

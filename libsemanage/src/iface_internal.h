@@ -31,7 +31,9 @@ extern int iface_policydb_dbase_init(semanage_handle_t * handle,
 extern void iface_policydb_dbase_release(dbase_config_t * dconfig);
 
 extern int iface_file_dbase_init(semanage_handle_t * handle,
-				 const char *fname, dbase_config_t * dconfig);
+				 const char *path_ro,
+				 const char *path_rw,
+				 dbase_config_t * dconfig);
 
 extern void iface_file_dbase_release(dbase_config_t * dconfig);
 

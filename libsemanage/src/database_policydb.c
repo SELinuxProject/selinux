@@ -25,8 +25,8 @@ typedef struct dbase_policydb dbase_t;
 /* POLICYDB dbase */
 struct dbase_policydb {
 
-	/* Backing file suffix */
-	const char *suffix;
+        /* Backing path for read-only[0] and transaction[1] */
+        const char *path[2];
 
 	/* Base record table */
 	record_table_t *rtable;
@@ -86,26 +86,6 @@ static int dbase_policydb_needs_resync(semanage_handle_t * handle,
 	return 0;
 }
 
-static int construct_filename(semanage_handle_t * handle,
-			      dbase_policydb_t * dbase, char **filename)
-{
-
-	const char *path = (handle->is_in_transaction) ?
-	    semanage_path(SEMANAGE_TMP, SEMANAGE_TOPLEVEL) :
-	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_TOPLEVEL);
-	size_t fname_length = strlen(path) + strlen(dbase->suffix) + 2;
-
-	char *fname = malloc(fname_length);
-	if (!fname) {
-		ERR(handle, "out of memory, could not construct database name");
-		return STATUS_ERR;
-	}
-	snprintf(fname, fname_length, "%s/%s", path, dbase->suffix);
-
-	*filename = fname;
-	return STATUS_SUCCESS;
-}
-
 static int dbase_policydb_cache(semanage_handle_t * handle,
 				dbase_policydb_t * dbase)
 {
@@ -113,7 +93,7 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 	FILE *fp = NULL;
 	sepol_policydb_t *policydb = NULL;
 	sepol_policy_file_t *pf = NULL;
-	char *fname = NULL;
+	const char *fname = NULL;
 
 	/* Check if cache is needed */
 	if (dbase->attached)
@@ -122,8 +102,7 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 	if (!dbase_policydb_needs_resync(handle, dbase))
 		return STATUS_SUCCESS;
 
-	if (construct_filename(handle, dbase, &fname) < 0)
-		goto err;
+	fname = dbase->path[handle->is_in_transaction];
 
 	if (sepol_policydb_create(&policydb) < 0) {
 		ERR(handle, "could not create policydb object");
@@ -164,7 +143,6 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 
 	/* Update the database policydb */
 	dbase->policydb = policydb;
-	free(fname);
 	return STATUS_SUCCESS;
 
       err:
@@ -173,7 +151,6 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 		fclose(fp);
 	sepol_policydb_free(policydb);
 	sepol_policy_file_free(pf);
-	free(fname);
 	return STATUS_ERR;
 }
 
@@ -200,7 +177,8 @@ static int dbase_policydb_is_modified(dbase_policydb_t * dbase)
 }
 
 int dbase_policydb_init(semanage_handle_t * handle,
-			const char *suffix,
+			const char *path_ro,
+			const char *path_rw,
 			record_table_t * rtable,
 			record_policydb_table_t * rptable,
 			dbase_policydb_t ** dbase)
@@ -212,7 +190,8 @@ int dbase_policydb_init(semanage_handle_t * handle,
 	if (!tmp_dbase)
 		goto omem;
 
-	tmp_dbase->suffix = suffix;
+	tmp_dbase->path[0] = path_ro;
+	tmp_dbase->path[1] = path_rw;
 	tmp_dbase->rtable = rtable;
 	tmp_dbase->rptable = rptable;
 	tmp_dbase->policydb = NULL;

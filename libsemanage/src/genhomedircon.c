@@ -1065,7 +1065,8 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 
 	s.homedir_template_path =
 	    semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL);
-	s.fcfilepath = semanage_path(SEMANAGE_TMP, SEMANAGE_FC_HOMEDIRS);
+	s.fcfilepath = semanage_final_path(SEMANAGE_FINAL_TMP,
+					   SEMANAGE_FC_HOMEDIRS);
 
 	s.fallback_user = strdup(FALLBACK_USER);
 	s.fallback_user_prefix = strdup(FALLBACK_USER_PREFIX);

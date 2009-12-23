@@ -202,11 +202,14 @@ record_file_table_t SEMANAGE_USER_BASE_FILE_RTABLE = {
 };
 
 int user_base_file_dbase_init(semanage_handle_t * handle,
-			      const char *fname, dbase_config_t * dconfig)
+			      const char *path_ro,
+			      const char *path_rw,
+			      dbase_config_t * dconfig)
 {
 
 	if (dbase_file_init(handle,
-			    fname,
+			    path_ro,
+			    path_rw,
 			    &SEMANAGE_USER_BASE_RTABLE,
 			    &SEMANAGE_USER_BASE_FILE_RTABLE,
 			    &dconfig->dbase) < 0)

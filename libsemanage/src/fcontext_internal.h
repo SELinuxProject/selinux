@@ -30,7 +30,8 @@ hidden_proto(semanage_fcontext_key_create)
 extern record_table_t SEMANAGE_FCONTEXT_RTABLE;
 
 extern int fcontext_file_dbase_init(semanage_handle_t * handle,
-				    const char *fname,
+				    const char *path_ro,
+				    const char *path_rw,
 				    dbase_config_t * dconfig);
 
 extern void fcontext_file_dbase_release(dbase_config_t * dconfig);

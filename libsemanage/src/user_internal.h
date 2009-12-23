@@ -41,14 +41,16 @@ extern record_table_t SEMANAGE_USER_EXTRA_RTABLE;
 
 /* USER BASE record, FILE backend */
 extern int user_base_file_dbase_init(semanage_handle_t * handle,
-				     const char *fname,
+				     const char *path_ro,
+				     const char *path_rw,
 				     dbase_config_t * dconfig);
 
 extern void user_base_file_dbase_release(dbase_config_t * dconfig);
 
 /* USER EXTRA record, FILE backend */
 extern int user_extra_file_dbase_init(semanage_handle_t * handle,
-				      const char *fname,
+				      const char *path_ro,
+				      const char *path_rw,
 				      dbase_config_t * dconfig);
 
 extern void user_extra_file_dbase_release(dbase_config_t * dconfig);

@@ -86,7 +86,8 @@ typedef struct record_policydb_table {
 
 /* Initialize database */
 extern int dbase_policydb_init(semanage_handle_t * handle,
-			       const char *suffix,
+			       const char *path_ro,
+			       const char *path_rw,
 			       record_table_t * rtable,
 			       record_policydb_table_t * rptable,
 			       dbase_policydb_t ** dbase);
