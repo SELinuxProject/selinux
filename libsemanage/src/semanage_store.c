@@ -55,8 +55,10 @@ typedef struct dbase_policydb dbase_t;
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <limits.h>
+#include <libgen.h>
 
 #include "debug.h"
+#include "utilities.h"
 
 #define SEMANAGE_CONF_FILE "semanage.conf"
 /* relative path names to enum semanage_paths to special files and
@@ -94,7 +96,6 @@ static const char *semanage_store_paths[SEMANAGE_NUM_STORES] = {
 static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"",
 	"/modules",
-	"/base.pp",
 	"/base.linked",
 	"/homedir_template",
 	"/file_contexts.template",
@@ -1025,6 +1026,29 @@ cleanup:
 	return status;
 }
 
+/* qsort comparison function for semanage_get_modules_names. */
+static int semanage_get_modules_names_cmp(const void *a, const void *b)
+{
+	const char *aa = *(const char **)a;
+	const char *bb = *(const char **)b;
+
+	/* copy into a buffer since basename/dirname can modify */
+	char ap[PATH_MAX];
+	char bp[PATH_MAX];
+
+	strncpy(ap, aa, sizeof(ap));
+	ap[PATH_MAX - 1] = '\0';
+
+	strncpy(bp, bb, sizeof(bp));
+	bp[PATH_MAX - 1] = '\0';
+
+	/* compare the module dir names */
+	const char *an = basename(dirname((char *)ap));
+	const char *bn = basename(dirname((char *)bp));
+
+	return strverscmp(an, bn);
+}
+
 /* Scans the modules directory for the current semanage handler.  This
  * might be the active directory or sandbox, depending upon if the
  * handler has a transaction lock.  Allocates and fills in *filenames
@@ -1035,58 +1059,119 @@ cleanup:
 int semanage_get_modules_names(semanage_handle_t * sh, char ***filenames,
 			       int *len)
 {
-	const char *modules_path;
-	struct dirent **namelist = NULL;
-	int num_files, i, retval = -1;
+	assert(sh);
+	assert(filenames);
+	assert(len);
 
-	if (sh->is_in_transaction) {
-		modules_path = semanage_path(SEMANAGE_TMP, SEMANAGE_MODULES);
-	} else {
-		modules_path = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_MODULES);
-	}
+	int status = 0;
+	int ret = 0;
 
-	*filenames = NULL;
-	*len = 0;
-	if ((num_files = scandir(modules_path, &namelist,
-				 semanage_filename_select, alphasort)) == -1) {
-		ERR(sh, "Error while scanning directory %s.", modules_path);
+	int i = 0;
+	int j = 0;
+
+	semanage_list_t *list = NULL;
+	semanage_list_t *found = NULL;
+
+	semanage_module_info_t *modinfos = NULL;
+	int modinfos_len = 0;
+
+	char path[PATH_MAX];
+
+	void *tmp = NULL;
+
+	/* get all modules */
+	ret = semanage_module_list_all(sh, &modinfos, &modinfos_len);
+	if (ret != 0) {
+		status = -1;
 		goto cleanup;
 	}
-	if (num_files == 0) {
-		retval = 0;
-		goto cleanup;
-	}
-	if ((*filenames =
-	     (char **)calloc(num_files, sizeof(**filenames))) == NULL) {
-		ERR(sh, "Out of memory!");
-		goto cleanup;
-	}
-	for (i = 0; i < num_files; i++) {
-		char *filename;
-		char path[PATH_MAX];
 
-		snprintf(path, PATH_MAX, "%s/%s", modules_path,
-			 namelist[i]->d_name);
-		if ((filename = strdup(path)) == NULL) {
-			int j;
-			ERR(sh, "Out of memory!");
-			for (j = 0; j < i; j++) {
-				free((*filenames)[j]);
+	/* allocate enough for worst case */
+	(*filenames) = calloc(modinfos_len, sizeof(char *));
+	if ((*filenames) == NULL) {
+		ERR(sh, "Error allocating space for filenames.");
+		status = -1;
+		goto cleanup;
+	}
+
+	*len = modinfos_len;
+
+	/* for each highest priority, non-base, enabled module get its path */
+	semanage_list_destroy(&list);
+	j = 0;
+	for (i = 0; i < modinfos_len; i++) {
+		/* check if base */
+		ret = strcmp(modinfos[i].name, "_base");
+		if (ret == 0) continue;
+
+		/* check if enabled */
+		if (modinfos[i].enabled != 1) continue;
+
+		/* check if we've seen this before (i.e. highest priority) */
+		found = semanage_list_find(list, modinfos[i].name);
+		if (found == NULL) {
+			ret = semanage_list_push(&list, modinfos[i].name);
+			if (ret != 0) {
+				ERR(sh, "Failed to add module name to list of known names.");
+				status = -1;
+				goto cleanup;
 			}
-			free(*filenames);
-			*filenames = NULL;
+		}
+		else continue;
+
+		ret = semanage_module_get_path(
+				sh,
+				&modinfos[i],
+				SEMANAGE_MODULE_PATH_CIL,
+				path,
+				sizeof(path));
+		if (ret != 0) {
+			status = -1;
 			goto cleanup;
 		}
-		(*filenames)[i] = filename;
+
+		(*filenames)[j] = strdup(path);
+		if ((*filenames)[j] == NULL) {
+			status = -1;
+			goto cleanup;
+		}
+
+		j += 1;
 	}
-	*len = num_files;
-	retval = 0;
-      cleanup:
-	for (i = 0; i < num_files; i++) {
-		free(namelist[i]);
+
+	/* realloc the array to its min size */
+	tmp = realloc(*filenames, j * sizeof(char *));
+	if (tmp == NULL) {
+		ERR(sh, "Error allocating space for filenames.");
+		status = -1;
+		goto cleanup;
 	}
-	free(namelist);
-	return retval;
+	*filenames = tmp;
+	*len = j;
+
+	/* sort array on module name */
+	qsort(*filenames,
+	      *len,
+	      sizeof(char *),
+	      semanage_get_modules_names_cmp);
+
+cleanup:
+	semanage_list_destroy(&list);
+
+	for (i = 0; i < modinfos_len; i++) {
+		semanage_module_info_destroy(sh, &modinfos[i]);
+	}
+	free(modinfos);
+
+	if (status != 0) {
+		for (i = 0; i < j; j++) {
+			free((*filenames)[i]);
+		}
+
+		free(*filenames);
+	}
+
+	return status;
 }
 
 /******************* routines that run external programs *******************/
@@ -1952,7 +2037,7 @@ static int semanage_load_module(semanage_handle_t * sh, const char *filename,
 int semanage_link_sandbox(semanage_handle_t * sh,
 			  sepol_module_package_t ** base)
 {
-	const char *base_filename = NULL;
+	char base_filename[PATH_MAX];
 	char **module_filenames = NULL;
 	int retval = -1, i;
 	int num_modules = 0;
@@ -1961,8 +2046,7 @@ int semanage_link_sandbox(semanage_handle_t * sh,
 	*base = NULL;
 
 	/* first make sure that base module is readable */
-	if ((base_filename =
-	     semanage_path(SEMANAGE_TMP, SEMANAGE_BASE)) == NULL) {
+	if (semanage_base_path(sh, base_filename, sizeof(base_filename)) != 0) {
 		goto cleanup;
 	}
 	if (access(base_filename, R_OK) == -1) {
@@ -2016,14 +2100,13 @@ int semanage_link_sandbox(semanage_handle_t * sh,
 int semanage_link_base(semanage_handle_t * sh,
 			  sepol_module_package_t ** base)
 {
-	const char *base_filename = NULL;
+	char base_filename[PATH_MAX];
 	int retval = -1;
 
 	*base = NULL;
 
 	/* first make sure that base module is readable */
-	if ((base_filename =
-	     semanage_path(SEMANAGE_TMP, SEMANAGE_BASE)) == NULL) {
+	if (semanage_base_path(sh, base_filename, sizeof(base_filename)) != 0) {
 		goto cleanup;
 	}
 	if (access(base_filename, R_OK) == -1) {

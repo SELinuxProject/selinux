@@ -91,6 +91,15 @@ struct semanage_policy_table {
 			 semanage_module_info_t **,
 			 int *);
 
+	/* Install via module info */
+	int (*install_info) (struct semanage_handle *,
+			     const semanage_module_info_t *,
+			     char *,
+			     size_t);
+
+	/* Remove via module key */
+	int (*remove_key) (struct semanage_handle *,
+			   const semanage_module_key_t *);
 };
 
 /* Should be backend independent */

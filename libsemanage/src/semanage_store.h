@@ -39,7 +39,6 @@ enum semanage_store_defs {
 enum semanage_sandbox_defs {
 	SEMANAGE_TOPLEVEL,
 	SEMANAGE_MODULES,
-	SEMANAGE_BASE,
 	SEMANAGE_LINKED,
 	SEMANAGE_HOMEDIR_TMPL,
 	SEMANAGE_FC_TMPL,

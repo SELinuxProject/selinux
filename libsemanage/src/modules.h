@@ -299,4 +299,52 @@ int semanage_module_list_all(semanage_handle_t *sh,
 			     semanage_module_info_t **modinfos,
 			     int *modinfos_len);
 
+/* Install the module indicated by @modinfo with input data from 
+ * @module_data with length @data_len.
+ *
+ * @modinfo must have all values filled in.
+ * @module_data may be bzip compressed.
+ *
+ * Returns:
+ *	 0	success
+ *	-1	failure, out of memory
+ *	-2	failure, invalid @modinfo
+ *	-3	failure, error writing file
+ */
+int semanage_module_install_info(semanage_handle_t *sh,
+				 const semanage_module_info_t *modinfo,
+				 char *data,
+				 size_t data_len);
+
+/* Upgrade the module indicated by @modinfo with input data from
+ * @module_data with length @data_len.
+ *
+ * If the module is not already installed, then this will install it.
+ *
+ * @modinfo must have all values filled in.
+ * @module_data may be bzip compressed.
+ *
+ * Returns:
+ *	 0	success
+ *	-1	failure, out of memory
+ *	-2	failure, invalid @modinfo
+ *	-3	failure, error writing file
+ *	-4	failure, same or newer version module exists
+ */
+int semanage_module_upgrade_info(semanage_handle_t *sh,
+				 const semanage_module_info_t *modinfo,
+				 char *data,
+				 size_t data_len);
+
+/* Remove the module indicated by @modkey.
+ * @modkey must have key values filled in.
+ *
+ * Returns:
+ * 	 0	success
+ *	-1	failure, out of memeory
+ *	-2	failure, @module not found or couldn't be removed
+ */
+int semanage_module_remove_key(semanage_handle_t *sh,
+			       const semanage_module_key_t *modkey);
+
 #endif

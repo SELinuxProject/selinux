@@ -1111,3 +1111,43 @@ int semanage_module_list_all(semanage_handle_t *sh,
 	return sh->funcs->list_all(sh, modinfos, modinfos_len);
 }
 
+int semanage_module_install_info(semanage_handle_t *sh,
+				 const semanage_module_info_t *modinfo,
+				 char *data,
+				 size_t data_len)
+{
+	if (sh->funcs->install_info == NULL) {
+		ERR(sh,
+		    "No install info function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	} else if (!sh->is_in_transaction) {
+		if (semanage_begin_transaction(sh) < 0) {
+			return -1;
+		}
+	}
+	sh->modules_modified = 1;
+	return sh->funcs->install_info(sh, modinfo, data, data_len);
+}
+
+int semanage_module_remove_key(semanage_handle_t *sh,
+			       const semanage_module_key_t *modkey)
+{
+	if (sh->funcs->remove_key== NULL) {
+		ERR(sh,
+		    "No remove key function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	} else if (!sh->is_in_transaction) {
+		if (semanage_begin_transaction(sh) < 0) {
+			return -1;
+		}
+	}
+	sh->modules_modified = 1;
+	return sh->funcs->remove_key(sh, modkey);
+}
+

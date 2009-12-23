@@ -86,6 +86,14 @@ static int semanage_direct_list_all(semanage_handle_t *sh,
 				    semanage_module_info_t **modinfo,
 				    int *num_modules);
 
+static int semanage_direct_install_info(semanage_handle_t *sh,
+					const semanage_module_info_t *modinfo,
+					char *data,
+					size_t data_len);
+
+static int semanage_direct_remove_key(semanage_handle_t *sh,
+				      const semanage_module_key_t *modkey);
+
 static struct semanage_policy_table direct_funcs = {
 	.get_serial = semanage_direct_get_serial,
 	.destroy = semanage_direct_destroy,
@@ -104,6 +112,8 @@ static struct semanage_policy_table direct_funcs = {
 	.set_enabled = semanage_direct_set_enabled,
 	.get_module_info = semanage_direct_get_module_info,
 	.list_all = semanage_direct_list_all,
+	.install_info = semanage_direct_install_info,
+	.remove_key = semanage_direct_remove_key,
 };
 
 int semanage_direct_is_managed(semanage_handle_t * sh)
@@ -359,21 +369,19 @@ static int semanage_direct_begintrans(semanage_handle_t * sh)
 /********************* utility functions *********************/
 
 /* Takes a module stored in 'module_data' and parses its headers.
- * Sets reference variables 'filename' to module's fully qualified
- * path name into the sandbox, 'module_name' to module's name, and
+ * Sets reference variables 'module_name' to module's name, and
  * 'version' to module's version.  The caller is responsible for
- * free()ing 'filename', 'module_name', and 'version'; they will be
+ * free()ing 'module_name', and 'version'; they will be
  * set to NULL upon entering this function.  Returns 0 on success, -1
  * if out of memory, or -2 if data did not represent a module.
  */
 static int parse_module_headers(semanage_handle_t * sh, char *module_data,
 				size_t data_len, char **module_name,
-				char **version, char **filename)
+				char **version)
 {
 	struct sepol_policy_file *pf;
 	int file_type;
-	const char *module_path;
-	*module_name = *version = *filename = NULL;
+	*module_name = *version = NULL;
 
 	if (sepol_policy_file_create(&pf)) {
 		ERR(sh, "Out of memory!");
@@ -398,14 +406,7 @@ static int parse_module_headers(semanage_handle_t * sh, char *module_data,
 			ERR(sh, "Data did not represent a module.");
 		return -2;
 	}
-	if ((module_path =
-	     semanage_path(SEMANAGE_TMP, SEMANAGE_MODULES)) == NULL) {
-		return -1;
-	}
-	if (asprintf(filename, "%s/%s.pp", module_path, *module_name) == -1) {
-		ERR(sh, "Out of memory!");
-		return -1;
-	}
+
 	return 0;
 }
 
@@ -591,27 +592,6 @@ static ssize_t map_file(semanage_handle_t *sh, int fd, char **data,
 	} 
 
 	return size;
-}
-
-static int dupfile( const char *dest, int src_fd) {
-	int dest_fd = -1;
-	int retval = 0;
-	int cnt;
-	char    buf[1<<18];
-
-	if (lseek(src_fd, 0, SEEK_SET)  == -1 ) return -1;
-
-	if ((dest_fd = open(dest, O_WRONLY | O_CREAT | O_TRUNC,
-			   S_IRUSR | S_IWUSR)) == -1) {
-		return -1;
-	}
-
-	while (( retval == 0 ) && 
-	       ( cnt = read(src_fd, buf, sizeof(buf)))> 0 ) {
-		if (write(dest_fd, buf, cnt) < cnt) retval = -1;
-	}
-	close(dest_fd);
-	return retval;
 }
 
 /* Writes a block of data to a file.  Returns 0 on success, -1 on
@@ -1106,25 +1086,61 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 static int semanage_direct_install(semanage_handle_t * sh,
 				   char *data, size_t data_len)
 {
+	int status = 0;
+	int ret = 0;
 
-	int retval;
-	char *module_name = NULL, *version = NULL, *filename = NULL;
-	if ((retval = parse_module_headers(sh, data, data_len,
-					   &module_name, &version,
-					   &filename)) != 0) {
+	char *module_name = NULL, *version = NULL;
+	if ((status = parse_module_headers(sh, data, data_len,
+					   &module_name, &version)) != 0) {
 		goto cleanup;
 	}
-	if (bzip(sh, filename, data, data_len) <= 0) {
-		ERR(sh, "Error while writing to %s.", filename);
-		retval = -3;
+
+	semanage_module_info_t modinfo;
+	ret = semanage_module_info_init(sh, &modinfo);
+	if (ret != 0) {
+		status = -1;
 		goto cleanup;
 	}
-	retval = 0;
-      cleanup:
+
+	ret = semanage_module_info_set_priority(sh, &modinfo, sh->priority);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_name(sh, &modinfo, module_name);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_version(sh, &modinfo, version);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_lang_ext(sh, &modinfo, "pp");
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_enabled(sh, &modinfo, -1);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	status = semanage_direct_install_info(sh, &modinfo, data, data_len);
+
+cleanup:
 	free(version);
-	free(filename);
 	free(module_name);
-	return retval;
+
+	semanage_module_info_destroy(sh, &modinfo);
+
+	return status;
 }
 
 /* Attempts to link a module to the sandbox's module directory, unlinking any
@@ -1150,77 +1166,12 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 		goto cleanup;
 	}
 		
-	if (compressed) {
-		char *module_name = NULL, *version = NULL, *filename = NULL;
-		if ((retval = parse_module_headers(sh, data, data_len,
-						   &module_name, &version,
-						   &filename)) != 0) {
-			goto cleanup;
-		}
-
-		if (data_len > 0) munmap(data, data_len);
-		data_len = 0;
-		retval = dupfile(filename, in_fd);
-		free(version);
-		free(filename);
-		free(module_name);
-
-	} else {
-		retval = semanage_direct_install(sh, data, data_len);
-	}
+	retval = semanage_direct_install(sh, data, data_len);
 
       cleanup:
 	close(in_fd);
 	if (data_len > 0) munmap(data, data_len);
 
-	return retval;
-}
-
-
-static int get_direct_upgrade_filename(semanage_handle_t * sh,
-				       char *data, size_t data_len, char **outfilename) {
-	int i, retval, num_modules = 0;
-	char *module_name = NULL, *version = NULL, *filename = NULL;
-	semanage_module_info_t *modinfo = NULL;
-	if ((retval = parse_module_headers(sh, data, data_len,
-					   &module_name, &version,
-					   &filename)) != 0) {
-		goto cleanup;
-	}
-	if (semanage_direct_list(sh, &modinfo, &num_modules) < 0) {
-		goto cleanup;
-	}
-	retval = -5;
-	for (i = 0; i < num_modules; i++) {
-		semanage_module_info_t *m =
-		    semanage_module_list_nth(modinfo, i);
-		if (strcmp(semanage_module_get_name(m), module_name) == 0) {
-			if (strverscmp(version, semanage_module_get_version(m))
-			    > 0) {
-				retval = 0;
-				break;
-			} else {
-				ERR(sh, "Previous module %s is same or newer.",
-				    module_name);
-				retval = -4;
-				goto cleanup;
-			}
-		}
-	}
-      cleanup:
-	free(version);
-	free(module_name);
-	for (i = 0; modinfo != NULL && i < num_modules; i++) {
-		semanage_module_info_t *m =
-		    semanage_module_list_nth(modinfo, i);
-		semanage_module_info_datum_destroy(m);
-	}
-	free(modinfo);
-	if (retval == 0) {
-		*outfilename = filename;
-	} else {
-		free(filename);
-	}
 	return retval;
 }
 
@@ -1235,18 +1186,62 @@ static int get_direct_upgrade_filename(semanage_handle_t * sh,
 static int semanage_direct_upgrade(semanage_handle_t * sh,
 				   char *data, size_t data_len)
 {
-	char *filename = NULL;
-	int retval = get_direct_upgrade_filename(sh,
-						 data, data_len, 
-						 &filename);
-	if (retval == 0) {
-		if (bzip(sh, filename, data, data_len) <= 0) {
-			ERR(sh, "Error while writing to %s.", filename);
-			retval = -3;
-		}
-		free(filename);
+	int status = 0;
+	int ret = 0;
+
+	char *module_name = NULL, *version = NULL;
+	status = parse_module_headers(
+			sh,
+			data,
+			data_len,
+			&module_name,
+			&version);
+	if (status != 0) {
+		goto cleanup;
 	}
-	return retval;
+
+	semanage_module_info_t modinfo;
+	ret = semanage_module_info_init(sh, &modinfo);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_priority(sh, &modinfo, sh->priority);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_name(sh, &modinfo, module_name);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_version(sh, &modinfo, version);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_lang_ext(sh, &modinfo, "pp");
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_enabled(sh, &modinfo, -1);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+cleanup:
+	free(module_name);
+	free(version);
+
+	return status;
 }
 
 /* Attempts to link a module to the sandbox's module directory, unlinking any
@@ -1272,19 +1267,7 @@ static int semanage_direct_upgrade_file(semanage_handle_t * sh,
 		goto cleanup;
 	}
 
-	if (compressed) {
-		char *filename = NULL;
-		retval = get_direct_upgrade_filename(sh,
-					 	     data, data_len, 
-						     &filename);
-		
-		if (retval != 0)  goto cleanup;
-
-		retval = dupfile(filename, in_fd);
-		free(filename);
-	} else {
-		retval = semanage_direct_upgrade(sh, data, data_len);
-	}
+	retval = semanage_direct_upgrade(sh, data, data_len);
 
       cleanup:
 	close(in_fd);
@@ -1302,22 +1285,62 @@ static int semanage_direct_upgrade_file(semanage_handle_t * sh,
 static int semanage_direct_install_base(semanage_handle_t * sh,
 					char *base_data, size_t data_len)
 {
-	int retval = -1;
-	const char *filename = NULL;
-	if ((retval = parse_base_headers(sh, base_data, data_len)) != 0) {
+	int status = 0;
+	int ret = 0;
+
+	ret = parse_base_headers(sh, base_data, data_len);
+	if (ret != 0) {
+		status = -1;
 		goto cleanup;
 	}
-	if ((filename = semanage_path(SEMANAGE_TMP, SEMANAGE_BASE)) == NULL) {
+
+	semanage_module_info_t modinfo;
+	ret = semanage_module_info_init(sh, &modinfo);
+	if (ret != 0) {
+		status = -1;
 		goto cleanup;
 	}
-	if (bzip(sh, filename, base_data, data_len) <= 0) {
-		ERR(sh, "Error while writing to %s.", filename);
-		retval = -3;
+
+	ret = semanage_module_info_set_priority(sh, &modinfo, sh->priority);
+	if (ret != 0) {
+		status = -1;
 		goto cleanup;
 	}
-	retval = 0;
-      cleanup:
-	return retval;
+
+	ret = semanage_module_info_set_name(sh, &modinfo, "_base");
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_version(sh, &modinfo, "1.0.0");
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_lang_ext(sh, &modinfo, "pp");
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_info_set_enabled(sh, &modinfo, 1);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	status = semanage_direct_install_info(
+			sh,
+			&modinfo,
+			base_data,
+			data_len);
+
+cleanup:
+	semanage_module_info_destroy(sh, &modinfo);
+
+	return status;
 }
 
 /* Writes a base module into a sandbox, overwriting any previous base
@@ -1342,19 +1365,7 @@ static int semanage_direct_install_base_file(semanage_handle_t * sh,
 		goto cleanup;
 	}
 		
-	if (compressed) {
-		const char *filename = NULL;
-		if ((retval = parse_base_headers(sh, data, data_len)) != 0) {
-			goto cleanup;
-		}
-		if ((filename = semanage_path(SEMANAGE_TMP, SEMANAGE_BASE)) == NULL) {
-			goto cleanup;
-		}
-
-		retval = dupfile(filename, in_fd);
-	} else {
-		retval = semanage_direct_install_base(sh, data, data_len);
-	}
+	retval = semanage_direct_install_base(sh, data, data_len);
 
       cleanup:
 	close(in_fd);
@@ -1367,41 +1378,32 @@ static int semanage_direct_install_base_file(semanage_handle_t * sh,
  * of memory, -2 if module not found or could not be removed. */
 static int semanage_direct_remove(semanage_handle_t * sh, char *module_name)
 {
-	int i, retval = -1;
-	char **module_filenames = NULL;
-	int num_mod_files;
-	size_t name_len = strlen(module_name);
-	if (semanage_get_modules_names(sh, &module_filenames, &num_mod_files) ==
-	    -1) {
-		return -1;
+	int status = 0;
+	int ret = 0;
+
+	semanage_module_key_t modkey;
+	ret = semanage_module_key_init(sh, &modkey);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
 	}
-	for (i = 0; i < num_mod_files; i++) {
-		char *base = strrchr(module_filenames[i], '/');
-		if (base == NULL) {
-			ERR(sh, "Could not read module names.");
-			retval = -2;
-			goto cleanup;
-		}
-		base++;
-		if (memcmp(module_name, base, name_len) == 0 &&
-		    strcmp(base + name_len, ".pp") == 0) {
-			if (unlink(module_filenames[i]) == -1) {
-				ERR(sh, "Could not remove module file %s.",
-				    module_filenames[i]);
-				retval = -2;
-			}
-			retval = 0;
-			goto cleanup;
-		}
+
+	ret = semanage_module_key_set_priority(sh, &modkey, sh->priority);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
 	}
-	ERR(sh, "Module %s was not found.", module_name);
-	retval = -2;		/* module not found */
-      cleanup:
-	for (i = 0; module_filenames != NULL && i < num_mod_files; i++) {
-		free(module_filenames[i]);
+
+	ret = semanage_module_key_set_name(sh, &modkey, module_name);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
 	}
-	free(module_filenames);
-	return retval;
+
+	status = semanage_direct_remove_key(sh, &modkey);
+
+cleanup:
+	return status;
 }
 
 /* Allocate an array of module_info structures for each readable
@@ -1951,7 +1953,6 @@ cleanup:
 	return status;
 }
 
-__attribute__ ((unused))
 static int semanage_direct_set_module_info(semanage_handle_t *sh,
 					   const semanage_module_info_t *modinfo)
 {
@@ -2406,3 +2407,217 @@ cleanup:
 
 	return status;
 }
+
+static int semanage_direct_install_info(semanage_handle_t *sh,
+					const semanage_module_info_t *modinfo,
+					char *data,
+					size_t data_len)
+{
+	assert(sh);
+	assert(modinfo);
+	assert(data);
+
+	int status = 0;
+	int ret = 0;
+
+	char path[PATH_MAX];
+
+	semanage_module_info_t *higher_info = NULL;
+	semanage_module_key_t higher_key;
+	ret = semanage_module_key_init(sh, &higher_key);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	/* validate module info */
+	ret = semanage_module_info_validate(modinfo);
+	if (ret != 0) {
+		status = -2;
+		goto cleanup;
+	}
+
+	/* Check for higher priority module and warn if there is one as
+	 * it will override the module currently being installed.
+	 */
+	ret = semanage_module_key_set_name(sh, &higher_key, modinfo->name);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_direct_get_module_info(sh, &higher_key, &higher_info);
+	if (ret == 0) {
+		if (higher_info->priority > modinfo->priority) {
+			errno = 0;
+			WARN(sh,
+			     "A higher priority %s module exists at priority %d and will override the module currently being installed at priority %d.",
+			     modinfo->name,
+			     higher_info->priority,
+			     modinfo->priority);
+		}
+		else if (higher_info->priority < modinfo->priority) {
+			errno = 0;
+			INFO(sh,
+			     "Overriding %s module at lower priority %d with module at priority %d.",
+			     modinfo->name,
+			     higher_info->priority,
+			     modinfo->priority);
+		}
+
+		if (higher_info->enabled == 0 && modinfo->enabled == -1) {
+			errno = 0;
+			WARN(sh,
+			     "%s module will be disabled after install due to default enabled status.",
+			     modinfo->name);
+		}
+	}
+
+	/* set module meta data */
+	ret = semanage_direct_set_module_info(sh, modinfo);
+	if (ret != 0) {
+		status = -2;
+		goto cleanup;
+	}
+
+	/* install module source file */
+	ret = semanage_module_get_path(
+			sh,
+			modinfo,
+			SEMANAGE_MODULE_PATH_HLL,
+			path,
+			sizeof(path));
+	if (ret != 0) {
+		status = -3;
+		goto cleanup;
+	}
+	
+	ret = bzip(sh, path, data, data_len);
+	if (ret <= 0) {
+		ERR(sh, "Error while writing to %s.", path);
+		status = -3;
+		goto cleanup;
+	}
+
+cleanup:
+	semanage_module_key_destroy(sh, &higher_key);
+	semanage_module_info_destroy(sh, higher_info);
+	free(higher_info);
+
+	return status;
+}
+
+static int semanage_direct_remove_key(semanage_handle_t *sh,
+				      const semanage_module_key_t *modkey)
+{
+	assert(sh);
+	assert(modkey);
+
+	int status = 0;
+	int ret = 0;
+
+	char path[PATH_MAX];
+	semanage_module_info_t *modinfo = NULL;
+
+	semanage_module_key_t modkey_tmp;
+	ret = semanage_module_key_init(sh, &modkey_tmp);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	/* validate module key */
+	ret = semanage_module_validate_priority(modkey->priority);
+	if (ret != 0) {
+		errno = 0;
+		ERR(sh, "Priority %d is invalid.", modkey->priority);
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_validate_name(modkey->name);
+	if (ret != 0) {
+		errno = 0;
+		ERR(sh, "Name %s is invalid.", modkey->name);
+		status = -1;
+		goto cleanup;
+	}
+
+	ret = semanage_module_key_set_name(sh, &modkey_tmp, modkey->name);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	/* get module path */
+	ret = semanage_module_get_path(
+			sh,
+			(const semanage_module_info_t *)modkey,
+			SEMANAGE_MODULE_PATH_NAME,
+			path,
+			sizeof(path));
+	if (ret != 0) {
+		status = -2;
+		goto cleanup;
+	}
+
+	/* remove directory */
+	ret = semanage_remove_directory(path);
+	if (ret != 0) {
+		ERR(sh, "Unable to remove module %s at priority %d.", modkey->name, modkey->priority);
+		status = -2;
+		goto cleanup;
+	}
+
+	/* check if its the last module at any priority */
+	ret = semanage_module_get_module_info(sh, &modkey_tmp, &modinfo);
+	if (ret != 0) {
+		/* info that no other module will override */
+		errno = 0;
+		INFO(sh,
+		     "Removing last %s module (no other %s module exists at another priority).",
+		     modkey->name,
+		     modkey->name);
+
+		/* remove disabled status file */
+		ret = semanage_module_get_path(
+				sh,
+				(const semanage_module_info_t *)modkey,
+				SEMANAGE_MODULE_PATH_DISABLED,
+				path,
+				sizeof(path));
+		if (ret != 0) {
+			status = -1;
+			goto cleanup;
+		}
+
+		struct stat sb;
+		if (stat(path, &sb) == 0) {
+			ret = unlink(path);
+			if (ret != 0) {
+				status = -1;
+				goto cleanup;
+			}
+		}
+	}
+	else {
+		/* if a lower priority module is going to become active */
+		if (modkey->priority > modinfo->priority) {
+			/* inform what the new active module will be */
+			errno = 0;
+			INFO(sh,
+			     "%s module at priority %d is now active.",
+			     modinfo->name,
+			     modinfo->priority);
+		}
+	}
+
+cleanup:
+	semanage_module_key_destroy(sh, &modkey_tmp);
+
+	semanage_module_info_destroy(sh, modinfo);
+	free(modinfo);
+
+	return status;
+}
+
