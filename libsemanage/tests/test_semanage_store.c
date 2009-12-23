@@ -44,12 +44,12 @@
 #include <CUnit/Basic.h>
 
 semanage_handle_t *sh = NULL;
-const char *polpath = "./test-policy";
-const char *lockpath = "./test-policy/modules";
-const char *readlockpath = "./test-policy/modules/semanage.read.LOCK";
-const char *translockpath = "./test-policy/modules/semanage.trans.LOCK";
-const char *actpath = "./test-policy/modules/active";
-const char *modpath = "./test-policy/modules/active/modules";
+const char *rootpath = "./test-policy";
+const char *polpath = "./test-policy/store/";
+const char *readlockpath = "./test-policy/store/semanage.read.LOCK";
+const char *translockpath = "./test-policy/store/semanage.trans.LOCK";
+const char *actpath = "./test-policy/store/active";
+const char *modpath = "./test-policy/store/active/modules";
 
 /* The suite initialization function.
  * Returns zero on success, non-zero otherwise.
@@ -59,11 +59,11 @@ int semanage_store_test_init(void)
 	int err;
 
 	/* create directories */
-	err = mkdir(polpath, S_IRUSR | S_IWUSR | S_IXUSR);
+	err = mkdir(rootpath, S_IRUSR | S_IWUSR | S_IXUSR);
 	if (err != 0)
 		return -1;
 
-	err = mkdir(lockpath, S_IRUSR | S_IWUSR | S_IXUSR);
+	err = mkdir(polpath, S_IRUSR | S_IWUSR | S_IXUSR);
 	if (err != 0)
 		return -1;
 
@@ -83,8 +83,12 @@ int semanage_store_test_init(void)
 	/* hide error messages */
 	sh->msg_callback = test_msg_handler;
 
+	/* use our own policy store */
+	free(sh->conf->store_path);
+	sh->conf->store_path = strdup("store");
+
 	/* initialize paths */
-	err = semanage_check_init(polpath);
+	err = semanage_check_init(sh, rootpath);
 	if (err != 0)
 		return -1;
 
@@ -107,11 +111,11 @@ int semanage_store_test_cleanup(void)
 	if (err != 0)
 		return -1;
 
-	err = rmdir(lockpath);
+	err = rmdir(polpath);
 	if (err != 0)
 		return -1;
 
-	err = rmdir(polpath);
+	err = rmdir(rootpath);
 	if (err != 0)
 		return -1;
 
@@ -217,8 +221,6 @@ void test_semanage_store_access_check(void)
 	/* check with no lock file and 000 */
 	err = chmod(modpath, 0);
 	CU_ASSERT(err == 0);
-	err = chmod(lockpath, 0);
-	CU_ASSERT(err == 0);
 	err = chmod(polpath, 0);
 	CU_ASSERT(err == 0);
 
@@ -228,16 +230,14 @@ void test_semanage_store_access_check(void)
 	/* check with no lock file and 500 */
 	err = chmod(polpath, S_IRUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
-	err = chmod(lockpath, S_IRUSR | S_IXUSR);
-	CU_ASSERT(err == 0);
 	err = chmod(modpath, S_IRUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
 
 	err = semanage_store_access_check();
 	CU_ASSERT(err == 0);
 
-	/* check with no lock file but write in lockpath */
-	err = chmod(lockpath, S_IRUSR | S_IWUSR | S_IXUSR);
+	/* check with no lock file but write in polpath */
+	err = chmod(polpath, S_IRUSR | S_IWUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
 
 	err = semanage_store_access_check();
