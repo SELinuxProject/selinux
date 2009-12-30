@@ -1338,8 +1338,6 @@ int main(int argc, char *argv[])
 	if (transition_to_caller_uid())
 		goto err_close_pam_session;
 #endif
-	freecon(old_context);
-	freecon(new_context);
 
 	/* Handle environment changes */
 	if (restore_environment(preserve_environment, old_environ, &pw)) {
