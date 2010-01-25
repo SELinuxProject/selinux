@@ -1528,16 +1528,12 @@ static int semanage_load_module(semanage_handle_t * sh, const char *filename,
 	char *data = NULL;
 
 	if ((size = bunzip(sh, fp, &data)) > 0) {
-		fclose(fp);
-		fp = fmemopen(data, size, "rb");
-		if (!fp) {
-			ERR(sh, "Out of memory!");
-			goto cleanup;
-		}
+		sepol_policy_file_set_mem(pf, data, size);
+	} else {
+		rewind(fp);
+		__fsetlocking(fp, FSETLOCKING_BYCALLER);
+		sepol_policy_file_set_fp(pf, fp);
 	}
-	rewind(fp);
-	__fsetlocking(fp, FSETLOCKING_BYCALLER);
-	sepol_policy_file_set_fp(pf, fp);
 	sepol_policy_file_set_handle(pf, sh->sepolh);
 	if (sepol_module_package_read(*package, pf, 0) == -1) {
 		ERR(sh, "Error while reading from module file %s.", filename);

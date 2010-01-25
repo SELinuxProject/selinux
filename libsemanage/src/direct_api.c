@@ -1371,16 +1371,12 @@ static int semanage_direct_list(semanage_handle_t * sh,
 		char *data = NULL;
 
 		if ((size = bunzip(sh, fp, &data)) > 0) {
-			fclose(fp);
-			fp = fmemopen(data, size, "rb");
-			if (!fp) {
-				ERR(sh, "Out of memory!");
-				goto cleanup;
-			}
+			sepol_policy_file_set_mem(pf, data, size);
+		} else {
+			rewind(fp);
+			__fsetlocking(fp, FSETLOCKING_BYCALLER);
+			sepol_policy_file_set_fp(pf, fp);
 		}
-		rewind(fp);
-		__fsetlocking(fp, FSETLOCKING_BYCALLER);
-		sepol_policy_file_set_fp(pf, fp);
 		if (sepol_module_package_info(pf, &type, &name, &version)) {
 			fclose(fp);
 			free(data);
