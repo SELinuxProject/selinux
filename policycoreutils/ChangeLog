@@ -1,3 +1,6 @@
+2.0.79 2010-01-26
+	* Fix double-free in newrole
+
 2.0.78 2009-11-27
 	* Remove non-working OUTFILE from fixfiles from Dan Walsh.
 	* Additional exception handling in chcat from Dan Walsh.
