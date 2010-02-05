@@ -694,17 +694,14 @@ void avc_audit(security_id_t ssid, security_id_t tsid,
 	access_vector_t denied, audited;
 
 	denied = requested & ~avd->allowed;
-	if (denied) {
-		audited = denied;
-		if (!(audited & avd->auditdeny))
-			return;
-	} else if (!requested || result) {
+	if (denied)
+		audited = denied & avd->auditdeny;
+	else if (!requested || result)
 		audited = denied = requested;
-	} else {
-		audited = requested;
-		if (!(audited & avd->auditallow))
-			return;
-	}
+	else
+		audited = requested & avd->auditallow;
+	if (!audited)
+		return;
 #if 0
 	if (!check_avc_ratelimit())
 		return;
