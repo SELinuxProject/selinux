@@ -17,6 +17,9 @@
 #include <errno.h>
 #include <limits.h>
 #include <regex.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "callbacks.h"
 #include "label_internal.h"
 
@@ -545,7 +548,7 @@ finish:
 /*
  * Backend interface routines
  */
-static void close(struct selabel_handle *rec)
+static void closef(struct selabel_handle *rec)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	struct spec *spec;
@@ -666,7 +669,7 @@ int selabel_file_init(struct selabel_handle *rec, struct selinux_opt *opts,
 	memset(data, 0, sizeof(*data));
 
 	rec->data = data;
-	rec->func_close = &close;
+	rec->func_close = &closef;
 	rec->func_stats = &stats;
 	rec->func_lookup = &lookup;
 
