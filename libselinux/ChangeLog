@@ -1,3 +1,9 @@
+2.0.91 2010-02-22
+	* Change the AVC to only audit the permissions specified by the
+	policy, excluding any permissions specified via dontaudit or not
+	specified via auditallow.
+	* Fix compilation of label_file.c with latest glibc headers.
+
 2.0.90 2009-11-27
 	* add/reformat man pages by Guido Trentalancia <guido@trentalancia.com>.
 	* Change exception.sh to be called with bash by Manoj Srivastava <srivasta@debian.org>
