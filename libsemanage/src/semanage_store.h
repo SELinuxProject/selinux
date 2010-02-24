@@ -128,4 +128,6 @@ int semanage_nc_sort(semanage_handle_t * sh,
 		     size_t buf_len,
 		     char **sorted_buf, size_t * sorted_buf_len);
 
+extern const char *DISABLESTR;
+
 #endif
