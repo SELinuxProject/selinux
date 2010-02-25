@@ -57,7 +57,7 @@ static int parse_errors;
 }
 
 %token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED
-%token LOAD_POLICY_START SETFILES_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN
+%token LOAD_POLICY_START SETFILES_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD
 %token BZIP_BLOCKSIZE BZIP_SMALL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
 %token PROG_PATH PROG_ARGS
@@ -82,6 +82,7 @@ single_opt:     module_store
         |       save_previous
         |       save_linked
         |       disable_genhomedircon
+        |       usepasswd
         |       handle_unknown
 	|	bzip_blocksize
 	|	bzip_small
@@ -149,6 +150,17 @@ disable_genhomedircon: DISABLE_GENHOMEDIRCON '=' ARG {
 		current_conf->disable_genhomedircon = 1;
 	} else {
 		yyerror("disable-genhomedircon can only be 'true' or 'false'");
+	}
+	free($3);
+ }
+
+usepasswd: USEPASSWD '=' ARG {
+	if (strcasecmp($3, "false") == 0) {
+		current_conf->usepasswd = 0;
+	} else if (strcasecmp($3, "true") == 0) {
+		current_conf->usepasswd = 1;
+	} else {
+		yyerror("usepasswd can only be 'true' or 'false'");
 	}
 	free($3);
  }
@@ -252,6 +264,7 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	conf->policyvers = sepol_policy_kern_vers_max();
 	conf->expand_check = 1;
 	conf->handle_unknown = -1;
+	conf->usepasswd = 1;
 	conf->file_mode = 0644;
 	conf->bzip_blocksize = 9;
 	conf->bzip_small = 0;

@@ -38,6 +38,7 @@ typedef struct semanage_conf {
 	int save_previous;
 	int save_linked;
 	int disable_genhomedircon;
+	int usepasswd;
 	int handle_unknown;
 	mode_t file_mode;
 	int bzip_blocksize;
