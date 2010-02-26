@@ -41,12 +41,9 @@ descriptor is stored internally; use
 .BR avc_netlink_acquire_fd (3)
 to take ownership of it in application code.  The
 .I blocking
-argument specifies whether read operations on the socket will block.
+argument controls whether the O_NONBLOCK flag is set on the socket descriptor.
 .BR avc_open (3)
-calls this function internally, specifying non-blocking behavior (unless
-threading callbacks were explicitly set using the deprecated
-.BR avc_init (3)
-interface, in which case blocking behavior is set).
+calls this function internally, specifying non-blocking behavior.
 
 .B avc_netlink_close
 closes the netlink socket.  This function is called automatically by
@@ -66,9 +63,7 @@ checks the netlink socket for pending messages and processes them.
 Callbacks for policyload and enforcing changes will be called;
 see
 .BR selinux_set_callback (3).
-This function does not block unless
-.BR avc_netlink_open (3)
-specified blocking behavior.
+This function does not block.
 
 .B avc_netlink_loop
 enters a loop blocking on the netlink socket and processing messages as they

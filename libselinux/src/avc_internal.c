@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <poll.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <linux/types.h>
@@ -92,12 +93,25 @@ void avc_netlink_close(void)
 	close(fd);
 }
 
-static int avc_netlink_receive(char *buf, unsigned buflen)
+static int avc_netlink_receive(char *buf, unsigned buflen, int blocking)
 {
 	int rc;
+	struct pollfd pfd = { fd, POLLIN | POLLPRI, 0 };
 	struct sockaddr_nl nladdr;
 	socklen_t nladdrlen = sizeof nladdr;
 	struct nlmsghdr *nlh = (struct nlmsghdr *)buf;
+
+	rc = poll(&pfd, 1, (blocking ? -1 : 0));
+
+	if (rc == 0 && !blocking) {
+		errno = EWOULDBLOCK;
+		return -1;
+	}
+	else if (rc < 1) {
+		avc_log(SELINUX_ERROR, "%s:  netlink poll: error %d\n",
+			avc_prefix, errno);
+		return rc;
+	}
 
 	rc = recvfrom(fd, buf, buflen, 0, (struct sockaddr *)&nladdr,
 		      &nladdrlen);
@@ -208,7 +222,7 @@ int avc_netlink_check_nb(void)
 
 	while (1) {
 		errno = 0;
-		rc = avc_netlink_receive(buf, sizeof(buf));
+		rc = avc_netlink_receive(buf, sizeof(buf), 0);
 		if (rc < 0) {
 			if (errno == EWOULDBLOCK)
 				return 0;
@@ -235,7 +249,7 @@ void avc_netlink_loop(void)
 
 	while (1) {
 		errno = 0;
-		rc = avc_netlink_receive(buf, sizeof(buf));
+		rc = avc_netlink_receive(buf, sizeof(buf), 1);
 		if (rc < 0) {
 			if (errno == 0 || errno == EINTR)
 				continue;
