@@ -23,7 +23,7 @@ int obj_class_compat = 1;
 static void init_selinuxmnt(void)
 {
 	char *buf=NULL, *p;
-	FILE *fp;
+	FILE *fp=NULL;
 	struct statfs sfbuf;
 	int rc;
 	size_t len;
@@ -57,16 +57,17 @@ static void init_selinuxmnt(void)
 			break;
 		}
 	}
-	fclose(fp);
 
-	if (!exists)
-		return;
+	if (!exists) 
+		goto out;
+
+	fclose(fp);
 
 	/* At this point, the usual spot doesn't have an selinuxfs so
 	 * we look around for it */
 	fp = fopen("/proc/mounts", "r");
 	if (!fp)
-		return;
+		goto out;
 
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
 	while ((num = getline(&buf, &len, fp)) != -1) {
@@ -90,7 +91,8 @@ static void init_selinuxmnt(void)
 
       out:
 	free(buf);
-	fclose(fp);
+	if (fp)
+		fclose(fp);
 	return;
 }
 
