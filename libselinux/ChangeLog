@@ -1,3 +1,8 @@
+2.0.92 2010-03-06
+	* Fix from Eric Paris to fix leak on non-selinux systems.
+	* regenerate swig wrappers
+	* pkgconfig fix to respect LIBDIR from Dan Walsh.
+
 2.0.91 2010-02-22
 	* Change the AVC to only audit the permissions specified by the
 	policy, excluding any permissions specified via dontaudit or not

@@ -1,3 +1,9 @@
+2.0.45 2010-03-06
+	* Add enable/disable patch support from Dan Walsh.
+	* Add usepasswd flag to semanage.conf to disable genhomedircon using
+	  passwd from Dan Walsh.
+	* regenerate swig wrappers
+
 2.0.44 2010-02-02
 	* Replace usage of fmemopen() with sepol_policy_file_set_mem() since
 	  glibc < 2.9 does not support binary mode ('b') for fmemopen'd
