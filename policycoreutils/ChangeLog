@@ -1,3 +1,6 @@
+2.0.80 2010-03-06
+	* Module enable/disable support from Dan Walsh.
+
 2.0.79 2010-01-26
 	* Fix double-free in newrole
 
