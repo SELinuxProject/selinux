@@ -75,6 +75,8 @@ class PolicyGenerator:
         else:
             self.module = refpolicy.Module()
 
+        self.dontaudit = False
+
     def set_gen_refpol(self, if_set=None, perm_maps=None):
         """Set whether reference policy interfaces are generated.
 
@@ -107,6 +109,9 @@ class PolicyGenerator:
         """Set whether access is explained.
         """
         self.explain = explain
+
+    def set_gen_dontaudit(self, dontaudit):
+        self.dontaudit = dontaudit
 
     def __set_module_style(self):
         if self.ifgen:
@@ -144,6 +149,8 @@ class PolicyGenerator:
     def __add_allow_rules(self, avs):
         for av in avs:
             rule = refpolicy.AVRule(av)
+            if self.dontaudit:
+                rule.rule_type = rule.DONTAUDIT
             if self.explain:
                 rule.comment = refpolicy.Comment(explain_access(av, verbosity=self.explain))
             self.module.children.append(rule)

@@ -25,10 +25,10 @@
 .TH AUDIT2ALLOW "1" "January 2005" "Security Enhanced Linux" NSA
 .SH NAME
 .BR audit2allow
-	\- generate SELinux policy allow rules from logs of denied operations
+\- generate SELinux policy allow/dontaudit rules from logs of denied operations
 
 .BR audit2why  
-	\- translates SELinux audit messages into a description of why the access was denied (audit2allow -w)
+\- translates SELinux audit messages into a description of why the access was denied (audit2allow -w)
 
 .SH SYNOPSIS
 .B audit2allow
@@ -43,6 +43,9 @@ Read input from output of
 .I /bin/dmesg.
 Note that all audit messages are not available via dmesg when
 auditd is running; use "ausearch -m avc | audit2allow"  or "-a" instead.
+.TP
+.B "\-D" | "\-\-dontaudit"
+Generate dontaudit rules (Default: allow)
 .TP
 .B "\-h" | "\-\-help"
 Print a short usage message

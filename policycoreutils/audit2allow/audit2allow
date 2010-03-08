@@ -58,6 +58,9 @@ class AuditToPolicy:
                           help="generate a module package - conflicts with -o and -m")
         parser.add_option("-o", "--output", dest="output",
                           help="append output to <filename>, conflicts with -M")
+        parser.add_option("-D", "--dontaudit", action="store_true", 
+                          dest="dontaudit", default=False, 
+                          help="generate policy with dontaudit rules")
         parser.add_option("-R", "--reference", action="store_true", dest="refpolicy",
                           default=True, help="generate refpolicy style output")
 
@@ -294,6 +297,8 @@ class AuditToPolicy:
                 sys.exit(1)
 
         g = policygen.PolicyGenerator()
+
+        g.set_gen_dontaudit(self.__options.dontaudit)
 
         if self.__options.module:
             g.set_module_name(self.__options.module)
