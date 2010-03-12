@@ -222,7 +222,7 @@ int avc_init(const char *prefix,
 		avc_enforcing = rc;
 	}
 
-	rc = avc_netlink_open(avc_using_threads);
+	rc = avc_netlink_open(0);
 	if (rc < 0) {
 		avc_log(SELINUX_ERROR,
 			"%s:  can't open netlink socket: %d (%s)\n",
