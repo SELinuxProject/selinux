@@ -127,7 +127,7 @@ class AccessVector:
         return self.to_string()
 
     def to_string(self):
-        return "allow %s %s : %s %s;" % (self.src_type, self.tgt_type,
+        return "allow %s %s:%s %s;" % (self.src_type, self.tgt_type,
                                         self.obj_class, self.perms.to_space_str())
 
     def __cmp__(self, other):
