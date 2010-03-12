@@ -279,7 +279,7 @@ parse_file = ""
 #     refpolicy.SupportMacros and should always be present during parsing
 #     though it may not contain any macros.
 spt = None
-success=True
+success = True
 
 # utilities
 def collect(stmts, parent, val=None):
@@ -921,9 +921,7 @@ def p_optional_semi(p):
 #
 
 def p_error(tok):
-    global error
-    global parse_file
-    global success
+    global error, parse_file, success, parser
     error = "%s: Syntax error on line %d %s [type=%s]" % (parse_file, tok.lineno, tok.value, tok.type)
     print error
     success = False
@@ -939,6 +937,7 @@ parser = None
 lexer = None
 def create_globals(module, support, debug):
     global parser, lexer, m, spt
+
     if not parser:
         lexer = lex.lex()
         parser = yacc.yacc(method="LALR", debug=debug, write_tables=0)
@@ -955,17 +954,20 @@ def create_globals(module, support, debug):
 
 def parse(text, module=None, support=None, debug=False):
     create_globals(module, support, debug)
-    lexer.lexdata = []
-    lexer.lexpos = 0
-    lexer.lineno = 1
+    global error, parser, lexer, success
+
+    success = True
 
     try:
-        parser.parse(text, debug=debug)
+        parser.parse(text, debug=debug, lexer=lexer)
     except Exception, e:
-        global error
+        parser = None
+        lexer = None
         error = "internal parser error: %s" % str(e) + "\n" + traceback.format_exc()
 
-    if error is not None:
+    if not success:
+        # force the parser and lexer to be rebuilt - we have some problems otherwise
+        parser = None
         msg = 'could not parse text: "%s"' % error
         raise ValueError(msg)
     return m
@@ -973,15 +975,9 @@ def parse(text, module=None, support=None, debug=False):
 def list_headers(root):
     modules = []
     support_macros = None
-    blacklist = ["init.if", "inetd.if", "uml.if", "thunderbird.if"]
 
     for dirpath, dirnames, filenames in os.walk(root):
         for name in filenames:
-            # FIXME: these make the parser barf in various unrecoverable ways, so we must skip
-            # them.
-            if name in blacklist:
-                continue
-
             modname = os.path.splitext(name)
             filename = os.path.join(dirpath, name)
 
