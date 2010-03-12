@@ -23,6 +23,27 @@ import re
 
 # Convenience functions
 
+def get_audit_boot_msgs():
+    """Obtain all of the avc and policy load messages from the audit
+    log. This function uses ausearch and requires that the current
+    process have sufficient rights to run ausearch.
+
+    Returns:
+       string contain all of the audit messages returned by ausearch.
+    """
+    import subprocess
+    import time
+    fd=open("/proc/uptime", "r")
+    off=float(fd.read().split()[0])
+    fd.close
+    s = time.localtime(time.time() - off)
+    date = time.strftime("%D/%Y", s).split("/")
+    bootdate="%s/%s/%s" % (date[0], date[1], date[3])
+    boottime = time.strftime("%X", s)
+    output = subprocess.Popen(["/sbin/ausearch", "-m", "AVC,USER_AVC,MAC_POLICY_LOAD,DAEMON_START,SELINUX_ERR", "-ts", bootdate, boottime],
+                              stdout=subprocess.PIPE).communicate()[0]
+    return output
+
 def get_audit_msgs():
     """Obtain all of the avc and policy load messages from the audit
     log. This function uses ausearch and requires that the current

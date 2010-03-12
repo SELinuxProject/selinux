@@ -42,6 +42,8 @@ class AuditToPolicy:
         from optparse import OptionParser
 
         parser = OptionParser(version=self.VERSION)
+        parser.add_option("-b", "--boot", action="store_true", dest="boot", default=False,
+                          help="audit messages since last boot conflicts with -i")
         parser.add_option("-a", "--all", action="store_true", dest="audit", default=False,
                           help="read input from audit log - conflicts with -i")
         parser.add_option("-d", "--dmesg", action="store_true", dest="dmesg", default=False,
@@ -83,11 +85,11 @@ class AuditToPolicy:
         options, args = parser.parse_args()
 
         # Make -d, -a, and -i conflict
-        if options.audit is True:
+        if options.audit is True or options.boot:
             if options.input is not None:
-                sys.stderr.write("error: --all conflicts with --input\n")
+                sys.stderr.write("error: --all/--boot conflicts with --input\n")
             if options.dmesg is True:
-                sys.stderr.write("error: --all conflicts with --dmesg\n")
+                sys.stderr.write("error: --all/--boot conflicts with --dmesg\n")
         if options.input is not None and options.dmesg is True:
             sys.stderr.write("error: --input conflicts with --dmesg\n")
 
@@ -129,6 +131,12 @@ class AuditToPolicy:
         elif self.__options.audit:
             try:
                 messages = audit.get_audit_msgs()
+            except OSError, e:
+                sys.stderr.write('could not run ausearch - "%s"\n' % str(e))
+                sys.exit(1)
+        elif self.__options.boot:
+            try:
+                messages = audit.get_audit_boot_msgs()
             except OSError, e:
                 sys.stderr.write('could not run ausearch - "%s"\n' % str(e))
                 sys.exit(1)
