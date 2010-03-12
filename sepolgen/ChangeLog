@@ -1,3 +1,6 @@
+1.0.20 2010-03-12
+	* Add dontaudit flag to audit2allow from Dan Walsh.
+
 1.0.19 2009-11-27
 	* fix sepolgen to read a "type 1403" msg as a policy load by Stephen
 	  Smalley <sds@tycho.nsa.gov>

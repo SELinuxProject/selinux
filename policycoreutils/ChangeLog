@@ -1,3 +1,6 @@
+2.0.81 2010-03-12
+	* Add dontaudit flag to audit2allow from Dan Walsh.
+
 2.0.80 2010-03-06
 	* Module enable/disable support from Dan Walsh.
 
