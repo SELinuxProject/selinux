@@ -22,7 +22,8 @@ typedef int (*selabel_initfunc)(struct selabel_handle *rec,
 static selabel_initfunc initfuncs[] = {
 	&selabel_file_init,
 	&selabel_media_init,
-	&selabel_x_init
+	&selabel_x_init,
+	&selabel_db_init,
 };
 
 typedef struct selabel_sub {

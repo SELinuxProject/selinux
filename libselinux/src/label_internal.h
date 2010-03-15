@@ -23,6 +23,8 @@ int selabel_media_init(struct selabel_handle *rec, struct selinux_opt *opts,
 		      unsigned nopts) hidden;
 int selabel_x_init(struct selabel_handle *rec, struct selinux_opt *opts,
 		   unsigned nopts) hidden;
+int selabel_db_init(struct selabel_handle *rec,
+		    struct selinux_opt *opts, unsigned nopts) hidden;
 
 /*
  * Labeling internal structures

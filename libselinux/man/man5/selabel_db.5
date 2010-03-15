@@ -1,0 +1,93 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.\"
+.\" Author: KaiGai Kohei <kaigai@ak.jp.nec.com> 2009
+.TH "selabel_db" "5" "22 Nov 2009" "" "SELinux API documentation"
+.SH "NAME"
+selabel_db \- userspace SELinux labeling interface: DB objects contexts backend.
+.SH "SYNOPSIS"
+.B #include <selinux/selinux.h>
+
+.B #include <selinux/label.h>
+.sp
+.BI "int selabel_lookup(struct selabel_handle *" hnd ,
+.in +\w'int selabel_lookup('u
+.BI "security_context_t *" context ,
+
+.BI "const char *" object_name ", int " object_type ");"
+
+.SH "DESCRIPTION"
+The DB contexts backend maps from a pair of object name and class into security contexts. It is used to find the appropriate context for database objects when relabeling a certain database.
+
+The
+.I object_name
+should be fully qualified name using the hierarchy of database objects.
+For example, the
+.B pg_class
+table in the
+.B postgres
+database and
+.B pg_catalog
+schema should be qualified as
+.B postgres.pg_catalog.pg_class .
+
+The
+.I object_type
+argument should be set to one of the following values:
+.TP
+.B SELABEL_DB_DATABASE
+The
+.I object_name
+argument specifies the name of a database itself, such as "postgres".
+.TP
+.B SELABEL_DB_SCHEMA
+The
+.I object_name
+argument specifies the name of a schema object, such as "postgres.public".
+.TP
+.B SELABEL_DB_TABLE
+The
+.I object_name
+argument specifies the name of a table object, such as "postgres.public.my_table"
+.TP
+.B SELABEL_DB_COLUMN
+The
+.I object_name
+argument specifies the name of a column object, such as "postgres.public.my_table.user_id"
+.TP
+.B SELABEL_DB_TUPLE
+The
+.I object_name
+argument specifies the name of a table object which contains the tuples to be relabeled, such as "postgresql.public.my_table". Note that we have no way to identify individual tuple objects, except for WHERE clause on DML statements, because it has no name.
+.TP
+.B SELABEL_DB_PROCEDURE
+The
+.I object_name
+argument specifies the name of a procedure object, such as "postgres.public.my_func". Note that we don't support to lookup individual security contexts for each procedures which have same name but different arguments.
+.TP
+.B SELABEL_DB_SEQUENCE
+The
+.I object_name
+argument specifies the name of a sequence object, such as "postgres.public.my_seq".
+.TP
+.B SELABEL_DB_BLOB
+The
+.I object_name
+argument specifies the name of a large object, such as "postgres.16308".
+Note that a large object does not have its name, so it is identified by its identifier value.
+
+.SH "OPTIONS"
+In addition to the global options described in 
+.BR selabel_open (3),
+this backend recognizes the following options:
+
+.TP
+.B SELABEL_OPT_PATH
+A non-null value for this option specifies a path to a file that will be opened in lieu of the standard DB contexts file.
+It tries to open the specfile designed for SE-PostgreSQL in the default, so if another RDBMS uses this interface, it needs to give an explicit specfile designed for the RDBMS.
+
+.SH "SEE ALSO"
+.BR selabel_open (3),
+.BR selabel_lookup (3),
+.BR selabel_stats (3),
+.BR selinux (8)
+

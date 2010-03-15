@@ -29,6 +29,8 @@ struct selabel_handle;
 #define SELABEL_CTX_MEDIA	1
 /* x contexts */
 #define SELABEL_CTX_X		2
+/* db objects */
+#define SELABEL_CTX_DB		3
 
 /*
  * Available options
@@ -116,6 +118,16 @@ void selabel_stats(struct selabel_handle *handle);
 #define SELABEL_X_POLYPROP	6
 #define SELABEL_X_POLYSELN	7
 
+/* DB backend */
+#define SELABEL_DB_DATABASE	1
+#define SELABEL_DB_SCHEMA	2
+#define SELABEL_DB_TABLE	3
+#define SELABEL_DB_COLUMN	4
+#define SELABEL_DB_SEQUENCE	5
+#define SELABEL_DB_VIEW		6
+#define SELABEL_DB_PROCEDURE	7
+#define SELABEL_DB_BLOB		8
+#define SELABEL_DB_TUPLE	9
 
 #ifdef __cplusplus
 }
