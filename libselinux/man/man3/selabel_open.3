@@ -72,15 +72,19 @@ Note that an invalid context may not be treated as an error unless it is actuall
 .TP
 .B SELABEL_CTX_FILE
 File contexts backend, described in 
-.BR selabel_file (3).
+.BR selabel_file (5).
 .TP
 .B SELABEL_CTX_MEDIA
 Media contexts backend, described in 
-.BR selabel_media (3).
+.BR selabel_media (5).
 .TP
 .B SELABEL_CTX_X
 X Windows contexts backend, described in 
-.BR selabel_x (3).
+.BR selabel_x (5).
+.TP
+.B SELABEL_CTX_DB
+Database objects contexts backend, described in
+.BR selabel_db (5).
 
 .SH "RETURN VALUE"
 A non-NULL handle value is returned on success.  On error, NULL is returned and

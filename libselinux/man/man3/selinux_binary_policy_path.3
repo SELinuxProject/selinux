@@ -29,6 +29,8 @@ extern const char *selinux_usersconf_path(void);
 
 extern const char *selinux_x_context_path(void);
 
+extern const char *selinux_sepgsql_context_path(void);
+
 extern const char *selinux_file_context_path(void);
 
 extern const char *selinux_media_context_path(void);
@@ -65,6 +67,8 @@ selinux_user_contexts_path() - directory containing per-user default contexts
 selinux_usersconf_path() - file containing mapping between Linux Users and SELinux users
 .sp
 selinux_x_context_path() - file containing configuration for XSELinux extension
+.sp
+selinux_sepgsql_context_path() - file containing configuration for SE-PostgreSQL
 .sp
 selinux_netfilter_context_path - default netfilter context 
 .sp

@@ -1,3 +1,8 @@
+2.0.93 2010-03-15
+	* Show strerror for security_getenforce() by Colin Waters.
+	* Merged selabel database support by KaiGai Kohei.
+	* Modify netlink socket blocking code by KaiGai Kohei.
+
 2.0.92 2010-03-06
 	* Fix from Eric Paris to fix leak on non-selinux systems.
 	* regenerate swig wrappers
