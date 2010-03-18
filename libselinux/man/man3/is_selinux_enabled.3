@@ -1,4 +1,4 @@
-.TH "is_selinux_enabled" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.TH "is_selinux_enabled" "3" "7 Mar 2010" "russell@coker.com.au" "SELinux API documentation"
 .SH "NAME"
 is_selinux_enabled \- check whether SELinux is enabled
 
@@ -14,6 +14,7 @@ is_selinux_mls_enabled \- check whether SELinux is enabled for (Multi Level Secu
 .SH "DESCRIPTION"
 .B is_selinux_enabled
 returns 1 if SELinux is running or 0 if it is not. 
+On error, \-1 is returned.
 
 .B is_selinux_mls_enabled
 returns 1 if SELinux is running in MLS mode or 0 if it is not. 
