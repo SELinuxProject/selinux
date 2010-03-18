@@ -1,5 +1,5 @@
 2.0.93 2010-03-15
-	* Show strerror for security_getenforce() by Colin Waters.
+	* Show strerror for security_getenforce() by Colin Walters.
 	* Merged selabel database support by KaiGai Kohei.
 	* Modify netlink socket blocking code by KaiGai Kohei.
 
