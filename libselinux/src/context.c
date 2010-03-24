@@ -22,6 +22,7 @@ typedef struct {
 context_t context_new(const char *str)
 {
 	int i, count;
+	errno = 0;
 	context_private_t *n =
 	    (context_private_t *) malloc(sizeof(context_private_t));
 	context_t result = (context_t) malloc(sizeof(context_s_t));
@@ -76,6 +77,7 @@ context_t context_new(const char *str)
 	}
 	return result;
       err:
+	if (errno == 0) errno = EINVAL;
 	context_free(result);
 	return 0;
 }
