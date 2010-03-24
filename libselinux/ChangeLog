@@ -1,3 +1,6 @@
+2.0.94 2010-03-24
+	* Set errno=EINVAL for invalid contexts from Dan Walsh.
+
 2.0.93 2010-03-15
 	* Show strerror for security_getenforce() by Colin Walters.
 	* Merged selabel database support by KaiGai Kohei.
