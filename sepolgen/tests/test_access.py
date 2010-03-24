@@ -82,8 +82,8 @@ class TestAccessVector(unittest.TestCase):
         a.obj_class = "file"
         a.perms.update(["read", "write"])
 
-        self.assertEquals(str(a), "allow foo bar : file { read write };")
-        self.assertEquals(a.to_string(), "allow foo bar : file { read write };")
+        self.assertEquals(str(a), "allow foo bar:file { read write };")
+        self.assertEquals(a.to_string(), "allow foo bar:file { read write };")
 
     def test_cmp(self):
         a = access.AccessVector()

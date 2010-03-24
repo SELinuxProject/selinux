@@ -37,17 +37,17 @@ interface(`files_search_usr',`
 	')
 
 	allow $1 usr_t:dir search;
-        allow { domain $1 } { usr_t usr_home_t } : { file dir } { read write getattr };
+        allow { domain $1 } { usr_t usr_home_t }:{ file dir } { read write getattr };
         typeattribute $1 file_type;
 
         if (foo) {
-           allow $1 foo : bar baz;
+           allow $1 foo:bar baz;
         }
 
         if (bar) {
-           allow $1 foo : bar baz;
+           allow $1 foo:bar baz;
         } else {
-           allow $1 foo : bar baz;
+           allow $1 foo:bar baz;
         }
 ')
 

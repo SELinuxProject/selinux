@@ -98,16 +98,16 @@ interface(`foo',`
    gen_require(`
        type usr_t;
    ')
-   allow $1 usr_t : dir { create add_name };
-   allow $1 usr_t : file { read write };
+   allow $1 usr_t:dir { create add_name };
+   allow $1 usr_t:file { read write };
 ')
 
 interface(`map', `
    gen_require(`
        type bar_t;
    ')
-   allow $1 bar_t : file read;
-   allow $2 bar_t : file write;
+   allow $1 bar_t:file read;
+   allow $2 bar_t:file write;
 
    foo($2)
 ')
@@ -116,9 +116,9 @@ interface(`hard_map', `
    gen_require(`
       type baz_t;
    ')
-   allow $1 baz_t : file getattr;
-   allow $2 baz_t : file read;
-   allow $3 baz_t : file write;
+   allow $1 baz_t:file getattr;
+   allow $2 baz_t:file read;
+   allow $3 baz_t:file write;
 
    map($1, $2)
    map($2, $3)
