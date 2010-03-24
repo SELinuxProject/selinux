@@ -1,3 +1,9 @@
+1.0.23 2010-03-24
+	* Fix unit tests from Dan Walsh.
+
+1.0.22 2010-03-23
+	* improve parser error recovery from Karl MacMillan.
+
 1.0.21 2010-03-18
 	* Add since-last-boot option to audit2allow from Dan Walsh.
 	* Fix sepolgen output to match what Chris expects for upstream
