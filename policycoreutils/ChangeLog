@@ -1,3 +1,6 @@
+2.0.82 2010-03-12
+	* Add avc's since boot from Dan Walsh.
+
 2.0.81 2010-03-12
 	* Add dontaudit flag to audit2allow from Dan Walsh.
 
