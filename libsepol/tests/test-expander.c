@@ -196,14 +196,12 @@ int expander_add_tests(CU_pSuite suite)
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
-#if 0
-	/* this is a very useful test and in fact has caught some bugs but cannot be used
-	 * currently because of the way the expander removes attributes, please FIXME :) */
+
 	if (NULL == CU_add_test(suite, "expander_attr_mapping", test_expander_attr_mapping)) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
-#endif
+
 	if (NULL == CU_add_test(suite, "expander_role_mapping", test_expander_role_mapping)) {
 		CU_cleanup_registry();
 		return CU_get_error();
