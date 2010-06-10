@@ -21,6 +21,14 @@ def restorecon(path, recursive=False):
                              map(restorecon, [os.path.join(dirname, fname)
                                               for fname in fnames]), None)
 
+def chcon(path, context, recursive=False):
+    """ Set the SELinux context on a given path """
+    lsetfilecon(path, context)
+    if recursive:
+        for root, dirs, files in os.walk(path):
+            for name in files + dirs:
+               lsetfilecon(os.path.join(root,name), context)
+
 def copytree(src, dest):
     """ An SELinux-friendly shutil.copytree method """
     shutil.copytree(src, dest)
