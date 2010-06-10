@@ -24,7 +24,6 @@ import selinux
 import signal
 from tempfile import mkdtemp
 import pwd
-import commands 
 
 PROGNAME = "policycoreutils"
 HOMEDIR=pwd.getpwuid(os.getuid()).pw_dir
@@ -64,14 +63,6 @@ def error_exit(msg):
     sys.stderr.flush()
     sys.exit(1)
 
-def chcon(path, context, recursive=False):
-    """ Restore SELinux context on a given path """
-    mode = os.lstat(path)[stat.ST_MODE]
-    lsetfilecon(path, context)
-    if recursive:
-           os.path.walk(path, lambda arg, dirname, fnames:
-                               map(chcon, [os.path.join(dirname, fname)
-                                                for fname in fnames]), context)
 def copyfile(file, dir, dest):
        import re
        if file.startswith(dir):
@@ -173,10 +164,6 @@ class Sandbox:
            if not os.path.exists("/usr/sbin/seunshare"):
                   raise ValueError(_("""
 /usr/sbin/seunshare is required for the action you want to perform.  
-Install seunshare by executing:
-
-# yum install /usr/sbin/seunshare
-
 """))
 
     def __mount_callback(self, option, opt, value, parser):
@@ -206,7 +193,7 @@ Install seunshare by executing:
                   try:
                          self.__include(option, opt, i[:-1], parser)
                   except IOError, e:
-                         sys.stderr.write(e)
+                         sys.stderr.write(str(e))
            fd.close()
 
     def __copyfiles(self):
@@ -347,14 +334,14 @@ sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-
                   os.mkdir(sandboxdir)
 
            if self.__options.homedir:
-                  chcon(self.__options.homedir, self.__filecon, True)
+                  selinux.chcon(self.__options.homedir, self.__filecon, recursive=True)
                   self.__homedir = self.__options.homedir
            else:
                   selinux.setfscreatecon(self.__filecon)
                   self.__homedir = mkdtemp(dir=sandboxdir, prefix=".sandbox")
 
            if self.__options.tmpdir:
-                  chcon(self.__options.homedir, self.__filecon, True)
+                  selinux.chcon(self.__options.tmpdir, self.__filecon, recursive=True)
                   self.__tmpdir = self.__options.tmpdir
            else:
                   selinux.setfscreatecon(self.__filecon)

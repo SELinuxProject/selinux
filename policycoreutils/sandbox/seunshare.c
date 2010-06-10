@@ -31,6 +31,14 @@
 #define _(msgid) (msgid)
 #endif
 
+#ifndef MS_REC
+#define MS_REC 1<<14
+#endif
+
+#ifndef MS_PRIVATE
+#define MS_PRIVATE 1<<18
+#endif
+
 /**
  * This function will drop all capabilities 
  * Returns zero on success, non-zero otherwise
@@ -126,17 +134,17 @@ static int verify_shell(const char *shell_name)
 static int seunshare_mount(const char *src, const char *dst, struct passwd *pwd) {
 	if (verbose)
 		printf("Mount %s on %s\n", src, dst);
-	if (mount(dst, dst,  NULL, MS_BIND, NULL) < 0) {
+	if (mount(dst, dst,  NULL, MS_BIND | MS_REC, NULL) < 0) {
 		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), dst, dst, strerror(errno));
 		return -1;
 	}
 
-	if (mount(dst, dst, NULL, MS_PRIVATE, NULL) < 0) {
+	if (mount(dst, dst, NULL, MS_PRIVATE | MS_REC, NULL) < 0) {
 		fprintf(stderr, _("Failed to make %s private: %s\n"), dst, strerror(errno));
 		return -1;
 	}
 
-	if (mount(src, dst, NULL, MS_BIND, NULL) < 0) {
+	if (mount(src, dst, NULL, MS_BIND | MS_REC, NULL) < 0) {
 		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), src, dst, strerror(errno));
 		return -1;
 	}
@@ -191,11 +199,17 @@ int main(int argc, char **argv) {
 
 		switch (clflag) {
 		case 't':
-			tmpdir_s = optarg;
+			if (!(tmpdir_s = realpath(optarg, NULL))) {
+				fprintf(stderr, _("Invalid mount point %s: %s\n"), optarg, strerror(errno));
+				return -1;
+			}
 			if (verify_mount(tmpdir_s, pwd) < 0) return -1;
 			break;
 		case 'h':
-			homedir_s = optarg;
+			if (!(homedir_s = realpath(optarg, NULL))) {
+				fprintf(stderr, _("Invalid mount point %s: %s\n"), optarg, strerror(errno));
+				return -1;
+			}
 			if (verify_mount(homedir_s, pwd) < 0) return -1;
 			if (verify_mount(pwd->pw_dir, pwd) < 0) return -1;
 			break;
@@ -299,6 +313,9 @@ int main(int argc, char **argv) {
 	} else {
 		waitpid(child, &status, 0);
 	}
+
+	free(tmpdir_s);
+	free(homedir_s);
 
 	return status;
 }

@@ -34,37 +34,57 @@ LOCKFILE=/var/lock/subsys/sandbox
 
 base=${0##*/}
 
-case "$1" in
-    restart)
-    start)
-	[ -f "$LOCKFILE" ] && exit 0
+start() {
+	echo -n "Starting sandbox"
+
+	[ -f "$LOCKFILE" ] && return 1
 
 	touch $LOCKFILE
-	mount --make-rshared /
-	mount --rbind /tmp /tmp
-	mount --rbind /var/tmp /var/tmp
-	mount --make-private /tmp
-	mount --make-private /var/tmp
+	mount --make-rshared / || return $? 
+	mount --rbind /tmp /tmp || return $?
+	mount --rbind /var/tmp /var/tmp || return $?
+	mount --make-private /tmp || return $?
+	mount --make-private /var/tmp || return $?
 	for h in $HOMEDIRS; do
-	    mount --rbind $h $h 
-	    mount --make-private $h
+	    mount --rbind $h $h || return $?
+	    mount --make-private $h || return $?
 	done
 
-	exit $?
-	;;
+	return 0
+}
 
-    status)
+stop() {
+	echo -n "Stopping sandbox"
+
+	[ -f "$LOCKFILE" ] || return 1
+}
+
+status() {
 	if [ -f "$LOCKFILE" ]; then 
 	    echo "$base is running"
 	else
 	    echo "$base is stopped"
 	fi
 	exit 0
+}
+
+case "$1" in
+    restart)
+	start && success || failure
+	;;
+
+    start)
+	start && success || failure
+	echo
 	;;
 
     stop)
-	rm -f $LOCKFILE
-	exit 0
+	stop && success || failure
+	echo
+	;;
+
+    status)
+	status
 	;;
 
     *)
