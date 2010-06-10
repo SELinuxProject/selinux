@@ -1,3 +1,7 @@
+2.0.95 2010-06-10
+	* Remove duplicate slashes in paths in selabel_lookup from Chad Sellers
+	* Adds a chcon method to the libselinux python bindings from Steve Lawrence
+
 2.0.94 2010-03-24
 	* Set errno=EINVAL for invalid contexts from Dan Walsh.
 
