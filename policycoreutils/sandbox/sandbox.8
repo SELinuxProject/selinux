@@ -1,0 +1,57 @@
+.TH SANDBOX "8" "May 2009" "chcat" "User Commands"
+.SH NAME
+sandbox \- Run cmd under an SELinux sandbox
+.SH SYNOPSIS
+.B sandbox
+[-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [[-i file ]...] [ -t type ] cmd
+[-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [[-i file ]...] [ -t type ] -S
+.br
+.SH DESCRIPTION
+.PP
+Run the 
+.I cmd 
+application within a tightly confined SELinux domain.  The default sandbox domain only allows applications the ability to read and write stdin, stdout and any other file descriptors handed to it. It is not allowed to open any other files.  The -M option will mount an alternate homedir and tmpdir to be used by the sandbox.
+
+If you have the 
+.I policycoreutils-sandbox 
+package installed, you can use the -X option and the -M option.
+.B sandbox -X
+allows you to run X applications within a sandbox.  These applications will start up their own X Server and create a temporary home directory and /tmp.  The default SELinux policy does not allow any capabilities or network access.  It also prevents all access to the users other processes and files.  Files specified on the command that are in the home directory or /tmp will be copied into the sandbox directories.
+
+If directories are specified with -H or -T the directory will have its context modified with chcon(1) unless a level is specified with -l.  If the MLS/MCS security level is specified, the user is responsible to set the correct labels.
+.PP
+.TP
+\fB\-H\ homedir
+Use alternate homedir to mount over your home directory.  Defaults to temporary. Requires -X or -M.
+.TP
+\fB\-i file\fR
+Copy this file into the appropriate temporary sandbox directory. Command can be repeated.
+.TP
+\fB\-I inputfile\fR Copy all files listed in inputfile into the
+appropriate temporary sandbox directories.
+.TP
+\fB\-l\fR
+Specify the MLS/MCS Security Level to run the sandbox with.  Defaults to random.
+.TP
+\fB\-M\fR
+Create a Sandbox with temporary files for $HOME and /tmp.
+.TP
+\fB\-t type\fR
+Use alternate sandbox type, defaults to sandbox_t or sandbox_x_t for -X.
+.TP
+\fB\-T\ tmpdir
+Use alternate tempory directory to mount on /tmp.  Defaults to tmpfs. Requires -X or -M.
+.TP
+\fB\-W windowmanager\fR
+Select alternative window manager to run within 
+.B sandbox -X.
+Default to /usr/bin/matchbox-window-manager.
+.TP
+\fB\-X\fR 
+Create an X based Sandbox for gui apps, temporary files for
+$HOME and /tmp, secondary Xserver, defaults to sandbox_x_t
+.PP
+.SH "SEE ALSO"
+.TP
+runcon(1)
+.PP

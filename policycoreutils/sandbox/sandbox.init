@@ -1,0 +1,74 @@
+#!/bin/bash
+## BEGIN INIT INFO
+# Provides: sandbox
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 2 3 4 6
+# Required-Start:
+#              
+## END INIT INFO
+# sandbox:        Set up / mountpoint to be shared, /var/tmp, /tmp, /home/sandbox unshared
+#
+# chkconfig: 345 1 99
+#
+# Description: sandbox and other apps that want to use pam_namespace 
+#              on /var/tmp, /tmp and home directories, requires this script
+#              to be run at boot time.
+#              This script sets up the / mount point and all of its 
+#              subdirectories as shared. The script sets up
+#              /tmp, /var/tmp, /home and any homedirs listed in 
+#              /etc/sysconfig/sandbox and all of their subdirectories 
+#              as unshared.
+#              All processes that use pam_namespace will see 
+#              modifications to the global mountspace, except for the
+#              unshared directories.
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+HOMEDIRS="/home"
+
+. /etc/sysconfig/sandbox
+
+LOCKFILE=/var/lock/subsys/sandbox
+
+base=${0##*/}
+
+case "$1" in
+    restart)
+    start)
+	[ -f "$LOCKFILE" ] && exit 0
+
+	touch $LOCKFILE
+	mount --make-rshared /
+	mount --rbind /tmp /tmp
+	mount --rbind /var/tmp /var/tmp
+	mount --make-private /tmp
+	mount --make-private /var/tmp
+	for h in $HOMEDIRS; do
+	    mount --rbind $h $h 
+	    mount --make-private $h
+	done
+
+	exit $?
+	;;
+
+    status)
+	if [ -f "$LOCKFILE" ]; then 
+	    echo "$base is running"
+	else
+	    echo "$base is stopped"
+	fi
+	exit 0
+	;;
+
+    stop)
+	rm -f $LOCKFILE
+	exit 0
+	;;
+
+    *)
+	echo $"Usage: $0 {start|stop|status|restart}"
+	exit 3
+	;;
+esac

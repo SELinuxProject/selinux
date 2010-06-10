@@ -1,0 +1,430 @@
+#! /usr/bin/python -E
+# Authors: Dan Walsh <dwalsh@redhat.com>
+# Authors: Josh Cogliati
+#
+# Copyright (C) 2009,2010  Red Hat
+# see file 'COPYING' for use and warranty information
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; version 2 only
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+#
+
+import os, sys, socket, random, fcntl, shutil, re, subprocess
+import selinux
+import signal
+from tempfile import mkdtemp
+import pwd
+import commands 
+
+PROGNAME = "policycoreutils"
+HOMEDIR=pwd.getpwuid(os.getuid()).pw_dir
+
+import gettext
+gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
+gettext.textdomain(PROGNAME)
+
+try:
+       gettext.install(PROGNAME,
+                       localedir = "/usr/share/locale",
+                       unicode=False,
+                       codeset = 'utf-8')
+except IOError:
+       import __builtin__
+       __builtin__.__dict__['_'] = unicode
+
+DEFAULT_TYPE = "sandbox_t"
+DEFAULT_X_TYPE = "sandbox_x_t"
+SAVE_FILES = {}
+
+random.seed(None)
+
+def sighandler(signum, frame):
+    signal.signal(signum,  signal.SIG_IGN)
+    os.kill(0, signum)
+    raise KeyboardInterrupt
+
+def setup_sighandlers():
+    signal.signal(signal.SIGHUP,  sighandler)
+    signal.signal(signal.SIGQUIT, sighandler)
+    signal.signal(signal.SIGTERM, sighandler)
+
+def error_exit(msg):
+    sys.stderr.write("%s: " % sys.argv[0])
+    sys.stderr.write("%s\n" % msg)
+    sys.stderr.flush()
+    sys.exit(1)
+
+def chcon(path, context, recursive=False):
+    """ Restore SELinux context on a given path """
+    mode = os.lstat(path)[stat.ST_MODE]
+    lsetfilecon(path, context)
+    if recursive:
+           os.path.walk(path, lambda arg, dirname, fnames:
+                               map(chcon, [os.path.join(dirname, fname)
+                                                for fname in fnames]), context)
+def copyfile(file, dir, dest):
+       import re
+       if file.startswith(dir):
+              dname = os.path.dirname(file)
+              bname = os.path.basename(file)
+              if dname == dir:
+                     dest = dest + "/" + bname
+              else:
+                     newdir = re.sub(dir, dest, dname)
+                     if not os.path.exists(newdir):
+                            os.makedirs(newdir)
+                     dest = newdir + "/" + bname
+
+              try:
+                     if os.path.isdir(file):
+                            shutil.copytree(file, dest)
+                     else:
+                            shutil.copy2(file, dest)
+              except shutil.Error, elist:
+                     for e in elist:
+                            sys.stderr.write(e[1])
+                     
+              SAVE_FILES[file] = (dest, os.path.getmtime(dest))
+
+def savefile(new, orig, X_ind):
+       copy = False
+       if(X_ind):
+              import gtk
+              dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO,
+                                      gtk.BUTTONS_YES_NO,
+                                      _("Do you want to save changes to '%s' (Y/N): ") % orig)
+              dlg.set_title(_("Sandbox Message"))
+              dlg.set_position(gtk.WIN_POS_MOUSE)
+              dlg.show_all()
+              rc = dlg.run()
+              dlg.destroy()
+              if rc == gtk.RESPONSE_YES:
+                     copy = True
+       else:
+              ans = raw_input(_("Do you want to save changes to '%s' (y/N): ") % orig)
+              if(re.match(_("[yY]"),ans)):
+                     copy = True
+       if(copy):
+              shutil.copy2(new,orig)
+
+def reserve(level):
+    sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    sock.bind("\0%s" % level)
+    fcntl.fcntl(sock.fileno(), fcntl.F_SETFD, fcntl.FD_CLOEXEC)
+
+def gen_mcs():
+       while True:
+              i1 = random.randrange(0, 1024)
+              i2 = random.randrange(0, 1024)
+              if i1 == i2:
+                     continue
+              if i1 > i2:
+                     tmp = i1
+                     i1 = i2
+                     i2 = tmp
+              level = "s0:c%d,c%d" % (i1, i2)
+              try:
+                     reserve(level)
+              except socket.error:
+                     continue
+              break
+       return level
+
+def fullpath(cmd):
+       for i in [ "/", "./", "../" ]:
+              if cmd.startswith(i):
+                     return cmd
+       for i in  os.environ["PATH"].split(':'):
+              f = "%s/%s" % (i, cmd)
+              if os.access(f, os.X_OK):
+                     return f
+       return cmd
+
+class Sandbox:
+    VERSION = "sandbox .1"
+    SYSLOG = "/var/log/messages"
+
+    def __init__(self):
+        self.setype = DEFAULT_TYPE
+        self.__options = None
+        self.__cmds = None
+        self.__init_files = []
+        self.__paths = []
+        self.__mount = False
+        self.__level = None
+        self.__homedir = None
+        self.__tmpdir = None
+
+    def __validate_mount(self):
+           if self.__options.level:
+                  if not self.__options.homedir or not self.__options.tmpdir:
+                         self.usage(_("Homedir and tempdir required for level mounts"))
+
+           if not os.path.exists("/usr/sbin/seunshare"):
+                  raise ValueError(_("""
+/usr/sbin/seunshare is required for the action you want to perform.  
+Install seunshare by executing:
+
+# yum install /usr/sbin/seunshare
+
+"""))
+
+    def __mount_callback(self, option, opt, value, parser):
+           self.__mount = True
+
+    def __x_callback(self, option, opt, value, parser):
+           self.__mount = True
+           setattr(parser.values, option.dest, True)
+
+    def __validdir(self, option, opt, value, parser):
+           if not os.path.isdir(value):
+                  raise IOError("Directory "+value+" not found")
+           setattr(parser.values, option.dest, value)
+           self.__mount = True
+
+    def __include(self, option, opt, value, parser):
+           rp = os.path.realpath(os.path.expanduser(value))
+           if not os.path.exists(rp):
+                  raise IOError(value+" not found")
+
+           if rp not in self.__init_files:
+                  self.__init_files.append(rp)
+
+    def __includefile(self, option, opt, value, parser):
+           fd = open(value, "r")
+           for i in fd.readlines():
+                  try:
+                         self.__include(option, opt, i[:-1], parser)
+                  except IOError, e:
+                         sys.stderr.write(e)
+           fd.close()
+
+    def __copyfiles(self):
+           files = self.__init_files + self.__paths
+           homedir=pwd.getpwuid(os.getuid()).pw_dir
+           for f in files:
+                  copyfile(f, homedir, self.__homedir)
+                  copyfile(f, "/tmp", self.__tmpdir)
+
+    def __setup_sandboxrc(self, wm = "/usr/bin/matchbox-window-manager -use_titlebar no"):
+           execfile =self.__homedir + "/.sandboxrc"
+           fd = open(execfile, "w+") 
+           if self.__options.session:
+                  fd.write("""#!/bin/sh
+#TITLE: /etc/gdm/Xsession
+/etc/gdm/Xsession
+""")
+           else:
+                  command = " ".join(self.__paths)
+                  fd.write("""#! /bin/sh
+#TITLE: %s
+/usr/bin/test -r ~/.xmodmap && /usr/bin/xmodmap ~/.xmodmap
+%s &
+WM_PID=$!
+%s
+kill -TERM $WM_PID  2> /dev/null
+""" % (command, wm, command))
+           fd.close()
+           os.chmod(execfile, 0700)
+
+    def usage(self, message = ""):
+           error_exit("%s\n%s" % (self.__parser.usage, message))
+
+    def __parse_options(self):
+        from optparse import OptionParser
+        usage = _("""
+sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [[-i file ] ...] [ -t type ] command
+
+sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [[-i file ] ...] [ -t type ] -S
+""")
+        
+        parser = OptionParser(version=self.VERSION, usage=usage)
+        parser.disable_interspersed_args()
+        parser.add_option("-i", "--include", 
+                          action="callback", callback=self.__include, 
+                          type="string",
+                          help=_("include file in sandbox"))
+        parser.add_option("-I", "--includefile",  action="callback", callback=self.__includefile,
+                          type="string",
+                          help=_("read list of files to include in sandbox from INCLUDEFILE"))
+        parser.add_option("-t", "--type", dest="setype", action="store", default=None,
+                          help=_("run sandbox with SELinux type"))
+        parser.add_option("-M", "--mount", 
+                          action="callback", callback=self.__mount_callback, 
+                          help=_("mount new home and/or tmp directory"))
+
+        parser.add_option("-S", "--session", action="store_true",  dest="session", 
+                          default=False,  help=_("run complete desktop session within sandbox"))
+
+        parser.add_option("-X", dest="X_ind", 
+                          action="callback", callback=self.__x_callback, 
+                          default=False,  help=_("run X application within a sandbox"))
+
+        parser.add_option("-H", "--homedir", 
+                          action="callback", callback=self.__validdir,
+                          type="string",
+                          dest="homedir",  
+                          help=_("alternate home directory to use for mounting"))
+
+        parser.add_option("-T", "--tmpdir", dest="tmpdir",  
+                          type="string",
+                          action="callback", callback=self.__validdir,
+                          help=_("alternate /tmp directory to use for mounting"))
+
+        parser.add_option("-W", "--windowmanager", dest="wm",  
+                          type="string",
+                          default="/usr/bin/matchbox-window-manager -use_titlebar no",
+                          help=_("alternate window manager"))
+
+        parser.add_option("-l", "--level", dest="level", 
+                          help=_("MCS/MLS level for the sandbox"))
+
+        self.__parser=parser
+
+        self.__options, cmds = parser.parse_args()
+
+        if self.__options.X_ind:
+               self.setype = DEFAULT_X_TYPE
+        
+        if self.__options.setype:
+               self.setype = self.__options.setype
+
+        if self.__mount:
+               self.__validate_mount()
+
+        if self.__options.session:
+               if not self.__options.setype:
+                      self.setype = selinux.getcon()[1].split(":")[2]
+               if not self.__options.homedir or not self.__options.tmpdir:
+                      self.usage(_("You must specify a Homedir and tempdir when setting up a session sandbox"))
+               if len(cmds) > 0:
+                      self.usage(_("Commands are not allowed in a session sandbox"))
+               self.__options.X_ind = True
+               self.__homedir = self.__options.homedir
+               self.__tmpdir = self.__options.tmpdir
+        else:
+               if len(cmds) == 0:
+                      self.usage(_("Command required"))
+               cmds[0] = fullpath(cmds[0])
+               if not os.access(cmds[0], os.X_OK):
+                      self.usage(_("%s is not an executable") % cmds[0]  )
+                      
+               self.__cmds = cmds
+
+        for f in cmds:
+               rp = os.path.realpath(f)
+               if os.path.exists(rp):
+                      self.__paths.append(rp)
+               else:
+                      self.__paths.append(f)
+                  
+    def __gen_context(self):
+           if self.__options.level:
+                  level = self.__options.level
+           else:
+                  level = gen_mcs()
+
+           con = selinux.getcon()[1].split(":")
+           self.__execcon = "%s:%s:%s:%s" % (con[0], con[1], self.setype, level)
+           self.__filecon = "%s:%s:%s:%s" % (con[0], "object_r", 
+                                             "%s_file_t" % self.setype[:-2], 
+                                             level)
+    def __setup_dir(self):
+           if self.__options.level or self.__options.session:
+                  return
+           sandboxdir = HOMEDIR + "/.sandbox"
+           if not os.path.exists(sandboxdir):
+                  os.mkdir(sandboxdir)
+
+           if self.__options.homedir:
+                  chcon(self.__options.homedir, self.__filecon, True)
+                  self.__homedir = self.__options.homedir
+           else:
+                  selinux.setfscreatecon(self.__filecon)
+                  self.__homedir = mkdtemp(dir=sandboxdir, prefix=".sandbox")
+
+           if self.__options.tmpdir:
+                  chcon(self.__options.homedir, self.__filecon, True)
+                  self.__tmpdir = self.__options.tmpdir
+           else:
+                  selinux.setfscreatecon(self.__filecon)
+                  self.__tmpdir = mkdtemp(dir="/tmp", prefix=".sandbox")
+           selinux.setfscreatecon(None)
+           self.__copyfiles()
+
+    def __execute(self):
+           try:
+                  if self.__options.X_ind:
+                         xmodmapfile = self.__homedir + "/.xmodmap"
+                         xd = open(xmodmapfile,"w")
+                         subprocess.Popen(["/usr/bin/xmodmap","-pke"],stdout=xd).wait()
+                         xd.close()
+
+                         self.__setup_sandboxrc(self.__options.wm)
+                         
+                         cmds = [ '/usr/sbin/seunshare', "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon, "/usr/share/sandbox/sandboxX.sh" ]
+                         rc = subprocess.Popen(cmds).wait()
+                         return rc
+
+                  if self.__mount:
+                         cmds =  [ '/usr/sbin/seunshare', "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon ] + self.__paths
+                         rc = subprocess.Popen(cmds).wait()
+                         return rc
+
+                  selinux.setexeccon(self.__execcon)
+                  rc = subprocess.Popen(self.__cmds).wait()
+                  selinux.setexeccon(None)
+                  return rc
+
+           finally:
+                  for i in self.__paths:
+                         if i not in SAVE_FILES:
+                                continue
+                         (dest, mtime) = SAVE_FILES[i]
+                         if os.path.getmtime(dest) > mtime:
+                                savefile(dest, i, self.__options.X_ind)
+
+                  if self.__homedir and not self.__options.homedir: 
+                         shutil.rmtree(self.__homedir)
+                  if self.__tmpdir and not self.__options.tmpdir:
+                         shutil.rmtree(self.__tmpdir)
+    def main(self):
+        try:
+               self.__parse_options()
+               self.__gen_context()
+               self.__setup_dir()
+               return self.__execute()
+        except KeyboardInterrupt:
+            sys.exit(0)
+
+
+if __name__ == '__main__':
+    setup_sighandlers()
+    if selinux.is_selinux_enabled() != 1:
+        error_exit("Requires an SELinux enabled system")
+    
+    try:
+           sandbox = Sandbox()
+           rc = sandbox.main()
+    except OSError, error:
+           error_exit(error.args[1])
+    except ValueError, error:
+           error_exit(error.args[0])
+    except KeyError, error:
+           error_exit(_("Invalid value %s") % error.args[0])
+    except IOError, error:
+           error_exit(error)
+    except KeyboardInterrupt:
+           rc = 0
+           
+    sys.exit(rc)
