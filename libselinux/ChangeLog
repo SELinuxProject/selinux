@@ -1,3 +1,6 @@
+2.0.96 2010-06-14
+	* Add const qualifiers to public API where appropriate by KaiGai Kohei.
+
 2.0.95 2010-06-10
 	* Remove duplicate slashes in paths in selabel_lookup from Chad Sellers
 	* Adds a chcon method to the libselinux python bindings from Steve Lawrence
