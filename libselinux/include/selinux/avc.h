@@ -51,8 +51,8 @@ int avc_sid_to_context_raw(security_id_t sid, security_context_t * ctx);
  * to the SID structure into the memory referenced by @sid, 
  * returning %0 on success or -%1 on error with @errno set.  
  */
-int avc_context_to_sid(security_context_t ctx, security_id_t * sid);
-int avc_context_to_sid_raw(security_context_t ctx, security_id_t * sid);
+int avc_context_to_sid(const security_context_t ctx, security_id_t * sid);
+int avc_context_to_sid_raw(const security_context_t ctx, security_id_t * sid);
 
 /**
  * sidget - increment SID reference counter.

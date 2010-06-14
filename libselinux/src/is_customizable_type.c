@@ -61,7 +61,7 @@ static int get_customizable_type_list(security_context_t ** retlist)
 
 static security_context_t *customizable_list = NULL;
 
-int is_context_customizable(security_context_t scontext)
+int is_context_customizable(const security_context_t scontext)
 {
 	int i;
 	const char *type;

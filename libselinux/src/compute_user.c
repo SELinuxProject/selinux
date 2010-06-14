@@ -9,7 +9,7 @@
 #include "policy.h"
 #include <limits.h>
 
-int security_compute_user_raw(security_context_t scon,
+int security_compute_user_raw(const security_context_t scon,
 			      const char *user, security_context_t ** con)
 {
 	char path[PATH_MAX];
@@ -79,11 +79,11 @@ int security_compute_user_raw(security_context_t scon,
 
 hidden_def(security_compute_user_raw)
 
-int security_compute_user(security_context_t scon,
+int security_compute_user(const security_context_t scon,
 			  const char *user, security_context_t ** con)
 {
 	int ret;
-	security_context_t rscon = scon;
+	security_context_t rscon;
 
 	if (selinux_trans_to_raw_context(scon, &rscon))
 		return -1;

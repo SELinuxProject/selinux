@@ -10,8 +10,8 @@
 #include "policy.h"
 #include "mapping.h"
 
-int security_compute_av_flags_raw(security_context_t scon,
-				  security_context_t tcon,
+int security_compute_av_flags_raw(const security_context_t scon,
+				  const security_context_t tcon,
 				  security_class_t tclass,
 				  access_vector_t requested,
 				  struct av_decision *avd)
@@ -72,8 +72,8 @@ int security_compute_av_flags_raw(security_context_t scon,
 
 hidden_def(security_compute_av_flags_raw)
 
-int security_compute_av_raw(security_context_t scon,
-			    security_context_t tcon,
+int security_compute_av_raw(const security_context_t scon,
+			    const security_context_t tcon,
 			    security_class_t tclass,
 			    access_vector_t requested,
 			    struct av_decision *avd)
@@ -99,14 +99,14 @@ int security_compute_av_raw(security_context_t scon,
 
 hidden_def(security_compute_av_raw)
 
-int security_compute_av_flags(security_context_t scon,
-			      security_context_t tcon,
+int security_compute_av_flags(const security_context_t scon,
+			      const security_context_t tcon,
 			      security_class_t tclass,
 			      access_vector_t requested,
 			      struct av_decision *avd)
 {
-	security_context_t rscon = scon;
-	security_context_t rtcon = tcon;
+	security_context_t rscon;
+	security_context_t rtcon;
 	int ret;
 
 	if (selinux_trans_to_raw_context(scon, &rscon))
@@ -126,8 +126,8 @@ int security_compute_av_flags(security_context_t scon,
 
 hidden_def(security_compute_av_flags)
 
-int security_compute_av(security_context_t scon,
-			security_context_t tcon,
+int security_compute_av(const security_context_t scon,
+			const security_context_t tcon,
 			security_class_t tclass,
 			access_vector_t requested, struct av_decision *avd)
 {

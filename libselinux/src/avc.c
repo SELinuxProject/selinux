@@ -66,7 +66,7 @@ static inline int avc_hash(security_id_t ssid,
 	    & (AVC_CACHE_SLOTS - 1);
 }
 
-int avc_context_to_sid_raw(security_context_t ctx, security_id_t * sid)
+int avc_context_to_sid_raw(const security_context_t ctx, security_id_t * sid)
 {
 	int rc;
 	avc_get_lock(avc_lock);
@@ -75,7 +75,7 @@ int avc_context_to_sid_raw(security_context_t ctx, security_id_t * sid)
 	return rc;
 }
 
-int avc_context_to_sid(security_context_t ctx, security_id_t * sid)
+int avc_context_to_sid(const security_context_t ctx, security_id_t * sid)
 {
 	int ret;
 	security_context_t rctx;

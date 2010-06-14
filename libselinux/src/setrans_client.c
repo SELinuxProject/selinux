@@ -165,7 +165,7 @@ receive_response(int fd, uint32_t function, char **outdata, int32_t * ret_val)
 	return 0;
 }
 
-static int raw_to_trans_context(char *raw, char **transp)
+static int raw_to_trans_context(const char *raw, char **transp)
 {
 	int ret;
 	int32_t ret_val;
@@ -191,7 +191,7 @@ static int raw_to_trans_context(char *raw, char **transp)
 	return ret;
 }
 
-static int trans_to_raw_context(char *trans, char **rawp)
+static int trans_to_raw_context(const char *trans, char **rawp)
 {
 	int ret;
 	int32_t ret_val;
@@ -216,7 +216,7 @@ static int trans_to_raw_context(char *trans, char **rawp)
 	return ret;
 }
 
-static int raw_context_to_color(char *raw, char **colors)
+static int raw_context_to_color(const char *raw, char **colors)
 {
 	int ret;
 	int32_t ret_val;
@@ -245,7 +245,7 @@ static void init_context_translations(void)
 	mls_enabled = is_selinux_mls_enabled();
 }
 
-int selinux_trans_to_raw_context(security_context_t trans,
+int selinux_trans_to_raw_context(const security_context_t trans,
 				 security_context_t * rawp)
 {
 	if (!trans) {
@@ -286,7 +286,7 @@ int selinux_trans_to_raw_context(security_context_t trans,
 
 hidden_def(selinux_trans_to_raw_context)
 
-int selinux_raw_to_trans_context(security_context_t raw,
+int selinux_raw_to_trans_context(const security_context_t raw,
 				 security_context_t * transp)
 {
 	if (!raw) {
@@ -327,7 +327,7 @@ int selinux_raw_to_trans_context(security_context_t raw,
 
 hidden_def(selinux_raw_to_trans_context)
 
-int selinux_raw_context_to_color(security_context_t raw, char **transp)
+int selinux_raw_context_to_color(const security_context_t raw, char **transp)
 {
 	if (!raw) {
 		*transp = NULL;
@@ -361,7 +361,7 @@ int selinux_raw_context_to_color(security_context_t raw, char **transp)
 hidden_def(selinux_raw_context_to_color)
 #else /*DISABLE_SETRANS*/
 
-int selinux_trans_to_raw_context(security_context_t trans,
+int selinux_trans_to_raw_context(const security_context_t trans,
 				 security_context_t * rawp)
 {
 	if (!trans) {
@@ -376,7 +376,7 @@ int selinux_trans_to_raw_context(security_context_t trans,
 
 hidden_def(selinux_trans_to_raw_context)
 
-int selinux_raw_to_trans_context(security_context_t raw,
+int selinux_raw_to_trans_context(const security_context_t raw,
 				 security_context_t * transp)
 {
 	if (!raw) {

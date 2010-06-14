@@ -46,7 +46,7 @@ int sidtab_init(struct sidtab *s)
 	return rc;
 }
 
-int sidtab_insert(struct sidtab *s, security_context_t ctx)
+int sidtab_insert(struct sidtab *s, const security_context_t ctx)
 {
 	int hvalue, rc = 0;
 	struct sidtab_node *newnode;
@@ -76,7 +76,7 @@ int sidtab_insert(struct sidtab *s, security_context_t ctx)
 
 int
 sidtab_context_to_sid(struct sidtab *s,
-		      security_context_t ctx, security_id_t * sid)
+		      const security_context_t ctx, security_id_t * sid)
 {
 	int hvalue, rc = 0;
 	struct sidtab_node *cur;

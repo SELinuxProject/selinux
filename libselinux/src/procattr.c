@@ -126,11 +126,11 @@ static int setprocattrcon_raw(security_context_t context,
 		return 0;
 }
 
-static int setprocattrcon(security_context_t context,
+static int setprocattrcon(const security_context_t context,
 			  pid_t pid, const char *attr)
 {
 	int ret;
-	security_context_t rcontext = context;
+	security_context_t rcontext;
 
 	if (selinux_trans_to_raw_context(context, &rcontext))
 		return -1;
@@ -153,11 +153,11 @@ static int setprocattrcon(security_context_t context,
 	}
 
 #define setselfattr_def(fn, attr) \
-	int set##fn##_raw(security_context_t c) \
+	int set##fn##_raw(const security_context_t c) \
 	{ \
 		return setprocattrcon_raw(c, 0, #attr); \
 	} \
-	int set##fn(security_context_t c) \
+	int set##fn(const security_context_t c) \
 	{ \
 		return setprocattrcon(c, 0, #attr); \
 	}

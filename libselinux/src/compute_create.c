@@ -10,8 +10,8 @@
 #include "policy.h"
 #include "mapping.h"
 
-int security_compute_create_raw(security_context_t scon,
-				security_context_t tcon,
+int security_compute_create_raw(const security_context_t scon,
+				const security_context_t tcon,
 				security_class_t tclass,
 				security_context_t * newcon)
 {
@@ -62,14 +62,14 @@ int security_compute_create_raw(security_context_t scon,
 
 hidden_def(security_compute_create_raw)
 
-int security_compute_create(security_context_t scon,
-			    security_context_t tcon,
+int security_compute_create(const security_context_t scon,
+			    const security_context_t tcon,
 			    security_class_t tclass,
 			    security_context_t * newcon)
 {
 	int ret;
-	security_context_t rscon = scon;
-	security_context_t rtcon = tcon;
+	security_context_t rscon;
+	security_context_t rtcon;
 	security_context_t rnewcon;
 
 	if (selinux_trans_to_raw_context(scon, &rscon))
