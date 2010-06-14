@@ -139,13 +139,14 @@ static int write_binary_policy(policydb_t * p, char *file, char *progname)
 
 static void usage(char *progname)
 {
-	printf("usage:  %s [-V] [-b] [-U handle_unknown] [-m] [-M] [-o FILE] [INPUT]\n", progname);
+	printf("usage:  %s [-h] [-V] [-b] [-U handle_unknown] [-m] [-M] [-o FILE] [INPUT]\n", progname);
 	printf("Build base and policy modules.\n");
 	printf("Options:\n");
 	printf("  INPUT      build module from INPUT (else read from \"%s\")\n",
 	       txtfile);
 	printf("  -V         show policy versions created by this program\n");
 	printf("  -b         treat input as a binary policy file\n");
+	printf("  -h         print usage\n");
 	printf("  -U OPTION  How to handle unknown classes and permissions\n");
 	printf("               deny: Deny unknown kernel checks\n");
 	printf("               reject: Reject loading of policy with unknowns\n");
@@ -169,7 +170,6 @@ int main(int argc, char **argv)
 		{"binary", no_argument, NULL, 'b'},
 		{"version", no_argument, NULL, 'V'},
 		{"handle-unknown", optional_argument, NULL, 'U'},
-		{"debug", no_argument, NULL, 'd'},
 		{"mls", no_argument, NULL, 'M'},
 		{NULL, 0, NULL, 0}
 	};
