@@ -1,0 +1,5 @@
+#!/bin/bash
+service mcstrans stop
+cd ~root
+runcon -u system_u -r system_r -t setrans_t -l s15:c0.c1023 -- valgrind  --tool=callgrind /usr/src/redhat/BUILD/*/src/mcstransd
+run_init /etc/init.d/mcstrans start

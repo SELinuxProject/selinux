@@ -1,0 +1,6 @@
+Restricted Handle Via Iron Pipes Only==s2:c102,c200.c511
+Restricted Handle Via Copper Pipes Only==s2:c103,c200.c511
+Restricted Handle Via Plastic Pipes Only==s2:c101,c200.c511
+Restricted Handle Via Galvanized Pipes Only==s2:c104,c200.c511
+Restricted Handle Via Plastic,Iron,Copper Pipes Only==s2:c101.c103,c200.c511
+Restricted Handle Via Iron,Plastic,Copper Pipes Only=s2:c101.c103,c200.c511

@@ -1,0 +1,30 @@
+.TH  "mcs"  "8"  "8 Sep 2005" "dwalsh@redhat.com" "mcs documentation"
+
+.SH "NAME"
+mcs \- Multi-Category System
+
+.SH "DESCRIPTION"
+MCS (Multiple Category System) allows users to label files on their 
+system within administrator defined categories.  It then uses SELinux
+Mandatory Access Control to protect those files.   MCS is a discretionary 
+model to allow users to mark their data with additional tags that further 
+restrict access.  The only mandatory aspect is authorizing users for 
+categories by defining their clearance in policy.  However, MCS is similar 
+to MLS and exercises the same code paths and share the same support 
+infrastructure.  They just differ in their specific configuration.
+
+
+The
+.I /etc/selinux/{SELINUXTYPE}/setrans.conf configuration file translates the labels on disk to human
+readable form.   Administrators can define any labels they want in this file.
+Certain applications like printing and auditing will use these labels to 
+identify the files.  By setting a category on a file you will prevent 
+other applications/services from having access to the files.
+.p
+Examples of file lables would be PatientRecord, CompanyConfidential etc.
+
+.SH "SEE ALSO"
+selinux(8), chcon(1)
+
+.SH FILES
+/etc/selinux/{SELINUXTYPE}/setrans.conf 

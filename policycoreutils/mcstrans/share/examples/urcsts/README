@@ -1,0 +1,15 @@
+Simple handling of
+ UNCLASSIFIED
+ RESTRICTED
+ CONFIDENTIAL
+ SECRET
+ TOP SECRET
+
+To use:
+cp setrans.conf /etc/selinux/mls/setrans.conf
+cp secolor.conf /etc/selinux/mls/
+run_init /etc/init.d/mcstrans restart
+
+To test:
+/usr/share/mcstrans/util/mlstrans-test urcsts.test
+/usr/share/mcstrans/util/mlscolor-test urcsts.color

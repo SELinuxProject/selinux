@@ -1,0 +1,43 @@
+#!/usr/bin/python -E
+import sys, re
+from selinux import *
+verbose = 0
+errors=0
+
+if len(sys.argv) > 1 and sys.argv[1] == "-v":
+    verbose = 1
+    
+for arg in sys.argv[1:]:
+    f=open(arg, 'r')
+    for line in f:
+        if line.startswith('#'):
+            continue
+        if not line.strip():
+            continue
+        line = line.rstrip('\n')
+#       print line
+        context,expected=line.split("=");
+        rc, raw = selinux_trans_to_raw_context(context)
+        if rc < 0:
+            print "Unable to get raw context of '%s'" % (context)
+            errors += 1
+            continue
+        rc, colors = selinux_raw_context_to_color(raw)
+        if rc < 0:
+            print "Unable to get colors for '%s'" % (context)
+            errors += 1
+            continue
+        colors = colors.rstrip()
+        if colors != expected:
+            print "For '%s' got\n\t'%s' expected\n\t'%s'" % (context,colors,expected)
+            errors += 1
+            continue
+    f.close()
+
+s = "s"
+if errors == 1: s = ""
+print "mlscolor-test done with %d error%s" % (errors, s)
+
+sys.exit(errors)
+
+

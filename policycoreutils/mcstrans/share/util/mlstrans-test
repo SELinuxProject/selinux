@@ -1,0 +1,53 @@
+#!/usr/bin/python -E
+import sys, re
+from selinux import *
+verbose = 0
+errors=0
+def untrans(trans, val):
+    global errors, verbose
+    (rc, raw) = selinux_trans_to_raw_context(trans)
+    if raw != val:
+        print "untrans: '%s' -> '%s' != '%s' FAILED" % (trans, raw, val)
+        errors += 1
+    else:
+        if verbose:
+            print "untrans: %s -> %s != %s SUCCESS" % (trans, raw, val)
+        
+def trans(raw, val):
+    global errors, verbose
+    (rc, trans) = selinux_raw_to_trans_context(raw)
+    if trans != val:
+        print "trans: '%s' -> '%s' != '%s' FAILED" % (raw,trans,  val)
+        errors += 1
+    else:
+        if verbose:
+            print "trans: %s -> %s != %s SUCCESS" % (raw, trans,  val)
+
+if len(sys.argv) > 1 and sys.argv[1] == "-v":
+    verbose = 1
+    
+for arg in sys.argv[1:]:
+    f=open(arg, 'r')
+    for line in f:
+        if line.startswith('#'):
+            continue
+        if not line.strip():
+            continue
+        line = line.rstrip('\n')
+#       print line
+        if (line.find("==") != -1):
+            t,r=line.split("==");
+            untrans("a:b:c:" + t, "a:b:c:" + r)
+            trans("a:b:c:" + r, "a:b:c:" + t)
+        else:
+            t,r=line.split("=");
+            untrans("a:b:c:" + t, "a:b:c:" + r)
+    f.close()
+
+s = "s"
+if errors == 1: s = ""
+print "mlstrans-test done with %d error%s" % (errors, s)
+
+sys.exit(errors)
+
+

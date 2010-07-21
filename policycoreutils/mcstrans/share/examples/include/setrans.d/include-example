@@ -1,0 +1,52 @@
+#
+# Multi-Level Security translation table for SELinux
+# 
+# Uncomment the following to disable translation libary
+# disable=1
+#
+# Objects can be labeled with one of 16 levels and be categorized with 0-1023 
+# categories defined by the admin.
+# Objects can be in more than one category at a time.
+# Users can modify this table to translate the MLS labels for different purpose.
+#
+# Assumptions: using below MLS labels.
+#  SystemLow
+#  SystemHigh
+#  Unclassified 
+#  Secret with compartments A and B.
+# 
+# SystemLow and SystemHigh
+s0=SystemLow
+s15:c0.c1023=SystemHigh
+s0-s15:c0.c1023=SystemLow-SystemHigh
+
+# Unclassified level
+s1=Unclassified
+
+# Secret level with compartments
+s2=Secret
+s2:c0=A
+s2:c1=B
+
+# ranges for Unclassified
+s0-s1=SystemLow-Unclassified
+s1-s2=Unclassified-Secret
+s1-s15:c0.c1023=Unclassified-SystemHigh
+
+# ranges for Secret with compartments
+s0-s2=SystemLow-Secret
+s0-s2:c0=SystemLow-Secret:A
+s0-s2:c1=SystemLow-Secret:B
+s0-s2:c0,c1=SystemLow-Secret:AB
+s1-s2:c0=Unclassified-Secret:A
+s1-s2:c1=Unclassified-Secret:B
+s1-s2:c0,c1=Unclassified-Secret:AB
+s2-s2:c0=Secret-Secret:A
+s2-s2:c1=Secret-Secret:B
+s2-s2:c0,c1=Secret-Secret:AB
+s2-s15:c0.c1023=Secret-SystemHigh
+s2:c0-s2:c0,c1=Secret:A-Secret:AB
+s2:c0-s15:c0.c1023=Secret:A-SystemHigh
+s2:c1-s2:c0,c1=Secret:B-Secret:AB
+s2:c1-s15:c0.c1023=Secret:B-SystemHigh
+s2:c0,c1-s15:c0.c1023=Secret:AB-SystemHigh

@@ -1,0 +1,102 @@
+#!/bin/bash
+#
+# mcstransd        This starts and stops mcstransd
+#
+# chkconfig: - 08 87
+# description: This starts the SELinux Context Translation System Daemon
+#
+# processname: /sbin/mcstransd
+# pidfile: /var/run/mcstransd.pid
+#
+# Return values according to LSB for all commands but status:
+# 0 - success
+# 1 - generic or unspecified error
+# 2 - invalid or excess argument(s)
+# 3 - unimplemented feature (e.g. "reload")
+# 4 - insufficient privilege
+# 5 - program is not installed
+# 6 - program is not configured
+# 7 - program is not running
+
+PATH=/sbin:/bin:/usr/bin:/usr/sbin
+prog="mcstransd"
+lockfile=/var/lock/subsys/$prog
+
+# Source function library.
+. /etc/init.d/functions
+
+# Allow anyone to run status
+if [ "$1" = "status" ] ; then
+	status $prog
+	RETVAL=$?
+	exit $RETVAL
+fi
+
+# Check that we are root ... so non-root users stop here
+test $EUID = 0  || exit 4
+
+# If selinux is not enabled, return success
+test -x /usr/sbin/selinuxenabled && /usr/sbin/selinuxenabled || exit 0
+
+RETVAL=0
+
+start(){
+	test -x /sbin/mcstransd  || exit 5
+	echo -n $"Starting $prog: "
+	if status $prog > /dev/null; then
+		echo -n $"$prog: already running"
+		failure
+		echo
+		return 1
+	fi
+
+	unset HOME MAIL USER USERNAME
+	daemon $prog "$EXTRAOPTIONS"
+	RETVAL=$?
+	echo
+	if test $RETVAL = 0 ; then
+        	touch $lockfile
+	fi
+	return $RETVAL
+}
+
+stop(){
+	echo -n $"Stopping $prog: "
+	killproc $prog
+	RETVAL=$?
+	echo
+	rm -f $lockfile
+	return $RETVAL
+}
+
+restart(){
+	stop
+	start
+}
+
+condrestart(){
+	[ -e $lockfile ] && restart
+	return 0
+}
+
+
+# See how we were called.
+case "$1" in
+    start)
+	start
+	;;
+    stop)
+	stop
+	;;
+    restart|force-reload)
+	restart
+	;;
+    condrestart)
+	condrestart
+	;;
+    *)
+	echo $"Usage: $0 {start|stop|status|restart|force-reload|condrestart}"
+	RETVAL=3
+esac
+
+exit $RETVAL

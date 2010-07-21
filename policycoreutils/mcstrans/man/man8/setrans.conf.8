@@ -1,0 +1,106 @@
+.TH "setrans.conf" "8" "13 July 2010" "txtoth@gmail.com" "setrans.conf documentation"
+.SH "NAME"
+setrans.conf \- translation configuration file for MCS/MLS SELinux systems
+
+.SH "DESCRIPTION"
+The
+.I /etc/selinux/{SELINUXTYPE}/setrans.conf
+configuration file specifies the way that SELinux MCS/MLS labels are translated into human
+readable form by the mcstransd daemon.  The default policies support 16 sensitivity levels (s0 through s15) and 1024 categories (c0 through c1023). Multiple categories can be separated with commas (c0,c1,c3,c5) and a range of categories can be shortened using dot notation (c0.c3,c5).
+
+.SS "Keywords"
+
+.TP
+Base\fR
+once a base is declared subsequent sensitivity label definitions will have all modifiers applied to them during translation.
+Sensitivity labels defined before the base declaration are immediately cached and no modifiers will be applied these are used as direct translations. 
+
+.TP
+Default\fR
+defines the category bit range that will be used for inverse bits.
+
+.TP
+Domain\fR
+creates a new domain with the supplied name.
+
+.TP
+Include\fR
+read and process the contents of the specified configuration file.
+
+.TP
+Join\fR
+defines a character used to separate members of a modifier group when more than one is specified (ex. USA/AUS).
+
+.TP
+ModifierGroup\fR
+a means of grouping category bit definitions by how they modify the sensitivity label.
+
+.TP
+Prefix\fR
+word(s) that may proceed member(s) of a modifier group (ex. REL USA).
+
+.TP
+Suffix\fR
+word(s) that may follow member(s) of a modifier group (ex. USA EYES ONLY).
+
+.TP
+Whitrespace\fR
+defines the set of acceptable white space characters that may be used in label being translated.
+
+.SS "Sensitivity Level Definition Examples"
+
+.TP 
+s0=SystemLow\fR
+defines a translation of s0 (the lowest sensitivity level) with no categories to SystemLow.
+
+.TP 
+s15:c0.c1023=SystemHigh\fR
+defines a translation of s15:c0.c1023 to SystemHigh. c0.c1023 is shorthand for all categories. A colon separates the sensitivity level and categories.
+
+.TP 
+s0\-s15:c0.c1023=SystemLow\-SystemHigh\fR
+defines a range translation of of s0\-s15:c0.c1023 to SystemLow\-SystemHigh. The two range components are separated by a dash.
+
+.TP 
+s0:c0=PatientRecord\fR
+defines a translation of sensitivity s0 with category c0 to PatientRecord.
+
+.TP 
+s0:c1=Accounting\fR
+defines a translation of sensitivity s0 with category c1 to Accounting.
+
+.TP 
+s2:c1,c2,c3=Confidential3Categories
+.TP 
+s2:c1.c3=Confidential3Categories\fR
+both define a translation of sensitivity s2 with categories c1, c2 and c3 to Confidential3Categories.
+
+.TP 
+s5=TopSecret\fR
+defines a translation of sensitivity s5 with no categories to TopSecret.
+
+.SS "Constraint Examples"
+
+.TP
+c0!c1
+if category bits 0 and 1 are both set the constraint will fail and the original context will be returned.
+
+.TP
+c5.c9>c1
+if category bits 5 through 9 are set bit 1 must also be set or the constraint will fail and the original context will be returned.
+
+.TP
+s1!c5,c9
+if categroy bits 5 and 9 are set and the sensitivity level is s1 the constraint will fail and the original context will be returned.
+
+.SH "AUTHOR"
+    Written by Joe Nall <joe@nall.com>.
+    Updated by Ted X. Toth <txtoth@gmail.com>.
+    
+.SH "SEE ALSO"
+selinux(8), mcs(8), mls(8), chcon(1)
+
+.SH "FILES"
+/etc/selinux/{SELINUXTYPE}/setrans.conf
+.br
+/usr/share/mcstrans/examples

@@ -1,0 +1,3 @@
+To rebuild with debugging support:
+make clean && env CFLAGS="-Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -DDEBUG -g" LDFLAGS="-g" make
+

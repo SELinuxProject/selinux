@@ -1,0 +1,12 @@
+NATO example test setrans.conf
+
+To use:
+mkdir /etc/selinux/mls/mcstrand.d
+cp rel.conf /etc/selinux/mls/mcstrand.d
+cp eyes-only.conf /etc/selinux/mls/mcstrand.d
+cp constraints.conf /etc/selinux/mls/mcstrand.d
+cp setrans.conf /etc/selinux/mls/setrans.conf
+sudo run_init /etc/init.d/mcstrans restart
+
+To test:
+/usr/share/mcstrans/util/mlstrans-test nato.test

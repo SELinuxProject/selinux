@@ -1,0 +1,18 @@
+0.3.2 2010-07-19
+	* Add constraints.
+	* Add setrans.conf man page
+	* Fix mixed raw and translated range bug
+	* Moved todo comments to TODO file
+0.3.1-4 2009-10-16
+	* Add mcstransd man page
+0.3.1-3 2009-09-17
+	* Fix init script
+0.3.0 2009-02-06
+	* Add inverse bit support
+	* Add color support from Eamon Walsh
+0.2.1 2007-02-6
+	* Rewrite for Proper MLS Translations
+0.1.8 2005-08-5
+	* Add Chad Hanson Patch for MLS
+0.1.0 2005-08-5
+	* Initial public release.

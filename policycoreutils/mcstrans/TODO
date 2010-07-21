@@ -1,0 +1,11 @@
+TODO List for mcstrans:
+
+In compute_raw_from_trans look for conflicting bit patterns and report errors.
+
+In emit_whitespace look at whitespace characters for any regex special character and escape them. 
+
+Make prefixes and suffixes optional (ex. SECRET REL AUS == SECRET AUS).
+
+compute_trans_from_raw is an expensive operation that needs to be sped up or threaded so that mcstrans can respond to other requests more quickly.
+
+Reevaluate the means of determining whether inverse bits are used in a domain.

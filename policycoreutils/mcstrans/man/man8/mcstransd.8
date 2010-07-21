@@ -1,0 +1,25 @@
+.TH "mcstransd" "8" "16 Oct 2009" "dwalsh@redhat.com" "mcs documentation"
+.SH "NAME"
+mcstransd \- MCS (Multiple Category System) daemon.  Translates SELinux MCS/MLS labels to human readable form.
+
+.SH "SYNOPSIS"
+.B mcstransd 
+.P
+
+.SH "DESCRIPTION"
+This manual page describes the
+.BR mcstransd
+program.
+.P
+This daemon reads /etc/selinux/{SELINUXTYPE}/setrans.conf configuration file, and communicates with libselinux via a socket in /var/run/setrans.
+
+.SH "AUTHOR"
+This man page was written by Dan Walsh <dwalsh@redhat.com>.
+The program was originally written by Dan Walsh <dwalsh@redhat.com>.
+The program was enhanced/rwwritten by Joe Nall <joe@nall.com>.
+
+.SH "FILES"
+/etc/selinux/{SELINUXTYPE}/setrans.conf 
+
+.SH "SEE ALSO"
+.BR mcs (8),

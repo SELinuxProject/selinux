@@ -1,0 +1,64 @@
+#!/bin/bash
+
+shopt -s nullglob
+
+fail() {
+  echo $1
+  exit 1
+}
+
+[ `id -u` = 0 ] || fail "must run as root"
+
+for d in /usr/share/mcstrans/examples/*; do
+	echo $d
+
+	rm -rf /etc/selinux/mls/setrans.conf.bak /etc/selinux/mls/secolor.conf.bak /etc/selinux/mls/setrans.d.bak
+	[ $? -eq 0 ] || fail "preclean failed"
+
+	if [ -e $d/setrans.conf ]; then
+		mv /etc/selinux/mls/setrans.conf /etc/selinux/mls/setrans.conf.bak
+		[ $? -eq 0 ] || fail "setrans.conf backup failed"
+	fi
+
+	if [ -e /etc/selinux/mls/secolor.conf ]; then
+		mv /etc/selinux/mls/secolor.conf /etc/selinux/mls/secolor.conf.bak
+		[ $? -eq 0 ] || fail "secolor.conf backup failed"
+	fi
+
+	mv /etc/selinux/mls/setrans.d /etc/selinux/mls/setrans.d.bak
+	[ $? -eq 0 ] || fail "setrans.d backup failed"
+
+	if [ -e $d/setrans.conf ]; then
+		cp -L $d/setrans.conf /etc/selinux/mls/setrans.conf
+	fi
+	if [ -e $d/secolor.conf ]; then
+		cp -L $d/secolor.conf /etc/selinux/mls
+	fi
+	if [ -d $d/setrans.d ]; then
+		cp -Lr $d/setrans.d /etc/selinux/mls
+	fi
+
+	runcon `cat /etc/selinux/mls/contexts/initrc_context` /etc/init.d/mcstrans restart
+	for t in $d/*.test; do
+		/usr/share/mcstrans/util/mlstrans-test $t
+	done
+	for c in $d/*.color; do
+		/usr/share/mcstrans/util/mlscolor-test $c
+	done
+
+	if [ -e /etc/selinux/mls/setrans.conf.bak ]; then
+		mv /etc/selinux/mls/setrans.conf.bak /etc/selinux/mls/setrans.conf
+	fi
+	if [ -e /etc/selinux/mls/secolor.conf.bak ]; then
+		mv /etc/selinux/mls/secolor.conf.bak /etc/selinux/mls/secolor.conf
+	fi
+	rm -rf /etc/selinux/mls/setrans.d
+	mv /etc/selinux/mls/setrans.d.bak    /etc/selinux/mls/setrans.d
+
+	restorecon -rv /etc/selinux/mls/setrans.conf /etc/selinux/mls/setrans.d >/dev/null
+	runcon `cat /etc/selinux/mls/contexts/initrc_context` /etc/init.d/mcstrans restart
+done
+exit 0
+
+
+

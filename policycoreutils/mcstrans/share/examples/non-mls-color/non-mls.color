@@ -1,0 +1,3 @@
+system_u:system_r:inetd_t:SystemLow=#000000 #008000 #ffffff #000000 #d2b48c #ffa500 #000000 #008000
+system_u:system_r:inetd_t:SystemHigh=#000000 #008000 #ffffff #000000 #d2b48c #ffa500 #000000 #008000
+user_u:user_r:user_t:SystemLow=#000000 #008000 #ffffff #000000 #d2b48c #ffa500 #000000 #008000

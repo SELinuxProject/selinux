@@ -1,0 +1,8 @@
+Non-MLS color example
+
+To use:
+cp secolor.conf /etc/selinux/mls/
+run_init /etc/init.d/mcstrans restart
+
+To test:
+/usr/share/mcstrans/util/mlscolor-test non-mls.color

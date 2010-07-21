@@ -1,0 +1,5 @@
+#!/bin/bash
+service mcstrans stop
+#valgrind -v --leak-check=full --show-reachable=yes ../src/mcstransd
+runcon -u system_u -r system_r -t setrans_t -l s15:c0.c1023 -- valgrind -v --leak-check=full --show-reachable=yes ../src/mcstransd
+run_init /etc/init.d/mcstrans start

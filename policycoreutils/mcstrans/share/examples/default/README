@@ -1,0 +1,8 @@
+Original RHEL 5 setrans.conf
+
+To use:
+cp setrans.conf /etc/selinux/mls/setrans.conf
+run_init /etc/init.d/mcstrans restart
+
+To test:
+/usr/share/mcstrans/util/mlstrans-test default.test

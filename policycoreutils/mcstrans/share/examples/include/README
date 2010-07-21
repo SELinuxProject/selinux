@@ -1,0 +1,9 @@
+Original RHEL 5 setrans.conf pushed into setrans.d as include file
+
+To use:
+cp setrans.conf /etc/selinux/mls/setrans.conf
+cp setrans.d/*  /etc/selinux/mls/setrans.d
+run_init /etc/init.d/mcstrans restart
+
+To test:
+/usr/share/mcstrans/util/mlstrans-test include.test
