@@ -72,8 +72,8 @@ unsigned int utmpwatcher_handle(int inotify_fd, int wd)
 	if (utmp_wd == -1)
 		exitApp("Error watching utmp file.");
 
+	changed = strings_list_diff(prev_utmp_ptr, utmp_ptr);
 	if (prev_utmp_ptr) {
-		changed = strings_list_diff(prev_utmp_ptr, utmp_ptr);
 		strings_list_free(prev_utmp_ptr);
 	}
 	return changed;
