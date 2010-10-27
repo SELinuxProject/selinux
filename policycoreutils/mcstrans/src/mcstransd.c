@@ -428,7 +428,6 @@ process_connections(void)
 			if (init_colors()) {
 				syslog(LOG_ERR, "Failed to initialize color translations");
 				syslog(LOG_ERR, "No color information will be available");
-				/* cleanup_exit(1); */
 			}
 			restart_daemon = 0;
 		}
@@ -479,7 +478,6 @@ initialize(void)
 	if (init_colors()) {
 		syslog(LOG_ERR, "Failed to initialize color translations");
 		syslog(LOG_ERR, "No color information will be available");
-		/* cleanup_exit(1); */
 	}
 
 	/* the socket will be unlinked when the daemon terminates */
@@ -553,7 +551,7 @@ void dropprivs(void)
 	if (cap_set_proc(new_caps)) {
 		syslog(LOG_ERR, "Error dropping capabilities, aborting: %s\n",
 			 strerror(errno));
-		exit(-1);
+		cleanup_exit(-1);
 	}
 	cap_free(new_caps);
 }
@@ -580,7 +578,7 @@ main(int UNUSED(argc), char *argv[])
 	/* run in the background as a daemon */
 	if (daemon(0, 0)) {
 		syslog(LOG_ERR, "daemon() failed: %m");
-		exit(1);
+		cleanup_exit(1);
 	}
 #endif
 

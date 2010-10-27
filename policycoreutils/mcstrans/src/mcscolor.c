@@ -71,23 +71,10 @@ void finish_context_colors(void) {
 		free(ptr);
 		ptr = mnemonics;
 	}
+	mnemonics = NULL;
 
 	freecon(my_context);
 	my_context = NULL;
-}
-
-static void print_colors(void) {
-	setab_t *ptr;
-	unsigned i;
-
-	for (i = 0; i < N_COLOR; i++) {
-		ptr = clist[i];
-		while (ptr) {
-			printf("%s %s->(fg:%x, bg:%x)\n", rules[i],
-			       ptr->pattern, ptr->color.fg, ptr->color.bg);
-			ptr = ptr->next;
-		}
-	}
 }
 
 static int check_dominance(const char *pattern, const char *raw) {
@@ -123,7 +110,7 @@ static int check_dominance(const char *pattern, const char *raw) {
 	if (!raw)
 		goto out;
 
-	rc = security_compute_av_raw(ctx, raw, SECCLASS_CONTEXT, bit, &avd);
+	rc = security_compute_av_raw(ctx, (security_context_t)raw, SECCLASS_CONTEXT, bit, &avd);
 	if (rc)
 		goto out;
 
@@ -139,8 +126,15 @@ static const secolor_t *find_color(int idx, const char *component,
 				   const char *raw) {
 	setab_t *ptr = clist[idx];
 
-	if (raw)
-	    while (ptr) {
+	if (idx == COLOR_RANGE) {
+		if (!raw) {
+			return NULL;
+		}
+	} else if (!component) {
+		return NULL;
+	}
+
+	while (ptr) {
 		if (idx == COLOR_RANGE) {
 		    if (check_dominance(ptr->pattern, raw) == 0)
 			return &ptr->color;
@@ -149,7 +143,7 @@ static const secolor_t *find_color(int idx, const char *component,
 			return &ptr->color;
 		}
 		ptr = ptr->next;
-	    }
+	}
 
 	return NULL;
 }
@@ -246,25 +240,6 @@ static int process_color(char *buffer, int line) {
 	return 0;
 }
 
-static char *get_color_path(void)
-{
-	static char path[256];
-	char *poltype;
-	int rc;
-
-	*path = '\0';
-
-	rc = selinux_getpolicytype(&poltype);
-	if (rc == 0) {
-		strncat(path, "/etc/selinux/", 16);
-		strncat(path, poltype, 128);
-		strncat(path, "/secolor.conf", 16);
-		free(poltype);
-	}
-	syslog(LOG_ERR, "%s", path);
-	return path;
-}
-
 /* Read in color file.
  */
 int init_colors(void) {
@@ -275,7 +250,7 @@ int init_colors(void) {
 
 	getcon(&my_context);
 
-	cfg = fopen(get_color_path(), "r");
+	cfg = fopen(selinux_colors_path(), "r");
 	if (!cfg) return 1;
 
 	__fsetlocking(cfg, FSETLOCKING_BYCALLER);
@@ -306,19 +281,20 @@ static int parse_components(context_t con, char **components) {
 	return 0;
 }
 
-static void free_components(context_t con, char **components) {
-	context_free(con);
-}
-
 /* Look up colors.
  */
 int raw_color(const security_context_t raw, char **color_str) {
+#define CHARS_PER_COLOR 16
 	context_t con;
 	uint32_t i, j, mask = 0;
 	const secolor_t *items[N_COLOR];
 	char *result, *components[N_COLOR];
-	char buf[20];
+	char buf[CHARS_PER_COLOR + 1];
 	int rc = -1;
+
+	if (!color_str && !*color_str) {
+		return -1;
+	}
 
 	/* parse context and allocate memory */
 	con = context_new(raw);
@@ -327,7 +303,7 @@ int raw_color(const security_context_t raw, char **color_str) {
 	if (parse_components(con, components) < 0)
 		goto out;
 
-	result = malloc(N_COLOR * sizeof(buf));
+	result = malloc((N_COLOR * CHARS_PER_COLOR) + 1);
 	if (!result)
 		goto out;
 	result[0] = '\0';
@@ -362,6 +338,7 @@ int raw_color(const security_context_t raw, char **color_str) {
 	*color_str = result;
 	rc = 0;
 out:
-	free_components(con, components);
+	context_free(con);
+
 	return rc;
 }

@@ -6,7 +6,13 @@ mls_level_t *mls_level_from_string(char *mls_context)
 {
 	char delim;
 	char *scontextp, *p, *lptr;
-	mls_level_t *l = (mls_level_t *) calloc(1, sizeof(mls_level_t));
+	mls_level_t *l;
+
+	if (!mls_context) {
+		return NULL;
+	}
+
+	l = (mls_level_t *) calloc(1, sizeof(mls_level_t));
 
 	/* Extract low sensitivity. */
 	scontextp = p = mls_context;
@@ -45,7 +51,7 @@ mls_level_t *mls_level_from_string(char *mls_context)
 
 			/* If level, set all categories in level */
 			if (lptr) {
-				if (*scontextp != 'c')
+				if (*lptr != 'c')
 					goto err;
 				int ubit = atoi(lptr + 1);
 				int i;
