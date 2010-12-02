@@ -97,6 +97,8 @@ extern int selinux_page_size hidden;
 
 /* Make pthread_once optional */
 #pragma weak pthread_once
+#pragma weak pthread_key_create
+#pragma weak pthread_setspecific
 
 /* Call handler iff the first call.  */
 #define __selinux_once(ONCE_CONTROL, INIT_FUNCTION)	\
@@ -109,4 +111,15 @@ extern int selinux_page_size hidden;
 		}					\
 	} while (0)
 
+/* Pthread key macros */
+#define __selinux_key_create(KEY, DESTRUCTOR)			\
+	do {							\
+		if (pthread_key_create != NULL)			\
+			pthread_key_create(KEY, DESTRUCTOR);	\
+	} while (0)
 
+#define __selinux_setspecific(KEY, VALUE)			\
+	do {							\
+		if (pthread_setspecific != NULL)		\
+			pthread_setspecific(KEY, VALUE);	\
+	} while (0)

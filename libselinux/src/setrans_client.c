@@ -34,6 +34,8 @@ static __thread char *prev_r2c_trans = NULL;
 static __thread security_context_t prev_r2c_raw = NULL;
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
+static pthread_key_t destructor_key;
+static __thread char destructor_initialized;
 
 /*
  * setransd_open
@@ -240,8 +242,27 @@ out:
 	return ret;
 }
 
+static void setrans_thread_destructor(void __attribute__((unused)) *unused)
+{
+	free(prev_t2r_trans);
+	free(prev_t2r_raw);
+	free(prev_r2t_trans);
+	free(prev_r2t_raw);
+	free(prev_r2c_trans);
+	free(prev_r2c_raw);
+}
+
+static inline void init_thread_destructor(void)
+{
+	if (destructor_initialized == 0) {
+		__selinux_setspecific(destructor_key, (void *)1);
+		destructor_initialized = 1;
+	}
+}
+
 static void init_context_translations(void)
 {
+	__selinux_key_create(&destructor_key, setrans_thread_destructor);
 	mls_enabled = is_selinux_mls_enabled();
 }
 
@@ -254,6 +275,7 @@ int selinux_trans_to_raw_context(const security_context_t trans,
 	}
 
 	__selinux_once(once, init_context_translations);
+	init_thread_destructor();
 
 	if (!mls_enabled) {
 		*rawp = strdup(trans);
@@ -295,6 +317,7 @@ int selinux_raw_to_trans_context(const security_context_t raw,
 	}
 
 	__selinux_once(once, init_context_translations);
+	init_thread_destructor();
 
 	if (!mls_enabled) {
 		*transp = strdup(raw);
@@ -333,6 +356,9 @@ int selinux_raw_context_to_color(const security_context_t raw, char **transp)
 		*transp = NULL;
 		return -1;
 	}
+
+	__selinux_once(once, init_context_translations);
+	init_thread_destructor();
 
 	if (prev_r2c_raw && strcmp(prev_r2c_raw, raw) == 0) {
 		*transp = strdup(prev_r2c_trans);

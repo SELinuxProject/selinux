@@ -15,6 +15,9 @@ static __thread char **con_array;
 static __thread int con_array_size;
 static __thread int con_array_used;
 
+static pthread_once_t once = PTHREAD_ONCE_INIT;
+static pthread_key_t destructor_key;
+
 static int add_array_elt(char *con)
 {
 	if (con_array_size) {
@@ -42,7 +45,7 @@ static int add_array_elt(char *con)
 	return con_array_used++;
 }
 
-static void free_array_elts(void)
+static void free_array_elts(void __attribute__((unused)) *unused)
 {
 	con_array_size = con_array_used = 0;
 	free(con_array);
@@ -263,7 +266,7 @@ void matchpathcon_filespec_destroy(void)
 	file_spec_t *fl, *tmp;
 	int h;
 
-	free_array_elts();
+	free_array_elts(NULL);
 
 	if (!fl_head)
 		return;
@@ -282,10 +285,18 @@ void matchpathcon_filespec_destroy(void)
 	fl_head = NULL;
 }
 
+static void matchpathcon_init_once(void)
+{
+    __selinux_key_create(&destructor_key, free_array_elts);
+}
+
 int matchpathcon_init_prefix(const char *path, const char *subset)
 {
 	if (!mycanoncon)
 		mycanoncon = default_canoncon;
+
+	__selinux_once(once, matchpathcon_init_once);
+	__selinux_setspecific(destructor_key, (void *)1);
 
 	options[SELABEL_OPT_SUBSET].type = SELABEL_OPT_SUBSET;
 	options[SELABEL_OPT_SUBSET].value = subset;
