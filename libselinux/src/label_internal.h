@@ -29,6 +29,13 @@ int selabel_db_init(struct selabel_handle *rec,
 /*
  * Labeling internal structures
  */
+struct selabel_sub {
+	char *src;
+	int slen;
+	char *dst;
+	struct selabel_sub *next;
+};
+
 struct selabel_lookup_rec {
 	security_context_t ctx_raw;
 	security_context_t ctx_trans;
@@ -48,6 +55,9 @@ struct selabel_handle {
 
 	/* supports backend-specific state information */
 	void *data;
+
+	/* substitution support */
+	struct selabel_sub *subs;
 };
 
 /*
