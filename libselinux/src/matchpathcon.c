@@ -45,7 +45,7 @@ static int add_array_elt(char *con)
 	return con_array_used++;
 }
 
-static void free_array_elts(void __attribute__((unused)) *unused)
+static void free_array_elts(void)
 {
 	con_array_size = con_array_used = 0;
 	free(con_array);
@@ -266,7 +266,7 @@ void matchpathcon_filespec_destroy(void)
 	file_spec_t *fl, *tmp;
 	int h;
 
-	free_array_elts(NULL);
+	free_array_elts();
 
 	if (!fl_head)
 		return;
@@ -285,9 +285,14 @@ void matchpathcon_filespec_destroy(void)
 	fl_head = NULL;
 }
 
+static void matchpathcon_thread_destructor(void __attribute__((unused)) *ptr)
+{
+	matchpathcon_fini();
+}
+
 static void matchpathcon_init_once(void)
 {
-    __selinux_key_create(&destructor_key, free_array_elts);
+	__selinux_key_create(&destructor_key, matchpathcon_thread_destructor);
 }
 
 int matchpathcon_init_prefix(const char *path, const char *subset)
@@ -316,6 +321,8 @@ int matchpathcon_init(const char *path)
 
 void matchpathcon_fini(void)
 {
+	free_array_elts();
+
 	if (hnd) {
 		selabel_close(hnd);
 		hnd = NULL;
