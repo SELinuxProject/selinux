@@ -1,3 +1,6 @@
+2.0.97 2010-12-02
+	* Thread local storage fixes from Eamon Walsh.
+
 2.0.96 2010-06-14
 	* Add const qualifiers to public API where appropriate by KaiGai Kohei.
 
