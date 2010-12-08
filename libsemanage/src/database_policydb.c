@@ -177,7 +177,8 @@ static int dbase_policydb_cache(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_flush(semanage_handle_t * handle,
+static int dbase_policydb_flush(semanage_handle_t * handle
+				__attribute__ ((unused)),
 				dbase_policydb_t * dbase)
 {
 
@@ -309,9 +310,12 @@ static int dbase_policydb_modify(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_del(semanage_handle_t * handle,
-			      dbase_policydb_t * dbase,
-			      const record_key_t * key)
+static int dbase_policydb_del(semanage_handle_t * handle
+				__attribute__ ((unused)),
+			      dbase_policydb_t * dbase
+				__attribute__ ((unused)),
+			      const record_key_t * key
+				__attribute__ ((unused)))
 {
 
 	/* Stub */
@@ -321,8 +325,10 @@ static int dbase_policydb_del(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-static int dbase_policydb_clear(semanage_handle_t * handle,
-				dbase_policydb_t * dbase)
+static int dbase_policydb_clear(semanage_handle_t * handle
+				__attribute__ ((unused)),
+				dbase_policydb_t * dbase
+				__attribute__ ((unused)))
 {
 
 	/* Stub */

@@ -243,7 +243,8 @@ int semanage_direct_connect(semanage_handle_t * sh)
 	return STATUS_ERR;
 }
 
-static void semanage_direct_destroy(semanage_handle_t * sh)
+static void semanage_direct_destroy(semanage_handle_t * sh
+					__attribute__ ((unused)))
 {
 	/* do nothing */
 	sh = NULL;

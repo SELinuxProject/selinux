@@ -51,7 +51,7 @@ hidden_def(semanage_msg_get_fname)
 #ifdef __GNUC__
     __attribute__ ((format(printf, 3, 4)))
 #endif
-void hidden semanage_msg_default_handler(void *varg,
+void hidden semanage_msg_default_handler(void *varg __attribute__ ((unused)),
 					 semanage_handle_t * handle,
 					 const char *fmt, ...)
 {

@@ -147,7 +147,8 @@ int dbase_llist_exists(semanage_handle_t * handle,
 
 int dbase_llist_add(semanage_handle_t * handle,
 		    dbase_llist_t * dbase,
-		    const record_key_t * key, const record_t * data)
+		    const record_key_t * key __attribute__ ((unused)),
+			 const record_t * data)
 {
 
 	if (dbase_llist_cache_prepend(handle, dbase, data) < 0)
@@ -218,7 +219,7 @@ int dbase_llist_modify(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-hidden int dbase_llist_count(semanage_handle_t * handle,
+hidden int dbase_llist_count(semanage_handle_t * handle __attribute__ ((unused)),
 			     dbase_llist_t * dbase, unsigned int *response)
 {
 
@@ -275,7 +276,7 @@ int dbase_llist_iterate(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-int dbase_llist_del(semanage_handle_t * handle,
+int dbase_llist_del(semanage_handle_t * handle __attribute__ ((unused)),
 		    dbase_llist_t * dbase, const record_key_t * key)
 {
 
