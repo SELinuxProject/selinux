@@ -8,7 +8,7 @@
 #include "handle.h"
 
 /* Check if a role exists */
-int sepol_role_exists(sepol_handle_t * handle,
+int sepol_role_exists(sepol_handle_t * handle __attribute__ ((unused)),
 		      sepol_policydb_t * p, const char *role, int *response)
 {
 

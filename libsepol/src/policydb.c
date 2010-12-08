@@ -3234,15 +3234,13 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 {
 
 	unsigned int i, j, r_policyvers;
-	uint32_t buf[5], config;
+	uint32_t buf[5];
 	size_t len, nprim, nel;
 	char *policydb_str;
 	struct policydb_compat_info *info;
 	unsigned int policy_type, bufindex;
 	ebitmap_node_t *tnode;
 	int rc;
-
-	config = 0;
 
 	/* Read the magic number and string length. */
 	rc = next_entry(buf, fp, sizeof(uint32_t) * 2);

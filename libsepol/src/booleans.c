@@ -103,7 +103,7 @@ int sepol_bool_set(sepol_handle_t * handle,
 	return STATUS_ERR;
 }
 
-int sepol_bool_count(sepol_handle_t * handle,
+int sepol_bool_count(sepol_handle_t * handle __attribute__ ((unused)),
 		     const sepol_policydb_t * p, unsigned int *response)
 {
 

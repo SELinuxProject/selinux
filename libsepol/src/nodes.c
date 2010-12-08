@@ -144,7 +144,7 @@ static int node_to_record(sepol_handle_t * handle,
 }
 
 /* Return the number of nodes */
-extern int sepol_node_count(sepol_handle_t * handle,
+extern int sepol_node_count(sepol_handle_t * handle __attribute__ ((unused)),
 			    const sepol_policydb_t * p, unsigned int *response)
 {
 

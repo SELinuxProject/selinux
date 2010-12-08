@@ -106,7 +106,7 @@ static int iface_to_record(sepol_handle_t * handle,
 }
 
 /* Check if an interface exists */
-int sepol_iface_exists(sepol_handle_t * handle,
+int sepol_iface_exists(sepol_handle_t * handle __attribute__ ((unused)),
 		       const sepol_policydb_t * p,
 		       const sepol_iface_key_t * key, int *response)
 {
@@ -216,7 +216,7 @@ int sepol_iface_modify(sepol_handle_t * handle,
 }
 
 /* Return the number of interfaces */
-extern int sepol_iface_count(sepol_handle_t * handle,
+extern int sepol_iface_count(sepol_handle_t * handle __attribute__ ((unused)),
 			     const sepol_policydb_t * p, unsigned int *response)
 {
 

@@ -284,7 +284,7 @@ int sepol_user_modify(sepol_handle_t * handle,
 	return STATUS_ERR;
 }
 
-int sepol_user_exists(sepol_handle_t * handle,
+int sepol_user_exists(sepol_handle_t * handle __attribute__ ((unused)),
 		      const sepol_policydb_t * p,
 		      const sepol_user_key_t * key, int *response)
 {
@@ -301,7 +301,7 @@ int sepol_user_exists(sepol_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-int sepol_user_count(sepol_handle_t * handle,
+int sepol_user_count(sepol_handle_t * handle __attribute__ ((unused)),
 		     const sepol_policydb_t * p, unsigned int *response)
 {
 

@@ -41,7 +41,7 @@ hidden_def(sepol_msg_get_fname)
 #ifdef __GNUC__
     __attribute__ ((format(printf, 3, 4)))
 #endif
-void hidden sepol_msg_default_handler(void *varg,
+void hidden sepol_msg_default_handler(void *varg __attribute__ ((unused)),
 				      sepol_handle_t * handle,
 				      const char *fmt, ...)
 {

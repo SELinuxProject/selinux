@@ -1003,7 +1003,6 @@ int hidden sepol_load_policy(void *data, size_t len)
 	policydb_t oldpolicydb, newpolicydb;
 	sidtab_t oldsidtab, newsidtab;
 	convert_context_args_t args;
-	uint32_t seqno;
 	int rc = 0;
 	struct policy_file file, *fp;
 
@@ -1050,7 +1049,6 @@ int hidden sepol_load_policy(void *data, size_t len)
 	/* Install the new policydb and SID table. */
 	memcpy(policydb, &newpolicydb, sizeof *policydb);
 	sepol_sidtab_set(sidtab, &newsidtab);
-	seqno = ++latest_granting;
 
 	/* Free the old policydb and SID table. */
 	policydb_destroy(&oldpolicydb);
