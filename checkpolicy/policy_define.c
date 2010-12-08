@@ -1213,7 +1213,6 @@ int define_type(int alias)
 {
 	char *id;
 	type_datum_t *datum, *attr;
-	int newattr = 0;
 
 	if (pass == 2) {
 		/*
@@ -1266,8 +1265,6 @@ int define_type(int alias)
 			/* treat it as a fatal error */
 			yyerror2("attribute %s is not declared", id);
 			return -1;
-		} else {
-			newattr = 0;
 		}
 
 		if (attr->flavor != TYPE_ATTRIB) {

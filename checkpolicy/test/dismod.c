@@ -474,11 +474,9 @@ void display_role_allow(role_allow_rule_t * ra, policydb_t * p, FILE * fp)
 
 int role_display_callback(hashtab_key_t key, hashtab_datum_t datum, void *data)
 {
-	char *id;
 	role_datum_t *role;
 	FILE *fp;
 
-	id = key;
 	role = (role_datum_t *) datum;
 	fp = (FILE *) data;
 
