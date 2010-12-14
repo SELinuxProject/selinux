@@ -286,7 +286,6 @@ static int get_failsafe_context(const char *user, security_context_t * newcon)
 	if (buf[plen - 1] == '\n')
 		buf[plen - 1] = 0;
 
-      retry:
 	nlen = strlen(user) + 1 + plen + 1;
 	*newcon = malloc(nlen);
 	if (!(*newcon))
@@ -306,10 +305,6 @@ static int get_failsafe_context(const char *user, security_context_t * newcon)
 	if (security_check_context(*newcon) && errno != ENOENT) {
 		free(*newcon);
 		*newcon = 0;
-		if (strcmp(user, SELINUX_DEFAULTUSER)) {
-			user = SELINUX_DEFAULTUSER;
-			goto retry;
-		}
 		return -1;
 	}
 
@@ -418,13 +413,8 @@ int get_ordered_context_list(const char *user,
 
 	/* Determine the set of reachable contexts for the user. */
 	rc = security_compute_user(fromcon, user, &reachable);
-	if (rc < 0) {
-		/* Retry with the default SELinux user identity. */
-		user = SELINUX_DEFAULTUSER;
-		rc = security_compute_user(fromcon, user, &reachable);
-		if (rc < 0)
-			goto failsafe;
-	}
+	if (rc < 0)
+		goto failsafe;
 	nreach = 0;
 	for (ptr = reachable; *ptr; ptr++)
 		nreach++;
