@@ -1,3 +1,6 @@
+2.0.23 2010-12-16
+	* Remove unused variables to fix compliation under GCC 4.6 by Justin Mattock
+
 2.0.22 2010-06-14
 	* Update checkmodule man page and usage by Daniel Walsh and Steve Lawrence
 

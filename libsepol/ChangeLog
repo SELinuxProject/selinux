@@ -1,3 +1,6 @@
+2.0.42 2010-12-16
+	* Fix compliation under GCC 4.6 by Justin Mattock
+
 2.0.41 2009-11-18
 	* Fixed typo in error message from Manoj Srivastava.
 

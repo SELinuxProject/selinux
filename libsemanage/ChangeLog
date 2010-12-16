@@ -1,3 +1,6 @@
+2.0.46 2010-12-16
+	* Fix compliation under GCC 4.6 by Justin Mattock
+
 2.0.45 2010-03-06
 	* Add enable/disable patch support from Dan Walsh.
 	* Add usepasswd flag to semanage.conf to disable genhomedircon using
