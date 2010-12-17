@@ -50,7 +50,7 @@ ifeq (${NAMESPACE_PRIV},y)
 endif
 ifeq (${IS_SUID},y)
 	MODE := 4555
-	LDLIBS += -lcap
+	LDLIBS += -lcap-ng
 else
 	MODE := 0555
 endif
