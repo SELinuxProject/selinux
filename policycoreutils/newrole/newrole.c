@@ -1274,7 +1274,9 @@ int main(int argc, char *argv[])
 		goto err_close_pam_session;
 #endif
 
-	drop_capabilities(TRUE);
+	if (drop_capabilities(TRUE))
+		goto err_close_pam_session;
+
 	/* Handle environment changes */
 	if (restore_environment(preserve_environment, old_environ, &pw)) {
 		fprintf(stderr, _("Unable to restore the environment, "
