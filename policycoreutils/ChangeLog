@@ -1,3 +1,6 @@
+2.0.85 2010-12-20
+	* Move newrole to use libcap-ng from Dan Walsh
+
 2.0.84 2010-11-16
 	* Add mcstrans support from Ted Toth with modifications from Steve Lawrence.
 
