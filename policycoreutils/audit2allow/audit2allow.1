@@ -1,5 +1,6 @@
 .\" Hey, Emacs! This is an -*- nroff -*- source file.
 .\" Copyright (c) 2005 Manoj Srivastava <srivasta@debian.org>
+.\" Copyright (c) 2010 Dan Walsh <dwalsh@redhat.com>
 .\"
 .\" This is free documentation; you can redistribute it and/or
 .\" modify it under the terms of the GNU General Public License as
@@ -22,7 +23,7 @@
 .\" USA.
 .\"
 .\"
-.TH AUDIT2ALLOW "1" "January 2005" "Security Enhanced Linux" NSA
+.TH AUDIT2ALLOW "1" "October 2010" "Security Enhanced Linux" NSA
 .SH NAME
 .BR audit2allow
 \- generate SELinux policy allow/dontaudit rules from logs of denied operations
@@ -117,14 +118,6 @@ an 'allow' rule.
 .B Please substitute /var/log/messages for /var/log/audit/audit.log in the 
 .B examples.
 .PP
-.B Using audit2allow to generate monolithic (non-module) policy
-$ cd /etc/selinux/$SELINUXTYPE/src/policy
-$ cat /var/log/audit/audit.log | audit2allow >> domains/misc/local.te
-$ cat domains/misc/local.te
-allow cupsd_config_t unconfined_t:fifo_file { getattr ioctl };
-<review domains/misc/local.te and customize as desired>
-$ make load
-
 .B Using audit2allow to generate module policy
 
 $ cat /var/log/audit/audit.log | audit2allow -m local > local.te
@@ -132,19 +125,37 @@ $ cat local.te
 module local 1.0;
 
 require {
-        role system_r;
+        class file {  getattr open read };
 
 
-        class fifo_file {  getattr ioctl };
-
-
-        type cupsd_config_t;
-        type unconfined_t;
+        type myapp_t;
+        type etc_t;
  };
 
 
-allow cupsd_config_t unconfined_t:fifo_file { getattr ioctl };
+allow myapp_t etc_t:file { getattr open read };
 <review local.te and customize as desired>
+
+.B Using audit2allow to generate module policy using reference policy
+
+$ cat /var/log/audit/audit.log | audit2allow -R -m local > local.te
+$ cat local.te
+policy_module(local, 1.0)
+
+gen_require(`
+        type myapp_t;
+        type etc_t;
+ };
+
+files_read_etc_files(myapp_t)
+<review local.te and customize as desired>
+
+.B Building module policy using Makefile
+
+# SELinux provides a policy devel environment under /usr/share/selinux/devel
+# You can create a te file and compile it by executing
+$ make -f /usr/share/selinux/devel/Makefile
+$ semodule -i local.pp
 
 .B Building module policy manually
 
@@ -167,6 +178,14 @@ In order to load this newly created policy package into the kernel,
 you are required to execute
 
 semodule -i local.pp
+
+.B Using audit2allow to generate monolithic (non-module) policy
+$ cd /etc/selinux/$SELINUXTYPE/src/policy
+$ cat /var/log/audit/audit.log | audit2allow >> domains/misc/local.te
+$ cat domains/misc/local.te
+allow cupsd_config_t unconfined_t:fifo_file { getattr ioctl };
+<review domains/misc/local.te and customize as desired>
+$ make load
 
 .fi
 .PP
