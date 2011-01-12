@@ -139,6 +139,7 @@ typedef int (* require_func_t)();
 %token MODULE VERSION_IDENTIFIER REQUIRE OPTIONAL
 %token POLICYCAP
 %token PERMISSIVE
+%token FILESYSTEM
 
 %left OR
 %left XOR
@@ -646,7 +647,7 @@ opt_fs_uses             : fs_uses
 fs_uses                 : fs_use_def
                         | fs_uses fs_use_def
                         ;
-fs_use_def              : FSUSEXATTR identifier security_context_def ';'
+fs_use_def              : FSUSEXATTR filesystem security_context_def ';'
                         {if (define_fs_use(SECURITY_FS_USE_XATTR)) return -1;}
                         | FSUSETASK identifier security_context_def ';'
                         {if (define_fs_use(SECURITY_FS_USE_TASK)) return -1;}
@@ -659,11 +660,11 @@ opt_genfs_contexts      : genfs_contexts
 genfs_contexts          : genfs_context_def
                         | genfs_contexts genfs_context_def
                         ;
-genfs_context_def	: GENFSCON identifier path '-' identifier security_context_def
+genfs_context_def	: GENFSCON filesystem path '-' identifier security_context_def
 			{if (define_genfs_context(1)) return -1;}
-			| GENFSCON identifier path '-' '-' {insert_id("-", 0);} security_context_def
+			| GENFSCON filesystem path '-' '-' {insert_id("-", 0);} security_context_def
 			{if (define_genfs_context(1)) return -1;}
-                        | GENFSCON identifier path security_context_def
+                        | GENFSCON filesystem path security_context_def
 			{if (define_genfs_context(0)) return -1;}
 			;
 ipv4_addr_def		: IPV4_ADDR
@@ -737,6 +738,11 @@ nested_id_element       : identifier | '-' { if (insert_id("-", 0)) return -1; }
 identifier		: IDENTIFIER
 			{ if (insert_id(yytext,0)) return -1; }
 			;
+filesystem		: FILESYSTEM
+                        { if (insert_id(yytext,0)) return -1; }
+                        | IDENTIFIER
+			{ if (insert_id(yytext,0)) return -1; }
+                        ;
 path     		: PATH
 			{ if (insert_id(yytext,0)) return -1; }
 			;
