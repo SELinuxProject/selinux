@@ -465,6 +465,42 @@ void avc_netlink_release_fd(void);
  */
 int avc_netlink_check_nb(void);
 
+/**
+ * selinux_status_open - Open and map SELinux kernel status page
+ *
+ */
+int selinux_status_open(int fallback);
+
+/**
+ * selinux_status_close - Unmap and close SELinux kernel status page
+ *
+ */
+void selinux_status_close(void);
+
+/**
+ * selinux_status_updated - Inform us whether the kernel status has been updated
+ *
+ */
+int selinux_status_updated(void);
+
+/**
+ * selinux_status_getenforce - Get the enforce flag value
+ *
+ */
+int selinux_status_getenforce(void);
+
+/**
+ * selinux_status_policyload - Get the number of policy reloaded
+ *
+ */
+int selinux_status_policyload(void);
+
+/**
+ * selinux_status_deny_unknown - Get the  behavior for undefined classes/permissions
+ *
+ */
+int selinux_status_deny_unknown(void);
+
 #ifdef __cplusplus
 }
 #endif
