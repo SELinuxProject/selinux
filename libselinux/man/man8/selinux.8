@@ -1,7 +1,7 @@
 .TH  "selinux"  "8"  "29 Apr 2005" "dwalsh@redhat.com" "SELinux Command Line documentation"
 
 .SH "NAME"
-selinux \- NSA Security-Enhanced Linux (SELinux)
+SELinux \- NSA Security-Enhanced Linux (SELinux)
 
 .SH "DESCRIPTION"
 
@@ -62,12 +62,12 @@ compile-time tunable options and a set of runtime policy booleans.
 .B system-config-securitylevel
 allows customization of these booleans and tunables.
 
-Many domains that are protected by SELinux also include selinux man pages explainging how to customize their policy.  
+Many domains that are protected by SELinux also include SELinux man pages explaining how to customize their policy.  
 
 .SH FILE LABELING
 
 All files, directories, devices ... have a security context/label associated with them.  These context are stored in the extended attributes of the file system.
-Problems with SELinux often arise from the file system being mislabeled. This can be caused by booting the machine with a non selinux kernel.  If you see an error message containing file_t, that is usually a good indicator that you have a serious problem with file system labeling.  
+Problems with SELinux often arise from the file system being mislabeled. This can be caused by booting the machine with a non SELinux kernel.  If you see an error message containing file_t, that is usually a good indicator that you have a serious problem with file system labeling.  
 
 The best way to relabel the file system is to create the flag file /.autorelabel and reboot.  system-config-securitylevel, also has this capability.  The restorcon/fixfiles commands are also available for relabeling files. 
   
