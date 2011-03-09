@@ -1,25 +1,75 @@
-.TH "selinux_file_context_cmp" "3" "21 November 2009" "sds@tycho.nsa.gov" "SELinux API documentation"
+.TH "selinux_file_context_cmp" "3" "08 March 2011" "SELinux API documentation"
+
 .SH "NAME"
-selinux_file_context_cmp, selinux_file_context_verify \- comparison of two file contexts.
+selinux_file_context_cmp \- Compare two SELinux security contexts excluding the 'user' component.
 
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
-
-.BI "int selinux_file_context_cmp(const security_context_t " a ", const security_context_t " b ");"
-
-.BI "int selinux_file_context_verify(const char *" path ", mode_t " mode ");"
+.BI "int selinux_file_context_cmp(const security_context_t " a ", "
+.RS
+.BI "const security_context_t " b ");"
+.RE
 
 .SH "DESCRIPTION"
 .B selinux_file_context_cmp
-compares two file contexts to see if their differences are "significant", the function runs the strcmp function ignoring the user componant of the file context.  
+compares two context strings excluding the user component with
+.B strcmp(3)
+as shown in the
+.B EXAMPLE
+section.
 .sp
-.B selinux_file_context_verify
-compares the file context on disk to the system default.
-.sp
+This is useful as for most object contexts, the user component is not relevant.
 
 .SH "RETURN VALUE"
-Returns zero on success or \-1 otherwise.
+The return values follow the
+.B strcmp(3)
+function, where:
+.RS
+0  if they are equal.
+.RE
+.RS
+1  if
+.I a
+is greater than
+.I b
+.RE
+.RS
+\-1 if
+.I a
+is less than
+.I b
+.RE
+
+.SH "ERRORS"
+None.
+
+.SH "NOTES"
+The contexts being compared do not specifically need to be file contexts.
+
+.SH "EXAMPLE"
+If context
+.I a
+is:
+.RS
+user_u:user_r:user_t:s0
+.RE
+.sp
+and context
+.I b
+is:
+.RS
+root:user_r:user_t:s0
+.RE
+.sp
+then the actual strings compared are:
+.RS
+:user_r:user_t:s0 and :user_r:user_t:s0
+.RE
+.sp
+Therefore they will match and
+.B selinux_file_context_cmp
+will return zero.
 
 .SH "SEE ALSO"
-.BR selinux "(8), " selinux_lsetfilecon "(3), " matchpathcon "(3), " freecon "(3), " setfilecon "(3), " setfscreatecon "(3)"
+.BR selinux "(8)"

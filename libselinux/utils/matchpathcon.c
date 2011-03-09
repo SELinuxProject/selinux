@@ -45,7 +45,7 @@ int printmatchpathcon(char *path, int header, int mode)
 
 int main(int argc, char **argv)
 {
-	int i, init = 0;
+	int i, init = 0, rc = 0;
 	int header = 1, opt;
 	int verify = 0;
 	int notrans = 0;
@@ -121,17 +121,19 @@ int main(int argc, char **argv)
 			rc = selinux_file_context_verify(path, mode);
 
 			if (quiet) {
-				if (rc)
+				if (rc == 1)
 					continue;
 				else
 					exit(1);
 			}
 
-			if (rc) {
+			if (rc == -1) {
+				printf("%s error: %s\n", path, strerror(errno));
+				exit(1);
+			} else if (rc == 1) {
 				printf("%s verified.\n", path);
 			} else {
 				security_context_t con;
-				int rc;
 				error = 1;
 				if (notrans)
 					rc = lgetfilecon_raw(path, &con);

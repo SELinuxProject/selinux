@@ -566,7 +566,7 @@ extern int selinux_file_context_cmp(const security_context_t a,
 
 /* 
  * Verify the context of the file 'path' against policy.
- * Return 0 if correct. 
+ * Return 1 if match, 0 if not and -1 on error.
  */
 extern int selinux_file_context_verify(const char *path, mode_t mode);
 

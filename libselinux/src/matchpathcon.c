@@ -463,7 +463,7 @@ int selinux_file_context_verify(const char *path, mode_t mode)
 	rc = lgetfilecon_raw(path, &con);
 	if (rc == -1) {
 		if (errno != ENOTSUP)
-			return 1;
+			return -1;
 		else
 			return 0;
 	}
@@ -473,11 +473,18 @@ int selinux_file_context_verify(const char *path, mode_t mode)
 
 	if (selabel_lookup_raw(hnd, &fcontext, path, mode) != 0) {
 		if (errno != ENOENT)
-			rc = 1;
+			rc = -1;
 		else
 			rc = 0;
-	} else
+	} else {
+		/*
+		 * Need to set errno to 0 as it can be set to ENOENT if the
+		 * file_contexts.subs file does not exist (see selabel_open in
+		 * label.c), thus causing confusion if errno is checked on return.
+		 */
+		errno = 0;
 		rc = (selinux_file_context_cmp(fcontext, con) == 0);
+	}
 
 	freecon(con);
 	freecon(fcontext);
