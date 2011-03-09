@@ -1,3 +1,9 @@
+2.0.100 2011-03-09
+	* Library destructors for thread local storage keys from Eamon Walsh.
+
+2.0.99 2011-03-01
+	* SELinux man page fixes from Dan Walsh.
+
 2.0.98 2010-12-16
 	* Turn off default user handling when computing user contexts by Dan Walsh
 
