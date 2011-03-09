@@ -252,6 +252,11 @@ static void setrans_thread_destructor(void __attribute__((unused)) *unused)
 	free(prev_r2c_raw);
 }
 
+void __attribute__((destructor)) setrans_lib_destructor(void)
+{
+	__selinux_key_delete(destructor_key);
+}
+
 static inline void init_thread_destructor(void)
 {
 	if (destructor_initialized == 0) {

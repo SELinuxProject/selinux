@@ -290,6 +290,11 @@ static void matchpathcon_thread_destructor(void __attribute__((unused)) *ptr)
 	matchpathcon_fini();
 }
 
+void __attribute__((destructor)) matchpathcon_lib_destructor(void)
+{
+	__selinux_key_delete(destructor_key);
+}
+
 static void matchpathcon_init_once(void)
 {
 	__selinux_key_create(&destructor_key, matchpathcon_thread_destructor);
