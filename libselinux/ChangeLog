@@ -1,8 +1,13 @@
+2.0.101 2011-03-23
+	* db_language object class support for selabel_lookup from KaiGai
+	Kohei.
+
 2.0.100 2011-03-09
 	* Library destructors for thread local storage keys from Eamon Walsh.
 
 2.0.99 2011-03-01
 	* SELinux man page fixes from Dan Walsh.
+	* selinux_status interfaces from KaiGai Kohei.
 
 2.0.98 2010-12-16
 	* Turn off default user handling when computing user contexts by Dan Walsh
