@@ -417,7 +417,9 @@ role_type_def		: ROLE identifier TYPES names ';'
 role_dominance		: DOMINANCE '{' roles '}'
 			;
 role_trans_def		: ROLE_TRANSITION names names identifier ';'
-			{if (define_role_trans()) return -1; }
+			{if (define_role_trans(0)) return -1; }
+			| ROLE_TRANSITION names names ':' names identifier ';'
+			{if (define_role_trans(1)) return -1;}
 			;
 role_allow_def		: ALLOW names names ';'
 			{if (define_role_allow()) return -1; }

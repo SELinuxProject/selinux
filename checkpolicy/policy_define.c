@@ -2050,17 +2050,18 @@ static int set_roles(role_set_t * set, char *id)
 	return 0;
 }
 
-int define_role_trans(void)
+int define_role_trans(int class_specified)
 {
 	char *id;
 	role_datum_t *role;
 	role_set_t roles;
 	type_set_t types;
-	ebitmap_t e_types, e_roles;
-	ebitmap_node_t *tnode, *rnode;
+	class_datum_t *cladatum;
+	ebitmap_t e_types, e_roles, e_classes;
+	ebitmap_node_t *tnode, *rnode, *cnode;
 	struct role_trans *tr = NULL;
 	struct role_trans_rule *rule = NULL;
-	unsigned int i, j;
+	unsigned int i, j, k;
 	int add = 1;
 
 	if (pass == 1) {
@@ -2068,6 +2069,9 @@ int define_role_trans(void)
 			free(id);
 		while ((id = queue_remove(id_queue)))
 			free(id);
+		if (class_specified)
+			while ((id = queue_remove(id_queue)))
+				free(id);
 		id = queue_remove(id_queue);
 		free(id);
 		return 0;
@@ -2077,6 +2081,7 @@ int define_role_trans(void)
 	ebitmap_init(&e_roles);
 	type_set_init(&types);
 	ebitmap_init(&e_types);
+	ebitmap_init(&e_classes);
 
 	while ((id = queue_remove(id_queue))) {
 		if (set_roles(&roles, id))
@@ -2086,6 +2091,35 @@ int define_role_trans(void)
 	while ((id = queue_remove(id_queue))) {
 		if (set_types(&types, id, &add, 0))
 			return -1;
+	}
+
+	if (class_specified) {
+		while ((id = queue_remove(id_queue))) {
+			if (!is_id_in_scope(SYM_CLASSES, id)) {
+				yyerror2("class %s is not within scope", id);
+				free(id);
+				return -1;
+			}
+			cladatum = hashtab_search(policydbp->p_classes.table,
+						  id);
+			if (!cladatum) {
+				yyerror2("unknow class %s", id);
+				return -1;
+			}
+
+			ebitmap_set_bit(&e_classes, cladatum->s.value - 1, TRUE);
+			free(id);
+		}
+	} else {
+		cladatum = hashtab_search(policydbp->p_classes.table,
+					  "process");
+		if (!cladatum) {
+			yyerror2("could not find process class for "
+				 "legacy role_transition statement");
+			return -1;
+		}
+
+		ebitmap_set_bit(&e_classes, cladatum->s.value - 1, TRUE);
 	}
 
 	id = (char *)queue_remove(id_queue);
@@ -2117,27 +2151,37 @@ int define_role_trans(void)
 		ebitmap_for_each_bit(&e_types, tnode, j) {
 			if (!ebitmap_node_get_bit(tnode, j))
 				continue;
-
-			for (tr = policydbp->role_tr; tr; tr = tr->next) {
-				if (tr->role == (i + 1) && tr->type == (j + 1)) {
-					yyerror2("duplicate role transition for (%s,%s)",
-					      role_val_to_name(i + 1),
-					      policydbp->p_type_val_to_name[j]);
-					goto bad;
+			ebitmap_for_each_bit(&e_classes, cnode, k) {
+				if (!ebitmap_node_get_bit(cnode, k))
+					continue;
+				for (tr = policydbp->role_tr; tr;
+				     tr = tr->next) {
+					if (tr->role == (i + 1) &&
+					    tr->type == (j + 1) &&
+					    tr->tclass == (k + 1)) {
+						yyerror2("duplicate role "
+							 "transition for "
+							 "(%s,%s,%s)",
+							 role_val_to_name(i+1),
+							 policydbp->p_type_val_to_name[j],
+							 policydbp->p_class_val_to_name[k]);
+						goto bad;
+					}
 				}
-			}
 
-			tr = malloc(sizeof(struct role_trans));
-			if (!tr) {
-				yyerror("out of memory");
-				return -1;
+				tr = malloc(sizeof(struct role_trans));
+				if (!tr) {
+					yyerror("out of memory");
+					return -1;
+				}
+				memset(tr, 0, sizeof(struct role_trans));
+				tr->role = i + 1;
+				tr->type = j + 1;
+				tr->tclass = k + 1;
+				tr->new_role = role->s.value;
+				tr->next = policydbp->role_tr;
+				policydbp->role_tr = tr;
 			}
-			memset(tr, 0, sizeof(struct role_trans));
-			tr->role = i + 1;
-			tr->type = j + 1;
-			tr->new_role = role->s.value;
-			tr->next = policydbp->role_tr;
-			policydbp->role_tr = tr;
 		}
 	}
 	/* Now add the real rule */
@@ -2149,6 +2193,7 @@ int define_role_trans(void)
 	memset(rule, 0, sizeof(struct role_trans_rule));
 	rule->roles = roles;
 	rule->types = types;
+	rule->classes = e_classes;
 	rule->new_role = role->s.value;
 
 	append_role_trans(rule);

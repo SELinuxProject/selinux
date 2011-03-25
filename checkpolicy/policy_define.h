@@ -45,7 +45,7 @@ int define_ioport_context(unsigned long low, unsigned long high);
 int define_pcidevice_context(unsigned long device);
 int define_range_trans(int class_specified);
 int define_role_allow(void);
-int define_role_trans(void);
+int define_role_trans(int class_specified);
 int define_role_types(void);
 int define_sens(void);
 int define_te_avtab(int which);
