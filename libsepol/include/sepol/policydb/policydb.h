@@ -124,7 +124,8 @@ typedef struct role_datum {
 
 typedef struct role_trans {
 	uint32_t role;		/* current role */
-	uint32_t type;		/* program executable type */
+	uint32_t type;		/* program executable type, or new object type */
+	uint32_t tclass;	/* process class, or new object class */
 	uint32_t new_role;	/* new role */
 	struct role_trans *next;
 } role_trans_t;
@@ -234,7 +235,8 @@ typedef struct avrule {
 
 typedef struct role_trans_rule {
 	role_set_t roles;	/* current role */
-	type_set_t types;	/* program executable type */
+	type_set_t types;	/* program executable type, or new object type */
+	ebitmap_t classes;	/* process class, or new object class */
 	uint32_t new_role;	/* new role */
 	struct role_trans_rule *next;
 } role_trans_rule_t;
@@ -630,10 +632,11 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_POLCAP		22
 #define POLICYDB_VERSION_PERMISSIVE	23
 #define POLICYDB_VERSION_BOUNDARY	24
+#define POLICYDB_VERSION_ROLETRANS	26
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_BOUNDARY
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_ROLETRANS
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE		4
@@ -645,9 +648,10 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_PERMISSIVE		8
 #define MOD_POLICYDB_VERSION_BOUNDARY		9
 #define MOD_POLICYDB_VERSION_BOUNDARY_ALIAS	10
+#define MOD_POLICYDB_VERSION_ROLETRANS		12
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_BOUNDARY_ALIAS
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_ROLETRANS
 
 #define POLICYDB_CONFIG_MLS    1
 
