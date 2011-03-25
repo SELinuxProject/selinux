@@ -434,6 +434,7 @@ void role_trans_rule_init(role_trans_rule_t * x)
 	memset(x, 0, sizeof(*x));
 	role_set_init(&x->roles);
 	type_set_init(&x->types);
+	ebitmap_init(&x->classes);
 }
 
 void role_trans_rule_destroy(role_trans_rule_t * x)
@@ -441,6 +442,7 @@ void role_trans_rule_destroy(role_trans_rule_t * x)
 	if (x != NULL) {
 		role_set_destroy(&x->roles);
 		type_set_destroy(&x->types);
+		ebitmap_destroy(&x->classes);
 	}
 }
 
@@ -2954,6 +2956,9 @@ static int role_trans_rule_read(role_trans_rule_t ** r, struct policy_file *fp)
 			return -1;
 
 		if (type_set_read(&tr->types, fp))
+			return -1;
+
+		if (ebitmap_read(&tr->classes, fp))
 			return -1;
 
 		rc = next_entry(buf, fp, sizeof(uint32_t));

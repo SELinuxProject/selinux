@@ -1146,11 +1146,11 @@ static int copy_role_allows(expand_state_t * state, role_allow_rule_t * rules)
 
 static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 {
-	unsigned int i, j;
+	unsigned int i, j, k;
 	role_trans_t *n, *l, *cur_trans;
 	role_trans_rule_t *cur;
 	ebitmap_t roles, types;
-	ebitmap_node_t *rnode, *tnode;
+	ebitmap_node_t *rnode, *tnode, *cnode;
 
 	/* start at the end of the list */
 	for (l = state->out->role_tr; l && l->next; l = l->next) ;
@@ -1175,51 +1175,57 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 			ebitmap_for_each_bit(&types, tnode, j) {
 				if (!ebitmap_node_get_bit(tnode, j))
 					continue;
+				ebitmap_for_each_bit(&cur->classes, cnode, k) {
+					if (!ebitmap_node_get_bit(cnode, k))
+						continue;
 
-				cur_trans = state->out->role_tr;
-				while (cur_trans) {
-					if ((cur_trans->role == i + 1) &&
-					    (cur_trans->type == j + 1)) {
-						if (cur_trans->new_role ==
-						    cur->new_role) {
-							break;
-						} else {
-							ERR(state->handle,
-							    "Conflicting role trans rule %s %s : %s",
-							    state->out->
-							    p_role_val_to_name
-							    [i],
-							    state->out->
-							    p_type_val_to_name
-							    [j],
-							    state->out->
-							    p_role_val_to_name
-							    [cur->new_role -
-							     1]);
-							return -1;
+					cur_trans = state->out->role_tr;
+					while (cur_trans) {
+						if ((cur_trans->role ==
+								i + 1) &&
+						    (cur_trans->type ==
+								j + 1) &&
+						    (cur_trans->tclass ==
+								k + 1)) {
+							if (cur_trans->
+							    new_role ==
+								cur->new_role) {
+								break;
+							} else {
+								ERR(state->handle,
+									"Conflicting role trans rule %s %s : %s %s",
+									state->out->p_role_val_to_name[i],
+									state->out->p_type_val_to_name[j],
+									state->out->p_class_val_to_name[k],
+									state->out->p_role_val_to_name[cur->new_role - 1]);
+								return -1;
+							}
 						}
+						cur_trans = cur_trans->next;
 					}
-					cur_trans = cur_trans->next;
-				}
-				if (cur_trans)
-					continue;
+					if (cur_trans)
+						continue;
 
-				n = (role_trans_t *)
-				    malloc(sizeof(role_trans_t));
-				if (!n) {
-					ERR(state->handle, "Out of memory!");
-					return -1;
+					n = (role_trans_t *)
+						malloc(sizeof(role_trans_t));
+					if (!n) {
+						ERR(state->handle,
+							"Out of memory!");
+						return -1;
+					}
+					memset(n, 0, sizeof(role_trans_t));
+					n->role = i + 1;
+					n->type = j + 1;
+					n->tclass = k + 1;
+					n->new_role = state->rolemap
+							[cur->new_role - 1];
+					if (l)
+						l->next = n;
+					else
+						state->out->role_tr = n;
+
+					l = n;
 				}
-				memset(n, 0, sizeof(role_trans_t));
-				n->role = i + 1;
-				n->type = j + 1;
-				n->new_role = state->rolemap[cur->new_role - 1];
-				if (l) {
-					l->next = n;
-				} else {
-					state->out->role_tr = n;
-				}
-				l = n;
 			}
 		}
 

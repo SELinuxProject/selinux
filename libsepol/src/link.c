@@ -1246,6 +1246,8 @@ static int copy_role_trans_list(role_trans_rule_t * list,
 				policy_module_t * module, link_state_t * state)
 {
 	role_trans_rule_t *cur, *new_rule = NULL, *tail;
+	unsigned int i;
+	ebitmap_node_t *cnode;
 
 	cur = list;
 	tail = *dst;
@@ -1265,6 +1267,18 @@ static int copy_role_trans_list(role_trans_rule_t * list,
 		    || type_set_or_convert(&cur->types, &new_rule->types,
 					   module, state)) {
 			goto cleanup;
+		}
+
+		ebitmap_for_each_bit(&cur->classes, cnode, i) {
+			if (ebitmap_node_get_bit(cnode, i)) {
+				assert(module->map[SYM_CLASSES][i]);
+				if (ebitmap_set_bit(&new_rule->classes,
+						    module->
+						    map[SYM_CLASSES][i] - 1,
+						    1)) {
+					goto cleanup;
+				}
+			}
 		}
 
 		new_rule->new_role = module->map[SYM_ROLES][cur->new_role - 1];
