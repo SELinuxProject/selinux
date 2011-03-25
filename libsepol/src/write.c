@@ -462,11 +462,15 @@ static int cat_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	return POLICYDB_SUCCESS;
 }
 
-static int role_trans_write(role_trans_t * r, struct policy_file *fp)
+static int role_trans_write(policydb_t *p, struct policy_file *fp)
 {
+	role_trans_t *r = p->role_tr;
 	role_trans_t *tr;
 	uint32_t buf[3];
 	size_t nel, items;
+	int new_roletr = (p->policy_type == POLICY_KERN &&
+			  p->policyvers >= POLICYDB_VERSION_ROLETRANS);
+	int warning_issued = 0;
 
 	nel = 0;
 	for (tr = r; tr; tr = tr->next)
@@ -476,12 +480,26 @@ static int role_trans_write(role_trans_t * r, struct policy_file *fp)
 	if (items != 1)
 		return POLICYDB_ERROR;
 	for (tr = r; tr; tr = tr->next) {
+		if (!new_roletr && tr->tclass != SECCLASS_PROCESS) {
+			if (!warning_issued)
+				WARN(fp->handle, "Discarding role_transition "
+				     "rules for security classes other than "
+				     "\"process\"");
+			warning_issued = 1;
+			continue;
+		}
 		buf[0] = cpu_to_le32(tr->role);
 		buf[1] = cpu_to_le32(tr->type);
 		buf[2] = cpu_to_le32(tr->new_role);
 		items = put_entry(buf, sizeof(uint32_t), 3, fp);
 		if (items != 3)
 			return POLICYDB_ERROR;
+		if (new_roletr) {
+			buf[0] = cpu_to_le32(tr->tclass);
+			items = put_entry(buf, sizeof(uint32_t), 1, fp);
+			if (items != 1)
+				return POLICYDB_ERROR;
+		}
 	}
 
 	return POLICYDB_SUCCESS;
@@ -1815,7 +1833,7 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 			if (cond_write_list(p, p->cond_list, fp))
 				return POLICYDB_ERROR;
 		}
-		if (role_trans_write(p->role_tr, fp))
+		if (role_trans_write(p, fp))
 			return POLICYDB_ERROR;
 		if (role_allow_write(p->role_allow, fp))
 			return POLICYDB_ERROR;

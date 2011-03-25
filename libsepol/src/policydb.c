@@ -2124,12 +2124,15 @@ static int type_read(policydb_t * p
 	return -1;
 }
 
-int role_trans_read(role_trans_t ** t, struct policy_file *fp)
+int role_trans_read(policydb_t *p, struct policy_file *fp)
 {
+	role_trans_t **t = &p->role_tr;
 	unsigned int i;
 	uint32_t buf[3], nel;
 	role_trans_t *tr, *ltr;
 	int rc;
+	int new_roletr = (p->policy_type == POLICY_KERN &&
+			  p->policyvers >= POLICYDB_VERSION_ROLETRANS);
 
 	rc = next_entry(buf, fp, sizeof(uint32_t));
 	if (rc < 0)
@@ -2152,6 +2155,13 @@ int role_trans_read(role_trans_t ** t, struct policy_file *fp)
 		tr->role = le32_to_cpu(buf[0]);
 		tr->type = le32_to_cpu(buf[1]);
 		tr->new_role = le32_to_cpu(buf[2]);
+		if (new_roletr) {
+			rc = next_entry(buf, fp, sizeof(uint32_t));
+			if (rc < 0)
+				return -1;
+			tr->tclass = le32_to_cpu(buf[0]);
+		} else
+			tr->tclass = SECCLASS_PROCESS;
 		ltr = tr;
 	}
 	return 0;
@@ -3472,7 +3482,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		if (r_policyvers >= POLICYDB_VERSION_BOOL)
 			if (cond_read_list(p, &p->cond_list, fp))
 				goto bad;
-		if (role_trans_read(&p->role_tr, fp))
+		if (role_trans_read(p, fp))
 			goto bad;
 		if (role_allow_read(&p->role_allow, fp))
 			goto bad;
