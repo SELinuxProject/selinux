@@ -451,13 +451,38 @@ void display_initial_sids(policydb_t * p, FILE * fp)
 #endif
 }
 
+void display_class_set(ebitmap_t *classes, policydb_t *p, FILE *fp)
+{
+	int i, num = 0;
+
+	for (i = ebitmap_startbit(classes); i < ebitmap_length(classes); i++) {
+		if (!ebitmap_get_bit(classes, i))
+			continue;
+		num++;
+		if (num > 1) {
+			fprintf(fp, "{");
+			break;
+		}
+	}
+
+	for (i = ebitmap_startbit(classes); i < ebitmap_length(classes); i++) {
+		if (ebitmap_get_bit(classes, i))
+			display_id(p, fp, SYM_CLASSES, i, "");
+	}
+
+	if (num > 1)
+		fprintf(fp, " }");
+}
+
 void display_role_trans(role_trans_rule_t * tr, policydb_t * p, FILE * fp)
 {
 	for (; tr; tr = tr->next) {
 		fprintf(fp, "role transition ");
 		display_mod_role_set(&tr->roles, p, fp);
 		display_type_set(&tr->types, 0, p, fp);
-		display_id(p, fp, SYM_ROLES, tr->new_role - 1, " :");
+		fprintf(fp, " :");
+		display_class_set(&tr->classes, p, fp);
+		display_id(p, fp, SYM_ROLES, tr->new_role - 1, "");
 		fprintf(fp, "\n");
 	}
 }
