@@ -52,6 +52,7 @@
 #define DISPLAY_AVBLOCK_ROLE_ALLOW	4
 #define DISPLAY_AVBLOCK_REQUIRES	5
 #define DISPLAY_AVBLOCK_DECLARES	6
+#define DISPLAY_AVBLOCK_FILENAME_TRANS	7
 
 static policydb_t policydb;
 extern unsigned int ss_initialized;
@@ -505,6 +506,18 @@ void display_role_allow(role_allow_rule_t * ra, policydb_t * p, FILE * fp)
 	}
 }
 
+void display_filename_trans(filename_trans_rule_t * tr, policydb_t * p, FILE * fp)
+{
+	for (; tr; tr = tr->next) {
+		fprintf(fp, "filename transition %s", tr->name);
+		display_type_set(&tr->stypes, 0, p, fp);
+		display_type_set(&tr->ttypes, 0, p, fp);
+		display_id(p, fp, SYM_CLASSES, tr->tclass - 1, ":");
+		display_id(p, fp, SYM_TYPES, tr->otype - 1, "");
+		fprintf(fp, "\n");
+	}
+}
+
 int role_display_callback(hashtab_key_t key, hashtab_datum_t datum, void *data)
 {
 	role_datum_t *role;
@@ -672,6 +685,11 @@ int display_avdecl(avrule_decl_t * decl, int field, uint32_t what,
 			}
 			break;
 		}
+	case DISPLAY_AVBLOCK_FILENAME_TRANS:
+		display_filename_trans(decl->filename_trans_rules, policy,
+				       out_fp);
+			return -1;
+		break;
 	default:{
 			assert(0);
 		}
@@ -837,6 +855,7 @@ int menu()
 	printf("c)  Display policy capabilities\n");
 	printf("l)  Link in a module\n");
 	printf("u)  Display the unknown handling setting\n");
+	printf("F)  Display filename_trans rules\n");
 	printf("\n");
 	printf("f)  set output file\n");
 	printf("m)  display menu\n");
@@ -971,6 +990,11 @@ int main(int argc, char **argv)
 			}
 			if (out_fp != stdout)
 				printf("\nOutput to file: %s\n", OutfileName);
+			break;
+		case 'F':
+			fprintf(out_fp, "filename_trans rules:\n");
+			display_avblock(DISPLAY_AVBLOCK_FILENAME_TRANS,
+					0, &policydb, out_fp);
 			break;
 		case 'l':
 			link_module(&policydb, out_fp);

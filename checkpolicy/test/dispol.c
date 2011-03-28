@@ -341,6 +341,21 @@ static void display_permissive(policydb_t *p, FILE *fp)
 	}
 }
 
+static void display_filename_trans(policydb_t *p, FILE *fp)
+{
+	filename_trans_t *ft;
+
+	fprintf(fp, "filename_trans rules:\n");
+	for (ft = p->filename_trans; ft; ft = ft->next) {
+		fprintf(fp, "%s\n", ft->name);
+		display_id(p, fp, SYM_TYPES, ft->stype - 1, "");
+		display_id(p, fp, SYM_TYPES, ft->ttype - 1, "");
+		display_id(p, fp, SYM_CLASSES, ft->tclass - 1, ":");
+		display_id(p, fp, SYM_TYPES, ft->otype - 1, "");
+		fprintf(fp, "\n");
+	}
+}
+
 int menu()
 {
 	printf("\nSelect a command:\n");
@@ -355,6 +370,8 @@ int menu()
 	printf("c)  display policy capabilities\n");
 	printf("p)  display the list of permissive types\n");
 	printf("u)  display unknown handling setting\n");
+	printf("F)  display filename_trans rules\n");
+	printf("\n");
 	printf("f)  set output file\n");
 	printf("m)  display menu\n");
 	printf("q)  quit\n");
@@ -491,6 +508,9 @@ int main(int argc, char **argv)
 			}
 			if (out_fp != stdout)
 				printf("\nOutput to file: %s\n", OutfileName);
+			break;
+		case 'F':
+			display_filename_trans(&policydb, out_fp);
 			break;
 		case 'q':
 			policydb_destroy(&policydb);

@@ -2241,6 +2241,190 @@ int define_role_allow(void)
 	return 0;
 }
 
+avrule_t *define_cond_filename_trans(void)
+{
+	yyerror("type transitions with a filename not allowed inside "
+		"conditionals\n");
+	return COND_ERR;
+}
+
+int define_filename_trans(void)
+{
+	char *id, *name = NULL;
+	type_set_t stypes, ttypes;
+	ebitmap_t e_stypes, e_ttypes;
+	ebitmap_t e_tclasses;
+	ebitmap_node_t *snode, *tnode, *cnode;
+	filename_trans_t *ft;
+	filename_trans_rule_t *ftr;
+	class_datum_t *cladatum;
+	type_datum_t *typdatum;
+	uint32_t otype;
+	unsigned int c, s, t;
+	int add;
+
+	if (pass == 1) {
+		/* stype */
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		/* ttype */
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		/* tclass */
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		/* otype */
+		id = queue_remove(id_queue);
+		free(id);
+		/* name */
+		id = queue_remove(id_queue);
+		free(id);
+		return 0;
+	}
+
+
+	add = 1;
+	type_set_init(&stypes);
+	while ((id = queue_remove(id_queue))) {
+		if (set_types(&stypes, id, &add, 0))
+			goto bad;
+	}
+
+	add =1;
+	type_set_init(&ttypes);
+	while ((id = queue_remove(id_queue))) {
+		if (set_types(&ttypes, id, &add, 0))
+			goto bad;
+	}
+
+	ebitmap_init(&e_tclasses);
+	while ((id = queue_remove(id_queue))) {
+		if (!is_id_in_scope(SYM_CLASSES, id)) {
+			yyerror2("class %s is not within scope", id);
+			free(id);
+			goto bad;
+		}
+		cladatum = hashtab_search(policydbp->p_classes.table, id);
+		if (!cladatum) {
+			yyerror2("unknown class %s", id);
+			goto bad;
+		}
+		if (ebitmap_set_bit(&e_tclasses, cladatum->s.value - 1, TRUE)) {
+			yyerror("Out of memory");
+			goto bad;
+		}
+		free(id);
+	}
+
+	id = (char *)queue_remove(id_queue);
+	if (!id) {
+		yyerror("no otype in transition definition?");
+		goto bad;
+	}
+	if (!is_id_in_scope(SYM_TYPES, id)) {
+		yyerror2("type %s is not within scope", id);
+		free(id);
+		goto bad;
+	}
+	typdatum = hashtab_search(policydbp->p_types.table, id);
+	if (!typdatum) {
+		yyerror2("unknown type %s used in transition definition", id);
+		goto bad;
+	}
+	free(id);
+	otype = typdatum->s.value;
+
+	name = queue_remove(id_queue);
+	if (!name) {
+		yyerror("no pathname specified in filename_trans definition?");
+		goto bad;
+	}
+
+	/* We expand the class set into seperate rules.  We expand the types
+	 * just to make sure there are not duplicates.  They will get turned
+	 * into seperate rules later */
+	ebitmap_init(&e_stypes);
+	if (type_set_expand(&stypes, &e_stypes, policydbp, 1))
+		goto bad;
+
+	ebitmap_init(&e_ttypes);
+	if (type_set_expand(&ttypes, &e_ttypes, policydbp, 1))
+		goto bad;
+
+	ebitmap_for_each_bit(&e_tclasses, cnode, c) {
+		if (!ebitmap_node_get_bit(cnode, c))
+			continue;
+		ebitmap_for_each_bit(&e_stypes, snode, s) {
+			if (!ebitmap_node_get_bit(snode, s))
+				continue;
+			ebitmap_for_each_bit(&e_ttypes, tnode, t) {
+				if (!ebitmap_node_get_bit(tnode, t))
+					continue;
+	
+				for (ft = policydbp->filename_trans; ft; ft = ft->next) {
+					if (ft->stype == (s + 1) &&
+					    ft->ttype == (t + 1) &&
+					    ft->tclass == (c + 1) &&
+					    !strcmp(ft->name, name)) {
+						yyerror2("duplicate filename transition for: filename_trans %s %s %s:%s",
+							 name, 
+							 policydbp->p_type_val_to_name[s],
+							 policydbp->p_type_val_to_name[t],
+							 policydbp->p_class_val_to_name[c]);
+						goto bad;
+					}
+				}
+	
+				ft = malloc(sizeof(*ft));
+				if (!ft) {
+					yyerror("out of memory");
+					goto bad;
+				}
+				memset(ft, 0, sizeof(*ft));
+	
+				ft->next = policydbp->filename_trans;
+				policydbp->filename_trans = ft;
+	
+				ft->name = strdup(name);
+				if (!ft->name) {
+					yyerror("out of memory");
+					goto bad;
+				}
+				ft->stype = s + 1;
+				ft->ttype = t + 1;
+				ft->tclass = c + 1;
+				ft->otype = otype;
+			}
+		}
+	
+		/* Now add the real rule since we didn't find any duplicates */
+		ftr = malloc(sizeof(*ftr));
+		if (!ftr) {
+			yyerror("out of memory");
+			goto bad;
+		}
+		filename_trans_rule_init(ftr);
+		append_filename_trans(ftr);
+
+		ftr->name = strdup(name);
+		ftr->stypes = stypes;
+		ftr->ttypes = ttypes;
+		ftr->tclass = c + 1;
+		ftr->otype = otype;
+	}
+
+	free(name);
+	ebitmap_destroy(&e_stypes);
+	ebitmap_destroy(&e_ttypes);
+	ebitmap_destroy(&e_tclasses);
+
+	return 0;
+
+bad:
+	free(name);
+	return -1;
+}
+
 static constraint_expr_t *constraint_expr_clone(constraint_expr_t * expr)
 {
 	constraint_expr_t *h = NULL, *l = NULL, *e, *newe;

@@ -1313,6 +1313,18 @@ void append_role_allow(role_allow_rule_t * role_allow_rules)
 }
 
 /* this doesn't actually append, but really prepends it */
+void append_filename_trans(filename_trans_rule_t * filename_trans_rules)
+{
+	avrule_decl_t *decl = stack_top->decl;
+
+	/* filename transitions are not allowed within conditionals */
+	assert(stack_top->type == 1);
+
+	filename_trans_rules->next = decl->filename_trans_rules;
+	decl->filename_trans_rules = filename_trans_rules;
+}
+
+/* this doesn't actually append, but really prepends it */
 void append_range_trans(range_trans_rule_t * range_tr_rules)
 {
 	avrule_decl_t *decl = stack_top->decl;

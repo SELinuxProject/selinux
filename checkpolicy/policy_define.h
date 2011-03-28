@@ -16,6 +16,7 @@
 avrule_t *define_cond_compute_type(int which);
 avrule_t *define_cond_pol_list(avrule_t *avlist, avrule_t *stmt);
 avrule_t *define_cond_te_avtab(int which);
+avrule_t *define_cond_filename_trans(void);
 cond_expr_t *define_cond_expr(uint32_t expr_type, void *arg1, void* arg2);
 int define_attrib(void);
 int define_av_perms(int inherits);
@@ -47,6 +48,7 @@ int define_range_trans(int class_specified);
 int define_role_allow(void);
 int define_role_trans(int class_specified);
 int define_role_types(void);
+int define_filename_trans(void);
 int define_sens(void);
 int define_te_avtab(int which);
 int define_typealias(void);

@@ -80,6 +80,7 @@ void append_avrule(avrule_t * avrule);
 void append_role_trans(role_trans_rule_t * role_tr_rules);
 void append_role_allow(role_allow_rule_t * role_allow_rules);
 void append_range_trans(range_trans_rule_t * range_tr_rules);
+void append_filename_trans(filename_trans_rule_t * filename_trans_rules);
 
 /* Create a new optional block and add it to the global policy.
  * During the second pass resolve the block's requirements.  Return 0
