@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <assert.h>
 #include <selinux/selinux.h>
 #include <selinux/avc.h>
 #include "mapping.h"
@@ -103,8 +102,13 @@ unmap_class(security_class_t tclass)
 	if (tclass < current_mapping_size)
 		return current_mapping[tclass].value;
 
-	assert(current_mapping_size == 0);
-	return tclass;
+	/* If here no mapping set or the class requested is not valid. */
+	if (current_mapping_size != 0) {
+		errno = EINVAL;
+		return 0;
+	}
+	else
+		return tclass;
 }
 
 access_vector_t
@@ -116,16 +120,19 @@ unmap_perm(security_class_t tclass, access_vector_t tperm)
 
 		for (i=0; i<current_mapping[tclass].num_perms; i++)
 			if (tperm & (1<<i)) {
-				assert(current_mapping[tclass].perms[i]);
 				kperm |= current_mapping[tclass].perms[i];
 				tperm &= ~(1<<i);
 			}
-		assert(tperm == 0);
 		return kperm;
 	}
 
-	assert(current_mapping_size == 0);
-	return tperm;
+	/* If here no mapping set or the perm requested is not valid. */
+	if (current_mapping_size != 0) {
+		errno = EINVAL;
+		return 0;
+	}
+	else
+		return tperm;
 }
 
 /*
@@ -141,8 +148,13 @@ map_class(security_class_t kclass)
 		if (current_mapping[i].value == kclass)
 			return i;
 
-	assert(current_mapping_size == 0);
-	return kclass;
+/* If here no mapping set or the class requested is not valid. */
+	if (current_mapping_size != 0) {
+		errno = EINVAL;
+		return 0;
+	}
+	else
+		return kclass;
 }
 
 access_vector_t
@@ -157,11 +169,14 @@ map_perm(security_class_t tclass, access_vector_t kperm)
 				tperm |= 1<<i;
 				kperm &= ~current_mapping[tclass].perms[i];
 			}
-		assert(kperm == 0);
-		return tperm;
-	}
 
-	assert(current_mapping_size == 0);
+		if (tperm == 0) {
+			errno = EINVAL;
+			return 0;
+		}
+		else
+			return tperm;
+	}
 	return kperm;
 }
 

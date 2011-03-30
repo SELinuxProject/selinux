@@ -401,8 +401,10 @@ static const char *security_av_perm_to_string_compat(security_class_t tclass,
 	access_vector_t common_base = 0;
 	unsigned int i;
 
-	if (!av)
+	if (!av) {
+		errno = EINVAL;
 		return NULL;
+	}
 
 	for (i = 0; i < ARRAY_SIZE(av_inherit); i++) {
 		if (av_inherit[i].tclass == tclass) {
