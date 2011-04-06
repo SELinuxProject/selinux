@@ -56,12 +56,11 @@ static char *selabel_sub(struct selabel_sub *ptr, const char *src)
 	return NULL;
 }
 
-static struct selabel_sub *selabel_subs_init(void)
+static struct selabel_sub *selabel_subs_init(const char *path,struct selabel_sub *list)
 {
 	char buf[1024];
-	FILE *cfg = fopen(selinux_file_context_subs_path(), "r");
+	FILE *cfg = fopen(path, "r");
 	struct selabel_sub *sub;
-	struct selabel_sub *list = NULL;
 
 	if (cfg) {
 		while (fgets_unlocked(buf, sizeof(buf) - 1, cfg)) {
@@ -160,7 +159,10 @@ struct selabel_handle *selabel_open(unsigned int backend,
 	memset(rec, 0, sizeof(*rec));
 	rec->backend = backend;
 	rec->validating = selabel_is_validate_set(opts, nopts);
-	rec->subs = selabel_subs_init();
+
+	rec->subs = NULL;
+	rec->subs = selabel_subs_init(selinux_file_context_subs_dist_path(), rec->subs);
+	rec->subs = selabel_subs_init(selinux_file_context_subs_path(), rec->subs);
 
 	if ((*initfuncs[backend])(rec, opts, nopts)) {
 		free(rec);

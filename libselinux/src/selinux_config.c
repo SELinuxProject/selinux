@@ -45,7 +45,8 @@
 #define VIRTUAL_IMAGE     22
 #define FILE_CONTEXT_SUBS 23
 #define SEPGSQL_CONTEXTS  24
-#define NEL               25
+#define FILE_CONTEXT_SUBS_DIST 25
+#define NEL               26
 
 /* Part of one-time lazy init */
 static pthread_once_t once = PTHREAD_ONCE_INIT;
@@ -422,6 +423,12 @@ const char * selinux_file_context_subs_path(void) {
 }
 
 hidden_def(selinux_file_context_subs_path)
+
+const char * selinux_file_context_subs_dist_path(void) {
+	return get_path(FILE_CONTEXT_SUBS_DIST);
+}
+
+hidden_def(selinux_file_context_subs_dist_path)
 
 const char *selinux_sepgsql_context_path()
 {

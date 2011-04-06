@@ -482,6 +482,7 @@ extern const char *selinux_file_context_path(void);
 extern const char *selinux_file_context_homedir_path(void);
 extern const char *selinux_file_context_local_path(void);
 extern const char *selinux_file_context_subs_path(void);
+extern const char *selinux_file_context_subs_dist_path(void);
 extern const char *selinux_homedir_context_path(void);
 extern const char *selinux_media_context_path(void);
 extern const char *selinux_virtual_domain_context_path(void);
