@@ -329,7 +329,7 @@ int selinux_init_load_policy(int *enforce)
 	selinux_getenforcemode(&seconfig);
 
 	/* Check for an override of the mode via the kernel command line. */
-	rc = mount("none", "/proc", "proc", 0, 0);
+	rc = mount("proc", "/proc", "proc", 0, 0);
 	cfg = fopen("/proc/cmdline", "r");
 	if (cfg) {
 		char *tmp;
@@ -369,7 +369,7 @@ int selinux_init_load_policy(int *enforce)
 	 * Check for the existence of SELinux via selinuxfs, and 
 	 * mount it if present for use in the calls below.  
 	 */
-	if (mount("none", SELINUXMNT, "selinuxfs", 0, 0) < 0 && errno != EBUSY) {
+	if (mount("selinuxfs", SELINUXMNT, "selinuxfs", 0, 0) < 0 && errno != EBUSY) {
 		if (errno == ENODEV) {
 			/*
 			 * SELinux was disabled in the kernel, either
