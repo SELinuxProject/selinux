@@ -35,6 +35,7 @@ static __thread security_context_t prev_r2c_raw = NULL;
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 static pthread_key_t destructor_key;
+static int destructor_key_initialized = 0;
 static __thread char destructor_initialized;
 
 /*
@@ -254,7 +255,8 @@ static void setrans_thread_destructor(void __attribute__((unused)) *unused)
 
 void __attribute__((destructor)) setrans_lib_destructor(void)
 {
-	__selinux_key_delete(destructor_key);
+	if (destructor_key_initialized)
+		__selinux_key_delete(destructor_key);
 }
 
 static inline void init_thread_destructor(void)
@@ -267,7 +269,9 @@ static inline void init_thread_destructor(void)
 
 static void init_context_translations(void)
 {
-	__selinux_key_create(&destructor_key, setrans_thread_destructor);
+	if (__selinux_key_create(&destructor_key, setrans_thread_destructor) == 0)
+		destructor_key_initialized = 1;
+
 	mls_enabled = is_selinux_mls_enabled();
 }
 

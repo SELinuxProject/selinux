@@ -17,6 +17,7 @@ static __thread int con_array_used;
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 static pthread_key_t destructor_key;
+static int destructor_key_initialized = 0;
 
 static int add_array_elt(char *con)
 {
@@ -292,12 +293,14 @@ static void matchpathcon_thread_destructor(void __attribute__((unused)) *ptr)
 
 void __attribute__((destructor)) matchpathcon_lib_destructor(void)
 {
-	__selinux_key_delete(destructor_key);
+	if (destructor_key_initialized)
+		__selinux_key_delete(destructor_key);
 }
 
 static void matchpathcon_init_once(void)
 {
-	__selinux_key_create(&destructor_key, matchpathcon_thread_destructor);
+	if (__selinux_key_create(&destructor_key, matchpathcon_thread_destructor) == 0)
+		destructor_key_initialized = 1;
 }
 
 int matchpathcon_init_prefix(const char *path, const char *subset)

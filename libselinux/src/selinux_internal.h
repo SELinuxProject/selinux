@@ -3,6 +3,7 @@
 #include "dso.h"
 
 hidden_proto(selinux_mkload_policy)
+    hidden_proto(fini_selinuxmnt)
     hidden_proto(set_selinuxmnt)
     hidden_proto(security_disable)
     hidden_proto(security_policyvers)
@@ -114,10 +115,7 @@ extern int selinux_page_size hidden;
 
 /* Pthread key macros */
 #define __selinux_key_create(KEY, DESTRUCTOR)			\
-	do {							\
-		if (pthread_key_create != NULL)			\
-			pthread_key_create(KEY, DESTRUCTOR);	\
-	} while (0)
+	(pthread_key_create != NULL ? pthread_key_create(KEY, DESTRUCTOR) : -1)
 
 #define __selinux_key_delete(KEY)				\
 	do {							\

@@ -398,6 +398,7 @@ int selinux_init_load_policy(int *enforce)
 		if (rc == 0) {
 			/* Successfully disabled, so umount selinuxfs too. */
 			umount(SELINUXMNT);
+			fini_selinuxmnt();
 		}
 		/*
 		 * If we failed to disable, SELinux will still be 

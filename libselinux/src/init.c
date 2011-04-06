@@ -96,11 +96,13 @@ static void init_selinuxmnt(void)
 	return;
 }
 
-static void fini_selinuxmnt(void)
+void fini_selinuxmnt(void)
 {
 	free(selinux_mnt);
 	selinux_mnt = NULL;
 }
+
+hidden_def(fini_selinuxmnt)
 
 void set_selinuxmnt(char *mnt)
 {
