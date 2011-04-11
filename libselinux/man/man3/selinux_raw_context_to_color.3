@@ -20,7 +20,7 @@ associated to the raw context
 provided that the 
 .BR mcstransd "(8)"
 daemon is running, the policy is an MLS type policy (MCS or MLS) and there is a color configuration file
-.BR secolors.conf "(5)"
+.BR secolor.conf "(5)"
 (see the
 .B FILES
 section).
@@ -85,11 +85,11 @@ daemon is not running.
 .SH "FILES"
 .B selinux_raw_context_to_color
 obtains the translated entry from the active policy 
-.BR secolors.conf "(5)"
+.BR secolor.conf "(5)"
 file as returned by
 .BR selinux_colors_path "(3)."
 The file format is described in 
-.BR secolors.conf "(5)."
+.BR secolor.conf "(5)."
 
 .SH "NOTES"
 1. The primary use of 
