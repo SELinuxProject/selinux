@@ -1,3 +1,6 @@
+2.0.86 2011-04-11
+	* Use correct color range in mcstrand by Richard Haines.
+
 2.0.85 2010-12-20
 	* Move newrole to use libcap-ng from Dan Walsh
 

@@ -1,3 +1,12 @@
+2.0.102 2011-04-11
+	* Give correct names to mount points in load_policy by Dan Walsh.
+	* Make sure selinux state is reported correctly if selinux is disabled or
+	fails to load by Dan Walsh.
+	* Fix crash if selinux_key_create was never called by Dan Walsh.
+	* Add new file_context.subs_dist for distro specific filecon substitutions
+	by Dan Walsh.
+	* Update man pages for selinux_color_* functions by Richard Haines.
+
 2.0.101 2011-03-23
 	* db_language object class support for selabel_lookup from KaiGai
 	Kohei.

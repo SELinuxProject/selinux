@@ -1,3 +1,6 @@
+2.0.43 2011-04-11
+	* Add new class field in role_transition by Harry Ciao.
+
 2.0.42 2010-12-16
 	* Fix compliation under GCC 4.6 by Justin Mattock
 
