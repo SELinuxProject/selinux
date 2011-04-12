@@ -138,6 +138,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	},
 	{
 	 .type = POLICY_KERN,
+	 .version = POLICYDB_VERSION_FILENAME_TRANS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_NODE6 + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_KERN,
 	 .version = POLICYDB_VERSION_ROLETRANS,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = OCON_NODE6 + 1,
@@ -194,6 +201,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	},
 	{
 	 .type = POLICY_BASE,
+	 .version = MOD_POLICYDB_VERSION_FILENAME_TRANS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_NODE6 + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_BASE,
 	 .version = MOD_POLICYDB_VERSION_ROLETRANS,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = OCON_NODE6 + 1,
@@ -244,6 +258,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_BOUNDARY_ALIAS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = 0,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_MOD,
+	 .version = MOD_POLICYDB_VERSION_FILENAME_TRANS,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = 0,
 	 .target_platform = SEPOL_TARGET_SELINUX,
@@ -451,6 +472,33 @@ void role_trans_rule_list_destroy(role_trans_rule_t * x)
 	while (x != NULL) {
 		role_trans_rule_t *next = x->next;
 		role_trans_rule_destroy(x);
+		free(x);
+		x = next;
+	}
+}
+
+void filename_trans_rule_init(filename_trans_rule_t * x)
+{
+	memset(x, 0, sizeof(*x));
+	type_set_init(&x->stypes);
+	type_set_init(&x->ttypes);
+}
+
+static void filename_trans_rule_destroy(filename_trans_rule_t * x)
+{
+	if (!x)
+		return;
+	type_set_destroy(&x->stypes);
+	type_set_destroy(&x->ttypes);
+	free(x->name);
+}
+
+void filename_trans_rule_list_destroy(filename_trans_rule_t * x)
+{
+	filename_trans_rule_t *next;
+	while (x) {
+		next = x->next;
+		filename_trans_rule_destroy(x);
 		free(x);
 		x = next;
 	}
@@ -1135,6 +1183,7 @@ void policydb_destroy(policydb_t * p)
 	role_allow_t *ra, *lra = NULL;
 	role_trans_t *tr, *ltr = NULL;
 	range_trans_t *rt, *lrt = NULL;
+	filename_trans_t *ft, *nft;
 
 	if (!p)
 		return;
@@ -1199,6 +1248,14 @@ void policydb_destroy(policydb_t * p)
 	}
 	if (ltr)
 		free(ltr);
+
+	ft = p->filename_trans;
+	while (ft) {
+		nft = ft->next;
+		free(ft->name);
+		free(ft);
+		ft = nft;
+	}
 
 	for (ra = p->role_allow; ra; ra = ra->next) {
 		if (lra)
@@ -2201,6 +2258,55 @@ int role_allow_read(role_allow_t ** r, struct policy_file *fp)
 	return 0;
 }
 
+int filename_trans_read(filename_trans_t **t, struct policy_file *fp)
+{
+	unsigned int i;
+	uint32_t buf[4], nel, len;
+	filename_trans_t *ft, *lft;
+	int rc;
+	char *name;
+
+	rc = next_entry(buf, fp, sizeof(uint32_t));
+	if (rc < 0)
+		return -1;
+	nel = le32_to_cpu(buf[0]);
+
+	lft = NULL;
+	for (i = 0; i < nel; i++) {
+		ft = calloc(1, sizeof(struct filename_trans));
+		if (!ft)
+			return -1;
+		if (lft)
+			lft->next = ft;
+		else
+			*t = ft;
+		rc = next_entry(buf, fp, sizeof(uint32_t));
+		if (rc < 0)
+			return -1;
+		len = le32_to_cpu(buf[0]);
+
+		name = calloc(len, sizeof(*name));
+		if (!name)
+			return -1;
+
+		ft->name = name;
+
+		rc = next_entry(name, fp, len);
+		if (rc < 0)
+			return -1;
+
+		rc = next_entry(buf, fp, sizeof(uint32_t) * 4);
+		if (rc < 0)
+			return -1;
+
+		ft->stype = le32_to_cpu(buf[0]);
+		ft->ttype = le32_to_cpu(buf[1]);
+		ft->tclass = le32_to_cpu(buf[2]);
+		ft->otype = le32_to_cpu(buf[3]);
+	}
+	return 0;
+}
+
 static int ocontext_read_xen(struct policydb_compat_info *info,
 	policydb_t *p, struct policy_file *fp)
 {
@@ -3007,6 +3113,62 @@ static int role_allow_rule_read(role_allow_rule_t ** r, struct policy_file *fp)
 	return 0;
 }
 
+static int filename_trans_rule_read(filename_trans_rule_t ** r, struct policy_file *fp)
+{
+	uint32_t buf[2], nel;
+	unsigned int i, len;
+	filename_trans_rule_t *ftr, *lftr;
+	int rc;
+
+	rc = next_entry(buf, fp, sizeof(uint32_t));
+	if (rc < 0)
+		return -1;
+	nel = le32_to_cpu(buf[0]);
+	lftr = NULL;
+	for (i = 0; i < nel; i++) {
+		ftr = malloc(sizeof(*ftr));
+		if (!ftr)
+			return -1;
+
+		filename_trans_rule_init(ftr);
+
+		if (lftr)
+			lftr->next = ftr;
+		else
+			*r = ftr;
+		lftr = ftr;
+
+		rc = next_entry(buf, fp, sizeof(uint32_t));
+		if (rc < 0)
+			return -1;
+
+		len = le32_to_cpu(buf[0]);
+
+		ftr->name = malloc(len + 1);
+		if (!ftr->name)
+			return -1;
+
+		rc = next_entry(ftr->name, fp, len);
+		if (rc)
+			return -1;
+		ftr->name[len] = 0;
+
+		if (type_set_read(&ftr->stypes, fp))
+			return -1;
+
+		if (type_set_read(&ftr->ttypes, fp))
+			return -1;
+
+		rc = next_entry(buf, fp, sizeof(uint32_t) * 2);
+		if (rc < 0)
+			return -1;
+		ftr->tclass = le32_to_cpu(buf[0]);
+		ftr->otype = le32_to_cpu(buf[1]);
+	}
+
+	return 0;
+}
+
 static int range_trans_rule_read(range_trans_rule_t ** r,
 				 struct policy_file *fp)
 {
@@ -3100,6 +3262,11 @@ static int avrule_decl_read(policydb_t * p, avrule_decl_t * decl,
 	    role_allow_rule_read(&decl->role_allow_rules, fp) == -1) {
 		return -1;
 	}
+
+	if (p->policyvers >= MOD_POLICYDB_VERSION_FILENAME_TRANS &&
+	    filename_trans_rule_read(&decl->filename_trans_rules, fp))
+		return -1;
+
 	if (p->policyvers >= MOD_POLICYDB_VERSION_RANGETRANS &&
 	    range_trans_rule_read(&decl->range_tr_rules, fp) == -1) {
 		return -1;
@@ -3490,6 +3657,9 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		if (role_trans_read(p, fp))
 			goto bad;
 		if (role_allow_read(&p->role_allow, fp))
+			goto bad;
+		if (r_policyvers >= POLICYDB_VERSION_FILENAME_TRANS &&
+		    filename_trans_read(&p->filename_trans, fp))
 			goto bad;
 	} else {
 		/* first read the AV rule blocks, then the scope tables */

@@ -1340,6 +1340,50 @@ static int copy_role_allow_list(role_allow_rule_t * list,
 	return -1;
 }
 
+static int copy_filename_trans_list(filename_trans_rule_t * list,
+				    filename_trans_rule_t ** dst,
+				    policy_module_t * module,
+				    link_state_t * state)
+{
+	filename_trans_rule_t *cur, *new_rule, *tail;
+
+	cur = list;
+	tail = *dst;
+	while (tail && tail->next)
+		tail = tail->next;
+
+	while (cur) {
+		new_rule = malloc(sizeof(*new_rule));
+		if (!new_rule)
+			goto err;
+
+		filename_trans_rule_init(new_rule);
+
+		if (*dst == NULL)
+			*dst = new_rule;
+		else
+			tail->next = new_rule;
+		tail = new_rule;
+
+		new_rule->name = strdup(cur->name);
+		if (!new_rule->name)
+			goto err;
+
+		if (type_set_or_convert(&cur->stypes, &new_rule->stypes, module, state) ||
+		    type_set_or_convert(&cur->ttypes, &new_rule->ttypes, module, state))
+			goto err;
+
+		new_rule->tclass = module->map[SYM_CLASSES][cur->tclass - 1];
+		new_rule->otype = module->map[SYM_TYPES][cur->otype - 1];
+
+		cur = cur->next;
+	}
+	return 0;
+err:
+	ERR(state->handle, "Out of memory!");
+	return -1;
+}
+
 static int copy_range_trans_list(range_trans_rule_t * rules,
 				 range_trans_rule_t ** dst,
 				 policy_module_t * mod, link_state_t * state)
@@ -1581,6 +1625,11 @@ static int copy_avrule_decl(link_state_t * state, policy_module_t * module,
 			      module, state) == -1) {
 		return -1;
 	}
+
+	if (copy_filename_trans_list(src_decl->filename_trans_rules,
+				     &dest_decl->filename_trans_rules,
+				     module, state))
+		return -1;
 
 	if (copy_range_trans_list(src_decl->range_tr_rules,
 				  &dest_decl->range_tr_rules, module, state))

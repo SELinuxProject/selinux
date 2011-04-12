@@ -136,6 +136,16 @@ typedef struct role_allow {
 	struct role_allow *next;
 } role_allow_t;
 
+/* filename_trans rules */
+typedef struct filename_trans {
+	uint32_t stype;
+	uint32_t ttype;
+	uint32_t tclass;
+	char *name;
+	uint32_t otype;
+	struct filename_trans *next;
+} filename_trans_t;
+
 /* Type attributes */
 typedef struct type_datum {
 	symtab_datum_t s;
@@ -246,6 +256,15 @@ typedef struct role_allow_rule {
 	role_set_t new_roles;	/* new roles */
 	struct role_allow_rule *next;
 } role_allow_rule_t;
+
+typedef struct filename_trans_rule {
+	type_set_t stypes;
+	type_set_t ttypes;
+	uint32_t tclass;
+	char *name;
+	uint32_t otype;	/* new type */
+	struct filename_trans_rule *next;
+} filename_trans_rule_t;
 
 typedef struct range_trans_rule {
 	type_set_t stypes;
@@ -376,6 +395,9 @@ typedef struct avrule_decl {
 	scope_index_t required;	/* symbols needed to activate this block */
 	scope_index_t declared;	/* symbols declared within this block */
 
+	/* type transition rules with a 'name' component */
+	filename_trans_rule_t *filename_trans_rules;
+
 	/* for additive statements (type attribute, roles, and users) */
 	symtab_t symtab[SYM_NUM];
 
@@ -486,6 +508,9 @@ typedef struct policydb {
 	/* role transitions */
 	role_trans_t *role_tr;
 
+	/* type transition rules with a 'name' component */
+	filename_trans_t *filename_trans;
+
 	/* role allows */
 	role_allow_t *role_allow;
 
@@ -564,6 +589,8 @@ extern void avrule_destroy(avrule_t * x);
 extern void avrule_list_destroy(avrule_t * x);
 extern void role_trans_rule_init(role_trans_rule_t * x);
 extern void role_trans_rule_list_destroy(role_trans_rule_t * x);
+extern void filename_trans_rule_init(filename_trans_rule_t * x);
+extern void filename_trans_rule_list_destroy(filename_trans_rule_t * x);
 
 extern void role_datum_init(role_datum_t * x);
 extern void role_datum_destroy(role_datum_t * x);
@@ -632,6 +659,7 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_POLCAP		22
 #define POLICYDB_VERSION_PERMISSIVE	23
 #define POLICYDB_VERSION_BOUNDARY	24
+#define POLICYDB_VERSION_FILENAME_TRANS	25
 #define POLICYDB_VERSION_ROLETRANS	26
 
 /* Range of policy versions we understand*/
@@ -648,6 +676,7 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_PERMISSIVE		8
 #define MOD_POLICYDB_VERSION_BOUNDARY		9
 #define MOD_POLICYDB_VERSION_BOUNDARY_ALIAS	10
+#define MOD_POLICYDB_VERSION_FILENAME_TRANS	11
 #define MOD_POLICYDB_VERSION_ROLETRANS		12
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE

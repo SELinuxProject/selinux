@@ -1237,6 +1237,101 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 	return 0;
 }
 
+static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *rules)
+{
+	unsigned int i, j;
+	filename_trans_t *new_trans, *tail, *cur_trans;
+	filename_trans_rule_t *cur_rule;
+	ebitmap_t stypes, ttypes;
+	ebitmap_node_t *snode, *tnode;
+
+	/* start at the end of the list */
+	tail = state->out->filename_trans;
+	while (tail && tail->next)
+		tail = tail->next;
+
+	cur_rule = rules;
+	while (cur_rule) {
+		ebitmap_init(&stypes);
+		ebitmap_init(&ttypes);
+
+		if (expand_convert_type_set(state->out, state->typemap,
+					    &cur_rule->stypes, &stypes, 1)) {
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
+		if (expand_convert_type_set(state->out, state->typemap,
+					    &cur_rule->ttypes, &ttypes, 1)) {
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
+		ebitmap_for_each_bit(&stypes, snode, i) {
+			if (!ebitmap_node_get_bit(snode, i))
+				continue;
+			ebitmap_for_each_bit(&ttypes, tnode, j) {
+				if (!ebitmap_node_get_bit(tnode, j))
+					continue;
+
+				cur_trans = state->out->filename_trans;
+				while (cur_trans) {
+					if ((cur_trans->stype == i + 1) &&
+					    (cur_trans->ttype == j + 1) &&
+					    (cur_trans->tclass == cur_rule->tclass) &&
+					    (!strcmp(cur_trans->name, cur_rule->name))) {
+						/* duplicate rule, who cares */
+						if (cur_trans->otype == cur_rule->otype)
+							break;
+
+						ERR(state->handle, "Conflicting filename trans rules %s %s %s : %s otype1:%s otype2:%s",
+						    cur_trans->name,
+						    state->out->p_type_val_to_name[i],
+						    state->out->p_type_val_to_name[j],
+						    state->out->p_class_val_to_name[cur_trans->tclass - 1],
+						    state->out->p_type_val_to_name[cur_trans->otype - 1],
+						    state->out->p_type_val_to_name[state->typemap[cur_rule->otype - 1] - 1]);
+						    
+						return -1;
+					}
+					cur_trans = cur_trans->next;
+				}
+				/* duplicate rule, who cares */
+				if (cur_trans)
+					continue;
+
+				new_trans = malloc(sizeof(*new_trans));
+				if (!new_trans) {
+					ERR(state->handle, "Out of memory!");
+					return -1;
+				}
+				memset(new_trans, 0, sizeof(*new_trans));
+				if (tail)
+					tail->next = new_trans;
+				else
+					state->out->filename_trans = new_trans;
+				tail = new_trans;
+
+				new_trans->name = strdup(cur_rule->name);
+				if (!new_trans->name) {
+					ERR(state->handle, "Out of memory!");
+					return -1;
+				}
+				new_trans->stype = i + 1;
+				new_trans->ttype = j + 1;
+				new_trans->tclass = cur_rule->tclass;
+				new_trans->otype = state->typemap[cur_rule->otype - 1];
+			}
+		}
+
+		ebitmap_destroy(&stypes);
+		ebitmap_destroy(&ttypes);
+
+		cur_rule = cur_rule->next;
+	}
+	return 0;
+}
+
 static int exp_rangetr_helper(uint32_t stype, uint32_t ttype, uint32_t tclass,
 			      mls_semantic_range_t * trange,
 			      expand_state_t * state)
@@ -2379,6 +2474,9 @@ static int copy_and_expand_avrule_block(expand_state_t * state)
 		    copy_role_trans(state, decl->role_tr_rules) != 0) {
 			goto cleanup;
 		}
+
+		if (expand_filename_trans(state, decl->filename_trans_rules))
+			goto cleanup;
 
 		/* expand the range transition rules */
 		if (expand_range_trans(state, decl->range_tr_rules))
