@@ -3033,7 +3033,8 @@ int avrule_read_list(policydb_t * p, avrule_t ** avrules,
 	return 0;
 }
 
-static int role_trans_rule_read(role_trans_rule_t ** r, struct policy_file *fp)
+static int role_trans_rule_read(policydb_t *p, role_trans_rule_t ** r,
+				struct policy_file *fp)
 {
 	uint32_t buf[1], nel;
 	unsigned int i;
@@ -3064,8 +3065,13 @@ static int role_trans_rule_read(role_trans_rule_t ** r, struct policy_file *fp)
 		if (type_set_read(&tr->types, fp))
 			return -1;
 
-		if (ebitmap_read(&tr->classes, fp))
-			return -1;
+		if (p->policyvers >= MOD_POLICYDB_VERSION_ROLETRANS) {
+			if (ebitmap_read(&tr->classes, fp))
+				return -1;
+		} else {
+			if (ebitmap_set_bit(&tr->classes, SECCLASS_PROCESS - 1, 1))
+				return -1;
+		}
 
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
@@ -3258,7 +3264,7 @@ static int avrule_decl_read(policydb_t * p, avrule_decl_t * decl,
 	decl->enabled = le32_to_cpu(buf[1]);
 	if (cond_read_list(p, &decl->cond_list, fp) == -1 ||
 	    avrule_read_list(p, &decl->avrules, fp) == -1 ||
-	    role_trans_rule_read(&decl->role_tr_rules, fp) == -1 ||
+	    role_trans_rule_read(p, &decl->role_tr_rules, fp) == -1 ||
 	    role_allow_rule_read(&decl->role_allow_rules, fp) == -1) {
 		return -1;
 	}

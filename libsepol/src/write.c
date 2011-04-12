@@ -1482,26 +1482,53 @@ static int avrule_write_list(avrule_t * avrules, struct policy_file *fp)
 	return POLICYDB_SUCCESS;
 }
 
-static int role_trans_rule_write(role_trans_rule_t * t, struct policy_file *fp)
+static int only_process(ebitmap_t *in)
+{
+	unsigned int i;
+	ebitmap_node_t *node;
+
+	ebitmap_for_each_bit(in, node, i) {
+		if (ebitmap_node_get_bit(node, i) &&
+		    i != SECCLASS_PROCESS - 1)
+			return 0;
+	}
+	return 1;
+}
+
+static int role_trans_rule_write(policydb_t *p, role_trans_rule_t * t,
+				 struct policy_file *fp)
 {
 	int nel = 0;
 	size_t items;
 	uint32_t buf[1];
 	role_trans_rule_t *tr;
+	int warned = 0;
+	int new_role = p->policyvers >= MOD_POLICYDB_VERSION_ROLETRANS;
 
 	for (tr = t; tr; tr = tr->next)
-		nel++;
+		if (new_role || only_process(&tr->classes))
+			nel++;
+
 	buf[0] = cpu_to_le32(nel);
 	items = put_entry(buf, sizeof(uint32_t), 1, fp);
 	if (items != 1)
 		return POLICYDB_ERROR;
 	for (tr = t; tr; tr = tr->next) {
+		if (!new_role && !only_process(&tr->classes)) {
+			if (!warned)
+				WARN(fp->handle, "Discarding role_transition "
+					"rules for security classes other than "
+					"\"process\"");
+			warned = 1;
+			continue;
+		}
 		if (role_set_write(&tr->roles, fp))
 			return POLICYDB_ERROR;
 		if (type_set_write(&tr->types, fp))
 			return POLICYDB_ERROR;
-		if (ebitmap_write(&tr->classes, fp))
-			return POLICYDB_ERROR;
+		if (new_role)
+			if (ebitmap_write(&tr->classes, fp))
+				return POLICYDB_ERROR;
 		buf[0] = cpu_to_le32(tr->new_role);
 		items = put_entry(buf, sizeof(uint32_t), 1, fp);
 		if (items != 1)
@@ -1636,7 +1663,7 @@ static int avrule_decl_write(avrule_decl_t * decl, int num_scope_syms,
 	}
 	if (cond_write_list(p, decl->cond_list, fp) == -1 ||
 	    avrule_write_list(decl->avrules, fp) == -1 ||
-	    role_trans_rule_write(decl->role_tr_rules, fp) == -1 ||
+	    role_trans_rule_write(p, decl->role_tr_rules, fp) == -1 ||
 	    role_allow_rule_write(decl->role_allow_rules, fp) == -1) {
 		return POLICYDB_ERROR;
 	}
