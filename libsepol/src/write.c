@@ -474,7 +474,9 @@ static int role_trans_write(policydb_t *p, struct policy_file *fp)
 
 	nel = 0;
 	for (tr = r; tr; tr = tr->next)
-		nel++;
+		if(new_roletr || tr->tclass == SECCLASS_PROCESS)
+			nel++;
+
 	buf[0] = cpu_to_le32(nel);
 	items = put_entry(buf, sizeof(uint32_t), 1, fp);
 	if (items != 1)
