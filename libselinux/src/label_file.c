@@ -406,6 +406,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	FILE *homedirfp = NULL;
 	char local_path[PATH_MAX + 1];
 	char homedir_path[PATH_MAX + 1];
+	char subs_file[PATH_MAX + 1];
 	char *line_buf = NULL;
 	size_t line_len = 0;
 	unsigned int lineno, pass, i, j, maxnspec;
@@ -426,6 +427,17 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 			baseonly = !!opts[n].value;
 			break;
 		}
+
+	/* Process local and distribution substitution files */
+	if (!path) {
+		rec->subs = selabel_subs_init(selinux_file_context_subs_dist_path(), rec->subs);
+		rec->subs = selabel_subs_init(selinux_file_context_subs_path(), rec->subs);
+	} else {
+		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist", path);
+		rec->subs = selabel_subs_init(subs_file, rec->subs);
+		snprintf(subs_file, sizeof(subs_file), "%s.subs", path);
+		rec->subs = selabel_subs_init(subs_file, rec->subs);
+	}
 
 	/* Open the specification file. */
 	if (!path)
