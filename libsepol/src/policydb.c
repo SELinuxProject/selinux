@@ -2327,6 +2327,7 @@ int filename_trans_read(filename_trans_t **t, struct policy_file *fp)
 			lft->next = ft;
 		else
 			*t = ft;
+		lft = ft;
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
 			return -1;
