@@ -506,15 +506,15 @@ void display_role_allow(role_allow_rule_t * ra, policydb_t * p, FILE * fp)
 	}
 }
 
-void display_filename_trans(filename_trans_rule_t * tr, policydb_t * p, FILE * fp)
+static void display_filename_trans(filename_trans_rule_t * tr, policydb_t * p, FILE * fp)
 {
+	fprintf(fp, "filename transition");
 	for (; tr; tr = tr->next) {
-		fprintf(fp, "filename transition %s", tr->name);
 		display_type_set(&tr->stypes, 0, p, fp);
 		display_type_set(&tr->ttypes, 0, p, fp);
 		display_id(p, fp, SYM_CLASSES, tr->tclass - 1, ":");
 		display_id(p, fp, SYM_TYPES, tr->otype - 1, "");
-		fprintf(fp, "\n");
+		fprintf(fp, " %s\n", tr->name);
 	}
 }
 
@@ -688,7 +688,6 @@ int display_avdecl(avrule_decl_t * decl, int field, uint32_t what,
 	case DISPLAY_AVBLOCK_FILENAME_TRANS:
 		display_filename_trans(decl->filename_trans_rules, policy,
 				       out_fp);
-			return -1;
 		break;
 	default:{
 			assert(0);
