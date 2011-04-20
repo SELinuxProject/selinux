@@ -15,6 +15,9 @@
 *.patch
 *.gz
 *~
+*.orig
+*.rej
+cscope.*
 
 # Failsafes
 !.gitignore
