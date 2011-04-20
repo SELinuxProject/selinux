@@ -341,6 +341,20 @@ static void display_permissive(policydb_t *p, FILE *fp)
 	}
 }
 
+static void display_role_trans(policydb_t *p, FILE *fp)
+{
+	role_trans_t *rt;
+
+	fprintf(fp, "role_trans rules:\n");
+	for (rt = p->role_tr; rt; rt = rt->next) {
+		display_id(p, fp, SYM_ROLES, rt->role - 1, "");
+		display_id(p, fp, SYM_TYPES, rt->type - 1, "");
+		display_id(p, fp, SYM_CLASSES, rt->tclass - 1, ":");
+		display_id(p, fp, SYM_ROLES, rt->new_role - 1, "");
+		fprintf(fp, "\n");
+	}
+}
+
 static void display_filename_trans(policydb_t *p, FILE *fp)
 {
 	filename_trans_t *ft;
@@ -365,6 +379,7 @@ int menu()
 	printf("5)  display conditional bools\n");
 	printf("6)  display conditional expressions\n");
 	printf("7)  change a boolean value\n");
+	printf("8)  display role transitions\n");
 	printf("\n");
 	printf("c)  display policy capabilities\n");
 	printf("p)  display the list of permissive types\n");
@@ -482,6 +497,9 @@ int main(int argc, char **argv)
 
 			change_bool(name, state, &policydb, out_fp);
 			free(name);
+			break;
+		case '8':
+			display_role_trans(&policydb, out_fp);
 			break;
 		case 'c':
 			display_policycaps(&policydb, out_fp);
