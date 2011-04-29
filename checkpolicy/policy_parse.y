@@ -774,6 +774,8 @@ module_def              : MODULE identifier version_identifier ';'
                         ;
 version_identifier      : VERSION_IDENTIFIER
                         { if (insert_id(yytext,0)) return -1; }
+			| number
+                        { if (insert_id(yytext,0)) return -1; }
                         | ipv4_addr_def /* version can look like ipv4 address */
                         ;
 avrules_block           : avrule_decls avrule_user_defs
