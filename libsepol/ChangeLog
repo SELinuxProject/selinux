@@ -1,3 +1,6 @@
+2.0.45 2011-05-02
+	* Warn if filename_trans rules are dropped by Steve Lawrence.
+
 2.0.44 2011-04-13
 	* Fixes for new role_transition class field by Eric Paris.
 	* Add libsepol support for filename_trans rules by Eric Paris.

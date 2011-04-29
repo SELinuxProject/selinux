@@ -1,3 +1,10 @@
+2.0.25 2011-05-02
+	* Add support for using the last path compnent in type transitions by Eric
+	Paris.
+	* Allow single digit module versions by Daniel Walsh.
+	* Use better filename identifier for filenames by Daniel Walsh.
+	* Use #defines for dismod selections by Eric Paris.
+
 2.0.24 2011-04-11
 	* Add new class field in role_transition by Harry Ciao.
 
