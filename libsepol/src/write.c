@@ -1950,9 +1950,13 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 			return POLICYDB_ERROR;
 		if (role_allow_write(p->role_allow, fp))
 			return POLICYDB_ERROR;
-		if (p->policyvers >= POLICYDB_VERSION_FILENAME_TRANS &&
-		    filename_trans_write(p->filename_trans, fp))
-			return POLICYDB_ERROR;
+		if (p->policyvers >= POLICYDB_VERSION_FILENAME_TRANS) {
+			if (filename_trans_write(p->filename_trans, fp))
+				return POLICYDB_ERROR;
+		} else {
+			if (p->filename_trans)
+				WARN(fp->handle, "Discarding filename type transition rules");
+		}
 	} else {
 		if (avrule_block_write(p->global, num_syms, p, fp) == -1) {
 			return POLICYDB_ERROR;
