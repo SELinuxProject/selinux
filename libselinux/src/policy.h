@@ -9,11 +9,15 @@
 /* Initial length guess for getting contexts. */
 #define INITCONTEXTLEN 255
 
+/* selinux file system type */
+#define SELINUXFS "selinuxfs"
+
 /* selinuxfs magic number */
 #define SELINUX_MAGIC 0xf97cff8c
 
 /* Preferred selinux mount location */
-#define SELINUXMNT "/selinux"
+#define SELINUXMNT "/sys/fs/selinux"
+#define OLDSELINUXMNT "/selinux"
 
 /* selinuxfs mount point */
 extern char *selinux_mnt;

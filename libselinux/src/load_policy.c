@@ -369,7 +369,17 @@ int selinux_init_load_policy(int *enforce)
 	 * Check for the existence of SELinux via selinuxfs, and 
 	 * mount it if present for use in the calls below.  
 	 */
-	if (mount("selinuxfs", SELINUXMNT, "selinuxfs", 0, 0) < 0 && errno != EBUSY) {
+	char *mntpoint = NULL;
+	if (mount(SELINUXFS, SELINUXMNT, SELINUXFS, 0, 0) == 0 || errno == EBUSY) {
+		mntpoint = SELINUXMNT;
+	} else {
+		/* check old mountpoint */
+		if (mount(SELINUXFS, OLDSELINUXMNT, SELINUXFS, 0, 0) == 0 || errno == EBUSY) {
+			mntpoint = OLDSELINUXMNT;
+		}
+	}
+
+	if (! mntpoint ) {
 		if (errno == ENODEV) {
 			/*
 			 * SELinux was disabled in the kernel, either
@@ -385,7 +395,7 @@ int selinux_init_load_policy(int *enforce)
                 
 		goto noload;
 	}
-	set_selinuxmnt(SELINUXMNT);
+	set_selinuxmnt(mntpoint);
 
 	/*
 	 * Note:  The following code depends on having selinuxfs 
@@ -397,7 +407,7 @@ int selinux_init_load_policy(int *enforce)
 		rc = security_disable();
 		if (rc == 0) {
 			/* Successfully disabled, so umount selinuxfs too. */
-			umount(SELINUXMNT);
+			umount(selinux_mnt);
 			fini_selinuxmnt();
 		}
 		/*

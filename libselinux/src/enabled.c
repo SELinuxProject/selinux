@@ -11,10 +11,6 @@
 
 int is_selinux_enabled(void)
 {
-	char *buf=NULL;
-	FILE *fp;
-	ssize_t num;
-	size_t len;
 	int enabled = 0;
 	security_context_t con;
 
@@ -32,37 +28,8 @@ int is_selinux_enabled(void)
 				enabled = 0;
 			freecon(con);
 		}
-		return enabled;
         }
 
-	/* Drop back to detecting it the long way. */
-	fp = fopen("/proc/filesystems", "r");
-	if (!fp)
-		return -1;
-
-	__fsetlocking(fp, FSETLOCKING_BYCALLER);
-	while ((num = getline(&buf, &len, fp)) != -1) {
-		if (strstr(buf, "selinuxfs")) {
-			enabled = 1;
-			break;
-		}
-	}
-
-	if (num < 0)
-		goto out;
-
-	/* Since an selinux file system is available, we consider
-	 * selinux enabled. If getcon_raw fails, selinux is still
-	 * enabled. We only consider it disabled if no policy is loaded. */
-	if (getcon_raw(&con) == 0) {
-		if (!strcmp(con, "kernel"))
-			enabled = 0;
-		freecon(con);
-	}
-
-      out:
-	free(buf);
-	fclose(fp);
 	return enabled;
 }
 
