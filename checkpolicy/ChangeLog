@@ -1,3 +1,7 @@
+2.0.26 2011-05-16
+	* Wrap file names in filename transitions with quotes by Steve Lawrence.
+	* Allow filesystem names to start with a digit by James Carter.
+
 2.0.25 2011-05-02
 	* Add support for using the last path compnent in type transitions by Eric
 	Paris.
