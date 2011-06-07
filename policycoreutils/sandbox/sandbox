@@ -319,7 +319,7 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
 
         if self.__options.X_ind:
                self.setype = DEFAULT_X_TYPE
-
+               self.dpi=commands.getoutput("xrdb -query | grep dpi  | /bin/cut -f 2")
         if self.__options.setype:
                self.setype = self.__options.setype
 
@@ -406,7 +406,7 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
 
                                 self.__setup_sandboxrc(self.__options.wm)
 
-                                cmds += [ "--", SANDBOXSH, self.__options.windowsize ]
+                                cmds += [ "--", SANDBOXSH, self.__options.windowsize, self.dpi ]
                          else:
                                 cmds += [ "--" ] + self.__paths
                          return subprocess.Popen(cmds).wait()
