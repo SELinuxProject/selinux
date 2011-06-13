@@ -309,6 +309,10 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
         parser.add_option("-l", "--level", dest="level", 
                           help=_("MCS/MLS level for the sandbox"))
 
+        parser.add_option("-C", "--capabilities",
+                         action="store_true", dest="usecaps", default=False,
+                         help="Allow apps requiring capabilities to run within the sandbox.")
+
         self.__parser=parser
 
         self.__options, cmds = parser.parse_args()
@@ -389,6 +393,8 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
     def __execute(self):
            try:
                   cmds = [ SEUNSHARE,  "-Z", self.__execcon ]
+                  if self.__options.usecaps == True:
+                         cmds.append('-C')
                   if self.__mount:
                          cmds +=  [ "-t", self.__tmpdir, "-h", self.__homedir ]
 

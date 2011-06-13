@@ -40,19 +40,21 @@
 #endif
 
 #define DEFAULT_PATH "/usr/bin:/bin"
-#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -t tmpdir ] [ -h homedir ] [ -Z CONTEXT ] -- executable [args] ")
+#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -C ] [-t tmpdir] [-h homedir] [-Z context] -- executable [args]")
 
 static int verbose = 0;
+
+static capng_select_t cap_set = CAPNG_SELECT_BOTH;
 
 /**
  * This function will drop all capabilities.
  */
 static int drop_caps()
 {
-	if (capng_have_capabilities(CAPNG_SELECT_BOTH) == CAPNG_NONE)
+	if (capng_have_capabilities(cap_set) == CAPNG_NONE)
 		return 0;
-	capng_clear(CAPNG_SELECT_BOTH);
-	if (capng_lock() == -1 || capng_apply(CAPNG_SELECT_BOTH) == -1) {
+	capng_clear(cap_set);
+	if (capng_lock() == -1 || capng_apply(cap_set) == -1) {
 		fprintf(stderr, _("Failed to drop all capabilities\n"));
 		return -1;
 	}
@@ -180,6 +182,7 @@ int main(int argc, char **argv) {
 		{"tmpdir", 1, 0, 't'},
 		{"verbose", 1, 0, 'v'},
 		{"context", 1, 0, 'Z'},
+		{"capabilities", 1, 0, 'C'},
 		{NULL, 0, 0, 0}
 	};
 
@@ -202,8 +205,7 @@ int main(int argc, char **argv) {
 	}
 
 	while (1) {
-		clflag = getopt_long(argc, argv, "cvh:t:Z:", long_options,
-				     &flag_index);
+		clflag = getopt_long(argc, argv, "Ccvh:t:Z:", long_options, NULL);
 		if (clflag == -1)
 			break;
 
@@ -225,6 +227,9 @@ int main(int argc, char **argv) {
 			break;
 		case 'v':
 			verbose = 1;
+			break;
+		case 'C':
+			cap_set = CAPNG_SELECT_CAPS;
 			break;
 		case 'Z':
 			scontext = strdup(optarg);
