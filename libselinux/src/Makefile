@@ -42,7 +42,7 @@ ifeq ($(DISABLE_RPM),y)
 endif
 
 GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT)
-SRCS= $(filter-out $(UNUSED_SRCS), $(filter-out audit2why.c $(GENERATED),$(wildcard *.c)))
+SRCS= $(filter-out $(UNUSED_SRCS) $(GENERATED) audit2why.c, $(wildcard *.c))
 
 OBJS= $(patsubst %.c,%.o,$(SRCS))
 LOBJS= $(patsubst %.c,%.lo,$(SRCS))
