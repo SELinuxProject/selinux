@@ -1,11 +1,17 @@
+# Support building the Python bindings multiple times, against various Python
+# runtimes (e.g. Python 2 vs Python 3) by optionally prefixing the build
+# targets with "PYPREFIX":
+PYTHON ?= python
+PYPREFIX ?= $(notdir $(PYTHON))
+
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 LIBDIR ?= $(PREFIX)/lib
 SHLIBDIR ?= $(PREFIX)/lib
 INCLUDEDIR ?= $(PREFIX)/include
-PYLIBVER ?= $(shell python -c 'import sys;print "python%d.%d" % sys.version_info[0:2]')
-PYINC ?= /usr/include/${PYLIBVER}
-PYLIBDIR ?= $(LIBDIR)/${PYLIBVER}
+PYLIBVER ?= $(shell $(PYTHON) -c 'import sys;print("python%d.%d" % sys.version_info[0:2])')
+PYINC ?= $(shell pkg-config --cflags `basename $(PYTHON)`)
+PYLIBDIR ?= $(LIBDIR)/$(PYLIBVER)
 RUBYLIBVER ?= $(shell ruby -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
 RUBYPLATFORM ?= $(shell ruby -e 'print RUBY_PLATFORM')
 RUBYINC ?= $(LIBDIR)/ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
@@ -34,21 +40,22 @@ SWIGIF= semanageswig_python.i
 SWIGRUBYIF= semanageswig_ruby.i
 SWIGCOUT= semanageswig_wrap.c
 SWIGRUBYCOUT= semanageswig_ruby_wrap.c
-SWIGLOBJ:= $(patsubst %.c,%.lo,$(SWIGCOUT)) 
+SWIGLOBJ:= $(patsubst %.c,$(PYPREFIX)%.lo,$(SWIGCOUT))
 SWIGRUBYLOBJ:= $(patsubst %.c,%.lo,$(SWIGRUBYCOUT)) 
-SWIGSO=_semanage.so
+SWIGSO=$(PYPREFIX)_semanage.so
 SWIGFILES=$(SWIGSO) semanage.py 
 SWIGRUBYSO=_rubysemanage.so
 LIBSO=$(TARGET).$(LIBVERSION)
 
-SWIGGEN=$(SWIGCOUT) $(SWIGRUBYCOUT)
-SRCS= $(filter-out $(SWIGGEN),$(wildcard *.c))
+GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT)
+SRCS= $(filter-out $(GENERATED),$(wildcard *.c))
 
 OBJS= $(patsubst %.c,%.o,$(SRCS)) conf-scan.o conf-parse.o
 LOBJS= $(patsubst %.c,%.lo,$(SRCS)) conf-scan.lo conf-parse.lo
 CFLAGS ?= -Werror -Wall -W -Wundef -Wshadow -Wmissing-noreturn -Wmissing-format-attribute
 
 override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE 
+RANLIB=ranlib
 
 SWIG = swig -Wall -python -o $(SWIGCOUT) -outdir ./
 
@@ -58,25 +65,25 @@ GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT) $(wildcard conf-*.[ch])
 
 all: $(LIBA) $(LIBSO) $(LIBPC)
 
-pywrap: all $(SWIGLOBJ) $(SWIGSO) 
+pywrap: all $(SWIGSO)
 
 rubywrap: all $(SWIGRUBYSO)
 
 $(SWIGLOBJ): $(SWIGCOUT)
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -I$(PYINC) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(filter-out -Werror, $(CFLAGS)) $(PYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGRUBYLOBJ): $(SWIGRUBYCOUT)
-	$(CC) $(filter-out -Werror,$(CFLAGS)) -I$(RUBYINC) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(filter-out -Werror, $(CFLAGS)) -I$(RUBYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGSO): $(SWIGLOBJ)
-	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $< -L. -lsemanage -l$(PYLIBVER) -L$(LIBDIR) -Wl,-soname,$@,-z,defs
+	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $< -L. -lsemanage -L$(LIBDIR) -Wl,-soname,$@,-z,defs
 
 $(SWIGRUBYSO): $(SWIGRUBYLOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -L. -lsemanage -L$(LIBDIR) -Wl,-soname,$@
 
 $(LIBA): $(OBJS)
 	$(AR) rcs $@ $^
-	ranlib $@
+	$(RANLIB) $@
 
 $(LIBSO): $(LOBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -lsepol -lselinux -lbz2 -lustr -L$(LIBDIR) -Wl,-soname,$(LIBSO),--version-script=libsemanage.map,-z,defs
@@ -112,13 +119,13 @@ conf-scan.lo:  conf-scan.c
 	$(CC) $(filter-out -Werror, $(CFLAGS)) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGCOUT): $(SWIGIF)
-	$(SWIG) $^
+	$(SWIG) $<
 
 $(SWIGRUBYCOUT): $(SWIGRUBYIF)
-	$(SWIGRUBY) $^
+	$(SWIGRUBY) $<
 
 swigify: $(SWIGIF)
-	$(SWIG) $^
+	$(SWIG) $<
 
 install: all 
 	test -d $(LIBDIR) || install -m 755 -d $(LIBDIR)
@@ -132,7 +139,9 @@ install: all
 
 install-pywrap: pywrap 
 	test -d $(PYLIBDIR)/site-packages || install -m 755 -d $(PYLIBDIR)/site-packages
-	install -m 755 $(SWIGFILES) $(PYLIBDIR)/site-packages
+	install -m 755 $(SWIGSO) $(PYLIBDIR)/site-packages/_semanage.so
+	install -m 755 semanage.py $(PYLIBDIR)/site-packages
+
 
 install-rubywrap: rubywrap
 	test -d $(RUBYINSTALL) || install -m 755 -d $(RUBYINSTALL) 
@@ -142,7 +151,7 @@ relabel:
 	/sbin/restorecon $(SHLIBDIR)/$(LIBSO)
 
 clean: 
-	rm -f $(LIBPC) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) conf-parse.c conf-parse.h conf-scan.c
+	-rm -f $(LIBPC) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) conf-parse.c conf-parse.h conf-scan.c *.o *.lo *~
 
 distclean: clean
 	rm -f $(SWIGCOUT) $(SWIGFILES)
