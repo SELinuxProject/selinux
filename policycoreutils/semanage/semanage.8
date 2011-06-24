@@ -21,6 +21,8 @@ semanage \- SELinux Policy Management tool
 .br
 .B semanage permissive \-{a|d} type
 .br
+.B semanage -i command-file
+.br
 .B semanage dontaudit [ on | off ]
 .P
 
@@ -99,6 +101,10 @@ Select and alternate SELinux store to manage
 .TP
 .I                \-t, \-\-type       
 SELinux Type for the object
+.TP
+.I                \-i
+Take a set of commands from a specified file and load them in a single
+transaction.
 
 .SH EXAMPLE
 .nf
