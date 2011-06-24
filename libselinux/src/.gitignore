@@ -1,0 +1,3 @@
+selinux.py
+selinuxswig_wrap.c
+selinuxswig_python_exception.i
