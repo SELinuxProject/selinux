@@ -380,7 +380,7 @@ int semanage_create_store(semanage_handle_t * sh, int create)
  * SEMANAGE_CAN_READ if the store can be read and the lock file used
  * SEMANAGE_CAN_WRITE if the modules directory and binary policy dir can be written to
  */
-int semanage_store_access_check(semanage_handle_t * sh)
+int semanage_store_access_check(void)
 {
 	const char *path;
 	int rc = -1;

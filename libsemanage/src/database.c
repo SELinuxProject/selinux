@@ -46,7 +46,7 @@ static int enter_ro(semanage_handle_t * handle, dbase_config_t * dconfig)
 	return STATUS_ERR;
 }
 
-static inline int exit_ro(semanage_handle_t * handle, dbase_config_t * dconfig)
+static inline int exit_ro(semanage_handle_t * handle)
 {
 
 	int commit_num = handle->funcs->get_serial(handle);
@@ -129,11 +129,11 @@ int dbase_query(semanage_handle_t * handle,
 		return STATUS_ERR;
 
 	if (dconfig->dtable->query(handle, dconfig->dbase, key, response) < 0) {
-		exit_ro(handle, dconfig);
+		exit_ro(handle);
 		return STATUS_ERR;
 	}
 
-	return exit_ro(handle, dconfig);
+	return exit_ro(handle);
 }
 
 int dbase_exists(semanage_handle_t * handle,
@@ -145,11 +145,11 @@ int dbase_exists(semanage_handle_t * handle,
 		return STATUS_ERR;
 
 	if (dconfig->dtable->exists(handle, dconfig->dbase, key, response) < 0) {
-		exit_ro(handle, dconfig);
+		exit_ro(handle);
 		return STATUS_ERR;
 	}
 
-	return exit_ro(handle, dconfig);
+	return exit_ro(handle);
 }
 
 int dbase_count(semanage_handle_t * handle,
@@ -160,11 +160,11 @@ int dbase_count(semanage_handle_t * handle,
 		return STATUS_ERR;
 
 	if (dconfig->dtable->count(handle, dconfig->dbase, response) < 0) {
-		exit_ro(handle, dconfig);
+		exit_ro(handle);
 		return STATUS_ERR;
 	}
 
-	return exit_ro(handle, dconfig);
+	return exit_ro(handle);
 }
 
 int dbase_iterate(semanage_handle_t * handle,
@@ -177,11 +177,11 @@ int dbase_iterate(semanage_handle_t * handle,
 		return STATUS_ERR;
 
 	if (dconfig->dtable->iterate(handle, dconfig->dbase, fn, fn_arg) < 0) {
-		exit_ro(handle, dconfig);
+		exit_ro(handle);
 		return STATUS_ERR;
 	}
 
-	return exit_ro(handle, dconfig);
+	return exit_ro(handle);
 }
 
 int dbase_list(semanage_handle_t * handle,
@@ -193,9 +193,9 @@ int dbase_list(semanage_handle_t * handle,
 		return STATUS_ERR;
 
 	if (dconfig->dtable->list(handle, dconfig->dbase, records, count) < 0) {
-		exit_ro(handle, dconfig);
+		exit_ro(handle);
 		return STATUS_ERR;
 	}
 
-	return exit_ro(handle, dconfig);
+	return exit_ro(handle);
 }

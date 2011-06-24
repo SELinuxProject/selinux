@@ -363,11 +363,10 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 }
 
 /**
- * @param	s	settings structure, stores various paths etc. Must never be NULL
  * @param	out	the FILE to put all the output in.
  * @return	0 on success
  */
-static int write_file_context_header(genhomedircon_settings_t * s, FILE * out)
+static int write_file_context_header(FILE * out)
 {
 	if (fprintf(out, COMMENT_FILE_CONTEXT_HEADER) < 0) {
 		return STATUS_ERR;
@@ -880,7 +879,7 @@ static int write_context_file(genhomedircon_settings_t * s, FILE * out)
 	if (!homedir_context_tpl && !homeroot_context_tpl && !user_context_tpl)
 		goto done;
 
-	if (write_file_context_header(s, out) != STATUS_SUCCESS) {
+	if (write_file_context_header(out) != STATUS_SUCCESS) {
 		retval = STATUS_ERR;
 		goto done;
 	}

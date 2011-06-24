@@ -1545,7 +1545,7 @@ int semanage_direct_access_check(semanage_handle_t * sh)
 	if (semanage_check_init(polpath))
 		return -1;
 
-	return semanage_store_access_check(sh);
+	return semanage_store_access_check();
 }
 
 int semanage_direct_mls_enabled(semanage_handle_t * sh)

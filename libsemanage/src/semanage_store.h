@@ -75,7 +75,7 @@ extern const char *semanage_path(enum semanage_store_defs store,
 
 int semanage_create_store(semanage_handle_t * sh, int create);
 
-int semanage_store_access_check(semanage_handle_t * sh);
+int semanage_store_access_check(void);
 
 int semanage_remove_directory(const char *path);
 
