@@ -1,12 +1,17 @@
+# Support building the Python bindings multiple times, against various Python
+# runtimes (e.g. Python 2 vs Python 3) by optionally prefixing the build
+# targets with "PYPREFIX":
+PYTHON ?= python
+PYPREFIX ?= $(notdir $(PYTHON))
+
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 LIBDIR ?= $(PREFIX)/lib
-SHLIBDIR ?= $(DESTDIR)/lib
+SHLIBDIR ?= $(PREFIX)/lib
 INCLUDEDIR ?= $(PREFIX)/include
-PYLIBVER ?= $(shell python -c 'import sys;print "python%d.%d" % sys.version_info[0:2]')
-PYINC ?= /usr/include/$(PYLIBVER)
-PYLIB ?= /usr/lib/$(PYLIBVER)
-PYTHONLIBDIR ?= $(LIBDIR)/$(PYLIBVER)
+PYLIBVER ?= $(shell $(PYTHON) -c 'import sys;print("python%d.%d" % sys.version_info[0:2])')
+PYINC ?= $(shell pkg-config --cflags `basename $(PYTHON)`)
+PYLIBDIR ?= $(LIBDIR)/$(PYLIBVER)
 RUBYLIBVER ?= $(shell ruby -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
 RUBYPLATFORM ?= $(shell ruby -e 'print RUBY_PLATFORM')
 RUBYINC ?= $(LIBDIR)/ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
@@ -23,13 +28,14 @@ SWIGIF= selinuxswig_python.i selinuxswig_python_exception.i
 SWIGRUBYIF= selinuxswig_ruby.i
 SWIGCOUT= selinuxswig_wrap.c
 SWIGRUBYCOUT= selinuxswig_ruby_wrap.c
-SWIGLOBJ:= $(patsubst %.c,%.lo,$(SWIGCOUT)) 
+SWIGLOBJ:= $(patsubst %.c,$(PYPREFIX)%.lo,$(SWIGCOUT))
 SWIGRUBYLOBJ:= $(patsubst %.c,%.lo,$(SWIGRUBYCOUT)) 
-SWIGSO=_selinux.so
-SWIGFILES=$(SWIGSO) selinux.py selinuxswig_python_exception.i
+SWIGSO=$(PYPREFIX)_selinux.so
+SWIGFILES=$(SWIGSO) selinux.py
 SWIGRUBYSO=_rubyselinux.so
 LIBSO=$(TARGET).$(LIBVERSION)
-AUDIT2WHYSO=audit2why.so
+AUDIT2WHYLOBJ=$(PYPREFIX)audit2why.lo
+AUDIT2WHYSO=$(PYPREFIX)audit2why.so
 
 ifeq ($(DISABLE_AVC),y)
 	UNUSED_SRCS+=avc.c avc_internal.c avc_sidtab.c mapping.c stringrep.c checkAccess.c
@@ -41,7 +47,7 @@ ifeq ($(DISABLE_RPM),y)
 	UNUSED_SRCS+=rpm.c
 endif
 
-GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT)
+GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT) selinuxswig_python_exception.i
 SRCS= $(filter-out $(UNUSED_SRCS) $(GENERATED) audit2why.c, $(wildcard *.c))
 
 OBJS= $(patsubst %.c,%.o,$(SRCS))
@@ -65,21 +71,21 @@ pywrap: all $(SWIGSO) $(AUDIT2WHYSO)
 
 rubywrap: all $(SWIGRUBYSO)
 
-$(LIBA):  $(OBJS)
-	$(AR) rcs $@ $^
-	$(RANLIB) $@
-
 $(SWIGLOBJ): $(SWIGCOUT)
-	$(CC) $(filter-out -Werror,$(CFLAGS)) -I$(PYINC) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(filter-out -Werror, $(CFLAGS)) $(PYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGRUBYLOBJ): $(SWIGRUBYCOUT)
-	$(CC) $(filter-out -Werror,$(CFLAGS)) -I$(RUBYINC) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(filter-out -Werror, $(CFLAGS)) -I$(RUBYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGSO): $(SWIGLOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $< -L. -lselinux -L$(LIBDIR) -Wl,-soname,$@
 
 $(SWIGRUBYSO): $(SWIGRUBYLOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -L. -lselinux -L$(LIBDIR) -Wl,-soname,$@
+
+$(LIBA): $(OBJS)
+	$(AR) rcs $@ $^
+	$(RANLIB) $@
 
 $(LIBSO): $(LOBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -ldl -L$(LIBDIR) -Wl,-soname,$(LIBSO),-z,defs,-z,relro
@@ -91,10 +97,10 @@ $(LIBPC): $(LIBPC).in
 selinuxswig_python_exception.i: ../include/selinux/selinux.h
 	bash exception.sh > $@ 
 
-audit2why.lo: audit2why.c
-	$(CC) $(CFLAGS) -I$(PYINC) -fPIC -DSHARED -c -o $@ $<
+$(AUDIT2WHYLOBJ): audit2why.c
+	$(CC) $(filter-out -Werror, $(CFLAGS)) $(PYINC) -fPIC -DSHARED -c -o $@ $<
 
-$(AUDIT2WHYSO): audit2why.lo
+$(AUDIT2WHYSO): $(AUDIT2WHYLOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $^ -L. -lselinux ${LIBDIR}/libsepol.a -L$(LIBDIR) -Wl,-soname,$@
 
 %.o:  %.c policy.h
@@ -104,10 +110,10 @@ $(AUDIT2WHYSO): audit2why.lo
 	$(CC) $(CFLAGS) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGCOUT): $(SWIGIF)
-	$(SWIG) $^
+	$(SWIG) $<
 
 $(SWIGRUBYCOUT): $(SWIGRUBYIF)
-	$(SWIGRUBY) $^
+	$(SWIGRUBY) $<
 
 swigify: $(SWIGIF)
 	$(SWIG) $<
@@ -122,10 +128,10 @@ install: all
 	cd $(LIBDIR) && ln -sf ../../`basename $(SHLIBDIR)`/$(LIBSO) $(TARGET)
 
 install-pywrap: pywrap
-	test -d $(PYTHONLIBDIR)/site-packages/selinux || install -m 755 -d $(PYTHONLIBDIR)/site-packages/selinux
-	install -m 755 $(SWIGSO) $(PYTHONLIBDIR)/site-packages/selinux
-	install -m 755 $(AUDIT2WHYSO) $(PYTHONLIBDIR)/site-packages/selinux
-	install -m 644  selinux.py $(PYTHONLIBDIR)/site-packages/selinux/__init__.py
+	test -d $(PYLIBDIR)/site-packages/selinux || install -m 755 -d $(PYLIBDIR)/site-packages/selinux
+	install -m 755 $(SWIGSO) $(PYLIBDIR)/site-packages/selinux/_selinux.so
+	install -m 755 $(AUDIT2WHYSO) $(PYLIBDIR)/site-packages/selinux/audit2why.so
+	install -m 644  selinux.py $(PYLIBDIR)/site-packages/selinux/__init__.py
 
 install-rubywrap: rubywrap
 	test -d $(RUBYINSTALL) || install -m 755 -d $(RUBYINSTALL) 
@@ -143,3 +149,4 @@ distclean: clean
 indent:
 	../../scripts/Lindent $(filter-out $(GENERATED),$(wildcard *.[ch]))
 
+.PHONY: all clean pywrap rubywrap swigify install install-pywrap install-rubywrap distclean

@@ -353,7 +353,11 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 		strObj = PyList_GetItem(listObj, i); /* Can't fail */
 		
 		/* make it a string */
+#if PY_MAJOR_VERSION >= 3
+		permstr = _PyUnicode_AsString( strObj );
+#else
 		permstr = PyString_AsString( strObj );
+#endif
 		
 		perm = string_to_av_perm(tclass, permstr);
 		if (!perm) {
@@ -423,10 +427,39 @@ static PyMethodDef audit2whyMethods[] = {
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
+#if PY_MAJOR_VERSION >= 3
+/* Module-initialization logic specific to Python 3 */
+struct module_state {
+	/* empty for now */
+};
+static struct PyModuleDef moduledef = {
+	PyModuleDef_HEAD_INIT,
+	"audit2why",
+	NULL,
+	sizeof(struct module_state),
+	audit2whyMethods,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+PyMODINIT_FUNC
+PyInit_audit2why(void)
+#else
 PyMODINIT_FUNC
 initaudit2why(void)
+#endif
 {
-	PyObject *m = Py_InitModule("audit2why", audit2whyMethods);
+	PyObject *m;
+#if PY_MAJOR_VERSION >= 3
+	m = PyModule_Create(&moduledef);
+	if (m == NULL) {
+		return NULL;
+	}
+#else
+	m  = Py_InitModule("audit2why", audit2whyMethods);
+#endif
 	PyModule_AddIntConstant(m,"UNKNOWN", UNKNOWN);
 	PyModule_AddIntConstant(m,"BADSCON", BADSCON);
 	PyModule_AddIntConstant(m,"BADTCON", BADTCON);
@@ -440,4 +473,8 @@ initaudit2why(void)
 	PyModule_AddIntConstant(m,"BOOLEAN", BOOLEAN);
 	PyModule_AddIntConstant(m,"CONSTRAINT", CONSTRAINT);
 	PyModule_AddIntConstant(m,"RBAC", RBAC);
+
+#if PY_MAJOR_VERSION >= 3
+	return m;
+#endif
 }
