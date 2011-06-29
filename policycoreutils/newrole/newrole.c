@@ -586,7 +586,7 @@ static int drop_capabilities(int full)
 		return -1;
 	}
 	if (! full) 
-		capng_update(CAPNG_ADD, CAPNG_EFFECTIVE | CAPNG_PERMITTED, CAP_SYS_ADMIN | CAP_FOWNER | CAP_CHOWN | CAP_DAC_OVERRIDE);
+		capng_update(CAPNG_ADD, CAPNG_EFFECTIVE | CAPNG_PERMITTED, CAP_SYS_ADMIN | CAP_FOWNER | CAP_CHOWN | CAP_DAC_OVERRIDE | CAP_SETPCAP);
 	return capng_apply(CAPNG_SELECT_BOTH);
 }
 
@@ -1030,8 +1030,10 @@ int main(int argc, char *argv[])
 	 * if it makes sense to continue to run newrole, and setting up
 	 * a scrubbed environment.
 	 */
-	if (drop_capabilities(FALSE))
+	if (drop_capabilities(FALSE)) {
+		perror(_("Sorry, newrole failed to drop capabilities\n"));
 		return -1;
+	}
 	if (set_signal_handles())
 		return -1;
 
