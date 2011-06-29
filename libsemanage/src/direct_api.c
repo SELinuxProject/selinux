@@ -992,7 +992,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	 * which requires the out policydb */
 	if (!sh->conf->disable_genhomedircon) {
 		if (out && (retval =
-		     semanage_genhomedircon(sh, out, sh->conf->usepasswd)) != 0) {
+			semanage_genhomedircon(sh, out, sh->conf->usepasswd, sh->conf->ignoredirs)) != 0) {
 			ERR(sh, "semanage_genhomedircon returned error code %d.",
 			    retval);
 			goto cleanup;

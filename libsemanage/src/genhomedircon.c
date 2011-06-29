@@ -113,6 +113,61 @@ typedef struct {
 	int matched;
 } fc_match_handle_t;
 
+typedef struct IgnoreDir {
+	struct IgnoreDir *next;
+	char *dir;
+} ignoredir_t;
+
+ignoredir_t *ignore_head = NULL;
+
+static void ignore_free(void) {
+	ignoredir_t *next;
+
+	while (ignore_head) {
+		next = ignore_head->next;
+		free(ignore_head->dir);
+		free(ignore_head);
+		ignore_head = next;
+	}
+}
+
+static int ignore_setup(char *ignoredirs) {
+	char *tok;
+	ignoredir_t *ptr = NULL; 
+
+	tok = strtok(ignoredirs, ";");
+	while(tok) {
+		ptr = calloc(sizeof(ignoredir_t),1);
+		if (!ptr)
+			goto err;
+		ptr->dir = strdup(tok);
+		if (!ptr->dir)
+			goto err;
+
+		ptr->next = ignore_head;
+		ignore_head = ptr;
+
+		tok = strtok(NULL, ";");
+	}
+
+	return 0;
+err:
+	free(ptr);
+	ignore_free();
+	return -1;
+}
+
+static int ignore(const char *homedir) {
+	ignoredir_t *ptr = ignore_head;
+	while (ptr) {
+		if (strcmp(ptr->dir, homedir) == 0) {
+			return 1;
+		}
+		ptr = ptr->next;
+	}
+	return 0;
+}
+
 static semanage_list_t *default_shell_list(void)
 {
 	semanage_list_t *list = NULL;
@@ -313,6 +368,8 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 			pwbuf->pw_dir[len] = '\0';
 		}
 		if (strcmp(pwbuf->pw_dir, "/") == 0)
+			continue;
+		if (ignore(pwbuf->pw_dir))
 			continue;
 		if (semanage_str_count(pwbuf->pw_dir, '/') <= 1)
 			continue;
@@ -829,6 +886,8 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 			 * /root */
 			continue;
 		}
+		if (ignore(pwent->pw_dir))
+			continue;
 		if (push_user_entry(&head, name, seuname,
 				    prefix, pwent->pw_dir, level) != STATUS_SUCCESS) {
 			*errors = STATUS_ERR;
@@ -980,7 +1039,8 @@ done:
 
 int semanage_genhomedircon(semanage_handle_t * sh,
 			   sepol_policydb_t * policydb,
-			   int usepasswd)
+			   int usepasswd, 
+			   char *ignoredirs)
 {
 	genhomedircon_settings_t s;
 	FILE *out = NULL;
@@ -998,6 +1058,8 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 	if (s.fallback_user == NULL || s.fallback_user_prefix == NULL || s.fallback_user_level == NULL)
 		return STATUS_ERR;
 
+	if (ignoredirs) ignore_setup(ignoredirs);
+
 	s.usepasswd = usepasswd;
 	s.h_semanage = sh;
 	s.policydb = policydb;
@@ -1014,6 +1076,7 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 
 	free(s.fallback_user);
 	free(s.fallback_user_prefix);
+	ignore_free();
 
 	return retval;
 }

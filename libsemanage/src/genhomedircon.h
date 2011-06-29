@@ -23,6 +23,7 @@
 #include "utilities.h"
 
 int semanage_genhomedircon(semanage_handle_t * sh,
-			   sepol_policydb_t * policydb, int usepasswd);
+			   sepol_policydb_t * policydb, int usepasswd,
+			   char *ignoredirs);
 
 #endif

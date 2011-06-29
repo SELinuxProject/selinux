@@ -56,6 +56,11 @@ It controls whether the previously linked module is saved (with name "base.linke
 It can be set to either "true" or "false" and by default it is set to "false" (the previous module is deleted).
 
 .TP
+.B ignoredirs
+List, separated by ";",  of directories to ignore when setting up users homedirs. 
+Some distributions use this to stop labeling /root as a homedir. 
+
+.TP
 .B usepasswd 
 Whether or not to enable the use getpwent() to obtain a list of home directories to label. It can be set to either "true" or "false".
 By default it is set to "true".

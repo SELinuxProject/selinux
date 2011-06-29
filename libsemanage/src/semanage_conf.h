@@ -43,6 +43,7 @@ typedef struct semanage_conf {
 	mode_t file_mode;
 	int bzip_blocksize;
 	int bzip_small;
+	char *ignoredirs;	/* ";" separated of list for genhomedircon to ignore */
 	struct external_prog *load_policy;
 	struct external_prog *setfiles;
 	struct external_prog *mod_prog, *linked_prog, *kernel_prog;

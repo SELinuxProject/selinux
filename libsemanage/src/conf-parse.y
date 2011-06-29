@@ -58,7 +58,7 @@ static int parse_errors;
 }
 
 %token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED
-%token LOAD_POLICY_START SETFILES_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD
+%token LOAD_POLICY_START SETFILES_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD IGNOREDIRS
 %token BZIP_BLOCKSIZE BZIP_SMALL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
 %token PROG_PATH PROG_ARGS
@@ -84,6 +84,7 @@ single_opt:     module_store
         |       save_linked
         |       disable_genhomedircon
         |       usepasswd
+        |       ignoredirs
         |       handle_unknown
 	|	bzip_blocksize
 	|	bzip_small
@@ -164,6 +165,10 @@ usepasswd: USEPASSWD '=' ARG {
 		yyerror("usepasswd can only be 'true' or 'false'");
 	}
 	free($3);
+ }
+
+ignoredirs: IGNOREDIRS '=' ARG {
+	current_conf->ignoredirs = strdup($3);
  }
 
 handle_unknown: HANDLE_UNKNOWN '=' ARG {
@@ -262,6 +267,7 @@ static int semanage_conf_init(semanage_conf_t * conf)
 {
 	conf->store_type = SEMANAGE_CON_DIRECT;
 	conf->store_path = strdup(basename(semanage_policy_root()));
+	conf->ignoredirs = NULL;
 	conf->policyvers = sepol_policy_kern_vers_max();
 	conf->expand_check = 1;
 	conf->handle_unknown = -1;
@@ -354,6 +360,7 @@ void semanage_conf_destroy(semanage_conf_t * conf)
 {
 	if (conf != NULL) {
 		free(conf->store_path);
+		free(conf->ignoredirs);
 		semanage_conf_external_prog_destroy(conf->load_policy);
 		semanage_conf_external_prog_destroy(conf->setfiles);
 		semanage_conf_external_prog_destroy(conf->mod_prog);
