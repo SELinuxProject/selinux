@@ -287,8 +287,9 @@ static int __policy_init(const char *init_path)
 static PyObject *init(PyObject *self __attribute__((unused)), PyObject *args) {
   int result;
   char *init_path=NULL;
-  if (PyArg_ParseTuple(args,(char *)"|s:policy_init",&init_path)) 
-	  result = __policy_init(init_path);
+  if (!PyArg_ParseTuple(args,(char *)"|s:policy_init",&init_path))
+    return NULL;
+  result = __policy_init(init_path);
   return Py_BuildValue("i", result);
 }
 
