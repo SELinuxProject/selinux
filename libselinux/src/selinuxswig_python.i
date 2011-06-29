@@ -12,8 +12,15 @@ import shutil, os, stat
 
 def restorecon(path, recursive=False):
     """ Restore SELinux context on a given path """
-    mode = os.lstat(path)[stat.ST_MODE]
-    status, context = matchpathcon(path, mode)
+
+    try:
+        mode = os.lstat(path)[stat.ST_MODE]
+        status, context = matchpathcon(path, mode)
+    except OSError:
+        path = os.path.realpath(os.path.expanduser(path))
+        mode = os.lstat(path)[stat.ST_MODE]
+        status, context = matchpathcon(path, mode)
+
     if status == 0:
         lsetfilecon(path, context)
         if recursive:
