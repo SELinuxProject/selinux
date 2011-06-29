@@ -460,4 +460,5 @@
 	$1 = &temp;
 }
 
+%include "semanageswig_python_exception.i"
 %include "semanageswig.i"

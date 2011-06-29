@@ -36,7 +36,7 @@ LIBVERSION = 1
 LIBA=libsemanage.a
 TARGET=libsemanage.so
 LIBPC=libsemanage.pc
-SWIGIF= semanageswig_python.i
+SWIGIF= semanageswig_python.i semanageswig_python_exception.i
 SWIGRUBYIF= semanageswig_ruby.i
 SWIGCOUT= semanageswig_wrap.c
 SWIGRUBYCOUT= semanageswig_ruby_wrap.c
@@ -47,7 +47,7 @@ SWIGFILES=$(SWIGSO) semanage.py
 SWIGRUBYSO=_rubysemanage.so
 LIBSO=$(TARGET).$(LIBVERSION)
 
-GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT)
+GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT) semanageswig_python_exception.i
 SRCS= $(filter-out $(GENERATED),$(wildcard *.c))
 
 OBJS= $(patsubst %.c,%.o,$(SRCS)) conf-scan.o conf-parse.o
@@ -91,6 +91,9 @@ $(LIBSO): $(LOBJS)
 
 $(LIBPC): $(LIBPC).in
 	sed -e 's/@VERSION@/$(VERSION)/; s:@prefix@:$(PREFIX):; s:@libdir@:$(LIBBASE):; s:@includedir@:$(INCLUDEDIR):' < $< > $@
+
+semanageswig_python_exception.i: ../include/semanage/semanage.h
+	bash exception.sh > $@
 
 conf-scan.c: conf-scan.l conf-parse.h
 	$(LEX) $(LFLAGS) -t $< > $@
