@@ -485,7 +485,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 					 pass, ++lineno) != 0)
 				goto finish;
 		}
-		if (pass == 1) {
+		if (pass == 1 && rec->validating) {
 			status = nodups_specs(data, path);
 			if (status)
 				goto finish;
