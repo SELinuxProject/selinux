@@ -90,7 +90,7 @@ static const char *semanage_store_paths[SEMANAGE_NUM_STORES] = {
 	"/tmp"
 };
 
-/* this is the module store path relative to selinux_policy_root() */
+/* this is the module store path relative to semanage_policy_root() */
 #define SEMANAGE_MOD_DIR "/modules"
 /* relative path names to enum sandbox_paths for special files within
  * a sandbox */
@@ -170,11 +170,11 @@ static int semanage_init_paths(const char *root)
 			semanage_relative_files[i]);
 	}
 
-	len = strlen(selinux_path()) + strlen(SEMANAGE_CONF_FILE);
+	len = strlen(semanage_selinux_path()) + strlen(SEMANAGE_CONF_FILE);
 	semanage_conf = calloc(len + 1, sizeof(char));
 	if (!semanage_conf)
 		return -1;
-	snprintf(semanage_conf, len, "%s%s", selinux_path(),
+	snprintf(semanage_conf, len, "%s%s", semanage_selinux_path(),
 		 SEMANAGE_CONF_FILE);
 
 	return 0;
@@ -1071,14 +1071,14 @@ static int semanage_install_active(semanage_handle_t * sh)
 	const char *active_fc_hd =
 	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC_HOMEDIRS);
 
-	const char *running_fc = selinux_file_context_path();
-	const char *running_fc_loc = selinux_file_context_local_path();
-	const char *running_fc_hd = selinux_file_context_homedir_path();
-	const char *running_hd = selinux_homedir_context_path();
-	const char *running_policy = selinux_binary_policy_path();
-	const char *running_seusers = selinux_usersconf_path();
-	const char *running_nc = selinux_netfilter_context_path();
-	const char *really_active_store = selinux_policy_root();
+	const char *running_fc = semanage_file_context_path();
+	const char *running_fc_loc = semanage_file_context_local_path();
+	const char *running_fc_hd = semanage_file_context_homedir_path();
+	const char *running_hd = semanage_homedir_context_path();
+	const char *running_policy = semanage_binary_policy_path();
+	const char *running_seusers = semanage_usersconf_path();
+	const char *running_nc = semanage_netfilter_context_path();
+	const char *really_active_store = semanage_policy_root();
 
 	/* This is very unelegant, the right thing to do is export the path 
 	 * building code in libselinux so that you can get paths for a given 
@@ -1099,11 +1099,11 @@ static int semanage_install_active(semanage_handle_t * sh)
 	running_seusers += len;
 	running_nc += len;
 
-	len = strlen(selinux_path()) + strlen(sh->conf->store_path) + 1;
+	len = strlen(semanage_selinux_path()) + strlen(sh->conf->store_path) + 1;
 	storepath = (char *)malloc(len);
 	if (!storepath)
 		goto cleanup;
-	snprintf(storepath, PATH_MAX, "%s%s", selinux_path(),
+	snprintf(storepath, PATH_MAX, "%s%s", semanage_selinux_path(),
 		 sh->conf->store_path);
 
 	snprintf(store_pol, PATH_MAX, "%s%s.%d", storepath,
