@@ -255,6 +255,8 @@ static int __policy_init(const char *init_path)
 	fclose(fp);
 	sepol_set_policydb(&avc->policydb->p);
 	avc->handle = sepol_handle_create();
+	/* Turn off messages */
+	sepol_msg_set_callback(avc->handle, NULL, NULL);
 
 	rc = sepol_bool_count(avc->handle,
 			      avc->policydb, &cnt);
