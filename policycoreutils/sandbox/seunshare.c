@@ -24,6 +24,7 @@
 
 #include <selinux/selinux.h>
 #include <selinux/context.h>	/* for context-mangling functions */
+#include <dirent.h>
 
 #ifdef USE_NLS
 #include <locale.h>		/* for setlocale() */
@@ -43,7 +44,7 @@
 
 #define BUF_SIZE 1024
 #define DEFAULT_PATH "/usr/bin:/bin"
-#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -C ] [ -c ] [ -t tmpdir ] [ -h homedir ] [ -Z CONTEXT ] -- executable [args] ")
+#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -C ] [ -c ] [ -k ] [ -t tmpdir ] [ -h homedir ] [ -Z CONTEXT ] -- executable [args] ")
 
 static int verbose = 0;
 
@@ -735,12 +736,77 @@ good:
 	return tmpdir;
 }
 
+#define PROC_BASE "/proc"
+
+static int
+killall (security_context_t execcon)
+{
+	DIR *dir;
+	security_context_t scon;
+	struct dirent *de;
+	pid_t *pid_table, pid, self;
+	int i;
+	int pids, max_pids;
+	int running = 0;
+	self = getpid();
+	if (!(dir = opendir(PROC_BASE))) {
+		return -1;
+	}
+	max_pids = 256;
+	pid_table = malloc(max_pids * sizeof (pid_t));
+	if (!pid_table) {
+		(void)closedir(dir);
+		return -1;
+	}
+	pids = 0;
+	context_t con;
+	con = context_new(execcon);
+	const char *mcs = context_range_get(con);
+	printf("mcs=%s\n", mcs);
+	while ((de = readdir (dir)) != NULL) {
+		if (!(pid = (pid_t)atoi(de->d_name)) || pid == self)
+			continue;
+
+		if (pids == max_pids) {
+			if (!(pid_table = realloc(pid_table, 2*pids*sizeof(pid_t)))) {
+				(void)closedir(dir);
+				return -1;
+			}
+			max_pids *= 2;
+		}
+		pid_table[pids++] = pid;
+	}
+
+	(void)closedir(dir);
+
+	for (i = 0; i < pids; i++) {
+		pid_t id = pid_table[i];
+
+		if (getpidcon(id, &scon) == 0) {
+
+			context_t pidcon = context_new(scon);
+			/* Attempt to kill remaining processes */
+			if (strcmp(context_range_get(pidcon), mcs) == 0)
+				kill(id, SIGKILL);
+
+			context_free(pidcon);
+			freecon(scon);
+		}
+		running++;
+	}
+
+	context_free(con);
+	free(pid_table);
+	return running;
+}
+
 int main(int argc, char **argv) {
 	int status = -1;
 	security_context_t execcon = NULL;
 
 	int clflag;		/* holds codes for command line flags */
 	int usecgroups = 0;
+	int kill_all = 0;
 
 	char *homedir_s = NULL;	/* homedir spec'd by user in argv[] */
 	char *tmpdir_s = NULL;	/* tmpdir spec'd by user in argv[] */
@@ -753,6 +819,7 @@ int main(int argc, char **argv) {
 	const struct option long_options[] = {
 		{"homedir", 1, 0, 'h'},
 		{"tmpdir", 1, 0, 't'},
+		{"kill", 1, 0, 'k'},
 		{"verbose", 1, 0, 'v'},
 		{"cgroups", 1, 0, 'c'},
 		{"context", 1, 0, 'Z'},
@@ -787,6 +854,9 @@ int main(int argc, char **argv) {
 		switch (clflag) {
 		case 't':
 			tmpdir_s = optarg;
+			break;
+		case 'k':
+			kill_all = 1;
 			break;
 		case 'h':
 			homedir_s = optarg;
@@ -925,6 +995,9 @@ childerr:
 	/* parent waits for child exit to do the cleanup */
 	waitpid(child, &status, 0);
 	status_to_retval(status, status);
+
+	if (execcon && kill_all)
+		killall(execcon);
 
 	if (tmpdir_r) cleanup_tmpdir(tmpdir_r, tmpdir_s, pwd, 1);
 

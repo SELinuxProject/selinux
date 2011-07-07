@@ -3,7 +3,7 @@
 seunshare \- Run cmd with alternate homedir, tmpdir and/or SELinux context
 .SH SYNOPSIS
 .B seunshare
-[ -v ] [ -c ] [ -C ] [ -t tmpdir ] [ -h homedir ] [ -Z context ] -- executable [args]
+[ -v ] [ -c ] [ -C ] [ -k ] [ -t tmpdir ] [ -h homedir ] [ -Z context ] -- executable [args]
 .br
 .SH DESCRIPTION
 .PP
@@ -23,6 +23,9 @@ Use cgroups to control this copy of seunshare.  Specify parameters in /etc/sysco
 .TP
 \fB\-C --capabilities\fR
 Allow apps executed within the namespace to use capabilities.  Default is no capabilities.
+.TP
+\fB\-k --kill\fR
+Kill all processes with matching MCS level.
 .TP
 \fB\-Z\ context
 Use alternate SELinux context while runing the executable.
