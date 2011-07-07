@@ -82,8 +82,13 @@ static int selinux_set_boolean_list(size_t boolcnt,
 		if (errno == ENOENT)
 			fprintf(stderr, "Could not change active booleans: "
 				"Invalid boolean\n");
-		else if (errno)
-			perror("Could not change active booleans");
+		else if (errno) {
+			if (getuid() == 0) {
+				perror("Could not change active booleans");
+			} else {
+				perror("Could not change active booleans. Please try as root");
+			}
+		}
 
 		return -1;
 	}
@@ -115,8 +120,13 @@ static int semanage_set_boolean_list(size_t boolcnt,
 		goto err;
 
 	} else if (managed == 0) {
-		fprintf(stderr,
-			"Cannot set persistent booleans without managed policy.\n");
+		if (getuid() == 0) {
+			fprintf(stderr,
+				"Cannot set persistent booleans without managed policy.\n");
+		} else {
+			fprintf(stderr,
+				"Cannot set persistent booleans, please try as root.\n");
+		}
 		goto err;
 	}
 
