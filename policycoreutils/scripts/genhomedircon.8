@@ -1,0 +1,37 @@
+.\" Hey, Emacs! This is an -*- nroff -*- source file.
+.\" Copyright (c) 2010 Dan Walsh <dwalsh@redhat.com>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.\"
+.TH GENHOMEDIRCON "8" "May 2010" "Security Enhanced Linux" "SELinux"
+.SH NAME
+genhomedircon \- generate SELinux file context configuration entries for user home directories
+.SH SYNOPSIS
+.B genhomedircon
+is a script that executes semodule to rebuild policy and create the
+labels for HOMEDIRS based on home directories returned by the getpw calls.
+
+This functionality is enabled via the usepasswd flag in /etc/selinux/semanage.conf.
+
+.SH AUTHOR
+This manual page was written by
+.I Dan Walsh <dwalsh@redhat.com>
