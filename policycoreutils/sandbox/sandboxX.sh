@@ -1,4 +1,5 @@
-#!/bin/bash 
+#!/bin/bash
+trap "" TERM
 context=`id -Z | secon -t -l -P`
 export TITLE="Sandbox $context -- `grep ^#TITLE: ~/.sandboxrc | /usr/bin/cut -b8-80`"
 [ -z $1 ] && export SCREENSIZE="1000x700" || export SCREENSIZE="$1"
@@ -14,7 +15,7 @@ __EOF
     chmod +x ~/seremote
     /usr/share/sandbox/start $HOME/.sandboxrc
     export EXITCODE=$?
-    kill -HUP 0
+    kill -TERM 0
     break
 done
 exit 0
