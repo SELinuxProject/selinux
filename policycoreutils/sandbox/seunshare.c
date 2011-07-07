@@ -47,6 +47,7 @@
 #define USAGE_STRING _("USAGE: seunshare [ -v ] [ -C ] [ -c ] [ -k ] [ -t tmpdir ] [ -h homedir ] [ -Z CONTEXT ] -- executable [args] ")
 
 static int verbose = 0;
+static int child = 0;
 
 static capng_select_t cap_set = CAPNG_SELECT_BOTH;
 
@@ -78,6 +79,13 @@ static int drop_privs(uid_t uid)
 }
 
 /**
+ * If the user sends a siginto to seunshare, kill the child's session
+ */
+void handler(int sig) {
+	if (child > 0) kill(-child,sig);
+}
+
+/**
  * Take care of any signal setup.
  */
 static int set_signal_handles(void)
@@ -95,6 +103,11 @@ static int set_signal_handles(void)
 	/* Terminate on SIGHUP */
 	if (signal(SIGHUP, SIG_DFL) == SIG_ERR) {
 		perror("Unable to set SIGHUP handler");
+		return -1;
+	}
+
+	if (signal(SIGINT, handler) == SIG_ERR) {
+		perror("Unable to set SIGINT handler");
 		return -1;
 	}
 
@@ -923,7 +936,7 @@ int main(int argc, char **argv) {
 	}
 
 	/* spawn child process */
-	int child = fork();
+	child = fork();
 	if (child == -1) {
 		perror(_("Unable to fork"));
 		goto err;
@@ -995,6 +1008,9 @@ childerr:
 	/* parent waits for child exit to do the cleanup */
 	waitpid(child, &status, 0);
 	status_to_retval(status, status);
+
+	/* Make sure all child processes exit */
+	kill(-child,SIGTERM);
 
 	if (execcon && kill_all)
 		killall(execcon);
