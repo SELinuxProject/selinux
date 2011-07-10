@@ -162,11 +162,11 @@ def untranslate(trans, prepend = 1):
 		return raw
 	
 class semanageRecords:
+        transaction = False
         handle = None
         def __init__(self, store):
                global handle
                       
-               self.transaction = False
                self.sh = self.get_handle(store)
 
         def get_handle(self, store):
@@ -179,7 +179,7 @@ class semanageRecords:
                if not handle:
                       raise ValueError(_("Could not create semanage handle"))
 
-               if not self.transaction and store != "":
+               if not semanageRecords.transaction and store != "":
                       semanage_select_store(handle, store, SEMANAGE_CON_DIRECT);
                      semanageRecords.store = store
 
@@ -209,28 +209,28 @@ class semanageRecords:
                raise ValueError(_("Not yet implemented"))
 
         def start(self):
-               if self.transaction:
+               if semanageRecords.transaction:
                       raise ValueError(_("Semanage transaction already in progress"))
                self.begin()
-               self.transaction = True
+               semanageRecords.transaction = True
 
         def begin(self):
-               if self.transaction:
+               if semanageRecords.transaction:
                       return
                rc = semanage_begin_transaction(self.sh)
                if rc < 0:
                       raise ValueError(_("Could not start semanage transaction"))
         def commit(self):
-               if self.transaction:
+               if semanageRecords.transaction:
                       return
                rc = semanage_commit(self.sh) 
                if rc < 0:
                       raise ValueError(_("Could not commit semanage transaction"))
 
         def finish(self):
-               if not self.transaction:
+               if not semanageRecords.transaction:
                       raise ValueError(_("Semanage transaction not in progress"))
-               self.transaction = False
+               semanageRecords.transaction = False
                self.commit()
 
 class dontauditClass(semanageRecords):
