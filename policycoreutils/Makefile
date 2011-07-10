@@ -1,4 +1,4 @@
-SUBDIRS = setfiles semanage load_policy newrole run_init sandbox secon audit2allow audit2why scripts sestatus semodule_package semodule semodule_link semodule_expand semodule_deps setsebool po
+SUBDIRS = setfiles semanage load_policy newrole run_init sandbox secon audit2allow audit2why scripts sestatus semodule_package semodule semodule_link semodule_expand semodule_deps sepolgen-ifgen setsebool po
 
 INOTIFYH = $(shell ls /usr/include/sys/inotify.h 2>/dev/null)
 
