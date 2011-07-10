@@ -20,6 +20,35 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+exclude_dirs_from_relabelling() {
+    exclude_from_relabelling=
+    if [ -e /etc/selinux/fixfiles_exclude_dirs ]
+    then
+        while read i
+        do
+          # skip blank line and comment
+          # skip not absolute path
+          # skip not directory
+          [ -z "${i}" ] && continue
+          [[ "${i}" =~ "^[[:blank:]]*#" ]] && continue
+          [[ ! "${i}" =~ ^/.* ]] && continue
+          [[ ! -d "${i}" ]] && continue
+          exclude_from_relabelling="$exclude_from_relabelling -e $i"
+          logit "skipping the directory $i from relabelling"
+        done < /etc/selinux/fixfiles_exclude_dirs
+    fi
+    echo "$exclude_from_relabelling"
+}
+
+exclude_dirs() {
+    exclude=
+    for i in /home /root /tmp /dev; do
+        [ -e $i ]  && exclude="$exclude -e $i";
+    done
+    exclude="$exclude `exclude_dirs_from_relabelling`"
+    echo "$exclude"
+}
+
 #
 # Set global Variables
 #
@@ -133,8 +162,26 @@ if [ ! -z "$FILEPATH" ]; then
 fi
 [ -x /usr/sbin/genhomedircon ] && /usr/sbin/genhomedircon
 LogReadOnly
+#
+exclude_dirs="`exclude_dirs_from_relabelling`"
+if [ -n "${exclude_dirs}" ]
+then
+	TEMPFCFILE=`mktemp ${FC}.XXXXXXXXXX`
+	test -z "$TEMPFCFILE" && exit
+	/bin/cp -p ${FC} ${TEMPFCFILE} &>/dev/null || exit
+	exclude_dirs=${exclude_dirs//-e/}
+	for p in ${exclude_dirs}
+	do
+		p="${p%/}"
+		p1="${p}(/.*)? -- <<none>>"
+		echo "${p1}" >> $TEMPFCFILE
+		logit "skipping the directory ${p} from relabelling"
+	done
+FC=$TEMPFCFILE
+fi
 ${SETFILES} -q ${SYSLOGFLAG} ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 >> $LOGFILE
-rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-*
+rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-* $TEMPFCFILE
+
 find /tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) \( -type s -o -type p \) -delete
 find /tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
 find /var/tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
