@@ -87,11 +87,7 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
                   esac; \
                fi; \
             done | \
-	while read pattern ; do sh -c "find $pattern \
-		      ! \( -fstype ext2 -o -fstype ext3 -o -fstype ext4 -o -fstype ext4dev  -o -fstype gfs2 -o -fstype jfs -o -fstype xfs -o -fstype btrfs \) -prune  -o \
-		      \( -wholename /home -o -wholename /root -o -wholename /tmp -wholename /dev \) -prune -o -print0"; \
-		      done 2> /dev/null | \
-	 ${RESTORECON} $* -0 -f - 
+	${RESTORECON} -f - -R -p `exclude_dirs`; \
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }
