@@ -146,7 +146,7 @@ exit $?
 
 fullrelabel() {
     logit "Cleaning out /tmp"
-    find /tmp/ -mindepth 1 -print0 | xargs -0 /bin/rm -f
+    find /tmp/ -mindepth 1 -delete
     LogReadOnly
     restore
 }
