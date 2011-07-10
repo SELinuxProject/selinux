@@ -390,7 +390,7 @@ int process_one_realpath(char *name, int recurse)
 {
 	int rc = 0;
 	char *p;
-	struct stat sb;
+	struct stat64 sb;
 
 	if (r_opts == NULL){
 		fprintf(stderr,
@@ -401,7 +401,7 @@ int process_one_realpath(char *name, int recurse)
 	if (!r_opts->expand_realpath) {
 		return process_one(name, recurse);
 	} else {
-		rc = lstat(name, &sb);
+		rc = lstat64(name, &sb);
 		if (rc < 0) {
 			if (r_opts->ignore_enoent && errno == ENOENT)
 				return 0;
@@ -568,7 +568,7 @@ static int filespec_add(ino_t ino, const security_context_t con, const char *fil
 {
 	file_spec_t *prevfl, *fl;
 	int h, ret;
-	struct stat sb;
+	struct stat64 sb;
 
 	if (!fl_head) {
 		fl_head = malloc(sizeof(file_spec_t) * HASH_BUCKETS);
@@ -581,7 +581,7 @@ static int filespec_add(ino_t ino, const security_context_t con, const char *fil
 	for (prevfl = &fl_head[h], fl = fl_head[h].next; fl;
 	     prevfl = fl, fl = fl->next) {
 		if (ino == fl->ino) {
-			ret = lstat(fl->file, &sb);
+			ret = lstat64(fl->file, &sb);
 			if (ret < 0 || sb.st_ino != ino) {
 				freecon(fl->con);
 				free(fl->file);
