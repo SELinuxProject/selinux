@@ -25,7 +25,6 @@ static char *policyfile = NULL;
 static int warn_no_match = 0;
 static int null_terminated = 0;
 static int errors;
-static int ignore_enoent;
 static struct restore_opts r_opts;
 
 #define STAT_BLOCK_SIZE 1
@@ -335,7 +334,7 @@ int main(int argc, char **argv)
 			r_opts.debug = 1;
 			break;
 		case 'i':
-			ignore_enoent = 1;
+			r_opts.ignore_enoent = 1;
 			break;
 		case 'l':
 			r_opts.logging = 1;

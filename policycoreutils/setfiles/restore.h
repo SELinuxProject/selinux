@@ -27,6 +27,7 @@ struct restore_opts {
 	int hard_links;
 	int verbose;
 	int logging;
+	int ignore_enoent;
 	char *rootpath;
 	int rootpathlen;
 	char *progname;

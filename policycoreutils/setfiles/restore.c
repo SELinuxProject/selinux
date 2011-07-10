@@ -374,6 +374,8 @@ int process_one_realpath(char *name, int recurse)
 	} else {
 		rc = lstat(name, &sb);
 		if (rc < 0) {
+			if (r_opts->ignore_enoent && errno == ENOENT)
+				return 0;
 			fprintf(stderr, "%s:  lstat(%s) failed:  %s\n",
 				r_opts->progname, name,	strerror(errno));
 			return -1;
