@@ -20,6 +20,50 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+#
+# seclabel support was added in 2.6.30.  This function will return a positive
+# number if the current kernel version is greater than 2.6.30, a negative
+# number if the current is less than 2.6.30 and 0 if they are the same.
+#
+function useseclabel {
+        VER=`uname -r`
+        SUP=2.6.30
+        expr '(' "$VER" : '\([^.]*\)' ')' '-' '(' "$SUP" : '\([^.]*\)' ')' '|' \
+             '(' "$VER.0" : '[^.]*[.]\([^.]*\)' ')' '-' '(' "$SUP.0" : '[^.]*[.]\([^.]*\)' ')' '|' \
+             '(' "$VER.0.0" : '[^.]*[.][^.]*[.]\([^.]*\)' ')' '-' '(' "$SUP.0.0" : '[^.]*[.][^.]*[.]\([^.]*\)' ')'
+}
+
+#
+# Get all mount points that support labeling.  Use the 'seclabel' field if it
+# is available.  Else fall back to known fs types which likely support xattrs
+# and we know were not context mounted.
+#
+get_all_labeled_mounts() {
+FS="`cat /proc/self/mounts | sort | uniq | awk '{print $2}'`"
+for i in $FS; do
+	if [ `useseclabel` -ge 0 ]
+	then
+		grep " $i " /proc/self/mounts | awk '{print $4}' | egrep --silent '(^|,)seclabel(,|$)' && echo $i
+	else
+		grep " $i " /proc/self/mounts | grep -v "context=" | egrep --silent '(ext[234]| ext4dev | gfs2 | xfs | jfs | btrfs )' && echo $i
+	fi
+done
+}
+
+get_rw_labeled_mounts() {
+FS=`get_all_labeled_mounts | sort | uniq`
+for i in $FS; do
+	grep " $i " /proc/self/mounts | awk '{print $4}' | egrep --silent '(^|,)rw(,|$)' && echo $i
+done
+}
+
+get_ro_labeled_mounts() {
+FS=`get_all_labeled_mounts | sort | uniq`
+for i in $FS; do
+	grep " $i " /proc/self/mounts | awk '{print $4}' | egrep --silent '(^|,)ro(,|$)' && echo $i
+done
+}
+
 exclude_dirs_from_relabelling() {
     exclude_from_relabelling=
     if [ -e /etc/selinux/fixfiles_exclude_dirs ]
@@ -64,8 +108,8 @@ SYSLOGFLAG="-l"
 LOGGER=/usr/sbin/logger
 SETFILES=/sbin/setfiles
 RESTORECON=/sbin/restorecon
-FILESYSTEMSRW=`mount | grep -v "context=" | egrep -v '\((|.*,)bind(,.*|)\)' | awk '/(ext[234]| ext4dev | gfs2 | xfs | jfs | btrfs ).*\(rw/{print $3}';`
-FILESYSTEMSRO=`mount | grep -v "context=" | egrep -v '\((|.*,)bind(,.*|)\)' | awk '/(ext[234]| ext4dev | gfs2 | xfs | jfs | btrfs ).*\(ro/{print $3}';`
+FILESYSTEMSRW=`get_rw_labeled_mounts`
+FILESYSTEMSRO=`get_ro_labeled_mounts`
 FILESYSTEMS="$FILESYSTEMSRW $FILESYSTEMSRO"
 SELINUXTYPE="targeted"
 if [ -e /etc/selinux/config ]; then
