@@ -142,6 +142,8 @@ rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-*
 find /tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) \( -type s -o -type p \) -delete
 find /tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
 find /var/tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
+find /var/run \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t var_run_t {} \;
+[ -e /var/lib/debug ] && find /var/lib/debug \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t lib_t {} \;
 exit $?
 }
 
