@@ -14,8 +14,6 @@
 #define AUDIT_FS_RELABEL 2309
 #endif
 #endif
-static int mass_relabel;
-static int mass_relabel_errs;
 
 
 /* cmdline opts*/
@@ -23,7 +21,6 @@ static int mass_relabel_errs;
 static char *policyfile = NULL;
 static int warn_no_match = 0;
 static int null_terminated = 0;
-static int errors;
 static struct restore_opts r_opts;
 
 #define STAT_BLOCK_SIZE 1
@@ -107,10 +104,11 @@ int canoncon(char **contextp)
 }
 
 #ifndef USE_AUDIT
-static void maybe_audit_mass_relabel(void)
+static void maybe_audit_mass_relabel(int mass_relabel __attribute__((unused)),
+				     int mass_relabel_errs __attribute__((unused)))
 {
 #else
-static void maybe_audit_mass_relabel(void)
+static void maybe_audit_mass_relabel(int mass_relabel, int mass_relabel_errs)
 {
 	int audit_fd = -1;
 	int rc = 0;
@@ -146,6 +144,7 @@ int main(int argc, char **argv)
 	size_t buf_len;
 	int recurse; /* Recursive descent. */
 	char *base;
+	int mass_relabel = 0, errors = 0;
 	
 	memset(&r_opts, 0, sizeof(r_opts));
 
@@ -423,9 +422,7 @@ int main(int argc, char **argv)
 		}
 	}
 	
-	if (mass_relabel)
-		mass_relabel_errs = errors;
-	maybe_audit_mass_relabel();
+	maybe_audit_mass_relabel(mass_relabel, errors);
 
 	if (warn_no_match)
 		selabel_stats(r_opts.hnd);
