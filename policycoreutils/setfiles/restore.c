@@ -1,4 +1,5 @@
 #include "restore.h"
+#include <glob.h>
 
 #define SKIP -2
 #define ERR -1
@@ -360,6 +361,28 @@ out:
 err:
 	rc = -1;
 	goto out;
+}
+
+int process_glob(char *name, int recurse) {
+	glob_t globbuf;
+	size_t i = 0;
+	int errors;
+	memset(&globbuf, 0, sizeof(globbuf));
+	errors = glob(name, GLOB_TILDE | GLOB_PERIOD, NULL, &globbuf);
+	if (errors)
+		errors = process_one_realpath(name, recurse);
+	else {
+		for (i = 0; i < globbuf.gl_pathc; i++) {
+			int len = strlen(globbuf.gl_pathv[i]) -2;
+			if (len > 0 && strcmp(&globbuf.gl_pathv[i][len--], "/.") == 0)
+				continue;
+			if (len > 0 && strcmp(&globbuf.gl_pathv[i][len], "/..") == 0)
+				continue;
+			errors |= process_one_realpath(globbuf.gl_pathv[i], recurse);
+		}
+		globfree(&globbuf);
+	}
+	return errors;
 }
 
 int process_one_realpath(char *name, int recurse)

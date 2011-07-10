@@ -47,5 +47,6 @@ void restore_finish();
 int add_exclude(const char *directory);
 void remove_exclude(const char *directory);
 int process_one_realpath(char *name, int recurse);
+int process_glob(char *name, int recurse);
 
 #endif

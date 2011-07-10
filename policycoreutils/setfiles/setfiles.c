@@ -474,7 +474,7 @@ int main(int argc, char **argv)
 			buf[len - 1] = 0;
 			if (!strcmp(buf, "/"))
 				mass_relabel = 1;
-			errors |= process_one_realpath(buf, recurse) < 0;
+			errors |= process_glob(buf, recurse);
 		}
 		if (strcmp(input_filename, "-") != 0)
 			fclose(f);
@@ -482,7 +482,8 @@ int main(int argc, char **argv)
 		for (i = optind; i < argc; i++) {
 			if (!strcmp(argv[i], "/"))
 				mass_relabel = 1;
-			errors |= process_one_realpath(argv[i], recurse) < 0;
+
+			errors |= process_glob(argv[i], recurse);
 		}
 	}
 	
