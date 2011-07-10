@@ -103,7 +103,7 @@ exclude_dirs_from_relabelling() {
 
 exclude_dirs() {
     exclude=
-    for i in /home /root /tmp /dev; do
+    for i in /var/lib/BackupPC /home /tmp /dev; do
         [ -e $i ]  && exclude="$exclude -e $i";
     done
     exclude="$exclude `exclude_dirs_from_relabelling`"
