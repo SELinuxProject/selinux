@@ -53,7 +53,6 @@ void remove_exclude(const char *directory)
 		}
 	}
 	return;
-
 }
 
 void restore_init(struct restore_opts *opts)
