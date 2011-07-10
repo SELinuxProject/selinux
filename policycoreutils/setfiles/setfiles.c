@@ -5,7 +5,6 @@
 #include <ctype.h>
 #include <regex.h>
 #include <sys/vfs.h>
-#include <sys/utsname.h>
 #define __USE_XOPEN_EXTENDED 1	/* nftw */
 #include <libgen.h>
 #ifdef USE_AUDIT
@@ -135,69 +134,6 @@ static void maybe_audit_mass_relabel(void)
 	}
 	audit_close(audit_fd);
 #endif
-}
-
-/*
-   Search /proc/mounts for all file systems that do not support extended
-   attributes and add them to the exclude directory table.  File systems
-   that support security labels have the seclabel option.
-*/
-static void exclude_non_seclabel_mounts()
-{
-	struct utsname uts;
-	FILE *fp;
-	size_t len;
-	ssize_t num;
-	int index = 0, found = 0;
-	char *mount_info[4];
-	char *buf = NULL, *item;
-
-	/* Check to see if the kernel supports seclabel */
-	if (uname(&uts) == 0 && strverscmp(uts.release, "2.6.30") < 0)
-		return;
-	if (is_selinux_enabled() <= 0)
-		return;
-
-	fp = fopen("/proc/mounts", "r");
-	if (!fp)
-		return;
-
-	while ((num = getline(&buf, &len, fp)) != -1) {
-		found = 0;
-		index = 0;
-		item = strtok(buf, " ");
-		while (item != NULL) {
-			mount_info[index] = item;
-			if (index == 3)
-				break;
-			index++;
-			item = strtok(NULL, " ");
-		}
-		if (index < 3) {
-			fprintf(stderr,
-				"/proc/mounts record \"%s\" has incorrect format.\n",
-				buf);
-			continue;
-		}
-
-		/* remove pre-existing entry */
-		remove_exclude(mount_info[1]);
-
-		item = strtok(mount_info[3], ",");
-		while (item != NULL) {
-			if (strcmp(item, "seclabel") == 0) {
-				found = 1;
-				break;
-			}
-			item = strtok(NULL, ",");
-		}
-
-		/* exclude mount points without the seclabel option */
-		if (!found)
-			add_exclude(mount_info[1]);
-	}
-
-	free(buf);
 }
 
 int main(int argc, char **argv)

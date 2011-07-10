@@ -49,5 +49,6 @@ int exclude(const char *path);
 void remove_exclude(const char *directory);
 int process_one_realpath(char *name, int recurse);
 int process_glob(char *name, int recurse);
+void exclude_non_seclabel_mounts();
 
 #endif
