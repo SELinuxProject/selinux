@@ -4,10 +4,10 @@ restorecon \- restore file(s) default SELinux security contexts.
 
 .SH "SYNOPSIS"
 .B restorecon
-.I [\-o outfilename ] [\-R] [\-n] [\-v] [\-e directory ] pathname...
+.I [\-o outfilename ] [\-R] [\-n] [\-p] [\-v] [\-e directory ] pathname...
 .P
 .B restorecon
-.I \-f infilename [\-o outfilename ] [\-e directory ] [\-R] [\-n] [\-v] [\-F]
+.I \-f infilename [\-o outfilename ] [\-e directory ] [\-R] [\-n] [\-p] [\-v] [\-F]
 
 .SH "DESCRIPTION"
 This manual page describes the
@@ -40,6 +40,9 @@ don't change any file labels.
 .TP 
 .B \-o outfilename
 save list of files with incorrect context in outfilename.
+.TP
+.B \-p
+show progress by printing * every 1000 files.
 .TP 
 .B \-v
 show changes in file labels.
