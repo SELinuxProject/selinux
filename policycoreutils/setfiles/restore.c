@@ -300,8 +300,14 @@ static int process_one(char *name, int recurse_this_path)
 	int rc = 0;
 	const char *namelist[2] = {name, NULL};
 	dev_t dev_num = 0;
-	FTS *fts_handle;
-	FTSENT *ftsent;
+	FTS *fts_handle = NULL;
+	FTSENT *ftsent = NULL;
+
+	if (r_opts == NULL){
+		fprintf(stderr,
+			"Must call initialize first!");
+		goto err;
+	}
 
 	fts_handle = fts_open((char **)namelist, r_opts->fts_flags, NULL);
 	if (fts_handle  == NULL) {
