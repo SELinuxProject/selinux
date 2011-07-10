@@ -37,40 +37,6 @@ except IOError:
 
 import syslog
 
-handle = None
-
-def get_handle(store):
-       global handle
-       global is_mls_enabled
-
-       handle = semanage_handle_create()
-       if not handle:
-              raise ValueError(_("Could not create semanage handle"))
-       
-       if store != "":
-              semanage_select_store(handle, store, SEMANAGE_CON_DIRECT);
-
-       if not semanage_is_managed(handle):
-              semanage_handle_destroy(handle)
-              raise ValueError(_("SELinux policy is not managed or store cannot be accessed."))
-
-       rc = semanage_access_check(handle)
-       if rc < SEMANAGE_CAN_READ:
-              semanage_handle_destroy(handle)
-              raise ValueError(_("Cannot read policy store."))
-
-       rc = semanage_connect(handle)
-       if rc < 0:
-              semanage_handle_destroy(handle)
-              raise ValueError(_("Could not establish semanage connection"))
-
-       is_mls_enabled = semanage_mls_enabled(handle)
-       if is_mls_enabled < 0:
-              semanage_handle_destroy(handle)
-              raise ValueError(_("Could not test MLS enabled status"))
-
-       return handle
-
 file_types = {}
 file_types[""] = SEMANAGE_FCONTEXT_ALL;
 file_types["all files"] = SEMANAGE_FCONTEXT_ALL;
@@ -196,14 +162,48 @@ def untranslate(trans, prepend = 1):
 		return raw
 	
 class semanageRecords:
-	def __init__(self, store):
+        handle = None
+        def __init__(self, store):
                global handle
                       
-               if handle != None:
-                      self.sh = handle
-               else:
-                      self.sh = get_handle(store)
                self.transaction = False
+               self.sh = self.get_handle(store)
+
+        def get_handle(self, store):
+               global is_mls_enabled
+
+               if semanageRecords.handle:
+                      return semanageRecords.handle
+
+               handle = semanage_handle_create()
+               if not handle:
+                      raise ValueError(_("Could not create semanage handle"))
+
+               if not self.transaction and store != "":
+                      semanage_select_store(handle, store, SEMANAGE_CON_DIRECT);
+                     semanageRecords.store = store
+
+               if not semanage_is_managed(handle):
+                      semanage_handle_destroy(handle)
+                      raise ValueError(_("SELinux policy is not managed or store cannot be accessed."))
+
+               rc = semanage_access_check(handle)
+               if rc < SEMANAGE_CAN_READ:
+                      semanage_handle_destroy(handle)
+                      raise ValueError(_("Cannot read policy store."))
+
+               rc = semanage_connect(handle)
+               if rc < 0:
+                      semanage_handle_destroy(handle)
+                      raise ValueError(_("Could not establish semanage connection"))
+
+               is_mls_enabled = semanage_mls_enabled(handle)
+               if is_mls_enabled < 0:
+                      semanage_handle_destroy(handle)
+                      raise ValueError(_("Could not test MLS enabled status"))
+
+               semanageRecords.handle = handle
+               return semanageRecords.handle
 
         def deleteall(self):
                raise ValueError(_("Not yet implemented"))
