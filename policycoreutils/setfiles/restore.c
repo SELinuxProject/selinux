@@ -32,7 +32,6 @@ struct edir {
 
 
 static file_spec_t *fl_head;
-static int exclude(const char *file);
 static int filespec_add(ino_t ino, const security_context_t con, const char *file);
 static int only_changed_user(const char *a, const char *b);
 struct restore_opts *r_opts = NULL;
@@ -439,7 +438,7 @@ int process_one_realpath(char *name, int recurse)
 	}
 }
 
-static int exclude(const char *file)
+int exclude(const char *file)
 {
 	int i = 0;
 	for (i = 0; i < excludeCtr; i++) {
