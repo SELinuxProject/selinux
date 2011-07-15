@@ -1408,6 +1408,8 @@ class fcontextRecords(semanageRecords):
         def validate(self, target):
                if target == "" or target.find("\n") >= 0:
                       raise ValueError(_("Invalid file specification"))
+               if target.find(" ") != -1:
+                      raise ValueError(_("File specification can not include spaces"))
                       
 	def __add(self, target, type, ftype = "", serange = "", seuser = "system_u"):
                 self.validate(target)
