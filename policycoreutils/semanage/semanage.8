@@ -5,19 +5,19 @@ semanage \- SELinux Policy Management tool
 .SH "SYNOPSIS"
 .B semanage {boolean|login|user|port|interface|node|fcontext} \-{l|D} [\-n] [\-S store]
 .br
-.B semanage boolean \-{d|m} [\-\-on|\-\-off|\-1|\-0] -F boolean | boolean_file
+.B semanage boolean \-{d|m|D} [\-\-on|\-\-off|\-1|\-0] -F boolean | boolean_file
 .br
-.B semanage login \-{a|d|m} [\-sr] login_name | %groupname
+.B semanage login \-{a|d|m|D} [\-sr] login_name | %groupname
 .br
-.B semanage user \-{a|d|m} [\-LrRP] selinux_name
+.B semanage user \-{a|d|m|D} [\-LrRP] selinux_name
 .br
-.B semanage port \-{a|d|m} [\-tr] [\-p proto] port | port_range
+.B semanage port \-{a|d|m|D} [\-tr] [\-p proto] port | port_range
 .br
-.B semanage interface \-{a|d|m} [\-tr] interface_spec
+.B semanage interface \-{a|d|m|D} [\-tr] interface_spec
 .br
-.B semanage node -{a|d|m} [-tr] [ -p protocol ] [-M netmask] address
+.B semanage node -{a|d|m|D} [-tr] [ -p protocol ] [-M netmask] address
 .br
-.B semanage fcontext \-{a|d|m} [\-frst] file_spec
+.B semanage fcontext \-{a|d|m|D} [\-frst] file_spec
 .br
 .B semanage permissive \-{a|d} type
 .br
