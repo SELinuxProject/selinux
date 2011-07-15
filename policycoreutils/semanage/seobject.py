@@ -161,10 +161,11 @@ def untranslate(trans, prepend = 1):
 		return trans
 	else:
 		return raw
-	
+
 class semanageRecords:
         transaction = False
         handle = None
+        store = None
         def __init__(self, store):
                global handle
                       
@@ -1842,6 +1843,18 @@ class booleanRecords(semanageRecords):
                 self.dict["1"] = 1
                 self.dict["0"] = 0
 
+		try:
+			rc, self.current_booleans = selinux.security_get_boolean_names()
+			rc, ptype = selinux.selinux_getpolicytype()
+		except:
+			self.current_booleans = []
+			ptype = None
+
+		if self.store == None or self.store == ptype:
+			self.modify_local = True
+		else:
+			self.modify_local = False
+
 	def __mod(self, name, value):
                 (rc, k) = semanage_bool_key_create(self.sh, name)
                 if rc < 0:
@@ -1861,9 +1874,10 @@ class booleanRecords(semanageRecords):
                 else:
                        raise ValueError(_("You must specify one of the following values: %s") % ", ".join(self.dict.keys()) )
                 
-                rc = semanage_bool_set_active(self.sh, k, b)
-                if rc < 0:
-                       raise ValueError(_("Could not set active value of boolean %s") % name)
+		if self.modify_local and name in self.current_booleans:
+			rc = semanage_bool_set_active(self.sh, k, b)
+			if rc < 0:
+				raise ValueError(_("Could not set active value of boolean %s") % name)
                 rc = semanage_bool_modify_local(self.sh, k, b)
                 if rc < 0:
                        raise ValueError(_("Could not modify boolean %s") % name)
@@ -1946,8 +1960,12 @@ class booleanRecords(semanageRecords):
                        value = []
                        name = semanage_bool_get_name(boolean)
                        value.append(semanage_bool_get_value(boolean))
-                       value.append(selinux.security_get_boolean_pending(name))
-                       value.append(selinux.security_get_boolean_active(name))
+		       if self.modify_local and boolean in self.current_booleans:
+			       value.append(selinux.security_get_boolean_pending(name))
+			       value.append(selinux.security_get_boolean_active(name))
+		       else:
+			       value.append(value[0])
+			       value.append(value[0])
                        ddict[name] = value
 
 		return ddict
