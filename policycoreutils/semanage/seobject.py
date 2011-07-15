@@ -740,6 +740,9 @@ class portRecords(semanageRecords):
 			low = int(ports[0])
 			high = int(ports[1])
 
+		if high > 65535:
+			raise ValueError(_("Invalid Port"))
+
 		(rc, k) = semanage_port_key_create(self.sh, low, high, proto_d)
 		if rc < 0:
 			raise ValueError(_("Could not create a key for %s/%s") % (proto, port))
