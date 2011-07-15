@@ -475,6 +475,16 @@ class loginRecords(semanageRecords):
 		
 		mylog.log(1, "delete SELinux user mapping", name);
 
+	def deleteall(self):
+		(rc, ulist) = semanage_seuser_list_local(self.sh)
+		if rc < 0:
+			raise ValueError(_("Could not list login mappings"))
+
+                self.begin()
+		for u in ulist:
+			self.__delete(semanage_seuser_get_name(u))
+                self.commit()
+
 	def get_all(self, locallist = 0):
 		ddict = {}
                 if locallist:
@@ -681,6 +691,16 @@ class seluserRecords(semanageRecords):
 			raise error
 		
 		mylog.log(1,"delete SELinux user record", name)
+
+	def deleteall(self):
+		(rc, ulist) = semanage_user_list_local(self.sh)
+		if rc < 0:
+			raise ValueError(_("Could not list login mappings"))
+
+                self.begin()
+		for u in ulist:
+			self.__delete(semanage_user_get_name(u))
+                self.commit()
 
 	def get_all(self, locallist = 0):
 		ddict = {}
@@ -1135,6 +1155,16 @@ class nodeRecords(semanageRecords):
               self.__delete(addr, mask, proto)
               self.commit()
 		
+       def deleteall(self):
+              (rc, nlist) = semanage_node_list_local(self.sh)
+              if rc < 0:
+                     raise ValueError(_("Could not deleteall node mappings"))
+
+              self.begin()
+              for node in nlist:
+                     self.__delete(semanage_node_get_addr(self.sh, node)[1], semanage_node_get_mask(self.sh, node)[1], self.protocol[semanage_node_get_proto(node)])
+              self.commit()
+
        def get_all(self, locallist = 0):
                ddict = {}
 	       if locallist :
@@ -1310,6 +1340,16 @@ class interfaceRecords(semanageRecords):
                 self.__delete(interface)
                 self.commit()
 		
+        def deleteall(self):
+		(rc, ulist) = semanage_iface_list_local(self.sh)
+		if rc < 0:
+			raise ValueError(_("Could not delete all interface  mappings"))
+
+                self.begin()
+		for i in ulist:
+			self.__delete(semanage_iface_get_name(i))
+                self.commit()
+
 	def get_all(self, locallist = 0):
 		ddict = {}
                 if locallist:
