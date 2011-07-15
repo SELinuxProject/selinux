@@ -25,6 +25,7 @@ import pwd, grp, string, selinux, tempfile, os, re, sys, stat
 from semanage import *;
 PROGNAME = "policycoreutils"
 import sepolgen.module as module
+from IPy import IP
 
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
@@ -981,21 +982,36 @@ class portRecords(semanageRecords):
 class nodeRecords(semanageRecords):
        def __init__(self, store = ""):
                semanageRecords.__init__(self,store)
+               self.protocol = ["ipv4", "ipv6"]
 
-       def __add(self, addr, mask, proto, serange, ctype):
+       def validate(self, addr, mask, protocol):
+               newaddr=addr
+               newmask=mask
+               newprotocol=""
+
                if addr == "":
                        raise ValueError(_("Node Address is required"))
 
-               if mask == "":
-                       raise ValueError(_("Node Netmask is required"))
+               # verify valid comination
+               if len(mask) == 0 or mask[0] == "/":
+                       i = IP(addr + mask)
+                       newaddr = i.strNormal(0)
+                       newmask = str(i.netmask())
+                       if newmask == "0.0.0.0" and i.version() == 6:
+                               newmask = "::"
 
-	       if proto == "ipv4":
-                       proto = 0
-               elif proto == "ipv6":
-                       proto = 1
-               else:
+                       protocol = "ipv%d" % i.version()
+
+               try:
+                      newprotocol = self.protocol.index(protocol)
+               except:
                       raise ValueError(_("Unknown or missing protocol"))
 
+               return newaddr, newmask, newprotocol
+
+       def __add(self, addr, mask, proto, serange, ctype):
+
+               addr, mask, proto = self.validate(addr, mask, proto)
 
                if is_mls_enabled == 1:
                        if serange == "":
@@ -1019,6 +1035,7 @@ class nodeRecords(semanageRecords):
                (rc, node) = semanage_node_create(self.sh)
                if rc < 0:
                        raise ValueError(_("Could not create addr for %s") % addr)
+               semanage_node_set_proto(node, proto)
 
                rc = semanage_node_set_addr(self.sh, node, proto, addr)
                (rc, con) = semanage_context_create(self.sh)
@@ -1065,18 +1082,8 @@ class nodeRecords(semanageRecords):
                 self.commit()
 
        def __modify(self, addr, mask, proto, serange, setype):
-               if addr == "":
-                       raise ValueError(_("Node Address is required"))
 
-               if mask == "":
-                       raise ValueError(_("Node Netmask is required"))
-               if proto == "ipv4":
-                       proto = 0
-               elif proto == "ipv6":
-                       proto = 1
-	       else:
-		      raise ValueError(_("Unknown or missing protocol"))
-
+               addr, mask, proto = self.validate(addr, mask, proto)
 
                if serange == "" and setype == "":
                        raise ValueError(_("Requires setype or serange"))
@@ -1115,18 +1122,8 @@ class nodeRecords(semanageRecords):
                 self.commit()
 
        def __delete(self, addr, mask, proto):
-               if addr == "":
-                       raise ValueError(_("Node Address is required"))
 
-               if mask == "":
-                       raise ValueError(_("Node Netmask is required"))
-
-	       if proto == "ipv4":
-                       proto = 0
-               elif proto == "ipv6":
-                       proto = 1
-               else:
-                      raise ValueError(_("Unknown or missing protocol"))
+               addr, mask, proto = self.validate(addr, mask, proto)
 
                (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
                if rc < 0:
@@ -1178,11 +1175,7 @@ class nodeRecords(semanageRecords):
                        con = semanage_node_get_con(node)
                        addr = semanage_node_get_addr(self.sh, node)
                        mask = semanage_node_get_mask(self.sh, node)
-                       proto = semanage_node_get_proto(node)
-		       if proto == 0:
-				proto = "ipv4"
-		       elif proto == 1:
-				proto = "ipv6"
+                       proto = self.protocol[semanage_node_get_proto(node)]
                        ddict[(addr[1], mask[1], proto)] = (semanage_context_get_user(con), semanage_context_get_role(con), semanage_context_get_type(con), semanage_context_get_mls(con))
 
                return ddict
