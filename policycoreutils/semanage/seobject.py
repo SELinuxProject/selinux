@@ -263,11 +263,19 @@ class permissiveRecords(semanageRecords):
                return l
 
 	def list(self, heading = 1, locallist = 0):
-		if heading:
-			print "\n%-25s\n" % (_("Permissive Types"))
-                for t in self.get_all():
-                       print t
+		import setools
+		all = map(lambda y: y["name"], filter(lambda x: x["permissive"], setools.seinfo(setools.TYPE)))
 
+		if heading:
+			print "\n%-25s\n" % (_("Builtin Permissive Types"))
+		customized = self.get_all()
+                for t in all:
+			if t not in customized:
+				print t
+		if heading:
+			print "\n%-25s\n" % (_("Customized Permissive Types"))
+		for t in customized:
+			print t
 
 	def add(self, type):
                import glob
