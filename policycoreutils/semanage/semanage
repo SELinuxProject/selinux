@@ -247,7 +247,7 @@ Object-specific Options (see above):
 				use_file = True
 
 			if o == "-h" or o == "--help":
-                               raise ValueError(_("%s bad option") % o)
+				raise usage()
 
 			if o == "-n" or o == "--noheading":
 				heading = False
