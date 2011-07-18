@@ -239,6 +239,7 @@ Object-specific Options (see above):
 		for o, a in gopts:
 			if o not in option_dict[object]:
 				sys.stderr.write(_("%s not valid for %s objects\n") % ( o, object) );
+				return
 				
 		for o,a in gopts:
 			if o == "-a" or o == "--add":
@@ -353,50 +354,61 @@ Object-specific Options (see above):
 		if add:
 			if object == "login":
 				OBJECT.add(target, seuser, serange)
+				return
 
 			if object == "user":
 				OBJECT.add(target, roles.split(), selevel, serange, prefix)
+				return
 
 			if object == "port":
 				OBJECT.add(target, proto, serange, setype)
+				return
 
 			if object == "interface":
 				OBJECT.add(target, serange, setype)
+				return
 
 			if object == "node":
 				OBJECT.add(target, mask, proto, serange, setype)
+				return
 
 			if object == "fcontext":
 				OBJECT.add(target, setype, ftype, serange, seuser)
+				return
+
 			if object == "permissive":
 				OBJECT.add(target)
+				return
 
-                        return
-			
 		if modify:
 			if object == "boolean":
-                               OBJECT.modify(target, value, use_file)
+				OBJECT.modify(target, value, use_file)
+				return
 
 			if object == "login":
 				OBJECT.modify(target, seuser, serange)
+				return
 
 			if object == "user":
 				rlist = roles.split()
 				OBJECT.modify(target, rlist, selevel, serange, prefix)
+				return
 
 			if object == "port":
 				OBJECT.modify(target, proto, serange, setype)
+				return
 
 			if object == "interface":
 				OBJECT.modify(target, serange, setype)
+				return
 
 			if object == "node":
 				OBJECT.modify(target, mask, proto, serange, setype)
+				return
 
 			if object == "fcontext":
 				OBJECT.modify(target, setype, ftype, serange, seuser)
-
-                        return
+				return
 
 		if delete:
 			if object == "port":
