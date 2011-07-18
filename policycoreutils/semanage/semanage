@@ -206,32 +206,36 @@ Object-specific Options (see above):
 			
 		args = argv[1:]
 
-		gopts, cmds = getopt.getopt(args,
-					    '01adf:i:lhmnp:s:FCDR:L:r:t:P:S:M:',
-					    ['add',
-					     'delete',
-					     'deleteall',
-					     'ftype=',
-					     'file',
-					     'help',
-                                             'input=',
-					     'list', 
-					     'modify',
-					     'noheading',
-					     'localist',
-                                             'off', 
-                                             'on', 
-					     'proto=',
-					     'seuser=',
-					     'store=',
-					     'range=',
-					     'locallist=',
-					     'level=',
-					     'roles=',
-					     'type=',
-					     'prefix=',
-                                             'mask='
-					     ])
+		try:
+			gopts, cmds = getopt.getopt(args,
+						    '01adf:i:lhmnp:s:FCDR:L:r:t:P:S:M:',
+						    ['add',
+						     'delete',
+						     'deleteall',
+						     'ftype=',
+						     'file',
+						     'help',
+						     'input=',
+						     'list',
+						     'modify',
+						     'noheading',
+						     'localist',
+						     'off',
+						     'on',
+						     'proto=',
+						     'seuser=',
+						     'store=',
+						     'range=',
+						     'locallist=',
+						     'level=',
+						     'roles=',
+						     'type=',
+						     'prefix=',
+						     'mask='
+						     ])
+		except getopt.error, error:
+			usage(_("Options Error %s ") % error.msg)
+
 		for o, a in gopts:
 			if o not in option_dict[object]:
 				sys.stderr.write(_("%s not valid for %s objects\n") % ( o, object) );
