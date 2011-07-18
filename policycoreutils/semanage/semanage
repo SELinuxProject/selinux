@@ -40,6 +40,13 @@ except IOError:
 
 if __name__ == '__main__':
 
+	action  = False
+	def set_action(option):
+		global action
+		if action:
+			raise ValueError(_("%s bad option") % option)
+		action = True
+
 	def usage(message = ""):
                text = _("""
 semanage [ -S store ] -i [ input_file | - ]
@@ -169,6 +176,8 @@ Object-specific Options (see above):
                return ret
 
         def process_args(argv):
+		global action
+		action = False
 		serange = ""
 		port = ""
 		proto = ""
@@ -229,17 +238,14 @@ Object-specific Options (see above):
 				
 		for o,a in gopts:
 			if o == "-a" or o == "--add":
-				if modify or delete:
-                                       raise ValueError(_("%s bad option") % o)
+				set_action(o)
 				add = True
 				
 			if o == "-d"  or o == "--delete":
-				if modify or add:
-                                       raise ValueError(_("%s bad option") % o)
+				set_action(o)
 				delete = True
 			if o == "-D"  or o == "--deleteall":
-				if modify:
-                                       raise ValueError(_("%s bad option") % o)
+				set_action(o)
 				deleteall = True
 			if o == "-f"  or o == "--ftype":
 				ftype=a
@@ -257,8 +263,7 @@ Object-specific Options (see above):
 				locallist = True
 
 			if o == "-m"or o == "--modify":
-				if delete or add:
-                                       raise ValueError(_("%s bad option") % o)
+				set_action(o)
 				modify = True
 				
 			if o == "-S" or o == '--store':
