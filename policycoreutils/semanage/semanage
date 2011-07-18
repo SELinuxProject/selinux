@@ -338,9 +338,11 @@ Object-specific Options (see above):
 
 			if o == "--on" or o == "-1":
 				value = "on"
+				modify = True
 
 			if o == "--off" or o == "-0":
 				value = "off"
+				modify = True
 
 		if object == "login":
 			OBJECT = seobject.loginRecords(store)
@@ -362,6 +364,7 @@ Object-specific Options (see above):
 		
 		if object == "boolean":
 			OBJECT = seobject.booleanRecords(store)
+			modify = True
 
 		if object == "module":
 			OBJECT = seobject.moduleRecords(store)
