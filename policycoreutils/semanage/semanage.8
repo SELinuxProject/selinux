@@ -1,4 +1,4 @@
-.TH "semanage" "8" "2005111103" "" ""
+.TH "semanage" "8" "20100223" "" ""
 .SH "NAME"
 semanage \- SELinux Policy Management tool
 
@@ -11,34 +11,58 @@ Input local customizations
 .br
 .B semanage [ -S store ] -i [ input_file | - ]
 
-.B semanage {boolean|login|user|port|interface|node|fcontext} \-{l|D} [\-n] [\-S store]
+Manage booleans.  Booleans allow the administrator to modify the confinement of
+processes based on his configuration.
 .br
-.B semanage boolean \-{d|m|D} [\-\-on|\-\-off|\-1|\-0] -F boolean | boolean_file
+.B semanage boolean [\-S store] \-{d|m|l|D} [\-n] [\-\-on|\-\-off|\-\1|\-0] -F boolean | boolean_file
+
+Manage SELinux confined users (Roles and levels for an SELinux user)
 .br
-.B semanage login \-{a|d|m|D} [\-sr] login_name | %groupname
+.B semanage user [\-S store] \-{a|d|m|l|D} [\-LnPrR] selinux_name
+
+Manage login mappings between linux users and SELinux confined users.
+.br
+.B semanage login [\-S store] \-{a|d|m|l|D} [\-nrs] login_name | %groupname
 
 Manage policy modules.
 .br
 .B semanage module [\-S store] \-{a|d|l} [-m [--enable | --disable] ] module_name
+
+Manage network port type definitions
 .br
-.B semanage user \-{a|d|m|D} [\-LrRP] selinux_name
+.B semanage port [\-S store] \-{a|d|m|l|D} [\-nrt] [\-p proto] port | port_range
 .br
-.B semanage port \-{a|d|m|D} [\-tr] [\-p proto] port | port_range
+
+Manage network interface type definitions
 .br
-.B semanage interface \-{a|d|m|D} [\-tr] interface_spec
+.B semanage interface [\-S store] \-{a|d|m|l|D} [\-nrt] interface_spec
+
+Manage network node type definitions
 .br
-.B semanage node -{a|d|m|D} [-tr] [ -p protocol ] [-M netmask] address
+.B semanage node [\-S store] -{a|d|m|l|D} [-nrt] [ -p protocol ] [-M netmask] address
+.br
 
 Manage file context mapping definitions
 .br
-.B semanage fcontext [\-S store] \-{a|d|m|l|n|D} [\-frst] file_spec
+.B semanage fcontext [\-S store] \-{a|d|m|l|D} [\-fnrst] file_spec
 .br
-.B semanage fcontext [\-S store] \-{a|d|m|l|n|D} \-e replacement target
+.B semanage fcontext [\-S store] \-{a|d|m|l|D} [\-n] \-e replacement target
 .br
-.B semanage permissive \-{a|d} type
+
+Manage processes type enforcement mode
 .br
-.B semanage dontaudit [ on | off ]
+.B semanage permissive [\-S store] \-{a|d|l|D} [\-n] type
+.br
+
+Disable/Enable dontaudit rules in policy
+.br
+.B semanage dontaudit [\-S store] [ on | off ]
 .P
+
+Execute multiple commands within a single transaction.
+.br
+.B semanage [\-S store] \-i command-file
+.br
 
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
@@ -83,6 +107,7 @@ Substitute target path with sourcepath when generating default label.  This is u
 fcontext. Requires source and target path arguments.  The context
 labeling for the target subtree is made equivalent to that
 defined for the source.
+.TP
 .I                \-f, \-\-ftype
 File Type.   This is used with fcontext.
 Requires a file type as shown in the mode field by ls, e.g. use -d to match only directories or -- to match only regular files.
@@ -91,6 +116,7 @@ Requires a file type as shown in the mode field by ls, e.g. use -d to match only
 Set multiple records from the input file.  When used with the \-l \-\-list, it will output the current settings to stdout in the proper format.
 
 Currently booleans only.
+
 .TP
 .I                \-h, \-\-help       
 display this message
@@ -106,6 +132,9 @@ Default SELinux Level for SELinux use, s0 Default. (MLS/MCS Systems only)
 .TP
 .I                \-m, \-\-modify     
 Modify a OBJECT record NAME
+.TP
+.I                \-M, \-\-mask
+Network Mask
 .TP
 .I                \-n, \-\-noheading  
 Do not print heading when listing OBJECTS.
@@ -131,18 +160,22 @@ Select and alternate SELinux store to manage
 .I                \-t, \-\-type       
 SELinux Type for the object
 .TP
-.I                \-i
+.I                \-i, \-\-input
 Take a set of commands from a specified file and load them in a single
 transaction.
 
 .SH EXAMPLE
 .nf
-# View SELinux user mappings
-$ semanage user -l
-# Allow joe to login as staff_u
-$ semanage login -a -s staff_u joe
-# Allow the group clerks to login as user_u
-$ semanage login -a -s user_u %clerks
+.B SELinux user
+List SELinux users
+# semanage user -l
+
+.B SELinux login
+Change joe to login as staff_u
+# semanage login -a -s staff_u joe
+Change the group clerks to login as user_u
+# semanage login -a -s user_u %clerks
+
 .B File contexts
 .i remember to run restorecon after you set the file context
 Add file-context for everything under /web
@@ -159,13 +192,15 @@ execute the following commands.
 # semanage fcontext -a -e /home /disk6/home
 # restorecon -R -v /disk6
 
+.B Port contexts
+Allow Apache to listen on tcp port 81
+# semanage port -a -t http_port_t -p tcp 81
 
-# Allow Apache to listen on port 81
-$ semanage port -a -t http_port_t -p tcp 81
-# Change apache to a permissive domain
-$ semanage permissive -a httpd_t
-# Turn off dontaudit rules
-$ semanage dontaudit off
+.B Change apache to a permissive domain
+# semanage permissive -a httpd_t
+
+.B Turn off dontaudit rules
+# semanage dontaudit off
 
 .B Managing multiple machines
 Multiple machines that need the same customizations.
@@ -179,9 +214,12 @@ to second and import them.
 
 If these customizations include file context, you need to apply the
 context using restorecon.
+
 .fi
 
 .SH "AUTHOR"
-This man page was written by Daniel Walsh <dwalsh@redhat.com> and
-Russell Coker <rcoker@redhat.com>.
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
+.br
+and Russell Coker <rcoker@redhat.com>.
+.br
 Examples by Thomas Bleher <ThomasBleher@gmx.de>.
