@@ -1498,6 +1498,48 @@ class interfaceRecords(semanageRecords):
 class fcontextRecords(semanageRecords):
 	def __init__(self, store = ""):
 		semanageRecords.__init__(self, store)
+                self.equiv = {}
+                self.equal_ind = False
+                try:
+                       fd = open(selinux.selinux_file_context_subs_path(), "r")
+                       for i in fd.readlines():
+                              src, dst = i.split()
+                              self.equiv[src] = dst
+                       fd.close()
+                except IOError:
+                       pass
+
+        def commit(self):
+                if self.equal_ind:
+                       subs_file = selinux.selinux_file_context_subs_path()
+                       tmpfile = "%s.tmp" % subs_file
+                       fd = open(tmpfile, "w")
+                       for src in self.equiv.keys():
+                              fd.write("%s %s\n" % (src, self.equiv[src]))
+                       fd.close()
+                       try:
+                              os.chmod(tmpfile, os.stat(subs_file)[stat.ST_MODE])
+                       except:
+                              pass
+                       os.rename(tmpfile,subs_file)
+                       self.equal_ind = False
+		semanageRecords.commit(self)
+
+        def add_equal(self, src, dst):
+                self.begin()
+                if src in self.equiv.keys():
+                       raise ValueError(_("Equivalence class for %s already exists") % src)
+                self.equiv[src] = dst
+                self.equal_ind = True
+                self.commit()
+
+        def modify_equal(self, src, dst):
+                self.begin()
+                if src not in self.equiv.keys():
+                       raise ValueError(_("Equivalence class for %s does not exists") % src)
+                self.equiv[src] = dst
+                self.equal_ind = True
+                self.commit()
 
         def createcon(self, target, seuser = "system_u"):
                 (rc, con) = semanage_context_create(self.sh)
@@ -1666,9 +1708,16 @@ class fcontextRecords(semanageRecords):
                               raise ValueError(_("Could not delete the file context %s") % target)
                        semanage_fcontext_key_free(k)
 	
+                self.equiv = {}
+                self.equal_ind = True
                 self.commit()
 
 	def __delete(self, target, ftype):
+                if target in self.equiv.keys():
+                       self.equiv.pop(target)
+                       self.equal_ind = True
+                       return
+
 		(rc,k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
 		if rc < 0:
 			raise ValueError(_("Could not create a key for %s") % target)
@@ -1747,6 +1796,12 @@ class fcontextRecords(semanageRecords):
 					print "%-50s %-18s %s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1],fcon_dict[k][2])
 			else:
 				print "%-50s %-18s <<None>>" % (k[0], k[1])
+                if len(self.equiv.keys()) > 0:
+                       if heading:
+                              print _("\nSELinux fcontext Equivalence \n")
+
+                       for src in self.equiv.keys():
+                              print "%s = %s" % (src, self.equiv[src])
 				
 class booleanRecords(semanageRecords):
 	def __init__(self, store = ""):

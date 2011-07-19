@@ -60,7 +60,7 @@ semanage port -{a|d|m|D|E} [-tr] [ -p proto ] port | port_range
 semanage interface -{a|d|m|D|E} [-tr] interface_spec
 semanage module -{a|d|m} [--enable|--disable] module
 semanage node -{a|d|m|D|E} [-tr] [ -p protocol ] [-M netmask] addr
-semanage fcontext -{a|d|m|D|E} [-frst] file_spec
+semanage fcontext -{a|d|m|D|E} [-efrst] file_spec
 semanage boolean -{d|m|D} [--on|--off|-1|-0] -F boolean | boolean_file
 semanage permissive -{d|a} type
 semanage dontaudit [ on | off ]
@@ -96,6 +96,7 @@ Object-specific Options (see above):
         -F, --file       Treat target as an input file for command, change multiple settings
 	-p, --proto      Port protocol (tcp or udp) or internet protocol version of node (ipv4 or ipv6)
 	-M, --mask       Netmask
+	-e, --equal      Substitue source path for dest path when labeling
 	-P, --prefix     Prefix for home directory labeling
 	-L, --level      Default SELinux Level (MLS/MCS Systems only)
 	-R, --roles      SELinux Roles (ex: "sysadm_r staff_r")
@@ -130,7 +131,7 @@ Object-specific Options (see above):
 		valid_option["module"] = []
 		valid_option["module"] += valid_everyone + [ '--enable', '--disable']
 		valid_option["fcontext"] = []
-		valid_option["fcontext"] += valid_everyone + valid_local + [ '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range']
+		valid_option["fcontext"] += valid_everyone + valid_local + [ '-e', '--equal', '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range']
 		valid_option["dontaudit"] = [ '-S', '--store' ]
 		valid_option["boolean"] = []
 		valid_option["boolean"] += valid_everyone + valid_local + [ '--on', "--off", "-1", "-0", "-F", "--file"]
@@ -210,6 +211,7 @@ Object-specific Options (see above):
 		locallist = False
 		use_file = False
                 store = ""
+		equal = ""
 
 		if len(argv) == 0:
 			return
@@ -222,11 +224,12 @@ Object-specific Options (see above):
 
 		try:
 			gopts, cmds = getopt.getopt(args,
-						    '01adEf:i:lhmnp:s:FCDR:L:r:t:P:S:M:',
+						    '01adEe:f:i:lhmnp:s:FCDR:L:r:t:P:S:M:',
 						    ['add',
 						     'delete',
 						     'deleteall',
 						     'enable',
+						     'equal=',
 						     'extract',
 						     'disable',
 						     'ftype=',
@@ -276,6 +279,9 @@ Object-specific Options (see above):
 
 			if o == "-f"  or o == "--ftype":
 				ftype=a
+
+			if o == "-e"  or o == "--equal":
+				equal = a
 
 			if o == "--enable":
 				set_action(o)
@@ -417,7 +423,10 @@ Object-specific Options (see above):
 				return
 
 			if object == "fcontext":
-				OBJECT.add(target, setype, ftype, serange, seuser)
+				if equal == "":
+					OBJECT.add(target, setype, ftype, serange, seuser)
+				else:
+					OBJECT.add_equal(target, equal)
 				return
 
 			if object == "permissive":
@@ -460,7 +469,10 @@ Object-specific Options (see above):
 				return
 
 			if object == "fcontext":
-				OBJECT.modify(target, setype, ftype, serange, seuser)
+				if equal == "":
+					OBJECT.modify(target, setype, ftype, serange, seuser)
+				else:
+					OBJECT.modify_equal(target, equal)
 				return
 
 		if delete:

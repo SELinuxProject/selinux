@@ -28,8 +28,12 @@ Manage policy modules.
 .B semanage interface \-{a|d|m|D} [\-tr] interface_spec
 .br
 .B semanage node -{a|d|m|D} [-tr] [ -p protocol ] [-M netmask] address
+
+Manage file context mapping definitions
 .br
-.B semanage fcontext \-{a|d|m|D} [\-frst] file_spec
+.B semanage fcontext [\-S store] \-{a|d|m|l|n|D} [\-frst] file_spec
+.br
+.B semanage fcontext [\-S store] \-{a|d|m|l|n|D} \-e replacement target
 .br
 .B semanage permissive \-{a|d} type
 .br
@@ -74,6 +78,11 @@ Enable a disabled policy module, requires -m option
 
 Currently modules only.
 .TP
+.I                \-e, \-\-equal
+Substitute target path with sourcepath when generating default label.  This is used with
+fcontext. Requires source and target path arguments.  The context
+labeling for the target subtree is made equivalent to that
+defined for the source.
 .I                \-f, \-\-ftype
 File Type.   This is used with fcontext.
 Requires a file type as shown in the mode field by ls, e.g. use -d to match only directories or -- to match only regular files.
@@ -134,8 +143,23 @@ $ semanage user -l
 $ semanage login -a -s staff_u joe
 # Allow the group clerks to login as user_u
 $ semanage login -a -s user_u %clerks
-# Add file-context for everything under /web (used by restorecon)
-$ semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?"
+.B File contexts
+.i remember to run restorecon after you set the file context
+Add file-context for everything under /web
+# semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?"
+# restorecon -R -v /web
+
+Substitute /home1 with /home when setting file context
+# semanage fcontext -a -e /home /home1
+# restorecon -R -v /home1
+
+For home directories under top level directory, for example /disk6/home,
+execute the following commands.
+# semanage fcontext -a -t home_root_t "/disk6"
+# semanage fcontext -a -e /home /disk6/home
+# restorecon -R -v /disk6
+
+
 # Allow Apache to listen on port 81
 $ semanage port -a -t http_port_t -p tcp 81
 # Change apache to a permissive domain
