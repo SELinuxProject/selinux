@@ -331,7 +331,7 @@ Object-specific Options (see above):
                         return
 			
 		if len(cmds) != 1:
-                       raise ValueError(_("%s bad option") % o)
+                       raise ValueError(_("bad option"))
                         
                 target = cmds[0]
 
