@@ -221,6 +221,9 @@ class semanageRecords:
                rc = semanage_begin_transaction(self.sh)
                if rc < 0:
                       raise ValueError(_("Could not start semanage transaction"))
+        def customized(self):
+               raise ValueError(_("Not yet implemented"))
+
         def commit(self):
                if semanageRecords.transaction:
                       return
@@ -508,6 +511,15 @@ class loginRecords(semanageRecords):
 			ddict[name] = (semanage_seuser_get_sename(u), semanage_seuser_get_mlsrange(u))
 		return ddict
 
+        def customized(self):
+                l = []
+                ddict = self.get_all(True)
+                keys = ddict.keys()
+                keys.sort()
+                for k in keys:
+                       l.append("-a -s %s -r '%s' %s" % (ddict[k][0], ddict[k][1], k))
+                return l
+
 	def list(self,heading = 1, locallist = 0):
 		ddict = self.get_all(locallist)
 		keys = ddict.keys()
@@ -730,6 +742,15 @@ class seluserRecords(semanageRecords):
 			ddict[semanage_user_get_name(u)] = (semanage_user_get_prefix(u), semanage_user_get_mlslevel(u), semanage_user_get_mlsrange(u), roles)
 
 		return ddict
+
+        def customized(self):
+                l = []
+                ddict = self.get_all(True)
+                keys = ddict.keys()
+                keys.sort()
+                for k in keys:
+                       l.append("-a -r %s -R '%s' %s" % (ddict[k][2], ddict[k][3], k))
+                return l
 
 	def list(self, heading = 1, locallist = 0):
 		ddict = self.get_all(locallist)
@@ -974,6 +995,18 @@ class portRecords(semanageRecords):
 				ddict[(ctype,proto_str)].append("%d-%d" % (low, high))
 		return ddict
 
+        def customized(self):
+                l = []
+		ddict = self.get_all(True)
+		keys = ddict.keys()
+		keys.sort()
+                for k in keys:
+                       if k[0] == k[1]:
+                              l.append("-a -t %s -p %s %s" % (ddict[k][0], k[2], k[0]))
+                       else:
+                              l.append("-a -t %s -p %s %s-%s" % (ddict[k][0], k[2], k[0], k[1]))
+                return l
+
 	def list(self, heading = 1, locallist = 0):
 		if heading:
 			print "%-30s %-8s %s\n" % (_("SELinux Port Type"), _("Proto"), _("Port Number"))
@@ -1188,6 +1221,15 @@ class nodeRecords(semanageRecords):
 
                return ddict
 
+       def customized(self):
+               l = []
+               ddict = self.get_all(True)
+               keys = ddict.keys()
+               keys.sort()
+               for k in keys:
+                      l.append("-a -M %s -p %s -t %s %s" % (k[1], k[2],ddict[k][2], k[0]))
+               return l
+
        def list(self, heading = 1, locallist = 0):
                if heading:
                        print "%-18s %-18s %-5s %-5s\n" % ("IP Address", "Netmask", "Protocol", "Context")
@@ -1366,6 +1408,15 @@ class interfaceRecords(semanageRecords):
 
 		return ddict
 			
+        def customized(self):
+                l = []
+                ddict = self.get_all(True)
+                keys = ddict.keys()
+                keys.sort()
+                for k in keys:
+                       l.append("-a -t %s %s" % (ddict[k][2], k))
+                return l
+
 	def list(self, heading = 1, locallist = 0):
 		if heading:
 			print "%-30s %s\n" % (_("SELinux Interface"), _("Context"))
@@ -1607,6 +1658,16 @@ class fcontextRecords(semanageRecords):
 
 		return ddict
 			
+        def customized(self):
+               l = []
+               fcon_dict = self.get_all(True)
+               keys = fcon_dict.keys()
+               keys.sort()
+               for k in keys:
+                      if fcon_dict[k]:
+                             l.append("-a -f '%s' -t %s '%s'" % (k[1], fcon_dict[k][2], k[0]))
+               return l
+
 	def list(self, heading = 1, locallist = 0 ):
 		if heading:
 			print "%-50s %-18s %s\n" % (_("SELinux fcontext"), _("type"), _("Context"))
@@ -1751,6 +1812,16 @@ class booleanRecords(semanageRecords):
                       return _(booleans_dict[boolean][0])
                else:
                       return _("unknown")
+
+        def customized(self):
+               l = []
+               ddict = self.get_all(True)
+               keys = ddict.keys()
+               keys.sort()
+               for k in keys:
+                      if ddict[k]:
+                             l.append("-%s %s" %  (ddict[k][2], k))
+               return l
 
 	def list(self, heading = True, locallist = False, use_file = False):
                 on_off = (_("off"), _("on")) 

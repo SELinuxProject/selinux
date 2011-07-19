@@ -52,12 +52,12 @@ if __name__ == '__main__':
 semanage [ -S store ] -i [ input_file | - ]
 
 semanage {boolean|login|user|port|interface|node|fcontext} -{l|D} [-n]
-semanage login -{a|d|m|D} [-sr] login_name | %groupname
-semanage user -{a|d|m|D} [-LrRP] selinux_name
-semanage port -{a|d|m|D} [-tr] [ -p proto ] port | port_range
-semanage interface -{a|d|m|D} [-tr] interface_spec
-semanage node -{a|d|m|D} [-tr] [ -p protocol ] [-M netmask] addr
-semanage fcontext -{a|d|m|D} [-frst] file_spec
+semanage login -{a|d|m|D|E} [-sr] login_name | %groupname
+semanage user -{a|d|m|D|E} [-LrRP] selinux_name
+semanage port -{a|d|m|D|E} [-tr] [ -p proto ] port | port_range
+semanage interface -{a|d|m|D|E} [-tr] interface_spec
+semanage node -{a|d|m|D|E} [-tr] [ -p protocol ] [-M netmask] addr
+semanage fcontext -{a|d|m|D|E} [-frst] file_spec
 semanage boolean -{d|m|D} [--on|--off|-1|-0] -F boolean | boolean_file
 semanage permissive -{d|a} type
 semanage dontaudit [ on | off ]
@@ -69,6 +69,7 @@ Primary Options:
 	-m, --modify     Modify a OBJECT record NAME
         -i, --input      Input multiple semange commands in a transaction 
 	-l, --list       List the OBJECTS
+	-E, --extract    extract customizable commands
 	-C, --locallist  List OBJECTS local customizations
 	-D, --deleteall  Remove all OBJECTS local customizations
 
@@ -109,7 +110,7 @@ Object-specific Options (see above):
 	def get_options():
 		valid_option={}
 		valid_everyone=[ '-a', '--add', '-d', '--delete', '-m', '--modify', '-l', '--list', '-h', '--help', '-n', '--noheading', '-S', '--store' ]
-		valid_local=[ '-C', '--locallist', '-D', '--deleteall']
+		valid_local=[ '-E', '--extract', '-C', '--locallist', '-D', '--deleteall']
 		valid_option["login"] = []
 		valid_option["login"] += valid_everyone + valid_local + [ '-s', '--seuser', '-r', '--range']
 		valid_option["user"] = []
@@ -194,6 +195,7 @@ Object-specific Options (see above):
 		modify = False
 		delete = False
 		deleteall = False
+		extract = False
 		list = False
 		locallist = False
 		use_file = False
@@ -210,10 +212,11 @@ Object-specific Options (see above):
 
 		try:
 			gopts, cmds = getopt.getopt(args,
-						    '01adf:i:lhmnp:s:FCDR:L:r:t:P:S:M:',
+						    '01adEf:i:lhmnp:s:FCDR:L:r:t:P:S:M:',
 						    ['add',
 						     'delete',
 						     'deleteall',
+						     'extract',
 						     'ftype=',
 						     'file',
 						     'help',
@@ -254,6 +257,11 @@ Object-specific Options (see above):
 			if o == "-D"  or o == "--deleteall":
 				set_action(o)
 				deleteall = True
+
+			if o == "-E"  or o == "--extract":
+				set_action(o)
+				extract = True
+
 			if o == "-f"  or o == "--ftype":
 				ftype=a
 
@@ -343,6 +351,12 @@ Object-specific Options (see above):
 			OBJECT.deleteall()
                         return
 			
+
+		if extract:
+			for i in OBJECT.customized():
+				print "%s %s" % (object, str(i))
+			return
+
 		if len(cmds) != 1:
                        raise ValueError(_("bad option"))
                         
