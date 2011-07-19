@@ -9,6 +9,10 @@ run_init \- run an init script in the proper SELinux context
 .PP
 Run a init script under the proper context, which is specified in 
 /etc/selinux/POLICYTYPE/contexts/initrc_context.
+It is generally used interactively as it requires either shadow or
+PAM user authentication (depending on compile-time options).  It
+should be possible to configure PAM such that interactive input is
+not required.  Check your PAM documentation.
 .SH FILES
 /etc/passwd - user account information
 .br
