@@ -467,3 +467,5 @@ Object-specific Options (see above):
 		errorExit(_("Invalid value %s") % error.args[0])
 	except IOError, error:
 		errorExit(error.args[1])
+	except OSError, error:
+		errorExit(error.args[1])
