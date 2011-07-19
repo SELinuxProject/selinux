@@ -364,7 +364,8 @@ Object-specific Options (see above):
 		
 		if object == "boolean":
 			OBJECT = seobject.booleanRecords(store)
-			modify = True
+			if use_file:
+				modify = True
 
 		if object == "module":
 			OBJECT = seobject.moduleRecords(store)
