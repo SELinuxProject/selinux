@@ -58,6 +58,7 @@ semanage login -{a|d|m|D|E} [-sr] login_name | %groupname
 semanage user -{a|d|m|D|E} [-LrRP] selinux_name
 semanage port -{a|d|m|D|E} [-tr] [ -p proto ] port | port_range
 semanage interface -{a|d|m|D|E} [-tr] interface_spec
+semanage module -{a|d|m} [--enable|--disable] module
 semanage node -{a|d|m|D|E} [-tr] [ -p protocol ] [-M netmask] addr
 semanage fcontext -{a|d|m|D|E} [-frst] file_spec
 semanage boolean -{d|m|D} [--on|--off|-1|-0] -F boolean | boolean_file
@@ -101,6 +102,8 @@ Object-specific Options (see above):
 	-s, --seuser     SELinux User Name
 	-t, --type       SELinux Type for the object
 	-r, --range      MLS/MCS Security Range (MLS/MCS Systems only)
+	--enable         Enable a module
+	--disable        Disable a module
 """)
                raise ValueError("%s\n%s" % (text, message))
 		
@@ -124,6 +127,8 @@ Object-specific Options (see above):
 		valid_option["interface"] += valid_everyone + valid_local + [ '-t', '--type', '-r', '--range']
 		valid_option["node"] = []
 		valid_option["node"] += valid_everyone + valid_local + [ '-M', '--mask', '-t', '--type', '-r', '--range', '-p', '--protocol']
+		valid_option["module"] = []
+		valid_option["module"] += valid_everyone + [ '--enable', '--disable']
 		valid_option["fcontext"] = []
 		valid_option["fcontext"] += valid_everyone + valid_local + [ '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range']
 		valid_option["dontaudit"] = [ '-S', '--store' ]
@@ -198,7 +203,9 @@ Object-specific Options (see above):
 		modify = False
 		delete = False
 		deleteall = False
+		enable = False
 		extract = False
+		disable = False
 		list = False
 		locallist = False
 		use_file = False
@@ -219,7 +226,9 @@ Object-specific Options (see above):
 						    ['add',
 						     'delete',
 						     'deleteall',
+						     'enable',
 						     'extract',
+						     'disable',
 						     'ftype=',
 						     'file',
 						     'help',
@@ -267,6 +276,14 @@ Object-specific Options (see above):
 
 			if o == "-f"  or o == "--ftype":
 				ftype=a
+
+			if o == "--enable":
+				set_action(o)
+				enable = True
+
+			if o == "--disable":
+				set_action(o)
+				disable = True
 
 			if o == "-F"  or o == "--file":
 				use_file = True
@@ -340,6 +357,10 @@ Object-specific Options (see above):
 		if object == "boolean":
 			OBJECT = seobject.booleanRecords(store)
 		
+
+		if object == "module":
+			OBJECT = seobject.moduleRecords(store)
+
 		if object == "permissive":
 			OBJECT = seobject.permissiveRecords(store)
 		
@@ -387,6 +408,10 @@ Object-specific Options (see above):
 				OBJECT.add(target, serange, setype)
 				return
 
+			if object == "module":
+				OBJECT.add(target)
+				return
+
 			if object == "node":
 				OBJECT.add(target, mask, proto, serange, setype)
 				return
@@ -411,6 +436,15 @@ Object-specific Options (see above):
 			if object == "user":
 				rlist = roles.split()
 				OBJECT.modify(target, rlist, selevel, serange, prefix)
+				return
+
+			if object == "module":
+				if enable:
+					OBJECT.enable(target)
+				elif disable:
+					OBJECT.disable(target)
+				else:
+					OBJECT.modify(target)
 				return
 
 			if object == "port":

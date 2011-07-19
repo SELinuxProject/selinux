@@ -237,6 +237,71 @@ class semanageRecords:
                semanageRecords.transaction = False
                self.commit()
 
+class moduleRecords(semanageRecords):
+	def __init__(self, store):
+               semanageRecords.__init__(self, store)
+
+	def get_all(self):
+               l = []
+               (rc, mlist, number) = semanage_module_list(self.sh)
+               if rc < 0:
+                      raise ValueError(_("Could not list SELinux modules"))
+
+               for i in range(number):
+                      mod = semanage_module_list_nth(mlist, i)
+                      l.append((semanage_module_get_name(mod), semanage_module_get_version(mod), semanage_module_get_enabled(mod)))
+               return l
+
+	def list(self, heading = 1, locallist = 0):
+		if heading:
+			print "\n%-25s%-10s\n" % (_("Modules Name"), _("Version"))
+                for t in self.get_all():
+                       if t[2] == 0:
+                              disabled = _("Disabled")
+                       else:
+                              disabled = ""
+                       print "%-25s%-10s%s" % (t[0], t[1], disabled)
+
+	def add(self, file):
+               rc = semanage_module_install_file(self.sh, file);
+               if rc >= 0:
+                      self.commit()
+
+	def disable(self, module):
+               need_commit = False
+               for m in module.split():
+                      rc = semanage_module_disable(self.sh, m)
+                      if rc < 0 and rc != -3:
+                             raise ValueError(_("Could not disable module %s (remove failed)") % m)
+                      if rc != -3:
+                             need_commit = True
+               if need_commit:
+                      self.commit()
+
+	def enable(self, module):
+               need_commit = False
+               for m in module.split():
+                      rc = semanage_module_enable(self.sh, m)
+                      if rc < 0 and rc != -3:
+                             raise ValueError(_("Could not enable module %s (remove failed)") % m)
+                      if rc != -3:
+                             need_commit = True
+               if need_commit:
+                      self.commit()
+
+	def modify(self, file):
+               rc = semanage_module_update_file(self.sh, file);
+               if rc >= 0:
+                      self.commit()
+
+	def delete(self, module):
+               for m in module.split():
+                      rc = semanage_module_remove(self.sh, m)
+                      if rc < 0 and rc != -2:
+                             raise ValueError(_("Could not remove module %s (remove failed)") % m)
+
+               self.commit()
+
 class dontauditClass(semanageRecords):
 	def __init__(self, store):
                semanageRecords.__init__(self, store)

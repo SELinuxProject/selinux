@@ -16,6 +16,10 @@ Input local customizations
 .B semanage boolean \-{d|m|D} [\-\-on|\-\-off|\-1|\-0] -F boolean | boolean_file
 .br
 .B semanage login \-{a|d|m|D} [\-sr] login_name | %groupname
+
+Manage policy modules.
+.br
+.B semanage module [\-S store] \-{a|d|l} [-m [--enable | --disable] ] module_name
 .br
 .B semanage user \-{a|d|m|D} [\-LrRP] selinux_name
 .br
@@ -59,6 +63,16 @@ Delete a OBJECT record NAME
 .TP
 .I                \-D, \-\-deleteall
 Remove all OBJECTS local customizations
+.TP
+.I                \-\-disable
+Disable a policy module, requires -m option
+
+Currently modules only.
+.TP
+.I                \-\-enable
+Enable a disabled policy module, requires -m option
+
+Currently modules only.
 .TP
 .I                \-f, \-\-ftype
 File Type.   This is used with fcontext.
