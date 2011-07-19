@@ -427,7 +427,7 @@ Object-specific Options (see above):
 
                         return
 
-                raise ValueError(_("Invalid command") % " ".join(argv))
+                raise ValueError(_("Invalid command: semanage %s") % " ".join(argv))
 
 	#
 	# 
