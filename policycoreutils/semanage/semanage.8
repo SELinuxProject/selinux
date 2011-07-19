@@ -3,6 +3,14 @@
 semanage \- SELinux Policy Management tool
 
 .SH "SYNOPSIS"
+Output local customizations
+.br
+.B semanage [ -S store ] -o [ output_file | - ]
+
+Input local customizations
+.br
+.B semanage [ -S store ] -i [ input_file | - ]
+
 .B semanage {boolean|login|user|port|interface|node|fcontext} \-{l|D} [\-n] [\-S store]
 .br
 .B semanage boolean \-{d|m|D} [\-\-on|\-\-off|\-1|\-0] -F boolean | boolean_file
@@ -20,8 +28,6 @@ semanage \- SELinux Policy Management tool
 .B semanage fcontext \-{a|d|m|D} [\-frst] file_spec
 .br
 .B semanage permissive \-{a|d} type
-.br
-.B semanage -i command-file
 .br
 .B semanage dontaudit [ on | off ]
 .P
@@ -122,6 +128,19 @@ $ semanage port -a -t http_port_t -p tcp 81
 $ semanage permissive -a httpd_t
 # Turn off dontaudit rules
 $ semanage dontaudit off
+
+.B Managing multiple machines
+Multiple machines that need the same customizations.
+Extract customizations off first machine, copy them
+to second and import them.
+
+# semanage -o /tmp/local.selinux
+# scp /tmp/local.selinux secondmachine:/tmp
+# ssh secondmachine
+# semanage -i /tmp/local.selinux
+
+If these customizations include file context, you need to apply the
+context using restorecon.
 .fi
 
 .SH "AUTHOR"

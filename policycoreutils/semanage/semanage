@@ -40,6 +40,7 @@ except IOError:
 
 if __name__ == '__main__':
 
+	manageditems=[ "boolean", "login", "user", "port", "interface", "node", "fcontext"]
 	action  = False
 	def set_action(option):
 		global action
@@ -50,6 +51,7 @@ if __name__ == '__main__':
 	def usage(message = ""):
                text = _("""
 semanage [ -S store ] -i [ input_file | - ]
+semanage [ -S store ] -o [ output_file | - ]
 
 semanage {boolean|login|user|port|interface|node|fcontext} -{l|D} [-n]
 semanage login -{a|d|m|D|E} [-sr] login_name | %groupname
@@ -68,6 +70,7 @@ Primary Options:
 	-d, --delete     Delete a OBJECT record NAME
 	-m, --modify     Modify a OBJECT record NAME
         -i, --input      Input multiple semange commands in a transaction 
+	-o, --output     Output current customizations as semange commands
 	-l, --list       List the OBJECTS
 	-E, --extract    extract customizable commands
 	-C, --locallist  List OBJECTS local customizations
@@ -447,6 +450,7 @@ Object-specific Options (see above):
 	# 
 	#
 	try:
+               output = None
                input = None
                store = ""
 
@@ -454,7 +458,7 @@ Object-specific Options (see above):
                       usage(_("Requires 2 or more arguments"))
                 
                gopts, cmds = getopt.getopt(sys.argv[1:],
-                                           '01adf:i:lhmnp:s:FCDR:L:r:t:T:P:S:',
+                                           '01adf:i:lhmno:p:s:FCDR:L:r:t:T:P:S:',
                                            ['add',
                                             'delete',
                                             'deleteall',
@@ -468,6 +472,7 @@ Object-specific Options (see above):
                                             'localist',
                                             'off', 
                                             'on', 
+                                            'output=',
                                             'proto=',
                                             'seuser=',
                                             'store=',
@@ -482,6 +487,16 @@ Object-specific Options (see above):
                              store = a
                       if o == "-i" or o == '--input':
                              input = a
+                      if o == "-o" or o == '--output':
+                             output = a
+
+               if output != None:
+                      if output != "-":
+                             sys.stdout = open(output, 'w')
+                      for i in manageditems:
+                             print "%s -D" % i
+                             process_args([i, "-E"])
+                      sys.exit(0)
 
                if input != None:
                       if input == "-":
