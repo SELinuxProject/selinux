@@ -198,7 +198,9 @@ Object-specific Options (see above):
 		locallist = False
 		use_file = False
                 store = ""
-			
+
+		if len(argv) == 0:
+			return
 		object = argv[0]
 		option_dict=get_options()
 		if object not in option_dict.keys():
