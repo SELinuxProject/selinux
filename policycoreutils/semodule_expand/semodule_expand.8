@@ -3,7 +3,7 @@
 semodule_expand \- Expand a SELinux policy module package.
 
 .SH SYNOPSIS
-.B semodule_expand [-V -c [version]] basemodpkg outputfile
+.B semodule_expand [-V ] [ -a ] [ -c [version]] basemodpkg outputfile
 .br
 .SH DESCRIPTION
 .PP
@@ -22,6 +22,9 @@ show version
 .TP
 .B \-c [version]
 policy version to create
+.TP
+.B \-a
+Do not check assertions.  This will cause the policy to not check any neverallow rules.
 
 .SH SEE ALSO
 .B checkmodule(8), semodule_package(8), semodule(8), semodule_link(8)
