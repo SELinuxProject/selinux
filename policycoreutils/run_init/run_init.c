@@ -406,6 +406,13 @@ int main(int argc, char *argv[])
 			new_context);
 		exit(-1);
 	}
+	if (! access("/usr/sbin/open_init_pty", X_OK)) {
+		if (execvp(argv[1], argv + 1)) {
+			perror("execvp");
+			exit(-1);
+		}
+		return 0;
+	}
 	/*
 	 * Do not execvp the command directly from run_init; since it would run
 	 * under with a pty under sysadm_devpts_t. Instead, we call open_init_tty,
