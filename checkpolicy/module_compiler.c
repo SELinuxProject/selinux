@@ -200,7 +200,7 @@ static int role_implicit_bounds(hashtab_t roles_tab,
 	return 0;
 }
 
-role_datum_t *declare_role(void)
+role_datum_t *declare_role(unsigned char isattr)
 {
 	char *id = queue_remove(id_queue), *dest_id = NULL;
 	role_datum_t *role = NULL, *dest_role = NULL;
@@ -217,7 +217,7 @@ role_datum_t *declare_role(void)
 		return NULL;
 	}
 	role_datum_init(role);
-
+	role->flavor = isattr ? ROLE_ATTRIB : ROLE_ROLE;
 	retval =
 	    declare_symbol(SYM_ROLES, id, (hashtab_datum_t *) role, &value,
 			   &value);
@@ -254,6 +254,7 @@ role_datum_t *declare_role(void)
 			}
 			role_datum_init(dest_role);
 			dest_role->s.value = value;
+			dest_role->flavor = isattr ? ROLE_ATTRIB : ROLE_ROLE;
 			if (role_implicit_bounds(roles_tab, dest_id, dest_role)) {
 				free(dest_id);
 				role_datum_destroy(dest_role);
@@ -548,6 +549,55 @@ type_datum_t *get_local_type(char *id, uint32_t value, unsigned char isattr)
 	return dest_typdatum;
 }
 
+/* Return a role_datum_t for the local avrule_decl with the given ID.
+ * If it does not exist, create one with the same value as 'value'.
+ * This function assumes that the ID is within scope.  c.f.,
+ * is_id_in_scope().
+ *
+ * NOTE: this function usurps ownership of id afterwards.  The caller
+ * shall not reference it nor free() it afterwards.
+ */
+role_datum_t *get_local_role(char *id, uint32_t value, unsigned char isattr)
+{
+	role_datum_t *dest_roledatum;
+	hashtab_t roles_tab;
+
+	assert(stack_top->type == 1);
+
+	if (stack_top->parent == NULL) {
+		/* in global, so use global symbol table */
+		roles_tab = policydbp->p_roles.table;
+	} else {
+		roles_tab = stack_top->decl->p_roles.table;
+	}
+
+	dest_roledatum = hashtab_search(roles_tab, id);
+	if (!dest_roledatum) {
+		dest_roledatum = (role_datum_t *)malloc(sizeof(role_datum_t));
+		if (dest_roledatum == NULL) {
+			free(id);
+			return NULL;
+		}
+
+		role_datum_init(dest_roledatum);
+		dest_roledatum->s.value = value;
+		dest_roledatum->flavor = isattr ? ROLE_ATTRIB : ROLE_ROLE;
+
+		if (hashtab_insert(roles_tab, id, dest_roledatum)) {
+			free(id);
+			role_datum_destroy(dest_roledatum);
+			free(dest_roledatum);
+			return NULL;
+		}
+	} else {
+		free(id);
+		if (dest_roledatum->flavor != isattr ? ROLE_ATTRIB : ROLE_ROLE)
+			return NULL;
+	}
+	
+	return dest_roledatum;
+}
+
 /* Given the current parse stack, returns 1 if a requirement would be
  * allowed here or 0 if not.  For example, the ELSE branch may never
  * have its own requirements.
@@ -812,7 +862,7 @@ int require_class(int pass)
 	return -1;
 }
 
-int require_role(int pass)
+static int require_role_or_attribute(int pass, unsigned char isattr)
 {
 	char *id = queue_remove(id_queue);
 	role_datum_t *role = NULL;
@@ -831,6 +881,7 @@ int require_role(int pass)
 		return -1;
 	}
 	role_datum_init(role);
+	role->flavor = isattr ? ROLE_ATTRIB : ROLE_ROLE;
 	retval =
 	    require_symbol(SYM_ROLES, id, (hashtab_datum_t *) role,
 			   &role->s.value, &role->s.value);
@@ -868,6 +919,16 @@ int require_role(int pass)
 			assert(0);	/* should never get here */
 		}
 	}
+}
+
+int require_role(int pass)
+{
+	return require_role_or_attribute(pass, 0);
+}
+
+int require_attribute_role(int pass)
+{
+	return require_role_or_attribute(pass, 1);
 }
 
 static int require_type_or_attribute(int pass, unsigned char isattr)

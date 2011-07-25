@@ -1774,6 +1774,9 @@ int define_te_avtab(int which)
 	return 0;
 }
 
+/* The role-types rule is no longer used to declare regular role or
+ * role attribute, but solely aimed for declaring role-types associations.
+ */
 int define_role_types(void)
 {
 	role_datum_t *role;
@@ -1786,12 +1789,154 @@ int define_role_types(void)
 		return 0;
 	}
 
-	if ((role = declare_role()) == NULL) {
+	id = (char *)queue_remove(id_queue);
+	if (!id) {
+		yyerror("no role name for role-types rule?");
 		return -1;
 	}
+
+	if (!is_id_in_scope(SYM_ROLES, id)) {
+		yyerror2("role %s is not within scope", id);
+		free(id);
+		return -1;
+	}
+
+	role = hashtab_search(policydbp->p_roles.table, id);
+	if (!role) {
+		yyerror2("unknown role %s", id);
+		free(id);
+		return -1;
+	}
+
 	while ((id = queue_remove(id_queue))) {
 		if (set_types(&role->types, id, &add, 0))
 			return -1;
+	}
+
+	return 0;
+}
+
+int define_attrib_role(void)
+{
+	if (pass == 2) {
+		free(queue_remove(id_queue));
+		return 0;
+	}
+
+	/* Declare a role attribute */
+	if (declare_role(TRUE) == NULL)
+		return -1;
+
+	return 0;
+}
+
+int define_role_attr(void)
+{
+	char *id;
+	role_datum_t *r, *attr;
+
+	if (pass == 2) {
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		return 0;
+	}
+	
+	/* Declare a regular role */
+	if ((r = declare_role(FALSE)) == NULL)
+		return -1;
+
+	while ((id = queue_remove(id_queue))) {
+		if (!is_id_in_scope(SYM_ROLES, id)) {
+			yyerror2("attribute %s is not within scope", id);
+			free(id);
+			return -1;
+		}
+		attr = hashtab_search(policydbp->p_roles.table, id);
+		if (!attr) {
+			/* treat it as a fatal error */
+			yyerror2("role attribute %s is not declared", id);
+			free(id);
+			return -1;
+		}
+
+		if (attr->flavor != ROLE_ATTRIB) {
+			yyerror2("%s is a regular role, not an attribute", id);
+			free(id);
+			return -1;
+		}
+
+		if ((attr = get_local_role(id, attr->s.value, 1)) == NULL) {
+			yyerror("Out of memory!");
+			return -1;
+		}
+
+		if (ebitmap_set_bit(&attr->roles, (r->s.value - 1), TRUE)) {
+			yyerror("out of memory");
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+int define_roleattribute(void)
+{
+	char *id;
+	role_datum_t *r, *attr;
+
+	if (pass == 2) {
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		return 0;
+	}
+
+	id = (char *)queue_remove(id_queue);
+	if (!id) {
+		yyerror("no role name for roleattribute definition?");
+		return -1;
+	}
+
+	if (!is_id_in_scope(SYM_ROLES, id)) {
+		yyerror2("role %s is not within scope", id);
+		free(id);
+		return -1;
+	}
+	r = hashtab_search(policydbp->p_roles.table, id);
+	if (!r || r->flavor != ROLE_ROLE) {
+		yyerror2("unknown role %s, or not a regular role", id);
+		free(id);
+		return -1;
+	}
+
+	while ((id = queue_remove(id_queue))) {
+		if (!is_id_in_scope(SYM_ROLES, id)) {
+			yyerror2("attribute %s is not within scope", id);
+			free(id);
+			return -1;
+		}
+		attr = hashtab_search(policydbp->p_roles.table, id);
+		if (!attr) {
+			/* treat it as a fatal error */
+			yyerror2("role attribute %s is not declared", id);
+			free(id);
+			return -1;
+		}
+
+		if (attr->flavor != ROLE_ATTRIB) {
+			yyerror2("%s is a regular role, not an attribute", id);
+			free(id);
+			return -1;
+		}
+
+		if ((attr = get_local_role(id, attr->s.value, 1)) == NULL) {
+			yyerror("Out of memory!");
+			return -1;
+		}
+
+		if (ebitmap_set_bit(&attr->roles, (r->s.value - 1), TRUE)) {
+			yyerror("out of memory");
+			return -1;
+		}
 	}
 
 	return 0;
@@ -2135,6 +2280,11 @@ int define_role_trans(int class_specified)
 	role = hashtab_search(policydbp->p_roles.table, id);
 	if (!role) {
 		yyerror2("unknown role %s used in transition definition", id);
+		goto bad;
+	}
+
+	if (role->flavor != ROLE_ROLE) {
+		yyerror2("the new role %s must be a regular role", id);
 		goto bad;
 	}
 

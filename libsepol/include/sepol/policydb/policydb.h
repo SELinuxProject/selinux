@@ -120,6 +120,10 @@ typedef struct role_datum {
 	type_set_t types;	/* set of authorized types for role */
 	ebitmap_t cache;	/* This is an expanded set used for context validation during parsing */
 	uint32_t bounds;	/* bounds role, if exist */
+#define ROLE_ROLE 0		/* regular role in kernel policies */
+#define ROLE_ATTRIB 1		/* attribute */
+	uint32_t flavor;
+	ebitmap_t roles;	/* roles with this attribute */
 } role_datum_t;
 
 typedef struct role_trans {

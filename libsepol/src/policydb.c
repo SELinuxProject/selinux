@@ -350,6 +350,7 @@ void role_datum_init(role_datum_t * x)
 	ebitmap_init(&x->dominates);
 	type_set_init(&x->types);
 	ebitmap_init(&x->cache);
+	ebitmap_init(&x->roles);
 }
 
 void role_datum_destroy(role_datum_t * x)
@@ -358,6 +359,7 @@ void role_datum_destroy(role_datum_t * x)
 		ebitmap_destroy(&x->dominates);
 		type_set_destroy(&x->types);
 		ebitmap_destroy(&x->cache);
+		ebitmap_destroy(&x->roles);
 	}
 }
 
@@ -1428,6 +1430,25 @@ int symtab_insert(policydb_t * pol, uint32_t sym,
 		/* disallow multiple declarations for non-roles/users */
 		if (sym != SYM_ROLES && sym != SYM_USERS) {
 			return -2;
+		}
+		/* Further confine that a role attribute can't have the same
+		 * name as another regular role, and a role attribute can't
+		 * be declared more than once. */
+		if (sym == SYM_ROLES) {
+			role_datum_t *base_role;
+			role_datum_t *cur_role = (role_datum_t *)datum;
+		
+			base_role = (role_datum_t *)
+					hashtab_search(pol->symtab[sym].table,
+						       key);
+			assert(base_role != NULL);
+
+			if (!((base_role->flavor == ROLE_ROLE) &&
+			    (cur_role->flavor == ROLE_ROLE))) {
+				/* Only regular roles are allowed to have
+				 * multiple declarations. */
+				return -2;
+			}
 		}
 	} else if (scope_datum->scope == SCOPE_REQ && scope == SCOPE_DECL) {
 		scope_datum->scope = SCOPE_DECL;

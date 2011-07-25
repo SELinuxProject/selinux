@@ -76,6 +76,10 @@ ROLE |
 role				{ return(ROLE); }
 ROLES |
 roles				{ return(ROLES); }
+ROLEATTRIBUTE |
+roleattribute			{ return(ROLEATTRIBUTE);}
+ATTRIBUTE_ROLE |
+attribute_role			{ return(ATTRIBUTE_ROLE);}
 TYPES |
 types				{ return(TYPES); }
 TYPEALIAS |

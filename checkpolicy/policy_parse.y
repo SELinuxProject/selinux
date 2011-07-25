@@ -90,6 +90,8 @@ typedef int (* require_func_t)();
 %token INHERITS
 %token SID
 %token ROLE
+%token ROLEATTRIBUTE
+%token ATTRIBUTE_ROLE
 %token ROLES
 %token TYPEALIAS
 %token TYPEATTRIBUTE
@@ -253,10 +255,13 @@ te_rbac_decl		: te_decl
 			| policycap_def
 			| ';'
                         ;
-rbac_decl		: role_type_def
+rbac_decl		: attribute_role_def
+			| role_type_def
                         | role_dominance
                         | role_trans_def
  			| role_allow_def
+			| roleattribute_def
+			| role_attr_def
 			;
 te_decl			: attribute_def
                         | type_def
@@ -417,10 +422,13 @@ dontaudit_def		: DONTAUDIT names names ':' names names ';'
 neverallow_def		: NEVERALLOW names names ':' names names  ';'
 			{if (define_te_avtab(AVRULE_NEVERALLOW)) return -1; }
 		        ;
+attribute_role_def	: ATTRIBUTE_ROLE identifier ';'
+			{if (define_attrib_role()) return -1; }
 role_type_def		: ROLE identifier TYPES names ';'
 			{if (define_role_types()) return -1;}
- 			| ROLE identifier';'
- 			{if (define_role_types()) return -1;}
+			;
+role_attr_def		: ROLE identifier opt_attr_list ';'
+ 			{if (define_role_attr()) return -1;}
                         ;
 role_dominance		: DOMINANCE '{' roles '}'
 			;
@@ -441,6 +449,9 @@ role_def		: ROLE identifier_push ';'
                         {$$ = define_role_dom(NULL); if ($$ == 0) return -1;}
 			| ROLE identifier_push '{' roles '}'
                         {$$ = define_role_dom((role_datum_t*)$4); if ($$ == 0) return -1;}
+			;
+roleattribute_def	: ROLEATTRIBUTE identifier id_comma_list ';'
+			{if (define_roleattribute()) return -1;}
 			;
 opt_constraints         : constraints
                         |
@@ -803,6 +814,7 @@ require_class           : CLASS identifier names
 require_decl_def        : ROLE        { $$ = require_role; }
                         | TYPE        { $$ = require_type; }
                         | ATTRIBUTE   { $$ = require_attribute; }
+                        | ATTRIBUTE_ROLE   { $$ = require_attribute_role; }
                         | USER        { $$ = require_user; }
                         | BOOL        { $$ = require_bool; }
                         | SENSITIVITY { $$ = require_sens; }
