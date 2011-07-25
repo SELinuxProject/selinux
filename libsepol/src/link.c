@@ -2335,6 +2335,122 @@ static int prepare_base(link_state_t * state, uint32_t num_mod_decls)
 	return 0;
 }
 
+static int expand_role_attributes(hashtab_key_t key, hashtab_datum_t datum,
+				  void * data)
+{
+	char *id;
+	role_datum_t *role, *sub_attr;
+	link_state_t *state;
+	unsigned int i;
+	ebitmap_node_t *rnode;
+
+	id = key;
+	role = (role_datum_t *)datum;
+	state = (link_state_t *)data;
+
+	if (strcmp(id, OBJECT_R) == 0){
+		/* object_r is never a role attribute by far */
+		return 0;
+	}
+
+	if (role->flavor != ROLE_ATTRIB)
+		return 0;
+
+	if (state->verbose)
+		INFO(state->handle, "expanding role attribute %s", id);
+
+restart:
+	ebitmap_for_each_bit(&role->roles, rnode, i) {
+		if (ebitmap_node_get_bit(rnode, i)) {
+			sub_attr = state->base->role_val_to_struct[i];
+			if (sub_attr->flavor != ROLE_ATTRIB)
+				continue;
+			
+			/* remove the sub role attribute from the parent
+			 * role attribute's roles ebitmap */
+			if (ebitmap_set_bit(&role->roles, i, 0))
+				return -1;
+
+			/* loop dependency of role attributes */
+			if (sub_attr->s.value == role->s.value)
+				continue;
+
+			/* now go on to expand a sub role attribute
+			 * by escalating its roles ebitmap */
+			if (ebitmap_union(&role->roles, &sub_attr->roles)) {
+				ERR(state->handle, "Out of memory!");
+				return -1;
+			}
+			
+			/* sub_attr->roles may contain other role attributes,
+			 * re-scan the parent role attribute's roles ebitmap */
+			goto restart;
+		}
+	}
+
+	return 0;
+}
+
+/* For any role attribute in a declaration's local symtab[SYM_ROLES] table,
+ * copy its roles ebitmap into its duplicate's in the base->p_roles.table.
+ */
+static int populate_decl_roleattributes(hashtab_key_t key, 
+					hashtab_datum_t datum,
+					void *data)
+{
+	char *id = key;
+	role_datum_t *decl_role, *base_role;
+	link_state_t *state = (link_state_t *)data;
+
+	decl_role = (role_datum_t *)datum;
+
+	if (strcmp(id, OBJECT_R) == 0) {
+		/* object_r is never a role attribute by far */
+		return 0;
+	}
+
+	if (decl_role->flavor != ROLE_ATTRIB)
+		return 0;
+
+	base_role = (role_datum_t *)hashtab_search(state->base->p_roles.table,
+						   id);
+	assert(base_role != NULL && base_role->flavor == ROLE_ATTRIB);
+
+	if (ebitmap_union(&base_role->roles, &decl_role->roles)) {
+		ERR(state->handle, "Out of memory!");
+		return -1;
+	}
+
+	return 0;
+}
+
+static int populate_roleattributes(link_state_t *state, policydb_t *pol)
+{
+	avrule_block_t *block;
+	avrule_decl_t *decl;
+
+	if (state->verbose)
+		INFO(state->handle, "Populating role-attribute relationship "
+			    "from enabled declarations' local symtab.");
+
+	/* Iterate through all of the blocks skipping the first(which is the
+	 * global block, is required to be present and can't have an else).
+	 * If the block is disabled or not having an enabled decl, skip it.
+	 */
+	for (block = pol->global->next; block != NULL; block = block->next)
+	{
+		decl = block->enabled;
+		if (decl == NULL || decl->enabled == 0)
+			continue;
+
+		if (hashtab_map(decl->symtab[SYM_ROLES].table, 
+				populate_decl_roleattributes, state))
+			return -1;
+	}
+
+	return 0;
+}
+
 /* Link a set of modules into a base module. This process is somewhat
  * similar to an actual compiler: it requires a set of order dependent
  * steps.  The base and every module must have been indexed prior to
@@ -2454,6 +2570,22 @@ int link_modules(sepol_handle_t * handle,
 		retval = SEPOL_EREQ;
 		goto cleanup;
 	}
+
+	/* Now that all role attribute's roles ebitmap have been settled,
+	 * escalate sub role attribute's roles ebitmap into that of parent.
+	 *
+	 * First, since some role-attribute relationships could be recorded
+	 * in some decl's local symtab(see get_local_role()), we need to
+	 * populate them up to the base.p_roles table. */
+	if (populate_roleattributes(&state, state.base)) {
+		retval = SEPOL_EREQ;
+		goto cleanup;
+	}
+	
+	/* Now do the escalation. */
+	if (hashtab_map(state.base->p_roles.table, expand_role_attributes,
+			&state))
+		goto cleanup;
 
 	retval = 0;
       cleanup:

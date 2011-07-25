@@ -1902,8 +1902,9 @@ int define_roleattribute(void)
 		return -1;
 	}
 	r = hashtab_search(policydbp->p_roles.table, id);
-	if (!r || r->flavor != ROLE_ROLE) {
-		yyerror2("unknown role %s, or not a regular role", id);
+	/* We support adding one role attribute into another */
+	if (!r) {
+		yyerror2("unknown role %s", id);
 		free(id);
 		return -1;
 	}
