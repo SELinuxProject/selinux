@@ -312,7 +312,25 @@ static int role_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	role = (role_datum_t *) datum;
 
 	base_role = hashtab_search(state->base->p_roles.table, id);
-	if (base_role == NULL) {
+	if (base_role != NULL) {
+		/* role already exists.  check that it is what this
+		 * module expected.  duplicate declarations (e.g., two
+		 * modules both declare role foo_r) is checked during
+		 * scope_copy_callback(). */
+		if (role->flavor == ROLE_ATTRIB
+		    && base_role->flavor != ROLE_ATTRIB) {
+			ERR(state->handle,
+			    "%s: Expected %s to be a role attribute, but it was already declared as a regular role.",
+			    state->cur_mod_name, id);
+			return -1;
+		} else if (role->flavor != ROLE_ATTRIB
+			   && base_role->flavor == ROLE_ATTRIB) {
+			ERR(state->handle,
+			    "%s: Expected %s to be a regular role, but it was already declared as a role attribute.",
+			    state->cur_mod_name, id);
+			return -1;
+		}
+	} else {
 		if (state->verbose)
 			INFO(state->handle, "copying role %s", id);
 
@@ -326,8 +344,9 @@ static int role_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		}
 		role_datum_init(new_role);
 
-		/* new_role's dominates and types field will be copied
+		/* new_role's dominates, types and roles field will be copied
 		 * during role_fix_callback() */
+		new_role->flavor = role->flavor;
 		new_role->s.value = state->base->p_roles.nprim + 1;
 
 		ret = hashtab_insert(state->base->p_roles.table,
@@ -346,6 +365,7 @@ static int role_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			goto cleanup;
 		}
 		role_datum_init(new_role);
+		new_role->flavor = base_role->flavor;
 		new_role->s.value = base_role->s.value;
 		if ((new_id = strdup(id)) == NULL) {
 			goto cleanup;
@@ -1046,6 +1066,24 @@ static int role_fix_callback(hashtab_key_t key, hashtab_datum_t datum,
 		goto cleanup;
 	}
 	ebitmap_destroy(&e_tmp);
+	
+	if (role->flavor == ROLE_ATTRIB) {
+		ebitmap_init(&e_tmp);
+		ebitmap_for_each_bit(&role->roles, rnode, i) {
+			if (ebitmap_node_get_bit(rnode, i)) {
+				assert(mod->map[SYM_ROLES][i]);
+				if (ebitmap_set_bit
+				    (&e_tmp, mod->map[SYM_ROLES][i] - 1, 1)) {
+					goto cleanup;
+				}
+			}
+		}
+		if (ebitmap_union(&dest_role->roles, &e_tmp)) {
+			goto cleanup;
+		}
+		ebitmap_destroy(&e_tmp);
+	}
+
 	return 0;
 
       cleanup:
