@@ -712,7 +712,7 @@ int policydb_user_cache(hashtab_key_t key
 	p = (policydb_t *) arg;
 
 	ebitmap_destroy(&user->cache);
-	if (role_set_expand(&user->roles, &user->cache, p, NULL)) {
+	if (role_set_expand(&user->roles, &user->cache, p, NULL, NULL)) {
 		return -1;
 	}
 

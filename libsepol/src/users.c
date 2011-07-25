@@ -259,8 +259,8 @@ int sepol_user_modify(sepol_handle_t * handle,
 		name = NULL;
 
 		/* Expand roles */
-		if (role_set_expand
-		    (&usrdatum->roles, &usrdatum->cache, policydb, NULL)) {
+		if (role_set_expand(&usrdatum->roles, &usrdatum->cache,
+				    policydb, NULL, NULL)) {
 			ERR(handle, "unable to expand role set");
 			goto err;
 		}

@@ -2289,7 +2289,7 @@ int define_role_trans(int class_specified)
 	}
 
 	/* This ebitmap business is just to ensure that there are not conflicting role_trans rules */
-	if (role_set_expand(&roles, &e_roles, policydbp, NULL))
+	if (role_set_expand(&roles, &e_roles, policydbp, NULL, NULL))
 		goto bad;
 
 	if (type_set_expand(&types, &e_types, policydbp, 1))

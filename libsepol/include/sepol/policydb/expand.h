@@ -60,7 +60,7 @@ extern int expand_convert_type_set(policydb_t * p, uint32_t * typemap,
 				   unsigned char alwaysexpand);
 extern int type_set_expand(type_set_t * set, ebitmap_t * t, policydb_t * p,
 			   unsigned char alwaysexpand);
-extern int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * p, uint32_t * rolemap);
+extern int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * out, policydb_t * base, uint32_t * rolemap);
 extern int mls_semantic_level_expand(mls_semantic_level_t *sl, mls_level_t *l,
                                      policydb_t *p, sepol_handle_t *h);
 extern int mls_semantic_range_expand(mls_semantic_range_t *sr, mls_range_t *r,

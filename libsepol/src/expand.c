@@ -981,7 +981,7 @@ static int user_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	ebitmap_init(&tmp_union);
 
 	/* get global roles for this user */
-	if (role_set_expand(&user->roles, &tmp_union, state->base, state->rolemap)) {
+	if (role_set_expand(&user->roles, &tmp_union, state->out, state->base, state->rolemap)) {
 		ERR(state->handle, "Out of memory!");
 		ebitmap_destroy(&tmp_union);
 		return -1;
@@ -1159,12 +1159,12 @@ static int copy_role_allows(expand_state_t * state, role_allow_rule_t * rules)
 		ebitmap_init(&roles);
 		ebitmap_init(&new_roles);
 
-		if (role_set_expand(&cur->roles, &roles, state->out, state->rolemap)) {
+		if (role_set_expand(&cur->roles, &roles, state->out, state->base, state->rolemap)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
 
-		if (role_set_expand(&cur->new_roles, &new_roles, state->out, state->rolemap)) {
+		if (role_set_expand(&cur->new_roles, &new_roles, state->out, state->base, state->rolemap)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
@@ -1228,7 +1228,7 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 		ebitmap_init(&roles);
 		ebitmap_init(&types);
 
-		if (role_set_expand(&cur->roles, &roles, state->out, state->rolemap)) {
+		if (role_set_expand(&cur->roles, &roles, state->out, state->base, state->rolemap)) {
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
@@ -2267,14 +2267,23 @@ int expand_rule(sepol_handle_t * handle,
 	return retval;
 }
 
-int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * p, uint32_t * rolemap)
+/* Expand a role set into an ebitmap containing the roles.
+ * This handles the attribute and flags.
+ * Attribute expansion depends on if the rolemap is available.
+ * During module compile the rolemap is not available, the
+ * possible duplicates of a regular role and the role attribute
+ * the regular role belongs to could be properly handled by
+ * copy_role_trans and copy_role_allow.
+ */
+int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * out, policydb_t * base, uint32_t * rolemap)
 {
 	unsigned int i;
 	ebitmap_node_t *rnode;
-	ebitmap_t mapped_roles;
+	ebitmap_t mapped_roles, roles;
+	policydb_t *p = out;
+	role_datum_t *role;
 
 	ebitmap_init(r);
-	ebitmap_init(&mapped_roles);
 
 	if (x->flags & ROLE_STAR) {
 		for (i = 0; i < p->p_roles.nprim++; i++)
@@ -2283,22 +2292,43 @@ int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * p, uint32_t * ro
 		return 0;
 	}
 
+	ebitmap_init(&mapped_roles);
+	ebitmap_init(&roles);
+	
 	if (rolemap) {
-		if (map_ebitmap(&x->roles, &mapped_roles, rolemap))
-			return -1;
+		assert(base != NULL);
+		ebitmap_for_each_bit(&x->roles, rnode, i) {
+			if (ebitmap_node_get_bit(rnode, i)) {
+				/* take advantage of p_role_val_to_struct[]
+				 * of the base module */
+				role = base->role_val_to_struct[i];
+				assert(role != NULL);
+				if (role->flavor == ROLE_ATTRIB) {
+					if (ebitmap_union(&roles,
+							  &role->roles))
+						goto bad;
+				} else {
+					if (ebitmap_set_bit(&roles, i, 1))
+						goto bad;
+				}
+			}
+		}
+		if (map_ebitmap(&roles, &mapped_roles, rolemap))
+			goto bad;
 	} else {
 		if (ebitmap_cpy(&mapped_roles, &x->roles))
-			return -1;
+			goto bad;
 	}
 
 	ebitmap_for_each_bit(&mapped_roles, rnode, i) {
 		if (ebitmap_node_get_bit(rnode, i)) {
 			if (ebitmap_set_bit(r, i, 1))
-				return -1;
+				goto bad;
 		}
 	}
 
 	ebitmap_destroy(&mapped_roles);
+	ebitmap_destroy(&roles);
 
 	/* if role is to be complimented, invert the entire bitmap here */
 	if (x->flags & ROLE_COMP) {
@@ -2313,6 +2343,11 @@ int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * p, uint32_t * ro
 		}
 	}
 	return 0;
+
+bad:
+	ebitmap_destroy(&mapped_roles);
+	ebitmap_destroy(&roles);
+	return -1;
 }
 
 /* Expand a type set into an ebitmap containing the types. This
