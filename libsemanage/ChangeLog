@@ -1,3 +1,6 @@
+2.1.0 2011-07-27
+	* Release, minor version bump
+
 2.0.46 2010-12-16
 	* Fix compliation under GCC 4.6 by Justin Mattock
 

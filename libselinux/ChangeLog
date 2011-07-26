@@ -1,3 +1,6 @@
+2.1.0 2011-07-27
+	* Release, minor version bump
+
 2.0.102 2011-04-11
 	* Give correct names to mount points in load_policy by Dan Walsh.
 	* Make sure selinux state is reported correctly if selinux is disabled or
