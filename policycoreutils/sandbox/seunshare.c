@@ -287,11 +287,12 @@ int main(int argc, char **argv) {
 	};
 
 	uid_t uid = getuid();
-
+/*
 	if (!uid) {
 		fprintf(stderr, _("Must not be root"));
 		return -1;
 	}
+*/
 
 	struct passwd *pwd=getpwuid(uid);
 	if (!pwd) {
