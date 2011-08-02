@@ -2835,9 +2835,6 @@ int expand_module(sepol_handle_t * handle,
 		if (hashtab_map
 		    (decl->p_roles.table, role_copy_callback, &state))
 			goto cleanup;
-		if (hashtab_map
-		    (decl->p_roles.table, role_fix_callback, &state))
-			goto cleanup;
 
 		/* copy users */
 		if (hashtab_map
