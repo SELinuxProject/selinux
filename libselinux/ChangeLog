@@ -1,3 +1,10 @@
+2.1.1 2011-08-02
+	* move .gitignore into utils
+	* new setexecon utility
+	* selabel_open fix processing of substitution files
+	* mountpoint changing patch.
+	* simplify SRCS in Makefile
+
 2.1.1 2011-08-01
 	* Remove generated files, introduce more .gitignore
 

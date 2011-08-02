@@ -1,3 +1,8 @@
+2.1.2 2011-08-02
+	* .gitignore changes
+	* dispol output of role trans
+	* man page update: build a module with an older policy version
+
 2.1.1 2011-08-01
 	* Minor updates to filename trans rule output in dis{mod,pol}
 

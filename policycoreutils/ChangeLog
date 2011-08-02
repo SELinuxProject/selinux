@@ -1,3 +1,9 @@
+2.1.2 2011-08-02
+	* seunshare: define _GNU_SOURCE earlier
+	* make ignore_enoent do something
+	* restorecond: first user logged in is not noticed
+	* Repo: update .gitignore
+
 2.1.1 2011-08-01
 	* Man page updates
 	* restorecon fix for bad inotify assumptions
