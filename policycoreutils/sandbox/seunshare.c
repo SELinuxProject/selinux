@@ -1,10 +1,10 @@
+#define _GNU_SOURCE
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <syslog.h>
 #include <sys/mount.h>
 #include <pwd.h>
-#define _GNU_SOURCE
 #include <sched.h>
 #include <string.h>
 #include <stdio.h>
