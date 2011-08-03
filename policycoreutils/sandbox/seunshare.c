@@ -61,7 +61,7 @@ static int drop_capabilities(uid_t uid)
 static	int verbose = 0;
 
 /**
- * Take care of any signal setup
+ * Take care of any signal setup.
  */
 static int set_signal_handles(void)
 {
