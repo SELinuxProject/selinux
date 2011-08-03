@@ -28,6 +28,10 @@
 
 import sys
 import os
+import tempfile
+import subprocess
+
+import selinux
 
 import sepolgen.refparser as refparser
 import sepolgen.defaults as defaults
@@ -35,6 +39,7 @@ import sepolgen.interfaces as interfaces
 
 
 VERSION = "%prog .1"
+ATTR_HELPER = "/usr/bin/sepolgen-ifgen-attr-helper"
 
 def parse_options():
     from optparse import OptionParser
@@ -44,14 +49,58 @@ def parse_options():
                       help="filename to store output")
     parser.add_option("-i", "--interfaces", dest="headers", default=defaults.headers(),
                       help="location of the interface header files")
+    parser.add_option("-a", "--attribute_info", dest="attribute_info")
+    parser.add_option("-p", "--policy", dest="policy_path")
     parser.add_option("-v", "--verbose", action="store_true", default=False,
                       help="print debuging output")
     parser.add_option("-d", "--debug", action="store_true", default=False,
                      help="extra debugging output")
+    parser.add_option("--no_attrs", action="store_true", default=False,
+                      help="do not retrieve attribute access from kernel policy")
     options, args = parser.parse_args()
     
     return options
 
+def get_policy():
+    i = selinux.security_policyvers()
+    p = selinux.selinux_binary_policy_path() + "." + str(i)
+    while i > 0 and not os.path.exists(p):
+        i = i - 1
+        p = selinux.selinux_binary_policy_path() + "." + str(i)
+    if i > 0:
+        return p
+    return None
+
+def get_attrs(policy_path):
+    try:
+        if not policy_path:
+            policy_path = get_policy()
+        if not policy_path:
+            sys.stderr.write("No installed policy to check\n")
+            return None
+        outfile = tempfile.NamedTemporaryFile()
+    except IOError, e:
+        sys.stderr.write("could not open attribute output file\n")
+        return None
+    except OSError:
+        # SELinux Disabled Machine
+        return None
+
+    fd = open("/dev/null","w")
+    ret = subprocess.Popen([ATTR_HELPER, policy_path, outfile.name], stdout=fd).wait()
+    fd.close()
+    if ret != 0:
+        sys.stderr.write("could not run attribute helper")
+        return None
+
+    attrs = interfaces.AttributeSet()
+    try:
+        attrs.from_file(outfile)
+    except:
+        print "error parsing attribute info"
+        return None
+
+    return attrs
 
 def main():
     options = parse_options()
@@ -68,6 +117,14 @@ def main():
     else:
         log = None
 
+    # Get the attibutes from the binary
+    attrs = None
+    if not options.no_attrs:
+        attrs = get_attrs(options.policy_path)
+        if attrs is None:
+            return 1
+
+    # Parse the headers
     try:
         headers = refparser.parse_headers(options.headers, output=log, debug=options.debug)
     except ValueError, e:
@@ -76,7 +133,7 @@ def main():
         return 1
 
     if_set = interfaces.InterfaceSet(output=log)
-    if_set.add_headers(headers)
+    if_set.add_headers(headers, attributes=attrs)
     if_set.to_file(f)
     f.close()
 
