@@ -39,6 +39,11 @@
 #define MS_PRIVATE 1<<18
 #endif
 
+#define DEFAULT_PATH "/usr/bin:/bin"
+#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -t tmpdir ] [ -h homedir ] -- CONTEXT executable [args] ")
+
+static int verbose = 0;
+
 /**
  * This function will drop all capabilities 
  * Returns zero on success, non-zero otherwise
@@ -56,9 +61,6 @@ static int drop_capabilities(uid_t uid)
 	}
 	return capng_apply(CAPNG_SELECT_BOTH);
 }
-
-#define DEFAULT_PATH "/usr/bin:/bin"
-static	int verbose = 0;
 
 /**
  * Take care of any signal setup.
@@ -152,8 +154,6 @@ static int seunshare_mount(const char *src, const char *dst, struct passwd *pwd)
 	if (verify_mount(dst, pwd) < 0) 
 		return -1;
 }
-
-#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -t tmpdir ] [ -h homedir ] -- CONTEXT executable [args] ")
 
 int main(int argc, char **argv) {
 	int rc;
