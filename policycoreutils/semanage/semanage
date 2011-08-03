@@ -39,7 +39,6 @@ except IOError:
        __builtin__.__dict__['_'] = unicode
 
 if __name__ == '__main__':
-
 	manageditems=[ "boolean", "login", "user", "port", "interface", "node", "fcontext"]
 	action  = False
 	def set_action(option):
@@ -269,6 +268,7 @@ Object-specific Options (see above):
 			if o == "-d"  or o == "--delete":
 				set_action(o)
 				delete = True
+
 			if o == "-D"  or o == "--deleteall":
 				set_action(o)
 				deleteall = True
@@ -337,10 +337,11 @@ Object-specific Options (see above):
 			if o == "-t" or o == "--type":
 				setype = a
 
-                        if o == "--on" or o == "-1":
-                               value = "on"
-                        if o == "--off" or o == "-0":
-                               value = "off"
+			if o == "--on" or o == "-1":
+				value = "on"
+
+			if o == "--off" or o == "-0":
+				value = "off"
 
 		if object == "login":
 			OBJECT = seobject.loginRecords(store)
@@ -362,7 +363,6 @@ Object-specific Options (see above):
 		
 		if object == "boolean":
 			OBJECT = seobject.booleanRecords(store)
-		
 
 		if object == "module":
 			OBJECT = seobject.moduleRecords(store)
@@ -381,7 +381,6 @@ Object-specific Options (see above):
 			OBJECT.deleteall()
                         return
 			
-
 		if extract:
 			for i in OBJECT.customized():
 				print "%s %s" % (object, str(i))
@@ -487,7 +486,6 @@ Object-specific Options (see above):
 
 			else:
 				OBJECT.delete(target)
-
                         return
 
                 raise ValueError(_("Invalid command: semanage %s") % " ".join(argv))
