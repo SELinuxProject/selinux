@@ -1136,7 +1136,6 @@ class nodeRecords(semanageRecords):
                return newaddr, newmask, newprotocol
 
        def __add(self, addr, mask, proto, serange, ctype):
-
                addr, mask, proto = self.validate(addr, mask, proto)
 
                if is_mls_enabled == 1:
@@ -1171,7 +1170,6 @@ class nodeRecords(semanageRecords):
                rc = semanage_node_set_mask(self.sh, node, proto, mask)
                if rc < 0:
                        raise ValueError(_("Could not set mask for %s") % addr)
-
 
                rc = semanage_context_set_user(self.sh, con, "system_u")
                if rc < 0:
@@ -1208,7 +1206,6 @@ class nodeRecords(semanageRecords):
                 self.commit()
 
        def __modify(self, addr, mask, proto, serange, setype):
-
                addr, mask, proto = self.validate(addr, mask, proto)
 
                if serange == "" and setype == "":
@@ -1229,7 +1226,6 @@ class nodeRecords(semanageRecords):
                        raise ValueError(_("Could not query addr %s") % addr)
 
                con = semanage_node_get_con(node)
-
                if serange != "":
                        semanage_context_set_mls(self.sh, con, untranslate(serange))
                if setype != "":
@@ -1734,7 +1730,6 @@ class fcontextRecords(semanageRecords):
                 self.begin()
                 self.__modify(target, setype, ftype, serange, seuser)
                 self.commit()
-		
 
 	def deleteall(self):
 		(rc, flist) = semanage_fcontext_list_local(self.sh)
