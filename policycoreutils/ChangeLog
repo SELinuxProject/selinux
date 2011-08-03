@@ -1,3 +1,31 @@
+2.1.3 2011-08-03
+	* semanage: fix indention
+	* semodule_package: fix man page typo
+	* semodule_expand: update man page with -a
+	* semanage: handle os errors
+	* semanage: fix traceback with bad options
+	* semanage: show usage on -h or --help
+	* semanage: introduce more deleteall options
+	* semanage: verify ports < 65536
+	* transaction into semanageRecords
+	* make get_handle a method of semanageRecords
+	* remove a needless blank line
+	* make process_one error if not initialized correctly
+	* fixfiles: correct usage for r_opts.rootpath
+	* put -p in help for restorecon and
+	* fixfiles: do not try to only label
+	* fixfiles clean up /var/run and /var/lib/debug
+	* fixfiles delete tmp sockets and pipes rather
+	* fixfile use find -delete instead of pipe
+	* chcat man page typo
+	* add man page for genhomedircon
+	* setfiles fix typo
+	* setsebool should inform users they need to
+	* setsebool typos
+	* open_init_tty man page typos
+	* Don't add user site directory to sys.path
+	* newrole retain CAP_SETPCAP
+
 2.1.2 2011-08-02
 	* seunshare: define _GNU_SOURCE earlier
 	* make ignore_enoent do something

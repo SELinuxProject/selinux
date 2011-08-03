@@ -1,3 +1,11 @@
+2.1.2 2011-0803
+	* audit2allow: do not print statistics
+	* make python bindings for restorecon work on relative path
+	* fix python audit2why binding error
+	* support new python3 functions
+	* do not check fcontext duplicates on use
+	* Patch for python3 for libselinux
+
 2.1.1 2011-08-02
 	* move .gitignore into utils
 	* new setexecon utility
