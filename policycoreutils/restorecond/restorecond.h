@@ -24,7 +24,22 @@
 #ifndef RESTORED_CONFIG_H
 #define RESTORED_CONFIG_H
 
-void exitApp(const char *msg);
-void watch_list_add(int inotify_fd, const char *path);
+extern int debug_mode;
+extern const char *homedir;
+extern int terminate;
+extern int master_wd;
+extern int run_as_user;
+
+extern int start(void);
+extern int server(int, const char *watch_file);
+
+extern void exitApp(const char *msg);
+extern void read_config(int fd,	const char *watch_file);
+
+extern int watch(int fd, const char *watch_file);
+extern void watch_list_add(int inotify_fd, const char *path);
+extern int watch_list_find(int wd, const char *file);
+extern void watch_list_free(int fd);
+extern int watch_list_isempty();
 
 #endif

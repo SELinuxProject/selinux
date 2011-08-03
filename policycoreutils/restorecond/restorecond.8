@@ -3,7 +3,7 @@
 restorecond \- daemon that watches for file creation and then sets the default SELinux file context
 
 .SH "SYNOPSIS"
-.B restorecond  [\-d]
+.B restorecond  [\-d] [\-f restorecond_file ] [\-u] [\-v]
 .P
 
 .SH "DESCRIPTION"
@@ -19,13 +19,22 @@ the correct file context associated with the policy.
 .B \-d
 Turns on debugging mode.   Application will stay in the foreground and lots of
 debugs messages start printing.
+.TP
+.B \-f restorecond_file
+Use alternative restorecond.conf file.
+.TP
+.B \-u
+Turns on user mode.  Runs restorecond in the user session and reads /etc/selinux/restorecond_user.conf.  Uses dbus to make sure only one restorecond is running per user session.
+.TP
+.B \-v
+Turns on verbose debugging.  (Report missing files)
 
 .SH "AUTHOR"
-This man page was written by Dan Walsh <dwalsh@redhat.com>.
-The program was written by Dan Walsh <dwalsh@redhat.com>.
+This man page and program was written by Dan Walsh <dwalsh@redhat.com>.
 
 .SH "FILES"
 /etc/selinux/restorecond.conf
+/etc/selinux/restorecond_user.conf
 
 .SH "SEE ALSO"
 .BR restorecon (8),

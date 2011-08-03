@@ -26,7 +26,7 @@ PATH=/sbin:/bin:/usr/bin:/usr/sbin
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-[ -x /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled || exit 0
+[ -x /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled || exit 7
 
 # Check that we are root ... so non-root users stop here
 test $EUID = 0  || exit 4
@@ -75,16 +75,15 @@ case "$1" in
 	status restorecond
 	RETVAL=$?
 	;;
-  restart|reload)
+  force-reload|restart|reload)
 	restart
 	;;
   condrestart)
 	[ -e /var/lock/subsys/restorecond ] && restart || :
 	;;
   *)
-        echo $"Usage: $0 {start|stop|restart|reload|condrestart}"
+        echo $"Usage: $0 {start|stop|restart|force-reload|status|condrestart}"
         RETVAL=3
 esac
 
 exit $RETVAL
-
