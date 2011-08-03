@@ -1,3 +1,8 @@
+/* Workaround for http://bugs.python.org/issue4835 */
+#ifndef SIZEOF_SOCKET_T
+#define SIZEOF_SOCKET_T SIZEOF_INT
+#endif
+
 #include <Python.h>
 #include <unistd.h>
 #include <stdlib.h>
