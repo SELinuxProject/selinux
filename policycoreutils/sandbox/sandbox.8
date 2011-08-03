@@ -3,11 +3,11 @@
 sandbox \- Run cmd under an SELinux sandbox
 .SH SYNOPSIS
 .B sandbox
-[-C] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] cmd
+[-C] [-c] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] cmd
 
 .br
 .B sandbox
-[-C] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] -S
+[-C] [-c] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] -S
 .br
 .SH DESCRIPTION
 .PP
@@ -60,10 +60,19 @@ Default to /usr/bin/matchbox-window-manager.
 Create an X based Sandbox for gui apps, temporary files for
 $HOME and /tmp, secondary Xserver, defaults to sandbox_x_t
 .TP
+\fB\-c\fR
+Use control groups to control this copy of sandbox.  Specify parameters in /etc/sysconfig/sandbox.  Max memory usage and cpu usage are to be specified in percent.  You can specify which CPUs to use by numbering them 0,1,2... etc.
+.TP
 \fB\-C\fR
 Use capabilities within the sandbox.  By default applications executed within the sandbox will not be allowed to use capabilities (setuid apps), with the -C flag, you can use programs requiring capabilities.
 .PP
 .SH "SEE ALSO"
 .TP
-runcon(1)
+runcon(1), seunshare(8), selinux(8)
 .PP
+
+.SH AUTHOR
+This manual page was written by
+.I Dan Walsh <dwalsh@redhat.com>
+and
+.I Thomas Liu <tliu@fedoraproject.org>
