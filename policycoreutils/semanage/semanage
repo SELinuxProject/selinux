@@ -335,11 +335,10 @@ Object-specific Options (see above):
                         
                 target = cmds[0]
 
-
 		if object == "dontaudit":
-			OBJECT = seobject.dontauditClass(store)
-                        OBJECT.toggle(target)
-                        return
+                       OBJECT = seobject.dontauditClass(store)
+                       OBJECT.toggle(target)
+                       return
                               
 		if add:
 			if object == "login":
