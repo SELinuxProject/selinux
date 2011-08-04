@@ -52,7 +52,6 @@ if __name__ == '__main__':
 semanage [ -S store ] -i [ input_file | - ]
 semanage [ -S store ] -o [ output_file | - ]
 
-semanage {boolean|login|user|port|interface|node|fcontext} -{l|D} [-n]
 semanage login -{a|d|m|l|D|E} [-nsr] login_name | %groupname
 semanage user -{a|d|m|l|D|E} [-LnrRP] selinux_name
 semanage port -{a|d|m|l|D|E} [-ntr] [ -p proto ] port | port_range
@@ -60,7 +59,7 @@ semanage interface -{a|d|m|l|D|E} [-ntr] interface_spec
 semanage module -{a|d|m} [--enable|--disable] module
 semanage node -{a|d|m|l|D|E} [-ntr] [ -p protocol ] [-M netmask] addr
 semanage fcontext -{a|d|m|l|D|E} [-efnrst] file_spec
-semanage boolean -{d|m|l|D} [--on|--off|-1|-0] -F boolean | boolean_file
+semanage boolean -{d|m} [--on|--off|-1|-0] -F boolean | boolean_file
 semanage permissive -{d|a|l} [-n] type
 semanage dontaudit [ on | off ]
 
