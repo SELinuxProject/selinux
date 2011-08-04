@@ -9,15 +9,17 @@ CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -I$(INCLUDEDIR)
 LDLIBS = -lsepol -lselinux -L$(LIBDIR)
 
-all: semodule_package
+all: semodule_package semodule_unpackage
 
 semodule_package:  semodule_package.o 
 
 install: all
 	-mkdir -p $(BINDIR)
 	install -m 755 semodule_package $(BINDIR)
+	install -m 755 semodule_unpackage $(BINDIR)
 	test -d $(MANDIR)/man8 || install -m 755 -d $(MANDIR)/man8
 	install -m 644 semodule_package.8 $(MANDIR)/man8/
+	install -m 644 semodule_unpackage.8 $(MANDIR)/man8/
 
 relabel:
 

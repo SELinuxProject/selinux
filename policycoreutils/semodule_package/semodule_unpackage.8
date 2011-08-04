@@ -1,0 +1,24 @@
+.TH SEMODULE_PACKAGE "8" "Nov 2005" "Security Enhanced Linux" NSA
+.SH NAME
+semodule_unpackage \- Extract polciy module and file context file from an SELinux policy module unpackage.
+
+.SH SYNOPSIS
+.B semodule_unpackage <module> [<file contexts>]
+.br
+.SH DESCRIPTION
+.PP
+semodule_unpackage is the tool used to extract the SELinux policy module
+ and file context file from an SELinux Policy Package.
+
+.SH EXAMPLE
+.nf
+# Extract the httpd module file from httpd policy package.
+$ semodule_unpackage httpd.pp httpd.mod httpd.fc
+.fi
+
+.SH SEE ALSO
+.B semodule_package(8)
+.SH AUTHORS
+.nf
+This manual page was written by Dan Walsh <dwalsh@redhat.com>.
+The program was written by Stephen Smalley <sds@tycho.nsa.gov>
