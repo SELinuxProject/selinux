@@ -2296,7 +2296,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 		}
 		if (i == line_len) {
 			ERR(sh,
-			    "WARNING: semanage_fc_sort: Incomplete context.");
+			    "WARNING: semanage_fc_sort: Incomplete context. %s", temp->path);
 			semanage_fc_node_destroy(temp);
 			line_buf = line_end + 1;
 			continue;
@@ -2308,7 +2308,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 
 			if (i + type_len >= line_len) {
 				ERR(sh,
-				    "WARNING: semanage_fc_sort: Incomplete context.");
+				    "WARNING: semanage_fc_sort: Incomplete context. %s", temp->path);
 				semanage_fc_node_destroy(temp);
 				line_buf = line_end + 1;
 				continue;
@@ -2333,7 +2333,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 			}
 			if (i == line_len) {
 				ERR(sh,
-				    "WARNING: semanage_fc_sort: Incomplete context.");
+				    "WARNING: semanage_fc_sort: Incomplete context. %s", temp->path);
 				semanage_fc_node_destroy(temp);
 				line_buf = line_end + 1;
 				continue;
