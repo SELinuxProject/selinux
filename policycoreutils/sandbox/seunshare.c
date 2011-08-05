@@ -45,21 +45,30 @@
 static int verbose = 0;
 
 /**
- * This function will drop all capabilities 
- * Returns zero on success, non-zero otherwise
+ * This function will drop all capabilities.
  */
-static int drop_capabilities(uid_t uid)
+static int drop_caps()
 {
+	if (capng_have_capabilities(CAPNG_SELECT_BOTH) == CAPNG_NONE)
+		return 0;
 	capng_clear(CAPNG_SELECT_BOTH);
-
-	if (capng_lock() < 0) 
-		return -1;
-	/* Change uid */
-	if (setresuid(uid, uid, uid)) {
-		fprintf(stderr, _("Error changing uid, aborting.\n"));
+	if (capng_lock() == -1 || capng_apply(CAPNG_SELECT_BOTH) == -1) {
+		fprintf(stderr, _("Failed to drop all capabilities\n"));
 		return -1;
 	}
-	return capng_apply(CAPNG_SELECT_BOTH);
+	return 0;
+}
+
+/**
+ * This function will drop all privileges.
+ */
+static int drop_privs(uid_t uid)
+{
+	if (drop_caps() == -1 || setresuid(uid, uid, uid) == -1) {
+		fprintf(stderr, _("Failed to drop privileges\n"));
+		return -1;
+	}
+	return 0;
 }
 
 /**
@@ -258,10 +267,8 @@ int main(int argc, char **argv) {
 				return -1;
 	}
 
-	if (drop_capabilities(uid)) {
-		perror(_("Failed to drop all capabilities"));
+	if (drop_privs(uid))
 		return -1;
-	}
 
 	int child = fork();
 	if (child == -1) {
