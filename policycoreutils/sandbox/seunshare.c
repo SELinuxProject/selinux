@@ -97,6 +97,47 @@ static int set_signal_handles(void)
 	return 0;
 }
 
+#define status_to_retval(status,retval) do { \
+	if ((status) == -1) \
+		retval = -1; \
+	else if (WIFEXITED((status))) \
+		retval = WEXITSTATUS((status)); \
+	else if (WIFSIGNALED((status))) \
+		retval = 128 + WTERMSIG((status)); \
+	else \
+		retval = -1; \
+	} while(0)
+
+/**
+ * Spawn external command using system() with dropped privileges.
+ * TODO: avoid system() and use exec*() instead
+ */
+static int spawn_command(const char *cmd, uid_t uid){
+	int child;
+	int status = -1;
+
+	if (verbose > 1)
+		printf("spawn_command: %s\n", cmd);
+
+	child = fork();
+	if (child == -1) {
+		perror(_("Unable to fork"));
+		return status;
+	}
+
+	if (child == 0) {
+		if (drop_privs(uid) != 0) exit(-1);
+
+		status = system(cmd);
+		status_to_retval(status, status);
+		exit(status);
+	}
+
+	waitpid(child, &status, 0);
+	status_to_retval(status, status);
+	return status;
+}
+
 /**
  * This function makes sure the mounted directory is owned by the user executing
  * seunshare.
