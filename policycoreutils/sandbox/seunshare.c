@@ -118,6 +118,65 @@ static int verify_mount(const char *mntdir, struct passwd *pwd) {
 }
 
 /**
+ * Check file/directory ownership, struct stat * must be passed to the
+ * functions.
+ */
+static int check_owner_uid(uid_t uid, const char *file, struct stat *st) {
+	if (S_ISLNK(st->st_mode)) {
+		fprintf(stderr, _("Error: %s must not be a symbolic link\n"), file);
+		return -1;
+	}
+	if (st->st_uid != uid) {
+		fprintf(stderr, _("Error: %s not owned by UID %d\n"), file, uid);
+		return -1;
+	}
+	return 0;
+}
+
+static int check_owner_gid(gid_t gid, const char *file, struct stat *st) {
+	if (S_ISLNK(st->st_mode)) {
+		fprintf(stderr, _("Error: %s must not be a symbolic link\n"), file);
+		return -1;
+	}
+	if (st->st_gid != gid) {
+		fprintf(stderr, _("Error: %s not owned by GID %d\n"), file, gid);
+		return -1;
+	}
+	return 0;
+}
+
+#define equal_stats(one,two) \
+	((one)->st_dev == (two)->st_dev && (one)->st_ino == (two)->st_ino && \
+	 (one)->st_uid == (two)->st_uid && (one)->st_gid == (two)->st_gid && \
+	 (one)->st_mode == (two)->st_mode)
+
+/**
+ * Sanity check specified directory.  Store stat info for future comparison, or
+ * compare with previously saved info to detect replaced directories.
+ * Note: This function does not perform owner checks.
+ */
+static int verify_directory(const char *dir, struct stat *st_in, struct stat *st_out) {
+	struct stat sb;
+
+	if (st_out == NULL) st_out = &sb;
+
+	if (lstat(dir, st_out) == -1) {
+		fprintf(stderr, _("Failed to stat %s: %s\n"), dir, strerror(errno));
+		return -1;
+	}
+	if (! S_ISDIR(st_out->st_mode)) {
+		fprintf(stderr, _("Error: %s is not a directory: %s\n"), dir, strerror(errno));
+		return -1;
+	}
+	if (st_in && !equal_stats(st_in, st_out)) {
+		fprintf(stderr, _("Error: %s was replaced by a different directory\n"), dir);
+		return -1;
+	}
+
+	return 0;
+}
+
+/**
  * This function checks to see if the shell is known in /etc/shells.
  * If so, it returns 0. On error or illegal shell, it returns -1.
  */
