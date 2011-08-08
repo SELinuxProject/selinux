@@ -10,17 +10,12 @@
 #
 # chkconfig: 345 1 99
 #
-# Description: sandbox and other apps that want to use pam_namespace 
-#              on /var/tmp, /tmp and home directories, requires this script
-#              to be run at boot time.
-#              This script sets up the / mount point and all of its 
-#              subdirectories as shared. The script sets up
-#              /tmp, /var/tmp, /home and any homedirs listed in 
-#              /etc/sysconfig/sandbox and all of their subdirectories 
-#              as unshared.
-#              All processes that use pam_namespace will see 
-#              modifications to the global mountspace, except for the
-#              unshared directories.
+# description: sandbox, xguest and other apps that want to use pam_namespace \
+#              require this script be run at boot.  This service script does \
+#              not actually run any service but sets up: \
+#              /var/tmp, /tmp and home directories to be used by these tools.\
+#              If you do not use sandbox, xguest or pam_namespace you can turn \
+#              this service off.\
 #
 
 # Source function library.
@@ -41,15 +36,6 @@ start() {
 
 	touch $LOCKFILE
 	mount --make-rshared / || return $? 
-	mount --rbind /tmp /tmp || return $?
-	mount --rbind /var/tmp /var/tmp || return $?
-	mount --make-private /tmp || return $?
-	mount --make-private /var/tmp || return $?
-	for h in $HOMEDIRS; do
-	    mount --rbind $h $h || return $?
-	    mount --make-private $h || return $?
-	done
-
 	return 0
 }
 
