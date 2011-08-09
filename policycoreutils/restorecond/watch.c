@@ -226,7 +226,9 @@ static void process_config(int fd, FILE * cfg)
 		if (buffer[0] == '~') {
 			if (run_as_user) {
 				char *ptr=NULL;
-				asprintf(&ptr, "%s%s", homedir, &buffer[1]);
+				if (asprintf(&ptr, "%s%s", homedir, &buffer[1]) < 0)
+					exitApp("Error allocating memory.");
+
 				watch_list_add(fd, ptr);
 				free(ptr);
 			} else {

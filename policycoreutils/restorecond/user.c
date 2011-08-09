@@ -190,7 +190,11 @@ int start() {
 static int local_server() {
 	// ! dbus, run as local service
 	char *ptr=NULL;
-	asprintf(&ptr, "%s/.restorecond", homedir);
+	if (asprintf(&ptr, "%s/.restorecond", homedir) < 0) {
+		if (debug_mode)
+			perror("asprintf");
+		return -1;
+	}
 	int fd = open(ptr, O_CREAT | O_WRONLY | O_NOFOLLOW, S_IRUSR | S_IWUSR);
 	if (debug_mode)
 		g_warning ("Lock file: %s", ptr);
