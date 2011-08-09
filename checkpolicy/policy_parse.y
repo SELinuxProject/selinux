@@ -423,6 +423,7 @@ neverallow_def		: NEVERALLOW names names ':' names names  ';'
 		        ;
 attribute_role_def	: ATTRIBUTE_ROLE identifier ';'
 			{if (define_attrib_role()) return -1; }
+		        ;
 role_type_def		: ROLE identifier TYPES names ';'
 			{if (define_role_types()) return -1;}
 			;
