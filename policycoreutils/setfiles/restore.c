@@ -318,10 +318,15 @@ static int process_one(char *name, int recurse_this_path)
 
 
 	ftsent = fts_read(fts_handle);
-	if (ftsent != NULL) {
-		/* Keep the inode of the first one. */
-		dev_num = ftsent->fts_statp->st_dev;
+	if (ftsent == NULL) {
+		fprintf(stderr,
+			"%s: error while labeling %s:  %s\n",
+			r_opts->progname, namelist[0], strerror(errno));
+		goto err;
 	}
+
+	/* Keep the inode of the first one. */
+	dev_num = ftsent->fts_statp->st_dev;
 
 	do {
 		rc = 0;
