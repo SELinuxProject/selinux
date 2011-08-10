@@ -66,15 +66,15 @@ def error_exit(msg):
     sys.stderr.flush()
     sys.exit(1)
 
-def copyfile(file, dir, dest):
+def copyfile(file, srcdir, dest):
        import re
-       if file.startswith(dir):
+       if file.startswith(srcdir):
               dname = os.path.dirname(file)
               bname = os.path.basename(file)
-              if dname == dir:
+              if dname == srcdir:
                      dest = dest + "/" + bname
               else:
-                     newdir = re.sub(dir, dest, dname)
+                     newdir = re.sub(srcdir, dest, dname)
                      if not os.path.exists(newdir):
                             os.makedirs(newdir)
                      dest = newdir + "/" + bname
