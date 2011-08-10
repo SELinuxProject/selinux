@@ -1,5 +1,6 @@
 #! /usr/bin/python -Es
 # Authors: Dan Walsh <dwalsh@redhat.com>
+# Authors: Thomas Liu <tliu@fedoraproject.org>
 # Authors: Josh Cogliati
 #
 # Copyright (C) 2009,2010  Red Hat
@@ -27,7 +28,8 @@ import pwd
 
 PROGNAME = "policycoreutils"
 HOMEDIR=pwd.getpwuid(os.getuid()).pw_dir
-
+SEUNSHARE = "/usr/sbin/seunshare"
+SANDBOXSH = "/usr/share/sandbox/sandboxX.sh"
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
@@ -161,10 +163,10 @@ class Sandbox:
                   if not self.__options.homedir or not self.__options.tmpdir:
                          self.usage(_("Homedir and tempdir required for level mounts"))
 
-           if not os.path.exists("/usr/sbin/seunshare"):
+           if not os.path.exists(SEUNSHARE):
                   raise ValueError(_("""
-/usr/sbin/seunshare is required for the action you want to perform.  
-"""))
+%s is required for the action you want to perform.
+""") % SEUNSHARE)
 
     def __mount_callback(self, option, opt, value, parser):
            self.__mount = True
@@ -359,12 +361,12 @@ sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-
 
                          self.__setup_sandboxrc(self.__options.wm)
                          
-                         cmds = [ '/usr/sbin/seunshare', "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon, "/usr/share/sandbox/sandboxX.sh" ]
+                         cmds = [ SEUNSHARE, "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon, SANDBOXSH ]
                          rc = subprocess.Popen(cmds).wait()
                          return rc
 
                   if self.__mount:
-                         cmds =  [ '/usr/sbin/seunshare', "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon ] + self.__paths
+                         cmds =  [ SEUNSHARE, "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon ] + self.__paths
                          rc = subprocess.Popen(cmds).wait()
                          return rc
 
