@@ -43,6 +43,7 @@ except IOError:
        import __builtin__
        __builtin__.__dict__['_'] = unicode
 
+DEFAULT_WINDOWSIZE = "1000x700"
 DEFAULT_TYPE = "sandbox_t"
 DEFAULT_X_TYPE = "sandbox_x_t"
 SAVE_FILES = {}
@@ -241,9 +242,9 @@ kill -TERM $WM_PID  2> /dev/null
     def __parse_options(self):
         from optparse import OptionParser
         usage = _("""
-sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [[-i file ] ...] [ -t type ] command
+sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] command
 
-sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [[-i file ] ...] [ -t type ] -S
+sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] -S
 """)
         
         parser = OptionParser(version=self.VERSION, usage=usage)
@@ -278,6 +279,10 @@ sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-
                           type="string",
                           action="callback", callback=self.__validdir,
                           help=_("alternate /tmp directory to use for mounting"))
+
+        parser.add_option("-w", "--windowsize", dest="windowsize",
+                          type="string", default=DEFAULT_WINDOWSIZE,
+                          help="size of the sandbox window")
 
         parser.add_option("-W", "--windowmanager", dest="wm",  
                           type="string",
@@ -370,7 +375,7 @@ sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-
 
                          self.__setup_sandboxrc(self.__options.wm)
                          
-                         cmds = [ SEUNSHARE, "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon, SANDBOXSH ]
+                         cmds = [ SEUNSHARE, "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon, SANDBOXSH, self.__options.windowsize ]
                          rc = subprocess.Popen(cmds).wait()
                          return rc
 

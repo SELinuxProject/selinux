@@ -1,10 +1,13 @@
-.TH SANDBOX "8" "May 2009" "chcat" "User Commands"
+.TH SANDBOX "8" "May 2010" "sandbox" "User Commands"
 .SH NAME
 sandbox \- Run cmd under an SELinux sandbox
 .SH SYNOPSIS
 .B sandbox
-[-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [[-i file ]...] [ -t type ] cmd
-[-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [[-i file ]...] [ -t type ] -S
+[-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] cmd
+
+.br
+.B sandbox
+[-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] -S
 .br
 .SH DESCRIPTION
 .PP
@@ -41,6 +44,12 @@ Use alternate sandbox type, defaults to sandbox_t or sandbox_x_t for -X.
 .TP
 \fB\-T\ tmpdir
 Use alternate tempory directory to mount on /tmp.  Defaults to tmpfs. Requires -X or -M.
+.TP
+\fB\-S
+Run a full desktop session, Requires level, and home and tmpdir.
+.TP
+\fB\-w windowsize\fR
+Specifies the windowsize when creating an X based Sandbox. The default windowsize is 1000x700.
 .TP
 \fB\-W windowmanager\fR
 Select alternative window manager to run within 
