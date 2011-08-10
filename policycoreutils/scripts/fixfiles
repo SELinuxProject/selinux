@@ -3,7 +3,7 @@
 #
 # Script to restore labels on a SELinux box
 #
-# Copyright (C) 2004-2009 Red Hat, Inc.
+# Copyright (C) 2004-2011 Red Hat, Inc.
 # Authors: Dan Walsh <dwalsh@redhat.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -62,6 +62,23 @@ FS=`get_all_labeled_mounts | sort | uniq`
 for i in $FS; do
 	grep " $i " /proc/self/mounts | awk '{print $4}' | egrep --silent '(^|,)ro(,|$)' && echo $i
 done
+}
+
+#
+# Get the default label returned from the kernel for a file with a lable the 
+# kernel does not understand
+#
+get_undefined_type() {
+	SELINUXMNT=`grep selinuxfs /proc/self/mountinfo | head -1 | awk '{ print $5 }'`
+	cat ${SELINUXMNT}/initial_contexts/unlabeled | secon -t
+}
+
+#
+# Get the default label for a file without a label
+#
+get_unlabeled_type() {
+	SELINUXMNT=`grep selinuxfs /proc/self/mountinfo | head -1 | awk '{ print $5 }'`
+	cat $SELINUXMNT/initial_contexts/file | secon -t 
 }
 
 exclude_dirs_from_relabelling() {
@@ -220,11 +237,13 @@ fi
 ${SETFILES} -q ${SYSLOGFLAG} ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 | cat >> $LOGFILE
 rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-* $TEMPFCFILE
 
-find /tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) \( -type s -o -type p \) -delete
-find /tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
-find /var/tmp \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t tmp_t {} \;
-find /var/run \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t var_run_t {} \;
-[ -e /var/lib/debug ] && find /var/lib/debug \( -context "*:file_t*" -o -context "*:unlabeled_t*" \) -exec chcon -t lib_t {} \;
+UNDEFINED=`get_undefined_type` || exit $?
+UNLABELED=`get_unlabeled_type` || exit $?
+find /tmp \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) \( -type s -o -type p \) -delete
+find /tmp \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) -exec chcon --reference /tmp {} \;
+find /var/tmp \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) -exec chcon --reference /var/tmp {} \;
+find /var/run \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) -exec chcon --reference /var/run {} \;
+[ -e /var/lib/debug ] && find /var/lib/debug \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) -exec chcon --reference /lib {} \;
 exit $?
 }
 
