@@ -237,7 +237,7 @@ class Sandbox:
 /usr/bin/test -r ~/.xmodmap && /usr/bin/xmodmap ~/.xmodmap
 %s &
 WM_PID=$!
-%s
+dbus-launch --exit-with-session %s
 kill -TERM $WM_PID  2> /dev/null
 """ % (command, wm, command))
            fd.close()
