@@ -20,11 +20,13 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 
-import os, sys, socket, random, fcntl, shutil, re, subprocess
+import os, stat, sys, socket, random, fcntl, shutil, re, subprocess
 import selinux
 import signal
 from tempfile import mkdtemp
 import pwd
+import commands
+import setools
 
 PROGNAME = "policycoreutils"
 HOMEDIR=pwd.getpwuid(os.getuid()).pw_dir
@@ -84,9 +86,10 @@ def copyfile(file, srcdir, dest):
                             shutil.copytree(file, dest)
                      else:
                             shutil.copy2(file, dest)
+
               except shutil.Error, elist:
-                     for e in elist:
-                            sys.stderr.write(e[1])
+                     for e in elist.message:
+                            sys.stderr.write(e[2])
                      
               SAVE_FILES[file] = (dest, os.path.getmtime(dest))
 
@@ -206,6 +209,8 @@ class Sandbox:
                          self.__include(option, opt, i[:-1], parser)
                   except IOError, e:
                          sys.stderr.write(str(e))
+                  except TypeError, e:
+                         sys.stderr.write(str(e))
            fd.close()
 
     def __copyfiles(self):
@@ -224,7 +229,9 @@ class Sandbox:
 /etc/gdm/Xsession
 """)
            else:
-                  command = " ".join(self.__paths)
+                  command = self.__paths[0] + " "
+                  for p in self.__paths[1:]:
+                         command += "'%s' " % p
                   fd.write("""#! /bin/sh
 #TITLE: %s
 /usr/bin/test -r ~/.xmodmap && /usr/bin/xmodmap ~/.xmodmap
@@ -241,12 +248,22 @@ kill -TERM $WM_PID  2> /dev/null
 
     def __parse_options(self):
         from optparse import OptionParser
-        usage = _("""
-sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] command
+        types = ""
+        try:
+               types = _("""
+Policy defines the following types for use with the -t:
+\t%s
+""") % "\n\t".join(setools.seinfo(setools.ATTRIBUTE, "sandbox_type")[0]['types'])
+        except RuntimeError:
+               pass
 
-sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] -S
-""")
-        
+        usage = _("""
+sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] command
+
+sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] -S
+%s
+""") % types
+
         parser = OptionParser(version=self.VERSION, usage=usage)
         parser.disable_interspersed_args()
         parser.add_option("-i", "--include", 
@@ -298,7 +315,7 @@ sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-
 
         if self.__options.X_ind:
                self.setype = DEFAULT_X_TYPE
-        
+
         if self.__options.setype:
                self.setype = self.__options.setype
 
@@ -316,6 +333,10 @@ sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-
                self.__homedir = self.__options.homedir
                self.__tmpdir = self.__options.tmpdir
         else:
+               if self.__options.level:
+                      self.__homedir = self.__options.homedir
+                      self.__tmpdir = self.__options.tmpdir
+
                if len(cmds) == 0:
                       self.usage(_("Command required"))
                cmds[0] = fullpath(cmds[0])
@@ -368,24 +389,21 @@ sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-
     def __execute(self):
            try:
                   cmds = [ SEUNSHARE,  "-Z", self.__execcon ]
-                  if self.__options.X_ind:
-                         xmodmapfile = self.__homedir + "/.xmodmap"
-                         xd = open(xmodmapfile,"w")
-                         subprocess.Popen(["/usr/bin/xmodmap","-pke"],stdout=xd).wait()
-                         xd.close()
-
-                         self.__setup_sandboxrc(self.__options.wm)
-                         
-                         cmds += [ "-t", self.__tmpdir, "-h", self.__homedir ]
-                         cmds += [ "--", SANDBOXSH, self.__options.windowsize ]
-                         rc = subprocess.Popen(cmds).wait()
-                         return rc
-
                   if self.__mount:
-                         cmds += [ SEUNSHARE, "-t", self.__tmpdir, "-h", self.__homedir ]
-                         cmds += [ "--", self.__execcon ] + self.__paths
-                         rc = subprocess.Popen(cmds).wait()
-                         return rc
+                         cmds +=  [ "-t", self.__tmpdir, "-h", self.__homedir ]
+
+                         if self.__options.X_ind:
+                                xmodmapfile = self.__homedir + "/.xmodmap"
+                                xd = open(xmodmapfile,"w")
+                                subprocess.Popen(["/usr/bin/xmodmap","-pke"],stdout=xd).wait()
+                                xd.close()
+
+                                self.__setup_sandboxrc(self.__options.wm)
+
+                                cmds += [ "--", SANDBOXSH, self.__options.windowsize ]
+                         else:
+                                cmds += [ "--" ] + self.__paths
+                         return subprocess.Popen(cmds).wait()
 
                   selinux.setexeccon(self.__execcon)
                   rc = subprocess.Popen(self.__cmds).wait()
@@ -423,7 +441,7 @@ if __name__ == '__main__':
            sandbox = Sandbox()
            rc = sandbox.main()
     except OSError, error:
-           error_exit(error.args[1])
+           error_exit(error)
     except ValueError, error:
            error_exit(error.args[0])
     except KeyError, error:
