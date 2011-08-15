@@ -40,7 +40,7 @@
 #endif
 
 #define DEFAULT_PATH "/usr/bin:/bin"
-#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -t tmpdir ] [ -h homedir ] -- CONTEXT executable [args] ")
+#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -t tmpdir ] [ -h homedir ] [ -Z CONTEXT ] -- executable [args] ")
 
 static int verbose = 0;
 
@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
 	int rc;
 	int status = -1;
 
-	security_context_t scontext;
+	security_context_t scontext = NULL;
 
 	int flag_index;		/* flag index in argv[] */
 	int clflag;		/* holds codes for command line flags */
@@ -170,6 +170,7 @@ int main(int argc, char **argv) {
 		{"homedir", 1, 0, 'h'},
 		{"tmpdir", 1, 0, 't'},
 		{"verbose", 1, 0, 'v'},
+		{"context", 1, 0, 'Z'},
 		{NULL, 0, 0, 0}
 	};
 
@@ -192,7 +193,7 @@ int main(int argc, char **argv) {
 	}
 
 	while (1) {
-		clflag = getopt_long(argc, argv, "h:t:", long_options,
+		clflag = getopt_long(argc, argv, "cvh:t:Z:", long_options,
 				     &flag_index);
 		if (clflag == -1)
 			break;
@@ -216,6 +217,9 @@ int main(int argc, char **argv) {
 		case 'v':
 			verbose = 1;
 			break;
+		case 'Z':
+			scontext = strdup(optarg);
+			break;
 		default:
 			fprintf(stderr, "%s\n", USAGE_STRING);
 			return -1;
@@ -228,14 +232,11 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	if (argc - optind < 2) {
-		fprintf(stderr, _("Error: context and executable required \n"),
-			"%s\n", USAGE_STRING);
+	if (argc - optind < 1) {
+		fprintf(stderr, _("Error: executable required \n %s \n"), USAGE_STRING);
 		return -1;
 	}
 
-	scontext = argv[optind++];
-	
 	if (set_signal_handles())
 		return -1;
 
@@ -285,12 +286,14 @@ int main(int argc, char **argv) {
 			free(display);
 			exit(-1);
 		}
-		
-		if (setexeccon(scontext)) {
-			fprintf(stderr, _("Could not set exec context to %s.\n"),
-				scontext);
-			free(display);
-			exit(-1);
+
+		if (scontext) {
+			if (setexeccon(scontext)) {
+				fprintf(stderr, _("Could not set exec context to %s.\n"),
+					scontext);
+				free(display);
+				exit(-1);
+			}
 		}
 
 		if (display) 
@@ -316,6 +319,7 @@ int main(int argc, char **argv) {
 
 	free(tmpdir_s);
 	free(homedir_s);
+	free(scontext);
 
 	return status;
 }

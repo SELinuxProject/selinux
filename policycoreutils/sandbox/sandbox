@@ -367,6 +367,7 @@ sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-
 
     def __execute(self):
            try:
+                  cmds = [ SEUNSHARE,  "-Z", self.__execcon ]
                   if self.__options.X_ind:
                          xmodmapfile = self.__homedir + "/.xmodmap"
                          xd = open(xmodmapfile,"w")
@@ -375,12 +376,14 @@ sandbox [-h] [-[X|M] [-l level ] [-H homedir] [-T tempdir]] [-I includefile ] [-
 
                          self.__setup_sandboxrc(self.__options.wm)
                          
-                         cmds = [ SEUNSHARE, "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon, SANDBOXSH, self.__options.windowsize ]
+                         cmds += [ "-t", self.__tmpdir, "-h", self.__homedir ]
+                         cmds += [ "--", SANDBOXSH, self.__options.windowsize ]
                          rc = subprocess.Popen(cmds).wait()
                          return rc
 
                   if self.__mount:
-                         cmds =  [ SEUNSHARE, "-t", self.__tmpdir, "-h", self.__homedir, "--", self.__execcon ] + self.__paths
+                         cmds += [ SEUNSHARE, "-t", self.__tmpdir, "-h", self.__homedir ]
+                         cmds += [ "--", self.__execcon ] + self.__paths
                          rc = subprocess.Popen(cmds).wait()
                          return rc
 
