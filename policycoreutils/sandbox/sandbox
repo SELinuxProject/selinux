@@ -29,7 +29,6 @@ import commands
 import setools
 
 PROGNAME = "policycoreutils"
-HOMEDIR=pwd.getpwuid(os.getuid()).pw_dir
 SEUNSHARE = "/usr/sbin/seunshare"
 SANDBOXSH = "/usr/share/sandbox/sandboxX.sh"
 import gettext
@@ -374,23 +373,20 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
     def __setup_dir(self):
            if self.__options.level or self.__options.session:
                   return
-           sandboxdir = HOMEDIR + "/.sandbox"
-           if not os.path.exists(sandboxdir):
-                  os.mkdir(sandboxdir)
 
            if self.__options.homedir:
                   selinux.chcon(self.__options.homedir, self.__filecon, recursive=True)
                   self.__homedir = self.__options.homedir
            else:
                   selinux.setfscreatecon(self.__filecon)
-                  self.__homedir = mkdtemp(dir=sandboxdir, prefix=".sandbox")
+                  self.__homedir = mkdtemp(dir="/tmp", prefix=".sandbox_home_")
 
            if self.__options.tmpdir:
                   selinux.chcon(self.__options.tmpdir, self.__filecon, recursive=True)
                   self.__tmpdir = self.__options.tmpdir
            else:
                   selinux.setfscreatecon(self.__filecon)
-                  self.__tmpdir = mkdtemp(dir="/tmp", prefix=".sandbox")
+                  self.__tmpdir = mkdtemp(dir="/tmp", prefix=".sandbox_tmp_")
            selinux.setfscreatecon(None)
            self.__copyfiles()
 
