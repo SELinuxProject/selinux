@@ -1,0 +1,9 @@
+#! /usr/bin/python -Es
+import gtk, commands, sys
+rc = [-1,'']
+try:
+    rc=commands.getstatusoutput(sys.argv[1])
+except:
+    pass
+if rc[0] == 0:
+    print rc[1]

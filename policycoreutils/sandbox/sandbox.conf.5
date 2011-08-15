@@ -1,0 +1,40 @@
+.TH sandbox.conf "5" "June 2010" "sandbox.conf" "Linux System Administration"
+.SH NAME
+sandbox.conf \- user config file for the SELinux sandbox
+.SH DESCRIPTION
+.PP
+When running sandbox with the -C argument, it will be confined using control groups and a system administrator can specify how the sandbox is confined.
+
+.PP
+Everything after "#" is ignored, as are empty lines.  All arguments should be separated by and equals sign ("=").
+
+.PP
+These keywords are allowed.
+
+.RS
+.TP
+.B NAME
+The name of the sandbox control group.  Default is "sandbox".
+
+.TP
+.B CPUAFFINITY
+Which cpus to assign sandbox to.  The default is ALL, but users can specify a comma-separated list with dashes ("-") to represent ranges.  Ex: 0-2,5
+
+.TP
+.B MEMUSAGE
+How much memory to allow sandbox to use.  The default is 80%.  Users can specify either a percentage or a value in the form of a number followed by one of the suffixes K, M, G to denote kilobytes, megabytes or gigabytes respectively.  Ex: 50% or 100M
+
+.TP
+.B CPUUSAGE
+Percentage of cpu sandbox should be allowed to use.  The default is 80%.  Specify a value followed by a percent sign ("%"). Ex: 50%
+
+
+
+.SH "SEE ALSO"
+.TP
+sandbox(8)
+.PP
+
+.SH AUTHOR
+This manual page was written by
+.I Thomas Liu <tliu@fedoraproject.org>
