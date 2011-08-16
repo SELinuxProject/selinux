@@ -1,3 +1,8 @@
+/*
+ * Authors: Dan Walsh <dwalsh@redhat.com>
+ * Authors: Thomas Liu <tliu@fedoraproject.org>
+ */
+
 #define _GNU_SOURCE
 #include <signal.h>
 #include <sys/fsuid.h>
@@ -40,6 +45,10 @@
 
 #ifndef MS_PRIVATE
 #define MS_PRIVATE 1<<18
+#endif
+
+#ifndef PACKAGE
+#define PACKAGE "policycoreutils"	/* the name of this package lang translation */
 #endif
 
 #define BUF_SIZE 1024
@@ -847,6 +856,12 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 */
+
+#ifdef USE_NLS
+	setlocale(LC_ALL, "");
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	textdomain(PACKAGE);
+#endif
 
 	struct passwd *pwd=getpwuid(uid);
 	if (!pwd) {
