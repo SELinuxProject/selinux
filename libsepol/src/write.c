@@ -972,6 +972,19 @@ static int role_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 
 	role = (role_datum_t *) datum;
 
+	/*
+	 * Role attributes are redundant for policy.X, skip them
+	 * when writing the roles symbol table. They are also skipped
+	 * when pp is downgraded.
+	 *
+	 * Their numbers would be deducted in policydb_write().
+	 */
+	if ((role->flavor == ROLE_ATTRIB) &&
+	    ((p->policy_type == POLICY_KERN) ||
+	     (p->policy_type != POLICY_KERN &&
+	      p->policyvers < MOD_POLICYDB_VERSION_ROLEATTRIB)))
+		return POLICYDB_SUCCESS;
+
 	len = strlen(key);
 	items = 0;
 	buf[items++] = cpu_to_le32(len);
@@ -1795,6 +1808,19 @@ static int type_attr_uncount(hashtab_key_t key __attribute__ ((unused)),
 	return 0;
 }
 
+static int role_attr_uncount(hashtab_key_t key __attribute__ ((unused)),
+			     hashtab_datum_t datum, void *args)
+{
+	role_datum_t *role = datum;
+	uint32_t *p_nel = args;
+
+	if (role->flavor == ROLE_ATTRIB) {
+		/* uncount attribute from total number of roles */
+		(*p_nel)--;
+	}
+	return 0;
+}
+
 /*
  * Write the configuration data in a policy database
  * structure to a policy database binary representation
@@ -1926,7 +1952,7 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 	num_syms = info->sym_num;
 	for (i = 0; i < num_syms; i++) {
 		buf[0] = cpu_to_le32(p->symtab[i].nprim);
-		buf[1] = cpu_to_le32(p->symtab[i].table->nel);
+		buf[1] = p->symtab[i].table->nel;
 
 		/*
 		 * A special case when writing type/attribute symbol table.
@@ -1939,6 +1965,20 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 		    p->policy_type == POLICY_KERN) {
 			hashtab_map(p->symtab[i].table, type_attr_uncount, &buf[1]);
 		}
+
+		/*
+		 * Another special case when writing role/attribute symbol
+		 * table, role attributes are redundant for policy.X, or
+		 * when the pp's version is not big enough. So deduct
+		 * their numbers from p_roles.table->nel.
+		 */
+		if ((i == SYM_ROLES) &&
+		    ((p->policy_type == POLICY_KERN) ||
+		     (p->policy_type != POLICY_KERN &&
+		      p->policyvers < MOD_POLICYDB_VERSION_ROLEATTRIB)))
+			hashtab_map(p->symtab[i].table, role_attr_uncount, &buf[1]);
+
+		buf[1] = cpu_to_le32(buf[1]);
 		items = put_entry(buf, sizeof(uint32_t), 2, fp);
 		if (items != 2)
 			return POLICYDB_ERROR;
