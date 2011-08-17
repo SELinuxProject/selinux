@@ -1,3 +1,10 @@
+2.1.2 2011-08-17
+	* print error debug info for buggy fc
+	* introduce semanage_set_root and friends
+	* throw exceptions in python rather than return
+	* python3 support.
+	* patch for MCS/MLS in user files
+
 2.1.1 2011-08-01
 	* Remove generated files, expand .gitignore
 	* Use -Werror and change a few prototypes to support it

@@ -1,3 +1,8 @@
+2.1.4 2011-0817
+	* mapping fix for invalid class/perms after selinux_set_mapping
+	* audit2why: work around python bug not defining
+	* resolv symlinks and dot directories before matching
+
 2.1.2 2011-0803
 	* audit2allow: do not print statistics
 	* make python bindings for restorecon work on relative path

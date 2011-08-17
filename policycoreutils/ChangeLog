@@ -1,3 +1,32 @@
+2.1.4 2011-08-17
+	* run_init: clarification of the usage in the
+	* semanage: fix usage header around booleans
+	* semanage: remove useless empty lines
+	* semanage: update man page with new examples
+	* semanage: update usage text
+	* semanage: introduce file context equivalencies
+	* semanage: enable and disable modules
+	* semanage: output all local modifications
+	* semanage: introduce extraction of local configuration
+	* semanage: cleanup error on invalid operation
+	* semanage: handle being called with no arguments
+	* semanage: return sooner to save CPU time
+	* semanage: surround getopt with try/except
+	* semanage: use define/raise instead of lots of
+	* semanage: some options are only valid for
+	* semanage: introduce better deleteall support
+	* semanage: do not allow spaces in file
+	* semanage: distinguish between builtin and local permissive
+	* semanage: centralized ip node handling
+	* setfiles: make the restore function exclude() non-static
+	* setfiles: use glob to handle ~ and
+	* fixfiles: do not hard code types
+	* fixfiles: stop trying to be smart about
+	* fixfiles: use new kernel seclabel option
+	* fixfiles: pipe everything to cat before sending
+	* fixfiles: introduce /etc/selinux/fixfiles_exclude_dirs
+	* semodule: support for alternative root paths
+
 2.1.3 2011-08-03
 	* semanage: fix indention
 	* semodule_package: fix man page typo
