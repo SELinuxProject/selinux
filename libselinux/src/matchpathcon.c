@@ -5,6 +5,7 @@
 #include "selinux_internal.h"
 #include "label_internal.h"
 #include "callbacks.h"
+#include <limits.h>
 
 static __thread struct selabel_handle *hnd;
 
@@ -337,14 +338,82 @@ void matchpathcon_fini(void)
 	}
 }
 
-int matchpathcon(const char *name, mode_t mode, security_context_t * con)
+/*
+ * We do not want to resolve a symlink to a real path if it is the final
+ * component of the name.  Thus we split the pathname on the last "/" and
+ * determine a real path component of the first portion.  We then have to
+ * copy the last part back on to get the final real path.  Wheww.
+ */
+static int symlink_realpath(const char *name, char *resolved_path)
 {
+	char *last_component;
+	char *tmp_path, *p;
+	size_t len = 0;
+	int rc = 0;
+
+	tmp_path = strdup(name);
+	if (!tmp_path) {
+		fprintf(stderr, "symlink_realpath(%s) strdup() failed: %s\n",
+			name, strerror(errno));
+		rc = -1;
+		goto out;
+	}
+
+	last_component = strrchr(tmp_path, '/');
+
+	if (last_component == tmp_path) {
+		last_component++;
+		p = strcpy(resolved_path, "/");
+	} else if (last_component) {
+		*last_component = '\0';
+		last_component++;
+		p = realpath(tmp_path, resolved_path);
+	} else {
+		last_component = tmp_path;
+		p = realpath("./", resolved_path);
+	}
+
+	if (!p) {
+		fprintf(stderr, "symlink_realpath(%s) realpath() failed: %s\n",
+			name, strerror(errno));
+		rc = -1;
+		goto out;
+	}
+
+	len = strlen(p);
+	if (len + strlen(last_component) + 1 > PATH_MAX) {
+		fprintf(stderr, "symlink_realpath(%s) failed: Filename too long \n",
+			name);
+		rc = -1;
+		goto out;
+	}
+
+	resolved_path += len;
+	strcpy(resolved_path, last_component);
+out:
+	free(tmp_path);
+	return rc;
+}
+
+int matchpathcon(const char *path, mode_t mode, security_context_t * con)
+{
+	char stackpath[PATH_MAX + 1];
+	char *p = NULL;
 	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0))
 			return -1;
 
+	if (S_ISLNK(mode)) {
+		if (!symlink_realpath(path, stackpath))
+			path = stackpath;
+	} else {
+		p = realpath(path, stackpath);
+		if (p)
+			path = p;
+	}
+
 	return notrans ?
-		selabel_lookup_raw(hnd, con, name, mode) :
-		selabel_lookup(hnd, con, name, mode);
+		selabel_lookup_raw(hnd, con, path, mode) :
+		selabel_lookup(hnd, con, path, mode);
 }
 
 int matchpathcon_index(const char *name, mode_t mode, security_context_t * con)
