@@ -32,6 +32,7 @@ in a variety of ways, but they are the fundamental representation of access.
 """
 
 import refpolicy
+from selinux import audit2why
 
 def is_idparam(id):
     """Determine if an id is a paramater in the form $N, where N is
@@ -85,6 +86,8 @@ class AccessVector:
             self.obj_class = None
             self.perms = refpolicy.IdSet()
             self.audit_msgs = []
+            self.type = audit2why.TERULE
+            self.bools = []
 
         # The direction of the information flow represented by this
         # access vector - used for matching
@@ -253,20 +256,22 @@ class AccessVectorSet:
         for av in l:
             self.add_av(AccessVector(av))
 
-    def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None):
+    def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None, avc_type=audit2why.TERULE, bools=[]):
         """Add an access vector to the set.
         """
         tgt = self.src.setdefault(src_type, { })
         cls = tgt.setdefault(tgt_type, { })
         
-        if cls.has_key(obj_class):
-            access = cls[obj_class]
+        if cls.has_key((obj_class, avc_type)):
+            access = cls[obj_class, avc_type]
         else:
             access = AccessVector()
             access.src_type = src_type
             access.tgt_type = tgt_type
             access.obj_class = obj_class
-            cls[obj_class] = access
+            access.bools = bools
+            access.type = avc_type
+            cls[obj_class, avc_type] = access
 
         access.perms.update(perms)
         if audit_msg:
