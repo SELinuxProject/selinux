@@ -29,6 +29,8 @@ import matching
 
 from sepolgeni18n import _
 
+import copy
+
 class Param:
     """
     Object representing a paramater for an interface.
@@ -197,10 +199,48 @@ def ifcall_extract_params(ifcall, params):
                 ret = 1
 
     return ret
-            
+
+class AttributeVector:
+    def __init__(self):
+        self.name = ""
+        self.access = access.AccessVectorSet()
+
+    def add_av(self, av):
+        self.access.add_av(av)
+
+class AttributeSet:
+    def __init__(self):
+        self.attributes = { }
+
+    def add_attr(self, attr):
+        self.attributes[attr.name] = attr
+
+    def from_file(self, fd):
+        def parse_attr(line):
+            fields = line[1:-1].split()
+            if len(fields) != 2 or fields[0] != "Attribute":
+                raise SyntaxError("Syntax error Attribute statement %s" % line)
+            a = AttributeVector()
+            a.name = fields[1]
+
+            return a
+
+        a = None
+        for line in fd:
+            line = line[:-1]
+            if line[0] == "[":
+                if a:
+                    self.add_attr(a)
+                a = parse_attr(line)
+            elif a:
+                l = line.split(",")
+                av = access.AccessVector(l)
+                a.add_av(av)
+        if a:
+            self.add_attr(a)
 
 class InterfaceVector:
-    def __init__(self, interface=None):
+    def __init__(self, interface=None, attributes={}):
         # Enabled is a loose concept currently - we are essentially
         # not enabling interfaces that we can't handle currently.
         # See InterfaceVector.add_ifv for more information.
@@ -214,10 +254,10 @@ class InterfaceVector:
         # value: Param object).
         self.params = { }
         if interface:
-            self.from_interface(interface)
+            self.from_interface(interface, attributes)
         self.expanded = False
 
-    def from_interface(self, interface):
+    def from_interface(self, interface, attributes={}):
         self.name = interface.name
 
         # Add allow rules
@@ -231,6 +271,23 @@ class InterfaceVector:
             avs = access.avrule_to_access_vectors(avrule)
             for av in avs:
                 self.add_av(av)
+
+        # Add typeattribute access
+        if attributes != None:
+            for typeattribute in interface.typeattributes():
+                for attr in typeattribute.attributes:
+                    if not attributes.attributes.has_key(attr):
+                        # print "missing attribute " + attr
+                        continue
+                    attr_vec = attributes.attributes[attr]
+                    for a in attr_vec.access:
+                        av = copy.copy(a)
+                        if av.src_type == attr_vec.name:
+                            av.src_type = typeattribute.type
+                        if av.tgt_type == attr_vec.name:
+                            av.tgt_type = typeattribute.type
+                        self.add_av(av)
+
 
         # Extract paramaters from roles
         for role in interface.roles():
@@ -346,13 +403,13 @@ class InterfaceSet:
                 l = self.tgt_type_map.setdefault(type, [])
                 l.append(ifv)
 
-    def add(self, interface):
-        ifv = InterfaceVector(interface)
+    def add(self, interface, attributes={}):
+        ifv = InterfaceVector(interface, attributes)
         self.add_ifv(ifv)
 
-    def add_headers(self, headers, output=None):
+    def add_headers(self, headers, output=None, attributes={}):
         for i in itertools.chain(headers.interfaces(), headers.templates()):
-            self.add(i)
+            self.add(i, attributes)
 
         self.expand_ifcalls(headers)
         self.index()
