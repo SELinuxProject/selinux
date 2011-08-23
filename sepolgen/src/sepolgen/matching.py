@@ -50,7 +50,7 @@ class Match:
                 return 1
 
 class MatchList:
-    DEFAULT_THRESHOLD = 120
+    DEFAULT_THRESHOLD = 150
     def __init__(self):
         # Match objects that pass the threshold
         self.children = []
@@ -63,14 +63,15 @@ class MatchList:
     def best(self):
         if len(self.children):
             return self.children[0]
-        else:
-            return None
+        if len(self.bastards):
+            return self.bastards[0]
+        return None
 
     def __len__(self):
         # Only return the length of the matches so
         # that this can be used to test if there is
         # a match.
-        return len(self.children)
+        return len(self.children) + len(self.bastards)
 
     def __iter__(self):
         return iter(self.children)
