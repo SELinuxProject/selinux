@@ -124,7 +124,7 @@ class filesystem 10
           quotamod     w           1
           quotaget     r           1
 
-class file 20
+class file 21
   execute_no_trans     r           1
         entrypoint     r           1
            execmod     n           1
@@ -141,48 +141,27 @@ class file 20
             unlink     w           1
               link     w           1
             rename     w           5
-           execute     r           100
+           execute     r           10
             swapon     b           1
            quotaon     b           1
            mounton     b           1
+	      open     r	   1
 
-class dir 22
-          add_name     w           5
+class dir 23
+          add_name     w           1
        remove_name     w           1
           reparent     w           1
             search     r           1
              rmdir     b           1
              ioctl     n           1
-              read     r          10
-             write     w          10
+              read     r           1
+             write     w           1
             create     w           1
-           getattr     r           7
-           setattr     w           7
+           getattr     r           1
+           setattr     w           1
               lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-            unlink     w           1
-              link     w           1
-            rename     w           5
-           execute     r           1
-            swapon     b           1
-           quotaon     b           1
-           mounton     b           1
-
-class fd 1
-               use     b           1
-
-class lnk_file 17
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
+       relabelfrom     r           1
+         relabelto     w           1
             append     w           1
             unlink     w           1
               link     w           1
@@ -191,8 +170,32 @@ class lnk_file 17
             swapon     b           1
            quotaon     b           1
            mounton     b           1
+	      open     r	   1
 
-class chr_file 20
+class fd 1
+               use     b           1
+
+class lnk_file 18
+             ioctl     n           1
+              read     r           1
+             write     w           1
+            create     w           1
+           getattr     r           1
+           setattr     w           1
+              lock     n           1
+       relabelfrom     r           1
+         relabelto     w           1
+            append     w           1
+            unlink     w           1
+              link     w           1
+            rename     w           1
+           execute     r           1
+            swapon     b           1
+           quotaon     b           1
+           mounton     b           1
+	      open     r	   1
+
+class chr_file 21
   execute_no_trans     r           1
         entrypoint     r           1
            execmod     n           1
@@ -213,8 +216,9 @@ class chr_file 20
             swapon     b           1
            quotaon     b           1
            mounton     b           1
+	      open     r	   1
 
-class blk_file 17
+class blk_file 18
              ioctl     n           1
               read     r          10
              write     w          10
@@ -232,8 +236,9 @@ class blk_file 17
             swapon     b           1
            quotaon     b           1
            mounton     b           1
+	      open     r	   1
 
-class sock_file 17
+class sock_file 18
              ioctl     n           1
               read     r          10
              write     w          10
@@ -251,8 +256,9 @@ class sock_file 17
             swapon     b           1
            quotaon     b           1
            mounton     b           1
+	      open     r	   1
 
-class fifo_file 17
+class fifo_file 18
              ioctl     n           1
               read     r          10
              write     w          10
@@ -270,6 +276,7 @@ class fifo_file 17
             swapon     b           1
            quotaon     b           1
            mounton     b           1
+	      open     r	   1
 
 class socket 22
              ioctl     n           1
