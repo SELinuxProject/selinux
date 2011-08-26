@@ -243,7 +243,7 @@ def t_refpolicywarn(t):
     t.lexer.lineno += 1
 
 def t_IDENTIFIER(t):
-    r'[a-zA-Z_\$][a-zA-Z0-9_\-\.\$\*]*'
+    r'[a-zA-Z_\$\"][a-zA-Z0-9_\-\.\$\*\"]*'
     # Handle any keywords
     t.type = reserved.get(t.value,'IDENTIFIER')
     return t
@@ -768,6 +768,7 @@ def p_avrule_def(p):
 
 def p_typerule_def(p):
     '''typerule_def : TYPE_TRANSITION names names COLON names IDENTIFIER SEMI
+                    | TYPE_TRANSITION names names COLON names IDENTIFIER IDENTIFIER SEMI
                     | TYPE_CHANGE names names COLON names IDENTIFIER SEMI
                     | TYPE_MEMBER names names COLON names IDENTIFIER SEMI
     '''
