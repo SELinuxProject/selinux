@@ -1,3 +1,7 @@
+1.1.1 2011-08-26
+	* refparser: include open among valid permissions
+	* refparser: add support for filename_trans rules
+
 1.1.0 2011-07-27
 	* Release, minor version bump
 

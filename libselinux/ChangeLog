@@ -1,3 +1,8 @@
+2.1.5 2011-0826
+	* selinux_file_context_verify function returns wrong value.
+	* move realpath helper to matchpathcon library
+	* python wrapper makefile changes
+
 2.1.4 2011-0817
 	* mapping fix for invalid class/perms after selinux_set_mapping
 	* audit2why: work around python bug not defining

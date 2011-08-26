@@ -1,3 +1,26 @@
+2.1.5 2011-08-26
+	* setfiles: Fix process_glob to handle error situations
+	* sandbox: Allow seunshare to run as root
+	* sandbox: trap sigterm to make sure sandbox
+	* sandbox: pass DPI from the desktop
+	* sandbox: seunshare: introduce helper spawn_command
+	* sandbox: seunshare: introduce new filesystem helpers
+	* sandbox: add -C option to not drop
+	* sandbox: split seunshare caps dropping
+	* sandbox: use dbus-launch
+	* sandbox: numerous simple updates to sandbox
+	* sandbox: do not require selinux context
+	* sandbox: Makefile: new man pages
+	* sandbox: rename dir to srcdir
+	* sandbox: allow users specify sandbox window size
+	* sandbox: check for paths up front
+	* sandbox: use defined values for paths rather
+	* sandbox: move seunshare globals to the top
+	* sandbox: whitespace fix
+	* semodule_package: Add semodule_unpackage executable
+	* setfiles: get rid of some stupid globals
+	* setfiles: move exclude_non_seclabel_mounts to a generic location
+
 2.1.4 2011-08-17
 	* run_init: clarification of the usage in the
 	* semanage: fix usage header around booleans
