@@ -1,5 +1,5 @@
 #! /usr/bin/python -E
-# Copyright (C) 2005, 2006, 2007, 2008, 2009 Red Hat 
+# Copyright (C) 2005-2011 Red Hat 
 # see file 'COPYING' for use and warranty information
 #
 # semanage is a tool for managing SELinux configuration files
@@ -1953,10 +1953,9 @@ class booleanRecords(semanageRecords):
                                      print "%s=%s" %  (k, ddict[k][2])
                        return
 		if heading:
-			print "%-40s %s\n" % (_("SELinux boolean"), _("Description"))
+			print "%-30s %s  %s %s\n" % (_("SELinux boolean"),_("State"), _("Default"), _("Description"))
 		ddict = self.get_all(locallist)
 		keys = ddict.keys()
 		for k in keys:
 			if ddict[k]:
-				print "%-30s -> %-5s %s" %  (k, on_off[ddict[k][2]], self.get_desc(k))
-
+				print "%-30s (%-5s,%5s)  %s" %  (k, on_off[selinux.security_get_boolean_active(k)], on_off[ddict[k][2]], self.get_desc(k))
