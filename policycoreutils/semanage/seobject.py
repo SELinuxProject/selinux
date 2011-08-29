@@ -253,9 +253,13 @@ class moduleRecords(semanageRecords):
                return l
 
 	def list(self, heading = 1, locallist = 0):
+		all = self.get_all()
+		if len(all) == 0:
+			return 
+
 		if heading:
 			print "\n%-25s%-10s\n" % (_("Modules Name"), _("Version"))
-                for t in self.get_all():
+                for t in all:
                        if t[2] == 0:
                               disabled = _("Disabled")
                        else:
@@ -333,6 +337,8 @@ class permissiveRecords(semanageRecords):
 	def list(self, heading = 1, locallist = 0):
 		import setools
 		all = map(lambda y: y["name"], filter(lambda x: x["permissive"], setools.seinfo(setools.TYPE)))
+		if len(all) == 0:
+			return 
 
 		if heading:
 			print "\n%-25s\n" % (_("Builtin Permissive Types"))
@@ -340,6 +346,10 @@ class permissiveRecords(semanageRecords):
                 for t in all:
 			if t not in customized:
 				print t
+
+		if len(customized) == 0:
+			return 
+
 		if heading:
 			print "\n%-25s\n" % (_("Customized Permissive Types"))
 		for t in customized:
@@ -588,7 +598,10 @@ class loginRecords(semanageRecords):
 	def list(self,heading = 1, locallist = 0):
 		ddict = self.get_all(locallist)
 		keys = ddict.keys()
+		if len(keys) == 0:
+			return 
 		keys.sort()
+
 		if is_mls_enabled == 1:
 			if heading:
 				print "\n%-25s %-25s %-25s\n" % (_("Login Name"), _("SELinux User"), _("MLS/MCS Range"))
@@ -820,7 +833,10 @@ class seluserRecords(semanageRecords):
 	def list(self, heading = 1, locallist = 0):
 		ddict = self.get_all(locallist)
 		keys = ddict.keys()
+		if len(keys) == 0:
+			return 
 		keys.sort()
+
 		if is_mls_enabled == 1:
 			if heading:
 				print "\n%-15s %-10s %-10s %-30s" % ("", _("Labeling"), _("MLS/"), _("MLS/"))
@@ -1073,11 +1089,14 @@ class portRecords(semanageRecords):
                 return l
 
 	def list(self, heading = 1, locallist = 0):
-		if heading:
-			print "%-30s %-8s %s\n" % (_("SELinux Port Type"), _("Proto"), _("Port Number"))
 		ddict = self.get_all_by_type(locallist)
 		keys = ddict.keys()
+		if len(keys) == 0:
+			return 
 		keys.sort()
+
+		if heading:
+			print "%-30s %-8s %s\n" % (_("SELinux Port Type"), _("Proto"), _("Port Number"))
 		for i in keys:
 			rec = "%-30s %-8s " % i
 			rec += "%s" % ddict[i][0]
@@ -1296,11 +1315,14 @@ class nodeRecords(semanageRecords):
                return l
 
        def list(self, heading = 1, locallist = 0):
-               if heading:
-                       print "%-18s %-18s %-5s %-5s\n" % ("IP Address", "Netmask", "Protocol", "Context")
                ddict = self.get_all(locallist)
                keys = ddict.keys()
+	       if len(keys) == 0:
+		       return 
                keys.sort()
+
+               if heading:
+                       print "%-18s %-18s %-5s %-5s\n" % ("IP Address", "Netmask", "Protocol", "Context")
                if is_mls_enabled:
 			for k in keys:
 				val = ''
@@ -1483,11 +1505,14 @@ class interfaceRecords(semanageRecords):
                 return l
 
 	def list(self, heading = 1, locallist = 0):
-		if heading:
-			print "%-30s %s\n" % (_("SELinux Interface"), _("Context"))
 		ddict = self.get_all(locallist)
 		keys = ddict.keys()
+		if len(keys) == 0:
+			return 
 		keys.sort()
+
+		if heading:
+			print "%-30s %s\n" % (_("SELinux Interface"), _("Context"))
 		if is_mls_enabled:
 			for k in keys:
 				print "%-30s %s:%s:%s:%s " % (k,ddict[k][0], ddict[k][1],ddict[k][2], translate(ddict[k][3], False))
@@ -1783,11 +1808,14 @@ class fcontextRecords(semanageRecords):
                return l
 
 	def list(self, heading = 1, locallist = 0 ):
-		if heading:
-			print "%-50s %-18s %s\n" % (_("SELinux fcontext"), _("type"), _("Context"))
 		fcon_dict = self.get_all(locallist)
                 keys = fcon_dict.keys()
+		if len(keys) == 0:
+			return 
                 keys.sort()
+
+		if heading:
+			print "%-50s %-18s %s\n" % (_("SELinux fcontext"), _("type"), _("Context"))
 		for k in keys:
 			if fcon_dict[k]:
 				if is_mls_enabled:
@@ -1952,10 +1980,13 @@ class booleanRecords(semanageRecords):
                               if ddict[k]:
                                      print "%s=%s" %  (k, ddict[k][2])
                        return
-		if heading:
-			print "%-30s %s  %s %s\n" % (_("SELinux boolean"),_("State"), _("Default"), _("Description"))
 		ddict = self.get_all(locallist)
 		keys = ddict.keys()
+		if len(keys) == 0:
+			return 
+
+		if heading:
+			print "%-30s %s  %s %s\n" % (_("SELinux boolean"),_("State"), _("Default"), _("Description"))
 		for k in keys:
 			if ddict[k]:
 				print "%-30s (%-5s,%5s)  %s" %  (k, on_off[selinux.security_get_boolean_active(k)], on_off[ddict[k][2]], self.get_desc(k))
