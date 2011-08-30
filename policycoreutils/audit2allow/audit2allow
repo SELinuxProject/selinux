@@ -104,7 +104,7 @@ class AuditToPolicy:
         if name:
             options.requires = True
             if not module.is_valid_name(name):
-                sys.stderr.write("only letters and numbers allowed in module names\n")
+                sys.stderr.write('error: module names must begin with a letter, optionally followed by letters, numbers, "-", "_", "."\n')
                 sys.exit(2)
 
         # Make -M and -o conflict
