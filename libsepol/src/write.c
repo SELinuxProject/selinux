@@ -607,6 +607,7 @@ static int cond_write_bool(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	unsigned int items, items2;
 	struct policy_data *pd = ptr;
 	struct policy_file *fp = pd->fp;
+	struct policydb *p = pd->p;
 
 	booldatum = (cond_bool_datum_t *) datum;
 
@@ -621,6 +622,15 @@ static int cond_write_bool(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	items = put_entry(key, 1, len, fp);
 	if (items != len)
 		return POLICYDB_ERROR;
+
+	if (p->policy_type != POLICY_KERN &&
+	    p->policyvers >= MOD_POLICYDB_VERSION_TUNABLE_SEP) {
+		buf[0] = cpu_to_le32(booldatum->flags);
+		items = put_entry(buf, sizeof(uint32_t), 1, fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+	}
+
 	return POLICYDB_SUCCESS;
 }
 
@@ -724,6 +734,14 @@ static int cond_write_node(policydb_t * p,
 		if (avrule_write_list(node->avtrue_list, fp))
 			return POLICYDB_ERROR;
 		if (avrule_write_list(node->avfalse_list, fp))
+			return POLICYDB_ERROR;
+	}
+
+	if (p->policy_type != POLICY_KERN &&
+	    p->policyvers >= MOD_POLICYDB_VERSION_TUNABLE_SEP) {
+		buf[0] = cpu_to_le32(node->flags);
+		items = put_entry(buf, sizeof(uint32_t), 1, fp);
+		if (items != 1)
 			return POLICYDB_ERROR;
 	}
 
