@@ -77,15 +77,17 @@ typedef struct cond_node {
 	/* these true/false lists point into te_avtab when that is used */
 	cond_av_list_t *true_list;
 	cond_av_list_t *false_list;
-	/* and these are using during parsing and for modules */
+	/* and these are used during parsing and for modules */
 	avrule_t *avtrue_list;
 	avrule_t *avfalse_list;
 	/* these fields are not written to binary policy */
 	unsigned int nbools;
 	uint32_t bool_ids[COND_MAX_BOOLS];
 	uint32_t expr_pre_comp;
-	/*                                               */
 	struct cond_node *next;
+	/* a tunable conditional, calculated and used at expansion */
+#define	COND_NODE_FLAGS_TUNABLE	0x01
+	uint32_t flags;
 } cond_node_t;
 
 extern int cond_evaluate_expr(policydb_t * p, cond_expr_t * expr);

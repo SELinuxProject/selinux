@@ -210,6 +210,8 @@ typedef struct range_trans {
 typedef struct cond_bool_datum {
 	symtab_datum_t s;
 	int state;
+#define COND_BOOL_FLAGS_TUNABLE	0x01	/* is this a tunable? */
+	uint32_t flags;
 } cond_bool_datum_t;
 
 struct cond_node;
@@ -683,9 +685,10 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_FILENAME_TRANS	11
 #define MOD_POLICYDB_VERSION_ROLETRANS		12
 #define MOD_POLICYDB_VERSION_ROLEATTRIB		13
+#define MOD_POLICYDB_VERSION_TUNABLE_SEP	14
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_ROLEATTRIB
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_TUNABLE_SEP
 
 #define POLICYDB_CONFIG_MLS    1
 
