@@ -1014,6 +1014,11 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return 0;
 	}
 
+	if (bool->flags & COND_BOOL_FLAGS_TUNABLE) {
+		/* Skip tunables */
+		return 0;
+	}
+
 	if (state->verbose)
 		INFO(state->handle, "copying boolean %s", id);
 
@@ -1046,6 +1051,7 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	state->boolmap[bool->s.value - 1] = new_bool->s.value;
 
 	new_bool->state = bool->state;
+	new_bool->flags = bool->flags;
 
 	return 0;
 }
@@ -1940,6 +1946,13 @@ static int cond_node_copy(expand_state_t * state, cond_node_t * cn)
 	if (cond_node_copy(state, cn->next)) {
 		return -1;
 	}
+
+	/* If current cond_node_t is of tunable, its effective branch
+	 * has been appended to its home decl->avrules list during link
+	 * and now we should just skip it. */
+	if (cn->flags & COND_NODE_FLAGS_TUNABLE)
+		return 0;
+
 	if (cond_normalize_expr(state->base, cn)) {
 		ERR(state->handle, "Error while normalizing conditional");
 		return -1;
