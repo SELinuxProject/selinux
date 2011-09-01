@@ -564,3 +564,5 @@ Object-specific Options (see above):
 		errorExit(error.args[1])
 	except OSError, error:
 		errorExit(error.args[1])
+	except RuntimeError, error:
+		errorExit(error.args[0])
