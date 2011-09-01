@@ -689,7 +689,8 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 
 	/* Declare some variables */
 	int modified = 0, fcontexts_modified, ports_modified,
-	    seusers_modified, users_extra_modified, dontaudit_modified;
+	    seusers_modified, users_extra_modified, dontaudit_modified,
+	    preserve_tunables_modified;
 	dbase_config_t *users = semanage_user_dbase_local(sh);
 	dbase_config_t *users_base = semanage_user_base_dbase_local(sh);
 	dbase_config_t *pusers_base = semanage_user_base_dbase_policy(sh);
@@ -731,6 +732,31 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		}
 	}
 
+	/* Create or remove the preserve_tunables flag file. */
+	path = semanage_path(SEMANAGE_TMP, SEMANAGE_PRESERVE_TUNABLES);
+	if (access(path, F_OK) == 0)
+		preserve_tunables_modified = !(sepol_get_preserve_tunables(sh->sepolh) == 1);
+	else
+		preserve_tunables_modified = (sepol_get_preserve_tunables(sh->sepolh) == 1);
+	if (sepol_get_preserve_tunables(sh->sepolh) == 1) {
+		FILE *touch;
+		touch = fopen(path, "w");
+		if (touch != NULL) {
+			if (fclose(touch) != 0) {
+				ERR(sh, "Error attempting to create preserve_tunable flag.");
+				goto cleanup;
+			}
+		} else {
+			ERR(sh, "Error attempting to create preserve_tunable flag.");
+			goto cleanup;
+		}
+	} else {
+		if (remove(path) == -1 && errno != ENOENT) {
+			ERR(sh, "Error removing the preserve_tunables flag.");
+			goto cleanup;
+		}
+	}
+
 	/* Before we do anything else, flush the join to its component parts.
 	 * This *does not* flush to disk automatically */
 	if (users->dtable->is_modified(users->dbase)) {
@@ -753,6 +779,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	modified |= ifaces->dtable->is_modified(ifaces->dbase);
 	modified |= nodes->dtable->is_modified(nodes->dbase);
 	modified |= dontaudit_modified;
+	modified |= preserve_tunables_modified;
 
 	/* If there were policy changes, or explicitly requested, rebuild the policy */
 	if (sh->do_rebuild || modified) {

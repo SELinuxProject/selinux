@@ -24,4 +24,11 @@ void sepol_set_expand_consume_base(sepol_handle_t * sh, int consume_base);
 /* Destroy a sepol handle. */
 void sepol_handle_destroy(sepol_handle_t *);
 
+/* Get whether or not needless unused branch of tunables would be preserved */
+int sepol_get_preserve_tunables(sepol_handle_t * sh);
+
+/* Set whether or not to preserve the needless unused branch of tunables,
+ * 0 is default and discard such branch, 1 preserves them */
+void sepol_set_preserve_tunables(sepol_handle_t * sh, int preserve_tunables);
+
 #endif

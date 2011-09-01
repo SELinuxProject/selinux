@@ -261,6 +261,19 @@ void semanage_set_disable_dontaudit(semanage_handle_t * sh, int disable_dontaudi
 	return;
 }
 
+int semanage_get_preserve_tunables(semanage_handle_t * sh)
+{
+	assert(sh != NULL);
+	return sepol_get_preserve_tunables(sh->sepolh);
+}
+
+void semanage_set_preserve_tunables(semanage_handle_t * sh,
+				    int preserve_tunables)
+{
+	assert(sh != NULL);
+	sepol_set_preserve_tunables(sh->sepolh, preserve_tunables);
+}
+
 void semanage_set_check_contexts(semanage_handle_t * sh, int do_check_contexts)
 {
 

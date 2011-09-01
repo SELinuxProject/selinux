@@ -18,7 +18,22 @@ sepol_handle_t *sepol_handle_create(void)
 	sh->disable_dontaudit = 0;
 	sh->expand_consume_base = 0;
 
+	/* by default needless unused branch of tunables would be discarded  */
+	sh->preserve_tunables = 0;
+
 	return sh;
+}
+
+int sepol_get_preserve_tunables(sepol_handle_t *sh)
+{
+	assert(sh != NULL);
+	return sh->preserve_tunables;
+}
+
+void sepol_set_preserve_tunables(sepol_handle_t * sh, int preserve_tunables)
+{
+	assert(sh !=NULL);
+	sh->preserve_tunables = preserve_tunables;
 }
 
 int sepol_get_disable_dontaudit(sepol_handle_t *sh)

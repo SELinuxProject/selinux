@@ -15,5 +15,6 @@
 	sepol_get_disable_dontaudit;
 	sepol_set_disable_dontaudit;
 	sepol_set_expand_consume_base;
+	sepol_get_preserve_tunables; sepol_set_preserve_tunables;
   local: *;
 };

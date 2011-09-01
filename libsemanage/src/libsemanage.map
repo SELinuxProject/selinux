@@ -22,5 +22,6 @@ LIBSEMANAGE_1.0 {
 	  semanage_is_connected; semanage_get_disable_dontaudit; semanage_set_disable_dontaudit;
 	  semanage_mls_enabled;
 	  semanage_set_check_contexts;
+	  semanage_get_preserve_tunables; semanage_set_preserve_tunables;
   local: *;
 };

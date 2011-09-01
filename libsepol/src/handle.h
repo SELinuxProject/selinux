@@ -17,7 +17,7 @@ struct sepol_handle {
 
 	int disable_dontaudit;
 	int expand_consume_base;
-
+	int preserve_tunables;
 };
 
 #endif

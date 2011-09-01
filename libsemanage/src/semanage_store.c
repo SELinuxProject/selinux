@@ -117,6 +117,7 @@ static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"/netfilter_contexts",
 	"/file_contexts.homedirs",
 	"/disable_dontaudit",
+	"/preserve_tunables",
 };
 
 /* A node used in a linked list of file contexts; used for sorting.
