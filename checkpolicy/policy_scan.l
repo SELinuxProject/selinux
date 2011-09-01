@@ -92,6 +92,8 @@ TYPE |
 type				{ return(TYPE); }
 BOOL |
 bool                            { return(BOOL); }
+TUNABLE |
+tunable				{ return(TUNABLE); }
 IF |
 if				{ return(IF); }
 ELSE |

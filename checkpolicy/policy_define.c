@@ -1494,7 +1494,7 @@ avrule_t *define_cond_compute_type(int which)
 	return avrule;
 }
 
-int define_bool(void)
+int define_bool_tunable(int is_tunable)
 {
 	char *id, *bool_value;
 	cond_bool_datum_t *datum;
@@ -1524,6 +1524,8 @@ int define_bool(void)
 		return -1;
 	}
 	memset(datum, 0, sizeof(cond_bool_datum_t));
+	if (is_tunable)
+		datum->flags |= COND_BOOL_FLAGS_TUNABLE;
 	ret = declare_symbol(SYM_BOOLS, id, datum, &value, &value);
 	switch (ret) {
 	case -3:{

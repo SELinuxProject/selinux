@@ -160,6 +160,7 @@ cond_node_t *cond_node_create(policydb_t * p, cond_node_t * node)
 		for (i = 0; i < min(node->nbools, COND_MAX_BOOLS); i++)
 			new_node->bool_ids[i] = node->bool_ids[i];
 		new_node->expr_pre_comp = node->expr_pre_comp;
+		new_node->flags = node->flags;
 	}
 
 	return new_node;

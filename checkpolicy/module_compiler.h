@@ -58,6 +58,7 @@ int require_attribute(int pass);
 int require_attribute_role(int pass);
 int require_user(int pass);
 int require_bool(int pass);
+int require_tunable(int pass);
 int require_sens(int pass);
 int require_cat(int pass);
 

@@ -21,7 +21,7 @@ cond_expr_t *define_cond_expr(uint32_t expr_type, void *arg1, void* arg2);
 int define_attrib(void);
 int define_attrib_role(void);
 int define_av_perms(int inherits);
-int define_bool(void);
+int define_bool_tunable(int is_tunable);
 int define_category(void);
 int define_class(void);
 int define_common_perms(void);

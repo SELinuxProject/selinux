@@ -1045,7 +1045,7 @@ int require_user(int pass)
 	}
 }
 
-int require_bool(int pass)
+static int require_bool_tunable(int pass, int is_tunable)
 {
 	char *id = queue_remove(id_queue);
 	cond_bool_datum_t *booldatum = NULL;
@@ -1063,6 +1063,8 @@ int require_bool(int pass)
 		yyerror("Out of memory!");
 		return -1;
 	}
+	if (is_tunable)
+		booldatum->flags |= COND_BOOL_FLAGS_TUNABLE;
 	retval =
 	    require_symbol(SYM_BOOLS, id, (hashtab_datum_t *) booldatum,
 			   &booldatum->s.value, &booldatum->s.value);
@@ -1092,6 +1094,16 @@ int require_bool(int pass)
 			assert(0);	/* should never get here */
 		}
 	}
+}
+
+int require_bool(int pass)
+{
+	return require_bool_tunable(pass, 0);
+}
+
+int require_tunable(int pass)
+{
+	return require_bool_tunable(pass, 1);
 }
 
 int require_sens(int pass)
@@ -1328,6 +1340,8 @@ void append_cond_list(cond_list_t * cond)
 		     tmp = tmp->next) ;
 		tmp->next = cond->avfalse_list;
 	}
+
+	old_cond->flags |= cond->flags;
 }
 
 void append_avrule(avrule_t * avrule)

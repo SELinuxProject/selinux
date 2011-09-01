@@ -101,6 +101,7 @@ typedef int (* require_func_t)();
 %token ALIAS
 %token ATTRIBUTE
 %token BOOL
+%token TUNABLE
 %token IF
 %token ELSE
 %token TYPE_TRANSITION
@@ -269,6 +270,7 @@ te_decl			: attribute_def
                         | typeattribute_def
                         | typebounds_def
                         | bool_def
+			| tunable_def
                         | transition_def
                         | range_trans_def
                         | te_avtab_def
@@ -295,8 +297,11 @@ opt_attr_list           : ',' id_comma_list
 			| 
 			;
 bool_def                : BOOL identifier bool_val ';'
-                        {if (define_bool()) return -1;}
+                        { if (define_bool_tunable(0)) return -1; }
                         ;
+tunable_def		: TUNABLE identifier bool_val ';'
+			{ if (define_bool_tunable(1)) return -1; }
+			;
 bool_val                : CTRUE
  			{ if (insert_id("T",0)) return -1; }
                         | CFALSE
@@ -820,6 +825,7 @@ require_decl_def        : ROLE        { $$ = require_role; }
                         | ATTRIBUTE_ROLE   { $$ = require_attribute_role; }
                         | USER        { $$ = require_user; }
                         | BOOL        { $$ = require_bool; }
+			| TUNABLE     { $$ = require_tunable; }
                         | SENSITIVITY { $$ = require_sens; }
                         | CATEGORY    { $$ = require_cat; }
                         ;
