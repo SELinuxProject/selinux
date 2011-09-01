@@ -587,7 +587,18 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		}
 		state->base->p_bools.nprim++;
 		base_bool = new_bool;
-
+		base_bool->flags = booldatum->flags;
+	} else if ((booldatum->flags & COND_BOOL_FLAGS_TUNABLE) !=
+		   (base_bool->flags & COND_BOOL_FLAGS_TUNABLE)) {
+			/* A mismatch between boolean/tunable declaration
+			 * and usage(for example a boolean used in the
+			 * tunable_policy() or vice versa).
+			 *
+			 * This is not allowed and bail out with errors */
+			ERR(state->handle,
+			    "%s: Mismatch between boolean/tunable definition "
+			    "and usage for %s", state->cur_mod_name, id);
+			return -1;
 	}
 
 	/* Get the scope info for this boolean to see if this is the declaration, 
@@ -595,9 +606,12 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	scope = hashtab_search(state->cur->policy->p_bools_scope.table, id);
 	if (!scope)
 		return SEPOL_ERR;
-	if (scope->scope == SCOPE_DECL)  
+	if (scope->scope == SCOPE_DECL) {
 		base_bool->state = booldatum->state;
-
+		/* Only the declaration rather than requirement
+		 * decides if it is a boolean or tunable. */
+		base_bool->flags = booldatum->flags;
+	}
 	state->cur->map[SYM_BOOLS][booldatum->s.value - 1] = base_bool->s.value;
 	return 0;
 
