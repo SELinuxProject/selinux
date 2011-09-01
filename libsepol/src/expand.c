@@ -2665,6 +2665,94 @@ int expand_module_avrules(sepol_handle_t * handle, policydb_t * base,
 	return copy_and_expand_avrule_block(&state);
 }
 
+static void discard_tunables(policydb_t *pol)
+{
+	avrule_block_t *block;
+	avrule_decl_t *decl;
+	cond_node_t *cur_node;
+	cond_expr_t *cur_expr;
+	int cur_state;
+	avrule_t *tail, *to_be_appended;
+
+	/* Iterate through all cond_node of all enabled decls, if a cond_node
+	 * is about tunable, caculate its state value and concatenate one of
+	 * its avrule list to the current decl->avrules list.
+	 *
+	 * Note, such tunable cond_node would be skipped over in expansion,
+	 * so we won't have to worry about removing it from decl->cond_list
+	 * here :-)
+	 *
+	 * If tunables and booleans co-exist in the expression of a cond_node,
+	 * then tunables would be "transformed" as booleans.
+	 */
+	for (block = pol->global; block != NULL; block = block->next) {
+		decl = block->enabled;
+		if (decl == NULL || decl->enabled == 0)
+			continue;
+
+		tail = decl->avrules;
+		while (tail && tail->next)
+			tail = tail->next;
+
+		for (cur_node = decl->cond_list; cur_node != NULL;
+		     cur_node = cur_node->next) {
+			int booleans, tunables;
+			cond_bool_datum_t *booldatum;
+
+			booleans = tunables = 0;
+
+			for (cur_expr = cur_node->expr; cur_expr != NULL;
+			     cur_expr = cur_expr->next) {
+				if (cur_expr->expr_type != COND_BOOL)
+					continue;
+				booldatum = pol->bool_val_to_struct[cur_expr->bool - 1];
+				if (booldatum->flags & COND_BOOL_FLAGS_TUNABLE)
+					tunables++;
+				else
+					booleans++;
+			}
+
+			/* bool_copy_callback() at link phase has ensured
+			 * that no mixture of tunables and booleans in one
+			 * expression. */
+			assert(!(booleans && tunables));
+
+			if (booleans) {
+				cur_node->flags &= ~COND_NODE_FLAGS_TUNABLE;
+			} else {
+				cur_node->flags |= COND_NODE_FLAGS_TUNABLE;
+				cur_state = cond_evaluate_expr(pol, cur_node->expr);
+				if (cur_state == -1) {
+					printf("Expression result was "
+					       "undefined, skipping all"
+					       "rules\n");
+					continue;
+				}
+
+				to_be_appended = (cur_state == 1) ?
+					cur_node->avtrue_list : cur_node->avfalse_list;
+
+				if (tail)
+					tail->next = to_be_appended;
+				else
+					tail = decl->avrules = to_be_appended;
+
+				/* Now that the effective branch has been
+				 * appended, neutralize its original pointer */
+				if (cur_state == 1)
+					cur_node->avtrue_list = NULL;
+				else
+					cur_node->avfalse_list = NULL;
+
+				/* Update the tail of decl->avrules for
+				 * further concatenation */
+				while (tail && tail->next)
+					tail = tail->next;
+			}
+		}
+	}
+}
+
 /* Linking should always be done before calling expand, even if
  * there is only a base since all optionals are dealt with at link time
  * the base passed in should be indexed and avrule blocks should be 
@@ -2677,6 +2765,16 @@ int expand_module(sepol_handle_t * handle,
 	unsigned int i;
 	expand_state_t state;
 	avrule_block_t *curblock;
+
+	/* Append tunable's avtrue_list or avfalse_list to the avrules list
+	 * of its home decl depending on its state value, so that the effect
+	 * rules of a tunable would be added to te_avtab permanently. Whereas
+	 * the disabled unused branch would be discarded.
+	 *
+	 * Originally this function is called at the very end of link phase,
+	 * however, we need to keep the linked policy intact for analysis
+	 * purpose. */
+	discard_tunables(base);
 
 	expand_state_init(&state);
 
