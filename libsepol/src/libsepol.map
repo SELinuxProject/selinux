@@ -1,5 +1,6 @@
 {
   global: 
+	expand_module_avrules;
 	sepol_module_package_*; sepol_link_modules; sepol_expand_module; sepol_link_packages;
 	sepol_bool_*; sepol_genbools*; 
 	sepol_context_*; sepol_mls_*; sepol_check_context;
