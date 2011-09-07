@@ -1,5 +1,6 @@
 #include "restore.h"
 #include <glob.h>
+#include <selinux/context.h>
 
 #define SKIP -2
 #define ERR -1
@@ -33,7 +34,6 @@ struct edir {
 
 static file_spec_t *fl_head;
 static int filespec_add(ino_t ino, const security_context_t con, const char *file);
-static int only_changed_user(const char *a, const char *b);
 struct restore_opts *r_opts = NULL;
 static void filespec_destroy(void);
 static void filespec_eval(void);
@@ -104,8 +104,7 @@ static int restore(FTSENT *ftsent)
 {
 	char *my_file = strdupa(ftsent->fts_path);
 	int ret = -1;
-	char *context, *newcon;
-	int user_only_changed = 0;
+	security_context_t curcon = NULL, newcon = NULL;
 
 	if (match(my_file, ftsent->fts_statp, &newcon) < 0)
 		/* Check for no matching specification. */
@@ -139,74 +138,105 @@ static int restore(FTSENT *ftsent)
 		printf("%s:  %s matched by %s\n", r_opts->progname, my_file, newcon);
 	}
 
+	/*
+	 * Do not relabel if their is no default specification for this file
+	 */
+
+	if (strcmp(newcon, "<<none>>") == 0) {
+		goto out;
+	}
+
 	/* Get the current context of the file. */
-	ret = lgetfilecon_raw(ftsent->fts_accpath, &context);
+	ret = lgetfilecon_raw(ftsent->fts_accpath, &curcon);
 	if (ret < 0) {
 		if (errno == ENODATA) {
-			context = NULL;
+			curcon = NULL;
 		} else {
 			fprintf(stderr, "%s get context on %s failed: '%s'\n",
 				r_opts->progname, my_file, strerror(errno));
 			goto err;
 		}
-		user_only_changed = 0;
-	} else
-		user_only_changed = only_changed_user(context, newcon);
+	}
+
 	/* lgetfilecon returns number of characters and ret needs to be reset
 	 * to 0.
 	 */
 	ret = 0;
 
 	/*
-	 * Do not relabel the file if the matching specification is 
-	 * <<none>> or the file is already labeled according to the 
-	 * specification.
+	 * Do not relabel the file if the file is already labeled according to
+	 * the specification.
 	 */
-	if ((strcmp(newcon, "<<none>>") == 0) ||
-	    (context && (strcmp(context, newcon) == 0))) {
-		freecon(context);
+	if (curcon && (strcmp(curcon, newcon) == 0)) {
 		goto out;
 	}
 
-	if (!r_opts->force && context && (is_context_customizable(context) > 0)) {
+	if (!r_opts->force && curcon && (is_context_customizable(curcon) > 0)) {
 		if (r_opts->verbose > 1) {
 			fprintf(stderr,
 				"%s: %s not reset customized by admin to %s\n",
-				r_opts->progname, my_file, context);
+				r_opts->progname, my_file, curcon);
 		}
-		freecon(context);
 		goto out;
 	}
 
-	if (r_opts->verbose) {
-		/* If we're just doing "-v", trim out any relabels where
-		 * the user has r_opts->changed but the role and type are the
-		 * same.  For "-vv", emit everything. */
-		if (r_opts->verbose > 1 || !user_only_changed) {
-			printf("%s reset %s context %s->%s\n",
-			       r_opts->progname, my_file, context ?: "", newcon);
+	/*
+	 *  Do not change label unless this is a force or the type is different
+	 */
+	if (!r_opts->force && curcon) {
+		int types_differ = 0;
+		context_t cona;
+		context_t conb;
+		int err = 0;
+		cona = context_new(curcon);
+		if (! cona) {
+			goto out;
+		}
+		conb = context_new(newcon);
+		if (! conb) {
+			context_free(cona);
+			goto out;
+		}
+
+		types_differ = strcmp(context_type_get(cona), context_type_get(conb));
+		if (types_differ) {
+			err |= context_user_set(conb, context_user_get(cona));
+			err |= context_role_set(conb, context_role_get(cona));
+			err |= context_range_set(conb, context_range_get(cona));
+			if (!err) {
+				freecon(newcon);
+				newcon = strdup(context_str(conb));
+			}
+		}
+		context_free(cona);
+		context_free(conb);
+
+		if (!types_differ || err) {
+			goto out;
 		}
 	}
 
-	if (r_opts->logging && !user_only_changed) {
-		if (context)
+	if (r_opts->verbose) {
+		printf("%s reset %s context %s->%s\n",
+		       r_opts->progname, my_file, curcon ?: "", newcon);
+	}
+
+	if (r_opts->logging) {
+		if (curcon)
 			syslog(LOG_INFO, "relabeling %s from %s to %s\n",
-			       my_file, context, newcon);
+			       my_file, curcon, newcon);
 		else
 			syslog(LOG_INFO, "labeling %s to %s\n",
 			       my_file, newcon);
 	}
 
-	if (r_opts->outfile && !user_only_changed)
+	if (r_opts->outfile)
 		fprintf(r_opts->outfile, "%s\n", my_file);
-
-	if (context)
-		freecon(context);
 
 	/*
 	 * Do not relabel the file if -n was used.
 	 */
-	if (!r_opts->change || user_only_changed)
+	if (!r_opts->change)
 		goto out;
 
 	/*
@@ -220,12 +250,15 @@ static int restore(FTSENT *ftsent)
 	}
 	ret = 1;
 out:
+	freecon(curcon);
 	freecon(newcon);
 	return ret;
 skip:
+	freecon(curcon);
 	freecon(newcon);
 	return SKIP;
 err:
+	freecon(curcon);
 	freecon(newcon);
 	return ERR;
 }
@@ -445,22 +478,6 @@ int add_exclude(const char *directory)
 	excludeArray[excludeCtr++].size = len;
 
 	return 0;
-}
-
-/* Compare two contexts to see if their differences are "significant",
- * or whether the only difference is in the user. */
-static int only_changed_user(const char *a, const char *b)
-{
-	char *rest_a, *rest_b;	/* Rest of the context after the user */
-	if (r_opts->force)
-		return 0;
-	if (!a || !b)
-		return 0;
-	rest_a = strchr(a, ':');
-	rest_b = strchr(b, ':');
-	if (!rest_a || !rest_b)
-		return 0;
-	return (strcmp(rest_a, rest_b) == 0);
 }
 
 /*
