@@ -944,6 +944,7 @@ int main(int argc, char **argv) {
 
 	if (child == 0) {
 		char *display = NULL;
+		char *LANG = NULL;
 		int rc = -1;
 
 		if (unshare(CLONE_NEWNS) < 0) {
@@ -969,12 +970,23 @@ int main(int argc, char **argv) {
 				goto childerr;
 			}
 		}
+		
+		/* construct a new environment */
+		if ((LANG = getenv("LANG")) != NULL) {
+			if ((LANG = strdup(LANG)) == NULL) {
+				perror(_("Out of memory"));
+				goto childerr;
+			}
+		}
+		
 		if ((rc = clearenv()) != 0) {
 			perror(_("Failed to clear environment"));
 			goto childerr;
 		}
 		if (display)
 			rc |= setenv("DISPLAY", display, 1);
+		if (LANG) 
+			rc |= setenv("LANG", LANG, 1);
 		rc |= setenv("HOME", pwd->pw_dir, 1);
 		rc |= setenv("SHELL", pwd->pw_shell, 1);
 		rc |= setenv("USER", pwd->pw_name, 1);
@@ -1000,6 +1012,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr, _("Failed to execute command %s: %s\n"), argv[optind], strerror(errno));
 childerr:
 		free(display);
+		free(LANG);
 		exit(-1);
 	}
 
