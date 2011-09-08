@@ -17,6 +17,7 @@
 *~
 *.orig
 *.rej
+*.pyc
 cscope.*
 
 # Failsafes

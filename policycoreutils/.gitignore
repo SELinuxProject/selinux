@@ -9,6 +9,7 @@ semodule_deps/semodule_deps
 semodule_expand/semodule_expand
 semodule_link/semodule_link
 semodule_package/semodule_package
+semodule_package/semodule_unpackage
 sestatus/sestatus
 setfiles/restorecon
 setfiles/setfiles
