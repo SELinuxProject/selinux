@@ -235,25 +235,10 @@ class AuditToPolicy:
             import selinux
             import seobject
             for i in self.__parser.avc_msgs:
-                rc, bools = audit2why.analyze(i.scontext.to_string(), i.tcontext.to_string(), i.tclass, i.accesses)
+                rc = i.type
+                bools = i.bools
                 if rc >= 0:
                     print "%s\n\tWas caused by:" % i.message
-                if rc == audit2why.NOPOLICY:
-                    raise RuntimeError("Must call policy_init first")
-                if rc == audit2why.BADTCON:
-                    print "Invalid Target Context %s\n" % i.tcontext
-                    continue
-                if rc == audit2why.BADSCON:
-                    print "Invalid Source Context %s\n" % i.scontext
-                    continue
-                if rc == audit2why.BADSCON:
-                    print "Invalid Type Class %s\n" % i.tclass
-                    continue
-                if rc == audit2why.BADPERM:
-                    print "Invalid permission %s\n" % i.accesses
-                    continue
-                if rc == audit2why. BADCOMPUTE:
-                    raise RuntimeError("Error during access vector computation")
                 if rc == audit2why.ALLOW:
                     print "\t\tUnknown - would be allowed by active policy\n",
                     print "\t\tPossible mismatch between this policy and the one under which the audit message was generated.\n"
