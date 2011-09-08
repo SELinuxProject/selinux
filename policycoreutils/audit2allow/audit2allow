@@ -1,4 +1,4 @@
-#! /usr/bin/python -E
+#! /usr/bin/python -Es
 # Authors: Karl MacMillan <kmacmillan@mentalrootkit.com>
 #
 # Copyright (C) 2006-2007  Red Hat
@@ -28,6 +28,7 @@ import sepolgen.objectmodel as objectmodel
 import sepolgen.defaults as defaults
 import sepolgen.module as module
 from sepolgen.sepolgeni18n import _
+import selinux.audit2why as audit2why
 
 class AuditToPolicy:
     VERSION = "%prog .1"
@@ -46,6 +47,7 @@ class AuditToPolicy:
                           help="audit messages since last boot conflicts with -i")
         parser.add_option("-a", "--all", action="store_true", dest="audit", default=False,
                           help="read input from audit log - conflicts with -i")
+        parser.add_option("-p", "--policy", dest="policy", default=None, help="Policy file to use for analysis")
         parser.add_option("-d", "--dmesg", action="store_true", dest="dmesg", default=False,
                           help="read input from dmesg - conflicts with --all and --input")
         parser.add_option("-i", "--input", dest="input",
@@ -231,9 +233,7 @@ class AuditToPolicy:
 
     def __output_audit2why(self):
             import selinux
-            import selinux.audit2why as audit2why
             import seobject
-            audit2why.init()
             for i in self.__parser.avc_msgs:
                 rc, bools = audit2why.analyze(i.scontext.to_string(), i.tcontext.to_string(), i.tclass, i.accesses)
                 if rc >= 0:
@@ -350,11 +350,19 @@ class AuditToPolicy:
     def main(self):
         try:
             self.__parse_options()
+            if self.__options.policy:
+                audit2why.init(self.__options.policy)
+            else:
+                audit2why.init()
+
             self.__read_input()
             self.__process_input()
             self.__output()
         except KeyboardInterrupt:
             sys.exit(0)
+        except ValueError, e:
+            print e
+            sys.exit(1)
 
 if __name__ == "__main__":
     app = AuditToPolicy()
