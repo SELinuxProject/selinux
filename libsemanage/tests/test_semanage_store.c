@@ -163,7 +163,7 @@ void test_semanage_store_access_check(void)
 	err = chmod(polpath, 0);
 	CU_ASSERT(err == 0);
 
-	err = semanage_store_access_check(sh);
+	err = semanage_store_access_check();
 	CU_ASSERT(err == -1);
 
 	/* check with permissions 500 */
@@ -174,7 +174,7 @@ void test_semanage_store_access_check(void)
 	err = chmod(modpath, S_IRUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
 
-	err = semanage_store_access_check(sh);
+	err = semanage_store_access_check();
 	CU_ASSERT(err == SEMANAGE_CAN_READ);
 
 	/* check with permissions 700 */
@@ -185,7 +185,7 @@ void test_semanage_store_access_check(void)
 	err = chmod(modpath, S_IRUSR | S_IWUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
 
-	err = semanage_store_access_check(sh);
+	err = semanage_store_access_check();
 	CU_ASSERT(err == SEMANAGE_CAN_WRITE);
 
 	/* check with lock file 000 and others 500 */
@@ -196,7 +196,7 @@ void test_semanage_store_access_check(void)
 	err = chmod(modpath, S_IRUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
 
-	err = semanage_store_access_check(sh);
+	err = semanage_store_access_check();
 	CU_ASSERT(err == 0);
 
 	/* check with lock file 000 and others 700 */
@@ -207,7 +207,7 @@ void test_semanage_store_access_check(void)
 	err = chmod(modpath, S_IRUSR | S_IWUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
 
-	err = semanage_store_access_check(sh);
+	err = semanage_store_access_check();
 	CU_ASSERT(err == 0);
 
 	/* remove lock file */
@@ -222,7 +222,7 @@ void test_semanage_store_access_check(void)
 	err = chmod(polpath, 0);
 	CU_ASSERT(err == 0);
 
-	err = semanage_store_access_check(sh);
+	err = semanage_store_access_check();
 	CU_ASSERT(err == -1);
 
 	/* check with no lock file and 500 */
@@ -233,14 +233,14 @@ void test_semanage_store_access_check(void)
 	err = chmod(modpath, S_IRUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
 
-	err = semanage_store_access_check(sh);
+	err = semanage_store_access_check();
 	CU_ASSERT(err == 0);
 
 	/* check with no lock file but write in lockpath */
 	err = chmod(lockpath, S_IRUSR | S_IWUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
 
-	err = semanage_store_access_check(sh);
+	err = semanage_store_access_check();
 	CU_ASSERT(err == SEMANAGE_CAN_READ);
 
 	/* check with no lock file and 700 */
@@ -249,7 +249,7 @@ void test_semanage_store_access_check(void)
 	err = chmod(modpath, S_IRUSR | S_IWUSR | S_IXUSR);
 	CU_ASSERT(err == 0);
 
-	err = semanage_store_access_check(sh);
+	err = semanage_store_access_check();
 	CU_ASSERT(err == SEMANAGE_CAN_WRITE);
 }
 
