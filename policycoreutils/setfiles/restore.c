@@ -113,10 +113,6 @@ static int restore(FTSENT *ftsent)
 
 	if (r_opts->progress) {
 		r_opts->count++;
-		if (r_opts->count % (80 * STAR_COUNT) == 0) {
-			fprintf(stdout, "\n");
-			fflush(stdout);
-		}
 		if (r_opts->count % STAR_COUNT == 0) {
 			fprintf(stdout, "*");
 			fflush(stdout);
