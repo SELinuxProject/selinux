@@ -2,7 +2,9 @@
 PREFIX ?= $(DESTDIR)/usr
 INCDIR ?= $(PREFIX)/include/sepol
 
-install:
+all:
+
+install: all
 	test -d $(INCDIR) || install -m 755 -d $(INCDIR)
 	test -d $(INCDIR)/policydb || install -m 755 -d $(INCDIR)/policydb
 	install -m 644 $(wildcard sepol/*.h) $(INCDIR)

@@ -1,6 +1,8 @@
 SHAREDIR ?= $(DESTDIR)/var/lib/sepolgen
 
-install:
+all:
+
+install: all
 	-mkdir -p $(SHAREDIR)
 	install -m 644 perm_map $(SHAREDIR)
 

@@ -1,7 +1,9 @@
 PYTHONLIBDIR ?= $(shell  python -c "from distutils.sysconfig import *; print get_python_lib(1)")
 PACKAGEDIR ?= $(DESTDIR)/$(PYTHONLIBDIR)/sepolgen
 
-install:
+all:
+
+install: all
 	-mkdir -p $(PACKAGEDIR)
 	install -m 644 *.py $(PACKAGEDIR)
 
