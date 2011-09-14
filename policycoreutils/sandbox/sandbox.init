@@ -13,17 +13,12 @@
 # description: sandbox, xguest and other apps that want to use pam_namespace \
 #              require this script be run at boot.  This service script does \
 #              not actually run any service but sets up: \
-#              /var/tmp, /tmp and home directories to be used by these tools.\
+#              / to be shared by any app that starts a separate namespace
 #              If you do not use sandbox, xguest or pam_namespace you can turn \
 #              this service off.\
 #
 
 # Source function library.
-. /etc/init.d/functions
-
-HOMEDIRS="/home"
-
-. /etc/sysconfig/sandbox
 
 LOCKFILE=/var/lock/subsys/sandbox
 
