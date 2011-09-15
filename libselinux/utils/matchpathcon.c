@@ -45,7 +45,7 @@ int printmatchpathcon(char *path, int header, int mode)
 
 int main(int argc, char **argv)
 {
-	int i, init = 0, rc = 0;
+	int i, init = 0;
 	int header = 1, opt;
 	int verify = 0;
 	int notrans = 0;
