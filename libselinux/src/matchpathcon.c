@@ -381,14 +381,17 @@ static int symlink_realpath(const char *name, char *resolved_path)
 	}
 
 	len = strlen(p);
-	if (len + strlen(last_component) + 1 > PATH_MAX) {
+	if (len + strlen(last_component) + 2 > PATH_MAX) {
 		myprintf("symlink_realpath(%s) failed: Filename too long \n",
 			name);
+		errno=ENAMETOOLONG;
 		rc = -1;
 		goto out;
 	}
 
 	resolved_path += len;
+	strcpy(resolved_path, "/");
+	resolved_path += 1;
 	strcpy(resolved_path, last_component);
 out:
 	free(tmp_path);
