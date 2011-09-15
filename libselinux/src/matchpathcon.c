@@ -353,7 +353,7 @@ static int symlink_realpath(const char *name, char *resolved_path)
 
 	tmp_path = strdup(name);
 	if (!tmp_path) {
-		fprintf(stderr, "symlink_realpath(%s) strdup() failed: %s\n",
+		myprintf("symlink_realpath(%s) strdup() failed: %s\n",
 			name, strerror(errno));
 		rc = -1;
 		goto out;
@@ -374,7 +374,7 @@ static int symlink_realpath(const char *name, char *resolved_path)
 	}
 
 	if (!p) {
-		fprintf(stderr, "symlink_realpath(%s) realpath() failed: %s\n",
+		myprintf("symlink_realpath(%s) realpath() failed: %s\n",
 			name, strerror(errno));
 		rc = -1;
 		goto out;
@@ -382,7 +382,7 @@ static int symlink_realpath(const char *name, char *resolved_path)
 
 	len = strlen(p);
 	if (len + strlen(last_component) + 1 > PATH_MAX) {
-		fprintf(stderr, "symlink_realpath(%s) failed: Filename too long \n",
+		myprintf("symlink_realpath(%s) failed: Filename too long \n",
 			name);
 		rc = -1;
 		goto out;
