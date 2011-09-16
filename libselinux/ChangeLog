@@ -1,3 +1,10 @@
+2.1.6 2011-09-15
+	* utils: matchpathcon: remove duplicate declaration
+	* src: matchpathcon: use myprintf not fprintf
+	* src: matchpathcon: make sure resolved path starts
+	* put libselinux.so.1 in /lib not /usr/lib
+	* tree: default make target to all not
+
 2.1.5 2011-0826
 	* selinux_file_context_verify function returns wrong value.
 	* move realpath helper to matchpathcon library

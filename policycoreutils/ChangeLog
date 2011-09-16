@@ -1,3 +1,25 @@
+2.1.6 2011-09-15
+	* sepolgen-ifgen: new attr-helper does something
+	* audit2allow: use alternate policy file
+	* audit2allow: sepolgen-ifgen use the attr helper
+	* setfiles: switch from stat to stat64
+	* setfiles: Fix potential crash using dereferenced ftsent
+	* setfiles: do not wrap * output at 80 characters
+	* sandbox: add -Wall and -Werror to makefile
+	* sandbox: add sandbox cgroup support
+	* sandbox: rewrite /tmp handling
+	* sandbox: do not bind mount so much
+	* sandbox: add level based kill option
+	* sandbox: cntrl-c should kill entire process control group
+	* Create a new preserve_tunables flag in sepol_handle_t.
+	* semanage: show running and disk setting for booleans
+	* semanage: Dont print heading if no items selected
+	* sepolgen: audit2allow is mistakakenly not allowing valid module names
+	* semanage: Catch RuntimeErrors, that can be generated when SELinux is disabled
+	* More files to ignore
+	* tree: default make target to all not install
+	* sandbox: do not load unused generic init functions
+
 2.1.5 2011-08-26
 	* setfiles: Fix process_glob to handle error situations
 	* sandbox: Allow seunshare to run as root
