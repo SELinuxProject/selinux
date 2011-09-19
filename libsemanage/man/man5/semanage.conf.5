@@ -1,0 +1,93 @@
+.TH semanage.conf "5" "September 2011" "semanage.conf" "Linux System Administration"
+.SH NAME
+semanage.conf \- global configuration file for the SELinux Management library
+.SH DESCRIPTION
+.PP
+The
+.BR semanage.conf
+file is usually located under the directory /etc/selinux and it is used for run-time configuration of the
+behavior of the SELinux Management library.
+
+.PP
+Each line should contain a configuration parameter followed by the equal sign ("=") and then followed by the configuration value for that
+parameter. Anything after the "#" symbol is ignored similarly to empty lines.
+
+.PP
+The following parameters are allowed:
+
+.RS
+.TP
+.B module-store 
+Specify how the SELinux Management library should interact with the SELinux policy store. When set to "direct", the SELinux
+Management library writes to the SELinux policy module store directly (this is the default setting).
+Otherwise a socket path or a server name can be used for the argument.
+If the argument begins with "/" (as in "/foo/bar"), it represents the path to a named socket that should be used to connect the policy management
+server.
+If the argument does not begin with a "/" (as in "foo.com:4242"), it should be interpreted as the name of a remote policy management server
+to be used through a TCP connection (default port is 4242 unless a different one is specified after the server name using the colon to separate
+the two fields).
+
+.TP
+.B policy-version 
+When generating the policy, by default
+.BR semanage
+will set the policy version to POLICYDB_VERSION_MAX, as defined in <sepol/policydb/policydb.h>. Change this setting if a different
+version needs to be set for the policy.
+
+.TP
+.B expand-check
+Whether or not to check "neverallow" rules when executing all
+.BR semanage
+command. It can be set to either "0" (disabled) or "1" (enabled) and by default it is enabled. There might be a large
+penalty in execution time if this option is enabled.
+
+.TP
+.B file-mode
+By default the permission mode for the run-time policy files is set to 0644.
+
+.TP
+.B save-previous
+It controls whether the previous module directory is saved after a successful commit to the policy store and it can be set to
+either "true" or "false". By default it is set to "false" (the previous version is deleted).
+
+.TP
+.B save-linked
+It controls whether the previously linked module is saved (with name "base.linked") after a successful commit to the policy store.
+It can be set to either "true" or "false" and by default it is set to "false" (the previous module is deleted).
+
+.TP
+.B usepasswd 
+Whether or not to enable the use getpwent() to obtain a list of home directories to label. It can be set to either "true" or "false".
+By default it is set to "true".
+
+.TP
+.B disable-genhomedircon
+It controls whether or not the genhomedircon function is executed when using the
+.BR semanage
+command and it can be set to either "false" or "true". By default the genhomedircon functionality is enabled (equivalent
+to this option set to "false").
+
+.TP
+.B handle-unknown
+This option controls the kernel behavior for handling permissions defined in the kernel but missing from the actual policy.
+It can be set to "deny", "reject" or "allow".
+
+.TP
+.B bzip-blocksize
+It should be in the range 0-9. A value of 0 means no compression. By default the bzip block size is set to 9 (actual block
+size value is obtained after multiplication by 100000).
+
+.TP
+.B bzip-small
+When set to "true", the bzip algorithm shall try to reduce its system memory usage. It can be set to either "true" or "false" and
+by default it is set to "false".
+
+.SH "SEE ALSO"
+.TP
+semanage(8)
+.PP
+
+.SH AUTHOR
+This manual page was written by Guido Trentalancia <guido@trentalancia.com>.
+
+The SELinux management library was written by Tresys Technology LLC and Red Hat Inc.
