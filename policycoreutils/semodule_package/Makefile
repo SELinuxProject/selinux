@@ -24,7 +24,7 @@ install: all
 relabel:
 
 clean:
-	-rm -f semodule_package *.o
+	-rm -f semodule_package semodule_unpackage *.o
 
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])
