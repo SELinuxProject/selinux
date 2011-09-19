@@ -1,7 +1,7 @@
 # Installation directories.
-PREFIX ?= ${DESTDIR}/usr
-INITDIR ?= ${DESTDIR}/etc/rc.d/init.d/
-SYSCONFDIR ?= ${DESTDIR}/etc/sysconfig
+PREFIX ?= $(DESTDIR)/usr
+INITDIR ?= $(DESTDIR)/etc/rc.d/init.d/
+SYSCONFDIR ?= $(DESTDIR)/etc/sysconfig
 BINDIR ?= $(PREFIX)/bin
 SBINDIR ?= $(PREFIX)/sbin
 MANDIR ?= $(PREFIX)/share/man
