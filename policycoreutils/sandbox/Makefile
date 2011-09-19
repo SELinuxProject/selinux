@@ -2,6 +2,7 @@
 PREFIX ?= $(DESTDIR)/usr
 INITDIR ?= $(DESTDIR)/etc/rc.d/init.d/
 SYSCONFDIR ?= $(DESTDIR)/etc/sysconfig
+LIBDIR ?= $(PREFIX)/lib
 BINDIR ?= $(PREFIX)/bin
 SBINDIR ?= $(PREFIX)/sbin
 MANDIR ?= $(PREFIX)/share/man
@@ -13,7 +14,7 @@ LDLIBS += -lcgroup -lselinux -lcap-ng
 all: sandbox seunshare sandboxX.sh start
 
 seunshare: seunshare.o $(EXTRA_OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS) -L$(LIBDIR)
 
 install: all
 	-mkdir -p $(BINDIR)
