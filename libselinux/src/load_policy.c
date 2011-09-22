@@ -380,7 +380,7 @@ int selinux_init_load_policy(int *enforce)
 	}
 
 	if (! mntpoint ) {
-		if (errno == ENODEV) {
+		if (errno == ENODEV || !selinuxfs_exists()) {
 			/*
 			 * SELinux was disabled in the kernel, either
 			 * omitted entirely or disabled at boot via selinux=0.

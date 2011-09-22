@@ -5,6 +5,7 @@
 hidden_proto(selinux_mkload_policy)
     hidden_proto(fini_selinuxmnt)
     hidden_proto(set_selinuxmnt)
+    hidden_proto(selinuxfs_exists)
     hidden_proto(security_disable)
     hidden_proto(security_policyvers)
     hidden_proto(security_load_policy)

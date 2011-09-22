@@ -52,13 +52,40 @@ static int verify_selinuxmnt(char *mnt)
 	return -1;
 }
 
+int selinuxfs_exists(void)
+{
+	int exists = 0;
+	FILE *fp = NULL;
+	char *buf = NULL;
+	size_t len;
+	ssize_t num;
+
+	fp = fopen("/proc/filesystems", "r");
+	if (!fp)
+		return 1; /* Fail as if it exists */
+	__fsetlocking(fp, FSETLOCKING_BYCALLER);
+
+	num = getline(&buf, &len, fp);
+	while (num != -1) {
+		if (strstr(buf, SELINUXFS)) {
+			exists = 1;
+			break;
+		}
+		num = getline(&buf, &len, fp);
+	}
+
+	free(buf);
+	fclose(fp);
+	return exists;
+}
+hidden_def(selinuxfs_exists)
+
 static void init_selinuxmnt(void)
 {
 	char *buf=NULL, *p;
 	FILE *fp=NULL;
 	size_t len;
 	ssize_t num;
-	int exists = 0;
 
 	if (selinux_mnt)
 		return;
@@ -68,22 +95,8 @@ static void init_selinuxmnt(void)
 	if (verify_selinuxmnt(OLDSELINUXMNT) == 0) return;
 
 	/* Drop back to detecting it the long way. */
-	fp = fopen("/proc/filesystems", "r");
-	if (!fp)
-		return;
-
-	__fsetlocking(fp, FSETLOCKING_BYCALLER);
-	while ((num = getline(&buf, &len, fp)) != -1) {
-		if (strstr(buf, SELINUXFS)) {
-			exists = 1;
-			break;
-		}
-	}
-
-	if (!exists) 
+	if (!selinuxfs_exists())
 		goto out;
-
-	fclose(fp);
 
 	/* At this point, the usual spot doesn't have an selinuxfs so
 	 * we look around for it */

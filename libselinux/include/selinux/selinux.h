@@ -515,6 +515,9 @@ extern int selinux_check_securetty_context(const security_context_t tty_context)
    which performs the initial mount of selinuxfs. */
 void set_selinuxmnt(char *mnt);
 
+/* Check if selinuxfs exists as a kernel filesystem */
+int selinuxfs_exists(void);
+
 /* clear selinuxmnt variable and free allocated memory */
 void fini_selinuxmnt(void);
 
