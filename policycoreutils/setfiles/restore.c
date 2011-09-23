@@ -250,46 +250,6 @@ static int apply_spec(FTSENT *ftsent)
 	return rc;
 }
 
-static int symlink_realpath(char *name, char *path)
-{
-	char *p = NULL, *file_sep;
-	char *tmp_path = strdupa(name);
-	size_t len = 0;
-
-	if (!tmp_path) {
-		fprintf(stderr, "strdupa on %s failed:  %s\n", name,
-			strerror(errno));
-		return -1;
-	}
-	file_sep = strrchr(tmp_path, '/');
-	if (file_sep == tmp_path) {
-		file_sep++;
-		p = strcpy(path, "");
-	} else if (file_sep) {
-		*file_sep = 0;
-		file_sep++;
-		p = realpath(tmp_path, path);
-	} else {
-		file_sep = tmp_path;
-		p = realpath("./", path);
-	}
-	if (p)
-		len = strlen(p);
-	if (!p || len + strlen(file_sep) + 2 > PATH_MAX) {
-		fprintf(stderr, "symlink_realpath(%s) failed %s\n", name,
-			strerror(errno));
-		return -1;
-	}
-	p += len;
-	/* ensure trailing slash of directory name */
-	if (len == 0 || *(p - 1) != '/') {
-		*p = '/';
-		p++;
-	}
-	strcpy(p, file_sep);
-	return 0;
-}
-
 static int process_one(char *name, int recurse_this_path)
 {
 	int rc = 0;
@@ -414,7 +374,7 @@ int process_one_realpath(char *name, int recurse)
 		if (S_ISLNK(sb.st_mode)) {
 			char path[PATH_MAX + 1];
 
-			rc = symlink_realpath(name, path);
+			rc = realpath_not_final(name, path);
 			if (rc < 0)
 				return rc;
 			rc = process_one(path, 0);
