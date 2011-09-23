@@ -413,6 +413,11 @@ extern int matchpathcon_init_prefix(const char *path, const char *prefix);
 /* Free the memory allocated by matchpathcon_init. */
 extern void matchpathcon_fini(void);
 
+/* Resolve all of the symlinks and relative portions of a pathname, but NOT
+ * the final component (same a realpath() unless the final component is a
+ * symlink.  Resolved path must be a path of size PATH_MAX + 1 */
+extern int realpath_not_final(const char *name, char *resolved_path);
+
 /* Match the specified pathname and mode against the file contexts
    configuration and set *con to refer to the resulting context.
    'mode' can be 0 to disable mode matching.

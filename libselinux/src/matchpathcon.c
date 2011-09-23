@@ -344,7 +344,7 @@ void matchpathcon_fini(void)
  * determine a real path component of the first portion.  We then have to
  * copy the last part back on to get the final real path.  Wheww.
  */
-static int symlink_realpath(const char *name, char *resolved_path)
+int realpath_not_final(const char *name, char *resolved_path)
 {
 	char *last_component;
 	char *tmp_path, *p;
@@ -406,7 +406,7 @@ int matchpathcon(const char *path, mode_t mode, security_context_t * con)
 			return -1;
 
 	if (S_ISLNK(mode)) {
-		if (!symlink_realpath(path, stackpath))
+		if (!realpath_not_final(path, stackpath))
 			path = stackpath;
 	} else {
 		p = realpath(path, stackpath);
