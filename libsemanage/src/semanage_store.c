@@ -57,7 +57,7 @@ typedef struct dbase_policydb dbase_t;
 
 #include "debug.h"
 
-static const char *DISABLESTR="disabled";
+const char *DISABLESTR=".disabled";
 
 #define SEMANAGE_CONF_FILE "semanage.conf"
 /* relative path names to enum semanage_paths to special files and
@@ -427,13 +427,6 @@ int semanage_store_access_check(void)
 
 /********************* other I/O functions *********************/
 
-static int is_disabled_file(const char *file) {
-	char *ptr = strrchr(file, '.');
-	if (! ptr) return 0;
-	ptr++;
-	return (strcmp(ptr, DISABLESTR) == 0);
-}
-
 /* Callback used by scandir() to select files. */
 static int semanage_filename_select(const struct dirent *d)
 {
@@ -444,41 +437,11 @@ static int semanage_filename_select(const struct dirent *d)
 	return 1;
 }
 
-int semanage_disable_module(const char *file) {
-	char path[PATH_MAX];
-	int in;
-	int n = snprintf(path, PATH_MAX, "%s.%s", file, DISABLESTR);
-	if (n < 0 || n >= PATH_MAX)
-		return -1;
-	if ((in = open(path, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR)) == -1) {
-		return -1;
-	}
-	close(in);
-	return 0;
-}
-
-int semanage_enable_module(const char *file) {
-	char path[PATH_MAX];
-	int n = snprintf(path, PATH_MAX, "%s.%s", file, DISABLESTR);
-	if (n < 0 || n >= PATH_MAX)
-		return 1;
-
-	if ((unlink(path) < 0) && (errno != ENOENT))
-		return -1;
-	return 0;
-}
-
 int semanage_module_enabled(const char *file) {
-	char path[PATH_MAX];
-	if (is_disabled_file(file)) return 0;
-	int n = snprintf(path, PATH_MAX, "%s.%s", file, DISABLESTR);
-	if (n < 0 || n >= PATH_MAX)
-		return 1;
-
-	return (access(path, F_OK ) != 0);
+	int len = strlen(file) - strlen(DISABLESTR);
+	return (len < 0 || strcmp(&file[len], DISABLESTR) != 0);
 }
 
-/* Callback used by scandir() to select module files. */
 static int semanage_modulename_select(const struct dirent *d)
 {
 	if (d->d_name[0] == '.'
@@ -486,7 +449,7 @@ static int semanage_modulename_select(const struct dirent *d)
 		|| (d->d_name[1] == '.' && d->d_name[2] == '\0')))
 		return 0;
 
-	return (! is_disabled_file(d->d_name));
+	return semanage_module_enabled(d->d_name);
 }
 
 /* Copies a file from src to dst.  If dst already exists then
@@ -727,7 +690,7 @@ int semanage_get_modules_names(semanage_handle_t * sh, char ***filenames,
 			       int *len)
 {
 	return semanage_get_modules_names_filter(sh, filenames,
-						 len, semanage_modulename_select);
+						 len, semanage_filename_select);
 }
 
 /* Scans the modules directory for the current semanage handler.  This
@@ -740,25 +703,8 @@ int semanage_get_modules_names(semanage_handle_t * sh, char ***filenames,
 int semanage_get_active_modules_names(semanage_handle_t * sh, char ***filenames,
 			       int *len)
 {
-
-	int rc = semanage_get_modules_names_filter(sh, filenames,
-						   len, semanage_modulename_select);
-	if ( rc != 0 ) return rc;
-
-	int i = 0, num_modules = *len;
-	char **names=*filenames;
-
-	while ( i < num_modules ) {
-		if (! semanage_module_enabled(names[i])) {
-			free(names[i]);
-			names[i]=names[num_modules-1];
-			names[num_modules-1] = NULL;
-			num_modules--;
-		}
-		i++;
-	}
-	*len = num_modules;
-	return 0;
+	return semanage_get_modules_names_filter(sh, filenames,
+						 len, semanage_modulename_select);
 }
 
 /******************* routines that run external programs *******************/

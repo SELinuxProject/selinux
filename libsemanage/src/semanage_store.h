@@ -86,8 +86,6 @@ int semanage_get_modules_names(semanage_handle_t * sh,
 			       char ***filenames, int *len);
 
 int semanage_module_enabled(const char *file);
-int semanage_enable_module(const char *file);
-int semanage_disable_module(const char *file);
 /* lock file routines */
 int semanage_get_trans_lock(semanage_handle_t * sh);
 int semanage_get_active_lock(semanage_handle_t * sh);
@@ -131,5 +129,7 @@ int semanage_nc_sort(semanage_handle_t * sh,
 		     const char *buf,
 		     size_t buf_len,
 		     char **sorted_buf, size_t * sorted_buf_len);
+
+extern const char *DISABLESTR;
 
 #endif
