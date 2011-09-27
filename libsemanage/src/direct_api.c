@@ -1336,14 +1336,8 @@ static int semanage_direct_enable(semanage_handle_t * sh, char *module_name)
 			goto cleanup;
 		}
 		base++;
-		if (memcmp(module_name, base, name_len) == 0) {
-
-			if(strcmp(base + name_len + 3, DISABLESTR) != 0) {
-				ERR(sh, "Module %s is already enabled.", module_name);
-				retval = -2;
-				goto cleanup;
-			}
-
+		if (memcmp(module_name, base, name_len) == 0 &&
+		    strcmp(base + name_len + 3, DISABLESTR) == 0) {
 			int len = strlen(module_filenames[i]) - strlen(DISABLESTR);
 			char *enabled_name = calloc(1, len+1);
 			if (!enabled_name) {
@@ -1374,7 +1368,7 @@ static int semanage_direct_enable(semanage_handle_t * sh, char *module_name)
 	return retval;
 }
 
-/* Disables a module from the sandbox.  Returns 0 on success, -1 if out
+/* Enables a module from the sandbox.  Returns 0 on success, -1 if out
  * of memory, -2 if module not found or could not be enabled. */
 static int semanage_direct_disable(semanage_handle_t * sh, char *module_name)
 {
@@ -1394,28 +1388,23 @@ static int semanage_direct_disable(semanage_handle_t * sh, char *module_name)
 			goto cleanup;
 		}
 		base++;
-		if (memcmp(module_name, base, name_len) == 0) {
-			if (strcmp(base + name_len + 3, DISABLESTR) == 0) {
-				ERR(sh, "Module %s is already disabled.", module_name);
+		if (memcmp(module_name, base, name_len) == 0 &&
+		    strcmp(base + name_len, ".pp") == 0) {
+			char disabled_name[PATH_MAX];
+			if (snprintf(disabled_name, PATH_MAX, "%s%s", 
+				     module_filenames[i], DISABLESTR) == PATH_MAX) {
+				ERR(sh, "Could not disable module file %s.",
+				    module_filenames[i]);
 				retval = -2;
 				goto cleanup;
-			} else if (strcmp(base + name_len, ".pp") == 0) {
-				char disabled_name[PATH_MAX];
-				if (snprintf(disabled_name, PATH_MAX, "%s%s", 
-							module_filenames[i], DISABLESTR) == PATH_MAX) {
-					ERR(sh, "Could not disable module file %s.",
-							module_filenames[i]);
-					retval = -2;
-					goto cleanup;
-				}
-				if (rename(module_filenames[i], disabled_name) == -1) {
-					ERR(sh, "Could not disable module file %s.",
-							module_filenames[i]);
-					retval = -2;
-				}
-				retval = 0;
-				goto cleanup;
 			}
+			if (rename(module_filenames[i], disabled_name) == -1) {
+				ERR(sh, "Could not disable module file %s.",
+				    module_filenames[i]);
+				retval = -2;
+			}
+			retval = 0;
+			goto cleanup;
 		}
 	}
 	ERR(sh, "Module %s was not found.", module_name);
