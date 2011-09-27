@@ -1,3 +1,6 @@
+2.1.6 2011-09-27
+	* semanage: fix indentation error in seobject
+
 2.1.6 2011-09-15
 	* sepolgen-ifgen: new attr-helper does something
 	* audit2allow: use alternate policy file
