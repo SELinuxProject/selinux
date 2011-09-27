@@ -57,8 +57,6 @@ typedef struct dbase_policydb dbase_t;
 
 #include "debug.h"
 
-const char *DISABLESTR=".disabled";
-
 #define SEMANAGE_CONF_FILE "semanage.conf"
 /* relative path names to enum semanage_paths to special files and
  * directories for the module store */
@@ -437,21 +435,6 @@ static int semanage_filename_select(const struct dirent *d)
 	return 1;
 }
 
-int semanage_module_enabled(const char *file) {
-	int len = strlen(file) - strlen(DISABLESTR);
-	return (len < 0 || strcmp(&file[len], DISABLESTR) != 0);
-}
-
-static int semanage_modulename_select(const struct dirent *d)
-{
-	if (d->d_name[0] == '.'
-	    && (d->d_name[1] == '\0'
-		|| (d->d_name[1] == '.' && d->d_name[2] == '\0')))
-		return 0;
-
-	return semanage_module_enabled(d->d_name);
-}
-
 /* Copies a file from src to dst.  If dst already exists then
  * overwrite it.  Returns 0 on success, -1 on error. */
 static int semanage_copy_file(const char *src, const char *dst, mode_t mode)
@@ -622,8 +605,15 @@ int semanage_make_sandbox(semanage_handle_t * sh)
 	return -1;
 }
 
-static int semanage_get_modules_names_filter(semanage_handle_t * sh, char ***filenames,
-				      int *len, int (*filter)(const struct dirent *))
+/* Scans the modules directory for the current semanage handler.  This
+ * might be the active directory or sandbox, depending upon if the
+ * handler has a transaction lock.  Allocates and fills in *filenames
+ * with an array of module filenames; length of array is stored in
+ * *len.  The caller is responsible for free()ing *filenames and its
+ * individual elements.	 Upon success returns 0, -1 on error.
+ */
+int semanage_get_modules_names(semanage_handle_t * sh, char ***filenames,
+			       int *len)
 {
 	const char *modules_path;
 	struct dirent **namelist = NULL;
@@ -638,7 +628,7 @@ static int semanage_get_modules_names_filter(semanage_handle_t * sh, char ***fil
 	*filenames = NULL;
 	*len = 0;
 	if ((num_files = scandir(modules_path, &namelist,
-				 filter, alphasort)) == -1) {
+				 semanage_filename_select, alphasort)) == -1) {
 		ERR(sh, "Error while scanning directory %s.", modules_path);
 		goto cleanup;
 	}
@@ -677,34 +667,6 @@ static int semanage_get_modules_names_filter(semanage_handle_t * sh, char ***fil
 	}
 	free(namelist);
 	return retval;
-}
-
-/* Scans the modules directory for the current semanage handler.  This
- * might be the active directory or sandbox, depending upon if the
- * handler has a transaction lock.  Allocates and fills in *filenames
- * with an array of module filenames; length of array is stored in
- * *len.  The caller is responsible for free()ing *filenames and its
- * individual elements.	 Upon success returns 0, -1 on error.
- */
-int semanage_get_modules_names(semanage_handle_t * sh, char ***filenames,
-			       int *len)
-{
-	return semanage_get_modules_names_filter(sh, filenames,
-						 len, semanage_filename_select);
-}
-
-/* Scans the modules directory for the current semanage handler.  This
- * might be the active directory or sandbox, depending upon if the
- * handler has a transaction lock.  Allocates and fills in *filenames
- * with an array of module filenames; length of array is stored in
- * *len.  The caller is responsible for free()ing *filenames and its
- * individual elements.	 Upon success returns 0, -1 on error.
- */
-int semanage_get_active_modules_names(semanage_handle_t * sh, char ***filenames,
-			       int *len)
-{
-	return semanage_get_modules_names_filter(sh, filenames,
-						 len, semanage_modulename_select);
 }
 
 /******************* routines that run external programs *******************/
@@ -1633,7 +1595,7 @@ int semanage_link_sandbox(semanage_handle_t * sh,
 	}
 
 	/* get list of modules and load them */
-	if (semanage_get_active_modules_names(sh, &module_filenames, &num_modules) ==
+	if (semanage_get_modules_names(sh, &module_filenames, &num_modules) ==
 	    -1 || semanage_load_module(sh, base_filename, base) == -1) {
 		goto cleanup;
 	}

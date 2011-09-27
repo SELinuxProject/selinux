@@ -40,12 +40,10 @@ int semanage_module_install_base(semanage_handle_t *,
 				 char *module_data, size_t data_len);
 int semanage_module_install_base_file(semanage_handle_t *,
 				      const char *module_name);
-int semanage_module_enable(semanage_handle_t *, char *module_name);
-int semanage_module_disable(semanage_handle_t *, char *module_name);
 int semanage_module_remove(semanage_handle_t *, char *module_name);
 
 /* semanage_module_info is for getting information on installed
-   modules, only name and version, and enabled/disabled flag at this time */
+   modules, only name and version at this time */
 typedef struct semanage_module_info semanage_module_info_t;
 
 int semanage_module_list(semanage_handle_t *,
@@ -55,6 +53,5 @@ semanage_module_info_t *semanage_module_list_nth(semanage_module_info_t * list,
 						 int n);
 const char *semanage_module_get_name(semanage_module_info_t *);
 const char *semanage_module_get_version(semanage_module_info_t *);
-int semanage_module_get_enabled(semanage_module_info_t *);
 
 #endif

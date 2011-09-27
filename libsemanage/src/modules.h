@@ -26,7 +26,6 @@
 struct semanage_module_info {
 	char *name;		/* Key */
 	char *version;
-	int enabled;
 };
 
 #endif

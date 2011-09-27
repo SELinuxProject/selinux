@@ -58,12 +58,6 @@ struct semanage_policy_table {
 	/* Upgrade a policy module */
 	int (*upgrade_file) (struct semanage_handle *, const char *);
 
-	/* Enable a policy module */
-	int (*enable) (struct semanage_handle *, char *);
-
-	/* Disable a policy module */
-	int (*disable) (struct semanage_handle *, char *);
-
 	/* Remove a policy module */
 	int (*remove) (struct semanage_handle *, char *);
 

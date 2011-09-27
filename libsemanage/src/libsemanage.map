@@ -6,13 +6,10 @@ LIBSEMANAGE_1.0 {
 	  semanage_module_install; semanage_module_install_file;
 	  semanage_module_upgrade; semanage_module_upgrade_file;
 	  semanage_module_install_base; semanage_module_install_base_file;
-	  semanage_module_enable;
-	  semanage_module_disable;
 	  semanage_module_remove;
 	  semanage_module_list; semanage_module_info_datum_destroy;
 	  semanage_module_list_nth; semanage_module_get_name;
 	  semanage_module_get_version; semanage_select_store;
-	  semanage_module_get_enabled;
 	  semanage_reload_policy; semanage_set_reload; semanage_set_rebuild;
 	  semanage_set_root;
 	  semanage_user_*; semanage_bool_*; semanage_seuser_*;

@@ -23,12 +23,12 @@
 
 #include <semanage/modules.h>
 
-enum client_modes { NO_MODE, INSTALL_M, UPGRADE_M, BASE_M, ENABLE_M, DISABLE_M, REMOVE_M,
+enum client_modes { NO_MODE, INSTALL_M, UPGRADE_M, BASE_M, REMOVE_M,
 	LIST_M, RELOAD
 };
 /* list of modes in which one ought to commit afterwards */
 static const int do_commit[] = {
-	0, 1, 1, 1, 1, 1, 1,
+	0, 1, 1, 1, 1,
 	0, 0
 };
 
@@ -106,11 +106,9 @@ static void usage(char *progname)
 	printf("  -R, --reload		    reload policy\n");
 	printf("  -B, --build		    build and reload policy\n");
 	printf("  -i,--install=MODULE_PKG   install a new module\n");
-	printf("  -u,--upgrade=MODULE_PKG   upgrade existing module\n");
+	printf("  -u,--upgrade=MODULE_PKG   upgrades or install module to a newer version\n");
 	printf("  -b,--base=MODULE_PKG      install new base module\n");
-	printf("  -e,--enable=MODULE_PKG    enable existing module\n");
-	printf("  -d,--disable=MODULE_PKG   disable existing module\n");
- 	printf("  -r,--remove=MODULE_NAME   remove existing module\n");
+	printf("  -r,--remove=MODULE_NAME   remove existing module\n");
 	printf
 	    ("  -l,--list-modules         display list of installed modules\n");
 	printf("Other options:\n");
@@ -158,8 +156,6 @@ static void parse_command_line(int argc, char **argv)
 		{"install", required_argument, NULL, 'i'},
 		{"list-modules", 0, NULL, 'l'},
 		{"verbose", 0, NULL, 'v'},
-		{"enable", required_argument, NULL, 'e'},
-		{"disable", required_argument, NULL, 'd'},
 		{"remove", required_argument, NULL, 'r'},
 		{"upgrade", required_argument, NULL, 'u'},
 		{"reload", 0, NULL, 'R'},
@@ -176,7 +172,7 @@ static void parse_command_line(int argc, char **argv)
 	no_reload = 0;
 	create_store = 0;
 	while ((i =
-		getopt_long(argc, argv, "p:s:b:hi:lvqe:d:r:u:RnNBDP", opts,
+		getopt_long(argc, argv, "p:s:b:hi:lvqr:u:RnNBDP", opts,
 			    NULL)) != -1) {
 		switch (i) {
 		case 'b':
@@ -194,12 +190,6 @@ static void parse_command_line(int argc, char **argv)
 			break;
 		case 'v':
 			verbose = 1;
-			break;
-		case 'e':
-			set_mode(ENABLE_M, optarg);
-			break;
-		case 'd':
-			set_mode(DISABLE_M, optarg);
 			break;
 		case 'r':
 			set_mode(REMOVE_M, optarg);
@@ -263,10 +253,6 @@ static void parse_command_line(int argc, char **argv)
 			mode = UPGRADE_M;
 		} else if (commands && commands[num_commands - 1].mode == REMOVE_M) {
 			mode = REMOVE_M;
-		} else if (commands && commands[num_commands - 1].mode == ENABLE_M) {
-			mode = ENABLE_M;
-		} else if (commands && commands[num_commands - 1].mode == DISABLE_M) {
-			mode = DISABLE_M;
 		} else {
 			fprintf(stderr, "unknown additional arguments:\n");
 			while (optind < argc)
@@ -385,30 +371,6 @@ int main(int argc, char *argv[])
 				    semanage_module_install_base_file(sh, mode_arg);
 				break;
 			}
-		case ENABLE_M:{
-				if (verbose) {
-					printf
-					    ("Attempting to enable module '%s':\n",
-					     mode_arg);
-				}
-				result = semanage_module_enable(sh, mode_arg);
-				if ( result == -2 ) { 
-					continue;
-				}
-				break;
-			}
-		case DISABLE_M:{
-				if (verbose) {
-					printf
-					    ("Attempting to disable module '%s':\n",
-					     mode_arg);
-				}
-				result = semanage_module_disable(sh, mode_arg);
-				if ( result == -2 ) { 
-					continue;
-				}
-				break;
-			}
 		case REMOVE_M:{
 				if (verbose) {
 					printf
@@ -439,12 +401,11 @@ int main(int argc, char *argv[])
 						semanage_module_info_t *m =
 						    semanage_module_list_nth
 						    (modinfo, j);
-						printf("%s\t%s\t%s\n",
+						printf("%s\t%s\n",
 						       semanage_module_get_name
 						       (m),
 						       semanage_module_get_version
-						       (m), 
-						       (semanage_module_get_enabled(m) ? "" : "Disabled"));
+						       (m));
 						semanage_module_info_datum_destroy
 						    (m);
 					}

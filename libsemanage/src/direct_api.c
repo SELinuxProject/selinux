@@ -66,8 +66,6 @@ static int semanage_direct_upgrade_file(semanage_handle_t * sh, const char *modu
 static int semanage_direct_install_base(semanage_handle_t * sh, char *base_data,
 					size_t data_len);
 static int semanage_direct_install_base_file(semanage_handle_t * sh, const char *module_name);
-static int semanage_direct_enable(semanage_handle_t * sh, char *module_name);
-static int semanage_direct_disable(semanage_handle_t * sh, char *module_name);
 static int semanage_direct_remove(semanage_handle_t * sh, char *module_name);
 static int semanage_direct_list(semanage_handle_t * sh,
 				semanage_module_info_t ** modinfo,
@@ -85,8 +83,6 @@ static struct semanage_policy_table direct_funcs = {
 	.upgrade_file = semanage_direct_upgrade_file,
 	.install_base = semanage_direct_install_base,
 	.install_base_file = semanage_direct_install_base_file,
-	.enable = semanage_direct_enable,
-	.disable = semanage_direct_disable,
 	.remove = semanage_direct_remove,
 	.list = semanage_direct_list
 };
@@ -353,17 +349,10 @@ static int parse_module_headers(semanage_handle_t * sh, char *module_data,
 	     semanage_path(SEMANAGE_TMP, SEMANAGE_MODULES)) == NULL) {
 		return -1;
 	}
-	if (asprintf(filename, "%s/%s.pp%s", module_path, *module_name, DISABLESTR) == -1) {
+	if (asprintf(filename, "%s/%s.pp", module_path, *module_name) == -1) {
 		ERR(sh, "Out of memory!");
 		return -1;
 	}
-
-	if (access(*filename, F_OK) == -1) {
-		char *ptr = *filename;
-		int len = strlen(ptr) - strlen(DISABLESTR);
-		if (len > 0) ptr[len]='\0';
-	}
-
 	return 0;
 }
 
@@ -1316,107 +1305,6 @@ static int semanage_direct_install_base_file(semanage_handle_t * sh,
 	return retval;
 }
 
-/* Enables a module from the sandbox.  Returns 0 on success, -1 if out
- * of memory, -2 if module not found or could not be enabled. */
-static int semanage_direct_enable(semanage_handle_t * sh, char *module_name)
-{
-	int i, retval = -1;
-	char **module_filenames = NULL;
-	int num_mod_files;
-	size_t name_len = strlen(module_name);
-	if (semanage_get_modules_names(sh, &module_filenames, &num_mod_files) ==
-	    -1) {
-		return -1;
-	}
-	for (i = 0; i < num_mod_files; i++) {
-		char *base = strrchr(module_filenames[i], '/');
-		if (base == NULL) {
-			ERR(sh, "Could not read module names.");
-			retval = -2;
-			goto cleanup;
-		}
-		base++;
-		if (memcmp(module_name, base, name_len) == 0 &&
-		    strcmp(base + name_len + 3, DISABLESTR) == 0) {
-			int len = strlen(module_filenames[i]) - strlen(DISABLESTR);
-			char *enabled_name = calloc(1, len+1);
-			if (!enabled_name) {
-				ERR(sh, "Could not allocate memory");
-				retval = -1;
-				goto cleanup;
-			}
-
-			strncpy(enabled_name, module_filenames[i],len);
-
-			if (rename(module_filenames[i], enabled_name) == -1) {
-				ERR(sh, "Could not enable module file %s.",
-				    enabled_name);
-				retval = -2;
-			}
-			retval = 0;
-			free(enabled_name);
-			goto cleanup;
-		}
-	}
-	ERR(sh, "Module %s was not found.", module_name);
-	retval = -2;		/* module not found */
-      cleanup:
-	for (i = 0; module_filenames != NULL && i < num_mod_files; i++) {
-		free(module_filenames[i]);
-	}
-	free(module_filenames);
-	return retval;
-}
-
-/* Enables a module from the sandbox.  Returns 0 on success, -1 if out
- * of memory, -2 if module not found or could not be enabled. */
-static int semanage_direct_disable(semanage_handle_t * sh, char *module_name)
-{
-	int i, retval = -1;
-	char **module_filenames = NULL;
-	int num_mod_files;
-	size_t name_len = strlen(module_name);
-	if (semanage_get_modules_names(sh, &module_filenames, &num_mod_files) ==
-	    -1) {
-		return -1;
-	}
-	for (i = 0; i < num_mod_files; i++) {
-		char *base = strrchr(module_filenames[i], '/');
-		if (base == NULL) {
-			ERR(sh, "Could not read module names.");
-			retval = -2;
-			goto cleanup;
-		}
-		base++;
-		if (memcmp(module_name, base, name_len) == 0 &&
-		    strcmp(base + name_len, ".pp") == 0) {
-			char disabled_name[PATH_MAX];
-			if (snprintf(disabled_name, PATH_MAX, "%s%s", 
-				     module_filenames[i], DISABLESTR) == PATH_MAX) {
-				ERR(sh, "Could not disable module file %s.",
-				    module_filenames[i]);
-				retval = -2;
-				goto cleanup;
-			}
-			if (rename(module_filenames[i], disabled_name) == -1) {
-				ERR(sh, "Could not disable module file %s.",
-				    module_filenames[i]);
-				retval = -2;
-			}
-			retval = 0;
-			goto cleanup;
-		}
-	}
-	ERR(sh, "Module %s was not found.", module_name);
-	retval = -2;		/* module not found */
-      cleanup:
-	for (i = 0; module_filenames != NULL && i < num_mod_files; i++) {
-		free(module_filenames[i]);
-	}
-	free(module_filenames);
-	return retval;
-}
-
 /* Removes a module from the sandbox.  Returns 0 on success, -1 if out
  * of memory, -2 if module not found or could not be removed. */
 static int semanage_direct_remove(semanage_handle_t * sh, char *module_name)
@@ -1437,7 +1325,8 @@ static int semanage_direct_remove(semanage_handle_t * sh, char *module_name)
 			goto cleanup;
 		}
 		base++;
-		if (memcmp(module_name, base, name_len) == 0) {
+		if (memcmp(module_name, base, name_len) == 0 &&
+		    strcmp(base + name_len, ".pp") == 0) {
 			if (unlink(module_filenames[i]) == -1) {
 				ERR(sh, "Could not remove module file %s.",
 				    module_filenames[i]);
@@ -1512,7 +1401,6 @@ static int semanage_direct_list(semanage_handle_t * sh,
 		}
 		ssize_t size;
 		char *data = NULL;
-		int enabled = semanage_module_enabled(module_filenames[i]);
 
 		if ((size = bunzip(sh, fp, &data)) > 0) {
 			sepol_policy_file_set_mem(pf, data, size);
@@ -1533,7 +1421,6 @@ static int semanage_direct_list(semanage_handle_t * sh,
 		if (type == SEPOL_POLICY_MOD) {
 			(*modinfo)[*num_modules].name = name;
 			(*modinfo)[*num_modules].version = version;
-			(*modinfo)[*num_modules].enabled = enabled;
 			(*num_modules)++;
 		} else {
 			/* file was not a module, so don't report it */

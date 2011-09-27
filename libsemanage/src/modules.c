@@ -154,40 +154,6 @@ int semanage_module_install_base_file(semanage_handle_t * sh,
 	return sh->funcs->install_base_file(sh, module_name);
 }
 
-int semanage_module_enable(semanage_handle_t * sh, char *module_name)
-{
-	if (sh->funcs->enable == NULL) {
-		ERR(sh, "No enable function defined for this connection type.");
-		return -1;
-	} else if (!sh->is_connected) {
-		ERR(sh, "Not connected.");
-		return -1;
-	} else if (!sh->is_in_transaction) {
-		if (semanage_begin_transaction(sh) < 0) {
-			return -1;
-		}
-	}
-	sh->modules_modified = 1;
-	return sh->funcs->enable(sh, module_name);
-}
-
-int semanage_module_disable(semanage_handle_t * sh, char *module_name)
-{
-	if (sh->funcs->disable == NULL) {
-		ERR(sh, "No disable function defined for this connection type.");
-		return -1;
-	} else if (!sh->is_connected) {
-		ERR(sh, "Not connected.");
-		return -1;
-	} else if (!sh->is_in_transaction) {
-		if (semanage_begin_transaction(sh) < 0) {
-			return -1;
-		}
-	}
-	sh->modules_modified = 1;
-	return sh->funcs->disable(sh, module_name);
-}
-
 int semanage_module_remove(semanage_handle_t * sh, char *module_name)
 {
 	if (sh->funcs->remove == NULL) {
@@ -242,13 +208,6 @@ const char *semanage_module_get_name(semanage_module_info_t * modinfo)
 }
 
 hidden_def(semanage_module_get_name)
-
-int semanage_module_get_enabled(semanage_module_info_t * modinfo)
-{
-	return modinfo->enabled;
-}
-
-hidden_def(semanage_module_get_enabled)
 
 const char *semanage_module_get_version(semanage_module_info_t * modinfo)
 {
