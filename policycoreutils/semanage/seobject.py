@@ -182,7 +182,7 @@ class semanageRecords:
 
                if not semanageRecords.transaction and store != "":
                       semanage_select_store(handle, store, SEMANAGE_CON_DIRECT);
-                     semanageRecords.store = store
+                      semanageRecords.store = store
 
                if not semanage_is_managed(handle):
                       semanage_handle_destroy(handle)
