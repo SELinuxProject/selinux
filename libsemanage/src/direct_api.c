@@ -2,7 +2,7 @@
  *         Christopher Ashworth <cashworth@tresys.com>
  *
  * Copyright (C) 2004-2006 Tresys Technology, LLC
- * Copyright (C) 2005-2011 Red Hat, Inc.
+ * Copyright (C) 2005 Red Hat, Inc.
  * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -91,7 +91,7 @@ int semanage_direct_is_managed(semanage_handle_t * sh)
 {
 	char polpath[PATH_MAX];
 
-	snprintf(polpath, PATH_MAX, "%s%s", semanage_selinux_path(),
+	snprintf(polpath, PATH_MAX, "%s%s", selinux_path(),
 		 sh->conf->store_path);
 
 	if (semanage_check_init(polpath))
@@ -114,7 +114,7 @@ int semanage_direct_connect(semanage_handle_t * sh)
 	char polpath[PATH_MAX];
 	const char *path;
 
-	snprintf(polpath, PATH_MAX, "%s%s", semanage_selinux_path(),
+	snprintf(polpath, PATH_MAX, "%s%s", selinux_path(),
 		 sh->conf->store_path);
 
 	if (semanage_check_init(polpath))
@@ -1446,7 +1446,7 @@ int semanage_direct_access_check(semanage_handle_t * sh)
 {
 	char polpath[PATH_MAX];
 
-	snprintf(polpath, PATH_MAX, "%s%s", semanage_selinux_path(),
+	snprintf(polpath, PATH_MAX, "%s%s", selinux_path(),
 		 sh->conf->store_path);
 
 	if (semanage_check_init(polpath))
