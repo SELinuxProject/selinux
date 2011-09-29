@@ -656,5 +656,6 @@ void exclude_non_seclabel_mounts()
 	}
 
 	free(buf);
+	fclose(fp);
 }
 
