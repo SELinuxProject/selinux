@@ -109,6 +109,7 @@ tokens = (
     'DONTAUDIT',
     'AUDITALLOW',
     'NEVERALLOW',
+    'PERMISSIVE',
     'TYPE_TRANSITION',
     'TYPE_CHANGE',
     'TYPE_MEMBER',
@@ -170,6 +171,7 @@ reserved = {
     'dontaudit' : 'DONTAUDIT',
     'auditallow' : 'AUDITALLOW',
     'neverallow' : 'NEVERALLOW',
+    'permissive' : 'PERMISSIVE',
     'type_transition' : 'TYPE_TRANSITION',
     'type_change' : 'TYPE_CHANGE',
     'type_member' : 'TYPE_MEMBER',
@@ -490,6 +492,7 @@ def p_policy_stmt(p):
                    | interface_call
                    | role_def
                    | role_allow
+                   | permissive
                    | type_def
                    | typealias_def
                    | attribute_def
@@ -746,6 +749,10 @@ def p_role_allow(p):
     r.src_roles = p[2]
     r.tgt_roles = p[3]
     p[0] = r
+
+def p_permissive(p):
+    'permissive : PERMISSIVE names SEMI'
+    t.skip(1)
 
 def p_avrule_def(p):
     '''avrule_def : ALLOW names names COLON names names SEMI
