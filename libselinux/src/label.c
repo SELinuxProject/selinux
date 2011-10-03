@@ -62,50 +62,58 @@ struct selabel_sub *selabel_subs_init(const char *path,struct selabel_sub *list)
 	FILE *cfg = fopen(path, "r");
 	struct selabel_sub *sub;
 
-	if (cfg) {
-		while (fgets_unlocked(buf, sizeof(buf) - 1, cfg)) {
-			char *ptr = NULL;
-			char *src = buf;
-			char *dst = NULL;
+	if (!cfg)
+		return list;
 
-			while (*src && isspace(*src))
-				src++;
-			if (src[0] == '#') continue;
-			ptr = src;
-			while (*ptr && ! isspace(*ptr))
-				ptr++;
-			*ptr++ = 0;
-			if (! *src) continue;
+	while (fgets_unlocked(buf, sizeof(buf) - 1, cfg)) {
+		char *ptr = NULL;
+		char *src = buf;
+		char *dst = NULL;
 
-			dst = ptr;
-			while (*dst && isspace(*dst))
-				dst++;
-			ptr=dst;
-			while (*ptr && ! isspace(*ptr))
-				ptr++;
-			*ptr=0;
-			if (! *dst) continue;
+		while (*src && isspace(*src))
+			src++;
+		if (src[0] == '#') continue;
+		ptr = src;
+		while (*ptr && ! isspace(*ptr))
+			ptr++;
+		*ptr++ = '\0';
+		if (! *src) continue;
 
-			sub = malloc(sizeof(struct selabel_sub));
-			if (! sub) return list;
-			sub->src=strdup(src);
-			if (! sub->src) {
-				free(sub);
-				return list;
-			}
-			sub->dst=strdup(dst);
-			if (! sub->dst) {
-				free(sub->src);
-				free(sub);
-				return list;
-			}
-			sub->slen = strlen(src);
-			sub->next = list;
-			list = sub;
-		}
-		fclose(cfg);
+		dst = ptr;
+		while (*dst && isspace(*dst))
+			dst++;
+		ptr=dst;
+		while (*ptr && ! isspace(*ptr))
+			ptr++;
+		*ptr='\0';
+		if (! *dst)
+			continue;
+
+		sub = malloc(sizeof(*sub));
+		if (! sub)
+			goto err;
+		memset(sub, 0, sizeof(*sub));
+
+		sub->src=strdup(src);
+		if (! sub->src)
+			goto err;
+
+		sub->dst=strdup(dst);
+		if (! sub->dst)
+			goto err;
+
+		sub->slen = strlen(src);
+		sub->next = list;
+		list = sub;
 	}
+out:
+	fclose(cfg);
 	return list;
+err:
+	if (sub)
+		free(sub->src);
+	free(sub);
+	goto out;
 }
 
 /*
