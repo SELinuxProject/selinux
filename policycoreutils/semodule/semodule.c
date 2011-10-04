@@ -119,6 +119,7 @@ static void usage(char *progname)
 	printf("  -v,--verbose     be verbose\n");
 	printf("  -D,--disable_dontaudit	Remove dontaudits from policy\n");
 	printf("  -P,--preserve_tunables	Preserve tunables in policy\n");
+	printf("  -p,--path        use an alternate path for the policy root\n");
 }
 
 /* Sets the global mode variable to new_mode, but only if no other
