@@ -543,13 +543,13 @@ static int restore_environment(int preserve_environment,
 #if defined(AUDIT_LOG_PRIV) && !defined(NAMESPACE_PRIV)
 static int drop_capabilities(int full)
 {
+	uid_t uid = getuid();
+	if (!uid) return 0;
+
 	capng_setpid(getpid());
 	capng_clear(CAPNG_SELECT_BOTH);
 	if (capng_lock() < 0) 
 		return -1;
-
-	uid_t uid = getuid();
-	if (!uid) return 0;
 
 	/* Change uid */
 	if (setresuid(uid, uid, uid)) {
