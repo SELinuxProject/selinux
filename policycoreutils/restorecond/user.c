@@ -123,6 +123,11 @@ io_channel_callback
        sizeof (buffer),
        &bytes_read);
 
+    if (! bytes_read) {
+	    /* Sesssion/Terminal Ended */
+	    exit(0);
+    }
+
     while (i < bytes_read) {
 	    struct inotify_event *event;
 	    event = (struct inotify_event *)&buffer[i];
@@ -148,6 +153,7 @@ io_channel_callback
 
   if (condition & G_IO_HUP) {
     g_io_channel_close (source);
+    exit(0);
     return FALSE;
   }
 
@@ -210,6 +216,13 @@ static int local_server() {
 			perror("flock");
 		return -1;
 	}
+	/* watch for stdin/terminal going away */
+	GIOChannel *in = g_io_channel_unix_new(0);
+	g_io_add_watch_full( in,
+			     G_PRIORITY_HIGH,
+			     G_IO_IN|G_IO_ERR|G_IO_HUP,
+			     io_channel_callback, NULL, NULL);
+
 	return 0;
 }
 
@@ -221,7 +234,7 @@ int server(int master_fd, const char *watch_file) {
 #ifdef HAVE_DBUS
     if (dbus_server(loop) != 0)
 #endif /* HAVE_DBUS */
-	    if (local_server(loop))
+	    if (local_server())
 		    goto end;
 
     read_config(master_fd, watch_file);
