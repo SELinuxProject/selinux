@@ -39,6 +39,10 @@ will set the policy version to POLICYDB_VERSION_MAX, as defined in <sepol/policy
 version needs to be set for the policy.
 
 .TP
+.B target-platform
+The target platform to generate policies for. Valid values are "selinux" and "xen", and is set to "selinux" by default.
+
+.TP
 .B expand-check
 Whether or not to check "neverallow" rules when executing all
 .BR semanage

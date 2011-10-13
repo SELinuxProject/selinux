@@ -41,6 +41,7 @@ int yywrap(void);
 #.*               /* ignore comments */
 module-store      return MODULE_STORE;
 policy-version    return VERSION;
+target-platform   return TARGET_PLATFORM;
 expand-check      return EXPAND_CHECK;
 file-mode         return FILE_MODE;
 save-previous     return SAVE_PREVIOUS;

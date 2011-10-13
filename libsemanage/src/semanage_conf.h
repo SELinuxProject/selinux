@@ -34,6 +34,7 @@ typedef struct semanage_conf {
 	char *store_path;	/* used for both socket path and policy dir */
 	int server_port;
 	int policyvers;		/* version for server generated policies */
+	int target_platform;
 	int expand_check;
 	int save_previous;
 	int save_linked;
