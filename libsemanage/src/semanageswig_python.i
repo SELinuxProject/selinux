@@ -29,6 +29,8 @@
 %}
 
 %include "stdint.i"
+%ignore semanage_module_install_pp;
+%ignore semanage_module_install_hll;
 
 %wrapper %{
 
@@ -91,8 +93,7 @@
 		free(arr);
 		return STATUS_ERR;
 	}
-%}
-
+%} 
 /* a few helpful typemaps are available in this library */
 %include <typemaps.i>
 /* wrap all int*'s so they can be used for results 

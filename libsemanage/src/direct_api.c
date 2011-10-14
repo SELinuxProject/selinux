@@ -59,14 +59,8 @@ static int semanage_direct_disconnect(semanage_handle_t * sh);
 static int semanage_direct_begintrans(semanage_handle_t * sh);
 static int semanage_direct_commit(semanage_handle_t * sh);
 static int semanage_direct_install(semanage_handle_t * sh, char *data,
-				   size_t data_len);
+				   size_t data_len, char *module_name, char *lang_ext);
 static int semanage_direct_install_file(semanage_handle_t * sh, const char *module_name);
-static int semanage_direct_upgrade(semanage_handle_t * sh, char *data,
-				   size_t data_len);
-static int semanage_direct_upgrade_file(semanage_handle_t * sh, const char *module_name);
-static int semanage_direct_install_base(semanage_handle_t * sh, char *base_data,
-					size_t data_len);
-static int semanage_direct_install_base_file(semanage_handle_t * sh, const char *module_name);
 static int semanage_direct_remove(semanage_handle_t * sh, char *module_name);
 static int semanage_direct_list(semanage_handle_t * sh,
 				semanage_module_info_t ** modinfo,
@@ -102,10 +96,6 @@ static struct semanage_policy_table direct_funcs = {
 	.commit = semanage_direct_commit,
 	.install = semanage_direct_install,
 	.install_file = semanage_direct_install_file,
-	.upgrade = semanage_direct_upgrade,
-	.upgrade_file = semanage_direct_upgrade_file,
-	.install_base = semanage_direct_install_base,
-	.install_base_file = semanage_direct_install_base_file,
 	.remove = semanage_direct_remove,
 	.list = semanage_direct_list,
 	.get_enabled = semanage_direct_get_enabled,
@@ -367,87 +357,6 @@ static int semanage_direct_begintrans(semanage_handle_t * sh)
 }
 
 /********************* utility functions *********************/
-
-/* Takes a module stored in 'module_data' and parses its headers.
- * Sets reference variables 'module_name' to module's name, and
- * 'version' to module's version.  The caller is responsible for
- * free()ing 'module_name', and 'version'; they will be
- * set to NULL upon entering this function.  Returns 0 on success, -1
- * if out of memory, or -2 if data did not represent a module.
- */
-static int parse_module_headers(semanage_handle_t * sh, char *module_data,
-				size_t data_len, char **module_name,
-				char **version)
-{
-	struct sepol_policy_file *pf;
-	int file_type;
-	*module_name = *version = NULL;
-
-	if (sepol_policy_file_create(&pf)) {
-		ERR(sh, "Out of memory!");
-		return -1;
-	}
-	sepol_policy_file_set_mem(pf, module_data, data_len);
-	sepol_policy_file_set_handle(pf, sh->sepolh);
-	if (module_data == NULL ||
-	    data_len == 0 ||
-	    sepol_module_package_info(pf, &file_type, module_name,
-				      version) == -1) {
-		sepol_policy_file_free(pf);
-		ERR(sh, "Could not parse module data.");
-		return -2;
-	}
-	sepol_policy_file_free(pf);
-	if (file_type != SEPOL_POLICY_MOD) {
-		if (file_type == SEPOL_POLICY_BASE)
-			ERR(sh,
-			    "Received a base module, expected a non-base module.");
-		else
-			ERR(sh, "Data did not represent a module.");
-		return -2;
-	}
-
-	return 0;
-}
-
-/* Takes a base module stored in 'module_data' and parse its headers.
- * Returns 0 on success, -1 if out of memory, or -2 if data did not
- * represent a module.
- */
-static int parse_base_headers(semanage_handle_t * sh,
-			      char *module_data, size_t data_len)
-{
-	struct sepol_policy_file *pf;
-	char *module_name = NULL, *version = NULL;
-	int file_type;
-
-	if (sepol_policy_file_create(&pf)) {
-		ERR(sh, "Out of memory!");
-		return -1;
-	}
-	sepol_policy_file_set_mem(pf, module_data, data_len);
-	sepol_policy_file_set_handle(pf, sh->sepolh);
-	if (module_data == NULL ||
-	    data_len == 0 ||
-	    sepol_module_package_info(pf, &file_type,
-				      &module_name, &version) == -1) {
-		sepol_policy_file_free(pf);
-		ERR(sh, "Could not parse base module data.");
-		return -2;
-	}
-	sepol_policy_file_free(pf);
-	free(module_name);
-	free(version);
-	if (file_type != SEPOL_POLICY_BASE) {
-		if (file_type == SEPOL_POLICY_MOD)
-			ERR(sh,
-			    "Received a non-base module, expected a base module.");
-		else
-			ERR(sh, "Data did not represent a module.");
-		return -2;
-	}
-	return 0;
-}
 
 #include <stdlib.h>
 #include <bzlib.h>
@@ -1084,16 +993,11 @@ static int semanage_direct_commit(semanage_handle_t * sh)
  * data does not represent a valid module file, -3 if error while
  * writing file. */
 static int semanage_direct_install(semanage_handle_t * sh,
-				   char *data, size_t data_len)
+				   char *data, size_t data_len,
+				   char *module_name, char *lang_ext)
 {
 	int status = 0;
 	int ret = 0;
-
-	char *module_name = NULL, *version = NULL;
-	if ((status = parse_module_headers(sh, data, data_len,
-					   &module_name, &version)) != 0) {
-		goto cleanup;
-	}
 
 	semanage_module_info_t modinfo;
 	ret = semanage_module_info_init(sh, &modinfo);
@@ -1114,13 +1018,7 @@ static int semanage_direct_install(semanage_handle_t * sh,
 		goto cleanup;
 	}
 
-	ret = semanage_module_info_set_version(sh, &modinfo, version);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_lang_ext(sh, &modinfo, "pp");
+	ret = semanage_module_info_set_lang_ext(sh, &modinfo, lang_ext);
 	if (ret != 0) {
 		status = -1;
 		goto cleanup;
@@ -1135,8 +1033,6 @@ static int semanage_direct_install(semanage_handle_t * sh,
 	status = semanage_direct_install_info(sh, &modinfo, data, data_len);
 
 cleanup:
-	free(version);
-	free(module_name);
 
 	semanage_module_info_destroy(sh, &modinfo);
 
@@ -1157,6 +1053,10 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 	ssize_t data_len = 0;
 	int compressed = 0;
 	int in_fd = -1;
+	char *path = NULL;
+	char *filename;
+	char *lang_ext;
+	char *separator;
 
 	if ((in_fd = open(install_filename, O_RDONLY)) == -1) {
 		return -1;
@@ -1165,211 +1065,38 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 	if ((data_len = map_file(sh, in_fd, &data, &compressed)) <= 0) {
 		goto cleanup;
 	}
-		
-	retval = semanage_direct_install(sh, data, data_len);
 
-      cleanup:
-	close(in_fd);
-	if (data_len > 0) munmap(data, data_len);
-
-	return retval;
-}
-
-/* Similar to semanage_direct_install(), except that it checks that
- * there already exists a module with the same name and that the
- * module is an older version then the one in 'data'.  Returns 0 on
- * success, -1 if out of memory, -2 if the data does not represent a
- * valid module file, -3 if error while writing file or reading
- * modules directory, -4 if the previous module is same or newer than 'data', 
- * -5 if there does not exist an older module.
- */
-static int semanage_direct_upgrade(semanage_handle_t * sh,
-				   char *data, size_t data_len)
-{
-	int status = 0;
-	int ret = 0;
-
-	char *module_name = NULL, *version = NULL;
-	status = parse_module_headers(
-			sh,
-			data,
-			data_len,
-			&module_name,
-			&version);
-	if (status != 0) {
-		goto cleanup;
-	}
-
-	semanage_module_info_t modinfo;
-	ret = semanage_module_info_init(sh, &modinfo);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_priority(sh, &modinfo, sh->priority);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_name(sh, &modinfo, module_name);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_version(sh, &modinfo, version);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_lang_ext(sh, &modinfo, "pp");
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_enabled(sh, &modinfo, -1);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-cleanup:
-	free(module_name);
-	free(version);
-
-	return status;
-}
-
-/* Attempts to link a module to the sandbox's module directory, unlinking any
- * previous module stored within.  
- * Returns 0 on success, -1 if out of memory, -2 if the
- * data does not represent a valid module file, -3 if error while
- * writing file. */
-
-static int semanage_direct_upgrade_file(semanage_handle_t * sh,
-					const char *module_filename)
-{
-	int retval = -1;
-	char *data = NULL;
-	ssize_t data_len = 0;
-	int compressed = 0;
-	int in_fd = -1;
-
-	if ((in_fd = open(module_filename, O_RDONLY)) == -1) {
+	path = strdup(install_filename);
+	if (path == NULL) {
 		return -1;
 	}
 
-	if ((data_len = map_file(sh, in_fd, &data, &compressed)) <= 0) {
-		goto cleanup;
+	filename = basename(path);
+
+	if (compressed) {
+		separator = strrchr(filename, '.');
+		if (separator == NULL) {
+			ERR(sh, "Compressed module does not have a valid extension.");
+			goto cleanup;
+		}
+		*separator = '\0';
 	}
 
-	retval = semanage_direct_upgrade(sh, data, data_len);
+	separator = strrchr(filename, '.');
+	if (separator == NULL) {
+		ERR(sh, "Module does not have a valid extension.");
+		goto cleanup;
+	}
+	*separator = '\0';
+
+	lang_ext = separator + 1;
+
+	retval = semanage_direct_install(sh, data, data_len, filename, lang_ext);
 
       cleanup:
 	close(in_fd);
 	if (data_len > 0) munmap(data, data_len);
-
-	return retval;
-}
-
-/* Writes a base module into a sandbox, overwriting any previous base
- * module.  Note that 'module_data' is not free()d by this function;
- * caller is responsible for deallocating it if necessary.  Returns 0
- * on success, -1 if out of memory, -2 if the data does not represent
- * a valid base module file, -3 if error while writing file.
- */
-static int semanage_direct_install_base(semanage_handle_t * sh,
-					char *base_data, size_t data_len)
-{
-	int status = 0;
-	int ret = 0;
-
-	ret = parse_base_headers(sh, base_data, data_len);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	semanage_module_info_t modinfo;
-	ret = semanage_module_info_init(sh, &modinfo);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_priority(sh, &modinfo, sh->priority);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_name(sh, &modinfo, "_base");
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_version(sh, &modinfo, "1.0.0");
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_lang_ext(sh, &modinfo, "pp");
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_enabled(sh, &modinfo, 1);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	status = semanage_direct_install_info(
-			sh,
-			&modinfo,
-			base_data,
-			data_len);
-
-cleanup:
-	semanage_module_info_destroy(sh, &modinfo);
-
-	return status;
-}
-
-/* Writes a base module into a sandbox, overwriting any previous base
- * module.  
- * Returns 0 on success, -1 if out of memory, -2 if the data does not represent
- * a valid base module file, -3 if error while writing file.
- */
-static int semanage_direct_install_base_file(semanage_handle_t * sh,
-					     const char *install_filename)
-{
-	int retval = -1;
-	char *data = NULL;
-	ssize_t data_len = 0;
-	int compressed = 0;
-	int in_fd;
-
-	if ((in_fd = open(install_filename, O_RDONLY)) == -1) {
-		return -1;
-	}
-
-	if ((data_len = map_file(sh, in_fd, &data, &compressed)) <= 0) {
-		goto cleanup;
-	}
-		
-	retval = semanage_direct_install_base(sh, data, data_len);
-
-      cleanup:
-	close(in_fd);
-	if (data_len > 0) munmap(data, data_len);
+	free(path);
 
 	return retval;
 }
@@ -1544,20 +1271,6 @@ static int semanage_direct_set_enabled(semanage_handle_t *sh,
 		ERR(sh, "Enabled status %d is invalid.", enabled);
 		status = -1;
 		goto cleanup;
-	}
-
-	/* check for base module */
-	if (strcmp(modkey->name, "_base") == 0) {
-		if (enabled == 0) {
-			errno = 0;
-			ERR(sh, "Base module cannot be disabled.");
-			status = -1;
-			goto cleanup;
-		}
-		else {
-			errno = 0;
-			WARN(sh, "Base module is always enabled, redundant enabling of base module requested.");
-		}
 	}
 
 	/* check for disabled path, create if missing */
@@ -1816,54 +1529,6 @@ static int semanage_direct_get_module_info(semanage_handle_t *sh,
 
 	fp = NULL;
 
-	/* lookup module version */
-	ret = semanage_module_get_path(sh,
-				       *modinfo,
-				       SEMANAGE_MODULE_PATH_VERSION,
-				       fn,
-				       sizeof(fn));
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	fp = fopen(fn, "r");
-
-	if (fp == NULL) {
-		ERR(sh,
-		    "Unable to open %s module version file.",
-		    (*modinfo)->name);
-		status = -1;
-		goto cleanup;
-	}
-
-	/* set module version */
-	if (getline(&tmp, &size, fp) < 0) {
-		ERR(sh,
-		    "Unable to read %s module version file.",
-		    (*modinfo)->name);
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_info_set_version(sh, (*modinfo), tmp);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-	free(tmp);
-	tmp = NULL;
-
-	if (fclose(fp) != 0) {
-		ERR(sh,
-		    "Unable to close %s module version file.",
-		    (*modinfo)->name);
-		status = -1;
-		goto cleanup;
-	}
-
-	fp = NULL;
-
 	/* lookup enabled/disabled status */
 	ret = semanage_module_get_path(sh,
 				       *modinfo,
@@ -1940,16 +1605,6 @@ static int semanage_direct_set_module_info(semanage_handle_t *sh,
 		goto cleanup;
 	}
 
-	/* check for base module */
-	if (strcmp(modinfo->name, "_base") == 0) {
-		if (modinfo->enabled == 0) {
-			errno = 0;
-			ERR(sh, "Base module cannot be disabled.");
-			status = -1;
-			goto cleanup;
-		}
-	}
-
 	sh->modules_modified = 1;
 
 	/* check for modules path, create if missing */
@@ -2022,45 +1677,6 @@ static int semanage_direct_set_module_info(semanage_handle_t *sh,
 
 	if (fclose(fp) != 0) {
 		ERR(sh, "Unable to close %s module ext file.", modinfo->name);
-		status = -1;
-		goto cleanup;
-	}
-
-	fp = NULL;
-
-	/* write version */
-	ret = semanage_module_get_path(sh,
-				       modinfo,
-				       SEMANAGE_MODULE_PATH_VERSION,
-				       fn,
-				       sizeof(fn));
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	fp = fopen(fn, "w");
-
-	if (fp == NULL) {
-		ERR(sh,
-		    "Unable to open %s module version file.",
-		    modinfo->name);
-		status = -1;
-		goto cleanup;
-	}
-
-	if (fputs(modinfo->version, fp) < 0) {
-		ERR(sh,
-		    "Unable to write %s module version file.",
-		    modinfo->name);
-		status = -1;
-		goto cleanup;
-	}
-
-	if (fclose(fp) != 0) {
-		ERR(sh,
-		    "Unable to close %s module version file.",
-		    modinfo->name);
 		status = -1;
 		goto cleanup;
 	}

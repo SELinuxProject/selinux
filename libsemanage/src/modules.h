@@ -26,11 +26,23 @@
 
 #include "module_internal.h"
 
+int semanage_module_install_pp(semanage_handle_t * sh,
+			    char *module_data, size_t data_len);
+int semanage_module_install_hll(semanage_handle_t * sh,
+			    char *module_data, size_t data_len, char *name, char *ext_lang);
+int semanage_module_upgrade(semanage_handle_t * sh,
+			    char *module_data, size_t data_len);
+int semanage_module_upgrade_file(semanage_handle_t * sh,
+				 const char *module_name);
+int semanage_module_install_base(semanage_handle_t * sh,
+				 char *module_data, size_t data_len);
+int semanage_module_install_base_file(semanage_handle_t * sh,
+				 const char *module_name);
+
 /* Module Info */
 struct semanage_module_info {
 	uint16_t priority;	/* key, module priority */
 	char *name;		/* key, module name */
-	char *version;		/* module version */
 	char *lang_ext;		/* module source language extension */
 	int enabled;		/* module enabled/disabled status */
 };
@@ -84,7 +96,6 @@ enum semanage_module_path_type {
 	SEMANAGE_MODULE_PATH_HLL,
 	SEMANAGE_MODULE_PATH_CIL,
 	SEMANAGE_MODULE_PATH_LANG_EXT,
-	SEMANAGE_MODULE_PATH_VERSION,
 	SEMANAGE_MODULE_PATH_DISABLED,
 };
 

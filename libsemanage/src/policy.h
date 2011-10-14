@@ -47,16 +47,10 @@ struct semanage_policy_table {
 	int (*commit) (struct semanage_handle *);
 
 	/* Install a policy module */
-	int (*install) (struct semanage_handle *, char *, size_t);
+	int (*install) (struct semanage_handle *, char *, size_t, char *, char *);
 
 	/* Install a policy module */
 	int (*install_file) (struct semanage_handle *, const char *);
-
-	/* Upgrade a policy module */
-	int (*upgrade) (struct semanage_handle *, char *, size_t);
-	
-	/* Upgrade a policy module */
-	int (*upgrade_file) (struct semanage_handle *, const char *);
 
 	/* Remove a policy module */
 	int (*remove) (struct semanage_handle *, char *);
@@ -64,12 +58,6 @@ struct semanage_policy_table {
 	/* List policy modules */
 	int (*list) (struct semanage_handle *, semanage_module_info_t **,
 		     int *);
-
-	/* Install base policy */
-	int (*install_base) (struct semanage_handle *, char *, size_t);
-
-	/* Install a base module */
-	int (*install_base_file) (struct semanage_handle *, const char *);
 
 	/* Get module enabled status */
 	int (*get_enabled) (struct semanage_handle *sh,

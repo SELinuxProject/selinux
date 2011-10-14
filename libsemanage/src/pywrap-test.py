@@ -137,7 +137,6 @@ class Tests:
 			module = semanage.semanage_module_list_nth(mlist, idx)
 			if self.verbose: print "Module reference: ", module
 			print "Module name: ", semanage.semanage_module_get_name(module)
-			print "   Module version: ", semanage.semanage_module_get_version(module)
 
 	def test_seusers(self,sh):
 		print "Testing seusers..."

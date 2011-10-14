@@ -1169,14 +1169,10 @@ int semanage_get_active_modules(semanage_handle_t * sh,
 		goto cleanup;
 	}
 
-	/* for each highest priority, non-base, enabled module get its path */
+	/* for each highest priority, enabled module get its path */
 	semanage_list_destroy(&list);
 	j = 0;
 	for (i = 0; i < all_modinfos_len; i++) {
-		/* check if base */
-		ret = strcmp(all_modinfos[i].name, "_base");
-		if (ret == 0) continue;
-
 		/* check if enabled */
 		if (all_modinfos[i].enabled != 1) continue;
 

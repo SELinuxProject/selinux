@@ -29,18 +29,17 @@ LIBSEMANAGE_1.0 {
 
 LIBSEMANAGE_1.1 {
   global:
+	  semanage_module_install;
 	  semanage_get_default_priority;
 	  semanage_set_default_priority;
 	  semanage_module_info_create;
 	  semanage_module_info_destroy;
 	  semanage_module_info_get_priority;
 	  semanage_module_info_get_name;
-	  semanage_module_info_get_version;
 	  semanage_module_info_get_lang_ext;
 	  semanage_module_info_get_enabled;
 	  semanage_module_info_set_priority;
 	  semanage_module_info_set_name;
-	  semanage_module_info_set_version;
 	  semanage_module_info_set_lang_ext;
 	  semanage_module_info_set_enabled;
 	  semanage_module_key_create;
