@@ -1,3 +1,7 @@
+DISABLE_CIL ?= n
+
+export DISABLE_CIL
+
 all: 
 	$(MAKE) -C src 
 	$(MAKE) -C utils
