@@ -152,6 +152,23 @@ int sepol_policydb_set_handle_unknown(sepol_policydb_t * sp,
 	return 0;
 }
 
+int sepol_policydb_set_target_platform(sepol_policydb_t * sp,
+				      int target_platform)
+{
+	struct policydb *p = &sp->p;
+
+	switch (target_platform) {
+	case SEPOL_TARGET_SELINUX:
+	case SEPOL_TARGET_XEN:
+		break;
+	default:
+		return -1;
+	}
+
+	p->target_platform = target_platform;		
+	return 0;
+}
+
 int sepol_policydb_read(sepol_policydb_t * p, sepol_policy_file_t * pf)
 {
 	return policydb_read(&p->p, &pf->pf, 0);

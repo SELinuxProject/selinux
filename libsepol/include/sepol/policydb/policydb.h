@@ -741,8 +741,6 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_STRING_MAX_LENGTH 32
 #define POLICYDB_MOD_MAGIC SELINUX_MOD_MAGIC
 #define POLICYDB_MOD_STRING "SE Linux Module"
-#define SEPOL_TARGET_SELINUX 0
-#define SEPOL_TARGET_XEN     1
 
 
 #endif				/* _POLICYDB_H_ */
