@@ -28,6 +28,9 @@
 #undef min
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 
+#undef max
+#define max(a,b) ((a) >= (b) ? (a) : (b))
+
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof((x)[0]))
 
 /* Policy compatibility information. */

@@ -38,9 +38,6 @@
 #define N_BUCKETS 1453
 #define OVECCOUNT (512*3)
 
-#define max(a,b) ((a) >= (b) ? (a) : (b))
-#define min(a,b) ((a) < (b) ? (a) : (b))
-
 #define log_error(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
 
 #ifdef DEBUG
@@ -50,82 +47,6 @@
 #endif
 
 static unsigned int maxbit=0;
-
-int
-ebitmap_and(ebitmap_t *dst, ebitmap_t *e1, ebitmap_t *e2) {
-	unsigned int i, length = min(ebitmap_length(e1), ebitmap_length(e2));
-	ebitmap_init(dst);
-	for (i=0; i < length; i++) {
-		if (ebitmap_get_bit(e1, i) && ebitmap_get_bit(e2, i)) {
-			int rc = ebitmap_set_bit(dst, i, 1);
-			if (rc < 0)
-				return rc;
-		}
-	}
-	return 0;
-}
-
-int
-ebitmap_xor(ebitmap_t *dst, ebitmap_t *e1, ebitmap_t *e2) {
-	unsigned int i, length = max(ebitmap_length(e1), ebitmap_length(e2));
-	ebitmap_init(dst);
-	for (i=0; i < length; i++) {
-		int val = ebitmap_get_bit(e1, i) ^ ebitmap_get_bit(e2, i);
-		int rc = ebitmap_set_bit(dst, i, val);
-		if (rc < 0)
-			return rc;
-	}
-	return 0;
-}
-
-int
-ebitmap_not(ebitmap_t *dst, ebitmap_t *e1) {
-	unsigned int i;
-	ebitmap_init(dst);
-	for (i=0; i < maxbit; i++) {
-		int val = ebitmap_get_bit(e1, i);
-		int rc = ebitmap_set_bit(dst, i, !val);
-		if (rc < 0)
-			return rc;
-	}
-	return 0;
-}
-
-int
-ebitmap_andnot(ebitmap_t *dst, ebitmap_t *e1, ebitmap_t *e2) {
-	ebitmap_t e3;
-	ebitmap_init(dst);
-	int rc = ebitmap_not(&e3, e2);
-	if (rc < 0)
-		return rc;
-	rc = ebitmap_and(dst, e1, &e3);
-	ebitmap_destroy(&e3);
-	if (rc < 0)
-		return rc;
-	return 0;
-}
-
-unsigned int
-ebitmap_cardinality(ebitmap_t *e1) {
-	unsigned int i, count = 0;
-	for (i=ebitmap_startbit(e1); i < ebitmap_length(e1); i++)
-		if (ebitmap_get_bit(e1, i))
-			count++;
-	return count;
-}
-
-int
-hamming_distance(ebitmap_t * e1, ebitmap_t * e2) {
-	if (ebitmap_cmp(e1, e2))
-		return 0;
-	ebitmap_t tmp;
-	int rc = ebitmap_xor(&tmp, e1, e2);
-	if (rc < 0)
-		return -1;
-	int distance = ebitmap_cardinality(&tmp);
-	ebitmap_destroy(&tmp);
-	return distance;
-}
 
 /* Define data structures */
 typedef struct context_map {
@@ -517,7 +438,7 @@ add_word(word_group_t *group, char *raw, char *trans) {
 		destroy_word(&group->words, word);
 		return -1;
 	}
-	if (ebitmap_andnot(&word->normal, &word->cat, &group->def) < 0)
+	if (ebitmap_andnot(&word->normal, &word->cat, &group->def, maxbit) < 0)
 		return -1;
 
 	ebitmap_t temp;
@@ -1279,7 +1200,7 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 								word_t *w = g->sword[i];
 								int wlen = strlen(w->text);
 								if (plen >= wlen && !strncmp(w->text, p, strlen(w->text))){
-									if (ebitmap_andnot(&set, &w->cat, &g->def) < 0) goto err;
+									if (ebitmap_andnot(&set, &w->cat, &g->def, maxbit) < 0) goto err;
 
 									if (ebitmap_xor(&tmp, &w->cat, &g->def) < 0) goto err;
 									if (ebitmap_and(&clear, &tmp, &g->def) < 0) goto err;
@@ -1288,7 +1209,7 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 									ebitmap_destroy(&tmp);
 									if (ebitmap_cpy(&tmp, &mraw->cat) < 0) goto err;
 									ebitmap_destroy(&mraw->cat);
-									if (ebitmap_andnot(&mraw->cat, &tmp, &clear) < 0) goto err;
+									if (ebitmap_andnot(&mraw->cat, &tmp, &clear, maxbit) < 0) goto err;
 
 									ebitmap_destroy(&tmp);
 									ebitmap_destroy(&set);
@@ -1439,7 +1360,7 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 				ebitmap_t handled, nothandled;
 				if (ebitmap_xor(&handled, &unhandled, &orig_unhandled) < 0)
 					goto err;
-				if (ebitmap_not(&nothandled, &handled) < 0)
+				if (ebitmap_not(&nothandled, &handled, maxbit) < 0)
 					goto err;
 				word_group_t *currentGroup = NULL;
 				word_t *currentWord = NULL;
@@ -1464,7 +1385,7 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 						if (ebitmap_and(&temp, &bit_diff, &unhandled) < 0)
 							goto err;
 						if (ebitmap_cmp(&bit_diff, &temp)) {
-							int h = hamming_distance(&bit_diff, &unhandled);
+							int h = ebitmap_hamming_distance(&bit_diff, &unhandled);
 							if (h < hamming) {
 								hamming = h;
 								currentGroup = g;
@@ -1487,7 +1408,7 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 					if (ebitmap_cpy(&temp, &unhandled) < 0)
 						goto err;
 					ebitmap_destroy(&unhandled);
-					if (ebitmap_andnot(&unhandled, &temp, &bit_diff) < 0)
+					if (ebitmap_andnot(&unhandled, &temp, &bit_diff, maxbit) < 0)
 						goto err;
 
 					ebitmap_destroy(&bit_diff);
