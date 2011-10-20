@@ -500,6 +500,25 @@ extern const char *selinux_colors_path(void);
 extern const char *selinux_netfilter_context_path(void);
 extern const char *selinux_path(void);
 
+/**
+ * selinux_check_access - Check permissions and perform appropriate auditing.
+ * @scon: source security context
+ * @tcon: target security context
+ * @tclass: target security class string
+ * @perm: requested permissions string, interpreted based on @tclass
+ * @auditdata: auxiliary audit data
+ *
+ * Check the AVC to determine whether the @perm permissions are granted
+ * for the SID pair (@scon, @tcon), interpreting the permissions
+ * based on @tclass.
+ * Return %0 if all @perm permissions are granted, -%1 with 
+ * @errno set to %EACCES if any permissions are denied or to another 
+ * value upon other errors.
+ * If auditing or logging is configured the appropriate callbacks will be called
+ * and passed the auditdata field
+ */
+extern int selinux_check_access(const security_context_t scon, const security_context_t tcon, const char *tclass, const char *perm, void *auditdata);
+
 /* Check a permission in the passwd class.
    Return 0 if granted or -1 otherwise. */
 extern int selinux_check_passwd_access(access_vector_t requested);

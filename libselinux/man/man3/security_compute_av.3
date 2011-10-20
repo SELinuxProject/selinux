@@ -24,6 +24,8 @@ the SELinux policy database in the kernel.
 .BI "int security_get_initial_context(const char *" name ", security_context_t
 "con );
 .sp
+.BI "int selinux_check_access(const security_context_t " scon, " const security_context_t " tcon, " const char *" class, " const char *" perm, "void *" auditdata);
+.sp
 .BI "int selinux_check_passwd_access(access_vector_t " requested );
 .sp
 .BI "int checkPasswdAccess(access_vector_t " requested );
@@ -73,6 +75,9 @@ source context. It is mainly used by
 .B security_get_initial_context
 is used to get the context of a kernel initial security identifier specified by 
 .I name
+
+.B selinux_check_access
+is used to check if the source context has the access permission for the specified class on the target context.
 
 .B selinux_check_passwd_access
 is used to check for a permission in the
