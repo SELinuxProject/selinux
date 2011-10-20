@@ -165,6 +165,9 @@ int avc_init(const char *prefix,
 	struct avc_node *new;
 	int i, rc = 0;
 
+	if (avc_running)
+		return 0;
+
 	if (prefix)
 		strncpy(avc_prefix, prefix, AVC_PREFIX_SIZE - 1);
 
