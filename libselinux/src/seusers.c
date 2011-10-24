@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <ctype.h>
+#include <errno.h>
 #include <selinux/selinux.h>
 #include <selinux/context.h>
 #include "selinux_internal.h"
@@ -118,13 +119,26 @@ static int check_group(const char *group, const char *name, const gid_t gid) {
 	long rbuflen = sysconf(_SC_GETGR_R_SIZE_MAX);
 	if (rbuflen <= 0)
 		return 0;
-	char *rbuf = malloc(rbuflen);
-	if (rbuf == NULL)
-		return 0;
+	char *rbuf;
 
-	if (getgrnam_r(group, &gbuf, rbuf, rbuflen, 
-		       &grent) != 0)
-		goto done;
+	while(1) {
+		rbuf = malloc(rbuflen);
+		if (rbuf == NULL)
+			return 0;
+		int retval = getgrnam_r(group, &gbuf, rbuf, 
+				rbuflen, &grent);
+		if ( retval == ERANGE )
+		{
+			free(rbuf);
+			rbuflen = rbuflen * 2;
+		} else if ( retval != 0 || grent == NULL )
+		{
+			goto done;
+		} else
+		{
+			break;
+		}
+	}
 
 	if (getgrouplist(name, gid, NULL, &ng) < 0) {
 		groups = (gid_t *) malloc(sizeof (gid_t) * ng);
