@@ -19,6 +19,7 @@
 #
 
 # Source function library.
+. /etc/init.d/functions
 
 LOCKFILE=/var/lock/subsys/sandbox
 
