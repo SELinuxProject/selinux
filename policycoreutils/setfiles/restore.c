@@ -103,7 +103,7 @@ static int match(const char *name, struct stat *sb, char **con)
 static int restore(FTSENT *ftsent)
 {
 	char *my_file = strdupa(ftsent->fts_path);
-	int ret;
+	int ret = -1;
 	char *context, *newcon;
 	int user_only_changed = 0;
 
