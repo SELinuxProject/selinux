@@ -235,6 +235,7 @@ static int __policy_init(const char *init_path)
 	avc = calloc(sizeof(struct avc_t), 1);
 	if (!avc) {
 		PyErr_SetString( PyExc_MemoryError, "Out of memory\n");
+		fclose(fp);
 		return 1;
 	}
 
