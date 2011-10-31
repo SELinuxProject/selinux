@@ -1329,6 +1329,8 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 
 	cur_rule = rules;
 	while (cur_rule) {
+		uint32_t mapped_otype;
+
 		ebitmap_init(&stypes);
 		ebitmap_init(&ttypes);
 
@@ -1344,6 +1346,8 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 			return -1;
 		}
 
+		mapped_otype = state->typemap[cur_rule->otype - 1];
+
 		ebitmap_for_each_bit(&stypes, snode, i) {
 			if (!ebitmap_node_get_bit(snode, i))
 				continue;
@@ -1358,7 +1362,7 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 					    (cur_trans->tclass == cur_rule->tclass) &&
 					    (!strcmp(cur_trans->name, cur_rule->name))) {
 						/* duplicate rule, who cares */
-						if (cur_trans->otype == cur_rule->otype)
+						if (cur_trans->otype == mapped_otype)
 							break;
 
 						ERR(state->handle, "Conflicting filename trans rules %s %s %s : %s otype1:%s otype2:%s",
@@ -1367,7 +1371,7 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 						    state->out->p_type_val_to_name[j],
 						    state->out->p_class_val_to_name[cur_trans->tclass - 1],
 						    state->out->p_type_val_to_name[cur_trans->otype - 1],
-						    state->out->p_type_val_to_name[state->typemap[cur_rule->otype - 1] - 1]);
+						    state->out->p_type_val_to_name[mapped_otype - 1]);
 						    
 						return -1;
 					}
@@ -1397,7 +1401,7 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 				new_trans->stype = i + 1;
 				new_trans->ttype = j + 1;
 				new_trans->tclass = cur_rule->tclass;
-				new_trans->otype = state->typemap[cur_rule->otype - 1];
+				new_trans->otype = mapped_otype;
 			}
 		}
 
