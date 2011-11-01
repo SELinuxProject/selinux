@@ -127,6 +127,9 @@ class PathMessage(AuditMessage):
             if fields[0] == "path":
                 self.path = fields[1][1:-1]
                 return
+import selinux.audit2why as audit2why
+
+avcdict = {}
 
 class AVCMessage(AuditMessage):
     """AVC message representing an access denial or granted message.
@@ -168,6 +171,8 @@ class AVCMessage(AuditMessage):
         self.name = ""
         self.accesses = []
         self.denial = True
+        self.type = audit2why.TERULE
+        self.bools = []
 
     def __parse_access(self, recs, start):
         # This is kind of sucky - the access that is in a space separated
@@ -229,7 +234,31 @@ class AVCMessage(AuditMessage):
 
         if not found_src or not found_tgt or not found_class or not found_access:
             raise ValueError("AVC message in invalid format [%s]\n" % self.message)
-                
+        self.analyze()
+
+    def analyze(self):
+        tcontext = self.tcontext.to_string()
+        scontext = self.scontext.to_string()
+        access_tuple = tuple( self.accesses)
+        if (scontext, tcontext, self.tclass, access_tuple) in avcdict.keys():
+            self.type, self.bools = avcdict[(scontext, tcontext, self.tclass, access_tuple)]
+        else:
+            self.type, self.bools = audit2why.analyze(scontext, tcontext, self.tclass, self.accesses);
+            if self.type == audit2why.NOPOLICY:
+                self.type = audit2why.TERULE
+            if self.type == audit2why.BADTCON:
+                raise ValueError("Invalid Target Context %s\n" % tcontext)
+            if self.type == audit2why.BADSCON:
+                raise ValueError("Invalid Source Context %s\n" % scontext)
+            if self.type == audit2why.BADSCON:
+                raise ValueError("Invalid Type Class %s\n" % self.tclass)
+            if self.type == audit2why.BADPERM:
+                raise ValueError("Invalid permission %s\n" % " ".join(self.accesses))
+            if self.type == audit2why.BADCOMPUTE:
+                raise ValueError("Error during access vector computation")
+
+            avcdict[(scontext, tcontext, self.tclass, access_tuple)] = (self.type, self.bools)
+
 class PolicyLoadMessage(AuditMessage):
     """Audit message indicating that the policy was reloaded."""
     def __init__(self, message):
@@ -472,10 +501,10 @@ class AuditParser:
             if avc_filter:
                 if avc_filter.filter(avc):
                     av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                               avc.accesses, avc)
+                               avc.accesses, avc, avc_type=avc.type, bools=avc.bools)
             else:
                 av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                           avc.accesses, avc)
+                           avc.accesses, avc, avc_type=avc.type, bools=avc.bools)
         return av_set
 
 class AVCTypeFilter:

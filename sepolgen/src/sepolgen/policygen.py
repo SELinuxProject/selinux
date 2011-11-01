@@ -29,6 +29,8 @@ import objectmodel
 import access
 import interfaces
 import matching
+import selinux.audit2why as audit2why
+from setools import *
 
 # Constants for the level of explanation from the generation
 # routines
@@ -77,6 +79,7 @@ class PolicyGenerator:
 
         self.dontaudit = False
 
+        self.domains = None
     def set_gen_refpol(self, if_set=None, perm_maps=None):
         """Set whether reference policy interfaces are generated.
 
@@ -151,8 +154,41 @@ class PolicyGenerator:
             rule = refpolicy.AVRule(av)
             if self.dontaudit:
                 rule.rule_type = rule.DONTAUDIT
+            rule.comment = ""
             if self.explain:
-                rule.comment = refpolicy.Comment(explain_access(av, verbosity=self.explain))
+                rule.comment = str(refpolicy.Comment(explain_access(av, verbosity=self.explain)))
+            if av.type == audit2why.ALLOW:
+                rule.comment += "#!!!! This avc is allowed in the current policy\n"
+            if av.type == audit2why.DONTAUDIT:
+                rule.comment += "#!!!! This avc has a dontaudit rule in the current policy\n"
+
+            if av.type == audit2why.BOOLEAN:
+                if len(av.bools) > 1:
+                    rule.comment += "#!!!! This avc can be allowed using one of the these booleans:\n#     %s\n" % ", ".join(map(lambda x: x[0], av.bools))
+                else:
+                    rule.comment += "#!!!! This avc can be allowed using the boolean '%s'\n" % av.bools[0][0]
+
+            if av.type == audit2why.CONSTRAINT:
+                rule.comment += "#!!!! This avc is a constraint violation.  You will need to add an attribute to either the source or target type to make it work.\n"
+                rule.comment += "#Constraint rule: "
+
+            if av.type == audit2why.TERULE:
+                if "write" in av.perms:
+                    if "dir" in av.obj_class or "open" in av.perms:
+                        if not self.domains:
+                            self.domains = seinfo(ATTRIBUTE, name="domain")[0]["types"]
+                        types=[]
+
+                        try:
+                            for i in map(lambda x: x[TCONTEXT], sesearch([ALLOW], {SCONTEXT: av.src_type, CLASS: av.obj_class, PERMS: av.perms})):
+                                if i not in self.domains:
+                                    types.append(i)
+                            if len(types) == 1:
+                                rule.comment += "#!!!! The source type '%s' can write to a '%s' of the following type:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+                            elif len(types) >= 1:
+                                rule.comment += "#!!!! The source type '%s' can write to a '%s' of the following types:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+                        except:
+                            pass
             self.module.children.append(rule)
 
 
