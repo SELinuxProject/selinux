@@ -391,6 +391,7 @@ cond_dontaudit_def	: DONTAUDIT names names ':' names names ';'
 			{ $$ = define_cond_te_avtab(AVRULE_DONTAUDIT);
                           if ($$ == COND_ERR) return -1; }
 		        ;
+			;
 transition_def		: TYPE_TRANSITION  names names ':' names identifier filename ';'
 			{if (define_filename_trans()) return -1; }
 			| TYPE_TRANSITION names names ':' names identifier ';'
@@ -663,7 +664,7 @@ opt_fs_uses             : fs_uses
 fs_uses                 : fs_use_def
                         | fs_uses fs_use_def
                         ;
-fs_use_def              : FSUSEXATTR filename security_context_def ';'
+fs_use_def              : FSUSEXATTR filesystem security_context_def ';'
                         {if (define_fs_use(SECURITY_FS_USE_XATTR)) return -1;}
                         | FSUSETASK identifier security_context_def ';'
                         {if (define_fs_use(SECURITY_FS_USE_TASK)) return -1;}
@@ -676,11 +677,11 @@ opt_genfs_contexts      : genfs_contexts
 genfs_contexts          : genfs_context_def
                         | genfs_contexts genfs_context_def
                         ;
-genfs_context_def	: GENFSCON filename path '-' identifier security_context_def
+genfs_context_def	: GENFSCON filesystem path '-' identifier security_context_def
 			{if (define_genfs_context(1)) return -1;}
-			| GENFSCON filename path '-' '-' {insert_id("-", 0);} security_context_def
+			| GENFSCON filesystem path '-' '-' {insert_id("-", 0);} security_context_def
 			{if (define_genfs_context(1)) return -1;}
-                        | GENFSCON filename path security_context_def
+                        | GENFSCON filesystem path security_context_def
 			{if (define_genfs_context(0)) return -1;}
 			;
 ipv4_addr_def		: IPV4_ADDR
@@ -754,20 +755,17 @@ nested_id_element       : identifier | '-' { if (insert_id("-", 0)) return -1; }
 identifier		: IDENTIFIER
 			{ if (insert_id(yytext,0)) return -1; }
 			;
-path     		: PATH
-			{ if (insert_id(yytext,0)) return -1; }
-			;
-filename     		: FILENAME
-			{ if (insert_id(yytext,0)) return -1; }
-                        | NUMBER
-			{ if (insert_id(yytext,0)) return -1; }
-                        | IPV4_ADDR
-			{ if (insert_id(yytext,0)) return -1; }
-                        | VERSION_IDENTIFIER
-			{ if (insert_id(yytext,0)) return -1; }
+filesystem		: FILESYSTEM
+                        { if (insert_id(yytext,0)) return -1; }
                         | IDENTIFIER
 			{ if (insert_id(yytext,0)) return -1; }
                         ;
+path     		: PATH
+			{ if (insert_id(yytext,0)) return -1; }
+			;
+filename		: FILENAME
+			{ yytext[strlen(yytext) - 1] = '\0'; if (insert_id(yytext + 1,0)) return -1; }
+			;
 number			: NUMBER 
 			{ $$ = strtoul(yytext,NULL,0); }
 			;
