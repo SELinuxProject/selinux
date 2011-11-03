@@ -1,4 +1,24 @@
-2.1.6 2011-09-27
+2.1.8 2011-11-03
+	* sandbox: Maintain the LANG environment into the sandbox
+	* audit2allow: use audit2why internally
+	* fixfiles: label /root but not /var/lib/BackupPC
+	* semanage: update local boolean settings is dealing with localstore
+	* semanage: missing modify=True
+	* semanage: set modified correctly
+	* restorecond: make restorecond dbuss-able
+	* restorecon: Always check return code on asprintf
+	* restorecond: make restorecond -u exit when terminal closes
+	* sandbox: introduce package name and language stuff
+	* semodule_package: remove semodule_unpackage on clean
+	* fix sandbox Makefile to support DESTDIR
+	* semanage: Add -o description to the semanage man page
+	* make use of the new realpath_not_final function
+	* setfiles: close /proc/mounts file when finished
+	* semodule: Document semodule -p in man page
+	* setfiles: fix use before initialized
+	* restorecond: Add .local/share as a directory to watch
+
+2.1.7 2011-09-27
 	* semanage: fix indentation error in seobject
 
 2.1.6 2011-09-15

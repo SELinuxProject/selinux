@@ -1,3 +1,8 @@
+2.1.4 2011-10-03
+	* regenerate .pc on VERSION change
+	* Move ebitmap_* functions from mcstrans to libsepol
+	* expand: do filename_trans type comparison on mapped representation
+
 2.1.3 2011-09-15
 	* Skip writing role attributes for policy.X and
 	* Indicate when boolean is indeed a tunable.

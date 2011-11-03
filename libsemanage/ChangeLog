@@ -1,3 +1,9 @@
+2.1.5 2011-11-03
+	* regenerate .pc on VERSION change
+	* maintain mode even if umask is tighter
+	* semanage.conf man page
+	* create man5dir if not exist
+
 2.1.4 2011-09-15
 	* Create a new preserve_tunables flag
 	* tree: default make target to all not
