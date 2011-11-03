@@ -211,13 +211,7 @@ int display_mod_role_set(role_set_t * roles, policydb_t * p, FILE * fp)
 
 }
 
-/* 'what' values for this function */
-#define	RENDER_UNCONDITIONAL	0x0001	/* render all regardless of enabled state */
-#define RENDER_ENABLED		0x0002
-#define RENDER_DISABLED		0x0004
-#define RENDER_CONDITIONAL	(RENDER_ENABLED|RENDER_DISABLED)
-
-int display_avrule(avrule_t * avrule, uint32_t what, policydb_t * policy,
+int display_avrule(avrule_t * avrule, policydb_t * policy,
 		   FILE * fp)
 {
 	class_perm_node_t *cur;
@@ -409,30 +403,11 @@ void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp)
 	}
 }
 
-void display_policycon(policydb_t * p, FILE * fp)
+void display_policycon(FILE * fp)
 {
-#if 0
-	int i;
-	ocontext_t *cur;
-	char *name;
-
-	for (i = 0; i < POLICYCON_NUM; i++) {
-		fprintf(fp, "%s:", symbol_labels[i]);
-		for (cur = p->policycon[i].head; cur != NULL; cur = cur->next) {
-			if (*(cur->u.name) == '\0') {
-				name = "{default}";
-			} else {
-				name = cur->u.name;
-			}
-			fprintf(fp, "\n%16s - %s:%s:%s", name,
-				p->p_user_val_to_name[cur->context[0].user - 1],
-				p->p_role_val_to_name[cur->context[0].role - 1],
-				p->p_type_val_to_name[cur->context[0].type -
-						      1]);
-		}
-		fprintf(fp, "\n");
-	}
-#endif
+	/* There was an attempt to implement this at one time.  Look through
+	 * git history to find it. */
+	fprintf(fp, "Sorry, not implemented\n");
 }
 
 void display_initial_sids(policydb_t * p, FILE * fp)
@@ -518,7 +493,8 @@ static void display_filename_trans(filename_trans_rule_t * tr, policydb_t * p, F
 	}
 }
 
-int role_display_callback(hashtab_key_t key, hashtab_datum_t datum, void *data)
+int role_display_callback(hashtab_key_t key __attribute__((unused)),
+			  hashtab_datum_t datum, void *data)
 {
 	role_datum_t *role;
 	FILE *fp;
@@ -611,7 +587,7 @@ int change_bool(char *name, int state, policydb_t * p, FILE * fp)
 }
 #endif
 
-int display_avdecl(avrule_decl_t * decl, int field, uint32_t what,
+int display_avdecl(avrule_decl_t * decl, int field,
 		   policydb_t * policy, FILE * out_fp)
 {
 	fprintf(out_fp, "decl %u:%s\n", decl->decl_id,
@@ -629,7 +605,6 @@ int display_avdecl(avrule_decl_t * decl, int field, uint32_t what,
 				avrule = cond->avtrue_list;
 				while (avrule) {
 					display_avrule(avrule,
-						       RENDER_UNCONDITIONAL,
 						       &policydb, out_fp);
 					avrule = avrule->next;
 				}
@@ -637,7 +612,6 @@ int display_avdecl(avrule_decl_t * decl, int field, uint32_t what,
 				avrule = cond->avfalse_list;
 				while (avrule) {
 					display_avrule(avrule,
-						       RENDER_UNCONDITIONAL,
 						       &policydb, out_fp);
 					avrule = avrule->next;
 				}
@@ -651,10 +625,8 @@ int display_avdecl(avrule_decl_t * decl, int field, uint32_t what,
 				fprintf(out_fp, "  <empty>\n");
 			}
 			while (avrule != NULL) {
-				if (display_avrule
-				    (avrule, what, policy, out_fp)) {
+				if (display_avrule(avrule, policy, out_fp))
 					return -1;
-				}
 				avrule = avrule->next;
 			}
 			break;
@@ -696,7 +668,7 @@ int display_avdecl(avrule_decl_t * decl, int field, uint32_t what,
 	return 0;		/* should never get here */
 }
 
-int display_avblock(int field, uint32_t what, policydb_t * policy,
+int display_avblock(int field, policydb_t * policy,
 		    FILE * out_fp)
 {
 	avrule_block_t *block = policydb.global;
@@ -704,7 +676,7 @@ int display_avblock(int field, uint32_t what, policydb_t * policy,
 		fprintf(out_fp, "--- begin avrule block ---\n");
 		avrule_decl_t *decl = block->branch_list;
 		while (decl != NULL) {
-			if (display_avdecl(decl, field, what, policy, out_fp)) {
+			if (display_avdecl(decl, field, policy, out_fp)) {
 				return -1;
 			}
 			decl = decl->next;
@@ -915,14 +887,12 @@ int main(int argc, char **argv)
 		case '1':
 			fprintf(out_fp, "unconditional avtab:\n");
 			display_avblock(DISPLAY_AVBLOCK_UNCOND_AVTAB,
-					RENDER_UNCONDITIONAL, &policydb,
-					out_fp);
+					&policydb, out_fp);
 			break;
 		case '2':
 			fprintf(out_fp, "conditional avtab:\n");
 			display_avblock(DISPLAY_AVBLOCK_COND_AVTAB,
-					RENDER_UNCONDITIONAL, &policydb,
-					out_fp);
+					&policydb, out_fp);
 			break;
 		case '3':
 			display_users(&policydb, out_fp);
@@ -944,28 +914,28 @@ int main(int argc, char **argv)
 			break;
 		case '7':
 			fprintf(out_fp, "role transitions:\n");
-			display_avblock(DISPLAY_AVBLOCK_ROLE_TRANS, 0,
+			display_avblock(DISPLAY_AVBLOCK_ROLE_TRANS,
 					&policydb, out_fp);
 			break;
 		case '8':
 			fprintf(out_fp, "role allows:\n");
-			display_avblock(DISPLAY_AVBLOCK_ROLE_ALLOW, 0,
+			display_avblock(DISPLAY_AVBLOCK_ROLE_ALLOW,
 					&policydb, out_fp);
 			break;
 		case '9':
-			display_policycon(&policydb, out_fp);
+			display_policycon(out_fp);
 			break;
 		case '0':
 			display_initial_sids(&policydb, out_fp);
 			break;
 		case 'a':
 			fprintf(out_fp, "avrule block requirements:\n");
-			display_avblock(DISPLAY_AVBLOCK_REQUIRES, 0,
+			display_avblock(DISPLAY_AVBLOCK_REQUIRES,
 					&policydb, out_fp);
 			break;
 		case 'b':
 			fprintf(out_fp, "avrule block declarations:\n");
-			display_avblock(DISPLAY_AVBLOCK_DECLARES, 0,
+			display_avblock(DISPLAY_AVBLOCK_DECLARES,
 					&policydb, out_fp);
 			break;
 		case 'c':
@@ -993,7 +963,7 @@ int main(int argc, char **argv)
 		case 'F':
 			fprintf(out_fp, "filename_trans rules:\n");
 			display_avblock(DISPLAY_AVBLOCK_FILENAME_TRANS,
-					0, &policydb, out_fp);
+					&policydb, out_fp);
 			break;
 		case 'l':
 			link_module(&policydb, out_fp);
