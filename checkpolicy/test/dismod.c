@@ -115,7 +115,7 @@ static void display_id(policydb_t * p, FILE * fp, uint32_t symbol_type,
 int display_type_set(type_set_t * set, uint32_t flags, policydb_t * policy,
 		     FILE * fp)
 {
-	int i, num_types;
+	unsigned int i, num_types;
 
 	if (set->flags & TYPE_STAR) {
 		fprintf(fp, " * ");
@@ -178,7 +178,7 @@ int display_type_set(type_set_t * set, uint32_t flags, policydb_t * policy,
 
 int display_mod_role_set(role_set_t * roles, policydb_t * p, FILE * fp)
 {
-	int i, num = 0;
+	unsigned int i, num = 0;
 
 	if (roles->flags & ROLE_STAR) {
 		fprintf(fp, " * ");
@@ -299,7 +299,7 @@ int display_type_callback(hashtab_key_t key, hashtab_datum_t datum, void *data)
 {
 	type_datum_t *type;
 	FILE *fp;
-	int i, first_attrib = 1;
+	unsigned int i, first_attrib = 1;
 
 	type = (type_datum_t *) datum;
 	fp = (FILE *) data;
@@ -346,7 +346,7 @@ int display_types(policydb_t * p, FILE * fp)
 
 int display_users(policydb_t * p, FILE * fp)
 {
-	int i, j;
+	unsigned int i, j;
 	ebitmap_t *bitmap;
 	for (i = 0; i < p->p_users.nprim; i++) {
 		display_id(p, fp, SYM_USERS, i, "");
@@ -365,7 +365,7 @@ int display_users(policydb_t * p, FILE * fp)
 
 int display_bools(policydb_t * p, FILE * fp)
 {
-	int i;
+	unsigned int i;
 
 	for (i = 0; i < p->p_bools.nprim; i++) {
 		display_id(p, fp, SYM_BOOLS, i, "");
@@ -462,7 +462,7 @@ void display_initial_sids(policydb_t * p, FILE * fp)
 
 void display_class_set(ebitmap_t *classes, policydb_t *p, FILE *fp)
 {
-	int i, num = 0;
+	unsigned int i, num = 0;
 
 	for (i = ebitmap_startbit(classes); i < ebitmap_length(classes); i++) {
 		if (!ebitmap_get_bit(classes, i))
@@ -538,9 +538,9 @@ int role_display_callback(hashtab_key_t key, hashtab_datum_t datum, void *data)
 static int display_scope_index(scope_index_t * indices, policydb_t * p,
 			       FILE * out_fp)
 {
-	int i;
+	unsigned int i;
 	for (i = 0; i < SYM_NUM; i++) {
-		int any_found = 0, j;
+		unsigned int any_found = 0, j;
 		fprintf(out_fp, "%s:", symbol_labels[i]);
 		for (j = ebitmap_startbit(&indices->scope[i]);
 		     j < ebitmap_length(&indices->scope[i]); j++) {
@@ -820,7 +820,7 @@ static void display_policycaps(policydb_t * p, FILE * fp)
 	ebitmap_node_t *node;
 	const char *capname;
 	char buf[64];
-	int i;
+	unsigned int i;
 
 	fprintf(fp, "policy capabilities:\n");
 	ebitmap_for_each_bit(&p->policycaps, node, i) {

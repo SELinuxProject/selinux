@@ -157,7 +157,7 @@ int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t what,
 
 int display_avtab(avtab_t * a, uint32_t what, policydb_t * p, FILE * fp)
 {
-	int i;
+	unsigned int i;
 	avtab_ptr_t cur;
 	avtab_t expa;
 
@@ -184,7 +184,7 @@ int display_avtab(avtab_t * a, uint32_t what, policydb_t * p, FILE * fp)
 
 int display_bools(policydb_t * p, FILE * fp)
 {
-	int i;
+	unsigned int i;
 
 	for (i = 0; i < p->p_bools.nprim; i++) {
 		fprintf(fp, "%s : %d\n", p->p_bool_val_to_name[i],
@@ -304,7 +304,7 @@ static void display_policycaps(policydb_t * p, FILE * fp)
 	ebitmap_node_t *node;
 	const char *capname;
 	char buf[64];
-	int i;
+	unsigned int i;
 
 	fprintf(fp, "policy capabilities:\n");
 	ebitmap_for_each_bit(&p->policycaps, node, i) {
@@ -329,7 +329,7 @@ static void display_id(policydb_t *p, FILE *fp, uint32_t symbol_type,
 static void display_permissive(policydb_t *p, FILE *fp)
 {
 	ebitmap_node_t *node;
-	int i;
+	unsigned int i;
 
 	fprintf(fp, "permissive sids:\n");
 	ebitmap_for_each_bit(&p->permissive_map, node, i) {
