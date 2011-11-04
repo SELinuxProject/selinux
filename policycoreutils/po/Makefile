@@ -7,7 +7,7 @@ TOP	 = ../..
 # What is this package?
 NLSPACKAGE	= policycoreutils
 POTFILE		= $(NLSPACKAGE).pot
-INSTALL		= /usr/bin/install -c
+INSTALL		= /usr/bin/install -c -p
 INSTALL_DATA	= $(INSTALL) -m 644
 INSTALL_DIR	= /usr/bin/install -d
 
