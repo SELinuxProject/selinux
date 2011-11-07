@@ -278,6 +278,10 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
                           action="callback", callback=self.__mount_callback, 
                           help=_("mount new home and/or tmp directory"))
 
+        parser.add_option("-d", "--dpi",
+                          dest="dpi", action="store",
+                          help=_("dots per inch for X display"))
+
         parser.add_option("-S", "--session", action="store_true",  dest="session", 
                           default=False,  help=_("run complete desktop session within sandbox"))
 
@@ -322,7 +326,7 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
 
         if self.__options.X_ind:
                self.setype = DEFAULT_X_TYPE
-               self.dpi=commands.getoutput("xrdb -query | grep dpi  | /bin/cut -f 2")
+
         if self.__options.setype:
                self.setype = self.__options.setype
 
@@ -401,6 +405,12 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
                          cmds +=  [ "-t", self.__tmpdir, "-h", self.__homedir ]
 
                          if self.__options.X_ind:
+                                if self.__options.dpi:
+                                       dpi = self.__options.dpi
+                                else:
+                                       import gtk
+                                       dpi = str(gtk.settings_get_default().props.gtk_xft_dpi/1024)
+
                                 xmodmapfile = self.__homedir + "/.xmodmap"
                                 xd = open(xmodmapfile,"w")
                                 subprocess.Popen(["/usr/bin/xmodmap","-pke"],stdout=xd).wait()
@@ -408,7 +418,7 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
 
                                 self.__setup_sandboxrc(self.__options.wm)
 
-                                cmds += [ "--", SANDBOXSH, self.__options.windowsize, self.dpi ]
+                                cmds += [ "--", SANDBOXSH, self.__options.windowsize, dpi ]
                          else:
                                 cmds += [ "--" ] + self.__paths
                          return subprocess.Popen(cmds).wait()
