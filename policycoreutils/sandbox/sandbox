@@ -134,7 +134,12 @@ def get_range():
 def gen_mcs():
        low, high = get_range()
 
-       while True:
+       level = None
+       ctr = 0
+       total = high-low
+       total = (total * (total - 1))/2
+       while ctr < total:
+              ctr += 1
               i1 = random.randrange(low, high)
               i2 = random.randrange(low, high)
               if i1 == i2:
@@ -149,7 +154,10 @@ def gen_mcs():
               except socket.error:
                      continue
               break
-       return level
+       if level:
+              return level
+       raise ValueError(_("Failed to find any unused categories"))
+
 
 def fullpath(cmd):
        for i in [ "/", "./", "../" ]:
