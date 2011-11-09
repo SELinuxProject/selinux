@@ -118,10 +118,25 @@ def reserve(level):
     sock.bind("\0%s" % level)
     fcntl.fcntl(sock.fileno(), fcntl.F_SETFD, fcntl.FD_CLOEXEC)
 
+def get_range():
+       try:
+              level =selinux.getcon_raw()[1].split(":")[4]
+              lowc,highc = level.split(".")
+              low = int(lowc[1:])
+              high = int(highc[1:])+1
+              if high - low < 100:
+                     raise IndexError
+
+              return low,high
+       except IndexError:
+              raise ValueError(_("User account must be setup with an MCS Range with more then 100 categories"))
+
 def gen_mcs():
+       low, high = get_range()
+
        while True:
-              i1 = random.randrange(0, 1024)
-              i2 = random.randrange(0, 1024)
+              i1 = random.randrange(low, high)
+              i2 = random.randrange(low, high)
               if i1 == i2:
                      continue
               if i1 > i2:
