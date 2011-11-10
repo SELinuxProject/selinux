@@ -27,7 +27,7 @@ base=${0##*/}
 start() {
 	echo -n "Starting sandbox"
 
-	[ -f "$LOCKFILE" ] && return 1
+	[ -f "$LOCKFILE" ] && return 0
 
 	touch $LOCKFILE
 	mount --make-rshared / || return $? 
