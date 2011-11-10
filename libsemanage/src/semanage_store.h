@@ -108,6 +108,10 @@ int semanage_make_final(semanage_handle_t * sh);
 int semanage_get_modules_names(semanage_handle_t * sh,
 			       char ***filenames, int *len);
 
+int semanage_get_active_modules(semanage_handle_t *sh,
+			       semanage_module_info_t **modinfo, int *num_modules);
+
+
 /* lock file routines */
 int semanage_get_trans_lock(semanage_handle_t * sh);
 int semanage_get_active_lock(semanage_handle_t * sh);

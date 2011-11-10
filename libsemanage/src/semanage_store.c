@@ -1039,41 +1039,102 @@ cleanup:
 }
 
 /* qsort comparison function for semanage_get_modules_names. */
-static int semanage_get_modules_names_cmp(const void *a, const void *b)
+static int semanage_get_active_modules_cmp(const void *a, const void *b)
 {
-	const char *aa = *(const char **)a;
-	const char *bb = *(const char **)b;
+	semanage_module_info_t *aa = (semanage_module_info_t *)a;
+	semanage_module_info_t *bb = (semanage_module_info_t *)b;
 
-	/* copy into a buffer since basename/dirname can modify */
-	char ap[PATH_MAX];
-	char bp[PATH_MAX];
+	return strcmp(aa->name, bb->name);
+}
 
-	strncpy(ap, aa, sizeof(ap));
-	ap[PATH_MAX - 1] = '\0';
+int semanage_get_modules_names(semanage_handle_t * sh,
+				char *** filenames,
+				int *len)
+{
+	semanage_module_info_t *modinfos = NULL;
+	enum semanage_module_path_type type;
+	char path[PATH_MAX];
 
-	strncpy(bp, bb, sizeof(bp));
-	bp[PATH_MAX - 1] = '\0';
+	int ret;
+	int status = 0;
 
-	/* compare the module dir names */
-	const char *an = basename(dirname((char *)ap));
-	const char *bn = basename(dirname((char *)bp));
+	int i = 0;
 
-	return strverscmp(an, bn);
+	*filenames = NULL;
+	*len = 0;
+
+	ret = semanage_get_active_modules(sh, &modinfos, len);
+	if (ret != 0) {
+		status = -1;
+		goto cleanup;
+	}
+
+	if (*len == 0) {
+		goto cleanup;
+	}
+
+	(*filenames) = calloc(*len, sizeof(char *));
+	if ((*filenames) == NULL) {
+		ERR(sh, "Error allocating space for filenames.");
+	}
+
+	for (i = 0; i < *len; i++) {
+		if (!strcasecmp(modinfos[i].lang_ext, "cil")) {
+			type = SEMANAGE_MODULE_PATH_HLL;
+		} else {
+			type = SEMANAGE_MODULE_PATH_CIL;
+		}
+
+		ret = semanage_module_get_path(
+				sh,
+				&modinfos[i],
+				type,
+				path,
+				sizeof(path));
+		if (ret != 0) {
+			status = -1;
+			goto cleanup;
+		}
+
+		(*filenames)[i] = strdup(path);
+		if ((*filenames)[i] == NULL) {
+			status = -1;
+			goto cleanup;
+		}
+	}
+
+cleanup:
+	for (i = 0; i < *len; i++) {
+		semanage_module_info_destroy(sh, &modinfos[i]);
+	}
+	free(modinfos);
+
+	if (status != 0) {
+		for (i = 0; i < *len; i++) {
+			free(filenames[i]);
+		}
+		free(*filenames);
+	}
+
+	return status;
 }
 
 /* Scans the modules directory for the current semanage handler.  This
  * might be the active directory or sandbox, depending upon if the
- * handler has a transaction lock.  Allocates and fills in *filenames
- * with an array of module filenames; length of array is stored in
- * *len.  The caller is responsible for free()ing *filenames and its
+ * handler has a transaction lock.  Allocates and fills in *modinfos
+ * with an array of module infos; length of array is stored in
+ * *num_modules. The caller is responsible for free()ing *modinfos and its
  * individual elements.	 Upon success returns 0, -1 on error.
  */
-int semanage_get_modules_names(semanage_handle_t * sh, char ***filenames,
-			       int *len)
+int semanage_get_active_modules(semanage_handle_t * sh,
+				semanage_module_info_t ** modinfo,
+				int *num_modules)
 {
 	assert(sh);
-	assert(filenames);
-	assert(len);
+	assert(modinfo);
+	assert(num_modules);
+	*modinfo = NULL;
+	*num_modules = 0;
 
 	int status = 0;
 	int ret = 0;
@@ -1084,45 +1145,45 @@ int semanage_get_modules_names(semanage_handle_t * sh, char ***filenames,
 	semanage_list_t *list = NULL;
 	semanage_list_t *found = NULL;
 
-	semanage_module_info_t *modinfos = NULL;
-	int modinfos_len = 0;
-
-	char path[PATH_MAX];
+	semanage_module_info_t *all_modinfos = NULL;
+	int all_modinfos_len = 0;
 
 	void *tmp = NULL;
 
 	/* get all modules */
-	ret = semanage_module_list_all(sh, &modinfos, &modinfos_len);
+	ret = semanage_module_list_all(sh, &all_modinfos, &all_modinfos_len);
 	if (ret != 0) {
 		status = -1;
 		goto cleanup;
 	}
 
+	if (all_modinfos_len == 0) {
+		goto cleanup;
+	}
+
 	/* allocate enough for worst case */
-	(*filenames) = calloc(modinfos_len, sizeof(char *));
-	if ((*filenames) == NULL) {
-		ERR(sh, "Error allocating space for filenames.");
+	(*modinfo) = calloc(all_modinfos_len, sizeof(**modinfo));
+	if ((*modinfo) == NULL) {
+		ERR(sh, "Error allocating space for module information.");
 		status = -1;
 		goto cleanup;
 	}
 
-	*len = modinfos_len;
-
 	/* for each highest priority, non-base, enabled module get its path */
 	semanage_list_destroy(&list);
 	j = 0;
-	for (i = 0; i < modinfos_len; i++) {
+	for (i = 0; i < all_modinfos_len; i++) {
 		/* check if base */
-		ret = strcmp(modinfos[i].name, "_base");
+		ret = strcmp(all_modinfos[i].name, "_base");
 		if (ret == 0) continue;
 
 		/* check if enabled */
-		if (modinfos[i].enabled != 1) continue;
+		if (all_modinfos[i].enabled != 1) continue;
 
 		/* check if we've seen this before (i.e. highest priority) */
-		found = semanage_list_find(list, modinfos[i].name);
+		found = semanage_list_find(list, all_modinfos[i].name);
 		if (found == NULL) {
-			ret = semanage_list_push(&list, modinfos[i].name);
+			ret = semanage_list_push(&list, all_modinfos[i].name);
 			if (ret != 0) {
 				ERR(sh, "Failed to add module name to list of known names.");
 				status = -1;
@@ -1131,19 +1192,7 @@ int semanage_get_modules_names(semanage_handle_t * sh, char ***filenames,
 		}
 		else continue;
 
-		ret = semanage_module_get_path(
-				sh,
-				&modinfos[i],
-				SEMANAGE_MODULE_PATH_CIL,
-				path,
-				sizeof(path));
-		if (ret != 0) {
-			status = -1;
-			goto cleanup;
-		}
-
-		(*filenames)[j] = strdup(path);
-		if ((*filenames)[j] == NULL) {
+		if (semanage_module_info_clone(sh, &all_modinfos[i], &(*modinfo)[j]) != 0) {
 			status = -1;
 			goto cleanup;
 		}
@@ -1151,36 +1200,42 @@ int semanage_get_modules_names(semanage_handle_t * sh, char ***filenames,
 		j += 1;
 	}
 
+	*num_modules = j;
+
+	if (j == 0) {
+		free(*modinfo);
+		*modinfo = NULL;
+		goto cleanup;
+	}
+
 	/* realloc the array to its min size */
-	tmp = realloc(*filenames, j * sizeof(char *));
+	tmp = realloc(*modinfo, j * sizeof(**modinfo));
 	if (tmp == NULL) {
 		ERR(sh, "Error allocating space for filenames.");
 		status = -1;
 		goto cleanup;
 	}
-	*filenames = tmp;
-	*len = j;
+	*modinfo = tmp;
 
 	/* sort array on module name */
-	qsort(*filenames,
-	      *len,
-	      sizeof(char *),
-	      semanage_get_modules_names_cmp);
+	qsort(*modinfo,
+	      *num_modules,
+	      sizeof(**modinfo),
+	      semanage_get_active_modules_cmp);
 
 cleanup:
 	semanage_list_destroy(&list);
 
-	for (i = 0; i < modinfos_len; i++) {
-		semanage_module_info_destroy(sh, &modinfos[i]);
+	for (i = 0; i < all_modinfos_len; i++) {
+		semanage_module_info_destroy(sh, &all_modinfos[i]);
 	}
-	free(modinfos);
+	free(all_modinfos);
 
 	if (status != 0) {
 		for (i = 0; i < j; j++) {
-			free((*filenames)[i]);
+			semanage_module_info_destroy(sh, &(*modinfo)[i]);
 		}
-
-		free(*filenames);
+		free(*modinfo);
 	}
 
 	return status;

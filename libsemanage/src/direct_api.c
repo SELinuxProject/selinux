@@ -1417,10 +1417,7 @@ static int semanage_direct_list(semanage_handle_t * sh,
 				semanage_module_info_t ** modinfo,
 				int *num_modules)
 {
-	struct sepol_policy_file *pf = NULL;
 	int i, retval = -1;
-	char **module_filenames = NULL;
-	int num_mod_files;
 	*modinfo = NULL;
 	*num_modules = 0;
 
@@ -1430,72 +1427,27 @@ static int semanage_direct_list(semanage_handle_t * sh,
 		if (semanage_get_active_lock(sh) < 0)
 			return -1;
 
-	if (semanage_get_modules_names(sh, &module_filenames, &num_mod_files) ==
-	    -1) {
+	if (semanage_get_active_modules(sh, modinfo, num_modules) == -1) {
 		goto cleanup;
 	}
-	if (num_mod_files == 0) {
+
+	if (num_modules == 0) {
 		retval = semanage_direct_get_serial(sh);
 		goto cleanup;
 	}
 
-	if (sepol_policy_file_create(&pf)) {
-		ERR(sh, "Out of memory!");
-		goto cleanup;
-	}
-	sepol_policy_file_set_handle(pf, sh->sepolh);
-
-	if ((*modinfo = calloc(num_mod_files, sizeof(**modinfo))) == NULL) {
-		ERR(sh, "Out of memory!");
-		goto cleanup;
-	}
-
-	for (i = 0; i < num_mod_files; i++) {
-		FILE *fp;
-		char *name = NULL, *version = NULL;
-		int type;
-		if ((fp = fopen(module_filenames[i], "rb")) == NULL) {
-			/* could not open this module file, so don't
-			 * report it */
-			continue;
-		}
-		ssize_t size;
-		char *data = NULL;
-
-		if ((size = bunzip(sh, fp, &data)) > 0) {
-			sepol_policy_file_set_mem(pf, data, size);
-		} else {
-			rewind(fp);
-			__fsetlocking(fp, FSETLOCKING_BYCALLER);
-			sepol_policy_file_set_fp(pf, fp);
-		}
-		if (sepol_module_package_info(pf, &type, &name, &version)) {
-			fclose(fp);
-			free(data);
-			free(name);
-			free(version);
-			continue;
-		}
-		fclose(fp);
-		free(data);
-		if (type == SEPOL_POLICY_MOD) {
-			(*modinfo)[*num_modules].name = name;
-			(*modinfo)[*num_modules].version = version;
-			(*num_modules)++;
-		} else {
-			/* file was not a module, so don't report it */
-			free(name);
-			free(version);
-		}
-	}
 	retval = semanage_direct_get_serial(sh);
 
       cleanup:
-	sepol_policy_file_free(pf);
-	for (i = 0; module_filenames != NULL && i < num_mod_files; i++) {
-		free(module_filenames[i]);
+	if (retval < 0) {
+		for (i = 0; i < *num_modules; i++) {
+			semanage_module_info_destroy(sh, &(*modinfo[i]));
+			modinfo[i] = NULL;
+		}
+		free(*modinfo);
+		*modinfo = NULL;
 	}
-	free(module_filenames);
+
 	if (!sh->is_in_transaction) {
 		semanage_release_active_lock(sh);
 	}
