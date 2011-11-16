@@ -1525,12 +1525,21 @@ class fcontextRecords(semanageRecords):
 	def __init__(self, store = ""):
 		semanageRecords.__init__(self, store)
                 self.equiv = {}
+                self.equiv_dist = {}
                 self.equal_ind = False
                 try:
                        fd = open(selinux.selinux_file_context_subs_path(), "r")
                        for i in fd.readlines():
                               src, dst = i.split()
                               self.equiv[src] = dst
+                       fd.close()
+                except IOError:
+                       pass
+                try:
+                       fd = open(selinux.selinux_file_context_subs_dist_path(), "r")
+                       for i in fd.readlines():
+                              src, dst = i.split()
+                              self.equiv_dist[src] = dst
                        fd.close()
                 except IOError:
                        pass
@@ -1594,7 +1603,7 @@ class fcontextRecords(semanageRecords):
                       raise ValueError(_("Invalid file specification"))
                if target.find(" ") != -1:
                       raise ValueError(_("File specification can not include spaces"))
-                      
+
 	def __add(self, target, type, ftype = "", serange = "", seuser = "system_u"):
                 self.validate(target)
 
@@ -1825,9 +1834,17 @@ class fcontextRecords(semanageRecords):
 					print "%-50s %-18s %s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1],fcon_dict[k][2])
 			else:
 				print "%-50s %-18s <<None>>" % (k[0], k[1])
-                if len(self.equiv.keys()) > 0:
+
+
+		if len(self.equiv_dist):
+		       if not locallist:
+			       if heading:
+				       print _("\nSELinux Distribution fcontext Equivalence \n")
+			       for src in self.equiv_dist.keys():
+				       print "%s = %s" % (src, self.equiv_dist[src])
+		if len(self.equiv):
                        if heading:
-                              print _("\nSELinux fcontext Equivalence \n")
+                              print _("\nSELinux Local fcontext Equivalence \n")
 
                        for src in self.equiv.keys():
                               print "%s = %s" % (src, self.equiv[src])
