@@ -594,7 +594,7 @@ class MiniProduction:
     pass
 
 # regex matching identifiers
-_is_identifier = re.compile(r'^[a-zA-Z0-9_-]+$')
+_is_identifier = re.compile(r'^[a-zA-Z0-9_-~]+$')
 
 # -----------------------------------------------------------------------------
 # add_production()
