@@ -994,7 +994,6 @@ int semanage_module_validate_priority(uint16_t priority)
  * to be considered valid:
  *
  * ^[a-zA-Z](\.?[a-zA-Z0-9_-])*$
- * ^_base$
  *
  * returns -1 if name is not valid, returns 0 otherwise
  */
@@ -1004,10 +1003,6 @@ int semanage_module_validate_name(const char * name)
 
 	if (name == NULL) {
 		status = -1;
-		goto exit;
-	}
-
-	if (strcmp(name, "_base") == 0) {
 		goto exit;
 	}
 

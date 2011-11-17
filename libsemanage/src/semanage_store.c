@@ -505,67 +505,6 @@ char *semanage_conf_path(void)
 	return semanage_conf;
 }
 
-/* Locates the highest priority enabled base module
- * and fills @path in with that value. @path must be
- * pre-allocated with size @len.
- *
- * Returns 0 on success and -1 on error.
- */
-int semanage_base_path(semanage_handle_t *sh,
-		       char *path,
-		       size_t len)
-{
-	assert(sh);
-	assert(path);
-
-	int status = 0;
-	int ret = 0;
-
-	semanage_module_info_t *base = NULL;
-
-	/* set key for getting base module */
-	semanage_module_key_t modkey;
-	ret = semanage_module_key_init(sh, &modkey);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	ret = semanage_module_key_set_name(sh, &modkey, "_base");
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-	/* get highest priority base module */
-	ret = semanage_module_get_module_info(sh, &modkey, &base);
-	if (ret != 0) {
-		/* no base module found */
-		status = -1;
-		goto cleanup;
-	}
-
-	/* get the highest priority base module path */
-	ret = semanage_module_get_path(
-			sh,
-			base,
-			SEMANAGE_MODULE_PATH_HLL,
-			path,
-			len);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
-
-cleanup:
-	semanage_module_key_destroy(sh, &modkey);
-
-	semanage_module_info_destroy(sh, base);
-	free(base);
-
-	return status;
-}
-
 /**************** functions that create module store ***************/
 
 /* Check that the semanage store exists.  If 'create' is non-zero then
@@ -2032,200 +1971,67 @@ int semanage_direct_get_serial(semanage_handle_t * sh)
 
 /* HIGHER LEVEL COMMIT FUNCTIONS */
 
-/* Loads a module (or a base) from a fully-qualified 'filename' into a
- * newly allocated sepol_module_package_t structure and returns it in
- * '*package'.	Caller is responsible for destroying it afterwards via
- * sepol_module_package_destroy().  Returns 0 on success, -1 on error.
- */
-static int semanage_load_module(semanage_handle_t * sh, const char *filename,
-				sepol_module_package_t ** package)
+int semanage_load_files(semanage_handle_t * sh, cil_db_t *cildb, char **filenames, int numfiles)
 {
 	int retval = 0;
 	FILE *fp;
-	struct sepol_policy_file *pf = NULL;
-
-	*package = NULL;
-	if (sepol_module_package_create(package) == -1) {
-		ERR(sh, "Out of memory!");
-		return -1;
-	}
-
-	if (sepol_policy_file_create(&pf)) {
-		ERR(sh, "Out of memory!");
-		goto cleanup;
-	}
-
-	if ((fp = fopen(filename, "rb")) == NULL) {
-		ERR(sh, "Could not open module file %s for reading.", filename);
-		goto cleanup;
-	}
 	ssize_t size;
 	char *data = NULL;
+	char *filename;
+	int i;
 
-	if ((size = bunzip(sh, fp, &data)) > 0) {
-		sepol_policy_file_set_mem(pf, data, size);
-	} else {
-		rewind(fp);
-		__fsetlocking(fp, FSETLOCKING_BYCALLER);
-		sepol_policy_file_set_fp(pf, fp);
-	}
-	sepol_policy_file_set_handle(pf, sh->sepolh);
-	if (sepol_module_package_read(*package, pf, 0) == -1) {
-		ERR(sh, "Error while reading from module file %s.", filename);
-		fclose(fp);
-		free(data);
-		goto cleanup;
-	}
-	sepol_policy_file_free(pf);
-	fclose(fp);
-	free(data);
-	return retval;
+	for (i = 0; i < numfiles; i++) {
+		filename = filenames[i];
 
-      cleanup:
-	sepol_module_package_free(*package);
-	*package = NULL;
-	sepol_policy_file_free(pf);
-	return -1;
-}
-
-/* Links all of the modules within the sandbox into the base module.
- * '*base' will point to the module package that contains everything
- * linked together (caller must call sepol_module_package_destroy() on
- * it afterwards).  '*mods' will be a list of module packages and
- * '*num_modules' will be the number of elements within '*mods'
- * (caller must destroy each element as well as the pointer itself.)
- * Both '*base' and '*mods' will be set to NULL upon entering this
- * function.  Returns 0 on success, -1 on error.
- */
-int semanage_link_sandbox(semanage_handle_t * sh,
-			  sepol_module_package_t ** base)
-{
-	char base_filename[PATH_MAX];
-	char **module_filenames = NULL;
-	int retval = -1, i;
-	int num_modules = 0;
-	sepol_module_package_t **mods = NULL;
-
-	*base = NULL;
-
-	/* first make sure that base module is readable */
-	if (semanage_base_path(sh, base_filename, sizeof(base_filename)) != 0) {
-		goto cleanup;
-	}
-	if (access(base_filename, R_OK) == -1) {
-		ERR(sh, "Could not access sandbox base file %s.",
-		    base_filename);
-		goto cleanup;
-	}
-
-	/* get list of modules and load them */
-	if (semanage_get_modules_names(sh, &module_filenames, &num_modules) ==
-	    -1 || semanage_load_module(sh, base_filename, base) == -1) {
-		goto cleanup;
-	}
-	if ((mods = calloc(num_modules, sizeof(*mods))) == NULL) {
-		ERR(sh, "Out of memory!");
-		num_modules = 0;
-		goto cleanup;
-	}
-	for (i = 0; i < num_modules; i++) {
-		if (semanage_load_module(sh, module_filenames[i], mods + i) ==
-		    -1) {
+		if ((fp = fopen(filename, "rb")) == NULL) {
+			ERR(sh, "Could not open module file %s for reading.", filename);
 			goto cleanup;
 		}
+
+		if ((size = bunzip(sh, fp, &data)) <= 0) {
+			rewind(fp);
+			__fsetlocking(fp, FSETLOCKING_BYCALLER);
+
+			if (fseek(fp, 0, SEEK_END) != 0) {
+				ERR(sh, "Failed to determine size of file %s.", filename);
+				goto cleanup;
+			}
+			size = ftell(fp);
+			rewind(fp);
+
+			data = malloc(size);
+			if (fread(data, size, 1, fp) != 1) {
+				ERR(sh, "Failed to read file %s.", filename);
+				goto cleanup;
+			}
+		}
+
+		fclose(fp);
+		fp = NULL;
+
+		retval = cil_add_file(cildb, filename, data, size);
+		if (retval != SEPOL_OK) {
+			ERR(sh, "Error while reading from file %s.", filename);
+			goto cleanup;
+		}
+	
+		free(data);
+		data = NULL;
 	}
 
-	if (sepol_link_packages(sh->sepolh, *base, mods, num_modules, 0) != 0) {
-		ERR(sh, "Link packages failed");
-		goto cleanup;
-	}
-
-	retval = 0;
+	return retval;
 
       cleanup:
-	for (i = 0; module_filenames != NULL && i < num_modules; i++) {
-		free(module_filenames[i]);
+	if (fp != NULL) {
+		fclose(fp);
 	}
-	free(module_filenames);
-	for (i = 0; mods != NULL && i < num_modules; i++) {
-		sepol_module_package_free(mods[i]);
-	}
-	free(mods);
-	return retval;
-}
-
-/* Links only the base module within the sandbox into the base module.
- * '*base' will point to the module package that contains everything
- * linked together (caller must call sepol_module_package_destroy() on
- * it afterwards).  '*base' will be set to NULL upon entering this
- * function.  Returns 0 on success, -1 on error.
- */
-int semanage_link_base(semanage_handle_t * sh,
-			  sepol_module_package_t ** base)
-{
-	char base_filename[PATH_MAX];
-	int retval = -1;
-
-	*base = NULL;
-
-	/* first make sure that base module is readable */
-	if (semanage_base_path(sh, base_filename, sizeof(base_filename)) != 0) {
-		goto cleanup;
-	}
-	if (access(base_filename, R_OK) == -1) {
-		ERR(sh, "Could not access sandbox base file %s.",
-		    base_filename);
-		goto cleanup;
-	}
-
-	if (semanage_load_module(sh, base_filename, base) == -1) {
-		goto cleanup;
-	}
-
-	retval = 0;
-
-      cleanup:
-	return retval;
+	free(data);
+	return -1;
 }
 
 /* 
  * Expands the policy contained within *base 
  */
-int semanage_expand_sandbox(semanage_handle_t * sh,
-			    sepol_module_package_t * base,
-			    sepol_policydb_t ** policydb)
-{
-
-	struct sepol_policydb *out = NULL;
-	int policyvers = sh->conf->policyvers;
-	int expand_check = sh->conf->expand_check ? sh->modules_modified : 0;
-
-	if (sepol_policydb_create(&out))
-		goto err;
-
-	sepol_set_expand_consume_base(sh->sepolh, 1);
-
-	if (sepol_expand_module(sh->sepolh,
-				sepol_module_package_get_policy(base), out, 0,
-				expand_check)
-	    == -1) {
-		ERR(sh, "Expand module failed");
-		goto err;
-	}
-	if (sepol_policydb_set_vers(out, policyvers)) {
-		ERR(sh, "Unknown/Invalid policy version %d.", policyvers);
-		goto err;
-	}
-	if (sh->conf->handle_unknown >= 0)
-		sepol_policydb_set_handle_unknown(out, sh->conf->handle_unknown);
-
-	*policydb = out;
-	return STATUS_SUCCESS;
-
-      err:
-	sepol_policydb_free(out);
-	return STATUS_ERR;
-}
 
 /**
  * Read the policy from the sandbox (kernel)
