@@ -70,6 +70,9 @@ prints help message and quit
 .B \-P,\-\-preserve_tunables
 Preserve tunables in policy
 .TP
+.B \-p,\-\-path
+Use an alternate path for the policy root
+.TP
 .B  \-v,\-\-verbose     
 be verbose
 
@@ -95,6 +98,8 @@ $ semodule \-d alsa
 $ semodule \-X 100 \-i alsa.pp
 # List all modules.
 $ semodule \-l full
+# Set an alternate path for the policy root
+$ semodule \-B \-p "/tmp"
 .fi
 
 .SH SEE ALSO

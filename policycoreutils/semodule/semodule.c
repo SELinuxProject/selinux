@@ -172,6 +172,7 @@ static void parse_command_line(int argc, char **argv)
 		{"priority", required_argument, NULL, 'X'},
 		{"enable", required_argument, NULL, 'e'},
 		{"disable", required_argument, NULL, 'd'},
+		{"path", required_argument, NULL, 'p'},
 		{NULL, 0, NULL, 0}
 	};
 	int i;
@@ -181,7 +182,7 @@ static void parse_command_line(int argc, char **argv)
 	create_store = 0;
 	priority = 400;
 	while ((i =
-		getopt_long(argc, argv, "s:b:hi:l::vqr:u:RnNBDPX:e:d:", opts,
+		getopt_long(argc, argv, "s:b:hi:l::vqr:u:RnNBDPX:e:d:p:", opts,
 			    NULL)) != -1) {
 		switch (i) {
 		case 'b':
@@ -208,6 +209,9 @@ static void parse_command_line(int argc, char **argv)
 			break;
 		case 's':
 			set_store(optarg);
+			break;
+		case 'p':
+			semanage_set_root(optarg);
 			break;
 		case 'R':
 			reload = 1;
