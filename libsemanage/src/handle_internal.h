@@ -8,4 +8,5 @@ hidden_proto(semanage_begin_transaction)
     hidden_proto(semanage_handle_destroy)
     hidden_proto(semanage_reload_policy)
     hidden_proto(semanage_access_check)
+    hidden_proto(semanage_set_root)
 #endif

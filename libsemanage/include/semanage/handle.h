@@ -134,6 +134,12 @@ int semanage_is_connected(semanage_handle_t * sh);
 /* returns 1 if policy is MLS, 0 otherwise. */
 int semanage_mls_enabled(semanage_handle_t *sh);
 
+/* Change to alternate semanage root path */
+int semanage_set_root(const char *path);
+
+/* Get the current semanage root path */
+const char * semanage_root(void);
+
 /* Get whether or not needless unused branch of tunables would be preserved */
 int semanage_get_preserve_tunables(semanage_handle_t * handle);
 

@@ -38,10 +38,29 @@
 
 #define SEMANAGE_COMMIT_READ_WAIT 5
 
+static char *private_semanage_root = NULL;
+
+int semanage_set_root(const char *root)
+{
+	free(private_semanage_root);
+	private_semanage_root = strdup(root);
+	return 0;
+}
+
+hidden_def(semanage_set_root);
+
+const char * semanage_root(void)
+{
+	if (private_semanage_root == NULL) {
+		return "";
+	}
+	return private_semanage_root;
+}
+
 semanage_handle_t *semanage_handle_create(void)
 {
 	semanage_handle_t *sh = NULL;
-	const char *conf_name = NULL;
+	char *conf_name = NULL;
 
 	/* Allocate handle */
 	if ((sh = calloc(1, sizeof(semanage_handle_t))) == NULL)
@@ -82,9 +101,12 @@ semanage_handle_t *semanage_handle_create(void)
 	sh->msg_callback = semanage_msg_default_handler;
 	sh->msg_callback_arg = NULL;
 
+	free(conf_name);
+
 	return sh;
 
       err:
+	free(conf_name);
 	semanage_handle_destroy(sh);
 	return NULL;
 }

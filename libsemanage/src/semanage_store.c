@@ -75,7 +75,6 @@ enum semanage_file_defs {
 
 static char *semanage_paths[SEMANAGE_NUM_STORES][SEMANAGE_STORE_NUM_PATHS];
 static char *semanage_files[SEMANAGE_NUM_FILES] = { NULL };
-static char *semanage_conf;
 static int semanage_paths_initialized = 0;
 
 /* These are paths relative to the bottom of the module store */
@@ -173,13 +172,6 @@ static int semanage_init_paths(const char *root)
 			semanage_relative_files[i]);
 	}
 
-	len = strlen(selinux_path()) + strlen(SEMANAGE_CONF_FILE);
-	semanage_conf = calloc(len + 1, sizeof(char));
-	if (!semanage_conf)
-		return -1;
-	snprintf(semanage_conf, len + 1, "%s%s", selinux_path(),
-		 SEMANAGE_CONF_FILE);
-
 	return 0;
 }
 
@@ -225,7 +217,8 @@ static int semanage_init_final(semanage_handle_t *sh, const char *prefix)
 	size_t store_len = strlen(store_path);
 
 	/* SEMANAGE_FINAL_TMP */
-	len = strlen(prefix) +
+	len = strlen(semanage_root()) +
+	      strlen(prefix) +
 	      strlen("/") +
 	      strlen(semanage_final_prefix[SEMANAGE_FINAL_TMP]) +
 	      store_len;
@@ -236,14 +229,16 @@ static int semanage_init_final(semanage_handle_t *sh, const char *prefix)
 	}
 
 	sprintf(semanage_final[SEMANAGE_FINAL_TMP],
-		"%s%s/%s",
+		"%s%s%s/%s",
+		semanage_root(),
 		prefix,
 		semanage_final_prefix[SEMANAGE_FINAL_TMP],
 		store_path);
 
 	/* SEMANAGE_FINAL_SELINUX */
 	const char *selinux_root = selinux_path();
-	len = strlen(selinux_root) +
+	len = strlen(semanage_root()) +
+	      strlen(selinux_root) +
 	      strlen(semanage_final_prefix[SEMANAGE_FINAL_SELINUX]) +
 	      store_len;
 	semanage_final[SEMANAGE_FINAL_SELINUX] = malloc(len + 1);
@@ -253,7 +248,8 @@ static int semanage_init_final(semanage_handle_t *sh, const char *prefix)
 	}
 
 	sprintf(semanage_final[SEMANAGE_FINAL_SELINUX],
-		"%s%s%s",
+		"%s%s%s%s",
+		semanage_root(),
 		selinux_root,
 		semanage_final_prefix[SEMANAGE_FINAL_SELINUX],
 		store_path);
@@ -409,7 +405,8 @@ int semanage_check_init(semanage_handle_t *sh, const char *prefix)
 
 		rc = snprintf(root,
 			      sizeof(root),
-			      "%s/%s",
+			      "%s%s/%s",
+			      semanage_root(),
 			      prefix,
 			      sh->conf->store_path);
 		if (rc < 0 || rc >= (int)sizeof(root))
@@ -483,15 +480,29 @@ const char *semanage_store_root_path(void)
 }
 
 /* Return a fully-qualified path + filename to the semanage
- * configuration file.  The caller must not alter the string returned
- * (and hence why this function return type is const).
+ * configuration file. If semanage.conf file in the semanage
+ * root is cannot be read, use the default semanage.conf as a
+ * fallback.
  *
- * This is going to be hard coded to /etc/selinux/semanage.conf for
- * the time being. FIXME
+ * The caller is responsible for freeing the returned string.
  */
-const char *semanage_conf_path(void)
+char *semanage_conf_path(void)
 {
-	return "/etc/selinux/semanage.conf";
+	char *semanage_conf = NULL;
+	int len;
+
+	len = strlen(semanage_root()) + strlen(selinux_path()) + strlen(SEMANAGE_CONF_FILE);
+	semanage_conf = calloc(len + 1, sizeof(char));
+	if (!semanage_conf)
+		return NULL;
+	snprintf(semanage_conf, len + 1, "%s%s%s", semanage_root(), selinux_path(),
+		 SEMANAGE_CONF_FILE);
+
+	if (access(semanage_conf, R_OK) != 0) {
+		snprintf(semanage_conf, len + 1, "%s%s", selinux_path(), SEMANAGE_CONF_FILE);
+	}
+
+	return semanage_conf;
 }
 
 /* Locates the highest priority enabled base module
@@ -973,7 +984,8 @@ int semanage_make_final(semanage_handle_t *sh)
 	/* Create tmp dir if it does not exist. */
 	ret = snprintf(fn,
 		       sizeof(fn),
-		       "%s%s",
+		       "%s%s%s",
+		       semanage_root(),
 		       semanage_store_root_path(),
 		       semanage_final_prefix[SEMANAGE_FINAL_TMP]);
 	if (ret < 0 || ret >= (int)sizeof(fn)) {

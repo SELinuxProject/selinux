@@ -1,0 +1,25 @@
+.TH semanage_set_root 3 "1 June 2011" "dwalsh@redhat.com" "Libsemanage API documentation"
+
+.SH "NAME"
+semanage_set_root, semanage_root \- SELinux Management API
+
+.SH "SYNOPSIS"
+Set/get the alternate root directory for SELinux configuration directory.
+
+.B	#include <semanage/handle.h>
+
+.B	extern int semanage_set_root(const char *path);
+
+.B	extern const char *semanage_root(void);
+
+.SH "DESCRIPTION"
+.TP
+The function semanage_set_root() sets an alternate root directory for SELinux configuration paths to be used by the semanage library.
+
+.SH "RETURN VALUE"
+The function semanage_set_root() returns \-1 in case of failure. Otherwise, 0 is returned.
+
+The function semanage_root() returns the semanage root. The returned value should not be modified by the caller.
+
+.SH "SEE ALSO"
+.BR semanage_handle_create "(3), " semanage_connect "(3), "
