@@ -60,7 +60,9 @@ int security_compute_av_flags_raw(const security_context_t scon,
 	} else if (ret < 6)
 		avd->flags = 0;
 
-	map_decision(tclass, avd);
+	/* If tclass invalid, kernel sets avd according to deny_unknown flag */
+	if (tclass != 0)
+		map_decision(tclass, avd);
 
 	ret = 0;
       out2:
