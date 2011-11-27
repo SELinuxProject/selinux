@@ -8,7 +8,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <assert.h>
 #include <stdlib.h>
 #include <dirent.h>
 #include <string.h>
@@ -41,7 +40,10 @@ int security_get_boolean_names(char ***names, int *len)
 	struct dirent **namelist;
 	char **n;
 
-	assert(len);
+	if (!len || names == NULL) {
+		errno = EINVAL;
+		return -1;
+	}
 	if (!selinux_mnt) {
 		errno = ENOENT;
 		return -1;
