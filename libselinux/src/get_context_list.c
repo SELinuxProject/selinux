@@ -38,8 +38,10 @@ int get_default_context_with_role(const char *user,
 	}
 
 	rc = -1;
-	if (!(*ptr))
+	if (!(*ptr)) {
+		errno = EINVAL;
 		goto out;
+	}
 	*newcon = strdup(*ptr);
 	if (!(*newcon))
 		goto out;
