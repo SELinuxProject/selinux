@@ -172,8 +172,8 @@ void printf_tab(const char *outp)
 int main(int argc, char **argv)
 {
 	/* these vars are reused several times */
-	int rc, opt, i, c;
-	char *context;
+	int rc, opt, i, c, size;
+	char *context, *root_path;
 
 	/* files that need context checks */
 	char *fc[MAX_CHECK];
@@ -193,8 +193,9 @@ int main(int argc, char **argv)
 	int show_bools = 0;
 
 	/* policy */
-	const char *pol_name;
+	const char *pol_name, *root_dir;
 	char *pol_path;
+
 
 	while (1) {
 		opt = getopt(argc, argv, "vb");
@@ -210,8 +211,8 @@ int main(int argc, char **argv)
 		default:
 			/* invalid option */
 			printf("\nUsage: %s [OPTION]\n\n", basename(argv[0]));
-			printf
-			    ("  -v  Verbose check of process and file contexts.\n");
+			printf("  -v  Verbose check of process and file contexts.\n");
+			printf("  -b  Display current state of booleans.\n");
 			printf("\nWithout options, show SELinux status.\n");
 			return -1;
 		}
@@ -240,6 +241,35 @@ int main(int argc, char **argv)
 		printf("not mounted\n\n");
 		printf("Please mount selinuxfs for proper results.\n");
 		return -1;
+	}
+
+	printf_tab("SELinux root directory:");
+	if ((root_dir = selinux_path()) != NULL) {
+		/* The path has a trailing '/' so remove it */
+		size = strlen(root_dir);
+		root_path = malloc(size);
+		if (!root_path) {
+			printf("malloc error (%s)\n", strerror(errno));
+			return -1;
+		}
+		memset(root_path, 0, size);
+		strncpy(root_path, root_dir, (size-1)) ;
+		printf("%s\n", root_path);
+		free(root_path);
+	} else {
+			printf("error (%s)\n", strerror(errno));
+		return -1;
+	}
+
+	/* Dump all the path information */
+	printf_tab("Loaded policy name:");
+	pol_path = strdup(selinux_policy_root());
+	if (pol_path) {
+		pol_name = basename(pol_path);
+		puts(pol_name);
+		free(pol_path);
+	} else {
+		printf("error (%s)\n", strerror(errno));
 	}
 
 	printf_tab("Current mode:");
@@ -273,23 +303,41 @@ int main(int argc, char **argv)
 		printf("error (%s)\n", strerror(errno));
 	}
 
+	printf_tab("Policy MLS status:");
+	rc = is_selinux_mls_enabled();
+	switch (rc) {
+		case 0:
+			printf("disabled\n");
+			break;
+		case 1:
+			printf("enabled\n");
+			break;
+		default:
+			printf("error (%s)\n", strerror(errno));
+			break;
+	}
+
+	printf_tab("Policy deny_unknown status:");
+	rc = security_deny_unknown();
+	switch (rc) {
+		case 0:
+			printf("allowed\n");
+			break;
+		case 1:
+			printf("denied\n");
+			break;
+		default:
+			printf("error (%s)\n", strerror(errno));
+			break;
+	}
+
 	rc = security_policyvers();
-	printf_tab("Policy version:");
+	printf_tab("Max kernel policy version:");
 	if (rc < 0)
 		printf("unknown (%s)\n", strerror(errno));
 	else
 		printf("%d\n", rc);
 
-	/* Dump all the path information */
-	printf_tab("Policy from config file:");
-	pol_path = strdup(selinux_policy_root());
-	if (pol_path) {
-		pol_name = basename(pol_path);
-		puts(pol_name);
-		free(pol_path);
-	} else {
-		printf("error (%s)\n", strerror(errno));
-	}
 
 	if (show_bools) {
 		/* show booleans */
@@ -374,7 +422,7 @@ int main(int argc, char **argv)
 	printf("\nFile contexts:\n");
 
 	/* controlling term */
-	printf_tab("Controlling term:");
+	printf_tab("Controlling terminal:");
 	if (lgetfilecon(cterm, &context) >= 0) {
 		printf("%s\n", context);
 		freecon(context);

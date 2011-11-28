@@ -1,4 +1,4 @@
-.TH "sestatus" "8" "2005111103" "" ""
+.TH "sestatus" "8" "26 Nov 2011" "Security Enhanced Linux" "SELinux command line documentation"
 .SH "NAME"
 sestatus \- SELinux status tool
 
@@ -12,38 +12,66 @@ This tool is used to get the status of a system running SELinux.
 This manual page describes the
 .BR sestatus
 program.
-.br
-This tool is used to get the status of a system running SELinux.  It displays data about whether SELinux is enabled, disabled, the loaded policy and whether it is in enforcing or permissive mode.  It can also be used to display the security context of files and processes listed in the /etc/sestatus.conf file.
-
+.sp
+This tool is used to get the status of a system running SELinux. It displays data about whether SELinux is enabled or disabled, location of key directories, and the loaded policy with its status as shown in the example:
+.RS
 > sestatus
 .br
-SELinux status:         enabled
+SELinux status:              enabled
 .br
-SELinuxfs mount:        /selinux
+SELinuxfs mount:             /selinux
 .br
-Current Mode:           permissive
+SELinux root directory:      /etc/selinux
 .br
-Policy version:         16
+Loaded policy name:          targeted
+.br
+Current mode:                permissive
+.br
+Mode from config file:       enforcing
+.br
+Policy MLS status:           enabled
+.br
+Policy deny_unknown status:  allow
+.br
+Max kernel policy version:   26
+.RE
+.sp
+\fBsestatus\fR can also be used to display:
+.RS
+.IP "-" 4
+The security context of files and processes listed in the \fI/etc/sestatus.conf\fR file. The format of this file is described in \fBsestatus.conf\fR(5).
+.IP "-" 4
+The status of booleans.
+.RE
 
 .SH "OPTIONS"
-.TP 
-
 .B \-v
-.P
- Checks the contexts of a files , and a processes listed in the /etc/sestatus.conf file.  It also checks the context of the target, in cases of
-symlinks.
-
+.RS
+Displays the contexts of files and processes listed in the \fI/etc/sestatus.conf\fR file. It also checks whether the file is a symbolic link, if so then the context of the target file is also shown.
+.sp
+The following contexts will always be displayed:
+.RS
+The current process context
+.br
+The init process context
+.br
+The controlling terminal file context
+.RE
+.RE
+.sp
 .B \-b
-.P
+.RS
 Display the current state of booleans.
-
+.RE
 
 .SH "FILES"
-/etc/sestatus.conf
+.I /etc/sestatus.conf
 
 .SH "AUTHOR"
 This man page was written by Daniel Walsh <dwalsh@redhat.com>.
 .br
 The program was written by Chris PeBenito <pebenito@gentoo.org>
 
+.SH "SEE ALSO"
+.BR selinux "(8), " sestatus.conf "(5)
 

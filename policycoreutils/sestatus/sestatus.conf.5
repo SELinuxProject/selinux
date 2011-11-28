@@ -1,0 +1,94 @@
+.TH "sestatus.conf" "5" "26-Nov-2011" "Security Enhanced Linux" "sestatus configuration file"
+
+.SH "NAME"
+sestatus.conf \- The \fBsestatus\fR(8) configuration file.
+
+.SH "DESCRIPTION"
+The \fIsestatus.conf\fR file is used by the \fBsestatus\fR(8) command with the \fB\-v\fR option to determine what file and process security contexts should be displayed.
+.sp
+The fully qualified path name of the configuration file is:
+.RS
+\fI/etc/sestatus.conf\fR
+.RE
+.RE
+.sp
+The file consists of two optional sections as described in the \fBFILE FORMAT\fR section. Whether these exist or not, the following will always be displayed:
+.RS
+The current process context
+.br
+The init process context
+.br
+The controlling terminal file context
+.RE
+
+.SH "FILE FORMAT"
+The format consists of two optional sections as follows:
+.RS
+.B [files]
+.br
+.I file_name
+.br
+.I [file_name]
+.br
+.I ...
+.sp
+.B [process]
+.br
+.I executable_file_name
+.br
+.I [executable_file_name]
+.br
+.I ...
+.RE
+.sp
+Where:
+.RS
+.B [files]
+.RS
+The start of the file list block.
+.RE
+.I file_name
+.RS
+One or more fully qualified file names, each on a new line will that will have its context displayed. If the file does not exist, then it is ignored. If the file is a symbolic link, then \fBsestatus -v\fR will also display the target file context.
+.RE
+.sp
+.B [process]
+.RS
+The start of the process list block.
+.RE
+.I executable_file_name
+.RS
+One or more fully qualified executable file names that should it be an active process, have its context displayed. Each entry is on a new line.
+.RE
+.RE
+
+.SH "EXAMPLE"
+# /etc/sestatus.conf
+.br
+[files]
+.br
+/etc/passwd
+.br
+/etc/shadow
+.br
+/bin/bash
+.br
+/bin/login
+.br
+/lib/libc.so.6
+.br
+/lib/ld-linux.so.2
+.br
+/lib/ld.so.1
+.sp
+[process]
+.br
+/sbin/mingetty
+.br
+/sbin/agetty
+.br
+/usr/sbin/sshd
+.RE
+
+.SH "SEE ALSO"
+.BR selinux "(8), " sestatus "(8) "

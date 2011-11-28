@@ -15,9 +15,11 @@ sestatus:  sestatus.o
 
 install: all
 	[ -d $(MANDIR)/man8 ] || mkdir -p $(MANDIR)/man8
+	[ -d $(MANDIR)/man5 ] || mkdir -p $(MANDIR)/man5
 	-mkdir -p $(SBINDIR)
 	install -m 755 sestatus $(SBINDIR)
 	install -m 644 sestatus.8 $(MANDIR)/man8
+	install -m 644 sestatus.conf.5 $(MANDIR)/man5
 	-mkdir -p $(ETCDIR)
 	install -m 644 sestatus.conf $(ETCDIR)
 
