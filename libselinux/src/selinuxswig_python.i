@@ -22,7 +22,10 @@ def restorecon(path, recursive=False):
         status, context = matchpathcon(path, mode)
 
     if status == 0:
-        lsetfilecon(path, context)
+        status, oldcontext = lgetfilecon(path)
+        if context != oldcontext:
+            lsetfilecon(path, context)
+
         if recursive:
             os.path.walk(path, lambda arg, dirname, fnames:
                              map(restorecon, [os.path.join(dirname, fname)
