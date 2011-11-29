@@ -1829,21 +1829,18 @@ class fcontextRecords(semanageRecords):
 	def list(self, heading = 1, locallist = 0 ):
 		fcon_dict = self.get_all(locallist)
                 keys = fcon_dict.keys()
-		if len(keys) == 0:
-			return 
-                keys.sort()
-
-		if heading:
-			print "%-50s %-18s %s\n" % (_("SELinux fcontext"), _("type"), _("Context"))
-		for k in keys:
-			if fcon_dict[k]:
-				if is_mls_enabled:
-					print "%-50s %-18s %s:%s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1], fcon_dict[k][2], translate(fcon_dict[k][3],False))
+		if len(keys) != 0:
+			keys.sort()
+			if heading:
+				print "%-50s %-18s %s\n" % (_("SELinux fcontext"), _("type"), _("Context"))
+			for k in keys:
+				if fcon_dict[k]:
+					if is_mls_enabled:
+						print "%-50s %-18s %s:%s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1], fcon_dict[k][2], translate(fcon_dict[k][3],False))
+					else:
+						print "%-50s %-18s %s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1],fcon_dict[k][2])
 				else:
-					print "%-50s %-18s %s:%s:%s " % (k[0], k[1], fcon_dict[k][0], fcon_dict[k][1],fcon_dict[k][2])
-			else:
-				print "%-50s %-18s <<None>>" % (k[0], k[1])
-
+					print "%-50s %-18s <<None>>" % (k[0], k[1])
 
 		if len(self.equiv_dist):
 		       if not locallist:
