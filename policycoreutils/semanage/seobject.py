@@ -1530,16 +1530,16 @@ class fcontextRecords(semanageRecords):
                 try:
                        fd = open(selinux.selinux_file_context_subs_path(), "r")
                        for i in fd.readlines():
-                              src, dst = i.split()
-                              self.equiv[src] = dst
+                              target, substitute = i.split()
+                              self.equiv[target] = substitute
                        fd.close()
                 except IOError:
                        pass
                 try:
                        fd = open(selinux.selinux_file_context_subs_dist_path(), "r")
                        for i in fd.readlines():
-                              src, dst = i.split()
-                              self.equiv_dist[src] = dst
+                              target, substitute = i.split()
+                              self.equiv_dist[target] = substitute
                        fd.close()
                 except IOError:
                        pass
@@ -1549,8 +1549,8 @@ class fcontextRecords(semanageRecords):
                        subs_file = selinux.selinux_file_context_subs_path()
                        tmpfile = "%s.tmp" % subs_file
                        fd = open(tmpfile, "w")
-                       for src in self.equiv.keys():
-                              fd.write("%s %s\n" % (src, self.equiv[src]))
+                       for target in self.equiv.keys():
+                              fd.write("%s %s\n" % (target, self.equiv[target]))
                        fd.close()
                        try:
                               os.chmod(tmpfile, os.stat(subs_file)[stat.ST_MODE])
@@ -1560,19 +1560,26 @@ class fcontextRecords(semanageRecords):
                        self.equal_ind = False
 		semanageRecords.commit(self)
 
-        def add_equal(self, src, dst):
+        def add_equal(self, target, substitute):
                 self.begin()
-                if src in self.equiv.keys():
-                       raise ValueError(_("Equivalence class for %s already exists") % src)
-                self.equiv[src] = dst
+                if target in self.equiv.keys():
+                       raise ValueError(_("Equivalence class for %s already exists") % target)
+                self.validate(target)
+
+		for fdict in (self.equiv, self.equiv_dist):
+			for i in fdict:
+				if i.startswith(target + "/"):
+					raise ValueError(_("File spec %s conflicts with equivalency rule '%s %s'") % (target, i, fdict[i]))
+
+                self.equiv[target] = substitute
                 self.equal_ind = True
                 self.commit()
 
-        def modify_equal(self, src, dst):
+        def modify_equal(self, target, substitute):
                 self.begin()
-                if src not in self.equiv.keys():
-                       raise ValueError(_("Equivalence class for %s does not exists") % src)
-                self.equiv[src] = dst
+                if target not in self.equiv.keys():
+                       raise ValueError(_("Equivalence class for %s does not exists") % target)
+                self.equiv[target] = substitute
                 self.equal_ind = True
                 self.commit()
 
@@ -1597,21 +1604,18 @@ class fcontextRecords(semanageRecords):
                               raise ValueError(_("Could not set mls fields in file context for %s") % target)
 
                 return con
-               
-        def check_equiv(self, target, fdict):
-		for i in fdict:
-			if target.startswith(i+"/"):
-				t = re.sub(i, fdict[i], target)
-				raise ValueError(_("File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead") % (target, i, fdict[i], t))
-
 
         def validate(self, target):
                if target == "" or target.find("\n") >= 0:
                       raise ValueError(_("Invalid file specification"))
                if target.find(" ") != -1:
                       raise ValueError(_("File specification can not include spaces"))
-	       self.check_equiv(target, self.equiv)
-	       self.check_equiv(target, self.equiv_dist)
+	       for fdict in (self.equiv, self.equiv_dist):
+		       for i in fdict:
+			       if target.startswith(i+"/"):
+				       t = re.sub(i, fdict[i], target)
+				       raise ValueError(_("File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead") % (target, i, fdict[i], t))
+
 
 	def __add(self, target, type, ftype = "", serange = "", seuser = "system_u"):
                 self.validate(target)
@@ -1846,14 +1850,14 @@ class fcontextRecords(semanageRecords):
 		       if not locallist:
 			       if heading:
 				       print _("\nSELinux Distribution fcontext Equivalence \n")
-			       for src in self.equiv_dist.keys():
-				       print "%s = %s" % (src, self.equiv_dist[src])
+			       for target in self.equiv_dist.keys():
+				       print "%s = %s" % (target, self.equiv_dist[target])
 		if len(self.equiv):
                        if heading:
                               print _("\nSELinux Local fcontext Equivalence \n")
 
-                       for src in self.equiv.keys():
-                              print "%s = %s" % (src, self.equiv[src])
+                       for target in self.equiv.keys():
+                              print "%s = %s" % (target, self.equiv[target])
 				
 class booleanRecords(semanageRecords):
 	def __init__(self, store = ""):
