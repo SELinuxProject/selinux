@@ -23,7 +23,7 @@ install: all
 	install -m 644 sandbox.8 $(MANDIR)/man8/
 	install -m 644 seunshare.8 $(MANDIR)/man8/
 	-mkdir -p $(MANDIR)/man5
-	install -m 644 sandbox.conf.5 $(MANDIR)/man5/
+	install -m 644 sandbox.5 $(MANDIR)/man5/
 	-mkdir -p $(SBINDIR)
 	install -m 4755 seunshare $(SBINDIR)/
 	-mkdir -p $(SHAREDIR)
