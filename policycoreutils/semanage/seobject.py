@@ -1598,11 +1598,20 @@ class fcontextRecords(semanageRecords):
 
                 return con
                
+        def check_equiv(self, target, fdict):
+		for i in fdict:
+			if target.startswith(i+"/"):
+				t = re.sub(i, fdict[i], target)
+				raise ValueError(_("File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead") % (target, i, fdict[i], t))
+
+
         def validate(self, target):
                if target == "" or target.find("\n") >= 0:
                       raise ValueError(_("Invalid file specification"))
                if target.find(" ") != -1:
                       raise ValueError(_("File specification can not include spaces"))
+	       self.check_equiv(target, self.equiv)
+	       self.check_equiv(target, self.equiv_dist)
 
 	def __add(self, target, type, ftype = "", serange = "", seuser = "system_u"):
                 self.validate(target)
