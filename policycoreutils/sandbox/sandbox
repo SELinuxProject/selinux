@@ -124,12 +124,12 @@ def get_range():
               lowc,highc = level.split(".")
               low = int(lowc[1:])
               high = int(highc[1:])+1
-              if high - low < 100:
+              if high - low == 0:
                      raise IndexError
 
               return low,high
        except IndexError:
-              raise ValueError(_("User account must be setup with an MCS Range with more then 100 categories"))
+              raise ValueError(_("User account must be setup with an MCS Range"))
 
 def gen_mcs():
        low, high = get_range()
@@ -156,7 +156,7 @@ def gen_mcs():
               break
        if level:
               return level
-       raise ValueError(_("Failed to find any unused categories"))
+       raise ValueError(_("Failed to find any unused category sets.  Consider a larger MCS range for this user."))
 
 
 def fullpath(cmd):
