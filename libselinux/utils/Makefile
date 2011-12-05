@@ -4,7 +4,7 @@ LIBDIR ?= $(PREFIX)/lib
 BINDIR ?= $(PREFIX)/sbin
 _BINDIR ?= $(DESTDIR)/sbin
 
-CFLAGS ?= -Wall
+CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -I../include -D_GNU_SOURCE $(EMFLAGS)
 LDLIBS += -L../src -lselinux -L$(LIBDIR)
 
