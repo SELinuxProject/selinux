@@ -1,3 +1,18 @@
+2.1.8 2011-12-05
+	* selinuxswig_python.i: don't make syscall if it won't change anything
+	* Remove assert in security_get_boolean_names(3)
+	* Mapped compute functions now obey deny_unknown flag
+	* get_default_type now sets EINVAL if no entry.
+	* return EINVAL if invalid role selected
+	* Updated selabel_file(5) man page
+	* Updated selabel_db(5) man page
+	* Updated selabel_media(5) man page
+	* Updated selabel_x(5) man page
+	* Add man/man5 man pages
+	* Add man/man5 man pages
+	* Add man/man5 man pages
+	* use -W and -Werror in utils
+
 2.1.7 2011-11-03
 	* Makefiles: syntax, convert all ${VAR} to $(VAR)
 	* load_policy: handle selinux=0 and /sys/fs/selinux not exist

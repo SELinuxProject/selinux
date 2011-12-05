@@ -1,3 +1,6 @@
+1.1.4 2011-12-05
+	* Allow ~ as a file identifier
+
 1.1.3 2011-11-03
 	* Ignore permissive qualifier if found in an interface
 	* Return name field in avc data

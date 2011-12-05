@@ -1,3 +1,21 @@
+2.1.9 2011-12-05
+	* sandbox: move sandbox.conf.5 to just sandbox.5
+	* po: Makefile use -p to preserve times to allow multilib simultatious installs
+	* of po files
+	* sandbox: Allow user to specify the DPI value for X in a sandbox
+	* sandbox: make sure the domain launching sandbox has at least 100 categories
+	* sandbox: do not try forever to find available category set
+	* sandbox: only complain if sandbox unable to launch
+	* sandbox: init script run twice is still successful
+	* semanage: print local and dristo equiv rules
+	* semanage: check file equivalence rules for conflict
+	* semanage: Make sure semanage fcontext -l -C prints even if local keys
+	* are not defined
+	* semanage: change src,dst to target,substitute for equivalency
+	* sestatus: Updated sestatus and man pages.
+	* Added SELinux config file man page.
+	* add clean target to man Makefile
+
 2.1.8 2011-11-03
 	* sandbox: Maintain the LANG environment into the sandbox
 	* audit2allow: use audit2why internally

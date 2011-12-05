@@ -1,3 +1,9 @@
+2.1.7 2011-12-05
+	* dis* fixed signed vs unsigned errors
+	* dismod: fix unused parameter errors
+	* test: Makefile: include -W and -Werror
+	* allow ~ in filename transition rules
+
 2.1.6 2011-11-03
 	* Revert "checkpolicy: Redo filename/filesystem syntax to support filename trans rules"
 	* drop libsepol dynamic link in checkpolicy
