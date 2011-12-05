@@ -351,6 +351,102 @@ static int read_classes(ebitmap_t *e_classes)
 	return 0;
 }
 
+int define_default_user(int which)
+{
+	char *id;
+	class_datum_t *cladatum;
+
+	if (pass == 1) {
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		return 0;
+	}
+
+	while ((id = queue_remove(id_queue))) {
+		if (!is_id_in_scope(SYM_CLASSES, id)) {
+			yyerror2("class %s is not within scope", id);
+			return -1;
+		}
+		cladatum = hashtab_search(policydbp->p_classes.table, id);
+		if (!cladatum) {
+			yyerror2("unknown class %s", id);
+			return -1;
+		}
+		if (cladatum->default_user && cladatum->default_user != which) {
+			yyerror2("conflicting default user information for class %s", id);
+			return -1;
+		}
+		cladatum->default_user = which;
+		free(id);
+	}
+
+	return 0;
+}
+
+int define_default_role(int which)
+{
+	char *id;
+	class_datum_t *cladatum;
+
+	if (pass == 1) {
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		return 0;
+	}
+
+	while ((id = queue_remove(id_queue))) {
+		if (!is_id_in_scope(SYM_CLASSES, id)) {
+			yyerror2("class %s is not within scope", id);
+			return -1;
+		}
+		cladatum = hashtab_search(policydbp->p_classes.table, id);
+		if (!cladatum) {
+			yyerror2("unknown class %s", id);
+			return -1;
+		}
+		if (cladatum->default_role && cladatum->default_role != which) {
+			yyerror2("conflicting default role information for class %s", id);
+			return -1;
+		}
+		cladatum->default_role = which;
+		free(id);
+	}
+
+	return 0;
+}
+
+int define_default_range(int which)
+{
+	char *id;
+	class_datum_t *cladatum;
+
+	if (pass == 1) {
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		return 0;
+	}
+
+	while ((id = queue_remove(id_queue))) {
+		if (!is_id_in_scope(SYM_CLASSES, id)) {
+			yyerror2("class %s is not within scope", id);
+			return -1;
+		}
+		cladatum = hashtab_search(policydbp->p_classes.table, id);
+		if (!cladatum) {
+			yyerror2("unknown class %s", id);
+			return -1;
+		}
+		if (cladatum->default_range && cladatum->default_range != which) {
+			yyerror2("conflicting default range information for class %s", id);
+			return -1;
+		}
+		cladatum->default_range = which;
+		free(id);
+	}
+
+	return 0;
+}
+
 int define_common_perms(void)
 {
 	char *id = 0, *perm = 0;

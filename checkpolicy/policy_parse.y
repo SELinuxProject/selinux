@@ -143,6 +143,8 @@ typedef int (* require_func_t)();
 %token POLICYCAP
 %token PERMISSIVE
 %token FILESYSTEM
+%token DEFAULT_USER DEFAULT_ROLE DEFAULT_RANGE
+%token LOW_HIGH LOW HIGH
 
 %left OR
 %left XOR
@@ -157,7 +159,7 @@ base_policy             : { if (define_policy(pass, 0) == -1) return -1; }
                           classes initial_sids access_vectors
                           { if (pass == 1) { if (policydb_index_classes(policydbp)) return -1; }
                             else if (pass == 2) { if (policydb_index_others(NULL, policydbp, 0)) return -1; }}
-			  opt_mls te_rbac users opt_constraints 
+			  opt_default_rules opt_mls te_rbac users opt_constraints 
                          { if (pass == 1) { if (policydb_index_bools(policydbp)) return -1;}
 			   else if (pass == 2) { if (policydb_index_others(NULL, policydbp, 0)) return -1;}}
 			  initial_sid_contexts opt_fs_contexts opt_fs_uses opt_genfs_contexts net_contexts opt_dev_contexts
@@ -194,6 +196,39 @@ av_perms_def		: CLASS identifier '{' identifier_list '}'
 			{if (define_av_perms(TRUE)) return -1;}
                         | CLASS identifier INHERITS identifier '{' identifier_list '}'
 			{if (define_av_perms(TRUE)) return -1;}
+			;
+opt_default_rules	: default_rules
+			|
+			;
+default_rules		: default_user_def
+			| default_role_def
+			| default_range_def
+			| default_rules default_user_def
+			| default_rules default_role_def
+			| default_rules default_range_def
+			;
+default_user_def	: DEFAULT_USER names SOURCE ';'
+			{if (define_default_user(DEFAULT_SOURCE)) return -1; }
+			| DEFAULT_USER names TARGET ';'
+			{if (define_default_user(DEFAULT_TARGET)) return -1; }
+			;
+default_role_def	: DEFAULT_ROLE names SOURCE ';'
+			{if (define_default_role(DEFAULT_SOURCE)) return -1; }
+			| DEFAULT_ROLE names TARGET ';'
+			{if (define_default_role(DEFAULT_TARGET)) return -1; }
+			;
+default_range_def	: DEFAULT_RANGE names SOURCE LOW ';'
+			{if (define_default_range(DEFAULT_SOURCE_LOW)) return -1; }
+			| DEFAULT_RANGE names SOURCE HIGH ';'
+			{if (define_default_range(DEFAULT_SOURCE_HIGH)) return -1; }
+			| DEFAULT_RANGE names SOURCE LOW_HIGH ';'
+			{if (define_default_range(DEFAULT_SOURCE_LOW_HIGH)) return -1; }
+			| DEFAULT_RANGE names TARGET LOW ';'
+			{if (define_default_range(DEFAULT_TARGET_LOW)) return -1; }
+			| DEFAULT_RANGE names TARGET HIGH ';'
+			{if (define_default_range(DEFAULT_TARGET_HIGH)) return -1; }
+			| DEFAULT_RANGE names TARGET LOW_HIGH ';'
+			{if (define_default_range(DEFAULT_TARGET_LOW_HIGH)) return -1; }
 			;
 opt_mls			: mls
                         | 

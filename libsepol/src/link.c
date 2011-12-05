@@ -205,6 +205,34 @@ static int permission_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return ret;
 }
 
+static int class_copy_default_new_object(link_state_t *state,
+					 class_datum_t *olddatum,
+					 class_datum_t *newdatum)
+{
+	if (olddatum->default_user) {
+		if (newdatum->default_user && olddatum->default_user != newdatum->default_user) {
+			ERR(state->handle, "Found conflicting default user definitions");
+			return SEPOL_ENOTSUP;
+		}
+		newdatum->default_user = olddatum->default_user;
+	}
+	if (olddatum->default_role) {
+		if (newdatum->default_role && olddatum->default_role != newdatum->default_role) {
+			ERR(state->handle, "Found conflicting default role definitions");
+			return SEPOL_ENOTSUP;
+		}
+		newdatum->default_role = olddatum->default_role;
+	}
+	if (olddatum->default_range) {
+		if (newdatum->default_range && olddatum->default_range != newdatum->default_range) {
+			ERR(state->handle, "Found conflicting default range definitions");
+			return SEPOL_ENOTSUP;
+		}
+		newdatum->default_range = olddatum->default_range;
+	}
+	return 0;
+}
+
 static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			       void *data)
 {
@@ -286,6 +314,11 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	state->src_class = cladatum;
 	state->dest_class = new_class;
 	state->dest_class_name = (char *)key;
+
+	/* copy default new object rules */
+	ret = class_copy_default_new_object(state, cladatum, new_class);
+	if (ret)
+		return ret;
 
 	ret =
 	    hashtab_map(cladatum->permissions.table, permission_copy_callback,

@@ -221,6 +221,18 @@ policycap |
 POLICYCAP			{ return(POLICYCAP); }
 permissive |
 PERMISSIVE			{ return(PERMISSIVE); }
+default_user |
+DEFAULT_USER			{ return(DEFAULT_USER); }
+default_role |
+DEFAULT_ROLE			{ return(DEFAULT_ROLE); }
+default_range |
+DEFAULT_RANGE			{ return(DEFAULT_RANGE); }
+low-high |
+LOW-HIGH			{ return(LOW_HIGH); }
+high |
+HIGH				{ return(HIGH); }
+low |
+LOW				{ return(LOW); }
 "/"({alnum}|[_\.\-/])*	        { return(PATH); }
 \"({alnum}|[_\.\-\~])+\"	{ return(FILENAME); }
 {letter}({alnum}|[_\-])*([\.]?({alnum}|[_\-]))*	{ return(IDENTIFIER); }

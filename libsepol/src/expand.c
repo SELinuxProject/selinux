@@ -358,6 +358,35 @@ static int constraint_node_clone(constraint_node_t ** dst,
 	return -1;
 }
 
+static int class_copy_default_new_object(expand_state_t *state,
+					 class_datum_t *olddatum,
+					 class_datum_t *newdatum)
+{
+	if (olddatum->default_user) {
+		if (newdatum->default_user && olddatum->default_user != newdatum->default_user) {
+			ERR(state->handle, "Found conflicting default user definitions");
+			return SEPOL_ENOTSUP;
+		}
+		newdatum->default_user = olddatum->default_user;
+
+	}
+	if (olddatum->default_role) {
+		if (newdatum->default_role && olddatum->default_role != newdatum->default_role) {
+			ERR(state->handle, "Found conflicting default role definitions");
+			return SEPOL_ENOTSUP;
+		}
+		newdatum->default_role = olddatum->default_role;
+	}
+	if (olddatum->default_range) {
+		if (newdatum->default_range && olddatum->default_range != newdatum->default_range) {
+			ERR(state->handle, "Found conflicting default range definitions");
+			return SEPOL_ENOTSUP;
+		}
+		newdatum->default_range = olddatum->default_range;
+	}
+	return 0;
+}
+
 static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			       void *data)
 {
@@ -393,6 +422,12 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	new_class->s.value = class->s.value;
 	state->out->p_classes.nprim++;
 
+	ret = class_copy_default_new_object(state, class, new_class);
+	if (ret) {
+		free(new_class);
+		return ret;
+	}
+	
 	new_id = strdup(id);
 	if (!new_id) {
 		ERR(state->handle, "Out of memory!");
