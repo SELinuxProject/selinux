@@ -8,13 +8,13 @@ SBINDIR ?= $(PREFIX)/sbin
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= /usr/share/locale
 SHAREDIR ?= $(PREFIX)/share/sandbox
-override CFLAGS += $(LDFLAGS) -I$(PREFIX)/include -DPACKAGE="\"policycoreutils\"" -Wall -Werror -Wextra
-LDLIBS += -lcgroup -lselinux -lcap-ng
+override CFLAGS += $(LDFLAGS) -I$(PREFIX)/include -DPACKAGE="\"policycoreutils\"" -Wall -Werror -Wextra -W
+LDLIBS += -lcgroup -lselinux -lcap-ng -L$(LIBDIR)
+SEUNSHARE_OBJS = seunshare.o
 
 all: sandbox seunshare sandboxX.sh start
 
-seunshare: seunshare.o $(EXTRA_OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS) -L$(LIBDIR)
+seunshare: $(SEUNSHARE_OBJS)
 
 install: all
 	-mkdir -p $(BINDIR)
