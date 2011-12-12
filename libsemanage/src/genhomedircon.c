@@ -717,9 +717,12 @@ static int set_fallback_user(genhomedircon_settings_t *s, const char *user,
 {
 	char *fallback_user = strdup(user);
 	char *fallback_user_prefix = strdup(prefix);
-	char *fallback_user_level = strdup(level);
+	char *fallback_user_level = NULL;
+	if (level) 
+		fallback_user_level = strdup(level);
 
-	if (fallback_user == NULL || fallback_user_prefix == NULL || fallback_user_level == NULL) {
+	if (fallback_user == NULL || fallback_user_prefix == NULL ||
+	    (fallback_user_level == NULL && level != NULL)) {
 		free(fallback_user);
 		free(fallback_user_prefix);
 		free(fallback_user_level);
