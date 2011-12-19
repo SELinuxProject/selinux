@@ -6,18 +6,14 @@ setenforce \- modify the mode SELinux is running in.
 
 .SH "DESCRIPTION"
 Use Enforcing or 1 to put SELinux in enforcing mode.
+.br
 Use Permissive or 0 to put SELinux in permissive mode.
-You need to modify 
-.I /etc/grub.conf
-or
-.I /etc/selinux/config
-to disable SELinux.
+
+If SELinux is disabled and you want to enable it, or SELinux is enabled and you want to disable it, please see 
+.B selinux(8).
 
 .SH AUTHOR	
 Dan Walsh, <dwalsh@redhat.com>
 
 .SH "SEE ALSO"
 selinux(8), getenforce(8), selinuxenabled(8)
-
-.SH FILES
-/etc/grub.conf, /etc/selinux/config
