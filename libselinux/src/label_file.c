@@ -462,6 +462,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 		if (localfp != NULL)
 			__fsetlocking(localfp, FSETLOCKING_BYCALLER);
 	}
+	rec->spec_file = strdup(path);
 
 	/* 
 	 * Perform two passes over the specification file.

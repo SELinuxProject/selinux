@@ -184,6 +184,12 @@ selabel_lookup_common(struct selabel_handle *rec, int translating,
 		      const char *key, int type)
 {
 	struct selabel_lookup_rec *lr;
+
+	if (key == NULL) {
+		errno = EINVAL;
+		return NULL;
+	}
+
 	char *ptr = selabel_sub(rec->subs, key);
 	if (ptr) {
 		lr = rec->func_lookup(rec, ptr, type); 
@@ -194,7 +200,7 @@ selabel_lookup_common(struct selabel_handle *rec, int translating,
 	if (!lr)
 		return NULL;
 
-	if (compat_validate(rec, lr, "file_contexts", 0))
+	if (compat_validate(rec, lr, rec->spec_file, 0))
 		return NULL;
 
 	if (translating && !lr->ctx_trans &&
@@ -234,6 +240,7 @@ void selabel_close(struct selabel_handle *rec)
 {
 	selabel_subs_fini(rec->subs);
 	rec->func_close(rec);
+	free(rec->spec_file);
 	free(rec);
 }
 

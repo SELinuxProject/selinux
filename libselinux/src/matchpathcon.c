@@ -531,9 +531,14 @@ int compat_validate(struct selabel_handle *rec,
 	else {
 		rc = selabel_validate(rec, contexts);
 		if (rc < 0) {
-			COMPAT_LOG(SELINUX_WARNING,
-				    "%s:  line %d has invalid context %s\n",
-				    path, lineno, *ctx);
+			if (lineno) {
+				COMPAT_LOG(SELINUX_WARNING,
+					    "%s: line %d has invalid context %s\n",
+						path, lineno, *ctx);
+			} else {
+				COMPAT_LOG(SELINUX_WARNING,
+					    "%s: has invalid context %s\n", path, *ctx);
+			}
 		}
 	}
 

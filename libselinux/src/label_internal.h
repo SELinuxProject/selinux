@@ -59,6 +59,12 @@ struct selabel_handle {
 	/* supports backend-specific state information */
 	void *data;
 
+	/*
+	 * The main spec file used. Note for file contexts the local and/or
+	 * homedirs could also have been used to resolve a context.
+	 */
+	char *spec_file;
+
 	/* substitution support */
 	struct selabel_sub *subs;
 };
