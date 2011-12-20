@@ -1,31 +1,31 @@
-.TH "context_new" "3" "15 November 2004" "dwalsh@redhat.com" "SELinux API documentation"
+.TH "context_new" "3" "20 December 2011" "dwalsh@redhat.com" "SELinux API documentation"
 .SH "NAME"
 context_new, context_str, context_free, context_type_get, context_type_set, context_range_get, context_range_set,context_role_get, context_role_set, context_user_get, context_user_set \- Routines to manipulate SELinux security contexts
 
 .SH "SYNOPSIS"
 .B #include <selinux/context.h>
 
-.B "context_t context_new(const char *" context_str );
+.BI "context_t context_new(const char *" context_str );
 
-.B "const char * context_str(context_t " con );
+.BI "const char * context_str(context_t " con );
 
-.B "void context_free(context_t " con );
+.BI "void context_free(context_t " con );
 
-.B "const char * context_type_get(context_t " con );
+.BI "const char * context_type_get(context_t " con );
 
-.B "const char * context_range_get(context_t " con );
+.BI "const char * context_range_get(context_t " con );
 
-.B "const char * context_role_get(context_t " con );
+.BI "const char * context_role_get(context_t " con );
 
-.B "const char * context_user_get(context_t " con );
+.BI "const char * context_user_get(context_t " con );
 
-.B "const char * context_type_set(context_t " con ", const char* " type);
+.BI "int context_type_set(context_t " con ", const char *" type );
 
-.B "const char * context_range_set(context_t " con ", const char* " range);
+.BI "int context_range_set(context_t " con ", const char *" range );
 
-.B "const char * context_role_set(context_t " con ", const char* " role );
+.BI "int context_role_set(context_t " con ", const char *" role );
 
-.B "const char * context_user_set(context_t " con ", const char* " user );
+.BI "int context_user_set(context_t " con ", const char *" user );
 
 .SH "DESCRIPTION"
 These functions allow an application to manipulate the fields of a
@@ -36,21 +36,22 @@ context_new
  Return a new context initialized to a context string 
 
 context_str
-Return a pointer to the string value of the context_t
+ Return a pointer to the string value of the context_t
 Valid until the next call to context_str or context_free 
 for the same context_t*
 
 context_free
-Free the storage used by a context
+ Free the storage used by a context
 
 context_type_get, context_range_get, context_role_get, context_user_get
-Get a pointer to the string value of a context component
+ Get a pointer to the string value of a context component
 
-NOTE: Values returned by the get functions are only valid until the next call 
+.B NOTE: 
+Values returned by the get functions are only valid until the next call 
 to a set function or context_free() for the same context_t structure.
 
 context_type_set, context_range_set, context_role_set, context_user_set
-Set a context component
+ Set a context component
 
 .SH "RETURN VALUE"
 On success, zero is returned. On failure, -1 is returned and errno is
@@ -58,4 +59,3 @@ set appropriately.
 
 .SH "SEE ALSO"
 .BR selinux "(8)"
-

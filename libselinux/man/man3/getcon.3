@@ -37,7 +37,7 @@ sets the current security context of the process to a new value.  Note
 that use of this function requires that the entire application be
 trusted to maintain any desired separation between the old and new
 security contexts, unlike exec-based transitions performed via
-setexeccon(3).  When possible, decompose your applicaiton and use
+setexeccon(3).  When possible, decompose your application and use
 setexeccon() and execve() instead.
 
 Since access to file descriptors is revalidated upon use by SELinux,
