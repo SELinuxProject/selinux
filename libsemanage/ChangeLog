@@ -1,3 +1,7 @@
+2.1.6 2011-12-21
+	* add ignoredirs config for genhomedircon
+	* Fallback_user_level can be NULL if you are not using MLS
+
 2.1.5 2011-11-03
 	* regenerate .pc on VERSION change
 	* maintain mode even if umask is tighter

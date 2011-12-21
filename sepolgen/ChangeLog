@@ -1,3 +1,6 @@
+1.1.5 2011-12-21
+	* better analysis of why things broke
+
 1.1.4 2011-12-05
 	* Allow ~ as a file identifier
 

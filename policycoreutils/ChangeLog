@@ -1,3 +1,9 @@
+2.1.10 2011-12-21
+	* Remove excess whitespace
+	* sandbox: Add back in . functions to sandbox.init script
+	* Fix Makefile to match other policycoreutils Makefiles
+	* semanage: drop unused translation getopt
+
 2.1.9 2011-12-05
 	* sandbox: move sandbox.conf.5 to just sandbox.5
 	* po: Makefile use -p to preserve times to allow multilib simultatious installs

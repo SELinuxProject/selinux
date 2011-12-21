@@ -1,3 +1,8 @@
+2.1.9 2011-12-21
+	* Fix setenforce man page to refer to selinux man page
+	* Cleanup Man pages
+	* merge freecon with getcon man page
+
 2.1.8 2011-12-05
 	* selinuxswig_python.i: don't make syscall if it won't change anything
 	* Remove assert in security_get_boolean_names(3)
