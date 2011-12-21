@@ -505,7 +505,7 @@ Object-specific Options (see above):
                       usage(_("Requires 2 or more arguments"))
                 
                gopts, cmds = getopt.getopt(sys.argv[1:],
-                                           '01adf:i:lhmno:p:s:FCDR:L:r:t:T:P:S:',
+                                           '01adf:i:lhmno:p:s:FCDR:L:r:t:P:S:',
                                            ['add',
                                             'delete',
                                             'deleteall',
