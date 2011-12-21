@@ -1,6 +1,8 @@
-.TH "getcon" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
+.TH "getcon" "3" "21 December 2011" "russell@coker.com.au" "SELinux API documentation"
 .SH "NAME"
 getcon, getprevcon, getpidcon \- get SELinux security context of a process.
+
+freecon, freeconary \- free memory associated with SELinux security contexts.
 
 getpeercon - get security context of a peer socket.
 
@@ -15,6 +17,10 @@ setcon - set current security context of a process.
 .BI "int getpidcon(pid_t " pid ", security_context_t *" context );
 
 .BI "int getpeercon(int " fd ", security_context_t *" context);
+
+.BI "void freecon(security_context_t "con );
+
+.BI "void freeconary(security_context_t *" con );
 
 .BI "int setcon(security_context_t " context);
 
@@ -31,6 +37,16 @@ returns the process context for the specified PID.
 
 .B getpeercon
 retrieves context of peer socket, and set *context to refer to it, which must be free'd with freecon.
+
+.B freecon
+frees the memory allocated for a security context.
+
+.B freeconary
+frees the memory allocated for a context array.
+
+If
+.I con
+is NULL, no operation is performed.
 
 .B setcon
 sets the current security context of the process to a new value.  Note
@@ -59,4 +75,4 @@ context and the setcon() will fail if it is not allowed by policy.
 On error -1 is returned.  On success 0 is returned.
 
 .SH "SEE ALSO"
-.BR selinux "(8), " freecon "(3), " setexeccon "(3)"
+.BR selinux "(8), " setexeccon "(3)"
