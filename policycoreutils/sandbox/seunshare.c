@@ -43,8 +43,8 @@
 #define MS_REC 1<<14
 #endif
 
-#ifndef MS_PRIVATE
-#define MS_PRIVATE 1<<18
+#ifndef MS_SLAVE
+#define MS_SLAVE 1<<19
 #endif
 
 #ifndef PACKAGE
@@ -255,7 +255,7 @@ static int verify_shell(const char *shell_name)
  */
 static int seunshare_mount(const char *src, const char *dst, struct stat *src_st)
 {
-	int flags = MS_REC;
+	int flags = 0;
 	int is_tmp = 0;
 
 	if (verbose)
@@ -267,14 +267,6 @@ static int seunshare_mount(const char *src, const char *dst, struct stat *src_st
 	}
 
 	/* mount directory */
-	if (mount(dst, dst,  NULL, MS_BIND | flags, NULL) < 0) {
-		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), dst, dst, strerror(errno));
-		return -1;
-	}
-	if (mount(dst, dst, NULL, MS_PRIVATE | flags, NULL) < 0) {
-		fprintf(stderr, _("Failed to make %s private: %s\n"), dst, strerror(errno));
-		return -1;
-	}
 	if (mount(src, dst, NULL, MS_BIND | flags, NULL) < 0) {
 		fprintf(stderr, _("Failed to mount %s on %s: %s\n"), src, dst, strerror(errno));
 		return -1;
@@ -288,14 +280,6 @@ static int seunshare_mount(const char *src, const char *dst, struct stat *src_st
 		if (verbose)
 			printf(_("Mounting /tmp on /var/tmp\n"));
 
-		if (mount("/var/tmp", "/var/tmp",  NULL, MS_BIND | flags, NULL) < 0) {
-			fprintf(stderr, _("Failed to mount /var/tmp on /var/tmp: %s\n"), strerror(errno));
-			return -1;
-		}
-		if (mount("/var/tmp", "/var/tmp", NULL, MS_PRIVATE | flags, NULL) < 0) {
-			fprintf(stderr, _("Failed to make /var/tmp private: %s\n"), strerror(errno));
-			return -1;
-		}
 		if (mount("/tmp", "/var/tmp",  NULL, MS_BIND | flags, NULL) < 0) {
 			fprintf(stderr, _("Failed to mount /tmp on /var/tmp: %s\n"), strerror(errno));
 			return -1;
@@ -964,6 +948,13 @@ int main(int argc, char **argv) {
 
 		if (unshare(CLONE_NEWNS) < 0) {
 			perror(_("Failed to unshare"));
+			goto childerr;
+		}
+
+		/* Remount / as SLAVE so that nothing mounted in the namespace 
+		   shows up in the parent */
+		if (mount("none", "/", NULL, MS_SLAVE | MS_REC , NULL) < 0) {
+			perror(_("Failed to make / a SLAVE mountpoint\n"));
 			goto childerr;
 		}
 
