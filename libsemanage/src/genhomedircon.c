@@ -778,6 +778,8 @@ static int setup_fallback_user(genhomedircon_settings_t * s)
 			{
 				prefix = semanage_user_get_prefix(u);
 				level = semanage_user_get_mlslevel(u);
+				if (!level)
+					level = FALLBACK_USER_LEVEL;
 			}
 
 			if (set_fallback_user(s, seuname, prefix, level) != 0)
@@ -861,6 +863,8 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 		if (u) {
 			prefix = semanage_user_get_prefix(*u);
 			level = semanage_user_get_mlslevel(*u);
+			if (!level)
+				level = FALLBACK_USER_LEVEL;
 		} else {
 			prefix = name;
 			level = FALLBACK_USER_LEVEL;
