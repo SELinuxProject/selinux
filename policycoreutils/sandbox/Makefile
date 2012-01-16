@@ -1,6 +1,5 @@
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
-INITDIR ?= $(DESTDIR)/etc/rc.d/init.d/
 SYSCONFDIR ?= $(DESTDIR)/etc/sysconfig
 LIBDIR ?= $(PREFIX)/lib
 BINDIR ?= $(PREFIX)/bin
@@ -29,8 +28,6 @@ install: all
 	-mkdir -p $(SHAREDIR)
 	install -m 755 sandboxX.sh $(SHAREDIR)
 	install -m 755 start $(SHAREDIR)
-	-mkdir -p $(INITDIR)
-	install -m 755 sandbox.init $(INITDIR)/sandbox
 	-mkdir -p $(SYSCONFDIR)
 	install -m 644 sandbox.conf $(SYSCONFDIR)/sandbox
 
