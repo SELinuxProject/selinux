@@ -76,4 +76,4 @@ information about the object classes - including information flow. It
 is separated to keep the core from being concerned about the details
 of the object classes.
 
-[selist]: http://www.nsa.gov/selinux/info/list.cfm
+[selist]: http://www.nsa.gov/research/selinux/info/list.cfm
