@@ -20,6 +20,7 @@
 import refpolicy
 import access
 import re
+import sys
 
 # Convenience functions
 
@@ -343,6 +344,7 @@ class AuditParser:
         self.policy_load_msgs = []
         self.path_msgs = []
         self.by_header = { }
+        self.check_input_file = False
                 
     # Low-level parsing function - tries to determine if this audit
     # message is an SELinux related message and then parses it into
@@ -378,6 +380,7 @@ class AuditParser:
                 found = True
                 
             if found:
+                self.check_input_file = True
                 try:
                     msg.from_split_string(rec)
                 except ValueError:
@@ -447,6 +450,9 @@ class AuditParser:
         while line:
             self.__parse(line)
             line = input.readline()
+        if not self.check_input_file:
+            sys.stderr.write("Nothing to do\n")
+            sys.exit(0)
         self.__post_process()
 
     def parse_string(self, input):
