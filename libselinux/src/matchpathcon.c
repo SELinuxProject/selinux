@@ -292,6 +292,8 @@ static void matchpathcon_thread_destructor(void __attribute__((unused)) *ptr)
 	matchpathcon_fini();
 }
 
+void __attribute__((destructor)) matchpathcon_lib_destructor(void);
+
 void __attribute__((destructor)) matchpathcon_lib_destructor(void)
 {
 	if (destructor_key_initialized)
