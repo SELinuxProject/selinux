@@ -130,7 +130,7 @@ struct avc_memory_callback {
 
 struct avc_log_callback {
 	/* log the printf-style format and arguments. */
-	void (*func_log) (const char *fmt, ...);
+	void (*func_log) (const char *fmt, ...) __attribute__((__format__(printf, 1, 2)));
 	/* store a string representation of auditdata (corresponding
 	   to the given security class) into msgbuf. */
 	void (*func_audit) (void *auditdata, security_class_t cls,

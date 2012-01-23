@@ -20,7 +20,7 @@
 extern void *(*avc_func_malloc) (size_t) hidden;
 extern void (*avc_func_free) (void *)hidden;
 
-extern void (*avc_func_log) (const char *, ...)hidden;
+extern void (*avc_func_log) (const char *, ...) __attribute__((__format__(printf,1,2))) hidden;
 extern void (*avc_func_audit) (void *, security_class_t, char *, size_t)hidden;
 
 extern int avc_using_threads hidden;
