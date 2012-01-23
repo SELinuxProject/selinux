@@ -369,7 +369,7 @@ int selinux_init_load_policy(int *enforce)
 	 * Check for the existence of SELinux via selinuxfs, and 
 	 * mount it if present for use in the calls below.  
 	 */
-	char *mntpoint = NULL;
+	const char *mntpoint = NULL;
 	if (mount(SELINUXFS, SELINUXMNT, SELINUXFS, 0, 0) == 0 || errno == EBUSY) {
 		mntpoint = SELINUXMNT;
 	} else {

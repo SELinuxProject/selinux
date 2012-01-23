@@ -537,7 +537,7 @@ extern int selinux_check_securetty_context(const security_context_t tty_context)
    Normally, this is determined automatically during libselinux 
    initialization, but this is not always possible, e.g. for /sbin/init
    which performs the initial mount of selinuxfs. */
-void set_selinuxmnt(char *mnt);
+void set_selinuxmnt(const char *mnt);
 
 /* Check if selinuxfs exists as a kernel filesystem */
 int selinuxfs_exists(void);

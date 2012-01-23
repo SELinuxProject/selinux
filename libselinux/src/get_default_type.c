@@ -27,7 +27,8 @@ int get_default_type(const char *role, char **type)
 static int find_default_type(FILE * fp, const char *role, char **type)
 {
 	char buf[250];
-	char *ptr = "", *end, *t;
+	const char *ptr = "", *end;
+	char *t;
 	size_t len;
 	int found = 0;
 

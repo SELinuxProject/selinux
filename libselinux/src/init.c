@@ -28,7 +28,7 @@ int obj_class_compat = 1;
    * The file system is read/write
    * then set this as the default file system.
 */
-static int verify_selinuxmnt(char *mnt)
+static int verify_selinuxmnt(const char *mnt)
 {
 	struct statfs sfbuf;
 	int rc;
@@ -139,7 +139,7 @@ void fini_selinuxmnt(void)
 
 hidden_def(fini_selinuxmnt)
 
-void set_selinuxmnt(char *mnt)
+void set_selinuxmnt(const char *mnt)
 {
 	selinux_mnt = strdup(mnt);
 }
