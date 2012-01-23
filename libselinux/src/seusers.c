@@ -269,9 +269,10 @@ int getseuser(const char *username, const char *service,
 	size_t lineno = 0;
 	char *rec = NULL;
 	char *path=NULL;
+	FILE *fp = NULL;
 	if (asprintf(&path,"%s/logins/%s", selinux_policy_root(), username) <  0)
 		goto err;
-	FILE *fp = fopen(path, "r");
+	fp = fopen(path, "r");
 	free(path);
 	if (fp == NULL) goto err;
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
