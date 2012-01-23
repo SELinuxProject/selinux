@@ -253,6 +253,8 @@ static void setrans_thread_destructor(void __attribute__((unused)) *unused)
 	free(prev_r2c_raw);
 }
 
+void __attribute__((destructor)) setrans_lib_destructor(void);
+
 void __attribute__((destructor)) setrans_lib_destructor(void)
 {
 	if (destructor_key_initialized)
