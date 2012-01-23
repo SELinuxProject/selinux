@@ -9,7 +9,7 @@
 #include <sys/errno.h>
 #include <selinux/selinux.h>
 
-void usage(const char *progname)
+static void usage(const char *progname)
 {
 	fprintf(stderr, "usage:  %s tty_context...\n", progname);
 	exit(1);

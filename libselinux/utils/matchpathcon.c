@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 
-void usage(const char *progname)
+static void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage:  %s [-N] [-n] [-f file_contexts] [-p prefix] [-Vq] path...\n",
@@ -21,7 +21,7 @@ void usage(const char *progname)
 	exit(1);
 }
 
-int printmatchpathcon(char *path, int header, int mode)
+static int printmatchpathcon(const char *path, int header, int mode)
 {
 	char *buf;
 	int rc = matchpathcon(path, mode, &buf);

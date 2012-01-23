@@ -10,7 +10,7 @@
 
 /* Attempt to rollback the transaction. No need to check error
    codes since this is rolling back something that blew up. */
-void rollback(int argc, char **argv)
+static void rollback(int argc, char **argv)
 {
 	int i;
 

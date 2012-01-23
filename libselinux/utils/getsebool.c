@@ -6,7 +6,7 @@
 #include <string.h>
 #include <selinux/selinux.h>
 
-void usage(const char *progname)
+static void usage(const char *progname)
 {
 	fprintf(stderr, "usage:  %s -a or %s boolean...\n", progname, progname);
 	exit(1);

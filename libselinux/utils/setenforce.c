@@ -6,7 +6,7 @@
 #include <strings.h>
 #include <selinux/selinux.h>
 
-void usage(const char *progname)
+static void usage(const char *progname)
 {
 	fprintf(stderr, "usage:  %s [ Enforcing | Permissive | 1 | 0 ]\n",
 		progname);

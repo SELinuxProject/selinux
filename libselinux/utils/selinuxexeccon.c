@@ -9,7 +9,7 @@
 #include <selinux/flask.h>
 #include <selinux/selinux.h>
 
-void usage(char *name, char *detail, int rc)
+static void usage(const char *name, const char *detail, int rc)
 {
 	fprintf(stderr, "usage:  %s command [ fromcon ]\n", name);
 	if (detail)
