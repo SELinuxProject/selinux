@@ -118,10 +118,10 @@ io_channel_callback
 
   if (condition & G_IO_IN) {
     /* Data is available. */
-    g_io_channel_read
+    g_io_channel_read_chars
       (source, buffer,
        sizeof (buffer),
-       &bytes_read);
+       &bytes_read, NULL);
 
     if (! bytes_read) {
 	    /* Sesssion/Terminal Ended */
@@ -152,7 +152,7 @@ io_channel_callback
      file. */
 
   if (condition & G_IO_HUP) {
-    g_io_channel_close (source);
+    g_io_channel_shutdown (source, 0, NULL);
     exit(0);
     return FALSE;
   }
