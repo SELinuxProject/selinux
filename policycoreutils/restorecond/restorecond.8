@@ -3,7 +3,7 @@
 restorecond \- daemon that watches for file creation and then sets the default SELinux file context
 
 .SH "SYNOPSIS"
-.B restorecond  [\-d] [\-f restorecond_file ] [\-u] [\-v]
+.B restorecond  [\-d] [-h] [\-f restorecond_file ] [\-u] [\-v]
 .P
 
 .SH "DESCRIPTION"
@@ -19,6 +19,9 @@ the correct file context associated with the policy.
 .B \-d
 Turns on debugging mode.   Application will stay in the foreground and lots of
 debugs messages start printing.
+.TP
+. B \-h
+Print usage statement.
 .TP
 .B \-f restorecond_file
 Use alternative restorecond.conf file.

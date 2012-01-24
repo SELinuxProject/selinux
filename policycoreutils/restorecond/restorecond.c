@@ -175,7 +175,7 @@ int main(int argc, char **argv)
 
 	exclude_non_seclabel_mounts();
 	atexit( done );
-	while ((opt = getopt(argc, argv, "df:uv")) > 0) {
+	while ((opt = getopt(argc, argv, "hdf:uv")) > 0) {
 		switch (opt) {
 		case 'd':
 			debug_mode = 1;
@@ -185,6 +185,10 @@ int main(int argc, char **argv)
 			break;
 		case 'u':
 			run_as_user = 1;
+			break;
+		case 'h':
+			usage(argv[0]);
+			exit(0);
 			break;
 		case 'v':
 			r_opts.verbose++;
