@@ -61,32 +61,58 @@ try:
 	class logger:
 		def __init__(self):
 			self.audit_fd = audit.audit_open()
+			self.log_list = []
+		def log(self, msg, name = "", sename = "", serole = "", serange = "", oldsename = "", oldserole = "", oldserange = ""):
+			self.log_list.append([self.audit_fd, audit.AUDIT_ROLE_ASSIGN, sys.argv[0], str(msg), name, 0, sename, serole, serange, oldsename, oldserole, oldserange, "", "", ""])
 
-		def log(self, success, msg, name = "", sename = "", serole = "", serange = "", old_sename = "", old_serole = "", old_serange = ""):
-			audit.audit_log_semanage_message(self.audit_fd, audit.AUDIT_USER_ROLE_CHANGE, sys.argv[0], str(msg), name, 0, sename, serole, serange, old_sename, old_serole, old_serange, "", "", "", success);
+		def log_remove(self, msg, name = "", sename = "", serole = "", serange = "", oldsename = "", oldserole = "", oldserange = ""):
+			self.log_list.append([self.audit_fd, audit.AUDIT_ROLE_REMOVE, sys.argv[0], str(msg), name, 0, sename, serole, serange, oldsename, oldserole, oldserange, "", "", ""])
+
+		def commit(self,success):
+			for l in self.log_list:
+				audit.audit_log_semanage_message(*(l + [success]))
+			self.log_list = []
 except:
 	class logger:
-		def log(self, success, msg, name = "", sename = "", serole = "", serange = "", old_sename = "", old_serole = "", old_serange = ""):
+		def __init__(self):
+			self.log_list=[]
+
+		def log(self, msg, name = "", sename = "", serole = "", serange = "", oldsename = "", oldserole = "", oldserange = ""):
+			message += " %s name=%s" % (msg, name)
+			if sename != "":
+				message += " sename=" + sename
+			if oldsename != "":
+				message += " oldsename=" + oldsename
+			if serole != "":
+				message += " role=" + serole
+			if oldserole != "":
+				message += " old_role=" + oldserole
+			if serange != "" and serange != None:
+				message += " MLSRange=" + serange
+			if oldserange != "" and oldserange != None:
+				message += " old_MLSRange=" + oldserange
+			self.log_list.append(message)
+
+		def log_remove(self, msg, name = "", sename = "", serole = "", serange = "", oldsename = "", oldserole = "", oldserange = ""):
+			self.log(msg, name, sename, serole, serange, oldsename, oldserole, oldserange)
+
+		def commit(self,success):
 			if success == 1:
 				message = "Successful: "
 			else:
 				message = "Failed: "
-			message += " %s name=%s" % (msg, name)
-			if sename != "":
-				message += " sename=" + sename
-			if old_sename != "":
-				message += " old_sename=" + old_sename
-			if serole != "":
-				message += " role=" + serole
-			if old_serole != "":
-				message += " old_role=" + old_serole
-			if serange != "" and serange != None:
-				message += " MLSRange=" + serange
-			if old_serange != "" and old_serange != None:
-				message += " old_MLSRange=" + old_serange
-			syslog.syslog(message);
-			
-mylog = logger()		
+			for l in self.log_list:
+				syslog.syslog(syslog.LOG_INFO, message + l)
+
+class nulllogger:
+	def log(self, msg, name = "", sename = "", serole = "", serange = "", oldsename = "", oldserole = "", oldserange = ""):
+		pass
+
+	def log_remove(self, msg, name = "", sename = "", serole = "", serange = "", oldsename = "", oldserole = "", oldserange = ""):
+		pass
+
+	def commit(self,success):
+		pass
 
 import xml.etree.ElementTree
 
@@ -168,7 +194,14 @@ class semanageRecords:
         store = None
         def __init__(self, store):
                global handle
-                      
+
+
+	       rc, localstore = selinux.selinux_getpolicytype()
+	       if store == "" or store == localstore:
+		       self.mylog = logger()	
+	       else:
+		       self.mylog = nulllogger()	
+
                self.sh = self.get_handle(store)
 
         def get_handle(self, store):
@@ -226,11 +259,13 @@ class semanageRecords:
                raise ValueError(_("Not yet implemented"))
 
         def commit(self):
-               if semanageRecords.transaction:
-                      return
-               rc = semanage_commit(self.sh) 
-               if rc < 0:
-                      raise ValueError(_("Could not commit semanage transaction"))
+		if semanageRecords.transaction:
+			return
+		rc = semanage_commit(self.sh) 
+		if rc < 0:
+			self.mylog.commit(0)
+			raise ValueError(_("Could not commit semanage transaction"))
+		self.mylog.commit(1)
 
         def finish(self):
                if not semanageRecords.transaction:
@@ -412,16 +447,25 @@ permissive %s;
 class loginRecords(semanageRecords):
 	def __init__(self, store = ""):
 		semanageRecords.__init__(self, store)
+		self.oldsename  = None
+		self.oldserange = None
+		self.sename  = None
+		self.serange = None
 
 	def __add(self, name, sename, serange):
-		if is_mls_enabled == 1:
-			if serange == "":
-				serange = "s0"
-			else:
-				serange = untranslate(serange)
-			
+		rec, self.oldsename, self.oldserange = selinux.getseuserbyname(name)
 		if sename == "":
 			sename = "user_u"
+			
+		userrec = seluserRecords()
+		range, (rc, oldserole) = userrec.get(self.oldsename)
+		range, (rc, serole) = userrec.get(sename)
+
+		if is_mls_enabled == 1:
+			if serange != "":
+				serange = untranslate(serange)
+			else:
+                           serange = range
 			
 		(rc, k) = semanage_seuser_key_create(self.sh, name)
 		if rc < 0:
@@ -466,113 +510,133 @@ class loginRecords(semanageRecords):
 
 		semanage_seuser_key_free(k)
 		semanage_seuser_free(u)
+		self.mylog.log("login-seuser", name, sename=sename, serange=serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange);
 
 	def add(self, name, sename, serange):
 		try:
-                        self.begin()
-                        self.__add(name, sename, serange)
-                        self.commit()
-
+			self.begin()
+			self.__add(name, sename, serange)
+			self.commit()
 		except ValueError, error:
-			mylog.log(0, _("add SELinux user mapping"), name, sename, "", serange);
+			self.mylog.commit(0)
 			raise error
-		
-		mylog.log(1, _("add SELinux user mapping"), name, sename, "", serange);
 
 	def __modify(self, name, sename = "", serange = ""):
-               if sename == "" and serange == "":
+		rec, self.oldsename, self.oldserange = selinux.getseuserbyname(name)
+		if sename == "" and serange == "":
                       raise ValueError(_("Requires seuser or serange"))
 
-               (rc, k) = semanage_seuser_key_create(self.sh, name)
-               if rc < 0:
-                      raise ValueError(_("Could not create a key for %s") % name)
+		userrec = seluserRecords()
+		range, (rc, oldserole) = userrec.get(self.oldsename)
 
-               (rc, exists) = semanage_seuser_exists(self.sh, k)
-               if rc < 0:
-                      raise ValueError(_("Could not check if login mapping for %s is defined") % name)
-               if not exists:
-                      raise ValueError(_("Login mapping for %s is not defined") % name)
+		if sename != "":
+			range, (rc, serole) = userrec.get(sename)
+		else:
+			serole=oldserole
 
-               (rc, u) = semanage_seuser_query(self.sh, k)
-               if rc < 0:
-                      raise ValueError(_("Could not query seuser for %s") % name)
+		if serange != "":
+			self.serange=serange
+		else:
+			self.serange=range
 
-               oldserange = semanage_seuser_get_mlsrange(u)
-               oldsename = semanage_seuser_get_sename(u)
-               if serange != "":
-                      semanage_seuser_set_mlsrange(self.sh, u, untranslate(serange))
-               else:
-                      serange = oldserange
+		(rc, k) = semanage_seuser_key_create(self.sh, name)
+		if rc < 0:
+		       raise ValueError(_("Could not create a key for %s") % name)
 
-               if sename != "":
-                      semanage_seuser_set_sename(self.sh, u, sename)
-               else:
-                      sename = oldsename
+		(rc, exists) = semanage_seuser_exists(self.sh, k)
+		if rc < 0:
+			raise ValueError(_("Could not check if login mapping for %s is defined") % name)
+		if not exists:
+			raise ValueError(_("Login mapping for %s is not defined") % name)
+		
+		(rc, u) = semanage_seuser_query(self.sh, k)
+		if rc < 0:
+			raise ValueError(_("Could not query seuser for %s") % name)
+		
+		self.oldserange = semanage_seuser_get_mlsrange(u)
+		self.oldsename = semanage_seuser_get_sename(u)
+		if serange != "":
+			semanage_seuser_set_mlsrange(self.sh, u, untranslate(serange))
 
-               rc = semanage_seuser_modify_local(self.sh, k, u)
-               if rc < 0:
-                      raise ValueError(_("Could not modify login mapping for %s") % name)
+		if sename != "":
+			semanage_seuser_set_sename(self.sh, u, sename)
+		else:
+			self.sename = self.oldsename
+			
+		rc = semanage_seuser_modify_local(self.sh, k, u)
+		if rc < 0:
+			raise ValueError(_("Could not modify login mapping for %s") % name)
 
-               semanage_seuser_key_free(k)
-               semanage_seuser_free(u)
+		semanage_seuser_key_free(k)
+		semanage_seuser_free(u)
 
-               mylog.log(1, "modify selinux user mapping", name, sename, "", serange, oldsename, "", oldserange);
+		self.mylog.log("login-seuser", name,sename=self.sename,serange=self.serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange);
 
 	def modify(self, name, sename = "", serange = ""):
 		try:
                         self.begin()
                         self.__modify(name, sename, serange)
                         self.commit()
-
 		except ValueError, error:
-			mylog.log(0, "modify selinux user mapping", name, sename, "", serange, "", "", "");
+			self.mylog.commit(0)
 			raise error
-		
+
 	def __delete(self, name):
-               (rc, k) = semanage_seuser_key_create(self.sh, name)
-               if rc < 0:
-                      raise ValueError(_("Could not create a key for %s") % name)
+		rec, self.oldsename, self.oldserange = selinux.getseuserbyname(name)
+		userrec = seluserRecords()
+		range, (rc, oldserole) = userrec.get(self.oldsename)
 
-               (rc, exists) = semanage_seuser_exists(self.sh, k)
-               if rc < 0:
-                      raise ValueError(_("Could not check if login mapping for %s is defined") % name)
-               if not exists:
-                      raise ValueError(_("Login mapping for %s is not defined") % name)
+		(rc, k) = semanage_seuser_key_create(self.sh, name)
+		if rc < 0:
+			raise ValueError(_("Could not create a key for %s") % name)
 
-               (rc, exists) = semanage_seuser_exists_local(self.sh, k)
-               if rc < 0:
-                      raise ValueError(_("Could not check if login mapping for %s is defined") % name)
-               if not exists:
-                      raise ValueError(_("Login mapping for %s is defined in policy, cannot be deleted") % name)
+		(rc, exists) = semanage_seuser_exists(self.sh, k)
+		if rc < 0:
+			raise ValueError(_("Could not check if login mapping for %s is defined") % name)
+		if not exists:
+			raise ValueError(_("Login mapping for %s is not defined") % name)
+		
+		(rc, exists) = semanage_seuser_exists_local(self.sh, k)
+		if rc < 0:
+			raise ValueError(_("Could not check if login mapping for %s is defined") % name)
+		if not exists:
+			raise ValueError(_("Login mapping for %s is defined in policy, cannot be deleted") % name)
+		
+		rc = semanage_seuser_del_local(self.sh, k)
+		if rc < 0:
+			raise ValueError(_("Could not delete login mapping for %s") % name)
+		
+		semanage_seuser_key_free(k)
 
-               rc = semanage_seuser_del_local(self.sh, k)
-               if rc < 0:
-                      raise ValueError(_("Could not delete login mapping for %s") % name)
+		rec, self.sename, self.serange = selinux.getseuserbyname("__default__")
+		range, (rc, serole) = userrec.get(self.sename)
 
-               semanage_seuser_key_free(k)
+		self.mylog.log_remove("login-seuser", name, sename=self.sename, serange=self.serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange);
 
 	def delete(self, name):
 		try:
-                       self.begin()
-                       self.__delete(name)
-                       self.commit()
+			self.begin()
+			self.__delete(name)
+			self.commit()
 
 		except ValueError, error:
-			mylog.log(0, "delete SELinux user mapping", name);
+			self.mylog.commit(0)
 			raise error
 		
-		mylog.log(1, "delete SELinux user mapping", name);
-
 	def deleteall(self):
 		(rc, ulist) = semanage_seuser_list_local(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not list login mappings"))
 
-                self.begin()
-		for u in ulist:
-			self.__delete(semanage_seuser_get_name(u))
-                self.commit()
-
+		try:
+			self.begin()
+			for u in ulist:
+				self.__delete(semanage_seuser_get_name(u))
+			self.commit()
+		except ValueError, error:
+			self.mylog.commit(0)
+			raise error
+		
 	def get_all(self, locallist = 0):
 		ddict = {}
                 if locallist:
@@ -618,6 +682,22 @@ class seluserRecords(semanageRecords):
 	def __init__(self, store = ""):
 		semanageRecords.__init__(self, store)
 
+	def get(self, name):
+                (rc, k) = semanage_user_key_create(self.sh, name)
+                if rc < 0:
+                       raise ValueError(_("Could not create a key for %s") % name)
+                (rc, exists) = semanage_user_exists(self.sh, k)
+                if rc < 0:
+                       raise ValueError(_("Could not check if SELinux user %s is defined") % name)
+                (rc, u) = semanage_user_query(self.sh, k)
+                if rc < 0:
+                       raise ValueError(_("Could not query user for %s") % name)
+                serange = semanage_user_get_mlsrange(u)
+                serole = semanage_user_get_roles(self.sh,u)
+		semanage_user_key_free(k)
+		semanage_user_free(u)
+		return serange, serole
+                
 	def __add(self, name, roles, selevel, serange, prefix):
 		if is_mls_enabled == 1:
 			if serange == "":
@@ -677,21 +757,20 @@ class seluserRecords(semanageRecords):
 
                 semanage_user_key_free(k)
                 semanage_user_free(u)
+		self.mylog.log("seuser", sename=name, serole=",".join(roles), serange=serange)
 
 	def add(self, name, roles, selevel, serange, prefix):
-		seroles = " ".join(roles)
-                try:
-                       self.begin()
-                       self.__add( name, roles, selevel, serange, prefix)
-                       self.commit()
+		serole = " ".join(roles)
+		try:
+			self.begin()
+			self.__add( name, roles, selevel, serange, prefix)
+			self.commit()
 		except ValueError, error:
-			mylog.log(0,"add SELinux user record", name, name, seroles, serange)
+			self.mylog.commit(0)
 			raise error
-		
-		mylog.log(1,"add SELinux user record", name, name, seroles, serange)
 
         def __modify(self, name, roles = [], selevel = "", serange = "", prefix = ""):
-		oldroles = ""
+		oldserole = ""
 		oldserange = ""
 		newroles = string.join(roles, ' ');
                 if prefix == "" and len(roles) == 0  and serange == "" and selevel == "":
@@ -717,9 +796,7 @@ class seluserRecords(semanageRecords):
                 oldserange = semanage_user_get_mlsrange(u)
                 (rc, rlist) = semanage_user_get_roles(self.sh, u)
                 if rc >= 0:
-                       oldroles = string.join(rlist, ' ');
-                       newroles = newroles + ' ' + oldroles;
-
+                       oldserole = string.join(rlist, ' ');
 
                 if serange != "":
                        semanage_user_set_mlsrange(self.sh, u, untranslate(serange))
@@ -743,8 +820,10 @@ class seluserRecords(semanageRecords):
 
 		semanage_user_key_free(k)
 		semanage_user_free(u)
-		
-		mylog.log(1,"modify SELinux user record", name, "", newroles, serange, "", oldroles, oldserange)
+	
+		role=",".join(newroles.split())
+		oldserole=",".join(oldserole.split())
+		self.mylog.log("seuser", sename=name, oldsename=name, serole=role, serange=serange, oldserole=oldserole, oldserange=oldserange)
 
 
 	def modify(self, name, roles = [], selevel = "", serange = "", prefix = ""):
@@ -752,9 +831,8 @@ class seluserRecords(semanageRecords):
                         self.begin()
                         self.__modify(name, roles, selevel, serange, prefix)
                         self.commit()
-
 		except ValueError, error:
-			mylog.log(0,"modify SELinux user record", name, "", " ".join(roles), serange, "", "", "")
+			self.mylog.commit(0)
 			raise error
 
 	def __delete(self, name):
@@ -774,11 +852,21 @@ class seluserRecords(semanageRecords):
                if not exists:
                       raise ValueError(_("SELinux user %s is defined in policy, cannot be deleted") % name)
 			
+	       (rc, u) = semanage_user_query(self.sh, k)
+	       if rc < 0:
+                       raise ValueError(_("Could not query user for %s") % name)
+	       oldserange = semanage_user_get_mlsrange(u)
+	       (rc, rlist) = semanage_user_get_roles(self.sh, u)
+	       oldserole = ",".join(rlist)
+
                rc = semanage_user_del_local(self.sh, k)
                if rc < 0:
                       raise ValueError(_("Could not delete SELinux user %s") % name)
 
                semanage_user_key_free(k)		
+	       semanage_user_free(u)
+
+	       self.mylog.log_remove("seuser", oldsename=name, oldserange=oldserange, oldserole=oldserole)
 
 	def delete(self, name):
 		try:
@@ -787,20 +875,22 @@ class seluserRecords(semanageRecords):
                         self.commit()
 
 		except ValueError, error:
-			mylog.log(0,"delete SELinux user record", name)
+			self.mylog.commit(0)
 			raise error
 		
-		mylog.log(1,"delete SELinux user record", name)
-
 	def deleteall(self):
 		(rc, ulist) = semanage_user_list_local(self.sh)
 		if rc < 0:
 			raise ValueError(_("Could not list login mappings"))
 
-                self.begin()
-		for u in ulist:
-			self.__delete(semanage_user_get_name(u))
-                self.commit()
+		try:
+			self.begin()
+			for u in ulist:
+				self.__delete(semanage_user_get_name(u))
+			self.commit()
+		except ValueError, error:
+			self.mylog.commit(0)
+			raise error
 
 	def get_all(self, locallist = 0):
 		ddict = {}
