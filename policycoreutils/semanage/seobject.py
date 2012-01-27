@@ -1,4 +1,4 @@
-#! /usr/bin/python -E
+#! /usr/bin/python -Es
 # Copyright (C) 2005-2011 Red Hat 
 # see file 'COPYING' for use and warranty information
 #
@@ -63,6 +63,15 @@ try:
 			self.audit_fd = audit.audit_open()
 			self.log_list = []
 		def log(self, msg, name = "", sename = "", serole = "", serange = "", oldsename = "", oldserole = "", oldserange = ""):
+			
+			sep = "-"
+			if sename != oldsename:
+				msg += sep + "sename"; sep = ","
+			if serole != oldserole:
+				msg += sep + "role"; sep = ","
+			if serange != oldserange:
+				msg += sep + "range"; sep = ","
+
 			self.log_list.append([self.audit_fd, audit.AUDIT_ROLE_ASSIGN, sys.argv[0], str(msg), name, 0, sename, serole, serange, oldsename, oldserole, oldserange, "", "", ""])
 
 		def log_remove(self, msg, name = "", sename = "", serole = "", serange = "", oldsename = "", oldserole = "", oldserange = ""):
@@ -195,6 +204,7 @@ class semanageRecords:
         def __init__(self, store):
                global handle
 
+               self.sh = self.get_handle(store)
 
 	       rc, localstore = selinux.selinux_getpolicytype()
 	       if store == "" or store == localstore:
@@ -202,43 +212,41 @@ class semanageRecords:
 	       else:
 		       self.mylog = nulllogger()	
 
-               self.sh = self.get_handle(store)
-
         def get_handle(self, store):
-               global is_mls_enabled
+		global is_mls_enabled
 
-               if semanageRecords.handle:
-                      return semanageRecords.handle
+		if semanageRecords.handle:
+			return semanageRecords.handle
 
-               handle = semanage_handle_create()
-               if not handle:
-                      raise ValueError(_("Could not create semanage handle"))
+		handle = semanage_handle_create()
+		if not handle:
+			raise ValueError(_("Could not create semanage handle"))
 
-               if not semanageRecords.transaction and store != "":
-                      semanage_select_store(handle, store, SEMANAGE_CON_DIRECT);
-                      semanageRecords.store = store
+		if not semanageRecords.transaction and store != "":
+			semanage_select_store(handle, store, SEMANAGE_CON_DIRECT);
+			semanageRecords.store = store
 
-               if not semanage_is_managed(handle):
-                      semanage_handle_destroy(handle)
-                      raise ValueError(_("SELinux policy is not managed or store cannot be accessed."))
+		if not semanage_is_managed(handle):
+			semanage_handle_destroy(handle)
+			raise ValueError(_("SELinux policy is not managed or store cannot be accessed."))
 
-               rc = semanage_access_check(handle)
-               if rc < SEMANAGE_CAN_READ:
-                      semanage_handle_destroy(handle)
-                      raise ValueError(_("Cannot read policy store."))
+		rc = semanage_access_check(handle)
+		if rc < SEMANAGE_CAN_READ:
+			semanage_handle_destroy(handle)
+			raise ValueError(_("Cannot read policy store."))
 
-               rc = semanage_connect(handle)
-               if rc < 0:
-                      semanage_handle_destroy(handle)
-                      raise ValueError(_("Could not establish semanage connection"))
+		rc = semanage_connect(handle)
+		if rc < 0:
+			semanage_handle_destroy(handle)
+			raise ValueError(_("Could not establish semanage connection"))
 
-               is_mls_enabled = semanage_mls_enabled(handle)
-               if is_mls_enabled < 0:
-                      semanage_handle_destroy(handle)
-                      raise ValueError(_("Could not test MLS enabled status"))
+		is_mls_enabled = semanage_mls_enabled(handle)
+		if is_mls_enabled < 0:
+			semanage_handle_destroy(handle)
+			raise ValueError(_("Could not test MLS enabled status"))
 
-               semanageRecords.handle = handle
-               return semanageRecords.handle
+		semanageRecords.handle = handle
+		return semanageRecords.handle
 
         def deleteall(self):
                raise ValueError(_("Not yet implemented"))
@@ -510,7 +518,7 @@ class loginRecords(semanageRecords):
 
 		semanage_seuser_key_free(k)
 		semanage_seuser_free(u)
-		self.mylog.log("login-seuser", name, sename=sename, serange=serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange);
+		self.mylog.log("login", name, sename=sename, serange=serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange);
 
 	def add(self, name, sename, serange):
 		try:
@@ -569,8 +577,7 @@ class loginRecords(semanageRecords):
 
 		semanage_seuser_key_free(k)
 		semanage_seuser_free(u)
-
-		self.mylog.log("login-seuser", name,sename=self.sename,serange=self.serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange);
+		self.mylog.log("login", name,sename=self.sename,serange=self.serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange);
 
 	def modify(self, name, sename = "", serange = ""):
 		try:
@@ -611,7 +618,7 @@ class loginRecords(semanageRecords):
 		rec, self.sename, self.serange = selinux.getseuserbyname("__default__")
 		range, (rc, serole) = userrec.get(self.sename)
 
-		self.mylog.log_remove("login-seuser", name, sename=self.sename, serange=self.serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange);
+		self.mylog.log_remove("login", name, sename=self.sename, serange=self.serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange);
 
 	def delete(self, name):
 		try:
