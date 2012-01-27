@@ -35,18 +35,16 @@ endif
 ifeq ($(DISABLE_BOOL),y)
 	UNUSED_TARGETS+=getsebool togglesebool
 endif
-TARGETS:= $(filter-out $(UNUSED_TARGETS) matchpathcon, $(TARGETS))
+TARGETS:= $(filter-out $(UNUSED_TARGETS), $(TARGETS))
 
-all: $(TARGETS) matchpathcon
+all: $(TARGETS)
 
 install: all
 	-mkdir -p $(USRBINDIR)
 	install -m 755 $(TARGETS) $(USRBINDIR)
 	-mkdir -p $(SBINDIR)
-	install -m 755 matchpathcon $(SBINDIR)
-	(cd $(BINDIR); 	ln -fs ../../sbin/matchpathcon)
 clean:
-	rm -f $(TARGETS) matchpathcon *.o *~
+	rm -f $(TARGETS) *.o *~
 
 distclean: clean
 
