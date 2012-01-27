@@ -11,3 +11,6 @@ install: all
 indent:
 	../../scripts/Lindent $(wildcard selinux/*.h)
 
+distclean clean:
+	-rm -f selinux/*~
+

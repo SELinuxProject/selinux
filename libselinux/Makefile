@@ -1,3 +1,5 @@
+SUBDIRS = src include utils man
+
 DISABLE_AVC ?= n
 DISABLE_SETRANS ?= n
 DISABLE_RPM ?= n
@@ -19,41 +21,24 @@ ifeq ($(DISABLE_SETRANS),y)
 endif
 export DISABLE_AVC DISABLE_SETRANS DISABLE_RPM DISABLE_BOOL EMFLAGS
 
-all: 
-	$(MAKE) -C src 
-	$(MAKE) -C utils
+all install relabel clean distclean indent:
+	@for subdir in $(SUBDIRS); do \
+		(cd $$subdir && $(MAKE) $@) || exit 1; \
+	done
 
 swigify: all
-	$(MAKE) -C src swigify
+	$(MAKE) -C src swigify $@
 
 pywrap: 
-	$(MAKE) -C src pywrap
+	$(MAKE) -C src pywrap $@
 
 rubywrap: 
-	$(MAKE) -C src rubywrap
-
-install: 
-	$(MAKE) -C include install
-	$(MAKE) -C src install
-	$(MAKE) -C utils install
-	$(MAKE) -C man install
+	$(MAKE) -C src rubywrap $@
 
 install-pywrap: 
-	$(MAKE) -C src install-pywrap 
+	$(MAKE) -C src install-pywrap $@
 
 install-rubywrap: 
-	$(MAKE) -C src install-rubywrap 
-
-relabel: 
-	$(MAKE) -C src relabel
-
-clean distclean:
-	$(MAKE) -C src $@
-	$(MAKE) -C utils clean
-
-indent:
-	$(MAKE) -C src $@
-	$(MAKE) -C utils $@
-	$(MAKE) -C include $@
+	$(MAKE) -C src install-rubywrap $@
 
 test:

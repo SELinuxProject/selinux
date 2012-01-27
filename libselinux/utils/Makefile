@@ -1,8 +1,8 @@
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 LIBDIR ?= $(PREFIX)/lib
-BINDIR ?= $(PREFIX)/sbin
-_BINDIR ?= $(DESTDIR)/sbin
+USRBINDIR ?= $(PREFIX)/sbin
+SBINDIR ?= $(DESTDIR)/sbin
 
 MAX_STACK_SIZE=8192
 CFLAGS ?= -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissing-include-dirs \
@@ -40,13 +40,15 @@ TARGETS:= $(filter-out $(UNUSED_TARGETS) matchpathcon, $(TARGETS))
 all: $(TARGETS) matchpathcon
 
 install: all
-	-mkdir -p $(BINDIR)
-	install -m 755 $(TARGETS) $(BINDIR)
-	-mkdir -p $(_BINDIR)
-	install -m 755 matchpathcon $(_BINDIR)
+	-mkdir -p $(USRBINDIR)
+	install -m 755 $(TARGETS) $(USRBINDIR)
+	-mkdir -p $(SBINDIR)
+	install -m 755 matchpathcon $(SBINDIR)
 	(cd $(BINDIR); 	ln -fs ../../sbin/matchpathcon)
 clean:
 	rm -f $(TARGETS) matchpathcon *.o *~
+
+distclean: clean
 
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])
