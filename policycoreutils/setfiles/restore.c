@@ -221,7 +221,7 @@ static int restore(FTSENT *ftsent)
 		       r_opts->progname, my_file, curcon ?: "", newcon);
 	}
 
-	if (r_opts->logging) {
+	if (r_opts->logging && r_opts->change) {
 		if (curcon)
 			syslog(LOG_INFO, "relabeling %s from %s to %s\n",
 			       my_file, curcon, newcon);
