@@ -121,7 +121,6 @@ LOGFILE=`tty`
 if [ $? != 0 ]; then
     LOGFILE="/dev/null"
 fi
-SYSLOGFLAG="-l"
 LOGGER=/usr/sbin/logger
 SETFILES=/sbin/setfiles
 RESTORECON=/sbin/restorecon
@@ -236,7 +235,7 @@ FC=$TEMPFCFILE
 fi
 if [  -n "${FILESYSTEMSRW}" ]; then
     echo "Relabeling `echo ${FILESYSTEMSRW}`"
-    ${SETFILES} -q ${SYSLOGFLAG} ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 | cat >> $LOGFILE
+    ${SETFILES} -q ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 | cat >> $LOGFILE
 else
     echo >&2 "fixfiles: No suitable file systems found"
 fi
