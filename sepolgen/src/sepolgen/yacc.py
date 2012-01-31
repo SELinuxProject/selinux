@@ -506,7 +506,7 @@ def initialize_vars():
 
     Errorfunc    = None    # User defined error handler
 
-    Signature    = hashlib.md5()   # Digital signature of the grammar rules, precedence
+    Signature    = hashlib.sha256()   # Digital signature of the grammar rules, precedence
                                # and other information.  Used to determined when a
                                # parsing table needs to be regenerated.
 
