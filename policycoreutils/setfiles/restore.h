@@ -14,6 +14,7 @@
 #include <selinux/label.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <stdint.h>
 
 #define STAR_COUNT 1000
 
@@ -21,7 +22,8 @@
 struct restore_opts {
 	int add_assoc; /* Track inode associations for conflict detection. */
 	int progress;
-	unsigned long long count;
+	uint64_t count;  /* Number of files processed so far */
+	uint64_t nfile;  /* Estimated total number of files */
 	int debug;
 	int change;
 	int hard_links;
@@ -49,6 +51,6 @@ int exclude(const char *path);
 void remove_exclude(const char *directory);
 int process_one_realpath(char *name, int recurse);
 int process_glob(char *name, int recurse);
-void exclude_non_seclabel_mounts();
+int exclude_non_seclabel_mounts();
 
 #endif

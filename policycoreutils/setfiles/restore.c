@@ -105,6 +105,7 @@ static int restore(FTSENT *ftsent)
 	char *my_file = strdupa(ftsent->fts_path);
 	int ret = -1;
 	security_context_t curcon = NULL, newcon = NULL;
+	float progress;
 
 	if (match(my_file, ftsent->fts_statp, &newcon) < 0)
 		/* Check for no matching specification. */
@@ -113,7 +114,14 @@ static int restore(FTSENT *ftsent)
 	if (r_opts->progress) {
 		r_opts->count++;
 		if (r_opts->count % STAR_COUNT == 0) {
-			fprintf(stdout, "*");
+			if (r_opts->progress == 1) {
+				fprintf(stdout, "*");
+			} else {
+				if (r_opts->nfile > 0) {
+					progress = (r_opts->count < r_opts->nfile) ? (100.0 * r_opts->count / r_opts->nfile) : 100;
+					fprintf(stdout, "\r%-.1f%%", progress);
+				}
+			}
 			fflush(stdout);
 		}
 	}
@@ -283,6 +291,8 @@ static int apply_spec(FTSENT *ftsent)
 	return rc;
 }
 
+#include <sys/statvfs.h>
+
 static int process_one(char *name, int recurse_this_path)
 {
 	int rc = 0;
@@ -332,6 +342,7 @@ static int process_one(char *name, int recurse_this_path)
 				continue;
 			}
 		}
+
 		rc = apply_spec(ftsent);
 		if (rc == SKIP)
 			fts_set(fts_handle, ftsent, FTS_SKIP);
@@ -611,12 +622,22 @@ static int filespec_add(ino_t ino, const security_context_t con, const char *fil
 }
 
 #include <sys/utsname.h>
+int file_system_count(char *name) {
+	struct statvfs statvfs_buf;
+	int nfile = 0;
+	memset(&statvfs_buf, 0, sizeof(statvfs_buf));
+	if (!statvfs(name, &statvfs_buf)) {
+		nfile = statvfs_buf.f_files - statvfs_buf.f_ffree;
+	}
+	return nfile;
+}
+
 /*
    Search /proc/mounts for all file systems that do not support extended
    attributes and add them to the exclude directory table.  File systems
-   that support security labels have the seclabel option.
+   that support security labels have the seclabel option, return total file count
 */
-void exclude_non_seclabel_mounts()
+int exclude_non_seclabel_mounts()
 {
 	struct utsname uts;
 	FILE *fp;
@@ -625,16 +646,16 @@ void exclude_non_seclabel_mounts()
 	int index = 0, found = 0;
 	char *mount_info[4];
 	char *buf = NULL, *item;
-
+	int nfile = 0;
 	/* Check to see if the kernel supports seclabel */
 	if (uname(&uts) == 0 && strverscmp(uts.release, "2.6.30") < 0)
-		return;
+		return 0;
 	if (is_selinux_enabled() <= 0)
-		return;
+		return 0;
 
 	fp = fopen("/proc/mounts", "r");
 	if (!fp)
-		return;
+		return 0;
 
 	while ((num = getline(&buf, &len, fp)) != -1) {
 		found = 0;
@@ -661,6 +682,7 @@ void exclude_non_seclabel_mounts()
 		while (item != NULL) {
 			if (strcmp(item, "seclabel") == 0) {
 				found = 1;
+				nfile += file_system_count(mount_info[1]);
 				break;
 			}
 			item = strtok(NULL, ",");
@@ -673,5 +695,7 @@ void exclude_non_seclabel_mounts()
 
 	free(buf);
 	fclose(fp);
+	/* return estimated #Files + 5% for directories and hard links */
+	return nfile * 1.05;
 }
 

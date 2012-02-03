@@ -159,6 +159,7 @@ int main(int argc, char **argv)
 	/* Initialize variables */
 	r_opts.progress = 0;
 	r_opts.count = 0;
+	r_opts.nfile = 0;
 	r_opts.debug = 0;
 	r_opts.change = 1;
 	r_opts.verbose = 0;
@@ -222,7 +223,7 @@ int main(int argc, char **argv)
 	}
 
 	/* This must happen before getopt. */
-	exclude_non_seclabel_mounts();
+	r_opts.nfile = exclude_non_seclabel_mounts();
 
 	/* Process any options. */
 	while ((opt = getopt(argc, argv, "c:de:f:hilno:pqrsvFRW0")) > 0) {
@@ -346,7 +347,7 @@ int main(int argc, char **argv)
 					"Progress and Verbose mutually exclusive\n");
 				usage(argv[0]);
 			}
-			r_opts.progress = 1;
+			r_opts.progress++;
 			break;
 		case 'W':
 			warn_no_match = 1;
@@ -357,6 +358,14 @@ int main(int argc, char **argv)
 		case 'h':
 		case '?':
 			usage(argv[0]);
+		}
+	}
+
+	for (i = optind; i < argc; i++) {
+		if (!strcmp(argv[i], "/")) {
+			mass_relabel = 1;
+			if (r_opts.progress)
+				r_opts.progress++;
 		}
 	}
 
@@ -426,12 +435,8 @@ int main(int argc, char **argv)
 		if (strcmp(input_filename, "-") != 0)
 			fclose(f);
 	} else {
-		for (i = optind; i < argc; i++) {
-			if (!strcmp(argv[i], "/"))
-				mass_relabel = 1;
-
+		for (i = optind; i < argc; i++)
 			errors |= process_glob(argv[i], recurse) < 0;
-		}
 	}
 	
 	maybe_audit_mass_relabel(mass_relabel, errors);

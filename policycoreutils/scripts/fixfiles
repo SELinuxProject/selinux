@@ -114,6 +114,7 @@ exclude_dirs() {
 # Set global Variables
 #
 fullFlag=0
+VERBOSE="-p"
 FORCEFLAG=""
 DIRS=""
 RPMILES=""
@@ -176,7 +177,7 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
                   esac; \
                fi; \
             done | \
-	${RESTORECON} -i -f - -R -p `exclude_dirs`; \
+	${RESTORECON} ${VERBOSE} -i -f - -R `exclude_dirs`; \
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }
@@ -206,12 +207,12 @@ if [ ! -z "$PREFC" ]; then
 fi
 if [ ! -z "$RPMFILES" ]; then
     for i in `echo "$RPMFILES" | sed 's/,/ /g'`; do
-	rpmlist $i | ${RESTORECON} ${FORCEFLAG} $* -R -i -f - 2>&1 | cat >> $LOGFILE
+	rpmlist $i | ${RESTORECON} ${FORCEFLAG} ${VERBOSE} $* -R -i -f - 2>&1 | cat >> $LOGFILE
     done
     exit $?
 fi
 if [ ! -z "$FILEPATH" ]; then
-    ${RESTORECON} ${FORCEFLAG} -R $* $FILEPATH 2>&1 | cat >> $LOGFILE
+    ${RESTORECON} ${FORCEFLAG} ${VERBOSE} -R $* $FILEPATH 2>&1 | cat >> $LOGFILE
     return
 fi
 [ -x /usr/sbin/genhomedircon ] && /usr/sbin/genhomedircon
@@ -286,7 +287,7 @@ process() {
 # Make sure they specified one of the three valid commands
 #
 case "$1" in
-    restore) restore -p ;;
+    restore) restore;;
     check) restore -n -v;;
     verify) restore -n -o -;;
     relabel) relabel;;
@@ -317,10 +318,13 @@ if [ $# = 0 ]; then
 fi
 
 # See how we were called.
-while getopts "C:FfR:l:" i; do
+while getopts "C:FfR:l:v" i; do
     case "$i" in
 	f)
 		fullFlag=1
+		;;
+	v)
+		VERBOSE="-v"
 		;;
         R)
 		RPMFILES=$OPTARG

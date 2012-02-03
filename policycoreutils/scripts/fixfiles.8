@@ -5,13 +5,13 @@ fixfiles \- fix file SELinux security contexts.
 .SH "SYNOPSIS"
 
 .B fixfiles 
-.I [-F] [-l logfile ] { check | restore|[-f] relabel | verify } [[dir/file] ... ] 
+.I [-v] [-F] [-l logfile ] { check | restore|[-f] relabel | verify } [[dir/file] ... ] 
 
 .B fixfiles 
-.I [-F] [ -R rpmpackagename[,rpmpackagename...] ] [-l logfile ] { check | restore | verify }
+.I [-v] [-F] [ -R rpmpackagename[,rpmpackagename...] ] [-l logfile ] { check | restore | verify }
 
 .B fixfiles 
-.I [ -C PREVIOUS_FILECONTEXT ] [-l logfile ] { check | restore | verify }
+.I [-v] [ -C PREVIOUS_FILECONTEXT ] [-l logfile ] { check | restore | verify }
 
 .B fixfiles 
 .I onboot
@@ -53,6 +53,10 @@ Use the rpm database to discover all files within the specified packages and res
 .TP
 .B -C PREVIOUS_FILECONTEXT
 Run a diff on  the PREVIOUS_FILECONTEXT file to the currently installed one, and restore the context of all affected files.
+
+.TP 
+.B -v
+Modify verbosity from progess to verbose. (Run restorecon with -v instead of -p)
 
 .SH "ARGUMENTS"
 One of:
