@@ -101,7 +101,9 @@ static int avc_netlink_receive(char *buf, unsigned buflen, int blocking)
 	socklen_t nladdrlen = sizeof nladdr;
 	struct nlmsghdr *nlh = (struct nlmsghdr *)buf;
 
-	rc = poll(&pfd, 1, (blocking ? -1 : 0));
+	do {
+		rc = poll(&pfd, 1, (blocking ? -1 : 0));
+	} while (rc < 0 && errno == EINTR);
 
 	if (rc == 0 && !blocking) {
 		errno = EWOULDBLOCK;
