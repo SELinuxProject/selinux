@@ -128,7 +128,7 @@ List the OBJECTS
 List only locally defined settings, not base policy settings.
 .TP
 .I                \-L, \-\-level
-Default SELinux Level for SELinux use, s0 Default. (MLS/MCS Systems only)
+Default SELinux Level for SELinux user, s0 Default. (MLS/MCS Systems only)
 .TP
 .I                \-m, \-\-modify     
 Modify a OBJECT record NAME
@@ -144,6 +144,8 @@ Protocol for the specified port (tcp|udp) or internet protocol version for the s
 .TP
 .I                \-r, \-\-range      
 MLS/MCS Security Range (MLS/MCS Systems only)
+SELinux Range for SELinux login mapping defaults to the SELinux user record range.
+SELinux Range for SELinux user defaults to s0.
 .TP
 .I                \-R, \-\-role
 SELinux Roles.  You must enclose multiple roles within quotes, separate by spaces. Or specify \-R multiple times.
