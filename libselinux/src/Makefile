@@ -15,7 +15,7 @@ PYTHONLIBDIR ?= $(shell pkg-config --libs $(PYPREFIX))
 PYLIBDIR ?= $(LIBDIR)/$(PYLIBVER)
 RUBYLIBVER ?= $(shell ruby -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
 RUBYPLATFORM ?= $(shell ruby -e 'print RUBY_PLATFORM')
-RUBYINC ?= $(shell pkg-config --cflags ruby-$(RUBYLIBVER))
+RUBYINC ?= -I$(LIBDIR)/ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 RUBYINSTALL ?= $(LIBDIR)/ruby/site_ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 LIBBASE=$(shell basename $(LIBDIR))
 
