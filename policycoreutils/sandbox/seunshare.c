@@ -58,7 +58,7 @@
 static int verbose = 0;
 static int child = 0;
 
-static capng_select_t cap_set = CAPNG_SELECT_BOTH;
+static capng_select_t cap_set = CAPNG_SELECT_CAPS;
 
 /**
  * This function will drop all capabilities.
