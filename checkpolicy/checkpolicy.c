@@ -70,6 +70,10 @@
 #include <errno.h>
 #include <sys/mman.h>
 
+#ifdef DARWIN
+#include <ctype.h>
+#endif
+
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/conditional.h>

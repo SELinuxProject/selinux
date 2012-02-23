@@ -27,7 +27,11 @@
 
 typedef int (* require_func_t)();
 
+#ifdef ANDROID
+#include "policy_parse.h"
+#else
 #include "y.tab.h"
+#endif
 
 static char linebuf[2][255];
 static unsigned int lno = 0;
@@ -43,7 +47,7 @@ unsigned long policydb_lineno = 1;
 unsigned int policydb_errors = 0;
 %}
 
-%option noinput nounput
+%option noinput nounput noyywrap
 
 %array
 letter  [A-Za-z]
