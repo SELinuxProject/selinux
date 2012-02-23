@@ -6,6 +6,8 @@
 #include <string.h>
 #include <errno.h>
 
+void usage(char*) __attribute__((noreturn));
+
 void usage(char *progname)
 {
 	printf("usage:  %s policy context\n", progname);

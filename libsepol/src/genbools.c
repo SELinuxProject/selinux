@@ -79,7 +79,16 @@ static int load_booleans(struct policydb *policydb, const char *path,
 	if (boolf == NULL)
 		goto localbool;
 
+#ifdef DARWIN
+        if ((buffer = (char *)malloc(255 * sizeof(char))) == NULL) {
+          ERR(NULL, "out of memory");
+	  return -1;
+	}
+
+        while(fgets(buffer, 255, boolf) != NULL) {
+#else
 	while (getline(&buffer, &size, boolf) > 0) {
+#endif
 		int ret = process_boolean(buffer, name, sizeof(name), &val);
 		if (ret == -1)
 			errors++;
@@ -101,7 +110,14 @@ static int load_booleans(struct policydb *policydb, const char *path,
 	snprintf(localbools, sizeof(localbools), "%s.local", path);
 	boolf = fopen(localbools, "r");
 	if (boolf != NULL) {
-		while (getline(&buffer, &size, boolf) > 0) {
+
+#ifdef DARWIN
+
+	  while(fgets(buffer, 255, boolf) != NULL) {
+#else
+
+	    while (getline(&buffer, &size, boolf) > 0) {
+#endif
 			int ret =
 			    process_boolean(buffer, name, sizeof(name), &val);
 			if (ret == -1)

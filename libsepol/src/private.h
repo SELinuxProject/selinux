@@ -4,10 +4,22 @@
 
 #include <sepol/policydb/policydb.h>
 
+
+#ifdef DARWIN
+#include <sys/types.h>
+#include <machine/endian.h>
+#else
 #include <byteswap.h>
 #include <endian.h>
+#endif
+
 #include <errno.h>
 #include <dso.h>
+
+#ifdef DARWIN
+#define __BYTE_ORDER  BYTE_ORDER
+#define __LITTLE_ENDIAN  LITTLE_ENDIAN
+#endif
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 #define cpu_to_le16(x) (x)

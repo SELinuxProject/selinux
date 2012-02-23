@@ -70,7 +70,11 @@ static int node_parse_addr(sepol_handle_t * handle,
 				return STATUS_ERR;
 			}
 
+#ifdef DARWIN
+			memcpy(addr_bytes, in_addr.s6_addr, 16);
+#else
 			memcpy(addr_bytes, in_addr.s6_addr32, 16);
+#endif
 			break;
 		}
 	default:
@@ -158,8 +162,11 @@ static int node_expand_addr(sepol_handle_t * handle,
 		{
 			struct in6_addr addr;
 			memset(&addr, 0, sizeof(struct in6_addr));
+#ifdef DARWIN
+			memcpy(&addr.s6_addr[0], addr_bytes, 16);
+#else
 			memcpy(&addr.s6_addr32[0], addr_bytes, 16);
-
+#endif
 			if (inet_ntop(AF_INET6, &addr, addr_str,
 				      INET6_ADDRSTRLEN) == NULL) {
 
