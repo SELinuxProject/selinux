@@ -1,0 +1,151 @@
+# This file is part of systemd.
+#
+# Copyright 2011 Dan Walsh
+#
+# systemd is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# systemd is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with systemd; If not, see <http://www.gnu.org/licenses/>.
+
+__contains_word () {
+        local word=$1; shift
+        for w in $*; do [[ $w = $word ]] && return 0; done
+        return 1
+}
+
+ALL_OPTS='-l --list -S -o -n --noheading -h --help'
+MANAGED_OPTS='-a --add -m --modify -d --delete -D --deleteall -C --locallist '
+
+__get_all_stores () {
+    dir -1 -F /etc/selinux/ | grep '/' | cut -d'/' -f 1
+}
+__get_all_ftypes () {
+    echo '-- -d -c -b -s -l -p'
+}
+__get_all_users () { 
+    seinfo -u 2> /dev/null | tail -n +3 
+}
+__get_all_types () { 
+    seinfo -t 2> /dev/null | tail -n +3 
+}
+__get_all_port_types () { 
+    seinfo -aport_type -x 2>/dev/null | tail -n +2 
+}
+__get_all_domains () { 
+    seinfo -adomain -x 2>/dev/null | tail -n +2 
+}
+__get_all_node_types () { 
+    seinfo -anode_type -x 2>/dev/null | tail -n +2 
+}
+__get_all_file_types () { 
+    seinfo -afile_type -x 2>/dev/null | tail -n +2 
+}
+__get_all_roles () { 
+    seinfo -t 2> /dev/null | tail -n +3 
+}
+__get_all_stores () {
+    dir -1 -F /etc/selinux/ | grep '/' | cut -d'/' -f 1
+}
+__get_boolean_opts () { echo '$ALL_OPTS --on -off -1 -0 -F' ; }
+__get_user_opts () { echo '$ALL_OPTS $MANAGED_OPTS -L -r -R --role '; }
+__get_login_opts () { echo '$ALL_OPTS $MANAGED_OPTS -s -r '; }
+__get_port_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t -type -r --range -p --proto'; }
+__get_interface_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type '; }
+__get_node_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -M --mask -p --proto'; }
+__get_fcontext_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -e --equal -f --ftype '; }
+__get_module_opts () { echo '$ALL_OPTS --enable --disable '; }
+__get_dontaudit_opts () { echo '-S on off' ; }
+__get_permissive_opts () { echo '$ALL_OPTS -a --add -d --delete' ; }
+
+_semanage () {
+        local command=${COMP_WORDS[1]}
+        local cur=${COMP_WORDS[COMP_CWORD]} prev=${COMP_WORDS[COMP_CWORD-1]}
+        local verb comps
+        local -A VERBS=(
+	       [LOGIN]='login'
+	       [USER]='user'
+	       [PORT]='port'
+	       [INTERFACE]='interface'
+	       [MODULE]='module'
+	       [NODE]='node'
+	       [FCONTEXT]='fcontext'
+	       [BOOLEAN]='boolean'
+	       [PERMISSIVE]='permissive'
+	       [DONTAUDIT]='dontaudit'
+        )
+
+	if   [ "$prev" = "-a" -a "$command" = "permissive" ]; then
+	        COMPREPLY=( $(compgen -W "$( __get_all_domains ) " -- "$cur") )
+		return 0
+	fi
+	if   [ "$verb" = "" -a "$prev" = "semanage" ]; then
+                comps="${VERBS[*]}"
+	elif [ "$verb" = "" -a "$prev" = "-S" -o "$prev" = "--store" ]; then
+	        COMPREPLY=( $(compgen -W "$( __get_all_stores ) " -- "$cur") )
+		return 0
+	elif [ "$verb" = "" -a "$prev" = "-p" -o "$prev" = "--proto" ]; then
+	        COMPREPLY=( $(compgen -W "tcp udp" -- "$cur") )
+		return 0
+	elif [ "$verb" = "" -a "$prev" = "-r" -o "$prev" = "--roles" ]; then
+	        COMPREPLY=( $(compgen -W "$( __get_all_roles ) " -- "$cur") )
+		return 0
+	elif [ "$verb" = "" -a "$prev" = "-s" -o "$prev" = "--seuser" ]; then
+	        COMPREPLY=( $(compgen -W "$( __get_all_users ) " -- "$cur") )
+		return 0
+	elif [ "$verb" = "" -a "$prev" = "-f" -o "$prev" = "--ftype" ]; then
+	        COMPREPLY=( $(compgen -W "$( __get_all_ftypes ) " -- "$cur") )
+		return 0
+	elif [ "$verb" = "" -a "$prev" = "-t" -o "$prev" = "--types" ]; then
+	    if [ "$command" = "port" ]; then
+	        COMPREPLY=( $(compgen -W "$( __get_all_port_types ) " -- "$cur") )
+		return 0
+	    fi
+	    if [ "$command" = "fcontext" ]; then
+	        COMPREPLY=( $(compgen -W "$( __get_all_file_types ) " -- "$cur") )
+		return 0
+	    fi
+	    COMPREPLY=( $(compgen -W "$( __get_all_types ) " -- "$cur") )
+	    return 0
+        elif __contains_word "$command" ${VERBS[LOGIN]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_login_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[USER]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_user_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[PORT]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_port_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[INTERFACE]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_interface_opts ) " -- "$cur") )
+		return 0p
+        elif __contains_word "$command" ${VERBS[MODULE]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_module_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[NODE]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_node_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[FCONTEXT]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_fcontext_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[BOOLEAN]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_boolean_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[PERMISSIVE]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_permissive_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[DONTAUDIT]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_dontaudit_opts ) " -- "$cur") )
+		return 0
+        fi
+        COMPREPLY=( $(compgen -W "$comps" -- "$cur") )
+        return 0
+}
+complete -F _semanage semanage
