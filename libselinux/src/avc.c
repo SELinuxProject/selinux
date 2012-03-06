@@ -9,6 +9,7 @@
  */
 #include <selinux/avc.h>
 #include "selinux_internal.h"
+#include <assert.h>
 #include "avc_sidtab.h"
 #include "avc_internal.h"
 
@@ -69,6 +70,9 @@ static inline int avc_hash(security_id_t ssid,
 int avc_context_to_sid_raw(const security_context_t ctx, security_id_t * sid)
 {
 	int rc;
+	/* avc_init needs to be called before this function */
+	assert(avc_running);
+
 	avc_get_lock(avc_lock);
 	rc = sidtab_context_to_sid(&avc_sidtab, ctx, sid);
 	avc_release_lock(avc_lock);
@@ -249,6 +253,8 @@ void avc_cache_stats(struct avc_cache_stats *p)
 
 void avc_sid_stats(void)
 {
+	/* avc_init needs to be called before this function */
+	assert(avc_running);
 	avc_get_lock(avc_log_lock);
 	avc_get_lock(avc_lock);
 	sidtab_sid_stats(&avc_sidtab, avc_audit_buf, AVC_AUDIT_BUFSIZE);
@@ -548,6 +554,8 @@ void avc_destroy(void)
 	struct avc_callback_node *c;
 	struct avc_node *node, *tmp;
 	int i;
+	/* avc_init needs to be called before this function */
+	assert(avc_running);
 
 	avc_get_lock(avc_lock);
 
@@ -878,6 +886,8 @@ int avc_compute_member(security_id_t ssid,  security_id_t tsid,
 	int rc;
 	security_context_t ctx = NULL;
 	*newsid = NULL;
+	/* avc_init needs to be called before this function */
+	assert(avc_running);
 	avc_get_lock(avc_lock);
 
 	rc = security_compute_member_raw(ssid->ctx, tsid->ctx, tclass, &ctx);
