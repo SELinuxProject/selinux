@@ -379,7 +379,12 @@ class permissiveRecords(semanageRecords):
                return l
 
 	def list(self, heading = 1, locallist = 0):
-		import setools
+		try:
+			import setools
+		except:
+			print "only able to list permissive types when setools is installed"
+			return
+
 		all = map(lambda y: y["name"], filter(lambda x: x["permissive"], setools.seinfo(setools.TYPE)))
 		if len(all) == 0:
 			return 

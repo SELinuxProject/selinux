@@ -30,7 +30,10 @@ import access
 import interfaces
 import matching
 import selinux.audit2why as audit2why
-from setools import *
+try:
+    from setools import *
+except:
+    pass
 
 # Constants for the level of explanation from the generation
 # routines
@@ -172,23 +175,23 @@ class PolicyGenerator:
                 rule.comment += "#!!!! This avc is a constraint violation.  You will need to add an attribute to either the source or target type to make it work.\n"
                 rule.comment += "#Constraint rule: "
 
-            if av.type == audit2why.TERULE:
-                if "write" in av.perms:
-                    if "dir" in av.obj_class or "open" in av.perms:
-                        if not self.domains:
-                            self.domains = seinfo(ATTRIBUTE, name="domain")[0]["types"]
-                        types=[]
+            try:
+                if ( av.type == audit2why.TERULE and
+                     "write" in av.perms and
+                     ( "dir" in av.obj_class or "open" in av.perms )):
+                    if not self.domains:
+                        self.domains = seinfo(ATTRIBUTE, name="domain")[0]["types"]
+                    types=[]
 
-                        try:
-                            for i in map(lambda x: x[TCONTEXT], sesearch([ALLOW], {SCONTEXT: av.src_type, CLASS: av.obj_class, PERMS: av.perms})):
-                                if i not in self.domains:
-                                    types.append(i)
-                            if len(types) == 1:
-                                rule.comment += "#!!!! The source type '%s' can write to a '%s' of the following type:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
-                            elif len(types) >= 1:
-                                rule.comment += "#!!!! The source type '%s' can write to a '%s' of the following types:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
-                        except:
-                            pass
+                    for i in map(lambda x: x[TCONTEXT], sesearch([ALLOW], {SCONTEXT: av.src_type, CLASS: av.obj_class, PERMS: av.perms})):
+                        if i not in self.domains:
+                            types.append(i)
+                    if len(types) == 1:
+                        rule.comment += "#!!!! The source type '%s' can write to a '%s' of the following type:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+                    elif len(types) >= 1:
+                        rule.comment += "#!!!! The source type '%s' can write to a '%s' of the following types:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+            except:
+                pass
             self.module.children.append(rule)
 
 
