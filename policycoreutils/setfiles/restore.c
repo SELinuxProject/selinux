@@ -374,7 +374,9 @@ int process_glob(char *name, int recurse) {
 			continue;
 		if (len > 0 && strcmp(&globbuf.gl_pathv[i][len], "/..") == 0)
 			continue;
-		errors |= process_one_realpath(globbuf.gl_pathv[i], recurse);
+		int rc = process_one_realpath(globbuf.gl_pathv[i], recurse);
+		if (rc < 0)
+			errors = rc;
 	}
 	globfree(&globbuf);
 	return errors;
