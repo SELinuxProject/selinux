@@ -543,6 +543,7 @@ static int restore_environment(int preserve_environment,
 #if defined(AUDIT_LOG_PRIV) && !defined(NAMESPACE_PRIV)
 static int drop_capabilities(int full)
 {
+	capng_setpid(getpid());
 	capng_clear(CAPNG_SELECT_BOTH);
 	if (capng_lock() < 0) 
 		return -1;
@@ -575,6 +576,7 @@ static int drop_capabilities(int full)
  */
 static int drop_capabilities(int full)
 {
+	capng_setpid(getpid());
 	capng_clear(CAPNG_SELECT_BOTH);
 	if (capng_lock() < 0) 
 		return -1;
@@ -586,7 +588,7 @@ static int drop_capabilities(int full)
 		return -1;
 	}
 	if (! full) 
-		capng_update(CAPNG_ADD, CAPNG_EFFECTIVE | CAPNG_PERMITTED, CAP_SYS_ADMIN | CAP_FOWNER | CAP_CHOWN | CAP_DAC_OVERRIDE | CAP_SETPCAP);
+		capng_updatev(CAPNG_ADD, CAPNG_EFFECTIVE | CAPNG_PERMITTED, CAP_SYS_ADMIN , CAP_FOWNER , CAP_CHOWN, CAP_DAC_OVERRIDE, CAP_SETPCAP, -1);
 	return capng_apply(CAPNG_SELECT_BOTH);
 }
 
