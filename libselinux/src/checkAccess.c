@@ -1,3 +1,4 @@
+/*-*- Mode: C; c-basic-offset: 8; indent-tabs-mode: nil -*-*/
 #include <unistd.h>
 #include <sys/types.h>
 #include <stdlib.h>
@@ -15,8 +16,7 @@ static void avc_init_once(void)
 }
 
 int selinux_check_access(const security_context_t scon, const security_context_t tcon, const char *class, const char *perm, void *aux) {
-	int status = -1;
-	int rc = -1;
+	int rc;
 	security_id_t scon_id;
 	security_id_t tcon_id;
 	security_class_t sclass;
@@ -27,15 +27,33 @@ int selinux_check_access(const security_context_t scon, const security_context_t
 
 	__selinux_once(once, avc_init_once);
 
-	if ((rc = avc_context_to_sid(scon, &scon_id)) < 0)  return rc;
+	rc = avc_context_to_sid(scon, &scon_id);
+	if (rc < 0)
+		return rc;
 
-	if ((rc = avc_context_to_sid(tcon, &tcon_id)) < 0)  return rc;
+       rc = avc_context_to_sid(tcon, &tcon_id);
+       if (rc < 0)
+	       return rc;
 
-	if ((sclass = string_to_security_class(class)) == 0) return status;
+       sclass = string_to_security_class(class);
+       if (sclass == 0) {
+	       rc = errno;
+	       if (security_deny_unknown() == 0)
+		       return 0;
+	       errno = rc;
+	       return -1;
+       }
 
-	if ((av = string_to_av_perm(sclass, perm)) == 0) return status;
+       av = string_to_av_perm(sclass, perm);
+       if (av == 0) {
+	       rc = errno;
+	       if (security_deny_unknown() == 0)
+		       return 0;
+	       errno = rc;
+	       return -1;
+       }
 
-	return avc_has_perm (scon_id, tcon_id, sclass, av, NULL, aux);
+       return avc_has_perm (scon_id, tcon_id, sclass, av, NULL, aux);
 }
 
 int selinux_check_passwd_access(access_vector_t requested)
