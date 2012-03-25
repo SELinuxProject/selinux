@@ -6,19 +6,58 @@
 #include <errno.h>
 #include <string.h>
 #include <limits.h>
+#include <ctype.h>
 #include "selinux_internal.h"
 #include "policy.h"
 #include "mapping.h"
 
-int security_compute_create_raw(const security_context_t scon,
-				const security_context_t tcon,
-				security_class_t tclass,
-				security_context_t * newcon)
+static int object_name_encode(const char *objname, char *buffer, size_t buflen)
+{
+	int	code;
+	size_t	offset = 0;
+
+	if (buflen - offset < 1)
+		return -1;
+	buffer[offset++] = ' ';
+
+	do {
+		code = *objname++;
+
+		if (isalnum(code) || code == '\0' || code == '-' ||
+		    code == '.' || code == '_' || code == '~') {
+			if (buflen - offset < 1)
+				return -1;
+			buffer[offset++] = code;
+		} else if (code == ' ') {
+			if (buflen - offset < 1)
+				return -1;
+			buffer[offset++] = '+';
+		} else {
+			static const char *table = "0123456789ABCDEF";
+			int	l = (code & 0x0f);
+			int	h = (code & 0xf0) >> 4;
+
+			if (buflen - offset < 3)
+				return -1;
+			buffer[offset++] = '%';
+			buffer[offset++] = table[h];
+			buffer[offset++] = table[l];
+		}
+	} while (code != '\0');
+
+	return 0;
+}
+
+int security_compute_create_name_raw(const security_context_t scon,
+				     const security_context_t tcon,
+				     security_class_t tclass,
+				     const char *objname,
+				     security_context_t * newcon)
 {
 	char path[PATH_MAX];
 	char *buf;
 	size_t size;
-	int fd, ret;
+	int fd, ret, len;
 
 	if (!selinux_mnt) {
 		errno = ENOENT;
@@ -36,7 +75,14 @@ int security_compute_create_raw(const security_context_t scon,
 		ret = -1;
 		goto out;
 	}
-	snprintf(buf, size, "%s %s %hu", scon, tcon, unmap_class(tclass));
+	len = snprintf(buf, size, "%s %s %hu",
+		       scon, tcon, unmap_class(tclass));
+	if (objname &&
+	    object_name_encode(objname, buf + len, size - len) < 0) {
+		errno = ENAMETOOLONG;
+		ret = -1;
+		goto out2;
+	}
 
 	ret = write(fd, buf, strlen(buf));
 	if (ret < 0)
@@ -59,13 +105,23 @@ int security_compute_create_raw(const security_context_t scon,
 	close(fd);
 	return ret;
 }
+hidden_def(security_compute_create_name_raw)
 
+int security_compute_create_raw(const security_context_t scon,
+				const security_context_t tcon,
+				security_class_t tclass,
+				security_context_t * newcon)
+{
+	return security_compute_create_name_raw(scon, tcon, tclass,
+						NULL, newcon);
+}
 hidden_def(security_compute_create_raw)
 
-int security_compute_create(const security_context_t scon,
-			    const security_context_t tcon,
-			    security_class_t tclass,
-			    security_context_t * newcon)
+int security_compute_create_name(const security_context_t scon,
+				 const security_context_t tcon,
+				 security_class_t tclass,
+				 const char *objname,
+				 security_context_t * newcon)
 {
 	int ret;
 	security_context_t rscon;
@@ -79,8 +135,8 @@ int security_compute_create(const security_context_t scon,
 		return -1;
 	}
 
-	ret = security_compute_create_raw(rscon, rtcon, tclass, &rnewcon);
-
+	ret = security_compute_create_name_raw(rscon, rtcon, tclass,
+					       objname, &rnewcon);
 	freecon(rscon);
 	freecon(rtcon);
 	if (!ret) {
@@ -90,5 +146,13 @@ int security_compute_create(const security_context_t scon,
 
 	return ret;
 }
+hidden_def(security_compute_create_name)
 
+int security_compute_create(const security_context_t scon,
+			    const security_context_t tcon,
+			    security_class_t tclass,
+			    security_context_t * newcon)
+{
+	return security_compute_create_name(scon, tcon, tclass, NULL, newcon);
+}
 hidden_def(security_compute_create)

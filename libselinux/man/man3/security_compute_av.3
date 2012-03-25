@@ -1,6 +1,6 @@
 .TH "security_compute_av" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
 .SH "NAME"
-security_compute_av, security_compute_av_flags, security_compute_create, security_compute_relabel,
+security_compute_av, security_compute_av_flags, security_compute_create, security_compute_create_name, security_compute_relabel,
 security_compute_member, security_compute_user, security_get_initial_context \- query
 the SELinux policy database in the kernel.
 
@@ -14,6 +14,8 @@ the SELinux policy database in the kernel.
 .BI "int security_compute_av_flags(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
 .BI "int security_compute_create(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
+.sp
+.BI "int security_compute_create_name(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", const char *"objname ", security_context_t *" newcon );
 .sp
 .BI "int security_compute_relabel(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
 .sp
@@ -57,6 +59,19 @@ which indicates the decision is computed on a permissive domain.
 .B security_compute_create
 is used to compute a context to use for labeling a new object in a particular
 class based on a SID pair.
+
+.B security_compute_create_name
+is identical to
+.B security_compute_create
+but also takes name of the new object in creation as an argument.
+When
+.BR TYPE_TRANSITION
+rule on the given class and a SID pair has object name extension,
+we shall be able to obtain a correct
+.BR newcon
+according to the security policy. Note that this interface is only
+supported on the linux 2.6.40 or later.
+In the older kernel, the object name will be simply ignored.
 
 .B security_compute_relabel
 is used to compute the new context to use when relabeling an object, it is used

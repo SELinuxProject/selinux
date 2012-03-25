@@ -211,6 +211,16 @@ extern int security_compute_create_raw(const security_context_t scon,
 				       const security_context_t tcon,
 				       security_class_t tclass,
 				       security_context_t * newcon);
+extern int security_compute_create_name(const security_context_t scon,
+					const security_context_t tcon,
+					security_class_t tclass,
+					const char *objname,
+					security_context_t * newcon);
+extern int security_compute_create_name_raw(const security_context_t scon,
+					    const security_context_t tcon,
+					    security_class_t tclass,
+					    const char *objname,
+					    security_context_t * newcon);
 
 /* Compute a relabeling decision and set *newcon to refer to it.
    Caller must free via freecon. */
