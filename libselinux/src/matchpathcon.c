@@ -294,7 +294,7 @@ static void matchpathcon_thread_destructor(void __attribute__((unused)) *ptr)
 
 void __attribute__((destructor)) matchpathcon_lib_destructor(void);
 
-void __attribute__((destructor)) matchpathcon_lib_destructor(void)
+void hidden __attribute__((destructor)) matchpathcon_lib_destructor(void)
 {
 	if (destructor_key_initialized)
 		__selinux_key_delete(destructor_key);

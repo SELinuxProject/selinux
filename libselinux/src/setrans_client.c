@@ -255,7 +255,7 @@ static void setrans_thread_destructor(void __attribute__((unused)) *unused)
 
 void __attribute__((destructor)) setrans_lib_destructor(void);
 
-void __attribute__((destructor)) setrans_lib_destructor(void)
+void hidden __attribute__((destructor)) setrans_lib_destructor(void)
 {
 	if (destructor_key_initialized)
 		__selinux_key_delete(destructor_key);
