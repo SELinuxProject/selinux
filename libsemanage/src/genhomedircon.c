@@ -772,7 +772,7 @@ static int setup_fallback_user(genhomedircon_settings_t * s)
 			if (semanage_user_query(s->h_semanage, key, &u) < 0)
 			{
 				prefix = name;
-				level = "s0";
+				level = FALLBACK_USER_LEVEL;
 			}
 			else
 			{
@@ -863,7 +863,7 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 			level = semanage_user_get_mlslevel(*u);
 		} else {
 			prefix = name;
-			level = "s0";
+			level = FALLBACK_USER_LEVEL;
 		}
 
 		retval = getpwnam_r(name, &pwstorage, rbuf, rbuflen, &pwent);
