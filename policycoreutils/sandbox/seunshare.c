@@ -295,8 +295,8 @@ static int seunshare_mount(const char *src, const char *dst, struct stat *src_st
  */
 static int sandbox_error(const char *string)
 {
-	fprintf(stderr, string);
-	syslog(LOG_AUTHPRIV | LOG_ALERT, string);
+	fprintf(stderr, "%s", string);
+	syslog(LOG_AUTHPRIV | LOG_ALERT, "%s", string);
 	exit(-1);
 }
 
