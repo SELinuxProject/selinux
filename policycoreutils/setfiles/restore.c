@@ -248,7 +248,7 @@ static int restore(FTSENT *ftsent)
 			r_opts->progname, my_file, newcon, strerror(errno));
 		goto skip;
 	}
-	ret = 1;
+	ret = 0;
 out:
 	freecon(curcon);
 	freecon(newcon);
