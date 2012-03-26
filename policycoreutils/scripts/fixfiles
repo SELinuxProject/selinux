@@ -234,7 +234,12 @@ then
 	done
 FC=$TEMPFCFILE
 fi
-${SETFILES} -q ${SYSLOGFLAG} ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 | cat >> $LOGFILE
+if [  -n "${FILESYSTEMSRW}" ]; then
+    echo "Relabeling `echo ${FILESYSTEMSRW}`"
+    ${SETFILES} -q ${SYSLOGFLAG} ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 | cat >> $LOGFILE
+else
+    echo >&2 "fixfiles: No suitable file systems found"
+fi
 rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-* $TEMPFCFILE
 
 UNDEFINED=`get_undefined_type` || exit $?
