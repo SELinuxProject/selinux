@@ -3,6 +3,8 @@
 # targets with "PYPREFIX":
 PYTHON ?= python
 PYPREFIX ?= $(notdir $(PYTHON))
+RUBY ?= ruby
+RUBYPREFIX ?= $(notdir $(RUBY))
 
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
@@ -13,8 +15,8 @@ PYLIBVER ?= $(shell $(PYTHON) -c 'import sys;print("python%d.%d" % sys.version_i
 PYINC ?= $(shell pkg-config --cflags $(PYPREFIX))
 PYTHONLIBDIR ?= $(shell pkg-config --libs $(PYPREFIX))
 PYLIBDIR ?= $(LIBDIR)/$(PYLIBVER)
-RUBYLIBVER ?= $(shell ruby -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
-RUBYPLATFORM ?= $(shell ruby -e 'print RUBY_PLATFORM')
+RUBYLIBVER ?= $(shell $(RUBY) -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
+RUBYPLATFORM ?= $(shell $(RUBY) -e 'print RUBY_PLATFORM')
 RUBYINC ?= $(LIBDIR)/ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 RUBYINSTALL ?= $(LIBDIR)/ruby/site_ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 LIBBASE=$(shell basename $(LIBDIR))
@@ -42,10 +44,10 @@ SWIGRUBYIF= semanageswig_ruby.i
 SWIGCOUT= semanageswig_wrap.c
 SWIGRUBYCOUT= semanageswig_ruby_wrap.c
 SWIGLOBJ:= $(patsubst %.c,$(PYPREFIX)%.lo,$(SWIGCOUT))
-SWIGRUBYLOBJ:= $(patsubst %.c,%.lo,$(SWIGRUBYCOUT)) 
+SWIGRUBYLOBJ:= $(patsubst %.c,$(RUBYPREFIX)%.lo,$(SWIGRUBYCOUT)) 
 SWIGSO=$(PYPREFIX)_semanage.so
 SWIGFILES=$(SWIGSO) semanage.py 
-SWIGRUBYSO=_rubysemanage.so
+SWIGRUBYSO=$(RUBYPREFIX)_rubysemanage.so
 LIBSO=$(TARGET).$(LIBVERSION)
 
 GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT) semanageswig_python_exception.i
