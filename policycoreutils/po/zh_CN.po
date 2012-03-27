@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: policycoreutils.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-24 10:53-0400\n"
+"POT-Creation-Date: 2012-03-27 10:49-0400\n"
 "PO-Revision-Date: 2008-09-11 16:22+1000\n"
 "Last-Translator: Leah Liu <lliu@redhat.com>\n"
 "Language-Team: Simplified Chinese <zh@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,7 +28,7 @@ msgstr ""
 "  这里：<script> 是要运行的初始脚本名，\n"
 "         <args ...> 是这个脚本的参数。"
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1187
+#: ../run_init/run_init.c:126 ../newrole/newrole.c:1124
 #, c-format
 msgid "failed to initialize PAM\n"
 msgstr "初始化 PAM 失败\n"
@@ -37,16 +38,16 @@ msgstr "初始化 PAM 失败\n"
 msgid "failed to get account information\n"
 msgstr "获取帐号信息失败\n"
 
-#: ../run_init/run_init.c:162 ../newrole/newrole.c:338
+#: ../run_init/run_init.c:162 ../newrole/newrole.c:341
 msgid "Password:"
 msgstr "密码："
 
-#: ../run_init/run_init.c:197 ../newrole/newrole.c:363
+#: ../run_init/run_init.c:197 ../newrole/newrole.c:366
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
 msgstr "无法在 shadow passwd 文件中找到您的项。\n"
 
-#: ../run_init/run_init.c:203 ../newrole/newrole.c:370
+#: ../run_init/run_init.c:203 ../newrole/newrole.c:373
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
 msgstr "getpass 不能打开 /dev/tty\n"
@@ -76,1099 +77,1103 @@ msgstr "run_init 只能在一个 SELinux 内核中运行。\n"
 msgid "authentication failed.\n"
 msgstr "验证失败。\n"
 
-#: ../run_init/run_init.c:405 ../newrole/newrole.c:1321
+#: ../run_init/run_init.c:405 ../newrole/newrole.c:1258
 #, c-format
 msgid "Could not set exec context to %s.\n"
 msgstr "无法为 %s 设定 exec context。\n"
 
-#: ../audit2allow/audit2allow:217
+#: ../audit2allow/audit2allow:230
 msgid "******************** IMPORTANT ***********************\n"
 msgstr "******************** 重要 ***********************\n"
 
-#: ../audit2allow/audit2allow:218
+#: ../audit2allow/audit2allow:231
 msgid "To make this policy package active, execute:"
 msgstr "要激活这个策略包，执行："
 
-#: ../semanage/seobject.py:48
+#: ../semanage/seobject.py:143 ../semanage/seobject.py:147
+msgid "global"
+msgstr "global"
+
+#: ../semanage/seobject.py:222
 msgid "Could not create semanage handle"
 msgstr "无法创建 semanage 句柄"
 
-#: ../semanage/seobject.py:55
+#: ../semanage/seobject.py:230
 msgid "SELinux policy is not managed or store cannot be accessed."
 msgstr "SELinux 策略没有被管理或存储无法被访问。"
 
-#: ../semanage/seobject.py:60
+#: ../semanage/seobject.py:235
 msgid "Cannot read policy store."
 msgstr "不能读策略存储。"
 
-#: ../semanage/seobject.py:65
+#: ../semanage/seobject.py:240
 msgid "Could not establish semanage connection"
 msgstr "无法创建 semanage 连接"
 
-#: ../semanage/seobject.py:70
+#: ../semanage/seobject.py:245
 #, fuzzy
 msgid "Could not test MLS enabled status"
 msgstr "无法为 %s 设置 MLS 的范围"
 
-#: ../semanage/seobject.py:142 ../semanage/seobject.py:146
-msgid "global"
-msgstr "global"
-
-#: ../semanage/seobject.py:206
-#, python-format
-msgid "Unable to open %s: translations not supported on non-MLS machines: %s"
-msgstr "无法打开 %s：在非 MLS 机器上不支持的转换：%s"
-
-#: ../semanage/seobject.py:239
-msgid "Level"
-msgstr "级别"
-
-#: ../semanage/seobject.py:239
-msgid "Translation"
-msgstr "转换"
-
-#: ../semanage/seobject.py:247 ../semanage/seobject.py:261
-#, python-format
-msgid "Translations can not contain spaces '%s' "
-msgstr "转换不能包括空格 '%s' "
-
-#: ../semanage/seobject.py:250
-#, python-format
-msgid "Invalid Level '%s' "
-msgstr "无效级别 '%s' "
-
-#: ../semanage/seobject.py:253
-#, python-format
-msgid "%s already defined in translations"
-msgstr "%s 已经在转换中定义"
-
-#: ../semanage/seobject.py:265
-#, python-format
-msgid "%s not defined in translations"
-msgstr "%s 没有在转换中定义"
-
-#: ../semanage/seobject.py:290
+#: ../semanage/seobject.py:251 ../semanage/seobject.py:266
 msgid "Not yet implemented"
 msgstr "还没有实施"
 
-#: ../semanage/seobject.py:294
+#: ../semanage/seobject.py:255
 msgid "Semanage transaction already in progress"
 msgstr ""
 
-#: ../semanage/seobject.py:303
+#: ../semanage/seobject.py:264
 msgid "Could not start semanage transaction"
 msgstr "无法开始 semanage 交易"
 
-#: ../semanage/seobject.py:309
+#: ../semanage/seobject.py:274
 msgid "Could not commit semanage transaction"
 msgstr "无法提交 semanage 交易"
 
-#: ../semanage/seobject.py:313
+#: ../semanage/seobject.py:279
 msgid "Semanage transaction not in progress"
 msgstr ""
 
-#: ../semanage/seobject.py:325
+#: ../semanage/seobject.py:291 ../semanage/seobject.py:371
 msgid "Could not list SELinux modules"
 msgstr "无法列出 SELinux 模块"
 
-#: ../semanage/seobject.py:336
-msgid "Permissive Types"
+#: ../semanage/seobject.py:304
+#, fuzzy
+msgid "Modules Name"
+msgstr "模块名称"
+
+#: ../semanage/seobject.py:304
+msgid "Version"
+msgstr "版本"
+
+#: ../semanage/seobject.py:307
+msgid "Disabled"
+msgstr "禁用"
+
+#: ../semanage/seobject.py:322
+#, fuzzy, python-format
+msgid "Could not disable module %s (remove failed)"
+msgstr "无法删除 permissive 域 %s（删除操作失败）"
+
+#: ../semanage/seobject.py:333
+#, fuzzy, python-format
+msgid "Could not enable module %s (remove failed)"
+msgstr "无法删除 permissive 域 %s（删除操作失败）"
+
+#: ../semanage/seobject.py:348
+#, fuzzy, python-format
+msgid "Could not remove module %s (remove failed)"
+msgstr "无法删除 permissive 域 %s（删除操作失败）"
+
+#: ../semanage/seobject.py:358
+msgid "dontaudit requires either 'on' or 'off'"
+msgstr ""
+
+#: ../semanage/seobject.py:387
+#, fuzzy
+msgid "Builtin Permissive Types"
 msgstr "Permissive 类型"
 
-#: ../semanage/seobject.py:378
+#: ../semanage/seobject.py:397
+#, fuzzy
+msgid "Customized Permissive Types"
+msgstr "Permissive 类型"
+
+#: ../semanage/seobject.py:438
 #, python-format
 msgid "Could not set permissive domain %s (module installation failed)"
 msgstr "无法设定 permissive 域 %s（模块安装失败）"
 
-#: ../semanage/seobject.py:384
+#: ../semanage/seobject.py:444
 #, python-format
 msgid "Could not remove permissive domain %s (remove failed)"
 msgstr "无法删除 permissive 域 %s（删除操作失败）"
 
-#: ../semanage/seobject.py:410 ../semanage/seobject.py:470
-#: ../semanage/seobject.py:516 ../semanage/seobject.py:598
-#: ../semanage/seobject.py:665 ../semanage/seobject.py:723
-#: ../semanage/seobject.py:933 ../semanage/seobject.py:1506
-#: ../semanage/seobject.py:1570 ../semanage/seobject.py:1582
-#: ../semanage/seobject.py:1663 ../semanage/seobject.py:1714
+#: ../semanage/seobject.py:479 ../semanage/seobject.py:553
+#: ../semanage/seobject.py:599 ../semanage/seobject.py:696
+#: ../semanage/seobject.py:726 ../semanage/seobject.py:793
+#: ../semanage/seobject.py:850 ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1786 ../semanage/seobject.py:1849
+#: ../semanage/seobject.py:1868 ../semanage/seobject.py:1985
+#: ../semanage/seobject.py:2037
 #, python-format
 msgid "Could not create a key for %s"
 msgstr "无法为 %s 创建一个密钥"
 
-#: ../semanage/seobject.py:414 ../semanage/seobject.py:474
-#: ../semanage/seobject.py:520 ../semanage/seobject.py:526
+#: ../semanage/seobject.py:483 ../semanage/seobject.py:557
+#: ../semanage/seobject.py:603 ../semanage/seobject.py:609
 #, python-format
 msgid "Could not check if login mapping for %s is defined"
 msgstr "无法检查 %s 的登录映射已被定义"
 
-#: ../semanage/seobject.py:416
-#, python-format
-msgid "Login mapping for %s is already defined"
-msgstr "%s 的登录映射已被定义"
-
-#: ../semanage/seobject.py:421
+#: ../semanage/seobject.py:492
 #, python-format
 msgid "Linux Group %s does not exist"
 msgstr "Linux 组群 %s 不存在"
 
-#: ../semanage/seobject.py:426
+#: ../semanage/seobject.py:497
 #, python-format
 msgid "Linux User %s does not exist"
 msgstr "Linux用户 %s 不存在"
 
-#: ../semanage/seobject.py:430
+#: ../semanage/seobject.py:501
 #, python-format
 msgid "Could not create login mapping for %s"
 msgstr "无法为 %s 创建登录映射"
 
-#: ../semanage/seobject.py:434 ../semanage/seobject.py:612
+#: ../semanage/seobject.py:505 ../semanage/seobject.py:741
 #, python-format
 msgid "Could not set name for %s"
 msgstr "无法为 %s 设置名称"
 
-#: ../semanage/seobject.py:439 ../semanage/seobject.py:622
+#: ../semanage/seobject.py:510 ../semanage/seobject.py:751
 #, python-format
 msgid "Could not set MLS range for %s"
 msgstr "无法为 %s 设置 MLS 的范围"
 
-#: ../semanage/seobject.py:443
+#: ../semanage/seobject.py:514
 #, python-format
 msgid "Could not set SELinux user for %s"
 msgstr "无法为 %s 设置 SELinux 用户"
 
-#: ../semanage/seobject.py:447
+#: ../semanage/seobject.py:518
 #, python-format
 msgid "Could not add login mapping for %s"
 msgstr "无法为 %s 添加登录映射"
 
-#: ../semanage/seobject.py:459 ../semanage/seobject.py:462
-msgid "add SELinux user mapping"
-msgstr "添加 SELinux 用户映射"
-
-#: ../semanage/seobject.py:466
+#: ../semanage/seobject.py:536
 msgid "Requires seuser or serange"
 msgstr "需要 seuser 或 serange"
 
-#: ../semanage/seobject.py:476 ../semanage/seobject.py:522
+#: ../semanage/seobject.py:559 ../semanage/seobject.py:605
 #, python-format
 msgid "Login mapping for %s is not defined"
 msgstr "%s 的登录映射没有被定义"
 
-#: ../semanage/seobject.py:480
+#: ../semanage/seobject.py:563
 #, python-format
 msgid "Could not query seuser for %s"
 msgstr "无法为 %s 查询 seuser"
 
-#: ../semanage/seobject.py:496
+#: ../semanage/seobject.py:577
 #, python-format
 msgid "Could not modify login mapping for %s"
 msgstr "无法为 %s 修改登录映射"
 
-#: ../semanage/seobject.py:528
+#: ../semanage/seobject.py:611
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
 msgstr "%s 的登录映射在策略中被定义，不能被删除"
 
-#: ../semanage/seobject.py:532
+#: ../semanage/seobject.py:615
 #, python-format
 msgid "Could not delete login mapping for %s"
 msgstr "无法为 %s 删除登录映射"
 
-#: ../semanage/seobject.py:555
+#: ../semanage/seobject.py:637 ../semanage/seobject.py:655
+#: ../semanage/seobject.py:893
 msgid "Could not list login mappings"
 msgstr "无法列出登录映射"
 
-#: ../semanage/seobject.py:568 ../semanage/seobject.py:573
+#: ../semanage/seobject.py:680 ../semanage/seobject.py:685
 msgid "Login Name"
 msgstr "登录名"
 
-#: ../semanage/seobject.py:568 ../semanage/seobject.py:573
-#: ../semanage/seobject.py:782 ../semanage/seobject.py:787
+#: ../semanage/seobject.py:680 ../semanage/seobject.py:685
+#: ../semanage/seobject.py:943 ../semanage/seobject.py:948
 msgid "SELinux User"
 msgstr "SELinux 用户"
 
-#: ../semanage/seobject.py:568
+#: ../semanage/seobject.py:680
 msgid "MLS/MCS Range"
 msgstr "MLS/MCS 范围"
 
-#: ../semanage/seobject.py:594
-#, python-format
-msgid "You must add at least one role for %s"
-msgstr "您必须至少为 %s 添加一个角色"
-
-#: ../semanage/seobject.py:602 ../semanage/seobject.py:669
-#: ../semanage/seobject.py:727 ../semanage/seobject.py:733
+#: ../semanage/seobject.py:699 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:797 ../semanage/seobject.py:854
+#: ../semanage/seobject.py:860
 #, python-format
 msgid "Could not check if SELinux user %s is defined"
 msgstr "如果 SELinux 用户 %s 被定义将无法检查"
 
-#: ../semanage/seobject.py:604
-#, python-format
-msgid "SELinux user %s is already defined"
-msgstr "SELinux用户 %s 已经存在"
-
-#: ../semanage/seobject.py:608
-#, python-format
-msgid "Could not create SELinux user for %s"
-msgstr "无法为 %s 创建 SELinux 用户"
-
-#: ../semanage/seobject.py:617
-#, python-format
-msgid "Could not add role %s for %s"
-msgstr "无法添加角色 %s（为 %s）"
-
-#: ../semanage/seobject.py:626
-#, python-format
-msgid "Could not set MLS level for %s"
-msgstr "无法为 %s 设置 MLS 级别"
-
-#: ../semanage/seobject.py:629
-#, python-format
-msgid "Could not add prefix %s for %s"
-msgstr "无法添加前缀 %s（为 %s）"
-
-#: ../semanage/seobject.py:632
-#, python-format
-msgid "Could not extract key for %s"
-msgstr "无法为 %s 提取密钥"
-
-#: ../semanage/seobject.py:636
-#, python-format
-msgid "Could not add SELinux user %s"
-msgstr "无法添加 SELinux 用户 %s"
-
-#: ../semanage/seobject.py:659
-msgid "Requires prefix, roles, level or range"
-msgstr "需要前缀、角色、级别或范围"
-
-#: ../semanage/seobject.py:661
-msgid "Requires prefix or roles"
-msgstr "需要前锥或角色"
-
-#: ../semanage/seobject.py:671 ../semanage/seobject.py:729
-#, python-format
-msgid "SELinux user %s is not defined"
-msgstr "SELinux 用户 %s 没有被定义"
-
-#: ../semanage/seobject.py:675
+#: ../semanage/seobject.py:702 ../semanage/seobject.py:803
+#: ../semanage/seobject.py:866
 #, python-format
 msgid "Could not query user for %s"
 msgstr "无法为 %s 查询用户"
 
-#: ../semanage/seobject.py:702
+#: ../semanage/seobject.py:722
+#, python-format
+msgid "You must add at least one role for %s"
+msgstr "您必须至少为 %s 添加一个角色"
+
+#: ../semanage/seobject.py:737
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "无法为 %s 创建 SELinux 用户"
+
+#: ../semanage/seobject.py:746
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "无法添加角色 %s（为 %s）"
+
+#: ../semanage/seobject.py:755
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "无法为 %s 设置 MLS 级别"
+
+#: ../semanage/seobject.py:758
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "无法添加前缀 %s（为 %s）"
+
+#: ../semanage/seobject.py:761
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "无法为 %s 提取密钥"
+
+#: ../semanage/seobject.py:765
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "无法添加 SELinux 用户 %s"
+
+#: ../semanage/seobject.py:787
+msgid "Requires prefix, roles, level or range"
+msgstr "需要前缀、角色、级别或范围"
+
+#: ../semanage/seobject.py:789
+msgid "Requires prefix or roles"
+msgstr "需要前锥或角色"
+
+#: ../semanage/seobject.py:799 ../semanage/seobject.py:856
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux 用户 %s 没有被定义"
+
+#: ../semanage/seobject.py:828
 #, python-format
 msgid "Could not modify SELinux user %s"
 msgstr "无法修改 SELinux 用户 %s"
 
-#: ../semanage/seobject.py:735
+#: ../semanage/seobject.py:862
 #, python-format
 msgid "SELinux user %s is defined in policy, cannot be deleted"
 msgstr "SELinux 用户 %s 在策略中被定义，无法删除"
 
-#: ../semanage/seobject.py:739
+#: ../semanage/seobject.py:873
 #, python-format
 msgid "Could not delete SELinux user %s"
 msgstr "无法删除 SELinux 用户 %s"
 
-#: ../semanage/seobject.py:762
+#: ../semanage/seobject.py:911
 msgid "Could not list SELinux users"
 msgstr "无法列出 SELinux 用户"
 
-#: ../semanage/seobject.py:768
+#: ../semanage/seobject.py:917
 #, python-format
 msgid "Could not list roles for user %s"
 msgstr "无法为用户 %s 列出角色"
 
-#: ../semanage/seobject.py:781
+#: ../semanage/seobject.py:942
 msgid "Labeling"
 msgstr "标记"
 
-#: ../semanage/seobject.py:781
+#: ../semanage/seobject.py:942
 msgid "MLS/"
 msgstr "MLS/"
 
-#: ../semanage/seobject.py:782
+#: ../semanage/seobject.py:943
 msgid "Prefix"
 msgstr "前缀"
 
-#: ../semanage/seobject.py:782
+#: ../semanage/seobject.py:943
 msgid "MCS Level"
 msgstr "MCS 级别"
 
-#: ../semanage/seobject.py:782
+#: ../semanage/seobject.py:943
 msgid "MCS Range"
 msgstr "MCS 范围"
 
-#: ../semanage/seobject.py:782 ../semanage/seobject.py:787
+#: ../semanage/seobject.py:943 ../semanage/seobject.py:948
 msgid "SELinux Roles"
 msgstr "SELinux 角色"
 
-#: ../semanage/seobject.py:802
+#: ../semanage/seobject.py:963
 msgid "Protocol udp or tcp is required"
 msgstr "需要 udp 或 tcp 协议"
 
-#: ../semanage/seobject.py:804
+#: ../semanage/seobject.py:965
 msgid "Port is required"
 msgstr "端口是必需的"
 
-#: ../semanage/seobject.py:815
+#: ../semanage/seobject.py:975
+msgid "Invalid Port"
+msgstr ""
+
+#: ../semanage/seobject.py:979
 #, python-format
 msgid "Could not create a key for %s/%s"
 msgstr "无法为 %s/%s 创建一个密钥"
 
-#: ../semanage/seobject.py:826
+#: ../semanage/seobject.py:990
 msgid "Type is required"
 msgstr "类型是必需的"
 
-#: ../semanage/seobject.py:832 ../semanage/seobject.py:891
-#: ../semanage/seobject.py:946 ../semanage/seobject.py:952
+#: ../semanage/seobject.py:996 ../semanage/seobject.py:1055
+#: ../semanage/seobject.py:1110 ../semanage/seobject.py:1116
 #, python-format
 msgid "Could not check if port %s/%s is defined"
 msgstr "无法检查端口 %s/%s 已被定义"
 
-#: ../semanage/seobject.py:834
+#: ../semanage/seobject.py:998
 #, python-format
 msgid "Port %s/%s already defined"
 msgstr "端口 %s/%s 已经存在"
 
-#: ../semanage/seobject.py:838
+#: ../semanage/seobject.py:1002
 #, python-format
 msgid "Could not create port for %s/%s"
 msgstr "无法为 %s/%s 创建端口"
 
-#: ../semanage/seobject.py:844
+#: ../semanage/seobject.py:1008
 #, python-format
 msgid "Could not create context for %s/%s"
 msgstr "无法为 %s/%s 设置 context"
 
-#: ../semanage/seobject.py:848
+#: ../semanage/seobject.py:1012
 #, python-format
 msgid "Could not set user in port context for %s/%s"
 msgstr "无法在端口 context 中为 %s/%s 设置用户"
 
-#: ../semanage/seobject.py:852
+#: ../semanage/seobject.py:1016
 #, python-format
 msgid "Could not set role in port context for %s/%s"
 msgstr "无法在端口 context 中为 %s/%s 设置角色"
 
-#: ../semanage/seobject.py:856
+#: ../semanage/seobject.py:1020
 #, python-format
 msgid "Could not set type in port context for %s/%s"
 msgstr "无法在端口 context 中为 %s/%s 设置类型"
 
-#: ../semanage/seobject.py:861
+#: ../semanage/seobject.py:1025
 #, python-format
 msgid "Could not set mls fields in port context for %s/%s"
 msgstr "无法在端口 context 中为 %s/%s 设置 mls 项"
 
-#: ../semanage/seobject.py:865
+#: ../semanage/seobject.py:1029
 #, python-format
 msgid "Could not set port context for %s/%s"
 msgstr "无法为 %s/%s 设置端口 context"
 
-#: ../semanage/seobject.py:869
+#: ../semanage/seobject.py:1033
 #, python-format
 msgid "Could not add port %s/%s"
 msgstr "无法添加端口 %s/%s"
 
-#: ../semanage/seobject.py:883 ../semanage/seobject.py:1129
-#: ../semanage/seobject.py:1317
+#: ../semanage/seobject.py:1047 ../semanage/seobject.py:1312
+#: ../semanage/seobject.py:1508
 msgid "Requires setype or serange"
 msgstr "需要 setype 或 serange"
 
-#: ../semanage/seobject.py:885
+#: ../semanage/seobject.py:1049
 msgid "Requires setype"
 msgstr "需要 settype"
 
-#: ../semanage/seobject.py:893 ../semanage/seobject.py:948
+#: ../semanage/seobject.py:1057 ../semanage/seobject.py:1112
 #, python-format
 msgid "Port %s/%s is not defined"
 msgstr "端口 %s/%s 没有被定义"
 
-#: ../semanage/seobject.py:897
+#: ../semanage/seobject.py:1061
 #, python-format
 msgid "Could not query port %s/%s"
 msgstr "无法查询端口 %s/%s"
 
-#: ../semanage/seobject.py:908
+#: ../semanage/seobject.py:1072
 #, python-format
 msgid "Could not modify port %s/%s"
 msgstr "无法修改端口 %s/%s"
 
-#: ../semanage/seobject.py:921
+#: ../semanage/seobject.py:1085
 msgid "Could not list the ports"
 msgstr "无法列出端口"
 
-#: ../semanage/seobject.py:937
+#: ../semanage/seobject.py:1101
 #, python-format
 msgid "Could not delete the port %s"
 msgstr "无法删除端口 %s"
 
-#: ../semanage/seobject.py:954
+#: ../semanage/seobject.py:1118
 #, python-format
 msgid "Port %s/%s is defined in policy, cannot be deleted"
 msgstr "端口 %s/%s 在策略中被定义，无法删除"
 
-#: ../semanage/seobject.py:958
+#: ../semanage/seobject.py:1122
 #, python-format
 msgid "Could not delete port %s/%s"
 msgstr "无法删除端口 %s/%s"
 
-#: ../semanage/seobject.py:974 ../semanage/seobject.py:996
+#: ../semanage/seobject.py:1138 ../semanage/seobject.py:1160
 msgid "Could not list ports"
 msgstr "无法列出端口"
 
-#: ../semanage/seobject.py:1017
+#: ../semanage/seobject.py:1199
 msgid "SELinux Port Type"
 msgstr "SELinux 端口类型"
 
-#: ../semanage/seobject.py:1017
+#: ../semanage/seobject.py:1199
 msgid "Proto"
 msgstr "协议"
 
-#: ../semanage/seobject.py:1017
+#: ../semanage/seobject.py:1199
 msgid "Port Number"
 msgstr "端口号"
 
-#: ../semanage/seobject.py:1034 ../semanage/seobject.py:1116
-#: ../semanage/seobject.py:1166
+#: ../semanage/seobject.py:1218
 msgid "Node Address is required"
 msgstr "需要节点地址"
 
-#: ../semanage/seobject.py:1037 ../semanage/seobject.py:1119
-#: ../semanage/seobject.py:1169
-msgid "Node Netmask is required"
-msgstr "需要节点掩码"
-
-#: ../semanage/seobject.py:1044 ../semanage/seobject.py:1125
-#: ../semanage/seobject.py:1176
+#: ../semanage/seobject.py:1233
 msgid "Unknown or missing protocol"
 msgstr "未知或者缺少协议"
 
-#: ../semanage/seobject.py:1054 ../semanage/seobject.py:1256
-#: ../semanage/seobject.py:1445
+#: ../semanage/seobject.py:1247 ../semanage/seobject.py:1446
+#: ../semanage/seobject.py:1724
 msgid "SELinux Type is required"
 msgstr "SELinux 类型是必选的"
 
-#: ../semanage/seobject.py:1058 ../semanage/seobject.py:1133
-#: ../semanage/seobject.py:1180 ../semanage/seobject.py:1260
-#: ../semanage/seobject.py:1321 ../semanage/seobject.py:1355
-#: ../semanage/seobject.py:1449
+#: ../semanage/seobject.py:1251 ../semanage/seobject.py:1316
+#: ../semanage/seobject.py:1352 ../semanage/seobject.py:1450
+#: ../semanage/seobject.py:1512 ../semanage/seobject.py:1546
+#: ../semanage/seobject.py:1728
 #, python-format
 msgid "Could not create key for %s"
 msgstr "无法为 %s 创建密钥"
 
-#: ../semanage/seobject.py:1060 ../semanage/seobject.py:1137
-#: ../semanage/seobject.py:1184 ../semanage/seobject.py:1190
+#: ../semanage/seobject.py:1253 ../semanage/seobject.py:1320
+#: ../semanage/seobject.py:1356 ../semanage/seobject.py:1362
 #, python-format
 msgid "Could not check if addr %s is defined"
 msgstr "如果定义了 addr %s 则无法检查"
 
-#: ../semanage/seobject.py:1064
-#, python-format
-msgid "Addr %s already defined"
-msgstr "已经定义了 addr %s"
-
-#: ../semanage/seobject.py:1068
+#: ../semanage/seobject.py:1262
 #, python-format
 msgid "Could not create addr for %s"
 msgstr "无法为 %s 创建 addr"
 
-#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1275
-#: ../semanage/seobject.py:1415
+#: ../semanage/seobject.py:1268 ../semanage/seobject.py:1466
+#: ../semanage/seobject.py:1686
 #, python-format
 msgid "Could not create context for %s"
 msgstr "无法为 %s 创建 context"
 
-#: ../semanage/seobject.py:1077
+#: ../semanage/seobject.py:1272
 #, python-format
 msgid "Could not set mask for %s"
 msgstr "无法为 %s 设置掩码"
 
-#: ../semanage/seobject.py:1082
+#: ../semanage/seobject.py:1276
 #, python-format
 msgid "Could not set user in addr context for %s"
 msgstr "无法在 addr 上下文中为 %s 设置用户"
 
-#: ../semanage/seobject.py:1086
+#: ../semanage/seobject.py:1280
 #, python-format
 msgid "Could not set role in addr context for %s"
 msgstr "无法在 addr 上下文中为 %s 设置角色"
 
-#: ../semanage/seobject.py:1090
+#: ../semanage/seobject.py:1284
 #, python-format
 msgid "Could not set type in addr context for %s"
 msgstr "无法在 addr 上下文中为 %s 设置类型"
 
-#: ../semanage/seobject.py:1095
+#: ../semanage/seobject.py:1289
 #, python-format
 msgid "Could not set mls fields in addr context for %s"
 msgstr "无法在 addr 上下文中为 %s 设置 mls 字段"
 
-#: ../semanage/seobject.py:1099
+#: ../semanage/seobject.py:1293
 #, python-format
 msgid "Could not set addr context for %s"
 msgstr "无法为 %s 设置 addr 上下文"
 
-#: ../semanage/seobject.py:1103
+#: ../semanage/seobject.py:1297
 #, python-format
 msgid "Could not add addr %s"
 msgstr "无法添加 addr %s"
 
-#: ../semanage/seobject.py:1139 ../semanage/seobject.py:1186
+#: ../semanage/seobject.py:1322 ../semanage/seobject.py:1358
 #, python-format
 msgid "Addr %s is not defined"
 msgstr "没有定义 addr %s"
 
-#: ../semanage/seobject.py:1143
+#: ../semanage/seobject.py:1326
 #, python-format
 msgid "Could not query addr %s"
 msgstr "无法查询 addr %s"
 
-#: ../semanage/seobject.py:1154
+#: ../semanage/seobject.py:1336
 #, python-format
 msgid "Could not modify addr %s"
 msgstr "无法修改 addr %s"
 
-#: ../semanage/seobject.py:1192
+#: ../semanage/seobject.py:1364
 #, python-format
 msgid "Addr %s is defined in policy, cannot be deleted"
 msgstr "在策略中定义了 addr %s，无法删除"
 
-#: ../semanage/seobject.py:1196
+#: ../semanage/seobject.py:1368
 #, python-format
 msgid "Could not delete addr %s"
 msgstr "无法删除 addr %s"
 
-#: ../semanage/seobject.py:1212
+#: ../semanage/seobject.py:1380
+#, fuzzy
+msgid "Could not deleteall node mappings"
+msgstr "无法为 %s 删除登录映射"
+
+#: ../semanage/seobject.py:1394
 msgid "Could not list addrs"
 msgstr "无法列出 addr"
 
-#: ../semanage/seobject.py:1264 ../semanage/seobject.py:1325
-#: ../semanage/seobject.py:1359 ../semanage/seobject.py:1365
+#: ../semanage/seobject.py:1454 ../semanage/seobject.py:1516
+#: ../semanage/seobject.py:1550 ../semanage/seobject.py:1556
 #, python-format
 msgid "Could not check if interface %s is defined"
 msgstr "无法检查接口 %s 是否已定义"
 
-#: ../semanage/seobject.py:1266
-#, python-format
-msgid "Interface %s already defined"
-msgstr "接口 %s 已经被定义"
-
-#: ../semanage/seobject.py:1270
+#: ../semanage/seobject.py:1461
 #, python-format
 msgid "Could not create interface for %s"
 msgstr "无法为 %s 创建接口"
 
-#: ../semanage/seobject.py:1279
+#: ../semanage/seobject.py:1470
 #, python-format
 msgid "Could not set user in interface context for %s"
 msgstr "无法在接口 context 中为 %s 设置用户"
 
-#: ../semanage/seobject.py:1283
+#: ../semanage/seobject.py:1474
 #, python-format
 msgid "Could not set role in interface context for %s"
 msgstr "无法在接口 context 中为 %s 设置角色"
 
-#: ../semanage/seobject.py:1287
+#: ../semanage/seobject.py:1478
 #, python-format
 msgid "Could not set type in interface context for %s"
 msgstr "无法在接口 context 中为 %s 设置类型"
 
-#: ../semanage/seobject.py:1292
+#: ../semanage/seobject.py:1483
 #, python-format
 msgid "Could not set mls fields in interface context for %s"
 msgstr "无法在接口 context 中为 %s 设置 mls 项"
 
-#: ../semanage/seobject.py:1296
+#: ../semanage/seobject.py:1487
 #, python-format
 msgid "Could not set interface context for %s"
 msgstr "无法为 %s 设置接口 context"
 
-#: ../semanage/seobject.py:1300
+#: ../semanage/seobject.py:1491
 #, python-format
 msgid "Could not set message context for %s"
 msgstr "无法为 %s 设置信息 context"
 
-#: ../semanage/seobject.py:1304
+#: ../semanage/seobject.py:1495
 #, python-format
 msgid "Could not add interface %s"
 msgstr "无法添加接口 %s"
 
-#: ../semanage/seobject.py:1327 ../semanage/seobject.py:1361
+#: ../semanage/seobject.py:1518 ../semanage/seobject.py:1552
 #, python-format
 msgid "Interface %s is not defined"
 msgstr "接口 %s 没有被定义"
 
-#: ../semanage/seobject.py:1331
+#: ../semanage/seobject.py:1522
 #, python-format
 msgid "Could not query interface %s"
 msgstr "无法查询接口 %s"
 
-#: ../semanage/seobject.py:1342
+#: ../semanage/seobject.py:1533
 #, python-format
 msgid "Could not modify interface %s"
 msgstr "无法修改接口 %s"
 
-#: ../semanage/seobject.py:1367
+#: ../semanage/seobject.py:1558
 #, python-format
 msgid "Interface %s is defined in policy, cannot be deleted"
 msgstr "接口 %s 在策略中被定义，无法删除"
 
-#: ../semanage/seobject.py:1371
+#: ../semanage/seobject.py:1562
 #, python-format
 msgid "Could not delete interface %s"
 msgstr "无法删除接口 %s"
 
-#: ../semanage/seobject.py:1387
+#: ../semanage/seobject.py:1574
+#, fuzzy
+msgid "Could not delete all interface  mappings"
+msgstr "无法删除接口 %s"
+
+#: ../semanage/seobject.py:1588
 msgid "Could not list interfaces"
 msgstr "无法列出接口"
 
-#: ../semanage/seobject.py:1397
+#: ../semanage/seobject.py:1613
 msgid "SELinux Interface"
 msgstr "SELinux 接口"
 
-#: ../semanage/seobject.py:1397 ../semanage/seobject.py:1636
+#: ../semanage/seobject.py:1613 ../semanage/seobject.py:1936
 msgid "Context"
 msgstr "上下文"
 
-#: ../semanage/seobject.py:1421
+#: ../semanage/seobject.py:1663
+#, fuzzy, python-format
+msgid "Equivalence class for %s already exists"
+msgstr "%s 的文件 context 已经被定义"
+
+#: ../semanage/seobject.py:1669
+#, python-format
+msgid "File spec %s conflicts with equivalency rule '%s %s'"
+msgstr ""
+
+#: ../semanage/seobject.py:1678
+#, fuzzy, python-format
+msgid "Equivalence class for %s does not exists"
+msgstr "Linux用户 %s 不存在"
+
+#: ../semanage/seobject.py:1692
 #, python-format
 msgid "Could not set user in file context for %s"
 msgstr "无法在文件 context 中为 %s 设置用户"
 
-#: ../semanage/seobject.py:1425
+#: ../semanage/seobject.py:1696
 #, python-format
 msgid "Could not set role in file context for %s"
 msgstr "无法在文件 context 中为 %s 设置角色"
 
-#: ../semanage/seobject.py:1430 ../semanage/seobject.py:1478
+#: ../semanage/seobject.py:1701 ../semanage/seobject.py:1758
 #, python-format
 msgid "Could not set mls fields in file context for %s"
 msgstr "无法在文件 context 中为 %s 设置 mls 项"
 
-#: ../semanage/seobject.py:1436
+#: ../semanage/seobject.py:1707
 msgid "Invalid file specification"
 msgstr "无效文件说明"
 
-#: ../semanage/seobject.py:1453 ../semanage/seobject.py:1458
-#: ../semanage/seobject.py:1510 ../semanage/seobject.py:1586
-#: ../semanage/seobject.py:1590
+#: ../semanage/seobject.py:1709
+msgid "File specification can not include spaces"
+msgstr ""
+
+#: ../semanage/seobject.py:1714
+#, python-format
+msgid ""
+"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead"
+msgstr ""
+
+#: ../semanage/seobject.py:1732 ../semanage/seobject.py:1737
+#: ../semanage/seobject.py:1790 ../semanage/seobject.py:1872
+#: ../semanage/seobject.py:1876
 #, python-format
 msgid "Could not check if file context for %s is defined"
 msgstr "如果 %s 的文件 context 被设定，无法检查"
 
-#: ../semanage/seobject.py:1461
-#, python-format
-msgid "File context for %s already defined"
-msgstr "%s 的文件 context 已经被定义"
-
-#: ../semanage/seobject.py:1465
+#: ../semanage/seobject.py:1745
 #, python-format
 msgid "Could not create file context for %s"
 msgstr "无法为 %s 创建文件 context"
 
-#: ../semanage/seobject.py:1473
+#: ../semanage/seobject.py:1753
 #, python-format
 msgid "Could not set type in file context for %s"
 msgstr "无法在文件 context 中为 %s 设置类型"
 
-#: ../semanage/seobject.py:1481 ../semanage/seobject.py:1538
-#: ../semanage/seobject.py:1542
+#: ../semanage/seobject.py:1761 ../semanage/seobject.py:1818
+#: ../semanage/seobject.py:1822
 #, python-format
 msgid "Could not set file context for %s"
 msgstr "无法为 %s 设置文件 context"
 
-#: ../semanage/seobject.py:1487
+#: ../semanage/seobject.py:1767
 #, python-format
 msgid "Could not add file context for %s"
 msgstr "无法为 %s 添加文件 context"
 
-#: ../semanage/seobject.py:1501
+#: ../semanage/seobject.py:1781
 msgid "Requires setype, serange or seuser"
 msgstr "需要 setype、serange 或 seuser"
 
-#: ../semanage/seobject.py:1514 ../semanage/seobject.py:1594
+#: ../semanage/seobject.py:1794 ../semanage/seobject.py:1880
 #, python-format
 msgid "File context for %s is not defined"
 msgstr "%s 的文件 context 没有被定义"
 
-#: ../semanage/seobject.py:1520
+#: ../semanage/seobject.py:1800
 #, python-format
 msgid "Could not query file context for %s"
 msgstr "无法为 %s 查询文件 context"
 
-#: ../semanage/seobject.py:1546
+#: ../semanage/seobject.py:1826
 #, python-format
 msgid "Could not modify file context for %s"
 msgstr "无法为 %s 修改文件 context"
 
-#: ../semanage/seobject.py:1560
+#: ../semanage/seobject.py:1839
 msgid "Could not list the file contexts"
 msgstr "无法列出文件环境"
 
-#: ../semanage/seobject.py:1574
+#: ../semanage/seobject.py:1853
 #, python-format
 msgid "Could not delete the file context %s"
 msgstr "无法删除文件环境为 %s"
 
-#: ../semanage/seobject.py:1592
+#: ../semanage/seobject.py:1878
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
 msgstr "%s 的文件 context 已经在策略中被定义，无法删除"
 
-#: ../semanage/seobject.py:1598
+#: ../semanage/seobject.py:1884
 #, python-format
 msgid "Could not delete file context for %s"
 msgstr "无法为 %s 删除文件 context"
 
-#: ../semanage/seobject.py:1613
+#: ../semanage/seobject.py:1899
 msgid "Could not list file contexts"
 msgstr "无法列出文件 context"
 
-#: ../semanage/seobject.py:1617
+#: ../semanage/seobject.py:1903
 msgid "Could not list local file contexts"
 msgstr "无法列出本地文件上下文"
 
-#: ../semanage/seobject.py:1636
+#: ../semanage/seobject.py:1936
 msgid "SELinux fcontext"
 msgstr "SELinux 文件上下文"
 
-#: ../semanage/seobject.py:1636
+#: ../semanage/seobject.py:1936
 msgid "type"
 msgstr "类型"
 
-#: ../semanage/seobject.py:1666 ../semanage/seobject.py:1717
-#: ../semanage/seobject.py:1723
+#: ../semanage/seobject.py:1949
+msgid ""
+"\n"
+"SELinux Distribution fcontext Equivalence \n"
+msgstr ""
+
+#: ../semanage/seobject.py:1954
+#, fuzzy
+msgid ""
+"\n"
+"SELinux Local fcontext Equivalence \n"
+msgstr "SELinux 文件上下文"
+
+#: ../semanage/seobject.py:1988 ../semanage/seobject.py:2040
+#: ../semanage/seobject.py:2046
 #, python-format
 msgid "Could not check if boolean %s is defined"
 msgstr "无法检查布尔值 %s 是否已被定义"
 
-#: ../semanage/seobject.py:1668 ../semanage/seobject.py:1719
+#: ../semanage/seobject.py:1990 ../semanage/seobject.py:2042
 #, python-format
 msgid "Boolean %s is not defined"
 msgstr "布尔值 %s 未被定义"
 
-#: ../semanage/seobject.py:1672
+#: ../semanage/seobject.py:1994
 #, python-format
 msgid "Could not query file context %s"
 msgstr "无法查询文件 context %s"
 
-#: ../semanage/seobject.py:1677
+#: ../semanage/seobject.py:1999
 #, python-format
 msgid "You must specify one of the following values: %s"
 msgstr "您必需指定以下值之一：%s"
 
-#: ../semanage/seobject.py:1681
+#: ../semanage/seobject.py:2004
 #, python-format
 msgid "Could not set active value of boolean %s"
 msgstr "无法设定活跃布尔值 %s"
 
-#: ../semanage/seobject.py:1684
+#: ../semanage/seobject.py:2007
 #, python-format
 msgid "Could not modify boolean %s"
 msgstr "无法修改布尔值 %s"
 
-#: ../semanage/seobject.py:1702
+#: ../semanage/seobject.py:2025
 #, python-format
 msgid "Bad format %s: Record %s"
 msgstr "错误格式 %s：记录 %s"
 
-#: ../semanage/seobject.py:1725
+#: ../semanage/seobject.py:2048
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
 msgstr "布尔值 %s 在策略中被定义，无法删除"
 
-#: ../semanage/seobject.py:1729
+#: ../semanage/seobject.py:2052
 #, python-format
 msgid "Could not delete boolean %s"
 msgstr "不能删除布尔值 %s"
 
-#: ../semanage/seobject.py:1741 ../semanage/seobject.py:1758
+#: ../semanage/seobject.py:2064 ../semanage/seobject.py:2081
 msgid "Could not list booleans"
 msgstr "无法列出布尔值"
 
-#: ../semanage/seobject.py:1777
+#: ../semanage/seobject.py:2104
 msgid "unknown"
 msgstr "未知"
 
-#: ../semanage/seobject.py:1780
+#: ../semanage/seobject.py:2117
 msgid "off"
 msgstr "关"
 
-#: ../semanage/seobject.py:1780
+#: ../semanage/seobject.py:2117
 msgid "on"
 msgstr "开"
 
-#: ../semanage/seobject.py:1789
+#: ../semanage/seobject.py:2131
 msgid "SELinux boolean"
 msgstr "SELinux 布尔值"
 
-#: ../semanage/seobject.py:1789
+#: ../semanage/seobject.py:2131
+#, fuzzy
+msgid "State"
+msgstr "状态"
+
+#: ../semanage/seobject.py:2131
+msgid "Default"
+msgstr ""
+
+#: ../semanage/seobject.py:2131
 msgid "Description"
 msgstr "描述"
 
-#: ../newrole/newrole.c:198
+#: ../newrole/newrole.c:201
 #, c-format
 msgid "failed to set PAM_TTY\n"
 msgstr "设置 PAM_TTY 失败\n"
 
-#: ../newrole/newrole.c:287
+#: ../newrole/newrole.c:290
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
 msgstr "newrole: 服务名配置散列溢出\n"
 
-#: ../newrole/newrole.c:297
+#: ../newrole/newrole.c:300
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
 msgstr "newrole:  %s: 错误发生在第 %lu 行。\n"
 
-#: ../newrole/newrole.c:436
+#: ../newrole/newrole.c:439
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
 msgstr "无法在 passwd 文件中找到有效的项。\n"
 
-#: ../newrole/newrole.c:447
+#: ../newrole/newrole.c:450
 #, c-format
 msgid "Out of memory!\n"
 msgstr "无可用的内存！\n"
 
-#: ../newrole/newrole.c:452
+#: ../newrole/newrole.c:455
 #, c-format
 msgid "Error!  Shell is not valid.\n"
 msgstr "错误！Shell 无效。\n"
 
-#: ../newrole/newrole.c:509
+#: ../newrole/newrole.c:512
 #, c-format
 msgid "Unable to clear environment\n"
 msgstr "无法清除系统环境\n"
 
-#: ../newrole/newrole.c:556 ../newrole/newrole.c:634
-#, fuzzy, c-format
-msgid "Error initializing capabilities, aborting.\n"
-msgstr "初始化能力（capability）错误，中止。\n"
-
-#: ../newrole/newrole.c:564 ../newrole/newrole.c:640
-#, c-format
-msgid "Error setting capabilities, aborting\n"
-msgstr "初始化能力（capability）错误，中止。\n"
-
-#: ../newrole/newrole.c:570
-#, c-format
-msgid "Error setting KEEPCAPS, aborting\n"
-msgstr "设置 KEEPCAPS 错误，中止\n"
-
-#: ../newrole/newrole.c:578 ../newrole/newrole.c:652
-#, c-format
-msgid "Error dropping capabilities, aborting\n"
-msgstr "删除能力（drop capability）错误，中止\n"
-
-#: ../newrole/newrole.c:584 ../newrole/newrole.c:683
+#: ../newrole/newrole.c:556 ../newrole/newrole.c:587 ../newrole/newrole.c:617
 #, c-format
 msgid "Error changing uid, aborting.\n"
 msgstr "改变 uid 错误，中止。\n"
 
-#: ../newrole/newrole.c:590 ../newrole/newrole.c:646 ../newrole/newrole.c:678
+#: ../newrole/newrole.c:612
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
 msgstr "重新设置 KEEPCAPS 错误，中止\n"
 
-#: ../newrole/newrole.c:597
-#, c-format
-msgid "Error dropping SETUID capability, aborting\n"
-msgstr "删除 SETUID 能力错误，中止\n"
-
-#: ../newrole/newrole.c:602 ../newrole/newrole.c:657
-#, c-format
-msgid "Error freeing caps\n"
-msgstr "freeing caps 错误\n"
-
-#: ../newrole/newrole.c:701
+#: ../newrole/newrole.c:635
 #, c-format
 msgid "Error connecting to audit system.\n"
 msgstr "连接到审核系统错误。\n"
 
-#: ../newrole/newrole.c:707
+#: ../newrole/newrole.c:641
 #, c-format
 msgid "Error allocating memory.\n"
 msgstr "分配内存时出错。\n"
 
-#: ../newrole/newrole.c:714
+#: ../newrole/newrole.c:648
 #, c-format
 msgid "Error sending audit message.\n"
 msgstr "发送审计信息时出错。\n"
 
-#: ../newrole/newrole.c:758 ../newrole/newrole.c:1122
+#: ../newrole/newrole.c:692 ../newrole/newrole.c:1059
 #, c-format
 msgid "Could not determine enforcing mode.\n"
 msgstr "不能决定强制模式。\n"
 
-#: ../newrole/newrole.c:765
+#: ../newrole/newrole.c:699
 #, c-format
 msgid "Error!  Could not open %s.\n"
 msgstr "错误！无法打开 %s。\n"
 
-#: ../newrole/newrole.c:771
+#: ../newrole/newrole.c:705
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
 msgstr "%s!  无法为 %s 获得当前的 context，没有重新标记（relabel）tty。\n"
 
-#: ../newrole/newrole.c:781
+#: ../newrole/newrole.c:715
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
 msgstr "%s! 无法为 %s 获得新 context，不能重新标记 tty。\n"
 
-#: ../newrole/newrole.c:791
+#: ../newrole/newrole.c:725
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
 msgstr "%s!  无法为 %s 设置新 context\n"
 
-#: ../newrole/newrole.c:838
+#: ../newrole/newrole.c:772
 #, c-format
 msgid "%s changed labels.\n"
 msgstr "%s 改变的标记。\n"
 
-#: ../newrole/newrole.c:844
+#: ../newrole/newrole.c:778
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
 msgstr "警告！无法为 %s 恢复上下文\n"
 
-#: ../newrole/newrole.c:901
+#: ../newrole/newrole.c:835
 #, c-format
 msgid "Error: multiple roles specified\n"
 msgstr "错误：指定了多个角色\n"
 
-#: ../newrole/newrole.c:909
+#: ../newrole/newrole.c:843
 #, c-format
 msgid "Error: multiple types specified\n"
 msgstr "错误：指定了多个类型\n"
 
-#: ../newrole/newrole.c:916
+#: ../newrole/newrole.c:850
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
 msgstr "-l 可以被有 MLS 支持的 SELinux 使用。\n"
 
-#: ../newrole/newrole.c:921
+#: ../newrole/newrole.c:855
 #, c-format
 msgid "Error: multiple levels specified\n"
 msgstr "错误：多个级别被指定\n"
 
-#: ../newrole/newrole.c:931
+#: ../newrole/newrole.c:865
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
 msgstr "错误：您不能在不安全的终端更改级别\n"
 
-#: ../newrole/newrole.c:957
+#: ../newrole/newrole.c:891
 #, c-format
 msgid "Couldn't get default type.\n"
 msgstr "无法获得默认的类型。\n"
 
-#: ../newrole/newrole.c:967
+#: ../newrole/newrole.c:901
 #, c-format
 msgid "failed to get new context.\n"
 msgstr "获得新 context 失败。\n"
 
-#: ../newrole/newrole.c:974
+#: ../newrole/newrole.c:908
 #, c-format
 msgid "failed to set new role %s\n"
 msgstr "设置新角色 %s 失败\n"
 
-#: ../newrole/newrole.c:981
+#: ../newrole/newrole.c:915
 #, c-format
 msgid "failed to set new type %s\n"
 msgstr "设置新类型 %s 失败\n"
 
-#: ../newrole/newrole.c:991
+#: ../newrole/newrole.c:925
 #, c-format
 msgid "failed to build new range with level %s\n"
 msgstr "创建有级别 %s 的新范围失败\n"
 
-#: ../newrole/newrole.c:996
+#: ../newrole/newrole.c:930
 #, c-format
 msgid "failed to set new range %s\n"
 msgstr "设定新范围 %s 失败\n"
 
-#: ../newrole/newrole.c:1004
+#: ../newrole/newrole.c:938
 #, c-format
 msgid "failed to convert new context to string\n"
 msgstr "把新 context 转换为字符串失败\n"
 
-#: ../newrole/newrole.c:1009
+#: ../newrole/newrole.c:943
 #, c-format
 msgid "%s is not a valid context\n"
 msgstr "%s 不是一个有效的 context\n"
 
-#: ../newrole/newrole.c:1016
+#: ../newrole/newrole.c:950
 #, c-format
 msgid "Unable to allocate memory for new_context"
 msgstr "无法为 new_context 分配内存"
 
-#: ../newrole/newrole.c:1042
+#: ../newrole/newrole.c:976
 #, c-format
 msgid "Unable to obtain empty signal set\n"
 msgstr "无法获得空信号\n"
 
-#: ../newrole/newrole.c:1050
+#: ../newrole/newrole.c:984
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
 msgstr "无法设置 SIGHUP handler\n"
 
-#: ../newrole/newrole.c:1116
+#: ../newrole/newrole.c:1053
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr "newrole 只可以在一个 SELinux 内核中使用。\n"
 
-#: ../newrole/newrole.c:1133
+#: ../newrole/newrole.c:1070
 #, c-format
 msgid "failed to get old_context.\n"
 msgstr "获得 old_context 失败。\n"
 
-#: ../newrole/newrole.c:1140
+#: ../newrole/newrole.c:1077
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
 msgstr "错误！不能检索 tty 信息。\n"
 
-#: ../newrole/newrole.c:1161
+#: ../newrole/newrole.c:1098
 #, c-format
 msgid "error on reading PAM service configuration.\n"
 msgstr "读取 PAM 服务配置时出错。\n"
 
-#: ../newrole/newrole.c:1196
+#: ../newrole/newrole.c:1133
 #, c-format
 msgid "newrole: incorrect password for %s\n"
 msgstr "newrole：%s 的密码不正确\n"
 
-#: ../newrole/newrole.c:1223
+#: ../newrole/newrole.c:1160
 #, c-format
 msgid "newrole: failure forking: %s"
 msgstr "newrole：fork 失败：%s"
 
-#: ../newrole/newrole.c:1226 ../newrole/newrole.c:1249
+#: ../newrole/newrole.c:1163 ../newrole/newrole.c:1186
 #, c-format
 msgid "Unable to restore tty label...\n"
 msgstr "无法恢复 tty label...\n"
 
-#: ../newrole/newrole.c:1228 ../newrole/newrole.c:1255
+#: ../newrole/newrole.c:1165 ../newrole/newrole.c:1192
 #, c-format
 msgid "Failed to close tty properly\n"
 msgstr "关闭 tty 失败\n"
 
-#: ../newrole/newrole.c:1287
+#: ../newrole/newrole.c:1224
 #, c-format
 msgid "Could not close descriptors.\n"
 msgstr "无法关闭 descriptors。\n"
 
-#: ../newrole/newrole.c:1314
+#: ../newrole/newrole.c:1251
 #, c-format
 msgid "Error allocating shell's argv0.\n"
 msgstr "分配 shell 的 argv0 时出错。\n"
 
-#: ../newrole/newrole.c:1346
+#: ../newrole/newrole.c:1287
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
 msgstr "无法恢复系统环境，中止\n"
 
-#: ../newrole/newrole.c:1357
+#: ../newrole/newrole.c:1298
 msgid "failed to exec shell\n"
 msgstr "执行 shell 失败\n"
 
@@ -1277,6 +1282,65 @@ msgid "Options Error %s "
 msgstr "选项错误 %s "
 
 #~ msgid ""
+#~ "Unable to open %s: translations not supported on non-MLS machines: %s"
+#~ msgstr "无法打开 %s：在非 MLS 机器上不支持的转换：%s"
+
+#~ msgid "Level"
+#~ msgstr "级别"
+
+#~ msgid "Translation"
+#~ msgstr "转换"
+
+#~ msgid "Translations can not contain spaces '%s' "
+#~ msgstr "转换不能包括空格 '%s' "
+
+#~ msgid "Invalid Level '%s' "
+#~ msgstr "无效级别 '%s' "
+
+#~ msgid "%s already defined in translations"
+#~ msgstr "%s 已经在转换中定义"
+
+#~ msgid "%s not defined in translations"
+#~ msgstr "%s 没有在转换中定义"
+
+#~ msgid "Login mapping for %s is already defined"
+#~ msgstr "%s 的登录映射已被定义"
+
+#~ msgid "add SELinux user mapping"
+#~ msgstr "添加 SELinux 用户映射"
+
+#~ msgid "SELinux user %s is already defined"
+#~ msgstr "SELinux用户 %s 已经存在"
+
+#~ msgid "Node Netmask is required"
+#~ msgstr "需要节点掩码"
+
+#~ msgid "Addr %s already defined"
+#~ msgstr "已经定义了 addr %s"
+
+#~ msgid "Interface %s already defined"
+#~ msgstr "接口 %s 已经被定义"
+
+#, fuzzy
+#~ msgid "Error initializing capabilities, aborting.\n"
+#~ msgstr "初始化能力（capability）错误，中止。\n"
+
+#~ msgid "Error setting capabilities, aborting\n"
+#~ msgstr "初始化能力（capability）错误，中止。\n"
+
+#~ msgid "Error setting KEEPCAPS, aborting\n"
+#~ msgstr "设置 KEEPCAPS 错误，中止\n"
+
+#~ msgid "Error dropping capabilities, aborting\n"
+#~ msgstr "删除能力（drop capability）错误，中止\n"
+
+#~ msgid "Error dropping SETUID capability, aborting\n"
+#~ msgstr "删除 SETUID 能力错误，中止\n"
+
+#~ msgid "Error freeing caps\n"
+#~ msgstr "freeing caps 错误\n"
+
+#~ msgid ""
 #~ "\n"
 #~ "\n"
 #~ "semodule -i %s\n"
@@ -1352,12 +1416,6 @@ msgstr "选项错误 %s "
 
 #~ msgid "Policy Module"
 #~ msgstr "策略模块"
-
-#~ msgid "Module Name"
-#~ msgstr "模块名称"
-
-#~ msgid "Version"
-#~ msgstr "版本"
 
 #~ msgid "Disable Audit"
 #~ msgstr "禁用审计"
@@ -2643,12 +2701,6 @@ msgstr "选项错误 %s "
 
 #~ msgid "Enforcing"
 #~ msgstr "强制"
-
-#~ msgid "Disabled"
-#~ msgstr "禁用"
-
-#~ msgid "Status"
-#~ msgstr "状态"
 
 #~ msgid ""
 #~ "Changing the policy type will cause a relabel of the entire file system "

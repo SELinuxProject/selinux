@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: policycoreutils\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-24 10:53-0400\n"
+"POT-Creation-Date: 2012-03-27 10:49-0400\n"
 "PO-Revision-Date: 2007-01-23 17:22+0300\n"
 "Last-Translator: Maxim Dziumanenko <dziumanenko@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,7 +26,7 @@ msgstr ""
 "  де: <сценарій> - назва сценарію ініціалізації для запуску,\n"
 "         <аргументи ...> - аргументи для цього сценарію."
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1187
+#: ../run_init/run_init.c:126 ../newrole/newrole.c:1124
 #, c-format
 msgid "failed to initialize PAM\n"
 msgstr "не вдалося ініціалізувати PAM\n"
@@ -35,16 +36,16 @@ msgstr "не вдалося ініціалізувати PAM\n"
 msgid "failed to get account information\n"
 msgstr "не вдається отримати інформацію про обліковий рахунок\n"
 
-#: ../run_init/run_init.c:162 ../newrole/newrole.c:338
+#: ../run_init/run_init.c:162 ../newrole/newrole.c:341
 msgid "Password:"
 msgstr "Пароль:"
 
-#: ../run_init/run_init.c:197 ../newrole/newrole.c:363
+#: ../run_init/run_init.c:197 ../newrole/newrole.c:366
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
 msgstr "Не вдається знайти елемент у тіньовому файлі паролів.\n"
 
-#: ../run_init/run_init.c:203 ../newrole/newrole.c:370
+#: ../run_init/run_init.c:203 ../newrole/newrole.c:373
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
 msgstr "getpass не вдається відкрити /dev/tty\n"
@@ -74,1117 +75,1114 @@ msgstr "run_init може використовуватись лише для я�
 msgid "authentication failed.\n"
 msgstr "помилка аутентифікації.\n"
 
-#: ../run_init/run_init.c:405 ../newrole/newrole.c:1321
+#: ../run_init/run_init.c:405 ../newrole/newrole.c:1258
 #, c-format
 msgid "Could not set exec context to %s.\n"
 msgstr "Не вдається виконати контекст у %s.\n"
 
-#: ../audit2allow/audit2allow:217
+#: ../audit2allow/audit2allow:230
 #, fuzzy
 msgid "******************** IMPORTANT ***********************\n"
 msgstr ""
 "\n"
 "******************** ВАЖЛИВО ***********************\n"
 
-#: ../audit2allow/audit2allow:218
+#: ../audit2allow/audit2allow:231
 msgid "To make this policy package active, execute:"
 msgstr ""
 
-#: ../semanage/seobject.py:48
+#: ../semanage/seobject.py:143 ../semanage/seobject.py:147
+msgid "global"
+msgstr ""
+
+#: ../semanage/seobject.py:222
 #, fuzzy
 msgid "Could not create semanage handle"
 msgstr "Не вдається запустити транзакцію semanage"
 
-#: ../semanage/seobject.py:55
+#: ../semanage/seobject.py:230
 msgid "SELinux policy is not managed or store cannot be accessed."
 msgstr "Політика SELinux не є призначеною або немає доступу до сховища."
 
-#: ../semanage/seobject.py:60
+#: ../semanage/seobject.py:235
 msgid "Cannot read policy store."
 msgstr "Не вдається прочитати сховище політики."
 
-#: ../semanage/seobject.py:65
+#: ../semanage/seobject.py:240
 msgid "Could not establish semanage connection"
 msgstr "Не вдається встановити з'єднання з semanage"
 
-#: ../semanage/seobject.py:70
+#: ../semanage/seobject.py:245
 #, fuzzy
 msgid "Could not test MLS enabled status"
 msgstr "Не вдається встановити діапазон MLS для %s"
 
-#: ../semanage/seobject.py:142 ../semanage/seobject.py:146
-msgid "global"
-msgstr ""
-
-#: ../semanage/seobject.py:206
-#, fuzzy, python-format
-msgid "Unable to open %s: translations not supported on non-MLS machines: %s"
-msgstr ""
-"Не вдається відкрити %s: трансляції не підтримуються на не-MLS комп'ютерах"
-
-#: ../semanage/seobject.py:239
-msgid "Level"
-msgstr ""
-
-#: ../semanage/seobject.py:239
-msgid "Translation"
-msgstr ""
-
-#: ../semanage/seobject.py:247 ../semanage/seobject.py:261
-#, python-format
-msgid "Translations can not contain spaces '%s' "
-msgstr "Трансляції не можуть містити пробіли '%s' "
-
-#: ../semanage/seobject.py:250
-#, python-format
-msgid "Invalid Level '%s' "
-msgstr "Неправильний рівень '%s' "
-
-#: ../semanage/seobject.py:253
-#, python-format
-msgid "%s already defined in translations"
-msgstr "%s вже визначено у трансляції"
-
-#: ../semanage/seobject.py:265
-#, python-format
-msgid "%s not defined in translations"
-msgstr "%s не визначено у трансляції"
-
-#: ../semanage/seobject.py:290
+#: ../semanage/seobject.py:251 ../semanage/seobject.py:266
 msgid "Not yet implemented"
 msgstr ""
 
-#: ../semanage/seobject.py:294
+#: ../semanage/seobject.py:255
 msgid "Semanage transaction already in progress"
 msgstr ""
 
-#: ../semanage/seobject.py:303
+#: ../semanage/seobject.py:264
 msgid "Could not start semanage transaction"
 msgstr "Не вдається запустити транзакцію semanage"
 
-#: ../semanage/seobject.py:309
+#: ../semanage/seobject.py:274
 #, fuzzy
 msgid "Could not commit semanage transaction"
 msgstr "Не вдається запустити транзакцію semanage"
 
-#: ../semanage/seobject.py:313
+#: ../semanage/seobject.py:279
 msgid "Semanage transaction not in progress"
 msgstr ""
 
-#: ../semanage/seobject.py:325
+#: ../semanage/seobject.py:291 ../semanage/seobject.py:371
 #, fuzzy
 msgid "Could not list SELinux modules"
 msgstr "Не вдається отримати список користувачів SELinux"
 
-#: ../semanage/seobject.py:336
-msgid "Permissive Types"
+#: ../semanage/seobject.py:304
+msgid "Modules Name"
 msgstr ""
 
-#: ../semanage/seobject.py:378
+#: ../semanage/seobject.py:304
+msgid "Version"
+msgstr ""
+
+#: ../semanage/seobject.py:307
+msgid "Disabled"
+msgstr ""
+
+#: ../semanage/seobject.py:322
+#, python-format
+msgid "Could not disable module %s (remove failed)"
+msgstr ""
+
+#: ../semanage/seobject.py:333
+#, fuzzy, python-format
+msgid "Could not enable module %s (remove failed)"
+msgstr "Не вдається додати роль %s для %s"
+
+#: ../semanage/seobject.py:348
+#, python-format
+msgid "Could not remove module %s (remove failed)"
+msgstr ""
+
+#: ../semanage/seobject.py:358
+msgid "dontaudit requires either 'on' or 'off'"
+msgstr ""
+
+#: ../semanage/seobject.py:387
+msgid "Builtin Permissive Types"
+msgstr ""
+
+#: ../semanage/seobject.py:397
+msgid "Customized Permissive Types"
+msgstr ""
+
+#: ../semanage/seobject.py:438
 #, python-format
 msgid "Could not set permissive domain %s (module installation failed)"
 msgstr ""
 
-#: ../semanage/seobject.py:384
+#: ../semanage/seobject.py:444
 #, python-format
 msgid "Could not remove permissive domain %s (remove failed)"
 msgstr ""
 
-#: ../semanage/seobject.py:410 ../semanage/seobject.py:470
-#: ../semanage/seobject.py:516 ../semanage/seobject.py:598
-#: ../semanage/seobject.py:665 ../semanage/seobject.py:723
-#: ../semanage/seobject.py:933 ../semanage/seobject.py:1506
-#: ../semanage/seobject.py:1570 ../semanage/seobject.py:1582
-#: ../semanage/seobject.py:1663 ../semanage/seobject.py:1714
+#: ../semanage/seobject.py:479 ../semanage/seobject.py:553
+#: ../semanage/seobject.py:599 ../semanage/seobject.py:696
+#: ../semanage/seobject.py:726 ../semanage/seobject.py:793
+#: ../semanage/seobject.py:850 ../semanage/seobject.py:1097
+#: ../semanage/seobject.py:1786 ../semanage/seobject.py:1849
+#: ../semanage/seobject.py:1868 ../semanage/seobject.py:1985
+#: ../semanage/seobject.py:2037
 #, python-format
 msgid "Could not create a key for %s"
 msgstr "Не вдається створити ключ для %s"
 
-#: ../semanage/seobject.py:414 ../semanage/seobject.py:474
-#: ../semanage/seobject.py:520 ../semanage/seobject.py:526
+#: ../semanage/seobject.py:483 ../semanage/seobject.py:557
+#: ../semanage/seobject.py:603 ../semanage/seobject.py:609
 #, python-format
 msgid "Could not check if login mapping for %s is defined"
 msgstr "Не вдається перевірити чи визначено mapping входу для %s "
 
-#: ../semanage/seobject.py:416
-#, python-format
-msgid "Login mapping for %s is already defined"
-msgstr "mapping входу для %s вже визначено"
-
-#: ../semanage/seobject.py:421
+#: ../semanage/seobject.py:492
 #, fuzzy, python-format
 msgid "Linux Group %s does not exist"
 msgstr "Користувач %s не існує у Linux"
 
-#: ../semanage/seobject.py:426
+#: ../semanage/seobject.py:497
 #, python-format
 msgid "Linux User %s does not exist"
 msgstr "Користувач %s не існує у Linux"
 
-#: ../semanage/seobject.py:430
+#: ../semanage/seobject.py:501
 #, python-format
 msgid "Could not create login mapping for %s"
 msgstr "Не вдається створити mapping входу для %s"
 
-#: ../semanage/seobject.py:434 ../semanage/seobject.py:612
+#: ../semanage/seobject.py:505 ../semanage/seobject.py:741
 #, python-format
 msgid "Could not set name for %s"
 msgstr "Не вдається встановити назву %s"
 
-#: ../semanage/seobject.py:439 ../semanage/seobject.py:622
+#: ../semanage/seobject.py:510 ../semanage/seobject.py:751
 #, python-format
 msgid "Could not set MLS range for %s"
 msgstr "Не вдається встановити діапазон MLS для %s"
 
-#: ../semanage/seobject.py:443
+#: ../semanage/seobject.py:514
 #, python-format
 msgid "Could not set SELinux user for %s"
 msgstr "Не вдається встановити користувача SELinux для %s"
 
-#: ../semanage/seobject.py:447
+#: ../semanage/seobject.py:518
 #, python-format
 msgid "Could not add login mapping for %s"
 msgstr "Не вдається додати mapping входу для %s"
 
-#: ../semanage/seobject.py:459 ../semanage/seobject.py:462
-#, fuzzy
-msgid "add SELinux user mapping"
-msgstr "Не вдається додати користувача SELinux %s"
-
-#: ../semanage/seobject.py:466
+#: ../semanage/seobject.py:536
 msgid "Requires seuser or serange"
 msgstr "Потрібно seuser або serange"
 
-#: ../semanage/seobject.py:476 ../semanage/seobject.py:522
+#: ../semanage/seobject.py:559 ../semanage/seobject.py:605
 #, python-format
 msgid "Login mapping for %s is not defined"
 msgstr "mapping входу для %s не визначено"
 
-#: ../semanage/seobject.py:480
+#: ../semanage/seobject.py:563
 #, python-format
 msgid "Could not query seuser for %s"
 msgstr "Не вдається запитати seuser для %s"
 
-#: ../semanage/seobject.py:496
+#: ../semanage/seobject.py:577
 #, python-format
 msgid "Could not modify login mapping for %s"
 msgstr "Не вдається змінити mapping входу для %s"
 
-#: ../semanage/seobject.py:528
+#: ../semanage/seobject.py:611
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
 msgstr "mapping входу для %s визначено у політиці, не вдається видалити"
 
-#: ../semanage/seobject.py:532
+#: ../semanage/seobject.py:615
 #, python-format
 msgid "Could not delete login mapping for %s"
 msgstr "Не вдається видалити mapping входу для %s"
 
-#: ../semanage/seobject.py:555
+#: ../semanage/seobject.py:637 ../semanage/seobject.py:655
+#: ../semanage/seobject.py:893
 msgid "Could not list login mappings"
 msgstr "Не вдається вивести mapping входу"
 
-#: ../semanage/seobject.py:568 ../semanage/seobject.py:573
+#: ../semanage/seobject.py:680 ../semanage/seobject.py:685
 msgid "Login Name"
 msgstr ""
 
-#: ../semanage/seobject.py:568 ../semanage/seobject.py:573
-#: ../semanage/seobject.py:782 ../semanage/seobject.py:787
+#: ../semanage/seobject.py:680 ../semanage/seobject.py:685
+#: ../semanage/seobject.py:943 ../semanage/seobject.py:948
 #, fuzzy
 msgid "SELinux User"
 msgstr "Потрібно вказати тип SELinux"
 
-#: ../semanage/seobject.py:568
+#: ../semanage/seobject.py:680
 msgid "MLS/MCS Range"
 msgstr ""
 
-#: ../semanage/seobject.py:594
-#, fuzzy, python-format
-msgid "You must add at least one role for %s"
-msgstr "Не вдається додати контекст файлу для %s"
-
-#: ../semanage/seobject.py:602 ../semanage/seobject.py:669
-#: ../semanage/seobject.py:727 ../semanage/seobject.py:733
+#: ../semanage/seobject.py:699 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:797 ../semanage/seobject.py:854
+#: ../semanage/seobject.py:860
 #, python-format
 msgid "Could not check if SELinux user %s is defined"
 msgstr "Не вдається перевірити чи визначений користувач SELinux %s"
 
-#: ../semanage/seobject.py:604
-#, python-format
-msgid "SELinux user %s is already defined"
-msgstr "Користувач SELinux %s вже визначений"
-
-#: ../semanage/seobject.py:608
-#, python-format
-msgid "Could not create SELinux user for %s"
-msgstr "Не вдається створити користувача SELinux для %s"
-
-#: ../semanage/seobject.py:617
-#, python-format
-msgid "Could not add role %s for %s"
-msgstr "Не вдається додати роль %s для %s"
-
-#: ../semanage/seobject.py:626
-#, python-format
-msgid "Could not set MLS level for %s"
-msgstr "Не вдається встановити рівень MLS для %s"
-
-#: ../semanage/seobject.py:629
-#, python-format
-msgid "Could not add prefix %s for %s"
-msgstr "Не вдається додати префікс %s для %s"
-
-#: ../semanage/seobject.py:632
-#, python-format
-msgid "Could not extract key for %s"
-msgstr "Не вдається витягнути ключ для %s"
-
-#: ../semanage/seobject.py:636
-#, python-format
-msgid "Could not add SELinux user %s"
-msgstr "Не вдається додати користувача SELinux %s"
-
-#: ../semanage/seobject.py:659
-msgid "Requires prefix, roles, level or range"
-msgstr "Треба вказати префікс, ролі, рівень або range"
-
-#: ../semanage/seobject.py:661
-msgid "Requires prefix or roles"
-msgstr "Потрібен префікс або роль"
-
-#: ../semanage/seobject.py:671 ../semanage/seobject.py:729
-#, python-format
-msgid "SELinux user %s is not defined"
-msgstr "Користувач SELinux  %s не визначений"
-
-#: ../semanage/seobject.py:675
+#: ../semanage/seobject.py:702 ../semanage/seobject.py:803
+#: ../semanage/seobject.py:866
 #, python-format
 msgid "Could not query user for %s"
 msgstr "Не вдається запитати користувача для %s"
 
-#: ../semanage/seobject.py:702
+#: ../semanage/seobject.py:722
+#, fuzzy, python-format
+msgid "You must add at least one role for %s"
+msgstr "Не вдається додати контекст файлу для %s"
+
+#: ../semanage/seobject.py:737
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "Не вдається створити користувача SELinux для %s"
+
+#: ../semanage/seobject.py:746
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "Не вдається додати роль %s для %s"
+
+#: ../semanage/seobject.py:755
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "Не вдається встановити рівень MLS для %s"
+
+#: ../semanage/seobject.py:758
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "Не вдається додати префікс %s для %s"
+
+#: ../semanage/seobject.py:761
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "Не вдається витягнути ключ для %s"
+
+#: ../semanage/seobject.py:765
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "Не вдається додати користувача SELinux %s"
+
+#: ../semanage/seobject.py:787
+msgid "Requires prefix, roles, level or range"
+msgstr "Треба вказати префікс, ролі, рівень або range"
+
+#: ../semanage/seobject.py:789
+msgid "Requires prefix or roles"
+msgstr "Потрібен префікс або роль"
+
+#: ../semanage/seobject.py:799 ../semanage/seobject.py:856
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "Користувач SELinux  %s не визначений"
+
+#: ../semanage/seobject.py:828
 #, python-format
 msgid "Could not modify SELinux user %s"
 msgstr "Не вдається змінити користувача SELinux %s"
 
-#: ../semanage/seobject.py:735
+#: ../semanage/seobject.py:862
 #, python-format
 msgid "SELinux user %s is defined in policy, cannot be deleted"
 msgstr "Користувач SELinux %s визначено у політиці, не може бути видалений"
 
-#: ../semanage/seobject.py:739
+#: ../semanage/seobject.py:873
 #, python-format
 msgid "Could not delete SELinux user %s"
 msgstr "Не вдається видалити користувача SELinux %s"
 
-#: ../semanage/seobject.py:762
+#: ../semanage/seobject.py:911
 msgid "Could not list SELinux users"
 msgstr "Не вдається отримати список користувачів SELinux"
 
-#: ../semanage/seobject.py:768
+#: ../semanage/seobject.py:917
 #, python-format
 msgid "Could not list roles for user %s"
 msgstr "Не вдається отримати список ролей користувача %s"
 
-#: ../semanage/seobject.py:781
+#: ../semanage/seobject.py:942
 msgid "Labeling"
 msgstr ""
 
-#: ../semanage/seobject.py:781
+#: ../semanage/seobject.py:942
 msgid "MLS/"
 msgstr ""
 
-#: ../semanage/seobject.py:782
+#: ../semanage/seobject.py:943
 msgid "Prefix"
 msgstr ""
 
-#: ../semanage/seobject.py:782
+#: ../semanage/seobject.py:943
 msgid "MCS Level"
 msgstr ""
 
-#: ../semanage/seobject.py:782
+#: ../semanage/seobject.py:943
 msgid "MCS Range"
 msgstr ""
 
-#: ../semanage/seobject.py:782 ../semanage/seobject.py:787
+#: ../semanage/seobject.py:943 ../semanage/seobject.py:948
 msgid "SELinux Roles"
 msgstr ""
 
-#: ../semanage/seobject.py:802
+#: ../semanage/seobject.py:963
 msgid "Protocol udp or tcp is required"
 msgstr "Потрібен протокол udp чи tcp"
 
-#: ../semanage/seobject.py:804
+#: ../semanage/seobject.py:965
 msgid "Port is required"
 msgstr "Необхідно вказати порт"
 
-#: ../semanage/seobject.py:815
+#: ../semanage/seobject.py:975
+#, fuzzy
+msgid "Invalid Port"
+msgstr "Неправильний префікс %s"
+
+#: ../semanage/seobject.py:979
 #, python-format
 msgid "Could not create a key for %s/%s"
 msgstr "Не вдається створити ключ для %s/%s"
 
-#: ../semanage/seobject.py:826
+#: ../semanage/seobject.py:990
 msgid "Type is required"
 msgstr "Необхідно вказати тип"
 
-#: ../semanage/seobject.py:832 ../semanage/seobject.py:891
-#: ../semanage/seobject.py:946 ../semanage/seobject.py:952
+#: ../semanage/seobject.py:996 ../semanage/seobject.py:1055
+#: ../semanage/seobject.py:1110 ../semanage/seobject.py:1116
 #, python-format
 msgid "Could not check if port %s/%s is defined"
 msgstr "Не вдається чи порт визначено %s/%s"
 
-#: ../semanage/seobject.py:834
+#: ../semanage/seobject.py:998
 #, python-format
 msgid "Port %s/%s already defined"
 msgstr "Порт %s/%s вже визначено"
 
-#: ../semanage/seobject.py:838
+#: ../semanage/seobject.py:1002
 #, python-format
 msgid "Could not create port for %s/%s"
 msgstr "Не вдається створити порт для %s/%s"
 
-#: ../semanage/seobject.py:844
+#: ../semanage/seobject.py:1008
 #, python-format
 msgid "Could not create context for %s/%s"
 msgstr "Не вдається створити контекст для %s/%s"
 
-#: ../semanage/seobject.py:848
+#: ../semanage/seobject.py:1012
 #, python-format
 msgid "Could not set user in port context for %s/%s"
 msgstr "Не вдається вказати користувача у контексті порту для %s/%s"
 
-#: ../semanage/seobject.py:852
+#: ../semanage/seobject.py:1016
 #, python-format
 msgid "Could not set role in port context for %s/%s"
 msgstr "Не вдається встановити роль у контексті порту для %s/%s"
 
-#: ../semanage/seobject.py:856
+#: ../semanage/seobject.py:1020
 #, python-format
 msgid "Could not set type in port context for %s/%s"
 msgstr "Не вдається встановити тип у контексті порту для %s/%s"
 
-#: ../semanage/seobject.py:861
+#: ../semanage/seobject.py:1025
 #, python-format
 msgid "Could not set mls fields in port context for %s/%s"
 msgstr "Не вдається встановити поле mls у контексті порту для %s/%s"
 
-#: ../semanage/seobject.py:865
+#: ../semanage/seobject.py:1029
 #, python-format
 msgid "Could not set port context for %s/%s"
 msgstr "Не вдається створити контекст порту для %s/%s"
 
-#: ../semanage/seobject.py:869
+#: ../semanage/seobject.py:1033
 #, python-format
 msgid "Could not add port %s/%s"
 msgstr "Не вдається додати додати порт  %s/%s"
 
-#: ../semanage/seobject.py:883 ../semanage/seobject.py:1129
-#: ../semanage/seobject.py:1317
+#: ../semanage/seobject.py:1047 ../semanage/seobject.py:1312
+#: ../semanage/seobject.py:1508
 msgid "Requires setype or serange"
 msgstr "Потрібно вказати setype або serange"
 
-#: ../semanage/seobject.py:885
+#: ../semanage/seobject.py:1049
 msgid "Requires setype"
 msgstr "Потрібно вказати setype"
 
-#: ../semanage/seobject.py:893 ../semanage/seobject.py:948
+#: ../semanage/seobject.py:1057 ../semanage/seobject.py:1112
 #, python-format
 msgid "Port %s/%s is not defined"
 msgstr "Порт %s/%s не визначено"
 
-#: ../semanage/seobject.py:897
+#: ../semanage/seobject.py:1061
 #, python-format
 msgid "Could not query port %s/%s"
 msgstr "Не вдається запитати порт %s/%s"
 
-#: ../semanage/seobject.py:908
+#: ../semanage/seobject.py:1072
 #, python-format
 msgid "Could not modify port %s/%s"
 msgstr "Не вдається змінити порт %s/%s"
 
-#: ../semanage/seobject.py:921
+#: ../semanage/seobject.py:1085
 #, fuzzy
 msgid "Could not list the ports"
 msgstr "Не вдається отримати список портів"
 
-#: ../semanage/seobject.py:937
+#: ../semanage/seobject.py:1101
 #, fuzzy, python-format
 msgid "Could not delete the port %s"
 msgstr "Не вдається видалити порт %s/%s"
 
-#: ../semanage/seobject.py:954
+#: ../semanage/seobject.py:1118
 #, python-format
 msgid "Port %s/%s is defined in policy, cannot be deleted"
 msgstr "Порт %s/%s визначено у політиці, не можу бути видалений"
 
-#: ../semanage/seobject.py:958
+#: ../semanage/seobject.py:1122
 #, python-format
 msgid "Could not delete port %s/%s"
 msgstr "Не вдається видалити порт %s/%s"
 
-#: ../semanage/seobject.py:974 ../semanage/seobject.py:996
+#: ../semanage/seobject.py:1138 ../semanage/seobject.py:1160
 msgid "Could not list ports"
 msgstr "Не вдається отримати список портів"
 
-#: ../semanage/seobject.py:1017
+#: ../semanage/seobject.py:1199
 msgid "SELinux Port Type"
 msgstr ""
 
-#: ../semanage/seobject.py:1017
+#: ../semanage/seobject.py:1199
 msgid "Proto"
 msgstr ""
 
-#: ../semanage/seobject.py:1017
+#: ../semanage/seobject.py:1199
 msgid "Port Number"
 msgstr ""
 
-#: ../semanage/seobject.py:1034 ../semanage/seobject.py:1116
-#: ../semanage/seobject.py:1166
+#: ../semanage/seobject.py:1218
 #, fuzzy
 msgid "Node Address is required"
 msgstr "Необхідно вказати порт"
 
-#: ../semanage/seobject.py:1037 ../semanage/seobject.py:1119
-#: ../semanage/seobject.py:1169
-#, fuzzy
-msgid "Node Netmask is required"
-msgstr "Необхідно вказати порт"
-
-#: ../semanage/seobject.py:1044 ../semanage/seobject.py:1125
-#: ../semanage/seobject.py:1176
+#: ../semanage/seobject.py:1233
 msgid "Unknown or missing protocol"
 msgstr ""
 
-#: ../semanage/seobject.py:1054 ../semanage/seobject.py:1256
-#: ../semanage/seobject.py:1445
+#: ../semanage/seobject.py:1247 ../semanage/seobject.py:1446
+#: ../semanage/seobject.py:1724
 msgid "SELinux Type is required"
 msgstr "Потрібно вказати тип SELinux"
 
-#: ../semanage/seobject.py:1058 ../semanage/seobject.py:1133
-#: ../semanage/seobject.py:1180 ../semanage/seobject.py:1260
-#: ../semanage/seobject.py:1321 ../semanage/seobject.py:1355
-#: ../semanage/seobject.py:1449
+#: ../semanage/seobject.py:1251 ../semanage/seobject.py:1316
+#: ../semanage/seobject.py:1352 ../semanage/seobject.py:1450
+#: ../semanage/seobject.py:1512 ../semanage/seobject.py:1546
+#: ../semanage/seobject.py:1728
 #, python-format
 msgid "Could not create key for %s"
 msgstr "Не вдається створити ключ для %s"
 
-#: ../semanage/seobject.py:1060 ../semanage/seobject.py:1137
-#: ../semanage/seobject.py:1184 ../semanage/seobject.py:1190
+#: ../semanage/seobject.py:1253 ../semanage/seobject.py:1320
+#: ../semanage/seobject.py:1356 ../semanage/seobject.py:1362
 #, fuzzy, python-format
 msgid "Could not check if addr %s is defined"
 msgstr "Не вдається чи порт визначено %s/%s"
 
-#: ../semanage/seobject.py:1064
-#, fuzzy, python-format
-msgid "Addr %s already defined"
-msgstr "Порт %s/%s вже визначено"
-
-#: ../semanage/seobject.py:1068
+#: ../semanage/seobject.py:1262
 #, fuzzy, python-format
 msgid "Could not create addr for %s"
 msgstr "Не вдається створити ключ для %s"
 
-#: ../semanage/seobject.py:1073 ../semanage/seobject.py:1275
-#: ../semanage/seobject.py:1415
+#: ../semanage/seobject.py:1268 ../semanage/seobject.py:1466
+#: ../semanage/seobject.py:1686
 #, python-format
 msgid "Could not create context for %s"
 msgstr "Не вдається створити контекст для %s"
 
-#: ../semanage/seobject.py:1077
+#: ../semanage/seobject.py:1272
 #, fuzzy, python-format
 msgid "Could not set mask for %s"
 msgstr "Не вдається встановити назву %s"
 
-#: ../semanage/seobject.py:1082
+#: ../semanage/seobject.py:1276
 #, fuzzy, python-format
 msgid "Could not set user in addr context for %s"
 msgstr "Не вдається встановити користувача у контексті файлу для %s"
 
-#: ../semanage/seobject.py:1086
+#: ../semanage/seobject.py:1280
 #, fuzzy, python-format
 msgid "Could not set role in addr context for %s"
 msgstr "Не вдається встановити роль у контексті файлу для %s"
 
-#: ../semanage/seobject.py:1090
+#: ../semanage/seobject.py:1284
 #, fuzzy, python-format
 msgid "Could not set type in addr context for %s"
 msgstr "Не вдається встановити тип у контексті файлу для %s"
 
-#: ../semanage/seobject.py:1095
+#: ../semanage/seobject.py:1289
 #, fuzzy, python-format
 msgid "Could not set mls fields in addr context for %s"
 msgstr "Не вдається встановити поле mls у контексті файлу для %s"
 
-#: ../semanage/seobject.py:1099
+#: ../semanage/seobject.py:1293
 #, fuzzy, python-format
 msgid "Could not set addr context for %s"
 msgstr "Не вдається встановити контекст файлу для %s"
 
-#: ../semanage/seobject.py:1103
+#: ../semanage/seobject.py:1297
 #, fuzzy, python-format
 msgid "Could not add addr %s"
 msgstr "Не вдається додати додати порт  %s/%s"
 
-#: ../semanage/seobject.py:1139 ../semanage/seobject.py:1186
+#: ../semanage/seobject.py:1322 ../semanage/seobject.py:1358
 #, fuzzy, python-format
 msgid "Addr %s is not defined"
 msgstr "Порт %s/%s не визначено"
 
-#: ../semanage/seobject.py:1143
+#: ../semanage/seobject.py:1326
 #, fuzzy, python-format
 msgid "Could not query addr %s"
 msgstr "Не вдається запитати порт %s/%s"
 
-#: ../semanage/seobject.py:1154
+#: ../semanage/seobject.py:1336
 #, fuzzy, python-format
 msgid "Could not modify addr %s"
 msgstr "Не вдається змінити порт %s/%s"
 
-#: ../semanage/seobject.py:1192
+#: ../semanage/seobject.py:1364
 #, fuzzy, python-format
 msgid "Addr %s is defined in policy, cannot be deleted"
 msgstr "Порт %s/%s визначено у політиці, не можу бути видалений"
 
-#: ../semanage/seobject.py:1196
+#: ../semanage/seobject.py:1368
 #, fuzzy, python-format
 msgid "Could not delete addr %s"
 msgstr "Не вдається видалити інтерфейс %s"
 
-#: ../semanage/seobject.py:1212
+#: ../semanage/seobject.py:1380
+#, fuzzy
+msgid "Could not deleteall node mappings"
+msgstr "Не вдається видалити mapping входу для %s"
+
+#: ../semanage/seobject.py:1394
 #, fuzzy
 msgid "Could not list addrs"
 msgstr "Не вдається отримати список портів"
 
-#: ../semanage/seobject.py:1264 ../semanage/seobject.py:1325
-#: ../semanage/seobject.py:1359 ../semanage/seobject.py:1365
+#: ../semanage/seobject.py:1454 ../semanage/seobject.py:1516
+#: ../semanage/seobject.py:1550 ../semanage/seobject.py:1556
 #, python-format
 msgid "Could not check if interface %s is defined"
 msgstr "Не вдається перевірити чи визначений інтерфейс %s"
 
-#: ../semanage/seobject.py:1266
-#, python-format
-msgid "Interface %s already defined"
-msgstr "Інтерфейс %s вже визначено"
-
-#: ../semanage/seobject.py:1270
+#: ../semanage/seobject.py:1461
 #, python-format
 msgid "Could not create interface for %s"
 msgstr "Не вдається створити інтерфейс для %s"
 
-#: ../semanage/seobject.py:1279
+#: ../semanage/seobject.py:1470
 #, python-format
 msgid "Could not set user in interface context for %s"
 msgstr "Не вдається встановити користувача у контексті інтерфейсу для %s"
 
-#: ../semanage/seobject.py:1283
+#: ../semanage/seobject.py:1474
 #, python-format
 msgid "Could not set role in interface context for %s"
 msgstr "Не вдається встановити роль у контексті інтерфейсу для %s"
 
-#: ../semanage/seobject.py:1287
+#: ../semanage/seobject.py:1478
 #, python-format
 msgid "Could not set type in interface context for %s"
 msgstr "Не вдається встановити тип у контексті інтерфейсу для %s"
 
-#: ../semanage/seobject.py:1292
+#: ../semanage/seobject.py:1483
 #, python-format
 msgid "Could not set mls fields in interface context for %s"
 msgstr "Не вдається встановити поле mls у контексті інтерфейсу для %s"
 
-#: ../semanage/seobject.py:1296
+#: ../semanage/seobject.py:1487
 #, python-format
 msgid "Could not set interface context for %s"
 msgstr "Не вдається створити контекст інтерфейсу для %s"
 
-#: ../semanage/seobject.py:1300
+#: ../semanage/seobject.py:1491
 #, python-format
 msgid "Could not set message context for %s"
 msgstr "Не вдається створити контекст повідомлення інтерфейс для %s"
 
-#: ../semanage/seobject.py:1304
+#: ../semanage/seobject.py:1495
 #, python-format
 msgid "Could not add interface %s"
 msgstr "Не вдається додати інтерфейс %s"
 
-#: ../semanage/seobject.py:1327 ../semanage/seobject.py:1361
+#: ../semanage/seobject.py:1518 ../semanage/seobject.py:1552
 #, python-format
 msgid "Interface %s is not defined"
 msgstr "Інтерфейс  %s не визначено"
 
-#: ../semanage/seobject.py:1331
+#: ../semanage/seobject.py:1522
 #, python-format
 msgid "Could not query interface %s"
 msgstr "Не вдається запитати інтерфейс %s"
 
-#: ../semanage/seobject.py:1342
+#: ../semanage/seobject.py:1533
 #, python-format
 msgid "Could not modify interface %s"
 msgstr "Не вдається змінити інтерфейс %s"
 
-#: ../semanage/seobject.py:1367
+#: ../semanage/seobject.py:1558
 #, python-format
 msgid "Interface %s is defined in policy, cannot be deleted"
 msgstr "Інтерфейс %s визначений у політиці, не може бути видалений"
 
-#: ../semanage/seobject.py:1371
+#: ../semanage/seobject.py:1562
 #, python-format
 msgid "Could not delete interface %s"
 msgstr "Не вдається видалити інтерфейс %s"
 
-#: ../semanage/seobject.py:1387
+#: ../semanage/seobject.py:1574
+#, fuzzy
+msgid "Could not delete all interface  mappings"
+msgstr "Не вдається видалити інтерфейс %s"
+
+#: ../semanage/seobject.py:1588
 msgid "Could not list interfaces"
 msgstr "Не вдається перелічити інтерфейси"
 
-#: ../semanage/seobject.py:1397
+#: ../semanage/seobject.py:1613
 msgid "SELinux Interface"
 msgstr ""
 
-#: ../semanage/seobject.py:1397 ../semanage/seobject.py:1636
+#: ../semanage/seobject.py:1613 ../semanage/seobject.py:1936
 msgid "Context"
 msgstr ""
 
-#: ../semanage/seobject.py:1421
+#: ../semanage/seobject.py:1663
+#, fuzzy, python-format
+msgid "Equivalence class for %s already exists"
+msgstr "Контекст файлу для %s вже визначено"
+
+#: ../semanage/seobject.py:1669
+#, python-format
+msgid "File spec %s conflicts with equivalency rule '%s %s'"
+msgstr ""
+
+#: ../semanage/seobject.py:1678
+#, fuzzy, python-format
+msgid "Equivalence class for %s does not exists"
+msgstr "Користувач %s не існує у Linux"
+
+#: ../semanage/seobject.py:1692
 #, python-format
 msgid "Could not set user in file context for %s"
 msgstr "Не вдається встановити користувача у контексті файлу для %s"
 
-#: ../semanage/seobject.py:1425
+#: ../semanage/seobject.py:1696
 #, python-format
 msgid "Could not set role in file context for %s"
 msgstr "Не вдається встановити роль у контексті файлу для %s"
 
-#: ../semanage/seobject.py:1430 ../semanage/seobject.py:1478
+#: ../semanage/seobject.py:1701 ../semanage/seobject.py:1758
 #, python-format
 msgid "Could not set mls fields in file context for %s"
 msgstr "Не вдається встановити поле mls у контексті файлу для %s"
 
-#: ../semanage/seobject.py:1436
+#: ../semanage/seobject.py:1707
 msgid "Invalid file specification"
 msgstr ""
 
-#: ../semanage/seobject.py:1453 ../semanage/seobject.py:1458
-#: ../semanage/seobject.py:1510 ../semanage/seobject.py:1586
-#: ../semanage/seobject.py:1590
+#: ../semanage/seobject.py:1709
+msgid "File specification can not include spaces"
+msgstr ""
+
+#: ../semanage/seobject.py:1714
+#, python-format
+msgid ""
+"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead"
+msgstr ""
+
+#: ../semanage/seobject.py:1732 ../semanage/seobject.py:1737
+#: ../semanage/seobject.py:1790 ../semanage/seobject.py:1872
+#: ../semanage/seobject.py:1876
 #, python-format
 msgid "Could not check if file context for %s is defined"
 msgstr "Не вдається перевірити чи визначений контекст файлу %s"
 
-#: ../semanage/seobject.py:1461
-#, python-format
-msgid "File context for %s already defined"
-msgstr "Контекст файлу для %s вже визначено"
-
-#: ../semanage/seobject.py:1465
+#: ../semanage/seobject.py:1745
 #, python-format
 msgid "Could not create file context for %s"
 msgstr "Не вдається створити контекст файлу для %s"
 
-#: ../semanage/seobject.py:1473
+#: ../semanage/seobject.py:1753
 #, python-format
 msgid "Could not set type in file context for %s"
 msgstr "Не вдається встановити тип у контексті файлу для %s"
 
-#: ../semanage/seobject.py:1481 ../semanage/seobject.py:1538
-#: ../semanage/seobject.py:1542
+#: ../semanage/seobject.py:1761 ../semanage/seobject.py:1818
+#: ../semanage/seobject.py:1822
 #, python-format
 msgid "Could not set file context for %s"
 msgstr "Не вдається встановити контекст файлу для %s"
 
-#: ../semanage/seobject.py:1487
+#: ../semanage/seobject.py:1767
 #, python-format
 msgid "Could not add file context for %s"
 msgstr "Не вдається додати контекст файлу для %s"
 
-#: ../semanage/seobject.py:1501
+#: ../semanage/seobject.py:1781
 msgid "Requires setype, serange or seuser"
 msgstr "Потрібно вказати setype, serange чи seuser"
 
-#: ../semanage/seobject.py:1514 ../semanage/seobject.py:1594
+#: ../semanage/seobject.py:1794 ../semanage/seobject.py:1880
 #, python-format
 msgid "File context for %s is not defined"
 msgstr "Контекст файлу для %s не визначено"
 
-#: ../semanage/seobject.py:1520
+#: ../semanage/seobject.py:1800
 #, python-format
 msgid "Could not query file context for %s"
 msgstr "Не вдається запитати контекст файлу для %s"
 
-#: ../semanage/seobject.py:1546
+#: ../semanage/seobject.py:1826
 #, python-format
 msgid "Could not modify file context for %s"
 msgstr "Не вдається змінити контекст файлу для %s"
 
-#: ../semanage/seobject.py:1560
+#: ../semanage/seobject.py:1839
 #, fuzzy
 msgid "Could not list the file contexts"
 msgstr "Не вдається отримати список контекстів файлів"
 
-#: ../semanage/seobject.py:1574
+#: ../semanage/seobject.py:1853
 #, fuzzy, python-format
 msgid "Could not delete the file context %s"
 msgstr "Не вдається видалити контекст файлу для %s"
 
-#: ../semanage/seobject.py:1592
+#: ../semanage/seobject.py:1878
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
 msgstr "Контекст файлу для %s визначено у політиці, його не можна видалити"
 
-#: ../semanage/seobject.py:1598
+#: ../semanage/seobject.py:1884
 #, python-format
 msgid "Could not delete file context for %s"
 msgstr "Не вдається видалити контекст файлу для %s"
 
-#: ../semanage/seobject.py:1613
+#: ../semanage/seobject.py:1899
 msgid "Could not list file contexts"
 msgstr "Не вдається отримати список контекстів файлів"
 
-#: ../semanage/seobject.py:1617
+#: ../semanage/seobject.py:1903
 msgid "Could not list local file contexts"
 msgstr "Не вдається отримати список локальних контекстів файлів"
 
-#: ../semanage/seobject.py:1636
+#: ../semanage/seobject.py:1936
 msgid "SELinux fcontext"
 msgstr ""
 
-#: ../semanage/seobject.py:1636
+#: ../semanage/seobject.py:1936
 msgid "type"
 msgstr ""
 
-#: ../semanage/seobject.py:1666 ../semanage/seobject.py:1717
-#: ../semanage/seobject.py:1723
+#: ../semanage/seobject.py:1949
+msgid ""
+"\n"
+"SELinux Distribution fcontext Equivalence \n"
+msgstr ""
+
+#: ../semanage/seobject.py:1954
+msgid ""
+"\n"
+"SELinux Local fcontext Equivalence \n"
+msgstr ""
+
+#: ../semanage/seobject.py:1988 ../semanage/seobject.py:2040
+#: ../semanage/seobject.py:2046
 #, python-format
 msgid "Could not check if boolean %s is defined"
 msgstr "Не вдається перевірити чи визначено логічне значення %s"
 
-#: ../semanage/seobject.py:1668 ../semanage/seobject.py:1719
+#: ../semanage/seobject.py:1990 ../semanage/seobject.py:2042
 #, python-format
 msgid "Boolean %s is not defined"
 msgstr "Логічне значення %s не визначене"
 
-#: ../semanage/seobject.py:1672
+#: ../semanage/seobject.py:1994
 #, python-format
 msgid "Could not query file context %s"
 msgstr "Не вдається запитати контекст файлу %s"
 
-#: ../semanage/seobject.py:1677
+#: ../semanage/seobject.py:1999
 #, fuzzy, python-format
 msgid "You must specify one of the following values: %s"
 msgstr "Необхідно вказати префікс"
 
-#: ../semanage/seobject.py:1681
+#: ../semanage/seobject.py:2004
 #, fuzzy, python-format
 msgid "Could not set active value of boolean %s"
 msgstr "Не вдається видалити логічне значення %s"
 
-#: ../semanage/seobject.py:1684
+#: ../semanage/seobject.py:2007
 #, python-format
 msgid "Could not modify boolean %s"
 msgstr "Не вдається змінити логічне значення %s"
 
-#: ../semanage/seobject.py:1702
+#: ../semanage/seobject.py:2025
 #, python-format
 msgid "Bad format %s: Record %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1725
+#: ../semanage/seobject.py:2048
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
 msgstr "Логічне значення %s визначено у політиці, його не можна видалити"
 
-#: ../semanage/seobject.py:1729
+#: ../semanage/seobject.py:2052
 #, python-format
 msgid "Could not delete boolean %s"
 msgstr "Не вдається видалити логічне значення %s"
 
-#: ../semanage/seobject.py:1741 ../semanage/seobject.py:1758
+#: ../semanage/seobject.py:2064 ../semanage/seobject.py:2081
 msgid "Could not list booleans"
 msgstr "Не вдається отримати список логічних змінних"
 
-#: ../semanage/seobject.py:1777
+#: ../semanage/seobject.py:2104
 msgid "unknown"
 msgstr ""
 
-#: ../semanage/seobject.py:1780
+#: ../semanage/seobject.py:2117
 msgid "off"
 msgstr ""
 
-#: ../semanage/seobject.py:1780
+#: ../semanage/seobject.py:2117
 msgid "on"
 msgstr ""
 
-#: ../semanage/seobject.py:1789
+#: ../semanage/seobject.py:2131
 msgid "SELinux boolean"
 msgstr ""
 
-#: ../semanage/seobject.py:1789
+#: ../semanage/seobject.py:2131
+msgid "State"
+msgstr ""
+
+#: ../semanage/seobject.py:2131
+msgid "Default"
+msgstr ""
+
+#: ../semanage/seobject.py:2131
 msgid "Description"
 msgstr ""
 
-#: ../newrole/newrole.c:198
+#: ../newrole/newrole.c:201
 #, c-format
 msgid "failed to set PAM_TTY\n"
 msgstr "помилка встановлення PAM_TTY\n"
 
-#: ../newrole/newrole.c:287
+#: ../newrole/newrole.c:290
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
 msgstr ""
 
-#: ../newrole/newrole.c:297
+#: ../newrole/newrole.c:300
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
 msgstr ""
 
-#: ../newrole/newrole.c:436
+#: ../newrole/newrole.c:439
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
 msgstr "не вдається знайти правильний запис у файлі passwd.\n"
 
-#: ../newrole/newrole.c:447
+#: ../newrole/newrole.c:450
 #, c-format
 msgid "Out of memory!\n"
 msgstr "Недостатньо пам'яті!\n"
 
-#: ../newrole/newrole.c:452
+#: ../newrole/newrole.c:455
 #, c-format
 msgid "Error!  Shell is not valid.\n"
 msgstr "Помилка!  Неправильна оболонка.\n"
 
-#: ../newrole/newrole.c:509
+#: ../newrole/newrole.c:512
 #, c-format
 msgid "Unable to clear environment\n"
 msgstr "Не вдається очистити оточення\n"
 
-#: ../newrole/newrole.c:556 ../newrole/newrole.c:634
-#, fuzzy, c-format
-msgid "Error initializing capabilities, aborting.\n"
-msgstr "Помилка ініціалізації можливостей.\n"
-
-#: ../newrole/newrole.c:564 ../newrole/newrole.c:640
-#, c-format
-msgid "Error setting capabilities, aborting\n"
-msgstr "Помилка ініціалізації можливостей, виконання переривається.\n"
-
-#: ../newrole/newrole.c:570
-#, c-format
-msgid "Error setting KEEPCAPS, aborting\n"
-msgstr "Помилка скидання KEEPCAPS, виконання переривається\n"
-
-#: ../newrole/newrole.c:578 ../newrole/newrole.c:652
-#, c-format
-msgid "Error dropping capabilities, aborting\n"
-msgstr "Помилка скидання можливостей, виконання переривається\n"
-
-#: ../newrole/newrole.c:584 ../newrole/newrole.c:683
+#: ../newrole/newrole.c:556 ../newrole/newrole.c:587 ../newrole/newrole.c:617
 #, c-format
 msgid "Error changing uid, aborting.\n"
 msgstr "Помилка зміни uid, виконання перервано.\n"
 
-#: ../newrole/newrole.c:590 ../newrole/newrole.c:646 ../newrole/newrole.c:678
+#: ../newrole/newrole.c:612
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
 msgstr "Помилка скидання KEEPCAPS, виконання перервано\n"
 
-#: ../newrole/newrole.c:597
-#, c-format
-msgid "Error dropping SETUID capability, aborting\n"
-msgstr "Помилка відбирання можливості SETUID, виконання перервано\n"
-
-#: ../newrole/newrole.c:602 ../newrole/newrole.c:657
-#, c-format
-msgid "Error freeing caps\n"
-msgstr "Помилка звільнення можливостей\n"
-
-#: ../newrole/newrole.c:701
+#: ../newrole/newrole.c:635
 #, c-format
 msgid "Error connecting to audit system.\n"
 msgstr "Помилка з'єднання з системою аудиту.\n"
 
-#: ../newrole/newrole.c:707
+#: ../newrole/newrole.c:641
 #, c-format
 msgid "Error allocating memory.\n"
 msgstr "Помилка при розподілі пам'яті.\n"
 
-#: ../newrole/newrole.c:714
+#: ../newrole/newrole.c:648
 #, c-format
 msgid "Error sending audit message.\n"
 msgstr "Помилка надсилання повідомлення аудиту.\n"
 
-#: ../newrole/newrole.c:758 ../newrole/newrole.c:1122
+#: ../newrole/newrole.c:692 ../newrole/newrole.c:1059
 #, c-format
 msgid "Could not determine enforcing mode.\n"
 msgstr "Не вдається визначити режим блокування (enforcing).\n"
 
-#: ../newrole/newrole.c:765
+#: ../newrole/newrole.c:699
 #, c-format
 msgid "Error!  Could not open %s.\n"
 msgstr "Помилка! Не вдається відкрити %s.\n"
 
-#: ../newrole/newrole.c:771
+#: ../newrole/newrole.c:705
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
 msgstr ""
 "%s!  Не вдається отримати контекст для %s, перепризначення позначок tty не "
 "відбулось.\n"
 
-#: ../newrole/newrole.c:781
+#: ../newrole/newrole.c:715
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
 msgstr ""
 "%s!  Не вдається отримати новий контекст для %s, перепризначення позначок "
 "tty не відбулось.\n"
 
-#: ../newrole/newrole.c:791
+#: ../newrole/newrole.c:725
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
 msgstr "%s!  Не вдається встановити новий контекст для %s\n"
 
-#: ../newrole/newrole.c:838
+#: ../newrole/newrole.c:772
 #, c-format
 msgid "%s changed labels.\n"
 msgstr "змінено %s позначок.\n"
 
-#: ../newrole/newrole.c:844
+#: ../newrole/newrole.c:778
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
 msgstr "Попередження!  Не вдається відновити контекст для %s\n"
 
-#: ../newrole/newrole.c:901
+#: ../newrole/newrole.c:835
 #, c-format
 msgid "Error: multiple roles specified\n"
 msgstr "Помилка: вказано декілька ролей\n"
 
-#: ../newrole/newrole.c:909
+#: ../newrole/newrole.c:843
 #, c-format
 msgid "Error: multiple types specified\n"
 msgstr "Помилка: вказано декілька типів\n"
 
-#: ../newrole/newrole.c:916
+#: ../newrole/newrole.c:850
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
 msgstr "Ключ -l може використовуватись з підтримкою SELinux MLS.\n"
 
-#: ../newrole/newrole.c:921
+#: ../newrole/newrole.c:855
 #, c-format
 msgid "Error: multiple levels specified\n"
 msgstr "Помилка: вказано декілька рівнів\n"
 
-#: ../newrole/newrole.c:931
+#: ../newrole/newrole.c:865
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
 msgstr ""
 
-#: ../newrole/newrole.c:957
+#: ../newrole/newrole.c:891
 #, c-format
 msgid "Couldn't get default type.\n"
 msgstr "Не вдається отримати типовий тип.\n"
 
-#: ../newrole/newrole.c:967
+#: ../newrole/newrole.c:901
 #, c-format
 msgid "failed to get new context.\n"
 msgstr "не вдається отримати новий контекст.\n"
 
-#: ../newrole/newrole.c:974
+#: ../newrole/newrole.c:908
 #, c-format
 msgid "failed to set new role %s\n"
 msgstr "помилка встановлення нової ролі %s\n"
 
-#: ../newrole/newrole.c:981
+#: ../newrole/newrole.c:915
 #, c-format
 msgid "failed to set new type %s\n"
 msgstr "помилка встановлення нового типу %s\n"
 
-#: ../newrole/newrole.c:991
+#: ../newrole/newrole.c:925
 #, c-format
 msgid "failed to build new range with level %s\n"
 msgstr "не вдається побудувати новий діапазон з рівнем %s\n"
 
-#: ../newrole/newrole.c:996
+#: ../newrole/newrole.c:930
 #, c-format
 msgid "failed to set new range %s\n"
 msgstr "помилка встановлення нової діапазону %s\n"
 
-#: ../newrole/newrole.c:1004
+#: ../newrole/newrole.c:938
 #, c-format
 msgid "failed to convert new context to string\n"
 msgstr "не вдається перетворити новий контекст у рядок\n"
 
-#: ../newrole/newrole.c:1009
+#: ../newrole/newrole.c:943
 #, c-format
 msgid "%s is not a valid context\n"
 msgstr "%s не є правильним контекстом\n"
 
-#: ../newrole/newrole.c:1016
+#: ../newrole/newrole.c:950
 #, c-format
 msgid "Unable to allocate memory for new_context"
 msgstr "Не вдається виділити пам'ять для new_context"
 
-#: ../newrole/newrole.c:1042
+#: ../newrole/newrole.c:976
 #, c-format
 msgid "Unable to obtain empty signal set\n"
 msgstr "Не вдається отримати порожній сигнал від\n"
 
-#: ../newrole/newrole.c:1050
+#: ../newrole/newrole.c:984
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
 msgstr "Не вдається встановити обробник SIGHUP\n"
 
-#: ../newrole/newrole.c:1116
+#: ../newrole/newrole.c:1053
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr "newrole може використовуватись лише для ядра з підтримкою SELinux.\n"
 
-#: ../newrole/newrole.c:1133
+#: ../newrole/newrole.c:1070
 #, c-format
 msgid "failed to get old_context.\n"
 msgstr "не вдається отримати old_context.\n"
 
-#: ../newrole/newrole.c:1140
+#: ../newrole/newrole.c:1077
 #, fuzzy, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
 msgstr "Помилка!  Не вдається отримати інформацію про tty.\n"
 
-#: ../newrole/newrole.c:1161
+#: ../newrole/newrole.c:1098
 #, c-format
 msgid "error on reading PAM service configuration.\n"
 msgstr ""
 
-#: ../newrole/newrole.c:1196
+#: ../newrole/newrole.c:1133
 #, c-format
 msgid "newrole: incorrect password for %s\n"
 msgstr "newrole: неправильний пароль для %s\n"
 
-#: ../newrole/newrole.c:1223
+#: ../newrole/newrole.c:1160
 #, c-format
 msgid "newrole: failure forking: %s"
 msgstr "newrole: помилка створення дочірнього процесу: %s"
 
-#: ../newrole/newrole.c:1226 ../newrole/newrole.c:1249
+#: ../newrole/newrole.c:1163 ../newrole/newrole.c:1186
 #, c-format
 msgid "Unable to restore tty label...\n"
 msgstr "Не вдається відновити позначку tty...\n"
 
-#: ../newrole/newrole.c:1228 ../newrole/newrole.c:1255
+#: ../newrole/newrole.c:1165 ../newrole/newrole.c:1192
 #, c-format
 msgid "Failed to close tty properly\n"
 msgstr "Не вдається правильно закрити tty\n"
 
-#: ../newrole/newrole.c:1287
+#: ../newrole/newrole.c:1224
 #, c-format
 msgid "Could not close descriptors.\n"
 msgstr "Не вдається закрити дескриптор.\n"
 
-#: ../newrole/newrole.c:1314
+#: ../newrole/newrole.c:1251
 #, c-format
 msgid "Error allocating shell's argv0.\n"
 msgstr "Помилка виділення argv0 у оболонці.\n"
 
-#: ../newrole/newrole.c:1346
+#: ../newrole/newrole.c:1287
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
 msgstr "Не вдається відновити оточення, виконання перервано\n"
 
-#: ../newrole/newrole.c:1357
+#: ../newrole/newrole.c:1298
 msgid "failed to exec shell\n"
 msgstr "не вдається виконати оболонку\n"
 
@@ -1292,6 +1290,64 @@ msgstr "chcat -l +CompanyConfidential juser"
 msgid "Options Error %s "
 msgstr "Помилка параметра %s"
 
+#, fuzzy
+#~ msgid ""
+#~ "Unable to open %s: translations not supported on non-MLS machines: %s"
+#~ msgstr ""
+#~ "Не вдається відкрити %s: трансляції не підтримуються на не-MLS комп'ютерах"
+
+#~ msgid "Translations can not contain spaces '%s' "
+#~ msgstr "Трансляції не можуть містити пробіли '%s' "
+
+#~ msgid "Invalid Level '%s' "
+#~ msgstr "Неправильний рівень '%s' "
+
+#~ msgid "%s already defined in translations"
+#~ msgstr "%s вже визначено у трансляції"
+
+#~ msgid "%s not defined in translations"
+#~ msgstr "%s не визначено у трансляції"
+
+#~ msgid "Login mapping for %s is already defined"
+#~ msgstr "mapping входу для %s вже визначено"
+
+#, fuzzy
+#~ msgid "add SELinux user mapping"
+#~ msgstr "Не вдається додати користувача SELinux %s"
+
+#~ msgid "SELinux user %s is already defined"
+#~ msgstr "Користувач SELinux %s вже визначений"
+
+#, fuzzy
+#~ msgid "Node Netmask is required"
+#~ msgstr "Необхідно вказати порт"
+
+#, fuzzy
+#~ msgid "Addr %s already defined"
+#~ msgstr "Порт %s/%s вже визначено"
+
+#~ msgid "Interface %s already defined"
+#~ msgstr "Інтерфейс %s вже визначено"
+
+#, fuzzy
+#~ msgid "Error initializing capabilities, aborting.\n"
+#~ msgstr "Помилка ініціалізації можливостей.\n"
+
+#~ msgid "Error setting capabilities, aborting\n"
+#~ msgstr "Помилка ініціалізації можливостей, виконання переривається.\n"
+
+#~ msgid "Error setting KEEPCAPS, aborting\n"
+#~ msgstr "Помилка скидання KEEPCAPS, виконання переривається\n"
+
+#~ msgid "Error dropping capabilities, aborting\n"
+#~ msgstr "Помилка скидання можливостей, виконання переривається\n"
+
+#~ msgid "Error dropping SETUID capability, aborting\n"
+#~ msgstr "Помилка відбирання можливості SETUID, виконання перервано\n"
+
+#~ msgid "Error freeing caps\n"
+#~ msgstr "Помилка звільнення можливостей\n"
+
 #~ msgid "translations not supported on non-MLS machines"
 #~ msgstr "трансляції не підтримуються на не-MLS комп'ютерах"
 
@@ -1375,9 +1431,6 @@ msgstr "Помилка параметра %s"
 
 #~ msgid "Requires value"
 #~ msgstr "Потрібно вказати значення"
-
-#~ msgid "Invalid prefix %s"
-#~ msgstr "Неправильний префікс %s"
 
 #~ msgid "Requires 2 or more arguments"
 #~ msgstr "Потрібно 2 або більше аргументів"
