@@ -3,7 +3,7 @@
 mcstransd \- MCS (Multiple Category System) daemon.  Translates SELinux MCS/MLS labels to human readable form.
 
 .SH "SYNOPSIS"
-.B mcstransd 
+.B mcstransd [-f] [-h]
 .P
 
 .SH "DESCRIPTION"
@@ -12,6 +12,13 @@ This manual page describes the
 program.
 .P
 This daemon reads /etc/selinux/{SELINUXTYPE}/setrans.conf configuration file, and communicates with libselinux via a socket in /var/run/setrans.
+.SH "OPTIONS"
+.TP
+-f
+Run mcstransd in the foreground.  Do not run as a daemon.
+.TP
+-h
+Output a short summary of available command line options\&.
 
 .SH "AUTHOR"
 This man page was written by Dan Walsh <dwalsh@redhat.com>.

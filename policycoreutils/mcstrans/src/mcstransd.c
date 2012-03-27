@@ -1,5 +1,4 @@
 /* Copyright (c) 2006 Trusted Computer Solutions, Inc. */
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/poll.h>
@@ -13,6 +12,7 @@
 #include <signal.h>
 #include <string.h>
 #include <syslog.h>
+#include <unistd.h>
 #include <selinux/selinux.h>
 #include <sys/types.h>
 #include <sys/capability.h>
@@ -556,9 +556,31 @@ void dropprivs(void)
 	cap_free(new_caps);
 }
 
-int
-main(int UNUSED(argc), char *argv[])
+static void usage(char *program)
 {
+	printf("%s [-f] [-h] \n", program);
+}
+
+int
+main(int argc, char *argv[])
+{
+	int opt;
+	int do_fork = 1;
+	while ((opt = getopt(argc, argv, "hf")) > 0) {
+		switch (opt) {
+		case 'f':
+			do_fork = 0;
+			break;
+		case 'h':
+			usage(argv[0]);
+			exit(0);
+			break;
+		case '?':
+			usage(argv[0]);
+			exit(-1);
+		}
+	}
+
 #ifndef DEBUG
 	/* Make sure we are root */
 	if (getuid() != 0) {
@@ -576,7 +598,7 @@ main(int UNUSED(argc), char *argv[])
 	dropprivs();
 
 	/* run in the background as a daemon */
-	if (daemon(0, 0)) {
+	if (do_fork && daemon(0, 0)) {
 		syslog(LOG_ERR, "daemon() failed: %m");
 		cleanup_exit(1);
 	}
