@@ -1,3 +1,9 @@
+1.1.6 2012-03-28
+	* Fix dead links to www.nsa.gov/selinux
+	* audit.py Dont crash if empty data is passed to sepolgen
+	* do not use md5 when calculating hash signatures
+	* fix detection of policy loads
+
 1.1.5 2011-12-21
 	* better analysis of why things broke
 

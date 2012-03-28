@@ -1,3 +1,21 @@
+2.1.11 2012-03-28
+	* sandbox: do not propogate inside mounts outside
+	* sandbox: Removing sandbox init script, should no longer be necessary
+	* restorecond: Stop using deprecated interfaces for g_io
+	* semanage: proper auditting of user changes for LSPP
+	* semanage: audit message to show what record(s) and item(s) have chaged
+	* scripts: Update Makefiles to handle /usrmove
+	* mcstrans: Version should have been bumped on last check in
+	* seunshare: Only drop caps not the Bounding Set from seunshare
+	* Add bash-completion scripts for setsebool and semanage
+	* newrole: Use correct capng calls in newrole
+	* Fix infinite loop with inotify on 2.6.31 kernels
+	* fix ftbfs with hardening flags
+	* Only run setfiles if we found read-write filesystems to run it on
+	* update .po files
+	* remove empty po files
+	* do not fail to install if unable to make load_policy lnk file
+
 2.1.10 2011-12-21
 	* Remove excess whitespace
 	* sandbox: Add back in . functions to sandbox.init script

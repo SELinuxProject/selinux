@@ -1,3 +1,7 @@
+2.1.9 2012-03-28
+	* implement new default labeling behaviors for usr, role, range
+	* Fix dead links to www.nsa.gov/selinux
+
 2.1.8 2011-12-21
 	* add new helper to translate class sets into bitmaps
 

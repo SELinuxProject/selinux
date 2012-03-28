@@ -1,3 +1,9 @@
+2.1.7 2012-03-28
+	* Alternate path for semanage.conf
+	* do not link against libpython, this is considered bad in Debian
+	* Allow to build for several ruby version
+	* fallback-user-level
+
 2.1.6 2011-12-21
 	* add ignoredirs config for genhomedircon
 	* Fallback_user_level can be NULL if you are not using MLS

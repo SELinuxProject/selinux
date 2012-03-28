@@ -1,3 +1,28 @@
+2.1.10 2012-03-28
+	* Fix dead links to www.nsa.gov/selinux
+	* Remove jump over variable declaration
+	* Fix old style function definitions
+	* Fix const-correctness
+	* Remove unused flush_class_cache method
+	* Add prototype decl for destructor
+	* Add more printf format annotations
+	* Add printf format attribute annotation to die() method
+	* Fix const-ness of parameters & make usage() methods static
+	* Enable many more gcc warnings for libselinux/src/ builds
+	* utils: Enable many more gcc warnings for libselinux/utils builds
+	* Change annotation on include/selinux/avc.h to avoid upsetting SWIG
+	* Ensure there is a prototype for 'matchpathcon_lib_destructor'
+	* Update Makefiles to handle /usrmove
+	* utils: Stop separating out matchpathcon as something special
+	* pkg-config to figure out where ruby include files are located
+	* build with either ruby 1.9 or ruby 1.8
+	* assert if avc_init() not called
+	* take security_deny_unknown into account
+	* security_compute_create_name(3)
+	* Do not link against python library, this is considered
+	* bad practice in debian
+	* Hide unnecessarily-exported library destructors
+
 2.1.9 2011-12-21
 	* Fix setenforce man page to refer to selinux man page
 	* Cleanup Man pages
