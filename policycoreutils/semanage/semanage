@@ -1,5 +1,5 @@
 #! /usr/bin/python -Es
-# Copyright (C) 2005, 2006, 2007 Red Hat 
+# Copyright (C) 2005-2012 Red Hat
 # see file 'COPYING' for use and warranty information
 #
 # semanage is a tool for managing SELinux configuration files
@@ -282,11 +282,9 @@ Object-specific Options (see above):
 				equal = a
 
 			if o == "--enable":
-				set_action(o)
 				enable = True
 
 			if o == "--disable":
-				set_action(o)
 				disable = True
 
 			if o == "-F"  or o == "--file":
