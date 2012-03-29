@@ -61,7 +61,7 @@ __get_port_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t -type -r --range -p --prot
 __get_interface_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type '; }
 __get_node_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -M --mask -p --proto'; }
 __get_fcontext_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -e --equal -f --ftype '; }
-__get_module_opts () { echo '$ALL_OPTS --enable --disable '; }
+__get_module_opts () { echo '$ALL_OPTS $MANAGED_OPTS --enable --disable '; }
 __get_dontaudit_opts () { echo '-S on off' ; }
 __get_permissive_opts () { echo '$ALL_OPTS -a --add -d --delete' ; }
 
