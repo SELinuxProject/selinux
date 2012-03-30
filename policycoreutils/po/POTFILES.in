@@ -34,7 +34,6 @@ gui/semanagePage.py
 gui/statusPage.py
 gui/system-config-selinux.glade
 gui/system-config-selinux.py
-gui/translationsPage.py
 gui/usersPage.py
 gui/templates/executable.py
 gui/templates/__init__.py

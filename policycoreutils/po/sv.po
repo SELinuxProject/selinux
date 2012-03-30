@@ -1,31 +1,30 @@
-# Swedish messages for policycoreutils.
-# Copyright © 2001-2008 Free Software Foundation, Inc.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
 # Christian Rose <menthos@menthos.com>, 2006.
 # Magnus Larsson <fedoratrans@gmail.com>, 2007, 2008.
-#
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: policycoreutils\n"
+"Project-Id-Version: Policycoreutils\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-27 10:49-0400\n"
-"PO-Revision-Date: 2008-01-27 19:18-0500\n"
-"Last-Translator: Christian Rose <menthos@menthos.com>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
-"Language: sv\n"
+"POT-Creation-Date: 2012-04-02 16:29-0400\n"
+"PO-Revision-Date: 2012-06-14 21:00+0000\n"
+"Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
+"Language-Team: Swedish (http://www.transifex.net/projects/p/fedora/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
 "USAGE: run_init <script> <args ...>\n"
 "  where: <script> is the name of the init script to run,\n"
 "         <args ...> are the arguments to that script."
-msgstr ""
-"ANVÄNDNING: run_init <script> <args ...>\n"
-"  där: <script> är namnet på init skript som ska köras,\n"
-"         <args ...> är argumenten till det skriptet."
+msgstr "ANVÄNDNING: run_init <skript> <arg …>\n  där: <skript> är namnet på init skript som ska köras,\n         <arg …> är argumenten till det skriptet."
 
 #: ../run_init/run_init.c:126 ../newrole/newrole.c:1124
 #, c-format
@@ -87,11 +86,11 @@ msgstr "******************** VIKTIGT ***********************\n"
 
 #: ../audit2allow/audit2allow:231
 msgid "To make this policy package active, execute:"
-msgstr ""
+msgstr "För att göra denna policy aktiv, kör:"
 
 #: ../semanage/seobject.py:143 ../semanage/seobject.py:147
 msgid "global"
-msgstr ""
+msgstr "globalt"
 
 #: ../semanage/seobject.py:222
 msgid "Could not create semanage handle"
@@ -110,87 +109,81 @@ msgid "Could not establish semanage connection"
 msgstr "Kunde inte sätta upp en semanage-uppkoppling"
 
 #: ../semanage/seobject.py:245
-#, fuzzy
 msgid "Could not test MLS enabled status"
-msgstr "Kunde inte sätta MLS-intervall för %s"
+msgstr "Kunde inte testa status för aktivering av MLS"
 
 #: ../semanage/seobject.py:251 ../semanage/seobject.py:266
 msgid "Not yet implemented"
-msgstr ""
+msgstr "Inte implementerat ännu"
 
 #: ../semanage/seobject.py:255
 msgid "Semanage transaction already in progress"
-msgstr ""
+msgstr "En semanagetransaktion pågår redan"
 
 #: ../semanage/seobject.py:264
 msgid "Could not start semanage transaction"
 msgstr "Kunde inte starta semanage-transaktion"
 
 #: ../semanage/seobject.py:274
-#, fuzzy
 msgid "Could not commit semanage transaction"
-msgstr "Kunde inte starta semanage-transaktion"
+msgstr "Kunde inte verkställa semanage-transaktion"
 
 #: ../semanage/seobject.py:279
 msgid "Semanage transaction not in progress"
-msgstr ""
+msgstr "Ingen semanagetransaktion pågår"
 
 #: ../semanage/seobject.py:291 ../semanage/seobject.py:371
-#, fuzzy
 msgid "Could not list SELinux modules"
-msgstr "Kan inte lista SELinux användare"
+msgstr "Kan inte lista SELinux-moduler"
 
 #: ../semanage/seobject.py:304
-#, fuzzy
 msgid "Modules Name"
 msgstr "Modulnamn"
 
-#: ../semanage/seobject.py:304
+#: ../semanage/seobject.py:304 ../gui/modulesPage.py:62
 msgid "Version"
 msgstr "Version"
 
-#: ../semanage/seobject.py:307
+#: ../semanage/seobject.py:307 ../gui/statusPage.py:75
 msgid "Disabled"
 msgstr "Avaktiverad"
 
 #: ../semanage/seobject.py:322
 #, python-format
 msgid "Could not disable module %s (remove failed)"
-msgstr ""
+msgstr "Det gick inte att avaktivera modulen %s (den gick inte att ta bort)"
 
 #: ../semanage/seobject.py:333
-#, fuzzy, python-format
+#, python-format
 msgid "Could not enable module %s (remove failed)"
-msgstr "Kunde inte lägga till roll %s för %s"
+msgstr "Det gick inte att aktivera modulen %s (den gick inte att ta bort)"
 
 #: ../semanage/seobject.py:348
 #, python-format
 msgid "Could not remove module %s (remove failed)"
-msgstr ""
+msgstr "Det gick inte att ta bort modulen %s (den gick inte att ta bort)"
 
 #: ../semanage/seobject.py:358
 msgid "dontaudit requires either 'on' or 'off'"
-msgstr ""
+msgstr "dontaudit kräver antingen ”on” eller ”off”"
 
 #: ../semanage/seobject.py:387
-#, fuzzy
 msgid "Builtin Permissive Types"
-msgstr "Tillåtande"
+msgstr "Inbyggda tillåtande typer"
 
 #: ../semanage/seobject.py:397
-#, fuzzy
 msgid "Customized Permissive Types"
-msgstr "Tillåtande"
+msgstr "Anpassade tillåtande typer"
 
 #: ../semanage/seobject.py:438
 #, python-format
 msgid "Could not set permissive domain %s (module installation failed)"
-msgstr ""
+msgstr "Det gick inte att sätta tillåtande domän %s (modulinstallationen misslyckades)"
 
 #: ../semanage/seobject.py:444
 #, python-format
 msgid "Could not remove permissive domain %s (remove failed)"
-msgstr ""
+msgstr "Det gick inte att ta bort tillåtande domän %s (borttagning misslyckades)"
 
 #: ../semanage/seobject.py:479 ../semanage/seobject.py:553
 #: ../semanage/seobject.py:599 ../semanage/seobject.py:696
@@ -210,9 +203,9 @@ msgid "Could not check if login mapping for %s is defined"
 msgstr "Kunde inte kontrollera om inloggningskartläggning för %s är definierad"
 
 #: ../semanage/seobject.py:492
-#, fuzzy, python-format
+#, python-format
 msgid "Linux Group %s does not exist"
-msgstr "Linuxanvändaren %s finns inte"
+msgstr "Linuxgruppen %s finns inte"
 
 #: ../semanage/seobject.py:497
 #, python-format
@@ -266,8 +259,7 @@ msgstr "Kunde inte ändra inloggnings-kartläggning för %s"
 #: ../semanage/seobject.py:611
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
-msgstr ""
-"Inloggningskartläggning för %s är definierad i policy, kan inte tas bort"
+msgstr "Inloggningskartläggning för %s är definierad i policy, kan inte tas bort"
 
 #: ../semanage/seobject.py:615
 #, python-format
@@ -280,15 +272,20 @@ msgid "Could not list login mappings"
 msgstr "Kunde inte lista inloggningsmappningar"
 
 #: ../semanage/seobject.py:680 ../semanage/seobject.py:685
+#: ../gui/system-config-selinux.glade:100
 msgid "Login Name"
 msgstr "Inloggningsnamn"
 
 #: ../semanage/seobject.py:680 ../semanage/seobject.py:685
 #: ../semanage/seobject.py:943 ../semanage/seobject.py:948
+#: ../gui/system-config-selinux.glade:128
+#: ../gui/system-config-selinux.glade:915
+#: ../gui/system-config-selinux.glade:2304 ../gui/usersPage.py:44
 msgid "SELinux User"
-msgstr "SELinux-användare"
+msgstr "SELinux-anv."
 
-#: ../semanage/seobject.py:680
+#: ../semanage/seobject.py:680 ../gui/system-config-selinux.glade:156
+#: ../gui/system-config-selinux.glade:943
 msgid "MLS/MCS Range"
 msgstr "MLS/MCS-intervall"
 
@@ -306,9 +303,9 @@ msgid "Could not query user for %s"
 msgstr "Kan inte fråga användare för %s"
 
 #: ../semanage/seobject.py:722
-#, fuzzy, python-format
+#, python-format
 msgid "You must add at least one role for %s"
-msgstr "Kunde inte lägga till filkontext för %s"
+msgstr "Du måste lägga till åtminstone en roll för %s"
 
 #: ../semanage/seobject.py:737
 #, python-format
@@ -398,6 +395,7 @@ msgid "MCS Range"
 msgstr "MCS-intervall"
 
 #: ../semanage/seobject.py:943 ../semanage/seobject.py:948
+#: ../gui/system-config-selinux.glade:992 ../gui/usersPage.py:59
 msgid "SELinux Roles"
 msgstr "SELinux-roller"
 
@@ -410,9 +408,8 @@ msgid "Port is required"
 msgstr "Port krävs"
 
 #: ../semanage/seobject.py:975
-#, fuzzy
 msgid "Invalid Port"
-msgstr "Ogiltigt prefix %s"
+msgstr "Ogiltig port"
 
 #: ../semanage/seobject.py:979
 #, python-format
@@ -499,14 +496,13 @@ msgid "Could not modify port %s/%s"
 msgstr "Kunde inte modifiera port %s/%s"
 
 #: ../semanage/seobject.py:1085
-#, fuzzy
 msgid "Could not list the ports"
-msgstr "Kunde inte lista portar"
+msgstr "Kunde inte lista portarna"
 
 #: ../semanage/seobject.py:1101
-#, fuzzy, python-format
+#, python-format
 msgid "Could not delete the port %s"
-msgstr "Kan inte ta bort port %s/%s"
+msgstr "Kan inte ta bort port %s"
 
 #: ../semanage/seobject.py:1118
 #, python-format
@@ -530,18 +526,17 @@ msgstr "SELinux-porttyp"
 msgid "Proto"
 msgstr "Proto"
 
-#: ../semanage/seobject.py:1199
+#: ../semanage/seobject.py:1199 ../gui/system-config-selinux.glade:335
 msgid "Port Number"
 msgstr "Portnummer"
 
 #: ../semanage/seobject.py:1218
-#, fuzzy
 msgid "Node Address is required"
-msgstr "Port krävs"
+msgstr "Nodadress krävs"
 
 #: ../semanage/seobject.py:1233
 msgid "Unknown or missing protocol"
-msgstr ""
+msgstr "Okänt eller saknat protokoll"
 
 #: ../semanage/seobject.py:1247 ../semanage/seobject.py:1446
 #: ../semanage/seobject.py:1724
@@ -558,14 +553,14 @@ msgstr "Kunde inte skapa nyckel för %s"
 
 #: ../semanage/seobject.py:1253 ../semanage/seobject.py:1320
 #: ../semanage/seobject.py:1356 ../semanage/seobject.py:1362
-#, fuzzy, python-format
+#, python-format
 msgid "Could not check if addr %s is defined"
-msgstr "Kunde inte kontrollera om port %s/%s är definierad"
+msgstr "Kunde inte kontrollera om adressen %s är definierad"
 
 #: ../semanage/seobject.py:1262
-#, fuzzy, python-format
+#, python-format
 msgid "Could not create addr for %s"
-msgstr "Kunde inte skapa en nyckel för %s"
+msgstr "Kunde inte skapa en adress för %s"
 
 #: ../semanage/seobject.py:1268 ../semanage/seobject.py:1466
 #: ../semanage/seobject.py:1686
@@ -574,74 +569,72 @@ msgid "Could not create context for %s"
 msgstr "Kunde inte skapa-kontext för %s"
 
 #: ../semanage/seobject.py:1272
-#, fuzzy, python-format
+#, python-format
 msgid "Could not set mask for %s"
-msgstr "Kunde inte sätta namn för %s"
+msgstr "Kunde inte sätta mask för %s"
 
 #: ../semanage/seobject.py:1276
-#, fuzzy, python-format
+#, python-format
 msgid "Could not set user in addr context for %s"
-msgstr "Kunde inte sätta användare i filkontext för %s"
+msgstr "Kunde inte sätta användare i adresskontext för %s"
 
 #: ../semanage/seobject.py:1280
-#, fuzzy, python-format
+#, python-format
 msgid "Could not set role in addr context for %s"
-msgstr "Kunde inte sätta roll i filkontext för %s"
+msgstr "Kunde inte sätta roll i adresskontext för %s"
 
 #: ../semanage/seobject.py:1284
-#, fuzzy, python-format
+#, python-format
 msgid "Could not set type in addr context for %s"
-msgstr "Kunde inte sätta typ i filkontext för %s"
+msgstr "Kunde inte sätta typ i adresskontext för %s"
 
 #: ../semanage/seobject.py:1289
-#, fuzzy, python-format
+#, python-format
 msgid "Could not set mls fields in addr context for %s"
-msgstr "Kunde inte sätta mls-fält i filkontext för %s"
+msgstr "Kunde inte sätta mls-fält i adresskontext för %s"
 
 #: ../semanage/seobject.py:1293
-#, fuzzy, python-format
+#, python-format
 msgid "Could not set addr context for %s"
-msgstr "Kunde inte sätta filkontext för %s"
+msgstr "Kunde inte sätta adresskontext för %s"
 
 #: ../semanage/seobject.py:1297
-#, fuzzy, python-format
+#, python-format
 msgid "Could not add addr %s"
-msgstr "Kunde inte lägga till port %s/%s"
+msgstr "Kunde inte lägga till adress %s"
 
 #: ../semanage/seobject.py:1322 ../semanage/seobject.py:1358
-#, fuzzy, python-format
+#, python-format
 msgid "Addr %s is not defined"
-msgstr "Port %s/%s är inte definierad"
+msgstr "Adressen %s är inte definierad"
 
 #: ../semanage/seobject.py:1326
-#, fuzzy, python-format
+#, python-format
 msgid "Could not query addr %s"
-msgstr "Kunde inte fråga port %s/%s"
+msgstr "Kunde inte fråga adress %s"
 
 #: ../semanage/seobject.py:1336
-#, fuzzy, python-format
+#, python-format
 msgid "Could not modify addr %s"
-msgstr "Kunde inte modifiera port %s/%s"
+msgstr "Kunde inte modifiera adress %s"
 
 #: ../semanage/seobject.py:1364
-#, fuzzy, python-format
+#, python-format
 msgid "Addr %s is defined in policy, cannot be deleted"
-msgstr "Port %s/%s är definierad i policy, kan inte tas bort"
+msgstr "Adress %s är definierad i policy, kan inte tas bort"
 
 #: ../semanage/seobject.py:1368
-#, fuzzy, python-format
+#, python-format
 msgid "Could not delete addr %s"
-msgstr "Kunde inte ta bort gränssnittet %s"
+msgstr "Kunde inte ta bort adress %s"
 
 #: ../semanage/seobject.py:1380
-#, fuzzy
 msgid "Could not deleteall node mappings"
-msgstr "Kunde inte ta bort inloggningkartläggning för %s"
+msgstr "Kunde inte göra deleteall på nodmappningar"
 
 #: ../semanage/seobject.py:1394
-#, fuzzy
 msgid "Could not list addrs"
-msgstr "Kunde inte lista portar"
+msgstr "Kunde inte lista adresser"
 
 #: ../semanage/seobject.py:1454 ../semanage/seobject.py:1516
 #: ../semanage/seobject.py:1550 ../semanage/seobject.py:1556
@@ -715,9 +708,8 @@ msgid "Could not delete interface %s"
 msgstr "Kunde inte ta bort gränssnittet %s"
 
 #: ../semanage/seobject.py:1574
-#, fuzzy
 msgid "Could not delete all interface  mappings"
-msgstr "Kunde inte ta bort gränssnittet %s"
+msgstr "Kunde inte ta bort alla gränssnittsmappningar"
 
 #: ../semanage/seobject.py:1588
 msgid "Could not list interfaces"
@@ -732,19 +724,19 @@ msgid "Context"
 msgstr "Kontext"
 
 #: ../semanage/seobject.py:1663
-#, fuzzy, python-format
+#, python-format
 msgid "Equivalence class for %s already exists"
-msgstr "Filkontext för %s redan definierat"
+msgstr "En ekvivalensklass för %s finns redan"
 
 #: ../semanage/seobject.py:1669
 #, python-format
 msgid "File spec %s conflicts with equivalency rule '%s %s'"
-msgstr ""
+msgstr "Filspecifikationen %s står i konflikt med evivalensregeln ”%s %s”"
 
 #: ../semanage/seobject.py:1678
-#, fuzzy, python-format
+#, python-format
 msgid "Equivalence class for %s does not exists"
-msgstr "Linuxanvändaren %s finns inte"
+msgstr "Någon ekvivalensklass för %s finns inte"
 
 #: ../semanage/seobject.py:1692
 #, python-format
@@ -762,21 +754,19 @@ msgid "Could not set mls fields in file context for %s"
 msgstr "Kunde inte sätta mls-fält i filkontext för %s"
 
 #: ../semanage/seobject.py:1707
-#, fuzzy
 msgid "Invalid file specification"
-msgstr ""
-"Fil\n"
-"Specifikation"
+msgstr "Ogiltig filspecifikation"
 
 #: ../semanage/seobject.py:1709
 msgid "File specification can not include spaces"
-msgstr ""
+msgstr "Filspecifikationer kan inte innehålla blanktecken"
 
 #: ../semanage/seobject.py:1714
 #, python-format
 msgid ""
-"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead"
-msgstr ""
+"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' "
+"instead"
+msgstr "Filspecifikationen %s står i konflikt med ekvivalensregeln ”%s %s”; försök lägga till ”%s” istället"
 
 #: ../semanage/seobject.py:1732 ../semanage/seobject.py:1737
 #: ../semanage/seobject.py:1790 ../semanage/seobject.py:1872
@@ -826,14 +816,13 @@ msgid "Could not modify file context for %s"
 msgstr "Kunde inte modifiera filkontext för %s"
 
 #: ../semanage/seobject.py:1839
-#, fuzzy
 msgid "Could not list the file contexts"
-msgstr "Kunde inte lista filkontext"
+msgstr "Kunde inte lista filkontexten"
 
 #: ../semanage/seobject.py:1853
-#, fuzzy, python-format
+#, python-format
 msgid "Could not delete the file context %s"
-msgstr "Kunde inte radera filkontext för %s"
+msgstr "Kunde inte radera filkontexten %s"
 
 #: ../semanage/seobject.py:1878
 #, python-format
@@ -865,14 +854,13 @@ msgstr "typ"
 msgid ""
 "\n"
 "SELinux Distribution fcontext Equivalence \n"
-msgstr ""
+msgstr "\nSELinux-distributionens fcontext-ekvivalens \n"
 
 #: ../semanage/seobject.py:1954
-#, fuzzy
 msgid ""
 "\n"
 "SELinux Local fcontext Equivalence \n"
-msgstr "SELinux-kontext"
+msgstr "\nSELinux lokala fcontext-ekvivalens \n"
 
 #: ../semanage/seobject.py:1988 ../semanage/seobject.py:2040
 #: ../semanage/seobject.py:2046
@@ -891,14 +879,14 @@ msgid "Could not query file context %s"
 msgstr "Kunde inte fråga filkontext %s"
 
 #: ../semanage/seobject.py:1999
-#, fuzzy, python-format
+#, python-format
 msgid "You must specify one of the following values: %s"
-msgstr "Du måste ange ett prefix"
+msgstr "Du måste ange ett av följande värden: %s"
 
 #: ../semanage/seobject.py:2004
-#, fuzzy, python-format
+#, python-format
 msgid "Could not set active value of boolean %s"
-msgstr "Kunde inte ta bort flagga %s"
+msgstr "Kunde inte sätta aktivt värde på booleanen %s"
 
 #: ../semanage/seobject.py:2007
 #, python-format
@@ -908,7 +896,7 @@ msgstr "Kunde inte modifiera flagga %s"
 #: ../semanage/seobject.py:2025
 #, python-format
 msgid "Bad format %s: Record %s"
-msgstr ""
+msgstr "Felaktigt format %s: Post %s"
 
 #: ../semanage/seobject.py:2048
 #, python-format
@@ -926,33 +914,32 @@ msgstr "Kunde inte lista flaggor"
 
 #: ../semanage/seobject.py:2104
 msgid "unknown"
-msgstr ""
+msgstr "okänt"
 
 #: ../semanage/seobject.py:2117
 msgid "off"
-msgstr ""
+msgstr "av"
 
 #: ../semanage/seobject.py:2117
-#, fuzzy
 msgid "on"
-msgstr "Cron"
+msgstr "på"
 
 #: ../semanage/seobject.py:2131
 msgid "SELinux boolean"
 msgstr "SELinux-boolean"
 
 #: ../semanage/seobject.py:2131
-#, fuzzy
 msgid "State"
-msgstr "Status"
+msgstr "Tillstånd"
 
 #: ../semanage/seobject.py:2131
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
-#: ../semanage/seobject.py:2131
+#: ../semanage/seobject.py:2131 ../gui/polgen.glade:3355
+#: ../gui/polgengui.py:253
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #: ../newrole/newrole.c:201
 #, c-format
@@ -962,12 +949,12 @@ msgstr "misslyckades med att sätta PAM_TTY\n"
 #: ../newrole/newrole.c:290
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
-msgstr ""
+msgstr "newrole: hashtabell för konfiguration av tjänstenamn spillde över\n"
 
 #: ../newrole/newrole.c:300
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
-msgstr ""
+msgstr "newrole:  %s:  fel på rad %lu.\n"
 
 #: ../newrole/newrole.c:439
 #, c-format
@@ -1072,7 +1059,7 @@ msgstr "Fel: flera nivåer angivna\n"
 #: ../newrole/newrole.c:865
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
-msgstr ""
+msgstr "Fel: du får inte lov att byta nivåer på en osäker terminal\n"
 
 #: ../newrole/newrole.c:891
 #, c-format
@@ -1140,14 +1127,14 @@ msgid "failed to get old_context.\n"
 msgstr "kunde inte få tag i old_context.\n"
 
 #: ../newrole/newrole.c:1077
-#, fuzzy, c-format
+#, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
-msgstr "Fel! Kunde inte få tag i tty-information.\n"
+msgstr "Varning!  Kunde inte få tag i tty-information.\n"
 
 #: ../newrole/newrole.c:1098
 #, c-format
 msgid "error on reading PAM service configuration.\n"
-msgstr ""
+msgstr "fel vid inläsning av PAM-tjänstekonfiguration.\n"
 
 #: ../newrole/newrole.c:1133
 #, c-format
@@ -1162,7 +1149,7 @@ msgstr "newrole: fel vid gaffling: %s"
 #: ../newrole/newrole.c:1163 ../newrole/newrole.c:1186
 #, c-format
 msgid "Unable to restore tty label...\n"
-msgstr "Kunde inte återställa tty-märkning...\n"
+msgstr "Kunde inte återställa tty-märkning…\n"
 
 #: ../newrole/newrole.c:1165 ../newrole/newrole.c:1192
 #, c-format
@@ -1189,19 +1176,19 @@ msgid "failed to exec shell\n"
 msgstr "kunde ej exek skal\n"
 
 #: ../load_policy/load_policy.c:22
-#, fuzzy, c-format
+#, c-format
 msgid "usage:  %s [-qi]\n"
-msgstr "användning:  %s [-q]\n"
+msgstr "användning:  %s [-qi]\n"
 
 #: ../load_policy/load_policy.c:71
 #, c-format
 msgid "%s:  Policy is already loaded and initial load requested\n"
-msgstr ""
+msgstr "%s:  Policyn är redan inläst och initial inläsning begärd\n"
 
 #: ../load_policy/load_policy.c:80
-#, fuzzy, c-format
+#, c-format
 msgid "%s:  Can't load policy and enforcing mode requested:  %s\n"
-msgstr "%s: Kan inte läsa in policy: %s\n"
+msgstr "%s:  Kan inte läsa in policy och tvingande läge är begärt:  %s\n"
 
 #: ../load_policy/load_policy.c:90
 #, c-format
@@ -1238,17 +1225,17 @@ msgstr "Kan inte ha flera känsligheter"
 #: ../scripts/chcat:325
 #, c-format
 msgid "Usage %s CATEGORY File ..."
-msgstr "Användning %s KATEGORI fil ..."
+msgstr "Användning %s KATEGORI fil …"
 
 #: ../scripts/chcat:326
 #, c-format
 msgid "Usage %s -l CATEGORY user ..."
-msgstr "Användning %s -l KATEGORI användare ..."
+msgstr "Användning %s -l KATEGORI användare …"
 
 #: ../scripts/chcat:327
 #, c-format
 msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
-msgstr "Användning %s [[+|-]KATEGORI],...]q fil ..."
+msgstr "Användning %s [[+|-]KATEGORI],…]q fil …"
 
 #: ../scripts/chcat:328
 #, c-format
@@ -1287,1055 +1274,2099 @@ msgstr "chcat -- -Hemligt /dok/affärsplan.odt"
 msgid "chcat -l +CompanyConfidential juser"
 msgstr "chcat -l +Hemligt juser"
 
-#: ../scripts/chcat:399
-#, c-format
+#: ../scripts/chcat:399 ../gui/polgen.py:1334
+#, c-format, python-format
 msgid "Options Error %s "
 msgstr "Flaggfel %s "
 
-#, fuzzy
-#~ msgid ""
-#~ "Unable to open %s: translations not supported on non-MLS machines: %s"
-#~ msgstr ""
-#~ "Kan inte öppna %s: översättningar stöds inte på maskiner som inte har MLS"
-
-#~ msgid "Level"
-#~ msgstr "Nivå"
-
-#~ msgid "Translation"
-#~ msgstr "Översättning"
-
-#~ msgid "Translations can not contain spaces '%s' "
-#~ msgstr "Översättningar kan inte innehålla blanksteg \"%s\" "
-
-#~ msgid "Invalid Level '%s' "
-#~ msgstr "Ogiltig nivå \"%s\" "
-
-#~ msgid "%s already defined in translations"
-#~ msgstr "%s är redan definierad i översättningar"
-
-#~ msgid "%s not defined in translations"
-#~ msgstr "%s är inte definierad i översättningar"
-
-#~ msgid "Login mapping for %s is already defined"
-#~ msgstr "Inloggningskartläggning för %s är redan definierad"
-
-#~ msgid "add SELinux user mapping"
-#~ msgstr "lägg till SELinux användarmappning"
-
-#~ msgid "SELinux user %s is already defined"
-#~ msgstr "SELinux användare %s är redan definierad"
-
-#, fuzzy
-#~ msgid "Node Netmask is required"
-#~ msgstr "Port krävs"
-
-#, fuzzy
-#~ msgid "Addr %s already defined"
-#~ msgstr "Port %s/%s redan definierad"
-
-#~ msgid "Interface %s already defined"
-#~ msgstr "Gränssnittet %s är redan definierat"
-
-#, fuzzy
-#~ msgid "Error initializing capabilities, aborting.\n"
-#~ msgstr "Fel vid initiering av kapabiliteter, avbryter.\n"
-
-#~ msgid "Error setting capabilities, aborting\n"
-#~ msgstr "Fel vid sättning av kapabiliteter, avbryter\n"
-
-#~ msgid "Error setting KEEPCAPS, aborting\n"
-#~ msgstr "Fel vid sättning av KEEPCAPS, avbryter\n"
-
-#~ msgid "Error dropping capabilities, aborting\n"
-#~ msgstr "Fel vid borttagning av kapabiliteter, avbryter\n"
-
-#~ msgid "Error dropping SETUID capability, aborting\n"
-#~ msgstr "Fel vi borttagning av SETUID kapabilitet, avbryter\n"
-
-#~ msgid "Error freeing caps\n"
-#~ msgstr "Fel vid frigöring av caps\n"
-
-#~ msgid "translations not supported on non-MLS machines"
-#~ msgstr "översättningar stöds inte på maskiner som inte har MLS"
-
-#~ msgid "Boolean"
-#~ msgstr "Boolean"
-
-#, fuzzy
-#~ msgid "all"
-#~ msgstr "Alla"
-
-#~ msgid "File Labeling"
-#~ msgstr "Filmärkning"
-
-#~ msgid ""
-#~ "File\n"
-#~ "Specification"
-#~ msgstr ""
-#~ "Fil\n"
-#~ "Specifikation"
-
-#, fuzzy
-#~ msgid ""
-#~ "Selinux\n"
-#~ "File Type"
-#~ msgstr ""
-#~ "Selinux\n"
-#~ "Filkontext"
-
-#~ msgid ""
-#~ "File\n"
-#~ "Type"
-#~ msgstr ""
-#~ "Fil\n"
-#~ "Typ"
-
-#~ msgid ""
-#~ "SELinux\n"
-#~ "User"
-#~ msgstr ""
-#~ "SELinux\n"
-#~ "Användare"
-
-#~ msgid ""
-#~ "MLS/\n"
-#~ "MCS Range"
-#~ msgstr ""
-#~ "MLS/\n"
-#~ "MCS-intervall"
-
-#~ msgid "Login '%s' is required"
-#~ msgstr "Inloggning '%s' krävs"
-
-#~ msgid "Policy Module"
-#~ msgstr "Policymodul"
-
-#~ msgid "Load Policy Module"
-#~ msgstr "Läsa in policymodul"
-
-#~ msgid "Red Hat 2007"
-#~ msgstr "Red Hat 2007"
-
-#~ msgid "GPL"
-#~ msgstr "GPL"
-
-#~ msgid "translator-credits"
-#~ msgstr "Magnus Larsson"
-
-#~ msgid "<b>Applications</b>"
-#~ msgstr "<b>Program</b>"
-
-#, fuzzy
-#~ msgid "<b>Login Users</b>"
-#~ msgstr "<b>Användare</b>"
-
-#, fuzzy
-#~ msgid "User Role"
-#~ msgstr "Roll"
-
-#, fuzzy
-#~ msgid "<b>Root Users</b>"
-#~ msgstr "<b>Användare</b>"
-
-#, fuzzy
-#~ msgid "Root Admin User Role"
-#~ msgstr "Root-användare"
-
-#~ msgid "Name"
-#~ msgstr "Namn"
-
-#~ msgid "..."
-#~ msgstr "..."
-
-#~ msgid "Executable"
-#~ msgstr "Körbar"
-
-#~ msgid "Init script"
-#~ msgstr "Init-skript"
-
-#~ msgid "<b>TCP Ports</b>"
-#~ msgstr "<b>TCP-portar</b>"
-
-#~ msgid "All"
-#~ msgstr "Alla"
-
-#~ msgid "600-1024"
-#~ msgstr "600-1024"
-
-#~ msgid "Select Ports"
-#~ msgstr "Välj portar"
-
-#~ msgid "<b>UDP Ports</b>"
-#~ msgstr "<b>UDP-portar</b>"
-
-#, fuzzy
-#~ msgid "Sends audit messages"
-#~ msgstr "Fel vid skickande av granskningsmeddelande.\n"
-
-#, fuzzy
-#~ msgid "Boolean Name"
-#~ msgstr "Boolean"
-
-#~ msgid "Role"
-#~ msgstr "Roll"
-
-#~ msgid "Application"
-#~ msgstr "Program"
-
-#, fuzzy
-#~ msgid "You must select a user"
-#~ msgstr "Du måste ange ett namn"
-
-#~ msgid "You must enter a name"
-#~ msgstr "Du måste ange ett namn"
-
-#~ msgid "You must enter a executable"
-#~ msgstr "Du måste ange ett körbart program"
-
-#, fuzzy
-#~ msgid "Type Enforcement file"
-#~ msgstr "Typ-upprätthållande fil"
-
-#~ msgid "Interface file"
-#~ msgstr "Gränssnittsfil"
-
-#~ msgid "File Contexts file"
-#~ msgstr "Filkontextsfil"
-
-#~ msgid "Protocol"
-#~ msgstr "Protokoll"
-
-#~ msgid ""
-#~ "MLS/MCS\n"
-#~ "Level"
-#~ msgstr ""
-#~ "MLS/MCS\n"
-#~ "Nivå"
-
-#~ msgid "Port"
-#~ msgstr "Port"
-
-#~ msgid "Group View"
-#~ msgstr "Gruppvy"
-
-#~ msgid "SELinux Service Protection"
-#~ msgstr "SELinux-tjänstskydd"
-
-#~ msgid "Admin"
-#~ msgstr "Admin"
-
-#~ msgid "Memory Protection"
-#~ msgstr "Minesskydd"
-
-#~ msgid "Mount"
-#~ msgstr "Montera"
-
-#~ msgid "SSH"
-#~ msgstr "SSH"
-
-#~ msgid "Network Configuration"
-#~ msgstr "Nätverkinställningar"
-
-#~ msgid "Databases"
-#~ msgstr "Databaser"
-
-#~ msgid "XServer"
-#~ msgstr "XServer"
-
-#~ msgid "NIS"
-#~ msgstr "NIS"
-
-#~ msgid "Web Applications"
-#~ msgstr "Webbprogram"
-
-#~ msgid "Disable SELinux protection for amavis"
-#~ msgstr "Avaktivera SELinux-skydd för amavis"
-
-#~ msgid "Disable SELinux protection for apmd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för apmd-demonen"
-
-#~ msgid "Disable SELinux protection for arpwatch daemon"
-#~ msgstr "Avaktivera SELinux-skydd för arpwatch-demonen"
-
-#~ msgid "Disable SELinux protection for auditd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för auditd-demonen"
-
-#~ msgid "Disable SELinux protection for automount daemon"
-#~ msgstr "Avaktivera SELinux-skydd för automount-demonen"
-
-#~ msgid "Disable SELinux protection for avahi"
-#~ msgstr "Avaktivera SELinux-skydd för avahi"
-
-#~ msgid "Disable SELinux protection for bluetooth daemon"
-#~ msgstr "Avaktivera SELinux-skydd för bluetooth-demonen"
-
-#~ msgid "Disable SELinux protection for canna daemon"
-#~ msgstr "Avaktivera SELinux-skydd för canna-demonen"
-
-#~ msgid "Disable SELinux protection for cardmgr daemon"
-#~ msgstr "Avaktivera SELinux-skydd för cardmgr-demonen"
-
-#~ msgid "Disable SELinux protection for Cluster Server"
-#~ msgstr "Avaktivera SELinux-skydd för Cluster-servern"
-
-#~ msgid "Disable SELinux protection for ciped daemon"
-#~ msgstr "Avaktivera SELinux-skydd för ciped-demonen"
-
-#~ msgid "Disable SELinux protection for clamd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för clamd-demonen"
-
-#~ msgid "Disable SELinux protection for clamscan"
-#~ msgstr "Avaktivera SELinux-skydd för clamscan"
-
-#~ msgid "Disable SELinux protection for clvmd"
-#~ msgstr "Avaktivera SELinux-skydd för clvmd"
-
-#~ msgid "Disable SELinux protection for comsat daemon"
-#~ msgstr "Avaktivera SELinux-skydd för comsat-demonen"
-
-#~ msgid "Disable SELinux protection for courier daemon"
-#~ msgstr "Avaktivera SELinux-skydd för courier-demonen"
-
-#~ msgid "Disable SELinux protection for cpucontrol daemon"
-#~ msgstr "Avaktivera SELinux-skydd för cpucontrol-demonen"
-
-#~ msgid "Disable SELinux protection for cpuspeed daemon"
-#~ msgstr "Avaktivera SELinux-skydd för cpuspeed-demonen"
-
-#~ msgid "Cron"
-#~ msgstr "Cron"
-
-#~ msgid "Disable SELinux protection for crond daemon"
-#~ msgstr "Avaktivera SELinux-skydd för crond-demonen"
-
-#~ msgid "Printing"
-#~ msgstr "Utskrift"
-
-#, fuzzy
-#~ msgid "Disable SELinux protection for cupsd back end server"
-#~ msgstr "Avaktivera SELinux-skydd för cupsd-demonen"
-
-#~ msgid "Disable SELinux protection for cupsd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för cupsd-demonen"
-
-#~ msgid "Disable SELinux protection for cupsd_lpd"
-#~ msgstr "Avaktivera SELinux-skydd för cupsd_lpd"
-
-#~ msgid "CVS"
-#~ msgstr "CVS"
-
-#~ msgid "Disable SELinux protection for cvs daemon"
-#~ msgstr "Avaktivera SELinux-skydd för cvs-demonen"
-
-#~ msgid "Disable SELinux protection for cyrus daemon"
-#~ msgstr "Avaktivera SELinux-skydd för cyrus-demonen"
-
-#~ msgid "Disable SELinux protection for dbskkd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för dbskkd-demonen"
-
-#~ msgid "Disable SELinux protection for dbusd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för dbusd-demonen"
-
-#~ msgid "Disable SELinux protection for dccd"
-#~ msgstr "Avaktivera SELinux-skydd för dccd"
-
-#~ msgid "Disable SELinux protection for dccifd"
-#~ msgstr "Avaktivera SELinux-skydd för dccifd"
-
-#~ msgid "Disable SELinux protection for dccm"
-#~ msgstr "Avaktivera SELinux-skydd för dccm"
-
-#~ msgid "Disable SELinux protection for ddt daemon"
-#~ msgstr "Avaktivera SELinux-skydd för ddt-demonen"
-
-#~ msgid "Disable SELinux protection for devfsd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för devfsd-demonen"
-
-#~ msgid "Disable SELinux protection for dhcpc daemon"
-#~ msgstr "Avaktivera SELinux-skydd för dhcpc-demonen"
-
-#~ msgid "Disable SELinux protection for dhcpd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för dhcpd-demonen"
-
-#~ msgid "Disable SELinux protection for dictd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för dictd-demonen"
-
-#~ msgid "Disable SELinux protection for games"
-#~ msgstr "Avaktivera SELinux-skydd för spel"
-
-#~ msgid "Disable SELinux protection for the web browsers"
-#~ msgstr "Avaktivera SELinux-skydd för webbläsare"
-
-#~ msgid "Disable SELinux protection for Thunderbird"
-#~ msgstr "Avaktivera SELinux-skydd för Thunderbird"
-
-#~ msgid "Disable SELinux protection for distccd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för distccd-demonen"
-
-#~ msgid "Disable SELinux protection for dmesg daemon"
-#~ msgstr "Avaktivera SELinux-skydd för dmesg-demonen"
-
-#~ msgid "Disable SELinux protection for dnsmasq daemon"
-#~ msgstr "Avaktivera SELinux-skydd för dnsmasq-demonen"
-
-#~ msgid "Disable SELinux protection for dovecot daemon"
-#~ msgstr "Avaktivera SELinux-skydd för dovecot-demonen"
-
-#~ msgid "Disable SELinux protection for entropyd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för entropyd-demonen"
-
-#~ msgid "Disable SELinux protection for fetchmail"
-#~ msgstr "Avaktivera SELinux-skydd för fetchmail"
-
-#~ msgid "Disable SELinux protection for fingerd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för fingerd-demonen"
-
-#~ msgid "Disable SELinux protection for freshclam daemon"
-#~ msgstr "Avaktivera SELinux-skydd för freshclam-demonen"
-
-#~ msgid "Disable SELinux protection for fsdaemon daemon"
-#~ msgstr "Avaktivera SELinux-skydd för fsdaemon-demonen"
-
-#~ msgid "Disable SELinux protection for gpm daemon"
-#~ msgstr "Avaktivera SELinux-skydd för gpm-demonen"
-
-#~ msgid "NFS"
-#~ msgstr "NFS"
-
-#~ msgid "Disable SELinux protection for gss daemon"
-#~ msgstr "Avaktivera SELinux-skydd för gss-demonen"
-
-#, fuzzy
-#~ msgid "Disable SELinux protection for Hal daemon"
-#~ msgstr "Avaktivera SELinux-skydd för hal-demonen"
-
-#~ msgid "Compatibility"
-#~ msgstr "Kompatibilitet"
-
-#~ msgid "Disable SELinux protection for hostname daemon"
-#~ msgstr "Avaktivera SELinux-skydd för hostname-demonen"
-
-#~ msgid "Disable SELinux protection for hotplug daemon"
-#~ msgstr "Avaktivera SELinux-skydd för hotplug-demonen"
-
-#~ msgid "Disable SELinux protection for howl daemon"
-#~ msgstr "Avaktivera SELinux-skydd för howl-demonen"
-
-#~ msgid "Disable SELinux protection for cups hplip daemon"
-#~ msgstr "Avaktivera SELinux-skydd för cups hplip-demonen"
-
-#~ msgid "Disable SELinux protection for httpd rotatelogs"
-#~ msgstr "Avaktivera SELinux-skydd för httpd rotatelogs"
-
-#~ msgid "HTTPD Service"
-#~ msgstr "HTTPD-tjänst"
-
-#~ msgid "Disable SELinux protection for http suexec"
-#~ msgstr "Avaktivera SELinux-skydd för http suexec"
-
-#~ msgid "Disable SELinux protection for hwclock daemon"
-#~ msgstr "Avaktivera SELinux-skydd för hwclock-demonen"
-
-#~ msgid "Disable SELinux protection for i18n daemon"
-#~ msgstr "Avaktivera SELinux-skydd för i18n-demonen"
-
-#~ msgid "Disable SELinux protection for imazesrv daemon"
-#~ msgstr "Avaktivera SELinux-skydd för imazesrv-demonen"
-
-#~ msgid "Disable SELinux protection for inetd child daemons"
-#~ msgstr "Avaktivera SELinux-skydd för inetd child-demonerna"
-
-#~ msgid "Disable SELinux protection for inetd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för inetd-demonen"
-
-#~ msgid "Disable SELinux protection for innd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för innd-demonen"
-
-#~ msgid "Disable SELinux protection for iptables daemon"
-#~ msgstr "Avaktivera SELinux-skydd för iptables-demonen"
-
-#~ msgid "Disable SELinux protection for ircd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för ircd-demonen"
-
-#~ msgid "Disable SELinux protection for irqbalance daemon"
-#~ msgstr "Avaktivera SELinux-skydd för irqbalance-demonen"
-
-#~ msgid "Disable SELinux protection for iscsi daemon"
-#~ msgstr "Avaktivera SELinux-skydd för iscsi-demonen"
-
-#~ msgid "Disable SELinux protection for jabberd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för jabberd-demonen"
-
-#~ msgid "Kerberos"
-#~ msgstr "Kerberos"
-
-#~ msgid "Disable SELinux protection for kadmind daemon"
-#~ msgstr "Avaktivera SELinux-skydd för kadmind-demonen"
-
-#~ msgid "Disable SELinux protection for klogd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för klogd-demonen"
-
-#~ msgid "Disable SELinux protection for krb5kdc daemon"
-#~ msgstr "Avaktivera SELinux-skydd för krb4kdc-demonen"
-
-#~ msgid "Disable SELinux protection for ktalk daemons"
-#~ msgstr "Avaktivera SELinux-skydd för ktalk-demonen"
-
-#~ msgid "Disable SELinux protection for kudzu daemon"
-#~ msgstr "Avaktivera SELinux-skydd för kudzu-demonen"
-
-#~ msgid "Disable SELinux protection for locate daemon"
-#~ msgstr "Avaktivera SELinux-skydd för locate-demonen"
-
-#~ msgid "Disable SELinux protection for lpd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för lpd-demonen"
-
-#~ msgid "Disable SELinux protection for lrrd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för lrrd-demonen"
-
-#~ msgid "Disable SELinux protection for lvm daemon"
-#~ msgstr "Avaktivera SELinux-skydd för lvm-demonen"
-
-#~ msgid "Disable SELinux protection for mailman"
-#~ msgstr "Avaktivera SELinux-skydd för mailman"
-
-#~ msgid "Disable SELinux protection for mdadm daemon"
-#~ msgstr "Avaktivera SELinux-skydd för madm-demonen"
-
-#~ msgid "Disable SELinux protection for monopd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för monopd-demonen"
-
-#~ msgid "Disable SELinux protection for mrtg daemon"
-#~ msgstr "Avaktivera SELinux-skydd för mrtg-demonen"
-
-#~ msgid "Disable SELinux protection for mysqld daemon"
-#~ msgstr "Avaktivera SELinux-skydd för mysqld-demonen"
-
-#~ msgid "Disable SELinux protection for nagios daemon"
-#~ msgstr "Avaktivera SELinux-skydd för nagios-demonen"
-
-#~ msgid "Name Service"
-#~ msgstr "Namntjänst"
-
-#~ msgid "Disable SELinux protection for named daemon"
-#~ msgstr "Avaktivera SELinux-skydd för named-demonen"
-
-#~ msgid "Disable SELinux protection for nessusd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för nessusd-demonen"
-
-#~ msgid "Disable SELinux protection for NetworkManager"
-#~ msgstr "Avaktivera SELinux-skydd för NetworkManager"
-
-#~ msgid "Disable SELinux protection for nfsd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för nfsd-demonen"
-
-#~ msgid "Samba"
-#~ msgstr "Samba"
-
-#~ msgid "Disable SELinux protection for nmbd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för nmbd-demonen"
-
-#~ msgid "Disable SELinux protection for nrpe daemon"
-#~ msgstr "Avaktivera SELinux-skydd för nrpe-demonen"
-
-#~ msgid "Disable SELinux protection for nscd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för nscd-demonen"
-
-#~ msgid "Disable SELinux protection for nsd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för nsd-demonen"
-
-#~ msgid "Disable SELinux protection for ntpd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för ntpd-demonen"
-
-#~ msgid "Disable SELinux protection for oddjob"
-#~ msgstr "Avaktivera SELinux-skydd för oddjob"
-
-#~ msgid "Disable SELinux protection for oddjob_mkhomedir"
-#~ msgstr "Avaktivera SELinux-skydd för oddjob_mkhomedir"
-
-#~ msgid "Disable SELinux protection for openvpn daemon"
-#~ msgstr "Avaktivera SELinux-skydd för openvpn-demonen"
-
-#~ msgid "Disable SELinux protection for pam daemon"
-#~ msgstr "Avaktivera SELinux-skydd för pam-demonen"
-
-#~ msgid "Disable SELinux protection for pegasus"
-#~ msgstr "Avaktivera SELinux-skydd för pegasus"
-
-#~ msgid "Disable SELinux protection for perdition daemon"
-#~ msgstr "Avaktivera SELinux-skydd för perdition-demonen"
-
-#~ msgid "Disable SELinux protection for portmap daemon"
-#~ msgstr "Avaktivera SELinux-skydd för portmap-demonen"
-
-#~ msgid "Disable SELinux protection for portslave daemon"
-#~ msgstr "Avaktivera SELinux-skydd för portslave-demonen"
-
-#~ msgid "Disable SELinux protection for postfix"
-#~ msgstr "Avaktivera SELinux-skydd för postfix"
-
-#~ msgid "Disable SELinux protection for postgresql daemon"
-#~ msgstr "Avaktivera SELinux-skydd för postgresql-demonen"
-
-#~ msgid "pppd"
-#~ msgstr "pppd"
-
-#~ msgid "Disable SELinux protection for pptp"
-#~ msgstr "Avaktivera SELinux-skydd för pptp"
-
-#~ msgid "Disable SELinux protection for prelink daemon"
-#~ msgstr "Avaktivera SELinux-skydd för prelink-demonen"
-
-#~ msgid "Disable SELinux protection for privoxy daemon"
-#~ msgstr "Avaktivera SELinux-skydd för privoxy-demonen"
-
-#~ msgid "Disable SELinux protection for ptal daemon"
-#~ msgstr "Avaktivera SELinux-skydd för ptal-demonen"
-
-#~ msgid "Disable SELinux protection for pxe daemon"
-#~ msgstr "Avaktivera SELinux-skydd för pxe-demonen"
-
-#~ msgid "Disable SELinux protection for pyzord"
-#~ msgstr "Avaktivera SELinux-skydd för pyzord"
-
-#~ msgid "Disable SELinux protection for quota daemon"
-#~ msgstr "Avaktivera SELinux-skydd för quota-demonen"
-
-#~ msgid "Disable SELinux protection for radiusd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för radiusd-demonen"
-
-#~ msgid "Disable SELinux protection for radvd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för radvd-demonen"
-
-#~ msgid "Disable SELinux protection for rdisc"
-#~ msgstr "Avaktivera SELinux-skydd för rdisc"
-
-#~ msgid "Disable SELinux protection for readahead"
-#~ msgstr "Avaktivera SELinux-skydd för readahead"
-
-#~ msgid "Disable SELinux protection for restorecond"
-#~ msgstr "Avaktivera SELinux-skydd för restorecond"
-
-#~ msgid "Disable SELinux protection for rhgb daemon"
-#~ msgstr "Avaktivera SELinux-skydd för rhgb-demonen"
-
-#~ msgid "Disable SELinux protection for ricci"
-#~ msgstr "Avaktivera SELinux-skydd för ricci"
-
-#~ msgid "Disable SELinux protection for ricci_modclusterd"
-#~ msgstr "Avaktivera SELinux-skydd för ricci_modclusterd"
-
-#~ msgid "Disable SELinux protection for rlogind daemon"
-#~ msgstr "Avaktivera SELinux-skydd för rlogind-demonen"
-
-#~ msgid "Disable SELinux protection for rpcd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för rpcd-demonen"
-
-#~ msgid "Disable SELinux protection for rshd"
-#~ msgstr "Avaktivera SELinux-skydd för rshd"
-
-#~ msgid "rsync"
-#~ msgstr "rsync"
-
-#~ msgid "Disable SELinux protection for rsync daemon"
-#~ msgstr "Avaktivera SELinux-skydd för rsync-demonen"
-
-#~ msgid "SASL authentication server"
-#~ msgstr "SASL autentiseringsserver"
-
-#~ msgid "Disable SELinux protection for saslauthd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för saslauthd-demonen"
-
-#~ msgid "Disable SELinux protection for scannerdaemon daemon"
-#~ msgstr "Avaktivera SELinux-skydd för scannerdaemon-demonen"
-
-#~ msgid "Disable SELinux protection for sendmail daemon"
-#~ msgstr "Avaktivera SELinux-skydd för sendmail-demonen"
-
-#~ msgid "Disable SELinux protection for setrans"
-#~ msgstr "Avaktivera SELinux-skydd för setrans"
-
-#, fuzzy
-#~ msgid "Disable SELinux protection for setroubleshoot daemon"
-#~ msgstr "Avaktivera SELinux-skydd för setroublesoot-demonen"
-
-#~ msgid "Disable SELinux protection for slapd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för slapd-demonen"
-
-#~ msgid "Disable SELinux protection for slrnpull daemon"
-#~ msgstr "Avaktivera SELinux-skydd för slrnpull-demonen"
-
-#~ msgid "Disable SELinux protection for smbd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för smbd-demonen"
-
-#~ msgid "Disable SELinux protection for snmpd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för snmpd-demonen"
-
-#~ msgid "Disable SELinux protection for snort daemon"
-#~ msgstr "Avaktivera SELinux-skydd för snort-demonen"
-
-#~ msgid "Disable SELinux protection for soundd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för soundd-demonen"
-
-#~ msgid "Disable SELinux protection for sound daemon"
-#~ msgstr "Avaktivera SELinux-skydd för sound-demonen"
-
-#, fuzzy
-#~ msgid "Spam Protection"
-#~ msgstr "skräppostskydd"
-
-#~ msgid "Disable SELinux protection for spamd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för spamd-demonen"
-
-#~ msgid "Disable SELinux protection for speedmgmt daemon"
-#~ msgstr "Avaktivera SELinux-skydd för speedmgmt-demonen"
-
-#~ msgid "Squid"
-#~ msgstr "Squid"
-
-#~ msgid "Disable SELinux protection for squid daemon"
-#~ msgstr "Avaktivera SELinux-skydd för squid-demonen"
-
-#~ msgid "Disable SELinux protection for ssh daemon"
-#~ msgstr "Avaktivera SELinux-skydd för ssh-demonen"
-
-#~ msgid "Universal SSL tunnel"
-#~ msgstr "Universiell SSL-tunnel"
-
-#~ msgid "Disable SELinux protection for stunnel daemon"
-#~ msgstr "Avaktivera SELinux-skydd för stunnel-demonen"
-
-#~ msgid "Disable SELinux protection for swat daemon"
-#~ msgstr "Avaktivera SELinux-skydd för swat-demonen"
-
-#~ msgid "Disable SELinux protection for sxid daemon"
-#~ msgstr "Avaktivera SELinux-skydd för sxid-demonen"
-
-#~ msgid "Disable SELinux protection for syslogd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för syslogd-demonen"
-
-#~ msgid "Disable SELinux protection for system cron jobs"
-#~ msgstr "Avaktivera SELinux-skydd för systemets cron-jobb"
-
-#~ msgid "Disable SELinux protection for tcp daemon"
-#~ msgstr "Avaktivera SELinux-skydd för tcp-demonen"
-
-#~ msgid "Disable SELinux protection for telnet daemon"
-#~ msgstr "Avaktivera SELinux-skydd för telnet-demonen"
-
-#~ msgid "Disable SELinux protection for tftpd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för tftpd-demonen"
-
-#~ msgid "Disable SELinux protection for transproxy daemon"
-#~ msgstr "Avaktivera SELinux-skydd för transproxy-demonen"
-
-#~ msgid "Disable SELinux protection for udev daemon"
-#~ msgstr "Avaktivera SELinux-skydd för udev-demonen"
-
-#~ msgid "Disable SELinux protection for uml daemon"
-#~ msgstr "Avaktivera SELinux-skydd för uml-demonen"
-
-#~ msgid "Disable SELinux protection for updfstab daemon"
-#~ msgstr "Avaktivera SELinux-skydd för updfstab-demonen"
-
-#~ msgid "Disable SELinux protection for uptimed daemon"
-#~ msgstr "Avaktivera SELinux-skydd för uptimed-demonen"
-
-#~ msgid "Disable SELinux protection for vmware daemon"
-#~ msgstr "Avaktivera SELinux-skydd för vmware-demonen"
-
-#~ msgid "Disable SELinux protection for watchdog daemon"
-#~ msgstr "Avaktivera SELinux-skydd för watchdog-demonen"
-
-#~ msgid "Disable SELinux protection for winbind daemon"
-#~ msgstr "Avaktivera SELinux-skydd för winbind-demonen"
-
-#~ msgid "Disable SELinux protection for xdm daemon"
-#~ msgstr "Avaktivera SELinux-skydd för xdm-demonen"
-
-#~ msgid "Disable SELinux protection for xen daemon"
-#~ msgstr "Avaktivera SELinux-skydd för xen-demonen"
-
-#~ msgid "XEN"
-#~ msgstr "XEN"
-
-#~ msgid "Disable SELinux protection for xfs daemon"
-#~ msgstr "Avaktivera SELinux-skydd för xfs-demonen"
-
-#, fuzzy
-#~ msgid "Disable SELinux protection for xen control"
-#~ msgstr "Avaktivera SELinux-skydd för xen-constrol"
-
-#~ msgid "Disable SELinux protection for ypbind daemon"
-#~ msgstr "Avaktivera SELinux-skydd för ypbind-demonen"
-
-#~ msgid "Disable SELinux protection for NIS Password Daemon"
-#~ msgstr "Avaktivera SELinux-skydd för NIS-lösenord-demonen"
-
-#~ msgid "Disable SELinux protection for ypserv daemon"
-#~ msgstr "Avaktivera SELinux-skydd för ypserv-demonen"
-
-#~ msgid "Disable SELinux protection for NIS Transfer Daemon"
-#~ msgstr "Avaktivera SELinux-skydd för NIS Transfer-demonen"
-
-#~ msgid "Delete %s"
-#~ msgstr "Radera %s"
-
-#~ msgid "Add %s"
-#~ msgstr "Lägg till %s"
-
-#~ msgid "Modify %s"
-#~ msgstr "Modifiera %s"
-
-#~ msgid "Permissive"
-#~ msgstr "Tillåtande"
-
-#~ msgid "Enforcing"
-#~ msgstr "Upprätthållande"
-
-#~ msgid "system-config-selinux"
-#~ msgstr "system-config-selinux"
-
-#~ msgid ""
-#~ "Copyright (c)2006 Red Hat, Inc.\n"
-#~ "Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
-#~ msgstr ""
-#~ "Copyright (c)2006 Red Hat, Inc.\n"
-#~ "Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
-
-#~ msgid "SELinux Type"
-#~ msgstr "SELinux-typ"
-
-#~ msgid ""
-#~ "tcp\n"
-#~ "udp"
-#~ msgstr ""
-#~ "tcp\n"
-#~ "udp"
-
-#~ msgid ""
-#~ "SELinux MLS/MCS\n"
-#~ "Level"
-#~ msgstr ""
-#~ "SELinux MLS/MCS\n"
-#~ "Nivå"
-
-#~ msgid "File Type"
-#~ msgstr "Filtyp"
-
-#~ msgid ""
-#~ "all files\n"
-#~ "regular file\n"
-#~ "directory\n"
-#~ "character device\n"
-#~ "block device\n"
-#~ "socket\n"
-#~ "symbolic link\n"
-#~ "named pipe\n"
-#~ msgstr ""
-#~ "alla filer\n"
-#~ "vanliga filer\n"
-#~ "kataloger\n"
-#~ "teckenenhet\n"
-#~ "blockenhet\n"
-#~ "uttag\n"
-#~ "symbolisk länk\n"
-#~ "namngivet rör\n"
-
-#~ msgid "MLS"
-#~ msgstr "MLS"
-
-#~ msgid "Add SELinux User"
-#~ msgstr "Lägga till SELinux-användare"
-
-#~ msgid "Add"
-#~ msgstr "Lägg till"
-
-#~ msgid "_Properties"
-#~ msgstr "_Egenskaper"
-
-#~ msgid "_Delete"
-#~ msgstr "_Ta bort"
-
-#~ msgid "<b>Select:</b>"
-#~ msgstr "<b>Val:</b>"
-
-#~ msgid "Current Enforcing Mode"
-#~ msgstr "Nuvarande upprätthållande-läge"
-
-#~ msgid "Relabel on next reboot."
-#~ msgstr "Märk om vid nästa omstart."
-
-#~ msgid "label37"
-#~ msgstr "label37"
-
-#~ msgid "Filter"
-#~ msgstr "Filter"
-
-#~ msgid "label50"
-#~ msgstr "label50"
-
-#~ msgid "label38"
-#~ msgstr "label38"
-
-#~ msgid "Modify SELinux User Mapping"
-#~ msgstr "Modifiera SELinux användarmappning"
-
-#~ msgid "Delete SELinux User Mapping"
-#~ msgstr "Ta bort SELinux-användarmappning"
-
-#~ msgid "label39"
-#~ msgstr "label39"
-
-#~ msgid "Add Translation"
-#~ msgstr "Lägg till översättning"
-
-#~ msgid "Delete Translation"
-#~ msgstr "Ta bort översättning"
-
-#~ msgid "label41"
-#~ msgstr "label41"
-
-#~ msgid "Modify SELinux User"
-#~ msgstr "Modifiera SELinux-användare"
-
-#~ msgid "label40"
-#~ msgstr "label40"
-
-#~ msgid "Add Network Port"
-#~ msgstr "Lägg till nätverkport"
-
-#~ msgid "label42"
-#~ msgstr "label42"
-
-#~ msgid "Load policy module"
-#~ msgstr "Läs in policymodul"
-
-#~ msgid "label44"
-#~ msgstr "label44"
-
-#~ msgid "SELinux user '%s' is required"
-#~ msgstr "SELinux-användare \"%s\" krävs"
-
-#~ msgid "Requires value"
-#~ msgstr "Kräver värde"
-
-#~ msgid "label25"
-#~ msgstr "label25"
-
-#~ msgid "label26"
-#~ msgstr "label26"
-
-#~ msgid "label28"
-#~ msgstr "label28"
-
-#~ msgid "label30"
-#~ msgstr "label30"
-
-#~ msgid "label31"
-#~ msgstr "label31"
-
-#~ msgid "label32"
-#~ msgstr "label32"
-
-#~ msgid "label33"
-#~ msgstr "label33"
-
-#~ msgid "label34"
-#~ msgstr "label34"
-
-#~ msgid "label35"
-#~ msgstr "label35"
-
-#, fuzzy
-#~ msgid "label51"
-#~ msgstr "label25"
-
-#~ msgid ""
-#~ "Enforcing\n"
-#~ "Permissive\n"
-#~ "Disabled\n"
-#~ msgstr ""
-#~ "Upprätthållande\n"
-#~ "Tillåtande\n"
-#~ "Avaktiverad\n"
-
-#~ msgid "value"
-#~ msgstr "värde"
-
-#~ msgid "You must be root to run %s."
-#~ msgstr "Du måste vara root för att köra %s."
-
-#~ msgid "Other"
-#~ msgstr "Andra"
-
-#~ msgid "Files and Directories"
-#~ msgstr "Filer och katalog"
-
-#~ msgid "FTP"
-#~ msgstr "FTP"
-
-#~ msgid "Polyinstatiation"
-#~ msgstr "Polyinstansiering"
-
-#~ msgid "Zebra"
-#~ msgstr "Zebra"
-
-#~ msgid "Disable SELinux protection for ftpd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för ftpd-demonen"
-
-#~ msgid "Disable SELinux protection for httpd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för httpd-demonen"
-
-#~ msgid "Disable SELinux protection for pppd daemon"
-#~ msgstr "Avaktivera SELinux-skydd för pppd-demonen"
-
-#~ msgid "Disable SELinux protection for the mozilla ppp daemon"
-#~ msgstr "Avaktivera SELinux-skydd för mozilla ppp-demonen"
-
-#~ msgid "Spam Assassin"
-#~ msgstr "Spam Assassin"
-
-#~ msgid "Disable SELinux protection for zebra daemon"
-#~ msgstr "Avaktivera SELinux-skydd för zebra-demonen"
-
-#~ msgid "MLS/MCS Level"
-#~ msgstr "MLS/MCS-nivå"
-
-#~ msgid ""
-#~ "MLS/\n"
-#~ "MCS Level"
-#~ msgstr ""
-#~ "MLS/\n"
-#~ "MCS-nivå"
-
-#~ msgid "Requires 2 or more arguments"
-#~ msgstr "Kräver 2 eller fler argument"
-
-#~ msgid "%s not defined"
-#~ msgstr "%s är inte definierad"
-
-#~ msgid "%s not valid for %s objects\n"
-#~ msgstr "%s inte giltig för %s objekt\n"
-
-#~ msgid "range not supported on Non MLS machines"
-#~ msgstr "intervall stöds inte av icke-MLS maskiner"
-
-#~ msgid "Invalid value %s"
-#~ msgstr "Ogiltigt värde %s"
-
-#~ msgid ""
-#~ "In order to load this newly created policy package into the kernel,\n"
-#~ "you are required to execute \n"
-#~ "\n"
-#~ "semodule -i %s.pp\n"
-#~ "\n"
-#~ msgstr ""
-#~ "För att ladda detta nya policy-paket in i kärnan,\n"
-#~ "måste du köra \n"
-#~ "\n"
-#~ "semodule -i %s.pp\n"
-#~ "\n"
-
-#~ msgid "Options Error: %s "
-#~ msgstr "Flaggfel: %s "
+#: ../gui/booleansPage.py:186 ../gui/system-config-selinux.glade:1725
+msgid "Boolean"
+msgstr "Boolean"
+
+#: ../gui/booleansPage.py:241 ../gui/semanagePage.py:162
+msgid "all"
+msgstr "alla"
+
+#: ../gui/booleansPage.py:243 ../gui/semanagePage.py:164
+#: ../gui/system-config-selinux.glade:1616
+#: ../gui/system-config-selinux.glade:1839
+#: ../gui/system-config-selinux.glade:2456
+msgid "Customized"
+msgstr "Anpassad"
+
+#: ../gui/fcontextPage.py:64 ../gui/system-config-selinux.glade:1930
+msgid "File Labeling"
+msgstr "Filmärkning"
+
+#: ../gui/fcontextPage.py:74
+msgid ""
+"File\n"
+"Specification"
+msgstr "Fil\nSpecifikation"
+
+#: ../gui/fcontextPage.py:81
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr "Selinux\nFiltyp"
+
+#: ../gui/fcontextPage.py:88
+msgid ""
+"File\n"
+"Type"
+msgstr "Fil\nTyp"
+
+#: ../gui/loginsPage.py:48 ../gui/system-config-selinux.glade:2117
+msgid "User Mapping"
+msgstr "Användarmappning"
+
+#: ../gui/loginsPage.py:52
+msgid ""
+"Login\n"
+"Name"
+msgstr "Inloggnings-\nnamn"
+
+#: ../gui/loginsPage.py:56 ../gui/usersPage.py:50
+msgid ""
+"SELinux\n"
+"User"
+msgstr "SELinux\nAnvändare"
+
+#: ../gui/loginsPage.py:59 ../gui/usersPage.py:55
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr "MLS/\nMCS-intervall"
+
+#: ../gui/loginsPage.py:133
+#, python-format
+msgid "Login '%s' is required"
+msgstr "Inloggning '%s' krävs"
+
+#: ../gui/modulesPage.py:48 ../gui/system-config-selinux.glade:2772
+msgid "Policy Module"
+msgstr "Policymodul"
+
+#: ../gui/modulesPage.py:57
+msgid "Module Name"
+msgstr "Modulnamn"
+
+#: ../gui/modulesPage.py:134
+msgid "Disable Audit"
+msgstr "Avaktivera granskning"
+
+#: ../gui/modulesPage.py:137 ../gui/system-config-selinux.glade:2681
+msgid "Enable Audit"
+msgstr "Aktivera granskning"
+
+#: ../gui/modulesPage.py:162
+msgid "Load Policy Module"
+msgstr "Läsa in policymodul"
+
+#: ../gui/polgen.glade:79
+msgid "Polgen"
+msgstr "Polgen"
+
+#: ../gui/polgen.glade:80
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../gui/polgen.glade:81
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../gui/polgen.glade:85 ../gui/system-config-selinux.glade:17
+msgid "translator-credits"
+msgstr "Christian Rose\nMagnus Larsson\nGöran Uddeborg"
+
+#: ../gui/polgen.glade:90
+msgid "SELinux Policy Generation Tool"
+msgstr "Genereringsverktyg för SELinuxpolicy"
+
+#: ../gui/polgen.glade:128
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr "<b>Välj policytyp för programmet eller användarrollen du vill begränsa:</b>"
+
+#: ../gui/polgen.glade:177
+msgid "<b>Applications</b>"
+msgstr "<b>Program</b>"
+
+#: ../gui/polgen.glade:239 ../gui/polgen.glade:259
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr "Standard initdemon är demoner som startas vid uppstart via initskript.  Vanligen krävs ett skript i /etc/rc.d/init.d"
+
+#: ../gui/polgen.glade:241 ../gui/polgen.py:156
+msgid "Standard Init Daemon"
+msgstr "Standard initdemon"
+
+#: ../gui/polgen.glade:261 ../gui/polgen.py:157
+msgid "DBUS System Daemon"
+msgstr "DBUS-systemdemonen"
+
+#: ../gui/polgen.glade:280
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "Internettjänstedemoner är demoner som startas av xinetd"
+
+#: ../gui/polgen.glade:282
+msgid "Internet Services Daemon (inetd)"
+msgstr "Internettjänstedemon (inetd)"
+
+#: ../gui/polgen.glade:301
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr "Webbprogram/-skript (CGI) CGI-skript startade av webbservern (apache)"
+
+#: ../gui/polgen.glade:303 ../gui/polgen.py:159
+msgid "Web Application/Script (CGI)"
+msgstr "Webbprogram/-skript (CGI)"
+
+#: ../gui/polgen.glade:322 ../gui/polgen.glade:343
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr "Användarprogram är alla program som du skulle vilja stänga in som startas av en användare"
+
+#: ../gui/polgen.glade:324 ../gui/polgen.py:160
+msgid "User Application"
+msgstr "Användarprogram"
+
+#: ../gui/polgen.glade:345 ../gui/polgen.py:166
+msgid "Sandbox"
+msgstr "Sandlåda"
+
+#: ../gui/polgen.glade:391
+msgid "<b>Login Users</b>"
+msgstr "<b>Inloggningsanvändare</b>"
+
+#: ../gui/polgen.glade:453
+msgid "Modify an existing login user record."
+msgstr "Modifiera en existerande inloggningsanvändarpost."
+
+#: ../gui/polgen.glade:455
+msgid "Existing User Roles"
+msgstr "Existerande användarroller"
+
+#: ../gui/polgen.glade:474
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr "Denna användare kommer logga in på en maskin endast via en terminal eller fjärrinloggning.  Som standard kommer denna användare inte ha setuid, inte nätverk, inte su, inte sudo."
+
+#: ../gui/polgen.glade:476 ../gui/polgen.py:161
+msgid "Minimal Terminal User Role"
+msgstr "Minimal terminalanvändarroll"
+
+#: ../gui/polgen.glade:495
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr "Denna användare kan logga in på en maskin via X eller terminal.  Som standard kommer denna användare inte ha setuid, inte nätverk, inte sudo, inte su"
+
+#: ../gui/polgen.glade:497 ../gui/polgen.py:162
+msgid "Minimal X Windows User Role"
+msgstr "Minimal X-Windows-användarroll"
+
+#: ../gui/polgen.glade:516
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr "Användare med fullständig nätverksåtkomst, inte setuid-program utan övergång, inte sudo, inte su."
+
+#: ../gui/polgen.glade:518 ../gui/polgen.py:163
+msgid "User Role"
+msgstr "Användarroll"
+
+#: ../gui/polgen.glade:537
+msgid ""
+"User with full networking, no setuid applications without transition, no su,"
+" can sudo to Root Administration Roles"
+msgstr "Användare med fullständig nätverksåtkomst, inga setuid-program utan övergångar, inte su, kan göra sudo till rootadminstratörsroller"
+
+#: ../gui/polgen.glade:539 ../gui/polgen.py:164
+msgid "Admin User Role"
+msgstr "Admininstrativ användarroll"
+
+#: ../gui/polgen.glade:585
+msgid "<b>Root Users</b>"
+msgstr "<b>Rootanvändare</b>"
+
+#: ../gui/polgen.glade:647
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer"
+" the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr "Välj root/administratöranvändarroll om denna användare kommer användas för att administrera maskinen när han/hon kör som root.  Denna användare kommer inte att kunna logga in direkt till systemet."
+
+#: ../gui/polgen.glade:649 ../gui/polgen.py:165
+msgid "Root Admin User Role"
+msgstr "Root-administrativ användarroll"
+
+#: ../gui/polgen.glade:716
+msgid "label104"
+msgstr "label104"
+
+#: ../gui/polgen.glade:745
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>Ange namn på programmet eller användarrollen:</b>"
+
+#: ../gui/polgen.glade:779 ../gui/polgengui.py:251
+msgid "Name"
+msgstr "Namn"
+
+#: ../gui/polgen.glade:807
+msgid "Enter complete path for executable to be confined."
+msgstr "Ange fullständig sökväg för programmet som skall stängas in."
+
+#: ../gui/polgen.glade:830 ../gui/polgen.glade:950 ../gui/polgen.glade:3142
+msgid "..."
+msgstr "..."
+
+#: ../gui/polgen.glade:849
+msgid "Enter unique name for the confined application or user role."
+msgstr "Ange ett unikt namn på den innestängda program- eller användarrollen."
+
+#: ../gui/polgen.glade:871
+msgid "Executable"
+msgstr "Körbar"
+
+#: ../gui/polgen.glade:899
+msgid "Init script"
+msgstr "Init-skript"
+
+#: ../gui/polgen.glade:927
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr "Ange fullständig sökväg till init-skript som används för att starta det innestängda programmet."
+
+#: ../gui/polgen.glade:982
+msgid "label105"
+msgstr "label105"
+
+#: ../gui/polgen.glade:1011
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>Välj en befintlig roll att ändra:</b>"
+
+#: ../gui/polgen.glade:1045
+msgid "Select the user roles that will transiton to the %s domain."
+msgstr "Välj användarrollerna som skall övergå till domänen %s."
+
+#: ../gui/polgen.glade:1073
+msgid "label106"
+msgstr "label106"
+
+#: ../gui/polgen.glade:1102
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>Välj användarroller som %s skall övergå till:</b>"
+
+#: ../gui/polgen.glade:1136
+msgid "Select applications domains that %s will transition to."
+msgstr "Väl programdomänerna som %s skall övergå till."
+
+#: ../gui/polgen.glade:1164
+msgid "label107"
+msgstr "label107"
+
+#: ../gui/polgen.glade:1193
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>Välj användarrollerna som skall övergå till domänen %s:</b>"
+
+#: ../gui/polgen.glade:1227
+msgid ""
+"Select the user roles that will transiton to this applications domains."
+msgstr "Välj användarrollerna som kan övergå till detta programs domäner."
+
+#: ../gui/polgen.glade:1255
+msgid "label108"
+msgstr "label108"
+
+#: ../gui/polgen.glade:1284
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>Välj domäner som %s kommer administrera:</b>"
+
+#: ../gui/polgen.glade:1318 ../gui/polgen.glade:1409
+msgid "Select the domains that you would like this user administer."
+msgstr "Välj domänerna som du vill att denna användare skall administrera."
+
+#: ../gui/polgen.glade:1346
+msgid "label109"
+msgstr "label109"
+
+#: ../gui/polgen.glade:1375
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>Välj ytterligare roller för %s:</b>"
+
+#: ../gui/polgen.glade:1437
+msgid "label111"
+msgstr "label111"
+
+#: ../gui/polgen.glade:1466
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>Ange nätverksportar som %s binder till:</b>"
+
+#: ../gui/polgen.glade:1497 ../gui/polgen.glade:1997
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP-portar</b>"
+
+#: ../gui/polgen.glade:1565 ../gui/polgen.glade:1785
+msgid "Allows %s to bind to any udp port"
+msgstr "Tillåter %s att binda till valfri udp-portar"
+
+#: ../gui/polgen.glade:1567 ../gui/polgen.glade:1787 ../gui/polgen.glade:2061
+#: ../gui/polgen.glade:2215
+msgid "All"
+msgstr "Alla"
+
+#: ../gui/polgen.glade:1585 ../gui/polgen.glade:1805
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr "Tillåt %s att anropa binresvport med 0.  Binder till port 600-1024"
+
+#: ../gui/polgen.glade:1587 ../gui/polgen.glade:1807
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../gui/polgen.glade:1605 ../gui/polgen.glade:1825
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr "Ange en kommaseparerad lista av udp-portar eller intervall av portar som %s binder till.  Exempel: 612, 650-660"
+
+#: ../gui/polgen.glade:1607 ../gui/polgen.glade:1827
+msgid "Unreserved Ports (>1024)"
+msgstr "Oreserverade portar (>1024)"
+
+#: ../gui/polgen.glade:1638 ../gui/polgen.glade:1858 ../gui/polgen.glade:2079
+#: ../gui/polgen.glade:2233
+msgid "Select Ports"
+msgstr "Välj portar"
+
+#: ../gui/polgen.glade:1663 ../gui/polgen.glade:1883
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "Tillåter %s att binda till valfria udp-portar > 1024"
+
+#: ../gui/polgen.glade:1717 ../gui/polgen.glade:2151
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP-portar</b>"
+
+#: ../gui/polgen.glade:1937
+msgid "label113"
+msgstr "label113"
+
+#: ../gui/polgen.glade:1966
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>Ange nätverksportar som %s ansluter till:</b>"
+
+#: ../gui/polgen.glade:2058
+msgid "Allows %s to connect to any tcp port"
+msgstr "Tillåter %s att ansluta till valfri tcp-port"
+
+#: ../gui/polgen.glade:2104
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr "Ange en kommaseparerad lista av tcp-portar eller intervall av portar som %s ansluter till.  Exempel: 612, 650-660"
+
+#: ../gui/polgen.glade:2212
+msgid "Allows %s to connect to any udp port"
+msgstr "Tillåter %s att ansluta till valfri udp-port"
+
+#: ../gui/polgen.glade:2258
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr "Ange en kommaseparerad lista av udp-portar eller intervall av portar som %s ansluter till.  Exempel: 612, 650-660"
+
+#: ../gui/polgen.glade:2305
+msgid "label114"
+msgstr "label114"
+
+#: ../gui/polgen.glade:2334
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>Ange gemensamma programegenskaper för %s:</b>"
+
+#: ../gui/polgen.glade:2366
+msgid "Writes syslog messages\t"
+msgstr "Skriver syslog-meddelanden\t"
+
+#: ../gui/polgen.glade:2385
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "Skapa/hantera temporärfiler i /tmp"
+
+#: ../gui/polgen.glade:2404
+msgid "Uses Pam for authentication"
+msgstr "Använder Pam för autentisering"
+
+#: ../gui/polgen.glade:2423
+msgid "Uses nsswitch or getpw* calls"
+msgstr "Använder nsswitch- eller getpw*-anrop"
+
+#: ../gui/polgen.glade:2442
+msgid "Uses dbus"
+msgstr "Använder dbus"
+
+#: ../gui/polgen.glade:2461
+msgid "Sends audit messages"
+msgstr "Skickar granskningsmeddelanden"
+
+#: ../gui/polgen.glade:2480
+msgid "Interacts with the terminal"
+msgstr "Interagerar med terminalen"
+
+#: ../gui/polgen.glade:2499
+msgid "Sends email"
+msgstr "Skicka epost"
+
+#: ../gui/polgen.glade:2530
+msgid "label115"
+msgstr "label115"
+
+#: ../gui/polgen.glade:2559
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>Lägg till filer/kataloger som %s hanterar</b>"
+
+#: ../gui/polgen.glade:2788
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr "Filer/kataloger som %s ”hanterar”.  Pid-filer, loggfiler, /var/lib-filer …"
+
+#: ../gui/polgen.glade:2823
+msgid "label116"
+msgstr "label116"
+
+#: ../gui/polgen.glade:2852
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>Lägg till booleaner från policyn %s:</b>"
+
+#: ../gui/polgen.glade:3002
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "Lägg till/ta bort booleaner som används av domänen %s"
+
+#: ../gui/polgen.glade:3066
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>I vilken katalog skall policyn %s genereras?</b>"
+
+#: ../gui/polgen.glade:3097
+msgid "Policy Directory"
+msgstr "Policykatalog"
+
+#: ../gui/polgen.glade:3254
+msgid "Add Booleans Dialog"
+msgstr "Dialog för booleantillägg"
+
+#: ../gui/polgen.glade:3327
+msgid "Boolean Name"
+msgstr "Booleans namn"
+
+#: ../gui/polgengui.py:261
+msgid "Role"
+msgstr "Roll"
+
+#: ../gui/polgengui.py:268
+msgid "Existing_User"
+msgstr "Existerande_användare"
+
+#: ../gui/polgengui.py:282 ../gui/polgengui.py:290 ../gui/polgengui.py:304
+msgid "Application"
+msgstr "Program"
+
+#: ../gui/polgengui.py:352
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s måste vara en katalog"
+
+#: ../gui/polgengui.py:412 ../gui/polgengui.py:693
+msgid "You must select a user"
+msgstr "Du måste välja en användare"
+
+#: ../gui/polgengui.py:542
+msgid "Select executable file to be confined."
+msgstr "Välj exekverbar fil som skall stängas in."
+
+#: ../gui/polgengui.py:553
+msgid "Select init script file to be confined."
+msgstr "Välj initskript som skall stängas in."
+
+#: ../gui/polgengui.py:563
+msgid "Select file(s) that confined application creates or writes"
+msgstr "Välj fil(er) som instängda program skapar eller skriver"
+
+#: ../gui/polgengui.py:570
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr "Välj katalog(er) som det istängda programmet äger och skriver till"
+
+#: ../gui/polgengui.py:632
+msgid "Select directory to generate policy files in"
+msgstr "Välj katalog att generera policyfiler i"
+
+#: ../gui/polgengui.py:649
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr "Typen %s_t är redan definierade i den nuvarande policyn.\nVill du fortsätta?"
+
+#: ../gui/polgengui.py:649 ../gui/polgengui.py:653
+msgid "Verify Name"
+msgstr "Verifiera namn"
+
+#: ../gui/polgengui.py:653
+#, python-format
+msgid ""
+"Module %s.pp already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr "Modul %s.pp är redan inläst i den nuvarande policyn.\nVill du fortsätta?"
+
+#: ../gui/polgengui.py:699
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr "Du måste lägga till ett namn bestående av bokstäver och siffror och utan några mellanrum."
+
+#: ../gui/polgengui.py:713
+msgid "You must enter a executable"
+msgstr "Du måste ange ett körbart program"
+
+#: ../gui/polgengui.py:738 ../gui/system-config-selinux.py:174
+msgid "Configue SELinux"
+msgstr "Konfigurera SELinux"
+
+#: ../gui/polgen.py:158
+msgid "Internet Services Daemon"
+msgstr "Internettjänstedemon"
+
+#: ../gui/polgen.py:197
+#, python-format
+msgid "Ports must be numbers or ranges of numbers from 1 to %d "
+msgstr "Portar måste vara tal eller intervall av tal från 1 till %d "
+
+#: ../gui/polgen.py:323
+msgid "You must enter a name for your confined process/user"
+msgstr "Du måste ange ett namn för din instängda process/användare"
+
+#: ../gui/polgen.py:325
+msgid ""
+"Name must be alpha numberic with no spaces. Consider using option \"-n "
+"MODULENAME\""
+msgstr "Namn måste vara alfanumeriska utan blanktecken.  Överväg att använda flagga ”-n MODULNAMN”"
+
+#: ../gui/polgen.py:413
+msgid "User Role types can not be assigned executables."
+msgstr "Användarrolltyper är inte tilldelas körbara program."
+
+#: ../gui/polgen.py:419
+msgid "Only Daemon apps can use an init script.."
+msgstr "Endast demonprogram kan använda ett initskript."
+
+#: ../gui/polgen.py:437
+msgid "use_resolve must be a boolean value "
+msgstr "use_resolve måste vara ett booleskt värde "
+
+#: ../gui/polgen.py:443
+msgid "use_syslog must be a boolean value "
+msgstr "use_syslog måste vara ett booleskt värde "
+
+#: ../gui/polgen.py:449
+msgid "use_kerberos must be a boolean value "
+msgstr "use_kerberos måste vara ett booleskt värde "
+
+#: ../gui/polgen.py:455
+msgid "manage_krb5_rcache must be a boolean value "
+msgstr "manage_krb5_rcache måste vara ett booleskt värde "
+
+#: ../gui/polgen.py:485
+msgid "USER Types automatically get a tmp type"
+msgstr "ANVÄNDARtyper får automatiskt en tmp-typ"
+
+#: ../gui/polgen.py:1003
+msgid "You must enter the executable path for your confined process"
+msgstr "Du måste ange sökvägen till det exekverbara programmet för din instängda process"
+
+#: ../gui/polgen.py:1165
+msgid "Type Enforcement file"
+msgstr "Typupprätthållandefil"
+
+#: ../gui/polgen.py:1166
+msgid "Interface file"
+msgstr "Gränssnittsfil"
+
+#: ../gui/polgen.py:1167
+msgid "File Contexts file"
+msgstr "Filkontextsfil"
+
+#: ../gui/polgen.py:1168
+msgid "Setup Script"
+msgstr "Uppstartsskript"
+
+#: ../gui/polgen.py:1289
+#, python-format
+msgid ""
+"\n"
+"%s\n"
+"\n"
+"sepolgen [ -n moduleName ] [ -m ] [ -t type ] [ executable | Name ]\n"
+"valid Types:\n"
+msgstr "\n%s\n\nsepolgen [ -n modulNamn ] [ -m ] [ -t typ ] [ program | Namn ]\ngiltiga typer:\n"
+
+#: ../gui/polgen.py:1337
+msgid "Executable or Name required"
+msgstr "Program eller namn behövs"
+
+#: ../gui/portsPage.py:51 ../gui/system-config-selinux.glade:2547
+msgid "Network Port"
+msgstr "Nätverkport"
+
+#: ../gui/portsPage.py:85
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr "SELinux-\nporttyp"
+
+#: ../gui/portsPage.py:91 ../gui/system-config-selinux.glade:363
+msgid "Protocol"
+msgstr "Protokoll"
+
+#: ../gui/portsPage.py:96 ../gui/system-config-selinux.glade:479
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr "MLS/MCS-\nNivå"
+
+#: ../gui/portsPage.py:101
+msgid "Port"
+msgstr "Port"
+
+#: ../gui/portsPage.py:207
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "Portnummer \"%s\" är inte giltigt.  0 < PORTNUMMER < 65536 "
+
+#: ../gui/portsPage.py:252
+msgid "List View"
+msgstr "Listvy"
+
+#: ../gui/portsPage.py:255 ../gui/system-config-selinux.glade:2438
+msgid "Group View"
+msgstr "Gruppvy"
+
+#: ../gui/selinux.tbl:1 ../gui/selinux.tbl:30 ../gui/selinux.tbl:31
+#: ../gui/selinux.tbl:32 ../gui/selinux.tbl:33 ../gui/selinux.tbl:34
+#: ../gui/selinux.tbl:36 ../gui/selinux.tbl:37 ../gui/selinux.tbl:38
+#: ../gui/selinux.tbl:39 ../gui/selinux.tbl:40 ../gui/selinux.tbl:42
+#: ../gui/selinux.tbl:43 ../gui/selinux.tbl:44 ../gui/selinux.tbl:45
+#: ../gui/selinux.tbl:46 ../gui/selinux.tbl:47 ../gui/selinux.tbl:48
+#: ../gui/selinux.tbl:49 ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
+#: ../gui/selinux.tbl:52 ../gui/selinux.tbl:53 ../gui/selinux.tbl:59
+#: ../gui/selinux.tbl:60 ../gui/selinux.tbl:61 ../gui/selinux.tbl:62
+#: ../gui/selinux.tbl:63 ../gui/selinux.tbl:64 ../gui/selinux.tbl:65
+#: ../gui/selinux.tbl:66 ../gui/selinux.tbl:67 ../gui/selinux.tbl:68
+#: ../gui/selinux.tbl:69 ../gui/selinux.tbl:75 ../gui/selinux.tbl:76
+#: ../gui/selinux.tbl:77 ../gui/selinux.tbl:78 ../gui/selinux.tbl:79
+#: ../gui/selinux.tbl:80 ../gui/selinux.tbl:81 ../gui/selinux.tbl:82
+#: ../gui/selinux.tbl:83 ../gui/selinux.tbl:84 ../gui/selinux.tbl:86
+#: ../gui/selinux.tbl:88 ../gui/selinux.tbl:89 ../gui/selinux.tbl:90
+#: ../gui/selinux.tbl:92 ../gui/selinux.tbl:94 ../gui/selinux.tbl:95
+#: ../gui/selinux.tbl:96 ../gui/selinux.tbl:97 ../gui/selinux.tbl:98
+#: ../gui/selinux.tbl:99 ../gui/selinux.tbl:100 ../gui/selinux.tbl:101
+#: ../gui/selinux.tbl:102 ../gui/selinux.tbl:103 ../gui/selinux.tbl:104
+#: ../gui/selinux.tbl:106 ../gui/selinux.tbl:108 ../gui/selinux.tbl:109
+#: ../gui/selinux.tbl:110 ../gui/selinux.tbl:111 ../gui/selinux.tbl:112
+#: ../gui/selinux.tbl:113 ../gui/selinux.tbl:114 ../gui/selinux.tbl:116
+#: ../gui/selinux.tbl:117 ../gui/selinux.tbl:119 ../gui/selinux.tbl:121
+#: ../gui/selinux.tbl:123 ../gui/selinux.tbl:124 ../gui/selinux.tbl:127
+#: ../gui/selinux.tbl:129 ../gui/selinux.tbl:130 ../gui/selinux.tbl:131
+#: ../gui/selinux.tbl:132 ../gui/selinux.tbl:133 ../gui/selinux.tbl:134
+#: ../gui/selinux.tbl:135 ../gui/selinux.tbl:136 ../gui/selinux.tbl:137
+#: ../gui/selinux.tbl:138 ../gui/selinux.tbl:139 ../gui/selinux.tbl:142
+#: ../gui/selinux.tbl:143 ../gui/selinux.tbl:144 ../gui/selinux.tbl:145
+#: ../gui/selinux.tbl:146 ../gui/selinux.tbl:147 ../gui/selinux.tbl:148
+#: ../gui/selinux.tbl:149 ../gui/selinux.tbl:150 ../gui/selinux.tbl:151
+#: ../gui/selinux.tbl:152 ../gui/selinux.tbl:154 ../gui/selinux.tbl:155
+#: ../gui/selinux.tbl:156 ../gui/selinux.tbl:157 ../gui/selinux.tbl:158
+#: ../gui/selinux.tbl:159 ../gui/selinux.tbl:160 ../gui/selinux.tbl:167
+#: ../gui/selinux.tbl:171 ../gui/selinux.tbl:172 ../gui/selinux.tbl:173
+#: ../gui/selinux.tbl:174 ../gui/selinux.tbl:175 ../gui/selinux.tbl:177
+#: ../gui/selinux.tbl:178 ../gui/selinux.tbl:179 ../gui/selinux.tbl:180
+#: ../gui/selinux.tbl:184 ../gui/selinux.tbl:192 ../gui/selinux.tbl:193
+#: ../gui/selinux.tbl:194 ../gui/selinux.tbl:195 ../gui/selinux.tbl:196
+#: ../gui/selinux.tbl:197 ../gui/selinux.tbl:198 ../gui/selinux.tbl:199
+#: ../gui/selinux.tbl:200 ../gui/selinux.tbl:201 ../gui/selinux.tbl:206
+#: ../gui/selinux.tbl:207 ../gui/selinux.tbl:218 ../gui/selinux.tbl:219
+#: ../gui/selinux.tbl:220 ../gui/selinux.tbl:222 ../gui/selinux.tbl:224
+#: ../gui/selinux.tbl:226 ../gui/selinux.tbl:227 ../gui/selinux.tbl:230
+msgid "SELinux Service Protection"
+msgstr "SELinux-tjänstskydd"
+
+#: ../gui/selinux.tbl:1
+msgid "Disable SELinux protection for acct daemon"
+msgstr "Avaktivera SELinuxskydd för acct-demonen"
+
+#: ../gui/selinux.tbl:2 ../gui/selinux.tbl:3 ../gui/selinux.tbl:70
+#: ../gui/selinux.tbl:153 ../gui/selinux.tbl:168 ../gui/selinux.tbl:169
+#: ../gui/selinux.tbl:170 ../gui/selinux.tbl:189 ../gui/selinux.tbl:202
+#: ../gui/selinux.tbl:203 ../gui/selinux.tbl:204 ../gui/selinux.tbl:205
+msgid "Admin"
+msgstr "Admin"
+
+#: ../gui/selinux.tbl:2
+msgid "Allow all daemons to write corefiles to /"
+msgstr "Tillåt alla demoner att skriva minnesdumpfiler i /"
+
+#: ../gui/selinux.tbl:3
+msgid "Allow all daemons the ability to use unallocated ttys"
+msgstr "Tillåt alla demoner att kunna använda oallokerade tty:er"
+
+#: ../gui/selinux.tbl:4 ../gui/selinux.tbl:5 ../gui/selinux.tbl:11
+#: ../gui/selinux.tbl:12 ../gui/selinux.tbl:13 ../gui/selinux.tbl:15
+#: ../gui/selinux.tbl:20 ../gui/selinux.tbl:41 ../gui/selinux.tbl:208
+#: ../gui/selinux.tbl:210 ../gui/selinux.tbl:211 ../gui/selinux.tbl:212
+#: ../gui/selinux.tbl:213 ../gui/selinux.tbl:214 ../gui/selinux.tbl:215
+#: ../gui/selinux.tbl:216 ../gui/selinux.tbl:217
+msgid "User Privs"
+msgstr "Användarpriviliger"
+
+#: ../gui/selinux.tbl:4
+msgid ""
+"Allow gadmin SELinux user account to execute files in home directory or /tmp"
+msgstr "Tillåt SELinuxanvändarkontot gadmin att köra filer i hemkatalogen eller /tmp"
+
+#: ../gui/selinux.tbl:5
+msgid ""
+"Allow guest SELinux user account to execute files in home directory or /tmp"
+msgstr "Tillåt SELinuxanvändarkontot guest att köra filer i hemkatalogen eller /tmp"
+
+#: ../gui/selinux.tbl:6 ../gui/selinux.tbl:9 ../gui/selinux.tbl:16
+msgid "Memory Protection"
+msgstr "Minesskydd"
+
+#: ../gui/selinux.tbl:6
+msgid "Allow java executable stack"
+msgstr "Tillåt javas exekverbara stack"
+
+#: ../gui/selinux.tbl:7 ../gui/selinux.tbl:8 ../gui/selinux.tbl:35
+#: ../gui/selinux.tbl:209
+msgid "Mount"
+msgstr "Montera"
+
+#: ../gui/selinux.tbl:7
+msgid "Allow mount to mount any file"
+msgstr "Tillåt mount att montera valfria filer"
+
+#: ../gui/selinux.tbl:8
+msgid "Allow mount to mount any directory"
+msgstr "Tillåt mount att montera på valfria kataloger"
+
+#: ../gui/selinux.tbl:9
+msgid "Allow mplayer executable stack"
+msgstr "Tillåt mplayers exekverbara stack"
+
+#: ../gui/selinux.tbl:10 ../gui/selinux.tbl:162 ../gui/selinux.tbl:187
+#: ../gui/selinux.tbl:188
+msgid "SSH"
+msgstr "SSH"
+
+#: ../gui/selinux.tbl:10
+msgid "Allow ssh to run ssh-keysign"
+msgstr "Tillåt ssh att köra ssh-keysign"
+
+#: ../gui/selinux.tbl:11
+msgid ""
+"Allow staff SELinux user account to execute files in home directory or /tmp"
+msgstr "Tillåt SELinuxanvändarkontot staff att köra filer i hemkatalogen eller /tmp"
+
+#: ../gui/selinux.tbl:12
+msgid ""
+"Allow sysadm SELinux user account to execute files in home directory or /tmp"
+msgstr "Tillåt SELinuxanvändarkontot sysadm att köra filer i hemkatalogen eller /tmp"
+
+#: ../gui/selinux.tbl:13
+msgid ""
+"Allow unconfined SELinux user account to execute files in home directory or "
+"/tmp"
+msgstr "Tillåt SELinuxanvändarkontot unconfined att köra filer i hemkatalogen eller /tmp"
+
+#: ../gui/selinux.tbl:14
+msgid "Network Configuration"
+msgstr "Nätverkinställningar"
+
+#: ../gui/selinux.tbl:14
+msgid "Allow unlabeled packets to flow on the network"
+msgstr "Tillåt oetiketterade paket att åka i nätverket"
+
+#: ../gui/selinux.tbl:15
+msgid ""
+"Allow user SELinux user account to execute files in home directory or /tmp"
+msgstr "Tillåt SELinuxanvändarkontot user att köra filer i hemkatalogen eller /tmp"
+
+#: ../gui/selinux.tbl:16
+msgid "Allow unconfined to dyntrans to unconfined_execmem"
+msgstr "Tillåt unconfied att dyntrans till unconfined_execmem"
+
+#: ../gui/selinux.tbl:17 ../gui/selinux.tbl:18 ../gui/selinux.tbl:120
+#: ../gui/selinux.tbl:140
+msgid "Databases"
+msgstr "Databaser"
+
+#: ../gui/selinux.tbl:17
+msgid "Allow user to connect to mysql socket"
+msgstr "Tillåt user att ansluta till mysql-uttag"
+
+#: ../gui/selinux.tbl:18
+msgid "Allow user to connect to postgres socket"
+msgstr "Tillåt user att ansluta till postgres-uttag"
+
+#: ../gui/selinux.tbl:19 ../gui/selinux.tbl:165 ../gui/selinux.tbl:223
+msgid "XServer"
+msgstr "XServer"
+
+#: ../gui/selinux.tbl:19
+msgid "Allow clients to write to X shared memory"
+msgstr "Tillåt klienter att skriva till X:s delade minne"
+
+#: ../gui/selinux.tbl:20
+msgid ""
+"Allow xguest SELinux user account to execute files in home directory or /tmp"
+msgstr "Tillåt SELinuxanvändarkontot xguest att köra filer i hemkatalogen eller /tmp"
+
+#: ../gui/selinux.tbl:21 ../gui/selinux.tbl:228 ../gui/selinux.tbl:229
+#: ../gui/selinux.tbl:231
+msgid "NIS"
+msgstr "NIS"
+
+#: ../gui/selinux.tbl:21
+msgid "Allow daemons to run with NIS"
+msgstr "Tillåt demoner att köra med NIS"
+
+#: ../gui/selinux.tbl:22 ../gui/selinux.tbl:23 ../gui/selinux.tbl:24
+#: ../gui/selinux.tbl:25 ../gui/selinux.tbl:26 ../gui/selinux.tbl:27
+#: ../gui/selinux.tbl:28 ../gui/selinux.tbl:29 ../gui/selinux.tbl:71
+#: ../gui/selinux.tbl:73 ../gui/selinux.tbl:74 ../gui/selinux.tbl:115
+#: ../gui/selinux.tbl:118
+msgid "Web Applications"
+msgstr "Webbprogram"
+
+#: ../gui/selinux.tbl:22
+msgid "Transition staff SELinux user to Web Browser Domain"
+msgstr "Överför SELinuxanvändaren staff till webbläsardomänen"
+
+#: ../gui/selinux.tbl:23
+msgid "Transition sysadm SELinux user to Web Browser Domain"
+msgstr "Överför SELinuxanvändaren sysadm till webbläsardomänen"
+
+#: ../gui/selinux.tbl:24
+msgid "Transition user SELinux user to Web Browser Domain"
+msgstr "Överför SELinuxanvändaren user till webbläsardomänen"
+
+#: ../gui/selinux.tbl:25
+msgid "Transition xguest SELinux user to Web Browser Domain"
+msgstr "Överför SELinuxanvändaren xguest till webbläsardomänen"
+
+#: ../gui/selinux.tbl:26 ../gui/selinux.tbl:27 ../gui/selinux.tbl:28
+#: ../gui/selinux.tbl:29
+msgid "Allow staff Web Browsers to write to home directories"
+msgstr "Tillåt staff-webbläsare att skriva till hemkatalogen"
+
+#: ../gui/selinux.tbl:30
+msgid "Disable SELinux protection for amanda"
+msgstr "Avaktivera SELinux-skydd för amanda"
+
+#: ../gui/selinux.tbl:31
+msgid "Disable SELinux protection for amavis"
+msgstr "Avaktivera SELinux-skydd för amavis"
+
+#: ../gui/selinux.tbl:32
+msgid "Disable SELinux protection for apmd daemon"
+msgstr "Avaktivera SELinux-skydd för apmd-demonen"
+
+#: ../gui/selinux.tbl:33
+msgid "Disable SELinux protection for arpwatch daemon"
+msgstr "Avaktivera SELinux-skydd för arpwatch-demonen"
+
+#: ../gui/selinux.tbl:34
+msgid "Disable SELinux protection for auditd daemon"
+msgstr "Avaktivera SELinux-skydd för auditd-demonen"
+
+#: ../gui/selinux.tbl:35
+msgid "Disable SELinux protection for automount daemon"
+msgstr "Avaktivera SELinux-skydd för automount-demonen"
+
+#: ../gui/selinux.tbl:36
+msgid "Disable SELinux protection for avahi"
+msgstr "Avaktivera SELinux-skydd för avahi"
+
+#: ../gui/selinux.tbl:37
+msgid "Disable SELinux protection for bluetooth daemon"
+msgstr "Avaktivera SELinux-skydd för bluetooth-demonen"
+
+#: ../gui/selinux.tbl:38
+msgid "Disable SELinux protection for canna daemon"
+msgstr "Avaktivera SELinux-skydd för canna-demonen"
+
+#: ../gui/selinux.tbl:39
+msgid "Disable SELinux protection for cardmgr daemon"
+msgstr "Avaktivera SELinux-skydd för cardmgr-demonen"
+
+#: ../gui/selinux.tbl:40
+msgid "Disable SELinux protection for Cluster Server"
+msgstr "Avaktivera SELinux-skydd för Cluster-servern"
+
+#: ../gui/selinux.tbl:41
+msgid ""
+"Allow cdrecord to read various content. nfs, samba, removable devices, user "
+"temp and untrusted content files"
+msgstr "Tillåt cdrecord att läsa olika innehåll.  nfs, samba, löstagbara enheter, användartemporära och filer med ej betrott innehåll"
+
+#: ../gui/selinux.tbl:42
+msgid "Disable SELinux protection for ciped daemon"
+msgstr "Avaktivera SELinux-skydd för ciped-demonen"
+
+#: ../gui/selinux.tbl:43
+msgid "Disable SELinux protection for clamd daemon"
+msgstr "Avaktivera SELinux-skydd för clamd-demonen"
+
+#: ../gui/selinux.tbl:44
+msgid "Disable SELinux protection for clamscan"
+msgstr "Avaktivera SELinux-skydd för clamscan"
+
+#: ../gui/selinux.tbl:45
+msgid "Disable SELinux protection for clvmd"
+msgstr "Avaktivera SELinux-skydd för clvmd"
+
+#: ../gui/selinux.tbl:46
+msgid "Disable SELinux protection for comsat daemon"
+msgstr "Avaktivera SELinux-skydd för comsat-demonen"
+
+#: ../gui/selinux.tbl:47 ../gui/selinux.tbl:48 ../gui/selinux.tbl:49
+#: ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
+msgid "Disable SELinux protection for courier daemon"
+msgstr "Avaktivera SELinux-skydd för courier-demonen"
+
+#: ../gui/selinux.tbl:52
+msgid "Disable SELinux protection for cpucontrol daemon"
+msgstr "Avaktivera SELinux-skydd för cpucontrol-demonen"
+
+#: ../gui/selinux.tbl:53
+msgid "Disable SELinux protection for cpuspeed daemon"
+msgstr "Avaktivera SELinux-skydd för cpuspeed-demonen"
+
+#: ../gui/selinux.tbl:54
+msgid "Cron"
+msgstr "Cron"
+
+#: ../gui/selinux.tbl:54
+msgid "Disable SELinux protection for crond daemon"
+msgstr "Avaktivera SELinux-skydd för crond-demonen"
+
+#: ../gui/selinux.tbl:55 ../gui/selinux.tbl:56 ../gui/selinux.tbl:57
+#: ../gui/selinux.tbl:91
+msgid "Printing"
+msgstr "Utskrift"
+
+#: ../gui/selinux.tbl:55
+msgid "Disable SELinux protection for cupsd back end server"
+msgstr "Avaktivera SELinux-skydd för cupsds bakändeserver"
+
+#: ../gui/selinux.tbl:56
+msgid "Disable SELinux protection for cupsd daemon"
+msgstr "Avaktivera SELinux-skydd för cupsd-demonen"
+
+#: ../gui/selinux.tbl:57
+msgid "Disable SELinux protection for cupsd_lpd"
+msgstr "Avaktivera SELinux-skydd för cupsd_lpd"
+
+#: ../gui/selinux.tbl:58
+msgid "CVS"
+msgstr "CVS"
+
+#: ../gui/selinux.tbl:58
+msgid "Disable SELinux protection for cvs daemon"
+msgstr "Avaktivera SELinux-skydd för cvs-demonen"
+
+#: ../gui/selinux.tbl:59
+msgid "Disable SELinux protection for cyrus daemon"
+msgstr "Avaktivera SELinux-skydd för cyrus-demonen"
+
+#: ../gui/selinux.tbl:60
+msgid "Disable SELinux protection for dbskkd daemon"
+msgstr "Avaktivera SELinux-skydd för dbskkd-demonen"
+
+#: ../gui/selinux.tbl:61
+msgid "Disable SELinux protection for dbusd daemon"
+msgstr "Avaktivera SELinux-skydd för dbusd-demonen"
+
+#: ../gui/selinux.tbl:62
+msgid "Disable SELinux protection for dccd"
+msgstr "Avaktivera SELinux-skydd för dccd"
+
+#: ../gui/selinux.tbl:63
+msgid "Disable SELinux protection for dccifd"
+msgstr "Avaktivera SELinux-skydd för dccifd"
+
+#: ../gui/selinux.tbl:64
+msgid "Disable SELinux protection for dccm"
+msgstr "Avaktivera SELinux-skydd för dccm"
+
+#: ../gui/selinux.tbl:65
+msgid "Disable SELinux protection for ddt daemon"
+msgstr "Avaktivera SELinux-skydd för ddt-demonen"
+
+#: ../gui/selinux.tbl:66
+msgid "Disable SELinux protection for devfsd daemon"
+msgstr "Avaktivera SELinux-skydd för devfsd-demonen"
+
+#: ../gui/selinux.tbl:67
+msgid "Disable SELinux protection for dhcpc daemon"
+msgstr "Avaktivera SELinux-skydd för dhcpc-demonen"
+
+#: ../gui/selinux.tbl:68
+msgid "Disable SELinux protection for dhcpd daemon"
+msgstr "Avaktivera SELinux-skydd för dhcpd-demonen"
+
+#: ../gui/selinux.tbl:69
+msgid "Disable SELinux protection for dictd daemon"
+msgstr "Avaktivera SELinux-skydd för dictd-demonen"
+
+#: ../gui/selinux.tbl:70
+msgid "Allow sysadm_t to directly start daemons"
+msgstr "Tillåt sysadm_t att starta demoner direkt"
+
+#: ../gui/selinux.tbl:71
+msgid "Disable SELinux protection for Evolution"
+msgstr "Avaktivera SELinux-skydd för Evolution"
+
+#: ../gui/selinux.tbl:72
+msgid "Games"
+msgstr "Spel"
+
+#: ../gui/selinux.tbl:72
+msgid "Disable SELinux protection for games"
+msgstr "Avaktivera SELinux-skydd för spel"
+
+#: ../gui/selinux.tbl:73
+msgid "Disable SELinux protection for the web browsers"
+msgstr "Avaktivera SELinux-skydd för webbläsare"
+
+#: ../gui/selinux.tbl:74
+msgid "Disable SELinux protection for Thunderbird"
+msgstr "Avaktivera SELinux-skydd för Thunderbird"
+
+#: ../gui/selinux.tbl:75
+msgid "Disable SELinux protection for distccd daemon"
+msgstr "Avaktivera SELinux-skydd för distccd-demonen"
+
+#: ../gui/selinux.tbl:76
+msgid "Disable SELinux protection for dmesg daemon"
+msgstr "Avaktivera SELinux-skydd för dmesg-demonen"
+
+#: ../gui/selinux.tbl:77
+msgid "Disable SELinux protection for dnsmasq daemon"
+msgstr "Avaktivera SELinux-skydd för dnsmasq-demonen"
+
+#: ../gui/selinux.tbl:78
+msgid "Disable SELinux protection for dovecot daemon"
+msgstr "Avaktivera SELinux-skydd för dovecot-demonen"
+
+#: ../gui/selinux.tbl:79
+msgid "Disable SELinux protection for entropyd daemon"
+msgstr "Avaktivera SELinux-skydd för entropyd-demonen"
+
+#: ../gui/selinux.tbl:80
+msgid "Disable SELinux protection for fetchmail"
+msgstr "Avaktivera SELinux-skydd för fetchmail"
+
+#: ../gui/selinux.tbl:81
+msgid "Disable SELinux protection for fingerd daemon"
+msgstr "Avaktivera SELinux-skydd för fingerd-demonen"
+
+#: ../gui/selinux.tbl:82
+msgid "Disable SELinux protection for freshclam daemon"
+msgstr "Avaktivera SELinux-skydd för freshclam-demonen"
+
+#: ../gui/selinux.tbl:83
+msgid "Disable SELinux protection for fsdaemon daemon"
+msgstr "Avaktivera SELinux-skydd för fsdaemon-demonen"
+
+#: ../gui/selinux.tbl:84
+msgid "Disable SELinux protection for gpm daemon"
+msgstr "Avaktivera SELinux-skydd för gpm-demonen"
+
+#: ../gui/selinux.tbl:85 ../gui/selinux.tbl:125
+msgid "NFS"
+msgstr "NFS"
+
+#: ../gui/selinux.tbl:85
+msgid "Disable SELinux protection for gss daemon"
+msgstr "Avaktivera SELinux-skydd för gss-demonen"
+
+#: ../gui/selinux.tbl:86
+msgid "Disable SELinux protection for Hal daemon"
+msgstr "Avaktivera SELinux-skydd för Hal-demonen"
+
+#: ../gui/selinux.tbl:87
+msgid "Compatibility"
+msgstr "Kompatibilitet"
+
+#: ../gui/selinux.tbl:87
+msgid ""
+"Do not audit things that we know to be broken but which are not security "
+"risks"
+msgstr "Granska inte saker som vi vet är trasiga men som inte är säkerhetsrisker"
+
+#: ../gui/selinux.tbl:88
+msgid "Disable SELinux protection for hostname daemon"
+msgstr "Avaktivera SELinux-skydd för hostname-demonen"
+
+#: ../gui/selinux.tbl:89
+msgid "Disable SELinux protection for hotplug daemon"
+msgstr "Avaktivera SELinux-skydd för hotplug-demonen"
+
+#: ../gui/selinux.tbl:90
+msgid "Disable SELinux protection for howl daemon"
+msgstr "Avaktivera SELinux-skydd för howl-demonen"
+
+#: ../gui/selinux.tbl:91
+msgid "Disable SELinux protection for cups hplip daemon"
+msgstr "Avaktivera SELinux-skydd för cups hplip-demonen"
+
+#: ../gui/selinux.tbl:92
+msgid "Disable SELinux protection for httpd rotatelogs"
+msgstr "Avaktivera SELinux-skydd för httpd rotatelogs"
+
+#: ../gui/selinux.tbl:93 ../gui/selinux.tbl:232 ../gui/selinux.tbl:233
+msgid "HTTPD Service"
+msgstr "HTTPD-tjänst"
+
+#: ../gui/selinux.tbl:93
+msgid "Disable SELinux protection for http suexec"
+msgstr "Avaktivera SELinux-skydd för http suexec"
+
+#: ../gui/selinux.tbl:94
+msgid "Disable SELinux protection for hwclock daemon"
+msgstr "Avaktivera SELinux-skydd för hwclock-demonen"
+
+#: ../gui/selinux.tbl:95
+msgid "Disable SELinux protection for i18n daemon"
+msgstr "Avaktivera SELinux-skydd för i18n-demonen"
+
+#: ../gui/selinux.tbl:96
+msgid "Disable SELinux protection for imazesrv daemon"
+msgstr "Avaktivera SELinux-skydd för imazesrv-demonen"
+
+#: ../gui/selinux.tbl:97
+msgid "Disable SELinux protection for inetd child daemons"
+msgstr "Avaktivera SELinux-skydd för inetd child-demonerna"
+
+#: ../gui/selinux.tbl:98
+msgid "Disable SELinux protection for inetd daemon"
+msgstr "Avaktivera SELinux-skydd för inetd-demonen"
+
+#: ../gui/selinux.tbl:99
+msgid "Disable SELinux protection for innd daemon"
+msgstr "Avaktivera SELinux-skydd för innd-demonen"
+
+#: ../gui/selinux.tbl:100
+msgid "Disable SELinux protection for iptables daemon"
+msgstr "Avaktivera SELinux-skydd för iptables-demonen"
+
+#: ../gui/selinux.tbl:101
+msgid "Disable SELinux protection for ircd daemon"
+msgstr "Avaktivera SELinux-skydd för ircd-demonen"
+
+#: ../gui/selinux.tbl:102
+msgid "Disable SELinux protection for irqbalance daemon"
+msgstr "Avaktivera SELinux-skydd för irqbalance-demonen"
+
+#: ../gui/selinux.tbl:103
+msgid "Disable SELinux protection for iscsi daemon"
+msgstr "Avaktivera SELinux-skydd för iscsi-demonen"
+
+#: ../gui/selinux.tbl:104
+msgid "Disable SELinux protection for jabberd daemon"
+msgstr "Avaktivera SELinux-skydd för jabberd-demonen"
+
+#: ../gui/selinux.tbl:105 ../gui/selinux.tbl:107
+msgid "Kerberos"
+msgstr "Kerberos"
+
+#: ../gui/selinux.tbl:105
+msgid "Disable SELinux protection for kadmind daemon"
+msgstr "Avaktivera SELinux-skydd för kadmind-demonen"
+
+#: ../gui/selinux.tbl:106
+msgid "Disable SELinux protection for klogd daemon"
+msgstr "Avaktivera SELinux-skydd för klogd-demonen"
+
+#: ../gui/selinux.tbl:107
+msgid "Disable SELinux protection for krb5kdc daemon"
+msgstr "Avaktivera SELinux-skydd för krb4kdc-demonen"
+
+#: ../gui/selinux.tbl:108
+msgid "Disable SELinux protection for ktalk daemons"
+msgstr "Avaktivera SELinux-skydd för ktalk-demonen"
+
+#: ../gui/selinux.tbl:109
+msgid "Disable SELinux protection for kudzu daemon"
+msgstr "Avaktivera SELinux-skydd för kudzu-demonen"
+
+#: ../gui/selinux.tbl:110
+msgid "Disable SELinux protection for locate daemon"
+msgstr "Avaktivera SELinux-skydd för locate-demonen"
+
+#: ../gui/selinux.tbl:111
+msgid "Disable SELinux protection for lpd daemon"
+msgstr "Avaktivera SELinux-skydd för lpd-demonen"
+
+#: ../gui/selinux.tbl:112
+msgid "Disable SELinux protection for lrrd daemon"
+msgstr "Avaktivera SELinux-skydd för lrrd-demonen"
+
+#: ../gui/selinux.tbl:113
+msgid "Disable SELinux protection for lvm daemon"
+msgstr "Avaktivera SELinux-skydd för lvm-demonen"
+
+#: ../gui/selinux.tbl:114
+msgid "Disable SELinux protection for mailman"
+msgstr "Avaktivera SELinux-skydd för mailman"
+
+#: ../gui/selinux.tbl:115
+msgid "Allow evolution and thunderbird to read user files"
+msgstr "Tillåt evolution och thunderbird att läsa användarfiler"
+
+#: ../gui/selinux.tbl:116
+msgid "Disable SELinux protection for mdadm daemon"
+msgstr "Avaktivera SELinux-skydd för madm-demonen"
+
+#: ../gui/selinux.tbl:117
+msgid "Disable SELinux protection for monopd daemon"
+msgstr "Avaktivera SELinux-skydd för monopd-demonen"
+
+#: ../gui/selinux.tbl:118
+msgid "Allow the mozilla browser to read user files"
+msgstr "Tillåt mozillawebbläsaren att läsa användarfiler"
+
+#: ../gui/selinux.tbl:119
+msgid "Disable SELinux protection for mrtg daemon"
+msgstr "Avaktivera SELinux-skydd för mrtg-demonen"
+
+#: ../gui/selinux.tbl:120
+msgid "Disable SELinux protection for mysqld daemon"
+msgstr "Avaktivera SELinux-skydd för mysqld-demonen"
+
+#: ../gui/selinux.tbl:121
+msgid "Disable SELinux protection for nagios daemon"
+msgstr "Avaktivera SELinux-skydd för nagios-demonen"
+
+#: ../gui/selinux.tbl:122 ../gui/selinux.tbl:128
+msgid "Name Service"
+msgstr "Namntjänst"
+
+#: ../gui/selinux.tbl:122
+msgid "Disable SELinux protection for named daemon"
+msgstr "Avaktivera SELinux-skydd för named-demonen"
+
+#: ../gui/selinux.tbl:123
+msgid "Disable SELinux protection for nessusd daemon"
+msgstr "Avaktivera SELinux-skydd för nessusd-demonen"
+
+#: ../gui/selinux.tbl:124
+msgid "Disable SELinux protection for NetworkManager"
+msgstr "Avaktivera SELinux-skydd för NetworkManager"
+
+#: ../gui/selinux.tbl:125
+msgid "Disable SELinux protection for nfsd daemon"
+msgstr "Avaktivera SELinux-skydd för nfsd-demonen"
+
+#: ../gui/selinux.tbl:126 ../gui/selinux.tbl:163 ../gui/selinux.tbl:176
+#: ../gui/selinux.tbl:221
+msgid "Samba"
+msgstr "Samba"
+
+#: ../gui/selinux.tbl:126
+msgid "Disable SELinux protection for nmbd daemon"
+msgstr "Avaktivera SELinux-skydd för nmbd-demonen"
+
+#: ../gui/selinux.tbl:127
+msgid "Disable SELinux protection for nrpe daemon"
+msgstr "Avaktivera SELinux-skydd för nrpe-demonen"
+
+#: ../gui/selinux.tbl:128
+msgid "Disable SELinux protection for nscd daemon"
+msgstr "Avaktivera SELinux-skydd för nscd-demonen"
+
+#: ../gui/selinux.tbl:129
+msgid "Disable SELinux protection for nsd daemon"
+msgstr "Avaktivera SELinux-skydd för nsd-demonen"
+
+#: ../gui/selinux.tbl:130
+msgid "Disable SELinux protection for ntpd daemon"
+msgstr "Avaktivera SELinux-skydd för ntpd-demonen"
+
+#: ../gui/selinux.tbl:131
+msgid "Disable SELinux protection for oddjob"
+msgstr "Avaktivera SELinux-skydd för oddjob"
+
+#: ../gui/selinux.tbl:132
+msgid "Disable SELinux protection for oddjob_mkhomedir"
+msgstr "Avaktivera SELinux-skydd för oddjob_mkhomedir"
+
+#: ../gui/selinux.tbl:133
+msgid "Disable SELinux protection for openvpn daemon"
+msgstr "Avaktivera SELinux-skydd för openvpn-demonen"
+
+#: ../gui/selinux.tbl:134
+msgid "Disable SELinux protection for pam daemon"
+msgstr "Avaktivera SELinux-skydd för pam-demonen"
+
+#: ../gui/selinux.tbl:135
+msgid "Disable SELinux protection for pegasus"
+msgstr "Avaktivera SELinux-skydd för pegasus"
+
+#: ../gui/selinux.tbl:136
+msgid "Disable SELinux protection for perdition daemon"
+msgstr "Avaktivera SELinux-skydd för perdition-demonen"
+
+#: ../gui/selinux.tbl:137
+msgid "Disable SELinux protection for portmap daemon"
+msgstr "Avaktivera SELinux-skydd för portmap-demonen"
+
+#: ../gui/selinux.tbl:138
+msgid "Disable SELinux protection for portslave daemon"
+msgstr "Avaktivera SELinux-skydd för portslave-demonen"
+
+#: ../gui/selinux.tbl:139
+msgid "Disable SELinux protection for postfix"
+msgstr "Avaktivera SELinux-skydd för postfix"
+
+#: ../gui/selinux.tbl:140
+msgid "Disable SELinux protection for postgresql daemon"
+msgstr "Avaktivera SELinux-skydd för postgresql-demonen"
+
+#: ../gui/selinux.tbl:141
+msgid "pppd"
+msgstr "pppd"
+
+#: ../gui/selinux.tbl:141
+msgid "Allow pppd to be run for a regular user"
+msgstr "Tillåt att pppd körs för en vanlig användare"
+
+#: ../gui/selinux.tbl:142
+msgid "Disable SELinux protection for pptp"
+msgstr "Avaktivera SELinux-skydd för pptp"
+
+#: ../gui/selinux.tbl:143
+msgid "Disable SELinux protection for prelink daemon"
+msgstr "Avaktivera SELinux-skydd för prelink-demonen"
+
+#: ../gui/selinux.tbl:144
+msgid "Disable SELinux protection for privoxy daemon"
+msgstr "Avaktivera SELinux-skydd för privoxy-demonen"
+
+#: ../gui/selinux.tbl:145
+msgid "Disable SELinux protection for ptal daemon"
+msgstr "Avaktivera SELinux-skydd för ptal-demonen"
+
+#: ../gui/selinux.tbl:146
+msgid "Disable SELinux protection for pxe daemon"
+msgstr "Avaktivera SELinux-skydd för pxe-demonen"
+
+#: ../gui/selinux.tbl:147
+msgid "Disable SELinux protection for pyzord"
+msgstr "Avaktivera SELinux-skydd för pyzord"
+
+#: ../gui/selinux.tbl:148
+msgid "Disable SELinux protection for quota daemon"
+msgstr "Avaktivera SELinux-skydd för quota-demonen"
+
+#: ../gui/selinux.tbl:149
+msgid "Disable SELinux protection for radiusd daemon"
+msgstr "Avaktivera SELinux-skydd för radiusd-demonen"
+
+#: ../gui/selinux.tbl:150
+msgid "Disable SELinux protection for radvd daemon"
+msgstr "Avaktivera SELinux-skydd för radvd-demonen"
+
+#: ../gui/selinux.tbl:151
+msgid "Disable SELinux protection for rdisc"
+msgstr "Avaktivera SELinux-skydd för rdisc"
+
+#: ../gui/selinux.tbl:152
+msgid "Disable SELinux protection for readahead"
+msgstr "Avaktivera SELinux-skydd för readahead"
+
+#: ../gui/selinux.tbl:153
+msgid "Allow programs to read files in non-standard locations (default_t)"
+msgstr "Tillåt program att läsa filer på icke-standardplatser (default_t)"
+
+#: ../gui/selinux.tbl:154
+msgid "Disable SELinux protection for restorecond"
+msgstr "Avaktivera SELinux-skydd för restorecond"
+
+#: ../gui/selinux.tbl:155
+msgid "Disable SELinux protection for rhgb daemon"
+msgstr "Avaktivera SELinux-skydd för rhgb-demonen"
+
+#: ../gui/selinux.tbl:156
+msgid "Disable SELinux protection for ricci"
+msgstr "Avaktivera SELinux-skydd för ricci"
+
+#: ../gui/selinux.tbl:157
+msgid "Disable SELinux protection for ricci_modclusterd"
+msgstr "Avaktivera SELinux-skydd för ricci_modclusterd"
+
+#: ../gui/selinux.tbl:158
+msgid "Disable SELinux protection for rlogind daemon"
+msgstr "Avaktivera SELinux-skydd för rlogind-demonen"
+
+#: ../gui/selinux.tbl:159
+msgid "Disable SELinux protection for rpcd daemon"
+msgstr "Avaktivera SELinux-skydd för rpcd-demonen"
+
+#: ../gui/selinux.tbl:160
+msgid "Disable SELinux protection for rshd"
+msgstr "Avaktivera SELinux-skydd för rshd"
+
+#: ../gui/selinux.tbl:161
+msgid "rsync"
+msgstr "rsync"
+
+#: ../gui/selinux.tbl:161
+msgid "Disable SELinux protection for rsync daemon"
+msgstr "Avaktivera SELinux-skydd för rsync-demonen"
+
+#: ../gui/selinux.tbl:162
+msgid "Allow ssh to run from inetd instead of as a daemon"
+msgstr "Tillåt ssh att köra från inetd istället för som en demon"
+
+#: ../gui/selinux.tbl:163
+msgid "Allow Samba to share nfs directories"
+msgstr "Tillåt Samba att dela nfs-kataloger"
+
+#: ../gui/selinux.tbl:164 ../gui/selinux.tbl:166
+msgid "SASL authentication server"
+msgstr "SASL autentiseringsserver"
+
+#: ../gui/selinux.tbl:164
+msgid "Allow sasl authentication server to read /etc/shadow"
+msgstr "Tillåt sasl-autentiseringsservern att läsa /etc/shadow"
+
+#: ../gui/selinux.tbl:165
+msgid ""
+"Allow X-Windows server to map a memory region as both executable and "
+"writable"
+msgstr "Tillåt X-Windowsservern att mappa en minnesregion både som körbar och skrivbar"
+
+#: ../gui/selinux.tbl:166
+msgid "Disable SELinux protection for saslauthd daemon"
+msgstr "Avaktivera SELinux-skydd för saslauthd-demonen"
+
+#: ../gui/selinux.tbl:167
+msgid "Disable SELinux protection for scannerdaemon daemon"
+msgstr "Avaktivera SELinux-skydd för scannerdaemon-demonen"
+
+#: ../gui/selinux.tbl:168
+msgid "Do not allow transition to sysadm_t, sudo and su effected"
+msgstr "Tillåt inte övergångar till sysadm_t, sudo och su påverkas"
+
+#: ../gui/selinux.tbl:169
+msgid "Do not allow any processes to load kernel modules"
+msgstr "Tillåt inte några processer att läsa in kärnmoduler"
+
+#: ../gui/selinux.tbl:170
+msgid "Do not allow any processes to modify kernel SELinux policy"
+msgstr "Tillåt inte några processer att ändra kärnans SELinuxpolicy"
+
+#: ../gui/selinux.tbl:171
+msgid "Disable SELinux protection for sendmail daemon"
+msgstr "Avaktivera SELinux-skydd för sendmail-demonen"
+
+#: ../gui/selinux.tbl:172
+msgid "Disable SELinux protection for setrans"
+msgstr "Avaktivera SELinux-skydd för setrans"
+
+#: ../gui/selinux.tbl:173
+msgid "Disable SELinux protection for setroubleshoot daemon"
+msgstr "Avaktivera SELinux-skydd för setroubleshoot-demonen"
+
+#: ../gui/selinux.tbl:174
+msgid "Disable SELinux protection for slapd daemon"
+msgstr "Avaktivera SELinux-skydd för slapd-demonen"
+
+#: ../gui/selinux.tbl:175
+msgid "Disable SELinux protection for slrnpull daemon"
+msgstr "Avaktivera SELinux-skydd för slrnpull-demonen"
+
+#: ../gui/selinux.tbl:176
+msgid "Disable SELinux protection for smbd daemon"
+msgstr "Avaktivera SELinux-skydd för smbd-demonen"
+
+#: ../gui/selinux.tbl:177
+msgid "Disable SELinux protection for snmpd daemon"
+msgstr "Avaktivera SELinux-skydd för snmpd-demonen"
+
+#: ../gui/selinux.tbl:178
+msgid "Disable SELinux protection for snort daemon"
+msgstr "Avaktivera SELinux-skydd för snort-demonen"
+
+#: ../gui/selinux.tbl:179
+msgid "Disable SELinux protection for soundd daemon"
+msgstr "Avaktivera SELinux-skydd för soundd-demonen"
+
+#: ../gui/selinux.tbl:180
+msgid "Disable SELinux protection for sound daemon"
+msgstr "Avaktivera SELinux-skydd för sound-demonen"
+
+#: ../gui/selinux.tbl:181 ../gui/selinux.tbl:182 ../gui/selinux.tbl:183
+msgid "Spam Protection"
+msgstr "Skräppostskydd"
+
+#: ../gui/selinux.tbl:181
+msgid "Disable SELinux protection for spamd daemon"
+msgstr "Avaktivera SELinux-skydd för spamd-demonen"
+
+#: ../gui/selinux.tbl:182
+msgid "Allow spamd to access home directories"
+msgstr "Tillåt spamd att komma åt hemkataloger"
+
+#: ../gui/selinux.tbl:183
+msgid "Allow Spam Assassin daemon network access"
+msgstr "Tillåt Spam Assassin-demonen att komma åt nätverket"
+
+#: ../gui/selinux.tbl:184
+msgid "Disable SELinux protection for speedmgmt daemon"
+msgstr "Avaktivera SELinux-skydd för speedmgmt-demonen"
+
+#: ../gui/selinux.tbl:185 ../gui/selinux.tbl:186
+msgid "Squid"
+msgstr "Squid"
+
+#: ../gui/selinux.tbl:185
+msgid "Allow squid daemon to connect to the network"
+msgstr "Tillåt squid-demonen att ansluta till nätverket"
+
+#: ../gui/selinux.tbl:186
+msgid "Disable SELinux protection for squid daemon"
+msgstr "Avaktivera SELinux-skydd för squid-demonen"
+
+#: ../gui/selinux.tbl:187
+msgid "Disable SELinux protection for ssh daemon"
+msgstr "Avaktivera SELinux-skydd för ssh-demonen"
+
+#: ../gui/selinux.tbl:188
+msgid "Allow ssh logins as sysadm_r:sysadm_t"
+msgstr "Tillåt ssh-inloggningar som sysadm_r:sysadm_t"
+
+#: ../gui/selinux.tbl:189
+msgid ""
+"Allow staff_r users to search the sysadm home dir and read files (such as "
+"~/.bashrc)"
+msgstr "Tillåt staff_r-användare att söka i sysadm-hemkatalogen och läsa filer (såsom ~/.bashrc)"
+
+#: ../gui/selinux.tbl:190 ../gui/selinux.tbl:191
+msgid "Universal SSL tunnel"
+msgstr "Universiell SSL-tunnel"
+
+#: ../gui/selinux.tbl:190
+msgid "Disable SELinux protection for stunnel daemon"
+msgstr "Avaktivera SELinux-skydd för stunnel-demonen"
+
+#: ../gui/selinux.tbl:191
+msgid "Allow stunnel daemon to run as standalone, outside of xinetd"
+msgstr "Tillåt stunnel-demonen att köra fristående, utanför xinetd"
+
+#: ../gui/selinux.tbl:192
+msgid "Disable SELinux protection for swat daemon"
+msgstr "Avaktivera SELinux-skydd för swat-demonen"
+
+#: ../gui/selinux.tbl:193
+msgid "Disable SELinux protection for sxid daemon"
+msgstr "Avaktivera SELinux-skydd för sxid-demonen"
+
+#: ../gui/selinux.tbl:194
+msgid "Disable SELinux protection for syslogd daemon"
+msgstr "Avaktivera SELinux-skydd för syslogd-demonen"
+
+#: ../gui/selinux.tbl:195
+msgid "Disable SELinux protection for system cron jobs"
+msgstr "Avaktivera SELinux-skydd för systemets cron-jobb"
+
+#: ../gui/selinux.tbl:196
+msgid "Disable SELinux protection for tcp daemon"
+msgstr "Avaktivera SELinux-skydd för tcp-demonen"
+
+#: ../gui/selinux.tbl:197
+msgid "Disable SELinux protection for telnet daemon"
+msgstr "Avaktivera SELinux-skydd för telnet-demonen"
+
+#: ../gui/selinux.tbl:198
+msgid "Disable SELinux protection for tftpd daemon"
+msgstr "Avaktivera SELinux-skydd för tftpd-demonen"
+
+#: ../gui/selinux.tbl:199
+msgid "Disable SELinux protection for transproxy daemon"
+msgstr "Avaktivera SELinux-skydd för transproxy-demonen"
+
+#: ../gui/selinux.tbl:200
+msgid "Disable SELinux protection for udev daemon"
+msgstr "Avaktivera SELinux-skydd för udev-demonen"
+
+#: ../gui/selinux.tbl:201
+msgid "Disable SELinux protection for uml daemon"
+msgstr "Avaktivera SELinux-skydd för uml-demonen"
+
+#: ../gui/selinux.tbl:202
+msgid ""
+"Allow xinetd to run unconfined, including any services it starts that do not"
+" have a domain transition explicitly defined"
+msgstr "Tillåt xinetd att köra obegränsad, inklusive alla tjänster den startar som inte har en domänövergång uttryckligen definierad"
+
+#: ../gui/selinux.tbl:203
+msgid ""
+"Allow rc scripts to run unconfined, including any daemon started by an rc "
+"script that does not have a domain transition explicitly defined"
+msgstr "Tillåt rc-skript att köra obegränsade, inklusive alla demnoer som startas av ett rc-skript och som inte har en domänövergång uttryckligen definierad"
+
+#: ../gui/selinux.tbl:204
+msgid "Allow rpm to run unconfined"
+msgstr "Tillåt rpm att köra obegränsad"
+
+#: ../gui/selinux.tbl:205
+msgid "Allow privileged utilities like hotplug and insmod to run unconfined"
+msgstr "Tillåt priviligerade verktyg som hotplug och insmod att köra obegränsade"
+
+#: ../gui/selinux.tbl:206
+msgid "Disable SELinux protection for updfstab daemon"
+msgstr "Avaktivera SELinux-skydd för updfstab-demonen"
+
+#: ../gui/selinux.tbl:207
+msgid "Disable SELinux protection for uptimed daemon"
+msgstr "Avaktivera SELinux-skydd för uptimed-demonen"
+
+#: ../gui/selinux.tbl:208
+msgid ""
+"Allow user_r to reach sysadm_r via su, sudo, or userhelper. Otherwise, only "
+"staff_r can do so"
+msgstr "Tillåt user_r att nå sysadm_r via su, sudo eller userhelper.  Annars kan endast staff_r göra det"
+
+#: ../gui/selinux.tbl:209
+msgid "Allow users to execute the mount command"
+msgstr "Tillåt användare att köra kommandot mount"
+
+#: ../gui/selinux.tbl:210
+msgid "Allow regular users direct mouse access (only allow the X server)"
+msgstr "Tillåt vanliga användare direkt musåtkomst (tillåt endast X-servern)"
+
+#: ../gui/selinux.tbl:211
+msgid "Allow users to run the dmesg command"
+msgstr "Tillåt användare att köra kommandot dmesg"
+
+#: ../gui/selinux.tbl:212
+msgid "Allow users to control network interfaces (also needs USERCTL=true)"
+msgstr "Tillåt användare att styra nätverksgränssnitt (kräver också USERCTL=true)"
+
+#: ../gui/selinux.tbl:213
+msgid "Allow normal user to execute ping"
+msgstr "Tillåt vanliga användare att köra ping"
+
+#: ../gui/selinux.tbl:214
+msgid "Allow user to r/w noextattrfile (FAT, CDROM, FLOPPY)"
+msgstr "Tillåt användare skriva/läsa noextattrfile (FAT, CDROM, FLOPPY)"
+
+#: ../gui/selinux.tbl:215
+msgid "Allow users to rw usb devices"
+msgstr "Tillåt användare skriva/läsa usb-enheter"
+
+#: ../gui/selinux.tbl:216
+msgid ""
+"Allow users to run TCP servers (bind to ports and accept connection from the"
+" same domain and outside users)  disabling this forces FTP passive mode and "
+"may change other protocols"
+msgstr "Tillåt användare att köra TCP-servrar (binda till portar och acceptera anslutningar från samma domän och användare utanför).  Avaktivering av detta framtvingar passivt läge i FTP och kan ändra andra protokoll"
+
+#: ../gui/selinux.tbl:217
+msgid "Allow user to stat ttyfiles"
+msgstr "Tillåt användare att ta status på ttyfiler"
+
+#: ../gui/selinux.tbl:218
+msgid "Disable SELinux protection for uucpd daemon"
+msgstr "Avaktivera SELinux-skydd för uucpd-demonen"
+
+#: ../gui/selinux.tbl:219
+msgid "Disable SELinux protection for vmware daemon"
+msgstr "Avaktivera SELinux-skydd för vmware-demonen"
+
+#: ../gui/selinux.tbl:220
+msgid "Disable SELinux protection for watchdog daemon"
+msgstr "Avaktivera SELinux-skydd för watchdog-demonen"
+
+#: ../gui/selinux.tbl:221
+msgid "Disable SELinux protection for winbind daemon"
+msgstr "Avaktivera SELinux-skydd för winbind-demonen"
+
+#: ../gui/selinux.tbl:222
+msgid "Disable SELinux protection for xdm daemon"
+msgstr "Avaktivera SELinux-skydd för xdm-demonen"
+
+#: ../gui/selinux.tbl:223
+msgid "Allow xdm logins as sysadm_r:sysadm_t"
+msgstr "Tillåt xdm-inloggning som sysadm_r:sysadm_t"
+
+#: ../gui/selinux.tbl:224
+msgid "Disable SELinux protection for xen daemon"
+msgstr "Avaktivera SELinux-skydd för xen-demonen"
+
+#: ../gui/selinux.tbl:225
+msgid "XEN"
+msgstr "XEN"
+
+#: ../gui/selinux.tbl:225
+msgid "Allow xen to read/write physical disk devices"
+msgstr "Tillåt xen att läsa/skriva fysiska diskenheter"
+
+#: ../gui/selinux.tbl:226
+msgid "Disable SELinux protection for xfs daemon"
+msgstr "Avaktivera SELinux-skydd för xfs-demonen"
+
+#: ../gui/selinux.tbl:227
+msgid "Disable SELinux protection for xen control"
+msgstr "Avaktivera SELinux-skydd för xen-styrning"
+
+#: ../gui/selinux.tbl:228
+msgid "Disable SELinux protection for ypbind daemon"
+msgstr "Avaktivera SELinux-skydd för ypbind-demonen"
+
+#: ../gui/selinux.tbl:229
+msgid "Disable SELinux protection for NIS Password Daemon"
+msgstr "Avaktivera SELinux-skydd för NIS-lösenord-demonen"
+
+#: ../gui/selinux.tbl:230
+msgid "Disable SELinux protection for ypserv daemon"
+msgstr "Avaktivera SELinux-skydd för ypserv-demonen"
+
+#: ../gui/selinux.tbl:231
+msgid "Disable SELinux protection for NIS Transfer Daemon"
+msgstr "Avaktivera SELinux-skydd för NIS Transfer-demonen"
+
+#: ../gui/selinux.tbl:232
+msgid ""
+"Allow SELinux webadm user to manage unprivileged users home directories"
+msgstr "Tillåt SELinux webadm-användare att hantera opriviligerade användares hemkataloger"
+
+#: ../gui/selinux.tbl:233
+msgid "Allow SELinux webadm user to read unprivileged users home directories"
+msgstr "Tillåt SELinux webadm-användare att läsa opriviligierade användares hemkataloger"
+
+#: ../gui/semanagePage.py:126
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "Är du säker på att du vill ta bort %s \"%s\"?"
+
+#: ../gui/semanagePage.py:126
+#, python-format
+msgid "Delete %s"
+msgstr "Radera %s"
+
+#: ../gui/semanagePage.py:134
+#, python-format
+msgid "Add %s"
+msgstr "Lägg till %s"
+
+#: ../gui/semanagePage.py:148
+#, python-format
+msgid "Modify %s"
+msgstr "Modifiera %s"
+
+#: ../gui/statusPage.py:69 ../gui/system-config-selinux.glade:2838
+msgid "Permissive"
+msgstr "Tillåtande"
+
+#: ../gui/statusPage.py:70 ../gui/system-config-selinux.glade:2856
+msgid "Enforcing"
+msgstr "Upprätthållande"
+
+#: ../gui/statusPage.py:94
+msgid "Status"
+msgstr "Status"
+
+#: ../gui/statusPage.py:133
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr "Att byta policytyp kommer medföra en ometikettering av hela filsystemet vid nästa omstart.  Ometikettering tar en lång tid, beroende på storleken på filsystemet.  Vill du fortsätta?"
+
+#: ../gui/statusPage.py:147
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you"
+" wish to continue?"
+msgstr "Att byta till att ha SELinux avstängt kräver en omstart.  Det rekommenderas inte.  Om du senare bestämmer dig för att slå på SELinux igen kommer systemet behöva etikettera om.  Om du bara vill se om SELinux orsakar ett problem på ditt system kan du gå till tillåtande läge vilket endast kommer logga fel och inte påtvinga SELinux policy.  Tillåtande läge kräver inte en omstart.  Vil du fortsätta?"
+
+#: ../gui/statusPage.py:152
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr "Att byta till att ha SELinux påslaged kommer medföra en ometikettering av hela filsystemet vid nästa omstart.  Ometikettering tar en lång tid, beroende på storleken på filsystemet.  Vill du fortsätta?"
+
+#: ../gui/system-config-selinux.glade:11
+msgid "system-config-selinux"
+msgstr "system-config-selinux"
+
+#: ../gui/system-config-selinux.glade:12
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr "Copyright © 2006 Red Hat, Inc.\nCopyright © 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../gui/system-config-selinux.glade:22
+#: ../gui/system-config-selinux.glade:544
+msgid "Add SELinux Login Mapping"
+msgstr "Lägg till SELinux-inloggningsmappning"
+
+#: ../gui/system-config-selinux.glade:257
+msgid "Add SELinux Network Ports"
+msgstr "Lägg till SELinux-nätverksportar"
+
+#: ../gui/system-config-selinux.glade:391
+#: ../gui/system-config-selinux.glade:678
+msgid "SELinux Type"
+msgstr "SELinux-typ"
+
+#: ../gui/system-config-selinux.glade:622
+msgid "File Specification"
+msgstr "Filspecifikation"
+
+#: ../gui/system-config-selinux.glade:650
+msgid "File Type"
+msgstr "Filtyp"
+
+#: ../gui/system-config-selinux.glade:727
+msgid ""
+"all files\n"
+"regular file\n"
+"directory\n"
+"character device\n"
+"block device\n"
+"socket\n"
+"symbolic link\n"
+"named pipe\n"
+msgstr "alla filer\nvanliga filer\nkataloger\nteckenenhet\nblockenhet\nuttag\nsymbolisk länk\nnamngivet rör\n"
+
+#: ../gui/system-config-selinux.glade:773
+msgid "MLS"
+msgstr "MLS"
+
+#: ../gui/system-config-selinux.glade:837
+msgid "Add SELinux User"
+msgstr "Lägga till SELinux-användare"
+
+#: ../gui/system-config-selinux.glade:1079
+msgid "SELinux Administration"
+msgstr "SELinux-administration"
+
+#: ../gui/system-config-selinux.glade:1122
+msgid "Add"
+msgstr "Lägg till"
+
+#: ../gui/system-config-selinux.glade:1144
+msgid "_Properties"
+msgstr "_Egenskaper"
+
+#: ../gui/system-config-selinux.glade:1166
+msgid "_Delete"
+msgstr "_Ta bort"
+
+#: ../gui/system-config-selinux.glade:1257
+msgid "Select Management Object"
+msgstr "Välj hanteringsobjekt"
+
+#: ../gui/system-config-selinux.glade:1274
+msgid "<b>Select:</b>"
+msgstr "<b>Val:</b>"
+
+#: ../gui/system-config-selinux.glade:1327
+msgid "System Default Enforcing Mode"
+msgstr "Tvingande läge systemstandard"
+
+#: ../gui/system-config-selinux.glade:1355
+msgid ""
+"Disabled\n"
+"Permissive\n"
+"Enforcing\n"
+msgstr "Avslaget\nTillåtande\nTvingande\n"
+
+#: ../gui/system-config-selinux.glade:1374
+msgid "Current Enforcing Mode"
+msgstr "Nuvarande upprätthållande-läge"
+
+#: ../gui/system-config-selinux.glade:1419
+msgid "System Default Policy Type: "
+msgstr "Policytyp systemstandard: "
+
+#: ../gui/system-config-selinux.glade:1464
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr "Väl om du vill etikettera om hela filsystemet vid nästa omstart.  Ometikettering kan ta väldigt lång tid, beroende på sotrleken av filsystemet.  Om du ändrar policytyper eller går från avslaget till tvingande behövs en ometikettering."
+
+#: ../gui/system-config-selinux.glade:1510
+msgid "Relabel on next reboot."
+msgstr "Märk om vid nästa omstart."
+
+#: ../gui/system-config-selinux.glade:1562
+msgid "label37"
+msgstr "label37"
+
+#: ../gui/system-config-selinux.glade:1599
+msgid "Revert boolean setting to system default"
+msgstr "Återställ booleansk inställning till systemstandard"
+
+#: ../gui/system-config-selinux.glade:1615
+msgid "Toggle between Customized and All Booleans"
+msgstr "Växla mellan anpassad och alla booleaner"
+
+#: ../gui/system-config-selinux.glade:1633
+msgid "Run booleans lockdown wizard"
+msgstr "Kör gude för nedlåsningsbooleaner"
+
+#: ../gui/system-config-selinux.glade:1634
+msgid "Lockdown..."
+msgstr "Lås ned..."
+
+#: ../gui/system-config-selinux.glade:1664
+#: ../gui/system-config-selinux.glade:1869
+#: ../gui/system-config-selinux.glade:2056
+#: ../gui/system-config-selinux.glade:2243
+#: ../gui/system-config-selinux.glade:2486
+#: ../gui/system-config-selinux.glade:2711
+#: ../gui/system-config-selinux.glade:2886
+msgid "Filter"
+msgstr "Filter"
+
+#: ../gui/system-config-selinux.glade:1753
+msgid "label50"
+msgstr "label50"
+
+#: ../gui/system-config-selinux.glade:1790
+msgid "Add File Context"
+msgstr "Lägg till filkontext"
+
+#: ../gui/system-config-selinux.glade:1806
+msgid "Modify File Context"
+msgstr "Modifiera filkontext"
+
+#: ../gui/system-config-selinux.glade:1822
+msgid "Delete File Context"
+msgstr "Ta bort filkontext"
+
+#: ../gui/system-config-selinux.glade:1838
+msgid "Toggle between all and customized file context"
+msgstr "Växla mellan alla och anpassade filkontext"
+
+#: ../gui/system-config-selinux.glade:1958
+msgid "label38"
+msgstr "label38"
+
+#: ../gui/system-config-selinux.glade:1995
+msgid "Add SELinux User Mapping"
+msgstr "Lägg till SELinux-användarmappning"
+
+#: ../gui/system-config-selinux.glade:2011
+msgid "Modify SELinux User Mapping"
+msgstr "Modifiera SELinux användarmappning"
+
+#: ../gui/system-config-selinux.glade:2027
+msgid "Delete SELinux User Mapping"
+msgstr "Ta bort SELinux-användarmappning"
+
+#: ../gui/system-config-selinux.glade:2145
+msgid "label39"
+msgstr "label39"
+
+#: ../gui/system-config-selinux.glade:2182
+msgid "Add User"
+msgstr "Lägg till användare"
+
+#: ../gui/system-config-selinux.glade:2198
+msgid "Modify User"
+msgstr "Modifiera användare"
+
+#: ../gui/system-config-selinux.glade:2214
+msgid "Delete User"
+msgstr "Radera användare"
+
+#: ../gui/system-config-selinux.glade:2332
+msgid "label41"
+msgstr "label41"
+
+#: ../gui/system-config-selinux.glade:2369
+msgid "Add Network Port"
+msgstr "Lägg till nätverkport"
+
+#: ../gui/system-config-selinux.glade:2385
+msgid "Edit Network Port"
+msgstr "Redigera nätverksport"
+
+#: ../gui/system-config-selinux.glade:2401
+msgid "Delete Network Port"
+msgstr "Ta bort nätverksport"
+
+#: ../gui/system-config-selinux.glade:2437
+#: ../gui/system-config-selinux.glade:2455
+msgid "Toggle between Customized and All Ports"
+msgstr "Växla mellan anpassad och alla portar"
+
+#: ../gui/system-config-selinux.glade:2575
+msgid "label42"
+msgstr "label42"
+
+#: ../gui/system-config-selinux.glade:2612
+msgid "Generate new policy module"
+msgstr "Generera ny policymodul"
+
+#: ../gui/system-config-selinux.glade:2628
+msgid "Load policy module"
+msgstr "Läs in policymodul"
+
+#: ../gui/system-config-selinux.glade:2644
+msgid "Remove loadable policy module"
+msgstr "Ta bort inläsningsbar policymodul"
+
+#: ../gui/system-config-selinux.glade:2680
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the"
+" log files."
+msgstr "Aktivera/avaktivera ytterligare granskningsregler, som normalt inte rapporteras till loggfilerna."
+
+#: ../gui/system-config-selinux.glade:2800
+msgid "label44"
+msgstr "label44"
+
+#: ../gui/system-config-selinux.glade:2837
+msgid "Change process mode to permissive."
+msgstr "Ändra processläge till tillåtande."
+
+#: ../gui/system-config-selinux.glade:2855
+msgid "Change process mode to enforcing"
+msgstr "Ändra processläge till tvingande."
+
+#: ../gui/system-config-selinux.glade:2947
+msgid "Process Domain"
+msgstr "Processdomän"
+
+#: ../gui/system-config-selinux.glade:2975
+msgid "label59"
+msgstr "label59"
+
+#: ../gui/usersPage.py:138
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "SELinux-användare ”%s” behövs"
