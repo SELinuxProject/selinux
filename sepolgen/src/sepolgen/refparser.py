@@ -245,7 +245,7 @@ def t_refpolicywarn(t):
     t.lexer.lineno += 1
 
 def t_IDENTIFIER(t):
-    r'[a-zA-Z_\$\"][a-zA-Z0-9_\-\.\$\*\"~]*'
+    r'[a-zA-Z_\$\"][a-zA-Z0-9_\-\+\.\$\*\"~]*'
     # Handle any keywords
     t.type = reserved.get(t.value,'IDENTIFIER')
     return t
