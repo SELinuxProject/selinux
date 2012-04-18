@@ -47,7 +47,8 @@
 #define SEPGSQL_CONTEXTS  24
 #define FILE_CONTEXT_SUBS_DIST 25
 #define LXC_CONTEXTS      26
-#define NEL               27
+#define BOOLEAN_SUBS      27
+#define NEL               28
 
 /* Part of one-time lazy init */
 static pthread_once_t once = PTHREAD_ONCE_INIT;
@@ -425,6 +426,12 @@ const char *selinux_lxc_contexts_path(void)
 }
 
 hidden_def(selinux_lxc_contexts_path)
+
+const char * selinux_booleans_subs_path(void) {
+	return get_path(BOOLEAN_SUBS);
+}
+
+hidden_def(selinux_booleans_subs_path)
 
 const char * selinux_file_context_subs_path(void) {
 	return get_path(FILE_CONTEXT_SUBS);

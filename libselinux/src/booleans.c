@@ -5,6 +5,7 @@
  *   Dan Walsh <dwalsh@redhat.com> - Added security_load_booleans().
  */
 
+#include <assert.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -86,44 +87,146 @@ int security_get_boolean_names(char ***names, int *len)
 }
 
 hidden_def(security_get_boolean_names)
+
+static char *bool_sub(const char *name)
+{
+	char *sub = NULL;
+	char *line_buf = NULL;
+	size_t line_len;
+	FILE *cfg;
+
+	if (!name)
+		return NULL;
+
+	cfg = fopen(selinux_booleans_subs_path(), "r");
+	if (!cfg)
+		goto out;
+
+	while (getline(&line_buf, &line_len, cfg) != -1) {
+		char *ptr;
+		char *src = line_buf;
+		char *dst;
+
+		while (*src && isspace(*src))
+			src++;
+		if (!*src)
+			continue;
+		if (src[0] == '#')
+			continue;
+
+		ptr = src;
+		while (*ptr && !isspace(*ptr))
+			ptr++;
+		*ptr++ = '\0';
+		if (strcmp(src, name) != 0)
+			continue;
+
+		dst = ptr;
+		while (*dst && isspace(*dst))
+			dst++;
+		if (!*dst)
+			continue;
+		ptr=dst;
+		while (*ptr && !isspace(*ptr))
+			ptr++;
+		*ptr='\0';
+
+		sub = strdup(dst);
+
+		break;
+	}
+
+	free(line_buf);
+	fclose(cfg);
+out:
+	if (!sub)
+		sub = strdup(name);
+	return sub;
+}
+
+static int bool_open(const char *name, int flag) {
+	char *fname = NULL;
+	char *alt_name = NULL;
+	int len;
+	int fd = -1;
+	int ret;
+	char *ptr;
+
+	if (!name) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	/* note the 'sizeof' gets us enough room for the '\0' */
+	len = strlen(name) + strlen(selinux_mnt) + sizeof(SELINUX_BOOL_DIR);
+	fname = malloc(sizeof(char) * len);
+	if (!fname)
+		return -1;
+
+	ret = snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR, name);
+	if (ret < 0)
+		goto out;
+	assert(ret < len);
+
+	fd = open(fname, flag);
+	if (fd >= 0 || errno != ENOENT)
+		goto out;
+
+	alt_name = bool_sub(name);
+	if (!alt_name)
+		goto out;
+
+	/* note the 'sizeof' gets us enough room for the '\0' */
+	len = strlen(alt_name) + strlen(selinux_mnt) + sizeof(SELINUX_BOOL_DIR);
+	ptr = realloc(fname, len);
+	if (!ptr)
+		goto out;
+	fname = ptr;
+
+	ret = snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR, alt_name);
+	if (ret < 0)
+		goto out;
+	assert(ret < len);
+
+	fd = open(fname, flag);
+out:
+	free(fname);
+	free(alt_name);
+
+	return fd;
+}
+
 #define STRBUF_SIZE 3
 static int get_bool_value(const char *name, char **buf)
 {
 	int fd, len;
-	char *fname = NULL;
+	int errno_tmp;
 
 	if (!selinux_mnt) {
 		errno = ENOENT;
 		return -1;
 	}
 
-	*buf = (char *)malloc(sizeof(char) * (STRBUF_SIZE + 1));
+	*buf = malloc(sizeof(char) * (STRBUF_SIZE + 1));
 	if (!*buf)
-		goto out;
+		return -1;
+
 	(*buf)[STRBUF_SIZE] = 0;
 
-	len = strlen(name) + strlen(selinux_mnt) + sizeof(SELINUX_BOOL_DIR);
-	fname = (char *)malloc(sizeof(char) * len);
-	if (!fname)
-		goto out;
-	snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR, name);
-
-	fd = open(fname, O_RDONLY);
+	fd = bool_open(name, O_RDONLY);
 	if (fd < 0)
-		goto out;
+		goto out_err;
 
 	len = read(fd, *buf, STRBUF_SIZE);
+	errno_tmp = errno;
 	close(fd);
+	errno = errno_tmp;
 	if (len != STRBUF_SIZE)
-		goto out;
+		goto out_err;
 
-	free(fname);
 	return 0;
-      out:
-	if (*buf)
-		free(*buf);
-	if (fname)
-		free(fname);
+out_err:
+	free(*buf);
 	return -1;
 }
 
@@ -164,8 +267,8 @@ hidden_def(security_get_boolean_active)
 
 int security_set_boolean(const char *name, int value)
 {
-	int fd, ret, len;
-	char buf[2], *fname;
+	int fd, ret;
+	char buf[2];
 
 	if (!selinux_mnt) {
 		errno = ENOENT;
@@ -176,17 +279,9 @@ int security_set_boolean(const char *name, int value)
 		return -1;
 	}
 
-	len = strlen(name) + strlen(selinux_mnt) + sizeof(SELINUX_BOOL_DIR);
-	fname = (char *)malloc(sizeof(char) * len);
-	if (!fname)
+	fd = bool_open(name, O_WRONLY);
+	if (fd < 0)
 		return -1;
-	snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR, name);
-
-	fd = open(fname, O_WRONLY);
-	if (fd < 0) {
-		ret = -1;
-		goto out;
-	}
 
 	if (value)
 		buf[0] = '1';
@@ -196,8 +291,7 @@ int security_set_boolean(const char *name, int value)
 
 	ret = write(fd, buf, 2);
 	close(fd);
-      out:
-	free(fname);
+
 	if (ret > 0)
 		return 0;
 	else

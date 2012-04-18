@@ -507,6 +507,7 @@ extern const char *selinux_x_context_path(void);
 extern const char *selinux_sepgsql_context_path(void);
 extern const char *selinux_contexts_path(void);
 extern const char *selinux_securetty_types_path(void);
+extern const char *selinux_booleans_subs_path(void);
 extern const char *selinux_booleans_path(void);
 extern const char *selinux_customizable_types_path(void);
 extern const char *selinux_users_path(void);
