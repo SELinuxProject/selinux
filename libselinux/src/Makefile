@@ -75,6 +75,10 @@ CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissi
           -Werror -Wno-aggregate-return -Wno-redundant-decls
 
 override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 $(EMFLAGS)
+
+SWIG_CFLAGS += -Wno-error -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter \
+		-Wno-shadow -Wno-uninitialized -Wno-missing-prototypes -Wno-missing-declarations
+
 RANLIB=ranlib
 
 ARCH := $(patsubst i%86,i386,$(shell uname -m))
@@ -93,10 +97,10 @@ pywrap: all $(SWIGSO) $(AUDIT2WHYSO)
 rubywrap: all $(SWIGRUBYSO)
 
 $(SWIGLOBJ): $(SWIGCOUT)
-	$(CC) $(filter-out -Werror, $(CFLAGS)) $(PYINC) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(CFLAGS) $(SWIG_CFLAGS) $(PYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGRUBYLOBJ): $(SWIGRUBYCOUT)
-	$(CC) $(filter-out -Werror, $(CFLAGS)) $(RUBYINC) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(CFLAGS) $(SWIG_CFLAGS) $(RUBYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGSO): $(SWIGLOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $< -L. -lselinux -L$(LIBDIR) $(PYTHONLIBDIR)

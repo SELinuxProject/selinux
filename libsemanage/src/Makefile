@@ -57,6 +57,9 @@ OBJS= $(patsubst %.c,%.o,$(SRCS)) conf-scan.o conf-parse.o
 LOBJS= $(patsubst %.c,%.lo,$(SRCS)) conf-scan.lo conf-parse.lo
 CFLAGS ?= -Werror -Wall -W -Wundef -Wshadow -Wmissing-noreturn -Wmissing-format-attribute
 
+SWIG_CFLAGS += -Wno-error -Wno-unused-but-set-variable -Wno-unused-variable -Wno-shadow \
+		-Wno-unused-parameter
+
 override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE 
 RANLIB=ranlib
 
@@ -73,10 +76,10 @@ pywrap: all $(SWIGSO)
 rubywrap: all $(SWIGRUBYSO)
 
 $(SWIGLOBJ): $(SWIGCOUT)
-	$(CC) $(filter-out -Werror, $(CFLAGS)) $(PYINC) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(CFLAGS) $(SWIG_CFLAGS) $(PYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGRUBYLOBJ): $(SWIGRUBYCOUT)
-	$(CC) $(filter-out -Werror, $(CFLAGS)) -I$(RUBYINC) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(CFLAGS) $(SWIG_CFLAGS) -I$(RUBYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGSO): $(SWIGLOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $< -L. -lsemanage -L$(LIBDIR) -Wl,-soname,$@
