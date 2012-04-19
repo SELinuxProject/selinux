@@ -453,11 +453,11 @@ static struct PyModuleDef moduledef = {
 	NULL
 };
 
-PyMODINIT_FUNC
-PyInit_audit2why(void)
+PyMODINIT_FUNC PyInit_audit2why(void); /* silence -Wmissing-prototypes */
+PyMODINIT_FUNC PyInit_audit2why(void)
 #else
-PyMODINIT_FUNC
-initaudit2why(void)
+PyMODINIT_FUNC initaudit2why(void); /* silence -Wmissing-prototypes */
+PyMODINIT_FUNC initaudit2why(void)
 #endif
 {
 	PyObject *m;
