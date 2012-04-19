@@ -15,9 +15,10 @@ INSTALL_DIR	= /usr/bin/install -d
 INSTALL_NLS_DIR = $(DESTDIR)/usr/share/locale
 
 # PO catalog handling
-MSGMERGE	= msgmerge -v
+MSGMERGE	= msgmerge
+MSGMERGE_FLAGS	= -q
 XGETTEXT	= xgettext --default-domain=$(NLSPACKAGE)
-MSGFMT		= msgfmt --statistics --verbose
+MSGFMT		= msgfmt
 
 # What do we need to do
 POFILES		= $(wildcard *.po)
@@ -91,7 +92,7 @@ update-po: Makefile $(POTFILE) refresh-po
 refresh-po: Makefile
 	for cat in $(POFILES); do \
 		lang=`basename $$cat .po`; \
-		if $(MSGMERGE) $$lang.po $(POTFILE) > $$lang.pot ; then \
+		if $(MSGMERGE) $(MSGMERGE_FLAGS) $$lang.po $(POTFILE) > $$lang.pot ; then \
 			mv -f $$lang.pot $$lang.po ; \
 			echo "$(MSGMERGE) of $$lang succeeded" ; \
 		else \
