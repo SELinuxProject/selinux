@@ -1,3 +1,6 @@
+2.1.6 2011-04-23
+	* allocate enough space to hold filename in trans rules
+
 2.1.5 2011-03-28
 	* checkpolicy: implement new default labeling behaviors
 
