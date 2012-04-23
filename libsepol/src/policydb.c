@@ -2380,7 +2380,7 @@ int filename_trans_read(filename_trans_t **t, struct policy_file *fp)
 			return -1;
 		len = le32_to_cpu(buf[0]);
 
-		name = calloc(len, sizeof(*name));
+		name = calloc(len + 1, sizeof(*name));
 		if (!name)
 			return -1;
 
