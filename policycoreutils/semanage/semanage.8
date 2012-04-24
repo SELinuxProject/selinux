@@ -44,9 +44,13 @@ Manage network node type definitions
 
 Manage file context mapping definitions
 .br
-.B semanage fcontext [\-S store] \-{a|d|m|l|D} [\-fnrst] file_spec
+.B semanage fcontext [\-S store] \-{l} [\-Cn]
 .br
-.B semanage fcontext [\-S store] \-{a|d|m|l|D} [\-n] \-e replacement target
+.B semanage fcontext [\-S store] \-D
+.br
+.B semanage fcontext [\-S store] \-{a|d|m} [\-frst] file_spec
+.br
+.B semanage fcontext [\-S store] \-{a|d|m} \-e replacement target
 .br
 
 Manage processes type enforcement mode
