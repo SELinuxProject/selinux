@@ -1140,6 +1140,22 @@ allow %s_t %s_t:%s_socket name_%s;
                         else:
                             self.add_dir(f)
             fd.close()
+
+            # some packages have own systemd subpackage
+            # tor-systemd for example
+            binary_name = self.program.split("/")[-1]
+            rc, output = commands.getstatusoutput("rpm -q %s-systemd" % binary_name)
+            if rc == 0:
+                fd = os.popen("rpm -ql %s-systemd" % binary_name)
+                for f in fd.read().split():
+                    for b in self.DEFAULT_DIRS:
+                        if f.startswith(b):
+                            if os.path.isfile(f):
+                                self.add_file(f)
+                            else:
+                                self.add_dir(f)
+                fd.close()
+
             if os.path.isfile("/var/run/%s.pid"  % self.name):
                 self.add_file("/var/run/%s.pid"  % self.name)
 
