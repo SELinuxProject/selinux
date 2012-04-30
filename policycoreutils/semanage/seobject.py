@@ -1925,6 +1925,10 @@ class fcontextRecords(semanageRecords):
                for k in keys:
                       if fcon_dict[k]:
                              l.append("-a -f '%s' -t %s '%s'" % (k[1], fcon_dict[k][2], k[0]))
+
+	       if len(self.equiv):
+                      for target in self.equiv.keys():
+			     l.append("-a -e %s %s" % (target, self.equiv[target]))
                return l
 
 	def list(self, heading = 1, locallist = 0 ):
