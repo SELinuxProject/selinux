@@ -13,13 +13,12 @@ mappingsPage.py \
 modulesPage.py \
 polgen.glade \
 portsPage.py \
-lockdown.glade \
 semanagePage.py \
 statusPage.py \
 system-config-selinux.glade \
 usersPage.py
 
-all: $(TARGETS) system-config-selinux.py polgengui.py templates lockdown.py polgen.py
+all: $(TARGETS) system-config-selinux.py polgengui.py templates polgen.py
 
 install: all
 	-mkdir -p $(SHAREDIR)/templates
@@ -28,7 +27,6 @@ install: all
 	install -m 755 polgengui.py $(SHAREDIR)
 	install -m 755 polgen.py $(SHAREDIR)
 	(cd $(BINDIR); 	ln -fs ../share/system-config-selinux/polgen.py sepolgen)
-	install -m 755 lockdown.py $(SHAREDIR)
 	install -m 644 $(TARGETS) $(SHAREDIR)
 	install -m 644 templates/*.py $(SHAREDIR)/templates/
 

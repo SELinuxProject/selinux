@@ -80,7 +80,6 @@ BOOLEAN = 3
 class booleansPage:
     def __init__(self, xml, doDebug=None):
         self.xml = xml
-        xml.signal_connect("on_lockdown_clicked", self.on_lockdown_clicked)
         self.window = self.xml.get_widget("mainWindow").get_root_window()
         self.local = False
         self.types=[]
@@ -226,12 +225,6 @@ class booleansPage:
         commands.getstatusoutput(setsebool)
         self.load(self.filter)
         self.ready()
-
-    def on_lockdown_clicked(self, button):
-        try:
-            os.spawnl(os.P_NOWAIT, "/usr/share/system-config-selinux/lockdown.py")
-        except ValueError, e:
-            self.error(e.args[0])
 
     def on_local_clicked(self, button):
         self.local = not self.local
