@@ -41,6 +41,19 @@ Create a Sandbox with temporary files for $HOME and /tmp.
 .TP
 \fB\-t type\fR
 Use alternate sandbox type, defaults to sandbox_t or sandbox_x_t for -X.
+
+\fBExamples:\fR
+.br
+sandbox_t	-	No X, No Network Access, No Open, read/write on passed in file descriptors.
+.br
+sandbox_min_t	-	No Network Access
+.br
+sandbox_x_t	-	Printer Ports
+.br
+sandbox_web_t	-	Ports required for web browsing
+.br
+sandbox_net_t	-	All network ports
+
 .TP
 \fB\-T\ tmpdir
 Use alternate tempory directory to mount on /tmp.  Defaults to tmpfs. Requires -X or -M.
