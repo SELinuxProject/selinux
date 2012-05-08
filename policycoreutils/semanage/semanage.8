@@ -14,58 +14,58 @@ Input local customizations
 Manage booleans.  Booleans allow the administrator to modify the confinement of
 processes based on his configuration.
 .br
-.B semanage boolean [\-S store] \-{d|m|l|D} [\-n] [\-\-on|\-\-off|\-\1|\-0] -F boolean | boolean_file
+.B semanage boolean [\-S store] \-{d|m|l|D} [\-nN] [\-\-on|\-\-off|\-\1|\-0] -F boolean | boolean_file
 
 Manage SELinux confined users (Roles and levels for an SELinux user)
 .br
-.B semanage user [\-S store] \-{a|d|m|l|D} [\-LnPrR] selinux_name
+.B semanage user [\-S store] \-{a|d|m|l|D} [\-LnNPrR] selinux_name
 
 Manage login mappings between linux users and SELinux confined users.
 .br
-.B semanage login [\-S store] \-{a|d|m|l|D} [\-nrs] login_name | %groupname
+.B semanage login [\-S store] \-{a|d|m|l|D} [\-nNrs] login_name | %groupname
 
 Manage policy modules.
 .br
-.B semanage module [\-S store] \-{a|d|l} [-m [--enable | --disable] ] module_name
+.B semanage module [\-S store] \-{a|d|l} [-m [--enable | --disable] ] [\-N] module_name
 
 Manage network port type definitions
 .br
-.B semanage port [\-S store] \-{a|d|m|l|D} [\-nrt] [\-p proto] port | port_range
+.B semanage port [\-S store] \-{a|d|m|l|D} [\-nNrt] [\-p proto] port | port_range
 .br
 
 Manage network interface type definitions
 .br
-.B semanage interface [\-S store] \-{a|d|m|l|D} [\-nrt] interface_spec
+.B semanage interface [\-S store] \-{a|d|m|l|D} [\-nNrt] interface_spec
 
 Manage network node type definitions
 .br
-.B semanage node [\-S store] -{a|d|m|l|D} [-nrt] [ -p protocol ] [-M netmask] address
+.B semanage node [\-S store] -{a|d|m|l|D} [-nNrt] [ -p protocol ] [-M netmask] address
 .br
 
 Manage file context mapping definitions
 .br
 .B semanage fcontext [\-S store] \-{l} [\-Cn]
 .br
-.B semanage fcontext [\-S store] \-D
+.B semanage fcontext [\-S store] \-D [\-N]
 .br
-.B semanage fcontext [\-S store] \-{a|d|m} [\-frst] file_spec
+.B semanage fcontext [\-S store] \-{a|d|m} [\-Nfrst] file_spec
 .br
 .B semanage fcontext [\-S store] \-{a|d|m} \-e replacement target
 .br
 
 Manage processes type enforcement mode
 .br
-.B semanage permissive [\-S store] \-{a|d|l|D} [\-n] type
+.B semanage permissive [\-S store] \-{a|d|l|D} [\-nN] type
 .br
 
 Disable/Enable dontaudit rules in policy
 .br
-.B semanage dontaudit [\-S store] [ on | off ]
+.B semanage dontaudit [\-N] [\-S store] [ on | off ]
 .P
 
 Execute multiple commands within a single transaction.
 .br
-.B semanage [\-S store] \-i command-file
+.B semanage [\-S store] [\-N] \-i command-file
 .br
 
 .SH "DESCRIPTION"
@@ -142,6 +142,9 @@ Network Mask
 .TP
 .I                \-n, \-\-noheading  
 Do not print heading when listing OBJECTS.
+.TP
+.B  \-N,\-\-noreload
+do not reload policy after commit
 .TP
 .I                \-p, \-\-proto
 Protocol for the specified port (tcp|udp) or internet protocol version for the specified node (ipv4|ipv6).

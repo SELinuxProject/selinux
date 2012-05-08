@@ -41,6 +41,7 @@ except IOError:
 if __name__ == '__main__':
 	manageditems=[ "boolean", "login", "user", "port", "interface", "node", "fcontext"]
 	action  = False
+	load = True
 	def set_action(option):
 		global action
 		if action:
@@ -52,16 +53,16 @@ if __name__ == '__main__':
 semanage [ -S store ] -i [ input_file | - ]
 semanage [ -S store ] -o [ output_file | - ]
 
-semanage login -{a|d|m|l|D|E} [-nsr] login_name | %groupname
-semanage user -{a|d|m|l|D|E} [-LnrRP] selinux_name
-semanage port -{a|d|m|l|D|E} [-ntr] [ -p proto ] port | port_range
-semanage interface -{a|d|m|l|D|E} [-ntr] interface_spec
-semanage module -{a|d|m} [--enable|--disable] module
-semanage node -{a|d|m|l|D|E} [-ntr] [ -p protocol ] [-M netmask] addr
-semanage fcontext -{a|d|m|l|D|E} [-efnrst] file_spec
-semanage boolean -{d|m} [--on|--off|-1|-0] -F boolean | boolean_file
-semanage permissive -{d|a|l} [-n] type
-semanage dontaudit [ on | off ]
+semanage login -{a|d|m|l|D|E} [-Nnsr] login_name | %groupname
+semanage user -{a|d|m|l|D|E} [-LNnrRP] selinux_name
+semanage port -{a|d|m|l|D|E} [-Nntr] [ -p proto ] port | port_range
+semanage interface -{a|d|m|l|D|E} [-Nntr] interface_spec
+semanage module -{a|d|m} [--enable|--disable] [-N] module
+semanage node -{a|d|m|l|D|E} [-Nntr] [ -p protocol ] [-M netmask] addr
+semanage fcontext -{a|d|m|l|D|E} [-Nefnrst] file_spec
+semanage boolean -{d|m} [--on|--off|-1|-0] [-N] -F boolean | boolean_file
+semanage permissive -{d|a|l} [-Nn] type
+semanage dontaudit [ on | off ] [-N]
 
 Primary Options:
 
@@ -94,6 +95,7 @@ Object-specific Options (see above):
         -F, --file       Treat target as an input file for command, change multiple settings
 	-p, --proto      Port protocol (tcp or udp) or internet protocol version of node (ipv4 or ipv6)
 	-M, --mask       Netmask
+	-N, --noreload   Do not reload policy after commit
 	-e, --equal      Substitue source path for dest path when labeling
 	-P, --prefix     Prefix for home directory labeling
 	-L, --level      Default SELinux Level (MLS/MCS Systems only)
@@ -115,26 +117,26 @@ Object-specific Options (see above):
 	def get_options():
 		valid_option={}
 		valid_everyone=[ '-a', '--add', '-d', '--delete', '-m', '--modify', '-l', '--list', '-h', '--help', '-n', '--noheading', '-S', '--store' ]
-		valid_local=[ '-E', '--extract', '-C', '--locallist', '-D', '--deleteall']
+		valid_local=[ '-E', '--extract', '-C', '--locallist', '-D', '--deleteall', '-N', '--noreload']
 		valid_option["login"] = []
 		valid_option["login"] += valid_everyone + valid_local + [ '-s', '--seuser', '-r', '--range']
 		valid_option["user"] = []
-		valid_option["user"] += valid_everyone + valid_local + [ '-L', '--level', '-r', '--range', '-R', '--roles', '-P', '--prefix' ]
+		valid_option["user"] += valid_everyone + valid_local + [ '-L', '--level', '-r', '--range', '-R', '--roles', '-P', '--prefix', '-N', '--noreload' ]
 		valid_option["port"] = []
-		valid_option["port"] += valid_everyone + valid_local + [ '-t', '--type', '-r', '--range', '-p', '--proto' ]
+		valid_option["port"] += valid_everyone + valid_local + [ '-t', '--type', '-r', '--range', '-p', '--proto' , '-N', '--noreload' ]
 		valid_option["interface"] = []
-		valid_option["interface"] += valid_everyone + valid_local + [ '-t', '--type', '-r', '--range']
+		valid_option["interface"] += valid_everyone + valid_local + [ '-t', '--type', '-r', '--range', '-N', '--noreload' ]
 		valid_option["node"] = []
-		valid_option["node"] += valid_everyone + valid_local + [ '-M', '--mask', '-t', '--type', '-r', '--range', '-p', '--protocol']
+		valid_option["node"] += valid_everyone + valid_local + [ '-M', '--mask', '-t', '--type', '-r', '--range', '-p', '--protocol', '-N', '--noreload' ]
 		valid_option["module"] = []
-		valid_option["module"] += valid_everyone + [ '--enable', '--disable']
+		valid_option["module"] += valid_everyone + [ '--enable', '--disable', '-N', '--noreload' ]
 		valid_option["fcontext"] = []
-		valid_option["fcontext"] += valid_everyone + valid_local + [ '-e', '--equal', '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range']
+		valid_option["fcontext"] += valid_everyone + valid_local + [ '-e', '--equal', '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range', '-N', '--noreload' ]
 		valid_option["dontaudit"] = [ '-S', '--store' ]
 		valid_option["boolean"] = []
-		valid_option["boolean"] += valid_everyone + valid_local + [ '--on', "--off", "-1", "-0", "-F", "--file"]
+		valid_option["boolean"] += valid_everyone + valid_local + [ '--on', "--off", "-1", "-0", "-F", "--file", '-N', '--noreload' ]
 		valid_option["permissive"] = []
-		valid_option["permissive"] += [ '-a', '--add', '-d', '--delete', '-l', '--list', '-h', '--help', '-n', '--noheading', '-D', '--deleteall' ]
+		valid_option["permissive"] += [ '-a', '--add', '-d', '--delete', '-l', '--list', '-h', '--help', '-n', '--noheading', '-D', '--deleteall' , '-N', '--noreload' ]
 		return valid_option
 
         def mkargv(line):
@@ -185,6 +187,7 @@ Object-specific Options (see above):
 
         def process_args(argv):
 		global action
+		global load
 		action = False
 		serange = ""
 		port = ""
@@ -222,7 +225,7 @@ Object-specific Options (see above):
 
 		try:
 			gopts, cmds = getopt.getopt(args,
-						    '01adEe:f:i:lhmnp:s:FCDR:L:r:t:P:S:M:',
+						    '01adEe:f:i:lhmNnp:s:FCDR:L:r:t:P:S:M:',
 						    ['add',
 						     'delete',
 						     'deleteall',
@@ -237,6 +240,7 @@ Object-specific Options (see above):
 						     'list',
 						     'modify',
 						     'noheading',
+						     'noreload',
 						     'off',
 						     'on',
 						     'proto=',
@@ -295,6 +299,9 @@ Object-specific Options (see above):
 
 			if o == "-n" or o == "--noheading":
 				heading = False
+
+			if o == "-N" or o == "--noreload":
+				load = False
 
 			if o == "-C" or o == "--locallist":
 				locallist = True
@@ -380,9 +387,10 @@ Object-specific Options (see above):
                                OBJECT.list(heading, locallist)
                         return
 			
+		OBJECT.set_reload(load)
 		if deleteall:
 			OBJECT.deleteall()
-                        return
+			return
 			
 		if extract:
 			for i in OBJECT.customized():
@@ -504,7 +512,7 @@ Object-specific Options (see above):
                       usage(_("Requires 2 or more arguments"))
                 
                gopts, cmds = getopt.getopt(sys.argv[1:],
-                                           '01adf:i:lhmno:p:s:FCDR:L:r:t:P:S:',
+                                           '01adf:i:lhmno:p:s:NFCDR:L:r:t:P:S:',
                                            ['add',
                                             'delete',
                                             'deleteall',
@@ -515,6 +523,7 @@ Object-specific Options (see above):
                                             'list', 
                                             'modify',
                                             'noheading',
+                                            'noreload',
                                             'off', 
                                             'on', 
                                             'output=',
@@ -534,6 +543,8 @@ Object-specific Options (see above):
                              input = a
                       if o == "-o" or o == '--output':
                              output = a
+                      if o == "-N" or o == "--noreload":
+                             load = False
 
                if output != None:
                       if output != "-":
@@ -552,6 +563,7 @@ Object-specific Options (see above):
                       trans.start()
                       for l in fd.readlines():
                              process_args(mkargv(l))
+                      trans.set_reload(load)
                       trans.finish()
                else:
                       process_args(sys.argv[1:])
