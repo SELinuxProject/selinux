@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <syslog.h>
+#include <getopt.h>
 #include <pwd.h>
 #include <selinux/selinux.h>
 #include <semanage/handle.h>
@@ -15,13 +16,14 @@
 #include <errno.h>
 
 int permanent = 0;
+int reload = 1;
 
 int setbool(char **list, size_t start, size_t end);
 
 void usage(void)
 {
 	fputs
-	    ("\nUsage:  setsebool [ -P ] boolean value | bool1=val1 bool2=val2...\n\n",
+	    ("\nUsage:  setsebool [ -NP ] boolean value | bool1=val1 bool2=val2...\n\n",
 	     stderr);
 	exit(1);
 }
@@ -29,7 +31,7 @@ void usage(void)
 int main(int argc, char **argv)
 {
 	size_t rc, start;
-
+	int clflag;		/* holds codes for command line flags */
 	if (argc < 2)
 		usage();
 
@@ -38,14 +40,30 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	if (strcmp(argv[1], "-P") == 0) {
-		permanent = 1;
-		if (argc < 3)
-			usage();
-		start = 2;
-	} else
-		start = 1;
+	while (1) {
+		clflag = getopt(argc, argv, "PN");
+		if (clflag == -1)
+			break;
 
+		switch (clflag) {
+		case 'P':
+			permanent = 1;
+			break;
+		case 'N':
+		        reload = 0;
+			break;
+		default:
+			usage();
+			break;
+		}
+	}
+
+	if (argc - optind < 1) {
+		fprintf(stderr, "Error: boolean name required\n");
+		usage();
+	}
+
+	start = argc-optind;
 	/* Check to see which way we are being called. If a '=' is passed,
 	   we'll enforce the list syntax. If not we'll enforce the original
 	   syntax for backward compatibility. */
@@ -165,7 +183,7 @@ static int semanage_set_boolean_list(size_t boolcnt,
 		boolean = NULL;
 	}
 
-	semanage_set_reload(handle, 0);
+	semanage_set_reload(handle, reload);
 	if (semanage_commit(handle) < 0)
 		goto err;
 

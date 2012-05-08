@@ -4,7 +4,7 @@ setsebool \- set SELinux boolean value
 
 .SH "SYNOPSIS"
 .B setsebool
-.I "[ -P ] boolean value | bool1=val1 bool2=val2 ..."
+.I "[ -PN ] boolean value | bool1=val1 bool2=val2 ..."
 
 .SH "DESCRIPTION"
 .B setsebool 
@@ -17,6 +17,9 @@ are not changed.
 
 If the -P option is given, all pending values are written to
 the policy file on disk. So they will be persistent across reboots.
+
+If the -N option is given, the policy on disk is not reloaded into the kernel.
+
 
 .SH AUTHOR	
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
