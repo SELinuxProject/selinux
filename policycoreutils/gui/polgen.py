@@ -142,15 +142,15 @@ USER_TRANSITION_INTERFACE = "_role$"
 DAEMON = 0
 DBUS = 1
 INETD = 2
-USER = 3
-CGI = 4
-XUSER = 5
+CGI = 3
+USER = 4
+SANDBOX = 5
 TUSER = 6
-LUSER = 7
-AUSER = 8
-EUSER = 9
+XUSER = 7
+LUSER = 8
+AUSER = 9
 RUSER = 10
-SANDBOX = 11
+EUSER = 11
 
 poltype={}
 poltype[DAEMON] = _("Standard Init Daemon")
@@ -158,12 +158,12 @@ poltype[DBUS] = _("DBUS System Daemon")
 poltype[INETD] = _("Internet Services Daemon")
 poltype[CGI] = _("Web Application/Script (CGI)")
 poltype[USER] = _("User Application")
+poltype[SANDBOX] = _("Sandbox")
 poltype[TUSER] = _("Minimal Terminal User Role")
 poltype[XUSER] = _("Minimal X Windows User Role")
 poltype[LUSER] = _("User Role")
 poltype[AUSER] = _("Admin User Role")
 poltype[RUSER] = _("Root Admin User Role")
-poltype[SANDBOX] = _("Sandbox")
 
 APPLICATIONS = [ DAEMON, DBUS, INETD, USER, CGI ]
 USERS = [ XUSER, TUSER, LUSER, AUSER, EUSER, RUSER]
@@ -311,15 +311,15 @@ class policy:
 ( self.generate_daemon_types, self.generate_daemon_rules), \
 ( self.generate_dbusd_types, self.generate_dbusd_rules), \
 ( self.generate_inetd_types, self.generate_inetd_rules), \
-( self.generate_userapp_types, self.generate_userapp_rules), \
 ( self.generate_cgi_types, self.generate_cgi_rules), \
-( self.generate_x_login_user_types, self.generate_x_login_user_rules), \
+( self.generate_sandbox_types, self.generate_sandbox_rules), \
+( self.generate_userapp_types, self.generate_userapp_rules), \
+( self.generate_existing_user_types, self.generate_existing_user_rules), \
 ( self.generate_min_login_user_types, self.generate_login_user_rules), \
+( self.generate_x_login_user_types, self.generate_x_login_user_rules), \
 ( self.generate_login_user_types, self.generate_login_user_rules), \
 ( self.generate_admin_user_types, self.generate_login_user_rules), \
-( self.generate_existing_user_types, self.generate_existing_user_rules), \
-( self.generate_root_user_types, self.generate_root_user_rules), \
-( self.generate_sandbox_types, self.generate_sandbox_rules))
+( self.generate_root_user_types, self.generate_root_user_rules))
 		if name == "":
 			raise ValueError(_("You must enter a name for your confined process/user"))
                 if not name.isalnum():
