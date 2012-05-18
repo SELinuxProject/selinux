@@ -4,7 +4,7 @@
 #
 # Dan Walsh <dwalsh@redhat.com>
 #
-# Copyright (C) 2007-2011 Red Hat
+# Copyright (C) 2007-2012 Red Hat
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,8 +28,24 @@ import os
 import gobject
 import gnome
 import sys
-import polgen
+from sepolicy import generate
+import sepolicy.interface
+import commands
+
 import re
+
+def get_all_modules():
+    try:
+        all_modules = []
+        rc, output=commands.getstatusoutput("semodule -l 2>/dev/null")
+        if rc == 0:
+            l = output.split("\n")
+            for i in l:
+                all_modules.append(i.split()[0])
+    except:
+        pass
+
+    return all_modules
 
 
 ##
@@ -169,10 +185,10 @@ class childWindow:
         self.tooltip_dict[label] = label.get_tooltip_text()
 
         try:
-            self.all_types = polgen.get_all_types()
-            self.all_modules = polgen.get_all_modules()
-            self.all_roles = polgen.get_all_roles()
-            self.all_users = polgen.get_all_users()
+            self.all_types = generate.get_all_types()
+            self.all_modules = get_all_modules()
+            self.all_roles = generate.get_all_roles()
+            self.all_users = generate.get_all_users()
         except RuntimeError, e:
             self.all_types = []
             self.all_modules = []
@@ -200,16 +216,16 @@ class childWindow:
         self.boolean_description_entry = xml.get_widget ("boolean_description_entry")
 
         self.pages={}
-        for i in polgen.USERS:
+        for i in generate.USERS:
             self.pages[i] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.TRANSITION_PAGE, self.ROLE_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
-        self.pages[polgen.RUSER] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE,  self.ADMIN_PAGE, self.USER_TRANSITION_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
-        self.pages[polgen.LUSER] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.TRANSITION_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
-        self.pages[polgen.SANDBOX] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
-        self.pages[polgen.EUSER] = [ self.SELECT_TYPE_PAGE, self.EXISTING_USER_PAGE, self.TRANSITION_PAGE, self.ROLE_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
+        self.pages[generate.RUSER] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE,  self.ADMIN_PAGE, self.USER_TRANSITION_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
+        self.pages[generate.LUSER] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.TRANSITION_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
+        self.pages[generate.SANDBOX] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
+        self.pages[generate.EUSER] = [ self.SELECT_TYPE_PAGE, self.EXISTING_USER_PAGE, self.TRANSITION_PAGE, self.ROLE_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
 
-        for i in polgen.APPLICATIONS:
+        for i in generate.APPLICATIONS:
             self.pages[i] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.COMMON_APPS_PAGE, self.FILES_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
-        self.pages[polgen.USER] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.USER_TRANSITION_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.COMMON_APPS_PAGE, self.FILES_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
+        self.pages[generate.USER] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.USER_TRANSITION_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.COMMON_APPS_PAGE, self.FILES_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
 
         self.current_page = 0
         self.back_button.set_sensitive(0)
@@ -304,22 +320,17 @@ class childWindow:
         col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text = 0)
         self.admin_treeview.append_column(col)
 
-        for i in polgen.methods:
-            m = re.findall("(.*)%s" % polgen.USER_TRANSITION_INTERFACE, i)
-            if len(m) > 0:
-                if "%s_exec_t" % m[0] in self.all_types:
-                    iter = self.transition_store.append()
-                    self.transition_store.set_value(iter, 0, m[0])
-                continue
 
-            m = re.findall("(.*)%s" % polgen.ADMIN_TRANSITION_INTERFACE, i)
-            if len(m) > 0:
-                iter = self.admin_store.append()
-                self.admin_store.set_value(iter, 0, m[0])
-                continue
+        for u in sepolicy.interface.get_user():
+            iter = self.transition_store.append()
+            self.transition_store.set_value(iter, 0, u)
+
+        for a in sepolicy.interface.get_admin():
+            iter = self.admin_store.append()
+            self.admin_store.set_value(iter, 0, a)
 
     def confine_application(self):
-        return self.get_type() in polgen.APPLICATIONS
+        return self.get_type() in generate.APPLICATIONS
 
     def forward(self, arg):
         type = self.get_type()
@@ -416,41 +427,41 @@ class childWindow:
 
     def get_type(self):
         if self.sandbox_radiobutton.get_active():
-            return polgen.SANDBOX
+            return generate.SANDBOX
         if self.cgi_radiobutton.get_active():
-            return polgen.CGI
+            return generate.CGI
         if self.user_radiobutton.get_active():
-            return polgen.USER
+            return generate.USER
         if self.init_radiobutton.get_active():
-            return polgen.DAEMON
+            return generate.DAEMON
         if self.dbus_radiobutton.get_active():
-            return polgen.DBUS
+            return generate.DBUS
         if self.inetd_radiobutton.get_active():
-            return polgen.INETD
+            return generate.INETD
         if self.login_user_radiobutton.get_active():
-            return polgen.LUSER
+            return generate.LUSER
         if self.admin_user_radiobutton.get_active():
-            return polgen.AUSER
+            return generate.AUSER
         if self.xwindows_user_radiobutton.get_active():
-            return polgen.XUSER
+            return generate.XUSER
         if self.terminal_user_radiobutton.get_active():
-            return polgen.TUSER
+            return generate.TUSER
         if self.root_user_radiobutton.get_active():
-            return polgen.RUSER
+            return generate.RUSER
         if self.existing_user_radiobutton.get_active():
-            return polgen.EUSER
+            return generate.EUSER
 
     def generate_policy(self, *args):
         outputdir = self.output_entry.get_text()
         try:
-            my_policy=polgen.policy(self.get_name(), self.get_type())
+            my_policy=generate.policy(self.get_name(), self.get_type())
 
             iter= self.boolean_store.get_iter_first()
             while(iter):
                 my_policy.add_boolean(self.boolean_store.get_value(iter, 0), self.boolean_store.get_value(iter, 1))
                 iter= self.boolean_store.iter_next(iter)
 
-            if self.get_type() in polgen.APPLICATIONS:
+            if self.get_type() in generate.APPLICATIONS:
                 my_policy.set_program(self.exec_entry.get_text())
                 my_policy.gen_symbols()
 
@@ -463,14 +474,14 @@ class childWindow:
                 my_policy.set_use_audit(self.audit_checkbutton.get_active() == 1)
                 my_policy.set_use_terminal(self.terminal_checkbutton.get_active() == 1)
                 my_policy.set_use_mail(self.mail_checkbutton.get_active() == 1)
-                if self.get_type() is polgen.DAEMON:
+                if self.get_type() is generate.DAEMON:
                     my_policy.set_init_script(self.init_script_entry.get_text())
-                if self.get_type() == polgen.USER:
+                if self.get_type() == generate.USER:
                     selected = []
                     self.user_transition_treeview.get_selection().selected_foreach(foreach, selected)
                     my_policy.set_transition_users(selected)
             else:
-                if self.get_type() == polgen.RUSER:
+                if self.get_type() == generate.RUSER:
                     selected = []
                     self.admin_treeview.get_selection().selected_foreach(foreach, selected)
                     my_policy.set_admin_domains(selected)
@@ -667,16 +678,16 @@ class childWindow:
 
     def on_in_net_page_next(self, *args):
         try:
-            polgen.verify_ports(self.in_tcp_entry.get_text())
-            polgen.verify_ports(self.in_udp_entry.get_text())
+            generate.verify_ports(self.in_tcp_entry.get_text())
+            generate.verify_ports(self.in_udp_entry.get_text())
         except ValueError, e:
             self.error(e.message)
             return True
 
     def on_out_net_page_next(self, *args):
         try:
-            polgen.verify_ports(self.out_tcp_entry.get_text())
-            polgen.verify_ports(self.out_udp_entry.get_text())
+            generate.verify_ports(self.out_tcp_entry.get_text())
+            generate.verify_ports(self.out_udp_entry.get_text())
         except ValueError, e:
             self.error(e.message)
             return True
@@ -712,7 +723,7 @@ class childWindow:
             if exe == "":
                 self.error(_("You must enter a executable"))
                 return True
-            policy=polgen.policy(name, self.get_type())
+            policy=generate.policy(name, self.get_type())
             policy.set_program(exe)
             policy.gen_writeable()
             policy.gen_symbols()

@@ -18,17 +18,15 @@ statusPage.py \
 system-config-selinux.glade \
 usersPage.py
 
-all: $(TARGETS) system-config-selinux.py polgengui.py templates polgen.py
+all: $(TARGETS) system-config-selinux.py polgengui.py
 
 install: all
-	-mkdir -p $(SHAREDIR)/templates
+	-mkdir -p $(SHAREDIR)
 	-mkdir -p $(BINDIR)
 	install -m 755 system-config-selinux.py $(SHAREDIR)
 	install -m 755 polgengui.py $(SHAREDIR)
-	install -m 755 polgen.py $(SHAREDIR)
-	(cd $(BINDIR); 	ln -fs ../share/system-config-selinux/polgen.py sepolgen)
+	install -m 755 sepolgen $(BINDIR)
 	install -m 644 $(TARGETS) $(SHAREDIR)
-	install -m 644 templates/*.py $(SHAREDIR)/templates/
 
 clean:
 

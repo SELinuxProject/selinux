@@ -26,7 +26,7 @@ import sys
 import seobject
 import selinux
 from semanagePage import *;
-import polgen
+from sepolicy import get_all_entrypoint_domains
 
 ##
 ## I18N
@@ -68,7 +68,7 @@ class domainsPage(semanagePage):
         self.permissive_button = xml.get_widget("permissiveButton")
         self.enforcing_button = xml.get_widget("enforcingButton")
 
-        self.domains=polgen.get_all_domains()
+        self.domains=get_all_entrypoint_domains()
         self.load()
 
     def get_modules(self):
