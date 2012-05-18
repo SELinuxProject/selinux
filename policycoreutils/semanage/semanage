@@ -373,6 +373,9 @@ Object-specific Options (see above):
 		if object == "permissive":
 			OBJECT = seobject.permissiveRecords(store)
 		
+		if object == "dontaudit":
+                        OBJECT = seobject.dontauditClass(store)
+
 		if list:
 			if object == "boolean":
                                OBJECT.list(heading, locallist, use_file)
@@ -395,7 +398,6 @@ Object-specific Options (see above):
                 target = cmds[0]
 
 		if object == "dontaudit":
-                       OBJECT = seobject.dontauditClass(store)
                        OBJECT.toggle(target)
                        return
                               
