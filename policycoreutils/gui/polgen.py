@@ -1354,9 +1354,11 @@ if __name__ == '__main__':
            usage(_("Executable or Name required"))
 
     try:
+        cmd = os.path.realpath(cmds[0])
         if not name:
-            name = os.path.basename(cmds[0]).replace("-","_")
-        cmd = cmds[0]
+            name = os.path.basename(cmd).replace("-","_")
+
+        print("Generating Policy for %s named %s" % (cmd, name))
         mypolicy = policy(name, setype)
         if setype not in USERS +  [ SANDBOX ]:
             mypolicy.set_program(cmd)
