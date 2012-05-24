@@ -30,7 +30,7 @@ void usage(void)
 
 int main(int argc, char **argv)
 {
-	size_t rc, start;
+	size_t rc;
 	int clflag;		/* holds codes for command line flags */
 	if (argc < 2)
 		usage();
@@ -63,30 +63,29 @@ int main(int argc, char **argv)
 		usage();
 	}
 
-	start = argc-optind;
 	/* Check to see which way we are being called. If a '=' is passed,
 	   we'll enforce the list syntax. If not we'll enforce the original
 	   syntax for backward compatibility. */
-	if (strchr(argv[start], '=') == 0) {
+	if (strchr(argv[optind], '=') == 0) {
 		int len;
 		char *bool_list[1];
 
-		if ((argc - start) != 2)
+		if ((argc - optind) != 2)
 			usage();
 
 		/* Add 1 for the '=' */
-		len = strlen(argv[start]) + strlen(argv[start + 1]) + 2;
+		len = strlen(argv[optind]) + strlen(argv[optind + 1]) + 2;
 		bool_list[0] = (char *)malloc(len);
 		if (bool_list[0] == 0) {
 			fputs("Out of memory - aborting\n", stderr);
 			return 1;
 		}
-		snprintf(bool_list[0], len, "%s=%s", argv[start],
-			 argv[start + 1]);
+		snprintf(bool_list[0], len, "%s=%s", argv[optind],
+			 argv[optind + 1]);
 		rc = setbool(bool_list, 0, 1);
 		free(bool_list[0]);
 	} else
-		rc = setbool(argv, start, argc);
+		rc = setbool(argv, optind, argc);
 
 	return rc;
 }
