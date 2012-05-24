@@ -137,6 +137,15 @@ class booleansPage:
         self.filter=""
         self.load(self.filter)
 
+    def error(self, message):
+        dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR,
+                                gtk.BUTTONS_CLOSE,
+                                message)
+        dlg.set_position(gtk.WIN_POS_MOUSE)
+        dlg.show_all()
+        dlg.run()
+        dlg.destroy()
+
     def __search(self, model, col, key, i):
         sort_col = self.store.get_sort_column_id()[0]
         if sort_col > 0:
@@ -214,8 +223,10 @@ class booleansPage:
         key = self.store.get_value(iter, BOOLEAN)
         self.store.set_value(iter, ACTIVE , not val)
         self.wait()
-        setsebool="/usr/sbin/setsebool -P %s=%d" % (key, not val)
-        commands.getstatusoutput(setsebool)
+        setsebool="/usr/sbin/setsebool -P %s %d" % (key, not val)
+        rc,out = commands.getstatusoutput(setsebool)
+        if rc != 0:
+            self.error(out)
         self.load(self.filter)
         self.ready()
 
