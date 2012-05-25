@@ -47,7 +47,8 @@ static char *selabel_sub(struct selabel_sub *ptr, const char *src)
 		if (strncmp(src, ptr->src, ptr->slen) == 0 ) {
 			if (src[ptr->slen] == '/' || 
 			    src[ptr->slen] == 0) {
-				asprintf(&dst, "%s%s", ptr->dst, &src[ptr->slen]);
+				if (asprintf(&dst, "%s%s", ptr->dst, &src[ptr->slen]) < 0)
+					return NULL;
 				return dst;
 			}
 		}
