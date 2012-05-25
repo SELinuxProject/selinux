@@ -5,7 +5,7 @@ USRBINDIR ?= $(PREFIX)/sbin
 SBINDIR ?= $(DESTDIR)/sbin
 
 MAX_STACK_SIZE=8192
-CFLAGS ?= -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissing-include-dirs \
+CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissing-include-dirs \
           -Wunused -Wunknown-pragmas -Wstrict-aliasing -Wshadow -Wpointer-arith \
           -Wbad-function-cast -Wcast-align -Wwrite-strings -Wlogical-op -Waggregate-return \
           -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes \
