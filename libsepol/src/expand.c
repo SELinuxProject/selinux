@@ -1352,15 +1352,10 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *rules)
 {
 	unsigned int i, j;
-	filename_trans_t *new_trans, *tail, *cur_trans;
+	filename_trans_t *new_trans, *cur_trans;
 	filename_trans_rule_t *cur_rule;
 	ebitmap_t stypes, ttypes;
 	ebitmap_node_t *snode, *tnode;
-
-	/* start at the end of the list */
-	tail = state->out->filename_trans;
-	while (tail && tail->next)
-		tail = tail->next;
 
 	cur_rule = rules;
 	while (cur_rule) {
@@ -1422,11 +1417,8 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 					return -1;
 				}
 				memset(new_trans, 0, sizeof(*new_trans));
-				if (tail)
-					tail->next = new_trans;
-				else
-					state->out->filename_trans = new_trans;
-				tail = new_trans;
+				new_trans->next = state->out->filename_trans;
+				state->out->filename_trans = new_trans;
 
 				new_trans->name = strdup(cur_rule->name);
 				if (!new_trans->name) {
