@@ -1826,58 +1826,36 @@ static int expand_rule_helper(sepol_handle_t * handle,
 			continue;
 		if (source_rule->flags & RULE_SELF) {
 			if (source_rule->specified & AVRULE_AV) {
-				if ((retval =
-				     expand_avrule_helper(handle,
-							  source_rule->
-							  specified, cond, i, i,
-							  source_rule->perms,
-							  dest_avtab,
-							  enabled)) !=
-				    EXPAND_RULE_SUCCESS) {
+				retval = expand_avrule_helper(handle, source_rule->specified,
+							      cond, i, i, source_rule->perms,
+							      dest_avtab, enabled);
+				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
-				}
 			} else {
-				if ((retval =
-				     expand_terule_helper(handle, p,
-							  typemap,
-							  source_rule->
-							  specified, cond,
-							  other, i, i,
-							  source_rule->perms,
-							  dest_avtab,
-							  enabled)) !=
-				    EXPAND_RULE_SUCCESS) {
+				retval = expand_terule_helper(handle, p, typemap,
+							      source_rule->specified, cond,
+							      other, i, i, source_rule->perms,
+							      dest_avtab, enabled);
+				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
-				}
 			}
 		}
 		ebitmap_for_each_bit(ttypes, tnode, j) {
 			if (!ebitmap_node_get_bit(tnode, j))
 				continue;
 			if (source_rule->specified & AVRULE_AV) {
-				if ((retval =
-				     expand_avrule_helper(handle,
-							  source_rule->
-							  specified, cond, i, j,
-							  source_rule->perms,
-							  dest_avtab,
-							  enabled)) !=
-				    EXPAND_RULE_SUCCESS) {
+				retval = expand_avrule_helper(handle, source_rule->specified,
+							      cond, i, j, source_rule->perms,
+							      dest_avtab, enabled);
+				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
-				}
 			} else {
-				if ((retval =
-				     expand_terule_helper(handle, p,
-							  typemap,
-							  source_rule->
-							  specified, cond,
-							  other, i, j,
-							  source_rule->perms,
-							  dest_avtab,
-							  enabled)) !=
-				    EXPAND_RULE_SUCCESS) {
+				retval = expand_terule_helper(handle, p, typemap,
+							      source_rule->specified, cond,
+							      other, i, j, source_rule->perms,
+							      dest_avtab, enabled);
+				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
-				}
 			}
 		}
 	}
