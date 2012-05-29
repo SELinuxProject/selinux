@@ -176,7 +176,7 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
                   esac; \
                fi; \
             done | \
-	${RESTORECON} -f - -R -p `exclude_dirs`; \
+	${RESTORECON} -i -f - -R -p `exclude_dirs`; \
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }
