@@ -25,7 +25,7 @@ struct semanage_fcontext {
 struct semanage_fcontext_key {
 
 	/* Matching expression */
-	const char *expr;
+	char *expr;
 
 	/* Type of object */
 	int type;
@@ -45,7 +45,11 @@ int semanage_fcontext_key_create(semanage_handle_t * handle,
 		    "create file context key");
 		return STATUS_ERR;
 	}
-	tmp_key->expr = expr;
+	tmp_key->expr = strdup(expr);
+	if (!tmp_key->expr) {
+		ERR(handle, "out of memory, could not create file context key.");
+		return STATUS_ERR;
+	}
 	tmp_key->type = type;
 
 	*key_ptr = tmp_key;
@@ -74,6 +78,7 @@ hidden_def(semanage_fcontext_key_extract)
 
 void semanage_fcontext_key_free(semanage_fcontext_key_t * key)
 {
+	free(key->expr);
 	free(key);
 }
 
