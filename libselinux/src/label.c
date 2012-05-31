@@ -24,6 +24,7 @@ static selabel_initfunc initfuncs[] = {
 	&selabel_media_init,
 	&selabel_x_init,
 	&selabel_db_init,
+	&selabel_property_init,
 };
 
 static void selabel_subs_fini(struct selabel_sub *ptr)

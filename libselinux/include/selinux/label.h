@@ -31,6 +31,8 @@ struct selabel_handle;
 #define SELABEL_CTX_X		2
 /* db objects */
 #define SELABEL_CTX_DB		3
+/* Android property service contexts */
+#define SELABEL_CTX_ANDROID_PROP 4
 
 /*
  * Available options
