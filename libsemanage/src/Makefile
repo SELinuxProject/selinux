@@ -17,8 +17,10 @@ PYTHONLIBDIR ?= $(shell pkg-config --libs $(PYPREFIX))
 PYLIBDIR ?= $(LIBDIR)/$(PYLIBVER)
 RUBYLIBVER ?= $(shell $(RUBY) -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
 RUBYPLATFORM ?= $(shell $(RUBY) -e 'print RUBY_PLATFORM')
-RUBYINC ?= $(LIBDIR)/ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
+RUBYINC ?= $(shell pkg-config --cflags ruby-$(RUBYLIBVER))
+RUBYLIBDIR ?= $(shell pkg-config --libs ruby-$(RUBYLIBVER))
 RUBYINSTALL ?= $(LIBDIR)/ruby/site_ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
+
 LIBBASE=$(shell basename $(LIBDIR))
 
 DEFAULT_SEMANAGE_CONF_LOCATION=$(DESTDIR)/etc/selinux/semanage.conf
@@ -47,7 +49,7 @@ SWIGLOBJ:= $(patsubst %.c,$(PYPREFIX)%.lo,$(SWIGCOUT))
 SWIGRUBYLOBJ:= $(patsubst %.c,$(RUBYPREFIX)%.lo,$(SWIGRUBYCOUT)) 
 SWIGSO=$(PYPREFIX)_semanage.so
 SWIGFILES=$(SWIGSO) semanage.py 
-SWIGRUBYSO=$(RUBYPREFIX)_rubysemanage.so
+SWIGRUBYSO=$(RUBYPREFIX)_semanage.so
 LIBSO=$(TARGET).$(LIBVERSION)
 
 GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT) semanageswig_python_exception.i
@@ -79,7 +81,7 @@ $(SWIGLOBJ): $(SWIGCOUT)
 	$(CC) $(CFLAGS) $(SWIG_CFLAGS) $(PYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGRUBYLOBJ): $(SWIGRUBYCOUT)
-	$(CC) $(CFLAGS) $(SWIG_CFLAGS) -I$(RUBYINC) -fPIC -DSHARED -c -o $@ $<
+	$(CC) $(CFLAGS) $(SWIG_CFLAGS) $(RUBYINC) -fPIC -DSHARED -c -o $@ $<
 
 $(SWIGSO): $(SWIGLOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $< -L. -lsemanage -L$(LIBDIR) -Wl,-soname,$@

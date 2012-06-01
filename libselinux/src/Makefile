@@ -3,6 +3,8 @@
 # targets with "PYPREFIX":
 PYTHON ?= python
 PYPREFIX ?= $(notdir $(PYTHON))
+RUBY ?= ruby
+RUBYPREFIX ?= $(notdir $(RUBY))
 
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
@@ -13,9 +15,10 @@ PYLIBVER ?= $(shell $(PYTHON) -c 'import sys;print("python%d.%d" % sys.version_i
 PYINC ?= $(shell pkg-config --cflags $(PYPREFIX))
 PYTHONLIBDIR ?= $(shell pkg-config --libs $(PYPREFIX))
 PYLIBDIR ?= $(LIBDIR)/$(PYLIBVER)
-RUBYLIBVER ?= $(shell ruby -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
-RUBYPLATFORM ?= $(shell ruby -e 'print RUBY_PLATFORM')
-RUBYINC ?= -I$(LIBDIR)/ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
+RUBYLIBVER ?= $(shell $(RUBY) -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
+RUBYPLATFORM ?= $(shell $(RUBY) -e 'print RUBY_PLATFORM')
+RUBYINC ?= $(shell pkg-config --cflags ruby-$(RUBYLIBVER))
+RUBYLIBDIR ?= $(shell pkg-config --libs ruby-$(RUBYLIBVER))
 RUBYINSTALL ?= $(LIBDIR)/ruby/site_ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 LIBBASE=$(shell basename $(LIBDIR))
 
@@ -33,7 +36,7 @@ SWIGLOBJ:= $(patsubst %.c,$(PYPREFIX)%.lo,$(SWIGCOUT))
 SWIGRUBYLOBJ:= $(patsubst %.c,%.lo,$(SWIGRUBYCOUT)) 
 SWIGSO=$(PYPREFIX)_selinux.so
 SWIGFILES=$(SWIGSO) selinux.py
-SWIGRUBYSO=_rubyselinux.so
+SWIGRUBYSO=$(RUBYPREFIX)_selinux.so
 LIBSO=$(TARGET).$(LIBVERSION)
 AUDIT2WHYLOBJ=$(PYPREFIX)audit2why.lo
 AUDIT2WHYSO=$(PYPREFIX)audit2why.so
@@ -166,7 +169,7 @@ relabel:
 	/sbin/restorecon $(SHLIBDIR)/$(LIBSO)
 
 clean: 
-	-rm -f $(LIBPC) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGSO) $(TARGET) $(AUDIT2WHYSO) *.o *.lo *~
+	-rm -f $(LIBPC) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGRUBYLOBJ) $(SWIGSO) $(TARGET) $(AUDIT2WHYSO) *.o *.lo *~
 
 distclean: clean
 	rm -f $(GENERATED) $(SWIGFILES)

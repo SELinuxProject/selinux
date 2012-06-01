@@ -1,3 +1,4 @@
 selinux.py
 selinuxswig_wrap.c
 selinuxswig_python_exception.i
+selinuxswig_ruby_wrap.c

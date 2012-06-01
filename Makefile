@@ -12,7 +12,7 @@ all install relabel clean test indent:
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
 	done
 
-install-pywrap swigify:
+install-pywrap install-rubywrap swigify:
 	@for subdir in $(PYSUBDIRS); do \
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
 	done
