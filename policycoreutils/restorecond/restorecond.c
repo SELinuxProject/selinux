@@ -121,7 +121,6 @@ static void term_handler()
 static void usage(char *program)
 {
 	printf("%s [-d] [-f restorecond_file ] [-u] [-v] \n", program);
-	exit(0);
 }
 
 void exitApp(const char *msg)
@@ -192,6 +191,7 @@ int main(int argc, char **argv)
 			break;
 		case '?':
 			usage(argv[0]);
+			exit(-1);
 		}
 	}
 
