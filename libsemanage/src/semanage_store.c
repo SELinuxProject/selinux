@@ -1142,12 +1142,8 @@ static int semanage_install_active(semanage_handle_t * sh)
 	running_seusers += len;
 	running_nc += len;
 
-	len = strlen(semanage_selinux_path()) + strlen(sh->conf->store_path) + 1;
-	storepath = (char *)malloc(len);
-	if (!storepath)
-		goto cleanup;
-	snprintf(storepath, PATH_MAX, "%s%s", semanage_selinux_path(),
-		 sh->conf->store_path);
+	if (asprintf(&storepath, "%s%s", semanage_selinux_path(), sh->conf->store_path) < 0)
+		return retval;
 
 	snprintf(store_pol, PATH_MAX, "%s%s.%d", storepath,
 		 running_policy, sh->conf->policyvers);
