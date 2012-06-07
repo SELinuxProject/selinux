@@ -1107,16 +1107,12 @@ static int semanage_install_active(semanage_handle_t * sh)
 	int retval = -3, r, len;
 	char *storepath = NULL;
 	struct stat astore, istore;
-	const char *active_kernel =
-	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_KERNEL);
+	const char *active_kernel = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_KERNEL);
 	const char *active_fc = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC);
-	const char *active_fc_loc =
-	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC_LOCAL);
-	const char *active_seusers =
-	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_SEUSERS);
+	const char *active_fc_loc = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC_LOCAL);
+	const char *active_seusers = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_SEUSERS);
 	const char *active_nc = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_NC);
-	const char *active_fc_hd =
-	    semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC_HOMEDIRS);
+	const char *active_fc_hd = semanage_path(SEMANAGE_ACTIVE, SEMANAGE_FC_HOMEDIRS);
 
 	const char *running_fc = semanage_file_context_path();
 	const char *running_fc_loc = semanage_file_context_local_path();
