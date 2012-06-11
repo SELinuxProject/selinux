@@ -473,6 +473,14 @@ extern int matchmediacon(const char *media, security_context_t * con);
 extern int selinux_getenforcemode(int *enforce);
 
 /*
+  selinux_boolean_sub reads the /etc/selinux/TYPE/booleans.subs_dist file
+  looking for a record with boolean_name.  If a record exists selinux_boolean_sub
+  returns the translated name otherwise it returns the original name.
+  The returned value needs to be freed. On failure NULL will be returned.
+ */
+extern char *selinux_boolean_sub(const char *boolean_name);
+
+/*
   selinux_getpolicytype reads the /etc/selinux/config file and determines 
   what the default policy for the machine is.  Calling application must 
   free policytype.

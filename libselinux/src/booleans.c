@@ -88,7 +88,7 @@ int security_get_boolean_names(char ***names, int *len)
 
 hidden_def(security_get_boolean_names)
 
-static char *bool_sub(const char *name)
+char *selinux_boolean_sub(const char *name)
 {
 	char *sub = NULL;
 	char *line_buf = NULL;
@@ -106,7 +106,6 @@ static char *bool_sub(const char *name)
 		char *ptr;
 		char *src = line_buf;
 		char *dst;
-
 		while (*src && isspace(*src))
 			src++;
 		if (!*src)
@@ -135,7 +134,6 @@ static char *bool_sub(const char *name)
 
 		break;
 	}
-
 	free(line_buf);
 	fclose(cfg);
 out:
@@ -143,6 +141,8 @@ out:
 		sub = strdup(name);
 	return sub;
 }
+
+hidden_def(selinux_boolean_sub)
 
 static int bool_open(const char *name, int flag) {
 	char *fname = NULL;
@@ -172,7 +172,7 @@ static int bool_open(const char *name, int flag) {
 	if (fd >= 0 || errno != ENOENT)
 		goto out;
 
-	alt_name = bool_sub(name);
+	alt_name = selinux_boolean_sub(name);
 	if (!alt_name)
 		goto out;
 
