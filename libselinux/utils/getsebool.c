@@ -87,14 +87,22 @@ int main(int argc, char **argv)
 			rc = -1;
 			goto out;
 		}
+		char *alt_name = selinux_boolean_sub(names[i]);
+		if (! alt_name) {
+			perror("Out of memory\n");
+			rc = -1;
+			goto out;
+		}
+
 		if (pending != active) {
-			printf("%s --> %s pending: %s\n", names[i],
+			printf("%s --> %s pending: %s\n", alt_name,
 			       (active ? "on" : "off"),
 			       (pending ? "on" : "off"));
 		} else {
-			printf("%s --> %s\n", names[i],
+			printf("%s --> %s\n", alt_name,
 			       (active ? "on" : "off"));
 		}
+		free(alt_name);
 	}
 
       out:
