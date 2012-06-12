@@ -16,6 +16,7 @@ default_selinux_log(int type __attribute__((unused)), const char *fmt, ...)
 {
 	int rc;
 	va_list ap;
+	if (is_selinux_enabled() == 0) return 0;
 	va_start(ap, fmt);
 	rc = vfprintf(stderr, fmt, ap);
 	va_end(ap);
