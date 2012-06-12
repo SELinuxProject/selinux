@@ -2032,11 +2032,6 @@ static int ocontext_copy_xen(expand_state_t *state)
 			else
 				state->out->ocontexts[i] = n;
 			l = n;
-			if (context_copy(&n->context[0], &c->context[0],
-				state)) {
-				ERR(state->handle, "Out of memory!");
-				return -1;
-			}
 			switch (i) {
 			case OCON_XEN_ISID:
 				n->sid[0] = c->sid[0];
@@ -2059,6 +2054,11 @@ static int ocontext_copy_xen(expand_state_t *state)
 			default:
 				/* shouldn't get here */
 				ERR(state->handle, "Unknown ocontext");
+				return -1;
+			}
+			if (context_copy(&n->context[0], &c->context[0],
+				state)) {
+				ERR(state->handle, "Out of memory!");
 				return -1;
 			}
 		}
@@ -2085,10 +2085,6 @@ static int ocontext_copy_selinux(expand_state_t *state)
 			else
 				state->out->ocontexts[i] = n;
 			l = n;
-			if (context_copy(&n->context[0], &c->context[0], state)) {
-				ERR(state->handle, "Out of memory!");
-				return -1;
-			}
 			switch (i) {
 			case OCON_ISID:
 				n->sid[0] = c->sid[0];
@@ -2132,6 +2128,10 @@ static int ocontext_copy_selinux(expand_state_t *state)
 			default:
 				/* shouldn't get here */
 				ERR(state->handle, "Unknown ocontext");
+				return -1;
+			}
+			if (context_copy(&n->context[0], &c->context[0], state)) {
+				ERR(state->handle, "Out of memory!");
 				return -1;
 			}
 		}
