@@ -2034,6 +2034,12 @@ static int ocontext_copy_xen(expand_state_t *state)
 			l = n;
 			switch (i) {
 			case OCON_XEN_ISID:
+				if (c->context[0].user == 0) {
+					ERR(state->handle,
+					    "Missing context for %s initial sid",
+					    c->u.name);
+					return -1;
+				}
 				n->sid[0] = c->sid[0];
 				break;
 			case OCON_XEN_PIRQ:
@@ -2087,6 +2093,12 @@ static int ocontext_copy_selinux(expand_state_t *state)
 			l = n;
 			switch (i) {
 			case OCON_ISID:
+				if (c->context[0].user == 0) {
+					ERR(state->handle,
+					    "Missing context for %s initial sid",
+					    c->u.name);
+					return -1;
+				}
 				n->sid[0] = c->sid[0];
 				break;
 			case OCON_FS:	/* FALLTHROUGH */
