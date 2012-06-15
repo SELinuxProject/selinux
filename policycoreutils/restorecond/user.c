@@ -201,7 +201,7 @@ static int local_server() {
 			perror("asprintf");
 		return -1;
 	}
-	int fd = open(ptr, O_CREAT | O_WRONLY | O_NOFOLLOW, S_IRUSR | S_IWUSR);
+	int fd = open(ptr, O_CREAT | O_WRONLY | O_NOFOLLOW | O_CLOEXEC, S_IRUSR | S_IWUSR);
 	if (debug_mode)
 		g_warning ("Lock file: %s", ptr);
 
