@@ -8,6 +8,7 @@
 static const char *polcap_names[] = {
 	"network_peer_controls",	/* POLICYDB_CAPABILITY_NETPEER */
 	"open_perms",			/* POLICYDB_CAPABILITY_OPENPERM */
+	"redhat1",			/* POLICYDB_CAPABILITY_REDHAT1, aka ptrace_child */
 	NULL
 };
 
