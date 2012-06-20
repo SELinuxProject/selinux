@@ -361,11 +361,17 @@ int realpath_not_final(const char *name, char *resolved_path)
 		goto out;
 	}
 
+	/* strip leading // */
+	while (tmp_path[len] && tmp_path[len] == '/' &&
+	       tmp_path[len+1] && tmp_path[len+1] == '/') {
+		tmp_path++;
+		len++;
+	}
 	last_component = strrchr(tmp_path, '/');
 
 	if (last_component == tmp_path) {
 		last_component++;
-		p = strcpy(resolved_path, "/");
+		p = strcpy(resolved_path, "");
 	} else if (last_component) {
 		*last_component = '\0';
 		last_component++;
