@@ -2018,9 +2018,9 @@ class booleanRecords(semanageRecords):
 		semanage_bool_free(b)
 
 	def modify(self, name, value = None, use_file = False):
-                
-                self.begin()
+                name = selinux.selinux_boolean_sub(name)
 
+                self.begin()
                 if use_file:
                        fd = open(name)
                        for b in fd.read().split("\n"):
@@ -2040,6 +2040,7 @@ class booleanRecords(semanageRecords):
                 self.commit()
 		
 	def __delete(self, name):
+                name = selinux.selinux_boolean_sub(name)
 
                 (rc, k) = semanage_bool_key_create(self.sh, name)
                 if rc < 0:
@@ -2103,14 +2104,16 @@ class booleanRecords(semanageRecords):
 
 		return ddict
 			
-        def get_desc(self, boolean):
-               return boolean_desc(boolean)
+        def get_desc(self, name):
+		name = selinux.selinux_boolean_sub(name)
+		return boolean_desc(name)
 
-        def get_category(self, boolean):
-               if boolean in booleans_dict:
-                      return _(booleans_dict[boolean][0])
-               else:
-                      return _("unknown")
+        def get_category(self, name):
+		name = selinux.selinux_boolean_sub(name)
+		if name in booleans_dict:
+			return _(booleans_dict[name][0])
+		else:
+			return _("unknown")
 
         def customized(self):
                l = []
