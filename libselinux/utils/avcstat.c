@@ -139,6 +139,7 @@ int main(int argc, char **argv)
 
 	sa.sa_handler = sighandler;
 	sa.sa_flags = SA_RESTART;
+	sigemptyset(&sa.sa_mask);
 
 	i = sigaction(SIGWINCH, &sa, NULL);
 	if (i < 0)
