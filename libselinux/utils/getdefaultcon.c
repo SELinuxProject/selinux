@@ -11,7 +11,7 @@
 
 static void usage(const char *name, const char *detail, int rc)
 {
-	fprintf(stderr, "usage:  %s [-l level] user fromcon\n", name);
+	fprintf(stderr, "usage:  %s [-l level] [-s service] user [fromcon]\n", name);
 	if (detail)
 		fprintf(stderr, "%s:  %s\n", name, detail);
 	exit(rc);
@@ -21,16 +21,20 @@ int main(int argc, char **argv)
 {
 	security_context_t usercon = NULL, cur_context = NULL;
 	char *user = NULL, *level = NULL, *role=NULL, *seuser=NULL, *dlevel=NULL;
+	char *service = NULL;
 	int ret, opt;
 	int verbose = 0;
 
-	while ((opt = getopt(argc, argv, "l:r:v")) > 0) {
+	while ((opt = getopt(argc, argv, "l:r:s:v")) > 0) {
 		switch (opt) {
 		case 'l':
 			level = strdup(optarg);
 			break;
 		case 'r':
 			role = strdup(optarg);
+			break;
+		case 's':
+			service = strdup(optarg);
 			break;
 		case 'v':
 			verbose = 1;
@@ -61,7 +65,7 @@ int main(int argc, char **argv)
 	} else
 		cur_context = argv[optind + 1];
 
-	if ((ret = getseuserbyname(user, &seuser, &dlevel)) == 0) {
+	if ((ret = getseuser(user, service, &seuser, &dlevel)) == 0) {
 		if (! level) level=dlevel;
 		if (role != NULL && role[0]) 
 			ret=get_default_context_with_rolelevel(seuser, role, level,cur_context,&usercon);
@@ -74,7 +78,7 @@ int main(int argc, char **argv)
 		if (verbose) {
 			printf("%s: %s from %s %s %s %s -> %s\n", argv[0], user, cur_context, seuser, role, level, usercon);
 		} else {
-			printf("%s", usercon);
+			printf("%s\n", usercon);
 		}
 	}
 
