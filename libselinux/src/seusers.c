@@ -298,6 +298,7 @@ int getseuser(const char *username, const char *service,
 
 	seuser++;
 	level = strchr(seuser, ':');
+	if (! level) goto err;
 	*level = 0;
 	level++;
 	*r_seuser = strdup(seuser);
