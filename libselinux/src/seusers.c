@@ -266,7 +266,6 @@ int getseuser(const char *username, const char *service,
 	char *level = NULL;
 	char *buffer = NULL;
 	size_t size = 0;
-	size_t lineno = 0;
 	char *rec = NULL;
 	char *path=NULL;
 	FILE *fp = NULL;
@@ -277,8 +276,6 @@ int getseuser(const char *username, const char *service,
 	if (fp == NULL) goto err;
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
 	while (getline(&buffer, &size, fp) > 0) {
-		++lineno;
-
 		if (strncmp(buffer, "*:", 2) == 0) {
 			free(rec);
 			rec = strdup(buffer);
