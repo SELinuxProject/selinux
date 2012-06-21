@@ -281,6 +281,8 @@ int getseuser(const char *username, const char *service,
 			rec = strdup(buffer);
 			continue;
 		}
+		if (!service)
+			continue;
 		len = strlen(service);
 		if ((strncmp(buffer, service, len) == 0) &&
 		    (buffer[len] == ':')) {
