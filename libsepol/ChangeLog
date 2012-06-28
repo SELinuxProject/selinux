@@ -1,3 +1,9 @@
+2.1.7 2011-06-28
+	* reserve policycapability for redhat testing of ptrace child
+	* cosmetic changes to make the source easier to read
+	* prepend instead of append to filename_trans list
+	* Android/MacOS X build support
+
 2.1.6 2011-04-23
 	* allocate enough space to hold filename in trans rules
 

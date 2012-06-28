@@ -1,3 +1,11 @@
+2.1.8 2012-06-28
+	* remove build warning when build swig c files
+	* additional makefile support for rubywrap
+	* ignore 80 column limit for readability
+	* semanage_store: fix snprintf length argument by using asprintf
+	* Use default semanage.conf as a fallback
+	* use after free in python bindings
+
 2.1.7 2012-03-28
 	* Alternate path for semanage.conf
 	* do not link against libpython, this is considered bad in Debian

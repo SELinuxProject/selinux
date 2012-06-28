@@ -1,3 +1,17 @@
+2.1.11 2012-06-28
+	* Fortify source now requires all code to be compiled with -O flag
+	* asprintf return code must be checked
+	* avc_netlink_recieve handle EINTR
+	* audit2why: silence -Wmissing-prototypes warning
+	* libsemanage: remove build warning when build swig c files
+	* matchpathcon: bad handling of symlinks in /
+	* seusers: remove unused lineno
+	* seusers: getseuser: gracefully handle NULL service
+	* New Android property labeling backend
+	* label_android_property whitespace cleanups
+	* additional makefile support for rubywrap
+
+
 2.1.10 2012-03-28
 	* Fix dead links to www.nsa.gov/selinux
 	* Remove jump over variable declaration

@@ -1,3 +1,7 @@
+1.1.7 2012-06-28
+	* Make use of setools optional within sepolgen
+	* We need to support files that have a + in them
+
 1.1.6 2012-03-28
 	* Fix dead links to www.nsa.gov/selinux
 	* audit.py Dont crash if empty data is passed to sepolgen

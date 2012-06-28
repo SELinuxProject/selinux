@@ -1,3 +1,15 @@
+2.1.12 2012-06-28
+	* restorecond: wrong options should exit with non-zero error code
+	* restorecond: Add -h option to get usage command
+	* resorecond: user: fix fd leak
+	* mcstrans: add -f to run in foreground
+	* semanage: fix man page range and level defaults
+	* semanage: bash completion for modules should include -a,-m, -d
+	* semanage: manpage update for -e
+	* semanage: dontaudit off should work
+	* semanage: locallist option does not take an argument
+	* sepolgen: Make use of setools optional within sepolgen
+
 2.1.11 2012-03-28
 	* sandbox: do not propogate inside mounts outside
 	* sandbox: Removing sandbox init script, should no longer be necessary
