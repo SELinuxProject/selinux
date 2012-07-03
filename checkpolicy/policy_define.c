@@ -2341,7 +2341,10 @@ int define_role_trans(int class_specified)
 			return -1;
 		}
 
-		ebitmap_set_bit(&e_classes, cladatum->s.value - 1, TRUE);
+		if (ebitmap_set_bit(&e_classes, cladatum->s.value - 1, TRUE)) {
+			yyerror("out of memory");
+			return -1;
+		}
 	}
 
 	id = (char *)queue_remove(id_queue);
