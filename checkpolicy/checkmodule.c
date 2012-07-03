@@ -63,10 +63,12 @@ static int read_binary_policy(policydb_t * p, char *file, char *progname)
 	if (fstat(fd, &sb) < 0) {
 		fprintf(stderr, "Can't stat '%s':  %s\n",
 			file, strerror(errno));
+		close(fd);
 		return -1;
 	}
 	map =
 	    mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+	close(fd);
 	if (map == MAP_FAILED) {
 		fprintf(stderr, "Can't map '%s':  %s\n", file, strerror(errno));
 		return -1;
