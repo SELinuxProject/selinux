@@ -1633,6 +1633,11 @@ class fcontextRecords(semanageRecords):
                 try:
                        fd = open(selinux.selinux_file_context_subs_path(), "r")
                        for i in fd.readlines():
+                              i = i.strip()
+                              if len(i) == 0:
+                                     continue
+                              if i.startswith("#"):
+                                     continue
                               target, substitute = i.split()
                               self.equiv[target] = substitute
                        fd.close()
@@ -1641,6 +1646,11 @@ class fcontextRecords(semanageRecords):
                 try:
                        fd = open(selinux.selinux_file_context_subs_dist_path(), "r")
                        for i in fd.readlines():
+                              i = i.strip()
+                              if len(i) == 0:
+                                     continue
+                              if i.startswith("#"):
+                                     continue
                               target, substitute = i.split()
                               self.equiv_dist[target] = substitute
                        fd.close()
