@@ -63,7 +63,7 @@ If \fBSELABEL_OPT_BASEONLY\fR is set, then the following files will be processed
 .IP "1." 4
 The mandatory file contexts file that is either the fully qualified file name from \fISELABEL_OPT_PATH.value\fR or if \fINULL\fR, then the path returned by \fBselinux_file_context_path\fR(3).
 .IP "2." 4
-The optional local and distribution substitution files that perform any substitutions on the 'in memory' version of the file contexts file.
+The optional local and distribution substitution files that perform path aliasing on the 'in memory' version of the file contexts file.
 .br
 These files have the same name as the mandatory file contexts file with the extensions \fI.subs\fR and \fI.subs_dist\fR added.
 .RE
@@ -81,7 +81,7 @@ The optional user home directory customizations file that has the same name as t
 .br
 \fBselinux_file_context_homedir_path\fR(3) will return the default path to this file.
 .IP "4." 4
-The optional local and distribution substitution files that perform any substitutions on the 'in memory' version of the file contexts file (and the \fI.local\fR and/or \fI.homedirs\fR if present). These files have the same name as the mandatory file contexts file with the extensions \fI.subs\fR and \fI.subs_dist\fR added.
+The optional local and distribution substitution files that perform any path aliasing on the 'in memory' version of the file contexts file (and the \fI.local\fR and/or \fI.homedirs\fR if present). These files have the same name as the mandatory file contexts file with the extensions \fI.subs\fR and \fI.subs_dist\fR added.
 .br
 \fBselinux_file_context_subs_path\fR(3) and \fBselinux_file_context_subs_dist_path\fR(3) will return the default paths to these files.
 .RE
@@ -163,20 +163,20 @@ Example:
 
 .SH "Substitution File Format"
 .sp
-Each line within the substitution files (\fI.subs\fR and \fI.subs_dist\fR) is:
+Each line within the substitution files (\fI.subs\fR and \fI.subs_dist\fR) has the form:
 .RS
-.I pathname subs_pathname
+.I subs_pathname pathname
 .RE
 .sp
 Where:
 .RS
 .I pathname
 .RS
-A path that matches an entry in one or more of the file contexts files.
+A path that matches an entry in one or more of the file contexts policy configuration file.
 .RE
 .I subs_pathname
 .RS
-The path that will be substituted for pathname by the look up process.
+The path that will be aliased (considered equivalent) with pathname by the look up process.
 .RE
 .RE
 .sp
