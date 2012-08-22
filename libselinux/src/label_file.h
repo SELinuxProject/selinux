@@ -1,6 +1,8 @@
 #ifndef _SELABEL_FILE_H_
 #define _SELABEL_FILE_H_
 
+#include <sys/stat.h>
+
 #include "label_internal.h"
 
 /* A file security context specification. */
@@ -40,4 +42,41 @@ struct saved_data {
 	int num_stems;
 	int alloc_stems;
 };
+
+static inline mode_t string_to_mode(char *mode, const char *path, unsigned lineno)
+{
+	size_t len;
+
+	len = strlen(mode);
+	if (mode[0] != '-' || len != 2) {
+		COMPAT_LOG(SELINUX_WARNING,
+			    "%s:  line %d has invalid file type %s\n",
+			    path, lineno, mode);
+		return 0;
+	}
+	switch (mode[1]) {
+	case 'b':
+		return S_IFBLK;
+	case 'c':
+		return S_IFCHR;
+	case 'd':
+		return S_IFDIR;
+	case 'p':
+		return S_IFIFO;
+	case 'l':
+		return S_IFLNK;
+	case 's':
+		return S_IFSOCK;
+	case '-':
+		return S_IFREG;
+	default:
+		COMPAT_LOG(SELINUX_WARNING,
+			    "%s:  line %d has invalid file type %s\n",
+			    path, lineno, mode);
+		return 0;
+	}
+	/* impossible to get here */
+	return 0;
+}
+
 #endif /* _SELABEL_FILE_H_ */

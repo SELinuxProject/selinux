@@ -239,7 +239,6 @@ static int compile_regex(struct saved_data *data, struct spec *spec, const char 
 	return 0;
 }
 
-
 static int process_line(struct selabel_handle *rec,
 			const char *path, const char *prefix,
 			char *line_buf, int pass, unsigned lineno)
@@ -298,45 +297,9 @@ static int process_line(struct selabel_handle *rec,
 		/* Convert the type string to a mode format */
 		spec_arr[nspec].type_str = type;
 		spec_arr[nspec].mode = 0;
-		if (!type)
-			goto skip_type;
-		len = strlen(type);
-		if (type[0] != '-' || len != 2) {
-			COMPAT_LOG(SELINUX_WARNING,
-				    "%s:  line %d has invalid file type %s\n",
-				    path, lineno, type);
-			return 0;
-		}
-		switch (type[1]) {
-		case 'b':
-			spec_arr[nspec].mode = S_IFBLK;
-			break;
-		case 'c':
-			spec_arr[nspec].mode = S_IFCHR;
-			break;
-		case 'd':
-			spec_arr[nspec].mode = S_IFDIR;
-			break;
-		case 'p':
-			spec_arr[nspec].mode = S_IFIFO;
-			break;
-		case 'l':
-			spec_arr[nspec].mode = S_IFLNK;
-			break;
-		case 's':
-			spec_arr[nspec].mode = S_IFSOCK;
-			break;
-		case '-':
-			spec_arr[nspec].mode = S_IFREG;
-			break;
-		default:
-			COMPAT_LOG(SELINUX_WARNING,
-				    "%s:  line %d has invalid file type %s\n",
-				    path, lineno, type);
-			return 0;
-		}
+		if (type)
+			spec_arr[nspec].mode = string_to_mode(type, path, lineno);
 
-	skip_type:
 		spec_arr[nspec].lr.ctx_raw = context;
 
 		/* Determine if specification has 
