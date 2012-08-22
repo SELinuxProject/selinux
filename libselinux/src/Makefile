@@ -20,6 +20,8 @@ RUBYINC ?= $(shell pkg-config --cflags ruby-$(RUBYLIBVER))
 RUBYINSTALL ?= $(LIBDIR)/ruby/site_ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 LIBBASE=$(shell basename $(LIBDIR))
 
+LDFLAGS ?= -lpcre
+
 VERSION = $(shell cat ../VERSION)
 LIBVERSION = 1
 
