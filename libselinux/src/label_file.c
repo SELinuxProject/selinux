@@ -297,8 +297,16 @@ static int process_line(struct selabel_handle *rec,
 		/* Convert the type string to a mode format */
 		spec_arr[nspec].type_str = type;
 		spec_arr[nspec].mode = 0;
-		if (type)
-			spec_arr[nspec].mode = string_to_mode(type, path, lineno);
+		if (type) {
+			mode_t mode = string_to_mode(type);
+			if (mode == -1) {
+				COMPAT_LOG(SELINUX_WARNING,
+					"%s:  line %d has invalid file type %s\n",
+					path, lineno, type);
+				mode = 0;
+			}
+			spec_arr[nspec].mode = mode;
+		}
 
 		spec_arr[nspec].lr.ctx_raw = context;
 

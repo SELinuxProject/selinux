@@ -43,17 +43,15 @@ struct saved_data {
 	int alloc_stems;
 };
 
-static inline mode_t string_to_mode(char *mode, const char *path, unsigned lineno)
+static inline mode_t string_to_mode(char *mode)
 {
 	size_t len;
 
-	len = strlen(mode);
-	if (mode[0] != '-' || len != 2) {
-		COMPAT_LOG(SELINUX_WARNING,
-			    "%s:  line %d has invalid file type %s\n",
-			    path, lineno, mode);
+	if (!mode)
 		return 0;
-	}
+	len = strlen(mode);
+	if (mode[0] != '-' || len != 2)
+		return -1;
 	switch (mode[1]) {
 	case 'b':
 		return S_IFBLK;
@@ -70,10 +68,7 @@ static inline mode_t string_to_mode(char *mode, const char *path, unsigned linen
 	case '-':
 		return S_IFREG;
 	default:
-		COMPAT_LOG(SELINUX_WARNING,
-			    "%s:  line %d has invalid file type %s\n",
-			    path, lineno, mode);
-		return 0;
+		return -1;
 	}
 	/* impossible to get here */
 	return 0;
