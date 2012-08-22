@@ -25,7 +25,13 @@ static struct restore_opts r_opts;
 
 #define STAT_BLOCK_SIZE 1
 
-
+/* setfiles will abort its operation after reaching the
+ * following number of errors (e.g. invalid contexts),
+ * unless it is used in "debug" mode (-d option).
+ */
+#ifndef ABORT_ON_ERRORS
+#define ABORT_ON_ERRORS	10
+#endif
 
 #define SETFILES "setfiles"
 #define RESTORECON "restorecon"
@@ -39,14 +45,16 @@ void usage(const char *const name)
 {
 	if (iamrestorecon) {
 		fprintf(stderr,
-			"usage:  %s [-iFnprRv0] [-e excludedir ] [-o filename ] [-f filename | pathname... ]\n",
-			name);
+			"usage:  %s [-iFnprRv0] [-e excludedir] [-o filename] pathname...\n"
+			"usage:  %s [-iFnprRv0] [-e excludedir] [-o filename] -f filename\n",
+			name, name);
 	} else {
 		fprintf(stderr,
-			"usage:  %s [-dnpqvW] [-o filename] [-r alt_root_path ] spec_file pathname...\n"
-			"usage:  %s -c policyfile spec_file\n"
-			"usage:  %s -s [-dnpqvW] [-o filename ] spec_file\n", name, name,
-			name);
+			"usage:  %s [-dilnpqvFW] [-e excludedir] [-o filename] [-r alt_root_path] spec_file pathname...\n"
+			"usage:  %s [-dilnpqvFW] [-e excludedir] [-o filename] [-r alt_root_path] spec_file -f filename\n"
+			"usage:  %s -s [-dilnpqvFW] [-o filename] spec_file\n"
+			"usage:  %s -c policyfile spec_file\n",
+			name, name, name, name);
 	}
 	exit(1);
 }
@@ -56,8 +64,8 @@ static int nerr = 0;
 void inc_err()
 {
 	nerr++;
-	if (nerr > 9 && !r_opts.debug) {
-		fprintf(stderr, "Exiting after 10 errors.\n");
+	if (nerr > ABORT_ON_ERRORS - 1 && !r_opts.debug) {
+		fprintf(stderr, "Exiting after %d errors.\n", ABORT_ON_ERRORS);
 		exit(1);
 	}
 }
@@ -217,7 +225,7 @@ int main(int argc, char **argv)
 	exclude_non_seclabel_mounts();
 
 	/* Process any options. */
-	while ((opt = getopt(argc, argv, "c:de:f:ilnpqrsvo:FRW0")) > 0) {
+	while ((opt = getopt(argc, argv, "c:de:f:hilno:pqrsvFRW0")) > 0) {
 		switch (opt) {
 		case 'c':
 			{
@@ -266,6 +274,8 @@ int main(int argc, char **argv)
 			input_filename = optarg;
 			break;			
 		case 'd':
+			if (iamrestorecon)
+				usage(argv[0]);
 			r_opts.debug = 1;
 			break;
 		case 'i':
@@ -344,6 +354,7 @@ int main(int argc, char **argv)
 		case '0':
 			null_terminated = 1;
 			break;
+		case 'h':
 		case '?':
 			usage(argv[0]);
 		}
@@ -381,7 +392,8 @@ int main(int argc, char **argv)
 
 		altpath = argv[optind];
 		optind++;
-	}
+	} else if (argc == 1)
+		usage(argv[0]);
 
 	/* Load the file contexts configuration and check it. */
 	r_opts.selabel_opt_validate = (ctx_validate ? (char *)1 : NULL);
@@ -433,7 +445,7 @@ int main(int argc, char **argv)
 	if (r_opts.outfile)
 		fclose(r_opts.outfile);
 
-       if (r_opts.progress && r_opts.count >= STAR_COUNT)
-               printf("\n");
+	if (r_opts.progress && r_opts.count >= STAR_COUNT)
+		printf("\n");
 	exit(errors);
 }

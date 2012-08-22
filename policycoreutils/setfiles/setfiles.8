@@ -1,22 +1,24 @@
 .TH "setfiles" "8" "2002031409" "" ""
 .SH "NAME"
-setfiles \- set file SELinux security contexts.
+setfiles \- set SELinux file security contexts.
 
 .SH "SYNOPSIS"
 .B setfiles
-.I [\-c policy ] [\-d] [\-l] [\-n] [\-e directory ] [\-o filename ] [\-q] [\-s] [\-v] [\-vv] [\-W] [\-F] spec_file pathname...
+.I [\-c policy] [\-d] [\-l] [\-n] [\-e directory] [\-o filename] [\-q] [\-s] [\-v] [\-vv] [\-W] [\-F] spec_file pathname...
 .SH "DESCRIPTION"
 This manual page describes the
 .BR setfiles
 program.
 .P
 This program is primarily used to initialize the security context
-database (extended attributes) on one or more filesystems.  This
-program is initially run as part of the SE Linux installation process.
+fields (extended attributes) on one or more filesystems (or parts of
+them).  Usually it is initially run as part of the SELinux installation
+process (a step commonly known as labeling).
 .P
-It can also be run at any time to correct errors, to add support for
-new policy, or with the \-n option it can just check whether the file
-contexts are all as you expect.
+It can also be run at any other time to correct inconsistent labels, to add
+support for newly-installed policy or, by using the \-n option, to passively
+check whether the file contexts are all set as specified by the active policy
+(default behavior) or by some other policy (see the \-c option).
 
 .SH "OPTIONS"
 .TP 
@@ -24,47 +26,66 @@ contexts are all as you expect.
 check the validity of the contexts against the specified binary policy.
 .TP
 .B \-d
-show what specification matched each file.
-.TP 
+show what specification matched each file (do not abort validation
+after ABORT_ON_ERRORS errors).
+.TP
+.B \-e directory
+directory to exclude (repeat option for more than one directory).
+.TP
+.B \-f
+take a list of files to be processed from an input file.
+.TP
+.B \-F
+force reset of context to match file_context for customizable files.
+.TP
+.B \-h, \-?
+display usage information and exit.
+.TP
+.B \-i
+ignore files that do not exist.
+.TP
 .B \-l
 log changes in file labels to syslog.
 .TP
 .B \-n
-don't change any file labels.
+don't change any file labels (passive check).
+.TP
+.B \-o filename
+save list of files with incorrect context in filename.
 .TP
 .B \-p
-show progress by printing * every 1000 files.
+show progress by printing * every STAR_COUNT files.
 .TP 
 .B \-q
 suppress non-error output.
 .TP 
 .B \-r rootpath
-use an alternate root path
-.TP 
-.B \-e directory
-directory to exclude (repeat option for more than one directory.)
-.TP 
-.B \-F
-Force reset of context to match file_context for customizable files
-.TP 
-.B \-o filename
-save list of files with incorrect context in filename.
+use an alternate root path.
 .TP 
 .B \-s
-take a list of files from standard input instead of using a pathname on the
-command line.
+take a list of files from standard input instead of using a pathname from the
+command line (equivalent to \-f \-).
 .TP
 .B \-v
-show changes in file labels, if type or role are changing.
+show changes in file labels, if type or role are going to be changed.
 .TP 
 .B \-vv
-show changes in file labels, if type, role, or user are changing.
+show changes in file labels, if type, role or user are going to be changed.
 .TP 
 .B \-W
 display warnings about entries that had no matching files.
 .TP 
 .B \-0
-Input items are terminated by a null character instead of by whitespace,  and the quotes and backslash are not special (every character is taken literally).  Disables the end of file string, which  is  treated  like  any other argument.  Useful when input items might contain white space, quote  marks,  or  backslashes.The  GNU  find  -print0  option produces input suitable for this mode.
+the separator for the input items is assumed to be the null character
+(instead of the white space).  The quotes and the backslash characters are
+also treated as normal characters that can form valid input.
+This option finally also disables the end of file string, which is treated
+like any other argument.  Useful when input items might contain white space,
+quote marks or backslashes.  The
+.B -print0
+option of GNU
+.B find
+produces input suitable for this mode.
 
 .SH "ARGUMENTS"
 .B spec_file
@@ -87,8 +108,13 @@ displayed but the file is still labeled based on the last matching
 specification other than <<none>>.
 .TP 
 .B pathname...
-The pathname for the root directory of each file system to be relabeled. 
+The pathname for the root directory of each file system to be relabeled
+or a specific directory within a filesystem that should be recursively
+descended and relabeled or the pathname of a file that should be
+relabeled.
 Not used if the
+.B \-f
+or the
 .B \-s
 option is used.
 
@@ -97,5 +123,6 @@ This man page was written by Russell Coker <russell@coker.com.au>.
 The program was written by Stephen Smalley <sds@epoch.ncsc.mil>
 
 .SH "SEE ALSO"
+.BR restorecon (8),
 .BR load_policy (8),
 .BR checkpolicy (8)
