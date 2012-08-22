@@ -28,7 +28,7 @@
  */
 
 /* A file security context specification. */
-typedef struct spec {
+struct spec {
 	struct selabel_lookup_rec lr;	/* holds contexts for lookup result */
 	char *regex_str;	/* regular expession string for diagnostics */
 	char *type_str;		/* type string for diagnostic messages */
@@ -39,13 +39,13 @@ typedef struct spec {
 	int matches;		/* number of matching pathnames */
 	int hasMetaChars;	/* regular expression has meta-chars */
 	int stem_id;		/* indicates which stem-compression item */
-} spec_t;
+};
 
 /* A regular expression stem */
-typedef struct stem {
+struct stem {
 	char *buf;
 	int len;
-} stem_t;
+};
 
 /* Our stored configuration */
 struct saved_data {
@@ -53,14 +53,14 @@ struct saved_data {
 	 * The array of specifications, initially in the same order as in 
 	 * the specification file. Sorting occurs based on hasMetaChars.
 	 */
-	spec_t *spec_arr;
+	struct spec *spec_arr;
 	unsigned int nspec;
 	unsigned int ncomp;
 
 	/*
 	 * The array of regular expression stems.
 	 */
-	stem_t *stem_arr;
+	struct stem *stem_arr;
 	int num_stems;
 	int alloc_stems;
 };
@@ -108,10 +108,10 @@ static int find_stem_from_spec(struct saved_data *data, const char *buf)
 			return i;
 	}
 	if (data->alloc_stems == num) {
-		stem_t *tmp_arr;
+		struct stem *tmp_arr;
 		data->alloc_stems = data->alloc_stems * 2 + 16;
 		tmp_arr = realloc(data->stem_arr,
-				  sizeof(stem_t) * data->alloc_stems);
+				  sizeof(*tmp_arr) * data->alloc_stems);
 		if (!tmp_arr)
 			return -1;
 		data->stem_arr = tmp_arr;
@@ -224,11 +224,11 @@ static void spec_hasMetaChars(struct spec *spec)
 	return;
 }
 
-static int compile_regex(struct saved_data *data, spec_t *spec, const char **errbuf)
+static int compile_regex(struct saved_data *data, struct spec *spec, const char **errbuf)
 {
 	const char *tmperrbuf;
 	char *reg_buf, *anchored_regex, *cp;
-	stem_t *stem_arr = data->stem_arr;
+	struct stem *stem_arr = data->stem_arr;
 	size_t len;
 	int erroff;
 
@@ -284,7 +284,7 @@ static int process_line(struct selabel_handle *rec,
 	int items, len;
 	char *buf_p, *regex, *type, *context;
 	struct saved_data *data = (struct saved_data *)rec->data;
-	spec_t *spec_arr = data->spec_arr;
+	struct spec *spec_arr = data->spec_arr;
 	unsigned int nspec = data->nspec;
 
 	len = strlen(line_buf);
@@ -409,7 +409,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	char *line_buf = NULL;
 	size_t line_len = 0;
 	unsigned int lineno, pass, i, j, maxnspec;
-	spec_t *spec_copy = NULL;
+	struct spec *spec_copy = NULL;
 	int status = -1, baseonly = 0;
 	struct stat sb;
 
@@ -474,7 +474,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	 * The second pass performs detailed validation of the input
 	 * and fills in the spec array.
 	 */
-	maxnspec = UINT_MAX / sizeof(spec_t);
+	maxnspec = UINT_MAX / sizeof(struct spec);
 	for (pass = 0; pass < 2; pass++) {
 		data->nspec = 0;
 		data->ncomp = 0;
@@ -519,7 +519,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 				status = 0;
 				goto finish;
 			}
-			data->spec_arr = calloc(data->nspec, sizeof(spec_t));
+			data->spec_arr = calloc(data->nspec, sizeof(*data->spec_arr));
 			if (!data->spec_arr)
 				goto finish;
 
@@ -534,18 +534,18 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	free(line_buf);
 
 	/* Move exact pathname specifications to the end. */
-	spec_copy = malloc(sizeof(spec_t) * data->nspec);
+	spec_copy = malloc(sizeof(*spec_copy) * data->nspec);
 	if (!spec_copy)
 		goto finish;
 	j = 0;
 	for (i = 0; i < data->nspec; i++)
 		if (data->spec_arr[i].hasMetaChars)
 			memcpy(&spec_copy[j++],
-			       &data->spec_arr[i], sizeof(spec_t));
+			       &data->spec_arr[i], sizeof(spec_copy[j]));
 	for (i = 0; i < data->nspec; i++)
 		if (!data->spec_arr[i].hasMetaChars)
 			memcpy(&spec_copy[j++],
-			       &data->spec_arr[i], sizeof(spec_t));
+			       &data->spec_arr[i], sizeof(spec_copy[j]));
 	free(data->spec_arr);
 	data->spec_arr = spec_copy;
 
@@ -600,7 +600,7 @@ static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 					 const char *key, int type)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
-	spec_t *spec_arr = data->spec_arr;
+	struct spec *spec_arr = data->spec_arr;
 	int i, rc, file_stem;
 	mode_t mode = (mode_t)type;
 	const char *buf;
@@ -639,7 +639,7 @@ static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 	 * the last matching specification is used.
 	 */
 	for (i = data->nspec - 1; i >= 0; i--) {
-		spec_t *spec = &spec_arr[i];
+		struct spec *spec = &spec_arr[i];
 		/* if the spec in question matches no stem or has the same
 		 * stem as the file AND if the spec in question has no mode
 		 * specified or if the mode matches the file mode then we do
@@ -680,7 +680,7 @@ static void stats(struct selabel_handle *rec)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	unsigned int i, nspec = data->nspec;
-	spec_t *spec_arr = data->spec_arr;
+	struct spec *spec_arr = data->spec_arr;
 
 	for (i = 0; i < nspec; i++) {
 		if (spec_arr[i].matches == 0) {
