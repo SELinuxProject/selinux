@@ -13,6 +13,8 @@ SEMODULE_OBJS = semodule.o
 all: semodule
 
 semodule: $(SEMODULE_OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	@echo -n $(SBINDIR) > ../scripts/semodule_path
 
 install: all
 	-mkdir -p $(SBINDIR)
@@ -23,7 +25,7 @@ install: all
 relabel:
 
 clean:
-	-rm -f semodule *.o
+	-rm -f semodule *.o ../scripts/semodule_path
 
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])
