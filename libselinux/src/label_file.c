@@ -28,23 +28,6 @@
  * Internals, mostly moved over from matchpathcon.c
  */
 
-/* Return the length of the text that can be considered the stem, returns 0
- * if there is no identifiable stem */
-static int get_stem_from_spec(const char *const buf)
-{
-	const char *tmp = strchr(buf + 1, '/');
-	const char *ind;
-
-	if (!tmp)
-		return 0;
-
-	for (ind = buf; ind < tmp; ind++) {
-		if (strchr(".^$?*+|[({", (int)*ind))
-			return 0;
-	}
-	return tmp - buf;
-}
-
 /* return the length of the text that is the stem of a file name */
 static int get_stem_from_file_name(const char *const buf)
 {
@@ -53,41 +36,6 @@ static int get_stem_from_file_name(const char *const buf)
 	if (!tmp)
 		return 0;
 	return tmp - buf;
-}
-
-/* find the stem of a file spec, returns the index into stem_arr for a new
- * or existing stem, (or -1 if there is no possible stem - IE for a file in
- * the root directory or a regex that is too complex for us). */
-static int find_stem_from_spec(struct saved_data *data, const char *buf)
-{
-	int i, num = data->num_stems;
-	int stem_len = get_stem_from_spec(buf);
-
-	if (!stem_len)
-		return -1;
-	for (i = 0; i < num; i++) {
-		if (stem_len == data->stem_arr[i].len
-		    && !strncmp(buf, data->stem_arr[i].buf, stem_len))
-			return i;
-	}
-	if (data->alloc_stems == num) {
-		struct stem *tmp_arr;
-		data->alloc_stems = data->alloc_stems * 2 + 16;
-		tmp_arr = realloc(data->stem_arr,
-				  sizeof(*tmp_arr) * data->alloc_stems);
-		if (!tmp_arr)
-			return -1;
-		data->stem_arr = tmp_arr;
-	}
-	data->stem_arr[num].len = stem_len;
-	data->stem_arr[num].buf = malloc(stem_len + 1);
-	if (!data->stem_arr[num].buf)
-		return -1;
-	memcpy(data->stem_arr[num].buf, buf, stem_len);
-	data->stem_arr[num].buf[stem_len] = '\0';
-	data->num_stems++;
-	buf += stem_len;
-	return num;
 }
 
 /* find the stem of a file name, returns the index into stem_arr (or -1 if
