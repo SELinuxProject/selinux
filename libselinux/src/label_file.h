@@ -88,7 +88,7 @@ static inline void spec_hasMetaChars(struct spec *spec)
 
 	/* Look at each character in the RE specification string for a
 	 * meta character. Return when any meta character reached. */
-	while (c != end) {
+	while (c < end) {
 		switch (*c) {
 		case '.':
 		case '^':
