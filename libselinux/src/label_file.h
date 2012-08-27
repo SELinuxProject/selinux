@@ -73,6 +73,47 @@ static inline mode_t string_to_mode(char *mode)
 	return 0;
 }
 
+/* Determine if the regular expression specification has any meta characters. */
+static inline void spec_hasMetaChars(struct spec *spec)
+{
+	char *c;
+	int len;
+	char *end;
+
+	c = spec->regex_str;
+	len = strlen(spec->regex_str);
+	end = c + len;
+
+	spec->hasMetaChars = 0;
+
+	/* Look at each character in the RE specification string for a
+	 * meta character. Return when any meta character reached. */
+	while (c != end) {
+		switch (*c) {
+		case '.':
+		case '^':
+		case '$':
+		case '?':
+		case '*':
+		case '+':
+		case '|':
+		case '[':
+		case '(':
+		case '{':
+			spec->hasMetaChars = 1;
+			return;
+		case '\\':	/* skip the next character */
+			c++;
+			break;
+		default:
+			break;
+
+		}
+		c++;
+	}
+	return;
+}
+
 /* Return the length of the text that can be considered the stem, returns 0
  * if there is no identifiable stem */
 static inline int get_stem_from_spec(const char *const buf)

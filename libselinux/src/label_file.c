@@ -94,47 +94,6 @@ static int nodups_specs(struct saved_data *data, const char *path)
 	return rc;
 }
 
-/* Determine if the regular expression specification has any meta characters. */
-static void spec_hasMetaChars(struct spec *spec)
-{
-	char *c;
-	int len;
-	char *end;
-
-	c = spec->regex_str;
-	len = strlen(spec->regex_str);
-	end = c + len;
-
-	spec->hasMetaChars = 0;
-
-	/* Look at each character in the RE specification string for a 
-	 * meta character. Return when any meta character reached. */
-	while (c != end) {
-		switch (*c) {
-		case '.':
-		case '^':
-		case '$':
-		case '?':
-		case '*':
-		case '+':
-		case '|':
-		case '[':
-		case '(':
-		case '{':
-			spec->hasMetaChars = 1;
-			return;
-		case '\\':	/* skip the next character */
-			c++;
-			break;
-		default:
-			break;
-
-		}
-		c++;
-	}
-	return;
-}
-
 static int compile_regex(struct saved_data *data, struct spec *spec, const char **errbuf)
 {
 	const char *tmperrbuf;
