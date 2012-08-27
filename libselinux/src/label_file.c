@@ -146,8 +146,6 @@ static int compile_regex(struct saved_data *data, struct spec *spec, const char 
 	if (spec->regcomp)
 		return 0; /* already done */
 
-	data->ncomp++; /* how many compiled regexes required */
-
 	/* Skip the fixed stem. */
 	reg_buf = spec->regex_str;
 	if (spec->stem_id >= 0)
@@ -359,7 +357,6 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	maxnspec = UINT_MAX / sizeof(struct spec);
 	for (pass = 0; pass < 2; pass++) {
 		data->nspec = 0;
-		data->ncomp = 0;
 
 		lineno = 0;
 		while (getline(&line_buf, &line_len, fp) > 0) {

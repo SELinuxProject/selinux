@@ -33,7 +33,6 @@ struct saved_data {
 	 */
 	struct spec *spec_arr;
 	unsigned int nspec;
-	unsigned int ncomp;
 
 	/*
 	 * The array of regular expression stems.
