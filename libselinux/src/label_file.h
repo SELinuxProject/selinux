@@ -42,6 +42,11 @@ struct saved_data {
 	int alloc_stems;
 };
 
+static inline pcre_extra *get_pcre_extra(struct spec *spec)
+{
+	return spec->sd;
+}
+
 static inline mode_t string_to_mode(char *mode)
 {
 	size_t len;

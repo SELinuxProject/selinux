@@ -472,9 +472,9 @@ static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 			if (compile_regex(data, spec, NULL) < 0)
 				goto finish;
 			if (spec->stem_id == -1)
-				rc = pcre_exec(spec->regex, spec->sd, key, strlen(key), 0, 0, NULL, 0);
+				rc = pcre_exec(spec->regex, get_pcre_extra(spec), key, strlen(key), 0, 0, NULL, 0);
 			else
-				rc = pcre_exec(spec->regex, spec->sd, buf, strlen(buf), 0, 0, NULL, 0);
+				rc = pcre_exec(spec->regex, get_pcre_extra(spec), buf, strlen(buf), 0, 0, NULL, 0);
 
 			if (rc == 0) {
 				spec->matches++;
