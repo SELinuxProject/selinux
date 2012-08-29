@@ -247,8 +247,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	char subs_file[PATH_MAX + 1];
 	char *line_buf = NULL;
 	size_t line_len = 0;
-	unsigned int lineno, pass, i, j, maxnspec;
-	struct spec *spec_copy = NULL;
+	unsigned int lineno, pass, maxnspec;
 	int status = -1, baseonly = 0;
 	struct stat sb;
 
@@ -371,26 +370,12 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	}
 	free(line_buf);
 
-	/* Move exact pathname specifications to the end. */
-	spec_copy = malloc(sizeof(*spec_copy) * data->nspec);
-	if (!spec_copy)
-		goto finish;
-	j = 0;
-	for (i = 0; i < data->nspec; i++)
-		if (data->spec_arr[i].hasMetaChars)
-			memcpy(&spec_copy[j++],
-			       &data->spec_arr[i], sizeof(spec_copy[j]));
-	for (i = 0; i < data->nspec; i++)
-		if (!data->spec_arr[i].hasMetaChars)
-			memcpy(&spec_copy[j++],
-			       &data->spec_arr[i], sizeof(spec_copy[j]));
-	free(data->spec_arr);
-	data->spec_arr = spec_copy;
+	status = sort_specs(data);
 
 	status = 0;
 finish:
 	fclose(fp);
-	if (data->spec_arr != spec_copy)
+	if (status)
 		free(data->spec_arr);
 	if (homedirfp)
 		fclose(homedirfp);

@@ -114,6 +114,28 @@ static inline void spec_hasMetaChars(struct spec *spec)
 	return;
 }
 
+/* Move exact pathname specifications to the end. */
+static inline int sort_specs(struct saved_data *data)
+{
+	struct spec *spec_copy;
+	int i, j;
+
+	spec_copy = malloc(sizeof(*spec_copy) * data->nspec);
+	if (!spec_copy)
+		return -1;
+	j = 0;
+	for (i = 0; i < data->nspec; i++)
+		if (data->spec_arr[i].hasMetaChars)
+			memcpy(&spec_copy[j++], &data->spec_arr[i], sizeof(spec_copy[j]));
+	for (i = 0; i < data->nspec; i++)
+		if (!data->spec_arr[i].hasMetaChars)
+			memcpy(&spec_copy[j++], &data->spec_arr[i], sizeof(spec_copy[j]));
+	free(data->spec_arr);
+	data->spec_arr = spec_copy;
+
+	return 0;
+}
+
 /* Return the length of the text that can be considered the stem, returns 0
  * if there is no identifiable stem */
 static inline int get_stem_from_spec(const char *const buf)
