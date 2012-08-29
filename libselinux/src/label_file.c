@@ -229,23 +229,61 @@ static int process_line(struct selabel_handle *rec,
 	return 0;
 }
 
+static int process_file(const char *path, const char *suffix, struct selabel_handle *rec, const char *prefix)
+{
+	FILE *fp;
+	struct stat sb;
+	unsigned int lineno;
+	size_t line_len;
+	char *line_buf = NULL;
+	int rc;
+	char stack_path[PATH_MAX + 1];
+
+	/* append the path suffix if we have one */
+	if (suffix) {
+		rc = snprintf(stack_path, sizeof(stack_path), "%s.%s", path, suffix);
+		if (rc >= sizeof(stack_path)) {
+			errno = ENAMETOOLONG;
+			return -1;
+		}
+		path = stack_path;
+	}
+
+	/* Open the specification file. */
+	if ((fp = fopen(path, "r")) == NULL)
+		return -1;
+	__fsetlocking(fp, FSETLOCKING_BYCALLER);
+
+	if (fstat(fileno(fp), &sb) < 0)
+		return -1;
+	if (!S_ISREG(sb.st_mode)) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	/*
+	 * The do detailed validation of the input and fill the spec array
+	 */
+	lineno = 0;
+	while (getline(&line_buf, &line_len, fp) > 0) {
+		rc = process_line(rec, path, prefix, line_buf, ++lineno);
+		if (rc)
+			return rc;
+	}
+	free(line_buf);
+	fclose(fp);
+
+	return 0;
+}
+
 static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 		unsigned n)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	const char *path = NULL;
 	const char *prefix = NULL;
-	FILE *fp;
-	FILE *localfp = NULL;
-	FILE *homedirfp = NULL;
-	char local_path[PATH_MAX + 1];
-	char homedir_path[PATH_MAX + 1];
 	char subs_file[PATH_MAX + 1];
-	char *line_buf = NULL;
-	size_t line_len = 0;
-	unsigned int lineno;
 	int status = -1, baseonly = 0;
-	struct stat sb;
 
 	/* Process arguments */
 	while (n--)
@@ -265,6 +303,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	if (!path) {
 		rec->subs = selabel_subs_init(selinux_file_context_subs_dist_path(), rec->subs);
 		rec->subs = selabel_subs_init(selinux_file_context_subs_path(), rec->subs);
+		path = selinux_file_context_path();
 	} else {
 		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist", path);
 		rec->subs = selabel_subs_init(subs_file, rec->subs);
@@ -272,45 +311,14 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 		rec->subs = selabel_subs_init(subs_file, rec->subs);
 	}
 
-	/* Open the specification file. */
-	if (!path)
-		path = selinux_file_context_path();
-	if ((fp = fopen(path, "r")) == NULL)
-		return -1;
-	__fsetlocking(fp, FSETLOCKING_BYCALLER);
-
-	if (fstat(fileno(fp), &sb) < 0)
-		return -1;
-	if (!S_ISREG(sb.st_mode)) {
-		errno = EINVAL;
-		return -1;
-	}
-
-	if (!baseonly) {
-		snprintf(homedir_path, sizeof(homedir_path), "%s.homedirs",
-			 path);
-		homedirfp = fopen(homedir_path, "r");
-		if (homedirfp != NULL)
-			__fsetlocking(homedirfp, FSETLOCKING_BYCALLER);
-
-		snprintf(local_path, sizeof(local_path), "%s.local", path);
-		localfp = fopen(local_path, "r");
-		if (localfp != NULL)
-			__fsetlocking(localfp, FSETLOCKING_BYCALLER);
-	}
 	rec->spec_file = strdup(path);
 
 	/* 
 	 * The do detailed validation of the input and fill the spec array
 	 */
-	data->nspec = 0;
-
-	lineno = 0;
-	while (getline(&line_buf, &line_len, fp) > 0) {
-		status = process_line(rec, path, prefix, line_buf, ++lineno);
-		if (status)
-			goto finish;
-	}
+	status = process_file(path, NULL, rec, prefix);
+	if (status)
+		goto finish;
 
 	if (rec->validating) {
 		status = nodups_specs(data, path);
@@ -318,35 +326,22 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 			goto finish;
 	}
 
-	lineno = 0;
-	if (homedirfp)
-		while (getline(&line_buf, &line_len, homedirfp) > 0) {
-			status = process_line(rec, homedir_path, prefix, line_buf, ++lineno);
-			if (status)
-				goto finish;
-		}
+	if (!baseonly) {
+		status = process_file(path, "homedirs", rec, prefix);
+		if (status && errno != ENOENT)
+			goto finish;
 
-	lineno = 0;
-	if (localfp)
-		while (getline(&line_buf, &line_len, localfp) > 0) {
-			status = process_line(rec, local_path, prefix, line_buf, ++lineno);
-			if (status)
-				goto finish;
-		}
-
-	free(line_buf);
+		status = process_file(path, "local", rec, prefix);
+		if (status && errno != ENOENT)
+			goto finish;
+	}
 
 	status = sort_specs(data);
 
 	status = 0;
 finish:
-	fclose(fp);
 	if (status)
 		free(data->spec_arr);
-	if (homedirfp)
-		fclose(homedirfp);
-	if (localfp)
-		fclose(localfp);
 	return status;
 }
 
