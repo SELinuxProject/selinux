@@ -33,6 +33,7 @@ struct saved_data {
 	 */
 	struct spec *spec_arr;
 	unsigned int nspec;
+	unsigned int alloc_specs;
 
 	/*
 	 * The array of regular expression stems.
@@ -75,6 +76,31 @@ static inline mode_t string_to_mode(char *mode)
 		return -1;
 	}
 	/* impossible to get here */
+	return 0;
+}
+
+static inline int grow_specs(struct saved_data *data)
+{
+	struct spec *specs;
+	size_t new_specs, total_specs;
+
+	if (data->nspec < data->alloc_specs)
+		return 0;
+
+	new_specs = data->nspec + 16;
+	total_specs = data->nspec + new_specs;
+
+	specs = realloc(data->spec_arr, total_specs * sizeof(*specs));
+	if (!specs) {
+		perror("realloc");
+		return -1;
+	}
+
+	/* blank the new entries */
+	memset(&specs[data->nspec], 0, new_specs * sizeof(*specs));
+
+	data->spec_arr = specs;
+	data->alloc_specs = total_specs;
 	return 0;
 }
 

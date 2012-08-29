@@ -146,13 +146,14 @@ static int compile_regex(struct saved_data *data, struct spec *spec, const char 
 
 static int process_line(struct selabel_handle *rec,
 			const char *path, const char *prefix,
-			char *line_buf, int pass, unsigned lineno)
+			char *line_buf, unsigned lineno)
 {
-	int items, len;
+	int items, len, rc;
 	char *buf_p, *regex, *type, *context;
 	struct saved_data *data = (struct saved_data *)rec->data;
-	struct spec *spec_arr = data->spec_arr;
+	struct spec *spec_arr;
 	unsigned int nspec = data->nspec;
+	const char *errbuf = NULL;
 
 	len = strlen(line_buf);
 	if (line_buf[len - 1] == '\n')
@@ -187,49 +188,44 @@ static int process_line(struct selabel_handle *rec,
 		return 0;
 	}
 
-	if (pass == 1) {
-		/* On the second pass, process and store the specification in spec. */
-		const char *errbuf = NULL;
-		spec_arr[nspec].stem_id = find_stem_from_spec(data, regex);
-		spec_arr[nspec].regex_str = regex;
-		if (rec->validating && compile_regex(data, &spec_arr[nspec], &errbuf)) {
-			COMPAT_LOG(SELINUX_WARNING,
-				   "%s:  line %d has invalid regex %s:  %s\n",
-				   path, lineno, regex,
-				   (errbuf ? errbuf : "out of memory"));
-		}
+	rc = grow_specs(data);
+	if (rc)
+		return rc;
 
-		/* Convert the type string to a mode format */
-		spec_arr[nspec].type_str = type;
-		spec_arr[nspec].mode = 0;
-		if (type) {
-			mode_t mode = string_to_mode(type);
-			if (mode == -1) {
-				COMPAT_LOG(SELINUX_WARNING,
-					"%s:  line %d has invalid file type %s\n",
-					path, lineno, type);
-				mode = 0;
-			}
-			spec_arr[nspec].mode = mode;
-		}
+	spec_arr = data->spec_arr;
 
-		spec_arr[nspec].lr.ctx_raw = context;
-
-		/* Determine if specification has 
-		 * any meta characters in the RE */
-		spec_hasMetaChars(&spec_arr[nspec]);
-
-		if (strcmp(context, "<<none>>") && rec->validating)
-			compat_validate(rec, &spec_arr[nspec].lr, path, lineno);
+	/* process and store the specification in spec. */
+	spec_arr[nspec].stem_id = find_stem_from_spec(data, regex);
+	spec_arr[nspec].regex_str = regex;
+	if (rec->validating && compile_regex(data, &spec_arr[nspec], &errbuf)) {
+		COMPAT_LOG(SELINUX_WARNING, "%s:  line %d has invalid regex %s:  %s\n",
+			   path, lineno, regex, (errbuf ? errbuf : "out of memory"));
 	}
+
+	/* Convert the type string to a mode format */
+	spec_arr[nspec].type_str = type;
+	spec_arr[nspec].mode = 0;
+	if (type) {
+		mode_t mode = string_to_mode(type);
+		if (mode == -1) {
+			COMPAT_LOG(SELINUX_WARNING, "%s:  line %d has invalid file type %s\n",
+				   path, lineno, type);
+			mode = 0;
+		}
+		spec_arr[nspec].mode = mode;
+	}
+
+	spec_arr[nspec].lr.ctx_raw = context;
+
+	/* Determine if specification has
+	 * any meta characters in the RE */
+	spec_hasMetaChars(&spec_arr[nspec]);
+
+	if (strcmp(context, "<<none>>") && rec->validating)
+		compat_validate(rec, &spec_arr[nspec].lr, path, lineno);
 
 	data->nspec = ++nspec;
-	if (pass == 0) {
-		free(regex);
-		if (type)
-			free(type);
-		free(context);
-	}
+
 	return 0;
 }
 
@@ -247,7 +243,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	char subs_file[PATH_MAX + 1];
 	char *line_buf = NULL;
 	size_t line_len = 0;
-	unsigned int lineno, pass, maxnspec;
+	unsigned int lineno;
 	int status = -1, baseonly = 0;
 	struct stat sb;
 
@@ -305,69 +301,39 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 	rec->spec_file = strdup(path);
 
 	/* 
-	 * Perform two passes over the specification file.
-	 * The first pass counts the number of specifications and
-	 * performs simple validation of the input.  At the end
-	 * of the first pass, the spec array is allocated.
-	 * The second pass performs detailed validation of the input
-	 * and fills in the spec array.
+	 * The do detailed validation of the input and fill the spec array
 	 */
-	maxnspec = UINT_MAX / sizeof(struct spec);
-	for (pass = 0; pass < 2; pass++) {
-		data->nspec = 0;
+	data->nspec = 0;
 
-		lineno = 0;
-		while (getline(&line_buf, &line_len, fp) > 0) {
-			if (data->nspec >= maxnspec)
-				break;
-			status = process_line(rec, path, prefix, line_buf, pass, ++lineno);
-			if (status)
-				goto finish;
-		}
-
-		if (pass == 1 && rec->validating) {
-			status = nodups_specs(data, path);
-			if (status)
-				goto finish;
-		}
-
-		lineno = 0;
-		if (homedirfp)
-			while (getline(&line_buf, &line_len, homedirfp) > 0) {
-				if (data->nspec >= maxnspec)
-					break;
-				status = process_line(rec, homedir_path, prefix, line_buf, pass, ++lineno);
-				if (status)
-					goto finish;
-			}
-
-		lineno = 0;
-		if (localfp)
-			while (getline(&line_buf, &line_len, localfp) > 0) {
-				if (data->nspec >= maxnspec)
-					break;
-				status = process_line(rec, local_path, prefix, line_buf, pass, ++lineno);
-				if (status)
-					goto finish;
-			}
-
-		if (pass == 0) {
-			if (data->nspec == 0) {
-				status = 0;
-				goto finish;
-			}
-			data->spec_arr = calloc(data->nspec, sizeof(*data->spec_arr));
-			if (!data->spec_arr)
-				goto finish;
-
-			maxnspec = data->nspec;
-			rewind(fp);
-			if (homedirfp)
-				rewind(homedirfp);
-			if (localfp)
-				rewind(localfp);
-		}
+	lineno = 0;
+	while (getline(&line_buf, &line_len, fp) > 0) {
+		status = process_line(rec, path, prefix, line_buf, ++lineno);
+		if (status)
+			goto finish;
 	}
+
+	if (rec->validating) {
+		status = nodups_specs(data, path);
+		if (status)
+			goto finish;
+	}
+
+	lineno = 0;
+	if (homedirfp)
+		while (getline(&line_buf, &line_len, homedirfp) > 0) {
+			status = process_line(rec, homedir_path, prefix, line_buf, ++lineno);
+			if (status)
+				goto finish;
+		}
+
+	lineno = 0;
+	if (localfp)
+		while (getline(&line_buf, &line_len, localfp) > 0) {
+			status = process_line(rec, local_path, prefix, line_buf, ++lineno);
+			if (status)
+				goto finish;
+		}
+
 	free(line_buf);
 
 	status = sort_specs(data);
