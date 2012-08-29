@@ -13,6 +13,7 @@ getsebool
 getseuser
 matchpathcon
 policyvers
+sefcontext_compile
 selinux_check_securetty_context
 selinuxenabled
 selinuxexeccon
