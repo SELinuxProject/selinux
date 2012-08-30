@@ -12,11 +12,11 @@ struct spec {
 	char *type_str;		/* type string for diagnostic messages */
 	pcre *regex;		/* compiled regular expression */
 	pcre_extra *sd;		/* extra compiled stuff */
-	char regcomp;		/* regex_str has been compiled to regex */
 	mode_t mode;		/* mode format value */
 	int matches;		/* number of matching pathnames */
-	int hasMetaChars;	/* regular expression has meta-chars */
 	int stem_id;		/* indicates which stem-compression item */
+	char hasMetaChars;	/* regular expression has meta-chars */
+	char regcomp;		/* regex_str has been compiled to regex */
 };
 
 /* A regular expression stem */
