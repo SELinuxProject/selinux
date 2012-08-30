@@ -8,6 +8,7 @@
  * developed by Secure Computing Corporation.
  */
 
+#include <assert.h>
 #include <fcntl.h>
 #include <stdarg.h>
 #include <string.h>
@@ -16,7 +17,12 @@
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
+#include <stdint.h>
 #include <pcre.h>
+
+#include <linux/limits.h>
+
+#include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -229,6 +235,167 @@ static int process_line(struct selabel_handle *rec,
 	return 0;
 }
 
+static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *stat)
+{
+	struct saved_data *data = (struct saved_data *)rec->data;
+	char mmap_path[PATH_MAX + 1];
+	int mmapfd;
+	int rc, i;
+	struct stat mmap_stat;
+	char *addr;
+	size_t len;
+	int stem_map_len, *stem_map;
+
+	uint32_t *magic;
+	uint32_t *section_len;
+	uint32_t *plen;
+
+	rc = snprintf(mmap_path, sizeof(mmap_path), "%s.bin", path);
+	if (rc >= sizeof(mmap_path))
+		return -1;
+
+	mmapfd = open(mmap_path, O_RDONLY);
+	if (mmapfd < 0)
+		return -1;
+
+	rc = fstat(mmapfd, &mmap_stat);
+	if (rc < 0)
+		return -1;
+
+	/* if mmap is old, ignore it */
+	if (mmap_stat.st_mtime < stat->st_mtime)
+		return -1;
+
+	if (mmap_stat.st_mtime == stat->st_mtime &&
+	    mmap_stat.st_mtim.tv_nsec < stat->st_mtim.tv_nsec)
+		return -1;
+
+	/* ok, read it in... */
+	len = mmap_stat.st_size;
+	len += (sysconf(_SC_PAGE_SIZE) - 1);
+	len &= ~(sysconf(_SC_PAGE_SIZE) - 1);
+
+	addr = mmap(NULL, len, PROT_READ, MAP_PRIVATE, mmapfd, 0);
+	close(mmapfd);
+	if (addr == MAP_FAILED) {
+		perror("mmap");
+		return -1;
+	}
+
+	/* check if this looks like an fcontext file */
+	magic = (uint32_t *)addr;
+	if (*magic != SELINUX_MAGIC_COMPILED_FCONTEXT)
+		return -1;
+	addr += sizeof(uint32_t);
+
+	/* check if this version is higher than we understand */
+	section_len = (uint32_t *)addr;
+	if (*section_len > SELINUX_COMPILED_FCONTEXT_MAX_VERS)
+		return -1;
+	addr += sizeof(uint32_t);
+
+	/* allocate the stems_data array */
+	section_len = (uint32_t *)addr;
+	addr += sizeof(uint32_t);
+
+	/*
+	 * map indexed by the stem # in the mmap file and contains the stem
+	 * number in the data stem_arr
+	 */
+	stem_map_len = *section_len;
+	stem_map = calloc(stem_map_len, sizeof(*stem_map));
+	if (!stem_map)
+		return -1;
+
+	for (i = 0; i < *section_len; i++) {
+		char *buf;
+		uint32_t stem_len;
+		int newid;
+
+		/* the length does not inlude the nul */
+		plen = (uint32_t *)addr;
+		addr += sizeof(uint32_t);
+
+		stem_len = *plen;
+		buf = (char *)addr;
+		addr += (stem_len + 1); // +1 is the nul
+
+		/* store the mapping between old and new */
+		newid = find_stem(data, buf, stem_len);
+		if (newid < 0) {
+			newid = store_stem(data, buf, stem_len);
+			if (newid < 0)
+				return newid;
+			data->stem_arr[newid].from_mmap = 1;
+		}
+		stem_map[i] = newid;
+	}
+
+	/* allocate the regex array */
+	section_len = (uint32_t *)addr;
+	addr += sizeof(*section_len);
+
+	for (i = 0; i < *section_len; i++) {
+		struct spec *spec;
+		int32_t stem_id;
+
+		rc = grow_specs(data);
+		if (rc < 0)
+			return rc;
+
+		spec = &data->spec_arr[data->nspec];
+		spec->from_mmap = 1;
+		spec->regcomp = 1;
+
+		plen = (uint32_t *)addr;
+		addr += sizeof(uint32_t);
+		spec->lr.ctx_raw = strdup((char *)addr);
+		if (!spec->lr.ctx_raw)
+			return -1;
+		addr += *plen;
+
+		plen = (uint32_t *)addr;
+		addr += sizeof(uint32_t);
+		spec->regex_str = (char *)addr;
+		addr += *plen;
+
+		spec->mode = *(mode_t *)addr;
+		addr += sizeof(mode_t);
+
+		/* map the stem id from the mmap file to the data->stem_arr */
+		stem_id = *(int32_t *)addr;
+		if (stem_id == -1) {
+			spec->stem_id = -1;
+		} else {
+			assert(stem_id <= stem_map_len);
+			spec->stem_id = stem_map[stem_id];
+		}
+		addr += sizeof(int32_t);
+
+		/* retrieve the hasMetaChars bit */
+		spec->hasMetaChars = *(uint32_t *)addr;
+		addr += sizeof(uint32_t);
+
+		plen = (uint32_t *)addr;
+		addr += sizeof(uint32_t);
+		spec->regex = (pcre *)addr;
+		addr += *plen;
+
+		plen = (uint32_t *)addr;
+		addr += sizeof(uint32_t);
+		spec->lsd.study_data = (void *)addr;
+		spec->lsd.flags |= PCRE_EXTRA_STUDY_DATA;
+		addr += *plen;
+
+		data->nspec++;
+	}
+
+	free(stem_map);
+
+	/* win */
+	return 0;
+}
+
 static int process_file(const char *path, const char *suffix, struct selabel_handle *rec, const char *prefix)
 {
 	FILE *fp;
@@ -261,6 +428,10 @@ static int process_file(const char *path, const char *suffix, struct selabel_han
 		return -1;
 	}
 
+	rc = load_mmap(rec, path, &sb);
+	if (rc == 0)
+		goto out;
+
 	/*
 	 * The do detailed validation of the input and fill the spec array
 	 */
@@ -270,6 +441,7 @@ static int process_file(const char *path, const char *suffix, struct selabel_han
 		if (rc)
 			return rc;
 	}
+out:
 	free(line_buf);
 	fclose(fp);
 
@@ -357,6 +529,8 @@ static void closef(struct selabel_handle *rec)
 
 	for (i = 0; i < data->nspec; i++) {
 		spec = &data->spec_arr[i];
+		if (spec->from_mmap)
+			continue;
 		free(spec->regex_str);
 		free(spec->type_str);
 		free(spec->lr.ctx_raw);
@@ -369,6 +543,8 @@ static void closef(struct selabel_handle *rec)
 
 	for (i = 0; i < (unsigned int)data->num_stems; i++) {
 		stem = &data->stem_arr[i];
+		if (stem->from_mmap)
+			continue;
 		free(stem->buf);
 	}
 

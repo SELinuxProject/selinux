@@ -5,24 +5,32 @@
 
 #include "label_internal.h"
 
+#define SELINUX_MAGIC_COMPILED_FCONTEXT	0xf97cff8a
+#define SELINUX_COMPILED_FCONTEXT_MAX_VERS	1
+
 /* A file security context specification. */
 struct spec {
 	struct selabel_lookup_rec lr;	/* holds contexts for lookup result */
 	char *regex_str;	/* regular expession string for diagnostics */
 	char *type_str;		/* type string for diagnostic messages */
 	pcre *regex;		/* compiled regular expression */
-	pcre_extra *sd;		/* extra compiled stuff */
+	union {
+		pcre_extra *sd;	/* pointer to extra compiled stuff */
+		pcre_extra lsd;	/* used to hold the mmap'd version */
+	};
 	mode_t mode;		/* mode format value */
 	int matches;		/* number of matching pathnames */
 	int stem_id;		/* indicates which stem-compression item */
 	char hasMetaChars;	/* regular expression has meta-chars */
 	char regcomp;		/* regex_str has been compiled to regex */
+	char from_mmap;		/* this spec is from an mmap of the data */
 };
 
 /* A regular expression stem */
 struct stem {
 	char *buf;
 	int len;
+	char from_mmap;
 };
 
 /* Our stored configuration */
@@ -45,7 +53,10 @@ struct saved_data {
 
 static inline pcre_extra *get_pcre_extra(struct spec *spec)
 {
-	return spec->sd;
+	if (spec->from_mmap)
+		return &spec->lsd;
+	else
+		return spec->sd;
 }
 
 static inline mode_t string_to_mode(char *mode)
