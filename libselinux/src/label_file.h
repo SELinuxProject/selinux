@@ -149,18 +149,42 @@ static inline void spec_hasMetaChars(struct spec *spec)
 static inline int sort_specs(struct saved_data *data)
 {
 	struct spec *spec_copy;
-	int i, j;
+	struct spec spec;
+	int i;
+	int front, back;
+	size_t len = sizeof(*spec_copy);
 
-	spec_copy = malloc(sizeof(*spec_copy) * data->nspec);
+	spec_copy = malloc(len * data->nspec);
 	if (!spec_copy)
 		return -1;
-	j = 0;
-	for (i = 0; i < data->nspec; i++)
+
+	/* first move the exact pathnames to the back */
+	front = 0;
+	back = data->nspec - 1;
+	for (i = 0; i < data->nspec; i++) {
 		if (data->spec_arr[i].hasMetaChars)
-			memcpy(&spec_copy[j++], &data->spec_arr[i], sizeof(spec_copy[j]));
-	for (i = 0; i < data->nspec; i++)
-		if (!data->spec_arr[i].hasMetaChars)
-			memcpy(&spec_copy[j++], &data->spec_arr[i], sizeof(spec_copy[j]));
+			memcpy(&spec_copy[front++], &data->spec_arr[i], len);
+		else
+			memcpy(&spec_copy[back--], &data->spec_arr[i], len);
+	}
+
+	/*
+	 * now the exact pathnames are at the end, but they are in the reverse order.
+	 * since 'front' is now the first of the 'exact' we can run that part of the
+	 * array switching the front and back element.
+	 */
+	back = data->nspec - 1;
+	while (front < back) {
+		/* save the front */
+		memcpy(&spec, &spec_copy[front], len);
+		/* move the back to the front */
+		memcpy(&spec_copy[front], &spec_copy[back], len);
+		/* put the old front in the back */
+		memcpy(&spec_copy[back], &spec, len);
+		front++;
+		back--;
+	}
+
 	free(data->spec_arr);
 	data->spec_arr = spec_copy;
 
