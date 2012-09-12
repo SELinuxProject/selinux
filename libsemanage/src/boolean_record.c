@@ -19,6 +19,8 @@ typedef semanage_bool_key_t record_key_t;
 #include "boolean_internal.h"
 #include "handle.h"
 #include "database.h"
+#include <stdlib.h>
+#include <selinux/selinux.h>
 
 /* Key */
 int semanage_bool_key_create(semanage_handle_t * handle,
@@ -82,8 +84,11 @@ hidden_def(semanage_bool_get_name)
 int semanage_bool_set_name(semanage_handle_t * handle,
 			   semanage_bool_t * boolean, const char *name)
 {
-
-	return sepol_bool_set_name(handle->sepolh, boolean, name);
+	int rc;
+	char *subname = selinux_boolean_sub(name);
+	rc = sepol_bool_set_name(handle->sepolh, boolean, subname);
+	free(subname);
+	return rc;
 }
 
 hidden_def(semanage_bool_set_name)
