@@ -3,7 +3,7 @@
 matchpathcon \- get the default SELinux security context for the specified path from the file contexts configuration.
 
 .SH "SYNOPSIS"
-.B matchpathcon [-V] [-N] [-n] [-f file_contexts_file ] [-p prefix ] filepath...
+.B matchpathcon [-V] [-N] [-n] [-m type] [-f file_contexts_file ] [-p prefix ] filepath...
 .SH "DESCRIPTION"
 .B matchpathcon
 queries the system policy and outputs the default security context associated with the filepath.
@@ -14,6 +14,10 @@ Note: Identical paths can have different security contexts, depending on the fil
 will also take the file type into consideration in determining the default security context if the file exists.  If the file does not exist, no file type matching will occur.
 
 .SH OPTIONS
+.B \-m type
+Force file type for the lookup.
+Valid types are file, dir, pipe, chr_file, blk_file, lnk_file, sock_file
+
 .B \-n
 Do not display path.
 

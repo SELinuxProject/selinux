@@ -43,9 +43,32 @@ static int printmatchpathcon(const char *path, int header, int mode)
 	return 0;
 }
 
+static mode_t string_to_mode(char *s)
+{
+	switch (s[0]) {
+	case 'b':
+		return S_IFBLK;
+	case 'c':
+		return S_IFCHR;
+	case 'd':
+		return S_IFDIR;
+	case 'p':
+		return S_IFIFO;
+	case 'l':
+		return S_IFLNK;
+	case 's':
+		return S_IFSOCK;
+	case 'f':
+		return S_IFREG;
+	default:
+		return -1;
+	};
+	return -1;
+}
+
 int main(int argc, char **argv)
 {
-	int i, init = 0;
+	int i, init = 0, force_mode = 0;
 	int header = 1, opt;
 	int verify = 0;
 	int notrans = 0;
@@ -55,10 +78,17 @@ int main(int argc, char **argv)
 	if (argc < 2)
 		usage(argv[0]);
 
-	while ((opt = getopt(argc, argv, "Nnf:p:Vq")) > 0) {
+	while ((opt = getopt(argc, argv, "m:Nnf:p:Vq")) > 0) {
 		switch (opt) {
 		case 'n':
 			header = 0;
+			break;
+		case 'm':
+			force_mode = string_to_mode(optarg);
+			if (force_mode < 0) {
+				fprintf(stderr, "%s: mode %s is invalid\n", argv[0], optarg);
+				exit(1);
+			}
 			break;
 		case 'V':
 			verify = 1;
@@ -116,6 +146,8 @@ int main(int argc, char **argv)
 
 		if (lstat(path, &buf) == 0)
 			mode = buf.st_mode;
+		if (force_mode)
+			mode = force_mode;
 
 		if (verify) {
 			rc = selinux_file_context_verify(path, mode);
