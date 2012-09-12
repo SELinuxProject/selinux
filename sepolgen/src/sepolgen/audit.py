@@ -173,7 +173,6 @@ class AVCMessage(AuditMessage):
         self.accesses = []
         self.denial = True
         self.type = audit2why.TERULE
-        self.bools = []
 
     def __parse_access(self, recs, start):
         # This is kind of sucky - the access that is in a space separated
@@ -241,10 +240,12 @@ class AVCMessage(AuditMessage):
         tcontext = self.tcontext.to_string()
         scontext = self.scontext.to_string()
         access_tuple = tuple( self.accesses)
+        self.data = []
+
         if (scontext, tcontext, self.tclass, access_tuple) in avcdict.keys():
-            self.type, self.bools = avcdict[(scontext, tcontext, self.tclass, access_tuple)]
+            self.type, self.data = avcdict[(scontext, tcontext, self.tclass, access_tuple)]
         else:
-            self.type, self.bools = audit2why.analyze(scontext, tcontext, self.tclass, self.accesses);
+            self.type, self.data = audit2why.analyze(scontext, tcontext, self.tclass, self.accesses);
             if self.type == audit2why.NOPOLICY:
                 self.type = audit2why.TERULE
             if self.type == audit2why.BADTCON:
@@ -258,7 +259,16 @@ class AVCMessage(AuditMessage):
             if self.type == audit2why.BADCOMPUTE:
                 raise ValueError("Error during access vector computation")
 
-            avcdict[(scontext, tcontext, self.tclass, access_tuple)] = (self.type, self.bools)
+            if self.type == audit2why.CONSTRAINT:
+                self.data = []
+                if self.scontext.user != self.tcontext.user:
+                    self.data.append("user")
+                if self.scontext.role != self.tcontext.role and self.tcontext.role != "object_r":
+                    self.data.append("role")
+                if self.scontext.level != self.tcontext.level:
+                    self.data.append("level")
+
+            avcdict[(scontext, tcontext, self.tclass, access_tuple)] = (self.type, self.data)
 
 class PolicyLoadMessage(AuditMessage):
     """Audit message indicating that the policy was reloaded."""
@@ -507,10 +517,10 @@ class AuditParser:
             if avc_filter:
                 if avc_filter.filter(avc):
                     av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                               avc.accesses, avc, avc_type=avc.type, bools=avc.bools)
+                               avc.accesses, avc, avc_type=avc.type, data=avc.data)
             else:
                 av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                           avc.accesses, avc, avc_type=avc.type, bools=avc.bools)
+                           avc.accesses, avc, avc_type=avc.type, data=avc.data)
         return av_set
 
 class AVCTypeFilter:

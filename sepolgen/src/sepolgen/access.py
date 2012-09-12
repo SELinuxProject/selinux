@@ -87,7 +87,7 @@ class AccessVector:
             self.perms = refpolicy.IdSet()
             self.audit_msgs = []
             self.type = audit2why.TERULE
-            self.bools = []
+            self.data = []
 
         # The direction of the information flow represented by this
         # access vector - used for matching
@@ -256,7 +256,7 @@ class AccessVectorSet:
         for av in l:
             self.add_av(AccessVector(av))
 
-    def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None, avc_type=audit2why.TERULE, bools=[]):
+    def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None, avc_type=audit2why.TERULE, data=[]):
         """Add an access vector to the set.
         """
         tgt = self.src.setdefault(src_type, { })
@@ -269,7 +269,7 @@ class AccessVectorSet:
             access.src_type = src_type
             access.tgt_type = tgt_type
             access.obj_class = obj_class
-            access.bools = bools
+            access.data = data
             access.type = avc_type
             cls[obj_class, avc_type] = access
 

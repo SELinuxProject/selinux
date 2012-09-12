@@ -799,7 +799,7 @@ class Require(Leaf):
         self.types = IdSet()
         self.obj_classes = { }
         self.roles = IdSet()
-        self.bools = IdSet()
+        self.data = IdSet()
         self.users = IdSet()
 
     def add_obj_class(self, obj_class, perms):
@@ -816,7 +816,7 @@ class Require(Leaf):
             s.append("\tclass %s %s;" % (obj_class, perms.to_space_str()))
         for role in self.roles:
             s.append("\trole %s;" % role)
-        for bool in self.bools:
+        for bool in self.data:
             s.append("\tbool %s;" % bool)
         for user in self.users:
             s.append("\tuser %s;" % user)

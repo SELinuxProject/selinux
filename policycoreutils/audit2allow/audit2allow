@@ -236,7 +236,7 @@ class AuditToPolicy:
             import seobject
             for i in self.__parser.avc_msgs:
                 rc = i.type
-                bools = i.bools
+                data = i.data
                 if rc >= 0:
                     print "%s\n\tWas caused by:" % i.message
                 if rc == audit2why.ALLOW:
@@ -250,15 +250,15 @@ class AuditToPolicy:
                     print "\t\tPossible mismatch between current in-memory boolean settings vs. permanent ones.\n"
                     continue
                 if rc == audit2why.BOOLEAN:
-                    if len(bools) > 1:
+                    if len(data) > 1:
                         print "\tOne of the following booleans was set incorrectly."
-                        for b in bools:
+                        for b in data:
                             print "\tDescription:\n\t%s\n"  % seobject.boolean_desc(b[0])
                             print "\tAllow access by executing:\n\t# setsebool -P %s %d"  % (b[0], b[1])
                     else:
-                        print "\tThe boolean %s was set incorrectly. " % (bools[0][0])
-                        print "\tDescription:\n\t%s\n"  % seobject.boolean_desc(bools[0][0])
-                        print "\tAllow access by executing:\n\t# setsebool -P %s %d"  % (bools[0][0], bools[0][1])
+                        print "\tThe boolean %s was set incorrectly. " % (data[0][0])
+                        print "\tDescription:\n\t%s\n"  % seobject.boolean_desc(data[0][0])
+                        print "\tAllow access by executing:\n\t# setsebool -P %s %d"  % (data[0][0], data[0][1])
                     continue
 
                 if rc == audit2why.TERULE:
@@ -270,6 +270,8 @@ class AuditToPolicy:
                     print "\t\tPolicy constraint violation.\n"
                     print "\t\tMay require adding a type attribute to the domain or type to satisfy the constraint.\n"
                     print "\t\tConstraints are defined in the policy sources in policy/constraints (general), policy/mcs (MCS), and policy/mls (MLS).\n"
+                    for reason in data:
+                        print "\t\tNote: Possible cause is the source and target %s differ\n" % reason
                     continue
 
                 if rc == audit2why.RBAC:

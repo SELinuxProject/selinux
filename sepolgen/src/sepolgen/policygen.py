@@ -166,14 +166,16 @@ class PolicyGenerator:
                 rule.comment += "#!!!! This avc has a dontaudit rule in the current policy\n"
 
             if av.type == audit2why.BOOLEAN:
-                if len(av.bools) > 1:
-                    rule.comment += "#!!!! This avc can be allowed using one of the these booleans:\n#     %s\n" % ", ".join(map(lambda x: x[0], av.bools))
+                if len(av.data) > 1:
+                    rule.comment += "#!!!! This avc can be allowed using one of the these booleans:\n#     %s\n" % ", ".join(map(lambda x: x[0], av.data))
                 else:
-                    rule.comment += "#!!!! This avc can be allowed using the boolean '%s'\n" % av.bools[0][0]
+                    rule.comment += "#!!!! This avc can be allowed using the boolean '%s'\n" % av.data[0][0]
 
             if av.type == audit2why.CONSTRAINT:
                 rule.comment += "#!!!! This avc is a constraint violation.  You will need to add an attribute to either the source or target type to make it work.\n"
                 rule.comment += "#Constraint rule: "
+                for reason in av.data:
+                    rule.comment += "\n#\tPossible cause source context and target context '%s' differ\b" % reason
 
             try:
                 if ( av.type == audit2why.TERULE and
