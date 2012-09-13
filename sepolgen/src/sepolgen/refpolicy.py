@@ -363,7 +363,10 @@ class Role(Leaf):
         self.types = IdSet()
 
     def to_string(self):
-        return "role %s types %s;" % (self.role, self.types.to_comma_str())
+        s = ""
+        for t in self.types:
+            s += "role %s types %s;\n" % (self.role, t)
+        return s
 
 class Type(Leaf):
     def __init__(self, name="", parent=None):
@@ -511,7 +514,10 @@ class RoleType(Leaf):
         self.types = IdSet()
 
     def to_string(self):
-        return "role %s types %s;" % (self.role, self.types.to_comma_str())
+        s = ""
+        for t in self.types:
+            s += "role %s types %s;\n" % (self.role, t)
+        return s
 
 class ModuleDeclaration(Leaf):
     def __init__(self, parent=None):
