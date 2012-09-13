@@ -1,3 +1,10 @@
+2.1.8 2011-09-13
+	* fix neverallow checking on attributes
+	* Move context_copy() after switch block in ocontext_copy_*().
+	* check for missing initial SID labeling statement.
+	* Add always_check_network policy capability
+	* role_fix_callback skips out-of-scope roles during expansion.
+
 2.1.7 2011-06-28
 	* reserve policycapability for redhat testing of ptrace child
 	* cosmetic changes to make the source easier to read

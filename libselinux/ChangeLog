@@ -1,3 +1,36 @@
+2.1.12 2012-09-13
+	* Add support for lxc_contexts_path
+	* utils: add service to getdefaultcon
+	* libsemanage: do not set soname needlessly
+	* libsemanage: remove PYTHONLIBDIR and ruby equivalent
+	* boolean name equivalency
+	* getsebool: support boolean name substitution
+	* Add man page for new selinux_boolean_sub function.
+	* expose selinux_boolean_sub
+	* matchpathcon: add -m option to force file type check
+	* utils: avcstat: clear sa_mask set
+	* seusers: Check for strchr failure
+	* booleans: initialize pointer to silence coveriety
+	* stop messages when SELinux disabled
+	* label_file: use PCRE instead of glibc regex functions
+	* label_file: remove all typedefs
+	* label_file: move definitions to include file
+	* label_file: do string to mode_t conversion in a helper function
+	* label_file: move error reporting back into caller
+	* label_file: move stem/spec handling to header
+	* label_file: drop useless ncomp field from label_file data
+	* label_file: move spec_hasMetaChars to header
+	* label_file: fix potential read past buffer in spec_hasMetaChars
+	* label_file: move regex sorting to the header
+	* label_file: add accessors for the pcre extra data
+	* label_file: only run regex files one time
+	* label_file: new process_file function
+	* label_file: break up find_stem_from_spec
+	* label_file: struct reorg
+	* label_file: only run array once when sorting
+	* Ensure that we only close the selinux netlink socket once.
+	* improve the file_contexts.5 manual page
+
 2.1.11 2012-06-28
 	* Fortify source now requires all code to be compiled with -O flag
 	* asprintf return code must be checked

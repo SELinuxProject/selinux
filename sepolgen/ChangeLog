@@ -1,3 +1,8 @@
+1.1.8 2012-09-13
+	* Allow returning of bastard matches
+	* sepolgen: return and output constraint violation information
+	* audit2allow: one role/type pair per line
+
 1.1.7 2012-06-28
 	* Make use of setools optional within sepolgen
 	* We need to support files that have a + in them

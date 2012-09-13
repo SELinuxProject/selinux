@@ -1,3 +1,9 @@
+2.1.9 2012-09-13
+	* libsemanage: do not set soname needlessly
+	* libsemanage: remove PYTHONLIBDIR and ruby equivalent
+	* do boolean name substitution
+	* Fix segfault for building standard policies.
+
 2.1.8 2012-06-28
 	* remove build warning when build swig c files
 	* additional makefile support for rubywrap

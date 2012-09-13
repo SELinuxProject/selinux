@@ -1,3 +1,42 @@
+2.1.13 2012-09-13
+	* genhomedircon: manual page improvements
+	* setfiles/restorecon minor improvements
+	* run_init: If open_init_pty is not available then just use exec
+	* newrole: do not drop capabilities when newrole is run as
+	* restorecon: only update type by default
+	* scripts: Don't syslog setfiles changes on a fixfiles restore
+	* setfiles: do not syslog if no changes
+	* Disable user restorecond by default
+	* Make restorecon return 0 when a file has changed context
+	* setfiles: Fix process_glob error handling
+	* semanage: allow enable/disable under -m
+	* add .tx to gitignore
+	* translations: commit translations from Fedora community
+	* po: silence build process
+	* gui: Checking in policy to support polgengui and sepolgen.
+	* gui: polgen: search for systemd subpackage when generating policy
+	* gui: for exploring booleans
+	* gui: system-config-selinux gui
+	* Add Makefiles to support new gui code
+	* gui: remove lockdown wizard
+	* return equivalency records in fcontext customized
+	* semanage: option to not load new policy into kernel after
+	* sandbox: manpage update to describe standard types
+	* setsebool: -N should not reload policy on changes
+	* semodule: Add -N qualifier to no reload kernel policy
+	* gui: polgen: sort selinux types of user controls
+	* gui: polgen: follow symlinks and get the real path to
+	* gui: Fix missing error function
+	* setfiles: return errors when bad paths are given
+	* fixfiles: tell restorecon to ignore missing paths
+	* setsebool: error when setting multiple options
+	* semanage: use boolean subs.
+	* sandbox: Make sure Xephyr never listens on tcp ports
+	* sepolgen: return and output constraint violation information
+	* semanage: skip comments while reading external configuration files
+	* restorecond: relabel all mount runtime files in the restorecond example
+	* genhomedircon: dynamically create genhomedircon
+
 2.1.12 2012-06-28
 	* restorecond: wrong options should exit with non-zero error code
 	* restorecond: Add -h option to get usage command

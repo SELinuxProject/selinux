@@ -1,3 +1,7 @@
+2.1.11 2012-09-13
+	* fd leak reading policy
+	* check return code on ebitmap_set_bit
+
 2.1.10 2012-06-28
 	* sepolgen: We need to support files that have a + in them
 	* Android/MacOS X build support
