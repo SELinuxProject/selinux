@@ -8,10 +8,13 @@
 #include "avc_internal.h"
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
+static int selinux_enabled;
 
 static void avc_init_once(void)
 {
-	avc_open(NULL, 0);
+	selinux_enabled = is_selinux_enabled();
+	if (selinux_enabled == 1)
+		avc_open(NULL, 0);
 }
 
 int selinux_check_access(const char *scon, const char *tcon, const char *class, const char *perm, void *aux) {
@@ -21,10 +24,10 @@ int selinux_check_access(const char *scon, const char *tcon, const char *class, 
 	security_class_t sclass;
 	access_vector_t av;
 
-	if (is_selinux_enabled() == 0)
-		return 0;
-
 	__selinux_once(once, avc_init_once);
+
+	if (selinux_enabled != 1)
+		return 0;
 
 	rc = avc_context_to_sid(scon, &scon_id);
 	if (rc < 0)
