@@ -19,8 +19,10 @@ static int process_file(struct saved_data *data, const char *filename)
 	FILE *context_file;
 
 	context_file = fopen(filename, "r");
-	if (!context_file)
+	if (!context_file) {
+		fprintf(stderr, "Error opening %s: %s\n", filename, strerror(errno));
 		return -1;
+	}
 
 	line_num = 0;
 	while ((len = getline(&line_buf, &line_len, context_file)) != -1) {
@@ -58,8 +60,10 @@ static int process_file(struct saved_data *data, const char *filename)
 		}
 
 		rc = grow_specs(data);
-		if (rc)
+		if (rc) {
+			fprintf(stderr, "grow_specs failed: %s\n", strerror(errno));
 			return rc;
+		}
 
 		spec = &data->spec_arr[data->nspec];
 
@@ -81,9 +85,10 @@ static int process_file(struct saved_data *data, const char *filename)
 
 		regex_len = strlen(regex);
 		cp = anchored_regex = malloc(regex_len + 3);
-		if (!cp)
+		if (!cp) {
+			fprintf(stderr, "Malloc Failed: %s\n", strerror(errno));
 			return -1;
-
+		}
 		*cp++ = '^';
 		memcpy(cp, regex, regex_len);
 		cp += regex_len;
