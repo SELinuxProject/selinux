@@ -55,7 +55,6 @@ POTFILES = \
 	../gui/polgengui.py \
 	../gui/polgen.py \
 	../gui/portsPage.py \
-	../gui/selinux.tbl \
 	../gui/semanagePage.py \
 	../gui/statusPage.py \
 	../gui/system-config-selinux.glade \
