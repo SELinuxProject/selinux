@@ -53,6 +53,7 @@ bzip-blocksize	return BZIP_BLOCKSIZE;
 bzip-small	return BZIP_SMALL;
 "[load_policy]"   return LOAD_POLICY_START;
 "[setfiles]"      return SETFILES_START;
+"[sefcontext_compile]"      return SEFCONTEXT_COMPILE_START;
 "[verify module]" return VERIFY_MOD_START;
 "[verify linked]" return VERIFY_LINKED_START;
 "[verify kernel]" return VERIFY_KERNEL_START;

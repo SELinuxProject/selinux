@@ -58,7 +58,7 @@ static int parse_errors;
 }
 
 %token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED
-%token LOAD_POLICY_START SETFILES_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD IGNOREDIRS
+%token LOAD_POLICY_START SETFILES_START SEFCONTEXT_COMPILE_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD IGNOREDIRS
 %token BZIP_BLOCKSIZE BZIP_SMALL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
 %token PROG_PATH PROG_ARGS
@@ -230,6 +230,14 @@ command_start:
                                 YYABORT;
                         }
                 }
+        |       SEFCONTEXT_COMPILE_START {
+                        semanage_conf_external_prog_destroy(current_conf->sefcontext_compile);
+                        current_conf->sefcontext_compile = NULL;
+                        if (new_external_prog(&current_conf->sefcontext_compile) == -1) {
+                                parse_errors++;
+                                YYABORT;
+                        }
+                }
         ;
 
 verify_block:   verify_start external_opts BLOCK_END  {
@@ -308,6 +316,20 @@ static int semanage_conf_init(semanage_conf_t * conf)
 		return -1;
 	}
 
+	if ((conf->sefcontext_compile =
+	     calloc(1, sizeof(*(current_conf->sefcontext_compile)))) == NULL) {
+		return -1;
+	}
+	if (access("/sbin/sefcontext_compile", X_OK) == 0) {
+		conf->sefcontext_compile->path = strdup("/sbin/sefcontext_compile");
+	} else {
+		conf->sefcontext_compile->path = strdup("/usr/sbin/sefcontext_compile");
+	}
+	if ((conf->sefcontext_compile->path == NULL) ||
+	    (conf->sefcontext_compile->args = strdup("$@")) == NULL) {
+		return -1;
+	}
+
 	return 0;
 }
 
@@ -363,6 +385,7 @@ void semanage_conf_destroy(semanage_conf_t * conf)
 		free(conf->ignoredirs);
 		semanage_conf_external_prog_destroy(conf->load_policy);
 		semanage_conf_external_prog_destroy(conf->setfiles);
+		semanage_conf_external_prog_destroy(conf->sefcontext_compile);
 		semanage_conf_external_prog_destroy(conf->mod_prog);
 		semanage_conf_external_prog_destroy(conf->linked_prog);
 		semanage_conf_external_prog_destroy(conf->kernel_prog);

@@ -1100,6 +1100,17 @@ int semanage_split_fc(semanage_handle_t * sh)
 
 }
 
+static int sefcontext_compile(semanage_handle_t * sh, const char *path) {
+
+	int r;
+	if ((r = semanage_exec_prog(sh, sh->conf->sefcontext_compile, path, "")) != 0) {
+		ERR(sh, "sefcontext_compile returned error code %d. Compiling %s", r, path);
+		return -1;
+	}
+
+	return 0;
+}
+
 /* Actually load the contents of the current active directory into the
  * kernel.  Return 0 on success, -3 on error. */
 static int semanage_install_active(semanage_handle_t * sh)
@@ -1230,6 +1241,16 @@ static int semanage_install_active(semanage_handle_t * sh)
 	     semanage_exec_prog(sh, sh->conf->setfiles, store_pol,
 				store_fc)) != 0) {
 		ERR(sh, "setfiles returned error code %d.", r);
+		goto cleanup;
+	}
+
+	if (sefcontext_compile(sh, store_fc) != 0) {
+		goto cleanup;
+	}
+	if (sefcontext_compile(sh, store_fc_loc) != 0) {
+		goto cleanup;
+	}
+	if (sefcontext_compile(sh, store_fc_hd) != 0) {
 		goto cleanup;
 	}
 
@@ -1368,6 +1389,11 @@ int semanage_install_sandbox(semanage_handle_t * sh)
 	}
 	if (sh->conf->setfiles == NULL) {
 		ERR(sh, "No setfiles program specified in configuration file.");
+		goto cleanup;
+	}
+
+	if (sh->conf->sefcontext_compile == NULL) {
+		ERR(sh, "No sefcontext_compile program specified in configuration file.");
 		goto cleanup;
 	}
 

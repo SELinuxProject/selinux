@@ -46,6 +46,7 @@ typedef struct semanage_conf {
 	char *ignoredirs;	/* ";" separated of list for genhomedircon to ignore */
 	struct external_prog *load_policy;
 	struct external_prog *setfiles;
+	struct external_prog *sefcontext_compile;
 	struct external_prog *mod_prog, *linked_prog, *kernel_prog;
 } semanage_conf_t;
 
