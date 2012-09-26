@@ -617,12 +617,19 @@ static int cleanup_tmpdir(const char *tmpdir, const char *src,
 	free(cmdbuf); cmdbuf = NULL;
 
 	/* remove runtime temporary directory */
-	setfsuid(0);
+	if ((uid_t)setfsuid(0) != pwd->pw_uid) {
+		fprintf(stderr, _("Unable to switch to root to clear tmp dir\n"));
+		rc++;
+	}
+
 	if (rmdir(tmpdir) == -1)
 		fprintf(stderr, _("Failed to remove directory %s: %s\n"), tmpdir, strerror(errno));
-	setfsuid(pwd->pw_uid);
+	if ((uid_t)setfsuid(pwd->pw_uid) != 0) {
+		fprintf(stderr, _("unable to switch back to user after clearing tmp dir\n"));
+		rc++;
+	}
 
-	return 0;
+	return rc;
 }
 
 /**
@@ -642,7 +649,9 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 
 	/* get selinux context */
 	if (execcon) {
-		setfsuid(pwd->pw_uid);
+		if ((uid_t)setfsuid(pwd->pw_uid) != 0)
+			goto err;
+
 		if ((fd_s = open(src, O_RDONLY)) < 0) {
 			fprintf(stderr, _("Failed to open directory %s: %s\n"), src, strerror(errno));
 			goto err;
@@ -661,7 +670,8 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 		}
 
 		/* ok to not reach this if there is an error */
-		setfsuid(0);
+		if ((uid_t)setfsuid(0) != pwd->pw_uid)
+			goto err;
 	}
 
 	if (asprintf(&tmpdir, "/tmp/.sandbox-%s-XXXXXX", pwd->pw_name) == -1) {
@@ -716,14 +726,16 @@ static char *create_tmpdir(const char *src, struct stat *src_st,
 		}
 	}
 
-	setfsuid(pwd->pw_uid);
+	if ((uid_t)setfsuid(pwd->pw_uid) != 0)
+		goto err;
 
 	if (rsynccmd(src, tmpdir, &cmdbuf) < 0) {
 		goto err;
 	}
 
 	/* ok to not reach this if there is an error */
-	setfsuid(0);
+	if ((uid_t)setfsuid(0) != pwd->pw_uid)
+		goto err;
 
 	if (cmdbuf && spawn_command(cmdbuf, pwd->pw_uid) != 0) {
 		fprintf(stderr, _("Failed to populate runtime temporary directory\n"));
@@ -919,7 +931,8 @@ int main(int argc, char **argv) {
 	/* Changing fsuid is usually required when user-specified directory is
 	 * on an NFS mount.  It's also desired to avoid leaking info about
 	 * existence of the files not accessible to the user. */
-	setfsuid(uid);
+	if ((uid_t)setfsuid(uid) != 0)
+		return -1;
 
 	/* verify homedir and tmpdir */
 	if (homedir_s && (
@@ -928,7 +941,7 @@ int main(int argc, char **argv) {
 	if (tmpdir_s && (
 		verify_directory(tmpdir_s, NULL, &st_tmpdir_s) < 0 ||
 		check_owner_uid(uid, tmpdir_s, &st_tmpdir_s))) return -1;
-	setfsuid(0);
+	if ((uid_t)setfsuid(0) != uid) return -1;
 
 	/* create runtime tmpdir */
 	if (tmpdir_s && (tmpdir_r = create_tmpdir(tmpdir_s, &st_tmpdir_s,
@@ -962,7 +975,7 @@ int main(int argc, char **argv) {
 		}
 
 		/* assume fsuid==ruid after this point */
-		setfsuid(uid);
+		if ((uid_t)setfsuid(uid) != 0) goto childerr;
 
 		/* mount homedir and tmpdir, in this order */
 		if (homedir_s && seunshare_mount(homedir_s, pwd->pw_dir,
@@ -979,7 +992,7 @@ int main(int argc, char **argv) {
 				goto childerr;
 			}
 		}
-		
+
 		/* construct a new environment */
 		if ((LANG = getenv("LANG")) != NULL) {
 			if ((LANG = strdup(LANG)) == NULL) {
@@ -987,14 +1000,14 @@ int main(int argc, char **argv) {
 				goto childerr;
 			}
 		}
-		
+
 		if ((rc = clearenv()) != 0) {
 			perror(_("Failed to clear environment"));
 			goto childerr;
 		}
 		if (display)
 			rc |= setenv("DISPLAY", display, 1);
-		if (LANG) 
+		if (LANG)
 			rc |= setenv("LANG", LANG, 1);
 		rc |= setenv("HOME", pwd->pw_dir, 1);
 		rc |= setenv("SHELL", pwd->pw_shell, 1);
@@ -1008,7 +1021,7 @@ int main(int argc, char **argv) {
 
 		/* selinux context */
 		if (execcon && setexeccon(execcon) != 0) {
-			fprintf(stderr, _("Could not set exec context to %s.\n"), execcon);
+			fprintf(stderr, _("Could not set exec context to %s. %s\n"), execcon, strerror(errno));
 			goto childerr;
 		}
 
