@@ -24,6 +24,9 @@
 import pwd, grp, string, selinux, tempfile, os, re, sys, stat
 from semanage import *;
 PROGNAME = "policycoreutils"
+import sepolicy
+from sepolicy import boolean_desc, boolean_category, gen_bool_dict
+gen_bool_dict()
 import sepolgen.module as module
 from IPy import IP
 
@@ -122,39 +125,6 @@ class nulllogger:
 
 	def commit(self,success):
 		pass
-
-import xml.etree.ElementTree
-
-booleans_dict = {}
-try:
-       tree = xml.etree.ElementTree.parse("/usr/share/selinux/devel/policy.xml")
-       for l in  tree.findall("layer"):
-              for m in  l.findall("module"):
-                     for b in  m.findall("tunable"):
-                            desc = b.find("desc").find("p").text.strip("\n")
-                            desc = re.sub("\n", " ", desc)
-                            booleans_dict[b.get('name')] = (m.get("name"), b.get('dftval'), desc)
-                     for b in  m.findall("bool"):
-                            desc = b.find("desc").find("p").text.strip("\n")
-                            desc = re.sub("\n", " ", desc)
-                            booleans_dict[b.get('name')] = (m.get("name"), b.get('dftval'), desc)
-              for i in  tree.findall("bool"):
-                     desc = i.find("desc").find("p").text.strip("\n")
-                     desc = re.sub("\n", " ", desc)
-                     booleans_dict[i.get('name')] = (_("global"), i.get('dftval'), desc)
-       for i in  tree.findall("tunable"):
-              desc = i.find("desc").find("p").text.strip("\n")
-              desc = re.sub("\n", " ", desc)
-              booleans_dict[i.get('name')] = (_("global"), i.get('dftval'), desc)
-except IOError, e:
-       #print _("Failed to translate booleans.\n%s") % e
-       pass
-
-def boolean_desc(boolean):
-       if boolean in booleans_dict:
-              return _(booleans_dict[boolean][2])
-       else:
-              return boolean
 
 def validate_level(raw):
 	sensitivity = "s[0-9]*"
@@ -384,13 +354,7 @@ class permissiveRecords(semanageRecords):
                return l
 
 	def list(self, heading = 1, locallist = 0):
-		try:
-			import setools
-		except:
-			print "only able to list permissive types when setools is installed"
-			return
-
-		all = map(lambda y: y["name"], filter(lambda x: x["permissive"], setools.seinfo(setools.TYPE)))
+		all = map(lambda y: y["name"], filter(lambda x: x["permissive"], sepolicy.info(sepolicy.TYPE)))
 		if len(all) == 0:
 			return 
 
@@ -2120,10 +2084,7 @@ class booleanRecords(semanageRecords):
 
         def get_category(self, name):
 		name = selinux.selinux_boolean_sub(name)
-		if name in booleans_dict:
-			return _(booleans_dict[name][0])
-		else:
-			return _("unknown")
+		return boolean_category(name)
 
         def customized(self):
                l = []
