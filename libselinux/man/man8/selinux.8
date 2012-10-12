@@ -69,14 +69,27 @@ Many domains that are protected by SELinux also include SELinux man pages explai
 All files, directories, devices ... have a security context/label associated with them.  These context are stored in the extended attributes of the file system.
 Problems with SELinux often arise from the file system being mislabeled. This can be caused by booting the machine with a non SELinux kernel.  If you see an error message containing file_t, that is usually a good indicator that you have a serious problem with file system labeling.  
 
-The best way to relabel the file system is to create the flag file /.autorelabel and reboot.  system-config-securitylevel, also has this capability.  The restorcon/fixfiles commands are also available for relabeling files. 
+The best way to relabel the file system is to create the flag file /.autorelabel and reboot.  system-config-selinux, also has this capability.  The restorcon/fixfiles commands are also available for relabeling files. 
   
 .SH AUTHOR	
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
 
 .SH "SEE ALSO"
-booleans(8), setsebool(8), selinuxenabled(8), togglesebool(8), restorecon(8), setfiles(8), ftpd_selinux(8), named_selinux(8), rsync_selinux(8), httpd_selinux(8), nfs_selinux(8), samba_selinux(8), kerberos_selinux(8), nis_selinux(8), ypbind_selinux(8)
+booleans(8), setsebool(8), selinuxenabled(8), restorecon(8), setfiles(8), semanage(8), sepolicy(8)
+.br
 
+Every confined service on the system has a man page in the following format:
+.br
+
+.B <servicename>_selinux(8)
+
+For example, httpd has the 
+.B httpd_selinux(8) 
+man page.
+
+.B man -k selinux 
+
+Will list all SELinux man pages.
 
 .SH FILES
 /etc/selinux/config
