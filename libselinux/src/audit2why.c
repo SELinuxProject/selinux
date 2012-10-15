@@ -164,6 +164,9 @@ static PyObject *finish(PyObject *self __attribute__((unused)), PyObject *args) 
   
 	if (PyArg_ParseTuple(args,(char *)":finish")) {
 		int i = 0;
+		if (! avc)
+			Py_RETURN_NONE;
+
 		for (i = 0; i < boolcnt; i++) {
 			free(boollist[i]->name);
 			free(boollist[i]);
@@ -177,7 +180,7 @@ static PyObject *finish(PyObject *self __attribute__((unused)), PyObject *args) 
 		avc = NULL;
 		boollist = NULL;
 		boolcnt = 0;
-	  
+
 		/* Boilerplate to return "None" */
 		Py_RETURN_NONE;
 	}
