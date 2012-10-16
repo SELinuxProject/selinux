@@ -26,6 +26,7 @@ import sys
 import seobject
 import selinux
 from semanagePage import *;
+from subprocess import Popen, PIPE
 
 ##
 ## I18N
@@ -88,7 +89,7 @@ class modulesPage(semanagePage):
         self.filter=filter
         self.store.clear()
         try:
-            fd=os.popen("semodule -l")
+            fd = Popen("semodule -l", shell=True, stdout=PIPE).stdout
             l = fd.readlines()
             fd.close()
             for i in l:
@@ -105,7 +106,7 @@ class modulesPage(semanagePage):
 
     def new_module(self, args):
         try:
-            os.spawnl(os.P_NOWAIT, "/usr/share/system-config-selinux/polgengui.py")
+            Popen(["/usr/share/system-config-selinux/polgengui.py"])
         except ValueError, e:
             self.error(e.args[0])
 
