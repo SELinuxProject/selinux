@@ -241,6 +241,7 @@ class Sandbox:
            for f in files:
                   copyfile(f, homedir, self.__homedir)
                   copyfile(f, "/tmp", self.__tmpdir)
+                  copyfile(f, "/var/tmp", self.__tmpdir)
 
     def __setup_sandboxrc(self, wm = "/usr/bin/matchbox-window-manager -use_titlebar no"):
            execfile =self.__homedir + "/.sandboxrc"
