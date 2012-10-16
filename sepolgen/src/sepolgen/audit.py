@@ -38,8 +38,7 @@ def get_audit_boot_msgs():
     off=float(fd.read().split()[0])
     fd.close
     s = time.localtime(time.time() - off)
-    date = time.strftime("%D/%Y", s).split("/")
-    bootdate="%s/%s/%s" % (date[0], date[1], date[3])
+    bootdate = time.strftime("%x", s)
     boottime = time.strftime("%X", s)
     output = subprocess.Popen(["/sbin/ausearch", "-m", "AVC,USER_AVC,MAC_POLICY_LOAD,DAEMON_START,SELINUX_ERR", "-ts", bootdate, boottime],
                               stdout=subprocess.PIPE).communicate()[0]
