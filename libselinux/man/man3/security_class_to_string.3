@@ -3,7 +3,7 @@
 .\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2007
 .TH "security_class_to_string" "3" "30 Mar 2007" "" "SELinux API documentation"
 .SH "NAME"
-security_class_to_string, security_av_perm_to_string, string_to_security_class, string_to_av_perm, security_av_string \- convert
+security_class_to_string, security_av_perm_to_string, string_to_security_class, string_to_av_perm, security_av_string, mode_to_security_class \- convert
 between SELinux class and permission values and string names.
 
 print_access_vector \- display an access vector in human-readable form. 
@@ -20,6 +20,8 @@ print_access_vector \- display an access vector in human-readable form.
 .BI "int security_av_string(security_class_t " tclass ", access_vector_t " av ", char **" result ");"
 .sp
 .BI "security_class_t string_to_security_class(const char *" name ");"
+.sp
+.BI "security_class_t mode_to_security_class(mode_t " mode ");"
 .sp
 .BI "access_vector_t string_to_av_perm(security_class_t " tclass ", const char *" name ");"
 .sp
@@ -51,6 +53,11 @@ and should be freed by the caller using
 .B string_to_security_class
 returns the class value corresponding to the string name
 .IR name ,
+or zero if no such class exists.
+
+.B mode_to_security_class
+returns the class value corresponding to the specified 
+.IR mode ,
 or zero if no such class exists.
 
 .B string_to_av_perm
@@ -88,3 +95,4 @@ Eamon Walsh <ewalsh@tycho.nsa.gov>
 .BR selinux (8),
 .BR getcon (3),
 .BR getfilecon (3)
+.BR stat (3)

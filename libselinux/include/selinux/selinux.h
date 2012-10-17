@@ -360,6 +360,8 @@ extern int selinux_set_mapping(struct security_class_mapping *map);
 
 /* Common helpers */
 
+/* Convert between mode and security class values */
+extern security_class_t mode_to_security_class(mode_t mode);
 /* Convert between security class values and string names */
 extern security_class_t string_to_security_class(const char *name);
 extern const char *security_class_to_string(security_class_t cls);

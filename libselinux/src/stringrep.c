@@ -436,6 +436,27 @@ security_class_t string_to_security_class(const char *s)
 	return map_class(node->value);
 }
 
+security_class_t mode_to_security_class(mode_t m) {
+
+	if (S_ISREG(m))
+		return string_to_security_class("file");
+	if (S_ISDIR(m))
+		return string_to_security_class("dir");
+	if (S_ISCHR(m))
+		return string_to_security_class("chr_file");
+	if (S_ISBLK(m))
+		return string_to_security_class("blk_file");
+	if (S_ISFIFO(m))
+		return string_to_security_class("fifo_file");
+	if (S_ISLNK(m))
+		return string_to_security_class("lnk_file");
+	if (S_ISSOCK(m))
+		return string_to_security_class("sock_file");
+
+	errno=EINVAL;
+	return 0;
+}
+
 access_vector_t string_to_av_perm(security_class_t tclass, const char *s)
 {
 	struct discover_class_node *node;
