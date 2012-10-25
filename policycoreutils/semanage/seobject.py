@@ -1997,6 +1997,8 @@ class booleanRecords(semanageRecords):
 			self.modify_local = False
 
 	def __mod(self, name, value):
+                name = selinux.selinux_boolean_sub(name)
+
                 (rc, k) = semanage_bool_key_create(self.sh, name)
                 if rc < 0:
                        raise ValueError(_("Could not create a key for %s") % name)
@@ -2026,8 +2028,6 @@ class booleanRecords(semanageRecords):
 		semanage_bool_free(b)
 
 	def modify(self, name, value = None, use_file = False):
-                name = selinux.selinux_boolean_sub(name)
-
                 self.begin()
                 if use_file:
                        fd = open(name)
