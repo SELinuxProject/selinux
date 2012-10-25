@@ -3,11 +3,11 @@
 sandbox \- Run cmd under an SELinux sandbox
 .SH SYNOPSIS
 .B sandbox
-[-C] [-c] [ -d DPI ] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] cmd
+[-C] [-c] [-s] [ -d DPI ] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] cmd
 
 .br
 .B sandbox
-[-C] [-c] [ -d DPI ] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] -S
+[-C] [-c] [-s] [ -d DPI ] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] -S
 .br
 .SH DESCRIPTION
 .PP
@@ -38,6 +38,9 @@ Specify the MLS/MCS Security Level to run the sandbox with.  Defaults to random.
 .TP
 \fB\-M\fR
 Create a Sandbox with temporary files for $HOME and /tmp.
+.TP
+\fB\-s\fR  \fB\--shred\fR
+Shred temporary files created in $HOME and /tmp, before deleting.
 .TP
 \fB\-t type\fR
 Use alternate sandbox type, defaults to sandbox_t or sandbox_x_t for -X.

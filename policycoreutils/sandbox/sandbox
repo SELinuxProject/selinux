@@ -309,6 +309,9 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
         parser.add_option("-S", "--session", action="store_true",  dest="session", 
                           default=False,  help=_("run complete desktop session within sandbox"))
 
+        parser.add_option("-s", "--shred", action="store_true",  dest="shred", 
+                          default=False,  help=_("Shred content before tempory directories are removed"))
+
         parser.add_option("-X", dest="X_ind", 
                           action="callback", callback=self.__x_callback, 
                           default=False,  help=_("run X application within a sandbox"))
@@ -466,9 +469,20 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
                                 savefile(dest, i, self.__options.X_ind)
 
                   if self.__homedir and not self.__options.homedir: 
+                         if self.__options.shred:
+                                self.shred(self.__homedir)
                          shutil.rmtree(self.__homedir)
                   if self.__tmpdir and not self.__options.tmpdir:
+                         if self.__options.shred:
+                                self.shred(self.__homedir)
                          shutil.rmtree(self.__tmpdir)
+
+    def shred(self, path):
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                dest = root + "/" + f
+                subprocess.Popen(["/usr/bin/shred",dest]).wait()
+
     def main(self):
         try:
                self.__parse_options()
