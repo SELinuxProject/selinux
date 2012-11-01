@@ -254,21 +254,27 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 	if (rc >= sizeof(mmap_path))
 		return -1;
 
-	mmapfd = open(mmap_path, O_RDONLY);
+	mmapfd = open(mmap_path, O_RDONLY | O_CLOEXEC);
 	if (mmapfd < 0)
 		return -1;
 
 	rc = fstat(mmapfd, &mmap_stat);
-	if (rc < 0)
+	if (rc < 0) {
+		close(mmapfd);
 		return -1;
+	}
 
 	/* if mmap is old, ignore it */
-	if (mmap_stat.st_mtime < stat->st_mtime)
+	if (mmap_stat.st_mtime < stat->st_mtime) {
+		close(mmapfd);
 		return -1;
+	}
 
 	if (mmap_stat.st_mtime == stat->st_mtime &&
-	    mmap_stat.st_mtim.tv_nsec < stat->st_mtim.tv_nsec)
+	    mmap_stat.st_mtim.tv_nsec < stat->st_mtim.tv_nsec) {
+		close(mmapfd);
 		return -1;
+	}
 
 	/* ok, read it in... */
 	len = mmap_stat.st_size;
