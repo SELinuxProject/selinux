@@ -22,12 +22,18 @@
 #
 import signal
 import string
-import gtk
+import sys
+try:
+    import gtk
+except RuntimeError, e:
+    print "system-config-selinux:", e
+    print "This is a graphical application and requires DISPLAY to be set."
+    sys.exit (1)
+
 import gtk.glade
 import os
 import gobject
 import gnome
-import sys
 import statusPage
 import booleansPage
 import loginsPage
