@@ -100,16 +100,19 @@ static int match(const char *name, struct stat *sb, char **con)
 	else
 		return selabel_lookup_raw(r_opts->hnd, con, name, sb->st_mode);
 }
-static int restore(FTSENT *ftsent)
+static int restore(FTSENT *ftsent, int recurse)
 {
 	char *my_file = strdupa(ftsent->fts_path);
 	int ret = -1;
 	security_context_t curcon = NULL, newcon = NULL;
 	float progress;
+	if (match(my_file, ftsent->fts_statp, &newcon) < 0) {
+		if ((errno == ENOENT) && ((!recurse) || (r_opts->verbose)))
+			fprintf(stderr, "%s:  Warning no default label for %s\n", r_opts->progname, my_file);
 
-	if (match(my_file, ftsent->fts_statp, &newcon) < 0)
 		/* Check for no matching specification. */
 		return (errno == ENOENT) ? 0 : -1;
+	}
 
 	if (r_opts->progress) {
 		r_opts->count++;
@@ -275,7 +278,7 @@ err:
  * This function is called by fts on each file during
  * the directory traversal.
  */
-static int apply_spec(FTSENT *ftsent)
+static int apply_spec(FTSENT *ftsent, int recurse)
 {
 	if (ftsent->fts_info == FTS_DNR) {
 		fprintf(stderr, "%s:  unable to read directory %s\n",
@@ -283,7 +286,7 @@ static int apply_spec(FTSENT *ftsent)
 		return SKIP;
 	}
 	
-	int rc = restore(ftsent);
+	int rc = restore(ftsent, recurse);
 	if (rc == ERR) {
 		if (!r_opts->abort_on_error)
 			return SKIP;
@@ -343,7 +346,7 @@ static int process_one(char *name, int recurse_this_path)
 			}
 		}
 
-		rc = apply_spec(ftsent);
+		rc = apply_spec(ftsent, recurse_this_path);
 		if (rc == SKIP)
 			fts_set(fts_handle, ftsent, FTS_SKIP);
 		if (rc == ERR)

@@ -41,29 +41,27 @@ default file context, changing the user, role, range portion as well as the type
 .TP
 .B \-h, \-?
 display usage information and exit.
-.TP 
+.TP
 .B \-i
 ignore files that do not exist.
-.TP 
-.B \-R, \-r
-change files and directories file labels recursively (descend directories).
-.TP 
+.TP
 .B \-n
 don't change any file labels (passive check).
-.TP 
+.TP
 .B \-o outfilename
 save list of files with incorrect context in outfilename.
 .TP
 .B \-p
 show progress by printing * every STAR_COUNT files.  (If you relabel the entire OS, this will show you the percentage complete.)
-
 .TP
 .B \-R, \-r
 change files and directories file labels recursively (descend directories).
+.br
+.B Note: restorecon reports warnings on paths without default labels only if called non-recursively or in verbose mode.
 .TP
 .B \-v
 show changes in file labels, if type or role are going to be changed.
-.TP 
+.TP
 .B \-0
 the separator for the input items is assumed to be the null character
 (instead of the white space).  The quotes and the backslash characters are
@@ -85,7 +83,7 @@ operate recursively on directories.
 
 .SH "AUTHOR"
 This man page was written by Dan Walsh <dwalsh@redhat.com>.
-Some of the content of this man page was taken from the setfiles 
+Some of the content of this man page was taken from the setfiles
 man page written by Russell Coker <russell@coker.com.au>.
 The program was written by Dan Walsh <dwalsh@redhat.com>.
 
