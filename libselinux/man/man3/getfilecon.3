@@ -7,9 +7,15 @@ getfilecon, fgetfilecon, lgetfilecon \- get SELinux security context of a file
 .sp
 .BI "int getfilecon(const char *" path ", security_context_t *" con );
 .sp
+.BI "int getfilecon_raw(const char *" path ", security_context_t *" con );
+.sp
 .BI "int lgetfilecon(const char *" path ", security_context_t *" con );
 .sp
+.BI "int lgetfilecon_raw(const char *" path ", security_context_t *" con );
+.sp
 .BI "int fgetfilecon(int "fd ", security_context_t *" con );
+.sp
+.BI "int fgetfilecon_raw(int "fd ", security_context_t *" con );
 .
 .SH "DESCRIPTION"
 .BR getfilecon ()
@@ -28,6 +34,13 @@ is identical to
 only the open file pointed to by filedes (as returned by
 .BR open (2))
 is interrogated in place of path.
+
+.BR getfilecon_raw (),
+.BR lgetfilecon_raw ()
+and
+.BR fgetfilecon_raw ()
+behave identically to their non-raw counterparts but do not perform context
+translation.
 
 The returned context should be freed with
 .BR freecon (3)

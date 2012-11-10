@@ -7,9 +7,15 @@ setfilecon, fsetfilecon, lsetfilecon \- set SELinux security context of a file
 .sp
 .BI "int setfilecon(const char *" path ", security_context_t "con );
 .sp
+.BI "int setfilecon_raw(const char *" path ", security_context_t "con );
+.sp
 .BI "int lsetfilecon(const char *" path ", security_context_t "con );
 .sp
+.BI "int lsetfilecon_raw(const char *" path ", security_context_t "con );
+.sp
 .BI "int fsetfilecon(int "fd ", security_context_t "con );
+.sp
+.BI "int fsetfilecon_raw(int "fd ", security_context_t "con );
 .
 .SH "DESCRIPTION"
 .BR setfilecon ()
@@ -24,6 +30,13 @@ is identical to setfilecon, only the open file pointed to by filedes (as
 returned by
 .BR open (2))
 has it's context set in place of path.
+
+.BR setfilecon_raw (),
+.BR lsetfilecon_raw (),
+and
+.BR fsetfilecon_raw ()
+behave identically to their non-raw counterparts but do not perform context
+translation.
 .
 .SH "RETURN VALUE"
 On success, zero is returned. On failure, \-1 is returned and

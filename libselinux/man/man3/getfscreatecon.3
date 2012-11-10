@@ -7,7 +7,11 @@ getfscreatecon, setfscreatecon \- get or set the SELinux security context used f
 .sp
 .BI "int getfscreatecon(security_context_t *" con );
 .sp
+.BI "int getfscreatecon_raw(security_context_t *" con );
+.sp
 .BI "int setfscreatecon(security_context_t "context );
+.sp
+.BI "int setfscreatecon_raw(security_context_t "context );
 .
 .SH "DESCRIPTION"
 .BR getfscreatecon ()
@@ -32,6 +36,12 @@ so a program doesn't need to explicitly sanitize it upon startup.
 can be applied prior to library
 functions that internally perform an file creation,
 in order to set an file context on the objects.
+
+.BR getfscreatecon_raw ()
+and
+.BR setfscreatecon_raw ()
+behave identically to their non-raw counterparts but do not perform context
+translation.
 
 .B Note:
 Signal handlers that perform a

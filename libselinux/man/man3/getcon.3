@@ -13,17 +13,27 @@ setcon \- set current security context of a process
 .sp
 .BI "int getcon(security_context_t *" context );
 .sp
+.BI "int getcon_raw(security_context_t *" context );
+.sp
 .BI "int getprevcon(security_context_t *" context );
+.sp
+.BI "int getprevcon_raw(security_context_t *" context );
 .sp
 .BI "int getpidcon(pid_t " pid ", security_context_t *" context );
 .sp
+.BI "int getpidcon_raw(pid_t " pid ", security_context_t *" context );
+.sp
 .BI "int getpeercon(int " fd ", security_context_t *" context );
+.sp
+.BI "int getpeercon_raw(int " fd ", security_context_t *" context );
 .sp
 .BI "void freecon(security_context_t "con );
 .sp
 .BI "void freeconary(security_context_t *" con );
 .sp
 .BI "int setcon(security_context_t " context );
+.sp
+.BI "int setcon_raw(security_context_t " context );
 .
 .SH "DESCRIPTION"
 .BR getcon ()
@@ -91,6 +101,15 @@ operation, ptrace permission will be revalidated against the new
 context and the
 .BR setcon ()
 will fail if it is not allowed by policy.
+
+.BR getcon_raw (),
+.BR getprevcon_raw (),
+.BR getpidcon_raw (),
+.BR getpeercon_raw ()
+and
+.BR setcon_raw ()
+behave identically to their non-raw counterparts but do not perform context
+translation.
 .
 .SH "RETURN VALUE"
 On error \-1 is returned.  On success 0 is returned.

@@ -7,7 +7,11 @@ getkeycreatecon, setkeycreatecon \- get or set the SELinux security context used
 .sp
 .BI "int getkeycreatecon(security_context_t *" con );
 .sp
+.BI "int getkeycreatecon_raw(security_context_t *" con );
+.sp
 .BI "int setkeycreatecon(security_context_t "context );
+.sp
+.BI "int setkeycreatecon_raw(security_context_t "context );
 .
 .SH "DESCRIPTION"
 .BR getkeycreatecon ()
@@ -32,6 +36,12 @@ so a program doesn't need to explicitly sanitize it upon startup.
 can be applied prior to library
 functions that internally perform an file creation,
 in order to set an file context on the objects.
+
+.BR getkeycreatecon_raw ()
+and
+.BR setkeycreatecon_raw ()
+behave identically to their non-raw counterparts but do not perform context
+translation.
 
 .B Note:
 Signal handlers that perform a

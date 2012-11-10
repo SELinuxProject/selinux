@@ -11,19 +11,35 @@ the SELinux policy database in the kernel
 .sp
 .BI "int security_compute_av(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
+.BI "int security_compute_av_raw(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.sp
 .BI "int security_compute_av_flags(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.sp
+.BI "int security_compute_av_flags_raw(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
 .BI "int security_compute_create(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
 .sp
+.BI "int security_compute_create_raw(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
+.sp
 .BI "int security_compute_create_name(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", const char *"objname ", security_context_t *" newcon );
+.sp
+.BI "int security_compute_create_name_raw(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", const char *"objname ", security_context_t *" newcon );
 .sp
 .BI "int security_compute_relabel(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
 .sp
+.BI "int security_compute_relabel_raw(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
+.sp
 .BI "int security_compute_member(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
+.sp
+.BI "int security_compute_member_raw(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", security_context_t *" newcon );
 .sp
 .BI "int security_compute_user(security_context_t "scon ", const char *" username ", security_context_t **" con );
 .sp
+.BI "int security_compute_user_raw(security_context_t "scon ", const char *" username ", security_context_t **" con );
+.sp
 .BI "int security_get_initial_context(const char *" name ", security_context_t " con );
+.sp
+.BI "int security_get_initial_context_raw(const char *" name ", security_context_t " con );
 .sp
 .BI "int selinux_check_access(const security_context_t " scon ", const security_context_t " tcon ", const char *" class ", const char *" perm ", void *" auditdata);
 .sp
@@ -89,6 +105,18 @@ source context. It is mainly used by
 .BR security_get_initial_context ()
 is used to get the context of a kernel initial security identifier specified by 
 .I name
+
+.BR security_compute_av_raw (),
+.BR security_compute_av_flags_raw (),
+.BR \%security_compute_create_raw (),
+.BR \%security_compute_create_name_raw (),
+.BR \%security_compute_relabel_raw (),
+.BR \%security_compute_member_raw (),
+.BR \%security_compute_user_raw ()
+and
+.BR \%security_get_initial_context_raw ()
+behave identically to their non-raw counterparts but do not perform context
+translation.
 
 .BR selinux_check_access ()
 is used to check if the source context has the access permission for the specified class on the target context.

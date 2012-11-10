@@ -9,7 +9,11 @@ rpm_execcon \- run a helper for rpm in an appropriate security context
 .sp
 .BI "int getexeccon(security_context_t *" context );
 .sp
+.BI "int getexeccon_raw(security_context_t *" context );
+.sp
 .BI "int setexeccon(security_context_t "context );
+.sp
+.BI "int setexeccon_raw(security_context_t "context );
 .sp
 .BI "int rpm_execcon(unsigned int " verified ", const char *" filename ", char *const " argv "[] , char *const " envp "[]);
 .
@@ -45,6 +49,12 @@ e.g.
 .BR execv *(3),
 .BR popen (3),
 in order to set an exec context for that operation.  
+
+.BR getexeccon_raw ()
+and
+.BR setexeccon_raw ()
+behave identically to their non-raw counterparts but do not perform context
+translation.
 
 .B Note:
 Signal handlers that perform an
