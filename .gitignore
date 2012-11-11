@@ -19,6 +19,8 @@
 *.rej
 *.pyc
 cscope.*
-
+.#*
+\#*
+.*.swp
 # Failsafes
 !.gitignore
