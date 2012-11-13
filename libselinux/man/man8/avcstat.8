@@ -1,31 +1,35 @@
 .TH "avcstat" "8" "18 Nov 2004" "dwalsh@redhat.com" "SELinux Command Line documentation"
 .SH "NAME"
 avcstat \- Display SELinux AVC statistics
-
+.
 .SH "SYNOPSIS"
 .B avcstat
-.I [-c] [-f status_file] [interval]
-
+.RB [ \-c ]
+.RB [ \-f
+.IR status_file ]
+.RI [ interval ]
+.
 .SH "DESCRIPTION"
-.B avcstat 
-
-Display SELinux AVC statistics.  If the interval parameter is specified, the
-program will loop, displaying updated statistics every 'interval' seconds.
+Display SELinux AVC statistics.  If the
+.I interval
+parameter is specified, the program will loop, displaying updated
+statistics every
+.I interval
+seconds.
 Relative values are displayed by default. 
-
+.
 .SH OPTIONS
 .TP
 .B \-c
 Display the cumulative values.
-
 .TP
 .B \-f
-Specifies the location of the AVC statistics file, defaulting to '/selinux/avc/cache_stats'.
-
-.SH "SEE ALSO"
-selinux(8)
-
+Specifies the location of the AVC statistics file, defaulting to
+.IR /selinux/avc/cache_stats .
+.
 .SH AUTHOR	
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
 The program was written by James Morris <jmorris@redhat.com>.
-
+.
+.SH "SEE ALSO"
+.BR selinux (8)

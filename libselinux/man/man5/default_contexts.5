@@ -1,8 +1,7 @@
 .TH "default_contexts" "5" "28-Nov-2011" "Security Enhanced Linux" "SELinux configuration"
-
 .SH "NAME"
-default_contexts \- The SELinux default contexts configuration file.
-
+default_contexts \- The SELinux default contexts configuration file
+.
 .SH "DESCRIPTION"
 The default contexts configuration file \fIdefault_contexts\fR contains entries that allow SELinux-aware login applications such as
 .BR PAM "(8) "
@@ -32,7 +31,7 @@ The default context configuration file path for the active policy is returned by
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).
-
+.
 .SH "FILE FORMAT"
 Each line in the default configuration file consists of the following:
 .RS
@@ -50,7 +49,7 @@ This consists of a \fIrole\fB:\fItype\fR[\fB:\fIrange\fR] entry that represents 
 This consists of one or more \fIrole\fB:\fItype\fR[\fB:\fIrange\fR] entries that represent the user login process context defined in the policy.
 .RE
 .RE
-
+.
 .SH "EXAMPLE"
 # ./contexts/default_contexts
 .br
@@ -65,6 +64,8 @@ system_r:sshd_t:s0			 user_r:user_t:s0
 system_r:sulogin_t:s0		 sysadm_r:sysadm_t:s0
 .br
 system_r:xdm_t:s0			 user_r:user_t:s0
-
+.
 .SH "SEE ALSO"
+.ad l
+.nh
 .BR selinux "(8), " selinux_default_contexts_path "(3), " PAM "(8), " selinux_default_type_path "(3), " get_default_context "(3), " get_ordered_context_list "(3), " get_ordered_context_list_with_level "(3), " get_default_context_with_level "(3), " get_default_context_with_role "(3), " get_default_context_with_rolelevel "(3), " query_user_context "(3), " manual_user_enter_context "(3), " selinux_config "(5) "

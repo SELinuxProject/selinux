@@ -1,65 +1,59 @@
 .TH "matchpathcon" "3" "21 November 2009" "sds@tycho.nsa.gov" "SELinux API documentation"
 .SH "NAME"
-matchpathcon, matchpathcon_index \- get the default SELinux security context for the specified path from the file contexts configuration.
-
+matchpathcon, matchpathcon_index \- get the default SELinux security context for the specified path from the file contexts configuration
+.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
-
 .BI "int matchpathcon_init(const char *" path ");"
-
+.sp
 .BI "int matchpathcon_init_prefix(const char *" path ", const char *" subset ");"
-
+.sp
 .BI "int matchpathcon_fini(void);"
 .sp
-
 .BI "int matchpathcon(const char *" path ", mode_t " mode ", security_context_t *" con ");
 .sp
-
-.BI "int matchpathcon_index(const char *" name ", mode_t " mode ", security_context_t * " con ");"
-
+.BI "int matchpathcon_index(const char *" name ", mode_t " mode ", security_context_t *" con ");"
+.
 .SH "DESCRIPTION"
-.B matchpathcon_init
+.BR matchpathcon_init ()
 loads the file contexts configuration specified by
 .I path
 into memory for use by subsequent 
-.B matchpathcon 
+.BR matchpathcon ()
 calls.  If
 .I path
 is NULL, then the active file contexts configuration is loaded by default,
 i.e. the path returned by 
-.B selinux_file_context_path(3).
+.BR selinux_file_context_path (3).
 Unless the 
 .B MATCHPATHCON_BASEONLY 
 flag has been set via 
-.B set_matchpathcon_flags(3),
+.BR \%set_matchpathcon_flags (3),
 files with the same path prefix but a 
-.B .homedirs
+.B \%.homedirs
 and
 .B .local
 suffix are also looked up and loaded if present.  These files provide
 dynamically generated entries for user home directories and for local
 customizations.
 
-.sp
-.B matchpathcon_init_prefix
+.BR matchpathcon_init_prefix ()
 is the same as
-.B matchpathcon_init
+.BR matchpathcon_init ()
 but only loads entries with regular expressions that have stems prefixed
 by
-.I prefix.
+.I \%prefix.
 
-.sp
-.B matchpathcon_fini
+.BR matchpathcon_fini ()
 frees the memory allocated by a prior call to
-.B matchpathcon_init.
+.BR matchpathcon_init. ()
 This function can be used to free and reset the internal state between multiple 
-.B matchpathcon_init 
+.BR matchpathcon_init ()
 calls, or to free memory when finished using 
-.B matchpathcon.
+.BR matchpathcon ().
 
-.sp
-.B matchpathcon 
+.BR matchpathcon ()
 matches the specified pathname and mode against the file contexts
 configuration and sets the security context 
 .I con 
@@ -67,7 +61,7 @@ to refer to the
 resulting context. The caller must free the returned security context 
 .I con
 using
-.B freecon(3)
+.BR freecon (3)
 when finished using it.
 .I mode
 can be 0 to disable mode matching, but
@@ -76,23 +70,23 @@ Only the file format bits (i.e. the file type) of the
 .I mode 
 are used.
 If 
-.B matchpathcon_init
+.BR matchpathcon_init ()
 has not already been called, then this function will call it upon
 its first invocation with a NULL
 .I path,
 defaulting to the active file contexts configuration.
-.sp
 
-.B matchpathcon_index
+.BR matchpathcon_index ()
 is the same as
-.B matchpathcon
+.BR matchpathcon ()
 but returns a specification index that can later be used in a
-.B matchpathcon_filespec_add(3)
+.BR matchpathcon_filespec_add (3)
 call.
-.sp
-
+.
 .SH "RETURN VALUE"
 Returns zero on success or \-1 otherwise.
-
+.
 .SH "SEE ALSO"
+.ad l
+.nh
 .BR selinux "(8), " set_matchpathcon_flags "(3), " set_matchpathcon_invalidcon "(3), " set_matchpathcon_printf "(3), " matchpathcon_filespec_add "(3), " matchpathcon_checkmatches "(3), " freecon "(3), " setfilecon "(3), " setfscreatecon "(3)"

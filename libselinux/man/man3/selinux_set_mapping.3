@@ -3,7 +3,8 @@
 .\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2008
 .TH "selinux_set_mapping" "3" "12 Jun 2008" "" "SELinux API documentation"
 .SH "NAME"
-selinux_set_mapping \- establish dynamic object class and permission mapping.
+selinux_set_mapping \- establish dynamic object class and permission mapping
+.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
@@ -15,9 +16,9 @@ struct security_class_mapping {
 .fi
 .sp
 .BI "int selinux_set_mapping(struct security_class_mapping *" map ");"
-
+.
 .SH "DESCRIPTION"
-.B selinux_set_mapping
+.BR selinux_set_mapping ()
 establishes a mapping from a user-provided ordering of object classes and permissions to the numbers actually used by the loaded system policy.  Use of this function is highly preferred over the generated constants in the libselinux header files, as this method allows the policy's class and permission values to change over time.
 
 After the mapping is established, all libselinux functions that operate on class and permission values take the user-provided numbers, which are determined as follows:
@@ -33,12 +34,12 @@ field should refer to the string name of an object class, and the corresponding
 field should refer to an array of permission bit names terminated by a NULL string.
 
 The object classes named in the mapping and the bit indexes of each set of permission bits named in the mapping are numbered in order starting from 1.  These numbers are the values that should be passed to subsequent libselinux calls.
-
+.
 .SH "RETURN VALUE"
-Zero is returned on success.  On error, -1 is returned and
+Zero is returned on success.  On error, \-1 is returned and
 .I errno
 is set appropriately.
-
+.
 .SH "ERRORS"
 .TP
 .B EINVAL
@@ -46,7 +47,7 @@ One of the class or permission names requested in the mapping is not present in 
 .TP
 .B ENOMEM
 An attempt to allocate memory failed.
-
+.
 .SH "EXAMPLE"
 .RS
 .ta 4n 10n
@@ -78,10 +79,10 @@ and
 (for the 
 .B file
 class) will be identified by 1, 2, 4, and 8 respectively.  Classes and permissions not listed in the mapping cannot be used.
-
+.
 .SH "AUTHOR"
 Eamon Walsh <ewalsh@tycho.nsa.gov>
-
+.
 .SH "SEE ALSO"
 .BR avc_open (8),
 .BR selinux (8)

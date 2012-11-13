@@ -1,8 +1,7 @@
 .TH "secolor.conf" "5" "08 April 2011" "SELinux API documentation"
-
 .SH "NAME"
-secolor.conf \- The SELinux color configuration file.
-
+secolor.conf \- The SELinux color configuration file
+.
 .SH "DESCRIPTION"
 This optional file controls the color to be associated to the context components associated to the 
 .I raw
@@ -15,7 +14,7 @@ obtains this color information from the active policy
 .B secolor.conf
 file as returned by 
 .BR selinux_colors_path "(3)."
-
+.
 .SH "FILE FORMAT"
 The file format is as follows:
 .RS
@@ -86,7 +85,7 @@ A
 .I color_mask
 may also be used.
 .RE
-
+.
 .SH "EXAMPLES"
 Example 1 entries are:
 .RS
@@ -112,17 +111,17 @@ role * = white black
 .br
 type * = tan orange
 .br
-range s0-s0:c0.c1023 = black green
+range s0\-s0:c0.c1023 = black green
 .br
-range s1-s1:c0.c1023 = white green
+range s1\-s1:c0.c1023 = white green
 .br
-range s3-s3:c0.c1023 = black tan
+range s3\-s3:c0.c1023 = black tan
 .br
-range s5-s5:c0.c1023 = white blue
+range s5\-s5:c0.c1023 = white blue
 .br
-range s7-s7:c0.c1023 = black red
+range s7\-s7:c0.c1023 = black red
 .br
-range s9-s9:c0.c1023 = black orange
+range s9\-s9:c0.c1023 = black orange
 .br
 range s15:c0.c1023   = black yellow
 .RE
@@ -174,8 +173,6 @@ role *            = black white
 .br
 type *            = black white
 .RE
-
+.
 .SH "SEE ALSO"
 .BR selinux "(8), " selinux_raw_context_to_color "(3), " selinux_colors_path "(3)"
-
-

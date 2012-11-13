@@ -1,8 +1,7 @@
 .TH "booleans" "5" "28-Nov-2011" "Security Enhanced Linux" "SELinux configuration"
-
 .SH "NAME"
-booleans \- The SELinux booleans configuration files.
-
+booleans \- The SELinux booleans configuration files
+.
 .SH "DESCRIPTION"
 The \fIbooleans\fR file, if present contains booleans to support a specific distribution.
 .sp
@@ -36,7 +35,7 @@ Looks for a \fIbooleans\fR and/or \fIbooleans.local\fR file at \fBselinux_boolea
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).
-
+.
 .SH "FILE FORMAT"
 Both boolean files have the same format and contain one or more boolean names and their value.
 .sp
@@ -69,11 +68,13 @@ file (see
 .BR selinux_config "(5)), then " selinux_mkload_policy "(3) will check for a "
 .I booleans.local
 file in the
-.B selinux_booleans_path
+.BR selinux_booleans_path (3)
 and also a
 .I local.users
 file (see
 .BR local.users "(5)) in the " selinux_users_path "(3). "
-
+.
 .SH "SEE ALSO"
+.ad l
+.nh
 .BR selinux "(8), " booleans "(8), " setsebool "(8), " semanage "(8), " selinux_booleans_path "(3), " security_set_boolean_list "(3), " security_load_booleans "(3), " selinux_mkload_policy "(3), " selinux_users_path "(3), " selinux_config "(5), " local.users "(5) "

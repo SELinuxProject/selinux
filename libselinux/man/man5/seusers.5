@@ -1,8 +1,7 @@
 .TH "seusers" "5" "28-Nov-2011" "Security Enhanced Linux" "SELinux configuration"
-
 .SH "NAME"
-seusers \- The SELinux GNU/Linux user to SELinux user mapping configuration file.
-
+seusers \- The SELinux GNU/Linux user to SELinux user mapping configuration file
+.
 .SH "DESCRIPTION"
 The
 .I seusers
@@ -17,7 +16,7 @@ will return the active policy path to this file. The default SELinux users mappi
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).
 .sp
 .BR getseuserbyname "(3) reads this file to map a GNU/Linux user or group to an SELinux user. "
-
+.
 .SH "FILE FORMAT"
 Each line of the
 .I seusers
@@ -44,19 +43,21 @@ The SELinux  user identity.
 The optional level or range for an MLS/MCS policy.
 .RE
 .RE
-
+.
 .SH "EXAMPLE"
 # ./seusers
 .br
 system_u:system_u:s0\-s15:c0.c255
 .br
-root:root:s0-s15:c0.c255
+root:root:s0\-s15:c0.c255
 .br
 fred:user_u:s0
 .br
 __default__:user_u:s0
 .br
 %user_group:user_u:s0
-
+.
 .SH "SEE ALSO"
+.ad l
+.nh
 .BR selinux "(8), " PAM "(8), " selinux_usersconf_path "(3), " getseuserbyname "(3), " selinux_config "(5) "

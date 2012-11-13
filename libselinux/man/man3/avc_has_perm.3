@@ -3,10 +3,11 @@
 .\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2004
 .TH "avc_has_perm" "3" "27 May 2004" "" "SELinux API documentation"
 .SH "NAME"
-avc_has_perm, avc_has_perm_noaudit, avc_audit, avc_entry_ref_init \- obtain and audit SELinux access decisions.
+avc_has_perm, avc_has_perm_noaudit, avc_audit, avc_entry_ref_init \- obtain and audit SELinux access decisions
+.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
-
+.br
 .B #include <selinux/avc.h>
 .sp
 .BI "void avc_entry_ref_init(struct avc_entry_ref *" aeref ");"
@@ -14,32 +15,33 @@ avc_has_perm, avc_has_perm_noaudit, avc_audit, avc_entry_ref_init \- obtain and 
 .BI "int avc_has_perm(security_id_t " ssid ", security_id_t " tsid ,
 .in +\w'int avc_has_perm('u
 .BI "security_class_t " tclass ", access_vector_t " requested ,
-
+.br
 .BI "struct avc_entry_ref *" aeref ", void *" auditdata ");"
 .in
 .sp
 .BI "int avc_has_perm_noaudit(security_id_t " ssid ", security_id_t " tsid ,
 .in +\w'int avc_has_perm('u
 .BI "security_class_t " tclass ", access_vector_t " requested ,
-
+.br
 .BI "struct avc_entry_ref *" aeref ", struct av_decision *" avd ");"
 .in
 .sp
 .BI "void avc_audit(security_id_t " ssid ", security_id_t " tsid ,
 .in +\w'void avc_audit('u
 .BI "security_class_t " tclass ", access_vector_t " requested ,
-
+.br
 .BI "struct av_decision *" avd ", int " result ", void *" auditdata ");"
 .in
+.
 .SH "DESCRIPTION"
-.B avc_entry_ref_init
+.BR avc_entry_ref_init ()
 initializes an
 .B avc_entry_ref
 structure; see
 .B ENTRY REFERENCES
 below.  This function may be implemented as a macro.
 
-.B avc_has_perm
+.BR avc_has_perm ()
 checks whether the 
 .I requested
 permissions are granted
@@ -55,19 +57,19 @@ and updating
 if non-NULL, to refer to a cache entry with the resulting decision.  The granting or denial of permissions is audited in accordance with the policy.  The
 .I auditdata
 parameter is for supplemental auditing; see
-.B avc_audit
+.BR avc_audit ()
 below.
 
-.B avc_has_perm_noaudit
+.BR avc_has_perm_noaudit ()
 behaves as
-.B avc_has_perm
+.BR avc_has_perm ()
 without producing an audit message.  The access decision is returned in
 .I avd
 and can be passed to
-.B avc_audit
+.BR avc_audit ()
 explicitly.
 
-.B avc_audit
+.BR avc_audit ()
 produces an audit message for the access query represented by
 .IR ssid ,
 .IR tsid ,
@@ -77,7 +79,7 @@ and
 with a decision represented by
 .IR avd .
 Pass the value returned by
-.B avc_has_perm_noaudit
+.BR avc_has_perm_noaudit ()
 as
 .IR result .
 The
@@ -86,7 +88,7 @@ parameter is passed to the user-supplied
 .B func_audit
 callback and can be used to add supplemental information to the audit message; see
 .BR avc_init (3).
-
+.
 .SH "ENTRY REFERENCES"
 Entry references can be used to speed cache performance for repeated queries on the same subject and target.  The userspace AVC will check the
 .I aeref
@@ -97,14 +99,14 @@ will be updated to reference the cache entry for that query.  A subsequent query
 After declaring an
 .B avc_entry_ref
 structure, use
-.B avc_entry_ref_init
+.BR avc_entry_ref_init ()
 to initialize it before passing it to
-.B avc_has_perm
+.BR avc_has_perm ()
 or
-.B avc_has_perm_noaudit
+.BR \%avc_has_perm_noaudit ()
 for the first time.
 Using an uninitialized structure will produce undefined behavior.
-
+.
 .SH "RETURN VALUE"
 If requested permissions are granted, zero is returned.  If requested permissions are denied or an error occured, \-1 is returned and
 .I errno
@@ -113,9 +115,9 @@ is set appropriately.
 In permissive mode, zero will be returned and
 .I errno
 unchanged even if permissions were denied.
-.B avc_has_perm
+.BR avc_has_perm ()
 will still produce an audit message in this case.
-
+.
 .SH "ERRORS"
 .TP
 .B EACCES
@@ -132,7 +134,7 @@ are not recognized by the currently loaded policy.
 .TP
 .B ENOMEM
 An attempt to allocate memory failed.
-
+.
 .SH "NOTES"
 Internal errors encountered by the userspace AVC may cause certain values of
 .I errno
@@ -142,14 +144,16 @@ or
 .BR EINVAL .
 Make sure that userspace object managers are granted appropriate access to
 netlink by the policy.
-
+.
 .SH "AUTHOR"
 Eamon Walsh <ewalsh@tycho.nsa.gov>
-
+.
 .SH "SEE ALSO"
+.ad l
+.nh
 .BR avc_init (3),
 .BR avc_context_to_sid (3),
 .BR avc_cache_stats (3),
 .BR avc_add_callback (3),
-.BR security_compute_av (3)
-.BR selinux(8)
+.BR security_compute_av (3),
+.BR selinux (8)

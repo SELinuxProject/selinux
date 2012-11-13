@@ -1,8 +1,7 @@
 .TH "failsafe_context" "5" "28-Nov-2011" "Security Enhanced Linux" "SELinux configuration"
-
 .SH "NAME"
-failsafe_context \- The SELinux fail safe context configuration file.
-
+failsafe_context \- The SELinux fail safe context configuration file
+.
 .SH "DESCRIPTION"
 The
 .I failsafe_context
@@ -37,7 +36,7 @@ The following functions read this file from the active policy path if they canno
 .br
 .BR manual_user_enter_context "(3) "
 .RE
-
+.
 .SH "FILE FORMAT"
 The file consists of a single line entry as follows:
 .RS
@@ -53,11 +52,13 @@ Where:
 A role, type and optional range (for MCS/MLS), separated by colons (:) to form a valid login process context for an administrator to access the system.
 .RE
 .RE
-
+.
 .SH "EXAMPLE"
 # ./contexts/failsafe_context
 .br
 unconfined_r:unconfined_t:s0
-
+.
 .SH "SEE ALSO"
+.ad l
+.nh
 .BR selinux "(8), " selinux_failsafe_context_path "(3), " PAM "(8), " selinux_default_type_path "(3), " get_default_context "(3), " get_ordered_context_list "(3), " get_ordered_context_list_with_level "(3), " get_default_context_with_level "(3), " get_default_context_with_role "(3), " get_default_context_with_rolelevel "(3), " query_user_context "(3), " manual_user_enter_context "(3), " selinux_config "(5) "

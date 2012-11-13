@@ -1,8 +1,7 @@
 .TH "securetty_types" "5" "28-Nov-2011" "Security Enhanced Linux" "SELinux configuration"
-
 .SH "NAME"
-securetty_types \- The SELinux secure tty type configuration file.
-
+securetty_types \- The SELinux secure tty type configuration file
+.
 .SH "DESCRIPTION"
 The
 .I securetty_types
@@ -20,7 +19,7 @@ Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIco
 .sp
 SELinux-aware applications such as
 .BR newrole "(1) use this information to check the status of a tty. "
-
+.
 .SH "FILE FORMAT"
 Each line in the file consists of the following entry:
 .sp
@@ -30,7 +29,7 @@ Each line in the file consists of the following entry:
 One or more type entries that are defined in the policy for secure tty devices.
 .RE
 .RE
-
+.
 .SH "EXAMPLE"
 # ./contexts/securetty_types
 .br
@@ -39,6 +38,8 @@ sysadm_tty_device_t
 user_tty_device_t
 .br
 staff_tty_device_t
-
+.
 .SH "SEE ALSO"
+.ad l
+.nh
 .BR selinux "(8), " selinux_securetty_types_path "(3), " newrole "(1), " selinux_check_securetty_context "(3), " selinux_config "(5) "

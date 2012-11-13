@@ -5,12 +5,11 @@ security_policyvers \- get the version of the SELinux policy
 .B #include <selinux/selinux.h>
 .sp
 .B int security_policyvers();
-
+.
 .SH "DESCRIPTION"
-.B security_policyvers
-returns the version of the policy (a positive integer) on success, or -1 on
+.BR security_policyvers ()
+returns the version of the policy (a positive integer) on success, or \-1 on
 error.
-
+.
 .SH "SEE ALSO"
 .BR selinux "(8)"
-

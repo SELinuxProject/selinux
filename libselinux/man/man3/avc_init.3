@@ -3,37 +3,39 @@
 .\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2004
 .TH "avc_init" "3" "27 May 2004" "" "SELinux API documentation"
 .SH "NAME"
-avc_init - legacy userspace SELinux AVC setup.
+avc_init \- legacy userspace SELinux AVC setup
+.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
-
+.br
 .B #include <selinux/avc.h>
 .sp
 .BI "int avc_init(const char *" msgprefix , 
 .in +\w'int avc_init('u
 .BI "const struct avc_memory_callback *" mem_callbacks ,
-
+.br
 .BI "const struct avc_log_callback *" log_callbacks ,
-
+.br
 .BI "const struct avc_thread_callback *" thread_callbacks ,
-
+.br
 .BI "const struct avc_lock_callback *" lock_callbacks ");"
+.
 .SH "DESCRIPTION"
-.B avc_init
+.BR avc_init ()
 is deprecated; please use
 .BR avc_open (3)
 in conjunction with
 .BR selinux_set_callback (3)
 in all new code.
 
-.B avc_init
+.BR avc_init ()
 initializes the userspace AVC and must be called before any other AVC operation can be performed.  A non-NULL
 .I msgprefix
 will be prepended to all audit messages produced by the userspace AVC.  The default is `uavc'.  The remaining arguments, if non-NULL, specify callbacks to be used by the userspace AVC.
-
+.
 .SH "CALLBACKS"
 The userspace AVC can be directed how to perform memory allocation, logging, thread creation, and locking via callback functions passed to
-.BR avc_init .
+.BR avc_init ().
 The purpose of this functionality is to allow the userspace AVC to be smoothly integrated into existing userspace object managers.
 
 Use an
@@ -150,26 +152,26 @@ The
 callback should destroy
 .IR lock ,
 freeing any resources associated with it.  The default behavior is not to perform any locking.  Note that undefined behavior may result if threading is used without appropriate locking.
-
+.
 .SH "NETLINK NOTIFICATION"
 Beginning with version 2.6.4, the Linux kernel supports SELinux status change notification via netlink.  Two message types are currently implemented, indicating changes to the enforcing mode and to the loaded policy in the kernel, respectively.  The userspace AVC listens for these messages and takes the appropriate action, modifying the behavior of
 .BR avc_has_perm (3)
 to reflect the current enforcing mode and flushing the cache on receipt of a policy load notification.  Audit messages are produced when netlink notifications are processed.
 
 In the default single-threaded mode, the userspace AVC checks for new netlink messages at the start of each permission query.  If threading and locking callbacks are passed to
-.B avc_init
+.BR avc_init ()
 however, a dedicated thread will be started to listen on the netlink socket.  This may increase performance and will ensure that log messages are generated immediately rather than at the time of the next permission query.
-
+.
 .SH "RETURN VALUE"
 Functions with a return value return zero on success.  On error, \-1 is returned and
 .I errno
 is set appropriately.
-
+.
 .SH "NOTES"
 The
 .I msgprefix
 argument to
-.B avc_init
+.BR avc_init ()
 currently has a length limit of 15 characters and will be truncated if necessary.
 
 If a provided
@@ -184,12 +186,11 @@ If a netlink thread has been created and an error occurs on the socket (such as 
 on all further permission checks until
 .B avc_destroy 
 is called.
-
+.
 .SH "AUTHOR"
 Eamon Walsh <ewalsh@tycho.nsa.gov>
-
+.
 .SH "SEE ALSO"
 .BR avc_open (3),
 .BR selinux_set_callback (3),
 .BR selinux (8)
-

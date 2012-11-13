@@ -2,11 +2,11 @@
 .SH "NAME"
 security_compute_av, security_compute_av_flags, security_compute_create, security_compute_create_name, security_compute_relabel,
 security_compute_member, security_compute_user, security_get_initial_context \- query
-the SELinux policy database in the kernel.
-
+the SELinux policy database in the kernel
+.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
-
+.br
 .B #include <selinux/flask.h>
 .sp
 .BI "int security_compute_av(security_context_t "scon ", security_context_t "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
@@ -23,91 +23,90 @@ the SELinux policy database in the kernel.
 .sp
 .BI "int security_compute_user(security_context_t "scon ", const char *" username ", security_context_t **" con );
 .sp
-.BI "int security_get_initial_context(const char *" name ", security_context_t
-"con );
+.BI "int security_get_initial_context(const char *" name ", security_context_t " con );
 .sp
-.BI "int selinux_check_access(const security_context_t " scon, " const security_context_t " tcon, " const char *" class, " const char *" perm, "void *" auditdata);
+.BI "int selinux_check_access(const security_context_t " scon ", const security_context_t " tcon ", const char *" class ", const char *" perm ", void *" auditdata);
 .sp
 .BI "int selinux_check_passwd_access(access_vector_t " requested );
 .sp
 .BI "int checkPasswdAccess(access_vector_t " requested );
-
+.
 .SH "DESCRIPTION"
-.B security_compute_av
+.BR security_compute_av ()
 queries whether the policy permits the source context
-.B scon
+.I scon
 to access the target context
-.B tcon
+.I tcon
 via class
-.B tclass
+.I tclass
 with the
-.B requested
+.I requested
 access vector.  The decision is returned in
-.BR avd .
+.IR avd .
 
-.B security_compute_av_flags
+.BR security_compute_av_flags ()
 is identical to
 .B security_compute_av
 but additionally sets the
-.B flags
+.I flags
 field of
-.BR avd .
+.IR avd .
 Currently one flag is supported:
 .BR SELINUX_AVD_FLAGS_PERMISSIVE ,
 which indicates the decision is computed on a permissive domain.
 
-.B security_compute_create
+.BR security_compute_create ()
 is used to compute a context to use for labeling a new object in a particular
 class based on a SID pair.
 
-.B security_compute_create_name
+.BR security_compute_create_name ()
 is identical to
-.B security_compute_create
+.BR \%security_compute_create ()
 but also takes name of the new object in creation as an argument.
 When
-.BR TYPE_TRANSITION
+.B TYPE_TRANSITION
 rule on the given class and a SID pair has object name extension,
 we shall be able to obtain a correct
-.BR newcon
+.I newcon
 according to the security policy. Note that this interface is only
 supported on the linux 2.6.40 or later.
 In the older kernel, the object name will be simply ignored.
 
-.B security_compute_relabel
+.BR security_compute_relabel ()
 is used to compute the new context to use when relabeling an object, it is used
 in the pam_selinux.so source and the newrole source to determine the correct
 label for the tty at login time, but can be used for other things.
 
-.B security_compute_member
+.BR security_compute_member ()
 is used to compute the context to use when labeling a polyinstantiated object
 instance.
 
-.B security_compute_user
+.BR security_compute_user ()
 is used to determine the set of user contexts that can be reached from a
 source context. It is mainly used by
-.B get_ordered_context_list.
+.BR get_ordered_context_list ().
 
-.B security_get_initial_context
+.BR security_get_initial_context ()
 is used to get the context of a kernel initial security identifier specified by 
 .I name
 
-.B selinux_check_access
+.BR selinux_check_access ()
 is used to check if the source context has the access permission for the specified class on the target context.
 
-.B selinux_check_passwd_access
+.BR selinux_check_passwd_access ()
 is used to check for a permission in the
 .I passwd
 class.
-.B selinux_check_passwd_access
+.BR selinux_check_passwd_access ()
 uses getprevcon() for the source and target security contexts.
 
-.B checkPasswdAccess
+.BR checkPasswdAccess ()
 is a deprecated alias of the
-.B selinux_check_passwd_access
+.BR selinux_check_passwd_access ()
 function.
-
+.
 .SH "RETURN VALUE"
 Returns zero on success or \-1 on error.
-
+.
 .SH "SEE ALSO"
 .BR selinux "(8), " getcon "(3), " getfilecon "(3), " get_ordered_context_list "(3)"

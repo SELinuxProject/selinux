@@ -1,8 +1,7 @@
 .TH "service_seusers" "5" "28-Nov-2011" "Security Enhanced Linux" "SELinux configuration"
-
 .SH "NAME"
-service_seusers \- The SELinux GNU/Linux user and service to SELinux user mapping configuration files.
-
+service_seusers \- The SELinux GNU/Linux user and service to SELinux user mapping configuration files
+.
 .SH "DESCRIPTION"
 These are optional files that allow services to define an SELinux user when authenticating via SELinux-aware login applications such as
 .BR PAM "(8). "
@@ -20,7 +19,7 @@ appended (where \fIusername\fR is a file representing the GNU/Linux user name). 
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).
 .sp
 .BR getseuser "(3) reads this file to map services to an SELinux user. "
-
+.
 .SH "FILE FORMAT"
 Each line within the \fIusername\fR file is formatted as follows with each component separated by a colon:
 .RS
@@ -42,9 +41,9 @@ The SELinux user name.
 The range for MCS/MLS policies.
 .RE
 .RE
-
+.
 .SH "EXAMPLES"
-Example 1 \- for the 'root' user:
+Example 1 - for the 'root' user:
 .RS
 # ./logins/root
 .br
@@ -53,7 +52,7 @@ ipa:user_u:s0
 this_service:unconfined_u:s0
 .RE
 .sp
-Example 2 \- for GNU/Linux user 'rch':
+Example 2 - for GNU/Linux user 'rch':
 .RS
 # ./logins/rch
 .br
@@ -61,6 +60,8 @@ ipa:unconfined_u:s0
 .br
 that_service:unconfined_u:s0
 .RE
-
+.
 .SH "SEE ALSO"
+.ad l
+.nh
 .BR selinux "(8), " PAM "(8), " selinux_policy_root "(3), " getseuser "(3), " selinux_config "(5) "

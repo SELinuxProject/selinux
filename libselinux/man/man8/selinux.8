@@ -1,10 +1,8 @@
 .TH  "selinux"  "8"  "29 Apr 2005" "dwalsh@redhat.com" "SELinux Command Line documentation"
-
 .SH "NAME"
 SELinux \- NSA Security-Enhanced Linux (SELinux)
-
+.
 .SH "DESCRIPTION"
-
 NSA Security-Enhanced Linux (SELinux) is an implementation of a
 flexible mandatory access control architecture in the Linux operating
 system.  The SELinux architecture provides general support for the
@@ -52,31 +50,48 @@ policies will be created (Multi-Level Security for example).  You can
 define which policy you will run by setting the
 .B SELINUXTYPE
 environment variable within
-.I /etc/selinux/config.
+.IR /etc/selinux/config .
 The corresponding
 policy configuration for each such policy must be installed in the
-/etc/selinux/SELINUXTYPE/ directories.
+.I /etc/selinux/{SELINUXTYPE}/
+directories.
 
 A given SELinux policy can be customized further based on a set of
 compile-time tunable options and a set of runtime policy booleans.
-.B system-config-securitylevel
+.B \%system\-config\-securitylevel
 allows customization of these booleans and tunables.
 
 Many domains that are protected by SELinux also include SELinux man pages explaining how to customize their policy.  
-
-.SH FILE LABELING
-
+.
+.SH "FILE LABELING"
 All files, directories, devices ... have a security context/label associated with them.  These context are stored in the extended attributes of the file system.
 Problems with SELinux often arise from the file system being mislabeled. This can be caused by booting the machine with a non SELinux kernel.  If you see an error message containing file_t, that is usually a good indicator that you have a serious problem with file system labeling.  
 
-The best way to relabel the file system is to create the flag file /.autorelabel and reboot.  system-config-selinux, also has this capability.  The restorcon/fixfiles commands are also available for relabeling files. 
-  
+The best way to relabel the file system is to create the flag file
+.I /.autorelabel
+and reboot.
+.BR system\-config\-selinux ,
+also has this capability.  The
+.BR restorcon / fixfiles
+commands are also available for relabeling files.
+.
 .SH AUTHOR	
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
-
+.
+.SH FILES
+.I /etc/selinux/config
+.
 .SH "SEE ALSO"
-booleans(8), setsebool(8), selinuxenabled(8), restorecon(8), setfiles(8), semanage(8), sepolicy(8)
-.br
+.ad l
+.nh
+.BR booleans (8),
+.BR setsebool (8),
+.BR selinuxenabled (8),
+.BR togglesebool (8),
+.BR restorecon (8),
+.BR setfiles (8),
+.BR semange (8),
+.BR sepolicy(8)
 
 Every confined service on the system has a man page in the following format:
 .br
@@ -90,6 +105,3 @@ man page.
 .B man -k selinux 
 
 Will list all SELinux man pages.
-
-.SH FILES
-/etc/selinux/config

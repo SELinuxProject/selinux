@@ -1,11 +1,12 @@
 .TH "getsebool" "8" "11 Aug 2004" "dwalsh@redhat.com" "SELinux Command Line documentation"
 .SH "NAME"
 getsebool \- get SELinux boolean value(s) 
-
+.
 .SH "SYNOPSIS"
 .B getsebool
-.I "[-a] [boolean]"
-
+.RB [ \-a ]
+.RI [ boolean ]
+.
 .SH "DESCRIPTION"
 .B getsebool 
 reports where a particular SELinux boolean or
@@ -20,16 +21,17 @@ value is changed, then the booleans are committed, causing their
 active values to become their pending values.  This allows a group of
 booleans to be changed in a single transaction, by setting all of
 their pending values as desired and then committing once.
-
+.
 .SH OPTIONS
 .TP
 .B \-a
 Show all SELinux booleans.
-
-.SH "SEE ALSO"
-selinux(8), setsebool(8), booleans(8)
-
+.
 .SH AUTHOR	
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
 The program was written by Tresys Technology.
-
+.
+.SH "SEE ALSO"
+.BR selinux (8),
+.BR setsebool (8),
+.BR booleans (8)

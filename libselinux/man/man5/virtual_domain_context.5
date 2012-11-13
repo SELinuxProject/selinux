@@ -1,8 +1,7 @@
 .TH "virtual_domain_context" "5" "28-Nov-2011" "Security Enhanced Linux" "SELinux configuration"
-
 .SH "NAME"
-virtual_domain_context \- The SELinux virtual machine domain context configuration file.
-
+virtual_domain_context \- The SELinux virtual machine domain context configuration file
+.
 .SH "DESCRIPTION"
 The
 .I virtual_domain_context
@@ -15,7 +14,7 @@ will return the active policy path to this file. The default virtual domain cont
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).
-
+.
 .SH "FILE FORMAT"
 Each line in the file consists of an entry as follows:
 .RS
@@ -29,11 +28,13 @@ Where:
 A user, role, type and optional range (for MCS/MLS) separated by colons (:) that can be used as a virtual domain context.
 .RE
 .RE
-
+.
 .SH "EXAMPLE"
 # ./contexts/virtual_domain_context
 .br
 system_u:object_r:svirt_t:s0
-
+.
 .SH "SEE ALSO"
+.ad l
+.nh
 .BR selinux "(8), " libvirtd "(8), " selinux_virtual_domain_context_path "(3), " selinux_config "(5) "

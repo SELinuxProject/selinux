@@ -5,89 +5,106 @@ selinux_failsafe_context_path, selinux_removable_context_path,
 selinux_default_context_path, selinux_user_contexts_path,
 selinux_file_context_path, selinux_media_context_path,
 selinux_contexts_path, selinux_booleans_path \- These functions return the paths to the active SELinux policy configuration
-directories and files.
-
+directories and files
+.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
 
-const char *selinux_path(void);
-
-const char *selinux_policy_root(void);
-
-const char *selinux_binary_policy_path(void);
-
-const char *selinux_failsafe_context_path(void);
-
-const char *selinux_removable_context_path(void);
-
-const char *selinux_default_context_path(void);
-
-const char *selinux_user_contexts_path(void);
-
-const char *selinux_usersconf_path(void);
-
-const char *selinux_x_context_path(void);
-
-const char *selinux_sepgsql_context_path(void);
-
-const char *selinux_file_context_path(void);
-
-const char *selinux_media_context_path(void);
-
-const char *selinux_securetty_types_path(void);
-
-const char *selinux_contexts_path(void);
-
-const char *selinux_booleans_path(void);
-
-
+.B const char *selinux_path(void);
+.sp
+.B const char *selinux_policy_root(void);
+.sp
+.B const char *selinux_binary_policy_path(void);
+.sp
+.B const char *selinux_failsafe_context_path(void);
+.sp
+.B const char *selinux_removable_context_path(void);
+.sp
+.B const char *selinux_default_context_path(void);
+.sp
+.B const char *selinux_user_contexts_path(void);
+.sp
+.B const char *selinux_usersconf_path(void);
+.sp
+.B const char *selinux_x_context_path(void);
+.sp
+.B const char *selinux_sepgsql_context_path(void);
+.sp
+.B const char *selinux_file_context_path(void);
+.sp
+.B const char *selinux_media_context_path(void);
+.sp
+.B const char *selinux_securetty_types_path(void);
+.sp
+.B const char *selinux_contexts_path(void);
+.sp
+.B const char *selinux_booleans_path(void);
+.
 .SH "DESCRIPTION"
-
 These functions return the paths to the active policy configuration
-directories and files based on the settings in /etc/selinux/config.
-
+directories and files based on the settings in
+.IR /etc/selinux/config .
 .sp
-selinux_path() - top-level SELinux configuration directory
+.BR selinux_path ()
+returns the top-level SELinux configuration directory.
 .sp
-selinux_policy_root() - top-level policy directory 
+.BR selinux_policy_root ()
+returns the top-level policy directory.
 .sp
-selinux_binary_policy_path() - binary policy file loaded into kernel
+.BR selinux_binary_policy_path ()
+returns the binary policy file loaded into kernel.
 .sp
-selinux_default_type_path - context file mapping roles to default types.
+.BR selinux_default_type_path ()
+returns the context file mapping roles to default types.
 .sp
-selinux_failsafe_context_path() - failsafe context for emergency logins
+.BR selinux_failsafe_context_path ()
+returns the failsafe context for emergency logins.
 .sp
-selinux_removable_context_path() - filesystem context for removable media
+.BR selinux_removable_context_path ()
+returns the filesystem context for removable media.
 .sp
-selinux_default_context_path() - system-wide default contexts for user sessions
+.BR selinux_default_context_path ()
+returns the system-wide default contexts for user sessions.
 .sp
-selinux_user_contexts_path() - directory containing per-user default contexts
+.BR selinux_user_contexts_path ()
+returns the directory containing per-user default contexts.
 .sp
-selinux_usersconf_path() - file containing mapping between Linux Users and SELinux users
+.BR selinux_usersconf_path ()
+returns the file containing mapping between Linux Users and SELinux users.
 .sp
-selinux_x_context_path() - file containing configuration for XSELinux extension
+.BR selinux_x_context_path ()
+returns the file containing configuration for XSELinux extension.
 .sp
-selinux_sepgsql_context_path() - file containing configuration for SE-PostgreSQL
+.BR selinux_sepgsql_context_path ()
+returns the file containing configuration for SE-PostgreSQL.
 .sp
-selinux_netfilter_context_path - default netfilter context 
+.BR selinux_netfilter_context_path ()
+returns the default netfilter context.
 .sp
-selinux_file_context_path() - default system file contexts configuration
+.BR selinux_file_context_path ()
+returns the default system file contexts configuration.
 .sp
-selinux_file_context_local_path() - local customization file contexts configuration
+.BR selinux_file_context_local_path ()
+returns the local customization file contexts configuration.
 .sp
-selinux_file_context_homedir_path() - home directory file contexts configuration
+.BR selinux_file_context_homedir_path ()
+returns the home directory file contexts configuration.
 .sp
-selinux_media_context_path() - file contexts for media device nodes
+.BR selinux_media_context_path ()
+returns the file contexts for media device nodes.
 .sp
-selinux_contexts_path() - directory containing all of the context configuration files
+.BR selinux_contexts_path ()
+returns the directory containing all of the context configuration files.
 .sp
-selinux_securetty_types_path() - defines tty types for newrole securettys
+.BR selinux_securetty_types_path ()
+returns the defines tty types for newrole securettys.
 .sp
-selinux_booleans_path() - initial policy boolean settings
-
+.BR selinux_booleans_path ()
+returns the initial policy boolean settings.
+.
 .SH AUTHOR	
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
-
+.
 .SH "SEE ALSO"
 .BR selinux "(8)"

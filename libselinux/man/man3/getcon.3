@@ -1,78 +1,99 @@
 .TH "getcon" "3" "21 December 2011" "russell@coker.com.au" "SELinux API documentation"
 .SH "NAME"
-getcon, getprevcon, getpidcon \- get SELinux security context of a process.
+getcon, getprevcon, getpidcon \- get SELinux security context of a process
 
-freecon, freeconary \- free memory associated with SELinux security contexts.
+freecon, freeconary \- free memory associated with SELinux security contexts
 
-getpeercon - get security context of a peer socket.
+getpeercon \- get security context of a peer socket
 
-setcon - set current security context of a process.
+setcon \- set current security context of a process
+.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
 .BI "int getcon(security_context_t *" context );
-
+.sp
 .BI "int getprevcon(security_context_t *" context );
-
+.sp
 .BI "int getpidcon(pid_t " pid ", security_context_t *" context );
-
-.BI "int getpeercon(int " fd ", security_context_t *" context);
-
+.sp
+.BI "int getpeercon(int " fd ", security_context_t *" context );
+.sp
 .BI "void freecon(security_context_t "con );
-
+.sp
 .BI "void freeconary(security_context_t *" con );
-
-.BI "int setcon(security_context_t " context);
-
+.sp
+.BI "int setcon(security_context_t " context );
+.
 .SH "DESCRIPTION"
-.B getcon
+.BR getcon ()
 retrieves the context of the current process, which must be free'd with
 freecon.
 
-.B getprevcon
+.BR getprevcon ()
 same as getcon but gets the context before the last exec.
 
-.B getpidcon
+.BR getpidcon ()
 returns the process context for the specified PID.
 
-.B getpeercon
-retrieves context of peer socket, and set *context to refer to it, which must be free'd with freecon.
+.BR getpeercon ()
+retrieves context of peer socket, and set
+.BI * context
+to refer to it, which must be free'd with
+.BR freecon ().
 
-.B freecon
+.BR freecon ()
 frees the memory allocated for a security context.
 
-.B freeconary
+.BR freeconary ()
 frees the memory allocated for a context array.
 
 If
 .I con
 is NULL, no operation is performed.
 
-.B setcon
+.BR setcon ()
 sets the current security context of the process to a new value.  Note
 that use of this function requires that the entire application be
 trusted to maintain any desired separation between the old and new
 security contexts, unlike exec-based transitions performed via
-setexeccon(3).  When possible, decompose your application and use
-setexeccon() and execve() instead.
+.BR setexeccon (3).
+When possible, decompose your application and use
+.BR setexeccon (3)
+and
+.BR execve (3)
+instead.
 
 Since access to file descriptors is revalidated upon use by SELinux,
 the new context must be explicitly authorized in the policy to use the
 descriptors opened by the old context if that is desired.  Otherwise,
 attempts by the process to use any existing descriptors (including
-stdin, stdout, and stderr) after performing the setcon() will fail.
+.IR stdin ,
+.IR stdout ,
+and
+.IR stderr )
+after performing the
+.BR setcon ()
+will fail.
 
-A multi-threaded application can perform a setcon() prior to creating
+A multi-threaded application can perform a
+.BR setcon ()
+prior to creating
 any child threads, in which case all of the child threads will inherit
-the new context.  However, setcon() will fail if there are any other
+the new context.  However,
+.BR setcon ()
+will fail if there are any other
 threads running in the same process.
 
-If the process was being ptraced at the time of the setcon()
+If the process was being ptraced at the time of the
+.BR setcon ()
 operation, ptrace permission will be revalidated against the new
-context and the setcon() will fail if it is not allowed by policy.
-
+context and the
+.BR setcon ()
+will fail if it is not allowed by policy.
+.
 .SH "RETURN VALUE"
-On error -1 is returned.  On success 0 is returned.
-
+On error \-1 is returned.  On success 0 is returned.
+.
 .SH "SEE ALSO"
 .BR selinux "(8), " setexeccon "(3)"

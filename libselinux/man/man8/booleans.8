@@ -1,11 +1,10 @@
 .TH "booleans" "8" "11 Aug 2004" "dwalsh@redhat.com" "SELinux Command Line documentation"
 .SH "NAME"
-booleans \- Policy booleans enable runtime customization of SELinux policy.
-
+booleans \- Policy booleans enable runtime customization of SELinux policy
+.
 .SH "DESCRIPTION"
 This manual page describes SELinux policy booleans.
 .BR
-
 The SELinux policy can include conditional rules that are enabled or
 disabled based on the current values of a set of policy booleans.
 These policy booleans allow runtime modification of the security
@@ -18,32 +17,42 @@ value.
 
 The policy defines a default value for each boolean, typically false.
 These default values can be overridden via local settings created via the
-.B setsebool(8)
-utility, using -P to make the setting persistent across reboots.
-The 
-.B system-config-securitylevel
+.BR setsebool (8)
+utility, using
+.B \-P
+to make the setting persistent across reboots.  The
+.B system\-config\-securitylevel
 tool provides a graphical interface for altering
 the settings.  The
-.B load_policy(8)
+.BR load_policy (8)
 program will preserve
 current boolean settings upon a policy reload by default, or can
-optionally reset booleans to the boot-time defaults via the -b option.
+optionally reset booleans to the boot-time defaults via the
+.B \-b
+option.
 
 Boolean values can be listed by using the
-.B getsebool(8)
-utility and passing it the -a option.
+.BR getsebool (8)
+utility and passing it the
+.B \-a
+option.
 
 Boolean values can also be changed at runtime via the
-.B setsebool(8)
+.BR setsebool (8)
 utility or the
-.B togglesebool
+.BR togglesebool (8)
 utility.  By default, these utilities only change the
 current boolean value and do not affect the persistent settings,
-unless the -P option is used to setsebool.
-
+unless the
+.B \-P
+option is used to setsebool.
+.
 .SH AUTHOR	
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
 The SELinux conditional policy support was developed by Tresys Technology.
-
+.
 .SH "SEE ALSO"
-getsebool(8), setsebool(8), selinux(8), togglesebool(8)
+.BR getsebool (8),
+.BR setsebool (8),
+.BR selinux (8),
+.BR togglesebool (8)

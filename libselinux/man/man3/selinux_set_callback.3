@@ -3,14 +3,15 @@
 .\" Author: Eamon Walsh (ewalsh@tycho.nsa.gov) 2007
 .TH "selinux_set_callback" "3" "20 Jun 2007" "" "SELinux API documentation"
 .SH "NAME"
-selinux_set_callback \- userspace SELinux callback facilities.
+selinux_set_callback \- userspace SELinux callback facilities
+.
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
 .BI "void selinux_set_callback(int " type ", union selinux_callback " callback ");"
-
+.
 .SH "DESCRIPTION"
-.B selinux_set_callback
+.BR selinux_set_callback ()
 sets the callback indicated by
 .I type
 to the value of
@@ -45,7 +46,7 @@ argument indicates the type of message and will be set to one of the following:
 .B SELINUX_INFO
 
 .B SELINUX_AVC
-
+.
 .TP
 .B SELINUX_CB_AUDIT
 .BI "int (*" func_audit ") (void *" auditdata ", security_class_t " cls ,
@@ -64,7 +65,7 @@ A human-readable interpretation should be printed to
 using no more than
 .I msgbufsize
 characters.
-
+.
 .TP
 .B SELINUX_CB_VALIDATE
 .BI "int (*" func_validate ") (security_context_t *" ctx ");"
@@ -78,7 +79,7 @@ The value of
 should be set to
 .B EINVAL
 to indicate an invalid context.
-
+.
 .TP
 .B SELINUX_CB_SETENFORCE
 .BI "int (*" func_setenforce ") (int " enforcing ");"
@@ -91,7 +92,7 @@ argument indicates the new value and is set to
 for enforcing mode, and
 .I 0
 for permissive mode.
-
+.
 .TP
 .B SELINUX_CB_POLICYLOAD
 .BI "int (*" func_policyload ") (int " seqno ");"
@@ -100,19 +101,18 @@ This callback is invoked when the system security policy is reloaded.
 The
 .I seqno
 argument is the current sequential number of the policy generation in the system.
-
+.
 .SH "RETURN VALUE"
 None.
-
+.
 .SH "ERRORS"
 None.
-
+.
 .SH "AUTHOR"
 Eamon Walsh <ewalsh@tycho.nsa.gov>
-
+.
 .SH "SEE ALSO"
 .BR selabel_open (3),
 .BR avc_init (3),
-.BR avc_netlink_open(3),
+.BR avc_netlink_open (3),
 .BR selinux (8)
-
