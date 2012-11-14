@@ -3,9 +3,6 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Alexander Todorov <atodorov@redhat.com>, 2008.
-# Doncho N. Gunchev <gunchev@gmail.com>, 2007.
-# Valentin Laskov <laskov@festa.bg>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Policycoreutils\n"
@@ -13,174 +10,174 @@ msgstr ""
 "POT-Creation-Date: 2013-01-04 12:01-0500\n"
 "PO-Revision-Date: 2013-01-04 17:02+0000\n"
 "Last-Translator: dwalsh <dwalsh@redhat.com>\n"
-"Language-Team: Bulgarian <trans-bg@lists.fedoraproject.org>\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/fedora/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: bg\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
 "USAGE: run_init <script> <args ...>\n"
 "  where: <script> is the name of the init script to run,\n"
 "         <args ...> are the arguments to that script."
-msgstr "УПОТРЕБА: run_init <скрипт> <аргументи ...>\n  където: <скрипт> е името на инициализиращ скрипт за изпълнение,\n         <аргументи ...> са аргументите към този скрипт."
+msgstr ""
 
 #: ../run_init/run_init.c:126 ../newrole/newrole.c:1123
 #, c-format
 msgid "failed to initialize PAM\n"
-msgstr "инициализацията на PAM не успя\n"
+msgstr ""
 
 #: ../run_init/run_init.c:139
 #, c-format
 msgid "failed to get account information\n"
-msgstr "взимането на информация за акаунта не успя\n"
+msgstr ""
 
 #: ../run_init/run_init.c:162 ../newrole/newrole.c:341
 msgid "Password:"
-msgstr "Парола:"
+msgstr ""
 
 #: ../run_init/run_init.c:197 ../newrole/newrole.c:366
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
-msgstr "Не може да се намери Ваш запис във файла shadow.\n"
+msgstr ""
 
 #: ../run_init/run_init.c:203 ../newrole/newrole.c:373
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
-msgstr "getpass не може да отвори /dev/tty\n"
+msgstr ""
 
 #: ../run_init/run_init.c:275
 #, c-format
 msgid "run_init: incorrect password for %s\n"
-msgstr "run_init: грешна парола за %s\n"
+msgstr ""
 
 #: ../run_init/run_init.c:309
 #, c-format
 msgid "Could not open file %s\n"
-msgstr "Не можах да отворя файл %s\n"
+msgstr ""
 
 #: ../run_init/run_init.c:336
 #, c-format
 msgid "No context in file %s\n"
-msgstr "Няма контекст във файла %s\n"
+msgstr ""
 
 #: ../run_init/run_init.c:361
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
-msgstr "Съжаляваме, run_init може да се ползва само със SELinux ядро.\n"
+msgstr ""
 
 #: ../run_init/run_init.c:380
 #, c-format
 msgid "authentication failed.\n"
-msgstr "удостоверяването не успя.\n"
+msgstr ""
 
 #: ../run_init/run_init.c:405 ../newrole/newrole.c:1257
 #, c-format
 msgid "Could not set exec context to %s.\n"
-msgstr "Не можах да задам контекст за изпълнение на %s.\n"
+msgstr ""
 
 #: ../audit2allow/audit2allow:232
 msgid "******************** IMPORTANT ***********************\n"
-msgstr "********************** ВАЖНО *************************\n"
+msgstr ""
 
 #: ../audit2allow/audit2allow:233
 msgid "To make this policy package active, execute:"
-msgstr "За да активирате този пакет с политика, изпълнете:"
+msgstr ""
 
 #: ../semanage/seobject.py:194
 msgid "Could not create semanage handle"
-msgstr "Не може да се създаде semanage обект за управление"
+msgstr ""
 
 #: ../semanage/seobject.py:202
 msgid "SELinux policy is not managed or store cannot be accessed."
-msgstr "SELinux политиката не е управлявана или хранилището не е достъпно."
+msgstr ""
 
 #: ../semanage/seobject.py:207
 msgid "Cannot read policy store."
-msgstr "Не може да се прочете хранилището с политики."
+msgstr ""
 
 #: ../semanage/seobject.py:212
 msgid "Could not establish semanage connection"
-msgstr "Не може да се установи semanage връзка"
+msgstr ""
 
 #: ../semanage/seobject.py:217
 msgid "Could not test MLS enabled status"
-msgstr "Не може да се тества статус с разрешен MLS"
+msgstr ""
 
 #: ../semanage/seobject.py:223 ../semanage/seobject.py:238
 msgid "Not yet implemented"
-msgstr "Все още не е реализирано"
+msgstr ""
 
 #: ../semanage/seobject.py:227
 msgid "Semanage transaction already in progress"
-msgstr "Semanage транзакцията е вече в ход"
+msgstr ""
 
 #: ../semanage/seobject.py:236
 msgid "Could not start semanage transaction"
-msgstr "Не можах да стартирам semanage транзакция"
+msgstr ""
 
 #: ../semanage/seobject.py:248
 msgid "Could not commit semanage transaction"
-msgstr "Не можах да ангажирам semanage транзакция"
+msgstr ""
 
 #: ../semanage/seobject.py:253
 msgid "Semanage transaction not in progress"
-msgstr "Semanage транзакцията не е в ход"
+msgstr ""
 
 #: ../semanage/seobject.py:265 ../semanage/seobject.py:345
 msgid "Could not list SELinux modules"
-msgstr "Не може да се направи списък на SELinux модулите"
+msgstr ""
 
 #: ../semanage/seobject.py:278
 msgid "Modules Name"
-msgstr "Име на модули"
+msgstr ""
 
 #: ../semanage/seobject.py:278 ../gui/modulesPage.py:63
 msgid "Version"
-msgstr "Версия"
+msgstr ""
 
 #: ../semanage/seobject.py:281 ../gui/statusPage.py:75
 msgid "Disabled"
-msgstr "Забранен"
+msgstr ""
 
 #: ../semanage/seobject.py:296
 #, python-format
 msgid "Could not disable module %s (remove failed)"
-msgstr "Не можах да забраня модула %s (неуспешно премахване)"
+msgstr ""
 
 #: ../semanage/seobject.py:307
 #, python-format
 msgid "Could not enable module %s (remove failed)"
-msgstr "Не можах да разреша модула %s (неуспешно премахване)"
+msgstr ""
 
 #: ../semanage/seobject.py:322
 #, python-format
 msgid "Could not remove module %s (remove failed)"
-msgstr "Не можах да премахна модула %s (неуспешно премахване)"
+msgstr ""
 
 #: ../semanage/seobject.py:332
 msgid "dontaudit requires either 'on' or 'off'"
-msgstr "dontaudit изисква или 'вкл' или 'изкл'"
+msgstr ""
 
 #: ../semanage/seobject.py:360
 msgid "Builtin Permissive Types"
-msgstr "Вградени Permissive типове"
+msgstr ""
 
 #: ../semanage/seobject.py:370
 msgid "Customized Permissive Types"
-msgstr "Индивидуални Permissive типове"
+msgstr ""
 
 #: ../semanage/seobject.py:412
 #, python-format
 msgid "Could not set permissive domain %s (module installation failed)"
-msgstr "Не можах да задам permissive domain %s (инсталирането на модул не успя)"
+msgstr ""
 
 #: ../semanage/seobject.py:418
 #, python-format
 msgid "Could not remove permissive domain %s (remove failed)"
-msgstr "Не можах да премахна permissive domain %s (премахването не успя)"
+msgstr ""
 
 #: ../semanage/seobject.py:453 ../semanage/seobject.py:527
 #: ../semanage/seobject.py:573 ../semanage/seobject.py:695
@@ -191,87 +188,87 @@ msgstr "Не можах да премахна permissive domain %s (премах
 #: ../semanage/seobject.py:2076
 #, python-format
 msgid "Could not create a key for %s"
-msgstr "Не можах да създам ключ за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:457 ../semanage/seobject.py:531
 #: ../semanage/seobject.py:577 ../semanage/seobject.py:583
 #, python-format
 msgid "Could not check if login mapping for %s is defined"
-msgstr "Не можах да проверя дали е дефинирано съответствие за вход на %s"
+msgstr ""
 
 #: ../semanage/seobject.py:466
 #, python-format
 msgid "Linux Group %s does not exist"
-msgstr "Linux група %s не съществува"
+msgstr ""
 
 #: ../semanage/seobject.py:471
 #, python-format
 msgid "Linux User %s does not exist"
-msgstr "Linux потребител %s не съществува"
+msgstr ""
 
 #: ../semanage/seobject.py:475
 #, python-format
 msgid "Could not create login mapping for %s"
-msgstr "Не можах да създам съответствие за вход за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:479 ../semanage/seobject.py:740
 #, python-format
 msgid "Could not set name for %s"
-msgstr "Не можах да задам името за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:484 ../semanage/seobject.py:750
 #, python-format
 msgid "Could not set MLS range for %s"
-msgstr "Не можах да задам MLS диапазон за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:488
 #, python-format
 msgid "Could not set SELinux user for %s"
-msgstr "Не можах да задам SELinux потребител за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:492
 #, python-format
 msgid "Could not add login mapping for %s"
-msgstr "Не можах да добавя съответствие за вход за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:510
 msgid "Requires seuser or serange"
-msgstr "Изисква seuser или serange"
+msgstr ""
 
 #: ../semanage/seobject.py:533 ../semanage/seobject.py:579
 #, python-format
 msgid "Login mapping for %s is not defined"
-msgstr "Не е дефинирано съответствие за вход за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:537
 #, python-format
 msgid "Could not query seuser for %s"
-msgstr "Не можах да запитам seuser за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:551
 #, python-format
 msgid "Could not modify login mapping for %s"
-msgstr "Не можах да променя съответствието за вход за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:585
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
-msgstr "Съответствие за вход за %s е дефинирано в политиката, не може да бъде изтрито"
+msgstr ""
 
 #: ../semanage/seobject.py:589
 #, python-format
 msgid "Could not delete login mapping for %s"
-msgstr "Не можах да изтрия съответствието за вход за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:611 ../semanage/seobject.py:644
 #: ../semanage/seobject.py:892
 msgid "Could not list login mappings"
-msgstr "Не можах да направя списък на съответствията за вход"
+msgstr ""
 
 #: ../semanage/seobject.py:672 ../semanage/seobject.py:684
 #: ../gui/system-config-selinux.glade:100
 msgid "Login Name"
-msgstr "Потребителско име"
+msgstr ""
 
 #: ../semanage/seobject.py:672 ../semanage/seobject.py:684
 #: ../semanage/seobject.py:942 ../semanage/seobject.py:947
@@ -279,12 +276,12 @@ msgstr "Потребителско име"
 #: ../gui/system-config-selinux.glade:915
 #: ../gui/system-config-selinux.glade:2285 ../gui/usersPage.py:44
 msgid "SELinux User"
-msgstr "SELinux потребител"
+msgstr ""
 
 #: ../semanage/seobject.py:672 ../gui/system-config-selinux.glade:156
 #: ../gui/system-config-selinux.glade:943
 msgid "MLS/MCS Range"
-msgstr "MLS/MCS интервал"
+msgstr ""
 
 #: ../semanage/seobject.py:672
 msgid "Service"
@@ -295,131 +292,131 @@ msgstr ""
 #: ../semanage/seobject.py:859
 #, python-format
 msgid "Could not check if SELinux user %s is defined"
-msgstr "Не можах да проверя дали SELinux потребител %s е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:701 ../semanage/seobject.py:802
 #: ../semanage/seobject.py:865
 #, python-format
 msgid "Could not query user for %s"
-msgstr "Не можах да запитам потребителя за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:721
 #, python-format
 msgid "You must add at least one role for %s"
-msgstr "Трябва да добавите поне една роля за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:736
 #, python-format
 msgid "Could not create SELinux user for %s"
-msgstr "Не можах да създам SELinux потребител за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:745
 #, python-format
 msgid "Could not add role %s for %s"
-msgstr "Не можах да добавя роля %s за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:754
 #, python-format
 msgid "Could not set MLS level for %s"
-msgstr "Не можах да задам MLS ниво за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:757
 #, python-format
 msgid "Could not add prefix %s for %s"
-msgstr "Не можах да добавя префикс %s за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:760
 #, python-format
 msgid "Could not extract key for %s"
-msgstr "Не можах да извлека ключ за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:764
 #, python-format
 msgid "Could not add SELinux user %s"
-msgstr "Не можах да добавя SELinux потребител %s"
+msgstr ""
 
 #: ../semanage/seobject.py:786
 msgid "Requires prefix, roles, level or range"
-msgstr "Изисква префикс, роли, ниво или диапазон"
+msgstr ""
 
 #: ../semanage/seobject.py:788
 msgid "Requires prefix or roles"
-msgstr "Изисква префикс или роли"
+msgstr ""
 
 #: ../semanage/seobject.py:798 ../semanage/seobject.py:855
 #, python-format
 msgid "SELinux user %s is not defined"
-msgstr "SELinux потребител %s не е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:827
 #, python-format
 msgid "Could not modify SELinux user %s"
-msgstr "Не можах да променя SELinux потребителя %s"
+msgstr ""
 
 #: ../semanage/seobject.py:861
 #, python-format
 msgid "SELinux user %s is defined in policy, cannot be deleted"
-msgstr "SELinux потребителя %s е дефиниран в политика, не може да се изтрие"
+msgstr ""
 
 #: ../semanage/seobject.py:872
 #, python-format
 msgid "Could not delete SELinux user %s"
-msgstr "Не можах да изтрия SELinux потребител %s"
+msgstr ""
 
 #: ../semanage/seobject.py:910
 msgid "Could not list SELinux users"
-msgstr "Не можах да направя списък на SELinux потребителите"
+msgstr ""
 
 #: ../semanage/seobject.py:916
 #, python-format
 msgid "Could not list roles for user %s"
-msgstr "Не можах да направя списък на ролите за потребител %s"
+msgstr ""
 
 #: ../semanage/seobject.py:941
 msgid "Labeling"
-msgstr "Етикетиране"
+msgstr ""
 
 #: ../semanage/seobject.py:941
 msgid "MLS/"
-msgstr "MLS/"
+msgstr ""
 
 #: ../semanage/seobject.py:942
 msgid "Prefix"
-msgstr "Префикс"
+msgstr ""
 
 #: ../semanage/seobject.py:942
 msgid "MCS Level"
-msgstr "MCS ниво"
+msgstr ""
 
 #: ../semanage/seobject.py:942
 msgid "MCS Range"
-msgstr "MCS интервал"
+msgstr ""
 
 #: ../semanage/seobject.py:942 ../semanage/seobject.py:947
 #: ../gui/system-config-selinux.glade:992 ../gui/usersPage.py:59
 msgid "SELinux Roles"
-msgstr "SELinux роли"
+msgstr ""
 
 #: ../semanage/seobject.py:964
 msgid "Protocol udp or tcp is required"
-msgstr "Изисква се протокол udp или tcp"
+msgstr ""
 
 #: ../semanage/seobject.py:966
 msgid "Port is required"
-msgstr "Изисква се порт"
+msgstr ""
 
 #: ../semanage/seobject.py:976
 msgid "Invalid Port"
-msgstr "Невалиден порт"
+msgstr ""
 
 #: ../semanage/seobject.py:980
 #, python-format
 msgid "Could not create a key for %s/%s"
-msgstr "Не можах да създам ключ за %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:991
 msgid "Type is required"
-msgstr "Изисква се тип"
+msgstr ""
 
 #: ../semanage/seobject.py:994 ../semanage/seobject.py:1056
 #: ../semanage/seobject.py:1814
@@ -431,119 +428,119 @@ msgstr ""
 #: ../semanage/seobject.py:1117 ../semanage/seobject.py:1123
 #, python-format
 msgid "Could not check if port %s/%s is defined"
-msgstr "Не можах да проверя дали порт %s/%s е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:1002
 #, python-format
 msgid "Port %s/%s already defined"
-msgstr "Порт %s/%s вече е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:1006
 #, python-format
 msgid "Could not create port for %s/%s"
-msgstr "Не можах да създам порт за %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1012
 #, python-format
 msgid "Could not create context for %s/%s"
-msgstr "Не можах да създам контекст за %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1016
 #, python-format
 msgid "Could not set user in port context for %s/%s"
-msgstr "Не можах да задам потребител в контекста на порта за %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1020
 #, python-format
 msgid "Could not set role in port context for %s/%s"
-msgstr "Не можах да задам роля в контекста на порта за %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1024
 #, python-format
 msgid "Could not set type in port context for %s/%s"
-msgstr "Не можах да задам тип в контекста на порта за %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1029
 #, python-format
 msgid "Could not set mls fields in port context for %s/%s"
-msgstr "Не можах да задам mls полета в контекста на порта за %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1033
 #, python-format
 msgid "Could not set port context for %s/%s"
-msgstr "Не можах да задам контекста на порта за %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1037
 #, python-format
 msgid "Could not add port %s/%s"
-msgstr "Не можах да добавя порт %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1051 ../semanage/seobject.py:1324
 #: ../semanage/seobject.py:1523
 msgid "Requires setype or serange"
-msgstr "Необходим е setype или serange"
+msgstr ""
 
 #: ../semanage/seobject.py:1053
 msgid "Requires setype"
-msgstr "Необходим е setype"
+msgstr ""
 
 #: ../semanage/seobject.py:1064 ../semanage/seobject.py:1119
 #, python-format
 msgid "Port %s/%s is not defined"
-msgstr "Порт %s/%s не е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:1068
 #, python-format
 msgid "Could not query port %s/%s"
-msgstr "Не можах да запитам порт %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1079
 #, python-format
 msgid "Could not modify port %s/%s"
-msgstr "Не можах да променя порт %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1092
 msgid "Could not list the ports"
-msgstr "Не можах да направя списък на портовете"
+msgstr ""
 
 #: ../semanage/seobject.py:1108
 #, python-format
 msgid "Could not delete the port %s"
-msgstr "Не можах да изтрия порт %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1125
 #, python-format
 msgid "Port %s/%s is defined in policy, cannot be deleted"
-msgstr "Порт %s/%s е дефиниран в политика, не може да се изтрие"
+msgstr ""
 
 #: ../semanage/seobject.py:1129
 #, python-format
 msgid "Could not delete port %s/%s"
-msgstr "Не можах да изтрия порт %s/%s"
+msgstr ""
 
 #: ../semanage/seobject.py:1145 ../semanage/seobject.py:1167
 msgid "Could not list ports"
-msgstr "Не можах да направя списък на портовете"
+msgstr ""
 
 #: ../semanage/seobject.py:1206
 msgid "SELinux Port Type"
-msgstr "SELinux тип порт"
+msgstr ""
 
 #: ../semanage/seobject.py:1206
 msgid "Proto"
-msgstr "Протокол"
+msgstr ""
 
 #: ../semanage/seobject.py:1206 ../gui/system-config-selinux.glade:335
 msgid "Port Number"
-msgstr "Номер на порт"
+msgstr ""
 
 #: ../semanage/seobject.py:1227
 msgid "Node Address is required"
-msgstr "Изисква се адрес на възел"
+msgstr ""
 
 #: ../semanage/seobject.py:1242
 msgid "Unknown or missing protocol"
-msgstr "Непознат или липсващ протокол"
+msgstr ""
 
 #: ../semanage/seobject.py:1256
 msgid "SELinux node type is required"
@@ -560,228 +557,228 @@ msgstr ""
 #: ../semanage/seobject.py:1759
 #, python-format
 msgid "Could not create key for %s"
-msgstr "Не можах да създам ключ за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1265 ../semanage/seobject.py:1335
 #: ../semanage/seobject.py:1371 ../semanage/seobject.py:1377
 #, python-format
 msgid "Could not check if addr %s is defined"
-msgstr "Не можах да проверя дали addr %s е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:1274
 #, python-format
 msgid "Could not create addr for %s"
-msgstr "Не можах да създам addr за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1280 ../semanage/seobject.py:1481
 #: ../semanage/seobject.py:1714
 #, python-format
 msgid "Could not create context for %s"
-msgstr "Не можах да създам контекст за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1284
 #, python-format
 msgid "Could not set mask for %s"
-msgstr "Не можах да задам маска за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1288
 #, python-format
 msgid "Could not set user in addr context for %s"
-msgstr "Не можах да задам потребител в addr контекст %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1292
 #, python-format
 msgid "Could not set role in addr context for %s"
-msgstr "Не можах да задам роля в addr контекст за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1296
 #, python-format
 msgid "Could not set type in addr context for %s"
-msgstr "Не можах да задам тип в addr контекст за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1301
 #, python-format
 msgid "Could not set mls fields in addr context for %s"
-msgstr "Не можах да задам mls полета в addr контекст за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1305
 #, python-format
 msgid "Could not set addr context for %s"
-msgstr "Не можах да задам addr контекст за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1309
 #, python-format
 msgid "Could not add addr %s"
-msgstr "Не можах да добавя addr %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1337 ../semanage/seobject.py:1373
 #, python-format
 msgid "Addr %s is not defined"
-msgstr "Addr %s не е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:1341
 #, python-format
 msgid "Could not query addr %s"
-msgstr "Не можах да запитам addr %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1351
 #, python-format
 msgid "Could not modify addr %s"
-msgstr "Не можах да променя addr %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1379
 #, python-format
 msgid "Addr %s is defined in policy, cannot be deleted"
-msgstr "Addr %s е дефиниран в политика, не може да се изтрие"
+msgstr ""
 
 #: ../semanage/seobject.py:1383
 #, python-format
 msgid "Could not delete addr %s"
-msgstr "Не можах да изтрия addr %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1395
 msgid "Could not deleteall node mappings"
-msgstr "Не можах да изтрия всички съответствия на възли"
+msgstr ""
 
 #: ../semanage/seobject.py:1409
 msgid "Could not list addrs"
-msgstr "Не можах да направя addr списък"
+msgstr ""
 
 #: ../semanage/seobject.py:1461 ../semanage/seobject.py:1752
 msgid "SELinux Type is required"
-msgstr "Необходим е SELinux тип"
+msgstr ""
 
 #: ../semanage/seobject.py:1469 ../semanage/seobject.py:1531
 #: ../semanage/seobject.py:1565 ../semanage/seobject.py:1571
 #, python-format
 msgid "Could not check if interface %s is defined"
-msgstr "Не можах да проверя дали интерфейс %s е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:1476
 #, python-format
 msgid "Could not create interface for %s"
-msgstr "Не можах да създам интерфейс за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1485
 #, python-format
 msgid "Could not set user in interface context for %s"
-msgstr "Не можах да задам потребител в контекст на интерфейс за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1489
 #, python-format
 msgid "Could not set role in interface context for %s"
-msgstr "Не можах да задам роля в контекст на интерфейс за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1493
 #, python-format
 msgid "Could not set type in interface context for %s"
-msgstr "Не можах да задам тип в контекст на интерфейс за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1498
 #, python-format
 msgid "Could not set mls fields in interface context for %s"
-msgstr "Не можах да задам mls полета в контекст на интерфейс за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1502
 #, python-format
 msgid "Could not set interface context for %s"
-msgstr "Не можах да задам контекст на интерфейс за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1506
 #, python-format
 msgid "Could not set message context for %s"
-msgstr "Не можах да задам контекст на съобщението за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1510
 #, python-format
 msgid "Could not add interface %s"
-msgstr "Не можах да добавя интерфейс %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1533 ../semanage/seobject.py:1567
 #, python-format
 msgid "Interface %s is not defined"
-msgstr "Интерфейс %s не е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:1537
 #, python-format
 msgid "Could not query interface %s"
-msgstr "Не можах да запитам интерфейс %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1548
 #, python-format
 msgid "Could not modify interface %s"
-msgstr "Не можах да променя интерфейс %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1573
 #, python-format
 msgid "Interface %s is defined in policy, cannot be deleted"
-msgstr "Интерфейс %s е дефиниран в политика, не може да се изтрие"
+msgstr ""
 
 #: ../semanage/seobject.py:1577
 #, python-format
 msgid "Could not delete interface %s"
-msgstr "Не можах да изтрия интерфейс %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1589
 msgid "Could not delete all interface  mappings"
-msgstr "Не можах да изтрия всички съответствия   на интерфейси"
+msgstr ""
 
 #: ../semanage/seobject.py:1603
 msgid "Could not list interfaces"
-msgstr "Не можах да създам списък с интерфейсите"
+msgstr ""
 
 #: ../semanage/seobject.py:1628
 msgid "SELinux Interface"
-msgstr "SELinux интерфейс"
+msgstr ""
 
 #: ../semanage/seobject.py:1628 ../semanage/seobject.py:1974
 msgid "Context"
-msgstr "Контекст"
+msgstr ""
 
 #: ../semanage/seobject.py:1691
 #, python-format
 msgid "Equivalence class for %s already exists"
-msgstr "Клас за еквивалентност за %s вече съществува"
+msgstr ""
 
 #: ../semanage/seobject.py:1697
 #, python-format
 msgid "File spec %s conflicts with equivalency rule '%s %s'"
-msgstr "Файловата спецификация %s е в конфликт с правило за еквивалентност '%s %s'"
+msgstr ""
 
 #: ../semanage/seobject.py:1706
 #, python-format
 msgid "Equivalence class for %s does not exists"
-msgstr "Клас за еквивалентност за %s не съществува"
+msgstr ""
 
 #: ../semanage/seobject.py:1720
 #, python-format
 msgid "Could not set user in file context for %s"
-msgstr "Не можах да задам потребител в контекст на файл за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1724
 #, python-format
 msgid "Could not set role in file context for %s"
-msgstr "Не можах да задам роля в контекст на файл за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1729 ../semanage/seobject.py:1789
 #, python-format
 msgid "Could not set mls fields in file context for %s"
-msgstr "Не можах да задам mls полета в контекст на файл за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1735
 msgid "Invalid file specification"
-msgstr "Невалидна файлова спецификация"
+msgstr ""
 
 #: ../semanage/seobject.py:1737
 msgid "File specification can not include spaces"
-msgstr "Файловата спецификация не може да съдържа интервали"
+msgstr ""
 
 #: ../semanage/seobject.py:1742
 #, python-format
 msgid ""
 "File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' "
 "instead"
-msgstr "Файловата спецификация %s е в конфликт с правило за еквивалентност '%s %s'; Вместо това опитайте като добавите '%s'"
+msgstr ""
 
 #: ../semanage/seobject.py:1755
 #, python-format
@@ -793,344 +790,344 @@ msgstr ""
 #: ../semanage/seobject.py:1910
 #, python-format
 msgid "Could not check if file context for %s is defined"
-msgstr "Не можах да проверя дали файловия контекст за %s е дефиниран"
+msgstr ""
 
 #: ../semanage/seobject.py:1776
 #, python-format
 msgid "Could not create file context for %s"
-msgstr "Не можах да създам контекст на файл за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1784
 #, python-format
 msgid "Could not set type in file context for %s"
-msgstr "Не можах да задам тип в контекст на файл за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1792 ../semanage/seobject.py:1852
 #: ../semanage/seobject.py:1856
 #, python-format
 msgid "Could not set file context for %s"
-msgstr "Не можах да задам контекст на файл за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1798
 #, python-format
 msgid "Could not add file context for %s"
-msgstr "Не можах да добавя контекст на файл за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1812
 msgid "Requires setype, serange or seuser"
-msgstr "Изисква setype, serange или seuser"
+msgstr ""
 
 #: ../semanage/seobject.py:1828 ../semanage/seobject.py:1914
 #, python-format
 msgid "File context for %s is not defined"
-msgstr "Не е дефиниран файлов контекст за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1834
 #, python-format
 msgid "Could not query file context for %s"
-msgstr "Не можах да запитам файловия контекст за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1860
 #, python-format
 msgid "Could not modify file context for %s"
-msgstr "Не можах да променя файловия контекст за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1873
 msgid "Could not list the file contexts"
-msgstr "Не можах да направя списък на файловите контексти"
+msgstr ""
 
 #: ../semanage/seobject.py:1887
 #, python-format
 msgid "Could not delete the file context %s"
-msgstr "Не можах да изтрия файловия контекст %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1912
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
-msgstr "Файловият контекст за %s е дефиниран в политика, не може да бъде изтрит"
+msgstr ""
 
 #: ../semanage/seobject.py:1918
 #, python-format
 msgid "Could not delete file context for %s"
-msgstr "Не можах да изтрия файловия контекст за %s"
+msgstr ""
 
 #: ../semanage/seobject.py:1933
 msgid "Could not list file contexts"
-msgstr "Не можах да направя списък на файловите контексти"
+msgstr ""
 
 #: ../semanage/seobject.py:1937
 msgid "Could not list local file contexts"
-msgstr "Не можах да направя списък на локалните файловите контексти"
+msgstr ""
 
 #: ../semanage/seobject.py:1974
 msgid "SELinux fcontext"
-msgstr "SELinux ф.контекст"
+msgstr ""
 
 #: ../semanage/seobject.py:1974
 msgid "type"
-msgstr "тип"
+msgstr ""
 
 #: ../semanage/seobject.py:1987
 msgid ""
 "\n"
 "SELinux Distribution fcontext Equivalence \n"
-msgstr "\nДистрибуционна SELinux fcontext еквивалентност \n"
+msgstr ""
 
 #: ../semanage/seobject.py:1992
 msgid ""
 "\n"
 "SELinux Local fcontext Equivalence \n"
-msgstr "\nЛокална SELinux fcontext еквивалентност \n"
+msgstr ""
 
 #: ../semanage/seobject.py:2028 ../semanage/seobject.py:2079
 #: ../semanage/seobject.py:2085
 #, python-format
 msgid "Could not check if boolean %s is defined"
-msgstr "Не можах да проверя дали булевата променлива %s е дефинирана"
+msgstr ""
 
 #: ../semanage/seobject.py:2030 ../semanage/seobject.py:2081
 #, python-format
 msgid "Boolean %s is not defined"
-msgstr "Булева променлива %s не е дефинирана"
+msgstr ""
 
 #: ../semanage/seobject.py:2034
 #, python-format
 msgid "Could not query file context %s"
-msgstr "Не можах да проверя файловия контекст %s"
+msgstr ""
 
 #: ../semanage/seobject.py:2039
 #, python-format
 msgid "You must specify one of the following values: %s"
-msgstr "Трябва да зададете една от следните стойности: %s"
+msgstr ""
 
 #: ../semanage/seobject.py:2044
 #, python-format
 msgid "Could not set active value of boolean %s"
-msgstr "Не можах да задам активна стойност на булева променлива %s"
+msgstr ""
 
 #: ../semanage/seobject.py:2047
 #, python-format
 msgid "Could not modify boolean %s"
-msgstr "Не можах да променя булевата променлива %s"
+msgstr ""
 
 #: ../semanage/seobject.py:2063
 #, python-format
 msgid "Bad format %s: Record %s"
-msgstr "Грешен формат %s: Запис %s"
+msgstr ""
 
 #: ../semanage/seobject.py:2087
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
-msgstr "Булевата променлива %s е дефинирана в политика, не може да се изтрие"
+msgstr ""
 
 #: ../semanage/seobject.py:2091
 #, python-format
 msgid "Could not delete boolean %s"
-msgstr "Не можах да изтрия булева променлива %s"
+msgstr ""
 
 #: ../semanage/seobject.py:2103 ../semanage/seobject.py:2120
 msgid "Could not list booleans"
-msgstr "Не можах да направя списък на булевите променливи"
+msgstr ""
 
 #: ../semanage/seobject.py:2155
 msgid "off"
-msgstr "изкл"
+msgstr ""
 
 #: ../semanage/seobject.py:2155
 msgid "on"
-msgstr "вкл"
+msgstr ""
 
 #: ../semanage/seobject.py:2169
 msgid "SELinux boolean"
-msgstr "SELinux булева"
+msgstr ""
 
 #: ../semanage/seobject.py:2169
 msgid "State"
-msgstr "Състояние"
+msgstr ""
 
 #: ../semanage/seobject.py:2169
 msgid "Default"
-msgstr "Подразбиращ се"
+msgstr ""
 
 #: ../semanage/seobject.py:2169 ../gui/polgen.glade:113
 #: ../gui/polgengui.py:269
 msgid "Description"
-msgstr "Описание"
+msgstr ""
 
 #: ../newrole/newrole.c:201
 #, c-format
 msgid "failed to set PAM_TTY\n"
-msgstr "настройката на PAM_TTY не успя\n"
+msgstr ""
 
 #: ../newrole/newrole.c:290
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
-msgstr "newrole: препълване на хеш таблицата на конфигурацията на услугата за имена\n"
+msgstr ""
 
 #: ../newrole/newrole.c:300
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
-msgstr "newrole:  %s:  грешка на ред %lu.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:439
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
-msgstr "не можах да намеря валиден запис във файла passwd.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:450
 #, c-format
 msgid "Out of memory!\n"
-msgstr "Паметта свърши!\n"
+msgstr ""
 
 #: ../newrole/newrole.c:455
 #, c-format
 msgid "Error!  Shell is not valid.\n"
-msgstr "Грешка!  Обвивката не е валидна.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:512
 #, c-format
 msgid "Unable to clear environment\n"
-msgstr "Не мога да почистя средата\n"
+msgstr ""
 
 #: ../newrole/newrole.c:556 ../newrole/newrole.c:587 ../newrole/newrole.c:617
 #, c-format
 msgid "Error changing uid, aborting.\n"
-msgstr "Грешка при смяна на uid, авариен изход.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:612
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
-msgstr "Грешка при връщане на KEEPCAPS, авариен изход\n"
+msgstr ""
 
 #: ../newrole/newrole.c:635
 #, c-format
 msgid "Error connecting to audit system.\n"
-msgstr "Грешка при връзка със системата за одит.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:641
 #, c-format
 msgid "Error allocating memory.\n"
-msgstr "Грешка при заделяне на памет.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:648
 #, c-format
 msgid "Error sending audit message.\n"
-msgstr "Грешка при изпращане на одит съобщение.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:692 ../newrole/newrole.c:1058
 #, c-format
 msgid "Could not determine enforcing mode.\n"
-msgstr "Не можах да определя enforcing режима.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:699
 #, c-format
 msgid "Error!  Could not open %s.\n"
-msgstr "Грешка!  Не можах да отворя %s.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:705
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
-msgstr "%s!  Не можах да определя текущия контекст за %s, tty няма да се преетикетира.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:715
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
-msgstr "%s!  Не можах да определя нов контекст за %s, tty няма да се преетикетира.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:725
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
-msgstr "%s!  Не можах да задам нов контекст за %s\n"
+msgstr ""
 
 #: ../newrole/newrole.c:772
 #, c-format
 msgid "%s changed labels.\n"
-msgstr "%s промяна на етикетите.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:778
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
-msgstr "Предупреждение! Не можах да възстановя контекста за %s\n"
+msgstr ""
 
 #: ../newrole/newrole.c:835
 #, c-format
 msgid "Error: multiple roles specified\n"
-msgstr "Грешка: зададени са няколко роли\n"
+msgstr ""
 
 #: ../newrole/newrole.c:843
 #, c-format
 msgid "Error: multiple types specified\n"
-msgstr "Грешка: зададени са няколко типа\n"
+msgstr ""
 
 #: ../newrole/newrole.c:850
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
-msgstr "Съжаляваме, -l може да се ползва с поддръжка на SELinux MLS.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:855
 #, c-format
 msgid "Error: multiple levels specified\n"
-msgstr "Грешка: зададени са няколко нива\n"
+msgstr ""
 
 #: ../newrole/newrole.c:865
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
-msgstr "Грешка: не Ви е позволено да променяте нивата на несигурен терминал\n"
+msgstr ""
 
 #: ../newrole/newrole.c:891
 #, c-format
 msgid "Couldn't get default type.\n"
-msgstr "Не можах да определя подразбиращия се тип.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:901
 #, c-format
 msgid "failed to get new context.\n"
-msgstr "получаването на нов контекст не успя.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:908
 #, c-format
 msgid "failed to set new role %s\n"
-msgstr "не успя задаването на нова роля %s\n"
+msgstr ""
 
 #: ../newrole/newrole.c:915
 #, c-format
 msgid "failed to set new type %s\n"
-msgstr "не успя задаването на нов тип %s\n"
+msgstr ""
 
 #: ../newrole/newrole.c:925
 #, c-format
 msgid "failed to build new range with level %s\n"
-msgstr "не успя изграждането на нов диапазон с ниво %s\n"
+msgstr ""
 
 #: ../newrole/newrole.c:930
 #, c-format
 msgid "failed to set new range %s\n"
-msgstr "не успя задаването на нов диапазон %s\n"
+msgstr ""
 
 #: ../newrole/newrole.c:938
 #, c-format
 msgid "failed to convert new context to string\n"
-msgstr "не успя конвертирането на новия контекст към низ\n"
+msgstr ""
 
 #: ../newrole/newrole.c:943
 #, c-format
 msgid "%s is not a valid context\n"
-msgstr "%s не е валиден контекст\n"
+msgstr ""
 
 #: ../newrole/newrole.c:950
 #, c-format
 msgid "Unable to allocate memory for new_context"
-msgstr "Не мога да заделя памет за нов_контекст"
+msgstr ""
 
 #: ../newrole/newrole.c:976
 #, c-format
 msgid "Unable to obtain empty signal set\n"
-msgstr "Не мога да се сдобия с празен сигнален набор\n"
+msgstr ""
 
 #: ../newrole/newrole.c:984
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
-msgstr "Не мога да задам манипулатор на SIGHUP\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1036
 msgid "Sorry, newrole failed to drop capabilities\n"
@@ -1139,433 +1136,433 @@ msgstr ""
 #: ../newrole/newrole.c:1052
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
-msgstr "Съжаляваме, newrole може да се ползва само на SELinux ядро.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1069
 #, c-format
 msgid "failed to get old_context.\n"
-msgstr "не успя извличането на стар_контекст.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1076
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
-msgstr "Внимание!  Не можах да извлека tty информация.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1097
 #, c-format
 msgid "error on reading PAM service configuration.\n"
-msgstr "грешка при четене на конфигурацията на PAM услуга.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1132
 #, c-format
 msgid "newrole: incorrect password for %s\n"
-msgstr "newrole: некоректна парола за %s\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1159
 #, c-format
 msgid "newrole: failure forking: %s"
-msgstr "newrole: неуспешно изпълнение на fork: %s"
+msgstr ""
 
 #: ../newrole/newrole.c:1162 ../newrole/newrole.c:1185
 #, c-format
 msgid "Unable to restore tty label...\n"
-msgstr "Не мога да възстановя етикета на tty...\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1164 ../newrole/newrole.c:1191
 #, c-format
 msgid "Failed to close tty properly\n"
-msgstr "Коректното затваряне на tty не успя\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1223
 #, c-format
 msgid "Could not close descriptors.\n"
-msgstr "Не можах да затворя дескриптори.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1250
 #, c-format
 msgid "Error allocating shell's argv0.\n"
-msgstr "Грешка при заделяне argv0 на обвивката.\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1286
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
-msgstr "Не мога да възстановя средата, авариен изход\n"
+msgstr ""
 
 #: ../newrole/newrole.c:1297
 msgid "failed to exec shell\n"
-msgstr "стартирането на обвивката не успя\n"
+msgstr ""
 
 #: ../load_policy/load_policy.c:22
 #, c-format
 msgid "usage:  %s [-qi]\n"
-msgstr "употреба:  %s [-qi]\n"
+msgstr ""
 
 #: ../load_policy/load_policy.c:71
 #, c-format
 msgid "%s:  Policy is already loaded and initial load requested\n"
-msgstr "%s:  Политиката е вече заредена и е изискано първоначално зареждане\n"
+msgstr ""
 
 #: ../load_policy/load_policy.c:80
 #, c-format
 msgid "%s:  Can't load policy and enforcing mode requested:  %s\n"
-msgstr "%s:  Не може да се зареди политика и искания за налагане режим:  %s\n"
+msgstr ""
 
 #: ../load_policy/load_policy.c:90
 #, c-format
 msgid "%s:  Can't load policy:  %s\n"
-msgstr "%s:  Не може да се зареди политика:  %s\n"
+msgstr ""
 
 #: ../scripts/chcat:92 ../scripts/chcat:169
 msgid "Requires at least one category"
-msgstr "Изисква поне една категория"
+msgstr ""
 
 #: ../scripts/chcat:106 ../scripts/chcat:183
 #, c-format
 msgid "Can not modify sensitivity levels using '+' on %s"
-msgstr "Не може да се променят нивата на чувствителност ползвайки '+' на %s"
+msgstr ""
 
 #: ../scripts/chcat:110
 #, c-format
 msgid "%s is already in %s"
-msgstr "%s вече е в %s"
+msgstr ""
 
 #: ../scripts/chcat:188 ../scripts/chcat:198
 #, c-format
 msgid "%s is not in %s"
-msgstr "%s не е в %s"
+msgstr ""
 
 #: ../scripts/chcat:267 ../scripts/chcat:272
 msgid "Can not combine +/- with other types of categories"
-msgstr "Не може да се комбинира +/- с други типове категории"
+msgstr ""
 
 #: ../scripts/chcat:319
 msgid "Can not have multiple sensitivities"
-msgstr "Не може да има няколко чувствителности"
+msgstr ""
 
 #: ../scripts/chcat:325
 #, c-format
 msgid "Usage %s CATEGORY File ..."
-msgstr "Употреба %s КАТЕГОРИЯ Файл ..."
+msgstr ""
 
 #: ../scripts/chcat:326
 #, c-format
 msgid "Usage %s -l CATEGORY user ..."
-msgstr "Употреба %s -l КАТЕГОРИЯ потребител ..."
+msgstr ""
 
 #: ../scripts/chcat:327
 #, c-format
 msgid "Usage %s [[+|-]CATEGORY],...]q File ..."
-msgstr "Употреба %s [[+|-]КАТЕГОРИЯ],...]q Файл ..."
+msgstr ""
 
 #: ../scripts/chcat:328
 #, c-format
 msgid "Usage %s -l [[+|-]CATEGORY],...]q user ..."
-msgstr "Употреба %s -l [[+|-]КАТЕГОРИЯ],...]q потребител ..."
+msgstr ""
 
 #: ../scripts/chcat:329
 #, c-format
 msgid "Usage %s -d File ..."
-msgstr "Употреба %s -d Файл ..."
+msgstr ""
 
 #: ../scripts/chcat:330
 #, c-format
 msgid "Usage %s -l -d user ..."
-msgstr "Употреба %s -l -d потребител ..."
+msgstr ""
 
 #: ../scripts/chcat:331
 #, c-format
 msgid "Usage %s -L"
-msgstr "Употреба %s -L"
+msgstr ""
 
 #: ../scripts/chcat:332
 #, c-format
 msgid "Usage %s -L -l user"
-msgstr "Употреба %s -L -l потребител"
+msgstr ""
 
 #: ../scripts/chcat:333
 msgid "Use -- to end option list.  For example"
-msgstr "Ползвайте -- за край на списъка с опции.  Например"
+msgstr ""
 
 #: ../scripts/chcat:334
 msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
-msgstr "chcat -- -КонфиденциалноЗаКомпанията /документи/бизнесплан.odt"
+msgstr ""
 
 #: ../scripts/chcat:335
 msgid "chcat -l +CompanyConfidential juser"
-msgstr "chcat -l +КонфиденциалноЗаКомпанията спотребител"
+msgstr ""
 
 #: ../scripts/chcat:399
 #, c-format
 msgid "Options Error %s "
-msgstr "Грешка в опциите %s "
+msgstr ""
 
 #: ../gui/booleansPage.py:194 ../gui/system-config-selinux.glade:1706
 msgid "Boolean"
-msgstr "Булева"
+msgstr ""
 
 #: ../gui/booleansPage.py:245 ../gui/semanagePage.py:162
 msgid "all"
-msgstr "всички"
+msgstr ""
 
 #: ../gui/booleansPage.py:247 ../gui/semanagePage.py:164
 #: ../gui/system-config-selinux.glade:1615
 #: ../gui/system-config-selinux.glade:1820
 #: ../gui/system-config-selinux.glade:2437
 msgid "Customized"
-msgstr "Индивидуални"
+msgstr ""
 
 #: ../gui/fcontextPage.py:64 ../gui/system-config-selinux.glade:1911
 msgid "File Labeling"
-msgstr "Етикетиране на файлове"
+msgstr ""
 
 #: ../gui/fcontextPage.py:74
 msgid ""
 "File\n"
 "Specification"
-msgstr "Файлова\nспецификация"
+msgstr ""
 
 #: ../gui/fcontextPage.py:81
 msgid ""
 "Selinux\n"
 "File Type"
-msgstr "Selinux\nТип файл"
+msgstr ""
 
 #: ../gui/fcontextPage.py:88
 msgid ""
 "File\n"
 "Type"
-msgstr "Файл\nТип"
+msgstr ""
 
 #: ../gui/loginsPage.py:48 ../gui/system-config-selinux.glade:2098
 msgid "User Mapping"
-msgstr "Съответствие на потребители"
+msgstr ""
 
 #: ../gui/loginsPage.py:52
 msgid ""
 "Login\n"
 "Name"
-msgstr "Име за\nвлизане"
+msgstr ""
 
 #: ../gui/loginsPage.py:56 ../gui/usersPage.py:50
 msgid ""
 "SELinux\n"
 "User"
-msgstr "SELinux\nПотребител"
+msgstr ""
 
 #: ../gui/loginsPage.py:59 ../gui/usersPage.py:55
 msgid ""
 "MLS/\n"
 "MCS Range"
-msgstr "MLS/\nMCS Обхват"
+msgstr ""
 
 #: ../gui/loginsPage.py:133
 #, python-format
 msgid "Login '%s' is required"
-msgstr "Изисква се '%s' влизане"
+msgstr ""
 
 #: ../gui/modulesPage.py:49 ../gui/system-config-selinux.glade:2753
 msgid "Policy Module"
-msgstr "Модул за политики"
+msgstr ""
 
 #: ../gui/modulesPage.py:58
 msgid "Module Name"
-msgstr "Име на модул"
+msgstr ""
 
 #: ../gui/modulesPage.py:135
 msgid "Disable Audit"
-msgstr "Забрана на наблюдението"
+msgstr ""
 
 #: ../gui/modulesPage.py:138 ../gui/system-config-selinux.glade:2662
 msgid "Enable Audit"
-msgstr "Разрешаване на наблюдението"
+msgstr ""
 
 #: ../gui/modulesPage.py:163
 msgid "Load Policy Module"
-msgstr "Зареждане на модула за политики"
+msgstr ""
 
 #: ../gui/polgen.glade:9
 msgid "Red Hat 2007"
-msgstr "Red Hat 2007"
+msgstr ""
 
 #: ../gui/polgen.glade:11
 msgid "GPL"
-msgstr "GPL"
+msgstr ""
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../gui/polgen.glade:13 ../gui/system-config-selinux.glade:17
 msgid "translator-credits"
-msgstr "Валентин Ласков, 2012, laskov@fedoraproject.org"
+msgstr ""
 
 #: ../gui/polgen.glade:34
 msgid "Add Booleans Dialog"
-msgstr "Добави диалог за булеви променливи"
+msgstr ""
 
 #: ../gui/polgen.glade:101
 msgid "Boolean Name"
-msgstr "Име на булева променлива"
+msgstr ""
 
 #: ../gui/polgen.glade:230
 msgid "SELinux Policy Generation Tool"
-msgstr "Инструмент за генериране на SELinux политики"
+msgstr ""
 
 #: ../gui/polgen.glade:251
 msgid ""
 "<b>Select the policy type for the application or user role you want to "
 "confine:</b>"
-msgstr "<b>Изберете тип политика за приложението или роля на потребителя, който искате да ограничите:</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:284
 msgid "<b>Applications</b>"
-msgstr "<b>Приложения</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:316 ../sepolicy/sepolicy/generate.py:171
 msgid "Standard Init Daemon"
-msgstr "Standard Init Daemon"
+msgstr ""
 
 #: ../gui/polgen.glade:320 ../gui/polgen.glade:336
 msgid ""
 "Standard Init Daemon are daemons started on boot via init scripts.  Usually "
 "requires a script in /etc/rc.d/init.d"
-msgstr "Standard Init Daemon са демони, стартирани при зареждането от инициализиращи скриптове.  Обикновено изисква скрипт в /etc/rc.d/init.d"
+msgstr ""
 
 #: ../gui/polgen.glade:332 ../sepolicy/sepolicy/generate.py:172
 msgid "DBUS System Daemon"
-msgstr "DBUS System Daemon"
+msgstr ""
 
 #: ../gui/polgen.glade:349
 msgid "Internet Services Daemon (inetd)"
-msgstr "Internet Services Daemon (inetd)"
+msgstr ""
 
 #: ../gui/polgen.glade:353
 msgid "Internet Services Daemon are daemons started by xinetd"
-msgstr "Internet Services Daemon са демони, стартирани от xinetd"
+msgstr ""
 
 #: ../gui/polgen.glade:366 ../sepolicy/sepolicy/generate.py:174
 msgid "Web Application/Script (CGI)"
-msgstr "Web Application/Script (CGI)"
+msgstr ""
 
 #: ../gui/polgen.glade:370
 msgid ""
 "Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
-msgstr "Web Applications/Script (CGI) са CGI скриптове, стартирани от уеб сървъра (apache)"
+msgstr ""
 
 #: ../gui/polgen.glade:383 ../sepolicy/sepolicy/generate.py:176
 msgid "User Application"
-msgstr "Потребителско приложение"
+msgstr ""
 
 #: ../gui/polgen.glade:387 ../gui/polgen.glade:404
 msgid ""
 "User Application are any application that you would like to confine that is "
 "started by a user"
-msgstr "Потребителско приложение са всякакви приложения, стартирани от потребител, които искате да ограничите"
+msgstr ""
 
 #: ../gui/polgen.glade:400 ../sepolicy/sepolicy/generate.py:175
 msgid "Sandbox"
-msgstr "Sandbox"
+msgstr ""
 
 #: ../gui/polgen.glade:446
 msgid "<b>Login Users</b>"
-msgstr "<b>Влизане на потребители</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:478
 msgid "Existing User Roles"
-msgstr "Съществуващи роли на потребителя"
+msgstr ""
 
 #: ../gui/polgen.glade:482
 msgid "Modify an existing login user record."
-msgstr "Промяна на съществуващия запис за влизане на потребител."
+msgstr ""
 
 #: ../gui/polgen.glade:495
 msgid "Minimal Terminal User Role"
-msgstr "Минимална роля на потребител в терминал"
+msgstr ""
 
 #: ../gui/polgen.glade:499
 msgid ""
 "This user will login to a machine only via a terminal or remote login.  By "
 "default this user will have  no setuid, no networking, no su, no sudo."
-msgstr "Този потребител ще влиза в машината само през терминал или отдалечено.  По подразбиране, този потребител няма да има  setuid, достъп до мрежа, su и sudo."
+msgstr ""
 
 #: ../gui/polgen.glade:512
 msgid "Minimal X Windows User Role"
-msgstr "Минимална X Windows роля на потребител"
+msgstr ""
 
 #: ../gui/polgen.glade:516
 msgid ""
 "This user can login to a machine via X or terminal.  By default this user "
 "will have no setuid, no networking, no sudo, no su"
-msgstr "Такъв потребител може да влезе в машината през X или терминал.  По подразбиране потребителят ще е без setuid, без работа в мрежа, без sudo и su"
+msgstr ""
 
 #: ../gui/polgen.glade:529
 msgid "User Role"
-msgstr "Роля на потребител"
+msgstr ""
 
 #: ../gui/polgen.glade:533
 msgid ""
 "User with full networking, no setuid applications without transition, no "
 "sudo, no su."
-msgstr "Потребител с пълноценна работа в мрежа, без setuid приложения без transition, без sudo и su."
+msgstr ""
 
 #: ../gui/polgen.glade:546
 msgid "Admin User Role"
-msgstr "Потребител с Административна роля"
+msgstr ""
 
 #: ../gui/polgen.glade:550
 msgid ""
 "User with full networking, no setuid applications without transition, no su,"
 " can sudo to Root Administration Roles"
-msgstr "Потребител с пълноценна работа в мрежа, без setuid приложения без transition, без su, с възможност за sudo към Административна Root роля."
+msgstr ""
 
 #: ../gui/polgen.glade:592
 msgid "<b>Root Users</b>"
-msgstr "<b>Root потребители</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:623
 msgid "Root Admin User Role"
-msgstr "Потребител с роля Root Администратор"
+msgstr ""
 
 #: ../gui/polgen.glade:627
 msgid ""
 "Select Root Administrator User Role, if this user will be used to administer"
 " the machine while running as root.  This user will not be able to login to "
 "the system directly."
-msgstr "Изберете роля на потребител Root Администратор, ако този потребител ще се ползва да администрира машината, докато работи като root.  Този потребител няма да е способен да влезе в системата директно."
+msgstr ""
 
 #: ../gui/polgen.glade:705
 msgid "<b>Enter name of application or user role:</b>"
-msgstr "<b>Въведете име на приложение или роля на потребител:</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:728 ../gui/polgengui.py:267
 msgid "Name"
-msgstr "Име"
+msgstr ""
 
 #: ../gui/polgen.glade:739
 msgid "Enter complete path for executable to be confined."
-msgstr "Въведете пълен път на изпълним файл, който ще бъде ограничен."
+msgstr ""
 
 #: ../gui/polgen.glade:756 ../gui/polgen.glade:838 ../gui/polgen.glade:2361
 msgid "..."
-msgstr "..."
+msgstr ""
 
 #: ../gui/polgen.glade:776
 msgid "Enter unique name for the confined application or user role."
-msgstr "Въведете уникално име за ограниченото приложение или роля на потребител."
+msgstr ""
 
 #: ../gui/polgen.glade:794
 msgid "Executable"
-msgstr "Изпълним файл"
+msgstr ""
 
 #: ../gui/polgen.glade:808
 msgid "Init script"
-msgstr "Инициализиращ скрипт"
+msgstr ""
 
 #: ../gui/polgen.glade:821
 msgid ""
 "Enter complete path to init script used to start the confined application."
-msgstr "Въведете пълен път до инициализиращ скрипт, използван за стартиране на ограниченото приложение."
+msgstr ""
 
 #: ../gui/polgen.glade:887
 msgid "<b>Select existing role to modify:</b>"
-msgstr "<b>Изберете съществуваща роля за промяна:</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:908
 msgid "Select the user roles that will transiton to the %s domain."
@@ -1600,63 +1597,63 @@ msgstr ""
 
 #: ../gui/polgen.glade:1056
 msgid "<b>Select domains that %s will administer:</b>"
-msgstr "<b>Изберете домейни, които %s ще администрира:</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:1074 ../gui/polgen.glade:1129
 msgid "Select the domains that you would like this user administer."
-msgstr "Изберете домейните, които желаете този потребител да администрира."
+msgstr ""
 
 #: ../gui/polgen.glade:1111
 msgid "<b>Select additional roles for %s:</b>"
-msgstr "<b>Изберете допълнителни роли за %s:</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:1166
 msgid "<b>Enter network ports that %s binds on:</b>"
-msgstr "<b>Въведете мрежови портове, към които %s ще се привързва:</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:1186 ../gui/polgen.glade:1557
 msgid "<b>TCP Ports</b>"
-msgstr "<b>TCP портове</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:1223 ../gui/polgen.glade:1390 ../gui/polgen.glade:1589
 #: ../gui/polgen.glade:1698
 msgid "All"
-msgstr "Всички"
+msgstr ""
 
 #: ../gui/polgen.glade:1227 ../gui/polgen.glade:1394
 msgid "Allows %s to bind to any udp port"
-msgstr "Позволява %s да се привързва към който и да е udp порт"
+msgstr ""
 
 #: ../gui/polgen.glade:1240 ../gui/polgen.glade:1407
 msgid "600-1024"
-msgstr "600-1024"
+msgstr ""
 
 #: ../gui/polgen.glade:1244 ../gui/polgen.glade:1411
 msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
-msgstr "Позволи %s да извиква bindresvport с 0. Привързване към порт 600-1024"
+msgstr ""
 
 #: ../gui/polgen.glade:1257 ../gui/polgen.glade:1424
 msgid "Unreserved Ports (>1024)"
-msgstr "Нерезервирани портове (>1024)"
+msgstr ""
 
 #: ../gui/polgen.glade:1261 ../gui/polgen.glade:1428
 msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s binds "
 "to. Example: 612, 650-660"
-msgstr "Въведете списък udp портове или диапазони от портове, разделени със запетаи, към които %s ще се привързва. Пример: 612, 650-660"
+msgstr ""
 
 #: ../gui/polgen.glade:1289 ../gui/polgen.glade:1456 ../gui/polgen.glade:1609
 #: ../gui/polgen.glade:1718
 msgid "Select Ports"
-msgstr "Изберете портове"
+msgstr ""
 
 #: ../gui/polgen.glade:1302 ../gui/polgen.glade:1469
 msgid "Allows %s to bind to any udp ports > 1024"
-msgstr "Позволява %s да се привързва към който и да е udp порт > 1024"
+msgstr ""
 
 #: ../gui/polgen.glade:1353 ../gui/polgen.glade:1666
 msgid "<b>UDP Ports</b>"
-msgstr "<b>UDP портове</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:1519
 msgid ""
@@ -1666,237 +1663,237 @@ msgstr ""
 
 #: ../gui/polgen.glade:1537
 msgid "<b>Select network ports that %s connects to:</b>"
-msgstr "<b>Изберете мрежовите портове, към които %s ще се свързва:</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:1593
 msgid "Allows %s to connect to any tcp port"
-msgstr "Позволява %s да се свързва с който и да е tcp порт"
+msgstr ""
 
 #: ../gui/polgen.glade:1622
 msgid ""
 "Enter a comma separated list of tcp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
-msgstr "Въведете списък tcp портове или диапазони от портове, разделени със запетаи, към които %s ще се свързва. Пример: 612, 650-660"
+msgstr ""
 
 #: ../gui/polgen.glade:1702
 msgid "Allows %s to connect to any udp port"
-msgstr "Позволява %s да се свързва с който и да е udp порт"
+msgstr ""
 
 #: ../gui/polgen.glade:1731
 msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
-msgstr "Въведете списък udp портове или диапазони от портове, разделени със запетаи, към които %s ще се свързва. Пример: 612, 650-660"
+msgstr ""
 
 #: ../gui/polgen.glade:1792
 msgid "<b>Select common application traits for %s:</b>"
-msgstr "<b>Изберете отличителни черти на приложението %s:</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:1809
 msgid "Writes syslog messages\t"
-msgstr "Пише syslog съобщения\t"
+msgstr ""
 
 #: ../gui/polgen.glade:1824
 msgid "Create/Manipulate temporary files in /tmp"
-msgstr "Създава/Работи с временни файлове в /tmp"
+msgstr ""
 
 #: ../gui/polgen.glade:1839
 msgid "Uses Pam for authentication"
-msgstr "Ползва Pam за удостоверяване"
+msgstr ""
 
 #: ../gui/polgen.glade:1854
 msgid "Uses nsswitch or getpw* calls"
-msgstr "Ползва извиквания на nsswitch или getpw*"
+msgstr ""
 
 #: ../gui/polgen.glade:1869
 msgid "Uses dbus"
-msgstr "Ползва dbus"
+msgstr ""
 
 #: ../gui/polgen.glade:1884
 msgid "Sends audit messages"
-msgstr "Праща съобщения към наблюдението"
+msgstr ""
 
 #: ../gui/polgen.glade:1899
 msgid "Interacts with the terminal"
-msgstr "Взаимодейства с терминала"
+msgstr ""
 
 #: ../gui/polgen.glade:1914
 msgid "Sends email"
-msgstr "Праща имейл"
+msgstr ""
 
 #: ../gui/polgen.glade:1961
 msgid "<b>Add files/directories that %s manages</b>"
-msgstr "<b>Добавете файлове/директории, които %s управлява</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:2122
 msgid ""
 "Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
 "Files ..."
-msgstr "Файлове/директории, които %s \"управлява\". Pid файлове, Log файлове, /var/lib файлове ..."
+msgstr ""
 
 #: ../gui/polgen.glade:2166
 msgid "<b>Add booleans from the %s policy:</b>"
-msgstr "<b>Добави булевите променливи от политиката %s:</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:2274
 msgid "Add/Remove booleans used by the %s domain"
-msgstr "Добавя/Премахва булеви променливи, използвани от домейна %s"
+msgstr ""
 
 #: ../gui/polgen.glade:2316
 msgid "<b>Which directory you will generate the %s policy?</b>"
-msgstr "<b>В коя директория ще генерирате политиката %s?</b>"
+msgstr ""
 
 #: ../gui/polgen.glade:2334
 msgid "Policy Directory"
-msgstr "Директория на политиката"
+msgstr ""
 
 #: ../gui/polgengui.py:277
 msgid "Role"
-msgstr "Роля"
+msgstr ""
 
 #: ../gui/polgengui.py:284
 msgid "Existing_User"
-msgstr "Съществуващ потребител"
+msgstr ""
 
 #: ../gui/polgengui.py:298 ../gui/polgengui.py:306 ../gui/polgengui.py:320
 msgid "Application"
-msgstr "Приложение"
+msgstr ""
 
 #: ../gui/polgengui.py:363
 #, python-format
 msgid "%s must be a directory"
-msgstr "%s трябва да е директория"
+msgstr ""
 
 #: ../gui/polgengui.py:423 ../gui/polgengui.py:704
 msgid "You must select a user"
-msgstr "Трябва да изберете потребител"
+msgstr ""
 
 #: ../gui/polgengui.py:553
 msgid "Select executable file to be confined."
-msgstr "Посочете изпълним файл, който да бъде ограничен"
+msgstr ""
 
 #: ../gui/polgengui.py:564
 msgid "Select init script file to be confined."
-msgstr "Посочете файл с инициализиращ скрипт, който да бъде ограничен"
+msgstr ""
 
 #: ../gui/polgengui.py:574
 msgid "Select file(s) that confined application creates or writes"
-msgstr "Посочете файл(ове), които ограниченото приложение създава или пише"
+msgstr ""
 
 #: ../gui/polgengui.py:581
 msgid "Select directory(s) that the confined application owns and writes into"
-msgstr "Посочете директория(и), които ограниченото приложение притежава и пише в тях"
+msgstr ""
 
 #: ../gui/polgengui.py:643
 msgid "Select directory to generate policy files in"
-msgstr "Посочете директория, в която да се генерират файловете на политиката"
+msgstr ""
 
 #: ../gui/polgengui.py:660
 #, python-format
 msgid ""
 "Type %s_t already defined in current policy.\n"
 "Do you want to continue?"
-msgstr "Типът %s_t е вече дефиниран в текущата политика.\nИскате ли да продължите?"
+msgstr ""
 
 #: ../gui/polgengui.py:660 ../gui/polgengui.py:664
 msgid "Verify Name"
-msgstr "Проверете името"
+msgstr ""
 
 #: ../gui/polgengui.py:664
 #, python-format
 msgid ""
 "Module %s.pp already loaded in current policy.\n"
 "Do you want to continue?"
-msgstr "Модулът %s.pp е вече зареден в текущата политика.\nИскате ли да продължите?"
+msgstr ""
 
 #: ../gui/polgengui.py:710
 msgid ""
 "You must add a name made up of letters and numbers and containing no spaces."
-msgstr "Трябва да добавите име, съставено от букви и цифри, и без интервали."
+msgstr ""
 
 #: ../gui/polgengui.py:724
 msgid "You must enter a executable"
-msgstr "Трябва да въведете изпълним файл"
+msgstr ""
 
 #: ../gui/polgengui.py:749 ../gui/system-config-selinux.py:180
 msgid "Configue SELinux"
-msgstr "Конфигуриране на "
+msgstr ""
 
 #: ../gui/portsPage.py:51 ../gui/system-config-selinux.glade:2528
 msgid "Network Port"
-msgstr "Мрежови порт"
+msgstr ""
 
 #: ../gui/portsPage.py:85
 msgid ""
 "SELinux Port\n"
 "Type"
-msgstr "SELinux Тип\nпорт"
+msgstr ""
 
 #: ../gui/portsPage.py:91 ../gui/system-config-selinux.glade:363
 msgid "Protocol"
-msgstr "Протокол"
+msgstr ""
 
 #: ../gui/portsPage.py:96 ../gui/system-config-selinux.glade:479
 msgid ""
 "MLS/MCS\n"
 "Level"
-msgstr "MLS/MCS\nниво"
+msgstr ""
 
 #: ../gui/portsPage.py:101
 msgid "Port"
-msgstr "Порт"
+msgstr ""
 
 #: ../gui/portsPage.py:207
 #, python-format
 msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
-msgstr "Номер \"%s\" на порт не е валиден.  0 < Порт_номер < 65536 "
+msgstr ""
 
 #: ../gui/portsPage.py:252
 msgid "List View"
-msgstr "Изглед като списък"
+msgstr ""
 
 #: ../gui/portsPage.py:255 ../gui/system-config-selinux.glade:2419
 msgid "Group View"
-msgstr "Изглед като група"
+msgstr ""
 
 #: ../gui/semanagePage.py:126
 #, python-format
 msgid "Are you sure you want to delete %s '%s'?"
-msgstr "Сигурни ли сте, че искате да изтриете %s '%s'?"
+msgstr ""
 
 #: ../gui/semanagePage.py:126
 #, python-format
 msgid "Delete %s"
-msgstr "Изтрий %s"
+msgstr ""
 
 #: ../gui/semanagePage.py:134
 #, python-format
 msgid "Add %s"
-msgstr "Добави %s"
+msgstr ""
 
 #: ../gui/semanagePage.py:148
 #, python-format
 msgid "Modify %s"
-msgstr "Промени %s"
+msgstr ""
 
 #: ../gui/statusPage.py:69 ../gui/system-config-selinux.glade:2819
 msgid "Permissive"
-msgstr "Permissive"
+msgstr ""
 
 #: ../gui/statusPage.py:70 ../gui/system-config-selinux.glade:2837
 msgid "Enforcing"
-msgstr "Enforcing"
+msgstr ""
 
 #: ../gui/statusPage.py:94
 msgid "Status"
-msgstr "Състояние"
+msgstr ""
 
 #: ../gui/statusPage.py:133
 msgid ""
 "Changing the policy type will cause a relabel of the entire file system on "
 "the next boot. Relabeling takes a long time depending on the size of the "
 "file system.  Do you wish to continue?"
-msgstr "Променяйки типа политика, ще предизвикате преетикетиране на цялата файлова система при следващото зареждане. Преетикетирането отнема доста време, в зависимост от големината на файловата система.  Искате ли да продължите?"
+msgstr ""
 
 #: ../gui/statusPage.py:147
 msgid ""
@@ -1906,46 +1903,46 @@ msgid ""
 "system, you can go to permissive mode which will only log errors and not "
 "enforce SELinux policy.  Permissive mode does not require a reboot    Do you"
 " wish to continue?"
-msgstr "Промяната към забранен SELinux изисква рестартиране.  Това не се препоръчва.  Ако по-късно решите да активирате SELinux, системата ще трябва да бъде преетикетирана.  Ако просто искате да видите дали SELinux е причина за проблем в системата Ви, може да преминете в режим permissive, който само ще регистрира грешките, без да налага SELinux политика.  Режимът Permissive не изисква рестартиране    Искате ли да продължите?"
+msgstr ""
 
 #: ../gui/statusPage.py:152
 msgid ""
 "Changing to SELinux enabled will cause a relabel of the entire file system "
 "on the next boot. Relabeling takes a long time depending on the size of the "
 "file system.  Do you wish to continue?"
-msgstr "Промяната към разрешен SELinux ще предизвика преетикетиране на цялата файлова система при следващото зареждане. Преетикетирането отнема доста време, в зависимост от големината на файловата система.  Искате ли да продължите?"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:11
 msgid "system-config-selinux"
-msgstr "system-config-selinux"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:12
 msgid ""
 "Copyright (c)2006 Red Hat, Inc.\n"
 "Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
-msgstr "Copyright (c)2006 Red Hat, Inc.\nCopyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:22
 #: ../gui/system-config-selinux.glade:544
 msgid "Add SELinux Login Mapping"
-msgstr "Добави SELinux съответствие за влизане"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:257
 msgid "Add SELinux Network Ports"
-msgstr "Добавя SELinux мрежови портове"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:391
 #: ../gui/system-config-selinux.glade:678
 msgid "SELinux Type"
-msgstr "SELinux тип"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:622
 msgid "File Specification"
-msgstr "Файлова спецификация"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:650
 msgid "File Type"
-msgstr "Тип файл"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:727
 msgid ""
@@ -1957,58 +1954,58 @@ msgid ""
 "socket\n"
 "symbolic link\n"
 "named pipe\n"
-msgstr "всички файлове\nнормален файл\nдиректория\nзнаково устр.\nблоково устр.\nсокет\nсимволна връзка\nnamed pipe\n"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:773
 msgid "MLS"
-msgstr "MLS"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:837
 msgid "Add SELinux User"
-msgstr "Добавя SELinux потребител"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1079
 msgid "SELinux Administration"
-msgstr "SELinux администрация"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1122
 msgid "Add"
-msgstr "Добави"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1144
 msgid "_Properties"
-msgstr "_Свойства"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1166
 msgid "_Delete"
-msgstr "_Изтрий"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1256
 msgid "Select Management Object"
-msgstr "Изберете Management Object"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1273
 msgid "<b>Select:</b>"
-msgstr "<b>Изберете:</b>"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1326
 msgid "System Default Enforcing Mode"
-msgstr "Системен Enforcing режим по подразбиране"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1354
 msgid ""
 "Disabled\n"
 "Permissive\n"
 "Enforcing\n"
-msgstr "Забранен\nPermissive\nEnforcing\n"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1373
 msgid "Current Enforcing Mode"
-msgstr "Текущ Enforcing режим"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1418
 msgid "System Default Policy Type: "
-msgstr "Системен тип политика по подразбиране: "
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1463
 msgid ""
@@ -2016,23 +2013,23 @@ msgid ""
 "Relabeling can take a very long time, depending on the size of the system.  "
 "If you are changing policy types or going from disabled to enforcing, a "
 "relabel is required."
-msgstr "Изберете, ако искате да преетикетирате тогава цялата файлова система при следващото зареждане.  Преетикетирането може да отнеме доста време, в зависимост от големината на файловата система.  Ако променяте типовете политика или преминавате от забранен към enforcing, е необходимо преетикетиране."
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1509
 msgid "Relabel on next reboot."
-msgstr "Преетикетиране при следващото зареждане"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1561
 msgid "label37"
-msgstr "label37"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1598
 msgid "Revert boolean setting to system default"
-msgstr "Върни булевите настройки към тези по подразбиране"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1614
 msgid "Toggle between Customized and All Booleans"
-msgstr "Превключва между Индивидуални и Всички булеви променливи"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1645
 #: ../gui/system-config-selinux.glade:1850
@@ -2042,127 +2039,127 @@ msgstr "Превключва между Индивидуални и Всички
 #: ../gui/system-config-selinux.glade:2692
 #: ../gui/system-config-selinux.glade:2867
 msgid "Filter"
-msgstr "Филтър"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1734
 msgid "label50"
-msgstr "label50"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1771
 msgid "Add File Context"
-msgstr "Добавя файлов контекст"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1787
 msgid "Modify File Context"
-msgstr "Променя файлов контекст"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1803
 msgid "Delete File Context"
-msgstr "Изтрива файлов контекст"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1819
 msgid "Toggle between all and customized file context"
-msgstr "Превключва между всички и индивидуален файлов контекст"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1939
 msgid "label38"
-msgstr "label38"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1976
 msgid "Add SELinux User Mapping"
-msgstr "Добави SELinux съответствие на потребител"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:1992
 msgid "Modify SELinux User Mapping"
-msgstr "Промени SELinux съответствие на потребител"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2008
 msgid "Delete SELinux User Mapping"
-msgstr "Изтрий SELinux съответствие на потребител"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2126
 msgid "label39"
-msgstr "label39"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2163
 msgid "Add User"
-msgstr "Добавя потребител"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2179
 msgid "Modify User"
-msgstr "Променя потребител"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2195
 msgid "Delete User"
-msgstr "Изтрива потребител"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2313
 msgid "label41"
-msgstr "label41"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2350
 msgid "Add Network Port"
-msgstr "Добавя мрежов порт"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2366
 msgid "Edit Network Port"
-msgstr "Редактира мрежов порт"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2382
 msgid "Delete Network Port"
-msgstr "Изтрива мрежов порт"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2418
 #: ../gui/system-config-selinux.glade:2436
 msgid "Toggle between Customized and All Ports"
-msgstr "Превключва между Индивидуални и Всички портове"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2556
 msgid "label42"
-msgstr "label42"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2593
 msgid "Generate new policy module"
-msgstr "Генерира нов модул с политика"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2609
 msgid "Load policy module"
-msgstr "Зарежда модул с политика"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2625
 msgid "Remove loadable policy module"
-msgstr "Премахва зареждаем модул с политика"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2661
 msgid ""
 "Enable/Disable additional audit rules, that are normally not reported in the"
 " log files."
-msgstr "Разрешава/Забранява допълнителни правила за наблюдение, които нормално не се докладват в журналните файлове."
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2781
 msgid "label44"
-msgstr "label44"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2818
 msgid "Change process mode to permissive."
-msgstr "Смени режима на процеса на permissive."
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2836
 msgid "Change process mode to enforcing"
-msgstr "Смени режима на процеса на enforcing"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2928
 msgid "Process Domain"
-msgstr "Домейн на процеса"
+msgstr ""
 
 #: ../gui/system-config-selinux.glade:2956
 msgid "label59"
-msgstr "label59"
+msgstr ""
 
 #: ../gui/usersPage.py:138
 #, python-format
 msgid "SELinux user '%s' is required"
-msgstr "Изисква се SELinux потребител '%s'"
+msgstr ""
 
 #: ../sepolicy/sepolicy.py:202
 msgid "Generate SELinux man pages"
@@ -2311,11 +2308,11 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/__init__.py:127
 msgid "unknown"
-msgstr "неизвестен"
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:173
 msgid "Internet Services Daemon"
-msgstr "Internet Services демон"
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:177
 msgid "Existing Domain Type"
@@ -2348,7 +2345,7 @@ msgstr ""
 #: ../sepolicy/sepolicy/generate.py:221
 #, python-format
 msgid "Ports must be numbers or ranges of numbers from 1 to %d "
-msgstr "Портовете трябва да са номера или интервали от номера от 1 до %d "
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:231
 msgid "You must enter a valid policy type"
@@ -2363,7 +2360,7 @@ msgstr ""
 msgid ""
 "Name must be alpha numberic with no spaces. Consider using option \"-n "
 "MODULENAME\""
-msgstr "Името трябва да е от букви и цифри без интервали. Разгледайте ползването на опцията \"-n MODULENAME\""
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:447
 msgid "User Role types can not be assigned executables."
@@ -2371,27 +2368,27 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:453
 msgid "Only Daemon apps can use an init script.."
-msgstr "Само Демон приложенията могат да ползват инит скрипт."
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:471
 msgid "use_resolve must be a boolean value "
-msgstr "use_resolve трябва да е булева стойност "
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:477
 msgid "use_syslog must be a boolean value "
-msgstr "use_syslog трябва да е булева стойност "
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:483
 msgid "use_kerberos must be a boolean value "
-msgstr "use_kerberos трябва да е булева стойност "
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:489
 msgid "manage_krb5_rcache must be a boolean value "
-msgstr "manage_krb5_rcache трябва да е булева стойност "
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:519
 msgid "USER Types automatically get a tmp type"
-msgstr "USER типовете автоматично получават tmp тип"
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:857
 #, python-format
@@ -2400,19 +2397,19 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:1059
 msgid "You must enter the executable path for your confined process"
-msgstr "Трябва да въведете изпълнимия път за Вашия ограничен процес"
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:1321
 msgid "Type Enforcement file"
-msgstr "Тип Enforcement файл"
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:1322
 msgid "Interface file"
-msgstr "Интерфейсен файл"
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:1323
 msgid "File Contexts file"
-msgstr "Файл контекстен файл"
+msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:1324
 msgid "Spec file"
@@ -2420,7 +2417,7 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:1325
 msgid "Setup Script"
-msgstr "Setup Script"
+msgstr ""
 
 #: booleans.py:1
 msgid ""
@@ -2466,7 +2463,7 @@ msgstr ""
 msgid ""
 "Allow cdrecord to read various content. nfs, samba, removable devices, user "
 "temp and untrusted content files"
-msgstr "Позволи cdrecord да чете различно съдържание. nfs, samba, сменяеми устройства, временни потребителски файлове и такива с несигурно съдържание"
+msgstr ""
 
 #: booleans.py:11
 msgid "Allow clamd to use JIT compiler"
@@ -2516,7 +2513,7 @@ msgstr ""
 
 #: booleans.py:22
 msgid "Allow all daemons to write corefiles to /"
-msgstr "Позволи всички демони да пишат основни файлове в /"
+msgstr ""
 
 #: booleans.py:23
 msgid "Allow all daemons to use tcp wrappers."
@@ -2911,7 +2908,7 @@ msgstr ""
 
 #: booleans.py:113
 msgid "Allow mplayer executable stack"
-msgstr "Позволи изпълним стек на mplayer"
+msgstr ""
 
 #: booleans.py:114
 msgid "Allow mysqld to connect to all ports"
@@ -3015,7 +3012,7 @@ msgstr ""
 
 #: booleans.py:137
 msgid "Allow pppd to be run for a regular user"
-msgstr "Позволи pppd да бъде стартиран за нормален потребител"
+msgstr ""
 
 #: booleans.py:138
 msgid ""
@@ -3266,7 +3263,7 @@ msgstr ""
 
 #: booleans.py:190
 msgid "Allow ssh logins as sysadm_r:sysadm_t"
-msgstr "Позволи ssh влизания като sysadm_r:sysadm_t"
+msgstr ""
 
 #: booleans.py:191
 msgid "Allow staff to exec content"

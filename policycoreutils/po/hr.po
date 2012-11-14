@@ -1,34 +1,30 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Policycoreutils\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-25 07:28-0400\n"
-"PO-Revision-Date: 2012-04-02 20:30+0000\n"
+"POT-Creation-Date: 2013-01-04 12:01-0500\n"
+"PO-Revision-Date: 2013-01-04 17:02+0000\n"
 "Last-Translator: dwalsh <dwalsh@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
 "USAGE: run_init <script> <args ...>\n"
 "  where: <script> is the name of the init script to run,\n"
 "         <args ...> are the arguments to that script."
-msgstr ""
-"UPOTREBA: run_init <skripta> <argumenti ...>\n"
-"  gdje je <skripta> naziv init skripte koju je potrebno pokrenuti,\n"
-"         <argumenti ...> argumenti za tu skriptu."
+msgstr "UPOTREBA: run_init <skripta> <argumenti ...>\n  gdje je <skripta> naziv init skripte koju je potrebno pokrenuti,\n         <argumenti ...> argumenti za tu skriptu."
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1124
+#: ../run_init/run_init.c:126 ../newrole/newrole.c:1123
 #, c-format
 msgid "failed to initialize PAM\n"
 msgstr "Inicijalizacija PAM nije uspjela\n"
@@ -77,353 +73,359 @@ msgstr "Nažalost, run_init može se upotrijebiti samo na SELinux kernelu.\n"
 msgid "authentication failed.\n"
 msgstr "Provjere autentičnosti nije uspjela.\n"
 
-#: ../run_init/run_init.c:405 ../newrole/newrole.c:1258
+#: ../run_init/run_init.c:405 ../newrole/newrole.c:1257
 #, c-format
 msgid "Could not set exec context to %s.\n"
 msgstr "Nije moguće postaviti exec kontekst za %s.\n"
 
-#: ../audit2allow/audit2allow:230
+#: ../audit2allow/audit2allow:232
 msgid "******************** IMPORTANT ***********************\n"
 msgstr "********************  VAŽNO  ***********************\n"
 
-#: ../audit2allow/audit2allow:231
+#: ../audit2allow/audit2allow:233
 msgid "To make this policy package active, execute:"
 msgstr "Za aktiviranje ovog paketa pravila pokrenite:"
 
-#: ../semanage/seobject.py:143 ../semanage/seobject.py:147
-msgid "global"
-msgstr ""
-
-#: ../semanage/seobject.py:225
+#: ../semanage/seobject.py:194
 msgid "Could not create semanage handle"
 msgstr "Hvatište semanage nije moguće izraditi"
 
-#: ../semanage/seobject.py:233
+#: ../semanage/seobject.py:202
 msgid "SELinux policy is not managed or store cannot be accessed."
 msgstr "SELinux pravilima se ne upravlja ili pristup pohrani nije moguć."
 
-#: ../semanage/seobject.py:238
+#: ../semanage/seobject.py:207
 msgid "Cannot read policy store."
 msgstr "Čitanje pohrane pravila nije moguće."
 
-#: ../semanage/seobject.py:243
+#: ../semanage/seobject.py:212
 msgid "Could not establish semanage connection"
 msgstr "Uspostavljanje semanage veze nije moguće"
 
-#: ../semanage/seobject.py:248
+#: ../semanage/seobject.py:217
 msgid "Could not test MLS enabled status"
 msgstr ""
 
-#: ../semanage/seobject.py:254 ../semanage/seobject.py:269
+#: ../semanage/seobject.py:223 ../semanage/seobject.py:238
 msgid "Not yet implemented"
 msgstr ""
 
-#: ../semanage/seobject.py:258
+#: ../semanage/seobject.py:227
 msgid "Semanage transaction already in progress"
 msgstr ""
 
-#: ../semanage/seobject.py:267
+#: ../semanage/seobject.py:236
 msgid "Could not start semanage transaction"
 msgstr "Semanage transakciju nije moguće pokrenuti"
 
-#: ../semanage/seobject.py:278
+#: ../semanage/seobject.py:248
 msgid "Could not commit semanage transaction"
 msgstr ""
 
-#: ../semanage/seobject.py:283
+#: ../semanage/seobject.py:253
 msgid "Semanage transaction not in progress"
 msgstr ""
 
-#: ../semanage/seobject.py:295 ../semanage/seobject.py:375
+#: ../semanage/seobject.py:265 ../semanage/seobject.py:345
 msgid "Could not list SELinux modules"
 msgstr ""
 
-#: ../semanage/seobject.py:308
+#: ../semanage/seobject.py:278
 msgid "Modules Name"
 msgstr ""
 
-#: ../semanage/seobject.py:308 ../gui/modulesPage.py:62
+#: ../semanage/seobject.py:278 ../gui/modulesPage.py:63
 msgid "Version"
 msgstr "Verzija"
 
-#: ../semanage/seobject.py:311 ../gui/statusPage.py:75
+#: ../semanage/seobject.py:281 ../gui/statusPage.py:75
 msgid "Disabled"
 msgstr ""
 
-#: ../semanage/seobject.py:326
+#: ../semanage/seobject.py:296
 #, python-format
 msgid "Could not disable module %s (remove failed)"
 msgstr ""
 
-#: ../semanage/seobject.py:337
+#: ../semanage/seobject.py:307
 #, python-format
 msgid "Could not enable module %s (remove failed)"
 msgstr ""
 
-#: ../semanage/seobject.py:352
+#: ../semanage/seobject.py:322
 #, python-format
 msgid "Could not remove module %s (remove failed)"
 msgstr ""
 
-#: ../semanage/seobject.py:362
+#: ../semanage/seobject.py:332
 msgid "dontaudit requires either 'on' or 'off'"
 msgstr ""
 
-#: ../semanage/seobject.py:391
+#: ../semanage/seobject.py:360
 msgid "Builtin Permissive Types"
 msgstr ""
 
-#: ../semanage/seobject.py:401
+#: ../semanage/seobject.py:370
 msgid "Customized Permissive Types"
 msgstr ""
 
-#: ../semanage/seobject.py:442
+#: ../semanage/seobject.py:412
 #, python-format
 msgid "Could not set permissive domain %s (module installation failed)"
 msgstr ""
 
-#: ../semanage/seobject.py:448
+#: ../semanage/seobject.py:418
 #, python-format
 msgid "Could not remove permissive domain %s (remove failed)"
 msgstr ""
 
-#: ../semanage/seobject.py:483 ../semanage/seobject.py:557
-#: ../semanage/seobject.py:603 ../semanage/seobject.py:700
-#: ../semanage/seobject.py:730 ../semanage/seobject.py:797
-#: ../semanage/seobject.py:854 ../semanage/seobject.py:1101
-#: ../semanage/seobject.py:1790 ../semanage/seobject.py:1853
-#: ../semanage/seobject.py:1872 ../semanage/seobject.py:1993
-#: ../semanage/seobject.py:2045
+#: ../semanage/seobject.py:453 ../semanage/seobject.py:527
+#: ../semanage/seobject.py:573 ../semanage/seobject.py:695
+#: ../semanage/seobject.py:725 ../semanage/seobject.py:792
+#: ../semanage/seobject.py:849 ../semanage/seobject.py:1104
+#: ../semanage/seobject.py:1820 ../semanage/seobject.py:1883
+#: ../semanage/seobject.py:1902 ../semanage/seobject.py:2025
+#: ../semanage/seobject.py:2076
 #, python-format
 msgid "Could not create a key for %s"
 msgstr "Izrada ključa za %s nije moguća"
 
-#: ../semanage/seobject.py:487 ../semanage/seobject.py:561
-#: ../semanage/seobject.py:607 ../semanage/seobject.py:613
+#: ../semanage/seobject.py:457 ../semanage/seobject.py:531
+#: ../semanage/seobject.py:577 ../semanage/seobject.py:583
 #, python-format
 msgid "Could not check if login mapping for %s is defined"
 msgstr "Nije moguće provjeriti je li mapiranje za prijavu %s određeno"
 
-#: ../semanage/seobject.py:496
+#: ../semanage/seobject.py:466
 #, python-format
 msgid "Linux Group %s does not exist"
 msgstr ""
 
-#: ../semanage/seobject.py:501
+#: ../semanage/seobject.py:471
 #, python-format
 msgid "Linux User %s does not exist"
 msgstr "Linux korisnik %s ne postoji"
 
-#: ../semanage/seobject.py:505
+#: ../semanage/seobject.py:475
 #, python-format
 msgid "Could not create login mapping for %s"
 msgstr "Izrada mapiranja prijave za %s nije moguća"
 
-#: ../semanage/seobject.py:509 ../semanage/seobject.py:745
+#: ../semanage/seobject.py:479 ../semanage/seobject.py:740
 #, python-format
 msgid "Could not set name for %s"
 msgstr "Zadavanje naziva za %s nije moguće"
 
-#: ../semanage/seobject.py:514 ../semanage/seobject.py:755
+#: ../semanage/seobject.py:484 ../semanage/seobject.py:750
 #, python-format
 msgid "Could not set MLS range for %s"
 msgstr "Zadavanje MLS raspona za %s nije moguće"
 
-#: ../semanage/seobject.py:518
+#: ../semanage/seobject.py:488
 #, python-format
 msgid "Could not set SELinux user for %s"
 msgstr "Zadavanje SELinux korisnika za %s nije moguće"
 
-#: ../semanage/seobject.py:522
+#: ../semanage/seobject.py:492
 #, python-format
 msgid "Could not add login mapping for %s"
 msgstr "Dodavanje mapiranja prijave za %s nije moguće"
 
-#: ../semanage/seobject.py:540
+#: ../semanage/seobject.py:510
 msgid "Requires seuser or serange"
 msgstr "Zahtijeva seuser ili serange"
 
-#: ../semanage/seobject.py:563 ../semanage/seobject.py:609
+#: ../semanage/seobject.py:533 ../semanage/seobject.py:579
 #, python-format
 msgid "Login mapping for %s is not defined"
 msgstr "Mapiranje prijave za %s nije određeno"
 
-#: ../semanage/seobject.py:567
+#: ../semanage/seobject.py:537
 #, python-format
 msgid "Could not query seuser for %s"
 msgstr "Propitivanje seusera za %s nije moguće"
 
-#: ../semanage/seobject.py:581
+#: ../semanage/seobject.py:551
 #, python-format
 msgid "Could not modify login mapping for %s"
 msgstr "Uređivanje mapiranja prijave za %s nije moguće"
 
-#: ../semanage/seobject.py:615
+#: ../semanage/seobject.py:585
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
 msgstr "Mapiranje prijave za %s određeno je u pravilima. Brisanje nije moguće."
 
-#: ../semanage/seobject.py:619
+#: ../semanage/seobject.py:589
 #, python-format
 msgid "Could not delete login mapping for %s"
 msgstr "Brisanje mapiranja prijave za %s nije moguće"
 
-#: ../semanage/seobject.py:641 ../semanage/seobject.py:659
-#: ../semanage/seobject.py:897
+#: ../semanage/seobject.py:611 ../semanage/seobject.py:644
+#: ../semanage/seobject.py:892
 msgid "Could not list login mappings"
 msgstr "Ispisivanje popisa mapiranja prijava nije moguće"
 
-#: ../semanage/seobject.py:684 ../semanage/seobject.py:689
+#: ../semanage/seobject.py:672 ../semanage/seobject.py:684
 #: ../gui/system-config-selinux.glade:100
 msgid "Login Name"
 msgstr "Korisničko ime"
 
-#: ../semanage/seobject.py:684 ../semanage/seobject.py:689
-#: ../semanage/seobject.py:947 ../semanage/seobject.py:952
+#: ../semanage/seobject.py:672 ../semanage/seobject.py:684
+#: ../semanage/seobject.py:942 ../semanage/seobject.py:947
 #: ../gui/system-config-selinux.glade:128
 #: ../gui/system-config-selinux.glade:915
 #: ../gui/system-config-selinux.glade:2285 ../gui/usersPage.py:44
 msgid "SELinux User"
 msgstr "SELinux korisnik"
 
-#: ../semanage/seobject.py:684 ../gui/system-config-selinux.glade:156
+#: ../semanage/seobject.py:672 ../gui/system-config-selinux.glade:156
 #: ../gui/system-config-selinux.glade:943
 msgid "MLS/MCS Range"
 msgstr "MLS/MCS raspon"
 
-#: ../semanage/seobject.py:703 ../semanage/seobject.py:734
-#: ../semanage/seobject.py:801 ../semanage/seobject.py:858
-#: ../semanage/seobject.py:864
+#: ../semanage/seobject.py:672
+msgid "Service"
+msgstr ""
+
+#: ../semanage/seobject.py:698 ../semanage/seobject.py:729
+#: ../semanage/seobject.py:796 ../semanage/seobject.py:853
+#: ../semanage/seobject.py:859
 #, python-format
 msgid "Could not check if SELinux user %s is defined"
 msgstr "Nije moguće provjeriti je li SELinux korisnik %s određen"
 
-#: ../semanage/seobject.py:706 ../semanage/seobject.py:807
-#: ../semanage/seobject.py:870
+#: ../semanage/seobject.py:701 ../semanage/seobject.py:802
+#: ../semanage/seobject.py:865
 #, python-format
 msgid "Could not query user for %s"
 msgstr "Propitivanje korisnika za %s nije moguće"
 
-#: ../semanage/seobject.py:726
+#: ../semanage/seobject.py:721
 #, python-format
 msgid "You must add at least one role for %s"
 msgstr ""
 
-#: ../semanage/seobject.py:741
+#: ../semanage/seobject.py:736
 #, python-format
 msgid "Could not create SELinux user for %s"
 msgstr "Izrada SELinux korisnika za %s nije moguća"
 
-#: ../semanage/seobject.py:750
+#: ../semanage/seobject.py:745
 #, python-format
 msgid "Could not add role %s for %s"
 msgstr "Dodavanje uloge %s za %s nije moguće"
 
-#: ../semanage/seobject.py:759
+#: ../semanage/seobject.py:754
 #, python-format
 msgid "Could not set MLS level for %s"
 msgstr "Zadavanje MLS razine za %s nije moguće"
 
-#: ../semanage/seobject.py:762
+#: ../semanage/seobject.py:757
 #, python-format
 msgid "Could not add prefix %s for %s"
 msgstr "Dodavanje prefiksa %s za %s nije moguće"
 
-#: ../semanage/seobject.py:765
+#: ../semanage/seobject.py:760
 #, python-format
 msgid "Could not extract key for %s"
 msgstr "Izvlačenje ključa za %s nije moguće"
 
-#: ../semanage/seobject.py:769
+#: ../semanage/seobject.py:764
 #, python-format
 msgid "Could not add SELinux user %s"
 msgstr "Dodavanje SELinux korisnika %s nije moguće"
 
-#: ../semanage/seobject.py:791
+#: ../semanage/seobject.py:786
 msgid "Requires prefix, roles, level or range"
 msgstr "Zahtijeva prefiks, uloge, razinu ili raspon"
 
-#: ../semanage/seobject.py:793
+#: ../semanage/seobject.py:788
 msgid "Requires prefix or roles"
 msgstr "Zahtijeva prefiks ili uloge"
 
-#: ../semanage/seobject.py:803 ../semanage/seobject.py:860
+#: ../semanage/seobject.py:798 ../semanage/seobject.py:855
 #, python-format
 msgid "SELinux user %s is not defined"
 msgstr "SELinux korisnik %s nije određen"
 
-#: ../semanage/seobject.py:832
+#: ../semanage/seobject.py:827
 #, python-format
 msgid "Could not modify SELinux user %s"
 msgstr "Uređivanje SELinux korisnika %s nije moguće"
 
-#: ../semanage/seobject.py:866
+#: ../semanage/seobject.py:861
 #, python-format
 msgid "SELinux user %s is defined in policy, cannot be deleted"
 msgstr "SELinux korisnik %s određen je u pravilima. Brisanje nije moguće."
 
-#: ../semanage/seobject.py:877
+#: ../semanage/seobject.py:872
 #, python-format
 msgid "Could not delete SELinux user %s"
 msgstr "Brisanje SELinux korisnika %s nije moguće"
 
-#: ../semanage/seobject.py:915
+#: ../semanage/seobject.py:910
 msgid "Could not list SELinux users"
 msgstr "Ispisivanje popisa SELinux korisnika nije moguće"
 
-#: ../semanage/seobject.py:921
+#: ../semanage/seobject.py:916
 #, python-format
 msgid "Could not list roles for user %s"
 msgstr "Ispisivanje popisa uloga korisnika %s nije moguće"
 
-#: ../semanage/seobject.py:946
+#: ../semanage/seobject.py:941
 msgid "Labeling"
 msgstr "Označavanje"
 
-#: ../semanage/seobject.py:946
+#: ../semanage/seobject.py:941
 msgid "MLS/"
 msgstr "MLS/"
 
-#: ../semanage/seobject.py:947
+#: ../semanage/seobject.py:942
 msgid "Prefix"
 msgstr "Prefiks"
 
-#: ../semanage/seobject.py:947
+#: ../semanage/seobject.py:942
 msgid "MCS Level"
 msgstr "MCS razina"
 
-#: ../semanage/seobject.py:947
+#: ../semanage/seobject.py:942
 msgid "MCS Range"
 msgstr "MCS raspon"
 
-#: ../semanage/seobject.py:947 ../semanage/seobject.py:952
+#: ../semanage/seobject.py:942 ../semanage/seobject.py:947
 #: ../gui/system-config-selinux.glade:992 ../gui/usersPage.py:59
 msgid "SELinux Roles"
 msgstr "SELinux uloge"
 
-#: ../semanage/seobject.py:967
+#: ../semanage/seobject.py:964
 msgid "Protocol udp or tcp is required"
 msgstr "Potreban je UDP ili TCP protokol"
 
-#: ../semanage/seobject.py:969
+#: ../semanage/seobject.py:966
 msgid "Port is required"
 msgstr "Potreban je port"
 
-#: ../semanage/seobject.py:979
+#: ../semanage/seobject.py:976
 msgid "Invalid Port"
 msgstr ""
 
-#: ../semanage/seobject.py:983
+#: ../semanage/seobject.py:980
 #, python-format
 msgid "Could not create a key for %s/%s"
 msgstr "Izrada ključa za %s/%s nije moguća"
 
-#: ../semanage/seobject.py:994
+#: ../semanage/seobject.py:991
 msgid "Type is required"
 msgstr "Potrebna je vrsta"
 
-#: ../semanage/seobject.py:1000 ../semanage/seobject.py:1059
-#: ../semanage/seobject.py:1114 ../semanage/seobject.py:1120
+#: ../semanage/seobject.py:994 ../semanage/seobject.py:1056
+#: ../semanage/seobject.py:1814
+#, python-format
+msgid "Type %s is invalid, must be a port type"
+msgstr ""
+
+#: ../semanage/seobject.py:1000 ../semanage/seobject.py:1062
+#: ../semanage/seobject.py:1117 ../semanage/seobject.py:1123
 #, python-format
 msgid "Could not check if port %s/%s is defined"
 msgstr "Nije moguće provjeriti je li port %s/%s određen"
@@ -473,8 +475,8 @@ msgstr "Zadavanje konteksta porta za %s/%s nije moguće"
 msgid "Could not add port %s/%s"
 msgstr "Dodavanje porta %s/%s nije moguće"
 
-#: ../semanage/seobject.py:1051 ../semanage/seobject.py:1316
-#: ../semanage/seobject.py:1512
+#: ../semanage/seobject.py:1051 ../semanage/seobject.py:1324
+#: ../semanage/seobject.py:1523
 msgid "Requires setype or serange"
 msgstr "Zahtijeva setype ili serange"
 
@@ -482,463 +484,473 @@ msgstr "Zahtijeva setype ili serange"
 msgid "Requires setype"
 msgstr "Zahtijeva setype"
 
-#: ../semanage/seobject.py:1061 ../semanage/seobject.py:1116
+#: ../semanage/seobject.py:1064 ../semanage/seobject.py:1119
 #, python-format
 msgid "Port %s/%s is not defined"
 msgstr "Port %s/%s nije određen"
 
-#: ../semanage/seobject.py:1065
+#: ../semanage/seobject.py:1068
 #, python-format
 msgid "Could not query port %s/%s"
 msgstr "Propitivanje porta %s/%s nije moguće"
 
-#: ../semanage/seobject.py:1076
+#: ../semanage/seobject.py:1079
 #, python-format
 msgid "Could not modify port %s/%s"
 msgstr "Uređivanje porta %s/%s nije moguće"
 
-#: ../semanage/seobject.py:1089
+#: ../semanage/seobject.py:1092
 msgid "Could not list the ports"
 msgstr ""
 
-#: ../semanage/seobject.py:1105
+#: ../semanage/seobject.py:1108
 #, python-format
 msgid "Could not delete the port %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1122
+#: ../semanage/seobject.py:1125
 #, python-format
 msgid "Port %s/%s is defined in policy, cannot be deleted"
 msgstr "Port %s/%s određen je u pravilima. Brisanje nije moguće."
 
-#: ../semanage/seobject.py:1126
+#: ../semanage/seobject.py:1129
 #, python-format
 msgid "Could not delete port %s/%s"
 msgstr "Brisanje porta %s/%s nije moguće"
 
-#: ../semanage/seobject.py:1142 ../semanage/seobject.py:1164
+#: ../semanage/seobject.py:1145 ../semanage/seobject.py:1167
 msgid "Could not list ports"
 msgstr "Ispisivanje popisa portova nije moguće"
 
-#: ../semanage/seobject.py:1203
+#: ../semanage/seobject.py:1206
 msgid "SELinux Port Type"
 msgstr "SELinux vrsta porta"
 
-#: ../semanage/seobject.py:1203
+#: ../semanage/seobject.py:1206
 msgid "Proto"
 msgstr "Proto"
 
-#: ../semanage/seobject.py:1203 ../gui/system-config-selinux.glade:335
+#: ../semanage/seobject.py:1206 ../gui/system-config-selinux.glade:335
 msgid "Port Number"
 msgstr "Broj porta"
 
-#: ../semanage/seobject.py:1222
+#: ../semanage/seobject.py:1227
 msgid "Node Address is required"
 msgstr ""
 
-#: ../semanage/seobject.py:1237
+#: ../semanage/seobject.py:1242
 msgid "Unknown or missing protocol"
 msgstr ""
 
-#: ../semanage/seobject.py:1251 ../semanage/seobject.py:1450
-#: ../semanage/seobject.py:1728
-msgid "SELinux Type is required"
-msgstr "Potrebna je SELinux vrsta"
+#: ../semanage/seobject.py:1256
+msgid "SELinux node type is required"
+msgstr ""
 
-#: ../semanage/seobject.py:1255 ../semanage/seobject.py:1320
-#: ../semanage/seobject.py:1356 ../semanage/seobject.py:1454
-#: ../semanage/seobject.py:1516 ../semanage/seobject.py:1550
-#: ../semanage/seobject.py:1732
+#: ../semanage/seobject.py:1259 ../semanage/seobject.py:1327
+#, python-format
+msgid "Type %s is invalid, must be a node type"
+msgstr ""
+
+#: ../semanage/seobject.py:1263 ../semanage/seobject.py:1331
+#: ../semanage/seobject.py:1367 ../semanage/seobject.py:1465
+#: ../semanage/seobject.py:1527 ../semanage/seobject.py:1561
+#: ../semanage/seobject.py:1759
 #, python-format
 msgid "Could not create key for %s"
 msgstr "Izrada ključa za %s nije moguća"
 
-#: ../semanage/seobject.py:1257 ../semanage/seobject.py:1324
-#: ../semanage/seobject.py:1360 ../semanage/seobject.py:1366
+#: ../semanage/seobject.py:1265 ../semanage/seobject.py:1335
+#: ../semanage/seobject.py:1371 ../semanage/seobject.py:1377
 #, python-format
 msgid "Could not check if addr %s is defined"
 msgstr ""
 
-#: ../semanage/seobject.py:1266
+#: ../semanage/seobject.py:1274
 #, python-format
 msgid "Could not create addr for %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1272 ../semanage/seobject.py:1470
-#: ../semanage/seobject.py:1690
+#: ../semanage/seobject.py:1280 ../semanage/seobject.py:1481
+#: ../semanage/seobject.py:1714
 #, python-format
 msgid "Could not create context for %s"
 msgstr "Izrada konteksta za %s nije moguća"
 
-#: ../semanage/seobject.py:1276
+#: ../semanage/seobject.py:1284
 #, python-format
 msgid "Could not set mask for %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1280
+#: ../semanage/seobject.py:1288
 #, python-format
 msgid "Could not set user in addr context for %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1284
+#: ../semanage/seobject.py:1292
 #, python-format
 msgid "Could not set role in addr context for %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1288
+#: ../semanage/seobject.py:1296
 #, python-format
 msgid "Could not set type in addr context for %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1293
+#: ../semanage/seobject.py:1301
 #, python-format
 msgid "Could not set mls fields in addr context for %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1297
+#: ../semanage/seobject.py:1305
 #, python-format
 msgid "Could not set addr context for %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1301
+#: ../semanage/seobject.py:1309
 #, python-format
 msgid "Could not add addr %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1326 ../semanage/seobject.py:1362
+#: ../semanage/seobject.py:1337 ../semanage/seobject.py:1373
 #, python-format
 msgid "Addr %s is not defined"
 msgstr ""
 
-#: ../semanage/seobject.py:1330
+#: ../semanage/seobject.py:1341
 #, python-format
 msgid "Could not query addr %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1340
+#: ../semanage/seobject.py:1351
 #, python-format
 msgid "Could not modify addr %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1368
+#: ../semanage/seobject.py:1379
 #, python-format
 msgid "Addr %s is defined in policy, cannot be deleted"
 msgstr ""
 
-#: ../semanage/seobject.py:1372
+#: ../semanage/seobject.py:1383
 #, python-format
 msgid "Could not delete addr %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1384
+#: ../semanage/seobject.py:1395
 msgid "Could not deleteall node mappings"
 msgstr ""
 
-#: ../semanage/seobject.py:1398
+#: ../semanage/seobject.py:1409
 msgid "Could not list addrs"
 msgstr ""
 
-#: ../semanage/seobject.py:1458 ../semanage/seobject.py:1520
-#: ../semanage/seobject.py:1554 ../semanage/seobject.py:1560
+#: ../semanage/seobject.py:1461 ../semanage/seobject.py:1752
+msgid "SELinux Type is required"
+msgstr "Potrebna je SELinux vrsta"
+
+#: ../semanage/seobject.py:1469 ../semanage/seobject.py:1531
+#: ../semanage/seobject.py:1565 ../semanage/seobject.py:1571
 #, python-format
 msgid "Could not check if interface %s is defined"
 msgstr "Nije moguće provjeriti je li sučelje %s određeno"
 
-#: ../semanage/seobject.py:1465
+#: ../semanage/seobject.py:1476
 #, python-format
 msgid "Could not create interface for %s"
 msgstr "Izrada sučelja za %s nije moguće"
 
-#: ../semanage/seobject.py:1474
+#: ../semanage/seobject.py:1485
 #, python-format
 msgid "Could not set user in interface context for %s"
 msgstr "Zadavanje korisnika u kontekstu sučelja za %s nije moguće"
 
-#: ../semanage/seobject.py:1478
+#: ../semanage/seobject.py:1489
 #, python-format
 msgid "Could not set role in interface context for %s"
 msgstr "Zadavanje uloge u kontekstu sučelja za %s nije moguće"
 
-#: ../semanage/seobject.py:1482
+#: ../semanage/seobject.py:1493
 #, python-format
 msgid "Could not set type in interface context for %s"
 msgstr "Zadavanje vrste u kontekstu sučelja za %s nije moguće"
 
-#: ../semanage/seobject.py:1487
+#: ../semanage/seobject.py:1498
 #, python-format
 msgid "Could not set mls fields in interface context for %s"
 msgstr "Zadavanje MLS polja u kontekstu sučelja za %s nije moguće"
 
-#: ../semanage/seobject.py:1491
+#: ../semanage/seobject.py:1502
 #, python-format
 msgid "Could not set interface context for %s"
 msgstr "Zadavanje konteksta sučelja za %s nije moguće"
 
-#: ../semanage/seobject.py:1495
+#: ../semanage/seobject.py:1506
 #, python-format
 msgid "Could not set message context for %s"
 msgstr "Zadavanje konteksta poruke za %s nije moguće"
 
-#: ../semanage/seobject.py:1499
+#: ../semanage/seobject.py:1510
 #, python-format
 msgid "Could not add interface %s"
 msgstr "Dodavanje sučelja %s nije moguće"
 
-#: ../semanage/seobject.py:1522 ../semanage/seobject.py:1556
+#: ../semanage/seobject.py:1533 ../semanage/seobject.py:1567
 #, python-format
 msgid "Interface %s is not defined"
 msgstr "Sučelje %s nije određeno"
 
-#: ../semanage/seobject.py:1526
+#: ../semanage/seobject.py:1537
 #, python-format
 msgid "Could not query interface %s"
 msgstr "Propitivanje sučelja %s nije moguće"
 
-#: ../semanage/seobject.py:1537
+#: ../semanage/seobject.py:1548
 #, python-format
 msgid "Could not modify interface %s"
 msgstr "Uređivanje sučelja %s nije moguće"
 
-#: ../semanage/seobject.py:1562
+#: ../semanage/seobject.py:1573
 #, python-format
 msgid "Interface %s is defined in policy, cannot be deleted"
 msgstr "Sučelje %s određeno je u pravilima. Brisanje nije moguće."
 
-#: ../semanage/seobject.py:1566
+#: ../semanage/seobject.py:1577
 #, python-format
 msgid "Could not delete interface %s"
 msgstr "Brisanje sučelja %s nije moguće"
 
-#: ../semanage/seobject.py:1578
+#: ../semanage/seobject.py:1589
 msgid "Could not delete all interface  mappings"
 msgstr ""
 
-#: ../semanage/seobject.py:1592
+#: ../semanage/seobject.py:1603
 msgid "Could not list interfaces"
 msgstr "Ispisivanje popisa sučelja nije moguće"
 
-#: ../semanage/seobject.py:1617
+#: ../semanage/seobject.py:1628
 msgid "SELinux Interface"
 msgstr "SELinux sučelje"
 
-#: ../semanage/seobject.py:1617 ../semanage/seobject.py:1944
+#: ../semanage/seobject.py:1628 ../semanage/seobject.py:1974
 msgid "Context"
 msgstr "Kontekst"
 
-#: ../semanage/seobject.py:1667
+#: ../semanage/seobject.py:1691
 #, python-format
 msgid "Equivalence class for %s already exists"
 msgstr ""
 
-#: ../semanage/seobject.py:1673
+#: ../semanage/seobject.py:1697
 #, python-format
 msgid "File spec %s conflicts with equivalency rule '%s %s'"
 msgstr ""
 
-#: ../semanage/seobject.py:1682
+#: ../semanage/seobject.py:1706
 #, python-format
 msgid "Equivalence class for %s does not exists"
 msgstr ""
 
-#: ../semanage/seobject.py:1696
+#: ../semanage/seobject.py:1720
 #, python-format
 msgid "Could not set user in file context for %s"
 msgstr "Zadavanje korisnika u kontekstu datoteke za %s nije moguće"
 
-#: ../semanage/seobject.py:1700
+#: ../semanage/seobject.py:1724
 #, python-format
 msgid "Could not set role in file context for %s"
 msgstr "Zadavanje uloge u kontekstu datoteke za %s nije moguće"
 
-#: ../semanage/seobject.py:1705 ../semanage/seobject.py:1762
+#: ../semanage/seobject.py:1729 ../semanage/seobject.py:1789
 #, python-format
 msgid "Could not set mls fields in file context for %s"
 msgstr "Zadavanje MLS polja u kontekstu datoteke za %s nije moguće"
 
-#: ../semanage/seobject.py:1711
+#: ../semanage/seobject.py:1735
 msgid "Invalid file specification"
 msgstr ""
 
-#: ../semanage/seobject.py:1713
+#: ../semanage/seobject.py:1737
 msgid "File specification can not include spaces"
 msgstr ""
 
-#: ../semanage/seobject.py:1718
+#: ../semanage/seobject.py:1742
 #, python-format
 msgid ""
-"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead"
+"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' "
+"instead"
 msgstr ""
 
-#: ../semanage/seobject.py:1736 ../semanage/seobject.py:1741
-#: ../semanage/seobject.py:1794 ../semanage/seobject.py:1876
-#: ../semanage/seobject.py:1880
+#: ../semanage/seobject.py:1755
+#, python-format
+msgid "Type %s is invalid, must be a file or device type"
+msgstr ""
+
+#: ../semanage/seobject.py:1763 ../semanage/seobject.py:1768
+#: ../semanage/seobject.py:1824 ../semanage/seobject.py:1906
+#: ../semanage/seobject.py:1910
 #, python-format
 msgid "Could not check if file context for %s is defined"
 msgstr "Nije moguće provjeriti je li kontekst datoteke za %s određen"
 
-#: ../semanage/seobject.py:1749
+#: ../semanage/seobject.py:1776
 #, python-format
 msgid "Could not create file context for %s"
 msgstr "Izrada konteksta datoteke za %s nije moguća"
 
-#: ../semanage/seobject.py:1757
+#: ../semanage/seobject.py:1784
 #, python-format
 msgid "Could not set type in file context for %s"
 msgstr "Zadavanje vrste u kontekstu datoteke za %s nije moguće"
 
-#: ../semanage/seobject.py:1765 ../semanage/seobject.py:1822
-#: ../semanage/seobject.py:1826
+#: ../semanage/seobject.py:1792 ../semanage/seobject.py:1852
+#: ../semanage/seobject.py:1856
 #, python-format
 msgid "Could not set file context for %s"
 msgstr "Zadavanje konteksta datoteke za %s nije moguće"
 
-#: ../semanage/seobject.py:1771
+#: ../semanage/seobject.py:1798
 #, python-format
 msgid "Could not add file context for %s"
 msgstr "Dodavanje konteksta datoteke za %s nije moguće"
 
-#: ../semanage/seobject.py:1785
+#: ../semanage/seobject.py:1812
 msgid "Requires setype, serange or seuser"
 msgstr "Zahtijeva setype, serange ili seuser"
 
-#: ../semanage/seobject.py:1798 ../semanage/seobject.py:1884
+#: ../semanage/seobject.py:1828 ../semanage/seobject.py:1914
 #, python-format
 msgid "File context for %s is not defined"
 msgstr "Kontekst datoteke za %s nije određen"
 
-#: ../semanage/seobject.py:1804
+#: ../semanage/seobject.py:1834
 #, python-format
 msgid "Could not query file context for %s"
 msgstr "Propitivanje konteksta datoteke za %s nije moguće"
 
-#: ../semanage/seobject.py:1830
+#: ../semanage/seobject.py:1860
 #, python-format
 msgid "Could not modify file context for %s"
 msgstr "Uređivanje konteksta datoteke za %s nije moguće"
 
-#: ../semanage/seobject.py:1843
+#: ../semanage/seobject.py:1873
 msgid "Could not list the file contexts"
 msgstr ""
 
-#: ../semanage/seobject.py:1857
+#: ../semanage/seobject.py:1887
 #, python-format
 msgid "Could not delete the file context %s"
 msgstr ""
 
-#: ../semanage/seobject.py:1882
+#: ../semanage/seobject.py:1912
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
 msgstr "Kontekst datoteke za %s određen je u pravilima. Brisanje nije moguće."
 
-#: ../semanage/seobject.py:1888
+#: ../semanage/seobject.py:1918
 #, python-format
 msgid "Could not delete file context for %s"
 msgstr "Brisanje konteksta datoteke za %s nije moguće"
 
-#: ../semanage/seobject.py:1903
+#: ../semanage/seobject.py:1933
 msgid "Could not list file contexts"
 msgstr "Ispisivanje popisa konteksta datoteke nije moguće"
 
-#: ../semanage/seobject.py:1907
+#: ../semanage/seobject.py:1937
 msgid "Could not list local file contexts"
 msgstr "Izrada popisa konteksta lokalnih datoteka nije moguća"
 
-#: ../semanage/seobject.py:1944
+#: ../semanage/seobject.py:1974
 msgid "SELinux fcontext"
 msgstr "SELinux fcontext"
 
-#: ../semanage/seobject.py:1944
+#: ../semanage/seobject.py:1974
 msgid "type"
 msgstr "vrsta"
 
-#: ../semanage/seobject.py:1957
+#: ../semanage/seobject.py:1987
 msgid ""
 "\n"
 "SELinux Distribution fcontext Equivalence \n"
 msgstr ""
 
-#: ../semanage/seobject.py:1962
+#: ../semanage/seobject.py:1992
 msgid ""
 "\n"
 "SELinux Local fcontext Equivalence \n"
 msgstr ""
 
-#: ../semanage/seobject.py:1996 ../semanage/seobject.py:2048
-#: ../semanage/seobject.py:2054
+#: ../semanage/seobject.py:2028 ../semanage/seobject.py:2079
+#: ../semanage/seobject.py:2085
 #, python-format
 msgid "Could not check if boolean %s is defined"
 msgstr "Nije moguće provjeriti je li Booleova vrijednost %s određena"
 
-#: ../semanage/seobject.py:1998 ../semanage/seobject.py:2050
+#: ../semanage/seobject.py:2030 ../semanage/seobject.py:2081
 #, python-format
 msgid "Boolean %s is not defined"
 msgstr "Booleova vrijednost %s nije određena"
 
-#: ../semanage/seobject.py:2002
+#: ../semanage/seobject.py:2034
 #, python-format
 msgid "Could not query file context %s"
 msgstr "Propitivanje konteksta datoteke %s nije moguće"
 
-#: ../semanage/seobject.py:2007
+#: ../semanage/seobject.py:2039
 #, python-format
 msgid "You must specify one of the following values: %s"
 msgstr ""
 
-#: ../semanage/seobject.py:2012
+#: ../semanage/seobject.py:2044
 #, python-format
 msgid "Could not set active value of boolean %s"
 msgstr ""
 
-#: ../semanage/seobject.py:2015
+#: ../semanage/seobject.py:2047
 #, python-format
 msgid "Could not modify boolean %s"
 msgstr "Uređivanje Booleove vrijednosti %s nije moguće"
 
-#: ../semanage/seobject.py:2033
+#: ../semanage/seobject.py:2063
 #, python-format
 msgid "Bad format %s: Record %s"
 msgstr ""
 
-#: ../semanage/seobject.py:2056
+#: ../semanage/seobject.py:2087
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
 msgstr "Booleova vrijednost %s određena je u pravilima. Brisanje nije moguće."
 
-#: ../semanage/seobject.py:2060
+#: ../semanage/seobject.py:2091
 #, python-format
 msgid "Could not delete boolean %s"
 msgstr "Brisanje Booleove vrijednosti %s nije moguće"
 
-#: ../semanage/seobject.py:2072 ../semanage/seobject.py:2089
+#: ../semanage/seobject.py:2103 ../semanage/seobject.py:2120
 msgid "Could not list booleans"
 msgstr "Ispisivanje popisa Booleovih vrijednosti nije moguće"
 
-#: ../semanage/seobject.py:2112
-msgid "unknown"
-msgstr ""
-
-#: ../semanage/seobject.py:2125
+#: ../semanage/seobject.py:2155
 msgid "off"
 msgstr ""
 
-#: ../semanage/seobject.py:2125
+#: ../semanage/seobject.py:2155
 msgid "on"
 msgstr ""
 
-#: ../semanage/seobject.py:2139
+#: ../semanage/seobject.py:2169
 msgid "SELinux boolean"
 msgstr "SELinux Booleov"
 
-#: ../semanage/seobject.py:2139
+#: ../semanage/seobject.py:2169
 msgid "State"
 msgstr ""
 
-#: ../semanage/seobject.py:2139
+#: ../semanage/seobject.py:2169
 msgid "Default"
 msgstr ""
 
-#: ../semanage/seobject.py:2139 ../gui/polgen.glade:3355
-#: ../gui/polgengui.py:253
+#: ../semanage/seobject.py:2169 ../gui/polgen.glade:113
+#: ../gui/polgengui.py:269
 msgid "Description"
 msgstr ""
 
@@ -1002,7 +1014,7 @@ msgstr "Pogreška pri dodjeljivanju memorije.\n"
 msgid "Error sending audit message.\n"
 msgstr "Pogreška pri slanju poruke provjere.\n"
 
-#: ../newrole/newrole.c:692 ../newrole/newrole.c:1059
+#: ../newrole/newrole.c:692 ../newrole/newrole.c:1058
 #, c-format
 msgid "Could not determine enforcing mode.\n"
 msgstr "Određivanje načina prisiljavanja nije moguće.\n"
@@ -1015,16 +1027,12 @@ msgstr "Pogreška! Nije moguće otvoriti %s.\n"
 #: ../newrole/newrole.c:705
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
-msgstr ""
-"%s! Dohvaćanje trenutnog konteksta za %s nije moguće. TTY neće biti ponovno "
-"označen.\n"
+msgstr "%s! Dohvaćanje trenutnog konteksta za %s nije moguće. TTY neće biti ponovno označen.\n"
 
 #: ../newrole/newrole.c:715
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
-msgstr ""
-"%s! Dohvaćanje novog konteksta za %s nije moguće. TTY neće biti ponovno "
-"označen.\n"
+msgstr "%s! Dohvaćanje novog konteksta za %s nije moguće. TTY neće biti ponovno označen.\n"
 
 #: ../newrole/newrole.c:725
 #, c-format
@@ -1121,62 +1129,66 @@ msgstr "Dohvaćanje praznog kompleta signala nije moguće\n"
 msgid "Unable to set SIGHUP handler\n"
 msgstr "Postavljanje SIGHUP rukovanja nije moguće\n"
 
-#: ../newrole/newrole.c:1053
+#: ../newrole/newrole.c:1036
+msgid "Sorry, newrole failed to drop capabilities\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1052
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr "Nažalost, nova uloga može se upotrijebiti samo na SELinux kernelu.\n"
 
-#: ../newrole/newrole.c:1070
+#: ../newrole/newrole.c:1069
 #, c-format
 msgid "failed to get old_context.\n"
 msgstr "Dohvaćanje starog konteksta nije uspjelo.\n"
 
-#: ../newrole/newrole.c:1077
+#: ../newrole/newrole.c:1076
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
 msgstr ""
 
-#: ../newrole/newrole.c:1098
+#: ../newrole/newrole.c:1097
 #, c-format
 msgid "error on reading PAM service configuration.\n"
 msgstr "pogreška tijekom čitanja konfiguracije usluge PAM.\n"
 
-#: ../newrole/newrole.c:1133
+#: ../newrole/newrole.c:1132
 #, c-format
 msgid "newrole: incorrect password for %s\n"
 msgstr "newrole: neispravna lozinka za %s.\n"
 
-#: ../newrole/newrole.c:1160
+#: ../newrole/newrole.c:1159
 #, c-format
 msgid "newrole: failure forking: %s"
 msgstr "newrole: 'forking' neuspjeh: %s"
 
-#: ../newrole/newrole.c:1163 ../newrole/newrole.c:1186
+#: ../newrole/newrole.c:1162 ../newrole/newrole.c:1185
 #, c-format
 msgid "Unable to restore tty label...\n"
 msgstr "Obnavljanje tty oznake nije moguće...\n"
 
-#: ../newrole/newrole.c:1165 ../newrole/newrole.c:1192
+#: ../newrole/newrole.c:1164 ../newrole/newrole.c:1191
 #, c-format
 msgid "Failed to close tty properly\n"
 msgstr "Ispravno zatvaranje tty nije uspjelo\n"
 
-#: ../newrole/newrole.c:1224
+#: ../newrole/newrole.c:1223
 #, c-format
 msgid "Could not close descriptors.\n"
 msgstr "Nije moguće zatvoriti deskriptore. \n"
 
-#: ../newrole/newrole.c:1251
+#: ../newrole/newrole.c:1250
 #, c-format
 msgid "Error allocating shell's argv0.\n"
 msgstr "Pogreška pri dodjeljivanju argv0 ljuske.\n"
 
-#: ../newrole/newrole.c:1287
+#: ../newrole/newrole.c:1286
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
 msgstr "Obnavljanje okruženja nije moguće. Prekidanje radnje.\n"
 
-#: ../newrole/newrole.c:1298
+#: ../newrole/newrole.c:1297
 msgid "failed to exec shell\n"
 msgstr "Izvršavanje ljuske nije uspjelo\n"
 
@@ -1279,20 +1291,20 @@ msgstr "chcat -- -TvrtkaPovjerljivo /docs/poslovniplan.odt"
 msgid "chcat -l +CompanyConfidential juser"
 msgstr "chcat -l +TvrtkaPovjerljivo juser"
 
-#: ../scripts/chcat:399 ../gui/polgen.py:1351
-#, c-format, python-format
+#: ../scripts/chcat:399
+#, c-format
 msgid "Options Error %s "
 msgstr "Pogreška opcija %s "
 
-#: ../gui/booleansPage.py:195 ../gui/system-config-selinux.glade:1706
+#: ../gui/booleansPage.py:194 ../gui/system-config-selinux.glade:1706
 msgid "Boolean"
 msgstr ""
 
-#: ../gui/booleansPage.py:252 ../gui/semanagePage.py:162
+#: ../gui/booleansPage.py:245 ../gui/semanagePage.py:162
 msgid "all"
 msgstr ""
 
-#: ../gui/booleansPage.py:254 ../gui/semanagePage.py:164
+#: ../gui/booleansPage.py:247 ../gui/semanagePage.py:164
 #: ../gui/system-config-selinux.glade:1615
 #: ../gui/system-config-selinux.glade:1820
 #: ../gui/system-config-selinux.glade:2437
@@ -1348,575 +1360,463 @@ msgstr ""
 msgid "Login '%s' is required"
 msgstr ""
 
-#: ../gui/modulesPage.py:48 ../gui/system-config-selinux.glade:2753
+#: ../gui/modulesPage.py:49 ../gui/system-config-selinux.glade:2753
 msgid "Policy Module"
 msgstr ""
 
-#: ../gui/modulesPage.py:57
+#: ../gui/modulesPage.py:58
 msgid "Module Name"
 msgstr ""
 
-#: ../gui/modulesPage.py:134
+#: ../gui/modulesPage.py:135
 msgid "Disable Audit"
 msgstr ""
 
-#: ../gui/modulesPage.py:137 ../gui/system-config-selinux.glade:2662
+#: ../gui/modulesPage.py:138 ../gui/system-config-selinux.glade:2662
 msgid "Enable Audit"
 msgstr ""
 
-#: ../gui/modulesPage.py:162
+#: ../gui/modulesPage.py:163
 msgid "Load Policy Module"
 msgstr ""
 
-#: ../gui/polgen.glade:79
-msgid "Polgen"
-msgstr ""
-
-#: ../gui/polgen.glade:80
+#: ../gui/polgen.glade:9
 msgid "Red Hat 2007"
 msgstr ""
 
-#: ../gui/polgen.glade:81
+#: ../gui/polgen.glade:11
 msgid "GPL"
 msgstr ""
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../gui/polgen.glade:85 ../gui/system-config-selinux.glade:17
+#: ../gui/polgen.glade:13 ../gui/system-config-selinux.glade:17
 msgid "translator-credits"
 msgstr ""
 
-#: ../gui/polgen.glade:90
+#: ../gui/polgen.glade:34
+msgid "Add Booleans Dialog"
+msgstr ""
+
+#: ../gui/polgen.glade:101
+msgid "Boolean Name"
+msgstr ""
+
+#: ../gui/polgen.glade:230
 msgid "SELinux Policy Generation Tool"
 msgstr ""
 
-#: ../gui/polgen.glade:128
+#: ../gui/polgen.glade:251
 msgid ""
 "<b>Select the policy type for the application or user role you want to "
 "confine:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:177
+#: ../gui/polgen.glade:284
 msgid "<b>Applications</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:239 ../gui/polgen.glade:259
+#: ../gui/polgen.glade:316 ../sepolicy/sepolicy/generate.py:171
+msgid "Standard Init Daemon"
+msgstr ""
+
+#: ../gui/polgen.glade:320 ../gui/polgen.glade:336
 msgid ""
 "Standard Init Daemon are daemons started on boot via init scripts.  Usually "
 "requires a script in /etc/rc.d/init.d"
 msgstr ""
 
-#: ../gui/polgen.glade:241 ../gui/polgen.py:156
-msgid "Standard Init Daemon"
-msgstr ""
-
-#: ../gui/polgen.glade:261 ../gui/polgen.py:157
+#: ../gui/polgen.glade:332 ../sepolicy/sepolicy/generate.py:172
 msgid "DBUS System Daemon"
 msgstr ""
 
-#: ../gui/polgen.glade:280
-msgid "Internet Services Daemon are daemons started by xinetd"
-msgstr ""
-
-#: ../gui/polgen.glade:282
+#: ../gui/polgen.glade:349
 msgid "Internet Services Daemon (inetd)"
 msgstr ""
 
-#: ../gui/polgen.glade:301
+#: ../gui/polgen.glade:353
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr ""
+
+#: ../gui/polgen.glade:366 ../sepolicy/sepolicy/generate.py:174
+msgid "Web Application/Script (CGI)"
+msgstr ""
+
+#: ../gui/polgen.glade:370
 msgid ""
 "Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
 msgstr ""
 
-#: ../gui/polgen.glade:303 ../gui/polgen.py:159
-msgid "Web Application/Script (CGI)"
+#: ../gui/polgen.glade:383 ../sepolicy/sepolicy/generate.py:176
+msgid "User Application"
 msgstr ""
 
-#: ../gui/polgen.glade:322 ../gui/polgen.glade:343
+#: ../gui/polgen.glade:387 ../gui/polgen.glade:404
 msgid ""
 "User Application are any application that you would like to confine that is "
 "started by a user"
 msgstr ""
 
-#: ../gui/polgen.glade:324 ../gui/polgen.py:160
-msgid "User Application"
-msgstr ""
-
-#: ../gui/polgen.glade:345 ../gui/polgen.py:161
+#: ../gui/polgen.glade:400 ../sepolicy/sepolicy/generate.py:175
 msgid "Sandbox"
 msgstr ""
 
-#: ../gui/polgen.glade:391
+#: ../gui/polgen.glade:446
 msgid "<b>Login Users</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:453
-msgid "Modify an existing login user record."
-msgstr ""
-
-#: ../gui/polgen.glade:455
+#: ../gui/polgen.glade:478
 msgid "Existing User Roles"
 msgstr ""
 
-#: ../gui/polgen.glade:474
+#: ../gui/polgen.glade:482
+msgid "Modify an existing login user record."
+msgstr ""
+
+#: ../gui/polgen.glade:495
+msgid "Minimal Terminal User Role"
+msgstr ""
+
+#: ../gui/polgen.glade:499
 msgid ""
 "This user will login to a machine only via a terminal or remote login.  By "
 "default this user will have  no setuid, no networking, no su, no sudo."
 msgstr ""
 
-#: ../gui/polgen.glade:476 ../gui/polgen.py:162
-msgid "Minimal Terminal User Role"
-msgstr ""
-
-#: ../gui/polgen.glade:495
-msgid ""
-"This user can login to a machine via X or terminal.  By default this user "
-"will have no setuid, no networking, no sudo, no su"
-msgstr ""
-
-#: ../gui/polgen.glade:497 ../gui/polgen.py:163
+#: ../gui/polgen.glade:512
 msgid "Minimal X Windows User Role"
 msgstr ""
 
 #: ../gui/polgen.glade:516
 msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+
+#: ../gui/polgen.glade:529
+msgid "User Role"
+msgstr ""
+
+#: ../gui/polgen.glade:533
+msgid ""
 "User with full networking, no setuid applications without transition, no "
 "sudo, no su."
 msgstr ""
 
-#: ../gui/polgen.glade:518 ../gui/polgen.py:164
-msgid "User Role"
-msgstr ""
-
-#: ../gui/polgen.glade:537
-msgid ""
-"User with full networking, no setuid applications without transition, no su, "
-"can sudo to Root Administration Roles"
-msgstr ""
-
-#: ../gui/polgen.glade:539 ../gui/polgen.py:165
+#: ../gui/polgen.glade:546
 msgid "Admin User Role"
 msgstr ""
 
-#: ../gui/polgen.glade:585
+#: ../gui/polgen.glade:550
+msgid ""
+"User with full networking, no setuid applications without transition, no su,"
+" can sudo to Root Administration Roles"
+msgstr ""
+
+#: ../gui/polgen.glade:592
 msgid "<b>Root Users</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:647
-msgid ""
-"Select Root Administrator User Role, if this user will be used to administer "
-"the machine while running as root.  This user will not be able to login to "
-"the system directly."
-msgstr ""
-
-#: ../gui/polgen.glade:649 ../gui/polgen.py:166
+#: ../gui/polgen.glade:623
 msgid "Root Admin User Role"
 msgstr ""
 
-#: ../gui/polgen.glade:716
-msgid "label104"
+#: ../gui/polgen.glade:627
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer"
+" the machine while running as root.  This user will not be able to login to "
+"the system directly."
 msgstr ""
 
-#: ../gui/polgen.glade:745
+#: ../gui/polgen.glade:705
 msgid "<b>Enter name of application or user role:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:779 ../gui/polgengui.py:251
+#: ../gui/polgen.glade:728 ../gui/polgengui.py:267
 msgid "Name"
 msgstr ""
 
-#: ../gui/polgen.glade:807
+#: ../gui/polgen.glade:739
 msgid "Enter complete path for executable to be confined."
 msgstr ""
 
-#: ../gui/polgen.glade:830 ../gui/polgen.glade:950 ../gui/polgen.glade:3142
+#: ../gui/polgen.glade:756 ../gui/polgen.glade:838 ../gui/polgen.glade:2361
 msgid "..."
 msgstr ""
 
-#: ../gui/polgen.glade:849
+#: ../gui/polgen.glade:776
 msgid "Enter unique name for the confined application or user role."
 msgstr ""
 
-#: ../gui/polgen.glade:871
+#: ../gui/polgen.glade:794
 msgid "Executable"
 msgstr ""
 
-#: ../gui/polgen.glade:899
+#: ../gui/polgen.glade:808
 msgid "Init script"
 msgstr ""
 
-#: ../gui/polgen.glade:927
+#: ../gui/polgen.glade:821
 msgid ""
 "Enter complete path to init script used to start the confined application."
 msgstr ""
 
-#: ../gui/polgen.glade:982
-msgid "label105"
-msgstr ""
-
-#: ../gui/polgen.glade:1011
+#: ../gui/polgen.glade:887
 msgid "<b>Select existing role to modify:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:1045
+#: ../gui/polgen.glade:908
 msgid "Select the user roles that will transiton to the %s domain."
 msgstr ""
 
-#: ../gui/polgen.glade:1073
-msgid "label106"
+#: ../gui/polgen.glade:928
+msgid "role tab"
 msgstr ""
 
-#: ../gui/polgen.glade:1102
+#: ../gui/polgen.glade:945
 msgid "<b>Select roles that %s will transition to:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:1136
+#: ../gui/polgen.glade:963
 msgid "Select applications domains that %s will transition to."
 msgstr ""
 
-#: ../gui/polgen.glade:1164
-msgid "label107"
+#: ../gui/polgen.glade:983
+msgid ""
+"transition \n"
+"role tab"
 msgstr ""
 
-#: ../gui/polgen.glade:1193
+#: ../gui/polgen.glade:1001
 msgid "<b>Select the user_roles that will transition to %s:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:1227
-msgid "Select the user roles that will transiton to this applications domains."
+#: ../gui/polgen.glade:1019
+msgid ""
+"Select the user roles that will transiton to this applications domains."
 msgstr ""
 
-#: ../gui/polgen.glade:1255
-msgid "label108"
-msgstr ""
-
-#: ../gui/polgen.glade:1284
+#: ../gui/polgen.glade:1056
 msgid "<b>Select domains that %s will administer:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:1318 ../gui/polgen.glade:1409
+#: ../gui/polgen.glade:1074 ../gui/polgen.glade:1129
 msgid "Select the domains that you would like this user administer."
 msgstr ""
 
-#: ../gui/polgen.glade:1346
-msgid "label109"
-msgstr ""
-
-#: ../gui/polgen.glade:1375
+#: ../gui/polgen.glade:1111
 msgid "<b>Select additional roles for %s:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:1437
-msgid "label111"
-msgstr ""
-
-#: ../gui/polgen.glade:1466
+#: ../gui/polgen.glade:1166
 msgid "<b>Enter network ports that %s binds on:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:1497 ../gui/polgen.glade:1997
+#: ../gui/polgen.glade:1186 ../gui/polgen.glade:1557
 msgid "<b>TCP Ports</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:1565 ../gui/polgen.glade:1785
-msgid "Allows %s to bind to any udp port"
-msgstr ""
-
-#: ../gui/polgen.glade:1567 ../gui/polgen.glade:1787 ../gui/polgen.glade:2061
-#: ../gui/polgen.glade:2215
+#: ../gui/polgen.glade:1223 ../gui/polgen.glade:1390 ../gui/polgen.glade:1589
+#: ../gui/polgen.glade:1698
 msgid "All"
 msgstr ""
 
-#: ../gui/polgen.glade:1585 ../gui/polgen.glade:1805
-msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+#: ../gui/polgen.glade:1227 ../gui/polgen.glade:1394
+msgid "Allows %s to bind to any udp port"
 msgstr ""
 
-#: ../gui/polgen.glade:1587 ../gui/polgen.glade:1807
+#: ../gui/polgen.glade:1240 ../gui/polgen.glade:1407
 msgid "600-1024"
 msgstr ""
 
-#: ../gui/polgen.glade:1605 ../gui/polgen.glade:1825
+#: ../gui/polgen.glade:1244 ../gui/polgen.glade:1411
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr ""
+
+#: ../gui/polgen.glade:1257 ../gui/polgen.glade:1424
+msgid "Unreserved Ports (>1024)"
+msgstr ""
+
+#: ../gui/polgen.glade:1261 ../gui/polgen.glade:1428
 msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s binds "
 "to. Example: 612, 650-660"
 msgstr ""
 
-#: ../gui/polgen.glade:1607 ../gui/polgen.glade:1827
-msgid "Unreserved Ports (>1024)"
-msgstr ""
-
-#: ../gui/polgen.glade:1638 ../gui/polgen.glade:1858 ../gui/polgen.glade:2079
-#: ../gui/polgen.glade:2233
+#: ../gui/polgen.glade:1289 ../gui/polgen.glade:1456 ../gui/polgen.glade:1609
+#: ../gui/polgen.glade:1718
 msgid "Select Ports"
 msgstr ""
 
-#: ../gui/polgen.glade:1663 ../gui/polgen.glade:1883
+#: ../gui/polgen.glade:1302 ../gui/polgen.glade:1469
 msgid "Allows %s to bind to any udp ports > 1024"
 msgstr ""
 
-#: ../gui/polgen.glade:1717 ../gui/polgen.glade:2151
+#: ../gui/polgen.glade:1353 ../gui/polgen.glade:1666
 msgid "<b>UDP Ports</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:1937
-msgid "label113"
+#: ../gui/polgen.glade:1519
+msgid ""
+"Network\n"
+"Bind tab"
 msgstr ""
 
-#: ../gui/polgen.glade:1966
+#: ../gui/polgen.glade:1537
 msgid "<b>Select network ports that %s connects to:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:2058
+#: ../gui/polgen.glade:1593
 msgid "Allows %s to connect to any tcp port"
 msgstr ""
 
-#: ../gui/polgen.glade:2104
+#: ../gui/polgen.glade:1622
 msgid ""
 "Enter a comma separated list of tcp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
 msgstr ""
 
-#: ../gui/polgen.glade:2212
+#: ../gui/polgen.glade:1702
 msgid "Allows %s to connect to any udp port"
 msgstr ""
 
-#: ../gui/polgen.glade:2258
+#: ../gui/polgen.glade:1731
 msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
 msgstr ""
 
-#: ../gui/polgen.glade:2305
-msgid "label114"
-msgstr ""
-
-#: ../gui/polgen.glade:2334
+#: ../gui/polgen.glade:1792
 msgid "<b>Select common application traits for %s:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:2366
+#: ../gui/polgen.glade:1809
 msgid "Writes syslog messages\t"
 msgstr ""
 
-#: ../gui/polgen.glade:2385
+#: ../gui/polgen.glade:1824
 msgid "Create/Manipulate temporary files in /tmp"
 msgstr ""
 
-#: ../gui/polgen.glade:2404
+#: ../gui/polgen.glade:1839
 msgid "Uses Pam for authentication"
 msgstr ""
 
-#: ../gui/polgen.glade:2423
+#: ../gui/polgen.glade:1854
 msgid "Uses nsswitch or getpw* calls"
 msgstr ""
 
-#: ../gui/polgen.glade:2442
+#: ../gui/polgen.glade:1869
 msgid "Uses dbus"
 msgstr ""
 
-#: ../gui/polgen.glade:2461
+#: ../gui/polgen.glade:1884
 msgid "Sends audit messages"
 msgstr ""
 
-#: ../gui/polgen.glade:2480
+#: ../gui/polgen.glade:1899
 msgid "Interacts with the terminal"
 msgstr ""
 
-#: ../gui/polgen.glade:2499
+#: ../gui/polgen.glade:1914
 msgid "Sends email"
 msgstr ""
 
-#: ../gui/polgen.glade:2530
-msgid "label115"
-msgstr ""
-
-#: ../gui/polgen.glade:2559
+#: ../gui/polgen.glade:1961
 msgid "<b>Add files/directories that %s manages</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:2788
+#: ../gui/polgen.glade:2122
 msgid ""
 "Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
 "Files ..."
 msgstr ""
 
-#: ../gui/polgen.glade:2823
-msgid "label116"
-msgstr ""
-
-#: ../gui/polgen.glade:2852
+#: ../gui/polgen.glade:2166
 msgid "<b>Add booleans from the %s policy:</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:3002
+#: ../gui/polgen.glade:2274
 msgid "Add/Remove booleans used by the %s domain"
 msgstr ""
 
-#: ../gui/polgen.glade:3066
+#: ../gui/polgen.glade:2316
 msgid "<b>Which directory you will generate the %s policy?</b>"
 msgstr ""
 
-#: ../gui/polgen.glade:3097
+#: ../gui/polgen.glade:2334
 msgid "Policy Directory"
 msgstr ""
 
-#: ../gui/polgen.glade:3254
-msgid "Add Booleans Dialog"
-msgstr ""
-
-#: ../gui/polgen.glade:3327
-msgid "Boolean Name"
-msgstr ""
-
-#: ../gui/polgengui.py:261
+#: ../gui/polgengui.py:277
 msgid "Role"
 msgstr ""
 
-#: ../gui/polgengui.py:268
+#: ../gui/polgengui.py:284
 msgid "Existing_User"
 msgstr ""
 
-#: ../gui/polgengui.py:282 ../gui/polgengui.py:290 ../gui/polgengui.py:304
+#: ../gui/polgengui.py:298 ../gui/polgengui.py:306 ../gui/polgengui.py:320
 msgid "Application"
 msgstr ""
 
-#: ../gui/polgengui.py:352
+#: ../gui/polgengui.py:363
 #, python-format
 msgid "%s must be a directory"
 msgstr ""
 
-#: ../gui/polgengui.py:412 ../gui/polgengui.py:693
+#: ../gui/polgengui.py:423 ../gui/polgengui.py:704
 msgid "You must select a user"
 msgstr ""
 
-#: ../gui/polgengui.py:542
+#: ../gui/polgengui.py:553
 msgid "Select executable file to be confined."
 msgstr ""
 
-#: ../gui/polgengui.py:553
+#: ../gui/polgengui.py:564
 msgid "Select init script file to be confined."
 msgstr ""
 
-#: ../gui/polgengui.py:563
+#: ../gui/polgengui.py:574
 msgid "Select file(s) that confined application creates or writes"
 msgstr ""
 
-#: ../gui/polgengui.py:570
+#: ../gui/polgengui.py:581
 msgid "Select directory(s) that the confined application owns and writes into"
 msgstr ""
 
-#: ../gui/polgengui.py:632
+#: ../gui/polgengui.py:643
 msgid "Select directory to generate policy files in"
 msgstr ""
 
-#: ../gui/polgengui.py:649
+#: ../gui/polgengui.py:660
 #, python-format
 msgid ""
 "Type %s_t already defined in current policy.\n"
 "Do you want to continue?"
 msgstr ""
 
-#: ../gui/polgengui.py:649 ../gui/polgengui.py:653
+#: ../gui/polgengui.py:660 ../gui/polgengui.py:664
 msgid "Verify Name"
 msgstr ""
 
-#: ../gui/polgengui.py:653
+#: ../gui/polgengui.py:664
 #, python-format
 msgid ""
 "Module %s.pp already loaded in current policy.\n"
 "Do you want to continue?"
 msgstr ""
 
-#: ../gui/polgengui.py:699
+#: ../gui/polgengui.py:710
 msgid ""
 "You must add a name made up of letters and numbers and containing no spaces."
 msgstr ""
 
-#: ../gui/polgengui.py:713
+#: ../gui/polgengui.py:724
 msgid "You must enter a executable"
 msgstr ""
 
-#: ../gui/polgengui.py:738 ../gui/system-config-selinux.py:174
+#: ../gui/polgengui.py:749 ../gui/system-config-selinux.py:180
 msgid "Configue SELinux"
-msgstr ""
-
-#: ../gui/polgen.py:158
-msgid "Internet Services Daemon"
-msgstr ""
-
-#: ../gui/polgen.py:197
-#, python-format
-msgid "Ports must be numbers or ranges of numbers from 1 to %d "
-msgstr ""
-
-#: ../gui/polgen.py:324
-msgid "You must enter a name for your confined process/user"
-msgstr ""
-
-#: ../gui/polgen.py:326
-msgid ""
-"Name must be alpha numberic with no spaces. Consider using option \"-n "
-"MODULENAME\""
-msgstr ""
-
-#: ../gui/polgen.py:414
-msgid "User Role types can not be assigned executables."
-msgstr ""
-
-#: ../gui/polgen.py:420
-msgid "Only Daemon apps can use an init script.."
-msgstr ""
-
-#: ../gui/polgen.py:438
-msgid "use_resolve must be a boolean value "
-msgstr ""
-
-#: ../gui/polgen.py:444
-msgid "use_syslog must be a boolean value "
-msgstr ""
-
-#: ../gui/polgen.py:450
-msgid "use_kerberos must be a boolean value "
-msgstr ""
-
-#: ../gui/polgen.py:456
-msgid "manage_krb5_rcache must be a boolean value "
-msgstr ""
-
-#: ../gui/polgen.py:486
-msgid "USER Types automatically get a tmp type"
-msgstr ""
-
-#: ../gui/polgen.py:1004
-msgid "You must enter the executable path for your confined process"
-msgstr ""
-
-#: ../gui/polgen.py:1182
-msgid "Type Enforcement file"
-msgstr ""
-
-#: ../gui/polgen.py:1183
-msgid "Interface file"
-msgstr ""
-
-#: ../gui/polgen.py:1184
-msgid "File Contexts file"
-msgstr ""
-
-#: ../gui/polgen.py:1185
-msgid "Setup Script"
-msgstr ""
-
-#: ../gui/polgen.py:1306
-#, python-format
-msgid ""
-"\n"
-"%s\n"
-"\n"
-"sepolgen [ -n moduleName ] [ -m ] [ -t type ] [ executable | Name ]\n"
-"valid Types:\n"
-msgstr ""
-
-#: ../gui/polgen.py:1354
-msgid "Executable or Name required"
 msgstr ""
 
 #: ../gui/portsPage.py:51 ../gui/system-config-selinux.glade:2528
@@ -1954,1110 +1854,6 @@ msgstr ""
 
 #: ../gui/portsPage.py:255 ../gui/system-config-selinux.glade:2419
 msgid "Group View"
-msgstr ""
-
-#: ../gui/selinux.tbl:1 ../gui/selinux.tbl:30 ../gui/selinux.tbl:31
-#: ../gui/selinux.tbl:32 ../gui/selinux.tbl:33 ../gui/selinux.tbl:34
-#: ../gui/selinux.tbl:36 ../gui/selinux.tbl:37 ../gui/selinux.tbl:38
-#: ../gui/selinux.tbl:39 ../gui/selinux.tbl:40 ../gui/selinux.tbl:42
-#: ../gui/selinux.tbl:43 ../gui/selinux.tbl:44 ../gui/selinux.tbl:45
-#: ../gui/selinux.tbl:46 ../gui/selinux.tbl:47 ../gui/selinux.tbl:48
-#: ../gui/selinux.tbl:49 ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
-#: ../gui/selinux.tbl:52 ../gui/selinux.tbl:53 ../gui/selinux.tbl:59
-#: ../gui/selinux.tbl:60 ../gui/selinux.tbl:61 ../gui/selinux.tbl:62
-#: ../gui/selinux.tbl:63 ../gui/selinux.tbl:64 ../gui/selinux.tbl:65
-#: ../gui/selinux.tbl:66 ../gui/selinux.tbl:67 ../gui/selinux.tbl:68
-#: ../gui/selinux.tbl:69 ../gui/selinux.tbl:75 ../gui/selinux.tbl:76
-#: ../gui/selinux.tbl:77 ../gui/selinux.tbl:78 ../gui/selinux.tbl:79
-#: ../gui/selinux.tbl:80 ../gui/selinux.tbl:81 ../gui/selinux.tbl:82
-#: ../gui/selinux.tbl:83 ../gui/selinux.tbl:84 ../gui/selinux.tbl:86
-#: ../gui/selinux.tbl:88 ../gui/selinux.tbl:89 ../gui/selinux.tbl:90
-#: ../gui/selinux.tbl:92 ../gui/selinux.tbl:94 ../gui/selinux.tbl:95
-#: ../gui/selinux.tbl:96 ../gui/selinux.tbl:97 ../gui/selinux.tbl:98
-#: ../gui/selinux.tbl:99 ../gui/selinux.tbl:100 ../gui/selinux.tbl:101
-#: ../gui/selinux.tbl:102 ../gui/selinux.tbl:103 ../gui/selinux.tbl:104
-#: ../gui/selinux.tbl:106 ../gui/selinux.tbl:108 ../gui/selinux.tbl:109
-#: ../gui/selinux.tbl:110 ../gui/selinux.tbl:111 ../gui/selinux.tbl:112
-#: ../gui/selinux.tbl:113 ../gui/selinux.tbl:114 ../gui/selinux.tbl:116
-#: ../gui/selinux.tbl:117 ../gui/selinux.tbl:119 ../gui/selinux.tbl:121
-#: ../gui/selinux.tbl:123 ../gui/selinux.tbl:124 ../gui/selinux.tbl:127
-#: ../gui/selinux.tbl:129 ../gui/selinux.tbl:130 ../gui/selinux.tbl:131
-#: ../gui/selinux.tbl:132 ../gui/selinux.tbl:133 ../gui/selinux.tbl:134
-#: ../gui/selinux.tbl:135 ../gui/selinux.tbl:136 ../gui/selinux.tbl:137
-#: ../gui/selinux.tbl:138 ../gui/selinux.tbl:139 ../gui/selinux.tbl:142
-#: ../gui/selinux.tbl:143 ../gui/selinux.tbl:144 ../gui/selinux.tbl:145
-#: ../gui/selinux.tbl:146 ../gui/selinux.tbl:147 ../gui/selinux.tbl:148
-#: ../gui/selinux.tbl:149 ../gui/selinux.tbl:150 ../gui/selinux.tbl:151
-#: ../gui/selinux.tbl:152 ../gui/selinux.tbl:154 ../gui/selinux.tbl:155
-#: ../gui/selinux.tbl:156 ../gui/selinux.tbl:157 ../gui/selinux.tbl:158
-#: ../gui/selinux.tbl:159 ../gui/selinux.tbl:160 ../gui/selinux.tbl:167
-#: ../gui/selinux.tbl:171 ../gui/selinux.tbl:172 ../gui/selinux.tbl:173
-#: ../gui/selinux.tbl:174 ../gui/selinux.tbl:175 ../gui/selinux.tbl:177
-#: ../gui/selinux.tbl:178 ../gui/selinux.tbl:179 ../gui/selinux.tbl:180
-#: ../gui/selinux.tbl:184 ../gui/selinux.tbl:192 ../gui/selinux.tbl:193
-#: ../gui/selinux.tbl:194 ../gui/selinux.tbl:195 ../gui/selinux.tbl:196
-#: ../gui/selinux.tbl:197 ../gui/selinux.tbl:198 ../gui/selinux.tbl:199
-#: ../gui/selinux.tbl:200 ../gui/selinux.tbl:201 ../gui/selinux.tbl:206
-#: ../gui/selinux.tbl:207 ../gui/selinux.tbl:218 ../gui/selinux.tbl:219
-#: ../gui/selinux.tbl:220 ../gui/selinux.tbl:222 ../gui/selinux.tbl:224
-#: ../gui/selinux.tbl:226 ../gui/selinux.tbl:227 ../gui/selinux.tbl:230
-msgid "SELinux Service Protection"
-msgstr ""
-
-#: ../gui/selinux.tbl:1
-msgid "Disable SELinux protection for acct daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:2 ../gui/selinux.tbl:3 ../gui/selinux.tbl:70
-#: ../gui/selinux.tbl:153 ../gui/selinux.tbl:168 ../gui/selinux.tbl:169
-#: ../gui/selinux.tbl:170 ../gui/selinux.tbl:189 ../gui/selinux.tbl:202
-#: ../gui/selinux.tbl:203 ../gui/selinux.tbl:204 ../gui/selinux.tbl:205
-msgid "Admin"
-msgstr ""
-
-#: ../gui/selinux.tbl:2
-msgid "Allow all daemons to write corefiles to /"
-msgstr ""
-
-#: ../gui/selinux.tbl:3
-msgid "Allow all daemons the ability to use unallocated ttys"
-msgstr ""
-
-#: ../gui/selinux.tbl:4 ../gui/selinux.tbl:5 ../gui/selinux.tbl:11
-#: ../gui/selinux.tbl:12 ../gui/selinux.tbl:13 ../gui/selinux.tbl:15
-#: ../gui/selinux.tbl:20 ../gui/selinux.tbl:41 ../gui/selinux.tbl:208
-#: ../gui/selinux.tbl:210 ../gui/selinux.tbl:211 ../gui/selinux.tbl:212
-#: ../gui/selinux.tbl:213 ../gui/selinux.tbl:214 ../gui/selinux.tbl:215
-#: ../gui/selinux.tbl:216 ../gui/selinux.tbl:217
-msgid "User Privs"
-msgstr ""
-
-#: ../gui/selinux.tbl:4
-msgid ""
-"Allow gadmin SELinux user account to execute files in home directory or /tmp"
-msgstr ""
-
-#: ../gui/selinux.tbl:5
-msgid ""
-"Allow guest SELinux user account to execute files in home directory or /tmp"
-msgstr ""
-
-#: ../gui/selinux.tbl:6 ../gui/selinux.tbl:9 ../gui/selinux.tbl:16
-msgid "Memory Protection"
-msgstr ""
-
-#: ../gui/selinux.tbl:6
-msgid "Allow java executable stack"
-msgstr ""
-
-#: ../gui/selinux.tbl:7 ../gui/selinux.tbl:8 ../gui/selinux.tbl:35
-#: ../gui/selinux.tbl:209
-msgid "Mount"
-msgstr ""
-
-#: ../gui/selinux.tbl:7
-msgid "Allow mount to mount any file"
-msgstr ""
-
-#: ../gui/selinux.tbl:8
-msgid "Allow mount to mount any directory"
-msgstr ""
-
-#: ../gui/selinux.tbl:9
-msgid "Allow mplayer executable stack"
-msgstr ""
-
-#: ../gui/selinux.tbl:10 ../gui/selinux.tbl:162 ../gui/selinux.tbl:187
-#: ../gui/selinux.tbl:188
-msgid "SSH"
-msgstr ""
-
-#: ../gui/selinux.tbl:10
-msgid "Allow ssh to run ssh-keysign"
-msgstr ""
-
-#: ../gui/selinux.tbl:11
-msgid ""
-"Allow staff SELinux user account to execute files in home directory or /tmp"
-msgstr ""
-
-#: ../gui/selinux.tbl:12
-msgid ""
-"Allow sysadm SELinux user account to execute files in home directory or /tmp"
-msgstr ""
-
-#: ../gui/selinux.tbl:13
-msgid ""
-"Allow unconfined SELinux user account to execute files in home directory or /"
-"tmp"
-msgstr ""
-
-#: ../gui/selinux.tbl:14
-msgid "Network Configuration"
-msgstr ""
-
-#: ../gui/selinux.tbl:14
-msgid "Allow unlabeled packets to flow on the network"
-msgstr ""
-
-#: ../gui/selinux.tbl:15
-msgid ""
-"Allow user SELinux user account to execute files in home directory or /tmp"
-msgstr ""
-
-#: ../gui/selinux.tbl:16
-msgid "Allow unconfined to dyntrans to unconfined_execmem"
-msgstr ""
-
-#: ../gui/selinux.tbl:17 ../gui/selinux.tbl:18 ../gui/selinux.tbl:120
-#: ../gui/selinux.tbl:140
-msgid "Databases"
-msgstr ""
-
-#: ../gui/selinux.tbl:17
-msgid "Allow user to connect to mysql socket"
-msgstr ""
-
-#: ../gui/selinux.tbl:18
-msgid "Allow user to connect to postgres socket"
-msgstr ""
-
-#: ../gui/selinux.tbl:19 ../gui/selinux.tbl:165 ../gui/selinux.tbl:223
-msgid "XServer"
-msgstr ""
-
-#: ../gui/selinux.tbl:19
-msgid "Allow clients to write to X shared memory"
-msgstr ""
-
-#: ../gui/selinux.tbl:20
-msgid ""
-"Allow xguest SELinux user account to execute files in home directory or /tmp"
-msgstr ""
-
-#: ../gui/selinux.tbl:21 ../gui/selinux.tbl:228 ../gui/selinux.tbl:229
-#: ../gui/selinux.tbl:231
-msgid "NIS"
-msgstr ""
-
-#: ../gui/selinux.tbl:21
-msgid "Allow daemons to run with NIS"
-msgstr ""
-
-#: ../gui/selinux.tbl:22 ../gui/selinux.tbl:23 ../gui/selinux.tbl:24
-#: ../gui/selinux.tbl:25 ../gui/selinux.tbl:26 ../gui/selinux.tbl:27
-#: ../gui/selinux.tbl:28 ../gui/selinux.tbl:29 ../gui/selinux.tbl:71
-#: ../gui/selinux.tbl:73 ../gui/selinux.tbl:74 ../gui/selinux.tbl:115
-#: ../gui/selinux.tbl:118
-msgid "Web Applications"
-msgstr ""
-
-#: ../gui/selinux.tbl:22
-msgid "Transition staff SELinux user to Web Browser Domain"
-msgstr ""
-
-#: ../gui/selinux.tbl:23
-msgid "Transition sysadm SELinux user to Web Browser Domain"
-msgstr ""
-
-#: ../gui/selinux.tbl:24
-msgid "Transition user SELinux user to Web Browser Domain"
-msgstr ""
-
-#: ../gui/selinux.tbl:25
-msgid "Transition xguest SELinux user to Web Browser Domain"
-msgstr ""
-
-#: ../gui/selinux.tbl:26 ../gui/selinux.tbl:27 ../gui/selinux.tbl:28
-#: ../gui/selinux.tbl:29
-msgid "Allow staff Web Browsers to write to home directories"
-msgstr ""
-
-#: ../gui/selinux.tbl:30
-msgid "Disable SELinux protection for amanda"
-msgstr ""
-
-#: ../gui/selinux.tbl:31
-msgid "Disable SELinux protection for amavis"
-msgstr ""
-
-#: ../gui/selinux.tbl:32
-msgid "Disable SELinux protection for apmd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:33
-msgid "Disable SELinux protection for arpwatch daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:34
-msgid "Disable SELinux protection for auditd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:35
-msgid "Disable SELinux protection for automount daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:36
-msgid "Disable SELinux protection for avahi"
-msgstr ""
-
-#: ../gui/selinux.tbl:37
-msgid "Disable SELinux protection for bluetooth daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:38
-msgid "Disable SELinux protection for canna daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:39
-msgid "Disable SELinux protection for cardmgr daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:40
-msgid "Disable SELinux protection for Cluster Server"
-msgstr ""
-
-#: ../gui/selinux.tbl:41
-msgid ""
-"Allow cdrecord to read various content. nfs, samba, removable devices, user "
-"temp and untrusted content files"
-msgstr ""
-
-#: ../gui/selinux.tbl:42
-msgid "Disable SELinux protection for ciped daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:43
-msgid "Disable SELinux protection for clamd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:44
-msgid "Disable SELinux protection for clamscan"
-msgstr ""
-
-#: ../gui/selinux.tbl:45
-msgid "Disable SELinux protection for clvmd"
-msgstr ""
-
-#: ../gui/selinux.tbl:46
-msgid "Disable SELinux protection for comsat daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:47 ../gui/selinux.tbl:48 ../gui/selinux.tbl:49
-#: ../gui/selinux.tbl:50 ../gui/selinux.tbl:51
-msgid "Disable SELinux protection for courier daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:52
-msgid "Disable SELinux protection for cpucontrol daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:53
-msgid "Disable SELinux protection for cpuspeed daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:54
-msgid "Cron"
-msgstr ""
-
-#: ../gui/selinux.tbl:54
-msgid "Disable SELinux protection for crond daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:55 ../gui/selinux.tbl:56 ../gui/selinux.tbl:57
-#: ../gui/selinux.tbl:91
-msgid "Printing"
-msgstr ""
-
-#: ../gui/selinux.tbl:55
-msgid "Disable SELinux protection for cupsd back end server"
-msgstr ""
-
-#: ../gui/selinux.tbl:56
-msgid "Disable SELinux protection for cupsd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:57
-msgid "Disable SELinux protection for cupsd_lpd"
-msgstr ""
-
-#: ../gui/selinux.tbl:58
-msgid "CVS"
-msgstr ""
-
-#: ../gui/selinux.tbl:58
-msgid "Disable SELinux protection for cvs daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:59
-msgid "Disable SELinux protection for cyrus daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:60
-msgid "Disable SELinux protection for dbskkd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:61
-msgid "Disable SELinux protection for dbusd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:62
-msgid "Disable SELinux protection for dccd"
-msgstr ""
-
-#: ../gui/selinux.tbl:63
-msgid "Disable SELinux protection for dccifd"
-msgstr ""
-
-#: ../gui/selinux.tbl:64
-msgid "Disable SELinux protection for dccm"
-msgstr ""
-
-#: ../gui/selinux.tbl:65
-msgid "Disable SELinux protection for ddt daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:66
-msgid "Disable SELinux protection for devfsd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:67
-msgid "Disable SELinux protection for dhcpc daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:68
-msgid "Disable SELinux protection for dhcpd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:69
-msgid "Disable SELinux protection for dictd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:70
-msgid "Allow sysadm_t to directly start daemons"
-msgstr ""
-
-#: ../gui/selinux.tbl:71
-msgid "Disable SELinux protection for Evolution"
-msgstr ""
-
-#: ../gui/selinux.tbl:72
-msgid "Games"
-msgstr ""
-
-#: ../gui/selinux.tbl:72
-msgid "Disable SELinux protection for games"
-msgstr ""
-
-#: ../gui/selinux.tbl:73
-msgid "Disable SELinux protection for the web browsers"
-msgstr ""
-
-#: ../gui/selinux.tbl:74
-msgid "Disable SELinux protection for Thunderbird"
-msgstr ""
-
-#: ../gui/selinux.tbl:75
-msgid "Disable SELinux protection for distccd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:76
-msgid "Disable SELinux protection for dmesg daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:77
-msgid "Disable SELinux protection for dnsmasq daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:78
-msgid "Disable SELinux protection for dovecot daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:79
-msgid "Disable SELinux protection for entropyd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:80
-msgid "Disable SELinux protection for fetchmail"
-msgstr ""
-
-#: ../gui/selinux.tbl:81
-msgid "Disable SELinux protection for fingerd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:82
-msgid "Disable SELinux protection for freshclam daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:83
-msgid "Disable SELinux protection for fsdaemon daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:84
-msgid "Disable SELinux protection for gpm daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:85 ../gui/selinux.tbl:125
-msgid "NFS"
-msgstr ""
-
-#: ../gui/selinux.tbl:85
-msgid "Disable SELinux protection for gss daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:86
-msgid "Disable SELinux protection for Hal daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:87
-msgid "Compatibility"
-msgstr ""
-
-#: ../gui/selinux.tbl:87
-msgid ""
-"Do not audit things that we know to be broken but which are not security "
-"risks"
-msgstr ""
-
-#: ../gui/selinux.tbl:88
-msgid "Disable SELinux protection for hostname daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:89
-msgid "Disable SELinux protection for hotplug daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:90
-msgid "Disable SELinux protection for howl daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:91
-msgid "Disable SELinux protection for cups hplip daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:92
-msgid "Disable SELinux protection for httpd rotatelogs"
-msgstr ""
-
-#: ../gui/selinux.tbl:93 ../gui/selinux.tbl:232 ../gui/selinux.tbl:233
-msgid "HTTPD Service"
-msgstr ""
-
-#: ../gui/selinux.tbl:93
-msgid "Disable SELinux protection for http suexec"
-msgstr ""
-
-#: ../gui/selinux.tbl:94
-msgid "Disable SELinux protection for hwclock daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:95
-msgid "Disable SELinux protection for i18n daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:96
-msgid "Disable SELinux protection for imazesrv daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:97
-msgid "Disable SELinux protection for inetd child daemons"
-msgstr ""
-
-#: ../gui/selinux.tbl:98
-msgid "Disable SELinux protection for inetd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:99
-msgid "Disable SELinux protection for innd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:100
-msgid "Disable SELinux protection for iptables daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:101
-msgid "Disable SELinux protection for ircd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:102
-msgid "Disable SELinux protection for irqbalance daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:103
-msgid "Disable SELinux protection for iscsi daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:104
-msgid "Disable SELinux protection for jabberd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:105 ../gui/selinux.tbl:107
-msgid "Kerberos"
-msgstr ""
-
-#: ../gui/selinux.tbl:105
-msgid "Disable SELinux protection for kadmind daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:106
-msgid "Disable SELinux protection for klogd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:107
-msgid "Disable SELinux protection for krb5kdc daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:108
-msgid "Disable SELinux protection for ktalk daemons"
-msgstr ""
-
-#: ../gui/selinux.tbl:109
-msgid "Disable SELinux protection for kudzu daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:110
-msgid "Disable SELinux protection for locate daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:111
-msgid "Disable SELinux protection for lpd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:112
-msgid "Disable SELinux protection for lrrd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:113
-msgid "Disable SELinux protection for lvm daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:114
-msgid "Disable SELinux protection for mailman"
-msgstr ""
-
-#: ../gui/selinux.tbl:115
-msgid "Allow evolution and thunderbird to read user files"
-msgstr ""
-
-#: ../gui/selinux.tbl:116
-msgid "Disable SELinux protection for mdadm daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:117
-msgid "Disable SELinux protection for monopd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:118
-msgid "Allow the mozilla browser to read user files"
-msgstr ""
-
-#: ../gui/selinux.tbl:119
-msgid "Disable SELinux protection for mrtg daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:120
-msgid "Disable SELinux protection for mysqld daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:121
-msgid "Disable SELinux protection for nagios daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:122 ../gui/selinux.tbl:128
-msgid "Name Service"
-msgstr ""
-
-#: ../gui/selinux.tbl:122
-msgid "Disable SELinux protection for named daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:123
-msgid "Disable SELinux protection for nessusd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:124
-msgid "Disable SELinux protection for NetworkManager"
-msgstr ""
-
-#: ../gui/selinux.tbl:125
-msgid "Disable SELinux protection for nfsd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:126 ../gui/selinux.tbl:163 ../gui/selinux.tbl:176
-#: ../gui/selinux.tbl:221
-msgid "Samba"
-msgstr ""
-
-#: ../gui/selinux.tbl:126
-msgid "Disable SELinux protection for nmbd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:127
-msgid "Disable SELinux protection for nrpe daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:128
-msgid "Disable SELinux protection for nscd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:129
-msgid "Disable SELinux protection for nsd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:130
-msgid "Disable SELinux protection for ntpd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:131
-msgid "Disable SELinux protection for oddjob"
-msgstr ""
-
-#: ../gui/selinux.tbl:132
-msgid "Disable SELinux protection for oddjob_mkhomedir"
-msgstr ""
-
-#: ../gui/selinux.tbl:133
-msgid "Disable SELinux protection for openvpn daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:134
-msgid "Disable SELinux protection for pam daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:135
-msgid "Disable SELinux protection for pegasus"
-msgstr ""
-
-#: ../gui/selinux.tbl:136
-msgid "Disable SELinux protection for perdition daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:137
-msgid "Disable SELinux protection for portmap daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:138
-msgid "Disable SELinux protection for portslave daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:139
-msgid "Disable SELinux protection for postfix"
-msgstr ""
-
-#: ../gui/selinux.tbl:140
-msgid "Disable SELinux protection for postgresql daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:141
-msgid "pppd"
-msgstr ""
-
-#: ../gui/selinux.tbl:141
-msgid "Allow pppd to be run for a regular user"
-msgstr ""
-
-#: ../gui/selinux.tbl:142
-msgid "Disable SELinux protection for pptp"
-msgstr ""
-
-#: ../gui/selinux.tbl:143
-msgid "Disable SELinux protection for prelink daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:144
-msgid "Disable SELinux protection for privoxy daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:145
-msgid "Disable SELinux protection for ptal daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:146
-msgid "Disable SELinux protection for pxe daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:147
-msgid "Disable SELinux protection for pyzord"
-msgstr ""
-
-#: ../gui/selinux.tbl:148
-msgid "Disable SELinux protection for quota daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:149
-msgid "Disable SELinux protection for radiusd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:150
-msgid "Disable SELinux protection for radvd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:151
-msgid "Disable SELinux protection for rdisc"
-msgstr ""
-
-#: ../gui/selinux.tbl:152
-msgid "Disable SELinux protection for readahead"
-msgstr ""
-
-#: ../gui/selinux.tbl:153
-msgid "Allow programs to read files in non-standard locations (default_t)"
-msgstr ""
-
-#: ../gui/selinux.tbl:154
-msgid "Disable SELinux protection for restorecond"
-msgstr ""
-
-#: ../gui/selinux.tbl:155
-msgid "Disable SELinux protection for rhgb daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:156
-msgid "Disable SELinux protection for ricci"
-msgstr ""
-
-#: ../gui/selinux.tbl:157
-msgid "Disable SELinux protection for ricci_modclusterd"
-msgstr ""
-
-#: ../gui/selinux.tbl:158
-msgid "Disable SELinux protection for rlogind daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:159
-msgid "Disable SELinux protection for rpcd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:160
-msgid "Disable SELinux protection for rshd"
-msgstr ""
-
-#: ../gui/selinux.tbl:161
-msgid "rsync"
-msgstr ""
-
-#: ../gui/selinux.tbl:161
-msgid "Disable SELinux protection for rsync daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:162
-msgid "Allow ssh to run from inetd instead of as a daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:163
-msgid "Allow Samba to share nfs directories"
-msgstr ""
-
-#: ../gui/selinux.tbl:164 ../gui/selinux.tbl:166
-msgid "SASL authentication server"
-msgstr ""
-
-#: ../gui/selinux.tbl:164
-msgid "Allow sasl authentication server to read /etc/shadow"
-msgstr ""
-
-#: ../gui/selinux.tbl:165
-msgid ""
-"Allow X-Windows server to map a memory region as both executable and writable"
-msgstr ""
-
-#: ../gui/selinux.tbl:166
-msgid "Disable SELinux protection for saslauthd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:167
-msgid "Disable SELinux protection for scannerdaemon daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:168
-msgid "Do not allow transition to sysadm_t, sudo and su effected"
-msgstr ""
-
-#: ../gui/selinux.tbl:169
-msgid "Do not allow any processes to load kernel modules"
-msgstr ""
-
-#: ../gui/selinux.tbl:170
-msgid "Do not allow any processes to modify kernel SELinux policy"
-msgstr ""
-
-#: ../gui/selinux.tbl:171
-msgid "Disable SELinux protection for sendmail daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:172
-msgid "Disable SELinux protection for setrans"
-msgstr ""
-
-#: ../gui/selinux.tbl:173
-msgid "Disable SELinux protection for setroubleshoot daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:174
-msgid "Disable SELinux protection for slapd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:175
-msgid "Disable SELinux protection for slrnpull daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:176
-msgid "Disable SELinux protection for smbd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:177
-msgid "Disable SELinux protection for snmpd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:178
-msgid "Disable SELinux protection for snort daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:179
-msgid "Disable SELinux protection for soundd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:180
-msgid "Disable SELinux protection for sound daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:181 ../gui/selinux.tbl:182 ../gui/selinux.tbl:183
-msgid "Spam Protection"
-msgstr ""
-
-#: ../gui/selinux.tbl:181
-msgid "Disable SELinux protection for spamd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:182
-msgid "Allow spamd to access home directories"
-msgstr ""
-
-#: ../gui/selinux.tbl:183
-msgid "Allow Spam Assassin daemon network access"
-msgstr ""
-
-#: ../gui/selinux.tbl:184
-msgid "Disable SELinux protection for speedmgmt daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:185 ../gui/selinux.tbl:186
-msgid "Squid"
-msgstr ""
-
-#: ../gui/selinux.tbl:185
-msgid "Allow squid daemon to connect to the network"
-msgstr ""
-
-#: ../gui/selinux.tbl:186
-msgid "Disable SELinux protection for squid daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:187
-msgid "Disable SELinux protection for ssh daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:188
-msgid "Allow ssh logins as sysadm_r:sysadm_t"
-msgstr ""
-
-#: ../gui/selinux.tbl:189
-msgid ""
-"Allow staff_r users to search the sysadm home dir and read files (such as ~/."
-"bashrc)"
-msgstr ""
-
-#: ../gui/selinux.tbl:190 ../gui/selinux.tbl:191
-msgid "Universal SSL tunnel"
-msgstr ""
-
-#: ../gui/selinux.tbl:190
-msgid "Disable SELinux protection for stunnel daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:191
-msgid "Allow stunnel daemon to run as standalone, outside of xinetd"
-msgstr ""
-
-#: ../gui/selinux.tbl:192
-msgid "Disable SELinux protection for swat daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:193
-msgid "Disable SELinux protection for sxid daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:194
-msgid "Disable SELinux protection for syslogd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:195
-msgid "Disable SELinux protection for system cron jobs"
-msgstr ""
-
-#: ../gui/selinux.tbl:196
-msgid "Disable SELinux protection for tcp daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:197
-msgid "Disable SELinux protection for telnet daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:198
-msgid "Disable SELinux protection for tftpd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:199
-msgid "Disable SELinux protection for transproxy daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:200
-msgid "Disable SELinux protection for udev daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:201
-msgid "Disable SELinux protection for uml daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:202
-msgid ""
-"Allow xinetd to run unconfined, including any services it starts that do not "
-"have a domain transition explicitly defined"
-msgstr ""
-
-#: ../gui/selinux.tbl:203
-msgid ""
-"Allow rc scripts to run unconfined, including any daemon started by an rc "
-"script that does not have a domain transition explicitly defined"
-msgstr ""
-
-#: ../gui/selinux.tbl:204
-msgid "Allow rpm to run unconfined"
-msgstr ""
-
-#: ../gui/selinux.tbl:205
-msgid "Allow privileged utilities like hotplug and insmod to run unconfined"
-msgstr ""
-
-#: ../gui/selinux.tbl:206
-msgid "Disable SELinux protection for updfstab daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:207
-msgid "Disable SELinux protection for uptimed daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:208
-msgid ""
-"Allow user_r to reach sysadm_r via su, sudo, or userhelper. Otherwise, only "
-"staff_r can do so"
-msgstr ""
-
-#: ../gui/selinux.tbl:209
-msgid "Allow users to execute the mount command"
-msgstr ""
-
-#: ../gui/selinux.tbl:210
-msgid "Allow regular users direct mouse access (only allow the X server)"
-msgstr ""
-
-#: ../gui/selinux.tbl:211
-msgid "Allow users to run the dmesg command"
-msgstr ""
-
-#: ../gui/selinux.tbl:212
-msgid "Allow users to control network interfaces (also needs USERCTL=true)"
-msgstr ""
-
-#: ../gui/selinux.tbl:213
-msgid "Allow normal user to execute ping"
-msgstr ""
-
-#: ../gui/selinux.tbl:214
-msgid "Allow user to r/w noextattrfile (FAT, CDROM, FLOPPY)"
-msgstr ""
-
-#: ../gui/selinux.tbl:215
-msgid "Allow users to rw usb devices"
-msgstr ""
-
-#: ../gui/selinux.tbl:216
-msgid ""
-"Allow users to run TCP servers (bind to ports and accept connection from the "
-"same domain and outside users)  disabling this forces FTP passive mode and "
-"may change other protocols"
-msgstr ""
-
-#: ../gui/selinux.tbl:217
-msgid "Allow user to stat ttyfiles"
-msgstr ""
-
-#: ../gui/selinux.tbl:218
-msgid "Disable SELinux protection for uucpd daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:219
-msgid "Disable SELinux protection for vmware daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:220
-msgid "Disable SELinux protection for watchdog daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:221
-msgid "Disable SELinux protection for winbind daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:222
-msgid "Disable SELinux protection for xdm daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:223
-msgid "Allow xdm logins as sysadm_r:sysadm_t"
-msgstr ""
-
-#: ../gui/selinux.tbl:224
-msgid "Disable SELinux protection for xen daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:225
-msgid "XEN"
-msgstr ""
-
-#: ../gui/selinux.tbl:225
-msgid "Allow xen to read/write physical disk devices"
-msgstr ""
-
-#: ../gui/selinux.tbl:226
-msgid "Disable SELinux protection for xfs daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:227
-msgid "Disable SELinux protection for xen control"
-msgstr ""
-
-#: ../gui/selinux.tbl:228
-msgid "Disable SELinux protection for ypbind daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:229
-msgid "Disable SELinux protection for NIS Password Daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:230
-msgid "Disable SELinux protection for ypserv daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:231
-msgid "Disable SELinux protection for NIS Transfer Daemon"
-msgstr ""
-
-#: ../gui/selinux.tbl:232
-msgid "Allow SELinux webadm user to manage unprivileged users home directories"
-msgstr ""
-
-#: ../gui/selinux.tbl:233
-msgid "Allow SELinux webadm user to read unprivileged users home directories"
 msgstr ""
 
 #: ../gui/semanagePage.py:126
@@ -3105,8 +1901,8 @@ msgid ""
 "you later decide to turn SELinux back on, the system will be required to "
 "relabel.  If you just want to see if SELinux is causing a problem on your "
 "system, you can go to permissive mode which will only log errors and not "
-"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
-"wish to continue?"
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you"
+" wish to continue?"
 msgstr ""
 
 #: ../gui/statusPage.py:152
@@ -3336,8 +2132,8 @@ msgstr ""
 
 #: ../gui/system-config-selinux.glade:2661
 msgid ""
-"Enable/Disable additional audit rules, that are normally not reported in the "
-"log files."
+"Enable/Disable additional audit rules, that are normally not reported in the"
+" log files."
 msgstr ""
 
 #: ../gui/system-config-selinux.glade:2781
@@ -3363,4 +2159,1323 @@ msgstr ""
 #: ../gui/usersPage.py:138
 #, python-format
 msgid "SELinux user '%s' is required"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:202
+msgid "Generate SELinux man pages"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:205
+msgid "path in which the generated SELinux man pages will be stored"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:207
+msgid "name of the OS for man pages"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:209
+msgid "Generate HTML man pages structure for selected SELinux man page"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:213
+msgid "All domains"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:216
+msgid "Domain name(s) of man pages to be created"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:221
+msgid "Query SELinux policy network information"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:226
+msgid "list all SELinux port types"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:229
+msgid "show SELinux type related to the port"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:232
+msgid "Show ports defined for this SELinux type"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:235
+msgid "show ports to which this domain can bind and/or connect"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:250
+msgid "query SELinux policy to see if domains can communicate with each other"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:253
+msgid "Source Domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:256
+msgid "Target Domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:276
+msgid "query SELinux Policy to see description of booleans"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:280
+msgid "get all booleans descriptions"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:282
+msgid "boolean to get description"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:301
+msgid ""
+"query SELinux Policy to see how a source process domain can transition to "
+"the target process domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:304
+msgid "source process domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:307
+msgid "target process domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:327
+msgid "Command required for this type of policy"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:347
+msgid "List SELinux Policy interfaces"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:362
+msgid "Generate SELinux Policy module template"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:365
+msgid "Enter domain type which you will be extending"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:368
+msgid "Enter SELinux user(s) which will transition to this domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:371
+msgid "Enter domain(s) that this confined admin will administrate"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:374
+msgid "name of policy to generate"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:378
+msgid "path in which the generated policy files will be stored"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:380
+msgid "executable to confine"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:384 ../sepolicy/sepolicy.py:387
+#: ../sepolicy/sepolicy.py:390 ../sepolicy/sepolicy.py:393
+#: ../sepolicy/sepolicy.py:396 ../sepolicy/sepolicy.py:399
+#: ../sepolicy/sepolicy.py:402 ../sepolicy/sepolicy.py:405
+#: ../sepolicy/sepolicy.py:408 ../sepolicy/sepolicy.py:411
+#: ../sepolicy/sepolicy.py:414 ../sepolicy/sepolicy.py:417
+#, python-format
+msgid "Generate Policy for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:422
+msgid "commands"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:425
+msgid "Alternate SELinux policy, defaults to /sys/fs/selinux/policy"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:48
+msgid "No SELinux Policy installed"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:54
+#, python-format
+msgid "Failed to read %s policy file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:127
+msgid "unknown"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:173
+msgid "Internet Services Daemon"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:177
+msgid "Existing Domain Type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:178
+msgid "Minimal Terminal Login User Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:179
+msgid "Minimal X Windows Login User Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:180
+msgid "Desktop Login User Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:181
+msgid "Administrator Login User Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:182
+msgid "Confined Root Administrator Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:187
+msgid "Valid Types:\n"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:221
+#, python-format
+msgid "Ports must be numbers or ranges of numbers from 1 to %d "
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:231
+msgid "You must enter a valid policy type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:234
+#, python-format
+msgid "You must enter a name for your policy module for your %s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:355
+msgid ""
+"Name must be alpha numberic with no spaces. Consider using option \"-n "
+"MODULENAME\""
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:447
+msgid "User Role types can not be assigned executables."
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:453
+msgid "Only Daemon apps can use an init script.."
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:471
+msgid "use_resolve must be a boolean value "
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:477
+msgid "use_syslog must be a boolean value "
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:483
+msgid "use_kerberos must be a boolean value "
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:489
+msgid "manage_krb5_rcache must be a boolean value "
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:519
+msgid "USER Types automatically get a tmp type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:857
+#, python-format
+msgid "%s policy modules require existing domains"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:1059
+msgid "You must enter the executable path for your confined process"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:1321
+msgid "Type Enforcement file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:1322
+msgid "Interface file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:1323
+msgid "File Contexts file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:1324
+msgid "Spec file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:1325
+msgid "Setup Script"
+msgstr ""
+
+#: booleans.py:1
+msgid ""
+"Allow ABRT to modify public files used for public file transfer services."
+msgstr ""
+
+#: booleans.py:2
+msgid ""
+"Allow ABRT to run in abrt_handle_event_t domain to handle ABRT event scripts"
+msgstr ""
+
+#: booleans.py:3
+msgid "Allow amavis to use JIT compiler"
+msgstr ""
+
+#: booleans.py:4
+msgid "Allow antivirus programs to read non security files on a system"
+msgstr ""
+
+#: booleans.py:5
+msgid "Allow auditadm to exec content"
+msgstr ""
+
+#: booleans.py:6
+msgid ""
+"Allow users to resolve user passwd entries directly from ldap rather then "
+"using a sssd server"
+msgstr ""
+
+#: booleans.py:7
+msgid "Allow users to login using a radius server"
+msgstr ""
+
+#: booleans.py:8
+msgid "Allow users to login using a yubikey  server"
+msgstr ""
+
+#: booleans.py:9
+msgid "Allow awstats to purge Apache logs"
+msgstr ""
+
+#: booleans.py:10
+msgid ""
+"Allow cdrecord to read various content. nfs, samba, removable devices, user "
+"temp and untrusted content files"
+msgstr ""
+
+#: booleans.py:11
+msgid "Allow clamd to use JIT compiler"
+msgstr ""
+
+#: booleans.py:12
+msgid "Allow clamscan to non security files on a system"
+msgstr ""
+
+#: booleans.py:13
+msgid "Allow clamscan to read user content"
+msgstr ""
+
+#: booleans.py:14
+msgid ""
+"Allow Cobbler to modify public files used for public file transfer services."
+msgstr ""
+
+#: booleans.py:15
+msgid "Allow Cobbler to connect to the network using TCP."
+msgstr ""
+
+#: booleans.py:16
+msgid "Allow Cobbler to access cifs file systems."
+msgstr ""
+
+#: booleans.py:17
+msgid "Allow Cobbler to access nfs file systems."
+msgstr ""
+
+#: booleans.py:18
+msgid "Allow collectd to connect to the network using TCP."
+msgstr ""
+
+#: booleans.py:19
+msgid "Allow codnor domain to connect to the network using TCP."
+msgstr ""
+
+#: booleans.py:20
+msgid ""
+"Allow system cron jobs to relabel filesystem for restoring file contexts."
+msgstr ""
+
+#: booleans.py:21
+msgid "Allow cvs daemon to read shadow"
+msgstr ""
+
+#: booleans.py:22
+msgid "Allow all daemons to write corefiles to /"
+msgstr ""
+
+#: booleans.py:23
+msgid "Allow all daemons to use tcp wrappers."
+msgstr ""
+
+#: booleans.py:24
+msgid "Allow all daemons the ability to read/write terminals"
+msgstr ""
+
+#: booleans.py:25
+msgid "Allow dan to manage user files"
+msgstr ""
+
+#: booleans.py:26
+msgid "Allow dan to read user files"
+msgstr ""
+
+#: booleans.py:27
+msgid "Allow dbadm to manage files in users home directories"
+msgstr ""
+
+#: booleans.py:28
+msgid "Allow dbadm to read files in users home directories"
+msgstr ""
+
+#: booleans.py:29
+msgid ""
+"Deny user domains applications to map a memory region as both executable and"
+" writable, this is dangerous and the executable should be reported in "
+"bugzilla"
+msgstr ""
+
+#: booleans.py:30
+msgid "Allow sysadm to debug or ptrace all processes."
+msgstr ""
+
+#: booleans.py:31
+msgid "Allow dhcpc client applications to execute iptables commands"
+msgstr ""
+
+#: booleans.py:32
+msgid "Allow DHCP daemon to use LDAP backends"
+msgstr ""
+
+#: booleans.py:33
+msgid "Allow all domains to use other domains file descriptors"
+msgstr ""
+
+#: booleans.py:34
+msgid "Allow all domains to have the kernel load modules"
+msgstr ""
+
+#: booleans.py:35
+msgid "Allow the use of the audio devices as the source for the entropy feeds"
+msgstr ""
+
+#: booleans.py:36
+msgid "Allow exim to connect to databases (postgres, mysql)"
+msgstr ""
+
+#: booleans.py:37
+msgid "Allow exim to create, read, write, and delete unprivileged user files."
+msgstr ""
+
+#: booleans.py:38
+msgid "Allow exim to read unprivileged user files."
+msgstr ""
+
+#: booleans.py:39
+msgid "Enable extra rules in the cron domain to support fcron."
+msgstr ""
+
+#: booleans.py:40
+msgid "Allow fenced domain to connect to the network using TCP."
+msgstr ""
+
+#: booleans.py:41
+msgid "Allow fenced domain to execute ssh."
+msgstr ""
+
+#: booleans.py:42
+msgid "Allow all domains to execute in fips_mode"
+msgstr ""
+
+#: booleans.py:43
+msgid "Allow ftp to read and write files in the user home directories"
+msgstr ""
+
+#: booleans.py:44
+msgid ""
+"Allow ftp servers to upload files,  used for public file transfer services. "
+"Directories must be labeled public_content_rw_t."
+msgstr ""
+
+#: booleans.py:45
+msgid "Allow ftp servers to connect to all ports > 1023"
+msgstr ""
+
+#: booleans.py:46
+msgid "Allow ftp servers to connect to mysql database ports"
+msgstr ""
+
+#: booleans.py:47
+msgid ""
+"Allow ftp servers to login to local users and read/write all files on the "
+"system, governed by DAC."
+msgstr ""
+
+#: booleans.py:48
+msgid "Allow ftp servers to use cifs used for public file transfer services."
+msgstr ""
+
+#: booleans.py:49
+msgid "Allow ftp servers to use nfs used for public file transfer services."
+msgstr ""
+
+#: booleans.py:50
+msgid "Allow ftp servers to use bind to all unreserved ports for passive mode"
+msgstr ""
+
+#: booleans.py:51
+msgid "Determine whether Git CGI can search home directories."
+msgstr ""
+
+#: booleans.py:52
+msgid "Determine whether Git CGI can access cifs file systems."
+msgstr ""
+
+#: booleans.py:53
+msgid "Determine whether Git CGI can access nfs file systems."
+msgstr ""
+
+#: booleans.py:54
+msgid ""
+"Determine whether Git session daemon can bind TCP sockets to all unreserved "
+"ports."
+msgstr ""
+
+#: booleans.py:55
+msgid ""
+"Determine whether calling user domains can execute Git daemon in the "
+"git_session_t domain."
+msgstr ""
+
+#: booleans.py:56
+msgid "Determine whether Git system daemon can search home directories."
+msgstr ""
+
+#: booleans.py:57
+msgid "Determine whether Git system daemon can access cifs file systems."
+msgstr ""
+
+#: booleans.py:58
+msgid "Determine whether Git system daemon can access nfs file systems."
+msgstr ""
+
+#: booleans.py:59
+msgid "Allow gitisis daemon to send mail"
+msgstr ""
+
+#: booleans.py:60
+msgid "Enable reading of urandom for all domains."
+msgstr ""
+
+#: booleans.py:61
+msgid ""
+"Allow usage of the gpg-agent --write-env-file option. This also allows gpg-"
+"agent to manage user files."
+msgstr ""
+
+#: booleans.py:62
+msgid ""
+"Allow gpg web domain to modify public files used for public file transfer "
+"services."
+msgstr ""
+
+#: booleans.py:63
+msgid "Allow gssd to read temp directory.  For access to kerberos tgt."
+msgstr ""
+
+#: booleans.py:64
+msgid "Allow guest to exec content"
+msgstr ""
+
+#: booleans.py:65
+msgid ""
+"Allow Apache to modify public files used for public file transfer services. "
+"Directories/Files must be labeled public_content_rw_t."
+msgstr ""
+
+#: booleans.py:66
+msgid "Allow httpd to use built in scripting (usually php)"
+msgstr ""
+
+#: booleans.py:67
+msgid "Allow http daemon to check spam"
+msgstr ""
+
+#: booleans.py:68
+msgid ""
+"Allow httpd to act as a FTP client connecting to the ftp port and ephemeral "
+"ports"
+msgstr ""
+
+#: booleans.py:69
+msgid "Allow httpd to connect to the ldap port"
+msgstr ""
+
+#: booleans.py:70
+msgid "Allow http daemon to connect to zabbix"
+msgstr ""
+
+#: booleans.py:71
+msgid "Allow HTTPD scripts and modules to connect to the network using TCP."
+msgstr ""
+
+#: booleans.py:72
+msgid ""
+"Allow HTTPD scripts and modules to connect to cobbler over the network."
+msgstr ""
+
+#: booleans.py:73
+msgid ""
+"Allow HTTPD scripts and modules to connect to databases over the network."
+msgstr ""
+
+#: booleans.py:74
+msgid "Allow httpd to connect to memcache server"
+msgstr ""
+
+#: booleans.py:75
+msgid "Allow httpd to act as a relay"
+msgstr ""
+
+#: booleans.py:76
+msgid "Allow http daemon to send mail"
+msgstr ""
+
+#: booleans.py:77
+msgid "Allow Apache to communicate with avahi service via dbus"
+msgstr ""
+
+#: booleans.py:78
+msgid "Allow httpd cgi support"
+msgstr ""
+
+#: booleans.py:79
+msgid "Allow httpd to act as a FTP server by listening on the ftp port."
+msgstr ""
+
+#: booleans.py:80
+msgid "Allow httpd to read home directories"
+msgstr ""
+
+#: booleans.py:81
+msgid "Allow httpd scripts and modules execmem/execstack"
+msgstr ""
+
+#: booleans.py:82
+msgid "Allow HTTPD to connect to port 80 for graceful shutdown"
+msgstr ""
+
+#: booleans.py:83
+msgid "Allow httpd processes to manage IPA content"
+msgstr ""
+
+#: booleans.py:84
+msgid "Allow Apache to use mod_auth_ntlm_winbind"
+msgstr ""
+
+#: booleans.py:85
+msgid "Allow Apache to use mod_auth_pam"
+msgstr ""
+
+#: booleans.py:86
+msgid "Allow httpd to read user content"
+msgstr ""
+
+#: booleans.py:87
+msgid "Allow Apache to run in stickshift mode, not transition to passenger"
+msgstr ""
+
+#: booleans.py:88
+msgid "Allow httpd daemon to change its resource limits"
+msgstr ""
+
+#: booleans.py:89
+msgid ""
+"Allow HTTPD to run SSI executables in the same domain as system CGI scripts."
+msgstr ""
+
+#: booleans.py:90
+msgid ""
+"Allow apache scripts to write to public content, directories/files must be "
+"labeled public_rw_content_t."
+msgstr ""
+
+#: booleans.py:91
+msgid "Allow Apache to execute tmp content."
+msgstr ""
+
+#: booleans.py:92
+msgid ""
+"Unify HTTPD to communicate with the terminal. Needed for entering the "
+"passphrase for certificates at the terminal."
+msgstr ""
+
+#: booleans.py:93
+msgid "Unify HTTPD handling of all content files."
+msgstr ""
+
+#: booleans.py:94
+msgid "Allow httpd to access cifs file systems"
+msgstr ""
+
+#: booleans.py:95
+msgid "Allow httpd to access FUSE file systems"
+msgstr ""
+
+#: booleans.py:96
+msgid "Allow httpd to run gpg"
+msgstr ""
+
+#: booleans.py:97
+msgid "Allow httpd to access nfs file systems"
+msgstr ""
+
+#: booleans.py:98
+msgid "Allow httpd to communicate with oddjob to start up a service"
+msgstr ""
+
+#: booleans.py:99
+msgid "Allow httpd to access openstack ports"
+msgstr ""
+
+#: booleans.py:100
+msgid "Allow Apache to query NS records"
+msgstr ""
+
+#: booleans.py:101
+msgid "Allow icecast to connect to all ports, not just sound ports."
+msgstr ""
+
+#: booleans.py:102
+msgid ""
+"Allow the Irssi IRC Client to connect to any port, and to bind to any "
+"unreserved port."
+msgstr ""
+
+#: booleans.py:103
+msgid "Allow confined applications to run with kerberos."
+msgstr ""
+
+#: booleans.py:104
+msgid "Allow syslogd daemon to send mail"
+msgstr ""
+
+#: booleans.py:105
+msgid "Allow syslogd the ability to read/write terminals"
+msgstr ""
+
+#: booleans.py:106
+msgid "Allow logging in and using the system from /dev/console."
+msgstr ""
+
+#: booleans.py:107
+msgid ""
+"Control the ability to mmap a low area of the address space, as configured "
+"by /proc/sys/kernel/mmap_min_addr."
+msgstr ""
+
+#: booleans.py:108
+msgid "Allow mock to read files in home directories."
+msgstr ""
+
+#: booleans.py:109
+msgid "Allow the mount command to mount any directory or file."
+msgstr ""
+
+#: booleans.py:110
+msgid "Allow mozilla plugin domain to connect to the network using TCP."
+msgstr ""
+
+#: booleans.py:111
+msgid ""
+"Allow mozilla_plugins to create random content in the users home directory"
+msgstr ""
+
+#: booleans.py:112
+msgid "Allow confined web browsers to read home directory content"
+msgstr ""
+
+#: booleans.py:113
+msgid "Allow mplayer executable stack"
+msgstr ""
+
+#: booleans.py:114
+msgid "Allow mysqld to connect to all ports"
+msgstr ""
+
+#: booleans.py:115
+msgid "Allow BIND to bind apache port."
+msgstr ""
+
+#: booleans.py:116
+msgid ""
+"Allow BIND to write the master zone files. Generally this is used for "
+"dynamic DNS or zone transfers."
+msgstr ""
+
+#: booleans.py:117
+msgid "Allow any files/directories to be exported read/only via NFS."
+msgstr ""
+
+#: booleans.py:118
+msgid "Allow any files/directories to be exported read/write via NFS."
+msgstr ""
+
+#: booleans.py:119
+msgid ""
+"Allow nfs servers to modify public files used for public file transfer "
+"services.  Files/Directories must be labeled public_content_rw_t."
+msgstr ""
+
+#: booleans.py:120
+msgid "Allow system to run with NIS"
+msgstr ""
+
+#: booleans.py:121
+msgid "Allow confined applications to use nscd shared memory."
+msgstr ""
+
+#: booleans.py:122
+msgid "Allow openshift to lockdown app"
+msgstr ""
+
+#: booleans.py:123
+msgid "Allow openvpn to read home directories"
+msgstr ""
+
+#: booleans.py:124
+msgid "Allow piranha-lvs domain to connect to the network using TCP."
+msgstr ""
+
+#: booleans.py:125
+msgid "Allow polipo to connect to all ports > 1023"
+msgstr ""
+
+#: booleans.py:126
+msgid ""
+"Determine whether Polipo session daemon can bind tcp sockets to all "
+"unreserved ports."
+msgstr ""
+
+#: booleans.py:127
+msgid ""
+"Determine whether calling user domains can execute Polipo daemon in the "
+"polipo_session_t domain."
+msgstr ""
+
+#: booleans.py:128
+msgid "Determine whether polipo can access cifs file systems."
+msgstr ""
+
+#: booleans.py:129
+msgid "Determine whether Polipo can access nfs file systems."
+msgstr ""
+
+#: booleans.py:130
+msgid "Enable polyinstantiated directory support."
+msgstr ""
+
+#: booleans.py:131
+msgid "Allow postfix_local domain full write access to mail_spool directories"
+msgstr ""
+
+#: booleans.py:132
+msgid "Allow postgresql to use ssh and rsync for point-in-time recovery"
+msgstr ""
+
+#: booleans.py:133
+msgid "Allow transmit client label to foreign database"
+msgstr ""
+
+#: booleans.py:134
+msgid "Allow database admins to execute DML statement"
+msgstr ""
+
+#: booleans.py:135
+msgid "Allow unprivileged users to execute DDL statement"
+msgstr ""
+
+#: booleans.py:136
+msgid "Allow pppd to load kernel modules for certain modems"
+msgstr ""
+
+#: booleans.py:137
+msgid "Allow pppd to be run for a regular user"
+msgstr ""
+
+#: booleans.py:138
+msgid ""
+"Allow privoxy to connect to all ports, not just HTTP, FTP, and Gopher ports."
+msgstr ""
+
+#: booleans.py:139
+msgid "Allow Puppet client to manage all file types."
+msgstr ""
+
+#: booleans.py:140
+msgid "Allow Puppet master to use connect to MySQL and PostgreSQL database"
+msgstr ""
+
+#: booleans.py:141
+msgid "Allow racoon to read shadow"
+msgstr ""
+
+#: booleans.py:142
+msgid "Allow rgmanager domain to connect to the network using TCP."
+msgstr ""
+
+#: booleans.py:143
+msgid ""
+"Allow rsync to modify public files used for public file transfer services.  "
+"Files/Directories must be labeled public_content_rw_t."
+msgstr ""
+
+#: booleans.py:144
+msgid "Allow rsync to run as a client"
+msgstr ""
+
+#: booleans.py:145
+msgid "Allow rsync to export any files/directories read only."
+msgstr ""
+
+#: booleans.py:146
+msgid "Allow rsync servers to share cifs files systems"
+msgstr ""
+
+#: booleans.py:147
+msgid "Allow rsync servers to share nfs files systems"
+msgstr ""
+
+#: booleans.py:148
+msgid "Allow samba to create new home directories (e.g. via PAM)"
+msgstr ""
+
+#: booleans.py:149
+msgid ""
+"Allow samba to act as the domain controller, add users, groups and change "
+"passwords."
+msgstr ""
+
+#: booleans.py:150
+msgid "Allow samba to share users home directories."
+msgstr ""
+
+#: booleans.py:151
+msgid "Allow samba to share any file/directory read only."
+msgstr ""
+
+#: booleans.py:152
+msgid "Allow samba to share any file/directory read/write."
+msgstr ""
+
+#: booleans.py:153
+msgid "Allow samba to act as a portmapper"
+msgstr ""
+
+#: booleans.py:154
+msgid "Allow samba to run unconfined scripts"
+msgstr ""
+
+#: booleans.py:155
+msgid "Allow samba to export ntfs/fusefs volumes."
+msgstr ""
+
+#: booleans.py:156
+msgid "Allow samba to export NFS volumes."
+msgstr ""
+
+#: booleans.py:157
+msgid "Allow sanlock to read/write fuse files"
+msgstr ""
+
+#: booleans.py:158
+msgid "Allow sanlock to manage nfs files"
+msgstr ""
+
+#: booleans.py:159
+msgid "Allow sanlock to manage cifs files"
+msgstr ""
+
+#: booleans.py:160
+msgid "Allow sasl to read shadow"
+msgstr ""
+
+#: booleans.py:161
+msgid "Allow secadm to exec content"
+msgstr ""
+
+#: booleans.py:162
+msgid ""
+"disallow programs, such as newrole, from transitioning to administrative "
+"user domains."
+msgstr ""
+
+#: booleans.py:163
+msgid "Disable kernel module loading."
+msgstr ""
+
+#: booleans.py:164
+msgid ""
+"Boolean to determine whether the system permits loading policy, setting "
+"enforcing mode, and changing boolean values.  Set this to true and you have "
+"to reboot to set it back."
+msgstr ""
+
+#: booleans.py:165
+msgid "Allow regular users direct dri device access"
+msgstr ""
+
+#: booleans.py:166
+msgid ""
+"Allow unconfined executables to make their heap memory executable.  Doing "
+"this is a really bad idea. Probably indicates a badly coded executable, but "
+"could indicate an attack. This executable should be reported in bugzilla"
+msgstr ""
+
+#: booleans.py:167
+msgid ""
+"Allow all unconfined executables to use libraries requiring text relocation "
+"that are not labeled textrel_shlib_t"
+msgstr ""
+
+#: booleans.py:168
+msgid ""
+"Allow unconfined executables to make their stack executable.  This should "
+"never, ever be necessary. Probably indicates a badly coded executable, but "
+"could indicate an attack. This executable should be reported in bugzilla"
+msgstr ""
+
+#: booleans.py:169
+msgid "Allow users to connect to the local mysql server"
+msgstr ""
+
+#: booleans.py:170
+msgid ""
+"Allow confined users the ability to execute the ping and traceroute "
+"commands."
+msgstr ""
+
+#: booleans.py:171
+msgid "Allow users to connect to PostgreSQL"
+msgstr ""
+
+#: booleans.py:172
+msgid ""
+"Allow user to r/w files on filesystems that do not have extended attributes "
+"(FAT, CDROM, FLOPPY)"
+msgstr ""
+
+#: booleans.py:173
+msgid ""
+"Allow users to run TCP servers (bind to ports and accept connection from the"
+" same domain and outside users)  disabling this forces FTP passive mode and "
+"may change other protocols."
+msgstr ""
+
+#: booleans.py:174
+msgid "Allow user  to use ssh chroot environment."
+msgstr ""
+
+#: booleans.py:175
+msgid "Allow user music sharing"
+msgstr ""
+
+#: booleans.py:176
+msgid ""
+"Allow anon internal-sftp to upload files, used for public file transfer "
+"services. Directories must be labeled public_content_rw_t."
+msgstr ""
+
+#: booleans.py:177
+msgid ""
+"Allow sftp-internal to read and write files in the user home directories"
+msgstr ""
+
+#: booleans.py:178
+msgid ""
+"Allow sftp-internal to login to local users and read/write all files on the "
+"system, governed by DAC."
+msgstr ""
+
+#: booleans.py:179
+msgid ""
+"Allow internal-sftp to read and write files in the user ssh home "
+"directories."
+msgstr ""
+
+#: booleans.py:180
+msgid "Allow sge to connect to the network using any TCP port"
+msgstr ""
+
+#: booleans.py:181
+msgid "Allow sge to access nfs file systems."
+msgstr ""
+
+#: booleans.py:182
+msgid ""
+"Enable additional permissions needed to support devices on 3ware "
+"controllers."
+msgstr ""
+
+#: booleans.py:183
+msgid ""
+"Allow samba to modify public files used for public file transfer services.  "
+"Files/Directories must be labeled public_content_rw_t."
+msgstr ""
+
+#: booleans.py:184
+msgid "Allow user spamassassin clients to use the network."
+msgstr ""
+
+#: booleans.py:185
+msgid "Allow spamd to read/write user home directories."
+msgstr ""
+
+#: booleans.py:186
+msgid ""
+"Allow squid to connect to all ports, not just HTTP, FTP, and Gopher ports."
+msgstr ""
+
+#: booleans.py:187
+msgid "Allow squid to run as a transparent proxy (TPROXY)"
+msgstr ""
+
+#: booleans.py:188
+msgid ""
+"Allow ssh with chroot env to read and write files in the user home "
+"directories"
+msgstr ""
+
+#: booleans.py:189
+msgid "allow host key based authentication"
+msgstr ""
+
+#: booleans.py:190
+msgid "Allow ssh logins as sysadm_r:sysadm_t"
+msgstr ""
+
+#: booleans.py:191
+msgid "Allow staff to exec content"
+msgstr ""
+
+#: booleans.py:192
+msgid "allow staff user to create and transition to svirt domains."
+msgstr ""
+
+#: booleans.py:193
+msgid "Allow sysadm to exec content"
+msgstr ""
+
+#: booleans.py:194
+msgid ""
+"Allow the Telepathy connection managers to connect to any network port."
+msgstr ""
+
+#: booleans.py:195
+msgid ""
+"Allow the Telepathy connection managers to connect to any generic TCP port."
+msgstr ""
+
+#: booleans.py:196
+msgid ""
+"Allow tftp to modify public files used for public file transfer services."
+msgstr ""
+
+#: booleans.py:197
+msgid "Allow tftp to read and write files in the user home directories"
+msgstr ""
+
+#: booleans.py:198
+msgid "Allow tor daemon to bind tcp sockets to all unreserved ports."
+msgstr ""
+
+#: booleans.py:199
+msgid "Allow tor to act as a relay"
+msgstr ""
+
+#: booleans.py:200
+msgid ""
+"allow unconfined users to transition to the chrome sandbox domains when "
+"running chrome-sandbox"
+msgstr ""
+
+#: booleans.py:201
+msgid "Allow a user to login as an unconfined domain"
+msgstr ""
+
+#: booleans.py:202
+msgid ""
+"Allow unconfined users to transition to the Mozilla plugin domain when "
+"running xulrunner plugin-container."
+msgstr ""
+
+#: booleans.py:203
+msgid "Allow video playing tools to run unconfined"
+msgstr ""
+
+#: booleans.py:204
+msgid "Allow unprivledged user to create and transition to svirt domains."
+msgstr ""
+
+#: booleans.py:205
+msgid "Support ecryptfs home directories"
+msgstr ""
+
+#: booleans.py:206
+msgid "Support fusefs home directories"
+msgstr ""
+
+#: booleans.py:207
+msgid "Use lpd server instead of cups"
+msgstr ""
+
+#: booleans.py:208
+msgid "Support NFS home directories"
+msgstr ""
+
+#: booleans.py:209
+msgid "Support SAMBA home directories"
+msgstr ""
+
+#: booleans.py:210
+msgid "Allow user to exec content"
+msgstr ""
+
+#: booleans.py:211
+msgid "Allow varnishd to connect to all ports, not just HTTP."
+msgstr ""
+
+#: booleans.py:212
+msgid "Ignore vbetool mmap_zero errors."
+msgstr ""
+
+#: booleans.py:213
+msgid ""
+"Allow confined virtual guests to use serial/parallel communication ports"
+msgstr ""
+
+#: booleans.py:214
+msgid ""
+"Allow confined virtual guests to use executable memory and executable stack"
+msgstr ""
+
+#: booleans.py:215
+msgid "Allow confined virtual guests to read fuse files"
+msgstr ""
+
+#: booleans.py:216
+msgid "Allow confined virtual guests to manage nfs files"
+msgstr ""
+
+#: booleans.py:217
+msgid "Allow confined virtual guests to interact with rawip sockets"
+msgstr ""
+
+#: booleans.py:218
+msgid "Allow confined virtual guests to manage cifs files"
+msgstr ""
+
+#: booleans.py:219
+msgid "Allow confined virtual guests to interact with the sanlock"
+msgstr ""
+
+#: booleans.py:220
+msgid "Allow confined virtual guests to manage device configuration, (pci)"
+msgstr ""
+
+#: booleans.py:221
+msgid "Allow confined virtual guests to use usb devices"
+msgstr ""
+
+#: booleans.py:222
+msgid "Allow confined virtual guests to interact with the xserver"
+msgstr ""
+
+#: booleans.py:223
+msgid "Allow webadm to manage files in users home directories"
+msgstr ""
+
+#: booleans.py:224
+msgid "Allow webadm to read files in users home directories"
+msgstr ""
+
+#: booleans.py:225
+msgid "Ignore wine mmap_zero errors."
+msgstr ""
+
+#: booleans.py:226
+msgid "Allow the graphical login program to execute bootloader"
+msgstr ""
+
+#: booleans.py:227
+msgid ""
+"Allow the graphical login program to login directly as sysadm_r:sysadm_t"
+msgstr ""
+
+#: booleans.py:228
+msgid "Allow xen to manage nfs files"
+msgstr ""
+
+#: booleans.py:229
+msgid ""
+"Allow xend to run blktapctrl/tapdisk. Not required if using dedicated "
+"logical volumes for disk images."
+msgstr ""
+
+#: booleans.py:230
+msgid "Allow xend to run qemu-dm. Not required if using paravirt and no vfb."
+msgstr ""
+
+#: booleans.py:231
+msgid ""
+"Allow xguest users to configure Network Manager and connect to apache ports"
+msgstr ""
+
+#: booleans.py:232
+msgid "Allow xguest to exec content"
+msgstr ""
+
+#: booleans.py:233
+msgid "Allow xguest users to mount removable media"
+msgstr ""
+
+#: booleans.py:234
+msgid "Allow xguest to use blue tooth devices"
+msgstr ""
+
+#: booleans.py:235
+msgid "Allows clients to write to the X server shared memory segments."
+msgstr ""
+
+#: booleans.py:236
+msgid "Allows XServer to execute writable memory"
+msgstr ""
+
+#: booleans.py:237
+msgid "Support X userspace object manager"
+msgstr ""
+
+#: booleans.py:238
+msgid "Allow zabbix to connect to unreserved ports"
+msgstr ""
+
+#: booleans.py:239
+msgid "Allow zebra daemon to write it configuration files"
+msgstr ""
+
+#: booleans.py:240
+msgid ""
+"Allow ZoneMinder to modify public files used for public file transfer "
+"services."
 msgstr ""
