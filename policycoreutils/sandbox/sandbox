@@ -26,7 +26,7 @@ import signal
 from tempfile import mkdtemp
 import pwd
 import commands
-import setools
+import sepolicy
 
 PROGNAME = "policycoreutils"
 SEUNSHARE = "/usr/sbin/seunshare"
@@ -275,7 +275,7 @@ kill -TERM $WM_PID  2> /dev/null
                types = _("""
 Policy defines the following types for use with the -t:
 \t%s
-""") % "\n\t".join(setools.seinfo(setools.ATTRIBUTE, "sandbox_type")[0]['types'])
+""") % "\n\t".join(sepolicy.info(sepolicy.ATTRIBUTE, "sandbox_type")[0]['types'])
         except RuntimeError:
                pass
 
@@ -349,7 +349,12 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
 
         if self.__options.X_ind:
                self.setype = DEFAULT_X_TYPE
-
+        else:
+               try:
+                      sepolicy.info(sepolicy.TYPE, "sandbox_t")
+               except RuntimeError:
+                      raise ValueError(_("Sandbox Policy is currently disabled.\nYou need to enable the policy by executing the following as root\n# semodule -e sandbox"))
+               
         if self.__options.setype:
                self.setype = self.__options.setype
 
