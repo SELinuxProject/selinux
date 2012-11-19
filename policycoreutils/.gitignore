@@ -14,4 +14,3 @@ sestatus/sestatus
 setfiles/restorecon
 setfiles/setfiles
 setsebool/setsebool
-.tx

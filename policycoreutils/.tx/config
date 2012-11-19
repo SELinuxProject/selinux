@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.net
+
+[policycoreutils.policycoreutils]
+file_filter = po/<lang>.po
+source_file = po/policycoreutils.pot 
+source_lang = en
+type = PO
