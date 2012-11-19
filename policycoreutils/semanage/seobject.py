@@ -27,7 +27,6 @@ PROGNAME = "policycoreutils"
 import sepolicy
 from sepolicy import boolean_desc, boolean_category, gen_bool_dict
 gen_bool_dict()
-import sepolgen.module as module
 from IPy import IP
 
 import gettext
@@ -258,7 +257,7 @@ class semanageRecords:
 
 class moduleRecords(semanageRecords):
 	def __init__(self, store):
-               semanageRecords.__init__(self, store)
+	       semanageRecords.__init__(self, store)
 
 	def get_all(self):
                l = []
@@ -375,6 +374,11 @@ class permissiveRecords(semanageRecords):
 
 	def add(self, type):
                import glob
+	       try:
+		       import sepolgen.module as module
+	       except ImportError:
+		       raise ValueError(_("The sepolgen python module is required to setup permissive domains.\nIn some distributions it is included in the policycoreutils-devel patckage.\n# yum install policycoreutils-devel\nOr similar for your distro."))
+		
                name = "permissive_%s" % type
                dirname = "/var/lib/selinux"
                os.chdir(dirname)

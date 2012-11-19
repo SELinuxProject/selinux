@@ -375,8 +375,8 @@ Object-specific Options (see above):
 			OBJECT = seobject.moduleRecords(store)
 
 		if object == "permissive":
-			OBJECT = seobject.permissiveRecords(store)
-		
+                       OBJECT = seobject.permissiveRecords(store)
+
 		if object == "dontaudit":
                         OBJECT = seobject.dontauditClass(store)
 
