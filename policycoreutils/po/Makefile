@@ -84,7 +84,7 @@ POTFILES = \
 
 #default:: clean
 
-all::  update-po $(MOFILES)
+all::  $(MOFILES)
 
 $(POTFILE): $(POTFILES) 
 	$(XGETTEXT) --keyword=_ --keyword=N_ $(POTFILES)
