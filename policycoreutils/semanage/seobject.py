@@ -922,6 +922,11 @@ class seluserRecords(semanageRecords):
 				print "%-15s %s" % (k, ddict[k][3])
 
 class portRecords(semanageRecords):
+	try:
+		valid_types =  sepolicy.info(sepolicy.ATTRIBUTE,"port_type")[0]["types"]
+	except RuntimeError:
+		valid_types = []
+
 	def __init__(self, store = ""):
 		semanageRecords.__init__(self, store)
 
@@ -960,6 +965,9 @@ class portRecords(semanageRecords):
 			
 		if type == "":
 			raise ValueError(_("Type is required"))
+
+		if type not in self.valid_types:
+			raise ValueError(_("Type %s is invalid, must be a port type") % type)
 
 		( k, proto_d, low, high ) = self.__genkey(port, proto)			
 
@@ -1019,6 +1027,9 @@ class portRecords(semanageRecords):
 				raise ValueError(_("Requires setype or serange"))
 			else:
 				raise ValueError(_("Requires setype"))
+
+		if setype and setype not in self.valid_types:
+			raise ValueError(_("Type %s is invalid, must be a port type") % setype)
 
 		( k, proto_d, low, high ) = self.__genkey(port, proto)
 
@@ -1177,6 +1188,11 @@ class portRecords(semanageRecords):
 			print rec
 
 class nodeRecords(semanageRecords):
+       try:
+	       valid_types =  sepolicy.info(sepolicy.ATTRIBUTE,"node_type")[0]["types"]
+       except RuntimeError:
+	       valid_types = []
+
        def __init__(self, store = ""):
                semanageRecords.__init__(self,store)
                self.protocol = ["ipv4", "ipv6"]
@@ -1216,7 +1232,10 @@ class nodeRecords(semanageRecords):
                                serange = untranslate(serange)
 
                if ctype == "":
-                       raise ValueError(_("SELinux Type is required"))
+                       raise ValueError(_("SELinux node type is required"))
+
+	       if ctype not in self.valid_types:
+		       raise ValueError(_("Type %s is invalid, must be a node type") % ctype)
 
                (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
                if rc < 0:
@@ -1281,6 +1300,9 @@ class nodeRecords(semanageRecords):
 
                if serange == "" and setype == "":
                        raise ValueError(_("Requires setype or serange"))
+
+	       if setype and setype not in self.valid_types:
+		       raise ValueError(_("Type %s is invalid, must be a node type") % setype)
 
                (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
                if rc < 0:
@@ -1589,6 +1611,12 @@ class interfaceRecords(semanageRecords):
 				print "%-30s %s:%s:%s " % (k,ddict[k][0], ddict[k][1],ddict[k][2])
 			
 class fcontextRecords(semanageRecords):
+	try:
+		valid_types =  sepolicy.info(sepolicy.ATTRIBUTE,"file_type")[0]["types"]
+		valid_types +=  sepolicy.info(sepolicy.ATTRIBUTE,"device_node")[0]["types"]
+	except RuntimeError:
+		valid_types = []
+
 	def __init__(self, store = ""):
 		semanageRecords.__init__(self, store)
                 self.equiv = {}
@@ -1703,6 +1731,9 @@ class fcontextRecords(semanageRecords):
 		if type == "":
 			raise ValueError(_("SELinux Type is required"))
 
+		if type not in self.valid_types:
+			raise ValueError(_("Type %s is invalid, must be a file or device type") % type)
+
 		(rc, k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
 		if rc < 0:
 			raise ValueError(_("Could not create key for %s") % target)
@@ -1758,6 +1789,9 @@ class fcontextRecords(semanageRecords):
 	def __modify(self, target, setype, ftype, serange, seuser):
 		if serange == "" and setype == "" and seuser == "":
 			raise ValueError(_("Requires setype, serange or seuser"))
+		if setype and setype not in self.valid_types:
+			raise ValueError(_("Type %s is invalid, must be a port type") % setype)
+
                 self.validate(target)
 
 		(rc, k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
