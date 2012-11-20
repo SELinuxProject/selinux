@@ -15,6 +15,8 @@ rpm_execcon \- run a helper for rpm in an appropriate security context
 .sp
 .BI "int setexeccon_raw(security_context_t "context );
 .sp
+.BI "int setexecfilecon(const char *" filename ", const char *" fallback_type );
+.sp
 .BI "int rpm_execcon(unsigned int " verified ", const char *" filename ", char *const " argv "[] , char *const " envp "[]);
 .
 .SH "DESCRIPTION"
@@ -62,7 +64,21 @@ Signal handlers that perform an
 must take care to
 save, reset, and restore the exec context to avoid unexpected behavior.
 
+.BR setexecfilecon ()
+sets the context used for the next
+.BR execve (2)
+call, based on the policy for the
+.IR filename ,
+and falling back to a new context with a
+.I fallback_type
+in case there is no transition.
+
 .BR rpm_execcon ()
+is deprecated; please use
+.BR setexecfilecon ()
+in conjunction with
+.BR execve (2)
+in all new code. This function
 runs a helper for rpm in an appropriate security context.  The
 verified parameter should contain the return code from the signature
 verification (0 == ok, 1 == notfound, 2 == verifyfail, 3 ==
@@ -76,10 +92,11 @@ environment arrays.
 On error \-1 is returned.
 
 On success
-.BR getexeccon ()
-and
+.BR getexeccon (),
 .BR setexeccon ()
-returns 0.
+and
+.BR setexecfilecon ()
+return 0.
 .BR rpm_execcon ()
 only returns upon errors, as it calls
 .BR execve (2).

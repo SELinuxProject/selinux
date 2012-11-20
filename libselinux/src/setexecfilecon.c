@@ -5,15 +5,14 @@
 #include "selinux_internal.h"
 #include "context_internal.h"
 
-int rpm_execcon(unsigned int verified __attribute__ ((unused)),
-		const char *filename, char *const argv[], char *const envp[])
+int setexecfilecon(const char *filename, const char *fallback_type)
 {
 	security_context_t mycon = NULL, fcon = NULL, newcon = NULL;
 	context_t con = NULL;
 	int rc = 0;
 
 	if (is_selinux_enabled() < 1)
-		return execve(filename, argv, envp);
+		return 0;
 
 	rc = getcon(&mycon);
 	if (rc < 0)
@@ -28,12 +27,12 @@ int rpm_execcon(unsigned int verified __attribute__ ((unused)),
 		goto out;
 
 	if (!strcmp(mycon, newcon)) {
-		/* No default transition, use rpm_script_t for now. */
+		/* No default transition, use fallback_type for now. */
 		rc = -1;
 		con = context_new(mycon);
 		if (!con)
 			goto out;
-		if (context_type_set(con, "rpm_script_t"))
+		if (context_type_set(con, fallback_type))
 			goto out;
 		freecon(newcon);
 		newcon = strdup(context_str(con));
@@ -47,8 +46,8 @@ int rpm_execcon(unsigned int verified __attribute__ ((unused)),
 		goto out;
       out:
 
-	if (rc >= 0 || security_getenforce() < 1)
-		rc = execve(filename, argv, envp);
+	if (rc < 0 && security_getenforce() == 0)
+		rc = 0;
 
 	context_free(con);
 	freecon(newcon);
@@ -56,3 +55,17 @@ int rpm_execcon(unsigned int verified __attribute__ ((unused)),
 	freecon(mycon);
 	return rc < 0 ? rc : 0;
 }
+
+#ifndef DISABLE_RPM
+int rpm_execcon(unsigned int verified __attribute__ ((unused)),
+		const char *filename, char *const argv[], char *const envp[])
+{
+	int rc;
+
+	rc = setexecfilecon(filename, "rpm_script_t");
+	if (rc < 0)
+		return rc;
+
+	return execve(filename, argv, envp);
+}
+#endif

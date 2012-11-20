@@ -45,9 +45,6 @@ endif
 ifeq ($(DISABLE_BOOL),y)
 	UNUSED_SRCS+=booleans.c
 endif
-ifeq ($(DISABLE_RPM),y)
-	UNUSED_SRCS+=rpm.c
-endif
 
 GENERATED=$(SWIGCOUT) $(SWIGRUBYCOUT) selinuxswig_python_exception.i
 SRCS= $(filter-out $(UNUSED_SRCS) $(GENERATED) audit2why.c, $(wildcard *.c))

@@ -16,6 +16,9 @@ endif
 ifeq ($(DISABLE_BOOL),y)
 	EMFLAGS+= -DDISABLE_BOOL
 endif
+ifeq ($(DISABLE_RPM),y)
+	EMFLAGS+= -DDISABLE_RPM
+endif
 ifeq ($(DISABLE_SETRANS),y)
 	EMFLAGS+= -DDISABLE_SETRANS
 endif

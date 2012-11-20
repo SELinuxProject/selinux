@@ -595,6 +595,10 @@ int selinuxfs_exists(void);
 /* clear selinuxmnt variable and free allocated memory */
 void fini_selinuxmnt(void);
 
+/* Set an appropriate security context based on the filename of a helper
+ * program, falling back to a new context with the specified type. */
+extern int setexecfilecon(const char *filename, const char *fallback_type);
+
 /* Execute a helper for rpm in an appropriate security context. */
 extern int rpm_execcon(unsigned int verified,
 		       const char *filename,
