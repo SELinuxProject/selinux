@@ -428,9 +428,9 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 		RETURN(CONSTRAINT);
 	}
 
-	if (reason & SEPOL_COMPUTEAV_RBAC) {
+	if (reason & SEPOL_COMPUTEAV_RBAC)
 		RETURN(RBAC)
-	}
+
         RETURN(BADCOMPUTE)
 }
 
