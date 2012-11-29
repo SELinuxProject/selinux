@@ -258,17 +258,20 @@ static struct discover_class_node * discover_class(const char *s)
 		struct stat m;
 
 		snprintf(path, sizeof path, "%s/class/%s/perms/%s", selinux_mnt,s,dentry->d_name);
-		if (stat(path,&m) < 0)
+		fd = open(path, O_RDONLY | O_CLOEXEC);
+		if (fd < 0)
 			goto err4;
 
+		if (fstat(fd, &m) < 0) {
+			close(fd);
+			goto err4;
+		}
+
 		if (m.st_mode & S_IFDIR) {
+			close(fd);
 			dentry = readdir(dir);
 			continue;
 		}
-
-		fd = open(path, O_RDONLY);
-		if (fd < 0)
-			goto err4;
 
 		memset(buf, 0, sizeof(buf));
 		ret = read(fd, buf, sizeof(buf) - 1);
@@ -277,6 +280,9 @@ static struct discover_class_node * discover_class(const char *s)
 			goto err4;
 
 		if (sscanf(buf, "%u", &value) != 1)
+			goto err4;
+
+		if (value == 0 || value > NVECTORS)
 			goto err4;
 
 		node->perms[value-1] = strdup(dentry->d_name);

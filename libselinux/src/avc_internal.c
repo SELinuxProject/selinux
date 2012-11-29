@@ -60,13 +60,12 @@ int avc_netlink_open(int blocking)
 	int len, rc = 0;
 	struct sockaddr_nl addr;
 
-	fd = socket(PF_NETLINK, SOCK_RAW, NETLINK_SELINUX);
+	fd = socket(PF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, NETLINK_SELINUX);
 	if (fd < 0) {
 		rc = fd;
 		goto out;
 	}
 	
-	fcntl(fd, F_SETFD, FD_CLOEXEC);
 	if (!blocking && fcntl(fd, F_SETFL, O_NONBLOCK)) {
 		close(fd);
 		fd = -1;

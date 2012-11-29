@@ -66,7 +66,7 @@ selinux_set_mapping(struct security_class_mapping *map)
 			goto err2;
 
 		k = 0;
-		while (p_in->perms && p_in->perms[k]) {
+		while (p_in->perms[k]) {
 			/* An empty permission string skips ahead */
 			if (!*p_in->perms[k]) {
 				k++;

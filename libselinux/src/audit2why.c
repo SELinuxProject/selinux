@@ -275,7 +275,7 @@ static int __policy_init(const char *init_path)
 		return 1;
 	}
 
-	boollist = calloc(cnt, sizeof(struct boolean_t));
+	boollist = calloc(cnt, sizeof(*boollist));
 	if (!boollist) {
 		PyErr_SetString( PyExc_MemoryError, "Out of memory\n");
 		return 1;

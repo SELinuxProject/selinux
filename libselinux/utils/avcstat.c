@@ -155,7 +155,7 @@ int main(int argc, char **argv)
 		ssize_t ret, parsed = 0;
 
 		memset(buf, 0, DEF_BUF_SIZE);
-		ret = read(fd, buf, DEF_BUF_SIZE);
+		ret = read(fd, buf, DEF_BUF_SIZE-1);
 		if (ret < 0)
 			die("read");
 

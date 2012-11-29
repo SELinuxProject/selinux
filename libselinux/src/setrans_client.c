@@ -56,7 +56,10 @@ static int setransd_open(void)
 	{
 		fd = socket(PF_UNIX, SOCK_STREAM, 0);
 		if (fd >= 0)
-			fcntl(fd, F_SETFD, FD_CLOEXEC);
+			if (fcntl(fd, F_SETFD, FD_CLOEXEC)) {
+				close(fd);
+				return -1;
+			}
 	}
 	if (fd < 0)
 		return -1;
@@ -151,9 +154,10 @@ receive_response(int fd, uint32_t function, char **outdata, int32_t * ret_val)
 	}
 
 	data = malloc(data_size);
-	if (!data) {
+	if (!data)
 		return -1;
-	}
+	/* coveriety doesn't realize that data will be initialized in readv */
+	memset(data, 0, data_size);
 
 	resp_data.iov_base = data;
 	resp_data.iov_len = data_size;

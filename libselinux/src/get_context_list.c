@@ -493,7 +493,10 @@ int get_ordered_context_list(const char *user,
 	}
 
       out:
-	*list = reachable;
+	if (rc > 0)
+		*list = reachable;
+	else
+		freeconary(reachable);
 
 	free(ordering);
 	if (freefrom)

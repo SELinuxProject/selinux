@@ -141,9 +141,16 @@ static int check_group(const char *group, const char *name, const gid_t gid) {
 	}
 
 	if (getgrouplist(name, gid, NULL, &ng) < 0) {
-		groups = (gid_t *) malloc(sizeof (gid_t) * ng);
-		if (!groups) goto done;
-		if (getgrouplist(name, gid, groups, &ng) < 0) goto done;
+		if (ng == 0)
+			goto done;
+		groups = calloc(ng, sizeof(*groups));
+		if (!groups)
+			goto done;
+		if (getgrouplist(name, gid, groups, &ng) < 0)
+			goto done;
+	} else {
+		/* WTF?  ng was 0 and we didn't fail? Are we in 0 groups? */
+		goto done;
 	}
 
 	for (i = 0; i < ng; i++) {

@@ -330,8 +330,10 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 		newid = find_stem(data, buf, stem_len);
 		if (newid < 0) {
 			newid = store_stem(data, buf, stem_len);
-			if (newid < 0)
-				return newid;
+			if (newid < 0) {
+				rc = newid;
+				goto err;
+			}
 			data->stem_arr[newid].from_mmap = 1;
 		}
 		stem_map[i] = newid;
@@ -347,7 +349,7 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 
 		rc = grow_specs(data);
 		if (rc < 0)
-			return rc;
+			goto err;
 
 		spec = &data->spec_arr[data->nspec];
 		spec->from_mmap = 1;
@@ -355,9 +357,11 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 
 		plen = (uint32_t *)addr;
 		addr += sizeof(uint32_t);
+		rc = -1;
 		spec->lr.ctx_raw = strdup((char *)addr);
 		if (!spec->lr.ctx_raw)
-			return -1;
+			goto err;
+
 		addr += *plen;
 
 		plen = (uint32_t *)addr;
@@ -370,12 +374,10 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 
 		/* map the stem id from the mmap file to the data->stem_arr */
 		stem_id = *(int32_t *)addr;
-		if (stem_id == -1) {
+		if (stem_id == -1 || stem_id >= stem_map_len)
 			spec->stem_id = -1;
-		} else {
-			assert(stem_id <= stem_map_len);
+		else
 			spec->stem_id = stem_map[stem_id];
-		}
 		addr += sizeof(int32_t);
 
 		/* retrieve the hasMetaChars bit */
@@ -395,11 +397,12 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 
 		data->nspec++;
 	}
-
+	/* win */
+	rc = 0;
+err:
 	free(stem_map);
 
-	/* win */
-	return 0;
+	return rc;
 }
 
 static int process_file(const char *path, const char *suffix, struct selabel_handle *rec, const char *prefix)
