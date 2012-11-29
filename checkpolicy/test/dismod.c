@@ -844,7 +844,10 @@ int main(int argc, char **argv)
 
 	/* read the binary policy */
 	fprintf(out_fp, "Reading policy...\n");
-	policydb_init(&policydb);
+	if (policydb_init(&policydb)) {
+		fprintf(stderr, "%s:  Out of memory!\n", __FUNCTION__);
+		exit(1);
+	}
 	if (read_policy(argv[1], &policydb)) {
 		fprintf(stderr,
 			"%s:  error(s) encountered while loading policy\n",

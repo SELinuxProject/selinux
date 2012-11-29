@@ -2777,6 +2777,7 @@ int define_constraint(constraint_expr_t * expr)
 		}
 		if (!node->expr) {
 			yyerror("out of memory");
+			free(node);
 			return -1;
 		}
 		node->permissions = 0;
@@ -3068,13 +3069,11 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 		ebitmap_destroy(&negset);
 		return (uintptr_t) expr;
 	default:
-		yyerror("invalid constraint expression");
-		constraint_expr_destroy(expr);
-		return 0;
+		break;
 	}
 
 	yyerror("invalid constraint expression");
-	free(expr);
+	constraint_expr_destroy(expr);
 	return 0;
 }
 
@@ -3281,6 +3280,7 @@ cond_expr_t *define_cond_expr(uint32_t expr_type, void *arg1, void *arg2)
 		return expr;
 	default:
 		yyerror("illegal conditional expression");
+		free(expr);
 		return NULL;
 	}
 }
@@ -4627,7 +4627,10 @@ int define_range_trans(int class_specified)
 			goto out;
 		}
 
-		ebitmap_set_bit(&rule->tclasses, cladatum->s.value - 1, TRUE);
+		if (ebitmap_set_bit(&rule->tclasses, cladatum->s.value - 1, TRUE)) {
+			yyerror("out of memory");
+			goto out;
+		}
 	}
 
 	id = (char *)queue_remove(id_queue);
