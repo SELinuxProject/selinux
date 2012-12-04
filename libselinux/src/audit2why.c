@@ -195,8 +195,9 @@ static int __policy_init(const char *init_path)
 	int rc;
 	unsigned int cnt;
 
+	path[PATH_MAX-1] = '\0';
 	if (init_path) {
-		strncpy(path, init_path, PATH_MAX);
+		strncpy(path, init_path, PATH_MAX-1);
 		fp = fopen(path, "r");
 		if (!fp) {
 			snprintf(errormsg, sizeof(errormsg), 
