@@ -69,7 +69,13 @@ structure.
 set a context component.
 .
 .SH "RETURN VALUE"
-On success, zero is returned. On failure, \-1 is returned and
+On failure
+.BR context_*_set ()
+functions return non-zero and 0 on success.
+
+The other functions return NULL on failure and non-NULL on success.
+
+On failure
 .I errno
 is set appropriately.
 .
