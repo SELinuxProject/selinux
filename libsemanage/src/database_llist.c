@@ -369,9 +369,11 @@ int dbase_llist_list(semanage_handle_t * handle,
 	ERR(handle, "out of memory");
 
       err:
-	for (; i >= 0; i--)
-		dbase->rtable->free(tmp_records[i]);
-	free(tmp_records);
+	if (tmp_records) {
+		for (; i >= 0; i--)
+			dbase->rtable->free(tmp_records[i]);
+		free(tmp_records);
+	}
 	ERR(handle, "could not allocate record array");
 	return STATUS_ERR;
 }

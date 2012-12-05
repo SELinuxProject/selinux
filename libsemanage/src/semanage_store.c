@@ -1061,7 +1061,7 @@ int semanage_split_fc(semanage_handle_t * sh)
 	}
 	hd = open(semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL),
 		  O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-	if (!hd) {
+	if (hd < 0) {
 		ERR(sh, "Could not open %s for writing.",
 		    semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL));
 		goto cleanup;

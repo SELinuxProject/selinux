@@ -62,11 +62,12 @@ void hidden semanage_msg_default_handler(void *varg __attribute__ ((unused)),
 	switch (semanage_msg_get_level(handle)) {
 
 	case SEMANAGE_MSG_ERR:
+		stream = stderr;
 		errsv = errno;
+		break;
 	case SEMANAGE_MSG_WARN:
 		stream = stderr;
 		break;
-	case SEMANAGE_MSG_INFO:
 	default:
 		stream = stdout;
 		break;

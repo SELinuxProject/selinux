@@ -462,9 +462,11 @@ static int dbase_policydb_list(semanage_handle_t * handle,
 	ERR(handle, "out of memory");
 
       err:
-	for (; list_arg.pos >= 0; list_arg.pos--)
-		dbase->rtable->free(tmp_records[list_arg.pos]);
-	free(tmp_records);
+	if (tmp_records) {
+		for (; list_arg.pos >= 0; list_arg.pos--)
+			dbase->rtable->free(tmp_records[list_arg.pos]);
+		free(tmp_records);
+	}
 	ERR(handle, "could not list records");
 	return STATUS_ERR;
 }
