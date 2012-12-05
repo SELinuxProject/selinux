@@ -283,7 +283,7 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	char *rbuf = NULL;
 	char *path = NULL;
 	long rbuflen;
-	uid_t temp, minuid = 0;
+	uid_t temp, minuid = 500;
 	int minuid_set = 0;
 	struct passwd pwstorage, *pwbuf;
 	struct stat buf;
@@ -345,11 +345,6 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	}
 	free(path);
 	path = NULL;
-
-	if (!minuid_set) {
-		minuid = 500;
-		minuid_set = 1;
-	}
 
 	rbuflen = sysconf(_SC_GETPW_R_SIZE_MAX);
 	if (rbuflen <= 0)
