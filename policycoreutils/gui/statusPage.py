@@ -158,8 +158,22 @@ class statusPage:
         self.enabled = enabled
 
     def write_selinux_config(self, enforcing, type):
-        import commands
-        commands.getstatusoutput("/usr/sbin/lokkit --selinuxtype=%s --selinux=%s" % (type, enforcing))
+        path = selinux.selinux_path() + "config" 
+        backup_path = path + ".bck"
+        fd = open(path)
+        lines = fd.readlines()
+        fd.close()
+        fd = open(backup_path, "w")
+        for l in lines:
+            if l.startswith("SELINUX="):
+                fd.write("SELINUX=%s\n" % enforcing)
+                continue
+            if l.startswith("SELINUXTYPE="):
+                fd.write("SELINUXTYPE=%s\n" % type)
+                continue
+            fd.write(l)
+        fd.close()
+        os.rename(backup_path, path)
 
     def read_selinux_config(self):
         self.initialtype = selinux.selinux_getpolicytype()[1]
