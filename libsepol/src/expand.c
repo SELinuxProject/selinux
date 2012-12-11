@@ -888,6 +888,7 @@ static int role_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		new_id = strdup(id);
 		if (!new_id) {
 			ERR(state->handle, "Out of memory!");
+			free(new_role);
 			return -1;
 		}
 
@@ -953,9 +954,13 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 
 	l->sens = sl->sens;
 	levdatum = (level_datum_t *) hashtab_search(p->p_levels.table,
-						    p->p_sens_val_to_name[l->
-									  sens -
-									  1]);
+						    p->p_sens_val_to_name[l->sens - 1]);
+	if (!levdatum) {
+		ERR(h, "%s: Impossible situation found, nothing in p_levels.table.\n",
+		    __func__);
+		errno = ENOENT;
+		return -1;
+	}
 	for (cat = sl->cat; cat; cat = cat->next) {
 		if (cat->low > cat->high) {
 			ERR(h, "Category range is not valid %s.%s",
@@ -1039,6 +1044,7 @@ static int user_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		new_id = strdup(id);
 		if (!new_id) {
 			ERR(state->handle, "Out of memory!");
+			free(new_user);
 			return -1;
 		}
 		ret = hashtab_insert(state->out->p_users.table,
@@ -2078,6 +2084,8 @@ static int cond_node_copy(expand_state_t * state, cond_node_t * cn)
 	}
 
 	if (cond_node_map_bools(state, tmp)) {
+		cond_node_destroy(tmp);
+		free(tmp);
 		ERR(state->handle, "Error mapping booleans");
 		return -1;
 	}
@@ -2285,9 +2293,15 @@ static int genfs_copy(expand_state_t * state)
 		memset(newgenfs, 0, sizeof(genfs_t));
 		newgenfs->fstype = strdup(genfs->fstype);
 		if (!newgenfs->fstype) {
+			free(newgenfs);
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
+		if (!end)
+			state->out->genfs = newgenfs;
+		else
+			end->next = newgenfs;
+		end = newgenfs;
 
 		l = NULL;
 		for (c = genfs->head; c; c = c->next) {
@@ -2300,6 +2314,7 @@ static int genfs_copy(expand_state_t * state)
 			newc->u.name = strdup(c->u.name);
 			if (!newc->u.name) {
 				ERR(state->handle, "Out of memory!");
+				free(newc);
 				return -1;
 			}
 			newc->v.sclass = c->v.sclass;
@@ -2310,12 +2325,6 @@ static int genfs_copy(expand_state_t * state)
 				newgenfs->head = newc;
 			l = newc;
 		}
-		if (!end) {
-			state->out->genfs = newgenfs;
-		} else {
-			end->next = newgenfs;
-		}
-		end = newgenfs;
 	}
 	return 0;
 }
@@ -3106,7 +3115,8 @@ int expand_module(sepol_handle_t * handle,
 	}
 
 	cond_optimize_lists(state.out->cond_list);
-	evaluate_conds(state.out);
+	if (evaluate_conds(state.out))
+		goto cleanup;
 
 	/* copy ocontexts */
 	if (ocontext_copy(&state, out->target_platform))

@@ -33,7 +33,7 @@ static char *strtrim(char *dest, char *source, int size)
 static int process_boolean(char *buffer, char *name, int namesize, int *val)
 {
 	char name1[BUFSIZ];
-	char *ptr;
+	char *ptr = NULL;
 	char *tok = strtok_r(buffer, "=", &ptr);
 	if (tok) {
 		strncpy(name1, tok, BUFSIZ - 1);

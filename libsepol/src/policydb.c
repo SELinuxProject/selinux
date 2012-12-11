@@ -1074,7 +1074,7 @@ static int common_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
 	if (key)
 		free(key);
 	comdatum = (common_datum_t *) datum;
-	hashtab_map(comdatum->permissions.table, perm_destroy, 0);
+	(void)hashtab_map(comdatum->permissions.table, perm_destroy, 0);
 	hashtab_destroy(comdatum->permissions.table);
 	free(datum);
 	return 0;
@@ -1093,7 +1093,7 @@ static int class_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
 	if (cladatum == NULL) {
 		return 0;
 	}
-	hashtab_map(cladatum->permissions.table, perm_destroy, 0);
+	(void)hashtab_map(cladatum->permissions.table, perm_destroy, 0);
 	hashtab_destroy(cladatum->permissions.table);
 	constraint = cladatum->constraints;
 	while (constraint) {
@@ -1261,7 +1261,7 @@ void policydb_destroy(policydb_t * p)
 	free(p->decl_val_to_struct);
 
 	for (i = 0; i < SYM_NUM; i++) {
-		hashtab_map(p->scope[i].table, scope_destroy, 0);
+		(void)hashtab_map(p->scope[i].table, scope_destroy, 0);
 		hashtab_destroy(p->scope[i].table);
 	}
 	avrule_block_list_destroy(p->global);
@@ -1351,7 +1351,7 @@ void symtabs_destroy(symtab_t * symtab)
 {
 	int i;
 	for (i = 0; i < SYM_NUM; i++) {
-		hashtab_map(symtab[i].table, destroy_f[i], 0);
+		(void)hashtab_map(symtab[i].table, destroy_f[i], 0);
 		hashtab_destroy(symtab[i].table);
 	}
 }

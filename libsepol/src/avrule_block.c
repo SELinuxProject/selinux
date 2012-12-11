@@ -61,7 +61,6 @@ avrule_decl_t *avrule_decl_create(uint32_t decl_id)
 	for (i = 0; i < SYM_NUM; i++) {
 		if (symtab_init(&decl->symtab[i], symtab_sizes[i])) {
 			avrule_decl_destroy(decl);
-			free(decl);
 			return NULL;
 		}
 	}

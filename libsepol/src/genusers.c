@@ -92,22 +92,32 @@ static int load_users(struct policydb *policydb, const char *path)
 		} else {
 			char *id = strdup(q);
 
-			/* Adding a new user definition. */
-			usrdatum =
-			    (user_datum_t *) malloc(sizeof(user_datum_t));
-			if (!id || !usrdatum) {
+			if (!id) {
 				ERR(NULL, "out of memory");
 				free(buffer);
 				fclose(fp);
 				return -1;
 			}
-			memset(usrdatum, 0, sizeof(user_datum_t));
+
+			/* Adding a new user definition. */
+			usrdatum = malloc(sizeof(user_datum_t));
+			if (!usrdatum) {
+				ERR(NULL, "out of memory");
+				free(buffer);
+				free(id);
+				fclose(fp);
+				return -1;
+			}
+
+			user_datum_init(usrdatum);
 			usrdatum->s.value = ++policydb->p_users.nprim;
-			ebitmap_init(&usrdatum->roles.roles);
 			if (hashtab_insert(policydb->p_users.table,
 					   id, (hashtab_datum_t) usrdatum)) {
 				ERR(NULL, "out of memory");
 				free(buffer);
+				free(id);
+				user_datum_destroy(usrdatum);
+				free(usrdatum);
 				fclose(fp);
 				return -1;
 			}

@@ -59,21 +59,34 @@ static int policy_file_seek(struct policy_file *fp, size_t offset)
 	}
 }
 
-static size_t policy_file_length(struct policy_file *fp)
+static int policy_file_length(struct policy_file *fp, size_t *out)
 {
 	long prev_offset, end_offset;
+	int rc;
 	switch (fp->type) {
 	case PF_USE_STDIO:
 		prev_offset = ftell(fp->fp);
-		fseek(fp->fp, 0L, SEEK_END);
+		if (prev_offset < 0)
+			return prev_offset;
+		rc = fseek(fp->fp, 0L, SEEK_END);
+		if (rc < 0)
+			return rc;
 		end_offset = ftell(fp->fp);
-		fseek(fp->fp, prev_offset, SEEK_SET);
-		return end_offset;
+		if (end_offset < 0)
+			return end_offset;
+		rc = fseek(fp->fp, prev_offset, SEEK_SET);
+		if (rc < 0)
+			return rc;
+		*out = end_offset;
+		break;
 	case PF_USE_MEMORY:
-		return fp->size;
+		*out = fp->size;
+		break;;
 	default:
-		return 0;
+		*out = 0;
+		break;
 	}
+	return 0;
 }
 
 static int module_package_init(sepol_module_package_t * p)
@@ -103,10 +116,17 @@ static int set_char(char **field, char *data, size_t len)
 
 int sepol_module_package_create(sepol_module_package_t ** p)
 {
+	int rc;
+
 	*p = calloc(1, sizeof(sepol_module_package_t));
 	if (!(*p))
 		return -1;
-	return module_package_init(*p);
+
+	rc = module_package_init(*p);
+	if (rc < 0)
+		free(*p);
+
+	return rc;
 }
 
 hidden_def(sepol_module_package_create)
@@ -413,7 +433,10 @@ static int module_package_read_offsets(sepol_module_package_t * mod,
 		}
 	}
 
-	off[nsec] = policy_file_length(file);
+	rc = policy_file_length(file, &off[nsec]);
+	if (rc < 0)
+		goto err;
+
 	if (nsec && off[nsec] < off[nsec-1]) {
 		ERR(file->handle, "offset greater than file size (at %u, "
 		    "offset %zu -> %zu", nsec, off[nsec - 1],

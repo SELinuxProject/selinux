@@ -1795,34 +1795,38 @@ static int scope_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	uint32_t static_buf[32], *dyn_buf = NULL, *buf;
 	size_t key_len = strlen(key);
 	unsigned int items = 2 + scope->decl_ids_len, i;
+	int rc;
 
+	buf = static_buf;
 	if (items >= (sizeof(static_buf) / 4)) {
 		/* too many things required, so dynamically create a
 		 * buffer.  this would have been easier with C99's
 		 * dynamic arrays... */
-		if ((dyn_buf = malloc(items * sizeof(*dyn_buf))) == NULL) {
-			return POLICYDB_ERROR;
-		}
+		rc = POLICYDB_ERROR;
+		dyn_buf = malloc(items * sizeof(*dyn_buf));
+		if (!dyn_buf)
+			goto err;
 		buf = dyn_buf;
-	} else {
-		buf = static_buf;
 	}
 	buf[0] = cpu_to_le32(key_len);
+
+	rc = POLICYDB_ERROR;
 	if (put_entry(buf, sizeof(*buf), 1, fp) != 1 ||
-	    put_entry(key, 1, key_len, fp) != key_len) {
-		return POLICYDB_ERROR;
-	}
+	    put_entry(key, 1, key_len, fp) != key_len)
+		goto err;
 	buf[0] = cpu_to_le32(scope->scope);
 	buf[1] = cpu_to_le32(scope->decl_ids_len);
-	for (i = 0; i < scope->decl_ids_len; i++) {
+
+	for (i = 0; i < scope->decl_ids_len; i++)
 		buf[2 + i] = cpu_to_le32(scope->decl_ids[i]);
-	}
-	if (put_entry(buf, sizeof(*buf), items, fp) != items) {
-		free(dyn_buf);
-		return POLICYDB_ERROR;
-	}
+
+	rc = POLICYDB_ERROR;
+	if (put_entry(buf, sizeof(*buf), items, fp) != items)
+		goto err;
+	rc = POLICYDB_SUCCESS;
+err:
 	free(dyn_buf);
-	return POLICYDB_SUCCESS;
+	return rc;
 }
 
 static int type_attr_uncount(hashtab_key_t key __attribute__ ((unused)),
@@ -2006,7 +2010,7 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 		    ((p->policy_type == POLICY_KERN) ||
 		     (p->policy_type != POLICY_KERN &&
 		      p->policyvers < MOD_POLICYDB_VERSION_ROLEATTRIB)))
-			hashtab_map(p->symtab[i].table, role_attr_uncount, &buf[1]);
+			(void)hashtab_map(p->symtab[i].table, role_attr_uncount, &buf[1]);
 
 		buf[1] = cpu_to_le32(buf[1]);
 		items = put_entry(buf, sizeof(uint32_t), 2, fp);
