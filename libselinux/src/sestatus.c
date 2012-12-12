@@ -268,7 +268,7 @@ int selinux_status_open(int fallback)
 		return -1;
 
 	snprintf(path, sizeof(path), "%s/status", selinux_mnt);
-	fd = open(path, O_RDONLY);
+	fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd < 0)
 		goto error;
 
