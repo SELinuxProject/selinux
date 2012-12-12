@@ -256,19 +256,23 @@ int selinux_status_open(int fallback)
 {
 	int	fd;
 	char	path[PATH_MAX];
+	long	pagesize;
 
 	if (!selinux_mnt) {
 		errno = ENOENT;
 		return -1;
 	}
 
+	pagesize = sysconf(_SC_PAGESIZE);
+	if (pagesize < 0)
+		return -1;
+
 	snprintf(path, sizeof(path), "%s/status", selinux_mnt);
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 		goto error;
 
-	selinux_status = mmap(NULL, sysconf(_SC_PAGESIZE),
-			      PROT_READ, MAP_SHARED, fd, 0);
+	selinux_status = mmap(NULL, pagesize, PROT_READ, MAP_SHARED, fd, 0);
 	if (selinux_status == MAP_FAILED) {
 		close(fd);
 		goto error;
@@ -318,6 +322,8 @@ error:
  */
 void selinux_status_close(void)
 {
+	long pagesize;
+
 	/* not opened */
 	if (selinux_status == NULL)
 		return;
@@ -331,7 +337,10 @@ void selinux_status_close(void)
 		return;
 	}
 
-	munmap(selinux_status, sysconf(_SC_PAGESIZE));
+	pagesize = sysconf(_SC_PAGESIZE);
+	/* not much we can do other than leak memory */
+	if (pagesize > 0)
+		munmap(selinux_status, pagesize);
 	selinux_status = NULL;
 
 	close(selinux_status_fd);
