@@ -223,6 +223,13 @@ static int class_copy_default_new_object(link_state_t *state,
 		}
 		newdatum->default_role = olddatum->default_role;
 	}
+	if (olddatum->default_type) {
+		if (newdatum->default_type && olddatum->default_type != newdatum->default_type) {
+			ERR(state->handle, "Found conflicting default type definitions");
+			return SEPOL_ENOTSUP;
+		}
+		newdatum->default_type = olddatum->default_type;
+	}
 	if (olddatum->default_range) {
 		if (newdatum->default_range && olddatum->default_range != newdatum->default_range) {
 			ERR(state->handle, "Found conflicting default range definitions");

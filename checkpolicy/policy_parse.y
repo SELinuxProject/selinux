@@ -143,7 +143,7 @@ typedef int (* require_func_t)();
 %token POLICYCAP
 %token PERMISSIVE
 %token FILESYSTEM
-%token DEFAULT_USER DEFAULT_ROLE DEFAULT_RANGE
+%token DEFAULT_USER DEFAULT_ROLE DEFAULT_TYPE DEFAULT_RANGE
 %token LOW_HIGH LOW HIGH
 
 %left OR
@@ -202,9 +202,11 @@ opt_default_rules	: default_rules
 			;
 default_rules		: default_user_def
 			| default_role_def
+			| default_type_def
 			| default_range_def
 			| default_rules default_user_def
 			| default_rules default_role_def
+			| default_rules default_type_def
 			| default_rules default_range_def
 			;
 default_user_def	: DEFAULT_USER names SOURCE ';'
@@ -216,6 +218,11 @@ default_role_def	: DEFAULT_ROLE names SOURCE ';'
 			{if (define_default_role(DEFAULT_SOURCE)) return -1; }
 			| DEFAULT_ROLE names TARGET ';'
 			{if (define_default_role(DEFAULT_TARGET)) return -1; }
+			;
+default_type_def	: DEFAULT_TYPE names SOURCE ';'
+			{if (define_default_type(DEFAULT_SOURCE)) return -1; }
+			| DEFAULT_TYPE names TARGET ';'
+			{if (define_default_type(DEFAULT_TARGET)) return -1; }
 			;
 default_range_def	: DEFAULT_RANGE names SOURCE LOW ';'
 			{if (define_default_range(DEFAULT_SOURCE_LOW)) return -1; }

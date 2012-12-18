@@ -26,6 +26,7 @@ int define_category(void);
 int define_class(void);
 int define_default_user(int which);
 int define_default_role(int which);
+int define_default_type(int which);
 int define_default_range(int which);
 int define_common_perms(void);
 int define_compute_type(int which);

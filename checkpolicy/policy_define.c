@@ -415,6 +415,38 @@ int define_default_role(int which)
 	return 0;
 }
 
+int define_default_type(int which)
+{
+	char *id;
+	class_datum_t *cladatum;
+
+	if (pass == 1) {
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		return 0;
+	}
+
+	while ((id = queue_remove(id_queue))) {
+		if (!is_id_in_scope(SYM_CLASSES, id)) {
+			yyerror2("class %s is not within scope", id);
+			return -1;
+		}
+		cladatum = hashtab_search(policydbp->p_classes.table, id);
+		if (!cladatum) {
+			yyerror2("unknown class %s", id);
+			return -1;
+		}
+		if (cladatum->default_type && cladatum->default_type != which) {
+			yyerror2("conflicting default type information for class %s", id);
+			return -1;
+		}
+		cladatum->default_type = which;
+		free(id);
+	}
+
+	return 0;
+}
+
 int define_default_range(int which)
 {
 	char *id;

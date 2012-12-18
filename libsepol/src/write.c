@@ -988,6 +988,16 @@ static int class_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 			return POLICYDB_ERROR;
 	}
 
+	if ((p->policy_type == POLICY_KERN &&
+	     p->policyvers >= POLICYDB_VERSION_DEFAULT_TYPE) ||
+	    (p->policy_type == POLICY_BASE &&
+	     p->policyvers >= MOD_POLICYDB_VERSION_DEFAULT_TYPE)) {
+		buf[0] = cpu_to_le32(cladatum->default_type);
+		items = put_entry(buf, sizeof(uint32_t), 1, fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+	}
+
 	return POLICYDB_SUCCESS;
 }
 

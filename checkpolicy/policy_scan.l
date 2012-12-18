@@ -229,6 +229,8 @@ default_user |
 DEFAULT_USER			{ return(DEFAULT_USER); }
 default_role |
 DEFAULT_ROLE			{ return(DEFAULT_ROLE); }
+default_type |
+DEFAULT_TYPE			{ return(DEFAULT_TYPE); }
 default_range |
 DEFAULT_RANGE			{ return(DEFAULT_RANGE); }
 low-high |

@@ -116,6 +116,7 @@ typedef struct class_datum {
 #define DEFAULT_TARGET		2
 	char default_user;
 	char default_role;
+	char default_type;
 /* Options how a new object range should be decided */
 #define DEFAULT_SOURCE_LOW	1
 #define DEFAULT_SOURCE_HIGH	2
@@ -681,10 +682,11 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_FILENAME_TRANS	25
 #define POLICYDB_VERSION_ROLETRANS	26
 #define POLICYDB_VERSION_NEW_OBJECT_DEFAULTS	27
+#define POLICYDB_VERSION_DEFAULT_TYPE	28
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_NEW_OBJECT_DEFAULTS
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_DEFAULT_TYPE
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE		4
@@ -701,9 +703,10 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_ROLEATTRIB		13
 #define MOD_POLICYDB_VERSION_TUNABLE_SEP	14
 #define MOD_POLICYDB_VERSION_NEW_OBJECT_DEFAULTS	15
+#define MOD_POLICYDB_VERSION_DEFAULT_TYPE	16
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_NEW_OBJECT_DEFAULTS
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_DEFAULT_TYPE
 
 #define POLICYDB_CONFIG_MLS    1
 
