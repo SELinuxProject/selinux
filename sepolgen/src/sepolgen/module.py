@@ -120,7 +120,7 @@ class ModuleCompiler:
         self.semodule_package = "/usr/bin/semodule_package"
         self.output = output
         self.last_output = ""
-        self.refpol_makefile = "/usr/share/selinux/devel/Makefile"
+        self.refpol_makefile = defaults.refpolicy_makefile()
         self.make = "/usr/bin/make"
 
     def o(self, str):
