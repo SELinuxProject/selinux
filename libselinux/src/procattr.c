@@ -1,6 +1,7 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <pthread.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,32 +9,137 @@
 #include "selinux_internal.h"
 #include "policy.h"
 
+static __thread pid_t cpid;
+static __thread pid_t tid;
+static __thread security_context_t prev_current;
+static __thread security_context_t prev_exec;
+static __thread security_context_t prev_fscreate;
+static __thread security_context_t prev_keycreate;
+static __thread security_context_t prev_sockcreate;
+
+static pthread_once_t once = PTHREAD_ONCE_INIT;
+static pthread_key_t destructor_key;
+static int destructor_key_initialized = 0;
+static __thread char destructor_initialized;
+
 static pid_t gettid(void)
 {
 	return syscall(__NR_gettid);
 }
 
-static int getprocattrcon_raw(security_context_t * context,
-			      pid_t pid, const char *attr)
+static void procattr_thread_destructor(void __attribute__((unused)) *unused)
 {
-	char *path, *buf;
-	size_t size;
+	free(prev_current);
+	free(prev_exec);
+	free(prev_fscreate);
+	free(prev_keycreate);
+	free(prev_sockcreate);
+}
+
+static void free_procattr(void)
+{
+	procattr_thread_destructor(NULL);
+	tid = 0;
+	cpid = getpid();
+	prev_current = prev_exec = prev_fscreate = prev_keycreate = prev_sockcreate = NULL;
+}
+
+void __attribute__((destructor)) procattr_destructor(void);
+
+void hidden __attribute__((destructor)) procattr_destructor(void)
+{
+	if (destructor_key_initialized)
+		__selinux_key_delete(destructor_key);
+}
+
+static inline void init_thread_destructor(void)
+{
+	if (destructor_initialized == 0) {
+		__selinux_setspecific(destructor_key, (void *)1);
+		destructor_initialized = 1;
+	}
+}
+
+static void init_procattr(void)
+{
+	if (__selinux_key_create(&destructor_key, procattr_thread_destructor) == 0) {
+		pthread_atfork(NULL, NULL, free_procattr);
+		destructor_key_initialized = 1;
+	}
+}
+
+static int openattr(pid_t pid, const char *attr, int flags)
+{
 	int fd, rc;
-	ssize_t ret;
-	pid_t tid;
-	int errno_hold;
+	char *path;
+
+	if (cpid != getpid())
+		free_procattr();
 
 	if (pid > 0)
 		rc = asprintf(&path, "/proc/%d/attr/%s", pid, attr);
 	else {
-		tid = gettid();
+		if (!tid)
+			tid = gettid();
 		rc = asprintf(&path, "/proc/self/task/%d/attr/%s", tid, attr);
 	}
 	if (rc < 0)
 		return -1;
 
-	fd = open(path, O_RDONLY);
+	fd = open(path, flags | O_CLOEXEC);
 	free(path);
+	return fd;
+}
+
+static int getprocattrcon_raw(security_context_t * context,
+			      pid_t pid, const char *attr)
+{
+	char *buf;
+	size_t size;
+	int fd;
+	ssize_t ret;
+	int errno_hold;
+	security_context_t prev_context;
+
+	__selinux_once(once, init_procattr);
+	init_thread_destructor();
+
+	if (cpid != getpid())
+		free_procattr();
+
+	switch (attr[0]) {
+		case 'c':
+			prev_context = prev_current;
+			break;
+		case 'e':
+			prev_context = prev_exec;
+			break;
+		case 'f':
+			prev_context = prev_fscreate;
+			break;
+		case 'k':
+			prev_context = prev_keycreate;
+			break;
+		case 's':
+			prev_context = prev_sockcreate;
+			break;
+		case 'p':
+			prev_context = NULL;
+			break;
+		default:
+			errno = ENOENT;
+			return -1;
+	};
+
+	if (prev_context) {
+		*context = strdup(prev_context);
+		if (!(*context)) {
+			return -1;
+		}
+		return 0;
+	}
+
+	fd = openattr(pid, attr, O_RDONLY);
 	if (fd < 0)
 		return -1;
 
@@ -90,40 +196,70 @@ static int getprocattrcon(security_context_t * context,
 static int setprocattrcon_raw(security_context_t context,
 			      pid_t pid, const char *attr)
 {
-	char *path;
-	int fd, rc;
-	pid_t tid;
+	int fd;
 	ssize_t ret;
 	int errno_hold;
+	security_context_t *prev_context;
 
-	if (pid > 0)
-		rc = asprintf(&path, "/proc/%d/attr/%s", pid, attr);
-	else {
-		tid = gettid();
-		rc = asprintf(&path, "/proc/self/task/%d/attr/%s", tid, attr);
-	}
-	if (rc < 0)
-		return -1;
+	__selinux_once(once, init_procattr);
+	init_thread_destructor();
 
-	fd = open(path, O_RDWR);
-	free(path);
+	if (cpid != getpid())
+		free_procattr();
+
+	switch (attr[0]) {
+		case 'c':
+			prev_context = &prev_current;
+			break;
+		case 'e':
+			prev_context = &prev_exec;
+			break;
+		case 'f':
+			prev_context = &prev_fscreate;
+			break;
+		case 'k':
+			prev_context = &prev_keycreate;
+			break;
+		case 's':
+			prev_context = &prev_sockcreate;
+			break;
+		default:
+			errno = ENOENT;
+			return -1;
+	};
+
+	if (!context && !*prev_context)
+		return 0;
+	if (context && *prev_context && !strcmp(context, *prev_context))
+		return 0;
+
+	fd = openattr(pid, attr, O_RDWR);
 	if (fd < 0)
 		return -1;
-	if (context)
+	if (context) {
+		ret = -1;
+		context = strdup(context);
+		if (!context)
+			goto out;
 		do {
 			ret = write(fd, context, strlen(context) + 1);
 		} while (ret < 0 && errno == EINTR);
-	else
+	} else {
 		do {
 			ret = write(fd, NULL, 0);	/* clear */
 		} while (ret < 0 && errno == EINTR);
+	}
+out:
 	errno_hold = errno;
 	close(fd);
 	errno = errno_hold;
-	if (ret < 0)
+	if (ret < 0) {
+		free(context);
 		return -1;
-	else
+	} else {
+		*prev_context = context;
 		return 0;
+	}
 }
 
 static int setprocattrcon(const security_context_t context,
