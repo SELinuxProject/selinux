@@ -117,6 +117,10 @@ class Node(PolicyBase):
         """Iterate over all of the TypeAttribute children of this Interface."""
         return itertools.ifilter(lambda x: isinstance(x, TypeAttribute), walktree(self))
 
+    def roleattributes(self):
+        """Iterate over all of the RoleAttribute children of this Interface."""
+        return itertools.ifilter(lambda x: isinstance(x, RoleAttribute), walktree(self))
+
     def requires(self):
         return itertools.ifilter(lambda x: isinstance(x, Require), walktree(self))
 
@@ -356,6 +360,20 @@ class TypeAttribute(Leaf):
     def to_string(self):
         return "typeattribute %s %s;" % (self.type, self.attributes.to_comma_str())
 
+class RoleAttribute(Leaf):
+    """SElinux roleattribute statement.
+
+    This class represents a roleattribute statement.
+    """
+    def __init__(self, parent=None):
+        Leaf.__init__(self, parent)
+        self.role = ""
+        self.roleattributes = IdSet()
+
+    def to_string(self):
+        return "roleattribute %s %s;" % (self.role, self.roleattributes.to_comma_str())
+
+
 class Role(Leaf):
     def __init__(self, parent=None):
         Leaf.__init__(self, parent)
@@ -399,6 +417,15 @@ class Attribute(Leaf):
 
     def to_string(self):
         return "attribute %s;" % self.name
+
+class Attribute_Role(Leaf):
+    def __init__(self, name="", parent=None):
+        Leaf.__init__(self, parent)
+        self.name = name
+
+    def to_string(self):
+        return "attribute_role %s;" % self.name
+
 
 # Classes representing rules
 

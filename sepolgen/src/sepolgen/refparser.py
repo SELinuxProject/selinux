@@ -91,8 +91,10 @@ tokens = (
     'CLASS',
     #   types and attributes
     'TYPEATTRIBUTE',
+    'ROLEATTRIBUTE',
     'TYPE',
     'ATTRIBUTE',
+    'ATTRIBUTE_ROLE',
     'ALIAS',
     'TYPEALIAS',
     #   conditional policy
@@ -153,8 +155,10 @@ reserved = {
     'class' : 'CLASS',
     # types and attributes
     'typeattribute' : 'TYPEATTRIBUTE',
+    'roleattribute' : 'ROLEATTRIBUTE',
     'type' : 'TYPE',
     'attribute' : 'ATTRIBUTE',
+    'attribute_role' : 'ATTRIBUTE_ROLE',
     'alias' : 'ALIAS',
     'typealias' : 'TYPEALIAS',
     # conditional policy
@@ -489,6 +493,7 @@ def p_policy_stmt(p):
                    | avrule_def
                    | typerule_def
                    | typeattribute_def
+                   | roleattribute_def
                    | interface_call
                    | role_def
                    | role_allow
@@ -496,6 +501,7 @@ def p_policy_stmt(p):
                    | type_def
                    | typealias_def
                    | attribute_def
+                   | attribute_role_def
                    | range_transition_def
                    | role_transition_def
                    | bool
@@ -542,6 +548,7 @@ def p_require(p):
     '''require : TYPE comma_list SEMI
                | ROLE comma_list SEMI
                | ATTRIBUTE comma_list SEMI
+               | ATTRIBUTE_ROLE comma_list SEMI
                | CLASS comma_list SEMI
                | BOOL comma_list SEMI
     '''
@@ -727,6 +734,11 @@ def p_attribute_def(p):
     a = refpolicy.Attribute(p[2])
     p[0] = a
 
+def p_attribute_role_def(p):
+	'attribute_role_def : ATTRIBUTE_ROLE IDENTIFIER SEMI'
+	a = refpolicy.Attribute_Role(p[2])
+	p[0] = a
+
 def p_typealias_def(p):
     'typealias_def : TYPEALIAS IDENTIFIER ALIAS names SEMI'
     t = refpolicy.TypeAlias()
@@ -817,6 +829,13 @@ def p_typeattribute_def(p):
     t = refpolicy.TypeAttribute()
     t.type = p[2]
     t.attributes.update(p[3])
+    p[0] = t
+
+def p_roleattribute_def(p):
+    '''roleattribute_def : ROLEATTRIBUTE IDENTIFIER comma_list SEMI'''
+    t = refpolicy.RoleAttribute()
+    t.role = p[2]
+    t.roleattributes.update(p[3])
     p[0] = t
 
 def p_range_transition_def(p):
