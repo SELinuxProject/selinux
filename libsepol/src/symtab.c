@@ -46,4 +46,12 @@ int symtab_init(symtab_t * s, unsigned int size)
 	return 0;
 }
 
+void symtab_destroy(symtab_t * s)
+{
+	if (!s)
+		return;
+	if (s->table)
+		hashtab_destroy(s->table);
+	return;
+}
 /* FLASK */

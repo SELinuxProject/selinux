@@ -327,6 +327,8 @@ static int common_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	new_id = strdup(id);
 	if (!new_id) {
 		ERR(state->handle, "Out of memory!");
+		/* free memory created by symtab_init first, then free new_common */
+		symtab_destroy(&new_common->permissions);
 		free(new_common);
 		return -1;
 	}

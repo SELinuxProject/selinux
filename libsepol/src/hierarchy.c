@@ -360,6 +360,7 @@ static int check_cond_avtab_hierarchy(cond_list_t * cond_list,
 				args->numerr++;
 		}
 		cond_av_list_destroy(expl);
+		avtab_destroy(&expa);
 
 		/*
 		 * Check false condition

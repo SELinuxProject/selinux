@@ -3433,6 +3433,8 @@ static int avrule_block_read(policydb_t * p,
 	uint32_t buf[1], num_blocks, nel;
 	int rc;
 
+	assert(*block == NULL);
+
 	rc = next_entry(buf, fp, sizeof(uint32_t));
 	if (rc < 0)
 		return -1;
@@ -3479,6 +3481,7 @@ static int avrule_block_read(policydb_t * p,
 			if (curblock->branch_list == NULL) {
 				curblock->branch_list = curdecl;
 			} else {
+				assert(last_decl);
 				last_decl->next = curdecl;
 			}
 			last_decl = curdecl;
@@ -3488,6 +3491,7 @@ static int avrule_block_read(policydb_t * p,
 		if (*block == NULL) {
 			*block = curblock;
 		} else {
+			assert(last_block);
 			last_block->next = curblock;
 		}
 		last_block = curblock;

@@ -96,6 +96,7 @@ int sepol_set_policydb_from_file(FILE * fp)
 		return -1;
 	}
 	if (policydb_read(&mypolicydb, &pf, 0)) {
+		policydb_destroy(&mypolicydb);
 		ERR(NULL, "can't read binary policy: %s", strerror(errno));
 		return -1;
 	}
@@ -1016,6 +1017,7 @@ int hidden sepol_load_policy(void *data, size_t len)
 		return -ENOMEM;
 
 	if (policydb_read(&newpolicydb, fp, 1)) {
+		policydb_destroy(&mypolicydb);
 		return -EINVAL;
 	}
 

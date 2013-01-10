@@ -32,6 +32,7 @@ typedef struct {
 } symtab_t;
 
 extern int symtab_init(symtab_t *, unsigned int size);
+extern void symtab_destroy(symtab_t *);
 
 #endif				/* _SYMTAB_H_ */
 

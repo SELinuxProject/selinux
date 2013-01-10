@@ -20,6 +20,7 @@ int policydb_from_image(sepol_handle_t * handle,
 	pf.handle = handle;
 
 	if (policydb_read(policydb, &pf, 0)) {
+		policydb_destroy(policydb);
 		ERR(handle, "policy image is invalid");
 		errno = EINVAL;
 		return STATUS_ERR;
