@@ -1,0 +1,34 @@
+.TH "sepolicy-transition" "8" "20121005" "" ""
+.SH "NAME"
+sepolicy-transition \- Examine the SELinux Policy and generate a process transition report
+
+.SH "SYNOPSIS"
+
+.br
+.B sepolicy transition [\-h] \-s SOURCE
+
+.br
+.B sepolicy transition [\-h] \-s SOURCE \-t TARGET
+
+.SH "DESCRIPTION"
+sepolicy transition will show all domains that a give SELinux source domain can transition to, including the entrypoint.
+
+If a target domain is given, sepolicy transition will examine policy for all transition paths from the source domain to the target domain, and will list the 
+paths.  If a transition is possible, this tool will print out all transition paths from the source domain to the target domain
+
+.SH "OPTIONS"
+.TP
+.I                \-h, \-\-help       
+Display help message
+.TP
+.I                \-s, \-\-source
+Specify the source SELinux domain type.
+.TP
+.I                \-t, \-\-target
+Specify the target SELinux domain type.
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
+
+.SH "SEE ALSO"
+sepolicy(8), selinux(8)

@@ -1,0 +1,71 @@
+.TH "sepolicy" "8" "20121005" "" ""
+.SH "NAME"
+sepolicy \- SELinux Policy Inspection tool
+
+.SH "SYNOPSIS"
+.B sepolicy [-h] [-P policy_path ] {booleans,communicate,generate,interface,manpage,network,transition} OPTIONS
+
+.br
+Arguments:
+.br
+
+.B    booleans
+.br
+Query SELinux policy to see description of booleans
+.B sepolicy-boolean(8)
+.br
+
+.B    communicate
+.br
+Query SELinux policy to see if domains can communicate with each other
+.B sepolicy-communicate(8)
+.br
+
+.B    generate
+.br 
+.br
+Generate SELinux Policy module template
+.B sepolicy-generate(8)
+.br
+
+.B    interface
+.br 
+.br
+Print SELinux Policy interface information
+.B sepolicy-interface(8)
+.br
+
+.B    manpage
+.br
+Generate SELinux man pages 
+.B sepolicy-manpage(8)
+.br
+
+.B    network
+.br
+Query SELinux policy network information
+.B sepolicy-network(8)
+.br
+
+.B    transition 
+.br
+Query SELinux Policy to see how a source process domain can transition to the target process domain
+.B sepolicy-transition(8)
+
+.SH "DESCRIPTION"
+sepolicy is a tools set that will query the installed SELinux policy and generate useful reports, man pages, or even new policy modules.
+See the argument specific man pages for options and descriptions.
+
+.SH "OPTIONS"
+.TP
+.I                \-P, \-\-policy
+Alternate policy to analyze. (Defaults to currently installed policy /sys/fs/selinux/policy)
+.TP
+.I                \-h, \-\-help       
+Display help message
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
+
+.SH "SEE ALSO"
+selinux(8), sepolicy-booleans(8), sepolicy-communicate(8), sepolicy-generate(8), sepolicy-interface(8),  sepolicy-network(8), sepolicy-manpage(8), sepolicy-transition(8)

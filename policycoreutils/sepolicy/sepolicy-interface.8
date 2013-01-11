@@ -1,0 +1,31 @@
+.TH "sepolicy-interface" "8" "20121222" "" ""
+.SH "NAME"
+sepolicy-interface \- Print interface information based on the installed SELinux Policy
+
+.SH "SYNOPSIS"
+
+.br
+.B sepolicy interface [\-h] [\-a | \-u | \-l ]
+
+.SH "DESCRIPTION"
+Use sepolicy interface to print interfaces information based on SELinux Policy.
+
+.SH "OPTIONS"
+.TP
+.I                \-a, \-\-list_admin
+List all domains with admin interface
+.TP
+.I                \-h, \-\-help       
+Display help message
+.TP
+.I                \-l, \-\-list
+List all interfaces
+.TP
+.I                \-u, \-\-list_user
+List all domains with SELinux user role interface
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
+
+.SH "SEE ALSO"
+sepolicy(8), selinux(8)

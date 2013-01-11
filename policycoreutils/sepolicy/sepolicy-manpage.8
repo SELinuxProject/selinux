@@ -1,0 +1,34 @@
+.TH "sepolicy-manpage" "8" "20121005" "" ""
+.SH "NAME"
+sepolicy-manpage \- Generate a man page based on the installed SELinux Policy
+
+.SH "SYNOPSIS"
+
+.br
+.B sepolicy manpage [\-w] [\-h] [\-p PATH ]  [\-a | \-d ]
+
+.SH "DESCRIPTION"
+Use sepolicy manpage to generate manpages based on SELinux Policy.
+
+.SH "OPTIONS"
+.TP
+.I                \-a, \-\-all        
+Generate Man Pages for All Domains
+.TP
+.I                \-d, \-\-domain     
+Generate a Man Page for the specified domain. (Supports multiple commands)
+.TP
+.I                \-h, \-\-help       
+Display help message
+.TP
+.I                \-p, \-\-path
+Specify the directory to store the created man pages. (Default to /tmp)
+.TP
+.I                \-w, \-\-web
+Generate an additional HTML man pages for the specified domain(s).
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
+
+.SH "SEE ALSO"
+sepolicy(8), selinux(8)

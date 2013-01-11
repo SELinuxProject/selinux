@@ -1,0 +1,35 @@
+.TH "sepolicy-network" "8" "20121005" "" ""
+.SH "NAME"
+sepolicy-network \- Examine the SELinux Policy and generate a network report
+
+.SH "SYNOPSIS"
+
+.br
+.B sepolicy network [\-h] (\-l | \-p PORT [PORT ...] | \-t TYPE [TYPE ...] | \-d DOMAIN [DOMAIN ...])
+
+.SH "DESCRIPTION"
+Use sepolicy network to examine SELinux Policy and generate network reports.
+
+.SH "OPTIONS"
+.TP
+.I                \-d, \-\-domain     
+Generate a report listing the ports to which the specified domain is allowed to connect and or bind.
+.TP
+.I                \-l, \-\-list        
+List all Network Port Types defined in SELinux Policy
+.TP
+.I                \-h, \-\-help       
+Display help message
+.TP
+.I                \-t, \-\-type
+Generate a report listing the port numbers associate with the specified SELinux port type.
+.TP
+.I                \-p, \-\-port
+Generate a report listing the SELinux port types associate with the specified port number.
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
+
+.SH "SEE ALSO"
+sepolicy(8), selinux(8), semanage(8)
+

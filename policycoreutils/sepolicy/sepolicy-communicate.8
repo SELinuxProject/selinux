@@ -1,0 +1,39 @@
+.TH "sepolicy-communicate" "8" "20121005" "" ""
+.SH "NAME"
+sepolicy-communicate \- Generate a report showing if two SELinux Policy Domains can communicate
+
+.SH "SYNOPSIS"
+
+.br
+.B sepolicy communicate [\-h] \-s SOURCE \-t TARGET [\-c TCLASS] [\-S SOURCEACCESS] [\-T TARGETACCESS]
+
+.SH "DESCRIPTION"
+Use sepolicy communicate to examine SELinux Policy to if a source SELinux Domain can communicate with a target SELinux Domain.
+The default command looks to see if there are any file types that the source domain can write, which the target domain can read.
+
+.SH "OPTIONS"
+.TP
+.I		  \-c, \-\-class
+Specify the SELinux class which the source domain will attempt to communicate with the target domain.  (Default file)
+.TP
+.I                \-h, \-\-help       
+Display help message
+.TP
+.I                \-s, \-\-source
+Specify the source SELinux domain type.
+.TP
+.I                \-S, \-\-sourceaccess
+Specify the list of accesses used by the source SELinux domain type to communicate with the target domain. Default Open, Write.
+.TP
+.I                \-t, \-\-target
+Specify the target SELinux domain type.
+.TP
+.I                \-T, \-\-targetaccess
+Specify the list of accesses used by the target SELinux domain type to receive communications from the source domain. Default Open, Read.
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
+
+.SH "SEE ALSO"
+sepolicy(8), selinux(8)
+

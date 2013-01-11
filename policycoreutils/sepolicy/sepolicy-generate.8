@@ -1,0 +1,120 @@
+.TH "sepolicy-generate" "8" "20121005" "" ""
+.SH "NAME"
+sepolicy-generate \- Generate an initial SELinux policy module template.
+
+.SH "SYNOPSIS"
+
+.br
+.B sepolicy generate [\-h] [\-d DOMAIN] [\-u USER] [\-w WRITE_PATH ] [\-a ADMIN_DOMAIN] [\-n NAME] [\-p PATH] [\-\-admin_user | \-\-application | \-\-cgi | \-\-confined_admin | \-\-customize | \-\-dbus | \-\-desktop_user | \-\-inetd | \-\-newtype | \-\-init | \-\-sandbox | \-\-term_user | \-\-x_user]
+
+.SH "DESCRIPTION"
+Use sepolicy generate to generate an SELinux policy Module.  sepolicy generate will generate 4 files.
+
+.B Type Enforcing File NAME.te
+.br
+This file can be used to define all the types rules for a particular domain.
+
+.B Interface File NAME.if
+.br
+This file defines the interfaces for the types generated in the te file, which can be used by other policy domains.
+
+.B File Context NAME.fc
+.br
+This file defines the default file context for the system, it takes the file types created in the te file and associates
+file paths to the types.  Tools like restorecon and RPM will use these paths to put down labels.
+
+.B RPM Spec File NAME_selinux.spec
+.br
+This file is an RPM SPEC file that can be used to install the SELinux policy on to machines and setup the labeling. The spec file also installs the interface file and a man page describing the policy.  You can use sepolicy manpage -d NAME to generate the man page.
+
+.B Shell File NAME.sh
+.br
+This is a helper shell script to compile, install and fix the labeling on your test system.  It will also generate a man page based on the installed policy, and
+compile and build an RPM suitable to be installed on other machines
+
+If a generate is possible, this tool will print out all generate paths from the source domain to the target domain
+
+.SH "OPTIONS"
+.TP
+.I                \-h, \-\-help
+Display help message
+.TP
+.I                \-n, \-\-name
+Specify alternate name of policy. The policy will default to the executable or name specified.
+.TP
+.I                \-p, \-\-path
+Specify the directory to store the created policy files. (Default to current working directory )
+optional arguments:
+.TP
+.I                \-u, \-\-user
+SELinux user(s) which will transition to this domain
+.TP
+.I                \-w, \-\-writepath
+Path(s) which the confined processes need to write
+.TP
+.I                \-a, \-\-admin
+Domain(s) that this confined admin will administrate
+.TP
+.I  \-\-admin_user 
+Generate Policy for Administrator Login User Role
+.TP
+.I  \-\-application
+Generate Policy for User Application
+.TP
+.I  \-\-cgi
+Generate Policy for Web Application/Script (CGI)
+.TP
+.I  \-\-confined_admin
+Generate Policy for Confined Root Administrator Role
+.TP
+.I  \-\-customize
+Generate Policy for Existing Domain Type
+.TP
+.I  \-\-dbus
+Generate Policy for DBUS System Daemon
+.TP
+.I  \-\-desktop_user
+Generate Policy for Desktop Login User Role
+.TP
+.I  \-\-inetd
+Generate Policy for Internet Services Daemon
+.TP
+.I  \-\-init
+Generate Policy for Standard Init Daemon (Default)
+.TP
+.I  \-\-newtype
+Generate new policy for new types to add to an existing policy.
+.TP
+.I  \-\-sandbox
+Generate Policy for Sandbox
+.TP
+.I  \-\-term_user
+Generate Policy for Minimal Terminal Login User Role
+.TP
+.I  \-\-x_user
+Generate Policy for Minimal X Windows Login User Role
+
+.SH "EXAMPLE"
+.B > sepolicy generate /usr/sbin/rwhod
+.br
+Generating Policy for /usr/sbin/rwhod named rwhod
+.br
+Created the following files in:
+.br
+./
+.br
+rwhod.te # Type Enforcement file
+.br
+rwhod.if # Interface file
+.br
+rwhod.fc # File Contexts file
+.br
+rwhod_selinux.spec # Spec file
+.br
+rwhod.sh # Setup Script
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
+
+.SH "SEE ALSO"
+sepolicy(8), selinux(8)
