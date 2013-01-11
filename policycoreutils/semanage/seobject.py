@@ -618,6 +618,21 @@ class loginRecords(semanageRecords):
 			self.mylog.commit(0)
 			raise error
 		
+	def get_all_logins(self):
+		ddict = {}
+		self.logins_path = selinux.selinux_policy_root() + "/logins"
+		for path,dirs,files in os.walk(self.logins_path):
+			if path == self.logins_path:
+				for name in files:
+					try:
+						fd = open(path + "/" + name)
+						rec = fd.read().rstrip().split(":")
+						fd.close()
+						ddict[name] = (rec[1], rec[2], rec[0])
+					except IndexError:
+						pass
+		return ddict
+
 	def get_all(self, locallist = 0):
 		ddict = {}
                 if locallist:
@@ -629,7 +644,7 @@ class loginRecords(semanageRecords):
 
 		for u in self.ulist:
 			name = semanage_seuser_get_name(u)
-			ddict[name] = (semanage_seuser_get_sename(u), semanage_seuser_get_mlsrange(u))
+			ddict[name] = (semanage_seuser_get_sename(u), semanage_seuser_get_mlsrange(u), "*")
 		return ddict
 
         def customized(self):
@@ -643,16 +658,26 @@ class loginRecords(semanageRecords):
 
 	def list(self,heading = 1, locallist = 0):
 		ddict = self.get_all(locallist)
+		ldict = self.get_all_logins()
+		lkeys = ldict.keys()
 		keys = ddict.keys()
-		if len(keys) == 0:
+		if len(keys) == 0 and len(lkeys) == 0:
 			return 
 		keys.sort()
+		lkeys.sort()
 
 		if is_mls_enabled == 1:
 			if heading:
-				print "\n%-25s %-25s %-25s\n" % (_("Login Name"), _("SELinux User"), _("MLS/MCS Range"))
+				print "\n%-20s %-20s %-20s %s\n" % (_("Login Name"), _("SELinux User"), _("MLS/MCS Range"), _("Service"))
 			for k in keys:
-				print "%-25s %-25s %-25s" % (k, ddict[k][0], translate(ddict[k][1]))
+				u = ddict[k]
+				print "%-20s %-20s %-20s %s" % (k, u[0], translate(u[1]), u[2])
+			if len(lkeys):
+				print "\nLocal customization in %s" % self.logins_path
+				
+			for k in lkeys:
+				u = ldict[k]
+				print "%-20s %-20s %-20s %s" % (k, u[0], translate(u[1]), u[2])
 		else:
 			if heading:
 				print "\n%-25s %-25s\n" % (_("Login Name"), _("SELinux User"))
