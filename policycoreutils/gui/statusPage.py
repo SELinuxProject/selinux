@@ -177,7 +177,11 @@ class statusPage:
 
     def read_selinux_config(self):
         self.initialtype = selinux.selinux_getpolicytype()[1]
-        self.initEnabled = selinux.selinux_getenforcemode()[1]
+        try:
+            self.initEnabled = selinux.selinux_getenforcemode()[1]
+        except:
+            self.initEnabled = False
+            pass
         self.enabled = self.initEnabled
         self.enabledOptionMenu.set_active(self.enabled + 1 )
 
