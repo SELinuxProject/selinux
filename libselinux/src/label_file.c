@@ -553,12 +553,12 @@ static void closef(struct selabel_handle *rec)
 
 	for (i = 0; i < data->nspec; i++) {
 		spec = &data->spec_arr[i];
+		free(spec->lr.ctx_trans);
+		free(spec->lr.ctx_raw);
 		if (spec->from_mmap)
 			continue;
 		free(spec->regex_str);
 		free(spec->type_str);
-		free(spec->lr.ctx_raw);
-		free(spec->lr.ctx_trans);
 		if (spec->regcomp) {
 			pcre_free(spec->regex);
 			pcre_free_study(spec->sd);
