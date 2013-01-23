@@ -245,6 +245,7 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 	char *addr;
 	size_t len;
 	int stem_map_len, *stem_map;
+	struct mmap_area *mmap_area;
 
 	uint32_t *magic;
 	uint32_t *section_len;
@@ -281,12 +282,25 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 	len += (sysconf(_SC_PAGE_SIZE) - 1);
 	len &= ~(sysconf(_SC_PAGE_SIZE) - 1);
 
+	mmap_area = malloc(sizeof(*mmap_area));
+	if (!mmap_area) {
+		close(mmapfd);
+		return -1;
+	}
+
 	addr = mmap(NULL, len, PROT_READ, MAP_PRIVATE, mmapfd, 0);
 	close(mmapfd);
 	if (addr == MAP_FAILED) {
+		free(mmap_area);
 		perror("mmap");
 		return -1;
 	}
+
+	/* save where we mmap'd the file to cleanup on close() */
+	mmap_area->addr = addr;
+	mmap_area->len = len;
+	mmap_area->next = data->mmap_areas;
+	data->mmap_areas = mmap_area;
 
 	/* check if this looks like an fcontext file */
 	magic = (uint32_t *)addr;
@@ -532,6 +546,7 @@ finish:
 static void closef(struct selabel_handle *rec)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
+	struct mmap_area *area, *last_area;
 	struct spec *spec;
 	struct stem *stem;
 	unsigned int i;
@@ -561,7 +576,14 @@ static void closef(struct selabel_handle *rec)
 		free(data->spec_arr);
 	if (data->stem_arr)
 		free(data->stem_arr);
-	
+
+	area = data->mmap_areas;
+	while (area) {
+		munmap(area->addr, area->len);
+		last_area = area;
+		area = area->next;
+		free(last_area);
+	}
 	free(data);
 }
 

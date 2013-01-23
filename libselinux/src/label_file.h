@@ -33,6 +33,13 @@ struct stem {
 	char from_mmap;
 };
 
+/* Where we map the file in during selabel_open() */
+struct mmap_area {
+	void *addr;
+	size_t len;
+	struct mmap_area *next;
+};
+
 /* Our stored configuration */
 struct saved_data {
 	/*
@@ -49,6 +56,7 @@ struct saved_data {
 	struct stem *stem_arr;
 	int num_stems;
 	int alloc_stems;
+	struct mmap_area *mmap_areas;
 };
 
 static inline pcre_extra *get_pcre_extra(struct spec *spec)
