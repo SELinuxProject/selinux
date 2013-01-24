@@ -124,6 +124,14 @@ static int process_line(struct selabel_handle *rec,
 				    path, lineno, context);
 			return -1;
 		}
+
+		if (rec->validating) {
+			if (selabel_validate(rec, &spec_arr[nspec].lr) < 0) {
+				selinux_log(SELINUX_WARNING,
+					    "%s:  line %d has invalid context %s\n",
+					    path, lineno, spec_arr[nspec].lr.ctx_raw);
+			}
+		}
 	}
 
 	data->nspec = ++nspec;
@@ -146,10 +154,6 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 		switch (opts[n].type) {
 		case SELABEL_OPT_PATH:
 			path = opts[n].value;
-			break;
-		default:
-			selinux_log(SELINUX_WARNING,
-				    "Argument type (%d) not recognized. Skipping\n", opts[n].type);
 			break;
 		}
 
