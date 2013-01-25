@@ -6,6 +6,7 @@ SBINDIR ?= $(DESTDIR)/sbin
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= $(PREFIX)/share/locale
 
+.PHONY: all genhomedircon
 all: fixfiles genhomedircon chcat
 
 genhomedircon:

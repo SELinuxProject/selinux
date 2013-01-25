@@ -10,11 +10,14 @@ override CFLAGS += -I$(INCLUDEDIR)
 LDLIBS = -lsepol -lselinux -lsemanage -L$(LIBDIR)
 SEMODULE_OBJS = semodule.o
 
-all: semodule
+.PHONY: all semodule_path
+all: semodule semodule_path
+
+semodule_path:
+	@echo -n $(SBINDIR) > ../scripts/semodule_path
 
 semodule: $(SEMODULE_OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-	@echo -n $(SBINDIR) > ../scripts/semodule_path
 
 install: all
 	-mkdir -p $(SBINDIR)
