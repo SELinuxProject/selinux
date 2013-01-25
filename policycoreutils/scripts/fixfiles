@@ -103,7 +103,7 @@ exclude_dirs_from_relabelling() {
 
 exclude_dirs() {
     exclude=
-    for i in /var/lib/BackupPC /home /tmp /dev; do
+    for i in /sys /proc /dev /run /mnt /var/tmp /var/lib/BackupPC /home /tmp /dev; do
         [ -e $i ]  && exclude="$exclude -e $i";
     done
     exclude="$exclude `exclude_dirs_from_relabelling`"
@@ -114,6 +114,8 @@ exclude_dirs() {
 # Set global Variables
 #
 fullFlag=0
+BOOTTIME=""
+FORCEFLAG=""
 VERBOSE="-p"
 FORCEFLAG=""
 DIRS=""
@@ -144,6 +146,17 @@ if [ -n $LOGFILE ]; then
     echo $1 >> $LOGFILE
 fi
 }
+#
+# Find files newer then the passed in date and fix the label
+#
+newer() {
+    DATE=$1
+    for m in `echo $FILESYSTEMSRW`; do
+	find $m -mount -newermt $DATE -print0 2>/dev/null | ${RESTORECON} ${VERBOSE} -i -0 -f -
+    done;
+
+}
+
 #
 # Compare PREVious File Context to currently installed File Context and 
 # run restorecon on all files affected by the differences.
@@ -205,6 +218,10 @@ if [ ! -z "$PREFC" ]; then
     diff_filecontext $*
     exit $?
 fi
+if [ ! -z "$BOOTTIME" ]; then
+    newer $BOOTTIME
+    exit $?
+fi
 if [ ! -z "$RPMFILES" ]; then
     for i in `echo "$RPMFILES" | sed 's/,/ /g'`; do
 	rpmlist $i | ${RESTORECON} ${FORCEFLAG} ${VERBOSE} $* -R -i -f - 2>&1 | cat >> $LOGFILE
@@ -236,7 +253,7 @@ FC=$TEMPFCFILE
 fi
 if [  -n "${FILESYSTEMSRW}" ]; then
     echo "Relabeling `echo ${FILESYSTEMSRW}`"
-    ${SETFILES} -q ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 | cat >> $LOGFILE
+    ${SETFILES} ${VERBOSE} -q ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 | cat >> $LOGFILE
 else
     echo >&2 "fixfiles: No suitable file systems found"
 fi
@@ -292,7 +309,11 @@ case "$1" in
     verify) restore -n -o -;;
     relabel) relabel;;
     onboot)
-	touch /.autorelabel
+	> /.autorelabel
+	[ -z "$FORCEFLAG" ] || echo -n "$FORCEFLAG " >> /.autorelabel
+	[ -z "$BOOTTIME" ] || echo -N $BOOTTIME >> /.autorelabel
+	# Force full relabel if / does not have a label on it
+	getfilecon / > /dev/null 2>&1  || echo -F >/.autorelabel
 	echo "System will relabel on next boot"
 	;;
     *)
@@ -318,8 +339,12 @@ if [ $# = 0 ]; then
 fi
 
 # See how we were called.
-while getopts "C:FfR:l:v" i; do
+while getopts "N:BC:FfR:l:v" i; do
     case "$i" in
+	B)
+		BOOTTIME=`/bin/who -b | awk '{print $3}'`
+		echo $BOOTTIME
+		;;
 	f)
 		fullFlag=1
 		;;
@@ -337,6 +362,9 @@ while getopts "C:FfR:l:v" i; do
 		;;
 	F)
 		FORCEFLAG="-F"
+		;;
+	N)
+		BOOTTIME=$OPTARG
 		;;
 	*)
 	    usage
