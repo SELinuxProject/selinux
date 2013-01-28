@@ -12,9 +12,11 @@ all: fixfiles genhomedircon chcat
 genhomedircon:
 	@echo "#!/bin/sh" > genhomedircon
 	@echo >> genhomedircon
-	@if [ ! -e semodule_path ]; then echo -n "$(USRSBINDIR)/" >> genhomedircon; fi
-	@if [ -e semodule_path ]; then echo -n "`cat semodule_path`/" >> genhomedircon; fi
-	@echo "semodule -Bn" >> genhomedircon
+	@if [ -z "${SEMODULE_PATH}" ]; then \
+		echo "${USRSBINDIR}/semodule -Bn" >> genhomedircon; \
+	else \
+		echo "${SEMODULE_PATH}/semodule -Bn" >> genhomedircon; \
+	fi
 
 install: all
 	-mkdir -p $(BINDIR)
