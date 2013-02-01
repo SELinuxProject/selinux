@@ -1,3 +1,8 @@
+1.1.9 2013-02-01
+	* audit.py: Handle times in foreign locals for audit2allow -b
+	* Use refpolicy_makefile() instead of hardcoding Makefile path
+	* understand role attributes
+
 1.1.8 2012-09-13
 	* Allow returning of bastard matches
 	* sepolgen: return and output constraint violation information

@@ -1,3 +1,8 @@
+2.1.12 2013-02-01
+	* Fix errors found by coverity
+	* implement default type policy syntax
+	* Free allocated memory when clean up / exit.
+
 2.1.11 2012-09-13
 	* fd leak reading policy
 	* check return code on ebitmap_set_bit

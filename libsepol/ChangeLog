@@ -1,3 +1,9 @@
+2.1.9 2013-02-01
+	* filename_trans: use some better sorting to compare and merge
+	* coverity fixes
+	* implement default type policy syntax
+	* Fix memory leak issues found by Klocwork
+
 2.1.8 2011-09-13
 	* fix neverallow checking on attributes
 	* Move context_copy() after switch block in ocontext_copy_*().

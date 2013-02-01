@@ -1,3 +1,32 @@
+2.1.13 2013-02-01
+	* audit2why: make sure path is nul terminated
+	* utils: new file context regex compiler
+	* label_file: use precompiled filecontext when possible
+	* do not leak mmapfd
+	* sefcontontext_compile: Add error handling to help debug problems in libsemanage.
+	* man: make selinux.8 mention service man pages
+	* audit2why: Fix segfault if finish() called twice
+	* audit2why: do not leak on multiple init() calls
+	* mode_to_security_class: interface to translate a mode_t in to a security class
+	* audit2why: Cleanup audit2why analysys function
+	* man: Fix program synopsis and function prototypes in man pages
+	* man: Fix man pages formatting
+	* man: Fix typo in man page
+	* man: Add references and man page links to _raw function variants
+	* Use ENOTSUP instead of EOPNOTSUPP for getfilecon functions
+	* man: context_new(3): fix the return value description
+	* selinux_status_open: handle error from sysconf
+	* selinux_status_open: do not leak statusfd on exec
+	* Fix errors found by coverity
+	* Change boooleans.subs to booleans.subs_dist.
+	* optimize set*con functions
+	* pkg-config do not specifc ruby version
+	* unmap file contexts on selabel_close()
+	* do not leak file contexts with mmap'd backend
+	* sefcontext_compile: do not leak fd on error
+	* matchmediacon: do not leak fd 
+	* src/label_android_property: do not leak fd on error
+
 2.1.12 2012-09-13
 	* Add support for lxc_contexts_path
 	* utils: add service to getdefaultcon

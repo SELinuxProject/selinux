@@ -1,3 +1,38 @@
+2.1.14 2013-02-01
+	* setfiles: estimate percent progress
+	* load_policy: make link at the destination directory
+	* Rebuild polgen.glade with glade-3
+	* sepolicy: new command to unite small utilities
+	* sepolicy: Update Makefiles and po files
+	* sandbox: use sepolicy to look for sandbox_t
+	* gui: switch to use sepolicy
+	* gui: sepolgen: use sepolicy to generate
+	* semanage: use sepolicy for boolean dictionary
+	* add po file configuration information
+	* po: stop running update-po on all
+	* semanage: seobject verify policy types before allowing you to assign them.
+	* gui: Start using Popen, instead of os.spawnl
+	* sandbox: Copy /var/tmp to /tmp as they are the same inside
+	* qualifier to shred content
+	* semanage: Fix handling of boolean_sub names when using the -F flag
+	* semanage: man: roles instead of role
+	* gui: system-config-selinux: Catch no DISPLAY= error
+	* setfiles: print error if no default label found
+	* semanage: list logins file entries in semanage login -l
+	* semanage: good error message is sepolgen python module missing
+	* gui: system-config-selinux: do not use lokkit
+	* secon: add support for setrans color information in prompt output
+	* restorecond: remove /etc/mtab from default list
+	* gui: If you are not able to read enforcemode set it to False
+	* genhomedircon: regenerate genhomedircon more often
+	* restorecond: Add /etc/udpatedb.conf to restorecond.conf
+	* genhomedircon generation to allow spec file to pass in SEMODULE_PATH
+	* fixfiles: relabel only after specific date
+	* po: update translations
+	* sandbox: seunshare: do not reassign realloc value
+	* seunshare: do checking on setfsuid
+	* sestatus: rewrite to shut up coverity
+
 2.1.13 2012-09-13
 	* genhomedircon: manual page improvements
 	* setfiles/restorecon minor improvements

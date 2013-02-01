@@ -1,3 +1,18 @@
+2.1.10 2013-02-01
+	* Add sefcontext_compile to compile regex everytime policy is rebuilt
+	* Cleanup/fix enable/disable/remove module.
+	* redo genhomedircon minuid
+	* fixes from coverity
+	* semanage_store: do not leak memory in semanage_exec_prog
+	* genhomedircon: remove useless conditional in get_home_dirs
+	* genhomedircon: double free in get_home_dirs
+	* fcontext_record: do not leak on error in semanage_fcontext_key_create
+	* genhomedircon: do not leak on failure in write_gen_home_dir_context
+	* semanage_store: do not leak fd 
+	* genhomedircon: do not leak shells list
+	* semanage_store: do not leak on strdup failure 
+	* semanage_store: rewrite for readability
+
 2.1.9 2012-09-13
 	* libsemanage: do not set soname needlessly
 	* libsemanage: remove PYTHONLIBDIR and ruby equivalent
