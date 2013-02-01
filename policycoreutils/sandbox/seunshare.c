@@ -774,10 +774,13 @@ killall (security_context_t execcon)
 			continue;
 
 		if (pids == max_pids) {
-			if (!(pid_table = realloc(pid_table, 2*pids*sizeof(pid_t)))) {
+			pid_t *new_pid_table = realloc(pid_table, 2*pids*sizeof(pid_t));
+			if (!new_pid_table) {
+				free(pid_table);
 				(void)closedir(dir);
 				return -1;
 			}
+			pid_table = new_pid_table;
 			max_pids *= 2;
 		}
 		pid_table[pids++] = pid;
