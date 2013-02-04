@@ -2,7 +2,7 @@
 
 DIRS="libsepol libselinux libsemanage policycoreutils checkpolicy sepolgen"
 
-mkdir ../selinux-dev-release
+mkdir -p ../selinux-dev-release
 
 for i in $DIRS; do
 	cd $i
