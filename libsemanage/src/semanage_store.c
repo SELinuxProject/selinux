@@ -843,93 +843,76 @@ static char **split_args(const char *arg0, char *arg_string,
 		switch (*s) {
 		case '\\':{
 				if (*(s + 1) == '\0') {
-					if ((targ = append(arg, '\\')) == NULL) {
+					targ = append(arg, '\\');
+					if (targ == NULL)
 						goto cleanup;
-					} else {
-						arg = targ;
-					}
+					arg = targ;
 				} else {
-					if ((targ =
-					     append(arg, *(s + 1))) == NULL) {
+					targ = append(arg, *(s + 1));
+					if (targ == NULL)
 						goto cleanup;
-					} else {
-						arg = targ;
-					}
+					arg = targ;
 					s++;
 				}
 				break;
 			}
 		case '\'':{
 				if (in_dquote) {
-					if ((targ = append(arg, *s)) == NULL) {
+					targ = append(arg, *s);
+					if (targ == NULL)
 						goto cleanup;
-					} else {
-						arg = targ;
-					}
+					arg = targ;
 				} else if (in_quote) {
 					in_quote = 0;
 				} else {
 					in_quote = 1;
-					if ((targ = append(arg, '\0')) == NULL) {
+					targ = append(arg, '\0');
+					if (targ == NULL)
 						goto cleanup;
-					} else {
-						arg = targ;
-					}
+					arg = targ;
 				}
 				break;
 			}
 		case '\"':{
 				if (in_quote) {
-					if ((targ = append(arg, *s)) == NULL) {
+					targ = append(arg, *s);
+					if (targ == NULL)
 						goto cleanup;
-					} else {
-						arg = targ;
-					}
+					arg = targ;
 				} else if (in_dquote) {
 					in_dquote = 0;
 				} else {
 					in_dquote = 1;
-					if ((targ = append(arg, '\0')) == NULL) {
+					targ = append(arg, '\0');
+					if (targ == NULL)
 						goto cleanup;
-					} else {
-						arg = targ;
-					}
+					arg = targ;
 				}
 				break;
 			}
 		case '$':{
 				switch (*(s + 1)) {
 				case '@':{
-						if ((targ =
-						     append_str(arg,
-								new_name)) ==
-						    NULL) {
+						targ = append_str(arg, new_name);
+						if (targ == NULL)
 							goto cleanup;
-						} else {
-							arg = targ;
-						}
+						arg = targ;
 						s++;
 						break;
 					}
 				case '<':{
-						if ((targ =
-						     append_str(arg,
-								old_name)) ==
-						    NULL) {
+						targ = append_str(arg, old_name);
+						if (targ == NULL)
 							goto cleanup;
-						} else {
-							arg = targ;
-						}
+						arg = targ;
 						s++;
 						break;
 					}
 				default:{
-						if ((targ =
-						     append(arg, *s)) == NULL) {
+						targ = append(arg, *s);
+						if (targ == NULL)
 							goto cleanup;
-						} else {
-							arg = targ;
-						}
+						arg = targ;
 					}
 				}
 				break;
