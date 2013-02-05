@@ -289,9 +289,6 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	struct stat buf;
 	int retval;
 
-	shells = get_shell_list();
-	assert(shells);
-
 	path = semanage_findval(PATH_ETC_USERADD, "HOME", "=");
 	if (path && *path) {
 		if (semanage_list_push(&homedir_list, path))
@@ -323,6 +320,9 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 
 	if (!(s->usepasswd))
 		return homedir_list;
+
+	shells = get_shell_list();
+	assert(shells);
 
 	path = semanage_findval(PATH_ETC_LOGIN_DEFS, "UID_MIN", NULL);
 	if (path && *path) {
