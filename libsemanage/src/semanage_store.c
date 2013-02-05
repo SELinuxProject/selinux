@@ -351,6 +351,7 @@ int semanage_create_store(semanage_handle_t * sh, int create)
 				    path);
 				return -2;
 			}
+			close(fd);
 		} else {
 			ERR(sh, "Could not read lock file at %s.", path);
 			return -1;
