@@ -48,6 +48,7 @@ int semanage_fcontext_key_create(semanage_handle_t * handle,
 	tmp_key->expr = strdup(expr);
 	if (!tmp_key->expr) {
 		ERR(handle, "out of memory, could not create file context key.");
+		free(tmp_key);
 		return STATUS_ERR;
 	}
 	tmp_key->type = type;
