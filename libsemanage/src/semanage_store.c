@@ -786,27 +786,29 @@ static char *append_str(char *s, const char *t)
 	return s;
 }
 
-/* Append an argument string to an argument vector, returning a
- * pointer to the realloc()ated argument vector.  Also increments
- * 'num_args'.
+/*
+ * Append an argument string to an argument vector.  Replaces the
+ * argument pointer passed in.  Returns -1 on error.  Increments
+ * 'num_args' on success.
  */
-static char **append_arg(char **argv, int *num_args, const char *arg)
+static int append_arg(char ***argv, int *num_args, const char *arg)
 {
 	char **a;
-	if ((a = realloc(argv, sizeof(*argv) * (*num_args + 1))) == NULL) {
-		return NULL;
-	}
-	argv = a;
-	if (arg == NULL) {
-		argv[*num_args] = NULL;
-	} else {
-		argv[*num_args] = strdup(arg);
-		if (!argv[*num_args]) {
-			return NULL;
-		}
+
+	a = realloc(argv, sizeof(**argv) * (*num_args + 1));
+	if (a == NULL)
+		return -1;
+
+	*argv = a;
+	a[*num_args] = NULL;
+
+	if (arg) {
+		a[*num_args] = strdup(arg);
+		if (!a[*num_args])
+			return -1;
 	}
 	(*num_args)++;
-	return argv;
+	return 0;
 }
 
 /* free()s all strings within a null-terminated argument vector, as
@@ -828,14 +830,12 @@ static void free_argv(char **argv)
 static char **split_args(const char *arg0, char *arg_string,
 			 const char *new_name, const char *old_name)
 {
-	char **argv = NULL, **tv, *s, *arg = NULL, *targ;
-	int num_args = 0, in_quote = 0, in_dquote = 0;
+	char **argv = NULL, *s, *arg = NULL, *targ;
+	int num_args = 0, in_quote = 0, in_dquote = 0, rc;
 
-	if ((tv = append_arg(argv, &num_args, arg0)) == NULL) {
+	rc = append_arg(&argv, &num_args, arg0);
+	if (rc)
 		goto cleanup;
-	} else {
-		argv = tv;
-	}
 	s = arg_string;
 	/* parse the argument string one character at a time,
 	 * repsecting quotes and other special characters */
@@ -920,13 +920,7 @@ static char **split_args(const char *arg0, char *arg_string,
 		default:{
 				if (isspace(*s) && !in_quote && !in_dquote) {
 					if (arg != NULL) {
-						if ((tv =
-						     append_arg(argv, &num_args,
-								arg)) == NULL) {
-							goto cleanup;
-						} else {
-							argv = tv;
-						}
+						rc = append_arg(&argv, &num_args, arg);
 						free(arg);
 						arg = NULL;
 					}
@@ -942,18 +936,15 @@ static char **split_args(const char *arg0, char *arg_string,
 		s++;
 	}
 	if (arg != NULL) {
-		if ((tv = append_arg(argv, &num_args, arg)) == NULL) {
-			goto cleanup;
-		} else {
-			argv = tv;
-		}
+		rc = append_arg(&argv, &num_args, arg);
 		free(arg);
 		arg = NULL;
 	}
 	/* explicitly add a NULL at the end */
-	if ((tv = append_arg(argv, &num_args, NULL)) != NULL) {
-		return tv;
-	}
+	rc = append_arg(&argv, &num_args, NULL);
+	if (rc)
+		goto cleanup;
+	return argv;
       cleanup:
 	free_argv(argv);
 	free(arg);
