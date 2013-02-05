@@ -327,10 +327,8 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	path = semanage_findval(PATH_ETC_LOGIN_DEFS, "UID_MIN", NULL);
 	if (path && *path) {
 		temp = atoi(path);
-		if (!minuid_set || temp < minuid) {
-			minuid = temp;
-			minuid_set = 1;
-		}
+		minuid = temp;
+		minuid_set = 1;
 	}
 	free(path);
 	path = NULL;
