@@ -934,16 +934,21 @@ static int write_gen_home_dir_context(genhomedircon_settings_t * s, FILE * out,
 		if (write_home_dir_context(s, out, homedir_context_tpl,
 					   users->name,
 					   users->sename, users->home,
-					   users->prefix, users->level)) {
-			return STATUS_ERR;
-		}
+					   users->prefix, users->level))
+			goto err;
 		if (write_user_context(s, out, user_context_tpl, users->name,
-				       users->sename, users->prefix)) {
-			return STATUS_ERR;
-		}
+				       users->sename, users->prefix))
+			goto err;
 	}
 
 	return STATUS_SUCCESS;
+err:
+	for (; users; pop_user_entry(&users)) {
+	/* the pop function takes care of all the cleanup
+	 * so the loop body is just empty */
+	}
+
+	return STATUS_ERR;
 }
 
 /**
