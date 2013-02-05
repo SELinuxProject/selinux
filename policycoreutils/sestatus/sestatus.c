@@ -172,7 +172,7 @@ void printf_tab(const char *outp)
 int main(int argc, char **argv)
 {
 	/* these vars are reused several times */
-	int rc, opt, i, c, size;
+	int rc, opt, i, c;
 	char *context, *root_path;
 
 	/* files that need context checks */
@@ -244,22 +244,21 @@ int main(int argc, char **argv)
 	}
 
 	printf_tab("SELinux root directory:");
-	if ((root_dir = selinux_path()) != NULL) {
-		/* The path has a trailing '/' so remove it */
-		size = strlen(root_dir);
-		root_path = malloc(size);
-		if (!root_path) {
-			printf("malloc error (%s)\n", strerror(errno));
-			return -1;
-		}
-		memset(root_path, 0, size);
-		strncpy(root_path, root_dir, (size-1)) ;
-		printf("%s\n", root_path);
-		free(root_path);
-	} else {
-			printf("error (%s)\n", strerror(errno));
+	root_dir = selinux_path();
+	if (root_dir == NULL) {
+		printf("error (%s)\n", strerror(errno));
 		return -1;
 	}
+	/* The path has a trailing '/' so duplicate to edit */
+	root_path = strdup(root_dir);
+	if (!root_path) {
+		printf("malloc error (%s)\n", strerror(errno));
+		return -1;
+	}
+	/* actually blank the '/' */
+	root_path[strlen(root_path) - 1] = '\0';
+	printf("%s\n", root_path);
+	free(root_path);
 
 	/* Dump all the path information */
 	printf_tab("Loaded policy name:");
