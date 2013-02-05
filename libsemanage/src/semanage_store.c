@@ -964,35 +964,38 @@ static int semanage_exec_prog(semanage_handle_t * sh,
 {
 	char **argv;
 	pid_t forkval;
+	int status = 0;
 
-	if ((argv = split_args(e->path, e->args, new_name, old_name)) == NULL) {
+	argv = split_args(e->path, e->args, new_name, old_name);
+	if (argv == NULL) {
 		ERR(sh, "Out of memory!");
 		return -1;
 	}
 
 	/* no need to use pthread_atfork() -- child will not be using
 	 * any mutexes. */
-	if ((forkval = vfork()) == -1) {
-		ERR(sh, "Error while forking process.");
-		return -1;
-	} else if (forkval == 0) {
+	forkval = vfork();
+	if (forkval == 0) {
 		/* child process.  file descriptors will be closed
 		 * because they were set as close-on-exec. */
 		execve(e->path, argv, NULL);
 		_exit(EXIT_FAILURE);	/* if execve() failed */
-	} else {
-		/* parent process.  wait for child to finish */
-		int status = 0;
-		free_argv(argv);
-		if (waitpid(forkval, &status, 0) == -1 || !WIFEXITED(status)) {
-			ERR(sh, "Child process %s did not exit cleanly.",
-			    e->path);
-			return -1;
-		}
-		return WEXITSTATUS(status);
 	}
-	assert(0);
-	return 0;		/* never reached, but here to satisfy lint */
+
+	free_argv(argv);
+
+	if (forkval == -1) {
+		ERR(sh, "Error while forking process.");
+		return -1;
+	}
+
+	/* parent process.  wait for child to finish */
+	if (waitpid(forkval, &status, 0) == -1 || !WIFEXITED(status)) {
+		ERR(sh, "Child process %s did not exit cleanly.",
+		    e->path);
+		return -1;
+	}
+	return WEXITSTATUS(status);
 }
 
 /* reloads the policy pointed to by the handle, used locally by install 
