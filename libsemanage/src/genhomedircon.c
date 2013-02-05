@@ -401,11 +401,13 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 		WARN(s->h_semanage, "Error while fetching users.  "
 		     "Returning list so far.");
 	}
+
+	if (semanage_list_sort(&homedir_list))
+		goto fail;
+
 	endpwent();
 	free(rbuf);
 	semanage_list_destroy(&shells);
-	if (semanage_list_sort(&homedir_list))
-		goto fail;
 
 	return homedir_list;
 
