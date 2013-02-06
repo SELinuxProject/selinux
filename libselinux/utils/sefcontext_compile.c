@@ -153,6 +153,7 @@ static int write_binary_file(struct saved_data *data, char *filename)
 	uint32_t magic = SELINUX_MAGIC_COMPILED_FCONTEXT;
 	uint32_t section_len;
 	uint32_t i;
+	int rc;
 
 	bin_file = fopen(filename, "w");
 	if (!bin_file) {
@@ -163,19 +164,19 @@ static int write_binary_file(struct saved_data *data, char *filename)
 	/* write some magic number */
 	len = fwrite(&magic, sizeof(uint32_t), 1, bin_file);
 	if (len != 1)
-		return -1;
+		goto err;
 
 	/* write the version */
 	section_len = SELINUX_COMPILED_FCONTEXT_MAX_VERS;
 	len = fwrite(&section_len, sizeof(uint32_t), 1, bin_file);
 	if (len != 1)
-		return -1;
+		goto err;
 
 	/* write the number of stems coming */
 	section_len = data->num_stems;
 	len = fwrite(&section_len, sizeof(uint32_t), 1, bin_file);
 	if (len != 1)
-		return -1;
+		goto err;
 
 	for (i = 0; i < section_len; i++) {
 		char *stem = data->stem_arr[i].buf;
@@ -184,20 +185,20 @@ static int write_binary_file(struct saved_data *data, char *filename)
 		/* write the strlen (aka no nul) */
 		len = fwrite(&stem_len, sizeof(uint32_t), 1, bin_file);
 		if (len != 1)
-			return -1;
+			goto err;
 
 		/* include the nul in the file */
 		stem_len += 1;
 		len = fwrite(stem, sizeof(char), stem_len, bin_file);
 		if (len != stem_len)
-			return -1;
+			goto err;
 	}
 
 	/* write the number of regexes coming */
 	section_len = data->nspec;
 	len = fwrite(&section_len, sizeof(uint32_t), 1, bin_file);
 	if (len != 1)
-		return -1;
+		goto err;
 
 	for (i = 0; i < section_len; i++) {
 		char *context = specs[i].lr.ctx_raw;
@@ -208,82 +209,85 @@ static int write_binary_file(struct saved_data *data, char *filename)
 		pcre_extra *sd = get_pcre_extra(&specs[i]);
 		uint32_t to_write;
 		size_t size;
-		int rc;
 
 		/* length of the context string (including nul) */
 		to_write = strlen(context) + 1;
 		len = fwrite(&to_write, sizeof(uint32_t), 1, bin_file);
 		if (len != 1)
-			return -1;
+			goto err;
 
 		/* original context strin (including nul) */
 		len = fwrite(context, sizeof(char), to_write, bin_file);
 		if (len != to_write)
-			return -1;
+			goto err;
 
 		/* length of the original regex string (including nul) */
 		to_write = strlen(regex_str) + 1;
 		len = fwrite(&to_write, sizeof(uint32_t), 1, bin_file);
 		if (len != 1)
-			return -1;
+			goto err;
 
 		/* original regex string */
 		len = fwrite(regex_str, sizeof(char), to_write, bin_file);
 		if (len != to_write)
-			return -1;
+			goto err;
 
 		/* binary F_MODE bits */
 		len = fwrite(&mode, sizeof(mode), 1, bin_file);
 		if (len != 1)
-			return -1;
+			goto err;
 
 		/* stem for this regex (could be -1) */
 		len = fwrite(&stem_id, sizeof(stem_id), 1, bin_file);
 		if (len != 1)
-			return -1;
+			goto err;
 
 		/* does this spec have a metaChar? */
 		to_write = specs[i].hasMetaChars;
 		len = fwrite(&to_write, sizeof(to_write), 1, bin_file);
 		if (len != 1)
-			return -1;
+			goto err;
 
 		/* determine the size of the pcre data in bytes */
 		rc = pcre_fullinfo(re, NULL, PCRE_INFO_SIZE, &size);
 		if (rc < 0)
-			return -1;
+			goto err;
 
 		/* write the number of bytes in the pcre data */
 		to_write = size;
 		len = fwrite(&to_write, sizeof(uint32_t), 1, bin_file);
 		if (len != 1)
-			return -1;
+			goto err;
 
 		/* write the actual pcre data as a char array */
 		len = fwrite(re, 1, to_write, bin_file);
 		if (len != to_write)
-			return -1;
+			goto err;
 
 		/* determine the size of the pcre study info */
 		rc = pcre_fullinfo(re, sd, PCRE_INFO_STUDYSIZE, &size);
 		if (rc < 0)
-			return -1;
+			goto err;
 
 		/* write the number of bytes in the pcre study data */
 		to_write = size;
 		len = fwrite(&to_write, sizeof(uint32_t), 1, bin_file);
 		if (len != 1)
-			return -1;
+			goto err;
 
 		/* write the actual pcre study data as a char array */
 		len = fwrite(sd->study_data, 1, to_write, bin_file);
 		if (len != to_write)
-			return -1;
+			goto err;
 	}
 
+	rc = 0;
+out:
 	fclose(bin_file);
-
-	return 0;
+	return rc;
+err:
+	rc = -1;
+	goto out;
 }
 
 static int free_specs(struct saved_data *data)
