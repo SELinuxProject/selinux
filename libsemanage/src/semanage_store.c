@@ -796,7 +796,7 @@ static int append_arg(char ***argv, int *num_args, const char *arg)
 {
 	char **a;
 
-	a = realloc(argv, sizeof(**argv) * (*num_args + 1));
+	a = realloc(*argv, sizeof(**argv) * (*num_args + 1));
 	if (a == NULL)
 		return -1;
 
