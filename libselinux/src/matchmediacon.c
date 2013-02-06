@@ -47,6 +47,7 @@ int matchmediacon(const char *media, security_context_t * con)
 			break;
 		}
 	}
+	fclose(infile);
 	if (!found)
 		return -1;
 
