@@ -161,11 +161,10 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 		return -1;
 
 	if (fstat(fileno(fp), &sb) < 0)
-		return -1;
-	if (!S_ISREG(sb.st_mode)) {
-		errno = EINVAL;
-		return -1;
-	}
+		goto finish;
+	errno = EINVAL;
+	if (!S_ISREG(sb.st_mode))
+		goto finish;
 
 	/*
 	 * Two passes of the specification file. First is to get the size.
