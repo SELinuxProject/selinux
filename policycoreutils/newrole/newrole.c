@@ -1249,7 +1249,7 @@ int main(int argc, char *argv[])
 			fprintf(stderr, _("Could not close descriptors.\n"));
 			goto err_close_pam;
 		}
-		fd = open(ttyn, O_RDONLY | O_NONBLOCK);
+		fd = open(ttyn, O_RDWR | O_NONBLOCK);
 		if (fd != 0)
 			goto err_close_pam;
 		rc = fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) & ~O_NONBLOCK);
