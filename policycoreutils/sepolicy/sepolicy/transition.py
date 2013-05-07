@@ -64,8 +64,9 @@ class setrans:
             return buf
         seen.append(name)
 
-        for t in self.sdict[name]["map"]:
-            buf += "%s%s @ %s --> %s\n" % (header, t["source"], t["target"], t["transtype"])
+        if "map" in self.sdict[name]:
+            for t in self.sdict[name]["map"]:
+                buf += "%s%s @ %s --> %s\n" % (header, t["source"], t["target"], t["transtype"])
 
         if "child" in self.sdict[name]:
             for x in self.sdict[name]["child"]:
