@@ -283,8 +283,8 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	char *rbuf = NULL;
 	char *path = NULL;
 	long rbuflen;
-	uid_t temp, minuid = 500;
-	int minuid_set = 0;
+	uid_t temp, minuid = 500, maxuid = 60000;
+	int minuid_set = 0, maxuid_set = 0;
 	struct passwd pwstorage, *pwbuf;
 	struct stat buf;
 	int retval;
@@ -333,6 +333,15 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	free(path);
 	path = NULL;
 
+	path = semanage_findval(PATH_ETC_LOGIN_DEFS, "UID_MAX", NULL);
+	if (path && *path) {
+		temp = atoi(path);
+		maxuid = temp;
+		maxuid_set = 1;
+	}
+	free(path);
+	path = NULL;
+
 	path = semanage_findval(PATH_ETC_LIBUSER, "LU_UIDNUMBER", "=");
 	if (path && *path) {
 		temp = atoi(path);
@@ -352,7 +361,7 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 		goto fail;
 	setpwent();
 	while ((retval = getpwent_r(&pwstorage, rbuf, rbuflen, &pwbuf)) == 0) {
-		if (pwbuf->pw_uid < minuid)
+		if (pwbuf->pw_uid < minuid || pwbuf->pw_uid > maxuid)
 			continue;
 		if (!semanage_list_find(shells, pwbuf->pw_shell))
 			continue;
@@ -385,7 +394,7 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 
 			/* NOTE: old genhomedircon printed a warning on match */
 			if (hand.matched) {
-				WARN(s->h_semanage, "%s homedir %s or its parent directory conflicts with a file context already specified in the policy.  This usually indicates an incorrectly defined system account.  If it is a system account please make sure its uid is less than %u or its login shell is /sbin/nologin.", pwbuf->pw_name, pwbuf->pw_dir, minuid);
+				WARN(s->h_semanage, "%s homedir %s or its parent directory conflicts with a file context already specified in the policy.  This usually indicates an incorrectly defined system account.  If it is a system account please make sure its uid is less than %u or greater than %u or its login shell is /sbin/nologin.", pwbuf->pw_name, pwbuf->pw_dir, minuid, maxuid);
 			} else {
 				if (semanage_list_push(&homedir_list, path))
 					goto fail;
