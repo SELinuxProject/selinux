@@ -8,7 +8,7 @@ AUDITH = $(shell ls /usr/include/libaudit.h 2>/dev/null)
 PROGRESS_STEP=$(shell grep "^\#define STAR_COUNT" restore.h | awk -S '{ print $$3 }')
 ABORT_ON_ERRORS=$(shell grep "^\#define ABORT_ON_ERRORS" setfiles.c | awk -S '{ print $$3 }')
 
-CFLAGS = -g -Werror -Wall -W
+CFLAGS ?= -g -Werror -Wall -W
 override CFLAGS += -I$(PREFIX)/include
 LDLIBS = -lselinux -lsepol -L$(LIBDIR)
 
