@@ -89,7 +89,7 @@ except:
 			self.log_list=[]
 
 		def log(self, msg, name = "", sename = "", serole = "", serange = "", oldsename = "", oldserole = "", oldserange = ""):
-			message += " %s name=%s" % (msg, name)
+			message = " %s name=%s" % (msg, name)
 			if sename != "":
 				message += " sename=" + sename
 			if oldsename != "":
