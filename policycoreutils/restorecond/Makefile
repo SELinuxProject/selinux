@@ -7,7 +7,7 @@ AUTOSTARTDIR = $(DESTDIR)/etc/xdg/autostart
 DBUSSERVICEDIR = $(DESTDIR)/usr/share/dbus-1/services
 
 autostart_DATA = sealertauto.desktop
-INITDIR = $(DESTDIR)/etc/rc.d/init.d
+INITDIR ?= $(DESTDIR)/etc/rc.d/init.d
 SELINUXDIR = $(DESTDIR)/etc/selinux
 
 DBUSFLAGS = -DHAVE_DBUS -I/usr/include/dbus-1.0 -I/usr/lib64/dbus-1.0/include -I/usr/lib/dbus-1.0/include
