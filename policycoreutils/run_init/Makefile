@@ -33,7 +33,7 @@ open_init_pty: open_init_pty.c
 
 install: all
 	test -d $(SBINDIR)      || install -m 755 -d $(SBINDIR)
-	test -d $(MANDIR)/man1 || install -m 755 -d $(MANDIR)/man1
+	test -d $(MANDIR)/man8 || install -m 755 -d $(MANDIR)/man8
 	install -m 755 run_init $(SBINDIR)
 	install -m 755 open_init_pty $(SBINDIR)
 	install -m 644 run_init.8 $(MANDIR)/man8/
