@@ -5,16 +5,16 @@ semanage \- SELinux Policy Management tool
 .SH "SYNOPSIS"
 Output local customizations
 .br
-.B semanage [ -S store ] -o [ output_file | - ]
+.B semanage [ -S store ] \-o [ output_file | \- ]
 
 Input local customizations
 .br
-.B semanage [ -S store ] -i [ input_file | - ]
+.B semanage [ -S store ] \-i [ input_file | \- ]
 
 Manage booleans.  Booleans allow the administrator to modify the confinement of
 processes based on his configuration.
 .br
-.B semanage boolean [\-S store] \-{d|m|l|D} [\-nN] [\-\-on|\-\-off|\-\1|\-0] -F boolean | boolean_file
+.B semanage boolean [\-S store] \-{d|m|l|D} [\-nN] [\-\-on|\-\-off|\-\1|\-0] \-F boolean | boolean_file
 
 Manage SELinux confined users (Roles and levels for an SELinux user)
 .br
@@ -26,7 +26,7 @@ Manage login mappings between linux users and SELinux confined users.
 
 Manage policy modules.
 .br
-.B semanage module [\-S store] \-{a|d|l} [-m [--enable | --disable] ] [\-N] module_name
+.B semanage module [\-S store] \-{a|d|l} [\-m [\-\-enable | \-\-disable] ] [\-N] module_name
 
 Manage network port type definitions
 .br
@@ -39,7 +39,7 @@ Manage network interface type definitions
 
 Manage network node type definitions
 .br
-.B semanage node [\-S store] -{a|d|m|l|D} [-nNrt] [ -p protocol ] [-M netmask] address
+.B semanage node [\-S store] \-{a|d|m|l|D} [\-nNrt] [ \-p protocol ] [\-M netmask] address
 .br
 
 Manage file context mapping definitions
@@ -97,12 +97,12 @@ Delete a OBJECT record NAME
 Remove all OBJECTS local customizations
 .TP
 .I                \-\-disable
-Disable a policy module, requires -m option
+Disable a policy module, requires \-m option
 
 Currently modules only.
 .TP
 .I                \-\-enable
-Enable a disabled policy module, requires -m option
+Enable a disabled policy module, requires \-m option
 
 Currently modules only.
 .TP
@@ -114,7 +114,7 @@ defined for the source.
 .TP
 .I                \-f, \-\-ftype
 File Type.   This is used with fcontext.
-Requires a file type as shown in the mode field by ls, e.g. use -d to match only directories or -- to match only regular files.
+Requires a file type as shown in the mode field by ls, e.g. use \-d to match only directories or \-\- to match only regular files.
 .TP
 .I                \-F, \-\-file
 Set multiple records from the input file.  When used with the \-l \-\-list, it will output the current settings to stdout in the proper format.
@@ -174,42 +174,42 @@ Take a set of commands from a specified file and load them in a single
 transaction.
 .TP
 .I                \-o, \-\-output
-Output all local customizations into a file. This file than can be used with the semanage -i command to customize other machines to match the local machine.
+Output all local customizations into a file. This file than can be used with the semanage \-i command to customize other machines to match the local machine.
 
 .SH EXAMPLE
 .nf
 .B SELinux user
 List SELinux users
-# semanage user -l
+# semanage user \-l
 
 .B SELinux login
 Change joe to login as staff_u
-# semanage login -a -s staff_u joe
+# semanage login \-a \-s staff_u joe
 Change the group clerks to login as user_u
-# semanage login -a -s user_u %clerks
+# semanage login \-a \-s user_u %clerks
 
 .B File contexts
-.i remember to run restorecon after you set the file context
+.I remember to run restorecon after you set the file context
 Add file-context for everything under /web
-# semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?"
-# restorecon -R -v /web
+# semanage fcontext \-a \-t httpd_sys_content_t "/web(/.*)?"
+# restorecon \-R \-v /web
 
 Substitute /home1 with /home when setting file context
-# semanage fcontext -a -e /home /home1
-# restorecon -R -v /home1
+# semanage fcontext \-a \-e /home /home1
+# restorecon \-R \-v /home1
 
 For home directories under top level directory, for example /disk6/home,
 execute the following commands.
-# semanage fcontext -a -t home_root_t "/disk6"
-# semanage fcontext -a -e /home /disk6/home
-# restorecon -R -v /disk6
+# semanage fcontext \-a \-t home_root_t "/disk6"
+# semanage fcontext \-a \-e /home /disk6/home
+# restorecon \-R \-v /disk6
 
 .B Port contexts
 Allow Apache to listen on tcp port 81
-# semanage port -a -t http_port_t -p tcp 81
+# semanage port \-a \-t http_port_t \-p tcp 81
 
 .B Change apache to a permissive domain
-# semanage permissive -a httpd_t
+# semanage permissive \-a httpd_t
 
 .B Turn off dontaudit rules
 # semanage dontaudit off
@@ -219,10 +219,10 @@ Multiple machines that need the same customizations.
 Extract customizations off first machine, copy them
 to second and import them.
 
-# semanage -o /tmp/local.selinux
+# semanage \-o /tmp/local.selinux
 # scp /tmp/local.selinux secondmachine:/tmp
 # ssh secondmachine
-# semanage -i /tmp/local.selinux
+# semanage \-i /tmp/local.selinux
 
 If these customizations include file context, you need to apply the
 context using restorecon.

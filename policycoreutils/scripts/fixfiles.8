@@ -5,13 +5,13 @@ fixfiles \- fix file SELinux security contexts.
 .SH "SYNOPSIS"
 
 .B fixfiles 
-.I [-v] [-F] [-l logfile ] { check | restore|[-f] relabel | verify } [[dir/file] ... ] 
+.I [\-v] [\-F] [\-l logfile ] { check | restore|[\-f] relabel | verify } [[dir/file] ... ]
 
 .B fixfiles 
-.I [-v] [-F] [ -R rpmpackagename[,rpmpackagename...] ] [-l logfile ] { check | restore | verify }
+.I [\-v] [\-F] [ \-R rpmpackagename[,rpmpackagename...] ] [\-l logfile ] { check | restore | verify }
 
 .B fixfiles 
-.I [-v] [ -C PREVIOUS_FILECONTEXT ] [-l logfile ] { check | restore | verify }
+.I [\-v] [ \-C PREVIOUS_FILECONTEXT ] [\-l logfile ] { check | restore | verify }
 
 .B fixfiles 
 .I onboot
@@ -28,7 +28,7 @@ It can also be run at any time to relabel when adding support for
 new policy, or  just check whether the file contexts are all
 as you expect.  By default it will relabel all mounted ext2, ext3, xfs and 
 jfs file systems as long as they do not have a security context mount 
-option.  You can use the -R flag to use rpmpackages as an alternative.
+option.  You can use the \-R flag to use rpmpackages as an alternative.
 The file /etc/selinux/fixfiles_exclude_dirs can contain a list of directories
 excluded from relabelling.
 .P
@@ -37,21 +37,21 @@ will setup the machine to relabel on the next reboot.
 
 .SH "OPTIONS"
 .TP 
-.B -l logfile
+.B \-l logfile
 Save the output to the specified logfile
 .TP 
-.B -F
-Force  reset  of  context to match file_context for customizable files
+.B \-F
+Force reset of context to match file_context for customizable files
 
 .TP 
-.B -f
+.B \-f
 Clear /tmp directory with out prompt for removal.
 
 .TP 
-.B -R rpmpackagename[,rpmpackagename...]
-Use the rpm database to discover all files within the specified packages and restore the file contexts.  (-a will get all files in the RPM database).
+.B \-R rpmpackagename[,rpmpackagename...]
+Use the rpm database to discover all files within the specified packages and restore the file contexts.  (\-a will get all files in the RPM database).
 .TP
-.B -C PREVIOUS_FILECONTEXT
+.B \-C PREVIOUS_FILECONTEXT
 Run a diff on  the PREVIOUS_FILECONTEXT file to the currently installed one, and restore the context of all affected files.
 
 .TP 
