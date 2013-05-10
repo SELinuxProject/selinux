@@ -3,7 +3,7 @@
 checkmodule \- SELinux policy module compiler
 .SH SYNOPSIS
 .B checkmodule
-.I "[-h] [-b] [-m] [-M] [-U handle_unknown ] [-V] [-o output_file] [input_file]"
+.I "[\-h] [\-b] [\-m] [\-M] [\-U handle_unknown ] [\-V] [\-o output_file] [input_file]"
 .SH "DESCRIPTION"
 This manual page describes the
 .BR checkmodule
@@ -12,7 +12,7 @@ command.
 .B checkmodule
 is a program that checks and compiles a SELinux security policy module
 into a binary representation.  It can generate either a base policy
-module (default) or a non-base policy module (-m option); typically,
+module (default) or a non-base policy module (\-m option); typically,
 you would build a non-base policy module to add to an existing module
 store that already has a base module provided by the base policy.  Use
 semodule_package to combine this module with its optional file
@@ -48,7 +48,7 @@ Specify how the kernel should handle unknown classes or permissions (deny, allow
 .SH EXAMPLE
 .nf
 # Build a MLS/MCS-enabled non-base policy module.
-$ checkmodule -M -m httpd.te -o httpd.mod
+$ checkmodule \-M \-m httpd.te \-o httpd.mod
 .fi
 
 .SH "SEE ALSO"
