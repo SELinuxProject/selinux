@@ -87,7 +87,7 @@ static PyMethodDef methods[] = {
 	{NULL, NULL, 0, NULL}	/* sentinel */
 };
 
-void init_policy() {
+void init_policy(void) {
 PyObject *m;
 m = Py_InitModule("_policy", methods);
 init_info(m);
