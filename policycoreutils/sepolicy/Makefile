@@ -9,7 +9,7 @@ LOCALEDIR ?= /usr/share/locale
 PYTHON ?= /usr/bin/python
 BASHCOMPLETIONDIR ?= $(DESTDIR)/etc/bash_completion.d/
 SHAREDIR ?= $(PREFIX)/share/sandbox
-override CFLAGS = $(LDFLAGS) -I$(PREFIX)/include -DPACKAGE="policycoreutils" -Wall -Werror -Wextra -W  -DSHARED -shared
+override CFLAGS = -I$(PREFIX)/include -DPACKAGE="policycoreutils" -Wall -Werror -Wextra -W  -DSHARED -shared
 
 BASHCOMPLETIONS=sepolicy-bash-completion.sh 
 
