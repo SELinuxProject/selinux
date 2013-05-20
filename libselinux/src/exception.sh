@@ -15,6 +15,6 @@ echo "
 ;;
 esac
 }
-gcc -x c -c - -aux-info temp.aux < ../include/selinux/selinux.h
+gcc -x c -c -I../include - -aux-info temp.aux < ../include/selinux/selinux.h
 for i in `awk '/<stdin>.*extern int/ { print $6 }' temp.aux`; do except $i ; done 
 rm -f -- temp.aux -.o
