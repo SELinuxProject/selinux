@@ -449,7 +449,7 @@ int semanage_enable_module(const char *file) {
 	char path[PATH_MAX];
 	int n = snprintf(path, PATH_MAX, "%s.%s", file, DISABLESTR);
 	if (n < 0 || n >= PATH_MAX)
-		return -1;
+		return 1;
 
 	if ((unlink(path) < 0) && (errno != ENOENT))
 		return -1;

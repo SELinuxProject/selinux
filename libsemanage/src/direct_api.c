@@ -1310,67 +1310,40 @@ static int semanage_direct_install_base_file(semanage_handle_t * sh,
 	return retval;
 }
 
-static int get_module_name(semanage_handle_t * sh, char *modulefile, char **module_name) {
-	FILE *fp = NULL;
-	int retval = -1;
-	char *data = NULL;
-	char *version = NULL;
-	ssize_t size;
-	int type;
-	struct sepol_policy_file *pf = NULL;
-
-	if (sepol_policy_file_create(&pf)) {
-		ERR(sh, "Out of memory!");
-		goto cleanup;
-	}
-	sepol_policy_file_set_handle(pf, sh->sepolh);
-
-	if ((fp = fopen(modulefile, "rb")) == NULL) {
-		goto cleanup;
-	}
-	if ((size = bunzip(sh, fp, &data)) > 0) {
-		sepol_policy_file_set_mem(pf, data, size);
-	} else {
-		rewind(fp);
-		__fsetlocking(fp, FSETLOCKING_BYCALLER);
-		sepol_policy_file_set_fp(pf, fp);
-	}
-	retval = sepol_module_package_info(pf, &type, module_name, &version);
-
-cleanup:
-	sepol_policy_file_free(pf);
-	if (fp)
-		fclose(fp);
-	free(data);
-	free(version);
-	return retval;
-}
-
-static int get_module_file_by_name(semanage_handle_t * sh, const char *module_name, char **module_file) {
+/* Enables a module from the sandbox.  Returns 0 on success, -1 if out
+ * of memory, -2 if module not found or could not be enabled. */
+static int semanage_direct_enable(semanage_handle_t * sh, char *module_name)
+{
 	int i, retval = -1;
 	char **module_filenames = NULL;
-	char *name = NULL;
 	int num_mod_files;
+	size_t name_len = strlen(module_name);
 	if (semanage_get_modules_names(sh, &module_filenames, &num_mod_files) ==
 	    -1) {
 		return -1;
 	}
 	for (i = 0; i < num_mod_files; i++) {
-		int rc = get_module_name(sh, module_filenames[i], &name);
-		if (rc < 0) 
-			continue;
-		if (strcmp(module_name, name) == 0) {
-			*module_file = strdup(module_filenames[i]);
-			if (*module_file) 
-				retval = 0;
+		char *base = strrchr(module_filenames[i], '/');
+		if (base == NULL) {
+			ERR(sh, "Could not read module names.");
+			retval = -2;
 			goto cleanup;
 		}
-		free(name); name = NULL;
+		base++;
+		if (memcmp(module_name, base, name_len) == 0) {
+
+			if (semanage_enable_module(module_filenames[i]) < 0) {
+				ERR(sh, "Could not enable module %s.", module_name);
+				retval = -2;
+				goto cleanup;
+			}
+			retval = 0;
+			goto cleanup;
+		}
 	}
 	ERR(sh, "Module %s was not found.", module_name);
 	retval = -2;		/* module not found */
       cleanup:
-	free(name);
 	for (i = 0; module_filenames != NULL && i < num_mod_files; i++) {
 		free(module_filenames[i]);
 	}
@@ -1378,38 +1351,43 @@ static int get_module_file_by_name(semanage_handle_t * sh, const char *module_na
 	return retval;
 }
 
-/* Enables a module from the sandbox.  Returns 0 on success, -1 if out
- * of memory, -2 if module not found or could not be enabled. */
-static int semanage_direct_enable(semanage_handle_t * sh, char *module_name)
-{
-	char *module_filename = NULL;
-	int retval = get_module_file_by_name(sh, module_name, &module_filename);
-	if (retval <  0)
-		return -1;		/* module not found */
-	retval = semanage_enable_module(module_filename);
-	if (retval < 0) {
-		ERR(sh, "Could not enable module file %s.",
-		    module_filename);
-		retval = -2;
-	}
-	free(module_filename);
-	return retval;
-}
-
 /* Disables a module from the sandbox.  Returns 0 on success, -1 if out
  * of memory, -2 if module not found or could not be enabled. */
 static int semanage_direct_disable(semanage_handle_t * sh, char *module_name)
 {
-	char *module_filename = NULL;
-	int retval = get_module_file_by_name(sh, module_name, &module_filename);	if (retval <  0)
-		return -1;		/* module not found */
-	retval = semanage_disable_module(module_filename);
-	if (retval < 0) {
-		ERR(sh, "Could not disable module file %s.",
-		    module_filename);
-		retval = -2;
+	int i, retval = -1;
+	char **module_filenames = NULL;
+	int num_mod_files;
+	size_t name_len = strlen(module_name);
+	if (semanage_get_modules_names(sh, &module_filenames, &num_mod_files) ==
+	    -1) {
+		return -1;
 	}
-	free(module_filename);
+	for (i = 0; i < num_mod_files; i++) {
+		char *base = strrchr(module_filenames[i], '/');
+		if (base == NULL) {
+			ERR(sh, "Could not read module names.");
+			retval = -2;
+			goto cleanup;
+		}
+		base++;
+		if ((memcmp(module_name, base, name_len) == 0) &&
+		    (strcmp(base + name_len, ".pp") == 0)) {
+			if (semanage_disable_module(module_filenames[i]) < 0) {
+				retval = -2;
+				goto cleanup;
+			}
+			retval=0;
+			goto cleanup;
+		}
+	}
+	ERR(sh, "Module %s was not found.", module_name);
+	retval = -2;		/* module not found */
+      cleanup:
+	for (i = 0; module_filenames != NULL && i < num_mod_files; i++) {
+		free(module_filenames[i]);
+	}
+	free(module_filenames);
 	return retval;
 }
 
@@ -1417,18 +1395,40 @@ static int semanage_direct_disable(semanage_handle_t * sh, char *module_name)
  * of memory, -2 if module not found or could not be removed. */
 static int semanage_direct_remove(semanage_handle_t * sh, char *module_name)
 {
-	char *module_filename = NULL;
-	int retval = get_module_file_by_name(sh, module_name, &module_filename);
-	if (retval <  0)
-		return -1;		/* module not found */
-	(void) semanage_enable_module(module_filename); /* Don't care if this fails */
-	retval = unlink(module_filename);
-	if (retval < 0) {
-		ERR(sh, "Could not remove module file %s.",
-		    module_filename);
-		retval = -2;
+	int i, retval = -1;
+	char **module_filenames = NULL;
+	int num_mod_files;
+	size_t name_len = strlen(module_name);
+	if (semanage_get_modules_names(sh, &module_filenames, &num_mod_files) ==
+	    -1) {
+		return -1;
 	}
-	free(module_filename);
+	for (i = 0; i < num_mod_files; i++) {
+		char *base = strrchr(module_filenames[i], '/');
+		if (base == NULL) {
+			ERR(sh, "Could not read module names.");
+			retval = -2;
+			goto cleanup;
+		}
+		base++;
+		if (memcmp(module_name, base, name_len) == 0) {
+			semanage_enable_module(module_filenames[i]);
+			if (unlink(module_filenames[i]) == -1) {
+				ERR(sh, "Could not remove module file %s.",
+				    module_filenames[i]);
+				retval = -2;
+			}
+			retval = 0;
+			goto cleanup;
+		}
+	}
+	ERR(sh, "Module %s was not found.", module_name);
+	retval = -2;		/* module not found */
+      cleanup:
+	for (i = 0; module_filenames != NULL && i < num_mod_files; i++) {
+		free(module_filenames[i]);
+	}
+	free(module_filenames);
 	return retval;
 }
 
