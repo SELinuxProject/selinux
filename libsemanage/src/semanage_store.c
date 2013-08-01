@@ -262,6 +262,18 @@ const char *semanage_path(enum semanage_store_defs store,
 	return semanage_paths[store][path_name];
 }
 
+/* Return a fully-qualified path + filename to the semanage
+ * configuration file.  The caller must not alter the string returned
+ * (and hence why this function return type is const).
+ *
+ * This is going to be hard coded to /etc/selinux/semanage.conf for
+ * the time being. FIXME
+ */
+const char *semanage_conf_path(void)
+{
+	return "/etc/selinux/semanage.conf";
+}
+
 /**************** functions that create module store ***************/
 
 /* Check that the semanage store exists.  If 'create' is non-zero then

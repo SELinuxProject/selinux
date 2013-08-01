@@ -37,12 +37,10 @@
 #include "semanage_store.h"
 
 #define SEMANAGE_COMMIT_READ_WAIT 5
-#define SEMANAGE_CONF_PATH "/etc/selinux/semanage.conf"
 
 #include <string.h>
 #include <selinux/selinux.h>
 static char *private_selinux_path = NULL;
-static char *private_semanage_conf_path = NULL;
 static char *private_file_context_path = NULL;
 static char *private_file_context_local_path = NULL;
 static char *private_file_context_homedir_path = NULL;
@@ -54,7 +52,6 @@ static char *private_policy_root = NULL;
 
 void semanage_free_root() {
 	free(private_selinux_path); private_selinux_path = NULL;
-	free(private_semanage_conf_path); private_semanage_conf_path = NULL;
 	free(private_file_context_path); private_file_context_path = NULL;
 	free(private_file_context_local_path); private_file_context_local_path = NULL;
 	free(private_file_context_homedir_path); private_file_context_homedir_path = NULL;
@@ -68,10 +65,6 @@ void semanage_free_root() {
 int semanage_set_root(const char *path) {
 	semanage_free_root();
 	if ( asprintf(&private_selinux_path, "%s/%s", path, selinux_path()) < 0 ) {
-		goto error;
-	}
-
-	if ( asprintf(&private_semanage_conf_path, "%s/%s", path, SEMANAGE_CONF_PATH) < 0 ) {
 		goto error;
 	}
 
@@ -176,20 +169,6 @@ const char *semanage_selinux_path(void) {
 	if (private_selinux_path)
 		return private_selinux_path;
 	return selinux_path();
-}
-
-/* Return a fully-qualified path + filename to the semanage
- * configuration file.  The caller must not alter the string returned
- * (and hence why this function return type is const).
- *
- */
-
-const char *semanage_conf_path(void)
-{
-	if (private_semanage_conf_path)
-		return private_semanage_conf_path;
-
-	return SEMANAGE_CONF_PATH;
 }
 
 semanage_handle_t *semanage_handle_create(void)

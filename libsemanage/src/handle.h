@@ -105,8 +105,6 @@ struct semanage_handle {
 	dbase_config_t dbase[DBASE_COUNT];
 };
 
-const char *semanage_conf_path(void);
-
 /* === Local modifications === */
 static inline
     dbase_config_t * semanage_user_base_dbase_local(semanage_handle_t * handle)
