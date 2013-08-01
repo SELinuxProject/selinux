@@ -186,8 +186,7 @@ const char *semanage_selinux_path(void) {
 
 const char *semanage_conf_path(void)
 {
-	if (private_semanage_conf_path &&
-	    access(private_semanage_conf_path, R_OK) == 0)
+	if (private_semanage_conf_path)
 		return private_semanage_conf_path;
 
 	return SEMANAGE_CONF_PATH;
