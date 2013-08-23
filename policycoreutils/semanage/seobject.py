@@ -276,20 +276,41 @@ class moduleRecords(semanageRecords):
 
 	def get_all(self):
                l = []
-               (rc, mlist, number) = semanage_module_list(self.sh)
+               (rc, mlist, number) = semanage_module_list_all(self.sh)
                if rc < 0:
                       raise ValueError(_("Could not list SELinux modules"))
 
                for i in range(number):
                       mod = semanage_module_list_nth(mlist, i)
-                      l.append((semanage_module_get_name(mod), semanage_module_get_version(mod), semanage_module_get_enabled(mod)))
+
+                      rc, name = semanage_module_info_get_name(self.sh, mod)
+                      if rc < 0:
+                          raise ValueError(_("Could not get module name"))
+
+                      rc, enabled = semanage_module_info_get_enabled(self.sh, mod)
+                      if rc < 0:
+                          raise ValueError(_("Could not get module enabled"))
+
+                      rc, priority = semanage_module_info_get_priority(self.sh, mod)
+                      if rc < 0:
+                          raise ValueError(_("Could not get module priority"))
+
+                      rc, lang_ext = semanage_module_info_get_lang_ext(self.sh, mod)
+                      if rc < 0:
+                          raise ValueError(_("Could not get module lang_ext"))
+
+                      l.append((name, enabled, priority, lang_ext))
+
+               # sort the list so they are in name order, but with higher priorities coming first
+               l.sort(key = lambda t: t[3], reverse=True)
+               l.sort(key = lambda t: t[0])
                return l
 
         def customized(self):
 		all = self.get_all()
 		if len(all) == 0:
 			return
-                return map(lambda x: "-d %s" % x[0], filter(lambda t: t[2] == 0, all))
+                return map(lambda x: "-d %s" % x[0], filter(lambda t: t[1] == 0, all))
 
 	def list(self, heading = 1, locallist = 0):
 		all = self.get_all()
@@ -297,51 +318,56 @@ class moduleRecords(semanageRecords):
 			return 
 
 		if heading:
-			print "\n%-25s%-10s\n" % (_("Modules Name"), _("Version"))
+			print "\n%-25s %-9s %s\n" % (_("Module Name"), _("Priority"), _("Language"))
                 for t in all:
-                       if t[2] == 0:
+                       if t[1] == 0:
                               disabled = _("Disabled")
                        else:
                               if locallist:
                                       continue
                               disabled = ""
-                       print "%-25s%-10s%s" % (t[0], t[1], disabled)
+                       print "%-25s %-9s %-5s %s" % (t[0], t[2], t[3], disabled)
 
-	def add(self, file):
+	def add(self, file, priority):
                if not os.path.exists(file):
                        raise ValueError(_("Module does not exists %s ") % file)
+
+               rc = semanage_set_default_priority(self.sh, priority)
+               if rc < 0:
+                       raise ValueError(_("Invalid priority %d (needs to be between 1 and 999)") % priority)
+
                rc = semanage_module_install_file(self.sh, file);
                if rc >= 0:
                       self.commit()
 
-	def disable(self, module):
-               need_commit = False
+	def set_enabled(self, module, enable):
                for m in module.split():
-                      rc = semanage_module_disable(self.sh, m)
-                      if rc < 0 and rc != -3:
-                             raise ValueError(_("Could not disable module %s (remove failed)") % m)
-                      if rc != -3:
-                             need_commit = True
-               if need_commit:
-                      self.commit()
+                      rc, key = semanage_module_key_create(self.sh)
+                      if rc < 0:
+                              raise ValueError(_("Could not create module key"))
 
-	def enable(self, module):
-               need_commit = False
-               for m in module.split():
-                      rc = semanage_module_enable(self.sh, m)
-                      if rc < 0 and rc != -3:
-                             raise ValueError(_("Could not enable module %s (remove failed)") % m)
-                      if rc != -3:
-                             need_commit = True
-               if need_commit:
-                      self.commit()
+                      rc = semanage_module_key_set_name(self.sh, key, m)
+                      if rc < 0:
+                              raise ValueError(_("Could not set module key name"))
+
+                      rc = semanage_module_set_enabled(self.sh, key, enable)
+                      if rc < 0:
+                              if enable:
+                                  raise ValueError(_("Could not enable module %s") % m)
+                              else:
+                                  raise ValueError(_("Could not disable module %s") % m)
+               self.commit()
 
 	def modify(self, file):
                rc = semanage_module_update_file(self.sh, file);
                if rc >= 0:
                       self.commit()
 
-	def delete(self, module):
+	def delete(self, module, priority):
+               rc = semanage_set_default_priority(self.sh, priority)
+               if rc < 0:
+                       raise ValueError(_("Invalid priority %d (needs to be between 1 and 999)") % priority)
+
                for m in module.split():
                       rc = semanage_module_remove(self.sh, m)
                       if rc < 0 and rc != -2:
@@ -350,7 +376,7 @@ class moduleRecords(semanageRecords):
                self.commit()
 
 	def deleteall(self):
-                l = map(lambda x: x[0], filter(lambda t: t[2] == 0, self.get_all()))
+                l = map(lambda x: x[0], filter(lambda t: t[1] == 0, self.get_all()))
                 for m in l:
                         self.enable(m)
 
@@ -410,34 +436,12 @@ class permissiveRecords(semanageRecords):
 		       raise ValueError(_("The sepolgen python module is required to setup permissive domains.\nIn some distributions it is included in the policycoreutils-devel patckage.\n# yum install policycoreutils-devel\nOr similar for your distro."))
 		
                name = "permissive_%s" % type
-               dirname = tempfile.mkdtemp("-semanage")
-               savedir = os.getcwd()
-               os.chdir(dirname)
-               filename = "%s.te" % name
-               modtxt = """
-module %s 1.0;
+               modtxt = "(typepermissive %s)" % type
 
-require {
-          type %s;
-}
-
-permissive %s;
-""" % (name, type, type)
-               fd = open(filename, 'w')
-               fd.write(modtxt)
-               fd.close()
-               mc = module.ModuleCompiler()
-               mc.create_module_package(filename, 1)
-               fd = open("permissive_%s.pp" % type)
-               data = fd.read()
-               fd.close()
-
-               rc = semanage_module_install(self.sh, data, len(data));
+               rc = semanage_module_install(self.sh, modtxt, len(modtxt), name, "cil");
                if rc >= 0:
                       self.commit()
 
-               os.chdir(savedir)
-               shutil.rmtree(dirname)
                if rc < 0:
 			raise ValueError(_("Could not set permissive domain %s (module installation failed)") % name)
 

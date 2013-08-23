@@ -212,6 +212,9 @@ def handleLogin(args):
 def parser_add_store(parser, name):
     parser.add_argument('-S', '--store', action=SetStore, help=_("Select an alternate SELinux Policy Store to manage"))
 
+def parser_add_priority(parser, name):
+    parser.add_argument('-P', '--priority', type=int, default=400, help=_("Select a priority for module operations"))
+
 def parser_add_noheading(parser, name):
     parser.add_argument('-n', '--noheading', action='store_false', default=True, help=_("Do not print heading when listing %s object types") % name  )
 
@@ -496,13 +499,13 @@ def handleModule(args):
     OBJECT = seobject.moduleRecords(store)
     OBJECT.set_reload(args.noreload)
     if args.action == "add":
-        OBJECT.add(args.module_name)
+        OBJECT.add(args.module_name, args.priority)
     if args.action == "enable":
-        OBJECT.enable(args.module_name)
+        OBJECT.set_enabled(args.module_name, True)
     if args.action == "disable":
-        OBJECT.disable(args.module_name)
+        OBJECT.set_enabled(args.module_name, False)
     if args.action == "remove":
-        OBJECT.delete(args.module_name)
+        OBJECT.delete(args.module_name, args.priority)
     if args.action is "deleteall":
         OBJECT.deleteall()
     if args.action == "list":
@@ -517,6 +520,7 @@ def setupModuleParser(subparsers):
     parser_add_noreload(moduleParser, "module")
     parser_add_store(moduleParser, "module")
     parser_add_locallist(moduleParser, "module")
+    parser_add_priority(moduleParser, "module")
 
     mgroup = moduleParser.add_mutually_exclusive_group(required=True)
     parser_add_add(mgroup, "module")
