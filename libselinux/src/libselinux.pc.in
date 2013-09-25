@@ -7,6 +7,6 @@ Name: libselinux
 Description: SELinux utility library
 Version: @VERSION@
 URL: http://userspace.selinuxproject.org/
-Requires.private: libsepol
-Libs: -L${libdir} -lselinux
+Requires.private: libsepol libpcre
+Libs: -L${libdir} -lselinux -lpthread
 Cflags: -I${includedir}
