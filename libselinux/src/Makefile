@@ -80,7 +80,7 @@ override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE -D_FILE_OFFSET_BIT
 SWIG_CFLAGS += -Wno-error -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter \
 		-Wno-shadow -Wno-uninitialized -Wno-missing-prototypes -Wno-missing-declarations
 
-RANLIB=ranlib
+RANLIB ?= ranlib
 
 ARCH := $(patsubst i%86,i386,$(shell uname -m))
 ifneq (,$(filter i386,$(ARCH)))
