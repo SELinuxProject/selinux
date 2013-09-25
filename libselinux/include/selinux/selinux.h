@@ -498,6 +498,7 @@ extern const char *selinux_policy_root(void);
 
 /* These functions return the paths to specific files under the 
    policy root directory. */
+extern const char *selinux_current_policy_path(void);
 extern const char *selinux_binary_policy_path(void);
 extern const char *selinux_failsafe_context_path(void);
 extern const char *selinux_removable_context_path(void);

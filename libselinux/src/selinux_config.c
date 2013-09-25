@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include <pthread.h>
+#include "policy.h"
 #include "selinux_internal.h"
 #include "get_default_type_internal.h"
 
@@ -302,6 +303,28 @@ const char *selinux_binary_policy_path(void)
 }
 
 hidden_def(selinux_binary_policy_path)
+
+const char *selinux_current_policy_path(void)
+{
+	int rc = 0;
+	int vers = 0;
+	static char policy_path[PATH_MAX];
+
+	snprintf(policy_path, sizeof(policy_path), "%s/policy", selinux_mnt);
+	if (access(policy_path, F_OK) == 0) {
+		vers = security_policyvers();
+		do {
+			/* Check prior versions to see if old policy is available */
+			snprintf(policy_path, sizeof(policy_path), "%s.%d",
+				selinux_binary_policy_path(), vers);
+		} while ((rc = access(policy_path, F_OK)) && --vers > 0);
+
+		if (rc) return NULL;
+	}
+	return policy_path;
+}
+
+hidden_def(selinux_current_policy_path)
 
 const char *selinux_file_context_path(void)
 {
