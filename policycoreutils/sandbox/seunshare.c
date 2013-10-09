@@ -617,8 +617,8 @@ static int cleanup_tmpdir(const char *tmpdir, const char *src,
 	free(cmdbuf); cmdbuf = NULL;
 
 	/* remove runtime temporary directory */
-	if ((uid_t)setfsuid(0) != pwd->pw_uid) {
-		fprintf(stderr, _("Unable to switch to root to clear tmp dir\n"));
+	if ((uid_t)setfsuid(0) != 0) {
+		/* setfsuid does not return errror, but this check makes code checkers happy */
 		rc++;
 	}
 
@@ -833,6 +833,7 @@ int main(int argc, char **argv) {
 	char *tmpdir_s = NULL;	/* tmpdir spec'd by user in argv[] */
 	char *tmpdir_r = NULL;	/* tmpdir created by seunshare */
 
+	struct stat st_curhomedir;
 	struct stat st_homedir;
 	struct stat st_tmpdir_s;
 	struct stat st_tmpdir_r;
@@ -931,8 +932,11 @@ int main(int argc, char **argv) {
 	/* Changing fsuid is usually required when user-specified directory is
 	 * on an NFS mount.  It's also desired to avoid leaking info about
 	 * existence of the files not accessible to the user. */
-	if ((uid_t)setfsuid(uid) != 0)
+	if (((uid_t)setfsuid(uid) != 0)   && (errno != 0)) {
+		fprintf(stderr, _("Error: unable to setfsuid %m\n"));
+
 		return -1;
+	}
 
 	/* verify homedir and tmpdir */
 	if (homedir_s && (
@@ -961,6 +965,7 @@ int main(int argc, char **argv) {
 		char *display = NULL;
 		char *LANG = NULL;
 		int rc = -1;
+		char *resolved_path = NULL;
 
 		if (unshare(CLONE_NEWNS) < 0) {
 			perror(_("Failed to unshare"));
@@ -977,8 +982,16 @@ int main(int argc, char **argv) {
 		/* assume fsuid==ruid after this point */
 		if ((uid_t)setfsuid(uid) != 0) goto childerr;
 
+		resolved_path = realpath(pwd->pw_dir,NULL);
+		if (! resolved_path) goto childerr;
+
+		if (verify_directory(resolved_path, NULL, &st_curhomedir) < 0)
+			goto childerr;
+		if (check_owner_uid(uid, resolved_path, &st_curhomedir) < 0)
+			goto childerr;
+
 		/* mount homedir and tmpdir, in this order */
-		if (homedir_s && seunshare_mount(homedir_s, pwd->pw_dir,
+		if (homedir_s && seunshare_mount(homedir_s, resolved_path,
 			&st_homedir) != 0) goto childerr;
 		if (tmpdir_s &&	seunshare_mount(tmpdir_r, "/tmp",
 			&st_tmpdir_r) != 0) goto childerr;
@@ -1033,6 +1046,7 @@ int main(int argc, char **argv) {
 		execv(argv[optind], argv + optind);
 		fprintf(stderr, _("Failed to execute command %s: %s\n"), argv[optind], strerror(errno));
 childerr:
+		free(resolved_path);
 		free(display);
 		free(LANG);
 		exit(-1);
