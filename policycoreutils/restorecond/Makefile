@@ -5,9 +5,10 @@ LIBDIR ?= $(PREFIX)/lib
 MANDIR = $(PREFIX)/share/man
 AUTOSTARTDIR = $(DESTDIR)/etc/xdg/autostart
 DBUSSERVICEDIR = $(DESTDIR)/usr/share/dbus-1/services
+SYSTEMDDIR ?= $(DESTDIR)/usr/lib/systemd
 
 autostart_DATA = sealertauto.desktop
-INITDIR = $(DESTDIR)/etc/rc.d/init.d
+INITDIR ?= $(DESTDIR)/etc/rc.d/init.d
 SELINUXDIR = $(DESTDIR)/etc/selinux
 
 DBUSFLAGS = -DHAVE_DBUS -I/usr/include/dbus-1.0 -I/usr/lib64/dbus-1.0/include -I/usr/lib/dbus-1.0/include
@@ -39,7 +40,8 @@ install: all
 	install -m 644 restorecond.desktop $(AUTOSTARTDIR)/restorecond.desktop
 	-mkdir -p $(DBUSSERVICEDIR)
 	install -m 600 org.selinux.Restorecond.service  $(DBUSSERVICEDIR)/org.selinux.Restorecond.service
-
+	-mkdir -p $(SYSTEMDDIR)/system
+	install -m 644 restorecond.service $(SYSTEMDDIR)/system/
 relabel: install
 	/sbin/restorecon $(SBINDIR)/restorecond 
 
