@@ -20,7 +20,7 @@ cat > ~/.config/openbox/rc.xml << EOF
 </openbox_config>
 EOF
 
-(/usr/bin/Xephyr -title "$TITLE" -terminate -screen $SCREENSIZE -dpi $DPI -nolisten tcp -displayfd 5 5>&1 2>/dev/null) | while read D; do
+(/usr/bin/Xephyr -resizeable -title "$TITLE" -terminate -screen $SCREENSIZE -dpi $DPI -nolisten tcp -displayfd 5 5>&1 2>/dev/null) | while read D; do
     export DISPLAY=:$D
     cat > ~/seremote << __EOF
 #!/bin/sh
