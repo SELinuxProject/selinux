@@ -8,6 +8,8 @@
 #include <limits.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <errno.h>
+#include "policy.h"
 #include "selinux_internal.h"
 #include "get_default_type_internal.h"
 
@@ -138,6 +140,13 @@ int selinux_getpolicytype(char **type)
 
 hidden_def(selinux_getpolicytype)
 
+static int setpolicytype(const char *type)
+{
+	free(selinux_policytype);
+	selinux_policytype = strdup(type);
+	return selinux_policytype ? 0 : -1;
+}
+
 static char *selinux_policyroot = NULL;
 static const char *selinux_rootpath = SELINUXDIR;
 
@@ -259,6 +268,37 @@ const char *selinux_policy_root(void)
 {
 	__selinux_once(once, init_selinux_config);
 	return selinux_policyroot;
+}
+
+int selinux_set_policy_root(const char *path)
+{
+	int i;
+	char *policy_type = strrchr(path, '/');
+	if (!policy_type) {
+		errno = EINVAL;
+		return -1;
+	}
+	policy_type++;
+
+	fini_selinuxmnt();
+	fini_selinux_policyroot();
+
+	selinux_policyroot = strdup(path);
+	if (! selinux_policyroot)
+		return -1;
+
+	if (setpolicytype(policy_type) != 0)
+		return -1;
+
+	for (i = 0; i < NEL; i++)
+		if (asprintf(&file_paths[i], "%s%s",
+			     selinux_policyroot,
+			     file_path_suffixes_data.str +
+			     file_path_suffixes_idx[i])
+		    == -1)
+			return -1;
+
+	return 0;
 }
 
 const char *selinux_path(void)

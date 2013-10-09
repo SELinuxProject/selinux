@@ -496,6 +496,12 @@ extern int selinux_getpolicytype(char **policytype);
  */
 extern const char *selinux_policy_root(void);
 
+/*
+  selinux_set_policy_root sets an alternate policy root directory path under
+  which the compiled policy file and context configuration files exist.
+ */
+extern int selinux_set_policy_root(const char *rootpath);
+
 /* These functions return the paths to specific files under the 
    policy root directory. */
 extern const char *selinux_binary_policy_path(void);

@@ -12,11 +12,10 @@
 #include <limits.h>
 #include <stdlib.h>
 
-
 static void usage(const char *progname)
 {
 	fprintf(stderr,
-		"usage:  %s [-N] [-n] [-f file_contexts] [-p prefix] [-Vq] path...\n",
+		"usage:  %s [-N] [-n] [-f file_contexts] [ -P policy_root_path ] [-p prefix] [-Vq] path...\n",
 		progname);
 	exit(1);
 }
@@ -78,7 +77,7 @@ int main(int argc, char **argv)
 	if (argc < 2)
 		usage(argv[0]);
 
-	while ((opt = getopt(argc, argv, "m:Nnf:p:Vq")) > 0) {
+	while ((opt = getopt(argc, argv, "m:Nnf:P:p:Vq")) > 0) {
 		switch (opt) {
 		case 'n':
 			header = 0;
@@ -108,6 +107,15 @@ int main(int argc, char **argv)
 			if (matchpathcon_init(optarg)) {
 				fprintf(stderr,
 					"Error while processing %s:  %s\n",
+					optarg,
+					errno ? strerror(errno) : "invalid");
+				exit(1);
+			}
+			break;
+		case 'P':
+			if (selinux_set_policy_root(optarg) < 0 ) {
+				fprintf(stderr,
+					"Error setting policy root  %s:  %s\n",
 					optarg,
 					errno ? strerror(errno) : "invalid");
 				exit(1);
