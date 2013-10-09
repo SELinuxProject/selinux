@@ -344,6 +344,31 @@ const char *selinux_binary_policy_path(void)
 
 hidden_def(selinux_binary_policy_path)
 
+const char *selinux_current_policy_path(void)
+{
+	int rc = 0;
+	int vers = 0;
+	static char policy_path[PATH_MAX];
+
+	if (selinux_mnt) {
+		snprintf(policy_path, sizeof(policy_path), "%s/policy", selinux_mnt);
+		if (access(policy_path, F_OK) == 0 ) {
+			return policy_path;
+		}
+	}
+	vers = security_policyvers();
+	do {
+		/* Check prior versions to see if old policy is available */
+		snprintf(policy_path, sizeof(policy_path), "%s.%d",
+			 selinux_binary_policy_path(), vers);
+	} while ((rc = access(policy_path, F_OK)) && --vers > 0);
+
+	if (rc) return NULL;
+	return policy_path;
+}
+
+hidden_def(selinux_current_policy_path)
+
 const char *selinux_file_context_path(void)
 {
 	return get_path(FILE_CONTEXTS);

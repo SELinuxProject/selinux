@@ -191,7 +191,6 @@ static PyObject *finish(PyObject *self __attribute__((unused)), PyObject *args) 
 static int __policy_init(const char *init_path)
 {
 	FILE *fp;
-	int vers = 0;
 	char path[PATH_MAX];
 	char errormsg[PATH_MAX];
 	struct sepol_policy_file *pf = NULL;
@@ -210,27 +209,12 @@ static int __policy_init(const char *init_path)
 			return 1;
 		}
 	} else {
-		vers = sepol_policy_kern_vers_max();
-		if (vers < 0) {
-			snprintf(errormsg, sizeof(errormsg), 
-				 "Could not get policy version:  %s\n",
-				 strerror(errno));
-			PyErr_SetString( PyExc_ValueError, errormsg);
-			return 1;
-		}
-		snprintf(path, PATH_MAX, "%s.%d",
-			 selinux_binary_policy_path(), vers);
-		fp = fopen(path, "r");
-		while (!fp && errno == ENOENT && --vers) {
-			snprintf(path, PATH_MAX, "%s.%d",
-				 selinux_binary_policy_path(), vers);
-			fp = fopen(path, "r");
-		}
+		fp = fopen(selinux_current_policy_path(), "r");
 		if (!fp) {
 			snprintf(errormsg, sizeof(errormsg), 
-				 "unable to open %s.%d:  %s\n",
-				 selinux_binary_policy_path(),
-				 security_policyvers(), strerror(errno));
+				 "unable to open %s:  %s\n",
+				 selinux_current_policy_path(),
+				 strerror(errno));
 			PyErr_SetString( PyExc_ValueError, errormsg);
 			return 1;
 		}
