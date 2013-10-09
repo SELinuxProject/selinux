@@ -68,6 +68,7 @@ struct selabel_handle {
 	char *spec_file;
 
 	/* substitution support */
+	struct selabel_sub *dist_subs;
 	struct selabel_sub *subs;
 };
 

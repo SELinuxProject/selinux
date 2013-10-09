@@ -496,12 +496,12 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 
 	/* Process local and distribution substitution files */
 	if (!path) {
-		rec->subs = selabel_subs_init(selinux_file_context_subs_dist_path(), rec->subs);
+		rec->dist_subs = selabel_subs_init(selinux_file_context_subs_dist_path(), rec->dist_subs);
 		rec->subs = selabel_subs_init(selinux_file_context_subs_path(), rec->subs);
 		path = selinux_file_context_path();
 	} else {
 		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist", path);
-		rec->subs = selabel_subs_init(subs_file, rec->subs);
+		rec->dist_subs = selabel_subs_init(subs_file, rec->dist_subs);
 		snprintf(subs_file, sizeof(subs_file), "%s.subs", path);
 		rec->subs = selabel_subs_init(subs_file, rec->subs);
 	}
