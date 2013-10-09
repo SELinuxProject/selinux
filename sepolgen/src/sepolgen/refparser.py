@@ -65,6 +65,7 @@ tokens = (
     'BAR',
     'EXPL',
     'EQUAL',
+    'FILENAME',
     'IDENTIFIER',
     'NUMBER',
     'PATH',
@@ -249,9 +250,15 @@ def t_refpolicywarn(t):
     t.lexer.lineno += 1
 
 def t_IDENTIFIER(t):
-    r'[a-zA-Z_\$\"][a-zA-Z0-9_\-\+\.\$\*\"~]*'
+    r'[a-zA-Z_\$][a-zA-Z0-9_\-\+\.\$\*~]*'
     # Handle any keywords
     t.type = reserved.get(t.value,'IDENTIFIER')
+    return t
+
+def t_FILENAME(t):
+    r'\"[a-zA-Z0-9_\-\+\.\$\*~ :]+\"'
+    # Handle any keywords
+    t.type = reserved.get(t.value,'FILENAME')
     return t
 
 def t_comment(t):
@@ -450,6 +457,7 @@ def p_interface_call_param(p):
                             | nested_id_set
                             | TRUE
                             | FALSE
+                            | FILENAME
     '''
     # Intentionally let single identifiers pass through
     # List means set, non-list identifier
@@ -461,6 +469,7 @@ def p_interface_call_param(p):
 def p_interface_call_param_list(p):
     '''interface_call_param_list : interface_call_param
                                  | interface_call_param_list COMMA interface_call_param
+                                 | interface_call_param_list COMMA interface_call_param COMMA interface_call_param_list
     '''
     if len(p) == 2:
         p[0] = [p[1]]
@@ -787,6 +796,7 @@ def p_avrule_def(p):
 
 def p_typerule_def(p):
     '''typerule_def : TYPE_TRANSITION names names COLON names IDENTIFIER SEMI
+                    | TYPE_TRANSITION names names COLON names IDENTIFIER FILENAME SEMI
                     | TYPE_TRANSITION names names COLON names IDENTIFIER IDENTIFIER SEMI
                     | TYPE_CHANGE names names COLON names IDENTIFIER SEMI
                     | TYPE_MEMBER names names COLON names IDENTIFIER SEMI
@@ -800,6 +810,7 @@ def p_typerule_def(p):
     t.tgt_types = p[3]
     t.obj_classes = p[5]
     t.dest_type = p[6]
+    t.file_name = p[7]
     p[0] = t
 
 def p_bool(p):
