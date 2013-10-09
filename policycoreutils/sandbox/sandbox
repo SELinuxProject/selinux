@@ -170,7 +170,6 @@ def fullpath(cmd):
        return cmd
 
 class Sandbox:
-    VERSION = "sandbox .1"
     SYSLOG = "/var/log/messages"
 
     def __init__(self):
@@ -243,7 +242,7 @@ class Sandbox:
                   copyfile(f, "/tmp", self.__tmpdir)
                   copyfile(f, "/var/tmp", self.__tmpdir)
 
-    def __setup_sandboxrc(self, wm = "/usr/bin/matchbox-window-manager -use_titlebar no"):
+    def __setup_sandboxrc(self, wm = "/usr/bin/openbox"):
            execfile =self.__homedir + "/.sandboxrc"
            fd = open(execfile, "w+") 
            if self.__options.session:
@@ -287,7 +286,7 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
 %s
 """) % types
 
-        parser = OptionParser(version=self.VERSION, usage=usage)
+        parser = OptionParser(usage=usage)
         parser.disable_interspersed_args()
         parser.add_option("-i", "--include", 
                           action="callback", callback=self.__include, 
@@ -333,7 +332,7 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
 
         parser.add_option("-W", "--windowmanager", dest="wm",  
                           type="string",
-                          default="/usr/bin/matchbox-window-manager -use_titlebar no",
+                          default="/usr/bin/openbox",
                           help=_("alternate window manager"))
 
         parser.add_option("-l", "--level", dest="level", 
@@ -403,9 +402,7 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
 
            con = selinux.getcon()[1].split(":")
            self.__execcon = "%s:%s:%s:%s" % (con[0], con[1], self.setype, level)
-           self.__filecon = "%s:%s:%s:%s" % (con[0], "object_r",
-                                             "%s_file_t" % self.setype[:-2],
-                                             level)
+           self.__filecon = "%s:object_r:sandbox_file_t:%s" % (con[0], level)
     def __setup_dir(self):
            if self.__options.level or self.__options.session:
                   return
