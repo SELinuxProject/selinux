@@ -43,6 +43,11 @@
  * Implementation of the security services.
  */
 
+/* The initial sizes malloc'd for sepol_compute_av_reason_buffer() support */
+#define REASON_BUF_SIZE 2048
+#define EXPR_BUF_SIZE 1024
+#define STACK_LEN 32
+
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -54,6 +59,7 @@
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/flask.h>
+#include <sepol/policydb/util.h>
 
 #include "debug.h"
 #include "private.h"
@@ -69,6 +75,50 @@ static int selinux_enforcing = 1;
 
 static sidtab_t mysidtab, *sidtab = &mysidtab;
 static policydb_t mypolicydb, *policydb = &mypolicydb;
+
+/* Used by sepol_compute_av_reason_buffer() to keep track of entries */
+static int reason_buf_used;
+static int reason_buf_len;
+
+/* Stack services for RPN to infix conversion. */
+static char **stack;
+static int stack_len;
+static int next_stack_entry;
+
+static void push(char * expr_ptr)
+{
+	if (next_stack_entry >= stack_len) {
+		char **new_stack = stack;
+		int new_stack_len;
+
+		if (stack_len == 0)
+			new_stack_len = STACK_LEN;
+		else
+			new_stack_len = stack_len * 2;
+
+		new_stack = realloc(stack, new_stack_len * sizeof(*stack));
+		if (!new_stack) {
+			ERR(NULL, "unable to allocate stack space");
+			return;
+		}
+		stack_len = new_stack_len;
+		stack = new_stack;
+	}
+	stack[next_stack_entry] = expr_ptr;
+	next_stack_entry++;
+}
+
+static char *pop(void)
+{
+	next_stack_entry--;
+	if (next_stack_entry < 0) {
+		next_stack_entry = 0;
+		ERR(NULL, "pop called with no stack entries");
+		return NULL;
+	}
+	return stack[next_stack_entry];
+}
+/* End Stack services */
 
 int hidden sepol_set_sidtab(sidtab_t * s)
 {
@@ -113,20 +163,195 @@ int sepol_set_policydb_from_file(FILE * fp)
 static uint32_t latest_granting = 0;
 
 /*
- * Return the boolean value of a constraint expression 
- * when it is applied to the specified source and target 
+ * cat_expr_buf adds a string to an expression buffer and handles realloc's if
+ * buffer is too small. The array of expression text buffer pointers and its
+ * counter are globally defined here as constraint_expr_eval_reason() sets
+ * them up and cat_expr_buf updates the e_buf pointer if the buffer is realloc'ed.
+ */
+static int expr_counter;
+static char **expr_list;
+static int expr_buf_used;
+static int expr_buf_len;
+
+static void cat_expr_buf(char *e_buf, char *string)
+{
+	int len, new_buf_len;
+	char *p, *new_buf = e_buf;
+
+	while (1) {
+		p = e_buf + expr_buf_used;
+		len = snprintf(p, expr_buf_len - expr_buf_used, "%s", string);
+		if (len < 0 || len >= expr_buf_len - expr_buf_used) {
+			new_buf_len = expr_buf_len + EXPR_BUF_SIZE;
+			new_buf = realloc(e_buf, new_buf_len);
+			if (!new_buf) {
+				ERR(NULL, "failed to realloc expr buffer");
+				return;
+			}
+			/* Update the new ptr in the expr list and locally + new len */
+			expr_list[expr_counter] = new_buf;
+			e_buf = new_buf;
+			expr_buf_len = new_buf_len;
+		} else {
+			expr_buf_used += len;
+			return;
+		}
+	}
+}
+
+/*
+ * If the POLICY_KERN version is < POLICYDB_VERSION_CONSTRAINT_NAMES,
+ * then just return.
+ *
+ * If the POLICY_KERN version is >= POLICYDB_VERSION_CONSTRAINT_NAMES,
+ * then for 'types' only, read the types_names->types list as it will
+ * contain a list of types and attributes that were defined in the
+ * policy source.
+ */
+static void get_names_list(constraint_expr_t *e, int type)
+{
+	ebitmap_t *types;
+	types = &e->type_names->types;
+	int rc = 0;
+	unsigned int i;
+	char tmp_buf[128];
+	/* if -type_names->types is 0, then output string <empty_set> */
+	int empty_set = 0;
+
+	if (policydb->policy_type == POLICY_KERN &&
+			policydb->policyvers >= POLICYDB_VERSION_CONSTRAINT_NAMES &&
+			type == CEXPR_TYPE) {
+		/*
+		 * Process >= POLICYDB_VERSION_CONSTRAINT_NAMES with CEXPR_TYPE, then
+		 * obtain the list of names defined in the policy source.
+		 */
+		cat_expr_buf(expr_list[expr_counter], "{ POLICY_SOURCE: ");
+		for (i = ebitmap_startbit(types); i < ebitmap_length(types); i++) {
+			if ((rc = ebitmap_get_bit(types, i)) == 0)
+				continue;
+			/* Collect entries */
+			snprintf(tmp_buf, sizeof(tmp_buf), "%s ", policydb->p_type_val_to_name[i]);
+			cat_expr_buf(expr_list[expr_counter], tmp_buf);
+			empty_set++;
+		}
+		if (empty_set == 0)
+			cat_expr_buf(expr_list[expr_counter], "<empty_set> ");
+		cat_expr_buf(expr_list[expr_counter], "} ");
+	}
+	return;
+}
+
+static void msgcat(char *src, char *tgt, char *rel, int failed)
+{
+	char tmp_buf[1024];
+	if (failed)
+		snprintf(tmp_buf, sizeof(tmp_buf), "(%s %s %s -Fail-) ",
+				src, rel, tgt);
+	else
+		snprintf(tmp_buf, sizeof(tmp_buf), "(%s %s %s -Pass-) ",
+				src, rel, tgt);
+	cat_expr_buf(expr_list[expr_counter], tmp_buf);
+}
+
+/* Returns a buffer with class, statement type and permissions */
+static char *get_class_info(sepol_security_class_t tclass,
+							constraint_node_t *constraint,
+							context_struct_t * xcontext)
+{
+	constraint_expr_t *e;
+	int mls, state_num;
+
+	/* Find if MLS statement or not */
+	mls = 0;
+	for (e = constraint->expr; e; e = e->next) {
+		if (e->attr >= CEXPR_L1L2) {
+			mls = 1;
+			break;
+		}
+	}
+
+	/* Determine statement type */
+	char *statements[] = {
+        "constrain ",			/* 0 */
+		"mlsconstrain ",		/* 1 */
+        "validatetrans ",		/* 2 */
+		"mlsvalidatetrans ",	/* 3 */
+        0 };
+
+	if (xcontext == NULL)
+		state_num = mls + 0;
+	else
+		state_num = mls + 2;
+
+	int class_buf_len = 0;
+	int new_class_buf_len;
+	int len, buf_used;
+	char *class_buf = NULL, *p;
+	char *new_class_buf = NULL;
+
+	while (1) {
+		new_class_buf_len = class_buf_len + EXPR_BUF_SIZE;
+		new_class_buf = realloc(class_buf, new_class_buf_len);
+			if (!new_class_buf)
+				return NULL;
+		class_buf_len = new_class_buf_len;
+		class_buf = new_class_buf;
+		buf_used = 0;
+		p = class_buf;
+
+		/* Add statement type */
+		len = snprintf(p, class_buf_len - buf_used, "%s", statements[state_num]);
+		if (len < 0 || len >= class_buf_len - buf_used)
+			continue;
+
+		/* Add class entry */
+		p += len;
+		buf_used += len;
+		len = snprintf(p, class_buf_len - buf_used, "%s ",
+				policydb->p_class_val_to_name[tclass - 1]);
+		if (len < 0 || len >= class_buf_len - buf_used)
+			continue;
+
+		/* Add permission entries */
+		p += len;
+		buf_used += len;
+		len = snprintf(p, class_buf_len - buf_used, "{%s } (",
+				sepol_av_to_string(policydb, tclass, constraint->permissions));
+		if (len < 0 || len >= class_buf_len - buf_used)
+			continue;
+		break;
+	}
+	return class_buf;
+}
+
+/*
+ * Modified version of constraint_expr_eval that will process each
+ * constraint as before but adds the information to text buffers that
+ * will hold various components. The expression will be in RPN format,
+ * therefore there is a stack based RPN to infix converter to produce
+ * the final readable constraint.
+ *
+ * Return the boolean value of a constraint expression
+ * when it is applied to the specified source and target
  * security contexts.
  *
  * xcontext is a special beast...  It is used by the validatetrans rules
  * only.  For these rules, scontext is the context before the transition,
  * tcontext is the context after the transition, and xcontext is the context
  * of the process performing the transition.  All other callers of
- * constraint_expr_eval should pass in NULL for xcontext.
+ * constraint_expr_eval_reason should pass in NULL for xcontext.
+ *
+ * This function will also build a buffer as the constraint is processed
+ * for analysis. If this option is not required, then:
+ *      'tclass' should be '0' and r_buf MUST be NULL.
  */
-static int constraint_expr_eval(context_struct_t * scontext,
+static int constraint_expr_eval_reason(context_struct_t * scontext,
 				context_struct_t * tcontext,
 				context_struct_t * xcontext,
-				constraint_expr_t * cexpr)
+				sepol_security_class_t tclass,
+				constraint_node_t *constraint,
+				char **r_buf,
+				unsigned int flags)
 {
 	uint32_t val1, val2;
 	context_struct_t *c;
@@ -136,56 +361,137 @@ static int constraint_expr_eval(context_struct_t * scontext,
 	int s[CEXPR_MAXDEPTH];
 	int sp = -1;
 
-	for (e = cexpr; e; e = e->next) {
+	char tmp_buf[128];
+
+/*
+ * Define the s_t_x_num values that make up r1, t2 etc. in text strings
+ * Set 1 = source, 2 = target, 3 = xcontext for validatetrans
+ */
+#define SOURCE  1
+#define TARGET  2
+#define XTARGET 3
+
+	int s_t_x_num = SOURCE;
+
+	/* Set 0 = fail, u = CEXPR_USER, r = CEXPR_ROLE, t = CEXPR_TYPE */
+	int u_r_t = 0;
+
+	char *name1, *name2;
+	char *src = NULL;
+	char *tgt = NULL;
+
+	int rc = 0, x;
+
+	char *class_buf = NULL;
+
+	class_buf = get_class_info(tclass, constraint, xcontext);
+	if (!class_buf) {
+		ERR(NULL, "failed to allocate class buffer");
+		return -ENOMEM;
+	}
+
+	/* Original function but with buffer support */
+	int expr_list_len = 0;
+	expr_counter = 0;
+	expr_list = NULL;
+	for (e = constraint->expr; e; e = e->next) {
+		/* Allocate a stack to hold expression buffer entries */
+		if (expr_counter >= expr_list_len) {
+			char **new_expr_list = expr_list;
+			int new_expr_list_len;
+
+			if (expr_list_len == 0)
+				new_expr_list_len = STACK_LEN;
+			else
+				new_expr_list_len = expr_list_len * 2;
+
+			new_expr_list = realloc(expr_list, new_expr_list_len * sizeof(*expr_list));
+			if (!new_expr_list) {
+				ERR(NULL, "failed to allocate expr buffer stack");
+				rc = -ENOMEM;
+				goto out;
+			}
+			expr_list_len = new_expr_list_len;
+			expr_list = new_expr_list;
+		}
+
+		/*
+		 * malloc a buffer to store each expression text component. If the
+		 * buffer is too small cat_expr_buf() will realloc extra space.
+		 */
+		expr_buf_len = EXPR_BUF_SIZE;
+		expr_list[expr_counter] = malloc(expr_buf_len);
+		if (!expr_list[expr_counter]) {
+			ERR(NULL, "failed to allocate expr buffer");
+			rc = -ENOMEM;
+			goto out;
+		}
+		expr_buf_used = 0;
+
+		/* Now process each expression of the constraint */
 		switch (e->expr_type) {
 		case CEXPR_NOT:
 			BUG_ON(sp < 0);
 			s[sp] = !s[sp];
+			cat_expr_buf(expr_list[expr_counter], "not");
 			break;
 		case CEXPR_AND:
 			BUG_ON(sp < 1);
 			sp--;
 			s[sp] &= s[sp + 1];
+			cat_expr_buf(expr_list[expr_counter], "and");
 			break;
 		case CEXPR_OR:
 			BUG_ON(sp < 1);
 			sp--;
 			s[sp] |= s[sp + 1];
+			cat_expr_buf(expr_list[expr_counter], "or");
 			break;
 		case CEXPR_ATTR:
 			if (sp == (CEXPR_MAXDEPTH - 1))
-				return 0;
+				goto out;
+
 			switch (e->attr) {
 			case CEXPR_USER:
 				val1 = scontext->user;
 				val2 = tcontext->user;
+				free(src); src = strdup("u1");
+				free(tgt); tgt = strdup("u2");
 				break;
 			case CEXPR_TYPE:
 				val1 = scontext->type;
 				val2 = tcontext->type;
+				free(src); src = strdup("t1");
+				free(tgt); tgt = strdup("t2");
 				break;
 			case CEXPR_ROLE:
 				val1 = scontext->role;
 				val2 = tcontext->role;
 				r1 = policydb->role_val_to_struct[val1 - 1];
 				r2 = policydb->role_val_to_struct[val2 - 1];
+				name1 = policydb->p_role_val_to_name[r1->s.value - 1];
+				name2 = policydb->p_role_val_to_name[r2->s.value - 1];
+				snprintf(tmp_buf, sizeof(tmp_buf), "r1=%s", name1);
+				free(src); src = strdup(tmp_buf);
+				snprintf(tmp_buf, sizeof(tmp_buf), "r2=%s ", name2);
+				free(tgt); tgt = strdup(tmp_buf);
+
 				switch (e->op) {
 				case CEXPR_DOM:
-					s[++sp] =
-					    ebitmap_get_bit(&r1->dominates,
-							    val2 - 1);
+					s[++sp] = ebitmap_get_bit(&r1->dominates, val2 - 1);
+					msgcat(src, tgt, "dom", s[sp] == 0);
+					expr_counter++;
 					continue;
 				case CEXPR_DOMBY:
-					s[++sp] =
-					    ebitmap_get_bit(&r2->dominates,
-							    val1 - 1);
+					s[++sp] = ebitmap_get_bit(&r2->dominates, val1 - 1);
+					msgcat(src, tgt, "domby", s[sp] == 0);
+					expr_counter++;
 					continue;
 				case CEXPR_INCOMP:
-					s[++sp] =
-					    (!ebitmap_get_bit
-					     (&r1->dominates, val2 - 1)
-					     && !ebitmap_get_bit(&r2->dominates,
-								 val1 - 1));
+					s[++sp] = (!ebitmap_get_bit(&r1->dominates, val2 - 1)
+						 && !ebitmap_get_bit(&r2->dominates, val1 - 1));
+					msgcat(src, tgt, "incomp", s[sp] == 0);
+					expr_counter++;
 					continue;
 				default:
 					break;
@@ -194,110 +500,327 @@ static int constraint_expr_eval(context_struct_t * scontext,
 			case CEXPR_L1L2:
 				l1 = &(scontext->range.level[0]);
 				l2 = &(tcontext->range.level[0]);
+				free(src); src = strdup("l1");
+				free(tgt); tgt = strdup("l2");
 				goto mls_ops;
 			case CEXPR_L1H2:
 				l1 = &(scontext->range.level[0]);
 				l2 = &(tcontext->range.level[1]);
+				free(src); src = strdup("l1");
+				free(tgt); tgt = strdup("h2");
 				goto mls_ops;
 			case CEXPR_H1L2:
 				l1 = &(scontext->range.level[1]);
 				l2 = &(tcontext->range.level[0]);
+				free(src); src = strdup("h1");
+				free(tgt); tgt = strdup("L2");
 				goto mls_ops;
 			case CEXPR_H1H2:
 				l1 = &(scontext->range.level[1]);
 				l2 = &(tcontext->range.level[1]);
+				free(src); src = strdup("h1");
+				free(tgt); tgt = strdup("h2");
 				goto mls_ops;
 			case CEXPR_L1H1:
 				l1 = &(scontext->range.level[0]);
 				l2 = &(scontext->range.level[1]);
+				free(src); src = strdup("l1");
+				free(tgt); tgt = strdup("h1");
 				goto mls_ops;
 			case CEXPR_L2H2:
 				l1 = &(tcontext->range.level[0]);
 				l2 = &(tcontext->range.level[1]);
-				goto mls_ops;
-			      mls_ops:
+				free(src); src = strdup("l2");
+				free(tgt); tgt = strdup("h2");
+			mls_ops:
 				switch (e->op) {
 				case CEXPR_EQ:
 					s[++sp] = mls_level_eq(l1, l2);
+					msgcat(src, tgt, "eq", s[sp] == 0);
+					expr_counter++;
 					continue;
 				case CEXPR_NEQ:
 					s[++sp] = !mls_level_eq(l1, l2);
+					msgcat(src, tgt, "neq", s[sp] == 0);
+					expr_counter++;
 					continue;
 				case CEXPR_DOM:
 					s[++sp] = mls_level_dom(l1, l2);
+					msgcat(src, tgt, "dom", s[sp] == 0);
+					expr_counter++;
 					continue;
 				case CEXPR_DOMBY:
 					s[++sp] = mls_level_dom(l2, l1);
+					msgcat(src, tgt, "domby", s[sp] == 0);
+					expr_counter++;
 					continue;
 				case CEXPR_INCOMP:
 					s[++sp] = mls_level_incomp(l2, l1);
+					msgcat(src, tgt, "incomp", s[sp] == 0);
+					expr_counter++;
 					continue;
 				default:
 					BUG();
-					return 0;
+					goto out;
 				}
 				break;
 			default:
 				BUG();
-				return 0;
+				goto out;
 			}
 
 			switch (e->op) {
 			case CEXPR_EQ:
 				s[++sp] = (val1 == val2);
+				msgcat(src, tgt, "eq", s[sp] == 0);
 				break;
 			case CEXPR_NEQ:
 				s[++sp] = (val1 != val2);
+				msgcat(src, tgt, "neq", s[sp] == 0);
 				break;
 			default:
 				BUG();
-				return 0;
+				goto out;
 			}
 			break;
 		case CEXPR_NAMES:
 			if (sp == (CEXPR_MAXDEPTH - 1))
-				return 0;
+				goto out;
+			s_t_x_num = SOURCE;
 			c = scontext;
-			if (e->attr & CEXPR_TARGET)
+			if (e->attr & CEXPR_TARGET) {
+				s_t_x_num = TARGET;
 				c = tcontext;
-			else if (e->attr & CEXPR_XTARGET) {
+			} else if (e->attr & CEXPR_XTARGET) {
+				s_t_x_num = XTARGET;
 				c = xcontext;
-				if (!c) {
-					BUG();
-					return 0;
-				}
 			}
-			if (e->attr & CEXPR_USER)
+			if (!c) {
+				BUG();
+				goto out;
+			}
+			if (e->attr & CEXPR_USER) {
+				u_r_t = CEXPR_USER;
 				val1 = c->user;
-			else if (e->attr & CEXPR_ROLE)
+				name1 = policydb->p_user_val_to_name[val1 - 1];
+				snprintf(tmp_buf, sizeof(tmp_buf), "u%d=%s ",
+						s_t_x_num, name1);
+				free(src); src = strdup(tmp_buf);
+			}
+			else if (e->attr & CEXPR_ROLE) {
+				u_r_t = CEXPR_ROLE;
 				val1 = c->role;
-			else if (e->attr & CEXPR_TYPE)
+				name1 = policydb->p_role_val_to_name[val1 - 1];
+				snprintf(tmp_buf, sizeof(tmp_buf), "r%d=%s ", s_t_x_num, name1);
+				free(src); src = strdup(tmp_buf);
+			}
+			else if (e->attr & CEXPR_TYPE) {
+				u_r_t = CEXPR_TYPE;
 				val1 = c->type;
+				name1 = policydb->p_type_val_to_name[val1 - 1];
+				snprintf(tmp_buf, sizeof(tmp_buf),
+						"t%d=%s ", s_t_x_num, name1);
+				free(src); src = strdup(tmp_buf);
+			}
 			else {
 				BUG();
-				return 0;
+				goto out;
 			}
 
 			switch (e->op) {
 			case CEXPR_EQ:
+				switch (u_r_t) {
+				case CEXPR_USER:
+					free(tgt); tgt=strdup("USER_ENTRY");
+					break;
+				case CEXPR_ROLE:
+					free(tgt); tgt=strdup("ROLE_ENTRY");
+					break;
+				case CEXPR_TYPE:
+					free(tgt); tgt=strdup("TYPE_ENTRY");
+					break;
+				default:
+					ERR(NULL, "unrecognized u_r_t Value: %d", u_r_t);
+					break;
+				}
+
 				s[++sp] = ebitmap_get_bit(&e->names, val1 - 1);
+				msgcat(src, tgt, "eq", s[sp] == 0);
+				if (s[sp] == 0) {
+					get_names_list(e, u_r_t);
+				}
 				break;
+
 			case CEXPR_NEQ:
+				switch (u_r_t) {
+				case CEXPR_USER:
+					free(tgt); tgt=strdup("USER_ENTRY");
+					break;
+				case CEXPR_ROLE:
+					free(tgt); tgt=strdup("ROLE_ENTRY");
+					break;
+				case CEXPR_TYPE:
+					free(tgt); tgt=strdup("TYPE_ENTRY");
+					break;
+				default:
+					ERR(NULL, "unrecognized u_r_t Value: %d", u_r_t);
+					break;
+				}
+
 				s[++sp] = !ebitmap_get_bit(&e->names, val1 - 1);
+				msgcat(src, tgt, "neq", s[sp] == 0);
+				if (s[sp] == 0) {
+					get_names_list(e, u_r_t);
+				}
 				break;
 			default:
 				BUG();
-				return 0;
+				goto out;
 			}
 			break;
 		default:
 			BUG();
-			return 0;
+			goto out;
+		}
+		expr_counter++;
+	}
+
+	/*
+	 * At this point each expression of the constraint is in
+	 * expr_list[n+1] and in RPN format. Now convert to 'infix'
+	 */
+
+	/*
+	 * Save expr count but zero expr_counter to detect if 'BUG(); goto out;'
+	 * was called as we need to release any used expr_list malloc's. Normally
+	 * they are released by the RPN to infix code.
+	 */
+	int expr_count = expr_counter;
+	expr_counter = 0;
+
+	/*
+	 * The array of expression answer buffer pointers and counter. Generate
+	 * the same number of answer buffer entries as expression buffers (as
+	 * there will never be more required).
+	 */
+	char **answer_list;
+	int answer_counter = 0;
+
+	answer_list = malloc(expr_count * sizeof(*answer_list));
+	if (!answer_list) {
+		ERR(NULL, "failed to allocate answer stack");
+		rc = -ENOMEM;
+		goto out;
+	}
+
+	/* The pop operands */
+	char *a;
+	char *b;
+	int a_len, b_len;
+
+	/* Convert constraint from RPN to infix notation. */
+	for (x = 0; x != expr_count; x++) {
+		if (strncmp(expr_list[x], "and", 3) == 0 || strncmp(expr_list[x],
+					"or", 2) == 0) {
+			b = pop();
+			b_len = strlen(b);
+			a = pop();
+			a_len = strlen(a);
+
+			/* get a buffer to hold the answer */
+			answer_list[answer_counter] = malloc(a_len + b_len + 8);
+			if (!answer_list[answer_counter]) {
+				ERR(NULL, "failed to allocate answer buffer");
+				rc = -ENOMEM;
+				goto out;
+			}
+			memset(answer_list[answer_counter], '\0', a_len + b_len + 8);
+
+			sprintf(answer_list[answer_counter], "%s %s %s", a, expr_list[x], b);
+			push(answer_list[answer_counter++]);
+			free(a);
+			free(b);
+		} else if (strncmp(expr_list[x], "not", 3) == 0) {
+			b = pop();
+			b_len = strlen(b);
+
+			answer_list[answer_counter] = malloc(b_len + 8);
+			if (!answer_list[answer_counter]) {
+				ERR(NULL, "failed to allocate answer buffer");
+				rc = -ENOMEM;
+				goto out;
+			}
+			memset(answer_list[answer_counter], '\0', b_len + 8);
+
+			if (strncmp(b, "not", 3) == 0)
+				sprintf(answer_list[answer_counter], "%s (%s)", expr_list[x], b);
+			else
+				sprintf(answer_list[answer_counter], "%s%s", expr_list[x], b);
+			push(answer_list[answer_counter++]);
+			free(b);
+		} else {
+			push(expr_list[x]);
+		}
+	}
+	/* Get the final answer from tos and build constraint text */
+	a = pop();
+
+	/* Constraint calculation: rc = 0 is denied, rc = 1 is granted */
+	sprintf(tmp_buf,"Constraint %s\n", s[0] ? "GRANTED" : "DENIED");
+
+	int len, new_buf_len;
+	char *p, **new_buf = r_buf;
+	/*
+	 * These contain the constraint components that are added to the
+	 * callers reason buffer.
+	 */
+	char *buffers[] = { class_buf, a, "); ", tmp_buf, 0 };
+
+	/*
+	 * This will add the constraints to the callers reason buffer (who is
+	 * responsible for freeing the memory). It will handle any realloc's
+	 * should the buffer be too short.
+	 * The reason_buf_used and reason_buf_len counters are defined globally
+	 * as multiple constraints can be in the buffer.
+	 */
+	if (r_buf && ((s[0] == 0) || ((s[0] == 1 &&
+				(flags & SHOW_GRANTED) == SHOW_GRANTED)))) {
+		for (x = 0; buffers[x] != NULL; x++) {
+			while (1) {
+				p = *r_buf + reason_buf_used;
+				len = snprintf(p, reason_buf_len - reason_buf_used, "%s", buffers[x]);
+				if (len < 0 || len >= reason_buf_len - reason_buf_used) {
+					new_buf_len = reason_buf_len + REASON_BUF_SIZE;
+					*new_buf = realloc(*r_buf, new_buf_len);
+					if (!new_buf) {
+						ERR(NULL, "failed to realloc reason buffer");
+						goto out1;
+					}
+					**r_buf = **new_buf;
+					reason_buf_len = new_buf_len;
+					continue;
+				} else {
+					reason_buf_used += len;
+					break;
+				}
+			}
 		}
 	}
 
-	BUG_ON(sp != 0);
-	return s[0];
+out1:
+	rc = s[0];
+	free(a);
+
+out:
+	free(class_buf);
+	free(src);
+	free(tgt);
+
+	if (expr_counter) {
+		for (x = 0; expr_list[x] != NULL; x++)
+			free(expr_list[x]);
+	}
+	return rc;
 }
 
 /*
@@ -309,7 +832,9 @@ static int context_struct_compute_av(context_struct_t * scontext,
 				     sepol_security_class_t tclass,
 				     sepol_access_vector_t requested,
 				     struct sepol_av_decision *avd,
-				     unsigned int *reason)
+				     unsigned int *reason,
+				     char **r_buf,
+					 unsigned int flags)
 {
 	constraint_node_t *constraint;
 	struct role_allow *ra;
@@ -384,8 +909,8 @@ static int context_struct_compute_av(context_struct_t * scontext,
 	constraint = tclass_datum->constraints;
 	while (constraint) {
 		if ((constraint->permissions & (avd->allowed)) &&
-		    !constraint_expr_eval(scontext, tcontext, NULL,
-					  constraint->expr)) {
+		    !constraint_expr_eval_reason(scontext, tcontext, NULL,
+					  tclass, constraint, r_buf, flags)) {
 			avd->allowed =
 			    (avd->allowed) & ~(constraint->permissions);
 		}
@@ -460,8 +985,8 @@ int hidden sepol_validate_transition(sepol_security_id_t oldsid,
 
 	constraint = tclass_datum->validatetrans;
 	while (constraint) {
-		if (!constraint_expr_eval(ocontext, ncontext, tcontext,
-					  constraint->expr)) {
+		if (!constraint_expr_eval_reason(ocontext, ncontext, tcontext,
+					  0, constraint, NULL, 0)) {
 			return -EPERM;
 		}
 		constraint = constraint->next;
@@ -494,8 +1019,56 @@ int hidden sepol_compute_av_reason(sepol_security_id_t ssid,
 	}
 
 	rc = context_struct_compute_av(scontext, tcontext, tclass,
-				       requested, avd, reason);
+					requested, avd, reason, NULL, 0);
       out:
+	return rc;
+}
+
+/*
+ * sepol_compute_av_reason_buffer - the reason buffer is malloc'd to
+ * REASON_BUF_SIZE. If the buffer size is exceeded, then it is realloc'd
+ * in the constraint_expr_eval_reason() function.
+ */
+int hidden sepol_compute_av_reason_buffer(sepol_security_id_t ssid,
+				   sepol_security_id_t tsid,
+				   sepol_security_class_t tclass,
+				   sepol_access_vector_t requested,
+				   struct sepol_av_decision *avd,
+				   unsigned int *reason,
+				   char **reason_buf,
+				   unsigned int flags)
+{
+	*reason_buf = malloc(REASON_BUF_SIZE);
+	if (!*reason_buf) {
+		ERR(NULL, "failed to allocate reason buffer");
+		return -ENOMEM;
+	}
+	/*
+	 * These are defined globally as the buffer can contain multiple
+	 * constraint statements so need to keep track
+	 */
+	reason_buf_used = 0;
+	reason_buf_len = REASON_BUF_SIZE;
+
+	context_struct_t *scontext = 0, *tcontext = 0;
+	int rc = 0;
+
+	scontext = sepol_sidtab_search(sidtab, ssid);
+	if (!scontext) {
+		ERR(NULL, "unrecognized SID %d", ssid);
+		rc = -EINVAL;
+		goto out;
+	}
+	tcontext = sepol_sidtab_search(sidtab, tsid);
+	if (!tcontext) {
+		ERR(NULL, "unrecognized SID %d", tsid);
+		rc = -EINVAL;
+		goto out;
+	}
+
+	rc = context_struct_compute_av(scontext, tcontext, tclass,
+					   requested, avd, reason, reason_buf, flags);
+out:
 	return rc;
 }
 
@@ -508,6 +1081,70 @@ int hidden sepol_compute_av(sepol_security_id_t ssid,
 	unsigned int reason = 0;
 	return sepol_compute_av_reason(ssid, tsid, tclass, requested, avd,
 				       &reason);
+}
+
+/*
+ * Return a class ID associated with the class string specified by
+ * class_name.
+ */
+int hidden sepol_class_name_to_id(const char *class_name,
+			sepol_security_class_t *tclass)
+{
+	char *class = NULL;
+	sepol_security_class_t id;
+
+	for (id = 1; ; id++) {
+		if ((class = policydb->p_class_val_to_name[id - 1]) == NULL) {
+			ERR(NULL, "could not convert %s to class id", class_name);
+			return STATUS_ERR;
+		}
+		if ((strcmp(class, class_name)) == 0) {
+			*tclass = id;
+			return STATUS_SUCCESS;
+		}
+	}
+}
+
+/*
+ * Return access vector bit associated with the class ID and permission
+ * string.
+ */
+int hidden sepol_perm_name_to_av(sepol_security_class_t tclass,
+					const char *perm_name,
+					sepol_access_vector_t *av)
+{
+	class_datum_t *tclass_datum;
+	perm_datum_t *perm_datum;
+
+	if (!tclass || tclass > policydb->p_classes.nprim) {
+		ERR(NULL, "unrecognized class %d", tclass);
+		return -EINVAL;
+	}
+	tclass_datum = policydb->class_val_to_struct[tclass - 1];
+
+	/* Check for unique perms then the common ones (if any) */
+	perm_datum = (perm_datum_t *)
+			hashtab_search(tclass_datum->permissions.table,
+			(hashtab_key_t)perm_name);
+	if (perm_datum != NULL) {
+		*av = 0x1 << (perm_datum->s.value - 1);
+		return STATUS_SUCCESS;
+	}
+
+	if (tclass_datum->comdatum == NULL)
+		goto out;
+
+	perm_datum = (perm_datum_t *)
+			hashtab_search(tclass_datum->comdatum->permissions.table,
+			(hashtab_key_t)perm_name);
+
+	if (perm_datum != NULL) {
+		*av = 0x1 << (perm_datum->s.value - 1);
+		return STATUS_SUCCESS;
+	}
+out:
+	ERR(NULL, "could not convert %s to av bit", perm_name);
+	return STATUS_ERR;
 }
 
 /*
@@ -1339,7 +1976,7 @@ int hidden sepol_get_user_sids(sepol_security_id_t fromsid,
 			rc = context_struct_compute_av(fromcon, &usercon,
 						       SECCLASS_PROCESS,
 						       PROCESS__TRANSITION,
-						       &avd, &reason);
+						       &avd, &reason, NULL, 0);
 			if (rc || !(avd.allowed & PROCESS__TRANSITION))
 				continue;
 			rc = sepol_sidtab_context_to_sid(sidtab, &usercon,
