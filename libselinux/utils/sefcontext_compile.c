@@ -145,7 +145,7 @@ static int process_file(struct saved_data *data, const char *filename)
  *	u32  - data length of the pcre regex study daya
  *	char - a buffer holding the raw pcre regex study data
  */
-static int write_binary_file(struct saved_data *data, char *filename)
+static int write_binary_file(struct saved_data *data, int fd)
 {
 	struct spec *specs = data->spec_arr;
 	FILE *bin_file;
@@ -155,7 +155,7 @@ static int write_binary_file(struct saved_data *data, char *filename)
 	uint32_t i;
 	int rc;
 
-	bin_file = fopen(filename, "w");
+	bin_file = fdopen(fd, "w");
 	if (!bin_file) {
 		perror("fopen output_file");
 		exit(EXIT_FAILURE);
@@ -321,6 +321,8 @@ int main(int argc, char *argv[])
 	const char *path;
 	char stack_path[PATH_MAX + 1];
 	int rc;
+	char *tmp= NULL;
+	int fd;
 
 	if (argc != 2) {
 		fprintf(stderr, "usage: %s input_file\n", argv[0]);
@@ -342,13 +344,29 @@ int main(int argc, char *argv[])
 	rc = snprintf(stack_path, sizeof(stack_path), "%s.bin", path);
 	if (rc < 0 || rc >= sizeof(stack_path))
 		return rc;
-	rc = write_binary_file(&data, stack_path);
-	if (rc < 0)
-		return rc;
 
+	if (asprintf(&tmp, "%sXXXXXX", stack_path) < 0)
+		return -1;
+
+	fd  = mkstemp(tmp);
+	if (fd < 0)
+		goto err;
+
+	rc = write_binary_file(&data, fd);
+
+	if (rc < 0)
+		goto err;
+
+	rename(tmp, stack_path);
 	rc = free_specs(&data);
 	if (rc < 0)
-		return rc;
+		goto err;
 
-	return 0;
+	rc = 0;
+out:
+	free(tmp);
+	return rc;
+err:
+	rc = -1;
+	goto out;
 }
