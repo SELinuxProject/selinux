@@ -329,7 +329,7 @@ class AuditToPolicy:
                 g.set_module_name(self.__options.module)
 
             if self.__options.output:
-                fd = open(self.__options.output, "w")
+                fd = open(self.__options.output, "a")
             else:
                 fd = sys.stdout
             writer.write(g.get_module(), fd)
