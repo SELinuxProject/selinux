@@ -3,7 +3,7 @@
 #
 # Script to restore labels on a SELinux box
 #
-# Copyright (C) 2004-2011 Red Hat, Inc.
+# Copyright (C) 2004-2013 Red Hat, Inc.
 # Authors: Dan Walsh <dwalsh@redhat.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,11 +26,11 @@
 # number if the current is less than 2.6.30 and 0 if they are the same.
 #
 function useseclabel {
-        VER=`uname -r`
-        SUP=2.6.30
-        expr '(' "$VER" : '\([^.]*\)' ')' '-' '(' "$SUP" : '\([^.]*\)' ')' '|' \
-             '(' "$VER.0" : '[^.]*[.]\([^.]*\)' ')' '-' '(' "$SUP.0" : '[^.]*[.]\([^.]*\)' ')' '|' \
-             '(' "$VER.0.0" : '[^.]*[.][^.]*[.]\([^.]*\)' ')' '-' '(' "$SUP.0.0" : '[^.]*[.][^.]*[.]\([^.]*\)' ')'
+	VER=`uname -r`
+	SUP=2.6.30
+	expr '(' "$VER" : '\([^.]*\)' ')' '-' '(' "$SUP" : '\([^.]*\)' ')' '|' \
+	     '(' "$VER.0" : '[^.]*[.]\([^.]*\)' ')' '-' '(' "$SUP.0" : '[^.]*[.]\([^.]*\)' ')' '|' \
+	     '(' "$VER.0.0" : '[^.]*[.][^.]*[.]\([^.]*\)' ')' '-' '(' "$SUP.0.0" : '[^.]*[.][^.]*[.]\([^.]*\)' ')'
 }
 
 #
@@ -65,7 +65,7 @@ done
 }
 
 #
-# Get the default label returned from the kernel for a file with a lable the 
+# Get the default label returned from the kernel for a file with a lable the
 # kernel does not understand
 #
 get_undefined_type() {
@@ -78,25 +78,25 @@ get_undefined_type() {
 #
 get_unlabeled_type() {
 	SELINUXMNT=`grep selinuxfs /proc/self/mountinfo | head -1 | awk '{ print $5 }'`
-	cat $SELINUXMNT/initial_contexts/file | secon -t 
+	cat $SELINUXMNT/initial_contexts/file | secon -t
 }
 
 exclude_dirs_from_relabelling() {
     exclude_from_relabelling=
     if [ -e /etc/selinux/fixfiles_exclude_dirs ]
     then
-        while read i
-        do
-          # skip blank line and comment
-          # skip not absolute path
-          # skip not directory
-          [ -z "${i}" ] && continue
-          [[ "${i}" =~ "^[[:blank:]]*#" ]] && continue
-          [[ ! "${i}" =~ ^/.* ]] && continue
-          [[ ! -d "${i}" ]] && continue
-          exclude_from_relabelling="$exclude_from_relabelling -e $i"
-          logit "skipping the directory $i from relabelling"
-        done < /etc/selinux/fixfiles_exclude_dirs
+	while read i
+	do
+	  # skip blank line and comment
+	  # skip not absolute path
+	  # skip not directory
+	  [ -z "${i}" ] && continue
+	  [[ "${i}" =~ "^[[:blank:]]*#" ]] && continue
+	  [[ ! "${i}" =~ ^/.* ]] && continue
+	  [[ ! -d "${i}" ]] && continue
+	  exclude_from_relabelling="$exclude_from_relabelling -e $i"
+	  logit "skipping the directory $i"
+	done < /etc/selinux/fixfiles_exclude_dirs
     fi
     echo "$exclude_from_relabelling"
 }
@@ -104,7 +104,7 @@ exclude_dirs_from_relabelling() {
 exclude_dirs() {
     exclude=
     for i in /sys /proc /dev /run /mnt /var/tmp /var/lib/BackupPC /home /tmp /dev; do
-        [ -e $i ]  && exclude="$exclude -e $i";
+	[ -e $i ]  && exclude="$exclude -e $i";
     done
     exclude="$exclude `exclude_dirs_from_relabelling`"
     echo "$exclude"
@@ -115,7 +115,6 @@ exclude_dirs() {
 #
 fullFlag=0
 BOOTTIME=""
-FORCEFLAG=""
 VERBOSE="-p"
 FORCEFLAG=""
 DIRS=""
@@ -133,7 +132,7 @@ FILESYSTEMS="$FILESYSTEMSRW $FILESYSTEMSRO"
 SELINUXTYPE="targeted"
 if [ -e /etc/selinux/config ]; then
     . /etc/selinux/config
-    FC=/etc/selinux/${SELINUXTYPE}/contexts/files/file_contexts 
+    FC=/etc/selinux/${SELINUXTYPE}/contexts/files/file_contexts
 else
     FC=/etc/security/selinux/file_contexts
 fi
@@ -152,13 +151,13 @@ fi
 newer() {
     DATE=$1
     for m in `echo $FILESYSTEMSRW`; do
-	find $m -mount -newermt $DATE -print0 2>/dev/null | ${RESTORECON} ${VERBOSE} -i -0 -f -
+	find $m -mount -newermt $DATE -print0 2>/dev/null | ${RESTORECON} ${FORCEFLAG} ${VERBOSE} -i -0 -f -
     done;
 
 }
 
 #
-# Compare PREVious File Context to currently installed File Context and 
+# Compare PREVious File Context to currently installed File Context and
 # run restorecon on all files affected by the differences.
 #
 diff_filecontext() {
@@ -172,30 +171,31 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 	    grep '^[<>]'|cut -c3-| grep ^/ | \
 	    egrep -v '(^/home|^/root|^/tmp|^/dev)' |\
 	sed -r -e 's,[[:blank:]].*,,g' \
-               -e 's|\(([/[:alnum:]]+)\)\?|{\1,}|g' \
+	       -e 's|\(([/[:alnum:]]+)\)\?|{\1,}|g' \
 	       -e 's|([/[:alnum:]])\?|{\1,}|g' \
-               -e 's|\?.*|*|g' \
+	       -e 's|\?.*|*|g' \
+	       -e 's|\{.*|*|g' \
 	       -e 's|\(.*|*|g' \
 	       -e 's|\[.*|*|g' \
-               -e 's|\.\*.*|*|g' \
-               -e 's|\.\+.*|*|g' | \
+	       -e 's|\.\*.*|*|g' \
+	       -e 's|\.\+.*|*|g' | \
 	    # These two sorts need to be separate commands \
 	sort -u | \
 	sort -d | \
-        while read pattern ; \
+	while read pattern ; \
 	    do if ! echo "$pattern" | grep -q -f ${TEMPFILE} 2>/dev/null; then \
-                  echo "$pattern"; \
-                  case "$pattern" in *"*") \
-	               echo "$pattern" | sed -e 's,^,^,' -e 's,\*$,,g' >> ${TEMPFILE};;  
-                  esac; \
-               fi; \
-            done | \
+		  echo "$pattern"; \
+		  case "$pattern" in *"*") \
+		       echo "$pattern" | sed -e 's,^,^,' -e 's,\*$,,g' >> ${TEMPFILE};;
+		  esac; \
+	       fi; \
+	    done | \
 	${RESTORECON} ${VERBOSE} -i -f - -R `exclude_dirs`; \
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }
 #
-# Log all Read Only file systems 
+# Log all Read Only file systems
 #
 LogReadOnly() {
 if [ ! -z "$FILESYSTEMSRO" ]; then
@@ -209,11 +209,14 @@ rpm -q --qf '[%{FILESTATES} %{FILENAMES}\n]' "$1" | grep '^0 ' | cut -f2- -d ' '
 [ ${PIPESTATUS[0]} != 0 ] && echo "$1 not found" >/dev/stderr
 }
 
-# 
+#
 # restore
 # if called with -n will only check file context
 #
 restore () {
+OPTION=$1
+shift
+
 if [ ! -z "$PREFC" ]; then
     diff_filecontext $*
     exit $?
@@ -222,41 +225,45 @@ if [ ! -z "$BOOTTIME" ]; then
     newer $BOOTTIME
     exit $?
 fi
-if [ ! -z "$RPMFILES" ]; then
-    for i in `echo "$RPMFILES" | sed 's/,/ /g'`; do
-	rpmlist $i | ${RESTORECON} ${FORCEFLAG} ${VERBOSE} $* -R -i -f - 2>&1 | cat >> $LOGFILE
-    done
-    exit $?
-fi
-if [ ! -z "$FILEPATH" ]; then
-    ${RESTORECON} ${FORCEFLAG} ${VERBOSE} -R $* $FILEPATH 2>&1 | cat >> $LOGFILE
-    return
-fi
 [ -x /usr/sbin/genhomedircon ] && /usr/sbin/genhomedircon
 LogReadOnly
 #
-exclude_dirs="`exclude_dirs_from_relabelling`"
+exclude_dirs="`exclude_dirs_from_relabelling $OPTION`"
 if [ -n "${exclude_dirs}" ]
 then
 	TEMPFCFILE=`mktemp ${FC}.XXXXXXXXXX`
 	test -z "$TEMPFCFILE" && exit
 	/bin/cp -p ${FC} ${TEMPFCFILE} &>/dev/null || exit
-	exclude_dirs=${exclude_dirs//-e/}
-	for p in ${exclude_dirs}
+	tmpdirs=${tempdirs//-e/}
+	for p in ${tmpdirs}
 	do
 		p="${p%/}"
 		p1="${p}(/.*)? -- <<none>>"
 		echo "${p1}" >> $TEMPFCFILE
-		logit "skipping the directory ${p} from relabelling"
+		logit "skipping the directory ${p}"
 	done
 FC=$TEMPFCFILE
 fi
+if [ ! -z "$RPMFILES" ]; then
+    for i in `echo "$RPMFILES" | sed 's/,/ /g'`; do
+	rpmlist $i | ${RESTORECON} $exclude_dirs ${FORCEFLAG} ${VERBOSE} $* -R -i -f - 2>&1 | cat >> $LOGFILE
+    done
+    exit $?
+fi
+if [ ! -z "$FILEPATH" ]; then
+    ${RESTORECON} $exclude_dirs ${FORCEFLAG} ${VERBOSE} -R $* $FILEPATH 2>&1 | cat >> $LOGFILE
+    return
+fi
 if [  -n "${FILESYSTEMSRW}" ]; then
-    echo "Relabeling `echo ${FILESYSTEMSRW}`"
-    ${SETFILES} ${VERBOSE} -q ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 | cat >> $LOGFILE
+    echo "${OPTION}ing `echo ${FILESYSTEMSRW}`"
+    ${SETFILES} ${VERBOSE} $exclude_dirs -q ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} 2>&1 | cat >> $LOGFILE
 else
     echo >&2 "fixfiles: No suitable file systems found"
 fi
+if [ ${OPTION} != "Relabel" ]; then
+    return
+fi
+echo "Cleaning up labels on /tmp"
 rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-* $TEMPFCFILE
 
 UNDEFINED=`get_undefined_type` || exit $?
@@ -265,20 +272,20 @@ find /tmp \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) \( -typ
 find /tmp \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) -exec chcon --reference /tmp {} \;
 find /var/tmp \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) -exec chcon --reference /var/tmp {} \;
 find /var/run \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) -exec chcon --reference /var/run {} \;
-[ -e /var/lib/debug ] && find /var/lib/debug \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) -exec chcon --reference /lib {} \;
-exit $?
+[ ! -e /var/lib/debug ] || find /var/lib/debug \( -context "*:${UNLABELED}*" -o -context "*:${UNDEFINED}*" \) -exec chcon --reference /lib {} \;
+exit 0
 }
 
 fullrelabel() {
     logit "Cleaning out /tmp"
     find /tmp/ -mindepth 1 -delete
     LogReadOnly
-    restore
+    restore Relabel
 }
 
 relabel() {
     if [ ! -z "$RPMFILES" ]; then
-	restore 
+	restore Relabel
     fi
 
     if [ $fullFlag == 1  ]; then
@@ -286,16 +293,16 @@ relabel() {
     fi
 
     echo -n "
-    Files in the /tmp directory may be labeled incorrectly, this command 
-    can remove all files in /tmp.  If you choose to remove files from /tmp, 
+    Files in the /tmp directory may be labeled incorrectly, this command
+    can remove all files in /tmp.  If you choose to remove files from /tmp,
     a reboot will be required after completion.
-    
+
     Do you wish to clean out the /tmp directory [N]? "
     read answer
-    if [ "$answer" = y -o  "$answer" = Y ]; then 
+    if [ "$answer" = y -o  "$answer" = Y ]; then
 	fullrelabel
     else
-	restore
+	restore Relabel
     fi
 }
 
@@ -304,9 +311,9 @@ process() {
 # Make sure they specified one of the three valid commands
 #
 case "$1" in
-    restore) restore;;
-    check) restore -n -v;;
-    verify) restore -n -o -;;
+    restore) restore Relabel;;
+    check) VERBOSE="-v"; restore Check -n;;
+    verify) restore Verify -n -o -;;
     relabel) relabel;;
     onboot)
 	> /.autorelabel
@@ -322,14 +329,14 @@ case "$1" in
 esac
 }
 usage() {
-      	echo $"""
-Usage: $0 [-F] [-l logfile ] { check | restore| [-f] relabel | verify } [[dir/file] ... ] 
+	echo $"""
+Usage: $0 [-v] [-F]  [-N time ] [-l logfile ] { check | restore| [-f] relabel | verify } [[dir/file] ... ]
 or
-Usage: $0 [-F] -R rpmpackage[,rpmpackage...] [-l logfile ] { check | restore | verify }
+Usage: $0 [-v] [-F] -R rpmpackage[,rpmpackage...] [-l logfile ] { check | restore | verify }
 or
-Usage: $0 [-F] -C PREVIOUS_FILECONTEXT { check | restore | verify }
+Usage: $0 [-v] [-F] -C PREVIOUS_FILECONTEXT { check | restore | verify }
 or
-Usage: $0 onboot
+Usage: $0 [-F] [-B] onboot
 """
 }
 
@@ -343,7 +350,6 @@ while getopts "N:BC:FfR:l:v" i; do
     case "$i" in
 	B)
 		BOOTTIME=`/bin/who -b | awk '{print $3}'`
-		echo $BOOTTIME
 		;;
 	f)
 		fullFlag=1
@@ -351,13 +357,13 @@ while getopts "N:BC:FfR:l:v" i; do
 	v)
 		VERBOSE="-v"
 		;;
-        R)
+	R)
 		RPMFILES=$OPTARG
 		;;
-        l)
+	l)
 		LOGFILE=$OPTARG
 		;;
-        C)
+	C)
 		PREFC=$OPTARG
 		;;
 	F)
@@ -371,7 +377,6 @@ while getopts "N:BC:FfR:l:v" i; do
 	    exit 1
 esac
 done
-
 # Move out processed options from arguments
 shift $(( OPTIND - 1 ))
 
@@ -397,11 +402,11 @@ else
     if [ -z "$1" ]; then
 	process $command
     else
-	while [ -n "$1" ]; do 
+	while [ -n "$1" ]; do
 	    FILEPATH=$1
-	    process $command 
+	    process $command
 	    shift
-    	done
+	done
     fi
 fi
 exit $?
