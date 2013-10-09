@@ -60,6 +60,7 @@ POTFILES = \
 	../gui/system-config-selinux.py \
 	../gui/usersPage.py \
 	../secon/secon.c \
+	booleans.py \
 	../sepolicy/info.c \
 	../sepolicy/search.c \
 	../sepolicy/sepolicy.py \
@@ -67,6 +68,8 @@ POTFILES = \
 	../sepolicy/sepolicy/__init__.py \
 	../sepolicy/sepolicy/network.py \
 	../sepolicy/sepolicy/generate.py \
+	../sepolicy/sepolicy/sepolicy.glade \
+	../sepolicy/sepolicy/gui.py \
 	../sepolicy/sepolicy/manpage.py \
 	../sepolicy/sepolicy/transition.py \
 	../sepolicy/sepolicy/templates/executable.py \
@@ -80,13 +83,16 @@ POTFILES = \
 	../sepolicy/sepolicy/templates/var_lib.py \
 	../sepolicy/sepolicy/templates/var_log.py \
 	../sepolicy/sepolicy/templates/var_run.py \
-	../sepolicy/sepolicy/templates/var_spool.py \
+	../sepolicy/sepolicy/templates/var_spool.py
 
 #default:: clean
 
 all::  $(MOFILES)
 
-$(POTFILE): $(POTFILES) 
+booleans.py:
+	sepolicy booleans -a > booleans.py
+
+$(POTFILE): $(POTFILES) booleans.py
 	$(XGETTEXT) --keyword=_ --keyword=N_ $(POTFILES)
 	@if cmp -s $(NLSPACKAGE).po $(POTFILE); then \
 	    rm -f $(NLSPACKAGE).po; \
@@ -95,6 +101,7 @@ $(POTFILE): $(POTFILES)
 	fi; \
 
 update-po: Makefile $(POTFILE) refresh-po
+	@rm -f booleans.py
 
 refresh-po: Makefile
 	for cat in $(POFILES); do \

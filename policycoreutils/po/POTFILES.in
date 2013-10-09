@@ -42,6 +42,8 @@ sepolicy/sepolicy/communicate.py
 sepolicy/sepolicy/__init__.py
 sepolicy/sepolicy/network.py
 sepolicy/sepolicy/generate.py
+sepolicy/sepolicy/sepolicy.glade
+sepolicy/sepolicy/gui.py
 sepolicy/sepolicy/manpage.py
 sepolicy/sepolicy/transition.py
 sepolicy/sepolicy/templates/executable.py

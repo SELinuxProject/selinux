@@ -47,4 +47,26 @@
 	../gui/templates/var_log.py
 	../gui/templates/var_run.py
 	../gui/templates/var_spool.py
-	../secon/secon.c
+	../sepolicy/info.c
+	../sepolicy/search.c
+	../sepolicy/sepolicy.py
+	../sepolicy/sepolicy/communicate.py
+	../sepolicy/sepolicy/__init__.py
+	../sepolicy/sepolicy/network.py
+	../sepolicy/sepolicy/generate.py
+	../sepolicy/sepolicy/sepolicy.glade
+	../sepolicy/sepolicy/gui.py
+	../sepolicy/sepolicy/manpage.py
+	../sepolicy/sepolicy/transition.py
+	../sepolicy/sepolicy/templates/executable.py
+	../sepolicy/sepolicy/templates/__init__.py
+	../sepolicy/sepolicy/templates/network.py
+	../sepolicy/sepolicy/templates/rw.py
+	../sepolicy/sepolicy/templates/script.py
+	../sepolicy/sepolicy/templates/semodule.py
+	../sepolicy/sepolicy/templates/tmp.py
+	../sepolicy/sepolicy/templates/user.py
+	../sepolicy/sepolicy/templates/var_lib.py
+	../sepolicy/sepolicy/templates/var_log.py
+	../sepolicy/sepolicy/templates/var_run.py
+	../sepolicy/sepolicy/templates/var_spool.py
