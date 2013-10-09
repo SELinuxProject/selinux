@@ -1,7 +1,10 @@
 # Installation directories.
 PREFIX ?= ${DESTDIR}/usr
+SYSCONFDIR ?= ${DESTDIR}/etc
 BINDIR ?= $(PREFIX)/bin
 SHAREDIR ?= $(PREFIX)/share/system-config-selinux
+DATADIR ?= $(PREFIX)/share
+MANDIR ?= $(PREFIX)/share/man
 
 TARGETS= \
 booleansPage.py \

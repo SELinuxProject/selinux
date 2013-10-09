@@ -3,7 +3,7 @@ PREFIX ?= $(DESTDIR)/usr
 INCLUDEDIR ?= $(PREFIX)/include
 LIBDIR ?= $(PREFIX)/lib
 SHLIBDIR ?= $(DESTDIR)/lib
-LIBBASE=$(shell basename $(LIBDIR))
+LIBBASE ?= $(shell basename $(LIBDIR))
 
 VERSION = $(shell cat ../VERSION)
 LIBVERSION = 1

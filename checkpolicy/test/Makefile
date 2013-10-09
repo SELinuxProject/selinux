@@ -3,7 +3,7 @@
 #
 PREFIX ?= $(DESTDIR)/usr
 BINDIR=$(PREFIX)/bin
-LIBDIR=$(PREFIX)/lib
+LIBDIR ?= $(PREFIX)/lib
 INCLUDEDIR ?= $(PREFIX)/include
 
 CFLAGS ?= -g -Wall -W -Werror -O2 -pipe

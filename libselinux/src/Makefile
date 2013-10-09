@@ -18,7 +18,7 @@ RUBYLIBVER ?= $(shell $(RUBY) -e 'print RUBY_VERSION.split(".")[0..1].join(".")'
 RUBYPLATFORM ?= $(shell $(RUBY) -e 'print RUBY_PLATFORM')
 RUBYINC ?= $(shell pkg-config --cflags ruby)
 RUBYINSTALL ?= $(LIBDIR)/ruby/site_ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
-LIBBASE=$(shell basename $(LIBDIR))
+LIBBASE ?= $(shell basename $(LIBDIR))
 
 LDFLAGS ?= -lpcre -lpthread
 
