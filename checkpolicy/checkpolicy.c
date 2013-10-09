@@ -402,7 +402,7 @@ int main(int argc, char **argv)
 		{"binary", no_argument, NULL, 'b'},
 		{"debug", no_argument, NULL, 'd'},
 		{"version", no_argument, NULL, 'V'},
-		{"handle-unknown", optional_argument, NULL, 'U'},
+		{"handle-unknown", required_argument, NULL, 'U'},
 		{"mls", no_argument, NULL, 'M'},
 		{"help", no_argument, NULL, 'h'},
 		{NULL, 0, NULL, 0}
