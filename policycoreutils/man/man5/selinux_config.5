@@ -92,7 +92,7 @@ The binary policy name has by convention the SELinux policy version that it supp
 .RS
 This entry is deprecated and should be removed or set to \fI0\fR.
 .sp
-If set to \fI1\fR, then \fBselinux_mkload_policy\fR(3) will read the local customisation for booleans (see \fBbooleans\fR(5)) and users (see \fBlocal.users\fR(5)).
+If set to \fI1\fR, then \fBselinux_mkload_policy\fR(3) will read the local customization for booleans (see \fBbooleans\fR(5)) and users (see \fBlocal.users\fR(5)).
 .RE
 .sp
 .B REQUIRESEUSERS
@@ -122,7 +122,7 @@ This is an optional entry that allows the file system to be relabeled.
 .sp
 If set to \fI0\fR and there is a file called \fI.autorelabel\fR in the root directory, then on a reboot, the loader will drop to a shell where a root login is required. An administrator can then manually relabel the file system.
 .sp
-If set to \fI1\fR or no entry present (the default) and there is a \fI.autorelabel\fR file in the root directory, then the file system will be automatically relabeled using \fBfixfiles -F restore\fR
+If set to \fI1\fR or no entry present (the default) and there is a \fI.autorelabel\fR file in the root directory, then the file system will be automatically relabeled using \fBfixfiles \-F restore\fR
 .sp
 In both cases the \fI/.autorelabel\fR file will be removed so that relabeling is not done again.
 .RE
