@@ -29,6 +29,8 @@ import sepolgen.defaults as defaults
 import sepolgen.module as module
 from sepolgen.sepolgeni18n import _
 import selinux.audit2why as audit2why
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 class AuditToPolicy:
     VERSION = "%prog .1"
