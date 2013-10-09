@@ -43,12 +43,18 @@ static void selabel_subs_fini(struct selabel_sub *ptr)
 static char *selabel_sub(struct selabel_sub *ptr, const char *src)
 {
 	char *dst = NULL;
+	int len;
 
 	while (ptr) {
 		if (strncmp(src, ptr->src, ptr->slen) == 0 ) {
 			if (src[ptr->slen] == '/' || 
 			    src[ptr->slen] == 0) {
-				if (asprintf(&dst, "%s%s", ptr->dst, &src[ptr->slen]) < 0)
+				if ((src[ptr->slen] == '/') &&
+				    (strcmp(ptr->dst, "/") == 0))
+					len = ptr->slen + 1;
+				else
+					len = ptr->slen;
+				if (asprintf(&dst, "%s%s", ptr->dst, &src[len]) < 0)
 					return NULL;
 				return dst;
 			}
