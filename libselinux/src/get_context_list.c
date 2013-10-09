@@ -426,7 +426,7 @@ int get_ordered_context_list(const char *user,
 	/* Initialize ordering array. */
 	ordering = malloc(nreach * sizeof(unsigned int));
 	if (!ordering)
-		goto oom_order;
+		goto failsafe;
 	for (i = 0; i < nreach; i++)
 		ordering[i] = nreach;
 
@@ -435,7 +435,7 @@ int get_ordered_context_list(const char *user,
 	fname_len = strlen(user_contexts_path) + strlen(user) + 2;
 	fname = malloc(fname_len);
 	if (!fname)
-		goto oom_order;
+		goto failsafe;
 	snprintf(fname, fname_len, "%s%s", user_contexts_path, user);
 	fp = fopen(fname, "r");
 	if (fp) {
@@ -463,33 +463,31 @@ int get_ordered_context_list(const char *user,
 				__FUNCTION__, selinux_default_context_path());
 			/* Fall through */
 		}
+		rc = 0;
 	}
+
+	if (!nordered)
+		goto failsafe;
 
 	/* Apply the ordering. */
-	if (nordered) {
-		co = malloc(nreach * sizeof(struct context_order));
-		if (!co)
-			goto oom_order;
-		for (i = 0; i < nreach; i++) {
-			co[i].con = reachable[i];
-			co[i].order = ordering[i];
-		}
-		qsort(co, nreach, sizeof(struct context_order), order_compare);
-		for (i = 0; i < nreach; i++)
-			reachable[i] = co[i].con;
-		free(co);
+	co = malloc(nreach * sizeof(struct context_order));
+	if (!co)
+		goto failsafe;
+	for (i = 0; i < nreach; i++) {
+		co[i].con = reachable[i];
+		co[i].order = ordering[i];
 	}
+	qsort(co, nreach, sizeof(struct context_order), order_compare);
+	for (i = 0; i < nreach; i++)
+		reachable[i] = co[i].con;
+	free(co);
 
-	/* Return the ordered list. 
-	   If we successfully ordered it, then only report the ordered entries
-	   to the caller.  Otherwise, fall back to the entire reachable list. */
-	if (nordered && nordered < nreach) {
+	/* Only report the ordered entries to the caller. */
+	if (nordered <= nreach) {
 		for (i = nordered; i < nreach; i++)
 			free(reachable[i]);
 		reachable[nordered] = NULL;
 		rc = nordered;
-	} else {
-		rc = nreach;
 	}
 
       out:
@@ -522,14 +520,6 @@ int get_ordered_context_list(const char *user,
 		goto out;
 	}
 	rc = 1;			/* one context in the list */
-	goto out;
-
-      oom_order:
-	/* Unable to order context list due to OOM condition.
-	   Fall back to unordered reachable context list. */
-	fprintf(stderr, "%s:  out of memory, unable to order list\n",
-		__FUNCTION__);
-	rc = nreach;
 	goto out;
 }
 
