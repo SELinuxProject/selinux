@@ -4,7 +4,7 @@ setfiles \- set SELinux file security contexts.
 
 .SH "SYNOPSIS"
 .B setfiles
-.I [\-c policy] [\-d] [\-l] [\-n] [\-e directory] [\-o filename] [\-q] [\-s] [\-v] [\-W] [\-F] spec_file pathname...
+.I [\-c policy] [\-d] [\-l] [\-n] [\-e directory] [\-o filename] [\-p] [\-q] [\-s] [\-v] [\-W] [\-F] spec_file pathname...
 .SH "DESCRIPTION"
 This manual page describes the
 .BR setfiles
@@ -23,7 +23,7 @@ check whether the file contexts are all set as specified by the active policy
 If a file object does not have a context, setfiles will write the default
 context to the file object's extended attributes. If a file object has a
 context, setfiles will only modify the type portion of the security context.
-The -F option will force a replacement of the entire context.
+The \-F option will force a replacement of the entire context.
 .SH "OPTIONS"
 .TP
 .B \-c
@@ -57,7 +57,7 @@ log changes in file labels to syslog.
 don't change any file labels (passive check).
 .TP
 .B \-o filename
-save list of files with incorrect context in filename.
+Deprecated, SELinux policy will probably block this access.  Use shell redirection to save list of files with incorrect context in filename.
 .TP
 .B \-p
 show progress by printing * every STAR_COUNT files.  (If you relabel the entire OS, this will show you the percentage complete.)

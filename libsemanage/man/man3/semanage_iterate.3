@@ -31,7 +31,7 @@ if that is necessary.
 
 The handler code may not invoke any semanage write requests for the same object type (i.e. modifying the underlying store is not allowed). The iterate function is reentrant only while inside a transaction (see
 .B semanage_begin_transaction
-). It is not safe to execute other semanage read or write requests within iterate if not inside a transaction. The handler may return -1 to signal error exit, 0 to signal continue, and 1 to signal successful exit early (the iterate function will stop accordingly). 
+). It is not safe to execute other semanage read or write requests within iterate if not inside a transaction. The handler may return \-1 to signal error exit, 0 to signal continue, and 1 to signal successful exit early (the iterate function will stop accordingly).
 
 .TP
 .B Parameters:
@@ -50,7 +50,7 @@ This function requires an semanage connection to be established (see
 )
 
 .SH "RETURN VALUE"
-In case of failure, -1 is returned, and the semanage error callback is invoked, describing the error.
+In case of failure, \-1 is returned, and the semanage error callback is invoked, describing the error.
 Otherwise a non-negative integer is returned (a commit number). The same number will be returned by all other semanage object read calls until the next commit.
 
 .SH "SEE ALSO"

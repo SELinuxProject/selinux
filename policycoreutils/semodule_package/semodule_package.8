@@ -3,7 +3,7 @@
 semodule_package \- Create a SELinux policy module package.
 
 .SH SYNOPSIS
-.B semodule_package -o <output file> -m <module> [-f <file contexts>]
+.B semodule_package \-o <output file> \-m <module> [\-f <file contexts>]
 .br
 .SH DESCRIPTION
 .PP
@@ -16,11 +16,11 @@ be installed via semodule.
 .SH EXAMPLE
 .nf
 # Build a policy package for a base module.
-$ semodule_package -o base.pp -m base.mod -f file_contexts
+$ semodule_package \-o base.pp \-m base.mod \-f file_contexts
 # Build a policy package for a httpd module.
-$ semodule_package -o httpd.pp -m httpd.mod -f httpd.fc
+$ semodule_package \-o httpd.pp \-m httpd.mod \-f httpd.fc
 # Build a policy package for local TE rules and no file contexts.
-$ semodule_package -o local.pp -m local.mod 
+$ semodule_package \-o local.pp \-m local.mod
 .fi
 
 .SH "OPTIONS"

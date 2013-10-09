@@ -43,7 +43,7 @@ unmounted using a call to
 .BR security_disable (3).
 Therefore, after the initial policy load, the only operational changes
 are those permitted by
-.BR setenforce (3)
+.BR security_setenforce (3)
 (i.e. eventually setting the framework in permissive mode rather than
 in enforcing one).
 .
@@ -54,4 +54,4 @@ Returns zero on success or \-1 on error.
 This manual page has been written by Guido Trentalancia <guido@trentalancia.com>
 .
 .SH "SEE ALSO"
-.BR selinux "(8), " security_disable "(3), " setenforce "(1)
+.BR selinux "(8), " security_disable "(3), " setenforce "(8)

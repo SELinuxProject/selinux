@@ -3,7 +3,7 @@
 semodule_deps \- show the dependencies between SELinux policy packages.
 
 .SH SYNOPSIS
-.B semodule_deps [-v -g -b] basemodpkg modpkg1 [modpkg2 ... ]
+.B semodule_deps [\-v \-g \-b] basemodpkg modpkg1 [modpkg2 ... ]
 .br
 .SH DESCRIPTION
 .PP
@@ -19,12 +19,12 @@ general this means that the list of modules will usually be
 quite long.
 
 By default options to the base module are excluded as almost every
-module has this dependency. The -b option will include these
+module has this dependency. The \-b option will include these
 dependencies.
 
 In addition to human readable output, semodule_deps can output the
 dependencies in the Graphviz dot format (http://www.graphviz.org/)
-using the -g option. This is useful for producing a picture of the
+using the \-g option. This is useful for producing a picture of the
 dependencies.
 
 .SH "OPTIONS"

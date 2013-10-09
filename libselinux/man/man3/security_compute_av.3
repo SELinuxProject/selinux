@@ -37,9 +37,9 @@ the SELinux policy database in the kernel
 .sp
 .BI "int security_compute_user_raw(security_context_t "scon ", const char *" username ", security_context_t **" con );
 .sp
-.BI "int security_get_initial_context(const char *" name ", security_context_t " con );
+.BI "int security_get_initial_context(const char *" name ", security_context_t *" con );
 .sp
-.BI "int security_get_initial_context_raw(const char *" name ", security_context_t " con );
+.BI "int security_get_initial_context_raw(const char *" name ", security_context_t *" con );
 .sp
 .BI "int selinux_check_access(const security_context_t " scon ", const security_context_t " tcon ", const char *" class ", const char *" perm ", void *" auditdata);
 .sp

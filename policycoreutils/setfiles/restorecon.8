@@ -4,10 +4,10 @@ restorecon \- restore file(s) default SELinux security contexts.
 
 .SH "SYNOPSIS"
 .B restorecon
-.I [\-o outfilename] [\-R] [\-n] [\-p] [\-v] [\-e directory] pathname...
+.I [\-R] [\-n] [\-p] [\-v] [\-e directory] pathname...
 .P
 .B restorecon
-.I \-f infilename [\-o outfilename] [\-e directory] [\-R] [\-n] [\-p] [\-v] [\-F]
+.I \-f infilename [\-e directory] [\-R] [\-n] [\-p] [\-v] [\-F]
 
 .SH "DESCRIPTION"
 This manual page describes the
@@ -20,17 +20,21 @@ This program is primarily used to set the security context
 It can also be run at any other time to correct inconsistent labels, to add
 support for newly-installed policy or, by using the \-n option, to passively
 check whether the file contexts are all set as specified by the active policy
-(default behavior) or by some other policy (see the \-c option).
+(default behavior).
 .P
 If a file object does not have a context, restorecon will write the default
 context to the file object's extended attributes. If a file object has a
 context, restorecon will only modify the type portion of the security context.
 The -F option will force a replacement of the entire context.
+.P
+It is the same executable as
+.BR setfiles
+but operates in a slightly different manner depending on it's argv[0].
 
 .SH "OPTIONS"
 .TP
 .B \-e directory
-exclude a directory (repeat the option to exclude more than one directory).
+exclude a directory (repeat the option to exclude more than one directory, Requires full path).
 .TP
 .B \-f infilename
 infilename contains a list of files to be processed. Use \- for stdin.
@@ -46,10 +50,10 @@ display usage information and exit.
 ignore files that do not exist.
 .TP
 .B \-n
-don't change any file labels (passive check).
+don't change any file labels (passive check).  To display the files whose labels would be changed, add -v.
 .TP
 .B \-o outfilename
-save list of files with incorrect context in outfilename.
+Deprecated, SELinux policy will probably block this access.  Use shell redirection to save list of files with incorrect context in filename.
 .TP
 .B \-p
 show progress by printing * every STAR_COUNT files.  (If you relabel the entire OS, this will show you the percentage complete.)

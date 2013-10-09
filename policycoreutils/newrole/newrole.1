@@ -44,7 +44,7 @@ Additional arguments
 .I ARGS
 may be provided after a -- option,
 in which case they are supplied to the new shell.
-In particular, an argument of -- -c will cause the next argument to be
+In particular, an argument of \-\- \-c will cause the next argument to be
 treated as a command by most command interpreters.
 .PP
 If a command argument is specified to newrole and the command name is found
@@ -66,31 +66,31 @@ shows the current version of newrole
 .SH EXAMPLE
 .br
 Changing role:
-   # id -Z
+   # id \-Z
    staff_u:staff_r:staff_t:SystemLow-SystemHigh
-   # newrole -r sysadm_r
-   # id -Z
+   # newrole \-r sysadm_r
+   # id \-Z
    staff_u:sysadm_r:sysadm_t:SystemLow-SystemHigh
 
 Changing sensitivity only:
-   # id -Z
+   # id \-Z
    staff_u:sysadm_r:sysadm_t:Unclassified-SystemHigh
-   # newrole -l Secret
-   # id -Z
+   # newrole \-l Secret
+   # id \-Z
    staff_u:sysadm_r:sysadm_t:Secret-SystemHigh
 
 .PP
 Changing sensitivity and clearance:
-   # id -Z
+   # id \-Z
    staff_u:sysadm_r:sysadm_t:Unclassified-SystemHigh
-   # newrole -l Secret-Secret
-   # id -Z
+   # newrole \-l Secret-Secret
+   # id \-Z
    staff_u:sysadm_r:sysadm_t:Secret
 
 .PP
 Running a program in a given role or level:
-   # newrole -r sysadm_r -- -c "/path/to/app arg1 arg2..."
-   # newrole -l Secret -- -c "/path/to/app arg1 arg2..."
+   # newrole \-r sysadm_r \-\- \-c "/path/to/app arg1 arg2..."
+   # newrole \-l Secret \-\- \-c "/path/to/app arg1 arg2..."
 
 .SH FILES
 /etc/passwd - user account information

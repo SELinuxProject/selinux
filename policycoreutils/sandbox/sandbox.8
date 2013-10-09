@@ -3,87 +3,94 @@
 sandbox \- Run cmd under an SELinux sandbox
 .SH SYNOPSIS
 .B sandbox
-[-C] [-c] [-s] [ -d DPI ] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] cmd
+[\-C] [\-c] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] cmd
 
 .br
 .B sandbox
-[-C] [-c] [-s] [ -d DPI ] [-l level ] [[-M | -X]  -H homedir -T tempdir ] [-I includefile ] [ -W windowmanager ] [ -w windowsize ] [[-i file ]...] [ -t type ] -S
+[\-C] [\-c] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] \-S
 .br
 .SH DESCRIPTION
 .PP
 Run the 
 .I cmd 
-application within a tightly confined SELinux domain.  The default sandbox domain only allows applications the ability to read and write stdin, stdout and any other file descriptors handed to it. It is not allowed to open any other files.  The -M option will mount an alternate homedir and tmpdir to be used by the sandbox.
+application within a tightly confined SELinux domain.  The default sandbox domain only allows applications the ability to read and write stdin, stdout and any other file descriptors handed to it. It is not allowed to open any other files.  The \-M option will mount an alternate homedir and tmpdir to be used by the sandbox.
 
 If you have the 
 .I policycoreutils-sandbox 
-package installed, you can use the -X option and the -M option.
-.B sandbox -X
+package installed, you can use the \-X option and the \-M option.
+.B sandbox \-X
 allows you to run X applications within a sandbox.  These applications will start up their own X Server and create a temporary home directory and /tmp.  The default SELinux policy does not allow any capabilities or network access.  It also prevents all access to the users other processes and files.  Files specified on the command that are in the home directory or /tmp will be copied into the sandbox directories.
 
-If directories are specified with -H or -T the directory will have its context modified with chcon(1) unless a level is specified with -l.  If the MLS/MCS security level is specified, the user is responsible to set the correct labels.
+If directories are specified with \-H or \-T the directory will have its context modified with chcon(1) unless a level is specified with \-l.  If the MLS/MCS security level is specified, the user is responsible to set the correct labels.
 .PP
 .TP
-\fB\-H\ homedir
-Use alternate homedir to mount over your home directory.  Defaults to temporary. Requires -X or -M.
+\fB\-h\ \fB\\-\-help\fR
+display usage message
 .TP
-\fB\-i file\fR
+\fB\-H\ \fB\\-\-homedir\fR
+Use alternate homedir to mount over your home directory.  Defaults to temporary. Requires \-X or \-M.
+.TP
+\fB\-i\fR \fB\-\-include\fR
 Copy this file into the appropriate temporary sandbox directory. Command can be repeated.
 .TP
-\fB\-I inputfile\fR Copy all files listed in inputfile into the
+\fB\-I\fR \fB\-\-includefile\fR
+Copy all files listed in inputfile into the
 appropriate temporary sandbox directories.
 .TP
-\fB\-l\fR
+\fB\-l\fR \fB\-\-level\fR
 Specify the MLS/MCS Security Level to run the sandbox with.  Defaults to random.
 .TP
-\fB\-M\fR
+\fB\-M\fR \fB\-\-mount\fR
 Create a Sandbox with temporary files for $HOME and /tmp.
 .TP
-\fB\-s\fR  \fB\--shred\fR
+\fB\-s\fR \fB\-\-shred\fR
 Shred temporary files created in $HOME and /tmp, before deleting.
 .TP
-\fB\-t type\fR
-Use alternate sandbox type, defaults to sandbox_t or sandbox_x_t for -X.
+\fB\-t\fR \fB\-\-type\fR
+Use alternate sandbox type, defaults to sandbox_t or sandbox_x_t for \-X.
 
 \fBExamples:\fR
 .br
-sandbox_t	-	No X, No Network Access, No Open, read/write on passed in file descriptors.
+sandbox_t	\-	No X, No Network Access, No Open, read/write on passed in file descriptors.
 .br
-sandbox_min_t	-	No Network Access
+sandbox_min_t	\-	No Network Access
 .br
-sandbox_x_t	-	Printer Ports
+sandbox_x_t	\-	Printer Ports
 .br
-sandbox_web_t	-	Ports required for web browsing
+sandbox_web_t	\-	Ports required for web browsing
 .br
-sandbox_net_t	-	All network ports
+sandbox_net_t	\-	All network ports
 
 .TP
-\fB\-T\ tmpdir
-Use alternate tempory directory to mount on /tmp.  Defaults to tmpfs. Requires -X or -M.
+\fB\-T\fR \fB\-\-tmpdir\fR
+Use alternate temporary directory to mount on /tmp.  Defaults to tmpfs. Requires \-X or \-M.
 .TP
-\fB\-S
+\fB\-S\fR \fB\-\-session\fR
 Run a full desktop session, Requires level, and home and tmpdir.
 .TP
-\fB\-w windowsize\fR
+\fB\-w\fR \fB\-\-windowsize\fR
+
 Specifies the windowsize when creating an X based Sandbox. The default windowsize is 1000x700.
 .TP
-\fB\-W windowmanager\fR
+\fB\-W\fR \fB\-\-windowmanager\fR
 Select alternative window manager to run within 
-.B sandbox -X.
-Default to /usr/bin/matchbox-window-manager.
+.B sandbox \-X.
+Default to /usr/bin/openbox.
 .TP
 \fB\-X\fR 
 Create an X based Sandbox for gui apps, temporary files for
 $HOME and /tmp, secondary Xserver, defaults to sandbox_x_t
 .TP
-\fB\-d\fR
-Set the DPI value for the sanbox X Server. Defaults to the current X Sever DPI.
+\fB\-d\fR \fB\-\-dpi\fR
+Set the DPI value for the sandbox X Server. Defaults to the current X Sever DPI.
 .TP
-\fB\-c\fR
-Use control groups to control this copy of sandbox.  Specify parameters in /etc/sysconfig/sandbox.  Max memory usage and cpu usage are to be specified in percent.  You can specify which CPUs to use by numbering them 0,1,2... etc.
+\fB\-c\fR \fB\-\-cgroups\fR
+Use control groups to control this copy of sandbox.  Specify parameters in /etc/sysconfig/sandbox. Max memory usage and cpu usage are to be specified in percent. You can specify which CPUs to use by numbering them 0,1,2... etc.
 .TP
-\fB\-C\fR
-Use capabilities within the sandbox.  By default applications executed within the sandbox will not be allowed to use capabilities (setuid apps), with the -C flag, you can use programs requiring capabilities.
+\fB\-C\fR \fB\-\-capabilities\fR Use capabilities within the
+sandbox. By default applications executed within the sandbox will not
+be allowed to use capabilities (setuid apps), with the \-C flag, you
+can use programs requiring capabilities.
 .PP
 .SH "SEE ALSO"
 .TP

@@ -21,7 +21,7 @@ by semodule_package.  Conventionally, these files have a .pp suffix
 force a reload of policy
 .TP
 .B \-B, \-\-build		
-force a rebuild of policy (also reloads unless -n is used)
+force a rebuild of policy (also reloads unless \-n is used)
 .TP
 .B \-D, \-\-disable_dontaudit
 Temporarily remove dontaudits from policy.  Reverts whenever policy is rebuilt
@@ -65,19 +65,19 @@ be verbose
 .SH EXAMPLE
 .nf
 # Install or replace a base policy package.
-$ semodule -b base.pp
+$ semodule \-b base.pp
 # Install or replace a non-base policy package.
-$ semodule -i httpd.pp
+$ semodule \-i httpd.pp
 # List non-base modules.
-$ semodule -l
+$ semodule \-l
 # Turn on all AVC Messages for which SELinux currently is "dontaudit"ing.
-$ semodule -DB
+$ semodule \-DB
 # Turn "dontaudit" rules back on.
-$ semodule -B
+$ semodule \-B
 # Install or replace all non-base modules in the current directory.
-$ semodule -i *.pp
+$ semodule \-i *.pp
 # Install or replace all modules in the current directory.
-$ ls *.pp | grep -Ev "base.pp|enableaudit.pp" | xargs /usr/sbin/semodule -b base.pp -i
+$ ls *.pp | grep \-Ev "base.pp|enableaudit.pp" | xargs /usr/sbin/semodule \-b base.pp \-i
 .fi
 
 .SH SEE ALSO

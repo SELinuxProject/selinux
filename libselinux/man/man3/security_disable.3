@@ -17,7 +17,7 @@ and then unmounts
 This function can only be called at runtime and prior to the initial policy
 load. After the initial policy load, the SELinux kernel code cannot be disabled,
 but only placed in "permissive" mode by using
-.BR setenforce (1).
+.BR security_setenforce(3).
 .
 .SH "RETURN VALUE"
 .BR security_disable ()
@@ -27,4 +27,4 @@ returns zero on success or \-1 on error.
 This manual page has been written by Guido Trentalancia <guido@trentalancia.com>
 .
 .SH "SEE ALSO"
-.BR selinux (8), " setenforce "(3)
+.BR selinux (8), " setenforce "(8)

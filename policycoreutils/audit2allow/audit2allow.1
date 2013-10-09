@@ -29,7 +29,7 @@
 \- generate SELinux policy allow/dontaudit rules from logs of denied operations
 
 .BR audit2why  
-\- translates SELinux audit messages into a description of why the access was denied (audit2allow -w)
+\- translates SELinux audit messages into a description of why the access was denied (audit2allow \-w)
 
 .SH SYNOPSIS
 .B audit2allow
@@ -37,16 +37,16 @@
 .SH OPTIONS
 .TP
 .B "\-a" | "\-\-all"
-Read input from audit and message log, conflicts with -i
+Read input from audit and message log, conflicts with \-i
 .TP
 .B "\-b" | "\-\-boot"
-Read input from audit messages since last boot conflicts with -i
+Read input from audit messages since last boot conflicts with \-i
 .TP
 .B "\-d" | "\-\-dmesg"
 Read input from output of 
 .I /bin/dmesg.
 Note that all audit messages are not available via dmesg when
-auditd is running; use "ausearch -m avc | audit2allow"  or "-a" instead.
+auditd is running; use "ausearch \-m avc | audit2allow"  or "\-a" instead.
 .TP
 .B "\-D" | "\-\-dontaudit"
 Generate dontaudit rules (Default: allow)
@@ -65,7 +65,7 @@ read input only after last policy reload
 Generate module/require output <modulename>
 .TP
 .B "\-M <modulename>" 
-Generate loadable module package, conflicts with -o
+Generate loadable module package, conflicts with \-o
 .TP
 .B "\-p <policyfile>"  | "\-\-policy <policyfile>"
 Policy file to use for analysis
@@ -123,7 +123,7 @@ an 'allow' rule.
 .PP
 .B Using audit2allow to generate module policy
 
-$ cat /var/log/audit/audit.log | audit2allow -m local > local.te
+$ cat /var/log/audit/audit.log | audit2allow \-m local > local.te
 $ cat local.te
 module local 1.0;
 
@@ -141,7 +141,7 @@ allow myapp_t etc_t:file { getattr open read };
 
 .B Using audit2allow to generate module policy using reference policy
 
-$ cat /var/log/audit/audit.log | audit2allow -R -m local > local.te
+$ cat /var/log/audit/audit.log | audit2allow \-R \-m local > local.te
 $ cat local.te
 policy_module(local, 1.0)
 
@@ -155,34 +155,49 @@ files_read_etc_files(myapp_t)
 
 .B Building module policy using Makefile
 
-# SELinux provides a policy devel environment under /usr/share/selinux/devel
+# SELinux provides a policy devel environment under
+# /usr/share/selinux/devel including all of the shipped
+# interface files.
 # You can create a te file and compile it by executing
-$ make -f /usr/share/selinux/devel/Makefile
-$ semodule -i local.pp
+
+$ make -f /usr/share/selinux/devel/Makefile local.pp
+
+
+# This make command will compile a local.te file in the current
+# directory. If you did not specify a "pp" file, the make file
+# will compile all "te" files in the current directory.  After
+# you compile your te file into a "pp" file, you need to install
+# it using the semodule command.
+
+$ semodule \-i local.pp
 
 .B Building module policy manually
 
 # Compile the module
-$ checkmodule -M -m -o local.mod local.te
+$ checkmodule \-M \-m \-o local.mod local.te
+
 # Create the package 
-$ semodule_package -o local.pp -m local.mod
+$ semodule_package \-o local.pp \-m local.mod
+
 # Load the module into the kernel
-$ semodule -i local.pp
+$ semodule \-i local.pp
 
 .B Using audit2allow to generate and build module policy
-$ cat /var/log/audit/audit.log | audit2allow -M local
-Generating type enforcment file: local.te
-Compiling policy: checkmodule -M -m -o local.mod local.te
-Building package: semodule_package -o local.pp -m local.mod
+
+$ cat /var/log/audit/audit.log | audit2allow \-M local
+Generating type enforcement file: local.te
+Compiling policy: checkmodule \-M \-m \-o local.mod local.te
+Building package: semodule_package \-o local.pp \-m local.mod
 
 ******************** IMPORTANT ***********************
 
 In order to load this newly created policy package into the kernel,
 you are required to execute
 
-semodule -i local.pp
+semodule \-i local.pp
 
-.B Using audit2allow to generate monolithic (non-module) policy
+.B Using audit2allow to generate monolithic (non\-module) policy
+
 $ cd /etc/selinux/$SELINUXTYPE/src/policy
 $ cat /var/log/audit/audit.log | audit2allow >> domains/misc/local.te
 $ cat domains/misc/local.te
