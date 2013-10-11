@@ -884,16 +884,14 @@ static PyObject*  get_ports(const char *num, const apol_policy_t * policydb)
 		if (py_insert_string(dict, "type", type))
 			goto err;
 
-		if((range = apol_context_get_range(c)) == NULL) {
-			goto err;
+		if((range = apol_context_get_range(c)) != NULL) {
+			range_str = apol_mls_range_render(policydb, range);
+			if (range_str == NULL) {
+				goto err;
+			}
+			if (py_insert_string(dict, "range", range_str))
+				goto err;
 		}
-			
-		range_str = apol_mls_range_render(policydb, range);
-		if (range_str == NULL) {
-			goto err;
-		}
-		if (py_insert_string(dict, "range", range_str))
-			goto err;
 
 		if (py_insert_string(dict, "protocol", proto_str))
 			goto err;
