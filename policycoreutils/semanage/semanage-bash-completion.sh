@@ -1,6 +1,6 @@
 # This file is part of systemd.
 #
-# Copyright 2011 Dan Walsh
+# Copyright 2011-2013 Dan Walsh
 #
 # systemd is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -49,14 +49,16 @@ __get_all_file_types () {
     seinfo -afile_type -x 2>/dev/null | tail -n +2 
 }
 __get_all_roles () { 
-    seinfo -t 2> /dev/null | tail -n +3 
+    seinfo -r 2> /dev/null | tail -n +3
 }
 __get_all_stores () {
     dir -1 -F /etc/selinux/ | grep '/' | cut -d'/' -f 1
 }
-__get_boolean_opts () { echo '$ALL_OPTS --on -off -1 -0 -F' ; }
-__get_user_opts () { echo '$ALL_OPTS $MANAGED_OPTS -L -r -R --role '; }
-__get_login_opts () { echo '$ALL_OPTS $MANAGED_OPTS -s -r '; }
+__get_import_opts () { echo '$ALL_OPTS --f --input_file' ; }
+__get_export_opts () { echo '$ALL_OPTS --f --output_file' ; }
+__get_boolean_opts () { echo '$ALL_OPTS --on -off -1 -0' ; }
+__get_user_opts () { echo '$ALL_OPTS $MANAGED_OPTS -L --level -r --range -R --role '; }
+__get_login_opts () { echo '$ALL_OPTS $MANAGED_OPTS -s --seuser -r --range'; }
 __get_port_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t -type -r --range -p --proto'; }
 __get_interface_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type '; }
 __get_node_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -M --mask -p --proto'; }
@@ -70,18 +72,19 @@ _semanage () {
         local cur=${COMP_WORDS[COMP_CWORD]} prev=${COMP_WORDS[COMP_CWORD-1]}
         local verb comps
         local -A VERBS=(
-	       [LOGIN]='login'
-	       [USER]='user'
-	       [PORT]='port'
+	       [BOOLEAN]='boolean'
+	       [DONTAUDIT]='dontaudit'
+	       [EXPORT]='export'
+	       [FCONTEXT]='fcontext'
+	       [IMPORT]='import'
 	       [INTERFACE]='interface'
+	       [LOGIN]='login'
 	       [MODULE]='module'
 	       [NODE]='node'
-	       [FCONTEXT]='fcontext'
-	       [BOOLEAN]='boolean'
 	       [PERMISSIVE]='permissive'
-	       [DONTAUDIT]='dontaudit'
+	       [PORT]='port'
+	       [USER]='user'
         )
-
 	if   [ "$prev" = "-a" -a "$command" = "permissive" ]; then
 	        COMPREPLY=( $(compgen -W "$( __get_all_domains ) " -- "$cur") )
 		return 0
@@ -94,9 +97,13 @@ _semanage () {
 	elif [ "$verb" = "" -a "$prev" = "-p" -o "$prev" = "--proto" ]; then
 	        COMPREPLY=( $(compgen -W "tcp udp" -- "$cur") )
 		return 0
-	elif [ "$verb" = "" -a "$prev" = "-r" -o "$prev" = "--roles" ]; then
+	elif [ "$verb" = "" -a "$prev" = "-R" -o "$prev" = "-r" -o "$prev" = "--role" ]; then
+	    if [ "$command" != "user" -o "$prev" != "-r" ]; then
 	        COMPREPLY=( $(compgen -W "$( __get_all_roles ) " -- "$cur") )
 		return 0
+	    else
+		return 0
+	    fi
 	elif [ "$verb" = "" -a "$prev" = "-s" -o "$prev" = "--seuser" ]; then
 	        COMPREPLY=( $(compgen -W "$( __get_all_users ) " -- "$cur") )
 		return 0
@@ -125,7 +132,7 @@ _semanage () {
 		return 0
         elif __contains_word "$command" ${VERBS[INTERFACE]} ; then
                 COMPREPLY=( $(compgen -W "$( __get_interface_opts ) " -- "$cur") )
-		return 0p
+		return 0
         elif __contains_word "$command" ${VERBS[MODULE]} ; then
                 COMPREPLY=( $(compgen -W "$( __get_module_opts ) " -- "$cur") )
 		return 0
@@ -143,6 +150,12 @@ _semanage () {
 		return 0
         elif __contains_word "$command" ${VERBS[DONTAUDIT]} ; then
                 COMPREPLY=( $(compgen -W "$( __get_dontaudit_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[IMPORT]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_import_opts ) " -- "$cur") )
+		return 0
+        elif __contains_word "$command" ${VERBS[EXPORT]} ; then
+                COMPREPLY=( $(compgen -W "$( __get_export_opts ) " -- "$cur") )
 		return 0
         fi
         COMPREPLY=( $(compgen -W "$comps" -- "$cur") )
