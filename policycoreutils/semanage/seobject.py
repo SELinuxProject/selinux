@@ -1727,6 +1727,12 @@ class fcontextRecords(semanageRecords):
 
         def add_equal(self, target, substitute):
                 self.begin()
+                if target != "/" and target[-1] == "/":
+                        raise ValueError(_("Target %s is not valid. Target is not allowed to end with '/'") % target )
+
+                if substitute != "/" and substitute[-1] == "/":
+                       raise ValueError(_("Substiture %s is not valid. Substitute is not allowed to end with '/'") % substitute )
+
                 if target in self.equiv.keys():
                        raise ValueError(_("Equivalence class for %s already exists") % target)
                 self.validate(target)
