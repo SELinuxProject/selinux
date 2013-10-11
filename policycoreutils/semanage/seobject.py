@@ -349,6 +349,11 @@ class moduleRecords(semanageRecords):
 
                self.commit()
 
+	def deleteall(self):
+                l = map(lambda x: x[0], filter(lambda t: t[2] == 0, self.get_all()))
+                for m in l:
+                        self.enable(m)
+
 class dontauditClass(semanageRecords):
 	def __init__(self, store):
                semanageRecords.__init__(self, store)
