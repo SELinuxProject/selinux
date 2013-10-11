@@ -10,6 +10,8 @@
 #include <pwd.h>
 #include <selinux/selinux.h>
 #include <semanage/handle.h>
+#include <semanage/debug.h>
+#include <semanage/booleans_policy.h>
 #include <semanage/booleans_local.h>
 #include <semanage/booleans_active.h>
 #include <semanage/boolean_record.h>
@@ -127,6 +129,7 @@ static int semanage_set_boolean_list(size_t boolcnt,
 	semanage_bool_t *boolean = NULL;
 	semanage_bool_key_t *bool_key = NULL;
 	int managed;
+	int result;
 
 	handle = semanage_handle_create();
 	if (handle == NULL) {
@@ -175,12 +178,21 @@ static int semanage_set_boolean_list(size_t boolcnt,
 		if (semanage_bool_key_extract(handle, boolean, &bool_key) < 0)
 			goto err;
 
+		semanage_bool_exists(handle, bool_key, &result);
+		if ( !result ) {
+			semanage_bool_exists_local(handle, bool_key, &result);
+			if ( !result ) {
+				fprintf(stderr, "Boolean %s is not defined\n", boollist[j].name);
+				goto err;
+			}
+		}
+
 		if (semanage_bool_modify_local(handle, bool_key,
 						  boolean) < 0)
 			goto err;
 
 		if (semanage_bool_set_active(handle, bool_key, boolean) < 0) {
-			fprintf(stderr, "Could not change boolean %s\n",
+			fprintf(stderr, "Failed to change boolean %s: %m\n",
 				boollist[j].name);
 			goto err;
 		}
@@ -202,7 +214,6 @@ static int semanage_set_boolean_list(size_t boolcnt,
 	semanage_bool_key_free(bool_key);
 	semanage_bool_free(boolean);
 	semanage_handle_destroy(handle);
-	fprintf(stderr, "Could not change policy booleans\n");
 	return -1;
 }
 
