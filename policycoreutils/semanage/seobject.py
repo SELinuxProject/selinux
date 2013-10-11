@@ -285,6 +285,12 @@ class moduleRecords(semanageRecords):
                       l.append((semanage_module_get_name(mod), semanage_module_get_version(mod), semanage_module_get_enabled(mod)))
                return l
 
+        def customized(self):
+		all = self.get_all()
+		if len(all) == 0:
+			return
+                return map(lambda x: "-d %s" % x[0], filter(lambda t: t[2] == 0, all))
+
 	def list(self, heading = 1, locallist = 0):
 		all = self.get_all()
 		if len(all) == 0:
