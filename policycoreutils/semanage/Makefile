@@ -23,6 +23,8 @@ install: all
 	-mkdir -p $(BASHCOMPLETIONDIR)
 	install -m 644 $(BASHCOMPLETIONS) $(BASHCOMPLETIONDIR)/semanage
 
+test:
+	@python test-semanage.py -a
 clean:
 
 indent:
