@@ -2003,11 +2003,11 @@ class fcontextRecords(semanageRecords):
                keys.sort()
                for k in keys:
                       if fcon_dict[k]:
-                             l.append("-a -f '%s' -t %s '%s'" % (k[1], fcon_dict[k][2], k[0]))
+                             l.append("-a -f %s -t %s '%s'" % (file_type_str_to_option[k[1]], fcon_dict[k][2], k[0]))
 
 	       if len(self.equiv):
                       for target in self.equiv.keys():
-			     l.append("-a -e %s %s" % (target, self.equiv[target]))
+			     l.append("-a -e %s %s" % (self.equiv[target], target))
                return l
 
 	def list(self, heading = 1, locallist = 0 ):
@@ -2193,7 +2193,7 @@ class booleanRecords(semanageRecords):
                keys.sort()
                for k in keys:
                       if ddict[k]:
-                             l.append("-%s %s" %  (ddict[k][2], k))
+                             l.append("-m -%s %s" %  (ddict[k][2], k))
                return l
 
 	def list(self, heading = True, locallist = False, use_file = False):
