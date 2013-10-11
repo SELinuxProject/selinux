@@ -302,6 +302,8 @@ class moduleRecords(semanageRecords):
                        if t[2] == 0:
                               disabled = _("Disabled")
                        else:
+                              if locallist:
+                                      continue
                               disabled = ""
                        print "%-25s%-10s%s" % (t[0], t[1], disabled)
 
