@@ -9,7 +9,7 @@ LOCALEDIR ?= /usr/share/locale
 PYTHON ?= /usr/bin/python
 BASHCOMPLETIONDIR ?= $(DESTDIR)/etc/bash_completion.d/
 SHAREDIR ?= $(PREFIX)/share/sandbox
-override CFLAGS = $(LDFLAGS) -I$(PREFIX)/include -DPACKAGE="policycoreutils" -Wall -Werror -Wextra -W  -DSHARED -shared
+override CFLAGS = -I$(PREFIX)/include -DPACKAGE="policycoreutils" -Wall -Werror -Wextra -W  -DSHARED -shared
 
 BASHCOMPLETIONS=sepolicy-bash-completion.sh
 
@@ -21,6 +21,9 @@ python-build: info.c search.c common.h policy.h policy.c
 clean:
 	$(PYTHON) setup.py clean
 	-rm -rf build *~ \#* *pyc .#*
+
+test:
+	@python test_sepolicy.py -v
 
 install:
 	$(PYTHON) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
