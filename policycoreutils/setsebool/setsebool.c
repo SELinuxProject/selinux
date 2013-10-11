@@ -17,13 +17,14 @@
 
 int permanent = 0;
 int reload = 1;
+int verbose = 0;
 
 int setbool(char **list, size_t start, size_t end);
 
 void usage(void)
 {
 	fputs
-	    ("\nUsage:  setsebool [ -NP ] boolean value | bool1=val1 bool2=val2...\n\n",
+	    ("\nUsage:  setsebool [ -NPV ] boolean value | bool1=val1 bool2=val2...\n\n",
 	     stderr);
 	exit(1);
 }
@@ -41,7 +42,7 @@ int main(int argc, char **argv)
 	}
 
 	while (1) {
-		clflag = getopt(argc, argv, "PN");
+		clflag = getopt(argc, argv, "PNV");
 		if (clflag == -1)
 			break;
 
@@ -51,6 +52,9 @@ int main(int argc, char **argv)
 			break;
 		case 'N':
 		        reload = 0;
+			break;
+		case 'V':
+		        verbose = 1;
 			break;
 		default:
 			usage();
@@ -128,6 +132,10 @@ static int semanage_set_boolean_list(size_t boolcnt,
 	if (handle == NULL) {
 		fprintf(stderr, "Could not create semanage library handle\n");
 		goto err;
+	}
+
+	if (! verbose) {
+		semanage_msg_set_callback(handle,NULL, NULL);
 	}
 
 	managed = semanage_is_managed(handle);
