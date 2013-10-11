@@ -4,7 +4,7 @@ INCLUDEDIR ?= $(PREFIX)/include
 SBINDIR ?= $(PREFIX)/sbin
 MANDIR = $(PREFIX)/share/man
 LIBDIR ?= $(PREFIX)/lib
-BASHCOMPLETIONDIR ?= $(DESTDIR)/etc/bash_completion.d/
+BASHCOMPLETIONDIR ?= $(DESTDIR)/usr/share/bash-completion/completions
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -I$(INCLUDEDIR)
@@ -23,7 +23,7 @@ install: all
 	-mkdir -p $(MANDIR)/man8
 	install -m 644 setsebool.8 $(MANDIR)/man8/
 	-mkdir -p $(BASHCOMPLETIONDIR)
-	install -m 644 $(BASHCOMPLETIONS) $(BASHCOMPLETIONDIR)
+	install -m 644 $(BASHCOMPLETIONS) $(BASHCOMPLETIONDIR)/setsebool
 
 relabel:
 
