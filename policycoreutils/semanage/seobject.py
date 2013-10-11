@@ -958,7 +958,7 @@ class seluserRecords(semanageRecords):
                 keys = ddict.keys()
                 keys.sort()
                 for k in keys:
-                       l.append("-a -r %s -R '%s' %s" % (ddict[k][2], ddict[k][3], k))
+                       l.append("-a -l %s -r %s -R '%s' %s" % (ddict[k][1], ddict[k][2], ddict[k][3], k))
                 return l
 
 	def list(self, heading = 1, locallist = 0):
