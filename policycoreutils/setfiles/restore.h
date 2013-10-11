@@ -16,7 +16,7 @@
 #include <limits.h>
 #include <stdint.h>
 
-#define STAR_COUNT 1000
+#define STAR_COUNT 1024
 
 /* Things that need to be init'd */
 struct restore_opts {

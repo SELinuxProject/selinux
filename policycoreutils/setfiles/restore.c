@@ -118,7 +118,7 @@ static int restore(FTSENT *ftsent, int recurse)
 		r_opts->count++;
 		if (r_opts->count % STAR_COUNT == 0) {
 			if (r_opts->progress == 1) {
-				fprintf(stdout, "*");
+				fprintf(stdout, "\r%luk", (size_t) r_opts->count / STAR_COUNT );
 			} else {
 				if (r_opts->nfile > 0) {
 					progress = (r_opts->count < r_opts->nfile) ? (100.0 * r_opts->count / r_opts->nfile) : 100;
