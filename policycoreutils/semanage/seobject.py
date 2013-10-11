@@ -1,5 +1,5 @@
 #! /usr/bin/python -Es
-# Copyright (C) 2005-2011 Red Hat 
+# Copyright (C) 2005-2013 Red Hat
 # see file 'COPYING' for use and warranty information
 #
 # semanage is a tool for managing SELinux configuration files
@@ -32,11 +32,10 @@ from IPy import IP
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
-try:
-       gettext.install(PROGNAME, localedir = "/usr/share/locale", unicode = 1)
-except IOError:
-       import __builtin__
-       __builtin__.__dict__['_'] = unicode
+
+import gettext
+translation=gettext.translation(PROGNAME, localedir = "/usr/share/locale", fallback=True)
+_=translation.ugettext
 
 import syslog
 
