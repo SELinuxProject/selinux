@@ -1673,6 +1673,7 @@ class fcontextRecords(semanageRecords):
 	try:
 		valid_types =  sepolicy.info(sepolicy.ATTRIBUTE,"file_type")[0]["types"]
 		valid_types +=  sepolicy.info(sepolicy.ATTRIBUTE,"device_node")[0]["types"]
+                valid_types.append("<<none>>")
 	except RuntimeError:
 		valid_types = []
 
