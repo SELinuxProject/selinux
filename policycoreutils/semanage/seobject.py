@@ -42,21 +42,37 @@ import syslog
 file_types = {}
 file_types[""] = SEMANAGE_FCONTEXT_ALL;
 file_types["all files"] = SEMANAGE_FCONTEXT_ALL;
-file_types["--"] = SEMANAGE_FCONTEXT_REG;
+file_types["a"] = SEMANAGE_FCONTEXT_ALL;
 file_types["regular file"] = SEMANAGE_FCONTEXT_REG;
+file_types["--"] = SEMANAGE_FCONTEXT_REG;
+file_types["f"] = SEMANAGE_FCONTEXT_REG;
 file_types["-d"] = SEMANAGE_FCONTEXT_DIR;
 file_types["directory"] = SEMANAGE_FCONTEXT_DIR;
+file_types["d"] = SEMANAGE_FCONTEXT_DIR;
 file_types["-c"] = SEMANAGE_FCONTEXT_CHAR;
 file_types["character device"] = SEMANAGE_FCONTEXT_CHAR;
+file_types["c"] = SEMANAGE_FCONTEXT_CHAR;
 file_types["-b"] = SEMANAGE_FCONTEXT_BLOCK;
 file_types["block device"] = SEMANAGE_FCONTEXT_BLOCK;
+file_types["b"] = SEMANAGE_FCONTEXT_BLOCK;
 file_types["-s"] = SEMANAGE_FCONTEXT_SOCK;
 file_types["socket"] = SEMANAGE_FCONTEXT_SOCK;
+file_types["s"] = SEMANAGE_FCONTEXT_SOCK;
 file_types["-l"] = SEMANAGE_FCONTEXT_LINK;
+file_types["l"] = SEMANAGE_FCONTEXT_LINK;
 file_types["symbolic link"] = SEMANAGE_FCONTEXT_LINK;
+file_types["p"] = SEMANAGE_FCONTEXT_PIPE;
 file_types["-p"] = SEMANAGE_FCONTEXT_PIPE;
 file_types["named pipe"] = SEMANAGE_FCONTEXT_PIPE;
 
+file_type_str_to_option = { "all files": "a",
+                            "regular file":"f",
+                            "directory":"d",
+                            "character device":"c",
+                            "block device":"b",
+                            "socket file":"s",
+                            "symbolic link":"l",
+                            "named pipe":"p" }
 try:
 	import audit
 	class logger:
