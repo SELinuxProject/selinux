@@ -1,0 +1,45 @@
+.TH "semanage-permissive" "8" "20130617" "" ""
+.SH "NAME"
+.B semanage permissive \- SELinux Policy Management permissive mapping tool
+.SH "SYNOPSIS"
+.B semanage permissive [\-h] (\-a | \-d | \-l) [\-n] [\-N] [\-S STORE] [type]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage permissive adds or removes a SELinux Policy permissive module.
+
+.SH "OPTIONS"
+.TP
+.I  \-h, \-\-help
+show this help message and exit
+.TP
+.I   \-a, \-\-add
+Add a record of the specified object type
+.TP
+.I   \-d, \-\-delete
+Delete a record of the specified object type
+.TP
+.I   \-l, \-\-list
+List records of the specified object type
+.TP
+.I   \-n, \-\-noheading
+Do not print heading when listing the specified object type
+.TP
+.I   \-N, \-\-noreload
+Do not reload the policy after commit
+.TP
+.I   \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+
+.SH EXAMPLE
+.nf
+List all permissive modules
+# semanage permissive \-l
+Make httpd_t (Web Server) a permissive domain
+# semanage permissive \-a httpd_t
+
+.SH "SEE ALSO"
+.B selinux (8),
+.B semanage (8)
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>

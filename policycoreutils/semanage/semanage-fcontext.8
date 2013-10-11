@@ -1,0 +1,87 @@
+.TH "semanage-fcontext" "8" "20130617" "" ""
+.SH "NAME"
+semanage fcontext\- SELinux Policy Management file context tool
+
+.SH "SYNOPSIS"
+.B semanage fcontext [\-h] [\-n] [\-N] [\-s STORE] [ \-\-add ( \-t TYPE \-f FTYPE \-r RANGE \-s SEUSER | \-e EQUAL ) FILE_SPEC ) | \-\-delete ( \-t TYPE \-f FTYPE | \-e EQUAL ) FILE_SPEC ) | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify ( \-t TYPE \-f FTYPE \-r RANGE \-s SEUSER | \-e EQUAL ) FILE_SPEC ) ]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of
+SELinux policy without requiring modification to or recompilation
+from policy sources.  semanage fcontext is used to  manage the default
+file system labeling on an SELinux system.  This command maps file paths using regular expressions to SELinux labels.
+
+.SH "OPTIONS"
+.TP
+.I  \-h, \-\-help
+show this help message and exit
+.TP
+.I   \-n, \-\-noheading
+Do not print heading when listing the specified object type
+.TP
+.I   \-N, \-\-noreload
+Do not reload policy after commit
+.TP
+.I   \-C, \-\-locallist
+List local customizations
+.TP
+.I   \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+.TP
+.I   \-a, \-\-add
+Add a record of the specified object type
+.TP
+.I   \-d, \-\-delete
+Delete a record of the specified object type
+.TP
+.I   \-m, \-\-modify
+Modify a record of the specified object type
+.TP
+.I   \-l, \-\-list
+List records of the specified object type
+.TP
+.I   \-E, \-\-extract
+Extract customizable commands, for use within a transaction
+.TP
+.I   \-D, \-\-deleteall
+Remove all local customizations
+.TP
+.I   \-e EQUAL, \-\-equal EQUAL
+Substitute target path with sourcepath when generating default label. This is used with fcontext. Requires source and target path arguments. The context labeling for the target subtree is made equivalent to that defined for the source.
+.TP
+.I   \-f [{a,f,d,c,b,s,l,p}], \-\-ftype [{a,f,d,c,b,s,l,p}]
+File Type. This is used with fcontext. Requires a file type as shown in the mode field by ls, e.g. use 'd' to match only directories or 'f' to match only regular files. The following file type options can be passed: f (regular file),d (directory),c (character device), b (block device),s (socket),l (symbolic link),p (named pipe).  If you do not specify a file type, the file type will default to "all files".
+
+.TP
+.I   \-s SEUSER, \-\-seuser SEUSER
+SELinux user name
+.TP
+.I   \-t TYPE, \-\-type TYPE
+SELinux Type for the object
+.TP
+.I   \-r RANGE, \-\-range RANGE
+MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login mapping defaults to the SELinux user record range. SELinux Range for SELinux user defaults to s0.
+
+.SH EXAMPLE
+.nf
+.I remember to run restorecon after you set the file context
+Add file-context for everything under /web
+# semanage fcontext \-a \-t httpd_sys_content_t "/web(/.*)?"
+# restorecon \-R \-v /web
+
+Substitute /home1 with /home when setting file context
+# semanage fcontext \-a \-e /home /home1
+# restorecon \-R \-v /home1
+
+For home directories under top level directory, for example /disk6/home,
+execute the following commands.
+# semanage fcontext \-a \-t home_root_t "/disk6"
+# semanage fcontext \-a \-e /home /disk6/home
+# restorecon \-R \-v /disk6
+
+.SH "SEE ALSO"
+.B selinux (8),
+.B semanage (8)
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>

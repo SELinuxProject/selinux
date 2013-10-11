@@ -1,0 +1,68 @@
+.TH "semanage-port" "8" "20130617" "" ""
+.SH "NAME"
+.B semanage port\- SELinux Policy Management port mapping tool
+.SH "SYNOPSIS"
+.B semanage port [\-h] [\-n] [\-N] [\-s STORE] [ \-\-add \-t TYPE \-p PROTOCOL \-r RANGE port_name | port_range | \-\-delete \-p PROTOCOL port_name | port_range | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-t TYPE \-p PROTOCOL \-r RANGE port_name | port_range ]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage port controls the port number to port type defitions.
+
+.SH "OPTIONS"
+.TP
+.I  \-h, \-\-help
+show this help message and exit
+.TP
+.I   \-n, \-\-noheading
+Do not print heading when listing the specified object type
+.TP
+.I   \-N, \-\-noreload
+Do not reload policy after commit
+.TP
+.I   \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+.TP
+.I   \-C, \-\-locallist
+List local customizations
+.TP
+.I   \-a, \-\-add
+Add a record of the specified object type
+.TP
+.I   \-d, \-\-delete
+Delete a record of the specified object type
+.TP
+.I   \-m, \-\-modify
+Modify a record of the specified object type
+.TP
+.I   \-l, \-\-list
+List records of the specified object type
+.TP
+.I   \-E, \-\-extract
+Extract customizable commands, for use within a transaction
+.TP
+.I   \-D, \-\-deleteall
+Remove all local customizations
+.TP
+.I   \-t TYPE, \-\-type TYPE
+SELinux type for the object
+.TP
+.I   \-r RANGE, \-\-range RANGE
+MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login mapping defaults to the SELinux user record range. SELinux Range for SELinux user defaults to s0.
+.TP
+.I   \-p PROTO, \-\-proto PROTO
+Protocol for the specified port (tcp|udp) or internet protocol version for the specified node (ipv4|ipv6).
+
+.SH EXAMPLE
+.nf
+List all port defitions
+# semanage port \-l
+Allow Apache to listen on tcp port 81
+# semanage port \-a \-t http_port_t \-p tcp 81
+Allow sshd to listen on tcp port 8991
+# semanage port \-a \-t ssh_port_t \-p tcp 8991
+
+.SH "SEE ALSO"
+.B selinux (8),
+.B semanage (8)
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>

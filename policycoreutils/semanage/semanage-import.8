@@ -1,0 +1,36 @@
+.TH "semanage-import" "8" "20130617" "" ""
+.SH "NAME"
+.B semanage import\- SELinux Policy Management import tool
+.SH "SYNOPSIS"
+.B semanage import [\-h] [\-N] [\-S STORE] [\-f INPUT_FILE]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of
+SELinux policy without requiring modification to or recompilation
+from policy sources.  semanage import and export can be used to extract the SELinux modifications from one machine and apply them to another. You can put a hole group of semanage commands within a file and apply them to a machine in a single transaction.
+
+.SH "OPTIONS"
+.TP
+.I  \-h, \-\-help
+show this help message and exit
+.TP
+.I   \-N, \-\-noreload
+Do not reload policy after commit
+.TP
+.I   \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+.TP
+.I   \-f INPUT_FILE, \-\-input_file INPUT_FILE
+Input file
+.SH EXAMPLE
+.nf
+Import semanage modifications from another machine
+# semanage import -f semanage.mods
+
+.SH "SEE ALSO"
+.B selinux (8),
+.B semanage (8),
+.B semanage-export (8)
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
