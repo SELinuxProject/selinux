@@ -1,0 +1,5 @@
+If you have more then one policy type installed,  the advanced screen will become visible.  You can select the advanced tab and modify the policy type that SELinux is running with.
+
+Policy types are installed as sub-directories of /etc/selinux.
+
+Changing the policy type of the machine will require a system relabeled in permissive mode. The gui will insure that proper labels get assigned on the next reboot.

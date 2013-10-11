@@ -20,10 +20,9 @@
 #                                        02111-1307  USA
 #
 #  
-import sepolicy, sys
+import sepolicy
 search=sepolicy.search
 info=sepolicy.info
-_failedlist = []
 __all__ = [ 'setrans', ]
 
 def _entrypoint(src):
@@ -32,11 +31,11 @@ def _entrypoint(src):
     
 
 def _get_trans(src):
-    foundstr = ""
     return search([sepolicy.TRANSITION],{sepolicy.SOURCE:src, sepolicy.CLASS:"process"})
 
 class setrans:
     def __init__(self, source, dest=None):
+        self.seen = []
         self.sdict = {}
         self.source=source
         self.dest=dest
@@ -58,19 +57,25 @@ class setrans:
             for s in self.sdict[source]["child"]:
                 self._process(s)
             
-    def out(self, name, seen=[], header=""):
+    def out(self, name, header=""):
         buf = ""
-        if name in seen:
+        if name in self.seen:
             return buf
-        seen.append(name)
+        self.seen.append(name)
 
-        for t in self.sdict[name]["map"]:
-            buf += "%s%s @ %s --> %s\n" % (header, t["source"], t["target"], t["transtype"])
+        if "map" in self.sdict[name]:
+            for t in self.sdict[name]["map"]:
+                cond=sepolicy.get_conditionals(t["source"], t["transtype"],"process",["transition"])
+                if cond:
+                    buf += "%s%s @ %s --> %s %s\n" % (header, t["source"], t["target"], t["transtype"], sepolicy.get_conditionals_format_text(cond))
+                else:
+                    buf += "%s%s @ %s --> %s\n" % (header, t["source"], t["target"], t["transtype"])
 
         if "child" in self.sdict[name]:
             for x in self.sdict[name]["child"]:
-                buf+= self.out(x, seen, "%s%s ... " % (header, name))
+                buf+= self.out(x, "%s%s ... " % (header, name))
         return buf
 
     def output(self):
+        self.seen = []
         print self.out(self.source)

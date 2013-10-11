@@ -1,0 +1,29 @@
+.TH "sepolicy-gui" "8" "20121005" "" ""
+.SH "NAME"
+sepolicy-gui \- Graphical User Interface for SELinux policy.
+
+.SH "SYNOPSIS"
+
+Common options
+
+.B sepolicy gui [\-h ] [ \-d DOMAIN ]
+
+.br
+
+.SH "DESCRIPTION"
+Use \fBsepolicy gui\fP to run a the graphical user interface, which
+allows you to explore how SELinux confines different process domains.
+
+.SH "OPTIONS"
+.TP
+.I                \-h, \-\-help
+Display help message
+.TP
+.I                \-d, \-\-domain
+Initialize gui to the selected domain.
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
+
+.SH "SEE ALSO"
+sepolicy(8), selinux(8)

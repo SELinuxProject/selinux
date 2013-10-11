@@ -1,0 +1,10 @@
+Disable Permissive Processes
+
+
+Disabling the 'permissivedomains' module allows you to remove all permissive domains shipped with the distribution.
+
+When the distribution policy writers write a new confined domain, they initially ship the policy for that domain in permissive mode.  Permissive mode means that a process running in the domain will not be confined by SELinux.  The kernel will log the AVC messages, access denials, that would have happened had the process been run in enforcing mode.
+
+Permissive domain policies are experimental and will be turned to enforcing in future Operation System Releases.
+
+Note if you disable the permissive domains module, you may see an increase in the denials in your log files.

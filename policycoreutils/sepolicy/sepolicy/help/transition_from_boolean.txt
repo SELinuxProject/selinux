@@ -1,0 +1,8 @@
+Transitions can be controlled by SELinux Booleans.
+
+
+SELinux Booleans are If-then-else rules in policy, that allow the administrator to modify the access control on a process type.
+
+Transition rules are either always allowed or can be turned on and off based on the boolean settings.   If the 'Boolean Enabled' column has an arrow on it, this indicates the transition is controlled by a boolean.
+
+Go to the next screen to see the effect of clicking on the arrow.

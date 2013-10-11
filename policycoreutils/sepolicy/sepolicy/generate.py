@@ -63,20 +63,6 @@ except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
 
-user_types =  sepolicy.info(sepolicy.ATTRIBUTE,"userdomain")[0]["types"]
-methods = []
-fn = defaults.interface_info()
-try:
-    fd = open(fn)
-    # List of per_role_template interfaces
-    ifs = interfaces.InterfaceSet()
-    ifs.from_file(fd)
-    methods = ifs.interfaces.keys()
-    fd.close()
-except:
-    sys.stderr.write("could not open interface info [%s]\n" % fn)
-    sys.exit(1)
-
 def get_rpm_nvr_from_header(hdr):
     'Given an RPM header return the package NVR as a string'
     name    = hdr['name']
@@ -164,7 +150,7 @@ def get_poltype_desc():
     return msg
         
 APPLICATIONS = [ DAEMON, DBUS, INETD, USER, CGI ]
-USERS = [ XUSER, TUSER, LUSER, AUSER, EUSER, RUSER]
+USERS = [ XUSER, TUSER, LUSER, AUSER, RUSER]
 
 def verify_ports(ports):
     if ports == "":
@@ -206,7 +192,7 @@ class policy:
                     raise ValueError(_("You must enter a valid policy type"))
 
 		if not name:
-                    raise ValueError(_("You must enter a name for your policy module for your %s.") % poltype[type])
+                    raise ValueError(_("You must enter a name for your policy module for your '%s'.") % poltype[type])
                 try:
                     self.ports = get_all_ports()
                 except ValueError, e:
@@ -268,8 +254,14 @@ class policy:
                 self.symbols["fowner"] = "add_capability('fowner')"
                 self.symbols["fsetid"] = "add_capability('fsetid')"
                 self.symbols["setgid"] = "add_capability('setgid')"
+                self.symbols["setegid"] = "add_capability('setgid')"
+                self.symbols["setresgid"] = "add_capability('setgid')"
+                self.symbols["setregid"] = "add_capability('setgid')"
                 self.symbols["setresuid"] = "add_capability('setuid')"
                 self.symbols["setuid"] = "add_capability('setuid')"
+                self.symbols["seteuid"] = "add_capability('setuid')"
+                self.symbols["setreuid"] = "add_capability('setuid')"
+                self.symbols["setresuid"] = "add_capability('setuid')"
                 self.symbols["setpcap"] = "add_capability('setpcap')"
                 self.symbols["linux_immutable"] = "add_capability('linux_immutable')"
                 self.symbols["net_bind_service"] = "add_capability('net_bind_service')"
@@ -319,7 +311,7 @@ class policy:
 		self.DEFAULT_EXT["_var_log_t"] = var_log;
 		self.DEFAULT_EXT["_var_run_t"] = var_run;
 		self.DEFAULT_EXT["_var_spool_t"] = var_spool;
-		self.DEFAULT_EXT["port_t"] = network;
+		self.DEFAULT_EXT["_port_t"] = network;
 
                 self.DEFAULT_KEYS=["/etc", "/var/cache", "/var/log", "/tmp", "rw", "/var/lib", "/var/run", "/var/spool", "/etc/systemd/system", "/usr/lib/systemd/system", "/lib/systemd/system" ]
 
@@ -587,7 +579,7 @@ class policy:
         def generate_network_action(self, protocol, action, port_name):
             line = ""
             method = "corenet_%s_%s_%s" % (protocol, action, port_name)
-            if method in methods:
+            if method in sepolicy.get_methods():
                 line = "%s(%s_t)\n" % (method, self.name)
             else:
                 line = """
@@ -843,7 +835,7 @@ allow %s_t %s_t:%s_socket name_%s;
 
 	def generate_existing_user_types(self):
                 if len(self.existing_domains) == 0:
-                    raise ValueError(_("%s policy modules require existing domains") % poltype[self.type])
+                    raise ValueError(_("'%s' policy modules require existing domains") % poltype[self.type])
                 newte = re.sub("TEMPLATETYPE", self.name, user.te_existing_user_types)
                 newte += """gen_require(`"""
 
@@ -873,18 +865,20 @@ allow %s_t %s_t:%s_socket name_%s;
                 for t in self.types:
                     for i in self.DEFAULT_EXT:
                         if t.endswith(i):
+                            print t, t[:-len(i)]
                             newte += re.sub("TEMPLATETYPE", t[:-len(i)], self.DEFAULT_EXT[i].te_types)
                             break
+
+                if NEWTYPE and newte == "":
+                    default_ext = []
+                    for i in self.DEFAULT_EXT:
+                        default_ext.append(i)
+                    raise ValueError(_("You need to define a new type which ends with: \n %s") % "\n ".join(default_ext))
+
                 return newte
 
 	def generate_new_rules(self):
-                newte = ""
-                for t in self.types:
-                    for i in self.DEFAULT_EXT:
-                        if t.endswith(i):
-                            newte += re.sub("TEMPLATETYPE", t[:-len(i)], self.DEFAULT_EXT[i].te_rules)
-                            break
-                return newte
+                return ""
 
 	def generate_daemon_types(self):
                 newte = re.sub("TEMPLATETYPE", self.name, executable.te_daemon_types)
@@ -1014,7 +1008,7 @@ allow %s_t %s_t:%s_socket name_%s;
 
 	def generate_roles_rules(self):
             newte = ""
-            if self.type in ( TUSER, XUSER, AUSER, LUSER, EUSER):
+            if self.type in ( TUSER, XUSER, AUSER, LUSER ):
                 roles = ""
                 if len(self.roles) > 0:
                     newte += re.sub("TEMPLATETYPE", self.name, user.te_sudo_rules)
@@ -1030,14 +1024,15 @@ allow %s_t %s_t:%s_socket name_%s;
 			if len(self.DEFAULT_DIRS[d][1]) > 0:
 				# CGI scripts already have a rw_t
 				if self.type != CGI or d != "rw":
-					newte += re.sub("TEMPLATETYPE", self.name, self.DEFAULT_DIRS[d][2].te_types)
+                                    newte += re.sub("TEMPLATETYPE", self.name, self.DEFAULT_DIRS[d][2].te_types)
 
                 if self.type != EUSER:
                     newte +="""
 ########################################
 #
 # %s local policy
-#""" % self.name
+#
+""" % self.name
                 newte += self.generate_capabilities()
                 newte += self.generate_process()
 		newte += self.generate_network_types()
@@ -1048,11 +1043,22 @@ allow %s_t %s_t:%s_socket name_%s;
 
                 for d in self.DEFAULT_KEYS:
 			if len(self.DEFAULT_DIRS[d][1]) > 0:
-				newte += re.sub("TEMPLATETYPE", self.name, self.DEFAULT_DIRS[d][2].te_rules)
-                                for i in self.DEFAULT_DIRS[d][1]:
-                                        if os.path.exists(i) and stat.S_ISSOCK(os.stat(i)[stat.ST_MODE]):
-                                            newte += re.sub("TEMPLATETYPE", self.name, self.DEFAULT_DIRS[d][2].te_stream_rules)
-                                            break
+                            if self.type == EUSER:
+                                newte_tmp = ""
+                                for domain in self.existing_domains:
+                                    newte_tmp += re.sub("TEMPLATETYPE_t", domain[:-2]+"_t", self.DEFAULT_DIRS[d][2].te_rules)
+                                    newte += re.sub("TEMPLATETYPE_rw_t", self.name+"_rw_t", newte_tmp)
+                            else:
+                                newte += re.sub("TEMPLATETYPE", self.name, self.DEFAULT_DIRS[d][2].te_rules)
+                            for i in self.DEFAULT_DIRS[d][1]:
+                                if os.path.exists(i) and stat.S_ISSOCK(os.stat(i)[stat.ST_MODE]):
+                                    if self.type == EUSER:
+                                        for domain in self.existing_domains:
+                                            newte += re.sub("TEMPLATETYPE", domain[:-2], self.DEFAULT_DIRS[d][2].te_stream_rules)
+
+                                    else:
+                                        newte += re.sub("TEMPLATETYPE", self.name, self.DEFAULT_DIRS[d][2].te_stream_rules)
+                                    break
 
 		newte += self.generate_tmp_rules()
 		newte += self.generate_network_rules()
@@ -1077,19 +1083,6 @@ allow %s_t %s_t:%s_socket name_%s;
 	def generate_fc(self):
 		newfc = ""
                 fclist = []
-                if self.type in USERS +  [ SANDBOX ]:
-                    return executable.fc_user
-                if self.type != NEWTYPE and not self.program:
-                    raise ValueError(_("You must enter the executable path for your confined process"))
-
-                if self.program:
-                    t1 = re.sub("EXECUTABLE", self.program, executable.fc_program)
-                    fclist.append(re.sub("TEMPLATETYPE", self.name, t1))
-
-                if self.initscript != "":
-                    t1 = re.sub("EXECUTABLE", self.initscript, executable.fc_initscript)
-                    fclist.append(re.sub("TEMPLATETYPE", self.name, t1))
-
 		for i in self.files.keys():
                         if os.path.exists(i) and stat.S_ISSOCK(os.stat(i)[stat.ST_MODE]):
                             t1 = re.sub("TEMPLATETYPE", self.name, self.files[i][2].fc_sock_file)
@@ -1103,13 +1096,28 @@ allow %s_t %s_t:%s_socket name_%s;
 			t2 = re.sub("FILENAME", i, t1)
                         fclist.append(re.sub("FILETYPE", self.dirs[i][0], t2))
 
+                if self.type in USERS +  [ SANDBOX ]:
+                    if len(fclist) == 0:
+                        return executable.fc_user
+
+                if self.type not in USERS + [ SANDBOX, EUSER,  NEWTYPE ] and not self.program:
+                    raise ValueError(_("You must enter the executable path for your confined process"))
+
+                if self.program:
+                    t1 = re.sub("EXECUTABLE", self.program, executable.fc_program)
+                    fclist.append(re.sub("TEMPLATETYPE", self.name, t1))
+
+                if self.initscript != "":
+                    t1 = re.sub("EXECUTABLE", self.initscript, executable.fc_initscript)
+                    fclist.append(re.sub("TEMPLATETYPE", self.name, t1))
+
                 fclist.sort()
                 newfc="\n".join(fclist)
 		return newfc
 
 	def generate_user_sh(self):
             newsh = ""
-            if self.type not in ( TUSER, XUSER, AUSER, LUSER, EUSER):
+            if self.type not in ( TUSER, XUSER, AUSER, LUSER, RUSER):
                 return newsh
 
             roles = ""
@@ -1117,13 +1125,10 @@ allow %s_t %s_t:%s_socket name_%s;
                 roles += " %s_r" % role
             if roles != "":
                 roles += " system_r"
-            if self.type == EUSER:
-                tmp = re.sub("TEMPLATETYPE", self.name, script.eusers)
-            else:
-                tmp = re.sub("TEMPLATETYPE", self.name, script.users)
+            tmp = re.sub("TEMPLATETYPE", self.name, script.users)
             newsh += re.sub("ROLES", roles, tmp)
 
-            if self.type == RUSER:
+            if self.type == RUSER or self.type == AUSER:
                 for u in self.transition_users:
                     tmp =  re.sub("TEMPLATETYPE", self.name, script.admin_trans)
                     newsh += re.sub("USER", u, tmp)
@@ -1143,6 +1148,8 @@ allow %s_t %s_t:%s_socket name_%s;
                     newsh  = re.sub("TEMPLATEFILE", "%s" % self.file_name, temp)
                 else:
                     newsh  = re.sub("TEMPLATEFILE", self.file_name, temp)
+                    newsh += re.sub("DOMAINTYPE", self.name, script.manpage)
+
                 if self.program:
                     newsh += re.sub("FILENAME", self.program, script.restorecon)
                 if self.initscript != "":
@@ -1165,6 +1172,7 @@ allow %s_t %s_t:%s_socket name_%s;
 			newsh += re.sub("TEMPLATETYPE", self.name, t1)
 
                 newsh += self.generate_user_sh()
+                newsh += re.sub("TEMPLATEFILE", self.file_name, script.rpm)
 
 		return newsh
 
@@ -1198,7 +1206,13 @@ allow %s_t %s_t:%s_socket name_%s;
 		if self.type not in APPLICATIONS:
                     newspec = re.sub("%relabel_files", "", newspec) 
                     
-		return newspec
+                # Remove man pages from EUSER spec file
+                if self.type == EUSER:
+                    newspec = re.sub(".*%s_selinux.8.*" % self.name,"", newspec)
+                # Remove user context file from non users spec file
+                if self.type not in ( TUSER, XUSER, AUSER, LUSER, RUSER):
+                    newspec = re.sub(".*%s_u.*" % self.name,"", newspec)
+                return newspec
 
 	def write_spec(self, out_dir):
 		specfile = "%s/%s_selinux.spec" % (out_dir, self.file_name)
@@ -1349,6 +1363,7 @@ Warning %s does not exist
             out += "%s # %s\n" % (self.write_te(out_dir), _("Type Enforcement file"))
             out += "%s # %s\n" % (self.write_if(out_dir), _("Interface file"))
             out += "%s # %s\n" % (self.write_fc(out_dir), _("File Contexts file"))
-            out += "%s # %s\n" % (self.write_spec(out_dir), _("Spec file"))
-            out += "%s # %s\n" % (self.write_sh(out_dir), _("Setup Script"))
+            if self.type != NEWTYPE:
+                out += "%s # %s\n" % (self.write_spec(out_dir), _("Spec file"))
+                out += "%s # %s\n" % (self.write_sh(out_dir), _("Setup Script"))
             return out

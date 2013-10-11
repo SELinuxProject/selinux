@@ -1,0 +1,1 @@
+After selecting the arrow under Boolean Enabled column, the line will expand to show a link which you can click.  This will take you to the booleans page and allow you to enable the boolean which will enable or disable the transition.

@@ -1,0 +1,10 @@
+SELinux is a labeling system.  Sometimes the labels on disk can get messed up.  One way to fix this is to trigger a full relabel on the next boot.
+
+
+You can toggle this behavior using this screen.
+
+Note:  Sometimes a simple restorecon is all you need to fix the labels on a file or directory.
+
+If you add a new disk which does not have labels you could simply execute
+
+# restorecon -R -v PATHTODISK

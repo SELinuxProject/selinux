@@ -1,0 +1,4 @@
+This screen shows you the boolean page with the boolean selected.
+
+
+Enable or disable the boolean to turn on or off the transition.

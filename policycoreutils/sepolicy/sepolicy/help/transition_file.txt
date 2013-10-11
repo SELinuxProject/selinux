@@ -1,0 +1,15 @@
+This screen shows the 'file types' of the specified 'class' that will be created by processes running with '%(APP)s' type in the '%(APP)s' directory.
+
+
+SELinux allows policy writers to define file transition rules.  These rules define the label of a newly create file system object.
+
+By default an newly created file system object will get the label of the directory the object is being created in.
+
+Creating an file in a directory with the file type of etc_t will get the label etc_t.  In certain situations SELinux aware applications
+can override this behavior, for example the passwd command creates /etc/shadow with a type of shadow_t.
+
+A third option is for policy writers to write a transition rule.  For example a process labeled NetworkManager creating content in a directory labeled etc_t will create it with the label net_conf_t.
+
+File Transition Rules can be written to create all objects of a particular class, or specific to a particular file name.
+
+You need to build a policy module if you want to add additional File Transition Rules.

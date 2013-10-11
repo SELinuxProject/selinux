@@ -1,0 +1,6 @@
+SELinux allows you to export/import the current configuration of the machine.
+
+
+If you have several machines configured the same way you may want to modify the SELinux configuration on one machine and then export the configuration to a file.  Then you could copy that file to another machine and import it on that machine.
+
+Note, If you import a configuration to a machine, the local configuration will get removed.

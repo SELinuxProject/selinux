@@ -1,0 +1,9 @@
+This screen shows files types to which a process running with the '%(APP)s' type is allowed to write.
+
+
+The description should give you a decent description for what the application is allowed to do with the type.   If your application type is being denied access to a particular file, you might want to change the label of that file.
+
+It is recommended that you use one of the types defined on this page.
+
+Note if the label of the content that is being denied is owned by another domain, you might have to write policy or use 'audit2allow -M mypol'
+to allow access.

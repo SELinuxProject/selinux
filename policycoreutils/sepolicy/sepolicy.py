@@ -22,7 +22,9 @@
 #
 #
 import os, sys
-from sepolicy import get_os_version
+import selinux
+import sepolicy
+from sepolicy import get_os_version, get_conditionals, get_conditionals_format_text
 import argparse
 import gettext
 PROGNAME="policycoreutils"
@@ -37,6 +39,9 @@ except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
 
+usage = "sepolicy generate [-h] [-n NAME] [-p PATH] ["
+usage_dict = {' --newtype':('-t [TYPES [TYPES ...]]',),' --customize':('-d DOMAIN','-a  ADMIN_DOMAIN',"[ -w WRITEPATHS ]",), ' --admin_user':('[-r TRANSITION_ROLE ]',"[ -w WRITEPATHS ]",), ' --application':('COMMAND',"[ -w WRITEPATHS ]",), ' --cgi':('COMMAND',"[ -w WRITEPATHS ]",), ' --confined_admin':('-a  ADMIN_DOMAIN',"[ -w WRITEPATHS ]",), ' --dbus':('COMMAND',"[ -w WRITEPATHS ]",), ' --desktop_user':('',"[ -w WRITEPATHS ]",),' --inetd':('COMMAND',"[ -w WRITEPATHS ]",),' --init':('COMMAND',"[ -w WRITEPATHS ]",), ' --sandbox':("[ -w WRITEPATHS ]",), ' --term_user':("[ -w WRITEPATHS ]",), ' --x_user':("[ -w WRITEPATHS ]",)}
+
 class CheckPath(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         if not os.path.exists(values):
@@ -45,7 +50,7 @@ class CheckPath(argparse.Action):
 
 class CheckType(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        from sepolicy.network import domains
+        domains = sepolicy.get_all_domains()
 
         if isinstance(values,str):
             setattr(namespace, self.dest, values)
@@ -58,9 +63,30 @@ class CheckType(argparse.Action):
                 newval.append(v)
             setattr(namespace, self.dest, newval)
 
+class CheckBoolean(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        booleans = sepolicy.get_all_booleans()
+        newval = getattr(namespace, self.dest)
+        if not newval:
+            newval = []
+
+        if isinstance(values,str):
+            v = selinux.selinux_boolean_sub(values)
+            if v not in booleans:
+                raise ValueError("%s must be an SELinux process domain:\nValid domains: %s" % (v, ", ".join(booleans)))
+            newval.append(v)
+            setattr(namespace, self.dest, newval)
+        else:
+            for value in values:
+                v = selinux.selinux_boolean_sub(value)
+                if v not in booleans:
+                    raise ValueError("%s must be an SELinux boolean:\nValid boolean: %s" % (v, ", ".join(booleans)))
+                newval.append(v)
+            setattr(namespace, self.dest, newval)
+
 class CheckDomain(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        from sepolicy.network import domains
+        domains = sepolicy.get_all_domains()
 
         if isinstance(values,str):
             if values not in domains:
@@ -80,7 +106,6 @@ class CheckDomain(argparse.Action):
 all_classes = None
 class CheckClass(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        import sepolicy
         global all_classes
         if not all_classes:
                 all_classes = map(lambda x: x['name'], sepolicy.info(sepolicy.TCLASS))
@@ -114,7 +139,7 @@ class CheckPort(argparse.Action):
 
 class CheckPortType(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        from sepolicy.network import port_types
+        port_types = sepolicy.get_all_port_types()
         newval = getattr(namespace, self.dest)
         if not newval:
             newval = []
@@ -140,71 +165,150 @@ class CheckPolicyType(argparse.Action):
 
 class CheckUser(argparse.Action):
     def __call__(self, parser, namespace, value, option_string=None):
-        from sepolicy import get_all_users
         newval = getattr(namespace, self.dest)
         if not newval:
             newval = []
-        users = get_all_users()
+        users = sepolicy.get_all_users()
         if value not in users:
                 raise ValueError("%s must be an SELinux user:\nValid users: %s" % (value, ", ".join(users)))
         newval.append(value)
         setattr(namespace, self.dest, newval)
 
+class CheckRole(argparse.Action):
+    def __call__(self, parser, namespace, value, option_string=None):
+        newval = getattr(namespace, self.dest)
+        if not newval:
+            newval = []
+        roles = sepolicy.get_all_roles()
+        if value not in roles:
+                raise ValueError("%s must be an SELinux role:\nValid roles: %s" % (value, ", ".join(roles)))
+        newval.append(value[:-2])
+        setattr(namespace, self.dest, newval)
+
+class InterfaceInfo(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+	from sepolicy.interface import get_interface_dict
+        interface_dict = get_interface_dict()
+        for v in values:
+            if v not in interface_dict.keys():
+                raise ValueError(_("Interface %s does not exist.") % v)
+
+        setattr(namespace, self.dest, values)
+
+def generate_custom_usage(usage_text,usage_dict):
+    sorted_keys = []
+    for i in usage_dict.keys():
+        sorted_keys.append(i)
+    sorted_keys.sort()
+    for k in sorted_keys:
+        usage_text += "%s %s |" % (k,(" ".join(usage_dict[k])))
+    usage_text = usage_text[:-1] + "]"
+    usage_text = _(usage_text)
+
+    return usage_text
+
+def numcmp(val1,val2):
+    try:
+        v1 = int(val1.split(",")[0].split("-")[0])
+        v2 = int(val2.split(",")[0].split("-")[0])
+        if v1 > v2:
+            return 1
+        if v1 == v2:
+            return 0
+        if v1 < v2:
+            return -1
+    except:
+        return cmp(val1,val2)
+
 def _print_net(src, protocol, perm):
-    from sepolicy.network import get_network_connect
-    portdict = get_network_connect(src, protocol, perm)
+    import sepolicy.network
+    portdict = sepolicy.network.get_network_connect(src, protocol, perm)
     if len(portdict) > 0:
-        print "%s: %s %s" % (src, protocol, perm)
+        bold_start="\033[1m"
+        bold_end="\033[0;0m"
+        print "\n"+bold_start+"%s: %s %s" % (src, protocol, perm) + bold_end
+        port_strings=[]
+        boolean_text=""
         for p in portdict:
-            for recs in portdict[p]:
-                print "\t" + recs
+            for t, recs in portdict[p]:
+                cond=get_conditionals(src,t,"%s_socket" % protocol, [perm])
+                if cond:
+                    boolean_text=get_conditionals_format_text(cond)
+                    port_strings.append("%s (%s) %s" % (", ".join(recs), t, boolean_text))
+                else:
+                    port_strings.append("%s (%s)" % (", ".join(recs), t))
+        port_strings.sort(numcmp)
+        for p in port_strings:
+                print "\t" + p
 
 def network(args):
-    from sepolicy.network import portrecsbynum, portrecs, get_network_connect
+    portrecs, portrecsbynum = sepolicy.gen_port_dict()
+    all_ports = []
     if args.list_ports:
-        all_ports = []
         for i in portrecs:
             if i[0] not in all_ports:
                 all_ports.append(i[0])
         all_ports.sort()
         print "\n".join(all_ports)
 
-    if args.port:
-        for port in args.port:
-            found = False
-            for i in portrecsbynum:
-                if i[0] <= port and port <= i[1]:
-                    if i[0] == i[1]:
-                        range = i[0]
-                    else:
-                        range = "%s-%s" % (i[0], i[1])
-                    found = True
-                    print "%d: %s %s %s" % (port, i[2], portrecsbynum[i][0], range)
-            if not found:
-                if port < 500:
-                    print "Undefined reserved port type"
+    for port in args.port:
+        found = False
+        for i in portrecsbynum:
+            if i[0] <= port and port <= i[1]:
+                if i[0] == i[1]:
+                    range = i[0]
                 else:
-                    print "Undefined port type"
-    if args.type:
-        for t in args.type:
-            if (t,'tcp') in portrecs.keys():
-                print "%s: tcp: %s" % (t, ",".join(portrecs[t,'tcp']))
-            if (t,'udp') in portrecs.keys():
-                print "%s: udp: %s" % (t, ",".join(portrecs[t,'udp']))
-    if args.domain:
-        for d in args.domain:
-            _print_net(d, "tcp", "name_connect")
-            for net in ("tcp", "udp"):
-                _print_net(d, net, "name_bind")
+                    range = "%s-%s" % (i[0], i[1])
+                found = True
+                print "%d: %s %s %s" % (port, i[2], portrecsbynum[i][0], range)
+        if not found:
+            if port < 500:
+                print "Undefined reserved port type"
+            else:
+                print "Undefined port type"
+
+    for t in args.type:
+        if (t,'tcp') in portrecs.keys():
+            print "%s: tcp: %s" % (t, ",".join(portrecs[t,'tcp']))
+        if (t,'udp') in portrecs.keys():
+            print "%s: udp: %s" % (t, ",".join(portrecs[t,'udp']))
+
+    for a in args.applications:
+        d = sepolicy.get_init_transtype(a)
+        if d:
+            args.domain.append(d)
+
+    for d in args.domain:
+        _print_net(d, "tcp", "name_connect")
+        for net in ("tcp", "udp"):
+            _print_net(d, net, "name_bind")
+
+def gui_run(args):
+    try:
+        import sepolicy.gui
+        sepolicy.gui.SELinuxGui(args.domain, args.test)
+        pass
+    except ImportError:
+        raise ValueError(_("You need to install policycoreutils-gui package to use the gui option"))
+
+def gen_gui_args(parser):
+    gui = parser.add_parser("gui",
+                            help=_('Graphical User Interface for SELinux Policy'))
+    gui.add_argument("-d", "--domain", default=None,
+                       action=CheckDomain,
+                       help=_("Domain name(s) of man pages to be created"))
+    gui.add_argument("-t", "--test", default=False, action="store_true",
+                       help=argparse.SUPPRESS)
+    gui.set_defaults(func=gui_run)
 
 def manpage(args):
     from sepolicy.manpage import ManPage, HTMLManPages, manpage_domains, manpage_roles, gen_domains
 
     path = args.path
-    if args.policy:
-        for f in ( "policy.xml", "file_context", "file_context.homedirs"):
-            if not os.path.exists(path + f):
-                raise ValueError("manpage creation with alternate policy requires the %s file exist" % (path + f))
+    if not args.policy and args.root != "/":
+        sepolicy.policy(sepolicy.get_installed_policy(args.root))
+    if args.source_files and args.root == "/":
+        raise ValueError(_("Alternative root needs to be setup"))
 
     if args.all:
         test_domains = gen_domains()
@@ -212,30 +316,34 @@ def manpage(args):
         test_domains = args.domain
 
     for domain in test_domains:
-        m = ManPage(domain, path, args.web)
+        m = ManPage(domain, path, args.root,args.source_files, args.web)
         print m.get_man_page_path()
 
     if args.web:
         HTMLManPages(manpage_roles, manpage_domains, path, args.os)
 
 def gen_manpage_args(parser):
-        man = parser.add_parser("manpage",
-                                   help=_('Generate SELinux man pages'))
+    man = parser.add_parser("manpage",
+                            help=_('Generate SELinux man pages'))
 
-        man.add_argument("-p", "--path", dest="path", default="/tmp",
-                         help=_("path in which the generated SELinux man pages will be stored"))
-        man.add_argument("-o", "--os", dest="os", default=get_os_version(),
-                         help=_("name of the OS for man pages"))
-        man.add_argument("-w", "--web", dest="web", default=False, action="store_true",
-                                help=_("Generate HTML man pages structure for selected SELinux man page"))
-        group = man.add_mutually_exclusive_group(required=True)
-        group.add_argument("-a", "--all", dest="all", default=False,
-                           action="store_true",
-                           help=_("All domains"))
-        group.add_argument("-d", "--domain", nargs="+",
-                           action=CheckDomain,
-                           help=_("Domain name(s) of man pages to be created"))
-        man.set_defaults(func=manpage)
+    man.add_argument("-p", "--path", dest="path", default="/tmp",
+                     help=_("path in which the generated SELinux man pages will be stored"))
+    man.add_argument("-o", "--os", dest="os", default=get_os_version(),
+                     help=_("name of the OS for man pages"))
+    man.add_argument("-w", "--web", dest="web", default=False, action="store_true",
+                     help=_("Generate HTML man pages structure for selected SELinux man page"))
+    man.add_argument("-r", "--root", dest="root", default="/",
+                     help=_("Alternate root directory, defaults to /"))
+    man.add_argument("--source_files", dest="source_files", default=False, action="store_true",
+                     help=_("With this flag, alternative root path needs to include file context files and policy.xml file"))
+    group = man.add_mutually_exclusive_group(required=True)
+    group.add_argument("-a", "--all", dest="all", default=False,
+                       action="store_true",
+                       help=_("All domains"))
+    group.add_argument("-d", "--domain", nargs="+",
+                       action=CheckDomain,
+                       help=_("Domain name(s) of man pages to be created"))
+    man.set_defaults(func=manpage)
 
 def gen_network_args(parser):
         net = parser.add_parser("network",
@@ -245,15 +353,18 @@ def gen_network_args(parser):
         group.add_argument("-l", "--list", dest="list_ports",
                            action="store_true",
                             help=_("list all SELinux port types"))
-        group.add_argument("-p", "--port", dest="port", default=None,
+        group.add_argument("-p", "--port", dest="port", default=[],
                             action=CheckPort, nargs="+", type=int,
                             help=_("show SELinux type related to the port"))
-        group.add_argument("-t", "--type", dest="type", default=None,
+        group.add_argument("-t", "--type", dest="type", default=[],
                             action=CheckPortType,nargs="+",
                             help=_("Show ports defined for this SELinux type"))
-        group.add_argument("-d", "--domain", dest="domain", default=None,
+        group.add_argument("-d", "--domain", dest="domain", default=[],
                             action=CheckDomain, nargs="+",
                             help=_("show ports to which this domain can bind and/or connect"))
+        group.add_argument("-a", "--application", dest="applications", default=[],
+                           nargs="+",
+                           help=_("show ports to which this application can bind and/or connect"))
         net.set_defaults(func=network)
 
 def communicate(args):
@@ -283,7 +394,6 @@ def gen_communicate_args(parser):
     comm.set_defaults(func=communicate)
 
 def booleans(args):
-    import selinux
     from sepolicy import boolean_desc
     if args.all:
         rc, args.booleans = selinux.security_get_boolean_names()
@@ -300,6 +410,7 @@ def gen_booleans_args(parser):
                        action="store_true",
                        help=_("get all booleans descriptions"))
     group.add_argument("-b", "--boolean", dest="booleans", nargs="+",
+                       action=CheckBoolean, required=False,
                        help=_("boolean to get description"))
     bools.set_defaults(func=booleans)
 
@@ -319,22 +430,49 @@ def gen_transition_args(parser):
                        help=_("target process domain"))
     trans.set_defaults(func=transition)
 
+def print_interfaces(interfaces, args, append=""):
+    from sepolicy.interface import get_interface_format_text, interface_compile_test
+    for i in interfaces:
+        if args.verbose:
+            try:
+                print get_interface_format_text(i + append)
+            except KeyError:
+                print i
+        if args.compile:
+            try:
+                interface_compile_test(i)
+            except KeyError:
+                print i
+        else:
+            print i
+
 def interface(args):
-    from sepolicy.interface import get_admin, get, get_user
+    from sepolicy.interface import get_admin, get_user, get_interface_dict, get_all_interfaces
     if args.list_admin:
-        for a in get_admin():
-            print a
+        print_interfaces(get_admin(args.file), args, "_admin")
     if args.list_user:
-        for a in get_user():
-            print a
+        print_interfaces(get_user(args.file), args, "_role")
     if args.list:
-        for m in get():
-            print m
+        print_interfaces(get_all_interfaces(args.file), args)
+    if args.interfaces:
+            print_interfaces(args.interfaces, args)
 
 def generate(args):
-    from sepolicy.generate import policy, USERS, SANDBOX, APPLICATIONS, NEWTYPE
+    from sepolicy.generate import policy, AUSER, RUSER, EUSER, USERS, SANDBOX, APPLICATIONS, NEWTYPE
     cmd = None
-    if args.policytype not in USERS +  [ SANDBOX, NEWTYPE]:
+# numbers present POLTYPE defined in sepolicy.generate
+    conflict_args = {'TYPES':(NEWTYPE,), 'DOMAIN':(EUSER,), 'ADMIN_DOMAIN':(AUSER, RUSER, EUSER,)}
+    error_text = ""
+
+    if args.policytype is None:
+        generate_usage = generate_custom_usage(usage, usage_dict)
+        for k in usage_dict:
+            error_text += "%s" % (k)
+        print(generate_usage)
+        print(_("sepolicy generate: error: one of the arguments %s is required") % error_text)
+        sys.exit(1)
+
+    if args.policytype in APPLICATIONS:
         if not args.command:
             raise ValueError(_("Command required for this type of policy"))
         cmd = os.path.realpath(args.command)
@@ -346,7 +484,21 @@ def generate(args):
         mypolicy.set_program(cmd)
 
     if args.types:
+        if args.policytype not in conflict_args['TYPES']:
+            raise ValueError(_("-t option can not be used with '%s' domains. Read usage for more details.") % sepolicy.generate.poltype[args.policytype])
         mypolicy.set_types(args.types)
+
+    if args.domain:
+        if args.policytype not in conflict_args['DOMAIN']:
+            raise ValueError(_("-d option can not be used with '%s' domains. Read usage for more details.") % sepolicy.generate.poltype[args.policytype])
+
+    if args.admin_domain:
+        if args.policytype not in conflict_args['ADMIN_DOMAIN']:
+            raise ValueError(_("-a option can not be used with '%s' domains. Read usage for more details.") % sepolicy.generate.poltype[args.policytype])
+
+    if len(args.writepaths) > 0 and args.policytype == NEWTYPE:
+
+            raise ValueError(_("-w option can not be used with the --newtype option"))
 
     for p in args.writepaths:
         if os.path.isdir(p):
@@ -355,6 +507,7 @@ def generate(args):
             mypolicy.add_file(p)
 
     mypolicy.set_transition_users(args.user)
+    mypolicy.set_admin_roles(args.role)
     mypolicy.set_admin_domains(args.admin_domain)
     mypolicy.set_existing_domains(args.domain)
 
@@ -366,20 +519,34 @@ def generate(args):
 def gen_interface_args(parser):
     itf = parser.add_parser("interface",
                             help=_('List SELinux Policy interfaces'))
+    itf.add_argument("-c", "--compile", dest="compile",
+                     action="store_true", default=False,
+                     help="Run compile test for selected interface")
+    itf.add_argument("-v", "--verbose", dest="verbose",
+                     action="store_true", default=False,
+                     help="Show verbose information")
+    itf.add_argument("-f", "--file", dest="file",
+                     help="Interface file")
     group = itf.add_mutually_exclusive_group(required=True)
     group.add_argument("-a", "--list_admin", dest="list_admin",action="store_true",                       default=False,
-                       help="List all domains with admin interface")
+                       help="List all domains with admin interface - DOMAIN_admin()")
     group.add_argument("-u", "--list_user", dest="list_user",action="store_true",
                        default=False,
-                       help="List all domains with SELinux user role interface")
+                       help="List all domains with SELinux user role interface - DOMAIN_role()")
     group.add_argument("-l", "--list", dest="list",action="store_true",
                        default=False,
                        help="List all interfaces")
+    group.add_argument("-i", "--interfaces", nargs="+", dest="interfaces",
+                       action=InterfaceInfo,
+                       help=_("Enter interface names, you wish to query"))
     itf.set_defaults(func=interface)
 
 def gen_generate_args(parser):
     from sepolicy.generate import DAEMON, get_poltype_desc, poltype, DAEMON, DBUS, INETD, CGI, SANDBOX, USER, EUSER, TUSER, XUSER, LUSER, AUSER, RUSER, NEWTYPE
-    pol = parser.add_parser("generate",
+
+    generate_usage = generate_custom_usage(usage, usage_dict)
+
+    pol = parser.add_parser("generate", usage = generate_usage,
                             help=_('Generate SELinux Policy module template'))
     pol.add_argument("-d", "--domain", dest="domain", default=[],
                      action=CheckDomain, nargs="*",
@@ -387,9 +554,12 @@ def gen_generate_args(parser):
     pol.add_argument("-u", "--user", dest="user", default=[],
                      action=CheckUser, 
                      help=_("Enter SELinux user(s) which will transition to this domain"))
+    pol.add_argument("-r", "--role", dest="role", default=[],
+                     action=CheckRole,
+                     help=_("Enter SELinux role(s) to which the administror domain will transition"))
     pol.add_argument("-a", "--admin", dest="admin_domain",default=[],
                      action=CheckAdmin,
-                     help=_("Enter domain(s) that this confined admin will administrate"))
+                     help=_("Enter domain(s) which this confined admin will administrate"))
     pol.add_argument("-n", "--name", dest="name",
                      default=None,
                      help=_("name of policy to generate"))
@@ -397,53 +567,57 @@ def gen_generate_args(parser):
                      help=argparse.SUPPRESS)
     pol.add_argument("-t", "--type", dest="types", default=[], nargs="*",
                      action=CheckType, 
-                     help=argparse.SUPPRESS)
+                     help="Enter type(s) for which you will generate new definition and rule(s)")
     pol.add_argument("-p", "--path", dest="path", default=os.getcwd(),
                      help=_("path in which the generated policy files will be stored"))
     pol.add_argument("-w", "--writepath", dest="writepaths", nargs="*", default = [],
                      help=_("path to which the confined processes will need to write"))
-    pol.add_argument("command",nargs="?", default=None,
-                     help=_("executable to confine"))
-    group = pol.add_mutually_exclusive_group(required=False)
-    group.add_argument("--newtype", dest="policytype", const=NEWTYPE,
+    cmdtype = pol.add_argument_group(_("Policy types which require a command"))
+    cmdgroup = cmdtype.add_mutually_exclusive_group(required=False)
+    cmdgroup.add_argument("--application", dest="policytype", const=USER,
                        action="store_const",
-                       help=_("Generate Policy for %s") % poltype[NEWTYPE])
+                       help=_("Generate '%s' policy") % poltype[USER])
+    cmdgroup.add_argument("--cgi", dest="policytype", const=CGI,
+                       action="store_const",
+                       help=_("Generate '%s' policy") % poltype[CGI])
+    cmdgroup.add_argument("--dbus", dest="policytype", const=DBUS,
+                       action="store_const",
+                       help=_("Generate '%s' policy") % poltype[DBUS])
+    cmdgroup.add_argument("--inetd", dest="policytype", const=INETD,
+                       action="store_const",
+                       help=_("Generate '%s' policy") % poltype[INETD])
+    cmdgroup.add_argument("--init", dest="policytype", const=DAEMON,
+                       action="store_const", default=DAEMON,
+                       help=_("Generate '%s' policy") % poltype[DAEMON])
+
+    type = pol.add_argument_group("Policy types which do not require a command")
+    group = type.add_mutually_exclusive_group(required=False)
     group.add_argument("--admin_user", dest="policytype", const=AUSER,
                        action="store_const",
-                       help=_("Generate Policy for %s") % poltype[AUSER])
-    group.add_argument("--application", dest="policytype", const=USER,
-                       action="store_const",
-                       help=_("Generate Policy for %s") % poltype[USER])
-    group.add_argument("--cgi", dest="policytype", const=CGI,
-                       action="store_const",
-                       help=_("Generate Policy for %s") % poltype[CGI])
+                       help=_("Generate '%s' policy") % poltype[AUSER])
     group.add_argument("--confined_admin", dest="policytype", const=RUSER,
                        action="store_const",
-                       help=_("Generate Policy for %s") % poltype[RUSER])
+                       help=_("Generate '%s' policy") % poltype[RUSER])
     group.add_argument("--customize", dest="policytype", const=EUSER,
                        action="store_const",
-                       help=_("Generate Policy for %s") % poltype[EUSER])
-    group.add_argument("--dbus", dest="policytype", const=DBUS, 
-                       action="store_const",
-                       help=_("Generate Policy for %s") % poltype[DBUS])
+                       help=_("Generate '%s' policy") % poltype[EUSER])
     group.add_argument("--desktop_user", dest="policytype", const=LUSER,
                        action="store_const",
-                       help=_("Generate Policy for %s") % poltype[LUSER])
-    group.add_argument("--inetd", dest="policytype", const=INETD,
+                       help=_("Generate '%s' policy ") % poltype[LUSER])
+    group.add_argument("--newtype", dest="policytype", const=NEWTYPE,
                        action="store_const",
-                       help=_("Generate Policy for %s") % poltype[INETD])
-    group.add_argument("--init", dest="policytype", const=DAEMON, 
-                       action="store_const", default=DAEMON, 
-                       help=_("Generate Policy for %s") % poltype[DAEMON])
+                       help=_("Generate '%s' policy") % poltype[NEWTYPE])
     group.add_argument("--sandbox", dest="policytype", const=SANDBOX,
                        action="store_const",
-                       help=_("Generate Policy for %s") % poltype[SANDBOX])
+                       help=_("Generate '%s' policy") % poltype[SANDBOX])
     group.add_argument("--term_user", dest="policytype", const=TUSER,
                        action="store_const",
-                       help=_("Generate Policy for %s") % poltype[TUSER])
+                       help=_("Generate '%s' policy") % poltype[TUSER])
     group.add_argument("--x_user", dest="policytype", const=XUSER,
                        action="store_const",
-                       help=_("Generate Policy for %s") % poltype[XUSER])
+                       help=_("Generate '%s' policy") % poltype[XUSER])
+    pol.add_argument("command",nargs="?", default=None,
+                     help=_("executable to confine"))
     pol.set_defaults(func=generate)
 
 if __name__ == '__main__':
@@ -455,17 +629,25 @@ if __name__ == '__main__':
     gen_booleans_args(subparsers)
     gen_communicate_args(subparsers)
     gen_generate_args(subparsers)
+    gen_gui_args(subparsers)
     gen_interface_args(subparsers)
     gen_manpage_args(subparsers)
     gen_network_args(subparsers)
     gen_transition_args(subparsers)
 
     try:
-        args = parser.parse_args()
+        if os.path.basename(sys.argv[0]) == "sepolgen":
+            args = parser.parse_args([ "generate" ] + sys.argv[1:])
+        else:
+            args = parser.parse_args()
         args.func(args)
         sys.exit(0)
     except ValueError,e:
         sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
         sys.exit(1)
+    except IOError,e:
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+        sys.exit(1)
     except KeyboardInterrupt:
+        print "Out"
         sys.exit(0)

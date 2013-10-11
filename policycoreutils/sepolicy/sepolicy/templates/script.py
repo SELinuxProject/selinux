@@ -66,14 +66,17 @@ set -x
 make -f /usr/share/selinux/devel/Makefile TEMPLATEFILE.pp || exit
 /usr/sbin/semodule -i TEMPLATEFILE.pp
 
-# Generate a man page off the installed module
-sepolicy manpage -p . -d DOMAINTYPE_t
-
+"""
+rpm="""\
 # Generate a rpm package for the newly generated policy
 
 pwd=$(pwd)
-rpmbuild --define "_sourcedir ${pwd}" --define "_specdir ${pwd}" --define "_builddir ${pwd}" --define "_srcrpmdir ${pwd}" --define "_rpmdir ${pwd}" --define "_buildrootdir ${pwd}/.build"  -ba TEMPLATETYPE_selinux.spec
+rpmbuild --define "_sourcedir ${pwd}" --define "_specdir ${pwd}" --define "_builddir ${pwd}" --define "_srcrpmdir ${pwd}" --define "_rpmdir ${pwd}" --define "_buildrootdir ${pwd}/.build"  -ba TEMPLATEFILE_selinux.spec
+"""
 
+manpage="""\
+# Generate a man page off the installed module
+sepolicy manpage -p . -d DOMAINTYPE_t
 """
 
 restorecon="""\
@@ -107,8 +110,7 @@ admin_trans="""\
 """
 
 min_login_user_default_context="""\
-if [ ! -f /etc/selinux/targeted/contexts/users/TEMPLATETYPE_u ]; then
-cat > /etc/selinux/targeted/contexts/users/TEMPLATETYPE_u << _EOF
+cat > TEMPLATETYPE_u << _EOF
 TEMPLATETYPE_r:TEMPLATETYPE_t:s0	TEMPLATETYPE_r:TEMPLATETYPE_t
 system_r:crond_t		TEMPLATETYPE_r:TEMPLATETYPE_t
 system_r:initrc_su_t		TEMPLATETYPE_r:TEMPLATETYPE_t
@@ -116,12 +118,13 @@ system_r:local_login_t		TEMPLATETYPE_r:TEMPLATETYPE_t
 system_r:remote_login_t		TEMPLATETYPE_r:TEMPLATETYPE_t
 system_r:sshd_t			TEMPLATETYPE_r:TEMPLATETYPE_t
 _EOF
+if [ ! -f /etc/selinux/targeted/contexts/users/TEMPLATETYPE_u ]; then
+   cp TEMPLATETYPE_u /etc/selinux/targeted/contexts/users/
 fi
 """
 
 x_login_user_default_context="""\
-if [ ! -f /etc/selinux/targeted/contexts/users/TEMPLATETYPE_u ]; then
-cat > /etc/selinux/targeted/contexts/users/TEMPLATETYPE_u << _EOF
+cat > TEMPLATETYPE_u << _EOF
 TEMPLATETYPE_r:TEMPLATETYPE_t	TEMPLATETYPE_r:TEMPLATETYPE_t
 system_r:crond_t		TEMPLATETYPE_r:TEMPLATETYPE_t
 system_r:initrc_su_t		TEMPLATETYPE_r:TEMPLATETYPE_t
@@ -130,5 +133,7 @@ system_r:remote_login_t		TEMPLATETYPE_r:TEMPLATETYPE_t
 system_r:sshd_t				TEMPLATETYPE_r:TEMPLATETYPE_t
 system_r:xdm_t				TEMPLATETYPE_r:TEMPLATETYPE_t
 _EOF
+if [ ! -f /etc/selinux/targeted/contexts/users/TEMPLATETYPE_u ]; then
+   cp TEMPLATETYPE_u /etc/selinux/targeted/contexts/users/
 fi
 """

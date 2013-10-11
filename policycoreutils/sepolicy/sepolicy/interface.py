@@ -21,15 +21,12 @@
 #                                        02111-1307  USA
 #
 #
-import re
-
-import sepolgen.interfaces as interfaces
-import sepolgen.defaults as defaults
+import re, sys
+import sepolicy
 ADMIN_TRANSITION_INTERFACE = "_admin$"
 USER_TRANSITION_INTERFACE = "_role$"
-from sepolicy.generate import get_all_types
 
-__all__ = [ 'get', 'get_admin', 'get_user' ]
+__all__ = [ 'get_all_interfaces', 'get_interfaces_from_xml', 'get_admin', 'get_user' ,'get_interface_dict', 'get_interface_format_text', 'get_interface_compile_format_text', 'get_xml_file', 'interface_compile_test' ]
 
 ##
 ## I18N
@@ -48,34 +45,173 @@ except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
 
-def get():
-    """ Get all Methods """
-    fn = defaults.interface_info()
-    try:
-        fd = open(fn)
-        ifs = interfaces.InterfaceSet()
-        ifs.from_file(fd)
-        methods = ifs.interfaces.keys()
-        fd.close()
-    except:
-        raise ValueError(_("could not open interface info [%s]\n") % fn)
+def get_interfaces_from_xml(path):
+    """ Get all interfaces from given xml file"""
+    interfaces_list = []
+    idict = get_interface_dict(path)
+    for k in idict.keys():
+        interfaces_list.append(k)
+    return interfaces_list
 
-    return methods
 
-def get_admin():
-    """ Get all domains with an admin interface"""
+def get_all_interfaces(path=""):
+    from sepolicy import get_methods
+    all_interfaces = []
+    if not path:
+        all_interfaces = get_methods()
+    else:
+        xml_path = get_xml_file(path)
+        all_interfaces = get_interfaces_from_xml(xml_path)
+
+    return all_interfaces
+
+def get_admin(path=""):
+    """ Get all domains with an admin interface from installed policy."""
+    """ If xml_path is specified, func returns an admin interface from specified xml file"""
     admin_list = []
-    for i in get():
-        if i.endswith("_admin"):
-            admin_list.append(i.split("_admin")[0])
+    if path:
+        try:
+            xml_path = get_xml_file(path)
+            idict = get_interface_dict(xml_path)
+            for k in idict.keys():
+                if k.endswith("_admin"):
+                    admin_list.append(k)
+        except IOError, e:
+            sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+            sys.exit(1)
+    else:
+        for i in sepolicy.get_methods():
+            if i.endswith("_admin"):
+                admin_list.append(i.split("_admin")[0])
+
     return admin_list
 
-def get_user():
+def get_user(path=""):
     """ Get all domains with SELinux user role interface"""
+    """ If xml_path is specified, func returns an user role interface from specified xml file"""
     trans_list = []
-    for i in get():
-        m = re.findall("(.*)%s" % USER_TRANSITION_INTERFACE, i)
-        if len(m) > 0:
-            if "%s_exec_t" % m[0] in get_all_types():
-                trans_list.append(m[0])
+    if path:
+        try:
+            xml_path = get_xml_file(path)
+            idict = get_interface_dict(xml_path)
+            for k in idict.keys():
+                if k.endswith("_role"):
+                    if (("%s_exec_t" % k[:-5]) in sepolicy.get_all_types()):
+                        trans_list.append(k)
+        except IOError, e:
+            sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+            sys.exit(1)
+    else:
+        for i in sepolicy.get_methods():
+            m = re.findall("(.*)%s" % USER_TRANSITION_INTERFACE, i)
+            if len(m) > 0:
+                if "%s_exec_t" % m[0] in sepolicy.get_all_types():
+                    trans_list.append(m[0])
+
     return trans_list
+
+interface_dict = None
+def get_interface_dict(path="/usr/share/selinux/devel/policy.xml"):
+    global interface_dict
+    import os
+    import xml.etree.ElementTree
+    if interface_dict:
+        return interface_dict
+
+    interface_dict = {}
+    param_list = []
+
+    xml_path = """<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<policy>
+<layer name="admin">
+"""
+    xml_path += path
+    xml_path +="""
+</layer>
+</policy>
+"""
+
+    try:
+        if os.path.isfile(path):
+            tree = xml.etree.ElementTree.parse(path)
+        else:
+            tree = xml.etree.ElementTree.fromstring(xml_path)
+        for l in tree.findall("layer"):
+            for m in l.findall("module"):
+                for i in m.getiterator('interface'):
+                    for e in i.findall("param"):
+                        param_list.append(e.get('name'))
+                    interface_dict[(i.get("name"))] = [param_list,(i.find('summary').text),"interface"]
+                    param_list = []
+                for i in m.getiterator('template'):
+                    for e in i.findall("param"):
+                        param_list.append(e.get('name'))
+                    interface_dict[(i.get("name"))] = [param_list,(i.find('summary').text),"template"]
+                    param_list = []
+    except IOError, e:
+        pass
+    return interface_dict
+
+def get_interface_format_text(interface,path = "/usr/share/selinux/devel/policy.xml"):
+    idict = get_interface_dict(path)
+    interface_text = "%s(%s) %s" % (interface, ", ".join(idict[interface][0]), " ".join(idict[interface][1].split("\n")))
+
+    return interface_text
+
+def get_interface_compile_format_text(interfaces_dict, interface):
+    from templates import test_module
+    param_tmp = []
+    for i in interfaces_dict[interface][0]:
+        param_tmp.append(test_module.dict_values[i])
+        interface_text = "%s(%s)\n" % (interface, ", ".join(param_tmp))
+
+    return interface_text
+
+def generate_compile_te(interface, idict, name="compiletest"):
+    from templates import test_module
+    te = ""
+    te += re.sub("TEMPLATETYPE", name, test_module.te_test_module )
+    te += get_interface_compile_format_text(idict,interface)
+
+    return te
+
+def get_xml_file(if_file):
+    """ Returns xml format of interfaces for given .if policy file"""
+    import os, commands
+    basedir = os.path.dirname(if_file)+"/"
+    filename = os.path.basename(if_file).split(".")[0]
+    rc, output=commands.getstatusoutput("python /usr/share/selinux/devel/include/support/segenxml.py -w -m %s" % basedir+filename)
+    if rc != 0:
+        sys.stderr.write("\n Could not proceed selected interface file.\n")
+        sys.stderr.write("\n%s" % output)
+        sys.exit(1)
+    else:
+        return output
+
+def interface_compile_test(interface, path = "/usr/share/selinux/devel/policy.xml"):
+    exclude_interfaces = ["userdom","kernel","corenet","files", "dev"]
+    exclude_interface_type = ["template"]
+
+    import commands, os
+    policy_files = {'pp':"compiletest.pp", 'te':"compiletest.te", 'fc':"compiletest.fc", 'if':"compiletest.if"}
+    idict = get_interface_dict(path)
+
+    if not (interface.split("_")[0] in exclude_interfaces or idict[interface][2] in exclude_interface_type):
+        print(_("Compiling %s interface" % interface))
+        try:
+            fd = open(policy_files['te'], "w")
+            fd.write(generate_compile_te(interface, idict))
+            fd.close()
+            rc, output=commands.getstatusoutput("make -f /usr/share/selinux/devel/Makefile %s" % policy_files['pp'] )
+            if rc != 0:
+                sys.stderr.write(output)
+                sys.stderr.write(_("\nCompile test for %s failed.\n") % interface)
+
+        except EnvironmentError, e:
+            sys.stderr.write(_("\nCompile test for %s has not run. %s\n") % (interface, e))
+        for v in policy_files.values():
+            if os.path.exists(v):
+                os.remove(v)
+
+    else:
+        sys.stderr.write(_("\nCompiling of %s interface is not supported." % interface))

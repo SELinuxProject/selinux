@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+"-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+"http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd">
+<policyconfig>
+
+    <vendor>Red Hat Inc.</vendor>
+    <vendor_url>http://www.redhat.com</vendor_url>
+
+    <action id="org.selinux.restorecon">
+        <description>SELinux write access</description>
+        <message>System policy prevents restorecon access to SELinux</message>
+        <defaults>
+            <allow_any>auth_admin_keep</allow_any>
+            <allow_inactive>auth_admin_keep</allow_inactive>
+            <allow_active>auth_admin_keep</allow_active>
+        </defaults>
+    </action>
+    <action id="org.selinux.setenforce">
+        <description>SELinux write access</description>
+        <message>System policy prevents setenforce access to SELinux</message>
+        <defaults>
+            <allow_any>auth_admin_keep</allow_any>
+            <allow_inactive>auth_admin_keep</allow_inactive>
+            <allow_active>auth_admin_keep</allow_active>
+        </defaults>
+    </action>
+    <action id="org.selinux.semanage">
+        <description>SELinux write access</description>
+        <message>System policy prevents semanage access to SELinux</message>
+        <defaults>
+            <allow_any>auth_admin_keep</allow_any>
+            <allow_inactive>auth_admin_keep</allow_inactive>
+            <allow_active>auth_admin_keep</allow_active>
+        </defaults>
+    </action>
+    <action id="org.selinux.customized">
+        <description>SELinux Read access</description>
+        <message>System policy prevents read access to SELinux</message>
+        <defaults>
+	  <allow_any>yes</allow_any>
+	  <allow_inactive>yes</allow_inactive>
+	  <allow_active>yes</allow_active>
+        </defaults>
+    </action>
+    <action id="org.selinux.semodule_list">
+        <description>SELinux list modules access</description>
+        <message>System policy prevents read access to SELinux modules</message>
+        <defaults>
+	  <allow_any>yes</allow_any>
+	  <allow_inactive>yes</allow_inactive>
+	  <allow_active>yes</allow_active>
+        </defaults>
+    </action>
+    <action id="org.selinux.relabel_on_boot">
+        <description>SELinux write access</description>
+        <message>System policy prevents relabel_on_boot access to SELinux</message>
+        <defaults>
+            <allow_any>yes</allow_any>
+        </defaults>
+    </action>
+    <action id="org.selinux.change_default_policy">
+        <description>SELinux write access</description>
+        <message>System policy prevents change_default_policy access to SELinux</message>
+        <defaults>
+            <allow_any>auth_admin_keep</allow_any>
+            <allow_inactive>auth_admin_keep</allow_inactive>
+            <allow_active>auth_admin_keep</allow_active>
+        </defaults>
+    </action>
+    <action id="org.selinux.change_policy_type">
+        <description>SELinux write access</description>
+        <message>System policy prevents change_policy_type access to SELinux</message>
+        <defaults>
+            <allow_any>auth_admin_keep</allow_any>
+            <allow_inactive>auth_admin_keep</allow_inactive>
+            <allow_active>auth_admin_keep</allow_active>
+        </defaults>
+    </action>
+</policyconfig>

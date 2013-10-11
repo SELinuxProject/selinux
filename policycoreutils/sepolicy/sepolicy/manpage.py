@@ -28,12 +28,12 @@ import string
 import argparse
 import selinux
 import sepolicy
-from sepolicy import network, gen_bool_dict, get_all_file_types, get_all_domains, get_all_roles, get_all_users, get_all_port_types, get_all_bools, get_all_attributes, get_all_role_allows
+from sepolicy import *
 
 import commands
 import sys, os, re, time
 
-equiv_dict={ "smbd" : [ "samba" ], "httpd" : [ "apache" ], "virtd" : [ "virt", "libvirt" ], "named" : [ "bind" ], "fsdaemon" : [ "smartmon" ], "mdadm" : [ "raid" ] }
+equiv_dict={ "smbd" : [ "samba" ], "httpd" : [ "apache" ], "virtd" : [ "virt", "libvirt", "svirt", "svirt_tcg", "svirt_lxc_t", "svirt_lxc_net_t" ], "named" : [ "bind" ], "fsdaemon" : [ "smartmon" ], "mdadm" : [ "raid" ] }
 
 equiv_dirs=[ "/var" ]
 modules_dict = None
@@ -45,7 +45,7 @@ def gen_modules_dict(path = "/usr/share/selinux/devel/policy.xml"):
 	import xml.etree.ElementTree
 	modules_dict = {}
 	try:
-		tree = xml.etree.ElementTree.parse(path)
+		tree = xml.etree.ElementTree.fromstring(policy_xml(path))
 		for l in  tree.findall("layer"):
 			for m in  l.findall("module"):
 				name = m.get("name")
@@ -100,8 +100,8 @@ def gen_domains():
 	for d in get_all_domains():
 		found = False
 		domain = d[:-2]
-		if domain + "_exec_t" not in get_entrypoints():
-			continue
+#		if domain + "_exec_t" not in get_entrypoints():
+#			continue
 		if domain in domains:
 			continue
 		domains.append(domain)
@@ -113,39 +113,6 @@ def gen_domains():
 
 	domains.sort()
 	return domains
-
-fcdict=None
-def _gen_fcdict(fc_path = selinux.selinux_file_context_path()):
-	global fcdict
-	if fcdict:
-		return fcdict
-	fd = open(fc_path, "r")
-	fc = fd.readlines()
-	fd.close()
-	fd = open(fc_path+".homedirs", "r")
-	fc += fd.readlines()
-	fd.close()
-	fcdict = {}
-	for i in fc:
-		rec = i.split()
-		try:
-			t = rec[-1].split(":")[2]
-			if t in fcdict:
-				fcdict[t].append(rec[0])
-			else:
-				fcdict[t] = [ rec[0] ]
-		except:
-			pass
-	fcdict["logfile"] = [ "all log files" ]
-	fcdict["user_tmp_type"] = [ "all user tmp files" ]
-	fcdict["user_home_type"] = [ "all user home files" ]
-	fcdict["virt_image_type"] = [ "all virtual image files" ]
-	fcdict["noxattrfs"] = [ "all files on file systems which do not support extended attributes" ]
-	fcdict["sandbox_tmpfs_type"] = [ "all sandbox content in tmpfs file systems" ]
-	fcdict["user_tmpfs_type"] = [ "all user content in tmpfs file systems" ]
-	fcdict["file_type"] = [ "all files on the system" ]
-	fcdict["samba_share_t"] = [ "use this label for random content that will be shared using samba" ]
-	return fcdict
 
 types = None
 def _gen_types():
@@ -184,14 +151,12 @@ def get_alphabet_manpages(manpage_list):
 	return alphabet_manpages
 
 def convert_manpage_to_html(html_manpage,manpage):
-	fd = open(html_manpage,'w')
-	rc, output = commands.getstatusoutput("man2html -r %s" % manpage)
+	rc, output = commands.getstatusoutput("/usr/bin/groff -man -Thtml %s 2>/dev/null" % manpage)
 	if rc == 0:
+		print html_manpage, " has been created"
+		fd = open(html_manpage,'w')
 		fd.write(output)
-	else:
-		fd.write("Man page does not exist")
-
-	fd.close()
+		fd.close()
 
 class HTMLManPages:
 	"""
@@ -416,56 +381,51 @@ class ManPage:
     """
 	Generate a Manpage on an SELinux domain in the specified path
     """
-    all_attributes = get_all_attributes()
-    all_domains = get_all_domains()
-    all_bools = get_all_bools()
-    all_port_types = get_all_port_types()
-    all_roles = get_all_roles()
-    all_users = get_all_users_info()[0]
-    all_users_range = get_all_users_info()[1]
-    all_file_types = get_all_file_types()
-    types = _gen_types()
     modules_dict = None
-    domains = gen_domains()
-    role_allows = get_all_role_allows()
     enabled_str = ["Disabled", "Enabled"]
 
-    def __init__(self, domainname, path = "/tmp", html = False):
+    def __init__(self, domainname, path = "/tmp", root="/", source_files = False ,html = False):
 	self.html = html
-	self.portrecs = network.portrecs
+	self.source_files = source_files
+	self.root = root
+	self.portrecs = gen_port_dict()[0]
+	self.domains = gen_domains()
+	self.all_domains = get_all_domains()
+	self.all_attributes = get_all_attributes()
+	self.all_bools = get_all_bools()
+	self.all_port_types = get_all_port_types()
+	self.all_roles = get_all_roles()
+	self.all_users = get_all_users_info()[0]
+	self.all_users_range = get_all_users_info()[1]
+	self.all_file_types = get_all_file_types()
+	self.role_allows = get_all_role_allows()
+	self.types = _gen_types()
 
-	fcpath = path + "/file_contexts"
-	if os.path.exists(fcpath):
-		self.fcpath = fcpath
+	if self.source_files:
+		self.fcpath = self.root + "file_contexts"
 	else:
-		self.fcpath = selinux.selinux_file_context_path()
-	self.fcdict = _gen_fcdict(self.fcpath)
+		self.fcpath = self.root + selinux.selinux_file_context_path()
+
+	self.fcdict = get_fcdict(self.fcpath)
 
 	if not os.path.exists(path):
 		os.makedirs(path)
+
 	self.path = path
 
-	xmlpath = path + "/policy.xml"
-	if os.path.exists(xmlpath):
-		self.xmlpath = xmlpath
+	if self.source_files:
+		self.xmlpath = self.root + "policy.xml"
 	else:
-		self.xmlpath = "/usr/share/selinux/devel/policy.xml"
+		self.xmlpath = self.root + "/usr/share/selinux/devel/policy.xml"
 	self.booleans_dict = gen_bool_dict(self.xmlpath)
 
-	if domainname.endswith("_t"):
-		self.domainname = domainname[:-2]
-	else:
-		self.domainname = domainname
-
-	if self.domainname + "_t" not in self.all_domains:
-		raise  ValueError("domain %s_t does not exist" % self.domainname)
-	self.short_name = self.domainname
+        self.domainname, self.short_name = gen_short_name(domainname)
 
 	self.type = self.domainname + "_t"
 	self._gen_bools()
 	self.man_page_path = "%s/%s_selinux.8" % (path, self.domainname)
 	self.fd = open(self.man_page_path, 'w')
-	if domainname + "_r" in self.all_roles:
+	if self.domainname + "_r" in self.all_roles:
 	    self.__gen_user_man_page()
 	    if self.html:
 		manpage_roles.append(self.man_page_path)
@@ -483,16 +443,16 @@ class ManPage:
     def _gen_bools(self):
 	    self.bools=[]
 	    self.domainbools=[]
-	    for i in map(lambda x: x['boolean'], filter(lambda x: 'boolean' in x, sepolicy.search([sepolicy.ALLOW],{'source' : self.type }))):
-		    for b in i:
-			    if not isinstance(b,tuple):
-				    continue
-			    if b[0].startswith(self.short_name):
-				    if b not in self.domainbools and (b[0], not b[1]) not in self.domainbools:
-					    self.domainbools.append(b)
-			    else:
-				    if b not in self.bools and (b[0], not b[1]) not in self.bools:
-					    self.bools.append(b)
+	    types = [self.type]
+	    if self.domainname in equiv_dict:
+		    for t in equiv_dict[self.domainname]:
+			    if t + "_t" in self.all_domains:
+				    types.append(t+"_t")
+
+	    for t in types:
+                    domainbools, bools = get_bools(t)
+                    self.bools += bools
+                    self.domainbools += domainbools
 
 	    self.bools.sort()
 	    self.domainbools.sort()
@@ -538,9 +498,6 @@ class ManPage:
 	    print path
 
     def __gen_man_page(self):
-	if self.domainname[-1]=='d':
-	    self.short_name = self.domainname[:-1]
-
 	self.anon_list = []
 
 	self.attributes = {}
@@ -563,22 +520,11 @@ class ManPage:
 
     def _get_ptypes(self):
 	for f in self.all_domains:
-	    if f.startswith(self.short_name):
-		self.ptypes.append(f)
-
-    def __whoami(self):
-	    import pwd
-	    fd = open("/proc/self/loginuid", "r")
-	    uid = int(fd.read())
-	    fd.close()
-	    pw = pwd.getpwuid(uid)
-	    if len(pw.pw_gecos) > 0:
-		    return pw.pw_gecos
-	    else:
-		    return pw.pw_name
+		if f.startswith(self.short_name) or f.startswith(self.domainname):
+			self.ptypes.append(f)
 
     def _header(self):
-	self.fd.write('.TH  "%(domainname)s_selinux"  "8"  "%(date)s" "%(domainname)s" "SELinux Policy documentation for %(domainname)s"'
+	self.fd.write('.TH  "%(domainname)s_selinux"  "8"  "%(date)s" "%(domainname)s" "SELinux Policy %(domainname)s"'
 		 % {'domainname':self.domainname, 'date': time.strftime("%y-%m-%d")})
 	self.fd.write(r"""
 .SH "NAME"
@@ -595,95 +541,6 @@ For example:
 
 """ % {'domainname':self.domainname})
 
-
-    def _explain(self, f):
-	if f.endswith("_var_run_t"):
-	    return "store the %s files under the /run or /var/run directory." % prettyprint(f, "_var_run_t")
-	if f.endswith("_pid_t"):
-	    return "store the %s files under the /run directory." % prettyprint(f, "_pid_t")
-	if f.endswith("_var_lib_t"):
-	    return "store the %s files under the /var/lib directory."  % prettyprint(f, "_var_lib_t")
-	if f.endswith("_var_t"):
-	    return "store the %s files under the /var directory."  % prettyprint(f, "_var_lib_t")
-	if f.endswith("_var_spool_t"):
-	    return "store the %s files under the /var/spool directory." % prettyprint(f, "_spool_t")
-	if f.endswith("_spool_t"):
-	    return "store the %s files under the /var/spool directory." % prettyprint(f, "_spool_t")
-	if f.endswith("_cache_t") or f.endswith("_var_cache_t"):
-	    return "store the files under the /var/cache directory."
-	if f.endswith("_keytab_t"):
-	    return "treat the files as kerberos keytab files."
-	if f.endswith("_lock_t"):
-	    return "treat the files as %s lock data, stored under the /var/lock directory" % prettyprint(f,"_lock_t")
-	if f.endswith("_log_t"):
-	    return "treat the data as %s log data, usually stored under the /var/log directory." % prettyprint(f,"_log_t")
-	if f.endswith("_config_t"):
-	    return "treat the files as %s configuration data, usually stored under the /etc directory." % prettyprint(f,"_config_t")
-	if f.endswith("_conf_t"):
-	    return "treat the files as %s configuration data, usually stored under the /etc directory." % prettyprint(f,"_conf_t")
-	if f.endswith("_exec_t"):
-	    return "transition an executable to the %s_t domain." % f[:-len("_exec_t")]
-	if f.endswith("_cgi_content_t"):
-	    return "treat the files as %s cgi content." % prettyprint(f, "_cgi_content_t")
-	if f.endswith("_rw_content_t"):
-	    return "treat the files as %s read/write content." % prettyprint(f,"_rw_content_t")
-	if f.endswith("_rw_t"):
-	    return "treat the files as %s read/write content." % prettyprint(f,"_rw_t")
-	if f.endswith("_write_t"):
-	    return "treat the files as %s read/write content." % prettyprint(f,"_write_t")
-	if f.endswith("_db_t"):
-	    return "treat the files as %s database content." % prettyprint(f,"_db_t")
-	if f.endswith("_ra_content_t"):
-	    return "treat the files as %s read/append content." % prettyprint(f,"_ra_conten_t")
-	if f.endswith("_cert_t"):
-	    return "treat the files as %s certificate data." % prettyprint(f,"_cert_t")
-	if f.endswith("_key_t"):
-	    return "treat the files as %s key data." % prettyprint(f,"_key_t")
-
-	if f.endswith("_secret_t"):
-	    return "treat the files as %s secret data." % prettyprint(f,"_key_t")
-
-	if f.endswith("_ra_t"):
-	    return "treat the files as %s read/append content." % prettyprint(f,"_ra_t")
-
-	if f.endswith("_ro_t"):
-	    return "treat the files as %s read/only content." % prettyprint(f,"_ro_t")
-
-	if f.endswith("_modules_t"):
-	    return "treat the files as %s modules." % prettyprint(f, "_modules_t")
-
-	if f.endswith("_content_t"):
-	    return "treat the files as %s content." % prettyprint(f, "_content_t")
-
-	if f.endswith("_state_t"):
-	    return "treat the files as %s state data." % prettyprint(f, "_state_t")
-
-	if f.endswith("_files_t"):
-	    return "treat the files as %s content." % prettyprint(f, "_files_t")
-
-	if f.endswith("_file_t"):
-	    return "treat the files as %s content." % prettyprint(f, "_file_t")
-
-	if f.endswith("_data_t"):
-	    return "treat the files as %s content." % prettyprint(f, "_data_t")
-
-	if f.endswith("_file_t"):
-	    return "treat the data as %s content." % prettyprint(f, "_file_t")
-
-	if f.endswith("_tmp_t"):
-	    return "store %s temporary files in the /tmp directories." % prettyprint(f, "_tmp_t")
-	if f.endswith("_etc_t"):
-	    return "store %s files in the /etc directories." % prettyprint(f, "_tmp_t")
-	if f.endswith("_home_t"):
-	    return "store %s files in the users home directory." % prettyprint(f, "_home_t")
-	if f.endswith("_tmpfs_t"):
-	    return "store %s files on a tmpfs file system." % prettyprint(f, "_tmpfs_t")
-	if f.endswith("_unit_file_t"):
-	    return "treat files as a systemd unit file."
-	if f.endswith("_htaccess_t"):
-	    return "treat the file as a %s access file." % prettyprint(f, "_htaccess_t")
-
-	return "treat the files as %s data." % prettyprint(f,"_t")
 
     def _format_boolean_desc(self, b):
 	    desc = self.booleans_dict[b][2][0].lower() + self.booleans_dict[b][2][1:]
@@ -774,7 +631,7 @@ can be used to make the process type %(domainname)s_t permissive. SELinux does n
     def _port_types(self):
 	self.ports = []
 	for f in self.all_port_types:
-	    if f.startswith(self.short_name):
+            if f.startswith(self.short_name) or f.startswith(self.domainname):
 		self.ports.append(f)
 
 	if len(self.ports) == 0:
@@ -821,7 +678,7 @@ Default Defined Ports:""")
 		if f.startswith(self.domainname):
 			flist.append(f)
 			if f in self.fcdict:
-				mpaths = mpaths + self.fcdict[f]
+				mpaths = mpaths + self.fcdict[f]["regex"]
 	if len(mpaths) == 0:
 		return
 	mpaths.sort()
@@ -896,19 +753,19 @@ Note: SELinux often uses regular expressions to specify labels that match multip
 .B %s
 .EE
 
-- Set files with the %s type, if you want to %s
-""" % (f, f, self._explain(f)))
+- %s
+""" % ( f, sepolicy.get_description(f)))
 
 		if f in self.fcdict:
 		    plural = ""
-		    if len(self.fcdict[f]) > 1:
+		    if len(self.fcdict[f]["regex"]) > 1:
 			plural = "s"
 			self.fd.write("""
 .br
 .TP 5
 Path%s:
-%s""" % (plural, self.fcdict[f][0]))
-			for x in self.fcdict[f][1:]:
+%s""" % (plural, self.fcdict[f]["regex"][0]))
+			for x in self.fcdict[f]["regex"][1:]:
 			    self.fd.write(", %s" % x)
 
 	self.fd.write("""
@@ -923,13 +780,12 @@ to apply the labels.
 
     def _see_also(self):
 	    ret = ""
-	    prefix = self.short_name.split("_")[0]
 	    for d in self.domains:
 		    if d == self.domainname:
 			    continue
-		    if d.startswith(prefix):
+		    if d.startswith(self.short_name):
 			    ret += ", %s_selinux(8)" % d
-		    if self.domainname.startswith(d):
+		    if d.startswith(self.domainname + "_"):
 			    ret += ", %s_selinux(8)" % d
 	    self.fd.write(ret)
 
@@ -947,13 +803,14 @@ semanage fcontext -a -t public_content_t "/var/%(domainname)s(/.*)?"
 .B restorecon -F -R -v /var/%(domainname)s
 .pp
 .TP
-Allow %(domainname)s servers to read and write /var/tmp/incoming by adding the public_content_rw_t type to the directory and by restoring the file type.  This also requires the allow_%(domainname)sd_anon_write boolean to be set.
+Allow %(domainname)s servers to read and write /var/%(domainname)s/incoming by adding the public_content_rw_t type to the directory and by restoring the file type.  You also need to turn on the %(domainname)s_anon_write boolean.
 .PP
 .B
 semanage fcontext -a -t public_content_rw_t "/var/%(domainname)s/incoming(/.*)?"
 .br
 .B restorecon -F -R -v /var/%(domainname)s/incoming
-
+.br
+.B setsebool -P %(domainname)s_anon_write 1
 """  % {'domainname':self.domainname})
 	    for b in self.anon_list:
 		desc = self.booleans_dict[b][2][0].lower() + self.booleans_dict[b][2][1:]
@@ -998,12 +855,11 @@ is a GUI tool available to customize SELinux policy settings.
 
 .SH AUTHOR
 This manual page was auto-generated using
-.B "sepolicy manpage"
-by %s.
+.B "sepolicy manpage".
 
 .SH "SEE ALSO"
 selinux(8), %s(8), semanage(8), restorecon(8), chcon(1), sepolicy(8)
-""" % (self.__whoami(), self.domainname))
+""" % (self.domainname))
 
 	if self.booltext != "":
 	    self.fd.write(", setsebool(8)")
@@ -1046,7 +902,7 @@ All executeables with the default executable label, usually stored in /usr/bin a
 	paths=[]
 	for entrypoint in entrypoints:
 		if entrypoint in self.fcdict:
-			paths += self.fcdict[entrypoint]
+			paths += self.fcdict[entrypoint]["regex"]
 
 	self.fd.write("""
 %s""" % ", ".join(paths))
@@ -1086,7 +942,7 @@ The SELinux process type %s_t can manage files labeled with the following file t
 
 """ % f)
 	    if f in self.fcdict:
-		for path in self.fcdict[f]:
+		for path in self.fcdict[f]["regex"]:
 		    self.fd.write("""\t%s
 .br
 """ % path)
@@ -1230,6 +1086,7 @@ The SELinux user %s_u is not able to terminal login.
 """ % self.domainname)
 
     def _network(self):
+        from sepolicy import network
 	self.fd.write("""
 .SH NETWORK
 """)
@@ -1241,10 +1098,10 @@ The SELinux user %s_u is not able to terminal login.
 The SELinux user %s_u is able to listen on the following %s ports.
 """ % (self.domainname, net))
 		for p in portdict:
-		    for recs in portdict[p]:
+		    for t, ports in portdict[p]:
 			self.fd.write("""
 .B %s
-""" % recs)
+""" % ",".join(ports))
 	    portdict = network.get_network_connect(self.type, "tcp", "name_connect")
 	    if len(portdict) > 0:
 		self.fd.write("""
@@ -1252,10 +1109,10 @@ The SELinux user %s_u is able to listen on the following %s ports.
 The SELinux user %s_u is able to connect to the following tcp ports.
 """ % (self.domainname))
 		for p in portdict:
-		    for recs in portdict[p]:
+		    for t, ports in portdict[p]:
 			self.fd.write("""
 .B %s
-""" % recs)
+""" % ",".join(ports))
 
     def _home_exec(self):
 	permlist = sepolicy.search([sepolicy.ALLOW],{'source':self.type,'target':'user_home_type', 'class':'file', 'permlist':['ioctl', 'read', 'getattr', 'execute', 'execute_no_trans', 'open']})

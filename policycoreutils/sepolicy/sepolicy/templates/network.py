@@ -578,3 +578,6 @@ interface(`corenet_relabelto_TEMPLATETYPE_server_packets',`
 	allow $1 TEMPLATETYPE_server_packet_t:packet relabelto;
 ')
 """
+
+te_rules="""
+"""

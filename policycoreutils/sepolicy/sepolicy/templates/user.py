@@ -71,11 +71,6 @@ policy_module(TEMPLATETYPE, 1.0.0)
 te_root_user_types="""\
 policy_module(TEMPLATETYPE, 1.0.0)
 
-########################################
-#
-# Declarations
-#
-
 ## <desc>
 ## <p>
 ## Allow TEMPLATETYPE to read files in the user home directory
@@ -89,6 +84,11 @@ gen_tunable(TEMPLATETYPE_read_user_files, false)
 ## </p>
 ## </desc>
 gen_tunable(TEMPLATETYPE_manage_user_files, false)
+
+########################################
+#
+# Declarations
+#
 
 userdom_base_user_template(TEMPLATETYPE)
 """
@@ -151,7 +151,9 @@ tunable_policy(`TEMPLATETYPE_read_user_files',`
 ')
 
 tunable_policy(`TEMPLATETYPE_manage_user_files',`
-        userdom_manage_user_home_content(TEMPLATETYPE_t)
+	userdom_manage_user_home_content_dirs(TEMPLATETYPE_t)
+	userdom_manage_user_home_content_files(TEMPLATETYPE_t)
+	userdom_manage_user_home_content_symlinks(TEMPLATETYPE_t)
         userdom_manage_user_tmp_files(TEMPLATETYPE_t)
 ')
 """
