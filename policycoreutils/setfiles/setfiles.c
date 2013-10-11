@@ -45,14 +45,14 @@ void usage(const char *const name)
 {
 	if (iamrestorecon) {
 		fprintf(stderr,
-			"usage:  %s [-iFnprRv0] [-e excludedir] [-o filename] pathname...\n"
-			"usage:  %s [-iFnprRv0] [-e excludedir] [-o filename] -f filename\n",
+			"usage:  %s [-iFnprRv0] [-e excludedir] pathname...\n"
+			"usage:  %s [-iFnprRv0] [-e excludedir] -f filename\n",
 			name, name);
 	} else {
 		fprintf(stderr,
-			"usage:  %s [-dilnpqvFW] [-e excludedir] [-o filename] [-r alt_root_path] spec_file pathname...\n"
-			"usage:  %s [-dilnpqvFW] [-e excludedir] [-o filename] [-r alt_root_path] spec_file -f filename\n"
-			"usage:  %s -s [-dilnpqvFW] [-o filename] spec_file\n"
+			"usage:  %s [-dilnpqvFW] [-e excludedir] [-r alt_root_path] spec_file pathname...\n"
+			"usage:  %s [-dilnpqvFW] [-e excludedir] [-r alt_root_path] spec_file -f filename\n"
+			"usage:  %s -s [-dilnpqvFW] spec_file\n"
 			"usage:  %s -c policyfile spec_file\n",
 			name, name, name, name);
 	}
