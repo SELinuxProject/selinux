@@ -308,6 +308,8 @@ class moduleRecords(semanageRecords):
                        print "%-25s%-10s%s" % (t[0], t[1], disabled)
 
 	def add(self, file):
+               if not os.path.exists(file):
+                       raise ValueError(_("Module does not exists %s ") % file)
                rc = semanage_module_install_file(self.sh, file);
                if rc >= 0:
                       self.commit()
