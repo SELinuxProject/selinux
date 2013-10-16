@@ -284,7 +284,7 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	char *path = NULL;
 	long rbuflen;
 	uid_t temp, minuid = 500, maxuid = 60000;
-	int minuid_set = 0, maxuid_set = 0;
+	int minuid_set = 0;
 	struct passwd pwstorage, *pwbuf;
 	struct stat buf;
 	int retval;
@@ -337,7 +337,6 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	if (path && *path) {
 		temp = atoi(path);
 		maxuid = temp;
-		maxuid_set = 1;
 	}
 	free(path);
 	path = NULL;
