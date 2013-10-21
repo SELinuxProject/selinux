@@ -235,7 +235,7 @@ static int process_line(struct selabel_handle *rec,
 	return 0;
 }
 
-static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *stat)
+static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *sb)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	char mmap_path[PATH_MAX + 1];
@@ -266,13 +266,13 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 	}
 
 	/* if mmap is old, ignore it */
-	if (mmap_stat.st_mtime < stat->st_mtime) {
+	if (mmap_stat.st_mtime < sb->st_mtime) {
 		close(mmapfd);
 		return -1;
 	}
 
-	if (mmap_stat.st_mtime == stat->st_mtime &&
-	    mmap_stat.st_mtim.tv_nsec < stat->st_mtim.tv_nsec) {
+	if (mmap_stat.st_mtime == sb->st_mtime &&
+	    mmap_stat.st_mtim.tv_nsec < sb->st_mtim.tv_nsec) {
 		close(mmapfd);
 		return -1;
 	}
