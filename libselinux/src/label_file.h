@@ -8,6 +8,11 @@
 #define SELINUX_MAGIC_COMPILED_FCONTEXT	0xf97cff8a
 #define SELINUX_COMPILED_FCONTEXT_MAX_VERS	1
 
+/* Prior to verison 8.20, libpcre did not have pcre_free_study() */
+#if (PCRE_MAJOR < 8 || (PCRE_MAJOR == 8 && PCRE_MINOR < 20))
+#define pcre_free_study  pcre_free
+#endif
+
 /* A file security context specification. */
 struct spec {
 	struct selabel_lookup_rec lr;	/* holds contexts for lookup result */
