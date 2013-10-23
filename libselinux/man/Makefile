@@ -13,4 +13,6 @@ install: all
 	install -m 644 man5/*.5 $(MAN5DIR)
 	install -m 644 man8/*.8 $(MAN8DIR)
 
+relabel:
+
 indent distclean clean:

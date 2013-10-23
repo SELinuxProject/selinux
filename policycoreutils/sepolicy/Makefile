@@ -30,3 +30,5 @@ install:
 	install -m 644 *.8 $(MANDIR)/man8
 	-mkdir -p $(BASHCOMPLETIONDIR)
 	install -m 644 $(BASHCOMPLETIONS) $(BASHCOMPLETIONDIR)
+
+relabel:
