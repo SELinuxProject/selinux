@@ -13,7 +13,7 @@ EXECUTABLE = libsemanage-tests
 CC = gcc
 CFLAGS = -c -g -o0 -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
 INCLUDE = -I$(TESTSRC) -I$(TESTSRC)/../include
-LDFLAGS = -lcunit -lustr -lbz2
+LDFLAGS = -lcunit -lustr -lbz2 -laudit
 OBJECTS = $(SOURCES:.c=.o) 
 
 all: $(EXECUTABLE) 
