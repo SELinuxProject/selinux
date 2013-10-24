@@ -667,8 +667,9 @@ def setupDontauditParser(subparsers):
 def handleExport(args):
     manageditems=[ "boolean", "login", "interface", "user", "port", "node", "fcontext", "module"]
     for i in manageditems:
-        OBJECT = object_dict[i]()
         print "%s -D" % i
+    for i in manageditems:
+        OBJECT = object_dict[i]()
         for c in OBJECT.customized():
             print "%s %s" % (i, str(c))
 
