@@ -384,6 +384,17 @@ static int constraint_node_clone(constraint_node_t ** dst,
 			new_expr->op = expr->op;
 			if (new_expr->expr_type == CEXPR_NAMES) {
 				if (new_expr->attr & CEXPR_TYPE) {
+					/*
+					 * Copy over constraint policy source types and/or
+					 * attributes for sepol_compute_av_reason_buffer(3) so that
+					 * utilities can analyse constraint errors.
+					 */
+					if (map_ebitmap(&expr->type_names->types,
+							&new_expr->type_names->types,
+							state->typemap)) {
+						ERR(NULL, "Failed to map type_names->types");
+						goto out_of_mem;
+					}
 					/* Type sets require expansion and conversion. */
 					if (expand_convert_type_set(state->out,
 								    state->

@@ -4,7 +4,7 @@
 #
 # Dan Walsh <dwalsh@redhat.com>
 #
-# Copyright (C) 2007-2012 Red Hat
+# Copyright (C) 2007-2013 Red Hat
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,12 @@ import os
 import gobject
 import gnome
 import sys
-from sepolicy import generate
+try:
+    from sepolicy import generate
+except ValueError,e:
+    sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+    sys.exit(1)
+
 import sepolicy.interface
 import commands
 
@@ -320,14 +325,16 @@ class childWindow:
         col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text = 0)
         self.admin_treeview.append_column(col)
 
+        try:
+            for u in sepolicy.interface.get_user():
+                iter = self.transition_store.append()
+                self.transition_store.set_value(iter, 0, u)
 
-        for u in sepolicy.interface.get_user():
-            iter = self.transition_store.append()
-            self.transition_store.set_value(iter, 0, u)
-
-        for a in sepolicy.interface.get_admin():
-            iter = self.admin_store.append()
-            self.admin_store.set_value(iter, 0, a)
+            for a in sepolicy.interface.get_admin():
+                iter = self.admin_store.append()
+                self.admin_store.set_value(iter, 0, a)
+        except ValueError,e:
+            self.error(e.message)
 
     def confine_application(self):
         return self.get_type() in generate.APPLICATIONS

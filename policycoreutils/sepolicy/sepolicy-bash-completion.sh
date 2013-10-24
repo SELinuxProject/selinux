@@ -1,6 +1,6 @@
 # This file is part of systemd.
 #
-# Copyright 2012 Dan Walsh
+# Copyright 2012-2013 Dan Walsh
 #
 # systemd is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -69,6 +69,7 @@ _sepolicy () {
                [BOOLEANS]='booleans'
                [COMMUNICATE]='communicate'
                [GENERATE]='generate'
+               [GUI]='gui'
                [INTERFACE]='interface'
                [MANPAGE]='manpage'
                [NETWORK]='network'
@@ -80,8 +81,9 @@ _sepolicy () {
                [booleans]='-h --help -p --path -a -all -b --boolean'
                [communicate]='-h --help -s --source -t --target -c --class -S --sourceaccess -T --targetaccess'
                [generate]='-a --admin --admin_user --application --cgi --confined_admin --customize  -d --domain --dbus --desktop_user -h --help --inetd --init -n --name --newtype -p --path --sandbox -T --test --term_user -u --user -w --writepath --x_user'
-               [interface]='-h --help -a --list_admin" -u --list_user -l --list'
-               [manpage]='-h --help -p --path -a -all -o --os -d --domain -w --web'
+               [gui]='-h --help'
+               [interface]='-h --help -a --list_admin -c --compile -i --interface -l --list -u --list_user -u --list_user -v --verbose'
+               [manpage]='-h --help -p --path -a -all -o --os -d --domain -w --web -r --root'
                [network]='-h --help -d --domain -l --list -p --port -t --type '
                [transition]='-h --help -s --source -t --target'
         )
@@ -130,17 +132,17 @@ _sepolicy () {
                 COMPREPLY=( $( compgen -d -- "$cur") )
                 compopt -o filenames
                 return 0
-            elif [ "$prev" = "--type" -o "$prev" = "-t" ]; then
-                COMPREPLY=( $(compgen -W '0 1 2 3 4 5 6 7 8 9 10 11' -- "$cur") )
-                return 0
             elif [ "$prev" = "--domain" -o "$prev" = "-d" ]; then
                 COMPREPLY=( $(compgen -W "$( __get_all_domain_types ) " -- "$cur") )
+                return 0
+            elif [ "$prev" = "--newtype" ]; then
+                COMPREPLY=( $(compgen -W "-n --name -t --type" -- "$cur") )
                 return 0
             elif [ "$prev" = "--admin" -o "$prev" = "-a" ]; then
                 COMPREPLY=( $(compgen -W "$( __get_all_admin_interaces ) " -- "$cur") )
                 return 0
             elif [ "$prev" = "--user" -o "$prev" = "-u" ]; then
-                COMPREPLY=( $(compgen -W "$( __get_all_users ) " -- "$cur") )
+                COMPREPLY=( $(compgen -W "$( __get_all_users )" -- "$cur") )
                 return 0
             elif [[ "$cur" == "$verb" || "$cur" == "" || "$cur" == -* ]]; then
                 COMPREPLY=( $(compgen -W '${OPTS[$verb]}' -- "$cur") )
@@ -156,6 +158,10 @@ _sepolicy () {
             if [ "$prev" = "-d" -o "$prev" = "--domain" ]; then
                 COMPREPLY=( $(compgen -W "$( __get_all_domains ) " -- "$cur") )
                 return 0
+            elif test "$prev" = "-r" || test "$prev" = "--root" ; then
+                COMPREPLY=( $( compgen -d -- "$cur") )
+                compopt -o filenames
+                return 0
             elif [ "$prev" = "-o" -o "$prev" = "--os" ]; then
                 return 0
             elif test "$prev" = "-p" || test "$prev" = "--path" ; then
@@ -167,11 +173,11 @@ _sepolicy () {
             return 0
         elif [ "$verb" = "network" ]; then
             if [ "$prev" = "-t" -o "$prev" = "--type" ]; then
-                COMPREPLY=( $(compgen -W "$( __get_all_port_types ) " -- "$cur") )
+                COMPREPLY=( $(compgen -W "$( __get_all_port_types )" -- "$cur") )
                 return 0
             fi
             if [ "$prev" = "-d" -o "$prev" = "--domain" ]; then
-                COMPREPLY=( $(compgen -W "$( __get_all_domain_types ) " -- "$cur") )
+                COMPREPLY=( $(compgen -W "$( __get_all_domain_types )" -- "$cur") )
                 return 0
             fi
             COMPREPLY=( $(compgen -W '${OPTS[$verb]}' -- "$cur") )

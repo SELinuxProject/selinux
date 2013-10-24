@@ -18,6 +18,7 @@ URL:		http://HOSTNAME
 Source0:	MODULENAME.pp
 Source1:	MODULENAME.if
 Source2:	DOMAINNAME_selinux.8
+Source3:	DOMAINNAME_u
 
 Requires: policycoreutils, libselinux-utils
 Requires(post): selinux-policy-base >= %{selinux_policyver}, policycoreutils
@@ -36,13 +37,16 @@ install -m 644 %{SOURCE0} %{buildroot}%{_datadir}/selinux/packages
 install -d %{buildroot}%{_datadir}/selinux/devel/include/contrib
 install -m 644 %{SOURCE1} %{buildroot}%{_datadir}/selinux/devel/include/contrib/
 install -d %{buildroot}%{_mandir}/man8/
-install -m 644 %{SOURCE2} %{buildroot}%{_mandir}/man8/
+install -m 644 %{SOURCE2} %{buildroot}%{_mandir}/man8/DOMAINNAME_selinux.8
+install -d %{buildroot}/etc/selinux/targeted/contexts/users/
+install -m 644 %{SOURCE3} %{buildroot}/etc/selinux/targeted/contexts/users/DOMAINNAME_u
 
 %post
 semodule -n -i %{_datadir}/selinux/packages/MODULENAME.pp
 if /usr/sbin/selinuxenabled ; then
     /usr/sbin/load_policy
     %relabel_files
+    /usr/sbin/semanage user -a -R DOMAINNAME_r DOMAINNAME_u
 fi;
 exit 0
 
@@ -52,6 +56,7 @@ if [ $1 -eq 0 ]; then
     if /usr/sbin/selinuxenabled ; then
        /usr/sbin/load_policy
        %relabel_files
+       /usr/sbin/semanage user -d DOMAINNAME_u
     fi;
 fi;
 exit 0
@@ -60,6 +65,7 @@ exit 0
 %attr(0600,root,root) %{_datadir}/selinux/packages/MODULENAME.pp
 %{_datadir}/selinux/devel/include/contrib/MODULENAME.if
 %{_mandir}/man8/DOMAINNAME_selinux.8.*
+/etc/selinux/targeted/contexts/users/DOMAINNAME_u
 
 %changelog
 * TODAYSDATE YOUR NAME <YOUR@EMAILADDRESS> 1.0-1

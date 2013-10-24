@@ -1,0 +1,9 @@
+Disable Unconfined System Processes
+
+
+By default any system process that is started at boot that do not have SELinux Policy defined for them, run as initrc_t or init_t.  These domains are unconfined by SELinux.  Other similar processes which do not have SELinux Policy written for them run also unconfined.  By disabling the unconfined module moves you closer to what used to be called strict policy, and locks down your machine tighter.
+
+Disabling the unconfined module will leave certain unconfined domains running on your system, specifically the unconfined_t user.  If you do not
+want unconfined_t users on your system you would need to remove them from the 'Login Mapping' and Users Screens.
+
+Note if you disable the unconfined module, you may see an increase in the denials, and if you have processes running as initrc_t, you may need to write policy for them.

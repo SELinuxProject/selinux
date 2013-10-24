@@ -1,22 +1,23 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
-# Eunju Kim <eukim@redhat.com>, 2006-2007,2009.
-# Hyunsok Oh <hoh@redhat.com>, 2010,2012.
+# eukim <eukim@redhat.com>, 2006-2007,2009
+# Hyunsok Oh <hoh@redhat.com>, 2010,2012-2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Policycoreutils\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-04 12:01-0500\n"
-"PO-Revision-Date: 2013-01-04 17:02+0000\n"
+"POT-Creation-Date: 2013-10-10 16:04-0400\n"
+"PO-Revision-Date: 2013-07-10 20:44+0000\n"
 "Last-Translator: dwalsh <dwalsh@redhat.com>\n"
-"Language-Team: Korean (http://www.transifex.com/projects/p/fedora/language/ko/)\n"
+"Language-Team: Korean (http://www.transifex.com/projects/p/fedora/language/"
+"ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../run_init/run_init.c:67
@@ -24,9 +25,12 @@ msgid ""
 "USAGE: run_init <script> <args ...>\n"
 "  where: <script> is the name of the init script to run,\n"
 "         <args ...> are the arguments to that script."
-msgstr "사용법: run_init <script> <args ...>\n  위치: <script> 은 실행 초기 스크립트명,\n         <args ...> 스크립에 대한 인자(arguments) 입니다."
+msgstr ""
+"사용법: run_init <script> <args ...>\n"
+"  위치: <script> 은 실행 초기 스크립트명,\n"
+"         <args ...> 스크립에 대한 인자(arguments) 입니다."
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1123
+#: ../run_init/run_init.c:126 ../newrole/newrole.c:1128
 #, c-format
 msgid "failed to initialize PAM\n"
 msgstr "PAM을 초기화하는데 실패하였습니다\n"
@@ -75,7 +79,7 @@ msgstr "죄송합니다. run_init은 단지 SELinux 커널에서만 사용될 �
 msgid "authentication failed.\n"
 msgstr "인증 실패.\n"
 
-#: ../run_init/run_init.c:405 ../newrole/newrole.c:1257
+#: ../run_init/run_init.c:405 ../newrole/newrole.c:1270
 #, c-format
 msgid "Could not set exec context to %s.\n"
 msgstr "%s에 실행가능한 문맥을 설정할 수 없습니다.\n"
@@ -88,871 +92,913 @@ msgstr "******************** 중요 ***********************\n"
 msgid "To make this policy package active, execute:"
 msgstr "정책 패키지를 활성화하려면 다음을 실행합니다:"
 
-#: ../semanage/seobject.py:194
+#: ../semanage/seobject.py:210
 msgid "Could not create semanage handle"
 msgstr "semanage 처리를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:202
+#: ../semanage/seobject.py:218
 msgid "SELinux policy is not managed or store cannot be accessed."
 msgstr "SELinux 정책은 관리되지 않거나 저장할 수 없습니다."
 
-#: ../semanage/seobject.py:207
+#: ../semanage/seobject.py:223
 msgid "Cannot read policy store."
 msgstr "정책을 읽을 수 없습니다."
 
-#: ../semanage/seobject.py:212
+#: ../semanage/seobject.py:228
 msgid "Could not establish semanage connection"
 msgstr "semanage 연결을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:217
+#: ../semanage/seobject.py:233
 msgid "Could not test MLS enabled status"
 msgstr "MLS가 활성화된 상태를 테스트할 수 없습니다 "
 
-#: ../semanage/seobject.py:223 ../semanage/seobject.py:238
+#: ../semanage/seobject.py:239 ../semanage/seobject.py:254
 msgid "Not yet implemented"
 msgstr "아직 구현되지 않았습니다 "
 
-#: ../semanage/seobject.py:227
+#: ../semanage/seobject.py:243
 msgid "Semanage transaction already in progress"
 msgstr "Semanage 트랜잭션이 이미 진행중입니다"
 
-#: ../semanage/seobject.py:236
+#: ../semanage/seobject.py:252
 msgid "Could not start semanage transaction"
 msgstr "semanage 트랜잭션을 시작할 수 없습니다"
 
-#: ../semanage/seobject.py:248
+#: ../semanage/seobject.py:264
 msgid "Could not commit semanage transaction"
 msgstr "semanage 트랜잭션을 커밋할 수 없습니다 "
 
-#: ../semanage/seobject.py:253
+#: ../semanage/seobject.py:269
 msgid "Semanage transaction not in progress"
 msgstr "Semanage 트랜잭션이 진행중이 아닙니다"
 
-#: ../semanage/seobject.py:265 ../semanage/seobject.py:345
+#: ../semanage/seobject.py:281 ../semanage/seobject.py:376
 msgid "Could not list SELinux modules"
 msgstr "SELinux 모듈 목록을 만들수 없습니다 "
 
-#: ../semanage/seobject.py:278
+#: ../semanage/seobject.py:300
 msgid "Modules Name"
 msgstr "모듈 이름"
 
-#: ../semanage/seobject.py:278 ../gui/modulesPage.py:63
+#: ../semanage/seobject.py:300 ../gui/modulesPage.py:63
 msgid "Version"
 msgstr "버전"
 
-#: ../semanage/seobject.py:281 ../gui/statusPage.py:75
+#: ../semanage/seobject.py:303 ../gui/statusPage.py:75
+#: ../sepolicy/sepolicy/sepolicy.glade:3430
 msgid "Disabled"
 msgstr "비활성화 "
 
-#: ../semanage/seobject.py:296
+#: ../semanage/seobject.py:312
+#, python-format
+msgid "Module does not exists %s "
+msgstr ""
+
+#: ../semanage/seobject.py:322
 #, python-format
 msgid "Could not disable module %s (remove failed)"
 msgstr "%s 모듈을 비활성화할 수 없습니다 (제거 실패)"
 
-#: ../semanage/seobject.py:307
+#: ../semanage/seobject.py:333
 #, python-format
 msgid "Could not enable module %s (remove failed)"
 msgstr "%s 모듈을 활성화할 수 없습니다 (제거 실패)"
 
-#: ../semanage/seobject.py:322
+#: ../semanage/seobject.py:348
 #, python-format
 msgid "Could not remove module %s (remove failed)"
 msgstr "%s 모듈을 제거할 수 없습니다 (제거 실패)"
 
-#: ../semanage/seobject.py:332
+#: ../semanage/seobject.py:363
 msgid "dontaudit requires either 'on' or 'off'"
 msgstr "dontaudit는 'on' 또는 'off'로 해야 합니다"
 
-#: ../semanage/seobject.py:360
+#: ../semanage/seobject.py:391
 msgid "Builtin Permissive Types"
 msgstr "내장 허용 형식"
 
-#: ../semanage/seobject.py:370
+#: ../semanage/seobject.py:401
 msgid "Customized Permissive Types"
 msgstr "사용자 정의 허용 형식"
 
-#: ../semanage/seobject.py:412
+#: ../semanage/seobject.py:410
+msgid ""
+"The sepolgen python module is required to setup permissive domains.\n"
+"In some distributions it is included in the policycoreutils-devel patckage.\n"
+"# yum install policycoreutils-devel\n"
+"Or similar for your distro."
+msgstr ""
+
+#: ../semanage/seobject.py:447
 #, python-format
 msgid "Could not set permissive domain %s (module installation failed)"
 msgstr "%s 허용 도메인을 설정할 수없습니다 (모듈 설치 실패) "
 
-#: ../semanage/seobject.py:418
+#: ../semanage/seobject.py:453
 #, python-format
 msgid "Could not remove permissive domain %s (remove failed)"
 msgstr "%s 허용 도메인을 제거하지 못했습니다 (제거 실패) "
 
-#: ../semanage/seobject.py:453 ../semanage/seobject.py:527
-#: ../semanage/seobject.py:573 ../semanage/seobject.py:695
-#: ../semanage/seobject.py:725 ../semanage/seobject.py:792
-#: ../semanage/seobject.py:849 ../semanage/seobject.py:1104
-#: ../semanage/seobject.py:1820 ../semanage/seobject.py:1883
-#: ../semanage/seobject.py:1902 ../semanage/seobject.py:2025
-#: ../semanage/seobject.py:2076
+#: ../semanage/seobject.py:488 ../semanage/seobject.py:562
+#: ../semanage/seobject.py:608 ../semanage/seobject.py:730
+#: ../semanage/seobject.py:760 ../semanage/seobject.py:827
+#: ../semanage/seobject.py:884 ../semanage/seobject.py:1144
+#: ../semanage/seobject.py:1879 ../semanage/seobject.py:1942
+#: ../semanage/seobject.py:1961 ../semanage/seobject.py:2084
+#: ../semanage/seobject.py:2135
 #, python-format
 msgid "Could not create a key for %s"
 msgstr "%s에 사용되는 키를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:457 ../semanage/seobject.py:531
-#: ../semanage/seobject.py:577 ../semanage/seobject.py:583
+#: ../semanage/seobject.py:492 ../semanage/seobject.py:566
+#: ../semanage/seobject.py:612 ../semanage/seobject.py:618
 #, python-format
 msgid "Could not check if login mapping for %s is defined"
 msgstr "%s에 대한 로그인 맵핑이 지정되었는지를 확인할 수 없습니다."
 
-#: ../semanage/seobject.py:466
+#: ../semanage/seobject.py:501
 #, python-format
 msgid "Linux Group %s does not exist"
 msgstr "%s Linux 그룹이 존재하지 않습니다 "
 
-#: ../semanage/seobject.py:471
+#: ../semanage/seobject.py:506
 #, python-format
 msgid "Linux User %s does not exist"
 msgstr "Linux 사용자 %s 가 존재하지 않습니다"
 
-#: ../semanage/seobject.py:475
+#: ../semanage/seobject.py:510
 #, python-format
 msgid "Could not create login mapping for %s"
 msgstr "%s에 대한 로그인 맵핑을 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:479 ../semanage/seobject.py:740
+#: ../semanage/seobject.py:514 ../semanage/seobject.py:775
 #, python-format
 msgid "Could not set name for %s"
 msgstr "%s에 대한 이름을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:484 ../semanage/seobject.py:750
+#: ../semanage/seobject.py:519 ../semanage/seobject.py:785
 #, python-format
 msgid "Could not set MLS range for %s"
 msgstr "%s 에 대한 MLS 범위를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:488
+#: ../semanage/seobject.py:523
 #, python-format
 msgid "Could not set SELinux user for %s"
 msgstr "%s에 대한 SELinu 사용자를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:492
+#: ../semanage/seobject.py:527
 #, python-format
 msgid "Could not add login mapping for %s"
 msgstr "%s에 대한 로그인 맵핑을 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:510
+#: ../semanage/seobject.py:545
 msgid "Requires seuser or serange"
 msgstr "seuser 또는 serange 필요"
 
-#: ../semanage/seobject.py:533 ../semanage/seobject.py:579
+#: ../semanage/seobject.py:568 ../semanage/seobject.py:614
 #, python-format
 msgid "Login mapping for %s is not defined"
 msgstr "%s에 대한 로그인 맵핑이 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:537
+#: ../semanage/seobject.py:572
 #, python-format
 msgid "Could not query seuser for %s"
 msgstr "%s에 대한 seuser를 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:551
+#: ../semanage/seobject.py:586
 #, python-format
 msgid "Could not modify login mapping for %s"
 msgstr "%s에 대한 로그인 맵핑을 수정할 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:585
+#: ../semanage/seobject.py:620
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
 msgstr "%s에 대한 로그인 맵핑이 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:589
+#: ../semanage/seobject.py:624
 #, python-format
 msgid "Could not delete login mapping for %s"
 msgstr "%s에 대한 로그인 맵핑을 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:611 ../semanage/seobject.py:644
-#: ../semanage/seobject.py:892
+#: ../semanage/seobject.py:646 ../semanage/seobject.py:679
+#: ../semanage/seobject.py:927
 msgid "Could not list login mappings"
 msgstr "로그인 맵핑 목록을 만들 수 없습니다"
 
-#: ../semanage/seobject.py:672 ../semanage/seobject.py:684
+#: ../semanage/seobject.py:707 ../semanage/seobject.py:719
 #: ../gui/system-config-selinux.glade:100
+#: ../sepolicy/sepolicy/sepolicy.glade:1166
+#: ../sepolicy/sepolicy/sepolicy.glade:3155
 msgid "Login Name"
 msgstr "로그인 이름"
 
-#: ../semanage/seobject.py:672 ../semanage/seobject.py:684
-#: ../semanage/seobject.py:942 ../semanage/seobject.py:947
+#: ../semanage/seobject.py:707 ../semanage/seobject.py:719
+#: ../semanage/seobject.py:977 ../semanage/seobject.py:982
 #: ../gui/system-config-selinux.glade:128
 #: ../gui/system-config-selinux.glade:915
 #: ../gui/system-config-selinux.glade:2285 ../gui/usersPage.py:44
+#: ../sepolicy/sepolicy/sepolicy.glade:1192
+#: ../sepolicy/sepolicy/sepolicy.glade:3173
+#: ../sepolicy/sepolicy/sepolicy.glade:3259
 msgid "SELinux User"
 msgstr "SELinux 사용자"
 
-#: ../semanage/seobject.py:672 ../gui/system-config-selinux.glade:156
+#: ../semanage/seobject.py:707 ../gui/system-config-selinux.glade:156
 #: ../gui/system-config-selinux.glade:943
 msgid "MLS/MCS Range"
 msgstr "MLS/MCS 범위"
 
-#: ../semanage/seobject.py:672
+#: ../semanage/seobject.py:707
 msgid "Service"
-msgstr ""
+msgstr "서비스 "
 
-#: ../semanage/seobject.py:698 ../semanage/seobject.py:729
-#: ../semanage/seobject.py:796 ../semanage/seobject.py:853
-#: ../semanage/seobject.py:859
+#: ../semanage/seobject.py:733 ../semanage/seobject.py:764
+#: ../semanage/seobject.py:831 ../semanage/seobject.py:888
+#: ../semanage/seobject.py:894
 #, python-format
 msgid "Could not check if SELinux user %s is defined"
 msgstr "%s에 대한 SELinux 사용자가 지정되었는지 확인할 수 없습니다"
 
-#: ../semanage/seobject.py:701 ../semanage/seobject.py:802
-#: ../semanage/seobject.py:865
+#: ../semanage/seobject.py:736 ../semanage/seobject.py:837
+#: ../semanage/seobject.py:900
 #, python-format
 msgid "Could not query user for %s"
 msgstr "%s에 대한 사용자를 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:721
+#: ../semanage/seobject.py:756
 #, python-format
 msgid "You must add at least one role for %s"
 msgstr "%s에 대해 최소 하나의 역할을 추가해야 합니다 "
 
-#: ../semanage/seobject.py:736
+#: ../semanage/seobject.py:771
 #, python-format
 msgid "Could not create SELinux user for %s"
 msgstr "%s에 대한 SELinux 사용자를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:745
+#: ../semanage/seobject.py:780
 #, python-format
 msgid "Could not add role %s for %s"
 msgstr "%s에 대한 %s의 역할을 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:754
+#: ../semanage/seobject.py:789
 #, python-format
 msgid "Could not set MLS level for %s"
 msgstr "%s에 대한 MLS 레벨을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:757
+#: ../semanage/seobject.py:792
 #, python-format
 msgid "Could not add prefix %s for %s"
 msgstr "%s에 대한 %s의 접두어를 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:760
+#: ../semanage/seobject.py:795
 #, python-format
 msgid "Could not extract key for %s"
 msgstr "%s에 대한 키를 추출할 수 없습니다"
 
-#: ../semanage/seobject.py:764
+#: ../semanage/seobject.py:799
 #, python-format
 msgid "Could not add SELinux user %s"
 msgstr "%s에 대한 SELinux 사용자를 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:786
+#: ../semanage/seobject.py:821
 msgid "Requires prefix, roles, level or range"
 msgstr "접두어, 기능, 레벨 또는 범위 필요"
 
-#: ../semanage/seobject.py:788
+#: ../semanage/seobject.py:823
 msgid "Requires prefix or roles"
 msgstr "접두어 또는 기능 필요"
 
-#: ../semanage/seobject.py:798 ../semanage/seobject.py:855
+#: ../semanage/seobject.py:833 ../semanage/seobject.py:890
 #, python-format
 msgid "SELinux user %s is not defined"
 msgstr "%s에 대한 SELinux 사용자가 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:827
+#: ../semanage/seobject.py:862
 #, python-format
 msgid "Could not modify SELinux user %s"
 msgstr "%s에 대한 SELinux 사용자를 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:861
+#: ../semanage/seobject.py:896
 #, python-format
 msgid "SELinux user %s is defined in policy, cannot be deleted"
-msgstr "%s에 대한 SELinux 사용자가 정책에 지정되어 있어 이를 삭제할 수 없습니다"
+msgstr ""
+"%s에 대한 SELinux 사용자가 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:872
+#: ../semanage/seobject.py:907
 #, python-format
 msgid "Could not delete SELinux user %s"
 msgstr "%s에 대한 SELinux 사용자를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:910
+#: ../semanage/seobject.py:945
 msgid "Could not list SELinux users"
 msgstr "SELinux 사용자 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:916
+#: ../semanage/seobject.py:951
 #, python-format
 msgid "Could not list roles for user %s"
 msgstr "%s 사용자에 대한 역할 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:941
+#: ../semanage/seobject.py:976
 msgid "Labeling"
 msgstr "레이블링"
 
-#: ../semanage/seobject.py:941
+#: ../semanage/seobject.py:976
 msgid "MLS/"
 msgstr "MLS/"
 
-#: ../semanage/seobject.py:942
+#: ../semanage/seobject.py:977
 msgid "Prefix"
 msgstr "접두부"
 
-#: ../semanage/seobject.py:942
+#: ../semanage/seobject.py:977
 msgid "MCS Level"
 msgstr "MCS 레벨"
 
-#: ../semanage/seobject.py:942
+#: ../semanage/seobject.py:977
 msgid "MCS Range"
 msgstr "MCS 범위"
 
-#: ../semanage/seobject.py:942 ../semanage/seobject.py:947
+#: ../semanage/seobject.py:977 ../semanage/seobject.py:982
 #: ../gui/system-config-selinux.glade:992 ../gui/usersPage.py:59
+#: ../sepolicy/sepolicy/sepolicy.glade:3279
+#: ../sepolicy/sepolicy/sepolicy.glade:5170
+#: ../sepolicy/sepolicy/sepolicy.glade:5411
 msgid "SELinux Roles"
 msgstr "SELinux 기능"
 
-#: ../semanage/seobject.py:964
+#: ../semanage/seobject.py:1002
 msgid "Protocol udp or tcp is required"
 msgstr "프로토콜 udp 또는 tcp 필요 "
 
-#: ../semanage/seobject.py:966
+#: ../semanage/seobject.py:1004
 msgid "Port is required"
 msgstr "포트 필요"
 
-#: ../semanage/seobject.py:976
+#: ../semanage/seobject.py:1014
 msgid "Invalid Port"
 msgstr "잘못된 포트"
 
-#: ../semanage/seobject.py:980
+#: ../semanage/seobject.py:1018
 #, python-format
 msgid "Could not create a key for %s/%s"
 msgstr "%s/%s 에 대한 키를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:991
+#: ../semanage/seobject.py:1029
 msgid "Type is required"
 msgstr "유형 필요"
 
-#: ../semanage/seobject.py:994 ../semanage/seobject.py:1056
-#: ../semanage/seobject.py:1814
+#: ../semanage/seobject.py:1032 ../semanage/seobject.py:1096
+#: ../semanage/seobject.py:1873
 #, python-format
 msgid "Type %s is invalid, must be a port type"
-msgstr ""
+msgstr "유형 %s이 잘못되었습니다, 포트 유형이어야 합니다 "
 
-#: ../semanage/seobject.py:1000 ../semanage/seobject.py:1062
-#: ../semanage/seobject.py:1117 ../semanage/seobject.py:1123
+#: ../semanage/seobject.py:1040 ../semanage/seobject.py:1102
+#: ../semanage/seobject.py:1157 ../semanage/seobject.py:1163
 #, python-format
 msgid "Could not check if port %s/%s is defined"
 msgstr "%s/%s에 대한 포트가 지정되었는지 확인할 수 없습니다 "
 
-#: ../semanage/seobject.py:1002
+#: ../semanage/seobject.py:1042
 #, python-format
 msgid "Port %s/%s already defined"
 msgstr "%s/%s에 대한 포트가 이미 지정되었습니다"
 
-#: ../semanage/seobject.py:1006
+#: ../semanage/seobject.py:1046
 #, python-format
 msgid "Could not create port for %s/%s"
 msgstr "%s/%s 에 대한 포트를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:1012
+#: ../semanage/seobject.py:1052
 #, python-format
 msgid "Could not create context for %s/%s"
 msgstr "%s/%s 에 대한 문맥을 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:1016
+#: ../semanage/seobject.py:1056
 #, python-format
 msgid "Could not set user in port context for %s/%s"
 msgstr "%s/%s 에 대한 포트 문맥의 사용자를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1020
+#: ../semanage/seobject.py:1060
 #, python-format
 msgid "Could not set role in port context for %s/%s"
 msgstr "%s/%s 에 대한 포트 문맥의 역할을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1024
+#: ../semanage/seobject.py:1064
 #, python-format
 msgid "Could not set type in port context for %s/%s"
 msgstr "%s/%s 에 대한 포트 문맥의 유형을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1029
+#: ../semanage/seobject.py:1069
 #, python-format
 msgid "Could not set mls fields in port context for %s/%s"
 msgstr "%s/%s 에 대한 포트 문맥의 mls 항목을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1033
+#: ../semanage/seobject.py:1073
 #, python-format
 msgid "Could not set port context for %s/%s"
 msgstr "%s/%s 에 대한 포트 문맥을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1037
+#: ../semanage/seobject.py:1077
 #, python-format
 msgid "Could not add port %s/%s"
 msgstr "%s/%s 에 대한 포트를 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:1051 ../semanage/seobject.py:1324
-#: ../semanage/seobject.py:1523
+#: ../semanage/seobject.py:1091 ../semanage/seobject.py:1367
+#: ../semanage/seobject.py:1566
 msgid "Requires setype or serange"
 msgstr "setype 또는 serange 필요"
 
-#: ../semanage/seobject.py:1053
+#: ../semanage/seobject.py:1093
 msgid "Requires setype"
 msgstr "setype 필요"
 
-#: ../semanage/seobject.py:1064 ../semanage/seobject.py:1119
+#: ../semanage/seobject.py:1104 ../semanage/seobject.py:1159
 #, python-format
 msgid "Port %s/%s is not defined"
 msgstr "%s/%s에 대한 포트가 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:1068
+#: ../semanage/seobject.py:1108
 #, python-format
 msgid "Could not query port %s/%s"
 msgstr "%s/%s에 대한 포트를 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:1079
+#: ../semanage/seobject.py:1119
 #, python-format
 msgid "Could not modify port %s/%s"
 msgstr "%s/%s에 대한 포트를 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:1092
+#: ../semanage/seobject.py:1132
 msgid "Could not list the ports"
 msgstr "포트 목록을 만들수 없습니다 "
 
-#: ../semanage/seobject.py:1108
+#: ../semanage/seobject.py:1148
 #, python-format
 msgid "Could not delete the port %s"
 msgstr "%s 포트를 삭제할 수 없습니다 "
 
-#: ../semanage/seobject.py:1125
+#: ../semanage/seobject.py:1165
 #, python-format
 msgid "Port %s/%s is defined in policy, cannot be deleted"
 msgstr "%s/%s에 대한 포트가 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:1129
+#: ../semanage/seobject.py:1169
 #, python-format
 msgid "Could not delete port %s/%s"
 msgstr "%s/%s에 대한 포트를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:1145 ../semanage/seobject.py:1167
+#: ../semanage/seobject.py:1185 ../semanage/seobject.py:1207
 msgid "Could not list ports"
 msgstr "포트 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:1206
+#: ../semanage/seobject.py:1246 ../sepolicy/sepolicy/sepolicy.glade:2675
+#: ../sepolicy/sepolicy/sepolicy.glade:2773
+#: ../sepolicy/sepolicy/sepolicy.glade:4687
 msgid "SELinux Port Type"
 msgstr "SELinux 포트 유형"
 
-#: ../semanage/seobject.py:1206
+#: ../semanage/seobject.py:1246
 msgid "Proto"
 msgstr "Proto"
 
-#: ../semanage/seobject.py:1206 ../gui/system-config-selinux.glade:335
+#: ../semanage/seobject.py:1246 ../gui/system-config-selinux.glade:335
+#: ../sepolicy/sepolicy/sepolicy.glade:1417
 msgid "Port Number"
 msgstr "포트 번호"
 
-#: ../semanage/seobject.py:1227
+#: ../semanage/seobject.py:1270
 msgid "Node Address is required"
 msgstr "노드 주소 필요  "
 
-#: ../semanage/seobject.py:1242
+#: ../semanage/seobject.py:1285
 msgid "Unknown or missing protocol"
 msgstr "알려지지 않거나 또는 생략된 프로토콜 "
 
-#: ../semanage/seobject.py:1256
+#: ../semanage/seobject.py:1299
 msgid "SELinux node type is required"
-msgstr ""
+msgstr "SELinux 노드 유형이 필요합니다 "
 
-#: ../semanage/seobject.py:1259 ../semanage/seobject.py:1327
+#: ../semanage/seobject.py:1302 ../semanage/seobject.py:1370
 #, python-format
 msgid "Type %s is invalid, must be a node type"
-msgstr ""
+msgstr "유형 %s이 잘못되었습니다, 노드 유형이어야 합니다 "
 
-#: ../semanage/seobject.py:1263 ../semanage/seobject.py:1331
-#: ../semanage/seobject.py:1367 ../semanage/seobject.py:1465
-#: ../semanage/seobject.py:1527 ../semanage/seobject.py:1561
-#: ../semanage/seobject.py:1759
+#: ../semanage/seobject.py:1306 ../semanage/seobject.py:1374
+#: ../semanage/seobject.py:1410 ../semanage/seobject.py:1508
+#: ../semanage/seobject.py:1570 ../semanage/seobject.py:1604
+#: ../semanage/seobject.py:1818
 #, python-format
 msgid "Could not create key for %s"
 msgstr "%s에 대한 키를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:1265 ../semanage/seobject.py:1335
-#: ../semanage/seobject.py:1371 ../semanage/seobject.py:1377
+#: ../semanage/seobject.py:1308 ../semanage/seobject.py:1378
+#: ../semanage/seobject.py:1414 ../semanage/seobject.py:1420
 #, python-format
 msgid "Could not check if addr %s is defined"
 msgstr "%s 주소가 지정되었는지 확인할 수 없습니다   "
 
-#: ../semanage/seobject.py:1274
+#: ../semanage/seobject.py:1317
 #, python-format
 msgid "Could not create addr for %s"
 msgstr "%s에 대한 주소를 생성할 수 없습니다  "
 
-#: ../semanage/seobject.py:1280 ../semanage/seobject.py:1481
-#: ../semanage/seobject.py:1714
+#: ../semanage/seobject.py:1323 ../semanage/seobject.py:1524
+#: ../semanage/seobject.py:1767
 #, python-format
 msgid "Could not create context for %s"
 msgstr "%s에 대한 문맥을 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:1284
+#: ../semanage/seobject.py:1327
 #, python-format
 msgid "Could not set mask for %s"
 msgstr "%s에 대한 마스크를 설정할 수 없습니다 "
 
-#: ../semanage/seobject.py:1288
+#: ../semanage/seobject.py:1331
 #, python-format
 msgid "Could not set user in addr context for %s"
 msgstr "%s에 대한 주소 문맥의 사용자를 설정할 수 없습니다  "
 
-#: ../semanage/seobject.py:1292
+#: ../semanage/seobject.py:1335
 #, python-format
 msgid "Could not set role in addr context for %s"
 msgstr "%s에 대한 주소 문맥의 역할을 설정할 수 없습니다  "
 
-#: ../semanage/seobject.py:1296
+#: ../semanage/seobject.py:1339
 #, python-format
 msgid "Could not set type in addr context for %s"
 msgstr "%s에 대한 주소 문맥의 유형을 설정할 수 없습니다  "
 
-#: ../semanage/seobject.py:1301
+#: ../semanage/seobject.py:1344
 #, python-format
 msgid "Could not set mls fields in addr context for %s"
 msgstr "%s에 대한 주소 문맥의 mls 항목을 설정할 수 없습니다  "
 
-#: ../semanage/seobject.py:1305
+#: ../semanage/seobject.py:1348
 #, python-format
 msgid "Could not set addr context for %s"
 msgstr "%s에 대한 주소 문맥을 설정할 수 없습니다  "
 
-#: ../semanage/seobject.py:1309
+#: ../semanage/seobject.py:1352
 #, python-format
 msgid "Could not add addr %s"
 msgstr "%s 주소를 추가할 수 없습니다 "
 
-#: ../semanage/seobject.py:1337 ../semanage/seobject.py:1373
+#: ../semanage/seobject.py:1380 ../semanage/seobject.py:1416
 #, python-format
 msgid "Addr %s is not defined"
 msgstr "%s 주소가 지정되지 않았습니다 "
 
-#: ../semanage/seobject.py:1341
+#: ../semanage/seobject.py:1384
 #, python-format
 msgid "Could not query addr %s"
 msgstr "%s 주소를 질의할 수 없습니다 "
 
-#: ../semanage/seobject.py:1351
+#: ../semanage/seobject.py:1394
 #, python-format
 msgid "Could not modify addr %s"
 msgstr "%s 주소를 수정할 수 없습니다  "
 
-#: ../semanage/seobject.py:1379
+#: ../semanage/seobject.py:1422
 #, python-format
 msgid "Addr %s is defined in policy, cannot be deleted"
 msgstr "%s 주소가 정책에 지정되어 있어 이를 삭제할 수 없습니다 "
 
-#: ../semanage/seobject.py:1383
+#: ../semanage/seobject.py:1426
 #, python-format
 msgid "Could not delete addr %s"
 msgstr "%s 주소를 삭제할 수 없습니다 "
 
-#: ../semanage/seobject.py:1395
+#: ../semanage/seobject.py:1438
 msgid "Could not deleteall node mappings"
 msgstr "모든 노드 맵핑을 삭제할 수 없습니다 "
 
-#: ../semanage/seobject.py:1409
+#: ../semanage/seobject.py:1452
 msgid "Could not list addrs"
 msgstr "주소 목록을 만들수 없습니다 "
 
-#: ../semanage/seobject.py:1461 ../semanage/seobject.py:1752
+#: ../semanage/seobject.py:1504 ../semanage/seobject.py:1811
 msgid "SELinux Type is required"
 msgstr "SELinux 유형 필요"
 
-#: ../semanage/seobject.py:1469 ../semanage/seobject.py:1531
-#: ../semanage/seobject.py:1565 ../semanage/seobject.py:1571
+#: ../semanage/seobject.py:1512 ../semanage/seobject.py:1574
+#: ../semanage/seobject.py:1608 ../semanage/seobject.py:1614
 #, python-format
 msgid "Could not check if interface %s is defined"
 msgstr "%s에 대한 인터페이스가 지정되었는지 확인할 수 없습니다"
 
-#: ../semanage/seobject.py:1476
+#: ../semanage/seobject.py:1519
 #, python-format
 msgid "Could not create interface for %s"
 msgstr "%s에 대한 인터페이스를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:1485
+#: ../semanage/seobject.py:1528
 #, python-format
 msgid "Could not set user in interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥의 사용자를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1489
+#: ../semanage/seobject.py:1532
 #, python-format
 msgid "Could not set role in interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥의 역할을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1493
+#: ../semanage/seobject.py:1536
 #, python-format
 msgid "Could not set type in interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥의 유형을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1498
+#: ../semanage/seobject.py:1541
 #, python-format
 msgid "Could not set mls fields in interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥의 mls 문맥을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1502
+#: ../semanage/seobject.py:1545
 #, python-format
 msgid "Could not set interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1506
+#: ../semanage/seobject.py:1549
 #, python-format
 msgid "Could not set message context for %s"
 msgstr "%s에 대한 메세지 문맥을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1510
+#: ../semanage/seobject.py:1553
 #, python-format
 msgid "Could not add interface %s"
 msgstr "%s에 대한 인터페이스를 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:1533 ../semanage/seobject.py:1567
+#: ../semanage/seobject.py:1576 ../semanage/seobject.py:1610
 #, python-format
 msgid "Interface %s is not defined"
 msgstr "%s에 대한 인터페이스가 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:1537
+#: ../semanage/seobject.py:1580
 #, python-format
 msgid "Could not query interface %s"
 msgstr "%s에 대한 인터페이스를 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:1548
+#: ../semanage/seobject.py:1591
 #, python-format
 msgid "Could not modify interface %s"
 msgstr "%s에 대한 인터페이슬 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:1573
+#: ../semanage/seobject.py:1616
 #, python-format
 msgid "Interface %s is defined in policy, cannot be deleted"
 msgstr "%s에 대한 인터페이스가 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:1577
+#: ../semanage/seobject.py:1620
 #, python-format
 msgid "Could not delete interface %s"
 msgstr "%s에 대한 인터페이스를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:1589
+#: ../semanage/seobject.py:1632
 msgid "Could not delete all interface  mappings"
 msgstr "모든 인터페이스 맵핑을 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:1603
+#: ../semanage/seobject.py:1646
 msgid "Could not list interfaces"
 msgstr "인터페이스 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:1628
+#: ../semanage/seobject.py:1671
 msgid "SELinux Interface"
 msgstr "SELinux 인터페이스"
 
-#: ../semanage/seobject.py:1628 ../semanage/seobject.py:1974
+#: ../semanage/seobject.py:1671 ../semanage/seobject.py:2033
 msgid "Context"
 msgstr "문맥"
 
-#: ../semanage/seobject.py:1691
+#: ../semanage/seobject.py:1738
+#, python-format
+msgid "Target %s is not valid. Target is not allowed to end with '/'"
+msgstr ""
+
+#: ../semanage/seobject.py:1741
+#, python-format
+msgid "Substiture %s is not valid. Substitute is not allowed to end with '/'"
+msgstr ""
+
+#: ../semanage/seobject.py:1744
 #, python-format
 msgid "Equivalence class for %s already exists"
 msgstr "%s에 대해 동등한 클래스가 이미 존재합니다"
 
-#: ../semanage/seobject.py:1697
+#: ../semanage/seobject.py:1750
 #, python-format
 msgid "File spec %s conflicts with equivalency rule '%s %s'"
 msgstr "파일 사양 %s이 해당 규칙 '%s %s'과 충돌합니다"
 
-#: ../semanage/seobject.py:1706
+#: ../semanage/seobject.py:1759
 #, python-format
 msgid "Equivalence class for %s does not exists"
 msgstr "%s에 대해 동등한 클래스가 존재하지 않습니다 "
 
-#: ../semanage/seobject.py:1720
+#: ../semanage/seobject.py:1773
 #, python-format
 msgid "Could not set user in file context for %s"
 msgstr "%s에 대한 파일 문맥의 사용자를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1724
+#: ../semanage/seobject.py:1777
 #, python-format
 msgid "Could not set role in file context for %s"
 msgstr "%s에 대한 파일 문맥의 역할을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1729 ../semanage/seobject.py:1789
+#: ../semanage/seobject.py:1782 ../semanage/seobject.py:1848
 #, python-format
 msgid "Could not set mls fields in file context for %s"
 msgstr "%s에 대한 파일 문맥의 mls 항목을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1735
+#: ../semanage/seobject.py:1788
 msgid "Invalid file specification"
 msgstr "잘못된 파일 사양 "
 
-#: ../semanage/seobject.py:1737
+#: ../semanage/seobject.py:1790
 msgid "File specification can not include spaces"
 msgstr "파일 사양에 공백이 포함되어 있어서는 안됩니다"
 
-#: ../semanage/seobject.py:1742
+#: ../semanage/seobject.py:1795
 #, python-format
 msgid ""
-"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' "
-"instead"
-msgstr "파일 사양 %s이 해당 규칙 '%s %s'과 충돌합니다; 대신 '%s'를 추가해 보십시오 "
+"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead"
+msgstr ""
+"파일 사양 %s이 해당 규칙 '%s %s'과 충돌합니다; 대신 '%s'를 추가해 보십시오 "
 
-#: ../semanage/seobject.py:1755
+#: ../semanage/seobject.py:1814
 #, python-format
 msgid "Type %s is invalid, must be a file or device type"
-msgstr ""
+msgstr "유형 %s이 잘못되어 있습니다. 파일 또는 장치 유형이어야 합니다 "
 
-#: ../semanage/seobject.py:1763 ../semanage/seobject.py:1768
-#: ../semanage/seobject.py:1824 ../semanage/seobject.py:1906
-#: ../semanage/seobject.py:1910
+#: ../semanage/seobject.py:1822 ../semanage/seobject.py:1827
+#: ../semanage/seobject.py:1883 ../semanage/seobject.py:1965
+#: ../semanage/seobject.py:1969
 #, python-format
 msgid "Could not check if file context for %s is defined"
 msgstr "%s에 대한 파일 문맥이 지정되었는지 확인할 수 없습니다"
 
-#: ../semanage/seobject.py:1776
+#: ../semanage/seobject.py:1835
 #, python-format
 msgid "Could not create file context for %s"
 msgstr "%s에 대한 파일 문맥을 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:1784
+#: ../semanage/seobject.py:1843
 #, python-format
 msgid "Could not set type in file context for %s"
 msgstr "%s에 대한 파일 문맥의 유형을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1792 ../semanage/seobject.py:1852
-#: ../semanage/seobject.py:1856
+#: ../semanage/seobject.py:1851 ../semanage/seobject.py:1911
+#: ../semanage/seobject.py:1915
 #, python-format
 msgid "Could not set file context for %s"
 msgstr "%s에 대한 파일 문맥을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1798
+#: ../semanage/seobject.py:1857
 #, python-format
 msgid "Could not add file context for %s"
 msgstr "%s에 대한 파일 문맥을 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:1812
+#: ../semanage/seobject.py:1871
 msgid "Requires setype, serange or seuser"
 msgstr "setype, serange 또는 seuser 필요"
 
-#: ../semanage/seobject.py:1828 ../semanage/seobject.py:1914
+#: ../semanage/seobject.py:1887 ../semanage/seobject.py:1973
 #, python-format
 msgid "File context for %s is not defined"
 msgstr "%s에 대한 파일 문맥이 저정되지 않았습니다"
 
-#: ../semanage/seobject.py:1834
+#: ../semanage/seobject.py:1893
 #, python-format
 msgid "Could not query file context for %s"
 msgstr "%s에 대한 파일 문맥을 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:1860
+#: ../semanage/seobject.py:1919
 #, python-format
 msgid "Could not modify file context for %s"
 msgstr "%s에 대한 파일 문맥을 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:1873
+#: ../semanage/seobject.py:1932
 msgid "Could not list the file contexts"
 msgstr "파일 문맥 목록을 만들수 없습니다 "
 
-#: ../semanage/seobject.py:1887
+#: ../semanage/seobject.py:1946
 #, python-format
 msgid "Could not delete the file context %s"
 msgstr "%s 파일 문맥을 삭제할 수 없습니다 "
 
-#: ../semanage/seobject.py:1912
+#: ../semanage/seobject.py:1971
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
 msgstr "%s에 대한 파일 문맥이 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:1918
+#: ../semanage/seobject.py:1977
 #, python-format
 msgid "Could not delete file context for %s"
 msgstr "%s에 대한 파일 문맥을 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:1933
+#: ../semanage/seobject.py:1992
 msgid "Could not list file contexts"
 msgstr "파일 문맥 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:1937
+#: ../semanage/seobject.py:1996
 msgid "Could not list local file contexts"
 msgstr "로컬 파일 문맥 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:1974
+#: ../semanage/seobject.py:2033
 msgid "SELinux fcontext"
 msgstr "SELinux fcontext"
 
-#: ../semanage/seobject.py:1974
+#: ../semanage/seobject.py:2033
 msgid "type"
 msgstr "유형"
 
-#: ../semanage/seobject.py:1987
+#: ../semanage/seobject.py:2046
 msgid ""
 "\n"
 "SELinux Distribution fcontext Equivalence \n"
-msgstr "\nSELinux 배포판 fcontext 해당 \n"
+msgstr ""
+"\n"
+"SELinux 배포판 fcontext 해당 \n"
 
-#: ../semanage/seobject.py:1992
+#: ../semanage/seobject.py:2051
 msgid ""
 "\n"
 "SELinux Local fcontext Equivalence \n"
-msgstr "\nSELinux 로컬 fcontext 해당 \n"
+msgstr ""
+"\n"
+"SELinux 로컬 fcontext 해당 \n"
 
-#: ../semanage/seobject.py:2028 ../semanage/seobject.py:2079
-#: ../semanage/seobject.py:2085
+#: ../semanage/seobject.py:2087 ../semanage/seobject.py:2138
+#: ../semanage/seobject.py:2144
 #, python-format
 msgid "Could not check if boolean %s is defined"
 msgstr "%s에 대한 부울이 지정되었는지 확인할 수 없습니다"
 
-#: ../semanage/seobject.py:2030 ../semanage/seobject.py:2081
+#: ../semanage/seobject.py:2089 ../semanage/seobject.py:2140
 #, python-format
 msgid "Boolean %s is not defined"
 msgstr "%s에 대하 부울이 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:2034
+#: ../semanage/seobject.py:2093
 #, python-format
 msgid "Could not query file context %s"
 msgstr "%s에 대한 파일 문맥을 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:2039
+#: ../semanage/seobject.py:2098
 #, python-format
 msgid "You must specify one of the following values: %s"
 msgstr "다음의 값 중 하나를 반드시 지정해야 합니다: %s"
 
-#: ../semanage/seobject.py:2044
+#: ../semanage/seobject.py:2103
 #, python-format
 msgid "Could not set active value of boolean %s"
 msgstr "%s 부울의 활성화값을 설정할 수 없습니다      "
 
-#: ../semanage/seobject.py:2047
+#: ../semanage/seobject.py:2106
 #, python-format
 msgid "Could not modify boolean %s"
 msgstr "%s에 대한 부을을 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:2063
+#: ../semanage/seobject.py:2122
 #, python-format
 msgid "Bad format %s: Record %s"
 msgstr "잘못된 형식 %s: 기록 %s "
 
-#: ../semanage/seobject.py:2087
+#: ../semanage/seobject.py:2146
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
 msgstr "%s에 대한 부울이 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:2091
+#: ../semanage/seobject.py:2150
 #, python-format
 msgid "Could not delete boolean %s"
 msgstr "%s에 대한 부울을 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:2103 ../semanage/seobject.py:2120
+#: ../semanage/seobject.py:2162 ../semanage/seobject.py:2179
 msgid "Could not list booleans"
 msgstr "부울 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:2155
+#: ../semanage/seobject.py:2214
 msgid "off"
 msgstr "비활성 "
 
-#: ../semanage/seobject.py:2155
+#: ../semanage/seobject.py:2214
 msgid "on"
 msgstr "활성 "
 
-#: ../semanage/seobject.py:2169
+#: ../semanage/seobject.py:2228
 msgid "SELinux boolean"
 msgstr "SELinux 부울"
 
-#: ../semanage/seobject.py:2169
+#: ../semanage/seobject.py:2228
 msgid "State"
 msgstr "상태 "
 
-#: ../semanage/seobject.py:2169
+#: ../semanage/seobject.py:2228
 msgid "Default"
 msgstr "디폴트 "
 
-#: ../semanage/seobject.py:2169 ../gui/polgen.glade:113
-#: ../gui/polgengui.py:269
+#: ../semanage/seobject.py:2228 ../gui/polgen.glade:113
+#: ../gui/polgengui.py:274 ../sepolicy/sepolicy/sepolicy.glade:2147
+#: ../sepolicy/sepolicy/sepolicy.glade:2517
+#: ../sepolicy/sepolicy/sepolicy.glade:5021
 msgid "Description"
 msgstr "설명 "
 
@@ -991,206 +1037,230 @@ msgstr "오류! 쉘이 유효하지 않습니다.\n"
 msgid "Unable to clear environment\n"
 msgstr "환경을 삭제할 수 없습니다\n"
 
-#: ../newrole/newrole.c:556 ../newrole/newrole.c:587 ../newrole/newrole.c:617
+#: ../newrole/newrole.c:554 ../newrole/newrole.c:585 ../newrole/newrole.c:616
 #, c-format
 msgid "Error changing uid, aborting.\n"
 msgstr "uid 변경 오류, 중지합니다.\n"
 
-#: ../newrole/newrole.c:612
+#: ../newrole/newrole.c:611
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
 msgstr "KEEPCAPS 재설정 오류, 중지합니다\n"
 
-#: ../newrole/newrole.c:635
+#: ../newrole/newrole.c:634
 #, c-format
 msgid "Error connecting to audit system.\n"
 msgstr "감사(audit) 시스템에 연결하는데 오류 발생.\n"
 
-#: ../newrole/newrole.c:641
+#: ../newrole/newrole.c:640
 #, c-format
 msgid "Error allocating memory.\n"
 msgstr "메모리 할당하는데 오류 발생.\n"
 
-#: ../newrole/newrole.c:648
+#: ../newrole/newrole.c:647
 #, c-format
 msgid "Error sending audit message.\n"
 msgstr "감사(audit) 메세지를 보내는데 오류 발생.\n"
 
-#: ../newrole/newrole.c:692 ../newrole/newrole.c:1058
+#: ../newrole/newrole.c:691 ../newrole/newrole.c:1063
 #, c-format
 msgid "Could not determine enforcing mode.\n"
 msgstr "강제모드를 결정할 수 없습니다.\n"
 
-#: ../newrole/newrole.c:699
+#: ../newrole/newrole.c:698
 #, c-format
 msgid "Error!  Could not open %s.\n"
 msgstr "오류! %s를 열 수 없습니다.\n"
 
-#: ../newrole/newrole.c:705
+#: ../newrole/newrole.c:704
+#, c-format
+msgid "Error!  Could not clear O_NONBLOCK on %s\n"
+msgstr "오류가 발생했습니다! %s에 있는 O_NONBLOCK을 삭제할 수 없습니다\n"
+
+#: ../newrole/newrole.c:710
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
-msgstr "%s!  %s에 사용되는 대한 최근 문맥을 찾을 수 없습니다, tty 레이블 변경이 되지 않습니다.\n"
+msgstr ""
+"%s!  %s에 사용되는 대한 최근 문맥을 찾을 수 없습니다, tty 레이블 변경이 되지 "
+"않습니다.\n"
 
-#: ../newrole/newrole.c:715
+#: ../newrole/newrole.c:720
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
-msgstr "%s! %s에 사용되는 대한 새로운 문맥을 찾을 수 없습니다. tty 레이블 변경이 되지 않습니다.\n"
+msgstr ""
+"%s! %s에 사용되는 대한 새로운 문맥을 찾을 수 없습니다. tty 레이블 변경이 되"
+"지 않습니다.\n"
 
-#: ../newrole/newrole.c:725
+#: ../newrole/newrole.c:730
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
 msgstr "%s!  %s에 사용되는 새로운 문맥을 설정할 수 없습니다\n"
 
-#: ../newrole/newrole.c:772
+#: ../newrole/newrole.c:777
 #, c-format
 msgid "%s changed labels.\n"
 msgstr "%s 변경된 레이블.\n"
 
-#: ../newrole/newrole.c:778
+#: ../newrole/newrole.c:783
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
 msgstr "경고! %s에 사용되는 문맥을 복구할 수 없습니다\n"
 
-#: ../newrole/newrole.c:835
+#: ../newrole/newrole.c:840
 #, c-format
 msgid "Error: multiple roles specified\n"
 msgstr "오류: 다중 임무가 지정되었습니다\n"
 
-#: ../newrole/newrole.c:843
+#: ../newrole/newrole.c:848
 #, c-format
 msgid "Error: multiple types specified\n"
 msgstr "오류: 다중 형식이 지정되었습니다\n"
 
-#: ../newrole/newrole.c:850
+#: ../newrole/newrole.c:855
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
 msgstr "죄송합니다, -l 은 SELinux MLS 지원에서 사용될 것입니다.\n"
 
-#: ../newrole/newrole.c:855
+#: ../newrole/newrole.c:860
 #, c-format
 msgid "Error: multiple levels specified\n"
 msgstr "오류: 다중 레벨이 지정되었습니다\n"
 
-#: ../newrole/newrole.c:865
+#: ../newrole/newrole.c:870
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
 msgstr "오류: 비보안 터미널에서 레벨을 변경하는 것을 허용하지 않습니다 \n"
 
-#: ../newrole/newrole.c:891
+#: ../newrole/newrole.c:896
 #, c-format
 msgid "Couldn't get default type.\n"
 msgstr "초기 형식을 가질 수 없습니다.\n"
 
-#: ../newrole/newrole.c:901
+#: ../newrole/newrole.c:906
 #, c-format
 msgid "failed to get new context.\n"
 msgstr "새로운 문맥을 갖는데 실패했습니다.\n"
 
-#: ../newrole/newrole.c:908
+#: ../newrole/newrole.c:913
 #, c-format
 msgid "failed to set new role %s\n"
 msgstr "새로운 임무 %s를 설정하는데 실패했습니다\n"
 
-#: ../newrole/newrole.c:915
+#: ../newrole/newrole.c:920
 #, c-format
 msgid "failed to set new type %s\n"
 msgstr "새로운 형식 %s를 설정하는데 실패했습니다\n"
 
-#: ../newrole/newrole.c:925
+#: ../newrole/newrole.c:930
 #, c-format
 msgid "failed to build new range with level %s\n"
 msgstr "%s 레벨의 새로운 범위를 개발하는데 실패했습니다\n"
 
-#: ../newrole/newrole.c:930
+#: ../newrole/newrole.c:935
 #, c-format
 msgid "failed to set new range %s\n"
 msgstr "새로운 범위 %s를 설정하는데 실패했습니다\n"
 
-#: ../newrole/newrole.c:938
+#: ../newrole/newrole.c:943
 #, c-format
 msgid "failed to convert new context to string\n"
 msgstr "새로운 문맥을 문자열로 변환하는데 실패했습니다\n"
 
-#: ../newrole/newrole.c:943
+#: ../newrole/newrole.c:948
 #, c-format
 msgid "%s is not a valid context\n"
 msgstr "%s는 유효한 문맥이 아닙니다\n"
 
-#: ../newrole/newrole.c:950
+#: ../newrole/newrole.c:955
 #, c-format
 msgid "Unable to allocate memory for new_context"
 msgstr "새 문맥에 해당하는 메모리를 할당할 수 없습니다"
 
-#: ../newrole/newrole.c:976
+#: ../newrole/newrole.c:981
 #, c-format
 msgid "Unable to obtain empty signal set\n"
 msgstr "비어있는 시그널 모음을 얻을 수 없습니다\n"
 
-#: ../newrole/newrole.c:984
+#: ../newrole/newrole.c:989
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
 msgstr "SIGHUP 처리기를 설정할 수 없습니다\n"
 
-#: ../newrole/newrole.c:1036
+#: ../newrole/newrole.c:1041
 msgid "Sorry, newrole failed to drop capabilities\n"
-msgstr ""
+msgstr "죄송합니다, newrole 기능을 삭제하지 못했습니다\n"
 
-#: ../newrole/newrole.c:1052
+#: ../newrole/newrole.c:1057
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr "죄송합니다, newrole은 오직 SELinux 커널에서만 사용될 것입니다.\n"
 
-#: ../newrole/newrole.c:1069
+#: ../newrole/newrole.c:1074
 #, c-format
 msgid "failed to get old_context.\n"
 msgstr "오래된 문맥를 갖는데 실패했습니다.\n"
 
-#: ../newrole/newrole.c:1076
+#: ../newrole/newrole.c:1081
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
 msgstr "경고! tty 정보를 검색할 수 없습니다.\n"
 
-#: ../newrole/newrole.c:1097
+#: ../newrole/newrole.c:1102
 #, c-format
 msgid "error on reading PAM service configuration.\n"
 msgstr "PAM 서비스 설정을 읽는데 오류가 발생했습니다.\n"
 
-#: ../newrole/newrole.c:1132
+#: ../newrole/newrole.c:1137
 #, c-format
 msgid "newrole: incorrect password for %s\n"
 msgstr "새로운 임무: %s에 대한 잘못된 암호\n"
 
-#: ../newrole/newrole.c:1159
+#: ../newrole/newrole.c:1164
 #, c-format
 msgid "newrole: failure forking: %s"
 msgstr "새로운 임무: 포크 작업(forking)이 실패했습니다: %s"
 
-#: ../newrole/newrole.c:1162 ../newrole/newrole.c:1185
+#: ../newrole/newrole.c:1167 ../newrole/newrole.c:1190
 #, c-format
 msgid "Unable to restore tty label...\n"
 msgstr "tty 레이블을 복구할 수 없습니다...\n"
 
-#: ../newrole/newrole.c:1164 ../newrole/newrole.c:1191
+#: ../newrole/newrole.c:1169 ../newrole/newrole.c:1196
 #, c-format
 msgid "Failed to close tty properly\n"
 msgstr "올바르게 tty를 종료하는 것을 실패했습니다\n"
 
-#: ../newrole/newrole.c:1223
+#: ../newrole/newrole.c:1228
 #, c-format
 msgid "Could not close descriptors.\n"
 msgstr "디스크립터를 종료할 수 없습니다.\n"
 
-#: ../newrole/newrole.c:1250
+#: ../newrole/newrole.c:1263
 #, c-format
 msgid "Error allocating shell's argv0.\n"
 msgstr "쉘의 argv0을리 할당하는데 오류 발생.\n"
 
-#: ../newrole/newrole.c:1286
+#: ../newrole/newrole.c:1285
+#, c-format
+msgid "Failed to send audit message"
+msgstr "감사 메세지 전송에 실패했습니다 "
+
+#: ../newrole/newrole.c:1293
+#, c-format
+msgid "Failed to transition to namespace\n"
+msgstr "네임 스페이스로 전환하는데 실패했습니다\n"
+
+#: ../newrole/newrole.c:1299
+#, c-format
+msgid "Failed to drop capabilities %m\n"
+msgstr "기능 %m을 제거하는데 실패했습니다\n"
+
+#: ../newrole/newrole.c:1304
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
 msgstr "환경을 복구할 수 없음, 중지합니다\n"
 
-#: ../newrole/newrole.c:1297
+#: ../newrole/newrole.c:1315
 msgid "failed to exec shell\n"
 msgstr "쉘을 실행하는데 실패하였습니다\n"
 
@@ -1321,19 +1391,25 @@ msgstr "파일 레이블 설정 "
 msgid ""
 "File\n"
 "Specification"
-msgstr "파일\n사양"
+msgstr ""
+"파일\n"
+"사양"
 
 #: ../gui/fcontextPage.py:81
 msgid ""
 "Selinux\n"
 "File Type"
-msgstr "Selinux\n파일 유형 "
+msgstr ""
+"Selinux\n"
+"파일 유형 "
 
 #: ../gui/fcontextPage.py:88
 msgid ""
 "File\n"
 "Type"
-msgstr "파일\n유형"
+msgstr ""
+"파일\n"
+"유형"
 
 #: ../gui/loginsPage.py:48 ../gui/system-config-selinux.glade:2098
 msgid "User Mapping"
@@ -1343,19 +1419,25 @@ msgstr "사용자 맵핑 "
 msgid ""
 "Login\n"
 "Name"
-msgstr "로그인\n이름"
+msgstr ""
+"로그인\n"
+"이름"
 
 #: ../gui/loginsPage.py:56 ../gui/usersPage.py:50
 msgid ""
 "SELinux\n"
 "User"
-msgstr "SELinux\n사용자 "
+msgstr ""
+"SELinux\n"
+"사용자 "
 
 #: ../gui/loginsPage.py:59 ../gui/usersPage.py:55
 msgid ""
 "MLS/\n"
 "MCS Range"
-msgstr "MLS/\nMCS 범위 "
+msgstr ""
+"MLS/\n"
+"MCS 범위 "
 
 #: ../gui/loginsPage.py:133
 #, python-format
@@ -1411,13 +1493,14 @@ msgstr "SELinux 정책 생성 도구 "
 msgid ""
 "<b>Select the policy type for the application or user role you want to "
 "confine:</b>"
-msgstr "<b>정의하려는 애플리케이션이나 사용자 역할에 대한 정책 유형을 선택합니다:</b>"
+msgstr ""
+"<b>정의하려는 애플리케이션이나 사용자 역할에 대한 정책 유형을 선택합니다:</b>"
 
 #: ../gui/polgen.glade:284
 msgid "<b>Applications</b>"
 msgstr "<b>애플리케이션</b>"
 
-#: ../gui/polgen.glade:316 ../sepolicy/sepolicy/generate.py:171
+#: ../gui/polgen.glade:316 ../sepolicy/sepolicy/generate.py:130
 msgid "Standard Init Daemon"
 msgstr "표준 Init 데몬 "
 
@@ -1425,9 +1508,11 @@ msgstr "표준 Init 데몬 "
 msgid ""
 "Standard Init Daemon are daemons started on boot via init scripts.  Usually "
 "requires a script in /etc/rc.d/init.d"
-msgstr "표준 Init 데몬은 시작할 때 init 스크립트를 통해 시작되는 데몬입니다. 일반적으로 /etc/rc.d/init.d에 스크립트가 필요합니다 "
+msgstr ""
+"표준 Init 데몬은 시작할 때 init 스크립트를 통해 시작되는 데몬입니다. 일반적으"
+"로 /etc/rc.d/init.d에 스크립트가 필요합니다 "
 
-#: ../gui/polgen.glade:332 ../sepolicy/sepolicy/generate.py:172
+#: ../gui/polgen.glade:332 ../sepolicy/sepolicy/generate.py:131
 msgid "DBUS System Daemon"
 msgstr "DBUS 시스템 데몬 "
 
@@ -1439,16 +1524,18 @@ msgstr "인터넷 시스템 데몬 (inetd)"
 msgid "Internet Services Daemon are daemons started by xinetd"
 msgstr "인터넷 서비스 데몬은 xinetd에 의해 시작되는 데몬입니다 "
 
-#: ../gui/polgen.glade:366 ../sepolicy/sepolicy/generate.py:174
+#: ../gui/polgen.glade:366 ../sepolicy/sepolicy/generate.py:133
 msgid "Web Application/Script (CGI)"
 msgstr "웹 애플리케이션/스크립트 (CGI)"
 
 #: ../gui/polgen.glade:370
 msgid ""
 "Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
-msgstr "웹 애플리케이션/스크립트 (CGI) CGI 스크립트는 웹 서버에 의해 시작됩니다 (apache)"
+msgstr ""
+"웹 애플리케이션/스크립트 (CGI) CGI 스크립트는 웹 서버에 의해 시작됩니다 "
+"(apache)"
 
-#: ../gui/polgen.glade:383 ../sepolicy/sepolicy/generate.py:176
+#: ../gui/polgen.glade:383 ../sepolicy/sepolicy/generate.py:135
 msgid "User Application"
 msgstr "사용자 애플리케이션 "
 
@@ -1456,9 +1543,11 @@ msgstr "사용자 애플리케이션 "
 msgid ""
 "User Application are any application that you would like to confine that is "
 "started by a user"
-msgstr "사용자 애플리케이션은 사용자에 의해 시작되는 한정하고자 하는 모든 애플리케이션입니다 "
+msgstr ""
+"사용자 애플리케이션은 사용자에 의해 시작되는 한정하고자 하는 모든 애플리케이"
+"션입니다 "
 
-#: ../gui/polgen.glade:400 ../sepolicy/sepolicy/generate.py:175
+#: ../gui/polgen.glade:400 ../sepolicy/sepolicy/generate.py:134
 msgid "Sandbox"
 msgstr "Sandbox"
 
@@ -1482,7 +1571,9 @@ msgstr "터미널에서 최소 사용자 역할 "
 msgid ""
 "This user will login to a machine only via a terminal or remote login.  By "
 "default this user will have  no setuid, no networking, no su, no sudo."
-msgstr "이 사용자는 터미널이나 원격 로그인을 통해서만 시스템에 로그인합니다. 기본값으로 이 사용자는 setuid, 네트워크 운용, su, sudo를 가지지 않습니다."
+msgstr ""
+"이 사용자는 터미널이나 원격 로그인을 통해서만 시스템에 로그인합니다. 기본값으"
+"로 이 사용자는 setuid, 네트워크 운용, su, sudo를 가지지 않습니다."
 
 #: ../gui/polgen.glade:512
 msgid "Minimal X Windows User Role"
@@ -1492,7 +1583,9 @@ msgstr "X 창에서 최소한의 사용자 역할 "
 msgid ""
 "This user can login to a machine via X or terminal.  By default this user "
 "will have no setuid, no networking, no sudo, no su"
-msgstr "이 사용자는 X 또는 터미널을 통해 시스템에 로그인할 수 있습니다. 기본값으로 이 사용자는 setuid, 네트워크 운용, su, sudo를 가지지 않습니다."
+msgstr ""
+"이 사용자는 X 또는 터미널을 통해 시스템에 로그인할 수 있습니다. 기본값으로 "
+"이 사용자는 setuid, 네트워크 운용, su, sudo를 가지지 않습니다."
 
 #: ../gui/polgen.glade:529
 msgid "User Role"
@@ -1502,7 +1595,9 @@ msgstr "사용자 역할"
 msgid ""
 "User with full networking, no setuid applications without transition, no "
 "sudo, no su."
-msgstr "사용자는 전체 네트워크 운영을 갖지만 전환없이 setuid 애플리케이션도 sudo도  su도 갖지 않습니다 "
+msgstr ""
+"사용자는 전체 네트워크 운영을 갖지만 전환없이 setuid 애플리케이션도 sudo도  "
+"su도 갖지 않습니다 "
 
 #: ../gui/polgen.glade:546
 msgid "Admin User Role"
@@ -1510,9 +1605,11 @@ msgstr "사용자 역할 관리 "
 
 #: ../gui/polgen.glade:550
 msgid ""
-"User with full networking, no setuid applications without transition, no su,"
-" can sudo to Root Administration Roles"
-msgstr "사용자는 전체 네트워크 운영을 갖지만 전환없이 setuid 애플리케이션도 su도 갖지 않으며, Root 관리 역할로 sudo를 사용할 수 있습니다"
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"사용자는 전체 네트워크 운영을 갖지만 전환없이 setuid 애플리케이션도 su도 갖"
+"지 않으며, Root 관리 역할로 sudo를 사용할 수 있습니다"
 
 #: ../gui/polgen.glade:592
 msgid "<b>Root Users</b>"
@@ -1524,16 +1621,19 @@ msgstr "사용자 역할 Root 관리 "
 
 #: ../gui/polgen.glade:627
 msgid ""
-"Select Root Administrator User Role, if this user will be used to administer"
-" the machine while running as root.  This user will not be able to login to "
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
 "the system directly."
-msgstr "root로 실행하는 동안 사용자를 시스템 관리를 위해 사용하는 경우 Root 관리 사용자 역할을 선택합니다. 이 사용자는 시스템에 직접 로그인할 수 없습니다."
+msgstr ""
+"root로 실행하는 동안 사용자를 시스템 관리를 위해 사용하는 경우 Root 관리 사용"
+"자 역할을 선택합니다. 이 사용자는 시스템에 직접 로그인할 수 없습니다."
 
 #: ../gui/polgen.glade:705
 msgid "<b>Enter name of application or user role:</b>"
 msgstr "<b>애플리케이션 이름이나 사용자 역할을 입력합니다:</b>"
 
-#: ../gui/polgen.glade:728 ../gui/polgengui.py:267
+#: ../gui/polgen.glade:728 ../gui/polgengui.py:272
+#: ../sepolicy/sepolicy/sepolicy.glade:2182
 msgid "Name"
 msgstr "이름"
 
@@ -1560,7 +1660,9 @@ msgstr "Init 스크립트 "
 #: ../gui/polgen.glade:821
 msgid ""
 "Enter complete path to init script used to start the confined application."
-msgstr "제한된 애플리케이션을 시작하기 위해 사용하는 init 스크립트로의 전체 경로를 입력합니다."
+msgstr ""
+"제한된 애플리케이션을 시작하기 위해 사용하는 init 스크립트로의 전체 경로를 입"
+"력합니다."
 
 #: ../gui/polgen.glade:887
 msgid "<b>Select existing role to modify:</b>"
@@ -1587,14 +1689,15 @@ msgid ""
 "transition \n"
 "role tab"
 msgstr ""
+"전환 \n"
+"역할 탭"
 
 #: ../gui/polgen.glade:1001
 msgid "<b>Select the user_roles that will transition to %s:</b>"
 msgstr "<b>%s로 전환할 사용자 역할을 선택(_R):</b>"
 
 #: ../gui/polgen.glade:1019
-msgid ""
-"Select the user roles that will transiton to this applications domains."
+msgid "Select the user roles that will transiton to this applications domains."
 msgstr "이 애플리케이션 도메인으로 전환할 사용자 역할을 선택합니다."
 
 #: ../gui/polgen.glade:1056
@@ -1618,7 +1721,7 @@ msgid "<b>TCP Ports</b>"
 msgstr "<b>TCP 포트</b>"
 
 #: ../gui/polgen.glade:1223 ../gui/polgen.glade:1390 ../gui/polgen.glade:1589
-#: ../gui/polgen.glade:1698
+#: ../gui/polgen.glade:1698 ../sepolicy/sepolicy/sepolicy.glade:4314
 msgid "All"
 msgstr "전체 "
 
@@ -1632,7 +1735,8 @@ msgstr "600-1024"
 
 #: ../gui/polgen.glade:1244 ../gui/polgen.glade:1411
 msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
-msgstr "%s이 0로 bindresvport를 호출하는 것을 허용합니다. 포트 600-1024로 바인딩"
+msgstr ""
+"%s이 0로 bindresvport를 호출하는 것을 허용합니다. 포트 600-1024로 바인딩"
 
 #: ../gui/polgen.glade:1257 ../gui/polgen.glade:1424
 msgid "Unreserved Ports (>1024)"
@@ -1642,7 +1746,9 @@ msgstr "예약되지 않은 포트 (>1024)"
 msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s binds "
 "to. Example: 612, 650-660"
-msgstr "%s이 바인딩할 포트 범위 또는 udp 포트의 콤마로 분리된 목록을 입력합니다. 예: 612, 650-660"
+msgstr ""
+"%s이 바인딩할 포트 범위 또는 udp 포트의 콤마로 분리된 목록을 입력합니다. 예: "
+"612, 650-660"
 
 #: ../gui/polgen.glade:1289 ../gui/polgen.glade:1456 ../gui/polgen.glade:1609
 #: ../gui/polgen.glade:1718
@@ -1662,6 +1768,8 @@ msgid ""
 "Network\n"
 "Bind tab"
 msgstr ""
+"네트워크\n"
+"바인딩 탭 "
 
 #: ../gui/polgen.glade:1537
 msgid "<b>Select network ports that %s connects to:</b>"
@@ -1675,7 +1783,9 @@ msgstr "%s이 모든 tcp 포트에 연결하는 것을 허용"
 msgid ""
 "Enter a comma separated list of tcp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
-msgstr "tcp 포트 또는 %s이 연결되는 포트 범위의 콤마로 분리된 목록을 입력합니다. 예: 612, 650-660"
+msgstr ""
+"tcp 포트 또는 %s이 연결되는 포트 범위의 콤마로 분리된 목록을 입력합니다. 예: "
+"612, 650-660"
 
 #: ../gui/polgen.glade:1702
 msgid "Allows %s to connect to any udp port"
@@ -1685,7 +1795,9 @@ msgstr "udp 포트에 연결하기 위해 %s 허용 "
 msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
-msgstr "udp 포트 또는 %s이 연결되는 포트 범위의 콤마로 분리된 목록을 입력합니다. 예: 612, 650-660"
+msgstr ""
+"udp 포트 또는 %s이 연결되는 포트 범위의 콤마로 분리된 목록을 입력합니다. 예: "
+"612, 650-660"
 
 #: ../gui/polgen.glade:1792
 msgid "<b>Select common application traits for %s:</b>"
@@ -1731,7 +1843,8 @@ msgstr "<b>%s이 관리하는 파일/디렉토리 추가</b>"
 msgid ""
 "Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
 "Files ..."
-msgstr "%s이 \"관리\"하는 파일/디렉토리. Pid 파일, 로그 파일, /var/lib 파일 등 ..."
+msgstr ""
+"%s이 \"관리\"하는 파일/디렉토리. Pid 파일, 로그 파일, /var/lib 파일 등 ..."
 
 #: ../gui/polgen.glade:2166
 msgid "<b>Add booleans from the %s policy:</b>"
@@ -1749,75 +1862,79 @@ msgstr "<b>어떤 디렉토리가 %s 정책을 생성합니까?</b>"
 msgid "Policy Directory"
 msgstr "정책 디렉토리 "
 
-#: ../gui/polgengui.py:277
+#: ../gui/polgengui.py:282
 msgid "Role"
 msgstr "역할 "
 
-#: ../gui/polgengui.py:284
+#: ../gui/polgengui.py:289
 msgid "Existing_User"
 msgstr "기존 사용자(_U)"
 
-#: ../gui/polgengui.py:298 ../gui/polgengui.py:306 ../gui/polgengui.py:320
+#: ../gui/polgengui.py:303 ../gui/polgengui.py:311 ../gui/polgengui.py:325
 msgid "Application"
 msgstr "애플리케이션 "
 
-#: ../gui/polgengui.py:363
+#: ../gui/polgengui.py:370
 #, python-format
 msgid "%s must be a directory"
 msgstr "%s은 디렉토리여야 합니다"
 
-#: ../gui/polgengui.py:423 ../gui/polgengui.py:704
+#: ../gui/polgengui.py:430 ../gui/polgengui.py:711
 msgid "You must select a user"
 msgstr "사용자를 선택해야 합니다 "
 
-#: ../gui/polgengui.py:553
+#: ../gui/polgengui.py:560
 msgid "Select executable file to be confined."
 msgstr "제한된 실행 파일을 선택합니다."
 
-#: ../gui/polgengui.py:564
+#: ../gui/polgengui.py:571
 msgid "Select init script file to be confined."
 msgstr "제한된 init 스크립트 파일을 선택합니다."
 
-#: ../gui/polgengui.py:574
+#: ../gui/polgengui.py:581
 msgid "Select file(s) that confined application creates or writes"
 msgstr "제한된 애플리케이션을 생성하거나 쓸 파일을 선택합니다"
 
-#: ../gui/polgengui.py:581
+#: ../gui/polgengui.py:588
 msgid "Select directory(s) that the confined application owns and writes into"
 msgstr "제한된 애플리케이션을 소유하고 쓸 디렉토리를 선택합니다"
 
-#: ../gui/polgengui.py:643
+#: ../gui/polgengui.py:650
 msgid "Select directory to generate policy files in"
 msgstr "정책 파일을 생성할 디렉토리를 선택합니다 "
 
-#: ../gui/polgengui.py:660
+#: ../gui/polgengui.py:667
 #, python-format
 msgid ""
 "Type %s_t already defined in current policy.\n"
 "Do you want to continue?"
-msgstr "현재 정책에서 이미 정의된 %s_t를 입력합니다.\n계속 진행하시겠습니까?"
+msgstr ""
+"현재 정책에서 이미 정의된 %s_t를 입력합니다.\n"
+"계속 진행하시겠습니까?"
 
-#: ../gui/polgengui.py:660 ../gui/polgengui.py:664
+#: ../gui/polgengui.py:667 ../gui/polgengui.py:671
 msgid "Verify Name"
 msgstr "이름 확인 "
 
-#: ../gui/polgengui.py:664
+#: ../gui/polgengui.py:671
 #, python-format
 msgid ""
 "Module %s.pp already loaded in current policy.\n"
 "Do you want to continue?"
-msgstr "모듈 %s.pp은 현재 정책에 이미 로드되어 있습니다.\n계속 진행하시겠습니까?"
+msgstr ""
+"모듈 %s.pp은 현재 정책에 이미 로드되어 있습니다.\n"
+"계속 진행하시겠습니까?"
 
-#: ../gui/polgengui.py:710
+#: ../gui/polgengui.py:717
 msgid ""
 "You must add a name made up of letters and numbers and containing no spaces."
 msgstr "공백이 없는 문자와 숫자로 구성된 이름을 추가해야 합니다."
 
-#: ../gui/polgengui.py:724
+#: ../gui/polgengui.py:731
 msgid "You must enter a executable"
 msgstr "실행 파일을 입력해야 합니다"
 
-#: ../gui/polgengui.py:749 ../gui/system-config-selinux.py:180
+#: ../gui/polgengui.py:756 ../gui/system-config-selinux.py:180
 msgid "Configue SELinux"
 msgstr "SELinux 설정 "
 
@@ -1829,9 +1946,15 @@ msgstr "네트워크 포트 "
 msgid ""
 "SELinux Port\n"
 "Type"
-msgstr "SELinux 포트\n유형"
+msgstr ""
+"SELinux 포트\n"
+"유형"
 
 #: ../gui/portsPage.py:91 ../gui/system-config-selinux.glade:363
+#: ../sepolicy/sepolicy/sepolicy.glade:1443
+#: ../sepolicy/sepolicy/sepolicy.glade:2657
+#: ../sepolicy/sepolicy/sepolicy.glade:2755
+#: ../sepolicy/sepolicy/sepolicy.glade:4672
 msgid "Protocol"
 msgstr "프로토콜 "
 
@@ -1839,9 +1962,13 @@ msgstr "프로토콜 "
 msgid ""
 "MLS/MCS\n"
 "Level"
-msgstr "MLS/MCS\n레벨"
+msgstr ""
+"MLS/MCS\n"
+"레벨"
 
-#: ../gui/portsPage.py:101
+#: ../gui/portsPage.py:101 ../sepolicy/sepolicy/sepolicy.glade:2638
+#: ../sepolicy/sepolicy/sepolicy.glade:2737
+#: ../sepolicy/sepolicy/sepolicy.glade:4658
 msgid "Port"
 msgstr "포트 "
 
@@ -1879,10 +2006,14 @@ msgid "Modify %s"
 msgstr "%s 수정 "
 
 #: ../gui/statusPage.py:69 ../gui/system-config-selinux.glade:2819
+#: ../sepolicy/sepolicy/sepolicy.glade:3413
+#: ../sepolicy/sepolicy/sepolicy.glade:3486
 msgid "Permissive"
 msgstr "허용 "
 
 #: ../gui/statusPage.py:70 ../gui/system-config-selinux.glade:2837
+#: ../sepolicy/sepolicy/sepolicy.glade:3394
+#: ../sepolicy/sepolicy/sepolicy.glade:3468
 msgid "Enforcing"
 msgstr "강제 "
 
@@ -1890,12 +2021,15 @@ msgstr "강제 "
 msgid "Status"
 msgstr "상태"
 
-#: ../gui/statusPage.py:133
+#: ../gui/statusPage.py:133 ../sepolicy/sepolicy/gui.py:2619
 msgid ""
 "Changing the policy type will cause a relabel of the entire file system on "
 "the next boot. Relabeling takes a long time depending on the size of the "
 "file system.  Do you wish to continue?"
-msgstr "정책 유형을 변경하면 다음 부팅 시 전체 파일 시스템의 레이블 변경의 원인이 됩니다. 레이블 변경은 파일 시스템의 크기에 따라 시간이 오래 소요됩니다. 계속 진행하시겠습니까?"
+msgstr ""
+"정책 유형을 변경하면 다음 부팅 시 전체 파일 시스템의 레이블 변경의 원인이 됩"
+"니다. 레이블 변경은 파일 시스템의 크기에 따라 시간이 오래 소요됩니다. 계속 진"
+"행하시겠습니까?"
 
 #: ../gui/statusPage.py:147
 msgid ""
@@ -1903,16 +2037,25 @@ msgid ""
 "you later decide to turn SELinux back on, the system will be required to "
 "relabel.  If you just want to see if SELinux is causing a problem on your "
 "system, you can go to permissive mode which will only log errors and not "
-"enforce SELinux policy.  Permissive mode does not require a reboot    Do you"
-" wish to continue?"
-msgstr "SELinux 비활성화로 변경하려면 재부팅해야 합니다. 이는 권장되는 방법이 아닙니다. 나중에 SELinux를 다시 활성화하고자 할 경우 시스템 레이블 변경이 필요합니다. 단순히 SELinux가 시스템에서 문제의 원인인지 여부를 확인하고 싶은 경우 허용 모드로 전환하면 오류를 로그하고 SELinux 정책을 강제하지 않을 수 있습니다. 또한 허용 모드로 변경하기 위해 재부팅할 필요가 없습니다. 계속 진행하시겠습니까?"
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"SELinux 비활성화로 변경하려면 재부팅해야 합니다. 이는 권장되는 방법이 아닙니"
+"다. 나중에 SELinux를 다시 활성화하고자 할 경우 시스템 레이블 변경이 필요합니"
+"다. 단순히 SELinux가 시스템에서 문제의 원인인지 여부를 확인하고 싶은 경우 허"
+"용 모드로 전환하면 오류를 로그하고 SELinux 정책을 강제하지 않을 수 있습니다. "
+"또한 허용 모드로 변경하기 위해 재부팅할 필요가 없습니다. 계속 진행하시겠습니"
+"까?"
 
-#: ../gui/statusPage.py:152
+#: ../gui/statusPage.py:152 ../sepolicy/sepolicy/gui.py:2753
 msgid ""
 "Changing to SELinux enabled will cause a relabel of the entire file system "
 "on the next boot. Relabeling takes a long time depending on the size of the "
 "file system.  Do you wish to continue?"
-msgstr "SELinux 활성화로 변경하면 다음 부팅시 전체 파일 시스템의 레이블 변경의 원인이 됩니다. 레이블 변경은 파일 시스템의 크기에 따라 시간이 오래 소요됩니다. 계속 진행하시겠습니까?"
+msgstr ""
+"SELinux 활성화로 변경하면 다음 부팅시 전체 파일 시스템의 레이블 변경의 원인"
+"이 됩니다. 레이블 변경은 파일 시스템의 크기에 따라 시간이 오래 소요됩니다. 계"
+"속 진행하시겠습니까?"
 
 #: ../gui/system-config-selinux.glade:11
 msgid "system-config-selinux"
@@ -1922,7 +2065,9 @@ msgstr "system-config-selinux"
 msgid ""
 "Copyright (c)2006 Red Hat, Inc.\n"
 "Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
-msgstr "Copyright (c)2006 Red Hat, Inc.\nCopyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
 
 #: ../gui/system-config-selinux.glade:22
 #: ../gui/system-config-selinux.glade:544
@@ -1956,9 +2101,19 @@ msgid ""
 "socket\n"
 "symbolic link\n"
 "named pipe\n"
-msgstr "모든 파일\n표준 파일\n디렉토리\n문자 장치\n차단 장치\n소켓\n심볼릭 링크\nnamed 파이프\n"
+msgstr ""
+"모든 파일\n"
+"표준 파일\n"
+"디렉토리\n"
+"문자 장치\n"
+"차단 장치\n"
+"소켓\n"
+"심볼릭 링크\n"
+"named 파이프\n"
 
 #: ../gui/system-config-selinux.glade:773
+#: ../sepolicy/sepolicy/sepolicy.glade:729
+#: ../sepolicy/sepolicy/sepolicy.glade:1489
 msgid "MLS"
 msgstr "MLS"
 
@@ -1971,6 +2126,7 @@ msgid "SELinux Administration"
 msgstr "SELinux 관리"
 
 #: ../gui/system-config-selinux.glade:1122
+#: ../sepolicy/sepolicy/sepolicy.glade:4162
 msgid "Add"
 msgstr "추가"
 
@@ -1999,7 +2155,10 @@ msgid ""
 "Disabled\n"
 "Permissive\n"
 "Enforcing\n"
-msgstr "비활성화\n허용\n강제\n"
+msgstr ""
+"비활성화\n"
+"허용\n"
+"강제\n"
 
 #: ../gui/system-config-selinux.glade:1373
 msgid "Current Enforcing Mode"
@@ -2015,7 +2174,10 @@ msgid ""
 "Relabeling can take a very long time, depending on the size of the system.  "
 "If you are changing policy types or going from disabled to enforcing, a "
 "relabel is required."
-msgstr "다음번 부팅시 전체 파일 시스템의 레이블을 변경할지 여부를 선택합니다. 레이블 변경은 시스템의 크기에 따라 시간이 오래 소요됩니다. 정책 유형을 변경하거나 비활성화에서 강제로 이동하는 경우 레이블 변경이 필요합니다. "
+msgstr ""
+"다음번 부팅시 전체 파일 시스템의 레이블을 변경할지 여부를 선택합니다. 레이블 "
+"변경은 시스템의 크기에 따라 시간이 오래 소요됩니다. 정책 유형을 변경하거나 비"
+"활성화에서 강제로 이동하는 경우 레이블 변경이 필요합니다. "
 
 #: ../gui/system-config-selinux.glade:1509
 msgid "Relabel on next reboot."
@@ -2040,6 +2202,7 @@ msgstr "사용자 정의 부울과 모든 부울을 전환"
 #: ../gui/system-config-selinux.glade:2467
 #: ../gui/system-config-selinux.glade:2692
 #: ../gui/system-config-selinux.glade:2867
+#: ../sepolicy/sepolicy/sepolicy.glade:1992
 msgid "Filter"
 msgstr "필터 "
 
@@ -2134,8 +2297,8 @@ msgstr "로딩할 수 있는 정책 모듈 제거 "
 
 #: ../gui/system-config-selinux.glade:2661
 msgid ""
-"Enable/Disable additional audit rules, that are normally not reported in the"
-" log files."
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
 msgstr "일반적으로 로그 파일에 보고되지 않는 추가 감사 규칙을 활성화/비활성화"
 
 #: ../gui/system-config-selinux.glade:2781
@@ -2163,1321 +2326,3136 @@ msgstr "label59"
 msgid "SELinux user '%s' is required"
 msgstr "SELinux 사용자 '%s'가 필요합니다"
 
-#: ../sepolicy/sepolicy.py:202
-msgid "Generate SELinux man pages"
-msgstr "SELinux man 페이지 생성 "
-
-#: ../sepolicy/sepolicy.py:205
-msgid "path in which the generated SELinux man pages will be stored"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:207
-msgid "name of the OS for man pages"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:209
-msgid "Generate HTML man pages structure for selected SELinux man page"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:213
-msgid "All domains"
-msgstr "전체 도메인 "
-
-#: ../sepolicy/sepolicy.py:216
-msgid "Domain name(s) of man pages to be created"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:221
-msgid "Query SELinux policy network information"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:226
-msgid "list all SELinux port types"
-msgstr "전체 SELinux 포트 유형 목록 "
-
-#: ../sepolicy/sepolicy.py:229
-msgid "show SELinux type related to the port"
-msgstr "포트와 관련된 SELinux 유형을 표시합니다 "
-
-#: ../sepolicy/sepolicy.py:232
-msgid "Show ports defined for this SELinux type"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:235
-msgid "show ports to which this domain can bind and/or connect"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:250
-msgid "query SELinux policy to see if domains can communicate with each other"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:253
-msgid "Source Domain"
-msgstr "소스 도메인 "
-
-#: ../sepolicy/sepolicy.py:256
-msgid "Target Domain"
-msgstr "대상 도메인 "
-
-#: ../sepolicy/sepolicy.py:276
-msgid "query SELinux Policy to see description of booleans"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:280
-msgid "get all booleans descriptions"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:282
-msgid "boolean to get description"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:301
-msgid ""
-"query SELinux Policy to see how a source process domain can transition to "
-"the target process domain"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:304
-msgid "source process domain"
-msgstr "소스 프로세스 도메인 "
-
-#: ../sepolicy/sepolicy.py:307
-msgid "target process domain"
-msgstr "대상 프로세스 도메인 "
-
-#: ../sepolicy/sepolicy.py:327
-msgid "Command required for this type of policy"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:347
-msgid "List SELinux Policy interfaces"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:362
-msgid "Generate SELinux Policy module template"
-msgstr "SELinux 정책 모듈 템플릿 생성 "
-
-#: ../sepolicy/sepolicy.py:365
-msgid "Enter domain type which you will be extending"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:368
-msgid "Enter SELinux user(s) which will transition to this domain"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:371
-msgid "Enter domain(s) that this confined admin will administrate"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:374
-msgid "name of policy to generate"
-msgstr "생성할 정책 이름 "
-
-#: ../sepolicy/sepolicy.py:378
-msgid "path in which the generated policy files will be stored"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:380
-msgid "executable to confine"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:384 ../sepolicy/sepolicy.py:387
-#: ../sepolicy/sepolicy.py:390 ../sepolicy/sepolicy.py:393
-#: ../sepolicy/sepolicy.py:396 ../sepolicy/sepolicy.py:399
-#: ../sepolicy/sepolicy.py:402 ../sepolicy/sepolicy.py:405
-#: ../sepolicy/sepolicy.py:408 ../sepolicy/sepolicy.py:411
-#: ../sepolicy/sepolicy.py:414 ../sepolicy/sepolicy.py:417
-#, python-format
-msgid "Generate Policy for %s"
-msgstr ""
-
-#: ../sepolicy/sepolicy.py:422
-msgid "commands"
-msgstr "명령 "
-
-#: ../sepolicy/sepolicy.py:425
-msgid "Alternate SELinux policy, defaults to /sys/fs/selinux/policy"
-msgstr ""
-
-#: ../sepolicy/sepolicy/__init__.py:48
-msgid "No SELinux Policy installed"
-msgstr ""
-
-#: ../sepolicy/sepolicy/__init__.py:54
-#, python-format
-msgid "Failed to read %s policy file"
-msgstr ""
-
-#: ../sepolicy/sepolicy/__init__.py:127
-msgid "unknown"
-msgstr "알려지지 않음 "
-
-#: ../sepolicy/sepolicy/generate.py:173
-msgid "Internet Services Daemon"
-msgstr "인터넷 서비스 데몬 "
-
-#: ../sepolicy/sepolicy/generate.py:177
-msgid "Existing Domain Type"
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:178
-msgid "Minimal Terminal Login User Role"
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:179
-msgid "Minimal X Windows Login User Role"
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:180
-msgid "Desktop Login User Role"
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:181
-msgid "Administrator Login User Role"
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:182
-msgid "Confined Root Administrator Role"
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:187
-msgid "Valid Types:\n"
-msgstr "유효한 유형:\n"
-
-#: ../sepolicy/sepolicy/generate.py:221
-#, python-format
-msgid "Ports must be numbers or ranges of numbers from 1 to %d "
-msgstr "포트는 숫자이거나 1에서 %d 까지의 숫자 범위에 있어야 합니다 "
-
-#: ../sepolicy/sepolicy/generate.py:231
-msgid "You must enter a valid policy type"
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:234
-#, python-format
-msgid "You must enter a name for your policy module for your %s."
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:355
-msgid ""
-"Name must be alpha numberic with no spaces. Consider using option \"-n "
-"MODULENAME\""
-msgstr "이름은 공백이 없는 영문 숫자로 구성되어야 합니다. \"-n MODULENAME\" 옵션의 사용을 고려해 보십시오"
-
-#: ../sepolicy/sepolicy/generate.py:447
-msgid "User Role types can not be assigned executables."
-msgstr "사용자 역할 유형은 할당된 실행 파일이 될 수 없습니다. "
-
-#: ../sepolicy/sepolicy/generate.py:453
-msgid "Only Daemon apps can use an init script.."
-msgstr "데몬 애플리케이션만 init 스크립트를 사용할 수 있습니다.."
-
-#: ../sepolicy/sepolicy/generate.py:471
-msgid "use_resolve must be a boolean value "
-msgstr "use_resolve는 부울 값이어야 합니다"
-
-#: ../sepolicy/sepolicy/generate.py:477
-msgid "use_syslog must be a boolean value "
-msgstr "use_syslog는 부울 값이어야 합니다"
-
-#: ../sepolicy/sepolicy/generate.py:483
-msgid "use_kerberos must be a boolean value "
-msgstr "use_kerberos는 부울 값이어야 합니다"
-
-#: ../sepolicy/sepolicy/generate.py:489
-msgid "manage_krb5_rcache must be a boolean value "
-msgstr "manage_krb5_rcache는 부울 값이어야 합니다"
-
-#: ../sepolicy/sepolicy/generate.py:519
-msgid "USER Types automatically get a tmp type"
-msgstr "USER 유형은 자동으로 tmp 유형을 갖습니다"
-
-#: ../sepolicy/sepolicy/generate.py:857
-#, python-format
-msgid "%s policy modules require existing domains"
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:1059
-msgid "You must enter the executable path for your confined process"
-msgstr "제한된 프로세스의 실행 파일 경로를 입력해야 합니다"
-
-#: ../sepolicy/sepolicy/generate.py:1321
-msgid "Type Enforcement file"
-msgstr "강제 파일 입력"
-
-#: ../sepolicy/sepolicy/generate.py:1322
-msgid "Interface file"
-msgstr "인터페이스 파일"
-
-#: ../sepolicy/sepolicy/generate.py:1323
-msgid "File Contexts file"
-msgstr "파일 문맥 파일 "
-
-#: ../sepolicy/sepolicy/generate.py:1324
-msgid "Spec file"
-msgstr ""
-
-#: ../sepolicy/sepolicy/generate.py:1325
-msgid "Setup Script"
-msgstr "스크립트 설정 "
-
 #: booleans.py:1
 msgid ""
 "Allow ABRT to modify public files used for public file transfer services."
-msgstr "ABRT는 공개 파일 전송 서비스에 사용되는 공개 파일을 수정할 수 있습니다."
+msgstr ""
+"ABRT는 공개 파일 전송 서비스에 사용되는 공개 파일을 수정할 수 있습니다."
 
 #: booleans.py:2
 msgid ""
 "Allow ABRT to run in abrt_handle_event_t domain to handle ABRT event scripts"
 msgstr ""
+"ABRT가 ABRT 이벤트 스크립트를 처리하기 위해 abrt_handle_event_t 도메인에서 실"
+"행하는 것을 허용합니다 "
 
 #: booleans.py:3
-msgid "Allow amavis to use JIT compiler"
-msgstr "amavis가 JIT 컴파일러 사용을 허용합니다 "
+#, fuzzy
+msgid ""
+"Allow abrt-handle-upload to modify public files used for public file "
+"transfer services in /var/spool/abrt-upload/."
+msgstr ""
+"tftp가 공용 파일 전송 서비스에 사용되는 공용 파일을 수정하는 것을 허용합니다."
 
 #: booleans.py:4
 msgid "Allow antivirus programs to read non security files on a system"
-msgstr ""
+msgstr "바이러스 백신 프로그램이 시스템의 비보안 파일을 읽는 것을 허용합니다 "
 
 #: booleans.py:5
-msgid "Allow auditadm to exec content"
+msgid "Determine whether can antivirus programs use JIT compiler."
 msgstr ""
+"바이러스 백신 프로그램이 JIT 컴파일러를 사용할 수 있는지에 대한 여부를 지정합"
+"니다."
 
 #: booleans.py:6
+msgid "Allow auditadm to exec content"
+msgstr "auditadm이 컨텐츠를 실행하는 것을 허용합니다 "
+
+#: booleans.py:7
 msgid ""
 "Allow users to resolve user passwd entries directly from ldap rather then "
 "using a sssd server"
 msgstr ""
-
-#: booleans.py:7
-msgid "Allow users to login using a radius server"
-msgstr ""
+"사용자가 sssd 서버를 사용하지 않고 ldap에서 직접 user passwd 항목을 확인할 "
+"수 있게 합니다 "
 
 #: booleans.py:8
-msgid "Allow users to login using a yubikey  server"
-msgstr ""
+msgid "Allow users to login using a radius server"
+msgstr "사용자가 radius 서버를 사용하여 로그인하는 것을 허용합니다 "
 
 #: booleans.py:9
-msgid "Allow awstats to purge Apache logs"
-msgstr ""
+msgid "Allow users to login using a yubikey  server"
+msgstr "사용자가 yubikey 서버를 사용하여 로그인하는 것을 허용합니다 "
 
 #: booleans.py:10
-msgid ""
-"Allow cdrecord to read various content. nfs, samba, removable devices, user "
-"temp and untrusted content files"
-msgstr "각종 컨텐츠 (nfs, samba, 이동식 장치, 사용자의 임시 파일, 신뢰할 수없는 컨텐츠 파일 등)를 로드하는 것을 cdrecord에 허용"
+msgid "Determine whether awstats can purge httpd log files."
+msgstr "awstats가 httpd 로그 파일을 제거할 수 있는지에 대한 여부를 지정합니다."
 
 #: booleans.py:11
-msgid "Allow clamd to use JIT compiler"
-msgstr ""
+#, fuzzy
+msgid "Allow boinc_domain execmem/execstack."
+msgstr "httpd 스크립트 및 모듈의 execmem/execstack 실행을 허용합니다 "
 
 #: booleans.py:12
-msgid "Allow clamscan to non security files on a system"
+msgid ""
+"Determine whether cdrecord can read various content. nfs, samba, removable "
+"devices, user temp and untrusted content files"
 msgstr ""
+"cdrecord가  nfs, samba, 이동식 장치, 사용자 temp, 신뢰할 수 없는 컨텐츠 파일"
+"과 같은 다양한 컨텐츠를 읽를 수 있는지에 대한 여부를 지정합니다."
 
 #: booleans.py:13
-msgid "Allow clamscan to read user content"
+msgid ""
+"Allow cluster administrative domains to connect to the network using TCP."
 msgstr ""
+"클러스터 관리 도메인이 TCP를 사용하여 네트워크에 연결하는 것을 허용합니다. "
 
 #: booleans.py:14
-msgid ""
-"Allow Cobbler to modify public files used for public file transfer services."
+msgid "Allow cluster administrative domains to manage all files on a system."
 msgstr ""
+"클러스터 관리 도메인이 시스템에 있는 모든 파일을 관리하는 것을 허용합니다."
 
 #: booleans.py:15
-msgid "Allow Cobbler to connect to the network using TCP."
+msgid ""
+"Allow cluster administrative cluster domains memcheck-amd64- to use "
+"executable memory"
 msgstr ""
+"클러스터 관리 클러스터 도메인 memcheck-amd64-가 실행 가능한 메모리를 사용하"
+"는 것을 허용합니다 "
 
 #: booleans.py:16
-msgid "Allow Cobbler to access cifs file systems."
+msgid ""
+"Determine whether Cobbler can modify public files used for public file "
+"transfer services."
 msgstr ""
+"Cobbler가 공용 파일 전송 서비스에 사용되는 공용 파일을 변경할 수 있는지에 대"
+"한 여부를 지정합니다. "
 
 #: booleans.py:17
-msgid "Allow Cobbler to access nfs file systems."
+msgid "Determine whether Cobbler can connect to the network using TCP."
 msgstr ""
+"Cobbler가 TCP를 사용하는 네트워크에 연결할 수 있는지에 대한 여부를 지정합니"
+"다. "
 
 #: booleans.py:18
-msgid "Allow collectd to connect to the network using TCP."
+msgid "Determine whether Cobbler can access cifs file systems."
 msgstr ""
+"Cobbler가 cifs 파일 시스템을 액세스할 수 있는지에 대한 여부를 지정합니다."
 
 #: booleans.py:19
-msgid "Allow codnor domain to connect to the network using TCP."
+msgid "Determine whether Cobbler can access nfs file systems."
 msgstr ""
+"Cobbler가 nfs 파일 시스템에 액세스할 수 있는지에 대한 여부를 지정합니다."
 
 #: booleans.py:20
+msgid "Determine whether collectd can connect to the network using TCP."
+msgstr ""
+"collectd가 TCP를 사용하는 네트워크에 연결할 수 있는지에 대한 여부를 지정합니"
+"다. "
+
+#: booleans.py:21
+msgid "Determine whether Condor can connect to the network using TCP."
+msgstr ""
+"Condor가 TCP를 사용하는 네트워크에 연결할 수 있는지에 대한 여부를 지정합니다."
+
+#: booleans.py:22
 msgid ""
 "Allow system cron jobs to relabel filesystem for restoring file contexts."
 msgstr ""
+"시스템 cron 작업이 파일 컨텍스트를 복구하기 위해 파일 시스템을 다시 레이블하"
+"는 것을 허용합니다."
 
-#: booleans.py:21
-msgid "Allow cvs daemon to read shadow"
-msgstr ""
+#: booleans.py:23
+msgid "Determine whether cvs can read shadow password files."
+msgstr "cvs가 shadow 암호 파일을 읽을 수 있는지에 대한 여부를 지정합니다."
 
-#: booleans.py:22
+#: booleans.py:24
 msgid "Allow all daemons to write corefiles to /"
 msgstr "모든 데몬에 /에 코어 파일 쓰기를 허용 "
 
-#: booleans.py:23
-msgid "Allow all daemons to use tcp wrappers."
-msgstr ""
-
-#: booleans.py:24
-msgid "Allow all daemons the ability to read/write terminals"
-msgstr ""
-
 #: booleans.py:25
-msgid "Allow dan to manage user files"
-msgstr ""
+msgid "Allow all daemons to use tcp wrappers."
+msgstr "모든 데몬이 tcp 래퍼를 사용하는 것을 허용합니다."
 
 #: booleans.py:26
-msgid "Allow dan to read user files"
-msgstr ""
+msgid "Allow all daemons the ability to read/write terminals"
+msgstr "모든 데몬에 터미널의 읽기/쓰기 기능을 허용합니다 "
 
 #: booleans.py:27
-msgid "Allow dbadm to manage files in users home directories"
+msgid "Determine whether dbadm can manage generic user files."
 msgstr ""
+"dbadm이 일반적인 사용자 파일을 관리할 수 있는지에 대한 여부를 지정합니다. "
 
 #: booleans.py:28
-msgid "Allow dbadm to read files in users home directories"
+msgid "Determine whether dbadm can read generic user files."
 msgstr ""
+"dbadm이 일반적인 사용자 파일을 읽을 수 있는지에 대한 여부를 지정합니다."
 
 #: booleans.py:29
 msgid ""
-"Deny user domains applications to map a memory region as both executable and"
-" writable, this is dangerous and the executable should be reported in "
-"bugzilla"
+"Deny user domains applications to map a memory region as both executable and "
+"writable, this is dangerous and the executable should be reported in bugzilla"
 msgstr ""
+"사용자 도메인 애플리케이션이 메모리 영역을 실행 가능 및 쓰기 가능하게 매핑하"
+"는 것을 거부합니다. 이는 매우 위험하므로 실행 파일은 bugzilla에 보고해야 합니"
+"다."
 
 #: booleans.py:30
-msgid "Allow sysadm to debug or ptrace all processes."
+msgid "Deny any process from ptracing or debugging any other processes."
 msgstr ""
 
 #: booleans.py:31
 msgid "Allow dhcpc client applications to execute iptables commands"
 msgstr ""
+"dhcpc 클라이언트 애플리케이션이 iptables 명령을 실행하는 것을 허용합니다 "
 
 #: booleans.py:32
-msgid "Allow DHCP daemon to use LDAP backends"
-msgstr ""
+msgid "Determine whether DHCP daemon can use LDAP backends."
+msgstr "DHCP 데몬이 LDAP 백엔드를 사용할 수 있는지에 대한 여부를 지정합니다. "
 
 #: booleans.py:33
 msgid "Allow all domains to use other domains file descriptors"
-msgstr ""
+msgstr "모든 도메인이 다른 도메인의 파일 설명기를 사용하는 것을 허용합니다. "
 
 #: booleans.py:34
 msgid "Allow all domains to have the kernel load modules"
-msgstr ""
+msgstr "모든 도메인이 커널 로드 모듈을 갖는 것을 허용합니다 "
 
 #: booleans.py:35
-msgid "Allow the use of the audio devices as the source for the entropy feeds"
+msgid ""
+"Determine whether entropyd can use audio devices as the source for the "
+"entropy feeds."
 msgstr ""
+"entropyd가 엔트로피 피드의 소스로 오디오 장치를 사용할 수 있는지에 대한 여부"
+"를 지정합니다."
 
 #: booleans.py:36
-msgid "Allow exim to connect to databases (postgres, mysql)"
-msgstr ""
+msgid "Determine whether exim can connect to databases."
+msgstr "exim이 데이터베이스에 연결할 수 있는지에 대한 여부를 지정합니다. "
 
 #: booleans.py:37
-msgid "Allow exim to create, read, write, and delete unprivileged user files."
+msgid ""
+"Determine whether exim can create, read, write, and delete generic user "
+"content files."
 msgstr ""
+"exim이 일반적인 사용자 컨텐츠 파일을 생성, 일기, 쓰기, 삭제할 수 있는지에 대"
+"한 여부를 지정합니다."
 
 #: booleans.py:38
-msgid "Allow exim to read unprivileged user files."
+msgid "Determine whether exim can read generic user content files."
 msgstr ""
+"exim이 일반적인 사용자 컨텐츠 파일을 읽기할 수 있는지에 대한 여부를 지정합니"
+"다. "
 
 #: booleans.py:39
 msgid "Enable extra rules in the cron domain to support fcron."
-msgstr ""
+msgstr "fcron을 지원하기 위해 cron 도메인에서 추가 규칙을 활성화합니다."
 
 #: booleans.py:40
-msgid "Allow fenced domain to connect to the network using TCP."
-msgstr ""
+msgid "Determine whether fenced can connect to the TCP network."
+msgstr "fenced가 TCP 네트워크에 연결할 수 있는지에 대한 여부를 지정합니다. "
 
 #: booleans.py:41
-msgid "Allow fenced domain to execute ssh."
-msgstr ""
+msgid "Determine whether fenced can use ssh."
+msgstr "fenced가 ssh를 사용할 수 있는지에 대한 여부를 지정합니다. "
 
 #: booleans.py:42
 msgid "Allow all domains to execute in fips_mode"
-msgstr ""
+msgstr "모든 도메인이 fips_mode에서 실행하는 것을 허용합니다 "
 
 #: booleans.py:43
-msgid "Allow ftp to read and write files in the user home directories"
+msgid ""
+"Determine whether ftpd can read and write files in user home directories."
 msgstr ""
+"ftpd가 사용자 홈 디렉토리에 있는 파일을 읽기 및 쓰기할 수 있는지에 대한 여부"
+"를 지정합니다."
 
 #: booleans.py:44
 msgid ""
-"Allow ftp servers to upload files,  used for public file transfer services. "
-"Directories must be labeled public_content_rw_t."
+"Determine whether ftpd can modify public files used for public file transfer "
+"services. Directories/Files must be labeled public_content_rw_t."
 msgstr ""
+"ftpd가 공용 파일 전송 서비스에 사용되는 공용 파일을 변경할 수 있는지에 대한 "
+"여부를 지정합니다. 디렉토리/파일은 public_content_rw_t로 레이블해야 합니다."
 
 #: booleans.py:45
-msgid "Allow ftp servers to connect to all ports > 1023"
+msgid "Determine whether ftpd can connect to all unreserved ports."
 msgstr ""
+"ftpd가 예약되지 않은 모든 포트에 연결할 수 있는지에 대한 여부를 지정합니다. "
 
 #: booleans.py:46
-msgid "Allow ftp servers to connect to mysql database ports"
+msgid "Determine whether ftpd can connect to databases over the TCP network."
 msgstr ""
+"ftpd가 TCP 네트워크를 통해 데이터베이스에 연결할 수 있는지에 대한 여부를 지정"
+"합니다. "
 
 #: booleans.py:47
 msgid ""
-"Allow ftp servers to login to local users and read/write all files on the "
-"system, governed by DAC."
+"Determine whether ftpd can login to local users and can read and write all "
+"files on the system, governed by DAC."
 msgstr ""
+"ftpd가 로컬 사요자로 로그인하여 DAC에 의해 관리되는 시스템 상의 모든 파일을 "
+"읽기 및 쓰기할 수 있는지에 대한 여부를 지정합니다. "
 
 #: booleans.py:48
-msgid "Allow ftp servers to use cifs used for public file transfer services."
+msgid ""
+"Determine whether ftpd can use CIFS used for public file transfer services."
 msgstr ""
+"ftpd가 공용 파일 전송 서비스에 사용되는 CIFS를 사용할 수 있는지에 대한 여부"
+"를 지정합니다."
 
 #: booleans.py:49
-msgid "Allow ftp servers to use nfs used for public file transfer services."
-msgstr ""
+#, fuzzy
+msgid "Allow ftpd to use ntfs/fusefs volumes."
+msgstr "samba가 ntfs/fusefs 볼륨을 내보내기하는 것을 허용합니다 "
 
 #: booleans.py:50
-msgid "Allow ftp servers to use bind to all unreserved ports for passive mode"
+msgid ""
+"Determine whether ftpd can use NFS used for public file transfer services."
 msgstr ""
+"ftpd가 공용 파일 전송 서비스에 사용되는 NFS를 사용할 수 있는지에 대한 여부를 "
+"지정합니다."
 
 #: booleans.py:51
-msgid "Determine whether Git CGI can search home directories."
+msgid ""
+"Determine whether ftpd can bind to all unreserved ports for passive mode."
 msgstr ""
+"ftpd가 수동 모드의 모든 예약되지 않은 포트에 바인딩할 수 있는지에 대한 여부"
+"를 지정합니다. "
 
 #: booleans.py:52
-msgid "Determine whether Git CGI can access cifs file systems."
-msgstr ""
+msgid "Determine whether Git CGI can search home directories."
+msgstr "Git CGI가 홈 디렉토리를 검색할 수 있는지 여부를 지정합니다. "
 
 #: booleans.py:53
-msgid "Determine whether Git CGI can access nfs file systems."
+msgid "Determine whether Git CGI can access cifs file systems."
 msgstr ""
+"Git CGI가 cifs 파일 시스템을 액세스할 수 있는지에 대한 여부를 지정합니다. "
 
 #: booleans.py:54
+msgid "Determine whether Git CGI can access nfs file systems."
+msgstr ""
+"Git CGI가 nfs 파일 시스템에 액세스할 수 있는지에 대한 여부를 지정합니다. "
+
+#: booleans.py:55
 msgid ""
 "Determine whether Git session daemon can bind TCP sockets to all unreserved "
 "ports."
 msgstr ""
+"Git 세션 데몬이 모든 예약되지 않은 포트에 TCP 소켓을 바인딩할 수 있는지 여부"
+"를 지정합니다. "
 
-#: booleans.py:55
+#: booleans.py:56
 msgid ""
 "Determine whether calling user domains can execute Git daemon in the "
 "git_session_t domain."
 msgstr ""
-
-#: booleans.py:56
-msgid "Determine whether Git system daemon can search home directories."
-msgstr ""
+"사용자 도메인 호출이 git_session_t 도메인에서 Git 데몬을 실행할 수 있게 할 지"
+"에 대한 여부를 지정합니다. "
 
 #: booleans.py:57
-msgid "Determine whether Git system daemon can access cifs file systems."
+msgid "Determine whether Git system daemon can search home directories."
 msgstr ""
+"Git 시스템 도메인이 홈 디렉토리를 검색할 수 있는지에 대한 여부를 지정합니다. "
 
 #: booleans.py:58
-msgid "Determine whether Git system daemon can access nfs file systems."
+msgid "Determine whether Git system daemon can access cifs file systems."
 msgstr ""
+"Git 시스템 데몬이 cifs 파일 시스템에 액세스할 수 있는지에 대한 여부를 지정합"
+"니다. "
 
 #: booleans.py:59
-msgid "Allow gitisis daemon to send mail"
+msgid "Determine whether Git system daemon can access nfs file systems."
 msgstr ""
+"Git 시스템 데몬이 nfs 파일 시스템에 액세스할 수 있는지에 대한 여부를 지정합니"
+"다. "
 
 #: booleans.py:60
-msgid "Enable reading of urandom for all domains."
-msgstr ""
+msgid "Determine whether Gitosis can send mail."
+msgstr "Gitosis가 메일을 전송할 수 있는지에 대한 여부를 지정합니다."
 
 #: booleans.py:61
+msgid "Enable reading of urandom for all domains."
+msgstr "모든 도메인의 urandom 읽기를 활성화합니다."
+
+#: booleans.py:62
+msgid ""
+"Allow glusterfsd to modify public files used for public file transfer "
+"services.  Files/Directories must be labeled public_content_rw_t."
+msgstr ""
+"glusterfsd가 공용 파일 전송 서비스에 사용되는 공용 파일을 변경하는 것을 허용"
+"합니다. 파일/디렉토리는 public_content_rw_t로 레이블해야 합니다."
+
+#: booleans.py:63
+msgid "Allow glusterfsd to share any file/directory read only."
+msgstr ""
+"glusterfsd가 모든 파일/디렉토리를 읽기 전용으로 공유하는 것을 허용합니다."
+
+#: booleans.py:64
+msgid "Allow glusterfsd to share any file/directory read/write."
+msgstr ""
+"glusterfsd가 모든 파일/디렉토리의 읽기/쓰기를 공유하는 것을 허용합니다."
+
+#: booleans.py:65
 msgid ""
 "Allow usage of the gpg-agent --write-env-file option. This also allows gpg-"
 "agent to manage user files."
 msgstr ""
+"gpg-agent --write-env-file 옵션 사용을 허용합니다. 이는 gpg-agent가 사용자 파"
+"일을 관리할 수 있게 합니다. "
 
-#: booleans.py:62
+#: booleans.py:66
 msgid ""
 "Allow gpg web domain to modify public files used for public file transfer "
 "services."
 msgstr ""
+"gpg 웹 도메인이 공용 파일 전송 서비스에 사용되는 공용 파일을 변경하는 것을 허"
+"용합니다. "
 
-#: booleans.py:63
-msgid "Allow gssd to read temp directory.  For access to kerberos tgt."
+#: booleans.py:67
+#, fuzzy
+msgid ""
+"Allow gssd to list tmp directories and read the kerberos credential cache."
 msgstr ""
+"gssd가 임시 디렉토리를 읽는 것을 허용합니다. kerberos tgt에 액세스하기 위한 "
+"것입니다."
 
-#: booleans.py:64
+#: booleans.py:68
 msgid "Allow guest to exec content"
-msgstr ""
+msgstr "게스트가 컨텐츠를 실행하는 것을 허용합니다 "
 
-#: booleans.py:65
+#: booleans.py:69
 msgid ""
 "Allow Apache to modify public files used for public file transfer services. "
 "Directories/Files must be labeled public_content_rw_t."
 msgstr ""
+"Apache가 공용 파일 전송 서비스에 사용되는 공용 파일을 변경할 수 있게 합니다. "
+"디렉토리 및 파일은 public_content_rw_t로 레이블해야 합니다. "
 
-#: booleans.py:66
+#: booleans.py:70
 msgid "Allow httpd to use built in scripting (usually php)"
-msgstr ""
+msgstr "httpd가 내장 스크립트 (일반적으로 php)를 사용하는 것을 허용합니다 "
 
-#: booleans.py:67
+#: booleans.py:71
 msgid "Allow http daemon to check spam"
-msgstr ""
+msgstr "http 데몬이 스팸 메일을 확인하는 것을 허용합니다 "
 
-#: booleans.py:68
+#: booleans.py:72
 msgid ""
 "Allow httpd to act as a FTP client connecting to the ftp port and ephemeral "
 "ports"
 msgstr ""
+"httpd가  ftp 포트와 임시 포트에 연결하여 FTP 클라이언트로 작동하는 것을 허용"
+"합니다 "
 
-#: booleans.py:69
+#: booleans.py:73
 msgid "Allow httpd to connect to the ldap port"
 msgstr "httpd가 ldap 포트로 연결하는 것을 허용합니다 "
 
-#: booleans.py:70
-msgid "Allow http daemon to connect to zabbix"
+#: booleans.py:74
+msgid "Allow http daemon to connect to mythtv"
 msgstr ""
 
-#: booleans.py:71
+#: booleans.py:75
+msgid "Allow http daemon to connect to zabbix"
+msgstr "http 데몬이 zabbix에 연결하는 것을 허용합니다 "
+
+#: booleans.py:76
 msgid "Allow HTTPD scripts and modules to connect to the network using TCP."
 msgstr ""
+"HTTPD 스크립트와 모듈이 TCP를 사용하여 네트워크에 연결하는 것을 허용합니다. "
 
-#: booleans.py:72
-msgid ""
-"Allow HTTPD scripts and modules to connect to cobbler over the network."
+#: booleans.py:77
+msgid "Allow HTTPD scripts and modules to connect to cobbler over the network."
 msgstr ""
+"HTTPD 스크립트와 모듈이 네트워크를 통해 cobbler에 연결하는 것을 허용합니다. "
 
-#: booleans.py:73
+#: booleans.py:78
 msgid ""
 "Allow HTTPD scripts and modules to connect to databases over the network."
 msgstr ""
+"HTTPD 스크립트와 모듈이 네트워크를 통해 데이터베이스에 연결하는 것을 허용합니"
+"다. "
 
-#: booleans.py:74
+#: booleans.py:79
 msgid "Allow httpd to connect to memcache server"
 msgstr "httpd가 memcache 서버에 연결하는 것을 허용합니다 "
 
-#: booleans.py:75
+#: booleans.py:80
 msgid "Allow httpd to act as a relay"
-msgstr ""
+msgstr "httpd가 릴레이로 작동하는 것을 허용합니다 "
 
-#: booleans.py:76
+#: booleans.py:81
 msgid "Allow http daemon to send mail"
-msgstr ""
+msgstr "http 데몬이 메일을 전송하는 것을 허용합니다 "
 
-#: booleans.py:77
+#: booleans.py:82
 msgid "Allow Apache to communicate with avahi service via dbus"
-msgstr ""
+msgstr "Apache가 dbus를 통해 avahi 서비스와 통신하는 것을 허용합니다 "
 
-#: booleans.py:78
+#: booleans.py:83
 msgid "Allow httpd cgi support"
 msgstr "httpd cgi 지원을 허용합니다 "
 
-#: booleans.py:79
+#: booleans.py:84
 msgid "Allow httpd to act as a FTP server by listening on the ftp port."
-msgstr ""
+msgstr "httpd가 ftp 포트에서 청취하여 FTP 서버로 작동하는 것을 허용합니다 "
 
-#: booleans.py:80
+#: booleans.py:85
 msgid "Allow httpd to read home directories"
 msgstr "httpd가 홈 디렉토리 읽는 것을 허용합니다 "
 
-#: booleans.py:81
+#: booleans.py:86
 msgid "Allow httpd scripts and modules execmem/execstack"
-msgstr ""
+msgstr "httpd 스크립트 및 모듈의 execmem/execstack 실행을 허용합니다 "
 
-#: booleans.py:82
+#: booleans.py:87
 msgid "Allow HTTPD to connect to port 80 for graceful shutdown"
-msgstr ""
+msgstr "HTTPD가 무사히 종료하도록 포트 80에 연결하는 것을 허용합니다 "
 
-#: booleans.py:83
+#: booleans.py:88
 msgid "Allow httpd processes to manage IPA content"
 msgstr "httpd 프로세스가 IPA 컨텐츠를 관리하는 것을 허용합니다 "
 
-#: booleans.py:84
+#: booleans.py:89
 msgid "Allow Apache to use mod_auth_ntlm_winbind"
-msgstr ""
+msgstr "Apache가 mod_auth_ntlm_winbind를 사용하는 것을 허용합니다 "
 
-#: booleans.py:85
+#: booleans.py:90
 msgid "Allow Apache to use mod_auth_pam"
-msgstr ""
+msgstr "Apache가 mod_auth_pam을 사용하는 것을 허용합니다 "
 
-#: booleans.py:86
+#: booleans.py:91
 msgid "Allow httpd to read user content"
 msgstr "httpd가 사용자 컨텐츠를 읽는 것을 허용합니다 "
 
-#: booleans.py:87
+#: booleans.py:92
 msgid "Allow Apache to run in stickshift mode, not transition to passenger"
 msgstr ""
+"Apache가 passenger로 전환하지 않고 stickshift 모드에서 실행하는 것을 허용합니"
+"다 "
 
-#: booleans.py:88
-msgid "Allow httpd daemon to change its resource limits"
+#: booleans.py:93
+msgid "Allow HTTPD scripts and modules to server cobbler files."
 msgstr ""
 
-#: booleans.py:89
+#: booleans.py:94
+msgid "Allow httpd daemon to change its resource limits"
+msgstr "httpd 데몬이 데몬의 리소스 제한을 변경하는 것을 허용합니다 "
+
+#: booleans.py:95
 msgid ""
 "Allow HTTPD to run SSI executables in the same domain as system CGI scripts."
 msgstr ""
+"HTTPD가 시스템 CGI 스크립트로동일한 도메인에서 SSI 실행 파일의 실행을 허용합"
+"니다. "
 
-#: booleans.py:90
+#: booleans.py:96
 msgid ""
 "Allow apache scripts to write to public content, directories/files must be "
 "labeled public_rw_content_t."
 msgstr ""
+"apache 스크립트가 공용 컨텐츠에 작성하는 것을 허용합니다, 디렉토리/파일은 "
+"public_rw_content_t로 레이블해야 합니다. "
 
-#: booleans.py:91
+#: booleans.py:97
 msgid "Allow Apache to execute tmp content."
-msgstr ""
+msgstr "Apache가 tmp 컨텐츠를 실행하는 것을 허용합니다. "
 
-#: booleans.py:92
+#: booleans.py:98
 msgid ""
 "Unify HTTPD to communicate with the terminal. Needed for entering the "
 "passphrase for certificates at the terminal."
 msgstr ""
+"터미널과 통신하기 위해 HTTPD를 통일합니다. 터미널에서 인증서의 암호를 입력할 "
+"때 필요합니다. "
 
-#: booleans.py:93
+#: booleans.py:99
 msgid "Unify HTTPD handling of all content files."
-msgstr ""
+msgstr "모든 컨텐츠 파일의 HTTPD 처리를 통합니다. "
 
-#: booleans.py:94
+#: booleans.py:100
 msgid "Allow httpd to access cifs file systems"
 msgstr "httpd가 cifs 파일 시스템을 액세스하는 것을 허용합니다 "
 
-#: booleans.py:95
+#: booleans.py:101
 msgid "Allow httpd to access FUSE file systems"
 msgstr "httpd가 FUSE 파일 시스템을 액세스하는 것을 허용합니다 "
 
-#: booleans.py:96
+#: booleans.py:102
 msgid "Allow httpd to run gpg"
 msgstr "httpd가 gpg를 실행하는 것을 허용합니다 "
 
-#: booleans.py:97
+#: booleans.py:103
 msgid "Allow httpd to access nfs file systems"
-msgstr ""
+msgstr "httpd가 nfs 파일 시스템을 액세스하는 것을 허용합니다 "
 
-#: booleans.py:98
-msgid "Allow httpd to communicate with oddjob to start up a service"
-msgstr ""
-
-#: booleans.py:99
+#: booleans.py:104
 msgid "Allow httpd to access openstack ports"
 msgstr "httpd가 openstack 포트에 액세스하는 것을 허용합니다 "
 
-#: booleans.py:100
+#: booleans.py:105
+msgid "Allow httpd to connect to  sasl"
+msgstr ""
+
+#: booleans.py:106
 msgid "Allow Apache to query NS records"
-msgstr ""
+msgstr "Apache가 NS 기록을 쿼리하는 것을 허용합니다 "
 
-#: booleans.py:101
-msgid "Allow icecast to connect to all ports, not just sound ports."
+#: booleans.py:107
+msgid "Determine whether icecast can listen on and connect to any TCP port."
 msgstr ""
+"icecast가 TCP 포트에 연결 및 청취할 수 있는지에 대한 여부를 지정합니다. "
 
-#: booleans.py:102
+#: booleans.py:108
+msgid ""
+"Determine whether irc clients can listen on and connect to any unreserved "
+"TCP ports."
+msgstr ""
+"irc 클라이언트가 예약되지 않은 TCP 포트에 연결 및 청취할 수 있는지에 대한 여"
+"부를 지정합니다. "
+
+#: booleans.py:109
 msgid ""
 "Allow the Irssi IRC Client to connect to any port, and to bind to any "
 "unreserved port."
 msgstr ""
+"Irssi IRC 클라이언트가 포트에 연결하여 예약되지 않은 포트에 바인딩하는 것을 "
+"허용합니다.ㅇ"
 
-#: booleans.py:103
+#: booleans.py:110
 msgid "Allow confined applications to run with kerberos."
-msgstr ""
+msgstr "제한된 애플리케이션이 kerberos와 함께 작동하는 것을 허용합니다."
 
-#: booleans.py:104
+#: booleans.py:111
+msgid "Allow ksmtuned to use cifs/Samba file systems"
+msgstr "ksmtuned가 cifs/Samba 파일 시스템을 사용하는 것을 허용합니다 "
+
+#: booleans.py:112
+msgid "Allow ksmtuned to use nfs file systems"
+msgstr "ksmtuned가 nfs 파일 시스템을 사용하는 것을 허용합니다 "
+
+#: booleans.py:113
 msgid "Allow syslogd daemon to send mail"
 msgstr "syslogd 데몬이 메일을 전송하는 것을 허용합니다 "
 
-#: booleans.py:105
+#: booleans.py:114
 msgid "Allow syslogd the ability to read/write terminals"
-msgstr ""
+msgstr "syslogd가 터미널을 읽기/쓰기하는 것을 허용합니다 "
 
-#: booleans.py:106
+#: booleans.py:115
 msgid "Allow logging in and using the system from /dev/console."
-msgstr ""
+msgstr "/dev/console에서 시스템을 로그인 및 사용하는 것을 허용합니다."
 
-#: booleans.py:107
+#: booleans.py:116
+#, fuzzy
+msgid "Allow epylog to send mail"
+msgstr "syslogd 데몬이 메일을 전송하는 것을 허용합니다 "
+
+#: booleans.py:117
+msgid "Allow mailman to access FUSE file systems"
+msgstr "mailman이 FUSE 파일 시스템에 액세스하는 것을 허용합니다 "
+
+#: booleans.py:118
+msgid "Determine whether mcelog supports client mode."
+msgstr "mcelog가 클라이언트 모드를 지원할 수 있는지에 대한 여부를 지정합니다. "
+
+#: booleans.py:119
+msgid "Determine whether mcelog can execute scripts."
+msgstr "mcelog가 스크립트를 실행할 수 있는지에 대한 여부를 지정합니다."
+
+#: booleans.py:120
+msgid "Determine whether mcelog can use all the user ttys."
+msgstr ""
+"mcelog가 모든 사용자 ttys를 사용할 수 있는지에 대한 여부를 지정합니다. "
+
+#: booleans.py:121
+msgid "Determine whether mcelog supports server mode."
+msgstr "mcelog가 서버 모드를 지원할 수 있는지에 대한 여부를 지정합니다. "
+
+#: booleans.py:122
 msgid ""
 "Control the ability to mmap a low area of the address space, as configured "
 "by /proc/sys/kernel/mmap_min_addr."
 msgstr ""
+"/proc/sys/kernel/mmap_min_addr로 설정되도록 주소 공간의 하단에 mmap 기능을 제"
+"어합니다. "
 
-#: booleans.py:108
+#: booleans.py:123
 msgid "Allow mock to read files in home directories."
+msgstr "mock가 홈디렉토리에 있는 파일을 읽는 것을 허용합니다. "
+
+#: booleans.py:124
+msgid "Allow the mount commands to mount any directory or file."
 msgstr ""
 
-#: booleans.py:109
-msgid "Allow the mount command to mount any directory or file."
-msgstr ""
-
-#: booleans.py:110
+#: booleans.py:125
 msgid "Allow mozilla plugin domain to connect to the network using TCP."
 msgstr ""
+"mozilla 플러그인 도메인이 TCP를 사용하여 네트워크에 연결하는 것을 허용합니다."
 
-#: booleans.py:111
-msgid ""
-"Allow mozilla_plugins to create random content in the users home directory"
+#: booleans.py:126
+msgid "Allow mozilla plugin to support GPS."
 msgstr ""
 
-#: booleans.py:112
+#: booleans.py:127
+msgid "Allow mozilla plugin to support spice protocols."
+msgstr ""
+
+#: booleans.py:128
 msgid "Allow confined web browsers to read home directory content"
-msgstr ""
+msgstr "제한된 웹 브라우져가 홈디렉토리 컨텐츠를 읽는 것을 허용합니다 "
 
-#: booleans.py:113
-msgid "Allow mplayer executable stack"
-msgstr "mplayer 실행 파일 스택을 허용"
+#: booleans.py:129
+msgid "Determine whether mpd can traverse user home directories."
+msgstr "mpd가 사용자 홈 디렉토리를 통과할 수 있는지에 대한 여부를 지정합니다."
 
-#: booleans.py:114
+#: booleans.py:130
+msgid "Determine whether mpd can use cifs file systems."
+msgstr "mpd가 cifs 파일 시스템을 사용할 수 있을지에 대한 여부를 지정합니다."
+
+#: booleans.py:131
+msgid "Determine whether mpd can use nfs file systems."
+msgstr "mpd가 nfs 파일 시스템을 사용할 수 있는지에 대한 여부를 지정합니다. "
+
+#: booleans.py:132
+msgid "Determine whether mplayer can make its stack executable."
+msgstr "mplayer가 스택을 실행 가능하게 할 수 있을지에 대해 지정합니다."
+
+#: booleans.py:133
 msgid "Allow mysqld to connect to all ports"
-msgstr ""
+msgstr "mysqld가 모든 포트에 연결하는 것을 허용합니다 "
 
-#: booleans.py:115
-msgid "Allow BIND to bind apache port."
+#: booleans.py:134
+msgid "Determine whether Bind can bind tcp socket to http ports."
 msgstr ""
+"Bind가 http 포트에 tcp 소켓을 바인딩할 수 있는지에 대한 여부를 지정합니다."
 
-#: booleans.py:116
+#: booleans.py:135
 msgid ""
-"Allow BIND to write the master zone files. Generally this is used for "
-"dynamic DNS or zone transfers."
+"Determine whether Bind can write to master zone files. Generally this is "
+"used for dynamic DNS or zone transfers."
 msgstr ""
+"Bind가 마스터 영역 파일에 쓰기할 수 있는지에 대한 여부를 지정합니다. 일반적으"
+"로 이는 동적 DNS 또는 영역 전송에서 사용됩니다."
 
-#: booleans.py:117
+#: booleans.py:136
 msgid "Allow any files/directories to be exported read/only via NFS."
 msgstr ""
+"모든 파일/디렉토리가 NFS를 통해 일기 전용으로 내보내기되는 것을 허용합니다."
 
-#: booleans.py:118
+#: booleans.py:137
 msgid "Allow any files/directories to be exported read/write via NFS."
 msgstr ""
+"모든 파일/디렉토리가 NFS를 통해 읽기/쓰기 용으로 내보내기되는 것을 허용합니"
+"다."
 
-#: booleans.py:119
+#: booleans.py:138
 msgid ""
 "Allow nfs servers to modify public files used for public file transfer "
 "services.  Files/Directories must be labeled public_content_rw_t."
 msgstr ""
+"nfs 서버가 공용 파일 전송 서비스에 사용되는 공용 파일을 변경하는 것을 허용합"
+"니다. 파일/디렉토리는 public_content_rw_t로 레이블되어야 합니다."
 
-#: booleans.py:120
+#: booleans.py:139
 msgid "Allow system to run with NIS"
-msgstr ""
+msgstr "시스템이 NIS와 작동하는 것을 허용합니다"
 
-#: booleans.py:121
+#: booleans.py:140
 msgid "Allow confined applications to use nscd shared memory."
-msgstr ""
+msgstr "제한된 애플리케이션이 nscd 공유 메모리를 사용하는 것을 허용합니다."
 
-#: booleans.py:122
+#: booleans.py:141
 msgid "Allow openshift to lockdown app"
-msgstr ""
+msgstr "openshift가 애플리케이션을 잠금하는 것을 허용합니다 "
 
-#: booleans.py:123
-msgid "Allow openvpn to read home directories"
-msgstr ""
+#: booleans.py:142
+#, fuzzy
+msgid "Determine whether openvpn can connect to the TCP network."
+msgstr "fenced가 TCP 네트워크에 연결할 수 있는지에 대한 여부를 지정합니다. "
 
-#: booleans.py:124
+#: booleans.py:143
+msgid "Determine whether openvpn can read generic user home content files."
+msgstr ""
+"openvpn이 일반적인 사용자 홈 컨텐츠 파일을 읽을 수 있는지에 대한 여부를 지정"
+"합니다."
+
+#: booleans.py:144
+#, fuzzy
+msgid "Allow openvpn to run unconfined scripts"
+msgstr "samba가 제한없는 스크립트를 실행하는 것을 허용합니다 "
+
+#: booleans.py:145
 msgid "Allow piranha-lvs domain to connect to the network using TCP."
 msgstr ""
+"piranha-lvs 도메인이 TCP를 사용하여 네트워크에 연결하는 것을 허용합니다."
 
-#: booleans.py:125
+#: booleans.py:146
 msgid "Allow polipo to connect to all ports > 1023"
-msgstr ""
+msgstr "polipo가 모든 포트 > 1023에 연결하는 것을 허용합니다"
 
-#: booleans.py:126
+#: booleans.py:147
 msgid ""
 "Determine whether Polipo session daemon can bind tcp sockets to all "
 "unreserved ports."
 msgstr ""
+"Polipo 세션 데몬이 모든 비예약 포트에 tcp 소켓을 바인딩할 수 있는지에 대한 여"
+"부를 지정합니다."
 
-#: booleans.py:127
+#: booleans.py:148
 msgid ""
 "Determine whether calling user domains can execute Polipo daemon in the "
 "polipo_session_t domain."
 msgstr ""
+"사용자 도메인 호출이 polipo_session_t domain에서 Polipo 데몬을 실행할 수 있는"
+"지에 대한 여부를 지정합니다."
 
-#: booleans.py:128
+#: booleans.py:149
 msgid "Determine whether polipo can access cifs file systems."
 msgstr ""
+"polipo가 cifs 파일 시스템에 액세스할 수 있는지에 대한 여부를 지정합니다."
 
-#: booleans.py:129
+#: booleans.py:150
 msgid "Determine whether Polipo can access nfs file systems."
 msgstr ""
+"Polipo가 nfs 파일 시스템에 액세스할 수 있는지에 대한 여부를 지정합니다."
 
-#: booleans.py:130
+#: booleans.py:151
 msgid "Enable polyinstantiated directory support."
-msgstr ""
+msgstr "polyinstantiated 디렉토리 지원을 활성화합니다."
 
-#: booleans.py:131
+#: booleans.py:152
 msgid "Allow postfix_local domain full write access to mail_spool directories"
 msgstr ""
+"postfix_local 도메인이 mail_spool 디렉토리에 전체 쓰기 액세스를 허용합니다 "
 
-#: booleans.py:132
+#: booleans.py:153
 msgid "Allow postgresql to use ssh and rsync for point-in-time recovery"
-msgstr ""
+msgstr "postgresql이 point-in-time 복구에 대해 ssh 및 rsync 사용을 허용합니다 "
 
-#: booleans.py:133
+#: booleans.py:154
 msgid "Allow transmit client label to foreign database"
-msgstr ""
+msgstr "외부  데이터베이스에 클라이언트 레이블 전환을 허용합니다 "
 
-#: booleans.py:134
+#: booleans.py:155
 msgid "Allow database admins to execute DML statement"
-msgstr ""
+msgstr "데이터베이스 관리자가 DML 문을 실행하는 것을 허용합니다 "
 
-#: booleans.py:135
+#: booleans.py:156
 msgid "Allow unprivileged users to execute DDL statement"
-msgstr ""
+msgstr "권한이 없는 사용자가 DDL 문을 실행하는 것을 허용합니다 "
 
-#: booleans.py:136
+#: booleans.py:157
 msgid "Allow pppd to load kernel modules for certain modems"
-msgstr ""
+msgstr "pppd가 특정 모뎀의 커널 모듈을 로딩하는 것을 허용합니다 "
 
-#: booleans.py:137
+#: booleans.py:158
 msgid "Allow pppd to be run for a regular user"
 msgstr "일반 사용자 용으로 pppd 실행을 허용 "
 
-#: booleans.py:138
+#: booleans.py:159
+msgid "Determine whether privoxy can connect to all tcp ports."
+msgstr "privoxy가 모든 tcp 프트에 연걸할 수 있는지에 대한 여부를 지정합니다."
+
+#: booleans.py:160
 msgid ""
-"Allow privoxy to connect to all ports, not just HTTP, FTP, and Gopher ports."
+"Permit to prosody to bind apache port. Need to be activated to use BOSH."
 msgstr ""
 
-#: booleans.py:139
+#: booleans.py:161
 msgid "Allow Puppet client to manage all file types."
-msgstr ""
+msgstr "Puppet 클라이언트가 모든 파일 유형을 관리하는 것을 허용합니다. "
 
-#: booleans.py:140
+#: booleans.py:162
 msgid "Allow Puppet master to use connect to MySQL and PostgreSQL database"
 msgstr ""
+"Puppet 마스터를 사용하여 MySQL 및 PostgreSQL 데이터베이스에 연결하는 것을 허"
+"용합니다 "
 
-#: booleans.py:141
+#: booleans.py:163
 msgid "Allow racoon to read shadow"
-msgstr ""
+msgstr "racoon이 shadow를 읽는 것을 허용합니다 "
 
-#: booleans.py:142
-msgid "Allow rgmanager domain to connect to the network using TCP."
-msgstr ""
-
-#: booleans.py:143
+#: booleans.py:164
 msgid ""
 "Allow rsync to modify public files used for public file transfer services.  "
 "Files/Directories must be labeled public_content_rw_t."
 msgstr ""
+"rsync가 공용 파일 전송 서비스에 사용되는 공용 파일을 변경하는 것을 허용합니"
+"다. 파일 및 디렉토리는 public_content_rw_t로 레이블해야 합니다."
 
-#: booleans.py:144
+#: booleans.py:165
 msgid "Allow rsync to run as a client"
 msgstr "rsync가 클라이언트로 실행하는 것을 허용합니다"
 
-#: booleans.py:145
+#: booleans.py:166
 msgid "Allow rsync to export any files/directories read only."
 msgstr ""
+"rsync가 모든 파일/디렉토리를 읽기 전용으로 내보내기하는 것을 허용합니다."
 
-#: booleans.py:146
-msgid "Allow rsync servers to share cifs files systems"
-msgstr "rsync 서버가 cifs 파일 시스템을 공유하는 것을 허용합니다 "
+#: booleans.py:167
+msgid "Allow rsync server to manage all files/directories on the system."
+msgstr ""
+"rsync 서버가 시스템에 있는 모든 파일/디렉토리를 관리하는 것을 허용합니다."
 
-#: booleans.py:147
-msgid "Allow rsync servers to share nfs files systems"
-msgstr "rsync 서버가 nfs 파일 시스템을 공유하는 것을 허용합니다 "
-
-#: booleans.py:148
+#: booleans.py:168
 msgid "Allow samba to create new home directories (e.g. via PAM)"
 msgstr "samba가 새로운 홈 디렉토리를 생성하는 것을 허용합니다 (예: PAM 사용)"
 
-#: booleans.py:149
+#: booleans.py:169
 msgid ""
 "Allow samba to act as the domain controller, add users, groups and change "
 "passwords."
 msgstr ""
+"samba가 도메인 컨트롤러로 동작하고, 사용자 및 그룹 추가, 암호 변경하는 것을 "
+"허용합니다."
 
-#: booleans.py:150
+#: booleans.py:170
 msgid "Allow samba to share users home directories."
 msgstr "samba가 사용자 홈 디렉토리를 공유하는 것을 허용합니다."
 
-#: booleans.py:151
+#: booleans.py:171
 msgid "Allow samba to share any file/directory read only."
-msgstr ""
+msgstr "samba가 모든 파일/디렉토리를 읽기 전용으로 공유하는 것을 허용합니다. "
 
-#: booleans.py:152
+#: booleans.py:172
 msgid "Allow samba to share any file/directory read/write."
-msgstr ""
+msgstr "samba가 모든 파일/디렉토리 읽기/쓰기를 공유하는 것을 허용합니다."
 
-#: booleans.py:153
+#: booleans.py:173
 msgid "Allow samba to act as a portmapper"
-msgstr ""
+msgstr "samba가 portmapper로 작동하는 것을 허용합니다 "
 
-#: booleans.py:154
+#: booleans.py:174
 msgid "Allow samba to run unconfined scripts"
-msgstr ""
+msgstr "samba가 제한없는 스크립트를 실행하는 것을 허용합니다 "
 
-#: booleans.py:155
+#: booleans.py:175
 msgid "Allow samba to export ntfs/fusefs volumes."
 msgstr "samba가 ntfs/fusefs 볼륨을 내보내기하는 것을 허용합니다 "
 
-#: booleans.py:156
+#: booleans.py:176
 msgid "Allow samba to export NFS volumes."
 msgstr "samba가 NFS 볼륨을 내보내기하는 것을 허용합니다."
 
-#: booleans.py:157
+#: booleans.py:177
 msgid "Allow sanlock to read/write fuse files"
-msgstr ""
+msgstr "sanlock이 fuse 파일을 읽기/쓰기하는 것을 허용합니다 "
 
-#: booleans.py:158
+#: booleans.py:178
 msgid "Allow sanlock to manage nfs files"
 msgstr "sanlock이 nfs 파일을 관리하는 것을 허용합니다 "
 
-#: booleans.py:159
+#: booleans.py:179
 msgid "Allow sanlock to manage cifs files"
 msgstr "sanlock이 cifs 파일을 관리하는 것을 허용합니다 "
 
-#: booleans.py:160
+#: booleans.py:180
 msgid "Allow sasl to read shadow"
-msgstr ""
+msgstr "sasl이 shadow를 읽는 것을 허용합니다 "
 
-#: booleans.py:161
+#: booleans.py:181
 msgid "Allow secadm to exec content"
-msgstr ""
+msgstr "secadm가 컨텐츠를 실행하는 것을 허용합니다 "
 
-#: booleans.py:162
+#: booleans.py:182
 msgid ""
 "disallow programs, such as newrole, from transitioning to administrative "
 "user domains."
 msgstr ""
+"newrole과 같은 프로그램이 관맂 도메인으로 전환하는 것을 허용하지 않습니다 "
 
-#: booleans.py:163
+#: booleans.py:183
 msgid "Disable kernel module loading."
 msgstr "커널 모듈을 로딩하는 것을 비활성화합니다."
 
-#: booleans.py:164
+#: booleans.py:184
 msgid ""
 "Boolean to determine whether the system permits loading policy, setting "
 "enforcing mode, and changing boolean values.  Set this to true and you have "
 "to reboot to set it back."
 msgstr ""
+"정책 로딩, 강제 모드 설정, 부울 값 변경 등을 시스템에 허용할 지에 대한 여부"
+"를 지정하는 부울입니다. true 로 설정하면 설정을 되돌리기 위해 재부팅해야 합니"
+"다. "
 
-#: booleans.py:165
+#: booleans.py:185
 msgid "Allow regular users direct dri device access"
-msgstr ""
+msgstr "일반 사용자가 dri 장치에 직접 액세스하는 것을 허용합니다 "
 
-#: booleans.py:166
+#: booleans.py:186
 msgid ""
 "Allow unconfined executables to make their heap memory executable.  Doing "
 "this is a really bad idea. Probably indicates a badly coded executable, but "
 "could indicate an attack. This executable should be reported in bugzilla"
 msgstr ""
+"heap 메모리를 실행하기 위해 제한되지 않는 실행 파일을 허용합니다. 이 설정은 "
+"추천하지 않습니다. 아마도 잘못 코딩된 실행 파일을 보여주지만 공격을 나타낼 "
+"수 도 있습니다. 이러한 실행 파일은 bugzilla에 보고하십시오"
 
-#: booleans.py:167
+#: booleans.py:187
 msgid ""
 "Allow all unconfined executables to use libraries requiring text relocation "
 "that are not labeled textrel_shlib_t"
 msgstr ""
+"textrel_shlib_t로 레이블되지 않는 텍스트 이동에 필요한 라이브러리를 사용하기 "
+"위해 모든 제한 없는 실행 파일을 허용합니다 "
 
-#: booleans.py:168
+#: booleans.py:188
 msgid ""
 "Allow unconfined executables to make their stack executable.  This should "
 "never, ever be necessary. Probably indicates a badly coded executable, but "
 "could indicate an attack. This executable should be reported in bugzilla"
 msgstr ""
+"제한없는 실행 파일이 스택을 실행하는 것을 허용합니다. 이는 절대로 권장하지 않"
+"습니다. 이는 잘못 코딩된 실행 파일을 표시하지만 공격을 표시할 수 도 있습니"
+"다. 이러한 실행 파일은 bugzilla에 보고하십시오 "
 
-#: booleans.py:169
+#: booleans.py:189
 msgid "Allow users to connect to the local mysql server"
-msgstr ""
+msgstr "사용자가 로컬 mysql 서버에 연결하는 것을 허용합니다 "
 
-#: booleans.py:170
+#: booleans.py:190
 msgid ""
-"Allow confined users the ability to execute the ping and traceroute "
-"commands."
-msgstr ""
+"Allow confined users the ability to execute the ping and traceroute commands."
+msgstr "제한된 사용자가 ping 및 traceroute 명령을 실행하는 것을 허용합니다."
 
-#: booleans.py:171
+#: booleans.py:191
 msgid "Allow users to connect to PostgreSQL"
 msgstr "사용자가 PostgreSQL에 연결하는 것을 허용합니다 "
 
-#: booleans.py:172
+#: booleans.py:192
 msgid ""
 "Allow user to r/w files on filesystems that do not have extended attributes "
 "(FAT, CDROM, FLOPPY)"
 msgstr ""
+"사용자가 확장 속성 (FAT, CDROM, FLOPPY)이 없는 파일 시스템에서 파일을 읽고 쓰"
+"는 것을 허용합니다 "
 
-#: booleans.py:173
+#: booleans.py:193
+msgid "Allow user music sharing"
+msgstr "사용자가 음악을 공유하는 것을 허용합니다 "
+
+#: booleans.py:194
 msgid ""
-"Allow users to run TCP servers (bind to ports and accept connection from the"
-" same domain and outside users)  disabling this forces FTP passive mode and "
+"Allow users to run TCP servers (bind to ports and accept connection from the "
+"same domain and outside users)  disabling this forces FTP passive mode and "
 "may change other protocols."
 msgstr ""
+"사용자가 TCP 서버 (포트에 바인딩되어 동일한 도메인 및 외부 사용자로 부터의 연"
+"결을 허용)를 실행하는 것을 허용합니다. 이는 강제로 FTP 수동 모드를 비활성화하"
+"고 다른 프로토콜을 변경할 수 있습니다."
 
-#: booleans.py:174
+#: booleans.py:195
 msgid "Allow user  to use ssh chroot environment."
-msgstr ""
+msgstr "사용자가 ssh chroot 환경을 사용하는 것을 허용합니다."
 
-#: booleans.py:175
-msgid "Allow user music sharing"
-msgstr ""
-
-#: booleans.py:176
+#: booleans.py:196
 msgid ""
-"Allow anon internal-sftp to upload files, used for public file transfer "
-"services. Directories must be labeled public_content_rw_t."
+"Determine whether sftpd can modify public files used for public file "
+"transfer services. Directories/Files must be labeled public_content_rw_t."
 msgstr ""
+"sftpd가 공요 파일 전송 서비스에 사용되는 공용 파일을 변경할 수 있는지에 대한 "
+"여부를 지정합니다. 디렉토리/파일은 public_content_rw_t로 레이블해야 합니다."
 
-#: booleans.py:177
+#: booleans.py:197
 msgid ""
-"Allow sftp-internal to read and write files in the user home directories"
+"Determine whether sftpd-can read and write files in user home directories."
 msgstr ""
+"sftpd-can이 사용자 홈 디렉토리에 있는 파일을 읽기 및 쓰기할 수 있는지에 대한 "
+"여부를 지정합니다."
 
-#: booleans.py:178
+#: booleans.py:198
 msgid ""
-"Allow sftp-internal to login to local users and read/write all files on the "
-"system, governed by DAC."
+"Determine whether sftpd-can login to local users and read and write all "
+"files on the system, governed by DAC."
 msgstr ""
+"sftpd-can이 로컬 사용자에 로그인하여 DAC의해 관리도는 시스템에 있는 모든 파일"
+"을 읽기 및 쓰기할 수 있는지에 대한 여부를 지정합니다."
 
-#: booleans.py:179
+#: booleans.py:199
 msgid ""
-"Allow internal-sftp to read and write files in the user ssh home "
+"Determine whether sftpd can read and write files in user ssh home "
 "directories."
 msgstr ""
+"sftpd가 사용자 ssh 홈 디렉토리에 있는 파일을 읽기 및 쓰기할 수 있는지에 대한 "
+"여부를 지정합니다."
 
-#: booleans.py:180
+#: booleans.py:200
 msgid "Allow sge to connect to the network using any TCP port"
 msgstr "sge가 TCP 포트를 사용하여 네트워크로 연결하는 것을 허용합니다 "
 
-#: booleans.py:181
+#: booleans.py:201
 msgid "Allow sge to access nfs file systems."
 msgstr "sge가 nfs 파일 시스템에 액세스하는 것을 허용합니다."
 
-#: booleans.py:182
-msgid ""
-"Enable additional permissions needed to support devices on 3ware "
-"controllers."
+#: booleans.py:202
+msgid "Determine whether smartmon can support devices on 3ware controllers."
 msgstr ""
+"smartmon이 3ware 컨트롤러에 있는 장치를 지원할 수 있는지에 대한 여부를 지정합"
+"니다."
 
-#: booleans.py:183
+#: booleans.py:203
 msgid ""
 "Allow samba to modify public files used for public file transfer services.  "
 "Files/Directories must be labeled public_content_rw_t."
 msgstr ""
+"samba가 공용 파일 전송 서비스에 사용되는 공용 파일을 변경하는 것을 허용합니"
+"다. 파일/디렉토리는 public_content_rw_t로 레이블해야 합니다."
 
-#: booleans.py:184
+#: booleans.py:204
 msgid "Allow user spamassassin clients to use the network."
-msgstr ""
+msgstr "사용자 spamassassin 클라이언트가 네트워크를 사용하는 것을 허용합니다."
 
-#: booleans.py:185
+#: booleans.py:205
 msgid "Allow spamd to read/write user home directories."
-msgstr ""
+msgstr "spamd가 사용자 홈 디렉토리를 읽기/쓰기하는 것을 허용합니다. "
 
-#: booleans.py:186
-msgid ""
-"Allow squid to connect to all ports, not just HTTP, FTP, and Gopher ports."
-msgstr ""
+#: booleans.py:206
+msgid "Determine whether squid can connect to all TCP ports."
+msgstr "squid가 모든 TCP 포트에 연결할 수 있는지에 대한 여부를 지정합니다 "
 
-#: booleans.py:187
-msgid "Allow squid to run as a transparent proxy (TPROXY)"
-msgstr ""
+#: booleans.py:207
+msgid "Determine whether squid can run as a transparent proxy."
+msgstr "squid가 투명 프록시로 실행할 수 있는지에 대한 여부를 지정합니다."
 
-#: booleans.py:188
+#: booleans.py:208
 msgid ""
 "Allow ssh with chroot env to read and write files in the user home "
 "directories"
 msgstr ""
+"chroot 환경의 ssh가 사용자 홈 디렉토리에 있는 파일을 읽기 및 쓰기하는 것을 허"
+"용합니다 "
 
-#: booleans.py:189
+#: booleans.py:209
 msgid "allow host key based authentication"
 msgstr "호스트 키 기반 인증 허용 "
 
-#: booleans.py:190
+#: booleans.py:210
 msgid "Allow ssh logins as sysadm_r:sysadm_t"
 msgstr "sysadm_r:sysadm_t로 ssh 로그인을 허용 "
 
-#: booleans.py:191
+#: booleans.py:211
 msgid "Allow staff to exec content"
-msgstr ""
+msgstr "staff가 컨텐츠를 실행하는 것을 허용합니다 "
 
-#: booleans.py:192
+#: booleans.py:212
 msgid "allow staff user to create and transition to svirt domains."
-msgstr ""
+msgstr "staff 사용자가 svirt 도메인으로 변환하거나 생성하는 것을 허용합니다."
 
-#: booleans.py:193
+#: booleans.py:213
 msgid "Allow sysadm to exec content"
-msgstr ""
+msgstr "sysadm이 컨텐츠를 실행하는 것을 허용합니다 "
 
-#: booleans.py:194
-msgid ""
-"Allow the Telepathy connection managers to connect to any network port."
-msgstr ""
+#: booleans.py:214
+msgid "Allow the Telepathy connection managers to connect to any network port."
+msgstr "Telepathy 연결 관리자가 모든 네트워크 포트에 연결하는 것을 허용합니다."
 
-#: booleans.py:195
+#: booleans.py:215
 msgid ""
 "Allow the Telepathy connection managers to connect to any generic TCP port."
+msgstr "Telepathy 연결 관리자가 일반적인 TCP 포트에 연결하는 것을 허용합니다."
+
+#: booleans.py:216
+msgid "Allow testpolicy to exec content"
 msgstr ""
 
-#: booleans.py:196
+#: booleans.py:217
 msgid ""
 "Allow tftp to modify public files used for public file transfer services."
 msgstr ""
+"tftp가 공용 파일 전송 서비스에 사용되는 공용 파일을 수정하는 것을 허용합니다."
 
-#: booleans.py:197
+#: booleans.py:218
 msgid "Allow tftp to read and write files in the user home directories"
 msgstr ""
+"tftp가 사용자 홈 디렉토리에 있는 파일을 읽기 및 쓰기하는 것을 허용합니다 "
 
-#: booleans.py:198
-msgid "Allow tor daemon to bind tcp sockets to all unreserved ports."
+#: booleans.py:219
+msgid "Determine whether tor can bind tcp sockets to all unreserved ports."
 msgstr ""
+"tor가 예약하지 않은 모든 포트에 대해 tcp 소켓을 바인딩할 수 있는지에 대한 여"
+"부를 지정합니다."
 
-#: booleans.py:199
+#: booleans.py:220
 msgid "Allow tor to act as a relay"
-msgstr ""
+msgstr "tor가 릴레이로 작동하는 것을 허용합니다 "
 
-#: booleans.py:200
+#: booleans.py:221
 msgid ""
 "allow unconfined users to transition to the chrome sandbox domains when "
 "running chrome-sandbox"
 msgstr ""
+"제한되지 않은 사용자가 chrome-sandbox를 실행할 때 chrome sandbox 도메인으로 "
+"이전하는 것을 허용합니다 "
 
-#: booleans.py:201
+#: booleans.py:222
 msgid "Allow a user to login as an unconfined domain"
-msgstr ""
+msgstr "사용자가 제한되지 않은 도메인으로 로그인하는 것을 허용합니다 "
 
-#: booleans.py:202
+#: booleans.py:223
 msgid ""
 "Allow unconfined users to transition to the Mozilla plugin domain when "
 "running xulrunner plugin-container."
 msgstr ""
+"제한되지 않은 사용자가 xulrunner plugin-container를 실행할 때 Mozilla 플러그"
+"인 도메인으로 이전하는 것을 허용합니다."
 
-#: booleans.py:203
-msgid "Allow video playing tools to run unconfined"
-msgstr ""
-
-#: booleans.py:204
+#: booleans.py:224
 msgid "Allow unprivledged user to create and transition to svirt domains."
 msgstr ""
+"권한이 없는 사용자가 svirt 도메인으로 이전 및 생성하는 것을 허용합니다."
 
-#: booleans.py:205
+#: booleans.py:225
 msgid "Support ecryptfs home directories"
 msgstr "ecryptfs 홈 디렉토리를 지원합니다 "
 
-#: booleans.py:206
+#: booleans.py:226
 msgid "Support fusefs home directories"
 msgstr "fusefs 홈 디렉토리 지원 "
 
-#: booleans.py:207
-msgid "Use lpd server instead of cups"
-msgstr "cups 대신 lpd 서버 사용 "
+#: booleans.py:227
+msgid "Determine whether to support lpd server."
+msgstr "lpd 서버를 지원할 지에 대한 여부를 지정합니다."
 
-#: booleans.py:208
+#: booleans.py:228
 msgid "Support NFS home directories"
 msgstr "NFS 홈 디렉토리 지원 "
 
-#: booleans.py:209
+#: booleans.py:229
 msgid "Support SAMBA home directories"
 msgstr "SAMBA 홈 디렉토리 지원 "
 
-#: booleans.py:210
+#: booleans.py:230
 msgid "Allow user to exec content"
+msgstr "사용자가 컨텐츠를 실행하는 것을 허용합니다 "
+
+#: booleans.py:231
+msgid "Determine whether varnishd can use the full TCP network."
 msgstr ""
+"varnishd가 전체 TCP 네트워크를 사용할 수 있는지에 대한 여부를 지정합니다."
 
-#: booleans.py:211
-msgid "Allow varnishd to connect to all ports, not just HTTP."
-msgstr "varnishd가 HTTP만이 아닌 모든 포트로의 연결을 허용합니다."
+#: booleans.py:232
+msgid ""
+"Determine whether attempts by vbetool to mmap low regions should be silently "
+"blocked."
+msgstr ""
+"낮은 영역을 mmap하는 vbetool의 시도를 안전하게 차단할 지에 대한 여부를 지정합"
+"니다."
 
-#: booleans.py:212
-msgid "Ignore vbetool mmap_zero errors."
-msgstr "vbetool mmap_zero 오류를 무시합니다."
+#: booleans.py:233
+#, fuzzy
+msgid "Allow virtual processes to run as userdomains"
+msgstr "제한된 가상 게스트가 fuse 파일을 읽는 것을 허용합니다 "
 
-#: booleans.py:213
+#: booleans.py:234
 msgid ""
 "Allow confined virtual guests to use serial/parallel communication ports"
-msgstr ""
+msgstr "제한된 가상 게스트가 직렬/병렬 통신 포트를 사용하는 것을 허용합니다"
 
-#: booleans.py:214
+#: booleans.py:235
 msgid ""
 "Allow confined virtual guests to use executable memory and executable stack"
 msgstr ""
+"제한된 가상 게스트가 실행 가능한 메모리 및 실행 가능한 스택을 사용하는 것을 "
+"허용합니다 "
 
-#: booleans.py:215
+#: booleans.py:236
 msgid "Allow confined virtual guests to read fuse files"
-msgstr ""
+msgstr "제한된 가상 게스트가 fuse 파일을 읽는 것을 허용합니다 "
 
-#: booleans.py:216
+#: booleans.py:237
 msgid "Allow confined virtual guests to manage nfs files"
-msgstr ""
+msgstr "제한된 가상 게스트가 nfs 파일을 관리하는 것을 허용합니다 "
 
-#: booleans.py:217
+#: booleans.py:238
 msgid "Allow confined virtual guests to interact with rawip sockets"
-msgstr ""
+msgstr "제한된 가상 게스트가 rawip 소켓과 상호 작용하는 것을 허용합니다 "
 
-#: booleans.py:218
+#: booleans.py:239
 msgid "Allow confined virtual guests to manage cifs files"
-msgstr ""
+msgstr "제한된 가상 게스트가 cifs 파일을 관리하는 것을 허용합니다 "
 
-#: booleans.py:219
+#: booleans.py:240
 msgid "Allow confined virtual guests to interact with the sanlock"
-msgstr ""
+msgstr "제한된 가상 게스트가 sanlock과 상호 작용하는 것을 허용합니다 "
 
-#: booleans.py:220
-msgid "Allow confined virtual guests to manage device configuration, (pci)"
-msgstr ""
-
-#: booleans.py:221
+#: booleans.py:241
 msgid "Allow confined virtual guests to use usb devices"
-msgstr ""
+msgstr "제한된 가상 게스트가 usb 장치를 사용하는 것을 허용합니다 "
 
-#: booleans.py:222
+#: booleans.py:242
 msgid "Allow confined virtual guests to interact with the xserver"
+msgstr "제한된 가상 게스트가 xserver와 상호 작용하는 것을 허용합니다 "
+
+#: booleans.py:243
+msgid "Determine whether webadm can manage generic user files."
+msgstr "webadm이 일반 사용자 파일을 관리할 수 있는지 여부를 지정합니다."
+
+#: booleans.py:244
+msgid "Determine whether webadm can read generic user files."
+msgstr "webadm이 일반 사용자 파일을 읽을 수 있는지 여부를 지정합니다."
+
+#: booleans.py:245
+msgid ""
+"Determine whether attempts by wine to mmap low regions should be silently "
+"blocked."
 msgstr ""
+"낮은 영역을 mmap하는 wine의 시도를 안전하게 차단할 지에 대한 여부를 지정합니"
+"다."
 
-#: booleans.py:223
-msgid "Allow webadm to manage files in users home directories"
-msgstr "webadm이 사용자 홈 디렉토리에 있는 파일을 관리하는 것을 허용합니다 "
-
-#: booleans.py:224
-msgid "Allow webadm to read files in users home directories"
-msgstr ""
-
-#: booleans.py:225
-msgid "Ignore wine mmap_zero errors."
-msgstr "wine mmap_zero 오류를 무시합니다."
-
-#: booleans.py:226
+#: booleans.py:246
 msgid "Allow the graphical login program to execute bootloader"
-msgstr ""
+msgstr "그래픽 로그인 프로그램이 부트로더를 실행하는 것을 허용합니다 "
 
-#: booleans.py:227
+#: booleans.py:247
 msgid ""
 "Allow the graphical login program to login directly as sysadm_r:sysadm_t"
 msgstr ""
+"그래픽 로그인 프로그램이 sysadm_r:sysadm_t로 직접 로그인하는 것을 허용합니다 "
 
-#: booleans.py:228
+#: booleans.py:248
+msgid ""
+"Allow the graphical login program to create files in HOME dirs as xdm_home_t."
+msgstr ""
+
+#: booleans.py:249
 msgid "Allow xen to manage nfs files"
 msgstr "xen이 nfs 파일을 관리하는 것을 허용합니다 "
 
-#: booleans.py:229
+#: booleans.py:250
 msgid ""
 "Allow xend to run blktapctrl/tapdisk. Not required if using dedicated "
 "logical volumes for disk images."
 msgstr ""
+"xend가 blktapctrl/tapdisk를 실행하는 것을 허용합니다. 디스크 이미지의 전용 논"
+"리 볼륨을 사용할 경우 필요하지 않습니다."
 
-#: booleans.py:230
+#: booleans.py:251
 msgid "Allow xend to run qemu-dm. Not required if using paravirt and no vfb."
 msgstr ""
+"xend가 qemu-dm을 실행하는 것을 허용합니다. 반가상화를 사용하고 vfb가 없을 경"
+"우 필요하지 않습니다."
 
-#: booleans.py:231
+#: booleans.py:252
 msgid ""
 "Allow xguest users to configure Network Manager and connect to apache ports"
 msgstr ""
+"xguest 사용자가 Network Manager를 설정하고 apache 포트에 연결하는 것을 허용합"
+"니다 "
 
-#: booleans.py:232
+#: booleans.py:253
 msgid "Allow xguest to exec content"
-msgstr ""
+msgstr "xguest가 컨텐츠를 실행하는 것을 허용합니다 "
 
-#: booleans.py:233
+#: booleans.py:254
 msgid "Allow xguest users to mount removable media"
-msgstr ""
+msgstr "xguest 사용자가 이동식 매체를 마운트하는 것을 허용합니다 "
 
-#: booleans.py:234
+#: booleans.py:255
 msgid "Allow xguest to use blue tooth devices"
-msgstr ""
+msgstr "xguest가 Bluetooth 장치를 사용하는 것을 허용합니다 "
 
-#: booleans.py:235
+#: booleans.py:256
 msgid "Allows clients to write to the X server shared memory segments."
-msgstr ""
+msgstr "클라이언트가 X 서버 공유 메모리 세그먼트에 작성하는 것을 허용합니다."
 
-#: booleans.py:236
+#: booleans.py:257
 msgid "Allows XServer to execute writable memory"
-msgstr ""
+msgstr "XServer가 쓰기 가능한 메모리를 실행하는 것을 허용합니다 "
 
-#: booleans.py:237
+#: booleans.py:258
 msgid "Support X userspace object manager"
-msgstr ""
+msgstr "X userspace 객체 관리자 지원 "
 
-#: booleans.py:238
-msgid "Allow zabbix to connect to unreserved ports"
-msgstr ""
+#: booleans.py:259
+msgid "Determine whether zabbix can connect to all TCP ports"
+msgstr "zabbix가 모든 TCP 포트에 연결할 수 있는지에 대한 여부를 지정합니다 "
 
-#: booleans.py:239
+#: booleans.py:260
+#, fuzzy
+msgid "Allow zarafa domains to setrlimit/sys_rouserce."
+msgstr "모든 도메인이 fips_mode에서 실행하는 것을 허용합니다 "
+
+#: booleans.py:261
 msgid "Allow zebra daemon to write it configuration files"
-msgstr ""
+msgstr "zebra 데몬이 설정 파일에 기록하는 것을 허용합니다 "
 
-#: booleans.py:240
+#: booleans.py:262
 msgid ""
 "Allow ZoneMinder to modify public files used for public file transfer "
 "services."
+msgstr ""
+"ZoneMinder가 공용 파일 전송 서비스에 사용되는 공용 파일을 변경하는 것을 허용"
+"합니다."
+
+#: booleans.py:263
+msgid "Allow ZoneMinder to run su/sudo."
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:194
+#, python-format
+msgid "Interface %s does not exist."
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:292
+msgid "You need to install policycoreutils-gui package to use the gui option"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:296
+msgid "Graphical User Interface for SELinux Policy"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:299 ../sepolicy/sepolicy.py:345
+msgid "Domain name(s) of man pages to be created"
+msgstr "생성된 man 페이지의 도메인 이름 "
+
+#: ../sepolicy/sepolicy.py:311
+#, fuzzy
+msgid "Alternative root needs to be setup"
+msgstr "대체 root 디렉토리, 기본값은 /임 "
+
+#: ../sepolicy/sepolicy.py:327
+msgid "Generate SELinux man pages"
+msgstr "SELinux man 페이지 생성 "
+
+#: ../sepolicy/sepolicy.py:330
+msgid "path in which the generated SELinux man pages will be stored"
+msgstr "생성된 SELinux man 페이지가 있는 경로가 저장됩니다 "
+
+#: ../sepolicy/sepolicy.py:332
+msgid "name of the OS for man pages"
+msgstr "man 페이지의 OS 이름 "
+
+#: ../sepolicy/sepolicy.py:334
+msgid "Generate HTML man pages structure for selected SELinux man page"
+msgstr "선택한 SELinux man 페이지의 HTML man 페이지 구조를 생성합니다 "
+
+#: ../sepolicy/sepolicy.py:336
+msgid "Alternate root directory, defaults to /"
+msgstr "대체 root 디렉토리, 기본값은 /임 "
+
+#: ../sepolicy/sepolicy.py:338
+msgid ""
+"With this flag, alternative root path needs to include file context files "
+"and policy.xml file"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:342
+msgid "All domains"
+msgstr "전체 도메인 "
+
+#: ../sepolicy/sepolicy.py:350
+msgid "Query SELinux policy network information"
+msgstr "SELinux 정책 네트워크 정보 쿼리 "
+
+#: ../sepolicy/sepolicy.py:355
+msgid "list all SELinux port types"
+msgstr "전체 SELinux 포트 유형 목록 "
+
+#: ../sepolicy/sepolicy.py:358
+msgid "show SELinux type related to the port"
+msgstr "포트와 관련된 SELinux 유형을 표시합니다 "
+
+#: ../sepolicy/sepolicy.py:361
+msgid "Show ports defined for this SELinux type"
+msgstr "SELinux 유형에 대해 정의된 포트 보기 "
+
+#: ../sepolicy/sepolicy.py:364
+msgid "show ports to which this domain can bind and/or connect"
+msgstr "이 도메인을 바인딩 또는 연결할 수 있는 포트를 표시 "
+
+#: ../sepolicy/sepolicy.py:367
+#, fuzzy
+msgid "show ports to which this application can bind and/or connect"
+msgstr "이 도메인을 바인딩 또는 연결할 수 있는 포트를 표시 "
+
+#: ../sepolicy/sepolicy.py:382
+msgid "query SELinux policy to see if domains can communicate with each other"
+msgstr "도메인이 서로 통신할 수 있는지를 확인하기 위해 SELinux 정책을 쿼리 "
+
+#: ../sepolicy/sepolicy.py:385
+msgid "Source Domain"
+msgstr "소스 도메인 "
+
+#: ../sepolicy/sepolicy.py:388
+msgid "Target Domain"
+msgstr "대상 도메인 "
+
+#: ../sepolicy/sepolicy.py:407
+msgid "query SELinux Policy to see description of booleans"
+msgstr "부울 설명을 확인하기 위해 SELinux 정책을 쿼리 "
+
+#: ../sepolicy/sepolicy.py:411
+msgid "get all booleans descriptions"
+msgstr "모든 부울 설명을 얻기 "
+
+#: ../sepolicy/sepolicy.py:414
+msgid "boolean to get description"
+msgstr "상세 정보를 얻기 위한 부울 "
+
+#: ../sepolicy/sepolicy.py:424
+msgid ""
+"query SELinux Policy to see how a source process domain can transition to "
+"the target process domain"
+msgstr ""
+"소스 프로세스 도메인이 대상 프로세스 도메인으로 전환하는 방법을 확인하기 위"
+"한 SELinux 정책을 쿼리 "
+
+#: ../sepolicy/sepolicy.py:427
+msgid "source process domain"
+msgstr "소스 프로세스 도메인 "
+
+#: ../sepolicy/sepolicy.py:430
+msgid "target process domain"
+msgstr "대상 프로세스 도메인 "
+
+#: ../sepolicy/sepolicy.py:472
+#, python-format
+msgid "sepolicy generate: error: one of the arguments %s is required"
+msgstr "sepolicy 생성: 오류: 인수 %s 중 하나가 필요합니다 "
+
+#: ../sepolicy/sepolicy.py:477
+msgid "Command required for this type of policy"
+msgstr "이 정책 유형에 필요한 명령 "
+
+#: ../sepolicy/sepolicy.py:488
+#, fuzzy, python-format
+msgid ""
+"-t option can not be used with '%s' domains. Read usage for more details."
+msgstr ""
+"-t 옵션은 이 옵션과 함께 사용할 수 없습니다. 보다 자세한 내용은 사용법을 읽어"
+"보십시오. "
+
+#: ../sepolicy/sepolicy.py:493
+#, fuzzy, python-format
+msgid ""
+"-d option can not be used with '%s' domains. Read usage for more details."
+msgstr ""
+"-d 옵션은 이 옵션과 함께 사용할 수 없습니다. 보다 자세한 내용은 사용법을 읽어"
+"보십시오. "
+
+#: ../sepolicy/sepolicy.py:497
+#, fuzzy, python-format
+msgid ""
+"-a option can not be used with '%s' domains. Read usage for more details."
+msgstr ""
+"-a 옵션은 이 옵션과 함께 사용할 수 없습니다. 보다 자세한 내용은 사용법을 읽어"
+"보십시오. "
+
+#: ../sepolicy/sepolicy.py:501
+#, fuzzy
+msgid "-w option can not be used with the --newtype option"
+msgstr ""
+"-t 옵션은 이 옵션과 함께 사용할 수 없습니다. 보다 자세한 내용은 사용법을 읽어"
+"보십시오. "
+
+#: ../sepolicy/sepolicy.py:521
+msgid "List SELinux Policy interfaces"
+msgstr "SELinux 정책 인터페이스 목록 나열 "
+
+#: ../sepolicy/sepolicy.py:541
+msgid "Enter interface names, you wish to query"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:550
+msgid "Generate SELinux Policy module template"
+msgstr "SELinux 정책 모듈 템플릿 생성 "
+
+#: ../sepolicy/sepolicy.py:553
+msgid "Enter domain type which you will be extending"
+msgstr "확장할 도메인 유형 입력 "
+
+#: ../sepolicy/sepolicy.py:556
+msgid "Enter SELinux user(s) which will transition to this domain"
+msgstr "이 도메인으로 전환할 SELinux 사용자를 입력합니다 "
+
+#: ../sepolicy/sepolicy.py:559
+msgid "Enter SELinux role(s) to which the administror domain will transition"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:562
+msgid "Enter domain(s) which this confined admin will administrate"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:565
+msgid "name of policy to generate"
+msgstr "생성할 정책 이름 "
+
+#: ../sepolicy/sepolicy.py:572
+msgid "path in which the generated policy files will be stored"
+msgstr "생성된 정책 파일이 저장되는 경로 "
+
+#: ../sepolicy/sepolicy.py:574
+msgid "path to which the confined processes will need to write"
+msgstr "제한된 프로세스가 작성을 위해 필요한 경로 "
+
+#: ../sepolicy/sepolicy.py:575
+msgid "Policy types which require a command"
+msgstr "명령이 필요한 정책 유형 "
+
+#: ../sepolicy/sepolicy.py:579 ../sepolicy/sepolicy.py:582
+#: ../sepolicy/sepolicy.py:585 ../sepolicy/sepolicy.py:588
+#: ../sepolicy/sepolicy.py:591 ../sepolicy/sepolicy.py:597
+#: ../sepolicy/sepolicy.py:600 ../sepolicy/sepolicy.py:603
+#: ../sepolicy/sepolicy.py:609 ../sepolicy/sepolicy.py:612
+#: ../sepolicy/sepolicy.py:615 ../sepolicy/sepolicy.py:618
+#, python-format
+msgid "Generate '%s' policy"
+msgstr "'%s' 정책 생성 "
+
+#: ../sepolicy/sepolicy.py:606
+#, python-format
+msgid "Generate '%s' policy "
+msgstr "'%s' 정책 생성 "
+
+#: ../sepolicy/sepolicy.py:620
+msgid "executable to confine"
+msgstr "제한 실행 가능 "
+
+#: ../sepolicy/sepolicy.py:625
+msgid "commands"
+msgstr "명령 "
+
+#: ../sepolicy/sepolicy.py:628
+msgid "Alternate SELinux policy, defaults to /sys/fs/selinux/policy"
+msgstr "대체 SELinux 정책, /sys/fs/selinux/policy는 기본값입니다 "
+
+#: ../sepolicy/sepolicy/__init__.py:89
+#, python-format
+msgid "-- Allowed %s [ %s ]"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:95 ../sepolicy/sepolicy/gui.py:1135
+msgid "all files"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:96
+msgid "regular file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:97
+msgid "directory"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:98
+msgid "character device"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:99
+msgid "block device"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:100
+msgid "socket file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:101
+msgid "symbolic link"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:102
+msgid "named pipe"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:398
+msgid "No SELinux Policy installed"
+msgstr "SELinux 정책이 설치되지 않음"
+
+#: ../sepolicy/sepolicy/__init__.py:478
+msgid "You must regenerate interface info by running /usr/bin/sepolgen-ifgen"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:724
+#, python-format
+msgid "Failed to read %s policy file"
+msgstr "%s 정책 파일 읽기 실패 "
+
+#: ../sepolicy/sepolicy/__init__.py:829
+msgid "unknown"
+msgstr "알려지지 않음 "
+
+#: ../sepolicy/sepolicy/generate.py:132
+msgid "Internet Services Daemon"
+msgstr "인터넷 서비스 데몬 "
+
+#: ../sepolicy/sepolicy/generate.py:136
+msgid "Existing Domain Type"
+msgstr "기존 도메인 유형 "
+
+#: ../sepolicy/sepolicy/generate.py:137
+msgid "Minimal Terminal Login User Role"
+msgstr "최소 터미널 로그인 사용자 역할 "
+
+#: ../sepolicy/sepolicy/generate.py:138
+msgid "Minimal X Windows Login User Role"
+msgstr "최소 X Windows 로그인 사용자 역할 "
+
+#: ../sepolicy/sepolicy/generate.py:139
+msgid "Desktop Login User Role"
+msgstr "데스크탑 로그인 사용자 역할 "
+
+#: ../sepolicy/sepolicy/generate.py:140
+msgid "Administrator Login User Role"
+msgstr "관리자 로그인 사용자 역할 "
+
+#: ../sepolicy/sepolicy/generate.py:141
+msgid "Confined Root Administrator Role"
+msgstr "제한된 Root 관리자 역할 "
+
+#: ../sepolicy/sepolicy/generate.py:142
+msgid "Module information for a new type"
+msgstr "새 유형의 모듈 정보 "
+
+#: ../sepolicy/sepolicy/generate.py:147
+msgid "Valid Types:\n"
+msgstr "유효한 유형:\n"
+
+#: ../sepolicy/sepolicy/generate.py:181
+#, python-format
+msgid "Ports must be numbers or ranges of numbers from 1 to %d "
+msgstr "포트는 숫자이거나 1에서 %d 까지의 숫자 범위에 있어야 합니다 "
+
+#: ../sepolicy/sepolicy/generate.py:192
+msgid "You must enter a valid policy type"
+msgstr "유효한 정책 유형을 입력해야 합니다 "
+
+#: ../sepolicy/sepolicy/generate.py:195
+#, fuzzy, python-format
+msgid "You must enter a name for your policy module for your '%s'."
+msgstr "%s에 해당하는 정책 모듈 이름을 입력해야 합니다 "
+
+#: ../sepolicy/sepolicy/generate.py:333
+msgid ""
+"Name must be alpha numberic with no spaces. Consider using option \"-n "
+"MODULENAME\""
+msgstr ""
+"이름은 공백이 없는 영문 숫자로 구성되어야 합니다. \"-n MODULENAME\" 옵션의 사"
+"용을 고려해 보십시오"
+
+#: ../sepolicy/sepolicy/generate.py:425
+msgid "User Role types can not be assigned executables."
+msgstr "사용자 역할 유형은 할당된 실행 파일이 될 수 없습니다. "
+
+#: ../sepolicy/sepolicy/generate.py:431
+msgid "Only Daemon apps can use an init script.."
+msgstr "데몬 애플리케이션만 init 스크립트를 사용할 수 있습니다.."
+
+#: ../sepolicy/sepolicy/generate.py:449
+msgid "use_resolve must be a boolean value "
+msgstr "use_resolve는 부울 값이어야 합니다"
+
+#: ../sepolicy/sepolicy/generate.py:455
+msgid "use_syslog must be a boolean value "
+msgstr "use_syslog는 부울 값이어야 합니다"
+
+#: ../sepolicy/sepolicy/generate.py:461
+msgid "use_kerberos must be a boolean value "
+msgstr "use_kerberos는 부울 값이어야 합니다"
+
+#: ../sepolicy/sepolicy/generate.py:467
+msgid "manage_krb5_rcache must be a boolean value "
+msgstr "manage_krb5_rcache는 부울 값이어야 합니다"
+
+#: ../sepolicy/sepolicy/generate.py:497
+msgid "USER Types automatically get a tmp type"
+msgstr "USER 유형은 자동으로 tmp 유형을 갖습니다"
+
+#: ../sepolicy/sepolicy/generate.py:838
+#, fuzzy, python-format
+msgid "'%s' policy modules require existing domains"
+msgstr "%s 정책 모듈에는 기존 도메인이 필요합니다 "
+
+#: ../sepolicy/sepolicy/generate.py:863
+msgid "Type field required"
+msgstr "필수 항목을 입력"
+
+#: ../sepolicy/sepolicy/generate.py:876
+#, python-format
+msgid ""
+"You need to define a new type which ends with: \n"
+" %s"
+msgstr ""
+"다음과 같이 끝나는 새로운 유형을 정의해야 합니다: \n"
+" %s"
+
+#: ../sepolicy/sepolicy/generate.py:1104
+msgid "You must enter the executable path for your confined process"
+msgstr "제한된 프로세스의 실행 파일 경로를 입력해야 합니다"
+
+#: ../sepolicy/sepolicy/generate.py:1363
+msgid "Type Enforcement file"
+msgstr "강제 파일 입력"
+
+#: ../sepolicy/sepolicy/generate.py:1364
+msgid "Interface file"
+msgstr "인터페이스 파일"
+
+#: ../sepolicy/sepolicy/generate.py:1365
+msgid "File Contexts file"
+msgstr "파일 문맥 파일 "
+
+#: ../sepolicy/sepolicy/generate.py:1367
+msgid "Spec file"
+msgstr "Spec 파일 "
+
+#: ../sepolicy/sepolicy/generate.py:1368
+msgid "Setup Script"
+msgstr "스크립트 설정 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:25
+#: ../sepolicy/sepolicy/sepolicy.glade:4369
+#, fuzzy
+msgid "Applications"
+msgstr "애플리케이션 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:52
+msgid "Select domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:80 ../sepolicy/sepolicy/gui.py:67
+msgid "Advanced Search >>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:95 ../sepolicy/sepolicy/gui.py:2306
+msgid "File Equivalence"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:112 ../sepolicy/sepolicy/gui.py:2316
+#, fuzzy
+msgid "Users"
+msgstr "사용자 추가 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:129
+#: ../sepolicy/sepolicy/sepolicy.glade:1897
+#: ../sepolicy/sepolicy/sepolicy.glade:3802 ../sepolicy/sepolicy/gui.py:2297
+msgid "System"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:189
+#: ../sepolicy/sepolicy/sepolicy.glade:4406
+#: ../sepolicy/sepolicy/sepolicy.glade:4499
+#: ../sepolicy/sepolicy/sepolicy.glade:4645
+#: ../sepolicy/sepolicy/sepolicy.glade:4793
+#: ../sepolicy/sepolicy/sepolicy.glade:4934
+#: ../sepolicy/sepolicy/sepolicy.glade:5007
+#, fuzzy
+msgid "Select"
+msgstr "포트 선택 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:204
+#: ../sepolicy/sepolicy/sepolicy.glade:557
+#: ../sepolicy/sepolicy/sepolicy.glade:702
+#: ../sepolicy/sepolicy/sepolicy.glade:1243
+#: ../sepolicy/sepolicy/sepolicy.glade:1539
+#: ../sepolicy/sepolicy/sepolicy.glade:4579
+#: ../sepolicy/sepolicy/sepolicy.glade:4729
+#: ../sepolicy/sepolicy/sepolicy.glade:4859
+#: ../sepolicy/sepolicy/sepolicy.glade:5077
+#: ../sepolicy/sepolicy/sepolicy.glade:5233
+#: ../sepolicy/sepolicy/sepolicy.glade:5474
+msgid "Cancel"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:350
+msgid ""
+"The entry that was entered is incorrect.  Please try again in the "
+"ex:/.../... format."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:376
+msgid "Retry"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:460
+#: ../sepolicy/sepolicy/sepolicy.glade:1124
+#: ../sepolicy/sepolicy/sepolicy.glade:1372
+#: ../sepolicy/sepolicy/sepolicy.glade:5102
+#: ../sepolicy/sepolicy/sepolicy.glade:5343
+#, fuzzy
+msgid "Network Port Definitions"
+msgstr "네트워크 포트 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:476
+msgid ""
+"Add file Equivilence Mapping.  Mapping will be created when Update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:501
+#: ../sepolicy/sepolicy/sepolicy.glade:4045
+msgid "Path"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:511
+#: ../sepolicy/sepolicy/sepolicy.glade:5154
+#: ../sepolicy/sepolicy/sepolicy.glade:5395
+msgid ""
+"Specify a new SELinux user name.  By convention SELinux User names usually "
+"end in an _u."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:515
+msgid "Enter the path to which you want to setup an equivalence label."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:528
+#: ../sepolicy/sepolicy/sepolicy.glade:4062
+#: ../sepolicy/sepolicy/sepolicy.glade:4819
+msgid "Equivalence Path"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:542
+#: ../sepolicy/sepolicy/sepolicy.glade:687
+#: ../sepolicy/sepolicy/sepolicy.glade:1228
+#: ../sepolicy/sepolicy/sepolicy.glade:1524
+#: ../sepolicy/sepolicy/sepolicy.glade:5218
+#: ../sepolicy/sepolicy/sepolicy.glade:5459
+msgid "Save to update"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:582
+msgid ""
+"Specify the mapping between the new path and the equivalence path.  "
+"Everything under this new path will be labeled as if they were under the "
+"equivalence path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:639
+msgid "Add a file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:656
+msgid ""
+"<operation> File Labeling for <selected domain>. File labels will be created "
+"when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:744
+#: ../sepolicy/sepolicy/sepolicy.glade:1471
+#: ../sepolicy/sepolicy/sepolicy.glade:3510 ../sepolicy/sepolicy/gui.py:66
+msgid "Advanced >>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:765
+#: ../sepolicy/sepolicy/sepolicy.glade:2305
+#: ../sepolicy/sepolicy/sepolicy.glade:2417
+#: ../sepolicy/sepolicy/sepolicy.glade:2539
+#: ../sepolicy/sepolicy/sepolicy.glade:4539
+msgid "Class"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:781
+#, fuzzy
+msgid "Type"
+msgstr ""
+"파일\n"
+"유형"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:795
+msgid ""
+"Select the file class to which this label will be applied.  Defaults to all "
+"classes."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:822
+msgid "Make Path Recursive"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:826
+msgid ""
+"Select Make Path Recursive iff you want to apply this label to all children "
+"of the specified directory path. objects under the directory to have this "
+"label."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:839
+msgid "Browse"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:843
+#, fuzzy
+msgid "Browse to select the file/directory for labeling."
+msgstr "samba가 모든 파일/디렉토리를 읽기 전용으로 공유하는 것을 허용합니다. "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:887
+msgid "Path  "
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:898
+msgid ""
+"Specify the path using regular expressions that you would like to modify the "
+"labeling."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:920
+msgid "Select the SELinux file type to assign to this path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:947
+msgid "Enter the MLS Label to assign to this file path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:951
+msgid "SELinux MLS Label you wish to assign to this path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1088
+msgid "Analyzing Policy..."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1141
+msgid ""
+"Add Login Mapping. Login Mapping will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1176
+msgid ""
+"Enter the login user name of the user to which you wish to add SELinux User "
+"confinement."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1205
+msgid ""
+"Select the SELinux User to assign to this login user.  Login users by "
+"default get assigned by the __default__ user."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1268
+msgid ""
+"Enter MLS/MCS Range for this login User.  Defaults to the range for the "
+"Selected SELinux User."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1271
+#: ../sepolicy/sepolicy/sepolicy.glade:3191
+#: ../sepolicy/sepolicy/sepolicy.glade:3312
+#: ../sepolicy/sepolicy/sepolicy.glade:5184
+#: ../sepolicy/sepolicy/sepolicy.glade:5425
+#, fuzzy
+msgid "MLS Range"
+msgstr "MCS 범위"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1283
+msgid ""
+"Specify the MLS Range for this user to login in with.  Defaults to the "
+"selected SELinux Users MLS Range."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1389
+msgid ""
+"<operation> Network Port for <selected domain>.  Ports will be created when "
+"update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1427
+msgid "Enter the port number or range to which you want to add a port type."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1457
+#, fuzzy
+msgid "Port Type"
+msgstr "SELinux 포트 유형"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1502
+msgid "Select the port type you want to assign to the specified port number."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1566
+msgid "tcp"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1570
+msgid ""
+"Select <b>tcp</b> if the port type should be assigned to tcp port numbers."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1583
+msgid "udp"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1587
+msgid ""
+"Select <b>udp</b> if the port type should be assigned to udp port numbers."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1609
+msgid "Enter the MLS Label to assign to this port."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1706
+#, fuzzy
+msgid "SELinux Configuration"
+msgstr "SELinux 관리"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1742
+msgid "Select..."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1791
+#: ../sepolicy/sepolicy/sepolicy.glade:2211
+msgid "Booleans"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1795
+msgid ""
+"Display boolean information that can be used to modify the policy for the "
+"'selected domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1809
+#: ../sepolicy/sepolicy/sepolicy.glade:2596
+msgid "Files"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1813
+msgid ""
+"Display file type information that can be used by the 'selected domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1827
+#: ../sepolicy/sepolicy/sepolicy.glade:2829
+msgid "Network"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1831
+msgid ""
+"Display network ports to which the 'selected domain' can connect or listen "
+"to."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1845
+#: ../sepolicy/sepolicy/sepolicy.glade:3120
+msgid "Transitions"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1849
+msgid ""
+"Display applications that can transition into or out of the 'selected "
+"domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1863
+#: ../sepolicy/sepolicy/sepolicy.glade:3221
+#, fuzzy
+msgid "Login Mapping"
+msgstr "SELinux 로그인 맵핑 추가 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1866
+#: ../sepolicy/sepolicy/sepolicy.glade:1883
+#: ../sepolicy/sepolicy/sepolicy.glade:1900
+msgid "Manage the SELinux configuration"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1880
+#: ../sepolicy/sepolicy/sepolicy.glade:3343
+#, fuzzy
+msgid "SELinux Users"
+msgstr "SELinux 사용자"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1914
+#: ../sepolicy/sepolicy/sepolicy.glade:4015
+msgid "Lockdown"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1917
+msgid ""
+"Lockdown the SELinux System.\n"
+"This screen can be used to turn up the SELinux Protections."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1932
+msgid "radiobutton"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2020
+msgid "Show Modified Only"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2059
+msgid "Mislabeled files exist"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2079
+msgid "Show mislabeled files only"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2119
+#: ../sepolicy/sepolicy/sepolicy.glade:3243
+msgid ""
+"If-Then-Else rules written in policy that can \n"
+"allow alternative access control."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2131
+msgid "Enabled"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2251
+#: ../sepolicy/sepolicy/sepolicy.glade:2363
+#: ../sepolicy/sepolicy/sepolicy.glade:2481
+#: ../sepolicy/sepolicy/sepolicy.glade:4512
+#: ../sepolicy/sepolicy/sepolicy.glade:4806
+msgid "File Path"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2287
+#: ../sepolicy/sepolicy/sepolicy.glade:2398
+#, fuzzy
+msgid "SELinux File Type"
+msgstr "SELinux 유형"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2331
+msgid "File path used to enter the 'selected domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2332
+msgid "Executable Files"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2447
+msgid "Files to which the 'selected domain' can write."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2448
+msgid "Writable files"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2570
+msgid "File Types defined for the 'selected domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2571
+msgid "Application File Types"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2703
+msgid "Network Ports to which the 'selected domain' is allowed to connect."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2704
+msgid "Outbound"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2803
+msgid "Network Ports to which the 'selected domain' is allowed to listen."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2804
+msgid "Inbound"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2865
+#, fuzzy
+msgid ""
+"Boolean \n"
+"Enabled"
+msgstr "부울 이름 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2891
+#, fuzzy
+msgid "Boolean name"
+msgstr "부울 이름 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2908
+#, fuzzy
+msgid "SELinux Application Type"
+msgstr "SELinux 포트 유형"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2929
+msgid ""
+"Executables which will transition to a different domain, when the 'selected "
+"domain' executes them."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2932
+msgid "Applicaton Transitions From 'select domain'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2955
+#, fuzzy
+msgid ""
+"Boolean\n"
+"Enabled"
+msgstr "부울 이름 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2971
+msgid "Calling Process Domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2987
+msgid "Executable File"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3011
+msgid ""
+"Executables which will transition to the 'selected domain', when executing a "
+"selected domains entrypoint."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3012
+msgid "Application Transitions Into 'select domain'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3027
+msgid ""
+"File Transitions define what happens when the current domain creates the "
+"content of a particular class in a directory of the destination type. "
+"Optionally a file name could be specified for the transition."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3035
+#, fuzzy
+msgid "SELinux Directory Type"
+msgstr "SELinux 포트 유형"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3048
+msgid "Destination Class"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3062
+#, fuzzy
+msgid "SELinux Destination Type"
+msgstr "SELinux 포트 유형"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3075
+#, fuzzy
+msgid "File Name"
+msgstr "모듈 이름 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3097
+msgid "File Transitions From 'select domain'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3296
+#: ../sepolicy/sepolicy/sepolicy.glade:5277
+#: ../sepolicy/sepolicy/sepolicy.glade:5518
+#, fuzzy
+msgid "Default Level"
+msgstr "디폴트 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3382
+msgid "Select the system mode when the system first boots up"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3455
+msgid "Select the system mode for the current session"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3532
+#, fuzzy
+msgid "System Policy Type:"
+msgstr "시스템 디폴트 정책 유형:"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3593
+#, fuzzy
+msgid "<b>System Mode</b>"
+msgstr "<b>선택:</b>"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3631
+msgid "Import system settings from another machine"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3639
+msgid "Import"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3658
+msgid "Export system settings to a file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3668
+msgid "Export"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3687
+msgid "Relabel all files back to system defaults on reboot"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3724
+#: ../sepolicy/sepolicy/sepolicy.glade:3825
+#: ../sepolicy/sepolicy/sepolicy.glade:3889
+#: ../sepolicy/sepolicy/sepolicy.glade:3952 ../sepolicy/sepolicy/gui.py:60
+msgid "Yes"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3741
+#: ../sepolicy/sepolicy/sepolicy.glade:3843
+#: ../sepolicy/sepolicy/sepolicy.glade:3906
+#: ../sepolicy/sepolicy/sepolicy.glade:3969 ../sepolicy/sepolicy/gui.py:60
+msgid "No"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3782
+msgid "<b>System Configuration</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3829
+#: ../sepolicy/sepolicy/sepolicy.glade:3847
+msgid ""
+"An unconfined domain is a process label that allows the process to do what "
+"it wants, without SELinux interfering.  Applications started at boot by the "
+"init system that SELinux do not have defined SELinux policy will run as "
+"unconfined if this module is enabled.  Disabling it means all daemons will "
+"now be confined.  To disable the unconfined_t user you must first remove "
+"unconfined_t from the users/login screens."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3865
+msgid "<b>Disable ability to run unconfined system processes?</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3893
+#: ../sepolicy/sepolicy/sepolicy.glade:3910
+#: ../sepolicy/sepolicy/sepolicy.glade:3973
+msgid ""
+"An permissive domain is a process label that allows the process to do what "
+"it wants, with SELinux only logging the denials, but not enforcing them.  "
+"Usually permissive domains indicate experimental policy, disabling the "
+"module could cause SELinux to deny access to a domain, that should be "
+"allowed."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3928
+msgid "<b>Disable all permissive processes?</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3956
+msgid ""
+"A permissive domain is a process label that allows the process to do what it "
+"wants, with SELinux only logging the denials, but not enforcing them.  "
+"Usually permissive domains indicate experimental policy, disabling the "
+"module could cause SELinux to deny access to a domain, that should be "
+"allowed."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3994
+msgid "<b>Deny all processes from ptracing or debugging other processes?</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4031
+msgid ""
+"File equivalence cause the system to label content under the new path as if "
+"it were under the equivalence path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4087
+msgid "Files Equivalence"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4100
+msgid "<b>...SELECT TO VIEW DATA...</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4131
+msgid "Delete"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4147
+msgid "Modify"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4208
+msgid "Revert"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4213
+msgid ""
+"Revert button will launch a dialog window which allows you to revert changes "
+"within the current transaction."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4225 ../sepolicy/sepolicy/gui.py:2379
+msgid "Update"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4230
+msgid "Commit all changes in your current transaction to the server."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4278
+msgid "Applications - Advanced Search"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4331
+msgid "Installed"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4383
+msgid "Process Types"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4424
+msgid "More Details"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4460
+#: ../sepolicy/sepolicy/sepolicy.glade:4754
+#, fuzzy
+msgid "Delete Modified File Labeling"
+msgstr "파일 레이블 설정 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4478
+msgid ""
+"Select file labeling to delete. File labeling will be deleted when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4525
+msgid "SELinux File Label"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4564
+#: ../sepolicy/sepolicy/sepolicy.glade:4714
+#: ../sepolicy/sepolicy/sepolicy.glade:4844
+msgid "Save to Update"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4604
+#, fuzzy
+msgid "Delete Modified Ports"
+msgstr "네트워크 포트 삭제"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4622
+msgid "Select ports to delete. Ports will be deleted when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4771
+msgid ""
+"Select file equivalence labeling to delete.File equivalence labeling will be "
+"deleted when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4887
+#, fuzzy
+msgid "More Types"
+msgstr "파일 유형"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4914
+msgid "Types"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4973
+msgid ""
+"Review the updates you have made before committing them to the system.  To "
+"reset an item, uncheck the checkbox.  All items checked will be updated in "
+"the system when you select update."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5036
+#, fuzzy
+msgid "Action"
+msgstr "애플리케이션 "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5062
+msgid "Apply"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5119
+#: ../sepolicy/sepolicy/sepolicy.glade:5360
+msgid ""
+"Add User Roles. SELinux User Roles will be created when Update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5144
+#: ../sepolicy/sepolicy/sepolicy.glade:5385
+#, fuzzy
+msgid "SELinux User Name"
+msgstr "SELinux 사용자"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5258
+#: ../sepolicy/sepolicy/sepolicy.glade:5499
+msgid ""
+"Enter MLS/MCS Range for this SELinux User.\n"
+"s0-s0:c1023"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5289
+#: ../sepolicy/sepolicy/sepolicy.glade:5530
+#, fuzzy
+msgid ""
+"Specify the default level that you would like this SELinux user to login "
+"with.  Defaults to s0."
+msgstr "이 사용자가 관리하려는 도메인을 선택합니다."
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5293
+#: ../sepolicy/sepolicy/sepolicy.glade:5534
+msgid "Enter Default Level for SELinux User to login with. Default s0"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:61
+#, fuzzy
+msgid "Disable"
+msgstr "비활성화 "
+
+#: ../sepolicy/sepolicy/gui.py:61
+#, fuzzy
+msgid "Enable"
+msgstr "감사 활성화 "
+
+#: ../sepolicy/sepolicy/gui.py:66
+msgid "Advanced <<"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:67
+msgid "Advanced Search <<"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:92
+msgid ""
+"<small>\n"
+"To change from Disabled to Enforcing mode\n"
+"- Change the system mode from Disabled to Permissive\n"
+"- Reboot, so that the system can relabel\n"
+"- Once the system is working as planned\n"
+"  * Change the system mode to Enforcing</small>\n"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:115
+#, fuzzy, python-format
+msgid "%s is not a valid domain"
+msgstr "%s는 유효한 문맥이 아닙니다\n"
+
+#: ../sepolicy/sepolicy/gui.py:624
+msgid "System Status: Disabled"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:722
+msgid "Help: Start Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:726
+#, fuzzy
+msgid "Help: Booleans Page"
+msgstr "부울 이름 "
+
+#: ../sepolicy/sepolicy/gui.py:732
+msgid "Help: Executable Files Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:735
+msgid "Help: Writable Files Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:738
+msgid "Help: Application Types Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:743
+msgid "Help: Outbound Network Connections Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:746
+msgid "Help: Inbound Network Connections Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:752
+msgid "Help: Transition from application Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:755
+msgid "Help: Transition into application Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:758
+msgid "Help: Transition application file Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:762
+msgid "Help: Systems Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:766
+msgid "Help: Lockdown Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:770
+#, fuzzy
+msgid "Help: Login Page"
+msgstr "로그인 이름"
+
+#: ../sepolicy/sepolicy/gui.py:774
+#, fuzzy
+msgid "Help: SELinux User Page"
+msgstr "SELinux 사용자 맵핑 삭제"
+
+#: ../sepolicy/sepolicy/gui.py:778
+msgid "Help: File Equivalence Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:922 ../sepolicy/sepolicy/gui.py:1211
+#: ../sepolicy/sepolicy/gui.py:1644 ../sepolicy/sepolicy/gui.py:1885
+#: ../sepolicy/sepolicy/gui.py:2698
+msgid "More..."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1031
+#, python-format
+msgid "File path used to enter the '%s' domain."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1032
+#, python-format
+msgid "Files to which the '%s' domain can write."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1033
+#, python-format
+msgid "Network Ports to which the '%s' is allowed to connect."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1034
+#, python-format
+msgid "Network Ports to which the '%s' is allowed to listen."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1035
+#, python-format
+msgid "File Types defined for the '%s'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1036
+#, python-format
+msgid ""
+"Display boolean information that can be used to modify the policy for the "
+"'%s'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1037
+#, python-format
+msgid "Display file type information that can be used by the '%s'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1038
+#, python-format
+msgid "Display network ports to which the '%s' can connect or listen to."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1039
+#, python-format
+msgid "Application Transitions Into '%s'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1040
+#, python-format
+msgid "Application Transitions From '%s'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1041
+#, fuzzy, python-format
+msgid "File Transitions From '%s'"
+msgstr "네임 스페이스로 전환하는데 실패했습니다\n"
+
+#: ../sepolicy/sepolicy/gui.py:1042
+#, python-format
+msgid ""
+"Executables which will transition to the '%s', when executing a selected "
+"domains entrypoint."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1043
+#, python-format
+msgid ""
+"Executables which will transition to a different domain, when the '%s' "
+"executes them."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1044
+#, python-format
+msgid "Files by '%s' will transitions to a different label."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1045
+#, python-format
+msgid "Display applications that can transition into or out of the '%s'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1149
+msgid "MISSING FILE PATH"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1265 ../sepolicy/sepolicy/gui.py:1267
+#, fuzzy
+msgid "Boolean section."
+msgstr "부울 이름 "
+
+#: ../sepolicy/sepolicy/gui.py:1265
+msgid "To disable this transition, go to the "
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1267
+msgid "To enable this transition, go to the "
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1324
+#, fuzzy
+msgid "executable"
+msgstr "실행 가능 "
+
+#: ../sepolicy/sepolicy/gui.py:1327
+#, fuzzy
+msgid "writable"
+msgstr "비활성화 "
+
+#: ../sepolicy/sepolicy/gui.py:1330
+#, fuzzy
+msgid "application"
+msgstr "애플리케이션 "
+
+#: ../sepolicy/sepolicy/gui.py:1331
+#, python-format
+msgid "Add new %s file path for '%s' domains."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1332
+#, python-format
+msgid "Delete modified %s file paths for '%s' domain."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1333
+#, python-format
+msgid ""
+"Modify selected modified %s file path for '%s' domain. Only bolded items in "
+"the list can be selected, this indicates they were modified previously."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1345
+msgid "connect"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1348
+msgid "listen for inbound connections"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1350
+#, python-format
+msgid "Add new port definition to which the '%s' domains is allowed to %s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1351
+#, python-format
+msgid ""
+"Delete modified port definitions to which the '%s' domain is allowed to %s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1352
+#, python-format
+msgid "Modify port definitions to which the '%s' domain is allowed to %s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1381
+#, fuzzy
+msgid "Add new SELinux User/Role definition."
+msgstr "SELinux 사용자 맵핑 추가 "
+
+#: ../sepolicy/sepolicy/gui.py:1382
+#, fuzzy
+msgid "Delete modified SELinux User/Role definitions."
+msgstr "SELinux 사용자 맵핑 삭제"
+
+#: ../sepolicy/sepolicy/gui.py:1383
+msgid "Modify selected modified SELinux User/Role definitions."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1390
+#, fuzzy
+msgid "Add new Login Mapping definition."
+msgstr "SELinux 로그인 맵핑 추가 "
+
+#: ../sepolicy/sepolicy/gui.py:1391
+#, fuzzy
+msgid "Delete modified Login Mapping definitions."
+msgstr "%s에 대한 로그인 맵핑을 수정할 수정할 수 없습니다"
+
+#: ../sepolicy/sepolicy/gui.py:1392
+msgid "Modify selected modified Login Mapping definitions."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1399
+msgid "Add new File Equivalence definition."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1400
+msgid "Delete modified File Equivalence definitions."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1401
+msgid ""
+"Modify selected modified File Equivalence definitions. Only bolded items in "
+"the list can be selected, this indicates they were modified previously."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1429
+#, python-format
+msgid "Boolean %s Allow Rules"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1442
+#, python-format
+msgid "Add Network Port for %s.  Ports will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1443
+#, fuzzy, python-format
+msgid "Add Network Port for %s"
+msgstr "네트워크 포트 추가 "
+
+#: ../sepolicy/sepolicy/gui.py:1448
+#, python-format
+msgid ""
+"Add File Labeling for %s. File labels will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1449 ../sepolicy/sepolicy/gui.py:1500
+#, fuzzy, python-format
+msgid "Add File Labeling for %s"
+msgstr "파일 레이블 설정 "
+
+#: ../sepolicy/sepolicy/gui.py:1459
+msgid "Add Login Mapping. User Mapping will be created when Update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1460
+#, fuzzy
+msgid "Add Login Mapping"
+msgstr "SELinux 로그인 맵핑 추가 "
+
+#: ../sepolicy/sepolicy/gui.py:1465
+msgid ""
+"Add SELinux User Role. SELinux user roles will be created when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1466
+#, fuzzy
+msgid "Add SELinux Users"
+msgstr "SELinux 사용자 추가 "
+
+#: ../sepolicy/sepolicy/gui.py:1473
+msgid ""
+"Add File Equivalency Mapping. Mapping will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1474
+#, fuzzy
+msgid "Add SELinux File Equivalency"
+msgstr ""
+"\n"
+"SELinux 로컬 fcontext 해당 \n"
+
+#: ../sepolicy/sepolicy/gui.py:1499
+#, python-format
+msgid ""
+"Modify File Labeling for %s. File labels will be created when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1566
+msgid ""
+"Modify File Equivalency Mapping. Mapping will be created when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1567
+#, fuzzy
+msgid "Modify SELinux File Equivalency"
+msgstr "SELinux 사용자 맵핑 편집 "
+
+#: ../sepolicy/sepolicy/gui.py:1652
+#, python-format
+msgid ""
+"Modify Network Port for %s.  Ports will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1653
+#, fuzzy, python-format
+msgid "Modify Network Port for %s"
+msgstr "네트워크 포트 편집 "
+
+#: ../sepolicy/sepolicy/gui.py:1866
+#, python-format
+msgid "The entry '%s' is not a valid path.  Paths must begin with a '/'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1879
+msgid "Port number must be between 1 and 65536"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2146
+#, fuzzy, python-format
+msgid "SELinux name: %s"
+msgstr "SELinux 기능"
+
+#: ../sepolicy/sepolicy/gui.py:2157
+#, python-format
+msgid "Add file labeling for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2159
+#, fuzzy, python-format
+msgid "Delete file labeling for %s"
+msgstr "%s에 대한 파일 문맥을 삭제할 수 없습니다"
+
+#: ../sepolicy/sepolicy/gui.py:2161
+#, fuzzy, python-format
+msgid "Modify file labeling for %s"
+msgstr "%s에 대한 파일 문맥을 수정할 수 없습니다"
+
+#: ../sepolicy/sepolicy/gui.py:2165
+#, python-format
+msgid "File path: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2168
+#, python-format
+msgid "File class: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2171 ../sepolicy/sepolicy/gui.py:2195
+#, fuzzy, python-format
+msgid "SELinux file type: %s"
+msgstr "SELinux 유형"
+
+#: ../sepolicy/sepolicy/gui.py:2180
+#, fuzzy, python-format
+msgid "Add ports for %s"
+msgstr "잘못된 형식 %s: 기록 %s "
+
+#: ../sepolicy/sepolicy/gui.py:2182
+#, fuzzy, python-format
+msgid "Delete ports for %s"
+msgstr "%s 삭제 "
+
+#: ../sepolicy/sepolicy/gui.py:2184
+#, fuzzy, python-format
+msgid "Modify ports for %s"
+msgstr "%s 수정 "
+
+#: ../sepolicy/sepolicy/gui.py:2187
+#, fuzzy, python-format
+msgid "Network ports: %s"
+msgstr "네트워크 포트 "
+
+#: ../sepolicy/sepolicy/gui.py:2190
+#, fuzzy, python-format
+msgid "Network protocol: %s"
+msgstr "네트워크 포트 "
+
+#: ../sepolicy/sepolicy/gui.py:2204
+#, fuzzy
+msgid "Add user"
+msgstr "사용자 추가 "
+
+#: ../sepolicy/sepolicy/gui.py:2206
+#, fuzzy
+msgid "Delete user"
+msgstr "사용자 삭제 "
+
+#: ../sepolicy/sepolicy/gui.py:2208
+#, fuzzy
+msgid "Modify user"
+msgstr "사용자 편집 "
+
+#: ../sepolicy/sepolicy/gui.py:2211
+#, fuzzy, python-format
+msgid "SELinux User : %s"
+msgstr "SELinux 사용자"
+
+#: ../sepolicy/sepolicy/gui.py:2216
+#, fuzzy, python-format
+msgid "Roles: %s"
+msgstr "역할 "
+
+#: ../sepolicy/sepolicy/gui.py:2220 ../sepolicy/sepolicy/gui.py:2245
+#, fuzzy, python-format
+msgid "MLS/MCS Range: %s"
+msgstr "MLS/MCS 범위"
+
+#: ../sepolicy/sepolicy/gui.py:2229
+#, fuzzy
+msgid "Add login mapping"
+msgstr "SELinux 로그인 맵핑 추가 "
+
+#: ../sepolicy/sepolicy/gui.py:2231
+#, fuzzy
+msgid "Delete login mapping"
+msgstr "SELinux 사용자 맵핑 삭제"
+
+#: ../sepolicy/sepolicy/gui.py:2233
+#, fuzzy
+msgid "Modify login mapping"
+msgstr "로그인 맵핑 목록을 만들 수 없습니다"
+
+#: ../sepolicy/sepolicy/gui.py:2237
+#, fuzzy, python-format
+msgid "Linux User : %s"
+msgstr "SELinux 사용자"
+
+#: ../sepolicy/sepolicy/gui.py:2241
+#, fuzzy, python-format
+msgid "SELinux User: %s"
+msgstr "SELinux 사용자"
+
+#: ../sepolicy/sepolicy/gui.py:2254
+msgid "Add file equiv labeling."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2256
+msgid "Delete file equiv labeling."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2258
+msgid "Modify file equiv labeling."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2262
+#, python-format
+msgid "File path : %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2266
+#, python-format
+msgid "Equivalence: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2369
+#, python-format
+msgid "Run restorecon on %s to change its type from %s to the default %s?"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2381
+msgid "Update Changes"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2383
+msgid "Revert Changes"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2556
+msgid "System Status: Enforcing"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2558
+msgid "System Status: Permissive"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2749
+#, fuzzy
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot.  Do you "
+"wish to continue?"
+msgstr ""
+"SELinux 비활성화로 변경하려면 재부팅해야 합니다. 이는 권장되는 방법이 아닙니"
+"다. 나중에 SELinux를 다시 활성화하고자 할 경우 시스템 레이블 변경이 필요합니"
+"다. 단순히 SELinux가 시스템에서 문제의 원인인지 여부를 확인하고 싶은 경우 허"
+"용 모드로 전환하면 오류를 로그하고 SELinux 정책을 강제하지 않을 수 있습니다. "
+"또한 허용 모드로 변경하기 위해 재부팅할 필요가 없습니다. 계속 진행하시겠습니"
+"까?"
+
+#: ../sepolicy/sepolicy/gui.py:2783
+msgid ""
+"You are attempting to close the application without applying your changes.\n"
+"    *    To apply changes you have made during this session, click No and "
+"click Update.\n"
+"    *    To leave the application without applying your changes, click Yes.  "
+"All changes that you have made during this session will be lost."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2783
+msgid "Loss of data Dialog"
 msgstr ""

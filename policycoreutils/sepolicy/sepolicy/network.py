@@ -20,52 +20,26 @@
 #                                        02111-1307  USA
 #
 #  
-import sys
 import sepolicy
 search=sepolicy.search
 info=sepolicy.info
-
-def _gen_port_dict():
-    portrecsbynum = {}
-    portrecs = {}
-    for i in info(sepolicy.PORT):
-        if i['low'] == i['high']:
-            port = str(i['low'])
-        else:
-            port = "%s-%s" % (str(i['low']), str(i['high']))
-
-        if (i['type'], i['protocol']) in portrecs:
-            portrecs [(i['type'], i['protocol'])].append(port)
-        else:
-            portrecs [(i['type'], i['protocol'])] = [port]
-
-        portrecsbynum[(i['low'], i['high'],i['protocol'])] = (i['type'], i['range'])
-    return ( portrecs, portrecsbynum )
-portrecs, portrecsbynum = _gen_port_dict()
-
-port_types =  sepolicy.info(sepolicy.ATTRIBUTE,"port_type")[0]["types"]
-domains =  sepolicy.info(sepolicy.ATTRIBUTE,"domain")[0]["types"]
 
 def get_types(src, tclass, perm):
     allows=search([sepolicy.ALLOW],{sepolicy.SOURCE:src,sepolicy.CLASS:tclass, sepolicy.PERMS:perm})
     nlist=[]
     if allows:
-        for i in map(lambda y: y[sepolicy.TARGET], filter(lambda x: set(perm).issubset(x[sepolicy.PERMS]) and x['enabled'], allows)):
+        for i in map(lambda y: y[sepolicy.TARGET], filter(lambda x: set(perm).issubset(x[sepolicy.PERMS]), allows)):
             if i not in nlist:
                 nlist.append(i)
     return nlist
    
 
 def get_network_connect(src, protocol, perm):
+    portrecs, portrecsbynum = sepolicy.gen_port_dict()
     d={}
     tlist = get_types(src, "%s_socket" % protocol, [perm])
     if len(tlist) > 0:
-        if "port_type" in tlist:
-            d[(src,protocol,perm)] = ["all ports"]
-            return d
-
         d[(src,protocol,perm)] = []
-
         for i in tlist:
             if i == "ephemeral_port_type":
                 if "unreserved_port_type" in tlist:
@@ -77,16 +51,18 @@ def get_network_connect(src, protocol, perm):
                 if "port_t" in tlist:
                     continue
             if i == "port_t":
-                d[(src,protocol,perm)].append("all ports with out defined types")
+                d[(src,protocol,perm)].append((i, ["all ports with out defined types"]))
+            if i == "port_type":
+                d[(src,protocol,perm)].append((i, ["all ports"]))
             elif i == "unreserved_port_type":
-                d[(src,protocol,perm)].append("%s: all ports > 1024" % i)
+                d[(src,protocol,perm)].append((i, ["all ports > 1024"]))
             elif i == "reserved_port_type":
-                d[(src,protocol,perm)].append("%s: all ports < 1024" % i)
+                d[(src,protocol,perm)].append((i, ["all ports < 1024"]))
             elif i == "rpc_port_type":
-                d[(src,protocol,perm)].append("%s: all ports > 500 and  < 1024" % i)
+                d[(src,protocol,perm)].append((i, ["all ports > 500 and  < 1024"]))
             else:
                 try:
-                    d[(src,protocol,perm)].append("%s: %s" % (i, ",".join(portrecs[(i, protocol)])))
+                    d[(src,protocol,perm)].append((i, portrecs[(i, protocol)]))
                 except KeyError:
                     pass
     return d

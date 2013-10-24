@@ -13,6 +13,8 @@ matchpathcon \- get the default SELinux security context for the specified path 
 .IR file_contexts_file ]
 .RB [ \-p
 .IR prefix ]
+.RB [ \-P
+.IR policy_root_path ]
 .I filepath...
 .
 .SH "DESCRIPTION"
@@ -45,6 +47,9 @@ Use alternate file_context file
 .TP
 .BI \-p " prefix"
 Use prefix to speed translations
+.TP
+.BI \-P " policy_root_path"
+Use alternate policy root path
 .TP
 .B \-V
 Verify file context on disk matches defaults

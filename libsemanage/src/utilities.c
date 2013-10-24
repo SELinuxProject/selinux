@@ -140,6 +140,10 @@ int semanage_list_push(semanage_list_t ** list, char *data)
 
 	if (!data)
 		return EINVAL;
+
+	if (semanage_list_find(*list, data) != NULL)
+		return 0;
+
 	if (!(temp = malloc(sizeof(semanage_list_t))))
 		return ENOMEM;
 

@@ -893,8 +893,11 @@ static int write_cons_helper(policydb_t * p,
 				if (ebitmap_write(&e->names, fp)) {
 					return POLICYDB_ERROR;
 				}
-				if (p->policy_type != POLICY_KERN &&
-				    type_set_write(e->type_names, fp)) {
+				if ((p->policy_type != POLICY_KERN &&
+						type_set_write(e->type_names, fp)) ||
+						(p->policy_type == POLICY_KERN &&
+						(p->policyvers >= POLICYDB_VERSION_CONSTRAINT_NAMES) &&
+						type_set_write(e->type_names, fp))) {
 					return POLICYDB_ERROR;
 				}
 				break;

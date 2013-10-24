@@ -191,7 +191,6 @@ static PyObject *finish(PyObject *self __attribute__((unused)), PyObject *args) 
 static int __policy_init(const char *init_path)
 {
 	FILE *fp;
-	int vers = 0;
 	char path[PATH_MAX];
 	char errormsg[PATH_MAX];
 	struct sepol_policy_file *pf = NULL;
@@ -210,27 +209,12 @@ static int __policy_init(const char *init_path)
 			return 1;
 		}
 	} else {
-		vers = sepol_policy_kern_vers_max();
-		if (vers < 0) {
-			snprintf(errormsg, sizeof(errormsg), 
-				 "Could not get policy version:  %s\n",
-				 strerror(errno));
-			PyErr_SetString( PyExc_ValueError, errormsg);
-			return 1;
-		}
-		snprintf(path, PATH_MAX, "%s.%d",
-			 selinux_binary_policy_path(), vers);
-		fp = fopen(path, "r");
-		while (!fp && errno == ENOENT && --vers) {
-			snprintf(path, PATH_MAX, "%s.%d",
-				 selinux_binary_policy_path(), vers);
-			fp = fopen(path, "r");
-		}
+		fp = fopen(selinux_current_policy_path(), "r");
 		if (!fp) {
 			snprintf(errormsg, sizeof(errormsg), 
-				 "unable to open %s.%d:  %s\n",
-				 selinux_binary_policy_path(),
-				 security_policyvers(), strerror(errno));
+				 "unable to open %s:  %s\n",
+				 selinux_current_policy_path(),
+				 strerror(errno));
 			PyErr_SetString( PyExc_ValueError, errormsg);
 			return 1;
 		}
@@ -310,10 +294,12 @@ static PyObject *init(PyObject *self __attribute__((unused)), PyObject *args) {
 }
 
 #define RETURN(X) \
-	PyTuple_SetItem(result, 0, Py_BuildValue("i", X));	\
-	return result;						
+	{ \
+		return Py_BuildValue("iO", (X), Py_None);	\
+	}
 
 static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args) {
+	char *reason_buf = NULL;
 	security_context_t scon; 
 	security_context_t tcon;
 	char *tclassstr; 
@@ -328,10 +314,6 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	struct sepol_av_decision avd;
 	int rc;
 	int i=0;
-	PyObject *result = PyTuple_New(2);
-	if (!result) return NULL;
-	Py_INCREF(Py_None);
-	PyTuple_SetItem(result, 1, Py_None);
 
 	if (!PyArg_ParseTuple(args,(char *)"sssO!:audit2why",&scon,&tcon,&tclassstr,&PyList_Type, &listObj)) 
 		return NULL;
@@ -342,22 +324,21 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	/* should raise an error here. */
 	if (numlines < 0)	return NULL; /* Not a list */
 
-	if (!avc) {
+	if (!avc)
 		RETURN(NOPOLICY)
-	}
 
 	rc = sepol_context_to_sid(scon, strlen(scon) + 1, &ssid);
-	if (rc < 0) {
+	if (rc < 0)
 		RETURN(BADSCON)
-	}
+
 	rc = sepol_context_to_sid(tcon, strlen(tcon) + 1, &tsid);
-	if (rc < 0) {
+	if (rc < 0)
 		RETURN(BADTCON)
-	}
+
 	tclass = string_to_security_class(tclassstr);
-	if (!tclass) {
+	if (!tclass)
 		RETURN(BADTCLASS)
-	}
+
 	/* Convert the permission list to an AV. */
 	av = 0;
 
@@ -377,21 +358,20 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 #endif
 		
 		perm = string_to_av_perm(tclass, permstr);
-		if (!perm) {
+		if (!perm)
 			RETURN(BADPERM)
-		}
+
 		av |= perm;
 	}
 
 	/* Reproduce the computation. */
-	rc = sepol_compute_av_reason(ssid, tsid, tclass, av, &avd, &reason);
-	if (rc < 0) {
+	rc = sepol_compute_av_reason_buffer(ssid, tsid, tclass, av, &avd, &reason, &reason_buf, 0);
+	if (rc < 0)
 		RETURN(BADCOMPUTE)
-	}
 
-	if (!reason) {
+	if (!reason)
 		RETURN(ALLOW)
-	}
+
 	if (reason & SEPOL_COMPUTEAV_TE) {
 		avc->ssid = ssid;
 		avc->tsid = tsid;
@@ -404,28 +384,34 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 				RETURN(TERULE)
 			}
 		} else {
-			PyTuple_SetItem(result, 0, Py_BuildValue("i", BOOLEAN));
+			PyObject *outboollist;
 			struct boolean_t *b = bools;
 			int len=0;
 			while (b->name) {
 				len++; b++;
 			}
 			b = bools;
-			PyObject *outboollist = PyTuple_New(len);
+			outboollist = PyList_New(len);
 			len=0;
 			while(b->name) {
-				PyObject *bool = Py_BuildValue("(si)", b->name, b->active);
-				PyTuple_SetItem(outboollist, len++, bool);
+				PyObject *bool_ = Py_BuildValue("(si)", b->name, b->active);
+				PyList_SetItem(outboollist, len++, bool_);
 				b++;
 			}
 			free(bools);
-			PyTuple_SetItem(result, 1, outboollist);
-			return result;
+			/* 'N' steals the reference to outboollist */
+			return Py_BuildValue("iN", BOOLEAN, outboollist);
 		}
 	}
 
 	if (reason & SEPOL_COMPUTEAV_CONS) {
-		RETURN(CONSTRAINT);
+		if (reason_buf) {
+			PyObject *result = NULL;
+			result = Py_BuildValue("is", CONSTRAINT, reason_buf);
+			free(reason_buf);
+			return result;
+		}
+		RETURN(CONSTRAINT)
 	}
 
 	if (reason & SEPOL_COMPUTEAV_RBAC)

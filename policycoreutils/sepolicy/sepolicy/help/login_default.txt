@@ -1,0 +1,8 @@
+The Login Mapping Screen has a special Login user called __default__.  This record is used to setup the default login user for any login account that is not specified separately.
+
+
+If this is a desktop system you might want to specify the user_u or xguest_u user.  If this is a terminal server the guest_u user might be a good match.
+
+Then you would need to add the admin users or a Linux group with a different label. Perhaps as unconfined_u or staff_u.
+
+You could use %%wheel to indicate the wheel group.

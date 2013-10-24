@@ -1,0 +1,6 @@
+You are viewing the booleans page for the application domain.
+
+
+SELinux Policy writers have written booleans, if-than-else rules, into the policy. This allows the administrator to change the way SELinux enforces policy on an application. The administrator can tighten or loosen the SELinux policy based on his needs.
+
+You can use the 'Filter Text Entry' to search for appropriate booleans.  The Show Modified Only toggle, will show the booleans that your system has customized.

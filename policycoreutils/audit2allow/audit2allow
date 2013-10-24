@@ -1,7 +1,8 @@
 #! /usr/bin/python -Es
 # Authors: Karl MacMillan <kmacmillan@mentalrootkit.com>
+# Authors: Dan Walsh <dwalsh@redhat.com>
 #
-# Copyright (C) 2006-2007  Red Hat
+# Copyright (C) 2006-2013  Red Hat
 # see file 'COPYING' for use and warranty information
 #
 # This program is free software; you can redistribute it and/or
@@ -18,7 +19,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 
-import sys
+import sys, os
 
 import sepolgen.audit as audit
 import sepolgen.policygen as policygen
@@ -29,6 +30,8 @@ import sepolgen.defaults as defaults
 import sepolgen.module as module
 from sepolgen.sepolgeni18n import _
 import selinux.audit2why as audit2why
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 class AuditToPolicy:
     VERSION = "%prog .1"
@@ -80,8 +83,7 @@ class AuditToPolicy:
         parser.add_option("--interface-info", dest="interface_info", help="file name of interface information")
         parser.add_option("--debug", dest="debug", action="store_true", default=False,
                           help="leave generated modules for -M")
-
-        parser.add_option("-w", "--why", dest="audit2why",  action="store_true", default=False,
+        parser.add_option("-w", "--why", dest="audit2why",  action="store_true", default=(os.path.basename(sys.argv[0])=="audit2why"),
                           help="Translates SELinux audit messages into a description of why the access was denied")
 
         options, args = parser.parse_args()
@@ -267,12 +269,10 @@ class AuditToPolicy:
                     continue
 
                 if rc == audit2why.CONSTRAINT:
-                    print "\t\tPolicy constraint violation.\n"
-                    print "\t\tMay require adding a type attribute to the domain or type to satisfy the constraint.\n"
-                    print "\t\tConstraints are defined in the policy sources in policy/constraints (general), policy/mcs (MCS), and policy/mls (MLS).\n"
-                    for reason in data:
-                        print "\t\tNote: Possible cause is the source and target %s differ\n" % reason
-                    continue
+                    print #!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access.\n"
+                    print "#Constraint rule: \n\t" + data[0]
+                    for reason in data[1:]:
+                        print "#\tPossible cause is the source %s and target %s are different.\n\b" % reason
 
                 if rc == audit2why.RBAC:
                     print "\t\tMissing role allow rule.\n"
@@ -329,7 +329,7 @@ class AuditToPolicy:
                 g.set_module_name(self.__options.module)
 
             if self.__options.output:
-                fd = open(self.__options.output, "w")
+                fd = open(self.__options.output, "a")
             else:
                 fd = sys.stdout
             writer.write(g.get_module(), fd)
@@ -348,6 +348,9 @@ class AuditToPolicy:
         except KeyboardInterrupt:
             sys.exit(0)
         except ValueError, e:
+            print e
+            sys.exit(1)
+        except IOError, e:
             print e
             sys.exit(1)
 

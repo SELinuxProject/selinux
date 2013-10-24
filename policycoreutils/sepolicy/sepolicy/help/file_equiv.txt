@@ -1,0 +1,20 @@
+SELinux can either setup labeling directory using the Application/files screen, or you can setup file equivalence.
+
+
+File Equivalence allows an administrator to label entire directory trees as the same way as the Equivalence directory tree.
+
+Use Case 1:
+An administrator want to store his Apache root content in a location other then /var/www like /srv/www. He could define an equivalence between /srv/www and /var/www.
+
+libselinux reads the equivalence rules and does the substitution when ever the matchpathcon function is called.  Tools like restorecon/rpm/udev and others will all follow the substitution.  Using the example above when matchpathcon is handed /srv/www/cgi-bin/myscript.cgi, it substitutes /var/www for /svr/www and looks up the context of /var/www/cgi-bin/myscript.cgi.
+
+In the command line you could execute.
+
+# semanage fcontext -a -e /var/www /srv/www
+
+Another common case where you might want to use file equivalence, is if you put your users home directories in a location other then /home.
+
+If you setup an equivalence between /home and /export/home
+
+# matchpathcon /export/home/dwalsh/.ssh
+/export/home/dwalsh/.ssh    unconfined_u:object_r:home_ssh_t:s0

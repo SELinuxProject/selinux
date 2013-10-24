@@ -9,4 +9,4 @@ policy = Extension("sepolicy._policy",
                    sources=[ "policy.c", "info.c", "search.c"]
 )
 
-setup(name = "sepolicy", version="1.1", description="Python SELinux Policy Analyses bindings", author="Daniel Walsh", author_email="dwalsh@redhat.com", ext_modules=[policy], packages=["sepolicy", "sepolicy.templates"])
+setup(name = "sepolicy", version="1.1", description="Python SELinux Policy Analyses bindings", author="Daniel Walsh", author_email="dwalsh@redhat.com", ext_modules=[policy], packages=["sepolicy", "sepolicy.templates", "sepolicy.help"], package_data={'sepolicy':['*.glade'], 'sepolicy.help': ['*.txt', '*.png']})

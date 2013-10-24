@@ -37,20 +37,22 @@ The
 configuration file also controls what policy
 is active on the system.  SELinux allows for multiple policies to be
 installed on the system, but only one policy may be active at any
-given time.  At present, two kinds of SELinux policy exist: targeted
-and strict.  The targeted policy is designed as a policy where most
-processes operate without restrictions, and only specific services are
+given time.  At present, multiple kinds of SELinux policy exist: targeted,
+mls for example.  The targeted policy is designed as a policy where most
+user processes operate without restrictions, and only specific services are
 placed into distinct security domains that are confined by the policy.
 For example, the user would run in a completely unconfined domain
 while the named daemon or apache daemon would run in a specific domain
-tailored to its operation.  The strict policy is designed as a policy
-where all processes are partitioned into fine-grained security domains
-and confined by policy.  It is anticipated in the future that other
-policies will be created (Multi-Level Security for example).  You can
+tailored to its operation.  The MLS (Multi-Level Security) policy is designed
+as a policy where all processes are partitioned into fine-grained security
+domains and confined by policy.  MLS also supports the Bell And LaPadula model, where processes are not only confined by the type but also the level of the data.
+
+You can
 define which policy you will run by setting the
 .B SELINUXTYPE
 environment variable within
 .IR /etc/selinux/config .
+You must reboot and possibly relabel if you change the policy type to have it take effect on the system.
 The corresponding
 policy configuration for each such policy must be installed in the
 .I /etc/selinux/{SELINUXTYPE}/
@@ -58,7 +60,7 @@ directories.
 
 A given SELinux policy can be customized further based on a set of
 compile-time tunable options and a set of runtime policy booleans.
-.B \%system\-config\-securitylevel
+.B \%system\-config\-selinux
 allows customization of these booleans and tunables.
 
 Many domains that are protected by SELinux also include SELinux man pages explaining how to customize their policy.  
@@ -86,11 +88,13 @@ This manual page was written by Dan Walsh <dwalsh@redhat.com>.
 .nh
 .BR booleans (8),
 .BR setsebool (8),
-.BR selinuxenabled (8),
+.BR sepolicy (8),
+.BR system-config-selinux (8),
 .BR togglesebool (8),
 .BR restorecon (8),
+.BR fixfiles (8),
 .BR setfiles (8),
-.BR semange (8),
+.BR semanage (8),
 .BR sepolicy(8)
 
 Every confined service on the system has a man page in the following format:

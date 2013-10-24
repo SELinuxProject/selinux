@@ -1,0 +1,10 @@
+This screen shows the SELinux process 'types' which will transition to the '%(APP)s' type when executing the 'Commands File Paths'.
+
+
+Under SELinux, when a process running with a 'type' attempts to execute an executable, one of three things can happen.
+
+1.  The process can be prevented from running the executable.
+2.  The executable executes with the same label as parent.
+3.  The executable 'transitions' to a new 'type' based on policy.
+
+This screen shows the executables that transition to another domain when '%(APP)s' executes them, and the 'SELinux Application Type' of the newly created process.

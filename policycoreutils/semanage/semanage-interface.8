@@ -1,0 +1,63 @@
+.TH "semanage-interface" "8" "20130617" "" ""
+.SH "NAME"
+.B semanage interface\- SELinux Policy Management network interface tool
+.SH "SYNOPSIS"
+.B semanage interface [\-h] [\-n] [\-N] [\-s STORE] [ \-\-add \-t TYPE \-r RANGE interface | \-\-delete interface | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-t TYPE \-r RANGE interface ]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of
+SELinux policy without requiring modification to or recompilation
+from policy sources.  semanage interface controls the labels assigned to network interfaces.
+
+.SH "OPTIONS"
+.TP
+.I \-h, \-\-help
+show this help message and exit
+.TP
+.I  \-n, \-\-noheading
+Do not print heading when listing the specified object type
+.TP
+.I  \-N, \-\-noreload
+Do not reload policy after commit
+.TP
+.I  \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+.TP
+.I  \-C, \-\-locallist
+List local customizations
+.TP
+.I  \-a, \-\-add
+Add a record of the specified object type
+.TP
+.I  \-d, \-\-delete
+Delete a record of the specified object type
+.TP
+.I  \-m, \-\-modify
+Modify a record of the specified object type
+.TP
+.I  \-l, \-\-list
+List records of the specified object type
+.TP
+.I  \-E, \-\-extract
+Extract customizable commands, for use within a transaction
+.TP
+.I  \-D, \-\-deleteall
+Remove all local customizations
+.TP
+.I  \-t TYPE, \-\-type TYPE
+SELinux type for the object
+.TP
+.I \-r RANGE, \-\-range RANGE
+MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login mapping defaults to the SELinux user record range. SELinux Range for SELinux user defaults to s0.
+
+.SH EXAMPLE
+.nf
+list all interface defitions
+# semanage interface -l
+
+.SH "SEE ALSO"
+.B selinux (8),
+.B semanage (8)
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>

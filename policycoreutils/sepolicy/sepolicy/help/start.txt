@@ -1,0 +1,6 @@
+You must 'Select' the initial screen to view for SELinux Configuration.
+
+
+This application allows you to browse SELinux confinement per application.  You can enter the name of the application to see how SELinux confines it, or you could enter the SELinux name for the running process.
+
+Alternatively you can select to manage SELinux on the system, lockdown the system via SELinux.   You can also manage confined users and confined user mappings.  Finally you could setup File System Labeling equivalence.

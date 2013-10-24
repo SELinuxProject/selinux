@@ -1,0 +1,4 @@
+This screen shows application types that can transition to a process running with the '%(APP)s' type.
+
+
+In SELinux these are called entrypoints.  SELinux controls the executable files that can be used as an entrypoint to an confined domain.  If you have an alternate executable that you would like to run in the '%(APP)s' domain, you need to change the executable file type to the entrypoint type.

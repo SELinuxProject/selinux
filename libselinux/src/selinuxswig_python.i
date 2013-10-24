@@ -10,6 +10,10 @@
 
 import shutil, os, stat
 
+DISABLED = -1
+PERMISSIVE = 0
+ENFORCING = 1
+
 def restorecon(path, recursive=False):
     """ Restore SELinux context on a given path """
 
@@ -72,6 +76,10 @@ def install(src, dest):
 
 %typemap(in,numinputs=0) security_id_t *(security_id_t temp) {
   $1 = &temp;
+}
+
+%typemap(in, numinputs=0) void *(char *temp=NULL) {
+	$1 = temp;
 }
 
 /* Makes security_compute_user() return a Python list of contexts */

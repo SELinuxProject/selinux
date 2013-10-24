@@ -5,7 +5,7 @@ sepolicy-interface \- Print interface information based on the installed SELinux
 .SH "SYNOPSIS"
 
 .br
-.B sepolicy interface [\-h] [\-a | \-u | \-l ]
+.B sepolicy interface  [\-h] [\-c] [\-v] [\-a | \-u | \-l | \-i INTERFACE [INTERFACE ... ]]
 
 .SH "DESCRIPTION"
 Use sepolicy interface to print interfaces information based on SELinux Policy.
@@ -15,14 +15,23 @@ Use sepolicy interface to print interfaces information based on SELinux Policy.
 .I                \-a, \-\-list_admin
 List all domains with admin interface
 .TP
+.I                \-c, \-\-compile
+Test compile of interfaces
+.TP
 .I                \-h, \-\-help       
 Display help message
+.TP
+.I                \-i, \-\-interface
+Interface(s) to be displayed
 .TP
 .I                \-l, \-\-list
 List all interfaces
 .TP
 .I                \-u, \-\-list_user
 List all domains with SELinux user role interface
+.TP
+.I                \-v, \-\-verbose
+Display extended information about the interface including parameters and desctiprion if available.
 
 .SH "AUTHOR"
 This man page was written by Daniel Walsh <dwalsh@redhat.com>

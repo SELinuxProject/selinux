@@ -1234,6 +1234,10 @@ static int semanage_install_active(semanage_handle_t * sh)
 
 	retval = 0;
       cleanup:
+	(void) unlink(active_kernel);
+	if (symlink(store_pol, active_kernel) < 0) {
+		ERR(sh, "Unable to create sybolic link from %s to %s error code %d.", active_kernel, store_pol, r);
+	}
 	free(storepath);
 	return retval;
 }

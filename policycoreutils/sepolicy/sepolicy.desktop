@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=SELinux Policy Management Tool
+Comment=Generate SELinux policy modules
+Icon=system-config-selinux
+Exec=/usr/bin/sepolicy gui
+Type=Application
+Terminal=false
+Categories=System;Security;
+X-Desktop-File-Install-Version=0.2
+Keywords=policy;security;selinux;avc;permission;mac;

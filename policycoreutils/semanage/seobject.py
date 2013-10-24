@@ -1,5 +1,5 @@
 #! /usr/bin/python -Es
-# Copyright (C) 2005-2011 Red Hat 
+# Copyright (C) 2005-2013 Red Hat
 # see file 'COPYING' for use and warranty information
 #
 # semanage is a tool for managing SELinux configuration files
@@ -32,32 +32,47 @@ from IPy import IP
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
-try:
-       gettext.install(PROGNAME, localedir = "/usr/share/locale", unicode = 1)
-except IOError:
-       import __builtin__
-       __builtin__.__dict__['_'] = unicode
+
+import gettext
+translation=gettext.translation(PROGNAME, localedir = "/usr/share/locale", fallback=True)
+_=translation.ugettext
 
 import syslog
 
 file_types = {}
 file_types[""] = SEMANAGE_FCONTEXT_ALL;
 file_types["all files"] = SEMANAGE_FCONTEXT_ALL;
-file_types["--"] = SEMANAGE_FCONTEXT_REG;
+file_types["a"] = SEMANAGE_FCONTEXT_ALL;
 file_types["regular file"] = SEMANAGE_FCONTEXT_REG;
+file_types["--"] = SEMANAGE_FCONTEXT_REG;
+file_types["f"] = SEMANAGE_FCONTEXT_REG;
 file_types["-d"] = SEMANAGE_FCONTEXT_DIR;
 file_types["directory"] = SEMANAGE_FCONTEXT_DIR;
+file_types["d"] = SEMANAGE_FCONTEXT_DIR;
 file_types["-c"] = SEMANAGE_FCONTEXT_CHAR;
 file_types["character device"] = SEMANAGE_FCONTEXT_CHAR;
+file_types["c"] = SEMANAGE_FCONTEXT_CHAR;
 file_types["-b"] = SEMANAGE_FCONTEXT_BLOCK;
 file_types["block device"] = SEMANAGE_FCONTEXT_BLOCK;
+file_types["b"] = SEMANAGE_FCONTEXT_BLOCK;
 file_types["-s"] = SEMANAGE_FCONTEXT_SOCK;
 file_types["socket"] = SEMANAGE_FCONTEXT_SOCK;
+file_types["s"] = SEMANAGE_FCONTEXT_SOCK;
 file_types["-l"] = SEMANAGE_FCONTEXT_LINK;
+file_types["l"] = SEMANAGE_FCONTEXT_LINK;
 file_types["symbolic link"] = SEMANAGE_FCONTEXT_LINK;
+file_types["p"] = SEMANAGE_FCONTEXT_PIPE;
 file_types["-p"] = SEMANAGE_FCONTEXT_PIPE;
 file_types["named pipe"] = SEMANAGE_FCONTEXT_PIPE;
 
+file_type_str_to_option = { "all files": "a",
+                            "regular file":"f",
+                            "directory":"d",
+                            "character device":"c",
+                            "block device":"b",
+                            "socket file":"s",
+                            "symbolic link":"l",
+                            "named pipe":"p" }
 try:
 	import audit
 	class logger:
@@ -270,6 +285,12 @@ class moduleRecords(semanageRecords):
                       l.append((semanage_module_get_name(mod), semanage_module_get_version(mod), semanage_module_get_enabled(mod)))
                return l
 
+        def customized(self):
+		all = self.get_all()
+		if len(all) == 0:
+			return
+                return map(lambda x: "-d %s" % x[0], filter(lambda t: t[2] == 0, all))
+
 	def list(self, heading = 1, locallist = 0):
 		all = self.get_all()
 		if len(all) == 0:
@@ -281,10 +302,14 @@ class moduleRecords(semanageRecords):
                        if t[2] == 0:
                               disabled = _("Disabled")
                        else:
+                              if locallist:
+                                      continue
                               disabled = ""
                        print "%-25s%-10s%s" % (t[0], t[1], disabled)
 
 	def add(self, file):
+               if not os.path.exists(file):
+                       raise ValueError(_("Module does not exists %s ") % file)
                rc = semanage_module_install_file(self.sh, file);
                if rc >= 0:
                       self.commit()
@@ -323,6 +348,11 @@ class moduleRecords(semanageRecords):
                              raise ValueError(_("Could not remove module %s (remove failed)") % m)
 
                self.commit()
+
+	def deleteall(self):
+                l = map(lambda x: x[0], filter(lambda t: t[2] == 0, self.get_all()))
+                for m in l:
+                        self.enable(m)
 
 class dontauditClass(semanageRecords):
 	def __init__(self, store):
@@ -928,7 +958,7 @@ class seluserRecords(semanageRecords):
                 keys = ddict.keys()
                 keys.sort()
                 for k in keys:
-                       l.append("-a -r %s -R '%s' %s" % (ddict[k][2], ddict[k][3], k))
+                       l.append("-a -l %s -r %s -R '%s' %s" % (ddict[k][1], ddict[k][2], ddict[k][3], k))
                 return l
 
 	def list(self, heading = 1, locallist = 0):
@@ -1643,6 +1673,7 @@ class fcontextRecords(semanageRecords):
 	try:
 		valid_types =  sepolicy.info(sepolicy.ATTRIBUTE,"file_type")[0]["types"]
 		valid_types +=  sepolicy.info(sepolicy.ATTRIBUTE,"device_node")[0]["types"]
+                valid_types.append("<<none>>")
 	except RuntimeError:
 		valid_types = []
 
@@ -1696,6 +1727,12 @@ class fcontextRecords(semanageRecords):
 
         def add_equal(self, target, substitute):
                 self.begin()
+                if target != "/" and target[-1] == "/":
+                        raise ValueError(_("Target %s is not valid. Target is not allowed to end with '/'") % target )
+
+                if substitute != "/" and substitute[-1] == "/":
+                       raise ValueError(_("Substiture %s is not valid. Substitute is not allowed to end with '/'") % substitute )
+
                 if target in self.equiv.keys():
                        raise ValueError(_("Equivalence class for %s already exists") % target)
                 self.validate(target)
@@ -1751,8 +1788,14 @@ class fcontextRecords(semanageRecords):
 				       raise ValueError(_("File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead") % (target, i, fdict[i], t))
 
 
-	def __add(self, target, type, ftype = "", serange = "", seuser = "system_u"):
+	def __add(self, target, type, ftype = "", serange = "s0", seuser = "system_u"):
                 self.validate(target)
+
+                if seuser == "":
+                        seuser = "system_u"
+
+                if serange == "":
+                        serange = "s0"
 
 		if is_mls_enabled == 1:
                        serange = untranslate(serange)
@@ -1966,11 +2009,11 @@ class fcontextRecords(semanageRecords):
                keys.sort()
                for k in keys:
                       if fcon_dict[k]:
-                             l.append("-a -f '%s' -t %s '%s'" % (k[1], fcon_dict[k][2], k[0]))
+                             l.append("-a -f %s -t %s '%s'" % (file_type_str_to_option[k[1]], fcon_dict[k][2], k[0]))
 
 	       if len(self.equiv):
                       for target in self.equiv.keys():
-			     l.append("-a -e %s %s" % (target, self.equiv[target]))
+			     l.append("-a -e %s %s" % (self.equiv[target], target))
                return l
 
 	def list(self, heading = 1, locallist = 0 ):
@@ -2156,7 +2199,7 @@ class booleanRecords(semanageRecords):
                keys.sort()
                for k in keys:
                       if ddict[k]:
-                             l.append("-%s %s" %  (ddict[k][2], k))
+                             l.append("-m -%s %s" %  (ddict[k][2], k))
                return l
 
 	def list(self, heading = True, locallist = False, use_file = False):

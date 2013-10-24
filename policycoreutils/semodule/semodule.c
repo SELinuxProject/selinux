@@ -19,6 +19,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <libgen.h>
 
 #include <semanage/modules.h>
 
@@ -284,8 +285,12 @@ int main(int argc, char *argv[])
 	int i, commit = 0;
 	int result;
 	int status = EXIT_FAILURE;
-
+	char *genhomedirconargv[] = { "genhomedircon", "-B", "-n" };
 	create_signal_handlers();
+	if (strcmp(basename(argv[0]), "genhomedircon") == 0) {
+		argc = 3;
+		argv=genhomedirconargv;
+	}
 	parse_command_line(argc, argv);
 
 	if (build)

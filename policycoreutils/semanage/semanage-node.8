@@ -1,0 +1,58 @@
+.TH "semanage-node" "8" "20130617" "" ""
+.SH "NAME"
+.B semanage node\- SELinux Policy Management node mapping tool
+.SH "SYNOPSIS"
+.B semanage node [\-h] [\-n] [\-N] [\-s STORE] [ \-\-add \-M NETMASK \-p PROTOCOL \-t TYPE \-r RANGE node | \-\-delete \-M NETMASK \-p PROTOCOL node | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-M NETMASK \-p PROTOCOL \-t TYPE \-r RANGE node ]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of
+SELinux policy without requiring modification to or recompilation
+from policy sources.  semanage controls the ipaddress to node type definitions.
+
+.SH "OPTIONS"
+.TP
+.I \-h, \-\-help
+show this help message and exit
+.TP
+.I   \-n, \-\-noheading
+Do not print heading when listing the specified object type
+.TP
+.I   \-N, \-\-noreload
+Do not reload policy after commit
+.TP
+.I   \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+.TP
+.I   \-C, \-\-locallist
+List local customizations
+.TP
+.I   \-a, \-\-add
+Add a record of the specified object type
+.TP
+.I   \-d, \-\-delete
+Delete a record of the specified object type
+.TP
+.I   \-m, \-\-modify
+Modify a record of the specified object type
+.TP
+.I   \-l, \-\-list
+List records of the specified object type
+.TP
+.I   \-E, \-\-extract
+Extract customizable commands, for use within a transaction
+.TP
+.I   \-D, \-\-deleteall
+Remove all local customizations
+.TP
+.I   \-M NETMASK, \-\-netmask NETMASK
+Network Mask
+.TP
+.I   \-t TYPE, \-\-type TYPE
+SELinux type for the object
+.TP
+.I   \-r RANGE, \-\-range RANGE
+MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login mapping defaults to the SELinux user record range. SELinux Range for SELinux user defaults to s0.
+.TP
+.I   \-p PROTO, \-\-proto PROTO
+
+Protocol for the specified port (tcp|udp) or internet protocol version for the specified node (ipv4|ipv6).

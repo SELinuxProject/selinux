@@ -51,12 +51,12 @@ class TestMatchList(unittest.TestCase):
         a = matching.Match()
         a.dist = 100
         ml.append(a)
-        self.assertEqual(len(ml), 1)
+        self.assertEqual(len(ml), 2)
 
         a = matching.Match()
         a.dist = 200
         ml.append(a)
-        self.assertEqual(len(ml), 1)
+        self.assertEqual(len(ml), 2)
         self.assertEqual(len(ml.bastards), 1)
 
         ml.allow_info_dir_change = False
@@ -64,7 +64,7 @@ class TestMatchList(unittest.TestCase):
         a.dist = 0
         a.info_dir_change = True
         ml.append(a)
-        self.assertEqual(len(ml), 1)
+        self.assertEqual(len(ml), 3)
         self.assertEqual(len(ml.bastards), 2)
 
     def test_sort(self):

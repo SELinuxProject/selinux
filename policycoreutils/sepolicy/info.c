@@ -78,6 +78,58 @@ static int py_insert_bool(PyObject *dict, const char *name, int value)
 }
 
 /**
+ * Get the alias of a type.
+ *
+ * @param fp Reference to a file to which to get type information
+ * @param type_datum Reference to sepol type_datum
+ * @param policydb Reference to a policy
+ * attributes
+ */
+static PyObject* get_type_aliases(const qpol_type_t * type_datum, const apol_policy_t * policydb)
+{
+	qpol_iterator_t *iter = NULL;
+	size_t alias_size;
+	unsigned char isattr, isalias;
+	const char *type_name = NULL;
+	const char *alias_name;
+	int error = 0;
+	qpol_policy_t *q = apol_policy_get_qpol(policydb);
+	PyObject *list = PyList_New(0);
+	if (!list) goto err;
+
+	if (qpol_type_get_name(q, type_datum, &type_name))
+		goto cleanup;
+	if (qpol_type_get_isattr(q, type_datum, &isattr))
+		goto cleanup;
+	if (qpol_type_get_isalias(q, type_datum, &isalias))
+		goto cleanup;
+
+	if (qpol_type_get_alias_iter(q, type_datum, &iter))
+		goto cleanup;
+	if (qpol_iterator_get_size(iter, &alias_size))
+		goto cleanup;
+	if (alias_size >  0) {
+		for (; !qpol_iterator_end(iter); qpol_iterator_next(iter)) {
+			if (qpol_iterator_get_item(iter, (void **)&alias_name))
+				goto err;
+			if (py_append_string(list, alias_name))
+				goto err;
+		}
+	}
+	goto cleanup;
+
+err:
+	error = errno;
+	PyErr_SetString(PyExc_RuntimeError,strerror(errno));
+	py_decref(list); list = NULL;
+
+cleanup:
+	qpol_iterator_destroy(&iter);
+	errno = error;
+	return list;
+}
+
+/**
  * Gets a textual representation of an attribute, and 
  * all of that attribute's types.
  *
@@ -295,6 +347,11 @@ static PyObject* get_type( const qpol_type_t * type_datum, const apol_policy_t *
 		Py_DECREF(obj);
 		if (rt) goto err;
 	}
+
+	obj = get_type_aliases(type_datum, policydb);
+	rt = py_insert_obj(dict, "aliases", obj);
+	Py_DECREF(obj);
+	if (rt) goto err;
 	goto cleanup;
 
 err:
@@ -827,16 +884,14 @@ static PyObject*  get_ports(const char *num, const apol_policy_t * policydb)
 		if (py_insert_string(dict, "type", type))
 			goto err;
 
-		if((range = apol_context_get_range(c)) == NULL) {
-			goto err;
+		if((range = apol_context_get_range(c)) != NULL) {
+			range_str = apol_mls_range_render(policydb, range);
+			if (range_str == NULL) {
+				goto err;
+			}
+			if (py_insert_string(dict, "range", range_str))
+				goto err;
 		}
-			
-		range_str = apol_mls_range_render(policydb, range);
-		if (range_str == NULL) {
-			goto err;
-		}
-		if (py_insert_string(dict, "range", range_str))
-			goto err;
 
 		if (py_insert_string(dict, "protocol", proto_str))
 			goto err;

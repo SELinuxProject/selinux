@@ -45,18 +45,18 @@ void usage(const char *const name)
 {
 	if (iamrestorecon) {
 		fprintf(stderr,
-			"usage:  %s [-iFnprRv0] [-e excludedir] [-o filename] pathname...\n"
-			"usage:  %s [-iFnprRv0] [-e excludedir] [-o filename] -f filename\n",
+			"usage:  %s [-iFnprRv0] [-e excludedir] pathname...\n"
+			"usage:  %s [-iFnprRv0] [-e excludedir] -f filename\n",
 			name, name);
 	} else {
 		fprintf(stderr,
-			"usage:  %s [-dilnpqvFW] [-e excludedir] [-o filename] [-r alt_root_path] spec_file pathname...\n"
-			"usage:  %s [-dilnpqvFW] [-e excludedir] [-o filename] [-r alt_root_path] spec_file -f filename\n"
-			"usage:  %s -s [-dilnpqvFW] [-o filename] spec_file\n"
+			"usage:  %s [-dilnpqvFW] [-e excludedir] [-r alt_root_path] spec_file pathname...\n"
+			"usage:  %s [-dilnpqvFW] [-e excludedir] [-r alt_root_path] spec_file -f filename\n"
+			"usage:  %s -s [-dilnpqvFW] spec_file\n"
 			"usage:  %s -c policyfile spec_file\n",
 			name, name, name, name);
 	}
-	exit(1);
+	exit(-1);
 }
 
 static int nerr = 0;
@@ -66,7 +66,7 @@ void inc_err()
 	nerr++;
 	if (nerr > ABORT_ON_ERRORS - 1 && !r_opts.debug) {
 		fprintf(stderr, "Exiting after %d errors.\n", ABORT_ON_ERRORS);
-		exit(1);
+		exit(-1);
 	}
 }
 
@@ -80,7 +80,7 @@ void set_rootpath(const char *arg)
 	if (NULL == r_opts.rootpath) {
 		fprintf(stderr, "%s:  insufficient memory for r_opts.rootpath\n",
 			r_opts.progname);
-		exit(1);
+		exit(-1);
 	}
 
 	/* trim trailing /, if present */
@@ -98,7 +98,7 @@ int canoncon(char **contextp)
 	if (policyfile) {
 		if (sepol_check_context(context) < 0) {
 			fprintf(stderr, "invalid context %s\n", context);
-			exit(1);
+			exit(-1);
 		}
 	} else if (security_canonicalize_context_raw(context, &tmpcon) == 0) {
 		free(context);
@@ -175,7 +175,7 @@ int main(int argc, char **argv)
 	r_opts.progname = strdup(argv[0]);
 	if (!r_opts.progname) {
 		fprintf(stderr, "%s:  Out of memory!\n", argv[0]);
-		exit(1);
+		exit(-1);
 	}
 	base = basename(r_opts.progname);
 	
@@ -242,7 +242,7 @@ int main(int argc, char **argv)
 					fprintf(stderr,
 						"Error opening %s: %s\n",
 						policyfile, strerror(errno));
-					exit(1);
+					exit(-1);
 				}
 				__fsetlocking(policystream,
 					      FSETLOCKING_BYCALLER);
@@ -252,7 +252,7 @@ int main(int argc, char **argv)
 					fprintf(stderr,
 						"Error reading policy %s: %s\n",
 						policyfile, strerror(errno));
-					exit(1);
+					exit(-1);
 				}
 				fclose(policystream);
 
@@ -268,7 +268,7 @@ int main(int argc, char **argv)
 				break;
 			}
 			if (add_exclude(optarg))
-				exit(1);
+				exit(-1);
 			break;
 		case 'f':
 			use_input_file = 1;
@@ -318,13 +318,13 @@ int main(int argc, char **argv)
 			if (optind + 1 >= argc) {
 				fprintf(stderr, "usage:  %s -r rootpath\n",
 					argv[0]);
-				exit(1);
+				exit(-1);
 			}
 			if (NULL != r_opts.rootpath) {
 				fprintf(stderr,
 					"%s: only one -r can be specified\n",
 					argv[0]);
-				exit(1);
+				exit(-1);
 			}
 			set_rootpath(argv[optind++]);
 			break;
@@ -337,7 +337,7 @@ int main(int argc, char **argv)
 			if (r_opts.progress) {
 				fprintf(stderr,
 					"Progress and Verbose mutually exclusive\n");
-				exit(1);
+				exit(-1);
 			}
 			r_opts.verbose++;
 			break;
@@ -391,12 +391,12 @@ int main(int argc, char **argv)
 
 		if (stat(argv[optind], &sb) < 0) {
 			perror(argv[optind]);
-			exit(1);
+			exit(-1);
 		}
 		if (!S_ISREG(sb.st_mode)) {
 			fprintf(stderr, "%s:  spec file %s is not a regular file.\n",
 				argv[0], argv[optind]);
-			exit(1);
+			exit(-1);
 		}
 
 		altpath = argv[optind];
@@ -409,7 +409,7 @@ int main(int argc, char **argv)
 	r_opts.selabel_opt_path = altpath;
 
 	if (nerr)
-		exit(1);
+		exit(-1);
 
 	restore_init(&r_opts);
 	if (use_input_file) {
@@ -452,5 +452,5 @@ int main(int argc, char **argv)
 
 	if (r_opts.progress && r_opts.count >= STAR_COUNT)
 		printf("\n");
-	exit(errors);
+	exit(errors ? -1: 0);
 }

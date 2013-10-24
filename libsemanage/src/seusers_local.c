@@ -8,27 +8,177 @@ typedef struct semanage_seuser record_t;
 
 #include <sepol/policydb.h>
 #include <sepol/context.h>
+#include <libaudit.h>
+#include <errno.h>
 #include "user_internal.h"
 #include "seuser_internal.h"
 #include "handle.h"
 #include "database.h"
 #include "debug.h"
+#include "string.h"
+#include <stdlib.h>
+
+static char *semanage_user_roles(semanage_handle_t * handle, const char *sename) {
+	char *roles = NULL;
+	unsigned int num_roles;
+	size_t i;
+	size_t size = 0;
+	const char **roles_arr;
+	semanage_user_key_t *key = NULL;
+	semanage_user_t * user;
+	if (semanage_user_key_create(handle, sename, &key) >= 0) {
+		if (semanage_user_query(handle, key, &user) >= 0) {
+			if (semanage_user_get_roles(handle,
+						    user,
+						    &roles_arr,
+						    &num_roles) >= 0) {
+				for (i = 0; i<num_roles; i++) {
+					size += (strlen(roles_arr[i]) + 1);
+				}
+				roles = malloc(size);
+				if (roles) {
+					strcpy(roles,roles_arr[0]);
+					for (i = 1; i<num_roles; i++) {
+						strcat(roles,",");
+						strcat(roles,roles_arr[i]);
+					}
+				}
+			}
+			semanage_user_free(user);
+		}
+		semanage_user_key_free(key);
+	}
+	return roles;
+}
+
+static int semanage_seuser_audit(semanage_handle_t * handle,
+			  const semanage_seuser_t * seuser,
+			  const semanage_seuser_t * previous,
+			  int audit_type,
+			  int success) {
+	const char *name = NULL;
+	const char *sename = NULL;
+	char *roles = NULL;
+	const char *mls = NULL;
+	const char *psename = NULL;
+	const char *pmls = NULL;
+	char *proles = NULL;
+	char msg[1024];
+	const char *sep = "-";
+	int rc = -1;
+	strcpy(msg, "login");
+	if (seuser) {
+		name = semanage_seuser_get_name(seuser);
+		sename = semanage_seuser_get_sename(seuser);
+		mls = semanage_seuser_get_mlsrange(seuser);
+		roles = semanage_user_roles(handle, sename);
+	}
+	if (previous) {
+		psename = semanage_seuser_get_sename(previous);
+		pmls = semanage_seuser_get_mlsrange(previous);
+		proles = semanage_user_roles(handle, psename);
+	}
+	if (audit_type != AUDIT_ROLE_REMOVE) {
+		if (sename && (!psename || strcmp(psename, sename) != 0)) {
+			strcat(msg,sep);
+			strcat(msg,"sename");
+			sep = ",";
+		}
+		if (roles && (!proles || strcmp(proles, roles) != 0)) {
+			strcat(msg,sep);
+			strcat(msg,"role");
+			sep = ",";
+		}
+		if (mls && (!pmls || strcmp(pmls, mls) != 0)) {
+			strcat(msg,sep);
+			strcat(msg,"range");
+		}
+	}
+
+	int fd = audit_open();
+	if (fd < 0)
+	{
+		/* If kernel doesn't support audit, bail out */
+		if (errno == EINVAL || errno == EPROTONOSUPPORT || errno == EAFNOSUPPORT) {
+			rc = 0;
+			goto err;
+		}
+		rc = fd;
+		goto err;
+	}
+	audit_log_semanage_message(fd, audit_type, NULL, msg, name, 0, sename, roles, mls, psename, proles, pmls, NULL, NULL,NULL, success);
+	rc = 0;
+err:
+	audit_close(fd);
+	free(roles);
+	free(proles);
+	return rc;
+}
 
 int semanage_seuser_modify_local(semanage_handle_t * handle,
 				 const semanage_seuser_key_t * key,
 				 const semanage_seuser_t * data)
 {
-
+	int rc;
+	void *callback = (void *) handle->msg_callback;
 	dbase_config_t *dconfig = semanage_seuser_dbase_local(handle);
-	return dbase_modify(handle, dconfig, key, data);
+	const char *sename = semanage_seuser_get_sename(data);
+	const char *mls_range = semanage_seuser_get_mlsrange(data);
+	semanage_seuser_t *previous = NULL;
+	semanage_seuser_t *new = NULL;
+
+	if (!sename) {
+		errno=EINVAL;
+		return -1;
+	}
+	if (semanage_seuser_clone(handle, data, &new) < 0) {
+		goto err;
+	}
+
+	if (!mls_range && semanage_mls_enabled(handle)) {
+		semanage_user_key_t *ukey = NULL;
+		semanage_user_t *u = NULL;
+		rc = semanage_user_key_create(handle, sename, &ukey);
+		if (rc < 0)
+			goto err;
+
+		rc = semanage_user_query(handle, ukey, &u);
+		semanage_user_key_free(ukey);
+		if (rc >= 0 ) {
+			mls_range = semanage_user_get_mlsrange(u);
+			rc = semanage_seuser_set_mlsrange(handle, new, mls_range);
+			semanage_user_free(u);
+		}
+		if (rc < 0)
+			goto err;
+	}
+
+	handle->msg_callback = NULL;
+	(void) semanage_seuser_query(handle, key, &previous);
+	handle->msg_callback = callback;
+	rc = dbase_modify(handle, dconfig, key, new);
+	if (semanage_seuser_audit(handle, new, previous, AUDIT_ROLE_ASSIGN, rc == 0) < 0)
+		rc = -1;
+err:
+	if (previous)
+		semanage_seuser_free(previous);
+	semanage_seuser_free(new);
+	return rc;
 }
 
 int semanage_seuser_del_local(semanage_handle_t * handle,
 			      const semanage_seuser_key_t * key)
 {
-
+	int rc;
+	semanage_seuser_t *seuser = NULL;
 	dbase_config_t *dconfig = semanage_seuser_dbase_local(handle);
-	return dbase_del(handle, dconfig, key);
+	rc = dbase_del(handle, dconfig, key);
+	semanage_seuser_query(handle, key, &seuser);
+	if (semanage_seuser_audit(handle, NULL, seuser, AUDIT_ROLE_REMOVE, rc == 0) < 0)
+		rc = -1;
+	if (seuser)
+		semanage_seuser_free(seuser);
+	return rc;
 }
 
 int semanage_seuser_query_local(semanage_handle_t * handle,

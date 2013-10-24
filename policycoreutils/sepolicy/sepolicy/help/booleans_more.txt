@@ -1,0 +1,4 @@
+You are viewing the booleans page for the application domain.
+
+
+Selecting the 'More...' button will open a dialog containing the SELinux allow rules that are turned on by the selected boolean.

@@ -1,0 +1,4 @@
+The Lockdown Screen allows you to tighten the SELinux Security on your machine.
+
+
+These lockdown measures are recommended, but can cause SELinux issues.  If you have a machine you truly want to secure, and are confident in your understanding of SELinux you should try some of these options.

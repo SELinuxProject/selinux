@@ -4,7 +4,7 @@ setsebool \- set SELinux boolean value
 
 .SH "SYNOPSIS"
 .B setsebool
-.I "[ \-PN ] boolean value | bool1=val1 bool2=val2 ..."
+.I "[ \-PNV ] boolean value | bool1=val1 bool2=val2 ..."
 
 .SH "DESCRIPTION"
 .B setsebool 
@@ -21,9 +21,12 @@ the policy file on disk. So they will be persistent across reboots.
 If the \-N option is given, the policy on disk is not reloaded into the kernel.
 
 
+If the \-V option is given, verbose error messages will be printed from semanage libraries.
+
+
 .SH AUTHOR	
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
 The program was written by Tresys Technology.
 
 .SH "SEE ALSO"
-getsebool(8), booleans(8), togglesebool(8)
+getsebool(8), booleans(8), togglesebool(8), semanage(8)

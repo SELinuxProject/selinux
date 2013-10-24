@@ -1,0 +1,13 @@
+SELinux Systems can boot in three different modes.
+
+
+* Enforcing mode (Default)
+  - SELinux security policy is enforced.
+* Permissive
+  - SELinux prints warnings instead of enforcing.
+* Disabled
+  - No SELinux policy is loaded, SELinux does not run.
+
+You can use this screen to change the enforcing mode.
+
+Note if you disable SELinux, you will need to to reboot, to turn it off.  Also the next time you turn SELinux on, a full system relabel will be performed.

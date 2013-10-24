@@ -48,7 +48,7 @@ interface(`TEMPLATETYPE_systemctl',`
 	')
 
 	systemd_exec_systemctl($1)
-        systemd_read_fifo_file_password_run($1)
+        systemd_read_fifo_file_passwd_run($1)
 	allow $1 TEMPLATETYPE_unit_file_t:file read_file_perms;
 	allow $1 TEMPLATETYPE_unit_file_t:service manage_service_perms;
 

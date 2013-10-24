@@ -54,6 +54,7 @@ static const char *PATH="/org/selinux/Restorecond";
 static const char *INTERFACE="org.selinux.RestorecondIface";
 static const char *RULE="type='signal',interface='org.selinux.RestorecondIface'";
 
+static int local_lock_fd = -1;
 
 static DBusHandlerResult
 signal_filter (DBusConnection *connection  __attribute__ ((__unused__)), DBusMessage *message, void *user_data)
@@ -201,17 +202,18 @@ static int local_server() {
 			perror("asprintf");
 		return -1;
 	}
-	int fd = open(ptr, O_CREAT | O_WRONLY | O_NOFOLLOW | O_CLOEXEC, S_IRUSR | S_IWUSR);
+	local_lock_fd = open(ptr, O_CREAT | O_WRONLY | O_NOFOLLOW | O_CLOEXEC, S_IRUSR | S_IWUSR);
 	if (debug_mode)
 		g_warning ("Lock file: %s", ptr);
 
 	free(ptr);
-	if (fd < 0) {
+	if (local_lock_fd < 0) {
 		if (debug_mode)
 			perror("open");
 		return -1;
 	}
-	if (flock(fd, LOCK_EX | LOCK_NB) < 0) {
+	if (flock(local_lock_fd, LOCK_EX | LOCK_NB) < 0) {
+		close(local_lock_fd);
 		if (debug_mode)
 			perror("flock");
 		return -1;
@@ -224,6 +226,12 @@ static int local_server() {
 			     io_channel_callback, NULL, NULL);
 
 	return 0;
+}
+
+static void end_local_server(void) {
+	if (local_lock_fd >= 0)
+		close(local_lock_fd);
+	local_lock_fd = -1;
 }
 
 int server(int master_fd, const char *watch_file) {
@@ -253,6 +261,7 @@ int server(int master_fd, const char *watch_file) {
     g_main_loop_run (loop);
 
 end:
+    end_local_server();
     g_main_loop_unref (loop);
     return 0;
 }

@@ -1,0 +1,61 @@
+.TH "semanage-boolean" "8" "20130617" "" ""
+.SH "NAME"
+semanage boolean\- SELinux Policy Management boolean tool
+.SH "SYNOPSIS"
+.B semanage boolean [\-h] [\-n] [\-N] [\-s STORE] [  \-\-extract  | \-\-deleteall  | \-\-list [\-C] | \-\-modify ( \-\-on | \-\-off ) boolean  ]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of
+SELinux policy without requiring modification to or recompilation
+from policy sources.  semanage boolean command controls the settings of booleans in SELinux policy.  booleans are if\-then\-else rules written in SELinux Policy.  They can be used to customize the way that SELinux Policy rules effect a confined domain.
+.SH "OPTIONS"
+.TP
+.I  \-h, \-\-help
+show this help message and exit
+.TP
+.I \-n, \-\-noheading
+Do not print heading when listing the specified object type
+.TP
+.I  \-N, \-\-noreload
+Do not reload policy after commit
+.TP
+.I  \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+.TP
+.I  \-C, \-\-locallist
+List local customizations
+.TP
+.I  \-m, \-\-modify
+Modify a record of the specified object type
+.TP
+.I  \-l, \-\-list
+List records of the specified object type
+.TP
+.I  \-E, \-\-extract
+Extract customizable commands, for use within a transaction
+.TP
+.I  \-D, \-\-deleteall
+Remove all local customizations
+.TP
+.I  \-1, \-\-on
+Enable the boolean
+.TP
+.I  \-0, \-\-off
+Disable the boolean
+
+.SH EXAMPLE
+.nf
+Turn on the apache can send mail boolan
+# semanage boolean \-m \-\-on httpd_can_sendmail
+
+List customized booleans
+# semanage boolean \-l \-C
+
+.SH "SEE ALSO"
+.B selinux (8),
+.B semanage (8)
+.B setsebool (8)
+.B getsebool (8)
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>

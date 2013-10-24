@@ -240,7 +240,7 @@ HIGH				{ return(HIGH); }
 low |
 LOW				{ return(LOW); }
 "/"({alnum}|[_\.\-/])*	        { return(PATH); }
-\"({alnum}|[_\.\-\+\~])+\"	{ return(FILENAME); }
+\"({alnum}|[_\.\-\+\~\: ])+\"	{ return(FILENAME); }
 {letter}({alnum}|[_\-])*([\.]?({alnum}|[_\-]))*	{ return(IDENTIFIER); }
 {alnum}*{letter}{alnum}*        { return(FILESYSTEM); }
 {digit}+|0x{hexval}+            { return(NUMBER); }

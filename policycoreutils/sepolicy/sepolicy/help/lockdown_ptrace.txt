@@ -1,0 +1,14 @@
+Disable ptrace capability on your system.
+
+
+The deny_ptrace feature allows an administrator to toggle the ability of processes on the computer system from examining other processes on the system, including user processes.   It can even block processes running as root.
+
+Most people do not realize that any program they run can examine the memory of any other process run by them.  Meaning the computer game you are running on your desktop can watch everything going on in Firefox or a programs like pwsafe or kinit or other program that attempts to hide passwords..
+
+SELinux defines this access as ptrace and sys_ptrace.  These accesses allow one process to read the memory of another process.   ptrace allows developers and administrators to debug how a process is running using tools like strace, ptrace and gdb.    You can even use gdb (GNU Debugger to manipulate another process running memory and environment.
+
+The problem is this is allowed by default.
+
+My wife does not debug programs, why is she allowed to debug them?  As a matter of fact most of the time, I am not debugging applications, so it would be more secure if we could disable it by default.
+
+Note: Disabling ptrace can break some bug trappers that attempt to collect crash data.

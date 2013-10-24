@@ -1,0 +1,21 @@
+By Default on a SELinux Targeted Policy system, all users login using the unconfined_t user.
+
+
+But SELinux has a very powerful concept called confined users.  You can setup individual users on your system to login with different SELinux user types.  This Login Mapping Screen allows you to map a Linux login user to an SELinux User.
+
+Default SELinux Users:
+
+* Terminal user/ssh - guest_u
+  - No Network, No setuid, no exec in homedir
+
+* Browser user/kiosk - xguest_u
+  - Web access ports only.  No setuid, no exec in homedir
+
+* Full Desktop user - User_u
+  - Full Network, No SETUID.
+
+* Confined Admin/Desktop User - Staff_u
+  - Full Network, sudo to admin only, no root password.  Usually a confined admin
+
+* Unconfined user - unconfined_u (Default)
+  - SELinux does not block access.

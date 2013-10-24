@@ -1,0 +1,60 @@
+.TH "semanage-module" "8" "20130617" "" ""
+.SH "NAME"
+.B semanage module\\- SELinux Policy Management module mapping tool
+.SH "SYNOPSIS"
+.B semanage module [\-h] [\-n] [\-N] [\-S STORE] (\-a | \-r | \-e | \-d | \-\-extract | \-\-list [\-C] | \-\-deleteall) [module_name]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage module installs, removes, disables SELinux Policy modules.
+
+.SH "OPTIONS"
+.TP
+.I  \-h, \-\-help
+show this help message and exit
+.TP
+.I   \-n, \-\-noheading
+Do not print heading when listing the specified object type
+.TP
+.I   \-N, \-\-noreload
+Do not reload policy after commit
+.TP
+.I   \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+.TP
+.I   \-a, \-\-add
+Install specified module
+.TP
+.I   \-r, \-\-remove
+Remove specified module
+.TP
+.I   \-d \-\-disable
+Disable specified module
+.TP
+.I   \-e \-\-enable
+Enable specified module
+.TP
+.I   \-E, \-\-extract
+Extract customizable commands, for use within a transaction
+.TP
+.I   \-l, \-\-list
+List records of the specified object type
+.TP
+.I   \-C, \-\-locallist
+List local customizations
+
+.SH EXAMPLE
+.nf
+List all modules
+# semanage module \-l
+Disable unconfined module
+# semanage module \-\-disable unconfined
+Install custom apache policy module
+# semanage module \-a myapache
+
+.SH "SEE ALSO"
+.B selinux (8),
+.B semanage (8)
+.B semodule (8)
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>

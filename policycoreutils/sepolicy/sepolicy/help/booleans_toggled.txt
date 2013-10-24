@@ -1,0 +1,4 @@
+You are viewing the booleans page for the application domain.
+
+
+Toggle the button to turn on or off the boolean.  This will not happen immediately. All changes on the application screen are bundled up into a single transaction.  You need to select the update button to apply all of your changes to the system.

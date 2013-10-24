@@ -5,15 +5,15 @@ fixfiles \- fix file SELinux security contexts.
 .SH "SYNOPSIS"
 
 .B fixfiles 
-.I [\-v] [\-F] [\-l logfile ] { check | restore|[\-f] relabel | verify } [[dir/file] ... ]
+.I [\-v] [\-F] [-B] [ -N time ] [\-l logfile ] { check | restore|[\-f] relabel | verify } [[dir/file] ... ]
 
 .B fixfiles 
 .I [\-v] [\-F] [ \-R rpmpackagename[,rpmpackagename...] ] [\-l logfile ] { check | restore | verify }
 
 .B fixfiles 
-.I [\-v] [ \-C PREVIOUS_FILECONTEXT ] [\-l logfile ] { check | restore | verify }
+.I [\-v] [\-F] \-C PREVIOUS_FILECONTEXT [\-l logfile ] { check | restore | verify }
 
-.B fixfiles 
+.B fixfiles [-F] [-B]
 .I onboot
 
 .SH "DESCRIPTION"
@@ -30,13 +30,16 @@ as you expect.  By default it will relabel all mounted ext2, ext3, xfs and
 jfs file systems as long as they do not have a security context mount 
 option.  You can use the \-R flag to use rpmpackages as an alternative.
 The file /etc/selinux/fixfiles_exclude_dirs can contain a list of directories
-excluded from relabelling.
+excluded from relabeling.
 .P
 .B fixfiles onboot 
 will setup the machine to relabel on the next reboot.
 
 .SH "OPTIONS"
 .TP 
+.B \-B
+If specified with onboot, this fixfiles will record the current date in the /.autorelabel file, so that it can be used later to speed up labeling. If used with restore, the restore will only affect files that were modified today.
+.TP
 .B \-l logfile
 Save the output to the specified logfile
 .TP 
@@ -55,8 +58,13 @@ Use the rpm database to discover all files within the specified packages and res
 Run a diff on  the PREVIOUS_FILECONTEXT file to the currently installed one, and restore the context of all affected files.
 
 .TP 
+.B \-N time
+Only act on files created after the specified date.  Date must be specified in
+"YYYY-MM-DD HH:MM" format.  Date field will be passed to find --newermt command.
+
+.TP
 .B -v
-Modify verbosity from progess to verbose. (Run restorecon with -v instead of -p)
+Modify verbosity from progress to verbose. (Run restorecon with -v instead of -p)
 
 .SH "ARGUMENTS"
 One of:

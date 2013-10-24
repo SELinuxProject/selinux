@@ -177,6 +177,7 @@ extern void selinux_set_callback(int type, union selinux_callback cb);
 #define SELINUX_WARNING		1
 #define SELINUX_INFO		2
 #define SELINUX_AVC		3
+#define SELINUX_TRANS_DIR	"/var/run/setrans"
 
 /* Compute an access decision. */
 extern int security_compute_av(const security_context_t scon,
@@ -496,6 +497,12 @@ extern int selinux_getpolicytype(char **policytype);
  */
 extern const char *selinux_policy_root(void);
 
+/*
+  selinux_set_policy_root sets an alternate policy root directory path under
+  which the compiled policy file and context configuration files exist.
+ */
+extern int selinux_set_policy_root(const char *rootpath);
+
 /* These functions return the paths to specific files under the 
    policy root directory. */
 extern const char *selinux_current_policy_path(void);
@@ -516,6 +523,7 @@ extern const char *selinux_virtual_image_context_path(void);
 extern const char *selinux_lxc_contexts_path(void);
 extern const char *selinux_x_context_path(void);
 extern const char *selinux_sepgsql_context_path(void);
+extern const char *selinux_systemd_contexts_path(void);
 extern const char *selinux_contexts_path(void);
 extern const char *selinux_securetty_types_path(void);
 extern const char *selinux_booleans_subs_path(void);

@@ -4,14 +4,15 @@ SYSCONFDIR ?= $(DESTDIR)/etc/sysconfig
 LIBDIR ?= $(PREFIX)/lib
 BINDIR ?= $(PREFIX)/bin
 SBINDIR ?= $(PREFIX)/sbin
+DATADIR ?= $(PREFIX)/share
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= /usr/share/locale
 PYTHON ?= /usr/bin/python
-BASHCOMPLETIONDIR ?= $(DESTDIR)/etc/bash_completion.d/
+BASHCOMPLETIONDIR ?= $(DESTDIR)/usr/share/bash-completion/completions
 SHAREDIR ?= $(PREFIX)/share/sandbox
 override CFLAGS = -I$(PREFIX)/include -DPACKAGE="policycoreutils" -Wall -Werror -Wextra -W  -DSHARED -shared
 
-BASHCOMPLETIONS=sepolicy-bash-completion.sh 
+BASHCOMPLETIONS=sepolicy-bash-completion.sh
 
 all: python-build
 
@@ -22,13 +23,30 @@ clean:
 	$(PYTHON) setup.py clean
 	-rm -rf build *~ \#* *pyc .#*
 
+sepolgen:
+	ln -sf sepolicy sepolgen
+
+test:
+	@python test_sepolicy.py -v
+
 install:
 	$(PYTHON) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
 	[ -d $(BINDIR) ] || mkdir -p $(BINDIR)
 	install -m 755 sepolicy.py $(BINDIR)/sepolicy
+	(cd $(BINDIR); ln -sf sepolicy sepolgen)
 	-mkdir -p $(MANDIR)/man8
 	install -m 644 *.8 $(MANDIR)/man8
 	-mkdir -p $(BASHCOMPLETIONDIR)
-	install -m 644 $(BASHCOMPLETIONS) $(BASHCOMPLETIONDIR)
+	install -m 644 $(BASHCOMPLETIONS) $(BASHCOMPLETIONDIR)/sepolicy
+	-mkdir -p $(DESTDIR)/etc/dbus-1/system.d/
+	install -m 644 org.selinux.conf $(DESTDIR)/etc/dbus-1/system.d/
+	-mkdir -p $(DESTDIR)/usr/share/dbus-1/system-services
+	install -m 644 org.selinux.service $(DESTDIR)/usr/share/dbus-1/system-services
+	-mkdir -p $(DESTDIR)/usr/share/polkit-1/actions/
+	install -m 644 org.selinux.policy $(DESTDIR)/usr/share/polkit-1/actions/
+	-mkdir -p $(DESTDIR)/usr/share/system-config-selinux
+	install -m 755 selinux_server.py $(DESTDIR)/usr/share/system-config-selinux
+	install -m 644 *.desktop $(DATADIR)/system-config-selinux
 
 relabel:
+

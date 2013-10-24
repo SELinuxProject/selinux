@@ -9,8 +9,20 @@
 
 int fsetfilecon_raw(int fd, const security_context_t context)
 {
-	return fsetxattr(fd, XATTR_NAME_SELINUX, context, strlen(context) + 1,
+	int rc = fsetxattr(fd, XATTR_NAME_SELINUX, context, strlen(context) + 1,
 			 0);
+	if (rc < 0 && errno == ENOTSUP) {
+		security_context_t ccontext = NULL;
+		int err = errno;
+		if ((fgetfilecon_raw(fd, &ccontext) >= 0) &&
+		    (strcmp(context,ccontext) == 0)) {
+			rc = 0;
+		} else {
+			errno = err;
+		}
+		freecon(ccontext);
+	}
+	return rc;
 }
 
 hidden_def(fsetfilecon_raw)

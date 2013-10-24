@@ -1,0 +1,6 @@
+You can switch SELinux between Enforcing mode and Permissive mode.
+
+
+When a machine is in permissive mode, SELinux will continue to log SELinux AVC messages, that would have been denied if the machine was in enforcing mode.
+
+Changing the current mode of the system will not survive a reboot.  You would need to change the system mode for this.

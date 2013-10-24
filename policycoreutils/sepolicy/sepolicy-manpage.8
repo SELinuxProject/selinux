@@ -5,7 +5,7 @@ sepolicy-manpage \- Generate a man page based on the installed SELinux Policy
 .SH "SYNOPSIS"
 
 .br
-.B sepolicy manpage [\-w] [\-h] [\-p PATH ]  [\-a | \-d ]
+.B sepolicy manpage [\-w] [\-h] [\-p PATH ] [\-r ROOTDIR ] [\-a | \-d ]
 
 .SH "DESCRIPTION"
 Use sepolicy manpage to generate manpages based on SELinux Policy.
@@ -23,6 +23,9 @@ Display help message
 .TP
 .I                \-p, \-\-path
 Specify the directory to store the created man pages. (Default to /tmp)
+.TP
+.I                \-r, \-\-root
+Specify alternate root directory to generate man pages from. (Default to /)
 .TP
 .I                \-w, \-\-web
 Generate an additional HTML man pages for the specified domain(s).

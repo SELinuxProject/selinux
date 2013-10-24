@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.selinux
+Exec=/usr/share/system-config-selinux/selinux_server.py
+User=root

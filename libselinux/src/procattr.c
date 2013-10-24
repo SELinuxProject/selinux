@@ -9,18 +9,29 @@
 #include "selinux_internal.h"
 #include "policy.h"
 
+#define UNSET (const security_context_t) -1
+
 static __thread pid_t cpid;
 static __thread pid_t tid;
-static __thread security_context_t prev_current;
-static __thread security_context_t prev_exec;
-static __thread security_context_t prev_fscreate;
-static __thread security_context_t prev_keycreate;
-static __thread security_context_t prev_sockcreate;
+static __thread security_context_t prev_current = UNSET;
+static __thread security_context_t prev_exec = UNSET;
+static __thread security_context_t prev_fscreate = UNSET;
+static __thread security_context_t prev_keycreate = UNSET;
+static __thread security_context_t prev_sockcreate = UNSET;
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 static pthread_key_t destructor_key;
 static int destructor_key_initialized = 0;
 static __thread char destructor_initialized;
+
+extern void *__dso_handle __attribute__ ((__weak__, __visibility__ ("hidden")));
+extern int __register_atfork (void (*) (void), void (*) (void), void (*) (void), void *);
+
+static int __selinux_atfork (void (*prepare) (void), void (*parent) (void), void (*child) (void))
+{
+  return __register_atfork (prepare, parent, child,
+                            &__dso_handle == NULL ? NULL : __dso_handle);
+}
 
 static pid_t gettid(void)
 {
@@ -29,11 +40,16 @@ static pid_t gettid(void)
 
 static void procattr_thread_destructor(void __attribute__((unused)) *unused)
 {
-	free(prev_current);
-	free(prev_exec);
-	free(prev_fscreate);
-	free(prev_keycreate);
-	free(prev_sockcreate);
+	if (prev_current != UNSET)
+		free(prev_current);
+	if (prev_exec != UNSET)
+		free(prev_exec);
+	if (prev_fscreate != UNSET)
+		free(prev_fscreate);
+	if (prev_keycreate != UNSET)
+		free(prev_keycreate);
+	if (prev_sockcreate != UNSET)
+		free(prev_sockcreate);
 }
 
 static void free_procattr(void)
@@ -41,7 +57,7 @@ static void free_procattr(void)
 	procattr_thread_destructor(NULL);
 	tid = 0;
 	cpid = getpid();
-	prev_current = prev_exec = prev_fscreate = prev_keycreate = prev_sockcreate = NULL;
+	prev_current = prev_exec = prev_fscreate = prev_keycreate = prev_sockcreate = UNSET;
 }
 
 void __attribute__((destructor)) procattr_destructor(void);
@@ -63,7 +79,7 @@ static inline void init_thread_destructor(void)
 static void init_procattr(void)
 {
 	if (__selinux_key_create(&destructor_key, procattr_thread_destructor) == 0) {
-		pthread_atfork(NULL, NULL, free_procattr);
+		__selinux_atfork(NULL, NULL, free_procattr);
 		destructor_key_initialized = 1;
 	}
 }
@@ -131,7 +147,7 @@ static int getprocattrcon_raw(security_context_t * context,
 			return -1;
 	};
 
-	if (prev_context) {
+	if (prev_context && prev_context != UNSET) {
 		*context = strdup(prev_context);
 		if (!(*context)) {
 			return -1;
@@ -230,7 +246,8 @@ static int setprocattrcon_raw(security_context_t context,
 
 	if (!context && !*prev_context)
 		return 0;
-	if (context && *prev_context && !strcmp(context, *prev_context))
+	if (context && *prev_context && *prev_context != UNSET
+	    && !strcmp(context, *prev_context))
 		return 0;
 
 	fd = openattr(pid, attr, O_RDWR);
@@ -257,6 +274,8 @@ out:
 		free(context);
 		return -1;
 	} else {
+		if (*prev_context != UNSET)
+			free(*prev_context);
 		*prev_context = context;
 		return 0;
 	}

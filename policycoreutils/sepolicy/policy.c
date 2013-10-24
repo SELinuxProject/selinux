@@ -66,7 +66,6 @@ PyObject *wrap_policy(PyObject *UNUSED(self), PyObject *args){
     }
     apol_vector_destroy(&mod_paths);
     
-    policy_load_options |= QPOL_POLICY_OPTION_MATCH_SYSTEM;
     policy = apol_policy_create_from_policy_path(pol_path, policy_load_options, NULL, NULL);
     apol_policy_path_destroy(&pol_path);
     if (!policy) {

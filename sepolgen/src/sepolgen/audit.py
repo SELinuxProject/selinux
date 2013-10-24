@@ -259,13 +259,13 @@ class AVCMessage(AuditMessage):
                 raise ValueError("Error during access vector computation")
 
             if self.type == audit2why.CONSTRAINT:
-                self.data = []
+                self.data = [ self.data ]
                 if self.scontext.user != self.tcontext.user:
-                    self.data.append("user")
+                    self.data.append(("user (%s)" % self.scontext.user, 'user (%s)' % self.tcontext.user))
                 if self.scontext.role != self.tcontext.role and self.tcontext.role != "object_r":
-                    self.data.append("role")
+                    self.data.append(("role (%s)" % self.scontext.role, 'role (%s)' % self.tcontext.role))
                 if self.scontext.level != self.tcontext.level:
-                    self.data.append("level")
+                    self.data.append(("level (%s)" % self.scontext.level, 'level (%s)' % self.tcontext.level))
 
             avcdict[(scontext, tcontext, self.tclass, access_tuple)] = (self.type, self.data)
 

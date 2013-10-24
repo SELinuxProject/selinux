@@ -1,5 +1,7 @@
 #! /usr/bin/python -Es
-# Copyright (C) 2005-2012 Red Hat
+# Copyright (C) 2012-2013 Red Hat
+# AUTHOR: Miroslav Grepl <mgrepl@redhat.com>
+# AUTHOR: David Quigley <selinux@davequigley.com>
 # see file 'COPYING' for use and warranty information
 #
 # semanage is a tool for managing SELinux configuration files
@@ -19,564 +21,820 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA     
 #                                        02111-1307  USA
 #
-#  
-import sys, getopt, re
+#
+
+import policycoreutils.default_encoding_utf8
+import argparse
 import seobject
-import selinux
-PROGNAME="policycoreutils"
-
+import sys
 import gettext
-gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
-gettext.textdomain(PROGNAME)
-
+PROGNAME="policycoreutils"
 try:
        gettext.install(PROGNAME,
                        localedir="/usr/share/locale",
-                       unicode=False,
+                       unicode=True,
                        codeset = 'utf-8')
 except IOError:
        import __builtin__
        __builtin__.__dict__['_'] = unicode
 
+# define custom usages for selected main actions
+usage_login = "semanage login [-h] [-n] [-N] [-s STORE] ["
+usage_login_dict = {' --add':('-s SEUSER','-r RANGE','LOGIN',),' --modify':('-s SEUSER','-r RANGE','LOGIN',),' --delete':('LOGIN',), ' --list':('-C',),' --extract':('',), ' --deleteall':('',)}
+
+usage_fcontext = "semanage fcontext [-h] [-n] [-N] [-s STORE] ["
+usage_fcontext_dict = {' --add':('(','-t TYPE','-f FTYPE','-r RANGE','-s SEUSER', '|','-e EQUAL', ')','FILE_SPEC',')' ,),' --delete':('(','-t TYPE','-f FTYPE','|','-e EQUAL',')','FILE_SPEC', ')',),' --modify':('(','-t TYPE','-f FTYPE','-r RANGE','-s SEUSER','|','-e EQUAL',')','FILE_SPEC )',),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+
+usage_user = "semanage user [-h] [-n] [-N] [-s STORE] ["
+usage_user_dict = {' --add':('(','-L LEVEL','-R ROLES','-r RANGE','-s SEUSER','selinux_name'')'),' --delete':('selinux_name',),' --modify':('(','-L LEVEL','-R ROLES','-r RANGE','-s SEUSER','selinux_name',')'),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+
+usage_port = "semanage port [-h] [-n] [-N] [-s STORE] ["
+usage_port_dict = {' --add':('-t TYPE','-p PROTOCOL','-r RANGE','(','port_name','|','port_range',')'),' --modify':('-t TYPE','-p PROTOCOL','-r RANGE','(','port_name','|','port_range',')'), ' --delete':('-p PROTOCOL','(','port_name','|','port_range',')'),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+
+usage_node = "semanage node [-h] [-n] [-N] [-s STORE] ["
+usage_node_dict = {' --add':('-M NETMASK','-p PROTOCOL','-t TYPE','-r RANGE','node'),' --modify':('-M NETMASK','-p PROTOCOL','-t TYPE','-r RANGE','node'), ' --delete':('-M NETMASK','-p PROTOCOL','node'),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+
+usage_interface = "semanage interface [-h] [-n] [-N] [-s STORE] ["
+usage_interface_dict = {' --add':('-t TYPE','-r RANGE','interface'),' --modify':('-t TYPE','-r RANGE','interface'), ' --delete':('interface',),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+
+usage_boolean = "semanage boolean [-h] [-n] [-N] [-s STORE] ["
+usage_boolean_dict = {' --modify':('(','--on','|','--off',')','boolean'), ' --list':('-C',), '  --extract':('',), ' --deleteall':('',)}
+
+import sepolicy
+class CheckRole(argparse.Action):
+    def __call__(self, parser, namespace, value, option_string=None):
+        newval = getattr(namespace, self.dest)
+        if not newval:
+               newval = []
+        roles = sepolicy.get_all_roles()
+        for v in value.split():
+               if v not in roles:
+                      raise ValueError("%s must be an SELinux role:\nValid roles: %s" % (v, ", ".join(roles)))
+               newval.append(v)
+        setattr(namespace, self.dest, newval)
+
+store = ''
+class SetStore(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        global store
+        store=values
+        setattr(namespace, self.dest, values)
+
+class seParser(argparse.ArgumentParser):
+    def error(self, message):
+        if len(sys.argv) == 2:
+            self.print_help()
+            sys.exit(2)
+        self.print_usage()
+        self.exit(2, ('%s: error: %s\n') % (self.prog, message))
+
+class SetExportFile(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        if values:
+            if values is not "-":
+                try:
+                    sys.stdout = open(values, 'w')
+                except:
+                    sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+                    sys.exit(1)
+        setattr(namespace, self.dest, values)
+
+class SetImportFile(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        if values and values is not "-":
+               try:
+                      sys.stdin = open(values, 'r')
+               except IOError,e:
+                      sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+                      sys.exit(1)
+        setattr(namespace, self.dest, values)
+
+# functions for OBJECT initialization
+def login_ini():
+    OBJECT = seobject.loginRecords(store)
+    return OBJECT
+
+def user_ini():
+    OBJECT = seobject.seluserRecords(store)
+    return OBJECT
+
+def port_ini():
+    OBJECT = seobject.portRecords(store)
+    return OBJECT
+
+def module_ini():
+    OBJECT = seobject.moduleRecords(store)
+    return OBJECT
+
+def interface_ini():
+    OBJECT = seobject.interfaceRecords(store)
+    return OBJECT
+
+def node_ini():
+    OBJECT = seobject.nodeRecords(store)
+    return OBJECT
+
+def fcontext_ini():
+    OBJECT = seobject.fcontextRecords(store)
+    return OBJECT
+
+def boolean_ini():
+    OBJECT = seobject.booleanRecords(store)
+    return OBJECT
+
+def permissive_ini():
+    OBJECT = seobject.permissiveRecords(store)
+    return OBJECT
+
+def dontaudit_ini():
+    OBJECT = seobject.dontauditClass(store)
+    return OBJECT
+
+# define dictonary for seobject OBEJCTS
+object_dict = {'login':login_ini, 'user':user_ini, 'port':port_ini, 'module':module_ini, 'interface':interface_ini, 'node':node_ini, 'fcontext':fcontext_ini, 'boolean':boolean_ini,'permissive':permissive_ini, 'dontaudit':dontaudit_ini}
+
+def generate_custom_usage(usage_text,usage_dict):
+    # generate custom usage from given text and dictonary
+    sorted_keys = []
+    for i in usage_dict.keys():
+        sorted_keys.append(i)
+    sorted_keys.sort()
+    for k in sorted_keys:
+        usage_text += "%s %s |" % (k,(" ".join(usage_dict[k])))
+    usage_text = usage_text[:-1] + "]"
+    usage_text = _(usage_text)
+
+    return usage_text
+
+def handle_opts(args,dict,target_key):
+    # handle conflict and required options for given dictonary
+    # {action:[conflict_opts,require_opts]}
+
+    # first we need to catch conflicts
+    for k in args.__dict__.keys():
+        try:
+            if k in dict[target_key][0] and args.__dict__[k]:
+                print("%s option can not be used with --%s" % (target_key,k))
+                sys.exit(2)
+        except KeyError:
+            continue
+
+    for k in args.__dict__.keys():
+        try:
+         if k in dict[target_key][1] and not args.__dict__[k]:
+            print("%s option is needed for %s" % (k,target_key))
+            sys.exit(2)
+        except KeyError:
+            continue
+
+def handleLogin(args):
+    # {action:[conflict_opts,require_opts]}
+    login_args = {'list':[('login','seuser'),('')],'add':[('locallist'),('seuser','login')],'modify':[('locallist'),('login')], 'delete':[('locallist'),('login')],'extract':[('locallist','login','seuser'),('')],'deleteall':[('locallist'),('')]}
+
+    handle_opts(args,login_args,args.action)
+
+    OBJECT = object_dict['login']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "add":
+        OBJECT.add(args.login, args.seuser, args.range)
+    if args.action is "modify":
+        OBJECT.modify(args.login, args.seuser, args.range)
+    if args.action is "delete":
+        OBJECT.delete(args.login)
+    if args.action is "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print "login %s" % (str(i))
+
+def parser_add_store(parser, name):
+    parser.add_argument('-S', '--store', action=SetStore, help=_("Select an alternate SELinux Policy Store to manage"))
+
+def parser_add_noheading(parser, name):
+    parser.add_argument('-n', '--noheading', action='store_false', default=True, help=_("Do not print heading when listing %s object types") % name  )
+
+def parser_add_noreload(parser, name):
+    parser.add_argument('-N', '--noreload', action='store_false', default=True, help=_('Do not reload policy after commit'))
+
+def parser_add_locallist(parser, name):
+    parser.add_argument('-C', '--locallist', action='store_true', default=False, help=_("List %s local customizations") % name  )
+
+def parser_add_add(parser, name):
+    parser.add_argument('-a', '--add', dest='action', action='store_const', const='add', help=_("Add a record of the %s object type") % name  )
+
+def parser_add_type(parser, name):
+    parser.add_argument('-t', '--type', help=_('SELinux Type for the object'))
+def parser_add_level(parser, name):
+    parser.add_argument('-L', '--level', default='s0', help=_('Default SELinux Level for SELinux user, s0 Default. (MLS/MCS Systems only)'))
+def parser_add_range(parser, name):
+    parser.add_argument('-r', '--range', default="s0",
+                             help=_('''
+MLS/MCS Security Range (MLS/MCS Systems only)
+SELinux Range  for SELinux login mapping
+defaults to the SELinux user record range.
+SELinux Range for SELinux user defaults to s0.
+'''))
+def parser_add_proto(parser, name):
+    parser.add_argument('-p', '--proto', help=_('''
+    Protocol  for  the specified port (tcp|udp) or internet protocol
+    version for the specified node (ipv4|ipv6).
+'''))
+
+def parser_add_modify(parser, name):
+    parser.add_argument('-m', '--modify', dest='action', action='store_const', const='modify', help=_("Modify a record of the %s object type") % name  )
+
+def parser_add_list(parser, name):
+    parser.add_argument('-l', '--list', dest='action', action='store_const', const='list', help=_("List records of the %s object type") % name  )
+
+def parser_add_delete(parser, name):
+    parser.add_argument('-d', '--delete', dest='action', action='store_const', const='delete', help=_("Delete a record of the %s object type") % name  )
+
+def parser_add_extract(parser, name):
+    parser.add_argument('-E', '--extract', dest='action', action='store_const', const='extract', help=_("Extract customizable commands, for use within a transaction"))
+
+def parser_add_deleteall(parser, name):
+    parser.add_argument('-D', '--deleteall', dest='action', action='store_const', const='deleteall', help=_('Remove all %s objects local customizations') % name )
+
+def parser_add_seuser(parser, name):
+    parser.add_argument('-s', '--seuser', default="", help=_("SELinux user name"))
+
+def setupLoginParser(subparsers):
+    generated_usage = generate_custom_usage(usage_login, usage_login_dict)
+    loginParser = subparsers.add_parser('login', usage=generated_usage, help=_("Manage login mappings between linux users and SELinux confined users"))
+    parser_add_locallist(loginParser, "login")
+    parser_add_noheading(loginParser, "login")
+    parser_add_noreload(loginParser, "login")
+    parser_add_store(loginParser, "login")
+    parser_add_range(loginParser, "login")
+
+    login_action = loginParser.add_mutually_exclusive_group(required=True)
+
+    parser_add_add(login_action, "login")
+    parser_add_delete(login_action, "login")
+    parser_add_modify(login_action, "login")
+    parser_add_list(login_action, "login")
+    parser_add_extract(login_action, "login")
+    parser_add_deleteall(login_action, "login")
+    parser_add_seuser(loginParser, "login")
+
+    loginParser.add_argument('login', nargs='?', default=None, help=_("login_name | %%groupname"))
+
+    loginParser.set_defaults(func=handleLogin)
+
+def handleFcontext(args):
+    fcontext_args = {'list':[('equal','ftype','seuser','type'),('')],'add':[('locallist'),('type','file_spec')],'modify':[('locallist'),('type','file_spec')], 'delete':[('locallist'), ('file_spec')],'extract':[('locallist','equal','ftype','seuser','type'),('')],'deleteall':[('locallist'),('')]}
+    # we can not use mutually for equal because we can define some actions together with equal
+    fcontext_equal_args = {'equal':[('list','locallist','type','ftype','seuser','deleteall','extract'),()]}
+
+    if args.action is None:
+        print("usage: "+"%s" % generate_custom_usage(usage_fcontext, usage_fcontext_dict))
+        sys.exit(2)
+    elif args.action and args.equal:
+        handle_opts(args, fcontext_equal_args, "equal")
+    else:
+        handle_opts(args, fcontext_args, args.action)
+
+    OBJECT = object_dict['fcontext']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "add":
+        if args.equal:
+            OBJECT.add_equal(args.file_spec, args.equal)
+        else:
+            OBJECT.add(args.file_spec, args.type, args.ftype, args.range, args.seuser)
+    if args.action is "modify":
+        if args.equal:
+            OBJECT.add_equal(args.file_spec, args.equal)
+        else:
+            OBJECT.modify(args.file_spec, args.type, args.ftype, args.range, args.seuser)
+    if args.action is "delete":
+        if args.equal:
+            OBJECT.delete(args.file_spec, args.equal)
+        else:
+            OBJECT.delete(args.file_spec,args.ftype)
+    if args.action is "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print "fcontext %s" % str(i)
+
+def setupFcontextParser(subparsers):
+    ftype_help = '''
+File Type.   This is used with fcontext.  Requires a  file  type
+as  shown  in  the  mode  field by ls, e.g. use -d to match only
+directories or -- to match only regular files. The following
+file type options can be passed:
+-- (regular file),-d (directory),-c (character device),
+-b (block device),-s (socket),-l (symbolic link),-p (named pipe)
+If you do not specify a file type, the file type will default to "all files".
+'''
+    generate_usage = generate_custom_usage(usage_fcontext, usage_fcontext_dict)
+    fcontextParser = subparsers.add_parser('fcontext',usage=generate_usage, help=_("Manage file context mapping definitions"))
+    parser_add_locallist(fcontextParser, "fcontext")
+    parser_add_noheading(fcontextParser, "fcontext")
+    parser_add_noreload(fcontextParser, "fcontext")
+    parser_add_store(fcontextParser, "fcontext")
+
+    fcontext_action = fcontextParser.add_mutually_exclusive_group(required=False)
+    parser_add_add(fcontext_action, "fcontext")
+    parser_add_delete(fcontext_action, "fcontext")
+    parser_add_modify(fcontext_action, "fcontext")
+    parser_add_list(fcontext_action, "fcontext")
+    parser_add_extract(fcontext_action, "fcontext")
+    parser_add_deleteall(fcontext_action, "fcontext")
+
+    fcontextParser.add_argument('-e', '--equal', help=_('''Substitute  target  path with sourcepath when generating default
+                                                                  label.  This is used with fcontext. Requires source  and  target
+                                                                  path  arguments.  The context labeling for the target subtree is
+                                                                  made equivalent to that defined for the source.'''))
+    fcontextParser.add_argument('-f', '--ftype', default="", choices=["a","f","d","c","b","s","l","p"], help=_(ftype_help))
+    parser_add_seuser(fcontextParser, "fcontext")
+    parser_add_type(fcontextParser, "fcontext")
+    parser_add_range(fcontextParser, "fcontext")
+    fcontextParser.add_argument('file_spec', nargs='?', default=None, help=_('file_spec'))
+    fcontextParser.set_defaults(func=handleFcontext)
+
+def handleUser(args):
+    user_args = {'list':[('selinux_name','seuser','roles'),('')],'add':[('locallist'),('roles','selinux_name')],'modify':[('locallist'),('selinux_name')], 'delete':[('locallist'),('selinux_name')],'extract':[('locallist','selinux_name','seuser','role'),('')],'deleteall':[('locallist'),('')]}
+
+    handle_opts(args,user_args,args.action)
+
+    OBJECT = object_dict['user']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "add":
+        OBJECT.add(args.selinux_name, args.roles,  args.level, args.range, args.prefix)
+    if args.action is "modify":
+        OBJECT.modify(args.selinux_name, args.roles,  args.level, args.range, args.prefix)
+    if args.action is "delete":
+        OBJECT.delete(args.selinux_name)
+    if args.action is "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print "user %s" % str(i)
+
+def setupUserParser(subparsers):
+    generated_usage = generate_custom_usage(usage_user, usage_user_dict)
+    userParser = subparsers.add_parser('user', usage=generated_usage,help=_('Manage SELinux confined users (Roles and levels for an SELinux user)'))
+    parser_add_locallist(userParser, "user")
+    parser_add_noheading(userParser, "user")
+    parser_add_noreload(userParser, "user")
+    parser_add_store(userParser, "user")
+
+    user_action = userParser.add_mutually_exclusive_group(required=True)
+    parser_add_add(user_action, "user")
+    parser_add_delete(user_action, "user")
+    parser_add_modify(user_action, "user")
+    parser_add_list(user_action, "user")
+    parser_add_extract(user_action, "user")
+    parser_add_deleteall(user_action, "user")
+
+    parser_add_level(userParser, "user")
+    parser_add_range(userParser, "user")
+    userParser.add_argument('-R', '--roles', default=[],
+                            action=CheckRole,
+                            help=_('''
+SELinux Roles.  You must enclose multiple roles within quotes,                  separate by spaces. Or specify -R multiple times.
+'''))
+    userParser.add_argument('-P', '--prefix', default="user",  help=argparse.SUPPRESS)
+    userParser.add_argument('selinux_name', nargs='?', default=None, help=_('selinux_name'))
+    userParser.set_defaults(func=handleUser)
+
+def handlePort(args):
+    port_args = {'list':[('port','type','proto'),('')],'add':[('locallist'),('type','port','proto')],'modify':[('localist'),('port','proto')], 'delete':[('locallist'),('port','proto')],'extract':[('locallist','port','type','proto'),('')],'deleteall':[('locallist'),('')]}
+
+    handle_opts(args,port_args,args.action)
+
+    OBJECT = object_dict['port']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "add":
+        OBJECT.add(args.port, args.proto, args.range, args.type)
+    if args.action is "modify":
+        OBJECT.modify(args.port, args.proto, args.range, args.type)
+    if args.action is "delete":
+        OBJECT.delete(args.port, args.proto)
+    if args.action is "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print "port %s" % str(i)
+
+def setupPortParser(subparsers):
+    generated_usage = generate_custom_usage(usage_port, usage_port_dict)
+    portParser = subparsers.add_parser('port', usage=generated_usage, help=_('Manage network port type definitions'))
+    parser_add_locallist(portParser, "port")
+    parser_add_noheading(portParser, "port")
+    parser_add_noreload(portParser, "port")
+    parser_add_store(portParser, "port")
+
+    port_action = portParser.add_mutually_exclusive_group(required=True)
+    parser_add_add(port_action, "port")
+    parser_add_delete(port_action, "port")
+    parser_add_modify(port_action, "port")
+    parser_add_list(port_action, "port")
+    parser_add_extract(port_action, "port")
+    parser_add_deleteall(port_action, "port")
+    parser_add_type(portParser, "port")
+    parser_add_range(portParser, "port")
+    parser_add_proto(portParser, "port")
+    portParser.add_argument('port', nargs='?', default=None, help=_('port | port_range'))
+    portParser.set_defaults(func=handlePort)
+
+def handleInterface(args):
+    interface_args = {'list':[('interface'),('')],'add':[('locallist'),('type','interface')],'modify':[('locallist'),('type','interface')], 'delete':[('locallist'),('interface')],'extract':[('locallist','interface','type'),('')],'deleteall':[('locallist'),('')]}
+
+    handle_opts(args,interface_args,args.action)
+
+    OBJECT = object_dict['interface']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "add":
+        OBJECT.add(args.interface, args.range, args.type)
+    if args.action is "modify":
+        OBJECT.add(args.interface, args.range, args.type)
+    if args.action is "delete":
+        OBJECT.delete(args.interface)
+    if args.action is "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print "interface %s" % str(i)
+
+def setupInterfaceParser(subparsers):
+    generated_usage = generate_custom_usage(usage_interface, usage_interface_dict)
+    interfaceParser = subparsers.add_parser('interface', usage=generated_usage, help=_('Manage network interface type definitions'))
+    parser_add_locallist(interfaceParser, "interface")
+    parser_add_noheading(interfaceParser, "interface")
+    parser_add_noreload(interfaceParser, "interface")
+    parser_add_store(interfaceParser, "interface")
+    parser_add_type(interfaceParser, "interface")
+    parser_add_range(interfaceParser, "interface")
+
+    interface_action = interfaceParser.add_mutually_exclusive_group(required=True)
+    parser_add_add(interface_action, "interface")
+    parser_add_delete(interface_action, "interface")
+    parser_add_modify(interface_action, "interface")
+    parser_add_list(interface_action, "interface")
+    parser_add_extract(interface_action, "interface")
+    parser_add_deleteall(interface_action, "interface")
+    interfaceParser.add_argument('interface', nargs='?', default=None, help=_('interface_spec'))
+    interfaceParser.set_defaults(func=handleInterface)
+
+def handleModule(args):
+    OBJECT = seobject.moduleRecords(store)
+    OBJECT.set_reload(args.noreload)
+    if args.action == "add":
+        OBJECT.add(args.module_name)
+    if args.action == "enable":
+        OBJECT.enable(args.module_name)
+    if args.action == "disable":
+        OBJECT.disable(args.module_name)
+    if args.action == "remove":
+        OBJECT.delete(args.module_name)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action == "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print "module %s" % str(i)
+
+def setupModuleParser(subparsers):
+    moduleParser = subparsers.add_parser('module', help=_('Manage SELinux policy modules'))
+    parser_add_noheading(moduleParser, "module")
+    parser_add_noreload(moduleParser, "module")
+    parser_add_store(moduleParser, "module")
+    parser_add_locallist(moduleParser, "module")
+
+    mgroup = moduleParser.add_mutually_exclusive_group(required=True)
+    parser_add_add(mgroup, "module")
+    parser_add_list(mgroup, "module")
+    parser_add_extract(mgroup, "module")
+    parser_add_deleteall(mgroup, "module")
+    mgroup.add_argument('-r', '--remove', dest='action', action='store_const', const='remove', help=_("Remove a module"))
+    mgroup.add_argument('-d', '--disable', dest='action', action='store_const', const='disable', help=_("Disable a module"))
+    mgroup.add_argument('-e', '--enable', dest='action', action='store_const', const='enable', help=_("Enable a module"))
+    moduleParser.add_argument('module_name', nargs='?', default=None, help=_('Name of the module to act on'))
+    moduleParser.set_defaults(func=handleModule)
+
+def handleNode(args):
+    node_args = {'list':[('node','type','proto','netmask'),('')],'add':[('locallist'),('type','node','proto','netmask')],'modify':[('locallist'),('node','netmask','proto')], 'delete':[('locallist'),('node','netmask','prototype')],'extract':[('locallist','node','type','proto','netmask'),('')],'deleteall':[('locallist'),('')]}
+    handle_opts(args,node_args,args.action)
+
+    OBJECT = object_dict['node']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "add":
+        OBJECT.add(args.node, args.netmask, args.proto, args.range, args.type)
+    if args.action is "modify":
+        OBJECT.add(args.node, args.netmask, args.proto, args.range, args.type)
+    if args.action is "delete":
+        OBJECT.delete(args.node, args.netmask, args.proto)
+    if args.action is "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print "node %s" % str(i)
+
+def setupNodeParser(subparsers):
+    generated_usage = generate_custom_usage(usage_node, usage_node_dict)
+    nodeParser = subparsers.add_parser('node', usage=generated_usage, help=_('Manage network node type definitions'))
+    parser_add_locallist(nodeParser, "node")
+    parser_add_noheading(nodeParser, "node")
+    parser_add_noreload(nodeParser, "node")
+    parser_add_store(nodeParser, "node")
+
+    node_action = nodeParser.add_mutually_exclusive_group(required=True)
+    parser_add_add(node_action, "node")
+    parser_add_delete(node_action, "node")
+    parser_add_modify(node_action, "node")
+    parser_add_list(node_action, "node")
+    parser_add_extract(node_action, "node")
+    parser_add_deleteall(node_action, "node")
+
+    nodeParser.add_argument('-M', '--netmask',  help=_('Network Mask'))
+    parser_add_type(nodeParser, "node")
+    parser_add_range(nodeParser, "node")
+    parser_add_proto(nodeParser, "node")
+    nodeParser.add_argument('node', nargs='?', default=None, help=_('node'))
+    nodeParser.set_defaults(func=handleNode)
+
+def handleBoolean(args):
+    boolean_args = {'list':[('state','boolean'),('')],'modify':[('localist'),('')], 'extract':[('locallist','state','boolean'),('')],'deleteall':[('locallist'),('')],'state':[('locallist','list','extract','deleteall'),('modify')]}
+    if args.action is None:
+        print("Usage: "+"%s" % generate_custom_usage(usage_boolean, usage_boolean_dict))
+        sys.exit(2)
+    # TODO: should be added to handle_opts logic
+    elif args.action is "modify" and not args.boolean:
+        print "boolean name required "
+        sys.exit(1)
+    elif args.action is "modify" and args.boolean and not args.state:
+        print "state option is needed"
+        sys.exit(1)
+    else:
+        handle_opts(args,boolean_args,args.action)
+
+    OBJECT = object_dict['boolean']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "modify":
+        if args.boolean:
+             OBJECT.modify(args.boolean, args.state, False)
+    if args.action is "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print "boolean %s" % str(i)
+
+def setupBooleanParser(subparsers):
+    generated_usage = generate_custom_usage(usage_boolean, usage_boolean_dict)
+    booleanParser = subparsers.add_parser('boolean',usage=generated_usage, help=_('Manage booleans to selectively enable functionality'))
+    parser_add_locallist(booleanParser, "boolean")
+    parser_add_noheading(booleanParser, "boolean")
+    parser_add_noreload(booleanParser, "boolean")
+    parser_add_store(booleanParser, "boolean")
+    booleanParser.add_argument('boolean', nargs="?", default=None, help=_('boolean'))
+
+    boolean_action = booleanParser.add_mutually_exclusive_group(required=False)
+    #add_add(boolean_action)
+    parser_add_modify(boolean_action, "boolean")
+    parser_add_list(boolean_action, "boolean")
+    parser_add_extract(boolean_action, "boolean")
+    parser_add_deleteall(boolean_action, "boolean")
+
+    booleanGroup = booleanParser.add_mutually_exclusive_group(required=False)
+    booleanGroup.add_argument('-1', '--on', dest='state', action='store_const', const='on', help=_('Enable the boolean'))
+    booleanGroup.add_argument('-0', '--off', dest='state', action='store_const', const='off', help=_('Disable the boolean'))
+
+    booleanParser.set_defaults(func=handleBoolean)
+
+def handlePermissive(args):
+    OBJECT = object_dict['permissive']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "add":
+        OBJECT.add(args.type)
+    if args.action is "list":
+        OBJECT.list(args.noheading)
+    if args.action is "delete":
+        OBJECT.delete(args.type)
+
+def setupPermissiveParser(subparsers):
+    permissiveParser = subparsers.add_parser('permissive', help=_('Manage process type enforcement mode'))
+
+    pgroup = permissiveParser.add_mutually_exclusive_group(required=True)
+    parser_add_add(pgroup, "permissive")
+    parser_add_delete(pgroup, "permissive")
+    parser_add_list(pgroup, "permissive")
+    #TODO: probably should be also added => need to implement own option handling
+    #parser_add_deleteall(pgroup)
+
+    parser_add_noheading(permissiveParser, "permissive")
+    parser_add_noreload(permissiveParser, "permissive")
+    parser_add_store(permissiveParser, "permissive")
+    permissiveParser.add_argument('type', nargs='?', default=None, help=_('type'))
+    permissiveParser.set_defaults(func=handlePermissive)
+
+def handleDontaudit(args):
+    OBJECT = object_dict['dontaudit']()
+    OBJECT.set_reload(args.noreload)
+    OBJECT.toggle(args.action)
+
+def setupDontauditParser(subparsers):
+    dontauditParser = subparsers.add_parser('dontaudit', help=_('Disable/Enable dontaudit rules in policy'))
+    parser_add_noreload(dontauditParser, "dontaudit")
+    parser_add_store(dontauditParser, "dontaudit")
+    dontauditParser.add_argument('action', choices=["on", "off"])
+    dontauditParser.set_defaults(func=handleDontaudit)
+
+def handleExport(args):
+    manageditems=[ "boolean", "login", "interface", "user", "port", "node", "fcontext", "module"]
+    for i in manageditems:
+        OBJECT = object_dict[i]()
+        print "%s -D" % i
+        for c in OBJECT.customized():
+            print "%s %s" % (i, str(c))
+
+    sys.exit(0)
+
+def setupExportParser(subparsers):
+    exportParser = subparsers.add_parser('export', help=_('Output local customizations'))
+    parser_add_store(exportParser, "export")
+    exportParser.add_argument('-f', '--output_file', dest='output_file', action=SetExportFile, help=_('Output file'))
+    exportParser.set_defaults(func=handleExport)
+
+import re
+def mkargv(line):
+    dquote = "\""
+    squote = "\'"
+    l = line.split()
+    ret = []
+    i = 0
+    while i < len(l):
+        cnt = len(re.findall(dquote, l[i]))
+        if cnt > 1:
+            ret.append(l[i].strip(dquote))
+            i = i + 1
+            continue
+        if cnt == 1:
+            quote = [ l[i].strip(dquote) ]
+            i = i + 1
+
+            while i < len(l) and  dquote not in l[i]:
+                quote.append(l[i])
+                i = i + 1
+            quote.append(l[i].strip(dquote))
+            ret.append(" ".join(quote))
+            i = i + 1
+            continue
+
+        cnt = len(re.findall(squote, l[i]))
+        if cnt > 1:
+            ret.append(l[i].strip(squote))
+            i = i + 1
+            continue
+        if cnt == 1:
+            quote = [ l[i].strip(squote) ]
+            i = i + 1
+            while i < len(l) and  squote not in l[i]:
+                quote.append(l[i])
+                i = i + 1
+
+            quote.append(l[i].strip(squote))
+            ret.append(" ".join(quote))
+            i = i + 1
+            continue
+
+        ret.append(l[i])
+        i = i + 1
+
+    return ret
+
+def handleImport(args):
+    trans = seobject.semanageRecords(store)
+    trans.start()
+
+    for l in sys.stdin.readlines():
+        if len(l.strip()) == 0:
+               continue
+
+        try:
+            commandParser = createCommandParser()
+            args = commandParser.parse_args(mkargv(l))
+            args.func(args)
+        except ValueError,e:
+            sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+            sys.exit(1)
+        except IOError,e:
+            sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+            sys.exit(1)
+        except KeyboardInterrupt:
+            sys.exit(0)
+
+    trans.set_reload(args.noreload)
+    trans.finish()
+
+def setupImportParser(subparsers):
+    importParser = subparsers.add_parser('import', help=_('Output local customizations'))
+    parser_add_noreload(importParser, "import")
+    parser_add_store(importParser, "import")
+    importParser.add_argument('-f', '--input_file', dest='input_file', action=SetImportFile, help=_('Input file'))
+    importParser.set_defaults(func=handleImport)
+
+def createCommandParser():
+    commandParser = seParser(prog='semanage',
+                                            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+                                            description='''semanage is used to configure certain elements
+                                                            of SELinux policy with-out requiring modification
+                                                            to or recompilation from policy source.''')
+
+    #To add a new subcommand define the parser for it in a function above and call it here.
+    subparsers = commandParser.add_subparsers(dest='subcommand')
+    setupImportParser(subparsers)
+    setupExportParser(subparsers)
+    setupLoginParser(subparsers)
+    setupUserParser(subparsers)
+    setupPortParser(subparsers)
+    setupInterfaceParser(subparsers)
+    setupModuleParser(subparsers)
+    setupNodeParser(subparsers)
+    setupFcontextParser(subparsers)
+    setupBooleanParser(subparsers)
+    setupPermissiveParser(subparsers)
+    setupDontauditParser(subparsers)
+
+    return commandParser
+
+def make_io_args(args):
+    # import/export backward compability
+    args_origin = ["-S", "-o", "-i", "targeted", "minumum", "mls"]
+    args_file = []
+    args_ie = []
+    args_subcommand = []
+
+    for i in args:
+        if i == "-o":
+            args_subcommand = ["export"]
+            continue
+        if i == "-i":
+            args_subcommand = ["import"]
+            continue
+        if i not in args_origin:
+            args_file = ["-f", i]
+            continue
+        args_ie.append(i)
+
+    return args_subcommand+args_ie+args_file
+
+def make_args(sys_args):
+    args = []
+    if "-o" in sys_args[1:] or "-i" in sys_args[1:]:
+        args=make_io_args(sys_args[1:])
+    else:
+        args=sys_args[1:]
+
+    return args
+
+def do_parser():
+    try:
+        commandParser = createCommandParser()
+        args = commandParser.parse_args(make_args(sys.argv))
+        args.func(args)
+        sys.exit(0)
+    except IOError,e:
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+        sys.exit(1)
+    except KeyboardInterrupt:
+        sys.exit(0)
+    except ValueError, e:
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, e.args[0]))
+        sys.exit(1)
+    except KeyError, e:
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, e.args[0]))
+        sys.exit(1)
+    except OSError, e:
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, e.args[1]))
+        sys.exit(1)
+    except RuntimeError, e:
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, e.args[0]))
+        sys.exit(1)
+
 if __name__ == '__main__':
-	manageditems=[ "boolean", "login", "user", "port", "interface", "node", "fcontext"]
-	action  = False
-	load = True
-	def set_action(option):
-		global action
-		if action:
-			raise ValueError(_("%s bad option") % option)
-		action = True
-
-	def usage(message = ""):
-               text = _("""
-semanage [ -S store ] -i [ input_file | - ]
-semanage [ -S store ] -o [ output_file | - ]
-
-semanage login -{a|d|m|l|D|E} [-Nnsr] login_name | %groupname
-semanage user -{a|d|m|l|D|E} [-LNnrRP] selinux_name
-semanage port -{a|d|m|l|D|E} [-Nntr] [ -p proto ] port | port_range
-semanage interface -{a|d|m|l|D|E} [-Nntr] interface_spec
-semanage module -{a|d|m} [--enable|--disable] [-N] module
-semanage node -{a|d|m|l|D|E} [-Nntr] [ -p protocol ] [-M netmask] addr
-semanage fcontext -{a|d|m|l|D|E} [-Nefnrst] file_spec
-semanage boolean -{d|m} [--on|--off|-1|-0] [-N] -F boolean | boolean_file
-semanage permissive -{d|a|l} [-Nn] type
-semanage dontaudit [ on | off ] [-N]
-
-Primary Options:
-
-	-a, --add        Add a OBJECT record NAME
-	-d, --delete     Delete a OBJECT record NAME
-	-m, --modify     Modify a OBJECT record NAME
-        -i, --input      Input multiple semange commands in a transaction 
-	-o, --output     Output current customizations as semange commands
-	-l, --list       List the OBJECTS
-	-E, --extract    extract customizable commands
-	-C, --locallist  List OBJECTS local customizations
-	-D, --deleteall  Remove all OBJECTS local customizations
-
-	-h, --help       Display this message
-	-n, --noheading  Do not print heading when listing OBJECTS
-        -S, --store      Select and alternate SELinux store to manage
-
-Object-specific Options (see above):
-
-	-f, --ftype      File Type of OBJECT 
-		"" (all files) 
-		-- (regular file) 
-		-d (directory) 
-		-c (character device) 
-		-b (block device) 
-		-s (socket) 
-		-l (symbolic link) 
-		-p (named pipe) 
-
-        -F, --file       Treat target as an input file for command, change multiple settings
-	-p, --proto      Port protocol (tcp or udp) or internet protocol version of node (ipv4 or ipv6)
-	-M, --mask       Netmask
-	-N, --noreload   Do not reload policy after commit
-	-e, --equal      Substitue source path for dest path when labeling
-	-P, --prefix     Prefix for home directory labeling
-	-L, --level      Default SELinux Level (MLS/MCS Systems only)
-	-R, --roles      SELinux Roles (ex: "sysadm_r staff_r")
-	-s, --seuser     SELinux User Name
-	-t, --type       SELinux Type for the object
-	-r, --range      MLS/MCS Security Range (MLS/MCS Systems only)
-	--enable         Enable a module
-	--disable        Disable a module
-""")
-               raise ValueError("%s\n%s" % (text, message))
-		
-	def errorExit(error):
-		sys.stderr.write("%s: " % sys.argv[0])
-		sys.stderr.write("%s\n" % error)
-		sys.stderr.flush()
-		sys.exit(1)
-
-	def get_options():
-		valid_option={}
-		valid_everyone=[ '-a', '--add', '-d', '--delete', '-m', '--modify', '-l', '--list', '-h', '--help', '-n', '--noheading', '-S', '--store' ]
-		valid_local=[ '-E', '--extract', '-C', '--locallist', '-D', '--deleteall', '-N', '--noreload']
-		valid_option["login"] = []
-		valid_option["login"] += valid_everyone + valid_local + [ '-s', '--seuser', '-r', '--range']
-		valid_option["user"] = []
-		valid_option["user"] += valid_everyone + valid_local + [ '-L', '--level', '-r', '--range', '-R', '--roles', '-P', '--prefix', '-N', '--noreload' ]
-		valid_option["port"] = []
-		valid_option["port"] += valid_everyone + valid_local + [ '-t', '--type', '-r', '--range', '-p', '--proto' , '-N', '--noreload' ]
-		valid_option["interface"] = []
-		valid_option["interface"] += valid_everyone + valid_local + [ '-t', '--type', '-r', '--range', '-N', '--noreload' ]
-		valid_option["node"] = []
-		valid_option["node"] += valid_everyone + valid_local + [ '-M', '--mask', '-t', '--type', '-r', '--range', '-p', '--protocol', '-N', '--noreload' ]
-		valid_option["module"] = []
-		valid_option["module"] += valid_everyone + [ '--enable', '--disable', '-N', '--noreload' ]
-		valid_option["fcontext"] = []
-		valid_option["fcontext"] += valid_everyone + valid_local + [ '-e', '--equal', '-f', '--ftype', '-s', '--seuser',  '-t', '--type', '-r', '--range', '-N', '--noreload' ]
-		valid_option["dontaudit"] = [ '-S', '--store' ]
-		valid_option["boolean"] = []
-		valid_option["boolean"] += valid_everyone + valid_local + [ '--on', "--off", "-1", "-0", "-F", "--file", '-N', '--noreload' ]
-		valid_option["permissive"] = []
-		valid_option["permissive"] += [ '-a', '--add', '-d', '--delete', '-l', '--list', '-h', '--help', '-n', '--noheading', '-D', '--deleteall' , '-N', '--noreload' ]
-		return valid_option
-
-        def mkargv(line):
-               dquote = "\""
-               squote = "\'"
-               l = line.split()
-               ret = []
-               i = 0
-               while i < len(l):
-                      cnt = len(re.findall(dquote, l[i]))
-                      if cnt > 1:
-                             ret.append(l[i].strip(dquote))
-                             i = i + 1
-                             continue
-                      if cnt == 1:
-                             quote = [ l[i].strip(dquote) ]
-                             i = i + 1
-                             
-                             while i < len(l) and  dquote not in l[i]:
-                                    quote.append(l[i])
-                                    i = i + 1
-                             quote.append(l[i].strip(dquote))
-                             ret.append(" ".join(quote))
-                             i = i + 1
-                             continue
-
-                      cnt = len(re.findall(squote, l[i]))
-                      if cnt > 1:
-                             ret.append(l[i].strip(squote))
-                             i = i + 1
-                             continue
-                      if cnt == 1:
-                             quote = [ l[i].strip(squote) ]
-                             i = i + 1
-                             while i < len(l) and  squote not in l[i]:
-                                    quote.append(l[i])
-                                    i = i + 1
-
-                             quote.append(l[i].strip(squote))
-                             ret.append(" ".join(quote))
-                             i = i + 1
-                             continue
-
-                      ret.append(l[i])
-                      i = i + 1
-
-               return ret
-
-        def process_args(argv):
-		global action
-		global load
-		action = False
-		serange = ""
-		port = ""
-		proto = ""
-		mask = ""
-		selevel = ""
-		setype = ""
-		ftype = ""
-		roles = ""
-		seuser = ""
-		prefix = "user"
-		heading = True
-		value = None
-		add = False
-		modify = False
-		delete = False
-		deleteall = False
-		enable = False
-		extract = False
-		disable = False
-		list = False
-		locallist = False
-		use_file = False
-                store = ""
-		equal = ""
-
-		if len(argv) == 0:
-			return
-		object = argv[0]
-		option_dict=get_options()
-		if object not in option_dict.keys():
-			usage(_("Invalid parameter %s not defined") % object)
-			
-		args = argv[1:]
-
-		try:
-			gopts, cmds = getopt.getopt(args,
-						    '01adEe:f:i:lhmNnp:s:FCDR:L:r:t:P:S:M:',
-						    ['add',
-						     'delete',
-						     'deleteall',
-						     'enable',
-						     'equal=',
-						     'extract',
-						     'disable',
-						     'ftype=',
-						     'file',
-						     'help',
-						     'input=',
-						     'list',
-						     'modify',
-						     'noheading',
-						     'noreload',
-						     'off',
-						     'on',
-						     'proto=',
-						     'seuser=',
-						     'store=',
-						     'range=',
-						     'locallist',
-						     'level=',
-						     'roles=',
-						     'type=',
-						     'prefix=',
-						     'mask='
-						     ])
-		except getopt.error, error:
-			usage(_("Options Error %s ") % error.msg)
-
-		for o, a in gopts:
-			if o not in option_dict[object]:
-				sys.stderr.write(_("%s not valid for %s objects\n") % ( o, object) );
-				return
-				
-		for o,a in gopts:
-			if o == "-a" or o == "--add":
-				set_action(o)
-				add = True
-				
-			if o == "-d"  or o == "--delete":
-				set_action(o)
-				delete = True
-
-			if o == "-D"  or o == "--deleteall":
-				set_action(o)
-				deleteall = True
-
-			if o == "-E"  or o == "--extract":
-				set_action(o)
-				extract = True
-
-			if o == "-f"  or o == "--ftype":
-				ftype=a
-
-			if o == "-e"  or o == "--equal":
-				equal = a
-
-			if o == "--enable":
-				enable = True
-
-			if o == "--disable":
-				disable = True
-
-			if o == "-F"  or o == "--file":
-				use_file = True
-
-			if o == "-h" or o == "--help":
-				raise usage()
-
-			if o == "-n" or o == "--noheading":
-				heading = False
-
-			if o == "-N" or o == "--noreload":
-				load = False
-
-			if o == "-C" or o == "--locallist":
-				locallist = True
-
-			if o == "-m"or o == "--modify":
-				set_action(o)
-				modify = True
-				
-			if o == "-S" or o == '--store':
-				store = a
-
-			if o == "-r" or o == '--range':
-				serange = a
-
-			if o == "-l" or o == "--list":
-				list = True
-
-			if o == "-L" or o == '--level':
-				selevel = a
-
-			if o == "-p" or o == '--proto':
-				proto = a
-
-			if o == "-P" or o == '--prefix':
-				prefix = a
-
-			if o == "-R" or o == '--roles':
-				roles = roles + " " + a
-
-			if o == "-s" or o == "--seuser":
-				seuser = a
-
-			if o == "-M" or o == '--mask':
-				mask = a
-
-			if o == "-t" or o == "--type":
-				setype = a
-
-			if o == "--on" or o == "-1":
-				value = "on"
-				modify = True
-
-			if o == "--off" or o == "-0":
-				value = "off"
-				modify = True
-
-		if object == "login":
-			OBJECT = seobject.loginRecords(store)
-
-		if object == "user":
-			OBJECT = seobject.seluserRecords(store)
-
-		if object == "port":
-			OBJECT = seobject.portRecords(store)
-		
-		if object == "interface":
-			OBJECT = seobject.interfaceRecords(store)
-
-		if object == "node":
-			OBJECT = seobject.nodeRecords(store)
-
-		if object == "fcontext":
-			OBJECT = seobject.fcontextRecords(store)
-		
-		if object == "boolean":
-			OBJECT = seobject.booleanRecords(store)
-			if use_file:
-				modify = True
-
-		if object == "module":
-			OBJECT = seobject.moduleRecords(store)
-
-		if object == "permissive":
-                       OBJECT = seobject.permissiveRecords(store)
-
-		if object == "dontaudit":
-                        OBJECT = seobject.dontauditClass(store)
-
-		if list:
-			if object == "boolean":
-                               OBJECT.list(heading, locallist, use_file)
-			else:
-                               OBJECT.list(heading, locallist)
-                        return
-			
-		OBJECT.set_reload(load)
-		if deleteall:
-			OBJECT.deleteall()
-			return
-			
-		if extract:
-			for i in OBJECT.customized():
-				print "%s %s" % (object, str(i))
-			return
-
-		if len(cmds) != 1:
-                       raise ValueError(_("bad option"))
-                        
-                target = cmds[0]
-
-		if object == "dontaudit":
-                       OBJECT.toggle(target)
-                       return
-                              
-		if add:
-			if object == "login":
-				OBJECT.add(target, seuser, serange)
-				return
-
-			if object == "user":
-				OBJECT.add(target, roles.split(), selevel, serange, prefix)
-				return
-
-			if object == "port":
-				OBJECT.add(target, proto, serange, setype)
-				return
-
-			if object == "interface":
-				OBJECT.add(target, serange, setype)
-				return
-
-			if object == "module":
-				OBJECT.add(target)
-				return
-
-			if object == "node":
-				OBJECT.add(target, mask, proto, serange, setype)
-				return
-
-			if object == "fcontext":
-				if equal == "":
-					OBJECT.add(target, setype, ftype, serange, seuser)
-				else:
-					OBJECT.add_equal(target, equal)
-				return
-
-			if object == "permissive":
-				OBJECT.add(target)
-				return
-
-		if modify:
-			if object == "boolean":
-				OBJECT.modify(target, value, use_file)
-				return
-
-			if object == "login":
-				OBJECT.modify(target, seuser, serange)
-				return
-
-			if object == "user":
-				rlist = roles.split()
-				OBJECT.modify(target, rlist, selevel, serange, prefix)
-				return
-
-			if object == "module":
-				if enable:
-					OBJECT.enable(target)
-				elif disable:
-					OBJECT.disable(target)
-				else:
-					OBJECT.modify(target)
-				return
-
-			if object == "port":
-				OBJECT.modify(target, proto, serange, setype)
-				return
-
-			if object == "interface":
-				OBJECT.modify(target, serange, setype)
-				return
-
-			if object == "node":
-				OBJECT.modify(target, mask, proto, serange, setype)
-				return
-
-			if object == "fcontext":
-				if equal == "":
-					OBJECT.modify(target, setype, ftype, serange, seuser)
-				else:
-					OBJECT.modify_equal(target, equal)
-				return
-
-		if delete:
-			if object == "port":
-				OBJECT.delete(target, proto)
-
-			elif object == "fcontext":
-				OBJECT.delete(target, ftype)
-
-			elif object == "node":
-				OBJECT.delete(target, mask, proto)
-
-			else:
-				OBJECT.delete(target)
-                        return
-
-                raise ValueError(_("Invalid command: semanage %s") % " ".join(argv))
-
-	#
-	# 
-	#
-	try:
-               output = None
-               input = None
-               store = ""
-
-               if len(sys.argv) < 3:
-                      usage(_("Requires 2 or more arguments"))
-                
-               gopts, cmds = getopt.getopt(sys.argv[1:],
-                                           '01adf:i:lhmno:p:s:NFCDR:L:r:t:P:S:',
-                                           ['add',
-                                            'delete',
-                                            'deleteall',
-                                            'ftype=',
-                                            'file',
-                                            'help',
-                                            'input=',
-                                            'list', 
-                                            'modify',
-                                            'noheading',
-                                            'noreload',
-                                            'off', 
-                                            'on', 
-                                            'output=',
-                                            'proto=',
-                                            'seuser=',
-                                            'store=',
-                                            'range=',
-                                            'level=',
-                                            'roles=',
-                                            'type=',
-                                            'prefix='
-                                            ])
-               for o, a in gopts:
-                      if o == "-S" or o == '--store':
-                             store = a
-                      if o == "-i" or o == '--input':
-                             input = a
-                      if o == "-o" or o == '--output':
-                             output = a
-                      if o == "-N" or o == "--noreload":
-                             load = False
-
-               if output != None:
-                      if output != "-":
-                             sys.stdout = open(output, 'w')
-                      for i in manageditems:
-                             print "%s -D" % i
-                             process_args([i, "-E"])
-                      sys.exit(0)
-
-               if input != None:
-                      if input == "-":
-                             fd = sys.stdin
-                      else:
-                             fd = open(input, 'r')
-                      trans = seobject.semanageRecords(store)
-                      trans.start()
-                      for l in fd.readlines():
-                             process_args(mkargv(l))
-                      trans.set_reload(load)
-                      trans.finish()
-               else:
-                      process_args(sys.argv[1:])
-			
-	except getopt.error, error:
-		usage(_("Options Error %s ") % error.msg)
-	except ValueError, error:
-		errorExit(error.args[0])
-	except KeyError, error:
-		errorExit(_("Invalid value %s") % error.args[0])
-	except IOError, error:
-		errorExit(error.args[1])
-	except OSError, error:
-		errorExit(error.args[1])
-	except RuntimeError, error:
-		errorExit(error.args[0])
+       do_parser()
