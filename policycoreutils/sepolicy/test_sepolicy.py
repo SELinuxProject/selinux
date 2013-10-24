@@ -67,12 +67,6 @@ class SepolicyTests(unittest.TestCase):
         out, err = p.communicate()
         self.assertSuccess(p.returncode, err)
 
-    def test_booleans_l(self):
-        "Verify sepolicy booleans -l fails"
-        p = Popen(['sepolicy', 'booleans', '-l'], stdout = PIPE)
-        out, err = p.communicate()
-        self.assertFailure(p.returncode)
-
     def test_booleans_a(self):
         "Verify sepolicy booleans -a works"
         p = Popen(['sepolicy', 'booleans', '-a'], stdout = PIPE)
