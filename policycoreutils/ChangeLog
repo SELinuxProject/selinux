@@ -1,3 +1,48 @@
+x.y.z 2013-MM-DD (Not yet released)
+	* Fix man pages from Laurent Bigonville.
+	* Support overriding PATH and INITDIR in Makefile from Laurent Bigonville.
+	* Fix LDFLAGS usage from Laurent Bigonville.
+	* Fix init_policy warning from Laurent Bigonville.
+	* Fix semanage logging from Laurent Bigonville.
+	* Open newrole stdin as read/write from Sven Vermeulen.
+	* Fix sepolicy transition from Sven Vermeulen.
+	* Support overriding CFLAGS from Simon Ruderich.
+	* Create correct man directory for run_init from Russell Coker.
+	* semanage export/import fixes from Dan Walsh.
+	* Improve setfiles progress reporting from Dan Walsh.
+	* Document setfiles -o option in usage from Dan Walsh.
+	* Change setfiles to always return -1 on failure from Dan Walsh.
+	* Improve setsebool error r eporting from Dan Walsh.
+	* Major overhaul of gui from Dan Walsh.
+	* Fix sepolicy handling of non-MLS policy from Dan Walsh.
+	* Support returning type aliases from Dan Walsh.
+	* Add sepolicy tests from Dan Walsh.
+	* Add org.selinux.config.policy from Dan Walsh.
+	* Improve range and user input checking by semanage from Dan Walsh.
+	* Prevent source or target arguments that end with / for substitutions from Dan Walsh.
+	* Allow use of <<none>> for semanage fcontext from Dan Walsh.
+	* Report customized user levels from Dan Walsh.
+	* Support deleteall for restoring disabled modules from Dan Walsh.
+	* Improve semanage error reporting from Dan Walsh.
+	* Only list disabled modules for module locallist from Dan Walsh.
+	* Fix logging from Dan Walsh.
+	* Define new constants for file type character codes from Dan Walsh.
+	* Improve bash completions from Dan Walsh.
+	* Convert semanage to argparse from Dan Walsh (originally by Dave Quigley).
+	* Add semanage tests from Dan Walsh.
+	* Split semanage man pages from Dan Walsh.
+	* Move bash completion scripts from Dan Walsh.
+	* Replace genhomedircon script with a link to semodule from Dan Walsh.
+	* Fix fixfiles from Dan Walsh.
+	* Add support for systemd service for restorecon from Dan Walsh.
+	* Spelling corrections from Dan Walsh.
+	* Improve sandbox support for home dir symlinks and file caps from Dan Walsh.
+	* Switch sandbox to openbox window manager from Dan Walsh.
+	* Coalesce audit2why and audit2allow from Dan Walsh.
+	* Change audit2allow to append to output file from Dan Walsh.
+	* Update translations from Dan Walsh.
+	* Change audit2why to use selinux_current_policy_path from Dan Walsh.
+
 2.1.14 2013-02-01
 	* setfiles: estimate percent progress
 	* load_policy: make link at the destination directory

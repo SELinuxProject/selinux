@@ -1,3 +1,10 @@
+x.y.z 2013-MM-DD (Not yet released)
+	* Avoid duplicate list entries from Dan Walsh.
+	* Add audit support to libsemanage from Dan Walsh.
+	* Remove policy.kern and replace with symlink from Dan Walsh.
+	* Apply a MAX_UID check for genhomedircon from Laurent Bigonville.
+	* Fix man pages from Laurent Bigonville.
+
 2.1.10 2013-02-01
 	* Add sefcontext_compile to compile regex everytime policy is rebuilt
 	* Cleanup/fix enable/disable/remove module.

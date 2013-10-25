@@ -1,3 +1,7 @@
+x.y.z 2013-MM-DD (Not yet released)
+	* Support overriding Makefile RANLIB from Sven Vermeulen.
+	* Fix man pages from Laurent Bigonville.
+
 2.1.9 2013-02-01
 	* filename_trans: use some better sorting to compare and merge
 	* coverity fixes

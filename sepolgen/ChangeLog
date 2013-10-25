@@ -1,3 +1,8 @@
+x.y.z 2013-MM-DD (Not yet released)
+	* Fix bug in calls to attributes from Dan Walsh.
+	* Add support for filename transitions from Dan Walsh.
+	* Fix sepolgen tests from Dan Walsh.
+
 1.1.9 2013-02-01
 	* audit.py: Handle times in foreign locals for audit2allow -b
 	* Use refpolicy_makefile() instead of hardcoding Makefile path

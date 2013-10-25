@@ -1,3 +1,27 @@
+x.y.z 2013-MM-DD (Not yet released)
+	* Support overriding Makefile RANLIB from Sven Vermeulen.
+	* Update pkgconfig definition from Sven Vermeulen.
+	* Mount sysfs before trying to mount selinuxfs from Sven Vermeulen.
+	* Fix man pages from Laurent Bigonville.
+	* Support overriding PATH  and LIBBASE in Makefiles from Laurent Bigonville.
+	* Fix LDFLAGS usage from Laurent Bigonville
+	* Avoid shadowing stat in load_mmap from Joe MacDonald.
+	* Support building on older PCRE libraries from Joe MacDonald.
+	* Fix handling of temporary file in sefcontext_compile from Dan Walsh.
+	* Fix procattr cache from Dan Walsh.
+	* Define python constants for getenforce result from Dan Walsh.
+	* Fix label substitution handling of / from Dan Walsh.
+	* Add selinux_current_policy_path from Dan Walsh.
+	* Change get_context_list to only return good matches from Dan Walsh.
+	* Support udev-197 and higher from Sven Vermeulen and Dan Walsh.
+	* Add support for local substitutions from Dan Walsh.
+	* Change setfilecon to not return ENOSUP if context is already correct from Dan Walsh.
+	* Python wrapper leak fixes from Dan Walsh.
+	* Export SELINUX_TRANS_DIR definition in selinux.h from Dan Walsh.
+	* Add selinux_systemd_contexts_path from Dan Walsh.
+	* Add selinux_set_policy_root from Dan Walsh.
+	* Add man page for sefcontext_compile from Dan Walsh.
+
 2.1.13 2013-02-01
 	* audit2why: make sure path is nul terminated
 	* utils: new file context regex compiler
