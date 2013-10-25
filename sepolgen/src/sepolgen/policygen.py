@@ -161,21 +161,21 @@ class PolicyGenerator:
             if self.explain:
                 rule.comment = str(refpolicy.Comment(explain_access(av, verbosity=self.explain)))
             if av.type == audit2why.ALLOW:
-                rule.comment += "\n#!!!! This avc is allowed in the current policy"
+                rule.comment += "#!!!! This avc is allowed in the current policy\n"
             if av.type == audit2why.DONTAUDIT:
-                rule.comment += "\n#!!!! This avc has a dontaudit rule in the current policy"
+                rule.comment += "#!!!! This avc has a dontaudit rule in the current policy\n"
 
             if av.type == audit2why.BOOLEAN:
                 if len(av.data) > 1:
-                    rule.comment += "\n#!!!! This avc can be allowed using one of the these booleans:\n#     %s" % ", ".join(map(lambda x: x[0], av.data))
+                    rule.comment += "#!!!! This avc can be allowed using one of the these booleans:\n#     %s\n" % ", ".join(map(lambda x: x[0], av.data))
                 else:
-                    rule.comment += "\n#!!!! This avc can be allowed using the boolean '%s'" % av.data[0][0]
+                    rule.comment += "#!!!! This avc can be allowed using the boolean '%s'\n" % av.data[0][0]
 
             if av.type == audit2why.CONSTRAINT:
-                rule.comment += "\n#!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access.\n"
-                rule.comment += "#Constraint rule: \n\t" + av.data[0]
-                for reason in av.data[1:]:
-                    rule.comment += "#\tPossible cause is the source %s and target %s are different." % reason
+                rule.comment += "#!!!! This avc is a constraint violation.  You will need to add an attribute to either the source or target type to make it work.\n"
+                rule.comment += "#Constraint rule: "
+                for reason in av.data:
+                    rule.comment += "\n#\tPossible cause source context and target context '%s' differ\b" % reason
 
             try:
                 if ( av.type == audit2why.TERULE and
@@ -189,9 +189,9 @@ class PolicyGenerator:
                         if i not in self.domains:
                             types.append(i)
                     if len(types) == 1:
-                        rule.comment += "\n#!!!! The source type '%s' can write to a '%s' of the following type:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+                        rule.comment += "#!!!! The source type '%s' can write to a '%s' of the following type:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
                     elif len(types) >= 1:
-                        rule.comment += "\n#!!!! The source type '%s' can write to a '%s' of the following types:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+                        rule.comment += "#!!!! The source type '%s' can write to a '%s' of the following types:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
             except:
                 pass
             self.module.children.append(rule)
