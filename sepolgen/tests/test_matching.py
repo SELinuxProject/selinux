@@ -51,7 +51,7 @@ class TestMatchList(unittest.TestCase):
         a = matching.Match()
         a.dist = 100
         ml.append(a)
-        self.assertEqual(len(ml), 2)
+        self.assertEqual(len(ml), 1)
 
         a = matching.Match()
         a.dist = 200
