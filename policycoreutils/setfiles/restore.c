@@ -375,7 +375,7 @@ int process_glob(char *name, int recurse) {
 	size_t i = 0;
 	int errors;
 	memset(&globbuf, 0, sizeof(globbuf));
-	errors = glob(name, GLOB_TILDE | GLOB_PERIOD | GLOB_NOCHECK, NULL, &globbuf);
+	errors = glob(name, GLOB_TILDE | GLOB_PERIOD | GLOB_NOCHECK | GLOB_BRACE, NULL, &globbuf);
 	if (errors) 
 		return errors;
 
