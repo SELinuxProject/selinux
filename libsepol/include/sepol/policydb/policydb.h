@@ -683,10 +683,11 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_ROLETRANS	26
 #define POLICYDB_VERSION_NEW_OBJECT_DEFAULTS	27
 #define POLICYDB_VERSION_DEFAULT_TYPE	28
+#define POLICYDB_VERSION_CONSTRAINT_NAMES	29
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_DEFAULT_TYPE
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_CONSTRAINT_NAMES
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE		4
