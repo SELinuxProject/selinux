@@ -1,0 +1,10 @@
+To build and install everything under a private directory, do:
+make DESTDIR=/path/to/private install install-pywrap
+
+To install as the default system libraries and binaries
+(overwriting any previously installed ones - dangerous!), do:
+make LIBDIR=/usr/lib64 SHLIBDIR=/lib64 install install-pywrap relabel
+
+This may render your system unusable if the upstream SELinux userspace
+lacks library functions or other dependencies relied upon by your
+distribution.  If it breaks, you get to keep both pieces.
