@@ -174,7 +174,8 @@ class PolicyGenerator:
             if av.type == audit2why.CONSTRAINT:
                 rule.comment += "\n#!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access."
                 rule.comment += "\n#Constraint rule: "
-                for reason in av.data:
+                rule.comment += "\n\t" + av.data[0]
+                for reason in av.data[1:]:
                     rule.comment += "\n#\tPossible cause is the source %s and target %s are different." % reason
 
             try:
