@@ -168,7 +168,7 @@ class SemanageTests(unittest.TestCase):
             p = Popen(["semanage", "login", "-d", "testlogin" ], stdout = PIPE)
             out, err = p.communicate()
             print("Verify userdel ")
-            p = Popen(["userdel", "testlogin" ], stdout = PIPE)
+            p = Popen(["userdel", "-f", "-r", "testlogin" ], stderr = PIPE, stdout = PIPE)
             out, err = p.communicate()
             self.assertSuccess(p.returncode, err)
             print("Verify semanage user -d")
