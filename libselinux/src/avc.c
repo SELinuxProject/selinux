@@ -739,6 +739,16 @@ void avc_audit(security_id_t ssid, security_id_t tsid,
 
 hidden_def(avc_audit)
 
+
+static void avd_init(struct av_decision *avd)
+{
+	avd->allowed = 0;
+	avd->auditallow = 0;
+	avd->auditdeny = 0xffffffff;
+	avd->seqno = avc_cache.latest_notif;
+	avd->flags = 0;
+}
+
 int avc_has_perm_noaudit(security_id_t ssid,
 			 security_id_t tsid,
 			 security_class_t tclass,
@@ -750,6 +760,9 @@ int avc_has_perm_noaudit(security_id_t ssid,
 	struct avc_entry entry;
 	access_vector_t denied;
 	struct avc_entry_ref ref;
+
+	if (avd)
+		avd_init(avd);
 
 	if (!avc_using_threads && !avc_app_main_loop) {
 		(void)avc_netlink_check_nb();
@@ -783,6 +796,10 @@ int avc_has_perm_noaudit(security_id_t ssid,
 			rc = security_compute_av_flags_raw(ssid->ctx, tsid->ctx,
 							   tclass, requested,
 							   &entry.avd);
+			if (rc && errno == EINVAL && !avc_enforcing) {
+				rc = errno = 0;
+				goto out;
+			}
 			if (rc)
 				goto out;
 			rc = avc_insert(ssid, tsid, tclass, &entry, aeref);
@@ -820,8 +837,6 @@ int avc_has_perm(security_id_t ssid, security_id_t tsid,
 {
 	struct av_decision avd;
 	int errsave, rc;
-
-	memset(&avd, 0, sizeof(avd));
 
 	rc = avc_has_perm_noaudit(ssid, tsid, tclass, requested, aeref, &avd);
 	errsave = errno;
