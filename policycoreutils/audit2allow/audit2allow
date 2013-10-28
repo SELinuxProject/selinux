@@ -269,12 +269,11 @@ class AuditToPolicy:
                     continue
 
                 if rc == audit2why.CONSTRAINT:
-                    print "\t\tPolicy constraint violation.\n"
-                    print "\t\tMay require adding a type attribute to the domain or type to satisfy the constraint.\n"
-                    print "\t\tConstraints are defined in the policy sources in policy/constraints (general), policy/mcs (MCS), and policy/mls (MLS).\n"
-                    for reason in data:
-                        print "\t\tNote: Possible cause is the source and target %s differ\n" % reason
-                    continue
+                    print #!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access.\n"
+                    print "#Constraint rule:"
+                    print "\n\t" + data[0]
+                    for reason in data[1:]:
+                        print "#\tPossible cause is the source %s and target %s are different.\n" % reason
 
                 if rc == audit2why.RBAC:
                     print "\t\tMissing role allow rule.\n"
