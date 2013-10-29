@@ -10,11 +10,7 @@ override CFLAGS += -I$(INCLUDEDIR)
 LDLIBS = -lsepol -lselinux -lsemanage -L$(LIBDIR)
 SEMODULE_OBJS = semodule.o
 
-.PHONY: all semodule_path
-all: semodule semodule_path genhomedircon
-
-semodule_path:
-	@echo -n $(SBINDIR) > ../scripts/semodule_path
+all: semodule genhomedircon
 
 semodule: $(SEMODULE_OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
@@ -33,7 +29,7 @@ install: all
 relabel:
 
 clean:
-	-rm -f semodule *.o ../scripts/semodule_path genhomedircon
+	-rm -f semodule *.o genhomedircon
 
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])
