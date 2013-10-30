@@ -1,4 +1,4 @@
-x.y.z 2013-MM-DD (Not yet released)
+2.2 2013-10-30
 	* Fix hyphen usage in man pages from Laurent Bigonville.
 	* handle-unknown / -U required argument fix from Laurent Bigonville.
 	* Support overriding Makefile PATH and LIBDIR from Laurent Bigonville.
