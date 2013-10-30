@@ -1,4 +1,5 @@
 x.y.z 2013-MM-DD (Not yet released)
+	* Fix avc_has_perm() returns -1 even when SELinux is in permissive mode.
 	* Support overriding Makefile RANLIB from Sven Vermeulen.
 	* Update pkgconfig definition from Sven Vermeulen.
 	* Mount sysfs before trying to mount selinuxfs from Sven Vermeulen.

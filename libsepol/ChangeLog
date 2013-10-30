@@ -1,4 +1,8 @@
 x.y.z 2013-MM-DD (Not yet released)
+	* Allow constraint denial cause to be determined from Richard Haines.
+	  - Add kernel policy version 29.
+	  - Add modular policy version 17.
+	  - Add sepol_compute_av_reason_buffer(), sepol_string_to_security_class(), sepol_string_to_av_perm().
 	* Support overriding Makefile RANLIB from Sven Vermeulen.
 	* Fix man pages from Laurent Bigonville.
 

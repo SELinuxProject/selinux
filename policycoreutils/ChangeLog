@@ -1,4 +1,5 @@
 x.y.z 2013-MM-DD (Not yet released)
+	* Properly build the swig exception file from Laurent Bigonville.
 	* Fix man pages from Laurent Bigonville.
 	* Support overriding PATH and INITDIR in Makefile from Laurent Bigonville.
 	* Fix LDFLAGS usage from Laurent Bigonville.
@@ -8,6 +9,9 @@ x.y.z 2013-MM-DD (Not yet released)
 	* Fix sepolicy transition from Sven Vermeulen.
 	* Support overriding CFLAGS from Simon Ruderich.
 	* Create correct man directory for run_init from Russell Coker.
+	* restorecon GLOB_BRACE change from Michal Trunecka.
+	* Extend audit2why to report additional constraint information.
+	* Catch IOError errors within audit2allow from Dan Walsh.
 	* semanage export/import fixes from Dan Walsh.
 	* Improve setfiles progress reporting from Dan Walsh.
 	* Document setfiles -o option in usage from Dan Walsh.
