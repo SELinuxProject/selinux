@@ -299,6 +299,7 @@ static PyObject *init(PyObject *self __attribute__((unused)), PyObject *args) {
 	}
 
 static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args) {
+	char *reason_buf = NULL;
 	security_context_t scon; 
 	security_context_t tcon;
 	char *tclassstr; 
@@ -364,7 +365,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	}
 
 	/* Reproduce the computation. */
-	rc = sepol_compute_av_reason(ssid, tsid, tclass, av, &avd, &reason);
+	rc = sepol_compute_av_reason_buffer(ssid, tsid, tclass, av, &avd, &reason, &reason_buf, 0);
 	if (rc < 0)
 		RETURN(BADCOMPUTE)
 
@@ -404,6 +405,12 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	}
 
 	if (reason & SEPOL_COMPUTEAV_CONS) {
+		if (reason_buf) {
+			PyObject *result = NULL;
+			result = Py_BuildValue("is", CONSTRAINT, reason_buf);
+			free(reason_buf);
+			return result;
+		}
 		RETURN(CONSTRAINT)
 	}
 
