@@ -1,3 +1,6 @@
+1.2.1 2013-10-31
+	* Add back attributes flag to fix exception crash from Dan Walsh.
+
 1.2 2013-10-30
 	* Return additional constraint information.
 	* Fix bug in calls to attributes from Dan Walsh.
