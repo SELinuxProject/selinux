@@ -12,23 +12,23 @@
 	* implement default type policy syntax
 	* Fix memory leak issues found by Klocwork
 
-2.1.8 2011-09-13
+2.1.8 2012-09-13
 	* fix neverallow checking on attributes
 	* Move context_copy() after switch block in ocontext_copy_*().
 	* check for missing initial SID labeling statement.
 	* Add always_check_network policy capability
 	* role_fix_callback skips out-of-scope roles during expansion.
 
-2.1.7 2011-06-28
+2.1.7 2012-06-28
 	* reserve policycapability for redhat testing of ptrace child
 	* cosmetic changes to make the source easier to read
 	* prepend instead of append to filename_trans list
 	* Android/MacOS X build support
 
-2.1.6 2011-04-23
+2.1.6 2012-04-23
 	* allocate enough space to hold filename in trans rules
 
-2.1.5 2011-03-28
+2.1.5 2012-03-28
 	* checkpolicy: implement new default labeling behaviors
 
 2.1.4 2011-10-03
