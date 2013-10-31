@@ -4,11 +4,15 @@ BINDIR ?= $(PREFIX)/bin
 LIBDIR ?= $(PREFIX)/lib
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= /usr/share/locale
+PYTHON ?= /usr/bin/python
 
 all: audit2why
 
 audit2why:
 	ln -sf audit2allow audit2why
+
+test: all
+	@$(PYTHON) test_audit2allow.py -v
 
 install: all
 	-mkdir -p $(BINDIR)
