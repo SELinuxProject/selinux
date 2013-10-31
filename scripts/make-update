@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ $# != 2 ]; then
+    echo "Usage: $0 last-release-date package-to-update"
+    echo "  e.g. $0 20131030 sepolgen"
+    exit 1
+fi
+
+TAG=$1
+PKG=$2
+
+DEST=../update-$TAG
+mkdir -p $DEST
+
+if [ \! -d $PKG ]; then
+    echo "$PKG does not exist."
+    exit 1
+fi
+
+cd $PKG
+VERS=`cat VERSION`
+ARCHIVE=$PKG-$VERS.tar.gz
+git tag $PKG-$VERS
+git archive --format=tar --prefix=$PKG-$VERS/ $PKG-$VERS | gzip > ../$DEST/$ARCHIVE
+cd ..
+
+cd $DEST
+
+echo "Copy $ARCHIVE from $DEST to the server and update its download link and checksum on the Releases wiki page:"
+
+echo ""
+
+echo "[http://userspace.selinuxproject.org/releases/$TAG/$ARCHIVE $ARCHIVE]"
+echo ""
+echo "`sha256sum $ARCHIVE`"
+echo ""

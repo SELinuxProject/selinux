@@ -5,18 +5,23 @@ DIRS="libsepol libselinux libsemanage policycoreutils checkpolicy sepolgen"
 
 git tag -a $(date '+%Y%m%d') -m "Release $(date '+%Y%m%d')"
 
-rm -rf $(DEST)
-mkdir -p $(DEST)
+rm -rf $DEST
+mkdir -p $DEST
 
 for i in $DIRS; do
 	cd $i
-	git archive --format=tar --prefix=$i-`cat VERSION`/ HEAD | gzip > ../$(DEST)/$i-`cat VERSION`.tar.gz
+	VERS=`cat VERSION`
+	ARCHIVE=$i-$VERS.tar.gz
+	git tag $i-$VERS > /dev/null 2>&1
+	git archive --format=tar --prefix=$i-$VERS/ $i-$VERS | gzip > ../$DEST/$ARCHIVE
 	cd ..
 done
 
-pushd $(DEST)
+cd $DEST
 
-echo "Copy contents of $(DEST) to the server and add the following to the Releases wiki page:"
+echo "Copy *.tar.gz from $DEST to the server and add the following to the Releases wiki page:"
+
+echo ""
 
 echo "== Release $(date '+%Y-%m-%d') =="
 
@@ -26,5 +31,3 @@ for i in *.tar.gz; do
 	echo "`sha256sum $i`"
 	echo ""
 done
-
-popd
