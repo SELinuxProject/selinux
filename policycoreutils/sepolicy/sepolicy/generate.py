@@ -26,7 +26,6 @@ import re
 import sepolicy
 from sepolicy import get_all_types, get_all_attributes, get_all_roles
 import time
-import yum
 
 from templates import executable
 from templates import boolean
@@ -1252,6 +1251,7 @@ allow %s_t %s_t:%s_socket name_%s;
 		return fcfile
 
         def __extract_rpms(self):
+            import yum
             yb = yum.YumBase()
             yb.setCacheDir()
 
@@ -1293,7 +1293,10 @@ allow %s_t %s_t:%s_socket name_%s;
                                 self.add_dir(fname)
 
         def gen_writeable(self):
-            self.__extract_rpms()
+            try:
+                self.__extract_rpms()
+            except ImportError:
+                pass
 
             if os.path.isfile("/var/run/%s.pid"  % self.name):
                 self.add_file("/var/run/%s.pid"  % self.name)
