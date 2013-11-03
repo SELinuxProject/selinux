@@ -728,6 +728,7 @@ mls_ops:
 			push(answer_list[answer_counter++]);
 			free(a);
 			free(b);
+			free(expr_list[x]);
 		} else if (strncmp(expr_list[x], "not", 3) == 0) {
 			b = pop();
 			b_len = strlen(b);
@@ -748,6 +749,7 @@ mls_ops:
 						expr_list[x], b);
 			push(answer_list[answer_counter++]);
 			free(b);
+			free(expr_list[x]);
 		} else {
 			push(expr_list[x]);
 		}
@@ -815,6 +817,8 @@ out:
 		for (x = 0; expr_list[x] != NULL; x++)
 			free(expr_list[x]);
 	}
+	free(answer_list);
+	free(expr_list);
 	return rc;
 }
 
