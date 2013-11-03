@@ -75,6 +75,20 @@ extern int sepol_compute_av_reason_buffer(sepol_security_id_t ssid,
 				   unsigned int *reason,
 				   char **reason_buf,
 				   unsigned int flags);
+
+/*
+ * Returns the mls/validatetrans constraint expression calculations in
+ * a buffer that must be free'd by the caller using free(3).
+ * If the SHOW_GRANTED flag is set it will show granted and denied
+ * mls/validatetrans (the default is to show only those denied).
+ */
+extern int sepol_validate_transition_reason_buffer(sepol_security_id_t oldsid,
+					sepol_security_id_t newsid,
+					sepol_security_id_t tasksid,
+					sepol_security_class_t tclass,
+					char **reason_buf,
+					unsigned int flags);
+
 /*
  * Return a class ID associated with the class string representation
  * specified by `class_name'.

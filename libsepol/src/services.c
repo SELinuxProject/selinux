@@ -344,11 +344,16 @@ static char *get_class_info(sepol_security_class_t tclass,
 		if (len < 0 || len >= class_buf_len - buf_used)
 			continue;
 
-		/* Add permission entries */
+		/* Add permission entries (validatetrans does not have perms) */
 		p += len;
 		buf_used += len;
-		len = snprintf(p, class_buf_len - buf_used, "{%s } (",
-				sepol_av_to_string(policydb, tclass, constraint->permissions));
+		if (state_num < 2) {
+			len = snprintf(p, class_buf_len - buf_used, "{%s } (",
+			sepol_av_to_string(policydb, tclass,
+				constraint->permissions));
+		} else {
+			len = snprintf(p, class_buf_len - buf_used, "(");
+		}
 		if (len < 0 || len >= class_buf_len - buf_used)
 			continue;
 		break;
@@ -750,8 +755,11 @@ mls_ops:
 	/* Get the final answer from tos and build constraint text */
 	a = pop();
 
-	/* Constraint calculation: rc = 0 is denied, rc = 1 is granted */
-	sprintf(tmp_buf, "Constraint %s\n", s[0] ? "GRANTED" : "DENIED");
+	/* validatetrans / constraint calculation:
+				rc = 0 is denied, rc = 1 is granted */
+	sprintf(tmp_buf, "%s %s\n",
+			xcontext ? "Validatetrans" : "Constraint",
+			s[0] ? "GRANTED" : "DENIED");
 
 	int len, new_buf_len;
 	char *p, **new_buf = r_buf;
@@ -979,6 +987,68 @@ int hidden sepol_validate_transition(sepol_security_id_t oldsid,
 		constraint = constraint->next;
 	}
 
+	return 0;
+}
+
+/*
+ * sepol_validate_transition_reason_buffer - the reason buffer is realloc'd
+ * in the constraint_expr_eval_reason() function.
+ */
+int hidden sepol_validate_transition_reason_buffer(sepol_security_id_t oldsid,
+				     sepol_security_id_t newsid,
+				     sepol_security_id_t tasksid,
+				     sepol_security_class_t tclass,
+				     char **reason_buf,
+				     unsigned int flags)
+{
+	context_struct_t *ocontext;
+	context_struct_t *ncontext;
+	context_struct_t *tcontext;
+	class_datum_t *tclass_datum;
+	constraint_node_t *constraint;
+
+	if (!tclass || tclass > policydb->p_classes.nprim) {
+		ERR(NULL, "unrecognized class %d", tclass);
+		return -EINVAL;
+	}
+	tclass_datum = policydb->class_val_to_struct[tclass - 1];
+
+	ocontext = sepol_sidtab_search(sidtab, oldsid);
+	if (!ocontext) {
+		ERR(NULL, "unrecognized SID %d", oldsid);
+		return -EINVAL;
+	}
+
+	ncontext = sepol_sidtab_search(sidtab, newsid);
+	if (!ncontext) {
+		ERR(NULL, "unrecognized SID %d", newsid);
+		return -EINVAL;
+	}
+
+	tcontext = sepol_sidtab_search(sidtab, tasksid);
+	if (!tcontext) {
+		ERR(NULL, "unrecognized SID %d", tasksid);
+		return -EINVAL;
+	}
+
+	/*
+	 * Set the buffer to NULL as mls/validatetrans may not be processed.
+	 * If a buffer is required, then the routines in
+	 * constraint_expr_eval_reason will realloc in REASON_BUF_SIZE
+	 * chunks (as it gets called for each mls/validatetrans processed).
+	 * We just make sure these start from zero.
+	 */
+	*reason_buf = NULL;
+	reason_buf_used = 0;
+	reason_buf_len = 0;
+	constraint = tclass_datum->validatetrans;
+	while (constraint) {
+		if (!constraint_expr_eval_reason(ocontext, ncontext, tcontext,
+				tclass, constraint, reason_buf, flags)) {
+			return -EPERM;
+		}
+		constraint = constraint->next;
+	}
 	return 0;
 }
 
