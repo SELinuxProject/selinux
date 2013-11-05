@@ -23,7 +23,6 @@
 #
 #
 
-import policycoreutils.default_encoding_utf8
 import argparse
 import seobject
 import sys
