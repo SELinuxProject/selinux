@@ -1,3 +1,6 @@
+2.2.2 2013-11-06
+	* Remove import policycoreutils.default_encoding_utf8 from semanage from Dan Walsh.
+
 2.2.1 2013-10-31
 	* Make yum/extract_rpms optional for sepolicy generate from Dan Walsh.
 	* Add test suite for audit2allow and sepolgen-ifgen from Dan Walsh.
