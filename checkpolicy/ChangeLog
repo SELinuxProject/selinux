@@ -1,3 +1,5 @@
+	* Add debug feature to display constraints/validatetrans from Richard Haines.
+
 2.2 2013-10-30
 	* Fix hyphen usage in man pages from Laurent Bigonville.
 	* handle-unknown / -U required argument fix from Laurent Bigonville.
