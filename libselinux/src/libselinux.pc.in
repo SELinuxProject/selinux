@@ -8,5 +8,5 @@ Description: SELinux utility library
 Version: @VERSION@
 URL: http://userspace.selinuxproject.org/
 Requires.private: libsepol libpcre
-Libs: -L${libdir} -lselinux -lpthread
+Libs: -L${libdir} -lselinux
 Cflags: -I${includedir}
