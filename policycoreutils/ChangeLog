@@ -1,3 +1,7 @@
+	* Add systemd unit file for mcstrans from Laurent Bigonville.
+	* Improve restorecond systemd unit file from Laurent Bigonville.
+	* Minor man pages improvements from Laurent Bigonville.
+
 2.2.2 2013-11-06
 	* Remove import policycoreutils.default_encoding_utf8 from semanage from Dan Walsh.
 
