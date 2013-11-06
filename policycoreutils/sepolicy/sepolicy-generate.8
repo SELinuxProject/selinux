@@ -54,7 +54,7 @@ Use \fBsepolicy generate\fP to generate an SELinux policy Module.
 
 When specifying a \fBconfined application\fP you must specify a
 path. \fBsepolicy generate\fP will use the rpm payload of the
-application along with \fBnm -D APPLICATION\fP to help it generate
+application along with \fBnm \-D APPLICATION\fP to help it generate
 types and policy rules for your policy files.
 
 .B Type Enforcing File NAME.te
@@ -75,7 +75,7 @@ file paths to the types.  Tools like restorecon and RPM will use these paths to 
 
 .B RPM Spec File NAME_selinux.spec
 .br
-This file is an RPM SPEC file that can be used to install the SELinux policy on to machines and setup the labeling. The spec file also installs the interface file and a man page describing the policy.  You can use \fBsepolicy manpage -d NAME\fP to generate the man page.
+This file is an RPM SPEC file that can be used to install the SELinux policy on to machines and setup the labeling. The spec file also installs the interface file and a man page describing the policy.  You can use \fBsepolicy manpage \-d NAME\fP to generate the man page.
 
 .B Shell File NAME.sh
 .br
@@ -158,9 +158,7 @@ Generate Policy for Minimal X Windows Login User Role
 .br
 Generating Policy for /usr/sbin/rwhod named rwhod
 .br
-Created the following files in:
-.br
-./
+Created the following files:
 .br
 rwhod.te # Type Enforcement file
 .br

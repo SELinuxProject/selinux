@@ -25,7 +25,7 @@ check whether the file contexts are all set as specified by the active policy
 If a file object does not have a context, restorecon will write the default
 context to the file object's extended attributes. If a file object has a
 context, restorecon will only modify the type portion of the security context.
-The -F option will force a replacement of the entire context.
+The \-F option will force a replacement of the entire context.
 .P
 It is the same executable as
 .BR setfiles
@@ -50,7 +50,7 @@ display usage information and exit.
 ignore files that do not exist.
 .TP
 .B \-n
-don't change any file labels (passive check).  To display the files whose labels would be changed, add -v.
+don't change any file labels (passive check).  To display the files whose labels would be changed, add \-v.
 .TP
 .B \-o outfilename
 Deprecated, SELinux policy will probably block this access.  Use shell redirection to save list of files with incorrect context in filename.

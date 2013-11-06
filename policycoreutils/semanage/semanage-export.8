@@ -1,6 +1,6 @@
 .TH "semanage-export" "8" "20130617" "" ""
 .SH "NAME"
-.B semanage export\- SELinux Policy Management import tool
+.B semanage\-export \- SELinux Policy Management import tool
 .SH "SYNOPSIS"
 .B semanage export [\-h] [\-S STORE] [\-f OUTPUT_FILE]
 
@@ -23,10 +23,10 @@ Output file
 .SH EXAMPLE
 .nf
 Import semanage modifications from another machine
-# semanage export -f semanage.mods
+# semanage export \-f semanage.mods
 # scp semanage.mod remotemachine:
 # ssh remotemachine
-# semanage import -f semanage.mods
+# semanage import \-f semanage.mods
 
 .SH "SEE ALSO"
 .B selinux (8),

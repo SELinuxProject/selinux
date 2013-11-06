@@ -1,6 +1,6 @@
 .TH "semanage-login" "8" "20130617" "" ""
 .SH "NAME"
-.B semanage login\- SELinux Policy Management linux user to SELinux User mapping tool
+.B semanage\-login \- SELinux Policy Management linux user to SELinux User mapping tool
 .SH "SYNOPSIS"
 .B semanage login [\-h] [\-n] [\-N] [\-s STORE] [ \-\-add \-s SEUSER \-r RANGE LOGIN | \-\-delete LOGIN | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-s SEUSER \-r RANGE LOGIN ]
 
@@ -53,11 +53,11 @@ MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login ma
 .SH EXAMPLE
 .nf
 Modify the default user on the system to the guest_u user
-# semanage login -m -s guest_u __default__
+# semanage login \-m \-s guest_u __default__
 Assign gijoe user on an MLS machine  a range and to the staff_u user
-# semanage login -a -s staff_u -rSystemLow-Secret gijoe
+# semanage login \-a \-s staff_u \-rSystemLow-Secret gijoe
 Assign all users in the engineering group to the staff_u user
-# semanage login -a -s staff_u %engineering
+# semanage login \-a \-s staff_u %engineering
 
 .SH "SEE ALSO"
 .B selinux (8),

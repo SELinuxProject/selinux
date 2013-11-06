@@ -1,6 +1,6 @@
 .TH "semanage-user" "8" "20130617" "" ""
 .SH "NAME"
-.B semanage user\- SELinux Policy Management SELinux User mapping tool
+.B semanage\-user \- SELinux Policy Management SELinux User mapping tool
 .SH "SYNOPSIS"
 .B  semanage user [\-h] [\-n] [\-N] [\-s STORE] [ \-\-add ( \-L LEVEL \-R ROLES \-r RANGE \-s SEUSER selinux_name) | \-\-delete selinux_name | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify ( \-L LEVEL \-R ROLES \-r RANGE \-s SEUSER selinux_name ) ]
 
@@ -60,7 +60,7 @@ List SELinux users
 Modify groups for staff_u user
 # semanage user \-m \-R "system_r unconfined_r staff_r" staff_u
 Add level for TopSecret Users
-# semanage user \-a \-R "staff_r" -rs0-TopSecret topsecret_u
+# semanage user \-a \-R "staff_r" \-rs0\-TopSecret topsecret_u
 
 .SH "SEE ALSO"
 .B selinux (8),
