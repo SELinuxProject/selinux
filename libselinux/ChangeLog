@@ -1,3 +1,6 @@
+2.2.1 2013-11-06
+	* Remove -lpthread from pkg-config file; it is not required.
+
 2.2 2013-10-30
 	* Fix avc_has_perm() returns -1 even when SELinux is in permissive mode.
 	* Support overriding Makefile RANLIB from Sven Vermeulen.
