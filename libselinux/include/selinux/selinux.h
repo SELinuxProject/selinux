@@ -357,6 +357,25 @@ struct security_class_mapping {
 	const char *perms[sizeof(access_vector_t) * 8 + 1];
 };
 
+/**
+ * selinux_set_mapping - Enable dynamic mapping between integer offsets and security class names
+ * @map: array of security_class_mapping structures
+ *
+ * The core avc_has_perm() API uses integers to represent security
+ * classes; previous to the introduction of this function, it was
+ * common for userspace object managers to be compiled using generated
+ * offsets for a particular policy.  However, that strongly ties the build of the userspace components to a particular policy.
+ *
+ * By using this function to map between integer offsets and security
+ * class names, it's possible to replace a system policies that have
+ * at least the same set of security class names as used by the
+ * userspace object managers.
+ *
+ * To correctly use this function, you should override the generated
+ * security class defines from the system policy in a local header,
+ * starting at 1, and have one security_class_mapping structure entry
+ * per define.
+ */
 extern int selinux_set_mapping(struct security_class_mapping *map);
 
 /* Common helpers */
