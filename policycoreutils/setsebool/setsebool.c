@@ -53,10 +53,10 @@ int main(int argc, char **argv)
 			permanent = 1;
 			break;
 		case 'N':
-		        reload = 0;
+			reload = 0;
 			break;
 		case 'V':
-		        verbose = 1;
+			verbose = 1;
 			break;
 		default:
 			usage();
