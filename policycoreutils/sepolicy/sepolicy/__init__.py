@@ -141,6 +141,9 @@ def get_writable_files(setype):
     for i in permlist:
         if i['target'] in attributes:
             continue
+        if "enabled" in i:
+            if not i["enabled"]:
+                continue
         if i['target'].endswith("_t"):
             if i['target'] not in file_types:
                 continue
