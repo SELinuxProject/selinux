@@ -2,7 +2,6 @@
 Name=File Context maintainer
 Exec=/usr/sbin/restorecond -u
 Comment=Fix file context in owned by the user
-Encoding=UTF-8
 Type=Application
 StartupNotify=false
 X-GNOME-Autostart-enabled=false
