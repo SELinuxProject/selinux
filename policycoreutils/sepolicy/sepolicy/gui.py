@@ -484,6 +484,8 @@ class SELinuxGui():
         path = None
         if test:
             domains = [ "httpd_t", "abrt_t" ]
+            if app and app not in domains:
+                domains.append(app)
         else:
             domains = sepolicy_domains
             loading_gui.show()
