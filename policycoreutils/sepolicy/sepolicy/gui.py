@@ -2727,7 +2727,7 @@ class SELinuxGui():
         if not active and not exists:
             return
         try:
-            self.dbus.relabel_on_boots(active)
+            self.dbus.relabel_on_boot(active)
         except dbus.exceptions.DBusException, e:
             self.error(e)
 
