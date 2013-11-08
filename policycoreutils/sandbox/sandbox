@@ -356,7 +356,7 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
                try:
                       sepolicy.info(sepolicy.TYPE, "sandbox_t")
                except RuntimeError:
-                      raise ValueError(_("Sandbox Policy is currently disabled.\nYou need to enable the policy by executing the following as root\n# semodule -e sandbox"))
+                      raise ValueError(_("Sandbox Policy is not currently installed.\nYou need to install the selinux-policy-sandbox package in order to run this command"))
                
         if self.__options.setype:
                self.setype = self.__options.setype
