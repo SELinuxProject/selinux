@@ -1,3 +1,10 @@
+	* Call proper dbus function from Dan Walsh.
+	* Only return writeable files that are enabled from Dan Walsh.
+	* Add domain to short list of domains, when -t and -d from Dan Walsh.
+	* Fix up desktop files to match current standards from Dan Walsh.
+	* Add support to return sesitivities and cats for python from Dan Walsh.
+	* Cleanup whitespace from Dan Walsh.
+	* Add message to tell user to install sandbox policy from Dan Walsh.
 	* Add systemd unit file for mcstrans from Laurent Bigonville.
 	* Improve restorecond systemd unit file from Laurent Bigonville.
 	* Minor man pages improvements from Laurent Bigonville.
