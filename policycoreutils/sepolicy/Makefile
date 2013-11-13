@@ -47,6 +47,11 @@ install:
 	-mkdir -p $(DESTDIR)/usr/share/system-config-selinux
 	install -m 755 selinux_server.py $(DESTDIR)/usr/share/system-config-selinux
 	install -m 644 *.desktop $(DATADIR)/system-config-selinux
+	-mkdir -p $(DESTDIR) $(DATADIR)/pixmaps
+	install -m 644 sepolicy_256.png $(DATADIR)/pixmaps/sepolicy.png
+	for i in 16 22 32 48 256; do \
+		mkdir -p $(DESTDIR) $(DATADIR)/icons/hicolor/$${i}x$${i}/apps; \
+		install -m 644 sepolicy_$${i}.png $(DATADIR)/icons/hicolor/$${i}x$${i}/apps/sepolicy.png; \
+	done
 
 relabel:
-
