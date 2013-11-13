@@ -1,4 +1,3 @@
-	* Call proper dbus function from Dan Walsh.
 	* Only return writeable files that are enabled from Dan Walsh.
 	* Add domain to short list of domains, when -t and -d from Dan Walsh.
 	* Fix up desktop files to match current standards from Dan Walsh.
@@ -8,6 +7,10 @@
 	* Add systemd unit file for mcstrans from Laurent Bigonville.
 	* Improve restorecond systemd unit file from Laurent Bigonville.
 	* Minor man pages improvements from Laurent Bigonville.
+
+2.2.3 2013-11-13
+	* Apply polkit check on all dbus interfaces and restrict to active user from Dan Walsh.
+	* Fix typo in sepolicy gui dbus.relabel_on_boot call from Dan Walsh.
 
 2.2.2 2013-11-06
 	* Remove import policycoreutils.default_encoding_utf8 from semanage from Dan Walsh.

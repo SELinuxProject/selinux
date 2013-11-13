@@ -47,7 +47,7 @@ class selinux_server(slip.dbus.service.Object):
     # The semodule_list method will return the output of semodule -l, using the customized polkit,
     # since this is a readonly behaviour
     #
-    @slip.dbus.polkit.require_auth("org.selinux.customized")
+    @slip.dbus.polkit.require_auth("org.selinux.semodule_list")
     @dbus.service.method("org.selinux", in_signature='', out_signature='s')
     def semodule_list(self):
         p = Popen(["/usr/sbin/semodule", "-l"],stdout=PIPE, stderr=PIPE)
@@ -60,6 +60,7 @@ class selinux_server(slip.dbus.service.Object):
     #
     # The restorecon method modifies any file path to the default system label
     #
+    @slip.dbus.polkit.require_auth("org.selinux.restorecon")
     @dbus.service.method("org.selinux", in_signature='s')
     def restorecon(self, path):
         selinux.restorecon(str(path), recursive=1)
@@ -67,6 +68,7 @@ class selinux_server(slip.dbus.service.Object):
     #
     # The setenforce method turns off the current enforcement of SELinux
     #
+    @slip.dbus.polkit.require_auth("org.selinux.setenforce")
     @dbus.service.method("org.selinux", in_signature='i')
     def setenforce(self, value):
         selinux.security_setenforce(value)
@@ -74,6 +76,7 @@ class selinux_server(slip.dbus.service.Object):
     #
     # The setenforce method turns off the current enforcement of SELinux
     #
+    @slip.dbus.polkit.require_auth("org.selinux.relabel_on_boot")
     @dbus.service.method("org.selinux", in_signature='i')
     def relabel_on_boot(self, value):
         if value == 1:
@@ -103,6 +106,7 @@ class selinux_server(slip.dbus.service.Object):
     #
     # The change_default_enforcement modifies the current enforcement mode
     #
+    @slip.dbus.polkit.require_auth("org.selinux.change_default_mode")
     @dbus.service.method("org.selinux", in_signature='s')
     def change_default_mode(self, value):
         values = [ "enforcing", "permissive", "disabled" ]
@@ -114,6 +118,7 @@ class selinux_server(slip.dbus.service.Object):
     #
     # The change_default_policy method modifies the policy type
     #
+    @slip.dbus.polkit.require_auth("org.selinux.change_default_policy")
     @dbus.service.method("org.selinux", in_signature='s')
     def change_default_policy(self, value):
         path = selinux.selinux_path() + value
