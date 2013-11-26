@@ -1,3 +1,6 @@
+2.2.4 2013-11-26
+	* Revert automatic setting of serange and seuser in seobject; was breaking non-MLS systems.
+
 2.2.3 2013-11-13
 	* Apply polkit check on all dbus interfaces and restrict to active user from Dan Walsh.
 	* Fix typo in sepolicy gui dbus.relabel_on_boot call from Dan Walsh.
