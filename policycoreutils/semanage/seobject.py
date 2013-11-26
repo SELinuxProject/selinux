@@ -1788,14 +1788,8 @@ class fcontextRecords(semanageRecords):
 				       raise ValueError(_("File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead") % (target, i, fdict[i], t))
 
 
-	def __add(self, target, type, ftype = "", serange = "s0", seuser = "system_u"):
+	def __add(self, target, type, ftype = "", serange = "", seuser = "system_u"):
                 self.validate(target)
-
-                if seuser == "":
-                        seuser = "system_u"
-
-                if serange == "":
-                        serange = "s0"
 
 		if is_mls_enabled == 1:
                        serange = untranslate(serange)
