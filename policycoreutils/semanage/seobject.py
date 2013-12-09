@@ -511,7 +511,7 @@ class loginRecords(semanageRecords):
                 if rc < 0:
                        raise ValueError(_("Could not set name for %s") % name)
 
-                if serange != "":
+                if (is_mls_enabled == 1) and (serange != ""):
                        rc = semanage_seuser_set_mlsrange(self.sh, u, serange)
                        if rc < 0:
                               raise ValueError(_("Could not set MLS range for %s") % name)
@@ -571,7 +571,7 @@ class loginRecords(semanageRecords):
 		
 		self.oldserange = semanage_seuser_get_mlsrange(u)
 		self.oldsename = semanage_seuser_get_sename(u)
-		if serange != "":
+		if (is_mls_enabled == 1) and (serange != ""):
 			semanage_seuser_set_mlsrange(self.sh, u, untranslate(serange))
 
 		if sename != "":
@@ -838,9 +838,9 @@ class seluserRecords(semanageRecords):
                 if rc >= 0:
                        oldserole = string.join(rlist, ' ');
 
-                if serange != "":
+                if (is_mls_enabled == 1) and (serange != ""):
                        semanage_user_set_mlsrange(self.sh, u, untranslate(serange))
-                if selevel != "":
+                if (is_mls_enabled == 1) and (selevel != ""):
                        semanage_user_set_mlslevel(self.sh, u, untranslate(selevel))
 
                 if prefix != "":
@@ -1058,7 +1058,7 @@ class portRecords(semanageRecords):
 		if rc < 0:
 			raise ValueError(_("Could not set type in port context for %s/%s") % (proto, port))
 
-		if serange != "":
+		if (is_mls_enabled == 1) and (serange != ""):
 			rc = semanage_context_set_mls(self.sh, con, serange)
 			if rc < 0:
 				raise ValueError(_("Could not set mls fields in port context for %s/%s") % (proto, port))
@@ -1104,7 +1104,7 @@ class portRecords(semanageRecords):
 
 		con = semanage_port_get_con(p)
 			
-		if serange != "":
+		if (is_mls_enabled == 1) and (serange != ""):
 			semanage_context_set_mls(self.sh, con, untranslate(serange))
 		if setype != "":
 			semanage_context_set_type(self.sh, con, setype)
@@ -1332,7 +1332,7 @@ class nodeRecords(semanageRecords):
                if rc < 0:
                        raise ValueError(_("Could not set type in addr context for %s") % addr)
 
-               if serange != "":
+               if (is_mls_enabled == 1) and (serange != ""):
                        rc = semanage_context_set_mls(self.sh, con, serange)
                        if rc < 0:
                                raise ValueError(_("Could not set mls fields in addr context for %s") % addr)
@@ -1378,7 +1378,7 @@ class nodeRecords(semanageRecords):
                        raise ValueError(_("Could not query addr %s") % addr)
 
                con = semanage_node_get_con(node)
-               if serange != "":
+               if (is_mls_enabled == 1) and (serange != ""):
                        semanage_context_set_mls(self.sh, con, untranslate(serange))
                if setype != "":
                        semanage_context_set_type(self.sh, con, setype)
@@ -1528,7 +1528,7 @@ class interfaceRecords(semanageRecords):
 		if rc < 0:
 			raise ValueError(_("Could not set type in interface context for %s") % interface)
 
-		if serange != "":
+		if (is_mls_enabled == 1) and (serange != ""):
 			rc = semanage_context_set_mls(self.sh, con, serange)
 			if rc < 0:
 				raise ValueError(_("Could not set mls fields in interface context for %s") % interface)
@@ -1574,7 +1574,7 @@ class interfaceRecords(semanageRecords):
 
 		con = semanage_iface_get_ifcon(iface)
 			
-		if serange != "":
+		if (is_mls_enabled == 1) and (serange != ""):
 			semanage_context_set_mls(self.sh, con, untranslate(serange))
 		if setype != "":
 			semanage_context_set_type(self.sh, con, setype)
@@ -1828,7 +1828,7 @@ class fcontextRecords(semanageRecords):
                        if rc < 0:
                               raise ValueError(_("Could not set type in file context for %s") % target)
 
-                       if serange != "":
+                       if (is_mls_enabled == 1) and (serange != ""):
                               rc = semanage_context_set_mls(self.sh, con, serange)
                               if rc < 0:
                                      raise ValueError(_("Could not set mls fields in file context for %s") % target)
@@ -1884,7 +1884,7 @@ class fcontextRecords(semanageRecords):
                        if con == None:
                               con = self.createcon(target)
                               
-                       if serange != "":
+                       if (is_mls_enabled == 1) and (serange != ""):
                               semanage_context_set_mls(self.sh, con, untranslate(serange))
                        if seuser != "":
                               semanage_context_set_user(self.sh, con, seuser)
