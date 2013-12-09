@@ -1,3 +1,6 @@
+2.2.5 2013-12-09
+	* Ignore selevel/serange if MLS is disabled from Sven Vermeulen.
+
 2.2.4 2013-11-26
 	* Revert automatic setting of serange and seuser in seobject; was breaking non-MLS systems.
 
