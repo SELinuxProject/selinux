@@ -336,7 +336,7 @@ static inline struct avc_node *avc_reclaim_node(void)
 
 static inline void avc_clear_avc_entry(struct avc_entry *ae)
 {
-	memset(ae, 0, sizeof *ae);
+	memset(ae, 0, sizeof(*ae));
 }
 
 static inline struct avc_node *avc_claim_node(security_id_t ssid,
@@ -484,7 +484,7 @@ static int avc_insert(security_id_t ssid, security_id_t tsid,
 		goto out;
 	}
 
-	memcpy(&node->ae.avd, &ae->avd, sizeof ae->avd);
+	memcpy(&node->ae.avd, &ae->avd, sizeof(ae->avd));
 	aeref->ae = &node->ae;
       out:
 	return rc;
