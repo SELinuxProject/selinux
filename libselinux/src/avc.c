@@ -336,11 +336,7 @@ static inline struct avc_node *avc_reclaim_node(void)
 
 static inline void avc_clear_avc_entry(struct avc_entry *ae)
 {
-	ae->ssid = ae->tsid = ae->create_sid = NULL;
-	ae->tclass = 0;
-	ae->avd.allowed = ae->avd.decided = 0;
-	ae->avd.auditallow = ae->avd.auditdeny = 0;
-	ae->used = 0;
+	memset(ae, 0, sizeof(*ae));
 }
 
 static inline struct avc_node *avc_claim_node(security_id_t ssid,
@@ -488,11 +484,7 @@ static int avc_insert(security_id_t ssid, security_id_t tsid,
 		goto out;
 	}
 
-	node->ae.avd.allowed = ae->avd.allowed;
-	node->ae.avd.decided = ae->avd.decided;
-	node->ae.avd.auditallow = ae->avd.auditallow;
-	node->ae.avd.auditdeny = ae->avd.auditdeny;
-	node->ae.avd.seqno = ae->avd.seqno;
+	memcpy(&node->ae.avd, &ae->avd, sizeof(ae->avd));
 	aeref->ae = &node->ae;
       out:
 	return rc;
