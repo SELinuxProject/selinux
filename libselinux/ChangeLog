@@ -1,3 +1,5 @@
+	* Refactor rpm_execcon() into a new setexecfilecon() from Guillem Jover.
+
 2.2.2 2013-12-30
 	* Fix userspace AVC handling of per-domain permissive mode.
 
