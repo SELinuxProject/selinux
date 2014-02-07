@@ -977,7 +977,7 @@ cleanup:
 	return status;
 }
 
-/* qsort comparison function for semanage_get_modules_names. */
+/* qsort comparison function for semanage_get_active_modules. */
 static int semanage_get_active_modules_cmp(const void *a, const void *b)
 {
 	semanage_module_info_t *aa = (semanage_module_info_t *)a;
@@ -986,48 +986,30 @@ static int semanage_get_active_modules_cmp(const void *a, const void *b)
 	return strcmp(aa->name, bb->name);
 }
 
-int semanage_get_modules_names(semanage_handle_t * sh,
-				char *** filenames,
-				int *len)
+int semanage_get_cil_paths(semanage_handle_t * sh,
+				semanage_module_info_t *modinfos,
+				int num_modinfos,
+				char *** filenames)
 {
-	semanage_module_info_t *modinfos = NULL;
-	enum semanage_module_path_type type;
 	char path[PATH_MAX];
+	char **names = NULL;
 
 	int ret;
 	int status = 0;
-
 	int i = 0;
 
-	*filenames = NULL;
-	*len = 0;
-
-	ret = semanage_get_active_modules(sh, &modinfos, len);
-	if (ret != 0) {
+	names = calloc(num_modinfos, sizeof(*names));
+	if (names == NULL) {
+		ERR(sh, "Error allocating space for filenames.");
 		status = -1;
 		goto cleanup;
 	}
 
-	if (*len == 0) {
-		goto cleanup;
-	}
-
-	(*filenames) = calloc(*len, sizeof(char *));
-	if ((*filenames) == NULL) {
-		ERR(sh, "Error allocating space for filenames.");
-	}
-
-	for (i = 0; i < *len; i++) {
-		if (!strcasecmp(modinfos[i].lang_ext, "cil")) {
-			type = SEMANAGE_MODULE_PATH_HLL;
-		} else {
-			type = SEMANAGE_MODULE_PATH_CIL;
-		}
-
+	for (i = 0; i < num_modinfos; i++) {
 		ret = semanage_module_get_path(
 				sh,
 				&modinfos[i],
-				type,
+				SEMANAGE_MODULE_PATH_CIL,
 				path,
 				sizeof(path));
 		if (ret != 0) {
@@ -1035,24 +1017,22 @@ int semanage_get_modules_names(semanage_handle_t * sh,
 			goto cleanup;
 		}
 
-		(*filenames)[i] = strdup(path);
-		if ((*filenames)[i] == NULL) {
+		names[i] = strdup(path);
+
+		if (names[i] == NULL) {
 			status = -1;
 			goto cleanup;
 		}
 	}
 
 cleanup:
-	for (i = 0; i < *len; i++) {
-		semanage_module_info_destroy(sh, &modinfos[i]);
-	}
-	free(modinfos);
-
 	if (status != 0) {
-		for (i = 0; i < *len; i++) {
-			free(filenames[i]);
+		for (i = 0; i < num_modinfos; i++) {
+			free(names[i]);
 		}
-		free(*filenames);
+		free(names);
+	} else {
+		*filenames = names;
 	}
 
 	return status;

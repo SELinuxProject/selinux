@@ -54,6 +54,10 @@
 #include "database_policydb.h"
 #include "policy.h"
 #include <sys/mman.h>
+#include <sys/wait.h>
+
+#define PIPE_READ 0
+#define PIPE_WRITE 1
 
 static void semanage_direct_destroy(semanage_handle_t * sh);
 static int semanage_direct_disconnect(semanage_handle_t * sh);
@@ -593,6 +597,351 @@ cleanup:
 	return retval;
 }
 
+static int read_from_pipe_to_data(semanage_handle_t *sh, size_t initial_len, int fd, char **out_data_read, size_t *out_read_len)
+{
+	size_t max_len = initial_len;
+	size_t read_len = 0;
+	size_t data_read_len = 0;
+	char *data_read = NULL;
+
+	if (max_len <= 0) {
+		max_len = 1;
+	}
+	data_read = malloc(max_len * sizeof(*data_read));
+	if (data_read == NULL) {
+		ERR(sh, "Failed to malloc, out of memory.\n");
+		return -1;
+	}
+
+	while ((read_len = read(fd, data_read + data_read_len, max_len - data_read_len)) > 0) {
+		data_read_len += read_len;
+		if (data_read_len == max_len) {
+			max_len *= 2;
+			data_read = realloc(data_read, max_len);
+			if (data_read == NULL) {
+				ERR(sh, "Failed to realloc, out of memory.\n");
+				return -1;
+			}
+		}
+	}
+
+	*out_read_len = data_read_len;
+	*out_data_read = data_read;
+
+	return 0;
+}
+
+static int semanage_pipe_data(semanage_handle_t *sh, char *path, char *in_data, size_t in_data_len, char **out_data, size_t *out_data_len, char **err_data, size_t *err_data_len)
+{
+	int input_fd[2];
+	int output_fd[2];
+	int err_fd[2];
+	pid_t pid;
+	char *data_read = NULL;
+	char *err_data_read = NULL;
+	int retval;
+	int status = 0;
+	size_t initial_len;
+	size_t data_read_len = 0;
+	size_t err_data_read_len = 0;
+	struct sigaction old_signal;
+	struct sigaction new_signal;
+	new_signal.sa_handler = SIG_IGN;
+	sigemptyset(&new_signal.sa_mask);
+	new_signal.sa_flags = 0;
+	/* This is needed in case the read end of input_fd is closed causing a SIGPIPE signal to be sent.
+	 * If SIGPIPE is not caught, the signal will cause semanage to terminate immediately. The sigaction below
+	 * creates a new_signal that ignores SIGPIPE allowing the write to exit cleanly.
+	 *
+	 * Another sigaction is called in cleanup to restore the original behavior when a SIGPIPE is received.
+	 */
+	sigaction(SIGPIPE, &new_signal, &old_signal);
+
+	retval = pipe(input_fd);
+	if (retval == -1) {
+		ERR(sh, "Unable to create pipe for input pipe: %s\n", strerror(errno));
+		goto cleanup;
+	}
+	retval = pipe(output_fd);
+	if (retval == -1) {
+		ERR(sh, "Unable to create pipe for output pipe: %s\n", strerror(errno));
+		goto cleanup;
+	}
+	retval = pipe(err_fd);
+	if (retval == -1) {
+		ERR(sh, "Unable to create pipe for error pipe: %s\n", strerror(errno));
+		goto cleanup;
+	}
+
+	pid = fork();
+	if (pid == -1) {
+		ERR(sh, "Unable to fork from parent: %s.", strerror(errno));
+		retval = -1;
+		goto cleanup;
+	} else if (pid == 0) {
+		retval = dup2(input_fd[PIPE_READ], STDIN_FILENO);
+		if (retval == -1) {
+			ERR(sh, "Unable to dup2 input pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+		retval = dup2(output_fd[PIPE_WRITE], STDOUT_FILENO);
+		if (retval == -1) {
+			ERR(sh, "Unable to dup2 output pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+		retval = dup2(err_fd[PIPE_WRITE], STDERR_FILENO);
+		if (retval == -1) {
+			ERR(sh, "Unable to dup2 error pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+
+		retval = close(input_fd[PIPE_WRITE]);
+		if (retval == -1) {
+			ERR(sh, "Unable to close input pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+		retval = close(output_fd[PIPE_READ]);
+		if (retval == -1) {
+			ERR(sh, "Unable to close output pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+		retval = close(err_fd[PIPE_READ]);
+		if (retval == -1) {
+			ERR(sh, "Unable to close error pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+		retval = execl(path, path, NULL);
+		if (retval == -1) {
+			ERR(sh, "Unable to execute %s : %s\n", path, strerror(errno));
+			_exit(EXIT_FAILURE);
+		}
+	} else {
+		retval = close(input_fd[PIPE_READ]);
+		input_fd[PIPE_READ] = -1;
+		if (retval == -1) {
+			ERR(sh, "Unable to close read end of input pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+
+		retval = close(output_fd[PIPE_WRITE]);
+		output_fd[PIPE_WRITE] = -1;
+		if (retval == -1) {
+			ERR(sh, "Unable to close write end of output pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+
+		retval = close(err_fd[PIPE_WRITE]);
+		err_fd[PIPE_WRITE] = -1;
+		if (retval == -1) {
+			ERR(sh, "Unable to close write end of error pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+
+		retval = write(input_fd[PIPE_WRITE], in_data, in_data_len);
+		if (retval == -1) {
+			ERR(sh, "Failed to write data to input pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+		retval = close(input_fd[PIPE_WRITE]);
+		input_fd[PIPE_WRITE] = -1;
+		if (retval == -1) {
+			ERR(sh, "Unable to close write end of input pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+
+		initial_len = 1 << 17;
+		retval = read_from_pipe_to_data(sh, initial_len, output_fd[PIPE_READ], &data_read, &data_read_len);
+		if (retval != 0) {
+			goto cleanup;
+		}
+		retval = close(output_fd[PIPE_READ]);
+		output_fd[PIPE_READ] = -1;
+		if (retval == -1) {
+			ERR(sh, "Unable to close read end of output pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+
+		initial_len = 1 << 9;
+		retval = read_from_pipe_to_data(sh, initial_len, err_fd[PIPE_READ], &err_data_read, &err_data_read_len);
+		if (retval != 0) {
+			goto cleanup;
+		}
+		retval = close(err_fd[PIPE_READ]);
+		err_fd[PIPE_READ] = -1;
+		if (retval == -1) {
+			ERR(sh, "Unable to close read end of error pipe: %s\n", strerror(errno));
+			goto cleanup;
+		}
+
+		if (waitpid(pid, &status, 0) == -1 || !WIFEXITED(status)) {
+			ERR(sh, "Child process %s did not exit cleanly.", path);
+			retval = -1;
+			goto cleanup;
+		}
+		if (WEXITSTATUS(status) != 0) {
+			ERR(sh, "Child process %s failed with code: %d.", path, WEXITSTATUS(status));
+			retval = -1;
+			goto cleanup;
+		}
+	}
+
+	retval = 0;
+
+cleanup:
+	sigaction(SIGPIPE, &old_signal, NULL);
+
+	if (data_read != NULL) {
+		*out_data = data_read;
+		*out_data_len = data_read_len;
+	}
+
+	if (err_data_read != NULL) {
+		*err_data = err_data_read;
+		*err_data_len = err_data_read_len;
+	}
+
+	if (output_fd[PIPE_READ] != -1) {
+		close(output_fd[PIPE_READ]);
+	}
+	if (output_fd[PIPE_WRITE] != -1) {
+		close(output_fd[PIPE_WRITE]);
+	}
+	if (err_fd[PIPE_READ] != -1) {
+		close(err_fd[PIPE_READ]);
+	}
+	if (err_fd[PIPE_WRITE] != -1) {
+		close(err_fd[PIPE_WRITE]);
+	}
+	if (input_fd[PIPE_READ] != -1) {
+		close(input_fd[PIPE_READ]);
+	}
+	if (input_fd[PIPE_WRITE] != -1) {
+		close(input_fd[PIPE_WRITE]);
+	}
+
+	return retval;
+}
+
+static int semanage_compile_hll(semanage_handle_t *sh,
+				semanage_module_info_t *modinfos,
+				int num_modinfos)
+{
+	char cil_path[PATH_MAX];
+	char hll_path[PATH_MAX];
+	char *compiler_path = NULL;
+	char *cil_data = NULL;
+	char *err_data = NULL;
+	char *hll_data = NULL;
+	char *start = NULL;
+	char *end = NULL;
+	ssize_t hll_data_len = 0;
+	ssize_t bzip_status;
+	int status = 0;
+	int i, compressed, in_fd;
+	size_t cil_data_len;
+	size_t err_data_len;
+
+	assert(sh);
+	assert(modinfos);
+
+	for (i = 0; i < num_modinfos; i++) {
+		if (!strcasecmp(modinfos[i].lang_ext, "cil")) {
+			continue;
+		}
+
+		status = semanage_module_get_path(
+				sh,
+				&modinfos[i],
+				SEMANAGE_MODULE_PATH_CIL,
+				cil_path,
+				sizeof(cil_path));
+		if (status != 0) {
+			goto cleanup;
+		}
+
+		if (semanage_get_ignore_module_cache(sh) == 0 &&
+			access(cil_path, F_OK) == 0) {
+			continue;
+		}
+
+		status = semanage_get_hll_compiler_path(sh, modinfos[i].lang_ext, &compiler_path);
+		if (status != 0) {
+			goto cleanup;
+		}
+
+		status = semanage_module_get_path(
+				sh,
+				&modinfos[i],
+				SEMANAGE_MODULE_PATH_HLL,
+				hll_path,
+				sizeof(hll_path));
+		if (status != 0) {
+			goto cleanup;
+		}
+
+		if ((in_fd = open(hll_path, O_RDONLY)) == -1) {
+			ERR(sh, "Unable to open %s\n", hll_path);
+			status = -1;
+			goto cleanup;
+		}
+
+		if ((hll_data_len = map_file(sh, in_fd, &hll_data, &compressed)) <= 0) {
+			ERR(sh, "Unable to read file %s\n", hll_path);
+			status = -1;
+			goto cleanup;
+		}
+
+		status = semanage_pipe_data(sh, compiler_path, hll_data, (size_t)hll_data_len, &cil_data, &cil_data_len, &err_data, &err_data_len);
+		if (err_data_len > 0) {
+			for (start = end = err_data; end < err_data + err_data_len; end++) {
+				if (*end == '\n') {
+					fprintf(stderr, "%s: ", modinfos[i].name);
+					fwrite(start, 1, end - start + 1, stderr);
+					start = end + 1;
+				}
+			}
+
+			if (end != start) {
+				fprintf(stderr, "%s: ", modinfos[i].name);
+				fwrite(start, 1, end - start, stderr);
+				fprintf(stderr, "\n");
+			}
+		}
+		if (status != 0) {
+			goto cleanup;
+		}
+
+		bzip_status = bzip(sh, cil_path, cil_data, cil_data_len);
+		if (bzip_status == -1) {
+			ERR(sh, "Failed to bzip %s\n", cil_path);
+			status = -1;
+			goto cleanup;
+		}
+
+		if (hll_data_len > 0) munmap(hll_data, hll_data_len);
+		hll_data_len = 0;
+
+		free(cil_data);
+		free(err_data);
+		free(compiler_path);
+		cil_data = NULL;
+		err_data = NULL;
+		compiler_path = NULL;
+		cil_data_len = 0;
+		err_data_len = 0;
+	}
+
+	status = 0;
+
+cleanup:
+	if (hll_data_len > 0) munmap(hll_data, hll_data_len);
+	free(cil_data);
+	free(err_data);
+	free(compiler_path);
+	return status;
+}
+
+
 /********************* direct API functions ********************/
 
 /* Commits all changes in sandbox to the actual kernel policy.
@@ -605,9 +954,10 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	size_t fc_buffer_len = 0;
 	const char *ofilename = NULL;
 	const char *path;
-	int retval = -1, num_modfiles = 0, i;
+	int retval = -1, num_modinfos = 0, i;
 	sepol_policydb_t *out = NULL;
 	struct cil_db *cildb = NULL;
+	semanage_module_info_t *modinfos = NULL;
 
 	/* Declare some variables */
 	int modified = 0, fcontexts_modified, ports_modified,
@@ -710,16 +1060,26 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	if (sh->do_rebuild || modified) {
 		/* =================== Module expansion =============== */
 
-		retval = semanage_get_modules_names(sh, &mod_filenames, &num_modfiles);
-		if (retval < 0)
-			goto cleanup;
-
-		if (num_modfiles == 0) {
-			ERR(sh, "No active modules.\n");
+		retval = semanage_get_active_modules(sh, &modinfos, &num_modinfos);
+		if (retval < 0) {
 			goto cleanup;
 		}
 
-		retval = semanage_verify_modules(sh, mod_filenames, num_modfiles);
+		if (num_modinfos == 0) {
+			goto cleanup;
+		}
+
+		retval = semanage_compile_hll(sh, modinfos, num_modinfos);
+		if (retval < 0) {
+			ERR(sh, "Failed to compile hll files into cil files.\n");
+			goto cleanup;
+		}
+
+		retval = semanage_get_cil_paths(sh, modinfos, num_modinfos, &mod_filenames);
+		if (retval < 0)
+			goto cleanup;
+
+		retval = semanage_verify_modules(sh, mod_filenames, num_modinfos);
 		if (retval < 0)
 			goto cleanup;
 
@@ -734,7 +1094,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 			cil_set_handle_unknown(cildb, sh->conf->handle_unknown);
 		}
 
-		retval = semanage_load_files(sh, cildb, mod_filenames, num_modfiles);
+		retval = semanage_load_files(sh, cildb, mod_filenames, num_modinfos);
 		if (retval < 0) {
 			goto cleanup;
 		}
@@ -885,8 +1245,13 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		retval = semanage_install_sandbox(sh);
 	}
 
-      cleanup:
-	for (i = 0; mod_filenames != NULL && i < num_modfiles; i++) {
+cleanup:
+	for (i = 0; i < num_modinfos; i++) {
+		semanage_module_info_destroy(sh, &modinfos[i]);
+	}
+	free(modinfos);
+
+	for (i = 0; mod_filenames != NULL && i < num_modinfos; i++) {
 		free(mod_filenames[i]);
 	}
 
@@ -989,16 +1354,22 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 	char *separator;
 
 	if ((in_fd = open(install_filename, O_RDONLY)) == -1) {
-		return -1;
+		ERR(sh, "Unable to open %s: %s\n", install_filename, strerror(errno));
+		retval = -1;
+		goto cleanup;
 	}
 
 	if ((data_len = map_file(sh, in_fd, &data, &compressed)) <= 0) {
+		ERR(sh, "Unable to read file %s\n", install_filename);
+		retval = -1;
 		goto cleanup;
 	}
 
 	path = strdup(install_filename);
 	if (path == NULL) {
-		return -1;
+		ERR(sh, "No memory available for strdup.\n");
+		retval = -1;
+		goto cleanup;
 	}
 
 	filename = basename(path);
@@ -1007,6 +1378,7 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 		separator = strrchr(filename, '.');
 		if (separator == NULL) {
 			ERR(sh, "Compressed module does not have a valid extension.");
+			retval = -1;
 			goto cleanup;
 		}
 		*separator = '\0';
@@ -1015,6 +1387,7 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 	separator = strrchr(filename, '.');
 	if (separator == NULL) {
 		ERR(sh, "Module does not have a valid extension.");
+		retval = -1;
 		goto cleanup;
 	}
 	*separator = '\0';
@@ -1023,8 +1396,10 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 
 	retval = semanage_direct_install(sh, data, data_len, filename, lang_ext);
 
-      cleanup:
-	close(in_fd);
+cleanup:
+	if (in_fd != -1) {
+		close(in_fd);
+	}
 	if (data_len > 0) munmap(data, data_len);
 	free(path);
 
@@ -1917,6 +2292,7 @@ static int semanage_direct_install_info(semanage_handle_t *sh,
 
 	int status = 0;
 	int ret = 0;
+	int type;
 
 	char path[PATH_MAX];
 
@@ -1931,6 +2307,7 @@ static int semanage_direct_install_info(semanage_handle_t *sh,
 	/* validate module info */
 	ret = semanage_module_info_validate(modinfo);
 	if (ret != 0) {
+		ERR(sh, "%s failed module validation.\n", modinfo->name);
 		status = -2;
 		goto cleanup;
 	}
@@ -1979,22 +2356,50 @@ static int semanage_direct_install_info(semanage_handle_t *sh,
 	}
 
 	/* install module source file */
+	if (!strcasecmp(modinfo->lang_ext, "cil")) {
+		type = SEMANAGE_MODULE_PATH_CIL;
+	} else {
+		type = SEMANAGE_MODULE_PATH_HLL;
+	}
 	ret = semanage_module_get_path(
 			sh,
 			modinfo,
-			SEMANAGE_MODULE_PATH_HLL,
+			type,
 			path,
 			sizeof(path));
 	if (ret != 0) {
 		status = -3;
 		goto cleanup;
 	}
-	
+
 	ret = bzip(sh, path, data, data_len);
 	if (ret <= 0) {
 		ERR(sh, "Error while writing to %s.", path);
 		status = -3;
 		goto cleanup;
+	}
+	
+	/* if this is an HLL, delete the CIL cache if it exists so it will get recompiled */
+	if (type == SEMANAGE_MODULE_PATH_HLL) {
+		ret = semanage_module_get_path(
+				sh,
+				modinfo,
+				SEMANAGE_MODULE_PATH_CIL,
+				path,
+				sizeof(path));
+		if (ret != 0) {
+			status = -3;
+			goto cleanup;
+		}
+
+		if (access(path, F_OK) == 0) {
+			ret = unlink(path);
+			if (ret != 0) {
+				ERR(sh, "Error while removing cached CIL file %s: %s", path, strerror(errno));
+				status = -3;
+				goto cleanup;
+			}
+		}
 	}
 
 cleanup:

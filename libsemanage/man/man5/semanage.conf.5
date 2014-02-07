@@ -32,6 +32,15 @@ the two fields).
 Specify an alternative root path to use for the store. The default is "/"
 
 .TP
+.B compiler-directory
+Specify an alternative directory that contains HLL to CIL compilers. The default value is "/usr/libexec/selinux/hll".
+
+.TP
+.B ignore-module-cache
+Whether or not to ignore the cache of CIL modules compiled from HLL. It can be set to either "true" or "false" and is set to "false" by default.
+If the cache is ignored, then all CIL modules are recompiled from their HLL modules.
+
+.TP
 .B policy-version 
 When generating the policy, by default
 .BR semanage

@@ -441,6 +441,7 @@ int semanage_module_info_set_name(semanage_handle_t *sh,
 
 	tmp = strdup(name);
 	if (!tmp) {
+		ERR(sh, "No memory available for strdup");
 		return -1;
 	}
 
@@ -471,6 +472,7 @@ int semanage_module_info_set_lang_ext(semanage_handle_t *sh,
 
 	tmp = strdup(lang_ext);
 	if (!tmp) {
+		ERR(sh, "No memory available for strdup");
 		return -1;
 	}
 
@@ -580,49 +582,7 @@ int semanage_module_get_path(semanage_handle_t *sh,
 			}
 			break;
 		case SEMANAGE_MODULE_PATH_HLL:
-			/* verify priority, name, and ext */
-			ret = semanage_module_validate_lang_ext(modinfo->lang_ext);
-			if (ret < 0) {
-				errno = 0;
-				ERR(sh,
-				    "Language extensions %s is invalid.",
-				    modinfo->lang_ext);
-				status = -1;
-				goto cleanup;
-			}
-
-			ret = semanage_module_validate_priority(modinfo->priority);
-			if (ret < 0) {
-				errno = 0;
-				ERR(sh,
-				    "Priority %d is invalid.",
-				    modinfo->priority);
-				status = -1;
-				goto cleanup;
-			}
-
-			ret = semanage_module_validate_name(modinfo->name);
-			if (ret < 0) {
-				errno = 0;
-				ERR(sh, "Name %s is invalid.", modinfo->name);
-				status = -1;
-				goto cleanup;
-			}
-
-			ret = snprintf(path,
-				       len,
-				       "%s/%03u/%s/%s.%s",
-				       modules_path,
-				       modinfo->priority,
-				       modinfo->name,
-				       modinfo->name,
-				       modinfo->lang_ext);
-			if (ret < 0 || (size_t)ret >= len) {
-				ERR(sh, "Unable to compose hll path.");
-				status = -1;
-				goto cleanup;
-			}
-			break;
+			if (file == NULL) file = "hll";
 		case SEMANAGE_MODULE_PATH_CIL:
 			if (file == NULL) file = "cil";
 		case SEMANAGE_MODULE_PATH_LANG_EXT:
@@ -783,6 +743,7 @@ int semanage_module_key_set_name(semanage_handle_t *sh,
 
 	tmp = strdup(name);
 	if (tmp == NULL) {
+		ERR(sh, "No memory available for strdup");
 		status = -1;
 		goto cleanup;
 	}

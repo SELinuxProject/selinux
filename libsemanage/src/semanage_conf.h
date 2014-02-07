@@ -32,6 +32,7 @@
 typedef struct semanage_conf {
 	enum semanage_connect_type store_type;
 	char *store_path;	/* used for both socket path and policy dir */
+	char *compiler_directory_path;
 	int server_port;
 	int policyvers;		/* version for server generated policies */
 	int target_platform;
@@ -44,6 +45,7 @@ typedef struct semanage_conf {
 	mode_t file_mode;
 	int bzip_blocksize;
 	int bzip_small;
+	int ignore_module_cache;
 	char *ignoredirs;	/* ";" separated of list for genhomedircon to ignore */
 	struct external_prog *load_policy;
 	struct external_prog *setfiles;

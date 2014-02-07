@@ -66,6 +66,11 @@ void semanage_set_reload(semanage_handle_t * handle, int do_reload);
  * 1 for yes, 0 for no (default) */
 void semanage_set_rebuild(semanage_handle_t * handle, int do_rebuild);
 
+/* Fills *compiler_path with the location of the hll compiler sh->conf->compiler_directory_path
+ * corresponding to lang_ext.
+ * Upon success returns 0, -1 on error. */
+int semanage_get_hll_compiler_path(semanage_handle_t *sh, char *lang_ext, char **compiler_path);
+
 /* create the store if it does not exist, this only has an effect on 
  * direct connections and must be called before semanage_connect 
  * 1 for yes, 0 for no (default) */
@@ -145,6 +150,12 @@ int semanage_get_preserve_tunables(semanage_handle_t * handle);
 
 /* Set whether or not to preserve the needless unused branch of tunables */
 void semanage_set_preserve_tunables(semanage_handle_t * handle, int preserve_tunables);
+
+/* Get the flag value for whether or not caching is ignored for compiled CIL modules from HLL files */
+int semanage_get_ignore_module_cache(semanage_handle_t *handle);
+
+/* Set semanage_handle flag for whether or not to ignore caching of compiled CIL modules from HLL files */
+void semanage_set_ignore_module_cache(semanage_handle_t *handle, int ignore_module_cache);
 
 /* META NOTES
  *

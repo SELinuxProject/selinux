@@ -30,6 +30,9 @@ LIBSEMANAGE_1.0 {
 LIBSEMANAGE_1.1 {
   global:
 	  semanage_module_install;
+	  semanage_get_hll_compiler_path;
+	  semanage_get_ignore_module_cache;
+	  semanage_set_ignore_module_cache;
 	  semanage_get_default_priority;
 	  semanage_set_default_priority;
 	  semanage_module_info_create;
