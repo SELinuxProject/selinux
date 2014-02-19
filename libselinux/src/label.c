@@ -230,7 +230,7 @@ selabel_lookup_common(struct selabel_handle *rec, int translating,
 	return lr;
 }
 
-int selabel_lookup(struct selabel_handle *rec, security_context_t *con,
+int selabel_lookup(struct selabel_handle *rec, char **con,
 		   const char *key, int type)
 {
 	struct selabel_lookup_rec *lr;
@@ -243,7 +243,7 @@ int selabel_lookup(struct selabel_handle *rec, security_context_t *con,
 	return *con ? 0 : -1;
 }
 
-int selabel_lookup_raw(struct selabel_handle *rec, security_context_t *con,
+int selabel_lookup_raw(struct selabel_handle *rec, char **con,
 		       const char *key, int type)
 {
 	struct selabel_lookup_rec *lr;

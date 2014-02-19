@@ -300,8 +300,8 @@ static PyObject *init(PyObject *self __attribute__((unused)), PyObject *args) {
 
 static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args) {
 	char *reason_buf = NULL;
-	security_context_t scon; 
-	security_context_t tcon;
+	char * scon;
+	char * tcon;
 	char *tclassstr; 
 	PyObject *listObj;
 	PyObject *strObj;

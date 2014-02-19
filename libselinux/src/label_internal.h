@@ -42,8 +42,8 @@ extern struct selabel_sub *selabel_subs_init(const char *path,
 					     struct selabel_sub *list);
 
 struct selabel_lookup_rec {
-	security_context_t ctx_raw;
-	security_context_t ctx_trans;
+	char * ctx_raw;
+	char * ctx_trans;
 	int validated;
 };
 

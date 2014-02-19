@@ -15,7 +15,7 @@ static void avc_init_once(void)
 	avc_open(NULL, 0);
 }
 
-int selinux_check_access(const security_context_t scon, const security_context_t tcon, const char *class, const char *perm, void *aux) {
+int selinux_check_access(const char *scon, const char *tcon, const char *class, const char *perm, void *aux) {
 	int rc;
 	security_id_t scon_id;
 	security_id_t tcon_id;
@@ -59,7 +59,7 @@ int selinux_check_access(const security_context_t scon, const security_context_t
 int selinux_check_passwd_access(access_vector_t requested)
 {
 	int status = -1;
-	security_context_t user_context;
+	char *user_context;
 	if (is_selinux_enabled() == 0)
 		return 0;
 	if (getprevcon_raw(&user_context) == 0) {

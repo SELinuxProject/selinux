@@ -10,10 +10,10 @@
 #include "policy.h"
 #include "mapping.h"
 
-int security_compute_member_raw(const security_context_t scon,
-				const security_context_t tcon,
+int security_compute_member_raw(const char * scon,
+				const char * tcon,
 				security_class_t tclass,
-				security_context_t * newcon)
+				char ** newcon)
 {
 	char path[PATH_MAX];
 	char *buf;
@@ -62,15 +62,15 @@ int security_compute_member_raw(const security_context_t scon,
 
 hidden_def(security_compute_member_raw)
 
-int security_compute_member(const security_context_t scon,
-			    const security_context_t tcon,
+int security_compute_member(const char * scon,
+			    const char * tcon,
 			    security_class_t tclass,
-			    security_context_t * newcon)
+			    char ** newcon)
 {
 	int ret;
-	security_context_t rscon;
-	security_context_t rtcon;
-	security_context_t rnewcon;
+	char * rscon;
+	char * rtcon;
+	char * rnewcon;
 
 	if (selinux_trans_to_raw_context(scon, &rscon))
 		return -1;

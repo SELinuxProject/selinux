@@ -17,8 +17,8 @@ static void usage(const char *name, const char *detail, int rc)
 	exit(rc);
 }
 
-static security_context_t get_selinux_proc_context(const char *command, security_context_t execcon) {
-	security_context_t fcon = NULL, newcon = NULL;
+static char * get_selinux_proc_context(const char *command, char * execcon) {
+	char * fcon = NULL, *newcon = NULL;
 
 	int ret = getfilecon(command, &fcon);
 	if (ret < 0) goto err;
@@ -33,7 +33,7 @@ err:
 int main(int argc, char **argv)
 {
 	int ret = -1;
-	security_context_t proccon = NULL, con = NULL;
+	char * proccon = NULL, *con = NULL;
 	if (argc < 2 || argc > 3)
 		usage(argv[0], "Invalid number of arguments", -1);
 

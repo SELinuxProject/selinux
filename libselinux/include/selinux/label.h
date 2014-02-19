@@ -92,9 +92,9 @@ void selabel_close(struct selabel_handle *handle);
  * The result is returned in the memory pointed to by @con and must be freed
  * by the user with freecon().
  */
-int selabel_lookup(struct selabel_handle *handle, security_context_t *con,
+int selabel_lookup(struct selabel_handle *handle, char **con,
 		   const char *key, int type);
-int selabel_lookup_raw(struct selabel_handle *handle, security_context_t *con,
+int selabel_lookup_raw(struct selabel_handle *handle, char **con,
 		       const char *key, int type);
 
 /**

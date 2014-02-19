@@ -34,11 +34,11 @@
 	}
 }
 
-%typemap(in, numinputs=0) (security_context_t **) (security_context_t *temp) {
+%typemap(in, numinputs=0) (char ***) (char **temp) {
 	$1 = &temp;
 }
 
-%typemap(freearg) (security_context_t **) {
+%typemap(freearg) (char ***) {
 	if (*$1) freeconary(*$1);
 }
 

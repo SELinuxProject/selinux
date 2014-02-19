@@ -7,7 +7,7 @@
 #include "selinux_internal.h"
 #include "policy.h"
 
-int lgetfilecon_raw(const char *path, security_context_t * context)
+int lgetfilecon_raw(const char *path, char ** context)
 {
 	char *buf;
 	ssize_t size;
@@ -51,10 +51,10 @@ int lgetfilecon_raw(const char *path, security_context_t * context)
 
 hidden_def(lgetfilecon_raw)
 
-int lgetfilecon(const char *path, security_context_t * context)
+int lgetfilecon(const char *path, char ** context)
 {
 	int ret;
-	security_context_t rcontext;
+	char * rcontext;
 
 	*context = NULL;
 

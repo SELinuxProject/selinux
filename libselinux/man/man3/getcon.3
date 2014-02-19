@@ -11,29 +11,29 @@ setcon \- set current security context of a process
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
-.BI "int getcon(security_context_t *" context );
+.BI "int getcon(char **" context );
 .sp
-.BI "int getcon_raw(security_context_t *" context );
+.BI "int getcon_raw(char **" context );
 .sp
-.BI "int getprevcon(security_context_t *" context );
+.BI "int getprevcon(char **" context );
 .sp
-.BI "int getprevcon_raw(security_context_t *" context );
+.BI "int getprevcon_raw(char **" context );
 .sp
-.BI "int getpidcon(pid_t " pid ", security_context_t *" context );
+.BI "int getpidcon(pid_t " pid ", char **" context );
 .sp
-.BI "int getpidcon_raw(pid_t " pid ", security_context_t *" context );
+.BI "int getpidcon_raw(pid_t " pid ", char **" context );
 .sp
-.BI "int getpeercon(int " fd ", security_context_t *" context );
+.BI "int getpeercon(int " fd ", char **" context );
 .sp
-.BI "int getpeercon_raw(int " fd ", security_context_t *" context );
+.BI "int getpeercon_raw(int " fd ", char **" context );
 .sp
-.BI "void freecon(security_context_t "con );
+.BI "void freecon(char * "con );
 .sp
-.BI "void freeconary(security_context_t *" con );
+.BI "void freeconary(char **" con );
 .sp
-.BI "int setcon(security_context_t " context );
+.BI "int setcon(char * " context );
 .sp
-.BI "int setcon_raw(security_context_t " context );
+.BI "int setcon_raw(char * " context );
 .
 .SH "DESCRIPTION"
 .BR getcon ()

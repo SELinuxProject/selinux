@@ -9,15 +9,15 @@
 #include "selinux_internal.h"
 #include "policy.h"
 
-#define UNSET (const security_context_t) -1
+#define UNSET (char *) -1
 
 static __thread pid_t cpid;
 static __thread pid_t tid;
-static __thread security_context_t prev_current = UNSET;
-static __thread security_context_t prev_exec = UNSET;
-static __thread security_context_t prev_fscreate = UNSET;
-static __thread security_context_t prev_keycreate = UNSET;
-static __thread security_context_t prev_sockcreate = UNSET;
+static __thread char *prev_current = UNSET;
+static __thread char * prev_exec = UNSET;
+static __thread char * prev_fscreate = UNSET;
+static __thread char * prev_keycreate = UNSET;
+static __thread char * prev_sockcreate = UNSET;
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 static pthread_key_t destructor_key;
@@ -107,7 +107,7 @@ static int openattr(pid_t pid, const char *attr, int flags)
 	return fd;
 }
 
-static int getprocattrcon_raw(security_context_t * context,
+static int getprocattrcon_raw(char ** context,
 			      pid_t pid, const char *attr)
 {
 	char *buf;
@@ -115,7 +115,7 @@ static int getprocattrcon_raw(security_context_t * context,
 	int fd;
 	ssize_t ret;
 	int errno_hold;
-	security_context_t prev_context;
+	char * prev_context;
 
 	__selinux_once(once, init_procattr);
 	init_thread_destructor();
@@ -193,11 +193,11 @@ static int getprocattrcon_raw(security_context_t * context,
 	return ret;
 }
 
-static int getprocattrcon(security_context_t * context,
+static int getprocattrcon(char ** context,
 			  pid_t pid, const char *attr)
 {
 	int ret;
-	security_context_t rcontext;
+	char * rcontext;
 
 	ret = getprocattrcon_raw(&rcontext, pid, attr);
 
@@ -209,13 +209,13 @@ static int getprocattrcon(security_context_t * context,
 	return ret;
 }
 
-static int setprocattrcon_raw(security_context_t context,
+static int setprocattrcon_raw(const char * context,
 			      pid_t pid, const char *attr)
 {
 	int fd;
 	ssize_t ret;
 	int errno_hold;
-	security_context_t *prev_context;
+	char **prev_context, *context2 = NULL;
 
 	__selinux_once(once, init_procattr);
 	init_thread_destructor();
@@ -255,11 +255,11 @@ static int setprocattrcon_raw(security_context_t context,
 		return -1;
 	if (context) {
 		ret = -1;
-		context = strdup(context);
-		if (!context)
+		context2 = strdup(context);
+		if (!context2)
 			goto out;
 		do {
-			ret = write(fd, context, strlen(context) + 1);
+			ret = write(fd, context2, strlen(context2) + 1);
 		} while (ret < 0 && errno == EINTR);
 	} else {
 		do {
@@ -271,21 +271,21 @@ out:
 	close(fd);
 	errno = errno_hold;
 	if (ret < 0) {
-		free(context);
+		free(context2);
 		return -1;
 	} else {
 		if (*prev_context != UNSET)
 			free(*prev_context);
-		*prev_context = context;
+		*prev_context = context2;
 		return 0;
 	}
 }
 
-static int setprocattrcon(const security_context_t context,
+static int setprocattrcon(const char * context,
 			  pid_t pid, const char *attr)
 {
 	int ret;
-	security_context_t rcontext;
+	char * rcontext;
 
 	if (selinux_trans_to_raw_context(context, &rcontext))
 		return -1;
@@ -298,21 +298,21 @@ static int setprocattrcon(const security_context_t context,
 }
 
 #define getselfattr_def(fn, attr) \
-	int get##fn##_raw(security_context_t *c) \
+	int get##fn##_raw(char **c) \
 	{ \
 		return getprocattrcon_raw(c, 0, #attr); \
 	} \
-	int get##fn(security_context_t *c) \
+	int get##fn(char **c) \
 	{ \
 		return getprocattrcon(c, 0, #attr); \
 	}
 
 #define setselfattr_def(fn, attr) \
-	int set##fn##_raw(const security_context_t c) \
+	int set##fn##_raw(const char * c) \
 	{ \
 		return setprocattrcon_raw(c, 0, #attr); \
 	} \
-	int set##fn(const security_context_t c) \
+	int set##fn(const char * c) \
 	{ \
 		return setprocattrcon(c, 0, #attr); \
 	}
@@ -322,11 +322,11 @@ static int setprocattrcon(const security_context_t context,
 	setselfattr_def(fn, attr)
 
 #define getpidattr_def(fn, attr) \
-	int get##fn##_raw(pid_t pid, security_context_t *c)	\
+	int get##fn##_raw(pid_t pid, char **c)	\
 	{ \
 		return getprocattrcon_raw(c, pid, #attr); \
 	} \
-	int get##fn(pid_t pid, security_context_t *c)	\
+	int get##fn(pid_t pid, char **c)	\
 	{ \
 		return getprocattrcon(c, pid, #attr); \
 	}

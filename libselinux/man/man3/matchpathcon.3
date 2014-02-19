@@ -11,9 +11,9 @@ matchpathcon, matchpathcon_index \- get the default SELinux security context for
 .sp
 .BI "int matchpathcon_fini(void);"
 .sp
-.BI "int matchpathcon(const char *" path ", mode_t " mode ", security_context_t *" con ");
+.BI "int matchpathcon(const char *" path ", mode_t " mode ", char **" con ");
 .sp
-.BI "int matchpathcon_index(const char *" name ", mode_t " mode ", security_context_t *" con ");"
+.BI "int matchpathcon_index(const char *" name ", mode_t " mode ", char **" con ");"
 .
 .SH "DESCRIPTION"
 .BR matchpathcon_init ()

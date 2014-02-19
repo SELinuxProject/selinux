@@ -26,12 +26,12 @@
 static int mls_enabled = -1;
 
 // Simple cache
-static __thread security_context_t prev_t2r_trans = NULL;
-static __thread security_context_t prev_t2r_raw = NULL;
-static __thread security_context_t prev_r2t_trans = NULL;
-static __thread security_context_t prev_r2t_raw = NULL;
+static __thread char * prev_t2r_trans = NULL;
+static __thread char * prev_t2r_raw = NULL;
+static __thread char * prev_r2t_trans = NULL;
+static __thread char * prev_r2t_raw = NULL;
 static __thread char *prev_r2c_trans = NULL;
-static __thread security_context_t prev_r2c_raw = NULL;
+static __thread char * prev_r2c_raw = NULL;
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 static pthread_key_t destructor_key;
@@ -281,8 +281,8 @@ static void init_context_translations(void)
 	mls_enabled = is_selinux_mls_enabled();
 }
 
-int selinux_trans_to_raw_context(const security_context_t trans,
-				 security_context_t * rawp)
+int selinux_trans_to_raw_context(const char * trans,
+				 char ** rawp)
 {
 	if (!trans) {
 		*rawp = NULL;
@@ -323,8 +323,8 @@ int selinux_trans_to_raw_context(const security_context_t trans,
 
 hidden_def(selinux_trans_to_raw_context)
 
-int selinux_raw_to_trans_context(const security_context_t raw,
-				 security_context_t * transp)
+int selinux_raw_to_trans_context(const char * raw,
+				 char ** transp)
 {
 	if (!raw) {
 		*transp = NULL;
@@ -365,7 +365,7 @@ int selinux_raw_to_trans_context(const security_context_t raw,
 
 hidden_def(selinux_raw_to_trans_context)
 
-int selinux_raw_context_to_color(const security_context_t raw, char **transp)
+int selinux_raw_context_to_color(const char * raw, char **transp)
 {
 	if (!raw) {
 		*transp = NULL;
@@ -402,8 +402,8 @@ int selinux_raw_context_to_color(const security_context_t raw, char **transp)
 hidden_def(selinux_raw_context_to_color)
 #else /*DISABLE_SETRANS*/
 
-int selinux_trans_to_raw_context(const security_context_t trans,
-				 security_context_t * rawp)
+int selinux_trans_to_raw_context(const char * trans,
+				 char ** rawp)
 {
 	if (!trans) {
 		*rawp = NULL;
@@ -417,8 +417,8 @@ int selinux_trans_to_raw_context(const security_context_t trans,
 
 hidden_def(selinux_trans_to_raw_context)
 
-int selinux_raw_to_trans_context(const security_context_t raw,
-				 security_context_t * transp)
+int selinux_raw_to_trans_context(const char * raw,
+				 char ** transp)
 {
 	if (!raw) {
 		*transp = NULL;

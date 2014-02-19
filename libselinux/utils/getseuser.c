@@ -8,7 +8,7 @@
 int main(int argc, char **argv)
 {
 	char *seuser = NULL, *level = NULL;
-	security_context_t *contextlist;
+	char **contextlist;
 	int rc, n, i;
 
 	if (argc != 3) {

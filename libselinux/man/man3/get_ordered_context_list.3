@@ -7,21 +7,21 @@ get_ordered_context_list, get_ordered_context_list_with_level, get_default_conte
 .br
 .B #include <selinux/get_context_list.h>
 .sp
-.BI "int get_ordered_context_list(const char *" user ", security_context_t "fromcon ", security_context_t **" list );
+.BI "int get_ordered_context_list(const char *" user ", char * "fromcon ", char ***" list );
 .sp
-.BI "int get_ordered_context_list_with_level(const char *" user ", const char *" level ", security_context_t "fromcon ", security_context_t **" list );
+.BI "int get_ordered_context_list_with_level(const char *" user ", const char *" level ", char * "fromcon ", char ***" list );
 .sp
-.BI "int get_default_context(const char *" user ", security_context_t "fromcon ", security_context_t *" newcon );
+.BI "int get_default_context(const char *" user ", char * "fromcon ", char **" newcon );
 .sp
-.BI "int get_default_context_with_level(const char *" user ", const char *" level ", security_context_t "fromcon ", security_context_t *" newcon );
+.BI "int get_default_context_with_level(const char *" user ", const char *" level ", char * "fromcon ", char **" newcon );
 .sp
-.BI "int get_default_context_with_role(const char *" user ", const char *" role ", security_context_t " fromcon ", security_context_t *" newcon ");
+.BI "int get_default_context_with_role(const char *" user ", const char *" role ", char * " fromcon ", char **" newcon ");
 .sp
-.BI "int get_default_context_with_rolelevel(const char *" user ", const char *" level ", const char *" role ", security_context_t " fromcon ", security_context_t *" newcon ");
+.BI "int get_default_context_with_rolelevel(const char *" user ", const char *" level ", const char *" role ", char * " fromcon ", char **" newcon ");
 .sp
-.BI "int query_user_context(security_context_t *" list ", security_context_t *" newcon );
+.BI "int query_user_context(char **" list ", char **" newcon );
 .sp
-.BI "int manual_user_enter_context(const char *" user ", security_context_t *" newcon );
+.BI "int manual_user_enter_context(const char *" user ", char **" newcon );
 .sp
 .BI "int get_default_type(const char *" role ", char **" type );
 .

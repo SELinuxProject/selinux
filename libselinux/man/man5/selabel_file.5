@@ -10,14 +10,14 @@ selabel_file \- userspace SELinux labeling interface and configuration file form
 .sp
 .BI "int selabel_lookup(struct selabel_handle *" hnd ,
 .in +\w'int selabel_lookup('u
-.BI "security_context_t *" context ,
+.BI "char **" context ,
 .br
 .BI "const char *" path ", int " mode ");"
 .in
 .sp
 .BI "int selabel_lookup_raw(struct selabel_handle *" hnd ,
 .in +\w'int selabel_lookup('u
-.BI "security_context_t *" context ,
+.BI "char **" context ,
 .br
 .BI "const char *" path ", int " mode ");"
 .

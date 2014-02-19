@@ -5,17 +5,17 @@ setfilecon, fsetfilecon, lsetfilecon \- set SELinux security context of a file
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
-.BI "int setfilecon(const char *" path ", security_context_t "con );
+.BI "int setfilecon(const char *" path ", char * "con );
 .sp
-.BI "int setfilecon_raw(const char *" path ", security_context_t "con );
+.BI "int setfilecon_raw(const char *" path ", char * "con );
 .sp
-.BI "int lsetfilecon(const char *" path ", security_context_t "con );
+.BI "int lsetfilecon(const char *" path ", char * "con );
 .sp
-.BI "int lsetfilecon_raw(const char *" path ", security_context_t "con );
+.BI "int lsetfilecon_raw(const char *" path ", char * "con );
 .sp
-.BI "int fsetfilecon(int "fd ", security_context_t "con );
+.BI "int fsetfilecon(int "fd ", char * "con );
 .sp
-.BI "int fsetfilecon_raw(int "fd ", security_context_t "con );
+.BI "int fsetfilecon_raw(int "fd ", char * "con );
 .
 .SH "DESCRIPTION"
 .BR setfilecon ()

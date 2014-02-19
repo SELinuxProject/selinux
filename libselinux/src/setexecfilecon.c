@@ -7,7 +7,7 @@
 
 int setexecfilecon(const char *filename, const char *fallback_type)
 {
-	security_context_t mycon = NULL, fcon = NULL, newcon = NULL;
+	char * mycon = NULL, *fcon = NULL, *newcon = NULL;
 	context_t con = NULL;
 	int rc = 0;
 

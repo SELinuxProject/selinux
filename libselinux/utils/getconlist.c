@@ -19,7 +19,7 @@ static void usage(const char *name, const char *detail, int rc)
 
 int main(int argc, char **argv)
 {
-	security_context_t *list, usercon = NULL, cur_context = NULL;
+	char **list, *usercon = NULL, *cur_context = NULL;
 	char *user = NULL, *level = NULL;
 	int ret, i, opt;
 

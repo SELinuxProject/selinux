@@ -173,7 +173,7 @@ int main(int argc, char **argv)
 			} else if (rc == 1) {
 				printf("%s verified.\n", path);
 			} else {
-				security_context_t con;
+				char * con;
 				error = 1;
 				if (notrans)
 					rc = lgetfilecon_raw(path, &con);

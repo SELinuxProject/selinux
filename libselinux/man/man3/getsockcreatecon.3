@@ -5,13 +5,13 @@ getsockcreatecon, setsockcreatecon \- get or set the SELinux security context us
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
-.BI "int getsockcreatecon(security_context_t *" con );
+.BI "int getsockcreatecon(char **" con );
 .sp
-.BI "int getsockcreatecon_raw(security_context_t *" con );
+.BI "int getsockcreatecon_raw(char **" con );
 .sp
-.BI "int setsockcreatecon(security_context_t "context );
+.BI "int setsockcreatecon(char * "context );
 .sp
-.BI "int setsockcreatecon_raw(security_context_t "context );
+.BI "int setsockcreatecon_raw(char * "context );
 .
 .SH "DESCRIPTION"
 .BR getsockcreatecon ()

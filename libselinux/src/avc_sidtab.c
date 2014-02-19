@@ -13,7 +13,7 @@
 #include "avc_sidtab.h"
 #include "avc_internal.h"
 
-static inline unsigned sidtab_hash(security_context_t key)
+static inline unsigned sidtab_hash(const char * key)
 {
 	char *p, *keyp;
 	unsigned int size;
@@ -46,18 +46,18 @@ int sidtab_init(struct sidtab *s)
 	return rc;
 }
 
-int sidtab_insert(struct sidtab *s, const security_context_t ctx)
+int sidtab_insert(struct sidtab *s, const char * ctx)
 {
 	int hvalue, rc = 0;
 	struct sidtab_node *newnode;
-	security_context_t newctx;
+	char * newctx;
 
 	newnode = (struct sidtab_node *)avc_malloc(sizeof(*newnode));
 	if (!newnode) {
 		rc = -1;
 		goto out;
 	}
-	newctx = (security_context_t) strdup(ctx);
+	newctx = (char *) strdup(ctx);
 	if (!newctx) {
 		rc = -1;
 		avc_free(newnode);
@@ -76,7 +76,7 @@ int sidtab_insert(struct sidtab *s, const security_context_t ctx)
 
 int
 sidtab_context_to_sid(struct sidtab *s,
-		      const security_context_t ctx, security_id_t * sid)
+		      const char * ctx, security_id_t * sid)
 {
 	int hvalue, rc = 0;
 	struct sidtab_node *cur;

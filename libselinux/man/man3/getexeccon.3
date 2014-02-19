@@ -7,13 +7,13 @@ rpm_execcon \- run a helper for rpm in an appropriate security context
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
-.BI "int getexeccon(security_context_t *" context );
+.BI "int getexeccon(char **" context );
 .sp
-.BI "int getexeccon_raw(security_context_t *" context );
+.BI "int getexeccon_raw(char **" context );
 .sp
-.BI "int setexeccon(security_context_t "context );
+.BI "int setexeccon(char * "context );
 .sp
-.BI "int setexeccon_raw(security_context_t "context );
+.BI "int setexeccon_raw(char * "context );
 .sp
 .BI "int setexecfilecon(const char *" filename ", const char *" fallback_type );
 .sp

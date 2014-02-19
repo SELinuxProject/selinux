@@ -6,7 +6,7 @@
 #include "selinux_internal.h"
 #include "context_internal.h"
 
-int selinux_check_securetty_context(const security_context_t tty_context)
+int selinux_check_securetty_context(const char * tty_context)
 {
 	char *line = NULL;
 	char *start, *end = NULL;

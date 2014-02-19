@@ -25,10 +25,10 @@ struct sidtab {
 };
 
 int sidtab_init(struct sidtab *s) hidden;
-int sidtab_insert(struct sidtab *s, security_context_t ctx) hidden;
+int sidtab_insert(struct sidtab *s, const char * ctx) hidden;
 
 int sidtab_context_to_sid(struct sidtab *s,
-			  security_context_t ctx, security_id_t * sid) hidden;
+			  const char * ctx, security_id_t * sid) hidden;
 
 void sidtab_sid_stats(struct sidtab *s, char *buf, int buflen) hidden;
 void sidtab_destroy(struct sidtab *s) hidden;

@@ -67,7 +67,7 @@ static inline int avc_hash(security_id_t ssid,
 	    & (AVC_CACHE_SLOTS - 1);
 }
 
-int avc_context_to_sid_raw(const security_context_t ctx, security_id_t * sid)
+int avc_context_to_sid_raw(const char * ctx, security_id_t * sid)
 {
 	int rc;
 	/* avc_init needs to be called before this function */
@@ -79,10 +79,10 @@ int avc_context_to_sid_raw(const security_context_t ctx, security_id_t * sid)
 	return rc;
 }
 
-int avc_context_to_sid(const security_context_t ctx, security_id_t * sid)
+int avc_context_to_sid(const char * ctx, security_id_t * sid)
 {
 	int ret;
-	security_context_t rctx;
+	char * rctx;
 
 	if (selinux_trans_to_raw_context(ctx, &rctx))
 		return -1;
@@ -94,7 +94,7 @@ int avc_context_to_sid(const security_context_t ctx, security_id_t * sid)
 	return ret;
 }
 
-int avc_sid_to_context_raw(security_id_t sid, security_context_t * ctx)
+int avc_sid_to_context_raw(security_id_t sid, char ** ctx)
 {
 	int rc;
 	*ctx = NULL;
@@ -105,10 +105,10 @@ int avc_sid_to_context_raw(security_id_t sid, security_context_t * ctx)
 	return rc;
 }
 
-int avc_sid_to_context(security_id_t sid, security_context_t * ctx)
+int avc_sid_to_context(security_id_t sid, char ** ctx)
 {
 	int ret;
-	security_context_t rctx;
+	char * rctx;
 
 	ret = avc_sid_to_context_raw(sid, &rctx);
 
@@ -133,7 +133,7 @@ int sidput(security_id_t sid __attribute__((unused)))
 int avc_get_initial_sid(const char * name, security_id_t * sid)
 {
 	int rc;
-	security_context_t con;
+	char * con;
 
 	rc = security_get_initial_context_raw(name, &con);
 	if (rc < 0)
@@ -843,7 +843,7 @@ int avc_compute_create(security_id_t ssid,  security_id_t tsid,
 	int rc;
 	struct avc_entry_ref aeref;
 	struct avc_entry entry;
-	security_context_t ctx;
+	char * ctx;
 
 	*newsid = NULL;
 	avc_entry_ref_init(&aeref);
@@ -891,7 +891,7 @@ int avc_compute_member(security_id_t ssid,  security_id_t tsid,
 		       security_class_t tclass, security_id_t *newsid)
 {
 	int rc;
-	security_context_t ctx = NULL;
+	char * ctx = NULL;
 	*newsid = NULL;
 	/* avc_init needs to be called before this function */
 	assert(avc_running);

@@ -68,7 +68,7 @@ characters.
 .
 .TP
 .B SELINUX_CB_VALIDATE
-.BI "int (*" func_validate ") (security_context_t *" ctx ");"
+.BI "int (*" func_validate ") (char **" ctx ");"
 
 This callback is used for context validation.  The callback may optionally modify the input context by setting the target of the 
 .I ctx

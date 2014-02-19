@@ -18,11 +18,11 @@
   $1 = &temp;
 }
 
-%typemap(in,noblock=1,numinputs=0) security_context_t * (security_context_t temp = 0) {
+%typemap(in,noblock=1,numinputs=0) char ** (char * temp = 0) {
 	$1 = &temp;
 }
-%typemap(freearg,match="in") security_context_t * "";
-%typemap(argout,noblock=1) security_context_t * {
+%typemap(freearg,match="in") char ** "";
+%typemap(argout,noblock=1) char ** {
 	if (*$1) {
 		%append_output(SWIG_FromCharPtr(*$1));
 		freecon(*$1);

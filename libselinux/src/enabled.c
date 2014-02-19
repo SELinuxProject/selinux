@@ -12,7 +12,7 @@
 int is_selinux_enabled(void)
 {
 	int enabled = 0;
-	security_context_t con;
+	char * con;
 
 	/* init_selinuxmnt() gets called before this function. We
  	 * will assume that if a selinux file system is mounted, then

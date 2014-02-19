@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-void freecon(security_context_t con)
+void freecon(char * con)
 {
 	free(con);
 }

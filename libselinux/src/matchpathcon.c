@@ -406,7 +406,7 @@ out:
 	return rc;
 }
 
-int matchpathcon(const char *path, mode_t mode, security_context_t * con)
+int matchpathcon(const char *path, mode_t mode, char ** con)
 {
 	char stackpath[PATH_MAX + 1];
 	char *p = NULL;
@@ -427,7 +427,7 @@ int matchpathcon(const char *path, mode_t mode, security_context_t * con)
 		selabel_lookup(hnd, con, path, mode);
 }
 
-int matchpathcon_index(const char *name, mode_t mode, security_context_t * con)
+int matchpathcon_index(const char *name, mode_t mode, char ** con)
 {
 	int i = matchpathcon(name, mode, con);
 
@@ -444,8 +444,8 @@ void matchpathcon_checkmatches(char *str __attribute__((unused)))
 
 /* Compare two contexts to see if their differences are "significant",
  * or whether the only difference is in the user. */
-int selinux_file_context_cmp(const security_context_t a,
-			     const security_context_t b)
+int selinux_file_context_cmp(const char * a,
+			     const char * b)
 {
 	char *rest_a, *rest_b;	/* Rest of the context after the user */
 	if (!a && !b)
@@ -467,8 +467,8 @@ int selinux_file_context_cmp(const security_context_t a,
 
 int selinux_file_context_verify(const char *path, mode_t mode)
 {
-	security_context_t con = NULL;
-	security_context_t fcontext = NULL;
+	char * con = NULL;
+	char * fcontext = NULL;
 	int rc = 0;
 
 	rc = lgetfilecon_raw(path, &con);
@@ -506,7 +506,7 @@ int selinux_lsetfilecon_default(const char *path)
 {
 	struct stat st;
 	int rc = -1;
-	security_context_t scontext = NULL;
+	char * scontext = NULL;
 	if (lstat(path, &st) != 0)
 		return rc;
 

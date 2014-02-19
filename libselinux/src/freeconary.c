@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-void freeconary(security_context_t * con)
+void freeconary(char ** con)
 {
 	char **ptr;
 

@@ -48,11 +48,11 @@ static int object_name_encode(const char *objname, char *buffer, size_t buflen)
 	return 0;
 }
 
-int security_compute_create_name_raw(const security_context_t scon,
-				     const security_context_t tcon,
+int security_compute_create_name_raw(const char * scon,
+				     const char * tcon,
 				     security_class_t tclass,
 				     const char *objname,
-				     security_context_t * newcon)
+				     char ** newcon)
 {
 	char path[PATH_MAX];
 	char *buf;
@@ -107,26 +107,26 @@ int security_compute_create_name_raw(const security_context_t scon,
 }
 hidden_def(security_compute_create_name_raw)
 
-int security_compute_create_raw(const security_context_t scon,
-				const security_context_t tcon,
+int security_compute_create_raw(const char * scon,
+				const char * tcon,
 				security_class_t tclass,
-				security_context_t * newcon)
+				char ** newcon)
 {
 	return security_compute_create_name_raw(scon, tcon, tclass,
 						NULL, newcon);
 }
 hidden_def(security_compute_create_raw)
 
-int security_compute_create_name(const security_context_t scon,
-				 const security_context_t tcon,
+int security_compute_create_name(const char * scon,
+				 const char * tcon,
 				 security_class_t tclass,
 				 const char *objname,
-				 security_context_t * newcon)
+				 char ** newcon)
 {
 	int ret;
-	security_context_t rscon;
-	security_context_t rtcon;
-	security_context_t rnewcon;
+	char * rscon;
+	char * rtcon;
+	char * rnewcon;
 
 	if (selinux_trans_to_raw_context(scon, &rscon))
 		return -1;
@@ -148,10 +148,10 @@ int security_compute_create_name(const security_context_t scon,
 }
 hidden_def(security_compute_create_name)
 
-int security_compute_create(const security_context_t scon,
-			    const security_context_t tcon,
+int security_compute_create(const char * scon,
+				const char * tcon,
 			    security_class_t tclass,
-			    security_context_t * newcon)
+				char ** newcon)
 {
 	return security_compute_create_name(scon, tcon, tclass, NULL, newcon);
 }

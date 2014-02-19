@@ -9,7 +9,7 @@
  *            to the user.  Returns the number (position in the list) of
  *            the user selected context.
  */
-static int context_menu(security_context_t * list)
+static int context_menu(char ** list)
 {
 	int i;			/* array index                        */
 	int choice = 0;		/* index of the user's choice         */
@@ -35,7 +35,7 @@ static int context_menu(security_context_t * list)
  *                  default is the first context in the list.  Returns 0 on
  *                  success, -1 on failure
  */
-int query_user_context(security_context_t * list, security_context_t * usercon)
+int query_user_context(char ** list, char ** usercon)
 {
 	char response[10];	/* The user's response                        */
 	int choice;		/* The index in the list of the sid chosen by
@@ -103,7 +103,7 @@ static void get_field(const char *fieldstr, char *newfield, int newfieldlen)
  *                     context chosen by the user into usercon.  Returns 0
  *                     on success.
  */
-int manual_user_enter_context(const char *user, security_context_t * newcon)
+int manual_user_enter_context(const char *user, char ** newcon)
 {
 	char response[10];	/* Used to get yes or no answers from user */
 	char role[100];		/* The role requested by the user          */

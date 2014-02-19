@@ -12,14 +12,14 @@ selabel_lookup \- obtain SELinux security context from a string label
 .sp
 .BI "int selabel_lookup(struct selabel_handle *" hnd ,
 .in +\w'int selabel_lookup('u
-.BI "security_context_t *" context ,
+.BI "char **" context ,
 .br
 .BI "const char *" key ", int " type ");"
 .in
 .sp
 .BI "int selabel_lookup_raw(struct selabel_handle *" hnd ,
 .in +\w'int selabel_lookup_raw('u
-.BI "security_context_t *" context ,
+.BI "char **" context ,
 .br
 .BI "const char *" key ", int " type ");"
 .in
