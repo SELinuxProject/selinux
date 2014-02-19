@@ -1,3 +1,4 @@
+	* Get rid of security_context_t and fix const declarations.
 	* Refactor rpm_execcon() into a new setexecfilecon() from Guillem Jover.
 
 2.2.2 2013-12-30
