@@ -9,7 +9,7 @@ INCLUDEDIR ?= $(PREFIX)/include
 CFLAGS ?= -g -Wall -W -Werror -O2 -pipe
 override CFLAGS += -I$(INCLUDEDIR)
 
-LDLIBS=-lfl -lselinux $(LIBDIR)/libsepol.a -L$(LIBDIR)
+LDLIBS=-lfl $(LIBDIR)/libsepol.a -L$(LIBDIR)
 
 all: dispol dismod
 
