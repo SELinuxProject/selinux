@@ -224,8 +224,12 @@ int main(int argc, char **argv)
 	}
 
 	if (handle_unknown && (policy_type != POLICY_BASE)) {
-		printf("Handling of unknown classes and permissions is only ");
-		printf("valid in the base module\n");
+		fprintf(stderr, "%s:  Handling of unknown classes and permissions is only valid in the base module.\n", argv[0]);
+		exit(1);
+	}
+
+	if (binary && (policy_type != POLICY_BASE)) {
+		fprintf(stderr, "%s:  -b and -m are incompatible with each other.\n", argv[0]);
 		exit(1);
 	}
 
