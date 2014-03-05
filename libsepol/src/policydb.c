@@ -535,6 +535,8 @@ void avrule_destroy(avrule_t * x)
 	type_set_destroy(&x->stypes);
 	type_set_destroy(&x->ttypes);
 
+	free(x->source_filename);
+
 	next = x->perms;
 	while (next) {
 		cur = next;

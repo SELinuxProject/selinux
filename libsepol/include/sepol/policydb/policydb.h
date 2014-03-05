@@ -260,6 +260,9 @@ typedef struct avrule {
 	class_perm_node_t *perms;
 	unsigned long line;	/* line number from policy.conf where
 				 * this rule originated  */
+	/* source file name and line number (e.g. .te file) */
+	char *source_filename;
+	unsigned long source_line;
 	struct avrule *next;
 } avrule_t;
 

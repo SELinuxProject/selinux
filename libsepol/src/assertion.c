@@ -31,13 +31,13 @@ static int check_assertion_helper(sepol_handle_t * handle,
 				  policydb_t * p,
 				  avtab_t * te_avtab, avtab_t * te_cond_avtab,
 				  unsigned int stype, unsigned int ttype,
-				  class_perm_node_t * perm, unsigned long line)
+				  avrule_t * avrule)
 {
 	avtab_key_t avkey;
 	avtab_ptr_t node;
 	class_perm_node_t *curperm;
 
-	for (curperm = perm; curperm != NULL; curperm = curperm->next) {
+	for (curperm = avrule->perms; curperm != NULL; curperm = curperm->next) {
 		avkey.source_type = stype + 1;
 		avkey.target_type = ttype + 1;
 		avkey.target_class = curperm->class;
@@ -59,9 +59,17 @@ static int check_assertion_helper(sepol_handle_t * handle,
 	return 0;
 
       err:
-	if (line) {
+	if (avrule->source_filename) {
+		ERR(handle, "neverallow on line %lu of %s (or line %lu of policy.conf) violated by allow %s %s:%s {%s };",
+		    avrule->source_line, avrule->source_filename, avrule->line,
+		    p->p_type_val_to_name[stype],
+		    p->p_type_val_to_name[ttype],
+		    p->p_class_val_to_name[curperm->class - 1],
+		    sepol_av_to_string(p, curperm->class,
+				       node->datum.data & curperm->data));
+	} else if (avrule->line) {
 		ERR(handle, "neverallow on line %lu violated by allow %s %s:%s {%s };",
-		    line, p->p_type_val_to_name[stype], 
+		    avrule->line, p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
 		    p->p_class_val_to_name[curperm->class - 1],
 		    sepol_av_to_string(p, curperm->class,
@@ -121,7 +129,7 @@ int check_assertions(sepol_handle_t * handle, policydb_t * p,
 			if (a->flags & RULE_SELF) {
 				if (check_assertion_helper
 				    (handle, p, &te_avtab, &te_cond_avtab, i, i,
-				     a->perms, a->line)) {
+				     a)) {
 					rc = -1;
 					goto out;
 				}
@@ -131,7 +139,7 @@ int check_assertions(sepol_handle_t * handle, policydb_t * p,
 					continue;
 				if (check_assertion_helper
 				    (handle, p, &te_avtab, &te_cond_avtab, i, j,
-				     a->perms, a->line)) {
+				     a)) {
 					rc = -1;
 					goto out;
 				}
