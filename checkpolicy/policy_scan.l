@@ -308,4 +308,6 @@ void set_source_file(const char *name)
 	source_lineno = 1;
 	strncpy(source_file, name, sizeof(source_file)-1); 
 	source_file[sizeof(source_file)-1] = '\0';
+	if (strlen(source_file) && source_file[strlen(source_file)-1] == '"')
+		source_file[strlen(source_file)-1] = '\0';
 }
