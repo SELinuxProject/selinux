@@ -38,6 +38,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include <sepol/policydb/expand.h>
 #include <sepol/policydb/policydb.h>
