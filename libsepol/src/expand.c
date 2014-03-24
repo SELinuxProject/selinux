@@ -2651,9 +2651,11 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 	avrule->line = source_rule->line;
 	avrule->flags = source_rule->flags;
 	avrule->source_line = source_rule->source_line;
-	avrule->source_filename = strdup(source_rule->source_filename);
-	if (!avrule->source_filename)
-		goto err;
+	if (source_rule->source_filename) {
+		avrule->source_filename = strdup(source_rule->source_filename);
+		if (!avrule->source_filename)
+			goto err;
+	}
 
 	if (ebitmap_cpy(&avrule->stypes.types, &stypes))
 		goto err;
