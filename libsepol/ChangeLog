@@ -1,3 +1,4 @@
+	* Report source file and line information for neverallow failures.
 	* Fix valgrind errors in constraint_expr_eval_reason from Richard Haines.
 	* Add sepol_validate_transition_reason_buffer function from Richard Haines.
 

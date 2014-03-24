@@ -1,3 +1,4 @@
+	* Report source file and line information for neverallow failures.
 	* Prevent incompatible option combinations for checkmodule.
 	* Drop -lselinux from LDLIBS for test programs; not used.
 	* Add debug feature to display constraints/validatetrans from Richard Haines.
