@@ -1070,8 +1070,10 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 	s.fallback_user = strdup(FALLBACK_USER);
 	s.fallback_user_prefix = strdup(FALLBACK_USER_PREFIX);
 	s.fallback_user_level = strdup(FALLBACK_USER_LEVEL);
-	if (s.fallback_user == NULL || s.fallback_user_prefix == NULL || s.fallback_user_level == NULL)
-		return STATUS_ERR;
+	if (s.fallback_user == NULL || s.fallback_user_prefix == NULL || s.fallback_user_level == NULL) {
+		retval = STATUS_ERR;
+		goto done;
+	}
 
 	if (ignoredirs) ignore_setup(ignoredirs);
 
@@ -1082,15 +1084,19 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 	if (!(out = fopen(s.fcfilepath, "w"))) {
 		/* couldn't open output file */
 		ERR(sh, "Could not open the file_context file for writing");
-		return STATUS_ERR;
+		retval = STATUS_ERR;
+		goto done;
 	}
 
 	retval = write_context_file(&s, out);
 
-	fclose(out);
+done:
+	if (out != NULL)
+		fclose(out);
 
 	free(s.fallback_user);
 	free(s.fallback_user_prefix);
+	free(s.fallback_user_level);
 	ignore_free();
 
 	return retval;
