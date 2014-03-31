@@ -1,3 +1,6 @@
+2.3-rc1 2014-03-31
+	* Fix memory leak in semanage_genhomedircon from Thomas Hurd.
+
 2.2 2013-10-30
 	* Avoid duplicate list entries from Dan Walsh.
 	* Add audit support to libsemanage from Dan Walsh.
