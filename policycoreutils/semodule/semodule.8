@@ -76,6 +76,9 @@ Recompile CIL modules built from HLL files
 .B \-p,\-\-path
 Use an alternate path for the policy root
 .TP
+.B \-S,\-\-store-path
+Use an alternate path for the policy store root
+.TP
 .B  \-v,\-\-verbose     
 be verbose
 
@@ -103,6 +106,8 @@ $ semodule \-X 100 \-i alsa.pp
 $ semodule \-l full
 # Set an alternate path for the policy root
 $ semodule \-B \-p "/tmp"
+# Set an alternate path for the policy store root
+$ semodule \-B \-S "/tmp/var/lib/selinux"
 .fi
 
 .SH SEE ALSO
