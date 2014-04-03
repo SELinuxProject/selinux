@@ -58,5 +58,6 @@ LIBSEMANAGE_1.1 {
 	  semanage_module_install_info;
 	  semanage_module_upgrade_info;
 	  semanage_module_remove_key;
+	  semanage_set_store_root;
   local: *;
 } LIBSEMANAGE_1.0;

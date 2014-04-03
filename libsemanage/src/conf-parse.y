@@ -38,6 +38,7 @@ extern FILE *semanage_in;
 extern char *semanage_text;
 
 static int parse_module_store(char *arg);
+static int parse_store_root_path(char *arg);
 static int parse_compiler_path(char *arg);
 static void semanage_conf_external_prog_destroy(external_prog_t *ep);
 static int new_external_prog(external_prog_t **chain);
@@ -57,7 +58,7 @@ static int parse_errors;
         char *s;
 }
 
-%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE
+%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT
 %token LOAD_POLICY_START SETFILES_START SEFCONTEXT_COMPILE_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD IGNOREDIRS
 %token BZIP_BLOCKSIZE BZIP_SMALL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
@@ -79,6 +80,7 @@ config_line:    single_opt
 single_opt:     module_store
         |       version
         |       target_platform
+        |       store_root
         |       compiler_dir
         |       ignore_module_cache
         |       expand_check
@@ -100,6 +102,14 @@ module_store:   MODULE_STORE '=' ARG {
                         }
                 }
 
+        ;
+
+store_root:     STORE_ROOT '=' ARG  {
+                        if (parse_store_root_path($3) != 0) {
+                                parse_errors++;
+                                YYABORT;
+                        }
+                }
         ;
 
 compiler_dir:       COMPILER_DIR '=' ARG  {
@@ -309,6 +319,7 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	conf->store_type = SEMANAGE_CON_DIRECT;
 	conf->store_path = strdup(basename(selinux_policy_root()));
 	conf->ignoredirs = NULL;
+	conf->store_root_path = strdup("/var/lib/selinux");
 	conf->compiler_directory_path = strdup("/usr/libexec/selinux/hll");
 	conf->policyvers = sepol_policy_kern_vers_max();
 	conf->target_platform = SEPOL_TARGET_SELINUX;
@@ -419,6 +430,7 @@ void semanage_conf_destroy(semanage_conf_t * conf)
 	if (conf != NULL) {
 		free(conf->store_path);
 		free(conf->ignoredirs);
+		free(conf->store_root_path);
 		free(conf->compiler_directory_path);
 		semanage_conf_external_prog_destroy(conf->load_policy);
 		semanage_conf_external_prog_destroy(conf->setfiles);
@@ -481,6 +493,17 @@ static int parse_module_store(char *arg)
 			}
 		}
 	}
+	return 0;
+}
+
+static int parse_store_root_path(char *arg)
+{
+	if (arg == NULL) {
+		return -1;
+	}
+
+	free(current_conf->store_root_path);
+	current_conf->store_root_path = strdup(arg);
 	return 0;
 }
 

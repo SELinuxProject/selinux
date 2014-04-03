@@ -284,6 +284,17 @@ void semanage_select_store(semanage_handle_t * sh, char *storename,
 	return;
 }
 
+void semanage_set_store_root(semanage_handle_t *sh, const char *store_root)
+{
+	assert(sh != NULL);
+
+	free(sh->conf->store_root_path);
+	sh->conf->store_root_path = strdup(store_root);
+	assert(sh->conf->store_root_path); /* no way to return failure */
+
+	return;
+}
+
 int semanage_is_managed(semanage_handle_t * sh)
 {
 	assert(sh != NULL);

@@ -113,7 +113,7 @@ static struct semanage_policy_table direct_funcs = {
 
 int semanage_direct_is_managed(semanage_handle_t * sh)
 {
-	if (semanage_check_init(sh, semanage_store_root_path()))
+	if (semanage_check_init(sh, sh->conf->store_root_path))
 		goto err;
 
 	if (semanage_access_check(sh) < 0)
@@ -132,7 +132,7 @@ int semanage_direct_connect(semanage_handle_t * sh)
 {
 	const char *path;
 
-	if (semanage_check_init(sh, semanage_store_root_path()))
+	if (semanage_check_init(sh, sh->conf->store_root_path))
 		goto err;
 
 	if (sh->create_store)
@@ -1665,7 +1665,7 @@ cleanup:
 
 int semanage_direct_access_check(semanage_handle_t * sh)
 {
-	if (semanage_check_init(sh, semanage_store_root_path()))
+	if (semanage_check_init(sh, sh->conf->store_root_path))
 		return -1;
 
 	return semanage_store_access_check();

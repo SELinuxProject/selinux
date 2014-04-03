@@ -75,8 +75,6 @@ enum semanage_final_path_defs {
 	SEMANAGE_FINAL_PATH_NUM
 };
 
-const char *semanage_store_root_path(void);
-
 /* FIXME: this needs to be made a module store specific init and the
  * global configuration moved to another file.
  */
