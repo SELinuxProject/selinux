@@ -60,3 +60,18 @@ LOCAL_YACCFLAGS := -v
 LOCAL_MODULE_CLASS := EXECUTABLES
 
 include $(BUILD_HOST_EXECUTABLE)
+
+##
+# dispol
+#
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := dispol
+LOCAL_MODULE_TAGS := optional
+LOCAL_C_INCLUDES := $(common_includes)
+LOCAL_CFLAGS := $(common_cflags)
+LOCAL_SRC_FILES := test/dispol.c
+LOCAL_STATIC_LIBRARIES := libsepol
+LOCAL_MODULE_CLASS := EXECUTABLES
+
+include $(BUILD_HOST_EXECUTABLE)
