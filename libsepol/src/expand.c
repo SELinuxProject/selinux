@@ -49,82 +49,6 @@ typedef struct expand_state {
 	int expand_neverallow;
 } expand_state_t;
 
-struct linear_probe {
-	filename_trans_t **table;	/* filename_trans chunks with same stype */
-	filename_trans_t **ends;	/* pointers to ends of **table chunks */
-	uint32_t length;		/* length of the table */
-};
-
-static int linear_probe_create(struct linear_probe *probe, uint32_t length)
-{
-	probe->table = calloc(length, sizeof(*probe->table));
-	if (probe->table == NULL)
-		return -1;
-
-	probe->ends = calloc(length, sizeof(*probe->ends));
-	if (probe->ends == NULL)
-		return -1;
-
-	probe->length = length;
-
-	return 0;
-}
-
-static void linear_probe_destroy(struct linear_probe *probe)
-{
-	if (probe->length == 0)
-		return;
-
-	free(probe->table);
-	free(probe->ends);
-	memset(probe, 0, sizeof(*probe));
-}
-
-static void linear_probe_insert(struct linear_probe *probe, uint32_t key,
-				filename_trans_t *data)
-{
-	assert(probe->length > key);
-
-	if (probe->table[key] != NULL) {
-		data->next = probe->table[key];
-		probe->table[key] = data;
-	} else {
-		probe->table[key] = probe->ends[key] = data;
-	}
-}
-
-static filename_trans_t *linear_probe_find(struct linear_probe *probe, uint32_t key)
-{
-	assert(probe->length > key);
-
-	return probe->table[key];
-}
-
-/* Returns all chunks stored in the *probe as single-linked list */
-static filename_trans_t *linear_probe_dump(struct linear_probe *probe,
-					   filename_trans_t **endp)
-{
-	uint32_t i;
-	filename_trans_t *result = NULL;
-	filename_trans_t *end = NULL;
-
-	for (i = 0; i < probe->length; i++) {
-		if (probe->table[i] != NULL) {
-			if (end == NULL)
-				end = probe->ends[i];
-			probe->ends[i]->next = result;
-			result = probe->table[i];
-			probe->table[i] = probe->ends[i] = NULL;
-		}
-	}
-
-	/* Incoherent result and end pointers indicates bug */
-	assert((result != NULL && end != NULL) || (result == NULL && end == NULL));
-
-	*endp = end;
-	return result;
-}
-
 static void expand_state_init(expand_state_t * state)
 {
 	memset(state, 0, sizeof(expand_state_t));
@@ -1459,20 +1383,10 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *rules)
 {
 	unsigned int i, j;
-	filename_trans_t *new_trans, *cur_trans, *end;
+	filename_trans_t *new_trans, *cur_trans;
 	filename_trans_rule_t *cur_rule;
 	ebitmap_t stypes, ttypes;
 	ebitmap_node_t *snode, *tnode;
-	struct linear_probe probe;
-
-	/*
-	 * Linear probing speeds-up finding filename_trans rules with certain
-	 * "stype" value.
-	 */
-	if (linear_probe_create(&probe, 4096)) { /* Assume 4096 is enough for most cases */
-		ERR(state->handle, "Out of memory!");
-		return -1;
-	}
 
 	cur_rule = rules;
 	while (cur_rule) {
@@ -1495,14 +1409,6 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 
 		mapped_otype = state->typemap[cur_rule->otype - 1];
 
-		if (ebitmap_length(&stypes) > probe.length) {
-			linear_probe_destroy(&probe);
-			if (linear_probe_create(&probe, ebitmap_length(&stypes))) {
-				ERR(state->handle, "Out of memory!");
-				return -1;
-			}
-		}
-
 		ebitmap_for_each_bit(&stypes, snode, i) {
 			if (!ebitmap_node_get_bit(snode, i))
 				continue;
@@ -1510,14 +1416,16 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 				if (!ebitmap_node_get_bit(tnode, j))
 					continue;
 
-				cur_trans = linear_probe_find(&probe, i);
-				while (cur_trans != NULL) {
-					if ((cur_trans->ttype == j + 1) &&
+				cur_trans = state->out->filename_trans;
+				while (cur_trans) {
+					if ((cur_trans->stype == i + 1) &&
+					    (cur_trans->ttype == j + 1) &&
 					    (cur_trans->tclass == cur_rule->tclass) &&
 					    (!strcmp(cur_trans->name, cur_rule->name))) {
 						/* duplicate rule, who cares */
 						if (cur_trans->otype == mapped_otype)
 							break;
+
 						ERR(state->handle, "Conflicting filename trans rules %s %s %s : %s otype1:%s otype2:%s",
 						    cur_trans->name,
 						    state->out->p_type_val_to_name[i],
@@ -1525,7 +1433,7 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 						    state->out->p_class_val_to_name[cur_trans->tclass - 1],
 						    state->out->p_type_val_to_name[cur_trans->otype - 1],
 						    state->out->p_type_val_to_name[mapped_otype - 1]);
-
+						    
 						return -1;
 					}
 					cur_trans = cur_trans->next;
@@ -1540,6 +1448,8 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 					return -1;
 				}
 				memset(new_trans, 0, sizeof(*new_trans));
+				new_trans->next = state->out->filename_trans;
+				state->out->filename_trans = new_trans;
 
 				new_trans->name = strdup(cur_rule->name);
 				if (!new_trans->name) {
@@ -1550,14 +1460,7 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 				new_trans->ttype = j + 1;
 				new_trans->tclass = cur_rule->tclass;
 				new_trans->otype = mapped_otype;
-				linear_probe_insert(&probe, i, new_trans);
 			}
-		}
-
-		cur_trans = linear_probe_dump(&probe, &end);
-		if (cur_trans != NULL) {
-			end->next = state->out->filename_trans;
-			state->out->filename_trans = cur_trans;
 		}
 
 		ebitmap_destroy(&stypes);
