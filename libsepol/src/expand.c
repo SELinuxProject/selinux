@@ -1426,14 +1426,14 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 						if (cur_trans->otype == mapped_otype)
 							break;
 
-						ERR(state->handle, "Conflicting filename trans rules %s %s %s : %s otype1:%s otype2:%s",
-						    cur_trans->name,
+						ERR(state->handle, "Conflicting name-based type_transition %s %s:%s \"%s\":  %s vs %s",
 						    state->out->p_type_val_to_name[i],
 						    state->out->p_type_val_to_name[j],
 						    state->out->p_class_val_to_name[cur_trans->tclass - 1],
+						    cur_trans->name,
 						    state->out->p_type_val_to_name[cur_trans->otype - 1],
 						    state->out->p_type_val_to_name[mapped_otype - 1]);
-						    
+
 						return -1;
 					}
 					cur_trans = cur_trans->next;
