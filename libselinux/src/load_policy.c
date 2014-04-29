@@ -417,13 +417,15 @@ int selinux_init_load_policy(int *enforce)
 			/* Successfully disabled, so umount selinuxfs too. */
 			umount(selinux_mnt);
 			fini_selinuxmnt();
+			goto noload;
+		} else {
+			/*
+			 * It's possible that this failed because policy has
+			 * already been loaded. We can't disable SELinux now,
+			 * so the best we can do is force it to be permissive.
+			 */
+			*enforce = 0;
 		}
-		/*
-		 * If we failed to disable, SELinux will still be 
-		 * effectively permissive, because no policy is loaded. 
-		 * No need to call security_setenforce(0) here.
-		 */
-		goto noload;
 	}
 
 	/*
@@ -441,6 +443,9 @@ int selinux_init_load_policy(int *enforce)
 				goto noload;
 		}
 	}
+
+	if (seconfig == -1)
+		goto noload;
 
 	/* Load the policy. */
 	return selinux_mkload_policy(0);
