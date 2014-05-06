@@ -1,4 +1,4 @@
-2.3-rc1 2014-03-31
+2.3 2014-05-06
 	* Fix memory leak in semanage_genhomedircon from Thomas Hurd.
 
 2.2 2013-10-30

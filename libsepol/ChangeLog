@@ -1,4 +1,6 @@
-2.3-rc1 2014-03-25
+2.3 2014-05-06
+	* Improve error message for name-based transition conflicts.
+	* Revert libsepol: filename_trans: use some better sorting to compare and merge.
 	* Report source file and line information for neverallow failures.
 	* Fix valgrind errors in constraint_expr_eval_reason from Richard Haines.
 	* Add sepol_validate_transition_reason_buffer function from Richard Haines.

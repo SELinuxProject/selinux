@@ -1,4 +1,4 @@
-2.3-rc1 2014-03-25
+2.3 2014-05-06
 	* Add -P semodule option to man page from Dan Walsh.
 	* selinux_current_policy_path will return none on a disabled SELinux system from Dan Walsh.
 	* Add new icons for sepolicy gui from Dan Walsh.
