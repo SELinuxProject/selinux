@@ -3,7 +3,7 @@
 seunshare \- Run cmd with alternate homedir, tmpdir and/or SELinux context
 .SH SYNOPSIS
 .B seunshare
-[ -v ] [ -c ] [ -C ] [ -k ] [ -t tmpdir ] [ -h homedir ] [ -Z context ] -- executable [args]
+[ -v ] [ -C ] [ -k ] [ -t tmpdir ] [ -h homedir ] [ -Z context ] -- executable [args]
 .br
 .SH DESCRIPTION
 .PP
@@ -17,9 +17,6 @@ Alternate homedir to be used by the application.  Homedir must be owned by the u
 .TP
 \fB\-t\ tmpdir
 Use alternate tempory directory to mount on /tmp.  tmpdir must be owned by the user.
-.TP
-\fB\-c --cgroups\fR
-Use cgroups to control this copy of seunshare.  Specify parameters in /etc/sysconfig/sandbox.  Max memory usage and cpu usage are to be specified in percent.  You can specify which CPUs to use by numbering them 0,1,2... etc.
 .TP
 \fB\-C --capabilities\fR
 Allow apps executed within the namespace to use capabilities.  Default is no capabilities.

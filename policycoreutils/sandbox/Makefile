@@ -8,7 +8,7 @@ MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= /usr/share/locale
 SHAREDIR ?= $(PREFIX)/share/sandbox
 override CFLAGS += $(LDFLAGS) -I$(PREFIX)/include -DPACKAGE="\"policycoreutils\"" -Wall -Werror -Wextra -W
-LDLIBS += -lcgroup -lselinux -lcap-ng -L$(LIBDIR)
+LDLIBS += -lselinux -lcap-ng -L$(LIBDIR)
 SEUNSHARE_OBJS = seunshare.o
 
 all: sandbox seunshare sandboxX.sh start

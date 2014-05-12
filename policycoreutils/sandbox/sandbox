@@ -280,9 +280,9 @@ Policy defines the following types for use with the -t:
                pass
 
         usage = _("""
-sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] command
+sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] command
 
-sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] -S
+sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t type ] -S
 %s
 """) % types
 
@@ -337,10 +337,6 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
 
         parser.add_option("-l", "--level", dest="level", 
                           help=_("MCS/MLS level for the sandbox"))
-
-        parser.add_option("-c", "--cgroups",
-                          action="store_true", dest="usecgroup", default=False,
-                          help=_("Use cgroups to limit this sandbox."))
 
         parser.add_option("-C", "--capabilities",
                          action="store_true", dest="usecaps", default=False,
@@ -426,8 +422,6 @@ sandbox [-h] [-c] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile
     def __execute(self):
            try:
                   cmds = [ SEUNSHARE,  "-Z", self.__execcon ]
-                  if self.__options.usecgroup:
-                         cmds.append('-c')
                   if self.__options.usecaps:
                          cmds.append('-C')
                   if self.__mount:
