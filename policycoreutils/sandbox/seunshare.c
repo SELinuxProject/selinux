@@ -826,17 +826,25 @@ int main(int argc, char **argv) {
 			goto childerr;
 		}
 
-		/* selinux context */
-		if (execcon && setexeccon(execcon) != 0) {
-			fprintf(stderr, _("Could not set exec context to %s. %s\n"), execcon, strerror(errno));
-			goto childerr;
-		}
-
 		if (chdir(pwd->pw_dir)) {
 			perror(_("Failed to change dir to homedir"));
 			goto childerr;
 		}
 		setsid();
+
+		/* selinux context */
+		if (execcon) {
+			/* try dyntransition, since no_new_privs can interfere
+			 * with setexeccon */
+			if (setcon(execcon) != 0) {
+				/* failed; fall back to setexeccon */
+				if (setexeccon(execcon) != 0) {
+					fprintf(stderr, _("Could not set exec context to %s. %s\n"), execcon, strerror(errno));
+					goto childerr;
+				}
+			}
+		}
+
 		execv(argv[optind], argv + optind);
 		fprintf(stderr, _("Failed to execute command %s: %s\n"), argv[optind], strerror(errno));
 childerr:
