@@ -24,12 +24,12 @@
 #include <semanage/modules.h>
 
 enum client_modes {
-	NO_MODE, INSTALL_M, UPGRADE_M, BASE_M, REMOVE_M,
+	NO_MODE, INSTALL_M, REMOVE_M,
 	LIST_M, RELOAD, PRIORITY_M, ENABLE_M, DISABLE_M
 };
 /* list of modes in which one ought to commit afterwards */
 static const int do_commit[] = {
-	0, 1, 1, 1, 1,
+	0, 1, 1,
 	0, 0, 0, 1, 1,
 };
 
@@ -44,7 +44,6 @@ static int num_commands = 0;
 static int verbose;
 static int reload;
 static int no_reload;
-static int create_store;
 static int build;
 static int disable_dontaudit;
 static int preserve_tunables;
@@ -108,11 +107,9 @@ static void usage(char *progname)
 	printf("  -R, --reload		    reload policy\n");
 	printf("  -B, --build		    build and reload policy\n");
 	printf("  -i,--install=MODULE_PKG   install a new module\n");
-	printf("  -u,--upgrade=MODULE_PKG   upgrades or install module to a newer version\n");
-	printf("  -b,--base=MODULE_PKG      install new base module\n");
 	printf("  -r,--remove=MODULE_NAME   remove existing module\n");
 	printf("  -l,--list-modules=[KIND]  display list of installed modules\n");
-	printf("     KIND:  standard  list highest priority, enabled, non-base modules\n");
+	printf("     KIND:  standard  list highest priority, enabled modules\n");
 	printf("            full      list all modules\n");
 	printf("  -X,--priority=PRIORITY    set priority for following operations (1-999)\n");
 	printf("  -e,--enable=MODULE_NAME   enable module\n");
@@ -179,15 +176,14 @@ static void parse_command_line(int argc, char **argv)
 	verbose = 0;
 	reload = 0;
 	no_reload = 0;
-	create_store = 0;
 	priority = 400;
 	while ((i =
 		getopt_long(argc, argv, "s:b:hi:l::vqr:u:RnNBDPX:e:d:p:", opts,
 			    NULL)) != -1) {
 		switch (i) {
 		case 'b':
-			set_mode(BASE_M, optarg);
-			create_store = 1;
+			fprintf(stderr, "The --base option is deprecated. Use --install instead.\n");
+			set_mode(INSTALL_M, optarg);
 			break;
 		case 'h':
 			usage(argv[0]);
@@ -205,7 +201,8 @@ static void parse_command_line(int argc, char **argv)
 			set_mode(REMOVE_M, optarg);
 			break;
 		case 'u':
-			set_mode(UPGRADE_M, optarg);
+			fprintf(stderr, "The --upgrade option is deprecated. Use --install instead.\n");
+			set_mode(INSTALL_M, optarg);
 			break;
 		case 's':
 			set_store(optarg);
@@ -268,8 +265,6 @@ static void parse_command_line(int argc, char **argv)
 
 		if (commands && commands[num_commands - 1].mode == INSTALL_M) {
 			mode = INSTALL_M;
-		} else if (commands && commands[num_commands - 1].mode == UPGRADE_M) {
-			mode = UPGRADE_M;
 		} else if (commands && commands[num_commands - 1].mode == REMOVE_M) {
 			mode = REMOVE_M;
 		} else {
@@ -316,23 +311,8 @@ int main(int argc, char *argv[])
 		semanage_select_store(sh, store, SEMANAGE_CON_DIRECT);
 	}
 
-	/* if installing base module create store if necessary, for bootstrapping */
-	semanage_set_create_store(sh, create_store);
-
-	if (!create_store) {
-		if (!semanage_is_managed(sh)) {
-			fprintf(stderr,
-				"%s: SELinux policy is not managed or store cannot be accessed.\n",
-				argv[0]);
-			goto cleanup;
-		}
-
-		if (semanage_access_check(sh) < SEMANAGE_CAN_READ) {
-			fprintf(stderr, "%s: Cannot read policy store.\n",
-				argv[0]);
-			goto cleanup;
-		}
-	}
+	/* create store if necessary, for bootstrapping */
+	semanage_set_create_store(sh, 1);
 
 	if ((result = semanage_connect(sh)) < 0) {
 		fprintf(stderr, "%s:  Could not connect to policy handler\n",
@@ -379,26 +359,6 @@ int main(int argc, char *argv[])
 				    semanage_module_install_file(sh, mode_arg);
 				break;
 			}
-		case UPGRADE_M:{
-				if (verbose) {
-					printf
-					    ("Attempting to upgrade module '%s':\n",
-					     mode_arg);
-				}
-				result =
-				    semanage_module_upgrade_file(sh, mode_arg);
-				break;
-			}
-		case BASE_M:{
-				if (verbose) {
-					printf
-					    ("Attempting to install base module '%s':\n",
-					     mode_arg);
-				}
-				result =
-				    semanage_module_install_base_file(sh, mode_arg);
-				break;
-			}
 		case REMOVE_M:{
 				if (verbose) {
 					printf
@@ -433,7 +393,6 @@ int main(int argc, char *argv[])
 					}
 
 					const char *name = NULL;
-					const char *version = NULL;
 
 					for (j = 0; j < modinfos_len; j++) {
 						m = semanage_module_list_nth(modinfos, j);
@@ -441,10 +400,7 @@ int main(int argc, char *argv[])
 						result = semanage_module_info_get_name(sh, m, &name);
 						if (result != 0) goto cleanup_list;
 
-						result = semanage_module_info_get_version(sh, m, &version);
-						if (result != 0) goto cleanup_list;
-
-						printf("%s\t%s\n", name, version);
+						printf("%s\n", name);
 					}
 				}
 				else if (strcmp(mode_arg, "full") == 0) {
@@ -459,11 +415,11 @@ int main(int argc, char *argv[])
 					}
 
 					/* calculate column widths */
-					size_t column[5] = { 0, 0, 0, 0, 0 };
+					size_t column[4] = { 0, 0, 0, 0 };
 
 					/* fixed width columns */
 					column[0] = sizeof("000") - 1;
-					column[4] = sizeof("disabled") - 1;
+					column[3] = sizeof("disabled") - 1;
 
 					/* variable width columns */
 					const char *tmp = NULL;
@@ -477,12 +433,6 @@ int main(int argc, char *argv[])
 						size = strlen(tmp);
 						if (size > column[1]) column[1] = size;
 
-						result = semanage_module_info_get_version(sh, m, &tmp);
-						if (result != 0) goto cleanup_list;
-
-						size = strlen(tmp);
-						if (size > column[2]) column[2] = size;
-
 						result = semanage_module_info_get_lang_ext(sh, m, &tmp);
 						if (result != 0) goto cleanup_list;
 
@@ -494,7 +444,6 @@ int main(int argc, char *argv[])
 					for (j = 0; j < modinfos_len; j++) {
 						uint16_t pri = 0;
 						const char *name = NULL;
-						const char *version = NULL;
 						int enabled = 0;
 						const char *lang_ext = NULL;
 
@@ -506,21 +455,17 @@ int main(int argc, char *argv[])
 						result = semanage_module_info_get_name(sh, m, &name);
 						if (result != 0) goto cleanup_list;
 
-						result = semanage_module_info_get_version(sh, m, &version);
-						if (result != 0) goto cleanup_list;
-
 						result = semanage_module_info_get_enabled(sh, m, &enabled);
 						if (result != 0) goto cleanup_list;
 
 						result = semanage_module_info_get_lang_ext(sh, m, &lang_ext);
 						if (result != 0) goto cleanup_list;
 
-						printf("%0*u %-*s %-*s %-*s %-*s\n",
+						printf("%0*u %-*s %-*s %-*s\n",
 							(int)column[0], pri,
 							(int)column[1], name,
-							(int)column[2], version,
-							(int)column[3], lang_ext,
-							(int)column[4], enabled ? "" : "disabled");
+							(int)column[2], lang_ext,
+							(int)column[3], enabled ? "" : "disabled");
 					}
 				}
 				else {
