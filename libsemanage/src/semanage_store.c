@@ -1081,6 +1081,11 @@ int semanage_split_fc(semanage_handle_t * sh)
 static int sefcontext_compile(semanage_handle_t * sh, const char *path) {
 
 	int r;
+
+	if (access(path, F_OK) != 0) {
+		return 0;
+	}
+
 	if ((r = semanage_exec_prog(sh, sh->conf->sefcontext_compile, path, "")) != 0) {
 		ERR(sh, "sefcontext_compile returned error code %d. Compiling %s", r, path);
 		return -1;
