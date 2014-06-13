@@ -41,6 +41,9 @@
 #include "modules.h"
 #include "debug.h"
 
+asm(".symver semanage_module_get_enabled_1_1,semanage_module_get_enabled@@LIBSEMANAGE_1.1");
+asm(".symver semanage_module_get_enabled_1_0,semanage_module_get_enabled@LIBSEMANAGE_1.0");
+
 int semanage_module_install(semanage_handle_t * sh,
 			    char *module_data, size_t data_len)
 {
@@ -855,7 +858,7 @@ int semanage_module_key_set_priority(semanage_handle_t *sh,
 
 hidden_def(semanage_module_key_set_priority)
 
-int semanage_module_get_enabled(semanage_handle_t *sh,
+int semanage_module_get_enabled_1_1(semanage_handle_t *sh,
 				const semanage_module_key_t *modkey,
 				int *enabled)
 {
@@ -875,7 +878,10 @@ int semanage_module_get_enabled(semanage_handle_t *sh,
 	return sh->funcs->get_enabled(sh, modkey, enabled);
 }
 
-hidden_def(semanage_module_get_enabled)
+int semanage_module_get_enabled_1_0(semanage_module_info_t *modinfo)
+{
+	return modinfo->enabled;
+}
 
 int semanage_module_set_enabled(semanage_handle_t *sh,
 				const semanage_module_key_t *modkey,
@@ -902,6 +908,62 @@ int semanage_module_set_enabled(semanage_handle_t *sh,
 }
 
 hidden_def(semanage_module_set_enabled)
+
+/* This function exists only for ABI compatability. It has been deprecated and
+ * should not be used. Instead, use semanage_module_set_enabled() */
+int semanage_module_enable(semanage_handle_t *sh, char *module_name)
+{
+	int rc = -1;
+	semanage_module_key_t *modkey = NULL;
+
+	rc = semanage_module_key_create(sh, &modkey);
+	if (rc != 0)
+		goto exit;
+
+	rc = semanage_module_key_set_name(sh, modkey, module_name);
+	if (rc != 0)
+		goto exit;
+
+	rc = semanage_module_set_enabled(sh, modkey, 1);
+	if (rc != 0)
+		goto exit;
+
+	rc = 0;
+
+exit:
+	semanage_module_key_destroy(sh, modkey);
+	free(modkey);
+
+	return rc;
+}
+
+/* This function exists only for ABI compatability. It has been deprecated and
+ * should not be used. Instead, use semanage_module_set_enabled() */
+int semanage_module_disable(semanage_handle_t *sh, char *module_name)
+{
+	int rc = -1;
+	semanage_module_key_t *modkey = NULL;
+
+	rc = semanage_module_key_create(sh, &modkey);
+	if (rc != 0)
+		goto exit;
+
+	rc = semanage_module_key_set_name(sh, modkey, module_name);
+	if (rc != 0)
+		goto exit;
+
+	rc = semanage_module_set_enabled(sh, modkey, 0);
+	if (rc != 0)
+		goto exit;
+
+	rc = 0;
+
+exit:
+	semanage_module_key_destroy(sh, modkey);
+	free(modkey);
+
+	return rc;
+}
 
 /* Converts a string to a priority
  *

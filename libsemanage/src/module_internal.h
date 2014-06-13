@@ -26,6 +26,5 @@ hidden_proto(semanage_module_get_name)
     hidden_proto(semanage_module_key_get_name)
     hidden_proto(semanage_module_key_set_priority)
     hidden_proto(semanage_module_key_set_name)
-    hidden_proto(semanage_module_get_enabled)
     hidden_proto(semanage_module_set_enabled)
 #endif
