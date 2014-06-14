@@ -829,7 +829,7 @@ class Tests:
 		if self.verbose: print "SEBool name set: ", semanage.semanage_bool_get_name(pbool)
 
 		semanage.semanage_bool_set_value(pbool, 0)
-		if self.verbose: print "SEbool value set: ", semanage.semanage_bool_set_value(pbool)
+		if self.verbose: print "SEbool value set: ", semanage.semanage_bool_get_value(pbool)
 
 		(status,key) = semanage.semanage_bool_key_extract(sh, pbool)
 		if status < 0:
@@ -912,7 +912,7 @@ class Tests:
 		if self.verbose: print "SEBool name set: ", semanage.semanage_bool_get_name(abool)
 
 		semanage.semanage_bool_set_value(abool, 0)
-		if self.verbose: print "SEbool value set: ", semanage.semanage_bool_set_value(abool)
+		if self.verbose: print "SEbool value set: ", semanage.semanage_bool_get_value(abool)
 
 		print "Starting transaction..."
 		status = semanage.semanage_begin_transaction(sh)
