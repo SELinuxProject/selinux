@@ -619,7 +619,9 @@ class Tests:
 		if self.verbose: print "SEFContext expr set: ", semanage.semanage_fcontext_get_expr(fcon)
 
 		semanage.semanage_fcontext_set_type(fcon, semanage.SEMANAGE_FCONTEXT_REG)
-		if self.verbose: print "SEFContext type set: ", semanage.semanage_fcontext_get_type_str(fcon)
+		if self.verbose:
+			ftype = semanage.semanage_fcontext_get_type(fcon)
+			print "SEFContext type set: ", semanage.semanage_fcontext_get_type_str(ftype)
 
 		(status, con) = semanage.semanage_context_create(sh)
 		if status < 0:
