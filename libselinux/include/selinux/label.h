@@ -131,6 +131,8 @@ void selabel_stats(struct selabel_handle *handle);
 #define SELABEL_DB_BLOB		8
 #define SELABEL_DB_TUPLE	9
 #define SELABEL_DB_LANGUAGE	10
+#define SELABEL_DB_EXCEPTION 11
+#define SELABEL_DB_DATATYPE 12
 
 #ifdef __cplusplus
 }

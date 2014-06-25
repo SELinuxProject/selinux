@@ -140,6 +140,10 @@ process_line(const char *path, char *line_buf, unsigned int line_num,
 		spec->type = SELABEL_DB_TUPLE;
 	else if (!strcmp(type, "db_language"))
 		spec->type = SELABEL_DB_LANGUAGE;
+	else if (!strcmp(type, "db_exception"))
+		spec->type = SELABEL_DB_EXCEPTION;
+	else if (!strcmp(type, "db_datatype"))
+		spec->type = SELABEL_DB_DATATYPE;
 	else {
 		selinux_log(SELINUX_WARNING,
 			    "%s:  line %d has invalid object type %s\n",
