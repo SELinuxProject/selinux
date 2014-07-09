@@ -9,8 +9,6 @@
 #include <alloca.h>
 #include <fnmatch.h>
 #include <syslog.h>
-#include <selinux/flask.h>
-#include <selinux/av_permissions.h>
 #include <selinux/selinux.h>
 #include <selinux/context.h>
 #include "mcstrans.h"
@@ -110,7 +108,7 @@ static int check_dominance(const char *pattern, const char *raw) {
 	if (!raw)
 		goto out;
 
-	rc = security_compute_av_raw(ctx, (security_context_t)raw, SECCLASS_CONTEXT, bit, &avd);
+	rc = security_compute_av_raw(ctx, (security_context_t)raw, string_to_security_class("context"), bit, &avd);
 	if (rc)
 		goto out;
 

@@ -4,9 +4,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "selinux_internal.h"
-#include <selinux/flask.h>
 #include <selinux/avc.h>
-#include <selinux/av_permissions.h>
 #include "avc_internal.h"
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;

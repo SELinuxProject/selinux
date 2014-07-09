@@ -66,7 +66,6 @@
 #include <string.h>
 #include <errno.h>
 #include <selinux/selinux.h>	/* for is_selinux_enabled() */
-#include <selinux/flask.h>	/* for SECCLASS_CHR_FILE */
 #include <selinux/context.h>	/* for context-mangling functions */
 #include <selinux/get_default_type.h>
 #include <selinux/get_context_list.h>	/* for SELINUX_DEFAULTUSER */
@@ -711,7 +710,7 @@ static int relabel_tty(const char *ttyn, security_context_t new_context,
 
 	if (tty_con &&
 	    (security_compute_relabel(new_context, tty_con,
-				      SECCLASS_CHR_FILE, &new_tty_con) < 0)) {
+				      string_to_security_class("chr_file"), &new_tty_con) < 0)) {
 		fprintf(stderr, _("%s!  Could not get new context for %s, "
 				  "not relabeling tty.\n"),
 			enforcing ? "Error" : "Warning", ttyn);

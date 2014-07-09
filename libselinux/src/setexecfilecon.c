@@ -1,7 +1,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
-#include <selinux/flask.h>
 #include "selinux_internal.h"
 #include "context_internal.h"
 
@@ -22,7 +21,7 @@ int setexecfilecon(const char *filename, const char *fallback_type)
 	if (rc < 0)
 		goto out;
 
-	rc = security_compute_create(mycon, fcon, SECCLASS_PROCESS, &newcon);
+	rc = security_compute_create(mycon, fcon, string_to_security_class("process"), &newcon);
 	if (rc < 0)
 		goto out;
 

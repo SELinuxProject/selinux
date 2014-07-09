@@ -6,7 +6,6 @@
 #include <errno.h>
 #include <string.h>
 #include <ctype.h>
-#include <selinux/flask.h>
 #include <selinux/selinux.h>
 
 static void usage(const char *name, const char *detail, int rc)
@@ -22,7 +21,7 @@ static char * get_selinux_proc_context(const char *command, char * execcon) {
 
 	int ret = getfilecon(command, &fcon);
 	if (ret < 0) goto err;
-	ret = security_compute_create(execcon, fcon, SECCLASS_PROCESS, &newcon);
+	ret = security_compute_create(execcon, fcon, string_to_security_class("process"), &newcon);
 	if (ret < 0) goto err;
 
 err:

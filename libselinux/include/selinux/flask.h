@@ -2,6 +2,9 @@
 #ifndef _SELINUX_FLASK_H_
 #define _SELINUX_FLASK_H_
 
+#warning "Please remove any #include's of this header in your source code."
+#warning "Instead, use string_to_security_class() to map the class name to a value."
+
 /*
  * Security object class definitions
  */
