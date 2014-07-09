@@ -127,6 +127,8 @@ static int process_file(struct saved_data *data, const char *filename)
  *
  * u32 - magic number
  * u32 - version
+ * u32 - length of pcre version EXCLUDING nul
+ * char - pcre version string EXCLUDING nul
  * u32 - number of stems
  * ** Stems
  * 	u32  - length of stem EXCLUDING nul
@@ -170,6 +172,15 @@ static int write_binary_file(struct saved_data *data, int fd)
 	section_len = SELINUX_COMPILED_FCONTEXT_MAX_VERS;
 	len = fwrite(&section_len, sizeof(uint32_t), 1, bin_file);
 	if (len != 1)
+		goto err;
+
+	/* write the pcre version */
+	section_len = strlen(pcre_version());
+	len = fwrite(&section_len, sizeof(uint32_t), 1, bin_file);
+	if (len != 1)
+		goto err;
+	len = fwrite(pcre_version(), sizeof(char), section_len, bin_file);
+	if (len != section_len)
 		goto err;
 
 	/* write the number of stems coming */

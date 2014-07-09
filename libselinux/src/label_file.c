@@ -314,6 +314,19 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 		return -1;
 	addr += sizeof(uint32_t);
 
+	if (*section_len >= SELINUX_COMPILED_FCONTEXT_PCRE_VERS) {
+		len = strlen(pcre_version());
+		plen = (uint32_t *)addr;
+		if (*plen > mmap_area->len)
+			return -1; /* runs off the end of the map */
+		if (len != *plen)
+			return -1; /* pcre version length mismatch */
+		addr += sizeof(uint32_t);
+		if (memcmp((char *)addr, pcre_version(), len))
+			return -1; /* pcre version content mismatch */
+		addr += *plen;
+	}
+
 	/* allocate the stems_data array */
 	section_len = (uint32_t *)addr;
 	addr += sizeof(uint32_t);

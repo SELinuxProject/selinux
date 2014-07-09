@@ -6,7 +6,9 @@
 #include "label_internal.h"
 
 #define SELINUX_MAGIC_COMPILED_FCONTEXT	0xf97cff8a
-#define SELINUX_COMPILED_FCONTEXT_MAX_VERS	1
+#define SELINUX_COMPILED_FCONTEXT_NOPCRE_VERS	1
+#define SELINUX_COMPILED_FCONTEXT_PCRE_VERS	2
+#define SELINUX_COMPILED_FCONTEXT_MAX_VERS	2
 
 /* Prior to verison 8.20, libpcre did not have pcre_free_study() */
 #if (PCRE_MAJOR < 8 || (PCRE_MAJOR == 8 && PCRE_MINOR < 20))
