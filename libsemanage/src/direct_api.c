@@ -690,7 +690,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	/* Declare some variables */
 	int modified = 0, fcontexts_modified, ports_modified,
 	    seusers_modified, users_extra_modified, dontaudit_modified,
-	    preserve_tunables_modified;
+	    preserve_tunables_modified, bools_modified;
 	dbase_config_t *users = semanage_user_dbase_local(sh);
 	dbase_config_t *users_base = semanage_user_base_dbase_local(sh);
 	dbase_config_t *pusers_base = semanage_user_base_dbase_policy(sh);
@@ -771,11 +771,11 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	users_extra_modified =
 	    users_extra->dtable->is_modified(users_extra->dbase);
 	ports_modified = ports->dtable->is_modified(ports->dbase);
+	bools_modified = bools->dtable->is_modified(bools->dbase);
 
 	modified = sh->modules_modified;
 	modified |= ports_modified;
 	modified |= users->dtable->is_modified(users_base->dbase);
-	modified |= bools->dtable->is_modified(bools->dbase);
 	modified |= ifaces->dtable->is_modified(ifaces->dbase);
 	modified |= nodes->dtable->is_modified(nodes->dbase);
 	modified |= dontaudit_modified;
@@ -891,15 +891,26 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 
 		/* ==================== Policydb-backed ================ */
 
-		/* Create new policy object, then attach to policy databases
-		 * that work with a policydb */
+		/* Create new policy object */
 		retval = semanage_expand_sandbox(sh, base, &out);
 		if (retval < 0)
 			goto cleanup;
 	
 		sepol_module_package_free(base);
 		base = NULL;
+	} else {
+		/* Load already linked policy */
+		retval = sepol_policydb_create(&out);
+		if (retval < 0)
+			goto cleanup;
 
+		retval = semanage_read_policydb(sh, out);
+		if (retval < 0)
+			goto cleanup;
+	}
+
+	if (sh->do_rebuild || modified || bools_modified) {
+		/* Attach to policy databases that work with a policydb. */
 		dbase_policydb_attach((dbase_policydb_t *) pusers_base->dbase,
 				      out);
 		dbase_policydb_attach((dbase_policydb_t *) pports->dbase, out);
@@ -921,14 +932,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		if (retval < 0)
 			goto cleanup;
 	} else {
-		retval = sepol_policydb_create(&out);
-		if (retval < 0)
-			goto cleanup;
-
-		retval = semanage_read_policydb(sh, out);
-		if (retval < 0)
-			goto cleanup;
-		
+		/* Changes to non-kernel policy configurations only. */
 		if (seusers_modified || users_extra_modified) {
 			retval = semanage_link_base(sh, &base);
 			if (retval < 0)
@@ -1007,7 +1011,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	sepol_policydb_free(out);
 	out = NULL;
 
-	if (sh->do_rebuild || modified || 
+	if (sh->do_rebuild || modified || bools_modified ||
 	    seusers_modified || fcontexts_modified || users_extra_modified) {
 		retval = semanage_install_sandbox(sh);
 	}
@@ -1017,7 +1021,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		free(mod_filenames[i]);
 	}
 
-	if (modified) {
+	if (modified || bools_modified) {
 		/* Detach from policydb, so it can be freed */
 		dbase_policydb_detach((dbase_policydb_t *) pusers_base->dbase);
 		dbase_policydb_detach((dbase_policydb_t *) pports->dbase);
