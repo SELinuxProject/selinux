@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <linux/limits.h>
 
@@ -334,6 +337,7 @@ int main(int argc, char *argv[])
 	int rc;
 	char *tmp= NULL;
 	int fd;
+	struct stat buf;
 
 	if (argc != 2) {
 		fprintf(stderr, "usage: %s input_file\n", argv[0]);
@@ -343,6 +347,11 @@ int main(int argc, char *argv[])
 	memset(&data, 0, sizeof(data));
 
 	path = argv[1];
+
+	if (stat(path, &buf) < 0) {
+		fprintf(stderr, "Can not stat: %s: %m\n", path);
+		exit(EXIT_FAILURE);
+	}
 
 	rc = process_file(&data, path);
 	if (rc < 0)
@@ -362,6 +371,12 @@ int main(int argc, char *argv[])
 	fd  = mkstemp(tmp);
 	if (fd < 0)
 		goto err;
+
+	rc = fchmod(fd, buf.st_mode);
+	if (rc < 0) {
+		perror("fchmod failed to set permission on compiled regexs");
+		goto err;
+	}
 
 	rc = write_binary_file(&data, fd);
 
