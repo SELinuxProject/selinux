@@ -50,7 +50,7 @@ static int parse_errors;
 
 %}
 
-%name-prefix="semanage_"
+%name-prefix "semanage_"
 
 %union {
         int d;
