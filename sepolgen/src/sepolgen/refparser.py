@@ -469,7 +469,6 @@ def p_interface_call_param(p):
 def p_interface_call_param_list(p):
     '''interface_call_param_list : interface_call_param
                                  | interface_call_param_list COMMA interface_call_param
-                                 | interface_call_param_list COMMA interface_call_param COMMA interface_call_param_list
     '''
     if len(p) == 2:
         p[0] = [p[1]]
