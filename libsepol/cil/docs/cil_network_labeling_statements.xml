@@ -1,0 +1,234 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+           <!-- network_labeling_statements.xml -->
+
+   <sect1 id="network_labeling">
+      <title>Network Labeling Statements</title>
+      <sect2 id="ipaddr">
+         <title>ipaddr</title>
+         <para>Declares a named IP address in IPv4 or IPv6 format that may be referenced by other CIL statements (i.e. <literal>netifcon</literal>).</para>
+         <para>Notes:</para>
+         <itemizedlist>
+            <listitem><para>CIL statements utilising an IP address may reference a named IP address or use an anonymous address, the examples will show each option.</para></listitem>
+
+            <listitem><para>IP Addresses may be declared without a previous declaration by enclosing within parentheses e.g. <literal>(127.0.0.1)</literal> or <literal>(::1)</literal>.</para></listitem>
+         </itemizedlist>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(ipaddr ipaddr_id ip_address)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>ipaddr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>ipaddr</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>ipaddr_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The IP address identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>ip_address</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A correctly formatted IP address in IPv4 or IPv6 format.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example declares a named IP address and also passes an 'explicit anonymously declared' IP address to a macro:</para>
+         <programlisting><![CDATA[
+(ipaddr netmask_1 255.255.255.0)
+(context netlabel_1 (system.user object_r unconfined.object low_low)
+
+(call build_nodecon ((192.168.1.64) netmask_1))
+
+(macro build_nodecon ((ipaddr ARG1) (ipaddr ARG2))
+    (nodecon ARG1 ARG2  netlabel_1))]]>
+      </programlisting>
+      </sect2>
+
+      <sect2 id="netifcon">
+         <title>netifcon</title>
+         <para>Label network interface objects (e.g. <literal>eth0</literal>).</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(netifcon netif_name netif_context_id packet_context_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>netifcon</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>netifcon</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>netif_name</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The network interface name (e.g. <literal>wlan0</literal>).</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>netif_context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The security context to be allocated to the network interface.</para>
+                     <para>A previously declared <literal><link linkend="context">context</link></literal> identifier or an anonymous security context (<literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>packet_context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The security context to be allocated to packets. Note that these are defined but currently unused as the <emphasis role="bold"><literal>iptables</literal></emphasis><literal>(8)</literal> SECMARK services should be used to label packets.</para>
+                     <para>A previously declared <literal><link linkend="context">context</link></literal> identifier or an anonymous security context (<literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>These examples show named and anonymous <literal>netifcon</literal> statements:</para>
+         <programlisting><![CDATA[
+(context context_1 (unconfined.user object_r unconfined.object low_low))
+(context context_2 (unconfined.user object_r unconfined.object (systemlow level_2)))
+
+(netifcon eth0 context_1 (unconfined.user object_r unconfined.object levelrange_1))
+(netifcon eth1 context_1 (unconfined.user object_r unconfined.object ((s0) level_1)))
+(netifcon eth3 context_1 context_2)]]>
+      </programlisting>
+      </sect2>
+
+      <sect2 id="nodecon">
+         <title>nodecon</title>
+         <para>Label network address objects that represent IPv4 or IPv6 IP addresses and network masks.</para>
+         <para>IP Addresses may be declared without a previous declaration by enclosing within parentheses e.g. <literal>(127.0.0.1)</literal> or <literal>(::1)</literal>.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(nodecon subnet_id netmask_id context_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>nodecon</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>nodecon</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>subnet_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="ipaddr">ipaddr</link></literal> identifier, or an anonymous IPv4 or IPv6 formatted address.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>netmask_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="ipaddr">ipaddr</link></literal> identifier, or an anonymous IPv4 or IPv6 formatted address.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="context">context</link></literal> identifier or an anonymous security context (<literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>These examples show named and anonymous <literal>nodecon</literal> statements:</para>
+         <programlisting><![CDATA[
+(context context_1 (unconfined.user object_r unconfined.object low_low))
+(context context_2 (unconfined.user object_r unconfined.object (systemlow level_2)))
+
+(ipaddr netmask_1 255.255.255.0)
+(ipaddr ipv4_1 192.168.1.64)
+
+(nodecon netmask_1 ipv4_1 context_2)
+(nodecon (255.255.255.0) (192.168.1.64) context_1)
+(nodecon netmask_1 (192.168.1.64) (unconfined.user object_r unconfined.object ((s0) (s0 (c0)))))]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="portcon">
+         <title>portcon</title>
+         <para>Label a udp or tcp port.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(portcon protocol port context_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>portcon</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>portcon</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>protocol</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The protocol keyword <literal>tcp</literal> or <literal>udp</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="context">context</link></literal> identifier or an anonymous security context (<literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>These examples show named and anonymous <literal>portcon</literal> statements:</para>
+         <programlisting><![CDATA[
+(portcon tcp 1111 (unconfined.user object_r unconfined.object ((s0) (s0 (c0)))))
+(portcon tcp 2222 (unconfined.user object_r unconfined.object levelrange_2))
+(portcon tcp 3333 (unconfined.user object_r unconfined.object levelrange_1))
+(portcon udp 4444 (unconfined.user object_r unconfined.object ((s0) level_2)))
+(portcon tcp 55555 (unconfined.user object_r unconfined.object (systemlow level_3)))]]>
+         </programlisting>
+      </sect2>
+
+   </sect1>

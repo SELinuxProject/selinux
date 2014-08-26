@@ -1,0 +1,269 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+           <!-- conditional_statements.xml -->
+
+   <sect1>
+      <title>Conditional Statements</title>
+      <sect2 id="boolean">
+         <title>boolean</title>
+         <para>Declares a run time boolean as true or false in the current namespace. The <literal><link linkend="booleanif">booleanif</link></literal> statement contains the CIL code that will be in the binary policy file.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(boolean boolean_id true|false)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="boolean">boolean</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="boolean">boolean</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>boolean_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="boolean">boolean</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>true | false</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The initial state of the boolean. This can be changed at run time using <emphasis role="bold"><literal>setsebool</literal></emphasis><literal>(8)</literal> and its status queried using  <emphasis role="bold"><literal>getsebool</literal></emphasis><literal>(8)</literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>See the <literal><link linkend="booleanif">booleanif</link></literal> statement for an example.</para>
+      </sect2>
+
+      <sect2 id="booleanif">
+         <title>booleanif</title>
+         <para>Contains the run time conditional statements that are instantiated in the binary policy according to the computed boolean identifier(s) state.</para>
+         <para><literal><link linkend="call">call</link></literal> statements are allowed within a <literal><link linkend="booleanif">booleanif</link></literal>, however the contents of the resulting macro must be limited to those of the <literal><link linkend="booleanif">booleanif</link></literal> statement (i.e. <literal><link linkend="allow">allow</link></literal>, <literal><link linkend="auditallow">auditallow</link></literal>, <literal><link linkend="dontaudit">dontaudit</link></literal>, <literal><link linkend="typemember">typemember</link></literal>, <literal><link linkend="typetransition">typetransition</link></literal>, <literal><link linkend="typechange">typechange</link></literal> and the compile time <literal><link linkend="tunableif">tunableif</link></literal> statement)).</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[
+(booleanif boolean_id | expr ...)
+    (true
+        cil_statements
+        ...)
+    (false
+        cil_statements
+        ...)
+)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="booleanif">booleanif</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="booleanif">booleanif</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>boolean_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Either a single <literal><link linkend="boolean">boolean</link></literal> identifier or one or more <literal>expr</literal>'s.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more <literal>expr</literal>'s, the valid operators and syntax are:</para>
+                     <simpara><literal>    (and (boolean_id boolean_id))</literal></simpara>
+                     <simpara><literal>    (or  (boolean_id boolean_id))</literal></simpara>
+                     <simpara><literal>    (xor (boolean_id boolean_id))</literal></simpara>
+                     <simpara><literal>    (eq  (boolean_id boolean_id))</literal></simpara>
+                     <simpara><literal>    (neq (boolean_id boolean_id))</literal></simpara>
+                     <simpara><literal>    (not (boolean_id))</literal></simpara>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>true</literal></para>
+                  </entry>
+                  <entry>
+                     <para>An optional set of CIL statements that will be instantiated when the <literal><link linkend="boolean">boolean</link></literal> is evaluated as <literal>true</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>false</literal></para>
+                  </entry>
+                  <entry>
+                     <para>An optional set of CIL statements that will be instantiated when the <literal><link linkend="boolean">boolean</link></literal> is evaluated as <literal>false</literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>The second example also shows the kernel policy language equivalent:</para>
+         <programlisting><![CDATA[
+(boolean disableAudio false)
+
+(booleanif disableAudio
+    (false
+        (allow process mediaserver.audio_device (chr_file_set (rw_file_perms)))
+    )
+)]]>
+         </programlisting>
+         <programlisting><![CDATA[
+(boolean disableAudioCapture false)
+
+;;; if(!disableAudio && !disableAudioCapture) {
+(booleanif (and (not disableAudio) (not disableAudioCapture))
+    (true
+        (allow process mediaserver.audio_capture_device (chr_file_set (rw_file_perms)))
+    )
+)]]>
+      </programlisting>
+      </sect2>
+
+      <sect2 id="tunable">
+         <title>tunable</title>
+         <para>Tunables are similar to booleans, however they are used to manage areas of CIL statements that may or may not be in the final CIL policy that will be compiled (whereas booleans are embedded in the binary policy and can be enabled or disabled during run-time).</para>
+         <para>Note that tunables can be treated as booleans by the CIL compiler command line parameter <literal>-P</literal> or <literal>--preserve-tunables</literal> flags.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(tunable tunable_id true|false)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>tunable</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="tunable">tunable</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>tunable_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="tunable">tunable</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>true | false</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The initial state of the <literal><link linkend="tunable">tunable</link></literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>See the <literal><link linkend="tunableif">tunableif</link></literal> statement for an example.</para>
+      </sect2>
+
+      <sect2 id="tunableif">
+         <title>tunableif</title>
+         <para>Compile time conditional statement that may or may not add CIL statements to be compiled.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[
+(tunableif tunable_id | expr ...)
+    (true
+        cil_statements
+        ...)
+    (false
+        cil_statements
+        ...)
+)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>tunableif</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="tunableif">tunableif</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>tunable_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Either a single <literal><link linkend="tunable">tunable</link></literal> identifier or one or more <literal>expr</literal>'s.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more <literal>expr</literal>'s, the valid operators and syntax are:</para>
+                     <simpara><literal>    (and (tunable_id tunable_id))</literal></simpara>
+                     <simpara><literal>    (or  (tunable_id tunable_id))</literal></simpara>
+                     <simpara><literal>    (xor (tunable_id tunable_id))</literal></simpara>
+                     <simpara><literal>    (eq  (tunable_id tunable_id))</literal></simpara>
+                     <simpara><literal>    (neq (tunable_id tunable_id))</literal></simpara>
+                     <simpara><literal>    (not (tunable_id))</literal></simpara>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>true</literal></para>
+                  </entry>
+                  <entry>
+                     <para>An optional set of CIL statements that will be instantiated when the <literal><link linkend="tunable">tunable</link></literal> is evaluated as <literal>true</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>false</literal></para>
+                  </entry>
+                  <entry>
+                     <para>An optional set of CIL statements that will be instantiated when the <literal><link linkend="tunable">tunable</link></literal> is evaluated as <literal>false</literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will not add the range transition rule to the binary policy:</para>
+         <programlisting><![CDATA[
+(tunable range_trans_rule false)
+
+(block init
+    (class process (process))
+    (type process)
+
+    (tunableif range_trans_rule
+        (true
+            (rangetransition process sshd.exec process low_high)
+        )
+    ) ; End tunableif
+) ; End block]]>
+         </programlisting>
+      </sect2>
+
+   </sect1>

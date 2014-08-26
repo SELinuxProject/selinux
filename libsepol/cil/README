@@ -1,0 +1,75 @@
+SELinux Common Intermediate Language (CIL) Compiler
+
+INTRODUCTION
+
+	The SELinux CIL Compiler is a compiler that converts the CIL language as
+	described on the CIL design wiki into a kernel binary policy file.
+	Please see the CIL Design Wiki at:
+	http://github.com/SELinuxProject/cil/wiki/
+	for more information about the goals and features on the CIL language.
+
+DEPENDENCIES
+
+	gcc >= 4.5.1
+	libsepol-static >= 2.1.4
+	lcov >= 1.9
+	flex >= 2.5.35
+
+
+BUILD STEPS
+
+	Open a terminal client and execute the following command to download the source code:
+
+			git clone https://github.com/SELinuxProject/cil.git
+
+	Change directory into the "cil" directory.
+	Run "make" with one of the following targets:
+
+	make
+		Build the CIL compiler (secilc)
+
+	make unit
+		Build the unit_test application to run unit tests
+
+	make coverage
+		Build the unit test binary and create coverage reports
+
+	make clean
+		Remove temporary build files
+
+	make bare
+		Remove temporary build files and compile binaries
+
+
+USAGE
+
+	Execute 'secilc' with any number of CIL files as arguments. A binary policy and
+	file_contexts file will be created.
+
+	Use the '--help' option for more details.
+
+
+DOCUMENTATION
+
+	There is a Docbook CIL Reference Guide in the docs directory, to build
+	this in HTML and PDF format change to the docs directory and run:
+		make html pdf
+
+	There is also an secilc man page that can be built with:
+		make man
+
+	The documents will be located in the docs/html, docs/pdf and docs/man8
+	directories.
+
+	To build the html and manpage the xmlto package is required.
+	To build the pdf document the xmlto and dblatex packages are required.
+
+
+KNOWN ISSUES
+
+	- Blocks inside of macros causes undefined behavior
+
+	- Policy must be well formed. For example, invalid usage of
+	  sensitivities/categories/levels may create an unloaded binary
+
+	- Recursive limits are not handled

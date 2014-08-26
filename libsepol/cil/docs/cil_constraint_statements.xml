@@ -1,0 +1,363 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+           <!-- constraint_statements.xml -->
+
+   <sect1>
+      <title>Constraint Statements</title>
+      <sect2 id="constrain">
+         <title>constrain</title>
+         <para>Enable constraints to be placed on the specified permissions of the object class based on the source and target security context components.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(constrain classpermissionset_id ... expression | expr ...)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>constrain</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>constrain</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>classpermissionset_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="classpermissionset">classpermissionset</link></literal> or a single set of <literal><link linkend="classmap">classmap</link></literal>/<literal><link linkend="classmapping">classmapping</link></literal> identifiers.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expression</literal></para>
+                  </entry>
+                  <entry>
+                     <para>There must be one constraint <literal>expression</literal> or one or more <literal>expr</literal>'s. The expression consists of an operator and two operands as follows:</para>
+                        <simpara><literal>    (op u1 u2)</literal></simpara>
+                        <simpara><literal>    (role_op r1 r2)</literal></simpara>
+                        <simpara><literal>    (op t1 t2)</literal></simpara>
+                        <simpara><literal>    (op u1 user_id)</literal></simpara>
+                        <simpara><literal>    (op u2 user_id)</literal></simpara>
+                        <simpara><literal>    (op r1 role_id)</literal></simpara>
+                        <simpara><literal>    (op r2 role_id)</literal></simpara>
+                        <simpara><literal>    (op t1 type_id)</literal></simpara>
+                        <simpara><literal>    (op t2 type_id)</literal></simpara>
+                     <simpara>where:</simpara>
+                        <simpara><literal>  u1, r1, t1 = Source context: <link linkend="user">user</link>, <link linkend="role">role</link> or <link linkend="type">type</link></literal></simpara>
+                        <simpara><literal>  u2, r2, t2 = Target context: <link linkend="user">user</link>, <link linkend="role">role</link> or <link linkend="type">type</link></literal></simpara>
+                     <simpara>and:</simpara>
+                        <simpara><literal>  op      : eq neq</literal></simpara>
+                        <simpara><literal>  role_op : eq neq dom domby incomp</literal></simpara>
+                        <simpara><literal>  user_id : A single <link linkend="user">user</link> identifier.</literal></simpara>
+                        <simpara><literal>  role_id : A single <link linkend="role">role</link> or <link linkend="roleattribute">roleattribute</link> identifier.</literal></simpara>
+                        <simpara><literal>  type_id : A single <link linkend="type">type</link>, <link linkend="typealias">typealias</link> or <link linkend="typeattribute">typeattribute</link> identifier.</literal></simpara>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more <literal>expr</literal>'s, the valid operators and syntax are:</para>
+                     <simpara><literal>    (and expression expression)</literal></simpara>
+                     <simpara><literal>    (or  expression expression)</literal></simpara>
+                     <simpara><literal>    (not expression)</literal></simpara>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>Two constrain statements are shown with their equivalent kernel policy language statements:</para>
+         <programlisting><![CDATA[
+;; constrain { file } { write }
+;;    (( t1 == unconfined.process  ) and ( t2 == unconfined.object  ) or ( r1 eq r2 ));
+(constrain (file (write))
+    (or
+        (and
+            (eq t1 unconfined.process)
+            (eq t2 unconfined.object)
+        )
+        (eq r1 r2)
+    )
+)
+
+;; constrain { file } { read }
+;;    (not( t1 == unconfined.process  ) and ( t2 == unconfined.object  ) or ( r1 eq r2 ));
+(constrain (file (read))
+    (not
+        (or
+            (and
+                (eq t1 unconfined.process)
+                (eq t2 unconfined.object)
+            )
+            (eq r1 r2)
+        )
+    )
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="validatetrans">
+         <title>validatetrans</title>
+         <para>The <literal>validatetrans</literal> statement is only used for <literal>file</literal> related object classes where it is used to control the ability to change the objects security context based on old, new and the current process security context.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(validatetrans class_id expression | expr ...)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>validatetrans</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>validatetrans</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>class_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expression</literal></para>
+                  </entry>
+                  <entry>
+                     <para>There must be one constraint <literal>expression</literal> or one or more <literal>expr</literal>'s. The expression consists of an operator and two operands as follows:</para>
+                        <simpara><literal>    (op u1 u2)</literal></simpara>
+                        <simpara><literal>    (role_op r1 r2)</literal></simpara>
+                        <simpara><literal>    (op t1 t2)</literal></simpara>
+                        <simpara><literal>    (op u1 user_id)</literal></simpara>
+                        <simpara><literal>    (op u2 user_id)</literal></simpara>
+                        <simpara><literal>    (op u3 user_id)</literal></simpara>
+                        <simpara><literal>    (op r1 role_id)</literal></simpara>
+                        <simpara><literal>    (op r2 role_id)</literal></simpara>
+                        <simpara><literal>    (op r3 role_id)</literal></simpara>
+                        <simpara><literal>    (op t1 type_id)</literal></simpara>
+                        <simpara><literal>    (op t2 type_id)</literal></simpara>
+                        <simpara><literal>    (op t3 type_id)</literal></simpara>
+                     <simpara>where:</simpara>
+                        <simpara><literal>  u1, r1, t1 = Old context: <link linkend="user">user</link>, <link linkend="role">role</link> or <link linkend="type">type</link></literal></simpara>
+                        <simpara><literal>  u2, r2, t2 = New context: <link linkend="user">user</link>, <link linkend="role">role</link> or <link linkend="type">type</link></literal></simpara>
+                        <simpara><literal>  u3, r3, t3 = Process context: <link linkend="user">user</link>, <link linkend="role">role</link> or <link linkend="type">type</link></literal></simpara>
+                     <simpara>and:</simpara>
+                        <simpara><literal>  op      : eq neq</literal></simpara>
+                        <simpara><literal>  role_op : eq neq dom domby incomp</literal></simpara>
+                        <simpara><literal>  user_id : A single <link linkend="user">user</link> identifier.</literal></simpara>
+                        <simpara><literal>  role_id : A single <link linkend="role">role</link> or <link linkend="roleattribute">roleattribute</link> identifier.</literal></simpara>
+                        <simpara><literal>  type_id : A single <link linkend="type">type</link>, <link linkend="typealias">typealias</link> or <link linkend="typeattribute">typeattribute</link> identifier.</literal></simpara>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more <literal>expr</literal>'s, the valid operators and syntax are:</para>
+                     <simpara><literal>    (and expression expression)</literal></simpara>
+                     <simpara><literal>    (or  expression expression)</literal></simpara>
+                     <simpara><literal>    (not expression)</literal></simpara>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>A validate transition statement with the equivalent kernel policy language statement:</para>
+         <programlisting><![CDATA[
+; validatetrans { file } ( t1 == unconfined.process  );
+
+(validatetrans file (eq t1 unconfined.process))]]>
+      </programlisting>
+      </sect2>
+
+      <sect2 id="mlsconstrain">
+         <title>mlsconstrain</title>
+         <para>Enable MLS constraints to be placed on the specified permissions of the object class based on the source and target security context components.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(mlsconstrain classpermissionset_id ... expression | expr ...)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>mlsconstrain</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>mlsconstrain</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>classpermissionset_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="classpermissionset">classpermissionset</link></literal> or a single set of <literal><link linkend="classmap">classmap</link></literal>/<literal><link linkend="classmapping">classmapping</link></literal> identifiers.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expression</literal></para>
+                  </entry>
+                  <entry>
+                     <para>There must be one constraint <literal>expression</literal> or one or more <literal>expr</literal>'s. The expression consists of an operator and two operands as follows:</para>
+                        <simpara><literal>    (op u1 u2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op r1 r2)</literal></simpara>
+                        <simpara><literal>    (op t1 t2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op l1 l2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op l1 h2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op h1 l2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op h1 h2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op l1 h1)</literal></simpara>
+                        <simpara><literal>    (mls_role_op l2 h2)</literal></simpara>
+                        <simpara><literal>    (op u1 user_id)</literal></simpara>
+                        <simpara><literal>    (op u2 user_id)</literal></simpara>
+                        <simpara><literal>    (op r1 role_id)</literal></simpara>
+                        <simpara><literal>    (op r2 role_id)</literal></simpara>
+                        <simpara><literal>    (op t1 type_id)</literal></simpara>
+                        <simpara><literal>    (op t2 type_id)</literal></simpara>
+                     <simpara>where:</simpara>
+                        <simpara><literal>  u1, r1, t1, l1, h1 = Source context: <link linkend="user">user</link>, <link linkend="role">role</link>, <link linkend="type">type</link>, <link linkend="level">low level</link> or <link linkend="level">high level</link></literal></simpara>
+                        <simpara><literal>  u2, r2, t2, l2, h2 = Target context: <link linkend="user">user</link>, <link linkend="role">role</link>, <link linkend="type">type</link>, <link linkend="level">low level</link> or <link linkend="level">high level</link></literal></simpara>
+                     <simpara>and:</simpara>
+                        <simpara><literal>  op          : eq neq</literal></simpara>
+                        <simpara><literal>  mls_role_op : eq neq dom domby incomp</literal></simpara>
+                        <simpara><literal>  user_id     : A single <link linkend="user">user</link> identifier.</literal></simpara>
+                        <simpara><literal>  role_id     : A single <link linkend="role">role</link> or <link linkend="roleattribute">roleattribute</link> identifier.</literal></simpara>
+                        <simpara><literal>  type_id     : A single <link linkend="type">type</link>, <link linkend="typealias">typealias</link> or <link linkend="typeattribute">typeattribute</link> identifier.</literal></simpara>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more <literal>expr</literal>'s, the valid operators and syntax are:</para>
+                     <simpara><literal>    (and expression expression)</literal></simpara>
+                     <simpara><literal>    (or  expression expression)</literal></simpara>
+                     <simpara><literal>    (not expression)</literal></simpara>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>An MLS constrain statement with the equivalent kernel policy language statement:</para>
+         <programlisting><![CDATA[
+;; mlsconstrain { file } { open }
+;;     (( l1 eq l2 ) and ( u1 == u2 ) or ( r1 != r2 ));
+
+(mlsconstrain (file (open))
+    (or
+        (and
+            (eq l1 l2)
+            (eq u1 u2)
+        )
+        (neq r1 r2)
+    )
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="mlsvalidatetrans">
+         <title>mlsvalidatetrans</title>
+         <para>The <literal>mlsvalidatetrans</literal> statement is only used for <literal>file</literal> related object classes where it is used to control the ability to change the objects security context based on old, new and the current process security context.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(mlsvalidatetrans class_id expression | expr ...)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>mlsvalidatetrans</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>mlsvalidatetrans</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>class_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expression</literal></para>
+                  </entry>
+                  <entry>
+                     <para>There must be one constraint <literal>expression</literal> or one or more <literal>expr</literal>'s. The expression consists of an operator and two operands as follows:</para>
+                        <simpara><literal>    (op u1 u2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op r1 r2)</literal></simpara>
+                        <simpara><literal>    (op t1 t2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op l1 l2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op l1 h2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op h1 l2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op h1 h2)</literal></simpara>
+                        <simpara><literal>    (mls_role_op l1 h1)</literal></simpara>
+                        <simpara><literal>    (mls_role_op l2 h2)</literal></simpara>
+                        <simpara><literal>    (op u1 user_id)</literal></simpara>
+                        <simpara><literal>    (op u2 user_id)</literal></simpara>
+                        <simpara><literal>    (op u3 user_id)</literal></simpara>
+                        <simpara><literal>    (op r1 role_id)</literal></simpara>
+                        <simpara><literal>    (op r2 role_id)</literal></simpara>
+                        <simpara><literal>    (op r3 role_id)</literal></simpara>
+                        <simpara><literal>    (op t1 type_id)</literal></simpara>
+                        <simpara><literal>    (op t2 type_id)</literal></simpara>
+                        <simpara><literal>    (op t3 type_id)</literal></simpara>
+                     <simpara>where:</simpara>
+                        <simpara><literal>  u1, r1, t1, l1, h1 = Source context: <link linkend="user">user</link>, <link linkend="role">role</link>, <link linkend="type">type</link>, <link linkend="level">low level</link> or <link linkend="level">high level</link></literal></simpara>
+                        <simpara><literal>  u2, r2, t2, l2, h2 = Target context: <link linkend="user">user</link>, <link linkend="role">role</link>, <link linkend="type">type</link>, <link linkend="level">low level</link> or <link linkend="level">high level</link></literal></simpara>
+                        <simpara><literal>  u3, r3, t3         = Process context: <link linkend="user">user</link>, <link linkend="role">role</link> or <link linkend="type">type</link></literal></simpara>
+                     <simpara>and:</simpara>
+                        <simpara><literal>  op          : eq neq</literal></simpara>
+                        <simpara><literal>  mls_role_op : eq neq dom domby incomp</literal></simpara>
+                        <simpara><literal>  user_id     : A single <link linkend="user">user</link> identifier.</literal></simpara>
+                        <simpara><literal>  role_id     : A single <link linkend="role">role</link> or <link linkend="roleattribute">roleattribute</link> identifier.</literal></simpara>
+                        <simpara><literal>  type_id     : A single <link linkend="type">type</link>, <link linkend="typealias">typealias</link> or <link linkend="typeattribute">typeattribute</link> identifier.</literal></simpara>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more <literal>expr</literal>'s, the valid operators and syntax are:</para>
+                     <simpara><literal>    (and expression expression)</literal></simpara>
+                     <simpara><literal>    (or  expression expression)</literal></simpara>
+                     <simpara><literal>    (not expression)</literal></simpara>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>An MLS validate transition statement with the equivalent kernel policy language statement:</para>
+         <programlisting><![CDATA[
+;; mlsvalidatetrans { file } ( l1 domby h2 );
+
+(mlsvalidatetrans file (domby l1 h2))]]>
+      </programlisting>
+      </sect2>
+
+   </sect1>

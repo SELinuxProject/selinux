@@ -1,0 +1,174 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+           <!-- call_macro_statements.xml -->
+
+   <sect1>
+      <title>Call / Macro Statements</title>
+      <sect2 id="call">
+         <title>call</title>
+         <para>Instantiate a <link linkend="macro">macro</link> within the current namespace. There may be zero or more parameters passed to the macro (with zero parameters this is similar to the <literal><link linkend="blockinherit">blockinherit</link></literal> (<literal><link linkend="call">call</link></literal>) / <literal><link linkend="blockabstract">blockabstract</link></literal> (<literal><link linkend="macro">macro</link></literal>) statements).</para>
+         <para>Each parameter passed contains an argument to be resolved by the <link linkend="macro">macro</link>, these can be named or anonymous but must conform to the parameter types defined in the <literal><link linkend="macro">macro</link></literal> statement.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(call macro_id [(param ...)])]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="call">call</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="call">call</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>macro_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The identifier of the <literal><link linkend="macro">macro</link></literal> to be instantiated.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>param</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more parameters that are passed to the macro.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>See the <literal><link linkend="macro">macro</link></literal> statement for an example.</para>
+      </sect2>
+
+      <sect2 id="macro">
+         <title>macro</title>
+         <para>Declare a macro in the current namespace with its associated parameters. The macro identifier is used by the <literal><link linkend="call">call</link></literal> statement to instantiate the macro and resolve any parameters. The call statement may be within the body of a macro.</para>
+
+         <para>Note that when resolving macros the callers namespace is not checked, only the following places:
+            <itemizedlist>
+              <listitem><simpara>Items defined inside the macro</simpara></listitem>
+              <listitem><simpara>Items passed into the macro as arguments</simpara></listitem>
+              <listitem><simpara>Items defined in the same namespace of the macro</simpara></listitem>
+              <listitem><simpara>Items defined in the global namespace</simpara></listitem>
+            </itemizedlist>
+         </para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[
+(macro macro_id ([(param_type param_id) ...])
+    cil_statements
+    ...
+)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="macro">macro</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="macro">macro</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>macro_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="macro">macro</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>param_type</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more parameters that are passed to the macro. The <literal>param_type</literal> is a keyword used to determine the declaration type (e.g. <literal>type</literal>, <literal>class</literal>, <literal>categoryset</literal>).</para>
+                     <para>The list of valid <literal>param_type</literal> entries are:
+                     <simplelist type="inline">
+                        <member><literal><link linkend="type">type</link></literal></member>
+                        <member><literal><link linkend="typealias">typealias</link></literal></member>
+                        <member><literal><link linkend="role">role</link></literal></member>
+                        <member><literal><link linkend="user">user</link></literal></member>
+                        <member><literal><link linkend="sensitivity">sensitivity</link></literal></member>
+                        <member><literal><link linkend="sensitivityalias">sensitivityalias</link></literal></member>
+                        <member><literal><link linkend="category">category</link></literal></member>
+                        <member><literal><link linkend="categoryalias">categoryalias</link></literal></member>
+                        <member><literal><link linkend="categoryset">categoryset</link></literal> (named or anonymous)</member>
+                        <member><literal><link linkend="level">level</link></literal> (named or anonymous)</member>
+                        <member><literal><link linkend="levelrange">levelrange</link></literal> (named or anonymous)</member>
+                        <member><literal><link linkend="class">class</link></literal></member>
+                        <member><literal><link linkend="classpermission">classpermission</link></literal> (named or anonymous)</member>
+                        <member><literal><link linkend="ipaddr">ipaddr</link></literal> (named or anonymous)</member>
+                        <member><literal><link linkend="boolean">block</link></literal></member>
+                        <member><literal><link linkend="name">name</link></literal> (a string)</member>
+                        <member><literal><link linkend="classmap">classmap</link></literal></member>
+                     </simplelist></para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>param_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The parameter identifier used to reference the entry within the macro body (e.g. <literal>ARG1</literal>).</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>cil_statement</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more valid CIL statements.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>This example will instantiate the <literal>binder_call</literal> macro in the calling namespace (<literal>my_domain</literal>) and replace <literal>ARG1</literal> with <literal>appdomain</literal> and <literal>ARG2</literal> with <literal>binderservicedomain</literal>:</para>
+         <programlisting><![CDATA[
+(block my_domain
+    (call binder_call (appdomain binderservicedomain))
+)
+
+(macro binder_call ((type ARG1) (type ARG2))
+    (allow ARG1 ARG2 (binder (call transfer)))
+    (allow ARG2 ARG1 (binder (transfer)))
+    (allow ARG1 ARG2 (fd (use)))
+)]]>
+         </programlisting>
+
+         <para>This example does not pass any parameters to the macro but adds a <literal>type</literal> identifier to the current namespace:</para>
+         <programlisting><![CDATA[
+(block unconfined
+    (call add_type)
+    ....
+
+    (macro add_type ()
+        (type exec)
+    )
+)]]>
+         </programlisting>
+
+         <para>This example passes an anonymous and named IP address to the macro:</para>
+         <programlisting><![CDATA[
+(ipaddr netmask_1 255.255.255.0)
+(context netlabel_1 (system.user object_r unconfined.object low_low)
+
+(call build_nodecon ((192.168.1.64) netmask_1))
+
+(macro build_nodecon ((ipaddr ARG1) (ipaddr ARG2))
+    (nodecon ARG1 ARG2  netlabel_1)
+)]]>
+         </programlisting>
+      </sect2>
+   </sect1>

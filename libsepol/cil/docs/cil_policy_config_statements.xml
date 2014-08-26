@@ -1,0 +1,118 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+              <!-- policy_config_statements.xml -->
+
+   <sect1>
+      <title>Policy Configuration Statements</title>
+      <sect2 id="mls">
+         <title>mls</title>
+         <para>Defines whether the policy is built as an MLS or non-MLS policy by the CIL compiler. There MUST only be one <literal>mls</literal> entry in the policy otherwise the compiler will exit with an error.</para>
+         <para>Note that this can be over-ridden by the CIL compiler command line parameter <literal>-M true|false</literal> or <literal>--mls true|false</literal> flags.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(mls boolean)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>mls</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>mls</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>boolean</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Set to either <literal>true</literal> or <literal>false</literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <programlisting><![CDATA[(mls true)]]></programlisting>
+      </sect2>
+
+      <sect2 id="handleunknown">
+         <title>handleunknown</title>
+         <para>Defines how the kernel will handle unknown object classes and permissions when loading the policy. There MUST only be one <literal>handleunknown</literal> entry in the policy otherwise the compiler will exit with an error.</para>
+         <para>Note that this can be over-ridden by the CIL compiler command line parameter <literal>-U</literal> or <literal>--handle-unknown</literal> flags.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(handleunknown action)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="1.5 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>handleunknown</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>handleunknown</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>action</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A keyword of either <literal>allow</literal>, <literal>deny</literal> or <literal>reject</literal>. The kernel will handle these keywords as follows:</para>
+                     <simpara><literal>    allow</literal> unknown class / permissions. This will set the returned AV with all 1's.</simpara>
+                     <simpara><literal>    deny</literal> unknown class / permissions (the default). This will set the returned AV with all 0's.</simpara>
+                     <simpara><literal>    reject</literal> loading the policy if it does not contain all the object classes / permissions.</simpara>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This will allow unknown classes / permissions to be present in the policy:</para>
+         <programlisting><![CDATA[(handleunknown allow)]]></programlisting>
+      </sect2>
+
+      <sect2 id="policycap">
+         <title>policycap</title>
+         <para>Allow policy capabilities to be enabled via policy. These should be declared in the global namespace and be valid policy capabilities as they are checked against those known in libsepol by the CIL compiler.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(policycap policycap_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>policycap</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>policycap</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>policycap_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>policycap</literal> identifer (e.g. <literal>open_perms</literal>).</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>These set two valid policy capabilities:</para>
+         <programlisting><![CDATA[
+; Enable networking controls.
+(policycap network_peer_controls)
+
+; Enable open permission check.
+(policycap open_perms)]]>
+         </programlisting>
+      </sect2>
+   </sect1>
+

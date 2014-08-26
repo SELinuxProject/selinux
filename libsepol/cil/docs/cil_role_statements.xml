@@ -1,0 +1,374 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+              <!-- role_statements.xml -->
+
+
+
+   <sect1>
+      <title>Role Statements</title>
+      <sect2 id="role">
+         <title>role</title>
+         <para>Declares a role identifier in the current namespace.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(role role_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>role</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>role</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>role</literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example declares two roles: <literal>object_r</literal> in the global namespace and <literal>unconfined.role</literal>:</para>
+         <programlisting><![CDATA[
+(role object_r)
+
+(block unconfined
+    (role role)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="roletype">
+         <title>roletype</title>
+         <para>Authorises a <literal><link linkend="role">role</link></literal> to access a <literal><link linkend="type">type</link></literal> identifier.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(role role_id type_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>roletype</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>roletype</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="role">role</link></literal> or <literal><link linkend="roleattribute">roleattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>type_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will declare <literal><link linkend="role">role</link></literal> and <literal><link linkend="type">type</link></literal> identifiers, then associate them:</para>
+         <programlisting><![CDATA[
+(block unconfined
+    (role role)
+    (type process)
+    (roletype role process)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="roleattribute">
+         <title>roleattribute</title>
+         <para>Declares a role attribute identifier in the current namespace. The identifier may have zero or more <literal><link linkend="role">role</link></literal> and <literal><link linkend="roleattribute">roleattribute</link></literal> identifiers associated to it via the <literal><link linkend="roleattributeset">typeattributeset</link></literal> statement.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(roleattribute roleattribute_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>roleattribute</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>roleattribute</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>roleattribute_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>roleattribute</literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will declare a role attribute <literal>roles.role_holder</literal> that will have an empty set:</para>
+         <programlisting><![CDATA[
+(block roles
+    (roleattribute role_holder)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="roleattributeset">
+         <title>roleattributeset</title>
+         <para>Allows the association of one or more previously declared <literal><link linkend="role">role</link></literal> identifiers to a <literal><link linkend="roleattribute">roleattribute</link></literal> identifier. Expressions may be used to refine the associations as shown in the examples.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(roleattributeset roleattribute_id (role_id ... | expr ...))]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>roleattributeset</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>roleattributeset</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>roleattribute_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="roleattribute">roleattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more previously declared <literal><link linkend="role">role</link></literal> or <literal><link linkend="roleattribute">roleattribute</link></literal> identifiers.</para>
+                     <para>Note that there must be at least one <literal>role_id</literal> or <literal>expr</literal> parameter declared.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more <literal>expr</literal>'s, the valid operators and syntax are:</para>
+                     <simpara><literal>    (and (role_id ...) (role_id ...))</literal></simpara>
+                     <simpara><literal>    (or  (role_id ...) (role_id ...))</literal></simpara>
+                     <simpara><literal>    (xor (role_id ...) (role_id ...))</literal></simpara>
+                     <simpara><literal>    (not (role_id ...))</literal></simpara>
+                     <simpara><literal>    (all)</literal></simpara>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will declare three roles and two role attributes, then associate all the roles to them as shown:</para>
+         <programlisting><![CDATA[
+(block roles
+    (role role_1)
+    (role role_2)
+    (role role_3)
+
+    (roleattribute role_holder)
+    (roleattributeset role_holder (role_1 role_2 role_3))
+
+    (roleattribute role_holder_all)
+    (roleattributeset role_holder_all (all))
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="roleallow">
+         <title>roleallow</title>
+         <para>Authorise the current role to assume a new role.</para>
+         <para>Notes:</para>
+         <itemizedlist>
+            <listitem><para>May require a <literal><link linkend="roletransition">roletransition</link></literal> rule to ensure transition to the new role.</para></listitem>
+            <listitem><para>This rule is not allowed in <literal><link linkend="booleanif">booleanif</link></literal> statements.</para></listitem>
+         </itemizedlist>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(roleallow current_role_id new_role_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>roleallow</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>roleallow</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>current_role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="role">role</link></literal> or <literal><link linkend="roleattribute">roleattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>new_role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="role">role</link></literal> or <literal><link linkend="roleattribute">roleattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>See the <literal><link linkend="roletransition">roletransition</link></literal> statement for an example.</para>
+      </sect2>
+
+      <sect2 id="roletransition">
+         <title>roletransition</title>
+         <para>Specify a role transition from the current role to a new role when computing a context for the target type. The <literal><link linkend="class">class</link></literal> identifier would normally be <literal>process</literal>, however for kernel versions 2.6.39 with policy version >= 25 and above, any valid class may be used. Note that a <literal><link linkend="roleallow">roleallow</link></literal> rule must be used to authorise the transition.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(roletransition current_role_id target_type_id class_id new_role_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>roletransition</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>roletransition</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>current_role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="role">role</link></literal> or <literal><link linkend="roleattribute">roleattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_type_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>class_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>new_role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="role">role</link></literal> identifier to be set on transition.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will authorise the <literal>unconfined.role</literal> to assume the <literal>msg_filter.role</literal> role, and then transition to that role:</para>
+         <programlisting><![CDATA[
+(block ext_gateway
+    (type process)
+    (type exec)
+
+    (roletype msg_filter.role process)
+    (roleallow unconfined.role msg_filter.role)
+    (roletransition unconfined.role exec process msg_filter.role)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="rolebounds">
+         <title>rolebounds</title>
+         <para>Defines a hierarchical relationship between roles where the child role cannot have more privileges than the parent.</para>
+         <para>Notes:</para>
+         <itemizedlist>
+            <listitem><para>It is not possible to bind the parent role to more than one child role.</para></listitem>
+            <listitem><para>While this is added to the binary policy, it is not enforced by the SELinux kernel services.</para></listitem>
+         </itemizedlist>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(rolebounds parent_role_id child_role_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>rolebounds</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>rolebounds</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>parent_role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="role">role</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>child_role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="role">role</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>In this example the role <literal>test</literal> cannot have greater priviledges than <literal>unconfined.role</literal>:</para>
+         <programlisting><![CDATA[
+(role test)
+
+(unconfined
+    (role role)
+    (rolebounds role .test)
+)]]>
+         </programlisting>
+      </sect2>
+
+   </sect1>

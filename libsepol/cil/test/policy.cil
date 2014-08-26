@@ -1,0 +1,312 @@
+(type bin_t)
+(type kernel_t)
+(type security_t)
+(type unlabeled_t)
+(handleunknown allow)
+(mls true)
+
+(policycap open_perms)
+
+(category c0)
+(category c1)
+(category c2)
+(category c3)
+(category c4)
+(category c5)
+(categoryalias cat0)
+(categoryaliasactual cat0 c0)
+(categoryset cats01 (c0 c1))
+(categoryset cats02 (c2 c3))
+(categoryset cats03 (range c0 c5))
+(categoryset cats04 (not (range c0 c2)))
+(categoryorder (cat0 c1 c2 c3))
+(categoryorder (c3 c4 c5))
+
+(sensitivity s0)
+(sensitivity s1)
+(sensitivity s2)
+(sensitivity s3)
+(sensitivityalias sens0)
+(sensitivityaliasactual sens0 s0)
+(sensitivityorder (s0 s1 s2 s3))
+
+(sensitivitycategory s0 (cats03))
+(sensitivitycategory s1 cats01)
+(sensitivitycategory s1 (c2))
+(sensitivitycategory s2 (cats01 cats02))
+(sensitivitycategory s2 (range c4 c5))
+(sensitivitycategory s3 (range c0 c5))
+
+(level low (s0))
+(level high (s3 (range c0 c3)))
+(levelrange low_high (low high))
+(levelrange lh1 ((s0 (c0)) (s2 (c0 c3))))
+(levelrange lh2 (low (s2 (c0 c3))))
+(levelrange lh3 ((s0 cats04) (s2 (range c0 c5))))
+(levelrange lh4 ((s0) (s1)))
+
+(block policy
+	(classorder (file char dir))
+	(class file (execute_no_trans entrypoint execmod open audit_access))
+	(common file (ioctl read write create getattr setattr lock relabelfrom
+			relabelto append unlink link rename execute swapon
+			quotaon mounton))
+	(classcommon file file)
+
+	(classpermission file_rw)
+	(classpermissionset file_rw (file (read write getattr setattr lock append)))
+
+	;;(classpermission loop1)
+	;;(classpermissionset loop1 ((loop2)))
+	;;(classpermission loop2)
+	;;(classpermissionset loop2 ((loop3)))
+	;;(classpermission loop3)
+	;;(classpermissionset loop3 ((loop1)))
+
+	(class char (foo))
+	(classcommon char file)
+
+	(class dir ())
+	(classcommon dir file)
+
+	(classpermission char_w)
+	(classpermissionset char_w (char (write setattr)))
+	(classpermissionset char_w (file (open read getattr)))
+
+	(classmap files (read))
+	(classmapping files read
+		(file (open read getattr)))
+	(classmapping files read
+		char_w)
+
+	(type auditadm_t)
+	(type console_t)
+	(type console_device_t)
+	(type user_tty_device_t)		
+	(type device_t)
+	(type getty_t)
+	(type exec_t)
+	(type bad_t)
+
+	;;(allow console_t console_device_t file_rw)
+	(allow console_t console_device_t (files (read)))
+
+	(boolean secure_mode false)
+	(boolean console_login true)
+	
+	(sid kernel)
+	(sid security)
+	(sid unlabeled)
+	(sidorder (kernel security))
+	(sidorder (security unlabeled))
+		
+	(typeattribute exec_type)
+	(typeattribute foo_type)
+	(typeattribute bar_type)
+	(typeattribute baz_type)
+	(typeattribute not_bad_type)
+	(typeattributeset exec_type (or bin_t kernel_t))
+	(typeattributeset foo_type (and exec_type kernel_t))
+	(typeattributeset bar_type (xor exec_type foo_type))
+	(typeattributeset baz_type (not bin_t))
+	(typeattributeset baz_type (and exec_type (and bar_type bin_t)))
+	(typeattributeset not_bad_type (not bad_t))
+	(typealias sbin_t)
+	(typealiasactual sbin_t bin_t)
+	(typepermissive device_t) 
+	(typebounds device_t bin_t)
+	;;(typebounds bin_t kernel_t)    ;; This statement and the next can be used
+	;;(typebounds kernel_t device_t) ;; to verify that circular bounds can be found 
+	(typemember device_t bin_t file exec_t)
+	(typetransition device_t console_t files console_device_t)
+
+	(roleattribute exec_role)
+	(roleattribute foo_role)
+	(roleattribute bar_role)
+	(roleattribute baz_role)
+	(roleattributeset exec_role (or user_r system_r))
+	(roleattributeset foo_role (and exec_role system_r))
+	(roleattributeset bar_role (xor exec_role foo_role))
+	(roleattributeset baz_role (not user_r))
+
+	(rangetransition device_t console_t file low_high)
+	(rangetransition device_t kernel_t file ((s0) (s3 (not c3))))
+
+	(typetransition device_t console_t file "some_file" getty_t)
+	
+	(allow foo_type self (file (execute)))
+	(allow bin_t device_t (file (execute)))
+
+	;; Next two rules violate the neverallow rule that follows
+	;;(allow bad_t not_bad_type (file (execute)))
+	;;(allow bad_t exec_t (file (execute)))
+	(neverallow bad_t not_bad_type (file (execute)))
+			
+	(booleanif secure_mode
+		(true
+			(auditallow device_t exec_t (file (read write)))
+		)
+	)
+
+	(booleanif console_login
+		(true
+			(typechange auditadm_t console_device_t file user_tty_device_t)
+			(allow getty_t console_device_t (file (getattr open read write append)))
+		)
+		(false
+			(dontaudit getty_t console_device_t (file (getattr open read write append)))
+		)
+	)
+
+	(booleanif (not (xor (eq secure_mode console_login) 
+				(and (or secure_mode console_login) secure_mode ) ) )
+		(true
+			(allow bin_t exec_t (file (execute)))
+		)
+	)
+
+	(tunable allow_execfile true)
+	(tunable allow_userexec false)
+
+	(tunableif (not (xor (eq allow_execfile allow_userexec)
+				(and (or allow_execfile allow_userexec)
+					(and allow_execfile allow_userexec) ) ) )
+		(true
+			(allow bin_t exec_t (file (execute)))
+		)
+	)
+
+	(optional allow_rules 
+		(allow user_t exec_t (bins (execute)))
+	)
+
+	(dontaudit device_t auditadm_t (file (read)))
+	(auditallow device_t auditadm_t (file (open)))
+
+	(user system_u)
+	(user user_u)
+	(user foo_u)
+	(userprefix user_u user)
+	(userprefix system_u user)
+
+	(selinuxuser name user_u low_high)
+	(selinuxuserdefault user_u ((s0 (c0)) (s3 (range c0 c3))))
+
+	(role system_r)
+	(role user_r)
+
+	(roletype system_r bin_t)
+	(roletype system_r kernel_t)
+	(roletype system_r security_t)
+	(roletype system_r unlabeled_t)
+	(roletype system_r exec_type)
+	(roletype exec_role bin_t)
+	(roletype exec_role exec_type)
+	(roleallow system_r user_r)
+	(rolebounds system_r user_r)
+	(roletransition system_r bin_t file user_r)
+
+	(userrole foo_u foo_role)
+	(userlevel foo_u low)
+	(userrange foo_u low_high)
+
+	(userrole system_u system_r)
+	(userlevel system_u low)
+	(userrange system_u low_high)
+	(userbounds system_u user_u)
+
+	(userrole user_u user_r)
+	(userlevel user_u (s0 (range c0 c2)))
+	(userrange user_u (low high))
+
+	(sidcontext kernel (system_u system_r kernel_t ((s0) high)))
+	(sidcontext security (system_u system_r security_t (low (s3 (range c0 c3)))))
+	(sidcontext unlabeled (system_u system_r unlabeled_t (low high)))
+
+	(context system_u_bin_t_l2h (system_u system_r bin_t (low high)))
+
+	(ipaddr ip_v4 192.25.35.200)
+	(ipaddr netmask 192.168.1.1)
+	(ipaddr ip_v6 2001:0DB8:AC10:FE01::)
+	(ipaddr netmask_v6 2001:0DE0:DA88:2222::)
+
+	(filecon "/usr/bin/foo" file system_u_bin_t_l2h)
+	(filecon "/usr/bin/bar" file (system_u system_r kernel_t (low low)))
+	(filecon "/usr/bin/baz" any ())
+	(filecon "/usr/bin/aaa" any (system_u system_r kernel_t ((s0) (s3 (range c0 c2)))))
+	(filecon "/usr/bin/bbb" any (system_u system_r kernel_t ((s0 (c0)) high)))
+	(filecon "/usr/bin/ccc" any (system_u system_r kernel_t (low (s3 (cats01)))))
+	(filecon "/usr/bin/ddd" any (system_u system_r kernel_t (low (s3 (cats01 cats02)))))
+	(nodecon ip_v4 netmask system_u_bin_t_l2h)
+	(nodecon ip_v6 netmask_v6 system_u_bin_t_l2h)
+	(portcon udp 25 system_u_bin_t_l2h)
+	(portcon tcp 22 system_u_bin_t_l2h)
+	(genfscon - "/usr/bin" system_u_bin_t_l2h)
+	(netifcon eth0 system_u_bin_t_l2h system_u_bin_t_l2h) ;different contexts?
+	(fsuse xattr ext3 system_u_bin_t_l2h)
+	
+	; XEN
+	(pirqcon 256 system_u_bin_t_l2h)
+	(iomemcon (0 255) system_u_bin_t_l2h)
+	(ioportcon (22 22) system_u_bin_t_l2h)
+	(pcidevicecon 345 system_u_bin_t_l2h)
+
+	(constrain (files (read)) (not (or (and (eq t1 exec_t) (eq t2 bin_t)) (eq r1 r2))))
+	(constrain char_w (not (or (and (eq t1 exec_t) (eq t2 bin_t)) (eq r1 r2))))
+
+	(constrain (file (read)) (or (and (eq t1 exec_t) (neq t2 bin_t) ) (eq u1 u2) ) )
+	(constrain (file (open)) (dom r1 r2))
+	(constrain (file (open)) (domby r1 r2))
+	(constrain (file (open)) (incomp r1 r2))
+
+	(validatetrans file (eq t1 exec_t))
+
+	(mlsconstrain (file (open)) (not (or (and (eq l1 l2) (eq u1 u2)) (eq r1 r2))))
+	(mlsconstrain (file (open)) (or (and (eq l1 l2) (eq u1 u2)) (neq r1 r2)))
+	(mlsconstrain (file (open)) (dom h1 l2))
+	(mlsconstrain (file (open)) (domby l1 h2))
+	(mlsconstrain (file (open)) (incomp l1 l2))
+
+	(mlsvalidatetrans file (domby l1 h2))
+
+	(macro test_mapping ((classpermission cps))
+	       (allow bin_t auditadm_t cps))
+
+	(call test_mapping ((file (read))))
+	(call test_mapping ((files (read))))
+	(call test_mapping (char_w))
+
+	(defaultuser (file char) source)
+	(defaultrole char target)
+	(defaulttype (files) source)
+	(defaultrange (file) target low)
+	(defaultrange (char) source low-high)
+)
+
+(macro all ((type x))
+	(allow x bin_t (policy.file (execute)))
+)
+(call all (bin_t))
+
+(block bb
+	(type t1)
+	(type t2)
+	(boolean b1 false)
+	(tunable tun1 true)
+	(macro m ((boolean b))
+		(tunableif tun1
+			(true
+				(allow t1 t2 (policy.file (write))))
+			(false
+				(allow t1 t2 (policy.file (execute)))))
+		(booleanif b
+			(true
+				(allow t1 t2 (policy.file (read))))))
+
+	(call m (b1))
+)
+
+(in bb
+	(tunableif bb.tun1
+		(true
+			(allow bb.t2 bb.t1 (policy.file (read write execute))))))

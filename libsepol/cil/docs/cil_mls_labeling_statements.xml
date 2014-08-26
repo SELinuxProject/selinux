@@ -1,0 +1,733 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+              <!-- mls_labeling_statements.xml -->
+
+   <sect1 id="mls_labeling_statements">
+      <title>Multi-Level Security Labeling Statements</title>
+         <para>Because there are many options for MLS labeling, the examples show a limited selection of statements, however there is a simple policy that will build shown in the <literal><link linkend="levelrange">levelrange</link></literal> section.</para>
+      <sect2 id="sensitivity">
+         <title>sensitivity</title>
+         <para>Declare a sensitivity identifier in the current namespace. Multiple <literal>sensitivity</literal> statements in the policy will form an ordered list.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(sensitivity sensitivity_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>sensitivity</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>sensitivity</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>sensitivity_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="sensitivity">sensitivity</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example declares three <literal><link linkend="sensitivity">sensitivity</link></literal> identifiers:</para>
+         <programlisting><![CDATA[
+(sensitivity s0)
+(sensitivity s1)
+(sensitivity s2)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="sensitivityalias">
+         <title>sensitivityalias</title>
+         <para>Declares a sensitivity alias identifier in the current namespace. See the <literal><link linkend="sensitivityaliasactual">sensitivityaliasactual</link></literal> statement for an example that associates the <literal><link linkend="sensitivityalias">sensitivityalias</link></literal> identifier.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(sensitivityalias sensitivityalias_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>sensitivityalias</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>sensitivityalias</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>sensitivityalias_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="sensitivityalias">sensitivityalias</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>See the <literal><link linkend="sensitivityaliasactual">sensitivityaliasactual</link></literal> statement.</para>
+      </sect2>
+
+      <sect2 id="sensitivityaliasactual">
+         <title>sensitivityaliasactual</title>
+         <para>Associates a previously declared <literal><link linkend="sensitivityalias">sensitivityalias</link></literal> identifier to a previously declared <literal><link linkend="sensitivity">sensitivity</link></literal> identifier.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(sensitivityaliasactual sensitivityalias_id sensitivity_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.5 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>sensitivityaliasactual</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>sensitivityaliasactual</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>sensitivityalias_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="sensitivityalias">sensitivityalias</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>sensitivity_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="sensitivity">sensitivity</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will associate sensitivity <literal>s0</literal> with two sensitivity alias's:</para>
+         <programlisting><![CDATA[
+(sensitivity s0)
+(sensitivityalias unclassified)
+(sensitivityalias SystemLow)
+(sensitivityaliasactual unclassified s0)
+(sensitivityaliasactual SystemLow s0)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="sensitivityorder">
+         <title>sensitivityorder</title>
+         <para>Define the sensitivity order - lowest to highest. Multiple <literal><link linkend="sensitivityorder">sensitivityorder</link></literal> statements in the policy will form an ordered list.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(sensitivityorder (sensitivity_id ...))]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>sensitivityorder</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>sensitivityorder</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>sensitivity_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>One or more previously declared <literal><link linkend="sensitivity">sensitivity</link></literal> or <literal><link linkend="sensitivityalias">sensitivityalias</link></literal> identifiers..</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example shows two <literal><link linkend="sensitivityorder">sensitivityorder</link></literal> statements that when compiled will form an ordered list. Note however that the second <literal><link linkend="sensitivityorder">sensitivityorder</link></literal> statement starts with <literal>s2</literal> so that the ordered list can be built.</para>
+         <programlisting><![CDATA[
+(sensitivity s0)
+(sensitivityalias s0 SystemLow)
+(sensitivity s1)
+(sensitivity s2)
+(sensitivityorder (SystemLow s1 s2))
+
+(sensitivity s3)
+(sensitivity s4)
+(sensitivityalias s4 SystemHigh)
+(sensitivityorder (s2 s3 SystemHigh))]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="category">
+         <title>category</title>
+         <para>Declare a category identifier in the current namespace. Multiple category statements declared in the policy will form an ordered list.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(category category_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>category</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>category</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>category_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="category">category</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example declares a three <literal><link linkend="category">category</link></literal> identifiers:</para>
+         <programlisting><![CDATA[
+(category c0)
+(category c1)
+(category c2)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="categoryalias">
+         <title>categoryalias</title>
+         <para>Declares a category alias identifier in the current namespace. See the <literal><link linkend="categoryaliasactual">categoryaliasactual</link></literal> statement for an example that associates the <literal><link linkend="categoryalias">categoryalias</link></literal> identifier.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(categoryalias categoryalias_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>categoryalias</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>categoryalias</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>categoryalias_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="categoryalias">categoryalias</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+      </sect2>
+
+      <sect2 id="categoryaliasactual">
+         <title>categoryaliasactual</title>
+         <para>Associates a previously declared <literal><link linkend="categoryalias">categoryalias</link></literal> identifier to a previously declared <literal><link linkend="category">category</link></literal> identifier.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(categoryaliasactual categoryalias_id category_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>categoryaliasactual</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>categoryaliasactual</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>categoryalias_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="categoryalias">categoryalias</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>category_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="category">category</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>Declares a category <literal>c0</literal>, a category alias of <literal>documents</literal>, and then associates them:</para>
+         <programlisting><![CDATA[
+(category c0)
+(categoryalias documents)
+(categoryaliasactual documents c0)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="categoryorder">
+         <title>categoryorder</title>
+         <para>Define the category order. Multiple <literal><link linkend="categoryorder">categoryorder</link></literal> statements declared in the policy will form an ordered list. Note that this statement orders the categories to allow validation of category ranges.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(categoryorder (category_id ...))]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>categoryorder</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>categoryorder</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>category_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>One or more previously declared <literal><link linkend="category">category</link></literal> or <literal><link linkend="categoryalias">categoryalias</link></literal> identifiers.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example orders one category alias and nine categories:</para>
+         <programlisting><![CDATA[(categoryorder (documents c1 c2 c3 c4 c5 c6 c7 c8 c9)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="categoryset">
+         <title>categoryset</title>
+         <para>Declare an identifier for a set of contiguous or non-contiguous categories in the current namespace.</para>
+         <para>Notes:</para>
+         <itemizedlist>
+            <listitem><para>Category expressions are allowed in <literal><link linkend="categoryset">categoryset</link></literal>, <literal><link linkend="sensitivitycategory">sensitivitycategory</link></literal>, <literal><link linkend="level">level</link></literal>, and <literal><link linkend="levelrange">levelrange</link></literal> statements.</para></listitem>
+            <listitem><para>Category sets are not allowed in <literal><link linkend="categoryorder">categoryorder</link></literal> statements.</para></listitem>
+         </itemizedlist>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(categoryset categoryset_id (category_id ... | expr ...))]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>categoryset</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>categoryset</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>categoryset_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="categoryset">categoryset</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>category_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more previously declared <literal><link linkend="category">category</link></literal> or <literal><link linkend="categoryalias">categoryalias</link></literal> identifiers.</para>
+                     <para>Note that there must be at least one <literal>category_id</literal> identifier or <literal>expr</literal> parameter declared.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more <literal>expr</literal>'s, the valid operators and syntax are:</para>
+                     <simpara><literal>    (and (category_id ...) (category_id ...))</literal></simpara>
+                     <simpara><literal>    (or  (category_id ...) (category_id ...))</literal></simpara>
+                     <simpara><literal>    (xor (category_id ...) (category_id ...))</literal></simpara>
+                     <simpara><literal>    (not (category_id ...))</literal></simpara>
+                     <simpara><literal>    (range category_id category_id)</literal></simpara>
+                     <simpara><literal>    (all)</literal></simpara>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>These examples show a selection of <literal><link linkend="categoryset">categoryset</link></literal> statements:</para>
+         <programlisting><![CDATA[
+; Declare categories with two alias's:
+(category c0)
+(categoryalias documents)
+(categoryaliasactual documents c0)
+(category c1)
+(category c2)
+(category c3)
+(category c4)
+(categoryalias spreadsheets)
+(categoryaliasactual spreadsheets c4)
+
+; Set the order to determine ranges:
+(categoryorder (c0 c1 c2 c3 spreadsheets))
+
+(categoryset catrange_1 (range c2 c3))
+
+; Two methods to associate all categories:
+(categoryset all_cats (range c0 c4))
+(categoryset all_cats1 (all))
+
+(categoryset catset_1 (documents c1))
+(categoryset catset_2 (c2 c3))
+(categoryset catset_3 (c4))
+
+(categoryset just_c0 (xor (c1 c2) (documents c1 c2)))]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="sensitivitycategory">
+         <title>sensitivitycategory</title>
+         <para>Associate a <literal><link linkend="sensitivity">sensitivity</link></literal> identifier with one or more <link linkend="category">category</link>'s. Multiple definitions for the same <literal><link linkend="sensitivity">sensitivity</link></literal> form an ordered list of categories for that sensitivity. This statement is required before a <literal><link linkend="level">level</link></literal> identifier can be declared.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(sensitivitycategory sensitivity_id categoryset_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>sensitivitycategory</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>sensitivitycategory</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>sensitivity_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="sensitivity">sensitivity</link></literal> or <literal><link linkend="sensitivityalias">sensitivityalias</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>categoryset_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="categoryset">categoryset</link></literal> (named or anonymous), or a list of <literal><link linkend="category">category</link></literal> and/or <literal><link linkend="categoryalias">categoryalias</link></literal> identifiers. The examples show each variation.
+</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>These <literal>sensitivitycategory</literal> examples use a selection of <literal><link linkend="category">category</link></literal>, <literal><link linkend="categoryalias">categoryalias</link></literal> and <literal><link linkend="categoryset">categoryset</link></literal>'s:</para>
+         <programlisting><![CDATA[
+(sensitivitycategory s0 catrange_1)
+(sensitivitycategory s0 catset_1)
+(sensitivitycategory s0 catset_3)
+(sensitivitycategory s0 (all))
+(sensitivitycategory unclassified (range documents c2))]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="level">
+         <title>level</title>
+         <para>Declare a <literal><link linkend="level">level</link></literal> identifier in the current namespace and associate it to a previously declared <literal><link linkend="sensitivity">sensitivity</link></literal> and zero or more categories. Note that if categories are required, then before this statement can be resolved the <literal><link linkend="sensitivitycategory">sensitivitycategory</link></literal> statement must be used to associate categories with the sensitivity.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[level level_id (sensitivity_id [categoryset_id])]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>level</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>level</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>level_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="level">level</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>sensitivity_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="sensitivity">sensitivity</link></literal> or <literal><link linkend="sensitivityalias">sensitivityalias</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>categoryset_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="categoryset">categoryset</link></literal> (named or anonymous), or a list of <literal><link linkend="category">category</link></literal> and/or <literal><link linkend="categoryalias">categoryalias</link></literal> identifiers. The examples show each variation.
+</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>These <literal>level</literal> examples use a selection of <literal><link linkend="category">category</link></literal>, <literal><link linkend="categoryalias">categoryalias</link></literal> and <literal><link linkend="categoryset">categoryset</link></literal>'s:</para>
+         <programlisting><![CDATA[
+(level systemLow (s0))
+(level level_1 (s0))
+(level level_2 (s0 (catrange_1)))
+(level level_3 (s0 (all_cats)))
+(level level_4 (unclassified (c2 c3 c4)))]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="levelrange">
+         <title>levelrange</title>
+         <para>Declare a level range identifier in the current namespace and associate a current and clearance level.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(levelrange levelrange_id (low_level_id high_level_id))]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>levelrange</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>levelrange</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>levelrange_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="levelrange">levelrange</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>low_level_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The current level specified by a previously declared <literal><link linkend="level">level</link></literal> identifier. This may be formed by named or anonymous components as discussed in the <literal><link linkend="level">level</link></literal> section and shown in the examples.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>high_level_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The clearance or high level specified by a previously declared <literal><link linkend="level">level</link></literal> identifier. This may be formed by named or anonymous components as discussed in the <literal><link linkend="level">level</link></literal> section and shown in the examples.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>This example policy shows <literal><link linkend="levelrange">levelrange</link></literal> statement and all the other MLS labeling statements discussed in this section and will compile as a standalone policy:</para>
+         <programlisting><![CDATA[
+(handleunknown allow)
+(mls true)
+
+; There must be least one set of SID statements in a policy:
+(sid kernel)
+(sidorder (kernel))
+(sidcontext kernel unconfined.context_1)
+
+(sensitivitycategory s0 (c4 c2 c3 c1 c0 c3))
+
+(category c0)
+(categoryalias documents)
+(categoryaliasactual documents c0)
+(category c1)
+(category c2)
+(category c3)
+(category c4)
+(categoryalias spreadsheets)
+(categoryaliasactual spreadsheets c4)
+
+(categoryorder (c0 c1 c2 c3 spreadsheets))
+
+(categoryset catrange_1 (range c2 c3))
+(categoryset all_cats (range c0 c4))
+(categoryset all_cats1 (all))
+
+(categoryset catset_1 (documents c1))
+(categoryset catset_2 (c2 c3))
+(categoryset catset_3 (c4))
+
+(categoryset just_c0 (xor (c1 c2) (documents c1 c2)))
+
+(sensitivity s0)
+(sensitivityalias unclassified)
+(sensitivityaliasactual unclassified s0)
+
+(sensitivityorder (s0))
+(sensitivitycategory s0 (c0))
+
+(sensitivitycategory s0 catrange_1)
+(sensitivitycategory s0 catset_1)
+(sensitivitycategory s0 catset_3)
+(sensitivitycategory s0 (all))
+(sensitivitycategory s0 (range documents c2))
+
+(level systemLow (s0))
+(level level_1 (s0))
+(level level_2 (s0 (catrange_1)))
+(level level_3 (s0 (all_cats)))
+(level level_4 (unclassified (c2 c3 c4)))
+
+(levelrange levelrange_2 (level_2 level_2))
+(levelrange levelrange_1 ((s0) level_2))
+(levelrange low_low (systemLow systemLow))
+
+(context context_2 (unconfined.user object_r unconfined.object (level_1 level_3)))
+
+; Define object_r role. This must be assigned in CIL.
+(role object_r)
+
+(block unconfined
+    (user user)
+    (role role)
+    (type process)
+    (type object)
+    (userrange user (systemLow systemLow))
+    (userlevel user systemLow)
+    (userrole user role)
+    (userrole user object_r)
+    (roletype role process)
+    (roletype role object)
+    (roletype object_r object)
+
+    (class file (open execute read write))
+
+    ; There must be least one allow rule in a policy:
+    (allow process self (file (read)))
+
+    (context context_1 (user object_r object low_low))
+) ; End unconfined namespace]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="rangetransition">
+         <title>rangetransition</title>
+         <para>Allows an objects level to transition to a different level. Generally used to ensure processes run with their correct MLS range, for example <literal>init</literal> would run at <literal>SystemHigh</literal> and needs to initialise / run other processes at their correct MLS range.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(rangetransition source_id target_id class_id new_range_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>rangetransition</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>rangetransition</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>source_type_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_type_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>class_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>new_range_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The new MLS range for the object class that is a previously declared <literal><link linkend="levelrange">levelrange</link></literal> identifier. This entry may also be defined as an anonymous or named <literal><link linkend="level">level</link></literal>, <literal><link linkend="sensitivity">sensitivity</link></literal>, <literal><link linkend="sensitivityalias">sensitivityalias</link></literal>, <literal><link linkend="category">category</link></literal>, <literal><link linkend="categoryalias">categoryalias</link></literal> or <literal><link linkend="categoryset">categoryset</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>This rule will transition the range of <literal>sshd.exec</literal> to <literal>s0 - s1:c0.c3</literal> on execution from the <literal>init.process</literal>:</para>
+         <programlisting><![CDATA[
+(sensitivity s0)
+(sensitivity s1)
+(sensitivityorder s0 s1)
+(category c0)
+...
+(level systemlow (s0)
+(level systemhigh (s1 (c0 c1 c2)))
+(levelrange low_high (systemlow systemhigh))
+
+(rangetransition init.process sshd.exec process low_high)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2>
+         <title>mlsconstrain</title>
+         <para>This is described in the <link linkend="mlsconstrain">Contraints</link> section.</para>
+      </sect2>
+
+      <sect2>
+         <title>mlsvalidatetrans</title>
+         <para>This is described in the <link linkend="mlsvalidatetrans">Contraints</link> section.</para>
+      </sect2>
+
+   </sect1>

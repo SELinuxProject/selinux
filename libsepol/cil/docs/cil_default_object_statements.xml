@@ -1,0 +1,215 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+           <!-- default_object_statements.xml -->
+
+   <sect1>
+      <title>Default Object Statements</title>
+      <para>These rules allow a default user, role, type and/or range to be used when computing a context for a new object. These require policy version 27 or 28 with kernels 3.5 or greater.</para>
+      <sect2 id="defaultuser">
+         <title>defaultuser</title>
+         <para>Allows the default user to be taken from the source or target context when computing a new context for the object <literal><link linkend="class">class</link></literal> identifier. Requires policy version 27.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(defaultuser class_id default)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>defaultuser</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>defaultuser</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>class_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifier, or a list of previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifiers enclosed within parentheses.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>default</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A keyword of either <literal>source</literal> or <literal>target</literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>When creating new <literal>binder</literal>, <literal>property_service</literal>, <literal>zygote</literal> or <literal>memprotect</literal> objects the <literal><link linkend="user">user</link></literal> component of the new security context will be taken from the <literal>source</literal> context:</para>
+         <programlisting><![CDATA[
+(class binder (impersonate call set_context_mgr transfer receive))
+(class property_service (set))
+(class zygote (specifyids specifyrlimits specifycapabilities specifyinvokewith specifyseinfo))
+(class memprotect (mmap_zero))
+
+(classmap android_classes (android))
+(classmapping android_classes android (binder (all)))
+(classmapping android_classes android (property_service (set)))
+(classmapping android_classes android (zygote (not (specifycapabilities))))
+
+(defaultuser (android_classes memprotect) source)
+
+; Will produce the following in the binary policy file:
+;; default_user binder source;
+;; default_user zygote source;
+;; default_user property_service source;
+;; default_user memprotect source;]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="defaultrole">
+         <title>defaultrole</title>
+         <para>Allows the default role to be taken from the source or target context when computing a new context for the object <literal><link linkend="class">class</link></literal> identifier. Requires policy version 27.</para>
+         <programlisting><![CDATA[(defaultrole class_id default)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>defaultrole</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>defaultrole</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>class_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifier, or a list of previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifiers enclosed within parentheses.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>default</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A keyword of either <literal>source</literal> or <literal>target</literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>When creating new <literal>binder</literal>, <literal>property_service</literal> or <literal>zygote</literal> objects the <literal><link linkend="role">role</link></literal> component of the new security context will be taken from the <literal>target</literal> context:</para>
+         <programlisting><![CDATA[
+(class binder (impersonate call set_context_mgr transfer receive))
+(class property_service (set))
+(class zygote (specifyids specifyrlimits specifycapabilities specifyinvokewith specifyseinfo))
+
+(defaultrole (binder property_service zygote) target)
+
+; Will produce the following in the binary policy file:
+;; default_role binder target;
+;; default_role zygote target;
+;; default_role property_service target;]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="defaulttype">
+         <title>defaulttype</title>
+         <para>Allows the default type to be taken from the source or target context when computing a new context for the object <literal><link linkend="class">class</link></literal> identifier. Requires policy version 28.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(defaulttype class_id default)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>defaulttype</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>defaulttype</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>class_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifier, or a list of previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifiers enclosed within parentheses.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>default</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A keyword of either <literal>source</literal> or <literal>target</literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>When creating a new <literal>socket</literal> object, the <literal><link linkend="type">type</link></literal> component of the new security context will be taken from the <literal>source</literal> context:</para>
+         <programlisting><![CDATA[(defaulttype socket source)]]></programlisting>
+      </sect2>
+
+      <sect2 id="defaultrange">
+         <title>defaultrange</title>
+         <para>Allows the default level or range to be taken from the source or target context when computing a new context for the object <literal><link linkend="class">class</link></literal> identifier. Requires policy version 27.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(defaultrange class_id default range)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>defaultrange</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>defaultrange</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>class_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifier, or a list of previously declared <literal><link linkend="class">class</link></literal> or <literal><link linkend="classmap">classmap</link></literal> identifiers enclosed within parentheses.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>default</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A keyword of either <literal>source</literal> or <literal>target</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>range</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A keyword of either <literal>low</literal>, <literal>high</literal> or <literal>low-high</literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>When creating a new <literal>file</literal> object, the appropriate <literal><link linkend="levelrange">range</link></literal> component of the new security context will be taken from the <literal>target</literal> context:</para>
+         <programlisting><![CDATA[(defaultrange file target low_high)]]></programlisting>
+      </sect2>
+
+   </sect1>
