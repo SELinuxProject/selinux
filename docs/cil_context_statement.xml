@@ -1,0 +1,100 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+           <!-- context_statement.xml -->
+
+   <sect1>
+      <title>Context Statement</title>
+      <para>Contexts are formed using previously declared parameters and may be named or anonymous where:</para>
+      <itemizedlist mark="none">
+         <listitem><para>Named - The context is declared with a context identifer that is used as a reference.</para></listitem>
+         <listitem><para>Anonymous - They are defined within the CIL labeling statement using user, role etc. identifiers.</para></listitem>
+      </itemizedlist>
+      <para>Each type is shown in the examples.</para>
+
+      <sect2 id="context">
+         <title>context</title>
+         <para>Declare an SELinux security context identifier for labeling. The range (or current and clearance levels) MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(context context_id (user_id role_id type_id levelrange_id)))]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="context">context</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="context">context</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="context">context</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="user">user</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="role">role</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>type_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="type">type</link></literal> or <literal><link linkend="typealias">typealias</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>levelrange_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="levelrange">levelrange</link></literal> identifier. This entry may also be defined by anonymous or named <literal><link linkend="level">level</link></literal>, <literal><link linkend="sensitivity">sensitivity</link></literal>, <literal><link linkend="sensitivityalias">sensitivityalias</link></literal>, <literal><link linkend="category">category</link></literal>, <literal><link linkend="categoryalias">categoryalias</link></literal> or <literal><link linkend="categoryset">categoryset</link></literal> as discussed in the <link linkend="mls_labeling_statements">Multi-Level Security Labeling Statements</link> section and shown in the examples.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>This example uses a named context definition:</para>
+            <programlisting><![CDATA[
+(context runas_exec_context (u object_r exec low_low))
+
+(filecon "/system/bin/run-as" file runas_exec_context)]]>
+            </programlisting>
+         <simpara>to resolve/build a <literal>file_contexts</literal> entry of (assuming MLS enabled policy):</simpara>
+            <programlisting><![CDATA[/system/bin/run-as  -- u:object_r:runas.exec:s0-s0]]></programlisting>
+
+         <para>This example uses an anonymous context where the previously declared <literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal> identifiers are used to specifiy two <literal><link linkend="portcon">portcon</link></literal> statements:</para>
+            <programlisting><![CDATA[
+(portcon udp 1024 (test.user object_r test.process ((s0) (s1))))
+(portcon tcp 1024 (test.user object_r test.process (system_low system_high)))]]>
+            </programlisting>
+
+         <para>This example uses an anonymous context for the first and named context for the second in a <literal><link linkend="netifcon">netifcon</link></literal> statement:</para>
+            <programlisting><![CDATA[
+(context netif_context (test.user object_r test.process ((s0 (c0)) (s1 (c0)))))
+
+(netifcon eth04 (test.user object_r test.process ((s0 (c0)) (s1 (c0)))) netif_context)]]>
+            </programlisting>
+
+      </sect2>
+
+   </sect1>

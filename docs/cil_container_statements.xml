@@ -1,0 +1,398 @@
+
+<!-- Common Interface Language (CIL) Reference Guide -->
+              <!-- container_statements.xml -->
+
+   <sect1>
+      <title>Container Statements</title>
+      <sect2 id="block">
+         <title>block</title>
+         <para>Start a new namespace where any CIL statement is valid.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[
+(block block_id
+    cil_statement
+    ...
+)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>block</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="block">block</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>block_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The namespace identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>cil_statement</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more valid CIL statements.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>See the <literal><link linkend="blockinherit">blockinherit</link></literal> statement for an example.</para>
+      </sect2>
+
+      <sect2 id="blockabstract">
+         <title>blockabstract</title>
+         <para>Declares the namespace as a 'template' and does not generate code until instantiated by another namespace that has a <literal><link linkend="blockinherit">blockinherit</link></literal> statement.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[
+(block block_id
+    (blockabstract template_id)
+    cil_statement
+    ...
+)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>block</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="block">block</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>block_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The namespace identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>blockabstract</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="blockabstract">blockabstract</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>template_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The abstract namespace identifier. This must match the <literal><link linkend="block">block_id</link></literal> entry.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>cil_statement</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more valid CIL statements forming the abstract block.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>See the <literal><link linkend="blockinherit">blockinherit</link></literal> statement for an example.</para>
+      </sect2>
+
+      <sect2 id="blockinherit">
+         <title>blockinherit</title>
+         <para>Used to add common policy rules to the current namespace via a template that has been defined with the <literal><link linkend="blockabstract">blockabstract</link></literal> statement.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[
+(block block_id
+    (blockinherit template_id)
+    cil_statement
+    ...
+)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>block</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="block">block</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>block_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The namespace identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>blockinherit</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="blockinherit">blockinherit</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>template_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The inherited namespace identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>cil_statement</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more valid CIL statements.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example contains a template <literal>client_server</literal> that is instantiated in two blocks (<literal>netserver_app</literal> and <literal>netclient_app</literal>):</para>
+         <programlisting><![CDATA[
+; This is the template block:
+(block client_server
+    (blockabstract client_server)
+
+    ; Log file labeling
+    (type log_file)
+    (typeattributeset file_type (log_file))
+    (typeattributeset data_file_type (log_file))
+    (allow process log_file (dir (write search create setattr add_name)))
+    (allow process log_file (file (create open append getattr setattr)))
+    (roletype object_r log_file)
+    (context log_file_context (u object_r log_file low_low))
+
+    ; Process labeling
+    (type process)
+    (typeattributeset domain (process))
+    (call app_domain (process))
+    (call net_domain (process))
+)
+
+; This is a policy block that will inherit the abstract block above:
+(block netclient_app
+    ; Add common policy rules to namespace:
+    (blockinherit client_server)
+    ; Label the log files
+    (filecon "/data/data/com.se4android.netclient/.*" file log_file_context)
+)
+
+; This is another policy block that will inherit the abstract block above:
+(block netserver_app
+   ; Add common policy rules to namespace:
+    (blockinherit client_server)
+
+    ; Label the log files
+    (filecon "/data/data/com.se4android.netserver/.*" file log_file_context)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="optional">
+         <title>optional</title>
+         <para>Declare an <literal><link linkend="optional">optional</link></literal> namespace. All CIL statements in the optional block must be satisfied before instantiation in the binary policy. <literal><link linkend="tunableif">tunableif</link></literal> and <literal><link linkend="macro">macro</link></literal> statements are not allowed in optional containers. The same restrictions apply to CIL policy statements within <literal><link linkend="optional">optional</link></literal>'s that apply to kernel policy statements, i.e. only the policy statements shown in the following table are valid:</para>
+
+         <informaltable frame="all">
+            <tgroup cols="4">
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="allow">allow</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="auditallow">auditallow</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="booleanif">booleanif</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="dontaudit">dontaudit</link></literal></para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="typepermissive">typepermissive</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="rangetransition">rangetransition</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="role">role</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="roleallow">roleallow</link></literal></para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="roleattribute">roleattribute</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="roletransition">roletransition</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="type">type</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="typealias">typealias</link></literal></para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="typeattribute">typeattribute</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="typechange">typechange</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="typemember">typemember</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para><literal><link linkend="typetransition">typetransition</link></literal></para>
+                  </entry>
+               </row>
+               </tbody>
+            </tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[
+(optional optional_id
+    cil_statement
+    ...
+)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>optional</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="optional">optional</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>optional_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="optional">optional</link></literal> namespace identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>cil_statement</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more valid CIL statements.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will instantiate the optional block <literal>ext_gateway.move_file</literal> into policy providing all optional CIL statements can be resolved:</para>
+         <programlisting><![CDATA[
+(block ext_gateway
+    ......
+    (optional move_file
+        (typetransition process msg_filter.move_file.in_queue file msg_filter.move_file.in_file)
+        (allow process msg_filter.move_file.in_queue (dir (read getattr write search add_name)))
+        (allow process msg_filter.move_file.in_file (file (write create getattr)))
+        (allow msg_filter.move_file.in_file unconfined.object (filesystem (associate)))
+        (typetransition msg_filter.int_gateway.process msg_filter.move_file.out_queue file
+            msg_filter.move_file.out_file)
+        (allow msg_filter.int_gateway.process msg_filter.move_file.out_queue (dir (read write search)))
+        (allow msg_filter.int_gateway.process msg_filter.move_file.out_file (file (read getattr unlink)))
+    ) ; End optional block
+
+    .....
+) ; End block]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="in">
+         <title>in</title>
+         <para>Allows the insertion of CIL statements into a named container (<literal><link linkend="block">block</link></literal>, <literal><link linkend="optional">optional</link></literal> or <literal><link linkend="macro">macro</link></literal>). This statement is not allowed in <literal><link linkend="booleanif">booleanif</link></literal> or <literal><link linkend="tunableif">tunableif</link></literal> statements.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[
+(in container_id
+    cil_statement
+    ...
+)]]>
+         </programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>in</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>in</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>container_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A valid <literal><link linkend="block">block</link></literal>, <literal><link linkend="optional">optional</link></literal> or <literal><link linkend="macro">macro</link></literal> namespace identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>cil_statement</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more valid CIL statements.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This will add rules to the container named <literal>system_server</literal>:</para>
+         <programlisting><![CDATA[
+(in system_server
+    (dontaudit process secmark_demo.dns_packet (packet (send recv)))
+    (allow process secmark_demo.dns_packet (packet (send recv)))
+)]]>
+         </programlisting>
+      </sect2>
+   </sect1>
+

@@ -1,0 +1,279 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+              <!-- access_vector_rules.xml -->
+
+   <sect1 id="av_rules">
+      <title>Access Vector Rules</title>
+      <sect2 id="allow">
+         <title>allow</title>
+         <para>Specifies the access allowed between a source and target type. Note that access may be refined by constraint rules based on the source, target and class (<literal><link linkend="validatetrans">validatetrans</link></literal> or <literal><link linkend="mlsvalidatetrans">mlsvalidatetrans</link></literal>) or source, target class and permissions (<literal><link linkend="constrain">constrain</link></literal> or <literal><link linkend="mlsconstrain">mlsconstrain</link></literal> statements).</para>
+         <para><emphasis role="bold">Rule definition:</emphasis></para>
+         <programlisting><![CDATA[(allow source_id target_id|self classpermissionset_id ...)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="allow">allow</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="allow">allow</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>source_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined source <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined target <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                     <para>The <literal>self</literal> keyword may be used instead to signify that source and target are the same.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>classpermissionset_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="classpermissionset">classpermissionset</link></literal> or a single set of <literal><link linkend="classmap">classmap</link></literal>/<literal><link linkend="classmapping">classmapping</link></literal> identifiers.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>These examples show a selection of possible permutations of <literal><link linkend="allow">allow</link></literal> rules:</para>
+         <programlisting><![CDATA[
+(class binder (impersonate call set_context_mgr transfer receive))
+(class property_service (set))
+(class zygote (specifyids specifyrlimits specifycapabilities specifyinvokewith specifyseinfo))
+
+(classpermission cps_zygote)
+(classpermissionset cps_zygote (zygote (not (specifyids))))
+
+(classmap android_classes (set_1 set_2 set_3))
+
+(classmapping android_classes set_1 (binder (all)))
+(classmapping android_classes set_1 (property_service (set)))
+(classmapping android_classes set_1 (zygote (not (specifycapabilities))))
+
+(classmapping android_classes set_2 (binder (impersonate call set_context_mgr transfer)))
+(classmapping android_classes set_2 (zygote (specifyids specifyrlimits specifycapabilities specifyinvokewith)))
+
+(classmapping android_classes set_3 cps_zygote)
+(classmapping android_classes set_3 (binder (impersonate call set_context_mgr)))
+
+(block av_rules
+    (type type_1)
+    (type type_2)
+    (type type_3)
+    (type type_4)
+    (type type_5)
+
+    (typeattribute all_types)
+    (typeattributeset all_types (all))
+
+; These examples have named and anonymous classpermissionset's and
+; classmap/classmapping statements
+    (allow type_1 self (property_service (set)))          ; anonymous
+    (allow type_2 self (zygote (specifyids)))             ; anonymous
+    (allow type_3 self cps_zygote)                        ; named
+    (allow type_4 self (android_classes (set_3)))         ; classmap/classmapping
+    (allow all_types all_types (android_classes (set_2))) ; classmap/classmapping
+
+;; This rule will cause the build to fail unless --disable-neverallow
+;    (neverallow type_5 all_types (property_service (set)))
+    (allow type_5 type_5 (property_service (set)))
+    (allow type_1 all_types (property_service (set)))
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="auditallow">
+         <title>auditallow</title>
+         <para>Audit the access rights defined if there is a valid allow rule. Note: It does NOT allow access, it only audits the event.</para>
+         <para><emphasis role="bold">Rule definition:</emphasis></para>
+         <programlisting><![CDATA[(auditallow source_id target_id|self classpermissionset_id ...)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.5 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>auditallow</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>auditallow</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>source_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined source <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined target <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                     <para>The <literal>self</literal> keyword may be used instead to signify that source and target are the same.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>classpermissionset_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="classpermissionset">classpermissionset</link></literal> or a single set of <literal><link linkend="classmap">classmap</link></literal>/<literal><link linkend="classmapping">classmapping</link></literal> identifiers.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will log an audit event whenever the corresponding <literal><link linkend="allow">allow</link></literal> rule grants access to the specified permissions:</para>
+         <programlisting><![CDATA[
+(allow release_app.process secmark_demo.browser_packet (packet (send recv append bind)))
+
+(auditallow release_app.process secmark_demo.browser_packet (packet (send recv)))
+]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="dontaudit">
+         <title>dontaudit</title>
+         <para>Do not audit the access rights defined when access denied. This stops excessive log entries for known events.</para>
+         <para>Note that these rules can be omitted by the CIL compiler command line parameter <literal>-D</literal> or <literal>--disable-dontaudit</literal> flags.</para>
+         <para><emphasis role="bold">Rule definition:</emphasis></para>
+         <programlisting><![CDATA[(dontaudit source_id target_id|self classpermissionset_id ...)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>dontaudit</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>dontaudit</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>source_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined source <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined target <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                     <para>The <literal>self</literal> keyword may be used instead to signify that source and target are the same.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>classpermissionset_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="classpermissionset">classpermissionset</link></literal> or a single set of <literal><link linkend="classmap">classmap</link></literal>/<literal><link linkend="classmapping">classmapping</link></literal> identifiers.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will not audit the denied access:</para>
+         <programlisting><![CDATA[(dontaudit zygote.process self (capability (fsetid)))]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="neverallow">
+         <title>neverallow</title>
+         <para>Never allow access rights defined. This is a compiler enforced action that will stop compilation until the offending rules are modified.</para>
+         <para>Note that these rules can be over-ridden by the CIL compiler command line parameter <literal>-N</literal> or <literal>--disable-neverallow</literal> flags.</para>
+         <para><emphasis role="bold">Rule definition:</emphasis></para>
+         <programlisting><![CDATA[(neverallow source_id target_id|self classpermissionset_id ...)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>neverallow</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>neverallow</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>source_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined source <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined target <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                     <para>The <literal>self</literal> keyword may be used instead to signify that source and target are the same.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>classpermissionset_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="classpermissionset">classpermissionset</link></literal> or a single set of <literal><link linkend="classmap">classmap</link></literal>/<literal><link linkend="classmapping">classmapping</link></literal> identifiers.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will not compile as <literal>type_3</literal> is not allowed to be a source type for the <literal><link linkend="allow">allow</link></literal> rule:</para>
+         <programlisting><![CDATA[
+(class property_service (set))
+
+(block av_rules
+    (type type_1)
+    (type type_2)
+    (type type_3)
+    (typeattribute all_types)
+    (typeattributeset all_types ((all)))
+
+    (neverallow type_3 all_types (property_service (set)))
+    ; This rule will fail compilation:
+    (allow type_3 self (property_service (set)))
+)]]>
+         </programlisting>
+      </sect2>
+
+   </sect1>

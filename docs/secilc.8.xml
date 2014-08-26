@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML//EN"
+               "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<refentry>
+   <refentryinfo>
+      <author>
+         <firstname>Richard</firstname><surname>Haines</surname><contrib></contrib>
+      </author>
+   </refentryinfo>
+
+   <refmeta>
+      <refentrytitle>SECILC</refentrytitle>
+      <manvolnum>8</manvolnum>
+      <refmiscinfo class="date">12 May 2014</refmiscinfo>
+      <refmiscinfo class="source">secilc</refmiscinfo>
+      <refmiscinfo class="manual">SELinux CIL Compiler</refmiscinfo>
+   </refmeta>
+   <refnamediv id="name">
+      <refname>secilc</refname>
+      <refpurpose>invoke the SELinux Common Intermediate Language (CIL) Compiler</refpurpose>
+   </refnamediv>
+
+   <refsynopsisdiv id="synopsis">
+      <cmdsynopsis>
+        <command>secilc</command>
+          <arg choice="opt" rep="repeat"><replaceable>OPTION</replaceable></arg>
+          <arg choice="plain"><replaceable>file</replaceable></arg>
+      </cmdsynopsis>
+   </refsynopsisdiv>
+
+   <refsect1 id="description"><title>DESCRIPTION</title>
+      <para><emphasis role="italic">secilc</emphasis> invokes the CIL compiler with the specified <emphasis role="italic">argument</emphasis>s to build a kernel binary policy. A <emphasis role="bold">file_contexts</emphasis> file will also be built as described in the <emphasis role="bold">FILE FORMAT</emphasis> section of <citerefentry><refentrytitle>file_contexts</refentrytitle><manvolnum>5</manvolnum></citerefentry>.</para>
+   </refsect1>
+
+   <refsect1 id="options"><title>OPTIONS</title>
+      <para><option>-o, --output=&lt;file></option></para>
+      <para>Write binary policy to <emphasis role="italic">file</emphasis> (default: policy.<emphasis role="italic">version</emphasis>)</para>
+
+      <para><option>-f, --filecontext=&lt;file></option></para>
+      <para>Write file contexts to <emphasis role="italic">file</emphasis> (default: <emphasis role="bold">file_contexts</emphasis>)</para>
+
+      <para><option>-t, --target=&lt;type></option></para>
+      <para>Specify target architecture. May be <emphasis role="bold">selinux</emphasis> or <emphasis role="bold">xen</emphasis> (default: <emphasis role="bold">selinux</emphasis>)</para>
+
+      <para><option>-M, --mls true|false</option></para>
+      <para>Build an mls policy. Must be <emphasis role="bold">true</emphasis> or <emphasis role="bold">false</emphasis>. This will override the <emphasis role="bold">(mls <emphasis role="italic">boolean</emphasis></emphasis><emphasis role="bold">)</emphasis> statement if present in the policy.</para>
+
+      <para><option>-c, --policyvers=&lt;version></option></para>
+      <para>Build a binary policy with a given <emphasis role="italic">version</emphasis> (default: depends on the systems SELinux policy <emphasis role="italic">version</emphasis>, see <citerefentry><refentrytitle>sestatus</refentrytitle><manvolnum>8</manvolnum></citerefentry>)</para>
+
+      <para><option>-U, --handle-unknown=&lt;action></option></para>
+      <para>How to handle unknown classes or permissions. May be <emphasis role="bold">deny</emphasis>, <emphasis role="bold">allow</emphasis>, or <emphasis role="bold">reject</emphasis> (default: <emphasis role="bold">deny</emphasis>). This will override the <emphasis role="bold">(handleunknown <emphasis role="italic">action</emphasis></emphasis><emphasis role="bold">)</emphasis> statement if present in the policy.</para>
+
+      <para><option>-D, --disable-dontaudit</option></para>
+      <para>Do not add <emphasis role="bold">dontaudit</emphasis> rules to the binary policy.</para>
+
+      <para><option>-P, --preserve-tunables</option></para>
+      <para>Treat tunables as booleans.</para>
+
+      <para><option>-N, --disable-neverallow</option></para>
+      <para>Do not check <emphasis role="bold">neverallow</emphasis> rules.</para>
+
+      <para><option>-v, --verbose</option></para>
+      <para>Increment verbosity level.</para>
+
+      <para><option>-h, --help</option></para>
+      <para>Display usage information.</para>
+   </refsect1>
+
+   <refsect1 id="see_also"><title>SEE ALSO</title>
+      <para>
+      <simplelist type="inline">
+         <member><citerefentry>
+            <refentrytitle>file_contexts</refentrytitle>
+            <manvolnum>5</manvolnum>
+         </citerefentry></member>
+         <member><citerefentry>
+            <refentrytitle>sestatus</refentrytitle>
+            <manvolnum>8</manvolnum>
+         </citerefentry></member>
+      </simplelist>
+      </para>
+      <para>HTML documentation describing the CIL language statements is available starting with <emphasis role="italic">docs/html/index.html</emphasis>.</para>
+      <para>PDF documentation describing the CIL language statements is available at: <emphasis role="italic">docs/pdf/CIL_Reference_Guide.pdf</emphasis>.</para>
+      <para>There is a CIL Design Wiki at: <ulink url="http://userspace.selinuxproject.org/trac/wiki/CilDesign"></ulink> that describes the goals and features of the CIL language.</para>
+   </refsect1>
+</refentry>
+

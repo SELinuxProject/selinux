@@ -1,0 +1,183 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+           <!-- xen_statements.xml -->
+
+   <sect1>
+      <title>Xen Statements</title>
+      <para>See the <ulink url="http://xenbits.xen.org/docs/4.2-testing/misc/xsm-flask.txt">"XSM/FLASK Configuration"</ulink> document for further information (<ulink url="http://xenbits.xen.org/docs/4.2-testing/misc/xsm-flask.txt"></ulink>)</para>
+      <sect2 id="iomemcon">
+         <title>iomemcon</title>
+         <para>Label i/o memory. This may be a single memory location or a range.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(iomemcon mem_addr|(mem_low mem_high) context_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>iomemcon</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>iomemcon</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>mem_addr |</literal></para>
+                     <para><literal>(mem_low mem_high)</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single memory address to apply the context, or a range of addresses.</para>
+                     <para>The entries must consist of numerics <literal>[0-9]</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="context">context</link></literal> identifier or an anonymous security context (<literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>An anonymous context for a memory address range of <literal>0xfebe0-0xfebff</literal>:</para>
+         <programlisting><![CDATA[(iomemcon (1043424 1043455) (unconfined.user object_r unconfined.object low_low))]]></programlisting>
+      </sect2>
+
+      <sect2 id="ioportcon">
+         <title>ioportcon</title>
+         <para>Label i/o ports. This may be a single port or a range.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(ioportcon port|(port_low port_high) context_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>ioportcon</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>ioportcon</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>port |</literal></para>
+                     <para><literal>(port_low port_high)</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single port to apply the context, or a range of ports.</para>
+                     <para>The entries must consist of numerics <literal>[0-9]</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="context">context</link></literal> identifier or an anonymous security context (<literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>An anonymous context for a single port of :<literal>0xecc0</literal>:</para>
+         <programlisting><![CDATA[(ioportcon 60608 (unconfined.user object_r unconfined.object low_low))]]></programlisting>
+      </sect2>
+
+      <sect2 id="pcidevicecon">
+         <title>pcidevicecon</title>
+         <para>Label a PCI device.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(pcidevicecon device context_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>pcidevicecon</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>pcidevicecon</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>device</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The device number.The entries must consist of numerics <literal>[0-9]</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="context">context</link></literal> identifier or an anonymous security context (<literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>An anonymous context for a pci device address of <literal>0xc800</literal>:</para>
+         <programlisting><![CDATA[(pcidevicecon 51200 (unconfined.user object_r unconfined.object low_low))]]></programlisting>
+      </sect2>
+
+      <sect2 id="pirqcon">
+         <title>pirqcon</title>
+         <para>Label an interrupt level.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(pirqcon irq_level context_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>pirqcon</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>pirqcon</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>irq_level</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The interrupt request number. The entries must consist of numerics <literal>[0-9]</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="context">context</link></literal> identifier or an anonymous security context (<literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>An anonymous context for IRQ 33:</para>
+         <programlisting><![CDATA[(pirqcon 33 (unconfined.user object_r unconfined.object low_low))]]></programlisting>
+      </sect2>
+
+   </sect1>

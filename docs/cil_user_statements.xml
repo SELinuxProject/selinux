@@ -1,0 +1,420 @@
+<!-- Common Interface Language (CIL) Reference Guide -->
+              <!-- user_statements.xml -->
+
+   <sect1>
+      <title>User Statements</title>
+      <sect2 id="user">
+         <title>user</title>
+         <para>Declares an SELinux user identifier in the current namespace.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(user user_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>user</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>user</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The SELinux <literal>user</literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This will declare an SELinux user as <literal>unconfined.user</literal>:</para>
+         <programlisting><![CDATA[
+(block unconfined
+    (user user)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="userrole">
+         <title>userrole</title>
+         <para>Associates a previously declared <literal><link linkend="user">user</link></literal> identifier with a previously declared <literal><link linkend="role">role</link></literal> identifier.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(userrole user_id role_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>userrole</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>userrole</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>role_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="role">role</link></literal> or <literal><link linkend="roleattribute">roleattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will associate <literal>unconfined.user</literal> to <literal>unconfined.role</literal>:</para>
+         <programlisting><![CDATA[
+(block unconfined
+    (user user)
+    (role role)
+    (userrole user role)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="userlevel">
+         <title>userlevel</title>
+         <para>Associates a previously declared <literal><link linkend="user">user</link></literal> identifier with a previously declared <literal><link linkend="level">level</link></literal> identifier. The <literal><link linkend="level">level</link></literal> may be named or anonymous.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(userlevel user_id level_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>userlevel</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>userlevel</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>level_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="level">level</link></literal> identifier. This may consist of a single <literal><link linkend="sensitivity">sensitivity</link></literal> with zero or more mixed named and anonymous <literal><link linkend="category">category</link></literal>'s as discussed in the <literal><link linkend="level">level</link></literal> statement.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will associate <literal>unconfined.user</literal> with a named <literal><link linkend="level">level</link></literal> of <literal>systemlow</literal>:</para>
+         <programlisting><![CDATA[
+(sensitivity s0)
+(level systemlow (s0))
+
+(block unconfined
+    (user user)
+     (userlevel user systemlow)
+    ; An anonymous example:
+    ;(userlevel user (s0))
+)]]>
+      </programlisting>
+      </sect2>
+
+      <sect2 id="userrange">
+         <title>userrange</title>
+         <para>Associates a previously declared <literal><link linkend="user">user</link></literal> identifer with a previously declared <literal><link linkend="levelrange">levelrange</link></literal> identifier. The <literal><link linkend="levelrange">levelrange</link></literal> may be named or anonymous.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(userrange user_id levelrange_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>userrange</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>userrange</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>levelrange_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="levelrange">levelrange</link></literal> identifier. This may be formed by named or anonymous components as discussed in the <literal><link linkend="levelrange">levelrange</link></literal> statement and shown in the examples.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will associate <literal>unconfined.user</literal> with a named <literal><link linkend="levelrange">levelrange</link></literal> of <literal>low_high</literal>, other anonymous examples are also shown:</para>
+         <programlisting><![CDATA[
+(category c0)
+(category c1)
+(categoryorder (c0 c1))
+(sensitivity s0)
+(sensitivity s1)
+(dominance (s0 s1))
+(sensitivitycategory s0 (c0 c1))
+(level systemLow (s0))
+(level systemHigh (s0 (c0 c1)))
+(levelrange low_high (systemLow systemHigh))
+
+(block unconfined
+    (user user)
+    (role role)
+    (userrole user role)
+    ; Named example:
+    (userrange user low_high)
+    ; Anonymous examples:
+    ;(userrange user (systemLow systemHigh))
+    ;(userrange user (systemLow (s0 (c0 c1))))
+    ;(userrange user ((s0) (s0 (c0 c1))))
+)]]>
+      </programlisting>
+      </sect2>
+
+      <sect2 id="userbounds">
+         <title>userbounds</title>
+         <para>Defines a hierarchical relationship between users where the child user cannot have more priviledges than the parent.</para>
+         <para>Notes:</para>
+         <itemizedlist>
+            <listitem><para>It is not possible to bind the parent to more than one child.</para></listitem>
+            <listitem><para>While this is added to the binary policy, it is not enforced by the SELinux kernel services.</para></listitem>
+         </itemizedlist>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(userbounds parent_user_id child_user_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>userbounds</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>userbounds</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>parent_user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>child_user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>The user <literal>test</literal> cannot have greater priviledges than <literal>unconfined.user</literal>:</para>
+         <programlisting><![CDATA[
+(user test)
+
+(unconfined
+    (user user)
+    (userbounds user .test)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="userprefix">
+         <title>userprefix</title>
+         <para>Declare a user prefix that will be replaced by the file labeling utilities described at <ulink url="http://selinuxproject.org/page/PolicyStoreConfigurationFiles#file_contexts.template_File">http://selinuxproject.org/page/PolicyStoreConfigurationFiles</ulink> that details the <filename>file_contexts</filename> entries.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(userprefix user_id prefix)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>userprefix</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>userprefix</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>prefix</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The string to be used by the file labeling utilities.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will associate <literal>unconfined.admin</literal> user with a prefix of "<literal>user</literal>":</para>
+         <programlisting><![CDATA[
+(block unconfined
+    (user admin
+    (userprefix admin user)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="selinuxuser">
+         <title>selinuxuser</title>
+         <para>Associates a GNU/Linux user to a previously declared <literal><link linkend="user">user</link></literal> identifier with a previously declared MLS <literal><link linkend="userrange">userrange</link></literal>. Note that the <literal><link linkend="userrange">userrange</link></literal> is required even if the policy is non-MCS/MLS.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(selinuxuser user_name user_id userrange_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>selinuxuser</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>selinuxuser</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_name</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A string representing the GNU/Linux user name</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>userrange_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="userrange">userrange</link></literal> identifier that has been associated to the <literal>user</literal> identifier. This may be formed by named or anonymous components as discussed in the <literal><link linkend="userrange">userrange</link></literal> statement and shown in the examples.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will associate <literal>unconfined.admin</literal> user with a GNU / Linux user "<literal>admin_1</literal>":</para>
+         <programlisting><![CDATA[
+(block unconfined
+    (user admin)
+    (selinuxuser admin_1 admin low_low)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="selinuxuserdefault">
+         <title>selinuxuserdefault</title>
+         <para>Declares the default SELinux user. Only one <literal>selinuxuserdefault</literal> statement is allowed in the policy. Note that the <literal><link linkend="userrange">userrange</link></literal> identifier is required even if the policy is non-MCS/MLS.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(selinuxuserdefault user_id userrange_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>selinuxuserdefault</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>selinuxuserdefault</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>userrange_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="userrange">userrange</link></literal> identifier that has been associated to the <literal><link linkend="user">user</link></literal> identifier. This may be formed by named or anonymous components as discussed in the <literal><link linkend="userrange">userrange</link></literal> statement and shown in the examples.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will define the <literal>unconfined.user</literal> as the default SELinux user:</para>
+         <programlisting><![CDATA[
+(block unconfined
+    (user user)
+    (selinuxuserdefault user low_low)
+)]]>
+         </programlisting>
+      </sect2>
+
+   </sect1>
