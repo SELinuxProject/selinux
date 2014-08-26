@@ -8,8 +8,6 @@
 	* Add pcre version string to the compiled file_contexts format, from
 	  Stephen Smalley
 	* Deprecate use of flask.h and av_permissions.h, from Stephen Smalley
-	* Skip policiy module relink when only setting booleans, from Stephen
-	  Smalley
 	* Compiled file_context files and the original should have the same DAC
 	  permissions, from Dan Walsh
 

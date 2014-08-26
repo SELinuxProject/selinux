@@ -1,8 +1,10 @@
 2.4-rc1 2014-08-26
 	* Fix failing libsemanage pywrap tests, from Nicolas Iooss
 	* Fix deprecation warning for bison, from Ilya Frolov
+	* Skip policy module relink when only setting booleans, from Stephen
+	  Smalley
 	* Fix typo in tests makefile, from Caleb Case
-	* Only try to copmile file contexts if they exist, from Steve Lawrence
+	* Only try to compile file contexts if they exist, from Steve Lawrence
 	* Fix memory leak when setting a custom store path, from Yuli
 	  Khodorkovskiy
 	* Add semodule option to set store root path in semanage.conf and the

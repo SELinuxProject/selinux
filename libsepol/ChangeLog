@@ -1,5 +1,5 @@
 2.4-rc1 2014-08-13
-	* Build CIL into libsepol. libspeol can be built without CIL by setting the 
+	* Build CIL into libsepol. libsepol can be built without CIL by setting the 
 	  DISABLE_CIL flag to 'y', from Steve Lawrence
 	* Add an API function to set target_platform, from Steve Lawrence
 

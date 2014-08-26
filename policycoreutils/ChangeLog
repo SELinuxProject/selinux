@@ -1,8 +1,8 @@
 2.4-rc1 2014-08-13
 	* Ensure XDG_RUNTIME_DIR is passed through to the sandbox in seunshare,
 	  from Dan Walsh
-	* Remove cgroups from sandbox, from Dan Waslh
-	* Try to use setcurent before setexec in seunshare, from Andy Lutomirski
+	* Remove cgroups from sandbox, from Dan Walsh
+	* Try to use setcurrent before setexec in seunshare, from Andy Lutomirski
 	* Stop using the now deprecated flask.h and av_permissions.h, from Stephen Smalley
 	* Add a store root path in semodule, from Yuli Khodorkovskiy
 	* Add a flag to ignore cached CIL files and recompile HLL modules, from

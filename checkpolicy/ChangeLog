@@ -1,6 +1,3 @@
-2.4-rc1 2014-08-26
-	* No Changes
-
 2.3 2014-05-06
 	* Add Android support for building dispol.
 	* Report source file and line information for neverallow failures.
