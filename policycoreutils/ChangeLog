@@ -1,3 +1,21 @@
+2.4-rc1 2014-08-13
+	* Ensure XDG_RUNTIME_DIR is passed through to the sandbox in seunshare,
+	  from Dan Walsh
+	* Remove cgroups from sandbox, from Dan Waslh
+	* Try to use setcurent before setexec in seunshare, from Andy Lutomirski
+	* Stop using the now deprecated flask.h and av_permissions.h, from Stephen Smalley
+	* Add a store root path in semodule, from Yuli Khodorkovskiy
+	* Add a flag to ignore cached CIL files and recompile HLL modules, from
+	  Yuli Khodorkovskiy
+	* Add and install HLL compiler for policy packages to CIL. The compiler is
+	  installed in /var/libexec/selinux/hll/ by default, from Steve Lawrence
+	* Deprecate base/upgrade/version in semodule. Calling these commands will
+	  now call --install on the backend, from Yuli Khodorkovskiy
+	* Add ability to install modules with a specified priority, from Caleb
+	  Case
+	* Use /tmp for permissive module creation, by Caleb Case
+	* Update semanage to use new source policy infrastructure, from Jason Dana
+
 2.3 2014-05-06
 	* Add -P semodule option to man page from Dan Walsh.
 	* selinux_current_policy_path will return none on a disabled SELinux system from Dan Walsh.

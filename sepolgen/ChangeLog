@@ -1,3 +1,7 @@
+1.2.2 2014-08-26
+	* Remove unnecessary grammar in interface call param list to fix poor
+	  interface fectors, from Steve Lawrence
+
 1.2.1 2013-10-31
 	* Add back attributes flag to fix exception crash from Dan Walsh.
 

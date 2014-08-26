@@ -1,3 +1,28 @@
+2.4-rc1 2014-08-26
+	* Fix failing libsemanage pywrap tests, from Nicolas Iooss
+	* Fix deprecation warning for bison, from Ilya Frolov
+	* Fix typo in tests makefile, from Caleb Case
+	* Only try to copmile file contexts if they exist, from Steve Lawrence
+	* Fix memory leak when setting a custom store path, from Yuli
+	  Khodorkovskiy
+	* Add semodule option to set store root path in semanage.conf and the
+	  semodule command, from Yuli Khodorkovskiy
+	* Add semanage.conf option to set an alternative root path for policy
+	  store, from Yuli Khodorkovskiy
+	* Add support for High Level Language (HLL) to CIL compilers. The HLL
+	  compiler path is configurable, but should be placed in 
+	  /usr/libexec/selinux/hll by default, from Yuli Khodorkovskiy
+	* Create a policy migration script for migrating the policy store from
+	  /etc/selinux to /var/lib/selinux, from Caleb Case
+	* Use libcil to compile modules, from Steve Lawrence
+	* Use symbolic versioning to maintain ABI compatibility for old install
+	  functions, from Yuli Khodorkovskiy
+	* Add a target-platform option to semanage.conf to control how policies
+	  are built, from Steve Lawrence
+	* Add API to handle modules and source policies, moving module store to
+	  /var/lib/selinux, from Caleb Case
+	* Only try to compile file contexts if they exist, from Steve Lawrence
+
 2.3 2014-05-06
 	* Fix memory leak in semanage_genhomedircon from Thomas Hurd.
 

@@ -1,3 +1,18 @@
+2.4-rc1 2014-08-13
+	* Set the system to permissive if failing to disable SELinux because
+	  policy has already been loaded, from Will Woods.
+	* Fix type in selinux.8 manpage, from Nicolas Iooss
+	* Add db_exception and db_datatype support to label_db backend, from Artyom
+	  Smirnov
+	* Log an error on unknown classes and permissions, from Stephen Smalley
+	* Add pcre version string to the compiled file_contexts format, from
+	  Stephen Smalley
+	* Deprecate use of flask.h and av_permissions.h, from Stephen Smalley
+	* Skip policiy module relink when only setting booleans, from Stephen
+	  Smalley
+	* Compiled file_context files and the original should have the same DAC
+	  permissions, from Dan Walsh
+
 2.3 2014-05-06
 	* Get rid of security_context_t and fix const declarations.
 	* Refactor rpm_execcon() into a new setexecfilecon() from Guillem Jover.
