@@ -1,4 +1,4 @@
-2.4-rc1 2014-08-13
+2.4-rc2 2014-08-13
 	* Set the system to permissive if failing to disable SELinux because
 	  policy has already been loaded, from Will Woods.
 	* Fix type in selinux.8 manpage, from Nicolas Iooss
