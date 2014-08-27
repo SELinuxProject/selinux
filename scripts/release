@@ -23,11 +23,11 @@ echo "Copy *.tar.gz from $DEST to the server and add the following to the Releas
 
 echo ""
 
-echo "== Release $(date '+%Y-%m-%d') =="
+echo "## Release $(date '+%Y-%m-%d')"
 
 for i in *.tar.gz; do
-	echo "[http://userspace.selinuxproject.org/releases/$(date '+%Y%m%d')/$i $i]"
-	echo ""
+
+	echo -n "[$i](https://raw.githubusercontent.com/wiki/SELinuxProject/selinux/files/releases/$(date '+%Y%m%d')/$i) "
 	echo "`sha256sum $i`"
 	echo ""
 done
