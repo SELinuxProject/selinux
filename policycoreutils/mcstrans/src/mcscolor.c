@@ -78,11 +78,12 @@ void finish_context_colors(void) {
 static int check_dominance(const char *pattern, const char *raw) {
 	security_context_t ctx;
 	context_t con;
-	unsigned int bit = CONTEXT__CONTAINS;
 	struct av_decision avd;
 	int rc = -1;
 	context_t my_tmp;
 	const char *raw_range;
+	security_class_t context_class = string_to_security_class("context");
+	access_vector_t context_contains_perm = string_to_av_perm(context_class, "contains");
 
 	con = context_new(raw);
 	if (!con)
@@ -108,11 +109,11 @@ static int check_dominance(const char *pattern, const char *raw) {
 	if (!raw)
 		goto out;
 
-	rc = security_compute_av_raw(ctx, (security_context_t)raw, string_to_security_class("context"), bit, &avd);
+	rc = security_compute_av_raw(ctx, (security_context_t)raw, context_class, context_contains_perm, &avd);
 	if (rc)
 		goto out;
 
-	rc = (bit & avd.allowed) != bit;
+	rc = (context_contains_perm & avd.allowed) != context_contains_perm;
 out:
 	free(ctx);
 	context_free(my_tmp);
