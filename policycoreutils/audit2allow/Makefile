@@ -1,10 +1,11 @@
+PYTHON ?= python
+
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 BINDIR ?= $(PREFIX)/bin
 LIBDIR ?= $(PREFIX)/lib
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= /usr/share/locale
-PYTHON ?= /usr/bin/python
 
 all: audit2why
 

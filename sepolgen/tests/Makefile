@@ -1,3 +1,5 @@
+PYTHON ?= python
+
 clean:
 	rm -f *~ *.pyc
 	rm -f parser.out parsetab.py
@@ -6,4 +8,4 @@ clean:
 	rm -f output
 
 test:
-	python run-tests.py
+	$(PYTHON) run-tests.py

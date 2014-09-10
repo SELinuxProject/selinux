@@ -1,3 +1,5 @@
+PYTHON ?= python
+
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 SYSCONFDIR ?= $(DESTDIR)/etc/sysconfig
@@ -32,7 +34,7 @@ install: all
 	install -m 644 sandbox.conf $(SYSCONFDIR)/sandbox
 
 test:
-	@python test_sandbox.py -v
+	@$(PYTHON) test_sandbox.py -v
 
 clean:
 	-rm -f seunshare *.o *~
