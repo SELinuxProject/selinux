@@ -223,7 +223,7 @@ extern int sepol_fs_use(const char *fstype,	/* IN */
  * fixed labeling behavior like transition SIDs or task SIDs.
  */
 extern int sepol_genfs_sid(const char *fstype,	/* IN */
-			   char *name,	/* IN */
+			   const char *name,	/* IN */
 			   sepol_security_class_t sclass,	/* IN */
 			   sepol_security_id_t * sid);	/* OUT  */
 

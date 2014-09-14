@@ -55,7 +55,7 @@
 #include "mls.h"
 
 #define POLICYDB_TARGET_SZ   ARRAY_SIZE(policydb_target_strings)
-char *policydb_target_strings[] = { POLICYDB_STRING, POLICYDB_XEN_STRING };
+const char *policydb_target_strings[] = { POLICYDB_STRING, POLICYDB_XEN_STRING };
 
 /* These need to be updated if SYM_NUM or OCON_NUM changes */
 static struct policydb_compat_info policydb_compat[] = {

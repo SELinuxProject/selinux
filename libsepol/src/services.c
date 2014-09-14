@@ -174,7 +174,7 @@ static char **expr_list;
 static int expr_buf_used;
 static int expr_buf_len;
 
-static void cat_expr_buf(char *e_buf, char *string)
+static void cat_expr_buf(char *e_buf, const char *string)
 {
 	int len, new_buf_len;
 	char *p, *new_buf = e_buf;
@@ -209,7 +209,7 @@ static void cat_expr_buf(char *e_buf, char *string)
  * POLICYDB_VERSION_CONSTRAINT_NAMES) just read the e->names list.
  */
 static void get_name_list(constraint_expr_t *e, int type,
-							char *src, char *op, int failed)
+							const char *src, const char *op, int failed)
 {
 	ebitmap_t *types;
 	int rc = 0;
@@ -273,7 +273,7 @@ static void get_name_list(constraint_expr_t *e, int type,
 	return;
 }
 
-static void msgcat(char *src, char *tgt, char *op, int failed)
+static void msgcat(const char *src, const char *tgt, const char *op, int failed)
 {
 	char tmp_buf[128];
 	if (failed)
@@ -303,7 +303,7 @@ static char *get_class_info(sepol_security_class_t tclass,
 	}
 
 	/* Determine statement type */
-	char *statements[] = {
+	const char *statements[] = {
 		"constrain ",			/* 0 */
 		"mlsconstrain ",		/* 1 */
 		"validatetrans ",		/* 2 */
@@ -771,7 +771,7 @@ mls_ops:
 	 * These contain the constraint components that are added to the
 	 * callers reason buffer.
 	 */
-	char *buffers[] = { class_buf, a, "); ", tmp_buf, 0 };
+	const char *buffers[] = { class_buf, a, "); ", tmp_buf, 0 };
 
 	/*
 	 * This will add the constraints to the callers reason buffer (who is
@@ -2085,7 +2085,7 @@ int hidden sepol_get_user_sids(sepol_security_id_t fromsid,
  * fixed labeling behavior like transition SIDs or task SIDs.
  */
 int hidden sepol_genfs_sid(const char *fstype,
-			   char *path,
+			   const char *path,
 			   sepol_security_class_t sclass,
 			   sepol_security_id_t * sid)
 {

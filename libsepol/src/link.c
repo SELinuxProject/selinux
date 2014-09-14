@@ -2089,7 +2089,7 @@ static int debug_requirements(link_state_t * state, policydb_t * p)
 		if (ret < 0) {
 			return ret;
 		} else if (ret == 0) {
-			char *mod_name = cur->branch_list->module_name ?
+			const char *mod_name = cur->branch_list->module_name ?
 			    cur->branch_list->module_name : "BASE";
 			if (req.symbol_type == SYM_CLASSES) {
 				struct find_perm_arg fparg;
@@ -2148,7 +2148,7 @@ static void print_missing_requirements(link_state_t * state,
 				       missing_requirement_t * req)
 {
 	policydb_t *p = state->base;
-	char *mod_name = cur->branch_list->module_name ?
+	const char *mod_name = cur->branch_list->module_name ?
 	    cur->branch_list->module_name : "BASE";
 
 	if (req->symbol_type == SYM_CLASSES) {
@@ -2220,7 +2220,7 @@ static int enable_avrules(link_state_t * state, policydb_t * pol)
 			}
 			decl = block->branch_list;
 			if (state->verbose) {
-				char *mod_name = decl->module_name ?
+				const char *mod_name = decl->module_name ?
 				    decl->module_name : "BASE";
 				INFO(state->handle, "check module %s decl %d\n",
 				     mod_name, decl->decl_id);
