@@ -37,7 +37,7 @@
 
 static policydb_t policydb;
 
-void usage(char *progname)
+void usage(const char *progname)
 {
 	printf("usage:  %s binary_pol_file\n\n", progname);
 	exit(1);
@@ -320,9 +320,9 @@ static void display_policycaps(policydb_t * p, FILE * fp)
 }
 
 static void display_id(policydb_t *p, FILE *fp, uint32_t symbol_type,
-		       uint32_t symbol_value, char *prefix)
+		       uint32_t symbol_value, const char *prefix)
 {
-	char *id = p->sym_val_to_name[symbol_type][symbol_value];
+	const char *id = p->sym_val_to_name[symbol_type][symbol_value];
 	fprintf(fp, " %s%s", prefix, id);
 }
 

@@ -96,8 +96,8 @@ extern policydb_t *policydbp;
 extern int mlspol;
 
 static int handle_unknown = SEPOL_DENY_UNKNOWN;
-static char *txtfile = "policy.conf";
-static char *binfile = "policy";
+static const char *txtfile = "policy.conf";
+static const char *binfile = "policy";
 
 unsigned int policyvers = POLICYDB_VERSION_MAX;
 
@@ -381,7 +381,8 @@ int main(int argc, char **argv)
 	sepol_security_context_t scontext;
 	struct sepol_av_decision avd;
 	class_datum_t *cladatum;
-	char ans[80 + 1], *file = txtfile, *outfile = NULL, *path, *fstype;
+	const char *file = txtfile;
+	char ans[80 + 1], *outfile = NULL, *path, *fstype;
 	size_t scontext_len, pathlen;
 	unsigned int i;
 	unsigned int protocol, port;

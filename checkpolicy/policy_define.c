@@ -107,7 +107,7 @@ int insert_separator(int push)
 	return 0;
 }
 
-int insert_id(char *id, int push)
+int insert_id(const char *id, int push)
 {
 	char *newid = 0;
 	int error;

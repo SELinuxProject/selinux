@@ -65,7 +65,7 @@ static const char *symbol_labels[9] = {
 	"levels ", "cats   ", "attribs"
 };
 
-void usage(char *progname)
+void usage(const char *progname)
 {
 	printf("usage:  %s binary_pol_file\n\n", progname);
 	exit(1);
@@ -99,7 +99,7 @@ static void render_access_bitmap(ebitmap_t * map, uint32_t class,
 }
 
 static void display_id(policydb_t * p, FILE * fp, uint32_t symbol_type,
-		       uint32_t symbol_value, char *prefix)
+		       uint32_t symbol_value, const char *prefix)
 {
 	char *id = p->sym_val_to_name[symbol_type][symbol_value];
 	scope_datum_t *scope =

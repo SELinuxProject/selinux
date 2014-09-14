@@ -64,7 +64,7 @@ int define_typebounds(void);
 int define_type(int alias);
 int define_user(void);
 int define_validatetrans(constraint_expr_t *expr);
-int insert_id(char *id,int push);
+int insert_id(const char *id,int push);
 int insert_separator(int push);
 role_datum_t *define_role_dom(role_datum_t *r);
 role_datum_t *merge_roles_dom(role_datum_t *r1,role_datum_t *r2);

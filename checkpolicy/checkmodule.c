@@ -41,13 +41,13 @@ static sidtab_t sidtab;
 extern int mlspol;
 
 static int handle_unknown = SEPOL_DENY_UNKNOWN;
-static char *txtfile = "policy.conf";
-static char *binfile = "policy";
+static const char *txtfile = "policy.conf";
+static const char *binfile = "policy";
 
 unsigned int policy_type = POLICY_BASE;
 unsigned int policyvers = MOD_POLICYDB_VERSION_MAX;
 
-static int read_binary_policy(policydb_t * p, char *file, char *progname)
+static int read_binary_policy(policydb_t * p, const char *file, const char *progname)
 {
 	int fd;
 	struct stat sb;
@@ -108,7 +108,7 @@ static int read_binary_policy(policydb_t * p, char *file, char *progname)
 	return 0;
 }
 
-static int write_binary_policy(policydb_t * p, char *file, char *progname)
+static int write_binary_policy(policydb_t * p, const char *file, char *progname)
 {
 	FILE *outfp = NULL;
 	struct policy_file pf;
@@ -161,7 +161,7 @@ static void usage(char *progname)
 
 int main(int argc, char **argv)
 {
-	char *file = txtfile, *outfile = NULL;
+	const char *file = txtfile, *outfile = NULL;
 	unsigned int binary = 0;
 	int ch;
 	int show_version = 0;
