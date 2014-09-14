@@ -807,7 +807,7 @@ static void display_policycaps(policydb_t * p, FILE * fp)
 	}
 }
 
-int menu()
+int menu(void)
 {
 	printf("\nSelect a command:\n");
 	printf("1)  display unconditional AVTAB\n");

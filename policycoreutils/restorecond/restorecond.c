@@ -111,7 +111,7 @@ static int write_pid_file(void)
 /*
  * SIGTERM handler
  */
-static void term_handler()
+static void term_handler(int s __attribute__ ((unused)))
 {
 	terminate = 1;
 	/* trigger a failure in the watch */

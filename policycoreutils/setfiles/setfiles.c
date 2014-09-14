@@ -61,7 +61,7 @@ void usage(const char *const name)
 
 static int nerr = 0;
 
-void inc_err()
+void inc_err(void)
 {
 	nerr++;
 	if (nerr > ABORT_ON_ERRORS - 1 && !r_opts.debug) {

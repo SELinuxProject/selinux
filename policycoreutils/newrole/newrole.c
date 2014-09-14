@@ -307,7 +307,7 @@ static int process_pam_config(FILE * cfg)
  *  Files specified one per line executable with a corresponding
  *  pam service name.
  */
-static int read_pam_config()
+static int read_pam_config(void)
 {
 	const char *config_file_path = PAM_SERVICE_CONFIG;
 	FILE *cfg = NULL;
@@ -966,7 +966,7 @@ static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 /**
  * Take care of any signal setup
  */
-static int set_signal_handles()
+static int set_signal_handles(void)
 {
 	sigset_t empty;
 

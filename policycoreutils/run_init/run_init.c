@@ -230,7 +230,7 @@ int authenticate_via_shadow_passwd(const struct passwd *p_passwd_line)
  * return:	0 When success
  *		-1 When failure
  */
-int authenticate_user()
+int authenticate_user(void)
 {
 
 #define INITLEN 255

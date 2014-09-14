@@ -34,7 +34,7 @@ struct watchList {
 };
 struct watchList *firstDir = NULL;
 
-int watch_list_isempty() {
+int watch_list_isempty(void) {
 	return firstDir == NULL;
 }
 

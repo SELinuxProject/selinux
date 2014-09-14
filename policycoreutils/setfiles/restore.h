@@ -45,12 +45,12 @@ struct restore_opts {
 };
 
 void restore_init(struct restore_opts *opts);
-void restore_finish();
+void restore_finish(void);
 int add_exclude(const char *directory);
 int exclude(const char *path);
 void remove_exclude(const char *directory);
 int process_one_realpath(char *name, int recurse);
 int process_glob(char *name, int recurse);
-int exclude_non_seclabel_mounts();
+int exclude_non_seclabel_mounts(void);
 
 #endif

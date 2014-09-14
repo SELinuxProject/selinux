@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include <string.h>
 
-typedef int (* require_func_t)();
+typedef int (* require_func_t)(void);
 
 #ifdef ANDROID
 #include "policy_parse.h"

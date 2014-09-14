@@ -40,6 +40,6 @@ extern int watch(int fd, const char *watch_file);
 extern void watch_list_add(int inotify_fd, const char *path);
 extern int watch_list_find(int wd, const char *file);
 extern void watch_list_free(int fd);
-extern int watch_list_isempty();
+extern int watch_list_isempty(void);
 
 #endif

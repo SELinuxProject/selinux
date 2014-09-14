@@ -289,7 +289,7 @@ static int identify_equiv_types(void)
 
 extern char *av_to_string(uint32_t tclass, sepol_access_vector_t av);
 
-int display_bools()
+int display_bools(void)
 {
 	uint32_t i;
 
@@ -335,7 +335,7 @@ void display_expr(cond_expr_t * exp)
 	}
 }
 
-int display_cond_expressions()
+int display_cond_expressions(void)
 {
 	cond_node_t *cur;
 

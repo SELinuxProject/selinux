@@ -194,7 +194,7 @@ int start() {
 	return 0;
 }
 
-static int local_server() {
+static int local_server(void) {
 	// ! dbus, run as local service
 	char *ptr=NULL;
 	if (asprintf(&ptr, "%s/.restorecond", homedir) < 0) {

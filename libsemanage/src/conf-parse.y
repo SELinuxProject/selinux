@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern int semanage_lex();                /* defined in conf-scan.c */
+extern int semanage_lex(void);                /* defined in conf-scan.c */
 int semanage_error(const char *msg);
 
 extern FILE *semanage_in;

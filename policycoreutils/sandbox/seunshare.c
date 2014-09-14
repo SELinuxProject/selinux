@@ -62,7 +62,7 @@ static capng_select_t cap_set = CAPNG_SELECT_CAPS;
 /**
  * This function will drop all capabilities.
  */
-static int drop_caps()
+static int drop_caps(void)
 {
 	if (capng_have_capabilities(cap_set) == CAPNG_NONE)
 		return 0;
