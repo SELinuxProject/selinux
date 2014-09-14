@@ -14,7 +14,7 @@
 char *progname = NULL;
 extern char *optarg;
 
-static void usage(char *progname)
+static void usage(void)
 {
 	printf("usage: %s ppfile modfile [fcfile]\n", progname);
 	exit(1);
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 	progname = argv[0];
 
 	if (argc < 3) {
-		usage(progname);
+		usage();
 		exit(1);
 	}
 
