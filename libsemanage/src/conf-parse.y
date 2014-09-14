@@ -32,7 +32,7 @@
 #include <string.h>
 
 extern int semanage_lex();                /* defined in conf-scan.c */
-int semanage_error(char *msg);
+int semanage_error(const char *msg);
 
 extern FILE *semanage_in;
 extern char *semanage_text;
@@ -442,7 +442,7 @@ void semanage_conf_destroy(semanage_conf_t * conf)
 	}
 }
 
-int semanage_error(char *msg)
+int semanage_error(const char *msg)
 {
 	fprintf(stderr, "error parsing semanage configuration file: %s\n", msg);
 	parse_errors++;

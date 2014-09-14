@@ -52,7 +52,7 @@ typedef struct list {
  *
  *	   NULL for error (out of memory, etc)
  */
-char *semanage_findval(char *file, char *var, char *delim) WARN_UNUSED;
+char *semanage_findval(const char *file, const char *var, const char *delim) WARN_UNUSED;
 
 /**
  * @param str   string to test
@@ -88,11 +88,11 @@ char *semanage_split(const char *str, const char *delim) WARN_UNUSED;
  * Functions allocate memory.  Must be free'd with
  * either semanage_list_pop until list == NULL or semanage_list_destroy()
  */
-int semanage_list_push(semanage_list_t ** list, char *data) WARN_UNUSED;
+int semanage_list_push(semanage_list_t ** list, const char *data) WARN_UNUSED;
 char *semanage_list_pop(semanage_list_t ** list);
 void semanage_list_destroy(semanage_list_t ** list);
 semanage_list_t *semanage_list_find(semanage_list_t * l,
-				    char *data) WARN_UNUSED;
+				    const char *data) WARN_UNUSED;
 int semanage_list_sort(semanage_list_t ** l) WARN_UNUSED;
 /* function to compare 2 semanage_list_t nodes,
  * returns strcmp(x->data, y->data)

@@ -31,7 +31,7 @@
 #define TRUE 1
 #define FALSE 0
 
-char *semanage_findval(char *file, char *var, char *delim)
+char *semanage_findval(const char *file, const char *var, const char *delim)
 {
 	FILE *fd;
 	char *buff = NULL;
@@ -134,7 +134,7 @@ char *semanage_split(const char *str, const char *delim)
 	return retval;
 }
 
-int semanage_list_push(semanage_list_t ** list, char *data)
+int semanage_list_push(semanage_list_t ** list, const char *data)
 {
 	semanage_list_t *temp = NULL;
 
@@ -185,7 +185,7 @@ void semanage_list_destroy(semanage_list_t ** list)
 	}
 }
 
-semanage_list_t *semanage_list_find(semanage_list_t * l, char *data)
+semanage_list_t *semanage_list_find(semanage_list_t * l, const char *data)
 {
 	if (!data)
 		return NULL;
