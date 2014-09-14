@@ -138,19 +138,19 @@ static int set_signal_handles(void)
  * TODO: avoid system() and use exec*() instead
  */
 static int spawn_command(const char *cmd, uid_t uid){
-	int child;
+	int childpid;
 	int status = -1;
 
 	if (verbose > 1)
 		printf("spawn_command: %s\n", cmd);
 
-	child = fork();
-	if (child == -1) {
+	childpid = fork();
+	if (childpid == -1) {
 		perror(_("Unable to fork"));
 		return status;
 	}
 
-	if (child == 0) {
+	if (childpid == 0) {
 		if (drop_privs(uid) != 0) exit(-1);
 
 		status = system(cmd);
@@ -158,7 +158,7 @@ static int spawn_command(const char *cmd, uid_t uid){
 		exit(status);
 	}
 
-	waitpid(child, &status, 0);
+	waitpid(childpid, &status, 0);
 	status_to_retval(status, status);
 	return status;
 }
