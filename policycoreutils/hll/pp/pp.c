@@ -54,7 +54,8 @@ FILE *out_file;
 #define DEFAULT_LEVEL "systemlow"
 #define DEFAULT_OBJECT "object_r"
 
-static void log_err(char *fmt, ...)
+__attribute__ ((format(printf, 1, 2)))
+static void log_err(const char *fmt, ...)
 {
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -75,7 +76,8 @@ static void cil_indent(int indent)
 	}
 }
 
-static void cil_printf(char *fmt, ...) {
+__attribute__ ((format(printf, 1, 2)))
+static void cil_printf(const char *fmt, ...) {
 	va_list argptr;
 	va_start(argptr, fmt);
 	if (vfprintf(out_file, fmt, argptr) < 0) {
@@ -85,7 +87,8 @@ static void cil_printf(char *fmt, ...) {
 	va_end(argptr);
 }
 
-static void cil_println(int indent, char *fmt, ...)
+__attribute__ ((format(printf, 2, 3)))
+static void cil_println(int indent, const char *fmt, ...)
 {
 	cil_indent(indent);
 	va_list argptr;
@@ -2200,9 +2203,9 @@ static int ocontext_xen_iomem_to_cil(struct policydb *pdb, struct ocontext *iome
 		high = iomem->u.iomem.high_iomem;
 
 		if (low == high) {
-			cil_printf("(iomemcon %#lX ", low);
+			cil_printf("(iomemcon %#lX ", (unsigned long)low);
 		} else {
-			cil_printf("(iomemcon (%#lX %#lX) ", low, high);
+			cil_printf("(iomemcon (%#lX %#lX) ", (unsigned long)low, (unsigned long)high);
 		}
 
 		context_to_cil(pdb, &iomem->context[0]);
@@ -2218,7 +2221,7 @@ static int ocontext_xen_pcidevice_to_cil(struct policydb *pdb, struct ocontext *
 	struct ocontext *pcid;
 
 	for (pcid = pcids; pcid != NULL; pcid = pcid->next) {
-		cil_printf("(pcidevicecon %#lx ", pcid->u.device);
+		cil_printf("(pcidevicecon %#lx ", (unsigned long)pcid->u.device);
 		context_to_cil(pdb, &pcid->context[0]);
 		cil_printf(")\n");
 	}
