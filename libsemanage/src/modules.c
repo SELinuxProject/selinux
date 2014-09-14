@@ -105,7 +105,7 @@ cleanup:
 }
 
 int semanage_module_install_hll(semanage_handle_t * sh,
-			    char *module_data, size_t data_len, char *name, char *ext_lang)
+			    char *module_data, size_t data_len, const char *name, const char *ext_lang)
 {
 	if (sh->funcs->install == NULL) {
 		ERR(sh,

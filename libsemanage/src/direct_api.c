@@ -64,7 +64,7 @@ static int semanage_direct_disconnect(semanage_handle_t * sh);
 static int semanage_direct_begintrans(semanage_handle_t * sh);
 static int semanage_direct_commit(semanage_handle_t * sh);
 static int semanage_direct_install(semanage_handle_t * sh, char *data,
-				   size_t data_len, char *module_name, char *lang_ext);
+				   size_t data_len, const char *module_name, const char *lang_ext);
 static int semanage_direct_install_file(semanage_handle_t * sh, const char *module_name);
 static int semanage_direct_remove(semanage_handle_t * sh, char *module_name);
 static int semanage_direct_list(semanage_handle_t * sh,
@@ -1289,7 +1289,7 @@ cleanup:
  * writing file. */
 static int semanage_direct_install(semanage_handle_t * sh,
 				   char *data, size_t data_len,
-				   char *module_name, char *lang_ext)
+				   const char *module_name, const char *lang_ext)
 {
 	int status = 0;
 	int ret = 0;
