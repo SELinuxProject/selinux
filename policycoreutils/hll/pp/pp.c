@@ -2604,6 +2604,10 @@ static int file_contexts_to_cil(struct sepol_module_package *mod_pkg)
 			cilmode = "pipe";
 		} else if (!strcmp(mode, "-l")) {
 			cilmode = "symlink";
+		} else {
+			rc = -1;
+			log_err("Invalid mode in file context line: %s", line);
+			goto exit;
 		}
 
 		cil_printf("(filecon \"%s\" %s ", regex, cilmode);
@@ -2930,7 +2934,7 @@ static int get_decl_roles(struct policydb *pdb, struct role_datum ***decl_roles,
 {
 	int rc = -1;
 	uint32_t num;
-	struct role_datum **roles;
+	struct role_datum **roles = NULL;
 	struct decl_roles_args args;
 	args.pdb = pdb;
 
