@@ -22,7 +22,7 @@
 char *progname = NULL;
 extern char *optarg;
 
-static void usage(char *prog)
+static void usage(const char *prog)
 {
 	printf("usage: %s -o <output file> -m <module> [-f <file contexts>]\n",
 	       prog);
@@ -37,8 +37,8 @@ static void usage(char *prog)
 	exit(1);
 }
 
-static int file_to_policy_file(char *filename, struct sepol_policy_file **pf,
-			       char *mode)
+static int file_to_policy_file(const char *filename, struct sepol_policy_file **pf,
+			       const char *mode)
 {
 	FILE *f;
 

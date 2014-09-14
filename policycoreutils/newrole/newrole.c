@@ -166,7 +166,7 @@ static char *build_new_range(char *newlevel, const char *range)
 #include <security/pam_appl.h>	/* for PAM functions */
 #include <security/pam_misc.h>	/* for misc_conv PAM utility function */
 
-char *service_name = "newrole";
+const char *service_name = "newrole";
 
 /* authenticate_via_pam()
  *

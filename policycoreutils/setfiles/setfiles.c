@@ -146,12 +146,12 @@ int main(int argc, char **argv)
 {
 	struct stat sb;
 	int opt, i = 0;
-	char *input_filename = NULL;
+	const char *input_filename = NULL;
 	int use_input_file = 0;
 	char *buf = NULL;
 	size_t buf_len;
 	int recurse; /* Recursive descent. */
-	char *base;
+	const char *base;
 	int mass_relabel = 0, errors = 0;
 	
 	memset(&r_opts, 0, sizeof(r_opts));
