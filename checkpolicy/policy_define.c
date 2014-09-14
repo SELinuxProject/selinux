@@ -828,7 +828,7 @@ int define_sens(void)
 int define_dominance(void)
 {
 	level_datum_t *datum;
-	int order;
+	uint32_t order;
 	char *id;
 
 	if (!mlspol) {

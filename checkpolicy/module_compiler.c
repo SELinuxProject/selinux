@@ -701,7 +701,7 @@ int add_perm_to_class(uint32_t perm_value, uint32_t class_value)
 	assert(class_value >= 1);
 	scope = &decl->required;
 	if (class_value > scope->class_perms_len) {
-		int i;
+		uint32_t i;
 		ebitmap_t *new_map = realloc(scope->class_perms_map,
 					     class_value * sizeof(*new_map));
 		if (new_map == NULL) {
@@ -1225,7 +1225,7 @@ int require_cat(int pass)
 
 static int is_scope_in_stack(scope_datum_t * scope, scope_stack_t * stack)
 {
-	int i;
+	uint32_t i;
 	if (stack == NULL) {
 		return 0;	/* no matching scope found */
 	}
@@ -1482,7 +1482,7 @@ int begin_optional_else(int pass)
 
 static int copy_requirements(avrule_decl_t * dest, scope_stack_t * stack)
 {
-	int i;
+	uint32_t i;
 	if (stack == NULL) {
 		return 0;
 	}

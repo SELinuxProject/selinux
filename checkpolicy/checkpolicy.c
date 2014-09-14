@@ -291,7 +291,7 @@ extern char *av_to_string(uint32_t tclass, sepol_access_vector_t av);
 
 int display_bools()
 {
-	int i;
+	uint32_t i;
 
 	for (i = 0; i < policydbp->p_bools.nprim; i++) {
 		printf("%s : %d\n", policydbp->p_bool_val_to_name[i],
