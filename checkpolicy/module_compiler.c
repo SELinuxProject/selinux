@@ -1446,7 +1446,7 @@ int begin_optional(int pass)
 	return -1;
 }
 
-int end_optional(int pass)
+int end_optional(int pass __attribute__ ((unused)))
 {
 	/* once nested conditionals are allowed, do the stack unfolding here */
 	pop_stack();

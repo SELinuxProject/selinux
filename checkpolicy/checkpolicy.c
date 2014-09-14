@@ -361,7 +361,7 @@ int change_bool(char *name, int state)
 	return 0;
 }
 
-static int check_level(hashtab_key_t key, hashtab_datum_t datum, void *arg)
+static int check_level(hashtab_key_t key, hashtab_datum_t datum, void *arg __attribute__ ((unused)))
 {
 	level_datum_t *levdatum = (level_datum_t *) datum;
 

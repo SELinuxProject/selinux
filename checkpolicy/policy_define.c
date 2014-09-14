@@ -995,7 +995,7 @@ int define_category(void)
 	return -1;
 }
 
-static int clone_level(hashtab_key_t key, hashtab_datum_t datum, void *arg)
+static int clone_level(hashtab_key_t key __attribute__ ((unused)), hashtab_datum_t datum, void *arg)
 {
 	level_datum_t *levdatum = (level_datum_t *) datum;
 	mls_level_t *level = (mls_level_t *) arg, *newlevel;
@@ -2123,8 +2123,8 @@ role_datum_t *merge_roles_dom(role_datum_t * r1, role_datum_t * r2)
 }
 
 /* This function eliminates the ordering dependency of role dominance rule */
-static int dominate_role_recheck(hashtab_key_t key, hashtab_datum_t datum,
-				 void *arg)
+static int dominate_role_recheck(hashtab_key_t key __attribute__ ((unused)),
+				 hashtab_datum_t datum, void *arg)
 {
 	role_datum_t *rdp = (role_datum_t *) arg;
 	role_datum_t *rdatum = (role_datum_t *) datum;
@@ -3443,7 +3443,7 @@ static int parse_categories(char *id, level_datum_t * levdatum, ebitmap_t * cats
 	return 0;
 }
 
-static int parse_semantic_categories(char *id, level_datum_t * levdatum,
+static int parse_semantic_categories(char *id, level_datum_t * levdatum __attribute__ ((unused)),
 				     mls_semantic_cat_t ** cats)
 {
 	cat_datum_t *cdatum;
