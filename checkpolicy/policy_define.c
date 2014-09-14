@@ -81,6 +81,7 @@ void init_parser(int pass_number)
 	pass = pass_number;
 }
 
+__attribute__ ((format(printf, 1, 2)))
 void yyerror2(char *fmt, ...)
 {
 	va_list ap;
@@ -3959,7 +3960,7 @@ int define_iomem_context(unsigned long low, unsigned long high)
 	newc->u.iomem.high_iomem = high;
 
 	if (low > high) {
-		yyerror2("low memory 0x%x exceeds high memory 0x%x", low, high);
+		yyerror2("low memory 0x%lx exceeds high memory 0x%lx", low, high);
 		free(newc);
 		return -1;
 	}
@@ -3971,12 +3972,12 @@ int define_iomem_context(unsigned long low, unsigned long high)
 
 	head = policydbp->ocontexts[OCON_XEN_IOMEM];
 	for (l = NULL, c = head; c; l = c, c = c->next) {
-		unsigned int low2, high2;
+		uint32_t low2, high2;
 
 		low2 = c->u.iomem.low_iomem;
 		high2 = c->u.iomem.high_iomem;
 		if (low <= high2 && low2 <= high) {
-			yyerror2("iomemcon entry for 0x%x-0x%x overlaps with "
+			yyerror2("iomemcon entry for 0x%lx-0x%lx overlaps with "
 				"earlier entry 0x%x-0x%x", low, high,
 				low2, high2);
 			goto bad;
@@ -4023,7 +4024,7 @@ int define_ioport_context(unsigned long low, unsigned long high)
 	newc->u.ioport.high_ioport = high;
 
 	if (low > high) {
-		yyerror2("low ioport 0x%x exceeds high ioport 0x%x", low, high);
+		yyerror2("low ioport 0x%lx exceeds high ioport 0x%lx", low, high);
 		free(newc);
 		return -1;
 	}
@@ -4035,12 +4036,12 @@ int define_ioport_context(unsigned long low, unsigned long high)
 
 	head = policydbp->ocontexts[OCON_XEN_IOPORT];
 	for (l = NULL, c = head; c; l = c, c = c->next) {
-		unsigned int low2, high2;
+		uint32_t low2, high2;
 
 		low2 = c->u.ioport.low_ioport;
 		high2 = c->u.ioport.high_ioport;
 		if (low <= high2 && low2 <= high) {
-			yyerror2("ioportcon entry for 0x%x-0x%x overlaps with"
+			yyerror2("ioportcon entry for 0x%lx-0x%lx overlaps with"
 				"earlier entry 0x%x-0x%x", low, high,
 				low2, high2);
 			goto bad;
@@ -4096,7 +4097,7 @@ int define_pcidevice_context(unsigned long device)
 
 		device2 = c->u.device;
 		if (device == device2) {
-			yyerror2("duplicate pcidevicecon entry for 0x%x ",
+			yyerror2("duplicate pcidevicecon entry for 0x%lx",
 				 device);
 			goto bad;
 		}
