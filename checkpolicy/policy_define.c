@@ -63,8 +63,8 @@ extern unsigned long source_lineno;
 extern unsigned int policydb_errors;
 extern char source_file[PATH_MAX];
 
-extern int yywarn(char *msg);
-extern int yyerror(char *msg);
+extern int yywarn(const char *msg);
+extern int yyerror(const char *msg);
 
 #define ERRORMSG_LEN 255
 static char errormsg[ERRORMSG_LEN + 1] = {0};
@@ -82,7 +82,7 @@ void init_parser(int pass_number)
 }
 
 __attribute__ ((format(printf, 1, 2)))
-void yyerror2(char *fmt, ...)
+void yyerror2(const char *fmt, ...)
 {
 	va_list ap;
 	va_start(ap, fmt);

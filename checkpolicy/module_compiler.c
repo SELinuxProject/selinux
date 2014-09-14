@@ -39,9 +39,9 @@ typedef struct scope_stack {
 
 extern policydb_t *policydbp;
 extern queue_t id_queue;
-extern int yyerror(char *msg);
+extern int yyerror(const char *msg);
 __attribute__ ((format(printf, 1, 2)))
-extern void yyerror2(char *fmt, ...);
+extern void yyerror2(const char *fmt, ...);
 
 static int push_stack(int stack_type, ...);
 static void pop_stack(void);
