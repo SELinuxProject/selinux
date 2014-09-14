@@ -101,7 +101,7 @@ void module_role_tests(policydb_t * base)
 {
 	role_datum_t *role;
 	avrule_decl_t *decl;
-	unsigned int decls[2];
+	unsigned int decls[3];
 	char *types[3];
 
 	/* These tests are run when the base is linked with 2 modules,
