@@ -131,7 +131,8 @@ int semanage_seuser_modify_local(semanage_handle_t * handle,
 		errno=EINVAL;
 		return -1;
 	}
-	if (semanage_seuser_clone(handle, data, &new) < 0) {
+	rc = semanage_seuser_clone(handle, data, &new);
+	if (rc < 0) {
 		goto err;
 	}
 
