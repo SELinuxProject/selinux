@@ -176,7 +176,7 @@ static inline int sort_specs(struct saved_data *data)
 {
 	struct spec *spec_copy;
 	struct spec spec;
-	int i;
+	unsigned int i;
 	int front, back;
 	size_t len = sizeof(*spec_copy);
 

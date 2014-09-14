@@ -213,7 +213,7 @@ static int process_line(struct selabel_handle *rec,
 	spec_arr[nspec].mode = 0;
 	if (type) {
 		mode_t mode = string_to_mode(type);
-		if (mode == -1) {
+		if (mode == (mode_t)-1) {
 			COMPAT_LOG(SELINUX_WARNING, "%s:  line %d has invalid file type %s\n",
 				   path, lineno, type);
 			mode = 0;
@@ -240,19 +240,20 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 	struct saved_data *data = (struct saved_data *)rec->data;
 	char mmap_path[PATH_MAX + 1];
 	int mmapfd;
-	int rc, i;
+	int rc;
 	struct stat mmap_stat;
 	char *addr;
 	size_t len;
 	int stem_map_len, *stem_map;
 	struct mmap_area *mmap_area;
 
+	uint32_t i;
 	uint32_t *magic;
 	uint32_t *section_len;
 	uint32_t *plen;
 
 	rc = snprintf(mmap_path, sizeof(mmap_path), "%s.bin", path);
-	if (rc >= sizeof(mmap_path))
+	if (rc >= (int)sizeof(mmap_path))
 		return -1;
 
 	mmapfd = open(mmap_path, O_RDONLY | O_CLOEXEC);
@@ -445,7 +446,7 @@ static int process_file(const char *path, const char *suffix, struct selabel_han
 	/* append the path suffix if we have one */
 	if (suffix) {
 		rc = snprintf(stack_path, sizeof(stack_path), "%s.%s", path, suffix);
-		if (rc >= sizeof(stack_path)) {
+		if (rc >= (int)sizeof(stack_path)) {
 			errno = ENAMETOOLONG;
 			return -1;
 		}

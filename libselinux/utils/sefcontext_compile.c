@@ -72,7 +72,7 @@ static int process_file(struct saved_data *data, const char *filename)
 
 		spec->lr.ctx_raw = context;
 		spec->mode = string_to_mode(mode);
-		if (spec->mode == -1) {
+		if (spec->mode == (mode_t)-1) {
 			fprintf(stderr, "%s: line %d has invalid file type %s\n",
 				regex, line_num + 1, mode);
 			spec->mode = 0;
@@ -362,7 +362,7 @@ int main(int argc, char *argv[])
 		return rc;
 
 	rc = snprintf(stack_path, sizeof(stack_path), "%s.bin", path);
-	if (rc < 0 || rc >= sizeof(stack_path))
+	if (rc < 0 || rc >= (int)sizeof(stack_path))
 		return rc;
 
 	if (asprintf(&tmp, "%sXXXXXX", stack_path) < 0)
