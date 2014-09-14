@@ -417,6 +417,12 @@ static int constraint_expr_eval_reason(context_struct_t *scontext,
 	int rc = 0, x;
 	char *class_buf = NULL;
 
+	/*
+	 * The array of expression answer buffer pointers and counter.
+	 */
+	char **answer_list = NULL;
+	int answer_counter = 0;
+
 	class_buf = get_class_info(tclass, constraint, xcontext);
 	if (!class_buf) {
 		ERR(NULL, "failed to allocate class buffer");
@@ -686,13 +692,9 @@ mls_ops:
 	expr_counter = 0;
 
 	/*
-	 * The array of expression answer buffer pointers and counter.
 	 * Generate the same number of answer buffer entries as expression
 	 * buffers (as there will never be more).
 	 */
-	char **answer_list;
-	int answer_counter = 0;
-
 	answer_list = malloc(expr_count * sizeof(*answer_list));
 	if (!answer_list) {
 		ERR(NULL, "failed to allocate answer stack");
