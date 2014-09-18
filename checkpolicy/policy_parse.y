@@ -356,6 +356,7 @@ cond_else		: ELSE '{' cond_pol_list '}'
 			{ $$ = $3; }
 			| /* empty */ 
 			{ $$ = NULL; }
+			;
 cond_expr               : '(' cond_expr ')'
 			{ $$ = $2;}
 			| NOT cond_expr
