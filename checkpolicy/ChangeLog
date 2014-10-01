@@ -1,3 +1,7 @@
+2.4-rc3 2014-08-26
+	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
+	* Add missing semicolon in cond_else parser rule, from Steven Capelli
+
 2.3 2014-05-06
 	* Add Android support for building dispol.
 	* Report source file and line information for neverallow failures.

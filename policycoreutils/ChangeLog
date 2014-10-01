@@ -1,4 +1,7 @@
-2.4-rc2 2014-08-13
+2.4-rc3 2014-08-13
+	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
+	* Improve support for building with different versions of python from
+	  Nicolas Iooss.
 	* Ensure XDG_RUNTIME_DIR is passed through to the sandbox in seunshare,
 	  from Dan Walsh
 	* Remove cgroups from sandbox, from Dan Walsh
@@ -9,6 +12,8 @@
 	  Yuli Khodorkovskiy
 	* Add and install HLL compiler for policy packages to CIL. The compiler is
 	  installed in /var/libexec/selinux/hll/ by default, from Steve Lawrence
+	* Fixes to pp compiler to better support roles and type attributes, from
+	  Yuli Khodorkovskiy
 	* Deprecate base/upgrade/version in semodule. Calling these commands will
 	  now call --install on the backend, from Yuli Khodorkovskiy
 	* Add ability to install modules with a specified priority, from Caleb

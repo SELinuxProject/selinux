@@ -1,4 +1,7 @@
-2.4-rc2 2014-08-26
+2.4-rc3 2014-08-26
+	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
+	* Add missing manpage links to security_load_policy, from Laurent
+	  Bigonville.
 	* Fix failing libsemanage pywrap tests, from Nicolas Iooss
 	* Fix deprecation warning for bison, from Ilya Frolov
 	* Skip policy module relink when only setting booleans, from Stephen

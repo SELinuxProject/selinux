@@ -1,4 +1,5 @@
-1.2.2-rc2 2014-08-26
+1.2.2-rc3 2014-08-26
+	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
 	* Remove unnecessary grammar in interface call param list to fix poor
 	  interface vectors, from Steve Lawrence
 
