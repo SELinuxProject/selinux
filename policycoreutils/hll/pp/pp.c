@@ -2756,7 +2756,9 @@ static int file_contexts_to_cil(struct sepol_module_package *mod_pkg)
 	fp = fmemopen(fc, fc_len, "r");
 	while ((line_len = getline(&line, &len, fp)) != -1) {
 		buf = line;
-		buf[line_len - 1] = '\0';
+		if (buf[line_len - 1] == '\n') {
+			buf[line_len - 1] = '\0';
+		}
 		while (*buf && isspace(buf[0])) {
 			buf++;
 		}
