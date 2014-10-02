@@ -83,7 +83,7 @@ void *cil_realloc(void *ptr, size_t size)
 }
 
 
-char *cil_strdup(char *str)
+char *cil_strdup(const char *str)
 {
 	char *mem = NULL;
 

@@ -58,6 +58,10 @@ enum cil_log_level {
 };
 extern void cil_set_log_level(enum cil_log_level lvl);
 extern void cil_set_log_handler(void (*handler)(int lvl, char *msg));
+
+#ifdef __GNUC__
+__attribute__ ((format(printf, 2, 3)))
+#endif
 extern void cil_log(enum cil_log_level lvl, const char *msg, ...);
 
 extern void cil_set_malloc_error_handler(void (*handler)(void));

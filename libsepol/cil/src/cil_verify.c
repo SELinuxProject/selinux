@@ -166,13 +166,13 @@ int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, en
 	case CIL_EQ:
 	case CIL_NEQ:
 		if (expr_flavor != CIL_BOOL && expr_flavor != CIL_TUNABLE ) {
-			cil_log(CIL_ERR,"Invalid operator (%s) for set expression\n", current->data);
+			cil_log(CIL_ERR,"Invalid operator (%s) for set expression\n", (char*)current->data);
 			goto exit;
 		}
 		break;
 	case CIL_ALL:
 		if (expr_flavor == CIL_BOOL || expr_flavor == CIL_TUNABLE) {
-			cil_log(CIL_ERR,"Invalid operator (%s) for boolean or tunable expression\n", current->data);
+			cil_log(CIL_ERR,"Invalid operator (%s) for boolean or tunable expression\n", (char*)current->data);
 			goto exit;
 		}
 		syntax[1] = CIL_SYN_END;
@@ -180,7 +180,7 @@ int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, en
 		break;
 	case CIL_RANGE:
 		if (expr_flavor != CIL_CAT) {
-			cil_log(CIL_ERR,"Operator (%s) only valid for catset expression\n", current->data);
+			cil_log(CIL_ERR,"Operator (%s) only valid for catset expression\n", (char*)current->data);
 			goto exit;
 		}
 		syntax[1] = CIL_SYN_STRING;
@@ -192,7 +192,7 @@ int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, en
 		syntax_len = 2;
 		break;
 	default:
-		cil_log(CIL_ERR,"Unexpected value (%s) for expression operator\n", current->data);
+		cil_log(CIL_ERR,"Unexpected value (%s) for expression operator\n", (char*)current->data);
 		goto exit;
 	}
 
@@ -298,7 +298,7 @@ int cil_verify_constraint_expr_syntax(struct cil_tree_node *current, enum cil_fl
 		syntax[2] = CIL_SYN_STRING;
 		break;
 	default:
-		cil_log(CIL_ERR,"Invalid operator (%s) for constraint expression\n",current->data);
+		cil_log(CIL_ERR, "Invalid operator (%s) for constraint expression\n", (char*)current->data);
 		goto exit;
 	}
 

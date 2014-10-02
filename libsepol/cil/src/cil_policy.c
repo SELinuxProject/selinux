@@ -542,7 +542,7 @@ void cil_constrain_to_policy(FILE **file_arr, __attribute__((unused)) uint32_t f
 	cil_constrain_to_policy_helper(file_arr, kind, cons->classperms, cons->datum_expr);
 }
 
-void cil_avrule_to_policy_helper(FILE **file_arr, uint32_t file_index, char *kind, char *src, char *tgt, struct cil_list *classperms)
+void cil_avrule_to_policy_helper(FILE **file_arr, uint32_t file_index, const char *kind, const char *src, const char *tgt, struct cil_list *classperms)
 {
 	struct cil_list_item *i;
 
@@ -573,9 +573,9 @@ void cil_avrule_to_policy_helper(FILE **file_arr, uint32_t file_index, char *kin
 
 int cil_avrule_to_policy(FILE **file_arr, uint32_t file_index, struct cil_avrule *rule)
 {
-	char *kind_str = NULL;
-	char *src_str = DATUM(rule->src)->name;
-	char *tgt_str = DATUM(rule->tgt)->name;
+	const char *kind_str = NULL;
+	const char *src_str = DATUM(rule->src)->name;
+	const char *tgt_str = DATUM(rule->tgt)->name;
 
 
 	switch (rule->rule_kind) {
@@ -974,7 +974,7 @@ int cil_name_to_policy(FILE **file_arr, struct cil_tree_node *current)
 		fprintf(file_arr[TYPEATTRTYPES], "role %s;\n", ((struct cil_symtab_datum*)current->data)->name);
 		break;
 	case CIL_BOOL: {
-		char *boolean = ((struct cil_bool*)current->data)->value ? "true" : "false";
+		const char *boolean = ((struct cil_bool*)current->data)->value ? "true" : "false";
 		fprintf(file_arr[TYPEATTRTYPES], "bool %s %s;\n", ((struct cil_symtab_datum*)current->data)->name, boolean);
 		break;
 	}

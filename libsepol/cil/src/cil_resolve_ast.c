@@ -128,7 +128,7 @@ static int __cil_resolve_perms(symtab_t *class_symtab, symtab_t *common_symtab, 
 				}
 			}
 			if (rc != SEPOL_OK) {
-				cil_log(CIL_ERR, "Failed to resolve permission %s\n", curr->data);
+				cil_log(CIL_ERR, "Failed to resolve permission %s\n", (char*)curr->data);
 				goto exit;
 			}
 			cil_list_append(*perm_datums, CIL_DATUM, perm_datum);
@@ -2210,7 +2210,7 @@ int cil_resolve_bounds(struct cil_tree_node *current, void *extra_args, enum cil
 
 		if (user->bounds != NULL) {
 			struct cil_tree_node *node = user->bounds->datum.nodes->head->data;
-			cil_log(CIL_ERR, "User %s already bound by parent at line %n of %s\n", bounds->child_str, node->line, node->path);
+			cil_log(CIL_ERR, "User %s already bound by parent at line %u of %s\n", bounds->child_str, node->line, node->path);
 			rc = SEPOL_ERR;
 			goto exit;
 		}
@@ -2223,7 +2223,7 @@ int cil_resolve_bounds(struct cil_tree_node *current, void *extra_args, enum cil
 
 		if (role->bounds != NULL) {
 			struct cil_tree_node *node = role->bounds->datum.nodes->head->data;
-			cil_log(CIL_ERR, "Role %s already bound by parent at line %n of %s\n", bounds->child_str, node->line, node->path);
+			cil_log(CIL_ERR, "Role %s already bound by parent at line %u of %s\n", bounds->child_str, node->line, node->path);
 			rc = SEPOL_ERR;
 			goto exit;
 		}
@@ -2237,8 +2237,8 @@ int cil_resolve_bounds(struct cil_tree_node *current, void *extra_args, enum cil
 
 		if (type->bounds != NULL) {
 			node = ((struct cil_symtab_datum *)type->bounds)->nodes->head->data;
-			cil_log(CIL_ERR, "Type %s already bound by parent at line %n of %s\n", bounds->child_str, node->line, node->path);
-			cil_log(CIL_ERR, "Now being bound to parent %s at line %n of %s\n", bounds->parent_str, current->line, current->path);
+			cil_log(CIL_ERR, "Type %s already bound by parent at line %u of %s\n", bounds->child_str, node->line, node->path);
+			cil_log(CIL_ERR, "Now being bound to parent %s at line %u of %s\n", bounds->parent_str, current->line, current->path);
 			rc = SEPOL_ERR;
 			goto exit;
 		}
@@ -2267,7 +2267,7 @@ int cil_resolve_bounds(struct cil_tree_node *current, void *extra_args, enum cil
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Bad bounds statement at line %n of %s\n", current->line, current->path);
+	cil_log(CIL_ERR, "Bad bounds statement at line %u of %s\n", current->line, current->path);
 	return rc;
 }
 
