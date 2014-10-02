@@ -64,7 +64,7 @@ static int cil_strpool_compare(hashtab_t h __attribute__ ((unused)), hashtab_key
 	return strcmp(keyp1, keyp2);
 }
 
-char *cil_strpool_add(char *str)
+char *cil_strpool_add(const char *str)
 {
 	struct cil_strpool_entry *strpool_ref = NULL;
 

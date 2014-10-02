@@ -32,7 +32,7 @@
 
 #include <sepol/policydb/hashtab.h>
 
-char *cil_strpool_add(char *str);
+char *cil_strpool_add(const char *str);
 void cil_strpool_init(void);
 void cil_strpool_destroy(void);
 #endif /* CIL_STRPOOL_H_ */

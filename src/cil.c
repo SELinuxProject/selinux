@@ -1326,7 +1326,7 @@ int cil_filecons_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char *
 	for (i = 0; i < filecons->count; i++) {
 		struct cil_filecon *filecon = filecons->array[i];
 		struct cil_context *ctx = filecon->context;
-		char *str_type = NULL; 
+		const char *str_type = NULL;
 
 		buf_pos = sprintf(str_tmp, "%s", filecon->path_str);
 		str_tmp += buf_pos;

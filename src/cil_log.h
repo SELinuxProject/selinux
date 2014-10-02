@@ -34,8 +34,6 @@
 
 #define MAX_LOG_SIZE 512
 
-
-
-void cil_log(enum cil_log_level lvl, const char *msg, ...);
+__attribute__ ((format(printf, 2, 3))) void cil_log(enum cil_log_level lvl, const char *msg, ...);
 
 #endif // CIL_LOG_H_

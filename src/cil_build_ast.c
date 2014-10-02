@@ -2271,7 +2271,7 @@ static int __cil_fill_expr(struct cil_tree_node *current, enum cil_flavor flavor
 	if (current->cl_head == NULL) {
 		enum cil_flavor op = __cil_get_expr_operator_flavor(current->data);
 		if (op != CIL_NONE) {
-			cil_log(CIL_ERR,"Operator (%s) not in an expression\n", current->data);
+			cil_log(CIL_ERR, "Operator (%s) not in an expression\n", (char*)current->data);
 			goto exit;
 		}
 		cil_list_append(expr, CIL_STRING, current->data);
@@ -2378,7 +2378,7 @@ static int __cil_fill_constraint_leaf_expr(struct cil_tree_node *current, enum c
 		leaf_expr_flavor = CIL_LEVEL;
 		break;
 	default:
-		cil_log(CIL_ERR,"Invalid left operand (%s)\n",current->next->data);
+		cil_log(CIL_ERR, "Invalid left operand (%s)\n", (char*)current->next->data);
 		goto exit;
 	}
 
@@ -2705,7 +2705,7 @@ int cil_gen_condblock(struct cil_db *db, struct cil_tree_node *parse_current, st
 
 exit:
 	cil_log(CIL_ERR, "Bad %s condition declaration at line %d of %s\n",
-		parse_current->data, parse_current->line, parse_current->path);
+		(char*)parse_current->data, parse_current->line, parse_current->path);
 	cil_destroy_condblock(cb);
 	return rc;
 }
@@ -2765,7 +2765,8 @@ int cil_gen_alias(struct cil_db *db, struct cil_tree_node *parse_current, struct
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Bad %s declaration at line %d of %s\n", parse_current->data, parse_current->line, parse_current->path);
+	cil_log(CIL_ERR, "Bad %s declaration at line %d of %s\n",
+		(char*)parse_current->data, parse_current->line, parse_current->path);
 	cil_destroy_alias(alias);
 	cil_clear_node(ast_node);
 	return rc;
