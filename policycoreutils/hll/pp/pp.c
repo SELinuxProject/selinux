@@ -1889,7 +1889,29 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 	switch (role->flavor) {
 	case ROLE_ROLE:
 		if (scope == SCOPE_DECL) {
-			cil_println(indent, "(role %s)", key);
+			// Only declare certain roles if we are reading a base module.
+			// These roles are defined in the base module and sometimes in
+			// other non-base modules. If we generated the roles regardless of
+			// the policy type, it would result in duplicate declarations,
+			// which isn't allowed in CIL. Patches have been made to refpolicy
+			// to remove these duplicate role declarations, but we need to be
+			// backwards compatable and support older policies. Since we know
+			// these roles are always declared in base, only print them when we
+			// see them in the base module. If the declarations appear in a
+			// non-base module, ignore their declarations.
+			//
+			// Note that this is a hack, and if a policy author does not define
+			// one of these roles in base, the declaration will not appeaer in
+			// the resulting policy, likely resulting in a compilation error in
+			// CIL.
+			int is_base_role = (!strcmp(key, "user_r") ||
+			                    !strcmp(key, "staff_r") ||
+			                    !strcmp(key, "sysadm_r") ||
+			                    !strcmp(key, "system_r") ||
+			                    !strcmp(key, "unconfined_r"));
+			if ((is_base_role && pdb->policy_type == SEPOL_POLICY_BASE) || !is_base_role) {
+				cil_println(indent, "(role %s)", key);
+			}
 		}
 
 		if (ebitmap_cardinality(&role->dominates) > 1) {
