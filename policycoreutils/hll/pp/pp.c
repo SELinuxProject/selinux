@@ -1915,7 +1915,7 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 		}
 
 		if (ebitmap_cardinality(&role->dominates) > 1) {
-			log_err("Warning: role 'dominance' statment unsupported in CIL. Dropping from output.");
+			log_err("Warning: role 'dominance' statement unsupported in CIL. Dropping from output.");
 		}
 
 		ts = &role->types;
@@ -2390,7 +2390,7 @@ exit:
 static int ocontext_selinux_fs_to_cil(struct policydb *UNUSED(pdb), struct ocontext *fss)
 {
 	if (fss != NULL) {
-		log_err("Warning: 'fscon' statment unsupported in CIL. Dropping from output.");
+		log_err("Warning: 'fscon' statement unsupported in CIL. Dropping from output.");
 	}
 
 	return 0;
