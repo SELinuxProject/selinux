@@ -1,4 +1,4 @@
-2.4-rc3 2014-08-26
+2.4-rc4 2014-08-26
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
 	* Add missing manpage links to security_load_policy, from Laurent
 	  Bigonville.

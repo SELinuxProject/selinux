@@ -1,4 +1,4 @@
-2.4-rc3 2014-08-13
+2.4-rc4 2014-08-13
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
 	* Improve support for building with different versions of python from
 	  Nicolas Iooss.
