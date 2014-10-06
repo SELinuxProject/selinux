@@ -5511,7 +5511,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 			rc = SEPOL_ERR;
 			cil_log(CIL_ERR, "Found tunable at line %d of %s\n",
 				parse_current->line, parse_current->path);
-			cil_log(CIL_ERR, "Tunables cannot be defined within macro statment\n");
+			cil_log(CIL_ERR, "Tunables cannot be defined within macro statement\n");
 			goto exit;
 		}
 
@@ -5519,7 +5519,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 			rc = SEPOL_ERR;
 			cil_log(CIL_ERR, "Found in at line %d of %s\n",
 				parse_current->line, parse_current->path);
-			cil_log(CIL_ERR, "in-statements cannot be defined within macro statment\n");
+			cil_log(CIL_ERR, "in-statements cannot be defined within macro statement\n");
 			goto exit;
 		}
 	}

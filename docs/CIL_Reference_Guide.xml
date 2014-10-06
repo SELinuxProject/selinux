@@ -215,7 +215,7 @@ expr_set = (name ... | expr ...)
 expr = (expr_key expr_set ...)
 expr_key = and | or | xor | not | all | eq | neq | dom | domby | incomp | range]]>
          </programlisting>
-         <para>The number of <literal>expr_set</literal>'s in an <literal>expr</literal> is dependent on the statement type (there are four different classes as defined below) that also influence the valid <literal>expr_key</literal> entries (e.g. <literal>dom</literal>, <literal>domby</literal>, <literal>incomp</literal> are only allowed in constraint statments).</para>
+         <para>The number of <literal>expr_set</literal>'s in an <literal>expr</literal> is dependent on the statement type (there are four different classes as defined below) that also influence the valid <literal>expr_key</literal> entries (e.g. <literal>dom</literal>, <literal>domby</literal>, <literal>incomp</literal> are only allowed in constraint statements).</para>
 
          <informaltable frame="all">
             <tgroup cols="5"><tbody>
