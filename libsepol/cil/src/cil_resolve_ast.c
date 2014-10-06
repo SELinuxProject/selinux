@@ -3181,7 +3181,7 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, __attribute__((unu
 	if (optstack != NULL) {
 		if (node->flavor == CIL_TUNABLE || node->flavor == CIL_MACRO) {
 			/* tuanbles and macros are not allowed in optionals*/
-			cil_log(CIL_ERR, "%s statment is not allowed in optionals (%s:%d)\n", cil_node_to_string(node), node->path, node->line);
+			cil_log(CIL_ERR, "%s statement is not allowed in optionals (%s:%d)\n", cil_node_to_string(node), node->path, node->line);
 			rc = SEPOL_ERR;
 			goto exit;
 		}
@@ -3367,7 +3367,7 @@ int __cil_resolve_ast_last_child_helper(struct cil_tree_node *current, void *ext
 
 		if (((struct cil_optional *)parent->data)->datum.state == CIL_STATE_DISABLING) {
 			/* go into the optional, removing everything that it added */
-			if (args->pass > CIL_PASS_CALL1) {
+			if (args->pass >= CIL_PASS_CALL1) {
 				rc = cil_tree_walk(parent, __cil_disable_children_helper, NULL, NULL, extra_args);
 				if (rc != SEPOL_OK) {
 					cil_log(CIL_ERR, "Failed to disable declarations in optional\n");
