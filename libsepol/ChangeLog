@@ -1,4 +1,6 @@
-2.4-rc4 2014-08-13
+2.4-rc5 2014-08-13
+	* Remove assumption that SHLIBDIR is ../../ relative to LIBDIR, from Steve
+	  Lawrence
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
 	* Build CIL into libsepol. libsepol can be built without CIL by setting the 
 	  DISABLE_CIL flag to 'y', from Steve Lawrence
