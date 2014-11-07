@@ -53,6 +53,7 @@ FILE *out_file;
 #define STACK_SIZE 16
 #define DEFAULT_LEVEL "systemlow"
 #define DEFAULT_OBJECT "object_r"
+#define GEN_REQUIRE_ATTR "cil_gen_require"
 
 __attribute__ ((format(printf, 1, 2)))
 static void log_err(const char *fmt, ...)
@@ -1886,6 +1887,15 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 	struct role_datum *role = datum;
 	struct type_set *ts;
 
+	if (scope == SCOPE_REQ) {
+		// if a role/roleattr is in the REQ scope, then it could cause an
+		// optional block to fail, even if it is never used. However in CIL,
+		// symbols must be used in order to cause an optional block to fail. So
+		// for symbols in the REQ scope, add them to a roleattribute as a way
+		// to 'use' them in the optional without affecting the resulting policy.
+		cil_println(indent, "(roleattributeset " GEN_REQUIRE_ATTR " %s)", key);
+	}
+
 	switch (role->flavor) {
 	case ROLE_ROLE:
 		if (scope == SCOPE_DECL) {
@@ -1982,6 +1992,15 @@ static int type_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 {
 	int rc = -1;
 	struct type_datum *type = datum;
+
+	if (scope == SCOPE_REQ) {
+		// if a type/typeattr is in the REQ scope, then it could cause an
+		// optional block to fail, even if it is never used. However in CIL,
+		// symbols must be used in order to cause an optional block to fail. So
+		// for symbols in the REQ scope, add them to a typeattribute as a way
+		// to 'use' them in the optional without affecting the resulting policy.
+		cil_println(indent, "(typeattributeset " GEN_REQUIRE_ATTR " %s)", key);
+	}
 
 	switch(type->flavor) {
 	case TYPE_TYPE:
@@ -3158,10 +3177,12 @@ static int required_scopes_to_cil(int indent, struct policydb *pdb, struct avrul
 	struct ebitmap map;
 	struct ebitmap_node *node;
 	unsigned int i;
+	unsigned int j;
 	char * key;
 	int sym;
 	void *datum;
 	struct avrule_decl *decl = stack_peek(decl_stack);
+	struct scope_datum *scope_datum;
 
 	for (sym = 0; sym < SYM_NUM; sym++) {
 		if (func_to_cil[sym] == NULL) {
@@ -3174,6 +3195,24 @@ static int required_scopes_to_cil(int indent, struct policydb *pdb, struct avrul
 				continue;
 			}
 			key = pdb->sym_val_to_name[sym][i];
+
+			scope_datum = hashtab_search(pdb->scope[sym].table, key);
+			for (j = 0; j < scope_datum->decl_ids_len; j++) {
+				if (scope_datum->decl_ids[j] == decl->decl_id) {
+					break;
+				}
+			}
+			if (j >= scope_datum->decl_ids_len) {
+				// Symbols required in the global scope are also in the
+				// required scope ebitmap of all avrule decls (i.e. required
+				// in all optionals). So we need to look at the scopes of each
+				// symbol in this avrule_decl to determine if it actually is
+				// required in this decl, or if it's just required in the
+				// global scope. If we got here, then this symbol is not
+				// actually required in this scope, so skip it.
+				continue;
+			}
+
 			datum = hashtab_search(pdb->symtab[sym].table, key);
 			if (datum == NULL) {
 				rc = -1;
@@ -3467,6 +3506,14 @@ static int generate_default_object(void)
 	return 0;
 }
 
+static int generate_gen_require_attribute(void)
+{
+	cil_println(0, "(typeattribute " GEN_REQUIRE_ATTR ")");
+	cil_println(0, "(roleattribute " GEN_REQUIRE_ATTR ")");
+
+	return 0;
+}
+
 static int fix_module_name(struct policydb *pdb)
 {
 	char *letter;
@@ -3540,6 +3587,12 @@ static int module_package_to_cil(struct sepol_module_package *mod_pkg)
 		// object_r is implicit in checkmodule, but not with CIL, create it
 		// as part of base
 		rc = generate_default_object();
+		if (rc != 0) {
+			goto exit;
+		}
+
+		// default attribute to be used to mimic gen_require in CIL
+		rc = generate_gen_require_attribute();
 		if (rc != 0) {
 			goto exit;
 		}
