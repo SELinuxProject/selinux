@@ -1,4 +1,4 @@
-2.4-rc5 2014-08-26
+2.4-rc6 2014-08-26
 	* Fix Makefile to allow LIBDIR and SHLIBDIR to be set to different
 	  directories, from Steve Lawrence
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
