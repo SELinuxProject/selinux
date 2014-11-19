@@ -1,6 +1,7 @@
 #!/usr/bin/python -E
 
 
+from __future__ import print_function
 import os
 import errno
 import shutil
@@ -16,7 +17,7 @@ try:
 	import selinux
 	import semanage
 except:
-	print >> sys.stderr, "You must install libselinux-python and libsemanage-python before running this tool"
+	print("You must install libselinux-python and libsemanage-python before running this tool", file=sys.stderr)
 	exit(1)
 
 
@@ -25,100 +26,103 @@ except:
 # For some reason this function doesn't exist in libselinux :\
 def copy_with_context(src, dst):
 	if DEBUG:
-		print "copying %s to %s" % (src, dst)
+		print("copying %s to %s" % (src, dst))
 	try:
 		con = selinux.lgetfilecon_raw(src)[1]
 	except:
-		print >> sys.stderr, "Could not get file context of %s" % src
+		print("Could not get file context of %s" % src, file=sys.stderr)
 		exit(1)
 
 	try:
 		selinux.setfscreatecon_raw(con)
 	except:
-		print >> sys.stderr, "Could not set fs create context: %s" %con
+		print("Could not set fs create context: %s" %con, file=sys.stderr)
 		exit(1)
 
 	try:
 		shutil.copy2(src, dst)
-	except OSError as (err, strerr):
-		print >> sys.stderr, "Could not copy %s to %s, %s" %(src, dst, strerr)
+	except OSError as the_err:
+		(err, strerr) = the_err.args
+		print("Could not copy %s to %s, %s" %(src, dst, strerr), file=sys.stderr)
 		exit(1)
 
 	try:
 		selinux.setfscreatecon_raw(None)
 	except:
-		print >> sys.stderr, "Could not reset fs create context. May need to relabel system."
+		print("Could not reset fs create context. May need to relabel system.", file=sys.stderr)
 
 def create_dir_from(src, dst, mode):
-	if DEBUG: print "Making directory %s" % dst
+	if DEBUG: print("Making directory %s" % dst)
 	try:
 		con = selinux.lgetfilecon_raw(src)[1]
 		selinux.setfscreatecon_raw(con)
 		os.makedirs(dst, mode)
-	except OSError as (err, stderr):
+	except OSError as the_err:
+		(err, stderr) = the_err.args
 		if err == errno.EEXIST:
 			pass
 		else:
-			print >> sys.stderr, "Error creating %s" % dst
+			print("Error creating %s" % dst, file=sys.stderr)
 			exit(1)
 
 	try:
 		selinux.setfscreatecon_raw(None)
 	except:
-		print >> sys.stderr, "Could not reset fs create context. May need to relabel system."
+		print("Could not reset fs create context. May need to relabel system.", file=sys.stderr)
 
 def create_file_from(src, dst):
-	if DEBUG: print "Making file %s" % dst
+	if DEBUG: print("Making file %s" % dst)
 	try:
 		con = selinux.lgetfilecon_raw(src)[1]
 		selinux.setfscreatecon_raw(con)
 		open(dst, 'a').close()
-	except OSError as (err, stderr):
-		print >> sys.stderr, "Error creating %s" % dst
+	except OSError as the_err:
+		(err, stderr) = the_err.args
+		print("Error creating %s" % dst, file=sys.stderr)
 		exit(1)
 
 	try:
 		selinux.setfscreatecon_raw(None)
 	except:
-		print >> sys.stderr, "Could not reset fs create context. May need to relabel system."
+		print("Could not reset fs create context. May need to relabel system.", file=sys.stderr)
 
 def copy_module(store, name, con, base):
-	if DEBUG: print "Install module %s" % name	
+	if DEBUG: print("Install module %s" % name)
 	(file, ext) = os.path.splitext(name)
 	if ext != ".pp":
 		# Stray non-pp file in modules directory, skip
-		print >> sys.stderr, "warning: %s has invalid extension, skipping" % name
+		print("warning: %s has invalid extension, skipping" % name, file=sys.stderr)
 		return
 	try:
 		selinux.setfscreatecon_raw(con)
-	
+
 		if base:
 			root = oldstore_path(store)
 		else:
 			root = oldmodules_path(store)
 
 		bottomdir = bottomdir_path(store)
-			
+
 		os.mkdir("%s/%s" % (bottomdir, file))
 
 		copy_with_context(os.path.join(root, name), "%s/%s/hll" % (bottomdir, file))
 
 		# This is the ext file that will eventually be used to choose a compiler
-		efile = open("%s/%s/lang_ext" % (bottomdir, file), "w+", 0600)
+		efile = open("%s/%s/lang_ext" % (bottomdir, file), "w+", 0o600)
 		efile.write("pp")
 		efile.close()
 
 	except:
-		print >> sys.stderr, "Error installing module %s" % name
+		print("Error installing module %s" % name, file=sys.stderr)
 		exit(1)
 
 	try:
 		selinux.setfscreatecon_raw(None)
 	except:
-		print >> sys.stderr, "Could not reset fs create context. May need to relabel system."
+		print("Could not reset fs create context. May need to relabel system.", file=sys.stderr)
 
 def disable_module(file, root, name, disabledmodules):
-	if DEBUG: print "Disabling %s" % name
+	if DEBUG: print("Disabling %s" % name)
 	(disabledname, disabledext) = os.path.splitext(file)
 	create_file_from(os.path.join(root, name), "%s/%s" % (disabledmodules, disabledname))
 
@@ -131,14 +135,14 @@ def migrate_store(store):
 	newmodules = newmodules_path(store);
 	bottomdir = bottomdir_path(store);
 
-	print "Migrating from %s to %s" % (oldstore, newstore)
+	print("Migrating from %s to %s" % (oldstore, newstore))
 
 	# Build up new directory structure
-	create_dir_from(selinux.selinux_policy_root(), "%s/%s" % (newroot_path(), store), 0755)
-	create_dir_from(oldmodules, newstore, 0700)
-	create_dir_from(oldstore, newmodules, 0700)
-	create_dir_from(oldstore, bottomdir, 0700)
-	create_dir_from(oldstore, disabledmodules, 0700)
+	create_dir_from(selinux.selinux_policy_root(), "%s/%s" % (newroot_path(), store), 0o755)
+	create_dir_from(oldmodules, newstore, 0o700)
+	create_dir_from(oldstore, newmodules, 0o700)
+	create_dir_from(oldstore, bottomdir, 0o700)
+	create_dir_from(oldstore, disabledmodules, 0o700)
 
 	# use whatever the file context of bottomdir is for the module directories
 	con = selinux.lgetfilecon_raw(bottomdir)[1]
@@ -149,7 +153,7 @@ def migrate_store(store):
 	# Dir structure built, start copying files
 	for root, dirs, files in os.walk(oldstore):
 		if root == oldstore:
-			# This is the top level directory, need to move 
+			# This is the top level directory, need to move
 			for name in files:
 				# Check to see if it is in TOPPATHS and copy if so
 				if name in TOPPATHS:
@@ -164,7 +168,7 @@ def migrate_store(store):
 			for name in files:
 				(file, ext) = os.path.splitext(name)
 				if name == "base.pp":
-					print >> sys.stderr, "Error installing module %s, name conflicts with base" % name
+					print("Error installing module %s, name conflicts with base" % name, file=sys.stderr)
 					exit(1)
 				elif ext == ".disabled":
 					disable_module(file, root, name, disabledmodules)
@@ -173,32 +177,32 @@ def migrate_store(store):
 
 def rebuild_policy():
 	# Ok, the modules are loaded, lets try to rebuild the policy
-	print "Attempting to rebuild policy from %s" % newroot_path()
+	print("Attempting to rebuild policy from %s" % newroot_path())
 
 	curstore = selinux.selinux_getpolicytype()[1]
 
 	handle = semanage.semanage_handle_create()
 	if not handle:
-		print >> sys.stderr, "Could not create semanage handle"
+		print("Could not create semanage handle", file=sys.stderr)
 		exit(1)
 
 	semanage.semanage_select_store(handle, curstore, semanage.SEMANAGE_CON_DIRECT)
 
 	if not semanage.semanage_is_managed(handle):
 		semanage.semanage_handle_destroy(handle)
-		print >> sys.stderr, "SELinux policy is not managed or store cannot be accessed."
+		print("SELinux policy is not managed or store cannot be accessed.", file=sys.stderr)
 		exit(1)
 
 	rc = semanage.semanage_access_check(handle)
 	if rc < semanage.SEMANAGE_CAN_WRITE:
 		semanage.semanage_handle_destroy(handle)
-		print >> sys.stderr, "Cannot write to policy store."
+		print("Cannot write to policy store.", file=sys.stderr)
 		exit(1)
 
 	rc = semanage.semanage_connect(handle)
 	if rc < 0:
 		semanage.semanage_handle_destroy(handle)
-		print >> sys.stderr, "Could not establish semanage connection"
+		print("Could not establish semanage connection", file=sys.stderr)
 		exit(1)
 
 	semanage.semanage_set_rebuild(handle, 1)
@@ -206,12 +210,12 @@ def rebuild_policy():
 	rc = semanage.semanage_begin_transaction(handle)
 	if rc < 0:
 		semanage.semanage_handle_destroy(handle)
-		print >> sys.stderr, "Could not begin transaction"
+		print("Could not begin transaction", file=sys.stderr)
 		exit(1)
 
 	rc = semanage.semanage_commit(handle)
 	if rc < 0:
-		print >> sys.stderr, "Could not commit transaction"
+		print("Could not commit transaction", file=sys.stderr)
 
 	semanage.semanage_handle_destroy(handle)
 
@@ -283,7 +287,7 @@ if __name__ == "__main__":
 		"preserve_tunables" ]
 
 
-	create_dir_from(oldroot_path(), newroot_path(), 0755)
+	create_dir_from(oldroot_path(), newroot_path(), 0o755)
 
 	stores = None
 	if TYPE is not None:
@@ -299,14 +303,14 @@ if __name__ == "__main__":
 
 		if os.path.isdir(newstore_path(store)):
 			# store has already been migrated, but old modules dir still exits
-			print >> sys.stderr, "warning: Policy type %s has already been migrated, but modules still exist in the old store. Skipping store." % store
+			print("warning: Policy type %s has already been migrated, but modules still exist in the old store. Skipping store." % store, file=sys.stderr)
 			continue
 
 		migrate_store(store)
 
 		if CLEAN is True:
 			def remove_error(function, path, execinfo):
-				print >> sys.stderr, "warning: Unable to remove old store modules directory %s. Cleaning failed." % oldmodules_path(store)
+				print("warning: Unable to remove old store modules directory %s. Cleaning failed." % oldmodules_path(store), file=sys.stderr)
 			shutil.rmtree(oldmodules_path(store), onerror=remove_error)
 
 	if NOREBUILD is False:
