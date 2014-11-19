@@ -2083,6 +2083,11 @@ static int type_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 		cil_println(indent, "(typeattributeset " GEN_REQUIRE_ATTR " %s)", key);
 	}
 
+	rc = roletype_role_in_ancestor_to_cil(pdb, decl_stack, key, indent);
+	if (rc != 0) {
+		goto exit;
+	}
+
 	switch(type->flavor) {
 	case TYPE_TYPE:
 		if (scope == SCOPE_DECL) {
@@ -2090,11 +2095,6 @@ static int type_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 			// object_r is implicit in checkmodule, but not with CIL,
 			// create it as part of base
 			cil_println(indent, "(roletype " DEFAULT_OBJECT " %s)", key);
-
-			rc = roletype_role_in_ancestor_to_cil(pdb, decl_stack, key, indent);
-			if (rc != 0) {
-				goto exit;
-			}
 		}
 
 		if (type->flags & TYPE_FLAGS_PERMISSIVE) {
