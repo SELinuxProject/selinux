@@ -23,9 +23,10 @@ common_includes := \
 	$(LOCAL_PATH)/../libsepol/src/ \
 
 ##
-# "-x c" forces the lex/yacc files to be compiled as c
-# the build system otherwise forces them to be c++
-yacc_flags := -x c
+# "-x c" forces the lex/yacc files to be compiled as c the build system
+# otherwise forces them to be c++. Need to also add an explicit -std because the
+# build system will soon default C++ to -std=c++11.
+yacc_flags := -x c -std=gnu89
 
 
 ##
