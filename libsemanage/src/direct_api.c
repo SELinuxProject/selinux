@@ -837,7 +837,8 @@ static int semanage_compile_hll(semanage_handle_t *sh,
 	ssize_t hll_data_len = 0;
 	ssize_t bzip_status;
 	int status = 0;
-	int i, compressed, in_fd;
+	int i, compressed;
+	int in_fd = -1;
 	size_t cil_data_len;
 	size_t err_data_len;
 
@@ -891,6 +892,9 @@ static int semanage_compile_hll(semanage_handle_t *sh,
 			goto cleanup;
 		}
 
+		if (in_fd >= 0) close(in_fd);
+		in_fd = -1;
+
 		status = semanage_pipe_data(sh, compiler_path, hll_data, (size_t)hll_data_len, &cil_data, &cil_data_len, &err_data, &err_data_len);
 		if (err_data_len > 0) {
 			for (start = end = err_data; end < err_data + err_data_len; end++) {
@@ -935,6 +939,7 @@ static int semanage_compile_hll(semanage_handle_t *sh,
 
 cleanup:
 	if (hll_data_len > 0) munmap(hll_data, hll_data_len);
+	if (in_fd >= 0) close(in_fd);
 	free(cil_data);
 	free(err_data);
 	free(compiler_path);
