@@ -4,6 +4,7 @@ ConditionSecurity=selinux
 
 [Service]
 ExecStart=/sbin/mcstransd -f
+RuntimeDirectory=setrans
 
 [Install]
 WantedBy=multi-user.target
