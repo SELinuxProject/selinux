@@ -1,4 +1,4 @@
-2.4-rc6 2014-08-13
+2.4-rc7 2014-08-13
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
 	* Improve support for building with different versions of python from
 	  Nicolas Iooss.
@@ -20,6 +20,8 @@
 	  Case
 	* Use /tmp for permissive module creation, by Caleb Case
 	* Update semanage to use new source policy infrastructure, from Jason Dana
+	* Add RuntimeDirectory to mcstrans systemd unit file, from Laurent
+	  Bigonville
 
 2.3 2014-05-06
 	* Add -P semodule option to man page from Dan Walsh.

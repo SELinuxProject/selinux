@@ -1,4 +1,4 @@
-2.4-rc6 2014-08-26
+2.4-rc7 2014-08-26
 	* Fix Makefile to allow LIBDIR and SHLIBDIR to be set to different
 	  directories, from Steve Lawrence
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
@@ -21,6 +21,7 @@
 	  /usr/libexec/selinux/hll by default, from Yuli Khodorkovskiy
 	* Create a policy migration script for migrating the policy store from
 	  /etc/selinux to /var/lib/selinux, from Caleb Case
+	* Add python3 support to the migration script, from Jason Zaman
 	* Use libcil to compile modules, from Steve Lawrence
 	* Use symbolic versioning to maintain ABI compatibility for old install
 	  functions, from Yuli Khodorkovskiy

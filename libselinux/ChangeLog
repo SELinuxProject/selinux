@@ -1,4 +1,4 @@
-2.4-rc6 2014-08-13
+2.4-rc7 2014-08-13
 	* Remove assumption that SHLIBDIR is ../../ relative to LIBDIR, from Steve
 	  Lawrence
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
