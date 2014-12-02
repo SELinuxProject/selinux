@@ -138,8 +138,8 @@ def migrate_store(store):
 	print("Migrating from %s to %s" % (oldstore, newstore))
 
 	# Build up new directory structure
-	create_dir_from(selinux.selinux_policy_root(), "%s/%s" % (newroot_path(), store), 0o755)
-	create_dir_from(oldmodules, newstore, 0o700)
+	create_dir_from(oldstore, "%s/%s" % (newroot_path(), store), 0o755)
+	create_dir_from(oldstore, newstore, 0o700)
 	create_dir_from(oldstore, newmodules, 0o700)
 	create_dir_from(oldstore, bottomdir, 0o700)
 	create_dir_from(oldstore, disabledmodules, 0o700)
