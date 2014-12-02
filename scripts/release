@@ -28,6 +28,6 @@ echo "## Release $(date '+%Y-%m-%d')"
 for i in *.tar.gz; do
 
 	echo -n "[$i](https://raw.githubusercontent.com/wiki/SELinuxProject/selinux/files/releases/$(date '+%Y%m%d')/$i) "
-	echo "`sha256sum $i`"
+	sha256sum $i | cut -d " " -f 1
 	echo ""
 done
