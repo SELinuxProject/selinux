@@ -770,6 +770,12 @@ int cil_userrole_to_policydb(policydb_t *pdb, const struct cil_db *db, struct ci
 		rc = __cil_get_sepol_role_datum(pdb, DATUM(db->val_to_role[i]), &sepol_role);
 		if (rc != SEPOL_OK) goto exit;
 
+		if (sepol_role->s.value == 1) {
+			// role is object_r, ignore it since it is implicitly associated
+			// with all users
+			continue;
+		}
+
 		if (ebitmap_set_bit(&sepol_user->roles.roles, sepol_role->s.value - 1, 1)) {
 			cil_log(CIL_INFO, "Failed to set role bit for user\n");
 			goto exit;
