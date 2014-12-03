@@ -258,7 +258,6 @@ extern int cil_sym_sizes[CIL_SYM_ARRAY_NUM][CIL_SYM_NUM];
 struct cil_db {
 	struct cil_tree *parse;
 	struct cil_tree *ast;
-	symtab_t symtab[CIL_SYM_NUM];
 	struct cil_type *selftype;
 	struct cil_list *sidorder;
 	struct cil_list *classorder;
@@ -287,6 +286,10 @@ struct cil_db {
 	int preserve_tunables;
 	int handle_unknown;
 	int mls;
+};
+
+struct cil_root {
+	symtab_t symtab[CIL_SYM_NUM];
 };
 
 struct cil_sort {
@@ -856,6 +859,9 @@ struct cil_mls {
 void cil_db_init(struct cil_db **db);
 void cil_db_destroy(struct cil_db **db);
 
+void cil_root_init(struct cil_root **root);
+void cil_root_destroy(struct cil_root *root);
+
 void cil_destroy_data(void **data, enum cil_flavor flavor);
 
 int cil_flavor_to_symtab_index(enum cil_flavor flavor, enum cil_sym_index *index);
@@ -868,7 +874,7 @@ int cil_filecons_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char *
 void cil_symtab_array_init(symtab_t symtab[], int symtab_sizes[CIL_SYM_NUM]);
 void cil_symtab_array_destroy(symtab_t symtab[]);
 void cil_destroy_ast_symtabs(struct cil_tree_node *root);
-int cil_get_symtab(struct cil_db *db, struct cil_tree_node *ast_node, symtab_t **symtab, enum cil_sym_index sym_index);
+int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab, enum cil_sym_index sym_index);
 
 void cil_sort_init(struct cil_sort **sort);
 void cil_sort_destroy(struct cil_sort **sort);

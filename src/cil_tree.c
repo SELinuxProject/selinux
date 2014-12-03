@@ -51,7 +51,9 @@ void cil_tree_print_node(struct cil_tree_node *node);
 int cil_tree_init(struct cil_tree **tree)
 {
 	struct cil_tree *new_tree = cil_malloc(sizeof(*new_tree));
+
 	cil_tree_node_init(&new_tree->root);
+	cil_root_init((struct cil_root **)&new_tree->root->data);
 	
 	*tree = new_tree;
 	

@@ -64,10 +64,20 @@ void cil_copy_list(struct cil_list *data, struct cil_list **copy)
 			cil_list_append(new, CIL_LIST, new_sub);
 			break;
 		}
+		case CIL_PARAM: {
+			struct cil_param *po = orig_item->data;
+			struct cil_param *pn;
+			cil_param_init(&pn);
+			pn->str = po->str;
+			pn->flavor = po->flavor;
+			cil_list_append(new, CIL_PARAM, pn);
+		}
+			break;
+
 		default:
 			cil_list_append(new, orig_item->flavor, orig_item->data);
 			break;
-		}	
+		}
 	}
 
 	*copy = new;
@@ -95,7 +105,6 @@ int cil_copy_block(__attribute__((unused)) struct cil_db *db, void *data, void *
 	if (datum == NULL) {
 		struct cil_block *new;
 		cil_block_init(&new);
-		cil_symtab_array_init(new->symtab, cil_sym_sizes[CIL_SYM_ARRAY_BLOCK]);
 		*copy = new;
 	} else {
 		*copy = datum;;
@@ -1336,7 +1345,6 @@ int cil_copy_macro(__attribute__((unused)) struct cil_db *db, void *data, void *
 	if (datum == NULL) {
 		struct cil_macro *new;
 		cil_macro_init(&new);
-		cil_symtab_array_init(new->symtab, cil_sym_sizes[CIL_SYM_ARRAY_MACRO]);
 		cil_copy_list(orig->params, &new->params);
 
 		*copy = new;
@@ -1826,7 +1834,7 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 			goto exit;
 		}
 
-		rc = cil_get_symtab(db, parent, &symtab, sym_index);
+		rc = cil_get_symtab(parent, &symtab, sym_index);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}

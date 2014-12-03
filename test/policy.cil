@@ -288,6 +288,16 @@
 )
 (call all (bin_t))
 
+(block z
+    (block ba
+        (roletype r t)
+        (blockabstract z.ba)))
+
+(block test_ba
+    (blockinherit z.ba)
+    (role r)
+    (type t))
+
 (block bb
 	(type t1)
 	(type t2)

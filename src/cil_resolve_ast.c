@@ -74,7 +74,7 @@ static struct cil_name * __cil_insert_name(struct cil_db *db, hashtab_key_t key,
 	struct cil_symtab_datum *datum = NULL;
 
 	cil_flavor_to_symtab_index(CIL_NAME, &sym_index);
-	symtab = &(db->symtab[sym_index]);
+	symtab = &((struct cil_root *)db->ast->root->data)->symtab[sym_index];
 
 	cil_symtab_get_datum(symtab, key, &datum);
 	if (datum != NULL) {
@@ -2075,9 +2075,13 @@ int cil_resolve_blockabstract(struct cil_tree_node *current, void *extra_args)
 	int rc = SEPOL_ERR;
 
 	rc = cil_resolve_name(current, abstract->block_str, CIL_SYM_BLOCKS, extra_args, &block_datum);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
 	block_node = block_datum->nodes->head->data;
-	if (rc != SEPOL_OK || block_node->flavor != CIL_BLOCK) {
-		cil_log(CIL_ERR, "Failed to resolve block, rc: %d\n", rc);
+	if (block_node->flavor != CIL_BLOCK) {
+		cil_log(CIL_ERR, "Failed to resolve blockabstract to a block, rc: %d\n", rc);
 		goto exit;
 	}
 
@@ -3526,7 +3530,6 @@ exit:
 static int __cil_resolve_name_helper(struct cil_tree_node *ast_node, char *name, enum cil_sym_index sym_index, void *extra_args, struct cil_symtab_datum **datum)
 {
 	struct cil_args_resolve *args = extra_args;
-	struct cil_db *db = NULL;
 	struct cil_call *call = NULL;
 	struct cil_tree_node *macro = NULL;
 	enum cil_pass pass = CIL_PASS_INIT;
@@ -3540,7 +3543,6 @@ static int __cil_resolve_name_helper(struct cil_tree_node *ast_node, char *name,
 	enum cil_flavor flavor = CIL_NONE;
 
 	if (args != NULL) {
-		db = args->db;
 		if (args->callstack != NULL) {
 			call = args->callstack->data;
 		}
@@ -3549,7 +3551,7 @@ static int __cil_resolve_name_helper(struct cil_tree_node *ast_node, char *name,
 	}
 
 	if (ast_node->flavor == CIL_ROOT) {
-		symtab = &(db->symtab[CIL_SYM_BLOCKS]);
+		symtab = &((struct cil_root *)ast_node->data)->symtab[CIL_SYM_BLOCKS];
 	} else {
 		if (call != NULL) {
 			// check macro symtab
@@ -3563,7 +3565,7 @@ static int __cil_resolve_name_helper(struct cil_tree_node *ast_node, char *name,
 					goto exit;
 				}
 				// if in macro, check call parent to verify successful copy to call
-				rc = cil_get_symtab(db, ast_node->parent->parent, &symtab, CIL_SYM_BLOCKS);
+				rc = cil_get_symtab(ast_node->parent->parent, &symtab, CIL_SYM_BLOCKS);
 				if (rc == SEPOL_OK) {
 					rc = cil_symtab_get_datum(symtab, tok_current, datum);
 					flavor = ((struct cil_tree_node*)(*datum)->nodes->head->data)->flavor;
@@ -3580,12 +3582,10 @@ static int __cil_resolve_name_helper(struct cil_tree_node *ast_node, char *name,
 					goto exit;
 				}
 			} else if (rc == SEPOL_ENOENT) {
-				rc = cil_get_symtab(db, ((struct cil_tree_node*)call->macro->datum.nodes->head->data)->parent, &symtab, CIL_SYM_BLOCKS);
+				rc = cil_get_symtab(((struct cil_tree_node*)call->macro->datum.nodes->head->data)->parent, &symtab, CIL_SYM_BLOCKS);
 				if (rc != SEPOL_OK) {
 					cil_log(CIL_ERR, "Failed to get datum from parent symtab of macro\n");
 					goto exit;
-				} else {
-					symtab = &(db->symtab[CIL_SYM_BLOCKS]);
 				}
 			} else {
 				goto exit;
@@ -3593,9 +3593,9 @@ static int __cil_resolve_name_helper(struct cil_tree_node *ast_node, char *name,
 
 		} else {
 			if (ast_node->flavor == CIL_TUNABLEIF && macro != NULL) {
-				rc = cil_get_symtab(db, macro->parent, &symtab, CIL_SYM_BLOCKS);
+				rc = cil_get_symtab(macro->parent, &symtab, CIL_SYM_BLOCKS);
 			} else {
-				rc = cil_get_symtab(db, ast_node->parent, &symtab, CIL_SYM_BLOCKS);
+				rc = cil_get_symtab(ast_node->parent, &symtab, CIL_SYM_BLOCKS);
 			}
 			if (rc != SEPOL_OK) {
 				cil_log(CIL_ERR, "Failed to get parent symtab, rc: %d\n", rc);
@@ -3684,7 +3684,7 @@ int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_in
 					namespace = namespace->parent;
 				}
 				if (namespace->flavor == CIL_BLOCK) {
-					rc = cil_get_symtab(db, namespace, &symtab, sym_index);
+					rc = cil_get_symtab(namespace, &symtab, sym_index);
 					if (rc != SEPOL_OK) {
 						cil_log(CIL_ERR, "Failed to get parent symtab\n");
 						goto exit;
@@ -3693,7 +3693,7 @@ int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_in
 					symtab = &call->macro->symtab[sym_index];
 					rc = cil_symtab_get_datum(symtab, name, datum);
 					if (rc == SEPOL_OK) {
-						rc = cil_get_symtab(db, namespace, &symtab, sym_index);
+						rc = cil_get_symtab(namespace, &symtab, sym_index);
 						if (rc != SEPOL_OK) {
 							cil_log(CIL_ERR, "Failed to get parent symtab from call\n");
 							goto exit;
@@ -3708,7 +3708,7 @@ int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_in
 						goto exit;
 					}
 
-					rc = cil_get_symtab(db, ((struct cil_tree_node*)call->macro->datum.nodes->head->data)->parent, &symtab, sym_index);
+					rc = cil_get_symtab(((struct cil_tree_node*)call->macro->datum.nodes->head->data)->parent, &symtab, sym_index);
 					if (rc != SEPOL_OK) {
 						goto exit;
 					}
@@ -3724,9 +3724,9 @@ int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_in
 				}
 			} else {
 				if (ast_node->flavor == CIL_TUNABLEIF && macro != NULL) {
-					rc = cil_get_symtab(db, macro->parent, &symtab, sym_index);
+					rc = cil_get_symtab(macro->parent, &symtab, sym_index);
 				} else {
-					rc = cil_get_symtab(db, ast_node->parent, &symtab, sym_index);
+					rc = cil_get_symtab(ast_node->parent, &symtab, sym_index);
 				}
 				if (rc != SEPOL_OK) {
 					cil_log(CIL_ERR, "Failed to get parent symtab, rc: %d\n", rc);
@@ -3753,7 +3753,8 @@ int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_in
 
 	if (first == '.') {
 		if (strrchr(global_symtab_name, '.') == global_symtab_name) { //Only one dot in name, check global symtabs
-			rc = cil_symtab_get_datum(&db->symtab[sym_index], global_symtab_name+1, datum);
+			symtab_t *symtab = &((struct cil_root *)db->ast->root->data)->symtab[sym_index];
+			rc = cil_symtab_get_datum(symtab, global_symtab_name+1, datum);
 			if (rc != SEPOL_OK) {
 				free(global_symtab_name);
 				goto exit;
