@@ -456,7 +456,9 @@ int main(int argc, char **argv)
 			mlspol = 1;
 			break;
 		case 'c':{
-				long int n = strtol(optarg, NULL, 10);
+				long int n;
+				errno = 0;
+				n = strtol(optarg, NULL, 10);
 				if (errno) {
 					fprintf(stderr,
 						"Invalid policyvers specified: %s\n",
