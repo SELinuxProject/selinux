@@ -27,8 +27,11 @@
 
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/conditional.h>
+#include <sys/cdefs.h>
 
 #define SEPOL_MODULE_PACKAGE_MAGIC 0xf97cff8f
+
+__BEGIN_DECLS
 
 struct sepol_module_package {
 	sepol_policydb_t *policy;
@@ -45,4 +48,5 @@ struct sepol_module_package {
 
 extern int sepol_module_package_init(sepol_module_package_t * p);
 
+__END_DECLS
 #endif

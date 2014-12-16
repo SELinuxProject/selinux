@@ -40,8 +40,11 @@
 #ifndef _SEPOL_POLICYDB_AVTAB_H_
 #define _SEPOL_POLICYDB_AVTAB_H_
 
+#include <sys/cdefs.h>
 #include <sys/types.h>
 #include <stdint.h>
+
+__BEGIN_DECLS
 
 typedef struct avtab_key {
 	uint16_t source_type;
@@ -123,6 +126,7 @@ extern avtab_ptr_t avtab_search_node_next(avtab_ptr_t node, int specified);
 /* avtab_alloc uses one bucket per 2-4 elements, so adjust to get maximum buckets */
 #define MAX_AVTAB_SIZE (MAX_AVTAB_HASH_BUCKETS << 1)
 
+__END_DECLS
 #endif				/* _AVTAB_H_ */
 
 /* FLASK */

@@ -4,6 +4,9 @@
 #include <sepol/handle.h>
 #include <sepol/policydb.h>
 #include <sepol/node_record.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 /* Return the number of nodes */
 extern int sepol_node_count(sepol_handle_t * handle,
@@ -37,4 +40,5 @@ extern int sepol_node_iterate(sepol_handle_t * handle,
 			      int (*fn) (const sepol_node_t * node,
 					 void *fn_arg), void *arg);
 
+__END_DECLS
 #endif

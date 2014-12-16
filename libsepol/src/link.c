@@ -1293,21 +1293,21 @@ static int copy_avrule_list(avrule_t * list, avrule_t ** dst,
 			}
 			class_perm_node_init(new_perm);
 
-			new_perm->class =
-			    module->map[SYM_CLASSES][cur_perm->class - 1];
-			assert(new_perm->class);
+			new_perm->tclass =
+			    module->map[SYM_CLASSES][cur_perm->tclass - 1];
+			assert(new_perm->tclass);
 
 			if (new_rule->specified & AVRULE_AV) {
 				for (i = 0;
 				     i <
-				     module->perm_map_len[cur_perm->class - 1];
+				     module->perm_map_len[cur_perm->tclass - 1];
 				     i++) {
 					if (!(cur_perm->data & (1U << i)))
 						continue;
 					new_perm->data |=
 					    (1U <<
 					     (module->
-					      perm_map[cur_perm->class - 1][i] -
+					      perm_map[cur_perm->tclass - 1][i] -
 					      1));
 				}
 			} else {

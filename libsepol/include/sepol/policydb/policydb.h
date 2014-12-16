@@ -1,4 +1,3 @@
-
 /* Author : Stephen Smalley, <sds@epoch.ncsc.mil> */
 
 /*
@@ -62,12 +61,15 @@
 #include <sepol/policydb/context.h>
 #include <sepol/policydb/constraint.h>
 #include <sepol/policydb/sidtab.h>
+#include <sys/cdefs.h>
 
 #define ERRMSG_LEN 1024
 
 #define POLICYDB_SUCCESS      0
 #define POLICYDB_ERROR       -1
 #define POLICYDB_UNSUPPORTED -2
+
+__BEGIN_DECLS
 
 /*
  * A datum type is defined for each kind of symbol 
@@ -234,7 +236,7 @@ typedef struct cond_node cond_list_t;
 struct cond_av_list;
 
 typedef struct class_perm_node {
-	uint32_t class;
+	uint32_t tclass;
 	uint32_t data;		/* permissions or new type */
 	struct class_perm_node *next;
 } class_perm_node_t;
@@ -742,7 +744,7 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_MOD_MAGIC SELINUX_MOD_MAGIC
 #define POLICYDB_MOD_STRING "SE Linux Module"
 
-
+__END_DECLS
 #endif				/* _POLICYDB_H_ */
 
 /* FLASK */

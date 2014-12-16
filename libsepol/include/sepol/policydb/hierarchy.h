@@ -26,7 +26,11 @@
 #define _SEPOL_POLICYDB_HIERARCHY_H_
 
 #include <sepol/policydb/policydb.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 extern int hierarchy_check_constraints(sepol_handle_t * handle, policydb_t * p);
 
+__END_DECLS
 #endif

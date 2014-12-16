@@ -2,6 +2,9 @@
 #define _SEPOL_CONTEXT_RECORD_H_
 
 #include <sepol/handle.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 struct sepol_context;
 typedef struct sepol_context sepol_context_t;
@@ -50,4 +53,5 @@ extern int sepol_context_from_string(sepol_handle_t * handle,
 extern int sepol_context_to_string(sepol_handle_t * handle,
 				   const sepol_context_t * con, char **str_ptr);
 
+__END_DECLS
 #endif

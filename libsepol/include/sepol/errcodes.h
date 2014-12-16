@@ -4,6 +4,9 @@
 #define __sepol_errno_h__
 
 #include <errno.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 #define SEPOL_OK             0
 
@@ -22,4 +25,5 @@
 #define SEPOL_EEXIST         -EEXIST
 #define SEPOL_ENOENT         -ENOENT
 
+__END_DECLS
 #endif

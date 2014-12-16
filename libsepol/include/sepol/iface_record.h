@@ -3,6 +3,9 @@
 
 #include <sepol/handle.h>
 #include <sepol/context_record.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 struct sepol_iface;
 struct sepol_iface_key;
@@ -56,4 +59,5 @@ extern int sepol_iface_clone(sepol_handle_t * handle,
 
 extern void sepol_iface_free(sepol_iface_t * iface);
 
+__END_DECLS
 #endif

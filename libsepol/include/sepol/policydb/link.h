@@ -12,9 +12,13 @@
 
 
 #include <stddef.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 extern int link_modules(sepol_handle_t * handle,
 			policydb_t * b, policydb_t ** mods, int len,
 			int verbose);
 
+__END_DECLS
 #endif

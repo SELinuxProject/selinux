@@ -538,7 +538,7 @@ static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const 
 
 	for (classperm = classperms; classperm != NULL; classperm = classperm->next) {
 		if (type & AVRULE_AV) {
-			perms = sepol_av_to_string(pdb, classperm->class, classperm->data);
+			perms = sepol_av_to_string(pdb, classperm->tclass, classperm->data);
 			if (perms == NULL) {
 				log_err("Failed to generate permission string");
 				rc = -1;
@@ -546,12 +546,12 @@ static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const 
 			}
 			cil_println(indent, "(%s %s %s (%s (%s)))",
 					rule, src, tgt,
-					pdb->p_class_val_to_name[classperm->class - 1],
+					pdb->p_class_val_to_name[classperm->tclass - 1],
 					perms + 1);
 		} else {
 			cil_println(indent, "(%s %s %s %s %s)",
 					rule, src, tgt,
-					pdb->p_class_val_to_name[classperm->class - 1],
+					pdb->p_class_val_to_name[classperm->tclass - 1],
 					pdb->p_type_val_to_name[classperm->data - 1]);
 		}
 	}

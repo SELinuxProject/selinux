@@ -1,4 +1,3 @@
-
 /* Author : Stephen Smalley, <sds@epoch.ncsc.mil> */
 /*
  * Updated: Trusted Computer Solutions, Inc. <dgoeddel@trustedcs.com>
@@ -35,6 +34,9 @@
 #include <stdlib.h>
 #include <sepol/policydb/ebitmap.h>
 #include <sepol/policydb/flask_types.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 typedef struct mls_level {
 	uint32_t sens;		/* sensitivity */
@@ -150,4 +152,5 @@ extern void mls_semantic_range_init(mls_semantic_range_t *r);
 extern void mls_semantic_range_destroy(mls_semantic_range_t *r);
 extern int mls_semantic_range_cpy(mls_semantic_range_t *dst, mls_semantic_range_t *src);
 
+__END_DECLS
 #endif

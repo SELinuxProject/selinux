@@ -1,4 +1,3 @@
-
 /* Author : Stephen Smalley, <sds@epoch.ncsc.mil> */
 
 /* FLASK */
@@ -18,6 +17,9 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 typedef char *hashtab_key_t;	/* generic key type */
 typedef void *hashtab_datum_t;	/* generic datum type */
@@ -134,4 +136,5 @@ extern void hashtab_map_remove_on_error(hashtab_t h,
 
 extern void hashtab_hash_eval(hashtab_t h, char *tag);
 
+__END_DECLS
 #endif

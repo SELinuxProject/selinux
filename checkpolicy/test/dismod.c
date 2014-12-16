@@ -269,7 +269,7 @@ int display_avrule(avrule_t * avrule, policydb_t * policy,
 
 	cur = avrule->perms;
 	while (cur) {
-		display_id(policy, fp, SYM_CLASSES, cur->class - 1, "");
+		display_id(policy, fp, SYM_CLASSES, cur->tclass - 1, "");
 		cur = cur->next;
 	}
 
@@ -278,7 +278,7 @@ int display_avrule(avrule_t * avrule, policydb_t * policy,
 	fprintf(fp, " ");
 
 	if (avrule->specified & (AVRULE_AV | AVRULE_NEVERALLOW)) {
-		render_access_mask(avrule->perms->data, avrule->perms->class,
+		render_access_mask(avrule->perms->data, avrule->perms->tclass,
 				   policy, fp);
 	} else if (avrule->specified & AVRULE_TYPE) {
 		display_id(policy, fp, SYM_TYPES, avrule->perms->data - 1, "");

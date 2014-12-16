@@ -5,6 +5,9 @@
 #include <stdio.h>
 
 #include <sepol/handle.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 struct sepol_policy_file;
 typedef struct sepol_policy_file sepol_policy_file_t;
@@ -141,4 +144,5 @@ extern int sepol_policydb_mls_enabled(const sepol_policydb_t * p);
  */
 extern int sepol_policydb_compat_net(const sepol_policydb_t * p);
 
+__END_DECLS
 #endif

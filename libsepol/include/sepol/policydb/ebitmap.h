@@ -1,4 +1,3 @@
-
 /* Author : Stephen Smalley, <sds@epoch.ncsc.mil> */
 
 /* FLASK */
@@ -20,6 +19,9 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 #define MAPTYPE uint64_t	/* portion of bitmap in each node */
 #define MAPSIZE (sizeof(MAPTYPE) * 8)	/* number of bits in node bitmap */
@@ -89,6 +91,7 @@ extern int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value);
 extern void ebitmap_destroy(ebitmap_t * e);
 extern int ebitmap_read(ebitmap_t * e, void *fp);
 
+__END_DECLS
 #endif				/* _EBITMAP_H_ */
 
 /* FLASK */

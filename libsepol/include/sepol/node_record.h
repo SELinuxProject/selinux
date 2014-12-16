@@ -4,6 +4,9 @@
 #include <stddef.h>
 #include <sepol/context_record.h>
 #include <sepol/handle.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 struct sepol_node;
 struct sepol_node_key;
@@ -89,4 +92,5 @@ extern int sepol_node_clone(sepol_handle_t * handle,
 
 extern void sepol_node_free(sepol_node_t * node);
 
+__END_DECLS
 #endif

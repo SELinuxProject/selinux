@@ -2,6 +2,9 @@
 #define _SEPOL_DEBUG_H_
 
 #include <sepol/handle.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 /* Deprecated */
 extern void sepol_debug(int on);
@@ -31,4 +34,6 @@ extern void sepol_msg_set_callback(sepol_handle_t * handle,
 							 handle,
 							 const char *fmt, ...),
 				   void *msg_callback_arg);
+
+__END_DECLS
 #endif

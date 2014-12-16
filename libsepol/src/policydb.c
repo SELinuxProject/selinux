@@ -3039,7 +3039,7 @@ static avrule_t *avrule_read(policydb_t * p
 			goto bad;
 		}
 
-		cur->class = le32_to_cpu(buf[0]);
+		cur->tclass = le32_to_cpu(buf[0]);
 		cur->data = le32_to_cpu(buf[1]);
 
 		if (!tail) {

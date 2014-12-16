@@ -1679,7 +1679,7 @@ static int expand_terule_helper(sepol_handle_t * handle,
 		    typemap ? typemap[cur->data - 1] : cur->data;
 		avkey.source_type = stype + 1;
 		avkey.target_type = ttype + 1;
-		avkey.target_class = cur->class;
+		avkey.target_class = cur->tclass;
 		avkey.specified = spec;
 
 		conflict = 0;
@@ -1791,7 +1791,7 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 	while (cur) {
 		avkey.source_type = stype + 1;
 		avkey.target_type = ttype + 1;
-		avkey.target_class = cur->class;
+		avkey.target_class = cur->tclass;
 		avkey.specified = spec;
 
 		node = find_avtab_node(handle, avtab, &avkey, cond);
@@ -2574,8 +2574,8 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 		if (!new_perm)
 			goto err;
 		class_perm_node_init(new_perm);
-		new_perm->class = cur_perm->class;
-		assert(new_perm->class);
+		new_perm->tclass = cur_perm->tclass;
+		assert(new_perm->tclass);
 
 		/* once we have modules with permissions we'll need to map the permissions (and classes) */
 		new_perm->data = cur_perm->data;

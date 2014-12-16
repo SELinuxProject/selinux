@@ -38,22 +38,22 @@ static void report_failure(sepol_handle_t *handle, policydb_t *p,
 		    avrule->source_line, avrule->source_filename, avrule->line,
 		    p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
-		    p->p_class_val_to_name[curperm->class - 1],
-		    sepol_av_to_string(p, curperm->class,
+		    p->p_class_val_to_name[curperm->tclass - 1],
+		    sepol_av_to_string(p, curperm->tclass,
 				       node->datum.data & curperm->data));
 	} else if (avrule->line) {
 		ERR(handle, "neverallow on line %lu violated by allow %s %s:%s {%s };",
 		    avrule->line, p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
-		    p->p_class_val_to_name[curperm->class - 1],
-		    sepol_av_to_string(p, curperm->class,
+		    p->p_class_val_to_name[curperm->tclass - 1],
+		    sepol_av_to_string(p, curperm->tclass,
 				       node->datum.data & curperm->data));
 	} else {
 		ERR(handle, "neverallow violated by allow %s %s:%s {%s };",
 		    p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
-		    p->p_class_val_to_name[curperm->class - 1],
-		    sepol_av_to_string(p, curperm->class,
+		    p->p_class_val_to_name[curperm->tclass - 1],
+		    sepol_av_to_string(p, curperm->tclass,
 				       node->datum.data & curperm->data));
 	}
 }
@@ -72,7 +72,7 @@ static unsigned long check_assertion_helper(sepol_handle_t * handle,
 	for (curperm = avrule->perms; curperm != NULL; curperm = curperm->next) {
 		avkey.source_type = stype + 1;
 		avkey.target_type = ttype + 1;
-		avkey.target_class = curperm->class;
+		avkey.target_class = curperm->tclass;
 		avkey.specified = AVTAB_ALLOWED;
 		for (node = avtab_search_node(te_avtab, &avkey);
 		     node != NULL;

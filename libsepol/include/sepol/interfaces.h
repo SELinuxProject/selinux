@@ -4,6 +4,9 @@
 #include <sepol/policydb.h>
 #include <sepol/iface_record.h>
 #include <sepol/handle.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 /* Return the number of interfaces */
 extern int sepol_iface_count(sepol_handle_t * handle,
@@ -40,4 +43,5 @@ extern int sepol_iface_iterate(sepol_handle_t * handle,
 			       int (*fn) (const sepol_iface_t * iface,
 					  void *fn_arg), void *arg);
 
+__END_DECLS
 #endif
