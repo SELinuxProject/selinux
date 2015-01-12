@@ -26,15 +26,16 @@ import selinux
 import sepolicy
 from sepolicy import get_os_version, get_conditionals, get_conditionals_format_text
 import argparse
+
 import gettext
 PROGNAME="policycoreutils"
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
 try:
     gettext.install(PROGNAME,
-                    localedir="/usr/share/locale",
-                    unicode=False,
-                    codeset = 'utf-8')
+                    localedir = "/usr/share/locale",
+                    unicode   = True,
+                    codeset   = 'utf-8')
 except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
@@ -643,10 +644,10 @@ if __name__ == '__main__':
         args.func(args)
         sys.exit(0)
     except ValueError,e:
-        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, unicode(e)))
         sys.exit(1)
     except IOError,e:
-        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, unicode(e)))
         sys.exit(1)
     except KeyboardInterrupt:
         print "Out"
