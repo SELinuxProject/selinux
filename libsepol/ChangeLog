@@ -6,6 +6,7 @@
 	  DISABLE_CIL flag to 'y', from Steve Lawrence
 	* Add an API function to set target_platform, from Steve Lawrence
 	* Report all neverallow violations, from Stephen Smalley
+	* Improve check_assertions performance through hash tweaks from John Brooks.
 
 2.3 2014-05-06
 	* Improve error message for name-based transition conflicts.
