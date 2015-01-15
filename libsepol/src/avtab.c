@@ -333,7 +333,7 @@ int avtab_init(avtab_t * h)
 
 int avtab_alloc(avtab_t *h, uint32_t nrules)
 {
-	uint16_t mask = 0;
+	uint32_t mask = 0;
 	uint32_t shift = 0;
 	uint32_t work = nrules;
 	uint32_t nslot = 0;
@@ -348,8 +348,8 @@ int avtab_alloc(avtab_t *h, uint32_t nrules)
 	if (shift > 2)
 		shift = shift - 2;
 	nslot = 1 << shift;
-	if (nslot > MAX_AVTAB_SIZE)
-		nslot = MAX_AVTAB_SIZE;
+	if (nslot > MAX_AVTAB_HASH_BUCKETS)
+		nslot = MAX_AVTAB_HASH_BUCKETS;
 	mask = nslot - 1;
 
 	h->htable = calloc(nslot, sizeof(avtab_ptr_t));
