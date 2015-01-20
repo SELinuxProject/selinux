@@ -1,6 +1,8 @@
 2.4-rc7 2014-08-26
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
-	* Add missing semicolon in cond_else parser rule, from Steven Capelli
+	* Add missing semicolon in cond_else parser rule, from Steven Capelli.
+	* Clear errno before call to strtol(3) from Dan Albert.
+o	* Allow libsepol C++ static library on device from Daniel Cashman.
 
 2.3 2014-05-06
 	* Add Android support for building dispol.

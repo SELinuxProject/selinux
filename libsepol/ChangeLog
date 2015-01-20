@@ -2,11 +2,12 @@
 	* Remove assumption that SHLIBDIR is ../../ relative to LIBDIR, from Steve
 	  Lawrence
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
-	* Build CIL into libsepol. libsepol can be built without CIL by setting the 
+	* Build CIL into libsepol. libsepol can be built without CIL by setting the
 	  DISABLE_CIL flag to 'y', from Steve Lawrence
 	* Add an API function to set target_platform, from Steve Lawrence
 	* Report all neverallow violations, from Stephen Smalley
 	* Improve check_assertions performance through hash tweaks from John Brooks.
+	* Allow libsepol C++ static library on device from Daniel Cashman.
 
 2.3 2014-05-06
 	* Improve error message for name-based transition conflicts.
