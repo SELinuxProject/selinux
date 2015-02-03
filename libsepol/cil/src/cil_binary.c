@@ -2806,8 +2806,8 @@ int cil_nodecon_to_policydb(policydb_t *pdb, struct cil_sort *nodecons)
 			new_ocon->u.node.mask = cil_nodecon->mask->ip.v4.s_addr;
 		} else if (cil_nodecon->addr->family == AF_INET6) {
 			new_ocon = cil_add_ocontext(&pdb->ocontexts[OCON_NODE6], &tail6);
-			memcpy(new_ocon->u.node6.addr, &cil_nodecon->addr->ip.v6.s6_addr32[0], 16);
-			memcpy(new_ocon->u.node6.mask, &cil_nodecon->mask->ip.v6.s6_addr32[0], 16);
+			memcpy(new_ocon->u.node6.addr, &cil_nodecon->addr->ip.v6.s6_addr[0], 16);
+			memcpy(new_ocon->u.node6.mask, &cil_nodecon->mask->ip.v6.s6_addr[0], 16);
 		} else {
 			/* should not get here */
 			rc = SEPOL_ERR;
