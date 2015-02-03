@@ -1,3 +1,6 @@
+Build dependencies on Fedora:
+yum install bison flex swig flex-static flex-devel pcre-devel bzip2-devel ustr-devel audit-libs-devel libcap-ng-devel
+
 To build and install everything under a private directory, run:
 make DESTDIR=~/obj install install-pywrap
 
