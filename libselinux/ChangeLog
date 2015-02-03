@@ -1,3 +1,7 @@
+	* pcre_study can return NULL without error, from Stephen Smalley.
+	* Android property backend validation support, from Robert Craig.
+	* Only check SELinux enabled status once in selinux_check_access, from Stephen Smalley.
+
 2.4 2015-02-02
 	* Remove assumption that SHLIBDIR is ../../ relative to LIBDIR, from Steve
 	  Lawrence
