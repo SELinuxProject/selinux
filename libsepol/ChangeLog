@@ -1,3 +1,4 @@
+	* Fix MacOS X build, from Stephen Smalley.
 	* Enabling building CIL in Android, from Stephen Smalley.
 
 2.4 2015-02-02
