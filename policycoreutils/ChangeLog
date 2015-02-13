@@ -1,3 +1,5 @@
+	* Fixed typo/grammatical error, from Christopher Peterson.
+
 2.4 2015-02-02
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
 	* Improve support for building with different versions of python from
