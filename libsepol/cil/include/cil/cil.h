@@ -40,16 +40,18 @@ extern void cil_db_destroy(cil_db_t **db);
 
 extern int cil_add_file(cil_db_t *db, char *name, char *data, size_t size);
 
-extern int cil_compile(cil_db_t *db, sepol_policydb_t *sepol_db);
-extern int cil_build_policydb(cil_db_t *db, sepol_policydb_t *sepol_db);
-extern int cil_userprefixes_to_string(cil_db_t *db, sepol_policydb_t *sepol_db, char **out, size_t *size);
-extern int cil_selinuxusers_to_string(cil_db_t *db, sepol_policydb_t *sepol_db, char **out, size_t *size);
-extern int cil_filecons_to_string(cil_db_t *db, sepol_policydb_t *sepol_db, char **out, size_t *size);
+extern int cil_compile(cil_db_t *db);
+extern int cil_build_policydb(cil_db_t *db, sepol_policydb_t **sepol_db);
+extern int cil_userprefixes_to_string(cil_db_t *db, char **out, size_t *size);
+extern int cil_selinuxusers_to_string(cil_db_t *db, char **out, size_t *size);
+extern int cil_filecons_to_string(cil_db_t *db, char **out, size_t *size);
 extern void cil_set_disable_dontaudit(cil_db_t *db, int disable_dontaudit);
 extern void cil_set_disable_neverallow(cil_db_t *db, int disable_neverallow);
 extern void cil_set_preserve_tunables(cil_db_t *db, int preserve_tunables);
 extern int cil_set_handle_unknown(cil_db_t *db, int handle_unknown);
 extern void cil_set_mls(cil_db_t *db, int mls);
+extern void cil_set_target_platform(cil_db_t *db, int target_platform);
+extern void cil_set_policy_version(cil_db_t *db, int policy_version);
 
 enum cil_log_level {
 	CIL_ERR = 1,

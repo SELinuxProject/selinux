@@ -51,6 +51,21 @@
 #include "cil_policy.h"
 #include "cil_strpool.h"
 
+asm(".symver cil_build_policydb_pdb,        cil_build_policydb@");
+asm(".symver cil_build_policydb_create_pdb, cil_build_policydb@@LIBSEPOL_1.1");
+
+asm(".symver cil_compile_pdb,   cil_compile@");
+asm(".symver cil_compile_nopdb, cil_compile@@LIBSEPOL_1.1");
+
+asm(".symver cil_userprefixes_to_string_pdb,   cil_userprefixes_to_string@");
+asm(".symver cil_userprefixes_to_string_nopdb, cil_userprefixes_to_string@@LIBSEPOL_1.1");
+
+asm(".symver cil_selinuxusers_to_string_pdb,   cil_selinuxusers_to_string@");
+asm(".symver cil_selinuxusers_to_string_nopdb, cil_selinuxusers_to_string@@LIBSEPOL_1.1");
+
+asm(".symver cil_filecons_to_string_pdb,   cil_filecons_to_string@");
+asm(".symver cil_filecons_to_string_nopdb, cil_filecons_to_string@@LIBSEPOL_1.1");
+
 int cil_sym_sizes[CIL_SYM_ARRAY_NUM][CIL_SYM_NUM] = {
 	{64, 64, 64, 1 << 13, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64},
 	{64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64},
@@ -249,6 +264,8 @@ void cil_db_init(struct cil_db **db)
 	(*db)->preserve_tunables = CIL_FALSE;
 	(*db)->handle_unknown = -1;
 	(*db)->mls = -1;
+	(*db)->target_platform = SEPOL_TARGET_SELINUX;
+	(*db)->policy_version = POLICYDB_VERSION_MAX;
 }
 
 void cil_db_destroy(struct cil_db **db)
@@ -332,11 +349,11 @@ exit:
 	return rc;
 }
 
-int cil_compile(struct cil_db *db, sepol_policydb_t *sepol_db)
+int cil_compile_nopdb(struct cil_db *db)
 {
 	int rc = SEPOL_ERR;
 
-	if (db == NULL || sepol_db == NULL) {
+	if (db == NULL) {
 		goto exit;
 	}
 
@@ -376,7 +393,27 @@ exit:
 	return rc;
 }
 
-int cil_build_policydb(cil_db_t *db, sepol_policydb_t *sepol_db)
+int cil_compile_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db)
+{
+	return cil_compile_nopdb(db);
+}
+
+int cil_build_policydb_pdb(cil_db_t *db, sepol_policydb_t *sepol_db)
+{
+	int rc;
+
+	cil_log(CIL_INFO, "Building policy binary\n");
+	rc = cil_binary_create_allocated_pdb(db, sepol_db);
+	if (rc != SEPOL_OK) {
+		cil_log(CIL_ERR, "Failed to generate binary\n");
+		goto exit;
+	}
+
+exit:
+	return rc;
+}
+
+int cil_build_policydb_create_pdb(cil_db_t *db, sepol_policydb_t **sepol_db)
 {
 	int rc;
 
@@ -1059,7 +1096,7 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 	return "<unknown>";
 }
 
-int cil_userprefixes_to_string(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
+int cil_userprefixes_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
 {
 	int rc = SEPOL_ERR;
 	size_t str_len = 0;
@@ -1104,20 +1141,78 @@ exit:
 
 }
 
-static int cil_level_equals(policydb_t *pdb, struct cil_level *low, struct cil_level *high)
+int cil_userprefixes_to_string_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
 {
-	mls_level_t l;
-	mls_level_t h;
+	return cil_userprefixes_to_string_nopdb(db, out, size);
+}
+
+static int cil_cats_to_ebitmap(struct cil_cats *cats, struct ebitmap* cats_ebitmap)
+{
+	int rc = SEPOL_ERR;
+	struct cil_list_item *i;
+	struct cil_list_item *j;
+	struct cil_cat* cat;
+	struct cil_catset *cs;
+	struct cil_tree_node *node;
+
+	if (cats == NULL) {
+		rc = SEPOL_OK;
+		goto exit;
+	}
+
+	cil_list_for_each(i, cats->datum_expr) {
+		node = DATUM(i->data)->nodes->head->data;
+		if (node->flavor == CIL_CATSET) {
+			cs = (struct cil_catset*)i->data;
+			cil_list_for_each(j, cs->cats->datum_expr) {
+				cat = (struct cil_cat*)j->data;
+				rc = ebitmap_set_bit(cats_ebitmap, cat->value, 1);
+				if (rc != SEPOL_OK) {
+					goto exit;
+				}
+			}
+		} else {
+			cat = (struct cil_cat*)i->data;
+			rc = ebitmap_set_bit(cats_ebitmap, cat->value, 1);
+			if (rc != SEPOL_OK) {
+				goto exit;
+			}
+		}
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
+static int cil_level_equals(struct cil_level *low, struct cil_level *high)
+{
 	int rc;
+	struct ebitmap elow;
+	struct ebitmap ehigh;
 
-	cil_level_to_mls_level(pdb, low, &l);
-	cil_level_to_mls_level(pdb, high, &h);
+	if (strcmp(low->sens->datum.fqn, high->sens->datum.fqn)) {
+		rc = 0;
+		goto exit;
+	}
 
-	rc = mls_level_eq(&l, &h);
+	ebitmap_init(&elow);
+	ebitmap_init(&ehigh);
 
-	mls_level_destroy(&l);
-	mls_level_destroy(&h);
+	rc = cil_cats_to_ebitmap(low->cats, &elow);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
 
+	rc = cil_cats_to_ebitmap(high->cats, &ehigh);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	return ebitmap_cmp(&elow, &ehigh);
+
+exit:
 	return rc;
 }
 
@@ -1236,7 +1331,7 @@ static int __cil_level_to_string(struct cil_level *lvl, char *out)
 	return str_tmp - out;
 }
 
-int cil_selinuxusers_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char **out, size_t *size)
+int cil_selinuxusers_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
 {
 	size_t str_len = 0;
 	int buf_pos = 0;
@@ -1255,7 +1350,7 @@ int cil_selinuxusers_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, ch
 
 		str_len += strlen(selinuxuser->name_str) + strlen(user->datum.fqn) + 1;
 
-		if (sepol_db->p.mls == CIL_TRUE) {
+		if (db->mls == CIL_TRUE) {
 			struct cil_levelrange *range = selinuxuser->range;
 			str_len += __cil_level_strlen(range->low) + __cil_level_strlen(range->high) + 2;
 		}
@@ -1274,7 +1369,7 @@ int cil_selinuxusers_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, ch
 		buf_pos = sprintf(str_tmp, "%s:%s", selinuxuser->name_str, user->datum.fqn);
 		str_tmp += buf_pos;
 
-		if (sepol_db->p.mls == CIL_TRUE) {
+		if (db->mls == CIL_TRUE) {
 			struct cil_levelrange *range = selinuxuser->range;
 			buf_pos = sprintf(str_tmp, ":");
 			str_tmp += buf_pos;
@@ -1293,7 +1388,12 @@ int cil_selinuxusers_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, ch
 	return SEPOL_OK;
 }
 
-int cil_filecons_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char **out, size_t *size)
+int cil_selinuxusers_to_string_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
+{
+	return cil_selinuxusers_to_string_nopdb(db, out, size);
+}
+
+int cil_filecons_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
 {
 	uint32_t i = 0;
 	int buf_pos = 0;
@@ -1320,9 +1420,9 @@ int cil_filecons_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char *
 
 			str_len += (strlen(user->datum.fqn) + strlen(role->datum.fqn) + strlen(type->datum.fqn) + 3);
 
-			if (sepol_db->p.mls == CIL_TRUE) {
+			if (db->mls == CIL_TRUE) {
 				struct cil_levelrange *range = ctx->range;
-				if (cil_level_equals(&sepol_db->p, range->low, range->high)) {
+				if (cil_level_equals(range->low, range->high)) {
 					str_len += __cil_level_strlen(range->low) + 1;
 				} else {
 					str_len += __cil_level_strlen(range->low) + __cil_level_strlen(range->high) + 2;
@@ -1385,14 +1485,14 @@ int cil_filecons_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char *
 							  type->datum.fqn);
 			str_tmp += buf_pos;
 
-			if (sepol_db->p.mls == CIL_TRUE) {
+			if (db->mls == CIL_TRUE) {
 				struct cil_levelrange *range = ctx->range;
 				buf_pos = sprintf(str_tmp, ":");
 				str_tmp += buf_pos;
 				buf_pos = __cil_level_to_string(range->low, str_tmp);
 				str_tmp += buf_pos;
 
-				if (!cil_level_equals(&sepol_db->p, range->low, range->high)) {
+				if (!cil_level_equals(range->low, range->high)) {
 					buf_pos = sprintf(str_tmp, "-");
 					str_tmp += buf_pos;
 					buf_pos = __cil_level_to_string(range->high, str_tmp);
@@ -1409,6 +1509,11 @@ int cil_filecons_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char *
 	}
 
 	return SEPOL_OK;
+}
+
+int cil_filecons_to_string_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
+{
+	return cil_filecons_to_string_nopdb(db, out, size);
 }
 
 void cil_set_disable_dontaudit(struct cil_db *db, int disable_dontaudit)
@@ -1447,6 +1552,16 @@ int cil_set_handle_unknown(struct cil_db *db, int handle_unknown)
 void cil_set_mls(struct cil_db *db, int mls)
 {
 	db->mls = mls;
+}
+
+void cil_set_target_platform(struct cil_db *db, int target_platform)
+{
+	db->target_platform = target_platform;
+}
+
+void cil_set_policy_version(struct cil_db *db, int policy_version)
+{
+	db->policy_version = policy_version;
 }
 
 void cil_symtab_array_init(symtab_t symtab[], int symtab_sizes[CIL_SYM_NUM])

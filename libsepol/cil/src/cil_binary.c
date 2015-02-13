@@ -3320,7 +3320,7 @@ int __cil_contexts_to_policydb(policydb_t *pdb, const struct cil_db *db)
 		goto exit;
 	}
 
-	if (pdb->target_platform == SEPOL_TARGET_XEN) {
+	if (db->target_platform == SEPOL_TARGET_XEN) {
 		rc = cil_pirqcon_to_policydb(pdb, db->pirqcon);
 		if (rc != SEPOL_OK) {
 			goto exit;
@@ -3550,10 +3550,42 @@ static void __cil_set_conditional_state_and_flags(policydb_t *pdb)
 	}
 }
 
+int __cil_policydb_create(const struct cil_db *db, struct sepol_policydb **spdb)
+{
+	int rc;
+	struct policydb *pdb = NULL;
+
+	rc = sepol_policydb_create(spdb);
+	if (rc < 0) {
+		cil_log(CIL_ERR, "Failed to create policy db\n");
+		// spdb could be a dangling pointer at this point, so reset it so
+		// callers of this function don't need to worry about freeing garbage
+		*spdb = NULL;
+		goto exit;
+	}
+
+	pdb = &(*spdb)->p;
+
+	pdb->policy_type = POLICY_KERN;
+	pdb->target_platform = db->target_platform;
+	pdb->policyvers = db->policy_version;
+	pdb->handle_unknown = db->handle_unknown;
+	pdb->mls = db->mls;
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
+
 int __cil_policydb_init(policydb_t *pdb, const struct cil_db *db)
 {
 	int rc = SEPOL_ERR;
 
+	// these flags should get set in __cil_policydb_create. However, for
+	// backwards compatability, it is possible that __cil_policydb_create is
+	// never called. So, they must also be set here.
 	pdb->handle_unknown = db->handle_unknown;
 	pdb->mls = db->mls;
 
@@ -3587,6 +3619,7 @@ int __cil_policydb_init(policydb_t *pdb, const struct cil_db *db)
 	return SEPOL_OK;
 
 exit:
+
 	return rc;
 }
 
@@ -3641,7 +3674,34 @@ static int role_trans_compare(hashtab_t h
 	return a->role != b->role || a->type != b->type || a->tclass != b->tclass;
 }
 
-int cil_binary_create(const struct cil_db *db, sepol_policydb_t *policydb)
+int cil_binary_create(const struct cil_db *db, sepol_policydb_t **policydb)
+{
+	int rc = SEPOL_ERR;
+	struct sepol_policydb *pdb = NULL;
+
+	rc = __cil_policydb_create(db, &pdb);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	rc = cil_binary_create_allocated_pdb(db, pdb);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	*policydb = pdb;
+
+	return SEPOL_OK;
+
+exit:
+	sepol_policydb_free(pdb);
+
+	return rc;
+}
+
+// assumes policydb is already allocated and initialized properly with things
+// like policy type set to kernel and version set appropriately
+int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *policydb)
 {
 	int rc = SEPOL_ERR;
 	int i;
@@ -3664,7 +3724,7 @@ int cil_binary_create(const struct cil_db *db, sepol_policydb_t *policydb)
 	rc = __cil_policydb_init(pdb, db);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR,"Problem in policydb_init\n");
-		return SEPOL_ERR;
+		goto exit;
 	}
 
 	filename_trans_table = hashtab_create(filename_trans_hash, filename_trans_compare, FILENAME_TRANS_TABLE_SIZE);
@@ -3740,5 +3800,6 @@ exit:
 	hashtab_destroy(range_trans_table);
 	hashtab_destroy(role_trans_table);
 	cil_neverallows_list_destroy(neverallows);
+
 	return rc;
 }

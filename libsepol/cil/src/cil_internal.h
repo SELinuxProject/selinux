@@ -287,6 +287,8 @@ struct cil_db {
 	int preserve_tunables;
 	int handle_unknown;
 	int mls;
+	int target_platform;
+	int policy_version;
 };
 
 struct cil_root {
@@ -871,9 +873,9 @@ void cil_destroy_data(void **data, enum cil_flavor flavor);
 int cil_flavor_to_symtab_index(enum cil_flavor flavor, enum cil_sym_index *index);
 const char * cil_node_to_string(struct cil_tree_node *node);
 
-int cil_userprefixes_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char **out, size_t *size);
-int cil_selinuxusers_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char **out, size_t *size);
-int cil_filecons_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char **out, size_t *size);
+int cil_userprefixes_to_string(struct cil_db *db, char **out, size_t *size);
+int cil_selinuxusers_to_string(struct cil_db *db, char **out, size_t *size);
+int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size);
 
 void cil_symtab_array_init(symtab_t symtab[], int symtab_sizes[CIL_SYM_NUM]);
 void cil_symtab_array_destroy(symtab_t symtab[]);

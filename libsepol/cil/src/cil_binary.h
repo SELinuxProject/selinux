@@ -44,7 +44,23 @@
  *
  * @return SEPOL_OK upon success or an error otherwise.
  */
-int cil_binary_create(const struct cil_db *db, sepol_policydb_t *pdb);
+int cil_binary_create(const struct cil_db *db, sepol_policydb_t **pdb);
+
+/**
+ * Create a pre allocated binary policydb from the cil db.
+ *
+ * It is assumed that pdb has been allocated and initialzed so that fields such
+ * as policy type and version are set appropriately. It is reccomended that
+ * instead of calling this, one instead calls cil_binary_create, which will
+ * properly allocate and initialize the pdb and then calls this function. This
+ * funcion is used to maintain binary backwards compatability.
+ *
+ * @param[in] db The cil database.
+ * @param[in] pdb The policy database.
+ *
+ * @return SEPOL_OK upon success or an error otherwise.
+ */
+int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *pdb);
 
 /**
  * Insert cil common structure into sepol policydb.

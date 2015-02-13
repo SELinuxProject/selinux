@@ -204,6 +204,8 @@ int main(int argc, char *argv[])
 	}
 
 	cil_set_mls(db, mls);
+	cil_set_target_platform(db, target);
+	cil_set_policy_version(db, policyvers);
 
 	for (i = optind; i < argc; i++) {
 		file = fopen(argv[i], "r");
@@ -238,26 +240,13 @@ int main(int argc, char *argv[])
 		buffer = NULL;
 	}
 
-	rc = sepol_policydb_create(&pdb);
-	if (rc < 0) {
-		cil_log(CIL_ERR, "Failed to create policy db\n");
-		goto exit;
-	}
-	pdb->p.policy_type = POLICY_KERN;
-	pdb->p.target_platform = target;
-	
-	rc = sepol_policydb_set_vers(pdb, policyvers);
-	if (rc != 0) {
-		cil_log(CIL_ERR, "Failed to set policy version: %d\n", rc);
-		goto exit;
-	}
-	rc = cil_compile(db, pdb);
+	rc = cil_compile(db);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Failed to compile cildb: %d\n", rc);
 		goto exit;
 	}
 
-	rc = cil_build_policydb(db, pdb);
+	rc = cil_build_policydb(db, &pdb);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Failed to build policydb\n");
 		goto exit;
@@ -306,7 +295,7 @@ int main(int argc, char *argv[])
 
 	cil_log(CIL_INFO, "Writing file contexts\n");
 	
-	rc = cil_filecons_to_string(db, pdb, &fc_buf, &fc_size);
+	rc = cil_filecons_to_string(db, &fc_buf, &fc_size);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Failed to get file context data\n");
 		goto exit;

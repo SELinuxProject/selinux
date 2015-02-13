@@ -1,4 +1,4 @@
-{
+LIBSEPOL_1.0 {
   global: 
 	expand_module_avrules;
 	sepol_module_package_*; sepol_link_modules; sepol_expand_module; sepol_link_packages;
@@ -34,3 +34,15 @@
 	cil_set_malloc_error_handler;
   local: *;
 };
+
+LIBSEPOL_1.1 {
+  global:
+	cil_build_policydb;
+	cil_compile;
+	cil_userprefixes_to_string;
+	cil_selinuxusers_to_string;
+	cil_filecons_to_string;
+	cil_set_target_platform;
+	cil_set_policy_version;
+  local: *;
+} LIBSEPOL_1.0;
