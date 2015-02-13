@@ -209,11 +209,19 @@ static int __policy_init(const char *init_path)
 			return 1;
 		}
 	} else {
-		fp = fopen(selinux_current_policy_path(), "r");
+		const char *curpolicy = selinux_current_policy_path();
+		if (!curpolicy) {
+			/* SELinux disabled, must use -p option. */
+			snprintf(errormsg, sizeof(errormsg),
+				 "You must specify the -p option with the path to the policy file.\n");
+			PyErr_SetString( PyExc_ValueError, errormsg);
+			return 1;
+		}
+		fp = fopen(curpolicy, "r");
 		if (!fp) {
 			snprintf(errormsg, sizeof(errormsg), 
 				 "unable to open %s:  %s\n",
-				 selinux_current_policy_path(),
+				 curpolicy,
 				 strerror(errno));
 			PyErr_SetString( PyExc_ValueError, errormsg);
 			return 1;
