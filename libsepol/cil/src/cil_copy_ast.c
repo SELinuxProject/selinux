@@ -135,6 +135,7 @@ int cil_copy_blockinherit(__attribute__((unused)) struct cil_db *db, void *data,
 	cil_blockinherit_init(&new);
 
 	new->block_str = orig->block_str;
+	new->block = orig->block;
 
 	*copy = new;
 
@@ -1315,6 +1316,7 @@ int cil_copy_call(struct cil_db *db, void *data, void **copy, __attribute__((unu
 	cil_call_init(&new);
 
 	new->macro_str = orig->macro_str;
+	new->macro = orig->macro;
 
 	if (orig->args_tree != NULL) {
 		cil_tree_init(&new->args_tree);
@@ -1345,7 +1347,9 @@ int cil_copy_macro(__attribute__((unused)) struct cil_db *db, void *data, void *
 	if (datum == NULL) {
 		struct cil_macro *new;
 		cil_macro_init(&new);
-		cil_copy_list(orig->params, &new->params);
+		if (orig->params != NULL) {
+			cil_copy_list(orig->params, &new->params);
+		}
 
 		*copy = new;
 
@@ -1575,6 +1579,7 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 	symtab_t *symtab = NULL;
 	void *data = NULL;
 	int (*copy_func)(struct cil_db *db, void *data, void **copy, symtab_t *symtab) = NULL;
+	struct cil_blockinherit *blockinherit = NULL;
 
 	if (orig == NULL || extra_args == NULL) {
 		goto exit;
@@ -1876,6 +1881,11 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 					}
 				}
 			}
+		}
+
+		if (new->flavor == CIL_BLOCKINHERIT) {
+			blockinherit = new->data;
+			cil_list_append(blockinherit->block->bi_nodes, CIL_NODE, new);
 		}
 
 		if (parent->cl_head == NULL) {

@@ -1263,7 +1263,6 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *ex
 	int *handleunknown;
 	int *mls;
 	int *nseuserdflt = 0;
-	int state = 0;
 	int *pass = 0;
 	struct cil_args_verify *args = extra_args;
 	struct cil_complex_symtab *csymtab = NULL;
@@ -1281,14 +1280,7 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *ex
 	csymtab = args->csymtab;
 	pass = args->pass;
 
-	if (node->flavor == CIL_OPTIONAL) {
-		state = ((struct cil_symtab_datum *)node->data)->state;
-		if (state == CIL_STATE_DISABLED) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		rc = SEPOL_OK;
-		goto exit;
-	} else if (node->flavor == CIL_MACRO) {
+	if (node->flavor == CIL_MACRO) {
 		*finished = CIL_TREE_SKIP_HEAD;
 		rc = SEPOL_OK;
 		goto exit;
@@ -1519,14 +1511,7 @@ static int __cil_verify_no_classperms_loop_helper(struct cil_tree_node *node, ui
 {
 	int rc = SEPOL_ERR;
 
-	if (node->flavor == CIL_OPTIONAL) {
-		int state = ((struct cil_symtab_datum *)node->data)->state;
-		if (state == CIL_STATE_DISABLED) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		rc = SEPOL_OK;
-		goto exit;
-	} else if (node->flavor == CIL_MACRO) {
+	if (node->flavor == CIL_MACRO) {
 		*finished = CIL_TREE_SKIP_HEAD;
 		rc = SEPOL_OK;
 		goto exit;

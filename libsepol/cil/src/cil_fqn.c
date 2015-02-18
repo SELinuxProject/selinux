@@ -33,189 +33,108 @@
 
 #include "cil_internal.h"
 #include "cil_log.h"
-#include "cil_mem.h"
-#include "cil_tree.h"
 #include "cil_strpool.h"
+#include "cil_symtab.h"
 
-struct cil_args_qualify {
-	char fqparent[CIL_MAX_NAME_LENGTH];
+struct cil_fqn_args {
+	char prefix[CIL_MAX_NAME_LENGTH];
 	int len;
+	struct cil_tree_node *node;
 };
 
-int __cil_fqn_qualify_last_child_helper(struct cil_tree_node *node, void *extra_args)
+static int __cil_fqn_qualify_decls(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
 {
-	struct cil_args_qualify *args = NULL;
-	struct cil_symtab_datum *datum = NULL;
-	int rc = SEPOL_ERR;
+	struct cil_fqn_args *fqn_args = args;
+	struct cil_symtab_datum *datum = (struct cil_symtab_datum *)d;
+	int newlen;
+	char prefix[CIL_MAX_NAME_LENGTH];
+	int rc = SEPOL_OK;
 
-	if (node == NULL || extra_args == NULL) {
+	if (fqn_args->len == 0) {
+		goto exit;
+	}
+
+	newlen = fqn_args->len + strlen(datum->name);
+	if (newlen >= CIL_MAX_NAME_LENGTH) {
+		cil_log(CIL_INFO, "Fully qualified name for %s is too long\n", datum->name);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
-
-	if (node->parent->flavor != CIL_BLOCK) {
-		rc = SEPOL_OK;
-		goto exit;
-	}
-
-	datum = node->parent->data;
-	args = extra_args;
-	args->len -= (strlen(datum->name) + 1);
-	args->fqparent[args->len] = '\0';
-
-	return SEPOL_OK;
+	strcpy(prefix, fqn_args->prefix);
+	strcat(prefix, datum->name);
+	datum->fqn = cil_strpool_add(prefix);
 
 exit:
 	return rc;
 }
 
-int __cil_fqn_qualify_first_child_helper(struct cil_tree_node *node, void *extra_args)
+static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
 {
-	struct cil_args_qualify *args = NULL;
-	struct cil_symtab_datum *datum = NULL;
-	int rc = SEPOL_ERR;
+	struct cil_fqn_args *fqn_args = args;
+	struct cil_fqn_args child_args;
+	struct cil_block *block = (struct cil_block *)d;
+	struct cil_symtab_datum *datum = (struct cil_symtab_datum *)block;
+	struct cil_tree_node *node = NODE(datum);
+	int i;
+	int rc = SEPOL_OK;
 
-	if (node == NULL || extra_args == NULL) {
+	if (node->flavor != CIL_BLOCK) {
+		goto exit;
+	}
+
+	int newlen = fqn_args->len + strlen(datum->name) + 1;
+	if (newlen >= CIL_MAX_NAME_LENGTH) {
+		cil_log(CIL_INFO, "Fully qualified name for block %s is too long\n", datum->name);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
 
-	if (node->parent->flavor != CIL_BLOCK) {
-		rc = SEPOL_OK;
-		goto exit;
-	}
+	child_args.node = node;
+	child_args.len = newlen;
+	strcpy(child_args.prefix, fqn_args->prefix);
+	strcat(child_args.prefix, datum->name);
+	strcat(child_args.prefix, ".");
 
-	args = extra_args;
-	datum = node->parent->data;
-
-	if (args->len + strlen(datum->name) + 1 >= CIL_MAX_NAME_LENGTH) {
-		cil_log(CIL_INFO, "Fully qualified name too long at line %d of %s\n",
-			node->line, node->path);
-		rc = SEPOL_ERR;
-		goto exit;
-	}
-
-	strcat(args->fqparent, datum->name);
-	strcat(args->fqparent, ".");
-	args->len += (strlen(datum->name) + 1);
-
-	return SEPOL_OK;
-
-exit:
-	return rc;
-}
-
-int __cil_fqn_qualify_node_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
-{
-	struct cil_args_qualify *args = NULL;
-	struct cil_symtab_datum *datum = NULL;
-	char *fqn = NULL;
-	int newlen = 0;
-	int rc = SEPOL_ERR;
-
-	if (node == NULL || finished == NULL || extra_args == NULL) {
-		goto exit;
-	}
-
-	if (node->flavor < CIL_MIN_DECLARATIVE || node->flavor == CIL_PERM || node->flavor == CIL_MAP_PERM) {
-		rc = SEPOL_OK;
-		goto exit;
-	}
-
-	args = extra_args;
-	datum = node->data;
-
-	switch (node->flavor) {
-	case CIL_OPTIONAL:
-		if (datum->state == CIL_STATE_DISABLED) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		break;
-	case CIL_MACRO:
-		*finished = CIL_TREE_SKIP_HEAD;
-		break;
-	case CIL_BLOCK:
-		if (((struct cil_block *)datum)->is_abstract == CIL_TRUE) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		break;
-	case CIL_STRING:
-	case CIL_NAME:
-		/* Strings don't change */
-		break;
-	case CIL_TYPEATTRIBUTE:
-	case CIL_ROLEATTRIBUTE:
-	case CIL_BOOL:
-	case CIL_CAT:
-	case CIL_CATALIAS:
-	case CIL_CATSET:
-	case CIL_CLASS:
-	case CIL_MAP_CLASS:
-	case CIL_CLASSPERMISSION:
-	case CIL_COMMON:
-	case CIL_CONTEXT:
-	case CIL_IPADDR:
-	case CIL_LEVEL:
-	case CIL_LEVELRANGE:
-	case CIL_POLICYCAP:
-	case CIL_ROLE:
-	case CIL_SENS:
-	case CIL_SENSALIAS:
-	case CIL_SID:
-	case CIL_TUNABLE:
-	case CIL_TYPE:
-	case CIL_TYPEALIAS:
-	case CIL_USER:
-		if (node != ((struct cil_symtab_datum*)node->data)->nodes->head->data) {
+	for (i=1; i<CIL_SYM_NUM; i++) {
+		switch (i) {
+		case CIL_SYM_CLASSPERMSETS:
+		case CIL_SYM_CONTEXTS:
+		case CIL_SYM_LEVELRANGES:
+		case CIL_SYM_IPADDRS:
+		case CIL_SYM_NAMES:
+			/* These do not show up in the kernal policy */
+			break;
+		case CIL_SYM_POLICYCAPS:
+			/* Valid policy capability names are defined in libsepol */
+			break;
+		default:
+			rc = cil_symtab_map(&(block->symtab[i]), __cil_fqn_qualify_decls, &child_args);
+			if (rc != SEPOL_OK) {
+				goto exit;
+			}
 			break;
 		}
-
-		if (args->len == 0) {
-			rc = SEPOL_OK;
-			goto exit;
-		}
-
-		newlen = args->len + strlen(datum->name);
-		if (newlen >= CIL_MAX_NAME_LENGTH) {
-			cil_log(CIL_INFO, "Fully qualified name too long at line %d of %s\n",
-				node->line, node->path);
-			rc = SEPOL_ERR;
-			goto exit;
-		}
-		fqn = cil_malloc(newlen + 1);
-		strcpy(fqn, args->fqparent);
-		strcat(fqn, datum->name);
-
-		datum->name = cil_strpool_add(fqn);
-		free(fqn);
-		break;
-	default:
-		rc = SEPOL_ERR;
-		goto exit;
 	}
 
-	return SEPOL_OK;
+	rc = cil_symtab_map(&(block->symtab[CIL_SYM_BLOCKS]), __cil_fqn_qualify_blocks, &child_args);
 
 exit:
+	if (rc != SEPOL_OK) {
+		cil_log(CIL_ERR,"Problem qualifying names in block at line %d of %s\n", child_args.node->line, child_args.node->path);
+	}
+
 	return rc;
 }
 
-int cil_fqn_qualify(struct cil_tree_node *root)
+int cil_fqn_qualify(struct cil_tree_node *root_node)
 {
-	struct cil_args_qualify extra_args;
-	int rc = SEPOL_ERR;
+	struct cil_root *root = root_node->data;
+	struct cil_fqn_args fqn_args;
 
-	extra_args.fqparent[0] = '\0';
-	extra_args.len = 0;
+	fqn_args.prefix[0] = '\0';
+	fqn_args.len = 0;
+	fqn_args.node = root_node;
 
-	rc = cil_tree_walk(root, __cil_fqn_qualify_node_helper, __cil_fqn_qualify_first_child_helper, __cil_fqn_qualify_last_child_helper, &extra_args);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
-	return SEPOL_OK;
-
-exit:
-	return rc;
+	return cil_symtab_map(&(root->symtab[CIL_SYM_BLOCKS]), __cil_fqn_qualify_blocks, &fqn_args);
 }
 

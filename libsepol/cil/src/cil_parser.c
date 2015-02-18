@@ -40,7 +40,7 @@
 #include "cil_lexer.h"
 #include "cil_strpool.h"
 
-int cil_parser(char *path, char *buffer, uint32_t size, struct cil_tree **parse_tree)
+int cil_parser(char *_path, char *buffer, uint32_t size, struct cil_tree **parse_tree)
 {
 
 	int paren_count = 0;
@@ -49,6 +49,7 @@ int cil_parser(char *path, char *buffer, uint32_t size, struct cil_tree **parse_
 	struct cil_tree_node *node = NULL;
 	struct cil_tree_node *item = NULL;
 	struct cil_tree_node *current = NULL;
+	char *path = cil_strpool_add(_path);
 
 	struct token tok;
 

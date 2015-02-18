@@ -325,13 +325,6 @@ static int __cil_post_db_count_helper(struct cil_tree_node *node, uint32_t *fini
 		}
 		break;
 	}
-	case CIL_OPTIONAL: {
-		struct cil_optional *opt = node->data;
-		if (opt->datum.state != CIL_STATE_ENABLED) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		break;
-	}
 	case CIL_MACRO:
 		*finished = CIL_TREE_SKIP_HEAD;
 		break;
@@ -402,13 +395,6 @@ static int __cil_post_db_array_helper(struct cil_tree_node *node, __attribute__(
 	case CIL_BLOCK: {
 		struct cil_block *blk = node->data;
 		if (blk->is_abstract == CIL_TRUE) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		break;
-	}
-	case CIL_OPTIONAL: {
-		struct cil_optional *opt = node->data;
-		if (opt->datum.state != CIL_STATE_ENABLED) {
 			*finished = CIL_TREE_SKIP_HEAD;
 		}
 		break;
@@ -994,13 +980,6 @@ static int __cil_post_db_attr_helper(struct cil_tree_node *node, __attribute__((
 		}
 		break;
 	}
-	case CIL_OPTIONAL: {
-		struct cil_optional *opt = node->data;
-		if (opt->datum.state != CIL_STATE_ENABLED) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		break;
-	}
 	case CIL_MACRO: {
 		*finished = CIL_TREE_SKIP_HEAD;
 		break;
@@ -1073,13 +1052,6 @@ static int __cil_post_db_roletype_helper(struct cil_tree_node *node, __attribute
 	case CIL_BLOCK: {
 		struct cil_block *blk = node->data;
 		if (blk->is_abstract == CIL_TRUE) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		break;
-	}
-	case CIL_OPTIONAL: {
-		struct cil_optional *opt = node->data;
-		if (opt->datum.state != CIL_STATE_ENABLED) {
 			*finished = CIL_TREE_SKIP_HEAD;
 		}
 		break;
@@ -1172,13 +1144,6 @@ static int __cil_post_db_cat_helper(struct cil_tree_node *node, uint32_t *finish
 	case CIL_BLOCK: {
 		struct cil_block *blk = node->data;
 		if (blk->is_abstract == CIL_TRUE) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		break;
-	}
-	case CIL_OPTIONAL: {
-		struct cil_optional *opt = node->data;
-		if (opt->datum.state != CIL_STATE_ENABLED) {
 			*finished = CIL_TREE_SKIP_HEAD;
 		}
 		break;
@@ -1526,13 +1491,6 @@ static int __cil_post_db_classperms_helper(struct cil_tree_node *node, uint32_t 
 	case CIL_BLOCK: {
 		struct cil_block *blk = node->data;
 		if (blk->is_abstract == CIL_TRUE) {
-			*finished = CIL_TREE_SKIP_HEAD;
-		}
-		break;
-	}
-	case CIL_OPTIONAL: {
-		struct cil_optional *opt = node->data;
-		if (opt->datum.state != CIL_STATE_ENABLED) {
 			*finished = CIL_TREE_SKIP_HEAD;
 		}
 		break;

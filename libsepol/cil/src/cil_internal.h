@@ -53,7 +53,8 @@ enum cil_pass {
 
 	CIL_PASS_TIF,
 	CIL_PASS_IN,
-	CIL_PASS_BLKIN,
+	CIL_PASS_BLKIN_LINK,
+	CIL_PASS_BLKIN_COPY,
 	CIL_PASS_BLKABS,
 	CIL_PASS_MACRO,
 	CIL_PASS_CALL1,
@@ -303,10 +304,12 @@ struct cil_block {
 	struct cil_symtab_datum datum;
 	symtab_t symtab[CIL_SYM_NUM];
 	uint16_t is_abstract;
+	struct cil_list *bi_nodes;
 };
 
 struct cil_blockinherit {
 	char *block_str;
+	struct cil_block *block;
 };
 
 struct cil_blockabstract {
@@ -320,6 +323,7 @@ struct cil_in {
 
 struct cil_optional {
 	struct cil_symtab_datum datum;
+	int enabled;
 };
 
 struct cil_perm {

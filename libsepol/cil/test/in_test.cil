@@ -1,0 +1,142 @@
+;; Minimum stuff
+(class CLASS (PERM))
+(classorder (CLASS))
+(sid SID)
+(sidorder (SID))
+(user USER)
+(role ROLE)
+(type TYPE)
+(category CAT)
+(categoryorder (CAT))
+(sensitivity SENS)
+(sensitivityorder (SENS))
+(sensitivitycategory SENS (CAT))
+(allow TYPE self (CLASS (PERM)))
+(roletype ROLE TYPE)
+(userrole USER ROLE)
+(userlevel USER (SENS))
+(userrange USER ((SENS)(SENS (CAT))))
+(sidcontext SID (USER ROLE TYPE ((SENS)(SENS))))
+;; Extra stuff
+(common COMMON (PERM1 PERM2 PERM3 PERM4))
+(classcommon CLASS COMMON)
+
+
+;; Check that "in" statements work in blocks
+(block b1
+  (type t1a)
+  (allow t1b self (CLASS (PERM1)))
+)
+
+(in b1
+  (type t1b)
+  (allow t1a self (CLASS (PERM1)))
+)
+
+(in b1
+  (allow t1a self (CLASS (PERM2)))
+  (allow b1.t1a self (CLASS (PERM3)))
+  (allow .b1.t1a self (CLASS (PERM4)))
+
+  (allow t1b self (CLASS (PERM2)))
+  (allow b1.t1b self (CLASS (PERM3)))
+  (allow .b1.t1b self (CLASS (PERM4)))
+)
+
+
+;; Check that "in" statements work in optionals
+(optional option2
+  (type t2a)
+  (allow t2b self (CLASS (PERM1)))
+)
+
+(in option2
+  (type t2b)
+  (allow t2a self (CLASS (PERM1)))
+)
+
+(in option2
+  (allow t2a self (CLASS (PERM2)))
+  (allow t2b self (CLASS (PERM2)))
+)
+
+(allow t2a self (CLASS (PERM3)))
+(allow t2b self (CLASS (PERM3)))
+
+
+;; Check that "in" statements work in macros
+(type t3a)
+(type t3b)
+(macro m3 ((type t))
+  (allow t3a self (CLASS (PERM1)))
+  (allow t self (CLASS (PERM1)))
+)
+
+(call m3 (t3b))
+
+(in m3
+  (allow t3a self (CLASS (PERM2)))
+)
+
+(in m3
+  (allow t self (CLASS (PERM3)))
+)
+
+
+;; Check "in" statements work for nested optionals
+(optional o4a
+  (optional o4b
+    (type t4b)
+    (allow t4b self (CLASS (PERM1)))
+  )
+)
+
+(in o4a.o4b
+  (allow t4b self (CLASS (PERM2)))
+)
+
+
+;; Check "in: statements work for nested optionals and macros
+(macro m5 ()
+  (type t5a)
+  (type t5b)
+  (optional o5a
+    (allow t5a self (CLASS (PERM1)))
+    (optional o5b
+      (allow t5b self (CLASS (PERM1)))
+    )
+  )
+)
+
+(call m5)
+
+(in m5.o5a
+  (allow t5a self (CLASS (PERM2)))
+)
+
+(in m5.o5a.o5b
+  (allow t5b self (CLASS (PERM2)))
+)
+
+
+;;
+;; Expected:
+;;
+;; Types:
+;;   b1.t1a, b1.t1b
+;;   t2a, t2b
+;;   t3a, t3b
+;;   t4b
+;;   t5a, t5b
+;;
+;; Allow rules:
+;;   allow b1.t1a b1.t1a : CLASS { PERM1 PERM2 PERM3 PERM4 };
+;;   allow b1.t1b b1.t1b : CLASS { PERM1 PERM2 PERM3 PERM4 };
+;;   allow t2a t2a : CLASS { PERM1 PERM2 PERM3 };
+;;   allow t2b t2b : CLASS { PERM1 PERM2 PERM3 };
+;;   allow t3a t3a : CLASS { PERM1 PERM2 };
+;;   allow t3b t3b : CLASS { PERM1 PERM3 };
+;;   allow t4b t4b : CLASS { PERM1 PERM2 };
+;;   allow t5a t5a : CLASS { PERM1 PERM2 };
+;;   allow t5b t5b : CLASS { PERM1 PERM2 };
+
