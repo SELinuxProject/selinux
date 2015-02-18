@@ -1,0 +1,126 @@
+;; Minimum stuff
+(class CLASS (PERM))
+(classorder (CLASS))
+(sid SID)
+(sidorder (SID))
+(user USER)
+(role ROLE)
+(type TYPE)
+(category CAT)
+(categoryorder (CAT))
+(sensitivity SENS)
+(sensitivityorder (SENS))
+(sensitivitycategory SENS (CAT))
+(allow TYPE self (CLASS (PERM)))
+(roletype ROLE TYPE)
+(userrole USER ROLE)
+(userlevel USER (SENS))
+(userrange USER ((SENS)(SENS (CAT))))
+(sidcontext SID (USER ROLE TYPE ((SENS)(SENS))))
+;; Extra stuff
+(common COMMON (PERM1 PERM2 PERM3 PERM4))
+(classcommon CLASS COMMON)
+
+
+;; Tests 1 and 2 show that the order of inheritance matters
+;; 
+(block b1
+  (type ta))
+
+(block b1a
+  (block b1
+    (type tb)))
+
+(block b1b
+  (blockinherit b1)   ;; Results in b1b.ta
+  (blockinherit b1a))
+
+
+(block b2
+  (type ta))
+
+(block b2a
+  (block b2
+    (type tb)))
+
+(block b2b
+  (blockinherit b2a)
+  (blockinherit b2))
+
+
+;; All of these work
+(block b3a
+  (type t3a)
+  (block b
+    (type t)
+    (allow t3a t (CLASS (PERM)))
+  )
+)
+
+(block b3b
+  (blockinherit b3a)
+)
+
+(block b3c
+  (blockinherit b3a.b)
+)
+
+(block b3d
+  (type t3a)
+  (blockinherit b3a)
+)
+
+(block b3e
+  (type t3a)
+  (blockinherit b3a.b)
+)
+
+
+;; Since block is abstract, allow rule will not be in policy
+(type t4)
+(block b4
+  (blockabstract b4)
+  (allow t4 self (CLASS (PERM)))
+)
+
+
+;; Inherting the abstract block causes the allow rule to be in the policy
+(type t5)
+(block b5
+  (blockabstract b5)
+  (allow t5 self (CLASS (PERM)))
+)
+(blockinherit b5)
+
+
+;; A sub-block can be inherited out of an abstract block
+(type t6)
+(block b6
+  (blockabstract b6)
+  (allow t6 self (CLASS (PERM1)))
+  (block b
+    (blockabstract b)
+    (allow t6 self (CLASS (PERM)))
+  )
+)
+(blockinherit b6.b)
+
+;;
+;; Expected:
+;;
+;; Types:
+;;   b1.ta, b1a.b1.tb, b1b.b1.tb, b1b.ta
+;;   b2.ta, b2a.b2.tb, b2b.b2.tb, b2b.ta
+;;   b3a.b.t, b3a.t3a, b3b.b.t, b3b.t3a, b3c.t, b3d.b.t, b3d.t3a, b3e.t, b3e.t3a
+;;   t4
+;;   t5
+;;   t6
+;;
+;; Allow rules:
+;;   allow b3a.t3a b3a.b.t : CLASS { PERM };
+;;   allow b3a.t3a b3c.t : CLASS { PERM };
+;;   allow b3b.t3a b3b.b.t : CLASS { PERM };
+;;   allow b3d.t3a b3d.b.t : CLASS { PERM };
+;;   allow b3e.t3a b3e.t : CLASS { PERM };
+;;   allow t5 t5 : CLASS { PERM };
+;;   allow t6 t6 : CLASS { PERM };

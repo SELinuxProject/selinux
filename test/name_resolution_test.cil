@@ -1,0 +1,172 @@
+;; Minimum stuff
+(class CLASS (PERM))
+(classorder (CLASS))
+(sid SID)
+(sidorder (SID))
+(user USER)
+(role ROLE)
+(type TYPE)
+(category CAT)
+(categoryorder (CAT))
+(sensitivity SENS)
+(sensitivityorder (SENS))
+(sensitivitycategory SENS (CAT))
+(allow TYPE self (CLASS (PERM)))
+(roletype ROLE TYPE)
+(userrole USER ROLE)
+(userlevel USER (SENS))
+(userrange USER ((SENS)(SENS (CAT))))
+(sidcontext SID (USER ROLE TYPE ((SENS)(SENS))))
+;; Extra stuff
+(common COMMON (PERM1 PERM2 PERM3 PERM4))
+(classcommon CLASS COMMON)
+
+
+;; Check global resolution
+(type t0)
+(allow t0 self (CLASS (PERM1)))
+(allow .t0 self (CLASS (PERM2)))
+
+
+;; Check block and sub-block resolution
+(block b1a
+  (type t1a)
+  (allow t1a self (CLASS (PERM)))
+  (allow b1b.t1b self (CLASS (PERM)))
+  (block b1b
+    (type t1b)
+    (allow t1a self (CLASS (PERM1)))
+    (allow t1b self (CLASS (PERM1)))
+    (allow .b1a.t1a self (CLASS (PERM2)))
+    (allow .b1a.b1b.t1b self (CLASS (PERM2)))
+  )
+)
+(allow b1a.t1a self (CLASS (PERM3)))
+(allow b1a.b1b.t1b self (CLASS (PERM3)))
+(allow .b1a.t1a self (CLASS (PERM4)))
+(allow .b1a.b1b.t1b self (CLASS (PERM4)))
+
+
+;; Check macro arg resolution
+(type t2)
+(macro m2 ((type t))
+  (allow t self (CLASS (PERM)))
+)
+(call m2 (t2))
+
+
+;; Check resolution for a macro with a parent decl
+(block b3
+  (type t3)
+  (macro m3 ()
+    (allow t3 self (CLASS (PERM)))
+  )
+)
+(call b3.m3)
+
+
+;; Check resolution for a macro with a caller decl
+(block b4
+  (block b4a
+    (macro m4 ()
+      (allow t4 self (CLASS (PERM)))
+    )
+  )
+  (block b4b
+    (type t4)
+    (call .b4.b4a.m4)
+  )
+)
+
+
+;; Check resolution for blockinherits with type in inheriting block
+(block b5a
+  (type t5a)
+  (block b5b
+    (allow t5a self (CLASS (PERM1)))
+  )
+)
+
+(block b5c
+  (type t5a)
+  (blockinherit b5a.b5b)
+  (allow t5a self (CLASS (PERM2)))
+)
+
+;; Check resolution for blockinherits with no type in inheriting block
+(block b6a
+  (type t6a)
+  (block b6b
+    (allow t6a self (CLASS (PERM1)))
+  )
+)
+
+(block b6c
+  (blockinherit b6a.b6b) ;; This does not cause an error.
+  ;;(allow t6a self (CLASS (PERM2))) ;; This causes an error
+)
+
+
+;; Check for proper resolution of t
+(block b7
+  (type t)
+  (macro m7 ((type t))
+    (allow t self (CLASS (PERM)))
+  )
+  (allow t self (CLASS (PERM1)))
+  (block b7a
+    (type t)
+    (allow t self (CLASS (PERM2)))
+    (block b7b
+      (type t)
+      (allow t self (CLASS (PERM3)))
+      (call m7 (t))
+    )
+  )
+)
+
+
+;; Check that improper name causes an error
+(block b8
+  (optional o8a
+    (type t8a)
+  )
+  (in o8a
+    (allow t8a self (CLASS (PERM1)))
+  )
+  ;;(allow o8a.t8a self (CLASS (PERM))) ;; Bad name
+  (macro m8 ((type t))
+    (allow t self (CLASS (PERM1)))
+  )
+  ;;(allow m8.t self (CLASS (PERM))) ;; Bad name
+)
+
+
+;;
+;; Expected:
+;;
+;; Types:
+;;   t0
+;;   b1a.t1a, b1a.b1b.t1b
+;;   t2
+;;   b3.t3
+;;   b4.b4b.t4
+;;   b5a.t5a, b5c.t5a
+;;   b6a.t6a
+;;   b7.t, b7.b7a.t, b7.b7a.b7b.t
+;;   b8.t8a
+;;
+;; Allow rules:
+;;   allow t0 t0 : CLASS { PERM1 PERM2 };
+;;   allow b1a.b1b.t1b b1a.b1b.t1b : CLASS { PERM PERM1 PERM2 PERM3 PERM4 };
+;;   allow b1a.t1a b1a.t1a : CLASS { PERM PERM1 PERM2 PERM3 PERM4 };
+;;   allow t2 t2 : CLASS { PERM };
+;;   allow b3.t3 b3.t3 : CLASS { PERM };
+;;   allow b4.b4b.t4 b4.b4b.t4 : CLASS { PERM };
+;;   allow b5a.t5a b5a.t5a : CLASS { PERM1 };
+;;   allow b5c.t5a b5c.t5a : CLASS { PERM1 PERM2 };
+;;   allow b6a.t6a b6a.t6a : CLASS { PERM1 };
+;;   allow b7.b7a.b7b.t b7.b7a.b7b.t : CLASS { PERM PERM3 };
+;;   allow b7.b7a.t b7.b7a.t : CLASS { PERM2 };
+;;   allow b7.t b7.t : CLASS { PERM1 };
+;;   allow b8.t8a b8.t8a : CLASS { PERM1 };

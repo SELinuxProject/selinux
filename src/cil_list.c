@@ -28,15 +28,19 @@
  */
 
 #include <stdlib.h>
+#include <stdarg.h>
 
 #include "cil_internal.h"
 #include "cil_flavor.h"
 #include "cil_log.h"
 #include "cil_mem.h"
 
-__attribute__((noreturn)) void cil_list_error(const char* msg)
+__attribute__((noreturn)) __attribute__((format (printf, 1, 2))) void cil_list_error(const char* msg, ...)
 {
-	cil_log(CIL_ERR, "%s\n",msg);
+	va_list ap;
+	va_start(ap, msg);
+	cil_vlog(CIL_ERR, msg, ap);
+	va_end(ap);
 	exit(1);
 }
 
@@ -215,4 +219,30 @@ void cil_list_prepend_item(struct cil_list *list, struct cil_list_item *item)
 
 	last->next = list->head;
 	list->head = item;
+}
+
+void cil_list_remove(struct cil_list *list, enum cil_flavor flavor, void *data, unsigned destroy_data)
+{
+	struct cil_list_item *item;
+	struct cil_list_item *previous = NULL;
+
+	if (list == NULL) {
+		cil_list_error("Attempt to remove data from a NULL list");
+	}
+
+	cil_list_for_each(item, list) {
+		if (item->data == data && item->flavor == flavor) {
+			if (previous == NULL) {
+				list->head = item->next;
+			} else {
+				previous->next = item->next;
+			}
+			if (item->next == NULL) {
+				list->tail = previous;
+			}
+			cil_list_item_destroy(&item, destroy_data);
+			break;
+		}
+		previous = item;
+	}
 }

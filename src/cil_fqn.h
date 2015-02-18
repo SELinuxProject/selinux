@@ -33,6 +33,6 @@
 #include "cil_internal.h"
 #include "cil_tree.h"
 
-int cil_fqn_qualify(struct cil_tree_node *root);
+int cil_fqn_qualify(struct cil_tree_node *root_node);
 
 #endif /* CIL_FQN_H_ */

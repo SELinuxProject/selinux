@@ -1,0 +1,78 @@
+;; Minimum stuff
+(class CLASS (PERM))
+(classorder (CLASS))
+(sid SID)
+(sidorder (SID))
+(user USER)
+(role ROLE)
+(type TYPE)
+(category CAT)
+(categoryorder (CAT))
+(sensitivity SENS)
+(sensitivityorder (SENS))
+(sensitivitycategory SENS (CAT))
+(allow TYPE self (CLASS (PERM)))
+(roletype ROLE TYPE)
+(userrole USER ROLE)
+(userlevel USER (SENS))
+(userrange USER ((SENS)(SENS (CAT))))
+(sidcontext SID (USER ROLE TYPE ((SENS)(SENS))))
+;; Extra stuff
+(common COMMON (PERM1 PERM2 PERM3 PERM4))
+(classcommon CLASS COMMON)
+
+
+;; Check resolution failure handling for optionals
+(type t1)
+(optional o1
+  (allow t1 self (CLASS (PERM))) ;; Should not appear in policy
+  (allow UNKNOWN self (CLASS (PERM)))
+)
+
+
+;; These should not cause an error
+(block b2a
+  (type t2)
+  (allow t2 self (CLASS (PERM1)))
+)
+
+(block b2b
+  (optional o2b
+    (type t2)
+    (allow t2 DNE (CLASS (PERM)))
+  )
+  (blockinherit b2a)
+)
+
+(block b2c
+  (optional o2c
+    (type t2)
+    (allow t2 self (CLASS (PERM)))
+  )
+  (blockinherit b2a)
+)
+
+
+;; This is not allowed
+;;(block b3
+;;  (optional o3
+;;    (type t3)
+;;    (allow t3 DNE (CLASS (PERM)))
+;;  )
+;;  (type t3)
+;;  (allow t3 self (CLASS (PERM1)))
+;;)
+
+
+;;
+;; Expected:
+;;
+;; Types:
+;;   t1
+;;   b2a.t2, b2b.t2, b2c.t2
+;;
+;; Allow rules:
+;;  allow b2a.t2 b2a.t2 : CLASS { PERM1 };
+;;  allow b2b.t2 b2b.t2 : CLASS { PERM1 };
+;;  allow b2c.t2 b2c.t2 : CLASS { PERM PERM1 };
+

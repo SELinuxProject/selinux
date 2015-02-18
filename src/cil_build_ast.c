@@ -201,6 +201,7 @@ void cil_destroy_block(struct cil_block *block)
 
 	cil_symtab_datum_destroy(&block->datum);
 	cil_symtab_array_destroy(block->symtab);
+	cil_list_destroy(&block->bi_nodes, CIL_FALSE);
 
 	free(block);
 }

@@ -215,6 +215,7 @@ void cil_db_init(struct cil_db **db)
 
 	cil_tree_init(&(*db)->parse);
 	cil_tree_init(&(*db)->ast);
+	cil_root_init((struct cil_root **)&(*db)->ast->root->data);
 	(*db)->sidorder = NULL;
 	(*db)->classorder = NULL;
 	(*db)->catorder = NULL;
@@ -235,6 +236,7 @@ void cil_db_init(struct cil_db **db)
 
 	cil_type_init(&(*db)->selftype);
 	(*db)->selftype->datum.name = CIL_KEY_SELF;
+	(*db)->selftype->datum.fqn = CIL_KEY_SELF;
 
 	(*db)->num_types = 0;
 	(*db)->num_roles = 0;
@@ -256,7 +258,6 @@ void cil_db_destroy(struct cil_db **db)
 	}
 
 	cil_tree_destroy(&(*db)->parse);
-	cil_destroy_ast_symtabs((*db)->ast->root);
 	cil_tree_destroy(&(*db)->ast);
 	cil_list_destroy(&(*db)->sidorder, CIL_FALSE);
 	cil_list_destroy(&(*db)->classorder, CIL_FALSE);
@@ -1079,7 +1080,7 @@ int cil_userprefixes_to_string(struct cil_db *db, __attribute__((unused)) sepol_
 	cil_list_for_each(curr, db->userprefixes) {
 		userprefix = curr->data;
 		user = userprefix->user;
-		str_len += strlen("user ") + strlen(user->datum.name) + strlen(" prefix ") + strlen(userprefix->prefix_str) + 2;
+		str_len += strlen("user ") + strlen(user->datum.fqn) + strlen(" prefix ") + strlen(userprefix->prefix_str) + 2;
 	}
 
 	*size = str_len * sizeof(char);
@@ -1091,7 +1092,7 @@ int cil_userprefixes_to_string(struct cil_db *db, __attribute__((unused)) sepol_
 		userprefix = curr->data;
 		user = userprefix->user;
 
-		buf_pos = snprintf(str_tmp, str_len, "user %s prefix %s;\n", user->datum.name,
+		buf_pos = snprintf(str_tmp, str_len, "user %s prefix %s;\n", user->datum.fqn,
 									userprefix->prefix_str);
 		str_len -= buf_pos;
 		str_tmp += buf_pos;
@@ -1130,26 +1131,26 @@ static int __cil_level_strlen(struct cil_level *lvl)
 	int first = -1;
 	int last = -1;
 
-	str_len += strlen(lvl->sens->datum.name);
+	str_len += strlen(lvl->sens->datum.fqn);
 
 	if (cats && cats->datum_expr != NULL) {
 		str_len++; /* initial ":" */
 		cil_list_for_each(item, cats->datum_expr) {
 			struct cil_cat *cat = item->data;
 			if (first == -1) {
-				str1 = cat->datum.name;
+				str1 = cat->datum.fqn;
 				first = cat->value;
 				last = first;
 			} else if (cat->value == last + 1) {
 				last++;
-				str2 = cat->datum.name;
+				str2 = cat->datum.fqn;
 			} else {
 				if (first == last) {
-					str_len += strlen(str1) + strlen(cat->datum.name) + 1;
+					str_len += strlen(str1) + strlen(cat->datum.fqn) + 1;
 				} else if (last == first + 1) {
-					str_len += strlen(str1) + strlen(str2) + strlen(cat->datum.name) + 2;
+					str_len += strlen(str1) + strlen(str2) + strlen(cat->datum.fqn) + 2;
 				} else {
-					str_len += strlen(str1) + strlen(str2) + strlen(cat->datum.name) + 2;
+					str_len += strlen(str1) + strlen(str2) + strlen(cat->datum.fqn) + 2;
 				}
 				first = -1;
 				last = -1;
@@ -1183,7 +1184,7 @@ static int __cil_level_to_string(struct cil_level *lvl, char *out)
 	int first = -1;
 	int last = -1;
 
-	buf_pos = sprintf(str_tmp, "%s", lvl->sens->datum.name);
+	buf_pos = sprintf(str_tmp, "%s", lvl->sens->datum.fqn);
 	str_tmp += buf_pos;
 
 	if (cats && cats->datum_expr != NULL) {
@@ -1193,21 +1194,21 @@ static int __cil_level_to_string(struct cil_level *lvl, char *out)
 		cil_list_for_each(item, cats->datum_expr) {
 			struct cil_cat *cat = item->data;
 			if (first == -1) {
-				str1 = cat->datum.name;
+				str1 = cat->datum.fqn;
 				first = cat->value;
 				last = first;
 			} else if (cat->value == last + 1) {
 				last++;
-				str2 = cat->datum.name;
+				str2 = cat->datum.fqn;
 			} else {
 				if (first == last) {
-					buf_pos = sprintf(str_tmp, "%s,%s", str1, cat->datum.name);
+					buf_pos = sprintf(str_tmp, "%s,%s", str1, cat->datum.fqn);
 					str_tmp += buf_pos;
 				} else if (last == first + 1) {
-					buf_pos = sprintf(str_tmp, "%s,%s,%s", str1, str2, cat->datum.name);
+					buf_pos = sprintf(str_tmp, "%s,%s,%s", str1, str2, cat->datum.fqn);
 					str_tmp += buf_pos;
 				} else {
-					buf_pos = sprintf(str_tmp, "%s.%s,%s",str1, str2, cat->datum.name);
+					buf_pos = sprintf(str_tmp, "%s.%s,%s",str1, str2, cat->datum.fqn);
 					str_tmp += buf_pos;
 				}
 				first = -1;
@@ -1252,7 +1253,7 @@ int cil_selinuxusers_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, ch
 		struct cil_selinuxuser *selinuxuser = curr->data;
 		struct cil_user *user = selinuxuser->user;
 
-		str_len += strlen(selinuxuser->name_str) + strlen(user->datum.name) + 1;
+		str_len += strlen(selinuxuser->name_str) + strlen(user->datum.fqn) + 1;
 
 		if (sepol_db->p.mls == CIL_TRUE) {
 			struct cil_levelrange *range = selinuxuser->range;
@@ -1270,7 +1271,7 @@ int cil_selinuxusers_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, ch
 		struct cil_selinuxuser *selinuxuser = curr->data;
 		struct cil_user *user = selinuxuser->user;
 
-		buf_pos = sprintf(str_tmp, "%s:%s", selinuxuser->name_str, user->datum.name);
+		buf_pos = sprintf(str_tmp, "%s:%s", selinuxuser->name_str, user->datum.fqn);
 		str_tmp += buf_pos;
 
 		if (sepol_db->p.mls == CIL_TRUE) {
@@ -1317,7 +1318,7 @@ int cil_filecons_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char *
 			struct cil_role *role = ctx->role;
 			struct cil_type *type = ctx->type;
 
-			str_len += (strlen(user->datum.name) + strlen(role->datum.name) + strlen(type->datum.name) + 3);
+			str_len += (strlen(user->datum.fqn) + strlen(role->datum.fqn) + strlen(type->datum.fqn) + 3);
 
 			if (sepol_db->p.mls == CIL_TRUE) {
 				struct cil_levelrange *range = ctx->range;
@@ -1380,8 +1381,8 @@ int cil_filecons_to_string(struct cil_db *db, sepol_policydb_t *sepol_db, char *
 			struct cil_role *role = ctx->role;
 			struct cil_type *type = ctx->type;
 
-			buf_pos = sprintf(str_tmp, "\t%s:%s:%s", user->datum.name, role->datum.name,
-							  type->datum.name);
+			buf_pos = sprintf(str_tmp, "\t%s:%s:%s", user->datum.fqn, role->datum.fqn,
+							  type->datum.fqn);
 			str_tmp += buf_pos;
 
 			if (sepol_db->p.mls == CIL_TRUE) {
@@ -1650,12 +1651,15 @@ void cil_block_init(struct cil_block **block)
 	cil_symtab_array_init((*block)->symtab, cil_sym_sizes[CIL_SYM_ARRAY_BLOCK]);
 
 	(*block)->is_abstract = CIL_FALSE;
+
+	(*block)->bi_nodes = NULL;
 }
 
 void cil_blockinherit_init(struct cil_blockinherit **inherit)
 {
 	*inherit = cil_malloc(sizeof(**inherit));
 	(*inherit)->block_str = NULL;
+	(*inherit)->block = NULL;
 }
 
 void cil_blockabstract_init(struct cil_blockabstract **abstract)
@@ -2243,6 +2247,7 @@ void cil_call_init(struct cil_call **call)
 void cil_optional_init(struct cil_optional **optional)
 {
 	*optional = cil_malloc(sizeof(**optional));
+	(*optional)->enabled = CIL_TRUE;
 	cil_symtab_datum_init(&(*optional)->datum);
 }
 

@@ -46,6 +46,20 @@ static inline void cil_reset_classperms(struct cil_classperms *cp)
 	cil_list_destroy(&cp->perms, CIL_FALSE);
 }
 
+static void cil_reset_classpermission(struct cil_classpermission *cp)
+{
+	if (cp == NULL) {
+		return;
+	}
+
+	cil_reset_classperms_list(cp->classperms);
+}
+
+static void cil_reset_classperms_set(struct cil_classperms_set *cp_set)
+{
+	cil_reset_classpermission(cp_set->set);
+}
+
 static inline void cil_reset_classperms_list(struct cil_list *cp_list)
 {
 	struct cil_list_item *curr;
@@ -55,15 +69,12 @@ static inline void cil_reset_classperms_list(struct cil_list *cp_list)
 	}
 
 	cil_list_for_each(curr, cp_list) {
-		if (curr->flavor == CIL_CLASSPERMS) { /* KERNEL or MAP, but not SET */
+		if (curr->flavor == CIL_CLASSPERMS) { /* KERNEL or MAP */
 			cil_reset_classperms(curr->data);
+		} else if (curr->flavor == CIL_CLASSPERMS_SET) { /* SET */
+			cil_reset_classperms_set(curr->data);
 		}
 	}
-}
-
-static void cil_reset_classpermission(struct cil_classpermission *cp)
-{
-	cil_reset_classperms_list(cp->classperms);
 }
 
 static void cil_reset_classpermissionset(struct cil_classpermissionset *cps)

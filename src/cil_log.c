@@ -49,16 +49,21 @@ void cil_set_log_handler(void (*handler)(int lvl, char *msg))
 	cil_log_handler = handler;
 }
 
-__attribute__ ((format (printf, 2, 3))) void cil_log(enum cil_log_level lvl, const char *msg, ...)
+__attribute__ ((format (printf, 2, 0))) void cil_vlog(enum cil_log_level lvl, const char *msg, va_list args)
 {
 	if (cil_log_level >= lvl) {
 		char buff[MAX_LOG_SIZE];
-		va_list args;
-		va_start(args, msg);
 		vsnprintf(buff, MAX_LOG_SIZE, msg, args);
-		va_end(args);
 		(*cil_log_handler)(cil_log_level, buff);
 	}
+}
+
+__attribute__ ((format (printf, 2, 3))) void cil_log(enum cil_log_level lvl, const char *msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    cil_vlog(lvl, msg, args);
+    va_end(args);
 }
 
 void cil_set_log_level(enum cil_log_level lvl)

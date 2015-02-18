@@ -115,7 +115,7 @@
 
       <sect2 id="blockinherit">
          <title>blockinherit</title>
-         <para>Used to add common policy rules to the current namespace via a template that has been defined with the <literal><link linkend="blockabstract">blockabstract</link></literal> statement.</para>
+         <para>Used to add common policy rules to the current namespace via a template that has been defined with the <literal><link linkend="blockabstract">blockabstract</link></literal> statement. All <literal><link linkend="blockinherit">blockinherit</link></literal> statements are resolved first and then the contents of the block are copied. This is so that inherited blocks will not be inherited. For a concrete example, please see the examples section.</para>
          <para><emphasis role="bold">Statement definition:</emphasis></para>
          <programlisting><![CDATA[
 (block block_id
@@ -210,7 +210,22 @@
 
     ; Label the log files
     (filecon "/data/data/com.se4android.netserver/.*" file log_file_context)
-)]]>
+)
+
+; This is an example of how blockinherits resolve inherits before copying
+(block a
+    (type one))
+
+(block b
+    ; Notice that block a is declared here as well
+    (block a
+        (type two)))
+
+; This will first copy the contents of block b, which results in type b.a.two being copied.
+; Next, the contents of block a will be copied which will result in type a.one.
+(block ab
+    (blockinherit b)
+    (blockinherit a))]]>
          </programlisting>
       </sect2>
 
