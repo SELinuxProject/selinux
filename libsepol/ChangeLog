@@ -1,5 +1,7 @@
 	* Fix MacOS X build, from Stephen Smalley.
 	* Enabling building CIL in Android, from Stephen Smalley.
+	* Update to latest CIL, includes new name resolution and fixes ordering
+	  issues with blockinherit statements, and bug fixes
 
 2.4 2015-02-02
 	* Remove assumption that SHLIBDIR is ../../ relative to LIBDIR, from Steve
