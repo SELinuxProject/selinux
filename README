@@ -1,3 +1,6 @@
+Please submit all bug reports and patches to selinux@tycho.nsa.gov.
+Subscribe via selinux-join@tycho.nsa.gov.
+
 Build dependencies on Fedora:
 yum install bison flex swig flex-static flex-devel pcre-devel bzip2-devel ustr-devel audit-libs-devel libcap-devel libcap-ng-devel pam-devel
 
