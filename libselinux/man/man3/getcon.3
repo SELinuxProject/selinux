@@ -90,10 +90,18 @@ A multi-threaded application can perform a
 .BR setcon ()
 prior to creating
 any child threads, in which case all of the child threads will inherit
-the new context.  However,
+the new context.  However, prior to Linux 2.6.28,
 .BR setcon ()
-will fail if there are any other
-threads running in the same process.
+would fail if there are any other
+threads running in the same process since this would yield
+an inconsistency among the security contexts of threads sharing
+the same memory space.  Since Linux 2.6.28,
+.BR setcon()
+is permitted for threads within a multi-threaded process if the
+new security context is bounded by the old security context, where
+the bounded relation is defined through typebounds statements in the
+policy and guarantees that the new security context has a subset of
+the permissions of the old security context.
 
 If the process was being ptraced at the time of the
 .BR setcon ()
