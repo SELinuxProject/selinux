@@ -914,10 +914,11 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 		}
 		for (i = cat->low - 1; i < cat->high; i++) {
 			if (!ebitmap_get_bit(&levdatum->level->cat, i)) {
-				ERR(h, "Category %s can not be associate with "
+				ERR(h, "Category %s can not be associated with "
 				    "level %s",
 				    p->p_cat_val_to_name[i],
 				    p->p_sens_val_to_name[l->sens - 1]);
+				return -1;
 			}
 			if (ebitmap_set_bit(&l->cat, i, 1)) {
 				ERR(h, "Out of memory!");
