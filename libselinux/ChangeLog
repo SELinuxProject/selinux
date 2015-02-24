@@ -1,3 +1,4 @@
+	* label_file:  handle newlines in file names, from Nick Kralevich.
 	* getcon.3:  Fix setcon description, from Stephen Smalley.
 	* Fix audit2why error handling if SELinux is disabled, from Stephen Smalley.
 	* pcre_study can return NULL without error, from Stephen Smalley.
