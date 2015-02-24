@@ -100,7 +100,7 @@ static int process_file(struct saved_data *data, const char *filename)
 
 		spec_hasMetaChars(spec);
 
-		re = pcre_compile(anchored_regex, 0, &err, &erroff, NULL);
+		re = pcre_compile(anchored_regex, PCRE_DOTALL, &err, &erroff, NULL);
 		if (!re) {
 			fprintf(stderr, "PCRE compilation failed for %s at offset %d: %s\n", anchored_regex, erroff, err);
 			return -1;
