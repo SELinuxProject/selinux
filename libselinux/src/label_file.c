@@ -129,7 +129,7 @@ static int compile_regex(struct saved_data *data, struct spec *spec, const char 
 	*cp = '\0';
 
 	/* Compile the regular expression. */
-	spec->regex = pcre_compile(anchored_regex, 0, &tmperrbuf, &erroff, NULL);
+	spec->regex = pcre_compile(anchored_regex, PCRE_DOTALL, &tmperrbuf, &erroff, NULL);
 	free(anchored_regex);
 	if (!spec->regex) {
 		if (errbuf)
