@@ -12,7 +12,7 @@
    <refmeta>
       <refentrytitle>SECILC</refentrytitle>
       <manvolnum>8</manvolnum>
-      <refmiscinfo class="date">12 May 2014</refmiscinfo>
+      <refmiscinfo class="date">18 February 2015</refmiscinfo>
       <refmiscinfo class="source">secilc</refmiscinfo>
       <refmiscinfo class="manual">SELinux CIL Compiler</refmiscinfo>
    </refmeta>
@@ -34,38 +34,62 @@
    </refsect1>
 
    <refsect1 id="options"><title>OPTIONS</title>
-      <para><option>-o, --output=&lt;file></option></para>
-      <para>Write binary policy to <emphasis role="italic">file</emphasis> (default: policy.<emphasis role="italic">version</emphasis>)</para>
+      <variablelist>
+         <varlistentry>
+            <term><option>-o, --output=&lt;file></option></term>
+            <listitem><para>Write binary policy to <emphasis role="italic">file</emphasis> (default: policy.<emphasis role="italic">version</emphasis>)</para></listitem>
+         </varlistentry>
 
-      <para><option>-f, --filecontext=&lt;file></option></para>
-      <para>Write file contexts to <emphasis role="italic">file</emphasis> (default: <emphasis role="bold">file_contexts</emphasis>)</para>
+         <varlistentry>
+            <term><option>-f, --filecontext=&lt;file></option></term>
+            <listitem><para>Write file contexts to <emphasis role="italic">file</emphasis> (default: <emphasis role="bold">file_contexts</emphasis>)</para></listitem>
+         </varlistentry>
 
-      <para><option>-t, --target=&lt;type></option></para>
-      <para>Specify target architecture. May be <emphasis role="bold">selinux</emphasis> or <emphasis role="bold">xen</emphasis> (default: <emphasis role="bold">selinux</emphasis>)</para>
+         <varlistentry>
+            <term><option>-t, --target=&lt;type></option></term>
+            <listitem><para>Specify target architecture. May be <emphasis role="bold">selinux</emphasis> or <emphasis role="bold">xen</emphasis> (default: <emphasis role="bold">selinux</emphasis>)</para></listitem>
+         </varlistentry>
 
-      <para><option>-M, --mls true|false</option></para>
-      <para>Build an mls policy. Must be <emphasis role="bold">true</emphasis> or <emphasis role="bold">false</emphasis>. This will override the <emphasis role="bold">(mls <emphasis role="italic">boolean</emphasis></emphasis><emphasis role="bold">)</emphasis> statement if present in the policy.</para>
+         <varlistentry>
+            <term><option>-M, --mls true|false</option></term>
+            <listitem><para>Build an mls policy. Must be <emphasis role="bold">true</emphasis> or <emphasis role="bold">false</emphasis>. This will override the <emphasis role="bold">(mls <emphasis role="italic">boolean</emphasis></emphasis><emphasis role="bold">)</emphasis> statement if present in the policy.</para></listitem>
+         </varlistentry>
 
-      <para><option>-c, --policyvers=&lt;version></option></para>
-      <para>Build a binary policy with a given <emphasis role="italic">version</emphasis> (default: depends on the systems SELinux policy <emphasis role="italic">version</emphasis>, see <citerefentry><refentrytitle>sestatus</refentrytitle><manvolnum>8</manvolnum></citerefentry>)</para>
+         <varlistentry>
+            <term><option>-c, --policyvers=&lt;version></option></term>
+            <listitem><para>Build a binary policy with a given <emphasis role="italic">version</emphasis> (default: depends on the systems SELinux policy <emphasis role="italic">version</emphasis>, see <citerefentry><refentrytitle>sestatus</refentrytitle><manvolnum>8</manvolnum></citerefentry>)</para></listitem>
+         </varlistentry>
 
-      <para><option>-U, --handle-unknown=&lt;action></option></para>
-      <para>How to handle unknown classes or permissions. May be <emphasis role="bold">deny</emphasis>, <emphasis role="bold">allow</emphasis>, or <emphasis role="bold">reject</emphasis> (default: <emphasis role="bold">deny</emphasis>). This will override the <emphasis role="bold">(handleunknown <emphasis role="italic">action</emphasis></emphasis><emphasis role="bold">)</emphasis> statement if present in the policy.</para>
+         <varlistentry>
+            <term><option>-U, --handle-unknown=&lt;action></option></term>
+            <listitem><para>How to handle unknown classes or permissions. May be <emphasis role="bold">deny</emphasis>, <emphasis role="bold">allow</emphasis>, or <emphasis role="bold">reject</emphasis> (default: <emphasis role="bold">deny</emphasis>). This will override the <emphasis role="bold">(handleunknown <emphasis role="italic">action</emphasis></emphasis><emphasis role="bold">)</emphasis> statement if present in the policy.</para></listitem>
+         </varlistentry>
 
-      <para><option>-D, --disable-dontaudit</option></para>
-      <para>Do not add <emphasis role="bold">dontaudit</emphasis> rules to the binary policy.</para>
+         <varlistentry>
+            <term><option>-D, --disable-dontaudit</option></term>
+            <listitem><para>Do not add <emphasis role="bold">dontaudit</emphasis> rules to the binary policy.</para></listitem>
+         </varlistentry>
 
-      <para><option>-P, --preserve-tunables</option></para>
-      <para>Treat tunables as booleans.</para>
+         <varlistentry>
+            <term><option>-P, --preserve-tunables</option></term>
+            <listitem><para>Treat tunables as booleans.</para></listitem>
+         </varlistentry>
 
-      <para><option>-N, --disable-neverallow</option></para>
-      <para>Do not check <emphasis role="bold">neverallow</emphasis> rules.</para>
+         <varlistentry>
+            <term><option>-N, --disable-neverallow</option></term>
+            <listitem><para>Do not check <emphasis role="bold">neverallow</emphasis> rules.</para></listitem>
+         </varlistentry>
 
-      <para><option>-v, --verbose</option></para>
-      <para>Increment verbosity level.</para>
+         <varlistentry>
+            <term><option>-v, --verbose</option></term>
+            <listitem><para>Increment verbosity level.</para></listitem>
+         </varlistentry>
 
-      <para><option>-h, --help</option></para>
-      <para>Display usage information.</para>
+         <varlistentry>
+            <term><option>-h, --help</option></term>
+            <listitem><para>Display usage information.</para></listitem>
+         </varlistentry>
+      </variablelist>
    </refsect1>
 
    <refsect1 id="see_also"><title>SEE ALSO</title>
@@ -83,7 +107,7 @@
       </para>
       <para>HTML documentation describing the CIL language statements is available starting with <emphasis role="italic">docs/html/index.html</emphasis>.</para>
       <para>PDF documentation describing the CIL language statements is available at: <emphasis role="italic">docs/pdf/CIL_Reference_Guide.pdf</emphasis>.</para>
-      <para>There is a CIL Design Wiki at: <ulink url="http://userspace.selinuxproject.org/trac/wiki/CilDesign"></ulink> that describes the goals and features of the CIL language.</para>
+      <para>There is a CIL Design Wiki at: <ulink url="http://github.com/SELinuxProject/cil/wiki"></ulink> that describes the goals and features of the CIL language.</para>
    </refsect1>
 </refentry>
 

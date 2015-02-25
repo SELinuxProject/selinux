@@ -186,7 +186,7 @@
          <title>portcon</title>
          <para>Label a udp or tcp port.</para>
          <para><emphasis role="bold">Statement definition:</emphasis></para>
-         <programlisting><![CDATA[(portcon protocol port context_id)]]></programlisting>
+         <programlisting><![CDATA[(portcon protocol port|(port_low port_high) context_id)]]></programlisting>
          <para><emphasis role="bold">Where:</emphasis></para>
          <informaltable frame="all">
             <tgroup cols="2">
@@ -211,6 +211,16 @@
                </row>
                <row>
                   <entry>
+                     <para><literal>port |</literal></para>
+                     <para><literal>(port_low port_high)</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single port to apply the context, or a range of ports.</para>
+                     <para>The entries must consist of numerics <literal>[0-9]</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
                      <para><literal>context_id</literal></para>
                   </entry>
                   <entry>
@@ -227,7 +237,7 @@
 (portcon tcp 2222 (unconfined.user object_r unconfined.object levelrange_2))
 (portcon tcp 3333 (unconfined.user object_r unconfined.object levelrange_1))
 (portcon udp 4444 (unconfined.user object_r unconfined.object ((s0) level_2)))
-(portcon tcp 55555 (unconfined.user object_r unconfined.object (systemlow level_3)))]]>
+(portcon tcp (2000 20000) (unconfined.user object_r unconfined.object (systemlow level_3)))]]>
          </programlisting>
       </sect2>
 
