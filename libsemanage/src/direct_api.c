@@ -428,49 +428,76 @@ static ssize_t bzip(semanage_handle_t *sh, const char *filename, char *data,
  * in the file.  Returns -1 if file could not be decompressed. */
 ssize_t bunzip(semanage_handle_t *sh, FILE *f, char **data)
 {
-	BZFILE* b;
+	BZFILE* b = NULL;
 	size_t  nBuf;
-	char    buf[1<<18];
-	size_t  size = sizeof(buf);
+	char*   buf = NULL;
+	size_t  size = 1<<18;
+	size_t  bufsize = size;
 	int     bzerror;
 	size_t  total=0;
+	char*   uncompress = NULL;
+	char*   tmpalloc = NULL;
+	int     ret = -1;
+
+	buf = malloc(bufsize);
+	if (buf == NULL) {
+		ERR(sh, "Failure allocating memory.");
+		goto exit;
+	}
 
 	if (!sh->conf->bzip_blocksize) {
 		bzerror = fread(buf, 1, BZ2_MAGICLEN, f);
 		rewind(f);
-		if ((bzerror != BZ2_MAGICLEN) || memcmp(buf, BZ2_MAGICSTR, BZ2_MAGICLEN))
-			return -1;
+		if ((bzerror != BZ2_MAGICLEN) || memcmp(buf, BZ2_MAGICSTR, BZ2_MAGICLEN)) {
+			ERR(sh, "bz2 magic number not found.");
+			goto exit;
+		}
 		/* fall through */
 	}
 	
 	b = BZ2_bzReadOpen ( &bzerror, f, 0, sh->conf->bzip_small, NULL, 0 );
 	if ( bzerror != BZ_OK ) {
-		BZ2_bzReadClose ( &bzerror, b );
-		return -1;
+		ERR(sh, "Failure opening bz2 archive.");
+		goto exit;
 	}
-	
-	char *uncompress = realloc(NULL, size);
-	
+
+	uncompress = malloc(size);
+	if (uncompress == NULL) {
+		ERR(sh, "Failure allocating memory.");
+		goto exit;
+	}
+
 	while ( bzerror == BZ_OK) {
-		nBuf = BZ2_bzRead ( &bzerror, b, buf, sizeof(buf));
+		nBuf = BZ2_bzRead ( &bzerror, b, buf, bufsize);
 		if (( bzerror == BZ_OK ) || ( bzerror == BZ_STREAM_END )) {
 			if (total + nBuf > size) {
 				size *= 2;
-				uncompress = realloc(uncompress, size);
+				tmpalloc = realloc(uncompress, size);
+				if (tmpalloc == NULL) {
+					ERR(sh, "Failure allocating memory.");
+					goto exit;
+				}
+				uncompress = tmpalloc;
 			}
 			memcpy(&uncompress[total], buf, nBuf);
 			total += nBuf;
 		}
 	}
 	if ( bzerror != BZ_STREAM_END ) {
-		BZ2_bzReadClose ( &bzerror, b );
-		free(uncompress);
-		return -1;
+		ERR(sh, "Failure reading bz2 archive.");
+		goto exit;
 	}
-	BZ2_bzReadClose ( &bzerror, b );
 
+	ret = total;
 	*data = uncompress;
-	return  total;
+
+exit:
+	BZ2_bzReadClose ( &bzerror, b );
+	free(buf);
+	if ( ret < 0 ) {
+		free(uncompress);
+	}
+	return ret;
 }
 
 /* mmap() a file to '*data',
