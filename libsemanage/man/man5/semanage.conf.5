@@ -108,6 +108,19 @@ size value is obtained after multiplication by 100000).
 When set to "true", the bzip algorithm shall try to reduce its system memory usage. It can be set to either "true" or "false" and
 by default it is set to "false".
 
+.TP
+.B remove-hll
+When set to "true", HLL files will be removed after compilation into CIL. In order to delete HLL files already compiled into CIL,
+modules will need to be recompiled with the
+.BR ignore-module-cache
+option set to 'true' or using the
+.BR ignore-module-cache
+option with semodule. The remove-hll option can be set to either "true" or "false"
+and by default it is set to "false".
+
+Please note that since this option deletes all HLL files, an updated HLL compiler will not be able to recompile the original HLL file into CIL.
+In order to compile the original HLL file into CIL, the same HLL file will need to be reinstalled.
+
 .SH "SEE ALSO"
 .TP
 semanage(8)

@@ -60,7 +60,7 @@ static int parse_errors;
 
 %token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT
 %token LOAD_POLICY_START SETFILES_START SEFCONTEXT_COMPILE_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD IGNOREDIRS
-%token BZIP_BLOCKSIZE BZIP_SMALL
+%token BZIP_BLOCKSIZE BZIP_SMALL REMOVE_HLL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
 %token PROG_PATH PROG_ARGS
 %token <s> ARG
@@ -93,6 +93,7 @@ single_opt:     module_store
         |       handle_unknown
 	|	bzip_blocksize
 	|	bzip_small
+	|	remove_hll
         ;
 
 module_store:   MODULE_STORE '=' ARG {
@@ -247,6 +248,17 @@ bzip_small:  BZIP_SMALL '=' ARG {
 	free($3);
 }
 
+remove_hll:  REMOVE_HLL'=' ARG {
+	if (strcasecmp($3, "false") == 0) {
+		current_conf->remove_hll = 0;
+	} else if (strcasecmp($3, "true") == 0) {
+		current_conf->remove_hll = 1;
+	} else {
+		yyerror("remove-hll can only be 'true' or 'false'");
+	}
+	free($3);
+}
+
 command_block: 
                 command_start external_opts BLOCK_END  {
                         if (new_external->path == NULL) {
@@ -330,6 +342,7 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	conf->bzip_blocksize = 9;
 	conf->bzip_small = 0;
 	conf->ignore_module_cache = 0;
+	conf->remove_hll = 0;
 
 	conf->save_previous = 0;
 	conf->save_linked = 0;

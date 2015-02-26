@@ -849,6 +849,52 @@ cleanup:
 	return retval;
 }
 
+static int semanage_direct_write_langext(semanage_handle_t *sh,
+				char *lang_ext,
+				const semanage_module_info_t *modinfo)
+{
+	int ret = -1;
+	char fn[PATH_MAX];
+	FILE *fp = NULL;
+
+	ret = semanage_module_get_path(sh,
+			modinfo,
+			SEMANAGE_MODULE_PATH_LANG_EXT,
+			fn,
+			sizeof(fn));
+	if (ret != 0) {
+		goto cleanup;
+	}
+
+	fp = fopen(fn, "w");
+	if (fp == NULL) {
+		ERR(sh, "Unable to open %s module ext file.", modinfo->name);
+		ret = -1;
+		goto cleanup;
+	}
+
+	if (fputs(lang_ext, fp) < 0) {
+		ERR(sh, "Unable to write %s module ext file.", modinfo->name);
+		ret = -1;
+		goto cleanup;
+	}
+
+	if (fclose(fp) != 0) {
+		ERR(sh, "Unable to close %s module ext file.", modinfo->name);
+		ret = -1;
+		goto cleanup;
+	}
+
+	fp = NULL;
+
+	ret = 0;
+
+cleanup:
+	if (fp != NULL) fclose(fp);
+
+	return ret;
+}
+
 static int semanage_compile_hll(semanage_handle_t *sh,
 				semanage_module_info_t *modinfos,
 				int num_modinfos)
@@ -942,6 +988,19 @@ static int semanage_compile_hll(semanage_handle_t *sh,
 			goto cleanup;
 		}
 
+		if (sh->conf->remove_hll == 1) {
+			status = unlink(hll_path);
+			if (status != 0) {
+				ERR(sh, "Error while removing HLL file %s: %s", hll_path, strerror(errno));
+				goto cleanup;
+			}
+
+			status = semanage_direct_write_langext(sh, "cil", &modinfos[i]);
+			if (status != 0) {
+				goto cleanup;
+			}
+		}
+
 		bzip_status = bzip(sh, cil_path, cil_data, cil_data_len);
 		if (bzip_status == -1) {
 			ERR(sh, "Failed to bzip %s\n", cil_path);
@@ -972,7 +1031,6 @@ cleanup:
 	free(compiler_path);
 	return status;
 }
-
 
 /********************* direct API functions ********************/
 
@@ -1915,7 +1973,6 @@ static int semanage_direct_set_module_info(semanage_handle_t *sh,
 
 	char fn[PATH_MAX];
 	const char *path = NULL;
-	FILE *fp = NULL;
 	int enabled = 0;
 
 	semanage_module_key_t modkey;
@@ -1988,37 +2045,11 @@ static int semanage_direct_set_module_info(semanage_handle_t *sh,
 	}
 
 	/* write ext */
-	ret = semanage_module_get_path(sh,
-				       modinfo,
-				       SEMANAGE_MODULE_PATH_LANG_EXT,
-				       fn,
-				       sizeof(fn));
+	ret = semanage_direct_write_langext(sh, modinfo->lang_ext, modinfo);
 	if (ret != 0) {
 		status = -1;
 		goto cleanup;
 	}
-
-	fp = fopen(fn, "w");
-
-	if (fp == NULL) {
-		ERR(sh, "Unable to open %s module ext file.", modinfo->name);
-		status = -1;
-		goto cleanup;
-	}
-
-	if (fputs(modinfo->lang_ext, fp) < 0) {
-		ERR(sh, "Unable to write %s module ext file.", modinfo->name);
-		status = -1;
-		goto cleanup;
-	}
-
-	if (fclose(fp) != 0) {
-		ERR(sh, "Unable to close %s module ext file.", modinfo->name);
-		status = -1;
-		goto cleanup;
-	}
-
-	fp = NULL;
 
 	/* write enabled/disabled status */
 
@@ -2071,8 +2102,6 @@ static int semanage_direct_set_module_info(semanage_handle_t *sh,
 	}
 
 cleanup:
-	if (fp != NULL) fclose(fp);
-
 	semanage_module_key_destroy(sh, &modkey);
 
 	semanage_module_info_destroy(sh, modinfo_tmp);
