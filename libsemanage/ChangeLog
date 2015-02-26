@@ -1,3 +1,6 @@
+	* Change bunzip to use heap instead of stack to prevent segfault on
+	  systems with small stack size, from Thomas Hurd.
+
 2.4 2015-02-02
 	* Fix Makefile to allow LIBDIR and SHLIBDIR to be set to different
 	  directories, from Steve Lawrence
