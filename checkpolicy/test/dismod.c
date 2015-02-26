@@ -755,7 +755,12 @@ static void link_module(policydb_t * base, FILE * out_fp)
 		return;
 	}
 	printf("\nModule filename: ");
-	fgets(module_name, sizeof(module_name), stdin);
+	if (fgets(module_name, sizeof(module_name), stdin) == NULL) {
+		fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
+				strerror(errno));
+		exit(1);
+	}
+
 	module_name[strlen(module_name) - 1] = '\0';	/* remove LF */
 	if (module_name[0] == '\0') {
 		return;
@@ -884,7 +889,12 @@ int main(int argc, char **argv)
 	menu();
 	for (;;) {
 		printf("\nCommand (\'m\' for menu):  ");
-		fgets(ans, sizeof(ans), stdin);
+		if (fgets(ans, sizeof(ans), stdin) == NULL) {
+			fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
+					strerror(errno));
+			continue;
+		}
+
 		switch (ans[0]) {
 
 		case '1':
@@ -951,7 +961,11 @@ int main(int argc, char **argv)
 		case 'f':
 			printf
 			    ("\nFilename for output (<CR> for screen output): ");
-			fgets(OutfileName, sizeof(OutfileName), stdin);
+			if (fgets(OutfileName, sizeof(OutfileName), stdin) == NULL) {
+				fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
+						strerror(errno));
+				break;
+			}
 			OutfileName[strlen(OutfileName) - 1] = '\0';	/* fix_string (remove LF) */
 			if (strlen(OutfileName) == 0)
 				out_fp = stdout;

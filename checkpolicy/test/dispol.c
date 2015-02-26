@@ -449,7 +449,11 @@ int main(int argc, char **argv)
 	menu();
 	for (;;) {
 		printf("\nCommand (\'m\' for menu):  ");
-		fgets(ans, sizeof(ans), stdin);
+		if (fgets(ans, sizeof(ans), stdin) == NULL) {
+			fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
+					strerror(errno));
+			continue;
+		}
 		switch (ans[0]) {
 
 		case '1':
@@ -476,7 +480,11 @@ int main(int argc, char **argv)
 			break;
 		case '7':
 			printf("name? ");
-			fgets(ans, sizeof(ans), stdin);
+			if (fgets(ans, sizeof(ans), stdin) == NULL) {
+				fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
+						strerror(errno));
+				break;
+			}
 			ans[strlen(ans) - 1] = 0;
 
 			name = malloc((strlen(ans) + 1) * sizeof(char));
@@ -487,7 +495,11 @@ int main(int argc, char **argv)
 			strcpy(name, ans);
 
 			printf("state? ");
-			fgets(ans, sizeof(ans), stdin);
+			if (fgets(ans, sizeof(ans), stdin) == NULL) {
+				fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
+						strerror(errno));
+				break;
+			}
 			ans[strlen(ans) - 1] = 0;
 
 			if (atoi(ans))
@@ -514,7 +526,11 @@ int main(int argc, char **argv)
 		case 'f':
 			printf
 			    ("\nFilename for output (<CR> for screen output): ");
-			fgets(OutfileName, sizeof(OutfileName), stdin);
+			if (fgets(OutfileName, sizeof(OutfileName), stdin) == NULL) {
+				fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
+						strerror(errno));
+				break;
+			}
 			OutfileName[strlen(OutfileName) - 1] = '\0';	/* fix_string (remove LF) */
 			if (strlen(OutfileName) == 0)
 				out_fp = stdout;
