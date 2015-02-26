@@ -1,3 +1,5 @@
+	* dispol/dismod fgets function warnings fix, from Emre Can Kucukoglu.
+
 2.4 2015-02-02
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
 	* Add missing semicolon in cond_else parser rule, from Steven Capelli.
