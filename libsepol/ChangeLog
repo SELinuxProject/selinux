@@ -1,3 +1,4 @@
+	* Update CIL documentation, from Richard Haines
 	* Fix error path in mls_semantic_level_expand(), from Chris PeBenito.
 	* Fix MacOS X build, from Stephen Smalley.
 	* Enabling building CIL in Android, from Stephen Smalley.
