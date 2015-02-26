@@ -32,6 +32,7 @@
 #include <string.h>
 
 extern int semanage_lex(void);                /* defined in conf-scan.c */
+extern int semanage_lex_destroy(void);        /* defined in conf-scan.c */
 int semanage_error(const char *msg);
 
 extern FILE *semanage_in;
@@ -101,6 +102,7 @@ module_store:   MODULE_STORE '=' ARG {
                                 parse_errors++;
                                 YYABORT;
                         }
+                        free($3);
                 }
 
         ;
@@ -110,6 +112,7 @@ store_root:     STORE_ROOT '=' ARG  {
                                 parse_errors++;
                                 YYABORT;
                         }
+                        free($3);
                 }
         ;
 
@@ -118,6 +121,7 @@ compiler_dir:       COMPILER_DIR '=' ARG  {
                                 parse_errors++;
                                 YYABORT;
                         }
+                        free($3);
                 }
         ;
 
@@ -129,6 +133,7 @@ ignore_module_cache:	IGNORE_MODULE_CACHE '=' ARG  {
 							else {
 								yyerror("disable-caching can only be 'true' or 'false'");
 							}
+							free($3);
 						}
         ;
 
@@ -151,6 +156,7 @@ target_platform: TARGET_PLATFORM '=' ARG  {
                         else {
                                 yyerror("target_platform can only be 'selinux' or 'xen'");
                         }
+                        free($3);
                 }
         ;
 
@@ -174,6 +180,7 @@ save_previous:    SAVE_PREVIOUS '=' ARG {
 			else {
 				yyerror("save-previous can only be 'true' or 'false'");
 			}
+			free($3);
                 }
         ;
 
@@ -186,6 +193,7 @@ save_linked:    SAVE_LINKED '=' ARG {
 			else {
 				yyerror("save-linked can only be 'true' or 'false'");
 			}
+			free($3);
                 }
         ;
 
@@ -213,6 +221,7 @@ usepasswd: USEPASSWD '=' ARG {
 
 ignoredirs: IGNOREDIRS '=' ARG {
 	current_conf->ignoredirs = strdup($3);
+	free($3);
  }
 
 handle_unknown: HANDLE_UNKNOWN '=' ARG {
@@ -416,6 +425,7 @@ semanage_conf_t *semanage_conf_parse(const char *config_filename)
 	parse_errors = 0;
 	semanage_parse();
 	fclose(semanage_in);
+	semanage_lex_destroy();
 	if (parse_errors != 0) {
 		goto cleanup;
 	}
@@ -485,10 +495,9 @@ static int parse_module_store(char *arg)
 		current_conf->store_path =
 		    strdup(basename(selinux_policy_root()));
 		current_conf->server_port = -1;
-		free(arg);
 	} else if (*arg == '/') {
 		current_conf->store_type = SEMANAGE_CON_POLSERV_LOCAL;
-		current_conf->store_path = arg;
+		current_conf->store_path = strdup(arg);
 		current_conf->server_port = -1;
 	} else {
 		char *s;

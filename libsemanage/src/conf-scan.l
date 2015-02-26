@@ -27,12 +27,10 @@
 static char *my_strdup (char * s);
 static char *my_qstrdup (char * s);
 
-int yywrap(void);
- 
 %}
 
 %option stack prefix="semanage_"
-%option noinput nounput noyy_push_state noyy_pop_state noyy_top_state
+%option noinput nounput noyy_push_state noyy_pop_state noyy_top_state noyywrap
 
 %x arg
 
@@ -74,10 +72,6 @@ args              return PROG_ARGS;
 <arg>.|\n         BEGIN INITIAL; semanage_lval.s = NULL; return ARG;
 
 %%
-
-int yywrap(void) {
-	return 1;
-}
 
 /* Like strdup(), but also trim leading and trailing whitespace.
  * Returns NULL on error. */
