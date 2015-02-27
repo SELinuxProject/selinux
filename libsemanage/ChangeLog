@@ -1,3 +1,6 @@
+	* Add remove-hll semanage.conf option to remove HLL files after
+	  compilation to CIL, from Yuli Khodorkovskiy
+	* Fix memory leaks when parsing semanage.conf, from Yuli Khodorkovskiy
 	* Change bunzip to use heap instead of stack to prevent segfault on
 	  systems with small stack size, from Thomas Hurd.
 
