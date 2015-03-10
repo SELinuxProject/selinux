@@ -1,3 +1,4 @@
+	* Fix precedence between number and filesystem tokens, from Stephen Smalley.
 	* dispol/dismod fgets function warnings fix, from Emre Can Kucukoglu.
 
 2.4 2015-02-02
