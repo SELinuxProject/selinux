@@ -44,10 +44,10 @@ static int process_line(const char *path, char *line_buf, int pass,
 	/* Skip comment lines and empty lines. */
 	if (*buf_p == '#' || *buf_p == 0)
 		return 0;
-	items = sscanf(line_buf, "%as %as ", &key, &context);
+	items = sscanf(line_buf, "%ms %ms ", &key, &context);
 	if (items < 2) {
 		selinux_log(SELINUX_WARNING,
-			  "%s:  line %d is missing fields, skipping\n", path,
+			  "%s:  line %u is missing fields, skipping\n", path,
 			  lineno);
 		if (items == 1)
 			free(key);

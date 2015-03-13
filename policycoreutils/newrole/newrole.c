@@ -278,7 +278,7 @@ static int process_pam_config(FILE * cfg)
 			continue;
 
 		app = service = NULL;
-		ret = sscanf(buffer, "%as %as\n", &app, &service);
+		ret = sscanf(buffer, "%ms %ms\n", &app, &service);
 		if (ret < 2 || !app || !service)
 			goto err;
 
@@ -1104,7 +1104,7 @@ int main(int argc, char *argv[])
 			 * command when invoked by newrole.
 			 */
 			char *cmd = NULL;
-			rc = sscanf(argv[optind + 1], "%as", &cmd);
+			rc = sscanf(argv[optind + 1], "%ms", &cmd);
 			if (rc != EOF && cmd) {
 				char *app_service_name =
 				    (char *)hashtab_search(app_service_names,

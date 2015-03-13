@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 					       argv[i], pwd->pw_name);
 				else
 					syslog(LOG_NOTICE,
-					       "The %s policy boolean was toggled by uid:%d",
+					       "The %s policy boolean was toggled by uid:%u",
 					       argv[i], getuid());
 
 			}

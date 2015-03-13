@@ -170,10 +170,10 @@ static int process_line(struct selabel_handle *rec,
 	/* Skip comment lines and empty lines. */
 	if (*buf_p == '#' || *buf_p == 0)
 		return 0;
-	items = sscanf(line_buf, "%as %as %as", &regex, &type, &context);
+	items = sscanf(line_buf, "%ms %ms %ms", &regex, &type, &context);
 	if (items < 2) {
 		COMPAT_LOG(SELINUX_WARNING,
-			    "%s:  line %d is missing fields, skipping\n", path,
+			    "%s:  line %u is missing fields, skipping\n", path,
 			    lineno);
 		if (items == 1)
 			free(regex);
@@ -204,7 +204,7 @@ static int process_line(struct selabel_handle *rec,
 	spec_arr[nspec].stem_id = find_stem_from_spec(data, regex);
 	spec_arr[nspec].regex_str = regex;
 	if (rec->validating && compile_regex(data, &spec_arr[nspec], &errbuf)) {
-		COMPAT_LOG(SELINUX_WARNING, "%s:  line %d has invalid regex %s:  %s\n",
+		COMPAT_LOG(SELINUX_WARNING, "%s:  line %u has invalid regex %s:  %s\n",
 			   path, lineno, regex, (errbuf ? errbuf : "out of memory"));
 	}
 
@@ -214,7 +214,7 @@ static int process_line(struct selabel_handle *rec,
 	if (type) {
 		mode_t mode = string_to_mode(type);
 		if (mode == (mode_t)-1) {
-			COMPAT_LOG(SELINUX_WARNING, "%s:  line %d has invalid file type %s\n",
+			COMPAT_LOG(SELINUX_WARNING, "%s:  line %u has invalid file type %s\n",
 				   path, lineno, type);
 			mode = 0;
 		}

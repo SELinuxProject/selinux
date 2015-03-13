@@ -124,7 +124,7 @@ void sidtab_sid_stats(struct sidtab *h, char *buf, int buflen)
 	}
 
 	snprintf(buf, buflen,
-		 "%s:  %d SID entries and %d/%d buckets used, longest "
+		 "%s:  %u SID entries and %d/%d buckets used, longest "
 		 "chain length %d\n", avc_prefix, h->nel, slots_used,
 		 SIDTAB_SIZE, max_chain_len);
 }

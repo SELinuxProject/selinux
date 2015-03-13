@@ -125,14 +125,14 @@ static int avc_netlink_receive(char *buf, unsigned buflen, int blocking)
 
 	if (nladdrlen != sizeof nladdr) {
 		avc_log(SELINUX_WARNING,
-			"%s:  warning: netlink address truncated, len %d?\n",
+			"%s:  warning: netlink address truncated, len %u?\n",
 			avc_prefix, nladdrlen);
 		return -1;
 	}
 
 	if (nladdr.nl_pid) {
 		avc_log(SELINUX_WARNING,
-			"%s:  warning: received spoofed netlink packet from: %d\n",
+			"%s:  warning: received spoofed netlink packet from: %u\n",
 			avc_prefix, nladdr.nl_pid);
 		return -1;
 	}
@@ -197,7 +197,7 @@ static int avc_netlink_process(char *buf)
 	case SELNL_MSG_POLICYLOAD:{
 		struct selnl_msg_policyload *msg = NLMSG_DATA(nlh);
 		avc_log(SELINUX_INFO,
-			"%s:  received policyload notice (seqno=%d)\n",
+			"%s:  received policyload notice (seqno=%u)\n",
 			avc_prefix, msg->seqno);
 		rc = avc_ss_reset(msg->seqno);
 		if (rc < 0) {

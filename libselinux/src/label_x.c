@@ -46,10 +46,10 @@ static int process_line(const char *path, char *line_buf, int pass,
 	/* Skip comment lines and empty lines. */
 	if (*buf_p == '#' || *buf_p == 0)
 		return 0;
-	items = sscanf(line_buf, "%as %as %as ", &type, &key, &context);
+	items = sscanf(line_buf, "%ms %ms %ms ", &type, &key, &context);
 	if (items < 3) {
 		selinux_log(SELINUX_WARNING,
-			    "%s:  line %d is missing fields, skipping\n", path,
+			    "%s:  line %u is missing fields, skipping\n", path,
 			    lineno);
 		if (items > 0)
 			free(type);
@@ -76,7 +76,7 @@ static int process_line(const char *path, char *line_buf, int pass,
 			data->spec_arr[data->nspec].type = SELABEL_X_POLYSELN;
 		else {
 			selinux_log(SELINUX_WARNING,
-				    "%s:  line %d has invalid object type %s\n",
+				    "%s:  line %u has invalid object type %s\n",
 				    path, lineno, type);
 			return 0;
 		}

@@ -105,12 +105,12 @@ process_line(const char *path, char *line_buf, unsigned int line_num,
 	 *   <object class> <object name> <security context>
 	 */
 	type = key = context = temp = NULL;
-	items = sscanf(line_buf, "%as %as %as %as",
+	items = sscanf(line_buf, "%ms %ms %ms %ms",
 		       &type, &key, &context, &temp);
 	if (items != 3) {
 		if (items > 0)
 			selinux_log(SELINUX_WARNING,
-				    "%s:  line %d has invalid format, skipped",
+				    "%s:  line %u has invalid format, skipped",
 				    path, line_num);
 		goto skip;
 	}
@@ -146,7 +146,7 @@ process_line(const char *path, char *line_buf, unsigned int line_num,
 		spec->type = SELABEL_DB_DATATYPE;
 	else {
 		selinux_log(SELINUX_WARNING,
-			    "%s:  line %d has invalid object type %s\n",
+			    "%s:  line %u has invalid object type %s\n",
 			    path, line_num, type);
 		goto skip;
 	}

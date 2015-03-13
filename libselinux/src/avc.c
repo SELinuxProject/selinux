@@ -288,7 +288,7 @@ void avc_av_stats(void)
 
 	avc_release_lock(avc_lock);
 
-	avc_log(SELINUX_INFO, "%s:  %d AV entries and %d/%d buckets used, "
+	avc_log(SELINUX_INFO, "%s:  %u AV entries and %d/%d buckets used, "
 		"longest chain length %d\n", avc_prefix,
 		avc_cache.active_nodes,
 		slots_used, AVC_CACHE_SLOTS, max_chain_len);
@@ -471,7 +471,7 @@ static int avc_insert(security_id_t ssid, security_id_t tsid,
 
 	if (ae->avd.seqno < avc_cache.latest_notif) {
 		avc_log(SELINUX_WARNING,
-			"%s:  seqno %d < latest_notif %d\n", avc_prefix,
+			"%s:  seqno %u < latest_notif %u\n", avc_prefix,
 			ae->avd.seqno, avc_cache.latest_notif);
 		errno = EAGAIN;
 		rc = -1;
