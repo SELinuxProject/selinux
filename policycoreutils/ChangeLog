@@ -1,3 +1,4 @@
+	* Fix -Wformat errors with gcc-5.0.0, from Petr Lautrbach.
 	* Fixed typo/grammatical error, from Christopher Peterson.
 	* Fix typo in semanage-port man page, from Andrew Spiers.
 
