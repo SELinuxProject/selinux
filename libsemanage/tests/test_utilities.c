@@ -45,7 +45,7 @@ void test_slurp_file_filter(void);
 
 char fname[] = {
 	'T', 'E', 'S', 'T', '_', 'T', 'E', 'M', 'P', '_', 'X', 'X', 'X', 'X',
-	'X', 'X'
+	'X', 'X', '\0'
 };
 int fd;
 FILE *fptr;
