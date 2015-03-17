@@ -81,6 +81,7 @@ typedef int (* require_func_t)(int pass);
 %type <require_func> require_decl_def
 
 %token PATH
+%token QPATH
 %token FILENAME
 %token CLONE
 %token COMMON
@@ -805,6 +806,8 @@ filesystem		: FILESYSTEM
                         ;
 path     		: PATH
 			{ if (insert_id(yytext,0)) return -1; }
+			| QPATH
+			{ yytext[strlen(yytext) - 1] = '\0'; if (insert_id(yytext + 1,0)) return -1; }
 			;
 filename		: FILENAME
 			{ yytext[strlen(yytext) - 1] = '\0'; if (insert_id(yytext + 1,0)) return -1; }
