@@ -1181,6 +1181,27 @@ exit:
 	return rc;
 }
 
+int __cil_verify_devicetreecon(struct cil_db *db, struct cil_tree_node *node)
+{
+	int rc = SEPOL_ERR;
+	struct cil_devicetreecon *dt = node->data;
+	struct cil_context *ctx = dt->context;
+
+	/* Verify only when anonymous */
+	if (ctx->datum.name == NULL) {
+		rc = __cil_verify_context(db, ctx);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+	}
+
+	return SEPOL_OK;
+
+exit:
+	cil_log(CIL_ERR, "Invalid devicetreecon at line %d of %s\n", node->line, node->path);
+	return rc;
+}
+
 int __cil_verify_fsuse(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
@@ -1389,6 +1410,9 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *ex
 			break;
 		case CIL_PCIDEVICECON:
 			rc = __cil_verify_pcidevicecon(db, node);
+			break;
+		case CIL_DEVICETREECON:
+			rc = __cil_verify_devicetreecon(db, node);
 			break;
 		case CIL_FSUSE:
 			rc = __cil_verify_fsuse(db, node);

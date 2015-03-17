@@ -2993,6 +2993,30 @@ exit:
 	return rc;
 }
 
+int cil_devicetreecon_to_policydb(policydb_t *pdb, struct cil_sort *devicetreecons)
+{
+	int rc = SEPOL_ERR;
+	uint32_t i = 0;
+	ocontext_t *tail = NULL;
+
+	for (i = 0; i < devicetreecons->count; i++) {
+		ocontext_t *new_ocon = cil_add_ocontext(&pdb->ocontexts[OCON_XEN_DEVICETREE], &tail);
+		struct cil_devicetreecon *cil_devicetreecon = devicetreecons->array[i];
+
+		new_ocon->u.name = cil_strdup(cil_devicetreecon->path);
+
+		rc = __cil_context_to_sepol_context(pdb, cil_devicetreecon->context, &new_ocon->context[0]);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
 int cil_default_to_policydb(policydb_t *pdb, struct cil_default *def)
 {
 	struct cil_list_item *curr;
@@ -3337,6 +3361,11 @@ int __cil_contexts_to_policydb(policydb_t *pdb, const struct cil_db *db)
 		}
 
 		rc = cil_pcidevicecon_to_policydb(pdb, db->pcidevicecon);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+
+		rc = cil_devicetreecon_to_policydb(pdb, db->devicetreecon);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}

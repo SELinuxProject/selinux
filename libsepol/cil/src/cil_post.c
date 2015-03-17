@@ -296,6 +296,17 @@ int cil_post_pcidevicecon_compare(const void *a, const void *b)
 	return rc;
 }
 
+int cil_post_devicetreecon_compare(const void *a, const void *b)
+{
+	int rc = SEPOL_ERR;
+	struct cil_devicetreecon *adevicetreecon = *(struct cil_devicetreecon**)a;
+	struct cil_devicetreecon *bdevicetreecon = *(struct cil_devicetreecon**)b;
+
+	rc = strcmp(adevicetreecon->path, bdevicetreecon->path);
+
+	return rc;
+}
+
 int cil_post_fsuse_compare(const void *a, const void *b)
 {
 	int rc;
@@ -377,6 +388,9 @@ static int __cil_post_db_count_helper(struct cil_tree_node *node, uint32_t *fini
 	case CIL_PCIDEVICECON:
 		db->pcidevicecon->count++;
 		break;	
+	case CIL_DEVICETREECON:
+		db->devicetreecon->count++;
+		break;
 	case CIL_FSUSE:
 		db->fsuse->count++;
 		break;
@@ -531,6 +545,17 @@ static int __cil_post_db_array_helper(struct cil_tree_node *node, __attribute__(
 	}
 	case CIL_PCIDEVICECON: {
 		struct cil_sort *sort = db->pcidevicecon;
+		uint32_t count = sort->count;
+		uint32_t i = sort->index;
+		if (sort->array == NULL) {
+			sort->array = cil_malloc(sizeof(*sort->array)*count);
+		}
+		sort->array[i] = node->data;
+		sort->index++;
+		break;
+	}
+	case CIL_DEVICETREECON: {
+		struct cil_sort *sort = db->devicetreecon;
 		uint32_t count = sort->count;
 		uint32_t i = sort->index;
 		if (sort->array == NULL) {
@@ -1305,6 +1330,14 @@ static int __cil_post_db_cat_helper(struct cil_tree_node *node, uint32_t *finish
 		}
 		break;
 	}
+	case CIL_DEVICETREECON: {
+		struct cil_devicetreecon *devicetreecon = node->data;
+		rc = __evaluate_levelrange_expression(devicetreecon->context->range, db);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+		break;
+	}
 	case CIL_FSUSE: {
 		struct cil_fsuse *fsuse = node->data;
 		rc = __evaluate_levelrange_expression(fsuse->context->range, db);
@@ -1590,6 +1623,7 @@ static int cil_post_db(struct cil_db *db)
 	qsort(db->iomemcon->array, db->iomemcon->count, sizeof(db->iomemcon->array), cil_post_iomemcon_compare);
 	qsort(db->ioportcon->array, db->ioportcon->count, sizeof(db->ioportcon->array), cil_post_ioportcon_compare);
 	qsort(db->pcidevicecon->array, db->pcidevicecon->count, sizeof(db->pcidevicecon->array), cil_post_pcidevicecon_compare);
+	qsort(db->devicetreecon->array, db->devicetreecon->count, sizeof(db->devicetreecon->array), cil_post_devicetreecon_compare);
 
 exit:
 	return rc;

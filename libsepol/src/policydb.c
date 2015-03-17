@@ -70,7 +70,7 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .type = POLICY_KERN,
 	 .version = POLICYDB_VERSION_XEN_DEVICETREE,
 	 .sym_num = SYM_NUM,
-	 .ocon_num = OCON_XEN_PCIDEVICE + 1,
+	 .ocon_num = OCON_XEN_DEVICETREE + 1,
 	 .target_platform = SEPOL_TARGET_XEN,
 	 },
 	{
@@ -2478,7 +2478,7 @@ static int ocontext_read_xen(struct policydb_compat_info *info,
 	policydb_t *p, struct policy_file *fp)
 {
 	unsigned int i, j;
-	size_t nel;
+	size_t nel, len;
 	ocontext_t *l, *c;
 	uint32_t buf[8];
 	int rc;
@@ -2551,6 +2551,20 @@ static int ocontext_read_xen(struct policydb_compat_info *info,
 				if (rc < 0)
 					return -1;
 				c->u.device = le32_to_cpu(buf[0]);
+				if (context_read_and_validate
+				    (&c->context[0], p, fp))
+					return -1;
+				break;
+			case OCON_XEN_DEVICETREE:
+				rc = next_entry(buf, fp, sizeof(uint32_t));
+				if (rc < 0)
+					return -1;
+				len = le32_to_cpu(buf[1]);
+				c->u.name = malloc(len + 1);
+				if (!c->u.name)
+					return -1;
+				rc = next_entry(c->u.name, fp, len);
+				c->u.name[len] = 0;
 				if (context_read_and_validate
 				    (&c->context[0], p, fp))
 					return -1;

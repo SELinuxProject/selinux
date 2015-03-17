@@ -1429,6 +1429,19 @@ void cil_tree_print_node(struct cil_tree_node *node)
 			cil_log(CIL_INFO, "\n");
 			return;
 		}
+		case CIL_DEVICETREECON: {
+			struct cil_devicetreecon *devicetreecon = node->data;
+
+			cil_log(CIL_INFO, "DEVICETREECON %s", devicetreecon->path);
+			if (devicetreecon->context != NULL) {
+				cil_tree_print_context(devicetreecon->context);
+			} else {
+				cil_log(CIL_INFO, " %s", devicetreecon->context_str);
+			}
+
+			cil_log(CIL_INFO, "\n");
+			return;
+		}
 		case CIL_FSUSE: {
 			struct cil_fsuse *fsuse = node->data;
 			cil_log(CIL_INFO, "FSUSE: ");

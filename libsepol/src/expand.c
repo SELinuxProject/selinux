@@ -2091,6 +2091,13 @@ static int ocontext_copy_xen(expand_state_t *state)
 			case OCON_XEN_PCIDEVICE:
 				n->u.device = c->u.device;
 				break;
+			case OCON_XEN_DEVICETREE:
+				n->u.name = strdup(c->u.name);
+				if (!n->u.name) {
+					ERR(state->handle, "Out of memory!");
+					return -1;
+				}
+				break;
 			default:
 				/* shouldn't get here */
 				ERR(state->handle, "Unknown ocontext");

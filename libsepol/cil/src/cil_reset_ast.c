@@ -323,6 +323,13 @@ static void cil_reset_pcidevicecon(struct cil_pcidevicecon *pcidevicecon)
 	}
 }
 
+static void cil_reset_devicetreecon(struct cil_devicetreecon *devicetreecon)
+{
+	if (devicetreecon->context_str == NULL) {
+		cil_reset_context(devicetreecon->context);
+	}
+}
+
 static void cil_reset_fsuse(struct cil_fsuse *fsuse)
 {
 	if (fsuse->context_str == NULL) {
@@ -474,6 +481,9 @@ int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused)) uint32
 		break;
 	case CIL_PCIDEVICECON:
 		cil_reset_pcidevicecon(node->data);
+		break;
+	case CIL_DEVICETREECON:
+		cil_reset_devicetreecon(node->data);
 		break;
 	case CIL_FSUSE:
 		cil_reset_fsuse(node->data);

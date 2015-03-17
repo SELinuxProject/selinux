@@ -1969,6 +1969,31 @@ exit:
 	return rc;
 }
 
+int cil_resolve_devicetreecon(struct cil_tree_node *current, void *extra_args)
+{
+	struct cil_devicetreecon *devicetreecon = current->data;
+	struct cil_symtab_datum *context_datum = NULL;
+	int rc = SEPOL_ERR;
+
+	if (devicetreecon->context_str != NULL) {
+		rc = cil_resolve_name(current, devicetreecon->context_str, CIL_SYM_CONTEXTS, extra_args, &context_datum);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+		devicetreecon->context = (struct cil_context*)context_datum;
+	} else {
+		rc = cil_resolve_context(current, devicetreecon->context, extra_args);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
 int cil_resolve_fsuse(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_fsuse *fsuse = current->data;
@@ -3184,6 +3209,9 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 			break;
 		case CIL_PCIDEVICECON:
 			rc = cil_resolve_pcidevicecon(node, args);
+			break;
+		case CIL_DEVICETREECON:
+			rc = cil_resolve_devicetreecon(node, args);
 			break;
 		case CIL_FSUSE:
 			rc = cil_resolve_fsuse(node, args);

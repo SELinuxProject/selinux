@@ -1211,7 +1211,7 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 			  struct policy_file *fp)
 {
 	unsigned int i, j;
-	size_t nel, items;
+	size_t nel, items, len;
 	uint32_t buf[32];
 	ocontext_t *c;
 	for (i = 0; i < info->ocon_num; i++) {
@@ -1284,6 +1284,18 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 				buf[0] = cpu_to_le32(c->u.device);
 				items = put_entry(buf, sizeof(uint32_t), 1, fp);
 				if (items != 1)
+					return POLICYDB_ERROR;
+				if (context_write(p, &c->context[0], fp))
+					return POLICYDB_ERROR;
+				break;
+			case OCON_XEN_DEVICETREE:
+				len = strlen(c->u.name);
+				buf[0] = cpu_to_le32(len);
+				items = put_entry(buf, sizeof(uint32_t), 1, fp);
+				if (items != 1)
+					return POLICYDB_ERROR;
+				items = put_entry(c->u.name, 1, len, fp);
+				if (items != len)
 					return POLICYDB_ERROR;
 				if (context_write(p, &c->context[0], fp))
 					return POLICYDB_ERROR;

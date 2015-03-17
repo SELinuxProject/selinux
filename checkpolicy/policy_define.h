@@ -49,6 +49,7 @@ int define_pirq_context(unsigned int pirq);
 int define_iomem_context(uint64_t low, uint64_t high);
 int define_ioport_context(unsigned long low, unsigned long high);
 int define_pcidevice_context(unsigned long device);
+int define_devicetree_context(void);
 int define_range_trans(int class_specified);
 int define_role_allow(void);
 int define_role_trans(int class_specified);

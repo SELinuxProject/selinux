@@ -4529,6 +4529,69 @@ void cil_destroy_pcidevicecon(struct cil_pcidevicecon *pcidevicecon)
 	free(pcidevicecon);
 }
 
+int cil_gen_devicetreecon(__attribute__((unused)) struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_STRING,
+		CIL_SYN_STRING | CIL_SYN_LIST,
+		CIL_SYN_END
+	};
+	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	int rc = SEPOL_ERR;
+	struct cil_devicetreecon *devicetreecon = NULL;
+
+	if (db == NULL || parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_devicetreecon_init(&devicetreecon);
+
+	devicetreecon->path = parse_current->next->data;
+
+	if (parse_current->next->next->cl_head == NULL) {
+		devicetreecon->context_str = parse_current->next->next->data;
+	} else {
+		cil_context_init(&devicetreecon->context);
+
+		rc = cil_fill_context(parse_current->next->next->cl_head, devicetreecon->context);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+	}
+
+	ast_node->data = devicetreecon;
+	ast_node->flavor = CIL_DEVICETREECON;
+
+	return SEPOL_OK;
+
+exit:
+	cil_log(CIL_ERR, "Bad devicetreecon declaration at line %d of %s\n",
+		parse_current->line, parse_current->path);
+	cil_destroy_devicetreecon(devicetreecon);
+	return rc;
+}
+
+void cil_destroy_devicetreecon(struct cil_devicetreecon *devicetreecon)
+{
+	if (devicetreecon == NULL) {
+		return;
+	}
+
+	free(devicetreecon->path);
+
+	if (devicetreecon->context_str == NULL && devicetreecon->context != NULL) {
+		cil_destroy_context(devicetreecon->context);
+	}
+
+	free(devicetreecon);
+}
+
 int cil_gen_fsuse(__attribute__((unused)) struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
 {
 	enum cil_syntax syntax[] = {
@@ -5805,6 +5868,9 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_PCIDEVICECON) {
 		rc = cil_gen_pcidevicecon(db, parse_current, ast_node);
+		*finished = CIL_TREE_SKIP_NEXT;
+	} else if (parse_current->data == CIL_KEY_DEVICETREECON) {
+		rc = cil_gen_devicetreecon(db, parse_current, ast_node);
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_FSUSE) {
 		rc = cil_gen_fsuse(db, parse_current, ast_node);

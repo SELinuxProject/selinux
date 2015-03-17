@@ -1211,6 +1211,27 @@ int cil_copy_pcidevicecon(struct cil_db *db, void *data, void **copy, __attribut
 	return SEPOL_OK;
 }
 
+int cil_copy_devicetreecon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+{
+	struct cil_devicetreecon *orig = data;
+	struct cil_devicetreecon *new = NULL;
+
+	cil_devicetreecon_init(&new);
+
+	new->path = orig->path;
+
+	if (orig->context_str != NULL) {
+		new->context_str = orig->context_str;
+	} else {
+		cil_context_init(&new->context);
+		cil_copy_fill_context(db, orig->context, new->context);
+	}
+
+	*copy = new;
+
+	return SEPOL_OK;
+}
+
 int cil_copy_fsuse(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_fsuse *orig = data;
@@ -1779,6 +1800,9 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 		break;
 	case CIL_PCIDEVICECON:
 		copy_func = &cil_copy_pcidevicecon;
+		break;
+	case CIL_DEVICETREECON:
+		copy_func = &cil_copy_devicetreecon;
 		break;
 	case CIL_FSUSE:
 		copy_func = &cil_copy_fsuse;

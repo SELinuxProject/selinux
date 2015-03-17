@@ -206,6 +206,7 @@ char *CIL_KEY_PIRQCON;
 char *CIL_KEY_IOMEMCON;
 char *CIL_KEY_IOPORTCON;
 char *CIL_KEY_PCIDEVICECON;
+char *CIL_KEY_DEVICETREECON;
 char *CIL_KEY_FSUSE;
 char *CIL_KEY_POLICYCAP;
 char *CIL_KEY_OPTIONAL;
@@ -273,6 +274,7 @@ struct cil_db {
 	struct cil_sort *iomemcon;
 	struct cil_sort *ioportcon;
 	struct cil_sort *pcidevicecon;
+	struct cil_sort *devicetreecon;
 	struct cil_sort *fsuse;
 	struct cil_list *userprefixes;
 	struct cil_list *selinuxusers;
@@ -738,6 +740,13 @@ struct cil_pcidevicecon {
 	struct cil_context *context;
 };
 
+struct cil_devicetreecon {
+	char *path;
+	char *context_str;
+	struct cil_context *context;
+};
+
+
 /* Ensure that CIL uses the same values as sepol services.h */
 enum cil_fsuse_types {
 	CIL_FSUSE_XATTR = SECURITY_FS_USE_XATTR,
@@ -933,6 +942,7 @@ void cil_pirqcon_init(struct cil_pirqcon **pirqcon);
 void cil_iomemcon_init(struct cil_iomemcon **iomemcon);
 void cil_ioportcon_init(struct cil_ioportcon **ioportcon);
 void cil_pcidevicecon_init(struct cil_pcidevicecon **pcidevicecon);
+void cil_devicetreecon_init(struct cil_devicetreecon **devicetreecon);
 void cil_fsuse_init(struct cil_fsuse **fsuse);
 void cil_constrain_init(struct cil_constrain **constrain);
 void cil_validatetrans_init(struct cil_validatetrans **validtrans);

@@ -182,6 +182,8 @@ int cil_gen_ioportcon(struct cil_db *db, struct cil_tree_node *parse_current, st
 void cil_destroy_ioportcon(struct cil_ioportcon *ioportcon);
 int cil_gen_pcidevicecon(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_pcidevicecon(struct cil_pcidevicecon *pcidevicecon);
+int cil_gen_devicetreecon(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
+void cil_destroy_devicetreecon(struct cil_devicetreecon *devicetreecon);
 int cil_gen_fsuse(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_fsuse(struct cil_fsuse *fsuse);
 void cil_destroy_param(struct cil_param *param);

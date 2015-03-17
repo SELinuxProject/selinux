@@ -375,6 +375,7 @@ typedef struct genfs {
 #define OCON_XEN_IOPORT     2    /* io ports */
 #define OCON_XEN_IOMEM	    3    /* io memory */
 #define OCON_XEN_PCIDEVICE  4    /* pci devices */
+#define OCON_XEN_DEVICETREE 5    /* device tree node */
 
 /* OCON_NUM needs to be the largest index in any platform's ocontext array */
 #define OCON_NUM   7

@@ -189,6 +189,7 @@ static void cil_init_keys(void)
 	CIL_KEY_IOMEMCON = cil_strpool_add("iomemcon");
 	CIL_KEY_IOPORTCON = cil_strpool_add("ioportcon");
 	CIL_KEY_PCIDEVICECON = cil_strpool_add("pcidevicecon");
+	CIL_KEY_DEVICETREECON = cil_strpool_add("devicetreecon");
 	CIL_KEY_FSUSE = cil_strpool_add("fsuse");
 	CIL_KEY_POLICYCAP = cil_strpool_add("policycap");
 	CIL_KEY_OPTIONAL = cil_strpool_add("optional");
@@ -244,6 +245,7 @@ void cil_db_init(struct cil_db **db)
 	cil_sort_init(&(*db)->iomemcon);
 	cil_sort_init(&(*db)->ioportcon);
 	cil_sort_init(&(*db)->pcidevicecon);
+	cil_sort_init(&(*db)->devicetreecon);
 	cil_sort_init(&(*db)->fsuse);
 	cil_list_init(&(*db)->userprefixes, CIL_LIST_ITEM);
 	cil_list_init(&(*db)->selinuxusers, CIL_LIST_ITEM);
@@ -289,6 +291,7 @@ void cil_db_destroy(struct cil_db **db)
 	cil_sort_destroy(&(*db)->iomemcon);
 	cil_sort_destroy(&(*db)->ioportcon);
 	cil_sort_destroy(&(*db)->pcidevicecon);
+	cil_sort_destroy(&(*db)->devicetreecon);
 	cil_sort_destroy(&(*db)->fsuse);
 	cil_list_destroy(&(*db)->userprefixes, CIL_FALSE);
 	cil_list_destroy(&(*db)->selinuxusers, CIL_FALSE);
@@ -697,6 +700,9 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	case CIL_PCIDEVICECON:
 		cil_destroy_pcidevicecon(*data);
 		break;
+	case CIL_DEVICETREECON:
+		cil_destroy_devicetreecon(*data);
+		break;
 	case CIL_POLICYCAP:
 		cil_destroy_policycap(*data);
 		break;
@@ -1026,6 +1032,8 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		return CIL_KEY_IOPORTCON;
 	case CIL_PCIDEVICECON:
 		return CIL_KEY_PCIDEVICECON;
+	case CIL_DEVICETREECON:
+		return CIL_KEY_DEVICETREECON;
 	case CIL_POLICYCAP:
 		return CIL_KEY_POLICYCAP;
 	case CIL_DEFAULTUSER:
@@ -2179,6 +2187,15 @@ void cil_pcidevicecon_init(struct cil_pcidevicecon **pcidevicecon)
 	(*pcidevicecon)->dev = 0;
 	(*pcidevicecon)->context_str = NULL;
 	(*pcidevicecon)->context = NULL;
+}
+
+void cil_devicetreecon_init(struct cil_devicetreecon **dtcon)
+{
+	*dtcon = cil_malloc(sizeof(**dtcon));
+
+	(*dtcon)->path = NULL;
+	(*dtcon)->context_str = NULL;
+	(*dtcon)->context = NULL;
 }
 
 void cil_fsuse_init(struct cil_fsuse **fsuse)

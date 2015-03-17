@@ -4116,6 +4116,61 @@ bad:
 	return -1;
 }
 
+int define_devicetree_context()
+{
+	ocontext_t *newc, *c, *l, *head;
+
+	if (policydbp->target_platform != SEPOL_TARGET_XEN) {
+		yyerror("devicetreecon not supported for target");
+		return -1;
+	}
+
+	if (pass == 1) {
+		free(queue_remove(id_queue));
+		parse_security_context(NULL);
+		return 0;
+	}
+
+	newc = malloc(sizeof(ocontext_t));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+	memset(newc, 0, sizeof(ocontext_t));
+
+	newc->u.name = (char *)queue_remove(id_queue);
+	if (!newc->u.name) {
+		free(newc);
+		return -1;
+	}
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc->u.name);
+		free(newc);
+		return -1;
+	}
+
+	head = policydbp->ocontexts[OCON_XEN_DEVICETREE];
+	for (l = NULL, c = head; c; l = c, c = c->next) {
+		if (strcmp(newc->u.name, c->u.name) == 0) {
+			yyerror2("duplicate devicetree entry for '%s'", newc->u.name);
+			goto bad;
+		}
+	}
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_XEN_DEVICETREE] = newc;
+
+	return 0;
+
+bad:
+	free(newc->u.name);
+	free(newc);
+	return -1;
+}
+
 int define_port_context(unsigned int low, unsigned int high)
 {
 	ocontext_t *newc, *c, *l, *head;

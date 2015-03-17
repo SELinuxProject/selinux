@@ -88,6 +88,7 @@ tokens = (
     'IOMEMCON',
     'IOPORTCON',
     'PCIDEVICECON',
+    'DEVICETREECON',
     #   object classes
     'CLASS',
     #   types and attributes
@@ -152,6 +153,7 @@ reserved = {
     'iomemcon' : 'IOMEMCON',
     'ioportcon' : 'IOPORTCON',
     'pcidevicecon' : 'PCIDEVICECON',
+    'devicetreecon' : 'DEVICETREECON',
     # object classes
     'class' : 'CLASS',
     # types and attributes
@@ -524,6 +526,7 @@ def p_policy_stmt(p):
                    | iomemcon
                    | ioportcon
                    | pcidevicecon
+                   | devicetreecon
     '''
     if p[1]:
         p[0] = [p[1]]
@@ -699,6 +702,14 @@ def p_pcidevicecon(p):
     'pcidevicecon : PCIDEVICECON NUMBER context'
     c = refpolicy.PciDeviceCon()
     c.device = p[2]
+    c.context = p[3]
+
+    p[0] = c
+
+def p_devicetreecon(p):
+    'devicetreecon : DEVICETREECON NUMBER context'
+    c = refpolicy.DevicetTeeCon()
+    c.path = p[2]
     c.context = p[3]
 
     p[0] = c

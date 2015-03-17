@@ -130,7 +130,7 @@ typedef int (* require_func_t)(int pass);
 %token TARGET
 %token SAMEUSER
 %token FSCON PORTCON NETIFCON NODECON 
-%token PIRQCON IOMEMCON IOPORTCON PCIDEVICECON
+%token PIRQCON IOMEMCON IOPORTCON PCIDEVICECON DEVICETREECON
 %token FSUSEXATTR FSUSETASK FSUSETRANS
 %token GENFSCON
 %token U1 U2 U3 R1 R2 R3 T1 T2 T3 L1 L2 H1 H2
@@ -644,7 +644,8 @@ dev_contexts		: dev_context_def
 dev_context_def		: pirq_context_def |
 			  iomem_context_def |
 			  ioport_context_def |
-			  pci_context_def
+			  pci_context_def |
+			  dtree_context_def
 			;
 pirq_context_def 	: PIRQCON number security_context_def
 		        {if (define_pirq_context($2)) return -1;}
@@ -661,6 +662,9 @@ ioport_context_def	: IOPORTCON number security_context_def
 			;
 pci_context_def  	: PCIDEVICECON number security_context_def
 		        {if (define_pcidevice_context($2)) return -1;}
+		        ;
+dtree_context_def	: DEVICETREECON path security_context_def
+		        {if (define_devicetree_context()) return -1;}
 		        ;
 opt_fs_contexts         : fs_contexts 
                         |

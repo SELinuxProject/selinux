@@ -187,6 +187,8 @@ ioportcon |
 IOPORTCON           		{ return(IOPORTCON);}
 pcidevicecon |
 PCIDEVICECON           		{ return(PCIDEVICECON);}
+devicetreecon |
+DEVICETREECON           	{ return(DEVICETREECON);}
 fs_use_xattr |
 FS_USE_XATTR			{ return(FSUSEXATTR);}
 fs_use_task |
