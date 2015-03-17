@@ -32,6 +32,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <inttypes.h>
 
 #include <sepol/policydb/conditional.h>
 #include <sepol/errcodes.h>
@@ -236,7 +237,7 @@ int cil_iomemcon_to_policy(FILE **file_arr, struct cil_sort *sort)
 
 	for (i = 0; i < sort->count; i++) {
 		struct cil_iomemcon *iomemcon = (struct cil_iomemcon*)sort->array[i];
-		fprintf(file_arr[NETIFCONS], "iomemcon %d-%d ", iomemcon->iomem_low, iomemcon->iomem_high);
+		fprintf(file_arr[NETIFCONS], "iomemcon %"PRId64"-%"PRId64" ", iomemcon->iomem_low, iomemcon->iomem_high);
 		cil_context_to_policy(file_arr, NETIFCONS, iomemcon->context);
 		fprintf(file_arr[NETIFCONS], ";\n");
 	}

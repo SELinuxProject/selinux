@@ -67,6 +67,7 @@ typedef int (* require_func_t)(int pass);
 
 %union {
 	unsigned int val;
+	uint64_t val64;
 	uintptr_t valptr;
 	void *ptr;
         require_func_t require_func;
@@ -78,6 +79,7 @@ typedef int (* require_func_t)(int pass);
 %type <ptr> role_def roles
 %type <valptr> cexpr cexpr_prim op role_mls_op
 %type <val> ipv4_addr_def number
+%type <val64> number64
 %type <require_func> require_decl_def
 
 %token PATH
@@ -647,9 +649,9 @@ dev_context_def		: pirq_context_def |
 pirq_context_def 	: PIRQCON number security_context_def
 		        {if (define_pirq_context($2)) return -1;}
 		        ;
-iomem_context_def	: IOMEMCON number security_context_def
+iomem_context_def	: IOMEMCON number64 security_context_def
 		        {if (define_iomem_context($2,$2)) return -1;}
-		        | IOMEMCON number '-' number security_context_def
+		        | IOMEMCON number64 '-' number64 security_context_def
 		        {if (define_iomem_context($2,$4)) return -1;}
 		        ;
 ioport_context_def	: IOPORTCON number security_context_def
@@ -814,6 +816,9 @@ filename		: FILENAME
 			;
 number			: NUMBER 
 			{ $$ = strtoul(yytext,NULL,0); }
+			;
+number64		: NUMBER
+			{ $$ = strtoull(yytext,NULL,0); }
 			;
 ipv6_addr		: IPV6_ADDR
 			{ if (insert_id(yytext,0)) return -1; }

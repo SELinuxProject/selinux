@@ -39,6 +39,7 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <inttypes.h>
 
 #include <sepol/policydb/expand.h>
 #include <sepol/policydb/policydb.h>
@@ -3932,7 +3933,7 @@ bad:
 	return -1;
 }
 
-int define_iomem_context(unsigned long low, unsigned long high)
+int define_iomem_context(uint64_t low, uint64_t high)
 {
 	ocontext_t *newc, *c, *l, *head;
 	char *id;
@@ -3960,7 +3961,7 @@ int define_iomem_context(unsigned long low, unsigned long high)
 	newc->u.iomem.high_iomem = high;
 
 	if (low > high) {
-		yyerror2("low memory 0x%lx exceeds high memory 0x%lx", low, high);
+		yyerror2("low memory 0x%"PRIx64" exceeds high memory 0x%"PRIx64"", low, high);
 		free(newc);
 		return -1;
 	}
@@ -3972,13 +3973,13 @@ int define_iomem_context(unsigned long low, unsigned long high)
 
 	head = policydbp->ocontexts[OCON_XEN_IOMEM];
 	for (l = NULL, c = head; c; l = c, c = c->next) {
-		uint32_t low2, high2;
+		uint64_t low2, high2;
 
 		low2 = c->u.iomem.low_iomem;
 		high2 = c->u.iomem.high_iomem;
 		if (low <= high2 && low2 <= high) {
-			yyerror2("iomemcon entry for 0x%lx-0x%lx overlaps with "
-				"earlier entry 0x%x-0x%x", low, high,
+			yyerror2("iomemcon entry for 0x%"PRIx64"-0x%"PRIx64" overlaps with "
+				"earlier entry 0x%"PRIx64"-0x%"PRIx64"", low, high,
 				low2, high2);
 			goto bad;
 		}

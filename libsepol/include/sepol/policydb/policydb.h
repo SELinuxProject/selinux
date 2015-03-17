@@ -325,8 +325,8 @@ typedef struct ocontext {
 		uint32_t device;
 		uint16_t pirq;
 		struct {
-			uint32_t low_iomem;
-			uint32_t high_iomem;
+			uint64_t low_iomem;
+			uint64_t high_iomem;
 		} iomem;
 		struct {
 			uint32_t low_ioport;
@@ -689,10 +689,11 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_NEW_OBJECT_DEFAULTS	27
 #define POLICYDB_VERSION_DEFAULT_TYPE	28
 #define POLICYDB_VERSION_CONSTRAINT_NAMES	29
+#define POLICYDB_VERSION_XEN_DEVICETREE 30
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_CONSTRAINT_NAMES
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_XEN_DEVICETREE
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE		4

@@ -4319,12 +4319,12 @@ int cil_gen_iomemcon(__attribute__((unused)) struct cil_db *db, struct cil_tree_
 	if (parse_current->next->cl_head != NULL) {
 		if (parse_current->next->cl_head->next != NULL &&
 		    parse_current->next->cl_head->next->next == NULL) {
-			rc = cil_fill_integer(parse_current->next->cl_head, &iomemcon->iomem_low);
+			rc = cil_fill_integer64(parse_current->next->cl_head, &iomemcon->iomem_low);
 			if (rc != SEPOL_OK) {
 				cil_log(CIL_ERR, "Improper iomem specified\n");
 				goto exit;
 			}
-			rc = cil_fill_integer(parse_current->next->cl_head->next, &iomemcon->iomem_high);
+			rc = cil_fill_integer64(parse_current->next->cl_head->next, &iomemcon->iomem_high);
 			if (rc != SEPOL_OK) {
 				cil_log(CIL_ERR, "Improper iomem specified\n");
 				goto exit;
@@ -4335,7 +4335,7 @@ int cil_gen_iomemcon(__attribute__((unused)) struct cil_db *db, struct cil_tree_
 			goto exit;
 		}
 	} else {
-		rc = cil_fill_integer(parse_current->next, &iomemcon->iomem_low);;
+		rc = cil_fill_integer64(parse_current->next, &iomemcon->iomem_low);;
 		if (rc != SEPOL_OK) {
 			cil_log(CIL_ERR, "Improper iomem specified\n");
 			goto exit;
@@ -5040,6 +5040,32 @@ int cil_fill_integer(struct cil_tree_node *int_node, uint32_t *integer)
 
 	errno = 0;
 	val = strtol(int_node->data, &endptr, 10);
+	if (errno != 0 || endptr == int_node->data || *endptr != '\0') {
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
+	*integer = val;
+
+	return SEPOL_OK;
+
+exit:
+	cil_log(CIL_ERR, "Failed to create integer from string\n");
+	return rc;
+}
+
+int cil_fill_integer64(struct cil_tree_node *int_node, uint64_t *integer)
+{
+	int rc = SEPOL_ERR;
+	char *endptr = NULL;
+	uint64_t val;
+
+	if (int_node == NULL || integer == NULL) {
+		goto exit;
+	}
+
+	errno = 0;
+	val = strtoull(int_node->data, &endptr, 10);
 	if (errno != 0 || endptr == int_node->data || *endptr != '\0') {
 		rc = SEPOL_ERR;
 		goto exit;

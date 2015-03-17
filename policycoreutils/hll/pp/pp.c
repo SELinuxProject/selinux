@@ -2695,8 +2695,8 @@ static int ocontext_xen_ioport_to_cil(struct policydb *pdb, struct ocontext *iop
 static int ocontext_xen_iomem_to_cil(struct policydb *pdb, struct ocontext *iomems)
 {
 	struct ocontext *iomem;
-	uint32_t low;
-	uint32_t high;
+	uint64_t low;
+	uint64_t high;
 
 	for (iomem = iomems; iomem != NULL; iomem = iomem->next) {
 		low = iomem->u.iomem.low_iomem;

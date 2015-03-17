@@ -719,8 +719,8 @@ struct cil_pirqcon {
 };
 
 struct cil_iomemcon {
-	uint32_t iomem_low;
-	uint32_t iomem_high;
+	uint64_t iomem_low;
+	uint64_t iomem_high;
 	char *context_str;
 	struct cil_context *context;
 };

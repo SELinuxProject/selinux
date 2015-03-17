@@ -1252,13 +1252,31 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 					return POLICYDB_ERROR;
 				break;
 			case OCON_XEN_IOMEM:
-				buf[0] = c->u.iomem.low_iomem;
-				buf[1] = c->u.iomem.high_iomem;
-				for (j = 0; j < 2; j++)
-					buf[j] = cpu_to_le32(buf[j]);
-				items = put_entry(buf, sizeof(uint32_t), 2, fp);
-				if (items != 2)
-					return POLICYDB_ERROR;
+				if (p->policyvers >= POLICYDB_VERSION_XEN_DEVICETREE) {
+					uint64_t b64[2];
+					b64[0] = c->u.iomem.low_iomem;
+					b64[1] = c->u.iomem.high_iomem;
+					for (j = 0; j < 2; j++)
+						b64[j] = cpu_to_le64(b64[j]);
+					items = put_entry(b64, sizeof(uint64_t), 2, fp);
+					if (items != 2)
+						return POLICYDB_ERROR;
+				} else {
+					if (c->u.iomem.high_iomem > 0xFFFFFFFFULL) {
+						ERR(fp->handle, "policy version %d"
+							" cannot represent IOMEM addresses over 16TB",
+							p->policyvers);
+						return POLICYDB_ERROR;
+					}
+
+					buf[0] = c->u.iomem.low_iomem;
+					buf[1] = c->u.iomem.high_iomem;
+					for (j = 0; j < 2; j++)
+						buf[j] = cpu_to_le32(buf[j]);
+					items = put_entry(buf, sizeof(uint32_t), 2, fp);
+					if (items != 2)
+						return POLICYDB_ERROR;
+				}
 				if (context_write(p, &c->context[0], fp))
 					return POLICYDB_ERROR;
 				break;

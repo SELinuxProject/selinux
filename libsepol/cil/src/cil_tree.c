@@ -29,6 +29,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <inttypes.h>
 
 #include <sepol/policydb/conditional.h>
 
@@ -1392,7 +1393,7 @@ void cil_tree_print_node(struct cil_tree_node *node)
 		case CIL_IOMEMCON: {
 			struct cil_iomemcon *iomemcon = node->data;
 
-			cil_log(CIL_INFO, "IOMEMCON ( %d %d )", iomemcon->iomem_low, iomemcon->iomem_high);
+			cil_log(CIL_INFO, "IOMEMCON ( %"PRId64" %"PRId64" )", iomemcon->iomem_low, iomemcon->iomem_high);
 			if (iomemcon->context != NULL) {
 				cil_tree_print_context(iomemcon->context);
 			} else {
