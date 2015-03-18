@@ -1,3 +1,5 @@
+	* Add device tree ocontext nodes to Xen policy, from Daniel De Graaf.
+
 1.2.2 2015-02-02
 	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
 	* Remove unnecessary grammar in interface call param list to fix poor

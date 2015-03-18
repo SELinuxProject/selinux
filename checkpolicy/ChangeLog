@@ -1,3 +1,6 @@
+	* Add device tree ocontext nodes to Xen policy, from Daniel De Graaf.
+	* Widen Xen IOMEM context entries, from Daniel De Graaf.
+	* Expand allowed character set in paths, from Daniel De Graaf.
 	* Fix precedence between number and filesystem tokens, from Stephen Smalley.
 	* dispol/dismod fgets function warnings fix, from Emre Can Kucukoglu.
 

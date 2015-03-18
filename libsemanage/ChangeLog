@@ -1,3 +1,4 @@
+	* Fix fname[] initialization in test_utilities.c, from Petr Lautrbach.
 	* Add remove-hll semanage.conf option to remove HLL files after
 	  compilation to CIL, from Yuli Khodorkovskiy
 	* Fix memory leaks when parsing semanage.conf, from Yuli Khodorkovskiy
