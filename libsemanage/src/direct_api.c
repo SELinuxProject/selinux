@@ -445,16 +445,13 @@ ssize_t bunzip(semanage_handle_t *sh, FILE *f, char **data)
 		goto exit;
 	}
 
-	if (!sh->conf->bzip_blocksize) {
-		bzerror = fread(buf, 1, BZ2_MAGICLEN, f);
-		rewind(f);
-		if ((bzerror != BZ2_MAGICLEN) || memcmp(buf, BZ2_MAGICSTR, BZ2_MAGICLEN)) {
-			ERR(sh, "bz2 magic number not found.");
-			goto exit;
-		}
-		/* fall through */
+	/* Check if the file is bzipped */
+	bzerror = fread(buf, 1, BZ2_MAGICLEN, f);
+	rewind(f);
+	if ((bzerror != BZ2_MAGICLEN) || memcmp(buf, BZ2_MAGICSTR, BZ2_MAGICLEN)) {
+		goto exit;
 	}
-	
+
 	b = BZ2_bzReadOpen ( &bzerror, f, 0, sh->conf->bzip_small, NULL, 0 );
 	if ( bzerror != BZ_OK ) {
 		ERR(sh, "Failure opening bz2 archive.");
