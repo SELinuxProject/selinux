@@ -630,6 +630,7 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		state->base->p_bools.nprim++;
 		base_bool = new_bool;
 		base_bool->flags = booldatum->flags;
+		base_bool->state = booldatum->state;
 	} else if ((booldatum->flags & COND_BOOL_FLAGS_TUNABLE) !=
 		   (base_bool->flags & COND_BOOL_FLAGS_TUNABLE)) {
 			/* A mismatch between boolean/tunable declaration
