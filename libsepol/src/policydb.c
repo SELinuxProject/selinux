@@ -1274,7 +1274,7 @@ void ocontext_xen_free(ocontext_t **ocontexts)
 			c = c->next;
 			context_destroy(&ctmp->context[0]);
 			context_destroy(&ctmp->context[1]);
-			if (i == OCON_ISID)
+			if (i == OCON_ISID || i == OCON_XEN_DEVICETREE)
 				free(ctmp->u.name);
 			free(ctmp);
 		}
@@ -2559,11 +2559,13 @@ static int ocontext_read_xen(struct policydb_compat_info *info,
 				rc = next_entry(buf, fp, sizeof(uint32_t));
 				if (rc < 0)
 					return -1;
-				len = le32_to_cpu(buf[1]);
+				len = le32_to_cpu(buf[0]);
 				c->u.name = malloc(len + 1);
 				if (!c->u.name)
 					return -1;
 				rc = next_entry(c->u.name, fp, len);
+				if (rc < 0)
+					return -1;
 				c->u.name[len] = 0;
 				if (context_read_and_validate
 				    (&c->context[0], p, fp))

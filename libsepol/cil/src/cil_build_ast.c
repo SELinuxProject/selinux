@@ -4583,8 +4583,6 @@ void cil_destroy_devicetreecon(struct cil_devicetreecon *devicetreecon)
 		return;
 	}
 
-	free(devicetreecon->path);
-
 	if (devicetreecon->context_str == NULL && devicetreecon->context != NULL) {
 		cil_destroy_context(devicetreecon->context);
 	}

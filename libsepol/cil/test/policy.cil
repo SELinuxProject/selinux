@@ -250,6 +250,7 @@
 	(iomemcon (0 255) system_u_bin_t_l2h)
 	(ioportcon (22 22) system_u_bin_t_l2h)
 	(pcidevicecon 345 system_u_bin_t_l2h)
+	(devicetreecon "/this is/a/path" system_u_bin_t_l2h)
 
 	(constrain (files (read)) (not (or (and (eq t1 exec_t) (eq t2 bin_t)) (eq r1 r2))))
 	(constrain char_w (not (or (and (eq t1 exec_t) (eq t2 bin_t)) (eq r1 r2))))

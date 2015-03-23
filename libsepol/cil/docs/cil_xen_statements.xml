@@ -3,6 +3,7 @@
 
    <sect1>
       <title>Xen Statements</title>
+      <para>Policy version 30 introduced the <literal><link linkend="devicetreecon">devicetreecon</link></literal> statement and also expanded the existing I/O memory range to 64 bits in order to support hardware with more than 44 bits of physical address space (32-bit count of 4K pages).</para>
       <para>See the <ulink url="http://xenbits.xen.org/docs/4.2-testing/misc/xsm-flask.txt">"XSM/FLASK Configuration"</ulink> document for further information (<ulink url="http://xenbits.xen.org/docs/4.2-testing/misc/xsm-flask.txt"></ulink>)</para>
       <sect2 id="iomemcon">
          <title>iomemcon</title>
@@ -178,6 +179,49 @@
          <para><emphasis role="bold">Example:</emphasis></para>
          <para>An anonymous context for IRQ 33:</para>
          <programlisting><![CDATA[(pirqcon 33 (unconfined.user object_r unconfined.object low_low))]]></programlisting>
+      </sect2>
+
+      <sect2 id="devicetreecon">
+         <title>devicetreecon</title>
+         <para>Label device tree nodes.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(devicetreecon path context_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>devicetreecon</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>devicetreecon</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>path</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The device tree path. If this contains spaces enclose within <literal>""</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>context_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A previously declared <literal><link linkend="context">context</link></literal> identifier or an anonymous security context (<literal><link linkend="user">user</link> <link linkend="role">role</link> <link linkend="type">type</link> <link linkend="levelrange">levelrange</link></literal>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>An anonymous context for the specified path:</para>
+         <programlisting><![CDATA[(devicetreecon "/this is/a/path" (unconfined.user object_r unconfined.object low_low))]]></programlisting>
       </sect2>
 
    </sect1>
