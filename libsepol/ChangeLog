@@ -1,3 +1,5 @@
+	* fix building Xen policy with devicetreecon, and add devicetreecon
+	  CIL documentation, from Richard Haines.
 	* bool_copy_callback set state on creation, from Thomas Hurd.
 	* Add device tree ocontext nodes to Xen policy, from Daniel De Graaf.
 	* Widen Xen IOMEM context entries, from Daniel De Graaf.
