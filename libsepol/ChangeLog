@@ -1,3 +1,4 @@
+	* Move secilc out of libsepol, from Yuli Khodorkovskiy.
 	* fix building Xen policy with devicetreecon, and add devicetreecon
 	  CIL documentation, from Richard Haines.
 	* bool_copy_callback set state on creation, from Thomas Hurd.
