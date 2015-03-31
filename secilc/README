@@ -11,34 +11,30 @@ INTRODUCTION
 DEPENDENCIES
 
 	gcc >= 4.5.1
-	libsepol-static >= 2.1.4
-	lcov >= 1.9
-	flex >= 2.5.35
+	libsepol >= 2.4
 
 
 BUILD STEPS
 
-	Open a terminal client and execute the following command to download the source code:
-
-			git clone https://github.com/SELinuxProject/cil.git
-
-	Change directory into the "cil" directory.
 	Run "make" with one of the following targets:
 
 	make
-		Build the CIL compiler (secilc)
+		Build the CIL compiler (secilc).
 
-	make unit
-		Build the unit_test application to run unit tests
+	make test
+		Pass a sample policy to test with the compiler.
 
-	make coverage
-		Build the unit test binary and create coverage reports
+	make install
+		Install the secilc compiler and man page to disk.
 
 	make clean
-		Remove temporary build files
+		Remove temporary build files.
+
+	make man
+		Build the secilc man page.
 
 	make bare
-		Remove temporary build files and compile binaries
+		Remove temporary build files and compile binaries.
 
 
 USAGE

@@ -34,7 +34,7 @@
 #include <getopt.h>
 #include <sys/stat.h>
 
-#include <cil/cil.h>
+#include <sepol/cil/cil.h>
 #include <sepol/policydb.h>
 
 void usage(char *prog)
@@ -210,13 +210,13 @@ int main(int argc, char *argv[])
 	for (i = optind; i < argc; i++) {
 		file = fopen(argv[i], "r");
 		if (!file) {
-			cil_log(CIL_ERR, "Could not open file: %s\n", argv[i]);
+			fprintf(stderr, "Could not open file: %s\n", argv[i]);
 			rc = SEPOL_ERR;
 			goto exit;
 		}
 		rc = stat(argv[i], &filedata);
 		if (rc == -1) {
-			cil_log(CIL_ERR, "Could not stat file: %s\n", argv[i]);
+			fprintf(stderr, "Could not stat file: %s\n", argv[i]);
 			goto exit;
 		}
 		file_size = filedata.st_size;	
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 		buffer = malloc(file_size);
 		rc = fread(buffer, file_size, 1, file);
 		if (rc != 1) {
-			cil_log(CIL_ERR, "Failure reading file: %s\n", argv[i]);
+			fprintf(stderr, "Failure reading file: %s\n", argv[i]);
 			goto exit;
 		}
 		fclose(file);
@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
 
 		rc = cil_add_file(db, argv[i], buffer, file_size);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Failure adding %s\n", argv[i]);
+			fprintf(stderr, "Failure adding %s\n", argv[i]);
 			goto exit;
 		}
 
@@ -242,13 +242,13 @@ int main(int argc, char *argv[])
 
 	rc = cil_compile(db);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Failed to compile cildb: %d\n", rc);
+		fprintf(stderr, "Failed to compile cildb: %d\n", rc);
 		goto exit;
 	}
 
 	rc = cil_build_policydb(db, &pdb);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Failed to build policydb\n");
+		fprintf(stderr, "Failed to build policydb\n");
 		goto exit;
 	}
 
@@ -256,29 +256,27 @@ int main(int argc, char *argv[])
 		int size = snprintf(NULL, 0, "policy.%d", policyvers);
 		output = malloc((size + 1) * sizeof(char));
 		if (output == NULL) {
-			cil_log(CIL_ERR, "Failed to create output filename\n");
+			fprintf(stderr, "Failed to create output filename\n");
 			rc = SEPOL_ERR;
 			goto exit;
 		}
 		if (snprintf(output, size + 1, "policy.%d", policyvers) != size) {
-			cil_log(CIL_ERR, "Failed to create output filename\n");
+			fprintf(stderr, "Failed to create output filename\n");
 			rc = SEPOL_ERR;
 			goto exit;
 		}
 	}
 
-	cil_log(CIL_INFO, "Writing binary to %s\n", output);
-
 	binary = fopen(output, "w");
 	if (binary == NULL) {
-		cil_log(CIL_ERR, "Failure opening binary file for writing\n");
+		fprintf(stderr, "Failure opening binary file for writing\n");
 		rc = SEPOL_ERR;
 		goto exit;
 	}
 
 	rc = sepol_policy_file_create(&pf);
 	if (rc != 0) {
-		cil_log(CIL_ERR, "Failed to create policy file: %d\n", rc);
+		fprintf(stderr, "Failed to create policy file: %d\n", rc);
 		goto exit;
 	}
 
@@ -286,18 +284,16 @@ int main(int argc, char *argv[])
 
 	rc = sepol_policydb_write(pdb, pf);
 	if (rc != 0) {
-		cil_log(CIL_ERR, "Failed to write binary policy: %d\n", rc);
+		fprintf(stderr, "Failed to write binary policy: %d\n", rc);
 		goto exit;
 	}
 
 	fclose(binary);
 	binary = NULL;
 
-	cil_log(CIL_INFO, "Writing file contexts\n");
-	
 	rc = cil_filecons_to_string(db, &fc_buf, &fc_size);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Failed to get file context data\n");
+		fprintf(stderr, "Failed to get file context data\n");
 		goto exit;
 	}
 
@@ -308,12 +304,12 @@ int main(int argc, char *argv[])
 	}
 
 	if (file_contexts == NULL) {
-		cil_log(CIL_ERR, "Failed to open file_contexts file\n");
+		fprintf(stderr, "Failed to open file_contexts file\n");
 		goto exit;
 	}
 	
 	if (fwrite(fc_buf, sizeof(char), fc_size, file_contexts) != fc_size) {
-		cil_log(CIL_ERR, "Failed to write file_contexts file\n");
+		fprintf(stderr, "Failed to write file_contexts file\n");
 		goto exit;
 	}
 
@@ -323,8 +319,6 @@ int main(int argc, char *argv[])
 	rc = SEPOL_OK;
 
 exit:
-	cil_log(CIL_INFO,"Exiting\n");
-
 	if (binary != NULL) {
 		fclose(binary);
 	}

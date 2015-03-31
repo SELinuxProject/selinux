@@ -44,5 +44,6 @@ LIBSEPOL_1.1 {
 	cil_filecons_to_string;
 	cil_set_target_platform;
 	cil_set_policy_version;
+	cil_set_mls;
   local: *;
 } LIBSEPOL_1.0;

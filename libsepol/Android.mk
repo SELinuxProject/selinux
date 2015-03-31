@@ -135,18 +135,3 @@ LOCAL_SRC_FILES := $(common_src_files)
 LOCAL_MODULE_CLASS := STATIC_LIBRARIES
 
 include $(BUILD_STATIC_LIBRARY)
-
-##
-# secilc
-#
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := secilc
-LOCAL_MODULE_TAGS := optional
-LOCAL_C_INCLUDES := $(common_includes)
-LOCAL_CFLAGS := $(common_cflags)
-LOCAL_SRC_FILES := cil/secilc.c
-LOCAL_STATIC_LIBRARIES := libsepol
-LOCAL_MODULE_CLASS := EXECUTABLES
-
-include $(BUILD_HOST_EXECUTABLE)
