@@ -23,6 +23,7 @@ common_src_files := \
 	src/link.c \
 	src/mls.c \
 	src/module.c \
+	src/module_to_cil.c \
 	src/node_record.c \
 	src/nodes.c \
 	src/polcaps.c \

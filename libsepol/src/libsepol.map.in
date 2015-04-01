@@ -45,5 +45,7 @@ LIBSEPOL_1.1 {
 	cil_set_target_platform;
 	cil_set_policy_version;
 	cil_set_mls;
+	sepol_ppfile_to_module_package;
+	sepol_module_package_to_cil;
   local: *;
 } LIBSEPOL_1.0;

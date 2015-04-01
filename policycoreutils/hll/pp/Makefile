@@ -9,7 +9,7 @@ HLLDIR ?= $(LIBEXECDIR)/selinux/hll
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -I$(INCLUDEDIR)
-LDLIBS = $(LIBDIR)/libsepol.a -L$(LIBDIR)
+LDLIBS = -lsepol -L$(LIBDIR)
 
 PP_SRCS = $(wildcard *.c)
 PP_OBJS = $(patsubst %.c,%.o,$(PP_SRCS))
