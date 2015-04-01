@@ -3407,126 +3407,177 @@ exit:
 	return rc;
 }
 
+static int block_to_cil(struct policydb *pdb, struct avrule_block *block, struct stack *stack, int indent)
+{
+	int rc = -1;
+	struct avrule_decl *decl;
+	struct list *attr_list;
+
+	decl = block->branch_list;
+
+	rc = list_init(&attr_list);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = typealiases_to_cil(indent, pdb, block, stack);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = declared_scopes_to_cil(indent, pdb, block, stack);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = required_scopes_to_cil(indent, pdb, block, stack);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = additive_scopes_to_cil(indent, pdb, block, stack);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = avrule_list_to_cil(indent, pdb, decl->avrules, attr_list);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = role_trans_to_cil(indent, pdb, decl->role_tr_rules);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = role_allows_to_cil(indent, pdb, decl->role_allow_rules);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = range_trans_to_cil(indent, pdb, decl->range_tr_rules);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = filename_trans_to_cil(indent, pdb, decl->filename_trans_rules);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = cond_list_to_cil(indent, pdb, decl->cond_list);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = cil_print_attr_list(indent, pdb, attr_list);
+	if (rc != 0) {
+		goto exit;
+	}
+
+exit:
+	attr_list_destroy(&attr_list);
+	return rc;
+}
+
+static int module_block_to_cil(struct policydb *pdb, struct avrule_block *block, struct stack *stack, int *indent)
+{
+	int rc = 0;
+	struct avrule_decl *decl;
+	struct avrule_decl *decl_tmp;
+
+	decl = block->branch_list;
+	if (decl == NULL) {
+		goto exit;
+	}
+
+	if (decl->next != NULL) {
+		log_err("Warning: 'else' blocks in optional statements are unsupported in CIL. Dropping from output.");
+	}
+
+	if (block->flags & AVRULE_OPTIONAL) {
+		while (stack->pos > 0) {
+			decl_tmp = stack_peek(stack);
+			if (is_scope_superset(&decl->required, &decl_tmp->required)) {
+				break;
+			}
+
+			stack_pop(stack);
+			(*indent)--;
+			cil_println(*indent, ")");
+		}
+
+		cil_println(*indent, "(optional %s_optional_%i", pdb->name, decl->decl_id);
+		(*indent)++;
+	}
+
+	stack_push(stack, decl);
+
+	rc = block_to_cil(pdb, block, stack, *indent);
+	if (rc != 0) {
+		goto exit;
+	}
+
+exit:
+	return rc;
+}
+
+static int global_block_to_cil(struct policydb *pdb, struct avrule_block *block, struct stack *stack)
+{
+	int rc = 0;
+	struct avrule_decl *decl;
+
+	decl = block->branch_list;
+	if (decl == NULL) {
+		goto exit;
+	}
+
+	if (decl->next != NULL) {
+		log_err("Warning: 'else' not allowed in global block. Dropping from output.");
+	}
+
+	stack_push(stack, decl);
+
+	// type aliases and commons are only stored in the global symtab.
+	// However, to get scoping correct, we assume they are in the
+	// global block
+	rc = hashtab_map(pdb->p_commons.table, common_to_cil, NULL);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = block_to_cil(pdb, block, stack, 0);
+	if (rc != 0) {
+		goto exit;
+	}
+
+exit:
+	return rc;
+}
+
 static int blocks_to_cil(struct policydb *pdb)
 {
 	int rc = -1;
 	struct avrule_block *block;
-	struct avrule_decl *decl;
-	struct avrule_decl *decl_tmp;
 	int indent = 0;
 	struct stack *stack;
-	struct list *attr_list;
 
 	rc = stack_init(&stack);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	for (block = pdb->global; block != NULL; block = block->next) {
-		rc = list_init(&attr_list);
+	block = pdb->global;
+	rc = global_block_to_cil(pdb, block, stack);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	for (block = block->next; block != NULL; block = block->next) {
+		rc = module_block_to_cil(pdb, block, stack, &indent);
 		if (rc != 0) {
 			goto exit;
 		}
-
-		decl = block->branch_list;
-		if (decl == NULL) {
-			continue;
-		}
-
-		if (decl->next != NULL) {
-			log_err("Warning: 'else' blocks in optional statements are unsupported in CIL. Dropping from output.");
-		}
-
-		if (block->flags & AVRULE_OPTIONAL) {
-			while (stack->pos > 0) {
-				decl_tmp = stack_peek(stack);
-				if (is_scope_superset(&decl->required, &decl_tmp->required)) {
-					break;
-				}
-
-				stack_pop(stack);
-				indent--;
-				cil_println(indent, ")");
-			}
-
-			cil_println(indent, "(optional %s_optional_%i", pdb->name, decl->decl_id);
-			indent++;
-		}
-
-		stack_push(stack, decl);
-
-		if (stack->pos == 0) {
-			// type aliases and commons are only stored in the global symtab.
-			// However, to get scoping correct, we assume they are in the
-			// global block
-			struct map_args args;
-			args.pdb = pdb;
-			args.block = block;
-			args.decl_stack = stack;
-			args.indent = 0;
-			args.scope = SCOPE_DECL;
-
-			rc = hashtab_map(pdb->p_commons.table, common_to_cil, &args);
-			if (rc != 0) {
-				goto exit;
-			}
-		}
-
-		rc = typealiases_to_cil(indent, pdb, block, stack);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = declared_scopes_to_cil(indent, pdb, block, stack);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = required_scopes_to_cil(indent, pdb, block, stack);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = additive_scopes_to_cil(indent, pdb, block, stack);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = avrule_list_to_cil(indent, pdb, decl->avrules, attr_list);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = role_trans_to_cil(indent, pdb, decl->role_tr_rules);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = role_allows_to_cil(indent, pdb, decl->role_allow_rules);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = range_trans_to_cil(indent, pdb, decl->range_tr_rules);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = filename_trans_to_cil(indent, pdb, decl->filename_trans_rules);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = cond_list_to_cil(indent, pdb, decl->cond_list);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		rc = cil_print_attr_list(indent, pdb, attr_list);
-		if (rc != 0) {
-			goto exit;
-		}
-		attr_list_destroy(&attr_list);
 	}
 
 	while (indent > 0) {
@@ -3534,11 +3585,71 @@ static int blocks_to_cil(struct policydb *pdb)
 		cil_println(indent, ")");
 	}
 
-	rc = 0;
+exit:
+	stack_destroy(&stack);
+
+	return rc;
+}
+
+static int linked_block_to_cil(struct policydb *pdb, struct avrule_block *block, struct stack *stack)
+{
+	int rc = 0;
+	struct avrule_decl *decl;
+
+	decl = block->branch_list;
+	if (decl == NULL) {
+		goto exit;
+	}
+
+	if (!decl->enabled) {
+		if (decl->next != NULL) {
+			decl = decl->next;
+		} else {
+			goto exit;
+		}
+	}
+
+	stack_push(stack, decl);
+
+	rc = block_to_cil(pdb, block, stack, 0);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	stack_pop(stack);
+
+exit:
+	return rc;
+}
+
+static int linked_blocks_to_cil(struct policydb *pdb)
+{
+	// Convert base module that has been linked to CIL
+	// Since it is linked, all optional blocks have been resolved
+	int rc = -1;
+	struct avrule_block *block;
+	struct stack *stack;
+
+	rc = stack_init(&stack);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	block = pdb->global;
+	rc = global_block_to_cil(pdb, block, stack);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	for (block = block->next; block != NULL; block = block->next) {
+		rc = linked_block_to_cil(pdb, block, stack);
+		if (rc != 0) {
+			goto exit;
+		}
+	}
 
 exit:
 	stack_destroy(&stack);
-	attr_list_destroy(&attr_list);
 
 	return rc;
 }
@@ -3638,33 +3749,30 @@ exit:
 	return rc;
 }
 
-int sepol_module_package_to_cil(FILE *fp, struct sepol_module_package *mod_pkg)
+int sepol_module_policydb_to_cil(FILE *fp, struct policydb *pdb, int linked)
 {
 	int rc = -1;
-	struct sepol_policydb *pdb;
 
 	out_file = fp;
 
-	pdb = sepol_module_package_get_policy(mod_pkg);
 	if (pdb == NULL) {
-		log_err("Failed to get policydb");
-		rc = -1;
+		rc = 0;
 		goto exit;
 	}
 
-	if (pdb->p.policy_type != SEPOL_POLICY_BASE &&
-		pdb->p.policy_type != SEPOL_POLICY_MOD) {
+	if (pdb->policy_type != SEPOL_POLICY_BASE &&
+		pdb->policy_type != SEPOL_POLICY_MOD) {
 		log_err("Policy pakcage is not a base or module");
 		rc = -1;
 		goto exit;
 	}
 
-	rc = fix_module_name(&pdb->p);
+	rc = fix_module_name(pdb);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	if (pdb->p.policy_type == SEPOL_POLICY_BASE && !pdb->p.mls) {
+	if (pdb->policy_type == SEPOL_POLICY_BASE && !pdb->mls) {
 		// If this is a base non-mls policy, we need to define a default level
 		// range that can be used for contexts by other non-mls modules, since
 		// CIL requires that all contexts have a range, even if they are
@@ -3675,7 +3783,7 @@ int sepol_module_package_to_cil(FILE *fp, struct sepol_module_package *mod_pkg)
 		}
 	}
 
-	if (pdb->p.policy_type == SEPOL_POLICY_BASE) {
+	if (pdb->policy_type == SEPOL_POLICY_BASE) {
 		// object_r is implicit in checkmodule, but not with CIL, create it
 		// as part of base
 		rc = generate_default_object();
@@ -3690,39 +3798,77 @@ int sepol_module_package_to_cil(FILE *fp, struct sepol_module_package *mod_pkg)
 		}
 
 		// handle_unknown is used from only the base module
-		rc = handle_unknown_to_cil(&pdb->p);
+		rc = handle_unknown_to_cil(pdb);
 		if (rc != 0) {
 			goto exit;
 		}
 
 		// mls is used from only the base module
-		rc = generate_mls(&pdb->p);
+		rc = generate_mls(pdb);
 		if (rc != 0) {
 			goto exit;
 		}
 	}
 
-	rc = role_list_create(pdb->p.p_roles.table);
+	rc = role_list_create(pdb->p_roles.table);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = typealias_list_create(&pdb->p);
+	rc = typealias_list_create(pdb);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = polcaps_to_cil(&pdb->p);
+	rc = polcaps_to_cil(pdb);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = ocontexts_to_cil(&pdb->p);
+	rc = ocontexts_to_cil(pdb);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = genfscon_to_cil(&pdb->p);
+	rc = genfscon_to_cil(pdb);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	// now print everything that is scoped
+	if (linked) {
+		rc = linked_blocks_to_cil(pdb);
+	} else {
+		rc = blocks_to_cil(pdb);
+	}
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = 0;
+
+exit:
+	role_list_destroy();
+	typealias_list_destroy();
+
+	return rc;
+}
+
+int sepol_module_package_to_cil(FILE *fp, struct sepol_module_package *mod_pkg)
+{
+	int rc = -1;
+	struct sepol_policydb *pdb;
+
+	out_file = fp;
+
+	pdb = sepol_module_package_get_policy(mod_pkg);
+	if (pdb == NULL) {
+		log_err("Failed to get policydb");
+		rc = -1;
+		goto exit;
+	}
+
+	rc = sepol_module_policydb_to_cil(fp, &pdb->p, 0);
 	if (rc != 0) {
 		goto exit;
 	}
@@ -3747,18 +3893,9 @@ int sepol_module_package_to_cil(FILE *fp, struct sepol_module_package *mod_pkg)
 		goto exit;
 	}
 
-	// now print everything that is scoped
-	rc = blocks_to_cil(&pdb->p);
-	if (rc != 0) {
-		goto exit;
-	}
-
 	rc = 0;
 
 exit:
-	role_list_destroy();
-	typealias_list_destroy();
-
 	return rc;
 }
 
