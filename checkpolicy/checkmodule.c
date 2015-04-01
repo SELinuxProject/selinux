@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <sys/mman.h>
 
+#include <sepol/module_to_cil.h>
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/conditional.h>
@@ -108,20 +109,9 @@ static int read_binary_policy(policydb_t * p, const char *file, const char *prog
 	return 0;
 }
 
-static int write_binary_policy(policydb_t * p, const char *file, char *progname)
+static int write_binary_policy(policydb_t * p, FILE *outfp)
 {
-	FILE *outfp = NULL;
 	struct policy_file pf;
-	int ret;
-
-	printf("%s:  writing binary representation (version %d) to %s\n",
-	       progname, policyvers, file);
-
-	outfp = fopen(file, "w");
-	if (!outfp) {
-		perror(file);
-		exit(1);
-	}
 
 	p->policy_type = policy_type;
 	p->policyvers = policyvers;
@@ -130,24 +120,19 @@ static int write_binary_policy(policydb_t * p, const char *file, char *progname)
 	policy_file_init(&pf);
 	pf.type = PF_USE_STDIO;
 	pf.fp = outfp;
-	ret = policydb_write(p, &pf);
-	if (ret) {
-		fprintf(stderr, "%s:  error writing %s\n", progname, file);
-		return -1;
-	}
-	fclose(outfp);
-	return 0;
+	return policydb_write(p, &pf);
 }
 
 static void usage(char *progname)
 {
-	printf("usage:  %s [-h] [-V] [-b] [-U handle_unknown] [-m] [-M] [-o FILE] [INPUT]\n", progname);
+	printf("usage:  %s [-h] [-V] [-b] [-C] [-U handle_unknown] [-m] [-M] [-o FILE] [INPUT]\n", progname);
 	printf("Build base and policy modules.\n");
 	printf("Options:\n");
 	printf("  INPUT      build module from INPUT (else read from \"%s\")\n",
 	       txtfile);
 	printf("  -V         show policy versions created by this program\n");
 	printf("  -b         treat input as a binary policy file\n");
+	printf("  -C         output CIL policy instead of binary policy\n");
 	printf("  -h         print usage\n");
 	printf("  -U OPTION  How to handle unknown classes and permissions\n");
 	printf("               deny: Deny unknown kernel checks\n");
@@ -162,7 +147,7 @@ static void usage(char *progname)
 int main(int argc, char **argv)
 {
 	const char *file = txtfile, *outfile = NULL;
-	unsigned int binary = 0;
+	unsigned int binary = 0, cil = 0;
 	int ch;
 	int show_version = 0;
 	policydb_t modpolicydb;
@@ -173,10 +158,11 @@ int main(int argc, char **argv)
 		{"version", no_argument, NULL, 'V'},
 		{"handle-unknown", required_argument, NULL, 'U'},
 		{"mls", no_argument, NULL, 'M'},
+		{"cil", no_argument, NULL, 'C'},
 		{NULL, 0, NULL, 0}
 	};
 
-	while ((ch = getopt_long(argc, argv, "ho:bVU:mM", long_options, NULL)) != -1) {
+	while ((ch = getopt_long(argc, argv, "ho:bVU:mMC", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'h':
 			usage(argv[0]);
@@ -211,6 +197,9 @@ int main(int argc, char **argv)
 			break;
 		case 'M':
 			mlspol = 1;
+			break;
+		case 'C':
+			cil = 1;
 			break;
 		default:
 			usage(argv[0]);
@@ -269,7 +258,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if (modpolicydb.policy_type == POLICY_BASE) {
+	if (modpolicydb.policy_type == POLICY_BASE && !cil) {
 		/* Verify that we can successfully expand the base module. */
 		policydb_t kernpolicydb;
 
@@ -295,10 +284,37 @@ int main(int argc, char **argv)
 
 	printf("%s:  policy configuration loaded\n", argv[0]);
 
-	if (outfile &&
-	    write_binary_policy(&modpolicydb, outfile, argv[0]) == -1) {
+	if (outfile) {
+		FILE *outfp = fopen(outfile, "w");
+
+		if (!outfp) {
+			perror(outfile);
+			exit(1);
+		}
+
+		if (!cil) {
+			printf("%s:  writing binary representation (version %d) to %s\n",
+				   argv[0], policyvers, file);
+
+			if (write_binary_policy(&modpolicydb, outfp) != 0) {
+				fprintf(stderr, "%s:  error writing %s\n", argv[0], outfile);
+				exit(1);
+			}
+		} else {
+			printf("%s:  writing CIL to %s\n",argv[0], outfile);
+
+			if (sepol_module_policydb_to_cil(outfp, &modpolicydb, 0) != 0) {
+				fprintf(stderr, "%s:  error writing %s\n", argv[0], outfile);
+				exit(1);
+			}
+		}
+
+		fclose(outfp);
+	} else if (cil) {
+		fprintf(stderr, "%s:  No file to write CIL was specified\n", argv[0]);
 		exit(1);
 	}
+
 	policydb_destroy(&modpolicydb);
 
 	return 0;

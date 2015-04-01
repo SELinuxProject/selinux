@@ -74,6 +74,7 @@
 #include <ctype.h>
 #endif
 
+#include <sepol/module_to_cil.h>
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/conditional.h>
@@ -104,7 +105,7 @@ unsigned int policyvers = POLICYDB_VERSION_MAX;
 void usage(char *progname)
 {
 	printf
-	    ("usage:  %s [-b] [-d] [-U handle_unknown (allow,deny,reject)] [-M]"
+	    ("usage:  %s [-b] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M]"
 	     "[-c policyvers (%d-%d)] [-o output_file] [-t target_platform (selinux,xen)]"
 	     "[input_file]\n",
 	     progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
@@ -376,6 +377,7 @@ static int check_level(hashtab_key_t key, hashtab_datum_t datum, void *arg __att
 
 int main(int argc, char **argv)
 {
+	policydb_t parse_policy;
 	sepol_security_class_t tclass;
 	sepol_security_id_t ssid, tsid, *sids, oldsid, newsid, tasksid;
 	sepol_security_context_t scontext;
@@ -386,7 +388,7 @@ int main(int argc, char **argv)
 	size_t scontext_len, pathlen;
 	unsigned int i;
 	unsigned int protocol, port;
-	unsigned int binary = 0, debug = 0;
+	unsigned int binary = 0, debug = 0, cil = 0;
 	struct val_to_name v;
 	int ret, ch, fd, target = SEPOL_TARGET_SELINUX;
 	unsigned int nel, uret;
@@ -408,11 +410,12 @@ int main(int argc, char **argv)
 		{"version", no_argument, NULL, 'V'},
 		{"handle-unknown", required_argument, NULL, 'U'},
 		{"mls", no_argument, NULL, 'M'},
+		{"cil", no_argument, NULL, 'C'},
 		{"help", no_argument, NULL, 'h'},
 		{NULL, 0, NULL, 0}
 	};
 
-	while ((ch = getopt_long(argc, argv, "o:t:dbU:MVc:h", long_options, NULL)) != -1) {
+	while ((ch = getopt_long(argc, argv, "o:t:dbU:MCVc:h", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'o':
 			outfile = optarg;
@@ -454,6 +457,9 @@ int main(int argc, char **argv)
 			usage(argv[0]);
 		case 'M':
 			mlspol = 1;
+			break;
+		case 'C':
+			cil = 1;
 			break;
 		case 'c':{
 				long int n;
@@ -505,6 +511,11 @@ int main(int argc, char **argv)
 	sepol_set_sidtab(&sidtab);
 
 	if (binary) {
+		if (cil) {
+			fprintf(stderr,	"%s:  Converting kernel policy to CIL is not supported\n",
+				argv[0]);
+			exit(1);
+		}
 		fd = open(file, O_RDONLY);
 		if (fd < 0) {
 			fprintf(stderr, "Can't open '%s':  %s\n",
@@ -557,8 +568,6 @@ int main(int argc, char **argv)
 			}
 		}
 	} else {
-		policydb_t parse_policy;
-
 		if (policydb_init(&parse_policy))
 			exit(1);
 		/* We build this as a base policy first since that is all the parser understands */
@@ -577,23 +586,24 @@ int main(int argc, char **argv)
 		if (hashtab_map(policydbp->p_levels.table, check_level, NULL))
 			exit(1);
 
-		if (policydb_init(&policydb)) {
-			fprintf(stderr, "%s:  policydb_init failed\n", argv[0]);
-			exit(1);
-		}
-
 		/* Linking takes care of optional avrule blocks */
-		if (link_modules(NULL, &parse_policy, NULL, 0, 0)) {
+		if (link_modules(NULL, policydbp, NULL, 0, 0)) {
 			fprintf(stderr, "Error while resolving optionals\n");
 			exit(1);
 		}
 
-		if (expand_module(NULL, &parse_policy, &policydb, 0, 1)) {
-			fprintf(stderr, "Error while expanding policy\n");
-			exit(1);
+		if (!cil) {
+			if (policydb_init(&policydb)) {
+				fprintf(stderr, "%s:  policydb_init failed\n", argv[0]);
+				exit(1);
+			}
+			if (expand_module(NULL, policydbp, &policydb, 0, 1)) {
+				fprintf(stderr, "Error while expanding policy\n");
+				exit(1);
+			}
+			policydb_destroy(policydbp);
+			policydbp = &policydb;
 		}
-		policydb_destroy(&parse_policy);
-		policydbp = &policydb;
 	}
 
 	if (policydb_load_isids(&policydb, &sidtab))
@@ -602,29 +612,46 @@ int main(int argc, char **argv)
 	printf("%s:  policy configuration loaded\n", argv[0]);
 
 	if (outfile) {
-		printf
-		    ("%s:  writing binary representation (version %d) to %s\n",
-		     argv[0], policyvers, outfile);
 		outfp = fopen(outfile, "w");
 		if (!outfp) {
 			perror(outfile);
 			exit(1);
 		}
 
-		policydb.policy_type = POLICY_KERN;
 		policydb.policyvers = policyvers;
 
-		policy_file_init(&pf);
-		pf.type = PF_USE_STDIO;
-		pf.fp = outfp;
-		ret = policydb_write(&policydb, &pf);
-		if (ret) {
-			fprintf(stderr, "%s:  error writing %s\n",
-				argv[0], outfile);
-			exit(1);
+		if (!cil) {
+			printf
+				("%s:  writing binary representation (version %d) to %s\n",
+				 argv[0], policyvers, outfile);
+			policydb.policy_type = POLICY_KERN;
+
+			policy_file_init(&pf);
+			pf.type = PF_USE_STDIO;
+			pf.fp = outfp;
+			ret = policydb_write(&policydb, &pf);
+			if (ret) {
+				fprintf(stderr, "%s:  error writing %s\n",
+						argv[0], outfile);
+				exit(1);
+			}
+		} else {
+			printf("%s:  writing CIL to %s\n",argv[0], outfile);
+			ret = sepol_module_policydb_to_cil(outfp, policydbp, 1);
+			if (ret) {
+				fprintf(stderr, "%s:  error writing %s\n", argv[0], outfile);
+				exit(1);
+			}
 		}
-		fclose(outfp);
+
+		if (outfile) {
+			fclose(outfp);
+		}
+	} else if (cil) {
+		fprintf(stderr, "%s:  No file to write CIL was specified\n", argv[0]);
+		exit(1);
 	}
+
 	if (!debug) {
 		policydb_destroy(&policydb);
 		exit(0);
