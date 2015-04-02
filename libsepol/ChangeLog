@@ -1,3 +1,4 @@
+	* Add sepol_module_policydb_to_cil(), sepol_module_package_to_cil(), and sepol_ppfile_to_module_package(), from James Carter
 	* Move secilc out of libsepol, from Yuli Khodorkovskiy.
 	* fix building Xen policy with devicetreecon, and add devicetreecon
 	  CIL documentation, from Richard Haines.
