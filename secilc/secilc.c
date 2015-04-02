@@ -34,7 +34,11 @@
 #include <getopt.h>
 #include <sys/stat.h>
 
+#ifdef ANDROID
+#include <sepol/cil.h>
+#else
 #include <sepol/cil/cil.h>
+#endif
 #include <sepol/policydb.h>
 
 void usage(char *prog)

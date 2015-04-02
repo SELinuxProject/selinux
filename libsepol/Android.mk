@@ -90,6 +90,8 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := libsepol
 LOCAL_MODULE_TAGS := optional
+LOCAL_COPY_HEADERS_TO := sepol
+LOCAL_COPY_HEADERS := include/sepol/handle.h include/sepol/policydb.h cil/include/cil/cil.h
 LOCAL_C_INCLUDES := $(common_includes) 
 LOCAL_CFLAGS := $(yacc_flags) $(common_cflags)
 LOCAL_SRC_FILES := $(common_src_files) $(cil_src_files)
