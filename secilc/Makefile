@@ -44,4 +44,6 @@ clean:
 	rm -f file_contexts
 	rm -f $(MANPAGE)
 
-.PHONY: all clean test install doc
+relabel:
+
+.PHONY: all clean test install doc relabel
