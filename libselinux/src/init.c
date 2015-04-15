@@ -11,6 +11,7 @@
 #include <sys/vfs.h>
 #include <stdint.h>
 #include <limits.h>
+#include <sys/mount.h>
 
 #include "dso.h"
 #include "policy.h"
@@ -54,15 +55,20 @@ static int verify_selinuxmnt(const char *mnt)
 
 int selinuxfs_exists(void)
 {
-	int exists = 0;
+	int exists = 0, mnt_rc = 0;
 	FILE *fp = NULL;
 	char *buf = NULL;
 	size_t len;
 	ssize_t num;
 
+	mnt_rc = mount("proc", "/proc", "proc", 0, 0);
+
 	fp = fopen("/proc/filesystems", "r");
-	if (!fp)
-		return 1; /* Fail as if it exists */
+	if (!fp) {
+		exists = 1; /* Fail as if it exists */
+		goto out;
+	}
+
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
 
 	num = getline(&buf, &len, fp);
@@ -76,6 +82,14 @@ int selinuxfs_exists(void)
 
 	free(buf);
 	fclose(fp);
+
+out:
+#ifndef MNT_DETACH
+#define MNT_DETACH 2
+#endif
+	if (mnt_rc == 0)
+		umount2("/proc", MNT_DETACH);
+
 	return exists;
 }
 hidden_def(selinuxfs_exists)
