@@ -50,8 +50,9 @@
 #include "cil_binary.h"
 #include "cil_policy.h"
 #include "cil_strpool.h"
+#include "dso.h"
 
-#ifndef ANDROID
+#ifndef DISABLE_SYMVER
 asm(".symver cil_build_policydb_pdb,        cil_build_policydb@");
 asm(".symver cil_build_policydb_create_pdb, cil_build_policydb@@LIBSEPOL_1.1");
 
@@ -354,7 +355,7 @@ exit:
 	return rc;
 }
 
-#ifdef ANDROID
+#ifdef DISABLE_SYMVER
 int cil_compile(struct cil_db *db)
 #else
 int cil_compile_nopdb(struct cil_db *db)
@@ -402,7 +403,7 @@ exit:
 	return rc;
 }
 
-#ifndef ANDROID
+#ifndef DISABLE_SYMVER
 int cil_compile_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db)
 {
 	return cil_compile_nopdb(db);
@@ -424,7 +425,7 @@ exit:
 }
 #endif
 
-#ifdef ANDROID
+#ifdef DISABLE_SYMVER
 int cil_build_policydb(cil_db_t *db, sepol_policydb_t **sepol_db)
 #else
 int cil_build_policydb_create_pdb(cil_db_t *db, sepol_policydb_t **sepol_db)
@@ -1116,7 +1117,7 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 	return "<unknown>";
 }
 
-#ifdef ANDROID
+#ifdef DISABLE_SYMVER
 int cil_userprefixes_to_string(struct cil_db *db, char **out, size_t *size)
 #else
 int cil_userprefixes_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
@@ -1165,7 +1166,7 @@ exit:
 
 }
 
-#ifndef ANDROID
+#ifndef DISABLE_SYMVER
 int cil_userprefixes_to_string_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
 {
 	return cil_userprefixes_to_string_nopdb(db, out, size);
@@ -1357,7 +1358,7 @@ static int __cil_level_to_string(struct cil_level *lvl, char *out)
 	return str_tmp - out;
 }
 
-#ifdef ANDROID
+#ifdef DISABLE_SYMVER
 int cil_selinuxusers_to_string(struct cil_db *db, char **out, size_t *size)
 #else
 int cil_selinuxusers_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
@@ -1418,14 +1419,14 @@ int cil_selinuxusers_to_string_nopdb(struct cil_db *db, char **out, size_t *size
 	return SEPOL_OK;
 }
 
-#ifndef ANDROID
+#ifndef DISABLE_SYMVER
 int cil_selinuxusers_to_string_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
 {
 	return cil_selinuxusers_to_string_nopdb(db, out, size);
 }
 #endif
 
-#ifdef ANDROID
+#ifdef DISABLE_SYMVER
 int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size)
 #else
 int cil_filecons_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
@@ -1547,7 +1548,7 @@ int cil_filecons_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
 	return SEPOL_OK;
 }
 
-#ifndef ANDROID
+#ifndef DISABLE_SYMVER
 int cil_filecons_to_string_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
 {
 	return cil_filecons_to_string_nopdb(db, out, size);
