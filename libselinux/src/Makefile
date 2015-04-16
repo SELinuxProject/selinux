@@ -59,7 +59,7 @@ CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissi
           -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes \
           -Wmissing-declarations -Wmissing-noreturn -Wmissing-format-attribute \
           -Wredundant-decls -Wnested-externs -Winline -Winvalid-pch -Wvolatile-register-var \
-          -Wdisabled-optimization -Wbuiltin-macro-redefined -Wmudflap -Wpacked-bitfield-compat \
+          -Wdisabled-optimization -Wbuiltin-macro-redefined -Wpacked-bitfield-compat \
           -Wsync-nand -Wattributes -Wcoverage-mismatch -Wmultichar -Wcpp \
           -Wdeprecated-declarations -Wdiv-by-zero -Wdouble-promotion -Wendif-labels -Wextra \
           -Wformat-contains-nul -Wformat-extra-args -Wformat-zero-length -Wformat=2 -Wmultichar \
