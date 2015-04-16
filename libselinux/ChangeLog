@@ -1,3 +1,4 @@
+	* Mount procfs before checking /proc/filesystems, from Ben Shelton.
 	* Fix -Wformat errors with gcc-5.0.0, from Petr Lautrbach.
 	* label_file:  handle newlines in file names, from Nick Kralevich.
 	* getcon.3:  Fix setcon description, from Stephen Smalley.
