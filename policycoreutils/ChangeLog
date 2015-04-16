@@ -1,3 +1,4 @@
+	* org.selinux.policy: Require auth_admin_keep for all actions, from Stephen Smalley.
 	* hll: Move core functions of pp to libsepol, from James Carter
 	* run_init: Use a ring buffer in open_init_pty, from Jason Zaman.
 	* run_init: fix open_init_pty availability check, from Nicolas Iooss.
