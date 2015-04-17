@@ -11,26 +11,10 @@
 
 int is_selinux_enabled(void)
 {
-	int enabled = 0;
-	char * con;
-
 	/* init_selinuxmnt() gets called before this function. We
  	 * will assume that if a selinux file system is mounted, then
  	 * selinux is enabled. */
-	if (selinux_mnt) {
-
-		/* Since a file system is mounted, we consider selinux
-		 * enabled. If getcon_raw fails, selinux is still enabled.
-		 * We only consider it disabled if no policy is loaded. */
-		enabled = 1;
-		if (getcon_raw(&con) == 0) {
-			if (!strcmp(con, "kernel"))
-				enabled = 0;
-			freecon(con);
-		}
-        }
-
-	return enabled;
+	return (selinux_mnt ? 1 : 0);
 }
 
 hidden_def(is_selinux_enabled)
