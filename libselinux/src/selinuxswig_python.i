@@ -31,9 +31,9 @@ def restorecon(path, recursive=False):
             lsetfilecon(path, context)
 
         if recursive:
-            os.path.walk(path, lambda arg, dirname, fnames:
-                             map(restorecon, [os.path.join(dirname, fname)
-                                              for fname in fnames]), None)
+            for root, dirs, files in os.walk(path):
+                for name in files + dirs:
+                   restorecon(os.path.join(root, name))
 
 def chcon(path, context, recursive=False):
     """ Set the SELinux context on a given path """
