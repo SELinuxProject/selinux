@@ -1,3 +1,5 @@
+	* Use os.walk() instead of the deprecated os.path.walk(), from Petr
+	  Lautrbach & Miro Hrončok
 	* Fix logic in bunzip for uncompressed pp files, from Thomas Hurd.
 	* Fix fname[] initialization in test_utilities.c, from Petr Lautrbach.
 	* Add remove-hll semanage.conf option to remove HLL files after
