@@ -1,3 +1,5 @@
+	* Use os.walk() instead of the deprecated os.path.walk(), from Petr
+	  Lautrbach & Miro Hrončok
 	* is_selinux_enabled(): drop no-policy-loaded test, from Stephen Smalley.
 	* Remove deprecated mudflap option, from Stephen Smalley.
 	* Mount procfs before checking /proc/filesystems, from Ben Shelton.
