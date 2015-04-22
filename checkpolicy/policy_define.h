@@ -9,7 +9,6 @@
  * for NULL (ie 0) because that is a potentially valid return.
  */
 #define COND_ERR ((avrule_t *)-1)
-
 #define TRUE 1
 #define FALSE 0
 
@@ -59,6 +58,7 @@ int define_roleattribute(void);
 int define_filename_trans(void);
 int define_sens(void);
 int define_te_avtab(int which);
+int define_te_avtab_operation(int which);
 int define_typealias(void);
 int define_typeattribute(void);
 int define_typebounds(void);

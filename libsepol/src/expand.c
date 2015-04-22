@@ -1603,13 +1603,29 @@ static int expand_range_trans(expand_state_t * state,
 */
 static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
 				   avtab_t * avtab, avtab_key_t * key,
-				   cond_av_list_t ** cond)
+				   cond_av_list_t ** cond,
+				   av_operations_t *operations)
 {
 	avtab_ptr_t node;
 	avtab_datum_t avdatum;
 	cond_av_list_t *nl;
+	int type_match = 0;
 
-	node = avtab_search_node(avtab, key);
+	/* AVTAB_OPNUM entries are not necessarily unique */
+	if (key->specified & AVTAB_OPNUM) {
+		node = avtab_search_node(avtab, key);
+		while (node) {
+			if (node->datum.ops->type == operations->type) {
+				type_match = 1;
+				break;
+			}
+			node = avtab_search_node_next(node, key->specified);
+		}
+		if (!type_match)
+			node = NULL;
+	} else {
+		node = avtab_search_node(avtab, key);
+	}
 
 	/* If this is for conditional policies, keep searching in case
 	   the node is part of my conditional avtab. */
@@ -1733,7 +1749,7 @@ static int expand_terule_helper(sepol_handle_t * handle,
 			return EXPAND_RULE_CONFLICT;
 		}
 
-		node = find_avtab_node(handle, avtab, &avkey, cond);
+		node = find_avtab_node(handle, avtab, &avkey, cond, NULL);
 		if (!node)
 			return -1;
 		if (enabled) {
@@ -1764,13 +1780,15 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 				cond_av_list_t ** cond,
 				uint32_t stype, uint32_t ttype,
 				class_perm_node_t * perms, avtab_t * avtab,
-				int enabled)
+				int enabled, av_operations_t *operations)
 {
 	avtab_key_t avkey;
 	avtab_datum_t *avdatump;
+	avtab_operations_t *ops;
 	avtab_ptr_t node;
 	class_perm_node_t *cur;
 	uint32_t spec = 0;
+	unsigned int i;
 
 	if (specified & AVRULE_ALLOWED) {
 		spec = AVTAB_ALLOWED;
@@ -1784,6 +1802,22 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 		spec = AVTAB_AUDITDENY;
 	} else if (specified & AVRULE_NEVERALLOW) {
 		spec = AVTAB_NEVERALLOW;
+	} else if (specified & AVRULE_OPNUM_ALLOWED) {
+		spec = AVTAB_OPNUM_ALLOWED;
+	} else if (specified & AVRULE_OPNUM_AUDITALLOW) {
+		spec = AVTAB_OPNUM_AUDITALLOW;
+	} else if (specified & AVRULE_OPNUM_DONTAUDIT) {
+		if (handle && handle->disable_dontaudit)
+			return EXPAND_RULE_SUCCESS;
+		spec = AVTAB_OPNUM_DONTAUDIT;
+	} else if (specified & AVRULE_OPTYPE_ALLOWED) {
+		spec = AVTAB_OPTYPE_ALLOWED;
+	} else if (specified & AVRULE_OPTYPE_AUDITALLOW) {
+		spec = AVTAB_OPTYPE_AUDITALLOW;
+	} else if (specified & AVRULE_OPTYPE_DONTAUDIT) {
+		if (handle && handle->disable_dontaudit)
+			return EXPAND_RULE_SUCCESS;
+		spec = AVTAB_OPTYPE_DONTAUDIT;
 	} else {
 		assert(0);	/* unreachable */
 	}
@@ -1795,7 +1829,7 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 		avkey.target_class = cur->tclass;
 		avkey.specified = spec;
 
-		node = find_avtab_node(handle, avtab, &avkey, cond);
+		node = find_avtab_node(handle, avtab, &avkey, cond, operations);
 		if (!node)
 			return EXPAND_RULE_ERROR;
 		if (enabled) {
@@ -1825,6 +1859,20 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 				avdatump->data &= ~cur->data;
 			else
 				avdatump->data = ~cur->data;
+		} else if (specified & AVRULE_OP) {
+			if (!avdatump->ops) {
+				ops = (avtab_operations_t *)
+					calloc(1, sizeof(avtab_operations_t));
+				if (!ops) {
+					ERR(handle, "Out of memory!");
+					return -1;
+				}
+				node->datum.ops = ops;
+			}
+			node->datum.ops->type = operations->type;
+			for (i = 0; i < ARRAY_SIZE(operations->perms); i++) {
+				node->datum.ops->perms[i] |= operations->perms[i];
+			}
 		} else {
 			assert(0);	/* should never occur */
 		}
@@ -1849,10 +1897,10 @@ static int expand_rule_helper(sepol_handle_t * handle,
 		if (!ebitmap_node_get_bit(snode, i))
 			continue;
 		if (source_rule->flags & RULE_SELF) {
-			if (source_rule->specified & AVRULE_AV) {
+			if (source_rule->specified & (AVRULE_AV | AVRULE_OP)) {
 				retval = expand_avrule_helper(handle, source_rule->specified,
 							      cond, i, i, source_rule->perms,
-							      dest_avtab, enabled);
+							      dest_avtab, enabled, source_rule->ops);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
 			} else {
@@ -1867,10 +1915,10 @@ static int expand_rule_helper(sepol_handle_t * handle,
 		ebitmap_for_each_bit(ttypes, tnode, j) {
 			if (!ebitmap_node_get_bit(tnode, j))
 				continue;
-			if (source_rule->specified & AVRULE_AV) {
+			if (source_rule->specified & (AVRULE_AV | AVRULE_OP)) {
 				retval = expand_avrule_helper(handle, source_rule->specified,
 							      cond, i, j, source_rule->perms,
-							      dest_avtab, enabled);
+							      dest_avtab, enabled, source_rule->ops);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
 			} else {
@@ -3107,18 +3155,31 @@ static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
 {
 	avtab_ptr_t node;
 	avtab_datum_t *avd;
-	int rc;
+	avtab_operations_t *ops;
+	unsigned int i;
+	unsigned int type_match = 0;
 
-	node = avtab_search_node(a, k);
-	if (!node) {
-		rc = avtab_insert(a, k, d);
-		if (rc)
-			ERR(NULL, "Out of memory!");
-		return rc;
+	if (k->specified & AVTAB_OPNUM) {
+		/*
+		 * AVTAB_OPNUM entries are not necessarily unique.
+		 * find node with matching ops->type
+		 */
+		node = avtab_search_node(a, k);
+		while (node) {
+			if (node->datum.ops->type == d->ops->type) {
+				type_match = 1;
+				break;
+			}
+			node = avtab_search_node_next(node, k->specified);
+		}
+		if (!type_match)
+			node = NULL;
+	} else {
+		node = avtab_search_node(a, k);
 	}
 
-	if ((k->specified & AVTAB_ENABLED) !=
-	    (node->key.specified & AVTAB_ENABLED)) {
+	if (!node || ((k->specified & AVTAB_ENABLED) !=
+			(node->key.specified & AVTAB_ENABLED))) {
 		node = avtab_insert_nonunique(a, k, d);
 		if (!node) {
 			ERR(NULL, "Out of memory!");
@@ -3128,6 +3189,7 @@ static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
 	}
 
 	avd = &node->datum;
+	ops = node->datum.ops;
 	switch (k->specified & ~AVTAB_ENABLED) {
 	case AVTAB_ALLOWED:
 	case AVTAB_AUDITALLOW:
@@ -3135,6 +3197,15 @@ static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
 		break;
 	case AVTAB_AUDITDENY:
 		avd->data &= d->data;
+		break;
+	case AVTAB_OPNUM_ALLOWED:
+	case AVTAB_OPNUM_AUDITALLOW:
+	case AVTAB_OPNUM_DONTAUDIT:
+	case AVTAB_OPTYPE_ALLOWED:
+	case AVTAB_OPTYPE_AUDITALLOW:
+	case AVTAB_OPTYPE_DONTAUDIT:
+		for (i = 0; i < ARRAY_SIZE(ops->perms); i++)
+			ops->perms[i] |= d->ops->perms[i];
 		break;
 	default:
 		ERR(NULL, "Type conflict!");

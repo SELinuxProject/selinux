@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <inttypes.h>
+#include <ctype.h>
 
 #include <sepol/policydb/expand.h>
 #include <sepol/policydb/policydb.h>
@@ -1727,6 +1728,619 @@ avrule_t *define_cond_pol_list(avrule_t * avlist, avrule_t * sl)
 	return sl;
 }
 
+#define operation_perm_test(x, p) (1 & (p[x >> 5] >> (x & 0x1f)))
+#define operation_perm_set(x, p) (p[x >> 5] |= (1 << (x & 0x1f)))
+#define operation_perm_clear(x, p) (p[x >> 5] &= ~(1 << (x & 0x1f)))
+
+typedef struct av_operations_range {
+	uint16_t low;
+	uint16_t high;
+} av_operations_range_t;
+
+struct av_operations_range_list {
+	uint8_t omit;
+	av_operations_range_t range;
+	struct av_operations_range_list *next;
+};
+
+int avrule_sort_operations(
+		struct av_operations_range_list **rangehead)
+{
+	struct av_operations_range_list *r, *r2, *sorted, *sortedhead = NULL;
+
+	/* order list by range.low */
+	for (r = *rangehead; r != NULL; r = r->next) {
+		sorted = malloc(sizeof(struct av_operations_range_list));
+		if (sorted == NULL)
+			goto error;
+		memcpy(sorted, r, sizeof(struct av_operations_range_list));
+		sorted->next = NULL;
+		if (sortedhead == NULL) {
+			sortedhead = sorted;
+			continue;
+		}
+	        for (r2 = sortedhead; r2 != NULL; r2 = r2->next) {
+			if (sorted->range.low < r2->range.low) {
+				/* range is the new head */
+				sorted->next = r2;
+				sortedhead = sorted;
+				break;
+			} else if ((r2 ->next != NULL) &&
+					(r->range.low < r2->next->range.low)) {
+				/* insert range between elements */
+				sorted->next = r2->next;
+				r2->next = sorted;
+				break;
+			} else if (r2->next == NULL) {
+				/* range is the new tail*/
+				r2->next = sorted;
+				break;
+			}
+		}
+	}
+
+	r = *rangehead;
+	while (r != NULL) {
+		r2 = r;
+		r = r->next;
+		free(r2);
+	}
+	*rangehead = sortedhead;
+	return 0;
+error:
+	yyerror("out of memory");
+	return -1;
+}
+
+int avrule_merge_operations(struct av_operations_range_list **rangehead)
+{
+	struct av_operations_range_list *r, *tmp;
+	r = *rangehead;
+	while (r != NULL && r->next != NULL) {
+		/* merge */
+		if ((r->range.high + 1) >= r->next->range.low) {
+			/* keep the higher of the two */
+			if (r->range.high < r->next->range.high)
+				r->range.high = r->next->range.high;
+			tmp = r->next;
+			r->next = r->next->next;
+			free(tmp);
+			continue;
+		}
+		r = r->next;
+	}
+	return 0;
+}
+
+int avrule_read_operations(struct av_operations_range_list **rangehead)
+{
+	char *id;
+	struct av_operations_range_list *rnew, *r = NULL;
+	*rangehead = NULL;
+	uint8_t omit = 0;
+
+	/* read in all the operations */
+	while ((id = queue_remove(id_queue))) {
+		if (strcmp(id,"~") == 0) {
+			/* these are values to be omitted */
+			free(id);
+			omit = 1;
+		} else if (strcmp(id,"-") == 0) {
+			/* high value of range */
+			free(id);
+			id = queue_remove(id_queue);
+			r->range.high = (uint16_t) strtoul(id,NULL,0);
+			if (r->range.high < r->range.low) {
+				yyerror("Ioctl ranges must be in ascending order.");
+				return -1;
+			}
+			free(id);
+		} else {
+			/* read in new low value */
+			rnew = malloc(sizeof(struct av_operations_range_list));
+			if (rnew == NULL)
+				goto error;
+			rnew->next = NULL;
+			if (*rangehead == NULL) {
+				*rangehead = rnew;
+				r = *rangehead;
+			} else {
+				r->next = rnew;
+				r = r->next;
+			}
+			rnew->range.low = (uint16_t) strtoul(id,NULL,0);
+			rnew->range.high = rnew->range.low;
+			free(id);
+		}
+	}
+	r = *rangehead;
+	r->omit = omit;
+	return 0;
+error:
+	yyerror("out of memory");
+	return -1;
+}
+
+/* flip to included ranges */
+int avrule_omit_operations(struct av_operations_range_list **rangehead)
+{
+	struct av_operations_range_list *rnew, *r, *newhead, *r2;
+
+	rnew = calloc(1, sizeof(struct av_operations_range_list));
+	if (!rnew)
+		goto error;
+
+	newhead = rnew;
+
+	r = *rangehead;
+	r2 = newhead;
+
+	if (r->range.low == 0) {
+		r2->range.low = r->range.high + 1;
+		r = r->next;
+	} else {
+		r2->range.low = 0;
+	}
+
+	while (r) {
+		r2->range.high = r->range.low - 1;
+		rnew = calloc(1, sizeof(struct av_operations_range_list));
+		if (!rnew)
+			goto error;
+		r2->next = rnew;
+		r2 = r2->next;
+
+		r2->range.low = r->range.high + 1;
+		if (!r->next)
+			r2->range.high = 0xffff;
+		r = r->next;
+	}
+
+	r = *rangehead;
+	while (r != NULL) {
+		r2 = r;
+		r = r->next;
+		free(r2);
+	}
+	*rangehead = newhead;
+	return 0;
+
+error:
+	yyerror("out of memory");
+	return -1;
+}
+
+int avrule_operation_ranges(struct av_operations_range_list **rangelist)
+{
+	struct av_operations_range_list *rangehead;
+	uint8_t omit;
+
+	/* read in ranges to include and omit */
+	if (avrule_read_operations(&rangehead))
+		return -1;
+	omit = rangehead->omit;
+	if (rangehead == NULL) {
+		yyerror("error processing ioctl operations");
+		return -1;
+	}
+	/* sort and merge the input operations */
+	if (avrule_sort_operations(&rangehead))
+		return -1;
+	if (avrule_merge_operations(&rangehead))
+		return -1;
+	/* flip ranges if these are ommited*/
+	if (omit) {
+		if (avrule_omit_operations(&rangehead))
+			return -1;
+	}
+
+	*rangelist = rangehead;
+	return 0;
+}
+
+int define_te_avtab_operation_helper(int which, avrule_t ** rule)
+{
+	char *id;
+	class_perm_node_t *perms, *tail = NULL, *cur_perms = NULL;
+	ebitmap_t tclasses;
+	ebitmap_node_t *node;
+	avrule_t *avrule;
+	unsigned int i;
+	int add = 1, ret = 0;
+
+	avrule = (avrule_t *) malloc(sizeof(avrule_t));
+	if (!avrule) {
+		yyerror("out of memory");
+		ret = -1;
+		goto out;
+	}
+	avrule_init(avrule);
+	avrule->specified = which;
+	avrule->line = policydb_lineno;
+	avrule->source_line = source_lineno;
+	avrule->source_filename = strdup(source_file);
+	avrule->ops = NULL;
+	if (!avrule->source_filename) {
+		yyerror("out of memory");
+		return -1;
+	}
+
+	while ((id = queue_remove(id_queue))) {
+		if (set_types
+		    (&avrule->stypes, id, &add,
+		     which == AVRULE_NEVERALLOW ? 1 : 0)) {
+			ret = -1;
+			goto out;
+		}
+	}
+	add = 1;
+	while ((id = queue_remove(id_queue))) {
+		if (strcmp(id, "self") == 0) {
+			free(id);
+			avrule->flags |= RULE_SELF;
+			continue;
+		}
+		if (set_types
+		    (&avrule->ttypes, id, &add,
+		     which == AVRULE_NEVERALLOW ? 1 : 0)) {
+			ret = -1;
+			goto out;
+		}
+	}
+
+	ebitmap_init(&tclasses);
+	ret = read_classes(&tclasses);
+	if (ret)
+		goto out;
+
+	perms = NULL;
+	ebitmap_for_each_bit(&tclasses, node, i) {
+		if (!ebitmap_node_get_bit(node, i))
+			continue;
+		cur_perms =
+		    (class_perm_node_t *) malloc(sizeof(class_perm_node_t));
+		if (!cur_perms) {
+			yyerror("out of memory");
+			ret = -1;
+			goto out;
+		}
+		class_perm_node_init(cur_perms);
+		cur_perms->tclass = i + 1;
+		if (!perms)
+			perms = cur_perms;
+		if (tail)
+			tail->next = cur_perms;
+		tail = cur_perms;
+	}
+
+	ebitmap_destroy(&tclasses);
+
+	avrule->perms = perms;
+	*rule = avrule;
+
+out:
+	return ret;
+}
+
+/* index of the u32 containing the permission */
+#define OP_IDX(x) (x >> 5)
+/* set bits 0 through x-1 within the u32 */
+#define OP_SETBITS(x) ((1 << (x & 0x1f)) - 1)
+/* low value for this u32 */
+#define OP_LOW(x) (x << 5)
+/* high value for this u32 */
+#define OP_HIGH(x) (((x + 1) << 5) - 1)
+void avrule_operation_setrangebits(uint16_t low, uint16_t high, av_operations_t *ops)
+{
+	unsigned int i;
+	uint16_t h = high + 1;
+	/* for each u32 that this low-high range touches, set type permissions */
+	for (i = OP_IDX(low); i <= OP_IDX(high); i++) {
+		/* set all bits in u32 */
+		if ((low <= OP_LOW(i)) && (high >= OP_HIGH(i)))
+			ops->perms[i] |= ~0U;
+		/* set low bits */
+		else if ((low <= OP_LOW(i)) && (high < OP_HIGH(i)))
+			ops->perms[i] |= OP_SETBITS(h);
+		/* set high bits */
+		else if ((low > OP_LOW(i)) && (high >= OP_HIGH(i)))
+			ops->perms[i] |= ~0U - OP_SETBITS(low);
+		/* set middle bits */
+		else if ((low > OP_LOW(i)) && (high <= OP_HIGH(i)))
+			ops->perms[i] |= OP_SETBITS(h) - OP_SETBITS(low);
+	}
+}
+
+int avrule_operation_used(av_operations_t *ops)
+{
+	unsigned int i;
+
+	for (i = 0; i < sizeof(ops->perms)/sizeof(ops->perms[0]); i++) {
+		if (ops->perms[i])
+			return 1;
+	}
+	return 0;
+}
+
+#define OP_TYPE(x) (x >> 8)
+#define OP_NUM(x) (x & 0xff)
+#define OP_CMD(type, num) ((type << 8) + num)
+int avrule_operation_partialtype(struct av_operations_range_list *rangelist,
+				av_operations_t *complete_type,
+				av_operations_t **operations)
+{
+	struct av_operations_range_list *r;
+	av_operations_t *ops;
+	uint8_t low, high;
+
+	ops = calloc(1, sizeof(av_operations_t));
+	if (!ops) {
+		yyerror("out of memory");
+		return - 1;
+	}
+
+	r = rangelist;
+	while(r) {
+		low = OP_TYPE(r->range.low);
+		high = OP_TYPE(r->range.high);
+		if (complete_type) {
+			if (!operation_perm_test(low, complete_type->perms))
+				operation_perm_set(low, ops->perms);
+			if (!operation_perm_test(high, complete_type->perms))
+				operation_perm_set(high, ops->perms);
+		} else {
+			operation_perm_set(low, ops->perms);
+			operation_perm_set(high, ops->perms);
+		}
+		r = r->next;
+	}
+	if (avrule_operation_used(ops)) {
+		*operations = ops;
+	} else {
+		free(ops);
+		*operations = NULL;
+	}
+	return 0;
+
+}
+
+int avrule_operation_completetype(struct av_operations_range_list *rangelist,
+			av_operations_t **operations)
+{
+	struct av_operations_range_list *r;
+	av_operations_t *ops;
+	uint16_t low, high;
+	ops = calloc(1, sizeof(av_operations_t));
+	if (!ops) {
+		yyerror("out of memory");
+		return - 1;
+	}
+
+	r = rangelist;
+	while(r) {
+		/*
+		 * Any type that has numbers 0x00 - 0xff is a complete type,
+		 *
+		 * if command number = 0xff, then round high up to next type,
+		 * else 0x00 - 0xfe keep current type
+		 * of this range. temporarily u32 for the + 1
+		 * to account for possible rollover before right shift
+		 */
+		high = OP_TYPE((uint32_t) (r->range.high + 1));
+		/* if 0x00 keep current type else 0x01 - 0xff round up to next type */
+		low = OP_TYPE(r->range.low);
+		if (OP_NUM(r->range.low))
+			low++;
+		if (high > low)
+			avrule_operation_setrangebits(low, high - 1, ops);
+		r = r->next;
+	}
+	if (avrule_operation_used(ops)) {
+		*operations = ops;
+	} else {
+		free(ops);
+		*operations = NULL;
+	}
+	return 0;
+}
+
+int avrule_operation_num(struct av_operations_range_list *rangelist,
+		av_operations_t **operations, unsigned int type)
+{
+	struct av_operations_range_list *r;
+	av_operations_t *ops;
+	uint16_t low, high;
+
+	*operations = NULL;
+	ops = calloc(1, sizeof(av_operations_t));
+	if (!ops) {
+		yyerror("out of memory");
+		return - 1;
+	}
+
+	r = rangelist;
+	/* for the passed in types, find the ranges that apply */
+	while (r) {
+		low = r->range.low;
+		high = r->range.high;
+		if ((type != OP_TYPE(low)) && (type != OP_TYPE(high))) {
+			r = r->next;
+			continue;
+		}
+
+		if (type == OP_TYPE(low)) {
+			if (high > OP_CMD(type, 0xff))
+				high = OP_CMD(type, 0xff);
+
+		} else {
+			if (low < OP_CMD(type, 0))
+				low = OP_CMD(type, 0);
+		}
+
+		low = OP_NUM(low);
+		high = OP_NUM(high);
+		avrule_operation_setrangebits(low, high, ops);
+		ops->type = type;
+		r = r->next;
+	}
+
+	if (avrule_operation_used(ops)) {
+		*operations = ops;
+	} else {
+		free(ops);
+		*operations = NULL;
+	}
+	return 0;
+}
+
+void avrule_operation_freeranges(struct av_operations_range_list *rangelist)
+{
+	struct av_operations_range_list *r, *tmp;
+	r = rangelist;
+	while (r) {
+		tmp = r;
+		r = r->next;
+		free(tmp);
+	}
+}
+
+unsigned int operation_for_each_bit(unsigned int *bit, av_operations_t *ops)
+{
+	unsigned int i;
+	for (i = *bit; i < sizeof(ops->perms)*8; i++) {
+		if (operation_perm_test(i,ops->perms)) {
+			operation_perm_clear(i, ops->perms);
+			*bit = i;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int avrule_cpy(avrule_t *dest, avrule_t *src)
+{
+	class_perm_node_t *src_perms;
+	class_perm_node_t *dest_perms, *dest_tail;
+	dest_tail = NULL;
+
+	avrule_init(dest);
+	dest->specified = src->specified;
+	dest->flags = src->flags;
+	if (type_set_cpy(&dest->stypes, &src->stypes)) {
+		yyerror("out of memory");
+		return - 1;
+	}
+	if (type_set_cpy(&dest->ttypes, &src->ttypes)) {
+		yyerror("out of memory");
+		return - 1;
+	}
+	dest->line = src->line;
+	dest->source_filename = strdup(source_file);
+	dest->source_line = src->source_line;
+
+	/* increment through the class perms and copy over */
+	src_perms = src->perms;
+	while (src_perms) {
+		dest_perms = (class_perm_node_t *) calloc(1, sizeof(class_perm_node_t));
+		class_perm_node_init(dest_perms);
+		if (!dest_perms) {
+			yyerror("out of memory");
+			return -1;
+		}
+		if (!dest->perms)
+			dest->perms = dest_perms;
+		else
+			dest_tail->next = dest_perms;
+
+		dest_perms->tclass = src_perms->tclass;
+		dest_perms->data = src_perms->data;
+		dest_perms->next = NULL;
+		dest_tail = dest_perms;
+		src_perms = src_perms->next;
+	}
+	return 0;
+}
+
+int define_te_avtab_operation(int which)
+{
+	char *id;
+	avrule_t *avrule_template;
+	avrule_t *avrule;
+	struct av_operations_range_list *rangelist;
+	av_operations_t *complete_type, *partial_type, *ops;
+	unsigned int i;
+
+	if (pass == 1) {
+		for (i = 0; i < 4; i++) {
+			while ((id = queue_remove(id_queue)))
+				free(id);
+		}
+		return 0;
+	}
+
+	/* populate avrule template with source/target/tclass */
+	if (define_te_avtab_operation_helper(which, &avrule_template))
+		return -1;
+
+	/* organize operation ranges */
+	if (avrule_operation_ranges(&rangelist))
+		return -1;
+
+	/* create rule for ioctl operation types that are entirely enabled */
+	if (avrule_operation_completetype(rangelist, &complete_type))
+		return -1;
+	if (complete_type) {
+		avrule = (avrule_t *) calloc(1, sizeof(avrule_t));
+		if (!avrule) {
+			yyerror("out of memory");
+			return -1;
+		}
+		if (avrule_cpy(avrule, avrule_template))
+			return -1;
+		avrule->ops = complete_type;
+		if (which == AVRULE_OPNUM_ALLOWED)
+			avrule->specified = AVRULE_OPTYPE_ALLOWED;
+		else if (which == AVRULE_OPNUM_AUDITALLOW)
+			avrule->specified = AVRULE_OPTYPE_AUDITALLOW;
+		else if (which == AVRULE_OPNUM_DONTAUDIT)
+			avrule->specified = AVRULE_OPTYPE_DONTAUDIT;
+
+		append_avrule(avrule);
+	}
+
+	/* flag ioctl types that are partially enabled */
+	if (avrule_operation_partialtype(rangelist, complete_type, &partial_type))
+		return -1;
+
+	if (!partial_type || !avrule_operation_used(partial_type))
+		goto done;
+
+	/* create rule for each partially enabled type */
+	i = 0;
+	while (operation_for_each_bit(&i, partial_type)) {
+		if (avrule_operation_num(rangelist, &ops, i))
+			return -1;
+
+		if (ops) {
+			avrule = (avrule_t *) calloc(1, sizeof(avrule_t));
+			if (!avrule) {
+				yyerror("out of memory");
+				return -1;
+			}
+			if (avrule_cpy(avrule, avrule_template))
+				return -1;
+			avrule->ops = ops;
+			append_avrule(avrule);
+		}
+	}
+
+done:
+	if (partial_type)
+		free(partial_type);
+
+	return 0;
+}
+
 int define_te_avtab_helper(int which, avrule_t ** rule)
 {
 	char *id;
@@ -1751,6 +2365,7 @@ int define_te_avtab_helper(int which, avrule_t ** rule)
 	avrule->line = policydb_lineno;
 	avrule->source_line = source_lineno;
 	avrule->source_filename = strdup(source_file);
+	avrule->ops = NULL;
 	if (!avrule->source_filename) {
 		yyerror("out of memory");
 		return -1;

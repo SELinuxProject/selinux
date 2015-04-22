@@ -457,6 +457,9 @@ te_avtab_def		: allow_def
 			| auditdeny_def
 			| dontaudit_def
 			| neverallow_def
+			| operation_allow_def
+			| operation_auditallow_def
+			| operation_dontaudit_def
 			;
 allow_def		: ALLOW names names ':' names names  ';'
 			{if (define_te_avtab(AVRULE_ALLOWED)) return -1; }
@@ -472,6 +475,15 @@ dontaudit_def		: DONTAUDIT names names ':' names names ';'
 		        ;
 neverallow_def		: NEVERALLOW names names ':' names names  ';'
 			{if (define_te_avtab(AVRULE_NEVERALLOW)) return -1; }
+		        ;
+operation_allow_def	: ALLOW names names ':' names  operations ';'
+			{if (define_te_avtab_operation(AVRULE_OPNUM_ALLOWED)) return -1; }
+		        ;
+operation_auditallow_def: AUDITALLOW names names ':' names operations ';'
+			{if (define_te_avtab_operation(AVRULE_OPNUM_AUDITALLOW)) return -1; }
+		        ;
+operation_dontaudit_def	: DONTAUDIT names names ':' names operations ';'
+			{if (define_te_avtab_operation(AVRULE_OPNUM_DONTAUDIT)) return -1; }
 		        ;
 attribute_role_def	: ATTRIBUTE_ROLE identifier ';'
 			{if (define_attrib_role()) return -1; }
@@ -736,6 +748,28 @@ genfs_context_def	: GENFSCON filesystem path '-' identifier security_context_def
 			;
 ipv4_addr_def		: IPV4_ADDR
 			{ if (insert_id(yytext,0)) return -1; }
+			;
+operations		: operation
+			{ if (insert_separator(0)) return -1; }
+			| nested_operation_set
+			{ if (insert_separator(0)) return -1; }
+			| tilde operation
+                        { if (insert_id("~", 0)) return -1; }
+			| tilde nested_operation_set
+			{ if (insert_id("~", 0)) return -1;
+			  if (insert_separator(0)) return -1; }
+			;
+nested_operation_set	: '{' nested_operation_list '}'
+			;
+nested_operation_list	: nested_operation_element
+			| nested_operation_list nested_operation_element
+			;
+nested_operation_element: operation '-' { if (insert_id("-", 0)) return -1; } operation
+			| operation
+			| nested_operation_set
+			;
+operation		: number
+                        { if (insert_id(yytext,0)) return -1; }
 			;
 security_context_def	: identifier ':' identifier ':' identifier opt_mls_range_def
 	                ;

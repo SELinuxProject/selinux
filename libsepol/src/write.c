@@ -101,6 +101,7 @@ static int avtab_write_item(policydb_t * p,
 			    unsigned merge, unsigned commit, uint32_t * nel)
 {
 	avtab_ptr_t node;
+	uint8_t buf8;
 	uint16_t buf16[4];
 	uint32_t buf32[10], lookup, val;
 	size_t items, items2;
@@ -220,10 +221,38 @@ static int avtab_write_item(policydb_t * p,
 	items = put_entry(buf16, sizeof(uint16_t), 4, fp);
 	if (items != 4)
 		return POLICYDB_ERROR;
-	buf32[0] = cpu_to_le32(cur->datum.data);
-	items = put_entry(buf32, sizeof(uint32_t), 1, fp);
-	if (items != 1)
+	if ((p->policyvers < POLICYDB_VERSION_IOCTL_OPERATIONS) &&
+			(cur->key.specified & AVTAB_OP)) {
+		ERR(fp->handle, "policy version %u does not support ioctl operation"
+				" rules and one was specified", p->policyvers);
 		return POLICYDB_ERROR;
+	}
+
+	if (p->target_platform != SEPOL_TARGET_SELINUX &&
+			(cur->key.specified & AVTAB_OP)) {
+		ERR(fp->handle, "Target platform %s does not support ioctl "
+				"operation rules and one was specified",
+				policydb_target_strings[p->target_platform]);
+		return POLICYDB_ERROR;
+	}
+
+	if (cur->key.specified & AVTAB_OP) {
+		buf8 = cur->datum.ops->type;
+		items = put_entry(&buf8, sizeof(uint8_t),1,fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+		for (i = 0; i < ARRAY_SIZE(cur->datum.ops->perms); i++)
+			buf32[i] = cpu_to_le32(cur->datum.ops->perms[i]);
+		items = put_entry(buf32, sizeof(uint32_t),8,fp);
+		if (items != 8)
+			return POLICYDB_ERROR;
+	} else {
+		buf32[0] = cpu_to_le32(cur->datum.data);
+		items = put_entry(buf32, sizeof(uint32_t), 1, fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+	}
+
 	return POLICYDB_SUCCESS;
 }
 
