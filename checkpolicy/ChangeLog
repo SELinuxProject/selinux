@@ -1,3 +1,4 @@
+	* dispol: Extend to display operations, from Stephen Smalley.
 	* Add support for ioctl command whitelisting, from Jeff Vander Stoep.
 	* Add option to write CIL policy, from James Carter
 	* Add device tree ocontext nodes to Xen policy, from Daniel De Graaf.
