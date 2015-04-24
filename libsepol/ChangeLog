@@ -1,3 +1,4 @@
+	* Binary modules do not support ioctl rules, from Stephen Smalley.
 	* Add support for ioctl command whitelisting, from Jeff Vander Stoep.
 	* Don't use symbol versioning for static object files, from Yuli Khodorkovskiy.
 	* Add sepol_module_policydb_to_cil(), sepol_module_package_to_cil(), and sepol_ppfile_to_module_package(), from James Carter.
