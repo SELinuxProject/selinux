@@ -1546,6 +1546,12 @@ static int avrule_write(avrule_t * avrule, struct policy_file *fp)
 	uint32_t buf[32], len;
 	class_perm_node_t *cur;
 
+	if (avrule->specified & AVRULE_OP) {
+		ERR(fp->handle, "module policy does not support ioctl operation"
+				" rules and one was specified");
+		return POLICYDB_ERROR;
+	}
+
 	items = 0;
 	buf[items++] = cpu_to_le32(avrule->specified);
 	buf[items++] = cpu_to_le32(avrule->flags);
@@ -1603,7 +1609,8 @@ static int avrule_write_list(avrule_t * avrules, struct policy_file *fp)
 
 	avrule = avrules;
 	while (avrule) {
-		avrule_write(avrule, fp);
+		if (avrule_write(avrule, fp))
+			return POLICYDB_ERROR;
 		avrule = avrule->next;
 	}
 
