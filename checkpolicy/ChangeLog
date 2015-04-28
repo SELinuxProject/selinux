@@ -1,3 +1,4 @@
+	* dispol: display operations as ranges, from Jeff Vander Stoep.
 	* dispol: Extend to display operations, from Stephen Smalley.
 	* Add support for ioctl command whitelisting, from Jeff Vander Stoep.
 	* Add option to write CIL policy, from James Carter
