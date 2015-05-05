@@ -1691,12 +1691,30 @@ exit:
 	return rc;
 }
 
+static int cil_pre_verify(struct cil_db *db)
+{
+	int rc = SEPOL_ERR;
+	struct cil_args_verify extra_args;
+
+	extra_args.db = db;
+
+	rc = cil_tree_walk(db->ast->root, __cil_pre_verify_helper, NULL, NULL, &extra_args);
+	if (rc != SEPOL_OK) {
+		cil_log(CIL_ERR, "Failed to verify cil database\n");
+		goto exit;
+	}
+
+exit:
+	return rc;
+}
+
 int cil_post_process(struct cil_db *db)
 {
 	int rc = SEPOL_ERR;
 
-	rc = cil_verify_no_classperms_loop(db);
+	rc = cil_pre_verify(db);
 	if (rc != SEPOL_OK) {
+		cil_log(CIL_ERR, "Failed to verify cil database\n");
 		goto exit;
 	}
 

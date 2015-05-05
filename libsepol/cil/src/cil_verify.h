@@ -68,6 +68,6 @@ int __cil_verify_ordered(struct cil_tree_node *current, enum cil_flavor flavor);
 int __cil_verify_initsids(struct cil_list *sids);
 int __cil_verify_senscat(struct cil_sens *sens, struct cil_cat *cat);
 int __cil_verify_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args);
-int cil_verify_no_classperms_loop(struct cil_db *db);
+int __cil_pre_verify_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args);
 
 #endif

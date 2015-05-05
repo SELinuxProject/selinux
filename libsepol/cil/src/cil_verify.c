@@ -601,7 +601,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_user(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_user_pre_eval(struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_user *user = node->data;
@@ -634,6 +634,17 @@ int __cil_verify_user(struct cil_db *db, struct cil_tree_node *node)
 			steps++;
 		}
 	}
+
+	return SEPOL_OK;
+exit:
+	cil_log(CIL_ERR, "Invalid user at line %d of %s\n", node->line, node->path);
+	return rc;
+}
+
+static int __cil_verify_user_post_eval(struct cil_db *db, struct cil_tree_node *node)
+{
+	int rc = SEPOL_ERR;
+	struct cil_user *user = node->data;
 
 	/* Verify user range only if anonymous */
 	if (user->range->datum.name == NULL) {
@@ -1318,7 +1329,7 @@ int __cil_verify_helper(struct cil_tree_node *node, uint32_t *finished, void *ex
 	case 0: {
 		switch (node->flavor) {
 		case CIL_USER:
-			rc = __cil_verify_user(db, node);
+			rc = __cil_verify_user_post_eval(db, node);
 			break;
 		case CIL_SELINUXUSERDEFAULT:
 			(*nseuserdflt)++;
@@ -1531,7 +1542,7 @@ static int __cil_verify_map_class(struct cil_tree_node *node)
 	return SEPOL_OK;
 }
 
-static int __cil_verify_no_classperms_loop_helper(struct cil_tree_node *node, uint32_t *finished, __attribute__((unused)) void *extra_args)
+int __cil_pre_verify_helper(struct cil_tree_node *node, uint32_t *finished, __attribute__((unused)) void *extra_args)
 {
 	int rc = SEPOL_ERR;
 
@@ -1549,6 +1560,12 @@ static int __cil_verify_no_classperms_loop_helper(struct cil_tree_node *node, ui
 	}
 
 	switch (node->flavor) {
+	case CIL_USER:
+		rc = __cil_verify_user_pre_eval(node);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+		break;
 	case CIL_MAP_CLASS:
 		rc = __cil_verify_map_class(node);
 		break;
@@ -1558,20 +1575,6 @@ static int __cil_verify_no_classperms_loop_helper(struct cil_tree_node *node, ui
 	default:
 		rc = SEPOL_OK;
 		break;
-	}
-
-exit:
-	return rc;
-}
-
-int cil_verify_no_classperms_loop(struct cil_db *db)
-{
-	int rc = SEPOL_ERR;
-
-	rc = cil_tree_walk(db->ast->root, __cil_verify_no_classperms_loop_helper, NULL, NULL, NULL);
-	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Failed to verify no loops in class permissions\n");
-		goto exit;
 	}
 
 exit:
