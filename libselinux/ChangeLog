@@ -1,3 +1,4 @@
+	* Add selabel partial and best match APIs, from Richard Haines.
 	* Use os.walk() instead of the deprecated os.path.walk(), from Petr
 	  Lautrbach & Miro Hrončok
 	* is_selinux_enabled(): drop no-policy-loaded test, from Stephen Smalley.
