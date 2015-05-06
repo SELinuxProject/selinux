@@ -154,6 +154,98 @@ out:
 	return rc;
 }
 
+/* Public API helpers */
+static char *selabel_sub_key(struct selabel_handle *rec, const char *key)
+{
+	char *ptr = NULL;
+	char *dptr = NULL;
+
+	ptr = selabel_sub(rec->subs, key);
+	if (ptr) {
+		dptr = selabel_sub(rec->dist_subs, ptr);
+		if (dptr) {
+			free(ptr);
+			ptr = dptr;
+		}
+	} else {
+		ptr = selabel_sub(rec->dist_subs, key);
+	}
+	if (ptr)
+		return ptr;
+
+	return NULL;
+}
+
+static int selabel_fini(struct selabel_handle *rec,
+			    struct selabel_lookup_rec *lr,
+			    int translating)
+{
+	if (compat_validate(rec, lr, rec->spec_file, 0))
+		return -1;
+
+	if (translating && !lr->ctx_trans &&
+	    selinux_raw_to_trans_context(lr->ctx_raw, &lr->ctx_trans))
+		return -1;
+
+	return 0;
+}
+
+static struct selabel_lookup_rec *
+selabel_lookup_common(struct selabel_handle *rec, int translating,
+		      const char *key, int type)
+{
+	struct selabel_lookup_rec *lr;
+	char *ptr = NULL;
+
+	if (key == NULL) {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	ptr = selabel_sub_key(rec, key);
+	if (ptr) {
+		lr = rec->func_lookup(rec, ptr, type);
+		free(ptr);
+	} else {
+		lr = rec->func_lookup(rec, key, type);
+	}
+	if (!lr)
+		return NULL;
+
+	if (selabel_fini(rec, lr, translating))
+		return NULL;
+
+	return lr;
+}
+
+static struct selabel_lookup_rec *
+selabel_lookup_bm_common(struct selabel_handle *rec, int translating,
+		      const char *key, int type, const char **aliases)
+{
+	struct selabel_lookup_rec *lr;
+	char *ptr = NULL;
+
+	if (key == NULL) {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	ptr = selabel_sub_key(rec, key);
+	if (ptr) {
+		lr = rec->func_lookup_best_match(rec, ptr, aliases, type);
+		free(ptr);
+	} else {
+		lr = rec->func_lookup_best_match(rec, key, aliases, type);
+	}
+	if (!lr)
+		return NULL;
+
+	if (selabel_fini(rec, lr, translating))
+		return NULL;
+
+	return lr;
+}
+
 /*
  * Public API
  */
@@ -188,48 +280,6 @@ out:
 	return rec;
 }
 
-static struct selabel_lookup_rec *
-selabel_lookup_common(struct selabel_handle *rec, int translating,
-		      const char *key, int type)
-{
-	struct selabel_lookup_rec *lr;
-	char *ptr = NULL;
-	char *dptr = NULL;
-
-	if (key == NULL) {
-		errno = EINVAL;
-		return NULL;
-	}
-
-	ptr = selabel_sub(rec->subs, key);
-	if (ptr) {
-		dptr = selabel_sub(rec->dist_subs, ptr);
-		if (dptr) {
-			free(ptr);
-			ptr = dptr;
-		}
-	} else {
-		ptr = selabel_sub(rec->dist_subs, key);
-	}
-	if (ptr) {
-		lr = rec->func_lookup(rec, ptr, type); 
-		free(ptr);
-	} else {
-		lr = rec->func_lookup(rec, key, type); 
-	}
-	if (!lr)
-		return NULL;
-
-	if (compat_validate(rec, lr, rec->spec_file, 0))
-		return NULL;
-
-	if (translating && !lr->ctx_trans &&
-	    selinux_raw_to_trans_context(lr->ctx_raw, &lr->ctx_trans))
-		return NULL;
-
-	return lr;
-}
-
 int selabel_lookup(struct selabel_handle *rec, char **con,
 		   const char *key, int type)
 {
@@ -249,6 +299,66 @@ int selabel_lookup_raw(struct selabel_handle *rec, char **con,
 	struct selabel_lookup_rec *lr;
 
 	lr = selabel_lookup_common(rec, 0, key, type);
+	if (!lr)
+		return -1;
+
+	*con = strdup(lr->ctx_raw);
+	return *con ? 0 : -1;
+}
+
+bool selabel_partial_match(struct selabel_handle *rec, const char *key)
+{
+	char *ptr;
+	bool ret;
+
+	if (!rec->func_partial_match) {
+		/*
+		 * If the label backend does not support partial matching,
+		 * then assume a match is possible.
+		 */
+		return true;
+	}
+
+	ptr = selabel_sub_key(rec, key);
+	if (ptr) {
+		ret = rec->func_partial_match(rec, ptr);
+		free(ptr);
+	} else {
+		ret = rec->func_partial_match(rec, key);
+	}
+
+	return ret;
+}
+
+int selabel_lookup_best_match(struct selabel_handle *rec, char **con,
+			      const char *key, const char **aliases, int type)
+{
+	struct selabel_lookup_rec *lr;
+
+	if (!rec->func_lookup_best_match) {
+		errno = ENOTSUP;
+		return -1;
+	}
+
+	lr = selabel_lookup_bm_common(rec, 1, key, type, aliases);
+	if (!lr)
+		return -1;
+
+	*con = strdup(lr->ctx_trans);
+	return *con ? 0 : -1;
+}
+
+int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
+			      const char *key, const char **aliases, int type)
+{
+	struct selabel_lookup_rec *lr;
+
+	if (!rec->func_lookup_best_match) {
+		errno = ENOTSUP;
+		return -1;
+	}
+
+	lr = selabel_lookup_bm_common(rec, 0, key, type, aliases);
 	if (!lr)
 		return -1;
 

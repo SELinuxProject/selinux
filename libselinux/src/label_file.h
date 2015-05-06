@@ -31,6 +31,7 @@ struct spec {
 	char hasMetaChars;	/* regular expression has meta-chars */
 	char regcomp;		/* regex_str has been compiled to regex */
 	char from_mmap;		/* this spec is from an mmap of the data */
+	size_t prefix_len;      /* length of fixed path prefix */
 };
 
 /* A regular expression stem */

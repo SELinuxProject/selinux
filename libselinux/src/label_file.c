@@ -601,15 +601,17 @@ static void closef(struct selabel_handle *rec)
 	free(data);
 }
 
-static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
-					 const char *key, int type)
+static struct spec *lookup_common(struct selabel_handle *rec,
+					     const char *key,
+					     int type,
+					     bool partial)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	struct spec *spec_arr = data->spec_arr;
-	int i, rc, file_stem;
+	int i, rc, file_stem, pcre_options = 0;
 	mode_t mode = (mode_t)type;
 	const char *buf;
-	struct selabel_lookup_rec *ret = NULL;
+	struct spec *ret = NULL;
 	char *clean_key = NULL;
 	const char *prev_slash, *next_slash;
 	unsigned int sofar = 0;
@@ -621,7 +623,7 @@ static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 
 	/* Remove duplicate slashes */
 	if ((next_slash = strstr(key, "//"))) {
-		clean_key = malloc(strlen(key) + 1);
+		clean_key = (char *) malloc(strlen(key) + 1);
 		if (!clean_key)
 			goto finish;
 		prev_slash = key;
@@ -639,6 +641,9 @@ static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 	file_stem = find_stem_from_file(data, &buf);
 	mode &= S_IFMT;
 
+	if (partial)
+		pcre_options |= PCRE_PARTIAL_SOFT;
+
 	/* 
 	 * Check for matching specifications in reverse order, so that
 	 * the last matching specification is used.
@@ -654,14 +659,22 @@ static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 			if (compile_regex(data, spec, NULL) < 0)
 				goto finish;
 			if (spec->stem_id == -1)
-				rc = pcre_exec(spec->regex, get_pcre_extra(spec), key, strlen(key), 0, 0, NULL, 0);
+				rc = pcre_exec(spec->regex,
+						    get_pcre_extra(spec),
+						    key, strlen(key), 0,
+						    pcre_options, NULL, 0);
 			else
-				rc = pcre_exec(spec->regex, get_pcre_extra(spec), buf, strlen(buf), 0, 0, NULL, 0);
-
+				rc = pcre_exec(spec->regex,
+						    get_pcre_extra(spec),
+						    buf, strlen(buf), 0,
+						    pcre_options, NULL, 0);
 			if (rc == 0) {
 				spec->matches++;
 				break;
-			} else if (rc == PCRE_ERROR_NOMATCH)
+			} else if (partial && rc == PCRE_ERROR_PARTIAL)
+				break;
+
+			if (rc == PCRE_ERROR_NOMATCH)
 				continue;
 
 			errno = ENOENT;
@@ -677,12 +690,86 @@ static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
 	}
 
 	errno = 0;
-	ret = &spec_arr[i].lr;
+	ret = &spec_arr[i];
 
 finish:
 	free(clean_key);
 	return ret;
 }
+
+static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
+					 const char *key, int type)
+{
+	struct spec *spec;
+
+	spec = lookup_common(rec, key, type, false);
+	if (spec)
+		return &spec->lr;
+	return NULL;
+}
+
+static bool partial_match(struct selabel_handle *rec, const char *key)
+{
+	return lookup_common(rec, key, 0, true) ? true : false;
+}
+
+static struct selabel_lookup_rec *lookup_best_match(struct selabel_handle *rec,
+						    const char *key,
+						    const char **aliases,
+						    int type)
+{
+	size_t n, i;
+	int best = -1;
+	struct spec **specs;
+	size_t prefix_len = 0;
+	struct selabel_lookup_rec *lr = NULL;
+
+	if (!aliases || !aliases[0])
+		return lookup(rec, key, type);
+
+	for (n = 0; aliases[n]; n++)
+		;
+
+	specs = calloc(n+1, sizeof(struct spec *));
+	if (!specs)
+		return NULL;
+	specs[0] = lookup_common(rec, key, type, false);
+	if (specs[0]) {
+		if (!specs[0]->hasMetaChars) {
+			/* exact match on key */
+			lr = &specs[0]->lr;
+			goto out;
+		}
+		best = 0;
+		prefix_len = specs[0]->prefix_len;
+	}
+	for (i = 1; i <= n; i++) {
+		specs[i] = lookup_common(rec, aliases[i-1], type, false);
+		if (specs[i]) {
+			if (!specs[i]->hasMetaChars) {
+				/* exact match on alias */
+				lr = &specs[i]->lr;
+				goto out;
+			}
+			if (specs[i]->prefix_len > prefix_len) {
+				best = i;
+				prefix_len = specs[i]->prefix_len;
+			}
+		}
+	}
+
+	if (best >= 0) {
+		/* longest fixed prefix match on key or alias */
+		lr = &specs[best]->lr;
+	} else {
+		errno = ENOENT;
+	}
+
+out:
+	free(specs);
+	return lr;
+}
+
 
 static void stats(struct selabel_handle *rec)
 {
@@ -722,6 +809,8 @@ int selabel_file_init(struct selabel_handle *rec, struct selinux_opt *opts,
 	rec->func_close = &closef;
 	rec->func_stats = &stats;
 	rec->func_lookup = &lookup;
+	rec->func_partial_match = &partial_match;
+	rec->func_lookup_best_match = &lookup_best_match;
 
 	return init(rec, opts, nopts);
 }
