@@ -325,6 +325,8 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 		addr += sizeof(uint32_t);
 		if (memcmp((char *)addr, pcre_version(), len))
 			return -1; /* pcre version content mismatch */
+		if (addr + *plen >= (char *)mmap_area->addr + mmap_area->len)
+			return -1; /* Buffer over-run */
 		addr += *plen;
 	}
 
@@ -390,11 +392,15 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 		if (!spec->lr.ctx_raw)
 			goto err;
 
+		if (addr + *plen >= (char *)mmap_area->addr + mmap_area->len)
+			return -1;
 		addr += *plen;
 
 		plen = (uint32_t *)addr;
 		addr += sizeof(uint32_t);
 		spec->regex_str = (char *)addr;
+		if (addr + *plen >= (char *)mmap_area->addr + mmap_area->len)
+			return -1;
 		addr += *plen;
 
 		spec->mode = *(mode_t *)addr;
@@ -415,12 +421,16 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 		plen = (uint32_t *)addr;
 		addr += sizeof(uint32_t);
 		spec->regex = (pcre *)addr;
+		if (addr + *plen >= (char *)mmap_area->addr + mmap_area->len)
+			return -1;
 		addr += *plen;
 
 		plen = (uint32_t *)addr;
 		addr += sizeof(uint32_t);
 		spec->lsd.study_data = (void *)addr;
 		spec->lsd.flags |= PCRE_EXTRA_STUDY_DATA;
+		if (addr + *plen >= (char *)mmap_area->addr + mmap_area->len)
+			return -1;
 		addr += *plen;
 
 		data->nspec++;
