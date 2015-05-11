@@ -14,7 +14,11 @@ int is_selinux_enabled(void)
 	/* init_selinuxmnt() gets called before this function. We
  	 * will assume that if a selinux file system is mounted, then
  	 * selinux is enabled. */
+#ifdef ANDROID
 	return (selinux_mnt ? 1 : 0);
+#else
+	return (selinux_mnt && has_selinux_config);
+#endif
 }
 
 hidden_def(is_selinux_enabled)

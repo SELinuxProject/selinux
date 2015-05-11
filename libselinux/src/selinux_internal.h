@@ -137,3 +137,8 @@ extern int selinux_page_size hidden;
 		if (pthread_setspecific != NULL)		\
 			pthread_setspecific(KEY, VALUE);	\
 	} while (0)
+
+#define SELINUXDIR "/etc/selinux/"
+#define SELINUXCONFIG SELINUXDIR "config"
+
+extern int has_selinux_config hidden;

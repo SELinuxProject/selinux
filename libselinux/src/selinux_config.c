@@ -13,8 +13,6 @@
 #include "selinux_internal.h"
 #include "get_default_type_internal.h"
 
-#define SELINUXDIR "/etc/selinux/"
-#define SELINUXCONFIG SELINUXDIR "config"
 #define SELINUXDEFAULT "targeted"
 #define SELINUXTYPETAG "SELINUXTYPE="
 #define SELINUXTAG "SELINUX="

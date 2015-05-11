@@ -22,6 +22,8 @@ char *selinux_mnt = NULL;
 int selinux_page_size = 0;
 int obj_class_compat = 1;
 
+int has_selinux_config = 0;
+
 /* Verify the mount point for selinux file system has a selinuxfs.
    If the file system:
    * Exist,
@@ -165,6 +167,9 @@ static void init_lib(void)
 {
 	selinux_page_size = sysconf(_SC_PAGE_SIZE);
 	init_selinuxmnt();
+#ifndef ANDROID
+	has_selinux_config = (access(SELINUXCONFIG, F_OK) == 0);
+#endif
 }
 
 static void fini_lib(void) __attribute__ ((destructor));
