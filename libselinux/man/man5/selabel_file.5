@@ -55,7 +55,9 @@ A non-null value for this option specifies a path to a file that will be opened 
 A non-null value for this option indicates that any local customizations to the file contexts mapping should be ignored.
 .TP
 .B SELABEL_OPT_SUBSET
-A non-null value for this option is interpreted as a path prefix, for example "/etc".  Only file context specifications starting with the given prefix are loaded.  This may increase lookup performance, however any attempt to look up a path not starting with the given prefix will fail.
+A non-null value for this option is interpreted as a path prefix, for example "/etc".  Only file context specifications with starting with a first component that prefix matches the given prefix are loaded.  This may increase lookup performance, however any attempt to look up a path not starting with the given prefix may fail.  This optimization is no longer required due to the use of
+.I file_contexts.bin
+files and is deprecated.
 .RE
 .
 .SH "FILES"
@@ -206,7 +208,7 @@ component with \fI/var/www\fR, therefore the path used is:
 If contexts are to be validated, then the global option \fBSELABEL_OPT_VALIDATE\fR must be set before calling \fBselabel_open\fR(3). If this is not set, then it is possible for an invalid context to be returned.
 .IP "2." 4
 If the size of file contexts series of files contain many entries, then \fBselabel_open\fR(3) may have a delay as it reads in the files, and if
-requested validates the entries. If possible use the \fBSELABEL_OPT_SUBSET\fR option to reduce the number of entries processed.
+requested validates the entries.
 .IP "3." 4
 Depending on the version of SELinux it is possible that a \fIfile_contexts.template\fR file may also be present, however this is now deprecated.
 .br

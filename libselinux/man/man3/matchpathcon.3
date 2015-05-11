@@ -7,7 +7,7 @@ matchpathcon, matchpathcon_index \- get the default SELinux security context for
 .sp
 .BI "int matchpathcon_init(const char *" path ");"
 .sp
-.BI "int matchpathcon_init_prefix(const char *" path ", const char *" subset ");"
+.BI "int matchpathcon_init_prefix(const char *" path ", const char *" prefix ");"
 .sp
 .BI "int matchpathcon_fini(void);"
 .sp
@@ -16,6 +16,24 @@ matchpathcon, matchpathcon_index \- get the default SELinux security context for
 .BI "int matchpathcon_index(const char *" name ", mode_t " mode ", char **" con ");"
 .
 .SH "DESCRIPTION"
+
+This family of functions is deprecated.  For new code, please use
+.BR selabel_open (3)
+with the
+.B SELABEL_CTX_FILE
+backend in place of
+.BR matchpathcon_init (),
+use
+.BR selabel_close (3)
+in place of
+.BR matchpathcon_fini (),
+and use
+.BR selabel_lookup (3)
+in place of
+.BR matchpathcon ().
+
+The remaining description below is for the legacy interface.
+
 .BR matchpathcon_init ()
 loads the file contexts configuration specified by
 .I path
@@ -41,9 +59,16 @@ customizations.
 .BR matchpathcon_init_prefix ()
 is the same as
 .BR matchpathcon_init ()
-but only loads entries with regular expressions that have stems prefixed
-by
-.I \%prefix.
+but only loads entries with regular expressions whose first pathname
+component is a prefix of
+.I \%prefix
+, e.g. pass "/dev" if you only intend to call
+.BR matchpathcon ()
+with pathnames beginning with /dev.
+However, this optimization is no longer necessary due to the use of
+.I file_contexts.bin
+files with precompiled regular expressions, so use of this interface
+is deprecated.
 
 .BR matchpathcon_fini ()
 frees the memory allocated by a prior call to
@@ -54,7 +79,17 @@ calls, or to free memory when finished using
 .BR matchpathcon ().
 
 .BR matchpathcon ()
-matches the specified pathname and mode against the file contexts
+matches the specified
+.I pathname,
+after transformation via
+.BR realpath (3)
+excepting any final symbolic link component if S_IFLNK was
+specified as the
+.I mode,
+and
+.I mode
+against the
+.I file contexts
 configuration and sets the security context 
 .I con 
 to refer to the
