@@ -1,3 +1,5 @@
+	* is_selinux_enabled:  Add /etc/selinux/config test, from Stephen Smalley.
+	* matchpathcon/selabel_file: Fix man pages, from Stephen Smalley.
 	* Fix core dumps with corrupt *.bin files, from Richard Haines.
 	* Add selabel partial and best match APIs, from Richard Haines.
 	* Use os.walk() instead of the deprecated os.path.walk(), from Petr
