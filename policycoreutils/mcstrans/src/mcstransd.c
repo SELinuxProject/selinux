@@ -139,24 +139,6 @@ get_peer_pid(int fd, pid_t *pid)
 
 
 static int
-get_peer_con(int fd, char **peercon)
-{
-	int ret;
-	pid_t pid;
-	ret = get_peer_pid(fd, &pid);
-	if (ret)
-		return -1;
-	ret = getpidcon_raw(pid, peercon);
-	if (ret) {
-		syslog(LOG_ERR, 
-			"Failed to get context of client process (pid=%u)",
-			pid);
-		return -1;
-	}
-	return 0;
-}
-
-static int
 process_request(int fd, uint32_t function, char *data1, char *UNUSED(data2))
 {
 	int32_t result;
@@ -164,8 +146,8 @@ process_request(int fd, uint32_t function, char *data1, char *UNUSED(data2))
 	char *peercon = NULL;
 	int ret;
 
-	ret = get_peer_con(fd, &peercon);
-	if (ret)
+	ret = getpeercon_raw(fd, &peercon);
+	if (ret < 0)
 		return ret;
 
 	/* TODO: Check if MLS clearance (in peercon) dominates the MLS label
