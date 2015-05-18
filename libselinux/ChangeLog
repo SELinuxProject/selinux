@@ -1,3 +1,4 @@
+	* Ensure selabel_lookup_best_match links NULL terminated, from Richard Haines.
 	* is_selinux_enabled:  Add /etc/selinux/config test, from Stephen Smalley.
 	* matchpathcon/selabel_file: Fix man pages, from Stephen Smalley.
 	* Fix core dumps with corrupt *.bin files, from Richard Haines.
