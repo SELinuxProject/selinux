@@ -23,7 +23,7 @@
 #include "setrans_internal.h"
 
 #ifndef DISABLE_SETRANS
-static int mls_enabled = -1;
+static unsigned char has_setrans;
 
 // Simple cache
 static __thread char * prev_t2r_trans = NULL;
@@ -261,12 +261,16 @@ void __attribute__((destructor)) setrans_lib_destructor(void);
 
 void hidden __attribute__((destructor)) setrans_lib_destructor(void)
 {
+	if (!has_setrans)
+		return;
 	if (destructor_key_initialized)
 		__selinux_key_delete(destructor_key);
 }
 
 static inline void init_thread_destructor(void)
 {
+	if (!has_setrans)
+		return;
 	if (destructor_initialized == 0) {
 		__selinux_setspecific(destructor_key, (void *)1);
 		destructor_initialized = 1;
@@ -275,10 +279,11 @@ static inline void init_thread_destructor(void)
 
 static void init_context_translations(void)
 {
+	has_setrans = (access(SETRANS_UNIX_SOCKET, F_OK) == 0);
+	if (!has_setrans)
+		return;
 	if (__selinux_key_create(&destructor_key, setrans_thread_destructor) == 0)
 		destructor_key_initialized = 1;
-
-	mls_enabled = is_selinux_mls_enabled();
 }
 
 int selinux_trans_to_raw_context(const char * trans,
@@ -292,7 +297,7 @@ int selinux_trans_to_raw_context(const char * trans,
 	__selinux_once(once, init_context_translations);
 	init_thread_destructor();
 
-	if (!mls_enabled) {
+	if (!has_setrans) {
 		*rawp = strdup(trans);
 		goto out;
 	}
@@ -334,7 +339,7 @@ int selinux_raw_to_trans_context(const char * raw,
 	__selinux_once(once, init_context_translations);
 	init_thread_destructor();
 
-	if (!mls_enabled) {
+	if (!has_setrans)  {
 		*transp = strdup(raw);
 		goto out;
 	}
@@ -374,6 +379,11 @@ int selinux_raw_context_to_color(const char * raw, char **transp)
 
 	__selinux_once(once, init_context_translations);
 	init_thread_destructor();
+
+	if (!has_setrans) {
+		*transp = strdup(raw);
+		goto out;
+	}
 
 	if (prev_r2c_raw && strcmp(prev_r2c_raw, raw) == 0) {
 		*transp = strdup(prev_r2c_trans);
