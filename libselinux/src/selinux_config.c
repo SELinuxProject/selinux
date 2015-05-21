@@ -48,8 +48,9 @@
 #define FILE_CONTEXT_SUBS_DIST 25
 #define LXC_CONTEXTS      26
 #define BOOLEAN_SUBS      27
-#define SYSTEMD_CONTEXTS  28
-#define NEL               29
+#define OPENSSH_CONTEXTS  28
+#define SYSTEMD_CONTEXTS  29
+#define NEL               30
 
 /* Part of one-time lazy init */
 static pthread_once_t once = PTHREAD_ONCE_INIT;
@@ -490,6 +491,13 @@ const char *selinux_lxc_contexts_path(void)
 }
 
 hidden_def(selinux_lxc_contexts_path)
+
+const char *selinux_openssh_contexts_path(void)
+{
+    return get_path(OPENSSH_CONTEXTS);
+}
+
+hidden_def(selinux_openssh_contexts_path)
 
 const char *selinux_systemd_contexts_path(void)
 {
