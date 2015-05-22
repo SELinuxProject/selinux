@@ -2091,7 +2091,9 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 
 
 		for (i = 0; i < num_types; i++) {
-			cil_println(indent, "(roletype %s %s)", key, types[i]);
+			if (is_id_in_scope(pdb, decl_stack, types[i], SYM_TYPES)) {
+				cil_println(indent, "(roletype %s %s)", key, types[i]);
+			}
 		}
 
 		break;
