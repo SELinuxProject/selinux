@@ -1,3 +1,4 @@
+	* Fix more bin file processing core dumps, from Richard Haines.
 	* add selinux_openssh_contexts_path(), from Petr Lautrbach.
 	* setrans_client: minimize overhead when mcstransd is not present, from Stephen Smalley.
 	* Ensure selabel_lookup_best_match links NULL terminated, from Richard Haines.
