@@ -1,3 +1,4 @@
+	* Expunge remaining references to flask.h and av_permissions.h, from Stephen Smalley.
 	* Fix more bin file processing core dumps, from Richard Haines.
 	* add selinux_openssh_contexts_path(), from Petr Lautrbach.
 	* setrans_client: minimize overhead when mcstransd is not present, from Stephen Smalley.
