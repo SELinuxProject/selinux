@@ -57,9 +57,7 @@
 %ignore avc_netlink_check_nb;
 
 %include "../include/selinux/avc.h"
-%include "../include/selinux/av_permissions.h"
 %include "../include/selinux/context.h"
-%include "../include/selinux/flask.h"
 %include "../include/selinux/get_context_list.h"
 %include "../include/selinux/get_default_type.h"
 %include "../include/selinux/label.h"
