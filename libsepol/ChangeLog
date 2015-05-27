@@ -1,3 +1,4 @@
+	* libsepol/cil: Do not allow categories/sensitivities inside blocks, from Yuli Khodorkovskiy.
 	* Replace fmemopen() with internal function in libsepol, from James Carter.
 	* Verify users prior to evaluating users in cil, from Yuli Khodorkovskiy. 
 	* Binary modules do not support ioctl rules, from Stephen Smalley.
