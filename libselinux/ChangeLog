@@ -1,3 +1,4 @@
+	* Support consistent mode size for bin files, from Richard Haines.
 	* Expunge remaining references to flask.h and av_permissions.h, from Stephen Smalley.
 	* Fix more bin file processing core dumps, from Richard Haines.
 	* add selinux_openssh_contexts_path(), from Petr Lautrbach.
