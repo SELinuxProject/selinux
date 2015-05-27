@@ -404,6 +404,7 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 	for (i = 0; i < regex_array_len; i++) {
 		struct spec *spec;
 		int32_t stem_id, meta_chars;
+		uint32_t mode = 0;
 
 		rc = grow_specs(data);
 		if (rc < 0)
@@ -454,9 +455,14 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 		}
 
 		/* Process mode */
-		rc = next_entry(&spec->mode, mmap_area, sizeof(mode_t));
+		if (version >= SELINUX_COMPILED_FCONTEXT_MODE)
+			rc = next_entry(&mode, mmap_area, sizeof(uint32_t));
+		else
+			rc = next_entry(&mode, mmap_area, sizeof(mode_t));
 		if (rc < 0)
 			goto err;
+
+		spec->mode = mode;
 
 		/* map the stem id from the mmap file to the data->stem_arr */
 		rc = next_entry(&stem_id, mmap_area, sizeof(int32_t));

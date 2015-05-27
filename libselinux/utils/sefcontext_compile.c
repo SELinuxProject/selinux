@@ -142,7 +142,8 @@ static int process_file(struct saved_data *data, const char *filename)
  * 	char - char array of the raw context
  *	u32  - length of the upcoming regex_str
  *	char - char array of the original regex string including the stem.
- *	mode_t - mode bits
+ *	u32  - mode bits for >= SELINUX_COMPILED_FCONTEXT_MODE
+ *	       mode_t for <= SELINUX_COMPILED_FCONTEXT_PCRE_VERS
  *	s32  - stemid associated with the regex
  *	u32  - spec has meta characters
  *	u32  - data length of the pcre regex
@@ -247,7 +248,8 @@ static int write_binary_file(struct saved_data *data, int fd)
 			goto err;
 
 		/* binary F_MODE bits */
-		len = fwrite(&mode, sizeof(mode), 1, bin_file);
+		to_write = mode;
+		len = fwrite(&to_write, sizeof(uint32_t), 1, bin_file);
 		if (len != 1)
 			goto err;
 
