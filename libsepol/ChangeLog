@@ -1,4 +1,6 @@
-	* libsepol/cil: Do not allow categories/sensitivities inside blocks, from Yuli Khodorkovskiy.
+	* Write auditadm_r and secadm_r roles to base module when writing CIL, from Steve Lawrence
+	* Fix module to CIL to only associate declared roleattributes with in-scope types, from Steve Lawrence
+	* Don't allow categories/sensitivities inside blocks in CIL, from Yuli Khodorkovskiy.
 	* Replace fmemopen() with internal function in libsepol, from James Carter.
 	* Verify users prior to evaluating users in cil, from Yuli Khodorkovskiy. 
 	* Binary modules do not support ioctl rules, from Stephen Smalley.
