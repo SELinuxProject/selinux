@@ -154,22 +154,16 @@ static int process_line(struct selabel_handle *rec,
 			char *line_buf, unsigned lineno)
 {
 	int items, len, rc;
-	char *buf_p, *regex, *type, *context;
+	char *regex = NULL, *type = NULL, *context = NULL;
 	struct saved_data *data = (struct saved_data *)rec->data;
 	struct spec *spec_arr;
 	unsigned int nspec = data->nspec;
 	const char *errbuf = NULL;
 
-	len = strlen(line_buf);
-	if (line_buf[len - 1] == '\n')
-		line_buf[len - 1] = 0;
-	buf_p = line_buf;
-	while (isspace(*buf_p))
-		buf_p++;
-	/* Skip comment lines and empty lines. */
-	if (*buf_p == '#' || *buf_p == 0)
-		return 0;
-	items = sscanf(line_buf, "%ms %ms %ms", &regex, &type, &context);
+	items = read_spec_entries(line_buf, 3, &regex, &type, &context);
+	if (items <= 0)
+		return items;
+
 	if (items < 2) {
 		COMPAT_LOG(SELINUX_WARNING,
 			    "%s:  line %u is missing fields, skipping\n", path,

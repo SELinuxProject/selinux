@@ -82,23 +82,15 @@ static int process_line(struct selabel_handle *rec,
 			const char *path, char *line_buf,
 			int pass, unsigned lineno)
 {
-	int items, len;
-	char buf1[BUFSIZ], buf2[BUFSIZ];
-	char *buf_p, *prop = buf1, *context = buf2;
+	int items;
+	char *prop = NULL, *context = NULL;
 	struct saved_data *data = (struct saved_data *)rec->data;
 	spec_t *spec_arr = data->spec_arr;
 	unsigned int nspec = data->nspec;
 
-	len = strlen(line_buf);
-	if (line_buf[len - 1] == '\n')
-		line_buf[len - 1] = 0;
-	buf_p = line_buf;
-	while (isspace(*buf_p))
-		buf_p++;
-	/* Skip comment lines and empty lines. */
-	if (*buf_p == '#' || *buf_p == 0)
-		return 0;
-	items = sscanf(line_buf, "%255s %255s", prop, context);
+	items = read_spec_entries(line_buf, 2, &prop, &context);
+	if (items <= 0)
+		return items;
 	if (items != 2) {
 		selinux_log(SELINUX_WARNING,
 			    "%s:  line %u is missing fields, skipping\n", path,

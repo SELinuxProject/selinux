@@ -102,4 +102,10 @@ compat_validate(struct selabel_handle *rec,
 		struct selabel_lookup_rec *contexts,
 		const char *path, unsigned lineno) hidden;
 
+/*
+ * The read_spec_entries function may be used to
+ * replace sscanf to read entries from spec files.
+ */
+extern int read_spec_entries(char *line_buf, int num_args, ...);
+
 #endif				/* _SELABEL_INTERNAL_H_ */
