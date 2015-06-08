@@ -3,9 +3,6 @@
  *
  * Author : Eamon Walsh <ewalsh@tycho.nsa.gov>
  * Author : Stephen Smalley <sds@tycho.nsa.gov>
- *
- * This library derived in part from setfiles and the setfiles.pl script
- * developed by Secure Computing Corporation.
  */
 
 #include <fcntl.h>
