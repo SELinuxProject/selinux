@@ -86,6 +86,7 @@ extern unsigned int ebitmap_cardinality(ebitmap_t *e1);
 extern int ebitmap_hamming_distance(ebitmap_t * e1, ebitmap_t * e2);
 extern int ebitmap_cpy(ebitmap_t * dst, const ebitmap_t * src);
 extern int ebitmap_contains(const ebitmap_t * e1, const ebitmap_t * e2);
+extern int ebitmap_match_any(const ebitmap_t *e1, const ebitmap_t *e2);
 extern int ebitmap_get_bit(const ebitmap_t * e, unsigned int bit);
 extern int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value);
 extern void ebitmap_destroy(ebitmap_t * e);
