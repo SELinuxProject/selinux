@@ -2311,25 +2311,33 @@ static int type_attr_map(hashtab_key_t key
 	policydb_t *p = state->out;
 	unsigned int i;
 	ebitmap_node_t *tnode;
+	int value;
 
 	type = (type_datum_t *) datum;
+	value = type->s.value;
+
 	if (type->flavor == TYPE_ATTRIB) {
-		if (ebitmap_cpy(&p->attr_type_map[type->s.value - 1],
-				&type->types)) {
-			ERR(state->handle, "Out of memory!");
-			return -1;
+		if (ebitmap_cpy(&p->attr_type_map[value - 1], &type->types)) {
+			goto oom;
 		}
 		ebitmap_for_each_bit(&type->types, tnode, i) {
 			if (!ebitmap_node_get_bit(tnode, i))
 				continue;
-			if (ebitmap_set_bit(&p->type_attr_map[i],
-					    type->s.value - 1, 1)) {
-				ERR(state->handle, "Out of memory!");
-				return -1;
+			if (ebitmap_set_bit(&p->type_attr_map[i], value - 1, 1)) {
+				goto oom;
 			}
 		}
+	} else {
+		if (ebitmap_set_bit(&p->attr_type_map[value - 1], value - 1, 1)) {
+			goto oom;
+		}
 	}
+
 	return 0;
+
+oom:
+	ERR(state->handle, "Out of memory!");
+	return -1;
 }
 
 /* converts typeset using typemap and expands into ebitmap_t types using the attributes in the passed in policy.
