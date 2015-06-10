@@ -250,7 +250,7 @@ int cil_type_rule_to_policydb(policydb_t *pdb, const struct cil_db *db, struct c
  *
  * @return SEPOL_OK upon success or an error otherwise.
  */
-int cil_avrule_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_avrule *cil_avrule, struct cil_list *neverallows);
+int cil_avrule_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_avrule *cil_avrule);
 
 /**
  * Insert cil booleanif structure into sepol policydb.  This populates the
@@ -262,7 +262,7 @@ int cil_avrule_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_
  *
  * @return SEPOL_OK upon success or an error otherwise.
  */
-int cil_booleanif_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_tree_node *node, struct cil_list *neverallows, hashtab_t filename_trans_table);
+int cil_booleanif_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_tree_node *node, hashtab_t filename_trans_table);
 
 /**
  * Insert cil role transition structure into sepol policydb.
