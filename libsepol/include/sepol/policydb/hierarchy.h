@@ -25,10 +25,21 @@
 #ifndef _SEPOL_POLICYDB_HIERARCHY_H_
 #define _SEPOL_POLICYDB_HIERARCHY_H_
 
+#include <sepol/policydb/avtab.h>
 #include <sepol/policydb/policydb.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
+
+extern int hierarchy_add_bounds(sepol_handle_t *handle, policydb_t *p);
+
+extern void bounds_destroy_bad(avtab_ptr_t cur);
+extern int bounds_check_type(sepol_handle_t *handle, policydb_t *p, uint32_t child,
+			     uint32_t parent, avtab_ptr_t *bad, int *numbad);
+
+extern int bounds_check_users(sepol_handle_t *handle, policydb_t *p);
+extern int bounds_check_roles(sepol_handle_t *handle, policydb_t *p);
+extern int bounds_check_types(sepol_handle_t *handle, policydb_t *p);
 
 extern int hierarchy_check_constraints(sepol_handle_t * handle, policydb_t * p);
 
