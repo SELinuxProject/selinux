@@ -11,7 +11,6 @@ common_src_files := \
 common_cflags := \
 	-Wall -Wshadow -O2 \
 	-pipe -fno-strict-aliasing \
-	-Wno-return-type
 
 ifeq ($(HOST_OS),darwin)
 common_cflags += -DDARWIN
