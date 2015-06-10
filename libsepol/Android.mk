@@ -46,6 +46,7 @@ cil_src_files := \
 	cil/src/cil_build_ast.c \
 	cil/src/cil.c \
 	cil/src/cil_copy_ast.c \
+	cil/src/cil_find.c \
 	cil/src/cil_fqn.c \
 	cil/src/cil_lexer.l \
 	cil/src/cil_list.c \
