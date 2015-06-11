@@ -279,6 +279,8 @@ struct cil_db {
 	struct cil_list *userprefixes;
 	struct cil_list *selinuxusers;
 	struct cil_list *names;
+	int num_types_and_attrs;
+	int num_classes;
 	int num_cats;
 	int num_types;
 	int num_roles;

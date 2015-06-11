@@ -112,7 +112,7 @@ int cil_roletype_to_policydb(policydb_t *pdb, const struct cil_db *db, struct ci
  *
  * @return SEPOL_OK upon success or an error otherwise.
  */
-int cil_type_to_policydb(policydb_t *pdb, struct cil_type *cil_type);
+int cil_type_to_policydb(policydb_t *pdb, struct cil_type *cil_type, void *type_value_to_cil[]);
 
 /**
  * Insert cil typealias structure into sepol policydb.
@@ -144,7 +144,7 @@ int cil_typepermissive_to_policydb(policydb_t *pdb, struct cil_typepermissive *c
  *
  * @return SEPOL_OK upon success or an error otherwise.
  */
-int cil_typeattribute_to_policydb(policydb_t *pdb, struct cil_typeattribute *cil_attr);
+int cil_typeattribute_to_policydb(policydb_t *pdb, struct cil_typeattribute *cil_attr, void *type_value_to_cil[]);
 
 /**
  * Insert cil attribute structure into sepol type->attribute bitmap.

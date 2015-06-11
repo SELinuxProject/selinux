@@ -257,7 +257,8 @@ void cil_db_init(struct cil_db **db)
 	cil_type_init(&(*db)->selftype);
 	(*db)->selftype->datum.name = CIL_KEY_SELF;
 	(*db)->selftype->datum.fqn = CIL_KEY_SELF;
-
+	(*db)->num_types_and_attrs = 0;
+	(*db)->num_classes = 0;
 	(*db)->num_types = 0;
 	(*db)->num_roles = 0;
 	(*db)->num_cats = 0;

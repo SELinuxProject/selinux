@@ -339,23 +339,37 @@ static int __cil_post_db_count_helper(struct cil_tree_node *node, uint32_t *fini
 	case CIL_MACRO:
 		*finished = CIL_TREE_SKIP_HEAD;
 		break;
-	case CIL_TYPE: {
-		struct cil_type *type = node->data;
-		if (type->datum.nodes->head->data == node) {
-			// multiple AST nodes can point to the same cil_type data (like if
-			// copied from a macro). This check ensures we only count the
-			// duplicates once
-			type->value = db->num_types;
-			db->num_types++;
+	case CIL_CLASS: {
+		struct cil_class *class = node->data;
+		if (class->datum.nodes->head->data == node) {
+			// Multiple nodes can point to the same datum. Only count once.
+			db->num_classes++;
 		}
 		break;
 	}
+	case CIL_TYPE: {
+		struct cil_type *type = node->data;
+		if (type->datum.nodes->head->data == node) {
+			// Multiple nodes can point to the same datum. Only count once.
+			type->value = db->num_types;
+			db->num_types++;
+			db->num_types_and_attrs++;
+		}
+		break;
+	}
+	case CIL_TYPEATTRIBUTE: {
+		struct cil_typeattribute *attr = node->data;
+		if (attr->datum.nodes->head->data == node) {
+			// Multiple nodes can point to the same datum. Only count once.
+			db->num_types_and_attrs++;
+		}
+		break;
+	}
+
 	case CIL_ROLE: {
 		struct cil_role *role = node->data;
 		if (role->datum.nodes->head->data == node) {
-			// multiple AST nodes can point to the same cil_role data (like if
-			// copied from a macro). This check ensures we only count the
-			// duplicates once
+			// Multiple nodes can point to the same datum. Only count once.
 			role->value = db->num_roles;
 			db->num_roles++;
 		}
