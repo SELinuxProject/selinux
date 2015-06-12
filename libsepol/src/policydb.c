@@ -180,7 +180,7 @@ static struct policydb_compat_info policydb_compat[] = {
 	},
 	{
 	 .type = POLICY_KERN,
-	 .version = POLICYDB_VERSION_IOCTL_OPERATIONS,
+	 .version = POLICYDB_VERSION_XPERMS_IOCTL,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = OCON_NODE6 + 1,
 	 .target_platform = SEPOL_TARGET_SELINUX,

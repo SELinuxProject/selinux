@@ -54,11 +54,11 @@ int render_access_mask(uint32_t mask, avtab_key_t * key, policydb_t * p,
 	return 0;
 }
 
-#define operation_perm_test(x, p) (1 & (p[x >> 5] >> (x & 0x1f)))
+#define xperms_test(x, p) (1 & (p[x >> 5] >> (x & 0x1f)))
 #define next_bit_in_range(i, p) \
-	((i + 1 < sizeof(p)*8) && operation_perm_test((i + 1), p))
+	((i + 1 < sizeof(p)*8) && xperms_test((i + 1), p))
 
-int render_operations(avtab_operations_t *ops, avtab_key_t * key, FILE * fp)
+int render_ioctl(avtab_extended_perms_t * xperms, FILE * fp)
 {
 	uint16_t value;
 	uint16_t low_bit;
@@ -67,28 +67,28 @@ int render_operations(avtab_operations_t *ops, avtab_key_t * key, FILE * fp)
 	unsigned int in_range = 0;
 
 	fprintf(fp, "{ ");
-	for (bit = 0; bit < sizeof(ops->perms)*8; bit++) {
-		if (!operation_perm_test(bit, ops->perms))
+	for (bit = 0; bit < sizeof(xperms->perms)*8; bit++) {
+		if (!xperms_test(bit, xperms->perms))
 			continue;
 
-		if (in_range && next_bit_in_range(bit, ops->perms)) {
+		if (in_range && next_bit_in_range(bit, xperms->perms)) {
 			/* continue until high value found */
 			continue;
-		} else if (next_bit_in_range(bit, ops->perms)) {
+		} else if (next_bit_in_range(bit, xperms->perms)) {
 			/* low value */
 			low_bit = bit;
 			in_range = 1;
 			continue;
 		}
 
-		if (key->specified & AVTAB_OPNUM) {
-			value = ops->type<<8 | bit;
-			low_value = ops->type<<8 | low_bit;
+		if (xperms->specified & AVTAB_XPERMS_IOCTLFUNCTION) {
+			value = xperms->driver<<8 | bit;
+			low_value = xperms->driver<<8 | low_bit;
 			if (in_range)
 				fprintf(fp, "0x%hx-0x%hx ", low_value, value);
 			else
 				fprintf(fp, "0x%hx ", value);
-		} else if (key->specified & AVTAB_OPTYPE) {
+		} else if (xperms->specified & AVTAB_XPERMS_IOCTLDRIVER) {
 			value = bit << 8;
 			low_value = low_bit << 8;
 			if (in_range)
@@ -101,6 +101,15 @@ int render_operations(avtab_operations_t *ops, avtab_key_t * key, FILE * fp)
 			in_range = 0;
 	}
 	fprintf(fp, "}");
+	return 0;
+}
+
+int render_xperms(avtab_extended_perms_t * xperms, FILE * fp)
+{
+	if ((xperms->specified == AVTAB_XPERMS_IOCTLFUNCTION) ||
+			(xperms->specified == AVTAB_XPERMS_IOCTLDRIVER))
+		render_ioctl(xperms, fp);
+
 	return 0;
 }
 
@@ -197,15 +206,15 @@ int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t what,
 			render_type(datum->data, p, fp);
 			fprintf(fp, ";\n");
 		}
-	} else if (key->specified & AVTAB_OP) {
-		if (key->specified & (AVTAB_OPNUM_ALLOWED|AVTAB_OPTYPE_ALLOWED))
-			fprintf(fp, "allow ");
-		else if (key->specified & (AVTAB_OPNUM_AUDITALLOW|AVTAB_OPTYPE_AUDITALLOW))
-			fprintf(fp, "auditallow ");
-		else if (key->specified & (AVTAB_OPNUM_DONTAUDIT|AVTAB_OPTYPE_DONTAUDIT))
-			fprintf(fp, "dontaudit ");
+	} else if (key->specified & AVTAB_XPERMS) {
+		if (key->specified & AVTAB_XPERMS_ALLOWED)
+			fprintf(fp, "allowxperm ");
+		else if (key->specified & AVTAB_XPERMS_AUDITALLOW)
+			fprintf(fp, "auditallowxperm ");
+		else if (key->specified & AVTAB_XPERMS_DONTAUDIT)
+			fprintf(fp, "dontauditxperm ");
 		render_key(key, p, fp);
-		render_operations(datum->ops, key, fp);
+		render_xperms(datum->xperms, fp);
 		fprintf(fp, ";\n");
 	} else {
 		fprintf(fp, "     ERROR: no valid rule type specified\n");

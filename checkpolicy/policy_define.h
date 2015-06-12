@@ -58,7 +58,7 @@ int define_roleattribute(void);
 int define_filename_trans(void);
 int define_sens(void);
 int define_te_avtab(int which);
-int define_te_avtab_operation(int which);
+int define_te_avtab_extended_perms(int which);
 int define_typealias(void);
 int define_typeattribute(void);
 int define_typebounds(void);

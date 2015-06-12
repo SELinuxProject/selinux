@@ -93,7 +93,7 @@ avtab_insert_node(avtab_t * h, int hvalue, avtab_ptr_t prev, avtab_key_t * key,
 		  avtab_datum_t * datum)
 {
 	avtab_ptr_t newnode;
-	avtab_operations_t *ops;
+	avtab_extended_perms_t *xperms;
 
 	newnode = (avtab_ptr_t) malloc(sizeof(struct avtab_node));
 	if (newnode == NULL)
@@ -101,16 +101,16 @@ avtab_insert_node(avtab_t * h, int hvalue, avtab_ptr_t prev, avtab_key_t * key,
 	memset(newnode, 0, sizeof(struct avtab_node));
 	newnode->key = *key;
 
-	if (key->specified & AVTAB_OP) {
-		ops = calloc(1, sizeof(avtab_operations_t));
-		if (ops == NULL) {
+	if (key->specified & AVTAB_XPERMS) {
+		xperms = calloc(1, sizeof(avtab_extended_perms_t));
+		if (xperms == NULL) {
 			free(newnode);
 			return NULL;
 		}
-		if (datum->ops) /* else caller populates ops*/
-			*ops = *(datum->ops);
+		if (datum->xperms) /* else caller populates xperms */
+			*xperms = *(datum->xperms);
 
-		newnode->datum.ops = ops;
+		newnode->datum.xperms = xperms;
 	} else {
 		newnode->datum = *datum;
 	}
@@ -144,7 +144,8 @@ int avtab_insert(avtab_t * h, avtab_key_t * key, avtab_datum_t * datum)
 		    key->target_type == cur->key.target_type &&
 		    key->target_class == cur->key.target_class &&
 		    (specified & cur->key.specified)) {
-			if (specified & AVTAB_OPNUM)
+			/* Extended permissions are not necessarily unique */
+			if (specified & AVTAB_XPERMS)
 				break;
 			return SEPOL_EEXIST;
 		}
@@ -416,12 +417,9 @@ static uint16_t spec_order[] = {
 	AVTAB_TRANSITION,
 	AVTAB_CHANGE,
 	AVTAB_MEMBER,
-	AVTAB_OPNUM_ALLOWED,
-	AVTAB_OPNUM_AUDITALLOW,
-	AVTAB_OPNUM_DONTAUDIT,
-	AVTAB_OPTYPE_ALLOWED,
-	AVTAB_OPTYPE_AUDITALLOW,
-	AVTAB_OPTYPE_DONTAUDIT
+	AVTAB_XPERMS_ALLOWED,
+	AVTAB_XPERMS_AUDITALLOW,
+	AVTAB_XPERMS_DONTAUDIT
 };
 
 int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
@@ -433,14 +431,14 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 	uint32_t buf32[8], items, items2, val;
 	avtab_key_t key;
 	avtab_datum_t datum;
-	avtab_operations_t ops;
+	avtab_extended_perms_t xperms;
 	unsigned set;
 	unsigned int i;
 	int rc;
 
 	memset(&key, 0, sizeof(avtab_key_t));
 	memset(&datum, 0, sizeof(avtab_datum_t));
-	memset(&ops, 0, sizeof(avtab_operations_t));
+	memset(&xperms, 0, sizeof(avtab_extended_perms_t));
 
 	if (vers < POLICYDB_VERSION_AVTAB) {
 		rc = next_entry(buf32, fp, sizeof(uint32_t));
@@ -533,26 +531,32 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 		return -1;
 	}
 
-	if ((vers < POLICYDB_VERSION_IOCTL_OPERATIONS) &&
-			(key.specified & AVTAB_OP)) {
-		ERR(fp->handle, "policy version %u does not support ioctl "
-				"operation rules and one was specified\n", vers);
+	if ((vers < POLICYDB_VERSION_XPERMS_IOCTL) &&
+			(key.specified & AVTAB_XPERMS)) {
+		ERR(fp->handle, "policy version %u does not support extended "
+				"permissions rules and one was specified\n", vers);
 		return -1;
-	} else if (key.specified & AVTAB_OP) {
+	} else if (key.specified & AVTAB_XPERMS) {
 		rc = next_entry(&buf8, fp, sizeof(uint8_t));
 		if (rc < 0) {
 			ERR(fp->handle, "truncated entry");
 			return -1;
 		}
-		ops.type = buf8;
+		xperms.specified = buf8;
+		rc = next_entry(&buf8, fp, sizeof(uint8_t));
+		if (rc < 0) {
+			ERR(fp->handle, "truncated entry");
+			return -1;
+		}
+		xperms.driver = buf8;
 		rc = next_entry(buf32, fp, sizeof(uint32_t)*8);
 		if (rc < 0) {
 			ERR(fp->handle, "truncated entry");
 			return -1;
 		}
-		for (i = 0; i < ARRAY_SIZE(ops.perms); i++)
-			ops.perms[i] = le32_to_cpu(buf32[i]);
-		datum.ops = &ops;
+		for (i = 0; i < ARRAY_SIZE(xperms.perms); i++)
+			xperms.perms[i] = le32_to_cpu(buf32[i]);
+		datum.xperms = &xperms;
 	} else {
 		rc = next_entry(buf32, fp, sizeof(uint32_t));
 		if (rc < 0) {

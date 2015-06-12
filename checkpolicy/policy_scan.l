@@ -142,6 +142,12 @@ AUDITDENY |
 auditdeny		        { return(AUDITDENY); }
 DONTAUDIT |
 dontaudit                       { return(DONTAUDIT); }
+ALLOWXPERM |
+allowxperm		        { return(ALLOWXPERM); }
+AUDITALLOWXPERM |
+auditallowxperm		        { return(AUDITALLOWXPERM); }
+DONTAUDITXPERM |
+dontauditxperm                  { return(DONTAUDITXPERM); }
 SOURCE |
 source			        { return(SOURCE); }
 TARGET |

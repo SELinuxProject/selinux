@@ -126,6 +126,9 @@ typedef int (* require_func_t)(int pass);
 %token AUDITALLOW
 %token AUDITDENY
 %token DONTAUDIT
+%token ALLOWXPERM
+%token AUDITALLOWXPERM
+%token DONTAUDITXPERM
 %token SOURCE
 %token TARGET
 %token SAMEUSER
@@ -457,9 +460,9 @@ te_avtab_def		: allow_def
 			| auditdeny_def
 			| dontaudit_def
 			| neverallow_def
-			| operation_allow_def
-			| operation_auditallow_def
-			| operation_dontaudit_def
+			| xperm_allow_def
+			| xperm_auditallow_def
+			| xperm_dontaudit_def
 			;
 allow_def		: ALLOW names names ':' names names  ';'
 			{if (define_te_avtab(AVRULE_ALLOWED)) return -1; }
@@ -476,14 +479,14 @@ dontaudit_def		: DONTAUDIT names names ':' names names ';'
 neverallow_def		: NEVERALLOW names names ':' names names  ';'
 			{if (define_te_avtab(AVRULE_NEVERALLOW)) return -1; }
 		        ;
-operation_allow_def	: ALLOW names names ':' names  operations ';'
-			{if (define_te_avtab_operation(AVRULE_OPNUM_ALLOWED)) return -1; }
+xperm_allow_def		: ALLOWXPERM names names ':' names identifier xperms ';'
+			{if (define_te_avtab_extended_perms(AVRULE_XPERMS_ALLOWED)) return -1; }
 		        ;
-operation_auditallow_def: AUDITALLOW names names ':' names operations ';'
-			{if (define_te_avtab_operation(AVRULE_OPNUM_AUDITALLOW)) return -1; }
+xperm_auditallow_def	: AUDITALLOWXPERM names names ':' names identifier xperms ';'
+			{if (define_te_avtab_extended_perms(AVRULE_XPERMS_AUDITALLOW)) return -1; }
 		        ;
-operation_dontaudit_def	: DONTAUDIT names names ':' names operations ';'
-			{if (define_te_avtab_operation(AVRULE_OPNUM_DONTAUDIT)) return -1; }
+xperm_dontaudit_def	: DONTAUDITXPERM names names ':' names identifier xperms ';'
+			{if (define_te_avtab_extended_perms(AVRULE_XPERMS_DONTAUDIT)) return -1; }
 		        ;
 attribute_role_def	: ATTRIBUTE_ROLE identifier ';'
 			{if (define_attrib_role()) return -1; }
@@ -749,26 +752,26 @@ genfs_context_def	: GENFSCON filesystem path '-' identifier security_context_def
 ipv4_addr_def		: IPV4_ADDR
 			{ if (insert_id(yytext,0)) return -1; }
 			;
-operations		: operation
+xperms		: xperm
 			{ if (insert_separator(0)) return -1; }
-			| nested_operation_set
+			| nested_xperm_set
 			{ if (insert_separator(0)) return -1; }
-			| tilde operation
+			| tilde xperm
                         { if (insert_id("~", 0)) return -1; }
-			| tilde nested_operation_set
+			| tilde nested_xperm_set
 			{ if (insert_id("~", 0)) return -1;
 			  if (insert_separator(0)) return -1; }
 			;
-nested_operation_set	: '{' nested_operation_list '}'
+nested_xperm_set	: '{' nested_xperm_list '}'
 			;
-nested_operation_list	: nested_operation_element
-			| nested_operation_list nested_operation_element
+nested_xperm_list	: nested_xperm_element
+			| nested_xperm_list nested_xperm_element
 			;
-nested_operation_element: operation '-' { if (insert_id("-", 0)) return -1; } operation
-			| operation
-			| nested_operation_set
+nested_xperm_element: xperm '-' { if (insert_id("-", 0)) return -1; } xperm
+			| xperm
+			| nested_xperm_set
 			;
-operation		: number
+xperm		: number
                         { if (insert_id(yytext,0)) return -1; }
 			;
 security_context_def	: identifier ':' identifier ':' identifier opt_mls_range_def

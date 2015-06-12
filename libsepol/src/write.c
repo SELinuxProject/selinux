@@ -221,28 +221,32 @@ static int avtab_write_item(policydb_t * p,
 	items = put_entry(buf16, sizeof(uint16_t), 4, fp);
 	if (items != 4)
 		return POLICYDB_ERROR;
-	if ((p->policyvers < POLICYDB_VERSION_IOCTL_OPERATIONS) &&
-			(cur->key.specified & AVTAB_OP)) {
-		ERR(fp->handle, "policy version %u does not support ioctl operation"
-				" rules and one was specified", p->policyvers);
+	if ((p->policyvers < POLICYDB_VERSION_XPERMS_IOCTL) &&
+			(cur->key.specified & AVTAB_XPERMS)) {
+		ERR(fp->handle, "policy version %u does not support ioctl extended"
+				"permissions rules and one was specified", p->policyvers);
 		return POLICYDB_ERROR;
 	}
 
 	if (p->target_platform != SEPOL_TARGET_SELINUX &&
-			(cur->key.specified & AVTAB_OP)) {
+			(cur->key.specified & AVTAB_XPERMS)) {
 		ERR(fp->handle, "Target platform %s does not support ioctl "
-				"operation rules and one was specified",
+				"extended permissions rules and one was specified",
 				policydb_target_strings[p->target_platform]);
 		return POLICYDB_ERROR;
 	}
 
-	if (cur->key.specified & AVTAB_OP) {
-		buf8 = cur->datum.ops->type;
+	if (cur->key.specified & AVTAB_XPERMS) {
+		buf8 = cur->datum.xperms->specified;
 		items = put_entry(&buf8, sizeof(uint8_t),1,fp);
 		if (items != 1)
 			return POLICYDB_ERROR;
-		for (i = 0; i < ARRAY_SIZE(cur->datum.ops->perms); i++)
-			buf32[i] = cpu_to_le32(cur->datum.ops->perms[i]);
+		buf8 = cur->datum.xperms->driver;
+		items = put_entry(&buf8, sizeof(uint8_t),1,fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+		for (i = 0; i < ARRAY_SIZE(cur->datum.xperms->perms); i++)
+			buf32[i] = cpu_to_le32(cur->datum.xperms->perms[i]);
 		items = put_entry(buf32, sizeof(uint32_t),8,fp);
 		if (items != 8)
 			return POLICYDB_ERROR;
@@ -1546,9 +1550,9 @@ static int avrule_write(avrule_t * avrule, struct policy_file *fp)
 	uint32_t buf[32], len;
 	class_perm_node_t *cur;
 
-	if (avrule->specified & AVRULE_OP) {
-		ERR(fp->handle, "module policy does not support ioctl operation"
-				" rules and one was specified");
+	if (avrule->specified & AVRULE_XPERMS) {
+		ERR(fp->handle, "module policy does not support extended"
+				" permissions rules and one was specified");
 		return POLICYDB_ERROR;
 	}
 
