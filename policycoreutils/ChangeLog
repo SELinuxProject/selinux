@@ -1,3 +1,4 @@
+	* sepolicy: Only invoke RPM on RPM-enabled Linux distributions, from Sven Vermeulen.
 	* mcstransd: don't reinvent getpeercon, from Stephen Smalley.
 	* setfiles/restorecon: fix -r/-R option, from Petr Lautrbach.
 	* org.selinux.policy: Require auth_admin_keep for all actions, from Stephen Smalley.
