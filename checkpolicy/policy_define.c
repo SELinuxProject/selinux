@@ -1521,7 +1521,8 @@ int define_compute_type_helper(int which, avrule_t ** rule)
 	ebitmap_node_t *node;
 	avrule_t *avrule;
 	class_perm_node_t *perm;
-	int i, add = 1;
+	uint32_t i;
+	int add = 1;
 
 	avrule = malloc(sizeof(avrule_t));
 	if (!avrule) {
@@ -2745,7 +2746,7 @@ static int dominate_role_recheck(hashtab_key_t key __attribute__ ((unused)),
 	role_datum_t *rdp = (role_datum_t *) arg;
 	role_datum_t *rdatum = (role_datum_t *) datum;
 	ebitmap_node_t *node;
-	int i;
+	uint32_t i;
 
 	/* Don't bother to process against self role */
 	if (rdatum->s.value == rdp->s.value)
