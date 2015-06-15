@@ -1,3 +1,4 @@
+	* switch operations to extended perms, from Jeff Vander Stoep.
 	* policy_define.c: fix compiler warnings, from Nick Kralevich.
 	* Remove uses of -Wno-return-type, from Dan Albert.
 	* Fix -Wreturn-type issues, from Dan Albert.
