@@ -28,7 +28,7 @@ LDLIBS += -L../src -lselinux -L$(LIBDIR)
 
 TARGETS=$(patsubst %.c,%,$(wildcard *.c))
 
-sefcontext_compile: LDLIBS += -lpcre
+sefcontext_compile: LDLIBS += -lpcre ../src/libselinux.a
 
 ifeq ($(DISABLE_AVC),y)
 	UNUSED_TARGETS+=compute_av compute_create compute_member compute_relabel

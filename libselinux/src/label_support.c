@@ -48,7 +48,7 @@ static inline int read_spec_entry(char **entry, char **ptr)
  *
  * This function calls read_spec_entry() to do the actual string processing.
  */
-int read_spec_entries(char *line_buf, int num_args, ...)
+int hidden read_spec_entries(char *line_buf, int num_args, ...)
 {
 	char **spec_entry, *buf_p;
 	int len, rc, items;
