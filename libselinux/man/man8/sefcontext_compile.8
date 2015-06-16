@@ -1,15 +1,56 @@
-.TH "sefcontext_compile" "8" "27 Jun 2013" "dwalsh@redhat.com" "SELinux Command Line documentation"
+.TH "sefcontext_compile" "8" "12 Jun 2015" "dwalsh@redhat.com" "SELinux Command Line documentation"
 .SH "NAME"
 sefcontext_compile \- compile file context regular expression files
 .
 .SH "SYNOPSIS"
-.B sefcontext_compile inputfile
+.B sefcontext_compile
+.RB [ \-o
+.IR outputfile ]
+.I inputfile
 .
 .SH "DESCRIPTION"
-sefcontext_compile is used libsemanage to compile file context regular expressions into prce format.  sefcontext_compile writes the compiled prce file with the .bin suffix appended "inputfile".bin.  This compiled file is used by libselinux file labeling functions.
+.B sefcontext_compile
+is used to compile file context regular expressions into
+.BR prce (3)
+format.
+.sp
+The compiled file is used by libselinux file labeling functions.
+.sp
+By default
+.B sefcontext_compile
+writes the compiled prce file with the
+.B .bin
+suffix appended (e.g. \fIinputfile\fB.bin\fR).
+.SH OPTIONS
+.TP
+.B \-o
+Specify an
+.I outputfile
+that must be a fully qualified file name as the
+.B .bin
+suffix is not automatically added.
+.
+.SH "RETURN VALUE"
+On error -1 is returned.  On success 0 is returned.
 
-.SH "EXAMPLE"
+.SH "EXAMPLES"
+.B Example 1:
+.br
 sefcontext_compile /etc/selinux/targeted/contexts/files/file_contexts
+.sp
+Results in the following file being generated:
+.RS
+/etc/selinux/targeted/contexts/files/file_contexts.bin
+.RE
+.sp
+.B Example 2:
+.br
+sefcontext_compile -o new_fc.bin /etc/selinux/targeted/contexts/files/file_contexts
+.sp
+Results in the following file being generated in the cwd:
+.RS
+new_fc.bin
+.RE
 .
 .SH AUTHOR
 Dan Walsh, <dwalsh@redhat.com>

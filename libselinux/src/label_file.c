@@ -15,13 +15,11 @@
 #include <limits.h>
 #include <stdint.h>
 #include <pcre.h>
-
-#include <linux/limits.h>
-
+#include <unistd.h>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+
 #include "callbacks.h"
 #include "label_internal.h"
 #include "label_file.h"
@@ -72,12 +70,14 @@ static int nodups_specs(struct saved_data *data, const char *path)
 	for (ii = 0; ii < data->nspec; ii++) {
 		curr_spec = &spec_arr[ii];
 		for (jj = ii + 1; jj < data->nspec; jj++) {
-			if ((!strcmp(spec_arr[jj].regex_str, curr_spec->regex_str))
+			if ((!strcmp(spec_arr[jj].regex_str,
+				curr_spec->regex_str))
 			    && (!spec_arr[jj].mode || !curr_spec->mode
 				|| spec_arr[jj].mode == curr_spec->mode)) {
 				rc = -1;
 				errno = EINVAL;
-				if (strcmp(spec_arr[jj].lr.ctx_raw, curr_spec->lr.ctx_raw)) {
+				if (strcmp(spec_arr[jj].lr.ctx_raw,
+					    curr_spec->lr.ctx_raw)) {
 					COMPAT_LOG
 						(SELINUX_ERROR,
 						 "%s: Multiple different specifications for %s  (%s and %s).\n",
@@ -96,136 +96,8 @@ static int nodups_specs(struct saved_data *data, const char *path)
 	return rc;
 }
 
-static int compile_regex(struct saved_data *data, struct spec *spec, const char **errbuf)
-{
-	const char *tmperrbuf;
-	char *reg_buf, *anchored_regex, *cp;
-	struct stem *stem_arr = data->stem_arr;
-	size_t len;
-	int erroff;
-
-	if (spec->regcomp)
-		return 0; /* already done */
-
-	/* Skip the fixed stem. */
-	reg_buf = spec->regex_str;
-	if (spec->stem_id >= 0)
-		reg_buf += stem_arr[spec->stem_id].len;
-
-	/* Anchor the regular expression. */
-	len = strlen(reg_buf);
-	cp = anchored_regex = malloc(len + 3);
-	if (!anchored_regex)
-		return -1;
-
-	/* Create ^...$ regexp.  */
-	*cp++ = '^';
-	cp = mempcpy(cp, reg_buf, len);
-	*cp++ = '$';
-	*cp = '\0';
-
-	/* Compile the regular expression. */
-	spec->regex = pcre_compile(anchored_regex, PCRE_DOTALL, &tmperrbuf, &erroff, NULL);
-	free(anchored_regex);
-	if (!spec->regex) {
-		if (errbuf)
-			*errbuf=tmperrbuf;
-		return -1;
-	}
-
-	spec->sd = pcre_study(spec->regex, 0, &tmperrbuf);
-	if (!spec->sd && tmperrbuf) {
-		if (errbuf)
-			*errbuf=tmperrbuf;
-		return -1;
-	}
-
-	/* Done. */
-	spec->regcomp = 1;
-
-	return 0;
-}
-
-static int process_line(struct selabel_handle *rec,
-			const char *path, const char *prefix,
-			char *line_buf, unsigned lineno)
-{
-	int items, len, rc;
-	char *regex = NULL, *type = NULL, *context = NULL;
-	struct saved_data *data = (struct saved_data *)rec->data;
-	struct spec *spec_arr;
-	unsigned int nspec = data->nspec;
-	const char *errbuf = NULL;
-
-	items = read_spec_entries(line_buf, 3, &regex, &type, &context);
-	if (items <= 0)
-		return items;
-
-	if (items < 2) {
-		COMPAT_LOG(SELINUX_WARNING,
-			    "%s:  line %u is missing fields, skipping\n", path,
-			    lineno);
-		if (items == 1)
-			free(regex);
-		return 0;
-	} else if (items == 2) {
-		/* The type field is optional. */
-		free(context);
-		context = type;
-		type = 0;
-	}
-
-	len = get_stem_from_spec(regex);
-	if (len && prefix && strncmp(prefix, regex, len)) {
-		/* Stem of regex does not match requested prefix, discard. */
-		free(regex);
-		free(type);
-		free(context);
-		return 0;
-	}
-
-	rc = grow_specs(data);
-	if (rc)
-		return rc;
-
-	spec_arr = data->spec_arr;
-
-	/* process and store the specification in spec. */
-	spec_arr[nspec].stem_id = find_stem_from_spec(data, regex);
-	spec_arr[nspec].regex_str = regex;
-	if (rec->validating && compile_regex(data, &spec_arr[nspec], &errbuf)) {
-		COMPAT_LOG(SELINUX_WARNING, "%s:  line %u has invalid regex %s:  %s\n",
-			   path, lineno, regex, (errbuf ? errbuf : "out of memory"));
-	}
-
-	/* Convert the type string to a mode format */
-	spec_arr[nspec].type_str = type;
-	spec_arr[nspec].mode = 0;
-	if (type) {
-		mode_t mode = string_to_mode(type);
-		if (mode == (mode_t)-1) {
-			COMPAT_LOG(SELINUX_WARNING, "%s:  line %u has invalid file type %s\n",
-				   path, lineno, type);
-			mode = 0;
-		}
-		spec_arr[nspec].mode = mode;
-	}
-
-	spec_arr[nspec].lr.ctx_raw = context;
-
-	/* Determine if specification has
-	 * any meta characters in the RE */
-	spec_hasMetaChars(&spec_arr[nspec]);
-
-	if (strcmp(context, "<<none>>") && rec->validating)
-		compat_validate(rec, &spec_arr[nspec].lr, path, lineno);
-
-	data->nspec = ++nspec;
-
-	return 0;
-}
-
-static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *sb)
+static int load_mmap(struct selabel_handle *rec, const char *path,
+						    struct stat *sb)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	char mmap_path[PATH_MAX + 1];
@@ -255,12 +127,6 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 
 	/* if mmap is old, ignore it */
 	if (mmap_stat.st_mtime < sb->st_mtime) {
-		close(mmapfd);
-		return -1;
-	}
-
-	if (mmap_stat.st_mtime == sb->st_mtime &&
-	    mmap_stat.st_mtim.tv_nsec < sb->st_mtim.tv_nsec) {
 		close(mmapfd);
 		return -1;
 	}
@@ -460,7 +326,7 @@ static int load_mmap(struct selabel_handle *rec, const char *path, struct stat *
 		if (rc < 0)
 			goto err;
 
-		if (stem_id < 0 || stem_id >= stem_map_len)
+		if (stem_id < 0 || stem_id >= (int32_t)stem_map_len)
 			spec->stem_id = -1;
 		 else
 			spec->stem_id = stem_map[stem_id];
@@ -520,19 +386,21 @@ err:
 	return rc;
 }
 
-static int process_file(const char *path, const char *suffix, struct selabel_handle *rec, const char *prefix)
+static int process_file(const char *path, const char *suffix,
+			  struct selabel_handle *rec, const char *prefix)
 {
 	FILE *fp;
 	struct stat sb;
 	unsigned int lineno;
-	size_t line_len;
+	size_t line_len = 0;
 	char *line_buf = NULL;
 	int rc;
 	char stack_path[PATH_MAX + 1];
 
 	/* append the path suffix if we have one */
 	if (suffix) {
-		rc = snprintf(stack_path, sizeof(stack_path), "%s.%s", path, suffix);
+		rc = snprintf(stack_path, sizeof(stack_path),
+					    "%s.%s", path, suffix);
 		if (rc >= (int)sizeof(stack_path)) {
 			errno = ENAMETOOLONG;
 			return -1;
@@ -563,13 +431,13 @@ static int process_file(const char *path, const char *suffix, struct selabel_han
 	while (getline(&line_buf, &line_len, fp) > 0) {
 		rc = process_line(rec, path, prefix, line_buf, ++lineno);
 		if (rc)
-			return rc;
+			goto out;
 	}
+
 out:
 	free(line_buf);
 	fclose(fp);
-
-	return 0;
+	return rc;
 }
 
 static int init(struct selabel_handle *rec, struct selinux_opt *opts,
@@ -609,7 +477,7 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 
 	rec->spec_file = strdup(path);
 
-	/* 
+	/*
 	 * The do detailed validation of the input and fill the spec array
 	 */
 	status = process_file(path, NULL, rec, prefix);
@@ -634,7 +502,6 @@ static int init(struct selabel_handle *rec, struct selinux_opt *opts,
 
 	status = sort_specs(data);
 
-	status = 0;
 finish:
 	if (status)
 		free(data->spec_arr);
@@ -731,7 +598,7 @@ static struct spec *lookup_common(struct selabel_handle *rec,
 	if (partial)
 		pcre_options |= PCRE_PARTIAL_SOFT;
 
-	/* 
+	/*
 	 * Check for matching specifications in reverse order, so that
 	 * the last matching specification is used.
 	 */
