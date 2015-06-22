@@ -1,3 +1,7 @@
+	* Added CIL bounds checking and refactored CIL Neverallow checking, from James Carter
+	* Refactored libsepol Neverallow and bounds (hierarchy) checking, from James Carter
+	* Treat types like an attribute in the attr_type_map, from James Carter
+	* Add new ebitmap function named ebitmap_match_any(), from James Carter
 	* switch operations to extended perms, from Jeff Vander Stoep.
 	* Write auditadm_r and secadm_r roles to base module when writing CIL, from Steve Lawrence
 	* Fix module to CIL to only associate declared roleattributes with in-scope types, from Steve Lawrence
