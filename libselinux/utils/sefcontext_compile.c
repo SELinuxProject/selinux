@@ -35,6 +35,7 @@ static int process_file(struct selabel_handle *rec, const char *filename)
 	}
 
 	line_num = 0;
+	rc = 0;
 	while (getline(&line_buf, &line_len, context_file) > 0) {
 		rc = process_line(rec, filename, prefix, line_buf, ++line_num);
 		if (rc)

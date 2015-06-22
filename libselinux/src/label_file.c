@@ -425,9 +425,10 @@ static int process_file(const char *path, const char *suffix,
 		goto out;
 
 	/*
-	 * The do detailed validation of the input and fill the spec array
+	 * Then do detailed validation of the input and fill the spec array
 	 */
 	lineno = 0;
+	rc = 0;
 	while (getline(&line_buf, &line_len, fp) > 0) {
 		rc = process_line(rec, path, prefix, line_buf, ++lineno);
 		if (rc)
