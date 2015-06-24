@@ -1435,7 +1435,7 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 	int in_fd = -1;
 	char *path = NULL;
 	char *filename;
-	char *lang_ext;
+	char *lang_ext = NULL;
 	char *separator;
 
 	if ((in_fd = open(install_filename, O_RDONLY)) == -1) {
@@ -1467,17 +1467,20 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 			goto cleanup;
 		}
 		*separator = '\0';
+		lang_ext = separator + 1;
 	}
 
 	separator = strrchr(filename, '.');
 	if (separator == NULL) {
-		ERR(sh, "Module does not have a valid extension.");
-		retval = -1;
-		goto cleanup;
+		if (lang_ext == NULL) {
+			ERR(sh, "Module does not have a valid extension.");
+			retval = -1;
+			goto cleanup;
+		}
+	} else {
+		*separator = '\0';
+		lang_ext = separator + 1;
 	}
-	*separator = '\0';
-
-	lang_ext = separator + 1;
 
 	retval = semanage_direct_install(sh, data, data_len, filename, lang_ext);
 
