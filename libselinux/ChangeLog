@@ -1,3 +1,4 @@
+	* Fix if file_contexts not '\n' terminated, from Richard Haines.
 	* Enhance file context support, from Richard Haines.
 	* Fix property processing and cleanup formatting, from Richard Haines.
 	* Add read_spec_entries function to replace sscanf, from Richard Haines.
