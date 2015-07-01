@@ -148,6 +148,7 @@ static inline void spec_hasMetaChars(struct spec *spec)
 	end = c + len;
 
 	spec->hasMetaChars = 0;
+	spec->prefix_len = len;
 
 	/* Look at each character in the RE specification string for a
 	 * meta character. Return when any meta character reached. */
@@ -164,6 +165,7 @@ static inline void spec_hasMetaChars(struct spec *spec)
 		case '(':
 		case '{':
 			spec->hasMetaChars = 1;
+			spec->prefix_len = c - spec->regex_str;
 			return;
 		case '\\':	/* skip the next character */
 			c++;
