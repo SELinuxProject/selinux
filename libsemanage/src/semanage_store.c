@@ -110,10 +110,12 @@ static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"/disable_dontaudit",
 	"/preserve_tunables",
 	"/modules/disabled",
+	"/policy.kern",
+	"/file_contexts.local"
 };
 
 static char const * const semanage_final_prefix[SEMANAGE_FINAL_NUM] = {
-	"/tmp",
+	"/final",
 	"",
 };
 
@@ -943,9 +945,7 @@ int semanage_make_final(semanage_handle_t *sh)
 		goto cleanup;
 	}
 
-	/* Copy in exported databases.
-	 * i = 1 to avoid copying the top level directory.
-	 */
+	// Build final directory structure
 	int i;
 	for (i = 1; i < SEMANAGE_FINAL_PATH_NUM; i++) {
 		if (strlen(semanage_final_path(SEMANAGE_FINAL_TMP, i)) >= sizeof(fn)) {
@@ -959,12 +959,6 @@ int semanage_make_final(semanage_handle_t *sh)
 			status = -1;
 			goto cleanup;
 		}
-
-		semanage_copy_file(
-			semanage_final_path(SEMANAGE_FINAL_SELINUX, i),
-			semanage_final_path(SEMANAGE_FINAL_TMP, i),
-			sh->conf->file_mode);
-		/* ignore errors, these files may not exist */
 	}
 
 cleanup:
@@ -2019,8 +2013,7 @@ int semanage_read_policydb(semanage_handle_t * sh, sepol_policydb_t * in)
 	FILE *infile = NULL;
 
 	if ((kernel_filename =
-	     semanage_final_path(SEMANAGE_FINAL_SELINUX,
-				 SEMANAGE_KERNEL)) == NULL) {
+	     semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_KERNEL)) == NULL) {
 		goto cleanup;
 	}
 	if ((infile = fopen(kernel_filename, "r")) == NULL) {
@@ -2061,7 +2054,7 @@ int semanage_write_policydb(semanage_handle_t * sh, sepol_policydb_t * out)
 	FILE *outfile = NULL;
 
 	if ((kernel_filename =
-	     semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_KERNEL)) == NULL) {
+	     semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL)) == NULL) {
 		goto cleanup;
 	}
 	if ((outfile = fopen(kernel_filename, "wb")) == NULL) {
@@ -2920,4 +2913,40 @@ int semanage_nc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 	semanage_nc_destroy_ruletab(ruletab);
 
 	return 0;
+}
+
+int semanage_copy_policydb(semanage_handle_t *sh)
+{
+	const char *src = NULL;
+	const char *dst = NULL;
+	int rc = -1;
+
+	src = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL);
+	dst = semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_KERNEL);
+
+	rc = semanage_copy_file(src, dst, sh->conf->file_mode);
+	if (rc != 0) {
+		goto cleanup;
+	}
+
+cleanup:
+	return rc;
+}
+
+int semanage_copy_fc_local(semanage_handle_t *sh)
+{
+	const char *src = NULL;
+	const char *dst = NULL;
+	int rc = -1;
+
+	src = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL);
+	dst = semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_LOCAL);
+
+	rc = semanage_copy_file(src, dst, sh->conf->file_mode);
+	if (rc != 0) {
+		goto cleanup;
+	}
+
+cleanup:
+	return rc;
 }

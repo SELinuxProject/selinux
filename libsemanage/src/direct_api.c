@@ -196,10 +196,8 @@ int semanage_direct_connect(semanage_handle_t * sh)
 		goto err;
 
 	if (fcontext_file_dbase_init(sh,
-				     semanage_final_path(SEMANAGE_FINAL_SELINUX,
-							 SEMANAGE_FC_LOCAL),
-				     semanage_final_path(SEMANAGE_FINAL_TMP,
-							 SEMANAGE_FC_LOCAL),
+				     semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_FC_LOCAL),
+				     semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL),
 				     semanage_fcontext_dbase_local(sh)) < 0)
 		goto err;
 
@@ -1041,7 +1039,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	size_t fc_buffer_len = 0;
 	const char *ofilename = NULL;
 	const char *path;
-	int retval = -1, num_modinfos = 0, i;
+	int retval = -1, num_modinfos = 0, i, missing_policy_kern = 0;
 	sepol_policydb_t *out = NULL;
 	struct cil_db *cildb = NULL;
 	semanage_module_info_t *modinfos = NULL;
@@ -1143,8 +1141,20 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	modified |= dontaudit_modified;
 	modified |= preserve_tunables_modified;
 
+	/* This is for systems that have already migrated with an older version
+	 * of semanage_migrate_store. The older version did not copy policy.kern so
+	 * the policy binary must be rebuilt here.
+	 */
+	if (!sh->do_rebuild && !modified) {
+		path = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL);
+
+		if (access(path, F_OK) != 0) {
+			missing_policy_kern = 1;
+		}
+	}
+
 	/* If there were policy changes, or explicitly requested, rebuild the policy */
-	if (sh->do_rebuild || modified) {
+	if (sh->do_rebuild || modified || missing_policy_kern) {
 		/* =================== Module expansion =============== */
 
 		retval = semanage_get_active_modules(sh, &modinfos, &num_modinfos);
@@ -1301,6 +1311,17 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	retval = semanage_commit_components(sh);
 	if (retval < 0)
 		goto cleanup;
+
+	retval = semanage_copy_policydb(sh);
+	if (retval < 0)
+		goto cleanup;
+
+	path = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL);
+	if (access(path, F_OK) == 0) {
+		retval = semanage_copy_fc_local(sh);
+		if (retval < 0)
+			goto cleanup;
+	}
 
 	/* run genhomedircon if its enabled, this should be the last operation
 	 * which requires the out policydb */

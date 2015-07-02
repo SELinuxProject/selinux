@@ -51,10 +51,8 @@ int iface_policydb_dbase_init(semanage_handle_t * handle,
 {
 
 	if (dbase_policydb_init(handle,
-				semanage_final_path(SEMANAGE_FINAL_SELINUX,
-						    SEMANAGE_KERNEL),
-				semanage_final_path(SEMANAGE_FINAL_TMP,
-						    SEMANAGE_KERNEL),
+				semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_KERNEL),
+				semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
 				&SEMANAGE_IFACE_RTABLE,
 				&SEMANAGE_IFACE_POLICYDB_RTABLE,
 				&dconfig->dbase) < 0)
