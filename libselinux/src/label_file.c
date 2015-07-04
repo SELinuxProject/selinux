@@ -261,7 +261,7 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 	for (i = 0; i < regex_array_len; i++) {
 		struct spec *spec;
 		int32_t stem_id, meta_chars;
-		uint32_t mode = 0;
+		uint32_t mode = 0, prefix_len = 0;
 
 		rc = grow_specs(data);
 		if (rc < 0)
@@ -337,6 +337,15 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 			goto err;
 
 		spec->hasMetaChars = meta_chars;
+		/* and prefix length for use by selabel_lookup_best_match */
+		if (version >= SELINUX_COMPILED_FCONTEXT_PREFIX_LEN) {
+			rc = next_entry(&prefix_len, mmap_area,
+					    sizeof(uint32_t));
+			if (rc < 0)
+				goto err;
+
+			spec->prefix_len = prefix_len;
+		}
 
 		/* Process regex and study_data entries */
 		rc = next_entry(&entry_len, mmap_area, sizeof(uint32_t));

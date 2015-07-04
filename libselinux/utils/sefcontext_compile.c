@@ -68,6 +68,7 @@ out:
  *	       mode_t for <= SELINUX_COMPILED_FCONTEXT_PCRE_VERS
  *	s32  - stemid associated with the regex
  *	u32  - spec has meta characters
+ *	u32  - The specs prefix_len if >= SELINUX_COMPILED_FCONTEXT_PREFIX_LEN
  *	u32  - data length of the pcre regex
  *	char - a bufer holding the raw pcre regex info
  *	u32  - data length of the pcre regex study daya
@@ -141,6 +142,7 @@ static int write_binary_file(struct saved_data *data, int fd)
 		char *context = specs[i].lr.ctx_raw;
 		char *regex_str = specs[i].regex_str;
 		mode_t mode = specs[i].mode;
+		size_t prefix_len = specs[i].prefix_len;
 		int32_t stem_id = specs[i].stem_id;
 		pcre *re = specs[i].regex;
 		pcre_extra *sd = get_pcre_extra(&specs[i]);
@@ -182,6 +184,12 @@ static int write_binary_file(struct saved_data *data, int fd)
 
 		/* does this spec have a metaChar? */
 		to_write = specs[i].hasMetaChars;
+		len = fwrite(&to_write, sizeof(to_write), 1, bin_file);
+		if (len != 1)
+			goto err;
+
+		/* For SELINUX_COMPILED_FCONTEXT_PREFIX_LEN */
+		to_write = prefix_len;
 		len = fwrite(&to_write, sizeof(to_write), 1, bin_file);
 		if (len != 1)
 			goto err;
