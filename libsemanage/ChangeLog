@@ -1,3 +1,4 @@
+	* Add policy binary and file_contexts.local to the store, from Yuli Khodorkovskiy.
 	* Allow to install compressed modules without a compression extension,
 	  from Petr Lautrbach.
 	* Do not copy contexts in semanage_migrate_store, from Jason Zaman.
