@@ -1,3 +1,4 @@
+	* Fix file labels for regexes with metachars, from Jeff Vander Stoep.
 	* Fix if file_contexts not '\n' terminated, from Richard Haines.
 	* Enhance file context support, from Richard Haines.
 	* Fix property processing and cleanup formatting, from Richard Haines.
