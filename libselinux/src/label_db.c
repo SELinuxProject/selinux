@@ -234,7 +234,8 @@ db_stats(struct selabel_handle *rec)
  * selabel_open() handler
  */
 static catalog_t *
-db_init(struct selinux_opt *opts, unsigned nopts, struct selabel_handle *rec)
+db_init(const struct selinux_opt *opts, unsigned nopts,
+			    struct selabel_handle *rec)
 {
 	catalog_t      *catalog;
 	FILE	       *filp;
@@ -332,7 +333,7 @@ out_error:
  * Initialize selabel_handle and load the entries of specfile
  */
 int selabel_db_init(struct selabel_handle *rec,
-		    struct selinux_opt *opts, unsigned nopts)
+		    const struct selinux_opt *opts, unsigned nopts)
 {
 	rec->func_close = &db_close;
 	rec->func_lookup = &db_lookup;

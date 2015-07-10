@@ -69,7 +69,8 @@ struct selabel_handle;
  * @errno set on failure.
  */
 struct selabel_handle *selabel_open(unsigned int backend,
-				    struct selinux_opt *opts, unsigned nopts);
+				    const struct selinux_opt *opts,
+				    unsigned nopts);
 
 /**
  * selabel_close - Close a labeling handle.

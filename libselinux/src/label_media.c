@@ -67,7 +67,7 @@ static int process_line(const char *path, char *line_buf, int pass,
 	return 0;
 }
 
-static int init(struct selabel_handle *rec, struct selinux_opt *opts,
+static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		unsigned n)
 {
 	FILE *fp;
@@ -201,8 +201,9 @@ static void stats(struct selabel_handle *rec)
 		  data->nspec, total);
 }
 
-int selabel_media_init(struct selabel_handle *rec, struct selinux_opt *opts,
-		       unsigned nopts)
+int selabel_media_init(struct selabel_handle *rec,
+				    const struct selinux_opt *opts,
+				    unsigned nopts)
 {
 	struct saved_data *data;
 

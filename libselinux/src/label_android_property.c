@@ -135,7 +135,7 @@ static int process_line(struct selabel_handle *rec,
 	return 0;
 }
 
-static int init(struct selabel_handle *rec, struct selinux_opt *opts,
+static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		unsigned n)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
@@ -278,7 +278,7 @@ static void stats(struct selabel_handle __attribute__((unused)) *rec)
 }
 
 int selabel_property_init(struct selabel_handle *rec,
-			  struct selinux_opt *opts,
+			  const struct selinux_opt *opts,
 			  unsigned nopts)
 {
 	struct saved_data *data;
