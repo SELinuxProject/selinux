@@ -1,3 +1,4 @@
+	* Use /proc/thread-self when available, from Stephen Smalley.
 	* Add const to selinux_opt for label backends, from Richard Haines.
 	* Fix binary file labels for regexes with metachars, from Richard Haines.
 	* Fix file labels for regexes with metachars, from Jeff Vander Stoep.
