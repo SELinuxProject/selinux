@@ -575,6 +575,7 @@ class loginRecords(semanageRecords):
 
 		if sename != "":
 			semanage_seuser_set_sename(self.sh, u, sename)
+                        self.sename = sename
 		else:
 			self.sename = self.oldsename
 			
