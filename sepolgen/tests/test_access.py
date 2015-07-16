@@ -72,8 +72,10 @@ class TestAccessVector(unittest.TestCase):
         self.assertEqual(l[0], "foo")
         self.assertEqual(l[1], "bar")
         self.assertEqual(l[2], "file")
-        self.assertEqual(l[3], "read")
-        self.assertEqual(l[4], "write")
+        perms = l[3:]
+        perms.sort()
+        self.assertEqual(perms[0], "read")
+        self.assertEqual(perms[1], "write")
 
     def test_to_string(self):
         a = access.AccessVector()
@@ -82,8 +84,21 @@ class TestAccessVector(unittest.TestCase):
         a.obj_class = "file"
         a.perms.update(["read", "write"])
 
-        self.assertEqual(str(a), "allow foo bar:file { read write };")
-        self.assertEqual(a.to_string(), "allow foo bar:file { read write };")
+        first, second = str(a).split(':')
+        self.assertEqual(first, "allow foo bar")
+        second = second.split(' ')
+        second.sort()
+        expected = "file { read write };".split(' ')
+        expected.sort()
+        self.assertEqual(second, expected)
+
+        first, second = a.to_string().split(':')
+        self.assertEqual(first, "allow foo bar")
+        second = second.split(' ')
+        second.sort()
+        expected = "file { read write };".split(' ')
+        expected.sort()
+        self.assertEqual(second, expected)
 
     def test_cmp(self):
         a = access.AccessVector()
@@ -127,11 +142,9 @@ class TestAccessVector(unittest.TestCase):
 
         b.perms = refpolicy.IdSet(["read", "write", "append"])
         self.assertNotEqual(a, b)
-        self.assertTrue(a < b)
 
         b.perms = refpolicy.IdSet(["read", "append"])
         self.assertNotEqual(a, b)
-        self.assertTrue(a > b)
                          
 class TestUtilFunctions(unittest.TestCase):
     def test_is_idparam(self):
@@ -227,15 +240,22 @@ class TestAccessVectorSet(unittest.TestCase):
         a.add("what", "bar", "file", refpolicy.IdSet(["read", "write"]))
 
         avl = a.to_list()
+        avl.sort()
 
         test_l = [['what','bar','file','read','write'],
                   ['$1','foo','file','read','write'],
                   ['$1','bar','file','read','write']]
+        test_l.sort()
 
         for a,b in zip(test_l, avl):
             self.assertEqual(len(a), len(b))
-            for x,y in zip(a,b):
+            for x,y in list(zip(a,b))[:3]:
                 self.assertEqual(x, y)
+            perms1 = a[3:]
+            perms2 = b[3:]
+            perms1.sort()
+            perms2.sort()
+            self.assertEqual(perms1, perms2)
                 
         b = access.AccessVectorSet()
         b.from_list(avl)

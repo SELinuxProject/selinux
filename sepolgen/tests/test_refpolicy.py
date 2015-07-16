@@ -24,7 +24,11 @@ import selinux
 class TestIdSet(unittest.TestCase):
     def test_set_to_str(self):
         s = refpolicy.IdSet(["read", "write", "getattr"])
-        self.assertEqual(s.to_space_str(), "{ read write getattr }")
+        s = s.to_space_str().split(' ')
+        s.sort()
+        expected = "{ read write getattr }".split(' ')
+        expected.sort()
+        self.assertEqual(s, expected)
         s = refpolicy.IdSet()
         s.add("read")
         self.assertEqual(s.to_space_str(), "read")
@@ -100,8 +104,11 @@ class TestAVRule(unittest.TestCase):
         a.obj_classes.add("lnk_file")
         a.perms.add("write")
         # This test might need to go because set ordering is not guaranteed
-        self.assertEqual(a.to_string(),
-                          "dontaudit { foo_t user_t } { user_home_t bar_t }:{ lnk_file file } { read write };")
+        a = a.to_string().split(' ')
+        a.sort()
+        b = "dontaudit { foo_t user_t } { user_home_t bar_t }:{ lnk_file file } { read write };".split(' ')
+        b.sort()
+        self.assertEqual(a, b)
 
 class TestTypeRule(unittest.TestCase):
     def test_init(self):
