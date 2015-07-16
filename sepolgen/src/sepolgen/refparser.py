@@ -34,12 +34,11 @@ import os
 import re
 import traceback
 
-import refpolicy
-import access
-import defaults
-
-import lex
-import yacc
+from . import access
+from . import defaults
+from . import lex
+from . import refpolicy
+from . import yacc
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #
@@ -1041,7 +1040,7 @@ def list_headers(root):
 
 
 def parse_headers(root, output=None, expand=True, debug=False):
-    import util
+    from . import util
 
     headers = refpolicy.Headers()
 

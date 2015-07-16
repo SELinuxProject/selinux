@@ -52,7 +52,7 @@ def t_error(t):
     print "Illegal character '%s'" % t.value[0]
     t.skip(1)
 
-import lex
+from . import lex
 lex.lex()
 
 def p_statements(p):
@@ -92,7 +92,7 @@ def p_names(p):
 def p_error(p):
     print "Syntax error on line %d %s [type=%s]" % (p.lineno, p.value, p.type)
     
-import yacc
+from . import yacc
 yacc.yacc()
 
 

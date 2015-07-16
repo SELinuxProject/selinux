@@ -21,9 +21,11 @@
 Classes and algorithms for matching requested access to access vectors.
 """
 
-import access
-import objectmodel
 import itertools
+
+from . import access
+from . import objectmodel
+
 
 class Match:
     def __init__(self, interface=None, dist=0):

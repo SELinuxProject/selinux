@@ -22,10 +22,6 @@ Utilities for dealing with the compilation of modules and creation
 of module tress.
 """
 
-import defaults
-
-import selinux
-
 import re
 import tempfile
 import commands
@@ -33,6 +29,11 @@ import os
 import os.path
 import subprocess
 import shutil
+
+import selinux
+
+from . import defaults
+
 
 def is_valid_name(modname):
     """Check that a module name is valid.

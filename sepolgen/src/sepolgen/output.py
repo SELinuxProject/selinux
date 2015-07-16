@@ -27,8 +27,8 @@ generating policy. This keeps the semantic / syntactic issues
 cleanly separated from the formatting issues.
 """
 
-import refpolicy
-import util
+from . import refpolicy
+from . import util
 
 class ModuleWriter:
     def __init__(self):

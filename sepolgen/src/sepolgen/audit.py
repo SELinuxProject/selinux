@@ -17,11 +17,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 
-import refpolicy
-import access
 import re
 import sys
 
+from . import refpolicy
+from . import access
 # Convenience functions
 
 def get_audit_boot_msgs():

@@ -31,7 +31,8 @@ and sets of that access (AccessVectorSet). These objects are used in Madison
 in a variety of ways, but they are the fundamental representation of access.
 """
 
-import refpolicy
+from . import refpolicy
+
 from selinux import audit2why
 
 def is_idparam(id):

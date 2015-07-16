@@ -190,7 +190,7 @@ class Parser:
 
         # If no lexer was given, we will try to use the lex module
         if not lexer:
-            import lex
+            from . import lex
             lexer = lex.lexer
 
         pslice.lexer = lexer

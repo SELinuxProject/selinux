@@ -21,15 +21,15 @@
 Classes for representing and manipulating interfaces.
 """
 
-import access
-import refpolicy
-import itertools
-import objectmodel
-import matching
-
-from sepolgeni18n import _
-
 import copy
+import itertools
+
+from . import access
+from . import refpolicy
+from . import objectmodel
+from . import matching
+from .sepolgeni18n import _
+
 
 class Param:
     """

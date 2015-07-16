@@ -24,17 +24,17 @@ classes and algorithms for the generation of SELinux policy.
 import itertools
 import textwrap
 
-import refpolicy
-import objectmodel
-import access
-import interfaces
-import matching
 import selinux.audit2why as audit2why
 try:
     from setools import *
 except:
     pass
 
+from . import refpolicy
+from . import objectmodel
+from . import access
+from . import interfaces
+from . import matching
 # Constants for the level of explanation from the generation
 # routines
 NO_EXPLANATION    = 0
