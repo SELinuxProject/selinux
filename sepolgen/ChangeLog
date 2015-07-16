@@ -1,3 +1,4 @@
+	* Add support for python3, from Robert Kuska.
 	* Add device tree ocontext nodes to Xen policy, from Daniel De Graaf.
 
 1.2.2 2015-02-02
