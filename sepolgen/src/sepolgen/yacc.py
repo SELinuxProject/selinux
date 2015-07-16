@@ -457,11 +457,11 @@ def validate_dict(d):
 
         if n[0:2] == 'p_':
             sys.stderr.write("yacc: Warning. '%s' not defined as a function\n" % n)
-        if 1 and isinstance(v,types.FunctionType) and v.func_code.co_argcount == 1:
+        if 1 and isinstance(v,types.FunctionType) and v.__code__.co_argcount == 1:
             try:
                 doc = v.__doc__.split(" ")
                 if doc[1] == ':':
-                    sys.stderr.write("%s:%d: Warning. Possible grammar rule '%s' defined without p_ prefix.\n" % (v.func_code.co_filename, v.func_code.co_firstlineno,n))
+                    sys.stderr.write("%s:%d: Warning. Possible grammar rule '%s' defined without p_ prefix.\n" % (v.__code__.co_filename, v.__code__.co_firstlineno,n))
             except StandardError:
                 pass
 
@@ -722,8 +722,8 @@ def add_production(f,file,line,prodname,syms):
 # and adds rules to the grammar
 
 def add_function(f):
-    line = f.func_code.co_firstlineno
-    file = f.func_code.co_filename
+    line = f.__code__.co_firstlineno
+    file = f.__code__.co_filename
     error = 0
 
     if isinstance(f,types.MethodType):
@@ -731,11 +731,11 @@ def add_function(f):
     else:
         reqdargs = 1
         
-    if f.func_code.co_argcount > reqdargs:
+    if f.__code__.co_argcount > reqdargs:
         sys.stderr.write("%s:%d: Rule '%s' has too many arguments.\n" % (file,line,f.__name__))
         return -1
 
-    if f.func_code.co_argcount < reqdargs:
+    if f.__code__.co_argcount < reqdargs:
         sys.stderr.write("%s:%d: Rule '%s' requires an argument.\n" % (file,line,f.__name__))
         return -1
           
@@ -2079,11 +2079,11 @@ def yacc(method=default_lr, debug=yaccdebug, module=None, tabmodule=tab_module, 
                 ismethod = 1
             else:
                 raise YaccError,"'p_error' defined, but is not a function or method."                
-            eline = ef.func_code.co_firstlineno
-            efile = ef.func_code.co_filename
+            eline = ef.__code__.co_firstlineno
+            efile = ef.__code__.co_filename
             files[efile] = None
 
-            if (ef.func_code.co_argcount != 1+ismethod):
+            if (ef.__code__.co_argcount != 1+ismethod):
                 raise YaccError,"%s:%d: p_error() requires 1 argument." % (efile,eline)
             global Errorfunc
             Errorfunc = ef
@@ -2100,14 +2100,14 @@ def yacc(method=default_lr, debug=yaccdebug, module=None, tabmodule=tab_module, 
             raise YaccError,"no rules of the form p_rulename are defined."
     
         # Sort the symbols by line number
-        symbols.sort(lambda x,y: cmp(x.func_code.co_firstlineno,y.func_code.co_firstlineno))
+        symbols.sort(lambda x,y: cmp(x.__code__.co_firstlineno,y.__code__.co_firstlineno))
 
         # Add all of the symbols to the grammar
         for f in symbols:
             if (add_function(f)) < 0:
                 error += 1
             else:
-                files[f.func_code.co_filename] = None
+                files[f.__code__.co_filename] = None
 
         # Make a signature of the docstrings
         for f in symbols:

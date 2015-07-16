@@ -301,7 +301,7 @@ class Lexer:
                 if not self.lexoptimize:
                     if not self.lextokens.has_key(newtok.type):
                         raise LexError, ("%s:%d: Rule '%s' returned an unknown token type '%s'" % (
-                            func.func_code.co_filename, func.func_code.co_firstlineno,
+                            func.__code__.co_filename, func.__code__.co_firstlineno,
                             func.__name__, newtok.type),lexdata[lexpos:])
 
                 return newtok
@@ -635,7 +635,7 @@ def lex(module=None,object=None,debug=0,optimize=0,lextab="lextab",reflags=0,now
 
     # Sort the functions by line number
     for f in funcsym.values():
-        f.sort(lambda x,y: cmp(x[1].func_code.co_firstlineno,y[1].func_code.co_firstlineno))
+        f.sort(lambda x,y: cmp(x[1].__code__.co_firstlineno,y[1].__code__.co_firstlineno))
 
     # Sort the strings by regular expression length
     for s in strsym.values():
@@ -649,15 +649,15 @@ def lex(module=None,object=None,debug=0,optimize=0,lextab="lextab",reflags=0,now
 
         # Add rules defined by functions first
         for fname, f in funcsym[state]:
-            line = f.func_code.co_firstlineno
-            file = f.func_code.co_filename
+            line = f.__code__.co_firstlineno
+            file = f.__code__.co_filename
             files[file] = None
             tokname = toknames[fname]
 
             ismethod = isinstance(f, types.MethodType)
 
             if not optimize:
-                nargs = f.func_code.co_argcount
+                nargs = f.__code__.co_argcount
                 if ismethod:
                     reqargs = 2
                 else:
