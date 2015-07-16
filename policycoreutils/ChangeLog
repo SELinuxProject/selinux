@@ -1,4 +1,4 @@
-	* semanage: Set self.sename to sename after calling semanage_seuser_set_sename(), from Laurent Bigonville <bigon@debian.org>.
+	* semanage: Set self.sename to sename after calling semanage_seuser_set_sename(), from Laurent Bigonville.
 	* semanage: Fix typo in semanage args for minimium policy store, from Petr Lautrbach.
 	* sepolicy: Only invoke RPM on RPM-enabled Linux distributions, from Sven Vermeulen.
 	* mcstransd: don't reinvent getpeercon, from Stephen Smalley.
