@@ -33,15 +33,15 @@ class TestMatch(unittest.TestCase):
         b.dist = 100
         b.info_dir_change = True
 
-        self.assertEquals(a, b)
+        self.assertEqual(a, b)
         b.info_dir_change = False
-        self.assertEquals(cmp(a, b), 1)
-        self.assertEquals(cmp(b, a), -1)
+        self.assertTrue((a > b))
+        self.assertTrue((b < a))
 
         b.dist = 200
 
-        self.assertEquals(cmp(a, b), -1)
-        self.assertEquals(cmp(b, a), 1)
+        self.assertTrue((a < b))
+        self.assertTrue((b > a))
 
 class TestMatchList(unittest.TestCase):
     def test_append(self):
@@ -90,7 +90,7 @@ class TestMatchList(unittest.TestCase):
         for x, y in zip(l, ml):
             self.assertEqual(x, y)
 
-        self.assertEquals(ml.best(), c)
+        self.assertEqual(ml.best(), c)
 
 
 test_expansion = """

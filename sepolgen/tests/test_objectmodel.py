@@ -27,18 +27,18 @@ class TestInfoFlow(unittest.TestCase):
         info.from_file(fd)
 
         pm = info.get("filesystem", "mount")
-        self.assertEquals(pm.perm, "mount")
-        self.assertEquals(pm.dir, sepolgen.objectmodel.FLOW_WRITE)
-        self.assertEquals(pm.weight, 1)
+        self.assertEqual(pm.perm, "mount")
+        self.assertEqual(pm.dir, sepolgen.objectmodel.FLOW_WRITE)
+        self.assertEqual(pm.weight, 1)
 
         self.assertRaises(KeyError, info.get, "filesystem", "foo")
 
         pm = info.getdefault("filesystem", "foo")
-        self.assertEquals(pm.perm, "foo")
-        self.assertEquals(pm.dir, sepolgen.objectmodel.FLOW_BOTH)
-        self.assertEquals(pm.weight, 5)
+        self.assertEqual(pm.perm, "foo")
+        self.assertEqual(pm.dir, sepolgen.objectmodel.FLOW_BOTH)
+        self.assertEqual(pm.weight, 5)
 
         pm = info.getdefault("foo", "bar")
-        self.assertEquals(pm.perm, "bar")
-        self.assertEquals(pm.dir, sepolgen.objectmodel.FLOW_BOTH)
-        self.assertEquals(pm.weight, 5)
+        self.assertEqual(pm.perm, "bar")
+        self.assertEqual(pm.dir, sepolgen.objectmodel.FLOW_BOTH)
+        self.assertEqual(pm.weight, 5)

@@ -107,12 +107,12 @@ class TestParser(unittest.TestCase):
         h = refparser.parse(interface_example)
         #print ""
         #refpolicy.print_tree(h)
-        #self.assertEquals(len(h.interfaces), 3)
+        #self.assertEqual(len(h.interfaces), 3)
 
         name = "files_search_usr"
         #i = h.interfaces[name]
-        #self.assertEquals(i.name, name)
-        #self.assertEquals(len(i.rules), 1)
+        #self.assertEqual(i.name, name)
+        #self.assertEqual(len(i.rules), 1)
         #rule = i.rules[0]
         #self.assertTrue(isinstance(rule, refpolicy.AVRule))
         

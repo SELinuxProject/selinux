@@ -24,10 +24,10 @@ import selinux
 class TestIdSet(unittest.TestCase):
     def test_set_to_str(self):
         s = refpolicy.IdSet(["read", "write", "getattr"])
-        self.assertEquals(s.to_space_str(), "{ read write getattr }")
+        self.assertEqual(s.to_space_str(), "{ read write getattr }")
         s = refpolicy.IdSet()
         s.add("read")
-        self.assertEquals(s.to_space_str(), "read")
+        self.assertEqual(s.to_space_str(), "read")
 
 class TestSecurityContext(unittest.TestCase):
     def test_init(self):
@@ -38,25 +38,25 @@ class TestSecurityContext(unittest.TestCase):
         context = "user_u:object_r:foo_t"
         sc = refpolicy.SecurityContext()
         sc.from_string(context)
-        self.assertEquals(sc.user, "user_u")
-        self.assertEquals(sc.role, "object_r")
-        self.assertEquals(sc.type, "foo_t")
-        self.assertEquals(sc.level, None)
+        self.assertEqual(sc.user, "user_u")
+        self.assertEqual(sc.role, "object_r")
+        self.assertEqual(sc.type, "foo_t")
+        self.assertEqual(sc.level, None)
         if selinux.is_selinux_mls_enabled():
-            self.assertEquals(str(sc), context + ":s0")
+            self.assertEqual(str(sc), context + ":s0")
         else:
-            self.assertEquals(str(sc), context)
-        self.assertEquals(sc.to_string(default_level="s1"), context + ":s1")
+            self.assertEqual(str(sc), context)
+        self.assertEqual(sc.to_string(default_level="s1"), context + ":s1")
 
         context = "user_u:object_r:foo_t:s0-s0:c0-c255"
         sc = refpolicy.SecurityContext()
         sc.from_string(context)
-        self.assertEquals(sc.user, "user_u")
-        self.assertEquals(sc.role, "object_r")
-        self.assertEquals(sc.type, "foo_t")
-        self.assertEquals(sc.level, "s0-s0:c0-c255")
-        self.assertEquals(str(sc), context)
-        self.assertEquals(sc.to_string(), context)
+        self.assertEqual(sc.user, "user_u")
+        self.assertEqual(sc.role, "object_r")
+        self.assertEqual(sc.type, "foo_t")
+        self.assertEqual(sc.level, "s0-s0:c0-c255")
+        self.assertEqual(str(sc), context)
+        self.assertEqual(sc.to_string(), context)
 
         sc = refpolicy.SecurityContext()
         self.assertRaises(ValueError, sc.from_string, "abc")
@@ -67,20 +67,20 @@ class TestSecurityContext(unittest.TestCase):
         sc3 = refpolicy.SecurityContext("user_u:object_r:foo_t:s0")
         sc4 = refpolicy.SecurityContext("user_u:object_r:bar_t")
 
-        self.assertEquals(sc1, sc2)
-        self.assertNotEquals(sc1, sc3)
-        self.assertNotEquals(sc1, sc4)
+        self.assertEqual(sc1, sc2)
+        self.assertNotEqual(sc1, sc3)
+        self.assertNotEqual(sc1, sc4)
 
 class TestObjecClass(unittest.TestCase):
     def test_init(self):
         o = refpolicy.ObjectClass(name="file")
-        self.assertEquals(o.name, "file")
+        self.assertEqual(o.name, "file")
         self.assertTrue(isinstance(o.perms, set))
 
 class TestAVRule(unittest.TestCase):
     def test_init(self):
         a = refpolicy.AVRule()
-        self.assertEquals(a.rule_type, a.ALLOW)
+        self.assertEqual(a.rule_type, a.ALLOW)
         self.assertTrue(isinstance(a.src_types, set))
         self.assertTrue(isinstance(a.tgt_types, set))
         self.assertTrue(isinstance(a.obj_classes, set))
@@ -92,7 +92,7 @@ class TestAVRule(unittest.TestCase):
         a.tgt_types.add("bar_t")
         a.obj_classes.add("file")
         a.perms.add("read")
-        self.assertEquals(a.to_string(), "allow foo_t bar_t:file read;")
+        self.assertEqual(a.to_string(), "allow foo_t bar_t:file read;")
 
         a.rule_type = a.DONTAUDIT
         a.src_types.add("user_t")
@@ -100,17 +100,17 @@ class TestAVRule(unittest.TestCase):
         a.obj_classes.add("lnk_file")
         a.perms.add("write")
         # This test might need to go because set ordering is not guaranteed
-        self.assertEquals(a.to_string(),
+        self.assertEqual(a.to_string(),
                           "dontaudit { foo_t user_t } { user_home_t bar_t }:{ lnk_file file } { read write };")
 
 class TestTypeRule(unittest.TestCase):
     def test_init(self):
         a = refpolicy.TypeRule()
-        self.assertEquals(a.rule_type, a.TYPE_TRANSITION)
+        self.assertEqual(a.rule_type, a.TYPE_TRANSITION)
         self.assertTrue(isinstance(a.src_types, set))
         self.assertTrue(isinstance(a.tgt_types, set))
         self.assertTrue(isinstance(a.obj_classes, set))
-        self.assertEquals(a.dest_type, "")
+        self.assertEqual(a.dest_type, "")
 
     def test_to_string(self):
         a = refpolicy.TypeRule()
@@ -118,7 +118,7 @@ class TestTypeRule(unittest.TestCase):
         a.tgt_types.add("bar_exec_t")
         a.obj_classes.add("process")
         a.dest_type = "bar_t"
-        self.assertEquals(a.to_string(), "type_transition foo_t bar_exec_t:process bar_t;")
+        self.assertEqual(a.to_string(), "type_transition foo_t bar_exec_t:process bar_t;")
 
 
 class TestParseNode(unittest.TestCase):

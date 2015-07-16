@@ -60,29 +60,29 @@ class TestAVCMessage(unittest.TestCase):
     def test_defs(self):
         avc = sepolgen.audit.AVCMessage(audit1)
         sc = sepolgen.refpolicy.SecurityContext()
-        self.assertEquals(avc.scontext, sc)
-        self.assertEquals(avc.tcontext, sc)
-        self.assertEquals(avc.tclass, "")
-        self.assertEquals(avc.accesses, [])
+        self.assertEqual(avc.scontext, sc)
+        self.assertEqual(avc.tcontext, sc)
+        self.assertEqual(avc.tclass, "")
+        self.assertEqual(avc.accesses, [])
 
     def test_granted(self):
         avc = sepolgen.audit.AVCMessage(granted1)
         avc.from_split_string(granted1.split())
 
-        self.assertEquals(avc.scontext.user, "user_u")
-        self.assertEquals(avc.scontext.role, "system_r")
-        self.assertEquals(avc.scontext.type, "unconfined_t")
-        self.assertEquals(avc.scontext.level, "s0")
+        self.assertEqual(avc.scontext.user, "user_u")
+        self.assertEqual(avc.scontext.role, "system_r")
+        self.assertEqual(avc.scontext.type, "unconfined_t")
+        self.assertEqual(avc.scontext.level, "s0")
 
-        self.assertEquals(avc.tcontext.user, "user_u")
-        self.assertEquals(avc.tcontext.role, "object_r")
-        self.assertEquals(avc.tcontext.type, "user_home_t")
-        self.assertEquals(avc.tcontext.level, "s0")
+        self.assertEqual(avc.tcontext.user, "user_u")
+        self.assertEqual(avc.tcontext.role, "object_r")
+        self.assertEqual(avc.tcontext.type, "user_home_t")
+        self.assertEqual(avc.tcontext.level, "s0")
         
-        self.assertEquals(avc.tclass, "file")
-        self.assertEquals(avc.accesses, ["getattr"])
+        self.assertEqual(avc.tclass, "file")
+        self.assertEqual(avc.accesses, ["getattr"])
 
-        self.assertEquals(avc.denial, False)
+        self.assertEqual(avc.denial, False)
 
 
     def test_from_split_string(self):
@@ -91,54 +91,54 @@ class TestAVCMessage(unittest.TestCase):
         recs = audit1.split()
         avc.from_split_string(recs)
 
-        self.assertEquals(avc.header, "audit(1158064002.046:4):")
-        self.assertEquals(avc.scontext.user, "user_u")
-        self.assertEquals(avc.scontext.role, "system_r")
-        self.assertEquals(avc.scontext.type, "bluetooth_helper_t")
-        self.assertEquals(avc.scontext.level, "s0-s0:c0")
+        self.assertEqual(avc.header, "audit(1158064002.046:4):")
+        self.assertEqual(avc.scontext.user, "user_u")
+        self.assertEqual(avc.scontext.role, "system_r")
+        self.assertEqual(avc.scontext.type, "bluetooth_helper_t")
+        self.assertEqual(avc.scontext.level, "s0-s0:c0")
 
-        self.assertEquals(avc.tcontext.user, "system_u")
-        self.assertEquals(avc.tcontext.role, "object_r")
-        self.assertEquals(avc.tcontext.type, "xdm_tmp_t")
-        self.assertEquals(avc.tcontext.level, "s0")
+        self.assertEqual(avc.tcontext.user, "system_u")
+        self.assertEqual(avc.tcontext.role, "object_r")
+        self.assertEqual(avc.tcontext.type, "xdm_tmp_t")
+        self.assertEqual(avc.tcontext.level, "s0")
 
-        self.assertEquals(avc.tclass, "file")
-        self.assertEquals(avc.accesses, ["read"])
+        self.assertEqual(avc.tclass, "file")
+        self.assertEqual(avc.accesses, ["read"])
 
-        self.assertEquals(avc.comm, "bluez-pin")
+        self.assertEqual(avc.comm, "bluez-pin")
 
 
-        self.assertEquals(avc.denial, True)
+        self.assertEqual(avc.denial, True)
 
         # audit daemon message
         avc = sepolgen.audit.AVCMessage(audit2)
         recs = audit2.split()
         avc.from_split_string(recs)
 
-        self.assertEquals(avc.header, "audit(1158584779.745:708):")
-        self.assertEquals(avc.scontext.user, "user_u")
-        self.assertEquals(avc.scontext.role, "system_r")
-        self.assertEquals(avc.scontext.type, "vpnc_t")
-        self.assertEquals(avc.scontext.level, "s0")
+        self.assertEqual(avc.header, "audit(1158584779.745:708):")
+        self.assertEqual(avc.scontext.user, "user_u")
+        self.assertEqual(avc.scontext.role, "system_r")
+        self.assertEqual(avc.scontext.type, "vpnc_t")
+        self.assertEqual(avc.scontext.level, "s0")
 
-        self.assertEquals(avc.tcontext.user, "user_u")
-        self.assertEquals(avc.tcontext.role, "system_r")
-        self.assertEquals(avc.tcontext.type, "vpnc_t")
-        self.assertEquals(avc.tcontext.level, "s0")
+        self.assertEqual(avc.tcontext.user, "user_u")
+        self.assertEqual(avc.tcontext.role, "system_r")
+        self.assertEqual(avc.tcontext.type, "vpnc_t")
+        self.assertEqual(avc.tcontext.level, "s0")
 
-        self.assertEquals(avc.tclass, "capability")
-        self.assertEquals(avc.accesses, ["dac_read_search"])
+        self.assertEqual(avc.tclass, "capability")
+        self.assertEqual(avc.accesses, ["dac_read_search"])
 
-        self.assertEquals(avc.comm, "sh")
+        self.assertEqual(avc.comm, "sh")
 
-        self.assertEquals(avc.denial, True)
+        self.assertEqual(avc.denial, True)
 
 class TestPathMessage(unittest.TestCase):
     def test_from_split_string(self):
         path = sepolgen.audit.PathMessage(path1)
         recs = path1.split()
         path.from_split_string(recs)
-        self.assertEquals(path.path, "/usr/lib/sa/sa1")
+        self.assertEqual(path.path, "/usr/lib/sa/sa1")
 
 # TODO - add tests for the other message types
 
@@ -149,27 +149,27 @@ class TestAuditParser(unittest.TestCase):
     def test_parse_string(self):
         a = sepolgen.audit.AuditParser()
         a.parse_string(log1)
-        self.assertEquals(len(a.avc_msgs), 11)
-        self.assertEquals(len(a.compute_sid_msgs), 0)
-        self.assertEquals(len(a.invalid_msgs), 0)
-        self.assertEquals(len(a.policy_load_msgs), 0)
-        self.assertEquals(len(a.path_msgs), 1)
+        self.assertEqual(len(a.avc_msgs), 11)
+        self.assertEqual(len(a.compute_sid_msgs), 0)
+        self.assertEqual(len(a.invalid_msgs), 0)
+        self.assertEqual(len(a.policy_load_msgs), 0)
+        self.assertEqual(len(a.path_msgs), 1)
 
     def test_post_process(self):
         a = sepolgen.audit.AuditParser()
         a.parse_string(log2)
-        self.assertEquals(len(a.avc_msgs), 2)
-        self.assertEquals(a.avc_msgs[0].path, "/usr/lib/sa/sa1")
-        self.assertEquals(a.avc_msgs[1].path, "/usr/lib/sa/sa1")
+        self.assertEqual(len(a.avc_msgs), 2)
+        self.assertEqual(a.avc_msgs[0].path, "/usr/lib/sa/sa1")
+        self.assertEqual(a.avc_msgs[1].path, "/usr/lib/sa/sa1")
 
     def test_parse_file(self):
         f = open("audit.txt")
         a = sepolgen.audit.AuditParser()
         a.parse_file(f)
-        self.assertEquals(len(a.avc_msgs), 21)
-        self.assertEquals(len(a.compute_sid_msgs), 0)
-        self.assertEquals(len(a.invalid_msgs), 0)
-        self.assertEquals(len(a.policy_load_msgs), 0)
+        self.assertEqual(len(a.avc_msgs), 21)
+        self.assertEqual(len(a.compute_sid_msgs), 0)
+        self.assertEqual(len(a.invalid_msgs), 0)
+        self.assertEqual(len(a.policy_load_msgs), 0)
 
 class TestGeneration(unittest.TestCase):
     def test_generation(self):

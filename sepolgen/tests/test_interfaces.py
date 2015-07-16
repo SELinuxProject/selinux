@@ -202,11 +202,11 @@ class TestInterfaceSet(unittest.TestCase):
         i = interfaces.InterfaceSet()
         i.add_headers(h)
 
-        self.assertEquals(len(i.interfaces), 1)
+        self.assertEqual(len(i.interfaces), 1)
         for key, interface in i.interfaces.items():
-            self.assertEquals(key, interface.name)
-            self.assertEquals(key, "foo")
-            self.assertEquals(len(interface.access), 2)
+            self.assertEqual(key, interface.name)
+            self.assertEqual(key, "foo")
+            self.assertEqual(len(interface.access), 2)
 
             # Check the access vectors
             comp_avs = [["$1", "usr_t", "dir", "create", "add_name"],
@@ -215,21 +215,21 @@ class TestInterfaceSet(unittest.TestCase):
             self.assertTrue(ret)
 
             # Check the params
-            self.assertEquals(len(interface.params), 1)
+            self.assertEqual(len(interface.params), 1)
             for param in interface.params.values():
-                self.assertEquals(param.type, refpolicy.SRC_TYPE)
-                self.assertEquals(param.name, "$1")
-                self.assertEquals(param.num, 1)
-                self.assertEquals(param.required, True)
+                self.assertEqual(param.type, refpolicy.SRC_TYPE)
+                self.assertEqual(param.name, "$1")
+                self.assertEqual(param.num, 1)
+                self.assertEqual(param.required, True)
 
     def test_expansion(self):
         h = refparser.parse(test_expansion)
         i = interfaces.InterfaceSet()
         i.add_headers(h)
 
-        self.assertEquals(len(i.interfaces), 3)
+        self.assertEqual(len(i.interfaces), 3)
         for key, interface in i.interfaces.items():
-            self.assertEquals(key, interface.name)
+            self.assertEqual(key, interface.name)
             if key == "foo":
                 comp_avs = [["$1", "usr_t", "dir", "create", "add_name"],
                             ["$1", "usr_t", "file", "read", "write"]]
@@ -277,6 +277,6 @@ class TestInterfaceSet(unittest.TestCase):
             if ifv.name == "files_exec_usr_files":
                 if_status[2] = True
 
-        self.assertEquals(if_status[0], True)
-        self.assertEquals(if_status[1], True)
-        self.assertEquals(if_status[2], True)
+        self.assertEqual(if_status[0], True)
+        self.assertEqual(if_status[1], True)
+        self.assertEqual(if_status[2], True)
