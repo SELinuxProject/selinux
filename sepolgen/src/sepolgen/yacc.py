@@ -69,6 +69,8 @@ error_count = 3                # Number of symbols that must be shifted to leave
 
 import re, types, sys, cStringIO, hashlib, os.path
 
+from . import util
+
 # Exception raised for yacc-related errors
 class YaccError(Exception):   pass
 
@@ -1962,7 +1964,7 @@ def yacc(method=default_lr, debug=yaccdebug, module=None, tabmodule=tab_module, 
 
 
     # Add parsing method to signature
-    Signature.update(method)
+    Signature.update(util.encode_input(method))
     
     # If a "module" parameter was supplied, extract its dictionary.
     # Note: a module may in fact be an instance as well.
@@ -1995,7 +1997,7 @@ def yacc(method=default_lr, debug=yaccdebug, module=None, tabmodule=tab_module, 
     if not start:
         start = ldict.get("start",None)
     if start:
-        Signature.update(start)
+        Signature.update(util.encode_input(start))
 
     # If running in optimized mode.  We're going to
 
@@ -2064,7 +2066,7 @@ def yacc(method=default_lr, debug=yaccdebug, module=None, tabmodule=tab_module, 
             if not (isinstance(prec,types.ListType) or isinstance(prec,types.TupleType)):
                 raise YaccError,"precedence must be a list or tuple."
             add_precedence(prec)
-            Signature.update(repr(prec))
+            Signature.update(util.encode_input(repr(prec)))
 
         for n in tokens:
             if not Precedence.has_key(n):
@@ -2112,7 +2114,7 @@ def yacc(method=default_lr, debug=yaccdebug, module=None, tabmodule=tab_module, 
         # Make a signature of the docstrings
         for f in symbols:
             if f.__doc__:
-                Signature.update(f.__doc__)
+                Signature.update(util.encode_input(f.__doc__))
     
         lr_init_vars()
 

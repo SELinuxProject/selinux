@@ -76,6 +76,20 @@ def first(s, sorted=False):
         for x in s:
             return x
 
+def encode_input(text):
+    import locale
+    """Encode given text via preferred system encoding"""
+    # locale will often find out the correct encoding
+    encoding = locale.getpreferredencoding()
+    try:
+        encoded_text = text.encode(encoding)
+    except UnicodeError:
+    # if it fails to find correct encoding then ascii is used
+    # which may lead to UnicodeError if `text` contains non ascii signs
+    # utf-8 is our guess to fix the situation
+        encoded_text = text.encode('utf-8')
+    return encoded_text
+
 if __name__ == "__main__":
     import sys
     import time
