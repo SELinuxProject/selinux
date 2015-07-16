@@ -111,7 +111,7 @@ class YaccProduction:
         self.stack = stack
 
     def __getitem__(self,n):
-        if type(n) == types.IntType:
+        if type(n) == int:
              if n >= 0: return self.slice[n].value
              else: return self.stack[n].value
         else:
@@ -1940,13 +1940,13 @@ def lr_read_tables(module=tab_module,optimize=0):
 
 
 # Available instance types.  This is used when parsers are defined by a class.
-# it's a little funky because I want to preserve backwards compatibility
-# with Python 2.0 where types.ObjectType is undefined.
+# In Python3 the InstanceType and ObjectType are no more, they've passed, ceased
+# to be, they are ex-classes along with old-style classes
 
 try:
    _INSTANCETYPE = (types.InstanceType, types.ObjectType)
 except AttributeError:
-   _INSTANCETYPE = types.InstanceType
+   _INSTANCETYPE = object
 
 # -----------------------------------------------------------------------------
 # yacc(module)
@@ -2026,18 +2026,18 @@ def yacc(method=default_lr, debug=yaccdebug, module=None, tabmodule=tab_module, 
     
         if not tokens:
             raise YaccError,"module does not define a list 'tokens'"
-        if not (isinstance(tokens,types.ListType) or isinstance(tokens,types.TupleType)):
+        if not (isinstance(tokens,list) or isinstance(tokens,tuple)):
             raise YaccError,"tokens must be a list or tuple."
 
         # Check to see if a requires dictionary is defined.
         requires = ldict.get("require",None)
         if requires:
-            if not (isinstance(requires,types.DictType)):
+            if not (isinstance(requires,dict)):
                 raise YaccError,"require must be a dictionary."
 
             for r,v in requires.items():
                 try:
-                    if not (isinstance(v,types.ListType)):
+                    if not (isinstance(v,list)):
                         raise TypeError
                     v1 = [x.split(".") for x in v]
                     Requires[r] = v1
@@ -2063,7 +2063,7 @@ def yacc(method=default_lr, debug=yaccdebug, module=None, tabmodule=tab_module, 
         # Get the precedence map (if any)
         prec = ldict.get("precedence",None)
         if prec:
-            if not (isinstance(prec,types.ListType) or isinstance(prec,types.TupleType)):
+            if not (isinstance(prec,list) or isinstance(prec,tuple)):
                 raise YaccError,"precedence must be a list or tuple."
             add_precedence(prec)
             Signature.update(util.encode_input(repr(prec)))

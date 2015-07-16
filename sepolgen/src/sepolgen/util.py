@@ -16,10 +16,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
+import locale
 import sys
 
 
 PY3 = sys.version_info[0] == 3
+
+if PY3:
+    bytes_type=bytes
+    string_type=str
+else:
+    bytes_type=str
+    string_type=unicode
+
 
 class ConsoleProgressBar:
     def __init__(self, out, steps=100, indicator='#'):

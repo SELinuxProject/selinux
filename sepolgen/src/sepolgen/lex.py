@@ -26,18 +26,20 @@ __version__ = "2.2"
 
 import re, sys, types
 
+from . import util
+
+
 # Regular expression used to match valid token names
 _is_identifier = re.compile(r'^[a-zA-Z0-9_]+$')
 
-# Available instance types.  This is used when lexers are defined by a class.
-# It's a little funky because I want to preserve backwards compatibility
-# with Python 2.0 where types.ObjectType is undefined.
+# Available instance types.  This is used when parsers are defined by a class.
+# In Python3 the InstanceType and ObjectType are no more, they've passed, ceased
+# to be, they are ex-classes along with old-style classes
 
 try:
    _INSTANCETYPE = (types.InstanceType, types.ObjectType)
 except AttributeError:
-   _INSTANCETYPE = types.InstanceType
-   class object: pass       # Note: needed if no new-style classes present
+   _INSTANCETYPE = object
 
 # Exception thrown when invalid token encountered and no default error
 # handler is defined.
@@ -197,7 +199,7 @@ class Lexer:
     # input() - Push a new string into the lexer
     # ------------------------------------------------------------
     def input(self,s):
-        if not (isinstance(s,types.StringType) or isinstance(s,types.UnicodeType)):
+        if not (isinstance(s,util.bytes_type) or isinstance(s, util.string_type)):
             raise ValueError, "Expected a string"
         self.lexdata = s
         self.lexpos = 0
@@ -543,7 +545,7 @@ def lex(module=None,object=None,debug=0,optimize=0,lextab="lextab",reflags=0,now
         
     if not tokens:
         raise SyntaxError,"lex: module does not define 'tokens'"
-    if not (isinstance(tokens,types.ListType) or isinstance(tokens,types.TupleType)):
+    if not (isinstance(tokens,list) or isinstance(tokens,tuple)):
         raise SyntaxError,"lex: tokens must be a list or tuple."
 
     # Build a dictionary of valid token names
@@ -564,7 +566,7 @@ def lex(module=None,object=None,debug=0,optimize=0,lextab="lextab",reflags=0,now
 
     try:
          for c in literals:
-               if not (isinstance(c,types.StringType) or isinstance(c,types.UnicodeType)) or len(c) > 1:
+               if not (isinstance(c,util.bytes_type) or isinstance(c, util.string_type)) or len(c) > 1:
                     print "lex: Invalid literal %s. Must be a single character" % repr(c)
                     error = 1
                     continue
@@ -577,18 +579,21 @@ def lex(module=None,object=None,debug=0,optimize=0,lextab="lextab",reflags=0,now
 
     # Build statemap
     if states:
-         if not (isinstance(states,types.TupleType) or isinstance(states,types.ListType)):
+         if not (isinstance(states,tuple) or isinstance(states,list)):
               print "lex: states must be defined as a tuple or list."
               error = 1
          else:
               for s in states:
-                    if not isinstance(s,types.TupleType) or len(s) != 2:
+                    if not isinstance(s,tuple) or len(s) != 2:
                            print "lex: invalid state specifier %s. Must be a tuple (statename,'exclusive|inclusive')" % repr(s)
                            error = 1
                            continue
                     name, statetype = s
-                    if not isinstance(name,types.StringType):
-                           print "lex: state name %s must be a string" % repr(name)
+                    if isinstance(name, util.string_type):
+                           original_name = name
+                           name = util.encode_input(name)
+                    if not isinstance(name,util.bytes_type) or len(original_name) != len(name):
+                           print "lex: state name %s must be a byte string" % repr(original_name)
                            error = 1
                            continue
                     if not (statetype == 'inclusive' or statetype == 'exclusive'):
@@ -627,7 +632,7 @@ def lex(module=None,object=None,debug=0,optimize=0,lextab="lextab",reflags=0,now
 
         if callable(t):
             for s in states: funcsym[s].append((f,t))
-        elif (isinstance(t, types.StringType) or isinstance(t,types.UnicodeType)):
+        elif (isinstance(t, util.bytes_type) or isinstance(t,util.string_type)):
             for s in states: strsym[s].append((f,t))
         else:
             print "lex: %s not defined as a function or string" % f
