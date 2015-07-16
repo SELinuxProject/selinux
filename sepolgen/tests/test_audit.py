@@ -166,6 +166,7 @@ class TestAuditParser(unittest.TestCase):
         f = open("audit.txt")
         a = sepolgen.audit.AuditParser()
         a.parse_file(f)
+        f.close()
         self.assertEqual(len(a.avc_msgs), 21)
         self.assertEqual(len(a.compute_sid_msgs), 0)
         self.assertEqual(len(a.invalid_msgs), 0)

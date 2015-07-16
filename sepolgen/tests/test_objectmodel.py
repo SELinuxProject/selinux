@@ -25,6 +25,7 @@ class TestInfoFlow(unittest.TestCase):
         info = sepolgen.objectmodel.PermMappings()
         fd = open("perm_map")
         info.from_file(fd)
+        fd.close()
 
         pm = info.get("filesystem", "mount")
         self.assertEqual(pm.perm, "mount")

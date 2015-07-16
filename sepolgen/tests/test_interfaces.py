@@ -268,6 +268,7 @@ class TestInterfaceSet(unittest.TestCase):
         i2 = interfaces.InterfaceSet()
         f = open("output")
         i2.from_file(f)
+        f.close()
         if_status = [False, False, False]
         for ifv in i2.interfaces.values():
             if ifv.name == "files_search_usr":
