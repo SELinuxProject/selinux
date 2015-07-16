@@ -165,7 +165,7 @@ class TestUtilFunctions(unittest.TestCase):
         status = [False] * 8
         for av in access.avrule_to_access_vectors(rule):
             self.assertEqual(av.perms, refpolicy.IdSet(["read", "write"]))
-            for i in xrange(len(comps)):
+            for i in range(len(comps)):
                 if comps[i][0] == av.src_type and \
                    comps[i][1] == av.tgt_type and \
                    comps[i][2] == av.obj_class:
@@ -208,7 +208,7 @@ class TestAccessVectorSet(unittest.TestCase):
         status = [False] * 8
         for av in self.s:
             self.assertEqual(av.perms, refpolicy.IdSet(["read", "write"]))
-            for i in xrange(len(comps)):
+            for i in range(len(comps)):
                 if comps[i][0] == av.src_type and \
                    comps[i][1] == av.tgt_type and \
                    comps[i][2] == av.obj_class:
