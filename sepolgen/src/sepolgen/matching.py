@@ -25,31 +25,26 @@ import itertools
 
 from . import access
 from . import objectmodel
+from . import util
 
 
-class Match:
+class Match(util.Comparison):
     def __init__(self, interface=None, dist=0):
         self.interface = interface
         self.dist = dist
         self.info_dir_change = False
+        # when implementing __eq__ also __hash__ is needed on py2
+        # if object is muttable __hash__ should be None
+        self.__hash__ = None
 
-    def __cmp__(self, other):
-        if self.dist == other.dist:
-            if self.info_dir_change:
-                if other.info_dir_change:
-                    return 0
-                else:
-                    return 1
-            else:
-                if other.info_dir_change:
-                    return -1
-                else:
-                    return 0
-        else:
-            if self.dist < other.dist:
-                return -1
-            else:
-                return 1
+    def _compare(self, other, method):
+        try:
+            a = (self.dist, self.info_dir_change)
+            b = (other.dist, other.info_dir_change)
+            return method(a, b)
+        except (AttributeError, TypeError):
+            # trying to compare to foreign type
+            return NotImplemented
 
 class MatchList:
     DEFAULT_THRESHOLD = 150

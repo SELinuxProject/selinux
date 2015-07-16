@@ -35,6 +35,9 @@ from . import objectmodel
 from . import access
 from . import interfaces
 from . import matching
+from . import util
+if util.PY3:
+    from .util import cmp
 # Constants for the level of explanation from the generation
 # routines
 NO_EXPLANATION    = 0

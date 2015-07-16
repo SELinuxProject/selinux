@@ -30,6 +30,10 @@ cleanly separated from the formatting issues.
 from . import refpolicy
 from . import util
 
+if util.PY3:
+    from .util import cmp
+
+
 class ModuleWriter:
     def __init__(self):
         self.fd = None

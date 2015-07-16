@@ -16,6 +16,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
+import sys
+
+
+PY3 = sys.version_info[0] == 3
 
 class ConsoleProgressBar:
     def __init__(self, out, steps=100, indicator='#'):
@@ -89,6 +93,37 @@ def encode_input(text):
     # utf-8 is our guess to fix the situation
         encoded_text = text.encode('utf-8')
     return encoded_text
+
+class Comparison():
+    """Class used when implementing rich comparison.
+
+    Inherit from this class if you want to have a rich
+    comparison withing the class, afterwards implement
+    _compare function within your class."""
+
+    def _compare(self, other, method):
+        raise NotImplemented
+
+    def __eq__(self, other):
+        return self._compare(other, lambda a, b: a == b)
+
+    def __lt__(self, other):
+        return self._compare(other, lambda a, b: a < b)
+
+    def __le__(self, other):
+        return self._compare(other, lambda a, b: a <= b)
+
+    def __ge__(self, other):
+        return self._compare(other, lambda a, b: a >= b)
+
+    def __gt__(self, other):
+        return self._compare(other, lambda a, b: a > b)
+
+    def __ne__(self, other):
+        return self._compare(other, lambda a, b: a != b)
+
+def cmp(first, second):
+    return (first > second) - (second > first)
 
 if __name__ == "__main__":
     import sys

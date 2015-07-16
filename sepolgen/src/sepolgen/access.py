@@ -32,6 +32,7 @@ in a variety of ways, but they are the fundamental representation of access.
 """
 
 from . import refpolicy
+from . import util
 
 from selinux import audit2why
 
@@ -52,7 +53,7 @@ def is_idparam(id):
     else:
         return False
 
-class AccessVector:
+class AccessVector(util.Comparison):
     """
     An access vector is the basic unit of access in SELinux.
 
@@ -89,6 +90,9 @@ class AccessVector:
             self.audit_msgs = []
             self.type = audit2why.TERULE
             self.data = []
+        # when implementing __eq__ also __hash__ is needed on py2
+        # if object is muttable __hash__ should be None
+        self.__hash__ = None
 
         # The direction of the information flow represented by this
         # access vector - used for matching
@@ -134,23 +138,19 @@ class AccessVector:
         return "allow %s %s:%s %s;" % (self.src_type, self.tgt_type,
                                         self.obj_class, self.perms.to_space_str())
 
-    def __cmp__(self, other):
-        if self.src_type != other.src_type:
-            return cmp(self.src_type, other.src_type)
-        if self.tgt_type != other.tgt_type:
-            return cmp(self.tgt_type, other.tgt_type)
-        if self.obj_class != self.obj_class:
-            return cmp(self.obj_class, other.obj_class)
-        if len(self.perms) != len(other.perms):
-            return cmp(len(self.perms), len(other.perms))
-        x = list(self.perms)
-        x.sort()
-        y = list(other.perms)
-        y.sort()
-        for pa, pb in zip(x, y):
-            if pa != pb:
-                return cmp(pa, pb)
-        return 0
+    def _compare(self, other, method):
+        try:
+            x = list(self.perms)
+            a = (self.src_type, self.tgt_type, self.obj_class, x)
+            y = list(other.perms)
+            x.sort()
+            y.sort()
+            b = (other.src_type, other.tgt_type, other.obj_class, y)
+            return method(a, b)
+        except (AttributeError, TypeError):
+            # trying to compare to foreign type
+            return NotImplemented
+
 
 def avrule_to_access_vectors(avrule):
     """Convert an avrule into a list of access vectors.
