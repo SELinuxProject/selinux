@@ -170,7 +170,7 @@ class PolicyGenerator:
 
             if av.type == audit2why.BOOLEAN:
                 if len(av.data) > 1:
-                    rule.comment += "\n#!!!! This avc can be allowed using one of the these booleans:\n#     %s" % ", ".join(map(lambda x: x[0], av.data))
+                    rule.comment += "\n#!!!! This avc can be allowed using one of the these booleans:\n#     %s" % ", ".join([x[0] for x in av.data])
                 else:
                     rule.comment += "\n#!!!! This avc can be allowed using the boolean '%s'" % av.data[0][0]
 
@@ -189,7 +189,7 @@ class PolicyGenerator:
                         self.domains = seinfo(ATTRIBUTE, name="domain")[0]["types"]
                     types=[]
 
-                    for i in map(lambda x: x[TCONTEXT], sesearch([ALLOW], {SCONTEXT: av.src_type, CLASS: av.obj_class, PERMS: av.perms})):
+                    for i in [x[TCONTEXT] for x in sesearch([ALLOW], {SCONTEXT: av.src_type, CLASS: av.obj_class, PERMS: av.perms})]:
                         if i not in self.domains:
                             types.append(i)
                     if len(types) == 1:
@@ -299,7 +299,7 @@ def call_interface(interface, av):
         elif params[i].type == refpolicy.OBJ_CLASS:
             ifcall.args.append(av.obj_class)
         else:
-            print params[i].type
+            print(params[i].type)
             assert(0)
 
     assert(len(ifcall.args) > 0)

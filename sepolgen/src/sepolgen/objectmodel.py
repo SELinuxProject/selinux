@@ -118,7 +118,7 @@ class PermMappings:
                 continue
             if fields[0] == "class":
                 c = fields[1]
-                if self.classes.has_key(c):
+                if c in self.classes:
                     raise ValueError("duplicate class in perm map")
                 self.classes[c] = { }
                 cur = self.classes[c]

@@ -430,7 +430,7 @@ class AuditParser:
 
         # Group by audit header
         if msg.header != "":
-            if self.by_header.has_key(msg.header):
+            if msg.header in self.by_header:
                 self.by_header[msg.header].append(msg)
             else:
                 self.by_header[msg.header] = [msg]

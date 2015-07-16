@@ -263,7 +263,7 @@ class AccessVectorSet:
         tgt = self.src.setdefault(src_type, { })
         cls = tgt.setdefault(tgt_type, { })
         
-        if cls.has_key((obj_class, avc_type)):
+        if (obj_class, avc_type) in cls:
             access = cls[obj_class, avc_type]
         else:
             access = AccessVector()
@@ -294,7 +294,7 @@ def avs_extract_types(avs):
 def avs_extract_obj_perms(avs):
     perms = { }
     for av in avs:
-        if perms.has_key(av.obj_class):
+        if av.obj_class in perms:
             s = perms[av.obj_class]
         else:
             s = refpolicy.IdSet()
@@ -322,7 +322,7 @@ class RoleTypeSet:
         return len(self.role_types.keys())
 
     def add(self, role, type):
-        if self.role_types.has_key(role):
+        if role in self.role_types:
             role_type = self.role_types[role]
         else:
             role_type = refpolicy.RoleType()

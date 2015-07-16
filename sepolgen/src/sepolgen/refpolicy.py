@@ -18,7 +18,6 @@
 #
 
 import string
-import itertools
 import selinux
 
 # OVERVIEW
@@ -85,53 +84,53 @@ class Node(PolicyBase):
     # Top level nodes
 
     def nodes(self):
-        return itertools.ifilter(lambda x: isinstance(x, Node), walktree(self))
+        return filter(lambda x: isinstance(x, Node), walktree(self))
 
     def modules(self):
-        return itertools.ifilter(lambda x: isinstance(x, Module), walktree(self))
+        return filter(lambda x: isinstance(x, Module), walktree(self))
 
     def interfaces(self):
-        return itertools.ifilter(lambda x: isinstance(x, Interface), walktree(self))
+        return filter(lambda x: isinstance(x, Interface), walktree(self))
 
     def templates(self):
-        return itertools.ifilter(lambda x: isinstance(x, Template), walktree(self))
+        return filter(lambda x: isinstance(x, Template), walktree(self))
 
     def support_macros(self):
-        return itertools.ifilter(lambda x: isinstance(x, SupportMacros), walktree(self))
+        return filter(lambda x: isinstance(x, SupportMacros), walktree(self))
 
     # Common policy statements
 
     def module_declarations(self):
-        return itertools.ifilter(lambda x: isinstance(x, ModuleDeclaration), walktree(self))
+        return filter(lambda x: isinstance(x, ModuleDeclaration), walktree(self))
 
     def interface_calls(self):
-        return itertools.ifilter(lambda x: isinstance(x, InterfaceCall), walktree(self))
+        return filter(lambda x: isinstance(x, InterfaceCall), walktree(self))
 
     def avrules(self):
-        return itertools.ifilter(lambda x: isinstance(x, AVRule), walktree(self))
+        return filter(lambda x: isinstance(x, AVRule), walktree(self))
 
     def typerules(self):
-        return itertools.ifilter(lambda x: isinstance(x, TypeRule), walktree(self))
+        return filter(lambda x: isinstance(x, TypeRule), walktree(self))
 
     def typeattributes(self):
         """Iterate over all of the TypeAttribute children of this Interface."""
-        return itertools.ifilter(lambda x: isinstance(x, TypeAttribute), walktree(self))
+        return filter(lambda x: isinstance(x, TypeAttribute), walktree(self))
 
     def roleattributes(self):
         """Iterate over all of the RoleAttribute children of this Interface."""
-        return itertools.ifilter(lambda x: isinstance(x, RoleAttribute), walktree(self))
+        return filter(lambda x: isinstance(x, RoleAttribute), walktree(self))
 
     def requires(self):
-        return itertools.ifilter(lambda x: isinstance(x, Require), walktree(self))
+        return filter(lambda x: isinstance(x, Require), walktree(self))
 
     def roles(self):
-        return itertools.ifilter(lambda x: isinstance(x, Role), walktree(self))
+        return filter(lambda x: isinstance(x, Role), walktree(self))
 
     def role_allows(self):
-        return itertools.ifilter(lambda x: isinstance(x, RoleAllow), walktree(self))
+        return filter(lambda x: isinstance(x, RoleAllow), walktree(self))
 
     def role_types(self):
-        return itertools.ifilter(lambda x: isinstance(x, RoleType), walktree(self))
+        return filter(lambda x: isinstance(x, RoleType), walktree(self))
 
     def __str__(self):
         if self.comment:
@@ -291,7 +290,7 @@ class SecurityContext(Leaf):
         self.type = fields[2]
         if len(fields) > 3:
             # FUTURE - normalize level fields to allow more comparisons to succeed.
-            self.level = string.join(fields[3:], ':')
+            self.level = ':'.join(fields[3:])
         else:
             self.level = None
 
@@ -703,7 +702,7 @@ def print_tree(head):
         s = ""
         for i in range(depth):
             s = s + "\t"
-        print s + str(node)
+        print(s + str(node))
 
 
 class Headers(Node):
@@ -810,7 +809,7 @@ class SupportMacros(Node):
         # are ordered correctly so that no macro is used before
         # it is defined
         s = set()
-        if self.map.has_key(perm):
+        if perm in self.map:
             for p in self.by_name(perm):
                 s.update(self.__expand_perm(p))
         else:
@@ -833,7 +832,7 @@ class SupportMacros(Node):
     def has_key(self, name):
         if not self.map:
             self.__gen_map()
-        return self.map.has_key(name)
+        return name in self.map
 
 class Require(Leaf):
     def __init__(self, parent=None):

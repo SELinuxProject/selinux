@@ -49,7 +49,7 @@ def t_NAME(t):
     return t
 
 def t_error(t):
-    print "Illegal character '%s'" % t.value[0]
+    print("Illegal character '%s'" % t.value[0])
     t.skip(1)
 
 from . import lex
@@ -90,7 +90,7 @@ def p_names(p):
         p[0] = [p[1]] + p[2]
 
 def p_error(p):
-    print "Syntax error on line %d %s [type=%s]" % (p.lineno, p.value, p.type)
+    print("Syntax error on line %d %s [type=%s]" % (p.lineno, p.value, p.type))
     
 from . import yacc
 yacc.yacc()
@@ -112,5 +112,5 @@ test2 = """define(`all_filesystem_perms',`{ mount remount unmount getattr relabe
 define(`all_security_perms',`{ compute_av compute_create compute_member check_context load_policy compute_relabel compute_user setenforce setbool setsecparam setcheckreqprot }')
 """
 result = yacc.parse(txt)
-print result
+print(result)
     

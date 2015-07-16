@@ -276,7 +276,7 @@ class InterfaceVector:
         if attributes:
             for typeattribute in interface.typeattributes():
                 for attr in typeattribute.attributes:
-                    if not attributes.attributes.has_key(attr):
+                    if attr not in attributes.attributes:
                         # print "missing attribute " + attr
                         continue
                     attr_vec = attributes.attributes[attr]

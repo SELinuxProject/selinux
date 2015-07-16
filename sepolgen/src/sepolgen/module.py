@@ -24,10 +24,12 @@ of module tress.
 
 import re
 import tempfile
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
 import os
 import os.path
-import subprocess
 import shutil
 
 import selinux
@@ -131,7 +133,7 @@ class ModuleCompiler:
 
     def run(self, command):
         self.o(command)
-        rc, output = commands.getstatusoutput(command)
+        rc, output = getstatusoutput(command)
         self.o(output)
         
         return rc
