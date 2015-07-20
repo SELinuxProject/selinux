@@ -11,8 +11,6 @@
 
 #define UNSET (char *) -1
 
-static __thread pid_t cpid;
-static __thread pid_t tid;
 static __thread char *prev_current = UNSET;
 static __thread char * prev_exec = UNSET;
 static __thread char * prev_fscreate = UNSET;
@@ -23,15 +21,6 @@ static pthread_once_t once = PTHREAD_ONCE_INIT;
 static pthread_key_t destructor_key;
 static int destructor_key_initialized = 0;
 static __thread char destructor_initialized;
-
-extern void *__dso_handle __attribute__ ((__weak__, __visibility__ ("hidden")));
-extern int __register_atfork (void (*) (void), void (*) (void), void (*) (void), void *);
-
-static int __selinux_atfork (void (*prepare) (void), void (*parent) (void), void (*child) (void))
-{
-  return __register_atfork (prepare, parent, child,
-                            &__dso_handle == NULL ? NULL : __dso_handle);
-}
 
 static pid_t gettid(void)
 {
@@ -50,14 +39,6 @@ static void procattr_thread_destructor(void __attribute__((unused)) *unused)
 		free(prev_keycreate);
 	if (prev_sockcreate != UNSET)
 		free(prev_sockcreate);
-}
-
-static void free_procattr(void)
-{
-	procattr_thread_destructor(NULL);
-	tid = 0;
-	cpid = getpid();
-	prev_current = prev_exec = prev_fscreate = prev_keycreate = prev_sockcreate = UNSET;
 }
 
 void __attribute__((destructor)) procattr_destructor(void);
@@ -79,7 +60,6 @@ static inline void init_thread_destructor(void)
 static void init_procattr(void)
 {
 	if (__selinux_key_create(&destructor_key, procattr_thread_destructor) == 0) {
-		__selinux_atfork(NULL, NULL, free_procattr);
 		destructor_key_initialized = 1;
 	}
 }
@@ -88,9 +68,7 @@ static int openattr(pid_t pid, const char *attr, int flags)
 {
 	int fd, rc;
 	char *path;
-
-	if (cpid != getpid())
-		free_procattr();
+	pid_t tid;
 
 	if (pid > 0)
 		rc = asprintf(&path, "/proc/%d/attr/%s", pid, attr);
@@ -101,8 +79,8 @@ static int openattr(pid_t pid, const char *attr, int flags)
 		fd = open(path, flags | O_CLOEXEC);
 		if (fd >= 0 || errno != ENOENT)
 			goto out;
-		if (!tid)
-			tid = gettid();
+		free(path);
+		tid = gettid();
 		rc = asprintf(&path, "/proc/self/task/%d/attr/%s", tid, attr);
 	}
 	if (rc < 0)
@@ -126,9 +104,6 @@ static int getprocattrcon_raw(char ** context,
 
 	__selinux_once(once, init_procattr);
 	init_thread_destructor();
-
-	if (cpid != getpid())
-		free_procattr();
 
 	switch (attr[0]) {
 		case 'c':
@@ -226,9 +201,6 @@ static int setprocattrcon_raw(const char * context,
 
 	__selinux_once(once, init_procattr);
 	init_thread_destructor();
-
-	if (cpid != getpid())
-		free_procattr();
 
 	switch (attr[0]) {
 		case 'c':
