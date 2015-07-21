@@ -273,10 +273,10 @@ if __name__ == "__main__":
             args = parser.parse_args()
             args.func(args)
             sys.exit(0)
-        except ValueError,e:
+        except ValueError as e:
             sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
             sys.exit(1)
-        except IOError,e:
+        except IOError as e:
             sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
             sys.exit(1)
         except KeyboardInterrupt:
