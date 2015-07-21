@@ -25,7 +25,6 @@ import selinux
 import signal
 from tempfile import mkdtemp
 import pwd
-import commands
 import sepolicy
 
 PROGNAME = "policycoreutils"
@@ -36,13 +35,16 @@ gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
 
 try:
-       gettext.install(PROGNAME,
-                       localedir = "/usr/share/locale",
-                       unicode=False,
-                       codeset = 'utf-8')
+   gettext.install(PROGNAME,
+                   localedir = "/usr/share/locale",
+                   codeset = 'utf-8')
 except IOError:
-       import __builtin__
-       __builtin__.__dict__['_'] = unicode
+    try:
+        import builtins
+        builtins.__dict__['_'] = str
+    except ImportError:
+        import __builtin__
+        __builtin__.__dict__['_'] = unicode
 
 DEFAULT_WINDOWSIZE = "1000x700"
 DEFAULT_TYPE = "sandbox_t"
@@ -86,7 +88,7 @@ def copyfile(file, srcdir, dest):
                      else:
                             shutil.copy2(file, dest)
 
-              except shutil.Error, elist:
+              except shutil.Error as elist:
                      for e in elist.message:
                             sys.stderr.write(e[2])
                      
@@ -107,7 +109,11 @@ def savefile(new, orig, X_ind):
               if rc == gtk.RESPONSE_YES:
                      copy = True
        else:
-              ans = raw_input(_("Do you want to save changes to '%s' (y/N): ") % orig)
+              try:
+                  input = raw_input
+              except NameError:
+                  pass
+              ans = input(_("Do you want to save changes to '%s' (y/N): ") % orig)
               if(re.match(_("[yY]"),ans)):
                      copy = True
        if(copy):
@@ -228,9 +234,9 @@ class Sandbox:
            for i in fd.readlines():
                   try:
                          self.__include(option, opt, i[:-1], parser)
-                  except IOError, e:
+                  except IOError as e:
                          sys.stderr.write(str(e))
-                  except TypeError, e:
+                  except TypeError as e:
                          sys.stderr.write(str(e))
            fd.close()
 
@@ -263,7 +269,7 @@ dbus-launch --exit-with-session %s
 kill -TERM $WM_PID  2> /dev/null
 """ % (command, wm, command))
            fd.close()
-           os.chmod(execfile, 0700)
+           os.chmod(execfile, 0o700)
 
     def usage(self, message = ""):
            error_exit("%s\n%s" % (self.__parser.usage, message))
@@ -492,13 +498,13 @@ if __name__ == '__main__':
     try:
            sandbox = Sandbox()
            rc = sandbox.main()
-    except OSError, error:
+    except OSError as error:
            error_exit(error)
-    except ValueError, error:
+    except ValueError as error:
            error_exit(error.args[0])
-    except KeyError, error:
+    except KeyError as error:
            error_exit(_("Invalid value %s") % error.args[0])
-    except IOError, error:
+    except IOError as error:
            error_exit(error)
     except KeyboardInterrupt:
            rc = 0

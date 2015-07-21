@@ -4,18 +4,18 @@ from subprocess import Popen, PIPE
 
 class SandboxTests(unittest.TestCase):
     def assertDenied(self, err):
-        self.assert_('Permission denied' in err,
+        self.assertTrue(b'Permission denied' in err,
                      '"Permission denied" not found in %r' % err)
     def assertNotFound(self, err):
-        self.assert_('not found' in err,
+        self.assertTrue(b'not found' in err,
                      '"not found" not found in %r' % err)
 
     def assertFailure(self, status):
-        self.assert_(status != 0,
+        self.assertTrue(status != 0,
                      '"Succeeded when it should have failed')
 
     def assertSuccess(self, status, err):
-        self.assert_(status == 0,
+        self.assertTrue(status == 0,
                      '"Sandbox should have succeeded for this test %r' %  err)
 
     def test_simple_success(self):
@@ -23,7 +23,7 @@ class SandboxTests(unittest.TestCase):
         p1 = Popen(['cat', '/etc/passwd'], stdout = PIPE)
         p2 = Popen(['sandbox', 'grep', 'root'], stdin = p1.stdout, stdout=PIPE)
         out, err = p2.communicate()
-        self.assert_('root' in out)
+        self.assertTrue(b'root' in out)
 
     def test_cant_kill(self):
         "Verify that we cannot send kill signal in the sandbox"
@@ -95,4 +95,4 @@ if __name__ == "__main__":
     if selinux.security_getenforce() == 1:
         unittest.main()
     else:
-        print "SELinux must be in enforcing mode for this test"
+        print("SELinux must be in enforcing mode for this test")
