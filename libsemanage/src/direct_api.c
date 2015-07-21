@@ -248,18 +248,14 @@ int semanage_direct_connect(semanage_handle_t * sh)
 		goto err;
 
 	if (fcontext_file_dbase_init(sh,
-				     semanage_final_path(SEMANAGE_FINAL_SELINUX,
-							 SEMANAGE_FC),
-				     semanage_final_path(SEMANAGE_FINAL_TMP,
-							 SEMANAGE_FC),
+				     semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_FC),
+				     semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC),
 				     semanage_fcontext_dbase_policy(sh)) < 0)
 		goto err;
 
 	if (seuser_file_dbase_init(sh,
-				   semanage_final_path(SEMANAGE_FINAL_SELINUX,
-						       SEMANAGE_SEUSERS),
-				   semanage_final_path(SEMANAGE_FINAL_TMP,
-						       SEMANAGE_SEUSERS),
+				   semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_SEUSERS),
+				   semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_SEUSERS),
 				   semanage_seuser_dbase_policy(sh)) < 0)
 		goto err;
 
@@ -602,7 +598,7 @@ static int semanage_direct_update_seuser(semanage_handle_t * sh, cil_db_t *cildb
 	}
 
 	if (size > 0) {
-		ofilename = semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_SEUSERS);
+		ofilename = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_SEUSERS);
 		if (ofilename == NULL) {
 			return -1;
 		}
@@ -1039,7 +1035,8 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	size_t fc_buffer_len = 0;
 	const char *ofilename = NULL;
 	const char *path;
-	int retval = -1, num_modinfos = 0, i, missing_policy_kern = 0;
+	int retval = -1, num_modinfos = 0, i, missing_policy_kern = 0,
+		missing_seusers = 0, missing_fc = 0, missing = 0;
 	sepol_policydb_t *out = NULL;
 	struct cil_db *cildb = NULL;
 	semanage_module_info_t *modinfos = NULL;
@@ -1151,10 +1148,26 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		if (access(path, F_OK) != 0) {
 			missing_policy_kern = 1;
 		}
+
+		path = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC);
+
+		if (access(path, F_OK) != 0) {
+			missing_fc = 1;
+		}
+
+		path = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_SEUSERS);
+
+		if (access(path, F_OK) != 0) {
+			missing_seusers = 1;
+		}
 	}
 
+	missing |= missing_policy_kern;
+	missing |= missing_fc;
+	missing |= missing_seusers;
+
 	/* If there were policy changes, or explicitly requested, rebuild the policy */
-	if (sh->do_rebuild || modified || missing_policy_kern) {
+	if (sh->do_rebuild || modified || missing) {
 		/* =================== Module expansion =============== */
 
 		retval = semanage_get_active_modules(sh, &modinfos, &num_modinfos);
@@ -1312,15 +1325,41 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	if (retval < 0)
 		goto cleanup;
 
-	retval = semanage_copy_policydb(sh);
-	if (retval < 0)
+	retval = semanage_copy_file(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL),
+			semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_KERNEL),
+			sh->conf->file_mode);
+	if (retval < 0) {
 		goto cleanup;
+	}
 
 	path = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL);
 	if (access(path, F_OK) == 0) {
-		retval = semanage_copy_fc_local(sh);
-		if (retval < 0)
+		retval = semanage_copy_file(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL),
+							semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_LOCAL),
+							sh->conf->file_mode);
+		if (retval < 0) {
 			goto cleanup;
+		}
+	}
+
+	path = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC);
+	if (access(path, F_OK) == 0) {
+		retval = semanage_copy_file(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC),
+							semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC),
+							sh->conf->file_mode);
+		if (retval < 0) {
+			goto cleanup;
+		}
+	}
+
+	path = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_SEUSERS);
+	if (access(path, F_OK) == 0) {
+		retval = semanage_copy_file(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_SEUSERS),
+							semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_SEUSERS),
+							sh->conf->file_mode);
+		if (retval < 0) {
+			goto cleanup;
+		}
 	}
 
 	/* run genhomedircon if its enabled, this should be the last operation

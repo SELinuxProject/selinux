@@ -111,7 +111,9 @@ static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"/preserve_tunables",
 	"/modules/disabled",
 	"/policy.kern",
-	"/file_contexts.local"
+	"/file_contexts.local",
+	"/file_contexts",
+	"/seusers"
 };
 
 static char const * const semanage_final_prefix[SEMANAGE_FINAL_NUM] = {
@@ -666,7 +668,7 @@ static int semanage_filename_select(const struct dirent *d)
 
 /* Copies a file from src to dst.  If dst already exists then
  * overwrite it.  Returns 0 on success, -1 on error. */
-static int semanage_copy_file(const char *src, const char *dst, mode_t mode)
+int semanage_copy_file(const char *src, const char *dst, mode_t mode)
 {
 	int in, out, retval = 0, amount_read, n, errsv = errno;
 	char tmp[PATH_MAX];
@@ -1425,11 +1427,11 @@ int semanage_split_fc(semanage_handle_t * sh)
 		goto cleanup;
 	}
 
-	fc = open(semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC),
+	fc = open(semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC),
 		  O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if (fc < 0) {
 		ERR(sh, "Could not open %s for writing.",
-		    semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC));
+		    semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC));
 		goto cleanup;
 	}
 	hd = open(semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL),
@@ -1454,8 +1456,7 @@ int semanage_split_fc(semanage_handle_t * sh)
 		} else {
 			if (write(fc, buf, strlen(buf)) < 0) {
 				ERR(sh, "Write to %s failed.",
-				    semanage_final_path(SEMANAGE_FINAL_TMP,
-							SEMANAGE_FC));
+				    semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC));
 				goto cleanup;
 			}
 		}
@@ -2913,40 +2914,4 @@ int semanage_nc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 	semanage_nc_destroy_ruletab(ruletab);
 
 	return 0;
-}
-
-int semanage_copy_policydb(semanage_handle_t *sh)
-{
-	const char *src = NULL;
-	const char *dst = NULL;
-	int rc = -1;
-
-	src = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL);
-	dst = semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_KERNEL);
-
-	rc = semanage_copy_file(src, dst, sh->conf->file_mode);
-	if (rc != 0) {
-		goto cleanup;
-	}
-
-cleanup:
-	return rc;
-}
-
-int semanage_copy_fc_local(semanage_handle_t *sh)
-{
-	const char *src = NULL;
-	const char *dst = NULL;
-	int rc = -1;
-
-	src = semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_LOCAL);
-	dst = semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_LOCAL);
-
-	rc = semanage_copy_file(src, dst, sh->conf->file_mode);
-	if (rc != 0) {
-		goto cleanup;
-	}
-
-cleanup:
-	return rc;
 }

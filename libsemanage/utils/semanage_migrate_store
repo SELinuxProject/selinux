@@ -244,7 +244,8 @@ if __name__ == "__main__":
 		"users_extra.local",
 		"disable_dontaudit",
 		"preserve_tunables",
-		"policy.kern" ]
+		"policy.kern",
+		"file_contexts"]
 
 
 	create_dir(newroot_path(), 0o755)
