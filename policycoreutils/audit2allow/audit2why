@@ -135,13 +135,13 @@ class AuditToPolicy:
         elif self.__options.audit:
             try:
                 messages = audit.get_audit_msgs()
-            except OSError, e:
+            except OSError as e:
                 sys.stderr.write('could not run ausearch - "%s"\n' % str(e))
                 sys.exit(1)
         elif self.__options.boot:
             try:
                 messages = audit.get_audit_boot_msgs()
-            except OSError, e:
+            except OSError as e:
                 sys.stderr.write('could not run ausearch - "%s"\n' % str(e))
                 sys.exit(1)
         else:
@@ -152,7 +152,7 @@ class AuditToPolicy:
         if filename is not None:
             try:
                 f = open(filename)
-            except IOError, e:
+            except IOError as e:
                 sys.stderr.write('could not open file %s - "%s"\n' % (filename, str(e)))
                 sys.exit(1)
 
@@ -214,7 +214,7 @@ class AuditToPolicy:
 
         try:
             fd = open(filename, "w")
-        except IOError, e:
+        except IOError as e:
             sys.stderr.write("could not write output file: %s\n" % str(e))
             sys.exit(1)
 
@@ -225,8 +225,8 @@ class AuditToPolicy:
 
         try:
             mc.create_module_package(filename, self.__options.refpolicy)
-        except RuntimeError, e:
-            print e
+        except RuntimeError as e:
+            print(e)
             sys.exit(1)
 
         sys.stdout.write(_("******************** IMPORTANT ***********************\n"))
@@ -240,43 +240,43 @@ class AuditToPolicy:
                 rc = i.type
                 data = i.data
                 if rc >= 0:
-                    print "%s\n\tWas caused by:" % i.message
+                    print("%s\n\tWas caused by:" % i.message)
                 if rc == audit2why.ALLOW:
-                    print "\t\tUnknown - would be allowed by active policy\n",
-                    print "\t\tPossible mismatch between this policy and the one under which the audit message was generated.\n"
-                    print "\t\tPossible mismatch between current in-memory boolean settings vs. permanent ones.\n"
+                    print("\t\tUnknown - would be allowed by active policy")
+                    print("\t\tPossible mismatch between this policy and the one under which the audit message was generated.\n")
+                    print("\t\tPossible mismatch between current in-memory boolean settings vs. permanent ones.\n")
                     continue
                 if rc == audit2why.DONTAUDIT:
-                    print "\t\tUnknown - should be dontaudit'd by active policy\n",
-                    print "\t\tPossible mismatch between this policy and the one under which the audit message was generated.\n"
-                    print "\t\tPossible mismatch between current in-memory boolean settings vs. permanent ones.\n"
+                    print("\t\tUnknown - should be dontaudit'd by active policy")
+                    print("\t\tPossible mismatch between this policy and the one under which the audit message was generated.\n")
+                    print("\t\tPossible mismatch between current in-memory boolean settings vs. permanent ones.\n")
                     continue
                 if rc == audit2why.BOOLEAN:
                     if len(data) > 1:
-                        print "\tOne of the following booleans was set incorrectly."
+                        print("\tOne of the following booleans was set incorrectly.")
                         for b in data:
-                            print "\tDescription:\n\t%s\n"  % seobject.boolean_desc(b[0])
-                            print "\tAllow access by executing:\n\t# setsebool -P %s %d"  % (b[0], b[1])
+                            print("\tDescription:\n\t%s\n"  % seobject.boolean_desc(b[0]))
+                            print("\tAllow access by executing:\n\t# setsebool -P %s %d"  % (b[0], b[1]))
                     else:
-                        print "\tThe boolean %s was set incorrectly. " % (data[0][0])
-                        print "\tDescription:\n\t%s\n"  % seobject.boolean_desc(data[0][0])
-                        print "\tAllow access by executing:\n\t# setsebool -P %s %d"  % (data[0][0], data[0][1])
+                        print("\tThe boolean %s was set incorrectly. " % (data[0][0]))
+                        print("\tDescription:\n\t%s\n"  % seobject.boolean_desc(data[0][0]))
+                        print("\tAllow access by executing:\n\t# setsebool -P %s %d"  % (data[0][0], data[0][1]))
                     continue
 
                 if rc == audit2why.TERULE:
-                    print "\t\tMissing type enforcement (TE) allow rule.\n"
-                    print "\t\tYou can use audit2allow to generate a loadable module to allow this access.\n"
+                    print("\t\tMissing type enforcement (TE) allow rule.\n")
+                    print("\t\tYou can use audit2allow to generate a loadable module to allow this access.\n")
                     continue
 
                 if rc == audit2why.CONSTRAINT:
-                    print #!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access.\n"
-                    print "#Constraint rule: \n\t" + data[0]
+                    print() #!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access.\n"
+                    print("#Constraint rule: \n\t" + data[0])
                     for reason in data[1:]:
-                        print "#\tPossible cause is the source %s and target %s are different.\n\b" % reason
+                        print("#\tPossible cause is the source %s and target %s are different.\n\b" % reason)
 
                 if rc == audit2why.RBAC:
-                    print "\t\tMissing role allow rule.\n"
-                    print "\t\tAdd an allow rule for the role pair.\n"
+                    print("\t\tMissing role allow rule.\n")
+                    print("\t\tAdd an allow rule for the role pair.\n")
                     continue
 
             audit2why.finish()
@@ -287,8 +287,8 @@ class AuditToPolicy:
         if self.__options.audit2why:
             try:
                 return self.__output_audit2why()
-            except RuntimeError, e:
-                print e
+            except RuntimeError as e:
+                print(e)
                 sys.exit(1)
 
         g = policygen.PolicyGenerator()
@@ -347,11 +347,11 @@ class AuditToPolicy:
             self.__output()
         except KeyboardInterrupt:
             sys.exit(0)
-        except ValueError, e:
-            print e
+        except ValueError as e:
+            print(e)
             sys.exit(1)
-        except IOError, e:
-            print e
+        except IOError as e:
+            print(e)
             sys.exit(1)
 
 if __name__ == "__main__":

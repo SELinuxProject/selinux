@@ -4,18 +4,18 @@ from subprocess import Popen, PIPE
 
 class Audit2allowTests(unittest.TestCase):
     def assertDenied(self, err):
-        self.assert_('Permission denied' in err,
+        self.assertTrue('Permission denied' in err,
                      '"Permission denied" not found in %r' % err)
     def assertNotFound(self, err):
-        self.assert_('not found' in err,
+        self.assertTrue('not found' in err,
                      '"not found" not found in %r' % err)
 
     def assertFailure(self, status):
-        self.assert_(status != 0,
+        self.assertTrue(status != 0,
                      '"Succeeded when it should have failed')
 
     def assertSuccess(self, cmd, status, err):
-        self.assert_(status == 0,
+        self.assertTrue(status == 0,
                      '"%s should have succeeded for this test %r' %  (cmd, err))
 
     def test_sepolgen_ifgen(self):

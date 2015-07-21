@@ -82,7 +82,7 @@ def get_attrs(policy_path):
             sys.stderr.write("No installed policy to check\n")
             return None
         outfile = tempfile.NamedTemporaryFile()
-    except IOError, e:
+    except IOError as e:
         sys.stderr.write("could not open attribute output file\n")
         return None
     except OSError:
@@ -100,7 +100,7 @@ def get_attrs(policy_path):
     try:
         attrs.from_file(outfile)
     except:
-        print "error parsing attribute info"
+        print("error parsing attribute info")
         return None
 
     return attrs
@@ -111,7 +111,7 @@ def main():
     # Open the output first to generate errors before parsing
     try:
         f = open(options.output, "w")
-    except IOError, e:
+    except IOError as e:
         sys.stderr.write("could not open output file [%s]\n" % options.output)
         return 1
 
@@ -130,9 +130,9 @@ def main():
     # Parse the headers
     try:
         headers = refparser.parse_headers(options.headers, output=log, debug=options.debug)
-    except ValueError, e:
-        print "error parsing headers"
-        print str(e)
+    except ValueError as e:
+        print("error parsing headers")
+        print(str(e))
         return 1
 
     if_set = interfaces.InterfaceSet(output=log)
