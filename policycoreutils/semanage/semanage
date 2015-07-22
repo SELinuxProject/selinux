@@ -35,7 +35,7 @@ try:
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
                     codeset = 'utf-8',
-                    **kwarg)
+                    **kwargs)
 except IOError:
     try:
         import builtins
