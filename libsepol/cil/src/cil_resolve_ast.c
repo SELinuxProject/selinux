@@ -51,6 +51,7 @@ struct cil_args_resolve {
 	struct cil_db *db;
 	enum cil_pass pass;
 	uint32_t *changed;
+	char *last_resolved_name;
 	struct cil_tree_node *callstack;
 	struct cil_tree_node *optstack;
 	struct cil_tree_node *boolif;
@@ -880,7 +881,6 @@ int cil_resolve_selinuxuser(struct cil_tree_node *current, void *extra_args)
 	if (selinuxuser->range_str != NULL) {
 		rc = cil_resolve_name(current, selinuxuser->range_str, CIL_SYM_LEVELRANGES, extra_args, &lvlrange_datum);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Unable to resolve name: %s\n", selinuxuser->range_str);
 			goto exit;
 		}
 		selinuxuser->range = (struct cil_levelrange*)lvlrange_datum;
@@ -1455,7 +1455,6 @@ int cil_resolve_cats(struct cil_tree_node *current, struct cil_cats *cats, void 
 
 	rc = cil_resolve_expr(CIL_CATSET, cats->str_expr, &cats->datum_expr, current, extra_args);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR,"Unable to resolve categories\n");
 		goto exit;
 	}
 	
@@ -1654,21 +1653,18 @@ int cil_resolve_context(struct cil_tree_node *current, struct cil_context *conte
 
 	rc = cil_resolve_name(current, context->user_str, CIL_SYM_USERS, extra_args, &user_datum);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Unable to resolve name: %s\n", context->user_str);
 		goto exit;
 	}
 	context->user = (struct cil_user*)user_datum;
 
 	rc = cil_resolve_name(current, context->role_str, CIL_SYM_ROLES, extra_args, &role_datum);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Unable to resolve name: %s\n", context->role_str);
 		goto exit;
 	}
 	context->role = (struct cil_role*)role_datum;
 
 	rc = cil_resolve_name(current, context->type_str, CIL_SYM_TYPES, extra_args, &type_datum);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Unable to resolve name: %s\n", context->type_str);
 		goto exit;
 	}
 
@@ -1684,7 +1680,6 @@ int cil_resolve_context(struct cil_tree_node *current, struct cil_context *conte
 	if (context->range_str != NULL) {
 		rc = cil_resolve_name(current, context->range_str, CIL_SYM_LEVELRANGES, extra_args, &lvlrange_datum);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Unable to resolve name: %s\n", context->range_str);
 			goto exit;
 		}
 		context->range = (struct cil_levelrange*)lvlrange_datum;
@@ -2351,7 +2346,6 @@ int cil_resolve_default(struct cil_tree_node *current, void *extra_args)
 	cil_list_for_each(curr, def->class_strs) {
 		rc = cil_resolve_name(current, (char *)curr->data, CIL_SYM_CLASSES, extra_args, &datum);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Failed to resolve class %s in %s\n", (char *)curr->data, cil_node_to_string(current));
 			goto exit;
 		}
 		cil_list_append(def->class_datums, CIL_CLASS, datum);
@@ -2375,7 +2369,6 @@ int cil_resolve_defaultrange(struct cil_tree_node *current, void *extra_args)
 	cil_list_for_each(curr, def->class_strs) {
 		rc = cil_resolve_name(current, (char *)curr->data, CIL_SYM_CLASSES, extra_args, &datum);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Failed to resolve class %s in defaultrange\n", (char *)curr->data);
 			goto exit;
 		}
 		cil_list_append(def->class_datums, CIL_CLASS, datum);
@@ -2408,7 +2401,7 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 	macro_node = macro_datum->nodes->head->data;
 
 	if (macro_node->flavor != CIL_MACRO) {
-		printf("Failed to resolve macro %s\n", new_call->macro_str);
+		printf("Failed to resolve %s to a macro\n", new_call->macro_str);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
@@ -3304,14 +3297,22 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, __attribute__((unu
 	}
 
 	rc = __cil_resolve_ast_node(node, extra_args);
-	if (rc == SEPOL_ENOENT && optstack != NULL) {
-		struct cil_optional *opt = (struct cil_optional *)optstack->data;
-		cil_log(CIL_WARN, "Disabling optional %s at %d of %s\n", opt->datum.name, node->parent->line, node->parent->path);
-		/* disable an optional if something failed to resolve */
-		opt->enabled = CIL_FALSE;
-		rc = SEPOL_OK;
-	} else if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Failed to resolve %s statement at %d of %s\n", cil_node_to_string(node), node->line, node->path);
+	if (rc == SEPOL_ENOENT) {
+		enum cil_log_level lvl = CIL_ERR;
+
+		if (optstack != NULL) {
+			lvl = CIL_WARN;
+
+			struct cil_optional *opt = (struct cil_optional *)optstack->data;
+			struct cil_tree_node *opt_node = opt->datum.nodes->head->data;
+			cil_log(lvl, "Disabling optional '%s' at line %d of %s: ", opt->datum.name, opt_node->line, opt_node->path);
+			/* disable an optional if something failed to resolve */
+			opt->enabled = CIL_FALSE;
+			rc = SEPOL_OK;
+		}
+
+		cil_log(lvl, "Failed to resolve '%s' in %s statement at line %d of %s\n",
+		        args->last_resolved_name, cil_node_to_string(node), node->line, node->path);
 		goto exit;
 	}
 
@@ -3460,6 +3461,7 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	extra_args.db = db;
 	extra_args.pass = pass;
 	extra_args.changed = &changed;
+	extra_args.last_resolved_name = NULL;
 	extra_args.callstack = NULL;
 	extra_args.optstack = NULL;
 	extra_args.boolif= NULL;
@@ -3734,8 +3736,6 @@ int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_in
 exit:
 	if (rc != SEPOL_OK) {
 		*datum = NULL;
-		cil_log(CIL_WARN, "Failed to resolve %s in %s statement on line %d of %s\n", 
-			name, cil_node_to_string(ast_node), ast_node->line, ast_node->path);
 	}
 
 	if (*datum != NULL) {
@@ -3751,6 +3751,8 @@ exit:
 			}
 		}
 	}
+
+	args->last_resolved_name = name;
 
 	return rc;
 }
