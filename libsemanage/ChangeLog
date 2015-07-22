@@ -1,3 +1,4 @@
+	* Add file_contexts and seusers to the store, from Yuli Khodorkovskiy.
 	* Add policy binary and file_contexts.local to the store, from Yuli Khodorkovskiy.
 	* Allow to install compressed modules without a compression extension,
 	  from Petr Lautrbach.
