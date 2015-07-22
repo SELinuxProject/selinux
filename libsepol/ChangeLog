@@ -1,3 +1,4 @@
+	* Improve CIL resolution error messages, from Steve Lawrence
 	* Fix policydb_read for policy versions < 24, from Stephen Smalley.
 	* Added CIL bounds checking and refactored CIL Neverallow checking, from James Carter
 	* Refactored libsepol Neverallow and bounds (hierarchy) checking, from James Carter
