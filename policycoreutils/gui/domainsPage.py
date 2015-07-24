@@ -25,13 +25,13 @@ import gobject
 import sys
 import seobject
 import selinux
-from semanagePage import *;
+from semanagePage import *
 from sepolicy import get_all_entrypoint_domains
 
 ##
 ## I18N
 ##
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
@@ -39,12 +39,14 @@ try:
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
                     unicode=False,
-                    codeset = 'utf-8')
+                    codeset='utf-8')
 except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
 
+
 class domainsPage(semanagePage):
+
     def __init__(self, xml):
         semanagePage.__init__(self, xml, "domains", _("Process Domain"))
         self.domain_filter = xml.get_widget("domainsFilterEntry")
@@ -54,12 +56,12 @@ class domainsPage(semanagePage):
         self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
         self.view.set_model(self.store)
         self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Domain Name"), gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn(_("Domain Name"), gtk.CellRendererText(), text=0)
         col.set_sort_column_id(0)
         col.set_resizable(True)
         self.view.append_column(col)
         self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Mode"), gtk.CellRendererText(), text = 1)
+        col = gtk.TreeViewColumn(_("Mode"), gtk.CellRendererText(), text=1)
         col.set_sort_column_id(1)
         col.set_resizable(True)
         self.view.append_column(col)
@@ -68,12 +70,12 @@ class domainsPage(semanagePage):
         self.permissive_button = xml.get_widget("permissiveButton")
         self.enforcing_button = xml.get_widget("enforcingButton")
 
-        self.domains=get_all_entrypoint_domains()
+        self.domains = get_all_entrypoint_domains()
         self.load()
 
     def get_modules(self):
-        modules=[]
-        fd=os.popen("semodule -l")
+        modules = []
+        fd = os.popen("semodule -l")
         mods = fd.readlines()
         fd.close()
         for l in mods:
@@ -81,10 +83,10 @@ class domainsPage(semanagePage):
         return modules
 
     def load(self, filter=""):
-        self.filter=filter
+        self.filter = filter
         self.store.clear()
         try:
-            modules=self.get_modules()
+            modules = self.get_modules()
             for domain in self.domains:
                 if not self.match(domain, filter):
                     continue
@@ -97,7 +99,7 @@ class domainsPage(semanagePage):
                     self.store.set_value(iter, 1, "")
         except:
             pass
-        self.view.get_selection().select_path ((0,))
+        self.view.get_selection().select_path((0,))
 
     def itemSelected(self, selection):
         store, iter = selection.get_selected()

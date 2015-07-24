@@ -38,18 +38,19 @@ import sepolicy.network
 import sepolicy.manpage
 import dbus
 import time
-import os, re
+import os
+import re
 import gettext
 import unicodedata
 
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
 try:
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
                     unicode=False,
-                    codeset = 'utf-8')
+                    codeset='utf-8')
 except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
@@ -58,37 +59,39 @@ reverse_file_type_str = {}
 for f in sepolicy.file_type_str:
     reverse_file_type_str[sepolicy.file_type_str[f]] = f
 
-enabled=[_("No"), _("Yes")]
-action=[_("Disable"), _("Enable")]
+enabled = [_("No"), _("Yes")]
+action = [_("Disable"), _("Enable")]
+
+
 def compare(a, b):
-    return cmp(a.lower(),b.lower())
+    return cmp(a.lower(), b.lower())
 
 import distutils.sysconfig
-ADVANCED_LABEL = ( _("Advanced >>"), _("Advanced <<") )
-ADVANCED_SEARCH_LABEL = ( _("Advanced Search >>"), _("Advanced Search <<") )
+ADVANCED_LABEL = (_("Advanced >>"), _("Advanced <<"))
+ADVANCED_SEARCH_LABEL = (_("Advanced Search >>"), _("Advanced Search <<"))
 OUTBOUND_PAGE = 0
 INBOUND_PAGE = 1
 
-TRANSITIONS_FROM_PAGE=0
-TRANSITIONS_TO_PAGE=1
-TRANSITIONS_FILE_PAGE=2
+TRANSITIONS_FROM_PAGE = 0
+TRANSITIONS_TO_PAGE = 1
+TRANSITIONS_FILE_PAGE = 2
 
 EXE_PAGE = 0
 WRITABLE_PAGE = 1
 APP_PAGE = 2
 
-BOOLEANS_PAGE=0
-FILES_PAGE=1
-NETWORK_PAGE=2
-TRANSITIONS_PAGE=3
-LOGIN_PAGE=4
-USER_PAGE=5
-LOCKDOWN_PAGE=6
-SYSTEM_PAGE=7
-FILE_EQUIV_PAGE=8
-START_PAGE=9
+BOOLEANS_PAGE = 0
+FILES_PAGE = 1
+NETWORK_PAGE = 2
+TRANSITIONS_PAGE = 3
+LOGIN_PAGE = 4
+USER_PAGE = 5
+LOCKDOWN_PAGE = 6
+SYSTEM_PAGE = 7
+FILE_EQUIV_PAGE = 8
+START_PAGE = 9
 
-keys = ["boolean", "fcontext", "fcontext-equiv", "port", "login", "user", "module", "node", "interface" ]
+keys = ["boolean", "fcontext", "fcontext-equiv", "port", "login", "user", "module", "node", "interface"]
 
 DISABLED_TEXT = _("""<small>
 To change from Disabled to Enforcing mode
@@ -98,9 +101,10 @@ To change from Disabled to Enforcing mode
   * Change the system mode to Enforcing</small>
 """)
 
+
 class SELinuxGui():
 
-    def __init__( self , app = None, test = False):
+    def __init__(self, app=None, test=False):
         self.finish_init = False
         self.opage = START_PAGE
         self.dbus = SELinuxDBus()
@@ -119,8 +123,8 @@ class SELinuxGui():
         self.init_cur()
         self.application = app
         self.filter_txt = ""
-        builder = Gtk.Builder() # BUILDER OBJ
-        self.code_path = distutils.sysconfig.get_python_lib(plat_specific = True) + "/sepolicy/"
+        builder = Gtk.Builder()  # BUILDER OBJ
+        self.code_path = distutils.sysconfig.get_python_lib(plat_specific=True) + "/sepolicy/"
         glade_file = self.code_path + "sepolicy.glade"
         builder.add_from_file(glade_file)
         self.outer_notebook = builder.get_object("outer_notebook")
@@ -314,7 +318,7 @@ class SELinuxGui():
         self.files_delete_liststore = builder.get_object("files_delete_liststore")
         self.network_delete_window = builder.get_object("network_delete_window")
         self.network_delete_treeview = builder.get_object("network_delete_treeview")
-        self.network_delete_liststore =builder.get_object("network_delete_liststore")
+        self.network_delete_liststore = builder.get_object("network_delete_liststore")
         # Delete items **************************************
 
         # Progress bar **************************************
@@ -323,7 +327,7 @@ class SELinuxGui():
 
         # executable_files items ****************************
         self.executable_files_treeview = builder.get_object("Executable_files_treeview")                  # Get the executable files tree view
-        self.executable_files_filter= builder.get_object("executable_files_filter")
+        self.executable_files_filter = builder.get_object("executable_files_filter")
         self.executable_files_filter.set_visible_func(self.filter_the_data)
         self.executable_files_tab = builder.get_object("Executable_files_tab")
         self.executable_files_tab_tooltip_txt = self.executable_files_tab.get_tooltip_text()
@@ -363,7 +367,7 @@ class SELinuxGui():
         self.network_out_treeview = builder.get_object("outbound_treeview")
         self.network_out_liststore = builder.get_object("network_out_liststore")
         self.network_out_liststore.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-        self.network_out_filter =  builder.get_object("network_out_filter")
+        self.network_out_filter = builder.get_object("network_out_filter")
         self.network_out_filter.set_visible_func(self.filter_the_data)
         self.network_out_tab = builder.get_object("network_out_tab")
         self.network_out_tab_tooltip_txt = self.network_out_tab.get_tooltip_text()
@@ -371,7 +375,7 @@ class SELinuxGui():
         self.network_in_treeview = builder.get_object("inbound_treeview")
         self.network_in_liststore = builder.get_object("network_in_liststore")
         self.network_in_liststore.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-        self.network_in_filter =  builder.get_object("network_in_filter")
+        self.network_in_filter = builder.get_object("network_in_filter")
         self.network_in_filter.set_visible_func(self.filter_the_data)
         self.network_in_tab = builder.get_object("network_in_tab")
         self.network_in_tab_tooltip_txt = self.network_in_tab.get_tooltip_text()
@@ -424,7 +428,7 @@ class SELinuxGui():
         # Combobox and Entry items **************************
         self.combobox_menu = builder.get_object("combobox_org")                    # This is the combobox box object, aka the arrow next to the entry text bar
         self.combobox_menu_model = builder.get_object("application_liststore")
-        self.completion_entry = builder.get_object("completion_entry")        #self.combobox_menu.get_child()
+        self.completion_entry = builder.get_object("completion_entry")  # self.combobox_menu.get_child()
         self.completion_entry_model = builder.get_object("application_liststore")
         self.entrycompletion_obj = builder.get_object("entrycompletion_obj")
         #self.entrycompletion_obj = Gtk.EntryCompletion()
@@ -483,7 +487,7 @@ class SELinuxGui():
         self.loading = 1
         path = None
         if test:
-            domains = [ "httpd_t", "abrt_t" ]
+            domains = ["httpd_t", "abrt_t"]
             if app and app not in domains:
                 domains.append(app)
         else:
@@ -497,7 +501,7 @@ class SELinuxGui():
             self.combo_box_initialize(domain, None)
             self.advanced_search_initialize(domain)
             self.all_list.append(domain)
-            self.percentage = float(float(self.loading)/float(length))
+            self.percentage = float(float(self.loading) / float(length))
             self.progress_bar.set_fraction(self.percentage)
             self.progress_bar.set_pulse_step(self.percentage)
             self.idle_func()
@@ -516,84 +520,84 @@ class SELinuxGui():
         loading_gui.hide()
 
         dic = {
-               "on_combo_button_clicked" : self.open_combo_menu,
-               "on_disable_ptrace_toggled" : self.on_disable_ptrace,
-               "on_SELinux_window_configure_event" : self.hide_combo_menu,
-               "on_entrycompletion_obj_match_selected" : self.set_application_label,
-               "on_filter_changed" : self.get_filter_data,
-               "on_save_changes_file_equiv_clicked" : self.update_to_file_equiv,
-               "on_save_changes_login_clicked" : self.update_to_login,
-               "on_save_changes_user_clicked" : self.update_to_user,
-               "on_save_changes_files_clicked" : self.update_to_files,
-               "on_save_changes_network_clicked" : self.update_to_network,
-               "on_Advanced_text_files_button_press_event" : self.reveal_advanced,
-               "item_in_tree_selected" : self.cursor_changed,
-               "on_Application_file_types_treeview_configure_event" : self.resize_wrap,
-               "on_save_delete_clicked" : self.on_save_delete_clicked,
-               "on_moreTypes_treeview_files_row_activated" : self.populate_type_combo,
-               "on_retry_button_files_clicked" : self.invalid_entry_retry,
-               "on_make_path_recursive_toggled" : self.recursive_path,
-               "on_files_path_entry_button_press_event" : self.highlight_entry_text,
-               "on_files_path_entry_changed" : self.autofill_add_files_entry,
-               "on_select_type_files_clicked" : self.select_type_more,
-               "on_choose_file" : self.on_browse_select,
-               "on_Enforcing_button_toggled" : self.set_enforce,
-               "on_confirmation_close" : self.confirmation_close,
-               "on_column_clicked" : self.column_clicked,
-               "on_tab_switch" : self.clear_filters,
+            "on_combo_button_clicked": self.open_combo_menu,
+            "on_disable_ptrace_toggled": self.on_disable_ptrace,
+            "on_SELinux_window_configure_event": self.hide_combo_menu,
+            "on_entrycompletion_obj_match_selected": self.set_application_label,
+            "on_filter_changed": self.get_filter_data,
+            "on_save_changes_file_equiv_clicked": self.update_to_file_equiv,
+            "on_save_changes_login_clicked": self.update_to_login,
+            "on_save_changes_user_clicked": self.update_to_user,
+            "on_save_changes_files_clicked": self.update_to_files,
+            "on_save_changes_network_clicked": self.update_to_network,
+            "on_Advanced_text_files_button_press_event": self.reveal_advanced,
+            "item_in_tree_selected": self.cursor_changed,
+            "on_Application_file_types_treeview_configure_event": self.resize_wrap,
+            "on_save_delete_clicked": self.on_save_delete_clicked,
+            "on_moreTypes_treeview_files_row_activated": self.populate_type_combo,
+            "on_retry_button_files_clicked": self.invalid_entry_retry,
+            "on_make_path_recursive_toggled": self.recursive_path,
+            "on_files_path_entry_button_press_event": self.highlight_entry_text,
+            "on_files_path_entry_changed": self.autofill_add_files_entry,
+            "on_select_type_files_clicked": self.select_type_more,
+            "on_choose_file": self.on_browse_select,
+            "on_Enforcing_button_toggled": self.set_enforce,
+            "on_confirmation_close": self.confirmation_close,
+            "on_column_clicked": self.column_clicked,
+            "on_tab_switch": self.clear_filters,
 
-               "on_file_equiv_button_clicked" : self.show_file_equiv_page,
-               "on_app/system_button_clicked" : self.system_interface,
-               "on_app/users_button_clicked" : self.users_interface,
-               "on_main_advanced_label_button_press_event": self.advanced_label_main,
+            "on_file_equiv_button_clicked": self.show_file_equiv_page,
+            "on_app/system_button_clicked": self.system_interface,
+            "on_app/users_button_clicked": self.users_interface,
+            "on_main_advanced_label_button_press_event": self.advanced_label_main,
 
-               "on_Show_mislabeled_files_toggled" : self.show_mislabeled_files,
-               "on_Browse_button_files_clicked" : self.browse_for_files,
-               "on_cancel_popup_clicked" : self.close_popup,
-               "on_treeview_cursor_changed" : self.cursor_changed,
-               "on_login_seuser_combobox_changed"  : self.login_seuser_combobox_change,
-               "on_user_roles_combobox_changed":self.user_roles_combobox_change,
+            "on_Show_mislabeled_files_toggled": self.show_mislabeled_files,
+            "on_Browse_button_files_clicked": self.browse_for_files,
+            "on_cancel_popup_clicked": self.close_popup,
+            "on_treeview_cursor_changed": self.cursor_changed,
+            "on_login_seuser_combobox_changed": self.login_seuser_combobox_change,
+            "on_user_roles_combobox_changed": self.user_roles_combobox_change,
 
-               "on_cancel_button_browse_clicked" : self.close_config_window,
-               "on_apply_button_clicked" : self.apply_changes_button_press,
-               "on_Revert_button_clicked" : self.update_or_revert_changes,
-               "on_Update_button_clicked" : self.update_or_revert_changes,
-               "on_advanced_filter_entry_changed" : self.get_advanced_filter_data,
-               "on_advanced_search_treeview_row_activated" : self.advanced_item_selected,
-               "on_Select_advanced_search_clicked" : self.advanced_item_button_push,
-               "on_All_advanced_button_toggled" : self.advanced_radio_select,
-               "on_Installed_advanced_button_toggled" : self.advanced_radio_select,
-               "on_info_button_button_press_event" : self.on_help_button,
-               "on_back_button_clicked" : self.on_help_back_clicked,
-               "on_forward_button_clicked" : self.on_help_forward_clicked,
-               "on_Boolean_treeview_columns_changed" : self.resize_columns,
-               "on_completion_entry_changed" : self.application_selected,
-               "on_Add_button_clicked" : self.add_button_clicked,
-               "on_Delete_button_clicked" : self.delete_button_clicked,
-               "on_Modify_button_clicked" : self.modify_button_clicked,
-               "on_Show_modified_only_toggled" : self.on_show_modified_only,
-               "on_cancel_button_config_clicked" : self.close_config_window,
-               "on_Import_button_clicked" : self.import_config_show,
-               "on_Export_button_clicked" : self.export_config_show,
-               "on_enable_unconfined_toggled": self.unconfined_toggle,
-               "on_enable_permissive_toggled": self.permissive_toggle,
-               "on_system_policy_type_combobox_changed" : self.change_default_policy,
-               "on_Enforcing_button_default_toggled" : self.change_default_mode,
-               "on_Permissive_button_default_toggled" : self.change_default_mode,
-               "on_Disabled_button_default_toggled" : self.change_default_mode,
+            "on_cancel_button_browse_clicked": self.close_config_window,
+            "on_apply_button_clicked": self.apply_changes_button_press,
+            "on_Revert_button_clicked": self.update_or_revert_changes,
+            "on_Update_button_clicked": self.update_or_revert_changes,
+            "on_advanced_filter_entry_changed": self.get_advanced_filter_data,
+            "on_advanced_search_treeview_row_activated": self.advanced_item_selected,
+            "on_Select_advanced_search_clicked": self.advanced_item_button_push,
+            "on_All_advanced_button_toggled": self.advanced_radio_select,
+            "on_Installed_advanced_button_toggled": self.advanced_radio_select,
+            "on_info_button_button_press_event": self.on_help_button,
+            "on_back_button_clicked": self.on_help_back_clicked,
+            "on_forward_button_clicked": self.on_help_forward_clicked,
+            "on_Boolean_treeview_columns_changed": self.resize_columns,
+            "on_completion_entry_changed": self.application_selected,
+            "on_Add_button_clicked": self.add_button_clicked,
+            "on_Delete_button_clicked": self.delete_button_clicked,
+            "on_Modify_button_clicked": self.modify_button_clicked,
+            "on_Show_modified_only_toggled": self.on_show_modified_only,
+            "on_cancel_button_config_clicked": self.close_config_window,
+            "on_Import_button_clicked": self.import_config_show,
+            "on_Export_button_clicked": self.export_config_show,
+            "on_enable_unconfined_toggled": self.unconfined_toggle,
+            "on_enable_permissive_toggled": self.permissive_toggle,
+            "on_system_policy_type_combobox_changed": self.change_default_policy,
+            "on_Enforcing_button_default_toggled": self.change_default_mode,
+            "on_Permissive_button_default_toggled": self.change_default_mode,
+            "on_Disabled_button_default_toggled": self.change_default_mode,
 
-               "on_Relabel_button_toggled_cb": self.relabel_on_reboot,
-               "on_advanced_system_button_press_event" : self.reveal_advanced_system,
-               "on_files_type_combobox_changed" : self.show_more_types,
-               "on_filter_row_changed" : self.filter_the_data,
-               "on_button_toggled" : self.tab_change,
-               "gtk_main_quit": self.closewindow
-               }
+            "on_Relabel_button_toggled_cb": self.relabel_on_reboot,
+            "on_advanced_system_button_press_event": self.reveal_advanced_system,
+            "on_files_type_combobox_changed": self.show_more_types,
+            "on_filter_row_changed": self.filter_the_data,
+            "on_button_toggled": self.tab_change,
+            "gtk_main_quit": self.closewindow
+        }
 
         self.previously_modified_initialize(customized)
         builder.connect_signals(dic)
         self.window.show()                # Show the gui to the screen
-        GLib.timeout_add_seconds(5,self.selinux_status)
+        GLib.timeout_add_seconds(5, self.selinux_status)
         self.selinux_status()
         self.lockdown_inited = False
         self.add_modify_delete_box.hide()
@@ -619,7 +623,7 @@ class SELinuxGui():
         for k in keys:
             self.cur_dict[k] = {}
 
-    def remove_cur(self,ctr):
+    def remove_cur(self, ctr):
         i = 0
         for k in self.cur_dict:
             for j in self.cur_dict[k]:
@@ -638,7 +642,7 @@ class SELinuxGui():
             self.current_status_enforcing.set_sensitive(False)
             self.current_status_permissive.set_sensitive(False)
             self.enforcing_button_default.set_sensitive(False)
-            self.status_bar.push(self.context_id,  _("System Status: Disabled"))
+            self.status_bar.push(self.context_id, _("System Status: Disabled"))
             self.info_text.set_label(DISABLED_TEXT)
         else:
             self.set_enforce_text(self.status)
@@ -670,7 +674,7 @@ class SELinuxGui():
             mod = m.split()
             if len(mod) < 2:
                 continue
-            self.module_dict[mod[0]] = { "version": mod[1], "Disabled" : (len(mod) > 2) }
+            self.module_dict[mod[0]] = {"version": mod[1], "Disabled": (len(mod) > 2)}
 
         self.enable_unconfined_button.set_active(not self.module_dict["unconfined"]["Disabled"])
         self.enable_permissive_button.set_active(not self.module_dict["permissivedomains"]["Disabled"])
@@ -719,7 +723,7 @@ class SELinuxGui():
         except IOError:
             buf = ""
         help_text = self.help_text.get_buffer()
-        help_text.set_text(buf % { "APP": self.application })
+        help_text.set_text(buf % {"APP": self.application})
         self.help_text.set_buffer(help_text)
         self.help_image.set_from_file("%shelp/%s.png" % (self.code_path, self.help_list[self.help_page]))
         self.show_popup(self.help_window)
@@ -737,70 +741,70 @@ class SELinuxGui():
         self.help_list = []
         if self.opage == START_PAGE:
             self.help_window.set_title(_("Help: Start Page"))
-            self.help_list = [ "start"]
+            self.help_list = ["start"]
 
         if self.opage == BOOLEANS_PAGE:
             self.help_window.set_title(_("Help: Booleans Page"))
-            self.help_list = [ "booleans", "booleans_toggled", "booleans_more", "booleans_more_show"]
+            self.help_list = ["booleans", "booleans_toggled", "booleans_more", "booleans_more_show"]
 
         if self.opage == FILES_PAGE:
             ipage = self.inner_notebook_files.get_current_page()
             if ipage == EXE_PAGE:
                 self.help_window.set_title(_("Help: Executable Files Page"))
-                self.help_list = [ "files_exec" ]
+                self.help_list = ["files_exec"]
             if ipage == WRITABLE_PAGE:
                 self.help_window.set_title(_("Help: Writable Files Page"))
-                self.help_list = [ "files_write" ]
+                self.help_list = ["files_write"]
             if ipage == APP_PAGE:
                 self.help_window.set_title(_("Help: Application Types Page"))
-                self.help_list = [ "files_app" ]
+                self.help_list = ["files_app"]
         if self.opage == NETWORK_PAGE:
             ipage = self.inner_notebook_network.get_current_page()
             if ipage == OUTBOUND_PAGE:
                 self.help_window.set_title(_("Help: Outbound Network Connections Page"))
-                self.help_list = [ "ports_outbound" ]
+                self.help_list = ["ports_outbound"]
             if ipage == INBOUND_PAGE:
                 self.help_window.set_title(_("Help: Inbound Network Connections Page"))
-                self.help_list = [ "ports_inbound" ]
+                self.help_list = ["ports_inbound"]
 
         if self.opage == TRANSITIONS_PAGE:
             ipage = self.inner_notebook_transitions.get_current_page()
             if ipage == TRANSITIONS_FROM_PAGE:
                 self.help_window.set_title(_("Help: Transition from application Page"))
-                self.help_list = [ "transition_from", "transition_from_boolean", "transition_from_boolean_1", "transition_from_boolean_2"]
+                self.help_list = ["transition_from", "transition_from_boolean", "transition_from_boolean_1", "transition_from_boolean_2"]
             if ipage == TRANSITIONS_TO_PAGE:
                 self.help_window.set_title(_("Help: Transition into application Page"))
-                self.help_list = [ "transition_to" ]
+                self.help_list = ["transition_to"]
             if ipage == TRANSITIONS_FILE_PAGE:
                 self.help_window.set_title(_("Help: Transition application file Page"))
-                self.help_list = [ "transition_file" ]
+                self.help_list = ["transition_file"]
 
         if self.opage == SYSTEM_PAGE:
-                self.help_window.set_title(_("Help: Systems Page"))
-                self.help_list = [ "system", "system_boot_mode", "system_current_mode", "system_export", "system_policy_type", "system_relabel" ]
+            self.help_window.set_title(_("Help: Systems Page"))
+            self.help_list = ["system", "system_boot_mode", "system_current_mode", "system_export", "system_policy_type", "system_relabel"]
 
         if self.opage == LOCKDOWN_PAGE:
-                self.help_window.set_title(_("Help: Lockdown Page"))
-                self.help_list = [ "lockdown", "lockdown_unconfined", "lockdown_permissive", "lockdown_ptrace" ]
+            self.help_window.set_title(_("Help: Lockdown Page"))
+            self.help_list = ["lockdown", "lockdown_unconfined", "lockdown_permissive", "lockdown_ptrace"]
 
         if self.opage == LOGIN_PAGE:
-                self.help_window.set_title(_("Help: Login Page"))
-                self.help_list = [ "login", "login_default" ]
+            self.help_window.set_title(_("Help: Login Page"))
+            self.help_list = ["login", "login_default"]
 
         if self.opage == USER_PAGE:
-                self.help_window.set_title(_("Help: SELinux User Page"))
-                self.help_list = [ "users" ]
+            self.help_window.set_title(_("Help: SELinux User Page"))
+            self.help_list = ["users"]
 
         if self.opage == FILE_EQUIV_PAGE:
-                self.help_window.set_title(_("Help: File Equivalence Page"))
-                self.help_list = [ "file_equiv"]
+            self.help_window.set_title(_("Help: File Equivalence Page"))
+            self.help_list = ["file_equiv"]
         return self.help_show_page()
 
     def open_combo_menu(self, *args):
         if self.popup == 0:
             self.popup = 1
             location = self.window.get_position()
-            self.main_selection_window.move(location[0]+2, location[1]+65)
+            self.main_selection_window.move(location[0] + 2, location[1] + 65)
             self.main_selection_window.show()
         else:
             self.main_selection_window.hide()
@@ -827,7 +831,7 @@ class SELinuxGui():
 
     def populate_system_policy(self):
         selinux_path = selinux.selinux_path()
-        types = map(lambda x: x[1], filter(lambda x: x[0]==selinux_path, os.walk(selinux_path)))[0]
+        types = map(lambda x: x[1], filter(lambda x: x[0] == selinux_path, os.walk(selinux_path)))[0]
         types.sort()
         ctr = 0
         for item in types:
@@ -844,23 +848,23 @@ class SELinuxGui():
         if self.filter_txt == "":
             return True
         try:
-            for x in range(0,list.get_n_columns()):
+            for x in range(0, list.get_n_columns()):
                 try:
                     val = list.get_value(iter, x)
                     if val == True or val == False or val == None:
                         continue
                     # Returns true if filter_txt exists within the val
-                    if(val.find(self.filter_txt) != -1 or val.lower().find(self.filter_txt) != -1) :
+                    if(val.find(self.filter_txt) != -1 or val.lower().find(self.filter_txt) != -1):
                         return True
                 except AttributeError, TypeError:
                     pass
-        except: #ValueError:
+        except:  # ValueError:
             pass
         return False
 
     def net_update(self, app, netd, protocol, direction, model):
         for k in netd.keys():
-            for t,ports in netd[k]:
+            for t, ports in netd[k]:
                 pkey = (",".join(ports), protocol)
                 if pkey in self.cur_dict["port"]:
                     if self.cur_dict["port"][pkey]["action"] == "-d":
@@ -937,7 +941,7 @@ class SELinuxGui():
                 return
             ctr += 1
 
-        niter = liststore.get_iter(ctr-1)
+        niter = liststore.get_iter(ctr - 1)
         if liststore.get_value(niter, 0) == _("More..."):
             iter = liststore.insert_before(niter)
             ctr = ctr - 1
@@ -1069,7 +1073,7 @@ class SELinuxGui():
 
     def reinit(self):
         sepolicy.reinit()
-        self.fcdict=sepolicy.get_fcdict()
+        self.fcdict = sepolicy.get_fcdict()
         self.local_file_paths = sepolicy.get_local_file_paths()
 
     def previously_modified_initialize(self, buf):
@@ -1083,36 +1087,36 @@ class SELinuxGui():
             if rec[0] not in self.cust_dict:
                 self.cust_dict[rec[0]] = {}
             if rec[0] == "boolean":
-                self.cust_dict["boolean"][rec[-1]] = { "active": rec[2] == "-1" }
+                self.cust_dict["boolean"][rec[-1]] = {"active": rec[2] == "-1"}
             if rec[0] == "login":
-                self.cust_dict["login"][rec[-1]] = { "seuser": rec[3], "range": rec[5] }
+                self.cust_dict["login"][rec[-1]] = {"seuser": rec[3], "range": rec[5]}
             if rec[0] == "interface":
-                self.cust_dict["interface"][rec[-1]] = { "type": rec[3] }
+                self.cust_dict["interface"][rec[-1]] = {"type": rec[3]}
             if rec[0] == "user":
-                self.cust_dict["user"][rec[-1]] = { "level": "s0", "range": rec[3], "role": rec[5] }
+                self.cust_dict["user"][rec[-1]] = {"level": "s0", "range": rec[3], "role": rec[5]}
             if rec[0] == "port":
-                self.cust_dict["port"][(rec[-1], rec[-2] )] = { "type": rec[3] }
+                self.cust_dict["port"][(rec[-1], rec[-2])] = {"type": rec[3]}
             if rec[0] == "node":
-                self.cust_dict["node"][rec[-1]] = { "mask": rec[3], "protocol":rec[5], "type": rec[7] }
+                self.cust_dict["node"][rec[-1]] = {"mask": rec[3], "protocol": rec[5], "type": rec[7]}
             if rec[0] == "fcontext":
                 if rec[2] == "-e":
                     if "fcontext-equiv" not in self.cust_dict:
                         self.cust_dict["fcontext-equiv"] = {}
-                    self.cust_dict["fcontext-equiv"][(rec[-1])] = { "equiv": rec[3] }
+                    self.cust_dict["fcontext-equiv"][(rec[-1])] = {"equiv": rec[3]}
                 else:
-                    self.cust_dict["fcontext"][(rec[-1],rec[3])] = { "type": rec[5] }
+                    self.cust_dict["fcontext"][(rec[-1], rec[3])] = {"type": rec[5]}
             if rec[0] == "module":
-                self.cust_dict["module"][rec[-1]] = { "enabled": rec[2] != "-d" }
+                self.cust_dict["module"][rec[-1]] = {"enabled": rec[2] != "-d"}
 
         if "module" not in self.cust_dict:
             return
-        for semodule, button in [ ("unconfined", self.disable_unconfined_button), ("permissivedomains", self.disable_permissive_button) ]:
+        for semodule, button in [("unconfined", self.disable_unconfined_button), ("permissivedomains", self.disable_permissive_button)]:
             if semodule in self.cust_dict["module"]:
                 button.set_active(self.cust_dict["module"][semodule]["enabled"])
 
         for i in keys:
             if i not in self.cust_dict:
-                self.cust_dict.update({i:{}})
+                self.cust_dict.update({i: {}})
 
     def executable_files_initialize(self, application):
         self.entrypoints = sepolicy.get_entrypoints(application)
@@ -1130,7 +1134,7 @@ class SELinuxGui():
 
     def mislabeled(self, path):
         try:
-            con = selinux.matchpathcon(path,0)[1]
+            con = selinux.matchpathcon(path, 0)[1]
             cur = selinux.getfilecon(path)[1]
             return con != cur
         except OSError:
@@ -1139,9 +1143,9 @@ class SELinuxGui():
     def set_mislabeled(self, tree, path, iter, niter):
         if not self.mislabeled(path):
             return
-        con = selinux.matchpathcon(path,0)[1]
+        con = selinux.matchpathcon(path, 0)[1]
         cur = selinux.getfilecon(path)[1]
-        self.mislabeled_files=True
+        self.mislabeled_files = True
         # Set visibility of label
         tree.set_value(niter, 3, True)
         # Has a mislabel
@@ -1159,8 +1163,8 @@ class SELinuxGui():
                 continue
             file_class = self.writable_files[write][1]
             for path in self.writable_files[write][0]:
-                if (path,file_class) in self.cur_dict["fcontext"]:
-                    if self.cur_dict["fcontext"][(path,file_class) ]["action"] == "-d":
+                if (path, file_class) in self.cur_dict["fcontext"]:
+                    if self.cur_dict["fcontext"][(path, file_class)]["action"] == "-d":
                         continue
                     if write != self.cur_dict["fcontext"][(path, file_class)]["type"]:
                         continue
@@ -1172,7 +1176,7 @@ class SELinuxGui():
             path = _("MISSING FILE PATH")
             modify = False
         else:
-            modify = (path,file_class) in self.local_file_paths
+            modify = (path, file_class) in self.local_file_paths
             for p in sepolicy.find_file(path):
                 niter = liststore.append(iter)
                 liststore.set_value(niter, 0, p)
@@ -1191,7 +1195,7 @@ class SELinuxGui():
 
     def unmarkup(self, f):
         if f:
-            return re.sub("</b>$","", re.sub("^<b>","", f))
+            return re.sub("</b>$", "", re.sub("^<b>", "", f))
         return None
 
     def application_files_initialize(self, application):
@@ -1201,7 +1205,7 @@ class SELinuxGui():
                 continue
             file_class = self.file_types[app][1]
             for path in self.file_types[app][0]:
-                desc = sepolicy.get_description(app, markup = self.markup)
+                desc = sepolicy.get_description(app, markup=self.markup)
                 if (path, file_class) in self.cur_dict["fcontext"]:
                     if self.cur_dict["fcontext"][(path, file_class)]["action"] == "-d":
                         continue
@@ -1222,7 +1226,7 @@ class SELinuxGui():
                 if b in self.cur_dict["boolean"]:
                     active = self.cur_dict["boolean"][b]['active']
                 desc = sepolicy.boolean_desc(b)
-                self.boolean_initial_data_insert(b, desc , active)
+                self.boolean_initial_data_insert(b, desc, active)
 
     def boolean_initial_data_insert(self, val, desc, active):
         # Insert data from data source into tree
@@ -1350,9 +1354,9 @@ class SELinuxGui():
             elif ipage == APP_PAGE:
                 self.treeview = self.application_files_treeview
                 category = _("application")
-            self.add_button.set_tooltip_text(_("Add new %(TYPE)s file path for '%(DOMAIN)s' domains.") % { "TYPE": category, "DOMAIN": self.application})
-            self.delete_button.set_tooltip_text(_("Delete %(TYPE)s file paths for '%(DOMAIN)s' domain.") % { "TYPE": category, "DOMAIN": self.application})
-            self.modify_button.set_tooltip_text(_("Modify %(TYPE)s file path for '%(DOMAIN)s' domain. Only bolded items in the list can be selected, this indicates they were modified previously.") % { "TYPE": category, "DOMAIN": self.application})
+            self.add_button.set_tooltip_text(_("Add new %(TYPE)s file path for '%(DOMAIN)s' domains.") % {"TYPE": category, "DOMAIN": self.application})
+            self.delete_button.set_tooltip_text(_("Delete %(TYPE)s file paths for '%(DOMAIN)s' domain.") % {"TYPE": category, "DOMAIN": self.application})
+            self.modify_button.set_tooltip_text(_("Modify %(TYPE)s file path for '%(DOMAIN)s' domain. Only bolded items in the list can be selected, this indicates they were modified previously.") % {"TYPE": category, "DOMAIN": self.application})
 
         if self.network_radio_button.get_active():
             self.add_modify_delete_box.show()
@@ -1428,11 +1432,11 @@ class SELinuxGui():
             self.treesort = self.treeview.get_model()
             self.treefilter = self.treesort.get_model()
             self.liststore = self.treefilter.get_model()
-            for x in range(0,self.liststore.get_n_columns()):
+            for x in range(0, self.liststore.get_n_columns()):
                 col = self.treeview.get_column(x)
                 if col:
                     cell = col.get_cells()[0]
-                    if isinstance(cell,Gtk.CellRendererText):
+                    if isinstance(cell, Gtk.CellRendererText):
                         self.liststore.set_sort_func(x, self.stripsort, None)
             self.treeview.get_selection().unselect_all()
         self.modify_button.set_sensitive(False)
@@ -1441,7 +1445,7 @@ class SELinuxGui():
         sort_column, _ = model.get_sort_column_id()
         val1 = self.unmarkup(model.get_value(row1, sort_column))
         val2 = self.unmarkup(model.get_value(row2, sort_column))
-        return cmp(val1,val2)
+        return cmp(val1, val2)
 
     def display_more_detail(self, windows, path):
         it = self.boolean_filter.get_iter(path)
@@ -1449,7 +1453,7 @@ class SELinuxGui():
 
         self.boolean_more_detail_tree_data_set.clear()
         self.boolean_more_detail_window.set_title(_("Boolean %s Allow Rules") % self.boolean_liststore.get_value(it, 2))
-        blist = sepolicy.get_boolean_rules(self.application,self.boolean_liststore.get_value(it, 2));
+        blist = sepolicy.get_boolean_rules(self.application, self.boolean_liststore.get_value(it, 2))
         for b in blist:
             self.display_more_detail_init(b["source"], b["target"], b["class"], b["permlist"])
         self.show_popup(self.boolean_more_detail_window)
@@ -1461,14 +1465,14 @@ class SELinuxGui():
     def add_button_clicked(self, *args):
         self.modify = False
         if self.opage == NETWORK_PAGE:
-            self.popup_network_label.set_text((_("Add Network Port for %s.  Ports will be created when update is applied."))% self.application)
-            self.network_popup_window.set_title((_("Add Network Port for %s"))% self.application)
+            self.popup_network_label.set_text((_("Add Network Port for %s.  Ports will be created when update is applied.")) % self.application)
+            self.network_popup_window.set_title((_("Add Network Port for %s")) % self.application)
             self.init_network_dialog(args)
             return
 
         if self.opage == FILES_PAGE:
-            self.popup_files_label.set_text((_("Add File Labeling for %s. File labels will be created when update is applied."))% self.application)
-            self.files_popup_window.set_title((_("Add File Labeling for %s"))% self.application)
+            self.popup_files_label.set_text((_("Add File Labeling for %s. File labels will be created when update is applied.")) % self.application)
+            self.files_popup_window.set_title((_("Add File Labeling for %s")) % self.application)
             self.init_files_dialog(args)
             ipage = self.inner_notebook_files.get_current_page()
             if ipage == EXE_PAGE:
@@ -1520,8 +1524,8 @@ class SELinuxGui():
             self.modify_button_network_clicked(args)
 
         if self.opage == FILES_PAGE:
-            self.popup_files_label.set_text((_("Modify File Labeling for %s. File labels will be created when update is applied."))% self.application)
-            self.files_popup_window.set_title((_("Add File Labeling for %s"))% self.application)
+            self.popup_files_label.set_text((_("Modify File Labeling for %s. File labels will be created when update is applied.")) % self.application)
+            self.files_popup_window.set_title((_("Add File Labeling for %s")) % self.application)
             self.delete_old_item = None
             self.init_files_dialog(args)
             self.modify = True
@@ -1572,26 +1576,26 @@ class SELinuxGui():
 
         if self.opage == USER_PAGE:
             self.user_init_dialog(args)
-            self.user_name_entry.set_text(self.user_liststore.get_value(iter,0))
-            self.user_mls_level_entry.set_text(self.user_liststore.get_value(iter,2))
-            self.user_mls_entry.set_text(self.user_liststore.get_value(iter,3))
-            self.combo_set_active_text(self.user_roles_combobox, self.user_liststore.get_value(iter,1))
+            self.user_name_entry.set_text(self.user_liststore.get_value(iter, 0))
+            self.user_mls_level_entry.set_text(self.user_liststore.get_value(iter, 2))
+            self.user_mls_entry.set_text(self.user_liststore.get_value(iter, 3))
+            self.combo_set_active_text(self.user_roles_combobox, self.user_liststore.get_value(iter, 1))
             self.user_label.set_text((_("Modify SELinux User Role. SELinux user roles will be modified when update is applied.")))
             self.user_popup_window.set_title(_("Modify SELinux Users"))
             self.show_popup(self.user_popup_window)
 
         if self.opage == LOGIN_PAGE:
             self.login_init_dialog(args)
-            self.login_name_entry.set_text(self.login_liststore.get_value(iter,0))
-            self.login_mls_entry.set_text(self.login_liststore.get_value(iter,2))
-            self.combo_set_active_text(self.login_seuser_combobox, self.login_liststore.get_value(iter,1))
+            self.login_name_entry.set_text(self.login_liststore.get_value(iter, 0))
+            self.login_mls_entry.set_text(self.login_liststore.get_value(iter, 2))
+            self.combo_set_active_text(self.login_seuser_combobox, self.login_liststore.get_value(iter, 1))
             self.login_label.set_text((_("Modify Login Mapping. Login Mapping will be modified when Update is applied.")))
             self.login_popup_window.set_title(_("Modify Login Mapping"))
             self.show_popup(self.login_popup_window)
 
         if self.opage == FILE_EQUIV_PAGE:
-            self.file_equiv_source_entry.set_text(self.file_equiv_liststore.get_value(iter,0))
-            self.file_equiv_dest_entry.set_text(self.file_equiv_liststore.get_value(iter,1))
+            self.file_equiv_source_entry.set_text(self.file_equiv_liststore.get_value(iter, 0))
+            self.file_equiv_dest_entry.set_text(self.file_equiv_liststore.get_value(iter, 1))
             self.file_equiv_label.set_text((_("Modify File Equivalency Mapping. Mapping will be created when update is applied.")))
             self.file_equiv_popup_window.set_title(_("Modify SELinux File Equivalency"))
             self.clear_entry = True
@@ -1608,9 +1612,9 @@ class SELinuxGui():
         if domain == None:
             return
         if domain.endswith("_script_t"):
-            split_char="_script_t"
+            split_char = "_script_t"
         else:
-            split_char="_t"
+            split_char = "_t"
         return domain.split(split_char)[0]
 
     def exclude_type(self, type, exclude_list):
@@ -1678,8 +1682,8 @@ class SELinuxGui():
             self.modify_button.set_sensitive(False)
             return
 
-        self.popup_network_label.set_text((_("Modify Network Port for %s.  Ports will be created when update is applied."))% self.application)
-        self.network_popup_window.set_title((_("Modify Network Port for %s"))% self.application)
+        self.popup_network_label.set_text((_("Modify Network Port for %s.  Ports will be created when update is applied.")) % self.application)
+        self.network_popup_window.set_title((_("Modify Network Port for %s")) % self.application)
         self.delete_old_item = None
         self.init_network_dialog(args)
         operation = "Modify"
@@ -1713,7 +1717,7 @@ class SELinuxGui():
 
             port_types = []
             for k in netd.keys():
-                for t,ports in netd[k]:
+                for t, ports in netd[k]:
                     if t not in port_types + ["port_t", "unreserved_port_t"]:
                         if t.endswith("_type"):
                             continue
@@ -1813,9 +1817,10 @@ class SELinuxGui():
 
     def on_show_modified_only(self, checkbutton):
         length = self.liststore.get_n_columns()
+
         def dup_row(row):
             l = []
-            for i in range(0,length):
+            for i in range(0, length):
                 l.append(row[i])
             return l
 
@@ -1838,7 +1843,7 @@ class SELinuxGui():
                 if ipage == APP_PAGE:
                     return self.application_files_initialize(self.application)
             for row in self.liststore:
-                if (row[0],row[2]) in self.cust_dict["fcontext"]:
+                if (row[0], row[2]) in self.cust_dict["fcontext"]:
                     append_list.append(row)
 
         if self.opage == NETWORK_PAGE:
@@ -1875,7 +1880,7 @@ class SELinuxGui():
         self.liststore.clear()
         for row in append_list:
             iter = self.liststore.append()
-            for i in range(0,length):
+            for i in range(0, length):
                 self.liststore.set_value(iter, i, row[i])
 
     def init_modified_files_liststore(self, tree, app, ipage, operation, path, fclass, ftype):
@@ -1927,20 +1932,20 @@ class SELinuxGui():
         name = self.login_name_entry.get_text()
         if self.modify:
             iter = self.get_selected_iter()
-            oldname = self.login_liststore.get_value(iter,0)
-            oldseuser = self.login_liststore.get_value(iter,1)
-            oldrange = self.login_liststore.get_value(iter,2)
-            self.liststore.set_value(iter,0,oldname)
-            self.liststore.set_value(iter,1,oldseuser)
-            self.liststore.set_value(iter,2,oldrange)
-            self.cur_dict["login"][name] = { "action": "-m", "range": mls_range, "seuser": seuser, "oldrange": oldrange, "oldseuser": oldseuser, "oldname": oldname }
+            oldname = self.login_liststore.get_value(iter, 0)
+            oldseuser = self.login_liststore.get_value(iter, 1)
+            oldrange = self.login_liststore.get_value(iter, 2)
+            self.liststore.set_value(iter, 0, oldname)
+            self.liststore.set_value(iter, 1, oldseuser)
+            self.liststore.set_value(iter, 2, oldrange)
+            self.cur_dict["login"][name] = {"action": "-m", "range": mls_range, "seuser": seuser, "oldrange": oldrange, "oldseuser": oldseuser, "oldname": oldname}
         else:
             iter = self.liststore.append(None)
-            self.cur_dict["login"][name] = { "action": "-a", "range": mls_range, "seuser": seuser }
+            self.cur_dict["login"][name] = {"action": "-a", "range": mls_range, "seuser": seuser}
 
-        self.liststore.set_value(iter,0,name)
-        self.liststore.set_value(iter,1,seuser)
-        self.liststore.set_value(iter,2, mls_range)
+        self.liststore.set_value(iter, 0, name)
+        self.liststore.set_value(iter, 1, seuser)
+        self.liststore.set_value(iter, 2, mls_range)
 
         self.new_updates()
 
@@ -1952,18 +1957,18 @@ class SELinuxGui():
         name = self.user_name_entry.get_text()
         if self.modify:
             iter = self.get_selected_iter()
-            oldname = self.user_liststore.get_value(iter,0)
-            oldroles = self.user_liststore.get_value(iter,1)
-            oldlevel = self.user_liststore.get_value(iter,1)
-            oldrange = self.user_liststore.get_value(iter,3)
-            self.liststore.set_value(iter,0,oldname)
-            self.liststore.set_value(iter,1,oldroles)
-            self.liststore.set_value(iter,2,oldlevel)
-            self.liststore.set_value(iter,3,oldrange)
-            self.cur_dict["user"][name] = { "action": "-m", "range": mls_range, "level": level, "role":roles, "oldrange": oldrange, "oldlevel": oldlevel, "oldroles": oldroles, "oldname": oldname }
+            oldname = self.user_liststore.get_value(iter, 0)
+            oldroles = self.user_liststore.get_value(iter, 1)
+            oldlevel = self.user_liststore.get_value(iter, 1)
+            oldrange = self.user_liststore.get_value(iter, 3)
+            self.liststore.set_value(iter, 0, oldname)
+            self.liststore.set_value(iter, 1, oldroles)
+            self.liststore.set_value(iter, 2, oldlevel)
+            self.liststore.set_value(iter, 3, oldrange)
+            self.cur_dict["user"][name] = {"action": "-m", "range": mls_range, "level": level, "role": roles, "oldrange": oldrange, "oldlevel": oldlevel, "oldroles": oldroles, "oldname": oldname}
         else:
             iter = self.liststore.append(None)
-            self.cur_dict["user"][name] = { "action": "-a", "range": mls_range, "level": level, "role": roles}
+            self.cur_dict["user"][name] = {"action": "-a", "range": mls_range, "level": level, "role": roles}
 
         self.liststore.set_value(iter, 0, name)
         self.liststore.set_value(iter, 1, roles)
@@ -1978,14 +1983,14 @@ class SELinuxGui():
         src = self.file_equiv_source_entry.get_text()
         if self.modify:
             iter = self.get_selected_iter()
-            olddest = self.unmarkup(self.liststore.set_value(iter,0))
-            oldsrc = self.unmarkup(self.liststore.set_value(iter,1))
-            self.cur_dict["fcontext-equiv"][dest] = { "action": "-m", "src": src, "oldsrc": oldsrc, "olddest": olddest }
+            olddest = self.unmarkup(self.liststore.set_value(iter, 0))
+            oldsrc = self.unmarkup(self.liststore.set_value(iter, 1))
+            self.cur_dict["fcontext-equiv"][dest] = {"action": "-m", "src": src, "oldsrc": oldsrc, "olddest": olddest}
         else:
             iter = self.liststore.append(None)
-            self.cur_dict["fcontext-equiv"][dest] = { "action": "-a", "src": src }
-        self.liststore.set_value(iter,0,self.markup(dest))
-        self.liststore.set_value(iter,1,self.markup(src))
+            self.cur_dict["fcontext-equiv"][dest] = {"action": "-a", "src": src}
+        self.liststore.set_value(iter, 0, self.markup(dest))
+        self.liststore.set_value(iter, 1, self.markup(src))
 
     def update_to_files(self, *args):
         self.close_popup()
@@ -2004,10 +2009,10 @@ class SELinuxGui():
             oldpath = self.unmark(self.liststore.get_value(iter, 0))
             setype = self.unmark(self.liststore.set_value(iter, 1))
             oldtclass = self.liststore.get_value(iter, 2)
-            self.cur_dict["fcontext"][(path, tclass)] = { "action": "-m", "type": setype, "oldtype": oldsetype, "oldmls": oldmls, "oldclass": oldclass }
+            self.cur_dict["fcontext"][(path, tclass)] = {"action": "-m", "type": setype, "oldtype": oldsetype, "oldmls": oldmls, "oldclass": oldclass}
         else:
             iter = self.liststore.append(None)
-            self.cur_dict["fcontext"][(path, tclass)] = { "action": "-a", "type": setype }
+            self.cur_dict["fcontext"][(path, tclass)] = {"action": "-a", "type": setype}
         self.liststore.set_value(iter, 0, self.markup(path))
         self.liststore.set_value(iter, 1, self.markup(setype))
         self.liststore.set_value(iter, 2, self.markup(tclass))
@@ -2034,10 +2039,10 @@ class SELinuxGui():
             oldports = self.unmark(self.liststore.get_value(iter, 0))
             oldprotocol = self.unmark(self.liststore.get_value(iter, 1))
             oldsetype = self.unmark(self.liststore.set_value(iter, 2))
-            self.cur_dict["port"][(ports, protocol)] = { "action": "-m", "type": setype, "mls": mls, "oldtype": oldsetype, "oldmls": oldmls, "oldprotocol": oldprotocol, "oldports": oldports }
+            self.cur_dict["port"][(ports, protocol)] = {"action": "-m", "type": setype, "mls": mls, "oldtype": oldsetype, "oldmls": oldmls, "oldprotocol": oldprotocol, "oldports": oldports}
         else:
             iter = self.liststore.append(None)
-            self.cur_dict["port"][(ports, protocol)] = { "action": "-a", "type": setype, "mls": mls}
+            self.cur_dict["port"][(ports, protocol)] = {"action": "-a", "type": setype, "mls": mls}
         self.liststore.set_value(iter, 0, ports)
         self.liststore.set_value(iter, 1, protocol)
         self.liststore.set_value(iter, 2, setype)
@@ -2053,7 +2058,7 @@ class SELinuxGui():
         if self.opage == NETWORK_PAGE:
             self.network_delete_liststore.clear()
             port_dict = self.cust_dict["port"]
-            for ports,protocol in port_dict:
+            for ports, protocol in port_dict:
                 setype = port_dict[(ports, protocol)]["type"]
                 iter = self.network_delete_liststore.append()
                 self.network_delete_liststore.set_value(iter, 1, ports)
@@ -2065,7 +2070,7 @@ class SELinuxGui():
         if self.opage == FILES_PAGE:
             self.files_delete_liststore.clear()
             fcontext_dict = self.cust_dict["fcontext"]
-            for path,tclass in fcontext_dict:
+            for path, tclass in fcontext_dict:
                 setype = fcontext_dict[(path, tclass)]["type"]
                 iter = self.files_delete_liststore.append()
                 self.files_delete_liststore.set_value(iter, 1, path)
@@ -2117,23 +2122,23 @@ class SELinuxGui():
         if self.opage == NETWORK_PAGE:
             for delete in self.network_delete_liststore:
                 if delete[0]:
-                    self.cur_dict["port"][(delete[1], delete[2])] = { "action": "-d", "type": delete[3] }
+                    self.cur_dict["port"][(delete[1], delete[2])] = {"action": "-d", "type": delete[3]}
         if self.opage == FILES_PAGE:
             for delete in self.files_delete_liststore:
                 if delete[0]:
-                    self.cur_dict["fcontext"][(delete[1], reverse_file_type_str[delete[3]])] = { "action": "-d", "type": delete[2] }
+                    self.cur_dict["fcontext"][(delete[1], reverse_file_type_str[delete[3]])] = {"action": "-d", "type": delete[2]}
         if self.opage == USER_PAGE:
             for delete in self.user_delete_liststore:
                 if delete[0]:
-                    self.cur_dict["user"][delete[1]] = { "action": "-d" , "role": delete[2], "range": delete[4] }
+                    self.cur_dict["user"][delete[1]] = {"action": "-d", "role": delete[2], "range": delete[4]}
         if self.opage == LOGIN_PAGE:
             for delete in self.login_delete_liststore:
                 if delete[0]:
-                    self.cur_dict["login"][delete[2]] = { "action": "-d", "login":delete[2], "seuser":delete[1], "range":delete[3] }
+                    self.cur_dict["login"][delete[2]] = {"action": "-d", "login": delete[2], "seuser": delete[1], "range": delete[3]}
         if self.opage == FILE_EQUIV_PAGE:
             for delete in self.file_equiv_delete_liststore:
                 if delete[0]:
-                    self.cur_dict["fcontext-equiv"][delete[1]] = { "action": "-d", "src" : delete[2] }
+                    self.cur_dict["fcontext-equiv"][delete[1]] = {"action": "-d", "src": delete[2]}
         self.new_updates()
 
     def on_save_delete_file_equiv_clicked(self, *args):
@@ -2150,7 +2155,7 @@ class SELinuxGui():
                 iter = liststore.get_iter(ctr)
                 liststore.remove(iter)
                 return
-            ctr+=1
+            ctr += 1
 
     def on_toggle(self, cell, path, model):
         if not path:
@@ -2163,7 +2168,7 @@ class SELinuxGui():
         if name in self.cur_dict["boolean"]:
             del(self.cur_dict["boolean"][name])
         else:
-            self.cur_dict["boolean"][name] = {"active":active}
+            self.cur_dict["boolean"][name] = {"active": active}
         self.new_updates()
 
     def get_advanced_filter_data(self, entry, *args):
@@ -2183,60 +2188,60 @@ class SELinuxGui():
             operation = self.cur_dict["boolean"][bools]["action"]
             iter = self.update_treestore.append(None)
             self.update_treestore.set_value(iter, 0, True)
-            self.update_treestore.set_value(iter, 1,  sepolicy.boolean_desc(bools))
+            self.update_treestore.set_value(iter, 1, sepolicy.boolean_desc(bools))
             self.update_treestore.set_value(iter, 2, action[self.cur_dict["boolean"][bools]['active']])
             self.update_treestore.set_value(iter, 3, True)
             niter = self.update_treestore.append(iter)
-            self.update_treestore.set_value(niter, 1, (_("SELinux name: %s"))% bools)
+            self.update_treestore.set_value(niter, 1, (_("SELinux name: %s")) % bools)
             self.update_treestore.set_value(niter, 3, False)
 
-        for path,tclass in self.cur_dict["fcontext"]:
-            operation = self.cur_dict["fcontext"][(path,tclass)]["action"]
-            setype = self.cur_dict["fcontext"][(path,tclass)]["type"]
+        for path, tclass in self.cur_dict["fcontext"]:
+            operation = self.cur_dict["fcontext"][(path, tclass)]["action"]
+            setype = self.cur_dict["fcontext"][(path, tclass)]["type"]
             iter = self.update_treestore.append(None)
             self.update_treestore.set_value(iter, 0, True)
             self.update_treestore.set_value(iter, 2, operation)
             self.update_treestore.set_value(iter, 0, True)
             if operation == "-a":
-                self.update_treestore.set_value(iter, 1, (_("Add file labeling for %s"))% self.application)
+                self.update_treestore.set_value(iter, 1, (_("Add file labeling for %s")) % self.application)
             if operation == "-d":
-                self.update_treestore.set_value(iter, 1, (_("Delete file labeling for %s"))% self.application)
+                self.update_treestore.set_value(iter, 1, (_("Delete file labeling for %s")) % self.application)
             if operation == "-m":
-                self.update_treestore.set_value(iter, 1, (_("Modify file labeling for %s"))% self.application)
+                self.update_treestore.set_value(iter, 1, (_("Modify file labeling for %s")) % self.application)
 
             niter = self.update_treestore.append(iter)
             self.update_treestore.set_value(niter, 3, False)
-            self.update_treestore.set_value(niter, 1, (_("File path: %s"))% path)
+            self.update_treestore.set_value(niter, 1, (_("File path: %s")) % path)
             niter = self.update_treestore.append(iter)
             self.update_treestore.set_value(niter, 3, False)
-            self.update_treestore.set_value(niter, 1, (_("File class: %s"))% sepolicy.file_type_str[tclass])
+            self.update_treestore.set_value(niter, 1, (_("File class: %s")) % sepolicy.file_type_str[tclass])
             niter = self.update_treestore.append(iter)
             self.update_treestore.set_value(niter, 3, False)
-            self.update_treestore.set_value(niter, 1, (_("SELinux file type: %s"))% setype)
+            self.update_treestore.set_value(niter, 1, (_("SELinux file type: %s")) % setype)
 
-        for port,protocol in self.cur_dict["port"]:
-            operation = self.cur_dict["port"][(port,protocol)]["action"]
+        for port, protocol in self.cur_dict["port"]:
+            operation = self.cur_dict["port"][(port, protocol)]["action"]
             iter = self.update_treestore.append(None)
             self.update_treestore.set_value(iter, 0, True)
             self.update_treestore.set_value(iter, 2, operation)
             self.update_treestore.set_value(iter, 3, True)
             if operation == "-a":
-                self.update_treestore.set_value(iter, 1, (_("Add ports for %s"))% self.application)
+                self.update_treestore.set_value(iter, 1, (_("Add ports for %s")) % self.application)
             if operation == "-d":
-                self.update_treestore.set_value(iter, 1, (_("Delete ports for %s"))% self.application)
+                self.update_treestore.set_value(iter, 1, (_("Delete ports for %s")) % self.application)
             if operation == "-m":
-                self.update_treestore.set_value(iter, 1, (_("Modify ports for %s"))% self.application)
+                self.update_treestore.set_value(iter, 1, (_("Modify ports for %s")) % self.application)
 
             niter = self.update_treestore.append(iter)
-            self.update_treestore.set_value(niter, 1, (_("Network ports: %s"))% port)
+            self.update_treestore.set_value(niter, 1, (_("Network ports: %s")) % port)
             self.update_treestore.set_value(niter, 3, False)
             niter = self.update_treestore.append(iter)
-            self.update_treestore.set_value(niter, 1, (_("Network protocol: %s"))% protocol)
+            self.update_treestore.set_value(niter, 1, (_("Network protocol: %s")) % protocol)
             self.update_treestore.set_value(niter, 3, False)
             setype = self.cur_dict["port"][(port, protocol)]["type"]
             niter = self.update_treestore.append(iter)
             self.update_treestore.set_value(niter, 3, False)
-            self.update_treestore.set_value(niter, 1, (_("SELinux file type: %s"))% setype)
+            self.update_treestore.set_value(niter, 1, (_("SELinux file type: %s")) % setype)
 
         for user in self.cur_dict["user"]:
             operation = self.cur_dict["user"][user]["action"]
@@ -2252,7 +2257,7 @@ class SELinuxGui():
                 self.update_treestore.set_value(iter, 1, _("Modify user"))
 
             niter = self.update_treestore.append(iter)
-            self.update_treestore.set_value(niter, 1, (_("SELinux User : %s"))% user)
+            self.update_treestore.set_value(niter, 1, (_("SELinux User : %s")) % user)
             self.update_treestore.set_value(niter, 3, False)
             niter = self.update_treestore.append(iter)
             self.update_treestore.set_value(niter, 3, False)
@@ -2278,7 +2283,7 @@ class SELinuxGui():
 
             niter = self.update_treestore.append(iter)
             self.update_treestore.set_value(niter, 3, False)
-            self.update_treestore.set_value(niter, 1, (_("Login Name : %s"))% login)
+            self.update_treestore.set_value(niter, 1, (_("Login Name : %s")) % login)
             niter = self.update_treestore.append(iter)
             self.update_treestore.set_value(niter, 3, False)
             seuser = self.cur_dict["login"][login]["seuser"]
@@ -2303,7 +2308,7 @@ class SELinuxGui():
 
             niter = self.update_treestore.append(iter)
             self.update_treestore.set_value(niter, 3, False)
-            self.update_treestore.set_value(niter, 1, (_("File path : %s"))% path)
+            self.update_treestore.set_value(niter, 1, (_("File path : %s")) % path)
             niter = self.update_treestore.append(iter)
             self.update_treestore.set_value(niter, 3, False)
             src = self.cur_dict["fcontext-equiv"][path]["src"]
@@ -2394,7 +2399,7 @@ class SELinuxGui():
                 if iter != None:
                     if self.liststore.get_value(iter, 4) == False:
                         iterlist.append(iter)
-                    ctr +=1
+                    ctr += 1
             for iters in iterlist:
                 self.liststore.remove(iters)
 
@@ -2409,8 +2414,8 @@ class SELinuxGui():
 
     def fix_mislabeled(self, path):
         cur = selinux.getfilecon(path)[1].split(":")[2]
-        con = selinux.matchpathcon(path,0)[1].split(":")[2]
-        if self.verify(_("Run restorecon on %(PATH)s to change its type from %(CUR_CONTEXT)s to the default %(DEF_CONTEXT)s?") % {"PATH":path, "CUR_CONTEXT": cur, "DEF_CONTEXT": con}, title="restorecon dialog") == Gtk.ResponseType.YES:
+        con = selinux.matchpathcon(path, 0)[1].split(":")[2]
+        if self.verify(_("Run restorecon on %(PATH)s to change its type from %(CUR_CONTEXT)s to the default %(DEF_CONTEXT)s?") % {"PATH": path, "CUR_CONTEXT": cur, "DEF_CONTEXT": con}, title="restorecon dialog") == Gtk.ResponseType.YES:
             self.dbus.restorecon(path)
             self.application_selected()
 
@@ -2511,8 +2516,8 @@ class SELinuxGui():
 
     def revert_data(self):
         ctr = 0
-        remove_list=[]
-        update_buffer =  ""
+        remove_list = []
+        update_buffer = ""
         for items in self.update_treestore:
             if not self.update_treestore[ctr][0]:
                 remove_list.append(ctr)
@@ -2562,7 +2567,7 @@ class SELinuxGui():
         # From entry_point = 0 to the number of keys in the dic
         for exe in entrypoints:
             if len(entrypoints[exe]):
-                file_class  = entrypoints[exe][1]
+                file_class = entrypoints[exe][1]
                 for path in entrypoints[exe][0]:
                     iter = self.advanced_search_liststore.append()
                     self.advanced_search_liststore.set_value(iter, 1, domain)
@@ -2597,7 +2602,7 @@ class SELinuxGui():
 
     def set_enforce_text(self, value):
         if value:
-           self.status_bar.push(self.context_id, _("System Status: Enforcing"))
+            self.status_bar.push(self.context_id, _("System Status: Enforcing"))
         else:
             self.status_bar.push(self.context_id, _("System Status: Permissive"))
         self.current_status_permissive.set_active(True)
@@ -2622,7 +2627,7 @@ class SELinuxGui():
         path = self.files_path_entry.get_text()
         if self.recursive_path_toggle.get_active():
             if not path.endswith("(/.*)?"):
-                self.files_path_entry.set_text(path+"(/.*)?")
+                self.files_path_entry.set_text(path + "(/.*)?")
         elif path.endswith("(/.*)?"):
             path = path.split("(/.*)?")[0]
             self.files_path_entry.set_text(path)
@@ -2709,9 +2714,9 @@ class SELinuxGui():
 
     def init_dictionary(self, dic, app, ipage, operation, p, q, ftype, mls, changed, old):
         if (app, ipage, operation) not in dic:
-                    dic[app, ipage, operation] = {}
+            dic[app, ipage, operation] = {}
         if (p, q) not in dic[app, ipage, operation]:
-                    dic[app, ipage, operation][p, q] = {'type': ftype, 'mls': mls, 'changed': changed, 'old': old}
+            dic[app, ipage, operation][p, q] = {'type': ftype, 'mls': mls, 'changed': changed, 'old': old}
 
     def translate_bool(self, b):
         b = b.split('-')[1]
@@ -2765,7 +2770,7 @@ class SELinuxGui():
         self.window.get_window().set_cursor(self.ready_cursor)
         self.idle_func()
 
-    def verify(self, message, title="" ):
+    def verify(self, message, title=""):
         dlg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                                 Gtk.ButtonsType.YES_NO,
                                 message)

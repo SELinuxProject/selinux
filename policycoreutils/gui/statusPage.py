@@ -31,7 +31,7 @@ import commands
 ENFORCING = 1
 PERMISSIVE = 0
 DISABLED = -1
-modearray = ( "disabled", "permissive",  "enforcing" )
+modearray = ("disabled", "permissive", "enforcing")
 
 SELINUXDIR = "/etc/selinux/"
 RELABELFILE = "/.autorelabel"
@@ -39,7 +39,7 @@ RELABELFILE = "/.autorelabel"
 ##
 ## I18N
 ##
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
@@ -50,7 +50,9 @@ except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
 
+
 class statusPage:
+
     def __init__(self, xml):
         self.xml = xml
         self.needRelabel = False
@@ -66,15 +68,15 @@ class statusPage:
         self.relabel_checkbutton.set_active(self.is_relabel())
         self.relabel_checkbutton.connect("toggled", self.on_relabel_toggle)
         if self.get_current_mode() == ENFORCING or self.get_current_mode() == PERMISSIVE:
-                self.currentOptionMenu.append_text(_("Permissive"))
-                self.currentOptionMenu.append_text(_("Enforcing"))
-                self.currentOptionMenu.set_active(self.get_current_mode())
-                self.currentOptionMenu.connect("changed", self.set_current_mode)
-                self.currentOptionMenu.set_sensitive(True)
+            self.currentOptionMenu.append_text(_("Permissive"))
+            self.currentOptionMenu.append_text(_("Enforcing"))
+            self.currentOptionMenu.set_active(self.get_current_mode())
+            self.currentOptionMenu.connect("changed", self.set_current_mode)
+            self.currentOptionMenu.set_sensitive(True)
         else:
-                self.currentOptionMenu.append_text(_("Disabled"))
-                self.currentOptionMenu.set_active(0)
-                self.currentOptionMenu.set_sensitive(False)
+            self.currentOptionMenu.append_text(_("Disabled"))
+            self.currentOptionMenu.set_active(0)
+            self.currentOptionMenu.set_sensitive(False)
 
         if self.read_selinux_config() == None:
             self.selinuxsupport = False
@@ -102,15 +104,15 @@ class statusPage:
         else:
             return DISABLED
 
-    def set_current_mode(self,menu):
+    def set_current_mode(self, menu):
         selinux.security_setenforce(menu.get_active() == 1)
 
     def is_relabel(self):
         return os.access(RELABELFILE, os.F_OK) != 0
 
-    def on_relabel_toggle(self,button):
+    def on_relabel_toggle(self, button):
         if button.get_active():
-            fd = open(RELABELFILE,"w")
+            fd = open(RELABELFILE, "w")
             fd.close()
         else:
             if os.access(RELABELFILE, os.F_OK) != 0:
@@ -136,7 +138,7 @@ class statusPage:
 
             self.relabel_checkbutton.set_active(True)
 
-        self.write_selinux_config(modearray[enabled], type )
+        self.write_selinux_config(modearray[enabled], type)
         self.typeHistory = menu.get_active()
 
     def enabled_changed(self, combo):
@@ -154,11 +156,11 @@ class statusPage:
                 return None
             self.relabel_checkbutton.set_active(True)
 
-        self.write_selinux_config(modearray[enabled], type )
+        self.write_selinux_config(modearray[enabled], type)
         self.enabled = enabled
 
     def write_selinux_config(self, enforcing, type):
-        path = selinux.selinux_path() + "config" 
+        path = selinux.selinux_path() + "config"
         backup_path = path + ".bck"
         fd = open(path)
         lines = fd.readlines()
@@ -183,7 +185,7 @@ class statusPage:
             self.initEnabled = False
             pass
         self.enabled = self.initEnabled
-        self.enabledOptionMenu.set_active(self.enabled + 1 )
+        self.enabledOptionMenu.set_active(self.enabled + 1)
 
         self.types = []
 
@@ -191,12 +193,12 @@ class statusPage:
         current = n
 
         for i in os.listdir(SELINUXDIR):
-            if os.path.isdir(SELINUXDIR+i) and os.path.isdir(SELINUXDIR+i+"/policy"):
+            if os.path.isdir(SELINUXDIR + i) and os.path.isdir(SELINUXDIR + i + "/policy"):
                 self.types.append(i)
                 self.selinuxTypeOptionMenu.append_text(i)
                 if i == self.initialtype:
                     current = n
-                n = n+1
+                n = n + 1
         self.selinuxTypeOptionMenu.set_active(current)
         self.typeHistory = current
 

@@ -28,18 +28,18 @@ import tempfile
 import seobject
 import semanagePage
 
-INSTALLPATH='/usr/share/system-config-selinux'
+INSTALLPATH = '/usr/share/system-config-selinux'
 sys.path.append(INSTALLPATH)
 
 import commands
-ENFORCING=0
-PERMISSIVE=1
-DISABLED=2
+ENFORCING = 0
+PERMISSIVE = 1
+DISABLED = 2
 
 ##
 ## I18N
 ##
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
@@ -48,41 +48,47 @@ try:
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
                     unicode=False,
-                    codeset = 'utf-8')
+                    codeset='utf-8')
 except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
 
 from glob import fnmatch
 
-class Modifier:
-    def __init__(self,name, on, save):
-        self.on=on
-        self.name=name
-        self.save=save
 
-    def set(self,value):
-        self.on=value
-        self.save=True
+class Modifier:
+
+    def __init__(self, name, on, save):
+        self.on = on
+        self.name = name
+        self.save = save
+
+    def set(self, value):
+        self.on = value
+        self.save = True
 
     def isOn(self):
         return self.on
 
+
 class Boolean(Modifier):
-    def __init__(self,name, val, save=False):
-        Modifier.__init__(self,name, val, save)
+
+    def __init__(self, name, val, save=False):
+        Modifier.__init__(self, name, val, save)
 
 ACTIVE = 0
 MODULE = 1
 DESC = 2
 BOOLEAN = 3
 
+
 class booleansPage:
+
     def __init__(self, xml, doDebug=None):
         self.xml = xml
         self.window = self.xml.get_widget("mainWindow").get_root_window()
         self.local = False
-        self.types=[]
+        self.types = []
         self.selinuxsupport = True
         self.typechanged = False
         self.doDebug = doDebug
@@ -112,7 +118,7 @@ class booleansPage:
 
         checkbox = gtk.CellRendererToggle()
         checkbox.connect("toggled", self.boolean_toggled)
-        col = gtk.TreeViewColumn('Active', checkbox, active = ACTIVE)
+        col = gtk.TreeViewColumn('Active', checkbox, active=ACTIVE)
         col.set_clickable(True)
         col.set_sort_column_id(ACTIVE)
         self.booleansView.append_column(col)
@@ -123,7 +129,7 @@ class booleansPage:
         self.booleansView.append_column(col)
 
         col = gtk.TreeViewColumn("Description", gtk.CellRendererText(), text=DESC)
-	col.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+        col.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
         col.set_fixed_width(400)
         col.set_sort_column_id(DESC)
         col.set_resizable(True)
@@ -134,7 +140,7 @@ class booleansPage:
         col.set_resizable(True)
         self.booleansView.set_search_equal_func(self.__search)
         self.booleansView.append_column(col)
-        self.filter=""
+        self.filter = ""
         self.load(self.filter)
 
     def error(self, message):
@@ -182,10 +188,10 @@ class booleansPage:
             self.error(e.args[0])
 
     def filter_changed(self, *arg):
-        filter =  arg[0].get_text()
+        filter = arg[0].get_text()
         if filter != self.filter:
             self.load(filter)
-            self.filter=filter
+            self.filter = filter
 
     def use_menus(self):
         return False
@@ -193,16 +199,15 @@ class booleansPage:
     def get_description(self):
         return _("Boolean")
 
-    def match(self,key, filter=""):
+    def match(self, key, filter=""):
         try:
-            f=filter.lower()
-            cat=self.booleans.get_category(key).lower()
-            val=self.booleans.get_desc(key).lower()
-            k=key.lower()
+            f = filter.lower()
+            cat = self.booleans.get_category(key).lower()
+            val = self.booleans.get_desc(key).lower()
+            k = key.lower()
             return val.find(f) >= 0 or k.find(f) >= 0 or cat.find(f) >= 0
         except:
             return False
-
 
     def load(self, filter=None):
         self.store.clear()
@@ -211,7 +216,7 @@ class booleansPage:
         for name in booleansList:
             rec = booleansList[name]
             if self.match(name, filter):
-                iter=self.store.append()
+                iter = self.store.append()
                 self.store.set_value(iter, ACTIVE, rec[2] == 1)
                 self.store.set_value(iter, MODULE, self.booleans.get_category(name))
                 self.store.set_value(iter, DESC, self.booleans.get_desc(name))
@@ -221,10 +226,10 @@ class booleansPage:
         iter = self.store.get_iter(row)
         val = self.store.get_value(iter, ACTIVE)
         key = self.store.get_value(iter, BOOLEAN)
-        self.store.set_value(iter, ACTIVE , not val)
+        self.store.set_value(iter, ACTIVE, not val)
         self.wait()
-        setsebool="/usr/sbin/setsebool -P %s %d" % (key, not val)
-        rc,out = commands.getstatusoutput(setsebool)
+        setsebool = "/usr/sbin/setsebool -P %s %d" % (key, not val)
+        rc, out = commands.getstatusoutput(setsebool)
         if rc != 0:
             self.error(out)
         self.load(self.filter)
@@ -232,7 +237,7 @@ class booleansPage:
 
     def on_revert_clicked(self, button):
         self.wait()
-        setsebool="semanage boolean --deleteall"
+        setsebool = "semanage boolean --deleteall"
         commands.getstatusoutput(setsebool)
         self.load(self.filter)
         self.ready()

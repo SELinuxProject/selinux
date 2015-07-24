@@ -30,7 +30,7 @@ import gnome
 import sys
 try:
     from sepolicy import generate
-except ValueError,e:
+except ValueError, e:
     sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
     sys.exit(1)
 
@@ -39,10 +39,11 @@ import commands
 
 import re
 
+
 def get_all_modules():
     try:
         all_modules = []
-        rc, output=commands.getstatusoutput("semodule -l 2>/dev/null")
+        rc, output = commands.getstatusoutput("semodule -l 2>/dev/null")
         if rc == 0:
             l = output.split("\n")
             for i in l:
@@ -56,7 +57,7 @@ def get_all_modules():
 ##
 ## I18N
 ##
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
@@ -65,7 +66,7 @@ try:
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
                     unicode=False,
-                    codeset = 'utf-8')
+                    codeset='utf-8')
 except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
@@ -78,6 +79,8 @@ sys.path.append('/usr/share/system-config-selinux')
 sys.path.append('.')
 
 # From John Hunter http://www.daa.com.au/pipermail/pygtk/2003-February/004454.html
+
+
 def foreach(model, path, iter, selected):
     selected.append(model.get_value(iter, 0))
 
@@ -85,12 +88,13 @@ def foreach(model, path, iter, selected):
 ## Pull in the Glade file
 ##
 if os.access("polgen.glade", os.F_OK):
-    xml = gtk.glade.XML ("polgen.glade", domain=PROGNAME)
+    xml = gtk.glade.XML("polgen.glade", domain=PROGNAME)
 else:
-    xml = gtk.glade.XML ("/usr/share/system-config-selinux/polgen.glade", domain=PROGNAME)
+    xml = gtk.glade.XML("/usr/share/system-config-selinux/polgen.glade", domain=PROGNAME)
 
 FILE = 1
 DIR = 2
+
 
 class childWindow:
     START_PAGE = 0
@@ -111,82 +115,82 @@ class childWindow:
 
     def __init__(self):
         self.xml = xml
-        self.notebook = xml.get_widget ("notebook")
+        self.notebook = xml.get_widget("notebook")
         self.label_dict = {}
         self.tooltip_dict = {}
-        label = xml.get_widget ("select_label")
+        label = xml.get_widget("select_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget ("select_user_roles_label")
+        label = xml.get_widget("select_user_roles_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget ("select_dir_label")
+        label = xml.get_widget("select_dir_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget ("select_domain_admin_label")
+        label = xml.get_widget("select_domain_admin_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget ("select_in_label")
+        label = xml.get_widget("select_in_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget ("select_out_label")
+        label = xml.get_widget("select_out_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget ("select_common_label")
+        label = xml.get_widget("select_common_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget ("select_manages_label")
+        label = xml.get_widget("select_manages_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget ("select_booleans_label")
+        label = xml.get_widget("select_booleans_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget ("existing_user_treeview")
+        label = xml.get_widget("existing_user_treeview")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("transition_treeview")
+        label = xml.get_widget("transition_treeview")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("in_tcp_all_checkbutton")
+        label = xml.get_widget("in_tcp_all_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("in_tcp_reserved_checkbutton")
+        label = xml.get_widget("in_tcp_reserved_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("in_tcp_unreserved_checkbutton")
+        label = xml.get_widget("in_tcp_unreserved_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("in_tcp_entry")
+        label = xml.get_widget("in_tcp_entry")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("in_udp_all_checkbutton")
+        label = xml.get_widget("in_udp_all_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("in_udp_reserved_checkbutton")
+        label = xml.get_widget("in_udp_reserved_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("in_udp_unreserved_checkbutton")
+        label = xml.get_widget("in_udp_unreserved_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("in_udp_entry")
+        label = xml.get_widget("in_udp_entry")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("out_tcp_entry")
+        label = xml.get_widget("out_tcp_entry")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("out_udp_entry")
+        label = xml.get_widget("out_udp_entry")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("out_tcp_all_checkbutton")
+        label = xml.get_widget("out_tcp_all_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("out_udp_all_checkbutton")
+        label = xml.get_widget("out_udp_all_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("boolean_treeview")
+        label = xml.get_widget("boolean_treeview")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget ("write_treeview")
+        label = xml.get_widget("write_treeview")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
         try:
@@ -201,7 +205,7 @@ class childWindow:
             self.all_users = []
             self.error(str(e))
 
-        self.name=""
+        self.name = ""
         xml.signal_connect("on_delete_clicked", self.delete)
         xml.signal_connect("on_delete_boolean_clicked", self.delete_boolean)
         xml.signal_connect("on_exec_select_clicked", self.exec_select)
@@ -210,68 +214,67 @@ class childWindow:
         xml.signal_connect("on_add_boolean_clicked", self.add_boolean)
         xml.signal_connect("on_add_dir_clicked", self.add_dir)
         xml.signal_connect("on_about_clicked", self.on_about_clicked)
-        xml.get_widget ("cancel_button").connect("clicked",self.quit)
-        self.forward_button = xml.get_widget ("forward_button")
-        self.forward_button.connect("clicked",self.forward)
-        self.back_button = xml.get_widget ("back_button")
-        self.back_button.connect("clicked",self.back)
+        xml.get_widget("cancel_button").connect("clicked", self.quit)
+        self.forward_button = xml.get_widget("forward_button")
+        self.forward_button.connect("clicked", self.forward)
+        self.back_button = xml.get_widget("back_button")
+        self.back_button.connect("clicked", self.back)
 
-        self.boolean_dialog = xml.get_widget ("boolean_dialog")
-        self.boolean_name_entry = xml.get_widget ("boolean_name_entry")
-        self.boolean_description_entry = xml.get_widget ("boolean_description_entry")
+        self.boolean_dialog = xml.get_widget("boolean_dialog")
+        self.boolean_name_entry = xml.get_widget("boolean_name_entry")
+        self.boolean_description_entry = xml.get_widget("boolean_description_entry")
 
-        self.pages={}
+        self.pages = {}
         for i in generate.USERS:
-            self.pages[i] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.TRANSITION_PAGE, self.ROLE_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
-        self.pages[generate.RUSER] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE,  self.ADMIN_PAGE, self.USER_TRANSITION_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
-        self.pages[generate.LUSER] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.TRANSITION_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
-        self.pages[generate.SANDBOX] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
-        self.pages[generate.EUSER] = [ self.SELECT_TYPE_PAGE, self.EXISTING_USER_PAGE, self.TRANSITION_PAGE, self.ROLE_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
+            self.pages[i] = [self.SELECT_TYPE_PAGE, self.APP_PAGE, self.TRANSITION_PAGE, self.ROLE_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
+        self.pages[generate.RUSER] = [self.SELECT_TYPE_PAGE, self.APP_PAGE, self.ADMIN_PAGE, self.USER_TRANSITION_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
+        self.pages[generate.LUSER] = [self.SELECT_TYPE_PAGE, self.APP_PAGE, self.TRANSITION_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
+        self.pages[generate.SANDBOX] = [self.SELECT_TYPE_PAGE, self.APP_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
+        self.pages[generate.EUSER] = [self.SELECT_TYPE_PAGE, self.EXISTING_USER_PAGE, self.TRANSITION_PAGE, self.ROLE_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
 
         for i in generate.APPLICATIONS:
-            self.pages[i] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.COMMON_APPS_PAGE, self.FILES_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
-        self.pages[generate.USER] = [ self.SELECT_TYPE_PAGE, self.APP_PAGE, self.USER_TRANSITION_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.COMMON_APPS_PAGE, self.FILES_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE ]
+            self.pages[i] = [self.SELECT_TYPE_PAGE, self.APP_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.COMMON_APPS_PAGE, self.FILES_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
+        self.pages[generate.USER] = [self.SELECT_TYPE_PAGE, self.APP_PAGE, self.USER_TRANSITION_PAGE, self.IN_NET_PAGE, self.OUT_NET_PAGE, self.COMMON_APPS_PAGE, self.FILES_PAGE, self.BOOLEAN_PAGE, self.SELECT_DIR_PAGE]
 
         self.current_page = 0
         self.back_button.set_sensitive(0)
 
         self.network_buttons = {}
 
-        self.in_tcp_all_checkbutton = xml.get_widget ("in_tcp_all_checkbutton")
-        self.in_tcp_reserved_checkbutton = xml.get_widget ("in_tcp_reserved_checkbutton")
-        self.in_tcp_unreserved_checkbutton = xml.get_widget ("in_tcp_unreserved_checkbutton")
+        self.in_tcp_all_checkbutton = xml.get_widget("in_tcp_all_checkbutton")
+        self.in_tcp_reserved_checkbutton = xml.get_widget("in_tcp_reserved_checkbutton")
+        self.in_tcp_unreserved_checkbutton = xml.get_widget("in_tcp_unreserved_checkbutton")
         self.in_tcp_entry = self.xml.get_widget("in_tcp_entry")
-        self.network_buttons[self.in_tcp_all_checkbutton] = [ self.in_tcp_reserved_checkbutton, self.in_tcp_unreserved_checkbutton, self.in_tcp_entry ]
+        self.network_buttons[self.in_tcp_all_checkbutton] = [self.in_tcp_reserved_checkbutton, self.in_tcp_unreserved_checkbutton, self.in_tcp_entry]
 
-
-        self.out_tcp_all_checkbutton = xml.get_widget ("out_tcp_all_checkbutton")
-        self.out_tcp_reserved_checkbutton = xml.get_widget ("out_tcp_reserved_checkbutton")
-        self.out_tcp_unreserved_checkbutton = xml.get_widget ("out_tcp_unreserved_checkbutton")
+        self.out_tcp_all_checkbutton = xml.get_widget("out_tcp_all_checkbutton")
+        self.out_tcp_reserved_checkbutton = xml.get_widget("out_tcp_reserved_checkbutton")
+        self.out_tcp_unreserved_checkbutton = xml.get_widget("out_tcp_unreserved_checkbutton")
         self.out_tcp_entry = self.xml.get_widget("out_tcp_entry")
 
-        self.network_buttons[self.out_tcp_all_checkbutton] = [ self.out_tcp_entry ]
+        self.network_buttons[self.out_tcp_all_checkbutton] = [self.out_tcp_entry]
 
-        self.in_udp_all_checkbutton = xml.get_widget ("in_udp_all_checkbutton")
-        self.in_udp_reserved_checkbutton = xml.get_widget ("in_udp_reserved_checkbutton")
-        self.in_udp_unreserved_checkbutton = xml.get_widget ("in_udp_unreserved_checkbutton")
+        self.in_udp_all_checkbutton = xml.get_widget("in_udp_all_checkbutton")
+        self.in_udp_reserved_checkbutton = xml.get_widget("in_udp_reserved_checkbutton")
+        self.in_udp_unreserved_checkbutton = xml.get_widget("in_udp_unreserved_checkbutton")
         self.in_udp_entry = self.xml.get_widget("in_udp_entry")
 
-        self.network_buttons[self.in_udp_all_checkbutton] = [ self.in_udp_reserved_checkbutton, self.in_udp_unreserved_checkbutton, self.in_udp_entry ]
+        self.network_buttons[self.in_udp_all_checkbutton] = [self.in_udp_reserved_checkbutton, self.in_udp_unreserved_checkbutton, self.in_udp_entry]
 
-        self.out_udp_all_checkbutton = xml.get_widget ("out_udp_all_checkbutton")
+        self.out_udp_all_checkbutton = xml.get_widget("out_udp_all_checkbutton")
         self.out_udp_entry = self.xml.get_widget("out_udp_entry")
-        self.network_buttons[self.out_udp_all_checkbutton] = [ self.out_udp_entry ]
+        self.network_buttons[self.out_udp_all_checkbutton] = [self.out_udp_entry]
 
         for b in self.network_buttons.keys():
-            b.connect("clicked",self.network_all_clicked)
+            b.connect("clicked", self.network_all_clicked)
 
         self.boolean_treeview = self.xml.get_widget("boolean_treeview")
-        self.boolean_store = gtk.ListStore(gobject.TYPE_STRING,gobject.TYPE_STRING)
+        self.boolean_store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
         self.boolean_treeview.set_model(self.boolean_store)
         self.boolean_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Name"), gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn(_("Name"), gtk.CellRendererText(), text=0)
         self.boolean_treeview.append_column(col)
-        col = gtk.TreeViewColumn(_("Description"), gtk.CellRendererText(), text = 1)
+        col = gtk.TreeViewColumn(_("Description"), gtk.CellRendererText(), text=1)
         self.boolean_treeview.append_column(col)
 
         self.role_treeview = self.xml.get_widget("role_treeview")
@@ -279,28 +282,28 @@ class childWindow:
         self.role_treeview.set_model(self.role_store)
         self.role_treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.role_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Role"), gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn(_("Role"), gtk.CellRendererText(), text=0)
         self.role_treeview.append_column(col)
 
         self.existing_user_treeview = self.xml.get_widget("existing_user_treeview")
         self.existing_user_store = gtk.ListStore(gobject.TYPE_STRING)
         self.existing_user_treeview.set_model(self.existing_user_store)
         self.existing_user_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Existing_User"), gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn(_("Existing_User"), gtk.CellRendererText(), text=0)
         self.existing_user_treeview.append_column(col)
 
         for i in self.all_roles:
             iter = self.role_store.append()
             self.role_store.set_value(iter, 0, i[:-2])
 
-        self.in_tcp_reserved_checkbutton = xml.get_widget ("in_tcp_reserved_checkbutton")
+        self.in_tcp_reserved_checkbutton = xml.get_widget("in_tcp_reserved_checkbutton")
 
         self.transition_treeview = self.xml.get_widget("transition_treeview")
         self.transition_store = gtk.ListStore(gobject.TYPE_STRING)
         self.transition_treeview.set_model(self.transition_store)
         self.transition_treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.transition_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text=0)
         self.transition_treeview.append_column(col)
 
         self.user_transition_treeview = self.xml.get_widget("user_transition_treeview")
@@ -308,7 +311,7 @@ class childWindow:
         self.user_transition_treeview.set_model(self.user_transition_store)
         self.user_transition_treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.user_transition_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text=0)
         self.user_transition_treeview.append_column(col)
 
         for i in self.all_users:
@@ -322,7 +325,7 @@ class childWindow:
         self.admin_treeview.set_model(self.admin_store)
         self.admin_treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         self.admin_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text=0)
         self.admin_treeview.append_column(col)
 
         try:
@@ -333,7 +336,7 @@ class childWindow:
             for a in sepolicy.interface.get_admin():
                 iter = self.admin_store.append()
                 self.admin_store.set_value(iter, 0, a)
-        except ValueError,e:
+        except ValueError, e:
             self.error(e.message)
 
     def confine_application(self):
@@ -367,19 +370,19 @@ class childWindow:
         if self.pages[type][self.current_page] == self.SELECT_DIR_PAGE:
             outputdir = self.output_entry.get_text()
             if not os.path.isdir(outputdir):
-                self.error(_("%s must be a directory") % outputdir )
+                self.error(_("%s must be a directory") % outputdir)
                 return False
 
         if self.pages[type][self.current_page] == self.FINISH_PAGE:
             self.generate_policy()
-            self.xml.get_widget ("cancel_button").set_label(gtk.STOCK_CLOSE)
+            self.xml.get_widget("cancel_button").set_label(gtk.STOCK_CLOSE)
         else:
             self.current_page = self.current_page + 1
             self.notebook.set_current_page(self.pages[type][self.current_page])
             if self.pages[type][self.current_page] == self.FINISH_PAGE:
                 self.forward_button.set_label(gtk.STOCK_APPLY)
 
-    def back(self,arg):
+    def back(self, arg):
         type = self.get_type()
         if self.pages[type][self.current_page] == self.FINISH_PAGE:
             self.forward_button.set_label(gtk.STOCK_GO_FORWARD)
@@ -394,7 +397,7 @@ class childWindow:
         for b in self.network_buttons[button]:
             b.set_sensitive(not active)
 
-    def verify(self, message, title="" ):
+    def verify(self, message, title=""):
         dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO,
                                 gtk.BUTTONS_YES_NO,
                                 message)
@@ -461,12 +464,12 @@ class childWindow:
     def generate_policy(self, *args):
         outputdir = self.output_entry.get_text()
         try:
-            my_policy=generate.policy(self.get_name(), self.get_type())
+            my_policy = generate.policy(self.get_name(), self.get_type())
 
-            iter= self.boolean_store.get_iter_first()
+            iter = self.boolean_store.get_iter_first()
             while(iter):
                 my_policy.add_boolean(self.boolean_store.get_value(iter, 0), self.boolean_store.get_value(iter, 1))
-                iter= self.boolean_store.iter_next(iter)
+                iter = self.boolean_store.iter_next(iter)
 
             if self.get_type() in generate.APPLICATIONS:
                 my_policy.set_program(self.exec_entry.get_text())
@@ -509,13 +512,13 @@ class childWindow:
             my_policy.set_out_tcp(self.out_tcp_all_checkbutton.get_active(), self.out_tcp_entry.get_text())
             my_policy.set_out_udp(self.out_udp_all_checkbutton.get_active(), self.out_udp_entry.get_text())
 
-            iter= self.store.get_iter_first()
+            iter = self.store.get_iter_first()
             while(iter):
                 if self.store.get_value(iter, 1) == FILE:
                     my_policy.add_file(self.store.get_value(iter, 0))
                 else:
                     my_policy.add_dir(self.store.get_value(iter, 0))
-                iter= self.store.iter_next(iter)
+                iter = self.store.iter_next(iter)
 
             self.info(my_policy.generate(outputdir))
             return False
@@ -526,15 +529,15 @@ class childWindow:
         store, iter = self.view.get_selection().get_selected()
         if iter != None:
             store.remove(iter)
-            self.view.get_selection().select_path ((0,))
+            self.view.get_selection().select_path((0,))
 
     def delete_boolean(self, args):
         store, iter = self.boolean_treeview.get_selection().get_selected()
         if iter != None:
             store.remove(iter)
-            self.boolean_treeview.get_selection().select_path ((0,))
+            self.boolean_treeview.get_selection().select_path((0,))
 
-    def add_boolean(self,type):
+    def add_boolean(self, type):
         self.boolean_name_entry.set_text("")
         self.boolean_description_entry.set_text("")
         rc = self.boolean_dialog.run()
@@ -545,7 +548,7 @@ class childWindow:
         self.boolean_store.set_value(iter, 0, self.boolean_name_entry.get_text())
         self.boolean_store.set_value(iter, 1, self.boolean_description_entry.get_text())
 
-    def __add(self,type):
+    def __add(self, type):
         rc = self.file_dialog.run()
         self.file_dialog.hide()
         if rc == gtk.RESPONSE_CANCEL:
@@ -592,9 +595,9 @@ class childWindow:
         self.__add(DIR)
 
     def on_about_clicked(self, args):
-        dlg = xml.get_widget ("about_dialog")
-        dlg.run ()
-        dlg.hide ()
+        dlg = xml.get_widget("about_dialog")
+        dlg.run()
+        dlg.hide()
 
     def quit(self, args):
         gtk.main_quit()
@@ -605,15 +608,15 @@ class childWindow:
         self.druid = self.xml.get_widget("druid")
         self.type = 0
         self.name_entry = self.xml.get_widget("name_entry")
-        self.name_entry.connect("insert_text",self.on_name_entry_changed)
-        self.name_entry.connect("focus_out_event",self.on_focus_out_event)
+        self.name_entry.connect("insert_text", self.on_name_entry_changed)
+        self.name_entry.connect("focus_out_event", self.on_focus_out_event)
         self.exec_entry = self.xml.get_widget("exec_entry")
         self.exec_button = self.xml.get_widget("exec_button")
         self.init_script_entry = self.xml.get_widget("init_script_entry")
         self.init_script_button = self.xml.get_widget("init_script_button")
         self.output_entry = self.xml.get_widget("output_entry")
         self.output_entry.set_text(os.getcwd())
-        self.xml.get_widget("output_button").connect("clicked",self.output_button_clicked)
+        self.xml.get_widget("output_button").connect("clicked", self.output_button_clicked)
 
         self.xwindows_user_radiobutton = self.xml.get_widget("xwindows_user_radiobutton")
         self.terminal_user_radiobutton = self.xml.get_widget("terminal_user_radiobutton")
@@ -641,10 +644,10 @@ class childWindow:
 
         self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_INT)
         self.view.set_model(self.store)
-        col = gtk.TreeViewColumn("",  gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn("", gtk.CellRendererText(), text=0)
         col.set_resizable(True)
         self.view.append_column(col)
-        self.view.get_selection().select_path ((0,))
+        self.view.get_selection().select_path((0,))
 
     def output_button_clicked(self, *args):
         self.file_dialog.set_title(_("Select directory to generate policy files in"))
@@ -712,7 +715,7 @@ class childWindow:
             return True
 
     def on_name_page_next(self, *args):
-        name=self.name_entry.get_text()
+        name = self.name_entry.get_text()
         if not name.isalnum():
             self.error(_("You must add a name made up of letters and numbers and containing no spaces."))
             return True
@@ -730,7 +733,7 @@ class childWindow:
             if exe == "":
                 self.error(_("You must enter a executable"))
                 return True
-            policy=generate.policy(name, self.get_type())
+            policy = generate.policy(name, self.get_type())
             policy.set_program(exe)
             policy.gen_writeable()
             policy.gen_symbols()
@@ -762,7 +765,7 @@ class childWindow:
         gtk.main()
 
 if __name__ == "__main__":
-    signal.signal (signal.SIGINT, signal.SIG_DFL)
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     app = childWindow()
     app.stand_alone()

@@ -24,12 +24,12 @@ import gobject
 import sys
 import commands
 import seobject
-from semanagePage import *;
+from semanagePage import *
 
 ##
 ## I18N
 ##
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
@@ -37,26 +37,28 @@ try:
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
                     unicode=False,
-                    codeset = 'utf-8')
+                    codeset='utf-8')
 except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
 
+
 class loginsPage(semanagePage):
+
     def __init__(self, xml):
         self.firstTime = False
         semanagePage.__init__(self, xml, "logins", _("User Mapping"))
         self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
         self.view.set_model(self.store)
         self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Login\nName"), gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn(_("Login\nName"), gtk.CellRendererText(), text=0)
         col.set_sort_column_id(0)
         col.set_resizable(True)
         self.view.append_column(col)
-        col = gtk.TreeViewColumn(_("SELinux\nUser"), gtk.CellRendererText(), text = 1)
+        col = gtk.TreeViewColumn(_("SELinux\nUser"), gtk.CellRendererText(), text=1)
         col.set_resizable(True)
         self.view.append_column(col)
-        col = gtk.TreeViewColumn(_("MLS/\nMCS Range"), gtk.CellRendererText(), text = 2)
+        col = gtk.TreeViewColumn(_("MLS/\nMCS Range"), gtk.CellRendererText(), text=2)
         col.set_resizable(True)
         self.view.append_column(col)
         self.load()
@@ -64,8 +66,8 @@ class loginsPage(semanagePage):
         self.loginsSelinuxUserCombo = xml.get_widget("loginsSelinuxUserCombo")
         self.loginsMLSEntry = xml.get_widget("loginsMLSEntry")
 
-    def load(self, filter = ""):
-        self.filter=filter
+    def load(self, filter=""):
+        self.filter = filter
         self.login = seobject.loginRecords()
         dict = self.login.get_all(0)
         keys = dict.keys()
@@ -79,7 +81,7 @@ class loginsPage(semanagePage):
             self.store.set_value(iter, 0, k)
             self.store.set_value(iter, 1, dict[k][0])
             self.store.set_value(iter, 2, range)
-        self.view.get_selection().select_path ((0,))
+        self.view.get_selection().select_path((0,))
 
     def __dialogSetup(self):
         if self.firstTime == True:
@@ -99,7 +101,7 @@ class loginsPage(semanagePage):
                 self.loginsSelinuxUserCombo.append_text(k)
 
         iter = liststore.get_iter_first()
-        while liststore.get_value(iter,0) != "user_u":
+        while liststore.get_value(iter, 0) != "user_u":
             iter = liststore.iter_next(iter)
         self.loginsSelinuxUserCombo.set_active_iter(iter)
 
@@ -113,11 +115,10 @@ class loginsPage(semanagePage):
         seuser = store.get_value(iter, 1)
         liststore = self.loginsSelinuxUserCombo.get_model()
         iter = liststore.get_iter_first()
-        while iter != None and liststore.get_value(iter,0) != seuser:
+        while iter != None and liststore.get_value(iter, 0) != seuser:
             iter = liststore.iter_next(iter)
         if iter != None:
             self.loginsSelinuxUserCombo.set_active_iter(iter)
-
 
     def dialogClear(self):
         self.__dialogSetup()
@@ -128,7 +129,7 @@ class loginsPage(semanagePage):
     def delete(self):
         store, iter = self.view.get_selection().get_selected()
         try:
-            login=store.get_value(iter, 0)
+            login = store.get_value(iter, 0)
             if login == "root" or login == "__default__":
                 raise ValueError(_("Login '%s' is required") % login)
 
@@ -139,18 +140,18 @@ class loginsPage(semanagePage):
                 self.error(out)
                 return False
             store.remove(iter)
-            self.view.get_selection().select_path ((0,))
+            self.view.get_selection().select_path((0,))
         except ValueError, e:
             self.error(e.args[0])
 
     def add(self):
-        target=self.loginsNameEntry.get_text().strip()
-        serange=self.loginsMLSEntry.get_text().strip()
+        target = self.loginsNameEntry.get_text().strip()
+        serange = self.loginsMLSEntry.get_text().strip()
         if serange == "":
-            serange="s0"
-        list_model=self.loginsSelinuxUserCombo.get_model()
+            serange = "s0"
+        list_model = self.loginsSelinuxUserCombo.get_model()
         iter = self.loginsSelinuxUserCombo.get_active_iter()
-        seuser = list_model.get_value(iter,0)
+        seuser = list_model.get_value(iter, 0)
         self.wait()
         (rc, out) = commands.getstatusoutput("semanage login -a -s %s -r %s %s" % (seuser, serange, target))
         self.ready()
@@ -164,13 +165,13 @@ class loginsPage(semanagePage):
         self.store.set_value(iter, 2, seobject.translate(serange))
 
     def modify(self):
-        target=self.loginsNameEntry.get_text().strip()
-        serange=self.loginsMLSEntry.get_text().strip()
+        target = self.loginsNameEntry.get_text().strip()
+        serange = self.loginsMLSEntry.get_text().strip()
         if serange == "":
             serange = "s0"
         list_model = self.loginsSelinuxUserCombo.get_model()
         iter = self.loginsSelinuxUserCombo.get_active_iter()
-        seuser=list_model.get_value(iter,0)
+        seuser = list_model.get_value(iter, 0)
         self.wait()
         (rc, out) = commands.getstatusoutput("semanage login -m -s %s -r %s %s" % (seuser, serange, target))
         self.ready()

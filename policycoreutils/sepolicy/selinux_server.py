@@ -10,9 +10,11 @@ import os
 import selinux
 from subprocess import Popen, PIPE, STDOUT
 
+
 class selinux_server(slip.dbus.service.Object):
     default_polkit_auth_required = "org.selinux.semanage"
-    def __init__ (self, *p, **k):
+
+    def __init__(self, *p, **k):
         super(selinux_server, self).__init__(*p, **k)
 
     #
@@ -22,7 +24,7 @@ class selinux_server(slip.dbus.service.Object):
     @slip.dbus.polkit.require_auth("org.selinux.semanage")
     @dbus.service.method("org.selinux", in_signature='s')
     def semanage(self, buf):
-        p = Popen(["/usr/sbin/semanage", "import"],stdout=PIPE, stderr=PIPE, stdin=PIPE)
+        p = Popen(["/usr/sbin/semanage", "import"], stdout=PIPE, stderr=PIPE, stdin=PIPE)
         p.stdin.write(buf)
         output = p.communicate()
         if p.returncode and p.returncode != 0:
@@ -36,7 +38,7 @@ class selinux_server(slip.dbus.service.Object):
     @slip.dbus.polkit.require_auth("org.selinux.customized")
     @dbus.service.method("org.selinux", in_signature='', out_signature='s')
     def customized(self):
-        p = Popen(["/usr/sbin/semanage", "export"],stdout=PIPE, stderr=PIPE)
+        p = Popen(["/usr/sbin/semanage", "export"], stdout=PIPE, stderr=PIPE)
         buf = p.stdout.read()
         output = p.communicate()
         if p.returncode and p.returncode != 0:
@@ -50,7 +52,7 @@ class selinux_server(slip.dbus.service.Object):
     @slip.dbus.polkit.require_auth("org.selinux.semodule_list")
     @dbus.service.method("org.selinux", in_signature='', out_signature='s')
     def semodule_list(self):
-        p = Popen(["/usr/sbin/semodule", "-l"],stdout=PIPE, stderr=PIPE)
+        p = Popen(["/usr/sbin/semodule", "-l"], stdout=PIPE, stderr=PIPE)
         buf = p.stdout.read()
         output = p.communicate()
         if p.returncode and p.returncode != 0:
@@ -80,7 +82,7 @@ class selinux_server(slip.dbus.service.Object):
     @dbus.service.method("org.selinux", in_signature='i')
     def relabel_on_boot(self, value):
         if value == 1:
-            fd = open("/.autorelabel","w")
+            fd = open("/.autorelabel", "w")
             fd.close()
         else:
             os.unlink("/.autorelabel")
@@ -109,11 +111,10 @@ class selinux_server(slip.dbus.service.Object):
     @slip.dbus.polkit.require_auth("org.selinux.change_default_mode")
     @dbus.service.method("org.selinux", in_signature='s')
     def change_default_mode(self, value):
-        values = [ "enforcing", "permissive", "disabled" ]
+        values = ["enforcing", "permissive", "disabled"]
         if value not in values:
             raise ValueError("Enforcement mode must be %s" % ", ".join(values))
         self.write_selinux_config(enforcing=value)
-
 
     #
     # The change_default_policy method modifies the policy type
@@ -127,10 +128,10 @@ class selinux_server(slip.dbus.service.Object):
         raise ValueError("%s does not exist" % path)
 
 if __name__ == "__main__":
-        mainloop = gobject.MainLoop()
-        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-        system_bus = dbus.SystemBus()
-        name = dbus.service.BusName("org.selinux", system_bus)
-        object = selinux_server(system_bus, "/org/selinux/object")
-        slip.dbus.service.set_mainloop(mainloop)
-        mainloop.run()
+    mainloop = gobject.MainLoop()
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+    system_bus = dbus.SystemBus()
+    name = dbus.service.BusName("org.selinux", system_bus)
+    object = selinux_server(system_bus, "/org/selinux/object")
+    slip.dbus.service.set_mainloop(mainloop)
+    mainloop.run()

@@ -18,7 +18,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA     
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 #                                        02111-1307  USA
 #
 #
@@ -27,14 +27,14 @@ import argparse
 import seobject
 import sys
 import gettext
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 try:
     kwargs = {}
     if sys.version_info < (3,):
         kwargs['unicode'] = True
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
-                    codeset = 'utf-8',
+                    codeset='utf-8',
                     **kwargs)
 except IOError:
     try:
@@ -46,47 +46,55 @@ except IOError:
 
 # define custom usages for selected main actions
 usage_login = "semanage login [-h] [-n] [-N] [-s STORE] ["
-usage_login_dict = {' --add':('-s SEUSER','-r RANGE','LOGIN',),' --modify':('-s SEUSER','-r RANGE','LOGIN',),' --delete':('LOGIN',), ' --list':('-C',),' --extract':('',), ' --deleteall':('',)}
+usage_login_dict = {' --add': ('-s SEUSER', '-r RANGE', 'LOGIN',), ' --modify': ('-s SEUSER', '-r RANGE', 'LOGIN',), ' --delete': ('LOGIN',), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_fcontext = "semanage fcontext [-h] [-n] [-N] [-s STORE] ["
-usage_fcontext_dict = {' --add':('(','-t TYPE','-f FTYPE','-r RANGE','-s SEUSER', '|','-e EQUAL', ')','FILE_SPEC',')' ,),' --delete':('(','-t TYPE','-f FTYPE','|','-e EQUAL',')','FILE_SPEC', ')',),' --modify':('(','-t TYPE','-f FTYPE','-r RANGE','-s SEUSER','|','-e EQUAL',')','FILE_SPEC )',),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+usage_fcontext_dict = {' --add': ('(', '-t TYPE', '-f FTYPE', '-r RANGE', '-s SEUSER', '|', '-e EQUAL', ')', 'FILE_SPEC', ')',), ' --delete': ('(', '-t TYPE', '-f FTYPE', '|', '-e EQUAL', ')', 'FILE_SPEC', ')',), ' --modify': ('(', '-t TYPE', '-f FTYPE', '-r RANGE', '-s SEUSER', '|', '-e EQUAL', ')', 'FILE_SPEC )',), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_user = "semanage user [-h] [-n] [-N] [-s STORE] ["
-usage_user_dict = {' --add':('(','-L LEVEL','-R ROLES','-r RANGE','-s SEUSER','selinux_name'')'),' --delete':('selinux_name',),' --modify':('(','-L LEVEL','-R ROLES','-r RANGE','-s SEUSER','selinux_name',')'),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+usage_user_dict = {' --add': ('(', '-L LEVEL', '-R ROLES', '-r RANGE', '-s SEUSER', 'selinux_name'')'), ' --delete': ('selinux_name',), ' --modify': ('(', '-L LEVEL', '-R ROLES', '-r RANGE', '-s SEUSER', 'selinux_name', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_port = "semanage port [-h] [-n] [-N] [-s STORE] ["
-usage_port_dict = {' --add':('-t TYPE','-p PROTOCOL','-r RANGE','(','port_name','|','port_range',')'),' --modify':('-t TYPE','-p PROTOCOL','-r RANGE','(','port_name','|','port_range',')'), ' --delete':('-p PROTOCOL','(','port_name','|','port_range',')'),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+usage_port_dict = {' --add': ('-t TYPE', '-p PROTOCOL', '-r RANGE', '(', 'port_name', '|', 'port_range', ')'), ' --modify': ('-t TYPE', '-p PROTOCOL', '-r RANGE', '(', 'port_name', '|', 'port_range', ')'), ' --delete': ('-p PROTOCOL', '(', 'port_name', '|', 'port_range', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_node = "semanage node [-h] [-n] [-N] [-s STORE] ["
-usage_node_dict = {' --add':('-M NETMASK','-p PROTOCOL','-t TYPE','-r RANGE','node'),' --modify':('-M NETMASK','-p PROTOCOL','-t TYPE','-r RANGE','node'), ' --delete':('-M NETMASK','-p PROTOCOL','node'),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+usage_node_dict = {' --add': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --modify': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --delete': ('-M NETMASK', '-p PROTOCOL', 'node'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_interface = "semanage interface [-h] [-n] [-N] [-s STORE] ["
-usage_interface_dict = {' --add':('-t TYPE','-r RANGE','interface'),' --modify':('-t TYPE','-r RANGE','interface'), ' --delete':('interface',),' --list':('-C',), ' --extract':('',), ' --deleteall':('',)}
+usage_interface_dict = {' --add': ('-t TYPE', '-r RANGE', 'interface'), ' --modify': ('-t TYPE', '-r RANGE', 'interface'), ' --delete': ('interface',), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_boolean = "semanage boolean [-h] [-n] [-N] [-s STORE] ["
-usage_boolean_dict = {' --modify':('(','--on','|','--off',')','boolean'), ' --list':('-C',), '  --extract':('',), ' --deleteall':('',)}
+usage_boolean_dict = {' --modify': ('(', '--on', '|', '--off', ')', 'boolean'), ' --list': ('-C',), '  --extract': ('',), ' --deleteall': ('',)}
 
 import sepolicy
+
+
 class CheckRole(argparse.Action):
+
     def __call__(self, parser, namespace, value, option_string=None):
         newval = getattr(namespace, self.dest)
         if not newval:
-               newval = []
+            newval = []
         roles = sepolicy.get_all_roles()
         for v in value.split():
-               if v not in roles:
-                      raise ValueError("%s must be an SELinux role:\nValid roles: %s" % (v, ", ".join(roles)))
-               newval.append(v)
+            if v not in roles:
+                raise ValueError("%s must be an SELinux role:\nValid roles: %s" % (v, ", ".join(roles)))
+            newval.append(v)
         setattr(namespace, self.dest, newval)
 
 store = ''
+
+
 class SetStore(argparse.Action):
+
     def __call__(self, parser, namespace, values, option_string=None):
         global store
-        store=values
+        store = values
         setattr(namespace, self.dest, values)
 
+
 class seParser(argparse.ArgumentParser):
+
     def error(self, message):
         if len(sys.argv) == 2:
             self.print_help()
@@ -94,7 +102,9 @@ class seParser(argparse.ArgumentParser):
         self.print_usage()
         self.exit(2, ('%s: error: %s\n') % (self.prog, message))
 
+
 class SetExportFile(argparse.Action):
+
     def __call__(self, parser, namespace, values, option_string=None):
         if values:
             if values is not "-":
@@ -105,74 +115,89 @@ class SetExportFile(argparse.Action):
                     sys.exit(1)
         setattr(namespace, self.dest, values)
 
+
 class SetImportFile(argparse.Action):
+
     def __call__(self, parser, namespace, values, option_string=None):
         if values and values is not "-":
-               try:
-                      sys.stdin = open(values, 'r')
-               except IOError as e:
-                      sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
-                      sys.exit(1)
+            try:
+                sys.stdin = open(values, 'r')
+            except IOError as e:
+                sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+                sys.exit(1)
         setattr(namespace, self.dest, values)
 
 # functions for OBJECT initialization
+
+
 def login_ini():
     OBJECT = seobject.loginRecords(store)
     return OBJECT
+
 
 def user_ini():
     OBJECT = seobject.seluserRecords(store)
     return OBJECT
 
+
 def port_ini():
     OBJECT = seobject.portRecords(store)
     return OBJECT
+
 
 def module_ini():
     OBJECT = seobject.moduleRecords(store)
     return OBJECT
 
+
 def interface_ini():
     OBJECT = seobject.interfaceRecords(store)
     return OBJECT
+
 
 def node_ini():
     OBJECT = seobject.nodeRecords(store)
     return OBJECT
 
+
 def fcontext_ini():
     OBJECT = seobject.fcontextRecords(store)
     return OBJECT
+
 
 def boolean_ini():
     OBJECT = seobject.booleanRecords(store)
     return OBJECT
 
+
 def permissive_ini():
     OBJECT = seobject.permissiveRecords(store)
     return OBJECT
+
 
 def dontaudit_ini():
     OBJECT = seobject.dontauditClass(store)
     return OBJECT
 
 # define dictonary for seobject OBEJCTS
-object_dict = {'login':login_ini, 'user':user_ini, 'port':port_ini, 'module':module_ini, 'interface':interface_ini, 'node':node_ini, 'fcontext':fcontext_ini, 'boolean':boolean_ini,'permissive':permissive_ini, 'dontaudit':dontaudit_ini}
+object_dict = {'login': login_ini, 'user': user_ini, 'port': port_ini, 'module': module_ini, 'interface': interface_ini, 'node': node_ini, 'fcontext': fcontext_ini, 'boolean': boolean_ini, 'permissive': permissive_ini, 'dontaudit': dontaudit_ini}
 
-def generate_custom_usage(usage_text,usage_dict):
+
+def generate_custom_usage(usage_text, usage_dict):
     # generate custom usage from given text and dictonary
     sorted_keys = []
     for i in usage_dict.keys():
         sorted_keys.append(i)
     sorted_keys.sort()
     for k in sorted_keys:
-        usage_text += "%s %s |" % (k,(" ".join(usage_dict[k])))
+        usage_text += "%s %s |" % (k, (" ".join(usage_dict[k])))
     usage_text = usage_text[:-1] + "]"
     usage_text = _(usage_text)
 
     return usage_text
 
-def handle_opts(args,dict,target_key):
+
+def handle_opts(args, dict, target_key):
     # handle conflict and required options for given dictonary
     # {action:[conflict_opts,require_opts]}
 
@@ -180,24 +205,25 @@ def handle_opts(args,dict,target_key):
     for k in args.__dict__.keys():
         try:
             if k in dict[target_key][0] and args.__dict__[k]:
-                print("%s option can not be used with --%s" % (target_key,k))
+                print("%s option can not be used with --%s" % (target_key, k))
                 sys.exit(2)
         except KeyError:
             continue
 
     for k in args.__dict__.keys():
         try:
-         if k in dict[target_key][1] and not args.__dict__[k]:
-            print("%s option is needed for %s" % (k,target_key))
-            sys.exit(2)
+            if k in dict[target_key][1] and not args.__dict__[k]:
+                print("%s option is needed for %s" % (k, target_key))
+                sys.exit(2)
         except KeyError:
             continue
 
+
 def handleLogin(args):
     # {action:[conflict_opts,require_opts]}
-    login_args = {'list':[('login','seuser'),('')],'add':[('locallist'),('seuser','login')],'modify':[('locallist'),('login')], 'delete':[('locallist'),('login')],'extract':[('locallist','login','seuser'),('')],'deleteall':[('locallist'),('')]}
+    login_args = {'list': [('login', 'seuser'), ('')], 'add': [('locallist'), ('seuser', 'login')], 'modify': [('locallist'), ('login')], 'delete': [('locallist'), ('login')], 'extract': [('locallist', 'login', 'seuser'), ('')], 'deleteall': [('locallist'), ('')]}
 
-    handle_opts(args,login_args,args.action)
+    handle_opts(args, login_args, args.action)
 
     OBJECT = object_dict['login']()
     OBJECT.set_reload(args.noreload)
@@ -216,59 +242,79 @@ def handleLogin(args):
         for i in OBJECT.customized():
             print("login %s" % (str(i)))
 
+
 def parser_add_store(parser, name):
     parser.add_argument('-S', '--store', action=SetStore, help=_("Select an alternate SELinux Policy Store to manage"))
+
 
 def parser_add_priority(parser, name):
     parser.add_argument('-P', '--priority', type=int, default=400, help=_("Select a priority for module operations"))
 
+
 def parser_add_noheading(parser, name):
-    parser.add_argument('-n', '--noheading', action='store_false', default=True, help=_("Do not print heading when listing %s object types") % name  )
+    parser.add_argument('-n', '--noheading', action='store_false', default=True, help=_("Do not print heading when listing %s object types") % name)
+
 
 def parser_add_noreload(parser, name):
     parser.add_argument('-N', '--noreload', action='store_false', default=True, help=_('Do not reload policy after commit'))
 
+
 def parser_add_locallist(parser, name):
-    parser.add_argument('-C', '--locallist', action='store_true', default=False, help=_("List %s local customizations") % name  )
+    parser.add_argument('-C', '--locallist', action='store_true', default=False, help=_("List %s local customizations") % name)
+
 
 def parser_add_add(parser, name):
-    parser.add_argument('-a', '--add', dest='action', action='store_const', const='add', help=_("Add a record of the %s object type") % name  )
+    parser.add_argument('-a', '--add', dest='action', action='store_const', const='add', help=_("Add a record of the %s object type") % name)
+
 
 def parser_add_type(parser, name):
     parser.add_argument('-t', '--type', help=_('SELinux Type for the object'))
+
+
 def parser_add_level(parser, name):
     parser.add_argument('-L', '--level', default='s0', help=_('Default SELinux Level for SELinux user, s0 Default. (MLS/MCS Systems only)'))
+
+
 def parser_add_range(parser, name):
     parser.add_argument('-r', '--range', default="s0",
-                             help=_('''
+                        help=_('''
 MLS/MCS Security Range (MLS/MCS Systems only)
 SELinux Range  for SELinux login mapping
 defaults to the SELinux user record range.
 SELinux Range for SELinux user defaults to s0.
 '''))
+
+
 def parser_add_proto(parser, name):
     parser.add_argument('-p', '--proto', help=_('''
     Protocol  for  the specified port (tcp|udp) or internet protocol
     version for the specified node (ipv4|ipv6).
 '''))
 
+
 def parser_add_modify(parser, name):
-    parser.add_argument('-m', '--modify', dest='action', action='store_const', const='modify', help=_("Modify a record of the %s object type") % name  )
+    parser.add_argument('-m', '--modify', dest='action', action='store_const', const='modify', help=_("Modify a record of the %s object type") % name)
+
 
 def parser_add_list(parser, name):
-    parser.add_argument('-l', '--list', dest='action', action='store_const', const='list', help=_("List records of the %s object type") % name  )
+    parser.add_argument('-l', '--list', dest='action', action='store_const', const='list', help=_("List records of the %s object type") % name)
+
 
 def parser_add_delete(parser, name):
-    parser.add_argument('-d', '--delete', dest='action', action='store_const', const='delete', help=_("Delete a record of the %s object type") % name  )
+    parser.add_argument('-d', '--delete', dest='action', action='store_const', const='delete', help=_("Delete a record of the %s object type") % name)
+
 
 def parser_add_extract(parser, name):
     parser.add_argument('-E', '--extract', dest='action', action='store_const', const='extract', help=_("Extract customizable commands, for use within a transaction"))
 
+
 def parser_add_deleteall(parser, name):
-    parser.add_argument('-D', '--deleteall', dest='action', action='store_const', const='deleteall', help=_('Remove all %s objects local customizations') % name )
+    parser.add_argument('-D', '--deleteall', dest='action', action='store_const', const='deleteall', help=_('Remove all %s objects local customizations') % name)
+
 
 def parser_add_seuser(parser, name):
     parser.add_argument('-s', '--seuser', default="", help=_("SELinux user name"))
+
 
 def setupLoginParser(subparsers):
     generated_usage = generate_custom_usage(usage_login, usage_login_dict)
@@ -293,13 +339,14 @@ def setupLoginParser(subparsers):
 
     loginParser.set_defaults(func=handleLogin)
 
+
 def handleFcontext(args):
-    fcontext_args = {'list':[('equal','ftype','seuser','type'),('')],'add':[('locallist'),('type','file_spec')],'modify':[('locallist'),('type','file_spec')], 'delete':[('locallist'), ('file_spec')],'extract':[('locallist','equal','ftype','seuser','type'),('')],'deleteall':[('locallist'),('')]}
+    fcontext_args = {'list': [('equal', 'ftype', 'seuser', 'type'), ('')], 'add': [('locallist'), ('type', 'file_spec')], 'modify': [('locallist'), ('type', 'file_spec')], 'delete': [('locallist'), ('file_spec')], 'extract': [('locallist', 'equal', 'ftype', 'seuser', 'type'), ('')], 'deleteall': [('locallist'), ('')]}
     # we can not use mutually for equal because we can define some actions together with equal
-    fcontext_equal_args = {'equal':[('list','locallist','type','ftype','seuser','deleteall','extract'),()]}
+    fcontext_equal_args = {'equal': [('list', 'locallist', 'type', 'ftype', 'seuser', 'deleteall', 'extract'), ()]}
 
     if args.action is None:
-        print("usage: "+"%s" % generate_custom_usage(usage_fcontext, usage_fcontext_dict))
+        print("usage: " + "%s" % generate_custom_usage(usage_fcontext, usage_fcontext_dict))
         sys.exit(2)
     elif args.action and args.equal:
         handle_opts(args, fcontext_equal_args, "equal")
@@ -323,7 +370,7 @@ def handleFcontext(args):
         if args.equal:
             OBJECT.delete(args.file_spec, args.equal)
         else:
-            OBJECT.delete(args.file_spec,args.ftype)
+            OBJECT.delete(args.file_spec, args.ftype)
     if args.action is "list":
         OBJECT.list(args.noheading, args.locallist)
     if args.action is "deleteall":
@@ -331,6 +378,7 @@ def handleFcontext(args):
     if args.action is "extract":
         for i in OBJECT.customized():
             print("fcontext %s" % str(i))
+
 
 def setupFcontextParser(subparsers):
     ftype_help = '''
@@ -343,7 +391,7 @@ file type options can be passed:
 If you do not specify a file type, the file type will default to "all files".
 '''
     generate_usage = generate_custom_usage(usage_fcontext, usage_fcontext_dict)
-    fcontextParser = subparsers.add_parser('fcontext',usage=generate_usage, help=_("Manage file context mapping definitions"))
+    fcontextParser = subparsers.add_parser('fcontext', usage=generate_usage, help=_("Manage file context mapping definitions"))
     parser_add_locallist(fcontextParser, "fcontext")
     parser_add_noheading(fcontextParser, "fcontext")
     parser_add_noreload(fcontextParser, "fcontext")
@@ -361,25 +409,26 @@ If you do not specify a file type, the file type will default to "all files".
                                                                   label.  This is used with fcontext. Requires source  and  target
                                                                   path  arguments.  The context labeling for the target subtree is
                                                                   made equivalent to that defined for the source.'''))
-    fcontextParser.add_argument('-f', '--ftype', default="", choices=["a","f","d","c","b","s","l","p"], help=_(ftype_help))
+    fcontextParser.add_argument('-f', '--ftype', default="", choices=["a", "f", "d", "c", "b", "s", "l", "p"], help=_(ftype_help))
     parser_add_seuser(fcontextParser, "fcontext")
     parser_add_type(fcontextParser, "fcontext")
     parser_add_range(fcontextParser, "fcontext")
     fcontextParser.add_argument('file_spec', nargs='?', default=None, help=_('file_spec'))
     fcontextParser.set_defaults(func=handleFcontext)
 
-def handleUser(args):
-    user_args = {'list':[('selinux_name','seuser','roles'),('')],'add':[('locallist'),('roles','selinux_name')],'modify':[('locallist'),('selinux_name')], 'delete':[('locallist'),('selinux_name')],'extract':[('locallist','selinux_name','seuser','role'),('')],'deleteall':[('locallist'),('')]}
 
-    handle_opts(args,user_args,args.action)
+def handleUser(args):
+    user_args = {'list': [('selinux_name', 'seuser', 'roles'), ('')], 'add': [('locallist'), ('roles', 'selinux_name')], 'modify': [('locallist'), ('selinux_name')], 'delete': [('locallist'), ('selinux_name')], 'extract': [('locallist', 'selinux_name', 'seuser', 'role'), ('')], 'deleteall': [('locallist'), ('')]}
+
+    handle_opts(args, user_args, args.action)
 
     OBJECT = object_dict['user']()
     OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
-        OBJECT.add(args.selinux_name, args.roles,  args.level, args.range, args.prefix)
+        OBJECT.add(args.selinux_name, args.roles, args.level, args.range, args.prefix)
     if args.action is "modify":
-        OBJECT.modify(args.selinux_name, args.roles,  args.level, args.range, args.prefix)
+        OBJECT.modify(args.selinux_name, args.roles, args.level, args.range, args.prefix)
     if args.action is "delete":
         OBJECT.delete(args.selinux_name)
     if args.action is "list":
@@ -390,9 +439,10 @@ def handleUser(args):
         for i in OBJECT.customized():
             print("user %s" % str(i))
 
+
 def setupUserParser(subparsers):
     generated_usage = generate_custom_usage(usage_user, usage_user_dict)
-    userParser = subparsers.add_parser('user', usage=generated_usage,help=_('Manage SELinux confined users (Roles and levels for an SELinux user)'))
+    userParser = subparsers.add_parser('user', usage=generated_usage, help=_('Manage SELinux confined users (Roles and levels for an SELinux user)'))
     parser_add_locallist(userParser, "user")
     parser_add_noheading(userParser, "user")
     parser_add_noreload(userParser, "user")
@@ -413,14 +463,15 @@ def setupUserParser(subparsers):
                             help=_('''
 SELinux Roles.  You must enclose multiple roles within quotes,                  separate by spaces. Or specify -R multiple times.
 '''))
-    userParser.add_argument('-P', '--prefix', default="user",  help=argparse.SUPPRESS)
+    userParser.add_argument('-P', '--prefix', default="user", help=argparse.SUPPRESS)
     userParser.add_argument('selinux_name', nargs='?', default=None, help=_('selinux_name'))
     userParser.set_defaults(func=handleUser)
 
-def handlePort(args):
-    port_args = {'list':[('port','type','proto'),('')],'add':[('locallist'),('type','port','proto')],'modify':[('localist'),('port','proto')], 'delete':[('locallist'),('port','proto')],'extract':[('locallist','port','type','proto'),('')],'deleteall':[('locallist'),('')]}
 
-    handle_opts(args,port_args,args.action)
+def handlePort(args):
+    port_args = {'list': [('port', 'type', 'proto'), ('')], 'add': [('locallist'), ('type', 'port', 'proto')], 'modify': [('localist'), ('port', 'proto')], 'delete': [('locallist'), ('port', 'proto')], 'extract': [('locallist', 'port', 'type', 'proto'), ('')], 'deleteall': [('locallist'), ('')]}
+
+    handle_opts(args, port_args, args.action)
 
     OBJECT = object_dict['port']()
     OBJECT.set_reload(args.noreload)
@@ -438,6 +489,7 @@ def handlePort(args):
     if args.action is "extract":
         for i in OBJECT.customized():
             print("port %s" % str(i))
+
 
 def setupPortParser(subparsers):
     generated_usage = generate_custom_usage(usage_port, usage_port_dict)
@@ -460,10 +512,11 @@ def setupPortParser(subparsers):
     portParser.add_argument('port', nargs='?', default=None, help=_('port | port_range'))
     portParser.set_defaults(func=handlePort)
 
-def handleInterface(args):
-    interface_args = {'list':[('interface'),('')],'add':[('locallist'),('type','interface')],'modify':[('locallist'),('type','interface')], 'delete':[('locallist'),('interface')],'extract':[('locallist','interface','type'),('')],'deleteall':[('locallist'),('')]}
 
-    handle_opts(args,interface_args,args.action)
+def handleInterface(args):
+    interface_args = {'list': [('interface'), ('')], 'add': [('locallist'), ('type', 'interface')], 'modify': [('locallist'), ('type', 'interface')], 'delete': [('locallist'), ('interface')], 'extract': [('locallist', 'interface', 'type'), ('')], 'deleteall': [('locallist'), ('')]}
+
+    handle_opts(args, interface_args, args.action)
 
     OBJECT = object_dict['interface']()
     OBJECT.set_reload(args.noreload)
@@ -481,6 +534,7 @@ def handleInterface(args):
     if args.action is "extract":
         for i in OBJECT.customized():
             print("interface %s" % str(i))
+
 
 def setupInterfaceParser(subparsers):
     generated_usage = generate_custom_usage(usage_interface, usage_interface_dict)
@@ -502,6 +556,7 @@ def setupInterfaceParser(subparsers):
     interfaceParser.add_argument('interface', nargs='?', default=None, help=_('interface_spec'))
     interfaceParser.set_defaults(func=handleInterface)
 
+
 def handleModule(args):
     OBJECT = seobject.moduleRecords(store)
     OBJECT.set_reload(args.noreload)
@@ -520,6 +575,7 @@ def handleModule(args):
     if args.action is "extract":
         for i in OBJECT.customized():
             print("module %s" % str(i))
+
 
 def setupModuleParser(subparsers):
     moduleParser = subparsers.add_parser('module', help=_('Manage SELinux policy modules'))
@@ -540,9 +596,10 @@ def setupModuleParser(subparsers):
     moduleParser.add_argument('module_name', nargs='?', default=None, help=_('Name of the module to act on'))
     moduleParser.set_defaults(func=handleModule)
 
+
 def handleNode(args):
-    node_args = {'list':[('node','type','proto','netmask'),('')],'add':[('locallist'),('type','node','proto','netmask')],'modify':[('locallist'),('node','netmask','proto')], 'delete':[('locallist'),('node','netmask','prototype')],'extract':[('locallist','node','type','proto','netmask'),('')],'deleteall':[('locallist'),('')]}
-    handle_opts(args,node_args,args.action)
+    node_args = {'list': [('node', 'type', 'proto', 'netmask'), ('')], 'add': [('locallist'), ('type', 'node', 'proto', 'netmask')], 'modify': [('locallist'), ('node', 'netmask', 'proto')], 'delete': [('locallist'), ('node', 'netmask', 'prototype')], 'extract': [('locallist', 'node', 'type', 'proto', 'netmask'), ('')], 'deleteall': [('locallist'), ('')]}
+    handle_opts(args, node_args, args.action)
 
     OBJECT = object_dict['node']()
     OBJECT.set_reload(args.noreload)
@@ -561,6 +618,7 @@ def handleNode(args):
         for i in OBJECT.customized():
             print("node %s" % str(i))
 
+
 def setupNodeParser(subparsers):
     generated_usage = generate_custom_usage(usage_node, usage_node_dict)
     nodeParser = subparsers.add_parser('node', usage=generated_usage, help=_('Manage network node type definitions'))
@@ -577,17 +635,18 @@ def setupNodeParser(subparsers):
     parser_add_extract(node_action, "node")
     parser_add_deleteall(node_action, "node")
 
-    nodeParser.add_argument('-M', '--netmask',  help=_('Network Mask'))
+    nodeParser.add_argument('-M', '--netmask', help=_('Network Mask'))
     parser_add_type(nodeParser, "node")
     parser_add_range(nodeParser, "node")
     parser_add_proto(nodeParser, "node")
     nodeParser.add_argument('node', nargs='?', default=None, help=_('node'))
     nodeParser.set_defaults(func=handleNode)
 
+
 def handleBoolean(args):
-    boolean_args = {'list':[('state','boolean'),('')],'modify':[('localist'),('')], 'extract':[('locallist','state','boolean'),('')],'deleteall':[('locallist'),('')],'state':[('locallist','list','extract','deleteall'),('modify')]}
+    boolean_args = {'list': [('state', 'boolean'), ('')], 'modify': [('localist'), ('')], 'extract': [('locallist', 'state', 'boolean'), ('')], 'deleteall': [('locallist'), ('')], 'state': [('locallist', 'list', 'extract', 'deleteall'), ('modify')]}
     if args.action is None:
-        print("Usage: "+"%s" % generate_custom_usage(usage_boolean, usage_boolean_dict))
+        print("Usage: " + "%s" % generate_custom_usage(usage_boolean, usage_boolean_dict))
         sys.exit(2)
     # TODO: should be added to handle_opts logic
     elif args.action is "modify" and not args.boolean:
@@ -597,14 +656,14 @@ def handleBoolean(args):
         print("state option is needed")
         sys.exit(1)
     else:
-        handle_opts(args,boolean_args,args.action)
+        handle_opts(args, boolean_args, args.action)
 
     OBJECT = object_dict['boolean']()
     OBJECT.set_reload(args.noreload)
 
     if args.action is "modify":
         if args.boolean:
-             OBJECT.modify(args.boolean, args.state, False)
+            OBJECT.modify(args.boolean, args.state, False)
     if args.action is "list":
         OBJECT.list(args.noheading, args.locallist)
     if args.action is "deleteall":
@@ -613,9 +672,10 @@ def handleBoolean(args):
         for i in OBJECT.customized():
             print("boolean %s" % str(i))
 
+
 def setupBooleanParser(subparsers):
     generated_usage = generate_custom_usage(usage_boolean, usage_boolean_dict)
-    booleanParser = subparsers.add_parser('boolean',usage=generated_usage, help=_('Manage booleans to selectively enable functionality'))
+    booleanParser = subparsers.add_parser('boolean', usage=generated_usage, help=_('Manage booleans to selectively enable functionality'))
     parser_add_locallist(booleanParser, "boolean")
     parser_add_noheading(booleanParser, "boolean")
     parser_add_noreload(booleanParser, "boolean")
@@ -635,6 +695,7 @@ def setupBooleanParser(subparsers):
 
     booleanParser.set_defaults(func=handleBoolean)
 
+
 def handlePermissive(args):
     OBJECT = object_dict['permissive']()
     OBJECT.set_reload(args.noreload)
@@ -645,6 +706,7 @@ def handlePermissive(args):
         OBJECT.list(args.noheading)
     if args.action is "delete":
         OBJECT.delete(args.type)
+
 
 def setupPermissiveParser(subparsers):
     permissiveParser = subparsers.add_parser('permissive', help=_('Manage process type enforcement mode'))
@@ -662,10 +724,12 @@ def setupPermissiveParser(subparsers):
     permissiveParser.add_argument('type', nargs='?', default=None, help=_('type'))
     permissiveParser.set_defaults(func=handlePermissive)
 
+
 def handleDontaudit(args):
     OBJECT = object_dict['dontaudit']()
     OBJECT.set_reload(args.noreload)
     OBJECT.toggle(args.action)
+
 
 def setupDontauditParser(subparsers):
     dontauditParser = subparsers.add_parser('dontaudit', help=_('Disable/Enable dontaudit rules in policy'))
@@ -674,8 +738,9 @@ def setupDontauditParser(subparsers):
     dontauditParser.add_argument('action', choices=["on", "off"])
     dontauditParser.set_defaults(func=handleDontaudit)
 
+
 def handleExport(args):
-    manageditems=[ "boolean", "login", "interface", "user", "port", "node", "fcontext", "module"]
+    manageditems = ["boolean", "login", "interface", "user", "port", "node", "fcontext", "module"]
     for i in manageditems:
         print("%s -D" % i)
     for i in manageditems:
@@ -685,6 +750,7 @@ def handleExport(args):
 
     sys.exit(0)
 
+
 def setupExportParser(subparsers):
     exportParser = subparsers.add_parser('export', help=_('Output local customizations'))
     parser_add_store(exportParser, "export")
@@ -692,6 +758,8 @@ def setupExportParser(subparsers):
     exportParser.set_defaults(func=handleExport)
 
 import re
+
+
 def mkargv(line):
     dquote = "\""
     squote = "\'"
@@ -705,10 +773,10 @@ def mkargv(line):
             i = i + 1
             continue
         if cnt == 1:
-            quote = [ l[i].strip(dquote) ]
+            quote = [l[i].strip(dquote)]
             i = i + 1
 
-            while i < len(l) and  dquote not in l[i]:
+            while i < len(l) and dquote not in l[i]:
                 quote.append(l[i])
                 i = i + 1
             quote.append(l[i].strip(dquote))
@@ -722,9 +790,9 @@ def mkargv(line):
             i = i + 1
             continue
         if cnt == 1:
-            quote = [ l[i].strip(squote) ]
+            quote = [l[i].strip(squote)]
             i = i + 1
-            while i < len(l) and  squote not in l[i]:
+            while i < len(l) and squote not in l[i]:
                 quote.append(l[i])
                 i = i + 1
 
@@ -738,13 +806,14 @@ def mkargv(line):
 
     return ret
 
+
 def handleImport(args):
     trans = seobject.semanageRecords(store)
     trans.start()
 
     for l in sys.stdin.readlines():
         if len(l.strip()) == 0:
-               continue
+            continue
 
         try:
             commandParser = createCommandParser()
@@ -762,6 +831,7 @@ def handleImport(args):
     trans.set_reload(args.noreload)
     trans.finish()
 
+
 def setupImportParser(subparsers):
     importParser = subparsers.add_parser('import', help=_('Output local customizations'))
     parser_add_noreload(importParser, "import")
@@ -769,10 +839,11 @@ def setupImportParser(subparsers):
     importParser.add_argument('-f', '--input_file', dest='input_file', action=SetImportFile, help=_('Input file'))
     importParser.set_defaults(func=handleImport)
 
+
 def createCommandParser():
     commandParser = seParser(prog='semanage',
-                                            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-                                            description='''semanage is used to configure certain elements
+                             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+                             description='''semanage is used to configure certain elements
                                                             of SELinux policy with-out requiring modification
                                                             to or recompilation from policy source.''')
 
@@ -793,6 +864,7 @@ def createCommandParser():
 
     return commandParser
 
+
 def make_io_args(args):
     # import/export backward compability
     args_origin = ["-S", "-o", "-i", "targeted", "minimum", "mls"]
@@ -812,16 +884,18 @@ def make_io_args(args):
             continue
         args_ie.append(i)
 
-    return args_subcommand+args_ie+args_file
+    return args_subcommand + args_ie + args_file
+
 
 def make_args(sys_args):
     args = []
     if "-o" in sys_args[1:] or "-i" in sys_args[1:]:
-        args=make_io_args(sys_args[1:])
+        args = make_io_args(sys_args[1:])
     else:
-        args=sys_args[1:]
+        args = sys_args[1:]
 
     return args
+
 
 def do_parser():
     try:
@@ -848,4 +922,4 @@ def do_parser():
         sys.exit(1)
 
 if __name__ == '__main__':
-       do_parser()
+    do_parser()

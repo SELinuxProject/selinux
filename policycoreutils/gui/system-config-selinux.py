@@ -28,7 +28,7 @@ try:
 except RuntimeError, e:
     print "system-config-selinux:", e
     print "This is a graphical application and requires DISPLAY to be set."
-    sys.exit (1)
+    sys.exit(1)
 
 import gtk.glade
 import os
@@ -46,7 +46,7 @@ import selinux
 ##
 ## I18N
 ##
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
@@ -55,7 +55,7 @@ try:
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
                     unicode=False,
-                    codeset = 'utf-8')
+                    codeset='utf-8')
 except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
@@ -67,18 +67,19 @@ version = "1.0"
 sys.path.append('/usr/share/system-config-selinux')
 
 
-
 ##
 ## Pull in the Glade file
 ##
 if os.access("system-config-selinux.glade", os.F_OK):
-    xml = gtk.glade.XML ("system-config-selinux.glade", domain=PROGNAME)
+    xml = gtk.glade.XML("system-config-selinux.glade", domain=PROGNAME)
 else:
-    xml = gtk.glade.XML ("/usr/share/system-config-selinux/system-config-selinux.glade", domain=PROGNAME)
+    xml = gtk.glade.XML("/usr/share/system-config-selinux/system-config-selinux.glade", domain=PROGNAME)
+
 
 class childWindow:
+
     def __init__(self):
-        self.tabs=[]
+        self.tabs = []
         self.xml = xml
         xml.signal_connect("on_quit_activate", self.destroy)
         xml.signal_connect("on_delete_clicked", self.delete)
@@ -93,8 +94,8 @@ class childWindow:
                 self.add_page(loginsPage.loginsPage(xml))
                 self.add_page(usersPage.usersPage(xml))
                 self.add_page(portsPage.portsPage(xml))
-                self.add_page(modulesPage.modulesPage(xml)) # modules
-                self.add_page(domainsPage.domainsPage(xml)) # domains
+                self.add_page(modulesPage.modulesPage(xml))  # modules
+                self.add_page(domainsPage.domainsPage(xml))  # domains
             except ValueError, e:
                 self.error(e.message)
 
@@ -121,6 +122,7 @@ class childWindow:
 
     def policy(self, args):
         os.spawnl(os.P_NOWAIT, "/usr/share/system-config-selinux/semanagegui.py")
+
     def logging(self, args):
         os.spawnl(os.P_NOWAIT, "/usr/bin/seaudit")
 
@@ -137,9 +139,9 @@ class childWindow:
         self.tabs[self.notebook.get_current_page()].on_local_clicked(button)
 
     def on_about_activate(self, args):
-        dlg = xml.get_widget ("aboutWindow")
-        dlg.run ()
-        dlg.hide ()
+        dlg = xml.get_widget("aboutWindow")
+        dlg.run()
+        dlg.hide()
 
     def destroy(self, args):
         gtk.main_quit()
@@ -158,7 +160,6 @@ class childWindow:
             self.notebook.set_current_page(0)
             self.use_menus(self.tabs[0].use_menus())
 
-
     def setupScreen(self):
         # Bring in widgets from glade file.
         self.mainWindow = self.xml.get_widget("mainWindow")
@@ -167,14 +168,14 @@ class childWindow:
         self.view.get_selection().connect("changed", self.itemSelected)
         self.store = gtk.ListStore(gobject.TYPE_STRING)
         self.view.set_model(self.store)
-        col = gtk.TreeViewColumn("",  gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn("", gtk.CellRendererText(), text=0)
         col.set_resizable(True)
         self.view.append_column(col)
 
         for page in self.tabs:
             iter = self.store.append()
             self.store.set_value(iter, 0, page.get_description())
-        self.view.get_selection().select_path ((0,))
+        self.view.get_selection().select_path((0,))
 
     def stand_alone(self):
         desktopName = _("Configue SELinux")
@@ -187,7 +188,7 @@ class childWindow:
         gtk.main()
 
 if __name__ == "__main__":
-    signal.signal (signal.SIGINT, signal.SIG_DFL)
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     app = childWindow()
     app.stand_alone()

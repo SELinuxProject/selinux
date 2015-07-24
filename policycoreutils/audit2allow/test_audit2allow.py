@@ -1,26 +1,31 @@
-import unittest, os, shutil
+import unittest
+import os
+import shutil
 from tempfile import mkdtemp
 from subprocess import Popen, PIPE
 
+
 class Audit2allowTests(unittest.TestCase):
+
     def assertDenied(self, err):
         self.assertTrue('Permission denied' in err,
-                     '"Permission denied" not found in %r' % err)
+                        '"Permission denied" not found in %r' % err)
+
     def assertNotFound(self, err):
         self.assertTrue('not found' in err,
-                     '"not found" not found in %r' % err)
+                        '"not found" not found in %r' % err)
 
     def assertFailure(self, status):
         self.assertTrue(status != 0,
-                     '"Succeeded when it should have failed')
+                        '"Succeeded when it should have failed')
 
     def assertSuccess(self, cmd, status, err):
         self.assertTrue(status == 0,
-                     '"%s should have succeeded for this test %r' %  (cmd, err))
+                        '"%s should have succeeded for this test %r' % (cmd, err))
 
     def test_sepolgen_ifgen(self):
         "Verify sepolgen-ifgen works"
-        p = Popen(['sudo', 'sepolgen-ifgen'], stdout = PIPE)
+        p = Popen(['sudo', 'sepolgen-ifgen'], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)
@@ -28,7 +33,7 @@ class Audit2allowTests(unittest.TestCase):
 
     def test_audit2allow(self):
         "Verify audit2allow works"
-        p = Popen(['audit2allow',"-i","test.log"], stdout = PIPE)
+        p = Popen(['audit2allow', "-i", "test.log"], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)
@@ -36,7 +41,7 @@ class Audit2allowTests(unittest.TestCase):
 
     def test_audit2why(self):
         "Verify audit2why works"
-        p = Popen(['audit2why',"-i","test.log"], stdout = PIPE)
+        p = Popen(['audit2why', "-i", "test.log"], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)

@@ -1,5 +1,5 @@
 #! /usr/bin/python -Es
-# Copyright (C) 2011 Red Hat 
+# Copyright (C) 2011 Red Hat
 # see file 'COPYING' for use and warranty information
 #
 # setrans is a tool for analyzing process transistions in SELinux policy
@@ -16,31 +16,34 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA     
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 #                                        02111-1307  USA
 #
-#  
+#
 import sepolicy
-search=sepolicy.search
-info=sepolicy.info
-__all__ = [ 'setrans', ]
+search = sepolicy.search
+info = sepolicy.info
+__all__ = ['setrans', ]
+
 
 def _entrypoint(src):
-    trans=search([sepolicy.ALLOW],{sepolicy.SOURCE:src})
+    trans = search([sepolicy.ALLOW], {sepolicy.SOURCE: src})
     return map(lambda y: y[sepolicy.TARGET], filter(lambda x: "entrypoint" in x[sepolicy.PERMS], trans))
-    
+
 
 def _get_trans(src):
-    return search([sepolicy.TRANSITION],{sepolicy.SOURCE:src, sepolicy.CLASS:"process"})
+    return search([sepolicy.TRANSITION], {sepolicy.SOURCE: src, sepolicy.CLASS: "process"})
+
 
 class setrans:
+
     def __init__(self, source, dest=None):
         self.seen = []
         self.sdict = {}
-        self.source=source
-        self.dest=dest
+        self.source = source
+        self.dest = dest
         self._process(self.source)
-            
+
     def _process(self, source):
         if source in self.sdict:
             return self.sdict[source]
@@ -53,10 +56,10 @@ class setrans:
             self.sdict[source]["map"] = trans
         else:
             self.sdict[source]["map"] = map(lambda y: y, filter(lambda x: x["transtype"] == self.dest, trans))
-            self.sdict[source]["child"] = map(lambda y: y["transtype"], filter(lambda x: x["transtype"] not in [self.dest,source] , trans))
+            self.sdict[source]["child"] = map(lambda y: y["transtype"], filter(lambda x: x["transtype"] not in [self.dest, source], trans))
             for s in self.sdict[source]["child"]:
                 self._process(s)
-            
+
     def out(self, name, header=""):
         buf = ""
         if name in self.seen:
@@ -65,7 +68,7 @@ class setrans:
 
         if "map" in self.sdict[name]:
             for t in self.sdict[name]["map"]:
-                cond=sepolicy.get_conditionals(t["source"], t["transtype"],"process",["transition"])
+                cond = sepolicy.get_conditionals(t["source"], t["transtype"], "process", ["transition"])
                 if cond:
                     buf += "%s%s @ %s --> %s %s\n" % (header, t["source"], t["target"], t["transtype"], sepolicy.get_conditionals_format_text(cond))
                 else:
@@ -73,7 +76,7 @@ class setrans:
 
         if "child" in self.sdict[name]:
             for x in self.sdict[name]["child"]:
-                buf+= self.out(x, "%s%s ... " % (header, name))
+                buf += self.out(x, "%s%s ... " % (header, name))
         return buf
 
     def output(self):

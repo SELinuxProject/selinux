@@ -25,13 +25,13 @@ import gobject
 import sys
 import seobject
 import selinux
-from semanagePage import *;
+from semanagePage import *
 from subprocess import Popen, PIPE
 
 ##
 ## I18N
 ##
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
@@ -39,12 +39,14 @@ try:
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
                     unicode=False,
-                    codeset = 'utf-8')
+                    codeset='utf-8')
 except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
 
+
 class modulesPage(semanagePage):
+
     def __init__(self, xml):
         semanagePage.__init__(self, xml, "modules", _("Policy Module"))
         self.module_filter = xml.get_widget("modulesFilterEntry")
@@ -55,12 +57,12 @@ class modulesPage(semanagePage):
         self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
         self.view.set_model(self.store)
         self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Module Name"), gtk.CellRendererText(), text = 0)
+        col = gtk.TreeViewColumn(_("Module Name"), gtk.CellRendererText(), text=0)
         col.set_sort_column_id(0)
         col.set_resizable(True)
         self.view.append_column(col)
         self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Version"), gtk.CellRendererText(), text = 1)
+        col = gtk.TreeViewColumn(_("Version"), gtk.CellRendererText(), text=1)
         self.enable_audit_button = xml.get_widget("enableAuditButton")
         self.enable_audit_button.connect("clicked", self.enable_audit)
         self.new_button = xml.get_widget("newModuleButton")
@@ -68,15 +70,15 @@ class modulesPage(semanagePage):
         col.set_sort_column_id(1)
         col.set_resizable(True)
         self.view.append_column(col)
-        self.store.set_sort_func(1,self.sort_int, "")
+        self.store.set_sort_func(1, self.sort_int, "")
         status, self.policy_type = selinux.selinux_getpolicytype()
 
         self.load()
 
     def sort_int(self, treemodel, iter1, iter2, user_data):
         try:
-            p1 = int(treemodel.get_value(iter1,1))
-            p2 = int(treemodel.get_value(iter1,1))
+            p1 = int(treemodel.get_value(iter1, 1))
+            p2 = int(treemodel.get_value(iter1, 1))
             if p1 > p2:
                 return 1
             if p1 == p2:
@@ -86,7 +88,7 @@ class modulesPage(semanagePage):
             return 0
 
     def load(self, filter=""):
-        self.filter=filter
+        self.filter = filter
         self.store.clear()
         try:
             fd = Popen("semodule -l", shell=True, stdout=PIPE).stdout
@@ -101,8 +103,7 @@ class modulesPage(semanagePage):
                 self.store.set_value(iter, 1, ver.strip())
         except:
             pass
-        self.view.get_selection().select_path ((0,))
-
+        self.view.get_selection().select_path((0,))
 
     def new_module(self, args):
         try:
@@ -121,7 +122,7 @@ class modulesPage(semanagePage):
                 self.error(output)
             else:
                 store.remove(iter)
-                self.view.get_selection().select_path ((0,))
+                self.view.get_selection().select_path((0,))
 
         except ValueError, e:
             self.error(e.args[0])
@@ -131,10 +132,10 @@ class modulesPage(semanagePage):
         try:
             self.wait()
             if self.audit_enabled:
-                status, output =commands.getstatusoutput("semodule -DB")
+                status, output = commands.getstatusoutput("semodule -DB")
                 button.set_label(_("Disable Audit"))
             else:
-                status, output =commands.getstatusoutput("semodule -B")
+                status, output = commands.getstatusoutput("semodule -B")
                 button.set_label(_("Enable Audit"))
             self.ready()
 
@@ -147,7 +148,7 @@ class modulesPage(semanagePage):
     def disable_audit(self, button):
         try:
             self.wait()
-            status, output =commands.getstatusoutput("semodule -B")
+            status, output = commands.getstatusoutput("semodule -B")
             self.ready()
             if status != 0:
                 self.error(output)
@@ -180,7 +181,7 @@ class modulesPage(semanagePage):
     def add(self, file):
         try:
             self.wait()
-            status, output =commands.getstatusoutput("semodule -i %s" % file)
+            status, output = commands.getstatusoutput("semodule -i %s" % file)
             self.ready()
             if status != 0:
                 self.error(output)

@@ -27,7 +27,7 @@ import seobject
 ##
 ## I18N
 ##
-PROGNAME="policycoreutils"
+PROGNAME = "policycoreutils"
 import gettext
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
@@ -35,16 +35,19 @@ try:
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
                     unicode=False,
-                    codeset = 'utf-8')
+                    codeset='utf-8')
 except IOError:
     import __builtin__
     __builtin__.__dict__['_'] = unicode
+
 
 def idle_func():
     while gtk.events_pending():
         gtk.main_iteration()
 
+
 class semanagePage:
+
     def __init__(self, xml, name, description):
         self.xml = xml
         self.window = self.xml.get_widget("mainWindow").get_root_window()
@@ -54,13 +57,13 @@ class semanagePage:
         self.local = False
         self.view = xml.get_widget("%sView" % name)
         self.dialog = xml.get_widget("%sDialog" % name)
-        self.filter_entry = xml.get_widget("%sFilterEntry" % name )
+        self.filter_entry = xml.get_widget("%sFilterEntry" % name)
         self.filter_entry.connect("focus_out_event", self.filter_changed)
         self.filter_entry.connect("activate", self.filter_changed)
 
         self.view.connect("row_activated", self.rowActivated)
         self.view.get_selection().connect("changed", self.itemSelected)
-        self.description = description;
+        self.description = description
 
     def wait(self):
         self.window.set_cursor(self.busy_cursor)
@@ -77,21 +80,21 @@ class semanagePage:
         return
 
     def filter_changed(self, *arg):
-        filter =  arg[0].get_text()
+        filter = arg[0].get_text()
         if filter != self.filter:
             self.load(filter)
 
     def search(self, model, col, key, i):
         sort_col = self.store.get_sort_column_id()[0]
-        val = model.get_value(i,sort_col)
+        val = model.get_value(i, sort_col)
         if val.lower().startswith(key.lower()):
             return False
         return True
 
     def match(self, target, filter):
         try:
-            f=filter.lower()
-            t=target.lower()
+            f = filter.lower()
+            t = target.lower()
             if t.find(f) >= 0:
                 return True
         except:
@@ -101,7 +104,7 @@ class semanagePage:
     def rowActivated(self, view, row, Column):
         self.propertiesDialog()
 
-    def verify(self, message, title="" ):
+    def verify(self, message, title=""):
         dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO,
                                 gtk.BUTTONS_YES_NO,
                                 message)
@@ -134,11 +137,11 @@ class semanagePage:
         self.dialog.set_title(_("Add %s" % self.description))
         self.dialog.set_position(gtk.WIN_POS_MOUSE)
 
-        while self.dialog.run() ==  gtk.RESPONSE_OK:
+        while self.dialog.run() == gtk.RESPONSE_OK:
             try:
                 if self.add() == False:
                     continue
-                break;
+                break
             except ValueError, e:
                 self.error(e.args[0])
         self.dialog.hide()
@@ -147,11 +150,11 @@ class semanagePage:
         self.dialogInit()
         self.dialog.set_title(_("Modify %s" % self.description))
         self.dialog.set_position(gtk.WIN_POS_MOUSE)
-        while self.dialog.run() ==  gtk.RESPONSE_OK:
+        while self.dialog.run() == gtk.RESPONSE_OK:
             try:
                 if self.modify() == False:
                     continue
-                break;
+                break
             except ValueError, e:
                 self.error(e.args[0])
         self.dialog.hide()
