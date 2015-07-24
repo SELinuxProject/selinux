@@ -1,3 +1,4 @@
+	* Fix PEP8 issues, from Jason Zaman.
 	* semanage: fix moduleRecords deleteall method, from Stephen Smalley.
 	* Improve compatibility with Python 3, from Michal Srb.
 	* semanage: Set self.sename to sename after calling semanage_seuser_set_sename(), from Laurent Bigonville.
