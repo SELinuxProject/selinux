@@ -19,11 +19,15 @@
  */
 
 #include <assert.h>
+#include <ctype.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include <sepol/policydb/flask_types.h>
 #include <sepol/policydb/policydb.h>
+#include <sepol/policydb/util.h>
+#include <dso.h>
 
 struct val_to_name {
 	unsigned int val;
@@ -113,4 +117,98 @@ char *sepol_av_to_string(policydb_t * policydbp, uint32_t tclass,
 	}
 
 	return avbuf;
+}
+
+/*
+ * The tokenize and tokenize_str functions may be used to
+ * replace sscanf to read tokens from buffers.
+ */
+
+/* Read a token from a buffer */
+static inline int tokenize_str(char delim, char **str, char **ptr, size_t *len)
+{
+	char *tmp_buf = *ptr;
+	*str = NULL;
+
+	while (**ptr != '\0') {
+		if (isspace(delim) && isspace(**ptr)) {
+			(*ptr)++;
+			break;
+		} else if (!isspace(delim) && **ptr == delim) {
+			(*ptr)++;
+			break;
+		}
+
+		(*ptr)++;
+	}
+
+	*len = *ptr - tmp_buf;
+	/* If the end of the string has not been reached, this will ensure the
+	 * delimiter is not included when returning the token.
+	 */
+	if (**ptr != '\0') {
+		(*len)--;
+	}
+
+	*str = strndup(tmp_buf, *len);
+	if (!*str) {
+		return -1;
+	}
+
+	/* Squash spaces if the delimiter is a whitespace character */
+	while (**ptr != '\0' && isspace(delim) && isspace(**ptr)) {
+		(*ptr)++;
+	}
+
+	return 0;
+}
+
+/*
+ * line_buf - Buffer containing string to tokenize.
+ * delim - The delimiter used to tokenize line_buf. A whitespace delimiter will
+ *	    be tokenized using isspace().
+ * num_args - The number of parameter entries to process.
+ * ...      - A 'char **' for each parameter.
+ * returns  - The number of items processed.
+ *
+ * This function calls tokenize_str() to do the actual string processing. The
+ * caller is responsible for calling free() on each additional argument. The
+ * function will not tokenize more than num_args and the last argument will
+ * contain the remaining content of line_buf. If the delimiter is any whitespace
+ * character, then all whitespace will be squashed.
+ */
+int hidden tokenize(char *line_buf, char delim, int num_args, ...)
+{
+	char **arg, *buf_p;
+	int rc, items;
+	size_t arg_len = 0;
+	va_list ap;
+
+	buf_p = line_buf;
+
+	/* Process the arguments */
+	va_start(ap, num_args);
+
+	for (items = 0; items < num_args && *buf_p != '\0'; items++) {
+		arg = va_arg(ap, char **);
+
+		/* Save the remainder of the string in arg */
+		if (items == num_args - 1) {
+			*arg = strdup(buf_p);
+			if (*arg == NULL) {
+				goto exit;
+			}
+
+			continue;
+		}
+
+		rc = tokenize_str(delim, arg, &buf_p, &arg_len);
+		if (rc < 0) {
+			goto exit;
+		}
+	}
+
+exit:
+	va_end(ap);
+	return items;
 }
