@@ -180,7 +180,7 @@ def rebuild_policy():
 
 
 def oldroot_path():
-	return "/etc/selinux"
+	return "%s/etc/selinux" % ROOT
 
 def oldstore_path(store):
 	return "%s/%s/modules/active" % (oldroot_path(), store)
@@ -192,7 +192,7 @@ def disabledmodules_path(store):
 	return "%s/disabled" % newmodules_path(store)
 
 def newroot_path():
-	return PATH
+	return "%s%s" % (ROOT, PATH)
 
 def newstore_path(store):
 	return "%s/%s/active" % (newroot_path(), store)
@@ -219,6 +219,8 @@ if __name__ == "__main__":
 			  help="Disable rebuilding policy after migration (default: no)")
 	parser.add_option("-P", "--path", dest="path",
 			  help="Set path for the policy store (default: /var/lib/selinux)")
+	parser.add_option("-r", "--root", dest="root",
+			  help="Set an alternative root for the migration (default: /)")
 
 	(options, args) = parser.parse_args()
 
@@ -230,6 +232,10 @@ if __name__ == "__main__":
 	PATH = options.path
 	if PATH is None:
 		PATH = "/var/lib/selinux"
+
+	ROOT = options.root
+	if ROOT is None:
+		ROOT = ""
 
 	# List of paths that go in the active 'root'
 	TOPPATHS = [
