@@ -3315,8 +3315,14 @@ int define_filename_trans(void)
 		append_filename_trans(ftr);
 
 		ftr->name = strdup(name);
-		ftr->stypes = stypes;
-		ftr->ttypes = ttypes;
+		if (type_set_cpy(&ftr->stypes, &stypes)) {
+			yyerror("out of memory");
+			goto bad;
+		}
+		if (type_set_cpy(&ftr->ttypes, &ttypes)) {
+			yyerror("out of memory");
+			goto bad;
+		}
 		ftr->tclass = c + 1;
 		ftr->otype = otype;
 	}
