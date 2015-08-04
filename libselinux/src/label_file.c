@@ -111,9 +111,16 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 	uint32_t i, magic, version;
 	uint32_t entry_len, stem_map_len, regex_array_len;
 
-	rc = snprintf(mmap_path, sizeof(mmap_path), "%s.bin", path);
-	if (rc >= (int)sizeof(mmap_path))
-		return -1;
+	len = strlen(path);
+	if (len > 4 && !strcmp(&path[len-4], ".bin")) {
+		if (len >= sizeof(mmap_path))
+			return -1;
+		strcpy(mmap_path, path);
+	} else {
+		rc = snprintf(mmap_path, sizeof(mmap_path), "%s.bin", path);
+		if (rc >= (int)sizeof(mmap_path))
+			return -1;
+	}
 
 	mmapfd = open(mmap_path, O_RDONLY | O_CLOEXEC);
 	if (mmapfd < 0)
