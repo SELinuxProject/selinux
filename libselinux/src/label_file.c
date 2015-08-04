@@ -418,20 +418,31 @@ static int process_file(const char *path, const char *suffix,
 	}
 
 	/* Open the specification file. */
-	if ((fp = fopen(path, "r")) == NULL)
-		return -1;
-	__fsetlocking(fp, FSETLOCKING_BYCALLER);
+	fp = fopen(path, "r");
+	if (fp) {
+		__fsetlocking(fp, FSETLOCKING_BYCALLER);
 
-	if (fstat(fileno(fp), &sb) < 0)
-		return -1;
-	if (!S_ISREG(sb.st_mode)) {
-		errno = EINVAL;
-		return -1;
+		if (fstat(fileno(fp), &sb) < 0)
+			return -1;
+		if (!S_ISREG(sb.st_mode)) {
+			errno = EINVAL;
+			return -1;
+		}
+	} else {
+		/*
+		 * Text file does not exist, so clear the timestamp
+		 * so that we will always pass the timestamp comparison
+		 * with the bin file in load_mmap().
+		 */
+		sb.st_mtime = 0;
 	}
 
 	rc = load_mmap(rec, path, &sb);
 	if (rc == 0)
 		goto out;
+
+	if (!fp)
+		return -1; /* no text or bin file */
 
 	/*
 	 * Then do detailed validation of the input and fill the spec array
@@ -446,7 +457,8 @@ static int process_file(const char *path, const char *suffix,
 
 out:
 	free(line_buf);
-	fclose(fp);
+	if (fp)
+		fclose(fp);
 	return rc;
 }
 
