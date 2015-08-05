@@ -22,6 +22,7 @@ import sys
 
 from . import refpolicy
 from . import access
+from . import util
 # Convenience functions
 
 def get_audit_boot_msgs():
@@ -42,6 +43,8 @@ def get_audit_boot_msgs():
     boottime = time.strftime("%X", s)
     output = subprocess.Popen(["/sbin/ausearch", "-m", "AVC,USER_AVC,MAC_POLICY_LOAD,DAEMON_START,SELINUX_ERR", "-ts", bootdate, boottime],
                               stdout=subprocess.PIPE).communicate()[0]
+    if util.PY3:
+        output = util.decode_input(output)
     return output
 
 def get_audit_msgs():
@@ -55,6 +58,8 @@ def get_audit_msgs():
     import subprocess
     output = subprocess.Popen(["/sbin/ausearch", "-m", "AVC,USER_AVC,MAC_POLICY_LOAD,DAEMON_START,SELINUX_ERR"],
                               stdout=subprocess.PIPE).communicate()[0]
+    if util.PY3:
+        output = util.decode_input(output)
     return output
 
 def get_dmesg_msgs():
@@ -66,6 +71,8 @@ def get_dmesg_msgs():
     import subprocess
     output = subprocess.Popen(["/bin/dmesg"],
                               stdout=subprocess.PIPE).communicate()[0]
+    if util.PY3:
+        output = util.decode_input(output)
     return output
 
 # Classes representing audit messages

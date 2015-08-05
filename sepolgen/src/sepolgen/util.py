@@ -103,6 +103,20 @@ def encode_input(text):
         encoded_text = text.encode('utf-8')
     return encoded_text
 
+def decode_input(text):
+    import locale
+    """Decode given text via preferred system encoding"""
+    # locale will often find out the correct encoding
+    encoding = locale.getpreferredencoding()
+    try:
+        decoded_text = text.decode(encoding)
+    except UnicodeError:
+    # if it fails to find correct encoding then ascii is used
+    # which may lead to UnicodeError if `text` contains non ascii signs
+    # utf-8 is our guess to fix the situation
+        decoded_text = text.decode('utf-8')
+    return decoded_text
+
 class Comparison():
     """Class used when implementing rich comparison.
 
