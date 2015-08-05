@@ -98,7 +98,7 @@ static int nodups_specs(struct saved_data *data, const char *path)
 }
 
 static int load_mmap(struct selabel_handle *rec, const char *path,
-						    struct stat *sb)
+		     struct stat *sb, bool isbinary)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	char mmap_path[PATH_MAX + 1];
@@ -112,8 +112,8 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 	uint32_t i, magic, version;
 	uint32_t entry_len, stem_map_len, regex_array_len;
 
-	len = strlen(path);
-	if (len > 4 && !strcmp(&path[len-4], ".bin")) {
+	if (isbinary) {
+		len = strlen(path);
 		if (len >= sizeof(mmap_path))
 			return -1;
 		strcpy(mmap_path, path);
@@ -413,6 +413,8 @@ static int process_file(const char *path, const char *suffix,
 	char *line_buf = NULL;
 	int rc;
 	char stack_path[PATH_MAX + 1];
+	bool isbinary = false;
+	uint32_t magic;
 
 	/* append the path suffix if we have one */
 	if (suffix) {
@@ -436,6 +438,21 @@ static int process_file(const char *path, const char *suffix,
 			errno = EINVAL;
 			return -1;
 		}
+
+		if (fread(&magic, sizeof magic, 1, fp) != 1) {
+			errno = EINVAL;
+			fclose(fp);
+			return -1;
+		}
+
+		if (magic == SELINUX_MAGIC_COMPILED_FCONTEXT) {
+			/* file_contexts.bin format */
+			fclose(fp);
+			fp = NULL;
+			isbinary = true;
+		} else {
+			rewind(fp);
+		}
 	} else {
 		/*
 		 * Text file does not exist, so clear the timestamp
@@ -445,7 +462,7 @@ static int process_file(const char *path, const char *suffix,
 		sb.st_mtime = 0;
 	}
 
-	rc = load_mmap(rec, path, &sb);
+	rc = load_mmap(rec, path, &sb, isbinary);
 	if (rc == 0)
 		goto out;
 
