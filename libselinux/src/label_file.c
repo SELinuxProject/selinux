@@ -5,6 +5,7 @@
  * Author : Stephen Smalley <sds@tycho.nsa.gov>
  */
 
+#include <assert.h>
 #include <fcntl.h>
 #include <stdarg.h>
 #include <string.h>
@@ -753,6 +754,96 @@ out:
 	return lr;
 }
 
+static enum selabel_cmp_result incomp(struct spec *spec1, struct spec *spec2, const char *reason, int i, int j)
+{
+	selinux_log(SELINUX_INFO,
+		    "selabel_cmp: mismatched %s on entry %d: (%s, %x, %s) vs entry %d: (%s, %x, %s)\n",
+		    reason,
+		    i, spec1->regex_str, spec1->mode, spec1->lr.ctx_raw,
+		    j, spec2->regex_str, spec2->mode, spec2->lr.ctx_raw);
+	return SELABEL_INCOMPARABLE;
+}
+
+static enum selabel_cmp_result cmp(struct selabel_handle *h1,
+				   struct selabel_handle *h2)
+{
+	struct saved_data *data1 = (struct saved_data *)h1->data;
+	struct saved_data *data2 = (struct saved_data *)h2->data;
+	unsigned int i, nspec1 = data1->nspec, j, nspec2 = data2->nspec;
+	struct spec *spec_arr1 = data1->spec_arr, *spec_arr2 = data2->spec_arr;
+	struct stem *stem_arr1 = data1->stem_arr, *stem_arr2 = data2->stem_arr;
+	bool skipped1 = false, skipped2 = false;
+
+	i = 0;
+	j = 0;
+	while (i < nspec1 && j < nspec2) {
+		struct spec *spec1 = &spec_arr1[i];
+		struct spec *spec2 = &spec_arr2[j];
+
+		/*
+		 * Because sort_specs() moves exact pathnames to the
+		 * end, we might need to skip over additional regex
+		 * entries that only exist in one of the configurations.
+		 */
+		if (!spec1->hasMetaChars && spec2->hasMetaChars) {
+			j++;
+			skipped2 = true;
+			continue;
+		}
+
+		if (spec1->hasMetaChars && !spec2->hasMetaChars) {
+			i++;
+			skipped1 = true;
+			continue;
+		}
+
+		if (spec1->regcomp && spec2->regcomp) {
+			size_t len1, len2;
+			int rc;
+
+			rc = pcre_fullinfo(spec1->regex, NULL, PCRE_INFO_SIZE, &len1);
+			assert(rc == 0);
+			rc = pcre_fullinfo(spec2->regex, NULL, PCRE_INFO_SIZE, &len2);
+			assert(rc == 0);
+			if (len1 != len2 ||
+			    memcmp(spec1->regex, spec2->regex, len1))
+				return incomp(spec1, spec2, "regex", i, j);
+		} else {
+			if (strcmp(spec1->regex_str, spec2->regex_str))
+				return incomp(spec1, spec2, "regex_str", i, j);
+		}
+
+		if (spec1->mode != spec2->mode)
+			return incomp(spec1, spec2, "mode", i, j);
+
+		if (spec1->stem_id == -1 && spec2->stem_id != -1)
+			return incomp(spec1, spec2, "stem_id", i, j);
+		if (spec2->stem_id == -1 && spec1->stem_id != -1)
+			return incomp(spec1, spec2, "stem_id", i, j);
+		if (spec1->stem_id != -1 && spec2->stem_id != -1) {
+			struct stem *stem1 = &stem_arr1[spec1->stem_id];
+			struct stem *stem2 = &stem_arr2[spec2->stem_id];
+			if (stem1->len != stem2->len ||
+			    strncmp(stem1->buf, stem2->buf, stem1->len))
+				return incomp(spec1, spec2, "stem", i, j);
+		}
+
+		if (strcmp(spec1->lr.ctx_raw, spec2->lr.ctx_raw))
+			return incomp(spec1, spec2, "ctx_raw", i, j);
+
+		i++;
+		j++;
+	}
+
+	if ((skipped1 || i < nspec1) && !skipped2)
+		return SELABEL_SUPERSET;
+	if ((skipped2 || j < nspec2) && !skipped1)
+		return SELABEL_SUBSET;
+	if (skipped1 && skipped2)
+		return SELABEL_INCOMPARABLE;
+	return SELABEL_EQUAL;
+}
+
 
 static void stats(struct selabel_handle *rec)
 {
@@ -795,6 +886,7 @@ int selabel_file_init(struct selabel_handle *rec,
 	rec->func_lookup = &lookup;
 	rec->func_partial_match = &partial_match;
 	rec->func_lookup_best_match = &lookup_best_match;
+	rec->func_cmp = &cmp;
 
 	return init(rec, opts, nopts);
 }

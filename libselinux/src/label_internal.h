@@ -68,6 +68,8 @@ struct selabel_handle {
 						    const char *key,
 						    const char **aliases,
 						    int type);
+	enum selabel_cmp_result (*func_cmp)(struct selabel_handle *h1,
+					    struct selabel_handle *h2);
 
 	/* supports backend-specific state information */
 	void *data;
