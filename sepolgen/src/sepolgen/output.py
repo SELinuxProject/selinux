@@ -131,7 +131,7 @@ def sort_filter(module):
         rules = []
         rules.extend(node.avrules())
         rules.extend(node.interface_calls())
-        rules.sort(rule_cmp)
+        rules.sort(key=util.cmp_to_key(rule_cmp))
 
         cur = None
         sep_rules = []
@@ -155,7 +155,7 @@ def sort_filter(module):
 
         ras = []
         ras.extend(node.role_types())
-        ras.sort(role_type_cmp)
+        ras.sort(key=util.cmp_to_key(role_type_cmp))
         if len(ras):
             comment = refpolicy.Comment()
             comment.lines.append("============= ROLES ==============")

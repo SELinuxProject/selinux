@@ -145,6 +145,29 @@ class Comparison():
     def __ne__(self, other):
         return self._compare(other, lambda a, b: a != b)
 
+if sys.version_info < (2,7):
+    # cmp_to_key function is missing in python2.6
+    def cmp_to_key(mycmp):
+        'Convert a cmp= function into a key= function'
+        class K:
+            def __init__(self, obj, *args):
+                self.obj = obj
+            def __lt__(self, other):
+                return mycmp(self.obj, other.obj) < 0
+            def __gt__(self, other):
+                return mycmp(self.obj, other.obj) > 0
+            def __eq__(self, other):
+                return mycmp(self.obj, other.obj) == 0
+            def __le__(self, other):
+                return mycmp(self.obj, other.obj) <= 0
+            def __ge__(self, other):
+                return mycmp(self.obj, other.obj) >= 0
+            def __ne__(self, other):
+                return mycmp(self.obj, other.obj) != 0
+        return K
+else:
+    from functools import cmp_to_key
+
 def cmp(first, second):
     return (first > second) - (second > first)
 
