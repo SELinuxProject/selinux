@@ -1,3 +1,5 @@
+	* Support specifying file_contexts.bin file path, from Stephen Smalley.
+	* Support file_contexts.bin without file_contexts, from Stephen Smalley.
 	* Simplify procattr cache, from Stephen Smalley.
 	* Use /proc/thread-self when available, from Stephen Smalley.
 	* Add const to selinux_opt for label backends, from Richard Haines.
