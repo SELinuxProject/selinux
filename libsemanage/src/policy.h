@@ -52,6 +52,14 @@ struct semanage_policy_table {
 	/* Install a policy module */
 	int (*install_file) (struct semanage_handle *, const char *);
 
+	/* Extract a policy module */
+	int (*extract) (struct semanage_handle *,
+				 semanage_module_key_t *,
+				 int extract_cil,
+				 void **,
+				 size_t *,
+				 semanage_module_info_t **);
+
 	/* Remove a policy module */
 	int (*remove) (struct semanage_handle *, char *);
 

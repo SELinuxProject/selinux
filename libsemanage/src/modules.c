@@ -142,6 +142,23 @@ int semanage_module_install_file(semanage_handle_t * sh,
 	return sh->funcs->install_file(sh, module_name);
 }
 
+int semanage_module_extract(semanage_handle_t * sh,
+				 semanage_module_key_t *modkey,
+				 int extract_cil,
+				 void **mapped_data,
+				 size_t *data_len,
+				 semanage_module_info_t **modinfo) {
+	if (sh->funcs->extract == NULL) {
+		ERR(sh,
+		    "No get function defined for this connection type.");
+		return -1;
+	} else if (!sh->is_connected) {
+		ERR(sh, "Not connected.");
+		return -1;
+	}
+	return sh->funcs->extract(sh, modkey, extract_cil, mapped_data, data_len, modinfo);
+}
+
 /* Legacy function that remains to preserve ABI
  * compatibility. Please use semanage_module_install instead.
  */

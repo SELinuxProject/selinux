@@ -23,6 +23,7 @@
 %header %{
 	#include <stdlib.h>
 	#include <semanage/semanage.h>
+	#include <sys/mman.h>
 
 	#define STATUS_SUCCESS 0
 	#define STATUS_ERR -1
@@ -102,6 +103,10 @@
 %apply int *OUTPUT { size_t * };
 %apply int *OUTPUT { unsigned int * };
 %apply int *OUTPUT { uint16_t * };
+
+%include <cstring.i>
+/* This is needed to properly mmaped binary data in SWIG */
+%cstring_output_allocate_size(void **mapped_data, size_t *data_len, munmap(*$1, *$2));
 
 %typemap(in, numinputs=0) char **(char *temp=NULL) {
 	$1 = &temp;

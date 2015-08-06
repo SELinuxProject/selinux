@@ -24,6 +24,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <semanage/handle.h>
+#include <sys/types.h>
 
 typedef struct semanage_module_key semanage_module_key_t;
 
@@ -41,6 +42,22 @@ int semanage_module_remove(semanage_handle_t *, char *module_name);
    modules, only name at this time */
 typedef struct semanage_module_info semanage_module_info_t;
 
+/* Look up a module using @modkey. The module's raw data is returned as a
+ * @mapped_data blob and size of the mapped_data is returned as @data_len.
+ * @modinfo contains additional information which can be used by the caller such
+ * as the high level language extension of @mapped_data.
+ *
+ * On success, the caller is responsible for unmapping @mapped_data with munmap(),
+ * destroying @modinfo with semanage_module_info_destroy(), and freeing @modinfo.
+ *
+ * Returns 0 on success and -1 on error.
+ */
+int semanage_module_extract(semanage_handle_t *sh,
+				 semanage_module_key_t *modkey,
+				 int extract_cil,
+				 void **mapped_data,
+				 size_t *data_len,
+				 semanage_module_info_t **modinfo);
 int semanage_module_list(semanage_handle_t *,
 			 semanage_module_info_t **, int *num_modules);
 void semanage_module_info_datum_destroy(semanage_module_info_t *);
