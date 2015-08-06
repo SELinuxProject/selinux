@@ -94,11 +94,12 @@ static int process_line(struct selabel_handle *rec,
 	if (items <= 0)
 		return items;
 	if (items != 2) {
-		selinux_log(SELINUX_WARNING,
-			    "%s:  line %u is missing fields, skipping\n", path,
+		selinux_log(SELINUX_ERROR,
+			    "%s:  line %u is missing fields\n", path,
 			    lineno);
 		free(prop);
-		return 0;
+		errno = EINVAL;
+		return -1;
 	}
 
 	if (pass == 0) {
@@ -107,26 +108,15 @@ static int process_line(struct selabel_handle *rec,
 	} else if (pass == 1) {
 		/* On the second pass, process and store the specification in spec. */
 		spec_arr[nspec].property_key = prop;
-		if (!spec_arr[nspec].property_key) {
-			selinux_log(SELINUX_WARNING,
-				    "%s:  out of memory at line %u on prop %s\n",
-				    path, lineno, prop);
-			return -1;
-		}
-
 		spec_arr[nspec].lr.ctx_raw = context;
-		if (!spec_arr[nspec].lr.ctx_raw) {
-			selinux_log(SELINUX_WARNING,
-				    "%s:  out of memory at line %u on context %s\n",
-				    path, lineno, context);
-			return -1;
-		}
 
 		if (rec->validating) {
 			if (selabel_validate(rec, &spec_arr[nspec].lr) < 0) {
-				selinux_log(SELINUX_WARNING,
+				selinux_log(SELINUX_ERROR,
 					    "%s:  line %u has invalid context %s\n",
 					    path, lineno, spec_arr[nspec].lr.ctx_raw);
+				errno = EINVAL;
+				return -1;
 			}
 		}
 	}
