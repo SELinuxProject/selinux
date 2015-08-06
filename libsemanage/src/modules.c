@@ -690,9 +690,11 @@ int semanage_module_key_destroy(semanage_handle_t *sh,
 {
 	assert(sh);
 
-	if (modkey) {
-		free(modkey->name);
+	if (!modkey) {
+		return 0;
 	}
+
+	free(modkey->name);
 
 	return semanage_module_key_init(sh, modkey);
 }
