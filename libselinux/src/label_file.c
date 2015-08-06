@@ -302,6 +302,14 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 		}
 		spec->lr.ctx_raw = str_buf;
 
+		if (strcmp(spec->lr.ctx_raw, "<<none>>") && rec->validating) {
+			if (selabel_validate(rec, &spec->lr) < 0) {
+				selinux_log(SELINUX_ERROR,
+					    "%s: context %s is invalid\n", mmap_path, spec->lr.ctx_raw);
+				goto err;
+			}
+		}
+
 		/* Process regex string */
 		rc = next_entry(&entry_len, mmap_area, sizeof(uint32_t));
 		if (rc < 0 || !entry_len) {
