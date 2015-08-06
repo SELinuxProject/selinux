@@ -1,3 +1,6 @@
+	* Fail hard on invalid property_contexts entries, from Stephen Smalley.
+	* Fail hard on invalid file_contexts entries, from Stephen Smalley.
+	* Support context validation on file_contexts.bin, from Stephen Smalley.
 	* Test for file_contexts.bin format by magic number, from Stephen Smalley.
 	* Add selabel_cmp interface and label_file backend, from Stephen Smalley.
 	* Support specifying file_contexts.bin file path, from Stephen Smalley.
