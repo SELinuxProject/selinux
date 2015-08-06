@@ -1,3 +1,5 @@
+	* Fix null pointer dereference in semanage_module_key_destroy, from Yuli Khodorkovskiy.
+	* Add semanage_module_extract() to extract a module as CIL or HLL, from Yuli Khodorkovskiy.
 	* semanage_migrate_store: add -r <root> option for migrating inside chroots, from Petr Lautrbach.
 	* Add file_contexts and seusers to the store, from Yuli Khodorkovskiy.
 	* Add policy binary and file_contexts.local to the store, from Yuli Khodorkovskiy.
