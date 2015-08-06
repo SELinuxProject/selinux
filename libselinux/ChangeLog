@@ -1,3 +1,5 @@
+	* Test for file_contexts.bin format by magic number, from Stephen Smalley.
+	* Add selabel_cmp interface and label_file backend, from Stephen Smalley.
 	* Support specifying file_contexts.bin file path, from Stephen Smalley.
 	* Support file_contexts.bin without file_contexts, from Stephen Smalley.
 	* Simplify procattr cache, from Stephen Smalley.
