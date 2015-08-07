@@ -1,3 +1,4 @@
+	* Do not treat an empty file_contexts(.local) as an error, from Stephen Smalley.
 	* Fail hard on invalid property_contexts entries, from Stephen Smalley.
 	* Fail hard on invalid file_contexts entries, from Stephen Smalley.
 	* Support context validation on file_contexts.bin, from Stephen Smalley.
