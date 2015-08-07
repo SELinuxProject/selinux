@@ -447,10 +447,14 @@ static int process_file(const char *path, const char *suffix,
 			return -1;
 		}
 
+		magic = 0;
 		if (fread(&magic, sizeof magic, 1, fp) != 1) {
-			errno = EINVAL;
-			fclose(fp);
-			return -1;
+			if (ferror(fp)) {
+				errno = EINVAL;
+				fclose(fp);
+				return -1;
+			}
+			clearerr(fp);
 		}
 
 		if (magic == SELINUX_MAGIC_COMPILED_FCONTEXT) {
