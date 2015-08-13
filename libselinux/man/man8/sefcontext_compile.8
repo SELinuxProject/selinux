@@ -1,4 +1,4 @@
-.TH "sefcontext_compile" "8" "12 Jun 2015" "dwalsh@redhat.com" "SELinux Command Line documentation"
+.TH "sefcontext_compile" "8" "12 Aug 2015" "dwalsh@redhat.com" "SELinux Command Line documentation"
 .SH "NAME"
 sefcontext_compile \- compile file context regular expression files
 .
@@ -6,6 +6,8 @@ sefcontext_compile \- compile file context regular expression files
 .B sefcontext_compile
 .RB [ \-o
 .IR outputfile ]
+.RB [ \-p
+.IR policyfile ]
 .I inputfile
 .
 .SH "DESCRIPTION"
@@ -29,7 +31,16 @@ Specify an
 that must be a fully qualified file name as the
 .B .bin
 suffix is not automatically added.
-.
+.TP
+.B \-p
+Specify a binary
+.I policyfile
+that will be used to validate the context entries in the
+.I inputfile
+.br
+If an invalid context is found the pcre formatted file will not be written and
+an error will be returned.
+
 .SH "RETURN VALUE"
 On error -1 is returned.  On success 0 is returned.
 
