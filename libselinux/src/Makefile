@@ -90,7 +90,7 @@ SWIGRUBY = swig -Wall -ruby -o $(SWIGRUBYCOUT) -outdir ./
 
 all: $(LIBA) $(LIBSO) $(LIBPC)
 
-pywrap: all $(SWIGSO) $(AUDIT2WHYSO)
+pywrap: all $(SWIGFILES) $(AUDIT2WHYSO)
 
 rubywrap: all $(SWIGRUBYSO)
 
