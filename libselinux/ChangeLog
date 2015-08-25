@@ -1,3 +1,4 @@
+	* Add explicit dependency for pywrap on selinux.py, from Wenzong Fan.
 	* Add policy context validation to sefcontext_compile, from Richard Haines.
 	* Do not treat an empty file_contexts(.local) as an error, from Stephen Smalley.
 	* Fail hard on invalid property_contexts entries, from Stephen Smalley.
