@@ -32,7 +32,10 @@ import sepolgen.module as module
 from sepolgen.sepolgeni18n import _
 import selinux.audit2why as audit2why
 import locale
-locale.setlocale(locale.LC_ALL, '')
+try:
+    locale.setlocale(locale.LC_ALL, '')
+except:
+    pass
 
 
 class AuditToPolicy:
