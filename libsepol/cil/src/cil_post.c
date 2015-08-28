@@ -682,6 +682,70 @@ exit:
 	return rc;
 }
 
+static int __evaluate_permissionx_expression(struct cil_permissionx *permx, struct cil_db *db)
+{
+	int rc;
+
+	permx->perms = cil_malloc(sizeof(*permx->perms));
+	ebitmap_init(permx->perms);
+
+	rc = __cil_expr_to_bitmap(permx->expr_str, permx->perms, 0x10000, db); // max is one more than 0xFFFF
+	if (rc != SEPOL_OK) {
+		cil_log(CIL_ERR, "Failed to expand permissionx expression\n");
+		ebitmap_destroy(permx->perms);
+		free(permx->perms);
+		permx->perms = NULL;
+	}
+
+	return rc;
+}
+
+static int __cil_permx_str_to_int(char *permx_str, uint16_t *val)
+{
+	char *endptr = NULL;
+	long lval = strtol(permx_str, &endptr, 0);
+
+	if (*endptr != '\0') {
+		cil_log(CIL_ERR, "permissionx value %s not valid number\n", permx_str);
+		goto exit;
+	}
+	if (lval < 0x0000 || lval > 0xFFFF) {
+		cil_log(CIL_ERR, "permissionx value %s must be between 0x0000 and 0xFFFF\n", permx_str);
+		goto exit;
+	}
+
+	*val = (uint16_t)lval;
+
+	return SEPOL_OK;
+
+exit:
+	return SEPOL_ERR;
+}
+
+static int __cil_permx_to_bitmap(struct cil_symtab_datum *datum, ebitmap_t *bitmap, __attribute__((unused)) struct cil_db *db)
+{
+	int rc = SEPOL_ERR;
+	uint16_t val;
+
+	ebitmap_init(bitmap);
+
+	rc = __cil_permx_str_to_int((char*)datum, &val);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	if (ebitmap_set_bit(bitmap, (unsigned int)val, 1)) {
+		cil_log(CIL_ERR, "Failed to set permissionx bit\n");
+		ebitmap_destroy(bitmap);
+		goto exit;
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
 static int __cil_perm_to_bitmap(struct cil_symtab_datum *datum, ebitmap_t *bitmap, __attribute__((unused)) struct cil_db *db)
 {
 	struct cil_perm *perm = (struct cil_perm *)datum;
@@ -792,7 +856,7 @@ exit:
 	return rc;
 }
 
-static int __cil_expr_range_to_bitmap_helper(struct cil_list_item *i1, struct cil_list_item *i2, ebitmap_t *bitmap)
+static int __cil_cat_expr_range_to_bitmap_helper(struct cil_list_item *i1, struct cil_list_item *i2, ebitmap_t *bitmap)
 {
 	int rc = SEPOL_ERR;
 	struct cil_symtab_datum *d1 = i1->data;
@@ -832,6 +896,39 @@ exit:
 	return rc;
 }
 
+static int __cil_permissionx_expr_range_to_bitmap_helper(struct cil_list_item *i1, struct cil_list_item *i2, ebitmap_t *bitmap)
+{
+	int rc = SEPOL_ERR;
+	char *p1 = i1->data;
+	char *p2 = i2->data;
+	uint16_t v1;
+	uint16_t v2;
+	uint32_t i;
+
+	rc = __cil_permx_str_to_int(p1, &v1);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	rc = __cil_permx_str_to_int(p2, &v2);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	for (i = v1; i <= v2; i++) {
+		if (ebitmap_set_bit(bitmap, i, 1)) {
+			cil_log(CIL_ERR, "Failed to set permissionx bit\n");
+			ebitmap_destroy(bitmap);
+			goto exit;
+		}
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
 static int __cil_expr_to_bitmap_helper(struct cil_list_item *curr, enum cil_flavor flavor, ebitmap_t *bitmap, int max, struct cil_db *db)
 {
 	int rc = SEPOL_ERR;
@@ -860,6 +957,10 @@ static int __cil_expr_to_bitmap_helper(struct cil_list_item *curr, enum cil_flav
 		if (rc != SEPOL_OK) {
 			ebitmap_destroy(bitmap);
 		}	
+	} else if (flavor == CIL_PERMISSIONX) {
+		// permissionx expressions aren't resolved into anything, so curr->flavor
+		// is just a CIL_STRING, not a CIL_DATUM, so just check on flavor for those
+		rc = __cil_permx_to_bitmap(curr->data, bitmap, db);
 	}
 
 	return rc;
@@ -892,16 +993,25 @@ static int __cil_expr_to_bitmap(struct cil_list *expr, ebitmap_t *out, int max, 
 				goto exit;
 			}
 		} else if (op == CIL_RANGE) {
-			if (flavor != CIL_CAT) {
-				cil_log(CIL_INFO, "Range operation only supported for categories\n");
+			if (flavor == CIL_CAT) {
+				ebitmap_init(&tmp);
+				rc = __cil_cat_expr_range_to_bitmap_helper(curr->next, curr->next->next, &tmp);
+				if (rc != SEPOL_OK) {
+					cil_log(CIL_INFO, "Failed to expand category range\n");
+					ebitmap_destroy(&tmp);
+					goto exit;
+				}
+			} else if (flavor == CIL_PERMISSIONX) {
+				ebitmap_init(&tmp);
+				rc = __cil_permissionx_expr_range_to_bitmap_helper(curr->next, curr->next->next, &tmp);
+				if (rc != SEPOL_OK) {
+					cil_log(CIL_INFO, "Failed to expand category range\n");
+					ebitmap_destroy(&tmp);
+					goto exit;
+				}
+			} else {
+				cil_log(CIL_INFO, "Range operation only supported for categories permissionx\n");
 				rc = SEPOL_ERR;
-				goto exit;
-			}
-			ebitmap_init(&tmp);
-			rc = __cil_expr_range_to_bitmap_helper(curr->next, curr->next->next, &tmp);
-			if (rc != SEPOL_OK) {
-				cil_log(CIL_INFO, "Failed to expand category range\n");
-				ebitmap_destroy(&tmp);
 				goto exit;
 			}
 		} else {
@@ -1037,6 +1147,20 @@ static int __cil_post_db_attr_helper(struct cil_tree_node *node, __attribute__((
 			rc = __evaluate_role_expression(attr, db);
 			if (rc != SEPOL_OK) goto exit;
 		}
+		break;
+	}
+	case CIL_AVRULEX: {
+		struct cil_avrulex *rule = node->data;
+		if (rule->permx_str == NULL) {
+			rc = __evaluate_permissionx_expression(rule->permx, db);
+			if (rc != SEPOL_OK) goto exit;
+		}
+		break;
+	}
+	case CIL_PERMISSIONX: {
+		struct cil_permissionx *permx = node->data;
+		rc = __evaluate_permissionx_expression(permx, db);
+		if (rc != SEPOL_OK) goto exit;
 		break;
 	}
 	default:

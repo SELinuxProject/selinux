@@ -179,8 +179,8 @@ int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, en
 		syntax_len = 2;
 		break;
 	case CIL_RANGE:
-		if (expr_flavor != CIL_CAT) {
-			cil_log(CIL_ERR,"Operator (%s) only valid for catset expression\n", (char*)current->data);
+		if (expr_flavor != CIL_CAT && expr_flavor != CIL_PERMISSIONX) {
+			cil_log(CIL_ERR,"Operator (%s) only valid for catset and permissionx expression\n", (char*)current->data);
 			goto exit;
 		}
 		syntax[1] = CIL_SYN_STRING;

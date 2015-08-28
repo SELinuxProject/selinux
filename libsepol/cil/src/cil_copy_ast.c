@@ -760,6 +760,59 @@ int cil_copy_avrule(__attribute__((unused)) struct cil_db *db, void *data, void 
 	return SEPOL_OK;
 }
 
+void cil_copy_fill_permissionx(struct cil_db *db, struct cil_permissionx *orig, struct cil_permissionx *new)
+{
+	new->kind = orig->kind;
+	new->obj_str = orig->obj_str;
+	cil_copy_expr(db, orig->expr_str, &new->expr_str);
+}
+
+int cil_copy_permissionx(struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+{
+	struct cil_permissionx *orig = data;
+	struct cil_permissionx *new = NULL;
+	char *key = orig->datum.name;
+	struct cil_symtab_datum *datum = NULL;
+
+
+	cil_symtab_get_datum(symtab, key, &datum);
+	if (datum != NULL) {
+		cil_log(CIL_INFO, "cil_copy_permissionx: permissionx cannot be redefined\n");
+		return SEPOL_ERR;
+	}
+
+	cil_permissionx_init(&new);
+	cil_copy_fill_permissionx(db, orig, new);
+
+	*copy = new;
+
+	return SEPOL_OK;
+}
+
+
+int cil_copy_avrulex(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+{
+	struct cil_avrulex *orig = data;
+	struct cil_avrulex *new = NULL;
+
+	cil_avrulex_init(&new);
+
+	new->rule_kind = orig->rule_kind;
+	new->src_str = orig->src_str;
+	new->tgt_str = orig->tgt_str;
+
+	if (new->permx_str != NULL) {
+		new->permx_str = orig->permx_str;
+	} else {
+		cil_permissionx_init(&new->permx);
+		cil_copy_fill_permissionx(db, orig->permx, new->permx);
+	}
+
+	*copy = new;
+
+	return SEPOL_OK;
+}
+
 int cil_copy_type_rule(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_type_rule  *orig = data;
@@ -1731,6 +1784,12 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 		break;
 	case CIL_AVRULE:
 		copy_func = &cil_copy_avrule;
+		break;
+	case CIL_AVRULEX:
+		copy_func = &cil_copy_avrulex;
+		break;
+	case CIL_PERMISSIONX:
+		copy_func = &cil_copy_permissionx;
 		break;
 	case CIL_TYPE_RULE:
 		copy_func = &cil_copy_type_rule;

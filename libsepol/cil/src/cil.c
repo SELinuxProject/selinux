@@ -70,11 +70,11 @@ asm(".symver cil_filecons_to_string_nopdb, cil_filecons_to_string@@LIBSEPOL_1.1"
 #endif
 
 int cil_sym_sizes[CIL_SYM_ARRAY_NUM][CIL_SYM_NUM] = {
-	{64, 64, 64, 1 << 13, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64},
-	{64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	{64, 64, 64, 1 << 13, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64},
+	{64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64},
+	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
 static void cil_init_keys(void)
@@ -223,6 +223,11 @@ static void cil_init_keys(void)
 	CIL_KEY_ROOT = cil_strpool_add("<root>");
 	CIL_KEY_NODE = cil_strpool_add("<node>");
 	CIL_KEY_PERM = cil_strpool_add("perm");
+	CIL_KEY_ALLOWX = cil_strpool_add("allowx");
+	CIL_KEY_AUDITALLOWX = cil_strpool_add("auditallowx");
+	CIL_KEY_DONTAUDITX = cil_strpool_add("dontauditx");
+	CIL_KEY_PERMISSIONX = cil_strpool_add("permissionx");
+	CIL_KEY_IOCTL = cil_strpool_add("ioctl");
 }
 
 void cil_db_init(struct cil_db **db)
@@ -653,6 +658,12 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	case CIL_AVRULE:
 		cil_destroy_avrule(*data);
 		break;
+	case CIL_AVRULEX:
+		cil_destroy_avrulex(*data);
+		break;
+	case CIL_PERMISSIONX:
+		cil_destroy_permissionx(*data);
+		break;
 	case CIL_ROLETRANSITION:
 		cil_destroy_roletransition(*data);
 		break;
@@ -824,6 +835,9 @@ int cil_flavor_to_symtab_index(enum cil_flavor flavor, enum cil_sym_index *sym_i
 	case CIL_POLICYCAP:
 		*sym_index = CIL_SYM_POLICYCAPS;
 		break;
+	case CIL_PERMISSIONX:
+		*sym_index = CIL_SYM_PERMX;
+		break;
 	default:
 		*sym_index = CIL_SYM_UNKNOWN;
 		cil_log(CIL_INFO, "Failed to find flavor: %d\n", flavor);
@@ -994,6 +1008,20 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 			break;
 		}
 		break;
+	case CIL_AVRULEX:
+		switch (((struct cil_avrulex *)node->data)->rule_kind) {
+		case CIL_AVRULE_ALLOWED:
+			return CIL_KEY_ALLOWX;
+		case CIL_AVRULE_AUDITALLOW:
+			return CIL_KEY_AUDITALLOWX;
+		case CIL_AVRULE_DONTAUDIT:
+			return CIL_KEY_DONTAUDITX;
+		default:
+			break;
+		}
+		break;
+	case CIL_PERMISSIONX:
+		return CIL_KEY_PERMISSIONX;
 	case CIL_ROLETRANSITION:
 		return CIL_KEY_ROLETRANSITION;
 	case CIL_TYPE_RULE:
@@ -2077,6 +2105,31 @@ void cil_avrule_init(struct cil_avrule **avrule)
 	(*avrule)->tgt_str = NULL;
 	(*avrule)->tgt = NULL;
 	(*avrule)->classperms = NULL;
+}
+
+void cil_permissionx_init(struct cil_permissionx **permx)
+{
+	*permx = cil_malloc(sizeof(**permx));
+
+	cil_symtab_datum_init(&(*permx)->datum);
+	(*permx)->kind = CIL_NONE;
+	(*permx)->obj_str = NULL;
+	(*permx)->obj = NULL;
+	(*permx)->expr_str = NULL;
+	(*permx)->perms = NULL;
+}
+
+void cil_avrulex_init(struct cil_avrulex **avrule)
+{
+	*avrule = cil_malloc(sizeof(**avrule));
+
+	(*avrule)->rule_kind = CIL_NONE;
+	(*avrule)->src_str = NULL;
+	(*avrule)->src = NULL;
+	(*avrule)->tgt_str = NULL;
+	(*avrule)->tgt = NULL;
+	(*avrule)->permx_str = NULL;
+	(*avrule)->permx = NULL;
 }
 
 void cil_type_rule_init(struct cil_type_rule **type_rule)

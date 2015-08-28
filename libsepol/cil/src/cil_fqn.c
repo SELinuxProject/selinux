@@ -102,6 +102,7 @@ static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, has
 		case CIL_SYM_LEVELRANGES:
 		case CIL_SYM_IPADDRS:
 		case CIL_SYM_NAMES:
+		case CIL_SYM_PERMX:
 			/* These do not show up in the kernal policy */
 			break;
 		case CIL_SYM_POLICYCAPS:

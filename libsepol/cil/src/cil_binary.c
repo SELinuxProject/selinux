@@ -52,9 +52,10 @@
 /* There are 44000 filename_trans in current fedora policy. 1.33 times this is the recommended
  * size of a hashtable. The next power of 2 of this is 2 ** 16.
  */
-#define FILENAME_TRANS_TABLE_SIZE 1 << 16
-#define RANGE_TRANS_TABLE_SIZE 1 << 13
-#define ROLE_TRANS_TABLE_SIZE 1 << 10
+#define FILENAME_TRANS_TABLE_SIZE (1 << 16)
+#define RANGE_TRANS_TABLE_SIZE (1 << 13)
+#define ROLE_TRANS_TABLE_SIZE (1 << 10)
+#define AVRULEX_TABLE_SIZE (1 <<  10)
 #define PERMS_PER_CLASS 32
 
 struct cil_args_binary {
@@ -65,6 +66,7 @@ struct cil_args_binary {
 	hashtab_t filename_trans_table;
 	hashtab_t range_trans_table;
 	hashtab_t role_trans_table;
+	hashtab_t avrulex_ioctl_table;
 	void **type_value_to_cil;
 };
 
@@ -1449,6 +1451,286 @@ exit:
 int cil_avrule_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_avrule *cil_avrule)
 {
 	return __cil_avrule_to_avtab(pdb, db, cil_avrule, NULL, CIL_FALSE);
+}
+
+// Copied from checkpolicy/policy_define.c
+
+/* index of the u32 containing the permission */
+#define XPERM_IDX(x) (x >> 5)
+/* set bits 0 through x-1 within the u32 */
+#define XPERM_SETBITS(x) ((1 << (x & 0x1f)) - 1)
+/* low value for this u32 */
+#define XPERM_LOW(x) (x << 5)
+/* high value for this u32 */
+#define XPERM_HIGH(x) (((x + 1) << 5) - 1)
+void __avrule_xperm_setrangebits(uint16_t low, uint16_t high, struct avtab_extended_perms *xperms)
+{
+	unsigned int i;
+	uint16_t h = high + 1;
+	/* for each u32 that this low-high range touches, set driver permissions */
+	for (i = XPERM_IDX(low); i <= XPERM_IDX(high); i++) {
+		/* set all bits in u32 */
+		if ((low <= XPERM_LOW(i)) && (high >= XPERM_HIGH(i)))
+			xperms->perms[i] |= ~0U;
+		/* set low bits */
+		else if ((low <= XPERM_LOW(i)) && (high < XPERM_HIGH(i)))
+			xperms->perms[i] |= XPERM_SETBITS(h);
+		/* set high bits */
+		else if ((low > XPERM_LOW(i)) && (high >= XPERM_HIGH(i)))
+			xperms->perms[i] |= ~0U - XPERM_SETBITS(low);
+		/* set middle bits */
+		else if ((low > XPERM_LOW(i)) && (high <= XPERM_HIGH(i)))
+			xperms->perms[i] |= XPERM_SETBITS(h) - XPERM_SETBITS(low);
+	}
+}
+
+
+#define IOC_DRIV(x) (x >> 8)
+#define IOC_FUNC(x) (x & 0xff)
+
+int __cil_avrulex_ioctl_to_policydb(hashtab_key_t k, hashtab_datum_t datum, void *args)
+{
+	int rc = SEPOL_OK;
+	struct policydb *pdb;
+	avtab_key_t *avtab_key;
+	avtab_datum_t avtab_datum;
+	ebitmap_t *xperms;
+	ebitmap_node_t *node;
+	unsigned int i;
+	uint16_t low, high;
+	struct avtab_extended_perms *partial = NULL;
+	struct avtab_extended_perms *complete = NULL;
+	int start_new_range;
+
+	avtab_key = (avtab_key_t *)k;
+	xperms = datum;
+	pdb = args;
+
+	avtab_datum.data = 0;
+
+	start_new_range = 1;
+
+	ebitmap_for_each_bit(xperms, node, i) {
+		if (!ebitmap_get_bit(xperms, i)) continue;
+
+		if (start_new_range) {
+			low = i;
+			start_new_range = 0;
+		}
+
+		// continue if the current bit isn't the end of the driver function or the next bit is set
+		if (IOC_FUNC(i) != 0xff && ebitmap_get_bit(xperms, i + 1)) {
+			continue;
+		}
+
+		// if we got here, i is the end of this range (either becuase the func
+		// is 0xff or the next bit isn't set). The next time around we are
+		// going to need a start a new range
+		high = i;
+		start_new_range = 1;
+
+		if (IOC_FUNC(low) == 0x00 && IOC_FUNC(high) == 0xff) {
+			if (!complete) {
+				complete = cil_calloc(1, sizeof(*complete));
+				complete->driver = 0x0;
+				complete->specified = AVTAB_XPERMS_IOCTLDRIVER;
+			}
+
+			__avrule_xperm_setrangebits(IOC_DRIV(low), IOC_DRIV(low), complete);
+		} else {
+			if (partial && partial->driver != IOC_DRIV(low)) {
+				avtab_datum.xperms = partial;
+				rc = avtab_insert(&pdb->te_avtab, avtab_key, &avtab_datum);
+				if (rc != SEPOL_OK) {
+					goto exit;
+				}
+				free(partial);
+				partial = NULL;
+			}
+
+			if (!partial) {
+				partial = cil_calloc(1, sizeof(*partial));
+				partial->driver = IOC_DRIV(low);
+				partial->specified = AVTAB_XPERMS_IOCTLFUNCTION;
+			}
+
+			__avrule_xperm_setrangebits(IOC_FUNC(low), IOC_FUNC(high), partial);
+		}
+	}
+
+	if (partial) {
+		avtab_datum.xperms = partial;
+		rc = avtab_insert(&pdb->te_avtab, avtab_key, &avtab_datum);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+	}
+
+	if (complete) {
+		avtab_datum.xperms = complete;
+		rc = avtab_insert(&pdb->te_avtab, avtab_key, &avtab_datum);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+	}
+
+	rc = SEPOL_OK;
+
+exit:
+	free(partial);
+	free(complete);
+
+	// hashtab_t does not have a way to free keys or datum since it doesn't
+	// know what they are. We won't need the keys/datum after this function, so
+	// clean them up here.
+	free(avtab_key);
+	ebitmap_destroy(xperms);
+	free(xperms);
+
+	return rc;
+}
+
+int __cil_avrulex_ioctl_to_hashtable(hashtab_t h, uint16_t kind, uint32_t src, uint32_t tgt, uint32_t obj, ebitmap_t *xperms)
+{
+	uint16_t specified;
+	avtab_key_t *avtab_key;
+	ebitmap_t *hashtab_xperms;
+	int rc = SEPOL_ERR;
+
+	switch (kind) {
+	case CIL_AVRULE_ALLOWED:
+		specified = AVTAB_XPERMS_ALLOWED;
+		break;
+	case CIL_AVRULE_AUDITALLOW:
+		specified = AVTAB_XPERMS_AUDITALLOW;
+		break;
+	case CIL_AVRULE_DONTAUDIT:
+		specified = AVTAB_XPERMS_DONTAUDIT;
+		break;
+	default:
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
+	avtab_key = cil_malloc(sizeof(*avtab_key));
+	avtab_key->source_type = src;
+	avtab_key->target_type = tgt;
+	avtab_key->target_class = obj;
+	avtab_key->specified = specified;
+
+	hashtab_xperms = (ebitmap_t *)hashtab_search(h, (hashtab_key_t)avtab_key);
+	if (!hashtab_xperms) {
+		hashtab_xperms = cil_malloc(sizeof(*hashtab_xperms));
+		rc = ebitmap_cpy(hashtab_xperms, xperms);
+		if (rc != SEPOL_OK) {
+			free(avtab_key);
+			goto exit;
+		}
+		rc = hashtab_insert(h, (hashtab_key_t)avtab_key, hashtab_xperms);
+		if (rc != SEPOL_OK) {
+			free(avtab_key);
+			goto exit;
+		}
+	} else {
+		free(avtab_key);
+		rc = ebitmap_union(hashtab_xperms, xperms);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
+int __cil_avrulex_to_hashtable_helper(policydb_t *pdb, uint16_t kind, struct cil_symtab_datum *src, struct cil_symtab_datum *tgt, struct cil_permissionx *permx, struct cil_args_binary *args)
+{
+	int rc = SEPOL_ERR;
+	type_datum_t *sepol_src = NULL;
+	type_datum_t *sepol_tgt = NULL;
+	class_datum_t *sepol_obj = NULL;
+	struct cil_list *class_list = NULL;
+	struct cil_list_item *c;
+
+	rc = __cil_get_sepol_type_datum(pdb, src, &sepol_src);
+	if (rc != SEPOL_OK) goto exit;
+
+	rc = __cil_get_sepol_type_datum(pdb, tgt, &sepol_tgt);
+	if (rc != SEPOL_OK) goto exit;
+
+	class_list = cil_expand_class(permx->obj);
+
+	cil_list_for_each(c, class_list) {
+		rc = __cil_get_sepol_class_datum(pdb, DATUM(c->data), &sepol_obj);
+		if (rc != SEPOL_OK) goto exit;
+
+		switch (permx->kind) {
+		case  CIL_PERMX_KIND_IOCTL:
+			rc = __cil_avrulex_ioctl_to_hashtable(args->avrulex_ioctl_table, kind, sepol_src->s.value, sepol_tgt->s.value, sepol_obj->s.value, permx->perms);
+			if (rc != SEPOL_OK) goto exit;
+			break;
+		default:
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+	}
+
+	rc = SEPOL_OK;
+
+exit:
+	cil_list_destroy(&class_list, CIL_FALSE);
+
+	return rc;
+}
+
+int cil_avrulex_to_hashtable(policydb_t *pdb, const struct cil_db *db, struct cil_avrulex *cil_avrulex, struct cil_args_binary *args)
+{
+	int rc = SEPOL_ERR;
+	uint16_t kind;
+	struct cil_symtab_datum *src = NULL;
+	struct cil_symtab_datum *tgt = NULL;
+	ebitmap_t type_bitmap;
+	ebitmap_node_t *tnode;
+	unsigned int i;
+
+	ebitmap_init(&type_bitmap);
+
+	if (cil_avrulex->rule_kind == CIL_AVRULE_DONTAUDIT && db->disable_dontaudit == CIL_TRUE) {
+		// Do not add dontaudit rules to binary
+		rc = SEPOL_OK;
+		goto exit;
+	}
+
+	kind = cil_avrulex->rule_kind;
+	src = cil_avrulex->src;
+	tgt = cil_avrulex->tgt;
+
+	if (tgt->fqn == CIL_KEY_SELF) {
+		rc = __cil_expand_type(src, &type_bitmap);
+		if (rc != SEPOL_OK) goto exit;
+
+		ebitmap_for_each_bit(&type_bitmap, tnode, i) {
+			if (!ebitmap_get_bit(&type_bitmap, i)) continue;
+
+			src = DATUM(db->val_to_type[i]);
+			rc = __cil_avrulex_to_hashtable_helper(pdb, kind, src, src, cil_avrulex->permx, args);
+			if (rc != SEPOL_OK) {
+				goto exit;
+			}
+		}
+	} else {
+		rc = __cil_avrulex_to_hashtable_helper(pdb, kind, src, tgt, cil_avrulex->permx, args);
+		if (rc != SEPOL_OK) goto exit;
+	}
+
+	rc = SEPOL_OK;
+
+exit:
+	ebitmap_destroy(&type_bitmap);
+
+	return rc;
 }
 
 int __cil_cond_to_policydb_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
@@ -3162,6 +3444,9 @@ int __cil_node_to_policydb(struct cil_tree_node *node, void *extra_args)
 				}
 			}
 			break;
+		case CIL_AVRULEX:
+			rc = cil_avrulex_to_hashtable(pdb, db, node->data, args);
+			break;
 		case CIL_ROLEALLOW:
 			rc = cil_roleallow_to_policydb(pdb, db, node->data);
 			break;
@@ -3593,6 +3878,58 @@ static int role_trans_compare(hashtab_t h
 	role_trans_t *b = (role_trans_t *)key2;
 
 	return a->role != b->role || a->type != b->type || a->tclass != b->tclass;
+}
+
+/* Based on MurmurHash3, written by Austin Appleby and placed in the
+ * public domain.
+ */
+static unsigned int avrulex_hash(__attribute__((unused)) hashtab_t h, hashtab_key_t key)
+{
+	avtab_key_t *k = (avtab_key_t *)key;
+
+	static const uint32_t c1 = 0xcc9e2d51;
+	static const uint32_t c2 = 0x1b873593;
+	static const uint32_t r1 = 15;
+	static const uint32_t r2 = 13;
+	static const uint32_t m  = 5;
+	static const uint32_t n  = 0xe6546b64;
+
+	uint32_t hash = 0;
+
+#define mix(input) { \
+	uint32_t v = input; \
+	v *= c1; \
+	v = (v << r1) | (v >> (32 - r1)); \
+	v *= c2; \
+	hash ^= v; \
+	hash = (hash << r2) | (hash >> (32 - r2)); \
+	hash = hash * m + n; \
+}
+
+	mix(k->target_class);
+	mix(k->target_type);
+	mix(k->source_type);
+	mix(k->specified);
+
+#undef mix
+
+	hash ^= hash >> 16;
+	hash *= 0x85ebca6b;
+	hash ^= hash >> 13;
+	hash *= 0xc2b2ae35;
+	hash ^= hash >> 16;
+
+	return hash & (AVRULEX_TABLE_SIZE - 1);
+}
+
+static int avrulex_compare(hashtab_t h
+             __attribute__ ((unused)), hashtab_key_t key1,
+			              hashtab_key_t key2)
+{
+	avtab_key_t *a = (avtab_key_t *)key1;
+	avtab_key_t *b = (avtab_key_t *)key2;
+
+	return a->source_type != b->source_type || a->target_type != b->target_type || a->target_class != b->target_class || a->specified != b->specified;
 }
 
 int cil_binary_create(const struct cil_db *db, sepol_policydb_t **policydb)
@@ -4039,6 +4376,7 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 	hashtab_t filename_trans_table = NULL;
 	hashtab_t range_trans_table = NULL;
 	hashtab_t role_trans_table = NULL;
+	hashtab_t avrulex_ioctl_table = NULL;
 	void **type_value_to_cil = NULL;
 	struct cil_class **class_value_to_cil = NULL;
 	struct cil_perm ***perm_value_to_cil = NULL;
@@ -4092,6 +4430,12 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 		goto exit;
 	}
 
+	avrulex_ioctl_table = hashtab_create(avrulex_hash, avrulex_compare, AVRULEX_TABLE_SIZE);
+	if (!avrulex_ioctl_table) {
+		cil_log(CIL_INFO, "Failure to create hashtab for avrulex\n");
+		goto exit;
+	}
+
 	cil_list_init(&neverallows, CIL_LIST_ITEM);
 
 	extra_args.db = db;
@@ -4100,6 +4444,7 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 	extra_args.filename_trans_table = filename_trans_table;
 	extra_args.range_trans_table = range_trans_table;
 	extra_args.role_trans_table = role_trans_table;
+	extra_args.avrulex_ioctl_table = avrulex_ioctl_table;
 	extra_args.type_value_to_cil = type_value_to_cil;
 
 	for (i = 1; i <= 3; i++) {
@@ -4115,6 +4460,14 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 			rc = __cil_policydb_val_arrays_create(pdb);
 			if (rc != SEPOL_OK) {
 				cil_log(CIL_INFO, "Failure creating val_to_{struct,name} arrays\n");
+				goto exit;
+			}
+		}
+
+		if (i == 3) {
+			rc = hashtab_map(avrulex_ioctl_table, __cil_avrulex_ioctl_to_policydb, pdb);
+			if (rc != SEPOL_OK) {
+				cil_log(CIL_INFO, "Failure creating avrulex rules\n");
 				goto exit;
 			}
 		}
@@ -4165,6 +4518,7 @@ exit:
 	hashtab_destroy(filename_trans_table);
 	hashtab_destroy(range_trans_table);
 	hashtab_destroy(role_trans_table);
+	hashtab_destroy(avrulex_ioctl_table);
 	free(type_value_to_cil);
 	free(class_value_to_cil);
 	/* Range is because libsepol values start at 1. */
