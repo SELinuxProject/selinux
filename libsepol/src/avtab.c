@@ -309,6 +309,9 @@ void avtab_destroy(avtab_t * h)
 	for (i = 0; i < h->nslot; i++) {
 		cur = h->htable[i];
 		while (cur != NULL) {
+			if (cur->key.specified & AVTAB_XPERMS) {
+				free(cur->datum.xperms);
+			}
 			temp = cur;
 			cur = cur->next;
 			free(temp);
