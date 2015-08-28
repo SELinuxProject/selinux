@@ -490,4 +490,99 @@
          </programlisting>
       </sect2>
 
+      <sect2 id="permissionx">
+         <title>permissionx</title>
+         <para>Defines a named extended permission, which can be used in the <literal><link linkend="allowx">allowx</link></literal>, <literal><link linkend="auditallowx">auditallowx</link></literal>, and <literal><link linkend="dontauditx">dontauditx</link></literal> statements.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(permissionx permissionx_id (kind class_id (permission ... | expr ...)))]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="permissionx">permissionx</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="permissionx">permissionx</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>kind</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A keyword specifying how to interpret the extended permission values. Must be one of:</para>
+                     <para>
+                        <informaltable frame="all">
+                           <tgroup cols="2">
+                              <colspec colwidth=".5 in"/>
+                              <colspec colwidth="*"/>
+                              <thead>
+                              <row>
+                                 <entry align="center">
+                                    <para><emphasis role="bold">kind</emphasis></para>
+                                 </entry>
+                                 <entry align="center">
+                                    <para><emphasis role="bold">description</emphasis></para>
+                                 </entry>
+                              </row>
+                              </thead>
+                              <tbody>
+                              <row>
+                                 <entry>
+                                    <para>ioctl</para>
+                                 </entry>
+                                 <entry>
+                                    <para>Permissions define a whitelist of ioctl values. Permission values must range from <literal>0x0000</literal> to <literal>0xFFFF</literal>, inclusive.</para>
+                                 </entry>
+                              </row>
+                           </tbody></tgroup>
+                        </informaltable>
+                     </para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>class_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="class">class</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>permission</literal></para>
+                  </entry>
+                  <entry>
+                     <para>One or more numeric values, specified in decimal, or hexadecimal if prefixed with 0x, or octal if prefixed with 0. Values are interpreted based on the value of <literal>kind</literal>.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>An expression, with valid operators and syntax:</para>
+                     <simpara><literal>    (range (permission ...) (permission ...))</literal></simpara>
+                     <simpara><literal>    (and (permission ...) (permission ...))</literal></simpara>
+                     <simpara><literal>    (or  (permission ...) (permission ...))</literal></simpara>
+                     <simpara><literal>    (xor (permission ...) (permission ...))</literal></simpara>
+                     <simpara><literal>    (not (permission ...))</literal></simpara>
+                     <simpara><literal>    (all)</literal></simpara>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <programlisting><![CDATA[
+(permissionx ioctl_1 (ioctl tcp_socket (0x2000 0x3000 0x4000)))
+(permissionx ioctl_2 (ioctl tcp_socket (range 0x6000 0x60FF)))
+(permissionx ioctl_3 (ioctl tcp_socket (and (range 0x8000 0x90FF) (not (range 0x8100 0x82FF)))))
+]]>
+         </programlisting>
+      </sect2>
+
    </sect1>

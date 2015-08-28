@@ -91,6 +91,9 @@
 	;;(allow console_t console_device_t file_rw)
 	(allow console_t console_device_t (files (read)))
 
+	(permissionx ioctl_test (ioctl files (and (range 0x1600 0x19FF) (not (range 0x1750 0x175F)))))
+	(allowx console_t console_device_t ioctl_test)
+
 	(boolean secure_mode false)
 	(boolean console_login true)
 	
@@ -114,9 +117,6 @@
 	(typealias sbin_t)
 	(typealiasactual sbin_t bin_t)
 	(typepermissive device_t) 
-	(typebounds device_t bin_t)
-	;;(typebounds bin_t kernel_t)    ;; This statement and the next can be used
-	;;(typebounds kernel_t device_t) ;; to verify that circular bounds can be found 
 	(typemember device_t bin_t file exec_t)
 	(typetransition device_t console_t files console_device_t)
 
@@ -203,7 +203,6 @@
 	(roletype exec_role bin_t)
 	(roletype exec_role exec_type)
 	(roleallow system_r user_r)
-	(rolebounds system_r user_r)
 	(roletransition system_r bin_t file user_r)
 
 	(userrole foo_u foo_role)
@@ -213,7 +212,6 @@
 	(userrole system_u system_r)
 	(userlevel system_u low)
 	(userrange system_u low_high)
-	(userbounds system_u user_u)
 
 	(userrole user_u user_r)
 	(userlevel user_u (s0 (range c0 c2)))
@@ -286,6 +284,7 @@
 
 (macro all ((type x))
 	(allow x bin_t (policy.file (execute)))
+	(allowx x bin_t (ioctl policy.file (range 0x1000 0x11FF)))
 )
 (call all (bin_t))
 

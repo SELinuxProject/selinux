@@ -276,4 +276,176 @@
          </programlisting>
       </sect2>
 
+      <sect2 id="allowx">
+         <title>allowx</title>
+         <para>Specifies the access allowed between a source and target type using extended permissions. Unlike the <literal><link linkend="allow">allow</link></literal> statement, the statements <literal><link linkend="validatetrans">validatetrans</link></literal>, <literal><link linkend="mlsvalidatetrans">mlsvalidatetrans</link></literal>, <literal><link linkend="constrain">constrain</link></literal>, and <literal><link linkend="mlsconstrain">mlsconstrain</link></literal> do not limit accesses granted by <literal><link linkend="allowx">allowx</link></literal>.</para>
+         <para><emphasis role="bold">Rule definition:</emphasis></para>
+         <programlisting><![CDATA[(allowx source_id target_id|self permissionx_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="allowx">allowx</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="allowx">allowx</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>source_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined source <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal>, or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined target <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal>, or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                     <para>The <literal>self</literal> keyword may be used instead to signify that source and target are the same.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>permissionx_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="permissionx">permissionx</link></literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>These examples show a selection of possible permutations of <literal><link linkend="allowx">allowx</link></literal> rules:</para>
+         <programlisting><![CDATA[
+(allowx type_1 type_2 (ioctl tcp_socket (range 0x2000 0x20FF)))
+
+(permissionx ioctl_nodebug (ioctl udp_socket (not (range 0x4000 0x4010))))
+(allowx type_3 type_4 ioctl_nodebug)
+]]>
+
+         </programlisting>
+      </sect2>
+
+      <sect2 id="auditallowx">
+         <title>auditallowx</title>
+         <para>Audit the access rights defined if there is a valid <literal><link linkend="allowx">allowx</link></literal> rule. It does NOT allow access, it only audits the event.</para>
+         <para><emphasis role="bold">Rule definition:</emphasis></para>
+         <programlisting><![CDATA[(auditallowx source_id target_id|self permissionx_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="auditallowx">auditallowx</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="auditallowx">auditallowx</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>source_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined source <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined target <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                     <para>The <literal>self</literal> keyword may be used instead to signify that source and target are the same.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>permissionx_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="permissionx">permissionx</link></literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>This example will log an audit event whenever the corresponding <literal><link linkend="allowx">allowx</link></literal> rule grants access to the specified extended permissions:</para>
+         <programlisting><![CDATA[
+(allowx type_1 type_2 (ioctl tcp_socket (range 0x2000 0x20FF)))
+
+(auditallowx type_1 type_2 (ioctl tcp_socket (range 0x2005 0x2010)))
+]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="dontauditx">
+         <title>dontauditx</title>
+         <para>Do not audit the access rights defined when access denied. This stops excessive log entries for known events.</para>
+         <para>Note that these rules can be omitted by the CIL compiler command line parameter <literal>-D</literal> or <literal>--disable-dontaudit</literal> flags.</para>
+         <para><emphasis role="bold">Rule definition:</emphasis></para>
+         <programlisting><![CDATA[(dontauditx source_id target_id|self permissionx_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal><link linkend="dontauditx">dontauditx</link></literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal><link linkend="dontauditx">dontauditx</link></literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>source_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined source <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined target <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                     <para>The <literal>self</literal> keyword may be used instead to signify that source and target are the same.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>permissionx_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="permissionx">permissionx</link></literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Examples:</emphasis></para>
+         <para>This example will not audit the denied access:</para>
+         <programlisting><![CDATA[
+(dontauditx type_1 type_2 (ioctl tcp_socket (range 0x3000 0x30FF)))
+]]>
+         </programlisting>
+      </sect2>
+
    </sect1>

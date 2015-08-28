@@ -241,19 +241,30 @@
                      <para><literal><link linkend="allow">allow</link></literal></para>
                   </entry>
                   <entry>
+                     <para><literal><link linkend="allowx">allowx</link></literal></para>
+                  </entry>
+                  <entry>
                      <para><literal><link linkend="auditallow">auditallow</link></literal></para>
                   </entry>
+                  <entry>
+                     <para><literal><link linkend="auditallowx">auditallowx</link></literal></para>
+                  </entry>
+               </row>
+               <row>
                   <entry>
                      <para><literal><link linkend="booleanif">booleanif</link></literal></para>
                   </entry>
                   <entry>
                      <para><literal><link linkend="dontaudit">dontaudit</link></literal></para>
                   </entry>
-               </row>
-               <row>
+                  <entry>
+                     <para><literal><link linkend="dontauditx">dontauditx</link></literal></para>
+                  </entry>
                   <entry>
                      <para><literal><link linkend="typepermissive">typepermissive</link></literal></para>
                   </entry>
+               </row>
+               <row>
                   <entry>
                      <para><literal><link linkend="rangetransition">rangetransition</link></literal></para>
                   </entry>
@@ -263,11 +274,11 @@
                   <entry>
                      <para><literal><link linkend="roleallow">roleallow</link></literal></para>
                   </entry>
-               </row>
-               <row>
                   <entry>
                      <para><literal><link linkend="roleattribute">roleattribute</link></literal></para>
                   </entry>
+               </row>
+               <row>
                   <entry>
                      <para><literal><link linkend="roletransition">roletransition</link></literal></para>
                   </entry>
@@ -277,11 +288,11 @@
                   <entry>
                      <para><literal><link linkend="typealias">typealias</link></literal></para>
                   </entry>
-               </row>
-               <row>
                   <entry>
                      <para><literal><link linkend="typeattribute">typeattribute</link></literal></para>
                   </entry>
+              </row>
+              <row>
                   <entry>
                      <para><literal><link linkend="typechange">typechange</link></literal></para>
                   </entry>
