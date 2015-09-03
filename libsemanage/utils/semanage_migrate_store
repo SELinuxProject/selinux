@@ -247,6 +247,7 @@ if __name__ == "__main__":
 		"file_contexts.local",
 		"seusers",
 		"users.local",
+		"users_extra",
 		"users_extra.local",
 		"disable_dontaudit",
 		"preserve_tunables",

@@ -1272,6 +1272,9 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		if (retval < 0)
 			goto cleanup;
 
+		/* remove FC_TMPL now that it is now longer needed */
+		unlink(semanage_path(SEMANAGE_TMP, SEMANAGE_FC_TMPL));
+
 		pfcontexts->dtable->drop_cache(pfcontexts->dbase);
 
 		/* SEUsers */
@@ -1412,10 +1415,6 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	 * then fork() may fail on low memory machines */
 	sepol_policydb_free(out);
 	out = NULL;
-
-	/* remove files that are automatically generated and no longer needed */
-	unlink(semanage_path(SEMANAGE_TMP, SEMANAGE_FC_TMPL));
-	unlink(semanage_path(SEMANAGE_TMP, SEMANAGE_USERS_EXTRA));
 
 	if (sh->do_rebuild || modified || bools_modified || fcontexts_modified) {
 		retval = semanage_install_sandbox(sh);
