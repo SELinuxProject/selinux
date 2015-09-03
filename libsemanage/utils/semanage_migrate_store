@@ -251,7 +251,8 @@ if __name__ == "__main__":
 		"disable_dontaudit",
 		"preserve_tunables",
 		"policy.kern",
-		"file_contexts"]
+		"file_contexts",
+		"homedir_template"]
 
 
 	create_dir(newroot_path(), 0o755)

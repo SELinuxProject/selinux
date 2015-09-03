@@ -1415,7 +1415,6 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 
 	/* remove files that are automatically generated and no longer needed */
 	unlink(semanage_path(SEMANAGE_TMP, SEMANAGE_FC_TMPL));
-	unlink(semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL));
 	unlink(semanage_path(SEMANAGE_TMP, SEMANAGE_USERS_EXTRA));
 
 	if (sh->do_rebuild || modified || bools_modified || fcontexts_modified) {
