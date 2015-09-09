@@ -1,3 +1,4 @@
+	* fix CIL NULL pointer dereference when copying classpermission/set, from Steve Lawrence
 	* Add CIL support for ioctl whitelists, from Steve Lawrence
 	* Fix memory leak when destroying avtab, from Steve Lawrence
 	* Replace sscanf in module_to_cil, from Yuli Khodorkovskiy.
