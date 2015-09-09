@@ -282,6 +282,8 @@ int cil_copy_classpermission(__attribute__((unused)) struct cil_db *db, void *da
 		}
 	}
 
+	cil_classpermission_init(&new);
+
 	cil_copy_classperms_list(orig->classperms, &new->classperms);
 
 	*copy = new;
@@ -293,6 +295,8 @@ int cil_copy_classpermissionset(__attribute__((unused)) struct cil_db *db, void 
 {
 	struct cil_classpermissionset *orig = data;
 	struct cil_classpermissionset *new = NULL;
+
+	cil_classpermissionset_init(&new);
 
 	new->set_str = orig->set_str;
 
