@@ -1,3 +1,4 @@
+	* fix CIL blockinherit copying segfault and add macro restrictions, from Steve Lawrence
 	* fix CIL NULL pointer dereference when copying classpermission/set, from Steve Lawrence
 	* Add CIL support for ioctl whitelists, from Steve Lawrence
 	* Fix memory leak when destroying avtab, from Steve Lawrence
