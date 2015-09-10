@@ -1486,13 +1486,22 @@ static int __cil_verify_classpermission(struct cil_tree_node *node)
 	int rc = SEPOL_ERR;
 	struct cil_classpermission *cp = node->data;
 
+	if (cp->classperms == NULL) {
+		cil_log(CIL_ERR, "Classpermission %s does not have a classpermissionset at line %d of %s\n", cp->datum.name, node->line, node->path);
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	rc = __cil_verify_classperms(cp->classperms, &cp->datum);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Found circular class permissions involving the set %s at line %d of %s\n",cp->datum.name, node->line, node->path);
-		return rc;
+		goto exit;
 	}
 
-	return SEPOL_OK;
+	rc = SEPOL_OK;
+
+exit:
+	return rc;
 }
 
 struct cil_verify_map_args {
@@ -1507,12 +1516,20 @@ static int __verify_map_perm_classperms(__attribute__((unused)) hashtab_key_t k,
 	struct cil_verify_map_args *map_args = args;
 	struct cil_perm *cmp = (struct cil_perm *)d;
 
+	if (cmp->classperms == NULL) {
+		cil_log(CIL_ERR, "Map class %s does not have a classmapping for %s at line %d of %s\n", map_args->class->datum.name, cmp->datum.name, map_args->node->line, map_args->node->path);
+		map_args->rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	rc = __cil_verify_classperms(cmp->classperms, &cmp->datum);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Found circular class permissions involving the map class %s and permission %s at line %d of %s\n", map_args->class->datum.name, cmp->datum.name, map_args->node->line, map_args->node->path);
 		map_args->rc = SEPOL_ERR;
+		goto exit;
 	}
 
+exit:
 	return SEPOL_OK;
 }
 
