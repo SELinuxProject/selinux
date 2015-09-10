@@ -51,7 +51,7 @@
                      <simpara>and:</simpara>
                         <simpara><literal>  op      : eq neq</literal></simpara>
                         <simpara><literal>  role_op : eq neq dom domby incomp</literal></simpara>
-                        <simpara><literal>  user_id : A single <link linkend="user">user</link> identifier.</literal></simpara>
+                        <simpara><literal>  user_id : A single <link linkend="user">user</link> or <link linkend="userattribute">userattribute</link> identifier.</literal></simpara>
                         <simpara><literal>  role_id : A single <link linkend="role">role</link> or <link linkend="roleattribute">roleattribute</link> identifier.</literal></simpara>
                         <simpara><literal>  type_id : A single <link linkend="type">type</link>, <link linkend="typealias">typealias</link> or <link linkend="typeattribute">typeattribute</link> identifier.</literal></simpara>
                   </entry>
@@ -154,7 +154,7 @@
                      <simpara>and:</simpara>
                         <simpara><literal>  op      : eq neq</literal></simpara>
                         <simpara><literal>  role_op : eq neq dom domby incomp</literal></simpara>
-                        <simpara><literal>  user_id : A single <link linkend="user">user</link> identifier.</literal></simpara>
+                        <simpara><literal>  user_id : A single <link linkend="user">user</link> or <link linkend="userattribute">userattribute</link> identifier.</literal></simpara>
                         <simpara><literal>  role_id : A single <link linkend="role">role</link> or <link linkend="roleattribute">roleattribute</link> identifier.</literal></simpara>
                         <simpara><literal>  type_id : A single <link linkend="type">type</link>, <link linkend="typealias">typealias</link> or <link linkend="typeattribute">typeattribute</link> identifier.</literal></simpara>
                   </entry>
@@ -236,7 +236,7 @@
                      <simpara>and:</simpara>
                         <simpara><literal>  op          : eq neq</literal></simpara>
                         <simpara><literal>  mls_role_op : eq neq dom domby incomp</literal></simpara>
-                        <simpara><literal>  user_id     : A single <link linkend="user">user</link> identifier.</literal></simpara>
+                        <simpara><literal>  user_id     : A single <link linkend="user">user</link> or <link linkend="userattribute">userattribute</link> identifier.</literal></simpara>
                         <simpara><literal>  role_id     : A single <link linkend="role">role</link> or <link linkend="roleattribute">roleattribute</link> identifier.</literal></simpara>
                         <simpara><literal>  type_id     : A single <link linkend="type">type</link>, <link linkend="typealias">typealias</link> or <link linkend="typeattribute">typeattribute</link> identifier.</literal></simpara>
                   </entry>
@@ -332,7 +332,7 @@
                      <simpara>and:</simpara>
                         <simpara><literal>  op          : eq neq</literal></simpara>
                         <simpara><literal>  mls_role_op : eq neq dom domby incomp</literal></simpara>
-                        <simpara><literal>  user_id     : A single <link linkend="user">user</link> identifier.</literal></simpara>
+                        <simpara><literal>  user_id     : A single <link linkend="user">user</link> or <link linkend="userattribute">userattribute</link> identifier.</literal></simpara>
                         <simpara><literal>  role_id     : A single <link linkend="role">role</link> or <link linkend="roleattribute">roleattribute</link> identifier.</literal></simpara>
                         <simpara><literal>  type_id     : A single <link linkend="type">type</link>, <link linkend="typealias">typealias</link> or <link linkend="typeattribute">typeattribute</link> identifier.</literal></simpara>
                   </entry>

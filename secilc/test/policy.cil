@@ -124,7 +124,9 @@
 	(roleattribute foo_role)
 	(roleattribute bar_role)
 	(roleattribute baz_role)
+	(roleattribute foo_role_a)
 	(roleattributeset exec_role (or user_r system_r))
+	(roleattributeset foo_role_a (baz_r user_r system_r))
 	(roleattributeset foo_role (and exec_role system_r))
 	(roleattributeset bar_role (xor exec_role foo_role))
 	(roleattributeset baz_role (not user_r))
@@ -194,6 +196,7 @@
 
 	(role system_r)
 	(role user_r)
+	(role baz_r)
 
 	(roletype system_r bin_t)
 	(roletype system_r kernel_t)
@@ -207,6 +210,23 @@
 
 	(userrole foo_u foo_role)
 	(userlevel foo_u low)
+
+	(userattribute ua1)
+	(userattribute ua2)
+	(userattribute ua3)
+	(userattribute ua4)
+	(userattributeset ua1 (user_u system_u))
+	(userattributeset ua2 (foo_u system_u))
+	(userattributeset ua3 (and ua1 ua2))
+	(user u5)
+	(user u6)
+	(userlevel u5 low)
+	(userlevel u6 low)
+	(userrange u5 low_high)
+	(userrange u6 low_high)
+	(userattributeset ua4 (u5 u6))
+	(userrole ua4 foo_role_a)
+
 	(userrange foo_u low_high)
 
 	(userrole system_u system_r)
@@ -253,7 +273,7 @@
 	(constrain (files (read)) (not (or (and (eq t1 exec_t) (eq t2 bin_t)) (eq r1 r2))))
 	(constrain char_w (not (or (and (eq t1 exec_t) (eq t2 bin_t)) (eq r1 r2))))
 
-	(constrain (file (read)) (or (and (eq t1 exec_t) (neq t2 bin_t) ) (eq u1 u2) ) )
+	(constrain (file (read)) (or (and (eq t1 exec_t) (neq t2 bin_t) ) (eq u1 ua4) ) )
 	(constrain (file (open)) (dom r1 r2))
 	(constrain (file (open)) (domby r1 r2))
 	(constrain (file (open)) (incomp r1 r2))

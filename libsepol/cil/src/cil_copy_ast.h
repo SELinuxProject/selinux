@@ -57,6 +57,8 @@ int cil_copy_sid(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_sidcontext(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_sidorder(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_user(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
+int cil_copy_userattribute(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
+int cil_copy_userattributeset(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_userrole(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_userlevel(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_userrange(struct cil_db *db, void *data, void **copy, symtab_t *symtab);

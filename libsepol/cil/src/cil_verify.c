@@ -737,16 +737,8 @@ int __cil_verify_context(struct cil_db *db, struct cil_context *ctx)
 	int found = CIL_FALSE;
 
 	if (user->roles != NULL) {
-		cil_list_for_each(curr, user->roles) {
-			struct cil_role *userrole = curr->data;
-			if (userrole == role) {
-				break;
-			}
-		}
-
-		if (curr == NULL) {
-			cil_log(CIL_ERR, "Role %s is invalid for user %s\n",
-					ctx->role_str, ctx->user_str);
+		if (!ebitmap_get_bit(user->roles, role->value)) {
+			cil_log(CIL_ERR, "Role %s is invalid for user %s\n", ctx->role_str, ctx->user_str);
 			rc = SEPOL_ERR;
 			goto exit;
 		}

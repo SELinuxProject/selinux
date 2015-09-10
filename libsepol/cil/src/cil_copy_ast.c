@@ -392,6 +392,41 @@ int cil_copy_user(__attribute__((unused)) struct cil_db *db, void *data, void **
 	return SEPOL_OK;
 }
 
+int cil_copy_userattribute(__attribute__((unused)) struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+{
+	struct cil_userattribute *orig = data;
+	struct cil_userattribute *new = NULL;
+	char *key = orig->datum.name;
+	struct cil_symtab_datum *datum = NULL;
+
+	cil_symtab_get_datum(symtab, key, &datum);
+	if (datum == NULL) {
+		cil_userattribute_init(&new);
+		*copy = new;
+	} else {
+		*copy = datum;
+	}
+
+	return SEPOL_OK;
+}
+
+int cil_copy_userattributeset(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+{
+	struct cil_userattributeset *orig = data;
+	struct cil_userattributeset *new = NULL;
+
+	cil_userattributeset_init(&new);
+
+	new->attr_str = orig->attr_str;
+
+	cil_copy_expr(db, orig->str_expr, &new->str_expr);
+	cil_copy_expr(db, orig->datum_expr, &new->datum_expr);
+
+	*copy = new;
+
+	return SEPOL_OK;
+}
+
 int cil_copy_userrole(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_userrole *orig = data;
@@ -1716,6 +1751,12 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 		break;
 	case CIL_USER:
 		copy_func = &cil_copy_user;
+		break;
+	case CIL_USERATTRIBUTE:
+		copy_func = &cil_copy_userattribute;
+		break;
+	case CIL_USERATTRIBUTESET:
+		copy_func = &cil_copy_userattributeset;
 		break;
 	case CIL_USERROLE:
 		copy_func = &cil_copy_userrole;

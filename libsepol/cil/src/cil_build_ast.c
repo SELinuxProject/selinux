@@ -1196,8 +1196,130 @@ void cil_destroy_user(struct cil_user *user)
 	}
 
 	cil_symtab_datum_destroy(&user->datum);
-	cil_list_destroy(&user->roles, CIL_FALSE);
+	ebitmap_destroy(user->roles);
+	free(user->roles);
 	free(user);
+}
+
+int cil_gen_userattribute(__attribute__((unused)) struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_STRING,
+		CIL_SYN_END
+	};
+	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	char *key = NULL;
+	struct cil_userattribute *attr = NULL;
+	int rc = SEPOL_ERR;
+
+	if (parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_userattribute_init(&attr);
+
+	key = parse_current->next->data;
+	rc = cil_gen_node(db, ast_node, (struct cil_symtab_datum*)attr, (hashtab_key_t)key, CIL_SYM_USERS, CIL_USERATTRIBUTE);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	return SEPOL_OK;
+exit:
+	cil_log(CIL_ERR, "Bad userattribute declaration at line %d of %s\n",
+		parse_current->line, parse_current->path);
+	cil_destroy_userattribute(attr);
+	cil_clear_node(ast_node);
+	return rc;
+}
+
+void cil_destroy_userattribute(struct cil_userattribute *attr)
+{
+	struct cil_list_item *expr = NULL;
+	struct cil_list_item *next = NULL;
+
+	if (attr == NULL) {
+		return;
+	}
+
+	if (attr->expr_list != NULL) {
+		/* we don't want to destroy the expression stacks (cil_list) inside
+		 * this list cil_list_destroy destroys sublists, so we need to do it
+		 * manually */
+		expr = attr->expr_list->head;
+		while (expr != NULL) {
+			next = expr->next;
+			cil_list_item_destroy(&expr, CIL_FALSE);
+			expr = next;
+		}
+		free(attr->expr_list);
+		attr->expr_list = NULL;
+	}
+
+	cil_symtab_datum_destroy(&attr->datum);
+	ebitmap_destroy(attr->users);
+	free(attr->users);
+	free(attr);
+}
+
+int cil_gen_userattributeset(__attribute__((unused)) struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_STRING,
+		CIL_SYN_STRING | CIL_SYN_LIST,
+		CIL_SYN_END
+	};
+	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	struct cil_userattributeset *attrset = NULL;
+	int rc = SEPOL_ERR;
+
+	if (db == NULL || parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_userattributeset_init(&attrset);
+
+	attrset->attr_str = parse_current->next->data;
+
+	rc = cil_gen_expr(parse_current->next->next, CIL_USER, &attrset->str_expr);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+	ast_node->data = attrset;
+	ast_node->flavor = CIL_USERATTRIBUTESET;
+
+	return SEPOL_OK;
+
+exit:
+	cil_log(CIL_ERR, "Bad userattributeset declaration at line %d of %s\n",
+		parse_current->line, parse_current->path);
+	cil_destroy_userattributeset(attrset);
+
+	return rc;
+}
+
+void cil_destroy_userattributeset(struct cil_userattributeset *attrset)
+{
+	if (attrset == NULL) {
+		return;
+	}
+
+	cil_list_destroy(&attrset->str_expr, CIL_TRUE);
+	cil_list_destroy(&attrset->datum_expr, CIL_FALSE);
+
+	free(attrset);
 }
 
 int cil_gen_userlevel(__attribute__((unused)) struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
@@ -5855,6 +5977,11 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_USER) {
 		rc = cil_gen_user(db, parse_current, ast_node);
+	} else if (parse_current->data == CIL_KEY_USERATTRIBUTE) {
+		rc = cil_gen_userattribute(db, parse_current, ast_node);
+	} else if (parse_current->data == CIL_KEY_USERATTRIBUTESET) {
+		rc = cil_gen_userattributeset(db, parse_current, ast_node);
+		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_USERLEVEL) {
 		rc = cil_gen_userlevel(db, parse_current, ast_node);
 		*finished = CIL_TREE_SKIP_NEXT;

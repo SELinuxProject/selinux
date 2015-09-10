@@ -144,6 +144,34 @@ static int __cil_get_sepol_level_datum(policydb_t *pdb, struct cil_symtab_datum 
 	return SEPOL_OK;
 }
 
+static int __cil_expand_user(struct cil_symtab_datum *datum, ebitmap_t *new)
+{
+	struct cil_tree_node *node = datum->nodes->head->data;
+	struct cil_user *user = NULL;
+	struct cil_userattribute *attr = NULL;
+
+	if (node->flavor == CIL_USERATTRIBUTE) {
+		attr = (struct cil_userattribute *)datum;
+		if (ebitmap_cpy(new, attr->users)) {
+			cil_log(CIL_ERR, "Failed to copy user bits\n");
+			goto exit;
+		}
+	} else {
+		user = (struct cil_user *)datum;
+		ebitmap_init(new);
+		if (ebitmap_set_bit(new, user->value, 1)) {
+			cil_log(CIL_ERR, "Failed to set user bit\n");
+			ebitmap_destroy(new);
+			goto exit;
+		}
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return SEPOL_ERR;
+}
+
 static int __cil_expand_role(struct cil_symtab_datum *datum, ebitmap_t *new)
 {
 	struct cil_tree_node *node = datum->nodes->head->data;
@@ -746,43 +774,41 @@ exit:
 	return SEPOL_ERR;
 }
 
-int cil_userrole_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_userrole *userrole)
+int cil_userrole_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_user *user)
 {
 	int rc = SEPOL_ERR;
 	user_datum_t *sepol_user = NULL;
 	role_datum_t *sepol_role = NULL;
-	ebitmap_t role_bitmap;
-	ebitmap_node_t *rnode;
+	ebitmap_node_t *rnode = NULL;
 	unsigned int i;
 
-	rc = __cil_get_sepol_user_datum(pdb, DATUM(userrole->user), &sepol_user);
-	if (rc != SEPOL_OK) goto exit;
-
-	rc = __cil_expand_role(userrole->role, &role_bitmap);
-	if (rc != SEPOL_OK) goto exit;
-
-	ebitmap_for_each_bit(&role_bitmap, rnode, i) {
-		if (!ebitmap_get_bit(&role_bitmap, i)) continue;
-
-		rc = __cil_get_sepol_role_datum(pdb, DATUM(db->val_to_role[i]), &sepol_role);
-		if (rc != SEPOL_OK) goto exit;
-
-		if (sepol_role->s.value == 1) {
-			// role is object_r, ignore it since it is implicitly associated
-			// with all users
-			continue;
+	if (user->roles) {
+		rc = __cil_get_sepol_user_datum(pdb, DATUM(user), &sepol_user);
+		if (rc != SEPOL_OK) {
+			goto exit;
 		}
 
-		if (ebitmap_set_bit(&sepol_user->roles.roles, sepol_role->s.value - 1, 1)) {
-			cil_log(CIL_INFO, "Failed to set role bit for user\n");
-			goto exit;
+		ebitmap_for_each_bit(user->roles, rnode, i) {
+			if (!ebitmap_get_bit(user->roles, i)) {
+				continue;
+			}
+
+			rc = __cil_get_sepol_role_datum(pdb, DATUM(db->val_to_role[i]), &sepol_role);
+			if (rc != SEPOL_OK) {
+				goto exit;
+			}
+
+			if (ebitmap_set_bit(&sepol_user->roles.roles, sepol_role->s.value - 1, 1)) {
+				cil_log(CIL_INFO, "Failed to set role bit for user\n");
+				rc = SEPOL_ERR;
+				goto exit;
+			}
 		}
 	}
 
 	rc = SEPOL_OK;
 
 exit:
-	ebitmap_destroy(&role_bitmap);
 	return rc;
 }
 
@@ -2183,12 +2209,30 @@ int __cil_constrain_expr_datum_to_sepol_expr(policydb_t *pdb, const struct cil_d
 
 	if (expr_flavor == CIL_USER) {
 		user_datum_t *sepol_user = NULL;
-		rc = __cil_get_sepol_user_datum(pdb, item->data, &sepol_user);
+		ebitmap_t user_bitmap;
+		ebitmap_node_t *unode;
+		unsigned int i;
+
+		rc = __cil_expand_user(item->data, &user_bitmap);
 		if (rc != SEPOL_OK) goto exit;
 
-		if (ebitmap_set_bit(&expr->names, sepol_user->s.value - 1, 1)) {
-			goto exit;
+		ebitmap_for_each_bit(&user_bitmap, unode, i) {
+			if (!ebitmap_get_bit(&user_bitmap, i)) {
+				continue;
+			}
+
+			rc = __cil_get_sepol_user_datum(pdb, DATUM(db->val_to_user[i]), &sepol_user);
+			if (rc != SEPOL_OK) {
+				ebitmap_destroy(&user_bitmap);
+				goto exit;
+			}
+
+			if (ebitmap_set_bit(&expr->names, sepol_user->s.value - 1, 1)) {
+				ebitmap_destroy(&user_bitmap);
+				goto exit;
+			}
 		}
+		ebitmap_destroy(&user_bitmap);
 	} else if (expr_flavor == CIL_ROLE) {
 		role_datum_t *sepol_role = NULL;
 		ebitmap_t role_bitmap;
@@ -3374,9 +3418,10 @@ int __cil_node_to_policydb(struct cil_tree_node *node, void *extra_args)
 			if (rc != SEPOL_OK) goto exit;
 			if (pdb->mls == CIL_TRUE) {
 				rc = cil_userlevel_userrange_to_policydb(pdb, node->data);
+				if (rc != SEPOL_OK) {
+					goto exit;
+				}
 			}
-			break;
-		case CIL_USERROLE:
 			rc = cil_userrole_to_policydb(pdb, db, node->data);
 			break;
 		case CIL_TYPE_RULE:

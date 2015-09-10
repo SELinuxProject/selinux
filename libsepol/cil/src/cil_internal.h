@@ -127,6 +127,8 @@ char *CIL_KEY_TRANS;
 char *CIL_KEY_TYPE;
 char *CIL_KEY_ROLE;
 char *CIL_KEY_USER;
+char *CIL_KEY_USERATTRIBUTE;
+char *CIL_KEY_USERATTRIBUTESET;
 char *CIL_KEY_SENSITIVITY;
 char *CIL_KEY_CATEGORY;
 char *CIL_KEY_CATSET;
@@ -290,8 +292,10 @@ struct cil_db {
 	int num_cats;
 	int num_types;
 	int num_roles;
+	int num_users;
 	struct cil_type **val_to_type;
 	struct cil_role **val_to_role;
+	struct cil_user **val_to_user;
 	int disable_dontaudit;
 	int disable_neverallow;
 	int preserve_tunables;
@@ -418,14 +422,27 @@ struct cil_sidorder {
 struct cil_user {
 	struct cil_symtab_datum datum;
 	struct cil_user *bounds;
-	struct cil_list *roles;
+	ebitmap_t *roles;
 	struct cil_level *dftlevel;
 	struct cil_levelrange *range;
+	int value;
+};
+
+struct cil_userattribute {
+	struct cil_symtab_datum datum;
+	struct cil_list *expr_list;
+	ebitmap_t *users;
+};
+
+struct cil_userattributeset {
+	char *attr_str;
+	struct cil_list *str_expr;
+	struct cil_list *datum_expr;
 };
 
 struct cil_userrole {
 	char *user_str;
-	struct cil_user *user;
+	void *user;
 	char *role_str;
 	void *role;
 };
@@ -1002,5 +1019,7 @@ void cil_default_init(struct cil_default **def);
 void cil_defaultrange_init(struct cil_defaultrange **def);
 void cil_handleunknown_init(struct cil_handleunknown **unk);
 void cil_mls_init(struct cil_mls **mls);
+void cil_userattribute_init(struct cil_userattribute **attribute);
+void cil_userattributeset_init(struct cil_userattributeset **attrset);
 
 #endif

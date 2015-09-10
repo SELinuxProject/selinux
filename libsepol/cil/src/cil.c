@@ -122,6 +122,8 @@ static void cil_init_keys(void)
 	CIL_KEY_TYPE = cil_strpool_add("type");
 	CIL_KEY_ROLE = cil_strpool_add("role");
 	CIL_KEY_USER = cil_strpool_add("user");
+	CIL_KEY_USERATTRIBUTE = cil_strpool_add("userattribute");
+	CIL_KEY_USERATTRIBUTESET = cil_strpool_add("userattributeset");
 	CIL_KEY_SENSITIVITY = cil_strpool_add("sensitivity");
 	CIL_KEY_CATEGORY = cil_strpool_add("category");
 	CIL_KEY_CATSET = cil_strpool_add("categoryset");
@@ -266,9 +268,11 @@ void cil_db_init(struct cil_db **db)
 	(*db)->num_classes = 0;
 	(*db)->num_types = 0;
 	(*db)->num_roles = 0;
+	(*db)->num_users = 0;
 	(*db)->num_cats = 0;
 	(*db)->val_to_type = NULL;
 	(*db)->val_to_role = NULL;
+	(*db)->val_to_user = NULL;
 
 	(*db)->disable_dontaudit = CIL_FALSE;
 	(*db)->disable_neverallow = CIL_FALSE;
@@ -311,6 +315,7 @@ void cil_db_destroy(struct cil_db **db)
 	cil_strpool_destroy();
 	free((*db)->val_to_type);
 	free((*db)->val_to_role);
+	free((*db)->val_to_user);
 
 	free(*db);
 	*db = NULL;	
@@ -551,6 +556,12 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 		break;
 	case CIL_USER:
 		cil_destroy_user(*data);
+		break;
+	case CIL_USERATTRIBUTE:
+		cil_destroy_userattribute(*data);
+		break;
+	case CIL_USERATTRIBUTESET:
+		cil_destroy_userattributeset(*data);
 		break;
 	case CIL_USERPREFIX:
 		cil_destroy_userprefix(*data);
@@ -794,6 +805,7 @@ int cil_flavor_to_symtab_index(enum cil_flavor flavor, enum cil_sym_index *sym_i
 		*sym_index = CIL_SYM_CLASSPERMSETS;
 		break;
 	case CIL_USER:
+	case CIL_USERATTRIBUTE:
 		*sym_index = CIL_SYM_USERS;
 		break;
 	case CIL_ROLE:
@@ -924,6 +936,10 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		return CIL_KEY_CLASSPERMISSIONSET;
 	case CIL_USER:
 		return CIL_KEY_USER;
+	case CIL_USERATTRIBUTE:
+		return CIL_KEY_USERATTRIBUTE;
+	case CIL_USERATTRIBUTESET:
+		return CIL_KEY_USERATTRIBUTESET;
 	case CIL_USERPREFIX:
 		return CIL_KEY_USERPREFIX;
 	case CIL_USERROLE:
@@ -2379,6 +2395,26 @@ void cil_user_init(struct cil_user **user)
 	(*user)->roles = NULL;
 	(*user)->dftlevel = NULL;
 	(*user)->range = NULL;
+	(*user)->value = 0;
+}
+
+void cil_userattribute_init(struct cil_userattribute **attr)
+{
+	*attr = cil_malloc(sizeof(**attr));
+
+	cil_symtab_datum_init(&(*attr)->datum);
+
+	(*attr)->expr_list = NULL;
+	(*attr)->users = NULL;
+}
+
+void cil_userattributeset_init(struct cil_userattributeset **attrset)
+{
+	*attrset = cil_malloc(sizeof(**attrset));
+
+	(*attrset)->attr_str = NULL;
+	(*attrset)->str_expr = NULL;
+	(*attrset)->datum_expr = NULL;
 }
 
 void cil_userlevel_init(struct cil_userlevel **usrlvl)

@@ -80,6 +80,10 @@ int cil_gen_sidorder(struct cil_db *db, struct cil_tree_node *parse_current, str
 void cil_destroy_sidorder(struct cil_sidorder *sidorder);
 int cil_gen_user(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_user(struct cil_user *user);
+int cil_gen_userattribute(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
+void cil_destroy_userattribute(struct cil_userattribute *attr);
+int cil_gen_userattributeset(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
+void cil_destroy_userattributeset(struct cil_userattributeset *attrset);
 int cil_gen_userlevel(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_userlevel(struct cil_userlevel *usrlvl);
 int cil_gen_userrange(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);

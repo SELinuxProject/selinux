@@ -820,12 +820,6 @@ int cil_resolve_userrole(struct cil_tree_node *current, void *extra_args)
 	}
 	userrole->role = role_datum;
 
-	if (userrole->user->roles == NULL) {
-		cil_list_init(&userrole->user->roles, CIL_LIST_ITEM);
-	}
-
-	cil_list_append(userrole->user->roles, CIL_ROLE, userrole->role);
-
 	return SEPOL_OK;
 
 exit:
@@ -838,12 +832,22 @@ int cil_resolve_userlevel(struct cil_tree_node *current, void *extra_args)
 	struct cil_symtab_datum *user_datum = NULL;
 	struct cil_symtab_datum *lvl_datum = NULL;
 	struct cil_user *user = NULL;
+	struct cil_tree_node *user_node = NULL;
 	int rc = SEPOL_ERR;
 
 	rc = cil_resolve_name(current, usrlvl->user_str, CIL_SYM_USERS, extra_args, &user_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	user_node = user_datum->nodes->head->data;
+
+	if (user_node->flavor != CIL_USER) {
+		cil_log(CIL_ERR, "Userlevel must be a user\n");
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	user = (struct cil_user*)user_datum;
 
 	if (usrlvl->level_str != NULL) {
@@ -881,12 +885,22 @@ int cil_resolve_userrange(struct cil_tree_node *current, void *extra_args)
 	struct cil_symtab_datum *user_datum = NULL;
 	struct cil_symtab_datum *range_datum = NULL;
 	struct cil_user *user = NULL;
+	struct cil_tree_node *user_node = NULL;
 	int rc = SEPOL_ERR;
 
 	rc = cil_resolve_name(current, userrange->user_str, CIL_SYM_USERS, extra_args, &user_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	user_node = user_datum->nodes->head->data;
+
+	if (user_node->flavor != CIL_USER) {
+		cil_log(CIL_ERR, "Userrange must be a user: %s\n", user_datum->fqn);
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	user = (struct cil_user*)user_datum;
 
 	if (userrange->range_str != NULL) {
@@ -922,12 +936,22 @@ int cil_resolve_userprefix(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_userprefix *userprefix = current->data;
 	struct cil_symtab_datum *user_datum = NULL;
+	struct cil_tree_node *user_node = NULL;
 	int rc = SEPOL_ERR;
 
 	rc = cil_resolve_name(current, userprefix->user_str, CIL_SYM_USERS, extra_args, &user_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	user_node = user_datum->nodes->head->data;
+
+	if (user_node->flavor != CIL_USER) {
+		cil_log(CIL_ERR, "Userprefix must be a user: %s\n", user_datum->fqn);
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	userprefix->user = (struct cil_user*)user_datum;
 
 exit:
@@ -939,12 +963,22 @@ int cil_resolve_selinuxuser(struct cil_tree_node *current, void *extra_args)
 	struct cil_selinuxuser *selinuxuser = current->data;
 	struct cil_symtab_datum *user_datum = NULL;
 	struct cil_symtab_datum *lvlrange_datum = NULL;
+	struct cil_tree_node *user_node = NULL;
 	int rc = SEPOL_ERR;
 
 	rc = cil_resolve_name(current, selinuxuser->user_str, CIL_SYM_USERS, extra_args, &user_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	user_node = user_datum->nodes->head->data;
+
+	if (user_node->flavor != CIL_USER) {
+		cil_log(CIL_ERR, "Selinuxuser must be a user: %s\n", user_datum->fqn);
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	selinuxuser->user = (struct cil_user*)user_datum;
 
 	if (selinuxuser->range_str != NULL) {
@@ -1715,7 +1749,7 @@ int cil_resolve_context(struct cil_tree_node *current, struct cil_context *conte
 	struct cil_symtab_datum *user_datum = NULL;
 	struct cil_symtab_datum *role_datum = NULL;
 	struct cil_symtab_datum *type_datum = NULL;
-	struct cil_tree_node *type_node = NULL;
+	struct cil_tree_node *node = NULL;
 	struct cil_symtab_datum *lvlrange_datum = NULL;
 
 	int rc = SEPOL_ERR;
@@ -1724,12 +1758,29 @@ int cil_resolve_context(struct cil_tree_node *current, struct cil_context *conte
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	node = user_datum->nodes->head->data;
+
+	if (node->flavor != CIL_USER) {
+		cil_log(CIL_ERR, "Context user must be a user: %s\n", user_datum->fqn);
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	context->user = (struct cil_user*)user_datum;
 
 	rc = cil_resolve_name(current, context->role_str, CIL_SYM_ROLES, extra_args, &role_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	node = role_datum->nodes->head->data;
+	if (node->flavor != CIL_ROLE) {
+		rc = SEPOL_ERR;
+		cil_log(CIL_ERR, "Context role not a role: %s\n", role_datum->fqn);
+		goto exit;
+	}
+
 	context->role = (struct cil_role*)role_datum;
 
 	rc = cil_resolve_name(current, context->type_str, CIL_SYM_TYPES, extra_args, &type_datum);
@@ -1737,9 +1788,9 @@ int cil_resolve_context(struct cil_tree_node *current, struct cil_context *conte
 		goto exit;
 	}
 
-	type_node = type_datum->nodes->head->data;
+	node = type_datum->nodes->head->data;
 
-	if (type_node->flavor != CIL_TYPE && type_node->flavor != CIL_TYPEALIAS) {
+	if (node->flavor != CIL_TYPE && node->flavor != CIL_TYPEALIAS) {
 		rc = SEPOL_ERR;
 		cil_log(CIL_ERR, "Type not a type or type alias\n");
 		goto exit;
@@ -3036,6 +3087,48 @@ exit:
 	return rc;
 }
 
+int cil_resolve_userattributeset(struct cil_tree_node *current, void *extra_args)
+{
+	int rc = SEPOL_ERR;
+	struct cil_userattributeset *attrusers = current->data;
+	struct cil_symtab_datum *attr_datum = NULL;
+	struct cil_tree_node *attr_node = NULL;
+	struct cil_userattribute *attr = NULL;
+
+	rc = cil_resolve_name(current, attrusers->attr_str, CIL_SYM_USERS, extra_args, &attr_datum);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+	attr_node = attr_datum->nodes->head->data;
+
+	if (attr_node->flavor != CIL_USERATTRIBUTE) {
+		rc = SEPOL_ERR;
+		cil_log(CIL_ERR, "Attribute user not an attribute\n");
+		goto exit;
+	}
+	attr = (struct cil_userattribute*)attr_datum;
+
+	rc = cil_resolve_expr(CIL_USERATTRIBUTESET, attrusers->str_expr, &attrusers->datum_expr, current, extra_args);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	rc = cil_verify_no_self_reference(attr_datum, attrusers->datum_expr);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	if (attr->expr_list == NULL) {
+		cil_list_init(&attr->expr_list, CIL_USERATTRIBUTE);
+	}
+
+	cil_list_append(attr->expr_list, CIL_LIST, attrusers->datum_expr);
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
 
 int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 {
@@ -3295,6 +3388,9 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 			break;
 		case CIL_DEFAULTRANGE:
 			rc = cil_resolve_defaultrange(node, args);
+			break;
+		case CIL_USERATTRIBUTESET:
+			rc = cil_resolve_userattributeset(node, args);
 			break;
 		default:
 			break;

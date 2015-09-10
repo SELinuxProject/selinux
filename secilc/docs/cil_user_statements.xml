@@ -66,7 +66,7 @@
                      <para><literal>user_id</literal></para>
                   </entry>
                   <entry>
-                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> identifier.</para>
+                     <para>A previously declared SELinux <literal><link linkend="user">user</link></literal> or <literal><link linkend="userattribute">userattribute</link></literal> identifier.</para>
                   </entry>
                </row>
                <row>
@@ -87,6 +87,114 @@
     (user user)
     (role role)
     (userrole user role)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="userattribute">
+         <title>userattribute</title>
+         <para>Declares a user attribute identifier in the current namespace. The identifier may have zero or more <literal><link linkend="user">user</link></literal> and <literal><link linkend="userattribute">userattribute</link></literal> identifiers associated to it via the <literal><link linkend="userattributeset">userattributeset</link></literal> statement.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(userattribute userattribute_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>userattribute</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>userattribute</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>userattribute_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>userattribute</literal> identifier.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will declare a user attribute <literal>users.user_holder</literal> that will have an empty set:</para>
+         <programlisting><![CDATA[
+(block users
+    (userattribute user_holder)
+)]]>
+         </programlisting>
+      </sect2>
+
+      <sect2 id="userattributeset">
+         <title>userattributeset</title>
+         <para>Allows the association of one or more previously declared <literal><link linkend="user">user</link></literal> or <literal><link linkend="userattribute">userattribute</link></literal> identifiers to a <literal><link linkend="userattribute">userattribute</link></literal> identifier. Expressions may be used to refine the associations as shown in the examples.</para>
+         <para><emphasis role="bold">Statement definition:</emphasis></para>
+         <programlisting><![CDATA[(userattributeset userattribute_id (user_id ... | expr ...))]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>userattributeset</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>userattributeset</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>userattribute_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously declared <literal><link linkend="roleattribute">userattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>user_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more previously declared <literal><link linkend="role">user</link></literal> or <literal><link linkend="userattribute">userattribute</link></literal> identifiers.</para>
+                     <para>Note that there must be at least one <literal>user_id</literal> or <literal>expr</literal> parameter declared.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>expr</literal></para>
+                  </entry>
+                  <entry>
+                     <para>Zero or more <literal>expr</literal>'s, the valid operators and syntax are:</para>
+                     <simpara><literal>    (and (user_id ...) (user_id ...))</literal></simpara>
+                     <simpara><literal>    (or  (user_id ...) (user_id ...))</literal></simpara>
+                     <simpara><literal>    (xor (user_id ...) (user_id ...))</literal></simpara>
+                     <simpara><literal>    (not (user_id ...))</literal></simpara>
+                     <simpara><literal>    (all)</literal></simpara>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will declare three users and two user attributes, then associate all the users to them as shown:</para>
+         <programlisting><![CDATA[
+(block users
+    (user user_1)
+    (user user_2)
+    (user user_3)
+
+    (userattribute user_holder)
+    (userattributeset user_holder (user_1 user_2 user_3))
+
+    (userattribute user_holder_all)
+    (userattributeset user_holder_all (all))
 )]]>
          </programlisting>
       </sect2>

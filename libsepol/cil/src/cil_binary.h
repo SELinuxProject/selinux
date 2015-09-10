@@ -184,12 +184,13 @@ int cil_user_to_policydb(policydb_t *pdb, struct cil_user *cil_user);
 /**
  * Insert cil userrole structure into sepol policydb.
  *
- * @param[in] pdb THe policy database to insert the userrole into.
- * @param[in] datum The cil_userrole datum.
+ * @param[in] pdb The policy database to insert the userrole into.
+ * @param[in] db The cil database
+ * @param[in] datum The cil_user
  *
  * @return SEPOL_OK upon success or SEPOL_ERR otherwise.
  */
-int cil_userrole_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_userrole *userrole);
+int cil_userrole_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_user *user);
 
 /**
  * Insert cil bool structure into sepol policydb.

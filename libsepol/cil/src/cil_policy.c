@@ -1155,11 +1155,6 @@ int __cil_gen_policy_node_helper(struct cil_tree_node *node, uint32_t *finished,
 		case CIL_USER:
 			cil_multimap_insert(users, node->data, NULL, CIL_USERROLE, CIL_NONE);
 			break;
-		case CIL_USERROLE: {
-			struct cil_userrole *userrole = node->data;
-			cil_multimap_insert(users, &userrole->user->datum, (struct cil_symtab_datum *)userrole->role, CIL_USERROLE, CIL_ROLE);
-		}
-			break;
 		case CIL_CATALIAS: {
 			struct cil_alias *alias = node->data;
 			struct cil_symtab_datum *datum = alias->actual;

@@ -54,6 +54,7 @@ int cil_resolve_userlevel(struct cil_tree_node *current, void *extra_args);
 int cil_resolve_userrange(struct cil_tree_node *current, void *extra_args);
 int cil_resolve_userbounds(struct cil_tree_node *current, void *extra_args);
 int cil_resolve_userprefix(struct cil_tree_node *current, void *extra_args);
+int cil_resolve_userattributeset(struct cil_tree_node *current, void *extra_args);
 int cil_resolve_selinuxuser(struct cil_tree_node *current, void *extra_args);
 int cil_resolve_roletype(struct cil_tree_node *current, void *extra_args);
 int cil_resolve_roletransition(struct cil_tree_node *current, void *extra_args);
