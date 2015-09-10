@@ -1972,7 +1972,14 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 
 		if (new->flavor == CIL_BLOCKINHERIT) {
 			blockinherit = new->data;
-			cil_list_append(blockinherit->block->bi_nodes, CIL_NODE, new);
+			// if a blockinherit statement is copied before blockinherit are
+			// resolved (like in an in-statement), the block will not have been
+			// resolved yet, so there's nothing to append yet. This is fine,
+			// the copied blockinherit statement will be handled later, as if
+			// it wasn't in an in-statement
+			if (blockinherit->block != NULL) {
+				cil_list_append(blockinherit->block->bi_nodes, CIL_NODE, new);
+			}
 		}
 
 		if (parent->cl_head == NULL) {

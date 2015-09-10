@@ -5750,27 +5750,14 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 	}
 
 	if (macro != NULL) {
-		if (parse_current->data == CIL_KEY_MACRO) {
+		if (parse_current->data == CIL_KEY_MACRO ||
+			parse_current->data == CIL_KEY_TUNABLE ||
+			parse_current->data == CIL_KEY_IN ||
+			parse_current->data == CIL_KEY_BLOCK ||
+			parse_current->data == CIL_KEY_BLOCKINHERIT ||
+			parse_current->data == CIL_KEY_BLOCKABSTRACT) {
 			rc = SEPOL_ERR;
-			cil_log(CIL_ERR, "Found macro at line %d of %s\n",
-				parse_current->line, parse_current->path);
-			cil_log(CIL_ERR, "Macros cannot be defined within macro statement\n");
-			goto exit;
-		}
-
-		if (parse_current->data == CIL_KEY_TUNABLE) {
-			rc = SEPOL_ERR;
-			cil_log(CIL_ERR, "Found tunable at line %d of %s\n",
-				parse_current->line, parse_current->path);
-			cil_log(CIL_ERR, "Tunables cannot be defined within macro statement\n");
-			goto exit;
-		}
-
-		if (parse_current->data == CIL_KEY_IN) {
-			rc = SEPOL_ERR;
-			cil_log(CIL_ERR, "Found in at line %d of %s\n",
-				parse_current->line, parse_current->path);
-			cil_log(CIL_ERR, "in-statements cannot be defined within macro statement\n");
+			cil_log(CIL_ERR, "%s is not allowed in macros (%s:%d)\n", (char *)parse_current->data, parse_current->path, parse_current->line);
 			goto exit;
 		}
 	}

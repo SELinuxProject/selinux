@@ -3318,6 +3318,7 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, __attribute__((unu
 	struct cil_tree_node *optstack = args->optstack;
 	struct cil_tree_node *boolif = args->boolif;
 	struct cil_tree_node *blockstack = args->blockstack;
+	struct cil_tree_node *macro = args->macro;
 
 	if (node == NULL) {
 		goto exit;
@@ -3335,6 +3336,17 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, __attribute__((unu
 	if (blockstack != NULL) {
 		if (node->flavor == CIL_CAT || node->flavor == CIL_SENS) {
 			cil_log(CIL_ERR, "%s statement is not allowed in blocks (%s:%d)\n", cil_node_to_string(node), node->path, node->line);
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+	}
+
+	if (macro != NULL) {
+		if (node->flavor == CIL_BLOCKINHERIT ||
+			node->flavor == CIL_BLOCK ||
+			node->flavor == CIL_BLOCKABSTRACT ||
+			node->flavor == CIL_MACRO) {
+			cil_log(CIL_ERR, "%s statement is not allowed in macros (%s:%d)\n", cil_node_to_string(node), node->path, node->line);
 			rc = SEPOL_ERR;
 			goto exit;
 		}
