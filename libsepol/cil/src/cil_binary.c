@@ -1523,7 +1523,7 @@ int __cil_avrulex_ioctl_to_policydb(hashtab_key_t k, hashtab_datum_t datum, void
 	ebitmap_t *xperms;
 	ebitmap_node_t *node;
 	unsigned int i;
-	uint16_t low, high;
+	uint16_t low = 0, high = 0;
 	struct avtab_extended_perms *partial = NULL;
 	struct avtab_extended_perms *complete = NULL;
 	int start_new_range;
