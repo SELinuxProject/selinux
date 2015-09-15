@@ -1,3 +1,4 @@
+	* Improve CIL block and macro call recursion detection, from Steve Lawrence
 	* Fix CIL uninitialized false positive in cil_binary, from Yuli Khodorkovskiy
 	* Provide error in CIL if classperms are empty, from Yuli Khodorkovskiy
 	* Add userattribute{set} functionality to CIL, from Yuli Khodorkovskiy
