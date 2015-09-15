@@ -188,7 +188,7 @@ static void close(struct selabel_handle *rec)
 	if (spec_arr)
 	    free(spec_arr);
 
-	memset(data, 0, sizeof(*data));
+	free(data);
 }
 
 static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
