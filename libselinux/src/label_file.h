@@ -49,8 +49,10 @@ struct stem {
 
 /* Where we map the file in during selabel_open() */
 struct mmap_area {
-	void *addr;	/* Start of area - gets incremented by next_entry() */
-	size_t len;	/* Length - gets decremented by next_entry() */
+	void *addr;	/* Start addr + len used to release memory at close */
+	size_t len;
+	void *next_addr;	/* Incremented by next_entry() */
+	size_t next_len;	/* Decremented by next_entry() */
 	struct mmap_area *next;
 };
 
@@ -310,14 +312,14 @@ static inline int find_stem_from_spec(struct saved_data *data, const char *buf)
  * current buffer). */
 static inline int next_entry(void *buf, struct mmap_area *fp, size_t bytes)
 {
-	if (bytes > fp->len)
+	if (bytes > fp->next_len)
 		return -1;
 
 	if (buf)
-		memcpy(buf, fp->addr, bytes);
+		memcpy(buf, fp->next_addr, bytes);
 
-	fp->addr = (char *)fp->addr + bytes;
-	fp->len -= bytes;
+	fp->next_addr = (char *)fp->next_addr + bytes;
+	fp->next_len -= bytes;
 	return 0;
 }
 

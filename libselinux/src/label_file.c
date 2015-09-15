@@ -159,8 +159,8 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 	}
 
 	/* save where we mmap'd the file to cleanup on close() */
-	mmap_area->addr = addr;
-	mmap_area->len = len;
+	mmap_area->addr = mmap_area->next_addr = addr;
+	mmap_area->len = mmap_area->next_len = len;
 	mmap_area->next = data->mmap_areas;
 	data->mmap_areas = mmap_area;
 
@@ -231,7 +231,7 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 
 		/* Check for stem_len wrap around. */
 		if (stem_len < UINT32_MAX) {
-			buf = (char *)mmap_area->addr;
+			buf = (char *)mmap_area->next_addr;
 			/* Check if over-run before null check. */
 			rc = next_entry(NULL, mmap_area, (stem_len + 1));
 			if (rc < 0)
@@ -317,7 +317,7 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 			goto err;
 		}
 
-		spec->regex_str = (char *)mmap_area->addr;
+		spec->regex_str = (char *)mmap_area->next_addr;
 		rc = next_entry(NULL, mmap_area, entry_len);
 		if (rc < 0)
 			goto err;
@@ -369,7 +369,7 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 			rc = -1;
 			goto err;
 		}
-		spec->regex = (pcre *)mmap_area->addr;
+		spec->regex = (pcre *)mmap_area->next_addr;
 		rc = next_entry(NULL, mmap_area, entry_len);
 		if (rc < 0)
 			goto err;
@@ -387,7 +387,7 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 			rc = -1;
 			goto err;
 		}
-		spec->lsd.study_data = (void *)mmap_area->addr;
+		spec->lsd.study_data = (void *)mmap_area->next_addr;
 		spec->lsd.flags |= PCRE_EXTRA_STUDY_DATA;
 		rc = next_entry(NULL, mmap_area, entry_len);
 		if (rc < 0)
