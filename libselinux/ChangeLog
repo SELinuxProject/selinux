@@ -1,3 +1,5 @@
+	* Free memory when processing media and x specfiles, from Richard Haines.
+	* Fix mmap memory release for file labeling, from Richard Haines.
 	* Add explicit dependency for pywrap on selinux.py, from Wenzong Fan.
 	* Add policy context validation to sefcontext_compile, from Richard Haines.
 	* Do not treat an empty file_contexts(.local) as an error, from Stephen Smalley.
