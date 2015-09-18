@@ -158,6 +158,28 @@ err1:
 	return NULL;
 }
 
+hidden void flush_class_cache(void)
+{
+	struct discover_class_node *cur = discover_class_cache, *prev = NULL;
+	size_t i;
+
+	while (cur != NULL) {
+		free(cur->name);
+
+		for (i = 0; i < MAXVECTORS; i++)
+			free(cur->perms[i]);
+
+		free(cur->perms);
+
+		prev = cur;
+		cur = cur->next;
+
+		free(prev);
+	}
+
+	discover_class_cache = NULL;
+}
+
 security_class_t string_to_security_class(const char *s)
 {
 	struct discover_class_node *node;
