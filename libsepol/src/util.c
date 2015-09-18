@@ -119,6 +119,78 @@ char *sepol_av_to_string(policydb_t * policydbp, uint32_t tclass,
 	return avbuf;
 }
 
+#define next_bit_in_range(i, p) ((i + 1 < sizeof(p)*8) && xperm_test((i + 1), p))
+
+char *sepol_extended_perms_to_string(avtab_extended_perms_t *xperms)
+{
+	uint16_t value;
+	uint16_t low_bit;
+	uint16_t low_value;
+	unsigned int bit;
+	unsigned int in_range = 0;
+	static char xpermsbuf[2048];
+	xpermsbuf[0] = '\0';
+	char *p;
+	int len, xpermslen = 0;
+	p = xpermsbuf;
+
+	if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
+		&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER))
+		return NULL;
+
+	len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "ioctl { ");
+	p += len;
+	xpermslen += len;
+
+	for (bit = 0; bit < sizeof(xperms->perms)*8; bit++) {
+		if (!xperm_test(bit, xperms->perms))
+			continue;
+
+		if (in_range && next_bit_in_range(bit, xperms->perms)) {
+			/* continue until high value found */
+			continue;
+		} else if (next_bit_in_range(bit, xperms->perms)) {
+			/* low value */
+			low_bit = bit;
+			in_range = 1;
+			continue;
+		}
+
+		if (xperms->specified & AVTAB_XPERMS_IOCTLFUNCTION) {
+			value = xperms->driver<<8 | bit;
+			low_value = xperms->driver<<8 | low_bit;
+			if (in_range) {
+				len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "0x%hx-0x%hx ", low_value, value);
+			} else {
+				len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "0x%hx ", value);
+			}
+		} else if (xperms->specified & AVTAB_XPERMS_IOCTLDRIVER) {
+			value = bit << 8;
+			low_value = low_bit << 8;
+			if (in_range) {
+				len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "0x%hx-0x%hx ", low_value, (uint16_t) (value|0xff));
+			} else {
+				len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "0x%hx-0x%hx ", value, (uint16_t) (value|0xff));
+			}
+
+		}
+
+		if (len < 0 || (size_t) len >= (sizeof(xpermsbuf) - xpermslen))
+			return NULL;
+
+		p += len;
+		xpermslen += len;
+		if (in_range)
+			in_range = 0;
+	}
+
+	len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "}");
+	if (len < 0 || (size_t) len >= (sizeof(xpermsbuf) - xpermslen))
+		return NULL;
+
+	return xpermsbuf;
+}
+
 /*
  * The tokenize and tokenize_str functions may be used to
  * replace sscanf to read tokens from buffers.

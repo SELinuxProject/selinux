@@ -1948,6 +1948,8 @@ static int convert_and_expand_rule(sepol_handle_t * handle,
 
 	if (!do_neverallow && source_rule->specified & AVRULE_NEVERALLOW)
 		return EXPAND_RULE_SUCCESS;
+	if (source_rule->specified & AVRULE_XPERMS_NEVERALLOW)
+		return EXPAND_RULE_SUCCESS;
 
 	ebitmap_init(&stypes);
 	ebitmap_init(&ttypes);
@@ -2378,7 +2380,8 @@ int expand_rule(sepol_handle_t * handle,
 	int retval;
 	ebitmap_t stypes, ttypes;
 
-	if (source_rule->specified & AVRULE_NEVERALLOW)
+	if ((source_rule->specified & AVRULE_NEVERALLOW)
+		|| (source_rule->specified & AVRULE_XPERMS_NEVERALLOW))
 		return 1;
 
 	ebitmap_init(&stypes);
@@ -2592,6 +2595,7 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 	ebitmap_t stypes, ttypes;
 	avrule_t *avrule;
 	class_perm_node_t *cur_perm, *new_perm, *tail_perm;
+	av_extended_perms_t *xperms = NULL;
 
 	ebitmap_init(&stypes);
 	ebitmap_init(&ttypes);
@@ -2608,7 +2612,7 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 		return -1;
 
 	avrule_init(avrule);
-	avrule->specified = AVRULE_NEVERALLOW;
+	avrule->specified = source_rule->specified;
 	avrule->line = source_rule->line;
 	avrule->flags = source_rule->flags;
 	avrule->source_line = source_rule->source_line;
@@ -2647,6 +2651,15 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 		cur_perm = cur_perm->next;
 	}
 
+	/* copy over extended permissions */
+	if (source_rule->xperms) {
+		xperms = calloc(1, sizeof(av_extended_perms_t));
+		if (!xperms)
+			goto err;
+		memcpy(xperms, source_rule->xperms, sizeof(av_extended_perms_t));
+		avrule->xperms = xperms;
+	}
+
 	/* just prepend the avrule to the first branch; it'll never be
 	   written to disk */
 	if (!dest_pol->global->branch_list->avrules)
@@ -2672,6 +2685,7 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 		free(cur_perm);
 		cur_perm = tail_perm;
 	}
+	free(xperms);
 	free(avrule);
 	return -1;
 }
@@ -2724,16 +2738,15 @@ static int copy_and_expand_avrule_block(expand_state_t * state)
 		cur_avrule = decl->avrules;
 		while (cur_avrule != NULL) {
 			if (!(state->expand_neverallow)
-			    && cur_avrule->specified & AVRULE_NEVERALLOW) {
+			    && cur_avrule->specified & (AVRULE_NEVERALLOW | AVRULE_XPERMS_NEVERALLOW)) {
 				/* copy this over directly so that assertions are checked later */
 				if (copy_neverallow
 				    (state->out, state->typemap, cur_avrule))
 					ERR(state->handle,
 					    "Error while copying neverallow.");
 			} else {
-				if (cur_avrule->specified & AVRULE_NEVERALLOW) {
+				if (cur_avrule->specified & (AVRULE_NEVERALLOW | AVRULE_XPERMS_NEVERALLOW))
 					state->out->unsupported_format = 1;
-				}
 				if (convert_and_expand_rule
 				    (state->handle, state->out, state->typemap,
 				     cur_avrule, &state->out->te_avtab, NULL,

@@ -129,6 +129,7 @@ typedef int (* require_func_t)(int pass);
 %token ALLOWXPERM
 %token AUDITALLOWXPERM
 %token DONTAUDITXPERM
+%token NEVERALLOWXPERM
 %token SOURCE
 %token TARGET
 %token SAMEUSER
@@ -463,6 +464,7 @@ te_avtab_def		: allow_def
 			| xperm_allow_def
 			| xperm_auditallow_def
 			| xperm_dontaudit_def
+			| xperm_neverallow_def
 			;
 allow_def		: ALLOW names names ':' names names  ';'
 			{if (define_te_avtab(AVRULE_ALLOWED)) return -1; }
@@ -487,6 +489,9 @@ xperm_auditallow_def	: AUDITALLOWXPERM names names ':' names identifier xperms '
 		        ;
 xperm_dontaudit_def	: DONTAUDITXPERM names names ':' names identifier xperms ';'
 			{if (define_te_avtab_extended_perms(AVRULE_XPERMS_DONTAUDIT)) return -1; }
+		        ;
+xperm_neverallow_def	: NEVERALLOWXPERM names names ':' names identifier xperms ';'
+			{if (define_te_avtab_extended_perms(AVRULE_XPERMS_NEVERALLOW)) return -1; }
 		        ;
 attribute_role_def	: ATTRIBUTE_ROLE identifier ';'
 			{if (define_attrib_role()) return -1; }

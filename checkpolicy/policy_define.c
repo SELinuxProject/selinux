@@ -1729,10 +1729,6 @@ avrule_t *define_cond_pol_list(avrule_t * avlist, avrule_t * sl)
 	return sl;
 }
 
-#define xperm_test(x, p) (1 & (p[x >> 5] >> (x & 0x1f)))
-#define xperm_set(x, p) (p[x >> 5] |= (1 << (x & 0x1f)))
-#define xperm_clear(x, p) (p[x >> 5] &= ~(1 << (x & 0x1f)))
-
 typedef struct av_ioctl_range {
 	uint16_t low;
 	uint16_t high;
@@ -1942,6 +1938,8 @@ int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 {
 	char *id;
 	class_perm_node_t *perms, *tail = NULL, *cur_perms = NULL;
+	class_datum_t *cladatum;
+	perm_datum_t *perdatum = NULL;
 	ebitmap_t tclasses;
 	ebitmap_node_t *node;
 	avrule_t *avrule;
@@ -1968,7 +1966,7 @@ int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	while ((id = queue_remove(id_queue))) {
 		if (set_types
 		    (&avrule->stypes, id, &add,
-		     which == AVRULE_NEVERALLOW ? 1 : 0)) {
+		     which == AVRULE_XPERMS_NEVERALLOW ? 1 : 0)) {
 			ret = -1;
 			goto out;
 		}
@@ -1982,7 +1980,7 @@ int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		}
 		if (set_types
 		    (&avrule->ttypes, id, &add,
-		     which == AVRULE_NEVERALLOW ? 1 : 0)) {
+		     which == AVRULE_XPERMS_NEVERALLOW ? 1 : 0)) {
 			ret = -1;
 			goto out;
 		}
@@ -1994,6 +1992,7 @@ int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		goto out;
 
 	perms = NULL;
+	id = queue_head(id_queue);
 	ebitmap_for_each_bit(&tclasses, node, i) {
 		if (!ebitmap_node_get_bit(node, i))
 			continue;
@@ -2011,6 +2010,29 @@ int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		if (tail)
 			tail->next = cur_perms;
 		tail = cur_perms;
+
+		cladatum = policydbp->class_val_to_struct[i];
+		perdatum = hashtab_search(cladatum->permissions.table, id);
+		if (!perdatum) {
+			if (cladatum->comdatum) {
+				perdatum = hashtab_search(cladatum->comdatum->
+							permissions.table,
+							id);
+			}
+		}
+		if (!perdatum) {
+			yyerror2("permission %s is not defined"
+				     " for class %s", id,
+				     policydbp->p_class_val_to_name[i]);
+			continue;
+		} else if (!is_perm_in_scope (id, policydbp->p_class_val_to_name[i])) {
+			yyerror2("permission %s of class %s is"
+			     " not within scope", id,
+			     policydbp->p_class_val_to_name[i]);
+			continue;
+		} else {
+			cur_perms->data |= 1U << (perdatum->s.value - 1);
+		}
 	}
 
 	ebitmap_destroy(&tclasses);
@@ -2246,6 +2268,10 @@ int avrule_cpy(avrule_t *dest, avrule_t *src)
 	}
 	dest->line = src->line;
 	dest->source_filename = strdup(source_file);
+	if (!dest->source_filename) {
+		yyerror("out of memory");
+		return -1;
+	}
 	dest->source_line = src->source_line;
 
 	/* increment through the class perms and copy over */
