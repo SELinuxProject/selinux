@@ -1,3 +1,4 @@
+	* Add neverallow support for ioctl extended permissions, from Jeff Vander Stoep.
 	* fix double free on name-based type transitions, from Stephen Smalley.
 	* switch operations to extended perms, from Jeff Vander Stoep.
 	* policy_define.c: fix compiler warnings, from Nick Kralevich.
