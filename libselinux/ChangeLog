@@ -1,3 +1,4 @@
+	* Fix restorecon when path has no context, from Nir Soffer.
 	* Free memory when processing media and x specfiles, from Richard Haines.
 	* Fix mmap memory release for file labeling, from Richard Haines.
 	* Add explicit dependency for pywrap on selinux.py, from Wenzong Fan.
