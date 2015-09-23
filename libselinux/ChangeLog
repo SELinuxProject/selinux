@@ -1,3 +1,4 @@
+	* Flush the class/perm string mapping cache on policy reload, from Stephen Smalley.
 	* Fix restorecon when path has no context, from Nir Soffer.
 	* Free memory when processing media and x specfiles, from Richard Haines.
 	* Fix mmap memory release for file labeling, from Richard Haines.
