@@ -163,7 +163,12 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	}
 	free(line_buf);
 
-	status = 0;
+	status = digest_add_specfile(rec->digest, fp, NULL, sb.st_size, path);
+	if (status)
+		goto finish;
+
+	status = digest_gen_hash(rec->digest);
+
 finish:
 	fclose(fp);
 	return status;

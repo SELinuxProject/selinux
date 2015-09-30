@@ -98,7 +98,8 @@ static int nodups_specs(struct saved_data *data, const char *path)
 }
 
 static int load_mmap(struct selabel_handle *rec, const char *path,
-		     struct stat *sb, bool isbinary)
+				    struct stat *sb, bool isbinary,
+				    struct selabel_digest *digest)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	char mmap_path[PATH_MAX + 1];
@@ -403,8 +404,12 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 
 		data->nspec++;
 	}
-	/* win */
-	rc = 0;
+
+	rc = digest_add_specfile(digest, NULL, addr, mmap_stat.st_size,
+								    mmap_path);
+	if (rc)
+		goto err;
+
 err:
 	free(stem_map);
 
@@ -412,7 +417,8 @@ err:
 }
 
 static int process_file(const char *path, const char *suffix,
-			  struct selabel_handle *rec, const char *prefix)
+			  struct selabel_handle *rec,
+			  const char *prefix, struct selabel_digest *digest)
 {
 	FILE *fp;
 	struct stat sb;
@@ -474,7 +480,7 @@ static int process_file(const char *path, const char *suffix,
 		sb.st_mtime = 0;
 	}
 
-	rc = load_mmap(rec, path, &sb, isbinary);
+	rc = load_mmap(rec, path, &sb, isbinary, digest);
 	if (rc == 0)
 		goto out;
 
@@ -491,6 +497,8 @@ static int process_file(const char *path, const char *suffix,
 		if (rc)
 			goto out;
 	}
+
+	rc = digest_add_specfile(digest, fp, NULL, sb.st_size, path);
 
 out:
 	free(line_buf);
@@ -524,14 +532,19 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 
 	/* Process local and distribution substitution files */
 	if (!path) {
-		rec->dist_subs = selabel_subs_init(selinux_file_context_subs_dist_path(), rec->dist_subs);
-		rec->subs = selabel_subs_init(selinux_file_context_subs_path(), rec->subs);
+		rec->dist_subs =
+		    selabel_subs_init(selinux_file_context_subs_dist_path(),
+		    rec->dist_subs, rec->digest);
+		rec->subs = selabel_subs_init(selinux_file_context_subs_path(),
+		    rec->subs, rec->digest);
 		path = selinux_file_context_path();
 	} else {
 		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist", path);
-		rec->dist_subs = selabel_subs_init(subs_file, rec->dist_subs);
+		rec->dist_subs = selabel_subs_init(subs_file, rec->dist_subs,
+							    rec->digest);
 		snprintf(subs_file, sizeof(subs_file), "%s.subs", path);
-		rec->subs = selabel_subs_init(subs_file, rec->subs);
+		rec->subs = selabel_subs_init(subs_file, rec->subs,
+							    rec->digest);
 	}
 
 	rec->spec_file = strdup(path);
@@ -539,7 +552,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	/*
 	 * The do detailed validation of the input and fill the spec array
 	 */
-	status = process_file(path, NULL, rec, prefix);
+	status = process_file(path, NULL, rec, prefix, rec->digest);
 	if (status)
 		goto finish;
 
@@ -550,14 +563,20 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	}
 
 	if (!baseonly) {
-		status = process_file(path, "homedirs", rec, prefix);
+		status = process_file(path, "homedirs", rec, prefix,
+							    rec->digest);
 		if (status && errno != ENOENT)
 			goto finish;
 
-		status = process_file(path, "local", rec, prefix);
+		status = process_file(path, "local", rec, prefix,
+							    rec->digest);
 		if (status && errno != ENOENT)
 			goto finish;
 	}
+
+	status = digest_gen_hash(rec->digest);
+	if (status)
+		goto finish;
 
 	status = sort_specs(data);
 

@@ -10,6 +10,8 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <openssl/sha.h>
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 #include "dso.h"
@@ -43,8 +45,31 @@ struct selabel_sub {
 	struct selabel_sub *next;
 };
 
+/*
+ * Calculate an SHA1 hash of all the files used to build the specs.
+ * The hash value is held in rec->digest if SELABEL_OPT_DIGEST set. To
+ * calculate the hash the hashbuf will hold a concatenation of all the files
+ * used. This is released once the value has been calculated.
+ */
+#define DIGEST_SPECFILE_SIZE SHA_DIGEST_LENGTH
+#define DIGEST_FILES_MAX 8
+struct selabel_digest {
+	unsigned char *digest;	/* SHA1 digest of specfiles */
+	unsigned char *hashbuf;	/* buffer to hold specfiles */
+	size_t hashbuf_size;	/* buffer size */
+	size_t specfile_cnt;	/* how many specfiles processed */
+	char **specfile_list;	/* and their names */
+};
+
+extern int digest_add_specfile(struct selabel_digest *digest, FILE *fp,
+						    char *from_addr,
+						    size_t buf_len,
+						    const char *path);
+extern int digest_gen_hash(struct selabel_digest *digest);
+
 extern struct selabel_sub *selabel_subs_init(const char *path,
-					     struct selabel_sub *list);
+				    struct selabel_sub *list,
+				    struct selabel_digest *digest);
 
 struct selabel_lookup_rec {
 	char * ctx_raw;
@@ -83,6 +108,8 @@ struct selabel_handle {
 	/* substitution support */
 	struct selabel_sub *dist_subs;
 	struct selabel_sub *subs;
+	/* ptr to SHA1 hash information if SELABEL_OPT_DIGEST set */
+	struct selabel_digest *digest;
 };
 
 /*

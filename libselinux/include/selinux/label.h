@@ -49,8 +49,10 @@ struct selabel_handle;
 #define SELABEL_OPT_PATH	3
 /* select a subset of the search space as an optimization (file backend) */
 #define SELABEL_OPT_SUBSET	4
+/* require a hash calculation on spec files */
+#define SELABEL_OPT_DIGEST	5
 /* total number of options */
-#define SELABEL_NOPT		5
+#define SELABEL_NOPT		6
 
 /*
  * Label operations
@@ -105,6 +107,23 @@ int selabel_lookup_best_match(struct selabel_handle *rec, char **con,
 			      const char *key, const char **aliases, int type);
 int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
 			      const char *key, const char **aliases, int type);
+
+/**
+ * selabel_digest - Retrieve the SHA1 digest and the list of specfiles used to
+ *		    generate the digest. The SELABEL_OPT_DIGEST option must
+ *		    be set in selabel_open() to initiate the digest generation.
+ * @handle: specifies backend instance to query
+ * @digest: returns a pointer to the SHA1 digest.
+ * @digest_len: returns length of digest in bytes.
+ * @specfiles: a list of specfiles used in the SHA1 digest generation.
+ *	       The list is NULL terminated and will hold @num_specfiles entries.
+ * @num_specfiles: number of specfiles in the list.
+ *
+ * Return %0 on success, -%1 with @errno set on failure.
+ */
+int selabel_digest(struct selabel_handle *rec,
+			    unsigned char **digest, size_t *digest_len,
+			    char ***specfiles, size_t *num_specfiles);
 
 enum selabel_cmp_result {
 	SELABEL_SUBSET,
