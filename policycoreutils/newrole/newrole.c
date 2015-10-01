@@ -548,11 +548,22 @@ static int drop_capabilities(int full)
 	capng_setpid(getpid());
 	capng_clear(CAPNG_SELECT_CAPS);
 
+	if (prctl(PR_SET_KEEPCAPS, 1, 0, 0, 0) < 0) {
+		fprintf(stderr, _("Error resetting KEEPCAPS, aborting\n"));
+		return -1;
+	}
+
 	/* Change uid */
 	if (setresuid(uid, uid, uid)) {
 		fprintf(stderr, _("Error changing uid, aborting.\n"));
 		return -1;
 	}
+
+	if (prctl(PR_SET_KEEPCAPS, 0, 0, 0, 0) < 0) {
+		fprintf(stderr, _("Error resetting KEEPCAPS, aborting\n"));
+		return -1;
+	}
+
 	if (! full) 
 		capng_update(CAPNG_ADD, CAPNG_EFFECTIVE | CAPNG_PERMITTED, CAP_AUDIT_WRITE);
 	return capng_apply(CAPNG_SELECT_CAPS);
@@ -579,11 +590,22 @@ static int drop_capabilities(int full)
 	capng_setpid(getpid());
 	capng_clear(CAPNG_SELECT_CAPS);
 
+	if (prctl(PR_SET_KEEPCAPS, 1, 0, 0, 0) < 0) {
+		fprintf(stderr, _("Error resetting KEEPCAPS, aborting\n"));
+		return -1;
+	}
+
 	/* Change uid */
 	if (setresuid(uid, uid, uid)) {
 		fprintf(stderr, _("Error changing uid, aborting.\n"));
 		return -1;
 	}
+
+	if (prctl(PR_SET_KEEPCAPS, 0, 0, 0, 0) < 0) {
+		fprintf(stderr, _("Error resetting KEEPCAPS, aborting\n"));
+		return -1;
+	}
+
 	if (! full) 
 		capng_updatev(CAPNG_ADD, CAPNG_EFFECTIVE | CAPNG_PERMITTED, CAP_SYS_ADMIN , CAP_FOWNER , CAP_CHOWN, CAP_DAC_OVERRIDE, CAP_AUDIT_WRITE, -1);
 	
