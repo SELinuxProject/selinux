@@ -1,3 +1,4 @@
+	* Add selabel_digest function, from Richard Haines.
 	* Fix parallel build with swig python, from Jason Zaman.
 	* Flush the class/perm string mapping cache on policy reload, from Stephen Smalley.
 	* Fix restorecon when path has no context, from Nir Soffer.
