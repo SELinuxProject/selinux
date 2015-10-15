@@ -98,15 +98,16 @@ int hidden read_spec_entries(char *line_buf, int num_args, ...)
 }
 
 /* Once all the specfiles are in the hash_buf, generate the hash. */
-int hidden digest_gen_hash(struct selabel_digest *digest)
+void hidden digest_gen_hash(struct selabel_digest *digest)
 {
+	/* If SELABEL_OPT_DIGEST not set then just return */
 	if (!digest)
-		return -1;
+		return;
 
 	SHA1(digest->hashbuf, digest->hashbuf_size, digest->digest);
 	free(digest->hashbuf);
 	digest->hashbuf = NULL;
-	return 0;
+	return;
 }
 
 /**
@@ -127,8 +128,9 @@ int hidden digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 {
 	unsigned char *tmp_buf;
 
+	/* If SELABEL_OPT_DIGEST not set then just return */
 	if (!digest)
-		return -1;
+		return 0;
 
 	if (digest->hashbuf_size + buf_len < digest->hashbuf_size) {
 		errno = EOVERFLOW;

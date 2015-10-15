@@ -574,9 +574,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 			goto finish;
 	}
 
-	status = digest_gen_hash(rec->digest);
-	if (status)
-		goto finish;
+	digest_gen_hash(rec->digest);
 
 	status = sort_specs(data);
 

@@ -11,13 +11,14 @@ static size_t digest_len;
 static void usage(const char *progname)
 {
 	fprintf(stderr,
-		"usage: %s -b backend [-d] [-v] [-B] [-f file]\n\n"
+		"usage: %s -b backend [-d] [-v] [-B] [-i] [-f file]\n\n"
 		"Where:\n\t"
 		"-b  The backend - \"file\", \"media\", \"x\", \"db\" or "
 			"\"prop\"\n\t"
 		"-v  Run \"cat <specfile_list> | openssl dgst -sha1 -hex\"\n\t"
 		"    on the list of specfiles to compare the SHA1 digests.\n\t"
 		"-B  Use base specfiles only (valid for \"-b file\" only).\n\t"
+		"-i  Do not request a digest.\n\t"
 		"-f  Optional file containing the specs (defaults to\n\t"
 		"    those used by loaded policy).\n\n",
 		progname);
@@ -59,7 +60,7 @@ static int run_check_digest(char *cmd, char *selabel_digest)
 int main(int argc, char **argv)
 {
 	int backend = 0, rc, opt, i, validate = 0;
-	char *baseonly = NULL, *file = NULL;
+	char *baseonly = NULL, *file = NULL, *digest = (char *)1;
 	char **specfiles = NULL;
 	unsigned char *sha1_digest = NULL;
 	size_t num_specfiles;
@@ -72,13 +73,13 @@ int main(int argc, char **argv)
 	struct selinux_opt selabel_option[] = {
 		{ SELABEL_OPT_PATH, file },
 		{ SELABEL_OPT_BASEONLY, baseonly },
-		{ SELABEL_OPT_DIGEST, (char *)1 }
+		{ SELABEL_OPT_DIGEST, digest }
 	};
 
 	if (argc < 3)
 		usage(argv[0]);
 
-	while ((opt = getopt(argc, argv, "b:Bvf:")) > 0) {
+	while ((opt = getopt(argc, argv, "ib:Bvf:")) > 0) {
 		switch (opt) {
 		case 'b':
 			if (!strcasecmp(optarg, "file")) {
@@ -103,6 +104,9 @@ int main(int argc, char **argv)
 		case 'v':
 			validate = 1;
 			break;
+		case 'i':
+			digest = NULL;
+			break;
 		case 'f':
 			file = optarg;
 			break;
@@ -115,6 +119,7 @@ int main(int argc, char **argv)
 
 	selabel_option[0].value = file;
 	selabel_option[1].value = baseonly;
+	selabel_option[2].value = digest;
 
 	hnd = selabel_open(backend, selabel_option, 3);
 	if (!hnd) {

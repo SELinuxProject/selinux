@@ -322,8 +322,7 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 	if (digest_add_specfile(rec->digest, filp, NULL, sb.st_size, path) < 0)
 		goto out_error;
 
-	if (digest_gen_hash(rec->digest) < 0)
-		goto out_error;
+	digest_gen_hash(rec->digest);
 
 	fclose(filp);
 

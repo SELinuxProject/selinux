@@ -167,7 +167,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	if (status)
 		goto finish;
 
-	status = digest_gen_hash(rec->digest);
+	digest_gen_hash(rec->digest);
 
 finish:
 	fclose(fp);
