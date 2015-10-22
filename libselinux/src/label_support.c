@@ -100,11 +100,15 @@ int hidden read_spec_entries(char *line_buf, int num_args, ...)
 /* Once all the specfiles are in the hash_buf, generate the hash. */
 void hidden digest_gen_hash(struct selabel_digest *digest)
 {
+	Sha1Context context;
+
 	/* If SELABEL_OPT_DIGEST not set then just return */
 	if (!digest)
 		return;
 
-	SHA1(digest->hashbuf, digest->hashbuf_size, digest->digest);
+	Sha1Initialise(&context);
+	Sha1Update(&context, digest->hashbuf, digest->hashbuf_size);
+	Sha1Finalise(&context, (SHA1_HASH *)digest->digest);
 	free(digest->hashbuf);
 	digest->hashbuf = NULL;
 	return;

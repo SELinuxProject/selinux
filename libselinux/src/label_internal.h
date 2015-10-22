@@ -11,10 +11,10 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <openssl/sha.h>
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 #include "dso.h"
+#include "sha1.h"
 
 /*
  * Installed backends
@@ -51,7 +51,7 @@ struct selabel_sub {
  * calculate the hash the hashbuf will hold a concatenation of all the files
  * used. This is released once the value has been calculated.
  */
-#define DIGEST_SPECFILE_SIZE SHA_DIGEST_LENGTH
+#define DIGEST_SPECFILE_SIZE SHA1_HASH_SIZE
 #define DIGEST_FILES_MAX 8
 struct selabel_digest {
 	unsigned char *digest;	/* SHA1 digest of specfiles */
