@@ -30,6 +30,8 @@ TARGETS=$(patsubst %.c,%,$(wildcard *.c))
 
 sefcontext_compile: LDLIBS += -lpcre ../src/libselinux.a -lsepol
 
+selinux_restorecon: LDLIBS += -lsepol
+
 ifeq ($(DISABLE_AVC),y)
 	UNUSED_TARGETS+=compute_av compute_create compute_member compute_relabel
 endif
