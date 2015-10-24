@@ -1003,6 +1003,7 @@ def parse(text, module=None, support=None, debug=False):
     create_globals(module, support, debug)
     global error, parser, lexer, success
 
+    lexer.lineno = 1
     success = True
 
     try:
