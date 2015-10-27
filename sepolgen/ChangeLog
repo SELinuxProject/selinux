@@ -1,3 +1,4 @@
+	* Reset line numbers when parsing files, from Nicolas Iooss.
 	* Convert cmp functions to key functions, from Robert Kuska.
 	* Decode output from Popen in Python3, from Robert Kuska.
 	* Comment constraint rules in output, from Miroslav Grepl via Petr Lautrbach.
