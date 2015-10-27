@@ -507,6 +507,8 @@ out:
 	return rc;
 }
 
+static void closef(struct selabel_handle *rec);
+
 static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		unsigned n)
 {
@@ -580,7 +582,8 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 
 finish:
 	if (status)
-		free(data->spec_arr);
+		closef(rec);
+
 	return status;
 }
 

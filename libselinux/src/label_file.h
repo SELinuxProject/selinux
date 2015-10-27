@@ -278,6 +278,7 @@ static inline int store_stem(struct saved_data *data, char *buf, int stem_len)
 	}
 	data->stem_arr[num].len = stem_len;
 	data->stem_arr[num].buf = buf;
+	data->stem_arr[num].from_mmap = 0;
 	data->num_stems++;
 
 	return num;
@@ -425,6 +426,18 @@ static inline int process_line(struct selabel_handle *rec,
 	/* process and store the specification in spec. */
 	spec_arr[nspec].stem_id = find_stem_from_spec(data, regex);
 	spec_arr[nspec].regex_str = regex;
+
+	spec_arr[nspec].type_str = type;
+	spec_arr[nspec].mode = 0;
+
+	spec_arr[nspec].lr.ctx_raw = context;
+
+	/*
+	 * bump data->nspecs to cause closef() to cover it in its free
+	 * but do not bump nspec since it's used below.
+	 */
+	data->nspec++;
+
 	if (rec->validating &&
 			    compile_regex(data, &spec_arr[nspec], &errbuf)) {
 		COMPAT_LOG(SELINUX_ERROR,
@@ -435,9 +448,6 @@ static inline int process_line(struct selabel_handle *rec,
 		return -1;
 	}
 
-	/* Convert the type string to a mode format */
-	spec_arr[nspec].type_str = type;
-	spec_arr[nspec].mode = 0;
 	if (type) {
 		mode_t mode = string_to_mode(type);
 
@@ -451,16 +461,12 @@ static inline int process_line(struct selabel_handle *rec,
 		spec_arr[nspec].mode = mode;
 	}
 
-	spec_arr[nspec].lr.ctx_raw = context;
-
 	/* Determine if specification has
 	 * any meta characters in the RE */
 	spec_hasMetaChars(&spec_arr[nspec]);
 
 	if (strcmp(context, "<<none>>") && rec->validating)
 		compat_validate(rec, &spec_arr[nspec].lr, path, lineno);
-
-	data->nspec = ++nspec;
 
 	return 0;
 }
