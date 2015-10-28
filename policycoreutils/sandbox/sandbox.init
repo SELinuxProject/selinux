@@ -42,12 +42,15 @@ stop() {
 }
 
 status() {
+        EXIT_CODE=0
 	if [ -f "$LOCKFILE" ]; then 
 	    echo "$base is running"
+	    EXIT_CODE=0
 	else
 	    echo "$base is stopped"
+	    EXIT_CODE=3
 	fi
-	exit 0
+	exit $EXIT_CODE
 }
 
 case "$1" in
