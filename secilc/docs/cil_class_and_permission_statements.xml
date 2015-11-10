@@ -198,6 +198,22 @@
 (classorder (file dir))
 (classorder (dir process))]]>
       </programlisting>
+         <para><emphasis role="bold">Unordered Classorder Statement:</emphasis></para>
+         <para>If users do not have knowledge of the existing classorder, the <literal>unordered</literal> keyword may be used in a <literal>classorder</literal> statement. The <link linkend="class">class</link>es in an unordered statement are appended to the existing classorder. A class in an ordered statement always supercedes the class redeclaration in an unordered statement. The <literal>unordered</literal> keyword must be the first item in the classorder listing.</para>
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This will produce an ordered list of "<literal>file dir foo a bar baz</literal>"</para>
+         <programlisting><![CDATA[
+(class file)
+(class dir)
+(class foo)
+(class bar)
+(class baz)
+(class a)
+(classorder (file dir))
+(classorder (dir foo))
+(classorder (unordered a))
+(classorder (unordered bar foo baz))]]>
+      </programlisting>
       </sect2>
      <sect2 id="classpermission">
          <title>classpermission</title>

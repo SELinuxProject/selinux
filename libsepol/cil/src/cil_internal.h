@@ -223,6 +223,7 @@ char *CIL_KEY_AUDITALLOWX;
 char *CIL_KEY_DONTAUDITX;
 char *CIL_KEY_PERMISSIONX;
 char *CIL_KEY_IOCTL;
+char *CIL_KEY_UNORDERED;
 
 /*
 	Symbol Table Array Indices

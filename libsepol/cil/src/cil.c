@@ -230,6 +230,7 @@ static void cil_init_keys(void)
 	CIL_KEY_DONTAUDITX = cil_strpool_add("dontauditx");
 	CIL_KEY_PERMISSIONX = cil_strpool_add("permissionx");
 	CIL_KEY_IOCTL = cil_strpool_add("ioctl");
+	CIL_KEY_UNORDERED = cil_strpool_add("unordered");
 }
 
 void cil_db_init(struct cil_db **db)

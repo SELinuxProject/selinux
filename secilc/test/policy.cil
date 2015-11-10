@@ -46,8 +46,13 @@
 (levelrange lh4 ((s0) (s1)))
 
 (block policy
-	(classorder (file char dir))
-	(class file (execute_no_trans entrypoint execmod open audit_access))
+	(class file (execute_no_trans entrypoint execmod open audit_access a b c d e))
+	; order should be: file char b c a dir d e f
+	(classorder (file char))
+	(classorder (unordered dir))
+	(classorder (unordered c a b d e f))
+	(classorder (char b c a))
+
 	(common file (ioctl read write create getattr setattr lock relabelfrom
 			relabelto append unlink link rename execute swapon
 			quotaon mounton))
@@ -67,6 +72,12 @@
 	(classcommon char file)
 
 	(class dir ())
+	(class a ())
+	(class b ())
+	(class c ())
+	(class d ())
+	(class e ())
+	(class f ())
 	(classcommon dir file)
 
 	(classpermission char_w)

@@ -365,6 +365,11 @@ int cil_gen_class(__attribute__((unused)) struct cil_db *db, struct cil_tree_nod
 	cil_class_init(&class);
 
 	key = parse_current->next->data;
+	if (key == CIL_KEY_UNORDERED) {
+		cil_log(CIL_ERR, "'unordered' keyword is reserved and not a valid class name.\n");
+		rc = SEPOL_ERR;
+		goto exit;
+	}
 
 	rc = cil_gen_node(db, ast_node, (struct cil_symtab_datum*)class, (hashtab_key_t)key, CIL_SYM_CLASSES, CIL_CLASS);
 	if (rc != SEPOL_OK) {
@@ -410,6 +415,8 @@ int cil_gen_classorder(__attribute__((unused)) struct cil_db *db, struct cil_tre
 	};
 	int syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_classorder *classorder = NULL;
+	struct cil_list_item *curr = NULL;
+	struct cil_list_item *head = NULL;
 	int rc = SEPOL_ERR;
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
@@ -427,6 +434,22 @@ int cil_gen_classorder(__attribute__((unused)) struct cil_db *db, struct cil_tre
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	head = classorder->class_list_str->head;
+	cil_list_for_each(curr, classorder->class_list_str) {
+		if (curr->data == CIL_KEY_UNORDERED) {
+			if (curr == head && curr->next == NULL) {
+				cil_log(CIL_ERR, "Classorder 'unordered' keyword must be followed by one or more class.\n");
+				rc = SEPOL_ERR;
+				goto exit;
+			} else if (curr != head) {
+				cil_log(CIL_ERR, "Classorder can only use 'unordered' keyword as the first item in the list.\n");
+				rc = SEPOL_ERR;
+				goto exit;
+			}
+		}
+	}
+
 	ast_node->data = classorder;
 	ast_node->flavor = CIL_CLASSORDER;
 
@@ -1107,6 +1130,7 @@ int cil_gen_sidorder(__attribute__((unused)) struct cil_db *db, struct cil_tree_
 	};
 	int syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_sidorder *sidorder = NULL;
+	struct cil_list_item *curr = NULL;
 	int rc = SEPOL_ERR;
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
@@ -1124,6 +1148,15 @@ int cil_gen_sidorder(__attribute__((unused)) struct cil_db *db, struct cil_tree_
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	cil_list_for_each(curr, sidorder->sid_list_str) {
+		if (curr->data == CIL_KEY_UNORDERED) {
+			cil_log(CIL_ERR, "Sidorder cannot be unordered.\n");
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+	}
+
 	ast_node->data = sidorder;
 	ast_node->flavor = CIL_SIDORDER;
 
@@ -3553,6 +3586,7 @@ int cil_gen_catorder(__attribute__((unused)) struct cil_db *db, struct cil_tree_
 	};
 	int syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_catorder *catorder = NULL;
+	struct cil_list_item *curr = NULL;
 	int rc = SEPOL_ERR;
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
@@ -3570,6 +3604,15 @@ int cil_gen_catorder(__attribute__((unused)) struct cil_db *db, struct cil_tree_
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	cil_list_for_each(curr, catorder->cat_list_str) {
+		if (curr->data == CIL_KEY_UNORDERED) {
+			cil_log(CIL_ERR, "Category order cannot be unordered.\n");
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+	}
+
 	ast_node->data = catorder;
 	ast_node->flavor = CIL_CATORDER;
 
@@ -3604,6 +3647,7 @@ int cil_gen_sensitivityorder(__attribute__((unused)) struct cil_db *db, struct c
 	};
 	int syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_sensorder *sensorder = NULL;
+	struct cil_list_item *curr = NULL;
 	int rc = SEPOL_ERR;
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
@@ -3620,6 +3664,14 @@ int cil_gen_sensitivityorder(__attribute__((unused)) struct cil_db *db, struct c
 	rc = cil_fill_list(parse_current->next->cl_head, CIL_SENSITIVITYORDER, &sensorder->sens_list_str);
 	if (rc != SEPOL_OK) {
 		goto exit;
+	}
+
+	cil_list_for_each(curr, sensorder->sens_list_str) {
+		if (curr->data == CIL_KEY_UNORDERED) {
+			cil_log(CIL_ERR, "Sensitivy order cannot be unordered.\n");
+			rc = SEPOL_ERR;
+			goto exit;
+		}
 	}
 
 	ast_node->data = sensorder;
