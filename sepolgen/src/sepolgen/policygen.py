@@ -36,8 +36,6 @@ from . import access
 from . import interfaces
 from . import matching
 from . import util
-if util.PY3:
-    from .util import cmp
 # Constants for the level of explanation from the generation
 # routines
 NO_EXPLANATION    = 0
@@ -278,15 +276,12 @@ def explain_access(av, ml=None, verbosity=SHORT_EXPLANATION):
         explain_interfaces()
     return s
 
-def param_comp(a, b):
-    return cmp(b.num, a.num)
-
 def call_interface(interface, av):
     params = []
     args = []
 
     params.extend(interface.params.values())
-    params.sort(param_comp)
+    params.sort(key=lambda param: param.num, reverse=True)
 
     ifcall = refpolicy.InterfaceCall()
     ifcall.ifname = interface.name
@@ -321,7 +316,7 @@ class InterfaceGenerator:
         for x in ifs.interfaces.values():
             params = []
             params.extend(x.params.values())
-            params.sort(param_comp)
+            params.sort(key=lambda param: param.num, reverse=True)
             for i in range(len(params)):
                 # Check that the paramater position matches
                 # the number (e.g., $1 is the first arg). This
