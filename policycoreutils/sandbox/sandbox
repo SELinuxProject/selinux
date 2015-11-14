@@ -424,9 +424,6 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
         self.__filecon = "%s:object_r:sandbox_file_t:%s" % (con[0], level)
 
     def __setup_dir(self):
-        if self.__options.level or self.__options.session:
-            return
-
         if self.__options.homedir:
             selinux.chcon(self.__options.homedir, self.__filecon, recursive=True)
             self.__homedir = self.__options.homedir
