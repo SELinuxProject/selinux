@@ -685,9 +685,12 @@ if __name__ == '__main__':
 
     try:
         if os.path.basename(sys.argv[0]) == "sepolgen":
-            args = parser.parse_args(["generate"] + sys.argv[1:])
+            parser_args = [ "generate" ] + sys.argv[1:]
+        elif len(sys.argv) > 1:
+            parser_args = sys.argv[1:]
         else:
-            args = parser.parse_args()
+            parser_args = ["-h"]
+        args = parser.parse_args(args=parser_args)
         args.func(args)
         sys.exit(0)
     except ValueError, e:
