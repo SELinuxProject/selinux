@@ -721,7 +721,7 @@ def setupPermissiveParser(subparsers):
     parser_add_noheading(permissiveParser, "permissive")
     parser_add_noreload(permissiveParser, "permissive")
     parser_add_store(permissiveParser, "permissive")
-    permissiveParser.add_argument('type', nargs='?', default=None, help=_('type'))
+    permissiveParser.add_argument('type', nargs='+', default=None, help=_('type'))
     permissiveParser.set_defaults(func=handlePermissive)
 
 
