@@ -1,3 +1,5 @@
+	* semanage: Require at least one argument for 'semanage permissive -d', from Petr Lautrbach.
+	* sepolicy: Improve sepolicy command line interface, from Petr Lautrbach.
 	* audit2allow/why: ignore setlocale errors, from Petr Lautrbach.
 	* semodule: Add --extract/-E, --cil/-c, and --hll/-H to extract modules, from Yuli Khodorkovskiy.
 	* audit2allow: Comment constraint rules in output, from Miroslav Grepl via Petr Lautrbach.
