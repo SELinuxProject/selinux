@@ -1811,6 +1811,8 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 		if (handle && handle->disable_dontaudit)
 			return EXPAND_RULE_SUCCESS;
 		spec = AVTAB_XPERMS_DONTAUDIT;
+	} else if (specified & AVRULE_XPERMS_NEVERALLOW) {
+		spec = AVTAB_XPERMS_NEVERALLOW;
 	} else {
 		assert(0);	/* unreachable */
 	}
@@ -1948,7 +1950,7 @@ static int convert_and_expand_rule(sepol_handle_t * handle,
 
 	if (!do_neverallow && source_rule->specified & AVRULE_NEVERALLOW)
 		return EXPAND_RULE_SUCCESS;
-	if (source_rule->specified & AVRULE_XPERMS_NEVERALLOW)
+	if (!do_neverallow && source_rule->specified & AVRULE_XPERMS_NEVERALLOW)
 		return EXPAND_RULE_SUCCESS;
 
 	ebitmap_init(&stypes);
