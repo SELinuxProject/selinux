@@ -132,7 +132,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	const char *path = NULL;
 	FILE *fp;
 	char line_buf[BUFSIZ];
-	unsigned int lineno = 0, maxnspec, pass;
+	unsigned int lineno, maxnspec, pass;
 	int status = -1;
 	struct stat sb;
 
@@ -166,6 +166,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	maxnspec = UINT_MAX / sizeof(spec_t);
 	for (pass = 0; pass < 2; pass++) {
 		data->nspec = 0;
+		lineno = 0;
 
 		while (fgets(line_buf, sizeof(line_buf) - 1, fp)
 		       && data->nspec < maxnspec) {
