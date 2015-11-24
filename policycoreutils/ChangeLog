@@ -1,3 +1,4 @@
+	* Man page warning fixes, from Ville Skyttä.
 	* sandbox: Fix sandbox to propagate specified MCS/MLS Security Level, from Miroslav Grepl.
 	* semanage: Require at least one argument for 'semanage permissive -d', from Petr Lautrbach.
 	* sepolicy: Improve sepolicy command line interface, from Petr Lautrbach.

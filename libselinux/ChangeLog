@@ -1,3 +1,4 @@
+	* Man page warning fixes, from Ville Skyttä.
 	* label_file: fix memory leaks and uninitialized jump, from William Roberts.
 	* Replace selabel_digest hash function, from Richard Haines.
 	* Fix selabel_open(3) services if no digest requested, from Richard Haines.
