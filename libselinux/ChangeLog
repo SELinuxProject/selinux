@@ -1,3 +1,4 @@
+	* Correct line count for property and service context files, from Richard Haines.
 	* Man page warning fixes, from Ville Skyttä.
 	* label_file: fix memory leaks and uninitialized jump, from William Roberts.
 	* Replace selabel_digest hash function, from Richard Haines.
