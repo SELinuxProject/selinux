@@ -700,12 +700,17 @@ def handlePermissive(args):
     OBJECT = object_dict['permissive']()
     OBJECT.set_reload(args.noreload)
 
-    if args.action is "add":
-        OBJECT.add(args.type)
     if args.action is "list":
         OBJECT.list(args.noheading)
-    if args.action is "delete":
-        OBJECT.delete(args.type)
+    elif args.type != None:
+        if args.action is "add":
+            OBJECT.add(args.type)
+        if args.action is "delete":
+            OBJECT.delete(args.type)
+    else:
+        args.parser.print_usage(sys.stderr)
+        sys.stderr.write(_('semanage permissive: error: the following argument is required: type\n'))
+        sys.exit(1)
 
 
 def setupPermissiveParser(subparsers):
@@ -721,8 +726,9 @@ def setupPermissiveParser(subparsers):
     parser_add_noheading(permissiveParser, "permissive")
     parser_add_noreload(permissiveParser, "permissive")
     parser_add_store(permissiveParser, "permissive")
-    permissiveParser.add_argument('type', nargs='+', default=None, help=_('type'))
+    permissiveParser.add_argument('type', nargs='?', default=None, help=_('type'))
     permissiveParser.set_defaults(func=handlePermissive)
+    permissiveParser.set_defaults(parser=permissiveParser)
 
 
 def handleDontaudit(args):
