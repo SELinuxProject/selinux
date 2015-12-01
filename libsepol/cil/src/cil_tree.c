@@ -1091,7 +1091,7 @@ void cil_tree_print_node(struct cil_tree_node *node)
 				cil_log(CIL_INFO, " %s", rule->tgt_str);
 			}
 
-			cil_tree_print_classperms_list(rule->classperms);
+			cil_tree_print_classperms_list(rule->perms.classperms);
 
 			cil_log(CIL_INFO, "\n");
 

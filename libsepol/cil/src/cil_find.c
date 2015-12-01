@@ -214,19 +214,92 @@ static int cil_classperms_list_match_any(struct cil_list *cpl1, struct cil_list 
 	return CIL_FALSE;
 }
 
+static void __add_classes_from_classperms_list(struct cil_list *classperms, struct cil_list *class_list)
+{
+	struct cil_list_item *curr;
+
+	cil_list_for_each(curr, classperms) {
+		if (curr->flavor == CIL_CLASSPERMS) {
+			struct cil_classperms *cp = curr->data;
+			if (FLAVOR(cp->class) == CIL_CLASS) {
+				cil_list_append(class_list, CIL_CLASS, cp->class);
+			} else { /* MAP */
+				struct cil_list_item *i = NULL;
+				cil_list_for_each(i, cp->perms) {
+					struct cil_perm *cmp = i->data;
+					__add_classes_from_classperms_list(cmp->classperms, class_list);
+				}
+			}
+		} else { /* SET */
+			struct cil_classperms_set *cp_set = curr->data;
+			struct cil_classpermission *cp = cp_set->set;
+			__add_classes_from_classperms_list(cp->classperms, class_list);
+		}
+	}
+}
+
+static int __add_classes_from_map_perms(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	struct cil_list *class_list = args;
+	struct cil_perm *cmp = (struct cil_perm *)d;
+
+	__add_classes_from_classperms_list(cmp->classperms, class_list);
+
+	return SEPOL_OK;
+}
+
+struct cil_list *cil_expand_class(struct cil_class *class)
+{
+	struct cil_list *class_list;
+
+	cil_list_init(&class_list, CIL_CLASS);
+
+	if (FLAVOR(class) == CIL_CLASS) {
+		cil_list_append(class_list, CIL_CLASS, class);
+	} else { /* MAP */
+		cil_symtab_map(&class->perms, __add_classes_from_map_perms, class_list);
+	}
+
+	return class_list;
+}
+
+static int cil_permissionx_match_any(struct cil_permissionx *px1, struct cil_permissionx *px2)
+{
+	int rc = CIL_FALSE;
+	struct cil_list *cl1 = NULL;
+	struct cil_list *cl2 = NULL;
+
+	if (px1->kind != px2->kind) goto exit;
+
+	if (!ebitmap_match_any(px1->perms, px2->perms)) goto exit;
+
+	cl1 = cil_expand_class(px1->obj);
+	cl2 = cil_expand_class(px2->obj);
+
+	if (!cil_list_match_any(cl1, cl2)) goto exit;
+
+	rc = CIL_TRUE;
+
+exit:
+	cil_list_destroy(&cl1, CIL_FALSE);
+	cil_list_destroy(&cl2, CIL_FALSE);
+
+	return rc;
+}
+
 int cil_find_matching_avrule(struct cil_tree_node *node, struct cil_avrule *avrule, struct cil_avrule *target, struct cil_list *matching, int match_self)
 {
 	int rc = SEPOL_OK;
 	struct cil_symtab_datum *s1 = avrule->src;
 	struct cil_symtab_datum *t1 = avrule->tgt;
-	struct cil_list *cp1 = avrule->classperms;
 	struct cil_symtab_datum *s2 = target->src;
 	struct cil_symtab_datum *t2 = target->tgt;
-	struct cil_list *cp2 = target->classperms;
 
 	if (match_self != CIL_TRUE && avrule == target) goto exit;
 
 	if (avrule->rule_kind != target->rule_kind) goto exit;
+
+	if (avrule->is_extended != target->is_extended) goto exit;
 
 	if (!cil_type_match_any(s1, s2)) goto exit;
 
@@ -254,8 +327,14 @@ int cil_find_matching_avrule(struct cil_tree_node *node, struct cil_avrule *avru
 		}
 	}
 
-	if (cil_classperms_list_match_any(cp1, cp2)) {
-		cil_list_append(matching, CIL_NODE, node);
+	if (!target->is_extended) {
+		if (cil_classperms_list_match_any(avrule->perms.classperms, target->perms.classperms)) {
+			cil_list_append(matching, CIL_NODE, node);
+		}
+	} else {
+		if (cil_permissionx_match_any(avrule->perms.x.permx, target->perms.x.permx)) {
+			cil_list_append(matching, CIL_NODE, node);
+		}
 	}
 
 	rc = SEPOL_OK;
@@ -264,7 +343,7 @@ exit:
 	return rc;
 }
 
-static int __cil_find_matching_avrule_in_ast(struct cil_tree_node *node,  __attribute__((unused)) uint32_t *finished, void *extra_args)
+static int __cil_find_matching_avrule_in_ast(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_OK;
 	struct cil_args_find *args = extra_args;
@@ -278,8 +357,10 @@ static int __cil_find_matching_avrule_in_ast(struct cil_tree_node *node,  __attr
 	} else if (node->flavor == CIL_MACRO) {
 		*finished = CIL_TREE_SKIP_HEAD;
 		goto exit;
-	} else if (node->flavor == CIL_AVRULE) {
-		rc = cil_find_matching_avrule(node, node->data, args->target, args->matching, args->match_self);
+	} else if (node->flavor == CIL_AVRULE || node->flavor == CIL_AVRULEX) {
+		if (node->flavor == args->flavor) {
+			rc = cil_find_matching_avrule(node, node->data, args->target, args->matching, args->match_self);
+		}
 	}
 
 exit:

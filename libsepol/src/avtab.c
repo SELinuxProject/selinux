@@ -111,6 +111,11 @@ avtab_insert_node(avtab_t * h, int hvalue, avtab_ptr_t prev, avtab_key_t * key,
 			*xperms = *(datum->xperms);
 
 		newnode->datum.xperms = xperms;
+		/* data is usually ignored with xperms, except in the case of
+		 * neverallow checking, which requires permission bits to be set.
+		 * So copy data so it is set in the avtab
+		 */
+		newnode->datum.data = datum->data;
 	} else {
 		newnode->datum = *datum;
 	}

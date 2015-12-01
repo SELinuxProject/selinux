@@ -29,6 +29,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <string.h>
 
 #include "cil_log.h"
@@ -97,4 +98,20 @@ char *cil_strdup(const char *str)
 	}
 
 	return mem;
+}
+
+__attribute__ ((format (printf, 2, 3))) int cil_asprintf(char **strp, const char *fmt, ...)
+{
+	int rc;
+	va_list ap;
+
+	va_start(ap, fmt);
+	rc = vasprintf(strp, fmt, ap);
+	va_end(ap);
+
+	if (rc == -1) {
+		(*cil_mem_error_handler)();
+	}
+
+	return rc;
 }

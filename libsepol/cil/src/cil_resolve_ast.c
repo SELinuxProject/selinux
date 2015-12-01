@@ -273,6 +273,23 @@ int cil_type_used(struct cil_symtab_datum *datum)
 	return 0;
 }
 
+int cil_resolve_permissionx(struct cil_tree_node *current, struct cil_permissionx *permx, void *extra_args)
+{
+	struct cil_symtab_datum *obj_datum = NULL;
+	int rc = SEPOL_ERR;
+
+	rc = cil_resolve_name(current, permx->obj_str, CIL_SYM_CLASSES, extra_args, &obj_datum);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+	permx->obj = (struct cil_class*)obj_datum;
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
 int cil_resolve_avrule(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_args_resolve *args = extra_args;
@@ -281,6 +298,7 @@ int cil_resolve_avrule(struct cil_tree_node *current, void *extra_args)
 	struct cil_avrule *rule = current->data;
 	struct cil_symtab_datum *src_datum = NULL;
 	struct cil_symtab_datum *tgt_datum = NULL;
+	struct cil_symtab_datum *permx_datum = NULL;
 	int rc = SEPOL_ERR;
 
 	if (args != NULL) {
@@ -309,77 +327,23 @@ int cil_resolve_avrule(struct cil_tree_node *current, void *extra_args)
 		}
 	}
 
-	rc = cil_resolve_classperms_list(current, rule->classperms, extra_args);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
-	return SEPOL_OK;
-
-exit:
-	return rc;
-}
-
-int cil_resolve_permissionx(struct cil_tree_node *current, struct cil_permissionx *permx, void *extra_args)
-{
-	struct cil_symtab_datum *obj_datum = NULL;
-	int rc = SEPOL_ERR;
-
-	rc = cil_resolve_name(current, permx->obj_str, CIL_SYM_CLASSES, extra_args, &obj_datum);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-	permx->obj = (struct cil_class*)obj_datum;
-
-	return SEPOL_OK;
-
-exit:
-	return rc;
-}
-
-int cil_resolve_avrulex(struct cil_tree_node *current, void *extra_args)
-{
-	struct cil_args_resolve *args = extra_args;
-	struct cil_db *db = NULL;
-
-	struct cil_avrulex *rule = current->data;
-	struct cil_symtab_datum *src_datum = NULL;
-	struct cil_symtab_datum *tgt_datum = NULL;
-	struct cil_symtab_datum *permx_datum = NULL;
-	int rc = SEPOL_ERR;
-
-	if (args != NULL) {
-		db = args->db;
-	}
-
-	rc = cil_resolve_name(current, rule->src_str, CIL_SYM_TYPES, args, &src_datum);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-	rule->src = src_datum;
-	cil_type_used(src_datum);
-
-	if (rule->tgt_str == CIL_KEY_SELF) {
-		rule->tgt = db->selftype;
-	} else {
-		rc = cil_resolve_name(current, rule->tgt_str, CIL_SYM_TYPES, args, &tgt_datum);
+	if (!rule->is_extended) {
+		rc = cil_resolve_classperms_list(current, rule->perms.classperms, extra_args);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
-		rule->tgt = tgt_datum;
-		cil_type_used(tgt_datum);
-	}
-
-	if (rule->permx_str != NULL) {
-		rc = cil_resolve_name(current, rule->permx_str, CIL_SYM_PERMX, args, &permx_datum);
-		if (rc != SEPOL_OK) {
-			goto exit;
-		}
-		rule->permx = (struct cil_permissionx*)permx_datum;
 	} else {
-		rc = cil_resolve_permissionx(current, rule->permx, extra_args);
-		if (rc != SEPOL_OK) {
-			goto exit;
+		if (rule->perms.x.permx_str != NULL) {
+			rc = cil_resolve_name(current, rule->perms.x.permx_str, CIL_SYM_PERMX, args, &permx_datum);
+			if (rc != SEPOL_OK) {
+				goto exit;
+			}
+			rule->perms.x.permx = (struct cil_permissionx*)permx_datum;
+		} else {
+			rc = cil_resolve_permissionx(current, rule->perms.x.permx, extra_args);
+			if (rc != SEPOL_OK) {
+				goto exit;
+			}
 		}
 	}
 
@@ -3489,10 +3453,8 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 			rc = cil_resolve_classmapping(node, args);
 			break;
 		case CIL_AVRULE:
-			rc = cil_resolve_avrule(node, args);
-			break;
 		case CIL_AVRULEX:
-			rc = cil_resolve_avrulex(node, args);
+			rc = cil_resolve_avrule(node, args);
 			break;
 		case CIL_PERMISSIONX:
 			rc = cil_resolve_permissionx(node, (struct cil_permissionx*)node->data, args);

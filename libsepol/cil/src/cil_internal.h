@@ -221,6 +221,7 @@ char *CIL_KEY_PERM;
 char *CIL_KEY_ALLOWX;
 char *CIL_KEY_AUDITALLOWX;
 char *CIL_KEY_DONTAUDITX;
+char *CIL_KEY_NEVERALLOWX;
 char *CIL_KEY_PERMISSIONX;
 char *CIL_KEY_IOCTL;
 char *CIL_KEY_UNORDERED;
@@ -570,12 +571,19 @@ struct cil_tunable {
 #define CIL_AVRULE_NEVERALLOW 128
 #define CIL_AVRULE_AV         (AVRULE_ALLOWED | AVRULE_AUDITALLOW | AVRULE_DONTAUDIT | AVRULE_NEVERALLOW)
 struct cil_avrule {
+	int is_extended;
 	uint32_t rule_kind;
 	char *src_str;
 	void *src; /* type, alias, or attribute */
 	char *tgt_str;	
 	void *tgt; /* type, alias, or attribute */
-	struct cil_list *classperms;
+	union {
+		struct cil_list *classperms;
+		struct {
+			char *permx_str;
+			struct cil_permissionx *permx;
+		} x;
+	} perms;
 };
 
 #define CIL_PERMX_KIND_IOCTL 1
@@ -583,19 +591,9 @@ struct cil_permissionx {
 	struct cil_symtab_datum datum;
 	uint32_t kind;
 	char *obj_str;
-	void *obj;
+	struct cil_class *obj;
 	struct cil_list *expr_str;
 	ebitmap_t *perms;
-};
-
-struct cil_avrulex {
-	uint32_t rule_kind;
-	char *src_str;
-	void *src; /* type, alias, or attribute */
-	char *tgt_str;
-	void *tgt; /* type, alias, or attribute */
-	char *permx_str;
-	struct cil_permissionx *permx;
 };
 
 #define CIL_TYPE_TRANSITION 16
@@ -974,7 +972,6 @@ void cil_condblock_init(struct cil_condblock **cb);
 void cil_tunable_init(struct cil_tunable **ciltun);
 void cil_tunif_init(struct cil_tunableif **tif);
 void cil_avrule_init(struct cil_avrule **avrule);
-void cil_avrulex_init(struct cil_avrulex **avrulex);
 void cil_permissionx_init(struct cil_permissionx **permx);
 void cil_type_rule_init(struct cil_type_rule **type_rule);
 void cil_roletransition_init(struct cil_roletransition **roletrans);

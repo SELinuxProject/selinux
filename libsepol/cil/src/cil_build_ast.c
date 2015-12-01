@@ -2025,12 +2025,13 @@ int cil_gen_avrule(struct cil_tree_node *parse_current, struct cil_tree_node *as
 
 	cil_avrule_init(&rule);
 
+	rule->is_extended = 0;
 	rule->rule_kind = rule_kind;
 
 	rule->src_str = parse_current->next->data;
 	rule->tgt_str = parse_current->next->next->data;
 
-	rc = cil_fill_classperms_list(parse_current->next->next->next, &rule->classperms);
+	rc = cil_fill_classperms_list(parse_current->next->next->next, &rule->perms.classperms);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
@@ -2053,7 +2054,13 @@ void cil_destroy_avrule(struct cil_avrule *rule)
 		return;
 	}
 
-	cil_destroy_classperms_list(&rule->classperms);
+	if (!rule->is_extended) {
+		cil_destroy_classperms_list(&rule->perms.classperms);
+	} else {
+		if (rule->perms.x.permx_str == NULL && rule->perms.x.permx != NULL) {
+			cil_destroy_permissionx(rule->perms.x.permx);
+		}
+	}
 
 	free(rule);
 }
@@ -2167,7 +2174,7 @@ int cil_gen_avrulex(struct cil_tree_node *parse_current, struct cil_tree_node *a
 		CIL_SYN_END
 	};
 	int syntax_len = sizeof(syntax)/sizeof(*syntax);
-	struct cil_avrulex *rule = NULL;
+	struct cil_avrule *rule = NULL;
 	int rc = SEPOL_ERR;
 
 	if (parse_current == NULL || ast_node == NULL) {
@@ -2179,18 +2186,19 @@ int cil_gen_avrulex(struct cil_tree_node *parse_current, struct cil_tree_node *a
 		goto exit;
 	}
 
-	cil_avrulex_init(&rule);
+	cil_avrule_init(&rule);
 
+	rule->is_extended = 1;
 	rule->rule_kind = rule_kind;
 	rule->src_str = parse_current->next->data;
 	rule->tgt_str = parse_current->next->next->data;
 
 	if (parse_current->next->next->next->cl_head == NULL) {
-		rule->permx_str = parse_current->next->next->next->data;
+		rule->perms.x.permx_str = parse_current->next->next->next->data;
 	} else {
-		cil_permissionx_init(&rule->permx);
+		cil_permissionx_init(&rule->perms.x.permx);
 
-		rc = cil_fill_permissionx(parse_current->next->next->next->cl_head, rule->permx);
+		rc = cil_fill_permissionx(parse_current->next->next->next->cl_head, rule->perms.x.permx);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
@@ -2204,21 +2212,8 @@ int cil_gen_avrulex(struct cil_tree_node *parse_current, struct cil_tree_node *a
 exit:
 	cil_log(CIL_ERR, "Bad allowx rule at line %d of %s\n",
 		parse_current->line, parse_current->path);
-	cil_destroy_avrulex(rule);
+	cil_destroy_avrule(rule);
 	return rc;
-}
-
-void cil_destroy_avrulex(struct cil_avrulex *rule)
-{
-	if (rule == NULL) {
-		return;
-	}
-
-	if (rule->permx_str == NULL && rule->permx != NULL) {
-		cil_destroy_permissionx(rule->permx);
-	}
-
-	free(rule);
 }
 
 int cil_gen_type_rule(struct cil_tree_node *parse_current, struct cil_tree_node *ast_node, uint32_t rule_kind)
@@ -6126,6 +6121,9 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_DONTAUDITX) {
 		rc = cil_gen_avrulex(parse_current, ast_node, CIL_AVRULE_DONTAUDIT);
+		*finished = CIL_TREE_SKIP_NEXT;
+	} else if (parse_current->data == CIL_KEY_NEVERALLOWX) {
+		rc = cil_gen_avrulex(parse_current, ast_node, CIL_AVRULE_NEVERALLOW);
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_PERMISSIONX) {
 		rc = cil_gen_permissionx(db, parse_current, ast_node);

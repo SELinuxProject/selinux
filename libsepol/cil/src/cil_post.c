@@ -1220,9 +1220,9 @@ static int __cil_post_db_attr_helper(struct cil_tree_node *node, __attribute__((
 		break;
 	}
 	case CIL_AVRULEX: {
-		struct cil_avrulex *rule = node->data;
-		if (rule->permx_str == NULL) {
-			rc = __evaluate_permissionx_expression(rule->permx, db);
+		struct cil_avrule *rule = node->data;
+		if (rule->perms.x.permx_str == NULL) {
+			rc = __evaluate_permissionx_expression(rule->perms.x.permx, db);
 			if (rc != SEPOL_OK) goto exit;
 		}
 		break;
@@ -1862,7 +1862,7 @@ static int __cil_post_db_classperms_helper(struct cil_tree_node *node, uint32_t 
 	}
 	case CIL_AVRULE: {
 		struct cil_avrule *avrule = node->data;
-		rc = __evaluate_classperms_list(avrule->classperms, db);
+		rc = __evaluate_classperms_list(avrule->perms.classperms, db);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}

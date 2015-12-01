@@ -195,7 +195,7 @@ static void cil_reset_typeattributeset(struct cil_typeattributeset *tas)
 
 static void cil_reset_avrule(struct cil_avrule *rule)
 {
-	cil_reset_classperms_list(rule->classperms);
+	cil_reset_classperms_list(rule->perms.classperms);
 }
 
 static void cil_reset_rangetransition(struct cil_rangetransition *rangetrans)

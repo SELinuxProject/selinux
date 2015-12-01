@@ -228,6 +228,7 @@ static void cil_init_keys(void)
 	CIL_KEY_ALLOWX = cil_strpool_add("allowx");
 	CIL_KEY_AUDITALLOWX = cil_strpool_add("auditallowx");
 	CIL_KEY_DONTAUDITX = cil_strpool_add("dontauditx");
+	CIL_KEY_NEVERALLOWX = cil_strpool_add("neverallowx");
 	CIL_KEY_PERMISSIONX = cil_strpool_add("permissionx");
 	CIL_KEY_IOCTL = cil_strpool_add("ioctl");
 	CIL_KEY_UNORDERED = cil_strpool_add("unordered");
@@ -668,10 +669,8 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 		cil_destroy_roleallow(*data);
 		break;
 	case CIL_AVRULE:
-		cil_destroy_avrule(*data);
-		break;
 	case CIL_AVRULEX:
-		cil_destroy_avrulex(*data);
+		cil_destroy_avrule(*data);
 		break;
 	case CIL_PERMISSIONX:
 		cil_destroy_permissionx(*data);
@@ -1026,13 +1025,15 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		}
 		break;
 	case CIL_AVRULEX:
-		switch (((struct cil_avrulex *)node->data)->rule_kind) {
+		switch (((struct cil_avrule *)node->data)->rule_kind) {
 		case CIL_AVRULE_ALLOWED:
 			return CIL_KEY_ALLOWX;
 		case CIL_AVRULE_AUDITALLOW:
 			return CIL_KEY_AUDITALLOWX;
 		case CIL_AVRULE_DONTAUDIT:
 			return CIL_KEY_DONTAUDITX;
+		case CIL_AVRULE_NEVERALLOW:
+			return CIL_KEY_NEVERALLOWX;
 		default:
 			break;
 		}
@@ -2116,12 +2117,13 @@ void cil_avrule_init(struct cil_avrule **avrule)
 {
 	*avrule = cil_malloc(sizeof(**avrule));
 
+	(*avrule)->is_extended = 0;
 	(*avrule)->rule_kind = CIL_NONE;
 	(*avrule)->src_str = NULL;
 	(*avrule)->src = NULL;
 	(*avrule)->tgt_str = NULL;
 	(*avrule)->tgt = NULL;
-	(*avrule)->classperms = NULL;
+	memset(&((*avrule)->perms), 0, sizeof((*avrule)->perms));
 }
 
 void cil_permissionx_init(struct cil_permissionx **permx)
@@ -2134,19 +2136,6 @@ void cil_permissionx_init(struct cil_permissionx **permx)
 	(*permx)->obj = NULL;
 	(*permx)->expr_str = NULL;
 	(*permx)->perms = NULL;
-}
-
-void cil_avrulex_init(struct cil_avrulex **avrule)
-{
-	*avrule = cil_malloc(sizeof(**avrule));
-
-	(*avrule)->rule_kind = CIL_NONE;
-	(*avrule)->src_str = NULL;
-	(*avrule)->src = NULL;
-	(*avrule)->tgt_str = NULL;
-	(*avrule)->tgt = NULL;
-	(*avrule)->permx_str = NULL;
-	(*avrule)->permx = NULL;
 }
 
 void cil_type_rule_init(struct cil_type_rule **type_rule)

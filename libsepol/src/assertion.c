@@ -355,7 +355,7 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	avrule_t *avrule = a->avrule;
 	avtab_t *avtab = a->avtab;
 
-	if (k->specified != AVTAB_ALLOWED)
+	if (k->specified != AVTAB_ALLOWED && k->specified != AVTAB_XPERMS_ALLOWED)
 		goto exit;
 
 	if (!match_any_class_permissions(avrule->perms, k->target_class, d->data))
