@@ -508,7 +508,7 @@
 
       <sect2 id="permissionx">
          <title>permissionx</title>
-         <para>Defines a named extended permission, which can be used in the <literal><link linkend="allowx">allowx</link></literal>, <literal><link linkend="auditallowx">auditallowx</link></literal>, and <literal><link linkend="dontauditx">dontauditx</link></literal> statements.</para>
+         <para>Defines a named extended permission, which can be used in the <literal><link linkend="allowx">allowx</link></literal>, <literal><link linkend="auditallowx">auditallowx</link></literal>, <literal><link linkend="dontauditx">dontauditx</link></literal>, and <literal><link linkend="neverallowx">neverallowx</link></literal> statements.</para>
          <para><emphasis role="bold">Statement definition:</emphasis></para>
          <programlisting><![CDATA[(permissionx permissionx_id (kind class_id (permission ... | expr ...)))]]></programlisting>
          <para><emphasis role="bold">Where:</emphasis></para>

@@ -448,4 +448,71 @@
          </programlisting>
       </sect2>
 
+      <sect2 id="neverallowx">
+         <title>neverallowx</title>
+         <para>Never allow access rights defined for extended permissions. This is a compiler enforced action that will stop compilation until the offending rules are modified.</para>
+         <para>Note that these rules can be over-ridden by the CIL compiler command line parameter <literal>-N</literal> or <literal>--disable-neverallow</literal> flags.</para>
+         <para><emphasis role="bold">Rule definition:</emphasis></para>
+         <programlisting><![CDATA[(neverallowx source_id target_id|self permissionx_id)]]></programlisting>
+         <para><emphasis role="bold">Where:</emphasis></para>
+         <informaltable frame="all">
+            <tgroup cols="2">
+            <colspec colwidth="2.25 *"/>
+            <colspec colwidth="6 *"/>
+               <tbody>
+               <row>
+                  <entry>
+                     <para><literal>neverallowx</literal></para>
+                  </entry>
+                  <entry>
+                     <para>The <literal>neverallowx</literal> keyword.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>source_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined source <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>target_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single previously defined target <literal><link linkend="type">type</link></literal>, <literal><link linkend="typealias">typealias</link></literal> or <literal><link linkend="typeattribute">typeattribute</link></literal> identifier.</para>
+                     <para>The <literal>self</literal> keyword may be used instead to signify that source and target are the same.</para>
+                  </entry>
+               </row>
+               <row>
+                  <entry>
+                     <para><literal>permissionx_id</literal></para>
+                  </entry>
+                  <entry>
+                     <para>A single named or anonymous <literal><link linkend="permissionx">permissionx</link></literal>.</para>
+                  </entry>
+               </row>
+            </tbody></tgroup>
+         </informaltable>
+
+         <para><emphasis role="bold">Example:</emphasis></para>
+         <para>This example will not compile as <literal>type_3</literal> is not allowed to be a source type and ioctl range for the <literal><link linkend="allowx">allowx</link></literal> rule:</para>
+         <programlisting><![CDATA[
+(class property_service (ioctl))
+
+(block av_rules
+    (type type_1)
+    (type type_2)
+    (type type_3)
+    (typeattribute all_types)
+    (typeattributeset all_types ((all)))
+
+    (neverallowx type_3 all_types (ioctl property_service (range 0x2000 0x20FF)))
+    ; This rule will fail compilation:
+    (allowx type_3 self (ioctl property_service (0x20A0)))
+)]]>
+         </programlisting>
+      </sect2>
+
    </sect1>
