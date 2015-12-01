@@ -1302,9 +1302,7 @@ void cil_tree_print_node(struct cil_tree_node *node)
 			cil_log(CIL_INFO, "FILECON:");
 			cil_log(CIL_INFO, " %s %d", filecon->path_str, filecon->type);
 
-			if (filecon->context_str != NULL) {
-				cil_log(CIL_INFO, " %s", filecon->context_str);
-			} else if (filecon->context != NULL) {
+			if (filecon->context != NULL) {
 				cil_tree_print_context(filecon->context);
 			} else if (filecon->context_str != NULL) {
 				cil_log(CIL_INFO, " %s", filecon->context_str);
