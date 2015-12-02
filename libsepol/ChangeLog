@@ -1,3 +1,4 @@
+	* Add support in CIL for neverallowx, from Steve Lawrence.
 	* Fully expand neverallowxperm rules, from Richard Haines.
 	* Add support for unordered classes to CIL, from Yuli Khodorkovskiy.
 	* Add neverallow support for ioctl extended permissions, from Jeff Vander Stoep.

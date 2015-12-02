@@ -1,3 +1,4 @@
+	* Add documentation for neverallowx rules, from Steve Lawrence
 	* Add documentation and examples for extended avrules, from Steve Lawrence
 	* Added neverallow and bounds checking test policies, from James Carter
 	* Remove uses of -Wno-return-type, from Dan Albert.
