@@ -1,3 +1,4 @@
+	* Validate extended avrules and permissionxs in CIL, from Steve Lawrence.
 	* Add support in CIL for neverallowx, from Steve Lawrence.
 	* Fully expand neverallowxperm rules, from Richard Haines.
 	* Add support for unordered classes to CIL, from Yuli Khodorkovskiy.
