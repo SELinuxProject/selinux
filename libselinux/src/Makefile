@@ -85,9 +85,9 @@ ifneq (,$(filter i386,$(ARCH)))
 TLSFLAGS += -mno-tls-direct-seg-refs
 endif
 
-SWIG = swig -Wall -python -o $(SWIGCOUT) -outdir ./
+SWIG = swig -Wall -python -o $(SWIGCOUT) -outdir ./ $(EMFLAGS)
 
-SWIGRUBY = swig -Wall -ruby -o $(SWIGRUBYCOUT) -outdir ./
+SWIGRUBY = swig -Wall -ruby -o $(SWIGRUBYCOUT) -outdir ./ $(EMFLAGS)
 
 all: $(LIBA) $(LIBSO) $(LIBPC)
 
