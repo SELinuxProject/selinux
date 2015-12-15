@@ -47,19 +47,16 @@ USAGE
 
 DOCUMENTATION
 
-	There is a Docbook CIL Reference Guide in the docs directory, to build
-	this in HTML and PDF format change to the docs directory and run:
-		make html pdf
+	There is a github markdown CIL Reference Guide in the docs directory. To
+	view the table of contents, see README.md in the docs directory.
 
-	There is also an secilc man page that can be built with:
-		make man
+	To convert the github markdown content to HTML and PDF, change to the docs
+	directory and run:
+		make
 
-	The documents will be located in the docs/html, docs/pdf and docs/man8
-	directories.
+	The documents will be located in the docs/html and docs/pdf directories.
 
-	To build the html and manpage the xmlto package is required.
-	To build the pdf document the xmlto and dblatex packages are required.
-
+	To build the html and pdf, the pandoc package is required.
 
 KNOWN ISSUES
 

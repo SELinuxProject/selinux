@@ -4,3 +4,4 @@ policy.*
 file_contexts
 docs/html
 docs/pdf
+docs/tmp
