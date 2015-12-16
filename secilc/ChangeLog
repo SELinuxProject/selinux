@@ -1,3 +1,4 @@
+	* Convert DocBook documentation into github markdown, from Yuli Khodorkovskiy
 	* Add documentation for neverallowx rules, from Steve Lawrence
 	* Add documentation and examples for extended avrules, from Steve Lawrence
 	* Added neverallow and bounds checking test policies, from James Carter
