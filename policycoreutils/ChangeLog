@@ -1,3 +1,4 @@
+	* chcat: Add a fallback in case os.getlogin() returns nothing, from Laurent Bigonville.
 	* semanage: fix 'semanage permissions -l' subcommand, from Petr Lautrbach.
 	* semanage: replace string.join() with str.join(), from Petr Lautrbach.
 	* Man page warning fixes, from Ville Skyttä.

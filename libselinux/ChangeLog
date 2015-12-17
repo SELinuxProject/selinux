@@ -1,3 +1,5 @@
+	* Add man information about thread specific functions, from Dan Waslh.
+	* Don't wrap rpm_execcon with DISABLE_RPM with SWIG, from Petr Lautrbach.
 	* Correct line count for property and service context files, from Richard Haines.
 	* Man page warning fixes, from Ville Skyttä.
 	* label_file: fix memory leaks and uninitialized jump, from William Roberts.
