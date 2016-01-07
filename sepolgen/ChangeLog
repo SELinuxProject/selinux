@@ -1,3 +1,4 @@
+1.2.3-rc1 2016-01-07
 	* Use key function in sort(), from Petr Lautrbach.
 	* Reset line numbers when parsing files, from Nicolas Iooss.
 	* Convert cmp functions to key functions, from Robert Kuska.

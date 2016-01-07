@@ -1,3 +1,4 @@
+2.5-rc1 2016-01-07
 	* semanage: List reserve_port_t in semanage port -l, from Petr Lautrbach.
 	* chcat: Add a fallback in case os.getlogin() returns nothing, from Laurent Bigonville.
 	* semanage: fix 'semanage permissions -l' subcommand, from Petr Lautrbach.

@@ -1,3 +1,4 @@
+2.5-rc1 2016-01-07
 	* Add neverallow support for ioctl extended permissions, from Jeff Vander Stoep.
 	* fix double free on name-based type transitions, from Stephen Smalley.
 	* switch operations to extended perms, from Jeff Vander Stoep.

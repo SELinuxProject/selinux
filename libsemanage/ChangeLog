@@ -1,3 +1,4 @@
+2.5-rc1 2016-01-07
 	* semanage_migrate_store: Load libsepol.so.1 instead of libsepol.so, from Laurent Bigonville.
 	* Store homedir_template and users_extra in policy store, from Steve Lawrence
 	* Fix null pointer dereference in semanage_module_key_destroy, from Yuli Khodorkovskiy.
