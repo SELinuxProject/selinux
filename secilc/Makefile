@@ -17,10 +17,10 @@ CFLAGS ?= -Wall -Wshadow -Wextra -Wundef -Wmissing-format-attribute -Wcast-align
 
 override CFLAGS += -I$(INCLUDEDIR) -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
 
+all: $(SECILC) man
+
 $(SECILC): $(SECILC_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
-
-all: $(SECILC) man
 
 test: $(SECILC)
 	./$(SECILC) test/policy.cil
@@ -46,4 +46,4 @@ clean:
 
 relabel:
 
-.PHONY: all clean test install doc relabel
+.PHONY: all clean test install doc relabel man
