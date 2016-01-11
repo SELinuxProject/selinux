@@ -8,6 +8,7 @@ newrole \- run a shell with a new SELinux role
 [\fB-t\fR|\fB--type\fR]
 \fITYPE\fR
 [\fB-l\fR|\fB--level\fR]
+[\fB-p\fR|\fB--preserve-environment\fR]
 \fILEVEL\fR [-- [\fIARGS\fR]...]
 .SH DESCRIPTION
 .PP
@@ -38,7 +39,12 @@ specified by
 If
 \fILEVEL\fR
 is a range, the new context will have the sensitivity level and clearance
-specified by that range.
+specified by that range.  If the
+.B -p
+or
+.B --preserve-environment
+option is specified, the shell with the new SELinux context will preserve environment variables,
+otherwise a new minimal enviroment is created.
 .PP
 Additional arguments
 .I ARGS
