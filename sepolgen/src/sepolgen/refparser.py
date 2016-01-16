@@ -219,7 +219,7 @@ t_BAR       = r'\|'
 t_EXPL      = r'\!'
 t_EQUAL     = r'\='
 t_NUMBER    = r'[0-9\.]+'
-t_PATH      = r'/[a-zA-Z0-9)_\.\*/]*'
+t_PATH      = r'/[a-zA-Z0-9)_\.\*/\$]*'
 #t_IPV6_ADDR = r'[a-fA-F0-9]{0,4}:[a-fA-F0-9]{0,4}:([a-fA-F0-9]{0,4}:)*'
 
 # Ignore whitespace - this is a special token for ply that more efficiently
@@ -417,6 +417,7 @@ def p_tunable_policy(p):
 def p_ifelse(p):
     '''ifelse : IFELSE OPAREN TICK IDENTIFIER SQUOTE COMMA COMMA TICK IDENTIFIER SQUOTE COMMA TICK interface_stmts SQUOTE CPAREN optional_semi
               | IFELSE OPAREN TICK IDENTIFIER SQUOTE COMMA TICK IDENTIFIER SQUOTE COMMA TICK interface_stmts SQUOTE COMMA TICK interface_stmts SQUOTE CPAREN optional_semi
+              | IFELSE OPAREN TICK IDENTIFIER SQUOTE COMMA TICK SQUOTE COMMA TICK interface_stmts SQUOTE COMMA TICK interface_stmts SQUOTE CPAREN optional_semi
     '''
 #    x = refpolicy.IfDef(p[4])
 #    v = True
