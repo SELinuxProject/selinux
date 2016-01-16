@@ -251,10 +251,10 @@ class IdSet(set):
         self.compliment = False
 
     def to_space_str(self):
-        return list_to_space_str(self)
+        return list_to_space_str(sorted(self))
 
     def to_comma_str(self):
-        return list_to_comma_str(self)
+        return list_to_comma_str(sorted(self))
 
 class SecurityContext(Leaf):
     """An SELinux security context with optional MCS / MLS fields."""

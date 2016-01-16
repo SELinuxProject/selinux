@@ -341,12 +341,12 @@ class InterfaceSet:
             self.output.write(str + "\n")
 
     def to_file(self, fd):
-        for iv in self.interfaces.values():
+        for iv in sorted(self.interfaces.values(), key=lambda x: x.name):
             fd.write("[InterfaceVector %s " % iv.name)
-            for param in iv.params.values():
+            for param in sorted(iv.params.values(), key=lambda x: x.name):
                 fd.write("%s:%s " % (param.name, refpolicy.field_to_str[param.type]))
             fd.write("]\n")
-            avl = iv.access.to_list()
+            avl = sorted(iv.access.to_list())
             for av in avl:
                 fd.write(",".join(av))
                 fd.write("\n")

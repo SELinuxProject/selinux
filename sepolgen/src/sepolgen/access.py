@@ -128,7 +128,7 @@ class AccessVector(util.Comparison):
         is represented in a list.
         """
         l = [self.src_type, self.tgt_type, self.obj_class]
-        l.extend(self.perms)
+        l.extend(sorted(self.perms))
         return l
 
     def __str__(self):
