@@ -74,7 +74,7 @@
 #ifdef USE_AUDIT
 #include <libaudit.h>
 #endif
-#if defined(AUDIT_LOG_PRIV) || (NAMESPACE_PRIV)
+#if defined(AUDIT_LOG_PRIV) || defined(NAMESPACE_PRIV)
 #include <sys/prctl.h>
 #include <cap-ng.h>
 #endif
