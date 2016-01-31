@@ -1076,7 +1076,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	/* Declare some variables */
 	int modified = 0, fcontexts_modified, ports_modified,
 	    seusers_modified, users_extra_modified, dontaudit_modified,
-	    preserve_tunables_modified, bools_modified,
+	    preserve_tunables_modified, bools_modified = 0,
 		disable_dontaudit, preserve_tunables;
 	dbase_config_t *users = semanage_user_dbase_local(sh);
 	dbase_config_t *users_base = semanage_user_base_dbase_local(sh);
