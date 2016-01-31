@@ -4145,7 +4145,7 @@ exit:
 
 static int __cil_permx_to_sepol_class_perms(policydb_t *pdb, struct cil_permissionx *permx, class_perm_node_t **sepol_class_perms)
 {
-	int rc;
+	int rc = SEPOL_OK;
 	struct cil_list *class_list = NULL;
 	struct cil_list_item *c;
 	class_datum_t *sepol_obj = NULL;
