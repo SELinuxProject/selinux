@@ -1,4 +1,5 @@
 2.5-rc1 2016-01-07
+	* newrole: Add missing defined in #if, from Nicolas Iooss.
 	* newrole: Add description of missing parameter -p in newrole man page, from Lukas Vrabec.
 	* secon: Add missing descriptions for --*-key params in secon man page, from Lukas Vrabec
 	* semanage: List reserve_port_t in semanage port -l, from Petr Lautrbach.

@@ -1,4 +1,6 @@
 1.2.3-rc1 2016-01-07
+	* Support latest refpolicy interfaces, from Nicolas Iooss.
+	* Make sepolgen-ifgen output deterministic with Python>=3.3, from Nicolas Iooss.
 	* Use key function in sort(), from Petr Lautrbach.
 	* Reset line numbers when parsing files, from Nicolas Iooss.
 	* Convert cmp functions to key functions, from Robert Kuska.
