@@ -154,7 +154,6 @@ int dbase_llist_add(semanage_handle_t * handle,
 	if (dbase_llist_cache_prepend(handle, dbase, data) < 0)
 		goto err;
 
-	key = NULL;
 	dbase->modified = 1;
 	return STATUS_SUCCESS;
 
@@ -224,7 +223,6 @@ hidden int dbase_llist_count(semanage_handle_t * handle __attribute__ ((unused))
 {
 
 	*response = dbase->cache_sz;
-	handle = NULL;
 	return STATUS_SUCCESS;
 }
 
@@ -303,7 +301,6 @@ int dbase_llist_del(semanage_handle_t * handle __attribute__ ((unused)),
 			prev = ptr;
 	}
 
-	handle = NULL;
 	return STATUS_SUCCESS;
 }
 

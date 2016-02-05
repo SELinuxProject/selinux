@@ -291,7 +291,6 @@ static void semanage_direct_destroy(semanage_handle_t * sh
 					__attribute__ ((unused)))
 {
 	/* do nothing */
-	sh = NULL;
 }
 
 static int semanage_direct_disconnect(semanage_handle_t * sh)

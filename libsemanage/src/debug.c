@@ -86,8 +86,6 @@ void hidden semanage_msg_default_handler(void *varg __attribute__ ((unused)),
 		fprintf(stream, " (%s).", strerror(errsv));
 
 	fprintf(stream, "\n");
-
-	varg = NULL;
 }
 
 #ifdef __GNUC__

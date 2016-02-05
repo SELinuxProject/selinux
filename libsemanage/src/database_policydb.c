@@ -165,7 +165,6 @@ static int dbase_policydb_flush(semanage_handle_t * handle
 	dbase->modified = 0;
 
 	/* Stub */
-	handle = NULL;
 	return STATUS_ERR;
 }
 
@@ -298,9 +297,6 @@ static int dbase_policydb_del(semanage_handle_t * handle
 {
 
 	/* Stub */
-	key = NULL;
-	handle = NULL;
-	dbase = NULL;
 	return STATUS_ERR;
 }
 
@@ -311,8 +307,6 @@ static int dbase_policydb_clear(semanage_handle_t * handle
 {
 
 	/* Stub */
-	handle = NULL;
-	dbase = NULL;
 	return STATUS_ERR;
 }
 
