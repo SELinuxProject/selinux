@@ -33,7 +33,7 @@
 #endif
 
 #include "policy.h"
-apol_policy_t *policy = NULL;
+apol_policy_t *global_policy = NULL;
 
 /* other */
 #include <errno.h>
@@ -53,8 +53,8 @@ PyObject *wrap_policy(PyObject *UNUSED(self), PyObject *args){
     if (!PyArg_ParseTuple(args, "z", &policy_file))
 	    return NULL;
 
-    if (policy) 
-	    apol_policy_destroy(&policy);
+    if (global_policy)
+	    apol_policy_destroy(&global_policy);
 
     int policy_load_options = 0;
 	    
@@ -66,9 +66,9 @@ PyObject *wrap_policy(PyObject *UNUSED(self), PyObject *args){
     }
     apol_vector_destroy(&mod_paths);
     
-    policy = apol_policy_create_from_policy_path(pol_path, policy_load_options, NULL, NULL);
+    global_policy = apol_policy_create_from_policy_path(pol_path, policy_load_options, NULL, NULL);
     apol_policy_path_destroy(&pol_path);
-    if (!policy) {
+    if (!global_policy) {
 	    PyErr_SetString(PyExc_RuntimeError,strerror(errno));
 	    return NULL;
     }

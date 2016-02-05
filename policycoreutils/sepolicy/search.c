@@ -914,23 +914,23 @@ PyObject* search(bool allow,
 		cmd_opts.perm_vector = apol_vector_create(free);
 		cmd_opts.permlist = strdup(permlist);
 	}
-	if (!cmd_opts.semantic && qpol_policy_has_capability(apol_policy_get_qpol(policy), QPOL_CAP_SYN_RULES)) {
-		if (qpol_policy_build_syn_rule_table(apol_policy_get_qpol(policy))) {
+	if (!cmd_opts.semantic && qpol_policy_has_capability(apol_policy_get_qpol(global_policy), QPOL_CAP_SYN_RULES)) {
+		if (qpol_policy_build_syn_rule_table(apol_policy_get_qpol(global_policy))) {
 			PyErr_SetString(PyExc_RuntimeError,"Query failed");
 			goto cleanup;
 		}
 	}
 
 	/* if syntactic rules are not available always do semantic search */
-	if (!qpol_policy_has_capability(apol_policy_get_qpol(policy), QPOL_CAP_SYN_RULES)) {
+	if (!qpol_policy_has_capability(apol_policy_get_qpol(global_policy), QPOL_CAP_SYN_RULES)) {
 		cmd_opts.semantic = 1;
 	}
 
 	/* supress line numbers if doing semantic search or not available */
-	if (cmd_opts.semantic || !qpol_policy_has_capability(apol_policy_get_qpol(policy), QPOL_CAP_LINE_NUMBERS)) {
+	if (cmd_opts.semantic || !qpol_policy_has_capability(apol_policy_get_qpol(global_policy), QPOL_CAP_LINE_NUMBERS)) {
 		cmd_opts.lineno = 0;
 	}
-	if (perform_av_query(policy, &cmd_opts, &v)) {
+	if (perform_av_query(global_policy, &cmd_opts, &v)) {
 		goto cleanup;
 	}
 	output = PyList_New(0);
@@ -938,36 +938,36 @@ PyObject* search(bool allow,
 		goto cleanup;
 
 	if (v) {
-		get_av_results(policy, v, output);
+		get_av_results(global_policy, v, output);
 	}
 
 	apol_vector_destroy(&v);
-	if (perform_te_query(policy, &cmd_opts, &v)) {
+	if (perform_te_query(global_policy, &cmd_opts, &v)) {
 		goto cleanup;
 	}
 	if (v) {
-		get_te_results(policy, v, output);
+		get_te_results(global_policy, v, output);
 	}
 
 	if (cmd_opts.all || cmd_opts.type) {
 		apol_vector_destroy(&v);
-		if (perform_ft_query(policy, &cmd_opts, &v)) {
+		if (perform_ft_query(global_policy, &cmd_opts, &v)) {
 			goto cleanup;
 		}
 
 		if (v) {
-			get_ft_results(policy, v, output);
+			get_ft_results(global_policy, v, output);
 		}
 	}
 
 	if (cmd_opts.all || cmd_opts.role_allow) {
 		apol_vector_destroy(&v);
-		if (perform_ra_query(policy, &cmd_opts, &v)) {
+		if (perform_ra_query(global_policy, &cmd_opts, &v)) {
 			goto cleanup;
 		}
 
 		if (v) {
-			get_ra_results(policy, v, output);
+			get_ra_results(global_policy, v, output);
 		}
 	}
 
@@ -1016,7 +1016,7 @@ PyObject *wrap_search(PyObject *UNUSED(self), PyObject *args){
     int transition = Dict_ContainsInt(dict, "transition");
     int role_allow = Dict_ContainsInt(dict, "role_allow");
 
-    if (!policy) {
+    if (!global_policy) {
 	    PyErr_SetString(PyExc_RuntimeError,"Policy not loaded");
 	    return NULL;
     }

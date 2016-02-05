@@ -1318,31 +1318,31 @@ PyObject* info( int type, const char *name)
 	switch(type) {
 	/* display requested info */
 	case TYPE:
-		output = get_types(name, policy);
+		output = get_types(name, global_policy);
 		break;
 	case ATTRIBUTE:
-		output = get_attribs(name, policy);
+		output = get_attribs(name, global_policy);
 		break;
 	case ROLE:
-		output = get_roles(name, policy);
+		output = get_roles(name, global_policy);
 		break;
 	case USER:
-		output = get_users(name, policy);
+		output = get_users(name, global_policy);
 		break;
 	case CLASS:
-		output = get_classes(name, policy);
+		output = get_classes(name, global_policy);
 		break;
 	case BOOLEAN:
-		output = get_booleans(name, policy);
+		output = get_booleans(name, global_policy);
 		break;
 	case PORT:
-		output = get_ports(name, policy);
+		output = get_ports(name, global_policy);
 		break;
 	case SENS:
-		output = get_sens(name, policy);
+		output = get_sens(name, global_policy);
 		break;
 	case CATS:
-		output = get_cats(name, policy);
+		output = get_cats(name, global_policy);
 		break;
 	default:
 		errno = EINVAL;
@@ -1357,7 +1357,7 @@ PyObject *wrap_info(PyObject *UNUSED(self), PyObject *args){
     int type;
     const char *name;
     
-    if (!policy) {
+    if (!global_policy) {
 	    PyErr_SetString(PyExc_RuntimeError,"Policy not loaded");
 	    return NULL;
     }
