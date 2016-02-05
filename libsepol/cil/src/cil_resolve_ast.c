@@ -3576,7 +3576,7 @@ exit:
 	return rc;
 }
 
-int __cil_resolve_ast_node_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
+int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_args_resolve *args = extra_args;

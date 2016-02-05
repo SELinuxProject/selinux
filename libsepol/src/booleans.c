@@ -110,7 +110,6 @@ int sepol_bool_count(sepol_handle_t * handle __attribute__ ((unused)),
 	const policydb_t *policydb = &p->p;
 	*response = policydb->p_bools.nprim;
 
-	handle = NULL;
 	return STATUS_SUCCESS;
 }
 

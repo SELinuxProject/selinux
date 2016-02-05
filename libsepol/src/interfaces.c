@@ -126,7 +126,6 @@ int sepol_iface_exists(sepol_handle_t * handle __attribute__ ((unused)),
 	}
 	*response = 0;
 
-	handle = NULL;
 	return STATUS_SUCCESS;
 }
 
@@ -230,7 +229,6 @@ extern int sepol_iface_count(sepol_handle_t * handle __attribute__ ((unused)),
 
 	*response = count;
 
-	handle = NULL;
 	return STATUS_SUCCESS;
 }
 

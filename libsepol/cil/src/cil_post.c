@@ -426,7 +426,7 @@ static int __cil_post_db_count_helper(struct cil_tree_node *node, uint32_t *fini
 	return SEPOL_OK;
 }
 
-static int __cil_post_db_array_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
+static int __cil_post_db_array_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	struct cil_db *db = extra_args;
 
@@ -1186,7 +1186,7 @@ exit:
 	return SEPOL_ERR;
 }
 
-static int __cil_post_db_attr_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
+static int __cil_post_db_attr_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_db *db = extra_args;
@@ -1286,7 +1286,7 @@ exit:
 	return SEPOL_ERR;
 }
 
-static int __cil_post_db_roletype_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
+static int __cil_post_db_roletype_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_db *db = extra_args;
@@ -1376,7 +1376,7 @@ exit:
 	return SEPOL_ERR;
 }
 
-static int __cil_post_db_userrole_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
+static int __cil_post_db_userrole_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_db *db = extra_args;

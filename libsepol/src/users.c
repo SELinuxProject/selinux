@@ -297,7 +297,6 @@ int sepol_user_exists(sepol_handle_t * handle __attribute__ ((unused)),
 	*response = (hashtab_search(policydb->p_users.table,
 				    (const hashtab_key_t)cname) != NULL);
 
-	handle = NULL;
 	return STATUS_SUCCESS;
 }
 
@@ -308,7 +307,6 @@ int sepol_user_count(sepol_handle_t * handle __attribute__ ((unused)),
 	const policydb_t *policydb = &p->p;
 	*response = policydb->p_users.nprim;
 
-	handle = NULL;
 	return STATUS_SUCCESS;
 }
 

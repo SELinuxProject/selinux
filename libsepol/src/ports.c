@@ -154,7 +154,6 @@ extern int sepol_port_count(sepol_handle_t * handle __attribute__ ((unused)),
 
 	*response = count;
 
-	handle = NULL;
 	return STATUS_SUCCESS;
 }
 

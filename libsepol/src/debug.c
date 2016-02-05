@@ -69,8 +69,6 @@ void hidden sepol_msg_default_handler(void *varg __attribute__ ((unused)),
 	va_end(ap);
 
 	fprintf(stream, "\n");
-
-	varg = NULL;
 }
 
 extern void sepol_msg_set_callback(sepol_handle_t * handle,

@@ -549,7 +549,7 @@ exit:
 /* The role bounds is defined as: a child role cannot have a type that
  * its parent doesn't have.
  */
-static int bounds_check_role_callback(hashtab_key_t k __attribute__ ((unused)),
+static int bounds_check_role_callback(hashtab_key_t k,
 				      hashtab_datum_t d, void *args)
 {
 	struct bounds_args *a = (struct bounds_args *)args;
@@ -592,7 +592,7 @@ int bounds_check_roles(sepol_handle_t *handle, policydb_t *p)
 /* The user bounds is defined as: a child user cannot have a role that
  * its parent doesn't have.
  */
-static int bounds_check_user_callback(hashtab_key_t k __attribute__ ((unused)),
+static int bounds_check_user_callback(hashtab_key_t k,
 				      hashtab_datum_t d, void *args)
 {
 	struct bounds_args *a = (struct bounds_args *)args;

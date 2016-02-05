@@ -2179,9 +2179,7 @@ static int class_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 	return -1;
 }
 
-static int role_read(policydb_t * p
-		     __attribute__ ((unused)), hashtab_t h,
-		     struct policy_file *fp)
+static int role_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 {
 	char *key = 0;
 	role_datum_t *role;
@@ -2257,9 +2255,7 @@ static int role_read(policydb_t * p
 	return -1;
 }
 
-static int type_read(policydb_t * p
-		     __attribute__ ((unused)), hashtab_t h,
-		     struct policy_file *fp)
+static int type_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 {
 	char *key = 0;
 	type_datum_t *typdatum;

@@ -789,7 +789,7 @@ void cil_copy_fill_permissionx(struct cil_db *db, struct cil_permissionx *orig, 
 	cil_copy_expr(db, orig->expr_str, &new->expr_str);
 }
 
-int cil_copy_avrule(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+int cil_copy_avrule(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_avrule *orig = data;
 	struct cil_avrule *new = NULL;

@@ -3588,7 +3588,7 @@ exit:
 	return rc;
 }
 
-int __cil_binary_create_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
+int __cil_binary_create_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 
