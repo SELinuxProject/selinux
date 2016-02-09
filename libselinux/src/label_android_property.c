@@ -89,10 +89,21 @@ static int process_line(struct selabel_handle *rec,
 	struct saved_data *data = (struct saved_data *)rec->data;
 	spec_t *spec_arr = data->spec_arr;
 	unsigned int nspec = data->nspec;
+	const char *errbuf = NULL;
 
-	items = read_spec_entries(line_buf, 2, &prop, &context);
-	if (items <= 0)
+	items = read_spec_entries(line_buf, &errbuf, 2, &prop, &context);
+	if (items < 0) {
+		items = errno;
+		selinux_log(SELINUX_ERROR,
+			"%s:  line %u error due to: %s\n", path,
+			lineno, errbuf ?: strerror(errno));
+		errno = items;
+		return -1;
+	}
+
+	if (items == 0)
 		return items;
+
 	if (items != 2) {
 		selinux_log(SELINUX_ERROR,
 			    "%s:  line %u is missing fields\n", path,
