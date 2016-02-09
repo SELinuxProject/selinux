@@ -140,6 +140,6 @@ compat_validate(struct selabel_handle *rec,
  * The read_spec_entries function may be used to
  * replace sscanf to read entries from spec files.
  */
-extern int read_spec_entries(char *line_buf, int num_args, ...);
+extern int read_spec_entries(char *line_buf, const char **errbuf, int num_args, ...);
 
 #endif				/* _SELABEL_INTERNAL_H_ */
