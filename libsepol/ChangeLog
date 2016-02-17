@@ -1,4 +1,5 @@
 2.5-rc1 2016-01-07
+	* Fix unused variable annotations, from Nicolas Iooss.
 	* Fix uninitialized variable in CIL, from Nicolas Iooss.
 	* Validate extended avrules and permissionxs in CIL, from Steve Lawrence.
 	* Add support in CIL for neverallowx, from Steve Lawrence.
