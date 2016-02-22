@@ -1,4 +1,5 @@
 2.5-rc1 2016-01-07
+	* selinux_restorecon.3 man page corrections, from Richard Haines.
 	* Add selinux_restorecon function, from Richard Haines.
 	* read_spec_entry: fail on non-ascii, from William Roberts.
 	* Add man information about thread specific functions, from Dan Waslh.
