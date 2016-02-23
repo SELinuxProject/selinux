@@ -1,4 +1,4 @@
-2.5-rc1 2016-01-07
+2.5 2016-02-23
 	* sepolicy: Do not overwrite CFLAGS, from Nicolas Iooss.
 	* sepolicy: Rename policy global variable conflict, from Nicolas Iooss.
 	* newrole: Add missing defined in #if, from Nicolas Iooss.

@@ -1,4 +1,4 @@
-2.5-rc1 2016-01-07
+2.5 2016-02-23
 	* Do not overwrite CFLAGS in test Makefile, from Nicolas Iooss.
 	* Fix uninitialized variable in direct_commit and direct_api, from Nicolas Iooss.
 	* semanage_migrate_store: Load libsepol.so.1 instead of libsepol.so, from Laurent Bigonville.
