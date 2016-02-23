@@ -306,11 +306,21 @@ static int setprocattrcon(const char * context,
 #define getpidattr_def(fn, attr) \
 	int get##fn##_raw(pid_t pid, char **c)	\
 	{ \
-		return getprocattrcon_raw(c, pid, #attr); \
+		if (pid <= 0) { \
+			errno = EINVAL; \
+			return -1; \
+		} else { \
+			return getprocattrcon_raw(c, pid, #attr); \
+		} \
 	} \
 	int get##fn(pid_t pid, char **c)	\
 	{ \
-		return getprocattrcon(c, pid, #attr); \
+		if (pid <= 0) { \
+			errno = EINVAL; \
+			return -1; \
+		} else { \
+			return getprocattrcon(c, pid, #attr); \
+		} \
 	}
 
 all_selfattr_def(con, current)
