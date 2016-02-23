@@ -70,9 +70,9 @@ static int openattr(pid_t pid, const char *attr, int flags)
 	char *path;
 	pid_t tid;
 
-	if (pid > 0)
+	if (pid > 0) {
 		rc = asprintf(&path, "/proc/%d/attr/%s", pid, attr);
-	else {
+	} else if (pid == 0) {
 		rc = asprintf(&path, "/proc/thread-self/attr/%s", attr);
 		if (rc < 0)
 			return -1;
@@ -82,6 +82,9 @@ static int openattr(pid_t pid, const char *attr, int flags)
 		free(path);
 		tid = gettid();
 		rc = asprintf(&path, "/proc/self/task/%d/attr/%s", tid, attr);
+	} else {
+		errno = EINVAL;
+		return -1;
 	}
 	if (rc < 0)
 		return -1;
