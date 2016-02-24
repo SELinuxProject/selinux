@@ -1,3 +1,5 @@
+	* procattr: return error on invalid pid_t input, from Daniel Cashman.
+
 2.5 2016-02-23
 	* selinux_restorecon.3 man page corrections, from Richard Haines.
 	* Add selinux_restorecon function, from Richard Haines.
