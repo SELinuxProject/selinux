@@ -48,6 +48,7 @@
 
 #include "debug.h"
 #include "private.h"
+#include "android_m_compat.h"
 
 /* Based on MurmurHash3, written by Austin Appleby and placed in the
  * public domain.
@@ -440,6 +441,7 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 	avtab_key_t key;
 	avtab_datum_t datum;
 	avtab_extended_perms_t xperms;
+	unsigned int android_m_compat_optype = 0;
 	unsigned set;
 	unsigned int i;
 	int rc;
@@ -529,6 +531,13 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 	key.target_class = le16_to_cpu(buf16[items++]);
 	key.specified = le16_to_cpu(buf16[items++]);
 
+	if ((key.specified & AVTAB_OPTYPE) &&
+			(vers == POLICYDB_VERSION_XPERMS_IOCTL)) {
+		key.specified = avtab_optype_to_xperms(key.specified);
+		android_m_compat_optype = 1;
+		avtab_android_m_compat_set();
+	}
+
 	set = 0;
 	for (i = 0; i < ARRAY_SIZE(spec_order); i++) {
 		if (key.specified & spec_order[i])
@@ -551,12 +560,24 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 			return -1;
 		}
 		xperms.specified = buf8;
-		rc = next_entry(&buf8, fp, sizeof(uint8_t));
-		if (rc < 0) {
-			ERR(fp->handle, "truncated entry");
-			return -1;
+		if (avtab_android_m_compat ||
+				((xperms.specified != AVTAB_XPERMS_IOCTLFUNCTION) &&
+				(xperms.specified != AVTAB_XPERMS_IOCTLDRIVER) &&
+				(vers == POLICYDB_VERSION_XPERMS_IOCTL))) {
+			xperms.driver = xperms.specified;
+			if (android_m_compat_optype)
+				xperms.specified = AVTAB_XPERMS_IOCTLDRIVER;
+			else
+				xperms.specified = AVTAB_XPERMS_IOCTLFUNCTION;
+			avtab_android_m_compat_set();
+		} else {
+			rc = next_entry(&buf8, fp, sizeof(uint8_t));
+			if (rc < 0) {
+				ERR(fp->handle, "truncated entry");
+				return -1;
+			}
+			xperms.driver = buf8;
 		}
-		xperms.driver = buf8;
 		rc = next_entry(buf32, fp, sizeof(uint32_t)*8);
 		if (rc < 0) {
 			ERR(fp->handle, "truncated entry");

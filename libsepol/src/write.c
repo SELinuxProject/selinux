@@ -44,6 +44,7 @@
 #include "debug.h"
 #include "private.h"
 #include "mls.h"
+#include "android_m_compat.h"
 
 struct policy_data {
 	struct policy_file *fp;
@@ -217,7 +218,11 @@ static int avtab_write_item(policydb_t * p,
 	buf16[0] = cpu_to_le16(cur->key.source_type);
 	buf16[1] = cpu_to_le16(cur->key.target_type);
 	buf16[2] = cpu_to_le16(cur->key.target_class);
-	buf16[3] = cpu_to_le16(cur->key.specified);
+	if (avtab_android_m_compat && (cur->key.specified & AVTAB_XPERMS) &&
+		    (cur->datum.xperms->specified == AVTAB_XPERMS_IOCTLDRIVER))
+		buf16[3] = cpu_to_le16(avtab_xperms_to_optype(cur->key.specified));
+	else
+		buf16[3] = cpu_to_le16(cur->key.specified);
 	items = put_entry(buf16, sizeof(uint16_t), 4, fp);
 	if (items != 4)
 		return POLICYDB_ERROR;
@@ -237,10 +242,12 @@ static int avtab_write_item(policydb_t * p,
 	}
 
 	if (cur->key.specified & AVTAB_XPERMS) {
-		buf8 = cur->datum.xperms->specified;
-		items = put_entry(&buf8, sizeof(uint8_t),1,fp);
-		if (items != 1)
-			return POLICYDB_ERROR;
+		if (avtab_android_m_compat == 0) {
+			buf8 = cur->datum.xperms->specified;
+			items = put_entry(&buf8, sizeof(uint8_t),1,fp);
+			if (items != 1)
+				return POLICYDB_ERROR;
+		}
 		buf8 = cur->datum.xperms->driver;
 		items = put_entry(&buf8, sizeof(uint8_t),1,fp);
 		if (items != 1)
