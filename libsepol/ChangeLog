@@ -1,3 +1,5 @@
+	* Fix bug in CIL when resetting classes, from Steve Lawrence
+
 2.5 2016-02-23
 	* Fix unused variable annotations, from Nicolas Iooss.
 	* Fix uninitialized variable in CIL, from Nicolas Iooss.
