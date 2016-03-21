@@ -112,6 +112,9 @@ class Node(PolicyBase):
     def typerules(self):
         return filter(lambda x: isinstance(x, TypeRule), walktree(self))
 
+    def typebounds(self):
+        return filter(lambda x: isinstance(x, TypeBound), walktree(self))
+
     def typeattributes(self):
         """Iterate over all of the TypeAttribute children of this Interface."""
         return filter(lambda x: isinstance(x, TypeAttribute), walktree(self))
@@ -522,6 +525,19 @@ class TypeRule(Leaf):
                                      self.tgt_types.to_space_str(),
                                      self.obj_classes.to_space_str(),
                                      self.dest_type)
+class TypeBound(Leaf):
+    """SElinux typebound statement.
+
+    This class represents a typebound statement.
+    """
+    def __init__(self, parent=None):
+        Leaf.__init__(self, parent)
+        self.type = ""
+        self.tgt_types = IdSet()
+
+    def to_string(self):
+        return "typebounds %s %s;" % (self.type, self.tgt_types.to_comma_str())
+
 
 class RoleAllow(Leaf):
     def __init__(self, parent=None):
