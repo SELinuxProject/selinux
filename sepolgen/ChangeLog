@@ -1,3 +1,5 @@
+	* Add support for TYPEBOUNDS statement in INTERFACE policy files, from Miroslav Grepl.
+
 1.2.3 2016-02-23
 	* Support latest refpolicy interfaces, from Nicolas Iooss.
 	* Make sepolgen-ifgen output deterministic with Python>=3.3, from Nicolas Iooss.
