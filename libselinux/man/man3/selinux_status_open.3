@@ -23,7 +23,7 @@ without invocation of system calls
 .SH "DESCRIPTION"
 Linux 2.6.37 or later provides a SELinux kernel status page; being mostly
 placed on
-.I /selinux/status
+.I /sys/fs/selinux/status
 entry. It enables userspace applications to mmap this page with read-only
 mode, then it informs some status without system call invocations.
 .sp
@@ -38,7 +38,7 @@ without system-call invocation or worker thread for monitoring.
 .BR selinux_status_open ()
 tries to
 .BR open (2)
-.I /selinux/status
+.I /sys/fs/selinux/status
 and
 .BR mmap (2)
 it in read-only mode. The file-descriptor and pointer to the page shall
