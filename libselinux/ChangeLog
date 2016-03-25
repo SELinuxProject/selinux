@@ -1,3 +1,4 @@
+	* Fix location of selinuxfs mount point, from Dan Walsh.
 	* Only mount /proc if necessary, from Stephen Smalley.
 	* procattr: return einval for <= 0 pid args, from Daniel Cashman.
 	* procattr: return error on invalid pid_t input, from Daniel Cashman.
