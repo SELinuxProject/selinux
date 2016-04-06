@@ -28,6 +28,7 @@
 
 #include <sepol/module.h>
 #include <sepol/module_to_cil.h>
+#include <sepol/policydb/module.h>
 
 char *progname;
 
@@ -68,6 +69,8 @@ int main(int argc, char **argv)
 		{ NULL, 0, NULL, 0 }
 	};
 	struct sepol_module_package *mod_pkg = NULL;
+	char *ifile = NULL;
+	char *ofile = NULL;
 	FILE *in = NULL;
 	FILE *out = NULL;
 	int outfd = -1;
@@ -89,20 +92,23 @@ int main(int argc, char **argv)
 	}
 
 	if (argc >= optind + 1 && strcmp(argv[1], "-") != 0) {
-		in = fopen(argv[1], "rb");
+		ifile = argv[1];
+		in = fopen(ifile, "rb");
 		if (in == NULL) {
-			log_err("Failed to open %s: %s", argv[1], strerror(errno));
+			log_err("Failed to open %s: %s", ifile, strerror(errno));
 			rc = -1;
 			goto exit;
 		}
 	} else {
+		ifile = "stdin";
 		in = stdin;
 	}
 
 	if (argc >= optind + 2 && strcmp(argv[2], "-") != 0) {
-		out = fopen(argv[2], "w");
+		ofile = argv[2];
+		out = fopen(ofile, "w");
 		if (out == NULL) {
-			log_err("Failed to open %s: %s", argv[2], strerror(errno));
+			log_err("Failed to open %s: %s", ofile, strerror(errno));
 			rc = -1;
 			goto exit;
 		}
@@ -121,6 +127,25 @@ int main(int argc, char **argv)
 	}
 	fclose(in);
 	in = NULL;
+
+	if (ofile) {
+		char *mod_name = mod_pkg->policy->p.name;
+		char *cil_path = strdup(ofile);
+		if (cil_path == NULL) {
+			log_err("No memory available for strdup\n");
+			rc = -1;
+			goto exit;
+		}
+		char *cil_name = basename(cil_path);
+		char *separator = strrchr(cil_name, '.');
+		if (separator) {
+			*separator = '\0';
+		}
+		if (strcmp(mod_name, cil_name) != 0) {
+			fprintf(stderr,	"Warning: SELinux userspace will refer to the module from %s as %s rather than %s\n", ifile, cil_name, mod_name);
+		}
+		free(cil_path);
+	}
 
 	rc = sepol_module_package_to_cil(out, mod_pkg);
 	if (rc != 0) {
