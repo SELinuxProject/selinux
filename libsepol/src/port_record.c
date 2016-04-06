@@ -184,6 +184,8 @@ const char *sepol_port_get_proto_str(int proto)
 		return "udp";
 	case SEPOL_PROTO_TCP:
 		return "tcp";
+	case SEPOL_PROTO_DCCP:
+		return "dccp";
 	default:
 		return "???";
 	}

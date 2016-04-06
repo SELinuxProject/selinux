@@ -4876,6 +4876,8 @@ int define_port_context(unsigned int low, unsigned int high)
 		protocol = IPPROTO_TCP;
 	} else if ((strcmp(id, "udp") == 0) || (strcmp(id, "UDP") == 0)) {
 		protocol = IPPROTO_UDP;
+	} else if ((strcmp(id, "dccp") == 0) || (strcmp(id, "DCCP") == 0)) {
+		protocol = IPPROTO_DCCP;
 	} else {
 		yyerror2("unrecognized protocol %s", id);
 		free(newc);

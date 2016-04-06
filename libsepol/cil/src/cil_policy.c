@@ -123,6 +123,8 @@ int cil_portcon_to_policy(FILE **file_arr, struct cil_sort *sort)
 			fprintf(file_arr[NETIFCONS], "udp ");
 		} else if (portcon->proto == CIL_PROTOCOL_TCP) {
 			fprintf(file_arr[NETIFCONS], "tcp ");
+		} else if (portcon->proto == CIL_PROTOCOL_DCCP) {
+			fprintf(file_arr[NETIFCONS], "dccp ");
 		}
 		fprintf(file_arr[NETIFCONS], "%d ", portcon->port_low);
 		fprintf(file_arr[NETIFCONS], "%d ", portcon->port_high);

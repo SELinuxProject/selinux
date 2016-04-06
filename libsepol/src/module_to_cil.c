@@ -2537,6 +2537,7 @@ static int ocontext_selinux_port_to_cil(struct policydb *pdb, struct ocontext *p
 		switch (portcon->u.port.protocol) {
 		case IPPROTO_TCP: protocol = "tcp"; break;
 		case IPPROTO_UDP: protocol = "udp"; break;
+		case IPPROTO_DCCP: protocol = "dccp"; break;
 		default:
 			log_err("Unknown portcon protocol: %i", portcon->u.port.protocol);
 			rc = -1;

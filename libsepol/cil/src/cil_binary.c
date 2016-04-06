@@ -3035,6 +3035,9 @@ int cil_portcon_to_policydb(policydb_t *pdb, struct cil_sort *portcons)
 		case CIL_PROTOCOL_TCP:
 			new_ocon->u.port.protocol = IPPROTO_TCP;
 			break;
+		case CIL_PROTOCOL_DCCP:
+			new_ocon->u.port.protocol = IPPROTO_DCCP;
+			break;
 		default:
 			/* should not get here */
 			rc = SEPOL_ERR;

@@ -108,6 +108,7 @@ static void cil_init_keys(void)
 	CIL_KEY_STAR = cil_strpool_add("*");
 	CIL_KEY_UDP = cil_strpool_add("udp");
 	CIL_KEY_TCP = cil_strpool_add("tcp");
+	CIL_KEY_DCCP = cil_strpool_add("dccp");
 	CIL_KEY_AUDITALLOW = cil_strpool_add("auditallow");
 	CIL_KEY_TUNABLEIF = cil_strpool_add("tunableif");
 	CIL_KEY_ALLOW = cil_strpool_add("allow");

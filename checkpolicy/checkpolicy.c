@@ -919,6 +919,8 @@ int main(int argc, char **argv)
 				protocol = IPPROTO_TCP;
 			else if (!strcmp(ans, "udp") || !strcmp(ans, "UDP"))
 				protocol = IPPROTO_UDP;
+			else if (!strcmp(ans, "dccp") || !strcmp(ans, "DCCP"))
+				protocol = IPPROTO_DCCP;
 			else {
 				printf("unknown protocol\n");
 				break;

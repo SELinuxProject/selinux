@@ -1319,6 +1319,8 @@ void cil_tree_print_node(struct cil_tree_node *node)
 				cil_log(CIL_INFO, " udp");
 			} else if (portcon->proto == CIL_PROTOCOL_TCP) {
 				cil_log(CIL_INFO, " tcp");
+			} else if (portcon->proto == CIL_PROTOCOL_DCCP) {
+				cil_log(CIL_INFO, " dccp");
 			}
 			cil_log(CIL_INFO, " (%d %d)", portcon->port_low, portcon->port_high);
 
