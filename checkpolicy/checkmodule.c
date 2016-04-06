@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <sys/mman.h>
+#include <libgen.h>
 
 #include <sepol/module_to_cil.h>
 #include <sepol/policydb/policydb.h>
@@ -256,6 +257,25 @@ int main(int argc, char **argv)
 		if (hierarchy_check_constraints(NULL, &modpolicydb)) {
 			return -1;
 		}
+	}
+
+	if (policy_type != POLICY_BASE && outfile) {
+		char *mod_name = modpolicydb.name;
+		char *out_path = strdup(outfile);
+		if (out_path == NULL) {
+			fprintf(stderr, "%s:  out of memory\n", argv[0]);
+			exit(1);
+		}
+		char *out_name = basename(out_path);
+		char *separator = strrchr(out_name, '.');
+		if (separator) {
+			*separator = '\0';
+		}
+		if (strcmp(mod_name, out_name) != 0) {
+			fprintf(stderr,	"%s:  Module name %s is different than the output base filename %s\n", argv[0], mod_name, out_name);
+			exit(1);
+		}
+		free(out_path);
 	}
 
 	if (modpolicydb.policy_type == POLICY_BASE && !cil) {
