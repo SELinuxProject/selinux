@@ -64,6 +64,7 @@ cil_src_files := \
 	cil/src/cil_verify.c
 
 common_cflags := \
+	-D_GNU_SOURCE \
 	-Wall -W -Wundef \
 	-Wshadow -Wmissing-noreturn \
 	-Wmissing-format-attribute
