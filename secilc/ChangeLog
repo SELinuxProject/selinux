@@ -1,3 +1,5 @@
+	* Add documentation and test rule for portcon dccp protocol, from Richard Haines
+
 2.5 2016-02-23
 	* Convert DocBook documentation into github markdown, from Yuli Khodorkovskiy
 	* Add documentation for neverallowx rules, from Steve Lawrence
