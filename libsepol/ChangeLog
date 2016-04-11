@@ -1,3 +1,4 @@
+	* Android.mk: Add -D_GNU_SOURCE to common_cflags, from Nick Kralevich.
 	* Add support for portcon dccp protocol, from Richard Haines
 	* Fix bug in CIL when resetting classes, from Steve Lawrence
 
