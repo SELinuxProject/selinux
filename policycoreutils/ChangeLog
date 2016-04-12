@@ -1,3 +1,5 @@
+	* hll/pp: Warn if module name different than output filename, from James Carter
+
 2.5 2016-02-23
 	* sepolicy: Do not overwrite CFLAGS, from Nicolas Iooss.
 	* sepolicy: Rename policy global variable conflict, from Nicolas Iooss.
