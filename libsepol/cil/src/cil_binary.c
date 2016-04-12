@@ -4577,6 +4577,7 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 		if (bad) {
 			avtab_ptr_t cur;
 			struct cil_avrule target;
+			struct cil_tree_node *n1 = NULL;
 
                         target.is_extended = 0;
 			target.rule_kind = CIL_AVRULE_ALLOWED;
@@ -4588,7 +4589,6 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 			for (cur = bad; cur; cur = cur->next) {
 				struct cil_list_item *i2;
 				struct cil_list *matching;
-				struct cil_tree_node *n;
 
 				rc = cil_avrule_from_sepol(pdb, cur, &target, type_value_to_cil, class_value_to_cil, perm_value_to_cil);
 				if (rc != SEPOL_OK) {
@@ -4597,7 +4597,7 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 				}
 				__cil_print_rule("  ", "allow", &target);
 				cil_list_init(&matching, CIL_NODE);
-				rc = cil_find_matching_avrule_in_ast(db->ast->root, CIL_AVRULE, &target, matching, CIL_FALSE);
+				rc = cil_find_matching_avrule_in_ast(db->ast->root, CIL_AVRULE, &target, matching, CIL_TRUE);
 				if (rc) {
 					cil_log(CIL_ERR, "Error occurred while checking type bounds\n");
 					cil_list_destroy(&matching, CIL_FALSE);
@@ -4605,14 +4605,17 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 					bounds_destroy_bad(bad);
 					goto exit;
 				}
-
 				cil_list_for_each(i2, matching) {
-					__cil_print_parents("    ", (struct cil_tree_node *)i2->data);
+					struct cil_tree_node *n2 = i2->data;
+					struct cil_avrule *r2 = n2->data;
+					if (n1 == n2) {
+						cil_log(CIL_ERR, "    <See previous>\n");
+					} else {
+						n1 = n2;
+						__cil_print_parents("    ", n2);
+						__cil_print_rule("      ", "allow", r2);
+					}
 				}
-				i2 = matching->tail;
-				n = i2->data;
-				__cil_print_rule("      ", "allow", n->data);
-				cil_log(CIL_ERR,"\n");
 				cil_list_destroy(&matching, CIL_FALSE);
 				cil_list_destroy(&target.perms.classperms, CIL_TRUE);
 			}
