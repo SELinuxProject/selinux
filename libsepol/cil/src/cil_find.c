@@ -69,7 +69,11 @@ static int cil_type_match_any(struct cil_symtab_datum *d1, struct cil_symtab_dat
 		/* Both are attributes */
 		struct cil_typeattribute *a1 = (struct cil_typeattribute *)d1;
 		struct cil_typeattribute *a2 = (struct cil_typeattribute *)d2;
-		return ebitmap_match_any(a1->types, a2->types);
+		if (d1 == d2) {
+			return CIL_TRUE;
+		} else if (ebitmap_match_any(a1->types, a2->types)) {
+			return CIL_TRUE;
+		}
 	}
 	return CIL_FALSE;
 }
