@@ -4383,10 +4383,9 @@ exit:
 	return rc;
 }
 
-static int cil_check_neverallow(const struct cil_db *db, policydb_t *pdb, struct cil_tree_node *node)
+static int cil_check_neverallow(const struct cil_db *db, policydb_t *pdb, struct cil_tree_node *node, int *violation)
 {
-	int rc = SEPOL_ERR;
-	int ret = CIL_FALSE;
+	int rc = SEPOL_OK;
 	struct cil_avrule *cil_rule = node->data;
 	struct cil_symtab_datum *tgt = cil_rule->tgt;
 	uint32_t kind;
@@ -4425,11 +4424,11 @@ static int cil_check_neverallow(const struct cil_db *db, policydb_t *pdb, struct
 
 		rc = check_assertion(pdb, rule);
 		if (rc == CIL_TRUE) {
+			*violation = CIL_TRUE;
 			rc = __cil_print_neverallow_failure(db, node);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
-			ret = CIL_TRUE;
 		}
 
 	} else {
@@ -4447,12 +4446,11 @@ static int cil_check_neverallow(const struct cil_db *db, policydb_t *pdb, struct
 			rule->xperms = item->data;
 			rc = check_assertion(pdb, rule);
 			if (rc == CIL_TRUE) {
+				*violation = CIL_TRUE;
 				rc = __cil_print_neverallow_failure(db, node);
 				if (rc != SEPOL_OK) {
 					goto exit;
 				}
-				ret = CIL_TRUE;
-				goto exit;
 			}
 		}
 	}
@@ -4469,34 +4467,23 @@ exit:
 	rule->xperms = NULL;
 	__cil_destroy_sepol_avrules(rule);
 
-	if (rc) {
-		return rc;
-	} else {
-		return ret;
-	}
+	return rc;
 }
 
-static int cil_check_neverallows(const struct cil_db *db, policydb_t *pdb, struct cil_list *neverallows)
+static int cil_check_neverallows(const struct cil_db *db, policydb_t *pdb, struct cil_list *neverallows, int *violation)
 {
 	int rc = SEPOL_OK;
-	int ret = CIL_FALSE;
 	struct cil_list_item *item;
 
 	cil_list_for_each(item, neverallows) {
-		rc = cil_check_neverallow(db, pdb, item->data);
-		if (rc < 0) {
+		rc = cil_check_neverallow(db, pdb, item->data, violation);
+		if (rc != SEPOL_OK) {
 			goto exit;
-		} else if (rc > 0) {
-			ret = CIL_TRUE;
 		}
 	}
 
 exit:
-	if (rc || ret) {
-		return SEPOL_ERR;
-	} else {
-		return SEPOL_OK;
-	}
+	return rc;
 }
 
 static struct cil_list *cil_classperms_from_sepol(policydb_t *pdb, uint16_t class, uint32_t data, struct cil_class *class_value_to_cil[], struct cil_perm **perm_value_to_cil[])
@@ -4551,7 +4538,7 @@ exit:
 	return rc;
 }
 
-static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void *type_value_to_cil, struct cil_class *class_value_to_cil[], struct cil_perm **perm_value_to_cil[])
+static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void *type_value_to_cil, struct cil_class *class_value_to_cil[], struct cil_perm **perm_value_to_cil[], int *violation)
 {
 	int rc = SEPOL_OK;
 	int i;
@@ -4578,6 +4565,8 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 			avtab_ptr_t cur;
 			struct cil_avrule target;
 			struct cil_tree_node *n1 = NULL;
+
+			*violation = CIL_TRUE;
 
                         target.is_extended = 0;
 			target.rule_kind = CIL_AVRULE_ALLOWED;
@@ -4759,19 +4748,31 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 	__cil_set_conditional_state_and_flags(pdb);
 
 	if (db->disable_neverallow != CIL_TRUE) {
+		int violation = CIL_FALSE;
 		cil_log(CIL_INFO, "Checking Neverallows\n");
-		rc = cil_check_neverallows(db, pdb, neverallows);
+		rc = cil_check_neverallows(db, pdb, neverallows, &violation);
 		if (rc != SEPOL_OK) goto exit;
 
 		cil_log(CIL_INFO, "Checking User Bounds\n");
-		bounds_check_users(NULL, pdb);
+		rc = bounds_check_users(NULL, pdb);
+		if (rc) {
+			violation = CIL_TRUE;
+		}
 
 		cil_log(CIL_INFO, "Checking Role Bounds\n");
-		bounds_check_roles(NULL, pdb);
+		rc = bounds_check_roles(NULL, pdb);
+		if (rc) {
+			violation = CIL_TRUE;
+		}
 
 		cil_log(CIL_INFO, "Checking Type Bounds\n");
-		rc = cil_check_type_bounds(db, pdb, type_value_to_cil, class_value_to_cil, perm_value_to_cil);
+		rc = cil_check_type_bounds(db, pdb, type_value_to_cil, class_value_to_cil, perm_value_to_cil, &violation);
 		if (rc != SEPOL_OK) goto exit;
+
+		if (violation == CIL_TRUE) {
+			rc = SEPOL_ERR;
+			goto exit;
+		}
 
 	}
 
