@@ -1,4 +1,7 @@
 #include <netinet/in.h>
+#ifndef IPPROTO_DCCP
+#define IPPROTO_DCCP 33
+#endif
 #include <stdlib.h>
 
 #include "debug.h"

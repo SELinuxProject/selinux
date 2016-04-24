@@ -26,6 +26,9 @@
 #include <getopt.h>
 #include <libgen.h>
 #include <netinet/in.h>
+#ifndef IPPROTO_DCCP
+#define IPPROTO_DCCP 33
+#endif
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>

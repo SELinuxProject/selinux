@@ -64,6 +64,9 @@
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#ifndef IPPROTO_DCCP
+#define IPPROTO_DCCP 33
+#endif
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <stdio.h>
