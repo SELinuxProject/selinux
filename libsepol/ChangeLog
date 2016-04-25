@@ -1,3 +1,4 @@
+	* Build policy on systems not supporting DCCP protocol, from Richard Haines.
 	* Fix extended permissions neverallow checking, from Jeff Vander Stoep.
 	* Fix CIL neverallow and bounds checking, from James Carter
 	* Android.mk: Add -D_GNU_SOURCE to common_cflags, from Nick Kralevich.

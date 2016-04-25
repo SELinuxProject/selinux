@@ -1,3 +1,4 @@
+	* Build policy on systems not supporting DCCP protocol, from Richard Haines.
 	* Fail if module name different than output base filename, from James Carter
 	* Add support for portcon dccp protocol, from Richard Haines
 2.5 2016-02-23
