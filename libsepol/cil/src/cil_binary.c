@@ -609,9 +609,11 @@ int __cil_typeattr_bitmap_init(policydb_t *pdb)
 			rc = SEPOL_ERR;
 			goto exit;
 		}
-		if (ebitmap_set_bit(&pdb->attr_type_map[i], i, 1)) {
-			rc = SEPOL_ERR;
-			goto exit;
+		if (pdb->type_val_to_struct[i] && pdb->type_val_to_struct[i]->flavor != TYPE_ATTRIB) {
+			if (ebitmap_set_bit(&pdb->attr_type_map[i], i, 1)) {
+				rc = SEPOL_ERR;
+				goto exit;
+			}
 		}
 
 	}
