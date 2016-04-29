@@ -1,3 +1,4 @@
+	* Fix CIL and not add an attribute as a type in the attr_type_map, from James Carter
 	* Build policy on systems not supporting DCCP protocol, from Richard Haines.
 	* Fix extended permissions neverallow checking, from Jeff Vander Stoep.
 	* Fix CIL neverallow and bounds checking, from James Carter
