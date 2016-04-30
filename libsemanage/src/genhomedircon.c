@@ -624,6 +624,21 @@ static int write_home_root_context(genhomedircon_settings_t * s, FILE * out,
 	return write_replacements(s, out, tpl, repl);
 }
 
+static int write_username_context(genhomedircon_settings_t * s, FILE * out,
+				  semanage_list_t * tpl,
+				  const genhomedircon_user_entry_t *user)
+{
+	replacement_pair_t repl[] = {
+		{.search_for = TEMPLATE_USERNAME,.replace_with = user->name},
+		{.search_for = TEMPLATE_USERID,.replace_with = user->uid},
+		{.search_for = TEMPLATE_ROLE,.replace_with = user->prefix},
+		{.search_for = TEMPLATE_SEUSER,.replace_with = user->sename},
+		{NULL, NULL}
+	};
+
+	return write_replacements(s, out, tpl, repl);
+}
+
 static int write_user_context(genhomedircon_settings_t * s, FILE * out,
 			      semanage_list_t * tpl, const genhomedircon_user_entry_t *user)
 {
@@ -931,6 +946,7 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 }
 
 static int write_gen_home_dir_context(genhomedircon_settings_t * s, FILE * out,
+				      semanage_list_t * username_context_tpl,
 				      semanage_list_t * user_context_tpl,
 				      semanage_list_t * homedir_context_tpl)
 {
@@ -944,6 +960,8 @@ static int write_gen_home_dir_context(genhomedircon_settings_t * s, FILE * out,
 
 	for (; users; pop_user_entry(&users)) {
 		if (write_home_dir_context(s, out, homedir_context_tpl, users))
+			goto err;
+		if (write_username_context(s, out, username_context_tpl, users))
 			goto err;
 		if (write_user_context(s, out, user_context_tpl, users))
 			goto err;
@@ -1035,15 +1053,22 @@ static int write_context_file(genhomedircon_settings_t * s, FILE * out)
 			s->fallback->home = NULL;
 		}
 	}
-	if (user_context_tpl) {
+	if (user_context_tpl || username_context_tpl) {
+		if (write_username_context(s, out, username_context_tpl,
+					   s->fallback) != STATUS_SUCCESS) {
+			retval = STATUS_ERR;
+			goto done;
+		}
+
 		if (write_user_context(s, out, user_context_tpl,
 				       s->fallback) != STATUS_SUCCESS) {
 			retval = STATUS_ERR;
 			goto done;
 		}
 
-		if (write_gen_home_dir_context(s, out, user_context_tpl,
-					       homedir_context_tpl) != STATUS_SUCCESS) {
+		if (write_gen_home_dir_context(s, out, username_context_tpl,
+					       user_context_tpl, homedir_context_tpl)
+				!= STATUS_SUCCESS) {
 			retval = STATUS_ERR;
 		}
 	}
