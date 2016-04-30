@@ -548,6 +548,29 @@ static int check_line(genhomedircon_settings_t * s, Ustr *line)
 	return result;
 }
 
+static int write_replacements(genhomedircon_settings_t * s, FILE * out,
+			      const semanage_list_t * tpl,
+			      const replacement_pair_t *repl)
+{
+	Ustr *line = USTR_NULL;
+
+	for (; tpl; tpl = tpl->next) {
+		line = replace_all(tpl->data, repl);
+		if (!line)
+			goto fail;
+		if (check_line(s, line) == STATUS_SUCCESS) {
+			if (!ustr_io_putfileline(&line, out))
+				goto fail;
+		}
+		ustr_sc_free(&line);
+	}
+	return STATUS_SUCCESS;
+
+      fail:
+	ustr_sc_free(&line);
+	return STATUS_ERR;
+}
+
 static int write_home_dir_context(genhomedircon_settings_t * s, FILE * out,
 				  semanage_list_t * tpl, const char *user,
 				  const char *seuser, const char *home,
@@ -560,26 +583,11 @@ static int write_home_dir_context(genhomedircon_settings_t * s, FILE * out,
 		{.search_for = TEMPLATE_LEVEL,.replace_with = level},
 		{NULL, NULL}
 	};
-	Ustr *line = USTR_NULL;
 
 	if (fprintf(out, COMMENT_USER_HOME_CONTEXT, user) < 0)
 		return STATUS_ERR;
 
-	for (; tpl; tpl = tpl->next) {
-		line = replace_all(tpl->data, repl);
-		if (!line)
-			goto fail;
-		if (check_line(s, line) == STATUS_SUCCESS) {
-			if (!ustr_io_putfileline(&line, out))
-				goto fail;
-		}
-		ustr_sc_free(&line);
-	}
-	return STATUS_SUCCESS;
-
-      fail:
-	ustr_sc_free(&line);
-	return STATUS_ERR;
+	return write_replacements(s, out, tpl, repl);
 }
 
 static int write_home_root_context(genhomedircon_settings_t * s, FILE * out,
@@ -589,23 +597,8 @@ static int write_home_root_context(genhomedircon_settings_t * s, FILE * out,
 		{.search_for = TEMPLATE_HOME_ROOT,.replace_with = homedir},
 		{NULL, NULL}
 	};
-	Ustr *line = USTR_NULL;
 
-	for (; tpl; tpl = tpl->next) {
-		line = replace_all(tpl->data, repl);
-		if (!line)
-			goto fail;
-		if (check_line(s, line) == STATUS_SUCCESS) {
-			if (!ustr_io_putfileline(&line, out))
-				goto fail;
-		}
-		ustr_sc_free(&line);
-	}
-	return STATUS_SUCCESS;
-
-      fail:
-	ustr_sc_free(&line);
-	return STATUS_ERR;
+	return write_replacements(s, out, tpl, repl);
 }
 
 static int write_user_context(genhomedircon_settings_t * s, FILE * out,
@@ -618,23 +611,8 @@ static int write_user_context(genhomedircon_settings_t * s, FILE * out,
 		{.search_for = TEMPLATE_SEUSER,.replace_with = seuser},
 		{NULL, NULL}
 	};
-	Ustr *line = USTR_NULL;
 
-	for (; tpl; tpl = tpl->next) {
-		line = replace_all(tpl->data, repl);
-		if (!line)
-			goto fail;
-		if (check_line(s, line) == STATUS_SUCCESS) {
-			if (!ustr_io_putfileline(&line, out))
-				goto fail;
-		}
-		ustr_sc_free(&line);
-	}
-	return STATUS_SUCCESS;
-
-      fail:
-	ustr_sc_free(&line);
-	return STATUS_ERR;
+	return write_replacements(s, out, tpl, repl);
 }
 
 static int user_sort_func(semanage_user_t ** arg1, semanage_user_t ** arg2)
