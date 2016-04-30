@@ -86,7 +86,7 @@
 #define FALLBACK_SENAME "user_u"
 #define FALLBACK_PREFIX "user"
 #define FALLBACK_LEVEL "s0"
-#define FALLBACK_NAME ".*"
+#define FALLBACK_NAME "[^/]+"
 #define FALLBACK_UIDGID "[0-9]+"
 #define DEFAULT_LOGIN "__default__"
 
@@ -1024,7 +1024,7 @@ static int write_context_file(genhomedircon_settings_t * s, FILE * out)
 		for (h = homedirs; h; h = h->next) {
 			Ustr *temp = ustr_dup_cstr(h->data);
 
-			if (!temp || !ustr_add_cstr(&temp, "/[^/]*")) {
+			if (!temp || !ustr_add_cstr(&temp, "/" FALLBACK_NAME)) {
 				ustr_sc_free(&temp);
 				retval = STATUS_ERR;
 				goto done;
