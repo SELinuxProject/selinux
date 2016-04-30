@@ -78,9 +78,10 @@
 #define TEMPLATE_SEUSER "system_u"
 #define TEMPLATE_LEVEL "s0"
 
-#define FALLBACK_USER "user_u"
-#define FALLBACK_USER_PREFIX "user"
-#define FALLBACK_USER_LEVEL "s0"
+#define FALLBACK_SENAME "user_u"
+#define FALLBACK_PREFIX "user"
+#define FALLBACK_LEVEL "s0"
+#define FALLBACK_NAME ".*"
 #define DEFAULT_LOGIN "__default__"
 
 typedef struct {
@@ -753,14 +754,14 @@ static int setup_fallback_user(genhomedircon_settings_t * s)
 			if (semanage_user_query(s->h_semanage, key, &u) < 0)
 			{
 				prefix = name;
-				level = FALLBACK_USER_LEVEL;
+				level = FALLBACK_LEVEL;
 			}
 			else
 			{
 				prefix = semanage_user_get_prefix(u);
 				level = semanage_user_get_mlslevel(u);
 				if (!level)
-					level = FALLBACK_USER_LEVEL;
+					level = FALLBACK_LEVEL;
 			}
 
 			if (set_fallback_user(s, seuname, prefix, level) != 0)
@@ -845,10 +846,10 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 			prefix = semanage_user_get_prefix(*u);
 			level = semanage_user_get_mlslevel(*u);
 			if (!level)
-				level = FALLBACK_USER_LEVEL;
+				level = FALLBACK_LEVEL;
 		} else {
 			prefix = name;
-			level = FALLBACK_USER_LEVEL;
+			level = FALLBACK_LEVEL;
 		}
 
 		retval = getpwnam_r(name, &pwstorage, rbuf, rbuflen, &pwent);
@@ -1046,9 +1047,9 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 	s.fcfilepath = semanage_final_path(SEMANAGE_FINAL_TMP,
 					   SEMANAGE_FC_HOMEDIRS);
 
-	s.fallback_user = strdup(FALLBACK_USER);
-	s.fallback_user_prefix = strdup(FALLBACK_USER_PREFIX);
-	s.fallback_user_level = strdup(FALLBACK_USER_LEVEL);
+	s.fallback_user = strdup(FALLBACK_SENAME);
+	s.fallback_user_prefix = strdup(FALLBACK_PREFIX);
+	s.fallback_user_level = strdup(FALLBACK_LEVEL);
 	if (s.fallback_user == NULL || s.fallback_user_prefix == NULL || s.fallback_user_level == NULL) {
 		retval = STATUS_ERR;
 		goto done;
