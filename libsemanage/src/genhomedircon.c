@@ -82,10 +82,13 @@
 #define FALLBACK_PREFIX "user"
 #define FALLBACK_LEVEL "s0"
 #define FALLBACK_NAME ".*"
+#define FALLBACK_UIDGID "[0-9]+"
 #define DEFAULT_LOGIN "__default__"
 
 typedef struct user_entry {
 	char *name;
+	char *uid;
+	char *gid;
 	char *sename;
 	char *prefix;
 	char *home;
@@ -628,11 +631,13 @@ static int name_user_cmp(char *key, semanage_user_t ** val)
 }
 
 static int push_user_entry(genhomedircon_user_entry_t ** list, const char *n,
-			   const char *sen, const char *pre, const char *h,
-			   const char *l)
+			   const char *u, const char *g, const char *sen,
+			   const char *pre, const char *h, const char *l)
 {
 	genhomedircon_user_entry_t *temp = NULL;
 	char *name = NULL;
+	char *uid = NULL;
+	char *gid = NULL;
 	char *sename = NULL;
 	char *prefix = NULL;
 	char *home = NULL;
@@ -643,6 +648,12 @@ static int push_user_entry(genhomedircon_user_entry_t ** list, const char *n,
 		goto cleanup;
 	name = strdup(n);
 	if (!name)
+		goto cleanup;
+	uid = strdup(u);
+	if (!uid)
+		goto cleanup;
+	gid = strdup(g);
+	if (!gid)
 		goto cleanup;
 	sename = strdup(sen);
 	if (!sename)
@@ -658,6 +669,8 @@ static int push_user_entry(genhomedircon_user_entry_t ** list, const char *n,
 		goto cleanup;
 
 	temp->name = name;
+	temp->uid = uid;
+	temp->gid = gid;
 	temp->sename = sename;
 	temp->prefix = prefix;
 	temp->home = home;
@@ -669,6 +682,8 @@ static int push_user_entry(genhomedircon_user_entry_t ** list, const char *n,
 
       cleanup:
 	free(name);
+	free(uid);
+	free(gid);
 	free(sename);
 	free(prefix);
 	free(home);
@@ -687,6 +702,8 @@ static void pop_user_entry(genhomedircon_user_entry_t ** list)
 	temp = *list;
 	*list = temp->next;
 	free(temp->name);
+	free(temp->uid);
+	free(temp->gid);
 	free(temp->sename);
 	free(temp->prefix);
 	free(temp->home);
@@ -739,6 +756,7 @@ static int setup_fallback_user(genhomedircon_settings_t * s)
 			}
 
 			if (push_user_entry(&(s->fallback), FALLBACK_NAME,
+					    FALLBACK_UIDGID, FALLBACK_UIDGID,
 					    seuname, prefix, "", level) != 0)
 				errors = STATUS_ERR;
 			semanage_user_key_free(key);
@@ -768,6 +786,8 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 	const char *seuname = NULL;
 	const char *prefix = NULL;
 	const char *level = NULL;
+	char uid[11];
+	char gid[11];
 	struct passwd pwstorage, *pwent = NULL;
 	unsigned int i;
 	long rbuflen;
@@ -852,7 +872,19 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 		}
 		if (ignore(pwent->pw_dir))
 			continue;
-		if (push_user_entry(&head, name, seuname,
+
+		len = snprintf(uid, sizeof(uid), "%u", pwent->pw_uid);
+		if (len < 0 || len >= (int)sizeof(uid)) {
+			*errors = STATUS_ERR;
+			goto cleanup;
+		}
+		len = snprintf(gid, sizeof(gid), "%u", pwent->pw_gid);
+		if (len < 0 || len >= (int)sizeof(gid)) {
+			*errors = STATUS_ERR;
+			goto cleanup;
+		}
+
+		if (push_user_entry(&head, name, uid, gid, seuname,
 				    prefix, pwent->pw_dir, level) != STATUS_SUCCESS) {
 			*errors = STATUS_ERR;
 			break;
