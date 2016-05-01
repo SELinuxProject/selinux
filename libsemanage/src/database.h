@@ -148,7 +148,7 @@ typedef struct dbase_table {
 	 * This function must be invoked before using
 	 * any of the database functions above. It may be invoked
 	 * multiple times, and will update the cache if a commit
-	 * occured between invocations */
+	 * occurred between invocations */
 	int (*cache) (struct semanage_handle * handle, dbase_t * dbase);
 
 	/* Forgets all changes that haven't been written

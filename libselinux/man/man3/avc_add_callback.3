@@ -57,7 +57,7 @@ and will cause any SID to match.
 .I callback
 is the callback function provided by the userspace object manager.  The
 .I event
-argument indicates the security event which occured; the remaining arguments
+argument indicates the security event which occurred; the remaining arguments
 are interpreted according to the event as described below.  The return value
 of the callback should be zero on success, \-1 on error with
 .I errno
@@ -175,7 +175,7 @@ If the userspace AVC is running in threaded mode, callbacks registered via
 may be executed in the context of the netlink handler thread.  This will likely introduce synchronization issues requiring the use of locks.  See
 .BR avc_init (3).
 
-Support for dynamic revocation and retained permissions is mostly unimplemented in the SELinux kernel module.  The only security event that currently gets excercised is
+Support for dynamic revocation and retained permissions is mostly unimplemented in the SELinux kernel module.  The only security event that currently gets exercised is
 .BR AVC_CALLBACK_RESET .
 .
 .SH "AUTHOR"

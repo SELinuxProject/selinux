@@ -383,7 +383,7 @@ int cil_find_matching_avrule_in_ast(struct cil_tree_node *current, enum cil_flav
 
 	rc = cil_tree_walk(current, __cil_find_matching_avrule_in_ast, NULL, NULL, &args);
 	if (rc) {
-		cil_log(CIL_ERR, "An error occured while searching for avrule in AST\n");
+		cil_log(CIL_ERR, "An error occurred while searching for avrule in AST\n");
 	}
 
 	return rc;

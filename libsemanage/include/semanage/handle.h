@@ -130,7 +130,7 @@ int semanage_commit(semanage_handle_t *);
 #define SEMANAGE_CAN_READ 1
 #define SEMANAGE_CAN_WRITE 2
 /* returns SEMANAGE_CAN_READ or SEMANAGE_CAN_WRITE if the store is readable
- * or writable, respectively. <0 if an error occured */
+ * or writable, respectively. <0 if an error occurred */
 int semanage_access_check(semanage_handle_t * sh);
 
 /* returns 0 if not connected, 1 if connected */
