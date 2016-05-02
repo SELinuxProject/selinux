@@ -1,3 +1,4 @@
+	* Fix multiple spelling errors, from Laurent Bigonville.
 	* Fix typo in sefcontext_compile.8, from Petr Lautrbach and Milos Malik
 	* Fix location of selinuxfs mount point, from Dan Walsh.
 	* Only mount /proc if necessary, from Stephen Smalley.

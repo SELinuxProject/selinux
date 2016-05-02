@@ -1,3 +1,4 @@
+	* Fix multiple spelling errors, from Laurent Bigonville.
 	* genhomedircon: %{USERID} and %{USERNAME} support and code cleanups, from Jason Zaman.
 
 2.5 2016-02-23
