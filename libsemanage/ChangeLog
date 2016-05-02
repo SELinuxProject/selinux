@@ -1,3 +1,5 @@
+	* genhomedircon: %{USERID} and %{USERNAME} support and code cleanups, from Jason Zaman.
+
 2.5 2016-02-23
 	* Do not overwrite CFLAGS in test Makefile, from Nicolas Iooss.
 	* Fix uninitialized variable in direct_commit and direct_api, from Nicolas Iooss.
