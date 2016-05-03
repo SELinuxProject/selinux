@@ -12,10 +12,6 @@ common_cflags := \
 	-Wall -Wshadow -O2 \
 	-pipe -fno-strict-aliasing \
 
-ifeq ($(HOST_OS),darwin)
-common_cflags += -DDARWIN
-endif
-
 common_includes := \
 	$(LOCAL_PATH)/ \
 	$(LOCAL_PATH)/../libsepol/include/ \

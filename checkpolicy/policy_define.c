@@ -5140,7 +5140,7 @@ int define_ipv6_node_context(void)
 
 	memset(newc, 0, sizeof(ocontext_t));
 
-#ifdef DARWIN
+#ifdef __APPLE__
 	memcpy(&newc->u.node6.addr[0], &addr.s6_addr[0], 16);
 	memcpy(&newc->u.node6.mask[0], &mask.s6_addr[0], 16);
 #else

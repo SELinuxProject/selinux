@@ -73,7 +73,7 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-#ifdef DARWIN
+#ifdef __APPLE__
 #include <ctype.h>
 #endif
 

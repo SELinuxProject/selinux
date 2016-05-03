@@ -7,7 +7,7 @@
 
 #include <sepol/policydb/policydb.h>
 
-#ifndef DARWIN
+#ifndef __APPLE__
 #include <stdio_ext.h>
 #endif
 
@@ -47,7 +47,7 @@ static int load_users(struct policydb *policydb, const char *path)
 	if (fp == NULL)
 		return -1;
 
-#ifdef DARWIN
+#ifdef __APPLE__
 	if ((buffer = (char *)malloc(255 * sizeof(char))) == NULL) {
 	  ERR(NULL, "out of memory");
 	  return -1;

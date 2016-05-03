@@ -69,10 +69,6 @@ common_cflags := \
 	-Wshadow -Wmissing-noreturn \
 	-Wmissing-format-attribute
 
-ifeq ($(HOST_OS), darwin)
-common_cflags += -DDARWIN
-endif
-
 common_includes := \
 	$(LOCAL_PATH)/include/ \
 	$(LOCAL_PATH)/src/ \

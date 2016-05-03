@@ -79,7 +79,7 @@ static int load_booleans(struct policydb *policydb, const char *path,
 	if (boolf == NULL)
 		goto localbool;
 
-#ifdef DARWIN
+#ifdef __APPLE__
         if ((buffer = (char *)malloc(255 * sizeof(char))) == NULL) {
           ERR(NULL, "out of memory");
 	  return -1;
@@ -111,7 +111,7 @@ static int load_booleans(struct policydb *policydb, const char *path,
 	boolf = fopen(localbools, "r");
 	if (boolf != NULL) {
 
-#ifdef DARWIN
+#ifdef __APPLE__
 
 	  while(fgets(buffer, 255, boolf) != NULL) {
 #else

@@ -70,7 +70,7 @@ static int node_parse_addr(sepol_handle_t * handle,
 				return STATUS_ERR;
 			}
 
-#ifdef DARWIN
+#ifdef __APPLE__
 			memcpy(addr_bytes, in_addr.s6_addr, 16);
 #else
 			memcpy(addr_bytes, in_addr.s6_addr32, 16);
@@ -162,7 +162,7 @@ static int node_expand_addr(sepol_handle_t * handle,
 		{
 			struct in6_addr addr;
 			memset(&addr, 0, sizeof(struct in6_addr));
-#ifdef DARWIN
+#ifdef __APPLE__
 			memcpy(&addr.s6_addr[0], addr_bytes, 16);
 #else
 			memcpy(&addr.s6_addr32[0], addr_bytes, 16);

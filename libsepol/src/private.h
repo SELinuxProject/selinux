@@ -5,7 +5,7 @@
 #include <sepol/policydb/policydb.h>
 
 
-#ifdef DARWIN
+#ifdef __APPLE__
 #include <sys/types.h>
 #include <machine/endian.h>
 #else
@@ -16,7 +16,7 @@
 #include <errno.h>
 #include <dso.h>
 
-#ifdef DARWIN
+#ifdef __APPLE__
 #define __BYTE_ORDER  BYTE_ORDER
 #define __LITTLE_ENDIAN  LITTLE_ENDIAN
 #endif
