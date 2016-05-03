@@ -301,20 +301,21 @@ static int bounds_check_rule(sepol_handle_t *handle, policydb_t *p,
 		ebitmap_for_each_bit(&p->attr_type_map[tgt - 1], tnode, i) {
 			if (!ebitmap_node_get_bit(tnode, i))
 				continue;
-			avtab_key.target_type = i + 1;
-			d = bounds_not_covered(global_avtab, cur_avtab,
-					       &avtab_key, data);
-			if (!d) continue;
 			td = p->type_val_to_struct[i];
 			if (td && td->bounds) {
 				avtab_key.target_type = td->bounds;
 				d = bounds_not_covered(global_avtab, cur_avtab,
 						       &avtab_key, data);
-				if (!d) continue;
+			} else {
+				avtab_key.target_type = i + 1;
+				d = bounds_not_covered(global_avtab, cur_avtab,
+						       &avtab_key, data);
 			}
-			(*numbad)++;
-			rc = bounds_add_bad(handle, child, i+1, class, d, bad);
-			if (rc) goto exit;
+			if (d) {
+				(*numbad)++;
+				rc = bounds_add_bad(handle, child, i+1, class, d, bad);
+				if (rc) goto exit;
+			}
 		}
 	}
 
