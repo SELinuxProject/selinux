@@ -1,3 +1,4 @@
+	* Change logic of bounds checking to match change in kernel, from James Carter.
 	* Fix multiple spelling errors, from Laurent Bigonville.
 	* Only apply bounds checking to source types in rules, from Stephen Smalley.
 	* Fix CIL and not add an attribute as a type in the attr_type_map, from James Carter
