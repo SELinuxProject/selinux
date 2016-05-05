@@ -14,7 +14,12 @@ getseuser
 matchpathcon
 policyvers
 sefcontext_compile
+selabel_digest
+selabel_lookup
+selabel_lookup_best_match
+selabel_partial_match
 selinux_check_securetty_context
+selinux_restorecon
 selinuxenabled
 selinuxexeccon
 setenforce
