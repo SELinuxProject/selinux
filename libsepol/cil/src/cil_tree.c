@@ -59,6 +59,92 @@ __attribute__((noreturn)) __attribute__((format (printf, 1, 2))) void cil_tree_e
 	exit(1);
 }
 
+struct cil_tree_node *cil_tree_get_next_path(struct cil_tree_node *node, char **path, int* is_cil)
+{
+	if (!node) {
+		return NULL;
+	}
+
+	node = node->parent;
+
+	while (node) {
+		if (node->flavor == CIL_NODE && node->data == NULL) {
+			if (node->cl_head->data == CIL_KEY_SRC_INFO) {
+				/* Parse Tree */
+				*path = node->cl_head->next->next->data;
+				*is_cil = (node->cl_head->next->data == CIL_KEY_SRC_CIL);
+				return node;
+			}
+			node = node->parent;
+		} else if (node->flavor == CIL_SRC_INFO) {
+				/* AST */
+				struct cil_src_info *info = node->data;
+				*path = info->path;
+				*is_cil = info->is_cil;
+				return node;
+		} else {
+			if (node->flavor == CIL_CALL) {
+				struct cil_call *call = node->data;
+				node = NODE(call->macro);
+			} else if (node->flavor == CIL_BLOCKINHERIT) {
+				struct cil_blockinherit *inherit = node->data;
+				node = NODE(inherit->block);
+			} else {
+				node = node->parent;
+			}
+		}
+	}
+
+	return NULL;
+}
+
+char *cil_tree_get_cil_path(struct cil_tree_node *node)
+{
+	char *path = NULL;
+	int is_cil;
+
+	while (node) {
+		node = cil_tree_get_next_path(node, &path, &is_cil);
+		if (node && is_cil) {
+			return path;
+		}
+	}
+
+	return NULL;
+}
+
+__attribute__((format (printf, 3, 4))) void cil_tree_log(struct cil_tree_node *node, enum cil_log_level lvl, const char* msg, ...)
+{
+	va_list ap;
+
+	va_start(ap, msg);
+	cil_vlog(lvl, msg, ap);
+	va_end(ap);
+
+	if (node) {
+		char *path = NULL;
+		int is_cil;
+		unsigned hll_line = node->hll_line;
+
+		path = cil_tree_get_cil_path(node);
+
+		if (path != NULL) {
+			cil_log(lvl, " at %s:%d", path, node->line);
+		}
+
+		while (node) {
+			node = cil_tree_get_next_path(node, &path, &is_cil);
+			if (node && !is_cil) {
+				cil_log(lvl," from %s:%d", path, hll_line);
+				path = NULL;
+				hll_line = node->hll_line;
+			}
+		}
+	}
+
+	cil_log(lvl,"\n");
+}
+
 int cil_tree_init(struct cil_tree **tree)
 {
 	struct cil_tree *new_tree = cil_malloc(sizeof(*new_tree));
