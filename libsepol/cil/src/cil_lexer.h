@@ -37,8 +37,10 @@
 #define SYMBOL 3
 #define QSTRING 4
 #define COMMENT 5
-#define END_OF_FILE 6
-#define UNKNOWN 7
+#define HLL_LINEMARK 6
+#define NEWLINE 7
+#define END_OF_FILE 8
+#define UNKNOWN 9
 
 struct token {
 	uint32_t type;

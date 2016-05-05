@@ -233,6 +233,9 @@ static void cil_init_keys(void)
 	CIL_KEY_PERMISSIONX = cil_strpool_add("permissionx");
 	CIL_KEY_IOCTL = cil_strpool_add("ioctl");
 	CIL_KEY_UNORDERED = cil_strpool_add("unordered");
+	CIL_KEY_SRC_INFO = cil_strpool_add("<src_info>");
+	CIL_KEY_SRC_CIL = cil_strpool_add("<src_cil>");
+	CIL_KEY_SRC_HLL = cil_strpool_add("<src_hll>");
 }
 
 void cil_db_init(struct cil_db **db)
@@ -757,6 +760,9 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	case CIL_MLS:
 		cil_destroy_mls(*data);
 		break;
+	case CIL_SRC_INFO:
+		cil_destroy_src_info(*data);
+		break;
 	case CIL_OP:
 	case CIL_CONS_OPERAND:
 		break;
@@ -764,8 +770,8 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 		cil_log(CIL_INFO, "Unknown data flavor: %d\n", flavor);
 		break;
 	}
-	
-	*data = NULL;		
+
+	*data = NULL;
 }
 
 int cil_flavor_to_symtab_index(enum cil_flavor flavor, enum cil_sym_index *sym_index)
@@ -1109,6 +1115,8 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		return CIL_KEY_HANDLEUNKNOWN;
 	case CIL_MLS:
 		return CIL_KEY_MLS;
+	case CIL_SRC_INFO:
+		return CIL_KEY_SRC_INFO;
 	case CIL_ALL:
 		return CIL_KEY_ALL;
 	case CIL_RANGE:
@@ -2553,4 +2561,11 @@ void cil_mls_init(struct cil_mls **mls)
 {
 	*mls = cil_malloc(sizeof(**mls));
 	(*mls)->value = 0;
+}
+
+void cil_src_info_init(struct cil_src_info **info)
+{
+	*info = cil_malloc(sizeof(**info));
+	(*info)->is_cil = 0;
+	(*info)->path = NULL;
 }

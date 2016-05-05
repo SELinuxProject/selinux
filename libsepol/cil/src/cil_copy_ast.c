@@ -1666,6 +1666,21 @@ int cil_copy_bounds(__attribute__((unused)) struct cil_db *db, void *data, void 
 	return SEPOL_OK;
 }
 
+int cil_copy_src_info(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+{
+	struct cil_src_info *orig = data;
+	struct cil_src_info *new = NULL;
+
+	cil_src_info_init(&new);
+
+	new->is_cil = orig->is_cil;
+	new->path = orig->path;
+
+	*copy = new;
+
+	return SEPOL_OK;
+}
+
 int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
@@ -1942,6 +1957,9 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 	case CIL_MLS:
 		copy_func = &cil_copy_mls;
 		break;
+	case CIL_SRC_INFO:
+		copy_func = &cil_copy_src_info;
+		break;
 	default:
 		goto exit;
 	}
@@ -1964,6 +1982,7 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 
 		new->parent = parent;
 		new->line = orig->line;
+		new->hll_line = orig->hll_line;
 		new->path = orig->path;
 		new->flavor = orig->flavor;
 		new->data = data;

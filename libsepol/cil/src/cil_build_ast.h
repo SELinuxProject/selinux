@@ -215,6 +215,8 @@ int cil_gen_mls(struct cil_tree_node *parse_current, struct cil_tree_node *ast_n
 void cil_destroy_mls(struct cil_mls *mls);
 int cil_gen_defaultrange(struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_defaultrange(struct cil_defaultrange *def);
+int cil_gen_src_info(struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
+void cil_destroy_src_info(struct cil_src_info *info);
 
 int cil_fill_cats(struct cil_tree_node *curr, struct cil_cats **cats);
 void cil_destroy_cats(struct cil_cats *cats);

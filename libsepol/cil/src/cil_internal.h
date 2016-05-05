@@ -226,6 +226,9 @@ char *CIL_KEY_NEVERALLOWX;
 char *CIL_KEY_PERMISSIONX;
 char *CIL_KEY_IOCTL;
 char *CIL_KEY_UNORDERED;
+char *CIL_KEY_SRC_INFO;
+char *CIL_KEY_SRC_CIL;
+char *CIL_KEY_SRC_HLL;
 
 /*
 	Symbol Table Array Indices
@@ -917,6 +920,11 @@ struct cil_mls {
 	int value;
 };
 
+struct cil_src_info {
+	int is_cil;
+	char *path;
+};
+
 void cil_db_init(struct cil_db **db);
 void cil_db_destroy(struct cil_db **db);
 
@@ -1019,6 +1027,7 @@ void cil_default_init(struct cil_default **def);
 void cil_defaultrange_init(struct cil_defaultrange **def);
 void cil_handleunknown_init(struct cil_handleunknown **unk);
 void cil_mls_init(struct cil_mls **mls);
+void cil_src_info_init(struct cil_src_info **info);
 void cil_userattribute_init(struct cil_userattribute **attribute);
 void cil_userattributeset_init(struct cil_userattributeset **attrset);
 

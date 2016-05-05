@@ -527,6 +527,7 @@ int cil_gen_perm_nodes(struct cil_db *db, struct cil_tree_node *current_perm, st
 		cil_tree_node_init(&new_ast);
 		new_ast->parent = ast_node;
 		new_ast->line = current_perm->line;
+		new_ast->hll_line = current_perm->hll_line;
 		new_ast->path = current_perm->path;
 
 		rc = cil_gen_perm(db, current_perm, new_ast, flavor, num_perms);
@@ -5881,6 +5882,27 @@ void cil_destroy_mls(struct cil_mls *mls)
 	free(mls);
 }
 
+int cil_gen_src_info(struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	/* No need to check syntax, because this is auto generated */
+	struct cil_src_info *info = NULL;
+
+	cil_src_info_init(&info);
+
+	info->is_cil = (parse_current->next->data == CIL_KEY_SRC_CIL) ? CIL_TRUE : CIL_FALSE;
+	info->path = parse_current->next->next->data;
+
+	ast_node->data = info;
+	ast_node->flavor = CIL_SRC_INFO;
+
+	return SEPOL_OK;
+}
+
+void cil_destroy_src_info(struct cil_src_info *info)
+{
+	free(info);
+}
+
 int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *finished, void *extra_args)
 {
 	struct cil_args_build *args = NULL;
@@ -5981,6 +6003,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 
 	ast_node->parent = ast_current;
 	ast_node->line = parse_current->line;
+	ast_node->hll_line = parse_current->hll_line;
 	ast_node->path = parse_current->path;
 
 	if (parse_current->data == CIL_KEY_BLOCK) {
@@ -6244,8 +6267,10 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 	} else if (parse_current->data == CIL_KEY_MLS) {
 		rc = cil_gen_mls(parse_current, ast_node);
 		*finished = CIL_TREE_SKIP_NEXT;
+	} else if (parse_current->data == CIL_KEY_SRC_INFO) {
+		rc = cil_gen_src_info(parse_current, ast_node);
 	} else {
-		cil_log(CIL_ERR, "Error: Unknown keyword %s\n", (char*)parse_current->data);
+		cil_log(CIL_ERR, "Error: Unknown keyword %s\n", (char *)parse_current->data);
 		rc = SEPOL_ERR;
 	}
 
@@ -6266,7 +6291,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 			if (ast_current->flavor == CIL_IN) {
 				args->in = ast_current;
 			}
-		
+
 			ast_current->cl_head = ast_node;
 		} else {
 			ast_current->cl_tail->next = ast_node;

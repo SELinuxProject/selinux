@@ -50,15 +50,17 @@ symbol		({digit}|{alpha}|{spec_char})+
 white		[ \t]
 newline		[\n\r]
 qstring		\"[^"\n]*\"
-comment		;[^\n]*
+hll_lm          ^;;\*
+comment		;
 
 %%
-{newline}	line++; 
+{newline}	line++; return NEWLINE;
+{hll_lm}	value=yytext; return HLL_LINEMARK;
 {comment}	value=yytext; return COMMENT;
 "("		value=yytext; return OPAREN;
-")"		value=yytext; return CPAREN;	
+")"		value=yytext; return CPAREN;
 {symbol}	value=yytext; return SYMBOL;
-{white}		//cil_log(CIL_INFO, "white, ");
+{white}		;
 {qstring}	value=yytext; return QSTRING;
 <<EOF>>		return END_OF_FILE;
 .		value=yytext; return UNKNOWN;
@@ -73,7 +75,7 @@ int cil_lexer_setup(char *buffer, uint32_t size)
 	}
 
 	line = 1;
-	
+
 	return SEPOL_OK;
 }
 
@@ -87,7 +89,6 @@ int cil_lexer_next(struct token *tok)
 	tok->type = yylex();
 	tok->value = value;
 	tok->line = line;
-	
+
 	return SEPOL_OK;
 }
-

@@ -46,6 +46,7 @@ struct cil_tree_node {
 	struct cil_tree_node *next;		//Each element in the list points to the next element
 	enum cil_flavor flavor;
 	uint32_t line;
+	uint32_t hll_line;
 	char *path;
 	void *data;
 };
