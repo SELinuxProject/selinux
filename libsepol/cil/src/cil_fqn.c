@@ -121,7 +121,7 @@ static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, has
 
 exit:
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR,"Problem qualifying names in block at line %d of %s\n", child_args.node->line, child_args.node->path);
+		cil_tree_log(child_args.node, CIL_ERR,"Problem qualifying names in block");
 	}
 
 	return rc;

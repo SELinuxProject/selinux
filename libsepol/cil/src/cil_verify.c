@@ -377,25 +377,25 @@ int __cil_verify_ordered_node_helper(struct cil_tree_node *node, __attribute__((
 		if (node->flavor == CIL_SID) {
 			struct cil_sid *sid = node->data;
 			if (sid->ordered == CIL_FALSE) {
-				cil_log(CIL_ERR, "SID %s not in sidorder statement at line %d of %s\n", sid->datum.name, node->line, node->path);
+				cil_tree_log(node, CIL_ERR, "SID %s not in sidorder statement", sid->datum.name);
 				return SEPOL_ERR;
 			}
 		} else if (node->flavor == CIL_CLASS) {
 			struct cil_class *class = node->data;
 			if (class->ordered == CIL_FALSE) {
-				cil_log(CIL_ERR, "Class %s not in classorder statement at line %d of %s\n", class->datum.name, node->line, node->path);
+				cil_tree_log(node, CIL_ERR, "Class %s not in classorder statement", class->datum.name);
 				return SEPOL_ERR;
 			}
 		} else if (node->flavor == CIL_CAT) {
 			struct cil_cat *cat = node->data;
 			if (cat->ordered == CIL_FALSE) {
-				cil_log(CIL_ERR, "Category %s not in categoryorder statement at line %d of %s\n", cat->datum.name, node->line, node->path);
+				cil_tree_log(node, CIL_ERR, "Category %s not in categoryorder statement", cat->datum.name);
 				return SEPOL_ERR;
 			}
 		} else if (node->flavor == CIL_SENS) {
 			struct cil_sens *sens = node->data;
 			if (sens->ordered == CIL_FALSE) {
-				cil_log(CIL_ERR, "Sensitivity %s not in sensitivityorder statement at line %d of %s\n", sens->datum.name, node->line, node->path);
+				cil_tree_log(node, CIL_ERR, "Sensitivity %s not in sensitivityorder statement", sens->datum.name);
 				return SEPOL_ERR;
 			}
 		}
@@ -430,7 +430,7 @@ int __cil_verify_initsids(struct cil_list *sids)
 		struct cil_sid *sid = i->data;
 		if (sid->context == NULL) {
 			struct cil_tree_node *node = sid->datum.nodes->head->data;
-			cil_log(CIL_ERR, "No context assigned to SID %s declared at line %d in %s\n",sid->datum.name, node->line, node->path);
+			cil_tree_log(node, CIL_ERR, "No context assigned to SID %s declared",sid->datum.name);
 			rc = SEPOL_ERR;
 		}
 	}
@@ -598,7 +598,7 @@ int __cil_verify_named_levelrange(struct cil_db *db, struct cil_tree_node *node)
 
 	return SEPOL_OK;
 exit:
-	cil_log(CIL_ERR, "Invalid named range at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid named range");
 	return rc;
 }
 
@@ -638,7 +638,7 @@ static int __cil_verify_user_pre_eval(struct cil_tree_node *node)
 
 	return SEPOL_OK;
 exit:
-	cil_log(CIL_ERR, "Invalid user at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid user");
 	return rc;
 }
 
@@ -657,7 +657,7 @@ static int __cil_verify_user_post_eval(struct cil_db *db, struct cil_tree_node *
 
 	return SEPOL_OK;
 exit:
-	cil_log(CIL_ERR, "Invalid user at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid user");
 	return rc;
 }
 
@@ -688,7 +688,7 @@ int __cil_verify_role(struct cil_tree_node *node)
 
 	return SEPOL_OK;
 exit:
-	cil_log(CIL_ERR, "Invalid role at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid role");
 	return rc;
 }
 
@@ -719,7 +719,7 @@ int __cil_verify_type(struct cil_tree_node *node)
 
 	return SEPOL_OK;
 exit:
-	cil_log(CIL_ERR, "Invalid type at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid type");
 	return rc;
 }
 
@@ -813,7 +813,7 @@ int __cil_verify_named_context(struct cil_db *db, struct cil_tree_node *node)
 
 	return SEPOL_OK;
 exit:
-	cil_log(CIL_ERR, "Invalid named context at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid named context");
 	return rc;
 }
 
@@ -852,8 +852,7 @@ int __cil_verify_rule(struct cil_tree_node *node, struct cil_complex_symtab *sym
 		struct cil_complex_symtab_datum *datum = NULL;
 		cil_complex_symtab_search(symtab, &ckey, &datum);
 		if (datum == NULL) {
-			cil_log(CIL_ERR, "Duplicate rule defined on line %d of %s\n", 
-				node->line, node->path);
+			cil_tree_log(node, CIL_ERR, "Duplicate rule defined");
 			rc = SEPOL_ERR;
 			goto exit;
 		}
@@ -861,7 +860,7 @@ int __cil_verify_rule(struct cil_tree_node *node, struct cil_complex_symtab *sym
 
 	return SEPOL_OK;
 exit:
-	cil_log(CIL_ERR, "Invalid rule at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid rule");
 	return rc;
 }
 
@@ -877,11 +876,9 @@ int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute__((unu
 		avrule = rule_node->data;
 		if (avrule->rule_kind == CIL_AVRULE_NEVERALLOW) {
 			if (bif->preserved_tunable) {
-				cil_log(CIL_ERR, "Neverallow found in tunableif block (treated as a booleanif due to preserve-tunables) at line %d or %s\n",
-					node->line, node->path);
+				cil_tree_log(node, CIL_ERR, "Neverallow found in tunableif block (treated as a booleanif due to preserve-tunables)");
 			} else {
-				cil_log(CIL_ERR, "Neverallow found in booleanif block at line %d or %s\n",
-					node->line, node->path);
+				cil_tree_log(node, CIL_ERR, "Neverallow found in booleanif block");
 			}
 			rc = SEPOL_ERR;
 			goto exit;
@@ -942,11 +939,9 @@ int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute__((unu
 	default: {
 		const char * flavor = cil_node_to_string(node);
 		if (bif->preserved_tunable) {
-			cil_log(CIL_ERR, "Invalid %s statement in tunableif (treated as a booleanif due to preserve-tunables) at line %d of %s\n",
-					flavor, node->line, node->path);
+			cil_tree_log(node, CIL_ERR, "Invalid %s statement in tunableif (treated as a booleanif due to preserve-tunables)", flavor);
 		} else {
-			cil_log(CIL_ERR, "Invalid %s statement in booleanif at line %d of %s\n",
-					flavor, node->line, node->path);
+			cil_tree_log(node, CIL_ERR, "Invalid %s statement in booleanif", flavor);
 		}
 		goto exit;
 	}
@@ -974,9 +969,9 @@ int __cil_verify_booleanif(struct cil_tree_node *node, struct cil_complex_symtab
 	return SEPOL_OK;
 exit:
 	if (bif->preserved_tunable) {
-		cil_log(CIL_ERR, "Invalid tunableif (treated as a booleanif due to preserve-tunables) at line %d of %s\n", node->line, node->path);
+		cil_tree_log(node, CIL_ERR, "Invalid tunableif (treated as a booleanif due to preserve-tunables)");
 	} else {
-		cil_log(CIL_ERR, "Invalid booleanif at line %d of %s\n", node->line, node->path);
+		cil_tree_log(node, CIL_ERR, "Invalid booleanif");
 	}
 	return rc;
 }
@@ -1007,7 +1002,7 @@ int __cil_verify_netifcon(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid netifcon at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid netifcon");
 	return rc;
 }
 
@@ -1028,7 +1023,7 @@ int __cil_verify_genfscon(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid genfscon at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid genfscon");
 	return rc;
 }
 
@@ -1047,8 +1042,7 @@ int __cil_verify_filecon(struct cil_db *db, struct cil_tree_node *node)
 	if (ctx->datum.name == NULL) {
 		rc = __cil_verify_context(db, ctx);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Invalid filecon at line %d of %s\n", 
-				node->line, node->path);
+			cil_tree_log(node, CIL_ERR, "Invalid filecon");
 			goto exit;
 		}
 	}
@@ -1076,7 +1070,7 @@ int __cil_verify_nodecon(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid nodecon at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid nodecon");
 	return rc;
 }
 
@@ -1097,7 +1091,7 @@ int __cil_verify_portcon(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid portcon at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid portcon");
 	return rc;
 }
 
@@ -1118,7 +1112,7 @@ int __cil_verify_pirqcon(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid pirqcon at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid pirqcon");
 	return rc;
 }
 
@@ -1139,7 +1133,7 @@ int __cil_verify_iomemcon(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid iomemcon at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid iomemcon");
 	return rc;
 }
 
@@ -1160,7 +1154,7 @@ int __cil_verify_ioportcon(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid ioportcon at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid ioportcon");
 	return rc;
 }
 
@@ -1181,7 +1175,7 @@ int __cil_verify_pcidevicecon(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid pcidevicecon at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid pcidevicecon");
 	return rc;
 }
 
@@ -1202,7 +1196,7 @@ int __cil_verify_devicetreecon(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid devicetreecon at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid devicetreecon");
 	return rc;
 }
 
@@ -1223,7 +1217,7 @@ int __cil_verify_fsuse(struct cil_db *db, struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid fsuse at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid fsuse");
 	return rc;
 }
 
@@ -1241,7 +1235,7 @@ int __cil_verify_permissionx(struct cil_permissionx *permx, struct cil_tree_node
 			kind_str = CIL_KEY_IOCTL;
 			break;
 		default:
-			cil_log(CIL_ERR, "Invalid permissionx kind (%d) at line %d of %s\n", permx->kind, node->line, node->path);
+			cil_tree_log(node, CIL_ERR, "Invalid permissionx kind (%d)", permx->kind);
 			rc = SEPOL_ERR;
 			goto exit;
 	}
@@ -1257,7 +1251,7 @@ int __cil_verify_permissionx(struct cil_permissionx *permx, struct cil_tree_node
 			}
 
 			if (rc == SEPOL_ENOENT) {
-				cil_log(CIL_ERR, "Invalid permissionx at line %d of %s: %s is not a permission of class %s\n", node->line, node->path, kind_str, class->datum.name);
+				cil_tree_log(node, CIL_ERR, "Invalid permissionx: %s is not a permission of class %s", kind_str, class->datum.name);
 				rc = SEPOL_ERR;
 				goto exit;
 			}
@@ -1312,7 +1306,7 @@ int __cil_verify_class(struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid class at line %d of %s\n", node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid class");
 	return rc;
 }
 
@@ -1329,8 +1323,7 @@ int __cil_verify_policycap(struct cil_tree_node *node)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Invalid policycap (%s) at line %d of %s\n", 
-		(const char*)polcap->datum.name, node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "Invalid policycap (%s)", (const char*)polcap->datum.name);
 	return rc;
 }
 
@@ -1547,14 +1540,14 @@ static int __cil_verify_classpermission(struct cil_tree_node *node)
 	struct cil_classpermission *cp = node->data;
 
 	if (cp->classperms == NULL) {
-		cil_log(CIL_ERR, "Classpermission %s does not have a classpermissionset at line %d of %s\n", cp->datum.name, node->line, node->path);
+		cil_tree_log(node, CIL_ERR, "Classpermission %s does not have a classpermissionset", cp->datum.name);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
 
 	rc = __cil_verify_classperms(cp->classperms, &cp->datum);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Found circular class permissions involving the set %s at line %d of %s\n",cp->datum.name, node->line, node->path);
+		cil_tree_log(node, CIL_ERR, "Found circular class permissions involving the set %s",cp->datum.name);
 		goto exit;
 	}
 
@@ -1577,14 +1570,14 @@ static int __verify_map_perm_classperms(__attribute__((unused)) hashtab_key_t k,
 	struct cil_perm *cmp = (struct cil_perm *)d;
 
 	if (cmp->classperms == NULL) {
-		cil_log(CIL_ERR, "Map class %s does not have a classmapping for %s at line %d of %s\n", map_args->class->datum.name, cmp->datum.name, map_args->node->line, map_args->node->path);
+		cil_tree_log(map_args->node, CIL_ERR, "Map class %s does not have a classmapping for %s", map_args->class->datum.name, cmp->datum.name);
 		map_args->rc = SEPOL_ERR;
 		goto exit;
 	}
 
 	rc = __cil_verify_classperms(cmp->classperms, &cmp->datum);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Found circular class permissions involving the map class %s and permission %s at line %d of %s\n", map_args->class->datum.name, cmp->datum.name, map_args->node->line, map_args->node->path);
+		cil_tree_log(map_args->node, CIL_ERR, "Found circular class permissions involving the map class %s and permission %s", map_args->class->datum.name, cmp->datum.name);
 		map_args->rc = SEPOL_ERR;
 		goto exit;
 	}

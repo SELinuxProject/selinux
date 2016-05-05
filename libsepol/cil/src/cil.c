@@ -1764,8 +1764,7 @@ int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab, enum cil_s
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Failed to get symtab from node at line %d of %s\n",
-			ast_node->line, ast_node->path);
+	cil_tree_log(ast_node, CIL_ERR, "Failed to get symtab from node");
 	return SEPOL_ERR;	
 }
 

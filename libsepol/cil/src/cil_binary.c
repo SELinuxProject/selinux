@@ -1775,13 +1775,12 @@ int __cil_cond_to_policydb_helper(struct cil_tree_node *node, __attribute__((unu
 		cil_typetrans = (struct cil_nametypetransition*)node->data;
 		if (DATUM(cil_typetrans->name)->fqn != CIL_KEY_STAR) {
 			cil_log(CIL_ERR, "typetransition with file name not allowed within a booleanif block.\n");
-			cil_log(CIL_ERR,"Invalid typetransition statement at line %d of %s\n", 
-			node->line, node->path);
+			cil_tree_log(node, CIL_ERR,"Invalid typetransition statement");
 			goto exit;
 		}
 		rc = __cil_typetransition_to_avtab(pdb, db, cil_typetrans, cond_node, cond_flavor, filename_trans_table);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Failed to insert type transition into avtab at line %d of %s\n", node->line, node->path);
+			cil_tree_log(node, CIL_ERR, "Failed to insert type transition into avtab");
 			goto exit;
 		}
 		break;
@@ -1789,7 +1788,7 @@ int __cil_cond_to_policydb_helper(struct cil_tree_node *node, __attribute__((unu
 		cil_type_rule = node->data;
 		rc = __cil_type_rule_to_avtab(pdb, db, cil_type_rule, cond_node, cond_flavor);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Failed to insert typerule into avtab at line %d of %s\n", node->line, node->path);
+			cil_tree_log(node, CIL_ERR, "Failed to insert typerule into avtab");
 			goto exit;
 		}
 		break;
@@ -1797,7 +1796,7 @@ int __cil_cond_to_policydb_helper(struct cil_tree_node *node, __attribute__((unu
 		cil_avrule = node->data;
 		rc = __cil_avrule_to_avtab(pdb, db, cil_avrule, cond_node, cond_flavor);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Failed to insert avrule into avtab at line %d of %s\n", node->line, node->path);
+			cil_tree_log(node, CIL_ERR, "Failed to insert avrule into avtab");
 			goto exit;
 		}
 		break;
@@ -1805,8 +1804,7 @@ int __cil_cond_to_policydb_helper(struct cil_tree_node *node, __attribute__((unu
 	case CIL_TUNABLEIF:
 		break;
 	default:
-		cil_log(CIL_ERR, "Invalid statement within booleanif at line %d of %s\n", 
-			node->line, node->path);
+		cil_tree_log(node, CIL_ERR, "Invalid statement within booleanif");
 		goto exit;
 	}
 
@@ -2065,14 +2063,13 @@ int cil_booleanif_to_policydb(policydb_t *pdb, const struct cil_db *db, struct c
 	tmp_cond = cond_node_create(pdb, NULL);
 	if (tmp_cond == NULL) {
 		rc = SEPOL_ERR;
-		cil_log(CIL_INFO, "Failed to create sepol conditional node at line %d of %s\n", 
-			node->line, node->path);
+		cil_tree_log(node, CIL_INFO, "Failed to create sepol conditional node");
 		goto exit;
 	}
 	
 	rc = __cil_cond_expr_to_sepol_expr(pdb, cil_boolif->datum_expr, &tmp_cond->expr);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_INFO, "Failed to convert CIL conditional expression to sepol expression at line %d of %s\n", node->line, node->path);
+		cil_tree_log(node, CIL_INFO, "Failed to convert CIL conditional expression to sepol expression");
 		goto exit;
 	}
 
@@ -2128,7 +2125,7 @@ int cil_booleanif_to_policydb(policydb_t *pdb, const struct cil_db *db, struct c
 		bool_args.cond_flavor = CIL_CONDTRUE;
 		rc = cil_tree_walk(true_node, __cil_cond_to_policydb_helper, NULL, NULL, &bool_args);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Failure while walking true conditional block at line %d of %s\n", true_node->line, true_node->path);
+			cil_tree_log(true_node, CIL_ERR, "Failure while walking true conditional block");
 			goto exit;
 		}
 	}
@@ -2137,7 +2134,7 @@ int cil_booleanif_to_policydb(policydb_t *pdb, const struct cil_db *db, struct c
 		bool_args.cond_flavor = CIL_CONDFALSE;
 		rc = cil_tree_walk(false_node, __cil_cond_to_policydb_helper, NULL, NULL, &bool_args);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Failure while walking false conditional block at line %d of %s\n", false_node->line, false_node->path);
+			cil_tree_log(false_node, CIL_ERR, "Failure while walking false conditional block");
 			goto exit;
 		}
 	}
@@ -3591,7 +3588,7 @@ int __cil_node_to_policydb(struct cil_tree_node *node, void *extra_args)
 
 exit:
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Binary policy creation failed at line %d of %s\n", node->line, node->path);
+		cil_tree_log(node, CIL_ERR, "Binary policy creation failed");
 	}
 	return rc;
 }
@@ -4271,10 +4268,8 @@ static void __cil_print_parents(const char *pad, struct cil_tree_node *n)
 
 	__cil_print_parents(pad, n->parent);
 
-	if (!n->path) {
-		cil_log(CIL_ERR,"%s%s\n", pad, cil_node_to_string(n));
-	} else {
-		cil_log(CIL_ERR,"%s%s at line %d of %s\n", pad, cil_node_to_string(n), n->line, n->path);
+	if (n->flavor != CIL_SRC_INFO) {
+		cil_tree_log(n, CIL_ERR,"%s%s", pad, cil_node_to_string(n));
 	}
 }
 
@@ -4365,7 +4360,7 @@ static int __cil_print_neverallow_failure(const struct cil_db *db, struct cil_tr
 		allow_str = CIL_KEY_ALLOWX;
 		avrule_flavor = CIL_AVRULEX;
 	}
-	cil_log(CIL_ERR, "%s check failed at line %d of %s\n", neverallow_str, node->line, node->path);
+	cil_tree_log(node, CIL_ERR, "%s check failed", neverallow_str);
 	__cil_print_rule("  ", neverallow_str, cil_rule);
 	cil_list_init(&matching, CIL_NODE);
 	rc = cil_find_matching_avrule_in_ast(db->ast->root, avrule_flavor, &target, matching, CIL_FALSE);

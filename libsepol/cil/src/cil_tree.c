@@ -272,7 +272,7 @@ int cil_tree_walk_core(struct cil_tree_node *node,
 		if (process_node != NULL) {
 			rc = (*process_node)(node, &finished, extra_args);
 			if (rc != SEPOL_OK) {
-				cil_log(CIL_INFO, "Problem at line %d of %s\n", node->line, node->path);
+				cil_tree_log(node, CIL_INFO, "Problem");
 				return rc;
 			}
 		}
@@ -309,7 +309,7 @@ int cil_tree_walk(struct cil_tree_node *node,
 	if (first_child != NULL) {
 		rc = (*first_child)(node->cl_head, extra_args);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_INFO, "Problem at line %d of %s\n", node->line, node->path);
+			cil_tree_log(node, CIL_INFO, "Problem");
 			return rc;
 		}
 	}
@@ -322,7 +322,7 @@ int cil_tree_walk(struct cil_tree_node *node,
 	if (last_child != NULL) {
 		rc = (*last_child)(node->cl_tail, extra_args);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_INFO, "Problem at line %d of %s\n",node->line, node->path);
+			cil_tree_log(node, CIL_INFO, "Problem");
 			return rc;
 		}
 	}
