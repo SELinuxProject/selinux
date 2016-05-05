@@ -1073,6 +1073,10 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 	struct type_set *ts;
 
 	for (avrule = avrule_list; avrule != NULL; avrule = avrule->next) {
+		if (avrule->specified == AVRULE_NEVERALLOW && avrule->source_filename) {
+			cil_println(0, ";;* lmx %lu %s\n",avrule->source_line, avrule->source_filename);
+		}
+
 		ts = &avrule->stypes;
 		rc = process_typeset(indent, pdb, ts, attr_list, &snames, &num_snames);
 		if (rc != 0) {
@@ -1103,6 +1107,10 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 
 		names_destroy(&snames, &num_snames);
 		names_destroy(&tnames, &num_tnames);
+
+		if (avrule->specified == AVRULE_NEVERALLOW && avrule->source_filename) {
+			cil_println(0, ";;* lme\n");
+		}
 	}
 
 	return 0;
