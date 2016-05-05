@@ -4232,6 +4232,9 @@ exit:
 static avrule_t *__cil_init_sepol_avrule(uint32_t kind, struct cil_tree_node *node)
 {
 	avrule_t *avrule;
+	struct cil_tree_node *source_node;
+	char *source_path;
+	int is_cil;
 
 	avrule = cil_malloc(sizeof(avrule_t));
 	avrule->specified = kind;
@@ -4240,8 +4243,17 @@ static avrule_t *__cil_init_sepol_avrule(uint32_t kind, struct cil_tree_node *no
 	__cil_init_sepol_type_set(&avrule->ttypes);
 	avrule->perms = NULL;
 	avrule->line = node->line;
-	avrule->source_filename = node->path;
+
+	avrule->source_filename = NULL;
 	avrule->source_line = node->line;
+	source_node = cil_tree_get_next_path(node, &source_path, &is_cil);
+	if (source_node) {
+		avrule->source_filename = source_path;
+		if (!is_cil) {
+			avrule->source_line = node->hll_line;
+		}
+	}
+
 	avrule->next = NULL;
 	return avrule;
 }

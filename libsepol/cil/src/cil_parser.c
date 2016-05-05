@@ -78,14 +78,13 @@ static void pop_hll_info(struct cil_stack *stack, int *hll_lineno, int *hll_expa
 	}
 }
 
-static void create_node(struct cil_tree_node **node, struct cil_tree_node *current, int line, int hll_line, char *path, void *value)
+static void create_node(struct cil_tree_node **node, struct cil_tree_node *current, int line, int hll_line, void *value)
 {
 	cil_tree_node_init(node);
 	(*node)->parent = current;
 	(*node)->flavor = CIL_NODE;
 	(*node)->line = line;
 	(*node)->hll_line = hll_line;
-	(*node)->path = path;
 	(*node)->data = value;
 }
 
@@ -117,14 +116,14 @@ static int add_hll_linemark(struct cil_tree_node **current, int *hll_lineno, int
 		pop_hll_info(stack, hll_lineno, hll_expand);
 		*current = (*current)->parent;
 	} else {
-		create_node(&node, *current, tok.line, *hll_lineno, path, NULL);
+		create_node(&node, *current, tok.line, *hll_lineno, NULL);
 		insert_node(node, *current);
 		*current = node;
 
-		create_node(&node, *current, tok.line, *hll_lineno, path, CIL_KEY_SRC_INFO);
+		create_node(&node, *current, tok.line, *hll_lineno, CIL_KEY_SRC_INFO);
 		insert_node(node, *current);
 
-		create_node(&node, *current, tok.line, *hll_lineno, path, CIL_KEY_SRC_HLL);
+		create_node(&node, *current, tok.line, *hll_lineno, CIL_KEY_SRC_HLL);
 		insert_node(node, *current);
 
 		if (hll_type == CIL_KEY_HLL_LMS) {
@@ -162,7 +161,7 @@ static int add_hll_linemark(struct cil_tree_node **current, int *hll_lineno, int
 
 		hll_file = cil_strpool_add(tok.value);
 
-		create_node(&node, *current, tok.line, *hll_lineno, path, hll_file);
+		create_node(&node, *current, tok.line, *hll_lineno, hll_file);
 		insert_node(node, *current);
 	}
 
@@ -183,17 +182,17 @@ static void add_cil_path(struct cil_tree_node **current, char *path)
 {
 	struct cil_tree_node *node;
 
-	create_node(&node, *current, 0, 0, path, NULL);
+	create_node(&node, *current, 0, 0, NULL);
 	insert_node(node, *current);
 	*current = node;
 
-	create_node(&node, *current, 0, 0, path, CIL_KEY_SRC_INFO);
+	create_node(&node, *current, 0, 0, CIL_KEY_SRC_INFO);
 	insert_node(node, *current);
 
-	create_node(&node, *current, 0, 0, path, CIL_KEY_SRC_CIL);
+	create_node(&node, *current, 0, 0, CIL_KEY_SRC_CIL);
 	insert_node(node, *current);
 
-	create_node(&node, *current, 0, 0, path, path);
+	create_node(&node, *current, 0, 0, path);
 	insert_node(node, *current);
 }
 
@@ -237,7 +236,7 @@ int cil_parser(char *_path, char *buffer, uint32_t size, struct cil_tree **parse
 		case OPAREN:
 			paren_count++;
 
-			create_node(&node, current, tok.line, hll_lineno, path, NULL);
+			create_node(&node, current, tok.line, hll_lineno, NULL);
 			insert_node(node, current);
 			current = node;
 			break;
@@ -258,7 +257,7 @@ int cil_parser(char *_path, char *buffer, uint32_t size, struct cil_tree **parse
 				goto exit;
 			}
 
-			create_node(&node, current, tok.line, hll_lineno, path, cil_strpool_add(tok.value));
+			create_node(&node, current, tok.line, hll_lineno, cil_strpool_add(tok.value));
 			insert_node(node, current);
 			break;
 		case NEWLINE :

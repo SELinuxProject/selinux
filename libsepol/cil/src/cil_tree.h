@@ -47,7 +47,6 @@ struct cil_tree_node {
 	enum cil_flavor flavor;
 	uint32_t line;
 	uint32_t hll_line;
-	char *path;
 	void *data;
 };
 

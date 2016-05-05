@@ -216,7 +216,6 @@ void cil_tree_node_init(struct cil_tree_node **node)
 	new_node->flavor = CIL_ROOT;
 	new_node->line = 0;
 	new_node->hll_line = 0;
-	new_node->path = NULL;
 
 	*node = new_node;
 }
