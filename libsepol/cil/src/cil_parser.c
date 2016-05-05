@@ -179,6 +179,24 @@ exit:
 	return SEPOL_ERR;
 }
 
+static void add_cil_path(struct cil_tree_node **current, char *path)
+{
+	struct cil_tree_node *node;
+
+	create_node(&node, *current, 0, 0, path, NULL);
+	insert_node(node, *current);
+	*current = node;
+
+	create_node(&node, *current, 0, 0, path, CIL_KEY_SRC_INFO);
+	insert_node(node, *current);
+
+	create_node(&node, *current, 0, 0, path, CIL_KEY_SRC_CIL);
+	insert_node(node, *current);
+
+	create_node(&node, *current, 0, 0, path, path);
+	insert_node(node, *current);
+}
+
 int cil_parser(char *_path, char *buffer, uint32_t size, struct cil_tree **parse_tree)
 {
 
@@ -204,6 +222,8 @@ int cil_parser(char *_path, char *buffer, uint32_t size, struct cil_tree **parse
 
 	tree = *parse_tree;
 	current = tree->root;
+
+	add_cil_path(&current, path);
 
 	do {
 		cil_lexer_next(&tok);
