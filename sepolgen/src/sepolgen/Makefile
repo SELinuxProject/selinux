@@ -11,5 +11,4 @@ install: all
 clean:
 	rm -f parser.out parsetab.py
 	rm -f *~ *.pyc
-
-
+	rm -rf __pycache__
