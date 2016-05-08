@@ -5,6 +5,7 @@ PYTHON ?= python
 PYPREFIX ?= $(notdir $(PYTHON))
 RUBY ?= ruby
 RUBYPREFIX ?= $(notdir $(RUBY))
+PKG_CONFIG ?= pkg-config
 
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
@@ -12,11 +13,11 @@ LIBDIR ?= $(PREFIX)/lib
 SHLIBDIR ?= $(DESTDIR)/lib
 INCLUDEDIR ?= $(PREFIX)/include
 PYLIBVER ?= $(shell $(PYTHON) -c 'import sys;print("python%d.%d" % sys.version_info[0:2])')
-PYINC ?= $(shell pkg-config --cflags $(PYPREFIX))
+PYINC ?= $(shell $(PKG_CONFIG) --cflags $(PYPREFIX))
 PYLIBDIR ?= $(LIBDIR)/$(PYLIBVER)
 RUBYLIBVER ?= $(shell $(RUBY) -e 'print RUBY_VERSION.split(".")[0..1].join(".")')
 RUBYPLATFORM ?= $(shell $(RUBY) -e 'print RUBY_PLATFORM')
-RUBYINC ?= $(shell pkg-config --cflags ruby-$(RUBYLIBVER))
+RUBYINC ?= $(shell $(PKG_CONFIG) --cflags ruby-$(RUBYLIBVER))
 RUBYINSTALL ?= $(LIBDIR)/ruby/site_ruby/$(RUBYLIBVER)/$(RUBYPLATFORM)
 
 LIBBASE=$(shell basename $(LIBDIR))

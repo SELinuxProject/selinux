@@ -9,6 +9,6 @@ echo "
 }
 "
 }
-gcc -x c -c -I../include - -aux-info temp.aux < ../include/semanage/semanage.h
+${CC:-gcc} -x c -c -I../include - -aux-info temp.aux < ../include/semanage/semanage.h
 for i in `awk '/extern int/ { print $6 }' temp.aux`; do except $i ; done
 rm -f -- temp.aux -.o
