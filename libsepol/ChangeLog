@@ -1,3 +1,4 @@
+	* Remove libsepol.map when cleaning, from Nicolas Iooss.
 	* Add high-level language line marking support to CIL, from James Carter.
 	* Change logic of bounds checking to match change in kernel, from James Carter.
 	* Fix multiple spelling errors, from Laurent Bigonville.
