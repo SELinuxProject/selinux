@@ -3,11 +3,11 @@
 sandbox \- Run cmd under an SELinux sandbox
 .SH SYNOPSIS
 .B sandbox
-[\-C] [\-c] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] cmd
+[\-C] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] cmd
 
 .br
 .B sandbox
-[\-C] [\-c] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] \-S
+[\-C] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] \-S
 .br
 .SH DESCRIPTION
 .PP
@@ -24,10 +24,10 @@ allows you to run X applications within a sandbox.  These applications will star
 If directories are specified with \-H or \-T the directory will have its context modified with chcon(1) unless a level is specified with \-l.  If the MLS/MCS security level is specified, the user is responsible to set the correct labels.
 .PP
 .TP
-\fB\-h\ \fB\\-\-help\fR
+\fB\-h\ \fB\-\-help\fR
 display usage message
 .TP
-\fB\-H\ \fB\\-\-homedir\fR
+\fB\-H\ \fB\-\-homedir\fR
 Use alternate homedir to mount over your home directory.  Defaults to temporary. Requires \-X or \-M.
 .TP
 \fB\-i\fR \fB\-\-include\fR
@@ -83,9 +83,6 @@ $HOME and /tmp, secondary Xserver, defaults to sandbox_x_t
 .TP
 \fB\-d\fR \fB\-\-dpi\fR
 Set the DPI value for the sandbox X Server. Defaults to the current X Sever DPI.
-.TP
-\fB\-c\fR \fB\-\-cgroups\fR
-Use control groups to control this copy of sandbox.  Specify parameters in /etc/sysconfig/sandbox. Max memory usage and cpu usage are to be specified in percent. You can specify which CPUs to use by numbering them 0,1,2... etc.
 .TP
 \fB\-C\fR \fB\-\-capabilities\fR Use capabilities within the
 sandbox. By default applications executed within the sandbox will not
