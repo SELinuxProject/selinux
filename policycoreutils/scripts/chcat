@@ -346,8 +346,8 @@ def translate(cats):
 def usage():
     print(_("Usage %s CATEGORY File ...") % sys.argv[0])
     print(_("Usage %s -l CATEGORY user ...") % sys.argv[0])
-    print(_("Usage %s [[+|-]CATEGORY],...]q File ...") % sys.argv[0])
-    print(_("Usage %s -l [[+|-]CATEGORY],...]q user ...") % sys.argv[0])
+    print(_("Usage %s [[+|-]CATEGORY],...] File ...") % sys.argv[0])
+    print(_("Usage %s -l [[+|-]CATEGORY],...] user ...") % sys.argv[0])
     print(_("Usage %s -d File ...") % sys.argv[0])
     print(_("Usage %s -l -d user ...") % sys.argv[0])
     print(_("Usage %s -L") % sys.argv[0])
