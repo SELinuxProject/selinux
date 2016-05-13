@@ -17,6 +17,10 @@
 #include "policy.h"
 #include <limits.h>
 
+#ifndef MNT_DETACH
+#define MNT_DETACH 2
+#endif
+
 int security_load_policy(void *data, size_t len)
 {
 	char path[PATH_MAX];
@@ -348,11 +352,6 @@ int selinux_init_load_policy(int *enforce)
 		fclose(cfg);
 		free(buf);
 	}
-#ifndef MNT_DETACH
-#define MNT_DETACH 2
-#endif
-	if (rc == 0)
-		umount2("/proc", MNT_DETACH);
 
 	/* 
 	 * Determine the final desired mode.
@@ -400,10 +399,16 @@ int selinux_init_load_policy(int *enforce)
 			/* Only emit this error if selinux was not disabled */
 			fprintf(stderr, "Mount failed for selinuxfs on %s:  %s\n", SELINUXMNT, strerror(errno));
 		}
+
+		if (rc == 0)
+			umount2("/proc", MNT_DETACH);
                 
 		goto noload;
 	}
 	set_selinuxmnt(mntpoint);
+
+	if (rc == 0)
+		umount2("/proc", MNT_DETACH);
 
 	/*
 	 * Note:  The following code depends on having selinuxfs 
