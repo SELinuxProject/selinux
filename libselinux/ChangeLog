@@ -1,3 +1,4 @@
+	* Respect CC and PKG_CONFIG environment variable, from Julien Pivotto.
 	* Avoid mounting /proc outside of selinux_init_load_policy(), from Stephen Smalley.
 	* Fix multiple spelling errors, from Laurent Bigonville.
 	* Fix typo in sefcontext_compile.8, from Petr Lautrbach and Milos Malik

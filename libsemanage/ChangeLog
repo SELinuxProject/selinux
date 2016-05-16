@@ -1,3 +1,5 @@
+	* Support overriding Makefile RANLIB, from Julien Pivotto.
+	* Respect CC and PKG_CONFIG environment variable, from Julien Pivotto.
 	* Fix multiple spelling errors, from Laurent Bigonville.
 	* genhomedircon: %{USERID} and %{USERNAME} support and code cleanups, from Jason Zaman.
 

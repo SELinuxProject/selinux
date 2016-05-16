@@ -1,3 +1,6 @@
+	* Fix the extract example in semodule.8, from Petr Lautrbach.
+	* Update sandbox.8 man page, from Petr Lautrbach.
+	* Remove typos from chcat --help, from Petr Lautrbach.
 	* Fix multiple spelling errors, from Laurent Bigonville.
 	* hll/pp: Warn if module name different than output filename, from James Carter
 

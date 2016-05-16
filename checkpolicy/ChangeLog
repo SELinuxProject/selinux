@@ -1,3 +1,4 @@
+	* Fix checkmodule output message, from Petr Lautrbach.
 	* Build policy on systems not supporting DCCP protocol, from Richard Haines.
 	* Fail if module name different than output base filename, from James Carter
 	* Add support for portcon dccp protocol, from Richard Haines
