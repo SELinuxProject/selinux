@@ -88,10 +88,12 @@ Use an alternate path for the policy store root
 be verbose
 .TP
 .B  \-c,\-\-cil
-Extract module as a CIL file. This only affects the \-\-extract option.
+Extract module as a CIL file. This only affects the \-\-extract option and
+only modules listed in \-\-extract after this option.
 .TP
 .B  \-H,\-\-hll
-Extract module as an HLL file. This only affects the \-\-extract option.
+Extract module as an HLL file. This only affects the \-\-extract option and
+only modules listed in \-\-extract after this option.
 
 .SH EXAMPLE
 .nf
@@ -121,7 +123,7 @@ $ semodule \-B \-p "/tmp"
 $ semodule \-B \-S "/tmp/var/lib/selinux"
 # Write the HLL version of puppet and the CIL version of wireshark
 # modules at priority 400 to the current working directory
-$ semodule \-X 400 \-g wireshark \-\-cil \-g puppet \-\-hll
+$ semodule \-X 400 \-\-hll \-E puppet \-\-cil \-E wireshark
 .fi
 
 .SH SEE ALSO
