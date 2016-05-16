@@ -314,7 +314,7 @@ int main(int argc, char **argv)
 
 		if (!cil) {
 			printf("%s:  writing binary representation (version %d) to %s\n",
-				   argv[0], policyvers, file);
+				   argv[0], policyvers, outfile);
 
 			if (write_binary_policy(&modpolicydb, outfp) != 0) {
 				fprintf(stderr, "%s:  error writing %s\n", argv[0], outfile);
