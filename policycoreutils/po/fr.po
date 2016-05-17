@@ -1307,7 +1307,7 @@ msgstr "syntaxe :  %s [-q]\n"
 #: ../load_policy/load_policy.c:71
 #, c-format
 msgid "%s:  Policy is already loaded and initial load requested\n"
-msgstr "La stratégie %s est déjà chargée et un chargement initial est requis\n"
+msgstr "%s : La stratégie est déjà chargée et un chargement initial est demandé\n"
 
 #: ../load_policy/load_policy.c:80
 #, c-format
