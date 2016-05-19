@@ -1,3 +1,4 @@
+	* Minor fix in a French translation, from Laurent Bigonville.
 	* Fix the extract example in semodule.8, from Petr Lautrbach.
 	* Update sandbox.8 man page, from Petr Lautrbach.
 	* Remove typos from chcat --help, from Petr Lautrbach.
