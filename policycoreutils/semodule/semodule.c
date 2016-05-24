@@ -127,7 +127,7 @@ static void usage(char *progname)
 	printf("  -B, --build		    build and reload policy\n");
 	printf("  -i,--install=MODULE_PKG   install a new module\n");
 	printf("  -r,--remove=MODULE_NAME   remove existing module\n");
-	printf("  -l,--list-modules=[KIND]  display list of installed modules\n");
+	printf("  -l[KIND],--list-modules[=KIND]  display list of installed modules\n");
 	printf("     KIND:  standard  list highest priority, enabled modules\n");
 	printf("            full      list all modules\n");
 	printf("  -X,--priority=PRIORITY    set priority for following operations (1-999)\n");

@@ -38,7 +38,7 @@ deprecated, alias for --install
 .B  \-r,\-\-remove=MODULE_NAME
 remove existing module
 .TP
-.B  \-l,\-\-list-modules=[KIND]
+.B  \-l[KIND],\-\-list-modules[=KIND]
 display list of installed modules (other than base)
 .TP
 .B  \-E,\-\-extract=MODULE_PKG
@@ -116,7 +116,7 @@ $ semodule \-d alsa
 # Install a module at a specific priority.
 $ semodule \-X 100 \-i alsa.pp
 # List all modules.
-$ semodule \-l full
+$ semodule \-\-list=full
 # Set an alternate path for the policy root
 $ semodule \-B \-p "/tmp"
 # Set an alternate path for the policy store root
