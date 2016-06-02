@@ -18,15 +18,15 @@ TARGET=libsepol.so
 LIBPC=libsepol.pc
 LIBMAP=libsepol.map
 LIBSO=$(TARGET).$(LIBVERSION)
-OBJS= $(patsubst %.c,%.o,$(wildcard *.c))
-LOBJS= $(patsubst %.c,%.lo,$(wildcard *.c))
+OBJS= $(patsubst %.c,%.o,$(sort $(wildcard *.c)))
+LOBJS= $(patsubst %.c,%.lo,$(sort $(wildcard *.c)))
 CFLAGS ?= -Werror -Wall -W -Wundef -Wshadow -Wmissing-format-attribute -O2
 
 override CFLAGS += -I. -I../include -D_GNU_SOURCE
 
 ifneq ($(DISABLE_CIL),y)
-OBJS += $(sort $(patsubst %.c,%.o,$(wildcard $(CILDIR)/src/*.c) $(CIL_GENERATED)))
-LOBJS += $(sort $(patsubst %.c,%.lo,$(wildcard $(CILDIR)/src/*.c) $(CIL_GENERATED)))
+OBJS += $(sort $(patsubst %.c,%.o,$(sort $(wildcard $(CILDIR)/src/*.c)) $(CIL_GENERATED)))
+LOBJS += $(sort $(patsubst %.c,%.lo,$(sort $(wildcard $(CILDIR)/src/*.c)) $(CIL_GENERATED)))
 override CFLAGS += -I$(CILDIR)/include
 endif
 
