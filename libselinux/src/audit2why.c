@@ -343,8 +343,8 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	if (rc < 0)
 		RETURN(BADTCON)
 
-	tclass = string_to_security_class(tclassstr);
-	if (!tclass)
+	rc = sepol_string_to_security_class(tclassstr, &tclass);
+	if (rc < 0)
 		RETURN(BADTCLASS)
 
 	/* Convert the permission list to an AV. */
@@ -365,8 +365,8 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 		permstr = PyString_AsString( strObj );
 #endif
 		
-		perm = string_to_av_perm(tclass, permstr);
-		if (!perm)
+		rc = sepol_string_to_av_perm(tclass, permstr, &perm);
+		if (rc < 0)
 			RETURN(BADPERM)
 
 		av |= perm;
