@@ -1155,7 +1155,7 @@ int hidden sepol_string_to_security_class(const char *class_name,
 	char *class = NULL;
 	sepol_security_class_t id;
 
-	for (id = 1;; id++) {
+	for (id = 1; id <= policydb->p_classes.nprim; id++) {
 		class = policydb->p_class_val_to_name[id - 1];
 		if (class == NULL) {
 			ERR(NULL, "could not convert %s to class id", class_name);
@@ -1166,6 +1166,8 @@ int hidden sepol_string_to_security_class(const char *class_name,
 			return STATUS_SUCCESS;
 		}
 	}
+	ERR(NULL, "unrecognized class %s", class_name);
+	return -EINVAL;
 }
 
 /*
