@@ -1,3 +1,4 @@
+	* Sort object files for deterministic linking order, from Laurent Bigonville.
 	* Respect CC and PKG_CONFIG environment variable, from Julien Pivotto.
 	* Avoid mounting /proc outside of selinux_init_load_policy(), from Stephen Smalley.
 	* Fix multiple spelling errors, from Laurent Bigonville.

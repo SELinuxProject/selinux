@@ -1,3 +1,4 @@
+	* Sort object files for deterministic linking order, from Laurent Bigonville.
 	* Support overriding Makefile RANLIB, from Julien Pivotto.
 	* Respect CC and PKG_CONFIG environment variable, from Julien Pivotto.
 	* Fix multiple spelling errors, from Laurent Bigonville.

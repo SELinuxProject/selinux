@@ -1,3 +1,4 @@
+	* Sort object files for deterministic linking order, from Laurent Bigonville.
 	* Fix neverallowxperm checking on attributes, from Jeff Vander Stoep.
 	* Remove libsepol.map when cleaning, from Nicolas Iooss.
 	* Add high-level language line marking support to CIL, from James Carter.

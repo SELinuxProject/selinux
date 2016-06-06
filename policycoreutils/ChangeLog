@@ -1,3 +1,5 @@
+	* Fix typos in semanage manpages, from Philipp Gesang.
+	* Fix the documentation of -l,--list for semodule, from Petr Lautrbach.
 	* Minor fix in a French translation, from Laurent Bigonville.
 	* Fix the extract example in semodule.8, from Petr Lautrbach.
 	* Update sandbox.8 man page, from Petr Lautrbach.
