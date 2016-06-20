@@ -1152,22 +1152,16 @@ int hidden sepol_compute_av(sepol_security_id_t ssid,
 int hidden sepol_string_to_security_class(const char *class_name,
 			sepol_security_class_t *tclass)
 {
-	char *class = NULL;
-	sepol_security_class_t id;
+	class_datum_t *tclass_datum;
 
-	for (id = 1; id <= policydb->p_classes.nprim; id++) {
-		class = policydb->p_class_val_to_name[id - 1];
-		if (class == NULL) {
-			ERR(NULL, "could not convert %s to class id", class_name);
-			return STATUS_ERR;
-		}
-		if ((strcmp(class, class_name)) == 0) {
-			*tclass = id;
-			return STATUS_SUCCESS;
-		}
+	tclass_datum = hashtab_search(policydb->p_classes.table,
+				      (hashtab_key_t) class_name);
+	if (!tclass_datum) {
+		ERR(NULL, "unrecognized class %s", class_name);
+		return STATUS_ERR;
 	}
-	ERR(NULL, "unrecognized class %s", class_name);
-	return -EINVAL;
+	*tclass = tclass_datum->s.value;
+	return STATUS_SUCCESS;
 }
 
 /*
