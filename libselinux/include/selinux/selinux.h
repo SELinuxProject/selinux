@@ -544,6 +544,7 @@ extern const char *selinux_lxc_contexts_path(void);
 extern const char *selinux_x_context_path(void);
 extern const char *selinux_sepgsql_context_path(void);
 extern const char *selinux_openssh_contexts_path(void);
+extern const char *selinux_snapperd_contexts_path(void);
 extern const char *selinux_systemd_contexts_path(void);
 extern const char *selinux_contexts_path(void);
 extern const char *selinux_securetty_types_path(void);

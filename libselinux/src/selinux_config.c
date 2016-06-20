@@ -50,7 +50,8 @@
 #define BOOLEAN_SUBS      27
 #define OPENSSH_CONTEXTS  28
 #define SYSTEMD_CONTEXTS  29
-#define NEL               30
+#define SNAPPERD_CONTEXTS 30
+#define NEL               31
 
 /* Part of one-time lazy init */
 static pthread_once_t once = PTHREAD_ONCE_INIT;
@@ -498,6 +499,13 @@ const char *selinux_openssh_contexts_path(void)
 }
 
 hidden_def(selinux_openssh_contexts_path)
+
+const char *selinux_snapperd_contexts_path(void)
+{
+    return get_path(SNAPPERD_CONTEXTS);
+}
+
+hidden_def(selinux_snapperd_contexts_path)
 
 const char *selinux_systemd_contexts_path(void)
 {
