@@ -252,11 +252,11 @@ int display_cond_expressions(policydb_t * p, FILE * fp)
 int display_handle_unknown(policydb_t * p, FILE * out_fp)
 {
 	if (p->handle_unknown == ALLOW_UNKNOWN)
-		fprintf(out_fp, "Allow unknown classes and permisions\n");
+		fprintf(out_fp, "Allow unknown classes and permissions\n");
 	else if (p->handle_unknown == DENY_UNKNOWN)
-		fprintf(out_fp, "Deny unknown classes and permisions\n");
+		fprintf(out_fp, "Deny unknown classes and permissions\n");
 	else if (p->handle_unknown == REJECT_UNKNOWN)
-		fprintf(out_fp, "Reject unknown classes and permisions\n");
+		fprintf(out_fp, "Reject unknown classes and permissions\n");
 	return 0;
 }
 
@@ -349,7 +349,7 @@ int menu(void)
 	printf("\nSelect a command:\n");
 	printf("1)  display unconditional AVTAB\n");
 	printf("2)  display conditional AVTAB (entirely)\n");
-	printf("3)  display conditional AVTAG (only ENABLED rules)\n");
+	printf("3)  display conditional AVTAB (only ENABLED rules)\n");
 	printf("4)  display conditional AVTAB (only DISABLED rules)\n");
 	printf("5)  display conditional bools\n");
 	printf("6)  display conditional expressions\n");
