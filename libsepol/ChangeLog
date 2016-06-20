@@ -1,3 +1,4 @@
+	* Correctly detect unknown classes in sepol_string_to_security_class, from Joshua Brindle.
 	* Sort object files for deterministic linking order, from Laurent Bigonville.
 	* Fix neverallowxperm checking on attributes, from Jeff Vander Stoep.
 	* Remove libsepol.map when cleaning, from Nicolas Iooss.
