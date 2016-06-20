@@ -470,6 +470,17 @@ int selinux_file_context_verify(const char *path, mode_t mode)
 	char * con = NULL;
 	char * fcontext = NULL;
 	int rc = 0;
+	char stackpath[PATH_MAX + 1];
+	char *p = NULL;
+
+	if (S_ISLNK(mode)) {
+		if (!realpath_not_final(path, stackpath))
+			path = stackpath;
+	} else {
+		p = realpath(path, stackpath);
+		if (p)
+			path = p;
+	}
 
 	rc = lgetfilecon_raw(path, &con);
 	if (rc == -1) {
