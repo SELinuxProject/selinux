@@ -1,3 +1,4 @@
+	* Update sandbox types in sandbox manual, from Michael De La Rue.
 	* Fix typos in semanage manpages, from Philipp Gesang.
 	* Fix the documentation of -l,--list for semodule, from Petr Lautrbach.
 	* Minor fix in a French translation, from Laurent Bigonville.
