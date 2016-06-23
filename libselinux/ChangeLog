@@ -1,3 +1,4 @@
+	* Compare absolute pathname in matchpathcon -V, from Petr Lautrbach.
 	* Add selinux_snapperd_contexts_path(), from Petr Lautrbach.
 	* Modify audit2why analyze function to use loaded policy, from Joshua Brindle.
 	* Sort object files for deterministic linking order, from Laurent Bigonville.
