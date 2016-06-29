@@ -45,25 +45,25 @@ except IOError:
         __builtin__.__dict__['_'] = unicode
 
 # define custom usages for selected main actions
-usage_login = "semanage login [-h] [-n] [-N] [-s STORE] ["
+usage_login = "semanage login [-h] [-n] [-N] [-S STORE] ["
 usage_login_dict = {' --add': ('-s SEUSER', '-r RANGE', 'LOGIN',), ' --modify': ('-s SEUSER', '-r RANGE', 'LOGIN',), ' --delete': ('LOGIN',), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
-usage_fcontext = "semanage fcontext [-h] [-n] [-N] [-s STORE] ["
+usage_fcontext = "semanage fcontext [-h] [-n] [-N] [-S STORE] ["
 usage_fcontext_dict = {' --add': ('(', '-t TYPE', '-f FTYPE', '-r RANGE', '-s SEUSER', '|', '-e EQUAL', ')', 'FILE_SPEC', ')',), ' --delete': ('(', '-t TYPE', '-f FTYPE', '|', '-e EQUAL', ')', 'FILE_SPEC', ')',), ' --modify': ('(', '-t TYPE', '-f FTYPE', '-r RANGE', '-s SEUSER', '|', '-e EQUAL', ')', 'FILE_SPEC )',), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
-usage_user = "semanage user [-h] [-n] [-N] [-s STORE] ["
+usage_user = "semanage user [-h] [-n] [-N] [-S STORE] ["
 usage_user_dict = {' --add': ('(', '-L LEVEL', '-R ROLES', '-r RANGE', '-s SEUSER', 'selinux_name'')'), ' --delete': ('selinux_name',), ' --modify': ('(', '-L LEVEL', '-R ROLES', '-r RANGE', '-s SEUSER', 'selinux_name', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
-usage_port = "semanage port [-h] [-n] [-N] [-s STORE] ["
+usage_port = "semanage port [-h] [-n] [-N] [-S STORE] ["
 usage_port_dict = {' --add': ('-t TYPE', '-p PROTOCOL', '-r RANGE', '(', 'port_name', '|', 'port_range', ')'), ' --modify': ('-t TYPE', '-p PROTOCOL', '-r RANGE', '(', 'port_name', '|', 'port_range', ')'), ' --delete': ('-p PROTOCOL', '(', 'port_name', '|', 'port_range', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
-usage_node = "semanage node [-h] [-n] [-N] [-s STORE] ["
+usage_node = "semanage node [-h] [-n] [-N] [-S STORE] ["
 usage_node_dict = {' --add': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --modify': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --delete': ('-M NETMASK', '-p PROTOCOL', 'node'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
-usage_interface = "semanage interface [-h] [-n] [-N] [-s STORE] ["
+usage_interface = "semanage interface [-h] [-n] [-N] [-S STORE] ["
 usage_interface_dict = {' --add': ('-t TYPE', '-r RANGE', 'interface'), ' --modify': ('-t TYPE', '-r RANGE', 'interface'), ' --delete': ('interface',), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
-usage_boolean = "semanage boolean [-h] [-n] [-N] [-s STORE] ["
+usage_boolean = "semanage boolean [-h] [-n] [-N] [-S STORE] ["
 usage_boolean_dict = {' --modify': ('(', '--on', '|', '--off', ')', 'boolean'), ' --list': ('-C',), '  --extract': ('',), ' --deleteall': ('',)}
 
 import sepolicy
