@@ -1,3 +1,4 @@
+	* Change the location of _selinux.so, from Petr Lautrbach.
 	* Clarify is_selinux_mls_enabled() description, from David King.
 	* Explain how to free policy type from selinux_getpolicytype(), from David King.
 	* Compare absolute pathname in matchpathcon -V, from Petr Lautrbach.
