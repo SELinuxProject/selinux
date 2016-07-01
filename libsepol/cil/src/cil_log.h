@@ -30,6 +30,7 @@
 #define CIL_LOG_H_
 
 #include <stdlib.h>
+#include <stdarg.h>
 #include <cil/cil.h>
 
 #define MAX_LOG_SIZE 512
