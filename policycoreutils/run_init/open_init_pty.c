@@ -327,8 +327,9 @@ int main(int argc, char *argv[])
 			break;
 		}
 
+		errno = 0;
 		int select_rc = select(pty_master + 1, &readfds, &writefds, NULL, NULL);
-		if (select_rc < 0) {
+		if (select_rc < 0 && errno != EINTR) {
 			perror("select()");
 			exit(EX_IOERR);
 		}
