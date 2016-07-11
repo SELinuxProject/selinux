@@ -273,6 +273,7 @@ int sepol_node_query(sepol_handle_t * handle,
 							   c, SEPOL_PROTO_IP6,
 							   response) < 0)
 						goto err;
+					return STATUS_SUCCESS;
 				}
 			}
 			break;
