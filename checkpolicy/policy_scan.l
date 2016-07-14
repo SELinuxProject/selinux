@@ -249,9 +249,9 @@ high |
 HIGH				{ return(HIGH); }
 low |
 LOW				{ return(LOW); }
-"/"({alnum}|[_\.\-/])*	        { return(PATH); }
-\""/"[ !#-~]*\" 		{ return(QPATH); }
-\"({alnum}|[_\.\-\+\~\: ])+\"	{ return(FILENAME); }
+"/"[^ \n\r\t\f]*	        { return(PATH); }
+\""/"[^\"\n]*\" 		{ return(QPATH); }
+\"[^"/"\"\n]+\"	{ return(FILENAME); }
 {letter}({alnum}|[_\-])*([\.]?({alnum}|[_\-]))*	{ return(IDENTIFIER); }
 {digit}+|0x{hexval}+            { return(NUMBER); }
 {alnum}*{letter}{alnum}*        { return(FILESYSTEM); }
