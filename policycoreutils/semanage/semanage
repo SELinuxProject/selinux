@@ -525,7 +525,7 @@ def handleInterface(args):
     if args.action is "add":
         OBJECT.add(args.interface, args.range, args.type)
     if args.action is "modify":
-        OBJECT.add(args.interface, args.range, args.type)
+        OBJECT.modify(args.interface, args.range, args.type)
     if args.action is "delete":
         OBJECT.delete(args.interface)
     if args.action is "list":
@@ -608,7 +608,7 @@ def handleNode(args):
     if args.action is "add":
         OBJECT.add(args.node, args.netmask, args.proto, args.range, args.type)
     if args.action is "modify":
-        OBJECT.add(args.node, args.netmask, args.proto, args.range, args.type)
+        OBJECT.modify(args.node, args.netmask, args.proto, args.range, args.type)
     if args.action is "delete":
         OBJECT.delete(args.node, args.netmask, args.proto)
     if args.action is "list":
