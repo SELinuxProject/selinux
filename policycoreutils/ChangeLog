@@ -1,3 +1,5 @@
+	* Remove unused autoconf files from po/, from Petr Lautrbach.
+	* Remove duplicate, empty translation files, from Piotr Drąg.
 	* open_init_pty: Do not error on EINTR, from Jason Zaman.
 	* Fix [-s STORE] typos in semanage, from Petr Lautrbach.
 	* Update sandbox types in sandbox manual, from Michael De La Rue.
