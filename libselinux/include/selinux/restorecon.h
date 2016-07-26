@@ -50,7 +50,9 @@ extern int selinux_restorecon(const char *pathname,
  */
 #define SELINUX_RESTORECON_VERBOSE			0x0010
 /*
- * Show progress by printing * to stdout every 1000 files.
+ * Show progress by printing * to stdout every 1000 files, unless
+ * relabeling the entire OS, that will then show the approximate
+ * percentage complete.
  */
 #define SELINUX_RESTORECON_PROGRESS			0x0020
 /*
@@ -68,10 +70,31 @@ extern int selinux_restorecon(const char *pathname,
  * with the specification, then use the last matching specification.
  */
 #define SELINUX_RESTORECON_ADD_ASSOC			0x0100
+/*
+ * Abort on errors during the file tree walk.
+ */
+#define SELINUX_RESTORECON_ABORT_ON_ERROR		0x0200
+/*
+ * Log any label changes to syslog.
+ */
+#define SELINUX_RESTORECON_SYSLOG_CHANGES		0x0400
+/*
+ * Log what spec matched each file.
+ */
+#define SELINUX_RESTORECON_LOG_MATCHES			0x0800
+/*
+ * Ignore files that do not exist.
+ */
+#define SELINUX_RESTORECON_IGNORE_NOENTRY		0x1000
+/*
+ * Do not read /proc/mounts to obtain a list of non-seclabel
+ * mounts to be excluded from relabeling checks.
+ */
+#define SELINUX_RESTORECON_IGNORE_MOUNTS		0x2000
 
 /**
  * selinux_restorecon_set_sehandle - Set the global fc handle.
- * @handle: specifies handle to set as the global fc handle.
+ * @hndl: specifies handle to set as the global fc handle.
  *
  * Called by a process that has already called selabel_open(3) with it's
  * required parameters, or if selinux_restorecon_default_handle(3) has been
@@ -83,17 +106,27 @@ extern void selinux_restorecon_set_sehandle(struct selabel_handle *hndl);
  * selinux_restorecon_default_handle - Sets default selabel_open(3) parameters
  *				       to use the currently loaded policy and
  *				       file_contexts, also requests the digest.
+ *
+ * Return value is the created handle on success or NULL with @errno set on
+ * failure.
  */
 extern struct selabel_handle *selinux_restorecon_default_handle(void);
 
 /**
- * selinux_restorecon_set_exclude_list - Add a list of files or
- *					 directories that are to be excluded
- *					 from relabeling.
+ * selinux_restorecon_set_exclude_list - Add a list of directories that are
+ *					 to be excluded from relabeling.
  * @exclude_list: containing a NULL terminated list of one or more
- *		  directories or files not to be relabeled.
+ *		  directories not to be relabeled.
  */
 extern void selinux_restorecon_set_exclude_list(const char **exclude_list);
+
+/**
+ * selinux_restorecon_set_alt_rootpath - Use alternate rootpath.
+ * @alt_rootpath: containing the alternate rootpath to be used.
+ *
+ * Return %0 on success, -%1 with @errno set on failure.
+ */
+extern int selinux_restorecon_set_alt_rootpath(const char *alt_rootpath);
 
 #ifdef __cplusplus
 }

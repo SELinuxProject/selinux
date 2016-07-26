@@ -82,13 +82,14 @@ Note that if
 .B SELINUX_RESTORECON_VERBOSE
 and
 .B SELINUX_RESTORECON_PROGRESS
-are set, then
+flags are set, then
 .B SELINUX_RESTORECON_PROGRESS
 will take precedence.
 .RE
 .sp
 .B SELINUX_RESTORECON_PROGRESS
-show progress by printing * to stdout every 1000 files.
+show progress by printing * to stdout every 1000 files unless relabeling the
+entire OS, that will then show the approximate percentage complete.
 .sp
 .B SELINUX_RESTORECON_REALPATH
 convert passed-in
@@ -106,6 +107,29 @@ entry from which the descent began.
 attempt to add an association between an inode and a specification. If there
 is already an association for the inode and it conflicts with the
 specification, then use the last matching specification.
+.sp
+.B SELINUX_RESTORECON_ABORT_ON_ERROR
+abort on errors during the file tree walk.
+.sp
+.B SELINUX_RESTORECON_SYSLOG_CHANGES
+log any label changes to
+.BR syslog (3).
+.sp
+.B SELINUX_RESTORECON_LOG_MATCHES
+log what specfile context matched each file.
+.sp
+.B SELINUX_RESTORECON_IGNORE_NOENTRY
+ignore files that do not exist.
+.sp
+.B SELINUX_RESTORECON_IGNORE_MOUNTS
+do not read
+.B /proc/mounts
+to obtain a list of non-seclabel mounts to be excluded from relabeling checks.
+.br
+Setting
+.B SELINUX_RESTORECON_IGNORE_MOUNTS
+is useful where there is a non-seclabel fs mounted with a seclabel fs mounted
+on a directory below this.
 .RE
 .sp
 The behavior regarding the checking and updating of the SHA1 digest described
@@ -120,13 +144,22 @@ to set the handle to be used by
 .sp
 If the
 .I pathname
-is a directory path, then it is possible to set files/directories to be
-excluded from the path by calling
+is a directory path, then it is possible to set directories to be excluded
+from the path by calling
 .BR selinux_restorecon_set_exclude_list (3)
 with a
 .B NULL
 terminated list before calling
 .BR selinux_restorecon (3).
+.sp
+By default
+.BR selinux_restorecon (3)
+reads
+.B /proc/mounts
+to obtain a list of non-seclabel mounts to be excluded from relabeling checks
+unless the
+.B SELINUX_RESTORECON_IGNORE_MOUNTS
+flag has been set.
 .RE
 .
 .SH "RETURN VALUE"
@@ -135,6 +168,7 @@ On success, zero is returned.  On error, \-1 is returned and
 is set appropriately.
 .
 .SH "NOTES"
+.IP "1." 4
 To improve performance when relabeling file systems recursively (e.g. the
 .IR restorecon_flags
 .B SELINUX_RESTORECON_RECURSE
@@ -146,21 +180,23 @@ to an extended attribute named
 .IR security.restorecon_last
 to the directory specified in the
 .IR pathname .
-.sp
+.IP "2." 4
 To check the extended attribute entry use
 .BR getfattr (1) ,
 for example:
 .sp
 .RS
+.RS
 getfattr -e hex -n security.restorecon_last /
 .RE
-.sp
+.RE
+.IP "3." 4
 The SHA1 digest is calculated by
 .BR selabel_open (3)
 concatenating the specfiles it reads during initialisation with the
 resulting digest and list of specfiles being retrieved by
 .BR selabel_digest (3).
-.sp
+.IP "4." 4
 The specfiles consist of the mandatory
 .I file_contexts
 file plus any subs, subs_dist, local and homedir entries (text or binary versions)
@@ -179,24 +215,20 @@ relabeled depending on the settings of the
 flag (provided
 .B SELINUX_RESTORECON_NOCHANGE
 is not set).
-.sp
+.IP "5." 4
 .B /sys
 and in-memory filesystems do not support the
 .IR security.restorecon_last
 extended attribute and are automatically excluded from any relabeling checks.
-.sp
-.BR selinux_restorecon ()
-does not check whether mounted filesystems support the
-.B seclabel
-option (i.e. support extended attributes as described in
-.BR xattr (7)).
-To exclude these filesystems from any relabeling checks
-.BR selinux_restorecon_set_exclude_list (3)
-should be called prior to
-.BR selinux_restorecon ()
-with a NULL terminated
-.IR exclude_list
-of these filesystems.
+.IP "6." 4
+By default
+.B stderr
+is used to log output messages and errors. This may be changed by calling
+.BR selinux_set_callback (3)
+with the
+.B SELINUX_CB_LOG
+.I type
+option.
 .
 .SH "SEE ALSO"
 .BR selinux_restorecon_set_sehandle (3),
@@ -204,3 +236,7 @@ of these filesystems.
 .BR selinux_restorecon_default_handle (3),
 .br
 .BR selinux_restorecon_set_exclude_list (3),
+.br
+.BR selinux_restorecon_set_alt_rootpath (3),
+.br
+.BR selinux_set_callback (3)

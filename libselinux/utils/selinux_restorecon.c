@@ -37,9 +37,9 @@ static int validate_context(char **contextp)
 static void usage(const char *progname)
 {
 	fprintf(stderr,
-		"\nusage: %s [-FCnRrdeia] [-v|-P] [-p policy] [-f specfile] "
-		"pathname ...\n"
-		"Where:\n\t"
+		"\nusage: %s [-FCnRrdmiIaAsl] [-e dir] [-v|-P]\n"
+		"[-x alt_rootpath] [-p policy] [-f specfile] pathname ...\n"
+		"\nWhere:\n\t"
 		"-F  Set the label to that in specfile.\n\t"
 		"    If not set then reset the \"type\" component of the "
 		"label to that\n\t    in the specfile.\n\t"
@@ -49,17 +49,25 @@ static void usage(const char *progname)
 		"-R  Recursively change file and directory labels.\n\t"
 		"-v  Show changes in file labels (-v and -P are mutually "
 		" exclusive).\n\t"
-		"-P  Show progress by printing \"*\" to stdout every 1000 files.\n\t"
+		"-P  Show progress by printing \"*\" to stdout every 1000 files"
+		",\n\t    unless relabeling entire OS, then show percentage complete.\n\t"
 		"-r  Use realpath(3) to convert pathnames to canonical form.\n\t"
 		"-d  Prevent descending into directories that have a "
 		"different\n\t    device number than the pathname from  which "
 		"the descent began.\n\t"
-		"-e  Exclude this file/directory (add multiple -e entries).\n\t"
+		"-m  Do not automatically read /proc/mounts to determine what\n\t"
+		"    non-seclabel mounts to exclude from relabeling.\n\t"
+		"-e  Exclude this directory (add multiple -e entries).\n\t"
 		"-i  Do not set SELABEL_OPT_DIGEST option when calling "
 		" selabel_open(3).\n\t"
+		"-I  Ignore files that do not exist.\n\t"
 		"-a  Add an association between an inode and a context.\n\t"
 		"    If there is a different context that matched the inode,\n\t"
 		"    then use the first context that matched.\n\t"
+		"-A  Abort on errors during the file tree walk.\n\t"
+		"-s  Log any label changes to syslog(3).\n\t"
+		"-l  Log what specfile context matched each file.\n\t"
+		"-x  Set alternate rootpath.\n\t"
 		"-p  Optional binary policy file (also sets validate context "
 		"option).\n\t"
 		"-f  Optional file contexts file.\n\t"
@@ -101,6 +109,7 @@ int main(int argc, char **argv)
 	int opt, i;
 	unsigned int restorecon_flags = 0;
 	char *path = NULL, *digest = NULL, *validate = NULL;
+	char *alt_rootpath = NULL;
 	FILE *policystream;
 	bool ignore_digest = false, require_selinux = true;
 	bool verbose = false, progress = false;
@@ -118,7 +127,7 @@ int main(int argc, char **argv)
 	exclude_list = NULL;
 	exclude_count = 0;
 
-	while ((opt = getopt(argc, argv, "iFCnRvPrdae:f:p:")) > 0) {
+	while ((opt = getopt(argc, argv, "iIFCnRvPrdaAslme:f:p:x:")) > 0) {
 		switch (opt) {
 		case 'F':
 			restorecon_flags |=
@@ -158,6 +167,9 @@ int main(int argc, char **argv)
 		case 'd':
 			restorecon_flags |= SELINUX_RESTORECON_XDEV;
 			break;
+		case 'm':
+			restorecon_flags |= SELINUX_RESTORECON_IGNORE_MOUNTS;
+			break;
 		case 'e':
 			add_exclude(optarg);
 			break;
@@ -190,8 +202,23 @@ int main(int argc, char **argv)
 		case 'i':
 			ignore_digest = true;
 			break;
+		case 'I':
+			restorecon_flags |= SELINUX_RESTORECON_IGNORE_NOENTRY;
+			break;
 		case 'a':
 			restorecon_flags |= SELINUX_RESTORECON_ADD_ASSOC;
+			break;
+		case 'A':
+			restorecon_flags |= SELINUX_RESTORECON_ABORT_ON_ERROR;
+			break;
+		case 's':
+			restorecon_flags |= SELINUX_RESTORECON_SYSLOG_CHANGES;
+			break;
+		case 'l':
+			restorecon_flags |= SELINUX_RESTORECON_LOG_MATCHES;
+			break;
+		case 'x':
+			alt_rootpath = optarg;
 			break;
 		default:
 			usage(argv[0]);
@@ -246,6 +273,9 @@ int main(int argc, char **argv)
 	if (exclude_list)
 		selinux_restorecon_set_exclude_list
 						 ((const char **)exclude_list);
+
+	if (alt_rootpath)
+		selinux_restorecon_set_alt_rootpath(alt_rootpath);
 
 	/* Call restorecon for each path in list */
 	for (i = optind; i < argc; i++) {
