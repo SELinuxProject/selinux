@@ -37,7 +37,7 @@ static int validate_context(char **contextp)
 static void usage(const char *progname)
 {
 	fprintf(stderr,
-		"\nusage: %s [-FCnRrdei] [-v|-P] [-p policy] [-f specfile] "
+		"\nusage: %s [-FCnRrdeia] [-v|-P] [-p policy] [-f specfile] "
 		"pathname ...\n"
 		"Where:\n\t"
 		"-F  Set the label to that in specfile.\n\t"
@@ -55,8 +55,11 @@ static void usage(const char *progname)
 		"different\n\t    device number than the pathname from  which "
 		"the descent began.\n\t"
 		"-e  Exclude this file/directory (add multiple -e entries).\n\t"
-		"-i  Do not set SELABEL_OPT_VALIDATE option in selabel_open(3)"
-		" then call\n\t    selinux_restorecon_set_sehandle(3).\n\t"
+		"-i  Do not set SELABEL_OPT_DIGEST option when calling "
+		" selabel_open(3).\n\t"
+		"-a  Add an association between an inode and a context.\n\t"
+		"    If there is a different context that matched the inode,\n\t"
+		"    then use the first context that matched.\n\t"
 		"-p  Optional binary policy file (also sets validate context "
 		"option).\n\t"
 		"-f  Optional file contexts file.\n\t"
@@ -115,7 +118,7 @@ int main(int argc, char **argv)
 	exclude_list = NULL;
 	exclude_count = 0;
 
-	while ((opt = getopt(argc, argv, "iFCnRvPrde:f:p:")) > 0) {
+	while ((opt = getopt(argc, argv, "iFCnRvPrdae:f:p:")) > 0) {
 		switch (opt) {
 		case 'F':
 			restorecon_flags |=
@@ -186,6 +189,9 @@ int main(int argc, char **argv)
 			break;
 		case 'i':
 			ignore_digest = true;
+			break;
+		case 'a':
+			restorecon_flags |= SELINUX_RESTORECON_ADD_ASSOC;
 			break;
 		default:
 			usage(argv[0]);

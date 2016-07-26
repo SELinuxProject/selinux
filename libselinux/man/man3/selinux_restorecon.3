@@ -67,8 +67,6 @@ extended attribute.
 If set, reset the files label to match the default specfile context.
 If not set only reset the files "type" component of the context to match the
 default specfile context.
-.br
-
 .sp
 .B SELINUX_RESTORECON_RECURSE
 change file and directory labels recursively (descend directories)
@@ -103,6 +101,11 @@ prevent descending into directories that have a different device number than
 the
 .I pathname
 entry from which the descent began.
+.sp
+.B SELINUX_RESTORECON_ADD_ASSOC
+attempt to add an association between an inode and a specification. If there
+is already an association for the inode and it conflicts with the
+specification, then use the last matching specification.
 .RE
 .sp
 The behavior regarding the checking and updating of the SHA1 digest described
