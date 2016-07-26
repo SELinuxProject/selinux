@@ -42,6 +42,11 @@
  *
  */
 
+/*
+ * Note that the restorecond(8) service build links with functions provided
+ * by ../setfiles/restore.c
+ */
+
 #define _GNU_SOURCE
 #include <sys/inotify.h>
 #include <errno.h>
@@ -68,7 +73,7 @@ static int master_fd = -1;
 static const char *server_watch_file  = "/etc/selinux/restorecond.conf";
 static const char *user_watch_file  = "/etc/selinux/restorecond_user.conf";
 static const char *watch_file;
-static struct restore_opts r_opts;
+struct restore_opts r_opts;
 
 #include <selinux/selinux.h>
 
@@ -81,7 +86,7 @@ static void done(void) {
 	watch_list_free(master_fd);
 	close(master_fd);
 	utmpwatcher_free();
-	matchpathcon_fini();
+	selabel_close(r_opts.hnd);
 }
 
 static const char *pidfile = "/var/run/restorecond.pid";
@@ -140,30 +145,17 @@ int main(int argc, char **argv)
 	int opt;
 	struct sigaction sa;
 
-	memset(&r_opts, 0, sizeof(r_opts));
-
-	r_opts.progress = 0;
-	r_opts.count = 0;
-	r_opts.debug = 0;
-	r_opts.change = 1;
-	r_opts.verbose = 0;
-	r_opts.logging = 0;
-	r_opts.rootpath = NULL;
-	r_opts.rootpathlen = 0;
-	r_opts.outfile = NULL;
-	r_opts.force = 0;
-	r_opts.hard_links = 0;
-	r_opts.abort_on_error = 0;
-	r_opts.add_assoc = 0;
-	r_opts.expand_realpath = 0;
-	r_opts.fts_flags = FTS_PHYSICAL;
-	r_opts.selabel_opt_validate = NULL;
-	r_opts.selabel_opt_path = NULL;
-	r_opts.ignore_enoent = 1;
-
-	restore_init(&r_opts);
 	/* If we are not running SELinux then just exit */
-	if (is_selinux_enabled() != 1) return 0;
+	if (is_selinux_enabled() != 1)
+		return 0;
+
+	/* Set all options to zero/NULL except for ignore_noent & digest. */
+	memset(&r_opts, 0, sizeof(r_opts));
+	r_opts.ignore_noent = SELINUX_RESTORECON_IGNORE_NOENTRY;
+	r_opts.ignore_digest = SELINUX_RESTORECON_IGNORE_DIGEST;
+
+	/* As r_opts.selabel_opt_digest = NULL, no digest will be requested. */
+	restore_init(&r_opts);
 
 	/* Register sighandlers */
 	sa.sa_flags = 0;
@@ -171,9 +163,6 @@ int main(int argc, char **argv)
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGTERM, &sa, NULL);
 
-	set_matchpathcon_flags(MATCHPATHCON_NOTRANS);
-
-	exclude_non_seclabel_mounts();
 	atexit( done );
 	while ((opt = getopt(argc, argv, "hdf:uv")) > 0) {
 		switch (opt) {
@@ -191,7 +180,7 @@ int main(int argc, char **argv)
 			exit(0);
 			break;
 		case 'v':
-			r_opts.verbose++;
+			r_opts.verbose = SELINUX_RESTORECON_VERBOSE;
 			break;
 		case '?':
 			usage(argv[0]);
@@ -230,7 +219,7 @@ int main(int argc, char **argv)
 
 	watch_list_free(master_fd);
 	close(master_fd);
-	matchpathcon_fini();
+
 	if (pidfile)
 		unlink(pidfile);
 

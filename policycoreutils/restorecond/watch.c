@@ -25,7 +25,6 @@
 /* reasonable guess as to size of 1024 events */
 #define BUF_LEN        (1024 * (EVENT_SIZE + 16))
 
-
 struct watchList {
 	struct watchList *next;
 	int wd;
@@ -49,20 +48,23 @@ void watch_list_add(int fd, const char *path)
 	char *file = basename(x);
 	char *dir = dirname(x);
 	ptr = firstDir;
-
-	if (exclude(path)) goto end;
+	int len;
 
 	globbuf.gl_offs = 1;
 	if (glob(path,
 		 GLOB_TILDE | GLOB_PERIOD,
 		 NULL,
 		 &globbuf) >= 0) {
-		for (i=0; i < globbuf.gl_pathc; i++) {
-		  int len = strlen(globbuf.gl_pathv[i]) -2;
-		  if (len > 0 && strcmp(&globbuf.gl_pathv[i][len--], "/.") == 0) continue;
-		  if (len > 0 && strcmp(&globbuf.gl_pathv[i][len], "/..") == 0) continue;
-		  if (process_one_realpath(globbuf.gl_pathv[i], 0) > 0)
-			  process_one_realpath(globbuf.gl_pathv[i], 1);
+		for (i = 0; i < globbuf.gl_pathc; i++) {
+			len = strlen(globbuf.gl_pathv[i]) - 2;
+			if (len > 0 &&
+			    strcmp(&globbuf.gl_pathv[i][len--], "/.") == 0)
+				continue;
+			if (len > 0 &&
+			    strcmp(&globbuf.gl_pathv[i][len], "/..") == 0)
+				continue;
+			selinux_restorecon(globbuf.gl_pathv[i],
+					   r_opts.restorecon_flags);
 		}
 		globfree(&globbuf);
 	}
@@ -114,7 +116,9 @@ end:
 int watch_list_find(int wd, const char *file)
 {
 	struct watchList *ptr = NULL;
+
 	ptr = firstDir;
+
 	if (debug_mode)
 		printf("%d: File=%s\n", wd, file);
 	while (ptr != NULL) {
@@ -126,7 +130,8 @@ int watch_list_find(int wd, const char *file)
 				    0)
 					exitApp("Error allocating memory.");
 
-				process_one_realpath(path, 0);
+				selinux_restorecon(path,
+						   r_opts.restorecon_flags);
 				free(path);
 				return 0;
 			}

@@ -42,4 +42,6 @@ extern int watch_list_find(int wd, const char *file);
 extern void watch_list_free(int fd);
 extern int watch_list_isempty(void);
 
+extern struct restore_opts r_opts;
+
 #endif
