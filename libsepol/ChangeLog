@@ -1,3 +1,4 @@
+	* Ignore object_r when adding userrole mappings to policydb, from Steve Lawrence.
 	* Add missing return to sepol_node_query(), from Petr Lautrbach.
 	* Add missing <stdarg.h> include, from Thomas Petazzoni.
 	* Correctly detect unknown classes in sepol_string_to_security_class, from Joshua Brindle.
