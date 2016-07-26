@@ -1,13 +1,13 @@
-.TH "restorecon" "8" "2002031409" "" ""
+.TH "restorecon" "8" "10 June 2016" "" "SELinux User Command"
 .SH "NAME"
 restorecon \- restore file(s) default SELinux security contexts.
 
 .SH "SYNOPSIS"
 .B restorecon
-.I [\-R] [\-n] [\-p] [\-v] [\-e directory] pathname...
+.I [\-R] [\-m] [\-n] [\-p] [\-v] [\-I] [\-e directory] pathname...
 .P
 .B restorecon
-.I \-f infilename [\-e directory] [\-R] [\-n] [\-p] [\-v] [\-F]
+.I \-f infilename [\-e directory] [\-R] [\-m] [\-n] [\-p] [\-v] [\-F] [\-I]
 
 .SH "DESCRIPTION"
 This manual page describes the
@@ -49,6 +49,20 @@ display usage information and exit.
 .B \-i
 ignore files that do not exist.
 .TP
+.B \-I
+ignore digest to force checking of labels even if the stored SHA1 digest
+matches the specfiles SHA1 digest. The digest will then be updated provided
+there are no errors. See the
+.B NOTES
+section for further details.
+.TP
+.B \-m
+do not read
+.B /proc/mounts
+to obtain a list of non-seclabel mounts to be excluded from relabeling checks.
+Setting this option is useful where there is a non-seclabel fs mounted with a
+seclabel fs mounted on a directory below this.
+.TP
 .B \-n
 don't change any file labels (passive check).  To display the files whose labels would be changed, add \-v.
 .TP
@@ -56,15 +70,28 @@ don't change any file labels (passive check).  To display the files whose labels
 Deprecated, SELinux policy will probably block this access.  Use shell redirection to save list of files with incorrect context in filename.
 .TP
 .B \-p
-show progress by printing * every STAR_COUNT files.  (If you relabel the entire OS, this will show you the percentage complete.)
+show progress by printing * every STAR_COUNT files unless relabeling the entire
+OS, that will then show the approximate percentage complete. Note that the
+.B \-p
+and
+.B \-v
+options are mutually exclusive.
 .TP
 .B \-R, \-r
 change files and directories file labels recursively (descend directories).
 .br
-.B Note: restorecon reports warnings on paths without default labels only if called non-recursively or in verbose mode.
 .TP
 .B \-v
-show changes in file labels, if type or role are going to be changed.
+show changes in file labels. Note that the
+.B \-v
+and
+.B \-p
+options are mutually exclusive.
+.TP
+.B \-W
+display warnings about entries that had no matching files by outputting the
+.BR selabel_stats (3)
+results.
 .TP
 .B \-0
 the separator for the input items is assumed to be the null character
@@ -81,9 +108,51 @@ produces input suitable for this mode.
 .SH "ARGUMENTS"
 .B pathname...
 The pathname for the file(s) to be relabeled.
-.SH NOTE
-restorecon does not follow symbolic links and by default it does not
+.SH "NOTES"
+.IP "1." 4
+.B restorecon
+does not follow symbolic links and by default it does not
 operate recursively on directories.
+.IP "2." 4
+If the
+.B pathname
+specifies the root directory and the
+.B \-vR
+or
+.B \-vr
+options are set and the audit system is running, then an audit event is
+automatically logged stating that a "mass relabel" took place using the
+message label
+.BR FS_RELABEL .
+.IP "3." 4
+To improve performance when relabeling file systems recursively (i.e. the
+.B \-R
+or
+.B \-r
+option is set),
+.B restorecon
+will write an SHA1 digest of the default specfiles set to an extended
+attribute named
+.IR security.restorecon_last
+to the directory specified in each
+.B pathname...
+once the relabeling has been completed successfully. This digest will be
+checked should
+.B restorecon
+be rerun with the same
+.B pathname
+parameters. See
+.BR selinux_restorecon (3)
+for further details.
+.sp
+The
+.B \-I
+option will ignore the SHA1 digest from each directory specified in
+.B pathname...
+and provided the
+.B \-n
+option is NOT set and recursive mode is set, files will be relabeled as
+required with the digest then being updated provided there are no errors.
 
 .SH "AUTHOR"
 This man page was written by Dan Walsh <dwalsh@redhat.com>.

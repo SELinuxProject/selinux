@@ -1,10 +1,10 @@
-.TH "setfiles" "8" "2002031409" "" ""
+.TH "setfiles" "8" "10 June 2016" "" "SELinux User Command"
 .SH "NAME"
 setfiles \- set SELinux file security contexts.
 
 .SH "SYNOPSIS"
 .B setfiles
-.I [\-c policy] [\-d] [\-l] [\-n] [\-e directory] [\-o filename] [\-p] [\-q] [\-s] [\-v] [\-W] [\-F] spec_file pathname...
+.I [\-c policy] [\-d] [\-l] [\-m] [\-n] [\-e directory] [\-o filename] [\-p] [\-q] [\-s] [\-v] [\-W] [\-F] [\-I] spec_file pathname...
 .SH "DESCRIPTION"
 This manual page describes the
 .BR setfiles
@@ -50,8 +50,22 @@ display usage information and exit.
 .B \-i
 ignore files that do not exist.
 .TP
+.B \-I
+ignore digest to force checking of labels even if the stored SHA1 digest
+matches the specfiles SHA1 digest. The digest will then be updated provided
+there are no errors. See the
+.B NOTES
+section for further details.
+.TP
 .B \-l
 log changes in file labels to syslog.
+.TP
+.B \-m
+do not read
+.B /proc/mounts
+to obtain a list of non-seclabel mounts to be excluded from relabeling checks.
+Setting this option is useful where there is a non-seclabel fs mounted with a
+seclabel fs mounted on a directory below this.
 .TP
 .B \-n
 don't change any file labels (passive check).
@@ -60,23 +74,38 @@ don't change any file labels (passive check).
 Deprecated, SELinux policy will probably block this access.  Use shell redirection to save list of files with incorrect context in filename.
 .TP
 .B \-p
-show progress by printing * every STAR_COUNT files.  (If you relabel the entire OS, this will show you the percentage complete.)
+show progress by printing * every STAR_COUNT files unless relabeling the entire
+OS, that will then show the approximate percentage complete. Note that the
+.B \-p
+and
+.B \-v
+options are mutually exclusive.
 .TP 
 .B \-q
-suppress non-error output.
+Deprecated, was only used to stop printing inode association parameters.
 .TP 
 .B \-r rootpath
-use an alternate root path.
+use an alternate root path. Used in meta-selinux for OpenEmbedded/Yocto builds
+to label files under
+.B rootpath
+as if they were at /
 .TP 
 .B \-s
 take a list of files from standard input instead of using a pathname from the
 command line (equivalent to \-f \-).
 .TP
 .B \-v
-show changes in file labels.
+show changes in file labels and output any inode association parameters.
+Note that the
+.B \-v
+and
+.B \-p
+options are mutually exclusive.
 .TP 
 .B \-W
-display warnings about entries that had no matching files.
+display warnings about entries that had no matching files by outputting the
+.BR selabel_stats (3)
+results.
 .TP 
 .B \-0
 the separator for the input items is assumed to be the null character
@@ -120,6 +149,49 @@ Not used if the
 or the
 .B \-s
 option is used.
+
+.SH "NOTES"
+.IP "1." 4
+.B setfiles
+follows symbolic links and operates recursively on directories.
+.IP "2." 4
+If the
+.B pathname
+specifies the root directory and the
+.B \-v
+option is set and the audit system is running, then an audit event is
+automatically logged stating that a "mass relabel" took place using the
+message label
+.BR FS_RELABEL .
+.IP "3." 4
+To improve performance when relabeling file systems recursively
+.B setfiles
+will write an SHA1 digest of the
+.B spec_file
+set to an extended attribute named
+.IR security.restorecon_last
+to the directory specified in each
+.B pathname...
+once the relabeling has been completed successfully. This digest will be
+checked should
+.B setfiles
+be rerun
+with the same
+.B spec_file
+and
+.B pathname
+parameters. See
+.BR selinux_restorecon (3)
+for further details.
+.sp
+The
+.B \-I
+option will ignore the SHA1 digest from each directory specified in
+.B pathname...
+and provided the
+.B \-n
+option is NOT set, files will be relabeled as required with the digest then
+being updated provided there are no errors.
 
 .SH "AUTHOR"
 This man page was written by Russell Coker <russell@coker.com.au>.
