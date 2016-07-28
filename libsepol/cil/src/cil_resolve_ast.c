@@ -131,10 +131,10 @@ static int __cil_resolve_perms(symtab_t *class_symtab, symtab_t *common_symtab, 
 				}
 			}
 			if (rc != SEPOL_OK) {
-				cil_log(CIL_ERR, "Failed to resolve permission %s\n", (char*)curr->data);
-				goto exit;
+				cil_log(CIL_WARN, "Failed to resolve permission %s\n", (char*)curr->data);
+			} else {
+				cil_list_append(*perm_datums, CIL_DATUM, perm_datum);
 			}
-			cil_list_append(*perm_datums, CIL_DATUM, perm_datum);
 		} else {
 			cil_list_append(*perm_datums, curr->flavor, curr->data);
 		}
@@ -3660,7 +3660,7 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 			rc = SEPOL_OK;
 		}
 
-		cil_tree_log(node, lvl, "Failed to resolve '%s' in %s statement", args->last_resolved_name, cil_node_to_string(node));
+		cil_tree_log(node, lvl, "Failed to resolve %s statement", cil_node_to_string(node));
 		goto exit;
 	}
 
