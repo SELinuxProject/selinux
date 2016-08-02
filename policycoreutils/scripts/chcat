@@ -22,7 +22,10 @@
 #                                        02111-1307  USA
 #
 #
-import subprocess
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
 import sys
 import os
 import pwd
@@ -99,7 +102,7 @@ def chcat_user_add(newcat, users):
             cmd = "semanage login -a -r %s -s %s %s" % (new_serange, user[0], u)
         else:
             cmd = "semanage login -m -r %s -s %s %s" % (new_serange, user[0], u)
-        rc = subprocess.getstatusoutput(cmd)
+        rc = getstatusoutput(cmd)
         if rc[0] != 0:
             print(rc[1])
             errors += 1
@@ -138,7 +141,7 @@ def chcat_add(orig, newcat, objects, login_ind):
         else:
             cat_string = cat
         cmd = 'chcon -l %s:%s %s' % (sensitivity, cat_string, f)
-        rc = subprocess.getstatusoutput(cmd)
+        rc = getstatusoutput(cmd)
         if rc[0] != 0:
             print(rc[1])
             errors += 1
@@ -179,7 +182,7 @@ def chcat_user_remove(newcat, users):
             cmd = "semanage login -a -r %s -s %s %s" % (new_serange, user[0], u)
         else:
             cmd = "semanage login -m -r %s -s %s %s" % (new_serange, user[0], u)
-        rc = subprocess.getstatusoutput(cmd)
+        rc = getstatusoutput(cmd)
         if rc[0] != 0:
             print(rc[1])
             errors += 1
@@ -224,7 +227,7 @@ def chcat_remove(orig, newcat, objects, login_ind):
             cmd = 'chcon -l %s %s' % (sensitivity, f)
         else:
             cmd = 'chcon -l %s:%s %s' % (sensitivity, cat, f)
-        rc = subprocess.getstatusoutput(cmd)
+        rc = getstatusoutput(cmd)
         if rc[0] != 0:
             print(rc[1])
             errors += 1
@@ -252,7 +255,7 @@ def chcat_user_replace(newcat, users):
             cmd = "semanage login -a -r %s -s %s %s" % (new_serange, user[0], u)
         else:
             cmd = "semanage login -m -r %s -s %s %s" % (new_serange, user[0], u)
-        rc = subprocess.getstatusoutput(cmd)
+        rc = getstatusoutput(cmd)
         if rc[0] != 0:
             print(rc[1])
             errors += 1
@@ -275,7 +278,7 @@ def chcat_replace(newcat, objects, login_ind):
     for f in objects:
         cmd = "%s %s" % (cmd, f)
 
-    rc = subprocess.getstatusoutput(cmd)
+    rc = getstatusoutput(cmd)
     if rc[0] != 0:
         print(rc[1])
         errors += 1

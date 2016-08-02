@@ -1,10 +1,12 @@
 #! /usr/bin/python -Es
-import gtk
-import subprocess
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
 import sys
 rc = [-1, '']
 try:
-    rc = subprocess.getstatusoutput(sys.argv[1])
+    rc = getstatusoutput(sys.argv[1])
 except:
     pass
 if rc[0] == 0:
