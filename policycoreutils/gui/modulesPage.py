@@ -20,7 +20,11 @@ import string
 import gtk
 import gtk.glade
 import os
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
+
 import gobject
 import sys
 import seobject
@@ -121,7 +125,7 @@ class modulesPage(semanagePage):
         module = store.get_value(iter, 0)
         try:
             self.wait()
-            status, output = commands.getstatusoutput("semodule -r %s" % module)
+            status, output = getstatusoutput("semodule -r %s" % module)
             self.ready()
             if status != 0:
                 self.error(output)
@@ -137,10 +141,10 @@ class modulesPage(semanagePage):
         try:
             self.wait()
             if self.audit_enabled:
-                status, output = commands.getstatusoutput("semodule -DB")
+                status, output = getstatusoutput("semodule -DB")
                 button.set_label(_("Disable Audit"))
             else:
-                status, output = commands.getstatusoutput("semodule -B")
+                status, output = getstatusoutput("semodule -B")
                 button.set_label(_("Enable Audit"))
             self.ready()
 
@@ -153,7 +157,7 @@ class modulesPage(semanagePage):
     def disable_audit(self, button):
         try:
             self.wait()
-            status, output = commands.getstatusoutput("semodule -B")
+            status, output = getstatusoutput("semodule -B")
             self.ready()
             if status != 0:
                 self.error(output)
@@ -186,7 +190,7 @@ class modulesPage(semanagePage):
     def add(self, file):
         try:
             self.wait()
-            status, output = commands.getstatusoutput("semodule -i %s" % file)
+            status, output = getstatusoutput("semodule -i %s" % file)
             self.ready()
             if status != 0:
                 self.error(output)

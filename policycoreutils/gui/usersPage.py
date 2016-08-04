@@ -22,7 +22,11 @@ import gtk.glade
 import os
 import gobject
 import sys
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
+
 import seobject
 from semanagePage import *
 
@@ -114,7 +118,7 @@ class usersPage(semanagePage):
         roles = self.selinuxRolesEntry.get_text()
 
         self.wait()
-        (rc, out) = commands.getstatusoutput("semanage user -a -R '%s' -r %s %s" % (roles, range, user))
+        (rc, out) = getstatusoutput("semanage user -a -R '%s' -r %s %s" % (roles, range, user))
         self.ready()
         if rc != 0:
             self.error(out)
@@ -130,7 +134,7 @@ class usersPage(semanagePage):
         roles = self.selinuxRolesEntry.get_text()
 
         self.wait()
-        (rc, out) = commands.getstatusoutput("semanage user -m -R '%s' -r %s %s" % (roles, range, user))
+        (rc, out) = getstatusoutput("semanage user -m -R '%s' -r %s %s" % (roles, range, user))
         self.ready()
 
         if rc != 0:
@@ -146,7 +150,7 @@ class usersPage(semanagePage):
                 raise ValueError(_("SELinux user '%s' is required") % user)
 
             self.wait()
-            (rc, out) = commands.getstatusoutput("semanage user -d %s" % user)
+            (rc, out) = getstatusoutput("semanage user -d %s" % user)
             self.ready()
             if rc != 0:
                 self.error(out)

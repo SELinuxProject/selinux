@@ -31,7 +31,11 @@ import semanagePage
 INSTALLPATH = '/usr/share/system-config-selinux'
 sys.path.append(INSTALLPATH)
 
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
+
 ENFORCING = 0
 PERMISSIVE = 1
 DISABLED = 2
@@ -182,7 +186,7 @@ class booleansPage:
             return
         try:
             self.wait()
-            (rc, out) = commands.getstatusoutput("semanage boolean -d %s" % boolean)
+            (rc, out) = getstatusoutput("semanage boolean -d %s" % boolean)
 
             self.ready()
             if rc != 0:
@@ -233,7 +237,7 @@ class booleansPage:
         self.store.set_value(iter, ACTIVE, not val)
         self.wait()
         setsebool = "/usr/sbin/setsebool -P %s %d" % (key, not val)
-        rc, out = commands.getstatusoutput(setsebool)
+        rc, out = getstatusoutput(setsebool)
         if rc != 0:
             self.error(out)
         self.load(self.filter)
@@ -242,7 +246,7 @@ class booleansPage:
     def on_revert_clicked(self, button):
         self.wait()
         setsebool = "semanage boolean --deleteall"
-        commands.getstatusoutput(setsebool)
+        getstatusoutput(setsebool)
         self.load(self.filter)
         self.ready()
 

@@ -22,7 +22,11 @@ import gtk.glade
 import os
 import gobject
 import sys
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
+
 import seobject
 from semanagePage import *
 
@@ -135,7 +139,7 @@ class loginsPage(semanagePage):
                 raise ValueError(_("Login '%s' is required") % login)
 
             self.wait()
-            (rc, out) = commands.getstatusoutput("semanage login -d %s" % login)
+            (rc, out) = getstatusoutput("semanage login -d %s" % login)
             self.ready()
             if rc != 0:
                 self.error(out)
@@ -154,7 +158,7 @@ class loginsPage(semanagePage):
         iter = self.loginsSelinuxUserCombo.get_active_iter()
         seuser = list_model.get_value(iter, 0)
         self.wait()
-        (rc, out) = commands.getstatusoutput("semanage login -a -s %s -r %s %s" % (seuser, serange, target))
+        (rc, out) = getstatusoutput("semanage login -a -s %s -r %s %s" % (seuser, serange, target))
         self.ready()
         if rc != 0:
             self.error(out)
@@ -174,7 +178,7 @@ class loginsPage(semanagePage):
         iter = self.loginsSelinuxUserCombo.get_active_iter()
         seuser = list_model.get_value(iter, 0)
         self.wait()
-        (rc, out) = commands.getstatusoutput("semanage login -m -s %s -r %s %s" % (seuser, serange, target))
+        (rc, out) = getstatusoutput("semanage login -m -s %s -r %s %s" % (seuser, serange, target))
         self.ready()
         if rc != 0:
             self.error(out)

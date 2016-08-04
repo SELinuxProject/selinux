@@ -21,7 +21,11 @@ import gtk.glade
 import os
 import gobject
 import seobject
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
+
 from semanagePage import *
 
 SPEC_COL = 0
@@ -179,7 +183,7 @@ class fcontextPage(semanagePage):
             fspec = store.get_value(iter, SPEC_COL)
             ftype = store.get_value(iter, FTYPE_COL)
             self.wait()
-            (rc, out) = commands.getstatusoutput("semanage fcontext -d -f '%s' '%s'" % (ftype, fspec))
+            (rc, out) = getstatusoutput("semanage fcontext -d -f '%s' '%s'" % (ftype, fspec))
             self.ready()
 
             if rc != 0:
@@ -197,7 +201,7 @@ class fcontextPage(semanagePage):
         list_model = self.fcontextFileTypeCombo.get_model()
         active = self.fcontextFileTypeCombo.get_active()
         self.wait()
-        (rc, out) = commands.getstatusoutput("semanage fcontext -a -t %s -r %s -f '%s' '%s'" % (type, mls, ftype[active], fspec))
+        (rc, out) = getstatusoutput("semanage fcontext -a -t %s -r %s -f '%s' '%s'" % (type, mls, ftype[active], fspec))
         self.ready()
         if rc != 0:
             self.error(out)
@@ -216,7 +220,7 @@ class fcontextPage(semanagePage):
         iter = self.fcontextFileTypeCombo.get_active_iter()
         ftype = list_model.get_value(iter, 0)
         self.wait()
-        (rc, out) = commands.getstatusoutput("semanage fcontext -m -t %s -r %s -f '%s' '%s'" % (type, mls, ftype, fspec))
+        (rc, out) = getstatusoutput("semanage fcontext -m -t %s -r %s -f '%s' '%s'" % (type, mls, ftype, fspec))
         self.ready()
         if rc != 0:
             self.error(out)

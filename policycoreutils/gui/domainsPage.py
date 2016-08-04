@@ -20,7 +20,11 @@ import string
 import gtk
 import gtk.glade
 import os
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
+
 import gobject
 import sys
 import seobject
@@ -124,7 +128,7 @@ class domainsPage(semanagePage):
         domain = store.get_value(iter, 0)
         try:
             self.wait()
-            status, output = commands.getstatusoutput("semanage permissive -d %s_t" % domain)
+            status, output = getstatusoutput("semanage permissive -d %s_t" % domain)
             self.ready()
             if status != 0:
                 self.error(output)
@@ -149,7 +153,7 @@ class domainsPage(semanagePage):
         domain = store.get_value(iter, 0)
         try:
             self.wait()
-            status, output = commands.getstatusoutput("semanage permissive -a %s_t" % domain)
+            status, output = getstatusoutput("semanage permissive -a %s_t" % domain)
             self.ready()
             if status != 0:
                 self.error(output)

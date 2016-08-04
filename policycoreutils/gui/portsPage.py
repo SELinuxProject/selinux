@@ -23,7 +23,11 @@ import os
 import gobject
 import sys
 import seobject
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
+
 from semanagePage import *
 
 ##
@@ -186,7 +190,7 @@ class portsPage(semanagePage):
         protocol = store.get_value(iter, 1)
         try:
             self.wait()
-            (rc, out) = commands.getstatusoutput("semanage port -d -p %s %s" % (protocol, port))
+            (rc, out) = getstatusoutput("semanage port -d -p %s %s" % (protocol, port))
             self.ready()
             if rc != 0:
                 return self.error(out)
@@ -209,7 +213,7 @@ class portsPage(semanagePage):
         iter = self.ports_protocol_combo.get_active_iter()
         protocol = list_model.get_value(iter, 0)
         self.wait()
-        (rc, out) = commands.getstatusoutput("semanage port -a -p %s -r %s -t %s %s" % (protocol, mls, target, port_number))
+        (rc, out) = getstatusoutput("semanage port -a -p %s -r %s -t %s %s" % (protocol, mls, target, port_number))
         self.ready()
         if rc != 0:
             self.error(out)
@@ -229,7 +233,7 @@ class portsPage(semanagePage):
         iter = self.ports_protocol_combo.get_active_iter()
         protocol = list_model.get_value(iter, 0)
         self.wait()
-        (rc, out) = commands.getstatusoutput("semanage port -m -p %s -r %s -t %s %s" % (protocol, mls, target, port_number))
+        (rc, out) = getstatusoutput("semanage port -m -p %s -r %s -t %s %s" % (protocol, mls, target, port_number))
         self.ready()
         if rc != 0:
             self.error(out)

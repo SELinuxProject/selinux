@@ -35,7 +35,11 @@ except ValueError as e:
     sys.exit(1)
 
 import sepolicy.interface
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
+
 
 import re
 
@@ -43,7 +47,7 @@ import re
 def get_all_modules():
     try:
         all_modules = []
-        rc, output = commands.getstatusoutput("semodule -l 2>/dev/null")
+        rc, output = getstatusoutput("semodule -l 2>/dev/null")
         if rc == 0:
             l = output.split("\n")
             for i in l:

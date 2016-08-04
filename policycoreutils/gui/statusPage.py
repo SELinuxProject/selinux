@@ -28,7 +28,11 @@ import selinux
 INSTALLPATH = '/usr/share/system-config-selinux'
 sys.path.append(INSTALLPATH)
 
-import commands
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
+
 ENFORCING = 1
 PERMISSIVE = 0
 DISABLED = -1
