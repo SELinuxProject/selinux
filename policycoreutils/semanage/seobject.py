@@ -31,8 +31,7 @@ import stat
 from semanage import *
 PROGNAME = "policycoreutils"
 import sepolicy
-from sepolicy import boolean_desc, boolean_category, gen_bool_dict
-gen_bool_dict()
+sepolicy.gen_bool_dict()
 from IPy import IP
 
 import gettext
@@ -2189,11 +2188,11 @@ class booleanRecords(semanageRecords):
 
     def get_desc(self, name):
         name = selinux.selinux_boolean_sub(name)
-        return boolean_desc(name)
+        return sepolicy.boolean_desc(name)
 
     def get_category(self, name):
         name = selinux.selinux_boolean_sub(name)
-        return boolean_category(name)
+        return sepolicy.boolean_category(name)
 
     def customized(self):
         l = []
