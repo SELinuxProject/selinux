@@ -3,7 +3,7 @@
 # Author: Dan Walsh <dwalsh@redhat.com>
 # Author: Ryan Hallisey <rhallise@redhat.com>
 
-import _policy
+from . import _policy
 import selinux
 import glob
 PROGNAME = "policycoreutils"

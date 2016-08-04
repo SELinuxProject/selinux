@@ -86,8 +86,31 @@ static PyMethodDef methods[] = {
 	{NULL, NULL, 0, NULL}	/* sentinel */
 };
 
-void init_policy(void) {
-PyObject *m;
-m = Py_InitModule("_policy", methods);
-init_info(m);
+#if PY_MAJOR_VERSION >= 3
+
+static struct PyModuleDef module_def =
+{
+	PyModuleDef_HEAD_INIT,
+	"_policy", /* name of module */
+	"", /* module documentation, may be NULL */
+	-1, /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+	(PyMethodDef*)&methods,
+};
+
+PyMODINIT_FUNC PyInit__policy(void)
+{
+	PyObject *m;
+	m = PyModule_Create(&module_def);
+	init_info(m);
+	return m;
 }
+
+#else // python 2
+
+void init_policy(void) {
+	PyObject *m;
+	m = Py_InitModule("_policy", methods);
+	init_info(m);
+}
+
+#endif
