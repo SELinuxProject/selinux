@@ -23,6 +23,7 @@
 #
 #
 
+import traceback
 import argparse
 import seobject
 import sys
@@ -111,7 +112,7 @@ class SetExportFile(argparse.Action):
                 try:
                     sys.stdout = open(values, 'w')
                 except:
-                    sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+                    sys.stderr.write(traceback.format_exc())
                     sys.exit(1)
         setattr(namespace, self.dest, values)
 
@@ -702,7 +703,7 @@ def handlePermissive(args):
 
     if args.action is "list":
         OBJECT.list(args.noheading)
-    elif args.type != None:
+    elif args.type is not None:
         if args.action is "add":
             OBJECT.add(args.type)
         if args.action is "delete":

@@ -1,8 +1,5 @@
 import unittest
-import os
-import shutil
 import sys
-from tempfile import mkdtemp
 from subprocess import Popen, PIPE
 
 import argparse

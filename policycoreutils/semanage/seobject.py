@@ -23,14 +23,11 @@
 
 import pwd
 import grp
-import string
 import selinux
-import tempfile
 import os
 import re
 import sys
 import stat
-import shutil
 from semanage import *
 PROGNAME = "policycoreutils"
 import sepolicy
@@ -129,9 +126,9 @@ except:
                 message += " role=" + serole
             if oldserole != "":
                 message += " old_role=" + oldserole
-            if serange != "" and serange != None:
+            if serange != "" and serange is not None:
                 message += " MLSRange=" + serange
-            if oldserange != "" and oldserange != None:
+            if oldserange != "" and oldserange is not None:
                 message += " old_MLSRange=" + oldserange
             self.log_list.append(message)
 
@@ -416,7 +413,7 @@ class dontauditClass(semanageRecords):
         if dontaudit not in ["on", "off"]:
             raise ValueError(_("dontaudit requires either 'on' or 'off'"))
         self.begin()
-        rc = semanage_set_disable_dontaudit(self.sh, dontaudit == "off")
+        semanage_set_disable_dontaudit(self.sh, dontaudit == "off")
         self.commit()
 
 
@@ -459,7 +456,6 @@ class permissiveRecords(semanageRecords):
             print(t)
 
     def add(self, type):
-        import glob
         try:
             import sepolgen.module as module
         except ImportError:
@@ -830,7 +826,6 @@ class seluserRecords(semanageRecords):
         self.mylog.log("seuser", sename=name, serole=",".join(roles), serange=serange)
 
     def add(self, name, roles, selevel, serange, prefix):
-        serole = " ".join(roles)
         try:
             self.begin()
             self.__add(name, roles, selevel, serange, prefix)
@@ -1897,7 +1892,7 @@ class fcontextRecords(semanageRecords):
         if setype != "<<none>>":
             con = semanage_fcontext_get_con(fcontext)
 
-            if con == None:
+            if con is None:
                 con = self.createcon(target)
 
             if (is_mls_enabled == 1) and (serange != ""):
@@ -2071,7 +2066,7 @@ class booleanRecords(semanageRecords):
             self.current_booleans = []
             ptype = None
 
-        if self.store == None or self.store == ptype:
+        if self.store is None or self.store == ptype:
             self.modify_local = True
         else:
             self.modify_local = False
