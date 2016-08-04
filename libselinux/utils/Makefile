@@ -3,6 +3,7 @@ PREFIX ?= $(DESTDIR)/usr
 LIBDIR ?= $(PREFIX)/lib
 USRBINDIR ?= $(PREFIX)/sbin
 SBINDIR ?= $(DESTDIR)/sbin
+INCLUDEDIR ?= $(PREFIX)/include
 
 MAX_STACK_SIZE=8192
 CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissing-include-dirs \
@@ -23,7 +24,7 @@ CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissi
           -fasynchronous-unwind-tables -fdiagnostics-show-option -funit-at-a-time \
           -fipa-pure-const -Wno-suggest-attribute=pure -Wno-suggest-attribute=const \
           -Werror -Wno-aggregate-return -Wno-redundant-decls
-override CFLAGS += -I../include -D_GNU_SOURCE $(EMFLAGS)
+override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE $(EMFLAGS)
 LDLIBS += -L../src -lselinux -L$(LIBDIR)
 
 TARGETS=$(patsubst %.c,%,$(wildcard *.c))
