@@ -35,18 +35,19 @@ from tempfile import mkdtemp
 import pwd
 import sepolicy
 
-PROGNAME = "policycoreutils"
 SEUNSHARE = "/usr/sbin/seunshare"
 SANDBOXSH = "/usr/share/sandbox/sandboxX.sh"
-import gettext
-gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
-gettext.textdomain(PROGNAME)
-
+PROGNAME = "policycoreutils"
 try:
+    import gettext
+    kwargs = {}
+    if sys.version_info < (3,):
+        kwargs['unicode'] = True
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
-                    codeset='utf-8')
-except IOError:
+                    codeset='utf-8',
+                    **kwargs)
+except:
     try:
         import builtins
         builtins.__dict__['_'] = str

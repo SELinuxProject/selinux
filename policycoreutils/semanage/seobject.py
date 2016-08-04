@@ -34,13 +34,22 @@ import sepolicy
 sepolicy.gen_bool_dict()
 from IPy import IP
 
-import gettext
-gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
-gettext.textdomain(PROGNAME)
-
-import gettext
-translation = gettext.translation(PROGNAME, localedir="/usr/share/locale", fallback=True)
-_ = translation.ugettext
+try:
+    import gettext
+    kwargs = {}
+    if sys.version_info < (3,):
+        kwargs['unicode'] = True
+    gettext.install(PROGNAME,
+                    localedir="/usr/share/locale",
+                    codeset='utf-8',
+                    **kwargs)
+except:
+    try:
+        import builtins
+        builtins.__dict__['_'] = str
+    except ImportError:
+        import __builtin__
+        __builtin__.__dict__['_'] = unicode
 
 import syslog
 

@@ -6,8 +6,6 @@
 from . import _policy
 import selinux
 import glob
-PROGNAME = "policycoreutils"
-import gettext
 import sepolgen.defaults as defaults
 import sepolgen.interfaces as interfaces
 import sys
@@ -15,16 +13,23 @@ import os
 import re
 import gzip
 
-gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
-gettext.textdomain(PROGNAME)
+PROGNAME = "policycoreutils"
 try:
+    import gettext
+    kwargs = {}
+    if sys.version_info < (3,):
+        kwargs['unicode'] = True
     gettext.install(PROGNAME,
                     localedir="/usr/share/locale",
-                    unicode=False,
-                    codeset='utf-8')
-except IOError:
-    import __builtin__
-    __builtin__.__dict__['_'] = unicode
+                    codeset='utf-8',
+                    **kwargs)
+except:
+    try:
+        import builtins
+        builtins.__dict__['_'] = str
+    except ImportError:
+        import __builtin__
+        __builtin__.__dict__['_'] = unicode
 
 TYPE = _policy.TYPE
 ROLE = _policy.ROLE

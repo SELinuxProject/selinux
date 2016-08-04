@@ -27,9 +27,9 @@ import traceback
 import argparse
 import seobject
 import sys
-import gettext
 PROGNAME = "policycoreutils"
 try:
+    import gettext
     kwargs = {}
     if sys.version_info < (3,):
         kwargs['unicode'] = True
@@ -37,7 +37,7 @@ try:
                     localedir="/usr/share/locale",
                     codeset='utf-8',
                     **kwargs)
-except IOError:
+except:
     try:
         import builtins
         builtins.__dict__['_'] = str
