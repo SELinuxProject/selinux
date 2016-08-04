@@ -1303,7 +1303,7 @@ static int cond_list_to_cil(int indent, struct policydb *pdb, struct cond_node *
 {
 	int rc = -1;
 	struct cond_node *cond;
-	struct list *attr_list;
+	struct list *attr_list = NULL;
 
 	rc = list_init(&attr_list);
 	if (rc != 0) {
@@ -3482,7 +3482,7 @@ static int block_to_cil(struct policydb *pdb, struct avrule_block *block, struct
 {
 	int rc = -1;
 	struct avrule_decl *decl;
-	struct list *attr_list;
+	struct list *attr_list = NULL;
 
 	decl = block->branch_list;
 
@@ -3631,7 +3631,7 @@ static int blocks_to_cil(struct policydb *pdb)
 	int rc = -1;
 	struct avrule_block *block;
 	int indent = 0;
-	struct stack *stack;
+	struct stack *stack = NULL;
 
 	rc = stack_init(&stack);
 	if (rc != 0) {
@@ -3699,7 +3699,7 @@ static int linked_blocks_to_cil(struct policydb *pdb)
 	// Since it is linked, all optional blocks have been resolved
 	int rc = -1;
 	struct avrule_block *block;
-	struct stack *stack;
+	struct stack *stack = NULL;
 
 	rc = stack_init(&stack);
 	if (rc != 0) {
