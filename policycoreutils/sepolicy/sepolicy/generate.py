@@ -1189,8 +1189,12 @@ allow %s_t %s_t:%s_socket name_%s;
     def generate_spec(self):
         newspec = ""
 
-        selinux_policyver = get_rpm_nvr_list("selinux-policy")[1]
-        POLICYCOREUTILSVER = get_rpm_nvr_list("checkpolicy")[1]
+        selinux_policynvr = get_rpm_nvr_list("selinux-policy")
+
+        if selinux_policynvr is None:
+            selinux_policyver = "0.0.0"
+        else:
+            selinux_policyver = selinux_policynvr[1]
 
         newspec += spec.header_comment_section
         if self.type in APPLICATIONS:
