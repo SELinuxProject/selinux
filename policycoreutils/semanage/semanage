@@ -856,6 +856,7 @@ def createCommandParser():
 
     #To add a new subcommand define the parser for it in a function above and call it here.
     subparsers = commandParser.add_subparsers(dest='subcommand')
+    subparsers.required = True
     setupImportParser(subparsers)
     setupExportParser(subparsers)
     setupLoginParser(subparsers)
