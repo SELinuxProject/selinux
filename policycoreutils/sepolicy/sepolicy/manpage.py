@@ -27,8 +27,6 @@ __all__ = ['ManPage', 'HTMLManPages', 'manpage_domains', 'manpage_roles', 'gen_d
 import string
 import selinux
 import sepolicy
-from sepolicy import *
-
 import commands
 import os
 import time
@@ -47,7 +45,7 @@ def gen_modules_dict(path="/usr/share/selinux/devel/policy.xml"):
     import xml.etree.ElementTree
     modules_dict = {}
     try:
-        tree = xml.etree.ElementTree.fromstring(policy_xml(path))
+        tree = xml.etree.ElementTree.fromstring(sepolicy.policy_xml(path))
         for l in tree.findall("layer"):
             for m in l.findall("module"):
                 name = m.get("name")
@@ -76,7 +74,7 @@ def get_all_users_info():
     users = []
     users_range = {}
     allusers = []
-    allusers_info = info(USER)
+    allusers_info = sepolicy.info(sepolicy.USER)
 
     for d in allusers_info:
         allusers.append(d['name'])
@@ -105,7 +103,7 @@ def gen_domains():
     if domains:
         return domains
     domains = []
-    for d in get_all_domains():
+    for d in sepolicy.get_all_domains():
         found = False
         domain = d[:-2]
 #		if domain + "_exec_t" not in get_entrypoints():
@@ -114,7 +112,7 @@ def gen_domains():
             continue
         domains.append(domain)
 
-    for role in get_all_roles():
+    for role in sepolicy.get_all_roles():
         if role[:-2] in domains or role == "system_r":
             continue
         domains.append(role[:-2])
@@ -404,17 +402,17 @@ class ManPage:
         self.html = html
         self.source_files = source_files
         self.root = root
-        self.portrecs = gen_port_dict()[0]
+        self.portrecs = sepolicy.gen_port_dict()[0]
         self.domains = gen_domains()
-        self.all_domains = get_all_domains()
-        self.all_attributes = get_all_attributes()
-        self.all_bools = get_all_bools()
-        self.all_port_types = get_all_port_types()
-        self.all_roles = get_all_roles()
+        self.all_domains = sepolicy.get_all_domains()
+        self.all_attributes = sepolicy.get_all_attributes()
+        self.all_bools = sepolicy.get_all_bools()
+        self.all_port_types = sepolicy.get_all_port_types()
+        self.all_roles = sepolicy.get_all_roles()
         self.all_users = get_all_users_info()[0]
         self.all_users_range = get_all_users_info()[1]
-        self.all_file_types = get_all_file_types()
-        self.role_allows = get_all_role_allows()
+        self.all_file_types = sepolicy.get_all_file_types()
+        self.role_allows = sepolicy.get_all_role_allows()
         self.types = _gen_types()
 
         if self.source_files:
@@ -422,7 +420,7 @@ class ManPage:
         else:
             self.fcpath = self.root + selinux.selinux_file_context_path()
 
-        self.fcdict = get_fcdict(self.fcpath)
+        self.fcdict = sepolicy.get_fcdict(self.fcpath)
 
         if not os.path.exists(path):
             os.makedirs(path)
@@ -433,9 +431,9 @@ class ManPage:
             self.xmlpath = self.root + "policy.xml"
         else:
             self.xmlpath = self.root + "/usr/share/selinux/devel/policy.xml"
-        self.booleans_dict = gen_bool_dict(self.xmlpath)
+        self.booleans_dict = sepolicy.gen_bool_dict(self.xmlpath)
 
-        self.domainname, self.short_name = gen_short_name(domainname)
+        self.domainname, self.short_name = sepolicy.gen_short_name(domainname)
 
         self.type = self.domainname + "_t"
         self._gen_bools()
@@ -466,7 +464,7 @@ class ManPage:
                     types.append(t + "_t")
 
         for t in types:
-            domainbools, bools = get_bools(t)
+            domainbools, bools = sepolicy.get_bools(t)
             self.bools += bools
             self.domainbools += domainbools
 

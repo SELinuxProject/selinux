@@ -22,8 +22,6 @@
 #
 import sepolicy
 import sys
-search = sepolicy.search
-info = sepolicy.info
 
 
 def usage(parser, msg):
@@ -36,13 +34,13 @@ def usage(parser, msg):
 
 def expand_attribute(attribute):
     try:
-        return info(sepolicy.ATTRIBUTE, attribute)[0]["types"]
+        return sepolicy.info(sepolicy.ATTRIBUTE, attribute)[0]["types"]
     except RuntimeError:
         return [attribute]
 
 
 def get_types(src, tclass, perm):
-    allows = search([sepolicy.ALLOW], {sepolicy.SOURCE: src, sepolicy.CLASS: tclass, sepolicy.PERMS: perm})
+    allows = sepolicy.search([sepolicy.ALLOW], {sepolicy.SOURCE: src, sepolicy.CLASS: tclass, sepolicy.PERMS: perm})
     if not allows:
         raise ValueError("The %s type is not allowed to %s any types" % (src, ",".join(perm)))
 

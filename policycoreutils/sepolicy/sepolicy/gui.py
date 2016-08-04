@@ -37,7 +37,6 @@ from selinux import DISABLED, PERMISSIVE, ENFORCING
 import sepolicy.network
 import sepolicy.manpage
 import dbus
-import time
 import os
 import re
 import gettext

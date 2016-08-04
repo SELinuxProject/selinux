@@ -21,18 +21,16 @@
 #
 #
 import sepolicy
-search = sepolicy.search
-info = sepolicy.info
-__all__ = ['setrans', ]
+__all__ = ['setrans']
 
 
 def _entrypoint(src):
-    trans = search([sepolicy.ALLOW], {sepolicy.SOURCE: src})
+    trans = sepolicy.search([sepolicy.ALLOW], {sepolicy.SOURCE: src})
     return map(lambda y: y[sepolicy.TARGET], filter(lambda x: "entrypoint" in x[sepolicy.PERMS], trans))
 
 
 def _get_trans(src):
-    return search([sepolicy.TRANSITION], {sepolicy.SOURCE: src, sepolicy.CLASS: "process"})
+    return sepolicy.search([sepolicy.TRANSITION], {sepolicy.SOURCE: src, sepolicy.CLASS: "process"})
 
 
 class setrans:
