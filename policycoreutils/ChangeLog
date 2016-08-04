@@ -1,3 +1,4 @@
+	* Remove unused 'q' from semodule getopt string, from Petr Lautrbach.
 	* Remove unused autoconf files from po/, from Petr Lautrbach.
 	* Remove duplicate, empty translation files, from Piotr Drąg.
 	* open_init_pty: Do not error on EINTR, from Jason Zaman.
