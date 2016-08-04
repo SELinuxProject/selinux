@@ -79,7 +79,7 @@ def get_admin(path=""):
             for k in idict.keys():
                 if k.endswith("_admin"):
                     admin_list.append(k)
-        except IOError, e:
+        except IOError as e:
             sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
             sys.exit(1)
     else:
@@ -102,7 +102,7 @@ def get_user(path=""):
                 if k.endswith("_role"):
                     if (("%s_exec_t" % k[:-5]) in sepolicy.get_all_types()):
                         trans_list.append(k)
-        except IOError, e:
+        except IOError as e:
             sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
             sys.exit(1)
     else:
@@ -154,7 +154,7 @@ def get_interface_dict(path="/usr/share/selinux/devel/policy.xml"):
                         param_list.append(e.get('name'))
                     interface_dict[(i.get("name"))] = [param_list, (i.find('summary').text), "template"]
                     param_list = []
-    except IOError, e:
+    except IOError:
         pass
     return interface_dict
 
@@ -220,7 +220,7 @@ def interface_compile_test(interface, path="/usr/share/selinux/devel/policy.xml"
                 sys.stderr.write(output)
                 sys.stderr.write(_("\nCompile test for %s failed.\n") % interface)
 
-        except EnvironmentError, e:
+        except EnvironmentError as e:
             sys.stderr.write(_("\nCompile test for %s has not run. %s\n") % (interface, e))
         for v in policy_files.values():
             if os.path.exists(v):

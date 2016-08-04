@@ -11,6 +11,10 @@ import gettext
 import sepolgen.defaults as defaults
 import sepolgen.interfaces as interfaces
 import sys
+import os
+import re
+import gzip
+
 gettext.bindtextdomain(PROGNAME, "/usr/share/locale")
 gettext.textdomain(PROGNAME)
 try:
@@ -140,7 +144,7 @@ def get_writable_files(setype):
     all_writes = []
     mpaths = {}
     permlist = search([ALLOW], {'source': setype, 'permlist': ['open', 'write'], 'class': 'file'})
-    if permlist == None or len(permlist) == 0:
+    if permlist is None or len(permlist) == 0:
         return mpaths
 
     fcdict = get_fcdict()
@@ -170,10 +174,6 @@ def get_writable_files(setype):
             mpaths[f] = []  # {"regex":[],"paths":[]}
     return mpaths
 
-import os
-import re
-import sys
-
 
 def find_file(reg):
     if os.path.exists(reg):
@@ -181,7 +181,7 @@ def find_file(reg):
     try:
         pat = re.compile(r"%s$" % reg)
     except:
-        print "bad reg:", reg
+        print("bad reg:", reg)
         return []
     p = reg
     if p.endswith("(/.*)?"):
@@ -193,7 +193,7 @@ def find_file(reg):
         if path[-1] != "/":    # is pass in it breaks without try block
             path += "/"
     except IndexError:
-        print "try failed got an IndexError"
+        print("try failed got an IndexError")
         pass
 
     try:
@@ -464,7 +464,7 @@ all_types = None
 
 def get_all_types():
     global all_types
-    if all_types == None:
+    if all_types is None:
         all_types = map(lambda x: x['name'], info(TYPE))
     return all_types
 
@@ -473,7 +473,7 @@ user_types = None
 
 def get_user_types():
     global user_types
-    if user_types == None:
+    if user_types is None:
         user_types = info(ATTRIBUTE, "userdomain")[0]["types"]
     return user_types
 
@@ -525,7 +525,7 @@ def gen_interfaces():
 
     if os.getuid() != 0:
         raise ValueError(_("You must regenerate interface info by running /usr/bin/sepolgen-ifgen"))
-    print commands.getstatusoutput("/usr/bin/sepolgen-ifgen")[1]
+    print(commands.getstatusoutput("/usr/bin/sepolgen-ifgen")[1])
 
 
 def gen_port_dict():
@@ -797,7 +797,7 @@ def policy(policy_file):
 try:
     policy_file = get_installed_policy()
     policy(policy_file)
-except ValueError, e:
+except ValueError as e:
     if selinux.is_selinux_enabled() == 1:
         raise e
 
@@ -854,7 +854,6 @@ def get_all_booleans():
     return booleans
 
 booleans_dict = None
-import gzip
 
 
 def policy_xml(path="/usr/share/selinux/devel/policy.xml"):
@@ -874,7 +873,6 @@ def gen_bool_dict(path="/usr/share/selinux/devel/policy.xml"):
     if booleans_dict:
         return booleans_dict
     import xml.etree.ElementTree
-    import re
     booleans_dict = {}
     try:
         tree = xml.etree.ElementTree.fromstring(policy_xml(path))
@@ -896,7 +894,7 @@ def gen_bool_dict(path="/usr/share/selinux/devel/policy.xml"):
             desc = i.find("desc").find("p").text.strip("\n")
             desc = re.sub("\n", " ", desc)
             booleans_dict[i.get('name')] = ("global", i.get('dftval'), desc)
-    except IOError, e:
+    except IOError:
         pass
     return booleans_dict
 

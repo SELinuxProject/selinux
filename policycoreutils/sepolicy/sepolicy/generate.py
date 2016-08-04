@@ -28,6 +28,7 @@ import re
 import sepolicy
 from sepolicy import get_all_types, get_all_attributes, get_all_roles
 import time
+import types
 import platform
 
 from templates import executable
@@ -204,10 +205,10 @@ class policy:
             raise ValueError(_("You must enter a name for your policy module for your '%s'.") % poltype[type])
         try:
             self.ports = get_all_ports()
-        except ValueError, e:
-            print "Can not get port types, must be root for this information"
-        except RuntimeError, e:
-            print "Can not get port types", e
+        except ValueError as e:
+            print("Can not get port types, must be root for this information")
+        except RuntimeError as e:
+            print("Can not get port types", e)
 
         self.symbols = {}
         self.symbols["openlog"] = "set_use_kerberos(True)"
@@ -454,52 +455,52 @@ class policy:
         self.out_udp = [all, False, False, verify_ports(ports)]
 
     def set_use_resolve(self, val):
-        if val != True and val != False:
+        if not isinstance(val, types.BooleanType):
             raise ValueError(_("use_resolve must be a boolean value "))
 
         self.use_resolve = val
 
     def set_use_syslog(self, val):
-        if val != True and val != False:
+        if not isinstance(val, types.BooleanType):
             raise ValueError(_("use_syslog must be a boolean value "))
 
         self.use_syslog = val
 
     def set_use_kerberos(self, val):
-        if val != True and val != False:
+        if not isinstance(val, types.BooleanType):
             raise ValueError(_("use_kerberos must be a boolean value "))
 
         self.use_kerberos = val
 
     def set_manage_krb5_rcache(self, val):
-        if val != True and val != False:
+        if not isinstance(val, types.BooleanType):
             raise ValueError(_("manage_krb5_rcache must be a boolean value "))
 
         self.manage_krb5_rcache = val
 
     def set_use_pam(self, val):
-        self.use_pam = val == True
+        self.use_pam = (val is True)
 
     def set_use_dbus(self, val):
-        self.use_dbus = val == True
+        self.use_dbus = (val is True)
 
     def set_use_audit(self, val):
-        self.use_audit = val == True
+        self.use_audit = (val is True)
 
     def set_use_etc(self, val):
-        self.use_etc = val == True
+        self.use_etc = (val is True)
 
     def set_use_localization(self, val):
-        self.use_localization = val == True
+        self.use_localization = (val is True)
 
     def set_use_fd(self, val):
-        self.use_fd = val == True
+        self.use_fd = (val is True)
 
     def set_use_terminal(self, val):
-        self.use_terminal = val == True
+        self.use_terminal = (val is True)
 
     def set_use_mail(self, val):
-        self.use_mail = val == True
+        self.use_mail = (val is True)
 
     def set_use_tmp(self, val):
         if self.type in USERS:
@@ -511,7 +512,7 @@ class policy:
             self.DEFAULT_DIRS["/tmp"][1] = []
 
     def set_use_uid(self, val):
-        self.use_uid = val == True
+        self.use_uid = (val is True)
 
     def generate_uid_rules(self):
         if self.use_uid:
@@ -602,7 +603,7 @@ allow %s_t %s_t:%s_socket name_%s;
     def generate_network_types(self):
         for i in self.in_tcp[PORTS]:
             rec = self.find_port(int(i), "tcp")
-            if rec == None:
+            if rec is None:
                 self.need_tcp_type = True
             else:
                 port_name = rec[0][:-2]
@@ -613,7 +614,7 @@ allow %s_t %s_t:%s_socket name_%s;
 
         for i in self.out_tcp[PORTS]:
             rec = self.find_port(int(i), "tcp")
-            if rec == None:
+            if rec is None:
                 self.need_tcp_type = True
             else:
                 port_name = rec[0][:-2]
@@ -624,7 +625,7 @@ allow %s_t %s_t:%s_socket name_%s;
 
         for i in self.in_udp[PORTS]:
             rec = self.find_port(int(i), "udp")
-            if rec == None:
+            if rec is None:
                 self.need_udp_type = True
             else:
                 port_name = rec[0][:-2]
@@ -633,13 +634,13 @@ allow %s_t %s_t:%s_socket name_%s;
                 if line not in self.found_udp_ports:
                     self.found_udp_ports.append(line)
 
-        if self.need_udp_type == True or self.need_tcp_type == True:
+        if self.need_udp_type is True or self.need_tcp_type is True:
             return re.sub("TEMPLATETYPE", self.name, network.te_types)
         return ""
 
     def __find_path(self, file):
         for d in self.DEFAULT_DIRS:
-            if file.find(d) == 0:
+            if file.find(d) is 0:
                 self.DEFAULT_DIRS[d][1].append(file)
                 return self.DEFAULT_DIRS[d]
         self.DEFAULT_DIRS["rw"][1].append(file)
@@ -870,7 +871,7 @@ allow %s_t %s_t:%s_socket name_%s;
         for t in self.types:
             for i in self.DEFAULT_EXT:
                 if t.endswith(i):
-                    print t, t[:-len(i)]
+                    print(t, t[:-len(i)])
                     newte += re.sub("TEMPLATETYPE", t[:-len(i)], self.DEFAULT_EXT[i].te_types)
                     break
 
@@ -1166,12 +1167,12 @@ allow %s_t %s_t:%s_socket name_%s;
             newsh += re.sub("FILENAME", i, script.restorecon)
 
         for i in self.in_tcp[PORTS] + self.out_tcp[PORTS]:
-            if self.find_port(i, "tcp") == None:
+            if self.find_port(i, "tcp") is None:
                 t1 = re.sub("PORTNUM", "%d" % i, script.tcp_ports)
                 newsh += re.sub("TEMPLATETYPE", self.name, t1)
 
         for i in self.in_udp[PORTS]:
-            if self.find_port(i, "udp") == None:
+            if self.find_port(i, "udp") is None:
                 t1 = re.sub("PORTNUM", "%d" % i, script.udp_ports)
                 newsh += re.sub("TEMPLATETYPE", self.name, t1)
 
@@ -1239,7 +1240,7 @@ allow %s_t %s_t:%s_socket name_%s;
         fd = open(shfile, "w")
         fd.write(self.generate_sh())
         fd.close()
-        os.chmod(shfile, 0750)
+        os.chmod(shfile, 0o750)
         return shfile
 
     def write_if(self, out_dir):
@@ -1364,7 +1365,7 @@ Warning %s does not exist
         for s in fd.read().split():
             for b in self.symbols:
                 if s.startswith(b):
-                    exec "self.%s" % self.symbols[b]
+                    exec("self.%s" % self.symbols[b])
         fd.close()
 
     def generate(self, out_dir=os.getcwd()):

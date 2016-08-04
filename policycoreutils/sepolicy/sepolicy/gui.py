@@ -110,8 +110,8 @@ class SELinuxGui():
         self.dbus = SELinuxDBus()
         try:
             customized = self.dbus.customized()
-        except dbus.exceptions.DBusException, e:
-            print e
+        except dbus.exceptions.DBusException as e:
+            print(e)
             self.quit()
 
         sepolicy_domains = sepolicy.get_all_domains()
@@ -818,7 +818,7 @@ class SELinuxGui():
         self.set_application_label = True
 
     def resize_wrap(self, *args):
-        print args
+        print(args)
 
     def initialize_system_default_mode(self):
         self.enforce_mode = selinux.selinux_getenforcemode()[1]
@@ -851,12 +851,12 @@ class SELinuxGui():
             for x in range(0, list.get_n_columns()):
                 try:
                     val = list.get_value(iter, x)
-                    if val == True or val == False or val == None:
+                    if val is True or val is False or val is None:
                         continue
                     # Returns true if filter_txt exists within the val
                     if(val.find(self.filter_txt) != -1 or val.lower().find(self.filter_txt) != -1):
                         return True
-                except AttributeError, TypeError:
+                except (AttributeError, TypeError):
                     pass
         except:  # ValueError:
             pass
@@ -959,7 +959,7 @@ class SELinuxGui():
         return liststore.get_value(iter, 0)
 
     def combo_box_initialize(self, val, desc):
-        if val == None:
+        if val is None:
             return
         iter = self.combobox_menu_model.append()
         for f in val:
@@ -968,7 +968,7 @@ class SELinuxGui():
     def select_type_more(self, *args):
         app = self.moreTypes_treeview.get_selection()
         iter = app.get_selected()[1]
-        if iter == None:
+        if iter is None:
             return
         app = self.more_types_files_liststore.get_value(iter, 0)
         self.combo_set_active_text(self.files_type_combobox, app)
@@ -980,7 +980,7 @@ class SELinuxGui():
         iter = model.convert_iter_to_child_iter(iter)
         iter = self.advanced_search_filter.convert_iter_to_child_iter(iter)
         app = self.advanced_search_liststore.get_value(iter, 1)
-        if app == None:
+        if app is None:
             return
         self.advanced_filter_entry.set_text('')
         self.advanced_search_window.hide()
@@ -1172,7 +1172,7 @@ class SELinuxGui():
 
     def files_initial_data_insert(self, liststore, path, seLinux_label, file_class):
         iter = liststore.append(None)
-        if path == None:
+        if path is None:
             path = _("MISSING FILE PATH")
             modify = False
         else:
@@ -1669,7 +1669,7 @@ class SELinuxGui():
                         self.more_types_files_liststore.set_value(iter, 0, app)
                 self.files_class_combobox.set_active(0)
         except AttributeError:
-            print "error"
+            print("error")
             pass
         self.files_type_combobox.set_active(0)
         self.files_mls_entry.set_text("s0")
@@ -1811,7 +1811,7 @@ class SELinuxGui():
             self.wait_mouse()
             try:
                 self.dbus.semanage(update_buffer)
-            except dbus.exceptions.DBusException, e:
+            except dbus.exceptions.DBusException as e:
                 self.error(e)
             self.ready_mouse()
 
@@ -1890,7 +1890,7 @@ class SELinuxGui():
         tree.set_value(iter, 2, fclass)
 
     def restore_to_default(self, *args):
-        print "restore to defualt clicked..."
+        print("restore to defualt clicked...")
 
     def invalid_entry_retry(self, *args):
         self.closewindow(self.error_check_window)
@@ -2143,7 +2143,7 @@ class SELinuxGui():
 
     def on_save_delete_file_equiv_clicked(self, *args):
         for delete in self.files_delete_liststore:
-            print delete[0], delete[1], delete[2],
+            print(delete[0], delete[1], delete[2],)
 
     def on_toggle_update(self, cell, path, model):
         model[path][0] = not model[path][0]
@@ -2451,8 +2451,8 @@ class SELinuxGui():
         self.wait_mouse()
         try:
             self.dbus.semanage(update_buffer)
-        except dbus.exceptions.DBusException, e:
-            print e
+        except dbus.exceptions.DBusException as e:
+            print(e)
         self.ready_mouse()
         self.init_cur()
 
@@ -2735,7 +2735,7 @@ class SELinuxGui():
             return
         try:
             self.dbus.relabel_on_boot(active)
-        except dbus.exceptions.DBusException, e:
+        except dbus.exceptions.DBusException as e:
             self.error(e)
 
     def closewindow(self, window, *args):
