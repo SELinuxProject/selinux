@@ -30,7 +30,7 @@ import gnome
 import sys
 try:
     import sepolicy
-except ValueError, e:
+except ValueError as e:
     sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
     sys.exit(1)
 
@@ -202,7 +202,7 @@ class childWindow:
             self.all_modules = get_all_modules()
             self.all_roles = sepolicy.generate.get_all_roles()
             self.all_users = sepolicy.generate.get_all_users()
-        except RuntimeError, e:
+        except RuntimeError as e:
             self.all_types = []
             self.all_modules = []
             self.all_roles = []
@@ -340,7 +340,7 @@ class childWindow:
             for a in sepolicy.interface.get_admin():
                 iter = self.admin_store.append()
                 self.admin_store.set_value(iter, 0, a)
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.message)
 
     def confine_application(self):
@@ -526,7 +526,7 @@ class childWindow:
 
             self.info(my_policy.generate(outputdir))
             return False
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.message)
 
     def delete(self, args):
@@ -694,7 +694,7 @@ class childWindow:
         try:
             generate.verify_ports(self.in_tcp_entry.get_text())
             generate.verify_ports(self.in_udp_entry.get_text())
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.message)
             return True
 
@@ -702,7 +702,7 @@ class childWindow:
         try:
             generate.verify_ports(self.out_tcp_entry.get_text())
             generate.verify_ports(self.out_udp_entry.get_text())
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.message)
             return True
 

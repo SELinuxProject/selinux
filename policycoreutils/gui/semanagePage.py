@@ -147,7 +147,7 @@ class semanagePage:
                 if self.add() == False:
                     continue
                 break
-            except ValueError, e:
+            except ValueError as e:
                 self.error(e.args[0])
         self.dialog.hide()
 
@@ -160,7 +160,7 @@ class semanagePage:
                 if self.modify() == False:
                     continue
                 break
-            except ValueError, e:
+            except ValueError as e:
                 self.error(e.args[0])
         self.dialog.hide()
 

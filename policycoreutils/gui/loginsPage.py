@@ -75,10 +75,8 @@ class loginsPage(semanagePage):
         self.filter = filter
         self.login = seobject.loginRecords()
         dict = self.login.get_all(0)
-        keys = dict.keys()
-        keys.sort()
         self.store.clear()
-        for k in keys:
+        for k in sorted(dict.keys()):
             range = seobject.translate(dict[k][1])
             if not (self.match(k, filter) or self.match(dict[k][0], filter) or self.match(range, filter)):
                 continue
@@ -99,9 +97,7 @@ class loginsPage(semanagePage):
         self.loginsSelinuxUserCombo.add_attribute(cell, 'text', 0)
 
         selusers = seobject.seluserRecords().get_all(0)
-        keys = selusers.keys()
-        keys.sort()
-        for k in keys:
+        for k in sorted(selusers.keys()):
             if k != "system_u":
                 self.loginsSelinuxUserCombo.append_text(k)
 
@@ -146,7 +142,7 @@ class loginsPage(semanagePage):
                 return False
             store.remove(iter)
             self.view.get_selection().select_path((0,))
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
 
     def add(self):

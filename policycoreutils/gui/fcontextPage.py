@@ -131,9 +131,7 @@ class fcontextPage(semanagePage):
         self.fcontext = seobject.fcontextRecords()
         self.store.clear()
         fcon_dict = self.fcontext.get_all(self.local)
-        keys = fcon_dict.keys()
-        keys.sort()
-        for k in keys:
+        for k in sorted(fcon_dict.keys()):
             if not self.match(fcon_dict, k, filter):
                 continue
             iter = self.store.append()
@@ -188,7 +186,7 @@ class fcontextPage(semanagePage):
                 return self.error(out)
             store.remove(iter)
             self.view.get_selection().select_path((0,))
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
 
     def add(self):

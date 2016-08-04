@@ -132,7 +132,7 @@ class domainsPage(semanagePage):
                 domain = store.set_value(iter, 1, "")
                 self.itemSelected(selection)
 
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
 
     def propertiesDialog(self):
@@ -157,5 +157,5 @@ class domainsPage(semanagePage):
                 domain = store.set_value(iter, 1, _("Permissive"))
                 self.itemSelected(selection)
 
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])

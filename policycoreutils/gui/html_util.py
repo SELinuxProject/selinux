@@ -135,7 +135,7 @@ def html_to_text(html, maxcol=80):
         text = buffer.getvalue()
         buffer.close()
         return text
-    except Exception, e:
+    except Exception as e:
         log_program.error('cannot convert html to text: %s' % e)
         return None
 

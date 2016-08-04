@@ -56,7 +56,5 @@ class loginsPage:
         self.view.set_model(self.store)
         self.login = loginRecords()
         dict = self.login.get_all(0)
-        keys = dict.keys()
-        keys.sort()
-        for k in keys:
-            print "%-25s %-25s %-25s" % (k, dict[k][0], translate(dict[k][1]))
+        for k in sorted(dict.keys()):
+            print("%-25s %-25s %-25s" % (k, dict[k][0], translate(dict[k][1])))

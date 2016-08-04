@@ -188,7 +188,7 @@ class booleansPage:
             if rc != 0:
                 return self.error(out)
             self.load(self.filter)
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
 
     def filter_changed(self, *arg):

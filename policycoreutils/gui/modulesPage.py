@@ -113,7 +113,7 @@ class modulesPage(semanagePage):
     def new_module(self, args):
         try:
             Popen(["/usr/share/system-config-selinux/polgengui.py"])
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
 
     def delete(self):
@@ -129,7 +129,7 @@ class modulesPage(semanagePage):
                 store.remove(iter)
                 self.view.get_selection().select_path((0,))
 
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
 
     def enable_audit(self, button):
@@ -147,7 +147,7 @@ class modulesPage(semanagePage):
             if status != 0:
                 self.error(output)
 
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
 
     def disable_audit(self, button):
@@ -158,7 +158,7 @@ class modulesPage(semanagePage):
             if status != 0:
                 self.error(output)
 
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
 
     def propertiesDialog(self):
@@ -193,5 +193,5 @@ class modulesPage(semanagePage):
             else:
                 self.load()
 
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])

@@ -123,10 +123,8 @@ class portsPage(semanagePage):
         self.filter = filter
         self.port = seobject.portRecords()
         dict = self.port.get_all(self.local)
-        keys = dict.keys()
-        keys.sort()
         self.store.clear()
-        for k in keys:
+        for k in sorted(dict.keys()):
             if not (self.match(str(k[0]), filter) or self.match(dict[k][0], filter) or self.match(k[2], filter) or self.match(dict[k][1], filter) or self.match(dict[k][1], filter)):
                 continue
             iter = self.store.append()
@@ -144,10 +142,8 @@ class portsPage(semanagePage):
         self.filter = filter
         self.port = seobject.portRecords()
         dict = self.port.get_all_by_type(self.local)
-        keys = dict.keys()
-        keys.sort()
         self.store.clear()
-        for k in keys:
+        for k in sorted(dict.keys()):
             ports_string = ", ".join(dict[k])
             if not (self.match(ports_string, filter) or self.match(k[0], filter) or self.match(k[1], filter)):
                 continue
@@ -196,7 +192,7 @@ class portsPage(semanagePage):
                 return self.error(out)
             store.remove(iter)
             self.view.get_selection().select_path((0,))
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
 
     def add(self):

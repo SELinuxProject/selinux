@@ -79,10 +79,8 @@ class usersPage(semanagePage):
         self.filter = filter
         self.user = seobject.seluserRecords()
         dict = self.user.get_all()
-        keys = dict.keys()
-        keys.sort()
         self.store.clear()
-        for k in keys:
+        for k in sorted(dict.keys()):
             range = seobject.translate(dict[k][2])
             if not (self.match(k, filter) or self.match(dict[k][0], filter) or self.match(range, filter) or self.match(dict[k][3], filter)):
                 continue
@@ -155,5 +153,5 @@ class usersPage(semanagePage):
                 return False
             store.remove(iter)
             self.view.get_selection().select_path((0,))
-        except ValueError, e:
+        except ValueError as e:
             self.error(e.args[0])
