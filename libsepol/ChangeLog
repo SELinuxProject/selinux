@@ -1,3 +1,4 @@
+	* Fix possible use of uninitialized variables, from William Roberts.
 	* Warn instead of fail if permission is not resolved, from James Carter.
 	* Ignore object_r when adding userrole mappings to policydb, from Steve Lawrence.
 	* Add missing return to sepol_node_query(), from Petr Lautrbach.
