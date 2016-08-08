@@ -16,18 +16,17 @@ class SepolicyTests(unittest.TestCase):
                      '"not found" not found in %r' % err)
 
     def assertFailure(self, status):
-        self.assert_(status != 0,
-                     '"Succeeded when it should have failed')
+        self.assertNotEqual(status, 0,
+                     'Succeeded when it should have failed')
 
     def assertSuccess(self, status, err):
-        self.assert_(status == 0,
-                     '"sepolicy should have succeeded for this test %r' % err)
+        self.assertEqual(status, 0,
+                     'sepolicy should have succeeded for this test %r' % err)
 
     def test_man_domain(self):
         "Verify sepolicy manpage -d works"
         p = Popen(['sepolicy', 'manpage', '-d', 'httpd_t'], stdout=PIPE)
         out, err = p.communicate()
-        print out, err
         self.assertSuccess(p.returncode, err)
 
     def test_man_all(self):
@@ -119,4 +118,4 @@ if __name__ == "__main__":
     if selinux.security_getenforce() == 1:
         unittest.main()
     else:
-        print "SELinux must be in enforcing mode for this test"
+        print("SELinux must be in enforcing mode for this test")
