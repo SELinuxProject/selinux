@@ -2505,6 +2505,14 @@ int type_set_expand(type_set_t * set, ebitmap_t * t, policydb_t * p,
 		/* First go through the types and OR all the attributes to types */
 		ebitmap_for_each_bit(&set->types, tnode, i) {
 			if (ebitmap_node_get_bit(tnode, i)) {
+
+				/*
+				 * invalid policies might have more types set in the ebitmap than
+				 * what's available in the type_val_to_struct mapping
+				 */
+				if (i > p->p_types.nprim - 1)
+						return -1;
+
 				if (p->type_val_to_struct[i]->flavor ==
 				    TYPE_ATTRIB) {
 					if (ebitmap_union
