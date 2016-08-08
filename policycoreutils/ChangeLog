@@ -1,3 +1,4 @@
+	* Improve compatibility with Python 3, from Jason Zaman.
 	* Remove unused 'q' from semodule getopt string, from Petr Lautrbach.
 	* Remove unused autoconf files from po/, from Petr Lautrbach.
 	* Remove duplicate, empty translation files, from Piotr Drąg.
