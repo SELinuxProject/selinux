@@ -150,8 +150,9 @@ fi
 #
 newer() {
     DATE=$1
+    shift
     for m in `echo $FILESYSTEMSRW`; do
-	find $m -mount -newermt $DATE -print0 2>/dev/null | ${RESTORECON} ${FORCEFLAG} ${VERBOSE} -i -0 -f -
+	find $m -mount -newermt $DATE -print0 2>/dev/null | ${RESTORECON} ${FORCEFLAG} ${VERBOSE} $* -i -0 -f -
     done;
 
 }
@@ -190,7 +191,7 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 		  esac; \
 	       fi; \
 	    done | \
-	${RESTORECON} ${VERBOSE} -i -f - -R `exclude_dirs`; \
+	${RESTORECON} ${VERBOSE} -i -f - -R $* `exclude_dirs`; \
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }
@@ -222,7 +223,7 @@ if [ ! -z "$PREFC" ]; then
     exit $?
 fi
 if [ ! -z "$BOOTTIME" ]; then
-    newer $BOOTTIME
+    newer $BOOTTIME $*
     exit $?
 fi
 [ -x /usr/sbin/genhomedircon ] && /usr/sbin/genhomedircon
