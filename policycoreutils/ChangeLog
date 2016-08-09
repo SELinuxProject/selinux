@@ -1,3 +1,7 @@
+	* fixfiles: Pass -n to restorecon for fixfiles check, from Petr Lautrbach.
+	* sepolicy: Check get_rpm_nvr_list() return value, from Vit Mojzis.
+	* Don't use subprocess.getstatusoutput() in Python 2 code, from Petr Lautrbach.
+	* semanage: Add auditing of changes in records, from Miroslav Vadkerti.
 	* Improve compatibility with Python 3, from Jason Zaman.
 	* Remove unused 'q' from semodule getopt string, from Petr Lautrbach.
 	* Remove unused autoconf files from po/, from Petr Lautrbach.

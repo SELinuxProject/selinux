@@ -1,3 +1,5 @@
+	* Fix memory leak in expand.c, from William Roberts.
+	* Fix invalid read when policy file is corrupt, from William Roberts.
 	* Fix possible use of uninitialized variables, from William Roberts.
 	* Warn instead of fail if permission is not resolved, from James Carter.
 	* Ignore object_r when adding userrole mappings to policydb, from Steve Lawrence.
