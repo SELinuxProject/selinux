@@ -1,4 +1,4 @@
-	* Fix in tree compilation of utils that depend on libsepol, from Petr Lautrbach.
+	* Fix in tree compilation of utils that depend on libsepol, from Laurent Bigonville.
 	* Change the location of _selinux.so, from Petr Lautrbach.
 	* Clarify is_selinux_mls_enabled() description, from David King.
 	* Explain how to free policy type from selinux_getpolicytype(), from David King.
