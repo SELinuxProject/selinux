@@ -88,8 +88,8 @@ file_type_str_to_option = {"all files": "a",
                            "symbolic link": "l",
                            "named pipe": "p"}
 
-proto_to_audit = {"tcp": 17,
-                  "udp": 6,
+proto_to_audit = {"tcp": 6,
+                  "udp": 17,
                   "ipv4": 4,
                   "ipv6": 41}
 
