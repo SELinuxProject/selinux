@@ -1,3 +1,4 @@
+	* semanage: fix modify action in node and interface, from Miroslav Vadkerti.
 	* fixfiles: Pass -n to restorecon for fixfiles check, from Petr Lautrbach.
 	* sepolicy: Check get_rpm_nvr_list() return value, from Vit Mojzis.
 	* Don't use subprocess.getstatusoutput() in Python 2 code, from Petr Lautrbach.
