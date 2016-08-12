@@ -1991,7 +1991,7 @@ class fcontextRecords(semanageRecords):
         if not seuser:
             seuser = "system_u"
 
-        self.mylog.log_change("resrc=fcontext op=modify %s ftype=%s tcontext=%s:%s:%s:%s" % (audit.audit_encode_nv_string("tglob", target, 0), ftype_to_audit[ftype], seuser, "object_r", type, serange))
+        self.mylog.log_change("resrc=fcontext op=modify %s ftype=%s tcontext=%s:%s:%s:%s" % (audit.audit_encode_nv_string("tglob", target, 0), ftype_to_audit[ftype], seuser, "object_r", setype, serange))
 
     def modify(self, target, setype, ftype, serange, seuser):
         self.begin()
@@ -2029,7 +2029,7 @@ class fcontextRecords(semanageRecords):
             self.equiv.pop(target)
             self.equal_ind = True
 
-            self.mylog.log_change("resrc=fcontext op=delete-equal %s ftype=%s" % (audit.audit_encode_nv_string("tglob", target, 0), ftype_to_audit[ftype]))
+            self.mylog.log_change("resrc=fcontext op=delete-equal %s" % (audit.audit_encode_nv_string("tglob", target, 0)))
 
             return
 
