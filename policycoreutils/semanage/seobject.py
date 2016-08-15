@@ -1161,8 +1161,11 @@ class portRecords(semanageRecords):
 
         con = semanage_port_get_con(p)
 
-        if (is_mls_enabled == 1) and (serange != ""):
-            semanage_context_set_mls(self.sh, con, untranslate(serange))
+        if is_mls_enabled == 1:
+            if serange == "":
+                serange = "s0"
+            else:
+                semanage_context_set_mls(self.sh, con, untranslate(serange))
         if setype != "":
             semanage_context_set_type(self.sh, con, setype)
 
