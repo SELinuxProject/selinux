@@ -1068,7 +1068,7 @@ int policydb_index_others(sepol_handle_t * handle,
 
 	free(p->role_val_to_struct);
 	p->role_val_to_struct = (role_datum_t **)
-	    malloc(p->p_roles.nprim * sizeof(role_datum_t *));
+	    calloc(p->p_roles.nprim, sizeof(role_datum_t *));
 	if (!p->role_val_to_struct)
 		return -1;
 

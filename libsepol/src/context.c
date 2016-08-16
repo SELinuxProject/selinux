@@ -55,7 +55,7 @@ int context_is_valid(const policydb_t * p, const context_struct_t * c)
 		 * Role must be authorized for the type.
 		 */
 		role = p->role_val_to_struct[c->role - 1];
-		if (!ebitmap_get_bit(&role->cache, c->type - 1))
+		if (!role || !ebitmap_get_bit(&role->cache, c->type - 1))
 			/* role may not be associated with type */
 			return 0;
 
