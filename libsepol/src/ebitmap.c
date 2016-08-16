@@ -394,6 +394,10 @@ int ebitmap_read(ebitmap_t * e, void *fp)
 		     e->highbit, MAPSIZE);
 		goto bad;
 	}
+
+	if (e->highbit && !count)
+		goto bad;
+
 	l = NULL;
 	for (i = 0; i < count; i++) {
 		rc = next_entry(buf, fp, sizeof(uint32_t));
