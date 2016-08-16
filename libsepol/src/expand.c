@@ -2514,6 +2514,10 @@ int type_set_expand(type_set_t * set, ebitmap_t * t, policydb_t * p,
 				if (i > p->p_types.nprim - 1)
 					goto err_types;
 
+				if (!p->type_val_to_struct[i]) {
+					goto err_types;
+				}
+
 				if (p->type_val_to_struct[i]->flavor ==
 				    TYPE_ATTRIB) {
 					if (ebitmap_union
