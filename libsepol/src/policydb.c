@@ -2812,6 +2812,8 @@ static int genfs_read(policydb_t * p, struct policy_file *fp)
 				l->next = newc;
 			else
 				newgenfs->head = newc;
+			/* clear newc after a new owner has the pointer */
+			newc = NULL;
 		}
 	}
 
