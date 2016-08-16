@@ -3926,6 +3926,10 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 					if (!ebitmap_node_get_bit(tnode, j)
 					    || i == j)
 						continue;
+
+					if (j >= p->p_types.nprim)
+						goto bad;
+
 					if (ebitmap_set_bit
 					    (&p->attr_type_map[j], i, 1))
 						goto bad;
