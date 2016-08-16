@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <inttypes.h>
 
 #define SEPOL_PACKAGE_SECTION_FC 0xf97cff90
 #define SEPOL_PACKAGE_SECTION_SEUSER 0x97cff91
@@ -793,6 +794,12 @@ int sepol_module_package_info(struct sepol_policy_file *spf, int *type,
 				goto cleanup;
 			}
 			len = le32_to_cpu(buf[0]);
+			if (zero_or_saturated(len)) {
+				ERR(file->handle,
+				    "invalid module name length: 0x%"PRIx32,
+				    len);
+				goto cleanup;
+			}
 			*name = malloc(len + 1);
 			if (!*name) {
 				ERR(file->handle, "out of memory");
@@ -814,6 +821,12 @@ int sepol_module_package_info(struct sepol_policy_file *spf, int *type,
 				goto cleanup;
 			}
 			len = le32_to_cpu(buf[0]);
+			if (zero_or_saturated(len)) {
+				ERR(file->handle,
+				    "invalid module version length: 0x%"PRIx32,
+				    len);
+				goto cleanup;
+			}
 			*version = malloc(len + 1);
 			if (!*version) {
 				ERR(file->handle, "out of memory");

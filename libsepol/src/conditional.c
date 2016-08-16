@@ -589,7 +589,8 @@ int cond_read_bool(policydb_t * p,
 		goto err;
 
 	len = le32_to_cpu(buf[2]);
-
+	if (zero_or_saturated(len))
+		goto err;
 	key = malloc(len + 1);
 	if (!key)
 		goto err;

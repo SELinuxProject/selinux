@@ -47,6 +47,8 @@
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/util.h>
 
+#include "private.h"
+
 #ifdef __GNUC__
 #  define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
 #else
@@ -124,7 +126,7 @@ static int get_line(char **start, char *end, char **line)
 
 	for (len = 0; p < end && *p != '\n' && *p != '\0'; p++, len++);
 
-	if (len == 0) {
+	if (zero_or_saturated(len)) {
 		rc = 0;
 		goto exit;
 	}

@@ -45,6 +45,9 @@
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof((x)[0]))
 
+#define is_saturated(x) (x == (typeof(x))-1)
+#define zero_or_saturated(x) ((x == 0) || is_saturated(x))
+
 /* Policy compatibility information. */
 struct policydb_compat_info {
 	unsigned int type;

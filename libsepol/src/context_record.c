@@ -5,6 +5,7 @@
 
 #include "context_internal.h"
 #include "debug.h"
+#include "private.h"
 
 struct sepol_context {
 
@@ -279,43 +280,68 @@ int sepol_context_from_string(sepol_handle_t * handle,
 
 hidden_def(sepol_context_from_string)
 
+static inline int safe_sum(size_t *sum, const size_t augends[], const size_t cnt) {
+
+	size_t a, i;
+
+	*sum = 0;
+	for(i=0; i < cnt; i++) {
+		/* sum should not be smaller than the addend */
+		a = augends[i];
+		*sum += a;
+		if (*sum < a) {
+			return i;
+		}
+	}
+
+	return 0;
+}
+
 int sepol_context_to_string(sepol_handle_t * handle,
 			    const sepol_context_t * con, char **str_ptr)
 {
 
 	int rc;
-	const int user_sz = strlen(con->user);
-	const int role_sz = strlen(con->role);
-	const int type_sz = strlen(con->type);
-	const int mls_sz = (con->mls) ? strlen(con->mls) : 0;
-	const int total_sz = user_sz + role_sz + type_sz +
-	    mls_sz + ((con->mls) ? 3 : 2);
+	char *str = NULL;
+	size_t total_sz, err;
+	const size_t sizes[] = {
+			strlen(con->user),                 /* user length */
+			strlen(con->role),                 /* role length */
+			strlen(con->type),                 /* type length */
+			(con->mls) ? strlen(con->mls) : 0, /* mls length */
+			((con->mls) ? 3 : 2) + 1           /* mls has extra ":" also null byte */
+	};
 
-	char *str = (char *)malloc(total_sz + 1);
-	if (!str)
-		goto omem;
+	err = safe_sum(&total_sz, sizes, ARRAY_SIZE(sizes));
+	if (err) {
+		ERR(handle, "invalid size, overflow at position: %zu", err);
+		goto err;
+	}
 
+	str = (char *)malloc(total_sz);
+	if (!str) {
+		ERR(handle, "out of memory");
+		goto err;
+	}
 	if (con->mls) {
-		rc = snprintf(str, total_sz + 1, "%s:%s:%s:%s",
+		rc = snprintf(str, total_sz, "%s:%s:%s:%s",
 			      con->user, con->role, con->type, con->mls);
-		if (rc < 0 || (rc >= total_sz + 1)) {
-			ERR(handle, "print error");
-			goto err;
-		}
 	} else {
-		rc = snprintf(str, total_sz + 1, "%s:%s:%s",
+		rc = snprintf(str, total_sz, "%s:%s:%s",
 			      con->user, con->role, con->type);
-		if (rc < 0 || (rc >= total_sz + 1)) {
-			ERR(handle, "print error");
-			goto err;
-		}
+	}
+
+	/*
+	 * rc is >= 0 on the size_t cast and is safe to promote
+	 * to an unsigned value.
+	 */
+	if (rc < 0 || (size_t)rc >= total_sz) {
+		ERR(handle, "print error");
+		goto err;
 	}
 
 	*str_ptr = str;
 	return STATUS_SUCCESS;
-
-      omem:
-	ERR(handle, "out of memory");
 
       err:
 	ERR(handle, "could not convert context to string");

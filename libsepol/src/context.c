@@ -10,6 +10,7 @@
 #include "context.h"
 #include "handle.h"
 #include "mls.h"
+#include "private.h"
 
 /* ----- Compatibility ---- */
 int policydb_context_isvalid(const policydb_t * p, const context_struct_t * c)
@@ -297,10 +298,18 @@ int context_from_string(sepol_handle_t * handle,
 	char *con_cpy = NULL;
 	sepol_context_t *ctx_record = NULL;
 
+	if (zero_or_saturated(con_str_len)) {
+		ERR(handle, "Invalid context length");
+		goto err;
+	}
+
 	/* sepol_context_from_string expects a NULL-terminated string */
 	con_cpy = malloc(con_str_len + 1);
-	if (!con_cpy)
-		goto omem;
+	if (!con_cpy) {
+		ERR(handle, "out of memory");
+		goto err;
+	}
+
 	memcpy(con_cpy, con_str, con_str_len);
 	con_cpy[con_str_len] = '\0';
 
@@ -314,9 +323,6 @@ int context_from_string(sepol_handle_t * handle,
 	free(con_cpy);
 	sepol_context_free(ctx_record);
 	return STATUS_SUCCESS;
-
-      omem:
-	ERR(handle, "out of memory");
 
       err:
 	ERR(handle, "could not create context structure");
