@@ -292,6 +292,13 @@ static int semanage_init_final_suffix(semanage_handle_t *sh)
 		goto cleanup;
 	}
 
+	if (asprintf(&semanage_final_suffix[SEMANAGE_FC_BIN], "%s.bin",
+		     semanage_final_suffix[SEMANAGE_FC]) < 0) {
+		ERR(sh, "Unable to allocate space for file context path.");
+		status = -1;
+		goto cleanup;
+	}
+
 	semanage_final_suffix[SEMANAGE_FC_HOMEDIRS] =
 		strdup(selinux_file_context_homedir_path() + offset);
 	if (semanage_final_suffix[SEMANAGE_FC_HOMEDIRS] == NULL) {
@@ -300,9 +307,23 @@ static int semanage_init_final_suffix(semanage_handle_t *sh)
 		goto cleanup;
 	}
 
+	if (asprintf(&semanage_final_suffix[SEMANAGE_FC_HOMEDIRS_BIN], "%s.bin",
+		     semanage_final_suffix[SEMANAGE_FC_HOMEDIRS]) < 0) {
+		ERR(sh, "Unable to allocate space for file context home directory path.");
+		status = -1;
+		goto cleanup;
+	}
+
 	semanage_final_suffix[SEMANAGE_FC_LOCAL] =
 		strdup(selinux_file_context_local_path() + offset);
 	if (semanage_final_suffix[SEMANAGE_FC_LOCAL] == NULL) {
+		ERR(sh, "Unable to allocate space for local file context path.");
+		status = -1;
+		goto cleanup;
+	}
+
+	if (asprintf(&semanage_final_suffix[SEMANAGE_FC_LOCAL_BIN], "%s.bin",
+		     semanage_final_suffix[SEMANAGE_FC_LOCAL]) < 0) {
 		ERR(sh, "Unable to allocate space for local file context path.");
 		status = -1;
 		goto cleanup;
@@ -1491,6 +1512,45 @@ static int sefcontext_compile(semanage_handle_t * sh, const char *path) {
 	return 0;
 }
 
+static int semanage_validate_and_compile_fcontexts(semanage_handle_t * sh)
+{
+	int status = -1;
+
+	if (sh->do_check_contexts) {
+		int ret;
+		ret = semanage_exec_prog(
+			sh,
+			sh->conf->setfiles,
+			semanage_final_path(SEMANAGE_FINAL_TMP,
+					    SEMANAGE_KERNEL),
+			semanage_final_path(SEMANAGE_FINAL_TMP,
+					    SEMANAGE_FC));
+		if (ret != 0) {
+			ERR(sh, "setfiles returned error code %d.", ret);
+			goto cleanup;
+		}
+	}
+
+	if (sefcontext_compile(sh,
+		    semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC)) != 0) {
+		goto cleanup;
+	}
+
+	if (sefcontext_compile(sh,
+		    semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_LOCAL)) != 0) {
+		goto cleanup;
+	}
+
+	if (sefcontext_compile(sh,
+		    semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_FC_HOMEDIRS)) != 0) {
+		goto cleanup;
+	}
+
+	status = 0;
+cleanup:
+	return status;
+}
+
 /* Load the contexts of the final tmp into the final selinux directory.
  * Return 0 on success, -3 on error.
  */
@@ -1566,35 +1626,6 @@ static int semanage_install_final_tmp(semanage_handle_t * sh)
 	}
 
 skip_reload:
-	if (sh->do_check_contexts) {
-		ret = semanage_exec_prog(
-			sh,
-			sh->conf->setfiles,
-			semanage_final_path(SEMANAGE_FINAL_SELINUX,
-					    SEMANAGE_KERNEL),
-			semanage_final_path(SEMANAGE_FINAL_SELINUX,
-					    SEMANAGE_FC));
-		if (ret != 0) {
-			ERR(sh, "setfiles returned error code %d.", ret);
-			goto cleanup;
-		}
-	}
-
-	if (sefcontext_compile(sh,
-		    semanage_final_path(SEMANAGE_FINAL_SELINUX, SEMANAGE_FC)) != 0) {
-		goto cleanup;
-	}
-
-	if (sefcontext_compile(sh,
-		    semanage_final_path(SEMANAGE_FINAL_SELINUX, SEMANAGE_FC_LOCAL)) != 0) {
-		goto cleanup;
-	}
-
-	if (sefcontext_compile(sh,
-		    semanage_final_path(SEMANAGE_FINAL_SELINUX, SEMANAGE_FC_HOMEDIRS)) != 0) {
-		goto cleanup;
-	}
-
 	status = 0;
 cleanup:
 	return status;
@@ -1736,6 +1767,9 @@ int semanage_install_sandbox(semanage_handle_t * sh)
 		ERR(sh, "No sefcontext_compile program specified in configuration file.");
 		goto cleanup;
 	}
+
+	if (semanage_validate_and_compile_fcontexts(sh) < 0)
+		goto cleanup;
 
 	if ((commit_num = semanage_commit_sandbox(sh)) < 0) {
 		retval = commit_num;
