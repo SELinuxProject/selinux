@@ -1,3 +1,4 @@
+	* Handle NULL pcre study data, from Stephen Smalley.
 	* Add setfiles support to selinux_restorecon(3), from Richard Haines.
 	* Evaluate inodes in selinux_restorecon(3), from Richard Haines.
 	* Fix in tree compilation of utils that depend on libsepol, from Laurent Bigonville.
