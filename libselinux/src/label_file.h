@@ -80,9 +80,12 @@ struct saved_data {
 
 static inline pcre_extra *get_pcre_extra(struct spec *spec)
 {
-	if (spec->from_mmap)
-		return &spec->lsd;
-	else
+	if (spec->from_mmap) {
+		if (spec->lsd.study_data)
+			return &spec->lsd;
+		else
+			return NULL;
+	} else
 		return spec->sd;
 }
 

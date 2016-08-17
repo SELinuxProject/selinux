@@ -228,10 +228,13 @@ static int write_binary_file(struct saved_data *data, int fd)
 		if (len != to_write)
 			goto err;
 
-		/* determine the size of the pcre study info */
-		rc = pcre_fullinfo(re, sd, PCRE_INFO_STUDYSIZE, &size);
-		if (rc < 0)
-			goto err;
+		if (sd) {
+			/* determine the size of the pcre study info */
+			rc = pcre_fullinfo(re, sd, PCRE_INFO_STUDYSIZE, &size);
+			if (rc < 0)
+				goto err;
+		} else
+			size = 0;
 
 		/* write the number of bytes in the pcre study data */
 		to_write = size;
@@ -239,10 +242,12 @@ static int write_binary_file(struct saved_data *data, int fd)
 		if (len != 1)
 			goto err;
 
-		/* write the actual pcre study data as a char array */
-		len = fwrite(sd->study_data, 1, to_write, bin_file);
-		if (len != to_write)
-			goto err;
+		if (sd) {
+			/* write the actual pcre study data as a char array */
+			len = fwrite(sd->study_data, 1, to_write, bin_file);
+			if (len != to_write)
+				goto err;
+		}
 	}
 
 	rc = 0;

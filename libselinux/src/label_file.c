@@ -388,18 +388,21 @@ static int load_mmap(struct selabel_handle *rec, const char *path,
 			rc = -1;
 			goto err;
 		}
-		spec->lsd.study_data = (void *)mmap_area->next_addr;
-		spec->lsd.flags |= PCRE_EXTRA_STUDY_DATA;
-		rc = next_entry(NULL, mmap_area, entry_len);
-		if (rc < 0)
-			goto err;
 
-		/* Check that study data lengths match. */
-		rc = pcre_fullinfo(spec->regex, &spec->lsd,
-				    PCRE_INFO_STUDYSIZE, &len);
-		if (rc < 0 || len != entry_len) {
-			rc = -1;
-			goto err;
+		if (entry_len) {
+			spec->lsd.study_data = (void *)mmap_area->next_addr;
+			spec->lsd.flags |= PCRE_EXTRA_STUDY_DATA;
+			rc = next_entry(NULL, mmap_area, entry_len);
+			if (rc < 0)
+				goto err;
+
+			/* Check that study data lengths match. */
+			rc = pcre_fullinfo(spec->regex, &spec->lsd,
+					   PCRE_INFO_STUDYSIZE, &len);
+			if (rc < 0 || len != entry_len) {
+				rc = -1;
+				goto err;
+			}
 		}
 
 		data->nspec++;
