@@ -90,6 +90,7 @@ file_type_str_to_option = {"all files": "a",
                            "named pipe": "p"}
 
 ftype_to_audit = {"": "any",
+                  "a" : "any",
                   "b": "block",
                   "c": "char",
                   "d": "dir",
@@ -2018,7 +2019,7 @@ class fcontextRecords(semanageRecords):
                 raise ValueError(_("Could not delete the file context %s") % target)
             semanage_fcontext_key_free(k)
 
-            self.mylog.log_change("resrc=fcontext op=delete %s ftype=%s" % (audit.audit_encode_nv_string("tglob", target, 0), ftype_to_audit[ftype_str]))
+            self.mylog.log_change("resrc=fcontext op=delete %s ftype=%s" % (audit.audit_encode_nv_string("tglob", target, 0), ftype_to_audit[file_type_str_to_option[ftype_str]]))
 
         self.equiv = {}
         self.equal_ind = True
