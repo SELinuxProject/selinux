@@ -840,7 +840,7 @@ def handleImport(args):
 
 
 def setupImportParser(subparsers):
-    importParser = subparsers.add_parser('import', help=_('Output local customizations'))
+    importParser = subparsers.add_parser('import', help=_('Import local customizations'))
     parser_add_noreload(importParser, "import")
     parser_add_store(importParser, "import")
     importParser.add_argument('-f', '--input_file', dest='input_file', action=SetImportFile, help=_('Input file'))
