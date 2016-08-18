@@ -1938,7 +1938,7 @@ class fcontextRecords(semanageRecords):
         if serange == "" and setype == "" and seuser == "":
             raise ValueError(_("Requires setype, serange or seuser"))
         if setype and setype not in self.valid_types:
-            raise ValueError(_("Type %s is invalid, must be a port type") % setype)
+            raise ValueError(_("Type %s is invalid, must be a file or device type") % setype)
 
         self.validate(target)
 
