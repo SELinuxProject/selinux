@@ -1,3 +1,4 @@
+	* semanage: fix error message for fcontext -m, from Miroslav Vadkerti.
 	* semanage: Fix semanage fcontext -D, from Stephen Smalley.
 	* semanage: Correct fcontext auditing, from Miroslav Vadkerti.
 	* semanage: Default serange to "s0" for port modify, from Miroslav Vadkerti.
