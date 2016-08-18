@@ -1,3 +1,4 @@
+	* semanage: fix man page and help message for import option, from AJ.
 	* semanage: fix error message for fcontext -m, from Miroslav Vadkerti.
 	* semanage: Fix semanage fcontext -D, from Stephen Smalley.
 	* semanage: Correct fcontext auditing, from Miroslav Vadkerti.
