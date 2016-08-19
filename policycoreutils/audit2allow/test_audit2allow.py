@@ -33,7 +33,7 @@ class Audit2allowTests(unittest.TestCase):
 
     def test_audit2allow(self):
         "Verify audit2allow works"
-        p = Popen(['audit2allow', "-i", "test.log"], stdout=PIPE)
+        p = Popen(['python', './audit2allow', "-i", "test.log"], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)
@@ -41,7 +41,7 @@ class Audit2allowTests(unittest.TestCase):
 
     def test_audit2why(self):
         "Verify audit2why works"
-        p = Popen(['audit2why', "-i", "test.log"], stdout=PIPE)
+        p = Popen(['python', './audit2why', "-i", "test.log"], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)
