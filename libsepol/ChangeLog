@@ -1,3 +1,5 @@
+	* Port str_read() from kernel and remove multiple occurances of similar code, from William Roberts.
+	* Use calloc instead of malloc for all the *_to_val_structs, from William Roberts.
 	* Fix bugs found by AFL, from William Roberts.
 	* Fix memory leak in expand.c, from William Roberts.
 	* Fix invalid read when policy file is corrupt, from William Roberts.
