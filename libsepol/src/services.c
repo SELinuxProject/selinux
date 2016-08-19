@@ -1639,13 +1639,16 @@ int hidden next_entry(void *buf, struct policy_file *fp, size_t bytes)
 			return -1;
 		break;
 	case PF_USE_MEMORY:
-		if (bytes > fp->len)
+		if (bytes > fp->len) {
+			errno = EOVERFLOW;
 			return -1;
+		}
 		memcpy(buf, fp->data, bytes);
 		fp->data += bytes;
 		fp->len -= bytes;
 		break;
 	default:
+		errno = EINVAL;
 		return -1;
 	}
 	return 0;
@@ -1675,6 +1678,40 @@ size_t hidden put_entry(const void *ptr, size_t size, size_t n,
 	default:
 		return 0;
 	}
+	return 0;
+}
+
+/*
+ * Reads a string and null terminates it from the policy file.
+ * This is a port of str_read from the SE Linux kernel code.
+ *
+ * It returns:
+ *   0 - Success
+ *  -1 - Failure with errno set
+ */
+int hidden str_read(char **strp, struct policy_file *fp, size_t len)
+{
+	int rc;
+	char *str;
+
+	if (zero_or_saturated(len)) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	str = malloc(len + 1);
+	if (!str)
+		return -1;
+
+	/* it's expected the caller should free the str */
+	*strp = str;
+
+	/* next_entry sets errno */
+	rc = next_entry(str, fp, len);
+	if (rc)
+		return rc;
+
+	str[len] = '\0';
 	return 0;
 }
 

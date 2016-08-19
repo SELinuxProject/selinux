@@ -65,3 +65,4 @@ extern struct policydb_compat_info *policydb_lookup_compat(unsigned int version,
 extern int next_entry(void *buf, struct policy_file *fp, size_t bytes) hidden;
 extern size_t put_entry(const void *ptr, size_t size, size_t n,
 		        struct policy_file *fp) hidden;
+extern int str_read(char **strp, struct policy_file *fp, size_t len) hidden;

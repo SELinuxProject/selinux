@@ -1911,18 +1911,10 @@ static int perm_read(policydb_t * p
 		goto bad;
 
 	len = le32_to_cpu(buf[0]);
-	if (zero_or_saturated(len))
+	if(str_read(&key, fp, len))
 		goto bad;
 
 	perdatum->s.value = le32_to_cpu(buf[1]);
-
-	key = malloc(len + 1);
-	if (!key)
-		goto bad;
-	rc = next_entry(key, fp, len);
-	if (rc < 0)
-		goto bad;
-	key[len] = 0;
 
 	if (hashtab_insert(h, key, perdatum))
 		goto bad;
