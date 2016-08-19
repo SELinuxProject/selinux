@@ -1,3 +1,6 @@
+	* audit2allow: tests should use local copy not system, from Jason Zaman.
+	* audit2allow: fix audit2why import from seobject, from Jason Zaman.
+	* audit2allow: remove audit2why so that it gets symlinked, from Jason Zaman.
 	* semanage: fix man page and help message for import option, from AJ.
 	* semanage: fix error message for fcontext -m, from Miroslav Vadkerti.
 	* semanage: Fix semanage fcontext -D, from Stephen Smalley.
