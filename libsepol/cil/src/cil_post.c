@@ -47,6 +47,9 @@
 #include "cil_verify.h"
 #include "cil_symtab.h"
 
+#define GEN_REQUIRE_ATTR "cil_gen_require" /* Also in libsepol/src/module_to_cil.c */
+#define TYPEATTR_INFIX "_typeattr_"        /* Also in libsepol/src/module_to_cil.c */
+
 static int __cil_expr_to_bitmap(struct cil_list *expr, ebitmap_t *out, int max, struct cil_db *db);
 static int __cil_expr_list_to_bitmap(struct cil_list *expr_list, ebitmap_t *out, int max, struct cil_db *db);
 
@@ -1186,6 +1189,27 @@ exit:
 	return SEPOL_ERR;
 }
 
+static int cil_typeattribute_used(struct cil_typeattribute *cil_attr)
+{
+	if (cil_attr->used) {
+		return CIL_TRUE;
+	}
+
+	if (strcmp(DATUM(cil_attr)->name, GEN_REQUIRE_ATTR) == 0) {
+		return CIL_FALSE;
+	}
+
+	if (strstr(DATUM(cil_attr)->name,TYPEATTR_INFIX) != NULL) {
+		return CIL_FALSE;
+	}
+
+	if (ebitmap_cardinality(cil_attr->types) == 0) {
+		return CIL_FALSE;
+	}
+
+	return CIL_TRUE;
+}
+
 static int __cil_post_db_attr_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
@@ -1208,6 +1232,9 @@ static int __cil_post_db_attr_helper(struct cil_tree_node *node, uint32_t *finis
 		if (attr->types == NULL) {
 			rc = __evaluate_type_expression(attr, db);
 			if (rc != SEPOL_OK) goto exit;
+			if (cil_typeattribute_used(attr)) {
+				attr->used = CIL_TRUE;
+			}
 		}
 		break;
 	}
