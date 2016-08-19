@@ -1074,7 +1074,7 @@ int policydb_index_others(sepol_handle_t * handle,
 
 	free(p->user_val_to_struct);
 	p->user_val_to_struct = (user_datum_t **)
-	    malloc(p->p_users.nprim * sizeof(user_datum_t *));
+	    calloc(p->p_users.nprim, sizeof(user_datum_t *));
 	if (!p->user_val_to_struct)
 		return -1;
 
@@ -4006,12 +4006,12 @@ int policydb_reindex_users(policydb_t * p)
 		free(p->sym_val_to_name[i]);
 
 	p->user_val_to_struct = (user_datum_t **)
-	    malloc(p->p_users.nprim * sizeof(user_datum_t *));
+	    calloc(p->p_users.nprim, sizeof(user_datum_t *));
 	if (!p->user_val_to_struct)
 		return -1;
 
 	p->sym_val_to_name[i] = (char **)
-	    malloc(p->symtab[i].nprim * sizeof(char *));
+	    calloc(p->symtab[i].nprim, sizeof(char *));
 	if (!p->sym_val_to_name[i])
 		return -1;
 

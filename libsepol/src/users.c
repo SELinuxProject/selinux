@@ -19,11 +19,16 @@ static int user_to_record(sepol_handle_t * handle,
 
 	const char *name = policydb->p_user_val_to_name[user_idx];
 	user_datum_t *usrdatum = policydb->user_val_to_struct[user_idx];
-	ebitmap_t *roles = &(usrdatum->roles.roles);
+	ebitmap_t *roles;
 	ebitmap_node_t *rnode;
 	unsigned bit;
 
 	sepol_user_t *tmp_record = NULL;
+
+	if (!usrdatum)
+		goto err;
+
+	roles = &(usrdatum->roles.roles);
 
 	if (sepol_user_create(handle, &tmp_record) < 0)
 		goto err;
@@ -234,6 +239,7 @@ int sepol_user_modify(sepol_handle_t * handle,
 		if (!tmp_ptr)
 			goto omem;
 		policydb->user_val_to_struct = tmp_ptr;
+		policydb->user_val_to_struct[policydb->p_users.nprim] = NULL;
 
 		tmp_ptr = realloc(policydb->sym_val_to_name[SYM_USERS],
 				  (policydb->p_users.nprim +
@@ -241,6 +247,7 @@ int sepol_user_modify(sepol_handle_t * handle,
 		if (!tmp_ptr)
 			goto omem;
 		policydb->sym_val_to_name[SYM_USERS] = tmp_ptr;
+		policydb->p_user_val_to_name[policydb->p_users.nprim] = NULL;
 
 		/* Need to copy the user name */
 		name = strdup(cname);

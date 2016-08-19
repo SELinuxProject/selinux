@@ -312,7 +312,7 @@ int mls_context_isvalid(const policydb_t * p, const context_struct_t * c)
 	if (!c->user || c->user > p->p_users.nprim)
 		return 0;
 	usrdatum = p->user_val_to_struct[c->user - 1];
-	if (!mls_range_contains(usrdatum->exp_range, c->range))
+	if (!usrdatum || !mls_range_contains(usrdatum->exp_range, c->range))
 		return 0;	/* user may not be associated with range */
 
 	return 1;
