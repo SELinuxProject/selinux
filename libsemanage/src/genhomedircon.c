@@ -853,9 +853,6 @@ static genhomedircon_user_entry_t *get_users(genhomedircon_settings_t * s,
 		seuname = semanage_seuser_get_sename(seuser_list[i]);
 		name = semanage_seuser_get_name(seuser_list[i]);
 
-		if (strcmp(name,"root") && strcmp(seuname, s->fallback->sename) == 0)
-			continue;
-
 		if (strcmp(name, DEFAULT_LOGIN) == 0)
 			continue;
 
