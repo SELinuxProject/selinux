@@ -132,8 +132,7 @@ void module_role_tests(policydb_t * base)
 
 	/**** test for type added to base role in module 1 (global) ****/
 	decls[0] = (test_find_decl_by_sym(base, SYM_TYPES, "tag_g_b"))->decl_id;
-	decls[1] = (test_find_decl_by_sym(base, SYM_TYPES, "tag_g_m1"))->decl_id;
-	test_sym_presence(base, "g_b_role_2", SYM_ROLES, SCOPE_DECL, decls, 2);
+	test_sym_presence(base, "g_b_role_2", SYM_ROLES, SCOPE_DECL, decls, 1);
 	/* make sure it has the correct type set (g_m1_type_1, no negset, no flags) */
 	types[0] = "g_b_type_2";	/* added in base when declared */
 	types[1] = "g_m1_type_1";	/* added in module */
