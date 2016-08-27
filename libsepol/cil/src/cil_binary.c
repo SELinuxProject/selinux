@@ -984,7 +984,7 @@ avtab_datum_t *cil_cond_av_list_search(avtab_key_t *key, cond_av_list_t *cond_li
 	return NULL;
 }
 
-int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, uint32_t tgt, uint32_t obj, uint32_t res, cond_node_t *cond_node, enum cil_flavor cond_flavor)
+int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, uint32_t tgt, uint32_t obj, uint32_t res, struct cil_type_rule *cil_rule, cond_node_t *cond_node, enum cil_flavor cond_flavor)
 {
 	int rc = SEPOL_OK;
 	avtab_key_t avtab_key;
@@ -1019,7 +1019,7 @@ int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, uint32_
 		 * non-duplicate rule using the same key.
 		 */
 		if (existing->datum.data != res) {
-			cil_log(CIL_ERR, "Conflicting type rules\n");
+			cil_log(CIL_ERR, "Conflicting type rules (scontext=%s tcontext=%s tclass=%s result=%s)\n", cil_rule->src_str, cil_rule->tgt_str, cil_rule->obj_str, cil_rule->result_str);
 			rc = SEPOL_ERR;
 		}
 		goto exit;
@@ -1045,7 +1045,7 @@ int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, uint32_
 			search_datum = cil_cond_av_list_search(&avtab_key, other_list);
 			if (search_datum == NULL) {
 				if (existing->datum.data != res) {
-					cil_log(CIL_ERR, "Conflicting type rules\n");
+					cil_log(CIL_ERR, "Conflicting type rules (scontext=%s tcontext=%s tclass=%s result=%s)\n", cil_rule->src_str, cil_rule->tgt_str, cil_rule->obj_str, cil_rule->result_str);
 					rc = SEPOL_ERR;
 					goto exit;
 				}
@@ -1104,7 +1104,7 @@ int __cil_type_rule_to_avtab(policydb_t *pdb, const struct cil_db *db, struct ci
 				rc = __cil_get_sepol_class_datum(pdb, DATUM(c->data), &sepol_obj);
 				if (rc != SEPOL_OK) goto exit;
 
-				rc = __cil_insert_type_rule(pdb, kind, sepol_src->s.value, sepol_tgt->s.value, sepol_obj->s.value, sepol_result->s.value, cond_node, cond_flavor);
+				rc = __cil_insert_type_rule(pdb, kind, sepol_src->s.value, sepol_tgt->s.value, sepol_obj->s.value, sepol_result->s.value, cil_rule, cond_node, cond_flavor);
 				if (rc != SEPOL_OK) goto exit;
 			}
 		}
