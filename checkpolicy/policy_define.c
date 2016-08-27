@@ -2614,6 +2614,7 @@ int define_role_types(void)
 		free(id);
 		return -1;
 	}
+	role = get_local_role(id, role->s.value, (role->flavor == ROLE_ATTRIB));
 
 	while ((id = queue_remove(id_queue))) {
 		if (set_types(&role->types, id, &add, 0))
