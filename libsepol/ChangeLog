@@ -1,3 +1,4 @@
+	* Produce more meaningful error messages for conflicting type rules in CIL, from Guido Trentalancia.
 	* make "make test" fail when a CUnit test fails, from Nicolas Iooss.
 	* tests: fix g_b_role_2 test, from Nicolas Iooss.
 	* Change which attributes CIL keeps in the binary policy, from James Carter.
