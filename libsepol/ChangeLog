@@ -1,3 +1,5 @@
+	* make "make test" fail when a CUnit test fails, from Nicolas Iooss.
+	* tests: fix g_b_role_2 test, from Nicolas Iooss.
 	* Change which attributes CIL keeps in the binary policy, from James Carter.
 	* Port str_read() from kernel and remove multiple occurances of similar code, from William Roberts.
 	* Use calloc instead of malloc for all the *_to_val_structs, from William Roberts.
