@@ -97,11 +97,12 @@ static int nodups_specs(struct saved_data *data, const char *path)
 	return rc;
 }
 
-static int process_text_file(FILE *fp, const char *prefix, struct selabel_handle *rec, const char *path)
+static int process_text_file(FILE *fp, const char *prefix,
+			     struct selabel_handle *rec, const char *path)
 {
 	int rc;
 	size_t line_len;
-	unsigned lineno = 0;
+	unsigned int lineno = 0;
 	char *line_buf = NULL;
 
 	while (getline(&line_buf, &line_len, fp) > 0) {
@@ -115,7 +116,8 @@ out:
 	return rc;
 }
 
-static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec, const char *path)
+static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec,
+		     const char *path)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	int rc;
@@ -284,7 +286,8 @@ static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec, const cha
 		if (strcmp(spec->lr.ctx_raw, "<<none>>") && rec->validating) {
 			if (selabel_validate(rec, &spec->lr) < 0) {
 				selinux_log(SELINUX_ERROR,
-					    "%s: context %s is invalid\n", path, spec->lr.ctx_raw);
+					    "%s: context %s is invalid\n",
+					    path, spec->lr.ctx_raw);
 				goto out;
 			}
 		}
@@ -444,9 +447,9 @@ static bool fcontext_is_binary(FILE *fp)
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 static FILE *open_file(const char *path, const char *suffix,
-        char *save_path, size_t len, struct stat *sb)
+		       char *save_path, size_t len, struct stat *sb)
 {
-	unsigned i;
+	unsigned int i;
 	int rc;
 	char stack_path[len];
 	struct file_details *found = NULL;
@@ -470,7 +473,7 @@ static FILE *open_file(const char *path, const char *suffix,
 
 		/* This handles the case if suffix is null */
 		path = rolling_append(stack_path, fdetails[i].suffix,
-		        sizeof(stack_path));
+				      sizeof(stack_path));
 		if (!path)
 			return NULL;
 
