@@ -1,4 +1,4 @@
-module foo 1.0;
+module module_compile_test 1.0;
 
 require {
 	type foo, bar;
