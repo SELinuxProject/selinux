@@ -425,21 +425,20 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
         self.__filecon = "%s:object_r:sandbox_file_t:%s" % (con[0], level)
 
     def __setup_dir(self):
+        selinux.setfscreatecon(self.__filecon)
         if self.__options.homedir:
-            selinux.chcon(self.__options.homedir, self.__filecon, recursive=True)
             self.__homedir = self.__options.homedir
         else:
-            selinux.setfscreatecon(self.__filecon)
             self.__homedir = mkdtemp(dir="/tmp", prefix=".sandbox_home_")
 
         if self.__options.tmpdir:
-            selinux.chcon(self.__options.tmpdir, self.__filecon, recursive=True)
             self.__tmpdir = self.__options.tmpdir
         else:
-            selinux.setfscreatecon(self.__filecon)
             self.__tmpdir = mkdtemp(dir="/tmp", prefix=".sandbox_tmp_")
-        selinux.setfscreatecon(None)
         self.__copyfiles()
+        selinux.chcon(self.__homedir, self.__filecon, recursive=True)
+        selinux.chcon(self.__tmpdir, self.__filecon, recursive=True)
+        selinux.setfscreatecon(None)
 
     def __execute(self):
         try:

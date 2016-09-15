@@ -97,6 +97,14 @@ class SandboxTests(unittest.TestCase):
         shutil.rmtree(tmpdir)
         self.assertSuccess(p.returncode, err)
 
+    def test_include_file(self):
+        "Verify that sandbox can copy a file in the sandbox home and use it"
+        p = Popen([sys.executable, 'sandbox', '-i' ,'test_sandbox.py' , '-M', '/bin/cat', 'test_sandbox.py'],
+                  stdout=PIPE, stderr=PIPE)
+        out, err = p.communicate()
+        self.assertSuccess(p.returncode, err)
+
+
 if __name__ == "__main__":
     import selinux
     if selinux.security_getenforce() == 1:
