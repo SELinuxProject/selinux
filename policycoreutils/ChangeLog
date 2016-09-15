@@ -1,3 +1,6 @@
+	* sandbox: fix file labels on copied files, from Petr Lautrbach.
+	* sandbox: tests - close stdout of p1, from Petr Lautrbach.
+	* sandbox: tests - use sandbox from cwd, from Petr Lautrbach.
 	* audit2allow: tests should use local copy not system, from Jason Zaman.
 	* audit2allow: fix audit2why import from seobject, from Jason Zaman.
 	* audit2allow: remove audit2why so that it gets symlinked, from Jason Zaman.
