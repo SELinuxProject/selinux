@@ -1,3 +1,4 @@
+	* Add support for pcre2, from Janis Danisevskis.
 	* Clean up process_file(), from William Roberts.
 	* Handle NULL pcre study data, from Stephen Smalley.
 	* Add setfiles support to selinux_restorecon(3), from Richard Haines.
