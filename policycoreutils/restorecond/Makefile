@@ -17,7 +17,14 @@ DBUSLIB = -ldbus-glib-1 -ldbus-1
 CFLAGS ?= -g -Werror -Wall -W
 override CFLAGS += -I$(PREFIX)/include $(DBUSFLAGS) -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/lib/glib-2.0/include
 
-LDLIBS += -lselinux $(DBUSLIB) -lglib-2.0 -L$(LIBDIR)
+USE_PCRE2 ?= n
+ifeq ($(USE_PCRE2),y)
+	PCRE_LDFLAGS := -lpcre2-8
+else
+	PCRE_LDFLAGS := -lpcre
+endif
+
+LDLIBS += -lselinux $(PCRE_LDFLAGS) $(DBUSLIB) -lglib-2.0 -L$(LIBDIR)
 
 all: restorecond
 

@@ -15,7 +15,6 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdint.h>
-#include <pcre.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -126,6 +125,7 @@ static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec,
 	struct mmap_area *mmap_area;
 	uint32_t i, magic, version;
 	uint32_t entry_len, stem_map_len, regex_array_len;
+	const char *reg_version;
 
 	mmap_area = malloc(sizeof(*mmap_area));
 	if (!mmap_area) {
@@ -155,8 +155,13 @@ static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec,
 	if (rc < 0 || version > SELINUX_COMPILED_FCONTEXT_MAX_VERS)
 		return -1;
 
+	reg_version = regex_version();
+	if (!reg_version)
+		return -1;
+
 	if (version >= SELINUX_COMPILED_FCONTEXT_PCRE_VERS) {
-		len = strlen(pcre_version());
+
+		len = strlen(reg_version);
 
 		rc = next_entry(&entry_len, mmap_area, sizeof(uint32_t));
 		if (rc < 0)
@@ -166,7 +171,7 @@ static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec,
 		if (len != entry_len)
 			return -1;
 
-		/* Check if pcre version mismatch */
+		/* Check if regex version mismatch */
 		str_buf = malloc(entry_len + 1);
 		if (!str_buf)
 			return -1;
@@ -178,7 +183,7 @@ static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec,
 		}
 
 		str_buf[entry_len] = '\0';
-		if ((strcmp(str_buf, pcre_version()) != 0)) {
+		if ((strcmp(str_buf, reg_version) != 0)) {
 			free(str_buf);
 			return -1;
 		}
@@ -258,7 +263,6 @@ static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec,
 
 		spec = &data->spec_arr[data->nspec];
 		spec->from_mmap = 1;
-		spec->regcomp = 1;
 
 		/* Process context */
 		rc = next_entry(&entry_len, mmap_area, sizeof(uint32_t));
@@ -345,46 +349,9 @@ static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec,
 			spec->prefix_len = prefix_len;
 		}
 
-		/* Process regex and study_data entries */
-		rc = next_entry(&entry_len, mmap_area, sizeof(uint32_t));
-		if (rc < 0 || !entry_len) {
-			rc = -1;
-			goto out;
-		}
-		spec->regex = (pcre *)mmap_area->next_addr;
-		rc = next_entry(NULL, mmap_area, entry_len);
+		rc = regex_load_mmap(mmap_area, &spec->regex);
 		if (rc < 0)
 			goto out;
-
-		/* Check that regex lengths match. pcre_fullinfo()
-		 * also validates its magic number. */
-		rc = pcre_fullinfo(spec->regex, NULL, PCRE_INFO_SIZE, &len);
-		if (rc < 0 || len != entry_len) {
-			rc = -1;
-			goto out;
-		}
-
-		rc = next_entry(&entry_len, mmap_area, sizeof(uint32_t));
-		if (rc < 0 || !entry_len) {
-			rc = -1;
-			goto out;
-		}
-
-		if (entry_len) {
-			spec->lsd.study_data = (void *)mmap_area->next_addr;
-			spec->lsd.flags |= PCRE_EXTRA_STUDY_DATA;
-			rc = next_entry(NULL, mmap_area, entry_len);
-			if (rc < 0)
-				goto out;
-
-			/* Check that study data lengths match. */
-			rc = pcre_fullinfo(spec->regex, &spec->lsd,
-					   PCRE_INFO_STUDYSIZE, &len);
-			if (rc < 0 || len != entry_len) {
-				rc = -1;
-				goto out;
-			}
-		}
 
 		data->nspec++;
 	}
@@ -630,14 +597,11 @@ static void closef(struct selabel_handle *rec)
 		spec = &data->spec_arr[i];
 		free(spec->lr.ctx_trans);
 		free(spec->lr.ctx_raw);
+		regex_data_free(spec->regex);
 		if (spec->from_mmap)
 			continue;
 		free(spec->regex_str);
 		free(spec->type_str);
-		if (spec->regcomp) {
-			pcre_free(spec->regex);
-			pcre_free_study(spec->sd);
-		}
 	}
 
 	for (i = 0; i < (unsigned int)data->num_stems; i++) {
@@ -669,7 +633,7 @@ static struct spec *lookup_common(struct selabel_handle *rec,
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	struct spec *spec_arr = data->spec_arr;
-	int i, rc, file_stem, pcre_options = 0;
+	int i, rc, file_stem;
 	mode_t mode = (mode_t)type;
 	const char *buf;
 	struct spec *ret = NULL;
@@ -702,9 +666,6 @@ static struct spec *lookup_common(struct selabel_handle *rec,
 	file_stem = find_stem_from_file(data, &buf);
 	mode &= S_IFMT;
 
-	if (partial)
-		pcre_options |= PCRE_PARTIAL_SOFT;
-
 	/*
 	 * Check for matching specifications in reverse order, so that
 	 * the last matching specification is used.
@@ -720,22 +681,16 @@ static struct spec *lookup_common(struct selabel_handle *rec,
 			if (compile_regex(data, spec, NULL) < 0)
 				goto finish;
 			if (spec->stem_id == -1)
-				rc = pcre_exec(spec->regex,
-						    get_pcre_extra(spec),
-						    key, strlen(key), 0,
-						    pcre_options, NULL, 0);
+				rc = regex_match(spec->regex, key, partial);
 			else
-				rc = pcre_exec(spec->regex,
-						    get_pcre_extra(spec),
-						    buf, strlen(buf), 0,
-						    pcre_options, NULL, 0);
-			if (rc == 0) {
+				rc = regex_match(spec->regex, buf, partial);
+			if (rc == REGEX_MATCH) {
 				spec->matches++;
 				break;
-			} else if (partial && rc == PCRE_ERROR_PARTIAL)
+			} else if (partial && rc == REGEX_MATCH_PARTIAL)
 				break;
 
-			if (rc == PCRE_ERROR_NOMATCH)
+			if (rc == REGEX_NO_MATCH)
 				continue;
 
 			errno = ENOENT;
@@ -874,17 +829,10 @@ static enum selabel_cmp_result cmp(struct selabel_handle *h1,
 			continue;
 		}
 
-		if (spec1->regcomp && spec2->regcomp) {
-			size_t len1, len2;
-			int rc;
-
-			rc = pcre_fullinfo(spec1->regex, NULL, PCRE_INFO_SIZE, &len1);
-			assert(rc == 0);
-			rc = pcre_fullinfo(spec2->regex, NULL, PCRE_INFO_SIZE, &len2);
-			assert(rc == 0);
-			if (len1 != len2 ||
-			    memcmp(spec1->regex, spec2->regex, len1))
+		if (spec1->regex && spec2->regex) {
+			if (regex_cmp(spec1->regex, spec2->regex) == SELABEL_INCOMPARABLE){
 				return incomp(spec1, spec2, "regex", i, j);
+			}
 		} else {
 			if (strcmp(spec1->regex_str, spec2->regex_str))
 				return incomp(spec1, spec2, "regex_str", i, j);

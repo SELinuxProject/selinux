@@ -24,12 +24,15 @@ CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissi
           -fasynchronous-unwind-tables -fdiagnostics-show-option -funit-at-a-time \
           -fipa-pure-const -Wno-suggest-attribute=pure -Wno-suggest-attribute=const \
           -Werror -Wno-aggregate-return -Wno-redundant-decls
-override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE $(EMFLAGS)
+override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE $(EMFLAGS) $(PCRE_CFLAGS)
 LDLIBS += -L../src -lselinux -L$(LIBDIR)
+PCRE_LDFLAGS ?= -lpcre
 
 TARGETS=$(patsubst %.c,%,$(wildcard *.c))
 
-sefcontext_compile: LDLIBS += -lpcre ../src/libselinux.a -lsepol
+sefcontext_compile: LDLIBS += $(PCRE_LDFLAGS) ../src/libselinux.a -lsepol
+
+sefcontext_compile: sefcontext_compile.o ../src/regex.o
 
 selinux_restorecon: LDLIBS += -lsepol
 

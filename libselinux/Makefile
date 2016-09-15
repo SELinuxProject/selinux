@@ -24,6 +24,15 @@ ifeq ($(DISABLE_SETRANS),y)
 endif
 export DISABLE_AVC DISABLE_SETRANS DISABLE_RPM DISABLE_BOOL EMFLAGS
 
+USE_PCRE2 ?= n
+ifeq ($(USE_PCRE2),y)
+	PCRE_CFLAGS := -DUSE_PCRE2 -DPCRE2_CODE_UNIT_WIDTH=8
+	PCRE_LDFLAGS := -lpcre2-8
+else
+	PCRE_LDFLAGS := -lpcre
+endif
+export PCRE_CFLAGS PCRE_LDFLAGS
+
 all install relabel clean distclean indent:
 	@for subdir in $(SUBDIRS); do \
 		(cd $$subdir && $(MAKE) $@) || exit 1; \

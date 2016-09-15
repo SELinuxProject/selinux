@@ -1,6 +1,5 @@
 #include <ctype.h>
 #include <errno.h>
-#include <pcre.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -13,6 +12,7 @@
 #include <sepol/sepol.h>
 
 #include "../src/label_file.h"
+#include "../src/regex.h"
 
 const char *policy_file;
 static int ctx_err;
@@ -92,7 +92,8 @@ out:
  *	u32  - data length of the pcre regex study daya
  *	char - a buffer holding the raw pcre regex study data
  */
-static int write_binary_file(struct saved_data *data, int fd)
+static int write_binary_file(struct saved_data *data, int fd,
+			     int do_write_precompregex)
 {
 	struct spec *specs = data->spec_arr;
 	FILE *bin_file;
@@ -101,6 +102,7 @@ static int write_binary_file(struct saved_data *data, int fd)
 	uint32_t section_len;
 	uint32_t i;
 	int rc;
+	const char *reg_version;
 
 	bin_file = fdopen(fd, "w");
 	if (!bin_file) {
@@ -119,12 +121,15 @@ static int write_binary_file(struct saved_data *data, int fd)
 	if (len != 1)
 		goto err;
 
-	/* write the pcre version */
-	section_len = strlen(pcre_version());
+	/* write version of the regex back-end */
+	reg_version = regex_version();
+	if (!reg_version)
+		goto err;
+	section_len = strlen(reg_version);
 	len = fwrite(&section_len, sizeof(uint32_t), 1, bin_file);
 	if (len != 1)
 		goto err;
-	len = fwrite(pcre_version(), sizeof(char), section_len, bin_file);
+	len = fwrite(reg_version, sizeof(char), section_len, bin_file);
 	if (len != section_len)
 		goto err;
 
@@ -162,10 +167,8 @@ static int write_binary_file(struct saved_data *data, int fd)
 		mode_t mode = specs[i].mode;
 		size_t prefix_len = specs[i].prefix_len;
 		int32_t stem_id = specs[i].stem_id;
-		pcre *re = specs[i].regex;
-		pcre_extra *sd = get_pcre_extra(&specs[i]);
+		struct regex_data *re = specs[i].regex;
 		uint32_t to_write;
-		size_t size;
 
 		/* length of the context string (including nul) */
 		to_write = strlen(context) + 1;
@@ -212,42 +215,10 @@ static int write_binary_file(struct saved_data *data, int fd)
 		if (len != 1)
 			goto err;
 
-		/* determine the size of the pcre data in bytes */
-		rc = pcre_fullinfo(re, NULL, PCRE_INFO_SIZE, &size);
+		/* Write regex related data */
+		rc = regex_writef(re, bin_file, do_write_precompregex);
 		if (rc < 0)
 			goto err;
-
-		/* write the number of bytes in the pcre data */
-		to_write = size;
-		len = fwrite(&to_write, sizeof(uint32_t), 1, bin_file);
-		if (len != 1)
-			goto err;
-
-		/* write the actual pcre data as a char array */
-		len = fwrite(re, 1, to_write, bin_file);
-		if (len != to_write)
-			goto err;
-
-		if (sd) {
-			/* determine the size of the pcre study info */
-			rc = pcre_fullinfo(re, sd, PCRE_INFO_STUDYSIZE, &size);
-			if (rc < 0)
-				goto err;
-		} else
-			size = 0;
-
-		/* write the number of bytes in the pcre study data */
-		to_write = size;
-		len = fwrite(&to_write, sizeof(uint32_t), 1, bin_file);
-		if (len != 1)
-			goto err;
-
-		if (sd) {
-			/* write the actual pcre study data as a char array */
-			len = fwrite(sd->study_data, 1, to_write, bin_file);
-			if (len != to_write)
-				goto err;
-		}
 	}
 
 	rc = 0;
@@ -270,8 +241,7 @@ static void free_specs(struct saved_data *data)
 		free(specs[i].lr.ctx_trans);
 		free(specs[i].regex_str);
 		free(specs[i].type_str);
-		pcre_free(specs[i].regex);
-		pcre_free_study(specs[i].sd);
+		regex_data_free(specs[i].regex);
 	}
 	free(specs);
 
@@ -293,6 +263,12 @@ static void usage(const char *progname)
 	    "         will be fc_file with the .bin suffix appended.\n\t"
 	    "-p       Optional binary policy file that will be used to\n\t"
 	    "         validate contexts defined in the fc_file.\n\t"
+	    "-r       Include precompiled regular expressions in the output.\n\t"
+	    "         (PCRE2 only. Compiled PCRE2 regular expressions are\n\t"
+	    "         not portable across architectures. When linked against\n\t"
+	    "         PCRE this flag is ignored)\n\t"
+	    "         Omit precompiled regular expressions (only meaningful\n\t"
+	    "         when using PCRE2 regular expression back-end).\n\t"
 	    "fc_file  The text based file contexts file to be processed.\n",
 	    progname);
 		exit(EXIT_FAILURE);
@@ -302,6 +278,7 @@ int main(int argc, char *argv[])
 {
 	const char *path = NULL;
 	const char *out_file = NULL;
+	int do_write_precompregex = 0;
 	char stack_path[PATH_MAX + 1];
 	char *tmp = NULL;
 	int fd, rc, opt;
@@ -313,13 +290,16 @@ int main(int argc, char *argv[])
 	if (argc < 2)
 		usage(argv[0]);
 
-	while ((opt = getopt(argc, argv, "o:p:")) > 0) {
+	while ((opt = getopt(argc, argv, "o:p:r")) > 0) {
 		switch (opt) {
 		case 'o':
 			out_file = optarg;
 			break;
 		case 'p':
 			policy_file = optarg;
+			break;
+		case 'r':
+			do_write_precompregex = 1;
 			break;
 		default:
 			usage(argv[0]);
@@ -418,7 +398,7 @@ int main(int argc, char *argv[])
 		goto err_unlink;
 	}
 
-	rc = write_binary_file(data, fd);
+	rc = write_binary_file(data, fd, do_write_precompregex);
 	if (rc < 0)
 		goto err_unlink;
 
