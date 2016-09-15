@@ -312,7 +312,8 @@ static inline pcre_extra *get_pcre_extra(struct regex_data *regex)
 	}
 }
 
-int regex_writef(struct regex_data *regex, FILE *fp, int unused)
+int regex_writef(struct regex_data *regex, FILE *fp,
+		 int unused __attribute__((unused)))
 {
 	int rc;
 	size_t len;
