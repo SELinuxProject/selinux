@@ -28,6 +28,7 @@ class SandboxTests(unittest.TestCase):
         "Verify that we can read file descriptors handed to sandbox"
         p1 = Popen(['cat', '/etc/passwd'], stdout=PIPE)
         p2 = Popen([sys.executable, 'sandbox', 'grep', 'root'], stdin=p1.stdout, stdout=PIPE)
+        p1.stdout.close()
         out, err = p2.communicate()
         self.assertTrue(b'root' in out)
 
