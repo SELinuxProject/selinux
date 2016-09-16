@@ -414,7 +414,7 @@ static bool fcontext_is_binary(FILE *fp)
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 static FILE *open_file(const char *path, const char *suffix,
-		       char *save_path, size_t len, struct stat *sb)
+	       char *save_path, size_t len, struct stat *sb, bool open_oldest)
 {
 	unsigned int i;
 	int rc;
@@ -460,9 +460,15 @@ static FILE *open_file(const char *path, const char *suffix,
 		 * includes equality. This provides a precedence on
 		 * secondary suffixes even when the timestamp is the
 		 * same. Ie choose file_contexts.bin over file_contexts
-		 * even if the time stamp is the same.
+		 * even if the time stamp is the same. Invert this logic
+		 * on open_oldest set to true. The idea is that if the
+		 * newest file failed to process, we can attempt to
+		 * process the oldest. The logic here is subtle and depends
+		 * on the array ordering in fdetails for the case when time
+		 * stamps are the same.
 		 */
-		if (fdetails[i].sb.st_mtime >= found->sb.st_mtime) {
+		if (open_oldest ^
+			(fdetails[i].sb.st_mtime >= found->sb.st_mtime)) {
 			found = &fdetails[i];
 			strcpy(save_path, path);
 		}
@@ -482,24 +488,35 @@ static int process_file(const char *path, const char *suffix,
 			  const char *prefix, struct selabel_digest *digest)
 {
 	int rc;
+	unsigned int i;
 	struct stat sb;
 	FILE *fp = NULL;
 	char found_path[PATH_MAX];
 
-	fp = open_file(path, suffix, found_path, sizeof(found_path), &sb);
-	if (fp == NULL)
-		return -1;
+	/*
+	 * On the first pass open the newest modified file. If it fails to
+	 * process, then the second pass shall open the oldest file. If both
+	 * passes fail, then it's a fatal error.
+	 */
+	for (i = 0; i < 2; i++) {
+		fp = open_file(path, suffix, found_path, sizeof(found_path),
+			&sb, i > 0);
+		if (fp == NULL)
+			return -1;
 
-	rc = fcontext_is_binary(fp) ?
-			load_mmap(fp, sb.st_size, rec, found_path) :
-			process_text_file(fp, prefix, rec, found_path);
-	if (rc < 0)
-		goto out;
+		rc = fcontext_is_binary(fp) ?
+				load_mmap(fp, sb.st_size, rec, found_path) :
+				process_text_file(fp, prefix, rec, found_path);
+		if (!rc)
+			rc = digest_add_specfile(digest, fp, NULL, sb.st_size,
+				found_path);
 
-	rc = digest_add_specfile(digest, fp, NULL, sb.st_size, found_path);
-out:
-	fclose(fp);
-	return rc;
+		fclose(fp);
+
+		if (!rc)
+			return 0;
+	}
+	return -1;
 }
 
 static void closef(struct selabel_handle *rec);
