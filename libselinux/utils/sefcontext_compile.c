@@ -267,8 +267,6 @@ static void usage(const char *progname)
 	    "         (PCRE2 only. Compiled PCRE2 regular expressions are\n\t"
 	    "         not portable across architectures. When linked against\n\t"
 	    "         PCRE this flag is ignored)\n\t"
-	    "         Omit precompiled regular expressions (only meaningful\n\t"
-	    "         when using PCRE2 regular expression back-end).\n\t"
 	    "fc_file  The text based file contexts file to be processed.\n",
 	    progname);
 		exit(EXIT_FAILURE);
