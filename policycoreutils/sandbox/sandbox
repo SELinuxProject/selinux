@@ -111,16 +111,18 @@ def copyfile(file, srcdir, dest):
 def savefile(new, orig, X_ind):
     copy = False
     if(X_ind):
-        import gtk
-        dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO,
-                                gtk.BUTTONS_YES_NO,
+        import gi
+        gi.require_version('Gtk', '3.0')
+        from gi.repository import Gtk
+        dlg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                Gtk.ButtonsType.YES_NO,
                                 _("Do you want to save changes to '%s' (Y/N): ") % orig)
         dlg.set_title(_("Sandbox Message"))
-        dlg.set_position(gtk.WIN_POS_MOUSE)
+        dlg.set_position(Gtk.WindowPosition.MOUSE)
         dlg.show_all()
         rc = dlg.run()
         dlg.destroy()
-        if rc == gtk.RESPONSE_YES:
+        if rc == Gtk.ResponseType.YES:
             copy = True
     else:
         try:
@@ -452,8 +454,10 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
                     if self.__options.dpi:
                         dpi = self.__options.dpi
                     else:
-                        import gtk
-                        dpi = str(gtk.settings_get_default().props.gtk_xft_dpi / 1024)
+                        import gi
+                        gi.require_version('Gtk', '3.0')
+                        from gi.repository import Gtk
+                        dpi = str(Gtk.Settings.get_default().props.gtk_xft_dpi / 1024)
 
                     xmodmapfile = self.__homedir + "/.xmodmap"
                     xd = open(xmodmapfile, "w")
