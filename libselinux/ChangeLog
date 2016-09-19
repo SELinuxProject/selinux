@@ -1,3 +1,4 @@
+	* Correct error path to always try text, from William Roberts.
 	* Add support for pcre2, from Janis Danisevskis.
 	* Clean up process_file(), from William Roberts.
 	* Handle NULL pcre study data, from Stephen Smalley.
