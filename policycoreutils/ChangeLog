@@ -1,3 +1,4 @@
+	* sandbox: Use GObject introspection binding instead of pygtk2, from Petr Lautrbach and Laurent Bigonville.
 	* sandbox: fix file labels on copied files, from Petr Lautrbach.
 	* sandbox: tests - close stdout of p1, from Petr Lautrbach.
 	* sandbox: tests - use sandbox from cwd, from Petr Lautrbach.
