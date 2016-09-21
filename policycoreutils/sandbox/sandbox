@@ -282,7 +282,7 @@ class Sandbox:
                 command += "'%s' " % p
             fd.write("""#! /bin/sh
 #TITLE: %s
-/usr/bin/test -r ~/.xmodmap && /usr/bin/xmodmap ~/.xmodmap
+# /usr/bin/test -r ~/.xmodmap && /usr/bin/xmodmap ~/.xmodmap
 %s &
 WM_PID=$!
 dbus-launch --exit-with-session %s
