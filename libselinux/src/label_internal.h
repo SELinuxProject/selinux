@@ -124,7 +124,7 @@ selabel_validate(struct selabel_handle *rec,
  */
 extern int myprintf_compat;
 extern void __attribute__ ((format(printf, 1, 2)))
-(*myprintf) (const char *fmt, ...);
+(*myprintf) (const char *fmt, ...) hidden;
 
 #define COMPAT_LOG(type, fmt...) if (myprintf_compat)	  \
 		myprintf(fmt);				  \

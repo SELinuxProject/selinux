@@ -19,7 +19,6 @@
 
 char *selinux_mnt = NULL;
 int selinux_page_size = 0;
-int obj_class_compat = 1;
 
 int has_selinux_config = 0;
 
