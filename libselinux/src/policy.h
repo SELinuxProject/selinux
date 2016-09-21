@@ -3,8 +3,13 @@
 
 /* Private definitions used internally by libselinux. */
 
-/* xattr name for SELinux attributes. */
+/*
+ * xattr name for SELinux attributes.
+ * This may have been exported via Kernel uapi header.
+ */
+#ifndef XATTR_NAME_SELINUX
 #define XATTR_NAME_SELINUX "security.selinux"
+#endif
 
 /* Initial length guess for getting contexts. */
 #define INITCONTEXTLEN 255
