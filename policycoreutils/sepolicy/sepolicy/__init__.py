@@ -249,23 +249,115 @@ def info(setype, name=None):
         raise ValueError("Invalid type")
 
 
-def search(types, info={}):
-    seinfo = info
-    valid_types = [ALLOW, AUDITALLOW, NEVERALLOW, DONTAUDIT, TRANSITION, ROLE_ALLOW]
+def _setools_rule_to_dict(rule):
+    d = {
+        'type': str(rule.ruletype),
+        'source': str(rule.source),
+        'target': str(rule.target),
+        'class': str(rule.tclass),
+    }
+
+    try:
+        enabled = bool(rule.qpol_symbol.is_enabled(rule.policy))
+    except AttributeError:
+        enabled = True
+
+    if isinstance(rule, setools.policyrep.terule.AVRule):
+        d['enabled'] = enabled
+
+    try:
+        d['permlist'] = list(map(str, rule.perms))
+    except setools.policyrep.exception.RuleUseError:
+        pass
+
+    try:
+        d['transtype'] = str(rule.default)
+    except setools.policyrep.exception.RuleUseError:
+        pass
+
+    try:
+        d['boolean'] = [(str(rule.conditional), enabled)]
+    except (AttributeError, setools.policyrep.exception.RuleNotConditional):
+        pass
+
+    try:
+        d['filename'] = rule.filename
+    except (AttributeError,
+            setools.policyrep.exception.RuleNotConditional,
+            setools.policyrep.exception.TERuleNoFilename):
+        pass
+
+    return d
+
+
+def search(types, seinfo=None):
+    if not seinfo:
+        seinfo = {}
+    valid_types = set([ALLOW, AUDITALLOW, NEVERALLOW, DONTAUDIT, TRANSITION, ROLE_ALLOW])
     for setype in types:
         if setype not in valid_types:
-            raise ValueError("Type has to be in %s" % valid_types)
-        seinfo[setype] = True
+            raise ValueError("Type has to be in %s" % " ".join(valid_types))
 
-    perms = []
-    if PERMS in seinfo:
-        perms = info[PERMS]
-        seinfo[PERMS] = ",".join(seinfo[PERMS])
+    source = None
+    if SOURCE in seinfo:
+        source = str(seinfo[SOURCE])
 
-    dict_list = _policy.search(seinfo)
-    if dict_list and len(perms) != 0:
-        dict_list = filter(lambda x: _dict_has_perms(x, perms), dict_list)
-    return dict_list
+    target = None
+    if TARGET in seinfo:
+        target = str(seinfo[TARGET])
+
+    tclass = None
+    if CLASS in seinfo:
+        tclass = str(seinfo[CLASS]).split(',')
+
+    toret = []
+
+    tertypes = []
+    if ALLOW in types:
+        tertypes.append(ALLOW)
+    if NEVERALLOW in types:
+        tertypes.append(NEVERALLOW)
+    if AUDITALLOW in types:
+        tertypes.append(AUDITALLOW)
+
+    if len(tertypes) > 0:
+        q = setools.TERuleQuery(_pol,
+                                ruletype=tertypes,
+                                source=source,
+                                target=target,
+                                tclass=tclass)
+
+        if PERMS in seinfo:
+            q.perms = seinfo[PERMS]
+
+        toret += [_setools_rule_to_dict(x) for x in q.results()]
+
+    if TRANSITION in types:
+        rtypes = ['type_transition', 'type_change', 'type_member']
+        q = setools.TERuleQuery(_pol,
+                                ruletype=rtypes,
+                                source=source,
+                                target=target,
+                                tclass=tclass)
+
+        if PERMS in seinfo:
+            q.perms = seinfo[PERMS]
+
+        toret += [_setools_rule_to_dict(x) for x in q.results()]
+
+    if ROLE_ALLOW in types:
+        ratypes = ['allow']
+        q = setools.RBACRuleQuery(_pol,
+                                  ruletype=ratypes,
+                                  source=source,
+                                  target=target,
+                                  tclass=tclass)
+
+        for r in q.results():
+            toret.append({'source': str(r.source),
+                          'target': str(r.target)})
+
+    return toret
 
 
 def get_conditionals(src, dest, tclass, perm):
