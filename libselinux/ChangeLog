@@ -1,3 +1,4 @@
+	* Add openrc_contexts functions, from Jason Zaman.
 	* Fix redefinition of XATTR_NAME_SELINUX, from William Roberts.
 	* sefcontext_compile: cleanup confusing usage message, from Janis Danisevskis.
 	* Correct error path to always try text, from William Roberts.
