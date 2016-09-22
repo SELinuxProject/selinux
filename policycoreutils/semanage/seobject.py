@@ -32,7 +32,6 @@ import socket
 from semanage import *
 PROGNAME = "policycoreutils"
 import sepolicy
-sepolicy.gen_bool_dict()
 from IPy import IP
 
 try:
@@ -1038,7 +1037,7 @@ class seluserRecords(semanageRecords):
 
 class portRecords(semanageRecords):
     try:
-        valid_types = sepolicy.info(sepolicy.ATTRIBUTE, "port_type")[0]["types"]
+        valid_types = list(list(sepolicy.info(sepolicy.ATTRIBUTE, "port_type"))[0]["types"])
     except RuntimeError:
         valid_types = []
 
@@ -1313,7 +1312,7 @@ class portRecords(semanageRecords):
 
 class nodeRecords(semanageRecords):
     try:
-        valid_types = sepolicy.info(sepolicy.ATTRIBUTE, "node_type")[0]["types"]
+        valid_types = list(list(sepolicy.info(sepolicy.ATTRIBUTE, "node_type"))[0]["types"])
     except RuntimeError:
         valid_types = []
 
@@ -1744,8 +1743,8 @@ class interfaceRecords(semanageRecords):
 
 class fcontextRecords(semanageRecords):
     try:
-        valid_types = sepolicy.info(sepolicy.ATTRIBUTE, "file_type")[0]["types"]
-        valid_types += sepolicy.info(sepolicy.ATTRIBUTE, "device_node")[0]["types"]
+        valid_types = list(list(sepolicy.info(sepolicy.ATTRIBUTE, "file_type"))[0]["types"])
+        valid_types += list(list(sepolicy.info(sepolicy.ATTRIBUTE, "device_node"))[0]["types"])
         valid_types.append("<<none>>")
     except RuntimeError:
         valid_types = []

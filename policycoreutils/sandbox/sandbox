@@ -301,7 +301,7 @@ kill -TERM $WM_PID  2> /dev/null
             types = _("""
 Policy defines the following types for use with the -t:
 \t%s
-""") % "\n\t".join(sepolicy.info(sepolicy.ATTRIBUTE, "sandbox_type")[0]['types'])
+""") % "\n\t".join(list(sepolicy.info(sepolicy.ATTRIBUTE, "sandbox_type"))[0]['types'])
         except RuntimeError:
             pass
 
