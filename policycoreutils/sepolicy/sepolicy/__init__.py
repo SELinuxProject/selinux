@@ -2,9 +2,11 @@
 
 # Author: Dan Walsh <dwalsh@redhat.com>
 # Author: Ryan Hallisey <rhallise@redhat.com>
+# Author: Jason Zaman <perfinion@gentoo.org>
 
 from . import _policy
 import selinux
+import setools
 import glob
 import sepolgen.defaults as defaults
 import sepolgen.interfaces as interfaces
@@ -31,13 +33,13 @@ except:
         import __builtin__
         __builtin__.__dict__['_'] = unicode
 
-TYPE = _policy.TYPE
-ROLE = _policy.ROLE
-ATTRIBUTE = _policy.ATTRIBUTE
-PORT = _policy.PORT
-USER = _policy.USER
-BOOLEAN = _policy.BOOLEAN
-TCLASS = _policy.CLASS
+TYPE = 1
+ROLE = 2
+ATTRIBUTE = 3
+PORT = 4
+USER = 5
+BOOLEAN = 6
+TCLASS = 7
 
 ALLOW = 'allow'
 AUDITALLOW = 'auditallow'
@@ -87,6 +89,9 @@ trans_file_type_str["-b"] = "b"
 trans_file_type_str["-s"] = "s"
 trans_file_type_str["-l"] = "l"
 trans_file_type_str["-p"] = "p"
+
+# the setools policy handle
+_pol = None
 
 # cache the lookup results
 file_equiv_modified = None
@@ -145,6 +150,7 @@ def policy(policy_file):
 
     try:
         _policy.policy(policy_file)
+        _pol = setools.SELinuxPolicy(policy_file)
     except:
         raise ValueError(_("Failed to read %s policy file") % policy_file)
 
