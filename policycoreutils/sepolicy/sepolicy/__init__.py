@@ -460,12 +460,12 @@ def get_all_entrypoints():
 
 
 def get_entrypoint_types(setype):
-    entrypoints = []
-    try:
-        entrypoints = map(lambda x: x['target'], filter(lambda x: x['source'] == setype, search([ALLOW], {'source': setype, 'permlist': ['entrypoint'], 'class': 'file'})))
-    except TypeError:
-        pass
-    return entrypoints
+    q = setools.TERuleQuery(_pol,
+                            ruletype=[ALLOW],
+                            source=setype,
+                            tclass=["file"],
+                            perms=["entrypoint"])
+    return [str(x.target) for x in q.results() if x.source == setype]
 
 
 def get_init_transtype(path):
@@ -481,14 +481,19 @@ def get_init_transtype(path):
 
 
 def get_init_entrypoint(transtype):
-    try:
-        entrypoints = filter(lambda x: x['transtype'] == transtype, search([TRANSITION], {'source': "init_t", 'class': 'process'}))
-        if len(entrypoints) == 0:
-            return None
-        return entrypoints[0]["target"]
-    except TypeError:
-        pass
-    return None
+    q = setools.TERuleQuery(_pol,
+                            ruletype=["type_transition"],
+                            source="init_t",
+                            tclass=["process"])
+    entrypoints = []
+    for i in q.results():
+        try:
+            if i.default == transtype:
+                entrypoints.append(i.target)
+        except AttributeError:
+            continue
+
+    return entrypoints
 
 
 def get_init_entrypoint_target(entrypoint):
@@ -551,13 +556,17 @@ def get_all_role_allows():
     if role_allows:
         return role_allows
     role_allows = {}
-    for r in search([ROLE_ALLOW]):
-        if r["source"] == "system_r" or r["target"] == "system_r":
+
+    q = setools.RBACRuleQuery(_pol, ruletype='allow')
+    for r in q.results():
+        src = str(r.source)
+        tgt = str(r.target)
+        if src == "system_r" or tgt == "system_r":
             continue
-        if r["source"] in role_allows:
-            role_allows[r["source"]].append(r["target"])
+        if src in role_allows:
+            role_allows[src].append(tgt)
         else:
-            role_allows[r["source"]] = [r["target"]]
+            role_allows[src] = [tgt]
 
     return role_allows
 
