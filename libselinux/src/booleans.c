@@ -63,12 +63,11 @@ int security_get_boolean_names(char ***names, int *len)
 	}
 
 	for (i = 0; i < *len; i++) {
-		n[i] = (char *)malloc(_D_ALLOC_NAMLEN(namelist[i]));
+		n[i] = strdup(namelist[i]->d_name);
 		if (!n[i]) {
 			rc = -1;
 			goto bad_freen;
 		}
-		strcpy(n[i], namelist[i]->d_name);
 	}
 	rc = 0;
 	*names = n;
