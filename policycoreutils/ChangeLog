@@ -1,3 +1,5 @@
+	* sandbox: create a new session for sandboxed processes, from Petr Lautrbach.
+	* sandbox: do not try to setup directories without -X or -M, from Petr Lautrbach.
 	* sandbox: do not run xmodmap in a new X session, from Petr Lautrbach.
 	* sandbox: Use GObject introspection binding instead of pygtk2, from Petr Lautrbach and Laurent Bigonville.
 	* sandbox: fix file labels on copied files, from Petr Lautrbach.
