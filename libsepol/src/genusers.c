@@ -53,6 +53,7 @@ static int load_users(struct policydb *policydb, const char *path)
 	}
 
 	while(fgets(buffer, 255, fp) != NULL) {
+		nread = strlen(buffer);
 #else
 	size_t len = 0;
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
