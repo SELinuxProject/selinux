@@ -503,7 +503,8 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
         try:
             self.__parse_options()
             self.__gen_context()
-            self.__setup_dir()
+            if self.__mount:
+                self.__setup_dir()
             return self.__execute()
         except KeyboardInterrupt:
             sys.exit(0)
