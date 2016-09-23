@@ -1,3 +1,4 @@
+	* Kill logging check for selinux_enabled(), from William Roberts.
 	* Drop usage of _D_ALLOC_NAMLEN, from William Roberts.
 	* Add openrc_contexts functions, from Jason Zaman.
 	* Fix redefinition of XATTR_NAME_SELINUX, from William Roberts.
