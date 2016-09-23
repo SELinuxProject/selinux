@@ -18,7 +18,7 @@ BASHCOMPLETIONS=sepolicy-bash-completion.sh
 
 all: python-build
 
-python-build: info.c search.c common.h policy.h policy.c
+python-build:
 	$(PYTHON) setup.py build
 
 clean:

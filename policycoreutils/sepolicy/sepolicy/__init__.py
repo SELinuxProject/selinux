@@ -4,7 +4,6 @@
 # Author: Ryan Hallisey <rhallise@redhat.com>
 # Author: Jason Zaman <perfinion@gentoo.org>
 
-from . import _policy
 import selinux
 import setools
 import glob
@@ -149,7 +148,6 @@ def policy(policy_file):
     global _pol
 
     try:
-        _policy.policy(policy_file)
         _pol = setools.SELinuxPolicy(policy_file)
     except:
         raise ValueError(_("Failed to read %s policy file") % policy_file)

@@ -61,8 +61,6 @@ POTFILES = \
 	../gui/usersPage.py \
 	../secon/secon.c \
 	booleans.py \
-	../sepolicy/info.c \
-	../sepolicy/search.c \
 	../sepolicy/sepolicy.py \
 	../sepolicy/sepolicy/communicate.py \
 	../sepolicy/sepolicy/__init__.py \
