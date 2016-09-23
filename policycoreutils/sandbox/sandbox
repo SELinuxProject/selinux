@@ -471,10 +471,15 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
                     cmds += ["--"] + self.__paths
                 return subprocess.Popen(cmds).wait()
 
-            selinux.setexeccon(self.__execcon)
-            rc = subprocess.Popen(self.__cmds).wait()
-            selinux.setexeccon(None)
-            return rc
+            pid = os.fork()
+            if pid == 0:
+                rc = os.setsid()
+                if rc:
+                    return rc
+                selinux.setexeccon(self.__execcon)
+                os.execv(self.__cmds[0], self.__cmds)
+            rc = os.waitpid(pid, 0)
+            return os.WEXITSTATUS(rc[1])
 
         finally:
             for i in self.__paths:
