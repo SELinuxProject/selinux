@@ -68,7 +68,6 @@ static int load_booleans(struct policydb *policydb, const char *path,
 {
 	FILE *boolf;
 	char *buffer = NULL;
-	size_t size = 0;
 	char localbools[BUFSIZ];
 	char name[BUFSIZ];
 	int val;
@@ -87,6 +86,7 @@ static int load_booleans(struct policydb *policydb, const char *path,
 
         while(fgets(buffer, 255, boolf) != NULL) {
 #else
+	size_t size = 0;
 	while (getline(&buffer, &size, boolf) > 0) {
 #endif
 		int ret = process_boolean(buffer, name, sizeof(name), &val);
