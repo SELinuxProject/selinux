@@ -36,7 +36,6 @@ static int load_users(struct policydb *policydb, const char *path)
 {
 	FILE *fp;
 	char *buffer = NULL, *p, *q, oldc;
-	size_t len = 0;
 	ssize_t nread;
 	unsigned lineno = 0, islist = 0, bit;
 	user_datum_t *usrdatum;
@@ -55,6 +54,7 @@ static int load_users(struct policydb *policydb, const char *path)
 
 	while(fgets(buffer, 255, fp) != NULL) {
 #else
+	size_t len = 0;
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
 	while ((nread = getline(&buffer, &len, fp)) > 0) {
 #endif
