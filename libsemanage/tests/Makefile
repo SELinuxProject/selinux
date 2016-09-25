@@ -10,7 +10,6 @@ LIBS = ../src/libsemanage.a ../../libselinux/src/libselinux.a ../../libsepol/src
 ###########################################################################
 
 EXECUTABLE = libsemanage-tests
-CC = gcc
 CFLAGS += -g -O0 -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
 INCLUDE = -I$(TESTSRC) -I$(TESTSRC)/../include
 LDFLAGS += -lcunit -lustr -lbz2 -laudit
