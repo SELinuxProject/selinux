@@ -4,7 +4,23 @@ setfiles \- set SELinux file security contexts.
 
 .SH "SYNOPSIS"
 .B setfiles
-.I [\-c policy] [\-d] [\-l] [\-m] [\-n] [\-e directory] [\-o filename] [\-p] [\-q] [\-s] [\-v] [\-W] [\-F] [\-I] spec_file pathname...
+.RB [ \-c
+.IR policy ]
+.RB [ \-d ]
+.RB [ \-l ]
+.RB [ \-m ]
+.RB [ \-n ]
+.RB [ \-e
+.IR directory ]
+.RB [ \-p ]
+.RB [ \-s ]
+.RB [ \-v ]
+.RB [ \-W ]
+.RB [ \-F ]
+.RB [ \-I | \-D ]
+.I spec_file
+.IR pathname \ ...
+
 .SH "DESCRIPTION"
 This manual page describes the
 .BR setfiles
@@ -16,14 +32,24 @@ them).  Usually it is initially run as part of the SELinux installation
 process (a step commonly known as labeling).
 .P
 It can also be run at any other time to correct inconsistent labels, to add
-support for newly-installed policy or, by using the \-n option, to passively
+support for newly-installed policy or, by using the
+.B \-n
+option, to passively
 check whether the file contexts are all set as specified by the active policy
-(default behavior) or by some other policy (see the \-c option).
+(default behavior) or by some other policy (see the
+.B \-c
+option).
 .P
-If a file object does not have a context, setfiles will write the default
+If a file object does not have a context,
+.B setfiles
+will write the default
 context to the file object's extended attributes. If a file object has a
-context, setfiles will only modify the type portion of the security context.
-The \-F option will force a replacement of the entire context.
+context,
+.B setfiles
+will only modify the type portion of the security context.
+The
+.B \-F
+option will force a replacement of the entire context.
 .SH "OPTIONS"
 .TP
 .B \-c
@@ -33,11 +59,15 @@ check the validity of the contexts against the specified binary policy.
 show what specification matched each file (do not abort validation
 after ABORT_ON_ERRORS errors).
 .TP
-.B \-e directory
+.BI \-e \ directory
 directory to exclude (repeat option for more than one directory).
 .TP
-.B \-f
-take a list of files to be processed from an input file.
+.BI \-f \ infilename
+.I infilename
+contains a list of files to be processed. Use
+.RB \*(lq \- \*(rq
+for
+.BR stdin .
 .TP
 .B \-F
 Force reset of context to match file_context for customizable files, and the
@@ -57,6 +87,14 @@ there are no errors. See the
 .B NOTES
 section for further details.
 .TP
+.B \-D
+do not set or update any directory SHA1 digests. Use this option to
+effectively disable usage of the
+.IR security.restorecon_last
+extended attribute. Note that using this option will override the
+.B \-I
+option.
+.TP
 .B \-l
 log changes in file labels to syslog.
 .TP
@@ -70,7 +108,7 @@ seclabel fs mounted on a directory below this.
 .B \-n
 don't change any file labels (passive check).
 .TP
-.B \-o filename
+.BI \-o \ filename
 Deprecated, SELinux policy will probably block this access.  Use shell redirection to save list of files with incorrect context in filename.
 .TP
 .B \-p
@@ -84,15 +122,18 @@ options are mutually exclusive.
 .B \-q
 Deprecated, was only used to stop printing inode association parameters.
 .TP 
-.B \-r rootpath
+.BI \-r \ rootpath
 use an alternate root path. Used in meta-selinux for OpenEmbedded/Yocto builds
 to label files under
-.B rootpath
-as if they were at /
+.I rootpath
+as if they were at
+.B /
 .TP 
 .B \-s
 take a list of files from standard input instead of using a pathname from the
-command line (equivalent to \-f \-).
+command line (equivalent to
+.RB \*(lq "\-f \-" \*(rq
+).
 .TP
 .B \-v
 show changes in file labels and output any inode association parameters.
@@ -120,26 +161,43 @@ option of GNU
 produces input suitable for this mode.
 
 .SH "ARGUMENTS"
-.B spec_file
-The specification file which contains lines of the following form
-.br
-.B regexp [ \-type ] ( context | <<none>> )
-.br
-The regular expression is anchored at both ends.  The optional type field 
-specifies the file type as shown in the mode field by the
-.B ls(1)
-program, e.g. \-\- to match only regular files or \-d to match only
-directories.  The context can be an ordinary security context or the
-string <<none>> to specify that the file is not to have its context
+.TP
+.I spec_file
+The specification file which contains lines of the following form:
+.sp
+.RS
+.I regexp
+.RI [ type ]
+.IR context \ |
+.B <<none>>
+.RS
+The regular expression is anchored at both ends.  The optional
+.I type
+field specifies the file type as shown in the mode field by the
+.BR ls (1)
+program, e.g.
+.B \-\-
+to match only regular files or
+.B \-d
+to match only
+directories.  The
+.I context
+can be an ordinary security context or the
+string
+.B <<none>>
+to specify that the file is not to have its context
 changed.
 .br
 The last matching specification is used. If there are multiple hard
 links to a file that match different specifications and those
 specifications indicate different security contexts, then a warning is
 displayed but the file is still labeled based on the last matching
-specification other than <<none>>.
+specification other than
+.BR <<none>> \|.
+.RE
+.RE
 .TP 
-.B pathname...
+.IR pathname \ ...
 The pathname for the root directory of each file system to be relabeled
 or a specific directory within a filesystem that should be recursively
 descended and relabeled or the pathname of a file that should be
@@ -156,7 +214,7 @@ option is used.
 follows symbolic links and operates recursively on directories.
 .IP "2." 4
 If the
-.B pathname
+.I pathname
 specifies the root directory and the
 .B \-v
 option is set and the audit system is running, then an audit event is
@@ -171,15 +229,15 @@ will write an SHA1 digest of the
 set to an extended attribute named
 .IR security.restorecon_last
 to the directory specified in each
-.B pathname...
+.IR pathname \ ...
 once the relabeling has been completed successfully. This digest will be
 checked should
 .B setfiles
 be rerun
 with the same
-.B spec_file
+.I spec_file
 and
-.B pathname
+.I pathname
 parameters. See
 .BR selinux_restorecon (3)
 for further details.
@@ -187,7 +245,7 @@ for further details.
 The
 .B \-I
 option will ignore the SHA1 digest from each directory specified in
-.B pathname...
+.IR pathname \ ...
 and provided the
 .B \-n
 option is NOT set, files will be relabeled as required with the digest then

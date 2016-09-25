@@ -17,6 +17,7 @@
 static char *policyfile;
 static int warn_no_match;
 static int null_terminated;
+static int request_digest;
 static struct restore_opts r_opts;
 static int nerr;
 
@@ -42,14 +43,14 @@ void usage(const char *const name)
 {
 	if (iamrestorecon) {
 		fprintf(stderr,
-			"usage:  %s [-iIFmnprRv0] [-e excludedir] pathname...\n"
-			"usage:  %s [-iIFmnprRv0] [-e excludedir] -f filename\n",
+			"usage:  %s [-iIDFmnprRv0] [-e excludedir] pathname...\n"
+			"usage:  %s [-iIDFmnprRv0] [-e excludedir] -f filename\n",
 			name, name);
 	} else {
 		fprintf(stderr,
-			"usage:  %s [-diIlmnpqvFW] [-e excludedir] [-r alt_root_path] spec_file pathname...\n"
-			"usage:  %s [-diIlmnpqvFW] [-e excludedir] [-r alt_root_path] spec_file -f filename\n"
-			"usage:  %s -s [-diIlmnpqvFW] spec_file\n"
+			"usage:  %s [-diIDlmnpqvFW] [-e excludedir] [-r alt_root_path] spec_file pathname...\n"
+			"usage:  %s [-diIDlmnpqvFW] [-e excludedir] [-r alt_root_path] spec_file -f filename\n"
+			"usage:  %s -s [-diIDlmnpqvFW] spec_file\n"
 			"usage:  %s -c policyfile spec_file\n",
 			name, name, name, name);
 	}
@@ -147,8 +148,8 @@ int main(int argc, char **argv)
 	size_t buf_len;
 	const char *base;
 	int mass_relabel = 0, errors = 0;
-	const char *ropts = "e:f:hiIlmno:pqrsvFRW0";
-	const char *sopts = "c:de:f:hiIlmno:pqr:svFR:W0";
+	const char *ropts = "e:f:hiIDlmno:pqrsvFRW0";
+	const char *sopts = "c:de:f:hiIDlmno:pqr:svFR:W0";
 	const char *opts;
 
 	/* Initialize variables */
@@ -156,6 +157,7 @@ int main(int argc, char **argv)
 	altpath = NULL;
 	null_terminated = 0;
 	warn_no_match = 0;
+	request_digest = 1;
 	policyfile = NULL;
 	nerr = 0;
 
@@ -278,6 +280,12 @@ int main(int argc, char **argv)
 			r_opts.ignore_digest =
 					   SELINUX_RESTORECON_IGNORE_DIGEST;
 			break;
+		case 'D': /*
+			   * Don't request file_contexts digest in selabel_open
+			   * This will effectively disable usage of the
+			   * security.restorecon_last extended attribute.
+			   */
+			request_digest = 0;
 		case 'l':
 			r_opts.syslog_changes =
 					   SELINUX_RESTORECON_SYSLOG_CHANGES;
@@ -409,9 +417,9 @@ int main(int argc, char **argv)
 	} else if (argc == 1)
 		usage(argv[0]);
 
-	/* Set selabel_open options. Always request a digest. */
+	/* Set selabel_open options. */
 	r_opts.selabel_opt_validate = (ctx_validate ? (char *)1 : NULL);
-	r_opts.selabel_opt_digest = (char *)1;
+	r_opts.selabel_opt_digest = (request_digest ? (char *)1 : NULL);
 	r_opts.selabel_opt_path = altpath;
 
 	if (nerr)
