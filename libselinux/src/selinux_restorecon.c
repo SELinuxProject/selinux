@@ -781,7 +781,7 @@ int selinux_restorecon(const char *pathname_orig,
 		size = getxattr(pathname, RESTORECON_LAST, xattr_value,
 							    fc_digest_len);
 
-		if (!flags.ignore_digest && size == fc_digest_len &&
+		if (!flags.ignore_digest && (size_t)size == fc_digest_len &&
 			    memcmp(fc_digest, xattr_value, fc_digest_len)
 								    == 0) {
 			selinux_log(SELINUX_INFO,
