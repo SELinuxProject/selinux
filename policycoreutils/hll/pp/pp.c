@@ -142,7 +142,7 @@ int main(int argc, char **argv)
 			*separator = '\0';
 		}
 		if (strcmp(mod_name, cil_name) != 0) {
-			fprintf(stderr,	"Warning: SELinux userspace will refer to the module from %s as %s rather than %s\n", ifile, cil_name, mod_name);
+			fprintf(stderr,	"Warning: SELinux userspace will refer to the module from %s as %s rather than %s\n", ifile, mod_name, cil_name);
 		}
 		free(cil_path);
 	}

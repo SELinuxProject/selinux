@@ -363,6 +363,48 @@ static int semanage_direct_begintrans(semanage_handle_t * sh)
 
 /********************* utility functions *********************/
 
+/* Takes a module stored in 'module_data' and parses its headers.
+ * Sets reference variables 'module_name' to module's name, and
+ * 'version' to module's version.  The caller is responsible for
+ * free()ing 'module_name', and 'version'; they will be
+ * set to NULL upon entering this function.  Returns 0 on success, -1
+ * if out of memory, or -2 if data did not represent a module.
+ */
+static int parse_module_headers(semanage_handle_t * sh, char *module_data,
+                               size_t data_len, char **module_name,
+                               char **version)
+{
+       struct sepol_policy_file *pf;
+       int file_type;
+       *module_name = *version = NULL;
+
+       if (sepol_policy_file_create(&pf)) {
+               ERR(sh, "Out of memory!");
+               return -1;
+       }
+       sepol_policy_file_set_mem(pf, module_data, data_len);
+       sepol_policy_file_set_handle(pf, sh->sepolh);
+       if (module_data == NULL ||
+           data_len == 0 ||
+           sepol_module_package_info(pf, &file_type, module_name,
+                                     version) == -1) {
+               sepol_policy_file_free(pf);
+               ERR(sh, "Could not parse module data.");
+               return -2;
+       }
+       sepol_policy_file_free(pf);
+       if (file_type != SEPOL_POLICY_MOD) {
+               if (file_type == SEPOL_POLICY_BASE)
+                       ERR(sh,
+                           "Received a base module, expected a non-base module.");
+               else
+                       ERR(sh, "Data did not represent a module.");
+               return -2;
+       }
+
+       return 0;
+}
+
 #include <stdlib.h>
 #include <bzlib.h>
 #include <string.h>
@@ -1524,7 +1566,9 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 	char *path = NULL;
 	char *filename;
 	char *lang_ext = NULL;
+	char *module_name = NULL;
 	char *separator;
+	char *version = NULL;
 
 	if ((data_len = map_file(sh, install_filename, &data, &compressed)) <= 0) {
 		ERR(sh, "Unable to read file %s\n", install_filename);
@@ -1564,10 +1608,25 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 		lang_ext = separator + 1;
 	}
 
-	retval = semanage_direct_install(sh, data, data_len, filename, lang_ext);
+	if (strcmp(lang_ext, "pp") != 0) {
+		module_name = strdup(filename);
+		if (module_name == NULL) {
+			ERR(sh, "No memory available for module_name.\n");
+			retval = -1;
+			goto cleanup;
+		}
+	} else {
+		if ((retval = parse_module_headers(sh, data, data_len, &module_name, &version)) != 0)
+			goto cleanup;
+
+		fprintf(stderr, "Warning: SELinux userspace will refer to the module from %s as %s rather than %s\n", install_filename, module_name, filename);
+		free(version);
+	}
+	retval = semanage_direct_install(sh, data, data_len, module_name, lang_ext);
 
 cleanup:
 	if (data_len > 0) munmap(data, data_len);
+	free(module_name);
 	free(path);
 
 	return retval;
