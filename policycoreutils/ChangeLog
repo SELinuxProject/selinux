@@ -1,3 +1,4 @@
+	* hll/pp: Change warning for module name not matching filename to match new behavior, from Petr Lautrbach.
 	* Remove LDFLAGS from CFLAGS, from Nicolas Iooss.
 	* sepolicy: convert to setools4, from Jason Zaman.
 	* sandbox: create a new session for sandboxed processes, from Petr Lautrbach.
