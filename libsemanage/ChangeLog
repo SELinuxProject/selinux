@@ -1,3 +1,4 @@
+	* tests: Do not force using gcc, from Nicolas Iooss.
 	* genhomedircon: remove hardcoded refpolicy strings, from Gary Tierney.
 	* genhomedircon: add support for %group syntax, from Gary Tierney.
 	* genhomedircon: generate contexts for logins mapped to the default user, from Gary Tierney.
