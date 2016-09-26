@@ -7,6 +7,64 @@
 #include "callbacks.h"
 #include <limits.h>
 
+static int (*myinvalidcon) (const char *p, unsigned l, char *c) = NULL;
+static int (*mycanoncon) (const char *p, unsigned l, char **c) =  NULL;
+
+static void
+#ifdef __GNUC__
+    __attribute__ ((format(printf, 1, 2)))
+#endif
+    default_printf(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	va_end(ap);
+}
+
+void
+#ifdef __GNUC__
+    __attribute__ ((format(printf, 1, 2)))
+#endif
+    (*myprintf) (const char *fmt,...) = &default_printf;
+int myprintf_compat = 0;
+
+void set_matchpathcon_printf(void (*f) (const char *fmt, ...))
+{
+	myprintf = f ? f : &default_printf;
+	myprintf_compat = 1;
+}
+
+int compat_validate(struct selabel_handle *rec,
+		    struct selabel_lookup_rec *contexts,
+		    const char *path, unsigned lineno)
+{
+	int rc;
+	char **ctx = &contexts->ctx_raw;
+
+	if (myinvalidcon)
+		rc = myinvalidcon(path, lineno, *ctx);
+	else if (mycanoncon)
+		rc = mycanoncon(path, lineno, ctx);
+	else {
+		rc = selabel_validate(rec, contexts);
+		if (rc < 0) {
+			if (lineno) {
+				COMPAT_LOG(SELINUX_WARNING,
+					    "%s: line %u has invalid context %s\n",
+						path, lineno, *ctx);
+			} else {
+				COMPAT_LOG(SELINUX_WARNING,
+					    "%s: has invalid context %s\n", path, *ctx);
+			}
+		}
+	}
+
+	return rc ? -1 : 0;
+}
+
+#ifndef BUILD_HOST
+
 static __thread struct selabel_handle *hnd;
 
 /*
@@ -54,33 +112,6 @@ static void free_array_elts(void)
 	con_array = NULL;
 }
 
-static void
-#ifdef __GNUC__
-    __attribute__ ((format(printf, 1, 2)))
-#endif
-    default_printf(const char *fmt, ...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-	vfprintf(stderr, fmt, ap);
-	va_end(ap);
-}
-
-void
-#ifdef __GNUC__
-    __attribute__ ((format(printf, 1, 2)))
-#endif
-    (*myprintf) (const char *fmt,...) = &default_printf;
-int myprintf_compat = 0;
-
-void set_matchpathcon_printf(void (*f) (const char *fmt, ...))
-{
-	myprintf = f ? f : &default_printf;
-	myprintf_compat = 1;
-}
-
-static int (*myinvalidcon) (const char *p, unsigned l, char *c) = NULL;
-
 void set_matchpathcon_invalidcon(int (*f) (const char *p, unsigned l, char *c))
 {
 	myinvalidcon = f;
@@ -103,9 +134,6 @@ static int default_canoncon(const char *path, unsigned lineno, char **context)
 	*context = tmpcon;
 	return 0;
 }
-
-static int (*mycanoncon) (const char *p, unsigned l, char **c) =
-    NULL;
 
 void set_matchpathcon_canoncon(int (*f) (const char *p, unsigned l, char **c))
 {
@@ -536,30 +564,4 @@ int selinux_lsetfilecon_default(const char *path)
 	return rc;
 }
 
-int compat_validate(struct selabel_handle *rec,
-		    struct selabel_lookup_rec *contexts,
-		    const char *path, unsigned lineno)
-{
-	int rc;
-	char **ctx = &contexts->ctx_raw;
-
-	if (myinvalidcon)
-		rc = myinvalidcon(path, lineno, *ctx);
-	else if (mycanoncon)
-		rc = mycanoncon(path, lineno, ctx);
-	else {
-		rc = selabel_validate(rec, contexts);
-		if (rc < 0) {
-			if (lineno) {
-				COMPAT_LOG(SELINUX_WARNING,
-					    "%s: line %u has invalid context %s\n",
-						path, lineno, *ctx);
-			} else {
-				COMPAT_LOG(SELINUX_WARNING,
-					    "%s: has invalid context %s\n", path, *ctx);
-			}
-		}
-	}
-
-	return rc ? -1 : 0;
-}
+#endif

@@ -543,6 +543,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 			break;
 		}
 
+#if !defined(BUILD_HOST) && !defined(ANDROID)
 	/* Process local and distribution substitution files */
 	if (!path) {
 		rec->dist_subs =
@@ -560,6 +561,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 							    rec->digest);
 	}
 
+#endif
 	rec->spec_file = strdup(path);
 
 	/*

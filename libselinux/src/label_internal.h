@@ -16,6 +16,11 @@
 #include "dso.h"
 #include "sha1.h"
 
+#ifdef ANDROID
+// Android does not have fgets_unlocked()
+#define fgets_unlocked(buf, size, fp) fgets(buf, size, fp)
+#endif
+
 /*
  * Installed backends
  */
