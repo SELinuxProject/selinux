@@ -1,3 +1,5 @@
+	* Add ifdef'ing for ANDROID and BUILD_HOST, from William Roberts.
+	* Introduce configurable backends, from William Roberts.
 	* Add function to find security.restorecon_last entries, from Richard Haines.
 	* Fix -Wsign-compare warnings, from Nicolas Iooss.
 	* Drop unused stdio_ext.h header file, from William Roberts.
