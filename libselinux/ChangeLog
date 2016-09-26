@@ -1,3 +1,4 @@
+	* Drop unused stdio_ext.h header file, from William Roberts.
 	* Kill logging check for selinux_enabled(), from William Roberts.
 	* Drop usage of _D_ALLOC_NAMLEN, from William Roberts.
 	* Add openrc_contexts functions, from Jason Zaman.
