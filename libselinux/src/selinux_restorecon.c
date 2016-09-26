@@ -64,6 +64,10 @@ static struct edir *exclude_lst = NULL;
 static uint64_t fc_count = 0;	/* Number of files processed so far */
 static uint64_t efile_count;	/* Estimated total number of files */
 
+/* Store information on directories with xattr's. */
+struct dir_xattr *dir_xattr_list;
+static struct dir_xattr *dir_xattr_last;
+
 /*
  * If SELINUX_RESTORECON_PROGRESS is set and mass_relabel = true, then
  * output approx % complete, else output * for every STAR_COUNT files
@@ -290,6 +294,90 @@ static int exclude_non_seclabel_mounts(void)
 	fclose(fp);
 	/* return estimated #Files + 5% for directories and hard links */
 	return nfile * 1.05;
+}
+
+/* Called by selinux_restorecon_xattr(3) to build a linked list of entries. */
+static int add_xattr_entry(const char *directory, bool delete_nonmatch,
+			   bool delete_all)
+{
+	char *sha1_buf = NULL;
+	unsigned char *xattr_value = NULL;
+	ssize_t xattr_size;
+	size_t i;
+	int rc, digest_result;
+	struct dir_xattr *new_entry;
+
+	if (!directory) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	xattr_value = malloc(fc_digest_len);
+	if (!xattr_value)
+		goto oom;
+
+	xattr_size = getxattr(directory, RESTORECON_LAST, xattr_value,
+			      fc_digest_len);
+	if (xattr_size < 0) {
+		free(xattr_value);
+		return 1;
+	}
+
+	/* Convert entry to a hex encoded string. */
+	sha1_buf = malloc(xattr_size * 2 + 1);
+	if (!sha1_buf) {
+		free(xattr_value);
+		goto oom;
+	}
+
+	for (i = 0; i < (size_t)xattr_size; i++)
+		sprintf((&sha1_buf[i * 2]), "%02x", xattr_value[i]);
+
+	rc = memcmp(fc_digest, xattr_value, fc_digest_len);
+	digest_result = rc ? NOMATCH : MATCH;
+
+	if ((delete_nonmatch && rc != 0) || delete_all) {
+		digest_result = rc ? DELETED_NOMATCH : DELETED_MATCH;
+		rc = removexattr(directory, RESTORECON_LAST);
+		if (rc) {
+			selinux_log(SELINUX_ERROR,
+				  "Error: %s removing xattr \"%s\" from: %s\n",
+				  strerror(errno), RESTORECON_LAST, directory);
+			digest_result = ERROR;
+		}
+	}
+	free(xattr_value);
+
+	/* Now add entries to link list. */
+	new_entry = malloc(sizeof(struct dir_xattr));
+	if (!new_entry)
+		goto oom;
+	new_entry->next = NULL;
+
+	new_entry->directory = strdup(directory);
+	if (!new_entry->directory)
+		goto oom;
+
+	new_entry->digest = strdup(sha1_buf);
+	if (!new_entry->digest)
+		goto oom;
+
+	new_entry->result = digest_result;
+
+	if (!dir_xattr_list) {
+		dir_xattr_list = new_entry;
+		dir_xattr_last = new_entry;
+	} else {
+		dir_xattr_last->next = new_entry;
+		dir_xattr_last = new_entry;
+	}
+
+	free(sha1_buf);
+	return 0;
+
+oom:
+	selinux_log(SELINUX_ERROR, "%s:  Out of memory\n", __func__);
+	return -1;
 }
 
 /*
@@ -1027,4 +1115,123 @@ int selinux_restorecon_set_alt_rootpath(const char *alt_rootpath)
 	rootpathlen = len;
 
 	return 0;
+}
+
+/* selinux_restorecon_xattr(3) - Find RESTORECON_LAST entries. */
+int selinux_restorecon_xattr(const char *pathname, unsigned int xattr_flags,
+					    struct dir_xattr ***xattr_list)
+{
+	bool recurse = (xattr_flags &
+	    SELINUX_RESTORECON_XATTR_RECURSE) ? true : false;
+	bool delete_nonmatch = (xattr_flags &
+	    SELINUX_RESTORECON_XATTR_DELETE_NONMATCH_DIGESTS) ? true : false;
+	bool delete_all = (xattr_flags &
+	    SELINUX_RESTORECON_XATTR_DELETE_ALL_DIGESTS) ? true : false;
+	ignore_mounts = (xattr_flags &
+	   SELINUX_RESTORECON_XATTR_IGNORE_MOUNTS) ? true : false;
+
+	int rc, fts_flags;
+	struct stat sb;
+	struct statfs sfsb;
+	struct dir_xattr *current, *next;
+	FTS *fts;
+	FTSENT *ftsent;
+	char *paths[2] = { NULL, NULL };
+
+	__selinux_once(fc_once, restorecon_init);
+
+	if (!fc_sehandle || !fc_digest_len)
+		return -1;
+
+	if (lstat(pathname, &sb) < 0) {
+		if (errno == ENOENT)
+			return 0;
+
+		selinux_log(SELINUX_ERROR,
+			    "lstat(%s) failed: %s\n",
+			    pathname, strerror(errno));
+		return -1;
+	}
+
+	if (!recurse) {
+		if (statfs(pathname, &sfsb) == 0) {
+			if (sfsb.f_type == RAMFS_MAGIC ||
+			    sfsb.f_type == TMPFS_MAGIC)
+				return 0;
+		}
+
+		if (check_excluded(pathname))
+			return 0;
+
+		rc = add_xattr_entry(pathname, delete_nonmatch, delete_all);
+
+		if (!rc && dir_xattr_list)
+			*xattr_list = &dir_xattr_list;
+		else if (rc == -1)
+			return rc;
+
+		return 0;
+	}
+
+	paths[0] = (char *)pathname;
+	fts_flags = FTS_PHYSICAL | FTS_NOCHDIR;
+
+	fts = fts_open(paths, fts_flags, NULL);
+	if (!fts) {
+		selinux_log(SELINUX_ERROR,
+			    "fts error on %s: %s\n",
+			    paths[0], strerror(errno));
+		return -1;
+	}
+
+	while ((ftsent = fts_read(fts)) != NULL) {
+		switch (ftsent->fts_info) {
+		case FTS_DP:
+			continue;
+		case FTS_D:
+			if (statfs(ftsent->fts_path, &sfsb) == 0) {
+				if (sfsb.f_type == RAMFS_MAGIC ||
+				    sfsb.f_type == TMPFS_MAGIC)
+					continue;
+			}
+			if (check_excluded(ftsent->fts_path)) {
+				fts_set(fts, ftsent, FTS_SKIP);
+				continue;
+			}
+
+			rc = add_xattr_entry(ftsent->fts_path,
+					     delete_nonmatch, delete_all);
+			if (rc == 1)
+				continue;
+			else if (rc == -1)
+				goto cleanup;
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (dir_xattr_list)
+		*xattr_list = &dir_xattr_list;
+
+	(void) fts_close(fts);
+	return 0;
+
+cleanup:
+	rc = errno;
+	(void) fts_close(fts);
+	errno = rc;
+
+	if (dir_xattr_list) {
+		/* Free any used memory */
+		current = dir_xattr_list;
+		while (current) {
+			next = current->next;
+			free(current->directory);
+			free(current->digest);
+			free(current);
+			current = next;
+		}
+	}
+	return -1;
 }

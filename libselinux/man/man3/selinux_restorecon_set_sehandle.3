@@ -25,11 +25,6 @@ is generally used when customised
 .BR selabel_open (3)
 parameters are required to perform relabeling operations with
 .BR selinux_restorecon (3).
-.sp
-.BR selinux_restorecon_set_sehandle ()
-will output to the default SELinux log information regarding whether a digest
-is available or not. If it were available, the message will contain the SHA1
-digest and a list of specfiles used to compute the digest.
 .
 .SH "SEE ALSO"
 .BR selinux_restorecon (3),
@@ -38,4 +33,6 @@ digest and a list of specfiles used to compute the digest.
 .br
 .BR selinux_restorecon_default_handle (3),
 .br
-.BR selinux_restorecon_set_alt_rootpath (3)
+.BR selinux_restorecon_set_alt_rootpath (3),
+.br
+.BR selinux_restorecon_xattr (3)

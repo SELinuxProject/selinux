@@ -128,6 +128,54 @@ extern void selinux_restorecon_set_exclude_list(const char **exclude_list);
  */
 extern int selinux_restorecon_set_alt_rootpath(const char *alt_rootpath);
 
+/**
+ * selinux_restorecon_xattr - Read/remove RESTORECON_LAST xattr entries.
+ * @pathname: specifies directory path to check.
+ * @xattr_flags: specifies the actions to be performed.
+ * @xattr_list: a linked list of struct dir_xattr structures containing
+ *              the directory, digest and result of the action on the
+ *              RESTORECON_LAST entry.
+ *
+ * selinux_restorecon_xattr(3) will automatically call
+ * selinux_restorecon_default_handle(3) and selinux_restorecon_set_sehandle(3)
+ * first time through to set the selabel_open(3) parameters to use the
+ * currently loaded policy file_contexts and request their computed digest.
+ *
+ * Should other selabel_open(3) parameters be required see
+ * selinux_restorecon_set_sehandle(3), however note that a file_contexts
+ * computed digest is required for selinux_restorecon_xattr().
+ */
+enum digest_result {
+	MATCH = 0,
+	NOMATCH,
+	DELETED_MATCH,
+	DELETED_NOMATCH,
+	ERROR
+};
+
+struct dir_xattr {
+	char *directory;
+	char *digest; /* A hex encoded string that can be printed. */
+	enum digest_result result;
+	struct dir_xattr *next;
+};
+
+extern int selinux_restorecon_xattr(const char *pathname,
+				    unsigned int xattr_flags,
+				    struct dir_xattr ***xattr_list);
+
+/*
+ * xattr_flags options
+ */
+/* Recursively descend directories. */
+#define SELINUX_RESTORECON_XATTR_RECURSE			0x0001
+/* Delete non-matching digests from each directory in pathname. */
+#define SELINUX_RESTORECON_XATTR_DELETE_NONMATCH_DIGESTS	0x0002
+/* Delete all digests found in pathname. */
+#define SELINUX_RESTORECON_XATTR_DELETE_ALL_DIGESTS		0x0004
+/* Do not read /proc/mounts. */
+#define SELINUX_RESTORECON_XATTR_IGNORE_MOUNTS			0x0008
+
 #ifdef __cplusplus
 }
 #endif
