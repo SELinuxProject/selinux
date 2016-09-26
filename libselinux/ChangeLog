@@ -1,3 +1,4 @@
+	* sefcontext_compile: do not fail silently, from Stephen Smalley.
 	* Add ifdef'ing for ANDROID and BUILD_HOST, from William Roberts.
 	* Introduce configurable backends, from William Roberts.
 	* Add function to find security.restorecon_last entries, from Richard Haines.
