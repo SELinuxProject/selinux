@@ -56,5 +56,6 @@ void restore_init(struct restore_opts *opts);
 void restore_finish(void);
 void add_exclude(const char *directory);
 int process_glob(char *name, struct restore_opts *opts);
+extern char **exclude_list;
 
 #endif

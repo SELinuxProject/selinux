@@ -17,12 +17,14 @@ ifeq ($(AUDITH), /usr/include/libaudit.h)
 	LDLIBS += -laudit
 endif
 
-all: setfiles restorecon man
+all: setfiles restorecon restorecon_xattr man
 
 setfiles:  setfiles.o restore.o
 
 restorecon: setfiles
 	ln -sf setfiles restorecon
+
+restorecon_xattr:  restorecon_xattr.o restore.o
 
 man:
 	@cp -af setfiles.8 setfiles.8.man
@@ -35,14 +37,16 @@ install: all
 	-mkdir -p $(SBINDIR)
 	install -m 755 setfiles $(SBINDIR)
 	(cd $(SBINDIR) && ln -sf setfiles restorecon)
+	install -m 755 restorecon_xattr $(SBINDIR)
 	install -m 644 setfiles.8.man $(MANDIR)/man8/setfiles.8
 	install -m 644 restorecon.8.man $(MANDIR)/man8/restorecon.8
+	install -m 644 restorecon_xattr.8 $(MANDIR)/man8/restorecon_xattr.8
 
 clean:
-	rm -f setfiles restorecon *.o setfiles.8.man restorecon.8.man
+	rm -f setfiles restorecon restorecon_xattr *.o setfiles.8.man restorecon.8.man
 
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])
 
 relabel: install
-	$(SBINDIR)/restorecon $(SBINDIR)/setfiles
+	$(SBINDIR)/restorecon $(SBINDIR)/setfiles $(SBINDIR)/restorecon_xattr
