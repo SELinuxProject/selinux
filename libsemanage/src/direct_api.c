@@ -1619,7 +1619,9 @@ static int semanage_direct_install_file(semanage_handle_t * sh,
 		if ((retval = parse_module_headers(sh, data, data_len, &module_name, &version)) != 0)
 			goto cleanup;
 
-		fprintf(stderr, "Warning: SELinux userspace will refer to the module from %s as %s rather than %s\n", install_filename, module_name, filename);
+		if (strcmp(module_name, filename) != 0)
+			fprintf(stderr, "Warning: SELinux userspace will refer to the module from %s as %s rather than %s\n", install_filename, module_name, filename);
+
 		free(version);
 	}
 	retval = semanage_direct_install(sh, data, data_len, module_name, lang_ext);
