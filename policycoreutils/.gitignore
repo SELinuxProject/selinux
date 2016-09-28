@@ -12,6 +12,7 @@ semodule_package/semodule_package
 semodule_package/semodule_unpackage
 sestatus/sestatus
 setfiles/restorecon
+setfiles/restorecon_xattr
 setfiles/setfiles
 setsebool/setsebool
 hll/pp/pp
