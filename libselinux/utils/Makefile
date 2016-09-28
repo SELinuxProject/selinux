@@ -36,9 +36,6 @@ sefcontext_compile: sefcontext_compile.o ../src/regex.o
 
 selinux_restorecon: LDLIBS += -lsepol
 
-ifeq ($(DISABLE_AVC),y)
-	UNUSED_TARGETS+=compute_av compute_create compute_member compute_relabel
-endif
 ifeq ($(DISABLE_BOOL),y)
 	UNUSED_TARGETS+=getsebool togglesebool
 endif

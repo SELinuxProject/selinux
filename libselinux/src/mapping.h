@@ -31,11 +31,4 @@ map_perm(security_class_t tclass, access_vector_t kperm);
 extern void
 map_decision(security_class_t tclass, struct av_decision *avd);
 
-/*mapping is not used for embedded build*/
-#ifdef DISABLE_AVC 
-#define unmap_perm(x,y) y
-#define unmap_class(x) x
-#define map_decision(x,y) 
-#endif
-
 #endif				/* _SELINUX_MAPPING_H_ */
