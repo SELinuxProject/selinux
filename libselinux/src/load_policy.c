@@ -256,7 +256,6 @@ checkbool:
 			}
 		}
 		
-#ifndef DISABLE_BOOL
 		if (preservebools) {
 			int *values, len, i;
 			char **names;
@@ -279,7 +278,6 @@ checkbool:
 			(void)genbools(data, size,
 				       (char *)selinux_booleans_path());
 		}
-#endif
 	}
 
 

@@ -36,11 +36,6 @@ sefcontext_compile: sefcontext_compile.o ../src/regex.o
 
 selinux_restorecon: LDLIBS += -lsepol
 
-ifeq ($(DISABLE_BOOL),y)
-	UNUSED_TARGETS+=getsebool togglesebool
-endif
-TARGETS:= $(filter-out $(UNUSED_TARGETS), $(TARGETS))
-
 all: $(TARGETS)
 
 install: all
