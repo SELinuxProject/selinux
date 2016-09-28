@@ -1,3 +1,4 @@
+	* Drop build config EMBEDDED=y, DISABLE_AVC=y and DISABLE_BOOL=y, from William Roberts.
 	* sefcontext_compile: invert semantics of "-r" flag, from Janis Danisevskis.
 	* sefcontext_compile: Add "-i" flag, from Janis Danisevskis.
 	* Add architecture string to file_contexts.bin, from Janis Danisevskis.
