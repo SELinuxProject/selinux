@@ -103,6 +103,7 @@ static int write_binary_file(struct saved_data *data, int fd,
 	uint32_t i;
 	int rc;
 	const char *reg_version;
+	const char *reg_arch;
 
 	bin_file = fdopen(fd, "w");
 	if (!bin_file) {
@@ -130,6 +131,18 @@ static int write_binary_file(struct saved_data *data, int fd,
 	if (len != 1)
 		goto err;
 	len = fwrite(reg_version, sizeof(char), section_len, bin_file);
+	if (len != section_len)
+		goto err;
+
+	/* write regex arch string */
+	reg_arch = regex_arch_string();
+	if (!reg_arch)
+		goto err;
+	section_len = strlen(reg_arch);
+	len = fwrite(&section_len, sizeof(uint32_t), 1, bin_file);
+	if (len != 1)
+		goto err;
+	len = fwrite(reg_arch, sizeof(char), section_len, bin_file);
 	if (len != section_len)
 		goto err;
 

@@ -34,6 +34,16 @@ struct regex_error_data {
 struct mmap_area;
 
 /**
+ * regex_arch_string return a string that represents the pointer width, the
+ * width of what the backend considers a size type, and the endianness of the
+ * system that this library was build for. (e.g. for x86_64: "8-8-el").
+ * This is required when loading stored regular espressions. PCRE2 regular
+ * expressions are not portable across architectures that do not have a
+ * matching arch-string.
+ */
+char const *regex_arch_string(void) hidden;
+
+/**
  * regex_verison returns the version string of the underlying regular
  * regular expressions library. In the case of PCRE it just returns the
  * result of pcre_version(). In the case of PCRE2, the very first time this
@@ -86,12 +96,15 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
  *               representation of the precompiled pattern.
  * @arg regex If successful, the structure returned through *regex was allocated
  *            with regex_data_create and must be freed with regex_data_free.
+ * @arg do_load_precompregex If non-zero precompiled patterns get loaded from
+ *			     the mmap region (ignored by PCRE1 back-end).
  *
  * @retval 0 on success
  * @retval -1 on error
  */
 int regex_load_mmap(struct mmap_area *map_area,
-		    struct regex_data **regex) hidden;
+		    struct regex_data **regex,
+		    int do_load_precompregex) hidden;
 /**
  * This function stores a precompiled regular expression to a file.
  * In the case of PCRE, it just dumps the binary representation of the

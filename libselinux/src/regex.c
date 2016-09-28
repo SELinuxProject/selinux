@@ -7,6 +7,44 @@
 #include "label_file.h"
 
 #ifdef USE_PCRE2
+#define REGEX_ARCH_SIZE_T PCRE2_SIZE
+#else
+#define REGEX_ARCH_SIZE_T size_t
+#endif
+
+#ifndef __BYTE_ORDER__
+#error __BYTE_ORDER__ not defined. Unable to determine endianness.
+#endif
+
+#ifdef USE_PCRE2
+char const *regex_arch_string(void)
+{
+	static char arch_string_buffer[32];
+	static char const *arch_string = "";
+	char const *endianness = NULL;
+	int rc;
+
+	if (arch_string[0] == '\0') {
+		if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+			endianness = "el";
+		else if (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+			endianness = "eb";
+
+		if (!endianness)
+			return NULL;
+
+		rc = snprintf(arch_string_buffer, sizeof(arch_string_buffer),
+				"%zu-%zu-%s", sizeof(void *),
+				sizeof(REGEX_ARCH_SIZE_T),
+				endianness);
+		if (rc < 0)
+			abort();
+
+		arch_string = &arch_string_buffer[0];
+	}
+	return arch_string;
+}
+
 struct regex_data {
 	pcre2_code *regex; /* compiled regular expression */
 	/*
@@ -56,7 +94,8 @@ char const *regex_version(void)
 	return version_buf;
 }
 
-int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex)
+int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
+		    int do_load_precompregex)
 {
 	int rc;
 	uint32_t entry_len;
@@ -65,7 +104,7 @@ int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex)
 	if (rc < 0)
 		return -1;
 
-	if (entry_len) {
+	if (entry_len && do_load_precompregex) {
 		/*
 		 * this should yield exactly one because we store one pattern at
 		 * a time
@@ -195,6 +234,10 @@ int regex_cmp(struct regex_data *regex1, struct regex_data *regex2)
 }
 
 #else // !USE_PCRE2
+char const *regex_arch_string(void)
+{
+	return "N/A";
+}
 
 /* Prior to version 8.20, libpcre did not have pcre_free_study() */
 #if (PCRE_MAJOR < 8 || (PCRE_MAJOR == 8 && PCRE_MINOR < 20))
@@ -247,7 +290,8 @@ char const *regex_version(void)
 	return pcre_version();
 }
 
-int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex)
+int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
+		    int unused __attribute__((unused)))
 {
 	int rc;
 	uint32_t entry_len;
