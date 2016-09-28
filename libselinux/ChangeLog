@@ -1,3 +1,4 @@
+	* Add ANDROID_HOST=y build option, from William Roberts.
 	* Set DISABLE_RPM default to y, from William Roberts.
 	* Rename EMFLAGS to DISABLE_FLAGS, from William Roberts.
 	* Fix unused variable error, from William Roberts.
