@@ -276,10 +276,12 @@ static void usage(const char *progname)
 	    "         will be fc_file with the .bin suffix appended.\n\t"
 	    "-p       Optional binary policy file that will be used to\n\t"
 	    "         validate contexts defined in the fc_file.\n\t"
-	    "-r       Include precompiled regular expressions in the output.\n\t"
+	    "-r       Omit precompiled regular expressions from the output.\n\t"
 	    "         (PCRE2 only. Compiled PCRE2 regular expressions are\n\t"
-	    "         not portable across architectures. When linked against\n\t"
-	    "         PCRE this flag is ignored)\n\t"
+	    "         not portable across architectures. Use this flag\n\t"
+	    "         if you know that you build for an incompatible\n\t"
+	    "         architecture to save space. When linked against\n\t"
+	    "         PCRE1 this flag is ignored.)\n\t"
 	    "-i       Print regular expression info end exit. That is, back\n\t"
 	    "         end version and architecture identifier.\n\t"
 	    "         Arch identifier format (PCRE2):\n\t"
@@ -294,7 +296,7 @@ int main(int argc, char *argv[])
 {
 	const char *path = NULL;
 	const char *out_file = NULL;
-	int do_write_precompregex = 0;
+	int do_write_precompregex = 1;
 	char stack_path[PATH_MAX + 1];
 	char *tmp = NULL;
 	int fd, rc, opt;
@@ -315,7 +317,7 @@ int main(int argc, char *argv[])
 			policy_file = optarg;
 			break;
 		case 'r':
-			do_write_precompregex = 1;
+			do_write_precompregex = 0;
 			break;
 		case 'i':
 			printf("%s (%s)\n", regex_version(),
