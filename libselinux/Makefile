@@ -1,7 +1,7 @@
 SUBDIRS = src include utils man
 
 DISABLE_SETRANS ?= n
-DISABLE_RPM ?= n
+DISABLE_RPM ?= y
 ifeq ($(DISABLE_RPM),y)
 	DISABLE_FLAGS+= -DDISABLE_RPM
 endif
