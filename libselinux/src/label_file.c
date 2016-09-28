@@ -567,7 +567,6 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	struct saved_data *data = (struct saved_data *)rec->data;
 	const char *path = NULL;
 	const char *prefix = NULL;
-	char subs_file[PATH_MAX + 1];
 	int status = -1, baseonly = 0;
 
 	/* Process arguments */
@@ -585,6 +584,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		}
 
 #if !defined(BUILD_HOST) && !defined(ANDROID)
+	char subs_file[PATH_MAX + 1];
 	/* Process local and distribution substitution files */
 	if (!path) {
 		rec->dist_subs =
