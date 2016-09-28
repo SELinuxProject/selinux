@@ -4,12 +4,6 @@ DISABLE_AVC ?= n
 DISABLE_SETRANS ?= n
 DISABLE_RPM ?= n
 DISABLE_BOOL ?= n
-ifeq ($(EMBEDDED),y)
-	override DISABLE_AVC=y
-	override DISABLE_SETRANS=y
-	override DISABLE_RPM=y
-	override DISABLE_BOOL=y
-endif
 ifeq ($(DISABLE_AVC),y)
 	EMFLAGS+= -DDISABLE_AVC
 endif
