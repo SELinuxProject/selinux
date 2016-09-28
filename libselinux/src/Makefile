@@ -81,6 +81,14 @@ ifneq (,$(filter i386,$(ARCH)))
 TLSFLAGS += -mno-tls-direct-seg-refs
 endif
 
+ifeq ($(ANDROID_HOST),y)
+DISABLE_FLAGS+= -DNO_MEDIA_BACKEND -DNO_DB_BACKEND -DNO_X_BACKEND \
+	-DBUILD_HOST
+SRCS= callbacks.c freecon.c label.c label_file.c \
+	label_android_property.c regex.c label_support.c \
+	matchpathcon.c setrans_client.c sha1.c
+endif
+
 SWIG = swig -Wall -python -o $(SWIGCOUT) -outdir ./ $(DISABLE_FLAGS)
 
 SWIGRUBY = swig -Wall -ruby -o $(SWIGRUBYCOUT) -outdir ./ $(DISABLE_FLAGS)

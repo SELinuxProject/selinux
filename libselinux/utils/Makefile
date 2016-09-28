@@ -28,7 +28,11 @@ override CFLAGS += -I../include -I$(INCLUDEDIR) -D_GNU_SOURCE $(DISABLE_FLAGS) $
 LDLIBS += -L../src -lselinux -L$(LIBDIR)
 PCRE_LDFLAGS ?= -lpcre
 
+ifeq ($(ANDROID_HOST),y)
+TARGETS=sefcontext_compile
+else
 TARGETS=$(patsubst %.c,%,$(wildcard *.c))
+endif
 
 sefcontext_compile: LDLIBS += $(PCRE_LDFLAGS) ../src/libselinux.a -lsepol
 
