@@ -280,6 +280,11 @@ static void usage(const char *progname)
 	    "         (PCRE2 only. Compiled PCRE2 regular expressions are\n\t"
 	    "         not portable across architectures. When linked against\n\t"
 	    "         PCRE this flag is ignored)\n\t"
+	    "-i       Print regular expression info end exit. That is, back\n\t"
+	    "         end version and architecture identifier.\n\t"
+	    "         Arch identifier format (PCRE2):\n\t"
+	    "         <pointer width>-<size type width>-<endianness>, e.g.,\n\t"
+	    "         \"8-8-el\" for x86_64.\n\t"
 	    "fc_file  The text based file contexts file to be processed.\n",
 	    progname);
 		exit(EXIT_FAILURE);
@@ -301,7 +306,7 @@ int main(int argc, char *argv[])
 	if (argc < 2)
 		usage(argv[0]);
 
-	while ((opt = getopt(argc, argv, "o:p:r")) > 0) {
+	while ((opt = getopt(argc, argv, "io:p:r")) > 0) {
 		switch (opt) {
 		case 'o':
 			out_file = optarg;
@@ -312,6 +317,10 @@ int main(int argc, char *argv[])
 		case 'r':
 			do_write_precompregex = 1;
 			break;
+		case 'i':
+			printf("%s (%s)\n", regex_version(),
+					regex_arch_string());
+			return 0;
 		default:
 			usage(argv[0]);
 		}
