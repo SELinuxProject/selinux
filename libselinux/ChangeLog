@@ -1,3 +1,6 @@
+	* make android label backends configurable, from Janis Danisevskis.
+	* android: fix lax service context lookup, from Janis Danisevskis.
+	* Rename android label backend source file, from Janis Danisevskis.
 	* Add ANDROID_HOST=y build option, from William Roberts.
 	* Set DISABLE_RPM default to y, from William Roberts.
 	* Rename EMFLAGS to DISABLE_FLAGS, from William Roberts.
