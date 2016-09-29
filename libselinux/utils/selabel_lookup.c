@@ -57,6 +57,8 @@ int main(int argc, char **argv)
 				backend = SELABEL_CTX_DB;
 			} else if (!strcmp(optarg, "prop")) {
 				backend = SELABEL_CTX_ANDROID_PROP;
+			} else if (!strcmp(optarg, "service")) {
+				backend = SELABEL_CTX_ANDROID_SERVICE;
 			} else {
 				fprintf(stderr, "Unknown backend: %s\n",
 								    optarg);

@@ -45,6 +45,7 @@ static selabel_initfunc initfuncs[] = {
 	CONFIG_X_BACKEND(selabel_x_init),
 	CONFIG_DB_BACKEND(selabel_db_init),
 	&selabel_property_init,
+	&selabel_service_init,
 };
 
 static void selabel_subs_fini(struct selabel_sub *ptr)

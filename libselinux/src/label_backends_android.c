@@ -244,7 +244,7 @@ static void closef(struct selabel_handle *rec)
 	free(data);
 }
 
-static struct selabel_lookup_rec *lookup(struct selabel_handle *rec,
+static struct selabel_lookup_rec *property_lookup(struct selabel_handle *rec,
 					 const char *key,
 					 int __attribute__((unused)) type)
 {
@@ -279,6 +279,38 @@ finish:
 	return ret;
 }
 
+static struct selabel_lookup_rec *service_lookup(struct selabel_handle *rec,
+		const char *key, int __attribute__((unused)) type)
+{
+	struct saved_data *data = (struct saved_data *)rec->data;
+	spec_t *spec_arr = data->spec_arr;
+	unsigned int i;
+	struct selabel_lookup_rec *ret = NULL;
+
+	if (!data->nspec) {
+		errno = ENOENT;
+		goto finish;
+	}
+
+	for (i = 0; i < data->nspec; i++) {
+		if (strcmp(spec_arr[i].property_key, key) == 0)
+			break;
+		if (strcmp(spec_arr[i].property_key, "*") == 0)
+			break;
+	}
+
+	if (i >= data->nspec) {
+		/* No matching specification. */
+		errno = ENOENT;
+		goto finish;
+	}
+
+	ret = &spec_arr[i].lr;
+
+finish:
+	return ret;
+}
+
 static void stats(struct selabel_handle __attribute__((unused)) *rec)
 {
 	selinux_log(SELINUX_WARNING, "'stats' functionality not implemented.\n");
@@ -298,7 +330,25 @@ int selabel_property_init(struct selabel_handle *rec,
 	rec->data = data;
 	rec->func_close = &closef;
 	rec->func_stats = &stats;
-	rec->func_lookup = &lookup;
+	rec->func_lookup = &property_lookup;
+
+	return init(rec, opts, nopts);
+}
+
+int selabel_service_init(struct selabel_handle *rec,
+		const struct selinux_opt *opts, unsigned nopts)
+{
+	struct saved_data *data;
+
+	data = (struct saved_data *)malloc(sizeof(*data));
+	if (!data)
+		return -1;
+	memset(data, 0, sizeof(*data));
+
+	rec->data = data;
+	rec->func_close = &closef;
+	rec->func_stats = &stats;
+	rec->func_lookup = &service_lookup;
 
 	return init(rec, opts, nopts);
 }
