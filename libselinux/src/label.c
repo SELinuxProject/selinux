@@ -35,6 +35,12 @@
 #define CONFIG_DB_BACKEND(fnptr) &fnptr
 #endif
 
+#ifdef NO_ANDROID_BACKEND
+#define CONFIG_ANDROID_BACKEND(fnptr) NULL
+#else
+#define CONFIG_ANDROID_BACKEND(fnptr) (&(fnptr))
+#endif
+
 typedef int (*selabel_initfunc)(struct selabel_handle *rec,
 				const struct selinux_opt *opts,
 				unsigned nopts);
@@ -44,8 +50,8 @@ static selabel_initfunc initfuncs[] = {
 	CONFIG_MEDIA_BACKEND(selabel_media_init),
 	CONFIG_X_BACKEND(selabel_x_init),
 	CONFIG_DB_BACKEND(selabel_db_init),
-	&selabel_property_init,
-	&selabel_service_init,
+	CONFIG_ANDROID_BACKEND(selabel_property_init),
+	CONFIG_ANDROID_BACKEND(selabel_service_init),
 };
 
 static void selabel_subs_fini(struct selabel_sub *ptr)
