@@ -1,3 +1,4 @@
+	* make distclean target work, from Nicolas Iooss.
 	* Do not always print a module name warning, from Miroslav Grepl.
 	* Use pp module name instead of filename when installing module, from Petr Lautrbach.
 	* tests: Do not force using gcc, from Nicolas Iooss.
