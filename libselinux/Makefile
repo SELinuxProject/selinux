@@ -1,7 +1,7 @@
 SUBDIRS = src include utils man
 
 DISABLE_SETRANS ?= n
-DISABLE_RPM ?= y
+DISABLE_RPM ?= n
 ANDROID_HOST ?= n
 ifeq ($(ANDROID_HOST),y)
 	override DISABLE_SETRANS=y
