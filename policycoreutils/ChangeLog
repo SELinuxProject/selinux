@@ -1,3 +1,4 @@
+	* setfiles ignore restorecon_xattr in git, from Nicolas Iooss.
 	* sandbox: Use dbus-run-session instead of dbus-launch when available, from Laurent Bigonville.
 	* setfiles: Utility to find security.restorecon_last entries, from Richard Haines.
 	* setfiles: Add option to stop setting the digest, from Richard Haines.
