@@ -1,3 +1,4 @@
+	* Revert 'Set DISABLE_RPM default to y', from Stephen Smalley.
 	* Re-introduce DISABLE_BOOL=y, from William Roberts.
 	* make android label backends configurable, from Janis Danisevskis.
 	* android: fix lax service context lookup, from Janis Danisevskis.
