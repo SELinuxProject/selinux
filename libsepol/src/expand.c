@@ -1855,20 +1855,31 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 			else
 				avdatump->data = ~cur->data;
 		} else if (specified & AVRULE_XPERMS) {
-			if (!avdatump->xperms) {
+			xperms = avdatump->xperms;
+			if (!xperms) {
 				xperms = (avtab_extended_perms_t *)
 					calloc(1, sizeof(avtab_extended_perms_t));
 				if (!xperms) {
 					ERR(handle, "Out of memory!");
 					return -1;
 				}
-				node->datum.xperms = xperms;
+				avdatump->xperms = xperms;
 			}
-			node->datum.xperms->specified = extended_perms->specified;
-			node->datum.xperms->driver = extended_perms->driver;
 
+			switch (extended_perms->specified) {
+			case AVRULE_XPERMS_IOCTLFUNCTION:
+				xperms->specified = AVTAB_XPERMS_IOCTLFUNCTION;
+				break;
+			case AVRULE_XPERMS_IOCTLDRIVER:
+				xperms->specified = AVTAB_XPERMS_IOCTLDRIVER;
+				break;
+			default:
+				return -1;
+			}
+
+			xperms->driver = extended_perms->driver;
 			for (i = 0; i < ARRAY_SIZE(xperms->perms); i++)
-				node->datum.xperms->perms[i] |= extended_perms->perms[i];
+				xperms->perms[i] |= extended_perms->perms[i];
 		} else {
 			assert(0);	/* should never occur */
 		}
