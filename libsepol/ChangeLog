@@ -1,3 +1,4 @@
+	* Fix xperm mapping between avrule and avtab, from Jeff Vander Stoep.
 	* tests: Fix mispelling of optimization option, from Nicolas Iooss.
 	* Fix unused/uninitialized variables on mac build, from William Roberts.
 	* Produce more meaningful error messages for conflicting type rules in CIL, from Guido Trentalancia.
