@@ -85,7 +85,7 @@ ifeq ($(ANDROID_HOST),y)
 DISABLE_FLAGS+= -DNO_MEDIA_BACKEND -DNO_DB_BACKEND -DNO_X_BACKEND \
 	-DBUILD_HOST
 SRCS= callbacks.c freecon.c label.c label_file.c \
-	label_android_property.c regex.c label_support.c \
+	label_backends_android.c regex.c label_support.c \
 	matchpathcon.c setrans_client.c sha1.c
 endif
 
