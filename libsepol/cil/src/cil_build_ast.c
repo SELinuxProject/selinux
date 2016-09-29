@@ -377,6 +377,11 @@ int cil_gen_class(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
+		if (class->num_perms > CIL_PERMS_PER_CLASS) {
+			cil_tree_log(parse_current, CIL_ERR, "Too many permissions in class '%s'", class->datum.name);
+			goto exit;
+		}
+
 	}
 
 	return SEPOL_OK;
@@ -937,6 +942,10 @@ int cil_gen_common(struct cil_db *db, struct cil_tree_node *parse_current, struc
 
 	rc = cil_gen_perm_nodes(db, parse_current->next->next->cl_head, ast_node, CIL_PERM, &common->num_perms);
 	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+	if (common->num_perms > CIL_PERMS_PER_CLASS) {
+		cil_tree_log(parse_current, CIL_ERR, "Too many permissions in common '%s'", common->datum.name);
 		goto exit;
 	}
 

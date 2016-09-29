@@ -717,6 +717,10 @@ int cil_resolve_classcommon(struct cil_tree_node *current, void *extra_args)
 	cil_symtab_map(&class->perms, __class_update_perm_values, &common->num_perms);
 
 	class->num_perms += common->num_perms;
+	if (class->num_perms > CIL_PERMS_PER_CLASS) {
+		cil_tree_log(current, CIL_ERR, "Too many permissions in class '%s' when including common permissions", class->datum.name);
+		goto exit;
+	}
 
 	return SEPOL_OK;
 
@@ -1447,6 +1451,7 @@ int cil_resolve_classorder(struct cil_tree_node *current, void *extra_args)
 	return SEPOL_OK;
 
 exit:
+	cil_list_destroy(&new, CIL_FALSE);
 	return rc;
 }
 
@@ -3919,6 +3924,7 @@ exit:
 	__cil_ordered_lists_destroy(&extra_args.catorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.sensitivityorder_lists);
 	cil_list_destroy(&extra_args.in_list, CIL_FALSE);
+	cil_list_destroy(&extra_args.unordered_classorder_lists, CIL_FALSE);
 
 	return rc;
 }

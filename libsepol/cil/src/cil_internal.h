@@ -37,6 +37,7 @@
 
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/policydb.h>
+#include <sepol/policydb/flask_types.h>
 
 #include <cil/cil.h>
 
@@ -270,6 +271,7 @@ enum cil_sym_array {
 extern int cil_sym_sizes[CIL_SYM_ARRAY_NUM][CIL_SYM_NUM];
 
 #define CIL_CLASS_SYM_SIZE	256
+#define CIL_PERMS_PER_CLASS (sizeof(sepol_access_vector_t) * 8)
 
 struct cil_db {
 	struct cil_tree *parse;
