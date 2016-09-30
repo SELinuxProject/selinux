@@ -279,6 +279,7 @@ int main(int argc, char **argv)
 		case 'I': /* Force label check by ignoring directory digest. */
 			r_opts.ignore_digest =
 					   SELINUX_RESTORECON_IGNORE_DIGEST;
+			request_digest = 1;
 			break;
 		case 'D': /*
 			   * Request file_contexts digest in selabel_open
