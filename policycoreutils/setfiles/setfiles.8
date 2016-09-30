@@ -88,12 +88,10 @@ there are no errors. See the
 section for further details.
 .TP
 .B \-D
-do not set or update any directory SHA1 digests. Use this option to
-effectively disable usage of the
+Set or update any directory SHA1 digests. Use this option to
+enable usage of the
 .IR security.restorecon_last
-extended attribute. Note that using this option will override the
-.B \-I
-option.
+extended attribute.
 .TP
 .B \-l
 log changes in file labels to syslog.
@@ -223,16 +221,20 @@ message label
 .BR FS_RELABEL .
 .IP "3." 4
 To improve performance when relabeling file systems recursively
+the
+.B \-D
+option to
 .B setfiles
-will write an SHA1 digest of the
+will cause it to store a SHA1 digest of the
 .B spec_file
-set to an extended attribute named
+set in an extended attribute named
 .IR security.restorecon_last
-to the directory specified in each
+on the directory specified in each
 .IR pathname \ ...
 once the relabeling has been completed successfully. This digest will be
 checked should
 .B setfiles
+.B \-D
 be rerun
 with the same
 .I spec_file

@@ -157,7 +157,7 @@ int main(int argc, char **argv)
 	altpath = NULL;
 	null_terminated = 0;
 	warn_no_match = 0;
-	request_digest = 1;
+	request_digest = 0;
 	policyfile = NULL;
 	nerr = 0;
 
@@ -281,11 +281,12 @@ int main(int argc, char **argv)
 					   SELINUX_RESTORECON_IGNORE_DIGEST;
 			break;
 		case 'D': /*
-			   * Don't request file_contexts digest in selabel_open
-			   * This will effectively disable usage of the
+			   * Request file_contexts digest in selabel_open
+			   * This will effectively enable usage of the
 			   * security.restorecon_last extended attribute.
 			   */
-			request_digest = 0;
+			request_digest = 1;
+			break;
 		case 'l':
 			r_opts.syslog_changes =
 					   SELINUX_RESTORECON_SYSLOG_CHANGES;
