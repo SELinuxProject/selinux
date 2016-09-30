@@ -1,4 +1,5 @@
-	* Check for too many permissions in classes and commons in CIL, from James Carter. 
+	* Remove Android.mk files and only keep them in Android tree, from Bowgo Tsai.
+	* Check for too many permissions in classes and commons in CIL, from James Carter.
 	* Fix xperm mapping between avrule and avtab, from Jeff Vander Stoep.
 	* tests: Fix mispelling of optimization option, from Nicolas Iooss.
 	* Fix unused/uninitialized variables on mac build, from William Roberts.

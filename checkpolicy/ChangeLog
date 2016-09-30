@@ -1,3 +1,4 @@
+	* Remove Android.mk files and only keep them in Android tree, from Bowgo Tsai.
 	* Add types associated to a role in the current scope when parsing, from Nicolas Iooss.
 	* Extend checkpolicy pathname matching, from Stephen Smalley.
 	* Fix typos in test/dispol, from Petr Lautrbach.
