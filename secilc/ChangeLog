@@ -1,3 +1,4 @@
+2.6-rc1 2016-09-30
 	* secilc: correct include path of cil.h for Android, from Bowgo Tsai.
 	* Remove Android.mk files and only keep them in Android tree, from Bowgo Tsai.
 	* Add documentation and test rule for portcon dccp protocol, from Richard Haines
