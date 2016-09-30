@@ -35,7 +35,7 @@
 #include <sys/stat.h>
 
 #ifdef ANDROID
-#include <sepol/cil.h>
+#include <cil/cil.h>
 #else
 #include <sepol/cil/cil.h>
 #endif
