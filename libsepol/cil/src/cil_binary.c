@@ -4794,6 +4794,19 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 
 	}
 
+	/* This pre-expands the roles and users for context validity checking */
+	if (hashtab_map(pdb->p_roles.table, policydb_role_cache, pdb)) {
+		cil_log(CIL_INFO, "Failure creating roles cache");
+		rc = SEPOL_ERR;
+		goto exit;
+    }
+
+	if (hashtab_map(pdb->p_users.table, policydb_user_cache, pdb)) {
+		cil_log(CIL_INFO, "Failure creating users cache");
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	rc = SEPOL_OK;
 
 exit:
