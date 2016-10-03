@@ -2562,6 +2562,7 @@ static int __cil_fill_expr(struct cil_tree_node *current, enum cil_flavor flavor
 		cil_list_init(&sub_expr, flavor);
 		rc = __cil_fill_expr_helper(current->cl_head, flavor, sub_expr, depth);
 		if (rc != SEPOL_OK) {
+			cil_list_destroy(&sub_expr, CIL_TRUE);
 			goto exit;
 		}
 		cil_list_append(expr, CIL_LIST, sub_expr);
