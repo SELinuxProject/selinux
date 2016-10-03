@@ -5481,6 +5481,7 @@ int cil_fill_cats(struct cil_tree_node *curr, struct cil_cats **cats)
 	rc = cil_gen_expr(curr, CIL_CAT, &(*cats)->str_expr);
 	if (rc != SEPOL_OK) {
 		cil_destroy_cats(*cats);
+		*cats = NULL;
 	}
 
 	return rc;
