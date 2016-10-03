@@ -1,3 +1,6 @@
+	* query for python site-packages dir directly, from Jason Zaman.
+	* versioned ruby pkg-config and query vendorarchdir properly, from Jason Zaman.
+
 2.6-rc1 2016-09-30
 	* Revert 'Set DISABLE_RPM default to y', from Stephen Smalley.
 	* Re-introduce DISABLE_BOOL=y, from William Roberts.
