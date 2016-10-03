@@ -4027,7 +4027,14 @@ int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_in
 		char *current = strtok_r(name_dup, ".", &sp);
 		char *next = strtok_r(NULL, ".", &sp);
 		symtab_t *symtab = NULL;
-		
+
+		if (current == NULL) {
+			/* Only dots */
+			cil_tree_log(ast_node, CIL_ERR, "Invalid name %s", name);
+			free(name_dup);
+			goto exit;
+		}
+
 		node = ast_node;
 		if (*name == '.') {
 			/* Leading '.' */
