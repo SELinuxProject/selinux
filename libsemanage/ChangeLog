@@ -1,3 +1,4 @@
+	* Fixes bug preventing the installation of base modules, from James Carter.
 2.6-rc1 2016-09-30
 	* make distclean target work, from Nicolas Iooss.
 	* Do not always print a module name warning, from Miroslav Grepl.
