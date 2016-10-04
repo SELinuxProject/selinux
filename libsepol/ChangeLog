@@ -1,4 +1,6 @@
-	* Pre-expands the role and user caches in CIL, by Gary Tierney.
+	* Fix bugs found by fuzzing secilc with AFL, from Nicolas Iooss.
+	* Add support for converting extended permissions to CIL, from James Carter.
+	* Pre-expands the role and user caches in CIL, from Gary Tierney.
 2.6-rc1 2016-09-30
 	* Remove Android.mk files and only keep them in Android tree, from Bowgo Tsai.
 	* Check for too many permissions in classes and commons in CIL, from James Carter.
