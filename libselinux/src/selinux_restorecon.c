@@ -797,25 +797,41 @@ int selinux_restorecon(const char *pathname_orig,
 	 * realpath of containing dir, then appending last component name.
 	 */
 	if (flags.userealpath) {
-		pathbname = basename((char *)pathname_orig);
+		char *basename_cpy = strdup(pathname_orig);
+		if (!basename_cpy)
+			goto realpatherr;
+		pathbname = basename(basename_cpy);
 		if (!strcmp(pathbname, "/") || !strcmp(pathbname, ".") ||
 					    !strcmp(pathbname, "..")) {
 			pathname = realpath(pathname_orig, NULL);
-			if (!pathname)
+			if (!pathname) {
+				free(basename_cpy);
 				goto realpatherr;
+			}
 		} else {
-			pathdname = dirname((char *)pathname_orig);
-			pathdnamer = realpath(pathdname, NULL);
-			if (!pathdnamer)
+			char *dirname_cpy = strdup(pathname_orig);
+			if (!dirname_cpy) {
+				free(basename_cpy);
 				goto realpatherr;
+			}
+			pathdname = dirname(dirname_cpy);
+			pathdnamer = realpath(pathdname, NULL);
+			free(dirname_cpy);
+			if (!pathdnamer) {
+				free(basename_cpy);
+				goto realpatherr;
+			}
 			if (!strcmp(pathdnamer, "/"))
 				error = asprintf(&pathname, "/%s", pathbname);
 			else
 				error = asprintf(&pathname, "%s/%s",
 						    pathdnamer, pathbname);
-			if (error < 0)
+			if (error < 0) {
+				free(basename_cpy);
 				goto oom;
+			}
 		}
+		free(basename_cpy);
 	} else {
 		pathname = strdup(pathname_orig);
 		if (!pathname)
