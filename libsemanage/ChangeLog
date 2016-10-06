@@ -1,3 +1,4 @@
+	* genhomedircon: use userprefix as the role for homedir, from Gary Tierney.
 	* Fix linker scripts / map files, from Stephen Smalley.
 	* Fix bug preventing the installation of base modules, from James Carter.
 
