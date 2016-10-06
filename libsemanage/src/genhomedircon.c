@@ -573,11 +573,8 @@ static int check_line(genhomedircon_settings_t * s, Ustr *line)
 	result = sepol_context_from_string(s->h_semanage->sepolh,
 					   ctx_str, &ctx_record);
 	if (result == STATUS_SUCCESS && ctx_record != NULL) {
-		sepol_msg_set_callback(s->h_semanage->sepolh, NULL, NULL);
 		result = sepol_context_check(s->h_semanage->sepolh,
 					     s->policydb, ctx_record);
-		sepol_msg_set_callback(s->h_semanage->sepolh,
-				       semanage_msg_relay_handler, s->h_semanage);
 		sepol_context_free(ctx_record);
 	}
 	return result;
