@@ -1,6 +1,13 @@
 #!/bin/bash
 
-DEST=../selinux-$(date '+%Y%m%d')
+PWD=`pwd`
+WIKIDIR=../selinux.wiki
+
+if [ \! -d $(WIKIDIR) ]; then
+    git clone git@github.com:SELinuxProject/selinux.wiki.git $(WIKIDIR)
+fi
+
+DEST=$(WIKIDIR)/files/releases/$(date '+%Y%m%d')
 DIRS="libsepol libselinux libsemanage policycoreutils checkpolicy secilc sepolgen"
 
 git tag -a $(date '+%Y%m%d') -m "Release $(date '+%Y%m%d')"
@@ -19,7 +26,9 @@ done
 
 cd $DEST
 
-echo "Copy *.tar.gz from $DEST to the server and add the following to the Releases wiki page:"
+git add files/releases/$(date '+%Y%m%d')
+
+echo "Add the following to the $(WIKIDIR)/Releases.md wiki page:"
 
 echo ""
 
@@ -31,3 +40,12 @@ for i in *.tar.gz; do
 	sha256sum $i | cut -d " " -f 1
 	echo ""
 done
+
+echo "And then run:"
+echo "cd $(WIKIDIR)"
+echo "git commit  -m \"Release $(date '+%Y%m%d')\" -a -s"
+
+echo "Push the release and its tags to git via:"
+echo "  cd $(PWD)"
+echo "  git push"
+echo "  git push --tags"
