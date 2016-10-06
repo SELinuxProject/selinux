@@ -1,4 +1,4 @@
-2.6-rc1 2016-09-30
+2.6-rc2 2016-10-06
 	* setfiles: reverse the sense of -D option, from Stephen Smalley.
 	* setfiles ignore restorecon_xattr in git, from Nicolas Iooss.
 	* sandbox: Use dbus-run-session instead of dbus-launch when available, from Laurent Bigonville.

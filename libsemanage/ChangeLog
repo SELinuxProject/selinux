@@ -1,9 +1,8 @@
+2.6-rc2 2016-10-06
 	* genhomedircon: do not suppress logging from libsepol, from Stephen Smaley.
 	* genhomedircon: use userprefix as the role for homedir, from Gary Tierney.
 	* Fix linker scripts / map files, from Stephen Smalley.
 	* Fix bug preventing the installation of base modules, from James Carter.
-
-2.6-rc1 2016-09-30
 	* make distclean target work, from Nicolas Iooss.
 	* Do not always print a module name warning, from Miroslav Grepl.
 	* Use pp module name instead of filename when installing module, from Petr Lautrbach.
