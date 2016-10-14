@@ -1,4 +1,4 @@
-2.6-rc2 2016-10-06
+2.6 2016-10-14
 	* Remove Android.mk files and only keep them in Android tree, from Bowgo Tsai.
 	* Add types associated to a role in the current scope when parsing, from Nicolas Iooss.
 	* Extend checkpolicy pathname matching, from Stephen Smalley.

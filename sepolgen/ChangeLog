@@ -1,4 +1,4 @@
-2.6-rc2 2016-10-06
+2.6 2016-10-14
 	* Remove additional files when cleaning, from Nicolas Iooss.
 	* Add support for TYPEBOUNDS statement in INTERFACE policy files, from Miroslav Grepl.
 

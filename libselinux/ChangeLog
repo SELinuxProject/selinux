@@ -1,4 +1,4 @@
-2.6-rc2 2016-10-06
+2.6 2016-10-14
 	* selinux_restorecon: fix realpath logic, from Stephen Smalley.
 	* query for python site-packages dir directly, from Jason Zaman.
 	* versioned ruby pkg-config and query vendorarchdir properly, from Jason Zaman.

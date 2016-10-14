@@ -1,4 +1,4 @@
-2.6-rc2 2016-10-06
+2.6 2016-10-14
 	* Fix linker scripts / map files, from Stephen Smalley.
 	* Fix bugs found by fuzzing secilc with AFL, from Nicolas Iooss.
 	* Add support for converting extended permissions to CIL, from James Carter.
