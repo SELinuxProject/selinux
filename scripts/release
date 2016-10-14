@@ -42,10 +42,11 @@ for i in *.tar.gz; do
 done
 
 echo "And then run:"
-echo "cd $WIKIDIR"
-echo "git commit  -m \"Release $(date '+%Y%m%d')\" -a -s"
+echo "  cd $WIKIDIR"
+echo "  git commit  -m \"Release $(date '+%Y%m%d')\" -a -s"
+echo "  git push"
 
+echo ""
 echo "Push the release and its tags to git via:"
-echo "  cd $PWD"
 echo "  git push"
 echo "  git push --tags"
