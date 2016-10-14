@@ -1,3 +1,5 @@
+	* genhomedircon: only set MLS level if MLS is enabled, from Stephen Smalley.
+
 2.6 2016-10-14
 	* genhomedircon: do not suppress logging from libsepol, from Stephen Smaley.
 	* genhomedircon: use userprefix as the role for homedir, from Gary Tierney.
