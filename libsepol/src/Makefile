@@ -30,6 +30,13 @@ LOBJS += $(sort $(patsubst %.c,%.lo,$(sort $(wildcard $(CILDIR)/src/*.c)) $(CIL_
 override CFLAGS += -I$(CILDIR)/include
 endif
 
+LD_SONAME_FLAGS=-soname,$(LIBSO),--version-script=$(LIBMAP),-z,defs
+
+OS := $(shell uname)
+ifeq ($(OS), Darwin)
+LD_SONAME_FLAGS=-install_name,$(LIBSO)
+LDFLAGS += -undefined dynamic_lookup
+endif
 
 all: $(LIBA) $(LIBSO) $(LIBPC)
 
@@ -39,7 +46,7 @@ $(LIBA):  $(OBJS)
 	$(RANLIB) $@
 
 $(LIBSO): $(LOBJS) $(LIBMAP)
-	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $(LOBJS) -Wl,-soname,$(LIBSO),--version-script=$(LIBMAP),-z,defs
+	$(CC) $(CFLAGS) $(LDFLAGS) -shared -o $@ $(LOBJS) -Wl,$(LD_SONAME_FLAGS)
 	ln -sf $@ $(TARGET) 
 
 $(LIBPC): $(LIBPC).in ../VERSION
