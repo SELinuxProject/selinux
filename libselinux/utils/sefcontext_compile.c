@@ -266,7 +266,7 @@ static void free_specs(struct saved_data *data)
 	memset(data, 0, sizeof(*data));
 }
 
-static void usage(const char *progname)
+static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 	    "usage: %s [-o out_file] [-p policy_file] fc_file\n"
