@@ -5,6 +5,8 @@
  *   Dan Walsh <dwalsh@redhat.com> - Added security_load_booleans().
  */
 
+#ifndef DISABLE_BOOL
+
 #include <assert.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -24,8 +26,6 @@
 #include "policy.h"
 
 #define SELINUX_BOOL_DIR "/booleans/"
-
-#ifndef DISABLE_BOOL
 
 static int filename_select(const struct dirent *d)
 {
@@ -561,6 +561,10 @@ int security_load_booleans(char *path)
 }
 
 #else
+
+#include <stdlib.h>
+#include "selinux_internal.h"
+
 int security_set_boolean_list(size_t boolcnt __attribute__((unused)),
 	SELboolean * boollist __attribute__((unused)),
 	int permanent __attribute__((unused)))
