@@ -27,6 +27,16 @@ else
 endif
 export PCRE_CFLAGS PCRE_LDFLAGS
 
+OS := $(shell uname)
+export OS
+
+ifeq ($(shell $(CC) -v 2>&1 | grep "clang"),)
+COMPILER := gcc
+else
+COMPILER := clang
+endif
+export COMPILER
+
 all install relabel clean distclean indent:
 	@for subdir in $(SUBDIRS); do \
 		(cd $$subdir && $(MAKE) $@) || exit 1; \

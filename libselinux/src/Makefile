@@ -48,22 +48,38 @@ OBJS= $(patsubst %.c,%.o,$(SRCS))
 LOBJS= $(patsubst %.c,%.lo,$(SRCS))
 CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissing-include-dirs \
           -Wunused -Wunknown-pragmas -Wstrict-aliasing -Wshadow -Wpointer-arith \
-          -Wbad-function-cast -Wcast-align -Wwrite-strings -Wlogical-op -Waggregate-return \
+          -Wbad-function-cast -Wcast-align -Wwrite-strings -Waggregate-return \
           -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes \
           -Wmissing-declarations -Wmissing-noreturn -Wmissing-format-attribute \
           -Wredundant-decls -Wnested-externs -Winline -Winvalid-pch -Wvolatile-register-var \
-          -Wdisabled-optimization -Wbuiltin-macro-redefined -Wpacked-bitfield-compat \
-          -Wsync-nand -Wattributes -Wcoverage-mismatch -Wmultichar -Wcpp \
+          -Wdisabled-optimization -Wbuiltin-macro-redefined \
+          -Wattributes -Wmultichar \
           -Wdeprecated-declarations -Wdiv-by-zero -Wdouble-promotion -Wendif-labels -Wextra \
-          -Wformat-contains-nul -Wformat-extra-args -Wformat-zero-length -Wformat=2 -Wmultichar \
-          -Wnormalized=nfc -Woverflow -Wpointer-to-int-cast -Wpragmas -Wsuggest-attribute=const \
-          -Wsuggest-attribute=noreturn -Wsuggest-attribute=pure -Wtrampolines \
-          -Wno-missing-field-initializers -Wno-sign-compare -Wjump-misses-init \
-          -Wno-format-nonliteral -Wframe-larger-than=$(MAX_STACK_SIZE) -Wp,-D_FORTIFY_SOURCE=2 \
+          -Wformat-extra-args -Wformat-zero-length -Wformat=2 -Wmultichar \
+          -Woverflow -Wpointer-to-int-cast -Wpragmas \
+          -Wno-missing-field-initializers -Wno-sign-compare \
+          -Wno-format-nonliteral -Wframe-larger-than=$(MAX_STACK_SIZE) \
           -fstack-protector-all --param=ssp-buffer-size=4 -fexceptions \
           -fasynchronous-unwind-tables -fdiagnostics-show-option -funit-at-a-time \
-          -fipa-pure-const -Wno-suggest-attribute=pure -Wno-suggest-attribute=const \
           -Werror -Wno-aggregate-return -Wno-redundant-decls
+
+LD_SONAME_FLAGS=-soname,$(LIBSO),-z,defs,-z,relro
+
+ifeq ($(COMPILER), gcc)
+override CFLAGS += -fipa-pure-const -Wlogical-op -Wpacked-bitfield-compat -Wsync-nand \
+	-Wcoverage-mismatch -Wcpp -Wformat-contains-nul -Wnormalized=nfc -Wsuggest-attribute=const \
+	-Wsuggest-attribute=noreturn -Wsuggest-attribute=pure -Wtrampolines -Wjump-misses-init \
+	-Wno-suggest-attribute=pure -Wno-suggest-attribute=const -Wp,-D_FORTIFY_SOURCE=2
+else
+override CFLAGS += -Wunused-command-line-argument
+override LDFLAGS += -L/opt/local/lib -undefined dynamic_lookup
+LD_SONAME_FLAGS=-install_name,$(LIBSO)
+endif
+
+ifeq ($(OS), Darwin)
+override CFLAGS += -I/opt/local/include
+override LDFLAGS += -L/opt/local/lib -undefined dynamic_lookup
+endif
 
 PCRE_LDFLAGS ?= -lpcre
 
@@ -117,7 +133,7 @@ $(LIBA): $(OBJS)
 	$(RANLIB) $@
 
 $(LIBSO): $(LOBJS)
-	$(CC) $(CFLAGS) -shared -o $@ $^ $(PCRE_LDFLAGS) -ldl $(LDFLAGS) -L$(LIBDIR) -Wl,-soname,$(LIBSO),-z,defs,-z,relro
+	$(CC) $(CFLAGS) -shared -o $@ $^ $(PCRE_LDFLAGS) -ldl $(LDFLAGS) -L$(LIBDIR) -Wl,$(LD_SONAME_FLAGS)
 	ln -sf $@ $(TARGET) 
 
 $(LIBPC): $(LIBPC).in ../VERSION
