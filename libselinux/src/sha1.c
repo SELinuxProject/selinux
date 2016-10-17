@@ -8,8 +8,14 @@
 //  Modified by WaterJuice retaining Public Domain license.
 //
 //  This is free and unencumbered software released into the public domain - June 2013 waterjuice.org
-//  Modified to stop symbols being exported for libselinux shared library - October 2015
+//  Modified to:
+//    - stop symbols being exported for libselinux shared library - October 2015
 //								       Richard Haines <richard_c_haines@btinternet.com>
+//    - Not cast the workspace from a byte array to a CHAR64LONG16 due to allignment isses.
+//      Fixes:
+//        sha1.c:73:33: error: cast from 'uint8_t *' (aka 'unsigned char *') to 'CHAR64LONG16 *' increases required alignment from 1 to 4 [-Werror,-Wcast-align]
+//             CHAR64LONG16*       block = (CHAR64LONG16*) workspace;
+//                                                                     William Roberts <william.c.roberts@intel.com>
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,8 +75,8 @@ void
     uint32_t            c;
     uint32_t            d;
     uint32_t            e;
-    uint8_t             workspace[64];
-    CHAR64LONG16*       block = (CHAR64LONG16*) workspace;
+    CHAR64LONG16        workspace;
+    CHAR64LONG16*       block = &workspace;
 
     memcpy( block, buffer, 64 );
 
