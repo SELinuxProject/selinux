@@ -865,13 +865,7 @@ static int __evaluate_cat_expression(struct cil_cats *cats, struct cil_db *db)
 
 	ebitmap_destroy(&bitmap);
 	cil_list_destroy(&cats->datum_expr, CIL_FALSE);
-	if (new->head != NULL) { 
-		cats->datum_expr = new;
-	} else {
-		/* empty list */
-		cil_list_destroy(&new, CIL_FALSE);
-		cats->datum_expr = NULL;
-	}
+	cats->datum_expr = new;
 
 	cats->evaluated = CIL_TRUE;
 
