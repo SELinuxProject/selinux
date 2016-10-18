@@ -952,6 +952,11 @@ static int __cil_cat_expr_range_to_bitmap_helper(struct cil_list_item *i1, struc
 		c2 = alias->actual;
 	}
 
+	if (c1->value > c2->value) {
+		cil_log(CIL_ERR, "Invalid category range\n");
+		goto exit;
+	}
+
 	for (i = c1->value; i <= c2->value; i++) {
 		if (ebitmap_set_bit(bitmap, i, 1)) {
 			cil_log(CIL_ERR, "Failed to set cat bit\n");
