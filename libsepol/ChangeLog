@@ -1,3 +1,6 @@
+	* build on mac, from William Roberts.
+	* cil: disable symver on Mac builds, from William Roberts.
+
 2.6 2016-10-14
 	* Fix linker scripts / map files, from Stephen Smalley.
 	* Fix bugs found by fuzzing secilc with AFL, from Nicolas Iooss.

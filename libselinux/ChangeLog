@@ -1,3 +1,10 @@
+	* Add booleans.c to ANDROID_HOST=y recipe, from William Roberts.
+	* DISABLE_BOOL move to include headers, from William Roberts.
+	* support ANDROID_HOST=y on Mac, from William Roberts.
+	* utils: add noreturn to sefcontext_compile, from William Roberts.
+	* Fix required alignment for sha1.c on mac, from William Roberts.
+	* Fix mac build warning when ANDROID_HOST=y, from William Roberts.
+
 2.6 2016-10-14
 	* selinux_restorecon: fix realpath logic, from Stephen Smalley.
 	* query for python site-packages dir directly, from Jason Zaman.
