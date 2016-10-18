@@ -482,6 +482,10 @@ int cil_gen_perm(struct cil_db *db, struct cil_tree_node *parse_current, struct 
 	cil_perm_init(&perm);
 
 	key = parse_current->data;
+	if (key == NULL) {
+		cil_log(CIL_ERR, "Bad permission\n");
+		goto exit;
+	}
 
 	rc = cil_gen_node(db, ast_node, (struct cil_symtab_datum*)perm, (hashtab_key_t)key, CIL_SYM_PERMS, flavor);
 	if (rc != SEPOL_OK) {
@@ -529,6 +533,7 @@ int cil_gen_perm_nodes(struct cil_db *db, struct cil_tree_node *current_perm, st
 
 		rc = cil_gen_perm(db, current_perm, new_ast, flavor, num_perms);
 		if (rc != SEPOL_OK) {
+			cil_tree_node_destroy(&new_ast);
 			goto exit;
 		}
 
@@ -546,6 +551,8 @@ int cil_gen_perm_nodes(struct cil_db *db, struct cil_tree_node *current_perm, st
 
 exit:
 	cil_log(CIL_ERR, "Bad permissions\n");
+	cil_tree_children_destroy(ast_node);
+	cil_clear_node(ast_node);
 	return rc;
 }
 
