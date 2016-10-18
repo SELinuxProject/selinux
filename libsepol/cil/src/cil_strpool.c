@@ -27,6 +27,7 @@
  * either expressed or implied, of Tresys Technology, LLC.
  */
 
+#include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,6 +41,8 @@ struct cil_strpool_entry {
 	char *str;
 };
 
+static pthread_mutex_t cil_strpool_mutex = PTHREAD_MUTEX_INITIALIZER;
+static unsigned int cil_strpool_readers = 0;
 static hashtab_t cil_strpool_tab = NULL;
 
 static unsigned int cil_strpool_hash(hashtab_t h, hashtab_key_t key)
@@ -68,16 +71,21 @@ char *cil_strpool_add(const char *str)
 {
 	struct cil_strpool_entry *strpool_ref = NULL;
 
+	pthread_mutex_lock(&cil_strpool_mutex);
+
 	strpool_ref = hashtab_search(cil_strpool_tab, (hashtab_key_t)str);
 	if (strpool_ref == NULL) {
 		strpool_ref = cil_malloc(sizeof(*strpool_ref));
 		strpool_ref->str = cil_strdup(str);
 		int rc = hashtab_insert(cil_strpool_tab, (hashtab_key_t)strpool_ref->str, strpool_ref);
 		if (rc != SEPOL_OK) {
+			pthread_mutex_unlock(&cil_strpool_mutex);
 			(*cil_mem_error_handler)();
+			pthread_mutex_lock(&cil_strpool_mutex);
 		}
 	}
 
+	pthread_mutex_unlock(&cil_strpool_mutex);
 	return strpool_ref->str;
 }
 
@@ -91,14 +99,26 @@ static int cil_strpool_entry_destroy(hashtab_key_t k __attribute__ ((unused)), h
 
 void cil_strpool_init(void)
 {
-	cil_strpool_tab = hashtab_create(cil_strpool_hash, cil_strpool_compare, CIL_STRPOOL_TABLE_SIZE);
+	pthread_mutex_lock(&cil_strpool_mutex);
 	if (cil_strpool_tab == NULL) {
-		(*cil_mem_error_handler)();
+		cil_strpool_tab = hashtab_create(cil_strpool_hash, cil_strpool_compare, CIL_STRPOOL_TABLE_SIZE);
+		if (cil_strpool_tab == NULL) {
+			pthread_mutex_unlock(&cil_strpool_mutex);
+			(*cil_mem_error_handler)();
+			return;
+		}
 	}
+	cil_strpool_readers++;
+	pthread_mutex_unlock(&cil_strpool_mutex);
 }
 
 void cil_strpool_destroy(void)
 {
-	hashtab_map(cil_strpool_tab, cil_strpool_entry_destroy, NULL);
-	hashtab_destroy(cil_strpool_tab);
+	pthread_mutex_lock(&cil_strpool_mutex);
+	cil_strpool_readers--;
+	if (cil_strpool_readers == 0) {
+		hashtab_map(cil_strpool_tab, cil_strpool_entry_destroy, NULL);
+		hashtab_destroy(cil_strpool_tab);
+	}
+	pthread_mutex_unlock(&cil_strpool_mutex);
 }
