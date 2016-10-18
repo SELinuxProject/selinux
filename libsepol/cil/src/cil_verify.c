@@ -50,9 +50,15 @@
 int __cil_verify_name(const char *name)
 {
 	int rc = SEPOL_ERR;
-	int len = strlen(name);
+	int len;
 	int i = 0;
 
+	if (name == NULL) {
+		cil_log(CIL_ERR, "Name is NULL\n");
+		goto exit;
+	}
+
+	len = strlen(name);
 	if (len >= CIL_MAX_NAME_LENGTH) {
 		cil_log(CIL_ERR, "Name length greater than max name length of %d", 
 			CIL_MAX_NAME_LENGTH);
