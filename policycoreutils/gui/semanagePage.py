@@ -130,8 +130,8 @@ class semanagePage:
         dlg.destroy()
 
     def deleteDialog(self):
-        store, iter = self.view.get_selection().get_selected()
-        if self.verify(_("Are you sure you want to delete %s '%s'?" % (self.description, store.get_value(iter, 0))), _("Delete %s" % self.description)) == gtk.RESPONSE_YES:
+        store, it = self.view.get_selection().get_selected()
+        if (it is not None) and (self.verify(_("Are you sure you want to delete %s '%s'?" % (self.description, store.get_value(it, 0))), _("Delete %s" % self.description)) == gtk.RESPONSE_YES):
             self.delete()
 
     def use_menus(self):

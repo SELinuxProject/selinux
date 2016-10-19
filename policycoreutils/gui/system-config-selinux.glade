@@ -729,7 +729,7 @@ regular file
 directory
 character device
 block device
-socket
+socket file
 symbolic link
 named pipe
 </property>

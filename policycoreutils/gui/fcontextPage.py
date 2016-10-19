@@ -105,13 +105,6 @@ class fcontextPage(semanagePage):
         self.load()
         self.fcontextEntry = xml.get_widget("fcontextEntry")
         self.fcontextFileTypeCombo = xml.get_widget("fcontextFileTypeCombo")
-        liststore = self.fcontextFileTypeCombo.get_model()
-        for k in seobject.file_types:
-            if len(k) > 0 and k[0] != '-':
-                iter = liststore.append()
-                liststore.set_value(iter, 0, k)
-        iter = liststore.get_iter_first()
-        self.fcontextFileTypeCombo.set_active_iter(iter)
         self.fcontextTypeEntry = xml.get_widget("fcontextTypeEntry")
         self.fcontextMLSEntry = xml.get_widget("fcontextMLSEntry")
 
@@ -183,7 +176,7 @@ class fcontextPage(semanagePage):
             fspec = store.get_value(iter, SPEC_COL)
             ftype = store.get_value(iter, FTYPE_COL)
             self.wait()
-            (rc, out) = getstatusoutput("semanage fcontext -d -f '%s' '%s'" % (ftype, fspec))
+            (rc, out) = getstatusoutput("semanage fcontext -d -f '%s' '%s'" % (seobject.file_type_str_to_option[ftype], fspec))
             self.ready()
 
             if rc != 0:
@@ -194,14 +187,14 @@ class fcontextPage(semanagePage):
             self.error(e.args[0])
 
     def add(self):
-        ftype = ["", "--", "-d", "-c", "-b", "-s", "-l", "-p"]
         fspec = self.fcontextEntry.get_text().strip()
         type = self.fcontextTypeEntry.get_text().strip()
         mls = self.fcontextMLSEntry.get_text().strip()
         list_model = self.fcontextFileTypeCombo.get_model()
-        active = self.fcontextFileTypeCombo.get_active()
+        it = self.fcontextFileTypeCombo.get_active_iter()
+        ftype = list_model.get_value(it,0)
         self.wait()
-        (rc, out) = getstatusoutput("semanage fcontext -a -t %s -r %s -f '%s' '%s'" % (type, mls, ftype[active], fspec))
+        (rc, out) = getstatusoutput("semanage fcontext -a -t %s -r %s -f '%s' '%s'" % (type, mls, seobject.file_type_str_to_option[ftype], fspec))
         self.ready()
         if rc != 0:
             self.error(out)
@@ -220,7 +213,7 @@ class fcontextPage(semanagePage):
         iter = self.fcontextFileTypeCombo.get_active_iter()
         ftype = list_model.get_value(iter, 0)
         self.wait()
-        (rc, out) = getstatusoutput("semanage fcontext -m -t %s -r %s -f '%s' '%s'" % (type, mls, ftype, fspec))
+        (rc, out) = getstatusoutput("semanage fcontext -m -t %s -r %s -f '%s' '%s'" % (type, mls, seobject.file_type_str_to_option[ftype], fspec))
         self.ready()
         if rc != 0:
             self.error(out)
