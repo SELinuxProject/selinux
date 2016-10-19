@@ -1,3 +1,4 @@
+	* cil: Add support for multiple strpool users, from Daniel Cashman.
 	* Fix bugs found by Nicolas Iooss by fuzzing secilc with AFL, from James Carter.
 	* build on mac, from William Roberts.
 	* cil: disable symver on Mac builds, from William Roberts.
