@@ -1,3 +1,5 @@
+	* policycoreutils/gui: fix system-config-selinux editing features, from Vit Mojzis.
+
 2.6 2016-10-14
 	* setfiles: reverse the sense of -D option, from Stephen Smalley.
 	* setfiles ignore restorecon_xattr in git, from Nicolas Iooss.
