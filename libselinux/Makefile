@@ -57,4 +57,10 @@ install-pywrap:
 install-rubywrap: 
 	$(MAKE) -C src install-rubywrap $@
 
+clean-pywrap:
+	$(MAKE) -C src clean-pywrap $@
+
+clean-rubywrap:
+	$(MAKE) -C src clean-rubywrap $@
+
 test:

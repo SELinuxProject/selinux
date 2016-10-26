@@ -187,8 +187,14 @@ install-rubywrap: rubywrap
 relabel:
 	/sbin/restorecon $(SHLIBDIR)/$(LIBSO)
 
-clean: 
-	-rm -f $(LIBPC) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(SWIGLOBJ) $(SWIGRUBYLOBJ) $(SWIGSO) $(TARGET) $(AUDIT2WHYSO) *.o *.lo *~
+clean-pywrap:
+	-rm -f $(SWIGLOBJ) $(SWIGSO) $(AUDIT2WHYLOBJ) $(AUDIT2WHYSO)
+
+clean-rubywrap:
+	-rm -f $(SWIGRUBYLOBJ) $(SWIGRUBYSO)
+
+clean: clean-pywrap clean-rubywrap
+	-rm -f $(LIBPC) $(OBJS) $(LOBJS) $(LIBA) $(LIBSO) $(TARGET) *.o *.lo *~
 
 distclean: clean
 	rm -f $(GENERATED) $(SWIGFILES)
@@ -196,4 +202,4 @@ distclean: clean
 indent:
 	../../scripts/Lindent $(filter-out $(GENERATED),$(wildcard *.[ch]))
 
-.PHONY: all clean pywrap rubywrap swigify install install-pywrap install-rubywrap distclean
+.PHONY: all clean clean-pywrap clean-rubywrap pywrap rubywrap swigify install install-pywrap install-rubywrap distclean
