@@ -1,3 +1,4 @@
+	* Fix  pointer handling in realpath_not_final, from Vit Mojzis.
 	* Allow overriding libsepol.a location during build, from Laurent Bigonville.
 	* Add clean-pywrap and clean-rubywrap targets, from Laurent Bigonville.
 	* Add booleans.c to ANDROID_HOST=y recipe, from William Roberts.
