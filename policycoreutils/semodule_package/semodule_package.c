@@ -72,6 +72,10 @@ static int file_to_data(const char *path, char **data, size_t * len)
 			path, strerror(errno));
 		goto err;
 	}
+	if (!sb.st_size) {
+		*len = 0;
+		return 0;
+	}
 
 	*data = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (*data == MAP_FAILED) {
