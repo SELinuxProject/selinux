@@ -1,3 +1,5 @@
+PKG_CONFIG ?= pkg-config
+
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 SBINDIR ?= $(PREFIX)/sbin
@@ -11,11 +13,11 @@ autostart_DATA = sealertauto.desktop
 INITDIR ?= $(DESTDIR)/etc/rc.d/init.d
 SELINUXDIR = $(DESTDIR)/etc/selinux
 
-DBUSFLAGS = -DHAVE_DBUS -I/usr/include/dbus-1.0 -I/usr/lib64/dbus-1.0/include -I/usr/lib/dbus-1.0/include
-DBUSLIB = -ldbus-glib-1 -ldbus-1
+DBUSFLAGS = -DHAVE_DBUS $(shell $(PKG_CONFIG) --cflags dbus-glib-1)
+DBUSLIB = $(shell $(PKG_CONFIG) --libs dbus-glib-1)
 
 CFLAGS ?= -g -Werror -Wall -W
-override CFLAGS += -I$(PREFIX)/include $(DBUSFLAGS) -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/lib/glib-2.0/include
+override CFLAGS += -I$(PREFIX)/include $(DBUSFLAGS)
 
 USE_PCRE2 ?= n
 ifeq ($(USE_PCRE2),y)
@@ -24,7 +26,7 @@ else
 	PCRE_LDFLAGS := -lpcre
 endif
 
-LDLIBS += -lselinux $(PCRE_LDFLAGS) $(DBUSLIB) -lglib-2.0 -L$(LIBDIR)
+LDLIBS += -lselinux $(PCRE_LDFLAGS) $(DBUSLIB) -L$(LIBDIR)
 
 all: restorecond
 
