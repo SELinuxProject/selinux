@@ -1,12 +1,7 @@
-SUBDIRS=libsepol libselinux libsemanage checkpolicy secilc policycoreutils gui sandbox dbus python semodule-utils
+OPT_SUBDIRS ?= dbus gui python restorecond sandbox semodule-utils
+SUBDIRS=libsepol libselinux libsemanage checkpolicy secilc policycoreutils $(OPT_SUBDIRS)
 PYSUBDIRS=libselinux libsemanage
 DISTCLEANSUBDIRS=libselinux libsemanage
-
-INOTIFYH = $(shell ls /usr/include/sys/inotify.h 2>/dev/null)
-
-ifeq (${INOTIFYH}, /usr/include/sys/inotify.h)
-	SUBDIRS += restorecond
-endif
 
 ifeq ($(DEBUG),1)
 	export CFLAGS = -g3 -O0 -gdwarf-2 -fno-strict-aliasing -Wall -Wshadow -Werror
