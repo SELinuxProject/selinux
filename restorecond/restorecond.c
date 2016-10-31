@@ -55,7 +55,7 @@
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
-#include "../setfiles/restore.h"
+#include "restore.h"
 #include <sys/types.h>
 #include <syslog.h>
 #include <limits.h>

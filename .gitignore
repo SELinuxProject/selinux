@@ -24,3 +24,4 @@ cscope.*
 .*.swp
 # Failsafes
 !.gitignore
+restorecond/restorecond

@@ -2,6 +2,12 @@ SUBDIRS=libsepol libselinux libsemanage sepolgen checkpolicy secilc policycoreut
 PYSUBDIRS=libselinux libsemanage
 DISTCLEANSUBDIRS=libselinux libsemanage
 
+INOTIFYH = $(shell ls /usr/include/sys/inotify.h 2>/dev/null)
+
+ifeq (${INOTIFYH}, /usr/include/sys/inotify.h)
+	SUBDIRS += restorecond
+endif
+
 ifeq ($(DEBUG),1)
 	export CFLAGS = -g3 -O0 -gdwarf-2 -fno-strict-aliasing -Wall -Wshadow -Werror
 	export LDFLAGS = -g

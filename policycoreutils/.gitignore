@@ -1,6 +1,5 @@
 load_policy/load_policy
 newrole/newrole
-restorecond/restorecond
 run_init/open_init_pty
 run_init/run_init
 secon/secon
