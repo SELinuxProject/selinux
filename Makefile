@@ -1,4 +1,4 @@
-SUBDIRS=libsepol libselinux libsemanage sepolgen checkpolicy secilc policycoreutils gui sandbox
+SUBDIRS=libsepol libselinux libsemanage sepolgen checkpolicy secilc policycoreutils gui sandbox dbus
 PYSUBDIRS=libselinux libsemanage
 DISTCLEANSUBDIRS=libselinux libsemanage
 
