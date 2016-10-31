@@ -53,19 +53,19 @@
 #include "dso.h"
 
 #ifndef DISABLE_SYMVER
-asm(".symver cil_build_policydb_pdb,        cil_build_policydb@");
+asm(".symver cil_build_policydb_pdb,        cil_build_policydb@LIBSEPOL_1.0");
 asm(".symver cil_build_policydb_create_pdb, cil_build_policydb@@LIBSEPOL_1.1");
 
-asm(".symver cil_compile_pdb,   cil_compile@");
+asm(".symver cil_compile_pdb,   cil_compile@LIBSEPOL_1.0");
 asm(".symver cil_compile_nopdb, cil_compile@@LIBSEPOL_1.1");
 
-asm(".symver cil_userprefixes_to_string_pdb,   cil_userprefixes_to_string@");
+asm(".symver cil_userprefixes_to_string_pdb,   cil_userprefixes_to_string@LIBSEPOL_1.0");
 asm(".symver cil_userprefixes_to_string_nopdb, cil_userprefixes_to_string@@LIBSEPOL_1.1");
 
-asm(".symver cil_selinuxusers_to_string_pdb,   cil_selinuxusers_to_string@");
+asm(".symver cil_selinuxusers_to_string_pdb,   cil_selinuxusers_to_string@LIBSEPOL_1.0");
 asm(".symver cil_selinuxusers_to_string_nopdb, cil_selinuxusers_to_string@@LIBSEPOL_1.1");
 
-asm(".symver cil_filecons_to_string_pdb,   cil_filecons_to_string@");
+asm(".symver cil_filecons_to_string_pdb,   cil_filecons_to_string@LIBSEPOL_1.0");
 asm(".symver cil_filecons_to_string_nopdb, cil_filecons_to_string@@LIBSEPOL_1.1");
 #endif
 
