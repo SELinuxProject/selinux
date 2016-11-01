@@ -13,4 +13,4 @@ clean:
 	$(MAKE) -C utils clean
 	$(MAKE) -C man clean
 
-
+relabel:
