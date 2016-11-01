@@ -10,7 +10,7 @@
 
 /* Attempt to rollback the transaction. No need to check error
    codes since this is rolling back something that blew up. */
-static void rollback(int argc, char **argv)
+static __attribute__ ((__noreturn__)) void rollback(int argc, char **argv)
 {
 	int i;
 

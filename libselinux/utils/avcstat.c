@@ -43,7 +43,7 @@ static char buf[DEF_BUF_SIZE];
 /* selinuxfs mount point */
 extern char *selinux_mnt;
 
-static __attribute__((__format__(printf,1,2))) void die(const char *msg, ...)
+static __attribute__((__format__(printf,1,2),__noreturn__)) void die(const char *msg, ...)
 {
 	va_list args;
 

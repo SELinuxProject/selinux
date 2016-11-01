@@ -12,7 +12,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
-static void usage(const char *progname)
+static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage:  %s [-N] [-n] [-f file_contexts] [ -P policy_root_path ] [-p prefix] [-Vq] path...\n",

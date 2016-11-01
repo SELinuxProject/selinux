@@ -8,7 +8,7 @@
 
 static size_t digest_len;
 
-static void usage(const char *progname)
+static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage: %s -b backend [-d] [-v] [-B] [-i] [-f file]\n\n"

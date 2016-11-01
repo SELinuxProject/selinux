@@ -6,7 +6,7 @@
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
-static void usage(const char *progname)
+static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage: %s -b backend [-v] [-r] -k key [-t type] [-f file]\n\n"

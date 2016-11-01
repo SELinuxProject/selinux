@@ -7,7 +7,7 @@
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
-static void usage(const char *progname)
+static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"usage:  %s [-v] -p <path> [-f file]\n\n"

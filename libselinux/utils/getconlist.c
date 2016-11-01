@@ -9,7 +9,7 @@
 #include <selinux/selinux.h>
 #include <selinux/get_context_list.h>
 
-static void usage(const char *name, const char *detail, int rc)
+static __attribute__ ((__noreturn__)) void usage(const char *name, const char *detail, int rc)
 {
 	fprintf(stderr, "usage:  %s [-l level] user [context]\n", name);
 	if (detail)

@@ -34,7 +34,7 @@ static int validate_context(char **contextp)
 	return 0;
 }
 
-static void usage(const char *progname)
+static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"\nusage: %s [-FCnRrdmiIaAsl] [-e dir] [-v|-P]\n"
