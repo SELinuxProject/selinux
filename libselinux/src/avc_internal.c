@@ -96,7 +96,7 @@ void avc_netlink_close(void)
 	fd = -1;
 }
 
-static int avc_netlink_receive(char *buf, unsigned buflen, int blocking)
+static int avc_netlink_receive(void *buf, unsigned buflen, int blocking)
 {
 	int rc;
 	struct pollfd pfd = { fd, POLLIN | POLLPRI, 0 };
@@ -155,7 +155,7 @@ static int avc_netlink_receive(char *buf, unsigned buflen, int blocking)
 	return 0;
 }
 
-static int avc_netlink_process(char *buf)
+static int avc_netlink_process(void *buf)
 {
 	int rc;
 	struct nlmsghdr *nlh = (struct nlmsghdr *)buf;
