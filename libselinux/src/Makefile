@@ -73,13 +73,12 @@ override CFLAGS += -fipa-pure-const -Wlogical-op -Wpacked-bitfield-compat -Wsync
 	-Wno-suggest-attribute=pure -Wno-suggest-attribute=const -Wp,-D_FORTIFY_SOURCE=2
 else
 override CFLAGS += -Wunused-command-line-argument
-override LDFLAGS += -L/opt/local/lib -undefined dynamic_lookup
-LD_SONAME_FLAGS=-install_name,$(LIBSO)
 endif
 
 ifeq ($(OS), Darwin)
 override CFLAGS += -I/opt/local/include
 override LDFLAGS += -L/opt/local/lib -undefined dynamic_lookup
+LD_SONAME_FLAGS=-install_name,$(LIBSO)
 endif
 
 PCRE_LDFLAGS ?= -lpcre
