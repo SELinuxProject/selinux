@@ -1,3 +1,4 @@
+	* utils: fix all the noreturn errors, from William Roberts.
 	* Fix compiler flags for Linux + clang, from William Roberts.
 	* Fix  pointer handling in realpath_not_final, from Vit Mojzis.
 	* Allow overriding libsepol.a location during build, from Laurent Bigonville.
