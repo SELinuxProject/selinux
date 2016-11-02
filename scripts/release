@@ -8,7 +8,7 @@ if [ \! -d $WIKIDIR ]; then
 fi
 
 DEST=$WIKIDIR/files/releases/$(date '+%Y%m%d')
-DIRS="libsepol libselinux libsemanage policycoreutils checkpolicy secilc sepolgen"
+DIRS="libsepol libselinux libsemanage checkpolicy secilc policycoreutils dbus gui mcstrans python restorecond sandbox semodule-utils"
 
 git tag -a $(date '+%Y%m%d') -m "Release $(date '+%Y%m%d')"
 
