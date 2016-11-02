@@ -1,3 +1,4 @@
+	* Fix kernel pathname in semanage_verify_kernel(), from Stephen Smalley.
 	* genhomedircon: only set MLS level if MLS is enabled, from Stephen Smalley.
 
 2.6 2016-10-14
