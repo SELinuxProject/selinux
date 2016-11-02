@@ -42,6 +42,12 @@ install: all
 	install -m 644 system-config-selinux.png $(DATADIR)/icons/hicolor/24x24/apps
 	install -m 644 system-config-selinux.png $(DATADIR)/system-config-selinux
 	install -m 644 *.desktop $(DATADIR)/system-config-selinux
+	-mkdir -p $(DESTDIR) $(DATADIR)/pixmaps
+	install -m 644 sepolicy_256.png $(DATADIR)/pixmaps/sepolicy.png
+	for i in 16 22 32 48 256; do \
+		mkdir -p $(DESTDIR) $(DATADIR)/icons/hicolor/$${i}x$${i}/apps; \
+		install -m 644 sepolicy_$${i}.png $(DATADIR)/icons/hicolor/$${i}x$${i}/apps/sepolicy.png; \
+	done
 	install -m 644 org.selinux.config.policy $(DATADIR)/polkit-1/actions/
 clean:
 
