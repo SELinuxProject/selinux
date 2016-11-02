@@ -64,7 +64,7 @@ def install(src, dest):
 	PyObject* list = PyList_New(*$2);
 	int i;
 	for (i = 0; i < *$2; i++) {
-		PyList_SetItem(list, i, PyBytes_FromString((*$1)[i]));
+		PyList_SetItem(list, i, PyString_FromString((*$1)[i]));
 	}
 	$result = SWIG_Python_AppendOutput($result, list);
 }
@@ -97,9 +97,7 @@ def install(src, dest):
 			len++;
 		plist = PyList_New(len);
 		for (i = 0; i < len; i++) {
-			PyList_SetItem(plist, i,
-                                       PyBytes_FromString((*$1)[i])
-                                       );
+			PyList_SetItem(plist, i, PyString_FromString((*$1)[i]));
 		}
 	} else {
 		plist = PyList_New(0);
@@ -116,9 +114,7 @@ def install(src, dest):
 	if (*$1) {
 		plist = PyList_New(result);
 		for (i = 0; i < result; i++) {
-			PyList_SetItem(plist, i,
-                                       PyBytes_FromString((*$1)[i])
-                                       );
+			PyList_SetItem(plist, i, PyString_FromString((*$1)[i]));
 		}
 	} else {
 		plist = PyList_New(0);
@@ -171,20 +167,16 @@ def install(src, dest):
 	$1 = (char**) malloc(size + 1);
 
 	for(i = 0; i < size; i++) {
-		if (!PyBytes_Check(PySequence_GetItem($input, i))) {
-			PyErr_SetString(PyExc_ValueError, "Sequence must contain only bytes");
-
+		if (!PyString_Check(PySequence_GetItem($input, i))) {
+			PyErr_SetString(PyExc_ValueError, "Sequence must contain only strings");
 			return NULL;
 		}
-
 	}
 		
 	for(i = 0; i < size; i++) {
 		s = PySequence_GetItem($input, i);
-
-		$1[i] = (char*) malloc(PyBytes_Size(s) + 1);
-		strcpy($1[i], PyBytes_AsString(s));
-
+		$1[i] = (char*) malloc(PyString_Size(s) + 1);
+		strcpy($1[i], PyString_AsString(s));
 	}
 	$1[size] = NULL;
 }
