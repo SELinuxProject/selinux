@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=SELinux Policy Management Tool
 Comment=Generate SELinux policy modules
-Icon=system-config-selinux
+Icon=sepolicy
 Exec=/usr/bin/sepolicy gui
 Type=Application
 Terminal=false
