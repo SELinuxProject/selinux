@@ -2174,7 +2174,7 @@ int semanage_verify_kernel(semanage_handle_t * sh)
 {
 	int retval = -1;
 	const char *kernel_filename =
-	    semanage_path(SEMANAGE_FINAL_TMP, SEMANAGE_KERNEL);
+	    semanage_final_path(SEMANAGE_FINAL_TMP, SEMANAGE_KERNEL);
 	semanage_conf_t *conf = sh->conf;
 	external_prog_t *e;
 	if (conf->kernel_prog == NULL) {
