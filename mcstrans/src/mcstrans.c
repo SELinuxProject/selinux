@@ -1287,6 +1287,7 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 
 	mls_level_t *l = NULL;
 	char *rval = NULL;
+	word_group_t *groups = NULL;
 	ebitmap_t bit_diff, temp, handled, nothandled, unhandled, orig_unhandled;
 
 	ebitmap_init(&bit_diff);
@@ -1313,7 +1314,6 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 
 	int doInverse = l->sens > 0;
 
-	word_group_t *groups = NULL;
 	base_classification_t *bc, *last = NULL;
 	int done = 0;
 	for (bc = domain->base_classifications; bc && !done; bc = bc->next) {

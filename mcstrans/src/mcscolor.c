@@ -289,6 +289,7 @@ int raw_color(const security_context_t raw, char **color_str) {
 	const secolor_t *items[N_COLOR];
 	char *result, *components[N_COLOR];
 	char buf[CHARS_PER_COLOR + 1];
+	size_t result_size = (N_COLOR * CHARS_PER_COLOR) + 1;
 	int rc = -1;
 
 	if (!color_str && !*color_str) {
@@ -302,7 +303,7 @@ int raw_color(const security_context_t raw, char **color_str) {
 	if (parse_components(con, components) < 0)
 		goto out;
 
-	result = malloc((N_COLOR * CHARS_PER_COLOR) + 1);
+	result = malloc(result_size);
 	if (!result)
 		goto out;
 	result[0] = '\0';
@@ -331,7 +332,7 @@ int raw_color(const security_context_t raw, char **color_str) {
 	for (i = 0; i < N_COLOR; i++) {
 		snprintf(buf, sizeof(buf), "#%06x #%06x ",
 			 items[i]->fg, items[i]->bg);
-		strncat(result, buf, sizeof(buf));
+		strncat(result, buf, result_size-1);
 	}
 
 	*color_str = result;
