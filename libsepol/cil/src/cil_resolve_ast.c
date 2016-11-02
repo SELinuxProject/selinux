@@ -106,7 +106,7 @@ static struct cil_name * __cil_insert_name(struct cil_db *db, hashtab_key_t key,
 	return name;
 }
 
-static int __cil_resolve_perms(symtab_t *class_symtab, symtab_t *common_symtab, struct cil_list *perm_strs, struct cil_list **perm_datums)
+static int __cil_resolve_perms(symtab_t *class_symtab, symtab_t *common_symtab, struct cil_list *perm_strs, struct cil_list **perm_datums, enum cil_flavor class_flavor)
 {
 	int rc = SEPOL_ERR;
 	struct cil_list_item *curr;
@@ -116,7 +116,7 @@ static int __cil_resolve_perms(symtab_t *class_symtab, symtab_t *common_symtab, 
 	cil_list_for_each(curr, perm_strs) {
 		if (curr->flavor == CIL_LIST) {
 			struct cil_list *sub_list;
-			rc = __cil_resolve_perms(class_symtab, common_symtab, curr->data, &sub_list);
+			rc = __cil_resolve_perms(class_symtab, common_symtab, curr->data, &sub_list, class_flavor);
 			if (rc != SEPOL_OK) {
 				cil_log(CIL_ERR, "Failed to resolve permission list\n");
 				goto exit;
@@ -132,6 +132,10 @@ static int __cil_resolve_perms(symtab_t *class_symtab, symtab_t *common_symtab, 
 			}
 			if (rc != SEPOL_OK) {
 				struct cil_list *empty_list;
+				if (class_flavor == CIL_MAP_CLASS) {
+					cil_log(CIL_ERR, "Failed to resolve permission %s for map class\n", (char*)curr->data);
+					goto exit;
+				}
 				cil_log(CIL_WARN, "Failed to resolve permission %s\n", (char*)curr->data);
 				/* Use an empty list to represent unknown perm */
 				cil_list_init(&empty_list, perm_strs->flavor);
@@ -170,7 +174,7 @@ int cil_resolve_classperms(struct cil_tree_node *current, struct cil_classperms 
 
 	cp->class = class;
 
-	rc = __cil_resolve_perms(&class->perms, common_symtab, cp->perm_strs, &cp->perms);
+	rc = __cil_resolve_perms(&class->perms, common_symtab, cp->perm_strs, &cp->perms, FLAVOR(datum));
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
