@@ -1,3 +1,4 @@
+	* Revert "libselinux: support new python3 functions", from Laurent Bigonville.
 	* utils: fix all the noreturn errors, from William Roberts.
 	* avc_internal.c: allow building with clang, from Stephen Smalley.
 	* Fix compiler flags for Linux + clang, from William Roberts.
