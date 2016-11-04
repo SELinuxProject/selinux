@@ -8,7 +8,8 @@ if [ \! -d $WIKIDIR ]; then
 fi
 
 DEST=$WIKIDIR/files/releases/$(date '+%Y%m%d')
-DIRS="libsepol libselinux libsemanage checkpolicy secilc policycoreutils dbus gui mcstrans python restorecond sandbox semodule-utils"
+DIRS="libsepol libselinux libsemanage checkpolicy secilc policycoreutils mcstrans restorecond semodule-utils"
+DIRS_NEED_PREFIX="dbus gui python sandbox"
 
 git tag -a $(date '+%Y%m%d') -m "Release $(date '+%Y%m%d')"
 
@@ -21,6 +22,15 @@ for i in $DIRS; do
 	ARCHIVE=$i-$VERS.tar.gz
 	git tag $i-$VERS > /dev/null 2>&1
 	git archive --format=tar --prefix=$i-$VERS/ $i-$VERS | gzip > ../$DEST/$ARCHIVE
+	cd ..
+done
+
+for i in $DIRS_NEED_PREFIX; do
+	cd $i
+	VERS=`cat VERSION`
+	ARCHIVE=selinux-$i-$VERS.tar.gz
+	git tag $i-$VERS > /dev/null 2>&1
+	git archive --format=tar --prefix=selinux-$i-$VERS/ selinux-$i-$VERS | gzip > ../$DEST/$ARCHIVE
 	cd ..
 done
 
