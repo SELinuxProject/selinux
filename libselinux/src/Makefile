@@ -140,7 +140,7 @@ $(LIBPC): $(LIBPC).in ../VERSION
 	sed -e 's/@VERSION@/$(VERSION)/; s:@prefix@:$(PREFIX):; s:@libdir@:$(LIBBASE):; s:@includedir@:$(INCLUDEDIR):' < $< > $@
 
 selinuxswig_python_exception.i: ../include/selinux/selinux.h
-	bash exception.sh > $@ 
+	bash -e exception.sh > $@ || (rm -f $@ ; false)
 
 $(AUDIT2WHYLOBJ): audit2why.c
 	$(CC) $(filter-out -Werror, $(CFLAGS)) $(PYINC) -fPIC -DSHARED -c -o $@ $<
