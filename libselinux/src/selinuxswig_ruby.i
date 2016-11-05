@@ -2,6 +2,11 @@
    Based on selinuxswig_python.i by James Athey
  */
 
+/* Never build rpm_execcon interface */
+#ifndef DISABLE_RPM
+#define DISABLE_RPM
+#endif
+
 %module selinux
 %{
 	#include "selinux/selinux.h"
@@ -38,15 +43,6 @@
 		%append_output(SWIG_FromCharPtr(*$1));
 		free(*$1);
 	}
-}
-
-%typemap(freearg,match="in") char * const [] {
-	int i = 0;
-	while($1[i]) {
-		free($1[i]);
-		i++;
-	}
-	free($1);
 }
 
 %include "selinuxswig.i"

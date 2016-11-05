@@ -1,6 +1,11 @@
 /* Author: James Athey
  */
 
+/* Never build rpm_execcon interface */
+#ifndef DISABLE_RPM
+#define DISABLE_RPM
+#endif
+
 %module selinux
 %{
 	#include "selinux/selinux.h"
@@ -151,43 +156,6 @@ def install(src, dest):
 		Py_INCREF(Py_None);
 		%append_output(Py_None);
 	}
-}
-
-%typemap(in) char * const [] {
-	int i, size;
-	PyObject * s;
-
-	if (!PySequence_Check($input)) {
-		PyErr_SetString(PyExc_ValueError, "Expected a sequence");
-		return NULL;
-	}
-
-	size = PySequence_Size($input);
-	
-	$1 = (char**) malloc(size + 1);
-
-	for(i = 0; i < size; i++) {
-		if (!PyString_Check(PySequence_GetItem($input, i))) {
-			PyErr_SetString(PyExc_ValueError, "Sequence must contain only strings");
-			return NULL;
-		}
-	}
-		
-	for(i = 0; i < size; i++) {
-		s = PySequence_GetItem($input, i);
-		$1[i] = (char*) malloc(PyString_Size(s) + 1);
-		strcpy($1[i], PyString_AsString(s));
-	}
-	$1[size] = NULL;
-}
-
-%typemap(freearg,match="in") char * const [] {
-	int i = 0;
-	while($1[i]) {
-		free($1[i]);
-		i++;
-	}
-	free($1);
 }
 
 %include "selinuxswig_python_exception.i"
