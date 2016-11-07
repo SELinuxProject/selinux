@@ -305,8 +305,8 @@ kill -TERM $WM_PID  2> /dev/null
             types = _("""
 Policy defines the following types for use with the -t:
 \t%s
-""") % "\n\t".join(list(sepolicy.info(sepolicy.ATTRIBUTE, "sandbox_type"))[0]['types'])
-        except RuntimeError:
+""") % "\n\t".join(next(sepolicy.info(sepolicy.ATTRIBUTE, "sandbox_type"))['types'])
+        except StopIteration:
             pass
 
         usage = _("""
@@ -380,8 +380,8 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
             self.setype = DEFAULT_X_TYPE
         else:
             try:
-                sepolicy.info(sepolicy.TYPE, "sandbox_t")
-            except RuntimeError:
+                next(sepolicy.info(sepolicy.TYPE, "sandbox_t"))
+            except StopIteration:
                 raise ValueError(_("Sandbox Policy is not currently installed.\nYou need to install the selinux-policy-sandbox package in order to run this command"))
 
         if self.__options.setype:
