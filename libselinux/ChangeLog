@@ -1,3 +1,5 @@
+	* Remove *swig_python_exception.i if its creation failed, from Nicolas Iooss.
+	* Remove rpm_execcon from SWIG wrappers, from Nicolas Iooss.
 	* Revert "libselinux: support new python3 functions", from Laurent Bigonville.
 	* utils: fix all the noreturn errors, from William Roberts.
 	* avc_internal.c: allow building with clang, from Stephen Smalley.
