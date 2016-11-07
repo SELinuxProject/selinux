@@ -262,7 +262,7 @@ def _print_net(src, protocol, perm):
     if len(portdict) > 0:
         bold_start = "\033[1m"
         bold_end = "\033[0;0m"
-        print "\n" + bold_start + "%s: %s %s" % (src, protocol, perm) + bold_end
+        print("\n" + bold_start + "%s: %s %s" % (src, protocol, perm) + bold_end)
         port_strings = []
         boolean_text = ""
         for p in portdict:
@@ -275,7 +275,7 @@ def _print_net(src, protocol, perm):
                     port_strings.append("%s (%s)" % (", ".join(recs), t))
         port_strings.sort(numcmp)
         for p in port_strings:
-            print "\t" + p
+            print("\t" + p)
 
 
 def network(args):
@@ -286,7 +286,7 @@ def network(args):
             if i[0] not in all_ports:
                 all_ports.append(i[0])
         all_ports.sort()
-        print "\n".join(all_ports)
+        print("\n".join(all_ports))
 
     for port in args.port:
         found = False
@@ -297,18 +297,18 @@ def network(args):
                 else:
                     range = "%s-%s" % (i[0], i[1])
                 found = True
-                print "%d: %s %s %s" % (port, i[2], portrecsbynum[i][0], range)
+                print("%d: %s %s %s" % (port, i[2], portrecsbynum[i][0], range))
         if not found:
             if port < 500:
-                print "Undefined reserved port type"
+                print("Undefined reserved port type")
             else:
-                print "Undefined port type"
+                print("Undefined port type")
 
     for t in args.type:
         if (t, 'tcp') in portrecs.keys():
-            print "%s: tcp: %s" % (t, ",".join(portrecs[t, 'tcp']))
+            print("%s: tcp: %s" % (t, ",".join(portrecs[t, 'tcp'])))
         if (t, 'udp') in portrecs.keys():
-            print "%s: udp: %s" % (t, ",".join(portrecs[t, 'udp']))
+            print( "%s: udp: %s" % (t, ",".join(portrecs[t, 'udp'])))
 
     for a in args.applications:
         d = sepolicy.get_init_transtype(a)
@@ -357,7 +357,7 @@ def manpage(args):
 
     for domain in test_domains:
         m = ManPage(domain, path, args.root, args.source_files, args.web)
-        print m.get_man_page_path()
+        print(m.get_man_page_path())
 
     if args.web:
         HTMLManPages(manpage_roles, manpage_domains, path, args.os)
@@ -418,7 +418,7 @@ def communicate(args):
     out = list(set(writable) & set(readable))
 
     for t in out:
-        print t
+        print(t)
 
 
 def gen_communicate_args(parser):
@@ -445,7 +445,7 @@ def booleans(args):
     args.booleans.sort()
 
     for b in args.booleans:
-        print "%s=_(\"%s\")" % (b, boolean_desc(b))
+        print("%s=_(\"%s\")" % (b, boolean_desc(b)))
 
 
 def gen_booleans_args(parser):
@@ -484,16 +484,16 @@ def print_interfaces(interfaces, args, append=""):
     for i in interfaces:
         if args.verbose:
             try:
-                print get_interface_format_text(i + append)
+                print(get_interface_format_text(i + append))
             except KeyError:
-                print i
+                print(i)
         if args.compile:
             try:
                 interface_compile_test(i)
             except KeyError:
-                print i
+                print(i)
         else:
-            print i
+            print(i)
 
 
 def interface(args):
@@ -565,7 +565,7 @@ def generate(args):
     if args.policytype in APPLICATIONS:
         mypolicy.gen_writeable()
         mypolicy.gen_symbols()
-    print mypolicy.generate(args.path)
+    print(mypolicy.generate(args.path))
 
 
 def gen_interface_args(parser):
@@ -698,12 +698,12 @@ if __name__ == '__main__':
         args = parser.parse_args(args=parser_args)
         args.func(args)
         sys.exit(0)
-    except ValueError, e:
+    except ValueError as e:
         sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
         sys.exit(1)
-    except IOError, e:
+    except IOError as e:
         sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
         sys.exit(1)
     except KeyboardInterrupt:
-        print "Out"
+        print("Out")
         sys.exit(0)

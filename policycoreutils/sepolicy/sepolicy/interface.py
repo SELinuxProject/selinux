@@ -192,10 +192,13 @@ def generate_compile_te(interface, idict, name="compiletest"):
 def get_xml_file(if_file):
     """ Returns xml format of interfaces for given .if policy file"""
     import os
-    import commands
+    try:
+            from commands import getstatusoutput
+    except ImportError:
+            from subprocess import getstatusoutput
     basedir = os.path.dirname(if_file) + "/"
     filename = os.path.basename(if_file).split(".")[0]
-    rc, output = commands.getstatusoutput("python /usr/share/selinux/devel/include/support/segenxml.py -w -m %s" % basedir + filename)
+    rc, output = getstatusoutput("python /usr/share/selinux/devel/include/support/segenxml.py -w -m %s" % basedir + filename)
     if rc != 0:
         sys.stderr.write("\n Could not proceed selected interface file.\n")
         sys.stderr.write("\n%s" % output)
@@ -208,7 +211,10 @@ def interface_compile_test(interface, path="/usr/share/selinux/devel/policy.xml"
     exclude_interfaces = ["userdom", "kernel", "corenet", "files", "dev"]
     exclude_interface_type = ["template"]
 
-    import commands
+    try:
+            from commands import getstatusoutput
+    except ImportError:
+            from subprocess import getstatusoutput
     import os
     policy_files = {'pp': "compiletest.pp", 'te': "compiletest.te", 'fc': "compiletest.fc", 'if': "compiletest.if"}
     idict = get_interface_dict(path)
@@ -219,7 +225,7 @@ def interface_compile_test(interface, path="/usr/share/selinux/devel/policy.xml"
             fd = open(policy_files['te'], "w")
             fd.write(generate_compile_te(interface, idict))
             fd.close()
-            rc, output = commands.getstatusoutput("make -f /usr/share/selinux/devel/Makefile %s" % policy_files['pp'])
+            rc, output = getstatusoutput("make -f /usr/share/selinux/devel/Makefile %s" % policy_files['pp'])
             if rc != 0:
                 sys.stderr.write(output)
                 sys.stderr.write(_("\nCompile test for %s failed.\n") % interface)

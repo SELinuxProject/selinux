@@ -27,7 +27,6 @@ __all__ = ['ManPage', 'HTMLManPages', 'manpage_domains', 'manpage_roles', 'gen_d
 import string
 import selinux
 import sepolicy
-import commands
 import os
 import time
 
@@ -162,7 +161,11 @@ def get_alphabet_manpages(manpage_list):
 
 
 def convert_manpage_to_html(html_manpage, manpage):
-    rc, output = commands.getstatusoutput("/usr/bin/groff -man -Thtml %s 2>/dev/null" % manpage)
+    try:
+            from commands import getstatusoutput
+    except ImportError:
+            from subprocess import getstatusoutput
+    rc, output = getstatusoutput("/usr/bin/groff -man -Thtml %s 2>/dev/null" % manpage)
     if rc == 0:
         print(html_manpage, "has been created")
         fd = open(html_manpage, 'w')

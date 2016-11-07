@@ -695,7 +695,7 @@ def get_methods():
     # List of per_role_template interfaces
         ifs = interfaces.InterfaceSet()
         ifs.from_file(fd)
-        methods = ifs.interfaces.keys()
+        methods = list(ifs.interfaces.keys())
         fd.close()
     except:
         sys.stderr.write("could not open interface info [%s]\n" % fn)
@@ -752,7 +752,10 @@ def get_all_entrypoint_domains():
 
 
 def gen_interfaces():
-    import commands
+    try:
+        from commands import getstatusoutput
+    except ImportError:
+        from subprocess import getstatusoutput
     ifile = defaults.interface_info()
     headers = defaults.headers()
     try:
@@ -763,7 +766,7 @@ def gen_interfaces():
 
     if os.getuid() != 0:
         raise ValueError(_("You must regenerate interface info by running /usr/bin/sepolgen-ifgen"))
-    print(commands.getstatusoutput("/usr/bin/sepolgen-ifgen")[1])
+    print(getstatusoutput("/usr/bin/sepolgen-ifgen")[1])
 
 
 def gen_port_dict():
@@ -1085,8 +1088,11 @@ def get_os_version():
     os_version = ""
     pkg_name = "selinux-policy"
     try:
-        import commands
-        rc, output = commands.getstatusoutput("rpm -q '%s'" % pkg_name)
+        try:
+            from commands import getstatusoutput
+        except ImportError:
+            from subprocess import getstatusoutput
+        rc, output = getstatusoutput("rpm -q '%s'" % pkg_name)
         if rc == 0:
             os_version = output.split(".")[-2]
     except:

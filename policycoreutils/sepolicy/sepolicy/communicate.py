@@ -34,8 +34,8 @@ def usage(parser, msg):
 
 def expand_attribute(attribute):
     try:
-        return sepolicy.info(sepolicy.ATTRIBUTE, attribute)[0]["types"]
-    except RuntimeError:
+        return list(next(sepolicy.info(sepolicy.ATTRIBUTE, attribute))["types"])
+    except StopIteration:
         return [attribute]
 
 

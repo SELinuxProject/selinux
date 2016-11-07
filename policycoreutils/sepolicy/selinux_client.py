@@ -39,6 +39,6 @@ if __name__ == "__main__":
     try:
         dbus_proxy = SELinuxDBus()
         resp = dbus_proxy.customized()
-        print convert_customization(resp)
-    except dbus.DBusException, e:
-        print e
+        print(convert_customization(resp))
+    except dbus.DBusException as e:
+        print(e)

@@ -31,21 +31,21 @@ import time
 import types
 import platform
 
-from templates import executable
-from templates import boolean
-from templates import etc_rw
-from templates import unit_file
-from templates import var_cache
-from templates import var_spool
-from templates import var_lib
-from templates import var_log
-from templates import var_run
-from templates import tmp
-from templates import rw
-from templates import network
-from templates import script
-from templates import spec
-from templates import user
+from .templates import executable
+from .templates import boolean
+from .templates import etc_rw
+from .templates import unit_file
+from .templates import var_cache
+from .templates import var_spool
+from .templates import var_lib
+from .templates import var_log
+from .templates import var_run
+from .templates import tmp
+from .templates import rw
+from .templates import network
+from .templates import script
+from .templates import spec
+from .templates import user
 import sepolgen.interfaces as interfaces
 import sepolgen.defaults as defaults
 
