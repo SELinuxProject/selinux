@@ -1,3 +1,4 @@
+	* sepol_{bool|iface|user}_key_create: copy name, from Stephen Smalley.
 	* Fail if CIL map permission is not resolved, from James Carter.
 	* Add symver with explicit version to build with ld.gold, from Jason Zaman.
 	* cil: Add support for multiple strpool users, from Daniel Cashman.
