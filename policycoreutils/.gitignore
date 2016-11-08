@@ -4,8 +4,6 @@ run_init/open_init_pty
 run_init/run_init
 secon/secon
 semodule/semodule
-semodule_package/semodule_package
-semodule_package/semodule_unpackage
 sestatus/sestatus
 setfiles/restorecon
 setfiles/restorecon_xattr
