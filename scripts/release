@@ -29,7 +29,7 @@ for i in $DIRS_NEED_PREFIX; do
 	cd $i
 	VERS=`cat VERSION`
 	ARCHIVE=selinux-$i-$VERS.tar.gz
-	git tag $i-$VERS > /dev/null 2>&1
+	git tag selinux-$i-$VERS > /dev/null 2>&1
 	git archive --format=tar --prefix=selinux-$i-$VERS/ selinux-$i-$VERS | gzip > ../$DEST/$ARCHIVE
 	cd ..
 done
