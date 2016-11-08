@@ -42,11 +42,6 @@
  *
  */
 
-/*
- * Note that the restorecond(8) service build links with functions provided
- * by ../setfiles/restore.c
- */
-
 #define _GNU_SOURCE
 #include <sys/inotify.h>
 #include <errno.h>

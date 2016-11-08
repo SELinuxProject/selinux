@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <syslog.h>
-#include "../setfiles/restore.h"
+#include "restore.h"
 #include <glob.h>
 #include <libgen.h>
 #include <sys/stat.h>

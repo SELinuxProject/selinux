@@ -16,10 +16,8 @@ SELINUXDIR = $(DESTDIR)/etc/selinux
 DBUSFLAGS = -DHAVE_DBUS $(shell $(PKG_CONFIG) --cflags dbus-glib-1)
 DBUSLIB = $(shell $(PKG_CONFIG) --libs dbus-glib-1)
 
-SETFILESDIR ?= ../policycoreutils/setfiles
-
 CFLAGS ?= -g -Werror -Wall -W
-override CFLAGS += -I$(PREFIX)/include $(DBUSFLAGS) -I$(SETFILESDIR)
+override CFLAGS += -I$(PREFIX)/include $(DBUSFLAGS)
 
 USE_PCRE2 ?= n
 ifeq ($(USE_PCRE2),y)
@@ -34,7 +32,7 @@ all: restorecond
 
 restorecond.o utmpwatcher.o stringslist.o user.o watch.o: restorecond.h
 
-restorecond:  $(SETFILESDIR)/restore.o restorecond.o utmpwatcher.o stringslist.o user.o watch.o
+restorecond:  restore.o restorecond.o utmpwatcher.o stringslist.o user.o watch.o
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 install: all
