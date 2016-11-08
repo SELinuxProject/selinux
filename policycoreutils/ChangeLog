@@ -1,3 +1,4 @@
+	* sandbox: Use next() over the sepolicy.info() result, from Laurent Bigonville.
 	* Use "new" sepolicy icon in .desktop file for sepolicy gui, from Laurent Bigonville.
 	* semodule_package: do not fail with an	empty fc file, from Nicolas Iooss.
 	* restorecond: use pkg-config to find dbus-glib-1 files, from Nicolas Iooss.
