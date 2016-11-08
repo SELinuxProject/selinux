@@ -15,7 +15,7 @@ struct sepol_bool {
 
 struct sepol_bool_key {
 	/* This boolean's name */
-	const char *name;
+	char *name;
 };
 
 int sepol_bool_key_create(sepol_handle_t * handle,
@@ -30,7 +30,12 @@ int sepol_bool_key_create(sepol_handle_t * handle,
 		return STATUS_ERR;
 	}
 
-	tmp_key->name = name;
+	tmp_key->name = strdup(name);
+	if (!tmp_key->name) {
+		ERR(handle, "out of memory, " "could not create boolean key");
+		free(tmp_key);
+		return STATUS_ERR;
+	}
 
 	*key_ptr = tmp_key;
 	return STATUS_SUCCESS;
@@ -62,6 +67,7 @@ int sepol_bool_key_extract(sepol_handle_t * handle,
 
 void sepol_bool_key_free(sepol_bool_key_t * key)
 {
+	free(key->name);
 	free(key);
 }
 
