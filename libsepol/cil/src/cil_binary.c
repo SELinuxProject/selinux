@@ -843,7 +843,6 @@ int cil_catalias_to_policydb(policydb_t *pdb, struct cil_alias *cil_alias)
 	key = cil_strdup(cil_alias->datum.fqn);
 	rc = symtab_insert(pdb, SYM_CATS, key, sepol_alias, SCOPE_DECL, 0, NULL);
 	if (rc != SEPOL_OK) {
-		free(key);
 		goto exit;
 	}
 	sepol_alias->s.value = sepol_cat->s.value;
