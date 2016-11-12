@@ -3,7 +3,7 @@
 import dbus
 import dbus.service
 import dbus.mainloop.glib
-import gobject
+from gi.repository import GObject
 import slip.dbus.service
 from slip.dbus import polkit
 import os
@@ -128,7 +128,7 @@ class selinux_server(slip.dbus.service.Object):
         raise ValueError("%s does not exist" % path)
 
 if __name__ == "__main__":
-    mainloop = gobject.MainLoop()
+    mainloop = GObject.MainLoop()
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     system_bus = dbus.SystemBus()
     name = dbus.service.BusName("org.selinux", system_bus)
