@@ -33,7 +33,7 @@ struct semanage_seuser {
 
 struct semanage_seuser_key {
 	/* This user's name */
-	const char *name;
+	char *name;
 };
 
 int semanage_seuser_key_create(semanage_handle_t * handle,
@@ -48,7 +48,12 @@ int semanage_seuser_key_create(semanage_handle_t * handle,
 		ERR(handle, "out of memory, could not create seuser key");
 		return STATUS_ERR;
 	}
-	tmp_key->name = name;
+	tmp_key->name = strdup(name);
+	if (!tmp_key->name) {
+		ERR(handle, "out of memory, could not create seuser key");
+		free(tmp_key);
+		return STATUS_ERR;
+	}
 
 	*key_ptr = tmp_key;
 	return STATUS_SUCCESS;
@@ -75,7 +80,7 @@ hidden_def(semanage_seuser_key_extract)
 
 void semanage_seuser_key_free(semanage_seuser_key_t * key)
 {
-
+	free(key->name);
 	free(key);
 }
 
