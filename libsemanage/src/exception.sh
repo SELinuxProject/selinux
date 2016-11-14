@@ -4,7 +4,7 @@ echo "
   \$action
   if (result < 0) {
      PyErr_SetFromErrno(PyExc_OSError);
-     return NULL;
+     SWIG_fail;
   }
 }
 "
