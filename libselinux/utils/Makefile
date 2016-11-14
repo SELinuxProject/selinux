@@ -5,6 +5,14 @@ USRBINDIR ?= $(PREFIX)/sbin
 SBINDIR ?= $(DESTDIR)/sbin
 INCLUDEDIR ?= $(PREFIX)/include
 
+OS ?= $(shell uname)
+
+ifeq ($(shell $(CC) -v 2>&1 | grep "clang"),)
+COMPILER ?= gcc
+else
+COMPILER ?= clang
+endif
+
 MAX_STACK_SIZE=8192
 CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissing-include-dirs \
           -Wunused -Wunknown-pragmas -Wstrict-aliasing -Wshadow -Wpointer-arith \
@@ -26,7 +34,7 @@ CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissi
 LD_SONAME_FLAGS=-soname,$(LIBSO),-z,defs,-z,relro
 
 ifeq ($(COMPILER), gcc)
-override CFLAGS += -fipa-pure-const -Wpacked-bitfield-compat -Wsync-nand -Wcoverage-mismatch \
+CFLAGS += -fipa-pure-const -Wpacked-bitfield-compat -Wsync-nand -Wcoverage-mismatch \
 	-Wcpp -Wformat-contains-nul -Wnormalized=nfc -Wsuggest-attribute=const \
 	-Wsuggest-attribute=noreturn -Wsuggest-attribute=pure -Wtrampolines -Wjump-misses-init \
 	-Wno-suggest-attribute=pure -Wno-suggest-attribute=const
