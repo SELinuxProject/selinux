@@ -25,7 +25,9 @@ $(SECILC): $(SECILC_OBJS)
 test: $(SECILC)
 	./$(SECILC) test/policy.cil
 
-man: $(MANPAGE).xml
+man: $(MANPAGE)
+
+$(MANPAGE): $(MANPAGE).xml
 	$(XMLTO) man $(MANPAGE).xml
 
 install: all man
