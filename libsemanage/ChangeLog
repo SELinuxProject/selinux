@@ -1,3 +1,4 @@
+	* semanage_seuser_key_create: copy name to avoid use-after-free in swig-generated code, from Nicolas Iooss.
 	* Remove *swig_python_exception.i if its creation failed, from Nicolas Iooss.
 	* Remove ruby_semanage.so with "make clean", from Nicolas Iooss.
 	* Fix kernel pathname in semanage_verify_kernel(), from Stephen Smalley.
