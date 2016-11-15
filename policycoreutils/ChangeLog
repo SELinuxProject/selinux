@@ -1,3 +1,5 @@
+	* Use GObject introspection binding instead of python-gobject in selinux_server.py, from Laurent Bigonville.
+	* Force GTK3.0 for sepolicy gui, from Laurent Bigonville.
 	* Make sepolicy work with python3, from Laurent Bigonville.
 	* sandbox: Use next() over the sepolicy.info() result, from Laurent Bigonville.
 	* Use "new" sepolicy icon in .desktop file for sepolicy gui, from Laurent Bigonville.
