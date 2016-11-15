@@ -3447,7 +3447,7 @@ static int scope_index_read(scope_index_t * scope_index,
 	int rc;
 
 	for (i = 0; i < num_scope_syms; i++) {
-		if (ebitmap_read(scope_index->scope + i, fp) == -1) {
+		if (ebitmap_read(scope_index->scope + i, fp) < 0) {
 			return -1;
 		}
 	}
@@ -3465,7 +3465,7 @@ static int scope_index_read(scope_index_t * scope_index,
 		return -1;
 	}
 	for (i = 0; i < scope_index->class_perms_len; i++) {
-		if (ebitmap_read(scope_index->class_perms_map + i, fp) == -1) {
+		if (ebitmap_read(scope_index->class_perms_map + i, fp) < 0) {
 			return -1;
 		}
 	}
