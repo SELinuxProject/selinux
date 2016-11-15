@@ -1,3 +1,5 @@
+	* Do not build secilc man page if it is up to date, from Nicolas Iooss.
+
 2.6 2016-10-14
 	* secilc: correct include path of cil.h for Android, from Bowgo Tsai.
 	* Remove Android.mk files and only keep them in Android tree, from Bowgo Tsai.
