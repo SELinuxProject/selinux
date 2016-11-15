@@ -3635,7 +3635,10 @@ static int scope_read(policydb_t * p, int symnum, struct policy_file *fp)
 		goto cleanup;
 	scope->scope = le32_to_cpu(buf[0]);
 	scope->decl_ids_len = le32_to_cpu(buf[1]);
-	assert(scope->decl_ids_len > 0);
+	if (scope->decl_ids_len == 0) {
+		ERR(fp->handle, "invalid scope with no declaration");
+		goto cleanup;
+	}
 	if ((scope->decl_ids =
 	     malloc(scope->decl_ids_len * sizeof(uint32_t))) == NULL) {
 		goto cleanup;
