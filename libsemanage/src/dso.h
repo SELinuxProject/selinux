@@ -1,5 +1,5 @@
-#ifndef _SEPOL_DSO_H
-#define _SEPOL_DSO_H	1
+#ifndef _SEMANAGE_DSO_H
+#define _SEMANAGE_DSO_H	1
 
 #ifdef SHARED
 # define hidden __attribute__ ((visibility ("hidden")))
