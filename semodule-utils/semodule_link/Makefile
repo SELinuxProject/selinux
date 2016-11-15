@@ -7,7 +7,7 @@ LIBDIR ?= $(PREFIX)/lib
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -I$(INCLUDEDIR)
-LDLIBS = -lsepol -lselinux -L$(LIBDIR)
+LDLIBS = -lsepol -L$(LIBDIR)
 
 all: semodule_link
 
