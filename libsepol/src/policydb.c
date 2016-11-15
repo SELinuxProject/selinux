@@ -3510,6 +3510,10 @@ static int avrule_decl_read(policydb_t * p, avrule_decl_t * decl,
 			return -1;
 		nprim = le32_to_cpu(buf[0]);
 		nel = le32_to_cpu(buf[1]);
+		if (nel && !nprim) {
+			ERR(fp->handle, "unexpected items in decl symbol table with no symbol");
+			return -1;
+		}
 		for (j = 0; j < nel; j++) {
 			if (read_f[i] (p, decl->symtab[i].table, fp)) {
 				return -1;
@@ -3881,6 +3885,10 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 			goto bad;
 		nprim = le32_to_cpu(buf[0]);
 		nel = le32_to_cpu(buf[1]);
+		if (nel && !nprim) {
+			ERR(fp->handle, "unexpected items in symbol table with no symbol");
+			goto bad;
+		}
 		for (j = 0; j < nel; j++) {
 			if (read_f[i] (p, p->symtab[i].table, fp))
 				goto bad;
