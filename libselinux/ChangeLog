@@ -1,3 +1,5 @@
+	* swig: use SWIG_fail when an error occurs, from Nicolas Iooss.
+	* Fall back to gcc in exception.sh, from Nicolas Iooss.
 	* Link Python wrapper with Python, from Nicolas Iooss.
 	* Link Ruby wrapper with -lruby, from Nicolas Iooss.
 	* Use Ruby to define RUBYINC, from Nicolas Iooss.
