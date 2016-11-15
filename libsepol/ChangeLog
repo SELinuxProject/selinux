@@ -1,3 +1,4 @@
+	* cil_lexer: make warnings non-fatal for building, from Stephen Smalley.
 	* cil: remove double free, from Daniel Cashman.
 	* Fix checkpolicy dontaudit compiler bug, from Stephen Smalley.
 	* sepol_{bool|iface|user}_key_create: copy name, from Stephen Smalley.
