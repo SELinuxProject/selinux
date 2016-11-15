@@ -1,3 +1,7 @@
+	* Link Python wrapper with Python, from Nicolas Iooss.
+	* Query for python site-packages dir directly, from Nicolas Iooss.
+	* Link Ruby wrapper with -lruby, from Nicolas Iooss.
+	* Use Ruby to define RUBYINC, from Nicolas Iooss.
 	* semanage_seuser_key_create: copy name to avoid use-after-free in swig-generated code, from Nicolas Iooss.
 	* Remove *swig_python_exception.i if its creation failed, from Nicolas Iooss.
 	* Remove ruby_semanage.so with "make clean", from Nicolas Iooss.
