@@ -525,9 +525,9 @@ int
 violates_constraints(mls_level_t *l) {
 	int nbits;
 	sens_constraint_t *s;
+	ebitmap_t common;
 	for (s=sens_constraints; s; s=s->next) {
 		if (s->sens == l->sens) {
-			ebitmap_t common;
 			if (ebitmap_and(&common, &s->cat, &l->cat) < 0)
 				return 1;
 			nbits = ebitmap_cardinality(&common);
@@ -542,13 +542,11 @@ violates_constraints(mls_level_t *l) {
 	}
 	cat_constraint_t *c;
 	for (c=cat_constraints; c; c=c->next) {
-		ebitmap_t common;
 		if (ebitmap_and(&common, &c->mask, &l->cat) < 0)
 			return 1;
 		nbits = ebitmap_cardinality(&common);
 		ebitmap_destroy(&common);
 		if (nbits > 0) {
-			ebitmap_t common;
 			if (ebitmap_and(&common, &c->cat, &l->cat) < 0)
 				return 1;
 			nbits = ebitmap_cardinality(&common);
@@ -1045,7 +1043,7 @@ build_regexps(domain_t *domain) {
 			return -1;
 		}
 
-		int i=0;
+		i=0;
 		for (w = g->words; w; w = w->next)
 			g->sword[i++]=w;
 
@@ -1094,6 +1092,7 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 	gettimeofday(&startTime, 0);
 #endif
 
+	int rc = 0;
 	int ovector[OVECCOUNT];
 	word_group_t *g = NULL;
 	char *work = NULL;
@@ -1120,7 +1119,7 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 	if (!domain->base_classification_regexp)
 		goto err;
 	log_debug(" compute_raw_from_trans work = %s\n", work);
-	int rc = pcre_exec(domain->base_classification_regexp, 0, work, work_len, 0, PCRE_ANCHORED, ovector, OVECCOUNT);
+	rc = pcre_exec(domain->base_classification_regexp, 0, work, work_len, 0, PCRE_ANCHORED, ovector, OVECCOUNT);
 	if (rc > 0) {
 		match = NULL;
 		pcre_get_substring(work, ovector, rc, 0, &match);
@@ -1163,7 +1162,7 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 			int prefix_offset = 0, prefix_len = 0;
 			int suffix_offset = 0, suffix_len = 0;
 			if (g->prefix_regexp) {
-				int rc = pcre_exec(g->prefix_regexp, 0, work, work_len, 0, 0, ovector, OVECCOUNT);
+				rc = pcre_exec(g->prefix_regexp, 0, work, work_len, 0, 0, ovector, OVECCOUNT);
 				if (rc > 0) {
 					prefix = 1;
 					prefix_offset = ovector[0];
@@ -1171,7 +1170,7 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 				}
 			}
 			if (g->suffix_regexp) {
-				int rc = pcre_exec(g->suffix_regexp, 0, work, work_len, 0, 0, ovector, OVECCOUNT);
+				rc = pcre_exec(g->suffix_regexp, 0, work, work_len, 0, 0, ovector, OVECCOUNT);
 				if (rc > 0) {
 					suffix = 1;
 					suffix_offset = ovector[0];
@@ -1186,7 +1185,7 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 			     g->word_regexp) {
 				char *s = work + prefix_offset + prefix_len;
 				int l = (suffix_len ? suffix_offset : work_len) - prefix_len - prefix_offset;
-				int rc = pcre_exec(g->word_regexp, 0, s, l, 0, 0, ovector, OVECCOUNT);
+				rc = pcre_exec(g->word_regexp, 0, s, l, 0, 0, ovector, OVECCOUNT);
 				if (rc > 0) {
 					match = NULL;
 					pcre_get_substring(s, ovector, rc, 0, &match);
@@ -1285,6 +1284,7 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 	gettimeofday(&startTime, 0);
 #endif
 
+	word_group_t *g;
 	mls_level_t *l = NULL;
 	char *rval = NULL;
 	word_group_t *groups = NULL;
@@ -1325,14 +1325,12 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 				continue;
 
 			/* compute bits not consumed by base classification */
-			ebitmap_t unhandled, orig_unhandled;
 			if (ebitmap_xor(&unhandled, &l->cat, &bc->level->cat) < 0)
 				goto err;
 			if (ebitmap_cpy(&orig_unhandled, &unhandled) < 0)
 				goto err;
 
 			/* prebuild groups */
-			word_group_t *g;
 			for (g = domain->groups; g; g = g->next) {
 				word_group_t **t;
 				for (t = &groups; *t; t = &(*t)->next)
@@ -1357,7 +1355,6 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 			for (loops = 50; ebitmap_cardinality(&unhandled) && loops > 0 && change; loops--) {
 				change = 0;
 				hamming = 10000;
-				ebitmap_t handled, nothandled;
 				if (ebitmap_xor(&handled, &unhandled, &orig_unhandled) < 0)
 					goto err;
 				if (ebitmap_not(&nothandled, &handled, maxbit) < 0)
@@ -1374,8 +1371,6 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 						}
 
 						/* if only unhandled bits are different */
-						ebitmap_t temp;
-						ebitmap_t bit_diff;
 						if (ebitmap_or(&temp, &w->normal, &w->inverse) < 0)
 							goto err;
 						if (ebitmap_and(&bit_diff, &temp, &nothandled) < 0)
@@ -1400,11 +1395,9 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 				ebitmap_destroy(&nothandled);
 
 				if (currentWord) {
-					ebitmap_t bit_diff;
 					if (ebitmap_xor(&bit_diff, &currentWord->cat, &bc->level->cat) < 0)
 						goto err;
 
-					ebitmap_t temp;
 					if (ebitmap_cpy(&temp, &unhandled) < 0)
 						goto err;
 					ebitmap_destroy(&unhandled);
@@ -1431,7 +1424,6 @@ compute_trans_from_raw(const char *level, domain_t *domain) {
 				buffer[0] = 0;
 				strcat(buffer, bc->trans);
 				strcat(buffer, " ");
-				word_group_t *g;
 				for (g=groups; g; g = g->next) {
 					if (g->words && g->prefixes) {
 						strcat(buffer, g->prefixes->text);
