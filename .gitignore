@@ -18,10 +18,10 @@
 *.orig
 *.rej
 *.pyc
+*.pyo
 cscope.*
 .#*
 \#*
 .*.swp
 # Failsafes
 !.gitignore
-restorecond/restorecond
