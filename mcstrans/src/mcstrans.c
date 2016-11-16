@@ -89,7 +89,7 @@ typedef struct word_group {
 	ebitmap_t def;
 
 	word_t **sword;
-	int sword_len;
+	unsigned int sword_len;
 
 	struct word_group *next;
 } word_group_t;
@@ -1194,7 +1194,7 @@ compute_raw_from_trans(const char *level, domain_t *domain) {
 						char *p = triml((char *)match, g->whitespace);
 						while (p && *p) {
 							int plen = strlen(p);
-							int i;
+							unsigned int i;
 							for (i = 0; i < g->sword_len; i++) {
 								word_t *w = g->sword[i];
 								int wlen = strlen(w->text);
