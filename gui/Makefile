@@ -54,3 +54,5 @@ clean:
 indent:
 
 relabel:
+
+test:

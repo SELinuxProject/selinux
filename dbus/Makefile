@@ -13,3 +13,5 @@ install:
 	install -m 755 selinux_server.py $(DESTDIR)/usr/share/system-config-selinux
 
 relabel:
+
+test:

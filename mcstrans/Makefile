@@ -14,3 +14,5 @@ clean:
 	$(MAKE) -C man clean
 
 relabel:
+
+test:

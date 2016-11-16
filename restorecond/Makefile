@@ -60,3 +60,4 @@ clean:
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])
 
+test:
