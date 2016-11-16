@@ -1,3 +1,5 @@
+	* Fix checkpolicy dontaudit compiler bug, from William Roberts.
+	* Revert "libsepol: fix checkpolicy dontaudit compiler bug", from William Roberts.
 	* cil_lexer: make warnings non-fatal for building, from Stephen Smalley.
 	* cil: remove double free, from Daniel Cashman.
 	* Fix checkpolicy dontaudit compiler bug, from Stephen Smalley.
