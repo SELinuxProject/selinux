@@ -1640,6 +1640,11 @@ static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
 
 	if (!node) {
 		memset(&avdatum, 0, sizeof avdatum);
+		/*
+		 * AUDITDENY, aka DONTAUDIT, are &= assigned, versus |= for
+		 * others. Initialize the data accordingly.
+		 */
+		avdatum.data = key->specified == AVTAB_AUDITDENY ? ~0 : 0;
 		/* this is used to get the node - insertion is actually unique */
 		node = avtab_insert_nonunique(avtab, key, &avdatum);
 		if (!node) {
@@ -1850,10 +1855,7 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 			 */
 			avdatump->data &= cur->data;
 		} else if (specified & AVRULE_DONTAUDIT) {
-			if (avdatump->data)
-				avdatump->data &= ~cur->data;
-			else
-				avdatump->data = ~cur->data;
+			avdatump->data &= ~cur->data;
 		} else if (specified & AVRULE_XPERMS) {
 			xperms = avdatump->xperms;
 			if (!xperms) {
