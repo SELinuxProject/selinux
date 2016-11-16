@@ -1,3 +1,6 @@
+	* Make parsing symbol table headers more robust, from  Nicolas Iooss.
+	* Test for ebitmap_read() negative return value, from Nicolas Iooss.
+	* Replace an assert with an error message, from Nicolas Iooss.
 	* Fix checkpolicy dontaudit compiler bug, from William Roberts.
 	* Revert "libsepol: fix checkpolicy dontaudit compiler bug", from William Roberts.
 	* cil_lexer: make warnings non-fatal for building, from Stephen Smalley.
