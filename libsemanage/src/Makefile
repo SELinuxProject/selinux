@@ -15,6 +15,7 @@ INCLUDEDIR ?= $(PREFIX)/include
 PYINC ?= $(shell $(PKG_CONFIG) --cflags $(PYPREFIX))
 PYLIBS ?= $(shell $(PKG_CONFIG) --libs $(PYPREFIX))
 PYSITEDIR ?= $(DESTDIR)$(shell $(PYTHON) -c 'import site; print(site.getsitepackages()[0])')
+PYCEXT ?= $(shell $(PYTHON) -c 'import imp;print([s for s,m,t in imp.get_suffixes() if t == imp.C_EXTENSION][0])')
 RUBYINC ?= $(shell $(RUBY) -e 'puts "-I" + RbConfig::CONFIG["rubyarchhdrdir"] + " -I" + RbConfig::CONFIG["rubyhdrdir"]')
 RUBYLIBS ?= $(shell $(RUBY) -e 'puts "-L" + RbConfig::CONFIG["libdir"] + " -lruby"')
 RUBYINSTALL ?= $(DESTDIR)$(shell $(RUBY) -e 'puts RbConfig::CONFIG["vendorarchdir"]')
@@ -145,7 +146,7 @@ install: all
 
 install-pywrap: pywrap 
 	test -d $(PYSITEDIR) || install -m 755 -d $(PYSITEDIR)
-	install -m 755 $(SWIGSO) $(PYSITEDIR)/_semanage.so
+	install -m 755 $(SWIGSO) $(PYSITEDIR)/_semanage$(PYCEXT)
 	install -m 644 semanage.py $(PYSITEDIR)
 
 
