@@ -440,14 +440,11 @@ static PyMethodDef audit2whyMethods[] = {
 
 #if PY_MAJOR_VERSION >= 3
 /* Module-initialization logic specific to Python 3 */
-struct module_state {
-	/* empty for now */
-};
 static struct PyModuleDef moduledef = {
 	PyModuleDef_HEAD_INIT,
 	"audit2why",
 	NULL,
-	sizeof(struct module_state),
+	0,
 	audit2whyMethods,
 	NULL,
 	NULL,
