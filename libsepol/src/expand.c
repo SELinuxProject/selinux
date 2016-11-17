@@ -1691,26 +1691,22 @@ static int expand_terule_helper(sepol_handle_t * handle,
 	avtab_ptr_t node;
 	class_perm_node_t *cur;
 	int conflict;
-	uint32_t oldtype = 0, spec = 0;
+	uint32_t oldtype = 0;
 
-	if (specified & AVRULE_TRANSITION) {
-		spec = AVTAB_TRANSITION;
-	} else if (specified & AVRULE_MEMBER) {
-		spec = AVTAB_MEMBER;
-	} else if (specified & AVRULE_CHANGE) {
-		spec = AVTAB_CHANGE;
-	} else {
-		assert(0);	/* unreachable */
+	if (!(specified & (AVRULE_TRANSITION|AVRULE_MEMBER|AVRULE_CHANGE))) {
+		ERR(handle, "Invalid specification: %"PRIu32"\n", specified);
+		return EXPAND_RULE_ERROR;
 	}
+
+	avkey.specified = avrule_to_avtab_spec(specified);
+	avkey.source_type = stype + 1;
+	avkey.target_type = ttype + 1;
 
 	cur = perms;
 	while (cur) {
 		uint32_t remapped_data =
 		    typemap ? typemap[cur->data - 1] : cur->data;
-		avkey.source_type = stype + 1;
-		avkey.target_type = ttype + 1;
 		avkey.target_class = cur->tclass;
-		avkey.specified = spec;
 
 		conflict = 0;
 		/* check to see if the expanded TE already exists --
@@ -1772,15 +1768,7 @@ static int expand_terule_helper(sepol_handle_t * handle,
 		}
 
 		avdatump = &node->datum;
-		if (specified & AVRULE_TRANSITION) {
-			avdatump->data = remapped_data;
-		} else if (specified & AVRULE_MEMBER) {
-			avdatump->data = remapped_data;
-		} else if (specified & AVRULE_CHANGE) {
-			avdatump->data = remapped_data;
-		} else {
-			assert(0);	/* should never occur */
-		}
+		avdatump->data = remapped_data;
 
 		cur = cur->next;
 	}
