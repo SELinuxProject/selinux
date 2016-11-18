@@ -1978,6 +1978,11 @@ int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	while ((id = queue_remove(id_queue))) {
 		if (strcmp(id, "self") == 0) {
 			free(id);
+			if (add == 0) {
+				yyerror("-self is not supported");
+				ret = -1;
+				goto out;
+			}
 			avrule->flags |= RULE_SELF;
 			continue;
 		}
@@ -2437,6 +2442,11 @@ int define_te_avtab_helper(int which, avrule_t ** rule)
 	while ((id = queue_remove(id_queue))) {
 		if (strcmp(id, "self") == 0) {
 			free(id);
+			if (add == 0) {
+				yyerror("-self is not supported");
+				ret = -1;
+				goto out;
+			}
 			avrule->flags |= RULE_SELF;
 			continue;
 		}
