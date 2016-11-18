@@ -34,7 +34,7 @@ int security_getenforce(void)
 	if (sscanf(buf, "%d", &enforce) != 1)
 		return -1;
 
-	return enforce;
+	return !!enforce;
 }
 
 hidden_def(security_getenforce)

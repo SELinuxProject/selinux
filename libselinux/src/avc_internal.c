@@ -176,6 +176,7 @@ static int avc_netlink_process(void *buf)
 
 	case SELNL_MSG_SETENFORCE:{
 		struct selnl_msg_setenforce *msg = NLMSG_DATA(nlh);
+		msg->val = !!msg->val;
 		avc_log(SELINUX_INFO,
 			"%s:  received setenforce notice (enforcing=%d)\n",
 			avc_prefix, msg->val);
