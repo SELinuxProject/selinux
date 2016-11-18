@@ -467,7 +467,7 @@ static inline int process_line(struct selabel_handle *rec,
 	spec_hasMetaChars(&spec_arr[nspec]);
 
 	if (strcmp(context, "<<none>>") && rec->validating)
-		compat_validate(rec, &spec_arr[nspec].lr, path, lineno);
+		return compat_validate(rec, &spec_arr[nspec].lr, path, lineno);
 
 	return 0;
 }
