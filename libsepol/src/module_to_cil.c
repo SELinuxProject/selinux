@@ -3530,6 +3530,9 @@ static int additive_scopes_to_cil(int indent, struct policydb *pdb, struct avrul
 	struct avrule_decl *decl = stack_peek(decl_stack);
 
 	for (args.sym_index = 0; args.sym_index < SYM_NUM; args.sym_index++) {
+		if (func_to_cil[args.sym_index] == NULL) {
+			continue;
+		}
 		rc = hashtab_map(decl->symtab[args.sym_index].table, additive_scopes_to_cil_map, &args);
 		if (rc != 0) {
 			goto exit;
