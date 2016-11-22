@@ -3469,6 +3469,10 @@ static int required_scopes_to_cil(int indent, struct policydb *pdb, struct avrul
 			key = pdb->sym_val_to_name[sym][i];
 
 			scope_datum = hashtab_search(pdb->scope[sym].table, key);
+			if (scope_datum == NULL) {
+				rc = -1;
+				goto exit;
+			}
 			for (j = 0; j < scope_datum->decl_ids_len; j++) {
 				if (scope_datum->decl_ids[j] == decl->decl_id) {
 					break;
