@@ -83,8 +83,10 @@ static void scope_index_destroy(scope_index_t * scope)
 	for (i = 0; i < SYM_NUM; i++) {
 		ebitmap_destroy(scope->scope + i);
 	}
-	for (i = 0; i < scope->class_perms_len; i++) {
-		ebitmap_destroy(scope->class_perms_map + i);
+	if (scope->class_perms_map) {
+		for (i = 0; i < scope->class_perms_len; i++) {
+			ebitmap_destroy(scope->class_perms_map + i);
+		}
 	}
 	free(scope->class_perms_map);
 }
