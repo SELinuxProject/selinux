@@ -627,7 +627,7 @@ int sepol_module_package_read(sepol_module_package_t * mod,
 		default:
 			/* unknown section, ignore */
 			ERR(file->handle,
-			    "unknown magic number at section %u, offset: %zx, number: %ux ",
+			    "unknown magic number at section %u, offset: %zx, number: %x ",
 			    i, offsets[i], le32_to_cpu(buf[0]));
 			break;
 		}
