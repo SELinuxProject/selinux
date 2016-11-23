@@ -563,40 +563,55 @@ static int role_allow_write(role_allow_t * r, struct policy_file *fp)
 	return POLICYDB_SUCCESS;
 }
 
-static int filename_trans_write(filename_trans_t * r, struct policy_file *fp)
+static int filename_write_helper(hashtab_key_t key, void *data, void *ptr)
 {
-	filename_trans_t *ft;
 	uint32_t buf[4];
-	size_t nel, items, len;
+	size_t items, len;
+	struct filename_trans *ft = (struct filename_trans *)key;
+	struct filename_trans_datum *otype = data;
+	void *fp = ptr;
 
-	nel = 0;
-	for (ft = r; ft; ft = ft->next)
-		nel++;
+	len = strlen(ft->name);
+	buf[0] = cpu_to_le32(len);
+	items = put_entry(buf, sizeof(uint32_t), 1, fp);
+	if (items != 1)
+		return POLICYDB_ERROR;
+
+	items = put_entry(ft->name, sizeof(char), len, fp);
+	if (items != len)
+		return POLICYDB_ERROR;
+
+	buf[0] = cpu_to_le32(ft->stype);
+	buf[1] = cpu_to_le32(ft->ttype);
+	buf[2] = cpu_to_le32(ft->tclass);
+	buf[3] = cpu_to_le32(otype->otype);
+	items = put_entry(buf, sizeof(uint32_t), 4, fp);
+	if (items != 4)
+		return POLICYDB_ERROR;
+
+	return 0;
+}
+
+static int filename_trans_write(struct policydb *p, void *fp)
+{
+	size_t nel, items;
+	uint32_t buf[1];
+	int rc;
+
+	if (p->policyvers < POLICYDB_VERSION_FILENAME_TRANS)
+		return 0;
+
+	nel =  p->filename_trans->nel;
 	buf[0] = cpu_to_le32(nel);
 	items = put_entry(buf, sizeof(uint32_t), 1, fp);
 	if (items != 1)
 		return POLICYDB_ERROR;
-	for (ft = r; ft; ft = ft->next) {
-		len = strlen(ft->name);
-		buf[0] = cpu_to_le32(len);
-		items = put_entry(buf, sizeof(uint32_t), 1, fp);
-		if (items != 1)
-			return POLICYDB_ERROR;
 
-		items = put_entry(ft->name, sizeof(char), len, fp);
-		if (items != len)
-			return POLICYDB_ERROR;
+	rc = hashtab_map(p->filename_trans, filename_write_helper, fp);
+	if (rc)
+		return rc;
 
-		buf[0] = cpu_to_le32(ft->stype);
-		buf[1] = cpu_to_le32(ft->ttype);
-		buf[2] = cpu_to_le32(ft->tclass);
-		buf[3] = cpu_to_le32(ft->otype);
-		items = put_entry(buf, sizeof(uint32_t), 4, fp);
-		if (items != 4)
-			return POLICYDB_ERROR;
-	}
-
-	return POLICYDB_SUCCESS;
+	return 0;
 }
 
 static int role_set_write(role_set_t * x, struct policy_file *fp)
@@ -1512,51 +1527,89 @@ static int genfs_write(policydb_t * p, struct policy_file *fp)
 	return POLICYDB_SUCCESS;
 }
 
+
+struct rangetrans_write_args {
+	size_t nel;
+	int new_rangetr;
+	struct policy_file *fp;
+};
+
+static int rangetrans_count(hashtab_key_t key,
+			    void *data __attribute__ ((unused)),
+			    void *ptr)
+{
+	struct range_trans *rt = (struct range_trans *)key;
+	struct rangetrans_write_args *args = ptr;
+
+	/* all range_transitions are written for the new format, only
+	   process related range_transitions are written for the old
+	   format, so count accordingly */
+	if (args->new_rangetr || rt->target_class == SECCLASS_PROCESS)
+		args->nel++;
+	return 0;
+}
+
+static int range_write_helper(hashtab_key_t key, void *data, void *ptr)
+{
+	uint32_t buf[2];
+	struct range_trans *rt = (struct range_trans *)key;
+	struct mls_range *r = data;
+	struct rangetrans_write_args *args = ptr;
+	struct policy_file *fp = args->fp;
+	int new_rangetr = args->new_rangetr;
+	size_t items;
+	static int warning_issued = 0;
+	int rc;
+
+	if (!new_rangetr && rt->target_class != SECCLASS_PROCESS) {
+		if (!warning_issued)
+			WARN(fp->handle, "Discarding range_transition "
+			     "rules for security classes other than "
+			     "\"process\"");
+		warning_issued = 1;
+		return 0;
+	}
+
+	buf[0] = cpu_to_le32(rt->source_type);
+	buf[1] = cpu_to_le32(rt->target_type);
+	items = put_entry(buf, sizeof(uint32_t), 2, fp);
+	if (items != 2)
+		return POLICYDB_ERROR;
+	if (new_rangetr) {
+		buf[0] = cpu_to_le32(rt->target_class);
+		items = put_entry(buf, sizeof(uint32_t), 1, fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+	}
+	rc = mls_write_range_helper(r, fp);
+	if (rc)
+		return rc;
+
+	return 0;
+}
+
 static int range_write(policydb_t * p, struct policy_file *fp)
 {
-	size_t nel, items;
-	struct range_trans *rt;
+	size_t items;
 	uint32_t buf[2];
 	int new_rangetr = (p->policy_type == POLICY_KERN &&
 			   p->policyvers >= POLICYDB_VERSION_RANGETRANS);
-	int warning_issued = 0;
+	struct rangetrans_write_args args;
+	int rc;
 
-	nel = 0;
-	for (rt = p->range_tr; rt; rt = rt->next) {
-		/* all range_transitions are written for the new format, only
-		   process related range_transitions are written for the old
-		   format, so count accordingly */
-		if (new_rangetr || rt->target_class == SECCLASS_PROCESS)
-			nel++;
-	}
-	buf[0] = cpu_to_le32(nel);
+	args.nel = 0;
+	args.new_rangetr = new_rangetr;
+	args.fp = fp;
+	rc = hashtab_map(p->range_tr, rangetrans_count, &args);
+	if (rc)
+		return rc;
+
+	buf[0] = cpu_to_le32(args.nel);
 	items = put_entry(buf, sizeof(uint32_t), 1, fp);
 	if (items != 1)
 		return POLICYDB_ERROR;
-	for (rt = p->range_tr; rt; rt = rt->next) {
-		if (!new_rangetr && rt->target_class != SECCLASS_PROCESS) {
-			if (!warning_issued)
-				WARN(fp->handle, "Discarding range_transition "
-				     "rules for security classes other than "
-				     "\"process\"");
-			warning_issued = 1;
-			continue;
-		}
-		buf[0] = cpu_to_le32(rt->source_type);
-		buf[1] = cpu_to_le32(rt->target_type);
-		items = put_entry(buf, sizeof(uint32_t), 2, fp);
-		if (items != 2)
-			return POLICYDB_ERROR;
-		if (new_rangetr) {
-			buf[0] = cpu_to_le32(rt->target_class);
-			items = put_entry(buf, sizeof(uint32_t), 1, fp);
-			if (items != 1)
-				return POLICYDB_ERROR;
-		}
-		if (mls_write_range_helper(&rt->target_range, fp))
-			return POLICYDB_ERROR;
-	}
-	return POLICYDB_SUCCESS;
+
+	return hashtab_map(p->range_tr, range_write_helper, &args);
 }
 
 /************** module writing functions below **************/
@@ -2136,7 +2189,7 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 		if (role_allow_write(p->role_allow, fp))
 			return POLICYDB_ERROR;
 		if (p->policyvers >= POLICYDB_VERSION_FILENAME_TRANS) {
-			if (filename_trans_write(p->filename_trans, fp))
+			if (filename_trans_write(p, fp))
 				return POLICYDB_ERROR;
 		} else {
 			if (p->filename_trans)

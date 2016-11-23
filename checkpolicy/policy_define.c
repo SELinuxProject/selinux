@@ -3220,11 +3220,12 @@ int define_filename_trans(void)
 	ebitmap_t e_tclasses;
 	ebitmap_node_t *snode, *tnode, *cnode;
 	filename_trans_t *ft;
+	filename_trans_datum_t *ftdatum;
 	filename_trans_rule_t *ftr;
 	type_datum_t *typdatum;
 	uint32_t otype;
 	unsigned int c, s, t;
-	int add;
+	int add, rc;
 
 	if (pass == 1) {
 		/* stype */
@@ -3308,40 +3309,44 @@ int define_filename_trans(void)
 			ebitmap_for_each_bit(&e_ttypes, tnode, t) {
 				if (!ebitmap_node_get_bit(tnode, t))
 					continue;
-	
-				for (ft = policydbp->filename_trans; ft; ft = ft->next) {
-					if (ft->stype == (s + 1) &&
-					    ft->ttype == (t + 1) &&
-					    ft->tclass == (c + 1) &&
-					    !strcmp(ft->name, name)) {
-						yyerror2("duplicate filename transition for: filename_trans %s %s %s:%s",
-							 name, 
-							 policydbp->p_type_val_to_name[s],
-							 policydbp->p_type_val_to_name[t],
-							 policydbp->p_class_val_to_name[c]);
-						goto bad;
-					}
-				}
-	
-				ft = malloc(sizeof(*ft));
+
+				ft = calloc(1, sizeof(*ft));
 				if (!ft) {
 					yyerror("out of memory");
 					goto bad;
 				}
-				memset(ft, 0, sizeof(*ft));
-	
-				ft->next = policydbp->filename_trans;
-				policydbp->filename_trans = ft;
-	
+				ft->stype = s+1;
+				ft->ttype = t+1;
+				ft->tclass = c+1;
 				ft->name = strdup(name);
 				if (!ft->name) {
 					yyerror("out of memory");
 					goto bad;
 				}
-				ft->stype = s + 1;
-				ft->ttype = t + 1;
-				ft->tclass = c + 1;
-				ft->otype = otype;
+
+				ftdatum = hashtab_search(policydbp->filename_trans,
+							 (hashtab_key_t)ft);
+				if (ftdatum) {
+					yyerror2("duplicate filename transition for: filename_trans %s %s %s:%s",
+						 name,
+						 policydbp->p_type_val_to_name[s],
+						 policydbp->p_type_val_to_name[t],
+						 policydbp->p_class_val_to_name[c]);
+					goto bad;
+				}
+
+				ftdatum = calloc(1, sizeof(*ftdatum));
+				if (!ftdatum) {
+					yyerror("out of memory");
+					goto bad;
+				}
+				rc = hashtab_insert(policydbp->filename_trans,
+						    (hashtab_key_t)ft,
+						    ftdatum);
+				if (rc) {
+					yyerror("out of memory");
+					goto bad;
+				}
 			}
 		}
 	

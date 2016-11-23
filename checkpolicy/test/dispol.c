@@ -330,18 +330,38 @@ static void display_role_trans(policydb_t *p, FILE *fp)
 	}
 }
 
+struct filenametr_display_args {
+	policydb_t *p;
+	FILE *fp;
+};
+
+static int filenametr_display(hashtab_key_t key,
+			      hashtab_datum_t datum,
+			      void *ptr)
+{
+	struct filename_trans *ft = (struct filename_trans *)key;
+	struct filename_trans_datum *ftdatum = datum;
+	struct filenametr_display_args *args = ptr;
+	policydb_t *p = args->p;
+	FILE *fp = args->fp;
+
+	display_id(p, fp, SYM_TYPES, ft->stype - 1, "");
+	display_id(p, fp, SYM_TYPES, ft->ttype - 1, "");
+	display_id(p, fp, SYM_CLASSES, ft->tclass - 1, ":");
+	display_id(p, fp, SYM_TYPES, ftdatum->otype - 1, "");
+	fprintf(fp, " %s\n", ft->name);
+	return 0;
+}
+
+
 static void display_filename_trans(policydb_t *p, FILE *fp)
 {
-	filename_trans_t *ft;
+	struct filenametr_display_args args;
 
 	fprintf(fp, "filename_trans rules:\n");
-	for (ft = p->filename_trans; ft; ft = ft->next) {
-		display_id(p, fp, SYM_TYPES, ft->stype - 1, "");
-		display_id(p, fp, SYM_TYPES, ft->ttype - 1, "");
-		display_id(p, fp, SYM_CLASSES, ft->tclass - 1, ":");
-		display_id(p, fp, SYM_TYPES, ft->otype - 1, "");
-		fprintf(fp, " %s\n", ft->name);
-	}
+	args.p = p;
+	args.fp = fp;
+	hashtab_map(p->filename_trans, filenametr_display, &args);
 }
 
 int menu(void)

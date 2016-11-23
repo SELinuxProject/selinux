@@ -1385,10 +1385,12 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *rules)
 {
 	unsigned int i, j;
-	filename_trans_t *new_trans, *cur_trans;
+	filename_trans_t key, *new_trans;
+	filename_trans_datum_t *otype;
 	filename_trans_rule_t *cur_rule;
 	ebitmap_t stypes, ttypes;
 	ebitmap_node_t *snode, *tnode;
+	int rc;
 
 	cur_rule = rules;
 	while (cur_rule) {
@@ -1418,40 +1420,32 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 				if (!ebitmap_node_get_bit(tnode, j))
 					continue;
 
-				cur_trans = state->out->filename_trans;
-				while (cur_trans) {
-					if ((cur_trans->stype == i + 1) &&
-					    (cur_trans->ttype == j + 1) &&
-					    (cur_trans->tclass == cur_rule->tclass) &&
-					    (!strcmp(cur_trans->name, cur_rule->name))) {
-						/* duplicate rule, who cares */
-						if (cur_trans->otype == mapped_otype)
-							break;
+				key.stype = i + 1;
+				key.ttype = j + 1;
+				key.tclass = cur_rule->tclass;
+				key.name = cur_rule->name;
+				otype = hashtab_search(state->out->filename_trans,
+						       (hashtab_key_t) &key);
+				if (otype) {
+					/* duplicate rule, ignore */
+					if (otype->otype == mapped_otype)
+						continue;
 
-						ERR(state->handle, "Conflicting name-based type_transition %s %s:%s \"%s\":  %s vs %s",
-						    state->out->p_type_val_to_name[i],
-						    state->out->p_type_val_to_name[j],
-						    state->out->p_class_val_to_name[cur_trans->tclass - 1],
-						    cur_trans->name,
-						    state->out->p_type_val_to_name[cur_trans->otype - 1],
-						    state->out->p_type_val_to_name[mapped_otype - 1]);
-
-						return -1;
-					}
-					cur_trans = cur_trans->next;
+					ERR(state->handle, "Conflicting name-based type_transition %s %s:%s \"%s\":  %s vs %s",
+					    state->out->p_type_val_to_name[i],
+					    state->out->p_type_val_to_name[j],
+					    state->out->p_class_val_to_name[cur_rule->tclass - 1],
+					    cur_rule->name,
+					    state->out->p_type_val_to_name[otype->otype - 1],
+					    state->out->p_type_val_to_name[mapped_otype - 1]);
+					return -1;
 				}
-				/* duplicate rule, who cares */
-				if (cur_trans)
-					continue;
 
-				new_trans = malloc(sizeof(*new_trans));
+				new_trans = calloc(1, sizeof(*new_trans));
 				if (!new_trans) {
 					ERR(state->handle, "Out of memory!");
 					return -1;
 				}
-				memset(new_trans, 0, sizeof(*new_trans));
-				new_trans->next = state->out->filename_trans;
-				state->out->filename_trans = new_trans;
 
 				new_trans->name = strdup(cur_rule->name);
 				if (!new_trans->name) {
@@ -1461,7 +1455,21 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 				new_trans->stype = i + 1;
 				new_trans->ttype = j + 1;
 				new_trans->tclass = cur_rule->tclass;
-				new_trans->otype = mapped_otype;
+
+				otype = calloc(1, sizeof(*otype));
+				if (!otype) {
+					ERR(state->handle, "Out of memory!");
+					return -1;
+				}
+				otype->otype = mapped_otype;
+
+				rc = hashtab_insert(state->out->filename_trans,
+						    (hashtab_key_t)new_trans,
+						    otype);
+				if (rc) {
+					ERR(state->handle, "Out of memory!");
+					return -1;
+				}
 			}
 		}
 
@@ -1477,63 +1485,67 @@ static int exp_rangetr_helper(uint32_t stype, uint32_t ttype, uint32_t tclass,
 			      mls_semantic_range_t * trange,
 			      expand_state_t * state)
 {
-	range_trans_t *rt, *check_rt = state->out->range_tr;
-	mls_range_t exp_range;
+	range_trans_t *rt = NULL, key;
+	mls_range_t *r, *exp_range = NULL;
 	int rc = -1;
 
-	if (mls_semantic_range_expand(trange, &exp_range, state->out,
+	exp_range = calloc(1, sizeof(*exp_range));
+	if (!exp_range) {
+		ERR(state->handle, "Out of memory!");
+		return -1;
+	}
+
+	if (mls_semantic_range_expand(trange, exp_range, state->out,
 				      state->handle))
-		goto out;
+		goto err;
 
 	/* check for duplicates/conflicts */
-	while (check_rt) {
-		if ((check_rt->source_type == stype) &&
-		    (check_rt->target_type == ttype) &&
-		    (check_rt->target_class == tclass)) {
-			if (mls_range_eq(&check_rt->target_range, &exp_range)) {
-				/* duplicate */
-				break;
-			} else {
-				/* conflict */
-				ERR(state->handle,
-				    "Conflicting range trans rule %s %s : %s",
-				    state->out->p_type_val_to_name[stype - 1],
-				    state->out->p_type_val_to_name[ttype - 1],
-				    state->out->p_class_val_to_name[tclass -
-								    1]);
-				goto out;
-			}
+	key.source_type = stype;
+	key.target_type = ttype;
+	key.target_class = tclass;
+	r = hashtab_search(state->out->range_tr, (hashtab_key_t) &key);
+	if (r) {
+		if (mls_range_eq(r, exp_range)) {
+			/* duplicate, ignore */
+			mls_range_destroy(exp_range);
+			free(exp_range);
+			return 0;
 		}
-		check_rt = check_rt->next;
-	}
-	if (check_rt) {
-		/* this is a dup - skip */
-		rc = 0;
-		goto out;
+
+		/* conflict */
+		ERR(state->handle,
+		    "Conflicting range trans rule %s %s : %s",
+		    state->out->p_type_val_to_name[stype - 1],
+		    state->out->p_type_val_to_name[ttype - 1],
+		    state->out->p_class_val_to_name[tclass - 1]);
+		goto err;
 	}
 
-	rt = (range_trans_t *) calloc(1, sizeof(range_trans_t));
+	rt = calloc(1, sizeof(*rt));
 	if (!rt) {
 		ERR(state->handle, "Out of memory!");
-		goto out;
+		goto err;
 	}
-
-	rt->next = state->out->range_tr;
-	state->out->range_tr = rt;
-
 	rt->source_type = stype;
 	rt->target_type = ttype;
 	rt->target_class = tclass;
-	if (mls_range_cpy(&rt->target_range, &exp_range)) {
+
+	rc = hashtab_insert(state->out->range_tr, (hashtab_key_t) rt,
+			    exp_range);
+	if (rc) {
 		ERR(state->handle, "Out of memory!");
-		goto out;
+		goto err;
+
 	}
 
-	rc = 0;
-
-      out:
-	mls_range_destroy(&exp_range);
-	return rc;
+	return 0;
+err:
+	free(rt);
+	if (exp_range) {
+		mls_range_destroy(exp_range);
+		free(exp_range);
+	}
+	return -1;
 }
 
 static int expand_range_trans(expand_state_t * state,

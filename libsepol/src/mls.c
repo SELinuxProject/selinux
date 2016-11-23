@@ -610,22 +610,45 @@ int mls_compute_sid(policydb_t * policydb,
 		    sepol_security_class_t tclass,
 		    uint32_t specified, context_struct_t * newcontext)
 {
-	range_trans_t *rtr;
+	range_trans_t rtr;
+	struct mls_range *r;
+	struct class_datum *cladatum;
+	int default_range = 0;
+
 	if (!policydb->mls)
 		return 0;
 
 	switch (specified) {
 	case AVTAB_TRANSITION:
 		/* Look for a range transition rule. */
-		for (rtr = policydb->range_tr; rtr; rtr = rtr->next) {
-			if (rtr->source_type == scontext->type &&
-			    rtr->target_type == tcontext->type &&
-			    rtr->target_class == tclass) {
-				/* Set the range from the rule */
-				return mls_range_set(newcontext,
-						     &rtr->target_range);
-			}
+		rtr.source_type = scontext->type;
+		rtr.target_type = tcontext->type;
+		rtr.target_class = tclass;
+		r = hashtab_search(policydb->range_tr, (hashtab_key_t) &rtr);
+		if (r)
+			return mls_range_set(newcontext, r);
+
+		if (tclass && tclass <= policydb->p_classes.nprim) {
+			cladatum = policydb->class_val_to_struct[tclass - 1];
+			if (cladatum)
+				default_range = cladatum->default_range;
 		}
+
+		switch (default_range) {
+		case DEFAULT_SOURCE_LOW:
+			return mls_context_cpy_low(newcontext, scontext);
+		case DEFAULT_SOURCE_HIGH:
+			return mls_context_cpy_high(newcontext, scontext);
+		case DEFAULT_SOURCE_LOW_HIGH:
+			return mls_context_cpy(newcontext, scontext);
+		case DEFAULT_TARGET_LOW:
+			return mls_context_cpy_low(newcontext, tcontext);
+		case DEFAULT_TARGET_HIGH:
+			return mls_context_cpy_high(newcontext, tcontext);
+		case DEFAULT_TARGET_LOW_HIGH:
+			return mls_context_cpy(newcontext, tcontext);
+		}
+
 		/* Fallthrough */
 	case AVTAB_CHANGE:
 		if (tclass == SECCLASS_PROCESS)
@@ -635,15 +658,8 @@ int mls_compute_sid(policydb_t * policydb,
 			/* Use the process effective MLS attributes. */
 			return mls_scopy_context(newcontext, scontext);
 	case AVTAB_MEMBER:
-		/* Only polyinstantiate the MLS attributes if
-		   the type is being polyinstantiated */
-		if (newcontext->type != tcontext->type) {
-			/* Use the process effective MLS attributes. */
-			return mls_scopy_context(newcontext, scontext);
-		} else {
-			/* Use the related object MLS attributes. */
-			return mls_copy_context(newcontext, tcontext);
-		}
+		/* Use the process effective MLS attributes. */
+		return mls_context_cpy_low(newcontext, scontext);
 	default:
 		return -EINVAL;
 	}

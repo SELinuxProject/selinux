@@ -1131,13 +1131,13 @@ int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *db, stru
 	class_datum_t *sepol_obj = NULL;
 	struct cil_list *class_list;
 	type_datum_t *sepol_result = NULL;
-	filename_trans_t *new = NULL;
+	filename_trans_t *newkey = NULL;
+	filename_trans_datum_t *newdatum = NULL, *otype = NULL;
 	ebitmap_t src_bitmap, tgt_bitmap;
 	ebitmap_node_t *node1, *node2;
 	unsigned int i, j;
 	struct cil_list_item *c;
 	char *name = DATUM(typetrans->name)->name;
-	uint32_t *otype = NULL;
 
 	if (name == CIL_KEY_STAR) {
 		struct cil_type_rule trans;
@@ -1177,20 +1177,20 @@ int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *db, stru
 				rc = __cil_get_sepol_class_datum(pdb, DATUM(c->data), &sepol_obj);
 				if (rc != SEPOL_OK) goto exit;
 
-				new = cil_malloc(sizeof(*new));
-				memset(new, 0, sizeof(*new));
-				new->stype = sepol_src->s.value;
-				new->ttype = sepol_tgt->s.value;
-				new->tclass = sepol_obj->s.value;
-				new->otype = sepol_result->s.value;
-				new->name = cil_strdup(name);
+				newkey = cil_calloc(1, sizeof(*newkey));
+				newdatum = cil_calloc(1, sizeof(*newdatum));
+				newkey->stype = sepol_src->s.value;
+				newkey->ttype = sepol_tgt->s.value;
+				newkey->tclass = sepol_obj->s.value;
+				newkey->name = cil_strdup(name);
+				newdatum->otype = sepol_result->s.value;
 
-				rc = hashtab_insert(filename_trans_table, (hashtab_key_t)new, &(new->otype));
+				rc = hashtab_insert(filename_trans_table, (hashtab_key_t)newkey, newdatum);
 				if (rc != SEPOL_OK) {
 					if (rc == SEPOL_EEXIST) {
 						add = CIL_FALSE;
-						otype = hashtab_search(filename_trans_table, (hashtab_key_t)new);
-						if (new->otype != *otype) {
+						otype = hashtab_search(filename_trans_table, (hashtab_key_t)newkey);
+						if (newdatum->otype != otype->otype) {
 							cil_log(CIL_ERR, "Conflicting name type transition rules\n");
 						} else {
 							rc = SEPOL_OK;
@@ -1201,11 +1201,17 @@ int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *db, stru
 				}
 
 				if (add == CIL_TRUE) {
-					new->next = pdb->filename_trans;
-					pdb->filename_trans = new;
+					rc = hashtab_insert(pdb->filename_trans,
+							    (hashtab_key_t)newkey,
+							    newdatum);
+					if (rc != SEPOL_OK) {
+						cil_log(CIL_ERR, "Out of memory\n");
+						goto exit;
+					}
 				} else {
-					free(new->name);
-					free(new);
+					free(newkey->name);
+					free(newkey);
+					free(newdatum);
 					if (rc != SEPOL_OK) {
 						goto exit;
 					}
@@ -2943,7 +2949,8 @@ int cil_rangetransition_to_policydb(policydb_t *pdb, const struct cil_db *db, st
 	type_datum_t *sepol_tgt = NULL;
 	class_datum_t *sepol_class = NULL;
 	struct cil_list *class_list;
-	range_trans_t *new;
+	range_trans_t *newkey = NULL;
+	struct mls_range *newdatum = NULL;
 	ebitmap_t src_bitmap, tgt_bitmap;
 	ebitmap_node_t *node1, *node2;
 	unsigned int i, j;
@@ -2975,24 +2982,25 @@ int cil_rangetransition_to_policydb(policydb_t *pdb, const struct cil_db *db, st
 				rc = __cil_get_sepol_class_datum(pdb, DATUM(c->data), &sepol_class);
 				if (rc != SEPOL_OK) goto exit;
 
-				new = cil_malloc(sizeof(*new));
-				memset(new, 0, sizeof(range_trans_t));
-				new->source_type = sepol_src->s.value;
-				new->target_type = sepol_tgt->s.value;
-				new->target_class = sepol_class->s.value;
-				rc = __cil_levelrange_to_mls_range(pdb, rangetrans->range, &new->target_range);
+				newkey = cil_calloc(1, sizeof(*newkey));
+				newdatum = cil_calloc(1, sizeof(*newdatum));
+				newkey->source_type = sepol_src->s.value;
+				newkey->target_type = sepol_tgt->s.value;
+				newkey->target_class = sepol_class->s.value;
+				rc = __cil_levelrange_to_mls_range(pdb, rangetrans->range, newdatum);
 				if (rc != SEPOL_OK) {
-					free(new);
+					free(newkey);
+					free(newdatum);
 					goto exit;
 				}
 
 				rc = SEPOL_OK;
-				rc = hashtab_insert(range_trans_table, (hashtab_key_t)new, &(new->target_range));
+				rc = hashtab_insert(range_trans_table, (hashtab_key_t)newkey, newdatum);
 				if (rc != SEPOL_OK) {
 					if (rc == SEPOL_EEXIST) {
 						add = CIL_FALSE;
-						o_range = hashtab_search(range_trans_table, (hashtab_key_t)new);
-						if (!mls_range_eq(&new->target_range, o_range)) {
+						o_range = hashtab_search(range_trans_table, (hashtab_key_t)newkey);
+						if (!mls_range_eq(newdatum, o_range)) {
 							cil_log(CIL_ERR, "Conflicting Range transition rules\n");
 						} else {
 							rc = SEPOL_OK;
@@ -3003,11 +3011,20 @@ int cil_rangetransition_to_policydb(policydb_t *pdb, const struct cil_db *db, st
 				}
 
 				if (add == CIL_TRUE) {
-					new->next = pdb->range_tr;
-					pdb->range_tr = new;
+					rc = hashtab_insert(pdb->range_tr,
+							    (hashtab_key_t)newkey,
+							    newdatum);
+					if (rc != SEPOL_OK) {
+						mls_range_destroy(newdatum);
+						free(newdatum);
+						free(newkey);
+						cil_log(CIL_ERR, "Out of memory\n");
+						goto exit;
+					}
 				} else {
-					mls_range_destroy(&new->target_range);
-					free(new);
+					mls_range_destroy(newdatum);
+					free(newdatum);
+					free(newkey);
 					if (rc != SEPOL_OK) {
 						goto exit;
 					}

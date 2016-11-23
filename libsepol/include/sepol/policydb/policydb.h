@@ -162,9 +162,11 @@ typedef struct filename_trans {
 	uint32_t ttype;
 	uint32_t tclass;
 	char *name;
-	uint32_t otype;
-	struct filename_trans *next;
 } filename_trans_t;
+
+typedef struct filename_trans_datum {
+	uint32_t otype;		/* expected of new object */
+} filename_trans_datum_t;
 
 /* Type attributes */
 typedef struct type_datum {
@@ -218,8 +220,6 @@ typedef struct range_trans {
 	uint32_t source_type;
 	uint32_t target_type;
 	uint32_t target_class;
-	mls_range_t target_range;
-	struct range_trans *next;
 } range_trans_t;
 
 /* Boolean data type */
@@ -555,9 +555,6 @@ typedef struct policydb {
 	/* role transitions */
 	role_trans_t *role_tr;
 
-	/* type transition rules with a 'name' component */
-	filename_trans_t *filename_trans;
-
 	/* role allows */
 	role_allow_t *role_allow;
 
@@ -570,8 +567,11 @@ typedef struct policydb {
 	   fixed labeling behavior. */
 	genfs_t *genfs;
 
-	/* range transitions */
-	range_trans_t *range_tr;
+	/* range transitions table (range_trans_key -> mls_range) */
+	hashtab_t range_tr;
+
+	/* file transitions with the last path component */
+	hashtab_t filename_trans;
 
 	ebitmap_t *type_attr_map;
 
