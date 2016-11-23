@@ -2424,7 +2424,7 @@ int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * out, policydb_t 
 	ebitmap_init(r);
 
 	if (x->flags & ROLE_STAR) {
-		for (i = 0; i < p->p_roles.nprim++; i++)
+		for (i = 0; i < p->p_roles.nprim; i++)
 			if (ebitmap_set_bit(r, i, 1))
 				return -1;
 		return 0;
