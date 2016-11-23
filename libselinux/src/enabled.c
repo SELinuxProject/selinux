@@ -6,7 +6,6 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
-#include <stdio_ext.h>
 #include "policy.h"
 
 int is_selinux_enabled(void)
