@@ -1078,8 +1078,25 @@ static int role_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	if (ebitmap_write(&role->dominates, fp))
 		return POLICYDB_ERROR;
 	if (p->policy_type == POLICY_KERN) {
-		if (ebitmap_write(&role->types.types, fp))
-			return POLICYDB_ERROR;
+		if (role->s.value == OBJECT_R_VAL) {
+			/*
+			 * CIL populates object_r's types map
+			 * rather than handling it as a special case.
+			 * However, this creates an inconsistency with
+			 * the kernel policy read from /sys/fs/selinux/policy
+			 * because the kernel ignores everything except for
+			 * object_r's value from the policy file.
+			 * Make them consistent by writing an empty
+			 * ebitmap instead.
+			 */
+			ebitmap_t empty;
+			ebitmap_init(&empty);
+			if (ebitmap_write(&empty, fp))
+				return POLICYDB_ERROR;
+		} else {
+			if (ebitmap_write(&role->types.types, fp))
+				return POLICYDB_ERROR;
+		}
 	} else {
 		if (type_set_write(&role->types, fp))
 			return POLICYDB_ERROR;
