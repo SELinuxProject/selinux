@@ -1,5 +1,7 @@
 secilc
 secilc.8
+secil2conf
+secil2conf.8
 policy.*
 file_contexts
 docs/html

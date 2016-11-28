@@ -5,19 +5,24 @@ LIBDIR ?= $(PREFIX)/lib
 INCLUDEDIR ?= $(PREFIX)/include
 
 LDLIBS = -lsepol -L$(LIBDIR)
+
 SECILC = secilc
 SECILC_SRCS := secilc.c
 SECILC_OBJS := $(patsubst %.c,%.o,$(SECILC_SRCS))
 
-# The secilc man page:
-MANPAGE = secilc.8
+SECIL2CONF = secil2conf
+SECIL2CONF_SRCS := secil2conf.c
+SECIL2CONF_OBJS := $(patsubst %.c,%.o,$(SECIL2CONF_SRCS))
+
+SECILC_MANPAGE = secilc.8
+SECIL2CONF_MANPAGE = secil2conf.8
 XMLTO = xmlto
 
 CFLAGS ?= -Wall -Wshadow -Wextra -Wundef -Wmissing-format-attribute -Wcast-align -Wstrict-prototypes -Wpointer-arith -Wunused
 
 override CFLAGS += -I$(INCLUDEDIR) -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
 
-all: $(SECILC) man
+all: $(SECILC) $(SECIL2CONF) man
 
 $(SECILC): $(SECILC_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
@@ -25,16 +30,24 @@ $(SECILC): $(SECILC_OBJS)
 test: $(SECILC)
 	./$(SECILC) test/policy.cil
 
-man: $(MANPAGE)
+$(SECIL2CONF): $(SECIL2CONF_OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-$(MANPAGE): $(MANPAGE).xml
-	$(XMLTO) man $(MANPAGE).xml
+man: $(SECILC_MANPAGE) $(SECIL2CONF_MANPAGE)
+
+$(SECILC_MANPAGE): $(SECILC_MANPAGE).xml
+	$(XMLTO) man $(SECILC_MANPAGE).xml
+
+$(SECIL2CONF_MANPAGE): $(SECIL2CONF_MANPAGE).xml
+	$(XMLTO) man $(SECIL2CONF_MANPAGE).xml
 
 install: all man
 	-mkdir -p $(BINDIR)
 	-mkdir -p $(MANDIR)/man8
 	install -m 755 $(SECILC) $(BINDIR)
-	install -m 644 $(MANPAGE) $(MANDIR)/man8
+	install -m 755 $(SECIL2CONF) $(BINDIR)
+	install -m 644 $(SECILC_MANPAGE) $(MANDIR)/man8
+	install -m 644 $(SECIL2CONF_MANPAGE) $(MANDIR)/man8
 
 doc:
 	$(MAKE) -C docs
@@ -42,9 +55,12 @@ doc:
 clean:
 	rm -f $(SECILC)
 	rm -f $(SECILC_OBJS)
+	rm -f $(SECIL2CONF)
+	rm -f $(SECIL2CONF_OBJS)
 	rm -f policy.*
 	rm -f file_contexts
-	rm -f $(MANPAGE)
+	rm -f $(SECILC_MANPAGE)
+	rm -f $(SECIL2CONF_MANPAGE)
 
 relabel:
 

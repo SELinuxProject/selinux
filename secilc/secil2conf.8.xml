@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML//EN"
+               "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<refentry>
+   <refentryinfo>
+      <author>
+         <firstname>James</firstname><surname>Carter</surname><contrib></contrib>
+      </author>
+   </refentryinfo>
+
+   <refmeta>
+      <refentrytitle>SECIL2CONF</refentrytitle>
+      <manvolnum>8</manvolnum>
+      <refmiscinfo class="date">21 November 2016</refmiscinfo>
+      <refmiscinfo class="source">secil2conf</refmiscinfo>
+      <refmiscinfo class="manual">SELinux CIL to policy.conf Converter</refmiscinfo>
+   </refmeta>
+   <refnamediv id="name">
+      <refname>secil2conf</refname>
+      <refpurpose>invoke the SELinux Common Intermediate Language (CIL) to policy.conf converter</refpurpose>
+   </refnamediv>
+
+   <refsynopsisdiv id="synopsis">
+      <cmdsynopsis>
+        <command>secil2conf</command>
+          <arg choice="opt" rep="repeat"><replaceable>OPTION</replaceable></arg>
+          <arg choice="plain"><replaceable>file</replaceable></arg>
+      </cmdsynopsis>
+   </refsynopsisdiv>
+
+   <refsect1 id="description"><title>DESCRIPTION</title>
+      <para><emphasis role="italic">secil2conf</emphasis> invokes the CIL to policy.conf converter with the specified <emphasis role="italic">argument</emphasis>s.</para>
+   </refsect1>
+
+   <refsect1 id="options"><title>OPTIONS</title>
+      <variablelist>
+         <varlistentry>
+            <term><option>-o, --output=&lt;file></option></term>
+            <listitem><para>Write policy.conf to <emphasis role="italic">file</emphasis> (default: policy.conf)</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
+            <term><option>-M, --mls true|false</option></term>
+            <listitem><para>Build an mls policy.conf. Must be <emphasis role="bold">true</emphasis> or <emphasis role="bold">false</emphasis>. This will override the <emphasis role="bold">(mls <emphasis role="italic">boolean</emphasis></emphasis><emphasis role="bold">)</emphasis> statement if present in the policy.</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
+            <term><option>-P, --preserve-tunables</option></term>
+            <listitem><para>Treat tunables as booleans.</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
+            <term><option>-v, --verbose</option></term>
+            <listitem><para>Increment verbosity level.</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
+            <term><option>-h, --help</option></term>
+            <listitem><para>Display usage information.</para></listitem>
+         </varlistentry>
+      </variablelist>
+   </refsect1>
+
+   <refsect1 id="see_also"><title>SEE ALSO</title>
+      <para>
+      <simplelist type="inline">
+         <member><citerefentry>
+            <refentrytitle>secilc</refentrytitle>
+            <manvolnum>8</manvolnum>
+         </citerefentry></member>
+         <member><citerefentry>
+            <refentrytitle>sestatus</refentrytitle>
+            <manvolnum>8</manvolnum>
+         </citerefentry></member>
+      </simplelist>
+      </para>
+      <para>HTML documentation describing the CIL language statements is available starting with <emphasis role="italic">docs/html/index.html</emphasis>.</para>
+      <para>PDF documentation describing the CIL language statements is available at: <emphasis role="italic">docs/pdf/CIL_Reference_Guide.pdf</emphasis>.</para>
+      <para>There is a CIL Design Wiki at: <ulink url="http://github.com/SELinuxProject/cil/wiki"></ulink> that describes the goals and features of the CIL language.</para>
+   </refsect1>
+</refentry>
