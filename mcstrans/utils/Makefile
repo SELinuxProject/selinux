@@ -4,8 +4,8 @@ LIBDIR ?= $(PREFIX)/lib
 BINDIR ?= $(PREFIX)/sbin
 
 CFLAGS ?= -Wall
-override CFLAGS += -I../src -D_GNU_SOURCE
-LDLIBS += -L../src ../src/mcstrans.o ../src/mls_level.o -lselinux -lpcre $(LIBDIR)/libsepol.a
+override CFLAGS += -I../src -I$(PREFIX)/include -D_GNU_SOURCE
+LDLIBS += -L$(LIBDIR) ../src/mcstrans.o ../src/mls_level.o -lselinux -lpcre $(LIBDIR)/libsepol.a
 
 TARGETS=$(patsubst %.c,%,$(wildcard *.c))
 
