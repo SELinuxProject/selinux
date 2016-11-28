@@ -32,7 +32,7 @@ all: $(EXE) $(policies)
 policies: $(policies)
 
 $(EXE): $(objs) $(parserobjs) $(LIBSEPOL)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(objs) $(parserobjs) -lfl -lcunit -lcurses $(LIBSEPOL) -o $@
+	$(CC) $(LDFLAGS) $(objs) $(parserobjs) -lcunit -lcurses $(LIBSEPOL) -o $@
 
 %.conf.std: $(m4support) %.conf
 	$(M4) $(M4PARAMS) $^ > $@
