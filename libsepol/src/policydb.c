@@ -932,6 +932,8 @@ static int common_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	p = (policydb_t *) datap;
 	if (!comdatum->s.value || comdatum->s.value > p->p_commons.nprim)
 		return -EINVAL;
+	if (p->p_common_val_to_name[comdatum->s.value - 1] != NULL)
+		return -EINVAL;
 	p->p_common_val_to_name[comdatum->s.value - 1] = (char *)key;
 
 	return 0;
@@ -945,6 +947,8 @@ static int class_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	cladatum = (class_datum_t *) datum;
 	p = (policydb_t *) datap;
 	if (!cladatum->s.value || cladatum->s.value > p->p_classes.nprim)
+		return -EINVAL;
+	if (p->p_class_val_to_name[cladatum->s.value - 1] != NULL)
 		return -EINVAL;
 	p->p_class_val_to_name[cladatum->s.value - 1] = (char *)key;
 	p->class_val_to_struct[cladatum->s.value - 1] = cladatum;
@@ -960,6 +964,8 @@ static int role_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	role = (role_datum_t *) datum;
 	p = (policydb_t *) datap;
 	if (!role->s.value || role->s.value > p->p_roles.nprim)
+		return -EINVAL;
+	if (p->p_role_val_to_name[role->s.value - 1] != NULL)
 		return -EINVAL;
 	p->p_role_val_to_name[role->s.value - 1] = (char *)key;
 	p->role_val_to_struct[role->s.value - 1] = role;
@@ -978,6 +984,8 @@ static int type_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	if (typdatum->primary) {
 		if (!typdatum->s.value || typdatum->s.value > p->p_types.nprim)
 			return -EINVAL;
+		if (p->p_type_val_to_name[typdatum->s.value - 1] != NULL)
+			return -EINVAL;
 		p->p_type_val_to_name[typdatum->s.value - 1] = (char *)key;
 		p->type_val_to_struct[typdatum->s.value - 1] = typdatum;
 	}
@@ -995,7 +1003,8 @@ static int user_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 
 	if (!usrdatum->s.value || usrdatum->s.value > p->p_users.nprim)
 		return -EINVAL;
-
+	if (p->p_user_val_to_name[usrdatum->s.value - 1] != NULL)
+		return -EINVAL;
 	p->p_user_val_to_name[usrdatum->s.value - 1] = (char *)key;
 	p->user_val_to_struct[usrdatum->s.value - 1] = usrdatum;
 
@@ -1014,6 +1023,8 @@ static int sens_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 		if (!levdatum->level->sens ||
 		    levdatum->level->sens > p->p_levels.nprim)
 			return -EINVAL;
+		if (p->p_sens_val_to_name[levdatum->level->sens - 1] != NULL)
+			return -EINVAL;
 		p->p_sens_val_to_name[levdatum->level->sens - 1] = (char *)key;
 	}
 
@@ -1030,6 +1041,8 @@ static int cat_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 
 	if (!catdatum->isalias) {
 		if (!catdatum->s.value || catdatum->s.value > p->p_cats.nprim)
+			return -EINVAL;
+		if (p->p_cat_val_to_name[catdatum->s.value - 1] != NULL)
 			return -EINVAL;
 		p->p_cat_val_to_name[catdatum->s.value - 1] = (char *)key;
 	}
@@ -1051,7 +1064,7 @@ int policydb_index_classes(policydb_t * p)
 {
 	free(p->p_common_val_to_name);
 	p->p_common_val_to_name = (char **)
-	    malloc(p->p_commons.nprim * sizeof(char *));
+	    calloc(p->p_commons.nprim, sizeof(char *));
 	if (!p->p_common_val_to_name)
 		return -1;
 
@@ -1060,13 +1073,13 @@ int policydb_index_classes(policydb_t * p)
 
 	free(p->class_val_to_struct);
 	p->class_val_to_struct = (class_datum_t **)
-	    malloc(p->p_classes.nprim * sizeof(class_datum_t *));
+	    calloc(p->p_classes.nprim, sizeof(class_datum_t *));
 	if (!p->class_val_to_struct)
 		return -1;
 
 	free(p->p_class_val_to_name);
 	p->p_class_val_to_name = (char **)
-	    malloc(p->p_classes.nprim * sizeof(char *));
+	    calloc(p->p_classes.nprim, sizeof(char *));
 	if (!p->p_class_val_to_name)
 		return -1;
 
@@ -1082,7 +1095,7 @@ int policydb_index_bools(policydb_t * p)
 	if (cond_init_bool_indexes(p) == -1)
 		return -1;
 	p->p_bool_val_to_name = (char **)
-	    malloc(p->p_bools.nprim * sizeof(char *));
+	    calloc(p->p_bools.nprim, sizeof(char *));
 	if (!p->p_bool_val_to_name)
 		return -1;
 	if (hashtab_map(p->p_bools.table, cond_index_bool, p))
@@ -1116,6 +1129,10 @@ int policydb_index_decls(sepol_handle_t * handle, policydb_t * p)
 		     decl = decl->next) {
 			if (decl->decl_id < 1 || decl->decl_id > num_decls) {
 				ERR(handle, "invalid decl ID %u", decl->decl_id);
+				return -1;
+			}
+			if (p->decl_val_to_struct[decl->decl_id - 1] != NULL) {
+				ERR(handle, "duplicated decl ID %u", decl->decl_id);
 				return -1;
 			}
 			p->decl_val_to_struct[decl->decl_id - 1] = decl;

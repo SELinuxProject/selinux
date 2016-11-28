@@ -551,6 +551,9 @@ int cond_index_bool(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	if (!booldatum->s.value || booldatum->s.value > p->p_bools.nprim)
 		return -EINVAL;
 
+	if (p->p_bool_val_to_name[booldatum->s.value - 1] != NULL)
+		return -EINVAL;
+
 	p->p_bool_val_to_name[booldatum->s.value - 1] = key;
 	p->bool_val_to_struct[booldatum->s.value - 1] = booldatum;
 
