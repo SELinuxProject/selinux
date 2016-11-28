@@ -1090,11 +1090,11 @@ int policydb_index_bools(policydb_t * p)
 	return 0;
 }
 
-int policydb_index_decls(policydb_t * p)
+int policydb_index_decls(sepol_handle_t * handle, policydb_t * p)
 {
 	avrule_block_t *curblock;
 	avrule_decl_t *decl;
-	int num_decls = 0;
+	unsigned int num_decls = 0;
 
 	free(p->decl_val_to_struct);
 
@@ -1114,6 +1114,10 @@ int policydb_index_decls(policydb_t * p)
 	for (curblock = p->global; curblock != NULL; curblock = curblock->next) {
 		for (decl = curblock->branch_list; decl != NULL;
 		     decl = decl->next) {
+			if (decl->decl_id < 1 || decl->decl_id > num_decls) {
+				ERR(handle, "invalid decl ID %u", decl->decl_id);
+				return -1;
+			}
 			p->decl_val_to_struct[decl->decl_id - 1] = decl;
 		}
 	}
@@ -4039,7 +4043,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 
 	}
 
-	if (policydb_index_decls(p))
+	if (policydb_index_decls(fp->handle, p))
 		goto bad;
 
 	if (policydb_index_classes(p))
