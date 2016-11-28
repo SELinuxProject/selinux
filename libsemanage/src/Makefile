@@ -101,7 +101,7 @@ semanageswig_python_exception.i: ../include/semanage/semanage.h
 	bash -e exception.sh > $@ || (rm -f $@ ; false)
 
 conf-scan.c: conf-scan.l conf-parse.h
-	$(LEX) $(LFLAGS) -t $< > $@
+	$(LEX) $(LFLAGS) -o $@ $<
 
 conf-parse.c: conf-parse.y
 	$(YACC) $(YFLAGS) -o $@ $<

@@ -67,7 +67,8 @@ $(CILDIR)/src/cil_lexer.lo: $(CILDIR)/src/cil_lexer.c
 	$(CC) $(filter-out -Werror, $(CFLAGS)) -fPIC -DSHARED -c -o $@ $<
 
 $(CILDIR)/src/cil_lexer.c: $(CILDIR)/src/cil_lexer.l
-	$(LEX) -t $< > $@
+	$(LEX) -o $@ $<
+
 endif
 
 %.o:  %.c 
