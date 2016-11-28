@@ -384,11 +384,11 @@ def handleFcontext(args):
 def setupFcontextParser(subparsers):
     ftype_help = '''
 File Type.   This is used with fcontext.  Requires a  file  type
-as  shown  in  the  mode  field by ls, e.g. use -d to match only
-directories or -- to match only regular files. The following
+as  shown  in  the  mode  field by ls, e.g. use d to match only
+directories or f to match only regular files. The following
 file type options can be passed:
--- (regular file),-d (directory),-c (character device),
--b (block device),-s (socket),-l (symbolic link),-p (named pipe)
+f (regular file),d (directory),c (character device),
+b (block device),s (socket),l (symbolic link),p (named pipe)
 If you do not specify a file type, the file type will default to "all files".
 '''
     generate_usage = generate_custom_usage(usage_fcontext, usage_fcontext_dict)
