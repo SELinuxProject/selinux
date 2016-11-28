@@ -52,6 +52,7 @@ extern int cil_set_handle_unknown(cil_db_t *db, int handle_unknown);
 extern void cil_set_mls(cil_db_t *db, int mls);
 extern void cil_set_target_platform(cil_db_t *db, int target_platform);
 extern void cil_set_policy_version(cil_db_t *db, int policy_version);
+extern void cil_write_policy_conf(FILE *out, struct cil_db *db);
 
 enum cil_log_level {
 	CIL_ERR = 1,

@@ -30,18 +30,8 @@
 #ifndef CIL_POLICY_H_
 #define CIL_POLICY_H_
 
-#include "cil_tree.h"
-#include "cil_list.h"
 #include "cil_internal.h"
 
-struct cil_multimap_item {
-	struct cil_symtab_datum *key;
-	struct cil_list *values;
-};
-
-int cil_combine_policy(FILE **file_arr, FILE *policy_file);
-void cil_context_to_policy(FILE **, uint32_t, struct cil_context *);
-int cil_name_to_policy(FILE **, struct cil_tree_node *);
-int cil_gen_policy(struct cil_db *);
+void cil_gen_policy(FILE *out, struct cil_db *db);
 
 #endif

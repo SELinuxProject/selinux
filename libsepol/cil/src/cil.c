@@ -461,6 +461,12 @@ exit:
 	return rc;
 }
 
+void cil_write_policy_conf(FILE *out, struct cil_db *db)
+{
+	cil_log(CIL_INFO, "Writing policy.conf file\n");
+	cil_gen_policy(out, db);
+}
+
 void cil_destroy_data(void **data, enum cil_flavor flavor)
 {
 	if (*data == NULL) {
