@@ -89,6 +89,7 @@ char *sepol_av_to_string(policydb_t * policydbp, uint32_t tclass,
 	int rc;
 	int avlen = 0, len;
 
+	memset(avbuf, 0, sizeof avbuf);
 	cladatum = policydbp->class_val_to_struct[tclass - 1];
 	p = avbuf;
 	for (i = 0; i < cladatum->permissions.nprim; i++) {
