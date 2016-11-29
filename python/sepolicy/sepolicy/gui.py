@@ -2609,9 +2609,10 @@ class SELinuxGui():
     def set_enforce_text(self, value):
         if value:
             self.status_bar.push(self.context_id, _("System Status: Enforcing"))
+            self.current_status_enforcing.set_active(True)
         else:
             self.status_bar.push(self.context_id, _("System Status: Permissive"))
-        self.current_status_permissive.set_active(True)
+            self.current_status_permissive.set_active(True)
 
     def set_enforce(self, button):
         self.dbus.setenforce(button.get_active())
