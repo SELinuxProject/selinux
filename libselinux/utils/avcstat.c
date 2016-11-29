@@ -203,7 +203,7 @@ int main(int argc, char **argv)
 		if (!parsed)
 			die("unable to parse \'%s\': no data", avcstatfile);
 
-		if (cumulative || (!cumulative && !i))
+		if (cumulative || !i)
 			printf("%10Lu %10Lu %10Lu %10Lu %10Lu %10Lu\n",
 			       tot.lookups, tot.hits, tot.misses,
 			       tot.allocations, tot.reclaims, tot.frees);
