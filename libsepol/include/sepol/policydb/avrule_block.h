@@ -21,9 +21,10 @@
 #define _SEPOL_AVRULE_BLOCK_H_
 
 #include <sepol/policydb/policydb.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern avrule_block_t *avrule_block_create(void);
 extern void avrule_block_destroy(avrule_block_t * x);
@@ -37,5 +38,8 @@ extern cond_list_t *get_decl_cond_list(policydb_t * p,
 extern int is_id_enabled(char *id, policydb_t * p, int symbol_table);
 extern int is_perm_enabled(char *class_id, char *perm_id, policydb_t * p);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

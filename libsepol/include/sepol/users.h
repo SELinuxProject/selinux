@@ -5,9 +5,10 @@
 #include <sepol/user_record.h>
 #include <sepol/handle.h>
 #include <stddef.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*---------compatibility------------*/
 
@@ -57,5 +58,8 @@ extern int sepol_user_iterate(sepol_handle_t * handle,
 			      int (*fn) (const sepol_user_t * user,
 					 void *fn_arg), void *arg);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

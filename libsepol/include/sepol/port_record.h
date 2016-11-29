@@ -3,9 +3,10 @@
 
 #include <sepol/context_record.h>
 #include <sepol/handle.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct sepol_port;
 struct sepol_port_key;
@@ -67,5 +68,8 @@ extern int sepol_port_clone(sepol_handle_t * handle,
 
 extern void sepol_port_free(sepol_port_t * port);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

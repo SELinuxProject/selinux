@@ -7,9 +7,10 @@
 
 #include <sepol/handle.h>
 #include <sepol/policydb.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct sepol_module_package;
 typedef struct sepol_module_package sepol_module_package_t;
@@ -82,5 +83,8 @@ extern int sepol_expand_module(sepol_handle_t * handle,
 			       sepol_policydb_t * base,
 			       sepol_policydb_t * out, int verbose, int check);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

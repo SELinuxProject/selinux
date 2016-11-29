@@ -25,9 +25,10 @@
 #include <sepol/policydb/avtab.h>
 #include <sepol/policydb/symtab.h>
 #include <sepol/policydb/policydb.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define COND_EXPR_MAXDEPTH 10
 
@@ -136,5 +137,8 @@ extern int cond_read_list(policydb_t * p, cond_list_t ** list, void *fp);
 extern void cond_compute_av(avtab_t * ctab, avtab_key_t * key,
 			    struct sepol_av_decision *avd);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif				/* _CONDITIONAL_H_ */

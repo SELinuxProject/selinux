@@ -11,9 +11,10 @@
 #define _SEPOL_POLICYDB_SIDTAB_H_
 
 #include <sepol/policydb/context.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct sidtab_node {
 	sepol_security_id_t sid;	/* security identifier */
@@ -69,7 +70,10 @@ extern void sepol_sidtab_set(sidtab_t * dst, sidtab_t * src);
 
 extern void sepol_sidtab_shutdown(sidtab_t * s);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif				/* _SIDTAB_H_ */
 
 /* FLASK */

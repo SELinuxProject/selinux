@@ -28,9 +28,10 @@
 #include <stddef.h>
 #include <sepol/handle.h>
 #include <sepol/policydb/conditional.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * Expand only the avrules for a module. It is valid for this function
@@ -79,5 +80,8 @@ extern int expand_avtab(policydb_t * p, avtab_t * a, avtab_t * expa);
 extern int expand_cond_av_list(policydb_t * p, cond_av_list_t * l,
 			       cond_av_list_t ** newl, avtab_t * expa);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

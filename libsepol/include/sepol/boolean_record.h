@@ -3,9 +3,10 @@
 
 #include <stddef.h>
 #include <sepol/handle.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct sepol_bool;
 struct sepol_bool_key;
@@ -51,5 +52,8 @@ extern int sepol_bool_clone(sepol_handle_t * handle,
 
 extern void sepol_bool_free(sepol_bool_t * boolean);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

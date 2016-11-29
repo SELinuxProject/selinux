@@ -22,7 +22,9 @@
 #include <sepol/policydb/ebitmap.h>
 #include <sepol/policydb/mls_types.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * A security context consists of an authenticated user
@@ -135,5 +137,8 @@ static inline int context_cmp(context_struct_t * c1, context_struct_t * c2)
 		(c1->type == c2->type) && mls_context_cmp(c1, c2));
 }
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

@@ -3,9 +3,10 @@
 
 #include <stddef.h>
 #include <sepol/handle.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct sepol_user;
 struct sepol_user_key;
@@ -76,5 +77,8 @@ extern int sepol_user_clone(sepol_handle_t * handle,
 
 extern void sepol_user_free(sepol_user_t * user);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

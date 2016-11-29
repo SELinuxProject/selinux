@@ -1,9 +1,9 @@
 #ifndef _SEPOL_HANDLE_H_
 #define _SEPOL_HANDLE_H_
 
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct sepol_handle;
 typedef struct sepol_handle sepol_handle_t;
@@ -35,5 +35,8 @@ int sepol_get_preserve_tunables(sepol_handle_t * sh);
  * 0 is default and discard such branch, 1 preserves them */
 void sepol_set_preserve_tunables(sepol_handle_t * sh, int preserve_tunables);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

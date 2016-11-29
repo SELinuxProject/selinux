@@ -22,7 +22,9 @@
 #include <sepol/policydb/ebitmap.h>
 #include <sepol/policydb/flask_types.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define CEXPR_MAXDEPTH 5
 
@@ -73,7 +75,10 @@ struct policydb;
 extern int constraint_expr_init(constraint_expr_t * expr);
 extern void constraint_expr_destroy(constraint_expr_t * expr);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif				/* _CONSTRAINT_H_ */
 
 /* FLASK */

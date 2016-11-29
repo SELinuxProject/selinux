@@ -27,9 +27,10 @@
 
 #include <sepol/policydb/avtab.h>
 #include <sepol/policydb/policydb.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern int hierarchy_add_bounds(sepol_handle_t *handle, policydb_t *p);
 
@@ -43,5 +44,8 @@ extern int bounds_check_types(sepol_handle_t *handle, policydb_t *p);
 
 extern int hierarchy_check_constraints(sepol_handle_t * handle, policydb_t * p);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

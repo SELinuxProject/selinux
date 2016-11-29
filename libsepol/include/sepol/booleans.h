@@ -5,9 +5,10 @@
 #include <sepol/policydb.h>
 #include <sepol/boolean_record.h>
 #include <sepol/handle.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*--------------compatibility--------------*/
 
@@ -59,5 +60,8 @@ extern int sepol_bool_iterate(sepol_handle_t * handle,
 			      int (*fn) (const sepol_bool_t * boolean,
 					 void *fn_arg), void *arg);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

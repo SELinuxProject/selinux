@@ -3,9 +3,10 @@
 
 #include <stddef.h>
 #include <stdio.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <sepol/user_record.h>
 #include <sepol/context_record.h>
@@ -28,5 +29,8 @@ __BEGIN_DECLS
 /* Set internal policydb from a file for subsequent service calls. */
 extern int sepol_set_policydb_from_file(FILE * fp);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

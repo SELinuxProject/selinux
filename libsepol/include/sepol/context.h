@@ -4,9 +4,10 @@
 #include <sepol/context_record.h>
 #include <sepol/policydb.h>
 #include <sepol/handle.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* -- Deprecated -- */
 
@@ -26,5 +27,8 @@ extern int sepol_mls_contains(sepol_handle_t * handle,
 extern int sepol_mls_check(sepol_handle_t * handle,
 			   const sepol_policydb_t * policydb, const char *mls);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

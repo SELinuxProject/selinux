@@ -14,9 +14,10 @@
 #define _SEPOL_POLICYDB_SYMTAB_H_
 
 #include <sepol/policydb/hashtab.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* The symtab_datum struct stores the common information for
  * all symtab datums. It should the first element in every
@@ -37,7 +38,10 @@ typedef struct {
 extern int symtab_init(symtab_t *, unsigned int size);
 extern void symtab_destroy(symtab_t *);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif				/* _SYMTAB_H_ */
 
 /* FLASK */

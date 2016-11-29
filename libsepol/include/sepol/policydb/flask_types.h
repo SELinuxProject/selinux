@@ -13,9 +13,10 @@
 
 #include <sys/types.h>
 #include <stdint.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * A security context is a set of security attributes 
@@ -61,5 +62,8 @@ struct sepol_av_decision {
 	uint32_t seqno;
 };
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

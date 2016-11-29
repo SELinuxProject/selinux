@@ -61,7 +61,6 @@
 #include <sepol/policydb/context.h>
 #include <sepol/policydb/constraint.h>
 #include <sepol/policydb/sidtab.h>
-#include <sys/cdefs.h>
 
 #define ERRMSG_LEN 1024
 
@@ -69,7 +68,9 @@
 #define POLICYDB_ERROR       -1
 #define POLICYDB_UNSUPPORTED -2
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * A datum type is defined for each kind of symbol 
@@ -776,7 +777,10 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_MOD_MAGIC SELINUX_MOD_MAGIC
 #define POLICYDB_MOD_STRING "SE Linux Module"
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif				/* _POLICYDB_H_ */
 
 /* FLASK */

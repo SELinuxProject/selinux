@@ -4,9 +4,10 @@
 #include <sepol/handle.h>
 #include <sepol/policydb.h>
 #include <sepol/port_record.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Return the number of ports */
 extern int sepol_port_count(sepol_handle_t * handle,
@@ -40,5 +41,8 @@ extern int sepol_port_iterate(sepol_handle_t * handle,
 			      int (*fn) (const sepol_port_t * port,
 					 void *fn_arg), void *arg);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif

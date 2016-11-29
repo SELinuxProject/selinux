@@ -15,9 +15,10 @@
 #include <sepol/policydb/flask_types.h>
 #include <sepol/policydb/policydb.h>
 #include <stddef.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Set the policydb and sidtab structures to be used by
    the service functions.  If not set, then these default
@@ -230,5 +231,8 @@ extern int sepol_genfs_sid(const char *fstype,	/* IN */
 			   sepol_security_class_t sclass,	/* IN */
 			   sepol_security_id_t * sid);	/* OUT  */
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
+
 #endif
