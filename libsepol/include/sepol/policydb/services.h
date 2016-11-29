@@ -52,9 +52,10 @@ extern int sepol_compute_av(sepol_security_id_t ssid,	/* IN */
 
 /* Same as above, but also return the reason(s) for any
    denials of the requested permissions. */
-#define SEPOL_COMPUTEAV_TE   1
-#define SEPOL_COMPUTEAV_CONS 2
-#define SEPOL_COMPUTEAV_RBAC 4
+#define SEPOL_COMPUTEAV_TE     0x1U
+#define SEPOL_COMPUTEAV_CONS   0x2U
+#define SEPOL_COMPUTEAV_RBAC   0x4U
+#define SEPOL_COMPUTEAV_BOUNDS 0x8U
 extern int sepol_compute_av_reason(sepol_security_id_t ssid,
 				   sepol_security_id_t tsid,
 				   sepol_security_class_t tclass,

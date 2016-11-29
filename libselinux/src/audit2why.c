@@ -28,6 +28,7 @@
 #define BOOLEAN 3
 #define CONSTRAINT 4
 #define RBAC 5
+#define BOUNDS 6
 
 struct boolean_t {
 	char *name;
@@ -425,6 +426,9 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	if (reason & SEPOL_COMPUTEAV_RBAC)
 		RETURN(RBAC)
 
+	if (reason & SEPOL_COMPUTEAV_BOUNDS)
+		RETURN(BOUNDS)
+
         RETURN(BADCOMPUTE)
 }
 
@@ -481,6 +485,7 @@ PyMODINIT_FUNC initaudit2why(void)
 	PyModule_AddIntConstant(m,"BOOLEAN", BOOLEAN);
 	PyModule_AddIntConstant(m,"CONSTRAINT", CONSTRAINT);
 	PyModule_AddIntConstant(m,"RBAC", RBAC);
+	PyModule_AddIntConstant(m,"BOUNDS", BOUNDS);
 
 #if PY_MAJOR_VERSION >= 3
 	return m;

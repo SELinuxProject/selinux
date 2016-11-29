@@ -285,6 +285,11 @@ class AuditToPolicy:
                 print("\t\tAdd an allow rule for the role pair.\n")
                 continue
 
+            if rc == audit2why.BOUNDS:
+                print("\t\tTypebounds violation.\n")
+                print("\t\tAdd an allow rule for the parent type.\n")
+                continue
+
         audit2why.finish()
         return
 

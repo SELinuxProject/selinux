@@ -824,6 +824,67 @@ out:
 	return rc;
 }
 
+/* Forward declaration */
+static int context_struct_compute_av(context_struct_t * scontext,
+				     context_struct_t * tcontext,
+				     sepol_security_class_t tclass,
+				     sepol_access_vector_t requested,
+				     struct sepol_av_decision *avd,
+				     unsigned int *reason,
+				     char **r_buf,
+				     unsigned int flags);
+
+static void type_attribute_bounds_av(context_struct_t *scontext,
+				     context_struct_t *tcontext,
+				     sepol_security_class_t tclass,
+				     sepol_access_vector_t requested,
+				     struct sepol_av_decision *avd,
+				     unsigned int *reason)
+{
+	context_struct_t lo_scontext;
+	context_struct_t lo_tcontext, *tcontextp = tcontext;
+	struct sepol_av_decision lo_avd;
+	type_datum_t *source;
+	type_datum_t *target;
+	sepol_access_vector_t masked = 0;
+
+	source = policydb->type_val_to_struct[scontext->type - 1];
+	if (!source->bounds)
+		return;
+
+	target = policydb->type_val_to_struct[tcontext->type - 1];
+
+	memset(&lo_avd, 0, sizeof(lo_avd));
+
+	memcpy(&lo_scontext, scontext, sizeof(lo_scontext));
+	lo_scontext.type = source->bounds;
+
+	if (target->bounds) {
+		memcpy(&lo_tcontext, tcontext, sizeof(lo_tcontext));
+		lo_tcontext.type = target->bounds;
+		tcontextp = &lo_tcontext;
+	}
+
+	context_struct_compute_av(&lo_scontext,
+				  tcontextp,
+				  tclass,
+				  requested,
+				  &lo_avd,
+				  NULL, /* reason intentionally omitted */
+				  NULL,
+				  0);
+
+	masked = ~lo_avd.allowed & avd->allowed;
+
+	if (!masked)
+		return;		/* no masked permission */
+
+	/* mask violated permissions */
+	avd->allowed &= ~masked;
+
+	*reason |= SEPOL_COMPUTEAV_BOUNDS;
+}
+
 /*
  * Compute access vectors based on a context structure pair for
  * the permissions in a particular class.
@@ -835,7 +896,7 @@ static int context_struct_compute_av(context_struct_t * scontext,
 				     struct sepol_av_decision *avd,
 				     unsigned int *reason,
 				     char **r_buf,
-					 unsigned int flags)
+				     unsigned int flags)
 {
 	constraint_node_t *constraint;
 	struct role_allow *ra;
@@ -860,7 +921,8 @@ static int context_struct_compute_av(context_struct_t * scontext,
 	avd->auditallow = 0;
 	avd->auditdeny = 0xffffffff;
 	avd->seqno = latest_granting;
-	*reason = 0;
+	if (reason)
+		*reason = 0;
 
 	/*
 	 * If a specific type enforcement rule was defined for
@@ -899,7 +961,8 @@ static int context_struct_compute_av(context_struct_t * scontext,
 	}
 
 	if (requested & ~avd->allowed) {
-		*reason |= SEPOL_COMPUTEAV_TE;
+		if (reason)
+			*reason |= SEPOL_COMPUTEAV_TE;
 		requested &= avd->allowed;
 	}
 
@@ -919,7 +982,8 @@ static int context_struct_compute_av(context_struct_t * scontext,
 	}
 
 	if (requested & ~avd->allowed) {
-		*reason |= SEPOL_COMPUTEAV_CONS;
+		if (reason)
+			*reason |= SEPOL_COMPUTEAV_CONS;
 		requested &= avd->allowed;
 	}
 
@@ -942,10 +1006,13 @@ static int context_struct_compute_av(context_struct_t * scontext,
 	}
 
 	if (requested & ~avd->allowed) {
-		*reason |= SEPOL_COMPUTEAV_RBAC;
+		if (reason)
+			*reason |= SEPOL_COMPUTEAV_RBAC;
 		requested &= avd->allowed;
 	}
 
+	type_attribute_bounds_av(scontext, tcontext, tclass, requested, avd,
+				 reason);
 	return 0;
 }
 
