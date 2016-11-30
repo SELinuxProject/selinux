@@ -1953,10 +1953,12 @@ class fcontextRecords(semanageRecords):
             if not exists:
                 raise ValueError(_("File context for %s is not defined") % target)
 
-        (rc, fcontext) = semanage_fcontext_query_local(self.sh, k)
-        if rc < 0:
-            (rc, fcontext) = semanage_fcontext_query(self.sh, k)
-            if rc < 0:
+        try:
+            (rc, fcontext) = semanage_fcontext_query_local(self.sh, k)
+        except OSError:
+            try:
+                (rc, fcontext) = semanage_fcontext_query(self.sh, k)
+            except OSError:
                 raise ValueError(_("Could not query file context for %s") % target)
 
         if setype != "<<none>>":
