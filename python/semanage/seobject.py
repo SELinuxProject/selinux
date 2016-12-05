@@ -386,7 +386,7 @@ class moduleRecords(semanageRecords):
 
     def add(self, file, priority):
         if not os.path.exists(file):
-            raise ValueError(_("Module does not exists %s ") % file)
+            raise ValueError(_("Module does not exist: %s ") % file)
 
         rc = semanage_set_default_priority(self.sh, priority)
         if rc < 0:
@@ -492,7 +492,7 @@ class permissiveRecords(semanageRecords):
         try:
             import sepolgen.module as module
         except ImportError:
-            raise ValueError(_("The sepolgen python module is required to setup permissive domains.\nIn some distributions it is included in the policycoreutils-devel patckage.\n# yum install policycoreutils-devel\nOr similar for your distro."))
+            raise ValueError(_("The sepolgen python module is required to setup permissive domains.\nIn some distributions it is included in the policycoreutils-devel package.\n# yum install policycoreutils-devel\nOr similar for your distro."))
 
         name = "permissive_%s" % type
         modtxt = "(typepermissive %s)" % type
@@ -1823,7 +1823,7 @@ class fcontextRecords(semanageRecords):
     def modify_equal(self, target, substitute):
         self.begin()
         if target not in self.equiv.keys():
-            raise ValueError(_("Equivalence class for %s does not exists") % target)
+            raise ValueError(_("Equivalence class for %s does not exist") % target)
         self.equiv[target] = substitute
         self.equal_ind = True
 

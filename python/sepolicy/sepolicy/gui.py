@@ -1068,9 +1068,9 @@ class SELinuxGui():
         self.transitions_into_tab.set_label(_("Application Transitions Into '%s'" % app))
         self.transitions_from_tab.set_label(_("Application Transitions From '%s'" % app))
         self.transitions_file_tab.set_label(_("File Transitions From '%s'" % app))
-        self.transitions_into_tab.set_tooltip_text(_("Executables which will transition to the '%s', when executing a selected domains entrypoint.") % app)
-        self.transitions_from_tab.set_tooltip_text(_("Executables which will transition to a different domain, when the '%s' executes them.") % app)
-        self.transitions_file_tab.set_tooltip_text(_("Files by '%s' will transitions to a different label." % app))
+        self.transitions_into_tab.set_tooltip_text(_("Executables which will transition to '%s', when executing selected domains entrypoint.") % app)
+        self.transitions_from_tab.set_tooltip_text(_("Executables which will transition to a different domain, when '%s' executes them.") % app)
+        self.transitions_file_tab.set_tooltip_text(_("Files by '%s' with transitions to a different label." % app))
         self.transitions_radio_button.set_tooltip_text(_("Display applications that can transition into or out of the '%s'." % app))
 
         self.application = app
@@ -1292,11 +1292,11 @@ class SELinuxGui():
             niter = self.transitions_from_treestore.append(iter)
             # active[0][1] is either T or F (enabled is all the way at the top)
             self.transitions_from_treestore.set_value(iter, 0, enabled[active[0][1]])
-            markup = '<span foreground="blue"><u>%s</u></span>'
+            markup = ('<span foreground="blue"><u>','</u></span>')
             if active[0][1]:
-                self.transitions_from_treestore.set_value(niter, 2, (_("To disable this transition, go to the " + markup % _("Boolean section."))))
+                self.transitions_from_treestore.set_value(niter, 2, (_("To disable this transition, go to the %sBoolean section%s.") % markup))
             else:
-                self.transitions_from_treestore.set_value(niter, 2, (_("To enable this transition, go to the " + markup % _("Boolean section."))))
+                self.transitions_from_treestore.set_value(niter, 2, (_("To enable this transition, go to the %sBoolean section%s.") % markup))
 
             # active[0][0] is the Bool Name
             self.transitions_from_treestore.set_value(niter, 1, active[0][0])

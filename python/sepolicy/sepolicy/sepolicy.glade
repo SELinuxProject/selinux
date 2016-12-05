@@ -3909,7 +3909,7 @@ allow alternative access control.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">An permissive domain is a process label that allows the process to do what it wants, with SELinux only logging the denials, but not enforcing them.  Usually permissive domains indicate experimental policy, disabling the module could cause SELinux to deny access to a domain, that should be allowed.</property>
+                                        <property name="tooltip_text" translatable="yes">A permissive domain is a process label that allows the process to do what it wants, with SELinux only logging the denials, but not enforcing them.  Usually permissive domains indicate experimental policy, disabling the module could cause SELinux to deny access to a domain, that should be allowed.</property>
                                         <property name="xalign">0</property>
                                         <property name="draw_indicator">True</property>
                                         <property name="group">enable_permissive</property>
@@ -3926,7 +3926,7 @@ allow alternative access control.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">An permissive domain is a process label that allows the process to do what it wants, with SELinux only logging the denials, but not enforcing them.  Usually permissive domains indicate experimental policy, disabling the module could cause SELinux to deny access to a domain, that should be allowed.</property>
+                                        <property name="tooltip_text" translatable="yes">A permissive domain is a process label that allows the process to do what it wants, with SELinux only logging the denials, but not enforcing them.  Usually permissive domains indicate experimental policy, disabling the module could cause SELinux to deny access to a domain, that should be allowed.</property>
                                         <property name="xalign">0</property>
                                         <property name="active">True</property>
                                         <property name="draw_indicator">True</property>
@@ -3989,7 +3989,7 @@ allow alternative access control.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">An permissive domain is a process label that allows the process to do what it wants, with SELinux only logging the denials, but not enforcing them.  Usually permissive domains indicate experimental policy, disabling the module could cause SELinux to deny access to a domain, that should be allowed.</property>
+                                        <property name="tooltip_text" translatable="yes">A permissive domain is a process label that allows the process to do what it wants, with SELinux only logging the denials, but not enforcing them.  Usually permissive domains indicate experimental policy, disabling the module could cause SELinux to deny access to a domain, that should be allowed.</property>
                                         <property name="xalign">0</property>
                                         <property name="active">True</property>
                                         <property name="draw_indicator">True</property>
