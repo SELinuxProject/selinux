@@ -512,8 +512,8 @@ class SELinuxGui():
             self.progress_bar.set_pulse_step(self.percentage)
             self.idle_func()
 
-            entrypoint = sepolicy.get_init_entrypoint(domain)
-            if entrypoint:
+            entrypoints = [str(x) for x in sepolicy.get_init_entrypoint(domain)]
+            for entrypoint in entrypoints:
                 path = sepolicy.find_entrypoint_path(entrypoint)
                 if path:
                     self.combo_box_initialize(path, None)
