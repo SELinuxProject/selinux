@@ -1411,6 +1411,48 @@ exit:
 	return rc;
 }
 
+static int __cil_type_datum_is_unused_attrib(struct cil_symtab_datum *src)
+{
+	struct cil_tree_node *node = NULL;
+	struct cil_typeattribute *attrib = NULL;
+
+	if (src->fqn == CIL_KEY_SELF) {
+		return CIL_FALSE;
+	}
+
+	node = NODE(src);
+
+	if (node->flavor != CIL_TYPEATTRIBUTE) {
+		return CIL_FALSE;
+	}
+
+	attrib = (struct cil_typeattribute *) src;
+	return ebitmap_cardinality(attrib->types) == 0;
+}
+
+static int __cil_avrule_can_remove(struct cil_avrule *cil_avrule)
+{
+	struct cil_symtab_datum *src = cil_avrule->src;
+	struct cil_symtab_datum *tgt = cil_avrule->tgt;
+
+	// Don't remove neverallow rules so they are written to
+	// the resulting policy and can be checked by tools in
+	// AOSP.
+	if (cil_avrule->rule_kind == CIL_AVRULE_NEVERALLOW) {
+		return CIL_FALSE;
+	}
+
+	if (__cil_type_datum_is_unused_attrib(src)) {
+		return CIL_TRUE;
+	}
+
+	if (__cil_type_datum_is_unused_attrib(tgt)) {
+		return CIL_TRUE;
+	}
+
+	return CIL_FALSE;
+}
+
 int __cil_avrule_to_avtab(policydb_t *pdb, const struct cil_db *db, struct cil_avrule *cil_avrule, cond_node_t *cond_node, enum cil_flavor cond_flavor)
 {
 	int rc = SEPOL_ERR;
@@ -1421,6 +1463,11 @@ int __cil_avrule_to_avtab(policydb_t *pdb, const struct cil_db *db, struct cil_a
 
 	if (cil_avrule->rule_kind == CIL_AVRULE_DONTAUDIT && db->disable_dontaudit == CIL_TRUE) {
 		// Do not add dontaudit rules to binary
+		rc = SEPOL_OK;
+		goto exit;
+	}
+
+	if (__cil_avrule_can_remove(cil_avrule)) {
 		rc = SEPOL_OK;
 		goto exit;
 	}
