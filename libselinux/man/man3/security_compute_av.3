@@ -7,39 +7,39 @@ the SELinux policy database in the kernel
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
-.BI "int security_compute_av(char * "scon ", char * "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.BI "int security_compute_av(char *" scon ", char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
-.BI "int security_compute_av_raw(char * "scon ", char * "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.BI "int security_compute_av_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
-.BI "int security_compute_av_flags(char * "scon ", char * "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.BI "int security_compute_av_flags(char *" scon ", char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
-.BI "int security_compute_av_flags_raw(char * "scon ", char * "tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
+.BI "int security_compute_av_flags_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", access_vector_t "requested ", struct av_decision *" avd );
 .sp
-.BI "int security_compute_create(char * "scon ", char * "tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_create(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_create_raw(char * "scon ", char * "tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_create_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_create_name(char * "scon ", char * "tcon ", security_class_t "tclass ", const char *"objname ", char **" newcon );
+.BI "int security_compute_create_name(char *" scon ", char *" tcon ", security_class_t "tclass ", const char *" objname ", char **" newcon );
 .sp
-.BI "int security_compute_create_name_raw(char * "scon ", char * "tcon ", security_class_t "tclass ", const char *"objname ", char **" newcon );
+.BI "int security_compute_create_name_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", const char *" objname ", char **" newcon );
 .sp
-.BI "int security_compute_relabel(char * "scon ", char * "tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_relabel(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_relabel_raw(char * "scon ", char * "tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_relabel_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_member(char * "scon ", char * "tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_member(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_member_raw(char * "scon ", char * "tcon ", security_class_t "tclass ", char **" newcon );
+.BI "int security_compute_member_raw(char *" scon ", char *" tcon ", security_class_t "tclass ", char **" newcon );
 .sp
-.BI "int security_compute_user(char * "scon ", const char *" username ", char ***" con );
+.BI "int security_compute_user(char *" scon ", const char *" username ", char ***" con );
 .sp
-.BI "int security_compute_user_raw(char * "scon ", const char *" username ", char ***" con );
+.BI "int security_compute_user_raw(char *" scon ", const char *" username ", char ***" con );
 .sp
 .BI "int security_get_initial_context(const char *" name ", char **" con );
 .sp
 .BI "int security_get_initial_context_raw(const char *" name ", char **" con );
 .sp
-.BI "int selinux_check_access(const char * " scon ", const char * " tcon ", const char *" class ", const char *" perm ", void *" auditdata);
+.BI "int selinux_check_access(const char *" scon ", const char *" tcon ", const char *" class ", const char *" perm ", void *" auditdata);
 .sp
 .BI "int selinux_check_passwd_access(access_vector_t " requested );
 .sp
