@@ -663,6 +663,23 @@ def get_init_entrypoint(transtype):
 
     return entrypoints
 
+def get_init_entrypoints_str():
+    q = setools.TERuleQuery(_pol,
+                            ruletype=["type_transition"],
+                            source="init_t",
+                            tclass=["process"])
+    entrypoints = {}
+    for i in q.results():
+        try:
+            transtype = str(i.default)
+            if transtype in entrypoints:
+                entrypoints[transtype].append(str(i.target))
+            else:
+                entrypoints[transtype] = [str(i.target)]
+        except AttributeError:
+            continue
+
+    return entrypoints
 
 def get_init_entrypoint_target(entrypoint):
     try:

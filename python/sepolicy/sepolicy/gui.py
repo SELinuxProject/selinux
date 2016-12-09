@@ -499,6 +499,8 @@ class SELinuxGui():
 
         loading_gui.show()
         length = len(self.all_domains)
+
+        entrypoint_dict = sepolicy.get_init_entrypoints_str()
         for domain in self.all_domains:
             # After the user selects a path in the drop down menu call
             # get_init_entrypoint_target(entrypoint) to get the transtype
@@ -509,8 +511,7 @@ class SELinuxGui():
             self.progress_bar.set_pulse_step(self.percentage)
             self.idle_func()
 
-            entrypoints = [str(x) for x in sepolicy.get_init_entrypoint(domain)]
-            for entrypoint in entrypoints:
+            for entrypoint in entrypoint_dict.get(domain, []):
                 path = sepolicy.find_entrypoint_path(entrypoint)
                 if path:
                     self.combo_box_add(path, domain)
