@@ -23,20 +23,20 @@
 import sepolicy
 
 
-def get_types(src, tclass, perm):
+def get_types(src, tclass, perm, check_bools=False):
     allows = sepolicy.search([sepolicy.ALLOW], {sepolicy.SOURCE: src, sepolicy.CLASS: tclass, sepolicy.PERMS: perm})
     nlist = []
     if allows:
-        for i in map(lambda y: y[sepolicy.TARGET], filter(lambda x: set(perm).issubset(x[sepolicy.PERMS]), allows)):
+        for i in map(lambda y: y[sepolicy.TARGET], filter(lambda x: set(perm).issubset(x[sepolicy.PERMS]) and (not check_bools or x["enabled"]), allows)):
             if i not in nlist:
                 nlist.append(i)
     return nlist
 
 
-def get_network_connect(src, protocol, perm):
+def get_network_connect(src, protocol, perm, check_bools=False):
     portrecs, portrecsbynum = sepolicy.gen_port_dict()
     d = {}
-    tlist = get_types(src, "%s_socket" % protocol, [perm])
+    tlist = get_types(src, "%s_socket" % protocol, [perm], check_bools)
     if len(tlist) > 0:
         d[(src, protocol, perm)] = []
         for i in tlist:

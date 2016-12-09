@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.16.0 on Fri Oct 11 08:24:19 2013 -->
 <interface>
   <!-- interface-requires gtk+ 3.8 -->
-  <object class="GtkListStore" id="Advanced_search_liststore">
+  <object class="GtkListStore" id="application_liststore">
     <columns>
       <!-- column-name Application -->
       <column type="gchararray"/>
@@ -82,7 +82,7 @@
             <attributes>
               <attribute name="foreground" value="#00004e4e9999"/>
             </attributes>
-            <signal name="button-press-event" handler="on_main_advanced_label_button_press_event" swapped="no"/>
+            <signal name="button-press-event" handler="on_show_advanced_search_window" swapped="no"/>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -225,7 +225,7 @@
     </child>
   </object>
   <object class="GtkTreeModelFilter" id="advanced_filter">
-    <property name="child_model">Advanced_search_liststore</property>
+    <property name="child_model">application_liststore</property>
   </object>
   <object class="GtkTreeModelSort" id="advanced_sort">
     <property name="model">advanced_filter</property>
@@ -255,24 +255,6 @@
   </object>
   <object class="GtkTreeModelSort" id="application_files_sort">
     <property name="model">application_files_filter</property>
-  </object>
-  <object class="GtkListStore" id="application_liststore">
-    <columns>
-      <!-- column-name Application -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkTreeModelFilter" id="application_filter">
-    <property name="child_model">application_liststore</property>
-  </object>
-  <object class="GtkTreeModelSort" id="application_sort">
-    <property name="model">application_filter</property>
-  </object>
-  <object class="GtkListStore" id="application_tree_list">
-    <columns>
-      <!-- column-name Process -->
-      <column type="gchararray"/>
-    </columns>
   </object>
   <object class="GtkListStore" id="boolean_liststore">
     <columns>
@@ -473,7 +455,7 @@
             <property name="can_focus">False</property>
             <property name="xalign">0</property>
             <property name="xpad">10</property>
-            <property name="label" translatable="yes">Add file Equivilence Mapping.  Mapping will be created when Update is applied.</property>
+            <property name="label" translatable="yes">Add file Equivalence Mapping.  Mapping will be created when Update is applied.</property>
             <property name="justify">fill</property>
             <property name="wrap">True</property>
           </object>
@@ -823,7 +805,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Select Make Path Recursive iff you want to apply this label to all children of the specified directory path. objects under the directory to have this label.</property>
+                        <property name="tooltip_text" translatable="yes">Select Make Path Recursive if you want to apply this label to all children of the specified directory path. objects under the directory to have this label.</property>
                         <property name="xalign">0.5</property>
                         <property name="draw_indicator">True</property>
                         <signal name="toggled" handler="on_make_path_recursive_toggled" swapped="no"/>
@@ -2948,7 +2930,7 @@ Enabled</property>
                                     <property name="tooltip_text" translatable="yes">Executables which will transition to a different domain, when the 'selected domain' executes them.</property>
                                     <property name="xpad">1</property>
                                     <property name="ypad">1</property>
-                                    <property name="label" translatable="yes">Applicaton Transitions From 'select domain'</property>
+                                    <property name="label" translatable="yes">Application Transitions From 'select domain'</property>
                                   </object>
                                   <packing>
                                     <property name="position">1</property>
@@ -4328,46 +4310,7 @@ allow alternative access control.</property>
                 <property name="position">0</property>
               </packing>
             </child>
-            <child>
-              <object class="GtkRadioButton" id="All_advanced_button">
-                <property name="label" translatable="yes">All</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="xalign">0.5</property>
-                <property name="active">True</property>
-                <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="on_All_advanced_button_toggled" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="Installed_advanced_button">
-                <property name="label" translatable="yes">Installed</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="xalign">0.5</property>
-                <property name="draw_indicator">True</property>
-                <property name="group">All_advanced_button</property>
-                <signal name="toggled" handler="on_Installed_advanced_button_toggled" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkScrolledWindow" id="scrolledwindow11">
@@ -4377,7 +4320,6 @@ allow alternative access control.</property>
               <object class="GtkTreeView" id="advanced_search_treeview">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="model">advanced_sort</property>
                 <property name="enable_search">False</property>
                 <signal name="row-activated" handler="on_advanced_search_treeview_row_activated" swapped="no"/>
                 <child internal-child="selection">
@@ -4788,7 +4730,7 @@ allow alternative access control.</property>
             <property name="can_focus">False</property>
             <property name="xalign">0</property>
             <property name="xpad">10</property>
-            <property name="label" translatable="yes">Select file equivalence labeling to delete.File equivalence labeling will be deleted when update is applied.</property>
+            <property name="label" translatable="yes">Select file equivalence labeling to delete. File equivalence labeling will be deleted when update is applied.</property>
             <property name="justify">fill</property>
             <property name="wrap">True</property>
           </object>
