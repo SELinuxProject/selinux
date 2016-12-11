@@ -90,7 +90,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	/* Open the specification file. */
 	if (!path)
 		path = selinux_media_context_path();
-	if ((fp = fopen(path, "r")) == NULL)
+	if ((fp = fopen(path, "re")) == NULL)
 		return -1;
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
 

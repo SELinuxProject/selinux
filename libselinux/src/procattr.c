@@ -143,7 +143,7 @@ static int getprocattrcon_raw(char ** context,
 		return 0;
 	}
 
-	fd = openattr(pid, attr, O_RDONLY);
+	fd = openattr(pid, attr, O_RDONLY | O_CLOEXEC);
 	if (fd < 0)
 		return -1;
 
@@ -235,7 +235,7 @@ static int setprocattrcon_raw(const char * context,
 	    && !strcmp(context, *prev_context))
 		return 0;
 
-	fd = openattr(pid, attr, O_RDWR);
+	fd = openattr(pid, attr, O_RDWR | O_CLOEXEC);
 	if (fd < 0)
 		return -1;
 	if (context) {

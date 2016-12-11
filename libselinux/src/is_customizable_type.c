@@ -16,7 +16,7 @@ static int get_customizable_type_list(char *** retlist)
 	unsigned int ctr = 0, i;
 	char **list = NULL;
 
-	fp = fopen(selinux_customizable_types_path(), "r");
+	fp = fopen(selinux_customizable_types_path(), "re");
 	if (!fp)
 		return -1;
 

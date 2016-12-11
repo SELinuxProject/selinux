@@ -26,7 +26,7 @@ int security_compute_member_raw(const char * scon,
 	}
 
 	snprintf(path, sizeof path, "%s/member", selinux_mnt);
-	fd = open(path, O_RDWR);
+	fd = open(path, O_RDWR | O_CLOEXEC);
 	if (fd < 0)
 		return -1;
 

@@ -21,7 +21,7 @@ int security_disable(void)
 	}
 
 	snprintf(path, sizeof path, "%s/disable", selinux_mnt);
-	fd = open(path, O_WRONLY);
+	fd = open(path, O_WRONLY | O_CLOEXEC);
 	if (fd < 0)
 		return -1;
 

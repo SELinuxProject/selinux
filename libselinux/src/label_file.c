@@ -520,7 +520,7 @@ static FILE *open_file(const char *path, const char *suffix,
 	}
 
 	memcpy(sb, &found->sb, sizeof(*sb));
-	return fopen(save_path, "r");
+	return fopen(save_path, "re");
 }
 
 static int process_file(const char *path, const char *suffix,

@@ -242,7 +242,7 @@ static int exclude_non_seclabel_mounts(void)
 	if (uname(&uts) == 0 && strverscmp(uts.release, "2.6.30") < 0)
 		return 0;
 
-	fp = fopen("/proc/mounts", "r");
+	fp = fopen("/proc/mounts", "re");
 	if (!fp)
 		return 0;
 

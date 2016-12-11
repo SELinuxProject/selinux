@@ -18,7 +18,7 @@ int matchmediacon(const char *media, char ** con)
 	char *ptr, *ptr2 = NULL;
 	int found = 0;
 	char current_line[PATH_MAX];
-	if ((infile = fopen(path, "r")) == NULL)
+	if ((infile = fopen(path, "re")) == NULL)
 		return -1;
 	while (!feof_unlocked(infile)) {
 		if (!fgets_unlocked(current_line, sizeof(current_line), infile)) {

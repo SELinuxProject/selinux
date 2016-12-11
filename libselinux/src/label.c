@@ -96,7 +96,7 @@ struct selabel_sub *selabel_subs_init(const char *path,
 					    struct selabel_digest *digest)
 {
 	char buf[1024];
-	FILE *cfg = fopen(path, "r");
+	FILE *cfg = fopen(path, "re");
 	struct selabel_sub *sub = NULL;
 	struct stat sb;
 

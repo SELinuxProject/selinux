@@ -23,7 +23,7 @@ int security_canonicalize_context_raw(const char * con,
 	}
 
 	snprintf(path, sizeof path, "%s/context", selinux_mnt);
-	fd = open(path, O_RDWR);
+	fd = open(path, O_RDWR | O_CLOEXEC);
 	if (fd < 0)
 		return -1;
 

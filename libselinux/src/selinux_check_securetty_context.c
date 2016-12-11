@@ -14,7 +14,7 @@ int selinux_check_securetty_context(const char * tty_context)
 	ssize_t len;
 	int found = -1;
 	FILE *fp;
-	fp = fopen(selinux_securetty_types_path(), "r");
+	fp = fopen(selinux_securetty_types_path(), "re");
 	if (fp) {
 		context_t con = context_new(tty_context);
 		if (con) {

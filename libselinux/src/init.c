@@ -61,7 +61,7 @@ int selinuxfs_exists(void)
 	size_t len;
 	ssize_t num;
 
-	fp = fopen("/proc/filesystems", "r");
+	fp = fopen("/proc/filesystems", "re");
 	if (!fp)
 		return 1; /* Fail as if it exists */
 	__fsetlocking(fp, FSETLOCKING_BYCALLER);
@@ -101,7 +101,7 @@ static void init_selinuxmnt(void)
 
 	/* At this point, the usual spot doesn't have an selinuxfs so
 	 * we look around for it */
-	fp = fopen("/proc/mounts", "r");
+	fp = fopen("/proc/mounts", "re");
 	if (!fp)
 		goto out;
 

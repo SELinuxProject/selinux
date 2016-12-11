@@ -88,7 +88,7 @@ static const uint16_t file_path_suffixes_idx[NEL] = {
 int selinux_getenforcemode(int *enforce)
 {
 	int ret = -1;
-	FILE *cfg = fopen(SELINUXCONFIG, "r");
+	FILE *cfg = fopen(SELINUXCONFIG, "re");
 	if (cfg) {
 		char *buf;
 		int len = sizeof(SELINUXTAG) - 1;
@@ -163,7 +163,7 @@ static void init_selinux_config(void)
 	if (selinux_policyroot)
 		return;
 
-	fp = fopen(SELINUXCONFIG, "r");
+	fp = fopen(SELINUXCONFIG, "re");
 	if (fp) {
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
 		while ((len = getline(&line_buf, &line_len, fp)) > 0) {

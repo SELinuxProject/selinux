@@ -80,7 +80,7 @@ static struct discover_class_node * discover_class(const char *s)
 
 	/* load up class index */
 	snprintf(path, sizeof path, "%s/class/%s/index", selinux_mnt,s);
-	fd = open(path, O_RDONLY);
+	fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd < 0)
 		goto err3;
 

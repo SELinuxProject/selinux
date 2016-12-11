@@ -21,7 +21,7 @@ int security_getenforce(void)
 	}
 
 	snprintf(path, sizeof path, "%s/enforce", selinux_mnt);
-	fd = open(path, O_RDONLY);
+	fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd < 0)
 		return -1;
 

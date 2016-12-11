@@ -34,7 +34,7 @@ int security_load_policy(void *data, size_t len)
 	}
 
 	snprintf(path, sizeof path, "%s/load", selinux_mnt);
-	fd = open(path, O_RDWR);
+	fd = open(path, O_RDWR | O_CLOEXEC);
 	if (fd < 0)
 		return -1;
 
@@ -173,13 +173,13 @@ checkbool:
       search:
 	snprintf(path, sizeof(path), "%s.%d",
 		 selinux_binary_policy_path(), vers);
-	fd = open(path, O_RDONLY);
+	fd = open(path, O_RDONLY | O_CLOEXEC);
 	while (fd < 0 && errno == ENOENT
 	       && --vers >= minvers) {
 		/* Check prior versions to see if old policy is available */
 		snprintf(path, sizeof(path), "%s.%d",
 			 selinux_binary_policy_path(), vers);
-		fd = open(path, O_RDONLY);
+		fd = open(path, O_RDONLY | O_CLOEXEC);
 	}
 	if (fd < 0) {
 		fprintf(stderr,
@@ -334,7 +334,7 @@ int selinux_init_load_policy(int *enforce)
 
 	/* Check for an override of the mode via the kernel command line. */
 	rc = mount("proc", "/proc", "proc", 0, 0);
-	cfg = fopen("/proc/cmdline", "r");
+	cfg = fopen("/proc/cmdline", "re");
 	if (cfg) {
 		char *tmp;
 		buf = malloc(selinux_page_size);

@@ -201,7 +201,7 @@ static int __policy_init(const char *init_path)
 	path[PATH_MAX-1] = '\0';
 	if (init_path) {
 		strncpy(path, init_path, PATH_MAX-1);
-		fp = fopen(path, "r");
+		fp = fopen(path, "re");
 		if (!fp) {
 			snprintf(errormsg, sizeof(errormsg), 
 				 "unable to open %s:  %s\n",
@@ -218,7 +218,7 @@ static int __policy_init(const char *init_path)
 			PyErr_SetString( PyExc_ValueError, errormsg);
 			return 1;
 		}
-		fp = fopen(curpolicy, "r");
+		fp = fopen(curpolicy, "re");
 		if (!fp) {
 			snprintf(errormsg, sizeof(errormsg), 
 				 "unable to open %s:  %s\n",

@@ -23,7 +23,7 @@ int security_policyvers(void)
 	}
 
 	snprintf(path, sizeof path, "%s/policyvers", selinux_mnt);
-	fd = open(path, O_RDONLY);
+	fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd < 0) {
 		if (errno == ENOENT)
 			return vers;

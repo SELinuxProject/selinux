@@ -159,7 +159,7 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		return -1;
 
 	/* Open the specification file. */
-	if ((fp = fopen(path, "r")) == NULL)
+	if ((fp = fopen(path, "re")) == NULL)
 		return -1;
 
 	if (fstat(fileno(fp), &sb) < 0)

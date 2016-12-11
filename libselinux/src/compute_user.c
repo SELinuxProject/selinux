@@ -25,7 +25,7 @@ int security_compute_user_raw(const char * scon,
 	}
 
 	snprintf(path, sizeof path, "%s/user", selinux_mnt);
-	fd = open(path, O_RDWR);
+	fd = open(path, O_RDWR | O_CLOEXEC);
 	if (fd < 0)
 		return -1;
 

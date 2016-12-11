@@ -11,7 +11,7 @@ int get_default_type(const char *role, char **type)
 {
 	FILE *fp = NULL;
 
-	fp = fopen(selinux_default_type_path(), "r");
+	fp = fopen(selinux_default_type_path(), "re");
 	if (!fp)
 		return -1;
 
