@@ -26,6 +26,7 @@
 #include <CUnit/Console.h>
 #include <CUnit/TestDB.h>
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <stdlib.h>
@@ -47,9 +48,10 @@ static void usage(char *progname)
 	printf("\t-i, --interactive\t\tinteractive console\n");
 }
 
-static int do_tests(int interactive, int verbose)
+static bool do_tests(int interactive, int verbose)
 {
 	CU_pSuite suite = NULL;
+	unsigned int num_failures;
 
 	/* Initialize the CUnit test registry. */
 	if (CUE_SUCCESS != CU_initialize_registry())
@@ -67,8 +69,9 @@ static int do_tests(int interactive, int verbose)
 		CU_console_run_tests();
 	else
 		CU_basic_run_tests();
+	num_failures = CU_get_number_of_tests_failed();
 	CU_cleanup_registry();
-	return CU_get_error();
+	return CU_get_error() == CUE_SUCCESS && num_failures == 0;
 
 }
 
@@ -101,7 +104,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if (do_tests(interactive, verbose))
+	if (!do_tests(interactive, verbose))
 		return -1;
 
 	return 0;
