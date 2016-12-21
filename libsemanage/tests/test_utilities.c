@@ -40,6 +40,7 @@ void test_semanage_split(void);
 void test_semanage_list(void);
 void test_semanage_str_count(void);
 void test_semanage_rtrim(void);
+void test_semanage_str_replace(void);
 void test_semanage_findval(void);
 void test_slurp_file_filter(void);
 
@@ -99,6 +100,10 @@ int semanage_utilities_add_tests(CU_pSuite suite)
 		goto err;
 	}
 	if (NULL == CU_add_test(suite, "semanage_rtrim", test_semanage_rtrim)) {
+		goto err;
+	}
+	if (NULL == CU_add_test(suite, "semanage_str_replace",
+				test_semanage_str_replace)) {
 		goto err;
 	}
 	if (NULL == CU_add_test(suite, "semanage_findval",
@@ -255,6 +260,35 @@ void test_semanage_rtrim(void)
 	CU_ASSERT_STRING_EQUAL(str, "/blah/foo/bar");
 
 	free(str);
+}
+
+void test_semanage_str_replace(void)
+{
+	const char *test_str = "Hello, I am %{USERNAME} and my id is %{USERID}";
+	char *str1, *str2;
+
+	str1 = semanage_str_replace("%{USERNAME}", "root", test_str, 0);
+	CU_ASSERT_STRING_EQUAL(str1, "Hello, I am root and my id is %{USERID}");
+
+	str2 = semanage_str_replace("%{USERID}", "0", str1, 1);
+	CU_ASSERT_STRING_EQUAL(str2, "Hello, I am root and my id is 0");
+	free(str1);
+	free(str2);
+
+	str1 = semanage_str_replace(":(", ";)", "Test :( :) ! :(:(:))(:(", 0);
+	CU_ASSERT_STRING_EQUAL(str1, "Test ;) :) ! ;);):))(;)");
+	free(str1);
+
+	str1 = semanage_str_replace(":(", ";)", "Test :( :) ! :(:(:))(:(", 3);
+	CU_ASSERT_STRING_EQUAL(str1, "Test ;) :) ! ;);):))(:(");
+	free(str1);
+
+	str1 = semanage_str_replace("", "empty search string", "test", 0);
+	CU_ASSERT_EQUAL(str1, NULL);
+
+	str1 = semanage_str_replace("a", "", "abracadabra", 0);
+	CU_ASSERT_STRING_EQUAL(str1, "brcdbr");
+	free(str1);
 }
 
 void test_semanage_findval(void)

@@ -230,6 +230,61 @@ void semanage_rtrim(char *str, char trim_to)
 	}
 }
 
+char *semanage_str_replace(const char *search, const char *replace,
+			   const char *src, size_t lim)
+{
+	size_t count = 0, slen, rlen, newsize;
+	char *p, *pres, *result;
+	const char *psrc;
+
+	slen = strlen(search);
+	rlen = strlen(replace);
+
+	/* Do not support empty search strings */
+	if (slen == 0)
+		return NULL;
+
+	/* Count the occurences of search in src and compute the new size */
+	for (p = strstr(src, search); p != NULL; p = strstr(p + slen, search)) {
+		count++;
+		if (lim && count >= lim)
+			break;
+	}
+	if (!count)
+		return strdup(src);
+
+	/* Allocate the result string */
+	newsize = strlen(src) + 1 + count * (rlen - slen);
+	result = malloc(newsize);
+	if (!result)
+		return NULL;
+
+	/* Fill the result */
+	psrc = src;
+	pres = result;
+	for (p = strstr(src, search); p != NULL; p = strstr(psrc, search)) {
+		/* Copy the part which has not been modified */
+		if (p != psrc) {
+			size_t length = (size_t)(p - psrc);
+			memcpy(pres, psrc, length);
+			pres += length;
+		}
+		/* Copy the replacement part */
+		if (rlen != 0) {
+			memcpy(pres, replace, rlen);
+			pres += rlen;
+		}
+		psrc = p + slen;
+		count--;
+		if (!count)
+			break;
+	}
+	/* Copy the last part, after doing a sanity check */
+	assert(pres + strlen(psrc) + 1 == result + newsize);
+	strcpy(pres, psrc);
+	return result;
+}
+
 /* list_addafter_controlmem does *NOT* duplicate the data argument
  * use at your own risk, I am building a list out of malloc'd memory and
  * it is only going to get stored into this list, thus when I destroy it
