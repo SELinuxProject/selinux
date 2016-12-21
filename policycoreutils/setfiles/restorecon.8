@@ -58,6 +58,12 @@ The
 .B \-F
 option will force a replacement of the entire context.
 .P
+If a file is labeled with
+.BR customizable
+SELinux type (for list of customizable
+types see /etc/selinux/{SELINUXTYPE}/contexts/customizable_types), restorecon
+won't reset the label unless the \-F option is used.
+.P
 It is the same executable as
 .BR setfiles
 but operates in a slightly different manner depending on its argv[0].
@@ -124,7 +130,7 @@ change files and directories file labels recursively (descend directories).
 .br
 .TP
 .B \-v
-show changes in file labels. Note that the
+show changes in file labels. Multiple -v options increase the verbosity. Note that the
 .B \-v
 and
 .B \-p
@@ -209,4 +215,5 @@ The program was written by Dan Walsh <dwalsh@redhat.com>.
 .SH "SEE ALSO"
 .BR setfiles (8),
 .BR load_policy (8),
-.BR checkpolicy (8)
+.BR checkpolicy (8),
+.BR customizable_types (5)
