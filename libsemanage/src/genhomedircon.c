@@ -34,9 +34,9 @@
 
 #include "utilities.h"
 #include "genhomedircon.h"
-#include <ustr.h>
 
 #include <assert.h>
+#include <ctype.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -239,46 +239,39 @@ static int fcontext_matches(const semanage_fcontext_t *fcontext, void *varg)
 {
 	const char *oexpr = semanage_fcontext_get_expr(fcontext);
 	fc_match_handle_t *handp = varg;
-	struct Ustr *expr;
+	char *expr = NULL;
 	regex_t re;
 	int type, retval = -1;
+	size_t len;
 
 	/* Only match ALL or DIR */
 	type = semanage_fcontext_get_type(fcontext);
 	if (type != SEMANAGE_FCONTEXT_ALL && type != SEMANAGE_FCONTEXT_ALL)
 		return 0;
 
-	/* Convert oexpr into a Ustr and anchor it at the beginning */
-	expr = ustr_dup_cstr("^");
-	if (expr == USTR_NULL)
-		goto done;
-	if (!ustr_add_cstr(&expr, oexpr))
-		goto done;
+	len = strlen(oexpr);
+	/* Define a macro to strip a literal string from the end of oexpr */
+#define rstrip_oexpr_len(cstr, cstrlen) \
+	do { \
+		if (len >= (cstrlen) && !strncmp(oexpr + len - (cstrlen), (cstr), (cstrlen))) \
+			len -= (cstrlen); \
+	} while (0)
+#define rstrip_oexpr(cstr) rstrip_oexpr_len(cstr, sizeof(cstr) - 1)
 
-	/* Strip off trailing ".+" or ".*" */
-	if (ustr_cmp_suffix_cstr_eq(expr, ".+") ||
-	    ustr_cmp_suffix_cstr_eq(expr, ".*")) {
-		if (!ustr_del(&expr, 2))
-			goto done;
-	}
+	rstrip_oexpr(".+");
+	rstrip_oexpr(".*");
+	rstrip_oexpr("(/.*)?");
+	rstrip_oexpr("/");
 
-	/* Strip off trailing "(/.*)?" */
-	if (ustr_cmp_suffix_cstr_eq(expr, "(/.*)?")) {
-		if (!ustr_del(&expr, 6))
-			goto done;
-	}
+#undef rstrip_oexpr_len
+#undef rstrip_oexpr
 
-	if (ustr_cmp_suffix_cstr_eq(expr, "/")) {
-		if (!ustr_del(&expr, 1))
-			goto done;
-	}
-
-	/* Append pattern to eat up trailing slashes */
-	if (!ustr_add_cstr(&expr, "/*$"))
-		goto done;
+	/* Anchor oexpr at the beginning and append pattern to eat up trailing slashes */
+	if (asprintf(&expr, "^%.*s/*$", (int)len, oexpr) < 0)
+		return -1;
 
 	/* Check dir against expr */
-	if (regcomp(&re, ustr_cstr(expr), REG_EXTENDED) != 0)
+	if (regcomp(&re, expr, REG_EXTENDED) != 0)
 		goto done;
 	if (regexec(&re, handp->dir, 0, NULL, 0) == 0)
 		handp->matched = 1;
@@ -287,7 +280,7 @@ static int fcontext_matches(const semanage_fcontext_t *fcontext, void *varg)
 	retval = 0;
 
 done:
-	ustr_free(expr);
+	free(expr);
 
 	return retval;
 }
@@ -523,44 +516,50 @@ static semanage_list_t *make_template(genhomedircon_settings_t * s,
 	return template_data;
 }
 
-static Ustr *replace_all(const char *str, const replacement_pair_t * repl)
+static char *replace_all(const char *str, const replacement_pair_t * repl)
 {
-	Ustr *retval = USTR_NULL;
+	char *retval, *retval2;
 	int i;
 
 	if (!str || !repl)
-		goto done;
-	if (!(retval = ustr_dup_cstr(str)))
-		goto done;
+		return NULL;
 
-	for (i = 0; repl[i].search_for; i++) {
-		ustr_replace_cstr(&retval, repl[i].search_for,
-				  repl[i].replace_with, 0);
+	retval = strdup(str);
+	for (i = 0; retval != NULL && repl[i].search_for; i++) {
+		retval2 = semanage_str_replace(repl[i].search_for,
+					       repl[i].replace_with, retval, 0);
+		free(retval);
+		retval = retval2;
 	}
-	if (ustr_enomem(retval))
-		ustr_sc_free(&retval);
-
-      done:
 	return retval;
 }
 
-static const char * extract_context(Ustr *line)
+static const char *extract_context(const char *line)
 {
-	const char whitespace[] = " \t\n";
-	size_t off, len;
+	const char *p = line;
+	size_t off;
 
-	/* check for trailing whitespace */
-	off = ustr_spn_chrs_rev(line, 0, whitespace, strlen(whitespace));
-
-	/* find the length of the last field in line */
-	len = ustr_cspn_chrs_rev(line, off, whitespace, strlen(whitespace));
-
-	if (len == 0)
+	off = strlen(p);
+	p += off;
+	/* consider trailing whitespaces */
+	while (off > 0) {
+		p--;
+		off--;
+		if (!isspace(*p))
+			break;
+	}
+	if (off == 0)
 		return NULL;
-	return ustr_cstr(line) + ustr_len(line) - (len + off);
+
+	/* find the last field in line */
+	while (off > 0 && !isspace(*(p - 1))) {
+		p--;
+		off--;
+	}
+	return p;
 }
 
-static int check_line(genhomedircon_settings_t * s, Ustr *line)
+static int check_line(genhomedircon_settings_t * s, const char *line)
 {
 	sepol_context_t *ctx_record = NULL;
 	const char *ctx_str;
@@ -584,22 +583,22 @@ static int write_replacements(genhomedircon_settings_t * s, FILE * out,
 			      const semanage_list_t * tpl,
 			      const replacement_pair_t *repl)
 {
-	Ustr *line = USTR_NULL;
+	char *line;
 
 	for (; tpl; tpl = tpl->next) {
 		line = replace_all(tpl->data, repl);
 		if (!line)
 			goto fail;
 		if (check_line(s, line) == STATUS_SUCCESS) {
-			if (!ustr_io_putfileline(&line, out))
+			if (fprintf(out, "%s\n", line) < 0)
 				goto fail;
 		}
-		ustr_sc_free(&line);
+		free(line);
 	}
 	return STATUS_SUCCESS;
 
       fail:
-	ustr_sc_free(&line);
+	free(line);
 	return STATUS_ERR;
 }
 
@@ -607,7 +606,7 @@ static int write_contexts(genhomedircon_settings_t *s, FILE *out,
 			  semanage_list_t *tpl, const replacement_pair_t *repl,
 			  const genhomedircon_user_entry_t *user)
 {
-	Ustr *line = USTR_NULL;
+	char *line, *temp;
 	sepol_context_t *context = NULL;
 	char *new_context_str = NULL;
 
@@ -624,10 +623,10 @@ static int write_contexts(genhomedircon_settings_t *s, FILE *out,
 
 		if (strcmp(old_context_str, CONTEXT_NONE) == 0) {
 			if (check_line(s, line) == STATUS_SUCCESS &&
-			    !ustr_io_putfileline(&line, out)) {
+			    fprintf(out, "%s\n", line) < 0) {
 				goto fail;
 			}
-
+			free(line);
 			continue;
 		}
 
@@ -657,25 +656,27 @@ static int write_contexts(genhomedircon_settings_t *s, FILE *out,
 			goto fail;
 		}
 
-		if (!ustr_replace_cstr(&line, old_context_str,
-				       new_context_str, 1)) {
+		temp = semanage_str_replace(old_context_str, new_context_str,
+					    line, 1);
+		if (!temp) {
 			goto fail;
 		}
+		free(line);
+		line = temp;
 
 		if (check_line(s, line) == STATUS_SUCCESS) {
-			if (!ustr_io_putfileline(&line, out)) {
+			if (fprintf(out, "%s\n", line) < 0)
 				goto fail;
-			}
 		}
 
-		ustr_sc_free(&line);
+		free(line);
 		sepol_context_free(context);
 		free(new_context_str);
 	}
 
 	return STATUS_SUCCESS;
 fail:
-	ustr_sc_free(&line);
+	free(line);
 	sepol_context_free(context);
 	free(new_context_str);
 	return STATUS_ERR;
@@ -1288,20 +1289,19 @@ static int write_context_file(genhomedircon_settings_t * s, FILE * out)
 		}
 
 		for (h = homedirs; h; h = h->next) {
-			Ustr *temp = ustr_dup_cstr(h->data);
+			char *temp = NULL;
 
-			if (!temp || !ustr_add_cstr(&temp, "/" FALLBACK_NAME)) {
-				ustr_sc_free(&temp);
+			if (asprintf(&temp, "%s/%s", h->data, FALLBACK_NAME) < 0) {
 				retval = STATUS_ERR;
 				goto done;
 			}
 
 			free(s->fallback->home);
-			s->fallback->home = (char*) ustr_cstr(temp);
+			s->fallback->home = temp;
 
 			if (write_home_dir_context(s, out, homedir_context_tpl,
 						   s->fallback) != STATUS_SUCCESS) {
-				ustr_sc_free(&temp);
+				free(temp);
 				s->fallback->home = NULL;
 				retval = STATUS_ERR;
 				goto done;
@@ -1309,13 +1309,13 @@ static int write_context_file(genhomedircon_settings_t * s, FILE * out)
 			if (write_home_root_context(s, out,
 						    homeroot_context_tpl,
 						    h->data) != STATUS_SUCCESS) {
-				ustr_sc_free(&temp);
+				free(temp);
 				s->fallback->home = NULL;
 				retval = STATUS_ERR;
 				goto done;
 			}
 
-			ustr_sc_free(&temp);
+			free(temp);
 			s->fallback->home = NULL;
 		}
 	}
