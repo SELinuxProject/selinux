@@ -1,8 +1,7 @@
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 LIBDIR ?= $(PREFIX)/lib
-USRBINDIR ?= $(PREFIX)/sbin
-SBINDIR ?= $(DESTDIR)/sbin
+USRSBINDIR ?= $(PREFIX)/sbin
 INCLUDEDIR ?= $(PREFIX)/include
 
 OS ?= $(shell uname)
@@ -64,9 +63,9 @@ selinux_restorecon: LDLIBS += -lsepol
 all: $(TARGETS)
 
 install: all
-	-mkdir -p $(USRBINDIR)
-	install -m 755 $(TARGETS) $(USRBINDIR)
-	-mkdir -p $(SBINDIR)
+	-mkdir -p $(USRSBINDIR)
+	install -m 755 $(TARGETS) $(USRSBINDIR)
+
 clean:
 	rm -f $(TARGETS) *.o *~
 
