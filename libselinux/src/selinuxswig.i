@@ -9,6 +9,7 @@
 	#include "../include/selinux/get_context_list.h"
 	#include "../include/selinux/get_default_type.h"
 	#include "../include/selinux/label.h"
+	#include "../include/selinux/restorecon.h"
 	#include "../include/selinux/selinux.h"
 %}
 %apply int *OUTPUT { int *enforce };
@@ -61,4 +62,5 @@
 %include "../include/selinux/get_context_list.h"
 %include "../include/selinux/get_default_type.h"
 %include "../include/selinux/label.h"
+%include "../include/selinux/restorecon.h"
 %include "../include/selinux/selinux.h"
