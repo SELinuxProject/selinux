@@ -19,31 +19,23 @@ DISABLED = -1
 PERMISSIVE = 0
 ENFORCING = 1
 
-def restorecon(path, recursive=False):
-    """ Restore SELinux context on a given path """
+def restorecon(path, recursive=False, verbose=False):
+    """ Restore SELinux context on a given path
 
-    try:
-        mode = os.lstat(path)[stat.ST_MODE]
-        status, context = matchpathcon(path, mode)
-    except OSError:
-        path = os.path.realpath(os.path.expanduser(path))
-        mode = os.lstat(path)[stat.ST_MODE]
-        status, context = matchpathcon(path, mode)
+    Arguments:
+    path -- The pathname for the file or directory to be relabeled.
 
-    if status == 0:
-        try:
-            status, oldcontext = lgetfilecon(path)
-        except OSError as e:
-            if e.errno != errno.ENODATA:
-                raise
-            oldcontext = None
-        if context != oldcontext:
-            lsetfilecon(path, context)
+    Keyword arguments:
+    recursive -- Change files and directories file labels recursively (default False)
+    verbose -- Show changes in file labels (default False)
+    """
 
-        if recursive:
-            for root, dirs, files in os.walk(path):
-                for name in files + dirs:
-                   restorecon(os.path.join(root, name))
+    restorecon_flags = SELINUX_RESTORECON_IGNORE_DIGEST | SELINUX_RESTORECON_REALPATH
+    if recursive:
+        restorecon_flags |= SELINUX_RESTORECON_RECURSE
+    if verbose:
+        restorecon_flags |= SELINUX_RESTORECON_VERBOSE
+    selinux_restorecon(os.path.expanduser(path), restorecon_flags)
 
 def chcon(path, context, recursive=False):
     """ Set the SELinux context on a given path """
