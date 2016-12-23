@@ -955,8 +955,8 @@ static int semanage_compile_module(semanage_handle_t *sh,
 	ssize_t bzip_status;
 	int status = 0;
 	int compressed;
-	size_t cil_data_len;
-	size_t err_data_len;
+	size_t cil_data_len = 0;
+	size_t err_data_len = 0;
 
 	if (!strcasecmp(modinfo->lang_ext, "cil")) {
 		goto cleanup;
