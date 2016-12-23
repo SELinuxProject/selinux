@@ -54,7 +54,7 @@ hidden_def(getfilecon_raw)
 int getfilecon(const char *path, char ** context)
 {
 	int ret;
-	char * rcontext;
+	char * rcontext = NULL;
 
 	*context = NULL;
 
