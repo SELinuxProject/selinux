@@ -113,6 +113,7 @@ void queue_destroy(queue_t q)
 
 	p = q->head;
 	while (p != NULL) {
+		free(p->element);
 		temp = p;
 		p = p->next;
 		free(temp);
