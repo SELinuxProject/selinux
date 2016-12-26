@@ -166,6 +166,7 @@ static void do_deps_modreq_global(int req_met, int b, char *policy, char *decl_t
 	ret = link_modules(h, base, mods, 1, 0);
 	CU_ASSERT_FATAL(ret == link_ret);
 	policydb_destroy(&mod);
+	sepol_handle_destroy(h);
 
 	if (!req_met)
 		return;
@@ -246,6 +247,7 @@ static void do_deps_modreq_opt(int req_met, int ret_val, int b, char *policy, ch
 	ret = link_modules(h, base, mods, 1, 0);
 	CU_ASSERT_FATAL(ret == ret_val);
 	policydb_destroy(&mod);
+	sepol_handle_destroy(h);
 	if (ret_val < 0)
 		return;
 

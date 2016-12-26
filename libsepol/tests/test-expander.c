@@ -122,6 +122,9 @@ int expander_policy_init(policydb_t * mybase, int num_modules, policydb_t ** mym
 		return -1;
 	}
 
+	for (i = 0; i < num_modules + 1; i++) {
+		free(filename[i]);
+	}
 	return 0;
 }
 
@@ -173,6 +176,20 @@ int expander_test_cleanup(void)
 {
 	policydb_destroy(&basemod);
 	policydb_destroy(&base_expanded);
+	policydb_destroy(&basemod2);
+	policydb_destroy(&base_expanded2);
+	policydb_destroy(&mod2);
+	policydb_destroy(&base_only_mod);
+	policydb_destroy(&base_only_expanded);
+	policydb_destroy(&role_basemod);
+	policydb_destroy(&role_expanded);
+	policydb_destroy(&role_mod);
+	policydb_destroy(&user_basemod);
+	policydb_destroy(&user_expanded);
+	policydb_destroy(&user_mod);
+	policydb_destroy(&alias_basemod);
+	policydb_destroy(&alias_expanded);
+	policydb_destroy(&alias_mod);
 	free(typemap);
 
 	return 0;
