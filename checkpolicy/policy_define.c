@@ -1708,11 +1708,11 @@ int define_bool_tunable(int is_tunable)
 	bool_value = (char *)queue_remove(id_queue);
 	if (!bool_value) {
 		yyerror("no default value for bool definition?");
-		free(id);
 		return -1;
 	}
 
 	datum->state = (int)(bool_value[0] == 'T') ? 1 : 0;
+	free(bool_value);
 	return 0;
       cleanup:
 	cond_destroy_bool(id, datum, NULL);
