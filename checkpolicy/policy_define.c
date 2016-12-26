@@ -5282,6 +5282,9 @@ int define_genfs_context_helper(char *fstype, int has_type)
 		else
 			policydbp->genfs = newgenfs;
 		genfs = newgenfs;
+	} else {
+		free(fstype);
+		fstype = NULL;
 	}
 
 	newc = (ocontext_t *) malloc(sizeof(ocontext_t));
@@ -5339,7 +5342,7 @@ int define_genfs_context_helper(char *fstype, int has_type)
 		    (!newc->v.sclass || !c->v.sclass
 		     || newc->v.sclass == c->v.sclass)) {
 			yyerror2("duplicate entry for genfs entry (%s, %s)",
-				 fstype, newc->u.name);
+				 genfs->fstype, newc->u.name);
 			goto fail;
 		}
 		len = strlen(newc->u.name);
@@ -5353,6 +5356,7 @@ int define_genfs_context_helper(char *fstype, int has_type)
 		p->next = newc;
 	else
 		genfs->head = newc;
+	free(type);
 	return 0;
       fail:
 	if (type)
