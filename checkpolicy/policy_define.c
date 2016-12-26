@@ -4899,8 +4899,7 @@ int define_port_context(unsigned int low, unsigned int high)
 		protocol = IPPROTO_DCCP;
 	} else {
 		yyerror2("unrecognized protocol %s", id);
-		free(newc);
-		return -1;
+		goto bad;
 	}
 
 	newc->u.port.protocol = protocol;
@@ -4909,13 +4908,11 @@ int define_port_context(unsigned int low, unsigned int high)
 
 	if (low > high) {
 		yyerror2("low port %d exceeds high port %d", low, high);
-		free(newc);
-		return -1;
+		goto bad;
 	}
 
 	if (parse_security_context(&newc->context[0])) {
-		free(newc);
-		return -1;
+		goto bad;
 	}
 
 	/* Preserve the matching order specified in the configuration. */
@@ -4945,9 +4942,11 @@ int define_port_context(unsigned int low, unsigned int high)
 	else
 		policydbp->ocontexts[OCON_PORT] = newc;
 
+	free(id);
 	return 0;
 
       bad:
+	free(id);
 	free(newc);
 	return -1;
 }
