@@ -168,12 +168,11 @@ void test_alias_datum(policydb_t * p, char *id, char *primary_id, char mode, uns
 		if (my_flavor == TYPE_TYPE) {
 			my_primary = 0;
 			my_value = primary->s.value;
-		} else if (my_flavor == TYPE_ALIAS) {
+		} else {
+			CU_ASSERT(my_flavor == TYPE_ALIAS);
 			my_primary = primary->s.value;
 			CU_ASSERT_NOT_EQUAL(type->s.value, primary->s.value);
 			my_value = type->s.value;
-		} else {
-			CU_FAIL("not an alias");
 		}
 
 		CU_ASSERT(type->primary == my_primary);
