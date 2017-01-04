@@ -26,7 +26,7 @@ int sepol_polcap_getnum(const char *name)
 	return -1;
 }
 
-const char *sepol_polcap_getname(int capnum)
+const char *sepol_polcap_getname(unsigned int capnum)
 {
 	if (capnum > POLICYDB_CAPABILITY_MAX)
 		return NULL;

@@ -19,7 +19,7 @@ enum {
 extern int sepol_polcap_getnum(const char *name);
 
 /* Convert a capability number to name. */
-extern const char *sepol_polcap_getname(int capnum);
+extern const char *sepol_polcap_getname(unsigned int capnum);
 
 #ifdef __cplusplus
 }
