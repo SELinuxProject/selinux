@@ -246,7 +246,7 @@ static int fcontext_matches(const semanage_fcontext_t *fcontext, void *varg)
 
 	/* Only match ALL or DIR */
 	type = semanage_fcontext_get_type(fcontext);
-	if (type != SEMANAGE_FCONTEXT_ALL && type != SEMANAGE_FCONTEXT_ALL)
+	if (type != SEMANAGE_FCONTEXT_ALL)
 		return 0;
 
 	len = strlen(oexpr);
