@@ -179,7 +179,7 @@ int watch(int fd, const char *watch_file)
 			syslog(LOG_ERR, "Read error (%s)", strerror(errno));
 			return 0;
 		}
-		syslog(LOG_ERR, "terminated");
+		syslog(LOG_INFO, "terminated");
 		return -1;
 	} else if (!len)
 		/* BUF_LEN too small? */
