@@ -1158,7 +1158,7 @@ cleanup:
 	free(all_modinfos);
 
 	if (status != 0) {
-		for (i = 0; i < j; j++) {
+		for (i = 0; i < j; i++) {
 			semanage_module_info_destroy(sh, &(*modinfo)[i]);
 		}
 		free(*modinfo);
