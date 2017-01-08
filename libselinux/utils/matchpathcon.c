@@ -7,7 +7,6 @@
 #include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/errno.h>
 #include <selinux/selinux.h>
 #include <limits.h>
 #include <stdlib.h>

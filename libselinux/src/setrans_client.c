@@ -18,6 +18,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <sys/uio.h>
 #include "dso.h"
 #include "selinux_internal.h"
 #include "setrans_internal.h"
