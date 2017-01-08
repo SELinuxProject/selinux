@@ -57,6 +57,7 @@
  * booleans or conditional rules are thrown away a warning is printed.
  */
 
+#include <ctype.h>
 #include <getopt.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -72,10 +73,6 @@
 #include <stdio.h>
 #include <errno.h>
 #include <sys/mman.h>
-
-#ifdef __APPLE__
-#include <ctype.h>
-#endif
 
 #include <sepol/module_to_cil.h>
 #include <sepol/policydb/policydb.h>
