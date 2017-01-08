@@ -1,22 +1,21 @@
 /* Copyright (c) 2006 Trusted Computer Solutions, Inc. */
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/poll.h>
-#include <sys/stat.h>
-#include <sys/un.h>
 #include <errno.h>
+#include <poll.h>
+#include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
-#include <signal.h>
 #include <string.h>
 #include <syslog.h>
 #include <unistd.h>
 #include <selinux/selinux.h>
-#include <sys/types.h>
 #include <sys/capability.h>
 #include <sys/resource.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <sys/un.h>
 #include "mcstrans.h"
 
 #ifdef UNUSED
