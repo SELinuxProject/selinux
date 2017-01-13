@@ -200,10 +200,9 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 			}
 
 			if (NULL == (data->spec_arr =
-				     malloc(sizeof(spec_t) * data->nspec)))
+				     calloc(data->nspec, sizeof(spec_t))))
 				goto finish;
 
-			memset(data->spec_arr, 0, sizeof(spec_t) * data->nspec);
 			maxnspec = data->nspec;
 			rewind(fp);
 		}
@@ -322,10 +321,9 @@ int selabel_property_init(struct selabel_handle *rec,
 {
 	struct saved_data *data;
 
-	data = (struct saved_data *)malloc(sizeof(*data));
+	data = (struct saved_data *)calloc(1, sizeof(*data));
 	if (!data)
 		return -1;
-	memset(data, 0, sizeof(*data));
 
 	rec->data = data;
 	rec->func_close = &closef;
@@ -340,10 +338,9 @@ int selabel_service_init(struct selabel_handle *rec,
 {
 	struct saved_data *data;
 
-	data = (struct saved_data *)malloc(sizeof(*data));
+	data = (struct saved_data *)calloc(1, sizeof(*data));
 	if (!data)
 		return -1;
-	memset(data, 0, sizeof(*data));
 
 	rec->data = data;
 	rec->func_close = &closef;
