@@ -90,6 +90,7 @@ struct rest_flags {
 	bool syslog_changes;
 	bool log_matches;
 	bool ignore_noent;
+	bool warnonnomatch;
 };
 
 static void restorecon_init(void)
@@ -613,7 +614,7 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 						    sb->st_mode);
 
 	if (rc < 0) {
-		if (errno == ENOENT && flags->verbose && !flags->recurse)
+		if (errno == ENOENT && flags->warnonnomatch)
 			selinux_log(SELINUX_INFO,
 				    "Warning no default label for %s\n",
 				    lookup_path);
@@ -761,6 +762,7 @@ int selinux_restorecon(const char *pathname_orig,
 		   SELINUX_RESTORECON_LOG_MATCHES) ? true : false;
 	flags.ignore_noent = (restorecon_flags &
 		   SELINUX_RESTORECON_IGNORE_NOENTRY) ? true : false;
+	flags.warnonnomatch = true;
 	ignore_mounts = (restorecon_flags &
 		   SELINUX_RESTORECON_IGNORE_MOUNTS) ? true : false;
 
@@ -983,7 +985,8 @@ int selinux_restorecon(const char *pathname_orig,
 		default:
 			error |= restorecon_sb(ftsent->fts_path,
 					       ftsent->fts_statp, &flags);
-
+			if (flags.warnonnomatch)
+				flags.warnonnomatch = false;
 			if (error && flags.abort_on_error)
 				goto out;
 			break;
