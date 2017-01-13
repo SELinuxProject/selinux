@@ -2012,7 +2012,6 @@ int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		    (class_perm_node_t *) malloc(sizeof(class_perm_node_t));
 		if (!cur_perms) {
 			yyerror("out of memory");
-			free(id);
 			ret = -1;
 			goto out;
 		}
@@ -2048,7 +2047,6 @@ int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		}
 	}
 
-	free(id);
 	ebitmap_destroy(&tclasses);
 
 	avrule->perms = perms;
