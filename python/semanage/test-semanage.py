@@ -276,7 +276,7 @@ def gen_semanage_test_args(parser):
 if __name__ == "__main__":
     import selinux
     semanage_test_list = [x for x in dir(SemanageTests) if x.startswith("test_")]
-    if selinux.security_getenforce() == 1:
+    if selinux.is_selinux_enabled() and selinux.security_getenforce() == 1:
         parser = argparse.ArgumentParser(description='Semanage unit test script')
         gen_semanage_test_args(parser)
         try:
