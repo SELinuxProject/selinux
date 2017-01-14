@@ -7,14 +7,14 @@ LIBDIR ?= $(PREFIX)/lib
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= /usr/share/locale
 INCLUDEDIR ?= $(PREFIX)/include
+LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -I$(INCLUDEDIR)
-LDLIBS = $(LIBDIR)/libsepol.a
 
 all: audit2why sepolgen-ifgen-attr-helper
 
-sepolgen-ifgen-attr-helper: sepolgen-ifgen-attr-helper.o
+sepolgen-ifgen-attr-helper: sepolgen-ifgen-attr-helper.o $(LIBSEPOLA)
 
 audit2why:
 	ln -sf audit2allow audit2why

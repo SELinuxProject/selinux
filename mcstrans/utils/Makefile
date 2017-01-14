@@ -2,14 +2,17 @@
 PREFIX ?= $(DESTDIR)/usr
 LIBDIR ?= $(PREFIX)/lib
 BINDIR ?= $(PREFIX)/sbin
+LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 
 CFLAGS ?= -Wall
 override CFLAGS += -I../src -I$(PREFIX)/include -D_GNU_SOURCE
-LDLIBS += -L$(LIBDIR) ../src/mcstrans.o ../src/mls_level.o -lselinux -lpcre $(LIBDIR)/libsepol.a
+LDLIBS += -L$(LIBDIR) -lselinux -lpcre
 
 TARGETS=$(patsubst %.c,%,$(wildcard *.c))
 
-all: $(TARGETS) 
+all: $(TARGETS)
+
+$(TARGETS): ../src/mcstrans.o ../src/mls_level.o $(LIBSEPOLA)
 
 install: all
 	-mkdir -p $(BINDIR)

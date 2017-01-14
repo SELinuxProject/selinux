@@ -4,14 +4,14 @@ INCLUDEDIR ?= $(PREFIX)/include
 BINDIR ?= $(PREFIX)/bin
 LIBDIR ?= $(PREFIX)/lib
 MANDIR ?= $(PREFIX)/share/man
+LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -I$(INCLUDEDIR)
-LDLIBS = $(LIBDIR)/libsepol.a
 
 all: semodule_deps
 
-semodule_deps:  semodule_deps.o 
+semodule_deps:  semodule_deps.o $(LIBSEPOLA)
 
 install: all
 	-mkdir -p $(BINDIR)

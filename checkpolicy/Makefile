@@ -6,6 +6,7 @@ BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/share/man
 LIBDIR ?= $(PREFIX)/lib
 INCLUDEDIR ?= $(PREFIX)/include
+LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 TARGETS = checkpolicy checkmodule
 
 LEX = flex
@@ -20,16 +21,14 @@ CHECKOBJS = y.tab.o lex.yy.o queue.o module_compiler.o parse_util.o \
 CHECKPOLOBJS = $(CHECKOBJS) checkpolicy.o
 CHECKMODOBJS = $(CHECKOBJS) checkmodule.o
 
-LDLIBS=$(LIBDIR)/libsepol.a
-
 GENERATED=lex.yy.c y.tab.c y.tab.h
 
 all:  $(TARGETS)
 	$(MAKE) -C test
 
-checkpolicy: $(CHECKPOLOBJS)
+checkpolicy: $(CHECKPOLOBJS) $(LIBSEPOLA)
 
-checkmodule: $(CHECKMODOBJS)
+checkmodule: $(CHECKMODOBJS) $(LIBSEPOLA)
 
 %.o: %.c 
 	$(CC) $(CFLAGS) -o $@ -c $<
