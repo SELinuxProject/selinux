@@ -727,7 +727,7 @@ partial_name_hash(unsigned long c, unsigned long prevhash)
 	return (prevhash + (c << 4) + (c >> 4)) * 11;
 }
 
-static unsigned int filenametr_hash(hashtab_t h, hashtab_key_t k)
+static unsigned int filenametr_hash(hashtab_t h, const_hashtab_key_t k)
 {
 	const struct filename_trans *ft = (const struct filename_trans *)k;
 	unsigned long hash;
@@ -743,7 +743,7 @@ static unsigned int filenametr_hash(hashtab_t h, hashtab_key_t k)
 }
 
 static int filenametr_cmp(hashtab_t h __attribute__ ((unused)),
-			  hashtab_key_t k1, hashtab_key_t k2)
+			  const_hashtab_key_t k1, const_hashtab_key_t k2)
 {
 	const struct filename_trans *ft1 = (const struct filename_trans *)k1;
 	const struct filename_trans *ft2 = (const struct filename_trans *)k2;
@@ -765,7 +765,7 @@ static int filenametr_cmp(hashtab_t h __attribute__ ((unused)),
 
 }
 
-static unsigned int rangetr_hash(hashtab_t h, hashtab_key_t k)
+static unsigned int rangetr_hash(hashtab_t h, const_hashtab_key_t k)
 {
 	const struct range_trans *key = (const struct range_trans *)k;
 	return (key->source_type + (key->target_type << 3) +
@@ -773,7 +773,7 @@ static unsigned int rangetr_hash(hashtab_t h, hashtab_key_t k)
 }
 
 static int rangetr_cmp(hashtab_t h __attribute__ ((unused)),
-		       hashtab_key_t k1, hashtab_key_t k2)
+		       const_hashtab_key_t k1, const_hashtab_key_t k2)
 {
 	const struct range_trans *key1 = (const struct range_trans *)k1;
 	const struct range_trans *key2 = (const struct range_trans *)k2;

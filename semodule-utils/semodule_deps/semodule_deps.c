@@ -52,14 +52,14 @@ static void usage(char *program_name)
 /* Basic string hash and compare for the hashtables used in
  * generate_requires. Copied from symtab.c.
  */
-static unsigned int reqsymhash(hashtab_t h, hashtab_key_t key)
+static unsigned int reqsymhash(hashtab_t h, const_hashtab_key_t key)
 {
-	char *p, *keyp;
+	const char *p, *keyp;
 	size_t size;
 	unsigned int val;
 
 	val = 0;
-	keyp = (char *)key;
+	keyp = (const char *)key;
 	size = strlen(keyp);
 	for (p = keyp; ((size_t) (p - keyp)) < size; p++)
 		val =
@@ -68,14 +68,10 @@ static unsigned int reqsymhash(hashtab_t h, hashtab_key_t key)
 }
 
 static int reqsymcmp(hashtab_t h
-		     __attribute__ ((unused)), hashtab_key_t key1,
-		     hashtab_key_t key2)
+		     __attribute__ ((unused)), const_hashtab_key_t key1,
+		     const_hashtab_key_t key2)
 {
-	char *keyp1, *keyp2;
-
-	keyp1 = (char *)key1;
-	keyp2 = (char *)key2;
-	return strcmp(keyp1, keyp2);
+	return strcmp(key1, key2);
 }
 
 /* Load a policy package from the given filename. Progname is used for

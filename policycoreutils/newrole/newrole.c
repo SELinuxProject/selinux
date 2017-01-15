@@ -228,7 +228,7 @@ static int free_hashtab_entry(hashtab_key_t key, hashtab_datum_t d,
 	return 0;
 }
 
-static unsigned int reqsymhash(hashtab_t h, hashtab_key_t key)
+static unsigned int reqsymhash(hashtab_t h, const_hashtab_key_t key)
 {
 	char *p, *keyp;
 	size_t size;
@@ -244,14 +244,10 @@ static unsigned int reqsymhash(hashtab_t h, hashtab_key_t key)
 }
 
 static int reqsymcmp(hashtab_t h
-		     __attribute__ ((unused)), hashtab_key_t key1,
-		     hashtab_key_t key2)
+		     __attribute__ ((unused)), const_hashtab_key_t key1,
+		     const_hashtab_key_t key2)
 {
-	char *keyp1, *keyp2;
-
-	keyp1 = (char *)key1;
-	keyp2 = (char *)key2;
-	return strcmp(keyp1, keyp2);
+	return strcmp(key1, key2);
 }
 
 static hashtab_t app_service_names = NULL;

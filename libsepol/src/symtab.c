@@ -11,14 +11,14 @@
 #include <sepol/policydb/hashtab.h>
 #include <sepol/policydb/symtab.h>
 
-static unsigned int symhash(hashtab_t h, hashtab_key_t key)
+static unsigned int symhash(hashtab_t h, const_hashtab_key_t key)
 {
-	char *p, *keyp;
+	const char *p, *keyp;
 	size_t size;
 	unsigned int val;
 
 	val = 0;
-	keyp = (char *)key;
+	keyp = (const char *)key;
 	size = strlen(keyp);
 	for (p = keyp; ((size_t) (p - keyp)) < size; p++)
 		val =
@@ -27,14 +27,10 @@ static unsigned int symhash(hashtab_t h, hashtab_key_t key)
 }
 
 static int symcmp(hashtab_t h
-		  __attribute__ ((unused)), hashtab_key_t key1,
-		  hashtab_key_t key2)
+		  __attribute__ ((unused)), const_hashtab_key_t key1,
+		  const_hashtab_key_t key2)
 {
-	char *keyp1, *keyp2;
-
-	keyp1 = (char *)key1;
-	keyp2 = (char *)key2;
-	return strcmp(keyp1, keyp2);
+	return strcmp(key1, key2);
 }
 
 int symtab_init(symtab_t * s, unsigned int size)

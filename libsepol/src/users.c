@@ -139,8 +139,7 @@ int sepol_user_modify(sepol_handle_t * handle,
 		goto err;
 
 	/* Now, see if a user exists */
-	usrdatum = hashtab_search(policydb->p_users.table,
-				  (const hashtab_key_t)cname);
+	usrdatum = hashtab_search(policydb->p_users.table, cname);
 
 	/* If it does, we will modify it */
 	if (usrdatum) {
@@ -163,8 +162,7 @@ int sepol_user_modify(sepol_handle_t * handle,
 	for (i = 0; i < num_roles; i++) {
 
 		/* Search for the role */
-		roldatum = hashtab_search(policydb->p_roles.table,
-					  (const hashtab_key_t)roles[i]);
+		roldatum = hashtab_search(policydb->p_roles.table, roles[i]);
 		if (!roldatum) {
 			ERR(handle, "undefined role %s for user %s",
 			    roles[i], cname);
@@ -301,8 +299,7 @@ int sepol_user_exists(sepol_handle_t * handle __attribute__ ((unused)),
 	const char *cname;
 	sepol_user_key_unpack(key, &cname);
 
-	*response = (hashtab_search(policydb->p_users.table,
-				    (const hashtab_key_t)cname) != NULL);
+	*response = (hashtab_search(policydb->p_users.table, cname) != NULL);
 
 	return STATUS_SUCCESS;
 }
@@ -328,8 +325,7 @@ int sepol_user_query(sepol_handle_t * handle,
 	const char *cname;
 	sepol_user_key_unpack(key, &cname);
 
-	usrdatum = hashtab_search(policydb->p_users.table,
-				  (const hashtab_key_t)cname);
+	usrdatum = hashtab_search(policydb->p_users.table, cname);
 
 	if (!usrdatum) {
 		*response = NULL;

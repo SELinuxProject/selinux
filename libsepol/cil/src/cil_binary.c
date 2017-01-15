@@ -4027,53 +4027,53 @@ exit:
 	return rc;
 }
 
-static unsigned int filename_trans_hash(hashtab_t h, hashtab_key_t key)
+static unsigned int filename_trans_hash(hashtab_t h, const_hashtab_key_t key)
 {
-	filename_trans_t *k = (filename_trans_t *)key;
+	const filename_trans_t *k = (const filename_trans_t *)key;
 	return ((k->tclass + (k->ttype << 2) +
 				(k->stype << 9)) & (h->size - 1));
 }
 
 static int filename_trans_compare(hashtab_t h
-             __attribute__ ((unused)), hashtab_key_t key1,
-			              hashtab_key_t key2)
+             __attribute__ ((unused)), const_hashtab_key_t key1,
+			              const_hashtab_key_t key2)
 {
-	filename_trans_t *a = (filename_trans_t *)key1;
-	filename_trans_t *b = (filename_trans_t *)key2;
+	const filename_trans_t *a = (const filename_trans_t *)key1;
+	const filename_trans_t *b = (const filename_trans_t *)key2;
 
 	return a->stype != b->stype || a->ttype != b->ttype || a->tclass != b->tclass || strcmp(a->name, b->name);
 }
 
-static unsigned int range_trans_hash(hashtab_t h, hashtab_key_t key)
+static unsigned int range_trans_hash(hashtab_t h, const_hashtab_key_t key)
 {
-	range_trans_t *k = (range_trans_t *)key;
+	const range_trans_t *k = (const range_trans_t *)key;
 	return ((k->target_class + (k->target_type << 2) +
 				(k->source_type << 5)) & (h->size - 1));
 }
 
 static int range_trans_compare(hashtab_t h
-             __attribute__ ((unused)), hashtab_key_t key1,
-			              hashtab_key_t key2)
+             __attribute__ ((unused)), const_hashtab_key_t key1,
+			              const_hashtab_key_t key2)
 {
-	range_trans_t *a = (range_trans_t *)key1;
-	range_trans_t *b = (range_trans_t *)key2;
+	const range_trans_t *a = (const range_trans_t *)key1;
+	const range_trans_t *b = (const range_trans_t *)key2;
 
 	return a->source_type != b->source_type || a->target_type != b->target_type || a->target_class != b->target_class;
 }
 
-static unsigned int role_trans_hash(hashtab_t h, hashtab_key_t key)
+static unsigned int role_trans_hash(hashtab_t h, const_hashtab_key_t key)
 {
-	role_trans_t *k = (role_trans_t *)key;
+	const role_trans_t *k = (const role_trans_t *)key;
 	return ((k->role + (k->type << 2) +
 				(k->tclass << 5)) & (h->size - 1));
 }
 
 static int role_trans_compare(hashtab_t h
-             __attribute__ ((unused)), hashtab_key_t key1,
-			              hashtab_key_t key2)
+             __attribute__ ((unused)), const_hashtab_key_t key1,
+			              const_hashtab_key_t key2)
 {
-	role_trans_t *a = (role_trans_t *)key1;
-	role_trans_t *b = (role_trans_t *)key2;
+	const role_trans_t *a = (const role_trans_t *)key1;
+	const role_trans_t *b = (const role_trans_t *)key2;
 
 	return a->role != b->role || a->type != b->type || a->tclass != b->tclass;
 }
@@ -4081,9 +4081,9 @@ static int role_trans_compare(hashtab_t h
 /* Based on MurmurHash3, written by Austin Appleby and placed in the
  * public domain.
  */
-static unsigned int avrulex_hash(__attribute__((unused)) hashtab_t h, hashtab_key_t key)
+static unsigned int avrulex_hash(__attribute__((unused)) hashtab_t h, const_hashtab_key_t key)
 {
-	avtab_key_t *k = (avtab_key_t *)key;
+	const avtab_key_t *k = (const avtab_key_t *)key;
 
 	static const uint32_t c1 = 0xcc9e2d51;
 	static const uint32_t c2 = 0x1b873593;
@@ -4121,11 +4121,11 @@ static unsigned int avrulex_hash(__attribute__((unused)) hashtab_t h, hashtab_ke
 }
 
 static int avrulex_compare(hashtab_t h
-             __attribute__ ((unused)), hashtab_key_t key1,
-			              hashtab_key_t key2)
+             __attribute__ ((unused)), const_hashtab_key_t key1,
+			              const_hashtab_key_t key2)
 {
-	avtab_key_t *a = (avtab_key_t *)key1;
-	avtab_key_t *b = (avtab_key_t *)key2;
+	const avtab_key_t *a = (const avtab_key_t *)key1;
+	const avtab_key_t *b = (const avtab_key_t *)key2;
 
 	return a->source_type != b->source_type || a->target_type != b->target_type || a->target_class != b->target_class || a->specified != b->specified;
 }

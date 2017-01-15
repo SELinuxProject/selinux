@@ -23,6 +23,7 @@ extern "C" {
 #endif
 
 typedef char *hashtab_key_t;	/* generic key type */
+typedef const char *const_hashtab_key_t;	/* constant generic key type */
 typedef void *hashtab_datum_t;	/* generic datum type */
 
 typedef struct hashtab_node *hashtab_ptr_t;
@@ -37,8 +38,8 @@ typedef struct hashtab_val {
 	hashtab_ptr_t *htable;	/* hash table */
 	unsigned int size;	/* number of slots in hash table */
 	uint32_t nel;		/* number of elements in hash table */
-	unsigned int (*hash_value) (struct hashtab_val * h, hashtab_key_t key);	/* hash function */
-	int (*keycmp) (struct hashtab_val * h, hashtab_key_t key1, hashtab_key_t key2);	/* key comparison function */
+	unsigned int (*hash_value) (struct hashtab_val * h, const_hashtab_key_t key);	/* hash function */
+	int (*keycmp) (struct hashtab_val * h, const_hashtab_key_t key1, const_hashtab_key_t key2);	/* key comparison function */
 } hashtab_val_t;
 
 typedef hashtab_val_t *hashtab_t;
@@ -50,11 +51,11 @@ typedef hashtab_val_t *hashtab_t;
    the new hash table otherwise.
  */
 extern hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
-							    const hashtab_key_t
+							    const_hashtab_key_t
 							    key),
 				int (*keycmp) (hashtab_t h,
-					       const hashtab_key_t key1,
-					       const hashtab_key_t key2),
+					       const_hashtab_key_t key1,
+					       const_hashtab_key_t key2),
 				unsigned int size);
 /*
    Inserts the specified (key, datum) pair into the specified hash table.
@@ -98,7 +99,7 @@ extern int hashtab_replace(hashtab_t h, hashtab_key_t k, hashtab_datum_t d,
    Returns NULL if no entry has the specified key or
    the datum of the entry otherwise.
  */
-extern hashtab_datum_t hashtab_search(hashtab_t h, const hashtab_key_t k);
+extern hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t k);
 
 /*
    Destroys the specified hash table.

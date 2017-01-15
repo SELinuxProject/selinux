@@ -45,14 +45,14 @@ static pthread_mutex_t cil_strpool_mutex = PTHREAD_MUTEX_INITIALIZER;
 static unsigned int cil_strpool_readers = 0;
 static hashtab_t cil_strpool_tab = NULL;
 
-static unsigned int cil_strpool_hash(hashtab_t h, hashtab_key_t key)
+static unsigned int cil_strpool_hash(hashtab_t h, const_hashtab_key_t key)
 {
-	char *p, *keyp;
+	const char *p, *keyp;
 	size_t size;
 	unsigned int val;
 
 	val = 0;
-	keyp = (char*)key;
+	keyp = (const char*)key;
 	size = strlen(keyp);
 	for (p = keyp; ((size_t) (p - keyp)) < size; p++)
 		val =
@@ -60,10 +60,10 @@ static unsigned int cil_strpool_hash(hashtab_t h, hashtab_key_t key)
 	return val & (h->size - 1);
 }
 
-static int cil_strpool_compare(hashtab_t h __attribute__ ((unused)), hashtab_key_t key1, hashtab_key_t key2)
+static int cil_strpool_compare(hashtab_t h __attribute__ ((unused)), const_hashtab_key_t key1, const_hashtab_key_t key2)
 {
-	char *keyp1 = (char*)key1;
-	char *keyp2 = (char*)key2;
+	const char *keyp1 = (const char*)key1;
+	const char *keyp2 = (const char*)key2;
 	return strcmp(keyp1, keyp2);
 }
 
