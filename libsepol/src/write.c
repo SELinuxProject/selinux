@@ -926,7 +926,6 @@ static int write_cons_helper(policydb_t * p,
 		if (items != 2)
 			return POLICYDB_ERROR;
 		for (e = c->expr; e; e = e->next) {
-			items = 0;
 			buf[0] = cpu_to_le32(e->expr_type);
 			buf[1] = cpu_to_le32(e->attr);
 			buf[2] = cpu_to_le32(e->op);

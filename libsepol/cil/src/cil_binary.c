@@ -2253,7 +2253,6 @@ int cil_roletrans_to_policydb(policydb_t *pdb, const struct cil_db *db, struct c
 				new->tclass = sepol_obj->s.value;
 				new->new_role = sepol_result->s.value;
 
-				rc = SEPOL_OK;
 				rc = hashtab_insert(role_trans_table, (hashtab_key_t)new, &(new->new_role));
 				if (rc != SEPOL_OK) {
 					if (rc == SEPOL_EEXIST) {
@@ -3041,7 +3040,6 @@ int cil_rangetransition_to_policydb(policydb_t *pdb, const struct cil_db *db, st
 					goto exit;
 				}
 
-				rc = SEPOL_OK;
 				rc = hashtab_insert(range_trans_table, (hashtab_key_t)newkey, newdatum);
 				if (rc != SEPOL_OK) {
 					if (rc == SEPOL_EEXIST) {
