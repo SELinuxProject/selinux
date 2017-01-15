@@ -2558,7 +2558,7 @@ int filename_trans_read(policydb_t *p, struct policy_file *fp)
 		if (!ft)
 			goto err;
 		otype = calloc(1, sizeof(*otype));
-		if (!ft)
+		if (!otype)
 			goto err;
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
