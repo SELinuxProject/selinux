@@ -57,8 +57,8 @@ extern "C" {
    that has the specified role and level.  If no reachable context exists
    for the user with that role, then return -1. */
 	int get_default_context_with_rolelevel(const char *user,
-					       const char *level,
 					       const char *role,
+					       const char *level,
 					       char * fromcon,
 					       char ** newcon);
 
