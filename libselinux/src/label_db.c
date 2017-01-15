@@ -281,9 +281,12 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 		free(catalog);
 		return NULL;
 	}
-	if (fstat(fileno(filp), &sb) < 0)
+	if (fstat(fileno(filp), &sb) < 0) {
+		free(catalog);
 		return NULL;
+	}
 	if (!S_ISREG(sb.st_mode)) {
+		free(catalog);
 		errno = EINVAL;
 		return NULL;
 	}
