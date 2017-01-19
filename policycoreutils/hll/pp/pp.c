@@ -141,7 +141,7 @@ int main(int argc, char **argv)
 		if (separator) {
 			*separator = '\0';
 		}
-		if (strcmp(mod_name, cil_name) != 0) {
+		if (mod_name && strcmp(mod_name, cil_name) != 0) {
 			fprintf(stderr,	"Warning: SELinux userspace will refer to the module from %s as %s rather than %s\n", ifile, mod_name, cil_name);
 		}
 		free(cil_path);
