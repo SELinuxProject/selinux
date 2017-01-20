@@ -32,10 +32,12 @@ endif
 
 LD_SONAME_FLAGS=-soname,$(LIBSO),--version-script=$(LIBMAP),-z,defs
 
+LN=ln
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
 LD_SONAME_FLAGS=-install_name,$(LIBSO)
 LDFLAGS += -undefined dynamic_lookup
+LN=gln
 endif
 
 all: $(LIBA) $(LIBSO) $(LIBPC)
@@ -84,7 +86,7 @@ install: all
 	install -m 755 $(LIBSO) $(SHLIBDIR)
 	test -d $(LIBDIR)/pkgconfig || install -m 755 -d $(LIBDIR)/pkgconfig
 	install -m 644 $(LIBPC) $(LIBDIR)/pkgconfig
-	ln -sf --relative $(SHLIBDIR)/$(LIBSO) $(LIBDIR)/$(TARGET)
+	$(LN) -sf --relative $(SHLIBDIR)/$(LIBSO) $(LIBDIR)/$(TARGET)
 
 relabel:
 	/sbin/restorecon $(SHLIBDIR)/$(LIBSO)

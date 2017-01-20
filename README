@@ -17,3 +17,8 @@ make install install-pywrap relabel
 This may render your system unusable if the upstream SELinux userspace
 lacks library functions or other dependencies relied upon by your
 distribution.  If it breaks, you get to keep both pieces.
+
+To install libsepol on macOS (mainly for policy analysis):
+cd libsepol; make DESTDIR=/usr/local PREFIX=/usr/local install
+
+This requires GNU coreutils (brew install coreutils).
