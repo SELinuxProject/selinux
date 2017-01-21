@@ -3256,22 +3256,24 @@ int define_filename_trans(void)
 		return 0;
 	}
 
+	type_set_init(&stypes);
+	type_set_init(&ttypes);
+	ebitmap_init(&e_stypes);
+	ebitmap_init(&e_ttypes);
+	ebitmap_init(&e_tclasses);
 
 	add = 1;
-	type_set_init(&stypes);
 	while ((id = queue_remove(id_queue))) {
 		if (set_types(&stypes, id, &add, 0))
 			goto bad;
 	}
 
 	add =1;
-	type_set_init(&ttypes);
 	while ((id = queue_remove(id_queue))) {
 		if (set_types(&ttypes, id, &add, 0))
 			goto bad;
 	}
 
-	ebitmap_init(&e_tclasses);
 	if (read_classes(&e_tclasses))
 		goto bad;
 
@@ -3288,6 +3290,7 @@ int define_filename_trans(void)
 	typdatum = hashtab_search(policydbp->p_types.table, id);
 	if (!typdatum) {
 		yyerror2("unknown type %s used in transition definition", id);
+		free(id);
 		goto bad;
 	}
 	free(id);
@@ -3302,11 +3305,9 @@ int define_filename_trans(void)
 	/* We expand the class set into seperate rules.  We expand the types
 	 * just to make sure there are not duplicates.  They will get turned
 	 * into seperate rules later */
-	ebitmap_init(&e_stypes);
 	if (type_set_expand(&stypes, &e_stypes, policydbp, 1))
 		goto bad;
 
-	ebitmap_init(&e_ttypes);
 	if (type_set_expand(&ttypes, &e_ttypes, policydbp, 1))
 		goto bad;
 
@@ -3386,11 +3387,18 @@ int define_filename_trans(void)
 	ebitmap_destroy(&e_stypes);
 	ebitmap_destroy(&e_ttypes);
 	ebitmap_destroy(&e_tclasses);
+	type_set_destroy(&stypes);
+	type_set_destroy(&ttypes);
 
 	return 0;
 
 bad:
 	free(name);
+	ebitmap_destroy(&e_stypes);
+	ebitmap_destroy(&e_ttypes);
+	ebitmap_destroy(&e_tclasses);
+	type_set_destroy(&stypes);
+	type_set_destroy(&ttypes);
 	return -1;
 }
 
