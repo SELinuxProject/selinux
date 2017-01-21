@@ -1426,11 +1426,13 @@ int define_type(int alias)
 		if (!attr) {
 			/* treat it as a fatal error */
 			yyerror2("attribute %s is not declared", id);
+			free(id);
 			return -1;
 		}
 
 		if (attr->flavor != TYPE_ATTRIB) {
 			yyerror2("%s is a type, not an attribute", id);
+			free(id);
 			return -1;
 		}
 
