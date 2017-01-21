@@ -348,13 +348,14 @@ static int read_classes(ebitmap_t *e_classes)
 		cladatum = hashtab_search(policydbp->p_classes.table, id);
 		if (!cladatum) {
 			yyerror2("unknown class %s", id);
+			free(id);
 			return -1;
 		}
+		free(id);
 		if (ebitmap_set_bit(e_classes, cladatum->s.value - 1, TRUE)) {
 			yyerror("Out of memory");
 			return -1;
 		}
-		free(id);
 	}
 	return 0;
 }
@@ -2552,6 +2553,10 @@ int define_te_avtab_helper(int which, avrule_t ** rule)
 	*rule = avrule;
 
       out:
+	if (ret) {
+		avrule_destroy(avrule);
+		free(avrule);
+	}
 	return ret;
 
 }
