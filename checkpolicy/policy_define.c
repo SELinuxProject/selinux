@@ -2733,6 +2733,7 @@ int define_roleattribute(void)
 		free(id);
 		return -1;
 	}
+	free(id);
 
 	while ((id = queue_remove(id_queue))) {
 		if (!is_id_in_scope(SYM_ROLES, id)) {
