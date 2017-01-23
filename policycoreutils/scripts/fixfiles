@@ -119,11 +119,7 @@ VERBOSE="-p"
 FORCEFLAG=""
 DIRS=""
 RPMILES=""
-LOGFILE=`tty`
-if [ $? != 0 ]; then
-    LOGFILE="/dev/null"
-fi
-LOGGER=/usr/sbin/logger
+LOGFILE=/proc/self/fd/1
 SETFILES=/sbin/setfiles
 RESTORECON=/sbin/restorecon
 FILESYSTEMSRW=`get_rw_labeled_mounts`
@@ -138,11 +134,11 @@ else
 fi
 
 #
-# Log to either syslog or a LOGFILE
+# Write to LOGFILE
 #
 logit () {
 if [ -n $LOGFILE ]; then
-    echo $1 >> $LOGFILE
+    echo $1 >> "$LOGFILE"
 fi
 }
 #
