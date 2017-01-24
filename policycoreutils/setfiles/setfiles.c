@@ -138,6 +138,19 @@ static void maybe_audit_mass_relabel(int mass_relabel, int mass_relabel_errs)
 #endif
 }
 
+static int __attribute__ ((format(printf, 2, 3)))
+log_callback(int type, const char *fmt, ...)
+{
+	int rc;
+	FILE *out = (type == SELINUX_INFO) ? stdout : stderr;
+	va_list ap;
+	fprintf(out, "%s: ", r_opts.progname);
+	va_start(ap, fmt);
+	rc = vfprintf(out, fmt, ap);
+	va_end(ap);
+	return rc;
+}
+
 int main(int argc, char **argv)
 {
 	struct stat sb;
@@ -151,6 +164,7 @@ int main(int argc, char **argv)
 	const char *ropts = "e:f:hiIDlmno:pqrsvFRW0";
 	const char *sopts = "c:de:f:hiIDlmno:pqr:svFR:W0";
 	const char *opts;
+	union selinux_callback cb;
 
 	/* Initialize variables */
 	memset(&r_opts, 0, sizeof(r_opts));
@@ -383,6 +397,9 @@ int main(int argc, char **argv)
 			mass_relabel = 1;
 	}
 
+	cb.func_log = log_callback;
+	selinux_set_callback(SELINUX_CB_LOG, cb);
+
 	if (!iamrestorecon) {
 		if (policyfile) {
 			if (optind != (argc - 1))
@@ -401,8 +418,8 @@ int main(int argc, char **argv)
 		 * we can support either checking against the active policy or
 		 * checking against a binary policy file.
 		 */
-		selinux_set_callback(SELINUX_CB_VALIDATE,
-				     (union selinux_callback)&canoncon);
+		cb.func_validate = canoncon;
+		selinux_set_callback(SELINUX_CB_VALIDATE, cb);
 
 		if (stat(argv[optind], &sb) < 0) {
 			perror(argv[optind]);
