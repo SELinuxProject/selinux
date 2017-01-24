@@ -487,6 +487,7 @@ oom:
 /*
  * Evaluate the association hash table distribution.
  */
+#ifdef DEBUG
 static void filespec_eval(void)
 {
 	file_spec_t *fl;
@@ -513,6 +514,11 @@ static void filespec_eval(void)
 		     "filespec hash table stats: %d elements, %d/%d buckets used, longest chain length %d\n",
 		     nel, used, HASH_BUCKETS, longest);
 }
+#else
+static void filespec_eval(void)
+{
+}
+#endif
 
 /*
  * Destroy the association hash table.
