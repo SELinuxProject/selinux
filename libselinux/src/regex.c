@@ -13,7 +13,18 @@
 #endif
 
 #ifndef __BYTE_ORDER__
-#error __BYTE_ORDER__ not defined. Unable to determine endianness.
+
+/* If the compiler doesn't define __BYTE_ORDER__, try to use the C
+ * library <endian.h> header definitions. */
+#include <endian.h>
+#ifndef __BYTE_ORDER
+#error Neither __BYTE_ORDER__ nor __BYTE_ORDER defined. Unable to determine endianness.
+#endif
+
+#define __ORDER_LITTLE_ENDIAN __LITTLE_ENDIAN
+#define __ORDER_BIG_ENDIAN __BIG_ENDIAN
+#define __BYTE_ORDER__ __BYTE_ORDER
+
 #endif
 
 #ifdef USE_PCRE2
