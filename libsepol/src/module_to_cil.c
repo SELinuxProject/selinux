@@ -2721,7 +2721,7 @@ static int ocontext_selinux_node_to_cil(struct policydb *pdb, struct ocontext *n
 			goto exit;
 		}
 
-		cil_printf("(nodecon %s %s ", addr, mask);
+		cil_printf("(nodecon (%s) (%s) ", addr, mask);
 
 		context_to_cil(pdb, &node->context[0]);
 
@@ -2753,7 +2753,7 @@ static int ocontext_selinux_node6_to_cil(struct policydb *pdb, struct ocontext *
 			goto exit;
 		}
 
-		cil_printf("(nodecon %s %s ", addr, mask);
+		cil_printf("(nodecon (%s) (%s) ", addr, mask);
 
 		context_to_cil(pdb, &node->context[0]);
 
