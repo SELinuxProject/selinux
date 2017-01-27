@@ -310,7 +310,7 @@ process() {
 case "$1" in
     restore) restore Relabel;;
     check) VERBOSE="-v"; restore Check -n;;
-    verify) restore Verify -n -o -;;
+    verify) restore Verify -n;;
     relabel) relabel;;
     onboot)
 	> /.autorelabel
