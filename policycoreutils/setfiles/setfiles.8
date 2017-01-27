@@ -106,11 +106,11 @@ seclabel fs mounted on a directory below this.
 .B \-n
 don't change any file labels (passive check).
 .TP
-.BI \-o \ filename
-Deprecated, SELinux policy will probably block this access.  Use shell redirection to save list of files with incorrect context in filename.
+.BI \-o \ outfilename
+Deprecated - This option is no longer supported.
 .TP
 .B \-p
-show progress by printing * every STAR_COUNT files unless relabeling the entire
+show progress by printing the number of files in 1k blocks unless relabeling the entire
 OS, that will then show the approximate percentage complete. Note that the
 .B \-p
 and

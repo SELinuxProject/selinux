@@ -50,9 +50,9 @@ extern int selinux_restorecon(const char *pathname,
  */
 #define SELINUX_RESTORECON_VERBOSE			0x0010
 /*
- * Show progress by printing * to stdout every 1000 files, unless
- * relabeling the entire OS, that will then show the approximate
- * percentage complete.
+ * If SELINUX_RESTORECON_PROGRESS is true and
+ * SELINUX_RESTORECON_MASS_RELABEL is true, then output approx % complete,
+ * else output the number of files in 1k blocks processed to stdout.
  */
 #define SELINUX_RESTORECON_PROGRESS			0x0020
 /*
@@ -91,6 +91,11 @@ extern int selinux_restorecon(const char *pathname,
  * mounts to be excluded from relabeling checks.
  */
 #define SELINUX_RESTORECON_IGNORE_MOUNTS		0x2000
+/*
+ * Set if there is a mass relabel required.
+ * See SELINUX_RESTORECON_PROGRESS flag for details.
+ */
+#define SELINUX_RESTORECON_MASS_RELABEL			0x4000
 
 /**
  * selinux_restorecon_set_sehandle - Set the global fc handle.

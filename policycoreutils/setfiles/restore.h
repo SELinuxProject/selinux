@@ -17,18 +17,12 @@
 #include <limits.h>
 #include <stdint.h>
 
-/*
- * STAR_COUNT is also defined in libselinux/src/selinux_restorecon.c where it
- * is used to output "*" for each number of files processed. Defined here for
- * inclusion in man pages.
-*/
-#define STAR_COUNT 1000
-
 /* Things that need to be init'd */
 struct restore_opts {
 	unsigned int nochange;
 	unsigned int verbose;
 	unsigned int progress;
+	unsigned int mass_relabel;
 	unsigned int set_specctx;
 	unsigned int add_assoc;
 	unsigned int ignore_digest;
@@ -49,7 +43,6 @@ struct restore_opts {
 	const char *selabel_opt_path;
 	const char *selabel_opt_digest;
 	int debug;
-	FILE *outfile;
 };
 
 void restore_init(struct restore_opts *opts);

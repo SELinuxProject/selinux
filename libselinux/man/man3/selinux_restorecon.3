@@ -88,8 +88,16 @@ will take precedence.
 .RE
 .sp
 .B SELINUX_RESTORECON_PROGRESS
-show progress by printing * to stdout every 1000 files unless relabeling the
-entire OS, that will then show the approximate percentage complete.
+show progress by outputting the number of files in 1k blocks processed
+to stdout. If the
+.B SELINUX_RESTORECON_MASS_RELABEL
+flag is also set then the approximate percentage complete will be shown.
+.sp
+.B SELINUX_RESTORECON_MASS_RELABEL
+generally set when relabeling the entire OS, that will then show the
+approximate percentage complete. The
+.B SELINUX_RESTORECON_PROGRESS
+flag must also be set.
 .sp
 .B SELINUX_RESTORECON_REALPATH
 convert passed-in

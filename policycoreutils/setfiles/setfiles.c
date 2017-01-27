@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 	char *buf = NULL;
 	size_t buf_len;
 	const char *base;
-	int mass_relabel = 0, errors = 0;
+	int errors = 0;
 	const char *ropts = "e:f:hiIDlmno:pqrsvFRW0";
 	const char *sopts = "c:de:f:hiIDlmno:pqr:svFR:W0";
 	const char *opts;
@@ -318,19 +318,8 @@ int main(int argc, char **argv)
 			r_opts.nochange = SELINUX_RESTORECON_NOCHANGE;
 			break;
 		case 'o': /* Deprecated */
-			if (strcmp(optarg, "-") == 0) {
-				r_opts.outfile = stdout;
-				break;
-			}
-
-			r_opts.outfile = fopen(optarg, "w");
-			if (!r_opts.outfile) {
-				fprintf(stderr, "Error opening %s: %s\n",
-					optarg, strerror(errno));
-
-				usage(argv[0]);
-			}
-			__fsetlocking(r_opts.outfile, FSETLOCKING_BYCALLER);
+			fprintf(stderr, "%s: -o option no longer supported\n",
+				r_opts.progname);
 			break;
 		case 'q':
 			/* Deprecated - Was only used to say whether print
@@ -394,7 +383,7 @@ int main(int argc, char **argv)
 
 	for (i = optind; i < argc; i++) {
 		if (!strcmp(argv[i], "/"))
-			mass_relabel = 1;
+			r_opts.mass_relabel = SELINUX_RESTORECON_MASS_RELABEL;
 	}
 
 	cb.func_log = log_callback;
@@ -466,7 +455,7 @@ int main(int argc, char **argv)
 		while ((len = getdelim(&buf, &buf_len, delim, f)) > 0) {
 			buf[len - 1] = 0;
 			if (!strcmp(buf, "/"))
-				mass_relabel = 1;
+				r_opts.mass_relabel = SELINUX_RESTORECON_MASS_RELABEL;
 			errors |= process_glob(buf, &r_opts) < 0;
 		}
 		if (strcmp(input_filename, "-") != 0)
@@ -476,7 +465,7 @@ int main(int argc, char **argv)
 			errors |= process_glob(argv[i], &r_opts) < 0;
 	}
 
-	maybe_audit_mass_relabel(mass_relabel, errors);
+	maybe_audit_mass_relabel(r_opts.mass_relabel, errors);
 
 	if (warn_no_match)
 		selabel_stats(r_opts.hnd);
@@ -484,8 +473,8 @@ int main(int argc, char **argv)
 	selabel_close(r_opts.hnd);
 	restore_finish();
 
-	if (r_opts.outfile)
-		fclose(r_opts.outfile);
+	if (r_opts.progress)
+		fprintf(stdout, "\n");
 
 	exit(errors ? -1 : 0);
 }

@@ -41,7 +41,7 @@
 #define SYS_PATH "/sys"
 #define SYS_PREFIX SYS_PATH "/"
 
-#define STAR_COUNT 1000
+#define STAR_COUNT 1024
 
 static struct selabel_handle *fc_sehandle = NULL;
 static unsigned char *fc_digest = NULL;
@@ -68,18 +68,12 @@ static uint64_t efile_count;	/* Estimated total number of files */
 struct dir_xattr *dir_xattr_list;
 static struct dir_xattr *dir_xattr_last;
 
-/*
- * If SELINUX_RESTORECON_PROGRESS is set and mass_relabel = true, then
- * output approx % complete, else output * for every STAR_COUNT files
- * processed to stdout.
- */
-static bool mass_relabel;
-
 /* restorecon_flags for passing to restorecon_sb() */
 struct rest_flags {
 	bool nochange;
 	bool verbose;
 	bool progress;
+	bool mass_relabel;
 	bool set_specctx;
 	bool add_assoc;
 	bool ignore_digest;
@@ -631,14 +625,14 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 	if (flags->progress) {
 		fc_count++;
 		if (fc_count % STAR_COUNT == 0) {
-			if (mass_relabel && efile_count > 0) {
+			if (flags->mass_relabel && efile_count > 0) {
 				pc = (fc_count < efile_count) ? (100.0 *
 					     fc_count / efile_count) : 100;
 				fprintf(stdout, "\r%-.1f%%", (double)pc);
 			} else {
-				fprintf(stdout, "*");
+				fprintf(stdout, "\r%luk", fc_count / STAR_COUNT);
 			}
-		fflush(stdout);
+			fflush(stdout);
 		}
 	}
 
@@ -750,6 +744,8 @@ int selinux_restorecon(const char *pathname_orig,
 		    SELINUX_RESTORECON_VERBOSE) ? true : false;
 	flags.progress = (restorecon_flags &
 		    SELINUX_RESTORECON_PROGRESS) ? true : false;
+	flags.mass_relabel = (restorecon_flags &
+		    SELINUX_RESTORECON_MASS_RELABEL) ? true : false;
 	flags.recurse = (restorecon_flags &
 		    SELINUX_RESTORECON_RECURSE) ? true : false;
 	flags.set_specctx = (restorecon_flags &
@@ -904,17 +900,6 @@ int selinux_restorecon(const char *pathname_orig,
 		}
 	}
 
-	mass_relabel = false;
-	if (!strcmp(pathname, "/")) {
-		mass_relabel = true;
-		if (flags.set_xdev && flags.progress)
-			/*
-			 * Need to recalculate to get accurate % complete
-			 * as only root device id will be processed.
-			 */
-			efile_count = file_system_count(pathname);
-	}
-
 	if (flags.set_xdev)
 		fts_flags = FTS_PHYSICAL | FTS_NOCHDIR | FTS_XDEV;
 	else
@@ -1009,12 +994,8 @@ int selinux_restorecon(const char *pathname_orig,
 	}
 
 out:
-	if (flags.progress) {
-		if (mass_relabel)
-			fprintf(stdout, "\r100.0%%\n");
-		else
-			fprintf(stdout, "\n");
-	}
+	if (flags.progress && flags.mass_relabel)
+		fprintf(stdout, "\r%s 100.0%%\n", pathname);
 
 	sverrno = errno;
 	(void) fts_close(fts);
