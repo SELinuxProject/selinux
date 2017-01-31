@@ -719,21 +719,13 @@ int require_symbol(uint32_t symbol_type,
 	avrule_decl_t *decl = stack_top->decl;
 	int ret = create_symbol(symbol_type, key, datum, dest_value, SCOPE_REQ);
 
-	if (ret == 0 || ret == 1) {
-		if (ebitmap_set_bit(decl->required.scope + symbol_type,
-				    *datum_value - 1, 1)) {
-			return -3;
-		}
-	} else if (ret == -2) {
-		/* ignore require statements if that symbol was
-		 * previously declared and is in current scope */
-		if (is_id_in_scope(symbol_type, key)) {
-			ret = 1;
-		} else {
-			return -2;
-		}
-	} else if (ret < 0) {
+	if (ret < 0) {
 		return ret;
+	}
+
+	if (ebitmap_set_bit(decl->required.scope + symbol_type,
+			    *datum_value - 1, 1)) {
+		return -3;
 	}
 
 	stack_top->require_given = 1;
