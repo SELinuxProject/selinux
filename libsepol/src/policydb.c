@@ -1666,9 +1666,6 @@ int symtab_insert(policydb_t * pol, uint32_t sym,
 		}
 	} else if (scope_datum->scope == SCOPE_REQ && scope == SCOPE_DECL) {
 		scope_datum->scope = SCOPE_DECL;
-	} else if (scope_datum->scope != scope) {
-		/* This only happens in DECL then REQUIRE case, which is handled by caller */
-		return -2;
 	}
 
 	/* search through the pre-existing list to avoid adding duplicates */
