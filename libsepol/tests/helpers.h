@@ -54,6 +54,6 @@ extern int test_load_policy(policydb_t * p, int policy_type, int mls, const char
  *  decl      success 
  *  NULL      error (including more than one declaration)
  */
-extern avrule_decl_t *test_find_decl_by_sym(policydb_t * p, int symtab, char *sym);
+extern avrule_decl_t *test_find_decl_by_sym(policydb_t * p, int symtab, const char *sym);
 
 #endif

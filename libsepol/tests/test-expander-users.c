@@ -28,7 +28,7 @@
 
 extern policydb_t user_expanded;
 
-static void check_user_roles(policydb_t * p, char *user_name, char **role_names, int num_roles)
+static void check_user_roles(policydb_t * p, const char *user_name, const char **role_names, int num_roles)
 {
 	user_datum_t *user;
 	ebitmap_node_t *tnode;
@@ -69,7 +69,7 @@ static void check_user_roles(policydb_t * p, char *user_name, char **role_names,
 
 void test_expander_user_mapping(void)
 {
-	char *roles1[] = { "user_check_1_1_r", "user_check_1_2_r" };
+	const char *roles1[] = { "user_check_1_1_r", "user_check_1_2_r" };
 
 	check_user_roles(&user_expanded, "user_check_1", roles1, 2);
 }

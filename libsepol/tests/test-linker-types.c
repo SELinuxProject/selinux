@@ -97,7 +97,7 @@
  */
 
 /* Don't pass in decls from global blocks since symbols aren't stored in their symtab */
-static void test_type_datum(policydb_t * p, char *id, unsigned int *decls, int len, unsigned int primary)
+static void test_type_datum(policydb_t * p, const char *id, unsigned int *decls, int len, unsigned int primary)
 {
 	int i;
 	unsigned int value;
@@ -125,7 +125,7 @@ static void test_type_datum(policydb_t * p, char *id, unsigned int *decls, int l
 void base_type_tests(policydb_t * base)
 {
 	unsigned int decls[2];
-	char *types[2];
+	const char *types[2];
 
 	/* These tests look at types in the base only, the desire is to ensure that
 	 * types are not destroyed or otherwise removed during the link process.
@@ -163,7 +163,7 @@ void base_type_tests(policydb_t * base)
 void module_type_tests(policydb_t * base)
 {
 	unsigned int decls[2];
-	char *types[2];
+	const char *types[2];
 	avrule_decl_t *d;
 
 	/* These tests look at types that were copied from modules or attributes

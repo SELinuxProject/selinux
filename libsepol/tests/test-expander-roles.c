@@ -31,7 +31,7 @@ extern policydb_t role_expanded;
 
 void test_expander_role_mapping(void)
 {
-	char *types1[] = { "role_check_1_1_t", "role_check_1_2_t" };
+	const char *types1[] = { "role_check_1_1_t", "role_check_1_2_t" };
 
 	test_role_type_set(&role_expanded, "role_check_1", NULL, types1, 2, 0);
 }

@@ -72,7 +72,7 @@ void base_role_tests(policydb_t * base)
 	avrule_decl_t *decl;
 	role_datum_t *role;
 	unsigned int decls[2];
-	char *types[2];
+	const char *types[2];
 
 	/* These tests look at roles in the base only, the desire is to ensure that
 	 * roles are not destroyed or otherwise removed during the link process */
@@ -102,7 +102,7 @@ void module_role_tests(policydb_t * base)
 	role_datum_t *role;
 	avrule_decl_t *decl;
 	unsigned int decls[3];
-	char *types[3];
+	const char *types[3];
 
 	/* These tests are run when the base is linked with 2 modules,
 	 * They should test whether the roles get copied correctly from the 

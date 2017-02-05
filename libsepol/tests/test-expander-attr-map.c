@@ -35,35 +35,35 @@ void test_expander_attr_mapping(void)
 	   because declare in optional then require in a different optional
 	   logic still doesn't work */
 
-	char *typesb1[] = { "attr_check_base_1_1_t", "attr_check_base_1_2_t" };
-	char *typesb2[] = { "attr_check_base_2_1_t", "attr_check_base_2_2_t" };
-	char *typesb3[] = { "attr_check_base_3_1_t", "attr_check_base_3_2_t",
+	const char *typesb1[] = { "attr_check_base_1_1_t", "attr_check_base_1_2_t" };
+	const char *typesb2[] = { "attr_check_base_2_1_t", "attr_check_base_2_2_t" };
+	const char *typesb3[] = { "attr_check_base_3_1_t", "attr_check_base_3_2_t",
 		"attr_check_base_3_3_t", "attr_check_base_3_4_t"
 	};
-	char *typesb4[] = { "attr_check_base_4_1_t", "attr_check_base_4_2_t" };
-	char *typesb5[] = { "attr_check_base_5_1_t", "attr_check_base_5_2_t" };
-	char *typesb6[] = { "attr_check_base_6_1_t", "attr_check_base_6_2_t",
+	const char *typesb4[] = { "attr_check_base_4_1_t", "attr_check_base_4_2_t" };
+	const char *typesb5[] = { "attr_check_base_5_1_t", "attr_check_base_5_2_t" };
+	const char *typesb6[] = { "attr_check_base_6_1_t", "attr_check_base_6_2_t",
 		"attr_check_base_6_3_t", "attr_check_base_6_4_t"
 	};
-	char *typesbo2[] = { "attr_check_base_optional_2_1_t",
+	const char *typesbo2[] = { "attr_check_base_optional_2_1_t",
 		"attr_check_base_optional_2_2_t"
 	};
-	char *typesbo5[] = { "attr_check_base_optional_5_1_t",
+	const char *typesbo5[] = { "attr_check_base_optional_5_1_t",
 		"attr_check_base_optional_5_2_t"
 	};
-	char *typesm2[] = { "attr_check_mod_2_1_t", "attr_check_mod_2_2_t" };
-	char *typesm4[] = { "attr_check_mod_4_1_t", "attr_check_mod_4_2_t" };
-	char *typesm5[] = { "attr_check_mod_5_1_t", "attr_check_mod_5_2_t" };
-	char *typesm6[] = { "attr_check_mod_6_1_t", "attr_check_mod_6_2_t",
+	const char *typesm2[] = { "attr_check_mod_2_1_t", "attr_check_mod_2_2_t" };
+	const char *typesm4[] = { "attr_check_mod_4_1_t", "attr_check_mod_4_2_t" };
+	const char *typesm5[] = { "attr_check_mod_5_1_t", "attr_check_mod_5_2_t" };
+	const char *typesm6[] = { "attr_check_mod_6_1_t", "attr_check_mod_6_2_t",
 		"attr_check_mod_6_3_t", "attr_check_mod_6_4_t"
 	};
-	char *typesmo2[] = { "attr_check_mod_optional_4_1_t",
+	const char *typesmo2[] = { "attr_check_mod_optional_4_1_t",
 		"attr_check_mod_optional_4_2_t"
 	};
-	char *typesb10[] = { "attr_check_base_10_1_t", "attr_check_base_10_2_t" };
-	char *typesb11[] = { "attr_check_base_11_3_t", "attr_check_base_11_4_t" };
-	char *typesm10[] = { "attr_check_mod_10_1_t", "attr_check_mod_10_2_t" };
-	char *typesm11[] = { "attr_check_mod_11_3_t", "attr_check_mod_11_4_t" };
+	const char *typesb10[] = { "attr_check_base_10_1_t", "attr_check_base_10_2_t" };
+	const char *typesb11[] = { "attr_check_base_11_3_t", "attr_check_base_11_4_t" };
+	const char *typesm10[] = { "attr_check_mod_10_1_t", "attr_check_mod_10_2_t" };
+	const char *typesm11[] = { "attr_check_mod_11_3_t", "attr_check_mod_11_4_t" };
 
 	test_attr_types(&base_expanded2, "attr_check_base_1", NULL, typesb1, 2);
 	test_attr_types(&base_expanded2, "attr_check_base_2", NULL, typesb2, 2);

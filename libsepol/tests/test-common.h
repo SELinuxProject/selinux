@@ -34,7 +34,7 @@
  * This is a utility function to test for the symbol's presence in the global symbol table, 
  * the scope table, and that the decl blocks we think this symbol is in are correct
  */
-extern void test_sym_presence(policydb_t * p, char *id, int sym_type, unsigned int scope_type, unsigned int *decls, unsigned int len);
+extern void test_sym_presence(policydb_t * p, const char *id, int sym_type, unsigned int scope_type, unsigned int *decls, unsigned int len);
 
 /* Test the indexes in the policydb to ensure their correctness. These include
  * the sym_val_to_name[], class_val_to_struct, role_val_to_struct, type_val_to_struct,
@@ -50,7 +50,7 @@ extern void test_policydb_indexes(policydb_t * p);
          1 = automatically detect the flavor value and test the datum accordingly
  * flavor = flavor value if in mode 0
  */
-extern void test_alias_datum(policydb_t * p, char *id, char *primary_id, char mode, unsigned int flavor);
+extern void test_alias_datum(policydb_t * p, const char *id, const char *primary_id, char mode, unsigned int flavor);
 
 /* p		the policy being inspected
  * id		string role identifier
@@ -62,7 +62,7 @@ extern void test_alias_datum(policydb_t * p, char *id, char *primary_id, char mo
  * This is a utility function to test whether the type set associated with a role in a specific
  * avrule decl block matches our expectations
  */
-extern role_datum_t *test_role_type_set(policydb_t * p, char *id, avrule_decl_t * decl, char **types, unsigned int len, unsigned int flags);
+extern role_datum_t *test_role_type_set(policydb_t * p, const char *id, avrule_decl_t * decl, const char **types, unsigned int len, unsigned int flags);
 
 /* p		the policy being inspected
  * id		string attribute identifier
@@ -73,6 +73,6 @@ extern role_datum_t *test_role_type_set(policydb_t * p, char *id, avrule_decl_t 
  * This is a utility function to test whether the type set associated with an attribute in a specific
  * avrule decl block matches our expectations 
  */
-extern void test_attr_types(policydb_t * p, char *id, avrule_decl_t * decl, char **types, int len);
+extern void test_attr_types(policydb_t * p, const char *id, avrule_decl_t * decl, const char **types, int len);
 
 #endif

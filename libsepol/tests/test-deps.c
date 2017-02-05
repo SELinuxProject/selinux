@@ -135,7 +135,7 @@ int deps_test_cleanup(void)
  *  decl_type          name of the unique type found in the module's global
  *                       section is to find that avrule_decl.
  */
-static void do_deps_modreq_global(int req_met, int b, char *policy, char *decl_type)
+static void do_deps_modreq_global(int req_met, int b, const char *policy, const char *decl_type)
 {
 	policydb_t *base;
 	policydb_t mod;
@@ -218,7 +218,7 @@ static void deps_modreq_global(void)
  *  decl_type          name of the unique type found in the module's global
  *                       section is to find that avrule_decl.
  */
-static void do_deps_modreq_opt(int req_met, int ret_val, int b, char *policy, char *decl_type)
+static void do_deps_modreq_opt(int req_met, int ret_val, int b, const char *policy, const char *decl_type)
 {
 	policydb_t *base;
 	policydb_t mod;

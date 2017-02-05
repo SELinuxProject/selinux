@@ -26,7 +26,7 @@
 
 #include <CUnit/Basic.h>
 
-void test_sym_presence(policydb_t * p, char *id, int sym_type, unsigned int scope_type, unsigned int *decls, unsigned int len)
+void test_sym_presence(policydb_t * p, const char *id, int sym_type, unsigned int scope_type, unsigned int *decls, unsigned int len)
 {
 	scope_datum_t *scope;
 	int found;
@@ -147,7 +147,7 @@ void test_policydb_indexes(policydb_t * p)
 	}
 }
 
-void test_alias_datum(policydb_t * p, char *id, char *primary_id, char mode, unsigned int flavor)
+void test_alias_datum(policydb_t * p, const char *id, const char *primary_id, char mode, unsigned int flavor)
 {
 	type_datum_t *type, *primary;
 	unsigned int my_primary, my_flavor, my_value;
@@ -181,7 +181,7 @@ void test_alias_datum(policydb_t * p, char *id, char *primary_id, char mode, uns
 	}
 }
 
-role_datum_t *test_role_type_set(policydb_t * p, char *id, avrule_decl_t * decl, char **types, unsigned int len, unsigned int flags)
+role_datum_t *test_role_type_set(policydb_t * p, const char *id, avrule_decl_t * decl, const char **types, unsigned int len, unsigned int flags)
 {
 	ebitmap_node_t *tnode;
 	unsigned int i, j, new, found = 0;
@@ -222,7 +222,7 @@ role_datum_t *test_role_type_set(policydb_t * p, char *id, avrule_decl_t * decl,
 	return role;
 }
 
-void test_attr_types(policydb_t * p, char *id, avrule_decl_t * decl, char **types, int len)
+void test_attr_types(policydb_t * p, const char *id, avrule_decl_t * decl, const char **types, int len)
 {
 	ebitmap_node_t *tnode;
 	int j, new, found = 0;

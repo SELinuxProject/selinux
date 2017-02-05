@@ -63,7 +63,7 @@ int test_load_policy(policydb_t * p, int policy_type, int mls, const char *test_
 	return 0;
 }
 
-avrule_decl_t *test_find_decl_by_sym(policydb_t * p, int symtab, char *sym)
+avrule_decl_t *test_find_decl_by_sym(policydb_t * p, int symtab, const char *sym)
 {
 	scope_datum_t *scope = (scope_datum_t *) hashtab_search(p->scope[symtab].table, sym);
 
