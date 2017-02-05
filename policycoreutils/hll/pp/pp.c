@@ -69,8 +69,8 @@ int main(int argc, char **argv)
 		{ NULL, 0, NULL, 0 }
 	};
 	struct sepol_module_package *mod_pkg = NULL;
-	char *ifile = NULL;
-	char *ofile = NULL;
+	const char *ifile = NULL;
+	const char *ofile = NULL;
 	FILE *in = NULL;
 	FILE *out = NULL;
 	int outfd = -1;
