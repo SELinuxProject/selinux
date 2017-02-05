@@ -1923,7 +1923,7 @@ static void __cil_expr_to_string(struct cil_list *expr, enum cil_flavor flavor, 
 				cil_asprintf(out, "%s %s", CIL_KEY_NOT, s1);
 				free(s1);
 			} else {
-				char *opstr = "";
+				const char *opstr = "";
 
 				__cil_expr_to_string_helper(curr->next->next, flavor, &s2);
 
@@ -4376,7 +4376,7 @@ static void __cil_print_classperm(struct cil_list *cp_list)
 
 static void __cil_print_permissionx(struct cil_permissionx *px)
 {
-	char *kind_str = "";
+	const char *kind_str = "";
 	char *expr_str;
 
 	switch (px->kind) {

@@ -775,7 +775,7 @@ static int cil_print_attr_strs(int indent, struct policydb *pdb, int is_type, st
 	int rc = 0;
 	struct ebitmap_node *node;
 	unsigned int i;
-	char *statement;
+	const char *statement;
 	int has_positive = pos && (ebitmap_cardinality(pos) > 0);
 	int has_negative = neg && (ebitmap_cardinality(neg) > 0);
 	char **val_to_name;

@@ -183,7 +183,7 @@ static void cil_gather_statements(struct cil_tree_node *start, struct cil_list *
 	cil_tree_walk(start, __cil_gather_statements_helper, NULL, NULL, lists);
 }
 
-static void cil_simple_rules_to_policy(FILE *out, struct cil_list *rules, char *kind)
+static void cil_simple_rules_to_policy(FILE *out, struct cil_list *rules, const char *kind)
 {
 	struct cil_list_item *i1;
 
@@ -194,7 +194,7 @@ static void cil_simple_rules_to_policy(FILE *out, struct cil_list *rules, char *
 
 static void cil_cats_to_policy(FILE *out, struct cil_cats *cats)
 {
-	char *lead = "";
+	const char *lead = "";
 	struct cil_cat *first = NULL, *last = NULL, *cat;
 	struct cil_list_item *i1;
 
@@ -471,7 +471,7 @@ static char *__cil_cons_leaf_operand_to_string(struct cil_db *db, struct cil_lis
 {
 	struct cil_list_item *i1;
 	enum cil_flavor flavor = operand->flavor;
-	char *o_str;
+	const char *o_str;
 	size_t o_len;
 
 	if (flavor == CIL_CONS_OPERAND) {
@@ -559,7 +559,7 @@ static char *__cil_cons_leaf_operand_to_string(struct cil_db *db, struct cil_lis
 static char *__cil_cons_leaf_op_to_string(struct cil_list_item *op, char *new)
 {
 	enum cil_flavor flavor = (enum cil_flavor)op->data;
-	char *op_str;
+	const char *op_str;
 	size_t len;
 
 	switch (flavor) {
@@ -1009,7 +1009,7 @@ static void cil_bools_to_policy(FILE *out, struct cil_list *bools)
 {
 	struct cil_list_item *i1;
 	struct cil_bool *bool;
-	char *value;
+	const char *value;
 
 	cil_list_for_each(i1, bools) {
 		bool = i1->data;
@@ -1108,7 +1108,7 @@ static void cil_xperms_to_policy(FILE *out, struct cil_permissionx *permx)
 	ebitmap_node_t *node;
 	unsigned int i, first = 0, last = 0;
 	int need_first = CIL_TRUE, need_last = CIL_TRUE;
-	char *kind;
+	const char *kind;
 
 	if (permx->kind == CIL_PERMX_KIND_IOCTL) {
 		kind = "ioctl";
@@ -1156,7 +1156,7 @@ static void cil_xperms_to_policy(FILE *out, struct cil_permissionx *permx)
 
 static void cil_av_rulex_to_policy(FILE *out, struct cil_avrule *rule)
 {
-	char *kind;
+	const char *kind;
 	struct cil_symtab_datum *src, *tgt;
 
 	src = rule->src;
@@ -1187,7 +1187,7 @@ static void cil_av_rulex_to_policy(FILE *out, struct cil_avrule *rule)
 
 static void cil_av_rule_to_policy(FILE *out, struct cil_avrule *rule)
 {
-	char *kind;
+	const char *kind;
 	struct cil_symtab_datum *src, *tgt;
 	struct cil_list *classperms_strs;
 	struct cil_list_item *i1;
@@ -1225,7 +1225,7 @@ static void cil_av_rule_to_policy(FILE *out, struct cil_avrule *rule)
 
 static void cil_type_rule_to_policy(FILE *out, struct cil_type_rule *rule)
 {
-	char *kind;
+	const char *kind;
 	struct cil_symtab_datum *src, *tgt, *res;
 	struct cil_list *class_list;
 	struct cil_list_item *i1;
