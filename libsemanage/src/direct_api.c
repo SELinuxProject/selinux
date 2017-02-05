@@ -895,7 +895,7 @@ cleanup:
 }
 
 static int semanage_direct_write_langext(semanage_handle_t *sh,
-				char *lang_ext,
+				const char *lang_ext,
 				const semanage_module_info_t *modinfo)
 {
 	int ret = -1;
