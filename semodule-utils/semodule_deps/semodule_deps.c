@@ -40,7 +40,7 @@ extern int optind;
  * thing is done in the linker for displaying error
  * messages.
  */
-#define BASE_NAME "BASE"
+#define BASE_NAME ((char *)"BASE")
 
 static void usage(char *program_name)
 {
