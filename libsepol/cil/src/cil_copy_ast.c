@@ -1987,6 +1987,14 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 		new->data = data;
 
 		if (orig->flavor >= CIL_MIN_DECLARATIVE) {
+			/* Check the flavor of data if was found in the destination symtab */
+			if (DATUM(data)->nodes->head && FLAVOR(data) != orig->flavor) {
+				cil_tree_log(orig, CIL_ERR, "Incompatible flavor when trying to copy %s", DATUM(data)->name);
+				cil_tree_log(NODE(data), CIL_ERR, "Note: conflicting declaration");
+				new->flavor = FLAVOR(data);
+				rc = SEPOL_ERR;
+				goto exit;
+			}
 			rc = cil_symtab_insert(symtab, ((struct cil_symtab_datum*)orig->data)->name, ((struct cil_symtab_datum*)data), new);
 
 			namespace = new;
