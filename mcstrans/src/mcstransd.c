@@ -90,7 +90,7 @@ send_response(int fd, uint32_t function, char *data, int32_t ret_val)
 	ssize_t count;
 
 	if (!data)
-		data = "";
+		data = (char *)"";
 
 	data_size = strlen(data) + 1;
 
