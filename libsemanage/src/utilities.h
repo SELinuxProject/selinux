@@ -105,7 +105,7 @@ int semanage_cmp_plist_t(const semanage_list_t ** x,
  * @param      what  a charachter
  * @returns    the number of times the char appears in the string
  */
-int semanage_str_count(char *data, char what);
+int semanage_str_count(const char *data, char what);
 /**
  * @param      - a string
  * @param            the charachter to trim to

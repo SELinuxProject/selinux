@@ -122,9 +122,9 @@ int semanage_utilities_add_tests(CU_pSuite suite)
 
 void test_semanage_is_prefix(void)
 {
-	char *str = "some string";
-	char *pre = "some";
-	char *not_pre = "not this";
+	const char *str = "some string";
+	const char *pre = "some";
+	const char *not_pre = "not this";
 
 	CU_ASSERT_TRUE(semanage_is_prefix(str, pre));
 	CU_ASSERT_TRUE(semanage_is_prefix(str, ""));
@@ -239,7 +239,7 @@ void test_semanage_list(void)
 
 void test_semanage_str_count(void)
 {
-	char *test_string = "abaababbaaaba";
+	const char *test_string = "abaababbaaaba";
 
 	CU_ASSERT_EQUAL(semanage_str_count(test_string, 'z'), 0);
 	CU_ASSERT_EQUAL(semanage_str_count(test_string, 'a'), 8);

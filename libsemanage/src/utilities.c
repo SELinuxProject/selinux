@@ -199,7 +199,7 @@ int semanage_cmp_plist_t(const semanage_list_t ** x, const semanage_list_t ** y)
 	return strcmp((*x)->data, (*y)->data);
 }
 
-int semanage_str_count(char *data, char what)
+int semanage_str_count(const char *data, char what)
 {
 	int count = 0;
 
