@@ -62,7 +62,7 @@ static const char * const flavor_str[SYM_NUM] = {
 	[SYM_CATS] = "cat"
 };
 
-void print_error_msg(int ret, uint32_t symbol_type)
+static void print_error_msg(int ret, uint32_t symbol_type)
 {
 	switch (ret) {
 	case -3:
