@@ -341,11 +341,11 @@ int main(int argc, char *argv[])
 	int i, commit = 0;
 	int result;
 	int status = EXIT_FAILURE;
-	char *genhomedirconargv[] = { "genhomedircon", "-B", "-n" };
+	const char *genhomedirconargv[] = { "genhomedircon", "-B", "-n" };
 	create_signal_handlers();
 	if (strcmp(basename(argv[0]), "genhomedircon") == 0) {
 		argc = 3;
-		argv=genhomedirconargv;
+		argv = (char **)genhomedirconargv;
 	}
 	parse_command_line(argc, argv);
 
