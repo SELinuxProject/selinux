@@ -3778,6 +3778,16 @@ exit:
 	return rc;
 }
 
+static void cil_destroy_tree_node_stack(struct cil_tree_node *curr)
+{
+	struct cil_tree_node *next;
+	while (curr != NULL) {
+		next = curr->cl_head;
+		free(curr);
+		curr = next;
+	}
+}
+
 int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 {
 	int rc = SEPOL_ERR;
@@ -3904,16 +3914,12 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 		/* reset the arguments */
 		changed = 0;
 		while (extra_args.optstack != NULL) {
-			struct cil_tree_node *curr = extra_args.optstack;
-			struct cil_tree_node *next = curr->cl_head;
-			free(curr);
-			extra_args.optstack = next;
+			cil_destroy_tree_node_stack(extra_args.optstack);
+			extra_args.optstack = NULL;
 		}
 		while (extra_args.blockstack!= NULL) {
-			struct cil_tree_node *curr = extra_args.blockstack;
-			struct cil_tree_node *next = curr->cl_head;
-			free(curr);
-			extra_args.blockstack= next;
+			cil_destroy_tree_node_stack(extra_args.blockstack);
+			extra_args.blockstack = NULL;
 		}
 	}
 
@@ -3924,6 +3930,8 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 
 	rc = SEPOL_OK;
 exit:
+	cil_destroy_tree_node_stack(extra_args.optstack);
+	cil_destroy_tree_node_stack(extra_args.blockstack);
 	__cil_ordered_lists_destroy(&extra_args.sidorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.classorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.catorder_lists);
