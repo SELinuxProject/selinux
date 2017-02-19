@@ -1299,7 +1299,9 @@ static int cil_level_equals(struct cil_level *low, struct cil_level *high)
 		goto exit;
 	}
 
-	return ebitmap_cmp(&elow, &ehigh);
+	rc = ebitmap_cmp(&elow, &ehigh);
+	ebitmap_destroy(&elow);
+	ebitmap_destroy(&ehigh);
 
 exit:
 	return rc;
