@@ -1105,6 +1105,7 @@ static int __cil_expr_to_bitmap(struct cil_list *expr, ebitmap_t *out, int max, 
 				rc = __cil_expr_to_bitmap_helper(curr->next->next, flavor, &b2, max, db);
 				if (rc != SEPOL_OK) {
 					cil_log(CIL_INFO, "Failed to get second operand bitmap\n");
+					ebitmap_destroy(&b1);
 					goto exit;
 				}
 
