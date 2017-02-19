@@ -3936,8 +3936,8 @@ exit:
 	__cil_ordered_lists_destroy(&extra_args.classorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.catorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.sensitivityorder_lists);
+	__cil_ordered_lists_destroy(&extra_args.unordered_classorder_lists);
 	cil_list_destroy(&extra_args.in_list, CIL_FALSE);
-	cil_list_destroy(&extra_args.unordered_classorder_lists, CIL_FALSE);
 
 	return rc;
 }
