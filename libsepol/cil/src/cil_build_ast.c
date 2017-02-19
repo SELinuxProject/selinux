@@ -2753,6 +2753,7 @@ static int __cil_fill_constraint_expr(struct cil_tree_node *current, enum cil_fl
 		}
 		rc = __cil_fill_constraint_expr(current->next->next->cl_head, flavor, &rexpr, depth);
 		if (rc != SEPOL_OK) {
+			cil_list_destroy(&lexpr, CIL_TRUE);
 			goto exit;
 		}
 		cil_list_init(expr, flavor);
