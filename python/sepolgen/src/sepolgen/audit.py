@@ -376,7 +376,9 @@ class AuditParser:
     #   AuditMessage (or subclass) - object representing a parsed
     #      and valid audit message.
     def __parse_line(self, line):
-        rec = line.split()
+        # strip("\x1c\x1d\x1e\x85") is only needed for python2
+        # since str.split() in python3 already does this
+        rec = [x.strip("\x1c\x1d\x1e\x85") for x in line.split()]
         for i in rec:
             found = False
             if i == "avc:" or i == "message=avc:" or i == "msg='avc:":
