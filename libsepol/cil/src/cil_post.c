@@ -797,13 +797,12 @@ static int __cil_permx_to_bitmap(struct cil_symtab_datum *datum, ebitmap_t *bitm
 	int rc = SEPOL_ERR;
 	uint16_t val;
 
-	ebitmap_init(bitmap);
-
 	rc = __cil_permx_str_to_int((char*)datum, &val);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
 
+	ebitmap_init(bitmap);
 	if (ebitmap_set_bit(bitmap, (unsigned int)val, 1)) {
 		cil_log(CIL_ERR, "Failed to set permissionx bit\n");
 		ebitmap_destroy(bitmap);
