@@ -11,7 +11,7 @@ LIBS = ../src/libsemanage.a -L$(LIBDIR) -lselinux -lsepol
 
 EXECUTABLE = libsemanage-tests
 CFLAGS += -g -O0 -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
-INCLUDE = -I../src -I../include
+INCLUDE = -I../src -I../include -I$(PREFIX)/include
 LDFLAGS += -lcunit -lbz2 -laudit
 OBJECTS = $(SOURCES:.c=.o) 
 

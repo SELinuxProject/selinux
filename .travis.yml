@@ -105,14 +105,12 @@ script:
   - make all -k
 
   # Set up environment variables for the tests
-  - export CFLAGS="-I$DESTDIR/usr/include"
   - export LD_LIBRARY_PATH="$DESTDIR/usr/lib:$DESTDIR/lib"
   - export PATH="$DESTDIR/usr/sbin:$DESTDIR/usr/bin:$DESTDIR/sbin:$DESTDIR/bin:$PATH"
   - export PYTHONPATH="$PYSITEDIR"
   - export RUBYLIB="$DESTDIR/$($RUBY -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$($RUBY -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
 
   # Show variables (to help debugging issues)
-  - echo "$CFLAGS"
   - echo "$LD_LIBRARY_PATH"
   - echo "$PATH"
   - echo "$PYTHONPATH"
