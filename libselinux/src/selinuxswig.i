@@ -18,7 +18,7 @@
 %typedef unsigned mode_t;
 %typedef unsigned pid_t;
 
-%typemap(in, numinputs=0) (char ***names, int *len) (char **temp1, int temp2) {
+%typemap(in, numinputs=0) (char ***names, int *len) (char **temp1=NULL, int temp2) {
 	$1 = &temp1;
 	$2 = &temp2;
 }
@@ -33,7 +33,7 @@
 	}
 }
 
-%typemap(in, numinputs=0) (char ***) (char **temp) {
+%typemap(in, numinputs=0) (char ***) (char **temp=NULL) {
 	$1 = &temp;
 }
 
