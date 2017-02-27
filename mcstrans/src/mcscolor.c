@@ -292,7 +292,7 @@ int raw_color(const security_context_t raw, char **color_str) {
 	size_t result_size = (N_COLOR * CHARS_PER_COLOR) + 1;
 	int rc = -1;
 
-	if (!color_str && !*color_str) {
+	if (!color_str || !*color_str) {
 		return -1;
 	}
 
