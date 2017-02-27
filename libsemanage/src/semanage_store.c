@@ -1194,8 +1194,14 @@ static char *append(char *s, char c)
 static char *append_str(char *s, const char *t)
 {
 	size_t s_len = (s == NULL ? 0 : strlen(s));
-	size_t t_len = (t == NULL ? 0 : strlen(t));
-	char *new_s = realloc(s, s_len + t_len + 1);
+	size_t t_len;
+	char *new_s;
+
+	if (t == NULL) {
+		return s;
+	}
+	t_len = strlen(t);
+	new_s = realloc(s, s_len + t_len + 1);
 	if (new_s == NULL) {
 		return NULL;
 	}
