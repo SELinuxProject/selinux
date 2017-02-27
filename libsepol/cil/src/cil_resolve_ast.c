@@ -3313,11 +3313,12 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 	int rc = SEPOL_OK;
 	struct cil_args_resolve *args = extra_args;
 	enum cil_pass pass = 0;
-	struct cil_list *ins = args->in_list;
+	struct cil_list *ins;
 
 	if (node == NULL || args == NULL) {
 		goto exit;
 	}
+	ins = args->in_list;
 
 	pass = args->pass;
 	switch (pass) {
