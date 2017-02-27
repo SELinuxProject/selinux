@@ -257,5 +257,7 @@ int main(int argc, char **argv)
 	free(file_contexts);
 	free(outfile);
 	free(module);
+	free(seusers);
+	free(user_extra);
 	exit(0);
 }
