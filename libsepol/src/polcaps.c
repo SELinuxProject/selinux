@@ -10,6 +10,7 @@ static const char *polcap_names[] = {
 	"open_perms",			/* POLICYDB_CAPABILITY_OPENPERM */
 	"extended_socket_class",	/* POLICYDB_CAPABILITY_EXTSOCKCLASS */
 	"always_check_network",		/* POLICYDB_CAPABILITY_ALWAYSNETWORK */
+	"cgroup_seclabel",		/* POLICYDB_CAPABILITY_SECLABEL */
 	NULL
 };
 
