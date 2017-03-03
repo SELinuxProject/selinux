@@ -205,12 +205,12 @@ class HTMLManPages:
         for domain in self.manpage_domains.values():
             if len(domain):
                 for d in domain:
-                    convert_manpage_to_html((self.new_path + d.split("_selinux")[0] + ".html"), self.old_path + d)
+                    convert_manpage_to_html((self.new_path + d.rsplit("_selinux", 1)[0] + ".html"), self.old_path + d)
 
         for role in self.manpage_roles.values():
             if len(role):
                 for r in role:
-                    convert_manpage_to_html((self.new_path + r.split("_selinux")[0] + ".html"), self.old_path + r)
+                    convert_manpage_to_html((self.new_path + r.rsplit("_selinux", 1)[0] + ".html"), self.old_path + r)
 
     def _gen_index(self):
         index = self.old_path + "index.html"
@@ -290,7 +290,7 @@ Fedora or Red Hat Enterprise Linux Man Pages.</h2>
             if len(self.manpage_roles[letter]):
                 rolename_body += "<p>"
                 for r in self.manpage_roles[letter]:
-                    rolename = r.split("_selinux")[0]
+                    rolename = r.rsplit("_selinux", 1)[0]
                     rolename_body += "<a name=%s_role></a><a href=%s.html>%s_selinux(8)</a> - Security Enhanced Linux Policy for the %s SELinux user\n" % (letter, rolename, rolename, rolename)
 
         fd.write("""%s
@@ -317,7 +317,7 @@ Fedora or Red Hat Enterprise Linux Man Pages.</h2>
             if len(self.manpage_domains[letter]):
                 domainname_body += "<p>"
                 for r in self.manpage_domains[letter]:
-                    domainname = r.split("_selinux")[0]
+                    domainname = r.rsplit("_selinux", 1)[0]
                     domainname_body += "<a name=%s_domain></a><a href=%s.html>%s_selinux(8)</a> - Security Enhanced Linux Policy for the %s SELinux processes\n" % (letter, domainname, domainname, domainname)
 
         fd.write("""%s
