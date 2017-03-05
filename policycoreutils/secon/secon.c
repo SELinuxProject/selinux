@@ -73,7 +73,7 @@ struct {
 		FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
 		    FALSE, FALSE, FALSE, OPTS_FROM_ARG, {0} } };
 
-static void usage(const char *name, int exit_code)
+static __attribute__((__noreturn__)) void usage(const char *name, int exit_code)
 {
 	fprintf(exit_code ? stderr : stdout,
 		"  Usage: %s [-%s] [ context | - ]\n"

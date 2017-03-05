@@ -23,7 +23,7 @@ int verbose = 0;
 
 int setbool(char **list, size_t start, size_t end);
 
-void usage(void)
+static __attribute__((__noreturn__)) void usage(void)
 {
 	fputs
 	    ("\nUsage:  setsebool [ -NPV ] boolean value | bool1=val1 bool2=val2...\n\n",

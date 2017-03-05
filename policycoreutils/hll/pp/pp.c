@@ -46,7 +46,7 @@ static void log_err(const char *fmt, ...)
 	}
 }
 
-static void usage(int err)
+static __attribute__((__noreturn__)) void usage(int err)
 {
 	fprintf(stderr, "Usage: %s [OPTIONS] [IN_FILE [OUT_FILE]]\n", progname);
 	fprintf(stderr, "\n");

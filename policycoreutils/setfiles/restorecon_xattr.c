@@ -14,7 +14,7 @@
 
 #include "restore.h"
 
-static void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr,
 		"\nusage: %s [-vnrmdD] [-e directory] [-f specfile] pathname\n"

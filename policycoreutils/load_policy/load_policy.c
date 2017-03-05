@@ -17,7 +17,7 @@
 #define PACKAGE "policycoreutils"	/* the name of this package lang translation */
 #endif
 
-void usage(char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr, _("usage:  %s [-qi]\n"), progname);
 	exit(1);
