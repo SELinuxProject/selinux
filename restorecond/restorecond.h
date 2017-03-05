@@ -33,7 +33,7 @@ extern int run_as_user;
 extern int start(void);
 extern int server(int, const char *watch_file);
 
-extern void exitApp(const char *msg);
+extern void exitApp(const char *msg) __attribute__((__noreturn__));
 extern void read_config(int fd,	const char *watch_file);
 
 extern int watch(int fd, const char *watch_file);
