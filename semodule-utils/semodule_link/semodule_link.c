@@ -25,7 +25,7 @@ char *progname;
 extern char *optarg;
 extern int optind;
 
-static void usage(char *program_name)
+static __attribute__((__noreturn__)) void usage(const char *program_name)
 {
 	printf("usage: %s [-Vv] [-o outfile] basemodpkg modpkg1 [modpkg2]...\n",
 	       program_name);

@@ -28,7 +28,7 @@ int policyvers = 0;
 
 #define EXPANDPOLICY_VERSION "1.0"
 
-static void usage(char *program_name)
+static __attribute__((__noreturn__)) void usage(const char *program_name)
 {
 	printf("usage: %s [-V -a -c [version]] basemodpkg outputfile\n",
 	       program_name);

@@ -14,7 +14,7 @@
 char *progname = NULL;
 extern char *optarg;
 
-static void usage(void)
+static __attribute__((__noreturn__)) void usage(void)
 {
 	printf("usage: %s ppfile modfile [fcfile]\n", progname);
 	exit(1);

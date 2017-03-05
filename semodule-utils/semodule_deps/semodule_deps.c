@@ -42,7 +42,7 @@ extern int optind;
  */
 #define BASE_NAME ((char *)"BASE")
 
-static void usage(char *program_name)
+static __attribute__((__noreturn__)) void usage(const char *program_name)
 {
 	printf("usage: %s [-v -g -b] basemodpkg modpkg1 [modpkg2 ... ]\n",
 	       program_name);
