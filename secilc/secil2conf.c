@@ -41,7 +41,7 @@
 #endif
 #include <sepol/policydb.h>
 
-void usage(char *prog)
+static __attribute__((__noreturn__)) void usage(const char *prog)
 {
 	printf("Usage: %s [OPTION]... FILE...\n", prog);
 	printf("\n");
