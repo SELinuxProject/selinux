@@ -124,7 +124,7 @@ static int write_binary_policy(policydb_t * p, FILE *outfp)
 	return policydb_write(p, &pf);
 }
 
-static void usage(char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	printf("usage:  %s [-h] [-V] [-b] [-C] [-U handle_unknown] [-m] [-M] [-o FILE] [INPUT]\n", progname);
 	printf("Build base and policy modules.\n");

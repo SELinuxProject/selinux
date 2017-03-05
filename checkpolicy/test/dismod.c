@@ -65,7 +65,7 @@ static const char *symbol_labels[9] = {
 	"levels ", "cats   ", "attribs"
 };
 
-void usage(const char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	printf("usage:  %s binary_pol_file\n\n", progname);
 	exit(1);

@@ -102,7 +102,7 @@ static const char *binfile = "policy";
 
 unsigned int policyvers = POLICYDB_VERSION_MAX;
 
-void usage(char *progname)
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	printf
 	    ("usage:  %s [-b] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M]"
