@@ -7,7 +7,7 @@
 #include <selinux/selinux.h>
 #include "mcstrans.h"
 
-void usage(const char *progname) 
+static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr, "usage:  %s context\n", progname);
 	exit(1);
