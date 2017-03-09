@@ -192,8 +192,8 @@ class nulllogger:
 def validate_level(raw):
     sensitivity = "s[0-9]*"
     category = "c[0-9]*"
-    cat_range = category + "(\." + category + ")?"
-    categories = cat_range + "(\," + cat_range + ")*"
+    cat_range = category + r"(\." + category + ")?"
+    categories = cat_range + r"(\," + cat_range + ")*"
     reg = sensitivity + "(-" + sensitivity + ")?" + "(:" + categories + ")?"
     return re.search("^" + reg + "$", raw)
 

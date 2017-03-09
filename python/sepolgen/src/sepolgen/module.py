@@ -40,7 +40,7 @@ from . import defaults
 def is_valid_name(modname):
     """Check that a module name is valid.
     """
-    m = re.findall("[^a-zA-Z0-9_\-\.]", modname)
+    m = re.findall(r"[^a-zA-Z0-9_\-\.]", modname)
     if len(m) == 0 and modname[0].isalpha():
         return True
     else:
