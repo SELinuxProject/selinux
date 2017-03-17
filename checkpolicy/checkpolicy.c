@@ -654,6 +654,7 @@ int main(int argc, char **argv)
 
 	if (!debug) {
 		policydb_destroy(&policydb);
+		sepol_sidtab_destroy(&sidtab);
 		exit(0);
 	}
 
