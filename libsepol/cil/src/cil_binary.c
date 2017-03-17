@@ -1018,7 +1018,14 @@ int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, uint32_
 		 * non-duplicate rule using the same key.
 		 */
 		if (existing->datum.data != res) {
-			cil_log(CIL_ERR, "Conflicting type rules (scontext=%s tcontext=%s tclass=%s result=%s)\n", cil_rule->src_str, cil_rule->tgt_str, cil_rule->obj_str, cil_rule->result_str);
+			cil_log(CIL_ERR, "Conflicting type rules (scontext=%s tcontext=%s tclass=%s result=%s), existing=%s\n",
+				pdb->p_type_val_to_name[src - 1],
+				pdb->p_type_val_to_name[tgt - 1],
+				pdb->p_class_val_to_name[obj - 1],
+				pdb->p_type_val_to_name[res - 1],
+				pdb->p_type_val_to_name[existing->datum.data - 1]);
+			cil_log(CIL_ERR, "Expanded from type rule (scontext=%s tcontext=%s tclass=%s result=%s)\n",
+				cil_rule->src_str, cil_rule->tgt_str, cil_rule->obj_str, cil_rule->result_str);
 			rc = SEPOL_ERR;
 		}
 		goto exit;
@@ -1044,7 +1051,14 @@ int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, uint32_
 			search_datum = cil_cond_av_list_search(&avtab_key, other_list);
 			if (search_datum == NULL) {
 				if (existing->datum.data != res) {
-					cil_log(CIL_ERR, "Conflicting type rules (scontext=%s tcontext=%s tclass=%s result=%s)\n", cil_rule->src_str, cil_rule->tgt_str, cil_rule->obj_str, cil_rule->result_str);
+					cil_log(CIL_ERR, "Conflicting type rules (scontext=%s tcontext=%s tclass=%s result=%s), existing=%s\n",
+						pdb->p_type_val_to_name[src - 1],
+						pdb->p_type_val_to_name[tgt - 1],
+						pdb->p_class_val_to_name[obj - 1],
+						pdb->p_type_val_to_name[res - 1],
+						pdb->p_type_val_to_name[existing->datum.data - 1]);
+					cil_log(CIL_ERR, "Expanded from type rule (scontext=%s tcontext=%s tclass=%s result=%s)\n",
+						cil_rule->src_str, cil_rule->tgt_str, cil_rule->obj_str, cil_rule->result_str);
 					rc = SEPOL_ERR;
 					goto exit;
 				}
@@ -1146,6 +1160,10 @@ int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *db, stru
 		trans.tgt = typetrans->tgt;
 		trans.obj = typetrans->obj;
 		trans.result = typetrans->result;
+		trans.src_str = typetrans->src_str;
+		trans.tgt_str = typetrans->tgt_str;
+		trans.obj_str = typetrans->obj_str;
+		trans.result_str = typetrans->result_str;
 		return __cil_type_rule_to_avtab(pdb, db, &trans, cond_node, cond_flavor);
 	}
 
