@@ -3797,7 +3797,7 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	uint32_t changed = 0;
 
 	if (db == NULL || current == NULL) {
-		goto exit;
+		return rc;
 	}
 
 	extra_args.db = db;
