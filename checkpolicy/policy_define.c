@@ -1924,11 +1924,11 @@ int avrule_ioctl_ranges(struct av_ioctl_range_list **rangelist)
 	/* read in ranges to include and omit */
 	if (avrule_read_ioctls(&rangehead))
 		return -1;
-	omit = rangehead->omit;
 	if (rangehead == NULL) {
 		yyerror("error processing ioctl commands");
 		return -1;
 	}
+	omit = rangehead->omit;
 	/* sort and merge the input ioctls */
 	if (avrule_sort_ioctls(&rangehead))
 		return -1;
