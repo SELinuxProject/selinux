@@ -1831,7 +1831,11 @@ static void cil_iomemcons_to_policy(FILE *out, struct cil_sort *iomemcons, int m
 
 	for (i = 0; i<iomemcons->count; i++) {
 		iomemcon = iomemcons->array[i];
-		fprintf(out, "iomemcon %" PRIu64 "-%" PRIu64 " ", iomemcon->iomem_low, iomemcon->iomem_high);
+		if (iomemcon->iomem_low == iomemcon->iomem_high) {
+			fprintf(out, "iomemcon %"PRIx64" ", iomemcon->iomem_low);
+		} else {
+			fprintf(out, "iomemcon %"PRIx64"-%"PRIx64" ", iomemcon->iomem_low, iomemcon->iomem_high);
+		}
 		cil_context_to_policy(out, iomemcon->context, mls);
 		fprintf(out, ";\n");
 	}
@@ -1844,7 +1848,7 @@ static void cil_ioportcons_to_policy(FILE *out, struct cil_sort *ioportcons, int
 
 	for (i = 0; i < ioportcons->count; i++) {
 		ioportcon = ioportcons->array[i];
-		fprintf(out, "ioportcon %d-%d ", ioportcon->ioport_low, ioportcon->ioport_high);
+		fprintf(out, "ioportcon 0x%x-0x%x ", ioportcon->ioport_low, ioportcon->ioport_high);
 		cil_context_to_policy(out, ioportcon->context, mls);
 		fprintf(out, ";\n");
 	}
@@ -1857,7 +1861,7 @@ static void cil_pcidevicecons_to_policy(FILE *out, struct cil_sort *pcidevicecon
 
 	for (i = 0; i < pcidevicecons->count; i++) {
 		pcidevicecon = pcidevicecons->array[i];
-		fprintf(out, "pcidevicecon %d ", pcidevicecon->dev);
+		fprintf(out, "pcidevicecon 0x%x ", pcidevicecon->dev);
 		cil_context_to_policy(out, pcidevicecon->context, mls);
 		fprintf(out, ";\n");
 	}
