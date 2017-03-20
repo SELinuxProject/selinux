@@ -221,8 +221,8 @@ void cil_destroy_src_info(struct cil_src_info *info);
 int cil_fill_cats(struct cil_tree_node *curr, struct cil_cats **cats);
 void cil_destroy_cats(struct cil_cats *cats);
 int cil_fill_context(struct cil_tree_node *user_node, struct cil_context *context);
-int cil_fill_integer(struct cil_tree_node *int_node, uint32_t *integer);
-int cil_fill_integer64(struct cil_tree_node *int_node, uint64_t *integer);
+int cil_fill_integer(struct cil_tree_node *int_node, uint32_t *integer, int base);
+int cil_fill_integer64(struct cil_tree_node *int_node, uint64_t *integer, int base);
 int cil_fill_ipaddr(struct cil_tree_node *addr_node, struct cil_ipaddr *addr);
 int cil_fill_level(struct cil_tree_node *sens, struct cil_level *level);
 
