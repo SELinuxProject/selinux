@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -2854,9 +2855,9 @@ static int ocontext_xen_ioport_to_cil(struct policydb *pdb, struct ocontext *iop
 		high = ioport->u.ioport.high_ioport;
 
 		if (low == high) {
-			cil_printf("(ioportcon %i ", low);
+			cil_printf("(ioportcon 0x%x ", low);
 		} else {
-			cil_printf("(ioportcon (%i %i) ", low, high);
+			cil_printf("(ioportcon (0x%x 0x%x) ", low, high);
 		}
 
 		context_to_cil(pdb, &ioport->context[0]);
@@ -2878,9 +2879,9 @@ static int ocontext_xen_iomem_to_cil(struct policydb *pdb, struct ocontext *iome
 		high = iomem->u.iomem.high_iomem;
 
 		if (low == high) {
-			cil_printf("(iomemcon %#lX ", (unsigned long)low);
+			cil_printf("(iomemcon 0x%"PRIx64" ", low);
 		} else {
-			cil_printf("(iomemcon (%#lX %#lX) ", (unsigned long)low, (unsigned long)high);
+			cil_printf("(iomemcon (0x%"PRIx64" 0x%"PRIx64") ", low, high);
 		}
 
 		context_to_cil(pdb, &iomem->context[0]);
@@ -2896,7 +2897,7 @@ static int ocontext_xen_pcidevice_to_cil(struct policydb *pdb, struct ocontext *
 	struct ocontext *pcid;
 
 	for (pcid = pcids; pcid != NULL; pcid = pcid->next) {
-		cil_printf("(pcidevicecon %#lx ", (unsigned long)pcid->u.device);
+		cil_printf("(pcidevicecon 0x%lx ", (unsigned long)pcid->u.device);
 		context_to_cil(pdb, &pcid->context[0]);
 		cil_printf(")\n");
 	}
