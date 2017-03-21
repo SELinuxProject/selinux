@@ -50,4 +50,5 @@ LIBSEPOL_1.1 {
 	sepol_module_package_to_cil;
 	sepol_module_policydb_to_cil;
 	sepol_kernel_policydb_to_cil;
+	sepol_kernel_policydb_to_conf;
 } LIBSEPOL_1.0;
