@@ -3,7 +3,7 @@
 checkpolicy \- SELinux policy compiler
 .SH SYNOPSIS
 .B checkpolicy
-.I "[\-b] [\-C] [\-d] [\-M] [\-c policyvers] [\-o output_file] [input_file]"
+.I "[\-b[F]] [\-C] [\-d] [\-M] [\-c policyvers] [\-o output_file] [input_file]"
 .br
 .SH "DESCRIPTION"
 This manual page describes the
@@ -26,6 +26,9 @@ Write CIL policy file rather than binary policy file.
 .TP
 .B \-d,\-\-debug
 Enter debug mode after loading the policy.
+.TP
+.B \-F,\-\-conf
+Write policy.conf file rather than binary policy file. Can only be used with binary policy file.
 .TP
 .B \-M,\-\-mls
 Enable the MLS policy when checking and compiling the policy.
