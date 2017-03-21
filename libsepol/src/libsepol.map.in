@@ -49,4 +49,5 @@ LIBSEPOL_1.1 {
 	sepol_ppfile_to_module_package;
 	sepol_module_package_to_cil;
 	sepol_module_policydb_to_cil;
+	sepol_kernel_policydb_to_cil;
 } LIBSEPOL_1.0;
