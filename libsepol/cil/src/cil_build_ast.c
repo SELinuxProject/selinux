@@ -4689,12 +4689,12 @@ int cil_gen_ioportcon(struct cil_db *db, struct cil_tree_node *parse_current, st
 	if (parse_current->next->cl_head != NULL) {
 		if (parse_current->next->cl_head->next != NULL &&
 		    parse_current->next->cl_head->next->next == NULL) {
-			rc = cil_fill_integer(parse_current->next->cl_head, &ioportcon->ioport_low, 10);
+			rc = cil_fill_integer(parse_current->next->cl_head, &ioportcon->ioport_low, 0);
 			if (rc != SEPOL_OK) {
 				cil_log(CIL_ERR, "Improper ioport specified\n");
 				goto exit;
 			}
-			rc = cil_fill_integer(parse_current->next->cl_head->next, &ioportcon->ioport_high, 10);
+			rc = cil_fill_integer(parse_current->next->cl_head->next, &ioportcon->ioport_high, 0);
 			if (rc != SEPOL_OK) {
 				cil_log(CIL_ERR, "Improper ioport specified\n");
 				goto exit;
@@ -4705,7 +4705,7 @@ int cil_gen_ioportcon(struct cil_db *db, struct cil_tree_node *parse_current, st
 			goto exit;
 		}
 	} else {
-		rc = cil_fill_integer(parse_current->next, &ioportcon->ioport_low, 10);
+		rc = cil_fill_integer(parse_current->next, &ioportcon->ioport_low, 0);
 		if (rc != SEPOL_OK) {
 			cil_log(CIL_ERR, "Improper ioport specified\n");
 			goto exit;
