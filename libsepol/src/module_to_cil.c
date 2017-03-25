@@ -250,19 +250,13 @@ static void attr_list_destroy(struct list **attr_list)
 
 static int list_init(struct list **list)
 {
-	int rc = -1;
 	struct list *l = calloc(1, sizeof(*l));
 	if (l == NULL) {
-		goto exit;
+		return -1;
 	}
 
 	*list = l;
-
 	return 0;
-
-exit:
-	list_destroy(&l);
-	return rc;
 }
 
 static int list_prepend(struct list *list, void *data)
