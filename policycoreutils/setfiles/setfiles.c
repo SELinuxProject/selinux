@@ -149,6 +149,7 @@ log_callback(int type, const char *fmt, ...)
 		out = stdout;
 	} else {
 		out = stderr;
+		fflush(stdout);
 		fprintf(out, "%s: ", r_opts.progname);
 	}
 	va_start(ap, fmt);
