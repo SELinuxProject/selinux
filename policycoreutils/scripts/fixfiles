@@ -248,7 +248,7 @@ if [ ! -z "$RPMFILES" ]; then
     exit $?
 fi
 if [ ! -z "$FILEPATH" ]; then
-    ${RESTORECON} $exclude_dirs ${FORCEFLAG} ${VERBOSE} -R $* $FILEPATH 2>&1 | cat >> $LOGFILE
+    ${RESTORECON} $exclude_dirs ${FORCEFLAG} ${VERBOSE} -R $* -- "$FILEPATH" 2>&1 | cat >> $LOGFILE
     return
 fi
 if [  -n "${FILESYSTEMSRW}" ]; then
@@ -400,7 +400,7 @@ else
 	process $command
     else
 	while [ -n "$1" ]; do
-	    FILEPATH=$1
+	    FILEPATH="$1"
 	    process $command
 	    shift
 	done
