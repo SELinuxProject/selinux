@@ -142,9 +142,15 @@ static int __attribute__ ((format(printf, 2, 3)))
 log_callback(int type, const char *fmt, ...)
 {
 	int rc;
-	FILE *out = (type == SELINUX_INFO) ? stdout : stderr;
+	FILE *out;
 	va_list ap;
-	fprintf(out, "%s: ", r_opts.progname);
+
+	if (type == SELINUX_INFO) {
+		out = stdout;
+	} else {
+		out = stderr;
+		fprintf(out, "%s: ", r_opts.progname);
+	}
 	va_start(ap, fmt);
 	rc = vfprintf(out, fmt, ap);
 	va_end(ap);
