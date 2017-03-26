@@ -378,8 +378,8 @@ done
 shift $(( OPTIND - 1 ))
 
 # Check for the command
-command=$1
-if [ -z $command ]; then
+command="$1"
+if [ -z "$command" ]; then
     usage
 fi
 
@@ -391,17 +391,17 @@ shift
 #
 
 if [ ! -z "$RPMFILES" ]; then
-    process $command
+    process "$command"
     if [ $# -gt 0 ]; then
 	    usage
     fi
 else
     if [ -z "$1" ]; then
-	process $command
+	process "$command"
     else
 	while [ -n "$1" ]; do
 	    FILEPATH="$1"
-	    process $command
+	    process "$command"
 	    shift
 	done
     fi
