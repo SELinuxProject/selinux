@@ -178,16 +178,18 @@ int sepol_user_add_role(sepol_handle_t * handle,
 {
 
 	char *role_cp;
-	char **roles_realloc;
+	char **roles_realloc = NULL;
 
 	if (sepol_user_has_role(user, role))
 		return STATUS_SUCCESS;
 
 	role_cp = strdup(role);
+	if (!role_cp)
+		goto omem;
+
 	roles_realloc = realloc(user->roles,
 				sizeof(char *) * (user->num_roles + 1));
-
-	if (!role_cp || !roles_realloc)
+	if (!roles_realloc)
 		goto omem;
 
 	user->num_roles++;
