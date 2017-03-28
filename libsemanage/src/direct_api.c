@@ -705,9 +705,9 @@ static int read_from_pipe_to_data(semanage_handle_t *sh, size_t initial_len, int
 
 static int semanage_pipe_data(semanage_handle_t *sh, char *path, char *in_data, size_t in_data_len, char **out_data, size_t *out_data_len, char **err_data, size_t *err_data_len)
 {
-	int input_fd[2];
-	int output_fd[2];
-	int err_fd[2];
+	int input_fd[2] = {-1, -1};
+	int output_fd[2] = {-1, -1};
+	int err_fd[2] = {-1, -1};
 	pid_t pid;
 	char *data_read = NULL;
 	char *err_data_read = NULL;
