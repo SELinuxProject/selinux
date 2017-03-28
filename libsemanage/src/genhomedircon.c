@@ -607,10 +607,12 @@ static int write_contexts(genhomedircon_settings_t *s, FILE *out,
 			  const genhomedircon_user_entry_t *user)
 {
 	char *line, *temp;
-	sepol_context_t *context = NULL;
-	char *new_context_str = NULL;
+	sepol_context_t *context;
+	char *new_context_str;
 
 	for (; tpl; tpl = tpl->next) {
+		context = NULL;
+		new_context_str = NULL;
 		line = replace_all(tpl->data, repl);
 		if (!line) {
 			goto fail;
