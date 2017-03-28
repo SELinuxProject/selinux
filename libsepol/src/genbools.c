@@ -157,7 +157,7 @@ static int load_booleans(struct policydb *policydb, const char *path,
 	return errors ? -1 : 0;
 }
 
-int sepol_genbools(void *data, size_t len, char *booleans)
+int sepol_genbools(void *data, size_t len, const char *booleans)
 {
 	struct policydb policydb;
 	struct policy_file pf;

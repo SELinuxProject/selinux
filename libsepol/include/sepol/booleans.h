@@ -17,7 +17,7 @@ extern "C" {
    policy for the boolean settings in the boolean configuration file.
    The binary policy is rewritten in place in memory.
    Returns 0 upon success, or -1 otherwise. */
-extern int sepol_genbools(void *data, size_t len, char *boolpath);
+extern int sepol_genbools(void *data, size_t len, const char *boolpath);
 
 /* Given an existing binary policy (starting at 'data', with length 'len')
    and boolean settings specified by the parallel arrays ('names', 'values')

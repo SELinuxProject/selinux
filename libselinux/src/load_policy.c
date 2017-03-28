@@ -79,7 +79,7 @@ int selinux_mkload_policy(int preservebools)
 	int (*policydb_to_image)(sepol_handle_t *, sepol_policydb_t *, void **, size_t *) = NULL;
 	int (*genbools_array)(void *data, size_t len, char **names, int *values, int nel) = NULL;
 	int (*genusers)(void *data, size_t len, const char *usersdir, void **newdata, size_t * newlen) = NULL;
-	int (*genbools)(void *data, size_t len, char *boolpath) = NULL;
+	int (*genbools)(void *data, size_t len, const char *boolpath) = NULL;
 
 #ifdef SHARED
 	char *errormsg = NULL;
@@ -275,8 +275,7 @@ checkbool:
 				free(names);
 			}
 		} else if (setlocaldefs) {
-			(void)genbools(data, size,
-				       (char *)selinux_booleans_path());
+			(void)genbools(data, size, selinux_booleans_path());
 		}
 	}
 
