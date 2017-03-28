@@ -1012,8 +1012,7 @@ int semanage_get_cil_paths(semanage_handle_t * sh,
 	names = calloc(num_modinfos, sizeof(*names));
 	if (names == NULL) {
 		ERR(sh, "Error allocating space for filenames.");
-		status = -1;
-		goto cleanup;
+		return -1;
 	}
 
 	for (i = 0; i < num_modinfos; i++) {
