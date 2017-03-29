@@ -174,12 +174,9 @@ struct role_list_node {
 };
 
 struct attr_list_node {
-	char *attribute;
+	char *attr_name;
 	int is_type;
-	union {
-		struct type_set *ts;
-		struct role_set *rs;
-	} set;
+	void *set;
 };
 
 struct list_node {
@@ -237,7 +234,7 @@ static void attr_list_destroy(struct list **attr_list)
 	while (curr != NULL) {
 		attr = curr->data;
 		if (attr != NULL) {
-			free(attr->attribute);
+			free(attr->attr_name);
 		}
 
 		free(curr->data);
@@ -711,54 +708,85 @@ static int num_digits(int n)
 	return num;
 }
 
-static int set_to_cil_attr(struct policydb *pdb, int is_type, char ***names, uint32_t *num_names)
+static int ebitmap_to_cil(struct policydb *pdb, struct ebitmap *map, int type)
+{
+	struct ebitmap_node *node;
+	uint32_t i;
+	char **val_to_name = pdb->sym_val_to_name[type];
+
+	ebitmap_for_each_bit(map, node, i) {
+		if (!ebitmap_get_bit(map, i)) {
+			continue;
+		}
+		cil_printf("%s ", val_to_name[i]);
+	}
+
+	return 0;
+}
+
+static char *get_new_attr_name(struct policydb *pdb, int is_type)
 {
 	static unsigned int num_attrs = 0;
-	int rc = -1;
 	int len, rlen;
-	const char *attr_infix;
-	char *attr;
+	const char *infix;
+	char *attr_name = NULL;
 
 	num_attrs++;
 
 	if (is_type) {
-		attr_infix = TYPEATTR_INFIX;
+		infix = TYPEATTR_INFIX;
 	} else {
-		attr_infix = ROLEATTR_INFIX;
+		infix = ROLEATTR_INFIX;
 	}
 
-	len = strlen(pdb->name) + strlen(attr_infix) + num_digits(num_attrs) + 1;
-	attr = malloc(len);
-	if (attr == NULL) {
+	len = strlen(pdb->name) + strlen(infix) + num_digits(num_attrs) + 1;
+	attr_name = malloc(len);
+	if (!attr_name) {
 		log_err("Out of memory");
-		rc = -1;
 		goto exit;
 	}
-	rlen = snprintf(attr, len, "%s%s%i", pdb->name, attr_infix, num_attrs);
+
+	rlen = snprintf(attr_name, len, "%s%s%i", pdb->name, infix, num_attrs);
 	if (rlen < 0 || rlen >= len) {
 		log_err("Failed to generate attribute name");
-		rc = -1;
+		free(attr_name);
+		attr_name = NULL;
 		goto exit;
 	}
 
-	*names = malloc(sizeof(**names));
-	if (*names == NULL) {
+exit:
+	return attr_name;
+}
+
+static int cil_add_attr_to_list(struct list *attr_list, char *attr_name, int is_type, void *set)
+{
+	struct attr_list_node *attr_list_node = NULL;
+	int rc = 0;
+
+	attr_list_node = calloc(1, sizeof(*attr_list_node));
+	if (attr_list_node == NULL) {
 		log_err("Out of memory");
 		rc = -1;
 		goto exit;
 	}
 
+	rc = list_prepend(attr_list, attr_list_node);
+	if (rc != 0) {
+		goto exit;
+	}
 
-	*names[0] = attr;
-	*num_names = 1;
+	attr_list_node->attr_name = attr_name;
+	attr_list_node->is_type = is_type;
+	attr_list_node->set = set;
 
-	rc = 0;
+	return rc;
 
 exit:
+	free(attr_list_node);
 	return rc;
 }
 
-static int cil_print_attr_strs(int indent, struct policydb *pdb, int is_type, struct ebitmap *pos, struct ebitmap *neg, uint32_t flags, char *attr)
+static int cil_print_attr_strs(int indent, struct policydb *pdb, int is_type, void *set, char *attr_name)
 {
 	// CIL doesn't support anonymous positive/negative/complemented sets.  So
 	// instead we create a CIL type/roleattributeset that matches the set. If
@@ -767,25 +795,40 @@ static int cil_print_attr_strs(int indent, struct policydb *pdb, int is_type, st
 	// in the negative set. Additonally, if the set is complemented, then wrap
 	// the whole thing with a negation.
 
-	int rc = 0;
 	struct ebitmap_node *node;
-	unsigned int i;
-	const char *statement;
-	int has_positive = pos && (ebitmap_cardinality(pos) > 0);
-	int has_negative = neg && (ebitmap_cardinality(neg) > 0);
+	struct ebitmap *pos, *neg;
+	uint32_t flags;
+	unsigned i;
+	struct type_set *ts;
+	struct role_set *rs;
+	int has_positive, has_negative;
+	const char *kind;
 	char **val_to_name;
+	int rc = 0;
 
 	if (is_type) {
-		statement = "type";
+		kind = "type";
 		val_to_name = pdb->p_type_val_to_name;
+		ts = (struct type_set *)set;
+		pos = &ts->types;
+		neg = &ts->negset;
+		flags = ts->flags;
+		has_positive = pos && (ebitmap_length(pos) > 0);
+		has_negative = neg && (ebitmap_length(neg) > 0);
 	} else {
-		statement = "role";
+		kind = "role";
 		val_to_name = pdb->p_role_val_to_name;
+		rs = (struct role_set *)set;
+		pos = &rs->roles;
+		neg = NULL;
+		flags = rs->flags;
+		has_positive = pos && (ebitmap_length(pos) > 0);
+		has_negative = 0;
 	}
 
-	cil_println(indent, "(%sattribute %s)", statement, attr);
+	cil_println(indent, "(%sattribute %s)", kind, attr_name);
 	cil_indent(indent);
-	cil_printf("(%sattributeset %s ", statement, attr);
+	cil_printf("(%sattributeset %s ", kind, attr_name);
 
 	if (flags & TYPE_STAR) {
 		cil_printf("(all)");
@@ -836,184 +879,150 @@ static int cil_print_attr_strs(int indent, struct policydb *pdb, int is_type, st
 	return rc;
 }
 
-static int ebitmap_to_cil(struct policydb *pdb, struct ebitmap *map, int type)
+static int cil_print_attr_list(int indent, struct policydb *pdb, struct list *attr_list)
 {
-	struct ebitmap_node *node;
-	uint32_t i;
-	char **val_to_name = pdb->sym_val_to_name[type];
+	struct list_node *curr;
+	struct attr_list_node *node;
+	int rc = 0;
 
-	ebitmap_for_each_bit(map, node, i) {
-		if (!ebitmap_get_bit(map, i)) {
-			continue;
+	for (curr = attr_list->head; curr != NULL; curr = curr->next) {
+		node = curr->data;
+		rc = cil_print_attr_strs(indent, pdb, node->is_type, node->set, node->attr_name);
+		if (rc != 0) {
+			return rc;
 		}
-		cil_printf("%s ", val_to_name[i]);
 	}
 
-	return 0;
+	return rc;
 }
 
-static int ebitmap_to_names(char** vals_to_names, struct ebitmap map, char ***names, uint32_t *num_names)
+static char *search_attr_list(struct list *attr_list, int is_type, void *set)
 {
-	int rc = -1;
+	struct list_node *curr;
+	struct attr_list_node *node;
+	struct role_set *rs1 = NULL, *rs2;
+	struct type_set *ts1 = NULL, *ts2;
+
+	if (is_type) {
+		ts1 = (struct type_set *)set;
+	} else {
+		rs1 = (struct role_set *)set;
+	}
+
+	for (curr = attr_list->head; curr != NULL; curr = curr->next) {
+		node = curr->data;
+		if (node->is_type != is_type)
+			continue;
+		if (ts1) {
+			ts2 = (struct type_set *)node->set;
+			if (ts1->flags != ts2->flags)
+				continue;
+			if (ebitmap_cmp(&ts1->negset, &ts2->negset) == 0)
+				continue;
+			if (ebitmap_cmp(&ts1->types, &ts2->types) == 0)
+				continue;
+			return node->attr_name;
+		} else {
+			rs2 = (struct role_set *)node->set;
+			if (rs1->flags != rs2->flags)
+				continue;
+			if (ebitmap_cmp(&rs1->roles, &rs2->roles) == 0)
+				continue;
+			return node->attr_name;
+		}
+	}
+
+	return NULL;
+}
+
+static int set_to_names(struct policydb *pdb, int is_type, void *set, struct list *attr_list, char ***names, int *num_names)
+{
+	char *attr_name = NULL;
+	int rc = 0;
+
+	*names = NULL;
+	*num_names = 0;
+
+	attr_name = search_attr_list(attr_list, is_type, set);
+
+	if (!attr_name) {
+		attr_name = get_new_attr_name(pdb, is_type);
+		if (!attr_name) {
+			rc = -1;
+			goto exit;
+		}
+
+		rc = cil_add_attr_to_list(attr_list, attr_name, is_type, set);
+		if (rc != 0) {
+			free(attr_name);
+			goto exit;
+		}
+	}
+
+	*names = malloc(sizeof(char *));
+	if (!*names) {
+		log_err("Out of memory");
+		free(attr_name);
+		rc = -1;
+		goto exit;
+	}
+	*names[0] = attr_name;
+	*num_names = 1;
+
+exit:
+	return rc;
+}
+
+static int ebitmap_to_names(struct ebitmap *map, char **vals_to_names, char ***names, int *num_names)
+{
+	int rc = 0;
 	struct ebitmap_node *node;
 	uint32_t i;
-	uint32_t num = 0;
-	uint32_t max = 8;
-	char **name_arr = NULL;
+	uint32_t num;
+	char **name_arr;
 
-	name_arr = malloc(sizeof(*name_arr) * max);
+	num = 0;
+	ebitmap_for_each_bit(map, node, i) {
+		if (ebitmap_get_bit(map, i))
+			num++;
+	}
+
+	name_arr = malloc(sizeof(*name_arr) * num);
 	if (name_arr == NULL) {
 		log_err("Out of memory");
 		rc = -1;
 		goto exit;
 	}
 
-	ebitmap_for_each_bit(&map, node, i) {
-		if (!ebitmap_get_bit(&map, i)) {
-			continue;
+	num = 0;
+	ebitmap_for_each_bit(map, node, i) {
+		if (ebitmap_get_bit(map, i)) {
+			name_arr[num] = vals_to_names[i];
+			num++;
 		}
-
-		if (num + 1 == max) {
-			max *= 2;
-			name_arr = realloc(name_arr, sizeof(*name_arr) * max);
-			if (name_arr == NULL) {
-				log_err("Out of memory");
-				rc = -1;
-				goto exit;
-			}
-		}
-
-		name_arr[num] = strdup(vals_to_names[i]);
-		if (name_arr[num] == NULL) {
-			log_err("Out of memory");
-			rc = -1;
-			goto exit;
-		}
-		num++;
 	}
 
 	*names = name_arr;
 	*num_names = num;
 
-	return 0;
-
-exit:
-	for (i = 0; i < num; i++) {
-		free(name_arr[i]);
-	}
-	free(name_arr);
-	return rc;
-}
-
-static int cil_add_attr_to_list(struct list *attr_list, char *attribute, int is_type, void *set)
-{
-	struct attr_list_node *attr_list_node = NULL;
-	int rc = -1;
-
-	attr_list_node = calloc(1, sizeof(*attr_list_node));
-	if (attr_list_node == NULL) {
-		log_err("Out of memory");
-		rc = -1;
-		goto exit;
-	}
-
-	rc = list_prepend(attr_list, attr_list_node);
-	if (rc != 0) {
-		goto exit;
-	}
-
-	attr_list_node->attribute = strdup(attribute);
-	if (attr_list_node->attribute == NULL) {
-		log_err("Out of memory");
-		rc = -1;
-		goto exit;
-	}
-
-	attr_list_node->is_type = is_type;
-	if (is_type) {
-		attr_list_node->set.ts = set;
-	} else {
-		attr_list_node->set.rs = set;
-	}
-
-	return rc;
-
-exit:
-	if (attr_list_node != NULL) {
-		free(attr_list_node->attribute);
-	}
-	free(attr_list_node);
-	return rc;
-}
-
-/* generated_attribute is only set if a new attribute was generated in set_to_cil_attr */
-static int typeset_to_names(struct policydb *pdb, struct type_set *ts, char ***names, uint32_t *num_names, char **generated_attribute)
-{
-	int rc = -1;
-	if (ebitmap_cardinality(&ts->negset) > 0 || ts->flags != 0) {
-		rc = set_to_cil_attr(pdb, 1, names, num_names);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		*generated_attribute = *names[0];
-	} else {
-		rc = ebitmap_to_names(pdb->p_type_val_to_name, ts->types, names, num_names);
-		if (rc != 0) {
-			goto exit;
-		}
-	}
-
-	return 0;
 exit:
 	return rc;
 }
 
-/* generated_attribute is only set if a new attribute was generated in set_to_cil_attr */
-static int roleset_to_names(struct policydb *pdb, struct role_set *rs, char ***names, uint32_t *num_names, char **generated_attribute)
+static int process_roleset(struct policydb *pdb, struct role_set *rs, struct list *attr_list, char ***names, int *num_names)
 {
-	int rc = -1;
-	if (rs->flags != 0) {
-		rc = set_to_cil_attr(pdb, 0, names, num_names);
-		if (rc != 0) {
-			goto exit;
-		}
+	int rc = 0;
 
-		*generated_attribute = *names[0];
-	} else {
-		rc = ebitmap_to_names(pdb->p_role_val_to_name, rs->roles, names, num_names);
-		if (rc != 0) {
-			goto exit;
-		}
-	}
+	*names = NULL;
+	*num_names = 0;
 
-	return 0;
-exit:
-	return rc;
-}
-
-static int process_roleset(int indent, struct policydb *pdb, struct role_set *rs, struct list *attr_list, char ***type_names, uint32_t *num_type_names)
-{
-	int rc = -1;
-	char *generated_attribute = NULL;
-	*num_type_names = 0;
-
-	rc = roleset_to_names(pdb, rs, type_names, num_type_names, &generated_attribute);
-	if (rc != 0) {
-		goto exit;
-	}
-
-	if (generated_attribute == NULL) {
-		goto exit;
-	}
-
-	if (attr_list == NULL) {
-		rc = cil_print_attr_strs(indent, pdb, 0, &rs->roles, NULL, rs->flags, generated_attribute);
+	if (rs->flags) {
+		rc = set_to_names(pdb, 0, &rs->roles, attr_list, names, num_names);
 		if (rc != 0) {
 			goto exit;
 		}
 	} else {
-		rc = cil_add_attr_to_list(attr_list, generated_attribute, 0, rs);
+		rc = ebitmap_to_names(&rs->roles, pdb->p_role_val_to_name, names, num_names);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -1023,29 +1032,20 @@ exit:
 	return rc;
 }
 
-static int process_typeset(int indent, struct policydb *pdb, struct type_set *ts, struct list *attr_list, char ***type_names, uint32_t *num_type_names)
+static int process_typeset(struct policydb *pdb, struct type_set *ts, struct list *attr_list, char ***names, int *num_names)
 {
-	int rc = -1;
-	char *generated_attribute = NULL;
-	*num_type_names = 0;
+	int rc = 0;
 
-	rc = typeset_to_names(pdb, ts, type_names, num_type_names, &generated_attribute);
-	if (rc != 0) {
-		goto exit;
-	}
+	*names = NULL;
+	*num_names = 0;
 
-	if (generated_attribute == NULL) {
-		rc = 0;
-		goto exit;
-	}
-
-	if (attr_list == NULL) {
-		rc = cil_print_attr_strs(indent, pdb, 1, &ts->types, &ts->negset, ts->flags, generated_attribute);
+	if (ebitmap_length(&ts->negset) > 0 || ts->flags != 0) {
+		rc = set_to_names(pdb, 1, ts, attr_list, names, num_names);
 		if (rc != 0) {
 			goto exit;
 		}
 	} else {
-		rc = cil_add_attr_to_list(attr_list, generated_attribute, 1, ts);
+		rc = ebitmap_to_names(&ts->types, pdb->p_type_val_to_name, names, num_names);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -1055,18 +1055,9 @@ exit:
 	return rc;
 }
 
-static void names_destroy(char ***names, uint32_t *num_names)
+static void names_destroy(char ***names, int *num_names)
 {
-	char **arr = *names;
-	uint32_t num = *num_names;
-	uint32_t i;
-
-	for (i = 0; i < num; i++) {
-		free(arr[i]);
-		arr[i] = NULL;
-	}
-	free(arr);
-
+	free(*names);
 	*names = NULL;
 	*num_names = 0;
 }
@@ -1075,10 +1066,16 @@ static int roletype_role_in_ancestor_to_cil(struct policydb *pdb, struct stack *
 {
 	struct list_node *curr;
 	char **tnames = NULL;
-	uint32_t num_tnames, i;
+	int num_tnames, i;
 	struct role_list_node *role_node = NULL;
 	int rc;
 	struct type_set *ts;
+	struct list *attr_list = NULL;
+
+	rc = list_init(&attr_list);
+	if (rc != 0) {
+		goto exit;
+	}
 
 	curr = role_list->head;
 	for (curr = role_list->head; curr != NULL; curr = curr->next) {
@@ -1088,7 +1085,7 @@ static int roletype_role_in_ancestor_to_cil(struct policydb *pdb, struct stack *
 		}
 
 		ts = &role_node->role->types;
-		rc = process_typeset(indent, pdb, ts, NULL, &tnames, &num_tnames);
+		rc = process_typeset(pdb, ts, attr_list, &tnames, &num_tnames);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -1100,9 +1097,13 @@ static int roletype_role_in_ancestor_to_cil(struct policydb *pdb, struct stack *
 		names_destroy(&tnames, &num_tnames);
 	}
 
-	rc = 0;
+	rc = cil_print_attr_list(indent, pdb, attr_list);
+	if (rc != 0) {
+		goto exit;
+	}
 
 exit:
+	attr_list_destroy(&attr_list);
 	return rc;
 }
 
@@ -1162,10 +1163,7 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 	struct avrule *avrule;
 	char **snames = NULL;
 	char **tnames = NULL;
-	uint32_t num_snames;
-	uint32_t num_tnames;
-	uint32_t s;
-	uint32_t t;
+	int s, t, num_snames, num_tnames;
 	struct type_set *ts;
 
 	for (avrule = avrule_list; avrule != NULL; avrule = avrule->next) {
@@ -1175,13 +1173,13 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 		}
 
 		ts = &avrule->stypes;
-		rc = process_typeset(indent, pdb, ts, attr_list, &snames, &num_snames);
+		rc = process_typeset(pdb, ts, attr_list, &snames, &num_snames);
 		if (rc != 0) {
 			goto exit;
 		}
 
 		ts = &avrule->ttypes;
-		rc = process_typeset(indent, pdb, ts, attr_list, &tnames, &num_tnames);
+		rc = process_typeset(pdb, ts, attr_list, &tnames, &num_tnames);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -1230,7 +1228,7 @@ exit:
 
 static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *cond_expr, uint32_t flags)
 {
-	int rc = -1;
+	int rc = 0;
 	struct cond_expr *curr;
 	struct stack *stack = NULL;
 	int len = 0;
@@ -1372,50 +1370,10 @@ exit:
 	return rc;
 }
 
-static int cil_print_attr_list(int indent, struct policydb *pdb, struct list *attr_list)
+static int cond_list_to_cil(int indent, struct policydb *pdb, struct cond_node *cond_list, struct list *attr_list)
 {
-	struct list_node *curr;
-	struct attr_list_node *attr_list_node;
 	int rc = 0;
-	struct type_set *ts;
-	struct role_set *rs;
-	char *generated_attribute;
-
-	for (curr = attr_list->head; curr != NULL; curr = curr->next) {
-		attr_list_node = curr->data;
-		generated_attribute = attr_list_node->attribute;
-		if (generated_attribute == NULL) {
-			return -1;
-		}
-
-		if (attr_list_node->is_type) {
-			ts = attr_list_node->set.ts;
-			rc = cil_print_attr_strs(indent, pdb, 1, &ts->types, &ts->negset, ts->flags, generated_attribute);
-			if (rc != 0) {
-				return rc;
-			}
-		} else {
-			rs = attr_list_node->set.rs;
-			rc = cil_print_attr_strs(indent, pdb, 0, &rs->roles, NULL, rs->flags, generated_attribute);
-			if (rc != 0) {
-				return rc;
-			}
-		}
-	}
-
-	return rc;
-}
-
-static int cond_list_to_cil(int indent, struct policydb *pdb, struct cond_node *cond_list)
-{
-	int rc = -1;
 	struct cond_node *cond;
-	struct list *attr_list = NULL;
-
-	rc = list_init(&attr_list);
-	if (rc != 0) {
-		goto exit;
-	}
 
 	for (cond = cond_list; cond != NULL; cond = cond->next) {
 
@@ -1445,38 +1403,34 @@ static int cond_list_to_cil(int indent, struct policydb *pdb, struct cond_node *
 		cil_println(indent, ")");
 	}
 
-	rc = cil_print_attr_list(indent, pdb, attr_list);
-
 exit:
-	attr_list_destroy(&attr_list);
 	return rc;
 }
 
-static int role_trans_to_cil(int indent, struct policydb *pdb, struct role_trans_rule *rules)
+static int role_trans_to_cil(int indent, struct policydb *pdb, struct role_trans_rule *rules, struct list *role_attr_list, struct list *type_attr_list)
 {
-	int rc = -1;
+	int rc = 0;
 	struct role_trans_rule *rule;
 	char **role_names = NULL;
-	uint32_t num_role_names = 0;
+	int num_role_names = 0;
+	int role;
 	char **type_names = NULL;
-	uint32_t num_type_names = 0;
-	uint32_t type;
-	uint32_t role;
+	int num_type_names = 0;
+	int type;
 	uint32_t i;
 	struct ebitmap_node *node;
 	struct type_set *ts;
 	struct role_set *rs;
 
-
 	for (rule = rules; rule != NULL; rule = rule->next) {
 		rs = &rule->roles;
-		rc = process_roleset(indent, pdb, rs, NULL, &role_names, &num_role_names);
+		rc = process_roleset(pdb, rs, role_attr_list, &role_names, &num_role_names);
 		if (rc != 0) {
 			goto exit;
 		}
 
 		ts = &rule->types;
-		rc = process_typeset(indent, pdb, ts, NULL, &type_names, &num_type_names);
+		rc = process_typeset(pdb, ts, type_attr_list, &type_names, &num_type_names);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -1487,10 +1441,10 @@ static int role_trans_to_cil(int indent, struct policydb *pdb, struct role_trans
 					if (!ebitmap_get_bit(&rule->classes, i)) {
 						continue;
 					}
-					cil_println(indent, "(roletransition %s %s %s %s)", role_names[role],
-					                                                    type_names[type],
-					                                                    pdb->p_class_val_to_name[i],
-					                                                    pdb->p_role_val_to_name[rule->new_role - 1]);
+					cil_println(indent, "(roletransition %s %s %s %s)",
+						    role_names[role], type_names[type],
+						    pdb->p_class_val_to_name[i],
+						    pdb->p_role_val_to_name[rule->new_role - 1]);
 				}
 			}
 		}
@@ -1499,8 +1453,6 @@ static int role_trans_to_cil(int indent, struct policydb *pdb, struct role_trans
 		names_destroy(&type_names, &num_type_names);
 	}
 
-	rc = 0;
-
 exit:
 	names_destroy(&role_names, &num_role_names);
 	names_destroy(&type_names, &num_type_names);
@@ -1508,27 +1460,26 @@ exit:
 	return rc;
 }
 
-static int role_allows_to_cil(int indent, struct policydb *pdb, struct role_allow_rule *rules)
+static int role_allows_to_cil(int indent, struct policydb *pdb, struct role_allow_rule *rules, struct list *attr_list)
 {
 	int rc = -1;
 	struct role_allow_rule *rule;
 	char **roles = NULL;
-	uint32_t num_roles = 0;
+	int num_roles = 0;
 	char **new_roles = NULL;
-	uint32_t num_new_roles = 0;
-	uint32_t i;
-	uint32_t j;
+	int num_new_roles = 0;
+	int i,j;
 	struct role_set *rs;
 
 	for (rule = rules; rule != NULL; rule = rule->next) {
 		rs = &rule->roles;
-		rc = process_roleset(indent, pdb, rs, NULL, &roles, &num_roles);
+		rc = process_roleset(pdb, rs, attr_list, &roles, &num_roles);
 		if (rc != 0) {
 			goto exit;
 		}
 
 		rs = &rule->new_roles;
-		rc = process_roleset(indent, pdb, rs, NULL, &new_roles, &num_new_roles);
+		rc = process_roleset(pdb, rs, attr_list, &new_roles, &num_new_roles);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -1552,18 +1503,18 @@ exit:
 	return rc;
 }
 
-static int range_trans_to_cil(int indent, struct policydb *pdb, struct range_trans_rule *rules)
+static int range_trans_to_cil(int indent, struct policydb *pdb, struct range_trans_rule *rules, struct list *attr_list)
 {
 	int rc = -1;
 	struct range_trans_rule *rule;
 	char **stypes = NULL;
-	uint32_t num_stypes = 0;
+	int num_stypes = 0;
+	int stype;
 	char **ttypes = NULL;
-	uint32_t num_ttypes = 0;
+	int num_ttypes = 0;
+	int ttype;
 	struct ebitmap_node *node;
 	uint32_t i;
-	uint32_t stype;
-	uint32_t ttype;
 	struct type_set *ts;
 
 	if (!pdb->mls) {
@@ -1572,13 +1523,13 @@ static int range_trans_to_cil(int indent, struct policydb *pdb, struct range_tra
 
 	for (rule = rules; rule != NULL; rule = rule->next) {
 		ts = &rule->stypes;
-		rc = process_typeset(indent, pdb, ts, NULL, &stypes, &num_stypes);
+		rc = process_typeset(pdb, ts, attr_list, &stypes, &num_stypes);
 		if (rc != 0) {
 			goto exit;
 		}
 
 		ts = &rule->ttypes;
-		rc = process_typeset(indent, pdb, ts, NULL, &ttypes, &num_ttypes);
+		rc = process_typeset(pdb, ts, attr_list, &ttypes, &num_ttypes);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -1626,39 +1577,38 @@ exit:
 	return rc;
 }
 
-static int filename_trans_to_cil(int indent, struct policydb *pdb, struct filename_trans_rule *rules)
+static int filename_trans_to_cil(int indent, struct policydb *pdb, struct filename_trans_rule *rules, struct list *attr_list)
 {
 	int rc = -1;
 	char **stypes = NULL;
-	uint32_t num_stypes = 0;
+	int num_stypes = 0;
+	int stype;
 	char **ttypes = NULL;
-	uint32_t num_ttypes = 0;
-	uint32_t stype;
-	uint32_t ttype;
+	int num_ttypes = 0;
+	int ttype;
 	struct type_set *ts;
-
 	struct filename_trans_rule *rule;
 
 	for (rule = rules; rule != NULL; rule = rule->next) {
 		ts = &rule->stypes;
-		rc = process_typeset(indent, pdb, ts, NULL, &stypes, &num_stypes);
+		rc = process_typeset(pdb, ts, attr_list, &stypes, &num_stypes);
 		if (rc != 0) {
 			goto exit;
 		}
 
 		ts = &rule->ttypes;
-		rc = process_typeset(indent, pdb, ts, NULL, &ttypes, &num_ttypes);
+		rc = process_typeset(pdb, ts, attr_list, &ttypes, &num_ttypes);
 		if (rc != 0) {
 			goto exit;
 		}
 
 		for (stype = 0; stype < num_stypes; stype++) {
 			for (ttype = 0; ttype < num_ttypes; ttype++) {
-				cil_println(indent, "(typetransition %s %s %s \"%s\" %s)", stypes[stype],
-				                                                       ttypes[ttype],
-				                                                       pdb->p_class_val_to_name[rule->tclass - 1],
-				                                                       rule->name,
-				                                                       pdb->p_type_val_to_name[rule->otype - 1]);
+				cil_println(indent, "(typetransition %s %s %s \"%s\" %s)",
+					    stypes[stype], ttypes[ttype],
+					    pdb->p_class_val_to_name[rule->tclass - 1],
+					    rule->name,
+					    pdb->p_type_val_to_name[rule->otype - 1]);
 			}
 		}
 
@@ -1733,7 +1683,7 @@ exit:
 }
 
 
-static int constraint_expr_to_string(int indent, struct policydb *pdb, struct constraint_expr *exprs, char **expr_string)
+static int constraint_expr_to_string(struct policydb *pdb, struct constraint_expr *exprs, char **expr_string)
 {
 	int rc = -1;
 	struct constraint_expr *expr;
@@ -1750,7 +1700,7 @@ static int constraint_expr_to_string(int indent, struct policydb *pdb, struct co
 	const char *attr2;
 	char *names;
 	char **name_list = NULL;
-	uint32_t num_names = 0;
+	int num_names = 0;
 	struct type_set *ts;
 
 	rc = stack_init(&stack);
@@ -1812,17 +1762,17 @@ static int constraint_expr_to_string(int indent, struct policydb *pdb, struct co
 			} else {
 				if (expr->attr & CEXPR_TYPE) {
 					ts = expr->type_names;
-					rc = process_typeset(indent, pdb, ts, NULL, &name_list, &num_names);
+					rc = ebitmap_to_names(&ts->types, pdb->p_type_val_to_name, &name_list, &num_names);
 					if (rc != 0) {
 						goto exit;
 					}
 				} else if (expr->attr & CEXPR_USER) {
-					rc = ebitmap_to_names(pdb->p_user_val_to_name, expr->names, &name_list, &num_names);
+					rc = ebitmap_to_names(&expr->names, pdb->p_user_val_to_name, &name_list, &num_names);
 					if (rc != 0) {
 						goto exit;
 					}
 				} else if (expr->attr & CEXPR_ROLE) {
-					rc = ebitmap_to_names(pdb->p_role_val_to_name, expr->names, &name_list, &num_names);
+					rc = ebitmap_to_names(&expr->names, pdb->p_role_val_to_name, &name_list, &num_names);
 					if (rc != 0) {
 						goto exit;
 					}
@@ -1963,7 +1913,7 @@ static int constraints_to_cil(int indent, struct policydb *pdb, char *classkey, 
 
 	for (node = constraints; node != NULL; node = node->next) {
 
-		rc = constraint_expr_to_string(indent, pdb, node->expr, &expr);
+		rc = constraint_expr_to_string(pdb, node->expr, &expr);
 		if (rc != 0) {
 			goto exit;
 		}
@@ -2121,10 +2071,17 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 	int rc = -1;
 	struct ebitmap_node *node;
 	uint32_t i;
+	int j;
 	char **types = NULL;
-	uint32_t num_types = 0;
+	int num_types = 0;
 	struct role_datum *role = datum;
 	struct type_set *ts;
+	struct list *attr_list = NULL;
+
+	rc = list_init(&attr_list);
+	if (rc != 0) {
+		goto exit;
+	}
 
 	if (scope == SCOPE_REQ) {
 		// if a role/roleattr is in the REQ scope, then it could cause an
@@ -2178,14 +2135,14 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 		}
 
 		ts = &role->types;
-		rc = process_typeset(indent, pdb, ts, NULL, &types, &num_types);
+		rc = process_typeset(pdb, ts, attr_list, &types, &num_types);
 		if (rc != 0) {
 			goto exit;
 		}
 
-		for (i = 0; i < num_types; i++) {
-			if (is_id_in_scope(pdb, decl_stack, types[i], SYM_TYPES)) {
-				cil_println(indent, "(roletype %s %s)", key, types[i]);
+		for (j = 0; j < num_types; j++) {
+			if (is_id_in_scope(pdb, decl_stack, types[j], SYM_TYPES)) {
+				cil_println(indent, "(roletype %s %s)", key, types[j]);
 			}
 		}
 
@@ -2212,15 +2169,15 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 		}
 
 		ts = &role->types;
-		rc = process_typeset(indent, pdb, ts, NULL, &types, &num_types);
+		rc = process_typeset(pdb, ts, attr_list, &types, &num_types);
 		if (rc != 0) {
 			goto exit;
 		}
 
 
-		for (i = 0; i < num_types; i++) {
-			if (is_id_in_scope(pdb, decl_stack, types[i], SYM_TYPES)) {
-				cil_println(indent, "(roletype %s %s)", key, types[i]);
+		for (j = 0; j < num_types; j++) {
+			if (is_id_in_scope(pdb, decl_stack, types[j], SYM_TYPES)) {
+				cil_println(indent, "(roletype %s %s)", key, types[j]);
 			}
 		}
 
@@ -2232,8 +2189,13 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 		goto exit;
 	}
 
-	rc = 0;
+	rc = cil_print_attr_list(indent, pdb, attr_list);
+	if (rc != 0) {
+		goto exit;
+	}
+
 exit:
+	attr_list_destroy(&attr_list);
 	names_destroy(&types, &num_types);
 
 	return rc;
@@ -3596,11 +3558,16 @@ static int block_to_cil(struct policydb *pdb, struct avrule_block *block, struct
 {
 	int rc = -1;
 	struct avrule_decl *decl;
-	struct list *attr_list = NULL;
+	struct list *type_attr_list = NULL;
+	struct list *role_attr_list = NULL;
 
 	decl = block->branch_list;
 
-	rc = list_init(&attr_list);
+	rc = list_init(&type_attr_list);
+	if (rc != 0) {
+		goto exit;
+	}
+	rc = list_init(&role_attr_list);
 	if (rc != 0) {
 		goto exit;
 	}
@@ -3625,43 +3592,49 @@ static int block_to_cil(struct policydb *pdb, struct avrule_block *block, struct
 		goto exit;
 	}
 
-	rc = avrule_list_to_cil(indent, pdb, decl->avrules, attr_list);
+	rc = avrule_list_to_cil(indent, pdb, decl->avrules, type_attr_list);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = role_trans_to_cil(indent, pdb, decl->role_tr_rules);
+	rc = role_trans_to_cil(indent, pdb, decl->role_tr_rules, role_attr_list, type_attr_list);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = role_allows_to_cil(indent, pdb, decl->role_allow_rules);
+	rc = role_allows_to_cil(indent, pdb, decl->role_allow_rules, role_attr_list);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = range_trans_to_cil(indent, pdb, decl->range_tr_rules);
+	rc = range_trans_to_cil(indent, pdb, decl->range_tr_rules, type_attr_list);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = filename_trans_to_cil(indent, pdb, decl->filename_trans_rules);
+	rc = filename_trans_to_cil(indent, pdb, decl->filename_trans_rules, type_attr_list);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = cond_list_to_cil(indent, pdb, decl->cond_list);
+	rc = cond_list_to_cil(indent, pdb, decl->cond_list, type_attr_list);
 	if (rc != 0) {
 		goto exit;
 	}
 
-	rc = cil_print_attr_list(indent, pdb, attr_list);
+	rc = cil_print_attr_list(indent, pdb, type_attr_list);
+	if (rc != 0) {
+		goto exit;
+	}
+	rc = cil_print_attr_list(indent, pdb, role_attr_list);
 	if (rc != 0) {
 		goto exit;
 	}
 
 exit:
-	attr_list_destroy(&attr_list);
+	attr_list_destroy(&type_attr_list);
+	attr_list_destroy(&role_attr_list);
+
 	return rc;
 }
 
