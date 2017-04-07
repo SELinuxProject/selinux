@@ -2495,11 +2495,7 @@ static int semanage_direct_list_all(semanage_handle_t *sh,
 				goto cleanup;
 			}
 
-			ret = semanage_module_info_destroy(sh, modinfo_tmp);
-			if (ret != 0) {
-				status = -1;
-				goto cleanup;
-			}
+			semanage_module_info_destroy(sh, modinfo_tmp);
 			free(modinfo_tmp);
 			modinfo_tmp = NULL;
 
@@ -2524,11 +2520,7 @@ cleanup:
 		free(modules);
 	}
 
-	ret = semanage_module_info_destroy(sh, modinfo_tmp);
-	if (ret != 0) {
-		status = -1;
-		goto cleanup;
-	}
+	semanage_module_info_destroy(sh, modinfo_tmp);
 	free(modinfo_tmp);
 	modinfo_tmp = NULL;
 
