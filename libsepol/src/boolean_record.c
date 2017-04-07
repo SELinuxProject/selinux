@@ -67,6 +67,8 @@ int sepol_bool_key_extract(sepol_handle_t * handle,
 
 void sepol_bool_key_free(sepol_bool_key_t * key)
 {
+	if (!key)
+		return;
 	free(key->name);
 	free(key);
 }

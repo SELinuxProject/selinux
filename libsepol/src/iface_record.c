@@ -73,6 +73,8 @@ int sepol_iface_key_extract(sepol_handle_t * handle,
 
 void sepol_iface_key_free(sepol_iface_key_t * key)
 {
+	if (!key)
+		return;
 	free(key->name);
 	free(key);
 }

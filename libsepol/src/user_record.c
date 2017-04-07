@@ -76,6 +76,8 @@ int sepol_user_key_extract(sepol_handle_t * handle,
 
 void sepol_user_key_free(sepol_user_key_t * key)
 {
+	if (!key)
+		return;
 	free(key->name);
 	free(key);
 }
