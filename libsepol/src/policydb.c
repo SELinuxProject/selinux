@@ -4044,6 +4044,10 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		if (avrule_block_read(p, &p->global, info->sym_num, fp) == -1) {
 			goto bad;
 		}
+		if (p->global == NULL) {
+			ERR(fp->handle, "no avrule block in policy");
+			goto bad;
+		}
 		for (i = 0; i < info->sym_num; i++) {
 			if ((rc = next_entry(buf, fp, sizeof(uint32_t))) < 0) {
 				goto bad;
