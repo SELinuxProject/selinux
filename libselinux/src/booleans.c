@@ -342,30 +342,42 @@ static int process_boolean(char *buffer, char *name, int namesize, int *val)
 {
 	char name1[BUFSIZ];
 	char *ptr = NULL;
-	char *tok = strtok_r(buffer, "=", &ptr);
-	if (tok) {
-		strncpy(name1, tok, BUFSIZ - 1);
-		strtrim(name, name1, namesize - 1);
-		if (name[0] == '#')
-			return 0;
-		tok = strtok_r(NULL, "\0", &ptr);
-		if (tok) {
-			while (isspace(*tok))
-				tok++;
-			*val = -1;
-			if (isdigit(tok[0]))
-				*val = atoi(tok);
-			else if (!strncasecmp(tok, "true", sizeof("true") - 1))
-				*val = 1;
-			else if (!strncasecmp
-				 (tok, "false", sizeof("false") - 1))
-				*val = 0;
-			if (*val != 0 && *val != 1) {
-				errno = EINVAL;
-				return -1;
-			}
+	char *tok;
 
-		}
+	/* Skip spaces */
+	while (isspace(buffer[0]))
+		buffer++;
+	/* Ignore comments */
+	if (buffer[0] == '#')
+		return 0;
+
+	tok = strtok_r(buffer, "=", &ptr);
+	if (!tok) {
+		errno = EINVAL;
+		return -1;
+	}
+	strncpy(name1, tok, BUFSIZ - 1);
+	strtrim(name, name1, namesize - 1);
+
+	tok = strtok_r(NULL, "\0", &ptr);
+	if (!tok) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	while (isspace(*tok))
+		tok++;
+
+	*val = -1;
+	if (isdigit(tok[0]))
+		*val = atoi(tok);
+	else if (!strncasecmp(tok, "true", sizeof("true") - 1))
+		*val = 1;
+	else if (!strncasecmp(tok, "false", sizeof("false") - 1))
+		*val = 0;
+	if (*val != 0 && *val != 1) {
+		errno = EINVAL;
+		return -1;
 	}
 	return 1;
 }
