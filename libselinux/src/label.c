@@ -191,9 +191,11 @@ static inline struct selabel_digest *selabel_is_digest_set
 	return NULL;
 
 err:
-	free(digest->digest);
-	free(digest->specfile_list);
-	free(digest);
+	if (digest) {
+		free(digest->digest);
+		free(digest->specfile_list);
+		free(digest);
+	}
 	return NULL;
 }
 
