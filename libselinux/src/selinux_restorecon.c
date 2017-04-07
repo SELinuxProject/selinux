@@ -252,12 +252,12 @@ static int exclude_non_seclabel_mounts(void)
 		item = strtok(buf, " ");
 		while (item != NULL) {
 			mount_info[index] = item;
-			if (index == 3)
-				break;
 			index++;
+			if (index == 4)
+				break;
 			item = strtok(NULL, " ");
 		}
-		if (index < 3) {
+		if (index < 4) {
 			selinux_log(SELINUX_ERROR,
 				    "/proc/mounts record \"%s\" has incorrect format.\n",
 				    buf);
