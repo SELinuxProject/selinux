@@ -49,8 +49,10 @@ enum semanage_sandbox_defs {
 	SEMANAGE_NODES_LOCAL,
 	SEMANAGE_BOOLEANS_LOCAL,
 	SEMANAGE_SEUSERS_LOCAL,
+	SEMANAGE_SEUSERS_LINKED,
 	SEMANAGE_USERS_BASE_LOCAL,
 	SEMANAGE_USERS_EXTRA_LOCAL,
+	SEMANAGE_USERS_EXTRA_LINKED,
 	SEMANAGE_USERS_EXTRA,
 	SEMANAGE_DISABLE_DONTAUDIT,
 	SEMANAGE_PRESERVE_TUNABLES,
@@ -129,10 +131,12 @@ int semanage_load_files(semanage_handle_t * sh,
 			    cil_db_t *cildb, char **filenames, int num_modules);
 
 int semanage_read_policydb(semanage_handle_t * sh,
-			    sepol_policydb_t * policydb);
+			   sepol_policydb_t * policydb,
+			   enum semanage_sandbox_defs file);
 
 int semanage_write_policydb(semanage_handle_t * sh,
-			    sepol_policydb_t * policydb);
+			    sepol_policydb_t * policydb,
+			    enum semanage_sandbox_defs file);
 
 int semanage_install_sandbox(semanage_handle_t * sh);
 

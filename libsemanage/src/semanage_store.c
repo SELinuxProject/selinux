@@ -95,7 +95,7 @@ static const char *semanage_store_paths[SEMANAGE_NUM_STORES] = {
 static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"",
 	"/modules",
-	"/base.linked",
+	"/policy.linked",
 	"/homedir_template",
 	"/file_contexts.template",
 	"/commit_num",
@@ -104,8 +104,10 @@ static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"/nodes.local",
 	"/booleans.local",
 	"/seusers.local",
+	"/seusers.linked",
 	"/users.local",
 	"/users_extra.local",
+	"/users_extra.linked",
 	"/users_extra",
 	"/disable_dontaudit",
 	"/preserve_tunables",
@@ -2042,9 +2044,10 @@ int semanage_load_files(semanage_handle_t * sh, cil_db_t *cildb, char **filename
  */
 
 /**
- * Read the policy from the sandbox (kernel)
+ * Read the policy from the sandbox (linked or kernel)
  */
-int semanage_read_policydb(semanage_handle_t * sh, sepol_policydb_t * in)
+int semanage_read_policydb(semanage_handle_t * sh, sepol_policydb_t * in,
+			   enum semanage_sandbox_defs file)
 {
 
 	int retval = STATUS_ERR;
@@ -2053,7 +2056,7 @@ int semanage_read_policydb(semanage_handle_t * sh, sepol_policydb_t * in)
 	FILE *infile = NULL;
 
 	if ((kernel_filename =
-	     semanage_path(SEMANAGE_ACTIVE, SEMANAGE_STORE_KERNEL)) == NULL) {
+	     semanage_path(SEMANAGE_ACTIVE, file)) == NULL) {
 		goto cleanup;
 	}
 	if ((infile = fopen(kernel_filename, "r")) == NULL) {
@@ -2083,9 +2086,10 @@ int semanage_read_policydb(semanage_handle_t * sh, sepol_policydb_t * in)
 	return retval;
 }
 /**
- * Writes the final policy to the sandbox (kernel)
+ * Writes the policy to the sandbox (linked or kernel)
  */
-int semanage_write_policydb(semanage_handle_t * sh, sepol_policydb_t * out)
+int semanage_write_policydb(semanage_handle_t * sh, sepol_policydb_t * out,
+			    enum semanage_sandbox_defs file)
 {
 
 	int retval = STATUS_ERR;
@@ -2094,7 +2098,7 @@ int semanage_write_policydb(semanage_handle_t * sh, sepol_policydb_t * out)
 	FILE *outfile = NULL;
 
 	if ((kernel_filename =
-	     semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_KERNEL)) == NULL) {
+	     semanage_path(SEMANAGE_TMP, file)) == NULL) {
 		goto cleanup;
 	}
 	if ((outfile = fopen(kernel_filename, "wb")) == NULL) {
