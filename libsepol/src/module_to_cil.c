@@ -962,7 +962,6 @@ static int set_to_names(struct policydb *pdb, int is_type, void *set, struct lis
 	*names = malloc(sizeof(char *));
 	if (!*names) {
 		log_err("Out of memory");
-		free(attr_name);
 		rc = -1;
 		goto exit;
 	}
