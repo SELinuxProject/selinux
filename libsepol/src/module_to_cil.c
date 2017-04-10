@@ -1153,6 +1153,7 @@ static int name_list_to_string(char **names, int num_names, char **string)
 
 	return 0;
 exit:
+	free(str);
 	return rc;
 }
 
@@ -1697,7 +1698,7 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 	const char *fmt_str;
 	const char *attr1;
 	const char *attr2;
-	char *names;
+	char *names = NULL;
 	char **name_list = NULL;
 	int num_names = 0;
 	struct type_set *ts;
@@ -1798,6 +1799,7 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 
 				names_destroy(&name_list, &num_names);
 				free(names);
+				names = NULL;
 			}
 
 			num_params = 0;
@@ -1887,6 +1889,7 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 
 exit:
 	names_destroy(&name_list, &num_names);
+	free(names);
 
 	free(new_val);
 	free(val1);
