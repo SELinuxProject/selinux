@@ -5592,9 +5592,11 @@ int cil_gen_default(struct cil_tree_node *parse_current, struct cil_tree_node *a
 	if (parse_current->next->cl_head == NULL) {
 		cil_list_init(&def->class_strs, CIL_CLASS);
 		cil_list_append(def->class_strs, CIL_STRING, parse_current->next->data);
-		rc = SEPOL_OK;
 	} else {
 		rc = cil_fill_list(parse_current->next->cl_head, CIL_CLASS, &def->class_strs);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
 	}
 
 	object = parse_current->next->next->data;
@@ -5657,9 +5659,11 @@ int cil_gen_defaultrange(struct cil_tree_node *parse_current, struct cil_tree_no
 	if (parse_current->next->cl_head == NULL) {
 		cil_list_init(&def->class_strs, CIL_CLASS);
 		cil_list_append(def->class_strs, CIL_STRING, parse_current->next->data);
-		rc = SEPOL_OK;
 	} else {
 		rc = cil_fill_list(parse_current->next->cl_head, CIL_CLASS, &def->class_strs);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
 	}
 
 	object = parse_current->next->next->data;
