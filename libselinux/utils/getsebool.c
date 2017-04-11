@@ -15,7 +15,7 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 int main(int argc, char **argv)
 {
 	int i, get_all = 0, rc = 0, active, pending, len = 0, opt;
-	char **names;
+	char **names = NULL;
 
 	while ((opt = getopt(argc, argv, "a")) > 0) {
 		switch (opt) {
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 		if (argc < 2)
 			usage(argv[0]);
 		len = argc - 1;
-		names = malloc(sizeof(char *) * len);
+		names = calloc(len, sizeof(char *));
 		if (!names) {
 			fprintf(stderr, "%s:  out of memory\n", argv[0]);
 			return 2;
@@ -65,7 +65,8 @@ int main(int argc, char **argv)
 			if (!names[i]) {
 				fprintf(stderr, "%s:  out of memory\n",
 					argv[0]);
-				return 2;
+				rc = 2;
+				goto out;
 			}
 		}
 	}
