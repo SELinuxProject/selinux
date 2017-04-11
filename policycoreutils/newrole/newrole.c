@@ -412,7 +412,7 @@ static int verify_shell(const char *shell_name)
  * This function assigns malloc'd memory into the pw_copy struct.
  * Returns zero on success, non-zero otherwise
  */
-int extract_pw_data(struct passwd *pw_copy)
+static int extract_pw_data(struct passwd *pw_copy)
 {
 	uid_t uid;
 	struct passwd *pw;
@@ -456,6 +456,9 @@ int extract_pw_data(struct passwd *pw_copy)
 	free(pw->pw_name);
 	free(pw->pw_dir);
 	free(pw->pw_shell);
+	pw->pw_name = NULL;
+	pw->pw_dir = NULL;
+	pw->pw_shell = NULL;
 	return -1;
 }
 
