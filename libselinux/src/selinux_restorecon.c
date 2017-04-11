@@ -664,7 +664,7 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 		curcon = NULL;
 	}
 
-	if (strcmp(curcon, newcon) != 0) {
+	if (curcon == NULL || strcmp(curcon, newcon) != 0) {
 		if (!flags->set_specctx && curcon &&
 				    (is_context_customizable(curcon) > 0)) {
 			if (flags->verbose) {
