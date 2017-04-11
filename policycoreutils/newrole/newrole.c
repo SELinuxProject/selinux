@@ -1113,6 +1113,7 @@ int main(int argc, char *argv[])
 	 * malicious software), not to authorize the operation (which is covered
 	 * by policy).  Trusted path mechanism would be preferred.
 	 */
+	memset(&pw, 0, sizeof(pw));
 	if (extract_pw_data(&pw))
 		goto err_free;
 
