@@ -1188,22 +1188,32 @@ exit:
 	return SEPOL_ERR;
 }
 
-static int cil_typeattribute_used(struct cil_typeattribute *cil_attr)
+static int cil_typeattribute_used(struct cil_typeattribute *attr, struct cil_db *db)
 {
-	if (cil_attr->used) {
+	if (!attr->used) {
+		return CIL_FALSE;
+	}
+
+	if (attr->used & CIL_ATTR_CONSTRAINT) {
 		return CIL_TRUE;
 	}
 
-	if (strcmp(DATUM(cil_attr)->name, GEN_REQUIRE_ATTR) == 0) {
-		return CIL_FALSE;
+	if (db->attrs_expand_generated || attr->used == CIL_ATTR_NEVERALLOW) {
+		if (strcmp(DATUM(attr)->name, GEN_REQUIRE_ATTR) == 0) {
+			return CIL_FALSE;
+		} else if (strstr(DATUM(attr)->name, TYPEATTR_INFIX) != NULL) {
+			return CIL_FALSE;
+		}
+
+		if (attr->used == CIL_ATTR_NEVERALLOW) {
+			return CIL_TRUE;
+		}
 	}
 
-	if (strstr(DATUM(cil_attr)->name,TYPEATTR_INFIX) != NULL) {
-		return CIL_FALSE;
-	}
-
-	if (ebitmap_cardinality(cil_attr->types) == 0) {
-		return CIL_FALSE;
+	if (attr->used == CIL_ATTR_AVRULE) {
+		if (ebitmap_cardinality(attr->types) < db->attrs_expand_size) {
+			return CIL_FALSE;
+		}
 	}
 
 	return CIL_TRUE;
@@ -1231,10 +1241,8 @@ static int __cil_post_db_attr_helper(struct cil_tree_node *node, uint32_t *finis
 		if (attr->types == NULL) {
 			rc = __evaluate_type_expression(attr, db);
 			if (rc != SEPOL_OK) goto exit;
-			if (cil_typeattribute_used(attr)) {
-				attr->used = CIL_TRUE;
-			}
 		}
+		attr->used = cil_typeattribute_used(attr, db);
 		break;
 	}
 	case CIL_ROLEATTRIBUTE: {

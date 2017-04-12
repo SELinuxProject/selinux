@@ -282,6 +282,8 @@ void cil_db_init(struct cil_db **db)
 
 	(*db)->disable_dontaudit = CIL_FALSE;
 	(*db)->disable_neverallow = CIL_FALSE;
+	(*db)->attrs_expand_generated = CIL_FALSE;
+	(*db)->attrs_expand_size = 1;
 	(*db)->preserve_tunables = CIL_FALSE;
 	(*db)->handle_unknown = -1;
 	(*db)->mls = -1;
@@ -1627,6 +1629,16 @@ void cil_set_disable_dontaudit(struct cil_db *db, int disable_dontaudit)
 void cil_set_disable_neverallow(struct cil_db *db, int disable_neverallow)
 {
 	db->disable_neverallow = disable_neverallow;
+}
+
+void cil_set_attrs_expand_generated(struct cil_db *db, int attrs_expand_generated)
+{
+	db->attrs_expand_generated = attrs_expand_generated;
+}
+
+void cil_set_attrs_expand_size(struct cil_db *db, unsigned attrs_expand_size)
+{
+	db->attrs_expand_size = attrs_expand_size;
 }
 
 void cil_set_preserve_tunables(struct cil_db *db, int preserve_tunables)

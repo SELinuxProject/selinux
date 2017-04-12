@@ -50,6 +50,8 @@ extern void cil_set_disable_neverallow(cil_db_t *db, int disable_neverallow);
 extern void cil_set_preserve_tunables(cil_db_t *db, int preserve_tunables);
 extern int cil_set_handle_unknown(cil_db_t *db, int handle_unknown);
 extern void cil_set_mls(cil_db_t *db, int mls);
+extern void cil_set_attrs_expand_generated(struct cil_db *db, int attrs_expand_generated);
+extern void cil_set_attrs_expand_size(struct cil_db *db, unsigned attrs_expand_size);
 extern void cil_set_target_platform(cil_db_t *db, int target_platform);
 extern void cil_set_policy_version(cil_db_t *db, int policy_version);
 extern void cil_write_policy_conf(FILE *out, struct cil_db *db);

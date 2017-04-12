@@ -269,13 +269,13 @@ exit:
 	return rc;
 }
 
-int cil_type_used(struct cil_symtab_datum *datum)
+int cil_type_used(struct cil_symtab_datum *datum, int used)
 {
 	struct cil_typeattribute *attr = NULL;
 
 	if (FLAVOR(datum) == CIL_TYPEATTRIBUTE) {
 		attr = (struct cil_typeattribute*)datum;
-		attr->used = CIL_TRUE;
+		attr->used |= used;
 	}
 
 	return 0;
@@ -307,6 +307,7 @@ int cil_resolve_avrule(struct cil_tree_node *current, void *extra_args)
 	struct cil_symtab_datum *src_datum = NULL;
 	struct cil_symtab_datum *tgt_datum = NULL;
 	struct cil_symtab_datum *permx_datum = NULL;
+	int used;
 	int rc = SEPOL_ERR;
 
 	if (args != NULL) {
@@ -318,9 +319,6 @@ int cil_resolve_avrule(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 	rule->src = src_datum;
-	if (rule->rule_kind != CIL_AVRULE_NEVERALLOW) {
-		cil_type_used(src_datum);
-	}
 		
 	if (rule->tgt_str == CIL_KEY_SELF) {
 		rule->tgt = db->selftype;
@@ -330,9 +328,10 @@ int cil_resolve_avrule(struct cil_tree_node *current, void *extra_args)
 			goto exit;
 		}
 		rule->tgt = tgt_datum;
-		if (rule->rule_kind != CIL_AVRULE_NEVERALLOW) {
-			cil_type_used(tgt_datum);
-		}
+		used = (rule->rule_kind == CIL_AVRULE_NEVERALLOW) ?
+			CIL_ATTR_NEVERALLOW : CIL_ATTR_AVRULE;
+		cil_type_used(src_datum, used); /* src not used if tgt is self */
+		cil_type_used(tgt_datum, used);
 	}
 
 	if (!rule->is_extended) {
@@ -376,14 +375,12 @@ int cil_resolve_type_rule(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 	rule->src = src_datum;
-	cil_type_used(src_datum);
 
 	rc = cil_resolve_name(current, rule->tgt_str, CIL_SYM_TYPES, extra_args, &tgt_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
 	rule->tgt = tgt_datum;
-	cil_type_used(tgt_datum);
 
 	rc = cil_resolve_name(current, rule->obj_str, CIL_SYM_CLASSES, extra_args, &obj_datum);
 	if (rc != SEPOL_OK) {
@@ -589,14 +586,12 @@ int cil_resolve_nametypetransition(struct cil_tree_node *current, void *extra_ar
 		goto exit;
 	}
 	nametypetrans->src = src_datum;
-	cil_type_used(src_datum);
 
 	rc = cil_resolve_name(current, nametypetrans->tgt_str, CIL_SYM_TYPES, extra_args, &tgt_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
 	nametypetrans->tgt = tgt_datum;
-	cil_type_used(tgt_datum);
 
 	rc = cil_resolve_name(current, nametypetrans->obj_str, CIL_SYM_CLASSES, extra_args, &obj_datum);
 	if (rc != SEPOL_OK) {
@@ -647,14 +642,12 @@ int cil_resolve_rangetransition(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 	rangetrans->src = src_datum;
-	cil_type_used(src_datum);
 
 	rc = cil_resolve_name(current, rangetrans->exec_str, CIL_SYM_TYPES, extra_args, &exec_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
 	rangetrans->exec = exec_datum;
-	cil_type_used(exec_datum);
 
 	rc = cil_resolve_name(current, rangetrans->obj_str, CIL_SYM_CLASSES, extra_args, &obj_datum);
 	if (rc != SEPOL_OK) {
@@ -1006,7 +999,6 @@ int cil_resolve_roletype(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 	roletype->type = (struct cil_type*)type_datum;
-	cil_type_used(type_datum);
 
 	return SEPOL_OK;
 
@@ -1035,7 +1027,6 @@ int cil_resolve_roletransition(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 	roletrans->tgt = tgt_datum;
-	cil_type_used(tgt_datum);
 
 	rc = cil_resolve_name(current, roletrans->obj_str, CIL_SYM_CLASSES, extra_args, &obj_datum);
 	if (rc != SEPOL_OK) {
@@ -3108,7 +3099,7 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 			}
 
 			if (sym_index == CIL_SYM_TYPES && (expr_type == CIL_CONSTRAIN || expr_type == CIL_VALIDATETRANS)) {
-				cil_type_used(res_datum);
+				cil_type_used(res_datum, CIL_ATTR_CONSTRAINT);
 			}
 
 			cil_list_append(*datum_expr, CIL_DATUM, res_datum);

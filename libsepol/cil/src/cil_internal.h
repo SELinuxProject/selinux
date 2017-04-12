@@ -306,6 +306,8 @@ struct cil_db {
 	struct cil_user **val_to_user;
 	int disable_dontaudit;
 	int disable_neverallow;
+	int attrs_expand_generated;
+	unsigned attrs_expand_size;
 	int preserve_tunables;
 	int handle_unknown;
 	int mls;
@@ -513,11 +515,14 @@ struct cil_type	{
 	int value;
 };
 
+#define CIL_ATTR_AVRULE     0x01
+#define CIL_ATTR_NEVERALLOW 0x02
+#define CIL_ATTR_CONSTRAINT 0x04
 struct cil_typeattribute {
 	struct cil_symtab_datum datum;
 	struct cil_list *expr_list;
 	ebitmap_t *types;
-	int used;	// whether or not this typeattribute was used and should be added to the binary
+	int used;	// whether or not this attribute was used in a binary policy rule
 };
 
 struct cil_typeattributeset {
