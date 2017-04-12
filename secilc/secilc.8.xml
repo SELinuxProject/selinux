@@ -81,6 +81,16 @@
          </varlistentry>
 
          <varlistentry>
+            <term><option>-G, --expand-generated</option></term>
+            <listitem><para>Expand and remove auto-generated attributes</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
+            <term><option>-X, --attrs-size &lt;size></option></term>
+            <listitem><para>Expand type attributes with fewer than <emphasis role="bold">&lt;SIZE></emphasis> members.</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
             <term><option>-v, --verbose</option></term>
             <listitem><para>Increment verbosity level.</para></listitem>
          </varlistentry>
