@@ -20,8 +20,16 @@ MSGMERGE_FLAGS	= -q
 XGETTEXT	= xgettext --default-domain=$(NLSPACKAGE)
 MSGFMT		= msgfmt
 
-# What do we need to do
-POFILES		= $(wildcard *.po)
+# All possible linguas
+PO_LINGUAS := $(sort $(patsubst %.po,%,$(wildcard *.po)))
+
+# Only the files matching what the user has set in LINGUAS
+USER_LINGUAS := $(filter $(patsubst %,%%,$(LINGUAS)),$(PO_LINGUAS))
+
+# if no valid LINGUAS, build all languages
+USE_LINGUAS := $(if $(USER_LINGUAS),$(USER_LINGUAS),$(PO_LINGUAS))
+
+POFILES		= $(patsubst %,%.po,$(USE_LINGUAS))
 MOFILES		= $(patsubst %.po,%.mo,$(POFILES))
 POTFILES = \
 	../run_init/open_init_pty.c \
