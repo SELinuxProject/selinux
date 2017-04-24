@@ -8,6 +8,13 @@ ifeq ($(DEBUG),1)
 	export LDFLAGS = -g
 endif
 
+ifneq ($(DESTDIR),)
+	CFLAGS += -I$(DESTDIR)/usr/include
+	LDFLAGS += -L$(DESTDIR)/usr/lib
+	export CFLAGS
+	export LDFLAGS
+endif
+
 all install relabel clean test indent:
 	@for subdir in $(SUBDIRS); do \
 		(cd $$subdir && $(MAKE) $@) || exit 1; \
