@@ -6,8 +6,7 @@ MANDIR = $(PREFIX)/share/man
 LIBDIR ?= $(PREFIX)/lib
 
 CFLAGS ?= -Werror -Wall -W
-override CFLAGS += -I$(INCLUDEDIR)
-LDLIBS = -lsepol -lselinux -lsemanage -L$(LIBDIR)
+LDLIBS = -lsepol -lselinux -lsemanage
 SEMODULE_OBJS = semodule.o
 
 all: semodule genhomedircon

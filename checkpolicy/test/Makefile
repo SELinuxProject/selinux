@@ -8,7 +8,6 @@ INCLUDEDIR ?= $(PREFIX)/include
 LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 
 CFLAGS ?= -g -Wall -W -Werror -O2 -pipe
-override CFLAGS += -I$(INCLUDEDIR)
 
 all: dispol dismod
 

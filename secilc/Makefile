@@ -4,7 +4,7 @@ MANDIR ?= $(PREFIX)/share/man
 LIBDIR ?= $(PREFIX)/lib
 INCLUDEDIR ?= $(PREFIX)/include
 
-LDLIBS = -lsepol -L$(LIBDIR)
+LDLIBS = -lsepol
 
 SECILC = secilc
 SECILC_SRCS := secilc.c
@@ -20,18 +20,18 @@ XMLTO = xmlto
 
 CFLAGS ?= -Wall -Wshadow -Wextra -Wundef -Wmissing-format-attribute -Wcast-align -Wstrict-prototypes -Wpointer-arith -Wunused
 
-override CFLAGS += -I$(INCLUDEDIR) -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
+override CFLAGS += -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
 
 all: $(SECILC) $(SECIL2CONF) man
 
 $(SECILC): $(SECILC_OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 test: $(SECILC)
 	./$(SECILC) test/policy.cil
 
 $(SECIL2CONF): $(SECIL2CONF_OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 man: $(SECILC_MANPAGE) $(SECIL2CONF_MANPAGE)
 

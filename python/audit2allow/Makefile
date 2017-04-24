@@ -10,7 +10,6 @@ INCLUDEDIR ?= $(PREFIX)/include
 LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 
 CFLAGS ?= -Werror -Wall -W
-override CFLAGS += -I$(INCLUDEDIR)
 
 all: audit2why sepolgen-ifgen-attr-helper
 

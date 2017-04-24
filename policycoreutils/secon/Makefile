@@ -8,8 +8,8 @@ LIBDIR ?= $(PREFIX)/lib
 WARNS=-Werror -W -Wall -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wwrite-strings -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wno-format-zero-length -Wformat-nonliteral -Wformat-security -Wfloat-equal
 VERSION = $(shell cat ../VERSION)
 CFLAGS ?= $(WARNS) -O1
-override CFLAGS += -DVERSION=\"$(VERSION)\" -I$(INCLUDEDIR) 
-LDLIBS = -lselinux -L$(LIBDIR)
+override CFLAGS += -DVERSION=\"$(VERSION)\"
+LDLIBS = -lselinux
 
 all: secon
 

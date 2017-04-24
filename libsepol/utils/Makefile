@@ -3,8 +3,8 @@ PREFIX ?= $(DESTDIR)/usr
 BINDIR ?= $(PREFIX)/bin
 
 CFLAGS ?= -Wall -Werror
-override CFLAGS += -I../include
-LDLIBS += -L../src -lsepol 
+LDFLAGS += -L../src
+LDLIBS += -lsepol
 
 TARGETS=$(patsubst %.c,%,$(wildcard *.c))
 

@@ -8,8 +8,7 @@ AUDITH = $(shell ls /usr/include/libaudit.h 2>/dev/null)
 ABORT_ON_ERRORS=$(shell grep "^\#define ABORT_ON_ERRORS" setfiles.c | awk -S '{ print $$3 }')
 
 CFLAGS ?= -g -Werror -Wall -W
-override CFLAGS += -I$(PREFIX)/include
-LDLIBS = -lselinux -lsepol -L$(LIBDIR)
+LDLIBS = -lselinux -lsepol
 
 ifeq ($(AUDITH), /usr/include/libaudit.h)
 	override CFLAGS += -DUSE_AUDIT

@@ -5,8 +5,8 @@ BINDIR ?= $(PREFIX)/sbin
 LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 
 CFLAGS ?= -Wall
-override CFLAGS += -I../src -I$(PREFIX)/include -D_GNU_SOURCE
-LDLIBS += -L$(LIBDIR) -lselinux -lpcre
+override CFLAGS += -I../src -D_GNU_SOURCE
+LDLIBS += -lselinux -lpcre
 
 TARGETS=$(patsubst %.c,%,$(wildcard *.c))
 

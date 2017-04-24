@@ -9,8 +9,8 @@ SBINDIR ?= $(PREFIX)/sbin
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= /usr/share/locale
 SHAREDIR ?= $(PREFIX)/share/sandbox
-override CFLAGS += -I$(PREFIX)/include -DPACKAGE="\"policycoreutils\"" -Wall -Werror -Wextra -W
-LDLIBS += -lselinux -lcap-ng -L$(LIBDIR)
+override CFLAGS += -DPACKAGE="\"policycoreutils\"" -Wall -Werror -Wextra -W
+LDLIBS += -lselinux -lcap-ng
 SEUNSHARE_OBJS = seunshare.o
 
 all: sandbox seunshare sandboxX.sh start

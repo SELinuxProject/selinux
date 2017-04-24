@@ -8,8 +8,7 @@ LIBEXECDIR ?= $(PREFIX)/libexec
 HLLDIR ?= $(LIBEXECDIR)/selinux/hll
 
 CFLAGS ?= -Werror -Wall -W
-override CFLAGS += -I$(INCLUDEDIR)
-LDLIBS = -lsepol -L$(LIBDIR)
+LDLIBS = -lsepol
 
 PP_SRCS = $(wildcard *.c)
 PP_OBJS = $(patsubst %.c,%.o,$(PP_SRCS))

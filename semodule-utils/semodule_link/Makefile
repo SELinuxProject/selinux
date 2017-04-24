@@ -6,8 +6,7 @@ MANDIR ?= $(PREFIX)/share/man
 LIBDIR ?= $(PREFIX)/lib
 
 CFLAGS ?= -Werror -Wall -W
-override CFLAGS += -I$(INCLUDEDIR)
-LDLIBS = -lsepol -L$(LIBDIR)
+LDLIBS = -lsepol
 
 all: semodule_link
 

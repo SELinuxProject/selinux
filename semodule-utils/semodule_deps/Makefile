@@ -7,7 +7,6 @@ MANDIR ?= $(PREFIX)/share/man
 LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 
 CFLAGS ?= -Werror -Wall -W
-override CFLAGS += -I$(INCLUDEDIR)
 
 all: semodule_deps
 
