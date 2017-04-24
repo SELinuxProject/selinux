@@ -4,8 +4,8 @@ BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/share/man
 ETCDIR ?= $(DESTDIR)/etc
 LOCALEDIR = /usr/share/locale
-PAMH = $(shell ls /usr/include/security/pam_appl.h 2>/dev/null)
-AUDITH = $(shell ls /usr/include/libaudit.h 2>/dev/null)
+PAMH ?= $(shell test -f /usr/include/security/pam_appl.h && echo y)
+AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
 # Enable capabilities to permit newrole to generate audit records.
 # This will make newrole a setuid root program.
 # The capabilities used are: CAP_AUDIT_WRITE.
@@ -24,7 +24,7 @@ CFLAGS ?= -Werror -Wall -W
 EXTRA_OBJS =
 override CFLAGS += -DVERSION=\"$(VERSION)\" -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
 LDLIBS += -lselinux
-ifeq ($(PAMH), /usr/include/security/pam_appl.h)
+ifeq ($(PAMH), y)
 	override CFLAGS += -DUSE_PAM
 	EXTRA_OBJS += hashtab.o
 	LDLIBS += -lpam -lpam_misc
@@ -32,7 +32,7 @@ else
 	override CFLAGS += -D_XOPEN_SOURCE=500
 	LDLIBS += -lcrypt
 endif
-ifeq ($(AUDITH), /usr/include/libaudit.h)
+ifeq ($(AUDITH), y)
 	override CFLAGS += -DUSE_AUDIT
 	LDLIBS += -laudit
 endif
@@ -66,7 +66,7 @@ install: all
 	test -d $(MANDIR)/man1 || install -m 755 -d $(MANDIR)/man1
 	install -m $(MODE) newrole $(BINDIR)
 	install -m 644 newrole.1 $(MANDIR)/man1/
-ifeq ($(PAMH), /usr/include/security/pam_appl.h)
+ifeq ($(PAMH), y)
 	test -d $(ETCDIR)/pam.d || install -m 755 -d $(ETCDIR)/pam.d
 ifeq ($(LSPP_PRIV),y)
 	install -m 644 newrole-lspp.pamd $(ETCDIR)/pam.d/newrole

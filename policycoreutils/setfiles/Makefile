@@ -3,14 +3,14 @@ PREFIX ?= $(DESTDIR)/usr
 SBINDIR ?= $(DESTDIR)/sbin
 MANDIR = $(PREFIX)/share/man
 LIBDIR ?= $(PREFIX)/lib
-AUDITH = $(shell ls /usr/include/libaudit.h 2>/dev/null)
+AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
 
 ABORT_ON_ERRORS=$(shell grep "^\#define ABORT_ON_ERRORS" setfiles.c | awk -S '{ print $$3 }')
 
 CFLAGS ?= -g -Werror -Wall -W
 LDLIBS = -lselinux -lsepol
 
-ifeq ($(AUDITH), /usr/include/libaudit.h)
+ifeq ($(AUDITH), y)
 	override CFLAGS += -DUSE_AUDIT
 	LDLIBS += -laudit
 endif
