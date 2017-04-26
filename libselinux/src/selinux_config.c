@@ -282,7 +282,6 @@ int selinux_set_policy_root(const char *path)
 	}
 	policy_type++;
 
-	fini_selinuxmnt();
 	fini_selinux_policyroot();
 
 	selinux_policyroot = strdup(path);
