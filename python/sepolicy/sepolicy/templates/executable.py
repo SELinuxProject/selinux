@@ -220,7 +220,7 @@ if_program_rules="""
 
 ########################################
 ## <summary>
-##	Execute TEMPLATETYPE_exec_t in the TEMPLATETYPE domin.
+##	Execute TEMPLATETYPE_exec_t in the TEMPLATETYPE domain.
 ## </summary>
 ## <param name=\"domain\">
 ## <summary>
