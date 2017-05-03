@@ -504,6 +504,7 @@ class ManPage:
             self._booleans()
 
         self._port_types()
+        self._mcs_types()
         self._writes()
         self._footer()
 
@@ -527,6 +528,7 @@ class ManPage:
         self._header()
         self._entrypoints()
         self._process_types()
+        self._mcs_types()
         self._booleans()
         self._nsswitch_domain()
         self._port_types()
@@ -922,6 +924,17 @@ All executeables with the default executable label, usually stored in /usr/bin a
 
         self.fd.write("""
 %s""" % ", ".join(paths))
+
+    def _mcs_types(self):
+        attributes = sepolicy.info(sepolicy.TYPE, (self.type))[0]["attributes"]
+        if "mcs_constrained_type" not in attributes:
+            return
+        self.fd.write ("""
+.SH "MCS Constrained"
+The SELinux process type %(type)s_t is an MCS (Multi Category Security) constrained type.  Sometimes this separation is referred to as sVirt. These types are usually used for securing multi-tenant environments, such as virtualization, containers or separation of users.  The tools used to launch MCS types, pick out a different MCS label for each process group.
+
+For example one process might be launched with %(type)s_t:s0:c1,c2, and another process launched with %(type)s_t:s0:c3,c4. The SELinux kernel only allows these processes can only write to content with a matching MCS label, or a MCS Label of s0. A process running with the MCS level of s0:c1,c2 is not allowed to write to content with the MCS label of s0:c3,c4
+""" % {'type': self.domainname})
 
     def _writes(self):
         permlist = sepolicy.search([sepolicy.ALLOW], {'source': self.type, 'permlist': ['open', 'write'], 'class': 'file'})
