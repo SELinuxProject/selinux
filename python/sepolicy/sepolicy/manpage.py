@@ -37,7 +37,7 @@ typealias_types = {
 "httpd_t":("phpfpm_t"),
 }
 
-equiv_dict = {"smbd": ["samba"], "httpd": ["apache"], "virtd": ["virt", "libvirt", "svirt", "svirt_tcg", "svirt_lxc_t", "svirt_lxc_net_t"], "named": ["bind"], "fsdaemon": ["smartmon"], "mdadm": ["raid"]}
+equiv_dict = {"smbd": ["samba"], "httpd": ["apache"], "virtd": ["virt", "libvirt"], "named": ["bind"], "fsdaemon": ["smartmon"], "mdadm": ["raid"]}
 
 equiv_dirs = ["/var"]
 modules_dict = None
