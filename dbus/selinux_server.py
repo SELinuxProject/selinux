@@ -24,7 +24,7 @@ class selinux_server(slip.dbus.service.Object):
     @slip.dbus.polkit.require_auth("org.selinux.semanage")
     @dbus.service.method("org.selinux", in_signature='s')
     def semanage(self, buf):
-        p = Popen(["/usr/sbin/semanage", "import"], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+        p = Popen(["/usr/sbin/semanage", "import"], stdout=PIPE, stderr=PIPE, stdin=PIPE, universal_newlines=True)
         p.stdin.write(buf)
         output = p.communicate()
         if p.returncode and p.returncode != 0:
@@ -38,7 +38,7 @@ class selinux_server(slip.dbus.service.Object):
     @slip.dbus.polkit.require_auth("org.selinux.customized")
     @dbus.service.method("org.selinux", in_signature='', out_signature='s')
     def customized(self):
-        p = Popen(["/usr/sbin/semanage", "export"], stdout=PIPE, stderr=PIPE)
+        p = Popen(["/usr/sbin/semanage", "export"], stdout=PIPE, stderr=PIPE, universal_newlines=True)
         buf = p.stdout.read()
         output = p.communicate()
         if p.returncode and p.returncode != 0:
@@ -52,7 +52,7 @@ class selinux_server(slip.dbus.service.Object):
     @slip.dbus.polkit.require_auth("org.selinux.semodule_list")
     @dbus.service.method("org.selinux", in_signature='', out_signature='s')
     def semodule_list(self):
-        p = Popen(["/usr/sbin/semodule", "--list=full"], stdout=PIPE, stderr=PIPE)
+        p = Popen(["/usr/sbin/semodule", "--list=full"], stdout=PIPE, stderr=PIPE, universal_newlines=True)
         buf = p.stdout.read()
         output = p.communicate()
         if p.returncode and p.returncode != 0:
