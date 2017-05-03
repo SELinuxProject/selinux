@@ -92,7 +92,7 @@ def get_rpm_nvr_list(package):
             nvr = get_rpm_nvr_from_header(h)
             break
     except:
-        print("Failed to retrieve rpm info for %s") % package
+        print(("Failed to retrieve rpm info for %s") % package)
         nvr = None
 
     return nvr
