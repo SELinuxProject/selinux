@@ -1378,8 +1378,8 @@ class SELinuxGui():
                 self.treeview = self.network_in_treeview
                 category = _("listen for inbound connections")
 
-            self.add_button.set_tooltip_text(_("Add new port definition to which the '%(APP)s' domain is allowed to %s.") % {"APP": self.application, "PERM": category})
-            self.delete_button.set_tooltip_text(_("Delete modified port definitions to which the '%(APP)s' domain is allowed to %s.") % {"APP": self.application, "PERM": category})
+            self.add_button.set_tooltip_text(_("Add new port definition to which the '%(APP)s' domain is allowed to %(PERM)s.") % {"APP": self.application, "PERM": category})
+            self.delete_button.set_tooltip_text(_("Delete modified port definitions to which the '%(APP)s' domain is allowed to %(PERM)s.") % {"APP": self.application, "PERM": category})
             self.modify_button.set_tooltip_text(_("Modify port definitions to which the '%(APP)s' domain is allowed to %(PERM)s.") % {"APP": self.application, "PERM": category})
 
         if self.transitions_radio_button.get_active():
@@ -1599,8 +1599,8 @@ class SELinuxGui():
             self.show_popup(self.login_popup_window)
 
         if self.opage == FILE_EQUIV_PAGE:
-            self.file_equiv_source_entry.set_text(self.file_equiv_liststore.get_value(iter, 0))
-            self.file_equiv_dest_entry.set_text(self.file_equiv_liststore.get_value(iter, 1))
+            self.file_equiv_source_entry.set_text(self.unmarkup(self.file_equiv_liststore.get_value(iter, 0)))
+            self.file_equiv_dest_entry.set_text(self.unmarkup(self.file_equiv_liststore.get_value(iter, 1)))
             self.file_equiv_label.set_text((_("Modify File Equivalency Mapping. Mapping will be created when update is applied.")))
             self.file_equiv_popup_window.set_title(_("Modify SELinux File Equivalency"))
             self.clear_entry = True
