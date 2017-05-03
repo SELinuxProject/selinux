@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <selinux/selinux.h>
 
-static void usage(char *progname)
+static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
 	fprintf(stderr, "usage:  %s [-a auditdata] scon tcon class perm\n"
 		"\nWhere:\n\t"
