@@ -747,7 +747,7 @@ def get_all_role_allows():
         return role_allows
     role_allows = {}
 
-    q = setools.RBACRuleQuery(_pol, ruletype='allow')
+    q = setools.RBACRuleQuery(_pol, ruletype=[ALLOW])
     for r in q.results():
         src = str(r.source)
         tgt = str(r.target)
