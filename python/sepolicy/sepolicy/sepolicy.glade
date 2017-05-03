@@ -1043,7 +1043,7 @@
               <object class="GtkImage" id="help_image">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="pixbuf">images/booleans.png</property>
+                <property name="pixbuf">help/booleans.png</property>
               </object>
               <packing>
                 <property name="expand">False</property>
