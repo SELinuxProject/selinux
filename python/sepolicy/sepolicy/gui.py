@@ -831,8 +831,7 @@ class SELinuxGui():
             self.enforce_button = self.disabled_button_default
 
     def populate_system_policy(self):
-        selinux_path = selinux.selinux_path()
-        types = map(lambda x: x[1], filter(lambda x: x[0] == selinux_path, os.walk(selinux_path)))[0]
+        types = next(os.walk(selinux.selinux_path(), topdown=True))[1]
         types.sort()
         ctr = 0
         for item in types:
