@@ -86,6 +86,7 @@ roleattribute system_r TEMPLATETYPE_roles;
 type TEMPLATETYPE_t;
 type TEMPLATETYPE_exec_t;
 application_domain(TEMPLATETYPE_t, TEMPLATETYPE_exec_t)
+role TEMPLATETYPE_roles types TEMPLATETYPE_t;
 
 permissive TEMPLATETYPE_t;
 """
