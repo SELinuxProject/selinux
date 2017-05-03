@@ -494,7 +494,7 @@ class ManPage:
             self.desc = "%s user role" % self.domainname
 
         if self.domainname in self.all_users:
-            self.attributes = sepolicy.info(sepolicy.TYPE, (self.type))[0]["attributes"]
+            self.attributes = next(sepolicy.info(sepolicy.TYPE, (self.type)))["attributes"]
             self._user_header()
             self._user_attribute()
             self._can_sudo()
@@ -539,7 +539,7 @@ class ManPage:
                     self.man_page_path = man_page_path
             except KeyError:
                 continue;
-            self.attributes[domain_type] = sepolicy.info(sepolicy.TYPE, ("%s") % domain_type)[0]["attributes"]
+            self.attributes[domain_type] = next(sepolicy.info(sepolicy.TYPE, ("%s") % domain_type))["attributes"]
 
         self._header()
         self._entrypoints()

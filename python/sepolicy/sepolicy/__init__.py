@@ -171,6 +171,7 @@ def info(setype, name=None):
             'aliases': map(str, x.aliases()),
             'name': str(x),
             'permissive': bool(x.ispermissive),
+            'attributes': map(str, x.attributes())
         } for x in q.results())
 
     elif setype == ROLE:
