@@ -94,11 +94,10 @@ def get_all_users_info():
 
 all_entrypoints = None
 
-
 def get_entrypoints():
     global all_entrypoints
     if not all_entrypoints:
-        all_entrypoints = sepolicy.info(sepolicy.ATTRIBUTE, "entry_type")[0]["types"]
+        all_entrypoints = next(sepolicy.info(sepolicy.ATTRIBUTE, "entry_type"))["types"]
     return all_entrypoints
 
 domains = None
@@ -939,9 +938,8 @@ selinux(8), %s(8), semanage(8), restorecon(8), chcon(1), sepolicy(8)
         return True
 
     def _entrypoints(self):
-        try:
-            entrypoints = map(lambda x: x['target'], sepolicy.search([sepolicy.ALLOW], {'source': self.type, 'permlist': ['entrypoint'], 'class': 'file'}))
-        except:
+        entrypoints = [x['target'] for x in sepolicy.search([sepolicy.ALLOW], {'source': self.type, 'permlist': ['entrypoint'], 'class': 'file'})]
+        if len(entrypoints) == 0:
             return
 
         self.fd.write("""
@@ -971,8 +969,8 @@ All executeables with the default executable label, usually stored in /usr/bin a
 %s""" % ", ".join(paths))
 
     def _mcs_types(self):
-        attributes = sepolicy.info(sepolicy.TYPE, (self.type))[0]["attributes"]
-        if "mcs_constrained_type" not in attributes:
+        mcs_constrained_type = next(sepolicy.info(sepolicy.ATTRIBUTE, "mcs_constrained_type"))
+        if self.type not in mcs_constrained_type['types']:
             return
         self.fd.write ("""
 .SH "MCS Constrained"
