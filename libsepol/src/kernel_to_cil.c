@@ -2369,7 +2369,7 @@ static int write_user_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 				goto exit;
 			}
 
-			rc = strs_add(role_strs, DEFAULT_OBJECT);
+			rc = strs_add(role_strs, (char *)DEFAULT_OBJECT);
 			if (rc != 0) {
 				strs_destroy(&role_strs);
 				goto exit;
