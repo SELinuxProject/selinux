@@ -383,7 +383,12 @@ def get_conditionals(src, dest, tclass, perm):
 
 
 def get_conditionals_format_text(cond):
-    enabled = len(filter(lambda x: x['boolean'][0][1], cond)) > 0
+
+    enabled = False
+    for x in cond:
+        if x['boolean'][0][1]:
+            enabled = True
+            break
     return _("-- Allowed %s [ %s ]") % (enabled, " || ".join(set(map(lambda x: "%s=%d" % (x['boolean'][0][0], x['boolean'][0][1]), cond))))
 
 
@@ -465,7 +470,7 @@ def find_file(reg):
 
     try:
         pat = re.compile(r"%s$" % reg)
-        return filter(pat.match, map(lambda x: path + x, os.listdir(path)))
+        return [x for x in map(lambda x: path + x, os.listdir(path)) if pat.match(x)]
     except:
         return []
 
@@ -589,7 +594,7 @@ def get_fcdict(fc_path=selinux.selinux_file_context_path()):
 
 def get_transitions_into(setype):
     try:
-        return filter(lambda x: x["transtype"] == setype, search([TRANSITION], {'class': 'process'}))
+        return [x for x in search([TRANSITION], {'class': 'process'}) if x["transtype"] == setype]
     except (TypeError, AttributeError):
         pass
     return None
@@ -605,7 +610,7 @@ def get_transitions(setype):
 
 def get_file_transitions(setype):
     try:
-        return filter(lambda x: x['class'] != "process", search([TRANSITION], {'source': setype}))
+        return [x for x in search([TRANSITION], {'source': setype}) if x['class'] != "process"]
     except (TypeError, AttributeError):
         pass
     return None
