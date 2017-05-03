@@ -220,7 +220,7 @@ if_program_rules="""
 
 ########################################
 ## <summary>
-##	Execute TEMPLATE in the TEMPLATETYPE domin.
+##	Execute TEMPLATETYPE_exec_t in the TEMPLATETYPE domin.
 ## </summary>
 ## <param name=\"domain\">
 ## <summary>
@@ -235,6 +235,25 @@ interface(`TEMPLATETYPE_domtrans',`
 
 	corecmd_search_bin($1)
 	domtrans_pattern($1, TEMPLATETYPE_exec_t, TEMPLATETYPE_t)
+')
+
+######################################
+## <summary>
+##	Execute TEMPLATETYPE in the caller domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`TEMPLATETYPE_exec',`
+	gen_require(`
+		type TEMPLATETYPE_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	can_exec($1, TEMPLATETYPE_exec_t)
 ')
 """
 
