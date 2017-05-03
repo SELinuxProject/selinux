@@ -679,7 +679,7 @@ class childWindow:
                     entry.set_text("")
                     return False
             if name in self.all_modules:
-                if self.verify(_("Module %s.pp already loaded in current policy.\nDo you want to continue?") % name, _("Verify Name")) == gtk.RESPONSE_NO:
+                if self.verify(_("Module %s already loaded in current policy.\nDo you want to continue?") % name, _("Verify Name")) == gtk.RESPONSE_NO:
                     entry.set_text("")
                     return False
 
