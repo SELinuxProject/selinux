@@ -30,6 +30,13 @@ import sepolicy
 import os
 import time
 
+typealias_types = {
+"antivirus_t":("amavis_t", "clamd_t", "clamscan_t", "freshclam_t"),
+"cluster_t":("rgmanager_t", "corosync_t", "aisexec_t", "pacemaker_t"),
+"svirt_t":("qemu_t"),
+"httpd_t":("phpfpm_t"),
+}
+
 equiv_dict = {"smbd": ["samba"], "httpd": ["apache"], "virtd": ["virt", "libvirt", "svirt", "svirt_tcg", "svirt_lxc_t", "svirt_lxc_net_t"], "named": ["bind"], "fsdaemon": ["smartmon"], "mdadm": ["raid"]}
 
 equiv_dirs = ["/var"]
@@ -523,6 +530,16 @@ class ManPage:
         self._get_ptypes()
 
         for domain_type in self.ptypes:
+            try:
+                if typealias_types[domain_type]:
+                    fd = self.fd
+                    man_page_path =  self.man_page_path
+                    for t in typealias_types[domain_type]:
+                        self._typealias_gen_man(t)
+                    self.fd = fd
+                    self.man_page_path = man_page_path
+            except KeyError:
+                continue;
             self.attributes[domain_type] = sepolicy.info(sepolicy.TYPE, ("%s") % domain_type)[0]["attributes"]
 
         self._header()
@@ -541,6 +558,34 @@ class ManPage:
         for f in self.all_domains:
             if f.startswith(self.short_name) or f.startswith(self.domainname):
                 self.ptypes.append(f)
+
+    def _typealias_gen_man(self, t):
+        self.man_page_path = "%s/%s_selinux.8" % (self.path, t[:-2])
+        self.ports = []
+        self.booltext = ""
+        self.fd = open(self.man_page_path, 'w')
+        self._typealias(t[:-2])
+        self._footer()
+        self.fd.close()
+
+    def _typealias(self,typealias):
+        self.fd.write('.TH  "%(typealias)s_selinux"  "8"  "%(date)s" "%(typealias)s" "SELinux Policy %(typealias)s"'
+                 % {'typealias':typealias, 'date': time.strftime("%y-%m-%d")})
+        self.fd.write(r"""
+.SH "NAME"
+%(typealias)s_selinux \- Security Enhanced Linux Policy for the %(typealias)s processes
+.SH "DESCRIPTION"
+
+%(typealias)s_t SELinux domain type is now associated with %(domainname)s domain type (%(domainname)s_t).
+""" % {'typealias':typealias, 'domainname':self.domainname})
+
+        self.fd.write(r"""
+Please see
+
+.B %(domainname)s_selinux
+
+man page for more details.
+"""  % {'domainname':self.domainname})
 
     def _header(self):
         self.fd.write('.TH  "%(domainname)s_selinux"  "8"  "%(date)s" "%(domainname)s" "SELinux Policy %(domainname)s"'
