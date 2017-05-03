@@ -69,8 +69,14 @@ enabled = [_("No"), _("Yes")]
 action = [_("Disable"), _("Enable")]
 
 
-def compare(a, b):
-    return cmp(a.lower(), b.lower())
+def cmp(a, b):
+    if a is None and b is None:
+        return 0
+    if a is None:
+        return -1
+    if b is None:
+        return 1
+    return (a > b) - (a < b)
 
 import distutils.sysconfig
 ADVANCED_LABEL = (_("Advanced >>"), _("Advanced <<"))
