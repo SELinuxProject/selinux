@@ -419,8 +419,12 @@ interface(`TEMPLATETYPE_admin',`
 if_middle_admin="""
 	')
 
-	allow $1 TEMPLATETYPE_t:process { ptrace signal_perms };
+	allow $1 TEMPLATETYPE_t:process { signal_perms };
 	ps_process_pattern($1, TEMPLATETYPE_t)
+
+    tunable_policy(`deny_ptrace',`',`
+        allow $1 TEMPLATETYPE_t:process ptrace;
+    ')
 """
 
 if_initscript_admin_types="""
