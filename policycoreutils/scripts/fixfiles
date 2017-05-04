@@ -230,21 +230,6 @@ fi
 LogReadOnly
 #
 exclude_dirs="`exclude_dirs_from_relabelling $OPTION`"
-if [ -n "${exclude_dirs}" ]
-then
-	TEMPFCFILE=`mktemp ${FC}.XXXXXXXXXX`
-	test -z "$TEMPFCFILE" && exit
-	/bin/cp -p ${FC} ${TEMPFCFILE} &>/dev/null || exit
-	tmpdirs=${tempdirs//-e/}
-	for p in ${tmpdirs}
-	do
-		p="${p%/}"
-		p1="${p}(/.*)? -- <<none>>"
-		echo "${p1}" >> $TEMPFCFILE
-		logit "skipping the directory ${p}"
-	done
-FC=$TEMPFCFILE
-fi
 if [ ! -z "$RPMFILES" ]; then
     for i in `echo "$RPMFILES" | sed 's/,/ /g'`; do
 	rpmlist $i | ${RESTORECON} $exclude_dirs ${FORCEFLAG} ${VERBOSE} $* -R -i -f - >>$LOGFILE 2>&1
@@ -265,7 +250,7 @@ if [ ${OPTION} != "Relabel" ]; then
     return
 fi
 echo "Cleaning up labels on /tmp"
-rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-* $TEMPFCFILE
+rm -rf /tmp/gconfd-* /tmp/pulse-* /tmp/orbit-*
 
 UNDEFINED=`get_undefined_type` || exit $?
 UNLABELED=`get_unlabeled_type` || exit $?
