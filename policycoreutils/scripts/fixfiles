@@ -95,7 +95,6 @@ exclude_dirs_from_relabelling() {
 	  [[ ! "${i}" =~ ^/.* ]] && continue
 	  [[ ! -d "${i}" ]] && continue
 	  exclude_from_relabelling="$exclude_from_relabelling -e $i"
-	  logit "skipping the directory $i"
 	done < /etc/selinux/fixfiles_exclude_dirs
     fi
     echo "$exclude_from_relabelling"
@@ -148,6 +147,15 @@ fi
 }
 
 #
+# Log directories excluded from relabelling by configuration file
+#
+LogExcluded() {
+for i in ${EXCLUDEDIRS//-e / }; do
+    logit "skipping the directory $i"
+done
+}
+
+#
 # Find files newer then the passed in date and fix the label
 #
 newer() {
@@ -164,11 +172,11 @@ newer() {
 # run restorecon on all files affected by the differences.
 #
 diff_filecontext() {
-exclude_dirs=
+EXCLUDEDIRS="`exclude_dirs_from_relabelling`"
 for i in /sys /proc /dev /run /mnt /var/tmp /var/lib/BackupPC /home /tmp /dev; do
-    [ -e $i ]  && exclude_dirs="$exclude_dirs -e $i";
+    [ -e $i ]  && EXCLUDEDIRS="${EXCLUDEDIRS} -e $i";
 done
-exclude_dirs="$exclude_dirs `exclude_dirs_from_relabelling`"
+LogExcluded
 
 if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 	TEMPFILE=`mktemp ${FC}.XXXXXXXXXX`
@@ -199,7 +207,7 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 		  esac; \
 	       fi; \
 	    done | \
-	${RESTORECON} ${VERBOSE} -i -f - -R $* $exclude_dirs; \
+	${RESTORECON} ${VERBOSE} -i -f - -R $* ${EXCLUDEDIRS}; \
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }
@@ -227,21 +235,23 @@ if [ ! -z "$BOOTTIME" ]; then
 fi
 [ -x /usr/sbin/genhomedircon ] && /usr/sbin/genhomedircon
 
-exclude_dirs="`exclude_dirs_from_relabelling`"
+EXCLUDEDIRS="`exclude_dirs_from_relabelling`"
+LogExcluded
+
 if [ ! -z "$RPMFILES" ]; then
     for i in `echo "$RPMFILES" | sed 's/,/ /g'`; do
-	rpmlist $i | ${RESTORECON} $exclude_dirs ${FORCEFLAG} ${VERBOSE} $* -R -i -f - >>$LOGFILE 2>&1
+	rpmlist $i | ${RESTORECON} ${EXCLUDEDIRS} ${FORCEFLAG} ${VERBOSE} $* -R -i -f - >>$LOGFILE 2>&1
     done
     exit $?
 fi
 if [ ! -z "$FILEPATH" ]; then
-    ${RESTORECON} $exclude_dirs ${FORCEFLAG} ${VERBOSE} -R $* -- "$FILEPATH" >>$LOGFILE 2>&1
+    ${RESTORECON} ${EXCLUDEDIRS} ${FORCEFLAG} ${VERBOSE} -R $* -- "$FILEPATH" >>$LOGFILE 2>&1
     return
 fi
 if [  -n "${FILESYSTEMSRW}" ]; then
     LogReadOnly
     echo "${OPTION}ing `echo ${FILESYSTEMSRW}`"
-    ${SETFILES} ${VERBOSE} $exclude_dirs -q ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} >>$LOGFILE 2>&1
+    ${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} -q ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} >>$LOGFILE 2>&1
 else
     echo >&2 "fixfiles: No suitable file systems found"
 fi
