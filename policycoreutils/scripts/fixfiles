@@ -109,11 +109,6 @@ VERBOSE="-p"
 FORCEFLAG=""
 DIRS=""
 RPMILES=""
-LOGFILE=`tty`
-if [ $? != 0 ]; then
-    LOGFILE="/dev/null"
-fi
-LOGGER=/usr/sbin/logger
 SETFILES=/sbin/setfiles
 RESTORECON=/sbin/restorecon
 FILESYSTEMSRW=`get_rw_labeled_mounts`
@@ -128,21 +123,12 @@ else
 fi
 
 #
-# Log to either syslog or a LOGFILE
-#
-logit () {
-if [ -n $LOGFILE ]; then
-    echo $1 >> $LOGFILE
-fi
-}
-
-#
 # Log all Read Only file systems
 #
 LogReadOnly() {
 if [ ! -z "$FILESYSTEMSRO" ]; then
-    logit "Warning: Skipping the following R/O filesystems:"
-    logit "$FILESYSTEMSRO"
+    echo "Warning: Skipping the following R/O filesystems:"
+    echo "$FILESYSTEMSRO"
 fi
 }
 
@@ -151,7 +137,7 @@ fi
 #
 LogExcluded() {
 for i in ${EXCLUDEDIRS//-e / }; do
-    logit "skipping the directory $i"
+    echo "skipping the directory $i"
 done
 }
 
@@ -240,18 +226,18 @@ LogExcluded
 
 if [ ! -z "$RPMFILES" ]; then
     for i in `echo "$RPMFILES" | sed 's/,/ /g'`; do
-	rpmlist $i | ${RESTORECON} ${EXCLUDEDIRS} ${FORCEFLAG} ${VERBOSE} $* -R -i -f - >>$LOGFILE 2>&1
+	rpmlist $i | ${RESTORECON} ${EXCLUDEDIRS} ${FORCEFLAG} ${VERBOSE} $* -R -i -f -
     done
     exit $?
 fi
 if [ ! -z "$FILEPATH" ]; then
-    ${RESTORECON} ${EXCLUDEDIRS} ${FORCEFLAG} ${VERBOSE} -R $* -- "$FILEPATH" >>$LOGFILE 2>&1
+    ${RESTORECON} ${EXCLUDEDIRS} ${FORCEFLAG} ${VERBOSE} -R $* -- "$FILEPATH"
     return
 fi
 if [  -n "${FILESYSTEMSRW}" ]; then
     LogReadOnly
     echo "${OPTION}ing `echo ${FILESYSTEMSRW}`"
-    ${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} -q ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW} >>$LOGFILE 2>&1
+    ${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} -q ${FORCEFLAG} $* ${FC} ${FILESYSTEMSRW}
 else
     echo >&2 "fixfiles: No suitable file systems found"
 fi
@@ -272,7 +258,7 @@ exit 0
 }
 
 fullrelabel() {
-    logit "Cleaning out /tmp"
+    echo "Cleaning out /tmp"
     find /tmp/ -mindepth 1 -delete
     LogReadOnly
     restore Relabel
@@ -325,9 +311,9 @@ esac
 }
 usage() {
 	echo $"""
-Usage: $0 [-v] [-F]  [-N time ] [-l logfile ] { check | restore| [-f] relabel | verify } [[dir/file] ... ]
+Usage: $0 [-v] [-F] [-N time ] { check | restore| [-f] relabel | verify } [[dir/file] ... ]
 or
-Usage: $0 [-v] [-F] -R rpmpackage[,rpmpackage...] [-l logfile ] { check | restore | verify }
+Usage: $0 [-v] [-F] -R rpmpackage[,rpmpackage...] { check | restore | verify }
 or
 Usage: $0 [-v] [-F] -C PREVIOUS_FILECONTEXT { check | restore | verify }
 or
@@ -356,7 +342,9 @@ while getopts "N:BC:FfR:l:v" i; do
 		RPMFILES=$OPTARG
 		;;
 	l)
-		LOGFILE=$OPTARG
+		# Old scripts use obsolete option `-l logfile`
+		echo "Redirecting output to $OPTARG"
+		exec >>"$OPTARG" 2>&1
 		;;
 	C)
 		PREFC=$OPTARG
