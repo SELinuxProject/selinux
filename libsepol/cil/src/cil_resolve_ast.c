@@ -271,14 +271,24 @@ exit:
 
 int cil_type_used(struct cil_symtab_datum *datum, int used)
 {
+	int rc = SEPOL_ERR;
 	struct cil_typeattribute *attr = NULL;
 
 	if (FLAVOR(datum) == CIL_TYPEATTRIBUTE) {
 		attr = (struct cil_typeattribute*)datum;
 		attr->used |= used;
+		if ((attr->used & CIL_ATTR_EXPAND_TRUE) &&
+				(attr->used & CIL_ATTR_EXPAND_FALSE)) {
+			cil_log(CIL_ERR, "Conflicting use of expandtypeattribute. "
+					"Expandtypeattribute may be set to true or false "
+					"but not both. \n");
+			goto exit;
+		}
 	}
 
-	return 0;
+	return SEPOL_OK;
+exit:
+	return rc;
 }
 
 int cil_resolve_permissionx(struct cil_tree_node *current, struct cil_permissionx *permx, void *extra_args)
@@ -449,6 +459,44 @@ int cil_resolve_typeattributeset(struct cil_tree_node *current, void *extra_args
 
 	return SEPOL_OK;
 
+exit:
+	return rc;
+}
+
+int cil_resolve_expandtypeattribute(struct cil_tree_node *current, void *extra_args)
+{
+	struct cil_expandtypeattribute *expandattr = current->data;
+	struct cil_symtab_datum *attr_datum = NULL;
+	struct cil_tree_node *attr_node = NULL;
+	struct cil_list_item *curr;
+	int used;
+	int rc = SEPOL_ERR;
+
+	cil_list_init(&expandattr->attr_datums, CIL_TYPE);
+
+	cil_list_for_each(curr, expandattr->attr_strs) {
+		rc = cil_resolve_name(current, (char *)curr->data, CIL_SYM_TYPES, extra_args, &attr_datum);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+
+		attr_node = attr_datum->nodes->head->data;
+
+		if (attr_node->flavor != CIL_TYPEATTRIBUTE) {
+			rc = SEPOL_ERR;
+			cil_log(CIL_ERR, "Attribute type not an attribute\n");
+			goto exit;
+		}
+		used = expandattr->expand ? CIL_ATTR_EXPAND_TRUE : CIL_ATTR_EXPAND_FALSE;
+		rc = cil_type_used(attr_datum, used);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+
+		cil_list_append(expandattr->attr_datums, CIL_TYPE, attr_datum);
+	}
+
+	return SEPOL_OK;
 exit:
 	return rc;
 }
@@ -3431,6 +3479,9 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 		switch (node->flavor) {
 		case CIL_TYPEATTRIBUTESET:
 			rc = cil_resolve_typeattributeset(node, args);
+			break;
+		case CIL_EXPANDTYPEATTRIBUTE:
+			rc = cil_resolve_expandtypeattribute(node, args);
 			break;
 		case CIL_TYPEBOUNDS:
 			rc = cil_resolve_bounds(node, args, CIL_TYPE, CIL_TYPEATTRIBUTE);

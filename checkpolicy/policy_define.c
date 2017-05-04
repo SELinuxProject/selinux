@@ -1139,6 +1139,88 @@ int define_attrib(void)
 	return 0;
 }
 
+int expand_attrib(void)
+{
+	char *id;
+	ebitmap_t attrs;
+	type_datum_t *attr;
+	ebitmap_node_t *node;
+	uint32_t i;
+	int rc = -1;
+	int flags = 0;
+
+	if (pass == 1) {
+		for (i = 0; i < 2; i++) {
+			while ((id = queue_remove(id_queue))) {
+				free(id);
+			}
+		}
+		return 0;
+	}
+
+	ebitmap_init(&attrs);
+	while ((id = queue_remove(id_queue))) {
+		if (!id) {
+			yyerror("No attribute name for expandattribute statement?");
+			goto exit;
+		}
+
+		if (!is_id_in_scope(SYM_TYPES, id)) {
+			yyerror2("attribute %s is not within scope", id);
+			goto exit;
+		}
+
+		attr = hashtab_search(policydbp->p_types.table, id);
+		if (!attr) {
+			yyerror2("attribute %s is not declared", id);
+			goto exit;
+		}
+
+		if (attr->flavor != TYPE_ATTRIB) {
+			yyerror2("%s is a type, not an attribute", id);
+			goto exit;
+		}
+
+		if (attr->flags & TYPE_FLAGS_EXPAND_ATTR) {
+			yyerror2("%s already has the expandattribute option specified", id);
+			goto exit;
+		}
+		if (ebitmap_set_bit(&attrs, attr->s.value - 1, TRUE)) {
+			yyerror("Out of memory!");
+			goto exit;
+		}
+
+		free(id);
+	}
+
+	id = (char *) queue_remove(id_queue);
+	if (!id) {
+		yyerror("No option specified for attribute expansion.");
+		goto exit;
+	}
+
+	if (!strcmp(id, "T")) {
+		flags = TYPE_FLAGS_EXPAND_ATTR_TRUE;
+	} else {
+		flags = TYPE_FLAGS_EXPAND_ATTR_FALSE;
+	}
+
+	ebitmap_for_each_bit(&attrs, node, i) {
+		if (!ebitmap_node_get_bit(node, i)){
+			continue;
+		}
+		attr = hashtab_search(policydbp->p_types.table,
+				policydbp->sym_val_to_name[SYM_TYPES][i]);
+		attr->flags |= flags;
+	}
+
+	rc = 0;
+exit:
+	ebitmap_destroy(&attrs);
+	free(id);
+	return rc;
+}
+
 static int add_aliases_to_type(type_datum_t * type)
 {
 	char *id;

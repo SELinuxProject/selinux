@@ -3176,6 +3176,75 @@ void cil_destroy_typeattributeset(struct cil_typeattributeset *attrset)
 	free(attrset);
 }
 
+int cil_gen_expandtypeattribute(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_STRING | CIL_SYN_LIST,
+		CIL_SYN_STRING,
+		CIL_SYN_END
+	};
+	char *expand_str;
+	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	struct cil_expandtypeattribute *expandattr = NULL;
+	int rc = SEPOL_ERR;
+
+	if (db == NULL || parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_expandtypeattribute_init(&expandattr);
+
+	if (parse_current->next->cl_head == NULL) {
+		cil_list_init(&expandattr->attr_strs, CIL_TYPE);
+		cil_list_append(expandattr->attr_strs, CIL_STRING, parse_current->next->data);
+	} else {
+		rc = cil_fill_list(parse_current->next->cl_head, CIL_TYPE, &expandattr->attr_strs);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+	}
+
+	expand_str = parse_current->next->next->data;
+
+	if (expand_str == CIL_KEY_CONDTRUE) {
+		expandattr->expand = CIL_TRUE;
+	} else if (expand_str == CIL_KEY_CONDFALSE) {
+		expandattr->expand = CIL_FALSE;
+	} else {
+		cil_log(CIL_ERR, "Value must be either \'true\' or \'false\'");
+		goto exit;
+	}
+
+	ast_node->data = expandattr;
+	ast_node->flavor = CIL_EXPANDTYPEATTRIBUTE;
+
+	return SEPOL_OK;
+
+exit:
+	cil_tree_log(parse_current, CIL_ERR, "Bad expandtypeattribute statement");
+	cil_destroy_expandtypeattribute(expandattr);
+	return rc;
+}
+
+void cil_destroy_expandtypeattribute(struct cil_expandtypeattribute *expandattr)
+{
+	if (expandattr == NULL) {
+		return;
+	}
+
+	cil_list_destroy(&expandattr->attr_strs, CIL_TRUE);
+
+	cil_list_destroy(&expandattr->attr_datums, CIL_FALSE);
+
+	free(expandattr);
+}
+
 int cil_gen_typepermissive(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
 {
 	enum cil_syntax syntax[] = {
@@ -6012,6 +6081,9 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		rc = cil_gen_typeattribute(db, parse_current, ast_node);
 	} else if (parse_current->data == CIL_KEY_TYPEATTRIBUTESET) {
 		rc = cil_gen_typeattributeset(db, parse_current, ast_node);
+		*finished = CIL_TREE_SKIP_NEXT;
+	} else if (parse_current->data == CIL_KEY_EXPANDTYPEATTRIBUTE) {
+		rc = cil_gen_expandtypeattribute(db, parse_current, ast_node);
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_TYPEALIAS) {
 		rc = cil_gen_alias(db, parse_current, ast_node, CIL_TYPEALIAS);

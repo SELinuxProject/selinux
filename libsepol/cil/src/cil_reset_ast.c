@@ -549,6 +549,7 @@ int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused)) uint32
 	case CIL_CLASSORDER:
 	case CIL_CATORDER:
 	case CIL_SENSITIVITYORDER:
+	case CIL_EXPANDTYPEATTRIBUTE:
 		break; /* Nothing to reset */
 	default:
 		break;

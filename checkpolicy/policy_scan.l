@@ -106,6 +106,8 @@ ALIAS |
 alias				{ return(ALIAS); }
 ATTRIBUTE |
 attribute			{ return(ATTRIBUTE); }
+EXPANDATTRIBUTE |
+expandattribute                 { return(EXPANDATTRIBUTE); }
 TYPE_TRANSITION |
 type_transition			{ return(TYPE_TRANSITION); }
 TYPE_MEMBER |

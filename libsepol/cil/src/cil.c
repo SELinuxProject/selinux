@@ -159,6 +159,7 @@ static void cil_init_keys(void)
 	CIL_KEY_SELINUXUSERDEFAULT = cil_strpool_add("selinuxuserdefault");
 	CIL_KEY_TYPEATTRIBUTE = cil_strpool_add("typeattribute");
 	CIL_KEY_TYPEATTRIBUTESET = cil_strpool_add("typeattributeset");
+	CIL_KEY_EXPANDTYPEATTRIBUTE = cil_strpool_add("expandtypeattribute");
 	CIL_KEY_TYPEALIAS = cil_strpool_add("typealias");
 	CIL_KEY_TYPEALIASACTUAL = cil_strpool_add("typealiasactual");
 	CIL_KEY_TYPEBOUNDS = cil_strpool_add("typebounds");
@@ -623,6 +624,9 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	case CIL_TYPEATTRIBUTESET:
 		cil_destroy_typeattributeset(*data);
 		break;
+	case CIL_EXPANDTYPEATTRIBUTE:
+		cil_destroy_expandtypeattribute(*data);
+		break;
 	case CIL_TYPEALIASACTUAL:
 		cil_destroy_aliasactual(*data);
 		break;
@@ -987,6 +991,8 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		return CIL_KEY_TYPEALIAS;
 	case CIL_TYPEATTRIBUTESET:
 		return CIL_KEY_TYPEATTRIBUTESET;
+	case CIL_EXPANDTYPEATTRIBUTE:
+		return CIL_KEY_EXPANDTYPEATTRIBUTE;
 	case CIL_TYPEALIASACTUAL:
 		return CIL_KEY_TYPEALIASACTUAL;
 	case CIL_TYPEBOUNDS:
@@ -2036,6 +2042,15 @@ void cil_typeattributeset_init(struct cil_typeattributeset **attrset)
 	(*attrset)->attr_str = NULL;
 	(*attrset)->str_expr = NULL;
 	(*attrset)->datum_expr = NULL;
+}
+
+void cil_expandtypeattribute_init(struct cil_expandtypeattribute **expandattr)
+{
+	*expandattr = cil_malloc(sizeof(**expandattr));
+
+	(*expandattr)->attr_strs = NULL;
+	(*expandattr)->attr_datums = NULL;
+	(*expandattr)->expand = 0;
 }
 
 void cil_alias_init(struct cil_alias **alias)

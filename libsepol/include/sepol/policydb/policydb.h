@@ -178,7 +178,11 @@ typedef struct type_datum {
 #define TYPE_ALIAS 2		/* alias in modular policy */
 	uint32_t flavor;
 	ebitmap_t types;	/* types with this attribute */
-#define TYPE_FLAGS_PERMISSIVE	0x01
+#define TYPE_FLAGS_PERMISSIVE		(1 << 0)
+#define TYPE_FLAGS_EXPAND_ATTR_TRUE	(1 << 1)
+#define TYPE_FLAGS_EXPAND_ATTR_FALSE	(1 << 2)
+#define TYPE_FLAGS_EXPAND_ATTR (TYPE_FLAGS_EXPAND_ATTR_TRUE | \
+				TYPE_FLAGS_EXPAND_ATTR_FALSE)
 	uint32_t flags;
 	uint32_t bounds;	/* bounds type, if exist */
 } type_datum_t;

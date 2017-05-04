@@ -2244,6 +2244,17 @@ static int type_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 			cil_println(indent, "(typeattribute %s)", key);
 		}
 
+		if (type->flags & TYPE_FLAGS_EXPAND_ATTR) {
+			cil_indent(indent);
+			cil_printf("(expandtypeattribute (%s) ", key);
+			if (type->flags & TYPE_FLAGS_EXPAND_ATTR_TRUE) {
+				cil_printf("true");
+			} else if (type->flags & TYPE_FLAGS_EXPAND_ATTR_FALSE) {
+				cil_printf("false");
+			}
+			cil_printf(")\n");
+		}
+
 		if (ebitmap_cardinality(&type->types) > 0) {
 			cil_indent(indent);
 			cil_printf("(typeattributeset %s (", key);

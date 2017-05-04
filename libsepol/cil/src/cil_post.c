@@ -1194,6 +1194,14 @@ static int cil_typeattribute_used(struct cil_typeattribute *attr, struct cil_db 
 		return CIL_FALSE;
 	}
 
+	if (attr->used & CIL_ATTR_EXPAND_FALSE) {
+		return CIL_TRUE;
+	}
+
+	if (attr->used & CIL_ATTR_EXPAND_TRUE) {
+		return CIL_FALSE;
+	}
+
 	if (attr->used & CIL_ATTR_CONSTRAINT) {
 		return CIL_TRUE;
 	}
