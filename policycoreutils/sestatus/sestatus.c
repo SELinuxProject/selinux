@@ -330,6 +330,20 @@ int main(int argc, char **argv)
 			break;
 	}
 
+	printf_tab("Memory protection checking:");
+	rc = security_get_checkreqprot();
+	switch (rc) {
+		case 0:
+			printf("actual (secure)\n");
+			break;
+		case 1:
+			printf("requested (insecure)\n");
+			break;
+		default:
+			printf("error (%s)\n", strerror(errno));
+			break;
+	}
+
 	rc = security_policyvers();
 	printf_tab("Max kernel policy version:");
 	if (rc < 0)
