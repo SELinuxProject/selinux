@@ -331,6 +331,9 @@ extern int security_setenforce(int value);
 /* Get the behavior for undefined classes/permissions */
 extern int security_deny_unknown(void);
 
+/* Get the checkreqprot value */
+extern int security_get_checkreqprot(void);
+
 /* Disable SELinux at runtime (must be done prior to initial policy load). */
 extern int security_disable(void);
 

@@ -1,6 +1,6 @@
 .TH "security_getenforce" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
 .SH "NAME"
-security_getenforce, security_setenforce, security_deny_unknown \- get or set the enforcing state of SELinux
+security_getenforce, security_setenforce, security_deny_unknown, security_get_checkreqprot\- get or set the enforcing state of SELinux
 .
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
@@ -10,6 +10,8 @@ security_getenforce, security_setenforce, security_deny_unknown \- get or set th
 .BI "int security_setenforce(int "value );
 .sp
 .B int security_deny_unknown(void);
+.sp
+.B int security_get_checkreqprot(void);
 .
 .SH "DESCRIPTION"
 .BR security_getenforce ()
@@ -24,6 +26,13 @@ returned.
 .BR security_deny_unknown ()
 returns 0 if SELinux treats policy queries on undefined object classes or
 permissions as being allowed, 1 if such queries are denied, and \-1 on error.
+
+.BR security_get_checkreqprot ()
+can be used to determine whether SELinux is configured to check the
+protection requested by the application or the actual protection that will
+be applied by the kernel (including the effects of READ_IMPLIES_EXEC) on
+mmap and mprotect calls.  It returns 0 if SELinux checks the actual
+protection, 1 if it checks the requested protection, and \-1 on error.
 .
 .SH "SEE ALSO"
 .BR selinux "(8)"
