@@ -107,13 +107,11 @@ fullFlag=0
 BOOTTIME=""
 VERBOSE="-p"
 FORCEFLAG=""
-DIRS=""
 RPMILES=""
 SETFILES=/sbin/setfiles
 RESTORECON=/sbin/restorecon
 FILESYSTEMSRW=`get_rw_labeled_mounts`
 FILESYSTEMSRO=`get_ro_labeled_mounts`
-FILESYSTEMS="$FILESYSTEMSRW $FILESYSTEMSRO"
 SELINUXTYPE="targeted"
 if [ -e /etc/selinux/config ]; then
     . /etc/selinux/config
@@ -373,7 +371,7 @@ fi
 shift
 
 #
-# check if they specified both DIRS and RPMFILES
+# check if they specified both RPMFILES and FILEPATHs
 #
 
 if [ ! -z "$RPMFILES" ]; then
