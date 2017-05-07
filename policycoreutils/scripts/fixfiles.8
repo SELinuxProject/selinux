@@ -5,8 +5,11 @@ fixfiles \- fix file SELinux security contexts.
 .SH "SYNOPSIS"
 .na
 
-.B fixfiles 
-.I [\-v] [\-F] [\-B | \-N time ] { check | restore | [\-f] relabel | verify } [[dir/file] ... ]
+.B fixfiles
+.I [\-v] [\-F] { check | restore | [\-f] relabel | verify } dir/file ...
+
+.B fixfiles
+.I [\-v] [\-F] [\-B | \-N time ] { check | restore | [\-f] relabel | verify }
 
 .B fixfiles 
 .I [\-v] [\-F] \-R rpmpackagename[,rpmpackagename...] { check | restore | verify }
