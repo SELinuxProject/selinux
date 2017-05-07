@@ -91,7 +91,7 @@ exclude_dirs_from_relabelling() {
 	  # skip not absolute path
 	  # skip not directory
 	  [ -z "${i}" ] && continue
-	  [[ "${i}" =~ "^[[:blank:]]*#" ]] && continue
+	  [[ "${i}" =~ ^[[:blank:]]*# ]] && continue
 	  [[ ! "${i}" =~ ^/.* ]] && continue
 	  [[ ! -d "${i}" ]] && continue
 	  exclude_from_relabelling="$exclude_from_relabelling -e $i"
