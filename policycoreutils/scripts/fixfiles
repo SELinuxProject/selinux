@@ -311,7 +311,7 @@ esac
 }
 usage() {
 	echo $"""
-Usage: $0 [-v] [-F] [-N time ] { check | restore| [-f] relabel | verify } [[dir/file] ... ]
+Usage: $0 [-v] [-F] [-B | -N time ] { check | restore | [-f] relabel | verify } [[dir/file] ... ]
 or
 Usage: $0 [-v] [-F] -R rpmpackage[,rpmpackage...] { check | restore | verify }
 or

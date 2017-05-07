@@ -3,18 +3,21 @@
 fixfiles \- fix file SELinux security contexts.
 
 .SH "SYNOPSIS"
+.na
 
 .B fixfiles 
-.I [\-v] [\-F] [-B] [ -N time ] [\-l logfile ] { check | restore|[\-f] relabel | verify } [[dir/file] ... ]
+.I [\-v] [\-F] [\-B | \-N time ] { check | restore | [\-f] relabel | verify } [[dir/file] ... ]
 
 .B fixfiles 
-.I [\-v] [\-F] [ \-R rpmpackagename[,rpmpackagename...] ] [\-l logfile ] { check | restore | verify }
+.I [\-v] [\-F] \-R rpmpackagename[,rpmpackagename...] { check | restore | verify }
 
-.B fixfiles 
-.I [\-v] [\-F] \-C PREVIOUS_FILECONTEXT [\-l logfile ] { check | restore | verify }
+.B fixfiles
+.I [\-v] [\-F] \-C PREVIOUS_FILECONTEXT  { check | restore | verify }
 
-.B fixfiles [-F] [-B]
-.I onboot
+.B fixfiles
+.I [-F] [-B] onboot
+
+.ad
 
 .SH "DESCRIPTION"
 This manual page describes the
@@ -40,9 +43,6 @@ will setup the machine to relabel on the next reboot.
 .B \-B
 If specified with onboot, this fixfiles will record the current date in the /.autorelabel file, so that it can be used later to speed up labeling. If used with restore, the restore will only affect files that were modified today.
 .TP
-.B \-l logfile
-Save the output to the specified logfile
-.TP 
 .B \-F
 Force reset of context to match file_context for customizable files
 
