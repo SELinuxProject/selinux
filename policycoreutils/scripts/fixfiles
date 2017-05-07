@@ -387,7 +387,7 @@ else
     else
 	while [ -n "$1" ]; do
 	    FILEPATH="$1"
-	    process "$command"
+	    process "$command" || exit $?
 	    shift
 	done
     fi
