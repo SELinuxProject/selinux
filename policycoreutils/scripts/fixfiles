@@ -195,7 +195,7 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 		  esac; \
 	       fi; \
 	    done | \
-	${RESTORECON} ${VERBOSE} -i -f - -R $* ${EXCLUDEDIRS}; \
+	${RESTORECON} ${VERBOSE} -i -f - -R $* ${EXCLUDEDIRS} ${FORCEFLAG}; \
 	rm -f ${TEMPFILE} ${PREFCTEMPFILE}
 fi
 }
