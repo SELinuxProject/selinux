@@ -12,6 +12,13 @@ else
 COMPILER ?= clang
 endif
 
+ifeq ($(COMPILER), gcc)
+EXTRA_CFLAGS = -fipa-pure-const -Wpacked-bitfield-compat -Wsync-nand -Wcoverage-mismatch \
+	-Wcpp -Wformat-contains-nul -Wnormalized=nfc -Wsuggest-attribute=const \
+	-Wsuggest-attribute=noreturn -Wsuggest-attribute=pure -Wtrampolines -Wjump-misses-init \
+	-Wno-suggest-attribute=pure -Wno-suggest-attribute=const
+endif
+
 MAX_STACK_SIZE=8192
 CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissing-include-dirs \
           -Wunused -Wunknown-pragmas -Wstrict-aliasing -Wshadow -Wpointer-arith \
@@ -28,16 +35,10 @@ CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissi
           -Wno-format-nonliteral -Wframe-larger-than=$(MAX_STACK_SIZE) -Wp,-D_FORTIFY_SOURCE=2 \
           -fstack-protector-all --param=ssp-buffer-size=4 -fexceptions \
           -fasynchronous-unwind-tables -fdiagnostics-show-option -funit-at-a-time \
-          -Werror -Wno-aggregate-return -Wno-redundant-decls
+          -Werror -Wno-aggregate-return -Wno-redundant-decls \
+          $(EXTRA_CFLAGS)
 
 LD_SONAME_FLAGS=-soname,$(LIBSO),-z,defs,-z,relro
-
-ifeq ($(COMPILER), gcc)
-CFLAGS += -fipa-pure-const -Wpacked-bitfield-compat -Wsync-nand -Wcoverage-mismatch \
-	-Wcpp -Wformat-contains-nul -Wnormalized=nfc -Wsuggest-attribute=const \
-	-Wsuggest-attribute=noreturn -Wsuggest-attribute=pure -Wtrampolines -Wjump-misses-init \
-	-Wno-suggest-attribute=pure -Wno-suggest-attribute=const
-endif
 
 ifeq ($(OS), Darwin)
 override CFLAGS += -I/opt/local/include -I../../libsepol/include
