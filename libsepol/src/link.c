@@ -467,8 +467,8 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			    state->cur_mod_name, id);
 			return -1;
 		}
-		/* permissive should pass to the base type */
-		base_type->flags |= (type->flags & TYPE_FLAGS_PERMISSIVE);
+
+		base_type->flags |= type->flags;
 	} else {
 		if (state->verbose)
 			INFO(state->handle, "copying type %s", id);
@@ -890,7 +890,7 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return -1;
 	}
 
-	target_type->flags |= (type->flags & TYPE_FLAGS_PERMISSIVE);
+	target_type->flags |= type->flags;
 
 	base_type = hashtab_search(state->base->p_types.table, id);
 	if (base_type == NULL) {
@@ -938,7 +938,7 @@ static int alias_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 
 		base_type->flavor = TYPE_ALIAS;
 		base_type->primary = target_type->s.value;
-		base_type->flags |= (target_type->flags & TYPE_FLAGS_PERMISSIVE);
+		base_type->flags |= target_type->flags;
 
 	}
 	/* the aliases map points from its value to its primary so when this module 
