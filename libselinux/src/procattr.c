@@ -22,8 +22,8 @@ static pthread_key_t destructor_key;
 static int destructor_key_initialized = 0;
 static __thread char destructor_initialized;
 
-#ifndef __ANDROID__
-/* Android declares this in unistd.h and has a definition for it */
+#ifndef __BIONIC__
+/* Bionic declares this in unistd.h and has a definition for it */
 static pid_t gettid(void)
 {
 	return syscall(__NR_gettid);
