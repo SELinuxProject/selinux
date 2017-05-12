@@ -104,7 +104,7 @@ struct selabel_sub *selabel_subs_init(const char *path,
 		return list;
 
 	if (fstat(fileno(cfg), &sb) < 0)
-		return list;
+		goto out;
 
 	while (fgets_unlocked(buf, sizeof(buf) - 1, cfg)) {
 		char *ptr = NULL;
