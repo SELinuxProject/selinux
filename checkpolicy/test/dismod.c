@@ -243,6 +243,13 @@ int display_avrule(avrule_t * avrule, policydb_t * policy,
 		}
 	} else if (avrule->specified & AVRULE_NEVERALLOW) {
 		fprintf(fp, "  neverallow");
+	} else if (avrule->specified & AVRULE_XPERMS) {
+		if (avrule->specified & AVRULE_XPERMS_ALLOWED)
+			fprintf(fp, "allowxperm ");
+		else if (avrule->specified & AVRULE_XPERMS_AUDITALLOW)
+			fprintf(fp, "auditallowxperm ");
+		else if (avrule->specified & AVRULE_XPERMS_DONTAUDIT)
+			fprintf(fp, "dontauditxperm ");
 	} else {
 		fprintf(fp, "     ERROR: no valid rule type specified\n");
 		return -1;
@@ -282,6 +289,24 @@ int display_avrule(avrule_t * avrule, policydb_t * policy,
 				   policy, fp);
 	} else if (avrule->specified & AVRULE_TYPE) {
 		display_id(policy, fp, SYM_TYPES, avrule->perms->data - 1, "");
+	} else if (avrule->specified & AVRULE_XPERMS) {
+		avtab_extended_perms_t xperms;
+		int i;
+
+		if (avrule->xperms->specified == AVRULE_XPERMS_IOCTLFUNCTION)
+			xperms.specified = AVTAB_XPERMS_IOCTLFUNCTION;
+		else if (avrule->xperms->specified == AVRULE_XPERMS_IOCTLDRIVER)
+			xperms.specified = AVTAB_XPERMS_IOCTLDRIVER;
+		else {
+			fprintf(fp, "     ERROR: no valid xperms specified\n");
+			return -1;
+		}
+
+		xperms.driver = avrule->xperms->driver;
+		for (i = 0; i < EXTENDED_PERMS_LEN; i++)
+			xperms.perms[i] = avrule->xperms->perms[i];
+
+		fprintf(fp, "%s", sepol_extended_perms_to_string(&xperms));
 	}
 
 	fprintf(fp, ";\n");

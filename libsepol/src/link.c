@@ -1325,6 +1325,15 @@ static int copy_avrule_list(avrule_t * list, avrule_t ** dst,
 			tail_perm = new_perm;
 			cur_perm = cur_perm->next;
 		}
+
+		if (cur->xperms) {
+			new_rule->xperms = calloc(1, sizeof(*new_rule->xperms));
+			if (!new_rule->xperms)
+				goto cleanup;
+			memcpy(new_rule->xperms, cur->xperms,
+			       sizeof(*new_rule->xperms));
+		}
+
 		new_rule->line = cur->line;
 		new_rule->source_line = cur->source_line;
 		if (cur->source_filename) {
@@ -2567,6 +2576,12 @@ int link_modules(sepol_handle_t * handle,
 				ERR(state.handle,
 				    "Tried to link in an MLS module with a non-MLS base.");
 			goto cleanup;
+		}
+
+		if (mods[i]->policyvers > b->policyvers) {
+			WARN(state.handle,
+			     "Upgrading policy version from %u to %u\n", b->policyvers, mods[i]->policyvers);
+			b->policyvers = mods[i]->policyvers;
 		}
 
 		if ((modules[i] =

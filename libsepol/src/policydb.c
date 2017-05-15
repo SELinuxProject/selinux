@@ -284,6 +284,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
+	 .type = POLICY_BASE,
+	 .version = MOD_POLICYDB_VERSION_XPERMS_IOCTL,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_NODE6 + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -377,6 +384,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_CONSTRAINT_NAMES,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = 0,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_MOD,
+	 .version = MOD_POLICYDB_VERSION_XPERMS_IOCTL,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = 0,
 	 .target_platform = SEPOL_TARGET_SELINUX,
@@ -557,6 +571,8 @@ void avrule_destroy(avrule_t * x)
 		next = cur->next;
 		free(cur);
 	}
+
+	free(x->xperms);
 }
 
 void role_trans_rule_init(role_trans_rule_t * x)
@@ -3215,8 +3231,8 @@ static avrule_t *avrule_read(policydb_t * p
 	if (rc < 0)
 		goto bad;
 
-	(avrule)->specified = le32_to_cpu(buf[0]);
-	(avrule)->flags = le32_to_cpu(buf[1]);
+	avrule->specified = le32_to_cpu(buf[0]);
+	avrule->flags = le32_to_cpu(buf[1]);
 
 	if (type_set_read(&avrule->stypes, fp))
 		goto bad;
@@ -3250,6 +3266,52 @@ static avrule_t *avrule_read(policydb_t * p
 			tail->next = cur;
 		}
 		tail = cur;
+	}
+
+	if (avrule->specified & AVRULE_XPERMS) {
+		uint8_t buf8;
+		size_t nel = ARRAY_SIZE(avrule->xperms->perms);
+		uint32_t buf32[nel];
+
+		if (p->policyvers < MOD_POLICYDB_VERSION_XPERMS_IOCTL) {
+			ERR(fp->handle,
+			    "module policy version %u does not support ioctl"
+			    " extended permissions rules and one was specified",
+			    p->policyvers);
+			goto bad;
+		}
+
+		if (p->target_platform != SEPOL_TARGET_SELINUX) {
+			ERR(fp->handle,
+			    "Target platform %s does not support ioctl"
+			    " extended permissions rules and one was specified",
+			    policydb_target_strings[p->target_platform]);
+			goto bad;
+		}
+
+		avrule->xperms = calloc(1, sizeof(*avrule->xperms));
+		if (!avrule->xperms)
+			goto bad;
+
+		rc = next_entry(&buf8, fp, sizeof(uint8_t));
+		if (rc < 0) {
+			ERR(fp->handle, "truncated entry");
+			goto bad;
+		}
+		avrule->xperms->specified = buf8;
+		rc = next_entry(&buf8, fp, sizeof(uint8_t));
+		if (rc < 0) {
+			ERR(fp->handle, "truncated entry");
+			goto bad;
+		}
+		avrule->xperms->driver = buf8;
+		rc = next_entry(buf32, fp, sizeof(uint32_t)*nel);
+		if (rc < 0) {
+			ERR(fp->handle, "truncated entry");
+			goto bad;
+		}
+		for (i = 0; i < nel; i++)
+			avrule->xperms->perms[i] = le32_to_cpu(buf32[i]);
 	}
 
 	return avrule;
