@@ -76,7 +76,6 @@ extern int digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 extern void digest_gen_hash(struct selabel_digest *digest);
 
 extern struct selabel_sub *selabel_subs_init(const char *path,
-				    struct selabel_sub *list,
 				    struct selabel_digest *digest);
 
 struct selabel_lookup_rec {

@@ -92,12 +92,11 @@ static char *selabel_sub(struct selabel_sub *ptr, const char *src)
 }
 
 struct selabel_sub *selabel_subs_init(const char *path,
-					    struct selabel_sub *list,
-					    struct selabel_digest *digest)
+				      struct selabel_digest *digest)
 {
 	char buf[1024];
 	FILE *cfg = fopen(path, "re");
-	struct selabel_sub *sub = NULL;
+	struct selabel_sub *list = NULL, *sub = NULL;
 	struct stat sb;
 
 	if (!cfg)
@@ -146,6 +145,7 @@ struct selabel_sub *selabel_subs_init(const char *path,
 		sub->slen = strlen(src);
 		sub->next = list;
 		list = sub;
+		sub = NULL;
 	}
 
 	if (digest_add_specfile(digest, cfg, NULL, sb.st_size, path) < 0)
@@ -158,6 +158,14 @@ err:
 	if (sub)
 		free(sub->src);
 	free(sub);
+	while (list) {
+		sub = list->next;
+		free(list->src);
+		free(list->dst);
+		free(list);
+		list = sub;
+	}
+	list = NULL;
 	goto out;
 }
 

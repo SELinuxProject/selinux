@@ -589,17 +589,15 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	if (!path) {
 		rec->dist_subs =
 		    selabel_subs_init(selinux_file_context_subs_dist_path(),
-		    rec->dist_subs, rec->digest);
+		    rec->digest);
 		rec->subs = selabel_subs_init(selinux_file_context_subs_path(),
-		    rec->subs, rec->digest);
+		    rec->digest);
 		path = selinux_file_context_path();
 	} else {
 		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist", path);
-		rec->dist_subs = selabel_subs_init(subs_file, rec->dist_subs,
-							    rec->digest);
+		rec->dist_subs = selabel_subs_init(subs_file, rec->digest);
 		snprintf(subs_file, sizeof(subs_file), "%s.subs", path);
-		rec->subs = selabel_subs_init(subs_file, rec->subs,
-							    rec->digest);
+		rec->subs = selabel_subs_init(subs_file, rec->digest);
 	}
 
 #endif
