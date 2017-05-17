@@ -3212,8 +3212,7 @@ common_read, class_read, role_read, type_read, user_read,
 
 /************** module reading functions below **************/
 
-static avrule_t *avrule_read(policydb_t * p
-			     __attribute__ ((unused)), struct policy_file *fp)
+static avrule_t *avrule_read(policydb_t * p, struct policy_file *fp)
 {
 	unsigned int i;
 	uint32_t buf[2], len;
