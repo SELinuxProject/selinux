@@ -91,16 +91,20 @@ static char *selabel_sub(struct selabel_sub *ptr, const char *src)
 	return NULL;
 }
 
-struct selabel_sub *selabel_subs_init(const char *path,
-				      struct selabel_digest *digest)
+int selabel_subs_init(const char *path, struct selabel_digest *digest,
+		       struct selabel_sub **out_subs)
 {
 	char buf[1024];
 	FILE *cfg = fopen(path, "re");
 	struct selabel_sub *list = NULL, *sub = NULL;
 	struct stat sb;
+	int status = -1;
 
-	if (!cfg)
-		return list;
+	*out_subs = NULL;
+	if (!cfg) {
+		/* If the file does not exist, it is not fatal */
+		return (errno == ENOENT) ? 0 : -1;
+	}
 
 	if (fstat(fileno(cfg), &sb) < 0)
 		goto out;
@@ -151,9 +155,12 @@ struct selabel_sub *selabel_subs_init(const char *path,
 	if (digest_add_specfile(digest, cfg, NULL, sb.st_size, path) < 0)
 		goto err;
 
+	*out_subs = list;
+	status = 0;
+
 out:
 	fclose(cfg);
-	return list;
+	return status;
 err:
 	if (sub)
 		free(sub->src);
@@ -165,7 +172,6 @@ err:
 		free(list);
 		list = sub;
 	}
-	list = NULL;
 	goto out;
 }
 

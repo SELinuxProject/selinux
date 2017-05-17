@@ -587,17 +587,27 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	char subs_file[PATH_MAX + 1];
 	/* Process local and distribution substitution files */
 	if (!path) {
-		rec->dist_subs =
-		    selabel_subs_init(selinux_file_context_subs_dist_path(),
-		    rec->digest);
-		rec->subs = selabel_subs_init(selinux_file_context_subs_path(),
-		    rec->digest);
+		status = selabel_subs_init(
+			selinux_file_context_subs_dist_path(),
+			rec->digest, &rec->dist_subs);
+		if (status)
+			goto finish;
+		status = selabel_subs_init(selinux_file_context_subs_path(),
+			rec->digest, &rec->subs);
+		if (status)
+			goto finish;
 		path = selinux_file_context_path();
 	} else {
 		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist", path);
-		rec->dist_subs = selabel_subs_init(subs_file, rec->digest);
+		status = selabel_subs_init(subs_file, rec->digest,
+					   &rec->dist_subs);
+		if (status)
+			goto finish;
 		snprintf(subs_file, sizeof(subs_file), "%s.subs", path);
-		rec->subs = selabel_subs_init(subs_file, rec->digest);
+		status = selabel_subs_init(subs_file, rec->digest,
+					   &rec->subs);
+		if (status)
+			goto finish;
 	}
 
 #endif
