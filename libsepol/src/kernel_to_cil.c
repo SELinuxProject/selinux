@@ -2043,7 +2043,7 @@ static int write_cond_nodes_to_cil(FILE *out, struct policydb *pdb)
 		num++;
 	}
 
-	cond_data = calloc(sizeof(struct cond_data), num);
+	cond_data = calloc(num, sizeof(struct cond_data));
 	if (!cond_data) {
 		rc = -1;
 		goto exit;
