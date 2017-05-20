@@ -1662,6 +1662,9 @@ static int common_to_cil(char *key, void *data, void *UNUSED(arg))
 
 	arr.count = 0;
 	arr.perms = calloc(common->permissions.nprim, sizeof(*arr.perms));
+	if (arr.perms == NULL) {
+		goto exit;
+	}
 	rc = hashtab_map(common->permissions.table, class_perm_to_array, &arr);
 	if (rc != 0) {
 		goto exit;
@@ -1952,6 +1955,9 @@ static int class_to_cil(int indent, struct policydb *pdb, struct avrule_block *U
 
 	arr.count = 0;
 	arr.perms = calloc(class->permissions.nprim, sizeof(*arr.perms));
+	if (arr.perms == NULL) {
+		goto exit;
+	}
 	rc = hashtab_map(class->permissions.table, class_perm_to_array, &arr);
 	if (rc != 0) {
 		goto exit;
