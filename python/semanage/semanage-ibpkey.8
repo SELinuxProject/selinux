@@ -1,0 +1,66 @@
+.TH "semanage-ibpkey" "8" "20170508" "" ""
+.SH "NAME"
+.B semanage\-ibpkey \- SELinux Policy Management ibpkey mapping tool
+.SH "SYNOPSIS"
+.B semanage ibpkey [\-h] [\-n] [\-N] [\-S STORE] [ \-\-add \-t TYPE \-x SUBNET_PREFIX \-r RANGE ibpkey_name | ibpkey_range | \-\-delete \-x SUBNET_PREFIX ibpkey_name | ibpkey_range | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-t TYPE \-x SUBNET_PREFIX \-r RANGE ibpkey_name | ibpkey_range ]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage ibpkey controls the ibpkey number to ibpkey type definitions.
+
+.SH "OPTIONS"
+.TP
+.I  \-h, \-\-help
+show this help message and exit
+.TP
+.I   \-n, \-\-noheading
+Do not print heading when listing the specified object type
+.TP
+.I   \-N, \-\-noreload
+Do not reload policy after commit
+.TP
+.I   \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+.TP
+.I   \-C, \-\-locallist
+List local customizations
+.TP
+.I   \-a, \-\-add
+Add a record of the specified object type
+.TP
+.I   \-d, \-\-delete
+Delete a record of the specified object type
+.TP
+.I   \-m, \-\-modify
+Modify a record of the specified object type
+.TP
+.I   \-l, \-\-list
+List records of the specified object type
+.TP
+.I   \-E, \-\-extract
+Extract customizable commands, for use within a transaction
+.TP
+.I   \-D, \-\-deleteall
+Remove all local customizations
+.TP
+.I   \-t TYPE, \-\-type TYPE
+SELinux type for the object
+.TP
+.I   \-r RANGE, \-\-range RANGE
+MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login mapping defaults to the SELinux user record range. SELinux Range for SELinux user defaults to s0.
+.TP
+.I \-x SUBNET_PREFIX, \-\-subnet_prefix SUBNET_PREFIX
+Subnet prefix for the specified pkey or range of pkeys.
+
+.SH EXAMPLE
+.nf
+List all ibpkey definitions
+# semanage ibpkey \-l
+Label pkey 0x8FFF (limited membership default pkey) as a default pkey type
+# semanage ibpkey \-a \-t default_ibpkey_t \-x fe80:: 0x8FFF
+
+.SH "SEE ALSO"
+.BR selinux (8),
+.BR semanage (8)
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>

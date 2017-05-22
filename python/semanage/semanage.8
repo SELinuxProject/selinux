@@ -3,7 +3,7 @@
 semanage \- SELinux Policy Management tool
 
 .SH "SYNOPSIS"
-.B semanage                {import,export,login,user,port,interface,module,node,fcontext,boolean,permissive,dontaudit}
+.B semanage                {import,export,login,user,port,interface,module,node,fcontext,boolean,permissive,dontaudit,ibpkey,ibendport}
                 ...
 .B positional arguments:
 
@@ -43,6 +43,12 @@ Manage process type enforcement mode
 .B    dontaudit
 Disable/Enable dontaudit rules in policy
 
+.B    ibpkey
+Manage infiniband pkey type definitions
+
+.B    ibendport
+Manage infiniband end port type definitions
+
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
 SELinux policy without requiring modification to or recompilation
@@ -50,9 +56,9 @@ from policy sources.  This includes the mapping from Linux usernames
 to SELinux user identities (which controls the initial security context
 assigned to Linux users when they login and bounds their authorized role set)
 as well as security context mappings for various kinds of objects, such
-as network ports, interfaces, and nodes (hosts) as well as the file
-context mapping. See the EXAMPLES section below for some examples
-of common usage.  Note that the semanage login command deals with the
+as network ports, interfaces, infiniband pkeys and endports, and nodes (hosts)
+as well as the file context mapping. See the EXAMPLES section below for some
+examples of common usage.  Note that the semanage login command deals with the
 mapping from Linux usernames (logins) to SELinux user identities,
 while the semanage user command deals with the mapping from SELinux
 user identities to authorized role sets.  In most cases, only the
@@ -79,6 +85,8 @@ List help information
 .BR semanage-permissive (8),
 .BR semanage-port (8),
 .BR semanage-user (8)
+.BR semanage-ibkey (8),
+.BR semanage-ibendport (8),
 
 .SH "AUTHOR"
 This man page was written by Daniel Walsh <dwalsh@redhat.com>

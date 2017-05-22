@@ -1,0 +1,66 @@
+.TH "semanage-ibendport" "8" "20170508" "" ""
+.SH "NAME"
+.B semanage\-ibendport \- SELinux Policy Management ibendport mapping tool
+.SH "SYNOPSIS"
+.B semanage ibendport [\-h] [\-n] [\-N] [\-S STORE] [ \-\-add \-t TYPE \-z IBDEV_NAME \-r RANGE port | \-\-delete \-z IBDEV_NAME port | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-t TYPE \-z IBDEV_NAME \-r RANGE port ]
+
+.SH "DESCRIPTION"
+semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage ibendport controls the ibendport number to ibendport type definitions.
+
+.SH "OPTIONS"
+.TP
+.I  \-h, \-\-help
+show this help message and exit
+.TP
+.I   \-n, \-\-noheading
+Do not print heading when listing the specified object type
+.TP
+.I   \-N, \-\-noreload
+Do not reload policy after commit
+.TP
+.I   \-S STORE, \-\-store STORE
+Select an alternate SELinux Policy Store to manage
+.TP
+.I   \-C, \-\-locallist
+List local customizations
+.TP
+.I   \-a, \-\-add
+Add a record of the specified object type
+.TP
+.I   \-d, \-\-delete
+Delete a record of the specified object type
+.TP
+.I   \-m, \-\-modify
+Modify a record of the specified object type
+.TP
+.I   \-l, \-\-list
+List records of the specified object type
+.TP
+.I   \-E, \-\-extract
+Extract customizable commands, for use within a transaction
+.TP
+.I   \-D, \-\-deleteall
+Remove all local customizations
+.TP
+.I   \-t TYPE, \-\-type TYPE
+SELinux type for the object
+.TP
+.I   \-r RANGE, \-\-range RANGE
+MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login mapping defaults to the SELinux user record range. SELinux Range for SELinux user defaults to s0.
+.TP
+.I \-z IBDEV_NAME, \-\-ibdev_name IBDEV_NAME
+The name of the infiniband device for the port to be labeled.  (ex. mlx5_0)
+
+.SH EXAMPLE
+.nf
+List all ibendport definitions
+# semanage ibendport \-l
+Label mlx4_0 port 2.
+# semanage ibendport \-a \-t allowed_ibendport_t \-z mlx4_0 2
+
+.SH "SEE ALSO"
+.BR selinux (8),
+.BR semanage (8)
+
+.SH "AUTHOR"
+This man page was written by Daniel Walsh <dwalsh@redhat.com>
