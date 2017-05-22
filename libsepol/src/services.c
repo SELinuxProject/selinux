@@ -1948,6 +1948,43 @@ out:
 }
 
 /*
+ * Return the SID of the subnet management interface specified by
+ * `device name', and `port'.
+ */
+int hidden sepol_ibendport_sid(char *dev_name,
+			       uint8_t port,
+			       sepol_security_id_t *out_sid)
+{
+	ocontext_t *c;
+	int rc = 0;
+
+	c = policydb->ocontexts[OCON_IBENDPORT];
+	while (c) {
+		if (c->u.ibendport.port == port &&
+		    !strcmp(dev_name, c->u.ibendport.dev_name))
+			break;
+		c = c->next;
+	}
+
+	if (c) {
+		if (!c->sid[0]) {
+			rc = sepol_sidtab_context_to_sid(sidtab,
+							 &c->context[0],
+							 &c->sid[0]);
+			if (rc)
+				goto out;
+		}
+		*out_sid = c->sid[0];
+	} else {
+		*out_sid = SECINITSID_UNLABELED;
+	}
+
+out:
+	return rc;
+}
+
+
+/*
  * Return the SID of the port specified by
  * `domain', `type', `protocol', and `port'.
  */

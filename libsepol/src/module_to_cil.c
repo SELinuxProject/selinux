@@ -2782,6 +2782,19 @@ exit:
 	return rc;
 }
 
+static int ocontext_selinux_ibendport_to_cil(struct policydb *pdb, struct ocontext *ibendports)
+{
+	struct ocontext *ibendport;
+
+	for (ibendport = ibendports; ibendport; ibendport = ibendport->next) {
+		cil_printf("(ibendportcon %s %u ", ibendport->u.ibendport.dev_name, ibendport->u.ibendport.port);
+		context_to_cil(pdb, &ibendport->context[0]);
+
+		cil_printf(")\n");
+	}
+
+	return 0;
+}
 
 static int ocontext_selinux_fsuse_to_cil(struct policydb *pdb, struct ocontext *fsuses)
 {
@@ -2936,6 +2949,7 @@ static int ocontexts_to_cil(struct policydb *pdb)
 		ocontext_selinux_fsuse_to_cil,
 		ocontext_selinux_node6_to_cil,
 		ocontext_selinux_ibpkey_to_cil,
+		ocontext_selinux_ibendport_to_cil,
 	};
 	static int (*ocon_xen_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
 		ocontext_xen_isid_to_cil,

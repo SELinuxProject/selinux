@@ -2224,6 +2224,14 @@ static int ocontext_copy_selinux(expand_state_t *state)
 				n->u.ibpkey.low_pkey = c->u.ibpkey.low_pkey;
 				n->u.ibpkey.high_pkey = c->u.ibpkey.high_pkey;
 			break;
+			case OCON_IBENDPORT:
+				n->u.ibendport.dev_name = strdup(c->u.ibendport.dev_name);
+				if (!n->u.ibendport.dev_name) {
+					ERR(state->handle, "Out of memory!");
+					return -1;
+				}
+				n->u.ibendport.port = c->u.ibendport.port;
+				break;
 			case OCON_PORT:
 				n->u.port.protocol = c->u.port.protocol;
 				n->u.port.low_port = c->u.port.low_port;

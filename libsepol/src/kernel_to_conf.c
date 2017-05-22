@@ -2703,6 +2703,42 @@ exit:
 	return rc;
 }
 
+static int write_selinux_ibendport_rules_to_conf(FILE *out, struct policydb *pdb)
+{
+	struct ocontext *ibendportcon;
+	char port_str[4];
+	char *ctx;
+	int rc = 0;
+
+	for (ibendportcon = pdb->ocontexts[OCON_IBENDPORT];
+	     ibendportcon != NULL; ibendportcon = ibendportcon->next) {
+		rc = snprintf(port_str, 4, "%u", ibendportcon->u.ibendport.port);
+		if (rc < 0 || rc >= 4) {
+			rc = -1;
+			goto exit;
+		}
+
+		ctx = context_to_str(pdb, &ibendportcon->context[0]);
+		if (!ctx) {
+			rc = -1;
+			goto exit;
+		}
+
+		sepol_printf(out, "ibendportcon %s %s %s\n", ibendportcon->u.ibendport.dev_name, port_str, ctx);
+
+		free(ctx);
+	}
+
+	rc = 0;
+
+exit:
+	if (rc != 0) {
+		sepol_log_err("Error writing ibendportcon rules to policy.conf\n");
+	}
+
+	return rc;
+}
+
 static int write_xen_isid_rules_to_conf(FILE *out, struct policydb *pdb)
 {
 	return write_sid_context_rules_to_conf(out, pdb, xen_sid_to_str);
@@ -3105,6 +3141,11 @@ int sepol_kernel_policydb_to_conf(FILE *out, struct policydb *pdb)
 		}
 
 		rc = write_selinux_ibpkey_rules_to_conf(out, pdb);
+		if (rc != 0) {
+			goto exit;
+		}
+
+		rc = write_selinux_ibendport_rules_to_conf(out, pdb);
 		if (rc != 0) {
 			goto exit;
 		}

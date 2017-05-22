@@ -190,7 +190,7 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .type = POLICY_KERN,
 	 .version = POLICYDB_VERSION_INFINIBAND,
 	 .sym_num = SYM_NUM,
-	 .ocon_num = OCON_IBPKEY + 1,
+	 .ocon_num = OCON_IBENDPORT + 1,
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
@@ -302,7 +302,7 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .type = POLICY_BASE,
 	 .version = MOD_POLICYDB_VERSION_INFINIBAND,
 	 .sym_num = SYM_NUM,
-	 .ocon_num = OCON_IBPKEY + 1,
+	 .ocon_num = OCON_IBENDPORT + 1,
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
@@ -2804,7 +2804,7 @@ static int ocontext_read_selinux(struct policydb_compat_info *info,
 				if (rc < 0)
 					return -1;
 				len = le32_to_cpu(buf[0]);
-				if (zero_or_saturated(len))
+				if (zero_or_saturated(len) || len > 63)
 					return -1;
 				c->u.name = malloc(len + 1);
 				if (!c->u.name)
@@ -2831,6 +2831,26 @@ static int ocontext_read_selinux(struct policydb_compat_info *info,
 				c->u.ibpkey.low_pkey = le32_to_cpu(buf[2]);
 				c->u.ibpkey.high_pkey = le32_to_cpu(buf[3]);
 
+				if (context_read_and_validate
+				    (&c->context[0], p, fp))
+					return -1;
+				break;
+			case OCON_IBENDPORT:
+				rc = next_entry(buf, fp, sizeof(uint32_t) * 2);
+				if (rc < 0)
+					return -1;
+				len = le32_to_cpu(buf[0]);
+				if (len == 0 || len > IB_DEVICE_NAME_MAX - 1)
+					return -1;
+
+				c->u.ibendport.dev_name = malloc(len + 1);
+				if (!c->u.ibendport.dev_name)
+					return -1;
+				rc = next_entry(c->u.ibendport.dev_name, fp, len);
+				if (rc < 0)
+					return -1;
+				c->u.ibendport.dev_name[len] = 0;
+				c->u.ibendport.port = le32_to_cpu(buf[1]);
 				if (context_read_and_validate
 				    (&c->context[0], p, fp))
 					return -1;

@@ -532,6 +532,19 @@ static int ibpkey_data_cmp(const void *a, const void *b)
 			      (*bb)->u.ibpkey.low_pkey, (*bb)->u.ibpkey.high_pkey);
 }
 
+static int ibendport_data_cmp(const void *a, const void *b)
+{
+	int rc;
+	struct ocontext *const *aa = a;
+	struct ocontext *const *bb = b;
+
+	rc = strcmp((*aa)->u.ibendport.dev_name, (*bb)->u.ibendport.dev_name);
+	if (rc)
+		return rc;
+
+	return (*aa)->u.ibendport.port - (*bb)->u.ibendport.port;
+}
+
 static int pirq_data_cmp(const void *a, const void *b)
 {
 	struct ocontext *const *aa = a;
@@ -657,6 +670,11 @@ int sort_ocontexts(struct policydb *pdb)
 		}
 
 		rc = sort_ocontext_data(&pdb->ocontexts[OCON_IBPKEY], ibpkey_data_cmp);
+		if (rc != 0) {
+			goto exit;
+		}
+
+		rc = sort_ocontext_data(&pdb->ocontexts[OCON_IBENDPORT], ibendport_data_cmp);
 		if (rc != 0) {
 			goto exit;
 		}

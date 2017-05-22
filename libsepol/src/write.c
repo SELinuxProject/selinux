@@ -1427,6 +1427,20 @@ static int ocontext_write_selinux(struct policydb_compat_info *info,
 				if (context_write(p, &c->context[0], fp))
 					return POLICYDB_ERROR;
 				break;
+			case OCON_IBENDPORT:
+				len = strlen(c->u.ibendport.dev_name);
+				buf[0] = cpu_to_le32(len);
+				buf[1] = cpu_to_le32(c->u.ibendport.port);
+				items = put_entry(buf, sizeof(uint32_t), 2, fp);
+				if (items != 2)
+					return POLICYDB_ERROR;
+				items = put_entry(c->u.ibendport.dev_name, 1, len, fp);
+				if (items != len)
+					return POLICYDB_ERROR;
+
+				if (context_write(p, &c->context[0], fp))
+					return POLICYDB_ERROR;
+				break;
 			case OCON_PORT:
 				buf[0] = c->u.port.protocol;
 				buf[1] = c->u.port.low_port;

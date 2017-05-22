@@ -701,6 +701,7 @@ int main(int argc, char **argv)
 	printf("i)  display constraint expressions\n");
 	printf("j)  display validatetrans expressions\n");
 	printf("k)  Call ibpkey_sid\n");
+	printf("l)  Call ibendport_sid\n");
 #ifdef EQUIVTYPES
 	printf("z)  Show equivalent types\n");
 #endif
@@ -1246,6 +1247,25 @@ int main(int argc, char **argv)
 				sepol_ibpkey_sid(subnet_prefix, pkey, &ssid);
 				printf("sid %d\n", ssid);
 			}
+			break;
+		case 'l':
+			printf("device name (eg. mlx4_0)?  ");
+			FGETS(ans, sizeof(ans), stdin);
+			ans[strlen(ans) - 1] = 0;
+
+			name = malloc((strlen(ans) + 1) * sizeof(char));
+			if (!name) {
+				fprintf(stderr, "couldn't malloc string.\n");
+				break;
+			}
+			strcpy(name, ans);
+
+			printf("port? ");
+			FGETS(ans, sizeof(ans), stdin);
+			port = atoi(ans);
+			sepol_ibendport_sid(name, port, &ssid);
+			printf("sid %d\n", ssid);
+			free(name);
 			break;
 #ifdef EQUIVTYPES
 		case 'z':
