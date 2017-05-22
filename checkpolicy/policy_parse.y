@@ -21,6 +21,7 @@
  * Copyright (C) 2004-2005 Trusted Computer Solutions, Inc.
  * Copyright (C) 2003 - 2008 Tresys Technology, LLC
  * Copyright (C) 2007 Red Hat Inc.
+ * Copyright (C) 2017 Mellanox Technologies Inc.
  *	This program is free software; you can redistribute it and/or modify
  *  	it under the terms of the GNU General Public License as published by
  *	the Free Software Foundation, version 2.
@@ -135,6 +136,7 @@ typedef int (* require_func_t)(int pass);
 %token TARGET
 %token SAMEUSER
 %token FSCON PORTCON NETIFCON NODECON 
+%token IBPKEYCON
 %token PIRQCON IOMEMCON IOPORTCON PCIDEVICECON DEVICETREECON
 %token FSUSEXATTR FSUSETASK FSUSETRANS
 %token GENFSCON
@@ -170,7 +172,7 @@ base_policy             : { if (define_policy(pass, 0) == -1) return -1; }
 			  opt_default_rules opt_mls te_rbac users opt_constraints 
                          { if (pass == 1) { if (policydb_index_bools(policydbp)) return -1;}
 			   else if (pass == 2) { if (policydb_index_others(NULL, policydbp, 0)) return -1;}}
-			  initial_sid_contexts opt_fs_contexts opt_fs_uses opt_genfs_contexts net_contexts opt_dev_contexts
+			  initial_sid_contexts opt_fs_contexts opt_fs_uses opt_genfs_contexts net_contexts opt_dev_contexts opt_ibpkey_contexts
 			;
 classes			: class_def 
 			| classes class_def
@@ -712,6 +714,17 @@ port_context_def	: PORTCON identifier number security_context_def
 			{if (define_port_context($3,$3)) return -1;}
 			| PORTCON identifier number '-' number security_context_def
 			{if (define_port_context($3,$5)) return -1;}
+			;
+opt_ibpkey_contexts     : ibpkey_contexts
+                        |
+                        ;
+ibpkey_contexts		: ibpkey_context_def
+			| ibpkey_contexts ibpkey_context_def
+			;
+ibpkey_context_def	: IBPKEYCON ipv6_addr number security_context_def
+			{if (define_ibpkey_context($3,$3)) return -1;}
+			| IBPKEYCON ipv6_addr number '-' number security_context_def
+			{if (define_ibpkey_context($3,$5)) return -1;}
 			;
 opt_netif_contexts      : netif_contexts 
                         |

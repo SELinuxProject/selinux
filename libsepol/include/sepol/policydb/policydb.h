@@ -24,6 +24,7 @@
  * Copyright (C) 2004-2005 Trusted Computer Solutions, Inc.
  * Copyright (C) 2003 - 2004 Tresys Technology, LLC
  * Copyright (C) 2003 - 2004 Red Hat, Inc.
+ * Copyright (C) 2017 Mellanox Techonolgies Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -358,6 +359,11 @@ typedef struct ocontext {
 			uint32_t low_ioport;
 			uint32_t high_ioport;
 		} ioport;
+		struct {
+			uint64_t subnet_prefix;
+			uint16_t low_pkey;
+			uint16_t high_pkey;
+		} ibpkey;
 	} u;
 	union {
 		uint32_t sclass;	/* security class for genfs */
@@ -386,14 +392,14 @@ typedef struct genfs {
 #define SYM_NUM     8
 
 /* object context array indices */
-#define OCON_ISID  0		/* initial SIDs */
-#define OCON_FS    1		/* unlabeled file systems */
-#define OCON_PORT  2		/* TCP and UDP port numbers */
-#define OCON_NETIF 3		/* network interfaces */
-#define OCON_NODE  4		/* nodes */
-#define OCON_FSUSE 5		/* fs_use */
-#define OCON_NODE6 6		/* IPv6 nodes */
-#define OCON_GENFS 7            /* needed for ocontext_supported */
+#define OCON_ISID  0	/* initial SIDs */
+#define OCON_FS    1	/* unlabeled file systems */
+#define OCON_PORT  2	/* TCP and UDP port numbers */
+#define OCON_NETIF 3	/* network interfaces */
+#define OCON_NODE  4	/* nodes */
+#define OCON_FSUSE 5	/* fs_use */
+#define OCON_NODE6 6	/* IPv6 nodes */
+#define OCON_IBPKEY 7	/* Infiniband PKEY */
 
 /* object context array indices for Xen */
 #define OCON_XEN_ISID  	    0    /* initial SIDs */
@@ -404,7 +410,7 @@ typedef struct genfs {
 #define OCON_XEN_DEVICETREE 5    /* device tree node */
 
 /* OCON_NUM needs to be the largest index in any platform's ocontext array */
-#define OCON_NUM   7
+#define OCON_NUM   8
 
 /* section: module information */
 
@@ -726,10 +732,11 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_CONSTRAINT_NAMES	29
 #define POLICYDB_VERSION_XEN_DEVICETREE		30 /* Xen-specific */
 #define POLICYDB_VERSION_XPERMS_IOCTL	30 /* Linux-specific */
+#define POLICYDB_VERSION_INFINIBAND		31 /* Linux-specific */
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_XPERMS_IOCTL
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_INFINIBAND
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE		4
@@ -749,9 +756,10 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_DEFAULT_TYPE	16
 #define MOD_POLICYDB_VERSION_CONSTRAINT_NAMES  17
 #define MOD_POLICYDB_VERSION_XPERMS_IOCTL  18
+#define MOD_POLICYDB_VERSION_INFINIBAND		19
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_XPERMS_IOCTL
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_INFINIBAND
 
 #define POLICYDB_CONFIG_MLS    1
 

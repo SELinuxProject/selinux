@@ -12,6 +12,7 @@
  *	Added support for binary policy modules
  *
  * Copyright (C) 2003-5 Tresys Technology, LLC
+ * Copyright (C) 2017 Mellanox Technologies Inc.
  *	This program is free software; you can redistribute it and/or modify
  *  	it under the terms of the GNU General Public License as published by
  *	the Free Software Foundation, version 2.
@@ -183,6 +184,8 @@ INCOMP |
 incomp				{ return(INCOMP);}
 fscon |
 FSCON                           { return(FSCON);}
+ibpkeycon |
+IBPKEYCON			{ return(IBPKEYCON);}
 portcon |
 PORTCON				{ return(PORTCON);}
 netifcon |                     
