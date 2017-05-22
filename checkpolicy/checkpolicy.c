@@ -22,6 +22,7 @@
  *
  *	Policy Module support.
  *
+ * Copyright (C) 2017 Mellanox Technologies Inc.
  * Copyright (C) 2004-2005 Trusted Computer Solutions, Inc.
  * Copyright (C) 2003 - 2005 Tresys Technology, LLC
  * Copyright (C) 2003 Red Hat, Inc., James Morris <jmorris@redhat.com>
@@ -699,6 +700,7 @@ int main(int argc, char **argv)
 	printf("h)  change a boolean value\n");
 	printf("i)  display constraint expressions\n");
 	printf("j)  display validatetrans expressions\n");
+	printf("k)  Call ibpkey_sid\n");
 #ifdef EQUIVTYPES
 	printf("z)  Show equivalent types\n");
 #endif
@@ -1218,6 +1220,31 @@ int main(int argc, char **argv)
 			} else {
 				printf(
 				    "\nNo validatetrans expressions found.\n");
+			}
+			break;
+		case 'k':
+			{
+				char *p;
+				struct in6_addr addr6;
+				uint64_t subnet_prefix;
+				unsigned int pkey;
+
+				printf("subnet prefix?  ");
+				FGETS(ans, sizeof(ans), stdin);
+				ans[strlen(ans) - 1] = 0;
+				p = (char *)&addr6;
+
+				if (inet_pton(AF_INET6, ans, p) < 1) {
+					printf("error parsing subnet prefix\n");
+					break;
+				}
+
+				memcpy(&subnet_prefix, p, sizeof(subnet_prefix));
+				printf("pkey? ");
+				FGETS(ans, sizeof(ans), stdin);
+				pkey = atoi(ans);
+				sepol_ibpkey_sid(subnet_prefix, pkey, &ssid);
+				printf("sid %d\n", ssid);
 			}
 			break;
 #ifdef EQUIVTYPES

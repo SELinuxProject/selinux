@@ -18,6 +18,7 @@
  * Copyright (C) 2004-2005 Trusted Computer Solutions, Inc.
  * Copyright (C) 2003 - 2005 Tresys Technology, LLC
  * Copyright (C) 2003 - 2007 Red Hat, Inc.
+ * Copyright (C) 2017 Mellanox Technologies Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -186,6 +187,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
+	 .type = POLICY_KERN,
+	 .version = POLICYDB_VERSION_INFINIBAND,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_IBPKEY + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
 	 .type = POLICY_BASE,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -291,6 +299,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
+	 .type = POLICY_BASE,
+	 .version = MOD_POLICYDB_VERSION_INFINIBAND,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_IBPKEY + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -391,6 +406,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_XPERMS_IOCTL,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = 0,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_MOD,
+	 .version = MOD_POLICYDB_VERSION_INFINIBAND,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = 0,
 	 .target_platform = SEPOL_TARGET_SELINUX,
@@ -2796,6 +2818,21 @@ static int ocontext_read_selinux(struct policydb_compat_info *info,
 					return -1;
 				if (context_read_and_validate
 				    (&c->context[1], p, fp))
+					return -1;
+				break;
+			case OCON_IBPKEY:
+				rc = next_entry(buf, fp, sizeof(uint32_t) * 4);
+				if (rc < 0 || buf[2] > 0xffff || buf[3] > 0xffff)
+					return -1;
+
+				memcpy(&c->u.ibpkey.subnet_prefix, buf,
+				       sizeof(c->u.ibpkey.subnet_prefix));
+
+				c->u.ibpkey.low_pkey = le32_to_cpu(buf[2]);
+				c->u.ibpkey.high_pkey = le32_to_cpu(buf[3]);
+
+				if (context_read_and_validate
+				    (&c->context[0], p, fp))
 					return -1;
 				break;
 			case OCON_PORT:

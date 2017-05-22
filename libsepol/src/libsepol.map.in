@@ -6,6 +6,7 @@ LIBSEPOL_1.0 {
 	sepol_context_*; sepol_mls_*; sepol_check_context;
 	sepol_iface_*; 
 	sepol_port_*;
+	sepol_ibpkey_*;
 	sepol_node_*;
 	sepol_user_*; sepol_genusers; sepol_set_delusers;
 	sepol_msg_*; sepol_debug;

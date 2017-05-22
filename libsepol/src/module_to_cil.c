@@ -3,6 +3,7 @@
  * Functions to convert policy module to CIL
  *
  * Copyright (C) 2015 Tresys Technology, LLC
+ * Copyright (C) 2017 Mellanox Technologies Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -2662,6 +2663,45 @@ exit:
 	return rc;
 }
 
+static int ocontext_selinux_ibpkey_to_cil(struct policydb *pdb,
+					struct ocontext *ibpkeycons)
+{
+	int rc = -1;
+	struct ocontext *ibpkeycon;
+	char subnet_prefix_str[INET6_ADDRSTRLEN];
+	struct in6_addr subnet_prefix = {0};
+	uint16_t high;
+	uint16_t low;
+
+	for (ibpkeycon = ibpkeycons; ibpkeycon; ibpkeycon = ibpkeycon->next) {
+		low = ibpkeycon->u.ibpkey.low_pkey;
+		high = ibpkeycon->u.ibpkey.high_pkey;
+		memcpy(&subnet_prefix.s6_addr, &ibpkeycon->u.ibpkey.subnet_prefix,
+		       sizeof(ibpkeycon->u.ibpkey.subnet_prefix));
+
+		if (inet_ntop(AF_INET6, &subnet_prefix.s6_addr,
+			      subnet_prefix_str, INET6_ADDRSTRLEN) == NULL) {
+			log_err("ibpkeycon subnet_prefix is invalid: %s",
+				strerror(errno));
+			rc = -1;
+			goto exit;
+		}
+
+		if (low == high)
+			cil_printf("(ibpkeycon %s %i ", subnet_prefix_str, low);
+		else
+			cil_printf("(ibpkeycon %s (%i %i) ", subnet_prefix_str, low,
+				   high);
+
+		context_to_cil(pdb, &ibpkeycon->context[0]);
+
+		cil_printf(")\n");
+	}
+	return 0;
+exit:
+	return rc;
+}
+
 static int ocontext_selinux_netif_to_cil(struct policydb *pdb, struct ocontext *netifs)
 {
 	struct ocontext *netif;
@@ -2895,6 +2935,7 @@ static int ocontexts_to_cil(struct policydb *pdb)
 		ocontext_selinux_node_to_cil,
 		ocontext_selinux_fsuse_to_cil,
 		ocontext_selinux_node6_to_cil,
+		ocontext_selinux_ibpkey_to_cil,
 	};
 	static int (*ocon_xen_funcs[OCON_NUM])(struct policydb *pdb, struct ocontext *ocon) = {
 		ocontext_xen_isid_to_cil,

@@ -16,6 +16,7 @@
  *
  * Copyright (C) 2004-2005 Trusted Computer Solutions, Inc.
  * Copyright (C) 2003-2005 Tresys Technology, LLC
+ * Copyright (C) 2017 Mellanox Technologies Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -1409,6 +1410,21 @@ static int ocontext_write_selinux(struct policydb_compat_info *info,
 				if (context_write(p, &c->context[0], fp))
 					return POLICYDB_ERROR;
 				if (context_write(p, &c->context[1], fp))
+					return POLICYDB_ERROR;
+				break;
+			case OCON_IBPKEY:
+				 /* The subnet prefix is in network order */
+				memcpy(buf, &c->u.ibpkey.subnet_prefix,
+				       sizeof(c->u.ibpkey.subnet_prefix));
+
+				buf[2] = cpu_to_le32(c->u.ibpkey.low_pkey);
+				buf[3] = cpu_to_le32(c->u.ibpkey.high_pkey);
+
+				items = put_entry(buf, sizeof(uint32_t), 4, fp);
+				if (items != 4)
+					return POLICYDB_ERROR;
+
+				if (context_write(p, &c->context[0], fp))
 					return POLICYDB_ERROR;
 				break;
 			case OCON_PORT:

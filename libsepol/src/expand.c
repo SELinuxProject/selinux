@@ -4,6 +4,7 @@
  *
  * Copyright (C) 2004-2005 Tresys Technology, LLC
  * Copyright (C) 2007 Red Hat, Inc.
+ * Copyright (C) 2017 Mellanox Technologies, Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -2217,6 +2218,12 @@ static int ocontext_copy_selinux(expand_state_t *state)
 					return -1;
 				}
 				break;
+			case OCON_IBPKEY:
+				n->u.ibpkey.subnet_prefix = c->u.ibpkey.subnet_prefix;
+
+				n->u.ibpkey.low_pkey = c->u.ibpkey.low_pkey;
+				n->u.ibpkey.high_pkey = c->u.ibpkey.high_pkey;
+			break;
 			case OCON_PORT:
 				n->u.port.protocol = c->u.port.protocol;
 				n->u.port.low_port = c->u.port.low_port;

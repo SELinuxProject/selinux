@@ -518,6 +518,20 @@ static int node6_data_cmp(const void *a, const void *b)
 	return memcmp(&(*aa)->u.node6.addr, &(*bb)->u.node6.addr, sizeof((*aa)->u.node6.addr));
 }
 
+static int ibpkey_data_cmp(const void *a, const void *b)
+{
+	int rc;
+	struct ocontext *const *aa = a;
+	struct ocontext *const *bb = b;
+
+	rc = (*aa)->u.ibpkey.subnet_prefix - (*bb)->u.ibpkey.subnet_prefix;
+	if (rc)
+		return rc;
+
+	return compare_ranges((*aa)->u.ibpkey.low_pkey, (*aa)->u.ibpkey.high_pkey,
+			      (*bb)->u.ibpkey.low_pkey, (*bb)->u.ibpkey.high_pkey);
+}
+
 static int pirq_data_cmp(const void *a, const void *b)
 {
 	struct ocontext *const *aa = a;
@@ -638,6 +652,11 @@ int sort_ocontexts(struct policydb *pdb)
 		}
 
 		rc = sort_ocontext_data(&pdb->ocontexts[6], node6_data_cmp);
+		if (rc != 0) {
+			goto exit;
+		}
+
+		rc = sort_ocontext_data(&pdb->ocontexts[OCON_IBPKEY], ibpkey_data_cmp);
 		if (rc != 0) {
 			goto exit;
 		}

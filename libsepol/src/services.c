@@ -21,6 +21,7 @@
  * Copyright (C) 2004-2005 Trusted Computer Solutions, Inc.
  * Copyright (C) 2003 - 2004 Tresys Technology, LLC
  * Copyright (C) 2003 - 2004 Red Hat, Inc.
+ * Copyright (C) 2017 Mellanox Technologies Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -1907,6 +1908,42 @@ int hidden sepol_fs_sid(char *name,
 	}
 
       out:
+	return rc;
+}
+
+/*
+ * Return the SID of the ibpkey specified by
+ * `subnet prefix', and `pkey number'.
+ */
+int hidden sepol_ibpkey_sid(uint64_t subnet_prefix,
+			    uint16_t pkey, sepol_security_id_t *out_sid)
+{
+	ocontext_t *c;
+	int rc = 0;
+
+	c = policydb->ocontexts[OCON_IBPKEY];
+	while (c) {
+		if (c->u.ibpkey.low_pkey <= pkey &&
+		    c->u.ibpkey.high_pkey >= pkey &&
+		    subnet_prefix == c->u.ibpkey.subnet_prefix)
+			break;
+		c = c->next;
+	}
+
+	if (c) {
+		if (!c->sid[0]) {
+			rc = sepol_sidtab_context_to_sid(sidtab,
+							 &c->context[0],
+							 &c->sid[0]);
+			if (rc)
+				goto out;
+		}
+		*out_sid = c->sid[0];
+	} else {
+		*out_sid = SECINITSID_UNLABELED;
+	}
+
+out:
 	return rc;
 }
 
