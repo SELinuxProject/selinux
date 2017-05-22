@@ -254,7 +254,8 @@ if __name__ == "__main__":
 		"policy.kern",
 		"file_contexts",
 		"homedir_template",
-                "pkeys.local"]
+                "pkeys.local",
+                "ibendports.local"]
 
 
 	create_dir(newroot_path(), 0o755)

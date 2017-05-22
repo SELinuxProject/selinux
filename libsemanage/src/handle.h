@@ -79,7 +79,7 @@ struct semanage_handle {
 	struct semanage_policy_table *funcs;
 
 	/* Object databases */
-#define DBASE_COUNT      21
+#define DBASE_COUNT      23
 
 /* Local modifications */
 #define DBASE_LOCAL_USERS_BASE  0
@@ -92,21 +92,23 @@ struct semanage_handle {
 #define DBASE_LOCAL_SEUSERS     7
 #define DBASE_LOCAL_NODES       8
 #define DBASE_LOCAL_IBPKEYS     9
+#define DBASE_LOCAL_IBENDPORTS  10
 
 /* Policy + Local modifications */
-#define DBASE_POLICY_USERS_BASE  10
-#define DBASE_POLICY_USERS_EXTRA 11
-#define DBASE_POLICY_USERS       12
-#define DBASE_POLICY_PORTS       13
-#define DBASE_POLICY_INTERFACES  14
-#define DBASE_POLICY_BOOLEANS    15
-#define DBASE_POLICY_FCONTEXTS   16
-#define DBASE_POLICY_SEUSERS     17
-#define DBASE_POLICY_NODES       18
-#define DBASE_POLICY_IBPKEYS     19
+#define DBASE_POLICY_USERS_BASE  11
+#define DBASE_POLICY_USERS_EXTRA 12
+#define DBASE_POLICY_USERS       13
+#define DBASE_POLICY_PORTS       14
+#define DBASE_POLICY_INTERFACES  15
+#define DBASE_POLICY_BOOLEANS    16
+#define DBASE_POLICY_FCONTEXTS   17
+#define DBASE_POLICY_SEUSERS     18
+#define DBASE_POLICY_NODES       19
+#define DBASE_POLICY_IBPKEYS     20
+#define DBASE_POLICY_IBENDPORTS  21
 
 /* Active kernel policy */
-#define DBASE_ACTIVE_BOOLEANS    20
+#define DBASE_ACTIVE_BOOLEANS    22
 	dbase_config_t dbase[DBASE_COUNT];
 };
 
@@ -139,6 +141,12 @@ static inline
     dbase_config_t * semanage_ibpkey_dbase_local(semanage_handle_t * handle)
 {
 	return &handle->dbase[DBASE_LOCAL_IBPKEYS];
+}
+
+static inline
+    dbase_config_t * semanage_ibendport_dbase_local(semanage_handle_t * handle)
+{
+	return &handle->dbase[DBASE_LOCAL_IBENDPORTS];
 }
 
 static inline
@@ -201,6 +209,12 @@ static inline
     dbase_config_t * semanage_ibpkey_dbase_policy(semanage_handle_t * handle)
 {
 	return &handle->dbase[DBASE_POLICY_IBPKEYS];
+}
+
+static inline
+    dbase_config_t * semanage_ibendport_dbase_policy(semanage_handle_t * handle)
+{
+	return &handle->dbase[DBASE_POLICY_IBENDPORTS];
 }
 
 static inline

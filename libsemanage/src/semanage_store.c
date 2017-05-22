@@ -100,6 +100,7 @@ static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"/file_contexts.template",
 	"/commit_num",
 	"/pkeys.local",
+	"/ibendports.local",
 	"/ports.local",
 	"/interfaces.local",
 	"/nodes.local",

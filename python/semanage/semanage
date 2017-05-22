@@ -61,6 +61,9 @@ usage_port_dict = {' --add': ('-t TYPE', '-p PROTOCOL', '-r RANGE', '(', 'port_n
 usage_ibpkey = "semanage ibpkey [-h] [-n] [-N] [-s STORE] ["
 usage_ibpkey_dict = {' --add': ('-t TYPE', '-x SUBNET_PREFIX', '-r RANGE', '(', 'ibpkey_name', '|', 'pkey_range', ')'), ' --modify': ('-t TYPE', '-x SUBNET_PREFIX', '-r RANGE', '(', 'ibpkey_name', '|', 'pkey_range', ')'), ' --delete': ('-x SUBNET_PREFIX', '(', 'ibpkey_name', '|', 'pkey_range', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
+usage_ibendport = "semanage ibendport [-h] [-n] [-N] [-s STORE] ["
+usage_ibendport_dict = {' --add': ('-t TYPE', '-z IBDEV_NAME', '-r RANGE', '(', 'port', ')'), ' --modify': ('-t TYPE', '-z IBDEV_NAME', '-r RANGE', '(', 'port', ')'), ' --delete': ('-z IBDEV_NAME', '-r RANGE''(', 'port', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
+
 usage_node = "semanage node [-h] [-n] [-N] [-S STORE] ["
 usage_node_dict = {' --add': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --modify': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --delete': ('-M NETMASK', '-p PROTOCOL', 'node'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
@@ -152,6 +155,10 @@ def ibpkey_ini():
     OBJECT = seobject.ibpkeyRecords(store)
     return OBJECT
 
+def ibendport_ini():
+    OBJECT = seobject.ibendportRecords(store)
+    return OBJECT
+
 def module_ini():
     OBJECT = seobject.moduleRecords(store)
     return OBJECT
@@ -187,8 +194,7 @@ def dontaudit_ini():
     return OBJECT
 
 # define dictonary for seobject OBEJCTS
-object_dict = {'login': login_ini, 'user': user_ini, 'port': port_ini, 'module': module_ini, 'interface': interface_ini, 'node': node_ini, 'fcontext': fcontext_ini, 'boolean': boolean_ini, 'permissive': permissive_ini, 'dontaudit': dontaudit_ini, 'ibpkey': ibpkey_ini}
-
+object_dict = {'login': login_ini, 'user': user_ini, 'port': port_ini, 'module': module_ini, 'interface': interface_ini, 'node': node_ini, 'fcontext': fcontext_ini, 'boolean': boolean_ini, 'permissive': permissive_ini, 'dontaudit': dontaudit_ini, 'ibpkey': ibpkey_ini, 'ibendport': ibendport_ini}
 
 def generate_custom_usage(usage_text, usage_dict):
     # generate custom usage from given text and dictonary
@@ -303,6 +309,10 @@ def parser_add_subnet_prefix(parser, name):
     Subnet prefix for  the specified infiniband ibpkey.
 '''))
 
+def parser_add_ibdev_name(parser, name):
+    parser.add_argument('-z', '--ibdev_name', help=_('''
+    Name for the specified infiniband end port.
+'''))
 
 def parser_add_modify(parser, name):
     parser.add_argument('-m', '--modify', dest='action', action='store_const', const='modify', help=_("Modify a record of the %s object type") % name)
@@ -567,6 +577,49 @@ def setupPkeyParser(subparsers):
     ibpkeyParser.add_argument('ibpkey', nargs='?', default=None, help=_('pkey | pkey_range'))
     ibpkeyParser.set_defaults(func=handlePkey)
 
+def handleIbendport(args):
+    ibendport_args = {'list': [('ibendport', 'type', 'ibdev_name'), ('')], 'add': [('locallist'), ('type', 'ibendport', 'ibdev_name'), ('')], 'modify': [('localist'), ('ibendport', 'ibdev_name')], 'delete': [('locallist'), ('ibendport', 'ibdev_name')], 'extract': [('locallist', 'ibendport', 'type', 'ibdev_name'), ('')], 'deleteall': [('locallist'), ('')]}
+
+    handle_opts(args, ibendport_args, args.action)
+
+    OBJECT = object_dict['ibendport']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "add":
+        OBJECT.add(args.ibendport, args.ibdev_name, args.range, args.type)
+    if args.action is "modify":
+        OBJECT.modify(args.ibendport, args.ibdev_name, args.range, args.type)
+    if args.action is "delete":
+        OBJECT.delete(args.ibendport, args.ibdev_name)
+    if args.action is "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print("ibendport %s" % str(i))
+
+
+def setupIbendportParser(subparsers):
+    generated_usage = generate_custom_usage(usage_ibendport, usage_ibendport_dict)
+    ibendportParser = subparsers.add_parser('ibendport', usage=generated_usage, help=_('Manage infiniband end port type definitions'))
+    parser_add_locallist(ibendportParser, "ibendport")
+    parser_add_noheading(ibendportParser, "ibendport")
+    parser_add_noreload(ibendportParser, "ibendport")
+    parser_add_store(ibendportParser, "ibendport")
+
+    ibendport_action = ibendportParser.add_mutually_exclusive_group(required=True)
+    parser_add_add(ibendport_action, "ibendport")
+    parser_add_delete(ibendport_action, "ibendport")
+    parser_add_modify(ibendport_action, "ibendport")
+    parser_add_list(ibendport_action, "ibendport")
+    parser_add_extract(ibendport_action, "ibendport")
+    parser_add_deleteall(ibendport_action, "ibendport")
+    parser_add_type(ibendportParser, "ibendport")
+    parser_add_range(ibendportParser, "ibendport")
+    parser_add_ibdev_name(ibendportParser, "ibendport")
+    ibendportParser.add_argument('ibendport', nargs='?', default=None, help=_('ibendport'))
+    ibendportParser.set_defaults(func=handleIbendport)
 
 def handleInterface(args):
     interface_args = {'list': [('interface'), ('')], 'add': [('locallist'), ('type', 'interface')], 'modify': [('locallist'), ('type', 'interface')], 'delete': [('locallist'), ('interface')], 'extract': [('locallist', 'interface', 'type'), ('')], 'deleteall': [('locallist'), ('')]}
@@ -907,6 +960,7 @@ def createCommandParser():
     setupUserParser(subparsers)
     setupPortParser(subparsers)
     setupPkeyParser(subparsers)
+    setupIbendportParser(subparsers)
     setupInterfaceParser(subparsers)
     setupModuleParser(subparsers)
     setupNodeParser(subparsers)

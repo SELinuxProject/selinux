@@ -19,6 +19,7 @@ LIBSEMANAGE_1.0 {
 	  semanage_user_*; semanage_bool_*; semanage_seuser_*;
 	  semanage_iface_*; semanage_port_*; semanage_context_*;
 	  semanage_ibpkey_*;
+	  semanage_ibendport_*;
 	  semanage_node_*;
 	  semanage_fcontext_*; semanage_access_check; semanage_set_create_store;
 	  semanage_is_connected; semanage_get_disable_dontaudit; semanage_set_disable_dontaudit;

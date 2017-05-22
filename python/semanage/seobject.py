@@ -1565,6 +1565,245 @@ class ibpkeyRecords(semanageRecords):
                 rec += ", %s" % p
             print rec
 
+class ibendportRecords(semanageRecords):
+    try:
+        q = setools.TypeQuery(setools.SELinuxPolicy(sepolicy.get_installed_policy()), attrs=["ibendport_type"])
+        valid_types = set(str(t) for t in q.results())
+    except:
+        valid_types = []
+
+    def __init__(self, store=""):
+        semanageRecords.__init__(self, store)
+
+    def __genkey(self, ibendport, ibdev_name):
+	if ibdev_name == "":
+            raise ValueError(_("IB device name is required"))
+
+        port = int(ibendport)
+
+        if port > 255 or port < 1:
+            raise ValueError(_("Invalid Port Number"))
+
+        (rc, k) = semanage_ibendport_key_create(self.sh, ibdev_name, port)
+        if rc < 0:
+            raise ValueError(_("Could not create a key for ibendport %s/%s") % (ibdev_name, ibendport))
+        return (k, ibdev_name, port)
+
+    def __add(self, ibendport, ibdev_name, serange, type):
+        if is_mls_enabled == 1:
+            if serange == "":
+                serange = "s0"
+            else:
+                serange = untranslate(serange)
+
+        if type == "":
+            raise ValueError(_("Type is required"))
+
+        if type not in self.valid_types:
+            raise ValueError(_("Type %s is invalid, must be an ibendport type") % type)
+        (k, ibendport, port) = self.__genkey(ibendport, ibdev_name)
+
+        (rc, exists) = semanage_ibendport_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibendport %s/%s is defined") % (ibdev_name, port))
+        if exists:
+            raise ValueError(_("ibendport %s/%s already defined") % (ibdev_name, port))
+
+        (rc, p) = semanage_ibendport_create(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not create ibendport for %s/%s") % (ibdev_name, port))
+
+        semanage_ibendport_set_ibdev_name(self.sh, p, ibdev_name)
+        semanage_ibendport_set_port(p, port)
+        (rc, con) = semanage_context_create(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not create context for %s/%s") % (ibdev_name, port))
+
+        rc = semanage_context_set_user(self.sh, con, "system_u")
+        if rc < 0:
+            raise ValueError(_("Could not set user in ibendport context for %s/%s") % (ibdev_name, port))
+
+        rc = semanage_context_set_role(self.sh, con, "object_r")
+        if rc < 0:
+            raise ValueError(_("Could not set role in ibendport context for %s/%s") % (ibdev_name, port))
+
+        rc = semanage_context_set_type(self.sh, con, type)
+        if rc < 0:
+            raise ValueError(_("Could not set type in ibendport context for %s/%s") % (ibdev_name, port))
+
+        if (is_mls_enabled == 1) and (serange != ""):
+            rc = semanage_context_set_mls(self.sh, con, serange)
+            if rc < 0:
+                raise ValueError(_("Could not set mls fields in ibendport context for %s/%s") % (ibdev_name, port))
+
+        rc = semanage_ibendport_set_con(self.sh, p, con)
+        if rc < 0:
+            raise ValueError(_("Could not set ibendport context for %s/%s") % (ibdev_name, port))
+
+        rc = semanage_ibendport_modify_local(self.sh, k, p)
+        if rc < 0:
+            raise ValueError(_("Could not add ibendport %s/%s") % (ibdev_name, port))
+
+        semanage_context_free(con)
+        semanage_ibendport_key_free(k)
+        semanage_ibendport_free(p)
+
+    def add(self, ibendport, ibdev_name, serange, type):
+        self.begin()
+        self.__add(ibendport, ibdev_name, serange, type)
+        self.commit()
+
+    def __modify(self, ibendport, ibdev_name, serange, setype):
+        if serange == "" and setype == "":
+            if is_mls_enabled == 1:
+                raise ValueError(_("Requires setype or serange"))
+            else:
+                raise ValueError(_("Requires setype"))
+
+        if setype and setype not in self.valid_types:
+            raise ValueError(_("Type %s is invalid, must be an ibendport type") % setype)
+
+        (k, ibdev_name, port) = self.__genkey(ibendport, ibdev_name)
+
+        (rc, exists) = semanage_ibendport_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibendport %s/%s is defined") % (ibdev_name, ibendport))
+        if not exists:
+            raise ValueError(_("ibendport %s/%s is not defined") % (ibdev_name, ibendport))
+
+        (rc, p) = semanage_ibendport_query(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not query ibendport %s/%s") % (ibdev_name, ibendport))
+
+        con = semanage_ibendport_get_con(p)
+
+        if (is_mls_enabled == 1) and (serange != ""):
+            semanage_context_set_mls(self.sh, con, untranslate(serange))
+        if setype != "":
+            semanage_context_set_type(self.sh, con, setype)
+
+        rc = semanage_ibendport_modify_local(self.sh, k, p)
+        if rc < 0:
+            raise ValueError(_("Could not modify ibendport %s/%s") % (ibdev_name, ibendport))
+
+        semanage_ibendport_key_free(k)
+        semanage_ibendport_free(p)
+
+    def modify(self, ibendport, ibdev_name, serange, setype):
+        self.begin()
+        self.__modify(ibendport, ibdev_name, serange, setype)
+        self.commit()
+
+    def deleteall(self):
+        (rc, plist) = semanage_ibendport_list_local(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not list the ibendports"))
+
+        self.begin()
+
+        for ibendport in plist:
+            (rc, ibdev_name) = semanage_ibendport_get_ibdev_name(self.sh, ibendport)
+            port = semanage_ibendport_get_port(ibendport)
+            (k, ibdev_name, port) = self.__genkey(str(port), ibdev_name)
+            if rc < 0:
+                raise ValueError(_("Could not create a key for %s/%d") % (ibdevname, port))
+
+            rc = semanage_ibendport_del_local(self.sh, k)
+            if rc < 0:
+                raise ValueError(_("Could not delete the ibendport %s/%d") % (ibdev_name, port))
+            semanage_ibendport_key_free(k)
+
+        self.commit()
+
+    def __delete(self, ibendport, ibdev_name):
+        (k, ibdev_name, port) = self.__genkey(ibendport, ibdev_name)
+        (rc, exists) = semanage_ibendport_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibendport %s/%s is defined") % (ibdev_name, ibendport))
+        if not exists:
+            raise ValueError(_("ibendport %s/%s is not defined") % (ibdev_name, ibendport))
+
+        (rc, exists) = semanage_ibendport_exists_local(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibendport %s/%s is defined") % (ibdev_name, ibendport))
+        if not exists:
+            raise ValueError(_("ibendport %s/%s is defined in policy, cannot be deleted") % (ibdev_name, ibendport))
+
+        rc = semanage_ibendport_del_local(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not delete ibendport %s/%s") % (ibdev_name, ibendport))
+
+        semanage_ibendport_key_free(k)
+
+    def delete(self, ibendport, ibdev_name):
+        self.begin()
+        self.__delete(ibendport, ibdev_name)
+        self.commit()
+
+    def get_all(self, locallist=0):
+        ddict = {}
+        if locallist:
+            (rc, self.plist) = semanage_ibendport_list_local(self.sh)
+        else:
+            (rc, self.plist) = semanage_ibendport_list(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not list ibendports"))
+
+        for ibendport in self.plist:
+            con = semanage_ibendport_get_con(ibendport)
+            ctype = semanage_context_get_type(con)
+            if ctype == "reserved_ibendport_t":
+                continue
+            level = semanage_context_get_mls(con)
+            (rc, ibdev_name) = semanage_ibendport_get_ibdev_name(self.sh, ibendport)
+            port = semanage_ibendport_get_port(ibendport)
+            ddict[(port, ibdev_name)] = (ctype, level)
+        return ddict
+
+    def get_all_by_type(self, locallist=0):
+        ddict = {}
+        if locallist:
+            (rc, self.plist) = semanage_ibendport_list_local(self.sh)
+        else:
+            (rc, self.plist) = semanage_ibendport_list(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not list ibendports"))
+
+        for ibendport in self.plist:
+            con = semanage_ibendport_get_con(ibendport)
+            ctype = semanage_context_get_type(con)
+            (rc, ibdev_name) = semanage_ibendport_get_ibdev_name(self.sh, ibendport)
+            port = semanage_ibendport_get_port(ibendport)
+            if (ctype, ibdev_name) not in ddict.keys():
+                ddict[(ctype, ibdev_name)] = []
+            ddict[(ctype, ibdev_name)].append("0x%x" % port)
+        return ddict
+
+    def customized(self):
+        l = []
+        ddict = self.get_all(True)
+        keys = ddict.keys()
+        keys.sort()
+        for k in keys:
+            l.append("-a -t %s -x %s %s" % (ddict[k][0], k[2], k[0]))
+        return l
+
+    def list(self, heading=1, locallist=0):
+        ddict = self.get_all_by_type(locallist)
+        keys = ddict.keys()
+        if len(keys) == 0:
+            return
+        keys.sort()
+
+        if heading:
+            print "%-30s %-18s %s\n" % (_("SELinux IB End Port Type"), _("IB Device Name"), _("Port Number"))
+        for i in keys:
+            rec = "%-30s %-18s " % i
+            rec += "%s" % ddict[i][0]
+            for p in ddict[i][1:]:
+                rec += ", %s" % p
+            print rec
+
 class nodeRecords(semanageRecords):
     try:
         valid_types = list(list(sepolicy.info(sepolicy.ATTRIBUTE, "node_type"))[0]["types"])

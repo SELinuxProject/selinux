@@ -41,6 +41,7 @@
 #include "seuser_internal.h"
 #include "port_internal.h"
 #include "ibpkey_internal.h"
+#include "ibendport_internal.h"
 #include "iface_internal.h"
 #include "boolean_internal.h"
 #include "fcontext_internal.h"
@@ -233,6 +234,14 @@ int semanage_direct_connect(semanage_handle_t * sh)
 				   semanage_ibpkey_dbase_local(sh)) < 0)
 		goto err;
 
+	if (ibendport_file_dbase_init(sh,
+				      semanage_path(SEMANAGE_ACTIVE,
+						    SEMANAGE_IBENDPORTS_LOCAL),
+				      semanage_path(SEMANAGE_TMP,
+						    SEMANAGE_IBENDPORTS_LOCAL),
+				      semanage_ibendport_dbase_local(sh)) < 0)
+		goto err;
+
 	/* Object databases: local modifications + policy */
 	if (user_base_policydb_dbase_init(sh,
 					  semanage_user_base_dbase_policy(sh)) <
@@ -258,6 +267,9 @@ int semanage_direct_connect(semanage_handle_t * sh)
 		goto err;
 
 	if (ibpkey_policydb_dbase_init(sh, semanage_ibpkey_dbase_policy(sh)) < 0)
+		goto err;
+
+	if (ibendport_policydb_dbase_init(sh, semanage_ibendport_dbase_policy(sh)) < 0)
 		goto err;
 
 	if (iface_policydb_dbase_init(sh, semanage_iface_dbase_policy(sh)) < 0)
@@ -333,6 +345,7 @@ static int semanage_direct_disconnect(semanage_handle_t * sh)
 	user_join_dbase_release(semanage_user_dbase_local(sh));
 	port_file_dbase_release(semanage_port_dbase_local(sh));
 	ibpkey_file_dbase_release(semanage_ibpkey_dbase_local(sh));
+	ibendport_file_dbase_release(semanage_ibendport_dbase_local(sh));
 	iface_file_dbase_release(semanage_iface_dbase_local(sh));
 	bool_file_dbase_release(semanage_bool_dbase_local(sh));
 	fcontext_file_dbase_release(semanage_fcontext_dbase_local(sh));
@@ -345,6 +358,7 @@ static int semanage_direct_disconnect(semanage_handle_t * sh)
 	user_join_dbase_release(semanage_user_dbase_policy(sh));
 	port_policydb_dbase_release(semanage_port_dbase_policy(sh));
 	ibpkey_policydb_dbase_release(semanage_ibpkey_dbase_policy(sh));
+	ibendport_policydb_dbase_release(semanage_ibendport_dbase_policy(sh));
 	iface_policydb_dbase_release(semanage_iface_dbase_policy(sh));
 	bool_policydb_dbase_release(semanage_bool_dbase_policy(sh));
 	fcontext_file_dbase_release(semanage_fcontext_dbase_policy(sh));
@@ -1158,7 +1172,8 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 
 	int do_rebuild, do_write_kernel, do_install;
 	int fcontexts_modified, ports_modified, seusers_modified,
-		disable_dontaudit, preserve_tunables, ibpkeys_modified;
+		disable_dontaudit, preserve_tunables, ibpkeys_modified,
+		ibendports_modified;
 	dbase_config_t *users = semanage_user_dbase_local(sh);
 	dbase_config_t *users_base = semanage_user_base_dbase_local(sh);
 	dbase_config_t *pusers_base = semanage_user_base_dbase_policy(sh);
@@ -1167,6 +1182,8 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	dbase_config_t *pports = semanage_port_dbase_policy(sh);
 	dbase_config_t *ibpkeys = semanage_ibpkey_dbase_local(sh);
 	dbase_config_t *pibpkeys = semanage_ibpkey_dbase_policy(sh);
+	dbase_config_t *ibendports = semanage_ibendport_dbase_local(sh);
+	dbase_config_t *pibendports = semanage_ibendport_dbase_policy(sh);
 	dbase_config_t *bools = semanage_bool_dbase_local(sh);
 	dbase_config_t *pbools = semanage_bool_dbase_policy(sh);
 	dbase_config_t *ifaces = semanage_iface_dbase_local(sh);
@@ -1181,6 +1198,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	/* Modified flags that we need to use more than once. */
 	ports_modified = ports->dtable->is_modified(ports->dbase);
 	ibpkeys_modified = ibpkeys->dtable->is_modified(ibpkeys->dbase);
+	ibendports_modified = ibendports->dtable->is_modified(ibendports->dbase);
 	seusers_modified = seusers->dtable->is_modified(seusers->dbase);
 	fcontexts_modified = fcontexts->dtable->is_modified(fcontexts->dbase);
 
@@ -1303,6 +1321,7 @@ rebuild:
 	 * will be modified.
 	 */
 	do_write_kernel = do_rebuild | ports_modified | ibpkeys_modified |
+		ibendports_modified |
 		bools->dtable->is_modified(bools->dbase) |
 		ifaces->dtable->is_modified(ifaces->dbase) |
 		nodes->dtable->is_modified(nodes->dbase) |
@@ -1449,6 +1468,7 @@ rebuild:
 	dbase_policydb_attach((dbase_policydb_t *) pusers_base->dbase, out);
 	dbase_policydb_attach((dbase_policydb_t *) pports->dbase, out);
 	dbase_policydb_attach((dbase_policydb_t *) pibpkeys->dbase, out);
+	dbase_policydb_attach((dbase_policydb_t *) pibendports->dbase, out);
 	dbase_policydb_attach((dbase_policydb_t *) pifaces->dbase, out);
 	dbase_policydb_attach((dbase_policydb_t *) pbools->dbase, out);
 	dbase_policydb_attach((dbase_policydb_t *) pnodes->dbase, out);
@@ -1500,6 +1520,13 @@ rebuild:
 	/* Validate local ibpkeys for overlap */
 	if (do_rebuild || ibpkeys_modified) {
 		retval = semanage_ibpkey_validate_local(sh);
+		if (retval < 0)
+			goto cleanup;
+	}
+
+	/* Validate local ibendports */
+	if (do_rebuild || ibendports_modified) {
+		retval = semanage_ibendport_validate_local(sh);
 		if (retval < 0)
 			goto cleanup;
 	}
@@ -1583,6 +1610,7 @@ cleanup:
 	dbase_policydb_detach((dbase_policydb_t *) pusers_base->dbase);
 	dbase_policydb_detach((dbase_policydb_t *) pports->dbase);
 	dbase_policydb_detach((dbase_policydb_t *) pibpkeys->dbase);
+	dbase_policydb_detach((dbase_policydb_t *) pibendports->dbase);
 	dbase_policydb_detach((dbase_policydb_t *) pifaces->dbase);
 	dbase_policydb_detach((dbase_policydb_t *) pnodes->dbase);
 	dbase_policydb_detach((dbase_policydb_t *) pbools->dbase);
