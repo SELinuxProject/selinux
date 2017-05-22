@@ -38,6 +38,7 @@ struct fc_data {
 
 void cil_post_fc_fill_data(struct fc_data *fc, char *path);
 int cil_post_filecon_compare(const void *a, const void *b);
+int cil_post_ibpkeycon_compare(const void *a, const void *b);
 int cil_post_portcon_compare(const void *a, const void *b);
 int cil_post_genfscon_compare(const void *a, const void *b);
 int cil_post_netifcon_compare(const void *a, const void *b);

@@ -203,6 +203,7 @@ char *CIL_KEY_VALIDATETRANS;
 char *CIL_KEY_MLSVALIDATETRANS;
 char *CIL_KEY_CONTEXT;
 char *CIL_KEY_FILECON;
+char *CIL_KEY_IBPKEYCON;
 char *CIL_KEY_PORTCON;
 char *CIL_KEY_NODECON;
 char *CIL_KEY_GENFSCON;
@@ -286,6 +287,7 @@ struct cil_db {
 	struct cil_sort *genfscon;
 	struct cil_sort *filecon;
 	struct cil_sort *nodecon;
+	struct cil_sort *ibpkeycon;
 	struct cil_sort *portcon;
 	struct cil_sort *pirqcon;
 	struct cil_sort *iomemcon;
@@ -737,6 +739,14 @@ enum cil_protocol {
 	CIL_PROTOCOL_DCCP
 };
 
+struct cil_ibpkeycon {
+	char *subnet_prefix_str;
+	uint32_t pkey_low;
+	uint32_t pkey_high;
+	char *context_str;
+	struct cil_context *context;
+};
+
 struct cil_portcon {
 	enum cil_protocol proto;
 	uint32_t port_low;
@@ -1007,6 +1017,7 @@ void cil_catset_init(struct cil_catset **catset);
 void cil_cats_init(struct cil_cats **cats);
 void cil_senscat_init(struct cil_senscat **senscat);
 void cil_filecon_init(struct cil_filecon **filecon);
+void cil_ibpkeycon_init(struct cil_ibpkeycon **ibpkeycon);
 void cil_portcon_init(struct cil_portcon **portcon);
 void cil_nodecon_init(struct cil_nodecon **nodecon);
 void cil_genfscon_init(struct cil_genfscon **genfscon);

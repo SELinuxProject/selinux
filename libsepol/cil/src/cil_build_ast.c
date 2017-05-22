@@ -4256,6 +4256,89 @@ void cil_destroy_filecon(struct cil_filecon *filecon)
 	free(filecon);
 }
 
+int cil_gen_ibpkeycon(__attribute__((unused)) struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_STRING,
+		CIL_SYN_STRING | CIL_SYN_LIST,
+		CIL_SYN_STRING | CIL_SYN_LIST,
+		CIL_SYN_END
+	};
+	int syntax_len = sizeof(syntax) / sizeof(*syntax);
+	int rc = SEPOL_ERR;
+	struct cil_ibpkeycon *ibpkeycon = NULL;
+
+	if (!db || !parse_current || !ast_node)
+		goto exit;
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK)
+		goto exit;
+
+	cil_ibpkeycon_init(&ibpkeycon);
+
+	ibpkeycon->subnet_prefix_str = parse_current->next->data;
+
+	if (parse_current->next->next->cl_head) {
+		if (parse_current->next->next->cl_head->next &&
+		    !parse_current->next->next->cl_head->next->next) {
+			rc = cil_fill_integer(parse_current->next->next->cl_head, &ibpkeycon->pkey_low, 0);
+			if (rc != SEPOL_OK) {
+				cil_log(CIL_ERR, "Improper ibpkey specified\n");
+				goto exit;
+			}
+			rc = cil_fill_integer(parse_current->next->next->cl_head->next, &ibpkeycon->pkey_high, 0);
+			if (rc != SEPOL_OK) {
+				cil_log(CIL_ERR, "Improper ibpkey specified\n");
+				goto exit;
+			}
+		} else {
+			cil_log(CIL_ERR, "Improper ibpkey range specified\n");
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+	} else {
+		rc = cil_fill_integer(parse_current->next->next, &ibpkeycon->pkey_low, 0);
+		if (rc != SEPOL_OK) {
+			cil_log(CIL_ERR, "Improper ibpkey specified\n");
+			goto exit;
+		}
+		ibpkeycon->pkey_high = ibpkeycon->pkey_low;
+	}
+
+	if (!parse_current->next->next->next->cl_head) {
+		ibpkeycon->context_str = parse_current->next->next->next->data;
+	} else {
+		cil_context_init(&ibpkeycon->context);
+
+		rc = cil_fill_context(parse_current->next->next->next->cl_head, ibpkeycon->context);
+		if (rc != SEPOL_OK)
+			goto exit;
+	}
+
+	ast_node->data = ibpkeycon;
+	ast_node->flavor = CIL_IBPKEYCON;
+	return SEPOL_OK;
+
+exit:
+	cil_tree_log(parse_current, CIL_ERR, "Bad ibpkeycon declaration");
+	cil_destroy_ibpkeycon(ibpkeycon);
+
+	return rc;
+}
+
+void cil_destroy_ibpkeycon(struct cil_ibpkeycon *ibpkeycon)
+{
+	if (!ibpkeycon)
+		return;
+
+	if (!ibpkeycon->context_str && ibpkeycon->context)
+		cil_destroy_context(ibpkeycon->context);
+
+	free(ibpkeycon);
+}
+
 int cil_gen_portcon(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
 {
 	enum cil_syntax syntax[] = {
@@ -6214,6 +6297,9 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_FILECON) {
 		rc = cil_gen_filecon(db, parse_current, ast_node);
+		*finished = CIL_TREE_SKIP_NEXT;
+	} else if (parse_current->data == CIL_KEY_IBPKEYCON) {
+		rc = cil_gen_ibpkeycon(db, parse_current, ast_node);
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_PORTCON) {
 		rc = cil_gen_portcon(db, parse_current, ast_node);

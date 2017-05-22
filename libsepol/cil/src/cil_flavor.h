@@ -113,6 +113,7 @@ enum cil_flavor {
 	CIL_HANDLEUNKNOWN,
 	CIL_MLS,
 	CIL_SRC_INFO,
+	CIL_IBPKEYCON,
 
 /*
  *          boolean  constraint  set  catset

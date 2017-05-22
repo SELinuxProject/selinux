@@ -99,6 +99,7 @@ int cil_copy_netifcon(struct cil_db *db, void *data, void **copy, symtab_t *symt
 int cil_copy_genfscon(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_filecon(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_nodecon(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
+int cil_copy_ibpkeycon(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_portcon(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_pirqcon(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_iomemcon(struct cil_db *db, void *data, void **copy, symtab_t *symtab);

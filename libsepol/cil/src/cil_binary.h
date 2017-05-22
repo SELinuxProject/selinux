@@ -330,6 +330,18 @@ int cil_sepol_level_define(policydb_t *pdb, struct cil_sens *cil_sens);
 int cil_rangetransition_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_rangetransition *rangetrans, hashtab_t range_trans_table);
 
 /**
+ * Insert cil ibpkeycon structure into sepol policydb.
+ * The function is given a structure containing the sorted ibpkeycons and
+ * loops over this structure inserting them into the policy database.
+ *
+ * @param[in] pdb The policy database to insert the ibpkeycon into.
+ * @param[in] node The cil_sort structure that contains the sorted ibpkeycons.
+ *
+ * @return SEPOL_OK upon success or an error otherwise.
+ */
+int cil_ibpkeycon_to_policydb(policydb_t *pdb, struct cil_sort *ibpkeycons);
+
+/**
  * Insert cil portcon structure into sepol policydb.
  * The function is given a structure containing the sorted portcons and
  * loops over this structure inserting them into the policy database.

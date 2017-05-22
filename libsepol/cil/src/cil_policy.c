@@ -1714,6 +1714,21 @@ static void cil_genfscons_to_policy(FILE *out, struct cil_sort *genfscons, int m
 	}
 }
 
+static void cil_ibpkeycons_to_policy(FILE *out, struct cil_sort *ibpkeycons, int mls)
+{
+	uint32_t i = 0;
+
+	for (i = 0; i < ibpkeycons->count; i++) {
+		struct cil_ibpkeycon *ibpkeycon = (struct cil_ibpkeycon *)ibpkeycons->array[i];
+
+		fprintf(out, "ibpkeycon %s ", ibpkeycon->subnet_prefix_str);
+		fprintf(out, "%d ", ibpkeycon->pkey_low);
+		fprintf(out, "%d ", ibpkeycon->pkey_high);
+		cil_context_to_policy(out, ibpkeycon->context, mls);
+		fprintf(out, "\n");
+	}
+}
+
 static void cil_portcons_to_policy(FILE *out, struct cil_sort *portcons, int mls)
 {
 	unsigned i;
@@ -1942,6 +1957,7 @@ void cil_gen_policy(FILE *out, struct cil_db *db)
 	cil_genfscons_to_policy(out, db->genfscon, db->mls);
 	cil_portcons_to_policy(out, db->portcon, db->mls);
 	cil_netifcons_to_policy(out, db->netifcon, db->mls);
+	cil_ibpkeycons_to_policy(out, db->ibpkeycon, db->mls);
 	cil_nodecons_to_policy(out, db->nodecon, db->mls);
 	cil_pirqcons_to_policy(out, db->pirqcon, db->mls);
 	cil_iomemcons_to_policy(out, db->iomemcon, db->mls);

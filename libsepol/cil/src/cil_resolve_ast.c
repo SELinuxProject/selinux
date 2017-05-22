@@ -1923,6 +1923,30 @@ int cil_resolve_filecon(struct cil_tree_node *current, void *extra_args)
 	return SEPOL_OK;
 }
 
+int cil_resolve_ibpkeycon(struct cil_tree_node *current, void *extra_args)
+{
+	struct cil_ibpkeycon *ibpkeycon = current->data;
+	struct cil_symtab_datum *context_datum = NULL;
+	int rc = SEPOL_ERR;
+
+	if (ibpkeycon->context_str) {
+		rc = cil_resolve_name(current, ibpkeycon->context_str, CIL_SYM_CONTEXTS, extra_args, &context_datum);
+		if (rc != SEPOL_OK)
+			goto exit;
+
+		ibpkeycon->context = (struct cil_context *)context_datum;
+	} else {
+		rc = cil_resolve_context(current, ibpkeycon->context, extra_args);
+		if (rc != SEPOL_OK)
+			goto exit;
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
 int cil_resolve_portcon(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_portcon *portcon = current->data;
@@ -3566,6 +3590,9 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 			break;
 		case CIL_FILECON:
 			rc = cil_resolve_filecon(node, args);
+			break;
+		case CIL_IBPKEYCON:
+			rc = cil_resolve_ibpkeycon(node, args);
 			break;
 		case CIL_PORTCON:
 			rc = cil_resolve_portcon(node, args);

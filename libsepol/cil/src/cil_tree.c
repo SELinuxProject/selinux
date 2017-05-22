@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Tresys Technology, LLC. All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
@@ -1408,6 +1408,20 @@ void cil_tree_print_node(struct cil_tree_node *node)
 			cil_log(CIL_INFO, "\n");
 			return;
 
+		}
+		case CIL_IBPKEYCON: {
+			struct cil_ibpkeycon *ibpkeycon = node->data;
+
+			cil_log(CIL_INFO, "IBPKEYCON: %s", ibpkeycon->subnet_prefix_str);
+			cil_log(CIL_INFO, " (%d %d) ", ibpkeycon->pkey_low, ibpkeycon->pkey_high);
+
+			if (ibpkeycon->context)
+				cil_tree_print_context(ibpkeycon->context);
+			else if (ibpkeycon->context_str)
+				cil_log(CIL_INFO, " %s", ibpkeycon->context_str);
+
+			cil_log(CIL_INFO, "\n");
+			return;
 		}
 		case CIL_PORTCON: {
 			struct cil_portcon *portcon = node->data;

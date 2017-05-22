@@ -175,6 +175,8 @@ int cil_gen_context(struct cil_db *db, struct cil_tree_node *parse_current, stru
 void cil_destroy_context(struct cil_context *context);
 int cil_gen_filecon(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_filecon(struct cil_filecon *filecon);
+int cil_gen_ibpkeycon(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
+void cil_destroy_ibpkeycon(struct cil_ibpkeycon *ibpkeycon);
 int cil_gen_portcon(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_portcon(struct cil_portcon *portcon);
 int cil_gen_nodecon(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
