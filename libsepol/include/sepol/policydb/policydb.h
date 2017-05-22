@@ -73,6 +73,8 @@
 extern "C" {
 #endif
 
+#define IB_DEVICE_NAME_MAX 64
+
 /*
  * A datum type is defined for each kind of symbol 
  * in the configuration data:  individual permissions, 
@@ -364,6 +366,10 @@ typedef struct ocontext {
 			uint16_t low_pkey;
 			uint16_t high_pkey;
 		} ibpkey;
+		struct {
+			char *dev_name;
+			uint8_t port;
+		} ibendport;
 	} u;
 	union {
 		uint32_t sclass;	/* security class for genfs */
@@ -400,6 +406,7 @@ typedef struct genfs {
 #define OCON_FSUSE 5	/* fs_use */
 #define OCON_NODE6 6	/* IPv6 nodes */
 #define OCON_IBPKEY 7	/* Infiniband PKEY */
+#define OCON_IBENDPORT 8	/* Infiniband End Port */
 
 /* object context array indices for Xen */
 #define OCON_XEN_ISID  	    0    /* initial SIDs */
@@ -410,7 +417,7 @@ typedef struct genfs {
 #define OCON_XEN_DEVICETREE 5    /* device tree node */
 
 /* OCON_NUM needs to be the largest index in any platform's ocontext array */
-#define OCON_NUM   8
+#define OCON_NUM   9
 
 /* section: module information */
 

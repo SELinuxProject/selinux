@@ -5164,6 +5164,86 @@ out:
 	return rc;
 }
 
+int define_ibendport_context(unsigned int port)
+{
+	ocontext_t *newc, *c, *l, *head;
+	char *id;
+	int rc = 0;
+
+	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
+		yyerror("ibendportcon not supported for target");
+		return -1;
+	}
+
+	if (pass == 1) {
+		id = (char *)queue_remove(id_queue);
+		free(id);
+		parse_security_context(NULL);
+		return 0;
+	}
+
+	if (port > 0xff || port == 0) {
+		yyerror("Invalid ibendport port number, should be 0 < port < 256");
+		return -1;
+	}
+
+	newc = malloc(sizeof(*newc));
+	if (!newc) {
+		yyerror("out of memory");
+		return -1;
+	}
+	memset(newc, 0, sizeof(*newc));
+
+	newc->u.ibendport.dev_name = queue_remove(id_queue);
+	if (!newc->u.ibendport.dev_name) {
+		yyerror("failed to read infiniband device name.");
+		rc = -1;
+		goto out;
+	}
+
+	if (strlen(newc->u.ibendport.dev_name) > IB_DEVICE_NAME_MAX - 1) {
+		yyerror("infiniband device name exceeds max length of 63.");
+		rc = -1;
+		goto out;
+	}
+
+	newc->u.ibendport.port = port;
+
+	if (parse_security_context(&newc->context[0])) {
+		free(newc);
+		return -1;
+	}
+
+	/* Preserve the matching order specified in the configuration. */
+	head = policydbp->ocontexts[OCON_IBENDPORT];
+	for (l = NULL, c = head; c; l = c, c = c->next) {
+		unsigned int port2;
+
+		port2 = c->u.ibendport.port;
+
+		if (port == port2 &&
+		    !strcmp(c->u.ibendport.dev_name,
+			     newc->u.ibendport.dev_name)) {
+			yyerror2("duplicate ibendportcon entry for %s port %u",
+				 newc->u.ibendport.dev_name, port);
+			rc = -1;
+			goto out;
+		}
+	}
+
+	if (l)
+		l->next = newc;
+	else
+		policydbp->ocontexts[OCON_IBENDPORT] = newc;
+
+	return 0;
+
+out:
+	free(newc->u.ibendport.dev_name);
+	free(newc);
+	return rc;
+}
+
 int define_netif_context(void)
 {
 	ocontext_t *newc, *c, *head;

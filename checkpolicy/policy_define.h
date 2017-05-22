@@ -44,6 +44,7 @@ int define_netif_context(void);
 int define_permissive(void);
 int define_polcap(void);
 int define_ibpkey_context(unsigned int low, unsigned int high);
+int define_ibendport_context(unsigned int port);
 int define_port_context(unsigned int low, unsigned int high);
 int define_pirq_context(unsigned int pirq);
 int define_iomem_context(uint64_t low, uint64_t high);

@@ -137,6 +137,7 @@ typedef int (* require_func_t)(int pass);
 %token SAMEUSER
 %token FSCON PORTCON NETIFCON NODECON 
 %token IBPKEYCON
+%token IBENDPORTCON
 %token PIRQCON IOMEMCON IOPORTCON PCIDEVICECON DEVICETREECON
 %token FSUSEXATTR FSUSETASK FSUSETRANS
 %token GENFSCON
@@ -172,7 +173,7 @@ base_policy             : { if (define_policy(pass, 0) == -1) return -1; }
 			  opt_default_rules opt_mls te_rbac users opt_constraints 
                          { if (pass == 1) { if (policydb_index_bools(policydbp)) return -1;}
 			   else if (pass == 2) { if (policydb_index_others(NULL, policydbp, 0)) return -1;}}
-			  initial_sid_contexts opt_fs_contexts opt_fs_uses opt_genfs_contexts net_contexts opt_dev_contexts opt_ibpkey_contexts
+			  initial_sid_contexts opt_fs_contexts opt_fs_uses opt_genfs_contexts net_contexts opt_dev_contexts opt_ibpkey_contexts opt_ibendport_contexts
 			;
 classes			: class_def 
 			| classes class_def
@@ -702,7 +703,7 @@ fs_contexts		: fs_context_def
 fs_context_def		: FSCON number number security_context_def security_context_def
 			{if (define_fs_context($2,$3)) return -1;}
 			;
-net_contexts		: opt_port_contexts opt_netif_contexts opt_node_contexts 
+net_contexts		: opt_port_contexts opt_netif_contexts opt_node_contexts
 			;
 opt_port_contexts       : port_contexts
                         |
@@ -726,6 +727,15 @@ ibpkey_context_def	: IBPKEYCON ipv6_addr number security_context_def
 			| IBPKEYCON ipv6_addr number '-' number security_context_def
 			{if (define_ibpkey_context($3,$5)) return -1;}
 			;
+opt_ibendport_contexts	: ibendport_contexts
+			|
+			;
+ibendport_contexts	: ibendport_context_def
+                        | ibendport_contexts ibendport_context_def
+                        ;
+ibendport_context_def	: IBENDPORTCON identifier number security_context_def
+                        {if (define_ibendport_context($3)) return -1;}
+                        ;
 opt_netif_contexts      : netif_contexts 
                         |
                         ;
