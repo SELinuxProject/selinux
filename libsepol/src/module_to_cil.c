@@ -212,7 +212,12 @@ static void list_destroy(struct list **list)
 
 static void role_list_destroy(void)
 {
-	struct list_node *curr = role_list->head;
+	struct list_node *curr;
+
+	if (role_list == NULL) {
+		return;
+	}
+	curr = role_list->head;
 
 	while (curr != NULL) {
 		free(curr->data);
