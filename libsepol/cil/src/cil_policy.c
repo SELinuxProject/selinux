@@ -1729,6 +1729,20 @@ static void cil_ibpkeycons_to_policy(FILE *out, struct cil_sort *ibpkeycons, int
 	}
 }
 
+static void cil_ibendportcons_to_policy(FILE *out, struct cil_sort *ibendportcons, int mls)
+{
+	uint32_t i;
+
+	for (i = 0; i < ibendportcons->count; i++) {
+		struct cil_ibendportcon *ibendportcon = (struct cil_ibendportcon *)ibendportcons->array[i];
+
+		fprintf(out, "ibendportcon %s ", ibendportcon->dev_name_str);
+		fprintf(out, "%u ", ibendportcon->port);
+		cil_context_to_policy(out, ibendportcon->context, mls);
+		fprintf(out, "\n");
+	}
+}
+
 static void cil_portcons_to_policy(FILE *out, struct cil_sort *portcons, int mls)
 {
 	unsigned i;
@@ -1958,6 +1972,7 @@ void cil_gen_policy(FILE *out, struct cil_db *db)
 	cil_portcons_to_policy(out, db->portcon, db->mls);
 	cil_netifcons_to_policy(out, db->netifcon, db->mls);
 	cil_ibpkeycons_to_policy(out, db->ibpkeycon, db->mls);
+	cil_ibendportcons_to_policy(out, db->ibendportcon, db->mls);
 	cil_nodecons_to_policy(out, db->nodecon, db->mls);
 	cil_pirqcons_to_policy(out, db->pirqcon, db->mls);
 	cil_iomemcons_to_policy(out, db->iomemcon, db->mls);

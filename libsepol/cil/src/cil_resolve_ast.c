@@ -2086,6 +2086,31 @@ exit:
 	return rc;
 }
 
+int cil_resolve_ibendportcon(struct cil_tree_node *current, void *extra_args)
+{
+	struct cil_ibendportcon *ibendportcon = current->data;
+	struct cil_symtab_datum *con_datum = NULL;
+
+	int rc = SEPOL_ERR;
+
+	if (ibendportcon->context_str) {
+		rc = cil_resolve_name(current, ibendportcon->context_str, CIL_SYM_CONTEXTS, extra_args, &con_datum);
+		if (rc != SEPOL_OK)
+			goto exit;
+
+		ibendportcon->context = (struct cil_context *)con_datum;
+	} else {
+		rc = cil_resolve_context(current, ibendportcon->context, extra_args);
+		if (rc != SEPOL_OK)
+			goto exit;
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
 int cil_resolve_pirqcon(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_pirqcon *pirqcon = current->data;
@@ -3605,6 +3630,9 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 			break;
 		case CIL_NETIFCON:
 			rc = cil_resolve_netifcon(node, args);
+			break;
+		case CIL_IBENDPORTCON:
+			rc = cil_resolve_ibendportcon(node, args);
 			break;
 		case CIL_PIRQCON:
 			rc = cil_resolve_pirqcon(node, args);

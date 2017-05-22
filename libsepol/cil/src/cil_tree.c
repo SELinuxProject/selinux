@@ -1506,6 +1506,19 @@ void cil_tree_print_node(struct cil_tree_node *node)
 			cil_log(CIL_INFO, "\n");
 			return;
 		}
+		case CIL_IBENDPORTCON: {
+			struct cil_ibendportcon *ibendportcon = node->data;
+
+			cil_log(CIL_INFO, "IBENDPORTCON: %s %u ", ibendportcon->dev_name_str, ibendportcon->port);
+
+			if (ibendportcon->context)
+				cil_tree_print_context(ibendportcon->context);
+			else if (ibendportcon->context_str)
+				cil_log(CIL_INFO, " %s", ibendportcon->context_str);
+
+			cil_log(CIL_INFO, "\n");
+			return;
+		}
 		case CIL_PIRQCON: {
 			struct cil_pirqcon *pirqcon = node->data;
 

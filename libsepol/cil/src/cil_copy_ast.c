@@ -1227,6 +1227,28 @@ int cil_copy_ibpkeycon(struct cil_db *db, void *data, void **copy, __attribute__
 	return SEPOL_OK;
 }
 
+int cil_copy_ibendportcon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+{
+	struct cil_ibendportcon *orig = data;
+	struct cil_ibendportcon *new = NULL;
+
+	cil_ibendportcon_init(&new);
+
+	new->dev_name_str = orig->dev_name_str;
+	new->port = orig->port;
+
+	if (orig->context_str) {
+		new->context_str = orig->context_str;
+	} else {
+		cil_context_init(&new->context);
+		cil_copy_fill_context(db, orig->context, new->context);
+	}
+
+	*copy = new;
+
+	return SEPOL_OK;
+}
+
 int cil_copy_portcon(struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_portcon *orig = data;
@@ -1941,6 +1963,9 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 		break;
 	case CIL_IBPKEYCON:
 		copy_func = &cil_copy_ibpkeycon;
+		break;
+	case CIL_IBENDPORTCON:
+		copy_func = &cil_copy_ibendportcon;
 		break;
 	case CIL_PORTCON:
 		copy_func = &cil_copy_portcon;

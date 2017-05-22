@@ -4667,6 +4667,68 @@ void cil_destroy_netifcon(struct cil_netifcon *netifcon)
 	free(netifcon);
 }
 
+int cil_gen_ibendportcon(__attribute__((unused)) struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_STRING,
+		CIL_SYN_STRING,
+		CIL_SYN_STRING | CIL_SYN_LIST,
+		CIL_SYN_END
+	};
+	int syntax_len = sizeof(syntax) / sizeof(*syntax);
+	int rc = SEPOL_ERR;
+	struct cil_ibendportcon *ibendportcon = NULL;
+
+	if (!db || !parse_current || !ast_node)
+		goto exit;
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK)
+		goto exit;
+
+	cil_ibendportcon_init(&ibendportcon);
+
+	ibendportcon->dev_name_str = parse_current->next->data;
+
+	rc = cil_fill_integer(parse_current->next->next, &ibendportcon->port, 10);
+	if (rc != SEPOL_OK) {
+		cil_log(CIL_ERR, "Improper ibendport port specified\n");
+		goto exit;
+	}
+
+	if (!parse_current->next->next->next->cl_head) {
+		ibendportcon->context_str = parse_current->next->next->data;
+	} else {
+		cil_context_init(&ibendportcon->context);
+
+		rc = cil_fill_context(parse_current->next->next->next->cl_head, ibendportcon->context);
+		if (rc != SEPOL_OK)
+			goto exit;
+	}
+
+	ast_node->data = ibendportcon;
+	ast_node->flavor = CIL_IBENDPORTCON;
+
+	return SEPOL_OK;
+
+exit:
+	cil_tree_log(parse_current, CIL_ERR, "Bad ibendportcon declaration");
+	cil_destroy_ibendportcon(ibendportcon);
+	return SEPOL_ERR;
+}
+
+void cil_destroy_ibendportcon(struct cil_ibendportcon *ibendportcon)
+{
+	if (!ibendportcon)
+		return;
+
+	if (!ibendportcon->context_str && ibendportcon->context)
+		cil_destroy_context(ibendportcon->context);
+
+	free(ibendportcon);
+}
+
 int cil_gen_pirqcon(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
 {
 	enum cil_syntax syntax[] = {
@@ -6300,6 +6362,9 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_IBPKEYCON) {
 		rc = cil_gen_ibpkeycon(db, parse_current, ast_node);
+		*finished = CIL_TREE_SKIP_NEXT;
+	} else if (parse_current->data == CIL_KEY_IBENDPORTCON) {
+		rc = cil_gen_ibendportcon(db, parse_current, ast_node);
 		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_PORTCON) {
 		rc = cil_gen_portcon(db, parse_current, ast_node);

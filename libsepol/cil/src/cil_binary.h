@@ -342,6 +342,18 @@ int cil_rangetransition_to_policydb(policydb_t *pdb, const struct cil_db *db, st
 int cil_ibpkeycon_to_policydb(policydb_t *pdb, struct cil_sort *ibpkeycons);
 
 /**
+ * Insert cil idbev structure into sepol policydb.
+ * The function is given a structure containing the sorted ibendportcons and
+ * loops over this structure inserting them into the policy database.
+ *
+ * @param[in] pdb The policy database to insert the pkeycon into.
+ * @param[in] node The cil_sort structure that contains the sorted ibendportcons.
+ *
+ * @return SEPOL_OK upon success or an error otherwise.
+ */
+int cil_ibendportcon_to_policydb(policydb_t *pdb, struct cil_sort *pkeycons);
+
+/**
  * Insert cil portcon structure into sepol policydb.
  * The function is given a structure containing the sorted portcons and
  * loops over this structure inserting them into the policy database.

@@ -3323,6 +3323,30 @@ exit:
 	return rc;
 }
 
+int cil_ibendportcon_to_policydb(policydb_t *pdb, struct cil_sort *ibendportcons)
+{
+	int rc = SEPOL_ERR;
+	uint32_t i;
+	ocontext_t *tail = NULL;
+
+	for (i = 0; i < ibendportcons->count; i++) {
+		ocontext_t *new_ocon = cil_add_ocontext(&pdb->ocontexts[OCON_IBENDPORT], &tail);
+		struct cil_ibendportcon *cil_ibendportcon = ibendportcons->array[i];
+
+		new_ocon->u.ibendport.dev_name = cil_strdup(cil_ibendportcon->dev_name_str);
+		new_ocon->u.ibendport.port = cil_ibendportcon->port;
+
+		rc = __cil_context_to_sepol_context(pdb, cil_ibendportcon->context, &new_ocon->context[0]);
+		if (rc != SEPOL_OK)
+			goto exit;
+	}
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
 int cil_nodecon_to_policydb(policydb_t *pdb, struct cil_sort *nodecons)
 {
 	int rc = SEPOL_ERR;
@@ -3883,6 +3907,11 @@ int __cil_contexts_to_policydb(policydb_t *pdb, const struct cil_db *db)
 	}
 
 	rc = cil_ibpkeycon_to_policydb(pdb, db->ibpkeycon);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	rc = cil_ibendportcon_to_policydb(pdb, db->ibendportcon);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}

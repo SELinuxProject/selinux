@@ -326,6 +326,13 @@ static void cil_reset_netifcon(struct cil_netifcon *netifcon)
 	}
 }
 
+static void cil_reset_ibendportcon(struct cil_ibendportcon *ibendportcon)
+{
+	if (!ibendportcon->context_str) {
+		cil_reset_context(ibendportcon->context);
+	}
+}
+
 static void cil_reset_pirqcon(struct cil_pirqcon *pirqcon)
 {
 	if (pirqcon->context_str == NULL) {
@@ -497,6 +504,9 @@ int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused)) uint32
 		break;
 	case CIL_IBPKEYCON:
 		cil_reset_ibpkeycon(node->data);
+		break;
+	case CIL_IBENDPORTCON:
+		cil_reset_ibendportcon(node->data);
 		break;
 	case CIL_PORTCON:
 		cil_reset_portcon(node->data);
