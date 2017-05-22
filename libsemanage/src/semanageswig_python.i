@@ -437,6 +437,49 @@
 	$1 = &temp;
 }
 
+/** ibpkey typemaps **/
+
+/* the wrapper will setup this parameter for passing... the resulting python functions
+   will not take the semanage_ibpkey_t *** parameter */
+%typemap(in, numinputs=0) semanage_ibpkey_t ***(semanage_ibpkey_t **temp=NULL) {
+	$1 = &temp;
+}
+
+%typemap(argout) (
+	semanage_handle_t* handle,
+	semanage_ibpkey_t*** records,
+	unsigned int* count) {
+
+	if ($result) {
+		int value;
+		SWIG_AsVal_int($result, &value);
+		if (value >= 0) {
+			PyObject* plist = NULL;
+			if (semanage_array2plist($1, (void**) *$2, *$3, SWIGTYPE_p_semanage_ibpkey,
+				(void (*) (void*)) &semanage_ibpkey_free, &plist) < 0)
+				$result = SWIG_From_int(STATUS_ERR);
+			else
+				$result = SWIG_Python_AppendOutput($result, plist);
+		}
+	}
+}
+
+%typemap(in, numinputs=0) semanage_ibpkey_t **(semanage_ibpkey_t *temp=NULL) {
+	$1 = &temp;
+}
+
+%typemap(argout) semanage_ibpkey_t ** {
+	$result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+}
+
+%typemap(argout) semanage_ibpkey_key_t ** {
+	$result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(*$1, $*1_descriptor, 0));
+}
+
+%typemap(in, numinputs=0) semanage_ibpkey_key_t **(semanage_ibpkey_key_t *temp=NULL) {
+	$1 = &temp;
+}
+
 /** node typemaps **/
 
 /* the wrapper will setup this parameter for passing... the resulting python functions

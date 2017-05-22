@@ -253,7 +253,8 @@ if __name__ == "__main__":
 		"preserve_tunables",
 		"policy.kern",
 		"file_contexts",
-		"homedir_template"]
+		"homedir_template",
+                "pkeys.local"]
 
 
 	create_dir(newroot_path(), 0o755)

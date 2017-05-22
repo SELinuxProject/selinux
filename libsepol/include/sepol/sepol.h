@@ -11,12 +11,14 @@ extern "C" {
 #include <sepol/user_record.h>
 #include <sepol/context_record.h>
 #include <sepol/iface_record.h>
+#include <sepol/ibpkey_record.h>
 #include <sepol/port_record.h>
 #include <sepol/boolean_record.h>
 #include <sepol/node_record.h>
 
 #include <sepol/booleans.h>
 #include <sepol/interfaces.h>
+#include <sepol/ibpkeys.h>
 #include <sepol/ports.h>
 #include <sepol/nodes.h>
 #include <sepol/users.h>

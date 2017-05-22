@@ -32,6 +32,7 @@ import socket
 from semanage import *
 PROGNAME = "policycoreutils"
 import sepolicy
+import setools
 from IPy import IP
 
 try:
@@ -1309,6 +1310,260 @@ class portRecords(semanageRecords):
                 rec += ", %s" % p
             print(rec)
 
+class ibpkeyRecords(semanageRecords):
+    try:
+        q = setools.TypeQuery(setools.SELinuxPolicy(sepolicy.get_installed_policy()), attrs=["ibpkey_type"])
+        valid_types = sorted(str(t) for t in q.results())
+    except:
+        valid_types = []
+
+    def __init__(self, store=""):
+        semanageRecords.__init__(self, store)
+
+    def __genkey(self, pkey, subnet_prefix):
+	if subnet_prefix == "":
+            raise ValueError(_("Subnet Prefix is required"))
+
+	pkeys = pkey.split("-")
+        if len(pkeys) == 1:
+            high = low = int(pkeys[0], 0)
+        else:
+            low = int(pkeys[0], 0)
+            high = int(pkeys[1], 0)
+
+        if high > 65535:
+            raise ValueError(_("Invalid Pkey"))
+
+        (rc, k) = semanage_ibpkey_key_create(self.sh, subnet_prefix, low, high)
+        if rc < 0:
+            raise ValueError(_("Could not create a key for %s/%s") % (subnet_prefix, pkey))
+        return (k, subnet_prefix, low, high)
+
+    def __add(self, pkey, subnet_prefix, serange, type):
+        if is_mls_enabled == 1:
+            if serange == "":
+                serange = "s0"
+            else:
+                serange = untranslate(serange)
+
+        if type == "":
+            raise ValueError(_("Type is required"))
+
+        if type not in self.valid_types:
+            raise ValueError(_("Type %s is invalid, must be a ibpkey type") % type)
+
+        (k, subnet_prefix, low, high) = self.__genkey(pkey, subnet_prefix)
+
+        (rc, exists) = semanage_ibpkey_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibpkey %s/%s is defined") % (subnet_prefix, pkey))
+        if exists:
+            raise ValueError(_("ibpkey %s/%s already defined") % (subnet_prefix, pkey))
+
+        (rc, p) = semanage_ibpkey_create(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not create ibpkey for %s/%s") % (subnet_prefix, pkey))
+
+        semanage_ibpkey_set_subnet_prefix(self.sh, p, subnet_prefix)
+        semanage_ibpkey_set_range(p, low, high)
+        (rc, con) = semanage_context_create(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not create context for %s/%s") % (subnet_prefix, pkey))
+
+        rc = semanage_context_set_user(self.sh, con, "system_u")
+        if rc < 0:
+            raise ValueError(_("Could not set user in ibpkey context for %s/%s") % (subnet_prefix, pkey))
+
+        rc = semanage_context_set_role(self.sh, con, "object_r")
+        if rc < 0:
+            raise ValueError(_("Could not set role in ibpkey context for %s/%s") % (subnet_prefix, pkey))
+
+        rc = semanage_context_set_type(self.sh, con, type)
+        if rc < 0:
+            raise ValueError(_("Could not set type in ibpkey context for %s/%s") % (subnet_prefix, pkey))
+
+        if (is_mls_enabled == 1) and (serange != ""):
+            rc = semanage_context_set_mls(self.sh, con, serange)
+            if rc < 0:
+                raise ValueError(_("Could not set mls fields in ibpkey context for %s/%s") % (subnet_prefix, pkey))
+
+        rc = semanage_ibpkey_set_con(self.sh, p, con)
+        if rc < 0:
+            raise ValueError(_("Could not set ibpkey context for %s/%s") % (subnet_prefix, pkey))
+
+        rc = semanage_ibpkey_modify_local(self.sh, k, p)
+        if rc < 0:
+            raise ValueError(_("Could not add ibpkey %s/%s") % (subnet_prefix, pkey))
+
+        semanage_context_free(con)
+        semanage_ibpkey_key_free(k)
+        semanage_ibpkey_free(p)
+
+    def add(self, pkey, subnet_prefix, serange, type):
+        self.begin()
+        self.__add(pkey, subnet_prefix, serange, type)
+        self.commit()
+
+    def __modify(self, pkey, subnet_prefix, serange, setype):
+        if serange == "" and setype == "":
+            if is_mls_enabled == 1:
+                raise ValueError(_("Requires setype or serange"))
+            else:
+                raise ValueError(_("Requires setype"))
+
+        if setype and setype not in self.valid_types:
+            raise ValueError(_("Type %s is invalid, must be a ibpkey type") % setype)
+
+        (k, subnet_prefix, low, high) = self.__genkey(pkey, subnet_prefix)
+
+        (rc, exists) = semanage_ibpkey_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibpkey %s/%s is defined") % (subnet_prefix, pkey))
+        if not exists:
+            raise ValueError(_("ibpkey %s/%s is not defined") % (subnet_prefix, pkey))
+
+        (rc, p) = semanage_ibpkey_query(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not query ibpkey %s/%s") % (subnet_prefix, pkey))
+
+        con = semanage_ibpkey_get_con(p)
+
+        if (is_mls_enabled == 1) and (serange != ""):
+            semanage_context_set_mls(self.sh, con, untranslate(serange))
+        if setype != "":
+            semanage_context_set_type(self.sh, con, setype)
+
+        rc = semanage_ibpkey_modify_local(self.sh, k, p)
+        if rc < 0:
+            raise ValueError(_("Could not modify ibpkey %s/%s") % (subnet_prefix, pkey))
+
+        semanage_ibpkey_key_free(k)
+        semanage_ibpkey_free(p)
+
+    def modify(self, pkey, subnet_prefix, serange, setype):
+        self.begin()
+        self.__modify(pkey, subnet_prefix, serange, setype)
+        self.commit()
+
+    def deleteall(self):
+        (rc, plist) = semanage_ibpkey_list_local(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not list the ibpkeys"))
+
+        self.begin()
+
+        for ibpkey in plist:
+            (rc, subnet_prefix) = semanage_ibpkey_get_subnet_prefix(self.sh, ibpkey)
+            low = semanage_ibpkey_get_low(ibpkey)
+            high = semanage_ibpkey_get_high(ibpkey)
+            pkey_str = "%s-%s" % (low, high)
+            (k, subnet_prefix, low, high) = self.__genkey(pkey_str, subnet_prefix)
+            if rc < 0:
+                raise ValueError(_("Could not create a key for %s") % pkey_str)
+
+            rc = semanage_ibpkey_del_local(self.sh, k)
+            if rc < 0:
+                raise ValueError(_("Could not delete the ibpkey %s") % pkey_str)
+            semanage_ibpkey_key_free(k)
+
+        self.commit()
+
+    def __delete(self, pkey, subnet_prefix):
+        (k, subnet_prefix, low, high) = self.__genkey(pkey, subnet_prefix)
+        (rc, exists) = semanage_ibpkey_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibpkey %s/%s is defined") % (subnet_prefix, pkey))
+        if not exists:
+            raise ValueError(_("ibpkey %s/%s is not defined") % (subnet_prefix, pkey))
+
+        (rc, exists) = semanage_ibpkey_exists_local(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if ibpkey %s/%s is defined") % (subnet_prefix, pkey))
+        if not exists:
+            raise ValueError(_("ibpkey %s/%s is defined in policy, cannot be deleted") % (subnet_prefix, pkey))
+
+        rc = semanage_ibpkey_del_local(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not delete ibpkey %s/%s") % (subnet_prefix, pkey))
+
+        semanage_ibpkey_key_free(k)
+
+    def delete(self, pkey, subnet_prefix):
+        self.begin()
+        self.__delete(pkey, subnet_prefix)
+        self.commit()
+
+    def get_all(self, locallist=0):
+        ddict = {}
+        if locallist:
+            (rc, self.plist) = semanage_ibpkey_list_local(self.sh)
+        else:
+            (rc, self.plist) = semanage_ibpkey_list(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not list ibpkeys"))
+
+        for ibpkey in self.plist:
+            con = semanage_ibpkey_get_con(ibpkey)
+            ctype = semanage_context_get_type(con)
+            if ctype == "reserved_ibpkey_t":
+                continue
+            level = semanage_context_get_mls(con)
+            (rc, subnet_prefix) = semanage_ibpkey_get_subnet_prefix(self.sh, ibpkey)
+            low = semanage_ibpkey_get_low(ibpkey)
+            high = semanage_ibpkey_get_high(ibpkey)
+            ddict[(low, high, subnet_prefix)] = (ctype, level)
+        return ddict
+
+    def get_all_by_type(self, locallist=0):
+        ddict = {}
+        if locallist:
+            (rc, self.plist) = semanage_ibpkey_list_local(self.sh)
+        else:
+            (rc, self.plist) = semanage_ibpkey_list(self.sh)
+        if rc < 0:
+            raise ValueError(_("Could not list ibpkeys"))
+
+        for ibpkey in self.plist:
+            con = semanage_ibpkey_get_con(ibpkey)
+            ctype = semanage_context_get_type(con)
+            (rc, subnet_prefix) = semanage_ibpkey_get_subnet_prefix(self.sh, ibpkey)
+            low = semanage_ibpkey_get_low(ibpkey)
+            high = semanage_ibpkey_get_high(ibpkey)
+            if (ctype, subnet_prefix) not in ddict.keys():
+                ddict[(ctype, subnet_prefix)] = []
+            if low == high:
+                ddict[(ctype, subnet_prefix)].append("0x%x" % low)
+            else:
+                ddict[(ctype, subnet_prefix)].append("0x%x-0x%x" % (low, high))
+        return ddict
+
+    def customized(self):
+        l = []
+        ddict = self.get_all(True)
+        keys = ddict.keys()
+        keys.sort()
+        for k in keys:
+            if k[0] == k[1]:
+                l.append("-a -t %s -x %s %s" % (ddict[k][0], k[2], k[0]))
+            else:
+                l.append("-a -t %s -x %s %s-%s" % (ddict[k][0], k[2], k[0], k[1]))
+        return l
+
+    def list(self, heading=1, locallist=0):
+        ddict = self.get_all_by_type(locallist)
+        keys = ddict.keys()
+        if len(keys) == 0:
+            return
+        keys.sort()
+
+        if heading:
+            print "%-30s %-18s %s\n" % (_("SELinux IB Pkey Type"), _("Subnet_Prefix"), _("Pkey Number"))
+        for i in keys:
+            rec = "%-30s %-18s " % i
+            rec += "%s" % ddict[i][0]
+            for p in ddict[i][1:]:
+                rec += ", %s" % p
+            print rec
 
 class nodeRecords(semanageRecords):
     try:

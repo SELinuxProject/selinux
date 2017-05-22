@@ -137,12 +137,14 @@ int semanage_base_merge_components(semanage_handle_t * handle)
 
 		{semanage_node_dbase_local(handle),
 		 semanage_node_dbase_policy(handle), MODE_MODIFY | MODE_SORT},
+
+		{semanage_ibpkey_dbase_local(handle),
+		 semanage_ibpkey_dbase_policy(handle), MODE_MODIFY},
 	};
 	const unsigned int CCOUNT = sizeof(components) / sizeof(components[0]);
 
 	/* Merge components into policy (and validate) */
 	for (i = 0; i < CCOUNT; i++) {
-
 		record_t **records = NULL;
 		unsigned int nrecords = 0;
 
@@ -218,6 +220,7 @@ int semanage_commit_components(semanage_handle_t * handle)
 		semanage_seuser_dbase_policy(handle),
 		semanage_bool_dbase_active(handle),
 		semanage_node_dbase_local(handle),
+		semanage_ibpkey_dbase_local(handle),
 	};
 	const int CCOUNT = sizeof(components) / sizeof(components[0]);
 

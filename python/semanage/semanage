@@ -58,6 +58,9 @@ usage_user_dict = {' --add': ('(', '-L LEVEL', '-R ROLES', '-r RANGE', '-s SEUSE
 usage_port = "semanage port [-h] [-n] [-N] [-S STORE] ["
 usage_port_dict = {' --add': ('-t TYPE', '-p PROTOCOL', '-r RANGE', '(', 'port_name', '|', 'port_range', ')'), ' --modify': ('-t TYPE', '-p PROTOCOL', '-r RANGE', '(', 'port_name', '|', 'port_range', ')'), ' --delete': ('-p PROTOCOL', '(', 'port_name', '|', 'port_range', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
+usage_ibpkey = "semanage ibpkey [-h] [-n] [-N] [-s STORE] ["
+usage_ibpkey_dict = {' --add': ('-t TYPE', '-x SUBNET_PREFIX', '-r RANGE', '(', 'ibpkey_name', '|', 'pkey_range', ')'), ' --modify': ('-t TYPE', '-x SUBNET_PREFIX', '-r RANGE', '(', 'ibpkey_name', '|', 'pkey_range', ')'), ' --delete': ('-x SUBNET_PREFIX', '(', 'ibpkey_name', '|', 'pkey_range', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
+
 usage_node = "semanage node [-h] [-n] [-N] [-S STORE] ["
 usage_node_dict = {' --add': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --modify': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --delete': ('-M NETMASK', '-p PROTOCOL', 'node'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
@@ -145,6 +148,9 @@ def port_ini():
     OBJECT = seobject.portRecords(store)
     return OBJECT
 
+def ibpkey_ini():
+    OBJECT = seobject.ibpkeyRecords(store)
+    return OBJECT
 
 def module_ini():
     OBJECT = seobject.moduleRecords(store)
@@ -181,7 +187,7 @@ def dontaudit_ini():
     return OBJECT
 
 # define dictonary for seobject OBEJCTS
-object_dict = {'login': login_ini, 'user': user_ini, 'port': port_ini, 'module': module_ini, 'interface': interface_ini, 'node': node_ini, 'fcontext': fcontext_ini, 'boolean': boolean_ini, 'permissive': permissive_ini, 'dontaudit': dontaudit_ini}
+object_dict = {'login': login_ini, 'user': user_ini, 'port': port_ini, 'module': module_ini, 'interface': interface_ini, 'node': node_ini, 'fcontext': fcontext_ini, 'boolean': boolean_ini, 'permissive': permissive_ini, 'dontaudit': dontaudit_ini, 'ibpkey': ibpkey_ini}
 
 
 def generate_custom_usage(usage_text, usage_dict):
@@ -290,6 +296,11 @@ def parser_add_proto(parser, name):
     parser.add_argument('-p', '--proto', help=_('''
     Protocol  for  the specified port (tcp|udp) or internet protocol
     version for the specified node (ipv4|ipv6).
+'''))
+
+def parser_add_subnet_prefix(parser, name):
+    parser.add_argument('-x', '--subnet_prefix', help=_('''
+    Subnet prefix for  the specified infiniband ibpkey.
 '''))
 
 
@@ -509,6 +520,52 @@ def setupPortParser(subparsers):
     parser_add_proto(portParser, "port")
     portParser.add_argument('port', nargs='?', default=None, help=_('port | port_range'))
     portParser.set_defaults(func=handlePort)
+
+
+
+def handlePkey(args):
+    ibpkey_args = {'list': [('ibpkey', 'type', 'subnet_prefix'), ('')], 'add': [('locallist'), ('type', 'ibpkey', 'subnet_prefix')], 'modify': [('localist'), ('ibpkey', 'subnet_prefix')], 'delete': [('locallist'), ('ibpkey', 'subnet_prefix')], 'extract': [('locallist', 'ibpkey', 'type', 'subnet prefix'), ('')], 'deleteall': [('locallist'), ('')]}
+
+    handle_opts(args, ibpkey_args, args.action)
+
+    OBJECT = object_dict['ibpkey']()
+    OBJECT.set_reload(args.noreload)
+
+    if args.action is "add":
+        OBJECT.add(args.ibpkey, args.subnet_prefix, args.range, args.type)
+    if args.action is "modify":
+        OBJECT.modify(args.ibpkey, args.subnet_prefix, args.range, args.type)
+    if args.action is "delete":
+        OBJECT.delete(args.ibpkey, args.subnet_prefix)
+    if args.action is "list":
+        OBJECT.list(args.noheading, args.locallist)
+    if args.action is "deleteall":
+        OBJECT.deleteall()
+    if args.action is "extract":
+        for i in OBJECT.customized():
+            print("ibpkey %s" % str(i))
+
+
+def setupPkeyParser(subparsers):
+    generated_usage = generate_custom_usage(usage_ibpkey, usage_ibpkey_dict)
+    ibpkeyParser = subparsers.add_parser('ibpkey', usage=generated_usage, help=_('Manage infiniband ibpkey type definitions'))
+    parser_add_locallist(ibpkeyParser, "ibpkey")
+    parser_add_noheading(ibpkeyParser, "ibpkey")
+    parser_add_noreload(ibpkeyParser, "ibpkey")
+    parser_add_store(ibpkeyParser, "ibpkey")
+
+    ibpkey_action = ibpkeyParser.add_mutually_exclusive_group(required=True)
+    parser_add_add(ibpkey_action, "ibpkey")
+    parser_add_delete(ibpkey_action, "ibpkey")
+    parser_add_modify(ibpkey_action, "ibpkey")
+    parser_add_list(ibpkey_action, "ibpkey")
+    parser_add_extract(ibpkey_action, "ibpkey")
+    parser_add_deleteall(ibpkey_action, "ibpkey")
+    parser_add_type(ibpkeyParser, "ibpkey")
+    parser_add_range(ibpkeyParser, "ibpkey")
+    parser_add_subnet_prefix(ibpkeyParser, "ibpkey")
+    ibpkeyParser.add_argument('ibpkey', nargs='?', default=None, help=_('pkey | pkey_range'))
+    ibpkeyParser.set_defaults(func=handlePkey)
 
 
 def handleInterface(args):
@@ -849,6 +906,7 @@ def createCommandParser():
     setupLoginParser(subparsers)
     setupUserParser(subparsers)
     setupPortParser(subparsers)
+    setupPkeyParser(subparsers)
     setupInterfaceParser(subparsers)
     setupModuleParser(subparsers)
     setupNodeParser(subparsers)
