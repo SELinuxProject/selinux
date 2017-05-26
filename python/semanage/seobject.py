@@ -1557,13 +1557,13 @@ class ibpkeyRecords(semanageRecords):
         keys.sort()
 
         if heading:
-            print "%-30s %-18s %s\n" % (_("SELinux IB Pkey Type"), _("Subnet_Prefix"), _("Pkey Number"))
+            print("%-30s %-18s %s\n" % (_("SELinux IB Pkey Type"), _("Subnet_Prefix"), _("Pkey Number")))
         for i in keys:
             rec = "%-30s %-18s " % i
             rec += "%s" % ddict[i][0]
             for p in ddict[i][1:]:
                 rec += ", %s" % p
-            print rec
+            print(rec)
 
 class ibendportRecords(semanageRecords):
     try:
@@ -1796,13 +1796,13 @@ class ibendportRecords(semanageRecords):
         keys.sort()
 
         if heading:
-            print "%-30s %-18s %s\n" % (_("SELinux IB End Port Type"), _("IB Device Name"), _("Port Number"))
+            print("%-30s %-18s %s\n" % (_("SELinux IB End Port Type"), _("IB Device Name"), _("Port Number")))
         for i in keys:
             rec = "%-30s %-18s " % i
             rec += "%s" % ddict[i][0]
             for p in ddict[i][1:]:
                 rec += ", %s" % p
-            print rec
+            print(rec)
 
 class nodeRecords(semanageRecords):
     try:
