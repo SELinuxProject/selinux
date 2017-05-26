@@ -1321,10 +1321,10 @@ class ibpkeyRecords(semanageRecords):
         semanageRecords.__init__(self, store)
 
     def __genkey(self, pkey, subnet_prefix):
-	if subnet_prefix == "":
+        if subnet_prefix == "":
             raise ValueError(_("Subnet Prefix is required"))
 
-	pkeys = pkey.split("-")
+        pkeys = pkey.split("-")
         if len(pkeys) == 1:
             high = low = int(pkeys[0], 0)
         else:
@@ -1576,7 +1576,7 @@ class ibendportRecords(semanageRecords):
         semanageRecords.__init__(self, store)
 
     def __genkey(self, ibendport, ibdev_name):
-	if ibdev_name == "":
+        if ibdev_name == "":
             raise ValueError(_("IB device name is required"))
 
         port = int(ibendport)
