@@ -15,7 +15,7 @@ CHECKPOLICY := ../../checkpolicy/
 CPPFLAGS += -I../include/ -I$(CHECKPOLICY)
 
 # test program object files
-objs := $(patsubst %.c,%.o,$(wildcard *.c))
+objs := $(patsubst %.c,%.o,$(sort $(wildcard *.c)))
 parserobjs := $(CHECKPOLICY)queue.o $(CHECKPOLICY)y.tab.o \
 	$(CHECKPOLICY)parse_util.o $(CHECKPOLICY)lex.yy.o \
 	$(CHECKPOLICY)policy_define.o $(CHECKPOLICY)module_compiler.o

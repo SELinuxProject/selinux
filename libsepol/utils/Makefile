@@ -7,7 +7,7 @@ override CFLAGS += -I../include
 override LDFLAGS += -L../src
 LDLIBS += -lsepol
 
-TARGETS=$(patsubst %.c,%,$(wildcard *.c))
+TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
 
 all: $(TARGETS)
 

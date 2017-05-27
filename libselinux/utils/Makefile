@@ -53,7 +53,7 @@ PCRE_LDLIBS ?= -lpcre
 ifeq ($(ANDROID_HOST),y)
 TARGETS=sefcontext_compile
 else
-TARGETS=$(patsubst %.c,%,$(wildcard *.c))
+TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
 endif
 
 sefcontext_compile: LDLIBS += $(PCRE_LDLIBS) ../src/libselinux.a -lsepol

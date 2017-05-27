@@ -2,7 +2,7 @@ PREFIX ?= $(DESTDIR)/usr
 LIBDIR ?= $(PREFIX)/lib
 
 # Add your test source files here:
-SOURCES = $(wildcard *.c)
+SOURCES = $(sort $(wildcard *.c))
 
 # Add the required external object files here:
 LIBS = ../src/libsemanage.a -lselinux -lsepol

@@ -8,7 +8,7 @@ CFLAGS ?= -Wall
 override CFLAGS += -I../src -D_GNU_SOURCE
 LDLIBS += -lselinux -lpcre
 
-TARGETS=$(patsubst %.c,%,$(wildcard *.c))
+TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
 
 all: $(TARGETS)
 

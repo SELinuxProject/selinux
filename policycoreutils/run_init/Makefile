@@ -23,7 +23,7 @@ ifeq ($(AUDITH), y)
 	LDLIBS += -laudit
 endif
 
-TARGETS=$(patsubst %.c,%,$(wildcard *.c))
+TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
 
 all: $(TARGETS)
 
