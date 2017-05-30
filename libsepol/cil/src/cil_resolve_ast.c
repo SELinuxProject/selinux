@@ -521,11 +521,18 @@ int cil_resolve_aliasactual(struct cil_tree_node *current, void *extra_args, enu
 	}
 	if (NODE(alias_datum)->flavor != alias_flavor) {
 		cil_log(CIL_ERR, "%s is not an alias\n",alias_datum->name);
+		rc = SEPOL_ERR;
 		goto exit;
 	}
 
 	rc = cil_resolve_name(current, aliasactual->actual_str, sym_index, extra_args, &actual_datum);
 	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	if (NODE(actual_datum)->flavor != flavor) {
+		cil_log(CIL_ERR, "%s is a %s, but aliases a %s\n", alias_datum->name, cil_node_to_string(NODE(alias_datum)), cil_node_to_string(NODE(actual_datum)));
+		rc = SEPOL_ERR;
 		goto exit;
 	}
 
