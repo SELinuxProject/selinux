@@ -156,20 +156,35 @@ int is_id_enabled(char *id, policydb_t * p, int symbol_table)
 {
 	scope_datum_t *scope =
 	    (scope_datum_t *) hashtab_search(p->scope[symbol_table].table, id);
-	uint32_t i;
+	avrule_decl_t *decl;
+	uint32_t len = scope->decl_ids_len;
+
 	if (scope == NULL) {
 		return 0;
 	}
 	if (scope->scope != SCOPE_DECL) {
 		return 0;
 	}
-	for (i = 0; i < scope->decl_ids_len; i++) {
-		avrule_decl_t *decl =
-		    p->decl_val_to_struct[scope->decl_ids[i] - 1];
+
+	if (len < 1) {
+		return 0;
+	}
+
+	if (symbol_table == SYM_ROLES || symbol_table == SYM_USERS) {
+		uint32_t i;
+		for (i = 0; i < len; i++) {
+			decl = p->decl_val_to_struct[scope->decl_ids[i] - 1];
+			if (decl != NULL && decl->enabled) {
+				return 1;
+			}
+		}
+	} else {
+		decl = p->decl_val_to_struct[scope->decl_ids[len-1] - 1];
 		if (decl != NULL && decl->enabled) {
 			return 1;
 		}
 	}
+
 	return 0;
 }
 

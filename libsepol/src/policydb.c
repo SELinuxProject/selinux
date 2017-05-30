@@ -1720,6 +1720,19 @@ int symtab_insert(policydb_t * pol, uint32_t sym,
 		return -ENOMEM;
 	}
 
+	if (scope_datum->scope == SCOPE_DECL && scope == SCOPE_REQ) {
+		/* Need to keep the decl at the end of the list */
+		uint32_t len, tmp;
+		len = scope_datum->decl_ids_len;
+		if (len < 2) {
+			/* This should be impossible here */
+			return -1;
+		}
+		tmp = scope_datum->decl_ids[len-2];
+		scope_datum->decl_ids[len-2] = scope_datum->decl_ids[len-1];
+		scope_datum->decl_ids[len-1] = tmp;
+	}
+
 	return retval;
 }
 
