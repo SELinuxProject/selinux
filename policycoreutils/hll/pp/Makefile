@@ -10,7 +10,7 @@ HLLDIR ?= $(LIBEXECDIR)/selinux/hll
 CFLAGS ?= -Werror -Wall -W
 LDLIBS = -lsepol
 
-PP_SRCS = $(wildcard *.c)
+PP_SRCS = $(sort $(wildcard *.c))
 PP_OBJS = $(patsubst %.c,%.o,$(PP_SRCS))
 
 all: pp

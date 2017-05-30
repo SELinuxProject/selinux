@@ -9,7 +9,7 @@ CFLAGS ?= -Werror -Wall -W
 override CFLAGS += $(LDFLAGS) -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
 LDLIBS += -lsepol -lselinux
 
-TARGETS=$(patsubst %.c,%,$(wildcard *.c))
+TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
 
 all: $(TARGETS)
 
