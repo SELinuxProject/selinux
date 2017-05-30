@@ -323,7 +323,7 @@ static int typealiases_gather_map(char *key, void *data, void *arg)
 	struct type_datum *type = data;
 	struct policydb *pdb = arg;
 	struct scope_datum *scope;
-	uint32_t i;
+	uint32_t len;
 	uint32_t scope_id;
 
 	if (type->primary != 1) {
@@ -332,8 +332,9 @@ static int typealiases_gather_map(char *key, void *data, void *arg)
 			return -1;
 		}
 
-		for (i = 0; i < scope->decl_ids_len; i++) {
-			scope_id = scope->decl_ids[i];
+		len = scope->decl_ids_len;
+		if (len > 0) {
+			scope_id = scope->decl_ids[len-1];
 			if (typealias_lists[scope_id] == NULL) {
 				rc = list_init(&typealias_lists[scope_id]);
 				if (rc != 0) {
@@ -2274,6 +2275,8 @@ static int type_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 			cil_printf("))\n");
 		}
 		break;
+	case TYPE_ALIAS:
+		break;
 	default:
 		log_err("Unknown flavor (%i) of type %s", type->flavor, key);
 		rc = -1;
@@ -3387,6 +3390,7 @@ static int typealiases_to_cil(int indent, struct policydb *pdb, struct avrule_bl
 {
 	struct type_datum *alias_datum;
 	char *alias_name;
+	char *type_name;
 	struct list_node *curr;
 	struct avrule_decl *decl = stack_peek(decl_stack);
 	struct list *alias_list = typealias_lists[decl->decl_id];
@@ -3403,9 +3407,13 @@ static int typealiases_to_cil(int indent, struct policydb *pdb, struct avrule_bl
 			rc = -1;
 			goto exit;
 		}
-
+		if (alias_datum->flavor == TYPE_ALIAS) {
+			type_name = pdb->p_type_val_to_name[alias_datum->primary - 1];
+		} else {
+			type_name = pdb->p_type_val_to_name[alias_datum->s.value - 1];
+		}
 		cil_println(indent, "(typealias %s)", alias_name);
-		cil_println(indent, "(typealiasactual %s %s)", alias_name, pdb->p_type_val_to_name[alias_datum->s.value - 1]);
+		cil_println(indent, "(typealiasactual %s %s)", alias_name, type_name);
 	}
 
 	return 0;
