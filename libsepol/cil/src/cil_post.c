@@ -102,6 +102,7 @@ void cil_post_fc_fill_data(struct fc_data *fc, char *path)
 			break;
 		case '\\':
 			c++;
+			/* FALLTHRU */
 		default:
 			if (!fc->meta) {
 				fc->stem_len++;

@@ -251,6 +251,7 @@ int cil_parser(char *_path, char *buffer, uint32_t size, struct cil_tree **parse
 		case QSTRING:
 			tok.value[strlen(tok.value) - 1] = '\0';
 			tok.value = tok.value+1;
+			/* FALLTHRU */
 		case SYMBOL:
 			if (paren_count == 0) {
 				cil_log(CIL_ERR, "Symbol not inside parenthesis at line %d of %s\n", tok.line, path);
@@ -275,6 +276,7 @@ int cil_parser(char *_path, char *buffer, uint32_t size, struct cil_tree **parse
 			if (tok.type != END_OF_FILE) {
 				break;
 			}
+			/* FALLTHRU */
 			// Fall through if EOF
 		case END_OF_FILE:
 			if (paren_count > 0) {

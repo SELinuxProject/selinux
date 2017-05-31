@@ -539,12 +539,16 @@ truncated:
 	/* no break statements, fall-through is intended */
 	case 4:
 		*ptr++ = '.';
+		/* FALLTHRU */
 	case 3:
 		*ptr++ = '.';
+		/* FALLTHRU */
 	case 2:
 		*ptr++ = '.';
+		/* FALLTHRU */
 	case 1:
 		*ptr++ = '\0';
+		/* FALLTHRU */
 	default:
 		break;
 	}

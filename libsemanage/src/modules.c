@@ -600,8 +600,10 @@ int semanage_module_get_path(semanage_handle_t *sh,
 			break;
 		case SEMANAGE_MODULE_PATH_HLL:
 			if (file == NULL) file = "hll";
+			/* FALLTHRU */
 		case SEMANAGE_MODULE_PATH_CIL:
 			if (file == NULL) file = "cil";
+			/* FALLTHRU */
 		case SEMANAGE_MODULE_PATH_LANG_EXT:
 			if (file == NULL) file = "lang_ext";
 
