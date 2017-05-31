@@ -989,8 +989,14 @@ static int ebitmap_to_names(struct ebitmap *map, char **vals_to_names, char ***n
 
 	num = 0;
 	ebitmap_for_each_bit(map, node, i) {
-		if (ebitmap_get_bit(map, i))
+		if (ebitmap_get_bit(map, i)) {
+			if (num >= UINT32_MAX / sizeof(*name_arr)) {
+				log_err("Overflow");
+				rc = -1;
+				goto exit;
+			}
 			num++;
+		}
 	}
 
 	name_arr = malloc(sizeof(*name_arr) * num);
@@ -1118,19 +1124,30 @@ static int name_list_to_string(char **names, int num_names, char **string)
 {
 	// create a space separated string of the names
 	int rc = -1;
-	int len = 0;
+	size_t len = 0;
 	int i;
 	char *str;
 	char *strpos;
-	int name_len;
-	int rlen;
 
 	for (i = 0; i < num_names; i++) {
 		len += strlen(names[i]);
+		if (len < strlen(names[i])) {
+			log_err("Overflow");
+			return -1;
+		}
 	}
 
 	// add spaces + null terminator
-	len += (num_names - 1) + 1;
+	len += num_names;
+	if (len < (size_t)num_names) {
+		log_err("Overflow");
+		return -1;
+	}
+
+	if (!len) {
+		log_err("Empty list");
+		return -1;
+	}
 
 	str = malloc(len);
 	if (str == NULL) {
@@ -1138,22 +1155,15 @@ static int name_list_to_string(char **names, int num_names, char **string)
 		rc = -1;
 		goto exit;
 	}
+	str[0] = 0;
 
 	strpos = str;
 
 	for (i = 0; i < num_names; i++) {
-		name_len = strlen(names[i]);
-		rlen = snprintf(strpos, len - (strpos - str), "%s", names[i]);
-		if (rlen < 0 || rlen >= len) {
-			log_err("Failed to generate name list");
-			rc = -1;
-			goto exit;
-		}
-
+		strpos = stpcpy(strpos, names[i]);
 		if (i < num_names - 1) {
-			strpos[name_len] = ' ';
+			*strpos++ = ' ';
 		}
-		strpos += name_len + 1;
 	}
 
 	*string = str;
