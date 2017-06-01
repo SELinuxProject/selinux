@@ -559,6 +559,148 @@ static int process_file(const char *path, const char *suffix,
 	return -1;
 }
 
+static void selabel_subs_fini(struct selabel_sub *ptr)
+{
+	struct selabel_sub *next;
+
+	while (ptr) {
+		next = ptr->next;
+		free(ptr->src);
+		free(ptr->dst);
+		free(ptr);
+		ptr = next;
+	}
+}
+
+static char *selabel_sub(struct selabel_sub *ptr, const char *src)
+{
+	char *dst = NULL;
+	int len;
+
+	while (ptr) {
+		if (strncmp(src, ptr->src, ptr->slen) == 0 ) {
+			if (src[ptr->slen] == '/' ||
+			    src[ptr->slen] == 0) {
+				if ((src[ptr->slen] == '/') &&
+				    (strcmp(ptr->dst, "/") == 0))
+					len = ptr->slen + 1;
+				else
+					len = ptr->slen;
+				if (asprintf(&dst, "%s%s", ptr->dst, &src[len]) < 0)
+					return NULL;
+				return dst;
+			}
+		}
+		ptr = ptr->next;
+	}
+	return NULL;
+}
+
+static int selabel_subs_init(const char *path, struct selabel_digest *digest,
+		       struct selabel_sub **out_subs)
+{
+	char buf[1024];
+	FILE *cfg = fopen(path, "re");
+	struct selabel_sub *list = NULL, *sub = NULL;
+	struct stat sb;
+	int status = -1;
+
+	*out_subs = NULL;
+	if (!cfg) {
+		/* If the file does not exist, it is not fatal */
+		return (errno == ENOENT) ? 0 : -1;
+	}
+
+	if (fstat(fileno(cfg), &sb) < 0)
+		goto out;
+
+	while (fgets_unlocked(buf, sizeof(buf) - 1, cfg)) {
+		char *ptr = NULL;
+		char *src = buf;
+		char *dst = NULL;
+
+		while (*src && isspace(*src))
+			src++;
+		if (src[0] == '#') continue;
+		ptr = src;
+		while (*ptr && ! isspace(*ptr))
+			ptr++;
+		*ptr++ = '\0';
+		if (! *src) continue;
+
+		dst = ptr;
+		while (*dst && isspace(*dst))
+			dst++;
+		ptr=dst;
+		while (*ptr && ! isspace(*ptr))
+			ptr++;
+		*ptr='\0';
+		if (! *dst)
+			continue;
+
+		sub = malloc(sizeof(*sub));
+		if (! sub)
+			goto err;
+		memset(sub, 0, sizeof(*sub));
+
+		sub->src=strdup(src);
+		if (! sub->src)
+			goto err;
+
+		sub->dst=strdup(dst);
+		if (! sub->dst)
+			goto err;
+
+		sub->slen = strlen(src);
+		sub->next = list;
+		list = sub;
+		sub = NULL;
+	}
+
+	if (digest_add_specfile(digest, cfg, NULL, sb.st_size, path) < 0)
+		goto err;
+
+	*out_subs = list;
+	status = 0;
+
+out:
+	fclose(cfg);
+	return status;
+err:
+	if (sub)
+		free(sub->src);
+	free(sub);
+	while (list) {
+		sub = list->next;
+		free(list->src);
+		free(list->dst);
+		free(list);
+		list = sub;
+	}
+	goto out;
+}
+
+static char *selabel_sub_key(struct saved_data *data, const char *key)
+{
+	char *ptr = NULL;
+	char *dptr = NULL;
+
+	ptr = selabel_sub(data->subs, key);
+	if (ptr) {
+		dptr = selabel_sub(data->dist_subs, ptr);
+		if (dptr) {
+			free(ptr);
+			ptr = dptr;
+		}
+	} else {
+		ptr = selabel_sub(data->dist_subs, key);
+	}
+	if (ptr)
+		return ptr;
+
+	return NULL;
+}
+
 static void closef(struct selabel_handle *rec);
 
 static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
@@ -589,23 +731,23 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	if (!path) {
 		status = selabel_subs_init(
 			selinux_file_context_subs_dist_path(),
-			rec->digest, &rec->dist_subs);
+			rec->digest, &data->dist_subs);
 		if (status)
 			goto finish;
 		status = selabel_subs_init(selinux_file_context_subs_path(),
-			rec->digest, &rec->subs);
+			rec->digest, &data->subs);
 		if (status)
 			goto finish;
 		path = selinux_file_context_path();
 	} else {
 		snprintf(subs_file, sizeof(subs_file), "%s.subs_dist", path);
 		status = selabel_subs_init(subs_file, rec->digest,
-					   &rec->dist_subs);
+					   &data->dist_subs);
 		if (status)
 			goto finish;
 		snprintf(subs_file, sizeof(subs_file), "%s.subs", path);
 		status = selabel_subs_init(subs_file, rec->digest,
-					   &rec->subs);
+					   &data->subs);
 		if (status)
 			goto finish;
 	}
@@ -660,6 +802,9 @@ static void closef(struct selabel_handle *rec)
 	struct stem *stem;
 	unsigned int i;
 
+	selabel_subs_fini(data->subs);
+	selabel_subs_fini(data->dist_subs);
+
 	for (i = 0; i < data->nspec; i++) {
 		spec = &data->spec_arr[i];
 		free(spec->lr.ctx_trans);
@@ -707,6 +852,7 @@ static struct spec *lookup_common(struct selabel_handle *rec,
 	char *clean_key = NULL;
 	const char *prev_slash, *next_slash;
 	unsigned int sofar = 0;
+	char *sub = NULL;
 
 	if (!data->nspec) {
 		errno = ENOENT;
@@ -728,6 +874,10 @@ static struct spec *lookup_common(struct selabel_handle *rec,
 		strcpy(clean_key + sofar, prev_slash);
 		key = clean_key;
 	}
+
+	sub = selabel_sub_key(data, key);
+	if (sub)
+		key = sub;
 
 	buf = key;
 	file_stem = find_stem_from_file(data, &buf);
@@ -777,6 +927,7 @@ static struct spec *lookup_common(struct selabel_handle *rec,
 
 finish:
 	free(clean_key);
+	free(sub);
 	return ret;
 }
 

@@ -46,12 +46,6 @@ int selabel_service_init(struct selabel_handle *rec,
 /*
  * Labeling internal structures
  */
-struct selabel_sub {
-	char *src;
-	int slen;
-	char *dst;
-	struct selabel_sub *next;
-};
 
 /*
  * Calculate an SHA1 hash of all the files used to build the specs.
@@ -74,9 +68,6 @@ extern int digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 						    size_t buf_len,
 						    const char *path);
 extern void digest_gen_hash(struct selabel_digest *digest);
-
-extern int selabel_subs_init(const char *path, struct selabel_digest *digest,
-			     struct selabel_sub **out_subs);
 
 struct selabel_lookup_rec {
 	char * ctx_raw;
@@ -112,9 +103,6 @@ struct selabel_handle {
 	 */
 	char *spec_file;
 
-	/* substitution support */
-	struct selabel_sub *dist_subs;
-	struct selabel_sub *subs;
 	/* ptr to SHA1 hash information if SELABEL_OPT_DIGEST set */
 	struct selabel_digest *digest;
 };

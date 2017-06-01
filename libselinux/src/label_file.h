@@ -29,6 +29,13 @@
 #define SELINUX_COMPILED_FCONTEXT_MAX_VERS \
 	SELINUX_COMPILED_FCONTEXT_REGEX_ARCH
 
+struct selabel_sub {
+	char *src;
+	int slen;
+	char *dst;
+	struct selabel_sub *next;
+};
+
 /* A file security context specification. */
 struct spec {
 	struct selabel_lookup_rec lr;	/* holds contexts for lookup result */
@@ -76,6 +83,10 @@ struct saved_data {
 	int num_stems;
 	int alloc_stems;
 	struct mmap_area *mmap_areas;
+
+	/* substitution support */
+	struct selabel_sub *dist_subs;
+	struct selabel_sub *subs;
 };
 
 static inline mode_t string_to_mode(char *mode)
