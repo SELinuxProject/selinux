@@ -99,5 +99,6 @@ int cil_resolve_tunif(struct cil_tree_node *current, void *extra_args);
 
 int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current);
 int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_index sym_index, void *extra_args, struct cil_symtab_datum **datum);
+int cil_resolve_name_keep_aliases(struct cil_tree_node *ast_node, char *name, enum cil_sym_index sym_index, void *extra_args, struct cil_symtab_datum **datum);
 
 #endif /* CIL_RESOLVE_AST_H_ */

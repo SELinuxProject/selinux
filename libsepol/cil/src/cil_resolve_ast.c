@@ -515,7 +515,7 @@ int cil_resolve_aliasactual(struct cil_tree_node *current, void *extra_args, enu
 		goto exit;
 	}
 
-	rc = cil_resolve_name(current, aliasactual->alias_str, sym_index, extra_args, &alias_datum);
+	rc = cil_resolve_name_keep_aliases(current, aliasactual->alias_str, sym_index, extra_args, &alias_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
@@ -530,7 +530,7 @@ int cil_resolve_aliasactual(struct cil_tree_node *current, void *extra_args, enu
 		goto exit;
 	}
 
-	if (NODE(actual_datum)->flavor != flavor) {
+	if (NODE(actual_datum)->flavor != flavor && NODE(actual_datum)->flavor != alias_flavor) {
 		cil_log(CIL_ERR, "%s is a %s, but aliases a %s\n", alias_datum->name, cil_node_to_string(NODE(alias_datum)), cil_node_to_string(NODE(actual_datum)));
 		rc = SEPOL_ERR;
 		goto exit;
@@ -539,7 +539,7 @@ int cil_resolve_aliasactual(struct cil_tree_node *current, void *extra_args, enu
 	alias = (struct cil_alias *)alias_datum;
 
 	if (alias->actual != NULL) {
-		cil_log(CIL_ERR, "Alias cannot bind more than one value\n");
+		cil_log(CIL_ERR, "%s %s cannot bind more than one value\n", cil_node_to_string(NODE(alias_datum)), alias_datum->name);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
@@ -4122,6 +4122,34 @@ static int __cil_resolve_name_helper(struct cil_db *db, struct cil_tree_node *no
 int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_index sym_index, void *extra_args, struct cil_symtab_datum **datum)
 {
 	int rc = SEPOL_ERR;
+	struct cil_tree_node *node = NULL;
+
+	rc = cil_resolve_name_keep_aliases(ast_node, name, sym_index, extra_args, datum);
+	if (rc != SEPOL_ERR) {
+		goto exit;
+	}
+
+	/* If this datum is an alias, then return the actual node
+	 * This depends on aliases already being processed
+	 */
+	node = NODE(*datum);
+	if (node->flavor == CIL_TYPEALIAS || node->flavor == CIL_SENSALIAS
+		|| node->flavor == CIL_CATALIAS) {
+		struct cil_alias *alias = (struct cil_alias *)(*datum);
+		if (alias->actual) {
+			*datum = alias->actual;
+		}
+	}
+
+	rc = SEPOL_OK;
+
+exit:
+	return rc;
+}
+
+int cil_resolve_name_keep_aliases(struct cil_tree_node *ast_node, char *name, enum cil_sym_index sym_index, void *extra_args, struct cil_symtab_datum **datum)
+{
+	int rc = SEPOL_ERR;
 	struct cil_args_resolve *args = extra_args;
 	struct cil_db *db = args->db;
 	struct cil_tree_node *node = NULL;
@@ -4206,20 +4234,6 @@ int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_in
 exit:
 	if (rc != SEPOL_OK) {
 		*datum = NULL;
-	}
-
-	if (*datum != NULL) {
-		/* If this datum is an alias, then return the actual node
-		 * This depends on aliases already being processed
-		 */
-		node = NODE(*datum);
-		if (node->flavor == CIL_TYPEALIAS || node->flavor == CIL_SENSALIAS
-			|| node->flavor == CIL_CATALIAS) {
-			struct cil_alias *alias = (struct cil_alias *)(*datum);
-			if (alias->actual) {
-				*datum = alias->actual;
-			}
-		}
 	}
 
 	args->last_resolved_name = name;
