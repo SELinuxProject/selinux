@@ -4269,7 +4269,7 @@ int cil_gen_ibpkeycon(__attribute__((unused)) struct cil_db *db, struct cil_tree
 	int rc = SEPOL_ERR;
 	struct cil_ibpkeycon *ibpkeycon = NULL;
 
-	if (!db || !parse_current || !ast_node)
+	if (!parse_current || !ast_node)
 		goto exit;
 
 	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
@@ -4680,7 +4680,7 @@ int cil_gen_ibendportcon(__attribute__((unused)) struct cil_db *db, struct cil_t
 	int rc = SEPOL_ERR;
 	struct cil_ibendportcon *ibendportcon = NULL;
 
-	if (!db || !parse_current || !ast_node)
+	if (!parse_current || !ast_node)
 		goto exit;
 
 	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
