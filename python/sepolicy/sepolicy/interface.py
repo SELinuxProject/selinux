@@ -171,7 +171,7 @@ def get_interface_format_text(interface, path="/usr/share/selinux/devel/policy.x
 
 
 def get_interface_compile_format_text(interfaces_dict, interface):
-    from templates import test_module
+    from .templates import test_module
     param_tmp = []
     for i in interfaces_dict[interface][0]:
         param_tmp.append(test_module.dict_values[i])
@@ -181,7 +181,7 @@ def get_interface_compile_format_text(interfaces_dict, interface):
 
 
 def generate_compile_te(interface, idict, name="compiletest"):
-    from templates import test_module
+    from .templates import test_module
     te = ""
     te += re.sub("TEMPLATETYPE", name, test_module.te_test_module)
     te += get_interface_compile_format_text(idict, interface)
