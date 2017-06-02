@@ -241,19 +241,13 @@ def generate_custom_usage(usage_text, usage_dict):
 
     return usage_text
 
-
-def numcmp(val1, val2):
+# expects formats:
+# "22 (sshd_t)", "80, 8080 (httpd_t)", "all ports (port_type)"
+def port_string_to_num(val):
     try:
-        v1 = int(val1.split(",")[0].split("-")[0])
-        v2 = int(val2.split(",")[0].split("-")[0])
-        if v1 > v2:
-            return 1
-        if v1 == v2:
-            return 0
-        if v1 < v2:
-            return -1
+        return int(val.split(" ")[0].split(",")[0].split("-")[0])
     except:
-        return cmp(val1, val2)
+        return 99999999
 
 
 def _print_net(src, protocol, perm):
@@ -273,7 +267,7 @@ def _print_net(src, protocol, perm):
                     port_strings.append("%s (%s) %s" % (", ".join(recs), t, boolean_text))
                 else:
                     port_strings.append("%s (%s)" % (", ".join(recs), t))
-        port_strings.sort(numcmp)
+        port_strings.sort(key=lambda param: port_string_to_num(param))
         for p in port_strings:
             print("\t" + p)
 
