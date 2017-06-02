@@ -4125,7 +4125,7 @@ int cil_resolve_name(struct cil_tree_node *ast_node, char *name, enum cil_sym_in
 	struct cil_tree_node *node = NULL;
 
 	rc = cil_resolve_name_keep_aliases(ast_node, name, sym_index, extra_args, datum);
-	if (rc != SEPOL_ERR) {
+	if (rc != SEPOL_OK) {
 		goto exit;
 	}
 
