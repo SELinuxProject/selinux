@@ -290,7 +290,7 @@ static void cil_reset_filecon(struct cil_filecon *filecon)
 
 static void cil_reset_ibpkeycon(struct cil_ibpkeycon *ibpkeycon)
 {
-	if (!ibpkeycon->context)
+	if (!ibpkeycon->context_str)
 		cil_reset_context(ibpkeycon->context);
 }
 
