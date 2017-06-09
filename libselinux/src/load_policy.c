@@ -449,8 +449,11 @@ int selinux_init_load_policy(int *enforce)
 		}
 	}
 
-	if (seconfig == -1)
+	if (seconfig == -1) {
+		umount(selinux_mnt);
+		fini_selinuxmnt();
 		goto noload;
+	}
 
 	/* Load the policy. */
 	return selinux_mkload_policy(0);
