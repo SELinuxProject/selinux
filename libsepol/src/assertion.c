@@ -222,7 +222,7 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	ebitmap_node_t *snode, *tnode;
 	unsigned int i, j;
 
-	if (k->specified != AVTAB_ALLOWED)
+	if ((k->specified & AVTAB_ALLOWED) == 0)
 		return 0;
 
 	if (!match_any_class_permissions(avrule->perms, k->target_class, d->data))
@@ -471,7 +471,7 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	avrule_t *avrule = a->avrule;
 	avtab_t *avtab = a->avtab;
 
-	if (k->specified != AVTAB_ALLOWED)
+	if ((k->specified & AVTAB_ALLOWED) == 0)
 		goto exit;
 
 	if (!match_any_class_permissions(avrule->perms, k->target_class, d->data))
