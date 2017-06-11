@@ -939,7 +939,7 @@ int mls_semantic_range_expand(mls_semantic_range_t * sr, mls_range_t * r,
 		return -1;
 
 	if (mls_semantic_level_expand(&sr->level[1], &r->level[1], p, h) < 0) {
-		mls_semantic_level_destroy(&sr->level[0]);
+		mls_level_destroy(&r->level[0]);
 		return -1;
 	}
 
