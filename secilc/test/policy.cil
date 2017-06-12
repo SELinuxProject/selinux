@@ -282,6 +282,12 @@
 	(pcidevicecon 345 system_u_bin_t_l2h)
 	(devicetreecon "/this is/a/path" system_u_bin_t_l2h)
 
+	; InfiniBand
+	(ibpkeycon fe80:: (0 0x10) system_u_bin_t_l2h)
+	(ibpkeycon fe80::7629:afff:fe0f:8e5d (15 25) (system_u system_r kernel_t (low (s3 (cats01 cats02)))))
+	(ibendportcon mlx5_0 1 system_u_bin_t_l2h)
+	(ibendportcon mlx4_3 5 (system_u system_r kernel_t (low (s3 (cats01 cats02)))))
+
 	(constrain (files (read)) (not (or (and (eq t1 exec_t) (eq t2 bin_t)) (eq r1 r2))))
 	(constrain char_w (not (or (and (eq t1 exec_t) (eq t2 bin_t)) (eq r1 r2))))
 

@@ -23,6 +23,7 @@ FILE_LIST ?= cil_introduction.md \
 	cil_sid_statements.md \
 	cil_type_statements.md \
 	cil_user_statements.md \
+	cil_infiniband_statements.md \
 	cil_xen_statements.md
 
 PANDOC_FILE_LIST = $(addprefix $(TMPDIR)/,$(FILE_LIST))

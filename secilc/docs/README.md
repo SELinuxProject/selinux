@@ -144,6 +144,10 @@ CIL (Common Intermediate Language)
   * [selinuxuser](cil_user_statements.md#selinuxuser)
   * [selinuxuserdefault](cil_user_statements.md#selinuxuserdefault)
 
+* [Infiniband Statements](cil_infiniband_statements.md#infiniband-statements)
+  * [ibpkeycon](cil_infiniband_statements.md#ibpkeycon)
+  * [ibendportcon](cil_infiniband_statements.md#ibendportcon)
+
 * [Xen Statements](cil_xen_statements.md#xen-statements)
   * [iomemcon](cil_xen_statements.md#iomemcon)
   * [ioportcon](cil_xen_statements.md#ioportcon)
