@@ -4698,7 +4698,7 @@ int cil_gen_ibendportcon(__attribute__((unused)) struct cil_db *db, struct cil_t
 	}
 
 	if (!parse_current->next->next->next->cl_head) {
-		ibendportcon->context_str = parse_current->next->next->data;
+		ibendportcon->context_str = parse_current->next->next->next->data;
 	} else {
 		cil_context_init(&ibendportcon->context);
 
