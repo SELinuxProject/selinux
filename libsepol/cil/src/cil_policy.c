@@ -1069,7 +1069,7 @@ static void cil_typebounds_to_policy(FILE *out, struct cil_list *types)
 		child = i1->data;
 		if (child->bounds != NULL) {
 			parent = child->bounds;
-			fprintf(out, "typebounds %s %s\n", parent->datum.fqn, child->datum.fqn);
+			fprintf(out, "typebounds %s %s;\n", parent->datum.fqn, child->datum.fqn);
 		}
 	}
 }
@@ -1779,7 +1779,7 @@ static void cil_netifcons_to_policy(FILE *out, struct cil_sort *netifcons, int m
 		cil_context_to_policy(out, netifcon->if_context, mls);
 		fprintf(out, " ");
 		cil_context_to_policy(out, netifcon->packet_context, mls);
-		fprintf(out, ";\n");
+		fprintf(out, "\n");
 	}
 }
 
@@ -1836,7 +1836,7 @@ static void cil_nodecons_to_policy(FILE *out, struct cil_sort *nodecons, int mls
 		}
 
 		cil_context_to_policy(out, nodecon->context, mls);
-		fprintf(out, ";\n");
+		fprintf(out, "\n");
 	}
 }
 
@@ -1928,9 +1928,9 @@ void cil_gen_policy(FILE *out, struct cil_db *db)
 	cil_commons_to_policy(out, lists[CIL_LIST_COMMON]);
 	cil_classes_to_policy(out, db->classorder);
 
-	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_USER], CIL_KEY_DEFAULTUSER);
-	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_ROLE], CIL_KEY_DEFAULTROLE);
-	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_TYPE], CIL_KEY_DEFAULTTYPE);
+	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_USER], "default_user");
+	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_ROLE], "default_role");
+	cil_defaults_to_policy(out, lists[CIL_LIST_DEFAULT_TYPE], "default_type");
 
 	if (db->mls == CIL_TRUE) {
 		cil_default_ranges_to_policy(out, lists[CIL_LIST_DEFAULT_RANGE]);
