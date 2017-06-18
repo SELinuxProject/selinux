@@ -46,8 +46,8 @@ override LDFLAGS += -L../../libsepol/src -undefined dynamic_lookup
 endif
 
 override CFLAGS += -I../include -D_GNU_SOURCE $(DISABLE_FLAGS) $(PCRE_CFLAGS)
-LDFLAGS += -L../src
-LDLIBS += -lselinux
+override LDFLAGS += -L../src
+override LDLIBS += -lselinux
 PCRE_LDLIBS ?= -lpcre
 
 ifeq ($(ANDROID_HOST),y)
