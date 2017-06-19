@@ -295,9 +295,8 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	long rbuflen;
 	uid_t temp, minuid = 500, maxuid = 60000;
 	int minuid_set = 0;
-	struct passwd pwstorage, *pwbuf;
+	struct passwd *pwbuf;
 	struct stat buf;
-	int retval;
 
 	path = semanage_findval(PATH_ETC_USERADD, "HOME", "=");
 	if (path && *path) {
@@ -369,7 +368,7 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 	if (rbuf == NULL)
 		goto fail;
 	setpwent();
-	while ((retval = getpwent_r(&pwstorage, rbuf, rbuflen, &pwbuf)) == 0) {
+	while ((pwbuf = getpwent()) != NULL) {
 		if (pwbuf->pw_uid < minuid || pwbuf->pw_uid > maxuid)
 			continue;
 		if (!semanage_list_find(shells, pwbuf->pw_shell))
@@ -413,7 +412,7 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 		path = NULL;
 	}
 
-	if (retval && retval != ENOENT) {
+	if (errno && errno != ENOENT) {
 		WARN(s->h_semanage, "Error while fetching users.  "
 		     "Returning list so far.");
 	}
@@ -1064,10 +1063,7 @@ static int get_group_users(genhomedircon_settings_t * s,
 	long grbuflen;
 	char *grbuf = NULL;
 	struct group grstorage, *group = NULL;
-
-	long prbuflen;
-	char *pwbuf = NULL;
-	struct passwd pwstorage, *pw = NULL;
+	struct passwd *pw = NULL;
 
 	grbuflen = sysconf(_SC_GETGR_R_SIZE_MAX);
 	if (grbuflen <= 0)
@@ -1104,15 +1100,8 @@ static int get_group_users(genhomedircon_settings_t * s,
 		}
 	}
 
-	prbuflen = sysconf(_SC_GETPW_R_SIZE_MAX);
-	if (prbuflen <= 0)
-		goto cleanup;
-	pwbuf = malloc(prbuflen);
-	if (pwbuf == NULL)
-		goto cleanup;
-
 	setpwent();
-	while ((retval = getpwent_r(&pwstorage, pwbuf, prbuflen, &pw)) == 0) {
+	while ((pw = getpwent()) != NULL) {
 		// skip users who also have this group as their
 		// primary group
 		if (lfind(pw->pw_name, group->gr_mem, &nmembers,
@@ -1131,7 +1120,6 @@ static int get_group_users(genhomedircon_settings_t * s,
 	retval = STATUS_SUCCESS;
 cleanup:
 	endpwent();
-	free(pwbuf);
 	free(grbuf);
 
 	return retval;
