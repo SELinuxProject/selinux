@@ -5,11 +5,12 @@
 #include <stdint.h>
 #include <sepol/context_record.h>
 #include <sepol/handle.h>
-#include <sys/cdefs.h>
 
 #define INET6_ADDRLEN 16
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct sepol_ibpkey;
 struct sepol_ibpkey_key;
@@ -71,5 +72,9 @@ extern int sepol_ibpkey_clone(sepol_handle_t *handle,
 
 extern void sepol_ibpkey_free(sepol_ibpkey_t *ibpkey);
 
-__END_DECLS
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
