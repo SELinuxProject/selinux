@@ -1,8 +1,6 @@
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 BINDIR ?= $(PREFIX)/bin
-USRSBINDIR ?= $(PREFIX)/sbin
-SBINDIR ?= $(DESTDIR)/sbin
 MANDIR ?= $(PREFIX)/share/man
 LOCALEDIR ?= $(PREFIX)/share/locale
 

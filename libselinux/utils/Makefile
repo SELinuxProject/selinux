@@ -1,7 +1,7 @@
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 LIBDIR ?= $(PREFIX)/lib
-USRSBINDIR ?= $(PREFIX)/sbin
+SBINDIR ?= $(PREFIX)/sbin
 INCLUDEDIR ?= $(PREFIX)/include
 
 OS ?= $(shell uname)
@@ -63,8 +63,8 @@ sefcontext_compile: sefcontext_compile.o ../src/regex.o
 all: $(TARGETS)
 
 install: all
-	-mkdir -p $(USRSBINDIR)
-	install -m 755 $(TARGETS) $(USRSBINDIR)
+	-mkdir -p $(SBINDIR)
+	install -m 755 $(TARGETS) $(SBINDIR)
 
 clean:
 	rm -f $(TARGETS) *.o *~

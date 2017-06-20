@@ -1,7 +1,6 @@
 # Installation directories.
 PREFIX ?= $(DESTDIR)/usr
 INCLUDEDIR ?= $(PREFIX)/include
-SBINDIR ?= $(PREFIX)/sbin
 MANDIR = $(PREFIX)/share/man
 LIBDIR ?= $(PREFIX)/lib
 LIBEXECDIR ?= $(PREFIX)/libexec
