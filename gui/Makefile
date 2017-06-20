@@ -1,6 +1,5 @@
 # Installation directories.
 PREFIX ?= ${DESTDIR}/usr
-SYSCONFDIR ?= ${DESTDIR}/etc
 BINDIR ?= $(PREFIX)/bin
 SHAREDIR ?= $(PREFIX)/share/system-config-selinux
 DATADIR ?= $(PREFIX)/share
@@ -30,7 +29,6 @@ install: all
 	-mkdir -p $(BINDIR)
 	-mkdir -p $(DATADIR)/pixmaps
 	-mkdir -p $(DATADIR)/icons/hicolor/24x24/apps
-	-mkdir -p $(SYSCONFDIR)
 	-mkdir -p $(DATADIR)/polkit-1/actions/
 	install -m 755 system-config-selinux.py $(SHAREDIR)
 	install -m 755 system-config-selinux $(BINDIR)
