@@ -4,9 +4,10 @@
 #include <sepol/handle.h>
 #include <sepol/policydb.h>
 #include <sepol/ibendport_record.h>
-#include <sys/cdefs.h>
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Return the number of ibendports */
 extern int sepol_ibendport_count(sepol_handle_t *handle,
@@ -41,5 +42,9 @@ extern int sepol_ibendport_iterate(sepol_handle_t *handle,
 				   int (*fn)(const sepol_ibendport_t *ibendport,
 					     void *fn_arg), void *arg);
 
-__END_DECLS
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
