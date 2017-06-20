@@ -10,17 +10,17 @@ AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
-LDLIBS += -lselinux
+override LDLIBS += -lselinux
 ifeq ($(PAMH), y)
 	override CFLAGS += -DUSE_PAM
-	LDLIBS += -lpam -lpam_misc
+	override LDLIBS += -lpam -lpam_misc
 else
 	override CFLAGS += -D_XOPEN_SOURCE=500
-	LDLIBS += -lcrypt
+	override LDLIBS += -lcrypt
 endif
 ifeq ($(AUDITH), y)
 	override CFLAGS += -DUSE_AUDIT
-	LDLIBS += -laudit
+	override LDLIBS += -laudit
 endif
 
 TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))

@@ -23,18 +23,18 @@ VERSION = $(shell cat ../VERSION)
 CFLAGS ?= -Werror -Wall -W
 EXTRA_OBJS =
 override CFLAGS += -DVERSION=\"$(VERSION)\" -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
-LDLIBS += -lselinux
+override LDLIBS += -lselinux
 ifeq ($(PAMH), y)
 	override CFLAGS += -DUSE_PAM
 	EXTRA_OBJS += hashtab.o
-	LDLIBS += -lpam -lpam_misc
+	override LDLIBS += -lpam -lpam_misc
 else
 	override CFLAGS += -D_XOPEN_SOURCE=500
-	LDLIBS += -lcrypt
+	override LDLIBS += -lcrypt
 endif
 ifeq ($(AUDITH), y)
 	override CFLAGS += -DUSE_AUDIT
-	LDLIBS += -laudit
+	override LDLIBS += -laudit
 endif
 ifeq ($(LSPP_PRIV),y)
 	override AUDIT_LOG_PRIV=y
@@ -50,7 +50,7 @@ ifeq ($(NAMESPACE_PRIV),y)
 endif
 ifeq ($(IS_SUID),y)
 	MODE := 4555
-	LDLIBS += -lcap-ng
+	override LDLIBS += -lcap-ng
 else
 	MODE := 0555
 endif

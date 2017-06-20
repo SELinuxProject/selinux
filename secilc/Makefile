@@ -4,8 +4,6 @@ MANDIR ?= $(PREFIX)/share/man
 LIBDIR ?= $(PREFIX)/lib
 INCLUDEDIR ?= $(PREFIX)/include
 
-LDLIBS = -lsepol
-
 SECILC = secilc
 SECILC_SRCS := secilc.c
 SECILC_OBJS := $(patsubst %.c,%.o,$(SECILC_SRCS))
@@ -21,6 +19,7 @@ XMLTO = xmlto
 CFLAGS ?= -Wall -Wshadow -Wextra -Wundef -Wmissing-format-attribute -Wcast-align -Wstrict-prototypes -Wpointer-arith -Wunused
 
 override CFLAGS += -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
+override LDLIBS += -lsepol
 
 all: $(SECILC) $(SECIL2CONF) man
 

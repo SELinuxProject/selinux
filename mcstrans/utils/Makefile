@@ -6,7 +6,7 @@ LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 
 CFLAGS ?= -Wall
 override CFLAGS += -I../src -D_GNU_SOURCE
-LDLIBS += -lselinux -lpcre
+override LDLIBS += -lselinux -lpcre
 
 TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
 

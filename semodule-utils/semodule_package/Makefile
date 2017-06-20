@@ -6,7 +6,7 @@ LIBDIR ?= $(PREFIX)/lib
 MANDIR ?= $(PREFIX)/share/man
 
 CFLAGS ?= -Werror -Wall -W
-LDLIBS = -lsepol
+override LDLIBS += -lsepol
 
 all: semodule_package semodule_unpackage
 

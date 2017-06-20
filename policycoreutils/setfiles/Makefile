@@ -8,21 +8,21 @@ AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
 ABORT_ON_ERRORS=$(shell grep "^\#define ABORT_ON_ERRORS" setfiles.c | awk -S '{ print $$3 }')
 
 CFLAGS ?= -g -Werror -Wall -W
-LDLIBS = -lselinux -lsepol
+override LDLIBS += -lselinux -lsepol
 
 ifeq ($(AUDITH), y)
 	override CFLAGS += -DUSE_AUDIT
-	LDLIBS += -laudit
+	override LDLIBS += -laudit
 endif
 
 all: setfiles restorecon restorecon_xattr man
 
-setfiles:  setfiles.o restore.o
+setfiles: setfiles.o restore.o
 
 restorecon: setfiles
 	ln -sf setfiles restorecon
 
-restorecon_xattr:  restorecon_xattr.o restore.o
+restorecon_xattr: restorecon_xattr.o restore.o
 
 man:
 	@cp -af setfiles.8 setfiles.8.man

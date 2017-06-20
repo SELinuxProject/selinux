@@ -29,7 +29,7 @@ else
 endif
 export PCRE_CFLAGS PCRE_LDLIBS
 
-LDLIBS += -lselinux $(PCRE_LDLIBS) $(DBUSLIB)
+override LDLIBS += -lselinux $(PCRE_LDLIBS) $(DBUSLIB)
 
 all: restorecond
 

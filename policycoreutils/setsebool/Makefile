@@ -7,7 +7,7 @@ LIBDIR ?= $(PREFIX)/lib
 BASHCOMPLETIONDIR ?= $(DESTDIR)/usr/share/bash-completion/completions
 
 CFLAGS ?= -Werror -Wall -W
-LDLIBS = -lsepol -lselinux -lsemanage
+override LDLIBS += -lsepol -lselinux -lsemanage
 SETSEBOOL_OBJS = setsebool.o
 
 BASHCOMPLETIONS=setsebool-bash-completion.sh 

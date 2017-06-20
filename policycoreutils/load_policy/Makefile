@@ -7,7 +7,7 @@ LOCALEDIR ?= /usr/share/locale
 
 CFLAGS ?= -Werror -Wall -W
 override CFLAGS += $(LDFLAGS) -DUSE_NLS -DLOCALEDIR="\"$(LOCALEDIR)\"" -DPACKAGE="\"policycoreutils\""
-LDLIBS += -lsepol -lselinux
+override LDLIBS += -lsepol -lselinux
 
 TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
 

@@ -4,24 +4,19 @@ LIBDIR ?= $(PREFIX)/lib
 # Add your test source files here:
 SOURCES = $(sort $(wildcard *.c))
 
-# Add the required external object files here:
-LIBS = ../src/libsemanage.a -lselinux -lsepol
-
 ###########################################################################
 
 EXECUTABLE = libsemanage-tests
 CFLAGS += -g -O0 -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter
-INCLUDE = -I../src -I../include
-LDLIBS += -lcunit -lbz2 -laudit
+override CFLAGS += -I../src -I../include
+override LDLIBS += -lcunit -lbz2 -laudit ../src/libsemanage.a -lselinux -lsepol
+
 OBJECTS = $(SOURCES:.c=.o) 
 
 all: $(EXECUTABLE) 
 
 $(EXECUTABLE): $(OBJECTS) ../src/libsemanage.a
-	$(CC) $(OBJECTS) $(LIBS) $(LDFLAGS) -o $@ $(LDLIBS)
-
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -c $*.c -o $*.o
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@ $(LDLIBS)
 
 clean distclean: 
 	rm -rf $(OBJECTS) $(EXECUTABLE)
