@@ -12,6 +12,7 @@ env:
   matrix:
     # Test the last version of Python and Ruby together, with some linkers
     - PYVER=python3.6 RUBYLIBVER=2.4
+    - PYVER=python3.6 RUBYLIBVER=2.4 TEST_FLAGS_OVERRIDE=1
     - PYVER=python3.6 RUBYLIBVER=2.4 LINKER=gold
     - PYVER=python3.6 RUBYLIBVER=2.4 LINKER=bfd
 
@@ -96,14 +97,17 @@ before_script:
   - echo "$PYTHON" ; $PYTHON --version
   - echo "$RUBY" ; $RUBY --version
 
+  # If TEST_FLAGS_OVERRIDE is defined, test that overriding CFLAGS, LDFLAGS and other variables works fine
+  - if [ -n "$TEST_FLAGS_OVERRIDE" ]; then EXPLICIT_MAKE_VARS="CFLAGS=-I$DESTDIR/usr/include LDFLAGS=-L$DESTDIR/usr/lib LDLIBS= CPPFLAGS=" ; fi
+
 script:
   # Start by installing everything into $DESTDIR
-  - make install -k
-  - make install-pywrap -k
-  - make install-rubywrap -k
+  - make install $EXPLICIT_MAKE_VARS -k
+  - make install-pywrap $EXPLICIT_MAKE_VARS -k
+  - make install-rubywrap $EXPLICIT_MAKE_VARS -k
 
   # Now that everything is installed, run "make all" to build everything which may have not been built
-  - make all -k
+  - make all $EXPLICIT_MAKE_VARS -k
 
   # Set up environment variables for the tests
   - export LD_LIBRARY_PATH="$DESTDIR/usr/lib:$DESTDIR/lib"
@@ -118,7 +122,7 @@ script:
   - echo "$RUBYLIB"
 
   # Run tests
-  - make test
+  - make test $EXPLICIT_MAKE_VARS
 
   # Test Python and Ruby wrappers
   - $PYTHON -c 'import selinux;import selinux.audit2why;import semanage;print(selinux.is_selinux_enabled())'
@@ -132,7 +136,7 @@ script:
     git status --short | sed -n 's/^??/error: missing .gitignore entry for/p' | (! grep '^')
 
   # Clean up everything and show which file would be added to "make clean"
-  - make clean distclean
+  - make clean distclean $EXPLICIT_MAKE_VARS
   - |-
     git ls-files --ignored --others --exclude-standard | sed 's/^/error: "make clean distclean" did not remove /' | (! grep '^')
 
