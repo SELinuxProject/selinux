@@ -276,10 +276,8 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	/* Non blocking mode for all file descriptors. */
+	/* Non blocking mode for the pty master. */
 	setfd_nonblock(pty_master);
-	setfd_nonblock(STDIN_FILENO);
-	setfd_nonblock(STDOUT_FILENO);
 
 	if (isatty(STDIN_FILENO)) {
 		if (tty_semi_raw(STDIN_FILENO) < 0) {
