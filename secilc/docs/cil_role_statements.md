@@ -84,7 +84,7 @@ This example will declare [`role`](cil_role_statements.md#role) and [`type`](cil
 roleattribute
 -------------
 
-Declares a role attribute identifier in the current namespace. The identifier may have zero or more [`role`](cil_role_statements.md#role) and [`roleattribute`](cil_role_statements.md#roleattribute) identifiers associated to it via the [`typeattributeset`](cil_type_statements.md#typeattributeset) statement.
+Declares a role attribute identifier in the current namespace. The identifier may have zero or more [`role`](cil_role_statements.md#role) and [`roleattribute`](cil_role_statements.md#roleattribute) identifiers associated to it via the [`roleattributeset`](cil_role_statements.md#roleattributeset) statement.
 
 **Statement definition:**
 
