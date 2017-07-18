@@ -191,6 +191,28 @@ static void setfd_nonblock(int fd)
 	}
 }
 
+static void setfd_block(int fd)
+{
+	int fsflags = fcntl(fd, F_GETFL);
+
+	if (fsflags < 0) {
+		fprintf(stderr, "fcntl(%d, F_GETFL): %s\n", fd, strerror(errno));
+		exit(EX_IOERR);
+	}
+
+	if (fcntl(fd, F_SETFL, fsflags & ~O_NONBLOCK) < 0) {
+		fprintf(stderr, "fcntl(%d, F_SETFL, ... & ~O_NONBLOCK): %s\n", fd, strerror(errno));
+		exit(EX_IOERR);
+	}
+}
+
+static void setfd_atexit(void)
+{
+	setfd_block(STDIN_FILENO);
+	setfd_block(STDOUT_FILENO);
+	return;
+}
+
 static void sigchld_handler(int asig __attribute__ ((unused)))
 {
 }
@@ -280,6 +302,10 @@ int main(int argc, char *argv[])
 	setfd_nonblock(pty_master);
 	setfd_nonblock(STDIN_FILENO);
 	setfd_nonblock(STDOUT_FILENO);
+	if (atexit(setfd_atexit) < 0) {
+		perror("atexit()");
+		exit(EXIT_FAILURE);
+	}
 
 	if (isatty(STDIN_FILENO)) {
 		if (tty_semi_raw(STDIN_FILENO) < 0) {
