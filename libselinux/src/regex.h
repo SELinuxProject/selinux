@@ -1,6 +1,7 @@
 #ifndef SRC_REGEX_H_
 #define SRC_REGEX_H_
 
+#include <stdbool.h>
 #include <stdio.h>
 
 #ifdef USE_PCRE2
@@ -98,13 +99,17 @@ int regex_prepare_data(struct regex_data **regex, char const *pattern_string,
  *            with regex_data_create and must be freed with regex_data_free.
  * @arg do_load_precompregex If non-zero precompiled patterns get loaded from
  *			     the mmap region (ignored by PCRE1 back-end).
+ * @arg regex_compiled Set to true if a precompiled pattern was loaded
+ * 		       into regex, otherwise set to false to indicate later
+ *		       compilation must occur
  *
  * @retval 0 on success
  * @retval -1 on error
  */
 int regex_load_mmap(struct mmap_area *map_area,
 		    struct regex_data **regex,
-		    int do_load_precompregex) hidden;
+		    int do_load_precompregex,
+		    bool *regex_compiled) hidden;
 /**
  * This function stores a precompiled regular expression to a file.
  * In the case of PCRE, it just dumps the binary representation of the
