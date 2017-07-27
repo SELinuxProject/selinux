@@ -807,6 +807,7 @@ Note: SELinux often uses regular expressions to specify labels that match multip
         self.fd.write(r"""
 .I The following file types are defined for %(domainname)s:
 """ % {'domainname': self.domainname})
+        flist.sort()
         for f in flist:
             self.fd.write("""
 
