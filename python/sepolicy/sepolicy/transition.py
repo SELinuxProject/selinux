@@ -30,7 +30,9 @@ def _entrypoint(src):
 
 
 def _get_trans(src):
-    return sepolicy.search([sepolicy.TRANSITION], {sepolicy.SOURCE: src, sepolicy.CLASS: "process"})
+    src_list = [src] + list(filter(lambda x: x['name'] == src, sepolicy.get_all_types_info()))[0]['attributes']
+    trans_list = list(filter(lambda x: x['source'] in src_list and x['class'] == 'process', sepolicy.get_all_transitions()))
+    return trans_list
 
 
 class setrans:
@@ -53,8 +55,8 @@ class setrans:
         if not self.dest:
             self.sdict[source]["map"] = trans
         else:
-            self.sdict[source]["map"] = map(lambda y: y, filter(lambda x: x["transtype"] == self.dest, trans))
-            self.sdict[source]["child"] = map(lambda y: y["transtype"], filter(lambda x: x["transtype"] not in [self.dest, source], trans))
+            self.sdict[source]["map"] = list(map(lambda y: y, filter(lambda x: x["transtype"] == self.dest, trans)))
+            self.sdict[source]["child"] = list(map(lambda y: y["transtype"], filter(lambda x: x["transtype"] not in [self.dest, source], trans)))
             for s in self.sdict[source]["child"]:
                 self._process(s)
 

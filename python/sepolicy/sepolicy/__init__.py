@@ -99,6 +99,7 @@ local_files = None
 fcdict = None
 methods = []
 all_types = None
+all_types_info = None
 user_types = None
 role_allows = None
 portrecs = None
@@ -113,6 +114,8 @@ bools = None
 all_attributes = None
 booleans = None
 booleans_dict = None
+all_allow_rules = None
+all_transitions = None
 
 
 def get_installed_policy(root="/"):
@@ -168,10 +171,10 @@ def info(setype, name=None):
             q.name = name
 
         return ({
-            'aliases': map(str, x.aliases()),
+            'aliases': list(map(str, x.aliases())),
             'name': str(x),
             'permissive': bool(x.ispermissive),
-            'attributes': map(str, x.attributes())
+            'attributes': list(map(str, x.attributes()))
         } for x in q.results())
 
     elif setype == ROLE:
@@ -181,8 +184,8 @@ def info(setype, name=None):
 
         return ({
             'name': str(x),
-            'roles': map(str, x.expand()),
-            'types': map(str, x.types()),
+            'roles': list(map(str, x.expand())),
+            'types': list(map(str, x.types())),
         } for x in q.results())
 
     elif setype == ATTRIBUTE:
@@ -192,7 +195,7 @@ def info(setype, name=None):
 
         return ({
             'name': str(x),
-            'types': map(str, x.expand()),
+            'types': list(map(str, x.expand())),
         } for x in q.results())
 
     elif setype == PORT:
@@ -220,7 +223,7 @@ def info(setype, name=None):
         return ({
             'range': str(x.mls_range),
             'name': str(x),
-            'roles': map(str, x.roles),
+            'roles': list(map(str, x.roles)),
             'level': str(x.mls_level),
         } for x in q.results())
 
@@ -362,17 +365,26 @@ def search(types, seinfo=None):
 def get_conditionals(src, dest, tclass, perm):
     tdict = {}
     tlist = []
-    if dest.endswith("_t"):
-        allows = search([ALLOW], {SOURCE: src, TARGET: dest, CLASS: tclass, PERMS: perm})
-    else:
-        # to include attribute
-        allows = search([ALLOW], {SOURCE: src, CLASS: tclass, PERMS: perm})
-        for i in allows:
-            if i['target'] == dest:
-                allows = []
-                allows.append(i)
+    src_list = [src]
+    dest_list = [dest]
+    # add assigned attributes
     try:
-        for i in map(lambda y: (y), filter(lambda x: set(perm).issubset(x[PERMS]) and x['boolean'], allows)):
+        src_list += list(filter(lambda x: x['name'] == src, get_all_types_info()))[0]['attributes']
+    except:
+        pass
+    try:
+        dest_list += list(filter(lambda x: x['name'] == dest, get_all_types_info()))[0]['attributes']
+    except:
+        pass
+    allows = map(lambda y: y, filter(lambda x:
+                x['source'] in src_list and
+                x['target'] in dest_list and
+                set(perm).issubset(x[PERMS]) and
+                'boolean' in x,
+                get_all_allow_rules()))
+
+    try:
+        for i in allows:
             tdict.update({'source': i['source'], 'boolean': i['boolean']})
             if tdict not in tlist:
                 tlist.append(tdict)
@@ -734,6 +746,11 @@ def get_all_types():
         all_types = [x['name'] for x in info(TYPE)]
     return all_types
 
+def get_all_types_info():
+    global all_types_info
+    if all_types_info is None:
+        all_types_info = list(info(TYPE))
+    return all_types_info
 
 def get_user_types():
     global user_types
@@ -1018,12 +1035,23 @@ def gen_short_name(setype):
         short_name = domainname + "_"
     return (domainname, short_name)
 
+def get_all_allow_rules():
+    global all_allow_rules
+    if not all_allow_rules:
+        all_allow_rules = search([ALLOW])
+    return all_allow_rules
+
+def get_all_transitions():
+    global all_transitions
+    if not all_transitions:
+        all_transitions = list(search([TRANSITION]))
+    return all_transitions
 
 def get_bools(setype):
     bools = []
     domainbools = []
     domainname, short_name = gen_short_name(setype)
-    for i in map(lambda x: x['boolean'], filter(lambda x: 'boolean' in x, search([ALLOW], {'source': setype}))):
+    for i in map(lambda x: x['boolean'], filter(lambda x: 'boolean' in x and x['source'] == setype, get_all_allow_rules())):
         for b in i:
             if not isinstance(b, tuple):
                 continue

@@ -938,7 +938,11 @@ selinux(8), %s(8), semanage(8), restorecon(8), chcon(1), sepolicy(8)
         return True
 
     def _entrypoints(self):
-        entrypoints = [x['target'] for x in sepolicy.search([sepolicy.ALLOW], {'source': self.type, 'permlist': ['entrypoint'], 'class': 'file'})]
+        entrypoints = [x['target'] for x in filter(lambda y:
+            y['source'] == self.type and y['class'] == 'file' and 'entrypoint' in y['permlist'],
+            sepolicy.get_all_allow_rules()
+        )]
+
         if len(entrypoints) == 0:
             return
 
@@ -980,15 +984,23 @@ For example one process might be launched with %(type)s_t:s0:c1,c2, and another 
 """ % {'type': self.domainname})
 
     def _writes(self):
-        permlist = sepolicy.search([sepolicy.ALLOW], {'source': self.type, 'permlist': ['open', 'write'], 'class': 'file'})
+        # add assigned attributes
+        src_list = [self.type]
+        try:
+            src_list += list(filter(lambda x: x['name'] == self.type, sepolicy.get_all_types_info()))[0]['attributes']
+        except:
+            pass
+
+        permlist = list(filter(lambda x:
+            x['source'] in src_list and
+            set(['open', 'write']).issubset(x['permlist']) and
+            x['class'] == 'file',
+            sepolicy.get_all_allow_rules()))
         if permlist is None or len(permlist) == 0:
             return
 
         all_writes = []
         attributes = ["proc_type", "sysctl_type"]
-        for i in permlist:
-            if not i['target'].endswith("_t"):
-                attributes.append(i['target'])
 
         for i in permlist:
             if self._valid_write(i['target'], attributes):
@@ -1187,7 +1199,12 @@ The SELinux user %s_u is able to connect to the following tcp ports.
 """ % ",".join(ports))
 
     def _home_exec(self):
-        permlist = sepolicy.search([sepolicy.ALLOW], {'source': self.type, 'target': 'user_home_type', 'class': 'file', 'permlist': ['ioctl', 'read', 'getattr', 'execute', 'execute_no_trans', 'open']})
+        permlist = list(filter(lambda x:
+            x['source'] == self.type and
+            x['target'] == 'user_home_type' and
+            x['class'] == 'file' and
+            set(['ioctl', 'read', 'getattr', 'execute', 'execute_no_trans', 'open']).issubset(set(x['permlist'])),
+            sepolicy.get_all_allow_rules()))
         self.fd.write("""
 .SH HOME_EXEC
 """)
