@@ -60,7 +60,7 @@ class SepolicyTests(unittest.TestCase):
         self.assertSuccess(p.returncode, err)
 
     def test_transition_s(self):
-        "Verify sepolicy transition -l works"
+        "Verify sepolicy transition -s works"
         p = Popen(['sepolicy', 'transition', '-s', 'httpd_t'], stdout=PIPE)
         out, err = p.communicate()
         self.assertSuccess(p.returncode, err)
