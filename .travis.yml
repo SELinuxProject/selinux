@@ -29,9 +29,10 @@ env:
     - PYVER=python3.6 RUBYLIBVER=2.2
     - PYVER=python3.6 RUBYLIBVER=2.3
 
-# Use Travis-CI Ubuntu 14.04 Trusty infrastructure
+# Use Travis-CI Ubuntu 14.04 Trusty infrastructure, "full image" variant
 sudo: required
 dist: trusty
+group: sugilite
 
 # Install SELinux userspace utilities dependencies
 addons:
