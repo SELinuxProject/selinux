@@ -956,7 +956,7 @@ def get_description(f, markup=markup):
     if f.endswith("_db_t"):
         return txt + "treat the files as %s database content." % prettyprint(f, "_db_t")
     if f.endswith("_ra_content_t"):
-        return txt + "treat the files as %s read/append content." % prettyprint(f, "_ra_conten_t")
+        return txt + "treat the files as %s read/append content." % prettyprint(f, "_ra_content_t")
     if f.endswith("_cert_t"):
         return txt + "treat the files as %s certificate data." % prettyprint(f, "_cert_t")
     if f.endswith("_key_t"):
