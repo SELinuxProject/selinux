@@ -207,10 +207,17 @@ def info(setype, name=None):
             elif len(ports) == 1:
                 q.ports = (ports[0], ports[0])
 
+        if _pol.mls:
+            return ({
+                'high': x.ports.high,
+                'protocol': str(x.protocol),
+                'range': str(x.context.range_),
+                'type': str(x.context.type_),
+                'low': x.ports.low,
+            } for x in q.results())
         return ({
             'high': x.ports.high,
             'protocol': str(x.protocol),
-            'range': str(x.context.range_),
             'type': str(x.context.type_),
             'low': x.ports.low,
         } for x in q.results())
@@ -220,11 +227,16 @@ def info(setype, name=None):
         if name:
             q.name = name
 
+        if _pol.mls:
+            return ({
+                'range': str(x.mls_range),
+                'name': str(x),
+                'roles': list(map(str, x.roles)),
+                'level': str(x.mls_level),
+            } for x in q.results())
         return ({
-            'range': str(x.mls_range),
             'name': str(x),
             'roles': list(map(str, x.roles)),
-            'level': str(x.mls_level),
         } for x in q.results())
 
     elif setype == BOOLEAN:

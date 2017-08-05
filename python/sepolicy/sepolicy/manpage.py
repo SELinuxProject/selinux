@@ -84,7 +84,8 @@ def get_all_users_info():
 
     for d in allusers_info:
         allusers.append(d['name'])
-        users_range[d['name'].split("_")[0]] = d['range']
+        if 'range' in d:
+            users_range[d['name'].split("_")[0]] = d['range']
 
     for u in allusers:
         if u not in ["system_u", "root", "unconfined_u"]:
