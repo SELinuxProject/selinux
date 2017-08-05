@@ -922,8 +922,7 @@ This manual page was auto-generated using
 .B "sepolicy manpage".
 
 .SH "SEE ALSO"
-selinux(8), %s(8), semanage(8), restorecon(8), chcon(1), sepolicy(8)
-""" % (self.domainname))
+selinux(8), %s(8), semanage(8), restorecon(8), chcon(1), sepolicy(8)""" % (self.domainname))
 
         if self.booltext != "":
             self.fd.write(", setsebool(8)")
