@@ -192,7 +192,7 @@ class HTMLManPages:
         self.old_path = path + "/"
         self.new_path = self.old_path + self.os_version + "/"
 
-        if self.os_version in fedora_releases or rhel_releases:
+        if self.os_version in fedora_releases or self.os_version in rhel_releases:
             self.__gen_html_manpages()
         else:
             print("SELinux HTML man pages can not be generated for this %s" % os_version)
@@ -262,7 +262,7 @@ Fedora or Red Hat Enterprise Linux Man Pages.</h2>
 </pre>
 	""")
         fd.close()
-        print("%s has been created") % index
+        print("%s has been created" % index)
 
     def _gen_body(self):
         html = self.new_path + self.os_version + ".html"
