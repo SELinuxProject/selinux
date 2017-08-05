@@ -29,6 +29,13 @@ env:
     - PYVER=python3.6 RUBYLIBVER=2.2
     - PYVER=python3.6 RUBYLIBVER=2.3
 
+matrix:
+  exclude:
+    - compiler: clang
+      env: PYVER=python3.6 RUBYLIBVER=2.4 LINKER=gold
+    - compiler: clang
+      env: PYVER=python3.6 RUBYLIBVER=2.4 LINKER=bfd
+
 # Use Travis-CI Ubuntu 14.04 Trusty infrastructure, "full image" variant
 sudo: required
 dist: trusty
