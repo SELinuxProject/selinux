@@ -573,9 +573,10 @@ def get_fcdict(fc_path=selinux.selinux_file_context_path()):
     fc += fd.readlines()
     fd.close()
     fcdict = {}
-    fd = open(fc_path + ".local", "r")
-    fc += fd.readlines()
-    fd.close()
+    if os.path.exists(fc_path + ".local"):
+        fd = open(fc_path + ".local", "r")
+        fc += fd.readlines()
+        fd.close()
 
     for i in fc:
         rec = i.split()
