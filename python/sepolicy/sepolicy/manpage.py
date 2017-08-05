@@ -975,7 +975,10 @@ All executeables with the default executable label, usually stored in /usr/bin a
 %s""" % ", ".join(paths))
 
     def _mcs_types(self):
-        mcs_constrained_type = next(sepolicy.info(sepolicy.ATTRIBUTE, "mcs_constrained_type"))
+        try:
+            mcs_constrained_type = next(sepolicy.info(sepolicy.ATTRIBUTE, "mcs_constrained_type"))
+        except StopIteration:
+            return
         if self.type not in mcs_constrained_type['types']:
             return
         self.fd.write ("""
