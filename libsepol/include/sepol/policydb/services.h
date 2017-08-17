@@ -2,7 +2,7 @@
 /* -*- linux-c -*- */
 
 /*
- * Author : Stephen Smalley, <sds@epoch.ncsc.mil> 
+ * Author : Stephen Smalley, <sds@tycho.nsa.gov>
  */
 
 #ifndef _SEPOL_POLICYDB_SERVICES_H_

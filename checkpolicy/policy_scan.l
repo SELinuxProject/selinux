@@ -1,6 +1,6 @@
 
 /* 
- * Author : Stephen Smalley, <sds@epoch.ncsc.mil> 
+ * Author : Stephen Smalley, <sds@tycho.nsa.gov>
  */
 
 /* Updated: David Caplan, <dac@tresys.com>

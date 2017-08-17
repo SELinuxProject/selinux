@@ -4,7 +4,7 @@
  * Author : Eamon Walsh <ewalsh@epoch.ncsc.mil>
  *
  * Derived from the kernel AVC implementation by
- * Stephen Smalley <sds@epoch.ncsc.mil> and 
+ * Stephen Smalley <sds@tycho.nsa.gov> and
  * James Morris <jmorris@redhat.com>.
  */
 #include <selinux/avc.h>
