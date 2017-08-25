@@ -119,6 +119,7 @@ void cil_strpool_destroy(void)
 	if (cil_strpool_readers == 0) {
 		hashtab_map(cil_strpool_tab, cil_strpool_entry_destroy, NULL);
 		hashtab_destroy(cil_strpool_tab);
+		cil_strpool_tab = NULL;
 	}
 	pthread_mutex_unlock(&cil_strpool_mutex);
 }
