@@ -316,6 +316,7 @@ struct cil_db {
 	int preserve_tunables;
 	int handle_unknown;
 	int mls;
+	int multiple_decls;
 	int target_platform;
 	int policy_version;
 };

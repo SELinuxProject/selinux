@@ -49,6 +49,7 @@ LIBSEPOL_1.1 {
 	cil_set_mls;
 	cil_set_attrs_expand_generated;
 	cil_set_attrs_expand_size;
+	cil_set_multiple_decls;
 	cil_write_policy_conf;
 	sepol_ppfile_to_module_package;
 	sepol_module_package_to_cil;

@@ -82,10 +82,33 @@ exit:
 	return rc;
 }
 
+/*
+ * Determine whether or not multiple declarations of the same key can share a
+ * datum, given the new datum and the one already present in a given symtab.
+ */
+int cil_is_datum_multiple_decl(__attribute__((unused)) struct cil_symtab_datum *cur,
+                               __attribute__((unused)) struct cil_symtab_datum *old,
+                               enum cil_flavor f)
+{
+	int rc = CIL_FALSE;
+
+	switch (f) {
+	case CIL_TYPE:
+	case CIL_TYPEATTRIBUTE:
+		/* type and typeattribute statements insert empty datums, ret true */
+		rc = CIL_TRUE;
+		break;
+	default:
+		break;
+	}
+	return rc;
+}
+
 int cil_gen_node(__attribute__((unused)) struct cil_db *db, struct cil_tree_node *ast_node, struct cil_symtab_datum *datum, hashtab_key_t key, enum cil_sym_index sflavor, enum cil_flavor nflavor)
 {
 	int rc = SEPOL_ERR;
 	symtab_t *symtab = NULL;
+	struct cil_symtab_datum *prev;
 
 	rc = __cil_verify_name((const char*)key);
 	if (rc != SEPOL_OK) {
@@ -103,15 +126,26 @@ int cil_gen_node(__attribute__((unused)) struct cil_db *db, struct cil_tree_node
 	if (symtab != NULL) {
 		rc = cil_symtab_insert(symtab, (hashtab_key_t)key, datum, ast_node);
 		if (rc == SEPOL_EEXIST) {
-			cil_log(CIL_ERR, "Re-declaration of %s %s\n", 
-				cil_node_to_string(ast_node), key);
-			if (cil_symtab_get_datum(symtab, key, &datum) == SEPOL_OK) {
-				if (sflavor == CIL_SYM_BLOCKS) {
-					struct cil_tree_node *node = datum->nodes->head->data;
-					cil_tree_log(node, CIL_ERR, "Previous declaration");
+			if (!db->multiple_decls ||
+			    cil_symtab_get_datum(symtab, (hashtab_key_t)key, &prev) != SEPOL_OK ||
+			    !cil_is_datum_multiple_decl(datum, prev, nflavor)) {
+
+				/* multiple_decls not ok, ret error */
+				cil_log(CIL_ERR, "Re-declaration of %s %s\n",
+					cil_node_to_string(ast_node), key);
+				if (cil_symtab_get_datum(symtab, key, &datum) == SEPOL_OK) {
+					if (sflavor == CIL_SYM_BLOCKS) {
+						struct cil_tree_node *node = datum->nodes->head->data;
+						cil_tree_log(node, CIL_ERR, "Previous declaration");
+					}
 				}
+				goto exit;
 			}
-			goto exit;
+			/* multiple_decls is enabled and works for this datum type, add node */
+			cil_list_append(prev->nodes, CIL_NODE, ast_node);
+			ast_node->data = prev;
+			cil_symtab_datum_destroy(datum);
+			free(datum);
 		}
 	}
 

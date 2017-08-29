@@ -1691,6 +1691,11 @@ void cil_set_mls(struct cil_db *db, int mls)
 	db->mls = mls;
 }
 
+void cil_set_multiple_decls(struct cil_db *db, int multiple_decls)
+{
+	db->multiple_decls = multiple_decls;
+}
+
 void cil_set_target_platform(struct cil_db *db, int target_platform)
 {
 	db->target_platform = target_platform;

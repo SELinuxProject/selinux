@@ -50,6 +50,7 @@ extern int cil_userprefixes_to_string(cil_db_t *db, char **out, size_t *size);
 extern int cil_selinuxusers_to_string(cil_db_t *db, char **out, size_t *size);
 extern int cil_filecons_to_string(cil_db_t *db, char **out, size_t *size);
 extern void cil_set_disable_dontaudit(cil_db_t *db, int disable_dontaudit);
+extern void cil_set_multiple_decls(cil_db_t *db, int multiple_decls);
 extern void cil_set_disable_neverallow(cil_db_t *db, int disable_neverallow);
 extern void cil_set_preserve_tunables(cil_db_t *db, int preserve_tunables);
 extern int cil_set_handle_unknown(cil_db_t *db, int handle_unknown);

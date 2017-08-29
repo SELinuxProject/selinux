@@ -63,6 +63,7 @@ static __attribute__((__noreturn__)) void usage(const char *prog)
 	printf("                                 statement if present in the policy\n");
 	printf("  -D, --disable-dontaudit        do not add dontaudit rules to the binary policy\n");
 	printf("  -P, --preserve-tunables        treat tunables as booleans\n");
+	printf("  -m, --multiple-decls           allow some statements to be re-declared\n");
 	printf("  -N, --disable-neverallow       do not check neverallow rules\n");
 	printf("  -G, --expand-generated         Expand and remove auto-generated attributes\n");
 	printf("  -X, --expand-size <SIZE>       Expand type attributes with fewer than <SIZE>\n");
@@ -89,6 +90,7 @@ int main(int argc, char *argv[])
 	int target = SEPOL_TARGET_SELINUX;
 	int mls = -1;
 	int disable_dontaudit = 0;
+	int multiple_decls = 0;
 	int disable_neverallow = 0;
 	int preserve_tunables = 0;
 	int handle_unknown = -1;
@@ -108,6 +110,7 @@ int main(int argc, char *argv[])
 		{"policyversion", required_argument, 0, 'c'},
 		{"handle-unknown", required_argument, 0, 'U'},
 		{"disable-dontaudit", no_argument, 0, 'D'},
+		{"multiple-decls", no_argument, 0, 'm'},
 		{"disable-neverallow", no_argument, 0, 'N'},
 		{"preserve-tunables", no_argument, 0, 'P'},
 		{"output", required_argument, 0, 'o'},
@@ -119,7 +122,7 @@ int main(int argc, char *argv[])
 	int i;
 
 	while (1) {
-		opt_char = getopt_long(argc, argv, "o:f:U:hvt:M:PDNc:GX:", long_opts, &opt_index);
+		opt_char = getopt_long(argc, argv, "o:f:U:hvt:M:PDmNc:GX:", long_opts, &opt_index);
 		if (opt_char == -1) {
 			break;
 		}
@@ -175,6 +178,9 @@ int main(int argc, char *argv[])
 			case 'D':
 				disable_dontaudit = 1;
 				break;
+			case 'm':
+				multiple_decls = 1;
+				break;
 			case 'N':
 				disable_neverallow = 1;
 				break;
@@ -223,6 +229,7 @@ int main(int argc, char *argv[])
 
 	cil_db_init(&db);
 	cil_set_disable_dontaudit(db, disable_dontaudit);
+	cil_set_multiple_decls(db, multiple_decls);
 	cil_set_disable_neverallow(db, disable_neverallow);
 	cil_set_preserve_tunables(db, preserve_tunables);
 	if (handle_unknown != -1) {
