@@ -1297,6 +1297,57 @@ static int cil_typeattribute_used(struct cil_typeattribute *attr, struct cil_db 
 	return CIL_TRUE;
 }
 
+static void __mark_neverallow_attrs(struct cil_list *expr_list)
+{
+	struct cil_list_item *curr;
+
+	cil_list_for_each(curr, expr_list) {
+		if (curr->flavor == CIL_DATUM) {
+			if (NODE(curr->data)->flavor == CIL_TYPEATTRIBUTE) {
+				struct cil_typeattribute *attr = curr->data;
+				if (strstr(DATUM(attr)->name, TYPEATTR_INFIX)) {
+					__mark_neverallow_attrs(attr->expr_list);
+				} else {
+					attr->used |= CIL_ATTR_NEVERALLOW;
+				}
+			}
+		} else if (curr->flavor == CIL_LIST) {
+			 __mark_neverallow_attrs(curr->data);
+		}
+	}
+}
+
+static int __cil_post_db_neverallow_attr_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+{
+	struct cil_db *db = extra_args;
+
+	switch (node->flavor) {
+	case CIL_BLOCK: {
+		struct cil_block *blk = node->data;
+		if (blk->is_abstract == CIL_TRUE) {
+			*finished = CIL_TREE_SKIP_HEAD;
+		}
+		break;
+	}
+	case CIL_MACRO: {
+		*finished = CIL_TREE_SKIP_HEAD;
+		break;
+	}
+	case CIL_TYPEATTRIBUTE: {
+		struct cil_typeattribute *attr = node->data;
+		if ((attr->used & CIL_ATTR_NEVERALLOW) &&
+		    strstr(DATUM(attr)->name, TYPEATTR_INFIX)) {
+			__mark_neverallow_attrs(attr->expr_list);
+		}
+		break;
+	}
+	default:
+		break;
+	}
+
+	return SEPOL_OK;
+}
+
 static int __cil_post_db_attr_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
@@ -2028,6 +2079,12 @@ static int cil_post_db(struct cil_db *db)
 	rc = cil_tree_walk(db->ast->root, __cil_post_db_array_helper, NULL, NULL, db);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_INFO, "Failure during cil database array helper\n");
+		goto exit;
+	}
+
+	rc = cil_tree_walk(db->ast->root, __cil_post_db_neverallow_attr_helper, NULL, NULL, db);
+	if (rc != SEPOL_OK) {
+		cil_log(CIL_INFO, "Failed to mark attributes used by generated attributes used in neverallow rules\n");
 		goto exit;
 	}
 
