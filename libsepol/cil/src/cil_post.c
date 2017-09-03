@@ -1317,10 +1317,8 @@ static void __mark_neverallow_attrs(struct cil_list *expr_list)
 	}
 }
 
-static int __cil_post_db_neverallow_attr_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+static int __cil_post_db_neverallow_attr_helper(struct cil_tree_node *node, uint32_t *finished, __attribute__((unused)) void *extra_args)
 {
-	struct cil_db *db = extra_args;
-
 	switch (node->flavor) {
 	case CIL_BLOCK: {
 		struct cil_block *blk = node->data;
