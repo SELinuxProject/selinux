@@ -103,7 +103,10 @@ static int write_pid_file(void)
 		pidfile = 0;
 		return 1;
 	}
-	(void)write(pidfd, val, (unsigned int)len);
+	if (write(pidfd, val, (unsigned int)len) != len) {
+		syslog(LOG_ERR, "Unable to write to pidfile (%s)", strerror(errno));
+		return 1;
+	}
 	close(pidfd);
 	return 0;
 }
@@ -204,8 +207,10 @@ int main(int argc, char **argv)
 	watch_file = server_watch_file;
 	read_config(master_fd, watch_file);
 
-	if (!debug_mode)
-		daemon(0, 0);
+	if (!debug_mode) {
+		if (daemon(0, 0) < 0)
+			exitApp("daemon");
+	}
 
 	write_pid_file();
 
