@@ -2687,7 +2687,7 @@ static int ocontext_selinux_ibpkey_to_cil(struct policydb *pdb,
 	int rc = -1;
 	struct ocontext *ibpkeycon;
 	char subnet_prefix_str[INET6_ADDRSTRLEN];
-	struct in6_addr subnet_prefix = {0};
+	struct in6_addr subnet_prefix = IN6ADDR_ANY_INIT;
 	uint16_t high;
 	uint16_t low;
 

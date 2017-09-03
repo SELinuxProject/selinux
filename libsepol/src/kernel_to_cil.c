@@ -2788,7 +2788,7 @@ static int write_selinux_ibpkey_rules_to_cil(FILE *out, struct policydb *pdb)
 {
 	struct ocontext *ibpkeycon;
 	char subnet_prefix_str[INET6_ADDRSTRLEN];
-	struct in6_addr subnet_prefix = {0};
+	struct in6_addr subnet_prefix = IN6ADDR_ANY_INIT;
 	uint16_t low;
 	uint16_t high;
 	char low_high_str[44]; /* 2^64 <= 20 digits so "(low high)" <= 44 chars */
