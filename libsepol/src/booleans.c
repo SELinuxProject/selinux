@@ -155,6 +155,7 @@ int sepol_bool_query(sepol_handle_t * handle,
 	booldatum = hashtab_search(policydb->p_bools.table, name);
 	if (!booldatum) {
 		*response = NULL;
+		free(name);
 		return STATUS_SUCCESS;
 	}
 
