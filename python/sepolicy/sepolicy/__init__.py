@@ -4,6 +4,7 @@
 # Author: Ryan Hallisey <rhallise@redhat.com>
 # Author: Jason Zaman <perfinion@gentoo.org>
 
+import errno
 import selinux
 import setools
 import glob
@@ -523,12 +524,15 @@ def find_entrypoint_path(exe, exclude_list=[]):
 
 
 def read_file_equiv(edict, fc_path, modify):
-    fd = open(fc_path, "r")
-    fc = fd.readlines()
-    fd.close()
-    for e in fc:
-        f = e.split()
-        edict[f[0]] = {"equiv": f[1], "modify": modify}
+    try:
+        with open(fc_path, "r") as fd:
+            fc = fd.readlines()
+            for e in fc:
+                f = e.split()
+                edict[f[0]] = {"equiv": f[1], "modify": modify}
+    except OSError as e:
+        if e.errno != errno.ENOENT:
+            raise
     return edict
 
 
@@ -555,9 +559,13 @@ def get_local_file_paths(fc_path=selinux.selinux_file_context_path()):
     if local_files:
         return local_files
     local_files = []
-    fd = open(fc_path + ".local", "r")
-    fc = fd.readlines()
-    fd.close()
+    try:
+        with open(fc_path + ".local", "r") as fd:
+            fc = fd.readlines()
+    except OSError as e:
+        if e.errno != errno.ENOENT:
+            raise
+        return []
     for i in fc:
         rec = i.split()
         if len(rec) == 0:
@@ -585,10 +593,12 @@ def get_fcdict(fc_path=selinux.selinux_file_context_path()):
     fc += fd.readlines()
     fd.close()
     fcdict = {}
-    if os.path.exists(fc_path + ".local"):
-        fd = open(fc_path + ".local", "r")
-        fc += fd.readlines()
-        fd.close()
+    try:
+        with open(fc_path + ".local", "r") as fd:
+            fc += fd.readlines()
+    except OSError as e:
+        if e.errno != errno.ENOENT:
+            raise
 
     for i in fc:
         rec = i.split()
