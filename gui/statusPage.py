@@ -16,22 +16,13 @@
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ## Author: Dan Walsh
-import string
-import gtk
-import gtk.glade
 import os
-import gobject
 import sys
-import tempfile
+from gi.repository import Gtk
 import selinux
 
 INSTALLPATH = '/usr/share/system-config-selinux'
 sys.path.append(INSTALLPATH)
-
-try:
-    from subprocess import getstatusoutput
-except ImportError:
-    from commands import getstatusoutput
 
 ENFORCING = 1
 PERMISSIVE = 0
@@ -71,12 +62,11 @@ class statusPage:
 
         self.type = selinux.selinux_getpolicytype()
         # Bring in widgets from glade file.
-        self.typeHBox = xml.get_widget("typeHBox")
-        self.selinuxTypeOptionMenu = xml.get_widget("selinuxTypeOptionMenu")
-        self.typeLabel = xml.get_widget("typeLabel")
-        self.enabledOptionMenu = xml.get_widget("enabledOptionMenu")
-        self.currentOptionMenu = xml.get_widget("currentOptionMenu")
-        self.relabel_checkbutton = xml.get_widget("relabelCheckbutton")
+        self.selinuxTypeOptionMenu = xml.get_object("selinuxTypeOptionMenu")
+        self.typeLabel = xml.get_object("typeLabel")
+        self.enabledOptionMenu = xml.get_object("enabledOptionMenu")
+        self.currentOptionMenu = xml.get_object("currentOptionMenu")
+        self.relabel_checkbutton = xml.get_object("relabelCheckbutton")
         self.relabel_checkbutton.set_active(self.is_relabel())
         self.relabel_checkbutton.connect("toggled", self.on_relabel_toggle)
         if self.get_current_mode() == ENFORCING or self.get_current_mode() == PERMISSIVE:
@@ -90,7 +80,7 @@ class statusPage:
             self.currentOptionMenu.set_active(0)
             self.currentOptionMenu.set_sensitive(False)
 
-        if self.read_selinux_config() == None:
+        if self.read_selinux_config() is None:
             self.selinuxsupport = False
         else:
             self.enabledOptionMenu.connect("changed", self.enabled_changed)
@@ -131,10 +121,10 @@ class statusPage:
                 os.unlink(RELABELFILE)
 
     def verify(self, message):
-        dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO,
-                                gtk.BUTTONS_YES_NO,
+        dlg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                Gtk.ButtonsType.YES_NO,
                                 message)
-        dlg.set_position(gtk.WIN_POS_MOUSE)
+        dlg.set_position(Gtk.WindowPosition.MOUSE)
         dlg.show_all()
         rc = dlg.run()
         dlg.destroy()
@@ -144,7 +134,7 @@ class statusPage:
         type = self.get_type()
         enabled = self.enabledOptionMenu.get_active()
         if self.initialtype != type:
-            if self.verify(_("Changing the policy type will cause a relabel of the entire file system on the next boot. Relabeling takes a long time depending on the size of the file system.  Do you wish to continue?")) == gtk.RESPONSE_NO:
+            if self.verify(_("Changing the policy type will cause a relabel of the entire file system on the next boot. Relabeling takes a long time depending on the size of the file system.  Do you wish to continue?")) == Gtk.ResponseType.NO:
                 menu.set_active(self.typeHistory)
                 return None
 
@@ -158,12 +148,12 @@ class statusPage:
         type = self.get_type()
 
         if self.initEnabled != DISABLED and enabled == DISABLED:
-            if self.verify(_("Changing to SELinux disabled requires a reboot.  It is not recommended.  If you later decide to turn SELinux back on, the system will be required to relabel.  If you just want to see if SELinux is causing a problem on your system, you can go to permissive mode which will only log errors and not enforce SELinux policy.  Permissive mode does not require a reboot    Do you wish to continue?")) == gtk.RESPONSE_NO:
+            if self.verify(_("Changing to SELinux disabled requires a reboot.  It is not recommended.  If you later decide to turn SELinux back on, the system will be required to relabel.  If you just want to see if SELinux is causing a problem on your system, you can go to permissive mode which will only log errors and not enforce SELinux policy.  Permissive mode does not require a reboot    Do you wish to continue?")) == Gtk.ResponseType.NO:
                 combo.set_active(self.enabled)
                 return None
 
         if self.initEnabled == DISABLED and enabled < 2:
-            if self.verify(_("Changing to SELinux enabled will cause a relabel of the entire file system on the next boot. Relabeling takes a long time depending on the size of the file system.  Do you wish to continue?")) == gtk.RESPONSE_NO:
+            if self.verify(_("Changing to SELinux enabled will cause a relabel of the entire file system on the next boot. Relabeling takes a long time depending on the size of the file system.  Do you wish to continue?")) == Gtk.ResponseType.NO:
                 combo.set_active(self.enabled)
                 return None
             self.relabel_checkbutton.set_active(True)

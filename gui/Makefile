@@ -17,8 +17,8 @@ polgen.glade \
 portsPage.py \
 semanagePage.py \
 statusPage.py \
-system-config-selinux.glade \
 system-config-selinux.png \
+system-config-selinux.ui \
 usersPage.py
 
 all: $(TARGETS) system-config-selinux.py polgengui.py

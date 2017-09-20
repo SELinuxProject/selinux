@@ -16,10 +16,7 @@
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ## Author: Dan Walsh
-import gtk
-import gtk.glade
-import os
-import gobject
+from gi.repository import GObject, Gtk
 import seobject
 try:
     from subprocess import getstatusoutput
@@ -73,40 +70,40 @@ class fcontextPage(semanagePage):
 
     def __init__(self, xml):
         semanagePage.__init__(self, xml, "fcontext", _("File Labeling"))
-        self.fcontextFilter = xml.get_widget("fcontextFilterEntry")
+        self.fcontextFilter = xml.get_object("fcontextFilterEntry")
         self.fcontextFilter.connect("focus_out_event", self.filter_changed)
         self.fcontextFilter.connect("activate", self.filter_changed)
 
-        self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.view = xml.get_widget("fcontextView")
+        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
+        self.view = xml.get_object("fcontextView")
         self.view.set_model(self.store)
         self.view.set_search_equal_func(self.search)
 
-        col = gtk.TreeViewColumn(_("File\nSpecification"), gtk.CellRendererText(), text=SPEC_COL)
-        col.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+        col = Gtk.TreeViewColumn(_("File\nSpecification"), Gtk.CellRendererText(), text=SPEC_COL)
+        col.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         col.set_fixed_width(250)
 
         col.set_sort_column_id(SPEC_COL)
         col.set_resizable(True)
         self.view.append_column(col)
-        col = gtk.TreeViewColumn(_("Selinux\nFile Type"), gtk.CellRendererText(), text=TYPE_COL)
+        col = Gtk.TreeViewColumn(_("Selinux\nFile Type"), Gtk.CellRendererText(), text=TYPE_COL)
 
-        col.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+        col.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         col.set_fixed_width(250)
         col.set_sort_column_id(TYPE_COL)
         col.set_resizable(True)
         self.view.append_column(col)
-        col = gtk.TreeViewColumn(_("File\nType"), gtk.CellRendererText(), text=2)
+        col = Gtk.TreeViewColumn(_("File\nType"), Gtk.CellRendererText(), text=2)
         col.set_sort_column_id(FTYPE_COL)
         col.set_resizable(True)
         self.view.append_column(col)
 
-        self.store.set_sort_column_id(SPEC_COL, gtk.SORT_ASCENDING)
+        self.store.set_sort_column_id(SPEC_COL, Gtk.SortType.ASCENDING)
         self.load()
-        self.fcontextEntry = xml.get_widget("fcontextEntry")
-        self.fcontextFileTypeCombo = xml.get_widget("fcontextFileTypeCombo")
-        self.fcontextTypeEntry = xml.get_widget("fcontextTypeEntry")
-        self.fcontextMLSEntry = xml.get_widget("fcontextMLSEntry")
+        self.fcontextEntry = xml.get_object("fcontextEntry")
+        self.fcontextFileTypeCombo = xml.get_object("fcontextFileTypeCombo")
+        self.fcontextTypeEntry = xml.get_object("fcontextTypeEntry")
+        self.fcontextMLSEntry = xml.get_object("fcontextMLSEntry")
 
     def match(self, fcon_dict, k, filter):
         try:
@@ -192,7 +189,7 @@ class fcontextPage(semanagePage):
         mls = self.fcontextMLSEntry.get_text().strip()
         list_model = self.fcontextFileTypeCombo.get_model()
         it = self.fcontextFileTypeCombo.get_active_iter()
-        ftype = list_model.get_value(it,0)
+        ftype = list_model.get_value(it, 0)
         self.wait()
         (rc, out) = getstatusoutput("semanage fcontext -a -t %s -r %s -f '%s' '%s'" % (type, mls, seobject.file_type_str_to_option[ftype], fspec))
         self.ready()

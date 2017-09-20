@@ -20,20 +20,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
+import os
 import signal
-import string
 import sys
+import gi
+gi.require_version('Gtk', '3.0')
 try:
-    import gtk
+    from gi.repository import Gtk
 except RuntimeError as e:
     print("system-config-selinux:", e)
     print("This is a graphical application and requires DISPLAY to be set.")
     sys.exit(1)
 
-import gtk.glade
-import os
-import gobject
-import gnome
+from gi.repository import GObject
 import statusPage
 import booleansPage
 import loginsPage
@@ -64,8 +63,6 @@ except:
         import __builtin__
         __builtin__.__dict__['_'] = unicode
 
-gnome.program_init("SELinux Management Tool", "5")
-
 version = "1.0"
 
 sys.path.append('/usr/share/system-config-selinux')
@@ -74,10 +71,12 @@ sys.path.append('/usr/share/system-config-selinux')
 ##
 ## Pull in the Glade file
 ##
-if os.access("system-config-selinux.glade", os.F_OK):
-    xml = gtk.glade.XML("system-config-selinux.glade", domain=PROGNAME)
+xml = Gtk.Builder()
+xml.set_translation_domain(PROGNAME)
+if os.access("system-config-selinux.ui", os.F_OK):
+    xml.add_from_file("system-config-selinux.ui")
 else:
-    xml = gtk.glade.XML("/usr/share/system-config-selinux/system-config-selinux.glade", domain=PROGNAME)
+    xml.add_from_file("/usr/share/system-config-selinux/system-config-selinux.ui")
 
 
 class childWindow:
@@ -85,11 +84,16 @@ class childWindow:
     def __init__(self):
         self.tabs = []
         self.xml = xml
-        xml.signal_connect("on_quit_activate", self.destroy)
-        xml.signal_connect("on_delete_clicked", self.delete)
-        xml.signal_connect("on_add_clicked", self.add)
-        xml.signal_connect("on_properties_clicked", self.properties)
-        xml.signal_connect("on_local_clicked", self.on_local_clicked)
+        xml.connect_signals({
+            "on_quit_activate": self.destroy,
+            "on_delete_clicked": self.delete,
+            "on_add_clicked": self.add,
+            "on_properties_clicked": self.properties,
+            "on_local_clicked": self.on_local_clicked,
+            "on_policy_activate": self.policy,
+            "on_logging_activate": self.logging,
+            "on_about_activate": self.on_about_activate,
+        })
         self.add_page(statusPage.statusPage(xml))
         if selinux.is_selinux_enabled() > 0:
             try:
@@ -103,20 +107,15 @@ class childWindow:
             except ValueError as e:
                 self.error(e.message)
 
-        xml.signal_connect("on_quit_activate", self.destroy)
-        xml.signal_connect("on_policy_activate", self.policy)
-        xml.signal_connect("on_logging_activate", self.logging)
-        xml.signal_connect("on_about_activate", self.on_about_activate)
-
-        self.add_menu = xml.get_widget("add_menu_item")
-        self.properties_menu = xml.get_widget("properties_menu_item")
-        self.delete_menu = xml.get_widget("delete_menu_item")
+        self.add_menu = xml.get_object("add_menu_item")
+        self.properties_menu = xml.get_object("properties_menu_item")
+        self.delete_menu = xml.get_object("delete_menu_item")
 
     def error(self, message):
-        dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR,
-                                gtk.BUTTONS_CLOSE,
+        dlg = Gtk.MessageDialog(None, 0, Gtk.MessageType.ERROR,
+                                Gtk.ButtonsType.CLOSE,
                                 message)
-        dlg.set_position(gtk.WIN_POS_MOUSE)
+        dlg.set_position(Gtk.WindowPosition.MOUSE)
         dlg.show_all()
         dlg.run()
         dlg.destroy()
@@ -143,12 +142,12 @@ class childWindow:
         self.tabs[self.notebook.get_current_page()].on_local_clicked(button)
 
     def on_about_activate(self, args):
-        dlg = xml.get_widget("aboutWindow")
+        dlg = xml.get_object("aboutWindow")
         dlg.run()
         dlg.hide()
 
     def destroy(self, args):
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def use_menus(self, use_menus):
         self.add_menu.set_sensitive(use_menus)
@@ -166,13 +165,13 @@ class childWindow:
 
     def setupScreen(self):
         # Bring in widgets from glade file.
-        self.mainWindow = self.xml.get_widget("mainWindow")
-        self.notebook = self.xml.get_widget("notebook")
-        self.view = self.xml.get_widget("selectView")
+        self.mainWindow = self.xml.get_object("mainWindow")
+        self.notebook = self.xml.get_object("notebook")
+        self.view = self.xml.get_object("selectView")
         self.view.get_selection().connect("changed", self.itemSelected)
-        self.store = gtk.ListStore(gobject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING)
         self.view.set_model(self.store)
-        col = gtk.TreeViewColumn("", gtk.CellRendererText(), text=0)
+        col = Gtk.TreeViewColumn("", Gtk.CellRendererText(), text=0)
         col.set_resizable(True)
         self.view.append_column(col)
 
@@ -189,7 +188,7 @@ class childWindow:
         self.mainWindow.connect("destroy", self.destroy)
 
         self.mainWindow.show_all()
-        gtk.main()
+        Gtk.main()
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal.SIG_DFL)

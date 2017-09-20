@@ -22,11 +22,11 @@
 #
 import signal
 import string
-import gtk
-import gtk.glade
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 import os
-import gobject
-import gnome
+from gi.repository import GObject
 import sys
 try:
     import sepolicy
@@ -79,8 +79,6 @@ except:
         import __builtin__
         __builtin__.__dict__['_'] = unicode
 
-gnome.program_init("SELinux Policy Generation Tool", "5")
-
 version = "1.0"
 
 sys.path.append('/usr/share/system-config-selinux')
@@ -95,10 +93,12 @@ def foreach(model, path, iter, selected):
 ##
 ## Pull in the Glade file
 ##
+xml = Gtk.Builder()
+xml.set_translation_domain(PROGNAME)
 if os.access("polgen.glade", os.F_OK):
-    xml = gtk.glade.XML("polgen.glade", domain=PROGNAME)
+    xml.add_from_file("polgen.glade")
 else:
-    xml = gtk.glade.XML("/usr/share/system-config-selinux/polgen.glade", domain=PROGNAME)
+    xml.add_from_file("/usr/share/system-config-selinux/polgen.glade")
 
 FILE = 1
 DIR = 2
@@ -277,27 +277,27 @@ class childWindow:
             b.connect("clicked", self.network_all_clicked)
 
         self.boolean_treeview = self.xml.get_widget("boolean_treeview")
-        self.boolean_store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.boolean_store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING)
         self.boolean_treeview.set_model(self.boolean_store)
-        self.boolean_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Name"), gtk.CellRendererText(), text=0)
+        self.boolean_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Name"), Gtk.CellRendererText(), text=0)
         self.boolean_treeview.append_column(col)
-        col = gtk.TreeViewColumn(_("Description"), gtk.CellRendererText(), text=1)
+        col = Gtk.TreeViewColumn(_("Description"), Gtk.CellRendererText(), text=1)
         self.boolean_treeview.append_column(col)
 
         self.role_treeview = self.xml.get_widget("role_treeview")
-        self.role_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.role_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.role_treeview.set_model(self.role_store)
-        self.role_treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-        self.role_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Role"), gtk.CellRendererText(), text=0)
+        self.role_treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
+        self.role_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Role"), Gtk.CellRendererText(), text=0)
         self.role_treeview.append_column(col)
 
         self.existing_user_treeview = self.xml.get_widget("existing_user_treeview")
-        self.existing_user_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.existing_user_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.existing_user_treeview.set_model(self.existing_user_store)
-        self.existing_user_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Existing_User"), gtk.CellRendererText(), text=0)
+        self.existing_user_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Existing_User"), Gtk.CellRendererText(), text=0)
         self.existing_user_treeview.append_column(col)
 
         for i in self.all_roles:
@@ -307,19 +307,19 @@ class childWindow:
         self.in_tcp_reserved_checkbutton = xml.get_widget("in_tcp_reserved_checkbutton")
 
         self.transition_treeview = self.xml.get_widget("transition_treeview")
-        self.transition_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.transition_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.transition_treeview.set_model(self.transition_store)
-        self.transition_treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-        self.transition_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text=0)
+        self.transition_treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
+        self.transition_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Application"), Gtk.CellRendererText(), text=0)
         self.transition_treeview.append_column(col)
 
         self.user_transition_treeview = self.xml.get_widget("user_transition_treeview")
-        self.user_transition_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.user_transition_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.user_transition_treeview.set_model(self.user_transition_store)
-        self.user_transition_treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-        self.user_transition_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text=0)
+        self.user_transition_treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
+        self.user_transition_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Application"), Gtk.CellRendererText(), text=0)
         self.user_transition_treeview.append_column(col)
 
         for i in self.all_users:
@@ -329,11 +329,11 @@ class childWindow:
             self.existing_user_store.set_value(iter, 0, i[:-2])
 
         self.admin_treeview = self.xml.get_widget("admin_treeview")
-        self.admin_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.admin_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.admin_treeview.set_model(self.admin_store)
-        self.admin_treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-        self.admin_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Application"), gtk.CellRendererText(), text=0)
+        self.admin_treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
+        self.admin_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Application"), Gtk.CellRendererText(), text=0)
         self.admin_treeview.append_column(col)
 
         try:
@@ -383,17 +383,17 @@ class childWindow:
 
         if self.pages[type][self.current_page] == self.FINISH_PAGE:
             self.generate_policy()
-            self.xml.get_widget("cancel_button").set_label(gtk.STOCK_CLOSE)
+            self.xml.get_widget("cancel_button").set_label(Gtk.STOCK_CLOSE)
         else:
             self.current_page = self.current_page + 1
             self.notebook.set_current_page(self.pages[type][self.current_page])
             if self.pages[type][self.current_page] == self.FINISH_PAGE:
-                self.forward_button.set_label(gtk.STOCK_APPLY)
+                self.forward_button.set_label(Gtk.STOCK_APPLY)
 
     def back(self, arg):
         type = self.get_type()
         if self.pages[type][self.current_page] == self.FINISH_PAGE:
-            self.forward_button.set_label(gtk.STOCK_GO_FORWARD)
+            self.forward_button.set_label(Gtk.STOCK_GO_FORWARD)
 
         self.current_page = self.current_page - 1
         self.notebook.set_current_page(self.pages[type][self.current_page])
@@ -406,30 +406,30 @@ class childWindow:
             b.set_sensitive(not active)
 
     def verify(self, message, title=""):
-        dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO,
-                                gtk.BUTTONS_YES_NO,
+        dlg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                Gtk.ButtonsType.YES_NO,
                                 message)
         dlg.set_title(title)
-        dlg.set_position(gtk.WIN_POS_MOUSE)
+        dlg.set_position(Gtk.WindowPosition.MOUSE)
         dlg.show_all()
         rc = dlg.run()
         dlg.destroy()
         return rc
 
     def info(self, message):
-        dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_INFO,
-                                gtk.BUTTONS_OK,
+        dlg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                                Gtk.ButtonsType.OK,
                                 message)
-        dlg.set_position(gtk.WIN_POS_MOUSE)
+        dlg.set_position(Gtk.WindowPosition.MOUSE)
         dlg.show_all()
         dlg.run()
         dlg.destroy()
 
     def error(self, message):
-        dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR,
-                                gtk.BUTTONS_CLOSE,
+        dlg = Gtk.MessageDialog(None, 0, Gtk.MessageType.ERROR,
+                                Gtk.ButtonsType.CLOSE,
                                 message)
-        dlg.set_position(gtk.WIN_POS_MOUSE)
+        dlg.set_position(Gtk.WindowPosition.MOUSE)
         dlg.show_all()
         dlg.run()
         dlg.destroy()
@@ -550,7 +550,7 @@ class childWindow:
         self.boolean_description_entry.set_text("")
         rc = self.boolean_dialog.run()
         self.boolean_dialog.hide()
-        if rc == gtk.RESPONSE_CANCEL:
+        if rc == Gtk.ResponseType.CANCEL:
             return
         iter = self.boolean_store.append()
         self.boolean_store.set_value(iter, 0, self.boolean_name_entry.get_text())
@@ -559,7 +559,7 @@ class childWindow:
     def __add(self, type):
         rc = self.file_dialog.run()
         self.file_dialog.hide()
-        if rc == gtk.RESPONSE_CANCEL:
+        if rc == Gtk.ResponseType.CANCEL:
             return
         for i in self.file_dialog.get_filenames():
             iter = self.store.append()
@@ -569,29 +569,29 @@ class childWindow:
     def exec_select(self, args):
         self.file_dialog.set_select_multiple(0)
         self.file_dialog.set_title(_("Select executable file to be confined."))
-        self.file_dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+        self.file_dialog.set_action(Gtk.FileChooserAction.OPEN)
         self.file_dialog.set_current_folder("/usr/sbin")
         rc = self.file_dialog.run()
         self.file_dialog.hide()
-        if rc == gtk.RESPONSE_CANCEL:
+        if rc == Gtk.ResponseType.CANCEL:
             return
         self.exec_entry.set_text(self.file_dialog.get_filename())
 
     def init_script_select(self, args):
         self.file_dialog.set_select_multiple(0)
         self.file_dialog.set_title(_("Select init script file to be confined."))
-        self.file_dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+        self.file_dialog.set_action(Gtk.FileChooserAction.OPEN)
         self.file_dialog.set_current_folder("/etc/rc.d/init.d")
         rc = self.file_dialog.run()
         self.file_dialog.hide()
-        if rc == gtk.RESPONSE_CANCEL:
+        if rc == Gtk.ResponseType.CANCEL:
             return
         self.init_script_entry.set_text(self.file_dialog.get_filename())
 
     def add(self, args):
         self.file_dialog.set_title(_("Select file(s) that confined application creates or writes"))
         self.file_dialog.set_current_folder("/")
-        self.file_dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+        self.file_dialog.set_action(Gtk.FileChooserAction.OPEN)
         self.file_dialog.set_select_multiple(1)
         self.__add(FILE)
 
@@ -599,7 +599,7 @@ class childWindow:
         self.file_dialog.set_title(_("Select directory(s) that the confined application owns and writes into"))
         self.file_dialog.set_current_folder("/")
         self.file_dialog.set_select_multiple(1)
-        self.file_dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+        self.file_dialog.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.__add(DIR)
 
     def on_about_clicked(self, args):
@@ -608,7 +608,7 @@ class childWindow:
         dlg.hide()
 
     def quit(self, args):
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def setupScreen(self):
         # Bring in widgets from glade file.
@@ -650,20 +650,20 @@ class childWindow:
         self.view = self.xml.get_widget("write_treeview")
         self.file_dialog = self.xml.get_widget("filechooserdialog")
 
-        self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_INT)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_INT)
         self.view.set_model(self.store)
-        col = gtk.TreeViewColumn("", gtk.CellRendererText(), text=0)
+        col = Gtk.TreeViewColumn("", Gtk.CellRendererText(), text=0)
         col.set_resizable(True)
         self.view.append_column(col)
         self.view.get_selection().select_path((0,))
 
     def output_button_clicked(self, *args):
         self.file_dialog.set_title(_("Select directory to generate policy files in"))
-        self.file_dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+        self.file_dialog.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.file_dialog.set_select_multiple(0)
         rc = self.file_dialog.run()
         self.file_dialog.hide()
-        if rc == gtk.RESPONSE_CANCEL:
+        if rc == Gtk.ResponseType.CANCEL:
             return
         self.output_entry.set_text(self.file_dialog.get_filename())
 
@@ -675,11 +675,11 @@ class childWindow:
         name = entry.get_text()
         if self.name != name:
             if name in self.all_types:
-                if self.verify(_("Type %s_t already defined in current policy.\nDo you want to continue?") % name, _("Verify Name")) == gtk.RESPONSE_NO:
+                if self.verify(_("Type %s_t already defined in current policy.\nDo you want to continue?") % name, _("Verify Name")) == Gtk.ResponseType.NO:
                     entry.set_text("")
                     return False
             if name in self.all_modules:
-                if self.verify(_("Module %s already loaded in current policy.\nDo you want to continue?") % name, _("Verify Name")) == gtk.RESPONSE_NO:
+                if self.verify(_("Module %s already loaded in current policy.\nDo you want to continue?") % name, _("Verify Name")) == Gtk.ResponseType.NO:
                     entry.set_text("")
                     return False
 
@@ -770,7 +770,7 @@ class childWindow:
         self.mainWindow.connect("destroy", self.quit)
 
         self.mainWindow.show_all()
-        gtk.main()
+        Gtk.main()
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal.SIG_DFL)

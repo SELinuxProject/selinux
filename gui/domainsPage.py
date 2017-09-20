@@ -16,19 +16,14 @@
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ## Author: Dan Walsh
-import string
-import gtk
-import gtk.glade
 import os
 try:
     from subprocess import getstatusoutput
 except ImportError:
     from commands import getstatusoutput
 
-import gobject
 import sys
-import seobject
-import selinux
+from gi.repository import GObject, Gtk
 import sepolicy
 from semanagePage import *
 
@@ -58,26 +53,26 @@ class domainsPage(semanagePage):
 
     def __init__(self, xml):
         semanagePage.__init__(self, xml, "domains", _("Process Domain"))
-        self.domain_filter = xml.get_widget("domainsFilterEntry")
+        self.domain_filter = xml.get_object("domainsFilterEntry")
         self.domain_filter.connect("focus_out_event", self.filter_changed)
         self.domain_filter.connect("activate", self.filter_changed)
 
-        self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING)
         self.view.set_model(self.store)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Domain Name"), gtk.CellRendererText(), text=0)
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Domain Name"), Gtk.CellRendererText(), text=0)
         col.set_sort_column_id(0)
         col.set_resizable(True)
         self.view.append_column(col)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Mode"), gtk.CellRendererText(), text=1)
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Mode"), Gtk.CellRendererText(), text=1)
         col.set_sort_column_id(1)
         col.set_resizable(True)
         self.view.append_column(col)
         self.view.get_selection().connect("changed", self.itemSelected)
 
-        self.permissive_button = xml.get_widget("permissiveButton")
-        self.enforcing_button = xml.get_widget("enforcingButton")
+        self.permissive_button = xml.get_object("permissiveButton")
+        self.enforcing_button = xml.get_object("enforcingButton")
 
         self.domains = sepolicy.get_all_entrypoint_domains()
         self.load()
@@ -112,7 +107,7 @@ class domainsPage(semanagePage):
 
     def itemSelected(self, selection):
         store, iter = selection.get_selected()
-        if iter == None:
+        if iter is None:
             return
         p = store.get_value(iter, 1) == _("Permissive")
         self.permissive_button.set_sensitive(not p)

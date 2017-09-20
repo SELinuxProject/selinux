@@ -18,13 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
-import string
-import gtk
-import gtk.glade
-import os
-import gobject
 import sys
-import tempfile
+from gi.repository import Gdk, GObject, Gtk
 import seobject
 import semanagePage
 
@@ -61,8 +56,6 @@ except:
         import __builtin__
         __builtin__.__dict__['_'] = unicode
 
-from glob import fnmatch
-
 
 class Modifier:
 
@@ -94,56 +87,53 @@ class booleansPage:
 
     def __init__(self, xml, doDebug=None):
         self.xml = xml
-        self.window = self.xml.get_widget("mainWindow").get_root_window()
+        self.window = self.xml.get_object("mainWindow").get_root_window()
         self.local = False
         self.types = []
         self.selinuxsupport = True
         self.typechanged = False
         self.doDebug = doDebug
-        self.busy_cursor = gtk.gdk.Cursor(gtk.gdk.WATCH)
-        self.ready_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
+        self.busy_cursor = Gdk.Cursor.new(Gdk.CursorType.WATCH)
+        self.ready_cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
 
         # Bring in widgets from glade file.
-        self.typeHBox = xml.get_widget("typeHBox")
-        self.booleanSW = xml.get_widget("booleanSW")
-        self.booleansFilter = xml.get_widget("booleansFilter")
+        self.booleansFilter = xml.get_object("booleansFilter")
         self.booleansFilter.connect("focus_out_event", self.filter_changed)
         self.booleansFilter.connect("activate", self.filter_changed)
+        self.booleansFilter.connect("changed", self.filter_changed)
 
-        self.booleansView = xml.get_widget("booleansView")
-        self.typeLabel = xml.get_widget("typeLabel")
-        self.modifySeparator = xml.get_widget("modifySeparator")
+        self.booleansView = xml.get_object("booleansView")
 
-        self.revertButton = xml.get_widget("booleanRevertButton")
+        self.revertButton = xml.get_object("booleanRevertButton")
         self.revertButton.set_sensitive(self.local)
         self.revertButton.connect("clicked", self.on_revert_clicked)
-        listStore = gtk.ListStore(gobject.TYPE_STRING)
-        cell = gtk.CellRendererText()
+        listStore = Gtk.ListStore(GObject.TYPE_STRING)
+        cell = Gtk.CellRendererText()
 
-        self.store = gtk.ListStore(gobject.TYPE_BOOLEAN, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.store.set_sort_column_id(1, gtk.SORT_ASCENDING)
+        self.store = Gtk.ListStore(GObject.TYPE_BOOLEAN, GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
+        self.store.set_sort_column_id(1, Gtk.SortType.ASCENDING)
         self.booleansView.set_model(self.store)
 
-        checkbox = gtk.CellRendererToggle()
+        checkbox = Gtk.CellRendererToggle()
         checkbox.connect("toggled", self.boolean_toggled)
-        col = gtk.TreeViewColumn('Active', checkbox, active=ACTIVE)
+        col = Gtk.TreeViewColumn('Active', checkbox, active=ACTIVE)
         col.set_clickable(True)
         col.set_sort_column_id(ACTIVE)
         self.booleansView.append_column(col)
 
-        col = gtk.TreeViewColumn("Module", gtk.CellRendererText(), text=MODULE)
+        col = Gtk.TreeViewColumn("Module", Gtk.CellRendererText(), text=MODULE)
         col.set_sort_column_id(MODULE)
         col.set_resizable(True)
         self.booleansView.append_column(col)
 
-        col = gtk.TreeViewColumn("Description", gtk.CellRendererText(), text=DESC)
-        col.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+        col = Gtk.TreeViewColumn("Description", Gtk.CellRendererText(), text=DESC)
+        col.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         col.set_fixed_width(400)
         col.set_sort_column_id(DESC)
         col.set_resizable(True)
         self.booleansView.append_column(col)
 
-        col = gtk.TreeViewColumn("Name", gtk.CellRendererText(), text=BOOLEAN)
+        col = Gtk.TreeViewColumn("Name", Gtk.CellRendererText(), text=BOOLEAN)
         col.set_sort_column_id(BOOLEAN)
         col.set_resizable(True)
         self.booleansView.set_search_equal_func(self.__search)
@@ -152,10 +142,10 @@ class booleansPage:
         self.load(self.filter)
 
     def error(self, message):
-        dlg = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR,
-                                gtk.BUTTONS_CLOSE,
+        dlg = Gtk.MessageDialog(None, 0, Gtk.MessageType.ERROR,
+                                Gtk.ButtonsType.CLOSE,
                                 message)
-        dlg.set_position(gtk.WIN_POS_MOUSE)
+        dlg.set_position(Gtk.WindowPosition.MOUSE)
         dlg.show_all()
         dlg.run()
         dlg.destroy()
@@ -178,11 +168,11 @@ class booleansPage:
 
     def deleteDialog(self):
         store, iter = self.booleansView.get_selection().get_selected()
-        if iter == None:
+        if iter is None:
             return
         boolean = store.get_value(iter, BOOLEAN)
         # change cursor
-        if boolean == None:
+        if boolean is None:
             return
         try:
             self.wait()

@@ -16,12 +16,8 @@
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ## Author: Dan Walsh
-import string
-import gtk
-import gtk.glade
-import os
-import gobject
 import sys
+from gi.repository import GObject, Gtk
 import seobject
 
 TYPE_COL = 0
@@ -62,18 +58,19 @@ class portsPage(semanagePage):
 
     def __init__(self, xml):
         semanagePage.__init__(self, xml, "ports", _("Network Port"))
-        xml.signal_connect("on_group_clicked", self.on_group_clicked)
+        group_listview = xml.get_object("listViewButton")
+        group_listview.connect("clicked", self.on_group_clicked)
         self.group = False
-        self.ports_filter = xml.get_widget("portsFilterEntry")
+        self.ports_filter = xml.get_object("portsFilterEntry")
         self.ports_filter.connect("focus_out_event", self.filter_changed)
         self.ports_filter.connect("activate", self.filter_changed)
-        self.ports_name_entry = xml.get_widget("portsNameEntry")
-        self.ports_protocol_combo = xml.get_widget("portsProtocolCombo")
-        self.ports_number_entry = xml.get_widget("portsNumberEntry")
-        self.ports_mls_entry = xml.get_widget("portsMLSEntry")
-        self.ports_add_button = xml.get_widget("portsAddButton")
-        self.ports_properties_button = xml.get_widget("portsPropertiesButton")
-        self.ports_delete_button = xml.get_widget("portsDeleteButton")
+        self.ports_name_entry = xml.get_object("portsNameEntry")
+        self.ports_protocol_combo = xml.get_object("portsProtocolCombo")
+        self.ports_number_entry = xml.get_object("portsNumberEntry")
+        self.ports_mls_entry = xml.get_object("portsMLSEntry")
+        self.ports_add_button = xml.get_object("portsAddButton")
+        self.ports_properties_button = xml.get_object("portsPropertiesButton")
+        self.ports_delete_button = xml.get_object("portsDeleteButton")
         liststore = self.ports_protocol_combo.get_model()
         iter = liststore.get_iter_first()
         self.ports_protocol_combo.set_active_iter(iter)
@@ -90,28 +87,28 @@ class portsPage(semanagePage):
                 self.group_load(filter)
 
     def init_store(self):
-        self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
         self.view.set_model(self.store)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         self.view.set_search_equal_func(self.search)
-        col = gtk.TreeViewColumn(_("SELinux Port\nType"), gtk.CellRendererText(), text=TYPE_COL)
+        col = Gtk.TreeViewColumn(_("SELinux Port\nType"), Gtk.CellRendererText(), text=TYPE_COL)
         col.set_sort_column_id(TYPE_COL)
         col.set_resizable(True)
         self.view.append_column(col)
-        self.store.set_sort_column_id(TYPE_COL, gtk.SORT_ASCENDING)
+        self.store.set_sort_column_id(TYPE_COL, Gtk.SortType.ASCENDING)
 
-        col = gtk.TreeViewColumn(_("Protocol"), gtk.CellRendererText(), text=PROTOCOL_COL)
+        col = Gtk.TreeViewColumn(_("Protocol"), Gtk.CellRendererText(), text=PROTOCOL_COL)
         col.set_sort_column_id(PROTOCOL_COL)
         col.set_resizable(True)
         self.view.append_column(col)
 
-        self.mls_col = gtk.TreeViewColumn(_("MLS/MCS\nLevel"), gtk.CellRendererText(), text=MLS_COL)
+        self.mls_col = Gtk.TreeViewColumn(_("MLS/MCS\nLevel"), Gtk.CellRendererText(), text=MLS_COL)
         self.mls_col.set_resizable(True)
         self.mls_col.set_sort_column_id(MLS_COL)
         self.view.append_column(self.mls_col)
 
-        col = gtk.TreeViewColumn(_("Port"), gtk.CellRendererText(), text=PORT_COL)
+        col = Gtk.TreeViewColumn(_("Port"), Gtk.CellRendererText(), text=PORT_COL)
         col.set_sort_column_id(PORT_COL)
         col.set_resizable(True)
         self.view.append_column(col)
@@ -139,7 +136,7 @@ class portsPage(semanagePage):
                 continue
             iter = self.store.append()
             if k[0] == k[1]:
-                self.store.set_value(iter, PORT_COL, k[0])
+                self.store.set_value(iter, PORT_COL, str(k[0]))
             else:
                 rec = "%s-%s" % k[:2]
                 self.store.set_value(iter, PORT_COL, rec)

@@ -16,17 +16,13 @@
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ## Author: Dan Walsh
-import string
-import gtk
-import gtk.glade
-import os
-import gobject
 import sys
 try:
     from subprocess import getstatusoutput
 except ImportError:
     from commands import getstatusoutput
 
+from gi.repository import GObject, Gtk
 import seobject
 from semanagePage import *
 
@@ -57,23 +53,23 @@ class loginsPage(semanagePage):
     def __init__(self, xml):
         self.firstTime = False
         semanagePage.__init__(self, xml, "logins", _("User Mapping"))
-        self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
         self.view.set_model(self.store)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Login\nName"), gtk.CellRendererText(), text=0)
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Login\nName"), Gtk.CellRendererText(), text=0)
         col.set_sort_column_id(0)
         col.set_resizable(True)
         self.view.append_column(col)
-        col = gtk.TreeViewColumn(_("SELinux\nUser"), gtk.CellRendererText(), text=1)
+        col = Gtk.TreeViewColumn(_("SELinux\nUser"), Gtk.CellRendererText(), text=1)
         col.set_resizable(True)
         self.view.append_column(col)
-        col = gtk.TreeViewColumn(_("MLS/\nMCS Range"), gtk.CellRendererText(), text=2)
+        col = Gtk.TreeViewColumn(_("MLS/\nMCS Range"), Gtk.CellRendererText(), text=2)
         col.set_resizable(True)
         self.view.append_column(col)
         self.load()
-        self.loginsNameEntry = xml.get_widget("loginsNameEntry")
-        self.loginsSelinuxUserCombo = xml.get_widget("loginsSelinuxUserCombo")
-        self.loginsMLSEntry = xml.get_widget("loginsMLSEntry")
+        self.loginsNameEntry = xml.get_object("loginsNameEntry")
+        self.loginsSelinuxUserCombo = xml.get_object("loginsSelinuxUserCombo")
+        self.loginsMLSEntry = xml.get_object("loginsMLSEntry")
 
     def load(self, filter=""):
         self.filter = filter
@@ -91,12 +87,12 @@ class loginsPage(semanagePage):
         self.view.get_selection().select_path((0,))
 
     def __dialogSetup(self):
-        if self.firstTime == True:
+        if self.firstTime:
             return
         self.firstTime = True
-        liststore = gtk.ListStore(gobject.TYPE_STRING)
+        liststore = Gtk.ListStore(GObject.TYPE_STRING)
         self.loginsSelinuxUserCombo.set_model(liststore)
-        cell = gtk.CellRendererText()
+        cell = Gtk.CellRendererText()
         self.loginsSelinuxUserCombo.pack_start(cell, True)
         self.loginsSelinuxUserCombo.add_attribute(cell, 'text', 0)
 

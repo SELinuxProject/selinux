@@ -16,17 +16,13 @@
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ## Author: Dan Walsh
-import string
-import gtk
-import gtk.glade
-import os
-import gobject
 import sys
 try:
     from subprocess import getstatusoutput
 except ImportError:
     from commands import getstatusoutput
 
+from gi.repository import GObject, Gtk
 import seobject
 from semanagePage import *
 
@@ -57,27 +53,27 @@ class usersPage(semanagePage):
     def __init__(self, xml):
         semanagePage.__init__(self, xml, "users", _("SELinux User"))
 
-        self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
         self.view.set_model(self.store)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        col = gtk.TreeViewColumn(_("SELinux\nUser"), gtk.CellRendererText(), text=0)
+        col = Gtk.TreeViewColumn(_("SELinux\nUser"), Gtk.CellRendererText(), text=0)
         col.set_sort_column_id(0)
         col.set_resizable(True)
         self.view.append_column(col)
 
-        col = gtk.TreeViewColumn(_("MLS/\nMCS Range"), gtk.CellRendererText(), text=1)
+        col = Gtk.TreeViewColumn(_("MLS/\nMCS Range"), Gtk.CellRendererText(), text=1)
         col.set_resizable(True)
         self.view.append_column(col)
 
-        col = gtk.TreeViewColumn(_("SELinux Roles"), gtk.CellRendererText(), text=2)
+        col = Gtk.TreeViewColumn(_("SELinux Roles"), Gtk.CellRendererText(), text=2)
         col.set_resizable(True)
         self.view.append_column(col)
 
         self.load()
-        self.selinuxUserEntry = xml.get_widget("selinuxUserEntry")
-        self.mlsRangeEntry = xml.get_widget("mlsRangeEntry")
-        self.selinuxRolesEntry = xml.get_widget("selinuxRolesEntry")
+        self.selinuxUserEntry = xml.get_object("selinuxUserEntry")
+        self.mlsRangeEntry = xml.get_object("mlsRangeEntry")
+        self.selinuxRolesEntry = xml.get_object("selinuxRolesEntry")
 
     def load(self, filter=""):
         self.filter = filter
@@ -96,7 +92,7 @@ class usersPage(semanagePage):
         self.view.get_selection().select_path((0,))
 
     def delete(self):
-        if semanagePage.delete(self) == gtk.RESPONSE_NO:
+        if semanagePage.delete(self) == Gtk.ResponseType.NO:
             return None
 
     def dialogInit(self):

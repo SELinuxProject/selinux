@@ -16,21 +16,16 @@
 ## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ## Author: Dan Walsh
-import string
-import gtk
-import gtk.glade
-import os
+import sys
+from subprocess import Popen, PIPE
 try:
     from subprocess import getstatusoutput
 except ImportError:
     from commands import getstatusoutput
 
-import gobject
-import sys
-import seobject
+from gi.repository import GObject, Gtk
 import selinux
 from semanagePage import *
-from subprocess import Popen, PIPE
 
 ##
 ## I18N
@@ -58,23 +53,23 @@ class modulesPage(semanagePage):
 
     def __init__(self, xml):
         semanagePage.__init__(self, xml, "modules", _("Policy Module"))
-        self.module_filter = xml.get_widget("modulesFilterEntry")
+        self.module_filter = xml.get_object("modulesFilterEntry")
         self.module_filter.connect("focus_out_event", self.filter_changed)
         self.module_filter.connect("activate", self.filter_changed)
         self.audit_enabled = False
 
-        self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING)
         self.view.set_model(self.store)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Module Name"), gtk.CellRendererText(), text=0)
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Module Name"), Gtk.CellRendererText(), text=0)
         col.set_sort_column_id(0)
         col.set_resizable(True)
         self.view.append_column(col)
-        self.store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        col = gtk.TreeViewColumn(_("Version"), gtk.CellRendererText(), text=1)
-        self.enable_audit_button = xml.get_widget("enableAuditButton")
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Version"), Gtk.CellRendererText(), text=1)
+        self.enable_audit_button = xml.get_object("enableAuditButton")
         self.enable_audit_button.connect("clicked", self.enable_audit)
-        self.new_button = xml.get_widget("newModuleButton")
+        self.new_button = xml.get_object("newModuleButton")
         self.new_button.connect("clicked", self.new_module)
         col.set_sort_column_id(1)
         col.set_resizable(True)
@@ -170,20 +165,20 @@ class modulesPage(semanagePage):
         return
 
     def addDialog(self):
-        dialog = gtk.FileChooserDialog(_("Load Policy Module"),
+        dialog = Gtk.FileChooserDialog(_("Load Policy Module"),
                                        None,
-                                       gtk.FILE_CHOOSER_ACTION_OPEN,
-                                       (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                        gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response(gtk.RESPONSE_OK)
+                                       Gtk.FileChooserAction.OPEN,
+                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                        Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        dialog.set_default_response(Gtk.ResponseType.OK)
 
-        filter = gtk.FileFilter()
+        filter = Gtk.FileFilter()
         filter.set_name("Policy Files")
         filter.add_pattern("*.pp")
         dialog.add_filter(filter)
 
         response = dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == Gtk.ResponseType.OK:
             self.add(dialog.get_filename())
         dialog.destroy()
 
