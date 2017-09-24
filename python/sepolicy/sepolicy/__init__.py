@@ -879,8 +879,9 @@ def get_selinux_users():
     global selinux_user_list
     if not selinux_user_list:
         selinux_user_list = list(info(USER))
-        for x in selinux_user_list:
-            x['range'] = "".join(x['range'].split(" "))
+        if _pol.mls:
+            for x in selinux_user_list:
+                x['range'] = "".join(x['range'].split(" "))
     return selinux_user_list
 
 
