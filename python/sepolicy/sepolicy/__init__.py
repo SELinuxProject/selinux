@@ -526,10 +526,10 @@ def find_entrypoint_path(exe, exclude_list=[]):
 def read_file_equiv(edict, fc_path, modify):
     try:
         with open(fc_path, "r") as fd:
-            fc = fd.readlines()
-            for e in fc:
+            for e in fd:
                 f = e.split()
-                edict[f[0]] = {"equiv": f[1], "modify": modify}
+                if f and not f[0].startswith('#'):
+                    edict[f[0]] = {"equiv": f[1], "modify": modify}
     except OSError as e:
         if e.errno != errno.ENOENT:
             raise
