@@ -58,7 +58,8 @@ class modulesPage(semanagePage):
         self.module_filter.connect("activate", self.filter_changed)
         self.audit_enabled = False
 
-        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING,
+                                   GObject.TYPE_STRING)
         self.view.set_model(self.store)
         self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
         col = Gtk.TreeViewColumn(_("Module Name"), Gtk.CellRendererText(), text=0)
@@ -66,12 +67,17 @@ class modulesPage(semanagePage):
         col.set_resizable(True)
         self.view.append_column(col)
         self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-        col = Gtk.TreeViewColumn(_("Version"), Gtk.CellRendererText(), text=1)
+        col = Gtk.TreeViewColumn(_("Priority"), Gtk.CellRendererText(), text=1)
         self.enable_audit_button = xml.get_object("enableAuditButton")
         self.enable_audit_button.connect("clicked", self.enable_audit)
         self.new_button = xml.get_object("newModuleButton")
         self.new_button.connect("clicked", self.new_module)
         col.set_sort_column_id(1)
+        col.set_resizable(True)
+        self.view.append_column(col)
+        self.store.set_sort_column_id(2, Gtk.SortType.ASCENDING)
+        col = Gtk.TreeViewColumn(_("Kind"), Gtk.CellRendererText(), text=2)
+        col.set_sort_column_id(2)
         col.set_resizable(True)
         self.view.append_column(col)
         self.store.set_sort_func(1, self.sort_int, "")
@@ -95,16 +101,17 @@ class modulesPage(semanagePage):
         self.filter = filter
         self.store.clear()
         try:
-            fd = Popen("semodule -l", shell=True, stdout=PIPE).stdout
+            fd = Popen("semodule -lfull", shell=True, stdout=PIPE).stdout
             l = fd.readlines()
             fd.close()
             for i in l:
-                module, ver, newline = i.split('\t')
-                if not (self.match(module, filter) or self.match(ver, filter)):
+                priority, module, kind = i.decode('utf-8').split()
+                if not (self.match(module, filter) or self.match(priority, filter)):
                     continue
                 iter = self.store.append()
                 self.store.set_value(iter, 0, module.strip())
-                self.store.set_value(iter, 1, ver.strip())
+                self.store.set_value(iter, 1, priority.strip())
+                self.store.set_value(iter, 2, kind.strip())
         except:
             pass
         self.view.get_selection().select_path((0,))
