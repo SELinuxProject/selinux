@@ -91,10 +91,6 @@ class usersPage(semanagePage):
             self.store.set_value(iter, 2, dict[k][3])
         self.view.get_selection().select_path((0,))
 
-    def delete(self):
-        if semanagePage.delete(self) == Gtk.ResponseType.NO:
-            return None
-
     def dialogInit(self):
         store, iter = self.view.get_selection().get_selected()
         self.selinuxUserEntry.set_text(store.get_value(iter, 0))
