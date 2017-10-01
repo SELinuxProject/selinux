@@ -11,7 +11,6 @@ domainsPage.py \
 fcontextPage.py \
 html_util.py \
 loginsPage.py \
-mappingsPage.py \
 modulesPage.py \
 polgen.glade \
 portsPage.py \
