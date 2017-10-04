@@ -1345,8 +1345,8 @@ int semanage_genhomedircon(semanage_handle_t * sh,
 
 	s.homedir_template_path =
 	    semanage_path(SEMANAGE_TMP, SEMANAGE_HOMEDIR_TMPL);
-	s.fcfilepath = semanage_final_path(SEMANAGE_FINAL_TMP,
-					   SEMANAGE_FC_HOMEDIRS);
+	s.fcfilepath =
+		semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_HOMEDIRS);
 
 	s.fallback = calloc(1, sizeof(genhomedircon_user_entry_t));
 	if (s.fallback == NULL) {

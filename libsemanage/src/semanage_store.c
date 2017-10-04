@@ -116,6 +116,7 @@ static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"/modules/disabled",
 	"/policy.kern",
 	"/file_contexts.local",
+	"/file_contexts.homedirs",
 	"/file_contexts",
 	"/seusers"
 };

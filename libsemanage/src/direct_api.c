@@ -1577,11 +1577,20 @@ rebuild:
 	/* run genhomedircon if its enabled, this should be the last operation
 	 * which requires the out policydb */
 	if (!sh->conf->disable_genhomedircon) {
-		if (out && (retval =
-			semanage_genhomedircon(sh, out, sh->conf->usepasswd, sh->conf->ignoredirs)) != 0) {
-			ERR(sh, "semanage_genhomedircon returned error code %d.",
-			    retval);
-			goto cleanup;
+		if (out){
+			if ((retval = semanage_genhomedircon(sh, out, sh->conf->usepasswd,
+								sh->conf->ignoredirs)) != 0) {
+				ERR(sh, "semanage_genhomedircon returned error code %d.", retval);
+				goto cleanup;
+			}
+			/* file_contexts.homedirs was created in SEMANAGE_TMP store */
+			retval = semanage_copy_file(
+						semanage_path(SEMANAGE_TMP, SEMANAGE_STORE_FC_HOMEDIRS),
+						semanage_final_path(SEMANAGE_FINAL_TMP,	SEMANAGE_FC_HOMEDIRS),
+						sh->conf->file_mode);
+			if (retval < 0) {
+				goto cleanup;
+			}
 		}
 	} else {
 		WARN(sh, "WARNING: genhomedircon is disabled. \
