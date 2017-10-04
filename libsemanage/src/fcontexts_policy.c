@@ -51,3 +51,11 @@ int semanage_fcontext_list(semanage_handle_t * handle,
 	dbase_config_t *dconfig = semanage_fcontext_dbase_policy(handle);
 	return dbase_list(handle, dconfig, records, count);
 }
+
+int semanage_fcontext_list_homedirs(semanage_handle_t * handle,
+			   semanage_fcontext_t *** records, unsigned int *count)
+{
+
+	dbase_config_t *dconfig = semanage_fcontext_dbase_homedirs(handle);
+	return dbase_list(handle, dconfig, records, count);
+}

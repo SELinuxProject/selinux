@@ -26,4 +26,8 @@ extern int semanage_fcontext_list(semanage_handle_t * handle,
 				  semanage_fcontext_t *** records,
 				  unsigned int *count);
 
+extern int semanage_fcontext_list_homedirs(semanage_handle_t * handle,
+				  semanage_fcontext_t *** records,
+				  unsigned int *count);
+
 #endif
