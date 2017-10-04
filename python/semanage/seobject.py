@@ -2566,10 +2566,15 @@ class fcontextRecords(semanageRecords):
             if rc < 0:
                 raise ValueError(_("Could not list file contexts"))
 
+            (rc, fchomedirs) = semanage_fcontext_list_homedirs(self.sh)
+            if rc < 0:
+                raise ValueError(_("Could not list file contexts for home directories"))
+
             (rc, fclocal) = semanage_fcontext_list_local(self.sh)
             if rc < 0:
                 raise ValueError(_("Could not list local file contexts"))
 
+            self.flist += fchomedirs
             self.flist += fclocal
 
         ddict = {}
