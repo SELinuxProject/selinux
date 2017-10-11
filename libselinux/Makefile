@@ -21,13 +21,14 @@ export DISABLE_SETRANS DISABLE_RPM DISABLE_FLAGS ANDROID_HOST
 
 USE_PCRE2 ?= n
 ifeq ($(USE_PCRE2),y)
-	PCRE_CFLAGS := -DUSE_PCRE2 -DPCRE2_CODE_UNIT_WIDTH=8 $(shell $(PKG_CONFIG) --cflags libpcre2-8)
-	PCRE_LDLIBS := $(shell $(PKG_CONFIG) --libs libpcre2-8)
+	PCRE_MODULE := libpcre2-8
+	PCRE_CFLAGS := -DUSE_PCRE2 -DPCRE2_CODE_UNIT_WIDTH=8
 else
-	PCRE_CFLAGS := $(shell $(PKG_CONFIG) --cflags libpcre)
-	PCRE_LDLIBS := $(shell $(PKG_CONFIG) --libs libpcre)
+	PCRE_MODULE := libpcre
 endif
-export PCRE_CFLAGS PCRE_LDLIBS
+PCRE_CFLAGS += $(shell $(PKG_CONFIG) --cflags $(PCRE_MODULE))
+PCRE_LDLIBS := $(shell $(PKG_CONFIG) --libs $(PCRE_MODULE))
+export PCRE_MODULE PCRE_CFLAGS PCRE_LDLIBS
 
 OS := $(shell uname)
 export OS
