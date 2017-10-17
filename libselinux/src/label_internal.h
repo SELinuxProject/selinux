@@ -98,10 +98,11 @@ struct selabel_handle {
 	void *data;
 
 	/*
-	 * The main spec file used. Note for file contexts the local and/or
+	 * The main spec file(s) used. Note for file contexts the local and/or
 	 * homedirs could also have been used to resolve a context.
 	 */
-	char *spec_file;
+	size_t spec_files_len;
+	char **spec_files;
 
 	/* ptr to SHA1 hash information if SELABEL_OPT_DIGEST set */
 	struct selabel_digest *digest;

@@ -127,7 +127,15 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 		errno = EINVAL;
 		return -1;
 	}
-	rec->spec_file = strdup(path);
+	rec->spec_files_len = 1;
+	rec->spec_files = calloc(rec->spec_files_len, sizeof(rec->spec_files[0]));
+	if (!rec->spec_files)
+		return -1;
+	rec->spec_files[0] = strdup(path);
+	if (!rec->spec_files[0]) {
+		free(rec->spec_files);
+		return -1;
+	}
 
 	/* 
 	 * Perform two passes over the specification file.
