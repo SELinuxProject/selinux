@@ -290,7 +290,18 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 		errno = EINVAL;
 		return NULL;
 	}
-	rec->spec_file = strdup(path);
+	rec->spec_files_len = 1;
+	rec->spec_files = calloc(rec->spec_files_len, sizeof(rec->spec_files[0]));
+	if (!rec->spec_files) {
+		free(catalog);
+		return NULL;
+	}
+	rec->spec_files[0] = strdup(path);
+	if (!rec->spec_files[0]) {
+		free(catalog);
+		free(rec->spec_files);
+		return NULL;
+	}
 
 	/*
 	 * Parse for each lines
