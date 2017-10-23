@@ -1420,6 +1420,8 @@ void ocontext_selinux_free(ocontext_t **ocontexts)
 			if (i == OCON_ISID || i == OCON_FS || i == OCON_NETIF
 				|| i == OCON_FSUSE)
 				free(ctmp->u.name);
+			else if (i == OCON_IBENDPORT)
+				free(ctmp->u.ibendport.dev_name);
 			free(ctmp);
 		}
 	}
