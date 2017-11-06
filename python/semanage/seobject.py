@@ -242,8 +242,11 @@ class semanageRecords:
 
     def __init__(self, args):
         global handle
-        self.load = True
         self.args = args
+        try:
+            self.noreload = args.noreload
+        except:
+            self.noreload = False
         self.sh = self.get_handle(args.store)
 
         rc, localstore = selinux.selinux_getpolicytype()
@@ -251,9 +254,6 @@ class semanageRecords:
             self.mylog = logger()
         else:
             self.mylog = nulllogger()
-
-    def set_reload(self, load):
-        self.load = load
 
     def get_handle(self, store):
         global is_mls_enabled
@@ -314,7 +314,8 @@ class semanageRecords:
         if semanageRecords.transaction:
             return
 
-        semanage_set_reload(self.sh, self.load)
+        if self.noreload:
+            semanage_set_reload(self.sh, 0)
         rc = semanage_commit(self.sh)
         if rc < 0:
             self.mylog.commit(0)

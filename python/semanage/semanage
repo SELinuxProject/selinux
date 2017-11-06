@@ -183,7 +183,6 @@ def handleLogin(args):
     handle_opts(args, login_args, args.action)
 
     OBJECT = object_dict['login'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
         OBJECT.add(args.login, args.seuser, args.range)
@@ -213,7 +212,7 @@ def parser_add_noheading(parser, name):
 
 
 def parser_add_noreload(parser, name):
-    parser.add_argument('-N', '--noreload', action='store_false', default=True, help=_('Do not reload policy after commit'))
+    parser.add_argument('-N', '--noreload', action='store_true', default=False, help=_('Do not reload policy after commit'))
 
 
 def parser_add_locallist(parser, name):
@@ -317,7 +316,6 @@ def handleFcontext(args):
         handle_opts(args, fcontext_args, args.action)
 
     OBJECT = object_dict['fcontext'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
         if args.equal:
@@ -386,7 +384,6 @@ def handleUser(args):
     handle_opts(args, user_args, args.action)
 
     OBJECT = object_dict['user'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
         OBJECT.add(args.selinux_name, args.roles, args.level, args.range, args.prefix)
@@ -437,7 +434,6 @@ def handlePort(args):
     handle_opts(args, port_args, args.action)
 
     OBJECT = object_dict['port'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
         OBJECT.add(args.port, args.proto, args.range, args.type)
@@ -483,7 +479,6 @@ def handlePkey(args):
     handle_opts(args, ibpkey_args, args.action)
 
     OBJECT = object_dict['ibpkey'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
         OBJECT.add(args.ibpkey, args.subnet_prefix, args.range, args.type)
@@ -527,7 +522,6 @@ def handleIbendport(args):
     handle_opts(args, ibendport_args, args.action)
 
     OBJECT = object_dict['ibendport'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
         OBJECT.add(args.ibendport, args.ibdev_name, args.range, args.type)
@@ -571,7 +565,6 @@ def handleInterface(args):
     handle_opts(args, interface_args, args.action)
 
     OBJECT = object_dict['interface'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
         OBJECT.add(args.interface, args.range, args.type)
@@ -611,7 +604,6 @@ def setupInterfaceParser(subparsers):
 
 def handleModule(args):
     OBJECT = seobject.moduleRecords(args)
-    OBJECT.set_reload(args.noreload)
     if args.action == "add":
         OBJECT.add(args.module_name, args.priority)
     if args.action == "enable":
@@ -654,7 +646,6 @@ def handleNode(args):
     handle_opts(args, node_args, args.action)
 
     OBJECT = object_dict['node'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
         OBJECT.add(args.node, args.netmask, args.proto, args.range, args.type)
@@ -701,7 +692,6 @@ def handleBoolean(args):
     handle_opts(args, boolean_args, args.action)
 
     OBJECT = object_dict['boolean'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "modify":
         if args.boolean:
@@ -740,7 +730,6 @@ def setupBooleanParser(subparsers):
 
 def handlePermissive(args):
     OBJECT = object_dict['permissive'](args)
-    OBJECT.set_reload(args.noreload)
 
     if args.action is "list":
         OBJECT.list(args.noheading)
@@ -775,7 +764,6 @@ def setupPermissiveParser(subparsers):
 
 def handleDontaudit(args):
     OBJECT = object_dict['dontaudit'](args)
-    OBJECT.set_reload(args.noreload)
     OBJECT.toggle(args.action)
 
 
@@ -876,7 +864,6 @@ def handleImport(args):
         except KeyboardInterrupt:
             sys.exit(0)
 
-    trans.set_reload(args.noreload)
     trans.finish()
 
 
