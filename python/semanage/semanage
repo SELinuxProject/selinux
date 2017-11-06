@@ -134,67 +134,21 @@ class SetImportFile(argparse.Action):
                 sys.exit(1)
         setattr(namespace, self.dest, values)
 
-# functions for OBJECT initialization
-
-
-def login_ini():
-    OBJECT = seobject.loginRecords(store)
-    return OBJECT
-
-
-def user_ini():
-    OBJECT = seobject.seluserRecords(store)
-    return OBJECT
-
-
-def port_ini():
-    OBJECT = seobject.portRecords(store)
-    return OBJECT
-
-def ibpkey_ini():
-    OBJECT = seobject.ibpkeyRecords(store)
-    return OBJECT
-
-def ibendport_ini():
-    OBJECT = seobject.ibendportRecords(store)
-    return OBJECT
-
-def module_ini():
-    OBJECT = seobject.moduleRecords(store)
-    return OBJECT
-
-
-def interface_ini():
-    OBJECT = seobject.interfaceRecords(store)
-    return OBJECT
-
-
-def node_ini():
-    OBJECT = seobject.nodeRecords(store)
-    return OBJECT
-
-
-def fcontext_ini():
-    OBJECT = seobject.fcontextRecords(store)
-    return OBJECT
-
-
-def boolean_ini():
-    OBJECT = seobject.booleanRecords(store)
-    return OBJECT
-
-
-def permissive_ini():
-    OBJECT = seobject.permissiveRecords(store)
-    return OBJECT
-
-
-def dontaudit_ini():
-    OBJECT = seobject.dontauditClass(store)
-    return OBJECT
-
 # define dictonary for seobject OBEJCTS
-object_dict = {'login': login_ini, 'user': user_ini, 'port': port_ini, 'module': module_ini, 'interface': interface_ini, 'node': node_ini, 'fcontext': fcontext_ini, 'boolean': boolean_ini, 'permissive': permissive_ini, 'dontaudit': dontaudit_ini, 'ibpkey': ibpkey_ini, 'ibendport': ibendport_ini}
+object_dict = {
+    'login': seobject.loginRecords,
+    'user': seobject.seluserRecords,
+    'port': seobject.portRecords,
+    'module': seobject.moduleRecords,
+    'interface': seobject.interfaceRecords,
+    'node': seobject.nodeRecords,
+    'fcontext': seobject.fcontextRecords,
+    'boolean': seobject.booleanRecords,
+    'permissive': seobject.permissiveRecords,
+    'dontaudit': seobject.dontauditClass,
+    'ibpkey': seobject.ibpkeyRecords,
+    'ibendport': seobject.ibendportRecords
+}
 
 def generate_custom_usage(usage_text, usage_dict):
     # generate custom usage from given text and dictonary
