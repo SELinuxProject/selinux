@@ -1385,7 +1385,9 @@ done:
 	if (out != NULL)
 		fclose(out);
 
-	pop_user_entry(&(s.fallback));
+	while (s.fallback)
+		pop_user_entry(&(s.fallback));
+
 	ignore_free();
 
 	return retval;
