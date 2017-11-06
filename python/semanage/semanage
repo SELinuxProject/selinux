@@ -89,16 +89,6 @@ class CheckRole(argparse.Action):
             newval.append(v)
         setattr(namespace, self.dest, newval)
 
-store = ''
-
-
-class SetStore(argparse.Action):
-
-    def __call__(self, parser, namespace, values, option_string=None):
-        global store
-        store = values
-        setattr(namespace, self.dest, values)
-
 
 class seParser(argparse.ArgumentParser):
 
@@ -192,7 +182,7 @@ def handleLogin(args):
 
     handle_opts(args, login_args, args.action)
 
-    OBJECT = object_dict['login']()
+    OBJECT = object_dict['login'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
@@ -211,7 +201,7 @@ def handleLogin(args):
 
 
 def parser_add_store(parser, name):
-    parser.add_argument('-S', '--store', action=SetStore, help=_("Select an alternate SELinux Policy Store to manage"))
+    parser.add_argument('-S', '--store', default='', help=_("Select an alternate SELinux Policy Store to manage"))
 
 
 def parser_add_priority(parser, name):
@@ -326,7 +316,7 @@ def handleFcontext(args):
     else:
         handle_opts(args, fcontext_args, args.action)
 
-    OBJECT = object_dict['fcontext']()
+    OBJECT = object_dict['fcontext'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
@@ -395,7 +385,7 @@ def handleUser(args):
 
     handle_opts(args, user_args, args.action)
 
-    OBJECT = object_dict['user']()
+    OBJECT = object_dict['user'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
@@ -446,7 +436,7 @@ def handlePort(args):
 
     handle_opts(args, port_args, args.action)
 
-    OBJECT = object_dict['port']()
+    OBJECT = object_dict['port'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
@@ -492,7 +482,7 @@ def handlePkey(args):
 
     handle_opts(args, ibpkey_args, args.action)
 
-    OBJECT = object_dict['ibpkey']()
+    OBJECT = object_dict['ibpkey'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
@@ -536,7 +526,7 @@ def handleIbendport(args):
 
     handle_opts(args, ibendport_args, args.action)
 
-    OBJECT = object_dict['ibendport']()
+    OBJECT = object_dict['ibendport'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
@@ -580,7 +570,7 @@ def handleInterface(args):
 
     handle_opts(args, interface_args, args.action)
 
-    OBJECT = object_dict['interface']()
+    OBJECT = object_dict['interface'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
@@ -620,7 +610,7 @@ def setupInterfaceParser(subparsers):
 
 
 def handleModule(args):
-    OBJECT = seobject.moduleRecords(store)
+    OBJECT = seobject.moduleRecords(args)
     OBJECT.set_reload(args.noreload)
     if args.action == "add":
         OBJECT.add(args.module_name, args.priority)
@@ -663,7 +653,7 @@ def handleNode(args):
     node_args = {'list': [('node', 'type', 'proto', 'netmask'), ('')], 'add': [('locallist'), ('type', 'node', 'proto', 'netmask')], 'modify': [('locallist'), ('node', 'netmask', 'proto')], 'delete': [('locallist'), ('node', 'netmask', 'prototype')], 'extract': [('locallist', 'node', 'type', 'proto', 'netmask'), ('')], 'deleteall': [('locallist'), ('')]}
     handle_opts(args, node_args, args.action)
 
-    OBJECT = object_dict['node']()
+    OBJECT = object_dict['node'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "add":
@@ -710,7 +700,7 @@ def handleBoolean(args):
 
     handle_opts(args, boolean_args, args.action)
 
-    OBJECT = object_dict['boolean']()
+    OBJECT = object_dict['boolean'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "modify":
@@ -749,7 +739,7 @@ def setupBooleanParser(subparsers):
 
 
 def handlePermissive(args):
-    OBJECT = object_dict['permissive']()
+    OBJECT = object_dict['permissive'](args)
     OBJECT.set_reload(args.noreload)
 
     if args.action is "list":
@@ -784,7 +774,7 @@ def setupPermissiveParser(subparsers):
 
 
 def handleDontaudit(args):
-    OBJECT = object_dict['dontaudit']()
+    OBJECT = object_dict['dontaudit'](args)
     OBJECT.set_reload(args.noreload)
     OBJECT.toggle(args.action)
 
@@ -802,7 +792,7 @@ def handleExport(args):
     for i in manageditems:
         print("%s -D" % i)
     for i in manageditems:
-        OBJECT = object_dict[i]()
+        OBJECT = object_dict[i](args)
         for c in OBJECT.customized():
             print("%s %s" % (i, str(c)))
 
@@ -866,7 +856,7 @@ def mkargv(line):
 
 
 def handleImport(args):
-    trans = seobject.semanageRecords(store)
+    trans = seobject.semanageRecords(args)
     trans.start()
 
     for l in sys.stdin.readlines():

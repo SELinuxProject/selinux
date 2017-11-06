@@ -238,14 +238,16 @@ class semanageRecords:
     transaction = False
     handle = None
     store = None
+    args = None
 
-    def __init__(self, store):
+    def __init__(self, args):
         global handle
         self.load = True
-        self.sh = self.get_handle(store)
+        self.args = args
+        self.sh = self.get_handle(args.store)
 
         rc, localstore = selinux.selinux_getpolicytype()
-        if store == "" or store == localstore:
+        if args.store == "" or args.store == localstore:
             self.mylog = logger()
         else:
             self.mylog = nulllogger()
@@ -328,8 +330,8 @@ class semanageRecords:
 
 class moduleRecords(semanageRecords):
 
-    def __init__(self, store):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
 
     def get_all(self):
         l = []
@@ -440,8 +442,8 @@ class moduleRecords(semanageRecords):
 
 class dontauditClass(semanageRecords):
 
-    def __init__(self, store):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
 
     def toggle(self, dontaudit):
         if dontaudit not in ["on", "off"]:
@@ -453,8 +455,8 @@ class dontauditClass(semanageRecords):
 
 class permissiveRecords(semanageRecords):
 
-    def __init__(self, store):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
 
     def get_all(self):
         l = []
@@ -522,8 +524,8 @@ class permissiveRecords(semanageRecords):
 
 class loginRecords(semanageRecords):
 
-    def __init__(self, store=""):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
         self.oldsename = None
         self.oldserange = None
         self.sename = None
@@ -534,7 +536,7 @@ class loginRecords(semanageRecords):
         if sename == "":
             sename = "user_u"
 
-        userrec = seluserRecords()
+        userrec = seluserRecords(self.args)
         range, (rc, oldserole) = userrec.get(self.oldsename)
         range, (rc, serole) = userrec.get(sename)
 
@@ -603,7 +605,7 @@ class loginRecords(semanageRecords):
         if sename == "" and serange == "":
             raise ValueError(_("Requires seuser or serange"))
 
-        userrec = seluserRecords()
+        userrec = seluserRecords(self.args)
         range, (rc, oldserole) = userrec.get(self.oldsename)
 
         if sename != "":
@@ -660,7 +662,7 @@ class loginRecords(semanageRecords):
 
     def __delete(self, name):
         rec, self.oldsename, self.oldserange = selinux.getseuserbyname(name)
-        userrec = seluserRecords()
+        userrec = seluserRecords(self.args)
         range, (rc, oldserole) = userrec.get(self.oldsename)
 
         (rc, k) = semanage_seuser_key_create(self.sh, name)
@@ -779,8 +781,8 @@ class loginRecords(semanageRecords):
 
 class seluserRecords(semanageRecords):
 
-    def __init__(self, store=""):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
 
     def get(self, name):
         (rc, k) = semanage_user_key_create(self.sh, name)
@@ -1042,8 +1044,8 @@ class portRecords(semanageRecords):
     except RuntimeError:
         valid_types = []
 
-    def __init__(self, store=""):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
 
     def __genkey(self, port, proto):
         if proto == "tcp":
@@ -1317,8 +1319,8 @@ class ibpkeyRecords(semanageRecords):
     except:
         valid_types = []
 
-    def __init__(self, store=""):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
 
     def __genkey(self, pkey, subnet_prefix):
         if subnet_prefix == "":
@@ -1572,8 +1574,8 @@ class ibendportRecords(semanageRecords):
     except:
         valid_types = []
 
-    def __init__(self, store=""):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
 
     def __genkey(self, ibendport, ibdev_name):
         if ibdev_name == "":
@@ -1810,8 +1812,8 @@ class nodeRecords(semanageRecords):
     except RuntimeError:
         valid_types = []
 
-    def __init__(self, store=""):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
         self.protocol = ["ipv4", "ipv6"]
 
     def validate(self, addr, mask, protocol):
@@ -2046,8 +2048,8 @@ class nodeRecords(semanageRecords):
 
 class interfaceRecords(semanageRecords):
 
-    def __init__(self, store=""):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
 
     def __add(self, interface, serange, ctype):
         if is_mls_enabled == 1:
@@ -2243,8 +2245,8 @@ class fcontextRecords(semanageRecords):
     except RuntimeError:
         valid_types = []
 
-    def __init__(self, store=""):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
         self.equiv = {}
         self.equiv_dist = {}
         self.equal_ind = False
@@ -2632,8 +2634,8 @@ class fcontextRecords(semanageRecords):
 
 class booleanRecords(semanageRecords):
 
-    def __init__(self, store=""):
-        semanageRecords.__init__(self, store)
+    def __init__(self, args):
+        semanageRecords.__init__(self, args)
         self.dict = {}
         self.dict["TRUE"] = 1
         self.dict["FALSE"] = 0
