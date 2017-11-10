@@ -1788,7 +1788,7 @@ class ibendportRecords(semanageRecords):
         keys = ddict.keys()
         keys.sort()
         for k in keys:
-            l.append("-a -t %s -x %s %s" % (ddict[k][0], k[2], k[0]))
+            l.append("-a -t %s -r %s -z %s %s" % (ddict[k][0], ddict[k][1], k[1], k[0]))
         return l
 
     def list(self, heading=1, locallist=0):
