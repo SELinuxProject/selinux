@@ -531,6 +531,7 @@ struct cil_typeattribute {
 	struct cil_list *expr_list;
 	ebitmap_t *types;
 	int used;	// whether or not this attribute was used in a binary policy rule
+	int keep;
 };
 
 struct cil_typeattributeset {

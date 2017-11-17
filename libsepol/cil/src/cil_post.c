@@ -1369,7 +1369,7 @@ static int __cil_post_db_attr_helper(struct cil_tree_node *node, uint32_t *finis
 			rc = __evaluate_type_expression(attr, db);
 			if (rc != SEPOL_OK) goto exit;
 		}
-		attr->used = cil_typeattribute_used(attr, db);
+		attr->keep = cil_typeattribute_used(attr, db);
 		break;
 	}
 	case CIL_ROLEATTRIBUTE: {

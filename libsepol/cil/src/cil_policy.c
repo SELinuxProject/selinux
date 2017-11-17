@@ -1085,7 +1085,7 @@ static void cil_typeattributes_to_policy(FILE *out, struct cil_list *types, stru
 		type = i1->data;
 		cil_list_for_each(i2, attributes) {
 			attribute = i2->data;
-			if (!attribute->used)
+			if (!attribute->keep)
 				continue;
 			if (ebitmap_get_bit(attribute->types, type->value)) {
 				if (first) {

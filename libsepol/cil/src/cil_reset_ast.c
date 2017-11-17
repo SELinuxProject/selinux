@@ -186,6 +186,7 @@ static void cil_reset_typeattr(struct cil_typeattribute *attr)
 		attr->expr_list = NULL;
 	}
 	attr->used = CIL_FALSE;
+	attr->keep = CIL_FALSE;
 }
 
 static void cil_reset_typeattributeset(struct cil_typeattributeset *tas)
