@@ -263,7 +263,7 @@ int dbase_llist_iterate(semanage_handle_t * handle,
 		if (rc < 0)
 			goto err;
 
-		else if (rc > 1)
+		else if (rc > 0)
 			break;
 	}
 
