@@ -119,13 +119,16 @@ static int dbase_file_flush(semanage_handle_t * handle, dbase_file_t * dbase)
 	cache_entry_t *ptr;
 	const char *fname = NULL;
 	FILE *str = NULL;
+	mode_t mask;
 
 	if (!dbase_llist_is_modified(&dbase->llist))
 		return STATUS_SUCCESS;
 
 	fname = dbase->path[handle->is_in_transaction];
 
+	mask = umask(0077);
 	str = fopen(fname, "w");
+	umask(mask);
 	if (!str) {
 		ERR(handle, "could not open %s for writing: %s",
 		    fname, strerror(errno));

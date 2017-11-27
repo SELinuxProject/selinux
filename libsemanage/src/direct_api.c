@@ -1176,6 +1176,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	sepol_policydb_t *out = NULL;
 	struct cil_db *cildb = NULL;
 	semanage_module_info_t *modinfos = NULL;
+	mode_t mask = umask(0077);
 
 	int do_rebuild, do_write_kernel, do_install;
 	int fcontexts_modified, ports_modified, seusers_modified,
@@ -1645,6 +1646,8 @@ cleanup:
 	semanage_remove_directory(semanage_final_path
 				  (SEMANAGE_FINAL_TMP,
 				   SEMANAGE_FINAL_TOPLEVEL));
+	umask(mask);
+
 	return retval;
 }
 
@@ -2016,6 +2019,7 @@ static int semanage_direct_set_enabled(semanage_handle_t *sh,
 	const char *path = NULL;
 	FILE *fp = NULL;
 	semanage_module_info_t *modinfo = NULL;
+	mode_t mask;
 
 	/* check transaction */
 	if (!sh->is_in_transaction) {
@@ -2076,7 +2080,9 @@ static int semanage_direct_set_enabled(semanage_handle_t *sh,
 
 	switch (enabled) {
 		case 0: /* disable the module */
+			mask = umask(0077);
 			fp = fopen(fn, "w");
+			umask(mask);
 
 			if (fp == NULL) {
 				ERR(sh,
@@ -2722,6 +2728,7 @@ static int semanage_direct_install_info(semanage_handle_t *sh,
 	int type;
 
 	char path[PATH_MAX];
+	mode_t mask = umask(0077);
 
 	semanage_module_info_t *higher_info = NULL;
 	semanage_module_key_t higher_key;
@@ -2833,6 +2840,7 @@ cleanup:
 	semanage_module_key_destroy(sh, &higher_key);
 	semanage_module_info_destroy(sh, higher_info);
 	free(higher_info);
+	umask(mask);
 
 	return status;
 }
