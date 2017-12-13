@@ -240,17 +240,22 @@ class semanageRecords:
     store = None
     args = None
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         global handle
-        self.args = args
-        try:
-            self.noreload = args.noreload
-        except:
-            self.noreload = False
-        self.sh = self.get_handle(args.store)
+        if args:
+            # legacy code - args was store originally
+            if type(args) == str:
+                self.store = args
+            else:
+                self.args = args
+        self.noreload = getattr(args, "noreload", False)
+        if not self.store:
+            self.store = getattr(args, "store", "")
+
+        self.sh = self.get_handle(self.store)
 
         rc, localstore = selinux.selinux_getpolicytype()
-        if args.store == "" or args.store == localstore:
+        if self.store == "" or self.store == localstore:
             self.mylog = logger()
         else:
             self.mylog = nulllogger()
@@ -331,7 +336,7 @@ class semanageRecords:
 
 class moduleRecords(semanageRecords):
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
 
     def get_all(self):
@@ -443,7 +448,7 @@ class moduleRecords(semanageRecords):
 
 class dontauditClass(semanageRecords):
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
 
     def toggle(self, dontaudit):
@@ -456,7 +461,7 @@ class dontauditClass(semanageRecords):
 
 class permissiveRecords(semanageRecords):
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
 
     def get_all(self):
@@ -525,7 +530,7 @@ class permissiveRecords(semanageRecords):
 
 class loginRecords(semanageRecords):
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
         self.oldsename = None
         self.oldserange = None
@@ -782,7 +787,7 @@ class loginRecords(semanageRecords):
 
 class seluserRecords(semanageRecords):
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
 
     def get(self, name):
@@ -1045,7 +1050,7 @@ class portRecords(semanageRecords):
     except RuntimeError:
         valid_types = []
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
 
     def __genkey(self, port, proto):
@@ -1320,7 +1325,7 @@ class ibpkeyRecords(semanageRecords):
     except:
         valid_types = []
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
 
     def __genkey(self, pkey, subnet_prefix):
@@ -1573,7 +1578,7 @@ class ibendportRecords(semanageRecords):
     except:
         valid_types = []
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
 
     def __genkey(self, ibendport, ibdev_name):
@@ -1809,7 +1814,7 @@ class nodeRecords(semanageRecords):
     except RuntimeError:
         valid_types = []
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
         self.protocol = ["ipv4", "ipv6"]
 
@@ -2045,7 +2050,7 @@ class nodeRecords(semanageRecords):
 
 class interfaceRecords(semanageRecords):
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
 
     def __add(self, interface, serange, ctype):
@@ -2242,7 +2247,7 @@ class fcontextRecords(semanageRecords):
     except RuntimeError:
         valid_types = []
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
         self.equiv = {}
         self.equiv_dist = {}
@@ -2631,7 +2636,7 @@ class fcontextRecords(semanageRecords):
 
 class booleanRecords(semanageRecords):
 
-    def __init__(self, args):
+    def __init__(self, args = None):
         semanageRecords.__init__(self, args)
         self.dict = {}
         self.dict["TRUE"] = 1
