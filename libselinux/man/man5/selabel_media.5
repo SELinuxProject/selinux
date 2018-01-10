@@ -52,8 +52,6 @@ The default media contexts file is:
 .RE
 .sp
 Where \fI{SELINUXTYPE}\fR is the entry from the selinux configuration file \fIconfig\fR (see \fBselinux_config\fR(5)).
-.sp
-Should there not be a valid entry in the \fImedia\fR file, then the default \fIremovable_context\fR file will be read (see \fBremovable_context\fR(5)).
 .
 .SH "FILE FORMAT"
 Each line within the \fImedia\fR file is as follows:
@@ -90,4 +88,4 @@ this is not set, then it is possible for an invalid context to be returned.
 .SH "SEE ALSO"
 .ad l
 .nh
-.BR selinux "(8), " selabel_open "(3), " selabel_lookup "(3), " selabel_stats "(3), " selabel_close "(3), " selinux_set_callback "(3), " selinux_media_context_path "(3), " freecon "(3), " selinux_config "(5), " removable_context "(5) "
+.BR selinux "(8), " selabel_open "(3), " selabel_lookup "(3), " selabel_stats "(3), " selabel_close "(3), " selinux_set_callback "(3), " selinux_media_context_path "(3), " freecon "(3), " selinux_config "(5) "
