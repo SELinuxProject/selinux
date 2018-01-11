@@ -426,11 +426,6 @@ class moduleRecords(semanageRecords):
                     raise ValueError(_("Could not disable module %s") % m)
         self.commit()
 
-    def modify(self, file):
-        rc = semanage_module_update_file(self.sh, file)
-        if rc >= 0:
-            self.commit()
-
     def delete(self, module, priority):
         rc = semanage_set_default_priority(self.sh, priority)
         if rc < 0:
