@@ -260,6 +260,9 @@ class semanageRecords:
         else:
             self.mylog = nulllogger()
 
+    def set_reload(self, load):
+        self.noreload = not load
+
     def get_handle(self, store):
         global is_mls_enabled
 
