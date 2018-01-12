@@ -1,6 +1,6 @@
 # Installation directories.
-PREFIX ?= $(DESTDIR)/usr
-INCDIR ?= $(PREFIX)/include/semanage
+PREFIX ?= /usr
+INCDIR ?= $(DESTDIR)$(PREFIX)/include/semanage
 
 all:
 
