@@ -1,6 +1,6 @@
 # Installation directories.
-PREFIX ?= $(DESTDIR)/usr
-BINDIR ?= $(PREFIX)/bin
+PREFIX ?= /usr
+BINDIR ?= $(DESTDIR)$(PREFIX)/bin
 
 CFLAGS ?= -Wall -Werror
 override CFLAGS += -I../include
