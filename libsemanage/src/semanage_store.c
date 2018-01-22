@@ -1740,9 +1740,9 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 
 	if (!sh->conf->save_previous) {
 		int errsv = errno;
-		retval = semanage_remove_directory(backup);
-		if (retval < 0) {
+		if (semanage_remove_directory(backup) != 0) {
 			ERR(sh, "Could not delete previous directory %s.", backup);
+			retval = -1;
 			goto cleanup;
 		}
 		errno = errsv;
