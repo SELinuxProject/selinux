@@ -323,25 +323,43 @@ static void semanage_direct_destroy(semanage_handle_t * sh
 	/* do nothing */
 }
 
-static int semanage_direct_disconnect(semanage_handle_t * sh)
+static int semanage_remove_tmps(semanage_handle_t *sh)
 {
-	/* destroy transaction */
-	if (sh->is_in_transaction) {
-		/* destroy sandbox */
-		if (semanage_remove_directory
-		    (semanage_path(SEMANAGE_TMP, SEMANAGE_TOPLEVEL)) < 0) {
+	if (sh->commit_err)
+		return 0;
+
+	/* destroy sandbox if it exists */
+	if (semanage_remove_directory
+	    (semanage_path(SEMANAGE_TMP, SEMANAGE_TOPLEVEL)) < 0) {
+		if (errno != ENOENT) {
 			ERR(sh, "Could not cleanly remove sandbox %s.",
 			    semanage_path(SEMANAGE_TMP, SEMANAGE_TOPLEVEL));
 			return -1;
 		}
-		if (semanage_remove_directory
-		    (semanage_final_path(SEMANAGE_FINAL_TMP,
-					 SEMANAGE_FINAL_TOPLEVEL)) < 0) {
+	}
+
+	/* destroy tmp policy if it exists */
+	if (semanage_remove_directory
+	    (semanage_final_path(SEMANAGE_FINAL_TMP,
+				 SEMANAGE_FINAL_TOPLEVEL)) < 0) {
+		if (errno != ENOENT) {
 			ERR(sh, "Could not cleanly remove tmp %s.",
 			    semanage_final_path(SEMANAGE_FINAL_TMP,
 						SEMANAGE_FINAL_TOPLEVEL));
 			return -1;
 		}
+	}
+
+	return 0;
+}
+
+static int semanage_direct_disconnect(semanage_handle_t *sh)
+{
+	int retval = 0;
+
+	/* destroy transaction and remove tmp files if no commit error */
+	if (sh->is_in_transaction) {
+		retval = semanage_remove_tmps(sh);
 		semanage_release_trans_lock(sh);
 	}
 
@@ -375,7 +393,7 @@ static int semanage_direct_disconnect(semanage_handle_t * sh)
 	/* Release object databases: active kernel policy */
 	bool_activedb_dbase_release(semanage_bool_dbase_active(sh));
 
-	return 0;
+	return retval;
 }
 
 static int semanage_direct_begintrans(semanage_handle_t * sh)
@@ -1635,17 +1653,19 @@ cleanup:
 	free(mod_filenames);
 	sepol_policydb_free(out);
 	cil_db_destroy(&cildb);
-	semanage_release_trans_lock(sh);
 
 	free(fc_buffer);
 
-	/* regardless if the commit was successful or not, remove the
-	   sandbox if it is still there */
-	semanage_remove_directory(semanage_path
-				  (SEMANAGE_TMP, SEMANAGE_TOPLEVEL));
-	semanage_remove_directory(semanage_final_path
-				  (SEMANAGE_FINAL_TMP,
-				   SEMANAGE_FINAL_TOPLEVEL));
+	/* Set commit_err so other functions can detect any errors. Note that
+	 * retval > 0 will be the commit number.
+	 */
+	if (retval < 0)
+		sh->commit_err = retval;
+
+	if (semanage_remove_tmps(sh) != 0)
+		retval = -1;
+
+	semanage_release_trans_lock(sh);
 	umask(mask);
 
 	return retval;
