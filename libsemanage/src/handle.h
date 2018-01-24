@@ -62,6 +62,10 @@ struct semanage_handle {
 	int is_in_transaction;
 	int do_reload;		/* whether to reload policy after commit */
 	int do_rebuild;		/* whether to rebuild policy if there were no changes */
+	int commit_err;		/* set by semanage_direct_commit() if there are
+				 * any errors when building or committing the
+				 * sandbox to kernel policy at /etc/selinux
+				 */
 	int modules_modified;
 	int create_store;	/* whether to create the store if it does not exist
 				 * this will only have an effect on direct connections */
