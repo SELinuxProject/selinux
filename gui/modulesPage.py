@@ -70,8 +70,6 @@ class modulesPage(semanagePage):
         col = Gtk.TreeViewColumn(_("Priority"), Gtk.CellRendererText(), text=1)
         self.enable_audit_button = xml.get_object("enableAuditButton")
         self.enable_audit_button.connect("clicked", self.enable_audit)
-        self.new_button = xml.get_object("newModuleButton")
-        self.new_button.connect("clicked", self.new_module)
         col.set_sort_column_id(1)
         col.set_resizable(True)
         self.view.append_column(col)
@@ -115,12 +113,6 @@ class modulesPage(semanagePage):
         except:
             pass
         self.view.get_selection().select_path((0,))
-
-    def new_module(self, args):
-        try:
-            Popen(["/usr/share/system-config-selinux/polgengui.py"])
-        except ValueError as e:
-            self.error(e.args[0])
 
     def delete(self):
         store, iter = self.view.get_selection().get_selected()
