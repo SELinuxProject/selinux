@@ -1596,18 +1596,6 @@ Level</property>
                         <property name="can_focus">False</property>
                         <property name="toolbar_style">both</property>
                         <child>
-                          <object class="GtkToolButton" id="newModuleButton">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="tooltip_text" translatable="yes">Generate new policy module</property>
-                            <property name="stock_id">gtk-new</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="homogeneous">True</property>
-                          </packing>
-                        </child>
-                        <child>
                           <object class="GtkToolButton" id="toolbutton23">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
