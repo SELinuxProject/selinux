@@ -459,25 +459,25 @@ class policy:
         self.out_udp = [all, False, False, verify_ports(ports)]
 
     def set_use_resolve(self, val):
-        if not isinstance(val, types.BooleanType):
+        if type(val) is not bool:
             raise ValueError(_("use_resolve must be a boolean value "))
 
         self.use_resolve = val
 
     def set_use_syslog(self, val):
-        if not isinstance(val, types.BooleanType):
+        if type(val) is not bool:
             raise ValueError(_("use_syslog must be a boolean value "))
 
         self.use_syslog = val
 
     def set_use_kerberos(self, val):
-        if not isinstance(val, types.BooleanType):
+        if type(val) is not bool:
             raise ValueError(_("use_kerberos must be a boolean value "))
 
         self.use_kerberos = val
 
     def set_manage_krb5_rcache(self, val):
-        if not isinstance(val, types.BooleanType):
+        if type(val) is not bool:
             raise ValueError(_("manage_krb5_rcache must be a boolean value "))
 
         self.manage_krb5_rcache = val
