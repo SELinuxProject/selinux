@@ -97,10 +97,10 @@ def foreach(model, path, iter, selected):
 ##
 xml = Gtk.Builder()
 xml.set_translation_domain(PROGNAME)
-if os.access("polgen.glade", os.F_OK):
-    xml.add_from_file("polgen.glade")
+if os.access("polgen.ui", os.F_OK):
+    xml.add_from_file("polgen.ui")
 else:
-    xml.add_from_file("/usr/share/system-config-selinux/polgen.glade")
+    xml.add_from_file("/usr/share/system-config-selinux/polgen.ui")
 
 FILE = 1
 DIR = 2
@@ -125,82 +125,82 @@ class childWindow:
 
     def __init__(self):
         self.xml = xml
-        self.notebook = xml.get_widget("notebook")
+        self.notebook = xml.get_object("notebook")
         self.label_dict = {}
         self.tooltip_dict = {}
-        label = xml.get_widget("select_label")
+        label = xml.get_object("select_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget("select_user_roles_label")
+        label = xml.get_object("select_user_roles_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget("select_dir_label")
+        label = xml.get_object("select_dir_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget("select_domain_admin_label")
+        label = xml.get_object("select_domain_admin_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget("select_in_label")
+        label = xml.get_object("select_in_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget("select_out_label")
+        label = xml.get_object("select_out_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget("select_common_label")
+        label = xml.get_object("select_common_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget("select_manages_label")
+        label = xml.get_object("select_manages_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget("select_booleans_label")
+        label = xml.get_object("select_booleans_label")
         self.label_dict[label] = label.get_text()
 
-        label = xml.get_widget("existing_user_treeview")
+        label = xml.get_object("existing_user_treeview")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("transition_treeview")
+        label = xml.get_object("transition_treeview")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("in_tcp_all_checkbutton")
+        label = xml.get_object("in_tcp_all_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("in_tcp_reserved_checkbutton")
+        label = xml.get_object("in_tcp_reserved_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("in_tcp_unreserved_checkbutton")
+        label = xml.get_object("in_tcp_unreserved_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("in_tcp_entry")
+        label = xml.get_object("in_tcp_entry")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("in_udp_all_checkbutton")
+        label = xml.get_object("in_udp_all_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("in_udp_reserved_checkbutton")
+        label = xml.get_object("in_udp_reserved_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("in_udp_unreserved_checkbutton")
+        label = xml.get_object("in_udp_unreserved_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("in_udp_entry")
+        label = xml.get_object("in_udp_entry")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("out_tcp_entry")
+        label = xml.get_object("out_tcp_entry")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("out_udp_entry")
+        label = xml.get_object("out_udp_entry")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("out_tcp_all_checkbutton")
+        label = xml.get_object("out_tcp_all_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("out_udp_all_checkbutton")
+        label = xml.get_object("out_udp_all_checkbutton")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("boolean_treeview")
+        label = xml.get_object("boolean_treeview")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
-        label = xml.get_widget("write_treeview")
+        label = xml.get_object("write_treeview")
         self.tooltip_dict[label] = label.get_tooltip_text()
 
         try:
@@ -216,23 +216,26 @@ class childWindow:
             self.error(str(e))
 
         self.name = ""
-        xml.signal_connect("on_delete_clicked", self.delete)
-        xml.signal_connect("on_delete_boolean_clicked", self.delete_boolean)
-        xml.signal_connect("on_exec_select_clicked", self.exec_select)
-        xml.signal_connect("on_init_script_select_clicked", self.init_script_select)
-        xml.signal_connect("on_add_clicked", self.add)
-        xml.signal_connect("on_add_boolean_clicked", self.add_boolean)
-        xml.signal_connect("on_add_dir_clicked", self.add_dir)
-        xml.signal_connect("on_about_clicked", self.on_about_clicked)
-        xml.get_widget("cancel_button").connect("clicked", self.quit)
-        self.forward_button = xml.get_widget("forward_button")
+        handlers = {
+            "on_delete_clicked": self.delete,
+            "on_delete_boolean_clicked": self.delete_boolean,
+            "on_exec_select_clicked": self.exec_select,
+            "on_init_script_select_clicked": self.init_script_select,
+            "on_add_clicked": self.add,
+            "on_add_boolean_clicked": self.add_boolean,
+            "on_add_dir_clicked": self.add_dir,
+            "on_about_clicked": self.on_about_clicked
+        }
+        xml.connect_signals(handlers)
+        xml.get_object("cancel_button").connect("clicked", self.quit)
+        self.forward_button = xml.get_object("forward_button")
         self.forward_button.connect("clicked", self.forward)
-        self.back_button = xml.get_widget("back_button")
+        self.back_button = xml.get_object("back_button")
         self.back_button.connect("clicked", self.back)
 
-        self.boolean_dialog = xml.get_widget("boolean_dialog")
-        self.boolean_name_entry = xml.get_widget("boolean_name_entry")
-        self.boolean_description_entry = xml.get_widget("boolean_description_entry")
+        self.boolean_dialog = xml.get_object("boolean_dialog")
+        self.boolean_name_entry = xml.get_object("boolean_name_entry")
+        self.boolean_description_entry = xml.get_object("boolean_description_entry")
 
         self.pages = {}
         for i in sepolicy.generate.USERS:
@@ -251,34 +254,34 @@ class childWindow:
 
         self.network_buttons = {}
 
-        self.in_tcp_all_checkbutton = xml.get_widget("in_tcp_all_checkbutton")
-        self.in_tcp_reserved_checkbutton = xml.get_widget("in_tcp_reserved_checkbutton")
-        self.in_tcp_unreserved_checkbutton = xml.get_widget("in_tcp_unreserved_checkbutton")
-        self.in_tcp_entry = self.xml.get_widget("in_tcp_entry")
+        self.in_tcp_all_checkbutton = xml.get_object("in_tcp_all_checkbutton")
+        self.in_tcp_reserved_checkbutton = xml.get_object("in_tcp_reserved_checkbutton")
+        self.in_tcp_unreserved_checkbutton = xml.get_object("in_tcp_unreserved_checkbutton")
+        self.in_tcp_entry = self.xml.get_object("in_tcp_entry")
         self.network_buttons[self.in_tcp_all_checkbutton] = [self.in_tcp_reserved_checkbutton, self.in_tcp_unreserved_checkbutton, self.in_tcp_entry]
 
-        self.out_tcp_all_checkbutton = xml.get_widget("out_tcp_all_checkbutton")
-        self.out_tcp_reserved_checkbutton = xml.get_widget("out_tcp_reserved_checkbutton")
-        self.out_tcp_unreserved_checkbutton = xml.get_widget("out_tcp_unreserved_checkbutton")
-        self.out_tcp_entry = self.xml.get_widget("out_tcp_entry")
+        self.out_tcp_all_checkbutton = xml.get_object("out_tcp_all_checkbutton")
+        self.out_tcp_reserved_checkbutton = xml.get_object("out_tcp_reserved_checkbutton")
+        self.out_tcp_unreserved_checkbutton = xml.get_object("out_tcp_unreserved_checkbutton")
+        self.out_tcp_entry = self.xml.get_object("out_tcp_entry")
 
         self.network_buttons[self.out_tcp_all_checkbutton] = [self.out_tcp_entry]
 
-        self.in_udp_all_checkbutton = xml.get_widget("in_udp_all_checkbutton")
-        self.in_udp_reserved_checkbutton = xml.get_widget("in_udp_reserved_checkbutton")
-        self.in_udp_unreserved_checkbutton = xml.get_widget("in_udp_unreserved_checkbutton")
-        self.in_udp_entry = self.xml.get_widget("in_udp_entry")
+        self.in_udp_all_checkbutton = xml.get_object("in_udp_all_checkbutton")
+        self.in_udp_reserved_checkbutton = xml.get_object("in_udp_reserved_checkbutton")
+        self.in_udp_unreserved_checkbutton = xml.get_object("in_udp_unreserved_checkbutton")
+        self.in_udp_entry = self.xml.get_object("in_udp_entry")
 
         self.network_buttons[self.in_udp_all_checkbutton] = [self.in_udp_reserved_checkbutton, self.in_udp_unreserved_checkbutton, self.in_udp_entry]
 
-        self.out_udp_all_checkbutton = xml.get_widget("out_udp_all_checkbutton")
-        self.out_udp_entry = self.xml.get_widget("out_udp_entry")
+        self.out_udp_all_checkbutton = xml.get_object("out_udp_all_checkbutton")
+        self.out_udp_entry = self.xml.get_object("out_udp_entry")
         self.network_buttons[self.out_udp_all_checkbutton] = [self.out_udp_entry]
 
         for b in self.network_buttons.keys():
             b.connect("clicked", self.network_all_clicked)
 
-        self.boolean_treeview = self.xml.get_widget("boolean_treeview")
+        self.boolean_treeview = self.xml.get_object("boolean_treeview")
         self.boolean_store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING)
         self.boolean_treeview.set_model(self.boolean_store)
         self.boolean_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
@@ -287,7 +290,7 @@ class childWindow:
         col = Gtk.TreeViewColumn(_("Description"), Gtk.CellRendererText(), text=1)
         self.boolean_treeview.append_column(col)
 
-        self.role_treeview = self.xml.get_widget("role_treeview")
+        self.role_treeview = self.xml.get_object("role_treeview")
         self.role_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.role_treeview.set_model(self.role_store)
         self.role_treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -295,7 +298,7 @@ class childWindow:
         col = Gtk.TreeViewColumn(_("Role"), Gtk.CellRendererText(), text=0)
         self.role_treeview.append_column(col)
 
-        self.existing_user_treeview = self.xml.get_widget("existing_user_treeview")
+        self.existing_user_treeview = self.xml.get_object("existing_user_treeview")
         self.existing_user_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.existing_user_treeview.set_model(self.existing_user_store)
         self.existing_user_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
@@ -306,9 +309,9 @@ class childWindow:
             iter = self.role_store.append()
             self.role_store.set_value(iter, 0, i[:-2])
 
-        self.in_tcp_reserved_checkbutton = xml.get_widget("in_tcp_reserved_checkbutton")
+        self.in_tcp_reserved_checkbutton = xml.get_object("in_tcp_reserved_checkbutton")
 
-        self.transition_treeview = self.xml.get_widget("transition_treeview")
+        self.transition_treeview = self.xml.get_object("transition_treeview")
         self.transition_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.transition_treeview.set_model(self.transition_store)
         self.transition_treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -316,7 +319,7 @@ class childWindow:
         col = Gtk.TreeViewColumn(_("Application"), Gtk.CellRendererText(), text=0)
         self.transition_treeview.append_column(col)
 
-        self.user_transition_treeview = self.xml.get_widget("user_transition_treeview")
+        self.user_transition_treeview = self.xml.get_object("user_transition_treeview")
         self.user_transition_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.user_transition_treeview.set_model(self.user_transition_store)
         self.user_transition_treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -330,7 +333,7 @@ class childWindow:
             iter = self.existing_user_store.append()
             self.existing_user_store.set_value(iter, 0, i[:-2])
 
-        self.admin_treeview = self.xml.get_widget("admin_treeview")
+        self.admin_treeview = self.xml.get_object("admin_treeview")
         self.admin_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.admin_treeview.set_model(self.admin_store)
         self.admin_treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -385,7 +388,7 @@ class childWindow:
 
         if self.pages[type][self.current_page] == self.FINISH_PAGE:
             self.generate_policy()
-            self.xml.get_widget("cancel_button").set_label(Gtk.STOCK_CLOSE)
+            self.xml.get_object("cancel_button").set_label(Gtk.STOCK_CLOSE)
         else:
             self.current_page = self.current_page + 1
             self.notebook.set_current_page(self.pages[type][self.current_page])
@@ -605,7 +608,7 @@ class childWindow:
         self.__add(DIR)
 
     def on_about_clicked(self, args):
-        dlg = xml.get_widget("about_dialog")
+        dlg = xml.get_object("about_dialog")
         dlg.run()
         dlg.hide()
 
@@ -614,43 +617,43 @@ class childWindow:
 
     def setupScreen(self):
         # Bring in widgets from glade file.
-        self.mainWindow = self.xml.get_widget("main_window")
-        self.druid = self.xml.get_widget("druid")
+        self.mainWindow = self.xml.get_object("main_window")
+        self.druid = self.xml.get_object("druid")
         self.type = 0
-        self.name_entry = self.xml.get_widget("name_entry")
+        self.name_entry = self.xml.get_object("name_entry")
         self.name_entry.connect("insert_text", self.on_name_entry_changed)
         self.name_entry.connect("focus_out_event", self.on_focus_out_event)
-        self.exec_entry = self.xml.get_widget("exec_entry")
-        self.exec_button = self.xml.get_widget("exec_button")
-        self.init_script_entry = self.xml.get_widget("init_script_entry")
-        self.init_script_button = self.xml.get_widget("init_script_button")
-        self.output_entry = self.xml.get_widget("output_entry")
+        self.exec_entry = self.xml.get_object("exec_entry")
+        self.exec_button = self.xml.get_object("exec_button")
+        self.init_script_entry = self.xml.get_object("init_script_entry")
+        self.init_script_button = self.xml.get_object("init_script_button")
+        self.output_entry = self.xml.get_object("output_entry")
         self.output_entry.set_text(os.getcwd())
-        self.xml.get_widget("output_button").connect("clicked", self.output_button_clicked)
+        self.xml.get_object("output_button").connect("clicked", self.output_button_clicked)
 
-        self.xwindows_user_radiobutton = self.xml.get_widget("xwindows_user_radiobutton")
-        self.terminal_user_radiobutton = self.xml.get_widget("terminal_user_radiobutton")
-        self.root_user_radiobutton = self.xml.get_widget("root_user_radiobutton")
-        self.login_user_radiobutton = self.xml.get_widget("login_user_radiobutton")
-        self.admin_user_radiobutton = self.xml.get_widget("admin_user_radiobutton")
-        self.existing_user_radiobutton = self.xml.get_widget("existing_user_radiobutton")
+        self.xwindows_user_radiobutton = self.xml.get_object("xwindows_user_radiobutton")
+        self.terminal_user_radiobutton = self.xml.get_object("terminal_user_radiobutton")
+        self.root_user_radiobutton = self.xml.get_object("root_user_radiobutton")
+        self.login_user_radiobutton = self.xml.get_object("login_user_radiobutton")
+        self.admin_user_radiobutton = self.xml.get_object("admin_user_radiobutton")
+        self.existing_user_radiobutton = self.xml.get_object("existing_user_radiobutton")
 
-        self.user_radiobutton = self.xml.get_widget("user_radiobutton")
-        self.init_radiobutton = self.xml.get_widget("init_radiobutton")
-        self.inetd_radiobutton = self.xml.get_widget("inetd_radiobutton")
-        self.dbus_radiobutton = self.xml.get_widget("dbus_radiobutton")
-        self.cgi_radiobutton = self.xml.get_widget("cgi_radiobutton")
-        self.sandbox_radiobutton = self.xml.get_widget("sandbox_radiobutton")
-        self.tmp_checkbutton = self.xml.get_widget("tmp_checkbutton")
-        self.uid_checkbutton = self.xml.get_widget("uid_checkbutton")
-        self.pam_checkbutton = self.xml.get_widget("pam_checkbutton")
-        self.dbus_checkbutton = self.xml.get_widget("dbus_checkbutton")
-        self.audit_checkbutton = self.xml.get_widget("audit_checkbutton")
-        self.terminal_checkbutton = self.xml.get_widget("terminal_checkbutton")
-        self.mail_checkbutton = self.xml.get_widget("mail_checkbutton")
-        self.syslog_checkbutton = self.xml.get_widget("syslog_checkbutton")
-        self.view = self.xml.get_widget("write_treeview")
-        self.file_dialog = self.xml.get_widget("filechooserdialog")
+        self.user_radiobutton = self.xml.get_object("user_radiobutton")
+        self.init_radiobutton = self.xml.get_object("init_radiobutton")
+        self.inetd_radiobutton = self.xml.get_object("inetd_radiobutton")
+        self.dbus_radiobutton = self.xml.get_object("dbus_radiobutton")
+        self.cgi_radiobutton = self.xml.get_object("cgi_radiobutton")
+        self.sandbox_radiobutton = self.xml.get_object("sandbox_radiobutton")
+        self.tmp_checkbutton = self.xml.get_object("tmp_checkbutton")
+        self.uid_checkbutton = self.xml.get_object("uid_checkbutton")
+        self.pam_checkbutton = self.xml.get_object("pam_checkbutton")
+        self.dbus_checkbutton = self.xml.get_object("dbus_checkbutton")
+        self.audit_checkbutton = self.xml.get_object("audit_checkbutton")
+        self.terminal_checkbutton = self.xml.get_object("terminal_checkbutton")
+        self.mail_checkbutton = self.xml.get_object("mail_checkbutton")
+        self.syslog_checkbutton = self.xml.get_object("syslog_checkbutton")
+        self.view = self.xml.get_object("write_treeview")
+        self.file_dialog = self.xml.get_object("filechooserdialog")
 
         self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_INT)
         self.view.set_model(self.store)

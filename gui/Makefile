@@ -12,7 +12,7 @@ fcontextPage.py \
 html_util.py \
 loginsPage.py \
 modulesPage.py \
-polgen.glade \
+polgen.ui \
 portsPage.py \
 semanagePage.py \
 statusPage.py \
