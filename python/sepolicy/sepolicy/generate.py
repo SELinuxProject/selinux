@@ -110,7 +110,7 @@ def get_all_ports():
 
 
 def get_all_users():
-    users = map(lambda x: x['name'], sepolicy.info(sepolicy.USER))
+    users = [x['name'] for x in sepolicy.info(sepolicy.USER)]
     users.remove("system_u")
     users.remove("root")
     users.sort()
