@@ -1,13 +1,13 @@
 # Installation directories.
-PREFIX ?= $(DESTDIR)/usr
+PREFIX ?= /usr
 LIBEXECDIR ?= $(PREFIX)/libexec
 SELINUXEXECDIR ?= $(LIBEXECDIR)/selinux/
 
 all:
 
 install: all
-	-mkdir -p $(SELINUXEXECDIR)
-	install -m 755 semanage_migrate_store $(SELINUXEXECDIR)
+	-mkdir -p $(DESTDIR)$(SELINUXEXECDIR)
+	install -m 755 semanage_migrate_store $(DESTDIR)$(SELINUXEXECDIR)
 
 clean:
 

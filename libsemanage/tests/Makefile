@@ -1,6 +1,3 @@
-PREFIX ?= $(DESTDIR)/usr
-LIBDIR ?= $(PREFIX)/lib
-
 # Add your test source files here:
 SOURCES = $(sort $(wildcard *.c))
 
