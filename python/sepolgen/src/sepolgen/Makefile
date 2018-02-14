@@ -1,12 +1,13 @@
+PREFIX ?= /usr
 PYTHON ?= python
-PYTHONLIBDIR ?= $(shell $(PYTHON) -c "from distutils.sysconfig import *; print(get_python_lib(1))")
-PACKAGEDIR ?= $(DESTDIR)/$(PYTHONLIBDIR)/sepolgen
+PYTHONLIBDIR ?= $(shell $(PYTHON) -c "from distutils.sysconfig import *; print(get_python_lib(plat_specific=1, prefix='$(PREFIX)'))")
+PACKAGEDIR ?= /$(PYTHONLIBDIR)/sepolgen
 
 all:
 
 install: all
-	-mkdir -p $(PACKAGEDIR)
-	install -m 644 *.py $(PACKAGEDIR)
+	-mkdir -p $(DESTDIR)$(PACKAGEDIR)
+	install -m 644 *.py $(DESTDIR)$(PACKAGEDIR)
 
 clean:
 	rm -f parser.out parsetab.py
