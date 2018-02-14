@@ -98,7 +98,7 @@ before_script:
   - if echo "$PYVER" | grep -q pypy ; then export PYINC=-I$($PYTHON -c 'import sys;print(sys.prefix)')/include PYLIBS= ; fi
   # Python virtualenvs do not support "import site; print(site.getsitepackages()[0]"
   # cf. https://github.com/pypa/virtualenv/issues/355#issuecomment-10250452
-  - export PYSITEDIR="$DESTDIR/usr/lib/$($PYTHON -c 'import sys;print("python%d.%d" % sys.version_info[:2])')/site-packages"
+  - export PYSITEDIR="/usr/lib/$($PYTHON -c 'import sys;print("python%d.%d" % sys.version_info[:2])')/site-packages"
 
   # Find the Ruby executable with version $RUBYLIBVER
   - export RUBY="$(ls -d -1 "$HOME/.rvm/rubies/ruby-$RUBYLIBVER"*/bin/ruby | head -n 1)"
@@ -126,7 +126,7 @@ script:
   # Set up environment variables for the tests
   - export LD_LIBRARY_PATH="$DESTDIR/usr/lib:$DESTDIR/lib"
   - export PATH="$DESTDIR/usr/sbin:$DESTDIR/usr/bin:$DESTDIR/sbin:$DESTDIR/bin:$PATH"
-  - export PYTHONPATH="$PYSITEDIR"
+  - export PYTHONPATH="$DESTDIR$PYSITEDIR"
   - export RUBYLIB="$DESTDIR/$($RUBY -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$($RUBY -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
 
   # Show variables (to help debugging issues)
