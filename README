@@ -19,6 +19,6 @@ lacks library functions or other dependencies relied upon by your
 distribution.  If it breaks, you get to keep both pieces.
 
 To install libsepol on macOS (mainly for policy analysis):
-cd libsepol; make DESTDIR=/usr/local PREFIX=/usr/local install
+cd libsepol; make PREFIX=/usr/local install
 
 This requires GNU coreutils (brew install coreutils).
