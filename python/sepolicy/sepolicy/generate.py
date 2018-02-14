@@ -105,7 +105,7 @@ def get_all_ports():
                 p['type'] == "port_t" or \
                 p['type'] == "hi_reserved_port_t":
             continue
-        dict[(p['low'], p['high'], p['protocol'])] = (p['type'], p['range'])
+        dict[(p['low'], p['high'], p['protocol'])] = (p['type'], p.get('range'))
     return dict
 
 
