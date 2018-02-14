@@ -1,12 +1,12 @@
 # Installation directories.
-PREFIX ?= $(DESTDIR)/usr
-INCDIR ?= $(PREFIX)/include/selinux
+PREFIX ?= /usr
+INCDIR = $(PREFIX)/include/selinux
 
 all:
 
 install: all
-	test -d $(INCDIR) || install -m 755 -d $(INCDIR)
-	install -m 644 $(wildcard selinux/*.h) $(INCDIR)
+	test -d $(DESTDIR)$(INCDIR) || install -m 755 -d $(DESTDIR)$(INCDIR)
+	install -m 644 $(wildcard selinux/*.h) $(DESTDIR)$(INCDIR)
 
 relabel:
 
