@@ -500,7 +500,7 @@ class SELinuxGui():
         self.all_domains.sort(key=str.lower)
 
         if app and app not in self.all_domains:
-            self.error(_("%s is not a valid domain" % app))
+            self.error(_("%s is not a valid domain") % app)
             self.quit()
 
         loading_gui.show()
@@ -1056,21 +1056,21 @@ class SELinuxGui():
         self.application_files_initialize(app)
         self.transitions_files_initialize(app)
 
-        self.executable_files_tab.set_tooltip_text(_("File path used to enter the '%s' domain." % app))
-        self.writable_files_tab.set_tooltip_text(_("Files to which the '%s' domain can write." % app))
-        self.network_out_tab.set_tooltip_text(_("Network Ports to which the '%s' is allowed to connect." % app))
-        self.network_in_tab.set_tooltip_text(_("Network Ports to which the '%s' is allowed to listen." % app))
-        self.application_files_tab.set_tooltip_text(_("File Types defined for the '%s'." % app))
-        self.boolean_radio_button.set_tooltip_text(_("Display boolean information that can be used to modify the policy for the '%s'." % app))
-        self.files_radio_button.set_tooltip_text(_("Display file type information that can be used by the '%s'." % app))
-        self.network_radio_button.set_tooltip_text(_("Display network ports to which the '%s' can connect or listen to." % app))
-        self.transitions_into_tab.set_label(_("Application Transitions Into '%s'" % app))
-        self.transitions_from_tab.set_label(_("Application Transitions From '%s'" % app))
-        self.transitions_file_tab.set_label(_("File Transitions From '%s'" % app))
+        self.executable_files_tab.set_tooltip_text(_("File path used to enter the '%s' domain.") % app)
+        self.writable_files_tab.set_tooltip_text(_("Files to which the '%s' domain can write.") % app)
+        self.network_out_tab.set_tooltip_text(_("Network Ports to which the '%s' is allowed to connect.") % app)
+        self.network_in_tab.set_tooltip_text(_("Network Ports to which the '%s' is allowed to listen.") % app)
+        self.application_files_tab.set_tooltip_text(_("File Types defined for the '%s'.") % app)
+        self.boolean_radio_button.set_tooltip_text(_("Display boolean information that can be used to modify the policy for the '%s'.") % app)
+        self.files_radio_button.set_tooltip_text(_("Display file type information that can be used by the '%s'.") % app)
+        self.network_radio_button.set_tooltip_text(_("Display network ports to which the '%s' can connect or listen to.") % app)
+        self.transitions_into_tab.set_label(_("Application Transitions Into '%s'") % app)
+        self.transitions_from_tab.set_label(_("Application Transitions From '%s'") % app)
+        self.transitions_file_tab.set_label(_("File Transitions From '%s'") % app)
         self.transitions_into_tab.set_tooltip_text(_("Executables which will transition to '%s', when executing selected domains entrypoint.") % app)
         self.transitions_from_tab.set_tooltip_text(_("Executables which will transition to a different domain, when '%s' executes them.") % app)
-        self.transitions_file_tab.set_tooltip_text(_("Files by '%s' with transitions to a different label." % app))
-        self.transitions_radio_button.set_tooltip_text(_("Display applications that can transition into or out of the '%s'." % app))
+        self.transitions_file_tab.set_tooltip_text(_("Files by '%s' with transitions to a different label.") % app)
+        self.transitions_radio_button.set_tooltip_text(_("Display applications that can transition into or out of the '%s'.") % app)
 
         self.application = app
         self.applications_selection_button.set_label(self.application)

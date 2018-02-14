@@ -220,7 +220,7 @@ def interface_compile_test(interface, path="/usr/share/selinux/devel/policy.xml"
     idict = get_interface_dict(path)
 
     if not (interface.split("_")[0] in exclude_interfaces or idict[interface][2] in exclude_interface_type):
-        print(_("Compiling %s interface" % interface))
+        print(_("Compiling %s interface") % interface)
         try:
             fd = open(policy_files['te'], "w")
             fd.write(generate_compile_te(interface, idict))
@@ -237,4 +237,4 @@ def interface_compile_test(interface, path="/usr/share/selinux/devel/policy.xml"
                 os.remove(v)
 
     else:
-        sys.stderr.write(_("\nCompiling of %s interface is not supported." % interface))
+        sys.stderr.write(_("\nCompiling of %s interface is not supported.") % interface)
