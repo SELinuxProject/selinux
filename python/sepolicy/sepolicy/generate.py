@@ -198,7 +198,7 @@ class policy:
 
     def __init__(self, name, type):
         self.rpms = []
-        self.ports = []
+        self.ports = {}
         self.all_roles = get_all_roles()
         self.types = []
 
