@@ -2,6 +2,7 @@
 # Makefile for the PO files (translation) catalog
 #
 
+PREFIX ?= /usr
 TOP	 = ../..
 
 # What is this package?
@@ -12,7 +13,7 @@ INSTALL_DATA	= $(INSTALL) -m 644
 INSTALL_DIR	= /usr/bin/install -d
 
 # destination directory
-INSTALL_NLS_DIR = $(DESTDIR)/usr/share/locale
+INSTALL_NLS_DIR = $(PREFIX)/share/locale
 
 # PO catalog handling
 MSGMERGE	= msgmerge
@@ -128,8 +129,8 @@ clean:
 install: $(MOFILES)
 	@for n in $(MOFILES); do \
 	    l=`basename $$n .mo`; \
-	    $(INSTALL_DIR) $(INSTALL_NLS_DIR)/$$l/LC_MESSAGES; \
-	    $(INSTALL_DATA) --verbose $$n $(INSTALL_NLS_DIR)/$$l/LC_MESSAGES/$(NLSPACKAGE).mo; \
+	    $(INSTALL_DIR) $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES; \
+	    $(INSTALL_DATA) --verbose $$n $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES/$(NLSPACKAGE).mo; \
 	done
 
 %.mo: %.po
