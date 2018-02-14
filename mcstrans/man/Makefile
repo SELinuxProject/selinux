@@ -1,11 +1,12 @@
 # Installation directories.
-MAN8DIR ?= $(DESTDIR)/usr/share/man/man8
+PREFIX ?= /usr
+MAN8DIR ?= $(PREFIX)/share/man/man8
 
 all:
 
 install: all
-	mkdir -p $(MAN8DIR)
-	install -m 644 man8/*.8 $(MAN8DIR)
+	mkdir -p $(DESTDIR)$(MAN8DIR)
+	install -m 644 man8/*.8 $(DESTDIR)$(MAN8DIR)
 
 clean:
 	-rm -f *~ \#*

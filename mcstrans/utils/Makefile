@@ -1,22 +1,30 @@
 # Installation directories.
-PREFIX ?= $(DESTDIR)/usr
-LIBDIR ?= $(PREFIX)/lib
+PREFIX ?= /usr
 SBINDIR ?= $(PREFIX)/sbin
-LIBSEPOLA ?= $(LIBDIR)/libsepol.a
 
-CFLAGS ?= -Wall
-override CFLAGS += -I../src -D_GNU_SOURCE
-override LDLIBS += -lselinux -lpcre
+TARGETS=transcon untranscon
 
-TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
+# If no specific libsepol.a is specified, fall back on LDFLAGS search path
+# Otherwise, as $(LIBSEPOLA) already appears in the dependencies, there
+# is no need to define a value for LDLIBS_LIBSEPOLA
+ifeq ($(LIBSEPOLA),)
+        LDLIBS_LIBSEPOLA := -l:libsepol.a
+endif
 
 all: $(TARGETS)
 
-$(TARGETS): ../src/mcstrans.o ../src/mls_level.o $(LIBSEPOLA)
+transcon: transcon.o ../src/mcstrans.o ../src/mls_level.o $(LIBSEPOLA)
+	$(CC) $(LDFLAGS) -o $@ $^ -lpcre -lselinux $(LDLIBS_LIBSEPOLA)
+
+untranscon: untranscon.o ../src/mcstrans.o ../src/mls_level.o $(LIBSEPOLA)
+	$(CC) $(LDFLAGS) -o $@ $^ -lpcre -lselinux $(LDLIBS_LIBSEPOLA)
+
+%.o:  %.c 
+	$(CC) $(CFLAGS) -D_GNU_SOURCE -I../src -fPIE -c -o $@ $<
 
 install: all
-	-mkdir -p $(SBINDIR)
-	install -m 755 $(TARGETS) $(SBINDIR)
+	-mkdir -p $(DESTDIR)$(SBINDIR)
+	install -m 755 $(TARGETS) $(DESTDIR)$(SBINDIR)
 
 test:
 	./mlstrans-test-runner.py ../test/*.test
