@@ -191,7 +191,7 @@ def verify_ports(ports):
                 temp.append(p)
         return temp
     except ValueError:
-        raise ValueError(_("Ports must be numbers or ranges of numbers from 1 to %d " % max_port))
+        raise ValueError(_("Ports must be numbers or ranges of numbers from 1 to %d ") % max_port)
 
 
 class policy:
