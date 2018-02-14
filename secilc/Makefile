@@ -1,8 +1,6 @@
-PREFIX ?= $(DESTDIR)/usr
+PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/share/man
-LIBDIR ?= $(PREFIX)/lib
-INCLUDEDIR ?= $(PREFIX)/include
 
 SECILC = secilc
 SECILC_SRCS := secilc.c
@@ -41,12 +39,12 @@ $(SECIL2CONF_MANPAGE): $(SECIL2CONF_MANPAGE).xml
 	$(XMLTO) man $(SECIL2CONF_MANPAGE).xml
 
 install: all man
-	-mkdir -p $(BINDIR)
-	-mkdir -p $(MANDIR)/man8
-	install -m 755 $(SECILC) $(BINDIR)
-	install -m 755 $(SECIL2CONF) $(BINDIR)
-	install -m 644 $(SECILC_MANPAGE) $(MANDIR)/man8
-	install -m 644 $(SECIL2CONF_MANPAGE) $(MANDIR)/man8
+	-mkdir -p $(DESTDIR)$(BINDIR)
+	-mkdir -p $(DESTDIR)$(MANDIR)/man8
+	install -m 755 $(SECILC) $(DESTDIR)$(BINDIR)
+	install -m 755 $(SECIL2CONF) $(DESTDIR)$(BINDIR)
+	install -m 644 $(SECILC_MANPAGE) $(DESTDIR)$(MANDIR)/man8
+	install -m 644 $(SECIL2CONF_MANPAGE) $(DESTDIR)$(MANDIR)/man8
 
 doc:
 	$(MAKE) -C docs
