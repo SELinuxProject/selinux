@@ -76,6 +76,11 @@
          </varlistentry>
 
          <varlistentry>
+            <term><option>-m, --multiple-decls</option></term>
+            <listitem><para>Allow some statements to be re-declared.</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
             <term><option>-N, --disable-neverallow</option></term>
             <listitem><para>Do not check <emphasis role="bold">neverallow</emphasis> rules.</para></listitem>
          </varlistentry>
