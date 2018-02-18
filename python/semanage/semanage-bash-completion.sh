@@ -59,7 +59,7 @@ __get_export_opts () { echo '$ALL_OPTS --f --output_file' ; }
 __get_boolean_opts () { echo '$ALL_OPTS --on -off -1 -0' ; }
 __get_user_opts () { echo '$ALL_OPTS $MANAGED_OPTS -L --level -r --range -R --role '; }
 __get_login_opts () { echo '$ALL_OPTS $MANAGED_OPTS -s --seuser -r --range'; }
-__get_port_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t -type -r --range -p --proto'; }
+__get_port_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -r --range -p --proto'; }
 __get_interface_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type '; }
 __get_node_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -M --mask -p --proto'; }
 __get_fcontext_opts () { echo '$ALL_OPTS $MANAGED_OPTS -t --type -e --equal -f --ftype '; }
