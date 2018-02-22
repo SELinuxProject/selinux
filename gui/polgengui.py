@@ -674,7 +674,7 @@ class childWindow:
 
     def on_name_entry_changed(self, entry, text, size, position):
         if text.find(" ") >= 0:
-            entry.emit_stop_by_name("insert_text")
+            entry.stop_emission_by_name("insert-text")
 
     def on_focus_out_event(self, entry, third):
         name = entry.get_text()
