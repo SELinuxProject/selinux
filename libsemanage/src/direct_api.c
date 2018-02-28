@@ -2797,7 +2797,7 @@ static int semanage_direct_install_info(semanage_handle_t *sh,
 		if (higher_info->enabled == 0 && modinfo->enabled == -1) {
 			errno = 0;
 			WARN(sh,
-			     "%s module will be disabled after install due to default enabled status.",
+			     "%s module will be disabled after install as there is a disabled instance of this module present in the system.",
 			     modinfo->name);
 		}
 	}
