@@ -164,6 +164,7 @@ class fcontextPage(semanagePage):
         self.fcontextEntry.set_text("")
         self.fcontextEntry.set_sensitive(True)
         self.fcontextFileTypeCombo.set_sensitive(True)
+        self.fcontextFileTypeCombo.set_active(0)
         self.fcontextTypeEntry.set_text("")
         self.fcontextMLSEntry.set_text("s0")
 
