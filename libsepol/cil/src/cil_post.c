@@ -53,6 +53,16 @@
 static int __cil_expr_to_bitmap(struct cil_list *expr, ebitmap_t *out, int max, struct cil_db *db);
 static int __cil_expr_list_to_bitmap(struct cil_list *expr_list, ebitmap_t *out, int max, struct cil_db *db);
 
+static int compact(void* array, int count, int len, int (*compar)(const void *, const void *)) {
+	char *a = (char*)array;
+	int i, j = 0;
+	for(i=1; i<count; i++) {
+		if(compar(a+i*len, a+j*len) != 0) j++;
+		if(i != j) memcpy(a+j*len, a+i*len, len);
+	}
+	return j;
+}
+
 static int cil_verify_is_list(struct cil_list *list, enum cil_flavor flavor)
 {
 	struct cil_list_item *curr;
@@ -2118,6 +2128,7 @@ static int cil_post_db(struct cil_db *db)
 
 	qsort(db->netifcon->array, db->netifcon->count, sizeof(db->netifcon->array), cil_post_netifcon_compare);
 	qsort(db->genfscon->array, db->genfscon->count, sizeof(db->genfscon->array), cil_post_genfscon_compare);
+	db->genfscon->count = compact(db->genfscon->array, db->genfscon->count, sizeof(db->genfscon->array), cil_post_genfscon_compare);
 	qsort(db->ibpkeycon->array, db->ibpkeycon->count, sizeof(db->ibpkeycon->array), cil_post_ibpkeycon_compare);
 	qsort(db->ibendportcon->array, db->ibendportcon->count, sizeof(db->ibendportcon->array), cil_post_ibendportcon_compare);
 	qsort(db->portcon->array, db->portcon->count, sizeof(db->portcon->array), cil_post_portcon_compare);
