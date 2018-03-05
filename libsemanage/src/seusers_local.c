@@ -35,12 +35,16 @@ static char *semanage_user_roles(semanage_handle_t * handle, const char *sename)
 				for (i = 0; i<num_roles; i++) {
 					size += (strlen(roles_arr[i]) + 1);
 				}
-				roles = malloc(size);
-				if (roles) {
-					strcpy(roles,roles_arr[0]);
-					for (i = 1; i<num_roles; i++) {
-						strcat(roles,",");
-						strcat(roles,roles_arr[i]);
+				if (num_roles == 0) {
+					roles = strdup("");
+				} else {
+					roles = malloc(size);
+					if (roles) {
+						strcpy(roles,roles_arr[0]);
+						for (i = 1; i<num_roles; i++) {
+							strcat(roles,",");
+							strcat(roles,roles_arr[i]);
+						}
 					}
 				}
 			}
