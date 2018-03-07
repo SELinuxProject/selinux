@@ -77,7 +77,7 @@ class PolicyGenerator:
         self.explain = NO_EXPLANATION
         self.gen_requires = False
         if module:
-            self.moduel = module
+            self.module = module
         else:
             self.module = refpolicy.Module()
 
