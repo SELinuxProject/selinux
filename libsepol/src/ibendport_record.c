@@ -32,14 +32,11 @@ struct sepol_ibendport_key {
 int sepol_ibendport_alloc_ibdev_name(sepol_handle_t *handle,
 				     char **ibdev_name)
 {
-	char *tmp_ibdev_name = NULL;
+	*ibdev_name = calloc(1, IB_DEVICE_NAME_MAX);
 
-	tmp_ibdev_name = calloc(1, IB_DEVICE_NAME_MAX);
-
-	if (!tmp_ibdev_name)
+	if (!*ibdev_name)
 		goto omem;
 
-	*ibdev_name = tmp_ibdev_name;
 	return STATUS_SUCCESS;
 
 omem:
