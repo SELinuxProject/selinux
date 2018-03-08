@@ -56,4 +56,6 @@ LIBSEPOL_1.1 {
 	sepol_module_policydb_to_cil;
 	sepol_kernel_policydb_to_cil;
 	sepol_kernel_policydb_to_conf;
+	sepol_polcap_getnum;
+	sepol_polcap_getname;
 } LIBSEPOL_1.0;
