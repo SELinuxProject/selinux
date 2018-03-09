@@ -514,6 +514,7 @@ char *semanage_conf_path(void)
 {
 	char *semanage_conf = NULL;
 	int len;
+	struct stat sb;
 
 	len = strlen(semanage_root()) + strlen(selinux_path()) + strlen(SEMANAGE_CONF_FILE);
 	semanage_conf = calloc(len + 1, sizeof(char));
@@ -522,7 +523,7 @@ char *semanage_conf_path(void)
 	snprintf(semanage_conf, len + 1, "%s%s%s", semanage_root(), selinux_path(),
 		 SEMANAGE_CONF_FILE);
 
-	if (access(semanage_conf, R_OK) != 0) {
+	if (stat(semanage_conf, &sb) != 0 && errno == ENOENT) {
 		snprintf(semanage_conf, len + 1, "%s%s", selinux_path(), SEMANAGE_CONF_FILE);
 	}
 
@@ -1508,8 +1509,14 @@ int semanage_split_fc(semanage_handle_t * sh)
 static int sefcontext_compile(semanage_handle_t * sh, const char *path) {
 
 	int r;
+	struct stat sb;
 
-	if (access(path, F_OK) != 0) {
+	if (stat(path, &sb) < 0) {
+		if (errno != ENOENT) {
+			ERR(sh, "Unable to access %s: %s\n", path, strerror(errno));
+			return -1;
+		}
+
 		return 0;
 	}
 
