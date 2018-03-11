@@ -271,6 +271,7 @@
 	(portcon udp 25 system_u_bin_t_l2h)
 	(portcon tcp 22 system_u_bin_t_l2h)
 	(portcon dccp (2048 2096) system_u_bin_t_l2h)
+	(portcon sctp (1024 1035) system_u_bin_t_l2h)
 	(genfscon - "/usr/bin" system_u_bin_t_l2h)
 	(netifcon eth0 system_u_bin_t_l2h system_u_bin_t_l2h) ;different contexts?
 	(fsuse xattr ext3 system_u_bin_t_l2h)

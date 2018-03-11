@@ -2,6 +2,9 @@
 #ifndef IPPROTO_DCCP
 #define IPPROTO_DCCP 33
 #endif
+#ifndef IPPROTO_SCTP
+#define IPPROTO_SCTP 132
+#endif
 #include <stdlib.h>
 
 #include "debug.h"
@@ -21,6 +24,8 @@ static inline int sepol2ipproto(sepol_handle_t * handle, int proto)
 		return IPPROTO_UDP;
 	case SEPOL_PROTO_DCCP:
 		return IPPROTO_DCCP;
+	case SEPOL_PROTO_SCTP:
+		return IPPROTO_SCTP;
 	default:
 		ERR(handle, "unsupported protocol %u", proto);
 		return STATUS_ERR;
@@ -37,6 +42,8 @@ static inline int ipproto2sepol(sepol_handle_t * handle, int proto)
 		return SEPOL_PROTO_UDP;
 	case IPPROTO_DCCP:
 		return SEPOL_PROTO_DCCP;
+	case IPPROTO_SCTP:
+		return SEPOL_PROTO_SCTP;
 	default:
 		ERR(handle, "invalid protocol %u " "found in policy", proto);
 		return STATUS_ERR;

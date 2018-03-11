@@ -1757,6 +1757,8 @@ static void cil_portcons_to_policy(FILE *out, struct cil_sort *portcons, int mls
 			fprintf(out, "tcp ");
 		} else if (portcon->proto == CIL_PROTOCOL_DCCP) {
 			fprintf(out, "dccp ");
+		} else if (portcon->proto == CIL_PROTOCOL_SCTP) {
+			fprintf(out, "sctp ");
 		}
 		if (portcon->port_low == portcon->port_high) {
 			fprintf(out, "%d ", portcon->port_low);

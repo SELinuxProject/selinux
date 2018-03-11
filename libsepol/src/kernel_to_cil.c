@@ -12,6 +12,9 @@
 #ifndef IPPROTO_DCCP
 #define IPPROTO_DCCP 33
 #endif
+#ifndef IPPROTO_SCTP
+#define IPPROTO_SCTP 132
+#endif
 
 #include <sepol/policydb/avtab.h>
 #include <sepol/policydb/conditional.h>
@@ -2631,6 +2634,7 @@ static int write_selinux_port_rules_to_cil(FILE *out, struct policydb *pdb)
 		case IPPROTO_TCP: protocol = "tcp"; break;
 		case IPPROTO_UDP: protocol = "udp"; break;
 		case IPPROTO_DCCP: protocol = "dccp"; break;
+		case IPPROTO_SCTP: protocol = "sctp"; break;
 		default:
 			sepol_log_err("Unknown portcon protocol: %i", portcon->u.port.protocol);
 			rc = -1;

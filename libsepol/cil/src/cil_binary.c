@@ -34,6 +34,9 @@
 #ifndef IPPROTO_DCCP
 #define IPPROTO_DCCP 33
 #endif
+#ifndef IPPROTO_SCTP
+#define IPPROTO_SCTP 132
+#endif
 
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/polcaps.h>
@@ -3271,6 +3274,9 @@ int cil_portcon_to_policydb(policydb_t *pdb, struct cil_sort *portcons)
 			break;
 		case CIL_PROTOCOL_DCCP:
 			new_ocon->u.port.protocol = IPPROTO_DCCP;
+			break;
+		case CIL_PROTOCOL_SCTP:
+			new_ocon->u.port.protocol = IPPROTO_SCTP;
 			break;
 		default:
 			/* should not get here */

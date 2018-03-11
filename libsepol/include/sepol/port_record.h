@@ -16,6 +16,7 @@ typedef struct sepol_port_key sepol_port_key_t;
 #define SEPOL_PROTO_UDP 0
 #define SEPOL_PROTO_TCP 1
 #define SEPOL_PROTO_DCCP 2
+#define SEPOL_PROTO_SCTP 3
 
 /* Key */
 extern int sepol_port_compare(const sepol_port_t * port,

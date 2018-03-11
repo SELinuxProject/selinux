@@ -155,7 +155,7 @@ These examples show named and anonymous [`nodecon`](cil_network_labeling_stateme
 portcon
 -------
 
-Label a udp, tcp or dccp port.
+Label a udp, tcp, dccp or sctp port.
 
 **Statement definition:**
 
@@ -175,7 +175,7 @@ Label a udp, tcp or dccp port.
 </tr>
 <tr class="even">
 <td align="left"><p><code>protocol</code></p></td>
-<td align="left"><p>The protocol keyword <code>tcp</code>, <code>udp</code> or <code>dccp</code>.</p></td>
+<td align="left"><p>The protocol keyword <code>tcp</code>, <code>udp</code>, <code>dccp</code> or <code>sctp</code>.</p></td>
 </tr>
 <tr class="odd">
 <td align="left"><p><code>port |</code></p>
@@ -200,3 +200,4 @@ These examples show named and anonymous [`portcon`](cil_network_labeling_stateme
     (portcon udp 4444 (unconfined.user object_r unconfined.object ((s0) level_2)))
     (portcon tcp (2000 20000) (unconfined.user object_r unconfined.object (systemlow level_3)))
     (portcon dccp (6840 6880) (unconfined.user object_r unconfined.object ((s0) level_2)))
+    (portcon sctp (1024 1035) (unconfined.user object_r unconfined.object ((s0) level_2)))

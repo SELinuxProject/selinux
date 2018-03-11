@@ -4405,6 +4405,8 @@ int cil_gen_portcon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 		portcon->proto = CIL_PROTOCOL_TCP;
 	} else if (proto == CIL_KEY_DCCP) {
 		portcon->proto = CIL_PROTOCOL_DCCP;
+	} else if (proto == CIL_KEY_SCTP) {
+		portcon->proto = CIL_PROTOCOL_SCTP;
 	} else {
 		cil_log(CIL_ERR, "Invalid protocol\n");
 		rc = SEPOL_ERR;

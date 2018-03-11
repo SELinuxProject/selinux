@@ -186,6 +186,8 @@ const char *sepol_port_get_proto_str(int proto)
 		return "tcp";
 	case SEPOL_PROTO_DCCP:
 		return "dccp";
+	case SEPOL_PROTO_SCTP:
+		return "sctp";
 	default:
 		return "???";
 	}
