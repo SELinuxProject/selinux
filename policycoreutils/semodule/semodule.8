@@ -3,7 +3,7 @@
 semodule \- Manage SELinux policy modules.
 
 .SH SYNOPSIS
-.B semodule [options]... MODE [MODES]...
+.B semodule [option]... MODE...
 .br
 .SH DESCRIPTION
 .PP
@@ -15,7 +15,7 @@ any other transaction.  semodule acts on module packages created
 by semodule_package.  Conventionally, these files have a .pp suffix
 (policy package), although this is not mandated in any way.
 
-.SH "OPTIONS"
+.SH "MODES"
 .TP
 .B \-R, \-\-reload
 force a reload of policy
@@ -36,15 +36,10 @@ deprecated, alias for --install
 deprecated, alias for --install
 .TP
 .B  \-r,\-\-remove=MODULE_NAME
-remove existing module
+remove existing module at desired priority (defaults to -X 400)
 .TP
 .B  \-l[KIND],\-\-list-modules[=KIND]
 display list of installed modules (other than base)
-.TP
-.B  \-E,\-\-extract=MODULE_PKG
-Extract a module from the store as an HLL or CIL file to the current directory.
-A module is extracted as HLL by default. The name of the module written is
-<module-name>.<lang_ext>
 .TP
 .B  KIND:
 .TP
@@ -57,11 +52,17 @@ list all modules
 .B  \-X,\-\-priority=PRIORITY
 set priority for following operations (1-999)
 .TP
-.B  \-e,\-\-enabled=MODULE_NAME
+.B  \-e,\-\-enable=MODULE_NAME
 enable module
 .TP
 .B  \-d,\-\-disable=MODULE_NAME
 disable module
+.TP
+.B  \-E,\-\-extract=MODULE_PKG
+Extract a module from the store as an HLL or CIL file to the current directory.
+A module is extracted as HLL by default. The name of the module written is
+<module-name>.<lang_ext>
+.SH "OPTIONS"
 .TP
 .B  \-s,\-\-store
 name of the store to operate on
@@ -101,17 +102,22 @@ only modules listed in \-\-extract after this option.
 $ semodule \-b base.pp
 # Install or replace a non-base policy package.
 $ semodule \-i httpd.pp
+# Install or replace all non-base modules in the current directory.
+# This syntax can be used with -i/u/r/E, but no other option can be entered after the module names
+$ semodule \-i *.pp
+# Install or replace all modules in the current directory.
+$ ls *.pp | grep \-Ev "base.pp|enableaudit.pp" | xargs /usr/sbin/semodule \-b base.pp \-i
 # List non-base modules.
 $ semodule \-l
+# List all modules including priorities
+$ semodule \-lfull
+# Remove a module at priority 100
+$ semodule \-X 100 \-r wireshark
 # Turn on all AVC Messages for which SELinux currently is "dontaudit"ing.
 $ semodule \-DB
 # Turn "dontaudit" rules back on.
 $ semodule \-B
-# Install or replace all non-base modules in the current directory.
-$ semodule \-i *.pp
-# Install or replace all modules in the current directory.
-$ ls *.pp | grep \-Ev "base.pp|enableaudit.pp" | xargs /usr/sbin/semodule \-b base.pp \-i
-# Disable a module.
+# Disable a module (all instances of given module across priorities will be disabled).
 $ semodule \-d alsa
 # Install a module at a specific priority.
 $ semodule \-X 100 \-i alsa.pp
