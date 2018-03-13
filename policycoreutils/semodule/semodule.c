@@ -120,13 +120,14 @@ static void create_signal_handlers(void)
 
 static void usage(char *progname)
 {
-	printf("usage:  %s [options]... MODE [MODES]...\n", progname);
+	printf("usage:  %s [option]... MODE...\n", progname);
 	printf("Manage SELinux policy modules.\n");
 	printf("MODES:\n");
 	printf("  -R, --reload		    reload policy\n");
 	printf("  -B, --build		    build and reload policy\n");
+	printf("  -D,--disable_dontaudit    Remove dontaudits from policy\n");
 	printf("  -i,--install=MODULE_PKG   install a new module\n");
-	printf("  -r,--remove=MODULE_NAME   remove existing module\n");
+	printf("  -r,--remove=MODULE_NAME   remove existing module at desired priority\n");
 	printf("  -l[KIND],--list-modules[=KIND]  display list of installed modules\n");
 	printf("     KIND:  standard  list highest priority, enabled modules\n");
 	printf("            full      list all modules\n");
@@ -134,12 +135,11 @@ static void usage(char *progname)
 	printf("  -e,--enable=MODULE_NAME   enable module\n");
 	printf("  -d,--disable=MODULE_NAME  disable module\n");
 	printf("  -E,--extract=MODULE_NAME  extract module\n");
-	printf("Other options:\n");
+	printf("Options:\n");
 	printf("  -s,--store	   name of the store to operate on\n");
 	printf("  -N,-n,--noreload do not reload policy after commit\n");
 	printf("  -h,--help        print this message and quit\n");
 	printf("  -v,--verbose     be verbose\n");
-	printf("  -D,--disable_dontaudit	Remove dontaudits from policy\n");
 	printf("  -P,--preserve_tunables	Preserve tunables in policy\n");
 	printf("  -C,--ignore-module-cache	Rebuild CIL modules compiled from HLL files\n");
 	printf("  -p,--path        use an alternate path for the policy root\n");
