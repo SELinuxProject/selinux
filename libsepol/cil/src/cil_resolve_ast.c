@@ -269,9 +269,8 @@ exit:
 	return rc;
 }
 
-int cil_type_used(struct cil_symtab_datum *datum, int used)
+void cil_type_used(struct cil_symtab_datum *datum, int used)
 {
-	int rc = SEPOL_ERR;
 	struct cil_typeattribute *attr = NULL;
 
 	if (FLAVOR(datum) == CIL_TYPEATTRIBUTE) {
@@ -279,16 +278,12 @@ int cil_type_used(struct cil_symtab_datum *datum, int used)
 		attr->used |= used;
 		if ((attr->used & CIL_ATTR_EXPAND_TRUE) &&
 				(attr->used & CIL_ATTR_EXPAND_FALSE)) {
-			cil_log(CIL_ERR, "Conflicting use of expandtypeattribute. "
-					"Expandtypeattribute may be set to true or false "
-					"but not both. \n");
-			goto exit;
+			cil_log(CIL_WARN, "Conflicting use of expandtypeattribute. "
+					"Expandtypeattribute was set to both true or false for %s. "
+					"Resolving to false. \n", attr->datum.name);
+			attr->used &= ~CIL_ATTR_EXPAND_TRUE;
 		}
 	}
-
-	return SEPOL_OK;
-exit:
-	return rc;
 }
 
 int cil_resolve_permissionx(struct cil_tree_node *current, struct cil_permissionx *permx, void *extra_args)
@@ -488,11 +483,7 @@ int cil_resolve_expandtypeattribute(struct cil_tree_node *current, void *extra_a
 			goto exit;
 		}
 		used = expandattr->expand ? CIL_ATTR_EXPAND_TRUE : CIL_ATTR_EXPAND_FALSE;
-		rc = cil_type_used(attr_datum, used);
-		if (rc != SEPOL_OK) {
-			goto exit;
-		}
-
+		cil_type_used(attr_datum, used);
 		cil_list_append(expandattr->attr_datums, CIL_TYPE, attr_datum);
 	}
 
