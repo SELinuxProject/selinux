@@ -1185,10 +1185,6 @@ int expand_attrib(void)
 			goto exit;
 		}
 
-		if (attr->flags & TYPE_FLAGS_EXPAND_ATTR) {
-			yyerror2("%s already has the expandattribute option specified", id);
-			goto exit;
-		}
 		if (ebitmap_set_bit(&attrs, attr->s.value - 1, TRUE)) {
 			yyerror("Out of memory!");
 			goto exit;
@@ -1216,6 +1212,12 @@ int expand_attrib(void)
 		attr = hashtab_search(policydbp->p_types.table,
 				policydbp->sym_val_to_name[SYM_TYPES][i]);
 		attr->flags |= flags;
+		if ((attr->flags & TYPE_FLAGS_EXPAND_ATTR_TRUE) &&
+				(attr->flags & TYPE_FLAGS_EXPAND_ATTR_FALSE)) {
+			yywarn("Expandattribute option was set to both true and false. "
+				"Resolving to false.");
+			attr->flags &= ~TYPE_FLAGS_EXPAND_ATTR_TRUE;
+		}
 	}
 
 	rc = 0;
