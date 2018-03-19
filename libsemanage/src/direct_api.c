@@ -60,6 +60,7 @@
 
 #define PIPE_READ 0
 #define PIPE_WRITE 1
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 static void semanage_direct_destroy(semanage_handle_t * sh);
 static int semanage_direct_disconnect(semanage_handle_t * sh);
@@ -1332,7 +1333,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 					   SEMANAGE_SEUSERS_LINKED,
 					   SEMANAGE_USERS_EXTRA_LINKED};
 
-		for (i = 0; i < (int) sizeof(files); i++) {
+		for (i = 0; i < (int) ARRAY_SIZE(files); i++) {
 			path = semanage_path(SEMANAGE_TMP, files[i]);
 			if (stat(path, &sb) != 0) {
 				if (errno != ENOENT) {
