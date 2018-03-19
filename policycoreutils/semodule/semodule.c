@@ -311,28 +311,29 @@ static void parse_command_line(int argc, char **argv)
 	}
 
 	if (optind < argc) {
-		int mode;
+		int mode = commands ? (int) commands[num_commands - 1].mode : -1;
 		/* if -i/u/r/E was the last command treat any remaining
 		 * arguments as args. Will allow 'semodule -i *.pp' to
 		 * work as expected.
 		 */
 
-		if (commands && commands[num_commands - 1].mode == INSTALL_M) {
-			mode = INSTALL_M;
-		} else if (commands && commands[num_commands - 1].mode == REMOVE_M) {
-			mode = REMOVE_M;
-		} else if (commands && commands[num_commands - 1].mode == EXTRACT_M) {
-			mode = EXTRACT_M;
-		} else {
-			fprintf(stderr, "unknown additional arguments:\n");
-			while (optind < argc)
-				fprintf(stderr, " %s", argv[optind++]);
-			fprintf(stderr, "\n\n");
-			usage(argv[0]);
-			exit(1);
+		switch (mode) {
+			case INSTALL_M:
+			case REMOVE_M:
+			case EXTRACT_M:
+			case ENABLE_M:
+			case DISABLE_M:
+				while (optind < argc)
+					set_mode(mode, argv[optind++]);
+				break;
+			default:
+				fprintf(stderr, "unknown additional arguments:\n");
+				while (optind < argc)
+					fprintf(stderr, " %s", argv[optind++]);
+				fprintf(stderr, "\n\n");
+				usage(argv[0]);
+				exit(1);
 		}
-		while (optind < argc)
-			set_mode(mode, argv[optind++]);
 	}
 }
 
