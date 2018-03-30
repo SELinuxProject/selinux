@@ -472,6 +472,7 @@ static inline int process_line(struct selabel_handle *rec,
 	spec_arr[nspec].mode = 0;
 
 	spec_arr[nspec].lr.ctx_raw = context;
+	spec_arr[nspec].lr.lineno = lineno;
 
 	/*
 	 * bump data->nspecs to cause closef() to cover it in its free
