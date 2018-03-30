@@ -73,6 +73,7 @@ struct selabel_lookup_rec {
 	char * ctx_raw;
 	char * ctx_trans;
 	int validated;
+	unsigned lineno;
 };
 
 struct selabel_handle {
