@@ -35,8 +35,7 @@ void set_matchpathcon_printf(void (*f) (const char *fmt, ...))
 	myprintf_compat = 1;
 }
 
-int compat_validate(struct selabel_handle *rec,
-		    struct selabel_lookup_rec *contexts,
+int compat_validate(struct selabel_lookup_rec *contexts,
 		    const char *path, unsigned lineno)
 {
 	int rc;
@@ -47,7 +46,7 @@ int compat_validate(struct selabel_handle *rec,
 	else if (mycanoncon)
 		rc = mycanoncon(path, lineno, ctx);
 	else {
-		rc = selabel_validate(rec, contexts);
+		rc = selabel_validate(contexts);
 		if (rc < 0) {
 			if (lineno) {
 				COMPAT_LOG(SELINUX_WARNING,
