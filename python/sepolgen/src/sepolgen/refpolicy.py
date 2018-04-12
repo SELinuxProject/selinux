@@ -284,6 +284,11 @@ class SecurityContext(Leaf):
 
         Raises ValueError if the string is not parsable as a security context.
         """
+        # try to translate the context string to raw form
+        raw = selinux.selinux_trans_to_raw_context(context)
+        if raw[0] == 0:
+            context = raw[1]
+
         fields = context.split(":")
         if len(fields) < 3:
             raise ValueError("context string [%s] not in a valid format" % context)
