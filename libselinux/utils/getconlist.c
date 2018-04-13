@@ -19,7 +19,7 @@ static __attribute__ ((__noreturn__)) void usage(const char *name, const char *d
 
 int main(int argc, char **argv)
 {
-	char **list, *usercon = NULL, *cur_context = NULL;
+	char **list, *cur_context = NULL;
 	char *user = NULL, *level = NULL;
 	int ret, i, opt;
 
@@ -69,7 +69,6 @@ int main(int argc, char **argv)
 		freeconary(list);
 	}
 
-	free(usercon);
 	free(level);
 
 	return 0;
