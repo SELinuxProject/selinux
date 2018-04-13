@@ -201,11 +201,11 @@ static int load_users(struct policydb *policydb, const char *path)
 			if (!(*p))
 				BADLINE();
 			q = p;
-			while (*p && strncasecmp(p, "range", 5))
+			while (*p && (!isspace(*p) || strncasecmp(p + 1, "range", 5)))
 				p++;
-			if (!(*p))
+			if (!(*p) || p == q)
 				BADLINE();
-			*--p = 0;
+			*p = 0;
 			p++;
 
 			scontext = malloc(p - q);
