@@ -1917,10 +1917,12 @@ exit:
 	free(new_val);
 	free(val1);
 	free(val2);
-	while ((val1 = stack_pop(stack)) != NULL) {
-		free(val1);
+	if (stack != NULL) {
+		while ((val1 = stack_pop(stack)) != NULL) {
+			free(val1);
+		}
+		stack_destroy(&stack);
 	}
-	stack_destroy(&stack);
 
 	return rc;
 }
