@@ -40,6 +40,7 @@ int main(int argc, char **argv)
 	if (!is_selinux_enabled()) {
 		fprintf(stderr,
 			"getconlist may be used only on a SELinux kernel.\n");
+		free(level);
 		return 1;
 	}
 
@@ -49,6 +50,7 @@ int main(int argc, char **argv)
 	if (((argc - optind) < 2)) {
 		if (getcon(&cur_context) < 0) {
 			fprintf(stderr, "Couldn't get current context.\n");
+			free(level);
 			return 2;
 		}
 	} else
@@ -68,6 +70,7 @@ int main(int argc, char **argv)
 	}
 
 	free(usercon);
+	free(level);
 
 	return 0;
 }
