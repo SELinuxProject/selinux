@@ -278,12 +278,14 @@ static inline int store_stem(struct saved_data *data, char *buf, int stem_len)
 
 	if (data->alloc_stems == num) {
 		struct stem *tmp_arr;
-
-		data->alloc_stems = data->alloc_stems * 2 + 16;
+		int alloc_stems = data->alloc_stems * 2 + 16;
 		tmp_arr = realloc(data->stem_arr,
-				  sizeof(*tmp_arr) * data->alloc_stems);
-		if (!tmp_arr)
+				  sizeof(*tmp_arr) * alloc_stems);
+		if (!tmp_arr) {
+			free(buf);
 			return -1;
+		}
+		data->alloc_stems = alloc_stems;
 		data->stem_arr = tmp_arr;
 	}
 	data->stem_arr[num].len = stem_len;
