@@ -708,6 +708,7 @@ append(affix_t **affixes, const char *val) {
 
 err:
 	log_error("allocation error %s", strerror(errno));
+	free(affix);
 	return -1;
 }
 
@@ -1517,8 +1518,10 @@ trans_context(const security_context_t incon, security_context_t *rcon) {
 		} else {
 			trans = compute_trans_from_raw(range, domain);
 			if (trans)
-				if (add_cache(domain, range, trans) < 0)
+				if (add_cache(domain, range, trans) < 0) {
+					free(range);
 					return -1;
+				}
 		}
 
 		if (lrange && urange) {
@@ -1526,12 +1529,15 @@ trans_context(const security_context_t incon, security_context_t *rcon) {
 			if (! ltrans) {
 				ltrans = compute_trans_from_raw(lrange, domain);
 				if (ltrans) {
-					if (add_cache(domain, lrange, ltrans) < 0)
+					if (add_cache(domain, lrange, ltrans) < 0) {
+						free(range);
 						return -1;
+					}
 				} else {
 					ltrans = strdup(lrange);
 					if (! ltrans) {
 						log_error("strdup failed %s", strerror(errno));
+						free(range);
 						return -1;
 					}
 				}
@@ -1541,25 +1547,36 @@ trans_context(const security_context_t incon, security_context_t *rcon) {
 			if (! utrans) {
 				utrans = compute_trans_from_raw(urange, domain);
 				if (utrans) {
-					if (add_cache(domain, urange, utrans) < 0)
+					if (add_cache(domain, urange, utrans) < 0) {
+						free(ltrans);
+						free(range);
 						return -1;
+					}
 				} else {
 					utrans = strdup(urange);
 					if (! utrans) {
 						log_error("strdup failed %s", strerror(errno));
- 						return -1;
- 					}
- 				}
+						free(ltrans);
+						free(range);
+						return -1;
+					}
+				}
 			}
 
 			if (strcmp(ltrans, utrans) == 0) {
 				if (asprintf(&trans, "%s", ltrans) < 0) {
 					log_error("asprintf failed %s", strerror(errno));
+					free(utrans);
+					free(ltrans);
+					free(range);
 					return -1;
 				}
 			} else {
 				if (asprintf(&trans, "%s-%s", ltrans, utrans) < 0) {
 					log_error("asprintf failed %s", strerror(errno));
+					free(utrans);
+					free(ltrans);
+					free(range);
 					return -1;
 				}
 			}
@@ -1629,13 +1646,17 @@ untrans_context(const security_context_t incon, security_context_t *rcon) {
 				if (!canonical) {
 					canonical = compute_trans_from_raw(raw, domain);
 					if (canonical && strcmp(canonical, range))
-						if (add_cache(domain, raw, canonical) < 0)
+						if (add_cache(domain, raw, canonical) < 0) {
+							free(range);
 							return -1;
+						}
 				}
 				if (canonical)
 					free(canonical);
-				if (add_cache(domain, raw, range) < 0)
+				if (add_cache(domain, raw, range) < 0) {
+					free(range);
 					return -1;
+				}
 			} else {
 				log_debug("untrans_context unable to compute raw context %s\n", range);
 			}
@@ -1650,17 +1671,24 @@ untrans_context(const security_context_t incon, security_context_t *rcon) {
 					if (!canonical) {
 						canonical = compute_trans_from_raw(lraw, domain);
 						if (canonical)
-							if (add_cache(domain, lraw, canonical) < 0)
+							if (add_cache(domain, lraw, canonical) < 0) {
+								free(lraw);
+								free(range);
 								return -1;
+							}
 					}
 					if (canonical)
 						free(canonical);
-					if (add_cache(domain, lraw, lrange) < 0)
+					if (add_cache(domain, lraw, lrange) < 0) {
+						free(lraw);
+						free(range);
 						return -1;
+					}
 				} else {
 					lraw = strdup(lrange);
 					if (! lraw) {
 						log_error("strdup failed %s", strerror(errno));
+						free(range);
 						return -1;
 					}
 				}
@@ -1674,17 +1702,27 @@ untrans_context(const security_context_t incon, security_context_t *rcon) {
 					if (!canonical) {
 						canonical = compute_trans_from_raw(uraw, domain);
 						if (canonical)
-							if (add_cache(domain, uraw, canonical) < 0)
+							if (add_cache(domain, uraw, canonical) < 0) {
+								free(uraw);
+								free(lraw);
+								free(range);
 								return -1;
 							}
+					}
 					if (canonical)
 						free(canonical);
-					if (add_cache(domain, uraw, urange) < 0)
+					if (add_cache(domain, uraw, urange) < 0) {
+						free(uraw);
+						free(lraw);
+						free(range);
 						return -1;
+					}
 				} else {
 					uraw = strdup(urange);
 					if (! uraw) {
 						log_error("strdup failed %s", strerror(errno));
+						free(lraw);
+						free(range);
 						return -1;
 					}
 				}
@@ -1694,11 +1732,17 @@ untrans_context(const security_context_t incon, security_context_t *rcon) {
 			if (strcmp(lraw, uraw) == 0) {
 				if (asprintf(&raw, "%s", lraw) < 0) {
 					log_error("asprintf failed %s", strerror(errno));
+					free(uraw);
+					free(lraw);
+					free(range);
 					return -1;
 				}
 			} else {
 				if (asprintf(&raw, "%s-%s", lraw, uraw) < 0) {
 					log_error("asprintf failed %s", strerror(errno));
+					free(uraw);
+					free(lraw);
+					free(range);
 					return -1;
 				}
 			}
