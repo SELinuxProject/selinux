@@ -121,11 +121,12 @@ static inline int selabel_is_validate_set(const struct selinux_opt *opts,
 	return 0;
 }
 
-int selabel_validate(struct selabel_lookup_rec *contexts)
+int selabel_validate(struct selabel_handle *rec,
+		     struct selabel_lookup_rec *contexts)
 {
 	int rc = 0;
 
-	if (contexts->validated)
+	if (!rec->validating || contexts->validated)
 		goto out;
 
 	rc = selinux_validate(&contexts->ctx_raw);
@@ -142,7 +143,7 @@ static int selabel_fini(struct selabel_handle *rec,
 			    struct selabel_lookup_rec *lr,
 			    int translating)
 {
-	if (compat_validate(lr, rec->spec_file, lr->lineno))
+	if (compat_validate(rec, lr, rec->spec_file, lr->lineno))
 		return -1;
 
 	if (translating && !lr->ctx_trans &&

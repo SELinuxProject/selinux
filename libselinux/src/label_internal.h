@@ -112,7 +112,8 @@ struct selabel_handle {
  * Validation function
  */
 extern int
-selabel_validate(struct selabel_lookup_rec *contexts) hidden;
+selabel_validate(struct selabel_handle *rec,
+		 struct selabel_lookup_rec *contexts) hidden;
 
 /*
  * Compatibility support
@@ -127,7 +128,8 @@ extern void __attribute__ ((format(printf, 1, 2)))
 		selinux_log(type, fmt);
 
 extern int
-compat_validate(struct selabel_lookup_rec *contexts,
+compat_validate(struct selabel_handle *rec,
+		struct selabel_lookup_rec *contexts,
 		const char *path, unsigned lineno) hidden;
 
 /*
