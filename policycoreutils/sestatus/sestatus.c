@@ -436,6 +436,7 @@ int main(int argc, char **argv)
 			printf("%s\n", context);
 			freecon(context);
 		}
+		free(pc[i]);
 	}
 
 	printf("\nFile contexts:\n");
@@ -478,6 +479,7 @@ int main(int argc, char **argv)
 				freecon(context);
 			}
 		}
+		free(fc[i]);
 	}
 
 	return 0;
