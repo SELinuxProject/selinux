@@ -1350,6 +1350,8 @@ static char **split_args(const char *arg0, char *arg_string,
 				if (isspace(*s) && !in_quote && !in_dquote) {
 					if (arg != NULL) {
 						rc = append_arg(&argv, &num_args, arg);
+						if (rc)
+							goto cleanup;
 						free(arg);
 						arg = NULL;
 					}
@@ -1366,6 +1368,8 @@ static char **split_args(const char *arg0, char *arg_string,
 	}
 	if (arg != NULL) {
 		rc = append_arg(&argv, &num_args, arg);
+		if (rc)
+			goto cleanup;
 		free(arg);
 		arg = NULL;
 	}
