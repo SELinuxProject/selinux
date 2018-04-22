@@ -61,6 +61,7 @@ int cmp_cmdline(const char *command, int pid)
 int pidof(const char *command)
 {
 /* inspired by killall5.c from psmisc */
+	char stackpath[PATH_MAX + 1], *p;
 	DIR *dir;
 	struct dirent *de;
 	int pid, ret = -1, self = getpid();
@@ -69,6 +70,11 @@ int pidof(const char *command)
 		perror(PROC_BASE);
 		return -1;
 	}
+
+	/* Resolve the path if it contains symbolic links */
+	p = realpath(command, stackpath);
+	if (p)
+		command = p;
 
 	while ((de = readdir(dir)) != NULL) {
 		errno = 0;
