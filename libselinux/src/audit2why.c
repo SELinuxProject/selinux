@@ -193,7 +193,7 @@ static int __policy_init(const char *init_path)
 {
 	FILE *fp;
 	char path[PATH_MAX];
-	char errormsg[PATH_MAX];
+	char errormsg[PATH_MAX+1024+20];
 	struct sepol_policy_file *pf = NULL;
 	int rc;
 	unsigned int cnt;
