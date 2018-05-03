@@ -1573,14 +1573,6 @@ int scope_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
 	return 0;
 }
 
-hashtab_destroy_func_t get_symtab_destroy_func(int sym_num)
-{
-	if (sym_num < 0 || sym_num >= SYM_NUM) {
-		return NULL;
-	}
-	return (hashtab_destroy_func_t) destroy_f[sym_num];
-}
-
 /*
  * Load the initial SIDs specified in a policy database
  * structure into a SID table.
