@@ -110,7 +110,8 @@ int main(int argc, char **argv)
 			cumulative = 1;
 			break;
 		case 'f':
-			strncpy(avcstatfile, optarg, sizeof avcstatfile);
+			strncpy(avcstatfile, optarg, sizeof(avcstatfile) - 1);
+			avcstatfile[sizeof(avcstatfile)-1] = '\0';
 			break;
 		case 'h':
 		case '-':
