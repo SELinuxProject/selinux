@@ -416,7 +416,7 @@ static int save_booleans(size_t boolcnt, SELboolean * boollist)
 		ssize_t ret;
 		size_t size = 0;
 		int val;
-		char boolname[BUFSIZ];
+		char boolname[BUFSIZ-3];
 		char *buffer;
 		inbuf = NULL;
 		__fsetlocking(boolf, FSETLOCKING_BYCALLER);
@@ -450,6 +450,7 @@ static int save_booleans(size_t boolcnt, SELboolean * boollist)
 					}
 				}
 				if (i == boolcnt) {
+					val = !!val;
 					snprintf(outbuf, sizeof(outbuf),
 						 "%s=%d\n", boolname, val);
 					len = strlen(outbuf);
@@ -505,6 +506,7 @@ int security_set_boolean_list(size_t boolcnt, SELboolean * boollist,
 
 	size_t i;
 	for (i = 0; i < boolcnt; i++) {
+		boollist[i].value = !!boollist[i].value;
 		if (security_set_boolean(boollist[i].name, boollist[i].value)) {
 			rollback(boollist, i);
 			return -1;
