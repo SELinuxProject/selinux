@@ -339,7 +339,7 @@ static int cil_expr_to_string(struct cil_list *expr, char **out)
 	int pos = 0;
 
 	cil_list_for_each(curr, expr) {
-		if (pos > COND_EXPR_MAXDEPTH) {
+		if (pos >= COND_EXPR_MAXDEPTH) {
 			rc = SEPOL_ERR;
 			goto exit;
 		}
