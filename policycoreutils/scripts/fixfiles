@@ -309,7 +309,7 @@ case "$1" in
 	    usage
 	    exit 1
 	fi
-	> /.autorelabel
+	> /.autorelabel || exit $?
 	[ -z "$FORCEFLAG" ] || echo -n "$FORCEFLAG " >> /.autorelabel
 	[ -z "$BOOTTIME" ] || echo -N $BOOTTIME >> /.autorelabel
 	# Force full relabel if / does not have a label on it
