@@ -20,6 +20,14 @@
 #include "stringslist.h"
 #include "utmpwatcher.h"
 
+#ifndef GLOB_TILDE
+#define GLOB_TILDE 0
+#endif
+
+#ifndef GLOB_BRACE
+#define GLOB_BRACE 0
+#endif
+
 /* size of the event structure, not counting name */
 #define EVENT_SIZE  (sizeof (struct inotify_event))
 /* reasonable guess as to size of 1024 events */
