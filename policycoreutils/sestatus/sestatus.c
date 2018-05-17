@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <ctype.h>
+#include <limits.h>
 
 #define PROC_BASE "/proc"
 #define MAX_CHECK 50
