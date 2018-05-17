@@ -972,9 +972,13 @@ static int add_user(genhomedircon_settings_t * s,
 	char uid[11];
 	char gid[11];
 
+	errno = 0;
 	/* Allocate space for the getpwnam_r buffer */
 	rbuflen = sysconf(_SC_GETPW_R_SIZE_MAX);
-	if (rbuflen <= 0)
+	if (rbuflen == -1 && errno == 0)
+		/* sysconf returning -1 with no errno means indeterminate size */
+		rbuflen = 1024;
+	else if (rbuflen <= 0)
 		goto cleanup;
 	rbuf = malloc(rbuflen);
 	if (rbuf == NULL)
@@ -1057,8 +1061,12 @@ static int get_group_users(genhomedircon_settings_t * s,
 	struct group grstorage, *group = NULL;
 	struct passwd *pw = NULL;
 
+	errno = 0;
 	grbuflen = sysconf(_SC_GETGR_R_SIZE_MAX);
-	if (grbuflen <= 0)
+	if (grbuflen == -1 && errno == 0)
+		/* sysconf returning -1 with no errno means indeterminate size */
+		grbuflen = 1024;
+	else if (grbuflen <= 0)
 		goto cleanup;
 	grbuf = malloc(grbuflen);
 	if (grbuf == NULL)
