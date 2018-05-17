@@ -1,10 +1,13 @@
-/*
- * Note that the restorecond(8) service build links with these functions.
- * Therefore any changes here should also be tested against that utility.
- */
-
 #include "restore.h"
 #include <glob.h>
+
+#ifndef GLOB_TILDE
+#define GLOB_TILDE 0
+#endif
+
+#ifndef GLOB_BRACE
+#define GLOB_BRACE 0
+#endif
 
 char **exclude_list;
 int exclude_count;
