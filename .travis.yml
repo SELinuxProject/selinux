@@ -11,29 +11,30 @@ compiler:
 env:
   matrix:
     # Test the last version of Python and Ruby together, with some linkers
-    - PYVER=python3.6 RUBYLIBVER=2.4
-    - PYVER=python3.6 RUBYLIBVER=2.4 TEST_FLAGS_OVERRIDE=1
-    - PYVER=python3.6 RUBYLIBVER=2.4 LINKER=gold
-    - PYVER=python3.6 RUBYLIBVER=2.4 LINKER=bfd
+    - PYVER=python3.6 RUBYLIBVER=2.5.1
+    - PYVER=python3.6 RUBYLIBVER=2.5.1 TEST_FLAGS_OVERRIDE=1
+    - PYVER=python3.6 RUBYLIBVER=2.5.1 LINKER=gold
+    - PYVER=python3.6 RUBYLIBVER=2.5.1 LINKER=bfd
 
     # Test several Python versions
-    - PYVER=python2.7 RUBYLIBVER=2.4
-    - PYVER=python3.3 RUBYLIBVER=2.4
-    - PYVER=python3.4 RUBYLIBVER=2.4
-    - PYVER=python3.5 RUBYLIBVER=2.4
-    - PYVER=pypy RUBYLIBVER=2.4
-    - PYVER=pypy3 RUBYLIBVER=2.4
+    - PYVER=python2.7 RUBYLIBVER=2.5.1
+    - PYVER=python3.3 RUBYLIBVER=2.5.1
+    - PYVER=python3.4 RUBYLIBVER=2.5.1
+    - PYVER=python3.5 RUBYLIBVER=2.5.1
+    - PYVER=pypy RUBYLIBVER=2.5.1
+    - PYVER=pypy3 RUBYLIBVER=2.5.1
 
     # Test several Ruby versions
-    - PYVER=python3.6 RUBYLIBVER=2.2
+    - PYVER=python3.6 RUBYLIBVER=2.4
     - PYVER=python3.6 RUBYLIBVER=2.3
+    - PYVER=python3.6 RUBYLIBVER=2.2
 
 matrix:
   exclude:
     - compiler: clang
-      env: PYVER=python3.6 RUBYLIBVER=2.4 LINKER=gold
+      env: PYVER=python3.6 RUBYLIBVER=2.5.1 LINKER=gold
     - compiler: clang
-      env: PYVER=python3.6 RUBYLIBVER=2.4 LINKER=bfd
+      env: PYVER=python3.6 RUBYLIBVER=2.5.1 LINKER=bfd
 
 # Use Travis-CI Ubuntu 14.04 Trusty infrastructure, "full image" variant
 sudo: required
@@ -98,6 +99,7 @@ before_script:
   - if echo "$PYVER" | grep -q pypy ; then export PYINC=-I$($PYTHON -c 'import sys;print(sys.prefix)')/include PYLIBS= ; fi
 
   # Find the Ruby executable with version $RUBYLIBVER
+  - rvm reinstall ruby-$RUBYLIBVER --binary
   - export RUBY="$(ls -d -1 "$HOME/.rvm/rubies/ruby-$RUBYLIBVER"*/bin/ruby | head -n 1)"
 
   # Set the linker in $CC so that it gets used everywhere
