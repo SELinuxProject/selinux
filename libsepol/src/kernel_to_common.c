@@ -80,10 +80,13 @@ static char *create_str_helper(const char *fmt, int num, va_list vargs)
 		goto exit;
 	}
 
+	va_end(vargs2);
+
 	return str;
 
 exit:
 	free(str);
+	va_end(vargs2);
 	return NULL;
 }
 
