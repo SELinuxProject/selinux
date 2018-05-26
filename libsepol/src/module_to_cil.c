@@ -4232,7 +4232,6 @@ exit:
 int sepol_ppfile_to_module_package(FILE *fp, struct sepol_module_package **mod_pkg)
 {
 	int rc = -1;
-	FILE *f = NULL;
 	struct sepol_policy_file *pf = NULL;
 	struct sepol_module_package *pkg = NULL;
 	char *data = NULL;
@@ -4284,9 +4283,6 @@ exit:
 	free(data);
 
 	sepol_policy_file_free(pf);
-	if (f != NULL) {
-		fclose(f);
-	}
 
 	if (rc != 0) {
 		sepol_module_package_free(pkg);
