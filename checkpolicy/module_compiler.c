@@ -802,6 +802,7 @@ int require_class(int pass)
 	if ((datum = calloc(1, sizeof(*datum))) == NULL ||
 	    symtab_init(&datum->permissions, PERM_SYMTAB_SIZE)) {
 		yyerror("Out of memory!");
+		class_datum_destroy(datum);
 		return -1;
 	}
 	ret =
