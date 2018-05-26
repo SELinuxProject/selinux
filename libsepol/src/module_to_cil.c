@@ -298,6 +298,8 @@ static int roles_gather_map(char *key, void *data, void *args)
 	role_node->role = role;
 
 	rc = list_prepend((struct list *)args, role_node);
+	if (rc != 0)
+		free(role_node);
 	return rc;
 }
 
@@ -344,6 +346,11 @@ static int typealiases_gather_map(char *key, void *data, void *arg)
 					goto exit;
 				}
 			}
+			/* As typealias_lists[scope_id] does not hold the
+			 * ownership of its items (typealias_list_destroy does
+			 * not free the list items), "key" does not need to be
+			 * strdup'ed before it is inserted in the list.
+			 */
 			list_prepend(typealias_lists[scope_id], key);
 		}
 	}
