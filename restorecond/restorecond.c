@@ -105,6 +105,7 @@ static int write_pid_file(void)
 	}
 	if (write(pidfd, val, (unsigned int)len) != len) {
 		syslog(LOG_ERR, "Unable to write to pidfile (%s)", strerror(errno));
+		close(pidfd);
 		return 1;
 	}
 	close(pidfd);
