@@ -58,6 +58,7 @@ clean:
 	rm -f file_contexts
 	rm -f $(SECILC_MANPAGE)
 	rm -f $(SECIL2CONF_MANPAGE)
+	$(MAKE) -C docs clean
 
 relabel:
 
