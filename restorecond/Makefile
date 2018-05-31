@@ -9,8 +9,8 @@ DBUSSERVICEDIR = $(PREFIX)/share/dbus-1/services
 SYSTEMDDIR ?= $(PREFIX)/lib/systemd
 
 autostart_DATA = sealertauto.desktop
-INITDIR ?= $(DESTDIR)/etc/rc.d/init.d
-SELINUXDIR = $(DESTDIR)/etc/selinux
+INITDIR ?= /etc/rc.d/init.d
+SELINUXDIR = /etc/selinux
 
 DBUSFLAGS = -DHAVE_DBUS $(shell $(PKG_CONFIG) --cflags dbus-glib-1)
 DBUSLIB = $(shell $(PKG_CONFIG) --libs dbus-glib-1)
@@ -42,11 +42,11 @@ install: all
 	-mkdir -p $(DESTDIR)$(SBINDIR)
 	install -m 755 restorecond $(DESTDIR)$(SBINDIR)
 	install -m 644 restorecond.8 $(DESTDIR)$(MANDIR)/man8
-	-mkdir -p $(INITDIR)
-	install -m 755 restorecond.init $(INITDIR)/restorecond
-	-mkdir -p $(SELINUXDIR)
-	install -m 644 restorecond.conf $(SELINUXDIR)/restorecond.conf
-	install -m 644 restorecond_user.conf $(SELINUXDIR)/restorecond_user.conf
+	-mkdir -p $(DESTDIR)$(INITDIR)
+	install -m 755 restorecond.init $(DESTDIR)$(INITDIR)/restorecond
+	-mkdir -p $(DESTDIR)$(SELINUXDIR)
+	install -m 644 restorecond.conf $(DESTDIR)$(SELINUXDIR)/restorecond.conf
+	install -m 644 restorecond_user.conf $(DESTDIR)$(SELINUXDIR)/restorecond_user.conf
 	-mkdir -p $(DESTDIR)$(AUTOSTARTDIR)
 	install -m 644 restorecond.desktop $(DESTDIR)$(AUTOSTARTDIR)/restorecond.desktop
 	-mkdir -p $(DESTDIR)$(DBUSSERVICEDIR)
