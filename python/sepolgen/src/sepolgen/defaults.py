@@ -22,7 +22,7 @@ import re
 
 # Select the correct location for the development files based on a
 # path variable (optionally read from a configuration file)
-class PathChoooser(object):
+class PathChooser(object):
     def __init__(self, pathname):
         self.config = dict()
         if not os.path.exists(pathname):
@@ -68,10 +68,10 @@ def attribute_info():
     return data_dir() + "/attribute_info"
 
 def refpolicy_makefile():
-    chooser = PathChoooser("/etc/selinux/sepolgen.conf")
+    chooser = PathChooser("/etc/selinux/sepolgen.conf")
     return chooser("Makefile")
 
 def headers():
-    chooser = PathChoooser("/etc/selinux/sepolgen.conf")
+    chooser = PathChooser("/etc/selinux/sepolgen.conf")
     return chooser("include")
 
