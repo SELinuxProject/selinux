@@ -73,7 +73,6 @@ int main(int argc, char **argv)
 	const char *ofile = NULL;
 	FILE *in = NULL;
 	FILE *out = NULL;
-	int outfd = -1;
 
 	// ignore sigpipe so we can check the return code of write, and potentially
 	// return a more helpful error message
@@ -158,12 +157,6 @@ exit:
 	}
 	if (out != NULL) {
 		fclose(out);
-	}
-	if (outfd != -1) {
-		close(outfd);
-		if (rc != 0) {
-			unlink(argv[2]);
-		}
 	}
 	sepol_module_package_free(mod_pkg);
 
