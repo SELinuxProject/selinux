@@ -646,6 +646,7 @@ static void disp_con(security_context_t scon_raw)
 			disp__con_val("clearance", NULL, &color);
 		if (opts->disp_mlsr)
 			disp__con_val("mls-range", NULL, &color);
+		freecon(scon_trans);
 		return;
 	}
 
