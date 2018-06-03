@@ -309,7 +309,7 @@ static void cmd_line(int argc, char *argv[])
 		}
 	}
 
-	if (!done) {		/* defualt, if nothing specified */
+	if (!done) {		/* default, if nothing specified */
 		opts->disp_user = TRUE;
 		opts->disp_role = TRUE;
 		opts->disp_type = TRUE;
