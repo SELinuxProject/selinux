@@ -87,9 +87,10 @@ class AccessVector(util.Comparison):
             self.tgt_type = None
             self.obj_class = None
             self.perms = refpolicy.IdSet()
-            self.audit_msgs = []
-            self.type = audit2why.TERULE
-            self.data = []
+
+        self.audit_msgs = []
+        self.type = audit2why.TERULE
+        self.data = []
         # when implementing __eq__ also __hash__ is needed on py2
         # if object is muttable __hash__ should be None
         self.__hash__ = None
