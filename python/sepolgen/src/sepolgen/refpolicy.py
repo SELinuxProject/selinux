@@ -472,8 +472,10 @@ class AVRule(Leaf):
             return "allow"
         elif self.rule_type == self.DONTAUDIT:
             return "dontaudit"
-        else:
+        elif self.rule_type == self.AUDITALLOW:
             return "auditallow"
+        elif self.rule_type == self.NEVERALLOW:
+            return "neverallow"
 
     def from_av(self, av):
         """Add the access from an access vector to this allow
