@@ -254,7 +254,7 @@ int write_binary_policy(const char *path, policydb_t *p)
 	if ((out_fp = fopen(path, "w" )) == NULL) {
 		fprintf(stderr, "Unable to open %s: %s\n", path,
 			strerror(errno));
-		sepol_handle_destroy(f.handle);
+		sepol_handle_destroy(handle);
 		return -1;
 	}
 
