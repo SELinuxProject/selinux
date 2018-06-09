@@ -1,0 +1,33 @@
+#!/bin/sh
+# Run clang's static analyzer (scan-build) and record its output in output-scan-build/
+
+# Ensure the current directory is where this script is
+cd "$(dirname -- "$0")" || exit $?
+
+OUTPUTDIR="$(pwd)/output-scan-build"
+
+# Display the commands which are run, and make sure they succeed
+set -x -e
+
+# Use a temporary directory as an installation directory, if $DESTDIR is not set
+if [ -z "$DESTDIR" ] ; then
+    DESTDIR="$(mktemp --tmpdir -d scan-build-destdir-XXXXXXXXXX)"
+fi
+
+# Make sure to use the newly-installed libraries when running tests
+export LD_LIBRARY_PATH="$DESTDIR/usr/lib:$DESTDIR/lib"
+export PATH="$DESTDIR/usr/sbin:$DESTDIR/usr/bin:$DESTDIR/sbin:$DESTDIR/bin:$PATH"
+export PYTHONPATH="$DESTDIR$(${PYTHON:-python} -c "from distutils.sysconfig import *;print(get_python_lib(prefix='/usr'))")"
+export RUBYLIB="$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
+
+# Build and analyze
+make -C .. CC=clang clean distclean -j"$(nproc)"
+scan-build -analyze-headers -o "$OUTPUTDIR" make -C .. CC=clang DESTDIR="$DESTDIR" install install-pywrap install-rubywrap all test
+
+# Reduce the verbosity in order to keep the message from scan-build saying
+# "scan-build: Run 'scan-view /.../output-scan-build/2018-...' to examine bug reports.
+set +x
+
+# Remove the destination directory without using "rm -rf"
+chmod u+w "$DESTDIR/usr/bin/newrole"
+rm -r "$DESTDIR"
