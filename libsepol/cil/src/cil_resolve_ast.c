@@ -2923,7 +2923,7 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 
 					rc = cil_fill_ipaddr(pc->cl_head, ipaddr);
 					if (rc != SEPOL_OK) {
-						cil_log(CIL_ERR, "Failed to create anonymous ip address, rc; %d\n", rc);
+						cil_log(CIL_ERR, "Failed to create anonymous ip address, rc: %d\n", rc);
 						cil_destroy_ipaddr(ipaddr);
 						goto exit;
 					}
