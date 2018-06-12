@@ -56,6 +56,18 @@ type=SYSCALL msg=audit(1162852201.019:1225): arch=40000003 syscall=11 success=ye
 type=AVC msg=audit(1162852201.019:1225): avc:  denied  { execute_no_trans } for  pid=6974 comm="sh" name="sa1" dev=dm-0 ino=13061698 scontext=system_u:system_r:crond_t:s0-s0:c0.c1023 tcontext=system_u:object_r:lib_t:s0 tclass=file
 type=AVC msg=audit(1162852201.019:1225): avc:  denied  { execute } for  pid=6974 comm="sh" name="sa1" dev=dm-0 ino=13061698 scontext=system_u:system_r:crond_t:s0-s0:c0.c1023 tcontext=system_u:object_r:lib_t:s0 tclass=file"""
 
+xperms1 = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0x42 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
+"""
+xperms2 = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0x42 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
+type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0x1234 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
+type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=0xdead scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
+type=AVC msg=audit(1516626657.910:4461): avc:  denied  { getattr } for  pid=4310 comm="test" path="/root/test" ino=8619937 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=dir permissive=0
+"""
+xperms_invalid = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 ioctlcmd=asdf scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
+"""
+xperms_without = """type=AVC msg=audit(1516626657.910:4461): avc:  denied  { ioctl } for  pid=4310 comm="test" path="/root/test" ino=8619937 scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:object_r:test_file_t:s0 tclass=file permissive=0
+"""
+
 class TestAVCMessage(unittest.TestCase):
     def test_defs(self):
         avc = sepolgen.audit.AVCMessage(audit1)
@@ -64,6 +76,7 @@ class TestAVCMessage(unittest.TestCase):
         self.assertEqual(avc.tcontext, sc)
         self.assertEqual(avc.tclass, "")
         self.assertEqual(avc.accesses, [])
+        self.assertEqual(avc.ioctlcmd, None)
 
     def test_granted(self):
         avc = sepolgen.audit.AVCMessage(granted1)
@@ -84,6 +97,29 @@ class TestAVCMessage(unittest.TestCase):
 
         self.assertEqual(avc.denial, False)
 
+    def test_xperms(self):
+        """Test that the ioctlcmd field is parsed"""
+        avc = sepolgen.audit.AVCMessage(xperms1)
+        recs = xperms1.split()
+        avc.from_split_string(recs)
+
+        self.assertEqual(avc.ioctlcmd, 66)
+
+    def test_xperms_invalid(self):
+        """Test message with invalid value in the ioctlcmd field"""
+        avc = sepolgen.audit.AVCMessage(xperms_invalid)
+        recs = xperms_invalid.split()
+        avc.from_split_string(recs)
+
+        self.assertIsNone(avc.ioctlcmd)
+
+    def test_xperms_without(self):
+        """Test message without the ioctlcmd field"""
+        avc = sepolgen.audit.AVCMessage(xperms_without)
+        recs = xperms_without.split()
+        avc.from_split_string(recs)
+
+        self.assertIsNone(avc.ioctlcmd)
 
     def test_from_split_string(self):
         # syslog message
@@ -171,6 +207,20 @@ class TestAuditParser(unittest.TestCase):
         self.assertEqual(len(a.compute_sid_msgs), 0)
         self.assertEqual(len(a.invalid_msgs), 0)
         self.assertEqual(len(a.policy_load_msgs), 0)
+
+    def test_parse_xperms(self):
+        """ Test that correct access vectors are generated from a set of AVC
+            denial messages. """
+        a = sepolgen.audit.AuditParser()
+        a.parse_string(xperms2)
+        av_set = a.to_access()
+
+        self.assertEqual(len(av_set), 2)
+        av_list = list(sorted(av_set))
+        self.assertEqual(av_list[0].xperms, {})
+        self.assertEqual(list(av_list[1].xperms), ["ioctl"])
+        self.assertEqual(av_list[1].xperms["ioctl"].ranges, [(66,66),
+            (4660,4660), (57005,57005)])
 
 class TestGeneration(unittest.TestCase):
     def test_generation(self):

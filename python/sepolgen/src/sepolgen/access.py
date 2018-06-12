@@ -78,6 +78,7 @@ class AccessVector(util.Comparison):
      .obj_class - The object class to which access is allowed. [String or None]
      .perms - The permissions allowed to the object class. [IdSet]
      .audit_msgs - The audit messages that generated this access vector [List of strings]
+     .xperms - Extended permissions attached to the AV. [Dictionary {operation: xperm set}]
     """
     def __init__(self, init_list=None):
         if init_list:
@@ -91,6 +92,7 @@ class AccessVector(util.Comparison):
         self.audit_msgs = []
         self.type = audit2why.TERULE
         self.data = []
+        self.xperms = {}
         # when implementing __eq__ also __hash__ is needed on py2
         # if object is muttable __hash__ should be None
         self.__hash__ = None
@@ -131,6 +133,15 @@ class AccessVector(util.Comparison):
         l = [self.src_type, self.tgt_type, self.obj_class]
         l.extend(sorted(self.perms))
         return l
+
+    def merge(self, av):
+        """Add permissions and extended permissions from AV"""
+        self.perms.update(av.perms)
+
+        for op in av.xperms:
+            if op not in self.xperms:
+                self.xperms[op] = refpolicy.XpermSet()
+            self.xperms[op].extend(av.xperms[op])
 
     def __str__(self):
         return self.to_string()
@@ -261,28 +272,28 @@ class AccessVectorSet:
     def add(self, src_type, tgt_type, obj_class, perms, audit_msg=None, avc_type=audit2why.TERULE, data=[]):
         """Add an access vector to the set.
         """
-        tgt = self.src.setdefault(src_type, { })
-        cls = tgt.setdefault(tgt_type, { })
-        
-        if (obj_class, avc_type) in cls:
-            access = cls[obj_class, avc_type]
-        else:
-            access = AccessVector()
-            access.src_type = src_type
-            access.tgt_type = tgt_type
-            access.obj_class = obj_class
-            access.data = data
-            access.type = avc_type
-            cls[obj_class, avc_type] = access
+        av = AccessVector()
+        av.src_type = src_type
+        av.tgt_type = tgt_type
+        av.obj_class = obj_class
+        av.perms = perms
+        av.data = data
+        av.type = avc_type
 
-        access.perms.update(perms)
-        if audit_msg:
-            access.audit_msgs.append(audit_msg)
+        self.add_av(av, audit_msg)
 
     def add_av(self, av, audit_msg=None):
         """Add an access vector to the set."""
-        self.add(av.src_type, av.tgt_type, av.obj_class, av.perms)
+        tgt = self.src.setdefault(av.src_type, { })
+        cls = tgt.setdefault(av.tgt_type, { })
 
+        if (av.obj_class, av.type) in cls:
+            cls[av.obj_class, av.type].merge(av)
+        else:
+            cls[av.obj_class, av.type] = av
+
+        if audit_msg:
+            cls[av.obj_class, av.type].audit_msgs.append(audit_msg)
 
 def avs_extract_types(avs):
     types = refpolicy.IdSet()

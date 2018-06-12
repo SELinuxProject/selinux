@@ -34,3 +34,4 @@ node=mary.example.com type=AVC msg=audit(1166023021.373:910): avc:  denied  { re
 node=lilly.example.com type=AVC_PATH msg=audit(1164783469.561:109):  path="/linuxtest/LVT/lvt/log.current"
 node=lilly.example.com type=SYSCALL msg=audit(1164783469.561:109): arch=14 syscall=11 success=yes exit=0 a0=10120520 a1=10120a78 a2=10120970 a3=118 items=0 ppid=8310 pid=8311 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) comm="smbd" exe="/usr/sbin/smbd" subj=root:system_r:smbd_t:s0 key=(null)
 node=lilly.example.com type=AVC msg=audit(1164783469.561:109): avc:  denied  { append } for  pid=8311 comm="smbd" name="log.current" dev=dm-0 ino=130930 scontext=root:system_r:smbd_t:s0 tcontext=root:object_r:default_t:s0 tclass=dir
+node=lilly.example.com type=AVC msg=audit(1164783469.561:109): avc:  denied  { ioctl } for  pid=8311 comm="smbd" name="log.current" ioctlcmd=0x2a scontext=root:system_r:smbd_t:s0 tcontext=root:object_r:default_t:s0 tclass=tcp_socket

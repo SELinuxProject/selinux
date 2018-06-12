@@ -152,6 +152,7 @@ class AVCMessage(AuditMessage):
        access - list of accesses that were allowed or denied
        denial - boolean indicating whether this was a denial (True) or granted
           (False) message.
+       ioctlcmd - ioctl 'request' parameter
 
     An example audit message generated from the audit daemon looks like (line breaks
     added):
@@ -178,6 +179,7 @@ class AVCMessage(AuditMessage):
         self.name = ""
         self.accesses = []
         self.denial = True
+        self.ioctlcmd = None
         self.type = audit2why.TERULE
 
     def __parse_access(self, recs, start):
@@ -237,6 +239,11 @@ class AVCMessage(AuditMessage):
                 self.exe = fields[1][1:-1]
             elif fields[0] == "name":
                 self.name = fields[1][1:-1]
+            elif fields[0] == "ioctlcmd":
+                try:
+                    self.ioctlcmd = int(fields[1], 16)
+                except ValueError:
+                    pass
 
         if not found_src or not found_tgt or not found_class or not found_access:
             raise ValueError("AVC message in invalid format [%s]\n" % self.message)
@@ -522,13 +529,20 @@ class AuditParser:
         for avc in self.avc_msgs:
             if avc.denial != True and only_denials:
                 continue
-            if avc_filter:
-                if avc_filter.filter(avc):
-                    av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                               avc.accesses, avc, avc_type=avc.type, data=avc.data)
-            else:
-                av_set.add(avc.scontext.type, avc.tcontext.type, avc.tclass,
-                           avc.accesses, avc, avc_type=avc.type, data=avc.data)
+
+            if not avc_filter or avc_filter.filter(avc):
+                av = access.AccessVector([avc.scontext.type, avc.tcontext.type,
+                                         avc.tclass] + avc.accesses)
+                av.data = avc.data
+                av.type = avc.type
+
+                if avc.ioctlcmd:
+                    xperm_set = refpolicy.XpermSet()
+                    xperm_set.add(avc.ioctlcmd)
+                    av.xperms["ioctl"] = xperm_set
+
+                av_set.add_av(av, audit_msg=avc)
+
         return av_set
 
 class AVCTypeFilter:

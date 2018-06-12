@@ -50,10 +50,11 @@ class PolicyGenerator:
     in the form of access vectors.
 
     It generates allow rules and optionally module require
-    statements and reference policy interfaces. By default
-    only allow rules are generated. The methods .set_gen_refpol
-    and .set_gen_requires turns on interface generation and
-    requires generation respectively.
+    statements, reference policy interfaces, and extended
+    permission access vector rules. By default only allow rules
+    are generated. The methods .set_gen_refpol, .set_gen_requires
+    and .set_gen_xperms turns on interface generation,
+    requires generation, and xperms rules genration respectively.
 
     PolicyGenerator can also optionally add comments explaining
     why a particular access was allowed based on the audit
@@ -82,6 +83,7 @@ class PolicyGenerator:
             self.module = refpolicy.Module()
 
         self.dontaudit = False
+        self.xperms = False
 
         self.domains = None
     def set_gen_refpol(self, if_set=None, perm_maps=None):
@@ -120,6 +122,12 @@ class PolicyGenerator:
     def set_gen_dontaudit(self, dontaudit):
         self.dontaudit = dontaudit
 
+    def set_gen_xperms(self, xperms):
+        """Set whether extended permission access vector rules
+        are generated.
+        """
+        self.xperms = xperms
+
     def __set_module_style(self):
         if self.ifgen:
             refpolicy = True
@@ -153,51 +161,69 @@ class PolicyGenerator:
         """Return the generated module"""
         return self.module
 
-    def __add_allow_rules(self, avs):
-        for av in avs:
-            rule = refpolicy.AVRule(av)
+    def __add_av_rule(self, av):
+        """Add access vector rule.
+        """
+        rule = refpolicy.AVRule(av)
+
+        if self.dontaudit:
+            rule.rule_type = rule.DONTAUDIT
+        rule.comment = ""
+        if self.explain:
+            rule.comment = str(refpolicy.Comment(explain_access(av, verbosity=self.explain)))
+
+        if av.type == audit2why.ALLOW:
+            rule.comment += "\n#!!!! This avc is allowed in the current policy"
+
+            if av.xperms:
+                rule.comment += "\n#!!!! This av rule may have been overridden by an extended permission av rule"
+
+        if av.type == audit2why.DONTAUDIT:
+            rule.comment += "\n#!!!! This avc has a dontaudit rule in the current policy"
+
+        if av.type == audit2why.BOOLEAN:
+            if len(av.data) > 1:
+                rule.comment += "\n#!!!! This avc can be allowed using one of the these booleans:\n#     %s" % ", ".join([x[0] for x in av.data])
+            else:
+                rule.comment += "\n#!!!! This avc can be allowed using the boolean '%s'" % av.data[0][0]
+
+        if av.type == audit2why.CONSTRAINT:
+            rule.comment += "\n#!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access."
+            rule.comment += "\n#Constraint rule: "
+            rule.comment += "\n#\t" + av.data[0]
+            for reason in av.data[1:]:
+                rule.comment += "\n#\tPossible cause is the source %s and target %s are different." % reason
+
+        try:
+            if ( av.type == audit2why.TERULE and
+                 "write" in av.perms and
+                 ( "dir" in av.obj_class or "open" in av.perms )):
+                if not self.domains:
+                    self.domains = seinfo(ATTRIBUTE, name="domain")[0]["types"]
+                types=[]
+
+                for i in [x[TCONTEXT] for x in sesearch([ALLOW], {SCONTEXT: av.src_type, CLASS: av.obj_class, PERMS: av.perms})]:
+                    if i not in self.domains:
+                        types.append(i)
+                if len(types) == 1:
+                    rule.comment += "\n#!!!! The source type '%s' can write to a '%s' of the following type:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+                elif len(types) >= 1:
+                    rule.comment += "\n#!!!! The source type '%s' can write to a '%s' of the following types:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
+        except:
+            pass
+
+        self.module.children.append(rule)
+
+    def __add_ext_av_rules(self, av):
+        """Add extended permission access vector rules.
+        """
+        for op in av.xperms.keys():
+            extrule = refpolicy.AVExtRule(av, op)
+
             if self.dontaudit:
-                rule.rule_type = rule.DONTAUDIT
-            rule.comment = ""
-            if self.explain:
-                rule.comment = str(refpolicy.Comment(explain_access(av, verbosity=self.explain)))
-            if av.type == audit2why.ALLOW:
-                rule.comment += "\n#!!!! This avc is allowed in the current policy"
-            if av.type == audit2why.DONTAUDIT:
-                rule.comment += "\n#!!!! This avc has a dontaudit rule in the current policy"
+                extrule.rule_type = extrule.DONTAUDITXPERM
 
-            if av.type == audit2why.BOOLEAN:
-                if len(av.data) > 1:
-                    rule.comment += "\n#!!!! This avc can be allowed using one of the these booleans:\n#     %s" % ", ".join([x[0] for x in av.data])
-                else:
-                    rule.comment += "\n#!!!! This avc can be allowed using the boolean '%s'" % av.data[0][0]
-
-            if av.type == audit2why.CONSTRAINT:
-                rule.comment += "\n#!!!! This avc is a constraint violation.  You would need to modify the attributes of either the source or target types to allow this access."
-                rule.comment += "\n#Constraint rule: "
-                rule.comment += "\n#\t" + av.data[0]
-                for reason in av.data[1:]:
-                    rule.comment += "\n#\tPossible cause is the source %s and target %s are different." % reason
-
-            try:
-                if ( av.type == audit2why.TERULE and
-                     "write" in av.perms and
-                     ( "dir" in av.obj_class or "open" in av.perms )):
-                    if not self.domains:
-                        self.domains = seinfo(ATTRIBUTE, name="domain")[0]["types"]
-                    types=[]
-
-                    for i in [x[TCONTEXT] for x in sesearch([ALLOW], {SCONTEXT: av.src_type, CLASS: av.obj_class, PERMS: av.perms})]:
-                        if i not in self.domains:
-                            types.append(i)
-                    if len(types) == 1:
-                        rule.comment += "\n#!!!! The source type '%s' can write to a '%s' of the following type:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
-                    elif len(types) >= 1:
-                        rule.comment += "\n#!!!! The source type '%s' can write to a '%s' of the following types:\n# %s\n" % ( av.src_type, av.obj_class, ", ".join(types))
-            except:
-                pass
-            self.module.children.append(rule)
-
+            self.module.children.append(extrule)
 
     def add_access(self, av_set):
         """Add the access from the access vector set to this
@@ -215,7 +241,10 @@ class PolicyGenerator:
             raw_allow = av_set
 
         # Generate the raw allow rules from the filtered list
-        self.__add_allow_rules(raw_allow)
+        for av in raw_allow:
+            self.__add_av_rule(av)
+            if self.xperms and av.xperms:
+                self.__add_ext_av_rules(av)
 
     def add_role_types(self, role_type_set):
         for role_type in role_type_set:

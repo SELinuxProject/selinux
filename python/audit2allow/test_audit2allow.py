@@ -47,5 +47,14 @@ class Audit2allowTests(unittest.TestCase):
             print(out, err)
         self.assertSuccess("audit2why", p.returncode, err)
 
+    def test_xperms(self):
+        "Verify that xperms generation works"
+        p = Popen(['python', './audit2allow', "-x", "-i", "test.log"], stdout=PIPE)
+        out, err = p.communicate()
+        if err:
+            print(out, err)
+        self.assertTrue(b"allowxperm" in out)
+        self.assertSuccess("xperms", p.returncode, err)
+
 if __name__ == "__main__":
     unittest.main()
