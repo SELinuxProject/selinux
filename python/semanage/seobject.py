@@ -593,7 +593,6 @@ class loginRecords(semanageRecords):
 
         semanage_seuser_key_free(k)
         semanage_seuser_free(u)
-        self.mylog.log("login", name, sename=sename, serange=serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange)
 
     def add(self, name, sename, serange):
         try:
@@ -601,7 +600,6 @@ class loginRecords(semanageRecords):
             self.__add(name, sename, serange)
             self.commit()
         except ValueError as error:
-            self.mylog.commit(0)
             raise error
 
     def __modify(self, name, sename="", serange=""):
@@ -653,7 +651,6 @@ class loginRecords(semanageRecords):
 
         semanage_seuser_key_free(k)
         semanage_seuser_free(u)
-        self.mylog.log("login", name, sename=self.sename, serange=self.serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange)
 
     def modify(self, name, sename="", serange=""):
         try:
@@ -661,7 +658,6 @@ class loginRecords(semanageRecords):
             self.__modify(name, sename, serange)
             self.commit()
         except ValueError as error:
-            self.mylog.commit(0)
             raise error
 
     def __delete(self, name):
@@ -694,8 +690,6 @@ class loginRecords(semanageRecords):
         rec, self.sename, self.serange = selinux.getseuserbyname("__default__")
         range, (rc, serole) = userrec.get(self.sename)
 
-        self.mylog.log_remove("login", name, sename=self.sename, serange=self.serange, serole=",".join(serole), oldserole=",".join(oldserole), oldsename=self.oldsename, oldserange=self.oldserange)
-
     def delete(self, name):
         try:
             self.begin()
@@ -703,7 +697,6 @@ class loginRecords(semanageRecords):
             self.commit()
 
         except ValueError as error:
-            self.mylog.commit(0)
             raise error
 
     def deleteall(self):
@@ -717,7 +710,6 @@ class loginRecords(semanageRecords):
                 self.__delete(semanage_seuser_get_name(u))
             self.commit()
         except ValueError as error:
-            self.mylog.commit(0)
             raise error
 
     def get_all_logins(self):
