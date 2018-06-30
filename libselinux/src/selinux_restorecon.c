@@ -116,7 +116,7 @@ static pthread_once_t fc_once = PTHREAD_ONCE_INIT;
  *
  *  check_excluded() - Check if directory/fs is to be excluded when relabeling.
  *
- *  file_system_count() - Calculates the the number of files to be processed.
+ *  file_system_count() - Calculates the number of files to be processed.
  *                        The count is only used if SELINUX_RESTORECON_PROGRESS
  *                        is set and a mass relabel is requested.
  *

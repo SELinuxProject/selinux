@@ -83,7 +83,7 @@ static int node_parse_addr(sepol_handle_t * handle,
 }
 
 /* Allocates a sufficiently large buffer (addr, addr_sz)
- * according the the protocol */
+ * according to the protocol */
 
 static int node_alloc_addr(sepol_handle_t * handle,
 			   int proto, char **addr, size_t * addr_sz)

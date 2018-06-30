@@ -1283,7 +1283,7 @@ USERNAME ALL=(ALL) ROLE=%(user)s_r TYPE=%(user)s_t COMMAND
 .br
 sudo will run COMMAND as staff_u:%(user)s_r:%(user)s_t:LEVEL
 
-When using a a non login role, you need to setup SELinux so that your SELinux user can reach %(user)s_r role.
+When using a non login role, you need to setup SELinux so that your SELinux user can reach %(user)s_r role.
 
 Execute the following to see all of the assigned SELinux roles:
 

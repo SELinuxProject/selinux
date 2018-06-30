@@ -145,7 +145,7 @@ def html_to_text(html, maxcol=80):
 
 def html_document(*body_components):
     '''Wrap the body components in a HTML document structure with a valid header.
-    Accepts a variable number of arguments of of which canb be:
+    Accepts a variable number of arguments of which can be:
     * string
     * a sequences of strings (tuple or list).
     * a callable object taking no parameters and returning a string or sequence of strings.

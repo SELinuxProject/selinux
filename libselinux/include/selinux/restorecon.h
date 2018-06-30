@@ -36,8 +36,8 @@ extern int selinux_restorecon(const char *pathname,
  */
 #define SELINUX_RESTORECON_NOCHANGE			0x0002
 /*
- * If set set change file label to that in spec file.
- * If not only change type component to that in spec file.
+ * If set, change file label to that in spec file.
+ * If not, only change type component to that in spec file.
  */
 #define SELINUX_RESTORECON_SET_SPECFILE_CTX		0x0004
 /*
