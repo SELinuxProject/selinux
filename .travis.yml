@@ -65,10 +65,10 @@ addons:
 install:
   # Download refpolicy Makefile for sepolgen tests
   - sudo mkdir -p /usr/share/selinux/default
-  - sudo curl --retry 10 -o /usr/share/selinux/default/Makefile 'https://raw.githubusercontent.com/TresysTechnology/refpolicy/RELEASE_2_20170204/support/Makefile.devel'
+  - sudo curl --retry 10 -o /usr/share/selinux/default/Makefile 'https://raw.githubusercontent.com/SELinuxProject/refpolicy/RELEASE_2_20180114/support/Makefile.devel'
   - sudo sed "s,^PREFIX :=.*,PREFIX := $TRAVIS_BUILD_DIR/installdir/usr," -i /usr/share/selinux/default/Makefile
   - sudo mkdir -p /usr/share/selinux/refpolicy/include
-  - sudo curl --retry 10 -o /usr/share/selinux/refpolicy/include/build.conf 'https://raw.githubusercontent.com/TresysTechnology/refpolicy/RELEASE_2_20170204/build.conf'
+  - sudo curl --retry 10 -o /usr/share/selinux/refpolicy/include/build.conf 'https://raw.githubusercontent.com/SELinuxProject/refpolicy/RELEASE_2_20180114/build.conf'
   - sudo mkdir -p /etc/selinux
   - echo 'SELINUXTYPE=refpolicy' | sudo tee /etc/selinux/config
 
