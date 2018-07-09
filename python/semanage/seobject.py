@@ -101,6 +101,8 @@ ftype_to_audit = {"": "any",
 
 try:
     import audit
+    #test if audit module is enabled
+    audit.audit_close(audit.audit_open())
 
     class logger:
 
