@@ -140,7 +140,7 @@ try:
 
             self.log_list = []
             self.log_change_list = []
-except:
+except OSError, ImportError:
     class logger:
 
         def __init__(self):
