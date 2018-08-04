@@ -2522,7 +2522,7 @@ class SELinuxGui():
                     if self.cur_dict[k][(port, protocol)]["action"] == "-d":
                         update_buffer += "port -d -p %s %s\n" % (protocol, port)
                     else:
-                        update_buffer += "port %s -t %s -p %s %s\n" % (self.cur_dict[k][f]["action"], self.cur_dict[k][f]["type"], procotol, port)
+                        update_buffer += "port %s -t %s -p %s %s\n" % (self.cur_dict[k][f]["action"], self.cur_dict[k][f]["type"], protocol, port)
 
         return update_buffer
 
