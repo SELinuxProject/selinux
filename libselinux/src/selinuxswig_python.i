@@ -13,7 +13,8 @@
 
 %pythoncode %{
 
-import shutil, os, errno, stat
+import shutil
+import os
 
 DISABLED = -1
 PERMISSIVE = 0
@@ -43,7 +44,7 @@ def chcon(path, context, recursive=False):
     if recursive:
         for root, dirs, files in os.walk(path):
             for name in files + dirs:
-               lsetfilecon(os.path.join(root,name), context)
+                lsetfilecon(os.path.join(root, name), context)
 
 def copytree(src, dest):
     """ An SELinux-friendly shutil.copytree method """
