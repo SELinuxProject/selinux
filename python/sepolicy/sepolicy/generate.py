@@ -28,7 +28,6 @@ import re
 import sepolicy
 from sepolicy import get_all_types, get_all_attributes, get_all_roles
 import time
-import types
 import platform
 
 from .templates import executable
