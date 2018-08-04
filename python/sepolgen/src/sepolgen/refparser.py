@@ -786,7 +786,7 @@ def p_role_allow(p):
 
 def p_permissive(p):
     'permissive : PERMISSIVE names SEMI'
-    t.skip(1)
+    pass
 
 def p_avrule_def(p):
     '''avrule_def : ALLOW names names COLON names names SEMI
