@@ -755,11 +755,11 @@ class FilesystemUse(Leaf):
 
     def to_string(self):
         s = ""
-        if self.type == XATTR:
+        if self.type == self.XATTR:
             s = "fs_use_xattr "
-        elif self.type == TRANS:
+        elif self.type == self.TRANS:
             s = "fs_use_trans "
-        elif self.type == TASK:
+        elif self.type == self.TASK:
             s = "fs_use_task "
 
         return "%s %s %s;" % (s, self.filesystem, str(self.context))
