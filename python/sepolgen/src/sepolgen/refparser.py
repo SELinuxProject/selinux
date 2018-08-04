@@ -312,7 +312,7 @@ def collect(stmts, parent, val=None):
 
 def expand(ids, s):
     for id in ids:
-        if spt.has_key(id):
+        if spt.has_key(id):  # noqa
             s.update(spt.by_name(id))
         else:
             s.add(id)
