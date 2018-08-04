@@ -3,4 +3,4 @@ This screen shows the network ports that processes running with the '%(APP)s' ty
 
 SELinux controls the network ports that a application is allowed to bind to based on SELinux Port types.
 
-This screen allows you to modify the port number/port type definitions, which the '(APP)s' is currently allowed to bind.
+This screen allows you to modify the port number/port type definitions, which the '%(APP)s' is currently allowed to bind.
