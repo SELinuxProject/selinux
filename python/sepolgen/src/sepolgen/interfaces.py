@@ -112,7 +112,7 @@ def av_extract_params(av, params):
     entries in the dict, but if an unresolvable conflict is
     found it is reported to the caller.
 
-    The goal here is to figure out how interface paramaters are
+    The goal here is to figure out how interface parameters are
     actually used in the interface - e.g., that $1 is a domain used as
     a SRC_TYPE. In general an interface will look like this:
 
@@ -152,11 +152,6 @@ def av_extract_params(av, params):
     if access.is_idparam(av.obj_class):
         if __param_insert(av.obj_class, refpolicy.OBJ_CLASS, av, params) == 1:
             ret = 1
-
-    for perm in av.perms:
-        if access.is_idparam(perm):
-            if __param_insert(perm, PERM) == 1:
-                ret = 1
 
     return ret
 
