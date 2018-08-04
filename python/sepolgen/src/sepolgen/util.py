@@ -90,7 +90,6 @@ def first(s, sorted=False):
             return x
 
 def encode_input(text):
-    import locale
     """Encode given text via preferred system encoding"""
     # locale will often find out the correct encoding
     encoding = locale.getpreferredencoding()
@@ -104,7 +103,6 @@ def encode_input(text):
     return encoded_text
 
 def decode_input(text):
-    import locale
     """Decode given text via preferred system encoding"""
     # locale will often find out the correct encoding
     encoding = locale.getpreferredencoding()
@@ -172,11 +170,9 @@ def cmp(first, second):
     return (first > second) - (second > first)
 
 if __name__ == "__main__":
-    import sys
     import time
     p = ConsoleProgressBar(sys.stdout, steps=999)
     p.start("computing pi")
     for i in range(999):
         p.step()
         time.sleep(0.001)
-
