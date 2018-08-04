@@ -123,7 +123,7 @@ class Comparison():
     _compare function within your class."""
 
     def _compare(self, other, method):
-        raise NotImplemented
+        return NotImplemented
 
     def __eq__(self, other):
         return self._compare(other, lambda a, b: a == b)
