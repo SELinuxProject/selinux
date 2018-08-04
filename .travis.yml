@@ -83,6 +83,9 @@ install:
         rm python.tar.bz2 ;
     fi
 
+  # Install flake8 for the given python version
+  - $VIRTUAL_ENV/bin/pip install flake8
+
 before_script:
   # clang on Travis-CI 14.04 environment is too old to support -Wdouble-promotion
   - if "$CC" --version |grep -q clang; then sed 's/ -Wdouble-promotion / /' -i libselinux/src/Makefile libselinux/utils/Makefile ; fi
@@ -140,6 +143,9 @@ script:
   # Test Python and Ruby wrappers
   - $PYTHON -c 'import selinux;import selinux.audit2why;import semanage;print(selinux.is_selinux_enabled())'
   - $RUBY -e 'require "selinux";require "semanage";puts Selinux::is_selinux_enabled()'
+
+  # Run Python linter
+  - PATH="$VIRTUAL_ENV/bin:$PATH" ./scripts/run-flake8
 
   # Remove every installed files
   - rm -rf "$DESTDIR"

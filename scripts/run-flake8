@@ -1,0 +1,79 @@
+#!/bin/sh
+# Run flake8 (Python linter) on the source directory or on the given files/directories
+
+# Run on the base directory if no argument has been given
+if [ $# -eq 0 ] ; then
+    cd "$(dirname -- "$0")/.." || exit $?
+fi
+
+# Assign each ignore warning on a line, in order to ease testing enabling the warning again
+IGNORE_LIST=''
+
+# Important warnings that should be fixed
+# (Comment one line and run this script in order to see where the warning occurs)
+IGNORE_LIST="$IGNORE_LIST,W191" # indentation contains tabs
+
+IGNORE_LIST="$IGNORE_LIST,E101" # indentation contains mixed spaces and tabs
+IGNORE_LIST="$IGNORE_LIST,E703" # statement ends with a semicolon
+IGNORE_LIST="$IGNORE_LIST,E711" # comparison to None should be 'if cond is not None:'
+IGNORE_LIST="$IGNORE_LIST,E712" # comparison to False should be 'if cond is False:' or 'if not cond:'
+IGNORE_LIST="$IGNORE_LIST,E722" # do not use bare 'except'
+IGNORE_LIST="$IGNORE_LIST,E999" # TabError: inconsistent use of tabs and spaces in indentation
+
+IGNORE_LIST="$IGNORE_LIST,F401" # module imported but unused
+IGNORE_LIST="$IGNORE_LIST,F812" # list comprehension redefines 'f', in lex.py and yacc.py
+IGNORE_LIST="$IGNORE_LIST,F841" # local variable '...' is assigned to but never used
+
+
+# Less-important warnings
+IGNORE_LIST="$IGNORE_LIST,W291" # trailing whitespace
+IGNORE_LIST="$IGNORE_LIST,W293" # blank line contains whitespace
+IGNORE_LIST="$IGNORE_LIST,W391" # blank line at end of file
+IGNORE_LIST="$IGNORE_LIST,W503" # line break before binary operator
+IGNORE_LIST="$IGNORE_LIST,W504" # line break after binary operator
+
+IGNORE_LIST="$IGNORE_LIST,E111" # indentation is not a multiple of four
+IGNORE_LIST="$IGNORE_LIST,E114" # indentation is not a multiple of four (comment)
+IGNORE_LIST="$IGNORE_LIST,E115" # expected an indented block (comment)
+IGNORE_LIST="$IGNORE_LIST,E116" # unexpected indentation (comment)
+IGNORE_LIST="$IGNORE_LIST,E122" # continuation line missing indentation or outdented
+IGNORE_LIST="$IGNORE_LIST,E123" # closing bracket does not match indentation of opening bracket's line
+IGNORE_LIST="$IGNORE_LIST,E126" # continuation line over-indented for hanging indent
+IGNORE_LIST="$IGNORE_LIST,E127" # continuation line over-indented for visual indent
+IGNORE_LIST="$IGNORE_LIST,E128" # continuation line under-indented for visual indent
+IGNORE_LIST="$IGNORE_LIST,E201" # whitespace after '['
+IGNORE_LIST="$IGNORE_LIST,E202" # whitespace before '}'
+IGNORE_LIST="$IGNORE_LIST,E203" # whitespace before ':'
+IGNORE_LIST="$IGNORE_LIST,E211" # whitespace before '('
+IGNORE_LIST="$IGNORE_LIST,E221" # multiple spaces before operator
+IGNORE_LIST="$IGNORE_LIST,E222" # multiple spaces after operator
+IGNORE_LIST="$IGNORE_LIST,E225" # missing whitespace around operator
+IGNORE_LIST="$IGNORE_LIST,E226" # missing whitespace around arithmetic operator
+IGNORE_LIST="$IGNORE_LIST,E231" # missing whitespace after ','
+IGNORE_LIST="$IGNORE_LIST,E241" # multiple spaces after ':'
+IGNORE_LIST="$IGNORE_LIST,E251" # unexpected spaces around keyword / parameter equals
+IGNORE_LIST="$IGNORE_LIST,E261" # at least two spaces before inline comment
+IGNORE_LIST="$IGNORE_LIST,E265" # block comment should start with '# '
+IGNORE_LIST="$IGNORE_LIST,E266" # too many leading '#' for block comment
+IGNORE_LIST="$IGNORE_LIST,E272" # multiple spaces before keyword
+IGNORE_LIST="$IGNORE_LIST,E301" # expected 1 blank line, found 0
+IGNORE_LIST="$IGNORE_LIST,E302" # expected 2 blank lines, found 1
+IGNORE_LIST="$IGNORE_LIST,E303" # too many blank lines
+IGNORE_LIST="$IGNORE_LIST,E305" # expected 2 blank lines after class or function definition, found 0
+IGNORE_LIST="$IGNORE_LIST,E306" # expected 1 blank line before a nested definition, found 0
+IGNORE_LIST="$IGNORE_LIST,E401" # multiple imports on one line
+IGNORE_LIST="$IGNORE_LIST,E402" # module level import not at top of file
+IGNORE_LIST="$IGNORE_LIST,E501" # line too long
+IGNORE_LIST="$IGNORE_LIST,E701" # multiple statements on one line (colon)
+IGNORE_LIST="$IGNORE_LIST,E704" # multiple statements on one line (def)
+IGNORE_LIST="$IGNORE_LIST,E731" # do not assign a lambda expression, use a def
+IGNORE_LIST="$IGNORE_LIST,E741" # ambiguous variable name 'l' / 'I'
+
+IGNORE_LIST="$IGNORE_LIST,F403" # 'from ... import *' used; unable to detect undefined names
+IGNORE_LIST="$IGNORE_LIST,F405" # '...' may be undefined, or defined from star imports
+
+# Ignore errors from files generated from SWIG
+IGNORE_LIST="$IGNORE_LIST,F811" # redefinition of unused ...
+
+
+exec flake8 --max-line-length=120 --builtins='_,unicode,lextab,parsetab' --ignore=",$IGNORE_LIST" "$@"
