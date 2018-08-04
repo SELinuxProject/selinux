@@ -1175,7 +1175,7 @@ class SELinuxGui():
                         continue
                 self.files_initial_data_insert(self.writable_files_liststore, path, write, file_class)
 
-    def files_initial_data_insert(self, liststore, path, seLinux_label, file_class):
+    def files_initial_data_insert(self, liststore, path, selinux_label, file_class):
         iter = liststore.append(None)
         if path is None:
             path = _("MISSING FILE PATH")
@@ -1191,7 +1191,7 @@ class SELinuxGui():
                 file_class = self.markup(selinux_label)
                 file_class = self.markup(file_class)
         liststore.set_value(iter, 0, path)
-        liststore.set_value(iter, 1, seLinux_label)
+        liststore.set_value(iter, 1, selinux_label)
         liststore.set_value(iter, 2, file_class)
         liststore.set_value(iter, 7, modify)
 
