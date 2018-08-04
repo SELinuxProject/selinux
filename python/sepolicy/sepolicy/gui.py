@@ -2015,9 +2015,9 @@ class SELinuxGui():
         if self.modify:
             iter = self.get_selected_iter()
             oldpath = self.unmark(self.liststore.get_value(iter, 0))
-            setype = self.unmark(self.liststore.set_value(iter, 1))
+            oldsetype = self.unmark(self.liststore.set_value(iter, 1))
             oldtclass = self.liststore.get_value(iter, 2)
-            self.cur_dict["fcontext"][(path, tclass)] = {"action": "-m", "type": setype, "oldtype": oldsetype, "oldmls": oldmls, "oldclass": oldclass}
+            self.cur_dict["fcontext"][(path, tclass)] = {"action": "-m", "type": setype, "oldtype": oldsetype, "oldpath": oldpath, "oldclass": oldtclass}
         else:
             iter = self.liststore.append(None)
             self.cur_dict["fcontext"][(path, tclass)] = {"action": "-a", "type": setype}
@@ -2047,7 +2047,7 @@ class SELinuxGui():
             oldports = self.unmark(self.liststore.get_value(iter, 0))
             oldprotocol = self.unmark(self.liststore.get_value(iter, 1))
             oldsetype = self.unmark(self.liststore.set_value(iter, 2))
-            self.cur_dict["port"][(ports, protocol)] = {"action": "-m", "type": setype, "mls": mls, "oldtype": oldsetype, "oldmls": oldmls, "oldprotocol": oldprotocol, "oldports": oldports}
+            self.cur_dict["port"][(ports, protocol)] = {"action": "-m", "type": setype, "mls": mls, "oldtype": oldsetype, "oldprotocol": oldprotocol, "oldports": oldports}
         else:
             iter = self.liststore.append(None)
             self.cur_dict["port"][(ports, protocol)] = {"action": "-a", "type": setype, "mls": mls}
