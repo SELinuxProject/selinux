@@ -579,7 +579,7 @@ def gen_interface_args(parser):
 
 
 def gen_generate_args(parser):
-    from sepolicy.generate import DAEMON, get_poltype_desc, poltype, DAEMON, DBUS, INETD, CGI, SANDBOX, USER, EUSER, TUSER, XUSER, LUSER, AUSER, RUSER, NEWTYPE
+    from sepolicy.generate import get_poltype_desc, poltype, DAEMON, DBUS, INETD, CGI, SANDBOX, USER, EUSER, TUSER, XUSER, LUSER, AUSER, RUSER, NEWTYPE
 
     generate_usage = generate_custom_usage(usage, usage_dict)
 
