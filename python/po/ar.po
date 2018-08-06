@@ -1,0 +1,3386 @@
+# Kevin Fenzi <kevin@scrye.com>, 2016. #zanata
+# Matej Habrnal <mhabrnal@redhat.com>, 2016. #zanata
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+# Tomáš Mráz <tmraz@fedoraproject.org>, 2016. #zanata
+# Parag <pnemade@redhat.com>, 2017. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-03 11:10+0100\n"
+"PO-Revision-Date: 2017-03-24 09:57-0400\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural= n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Zanata 4.6.2\n"
+
+#: ../audit2allow/audit2allow:239
+msgid "******************** IMPORTANT ***********************\n"
+msgstr "******************** مهم ***********************\n"
+
+#: ../audit2allow/audit2allow:240
+#, python-format
+msgid ""
+"To make this policy package active, execute:\n"
+"\n"
+"semodule -i %s\n"
+"\n"
+msgstr ""
+
+#: ../chcat/chcat:110 ../chcat/chcat:190
+msgid "Requires at least one category"
+msgstr "يتطلب تصنيف واحد على الأقل"
+
+#: ../chcat/chcat:123 ../chcat/chcat:204
+#, python-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "لا يمكن تعديل مستويات الحساسية باستخدام '+' على %s"
+
+#: ../chcat/chcat:127
+#, python-format
+msgid "%s is already in %s"
+msgstr "%s موجود في %s مسبقا"
+
+#: ../chcat/chcat:209 ../chcat/chcat:219
+#, python-format
+msgid "%s is not in %s"
+msgstr "%s ليس في %s"
+
+#: ../chcat/chcat:290 ../chcat/chcat:295
+msgid "Can not combine +/- with other types of categories"
+msgstr "لا يمكن الجمع +/- مع أنواع أخرى من التصنيفات"
+
+#: ../chcat/chcat:345
+msgid "Can not have multiple sensitivities"
+msgstr "لا يمكن أن يكون متعدد الحساسيات"
+
+#: ../chcat/chcat:352
+#, python-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "الاستخدام %s CATEGORY ملف ..."
+
+#: ../chcat/chcat:353
+#, python-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "الاستخدام %s -l CATEGORY مستخدم ..."
+
+#: ../chcat/chcat:354
+#, python-format
+msgid "Usage %s [[+|-]CATEGORY],...] File ..."
+msgstr ""
+
+#: ../chcat/chcat:355
+#, python-format
+msgid "Usage %s -l [[+|-]CATEGORY],...] user ..."
+msgstr ""
+
+#: ../chcat/chcat:356
+#, python-format
+msgid "Usage %s -d File ..."
+msgstr "الاستخدام %s -d ملف ..."
+
+#: ../chcat/chcat:357
+#, python-format
+msgid "Usage %s -l -d user ..."
+msgstr "الاستخدام %s -l -d مستخدم ..."
+
+#: ../chcat/chcat:358
+#, python-format
+msgid "Usage %s -L"
+msgstr "الاستخدام %s -L"
+
+#: ../chcat/chcat:359
+#, python-format
+msgid "Usage %s -L -l user"
+msgstr "الاستخدام %s -L -l مستخدم"
+
+#: ../chcat/chcat:360
+msgid "Use -- to end option list.  For example"
+msgstr "استخدم -- لإنهاء قائمة الخيارات. على سبيل المثال"
+
+#: ../chcat/chcat:361
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -CompanyConfidential /docs/businessplan.odt"
+
+#: ../chcat/chcat:362
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +CompanyConfidential juser"
+
+#: ../chcat/chcat:432
+#, python-format
+msgid "Options Error %s "
+msgstr "خطأ في الخيارات %s "
+
+#: ../semanage/semanage:208
+msgid "Select an alternate SELinux Policy Store to manage"
+msgstr ""
+
+#: ../semanage/semanage:212
+msgid "Select a priority for module operations"
+msgstr ""
+
+#: ../semanage/semanage:216
+#, python-format
+msgid "Do not print heading when listing %s object types"
+msgstr ""
+
+#: ../semanage/semanage:220
+msgid "Do not reload policy after commit"
+msgstr ""
+
+#: ../semanage/semanage:224
+#, python-format
+msgid "List %s local customizations"
+msgstr ""
+
+#: ../semanage/semanage:228
+#, python-format
+msgid "Add a record of the %s object type"
+msgstr ""
+
+#: ../semanage/semanage:232
+msgid "SELinux Type for the object"
+msgstr ""
+
+#: ../semanage/semanage:236
+msgid ""
+"Default SELinux Level for SELinux user, s0 Default. (MLS/MCS Systems only)"
+msgstr ""
+
+#: ../semanage/semanage:241
+msgid ""
+"\n"
+"MLS/MCS Security Range (MLS/MCS Systems only)\n"
+"SELinux Range  for SELinux login mapping\n"
+"defaults to the SELinux user record range.\n"
+"SELinux Range for SELinux user defaults to s0.\n"
+msgstr ""
+
+#: ../semanage/semanage:250
+msgid ""
+"\n"
+"    Protocol  for  the specified port (tcp|udp|dccp|sctp) or internet "
+"protocol\n"
+"    version for the specified node (ipv4|ipv6).\n"
+msgstr ""
+
+#: ../semanage/semanage:256
+msgid ""
+"\n"
+"    Subnet prefix for  the specified infiniband ibpkey.\n"
+msgstr ""
+
+#: ../semanage/semanage:261
+msgid ""
+"\n"
+"    Name for the specified infiniband end port.\n"
+msgstr ""
+
+#: ../semanage/semanage:266
+#, python-format
+msgid "Modify a record of the %s object type"
+msgstr ""
+
+#: ../semanage/semanage:270
+#, python-format
+msgid "List records of the %s object type"
+msgstr ""
+
+#: ../semanage/semanage:274
+#, python-format
+msgid "Delete a record of the %s object type"
+msgstr ""
+
+#: ../semanage/semanage:278
+msgid "Extract customizable commands, for use within a transaction"
+msgstr ""
+
+#: ../semanage/semanage:282
+#, python-format
+msgid "Remove all %s objects local customizations"
+msgstr ""
+
+#: ../semanage/semanage:286
+msgid "SELinux user name"
+msgstr ""
+
+#: ../semanage/semanage:291
+msgid "Manage login mappings between linux users and SELinux confined users"
+msgstr ""
+
+#: ../semanage/semanage:308
+#, python-format
+msgid "login_name | %%groupname"
+msgstr ""
+
+#: ../semanage/semanage:360
+msgid "Manage file context mapping definitions"
+msgstr ""
+
+#: ../semanage/semanage:374
+msgid ""
+"Substitute  target  path with sourcepath when generating default\n"
+"                                                                  label.  "
+"This is used with fcontext. Requires source  and  target\n"
+"                                                                  path  "
+"arguments.  The context labeling for the target subtree is\n"
+"                                                                  made "
+"equivalent to that defined for the source."
+msgstr ""
+
+#: ../semanage/semanage:382
+msgid ""
+"Path to be labeled (may be in the form of a Perl compatible regular "
+"expression)"
+msgstr ""
+
+#: ../semanage/semanage:410
+msgid "Manage SELinux confined users (Roles and levels for an SELinux user)"
+msgstr ""
+
+#: ../semanage/semanage:428
+msgid ""
+"\n"
+"SELinux Roles.  You must enclose multiple roles within quotes, separate by "
+"spaces. Or specify -R multiple times.\n"
+msgstr ""
+
+#: ../semanage/semanage:432
+msgid "selinux_name"
+msgstr ""
+
+#: ../semanage/semanage:460
+msgid "Manage network port type definitions"
+msgstr ""
+
+#: ../semanage/semanage:476
+msgid "port | port_range"
+msgstr ""
+
+#: ../semanage/semanage:505
+msgid "Manage infiniband ibpkey type definitions"
+msgstr ""
+
+#: ../semanage/semanage:521
+msgid "pkey | pkey_range"
+msgstr ""
+
+#: ../semanage/semanage:548
+msgid "Manage infiniband end port type definitions"
+msgstr ""
+
+#: ../semanage/semanage:564
+msgid "ibendport"
+msgstr ""
+
+#: ../semanage/semanage:591
+msgid "Manage network interface type definitions"
+msgstr ""
+
+#: ../semanage/semanage:606
+msgid "interface_spec"
+msgstr ""
+
+#: ../semanage/semanage:630
+msgid "Manage SELinux policy modules"
+msgstr ""
+
+#: ../semanage/semanage:641
+msgid "Add a module"
+msgstr ""
+
+#: ../semanage/semanage:642
+msgid "Remove a module"
+msgstr ""
+
+#: ../semanage/semanage:643
+msgid "Disable a module"
+msgstr ""
+
+#: ../semanage/semanage:644
+msgid "Enable a module"
+msgstr ""
+
+#: ../semanage/semanage:671
+msgid "Manage network node type definitions"
+msgstr ""
+
+#: ../semanage/semanage:685
+msgid "Network Mask"
+msgstr ""
+
+#: ../semanage/semanage:689
+msgid "node"
+msgstr ""
+
+#: ../semanage/semanage:714
+msgid "Manage booleans to selectively enable functionality"
+msgstr ""
+
+#: ../semanage/semanage:719
+msgid "boolean"
+msgstr ""
+
+#: ../semanage/semanage:729
+msgid "Enable the boolean"
+msgstr ""
+
+#: ../semanage/semanage:730
+msgid "Disable the boolean"
+msgstr ""
+
+#: ../semanage/semanage:751
+msgid "semanage permissive: error: the following argument is required: type\n"
+msgstr ""
+
+#: ../semanage/semanage:755
+msgid "Manage process type enforcement mode"
+msgstr ""
+
+#: ../semanage/semanage:767 ../semanage/seobject.py:2673
+msgid "type"
+msgstr "نوع"
+
+#: ../semanage/semanage:778
+msgid "Disable/Enable dontaudit rules in policy"
+msgstr ""
+
+#: ../semanage/semanage:798
+msgid "Output local customizations"
+msgstr ""
+
+#: ../semanage/semanage:800
+msgid "Output file"
+msgstr ""
+
+#: ../semanage/semanage:876
+msgid "Import local customizations"
+msgstr ""
+
+#: ../semanage/semanage:879
+msgid "Input file"
+msgstr ""
+
+#: ../semanage/seobject.py:278
+msgid "Could not create semanage handle"
+msgstr "لا يمكن إنشاء معالج semanage"
+
+#: ../semanage/seobject.py:286
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "سياسة SELinux غير مُدارة أو لا يمكن الوصول إلى المخزن."
+
+#: ../semanage/seobject.py:291
+msgid "Cannot read policy store."
+msgstr "لا يمكن قراءة مخزن السياسات."
+
+#: ../semanage/seobject.py:296
+msgid "Could not establish semanage connection"
+msgstr "لا يمكن  إنشاء اتصال semanage"
+
+#: ../semanage/seobject.py:301
+msgid "Could not test MLS enabled status"
+msgstr "لا يمكن اختبار حالة تفعيل MLS"
+
+#: ../semanage/seobject.py:307 ../semanage/seobject.py:323
+msgid "Not yet implemented"
+msgstr "غير مطبقة بعد"
+
+#: ../semanage/seobject.py:311
+msgid "Semanage transaction already in progress"
+msgstr "عملية semanage تحت التنفيذ"
+
+#: ../semanage/seobject.py:320
+msgid "Could not start semanage transaction"
+msgstr "لا يمكن بدء عملية semanage"
+
+#: ../semanage/seobject.py:334
+msgid "Could not commit semanage transaction"
+msgstr "لا يمكن تنفيذ عملية semanage"
+
+#: ../semanage/seobject.py:339
+msgid "Semanage transaction not in progress"
+msgstr "عملية semanage ليست تحت التنفيذ"
+
+#: ../semanage/seobject.py:353 ../semanage/seobject.py:473
+msgid "Could not list SELinux modules"
+msgstr "لا يمكن عرض قائمة وحدات SELinux"
+
+#: ../semanage/seobject.py:360
+msgid "Could not get module name"
+msgstr ""
+
+#: ../semanage/seobject.py:364
+msgid "Could not get module enabled"
+msgstr ""
+
+#: ../semanage/seobject.py:368
+msgid "Could not get module priority"
+msgstr ""
+
+#: ../semanage/seobject.py:372
+msgid "Could not get module lang_ext"
+msgstr ""
+
+#: ../semanage/seobject.py:393
+msgid "Module Name"
+msgstr "اسم الوحدة"
+
+#: ../semanage/seobject.py:393
+msgid "Priority"
+msgstr ""
+
+#: ../semanage/seobject.py:393
+msgid "Language"
+msgstr "اللّغة"
+
+#: ../semanage/seobject.py:396 ../sepolicy/sepolicy/sepolicy.glade:3421
+msgid "Disabled"
+msgstr "معطّل"
+
+#: ../semanage/seobject.py:405
+#, python-format
+msgid "Module does not exist: %s "
+msgstr ""
+
+#: ../semanage/seobject.py:409 ../semanage/seobject.py:436
+#, python-format
+msgid "Invalid priority %d (needs to be between 1 and 999)"
+msgstr ""
+
+#: ../semanage/seobject.py:419
+msgid "Could not create module key"
+msgstr ""
+
+#: ../semanage/seobject.py:423
+msgid "Could not set module key name"
+msgstr ""
+
+#: ../semanage/seobject.py:428
+#, python-format
+msgid "Could not enable module %s"
+msgstr ""
+
+#: ../semanage/seobject.py:430
+#, python-format
+msgid "Could not disable module %s"
+msgstr ""
+
+#: ../semanage/seobject.py:441
+#, python-format
+msgid "Could not remove module %s (remove failed)"
+msgstr ""
+
+#: ../semanage/seobject.py:458
+msgid "dontaudit requires either 'on' or 'off'"
+msgstr ""
+
+#: ../semanage/seobject.py:491
+msgid "Builtin Permissive Types"
+msgstr ""
+
+#: ../semanage/seobject.py:501
+msgid "Customized Permissive Types"
+msgstr ""
+
+#: ../semanage/seobject.py:509
+msgid ""
+"The sepolgen python module is required to setup permissive domains.\n"
+"In some distributions it is included in the policycoreutils-devel package.\n"
+"# yum install policycoreutils-devel\n"
+"Or similar for your distro."
+msgstr ""
+
+#: ../semanage/seobject.py:519
+#, python-format
+msgid "Could not set permissive domain %s (module installation failed)"
+msgstr "لا يمكن ضبط النطاق المتساهل %s (خطأ في تثبيت الوحدة)"
+
+#: ../semanage/seobject.py:525
+#, python-format
+msgid "Could not remove permissive domain %s (remove failed)"
+msgstr "لا يمكن إزالة النطاق المتساهل %s (فشل في الإزالة)"
+
+#: ../semanage/seobject.py:562 ../semanage/seobject.py:632
+#: ../semanage/seobject.py:677 ../semanage/seobject.py:796
+#: ../semanage/seobject.py:826 ../semanage/seobject.py:891
+#: ../semanage/seobject.py:947 ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1491 ../semanage/seobject.py:2501
+#: ../semanage/seobject.py:2571 ../semanage/seobject.py:2595
+#: ../semanage/seobject.py:2726 ../semanage/seobject.py:2777
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "لا يمكن إنشاء مفتاح لـ %s"
+
+#: ../semanage/seobject.py:566 ../semanage/seobject.py:636
+#: ../semanage/seobject.py:681 ../semanage/seobject.py:687
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "لا يمكن التحقق في إذا ما كان مخطط الدخول لـ %s معرفا"
+
+#: ../semanage/seobject.py:568
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:573
+#, python-format
+msgid "Linux Group %s does not exist"
+msgstr "مجموعة لينكس %s غير موجودة"
+
+#: ../semanage/seobject.py:578
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "مستخدم لينكس %s غير موجود"
+
+#: ../semanage/seobject.py:582
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "لا يمكن إنشاء مخطط الدخول لـ %s"
+
+#: ../semanage/seobject.py:586 ../semanage/seobject.py:840
+#, python-format
+msgid "Could not set name for %s"
+msgstr "لا يمكن ضبط اسم لـ %s"
+
+#: ../semanage/seobject.py:591 ../semanage/seobject.py:850
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "لا يمكن ضبط مدى MLS لـ %s"
+
+#: ../semanage/seobject.py:595
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "لا يمكن ضبط مستخدم SELinux لـ %s"
+
+#: ../semanage/seobject.py:599
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "لا يمكن إضافة مخطط الدخول لـ %s"
+
+#: ../semanage/seobject.py:615
+msgid "Requires seuser or serange"
+msgstr "بحاجة إلى seuser أو serange"
+
+#: ../semanage/seobject.py:638 ../semanage/seobject.py:683
+#, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "مخطط الدخول لـ %s غير معرّف"
+
+#: ../semanage/seobject.py:642
+#, python-format
+msgid "Could not query seuser for %s"
+msgstr "لا يمكن استعلام seuser لـ %s"
+
+#: ../semanage/seobject.py:657
+#, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "لا يمكن تغيير مخطط الدخول لـ %s"
+
+#: ../semanage/seobject.py:689
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr "تخطيط الدخول لـ %s معرف في السياسة، لا يمكن حذفه"
+
+#: ../semanage/seobject.py:693
+#, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "لا يمكن حذف تخطيط الدخول لـ %s"
+
+#: ../semanage/seobject.py:712 ../semanage/seobject.py:744
+#: ../semanage/seobject.py:990
+msgid "Could not list login mappings"
+msgstr "لا يمكن عرض قائمة تخطيطات الدخول"
+
+#: ../semanage/seobject.py:771 ../semanage/seobject.py:783
+#: ../sepolicy/sepolicy/sepolicy.glade:1162
+#: ../sepolicy/sepolicy/sepolicy.glade:3146
+msgid "Login Name"
+msgstr "اسم الدخول"
+
+#: ../semanage/seobject.py:771 ../semanage/seobject.py:783
+#: ../semanage/seobject.py:1040 ../semanage/seobject.py:1045
+#: ../sepolicy/sepolicy/sepolicy.glade:1188
+#: ../sepolicy/sepolicy/sepolicy.glade:3164
+#: ../sepolicy/sepolicy/sepolicy.glade:3250
+#: ../sepolicy/sepolicy/sepolicy.glade:4905
+msgid "SELinux User"
+msgstr "مستخدم SELinux"
+
+#: ../semanage/seobject.py:771
+msgid "MLS/MCS Range"
+msgstr "مدى MLS/MCS"
+
+#: ../semanage/seobject.py:771
+msgid "Service"
+msgstr "خِدمة"
+
+#: ../semanage/seobject.py:799 ../semanage/seobject.py:830
+#: ../semanage/seobject.py:895 ../semanage/seobject.py:951
+#: ../semanage/seobject.py:957
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "لا يمكن التحقق من إذا كان مستخدم SELinux %s معرفا"
+
+#: ../semanage/seobject.py:802 ../semanage/seobject.py:901
+#: ../semanage/seobject.py:963
+#, python-format
+msgid "Could not query user for %s"
+msgstr "لا يمكن استعلام المستخدم عن %s"
+
+#: ../semanage/seobject.py:822
+#, python-format
+msgid "You must add at least one role for %s"
+msgstr "يجب إضافة دور واحد على الأقل لـ %s"
+
+#: ../semanage/seobject.py:832
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:836
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "لا يمكن إنشاء مستخدم SELinux لـ %s"
+
+#: ../semanage/seobject.py:845
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "لا يمكن إضافة دور %s لـ %s"
+
+#: ../semanage/seobject.py:854
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "لا يمكن ضبط مستوى MLS لـ %s"
+
+#: ../semanage/seobject.py:857
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "لا يمكن إضافة البادئة %s لـ %s"
+
+#: ../semanage/seobject.py:860
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "لا يمكن استخراج مفتاح لـ %s"
+
+#: ../semanage/seobject.py:864
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "لا يمكن إضافة مستخدم SELinux %s"
+
+#: ../semanage/seobject.py:885
+msgid "Requires prefix, roles, level or range"
+msgstr "يحتاج إلى بادئة، أدوار، مستويات أو مدى"
+
+#: ../semanage/seobject.py:887
+msgid "Requires prefix or roles"
+msgstr "يحتاج إلى بادئة أو أدوار"
+
+#: ../semanage/seobject.py:897 ../semanage/seobject.py:953
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "مستخدم SELinux %s غير معرف"
+
+#: ../semanage/seobject.py:926
+#, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "لا يمكن تعديل مستخدم SELinux %s"
+
+#: ../semanage/seobject.py:959
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "مستخدم SELinux لـ %s معرف في السياسة، لا يمكن حذفه"
+
+#: ../semanage/seobject.py:970
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "لا يمكن حذف مستخدم SELinux %s"
+
+#: ../semanage/seobject.py:1008
+msgid "Could not list SELinux users"
+msgstr "لا يمكن عرض قائمة مستخدمي SELinux"
+
+#: ../semanage/seobject.py:1014
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr "لا يمكن عرض قائمة أدوار المستخدم %s"
+
+#: ../semanage/seobject.py:1039
+msgid "Labeling"
+msgstr "عنونة"
+
+#: ../semanage/seobject.py:1039
+msgid "MLS/"
+msgstr "MLS/"
+
+#: ../semanage/seobject.py:1040
+msgid "Prefix"
+msgstr "بادئة"
+
+#: ../semanage/seobject.py:1040
+msgid "MCS Level"
+msgstr "مستوى MSC"
+
+#: ../semanage/seobject.py:1040
+msgid "MCS Range"
+msgstr "مدى MSC"
+
+#: ../semanage/seobject.py:1040 ../semanage/seobject.py:1045
+#: ../sepolicy/sepolicy/sepolicy.glade:3270
+#: ../sepolicy/sepolicy/sepolicy.glade:5241
+#: ../sepolicy/sepolicy/sepolicy.glade:5390
+msgid "SELinux Roles"
+msgstr "أدوار SELinux"
+
+#: ../semanage/seobject.py:1070
+msgid "Protocol has to be one of udp, tcp, dccp or sctp"
+msgstr ""
+
+#: ../semanage/seobject.py:1072
+msgid "Port is required"
+msgstr "المنفذ مطلوب"
+
+#: ../semanage/seobject.py:1086
+msgid "Invalid Port"
+msgstr ""
+
+#: ../semanage/seobject.py:1090 ../semanage/seobject.py:1364
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "لا يمكن إنشاء مفتاح لـ %s/%s"
+
+#: ../semanage/seobject.py:1101 ../semanage/seobject.py:1375
+#: ../semanage/seobject.py:1630
+msgid "Type is required"
+msgstr "النوع مطلوب"
+
+#: ../semanage/seobject.py:1106 ../semanage/seobject.py:1171
+#, python-format
+msgid "Type %s is invalid, must be a port type"
+msgstr ""
+
+#: ../semanage/seobject.py:1112 ../semanage/seobject.py:1177
+#: ../semanage/seobject.py:1243 ../semanage/seobject.py:1249
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "لا يمكن التحقق من إذا كان المنفذ %s/%s معرفا"
+
+#: ../semanage/seobject.py:1114
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "المنفذ %s/%s معرف مسبقا"
+
+#: ../semanage/seobject.py:1118
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "لا يمكن إنشاء منفذ لـ %s/%s"
+
+#: ../semanage/seobject.py:1124 ../semanage/seobject.py:1398
+#: ../semanage/seobject.py:1652
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "لا يمكن إنشاء سياق لـ %s/%s"
+
+#: ../semanage/seobject.py:1128
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "لا يمكن ضبط مستخدم في سياق المنفذ لـ %s/%s"
+
+#: ../semanage/seobject.py:1132
+#, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "لا يمكن ضبط دور في سياق المنفذ لـ %s/%s"
+
+#: ../semanage/seobject.py:1136
+#, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "لا يمكن ضبط نوع في سياق المنفذ لـ %s/%s"
+
+#: ../semanage/seobject.py:1141
+#, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr "لا يمكن ضبط حقل mls في سياق المنفذ لـ %s/%s"
+
+#: ../semanage/seobject.py:1145
+#, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "لا يمكن ضبط سياق المنفذ لـ %s/%s"
+
+#: ../semanage/seobject.py:1149
+#, python-format
+msgid "Could not add port %s/%s"
+msgstr "لا يمكن إضافة المنفذ %s/%s"
+
+#: ../semanage/seobject.py:1165 ../semanage/seobject.py:1437
+#: ../semanage/seobject.py:1691 ../semanage/seobject.py:1969
+#: ../semanage/seobject.py:2175
+msgid "Requires setype or serange"
+msgstr "يتطلب setype أو serange"
+
+#: ../semanage/seobject.py:1167 ../semanage/seobject.py:1439
+#: ../semanage/seobject.py:1693
+msgid "Requires setype"
+msgstr "يتطلب setype"
+
+#: ../semanage/seobject.py:1179 ../semanage/seobject.py:1245
+#, python-format
+msgid "Port %s/%s is not defined"
+msgstr "المنفذ %s/%s غير معرفة"
+
+#: ../semanage/seobject.py:1183
+#, python-format
+msgid "Could not query port %s/%s"
+msgstr "لا يمكن استعلام المنفذ %s/%s"
+
+#: ../semanage/seobject.py:1197
+#, python-format
+msgid "Could not modify port %s/%s"
+msgstr "لا يمكن تعديل المنفذ %s/%s"
+
+#: ../semanage/seobject.py:1212
+msgid "Could not list the ports"
+msgstr "لا يمكن عرض قائمة المنافذ"
+
+#: ../semanage/seobject.py:1229
+#, python-format
+msgid "Could not delete the port %s"
+msgstr "لا يمكن حذف المنفذ %s"
+
+#: ../semanage/seobject.py:1251
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr "المنفذ %s/%s معرف في السياسة، لا يمكن حذفه"
+
+#: ../semanage/seobject.py:1255
+#, python-format
+msgid "Could not delete port %s/%s"
+msgstr "لا يمكن حذف المنفذ %s/%s"
+
+#: ../semanage/seobject.py:1273 ../semanage/seobject.py:1293
+msgid "Could not list ports"
+msgstr "لا يمكن عرض قائمة المنافذ"
+
+#: ../semanage/seobject.py:1328 ../sepolicy/sepolicy/sepolicy.glade:2676
+#: ../sepolicy/sepolicy/sepolicy.glade:2774
+#: ../sepolicy/sepolicy/sepolicy.glade:4638
+msgid "SELinux Port Type"
+msgstr "نوع منفذ SELinux"
+
+#: ../semanage/seobject.py:1328
+msgid "Proto"
+msgstr "الأول"
+
+#: ../semanage/seobject.py:1328 ../semanage/seobject.py:1834
+#: ../sepolicy/sepolicy/sepolicy.glade:1413
+msgid "Port Number"
+msgstr "رقم المنفذ"
+
+#: ../semanage/seobject.py:1350
+msgid "Subnet Prefix is required"
+msgstr ""
+
+#: ../semanage/seobject.py:1360
+msgid "Invalid Pkey"
+msgstr ""
+
+#: ../semanage/seobject.py:1380 ../semanage/seobject.py:1444
+#, python-format
+msgid "Type %s is invalid, must be a ibpkey type"
+msgstr ""
+
+#: ../semanage/seobject.py:1386 ../semanage/seobject.py:1450
+#: ../semanage/seobject.py:1504 ../semanage/seobject.py:1510
+#, python-format
+msgid "Could not check if ibpkey %s/%s is defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1388
+#, python-format
+msgid "ibpkey %s/%s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1392
+#, python-format
+msgid "Could not create ibpkey for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1402
+#, python-format
+msgid "Could not set user in ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1406
+#, python-format
+msgid "Could not set role in ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1410
+#, python-format
+msgid "Could not set type in ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1415
+#, python-format
+msgid "Could not set mls fields in ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1419
+#, python-format
+msgid "Could not set ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1423
+#, python-format
+msgid "Could not add ibpkey %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1452 ../semanage/seobject.py:1506
+#, python-format
+msgid "ibpkey %s/%s is not defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1456
+#, python-format
+msgid "Could not query ibpkey %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1467
+#, python-format
+msgid "Could not modify ibpkey %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1480
+msgid "Could not list the ibpkeys"
+msgstr ""
+
+#: ../semanage/seobject.py:1495
+#, python-format
+msgid "Could not delete the ibpkey %s"
+msgstr ""
+
+#: ../semanage/seobject.py:1512
+#, python-format
+msgid "ibpkey %s/%s is defined in policy, cannot be deleted"
+msgstr ""
+
+#: ../semanage/seobject.py:1516
+#, python-format
+msgid "Could not delete ibpkey %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1532 ../semanage/seobject.py:1553
+msgid "Could not list ibpkeys"
+msgstr ""
+
+#: ../semanage/seobject.py:1588
+msgid "SELinux IB Pkey Type"
+msgstr ""
+
+#: ../semanage/seobject.py:1588
+msgid "Subnet_Prefix"
+msgstr ""
+
+#: ../semanage/seobject.py:1588
+msgid "Pkey Number"
+msgstr ""
+
+#: ../semanage/seobject.py:1610
+msgid "IB device name is required"
+msgstr ""
+
+#: ../semanage/seobject.py:1615
+msgid "Invalid Port Number"
+msgstr ""
+
+#: ../semanage/seobject.py:1619
+#, python-format
+msgid "Could not create a key for ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1635 ../semanage/seobject.py:1698
+#, python-format
+msgid "Type %s is invalid, must be an ibendport type"
+msgstr ""
+
+#: ../semanage/seobject.py:1640 ../semanage/seobject.py:1704
+#: ../semanage/seobject.py:1756 ../semanage/seobject.py:1762
+#, python-format
+msgid "Could not check if ibendport %s/%s is defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1642
+#, python-format
+msgid "ibendport %s/%s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1646
+#, python-format
+msgid "Could not create ibendport for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1656
+#, python-format
+msgid "Could not set user in ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1660
+#, python-format
+msgid "Could not set role in ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1664
+#, python-format
+msgid "Could not set type in ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1669
+#, python-format
+msgid "Could not set mls fields in ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1673
+#, python-format
+msgid "Could not set ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1677
+#, python-format
+msgid "Could not add ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1706 ../semanage/seobject.py:1758
+#, python-format
+msgid "ibendport %s/%s is not defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1710
+#, python-format
+msgid "Could not query ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1721
+#, python-format
+msgid "Could not modify ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1734
+msgid "Could not list the ibendports"
+msgstr ""
+
+#: ../semanage/seobject.py:1743
+#, python-format
+msgid "Could not create a key for %s/%d"
+msgstr ""
+
+#: ../semanage/seobject.py:1747
+#, python-format
+msgid "Could not delete the ibendport %s/%d"
+msgstr ""
+
+#: ../semanage/seobject.py:1764
+#, python-format
+msgid "ibendport %s/%s is defined in policy, cannot be deleted"
+msgstr ""
+
+#: ../semanage/seobject.py:1768
+#, python-format
+msgid "Could not delete ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1784 ../semanage/seobject.py:1804
+msgid "Could not list ibendports"
+msgstr ""
+
+#: ../semanage/seobject.py:1834
+msgid "SELinux IB End Port Type"
+msgstr ""
+
+#: ../semanage/seobject.py:1834
+msgid "IB Device Name"
+msgstr ""
+
+#: ../semanage/seobject.py:1860
+msgid "Node Address is required"
+msgstr "عنوان العقدة مطلوب"
+
+#: ../semanage/seobject.py:1872 ../semanage/seobject.py:1884
+msgid "Unknown or missing protocol"
+msgstr "البروتوكول غير معروف أو مفقود"
+
+#: ../semanage/seobject.py:1898
+msgid "SELinux node type is required"
+msgstr ""
+
+#: ../semanage/seobject.py:1903 ../semanage/seobject.py:1974
+#, python-format
+msgid "Type %s is invalid, must be a node type"
+msgstr ""
+
+#: ../semanage/seobject.py:1907 ../semanage/seobject.py:1978
+#: ../semanage/seobject.py:2015 ../semanage/seobject.py:2116
+#: ../semanage/seobject.py:2179 ../semanage/seobject.py:2215
+#: ../semanage/seobject.py:2434
+#, python-format
+msgid "Could not create key for %s"
+msgstr "لا يمكن إنشاء مفتاح لـ %s"
+
+#: ../semanage/seobject.py:1911 ../semanage/seobject.py:1982
+#: ../semanage/seobject.py:2019 ../semanage/seobject.py:2025
+#, python-format
+msgid "Could not check if addr %s is defined"
+msgstr "لا يمكن التحقق من إذا كان العنوان %s معرفا"
+
+#: ../semanage/seobject.py:1913
+#, python-format
+msgid "Addr %s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1917
+#, python-format
+msgid "Could not create addr for %s"
+msgstr "لا يمكن إنشاء العنوان لـ %s"
+
+#: ../semanage/seobject.py:1923 ../semanage/seobject.py:2131
+#: ../semanage/seobject.py:2388
+#, python-format
+msgid "Could not create context for %s"
+msgstr "لا يمكن إنشاء سياق لـ %s"
+
+#: ../semanage/seobject.py:1927
+#, python-format
+msgid "Could not set mask for %s"
+msgstr "لا يمكن ضبط قناع لـ %s"
+
+#: ../semanage/seobject.py:1931
+#, python-format
+msgid "Could not set user in addr context for %s"
+msgstr "لا يمكن ضبط مستخدم في سياق العنوان لـ %s"
+
+#: ../semanage/seobject.py:1935
+#, python-format
+msgid "Could not set role in addr context for %s"
+msgstr "لا يمكن ضبط دور في سياق العنوان لـ %s"
+
+#: ../semanage/seobject.py:1939
+#, python-format
+msgid "Could not set type in addr context for %s"
+msgstr "لا يمكن ضبط نوع في سياق العنوان لـ %s"
+
+#: ../semanage/seobject.py:1944
+#, python-format
+msgid "Could not set mls fields in addr context for %s"
+msgstr "لا يمكن ضبط حقل mls في سياق العنوان لـ %s"
+
+#: ../semanage/seobject.py:1948
+#, python-format
+msgid "Could not set addr context for %s"
+msgstr "لا يمكن ضبط سياق العنوان لـ %s"
+
+#: ../semanage/seobject.py:1952
+#, python-format
+msgid "Could not add addr %s"
+msgstr "لا يمكن إضافة العنوان %s"
+
+#: ../semanage/seobject.py:1984 ../semanage/seobject.py:2021
+#, python-format
+msgid "Addr %s is not defined"
+msgstr "العنوان %s غير معرف"
+
+#: ../semanage/seobject.py:1988
+#, python-format
+msgid "Could not query addr %s"
+msgstr "لا يمكن استعلام العنوان %s"
+
+#: ../semanage/seobject.py:1998
+#, python-format
+msgid "Could not modify addr %s"
+msgstr "لا يمكن تعديل العنوان %s"
+
+#: ../semanage/seobject.py:2027
+#, python-format
+msgid "Addr %s is defined in policy, cannot be deleted"
+msgstr "العنوان %s معرف في السياسة، لا يمكن حذفه"
+
+#: ../semanage/seobject.py:2031
+#, python-format
+msgid "Could not delete addr %s"
+msgstr "لا يمكن حذف العنوان %s"
+
+#: ../semanage/seobject.py:2045
+msgid "Could not deleteall node mappings"
+msgstr ""
+
+#: ../semanage/seobject.py:2059
+msgid "Could not list addrs"
+msgstr "لا يمكن عرض قائمة العناوين"
+
+#: ../semanage/seobject.py:2112 ../semanage/seobject.py:2425
+msgid "SELinux Type is required"
+msgstr "نوع SELinux مطلوب"
+
+#: ../semanage/seobject.py:2120 ../semanage/seobject.py:2183
+#: ../semanage/seobject.py:2219 ../semanage/seobject.py:2225
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "لا يمكن التحقق من إذا كانت الواجهة %s معرفة"
+
+#: ../semanage/seobject.py:2122
+#, python-format
+msgid "Interface %s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:2126
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "لا يمكن إنشاء واجهة لـ %s"
+
+#: ../semanage/seobject.py:2135
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "لا يمكن ضبط مستخدم في سياق الواجهة لـ %s"
+
+#: ../semanage/seobject.py:2139
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "لا يمكن ضبط دور في سياق الواجهة لـ %s"
+
+#: ../semanage/seobject.py:2143
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "لا يمكن ضبط نوع في سياق الواجهة لـ %s"
+
+#: ../semanage/seobject.py:2148
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "لا يمكن ضبط حقل mls في سياق الواجهة لـ %s"
+
+#: ../semanage/seobject.py:2152
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "لا يمكن ضبط سياق المنفذ لـ %s"
+
+#: ../semanage/seobject.py:2156
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "لا يمكن ضبط سياق الرسالة ل%s"
+
+#: ../semanage/seobject.py:2160
+#, python-format
+msgid "Could not add interface %s"
+msgstr "لا يمكن إضافة الواجهة %s"
+
+#: ../semanage/seobject.py:2185 ../semanage/seobject.py:2221
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "الواجهة %s غير معرفة"
+
+#: ../semanage/seobject.py:2189
+#, python-format
+msgid "Could not query interface %s"
+msgstr "لا يمكن استعلام الواجهة %s"
+
+#: ../semanage/seobject.py:2200
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "لا يمكن تعديل الواجهة %s"
+
+#: ../semanage/seobject.py:2227
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "الواجهة %s معرفة في السياسة، لا يمكن حذفها"
+
+#: ../semanage/seobject.py:2231
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "لا يمكن حذف الواجهة %s"
+
+#: ../semanage/seobject.py:2245
+msgid "Could not delete all interface  mappings"
+msgstr ""
+
+#: ../semanage/seobject.py:2259
+msgid "Could not list interfaces"
+msgstr "لا يمكن عرض قائمة الواجهات"
+
+#: ../semanage/seobject.py:2284
+msgid "SELinux Interface"
+msgstr "واجهة SELinux"
+
+#: ../semanage/seobject.py:2284 ../semanage/seobject.py:2673
+msgid "Context"
+msgstr "سياق"
+
+#: ../semanage/seobject.py:2354
+#, python-format
+msgid "Target %s is not valid. Target is not allowed to end with '/'"
+msgstr ""
+
+#: ../semanage/seobject.py:2357
+#, python-format
+msgid "Substitute %s is not valid. Substitute is not allowed to end with '/'"
+msgstr ""
+
+#: ../semanage/seobject.py:2360
+#, python-format
+msgid "Equivalence class for %s already exists"
+msgstr ""
+
+#: ../semanage/seobject.py:2366
+#, python-format
+msgid "File spec %s conflicts with equivalency rule '%s %s'"
+msgstr ""
+
+#: ../semanage/seobject.py:2377
+#, python-format
+msgid "Equivalence class for %s does not exist"
+msgstr ""
+
+#: ../semanage/seobject.py:2394
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "لا يمكن ضبط مستخدم في سياق الملف لـ %s"
+
+#: ../semanage/seobject.py:2398
+#, python-format
+msgid "Could not set role in file context for %s"
+msgstr "لا يمكن ضبط دور في سياق الملف لـ %s"
+
+#: ../semanage/seobject.py:2403 ../semanage/seobject.py:2463
+#, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "لا يمكن ضبط حقل mls في سياق الملف لـ %s"
+
+#: ../semanage/seobject.py:2409
+msgid "Invalid file specification"
+msgstr "مواصفات ملف خاطئة"
+
+#: ../semanage/seobject.py:2411
+msgid "File specification can not include spaces"
+msgstr ""
+
+#: ../semanage/seobject.py:2416
+#, python-format
+msgid ""
+"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead"
+msgstr ""
+
+#: ../semanage/seobject.py:2430 ../semanage/seobject.py:2495
+#, python-format
+msgid "Type %s is invalid, must be a file or device type"
+msgstr ""
+
+#: ../semanage/seobject.py:2438 ../semanage/seobject.py:2443
+#: ../semanage/seobject.py:2505 ../semanage/seobject.py:2599
+#: ../semanage/seobject.py:2603
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "لا يمكن التحقق من إذا كان سياق الملف لـ %s معرفا"
+
+#: ../semanage/seobject.py:2446
+#, python-format
+msgid "File context for %s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:2450
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "لا يمكن إنشاء سياق الملف لـ %s"
+
+#: ../semanage/seobject.py:2458
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "لا يمكن ضبط نوع في سياق الملف لـ %s"
+
+#: ../semanage/seobject.py:2466 ../semanage/seobject.py:2535
+#: ../semanage/seobject.py:2539
+#, python-format
+msgid "Could not set file context for %s"
+msgstr "لا يمكن ضبط سياق ملف لـ %s"
+
+#: ../semanage/seobject.py:2472
+#, python-format
+msgid "Could not add file context for %s"
+msgstr "لا يمكن إضافة سياق ملف لـ %s"
+
+#: ../semanage/seobject.py:2491
+msgid "Requires setype, serange or seuser"
+msgstr "يتطلب setype، serange أو seuser"
+
+#: ../semanage/seobject.py:2509 ../semanage/seobject.py:2607
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "سياق الملف لـ %s غير معرف"
+
+#: ../semanage/seobject.py:2517
+#, python-format
+msgid "Could not query file context for %s"
+msgstr "لا يمكن استعلام سياق الملف لـ %s"
+
+#: ../semanage/seobject.py:2543
+#, python-format
+msgid "Could not modify file context for %s"
+msgstr "لا يمكن تعديل سياق الملف لـ %s"
+
+#: ../semanage/seobject.py:2561
+msgid "Could not list the file contexts"
+msgstr "لا يمكن عرض قائمة سياقات الملفات"
+
+#: ../semanage/seobject.py:2575
+#, python-format
+msgid "Could not delete the file context %s"
+msgstr "لا يمكن حذف سياق الملف %s"
+
+#: ../semanage/seobject.py:2605
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr "سياق الملف لـ %s معرف في السياسة، لا يمكن حذفه"
+
+#: ../semanage/seobject.py:2611
+#, python-format
+msgid "Could not delete file context for %s"
+msgstr "لا يمكن حذف سياق الملف لـ %s"
+
+#: ../semanage/seobject.py:2628
+msgid "Could not list file contexts"
+msgstr "لا يمكن عرض قائمة سياقات الملفات"
+
+#: ../semanage/seobject.py:2632
+msgid "Could not list file contexts for home directories"
+msgstr ""
+
+#: ../semanage/seobject.py:2636
+msgid "Could not list local file contexts"
+msgstr "لا يمكن عرض قائمة سياقات الملفات المحلية"
+
+#: ../semanage/seobject.py:2673
+msgid "SELinux fcontext"
+msgstr "SELinux fcontext"
+
+#: ../semanage/seobject.py:2686
+msgid ""
+"\n"
+"SELinux Distribution fcontext Equivalence \n"
+msgstr ""
+
+#: ../semanage/seobject.py:2691
+msgid ""
+"\n"
+"SELinux Local fcontext Equivalence \n"
+msgstr ""
+
+#: ../semanage/seobject.py:2729 ../semanage/seobject.py:2780
+#: ../semanage/seobject.py:2786
+#, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "لا يمكن التحقق من إذا كانت القيمة المنطقية %s معرفة"
+
+#: ../semanage/seobject.py:2731 ../semanage/seobject.py:2782
+#, python-format
+msgid "Boolean %s is not defined"
+msgstr "القيمة المنطقية %s غير معرفة"
+
+#: ../semanage/seobject.py:2735
+#, python-format
+msgid "Could not query file context %s"
+msgstr "لا يمكن استعلام سياق الملف %s"
+
+#: ../semanage/seobject.py:2740
+#, python-format
+msgid "You must specify one of the following values: %s"
+msgstr "يجب أن تحدد أحد القيم التالية: %s"
+
+#: ../semanage/seobject.py:2745
+#, python-format
+msgid "Could not set active value of boolean %s"
+msgstr "لا يمكن ضبط القيمة المنطقية النشطة %s"
+
+#: ../semanage/seobject.py:2748
+#, python-format
+msgid "Could not modify boolean %s"
+msgstr "لا يمكن تعديل القيمة المنطقية %s"
+
+#: ../semanage/seobject.py:2764
+#, python-format
+msgid "Bad format %s: Record %s"
+msgstr "بنية خاطئة %s: سجّل %s"
+
+#: ../semanage/seobject.py:2788
+#, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "القيمة المنطقية %s معرفة في السياسة، لا يمكن حذفها"
+
+#: ../semanage/seobject.py:2792
+#, python-format
+msgid "Could not delete boolean %s"
+msgstr "لا يمكن حذف القيمة المنطقية %s"
+
+#: ../semanage/seobject.py:2804 ../semanage/seobject.py:2821
+msgid "Could not list booleans"
+msgstr "لا يمكن عرض قائمة القيم المنطقية"
+
+#: ../semanage/seobject.py:2854
+msgid "off"
+msgstr "إلغاء التشغيل"
+
+#: ../semanage/seobject.py:2854
+msgid "on"
+msgstr "تشغيل"
+
+#: ../semanage/seobject.py:2866
+msgid "SELinux boolean"
+msgstr "قيمة منطقية لـSELinux"
+
+#: ../semanage/seobject.py:2866
+msgid "State"
+msgstr "State"
+
+#: ../semanage/seobject.py:2866
+msgid "Default"
+msgstr "افتراضي"
+
+#: ../semanage/seobject.py:2866 ../sepolicy/sepolicy/sepolicy.glade:2148
+#: ../sepolicy/sepolicy/sepolicy.glade:2518
+#: ../sepolicy/sepolicy/sepolicy.glade:5107
+msgid "Description"
+msgstr "وصف"
+
+#: ../sepolgen/src/sepolgen/interfaces.py:481
+msgid "Found circular interface class"
+msgstr ""
+
+#: ../sepolgen/src/sepolgen/interfaces.py:486
+#, python-format
+msgid "Missing interface definition for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:139
+msgid "Standard Init Daemon"
+msgstr "خادم Init القياسي"
+
+#: ../sepolicy/sepolicy/generate.py:140
+msgid "DBUS System Daemon"
+msgstr "خادم نظام DBUS"
+
+#: ../sepolicy/sepolicy/generate.py:141
+msgid "Internet Services Daemon"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:142
+msgid "Web Application/Script (CGI)"
+msgstr "تطبيق الإنترنت/البرنامج النصي (CGI)"
+
+#: ../sepolicy/sepolicy/generate.py:143
+msgid "Sandbox"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:144
+msgid "User Application"
+msgstr "تطبيقات المستخدم"
+
+#: ../sepolicy/sepolicy/generate.py:145
+msgid "Existing Domain Type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:146
+msgid "Minimal Terminal Login User Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:147
+msgid "Minimal X Windows Login User Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:148
+msgid "Desktop Login User Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:149
+msgid "Administrator Login User Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:150
+msgid "Confined Root Administrator Role"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:151
+msgid "Module information for a new type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:157
+msgid "Valid Types:\n"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:192
+#, python-format
+msgid "Ports must be numbers or ranges of numbers from 1 to %d "
+msgstr "المنافذ يجب أن تكون أرقاماً أو مجالات من الأرقام تبدأ من 1 إلى %d"
+
+#: ../sepolicy/sepolicy/generate.py:204
+msgid "You must enter a valid policy type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:207
+#, python-format
+msgid "You must enter a name for your policy module for your '%s'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:345
+msgid ""
+"Name must be alphanumeric with no spaces. Consider using option \"-n "
+"MODULENAME\""
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:437
+msgid "User Role types can not be assigned executables."
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:443
+msgid "Only Daemon apps can use an init script."
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:461
+msgid "use_resolve must be a boolean value "
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:467
+msgid "use_syslog must be a boolean value "
+msgstr "use_syslog يجب أن تكون قيمة منطقية"
+
+#: ../sepolicy/sepolicy/generate.py:473
+msgid "use_kerberos must be a boolean value "
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:479
+msgid "manage_krb5_rcache must be a boolean value "
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:509
+msgid "USER Types automatically get a tmp type"
+msgstr "نوع المستخدم USER يحصل آليا على نوع tmp"
+
+#: ../sepolicy/sepolicy/generate.py:846
+#, python-format
+msgid "'%s' policy modules require existing domains"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:871
+msgid "Type field required"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:884
+#, python-format
+msgid ""
+"You need to define a new type which ends with: \n"
+" %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:1112
+msgid "You must enter the executable path for your confined process"
+msgstr "يجب أن تدخل المسار القابل للتنفيذ من أجل عمليتك المحصورة"
+
+#: ../sepolicy/sepolicy/generate.py:1378
+msgid "Type Enforcement file"
+msgstr "ملف إلزام النوع"
+
+#: ../sepolicy/sepolicy/generate.py:1379
+msgid "Interface file"
+msgstr "ملف الواجهة"
+
+#: ../sepolicy/sepolicy/generate.py:1380
+msgid "File Contexts file"
+msgstr "ملف سياقات الملف"
+
+#: ../sepolicy/sepolicy/generate.py:1382
+msgid "Spec file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:1383
+msgid "Setup Script"
+msgstr "إعداد البرنامج النصي"
+
+#: ../sepolicy/sepolicy/gui.py:66 ../sepolicy/sepolicy/sepolicy.glade:3732
+#: ../sepolicy/sepolicy/sepolicy.glade:3834
+#: ../sepolicy/sepolicy/sepolicy.glade:3897
+#: ../sepolicy/sepolicy/sepolicy.glade:3960
+msgid "No"
+msgstr "لا"
+
+#: ../sepolicy/sepolicy/gui.py:66 ../sepolicy/sepolicy/sepolicy.glade:3715
+#: ../sepolicy/sepolicy/sepolicy.glade:3816
+#: ../sepolicy/sepolicy/sepolicy.glade:3880
+#: ../sepolicy/sepolicy/sepolicy.glade:3943
+msgid "Yes"
+msgstr "نعم"
+
+#: ../sepolicy/sepolicy/gui.py:67
+msgid "Disable"
+msgstr "تَعطّيل"
+
+#: ../sepolicy/sepolicy/gui.py:67
+msgid "Enable"
+msgstr "تَمكين"
+
+#: ../sepolicy/sepolicy/gui.py:80 ../sepolicy/sepolicy/sepolicy.glade:726
+#: ../sepolicy/sepolicy/sepolicy.glade:1467
+#: ../sepolicy/sepolicy/sepolicy.glade:3501
+msgid "Advanced >>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:80
+msgid "Advanced <<"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:81 ../sepolicy/sepolicy/sepolicy.glade:80
+msgid "Advanced Search >>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:81
+msgid "Advanced Search <<"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:106
+msgid ""
+"<small>\n"
+"To change from Disabled to Enforcing mode\n"
+"- Change the system mode from Disabled to Permissive\n"
+"- Reboot, so that the system can relabel\n"
+"- Once the system is working as planned\n"
+"  * Change the system mode to Enforcing</small>\n"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:502
+#, python-format
+msgid "%s is not a valid domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:651
+msgid "System Status: Disabled"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:749
+msgid "Help: Start Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:753
+msgid "Help: Booleans Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:759
+msgid "Help: Executable Files Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:762
+msgid "Help: Writable Files Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:765
+msgid "Help: Application Types Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:770
+msgid "Help: Outbound Network Connections Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:773
+msgid "Help: Inbound Network Connections Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:779
+msgid "Help: Transition from application Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:782
+msgid "Help: Transition into application Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:785
+msgid "Help: Transition application file Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:789
+msgid "Help: Systems Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:793
+msgid "Help: Lockdown Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:797
+msgid "Help: Login Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:801
+msgid "Help: SELinux User Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:805
+msgid "Help: File Equivalence Page"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:950 ../sepolicy/sepolicy/gui.py:1241
+#: ../sepolicy/sepolicy/gui.py:1681 ../sepolicy/sepolicy/gui.py:1928
+#: ../sepolicy/sepolicy/gui.py:2716
+msgid "More..."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1058
+#, python-format
+msgid "File path used to enter the '%s' domain."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1059
+#, python-format
+msgid "Files to which the '%s' domain can write."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1060
+#, python-format
+msgid "Network Ports to which the '%s' is allowed to connect."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1061
+#, python-format
+msgid "Network Ports to which the '%s' is allowed to listen."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1062
+#, python-format
+msgid "File Types defined for the '%s'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1063
+#, python-format
+msgid ""
+"Display boolean information that can be used to modify the policy for the "
+"'%s'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1064
+#, python-format
+msgid "Display file type information that can be used by the '%s'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1065
+#, python-format
+msgid "Display network ports to which the '%s' can connect or listen to."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1066
+#, python-format
+msgid "Application Transitions Into '%s'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1067
+#, python-format
+msgid "Application Transitions From '%s'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1068
+#, python-format
+msgid "File Transitions From '%s'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1069
+#, python-format
+msgid ""
+"Executables which will transition to '%s', when executing selected domains "
+"entrypoint."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1070
+#, python-format
+msgid ""
+"Executables which will transition to a different domain, when '%s' executes "
+"them."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1071
+#, python-format
+msgid "Files by '%s' with transitions to a different label."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1072
+#, python-format
+msgid "Display applications that can transition into or out of the '%s'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1166 ../sepolicy/sepolicy/__init__.py:82
+msgid "all files"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1180
+msgid "MISSING FILE PATH"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1295
+#, python-format
+msgid "To disable this transition, go to the %sBoolean section%s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1297
+#, python-format
+msgid "To enable this transition, go to the %sBoolean section%s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1354
+msgid "executable"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1357
+msgid "writable"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1360
+msgid "application"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1361
+#, python-format
+msgid "Add new %(TYPE)s file path for '%(DOMAIN)s' domains."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1362
+#, python-format
+msgid "Delete %(TYPE)s file paths for '%(DOMAIN)s' domain."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1363
+#, python-format
+msgid ""
+"Modify %(TYPE)s file path for '%(DOMAIN)s' domain. Only bolded items in the "
+"list can be selected, this indicates they were modified previously."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1375
+msgid "connect"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1378
+msgid "listen for inbound connections"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1380
+#, python-format
+msgid ""
+"Add new port definition to which the '%(APP)s' domain is allowed to %(PERM)s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1381
+#, python-format
+msgid ""
+"Delete modified port definitions to which the '%(APP)s' domain is allowed to "
+"%(PERM)s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1382
+#, python-format
+msgid ""
+"Modify port definitions to which the '%(APP)s' domain is allowed to %(PERM)s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1411
+msgid "Add new SELinux User/Role definition."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1412
+msgid "Delete modified SELinux User/Role definitions."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1413
+msgid "Modify selected modified SELinux User/Role definitions."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1420
+msgid "Add new Login Mapping definition."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1421
+msgid "Delete modified Login Mapping definitions."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1422
+msgid "Modify selected modified Login Mapping definitions."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1429
+msgid "Add new File Equivalence definition."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1430
+msgid "Delete modified File Equivalence definitions."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1431
+msgid ""
+"Modify selected modified File Equivalence definitions. Only bolded items in "
+"the list can be selected, this indicates they were modified previously."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1459
+#, python-format
+msgid "Boolean %s Allow Rules"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1472
+#, python-format
+msgid "Add Network Port for %s.  Ports will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1473
+#, python-format
+msgid "Add Network Port for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1478
+#, python-format
+msgid ""
+"Add File Labeling for %s. File labels will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1479 ../sepolicy/sepolicy/gui.py:1532
+#, python-format
+msgid "Add File Labeling for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1489
+msgid "Add Login Mapping. User Mapping will be created when Update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1490
+msgid "Add Login Mapping"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1495
+msgid ""
+"Add SELinux User Role. SELinux user roles will be created when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1496
+msgid "Add SELinux Users"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1503
+msgid ""
+"Add File Equivalency Mapping. Mapping will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1504
+msgid "Add SELinux File Equivalency"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1531
+#, python-format
+msgid ""
+"Modify File Labeling for %s. File labels will be created when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1587
+msgid ""
+"Modify SELinux User Role. SELinux user roles will be modified when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1588
+msgid "Modify SELinux Users"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1596
+msgid ""
+"Modify Login Mapping. Login Mapping will be modified when Update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1597
+msgid "Modify Login Mapping"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1603
+msgid ""
+"Modify File Equivalency Mapping. Mapping will be created when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1604
+msgid "Modify SELinux File Equivalency"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1689
+#, python-format
+msgid ""
+"Modify Network Port for %s.  Ports will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1690
+#, python-format
+msgid "Modify Network Port for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1909
+#, python-format
+msgid "The entry '%s' is not a valid path.  Paths must begin with a '/'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1922
+msgid "Port number must be between 1 and 65536"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2202
+#, python-format
+msgid "SELinux name: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2213
+#, python-format
+msgid "Add file labeling for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2215
+#, python-format
+msgid "Delete file labeling for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2217
+#, python-format
+msgid "Modify file labeling for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2221
+#, python-format
+msgid "File path: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2224
+#, python-format
+msgid "File class: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2227 ../sepolicy/sepolicy/gui.py:2251
+#, python-format
+msgid "SELinux file type: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2236
+#, python-format
+msgid "Add ports for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2238
+#, python-format
+msgid "Delete ports for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2240
+#, python-format
+msgid "Modify ports for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2243
+#, python-format
+msgid "Network ports: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2246
+#, python-format
+msgid "Network protocol: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2260
+msgid "Add user"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2262
+msgid "Delete user"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2264
+msgid "Modify user"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2267
+#, python-format
+msgid "SELinux User : %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2272
+#, python-format
+msgid "Roles: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2276 ../sepolicy/sepolicy/gui.py:2301
+#, python-format
+msgid "MLS/MCS Range: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2285
+msgid "Add login mapping"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2287
+msgid "Delete login mapping"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2289
+msgid "Modify login mapping"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2293
+#, python-format
+msgid "Login Name : %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2297
+#, python-format
+msgid "SELinux User: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2310
+msgid "Add file equiv labeling."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2312
+msgid "Delete file equiv labeling."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2314
+msgid "Modify file equiv labeling."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2318
+#, python-format
+msgid "File path : %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2322
+#, python-format
+msgid "Equivalence: %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2353 ../sepolicy/sepolicy/sepolicy.glade:129
+#: ../sepolicy/sepolicy/sepolicy.glade:1898
+#: ../sepolicy/sepolicy/sepolicy.glade:3793
+msgid "System"
+msgstr "النّظام"
+
+#: ../sepolicy/sepolicy/gui.py:2362 ../sepolicy/sepolicy/sepolicy.glade:95
+msgid "File Equivalence"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2372 ../sepolicy/sepolicy/sepolicy.glade:112
+msgid "Users"
+msgstr "المستخدمون"
+
+#: ../sepolicy/sepolicy/gui.py:2425
+#, python-format
+msgid ""
+"Run restorecon on %(PATH)s to change its type from %(CUR_CONTEXT)s to the "
+"default %(DEF_CONTEXT)s?"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2435 ../sepolicy/sepolicy/sepolicy.glade:4216
+msgid "Update"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2437
+msgid "Update Changes"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2439
+msgid "Revert Changes"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2570
+msgid "System Status: Enforcing"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2573
+msgid "System Status: Permissive"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2637
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"تغيير نوع السياسة سيسبب إعادة عنونة ملفات النظام الكلي عند إعادة التشغيل. "
+"إعادة العنونة يمكن أن تستغرق وقتاً طويلاً، اعتماداً على حجم النظام. هل ترغب في "
+"الاستمرار؟"
+
+#: ../sepolicy/sepolicy/gui.py:2767
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot.  Do you "
+"wish to continue?"
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2771
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"تغيير لتمكين SELinux سوف يسبب إعادة عنونة نظام الملفات الكلي عند إعادة "
+"التشغيل. إعادة العنونة يمكن أن تستغرق وقتاً طويلاً، اعتماداً على حجم النظام. هل "
+"ترغب في الاستمرار؟"
+
+#: ../sepolicy/sepolicy/gui.py:2801
+msgid ""
+"You are attempting to close the application without applying your changes.\n"
+"    *    To apply changes you have made during this session, click No and "
+"click Update.\n"
+"    *    To leave the application without applying your changes, click Yes.  "
+"All changes that you have made during this session will be lost."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:2801
+msgid "Loss of data Dialog"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:83
+msgid "regular file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:84
+msgid "directory"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:85
+msgid "character device"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:86
+msgid "block device"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:87
+msgid "socket file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:88
+msgid "symbolic link"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:89
+msgid "named pipe"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:147
+msgid "No SELinux Policy installed"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:183
+#, python-format
+msgid "Failed to read %s policy file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:464
+#, python-format
+msgid "-- Allowed %s [ %s ]"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:890
+msgid "You must regenerate interface info by running /usr/bin/sepolgen-ifgen"
+msgstr ""
+
+#: ../sepolicy/sepolicy/__init__.py:1215
+msgid "unknown"
+msgstr "غير معروف"
+
+#: ../sepolicy/sepolicy/interface.py:221
+#, python-format
+msgid "Compiling %s interface"
+msgstr ""
+
+#: ../sepolicy/sepolicy/interface.py:229
+#, python-format
+msgid ""
+"\n"
+"Compile test for %s failed.\n"
+msgstr ""
+
+#: ../sepolicy/sepolicy/interface.py:232
+#, python-format
+msgid ""
+"\n"
+"Compile test for %s has not run. %s\n"
+msgstr ""
+
+#: ../sepolicy/sepolicy/interface.py:238
+#, python-format
+msgid ""
+"\n"
+"Compiling of %s interface is not supported."
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:219
+#, python-format
+msgid "Interface %s does not exist."
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:316
+msgid "You need to install policycoreutils-gui package to use the gui option"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:321
+msgid "Graphical User Interface for SELinux Policy"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:324 ../sepolicy/sepolicy.py:379
+msgid "Domain name(s) of man pages to be created"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:342
+msgid "Alternative root needs to be setup"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:361
+msgid "Generate SELinux man pages"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:364
+msgid "path in which the generated SELinux man pages will be stored"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:366
+msgid "name of the OS for man pages"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:368
+msgid "Generate HTML man pages structure for selected SELinux man page"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:370
+msgid "Alternate root directory, defaults to /"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:372
+msgid ""
+"With this flag, alternative root path needs to include file context files "
+"and policy.xml file"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:376
+msgid "All domains"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:385
+msgid "Query SELinux policy network information"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:390
+msgid "list all SELinux port types"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:393
+msgid "show SELinux type related to the port"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:396
+msgid "Show ports defined for this SELinux type"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:399
+msgid "show ports to which this domain can bind and/or connect"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:402
+msgid "show ports to which this application can bind and/or connect"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:419
+msgid "query SELinux policy to see if domains can communicate with each other"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:422
+msgid "Source Domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:425
+msgid "Target Domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:446
+msgid "query SELinux Policy to see description of booleans"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:450
+msgid "get all booleans descriptions"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:453
+msgid "boolean to get description"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:465
+msgid ""
+"query SELinux Policy to see how a source process domain can transition to "
+"the target process domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:468
+msgid "source process domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:471
+msgid "target process domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:516
+#, python-format
+msgid "sepolicy generate: error: one of the arguments %s is required"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:521
+msgid "Command required for this type of policy"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:532
+#, python-format
+msgid ""
+"-t option can not be used with '%s' domains. Read usage for more details."
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:537
+#, python-format
+msgid ""
+"-d option can not be used with '%s' domains. Read usage for more details."
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:541
+#, python-format
+msgid ""
+"-a option can not be used with '%s' domains. Read usage for more details."
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:545
+msgid "-w option can not be used with the --newtype option"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:566
+msgid "List SELinux Policy interfaces"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:586
+msgid "Enter interface names, you wish to query"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:596
+msgid "Generate SELinux Policy module template"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:599
+msgid "Enter domain type which you will be extending"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:602
+msgid "Enter SELinux user(s) which will transition to this domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:605
+msgid "Enter SELinux role(s) to which the administror domain will transition"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:608
+msgid "Enter domain(s) which this confined admin will administrate"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:611
+msgid "name of policy to generate"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:618
+msgid "path in which the generated policy files will be stored"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:620
+msgid "path to which the confined processes will need to write"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:621
+msgid "Policy types which require a command"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:625 ../sepolicy/sepolicy.py:628
+#: ../sepolicy/sepolicy.py:631 ../sepolicy/sepolicy.py:634
+#: ../sepolicy/sepolicy.py:637 ../sepolicy/sepolicy.py:643
+#: ../sepolicy/sepolicy.py:646 ../sepolicy/sepolicy.py:649
+#: ../sepolicy/sepolicy.py:655 ../sepolicy/sepolicy.py:658
+#: ../sepolicy/sepolicy.py:661 ../sepolicy/sepolicy.py:664
+#, python-format
+msgid "Generate '%s' policy"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:652
+#, python-format
+msgid "Generate '%s' policy "
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:666
+msgid "executable to confine"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:671
+msgid "commands"
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:674
+msgid "Alternate SELinux policy, defaults to /sys/fs/selinux/policy"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:25
+#: ../sepolicy/sepolicy/sepolicy.glade:4320
+msgid "Applications"
+msgstr "تطبيقات"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:52
+msgid "Select domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:189
+#: ../sepolicy/sepolicy/sepolicy.glade:4357
+#: ../sepolicy/sepolicy/sepolicy.glade:4450
+#: ../sepolicy/sepolicy/sepolicy.glade:4596
+#: ../sepolicy/sepolicy/sepolicy.glade:4745
+#: ../sepolicy/sepolicy/sepolicy.glade:4879
+#: ../sepolicy/sepolicy/sepolicy.glade:5020
+#: ../sepolicy/sepolicy/sepolicy.glade:5093
+#: ../sepolicy/sepolicy/sepolicy.glade:5228
+msgid "Select"
+msgstr "اختيار"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:204
+#: ../sepolicy/sepolicy/sepolicy.glade:539
+#: ../sepolicy/sepolicy/sepolicy.glade:684
+#: ../sepolicy/sepolicy/sepolicy.glade:1239
+#: ../sepolicy/sepolicy/sepolicy.glade:1535
+#: ../sepolicy/sepolicy/sepolicy.glade:4530
+#: ../sepolicy/sepolicy/sepolicy.glade:4680
+#: ../sepolicy/sepolicy/sepolicy.glade:4811
+#: ../sepolicy/sepolicy/sepolicy.glade:4945
+#: ../sepolicy/sepolicy/sepolicy.glade:5163
+#: ../sepolicy/sepolicy/sepolicy.glade:5294
+#: ../sepolicy/sepolicy/sepolicy.glade:5454
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:332
+msgid ""
+"The entry that was entered is incorrect.  Please try again in the "
+"ex:/.../... format."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:358
+msgid "Retry"
+msgstr "أعد المحاولة"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:442
+#: ../sepolicy/sepolicy/sepolicy.glade:1120
+#: ../sepolicy/sepolicy/sepolicy.glade:1368
+#: ../sepolicy/sepolicy/sepolicy.glade:5322
+msgid "Network Port Definitions"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:458
+msgid ""
+"Add file Equivalence Mapping.  Mapping will be created when Update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:483
+#: ../sepolicy/sepolicy/sepolicy.glade:4036
+msgid "Path"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:493
+#: ../sepolicy/sepolicy/sepolicy.glade:5374
+msgid ""
+"Specify a new SELinux user name.  By convention SELinux User names usually "
+"end in an _u."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:497
+msgid "Enter the path to which you want to setup an equivalence label."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:510
+#: ../sepolicy/sepolicy/sepolicy.glade:4053
+#: ../sepolicy/sepolicy/sepolicy.glade:4771
+msgid "Equivalence Path"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:524
+#: ../sepolicy/sepolicy/sepolicy.glade:669
+#: ../sepolicy/sepolicy/sepolicy.glade:1224
+#: ../sepolicy/sepolicy/sepolicy.glade:1520
+#: ../sepolicy/sepolicy/sepolicy.glade:5439
+msgid "Save to update"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:564
+msgid ""
+"Specify the mapping between the new path and the equivalence path.  "
+"Everything under this new path will be labeled as if they were under the "
+"equivalence path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:621
+msgid "Add a file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:638
+msgid ""
+"<operation> File Labeling for <selected domain>. File labels will be created "
+"when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:711
+#: ../sepolicy/sepolicy/sepolicy.glade:1485
+msgid "MLS"
+msgstr "MLS"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:747
+#: ../sepolicy/sepolicy/sepolicy.glade:2306
+#: ../sepolicy/sepolicy/sepolicy.glade:2418
+#: ../sepolicy/sepolicy/sepolicy.glade:2540
+#: ../sepolicy/sepolicy/sepolicy.glade:4490
+msgid "Class"
+msgstr "الصنف"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:763
+msgid "Type"
+msgstr "النّوع"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:777
+msgid ""
+"Select the file class to which this label will be applied.  Defaults to all "
+"classes."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:804
+msgid "Make Path Recursive"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:808
+msgid ""
+"Select Make Path Recursive if you want to apply this label to all children "
+"of the specified directory path. objects under the directory to have this "
+"label."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:821
+msgid "Browse"
+msgstr "تصفح"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:825
+msgid "Browse to select the file/directory for labeling."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:869
+msgid "Path  "
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:880
+msgid ""
+"Specify the path using regular expressions that you would like to modify the "
+"labeling."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:902
+msgid "Select the SELinux file type to assign to this path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:929
+msgid "Enter the MLS Label to assign to this file path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:933
+msgid "SELinux MLS Label you wish to assign to this path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1070
+msgid "Analyzing Policy..."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1137
+msgid ""
+"Add Login Mapping. Login Mapping will be created when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1172
+msgid ""
+"Enter the login user name of the user to which you wish to add SELinux User "
+"confinement."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1201
+msgid ""
+"Select the SELinux User to assign to this login user.  Login users by "
+"default get assigned by the __default__ user."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1264
+msgid ""
+"Enter MLS/MCS Range for this login User.  Defaults to the range for the "
+"Selected SELinux User."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1267
+#: ../sepolicy/sepolicy/sepolicy.glade:3182
+#: ../sepolicy/sepolicy/sepolicy.glade:3303
+#: ../sepolicy/sepolicy/sepolicy.glade:5404
+msgid "MLS Range"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1279
+msgid ""
+"Specify the MLS Range for this user to login in with.  Defaults to the "
+"selected SELinux Users MLS Range."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1385
+msgid ""
+"<operation> Network Port for <selected domain>.  Ports will be created when "
+"update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1423
+msgid "Enter the port number or range to which you want to add a port type."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1439
+#: ../sepolicy/sepolicy/sepolicy.glade:2658
+#: ../sepolicy/sepolicy/sepolicy.glade:2756
+#: ../sepolicy/sepolicy/sepolicy.glade:4623
+msgid "Protocol"
+msgstr "بروتوكول"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1453
+msgid "Port Type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1498
+msgid "Select the port type you want to assign to the specified port number."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1562
+msgid "tcp"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1566
+msgid ""
+"Select <b>tcp</b> if the port type should be assigned to tcp port numbers."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1579
+msgid "udp"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1583
+msgid ""
+"Select <b>udp</b> if the port type should be assigned to udp port numbers."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1605
+msgid "Enter the MLS Label to assign to this port."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1707
+msgid "SELinux Configuration"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1743
+msgid "Select..."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1792
+#: ../sepolicy/sepolicy/sepolicy.glade:2212
+msgid "Booleans"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1796
+msgid ""
+"Display boolean information that can be used to modify the policy for the "
+"'selected domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1810
+#: ../sepolicy/sepolicy/sepolicy.glade:2597
+msgid "Files"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1814
+msgid ""
+"Display file type information that can be used by the 'selected domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1828
+#: ../sepolicy/sepolicy/sepolicy.glade:2830
+msgid "Network"
+msgstr "شبكة"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1832
+msgid ""
+"Display network ports to which the 'selected domain' can connect or listen "
+"to."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1846
+#: ../sepolicy/sepolicy/sepolicy.glade:3111
+msgid "Transitions"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1850
+msgid ""
+"Display applications that can transition into or out of the 'selected "
+"domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1864
+#: ../sepolicy/sepolicy/sepolicy.glade:3212
+msgid "Login Mapping"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1867
+#: ../sepolicy/sepolicy/sepolicy.glade:1884
+#: ../sepolicy/sepolicy/sepolicy.glade:1901
+msgid "Manage the SELinux configuration"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1881
+#: ../sepolicy/sepolicy/sepolicy.glade:3334
+msgid "SELinux Users"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1915
+#: ../sepolicy/sepolicy/sepolicy.glade:4006
+msgid "Lockdown"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1918
+msgid ""
+"Lockdown the SELinux System.\n"
+"This screen can be used to turn up the SELinux Protections."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1933
+msgid "radiobutton"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1993
+msgid "Filter"
+msgstr "مرشح"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2021
+msgid "Show Modified Only"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2060
+msgid "Mislabeled files exist"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2080
+msgid "Show mislabeled files only"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2120
+#: ../sepolicy/sepolicy/sepolicy.glade:3234
+msgid ""
+"If-Then-Else rules written in policy that can\n"
+"allow alternative access control."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2132
+msgid "Enabled"
+msgstr "مفعّل"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2183
+msgid "Name"
+msgstr "الاسم"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2252
+#: ../sepolicy/sepolicy/sepolicy.glade:2364
+#: ../sepolicy/sepolicy/sepolicy.glade:2482
+#: ../sepolicy/sepolicy/sepolicy.glade:4463
+#: ../sepolicy/sepolicy/sepolicy.glade:4758
+msgid "File Path"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2288
+#: ../sepolicy/sepolicy/sepolicy.glade:2399
+msgid "SELinux File Type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2332
+msgid "File path used to enter the 'selected domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2333
+msgid "Executable Files"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2448
+msgid "Files to which the 'selected domain' can write."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2449
+msgid "Writable files"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2571
+msgid "File Types defined for the 'selected domain'."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2572
+msgid "Application File Types"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2639
+#: ../sepolicy/sepolicy/sepolicy.glade:2738
+#: ../sepolicy/sepolicy/sepolicy.glade:4609
+msgid "Port"
+msgstr "منفذ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2704
+msgid "Network Ports to which the 'selected domain' is allowed to connect."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2705
+msgid "Outbound"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2804
+msgid "Network Ports to which the 'selected domain' is allowed to listen."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2805
+msgid "Inbound"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2866
+#: ../sepolicy/sepolicy/sepolicy.glade:2946
+msgid ""
+"Boolean\n"
+"Enabled"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2882
+#: ../sepolicy/sepolicy/sepolicy.glade:2978
+msgid "Executable File"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2899
+msgid "SELinux Application Type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2920
+msgid ""
+"Executables which will transition to a different domain, when the 'selected "
+"domain' executes them."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2923
+msgid "Application Transitions From 'select domain'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2962
+msgid "Calling Process Domain"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3002
+msgid ""
+"Executables which will transition to the 'selected domain', when executing a "
+"selected domains entrypoint."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3003
+msgid "Application Transitions Into 'select domain'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3018
+msgid ""
+"File Transitions define what happens when the current domain creates the "
+"content of a particular class in a directory of the destination type. "
+"Optionally a file name could be specified for the transition."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3026
+msgid "SELinux Directory Type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3039
+msgid "Destination Class"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3053
+msgid "SELinux Destination Type"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3066
+msgid "File Name"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3088
+msgid "File Transitions From 'select domain'"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3287
+#: ../sepolicy/sepolicy/sepolicy.glade:5498
+msgid "Default Level"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3373
+msgid "Select the system mode when the system first boots up"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3385
+#: ../sepolicy/sepolicy/sepolicy.glade:3459
+msgid "Enforcing"
+msgstr "إلزامي"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3404
+#: ../sepolicy/sepolicy/sepolicy.glade:3477
+msgid "Permissive"
+msgstr "متساهل"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3446
+msgid "Select the system mode for the current session"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3523
+msgid "System Policy Type:"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3584
+msgid "<b>System Mode</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3622
+msgid "Import system settings from another machine"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3630
+msgid "Import"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3649
+msgid "Export system settings to a file"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3659
+msgid "Export"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3678
+msgid "Relabel all files back to system defaults on reboot"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3773
+msgid "<b>System Configuration</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3820
+#: ../sepolicy/sepolicy/sepolicy.glade:3838
+msgid ""
+"An unconfined domain is a process label that allows the process to do what "
+"it wants, without SELinux interfering.  Applications started at boot by the "
+"init system that SELinux do not have defined SELinux policy will run as "
+"unconfined if this module is enabled.  Disabling it means all daemons will "
+"now be confined.  To disable the unconfined_t user you must first remove "
+"unconfined_t from the users/login screens."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3856
+msgid "<b>Disable ability to run unconfined system processes?</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3884
+#: ../sepolicy/sepolicy/sepolicy.glade:3901
+#: ../sepolicy/sepolicy/sepolicy.glade:3947
+#: ../sepolicy/sepolicy/sepolicy.glade:3964
+msgid ""
+"A permissive domain is a process label that allows the process to do what it "
+"wants, with SELinux only logging the denials, but not enforcing them.  "
+"Usually permissive domains indicate experimental policy, disabling the "
+"module could cause SELinux to deny access to a domain, that should be "
+"allowed."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3919
+msgid "<b>Disable all permissive processes?</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3985
+msgid "<b>Deny all processes from ptracing or debugging other processes?</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4022
+msgid ""
+"File equivalence cause the system to label content under the new path as if "
+"it were under the equivalence path."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4078
+msgid "Files Equivalence"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4091
+msgid "<b>...SELECT TO VIEW DATA...</b>"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4122
+msgid "Delete"
+msgstr "احذف"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4138
+msgid "Modify"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4153
+msgid "Add"
+msgstr "إضافة"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4199
+msgid "Revert"
+msgstr "اقلب"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4204
+msgid ""
+"Revert button will launch a dialog window which allows you to revert changes "
+"within the current transaction."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4221
+msgid "Commit all changes in your current transaction to the server."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4269
+msgid "Applications - Advanced Search"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4334
+msgid "Process Types"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4375
+msgid "More Details"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4411
+#: ../sepolicy/sepolicy/sepolicy.glade:4705
+msgid "Delete Modified File Labeling"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4429
+msgid ""
+"Select file labeling to delete. File labeling will be deleted when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4476
+msgid "SELinux File Label"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4515
+#: ../sepolicy/sepolicy/sepolicy.glade:4665
+#: ../sepolicy/sepolicy/sepolicy.glade:4796
+#: ../sepolicy/sepolicy/sepolicy.glade:4930
+#: ../sepolicy/sepolicy/sepolicy.glade:5279
+msgid "Save to Update"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4555
+msgid "Delete Modified Ports"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4573
+msgid "Select ports to delete. Ports will be deleted when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4723
+msgid ""
+"Select file equivalence labeling to delete. File equivalence labeling will "
+"be deleted when update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4839
+#: ../sepolicy/sepolicy/sepolicy.glade:5188
+msgid "Delete Modified Users Mapping."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4857
+msgid ""
+"Select login user mapping to delete. Login user mapping will be deleted when "
+"update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4892
+msgid "Login name"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4973
+msgid "More Types"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5000
+msgid "Types"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5059
+msgid ""
+"Review the updates you have made before committing them to the system.  To "
+"reset an item, uncheck the checkbox.  All items checked will be updated in "
+"the system when you select update."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5122
+msgid "Action"
+msgstr "نشاط"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5148
+msgid "Apply"
+msgstr "تطبيق"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5206
+msgid ""
+"Select users mapping to delete.Users mapping will be deleted when update is "
+"applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5254
+msgid "SELinux Username"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5339
+msgid ""
+"Add User Roles. SELinux User Roles will be created when Update is applied."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5364
+msgid "SELinux User Name"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5479
+msgid ""
+"Enter MLS/MCS Range for this SELinux User.\n"
+"s0-s0:c1023"
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5510
+msgid ""
+"Specify the default level that you would like this SELinux user to login "
+"with.  Defaults to s0."
+msgstr ""
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5514
+msgid "Enter Default Level for SELinux User to login with. Default s0"
+msgstr ""
+
+#~ msgid "Protocol udp or tcp is required"
+#~ msgstr "بروتوكول udp أو tcp مطلوب"

@@ -1,0 +1,1046 @@
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+# yuliya <ypoyarko@redhat.com>, 2016. #zanata
+# Igor Gorbounov <igor.gorbounov@gmail.com>, 2017. #zanata
+# Ludek Janda <ljanda@redhat.com>, 2017. #zanata
+# Parag <pnemade@redhat.com>, 2017. #zanata
+# Vit Mojzis <vmojzis@redhat.com>, 2017. #zanata
+# Ludek Janda <ljanda@redhat.com>, 2018. #zanata
+# Olesya Gerasimenko <gammaray@basealt.ru>, 2018. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2018-11-20 10:24-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"X-Generator: Zanata 4.6.2\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "Логические переменные"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "все"
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "Другие"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "Домен процесса"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr "Доменное имя"
+
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr "Режим"
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "Разрешающий"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "Метки файлов"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"Спецификация\n"
+"файла"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"Тип файлов\n"
+"SELinux"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"Тип\n"
+"файла"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "Пользователи"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr "Пользователь"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"Пользователь\n"
+"SELinux"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"Диапазон\n"
+"MLS/MCS"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "Необходима авторизация «%s»"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "Модуль политики"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "Имя модуля"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr "Приоритет"
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr "Тип"
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "Отключить аудит"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "Включить аудит"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "Загрузить модуль политики"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "Имя"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "Описание"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "Роль"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "Существующий_пользователь"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "Программа"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s должен быть каталогом"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "Необходимо выбрать пользователя"
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "Выберите исполняемый файл для ограничения."
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "Выберите сценарий init для ограничения."
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr ""
+"Выберите файлы, которые ограничиваемое приложение будет создавать и "
+"записывать"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr "Выберите каталоги, которые будут принадлежать ограничиваемой программе"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "Выберите каталог, в котором будут создаваться файлы политики"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"Тип %s_t уже определен в текущей политике.\n"
+"Продолжить?"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "Проверка имени"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"Модуль %s уже загружен в текущую политику.\n"
+"Продолжить?"
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr "Добавьте имя, содержащее буквы и цифры без пробелов."
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "Необходимо указать исполняемый файл"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+#, fuzzy
+#| msgid "Configue SELinux"
+msgid "Configure SELinux"
+msgstr "Настроить SELinux"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr "Yulia Poyarkova (ypoyarko@redhat.com)"
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "Добавить диалог логических переменных"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "Имя логической переменной"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "Программа формирования политики SELinux"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr "<b>Выберите тип политики для ограничиваемого приложения или роли:</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>Приложения</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "Стандартная служба init"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"Стандартные службы инициализации запускаются во время загрузки в рамках "
+"сценариев init. Требует наличия сценария в /etc/rc.d/init.d"
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "Системная программа DBUS"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "inetd (Internet Services Daemon)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "initd запускается службой xinetd"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "Веб-приложение/сценарий CGI"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr "Веб-программы и сценарии CGI, запускаемые веб-сервером Apache"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "Программа пользователя"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+"Программа пользователя — запущенная пользователем программа, которая будет "
+"ограничена"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "Песочница"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>Зарегистрированные пользователи</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "Существующие пользователи"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "Изменить существующую запись пользователя."
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "Минимальная роль пользователя терминала"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"Этот пользователь сможет авторизоваться удаленно или через терминал. По "
+"умолчанию для него не задан setuid, su, sudo и не настроена сеть."
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "Минимальная роль пользователя X Window"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"Этот пользователь может авторизоваться через терминал или X. По умолчанию "
+"для него не задан setuid, su, sudo и не настроена сеть."
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "Роль пользователя"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+"Пользователь с настроенным сетевым окружением, программы без setuid, sudo, "
+"su."
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "Роль администратора"
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"Пользователь с полностью настроенным сетевым окружением, программы без "
+"setuid, без su, может выполнять sudo для роли  администрирования root"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>Пользователи Root</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "Роль администратора root"
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"Если пользователь будет выполнять задачи администрирования, выберите роль "
+"администратора root. Администратор не сможет авторизоваться в системе "
+"напрямую."
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>Введите имя приложения или роль:</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr "Введите полный путь к ограничиваемой программе."
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "..."
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr ""
+"Введите уникальное имя ограничиваемого приложения или роль пользователя."
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "Исполняемый файл"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "Сценарий Init"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr ""
+"Введите полный путь к сценарию init, запускающему ограничиваемое приложение."
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>Выберите роль для изменения:</b>"
+
+#: ../polgen.ui:904
+#, fuzzy, python-format
+#| msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "Выберите роли для переноса в домен %s."
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "вкладка роли"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>Выберите новые роли для %s</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr "Выберите домены приложений, куда будет перенесен %s."
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"перенос \n"
+"вкладка ролей"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>Выберите роли, которые будут перенесены в %s:</b>"
+
+#: ../polgen.ui:1007
+#, fuzzy
+#| msgid ""
+#| "Select the user roles that will transiton to this applications domains."
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr "Выберите роли, которые будут перенесены в домены программ."
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>Выберите домены, которыми будет управлять %s:</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "Выберите домены, которыми будет управлять этот пользователь."
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>Выберите дополнительные  роли для %s:</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>Укажите сетевые порты, к которым будет привязан %s:</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>Порты TCP</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "Все"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "Разрешает привязку %s к портам UDP"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr ""
+"Разрешить %s вызывать bindresvport со значением 0. Привязка к порту 600-1024"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "Незарезервированные (>1024)"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"Введите список диапазонов и портов UDP,  к которым будет привязан  %s. "
+"Пример: 612, 650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "Выберите порты"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "Разрешает привязку %s к портам UDP с номером больше 1024"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>Порты UDP</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"сеть\n"
+"вкладка привязки"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>Выберите сетевые порты, к которым будет подключаться %s:</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "Разрешает подключение %s к любому порту TCP"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"Введите список диапазонов и портов TCP,  к которым будет подключаться %s. "
+"Пример: 612, 650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "Разрешает подключение %s к любому порту UDP"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"Введите список диапазонов и портов UDP,  к которым будет подключаться %s. "
+"Пример: 612, 650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>Выберите типичные свойства приложения для %s:</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "Записывает сообщения syslog\\t"
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "Создать/управлять временными файлами в /tmp"
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "Использует аутентификацию PAM"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "Использует вызовы nsswitch или getpw*"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "Использует dbus"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "Отправляет сообщения аудита"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "Взаимодействует с терминалом"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "Отправляет электронные сообщения"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>Добавьте файлы и каталоги, которыми управляет %s</b>"
+
+#: ../polgen.ui:1978
+#, fuzzy
+#| msgid "Add File Context"
+msgid "Add File"
+msgstr "Добавить контекст файла"
+
+#: ../polgen.ui:2031
+#, fuzzy
+#| msgid "directory"
+msgid "Add Directory"
+msgstr "каталог"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr "Файлы и каталоги под «управлением» %s (файлы PID,  журналы, /var/lib)"
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>Добавить логические переменные из политики %s:</b>"
+
+#: ../polgen.ui:2179
+#, fuzzy
+#| msgid "Boolean"
+msgid "Add Boolean"
+msgstr "Логические переменные"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "Добавить или удалить логические переменные, используемые доменом %s"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>В каком каталоге будет создана политика %s?</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "Каталог политики"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "Сетевой порт"
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"Тип порта\n"
+"SELinux"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "Протокол"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"Уровень\n"
+"MLS/MCS"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "Порт"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "Неверный номер порта: «%s». Допустимые значения: 0-65536"
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "Список"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "Группы"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr "Создание модулей политики SELinux"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "Удалить %s «%s»?"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "Удалить %s"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "Добавить %s"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "Изменить %s"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr "Инструмент управления политиками SELinux"
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr "политика, безопасность, SELinux; АВК; разрешение; макинтош;"
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "Принудительный"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "Выключено"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "Статус"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"Изменение типа политики потребует разметки файловой системы при следующей "
+"загрузке. Процесс переразметки может быть довольно длительным в зависимости "
+"от размера файловой системы. Продолжить?"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"Отключение SELinux требует перезагрузки и не является рекомендуемой "
+"операцией. Если вы решите снова включить SELinux, потребуется заново "
+"провести разметку файловой системы. Чтобы убедиться, что SELinux не вызывает "
+"проблем, включите разрешающий режим, в котором ошибки будут регистрироваться "
+"без принудительного применения правил SELinux. Разрешающий режим не требует "
+"перезагрузки. Продолжить?"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"Активация SELinux потребует переразметки файловой системы при следующей "
+"загрузке. Процесс переразметки может быть довольно длительным в зависимости "
+"от размера файловой системы. Продолжить?"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr "Управление SELinux"
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr "Настройка SELinux в графическом режиме"
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"(c)2006 Red Hat, Inc.\n"
+"(c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "Добавить соответствие авторизации SELinux"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "Имя входа"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "Пользователь SELinux"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "Диапазон MLS/MCS"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "Добавить сетевые порты SELinux"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "Номер порта"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "Тип SELinux"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "Спецификация"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "Тип"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "Администрирование SELinux"
+
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "_Файл"
+
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "Добавить"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "_Свойства"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "_Удалить"
+
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "_Справка"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "Выберите объект управления"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>Выберите:</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "Режим по умолчанию"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "Текущий режим"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "Системная политика по умолчанию:"
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"Выберите, чтобы выполнить переразметку файловой системы при следующей "
+"перезагрузке.  Этот процесс может быть довольно длительным в зависимости от "
+"размера файловой системы и потребуется при изменении типа политики и при "
+"активации принудительного режима."
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr "Переразметить после перезагрузки"
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "Восстановить исходное логическое значение"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "Показать индивидуально настроенные логические значения/полный список"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "Фильтр"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "Добавить контекст файла"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "Изменить контекст файла"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "Удалить контекст файла"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "Показать настроенные файловые контексты/полный список"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "Добавить соответствие для пользователя SELinux"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "Изменить соответствие для пользователя SELinux"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "Удалить соответствие пользователя SELinux"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "Добавить пользователя"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "Изменить пользователя"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "Удалить пользователя"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "Добавить сетевой порт"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "Изменить сетевой порт"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "Удалить сетевой порт"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "Показать список настроенных портов/полный список"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "Создать новый модуль политики"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "Загрузить модуль политики"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "Удалить загружаемый модуль политики"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr ""
+"Включить или выключить дополнительные правила аудита, обычно не показываемые "
+"в журналах."
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "Изменить режим процесса на разрешающий"
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "Изменить режим процесса на принудительный"
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "Добавить пользователя SELinux"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "Роли SELinux"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "Пользователь SELinux «%s» является обязательным"
+
+#, fuzzy
+#~| msgid "Configue SELinux"
+#~ msgid "Run System Config SELinux"
+#~ msgstr "Настроить SELinux"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "sepolicy"
+#~ msgstr "sepolicy"
+
+#~ msgid "all files"
+#~ msgstr "все файлы"
+
+#~ msgid "regular file"
+#~ msgstr "обычный файл"
+
+#~ msgid "character device"
+#~ msgstr "символьное устройство"
+
+#~ msgid "block device"
+#~ msgstr "блочное устройство"
+
+#~ msgid "socket file"
+#~ msgstr "файл сокета"
+
+#~ msgid "symbolic link"
+#~ msgstr "символьная ссылка"
+
+#~ msgid "named pipe"
+#~ msgstr "именованный канал"

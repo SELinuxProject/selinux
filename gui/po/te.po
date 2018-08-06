@@ -1,0 +1,1025 @@
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2016-01-06 07:13-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Telugu\n"
+"Language: te\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Zanata 4.6.2\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "బూలియన్"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "అన్ని"
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "మలచుకొనిన"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "డౌమైన్ ప్రోసెస్ చేయుము"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr ""
+
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr ""
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "అనుమతిగల"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "దస్త్రము లేబులింగ్"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"దస్త్రము\n"
+"విశదీకరణము"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"Selinux\n"
+"దస్త్రము రకము"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"దస్త్రము\n"
+"రకము"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "వినియోగదారి మాపింగ్"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"లాగిన్\n"
+"నామము"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux\n"
+"వినియోగదారి"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"MLS/\n"
+"MCS వ్యాప్తి"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "లాగిన్ '%s' అవసరము"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "విధానం మాడ్యూల్"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "మాడ్యూల్ నామము"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr ""
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr ""
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "ఆడిట్ అచేతనంచేయుము"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "ఆడిట్ చేతనంచేయి"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "విధానం మాడ్యూల్‌ను నింపుము"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "నామము"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "వివరణ"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "పాత్ర"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "ఉన్న వినియోగదారి(_U)"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "అనువర్తనము"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s తప్పక ఒక సంచయం అవ్వాలి"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "మీరు తప్పక ఒక వినియోగదారిని ఎంపికచేయాలి"
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "పరిమితం చేయుటకు నిర్వర్తించదగు దస్త్రమును ఎంపికచేయుము"
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "పరిమితం చేయుటకు init స్క్రిప్ట్‍ దస్త్రమును ఎంపికచేయుము."
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr "పరిమిత అనునర్తనములు సృష్టించిన లేదా వ్రాసిన దస్త్రము(లు) ఎంపికచేయుము"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr "పరిమిత అనువర్తనములు కలిగివున్న మరియు వాటిలోకి వ్రాసిన సంచయము(లు) ఎంపికచేయుము"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "విధానం దస్త్రములను దానిలోకి ఉద్బవింపచేయుటకు సంచయమును ఎంపికచేయుము"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"ప్రస్తుత విధానంనందు ఇప్పటికే నిర్వచించబడిన %s_t ను టైపు చేయుము.\n"
+"మీరు కొనసాగించాలని అనుకుంటున్నారా?"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "నామమును నిర్ధారించుము"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr "అక్షరాలు మరియు సంఖ్యలు కలిగిన ఖాళీలు లేని పేరును మీరు తప్పక జతచేయాలి."
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "మీరు తప్పక ఒక నిర్వర్తినిని ప్రవేశపెట్టవలెను"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+#, fuzzy
+#| msgid "Configue SELinux"
+msgid "Configure SELinux"
+msgstr "SELinux ను ఆకృతీకరించుము"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr "కృష్ణబాబు క్రొత్తపల్లి <kkrothap@redhat.com> 2009,2010,2012."
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "బూలియన్స్‍ డైలాగ్‌ను జతచేయుము"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "బూలియన్ నామము"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "SELinux పాలసి ఉద్భవన సాధనం"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr "<b>మీరు నిర్భందించాలనుకొన్న అనువర్తనం లేదా వాడుకరి పాత్ర కొరకు విధానం యెంపికచేయి:</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>అనువర్తనములు</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "ప్రామాణిక Init డెమోన్‌"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"ప్రామాణిక Init డెమోన్ బూట్ నందు init స్క్రిప్ట్స్‍ ద్వారా ప్రారంభమగు డెమోన్స్‍.  సాదారణంగా /etc/rc.d/"
+"init.d నందు ఒక స్క్రిప్టు కావాలి"
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "DBUS సిస్టమ్ డెమోన్"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "ఇంటర్నెట్ సేవల డెమోన్ (inetd)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "ఇంటర్నెట్ సేవల డెమోన్ xinetd ద్వారా ప్రారంభించిన డెమోన్స్‍"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "వెబ్ అనువర్తనము/స్క్రిప్ట్‍ (CGI)"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr "వెబ్ అనువర్తనములు/స్క్రిప్ట్‍ (CGI) CGI స్క్రిప్ట్స్‍ వెబ్ సేవిక ద్వారా ప్రారంభించబడినవి (apache)"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "వినియోగదారి అనువర్తనము"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+"వినియోగదారుని చేత ప్రారంభించబడి మీరు పరిమితం చేయుటకు ఇష్టపడు ఏ అనువర్తనమైనా వినియోగదారుని అనువర్తనమే"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "Sandbox"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>లాగిన్ వినియోగదారులు</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "ఉన్న వినియోగాదారి పాత్రలు"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "ఉన్న లాగిన్ వినియోగదారి రికార్డ్‍‌ను సవరించుము"
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "కనీస టెర్మినల్ వినియోగదారి పాత్ర"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"ఈ వినియోగాదారి మిషన్‌కు టెర్మినల్ లేదా దూరస్థ లాగిన్ ద్వారా లాగిన్ అవుతాడు.  అప్రమేయంగా ఈ వినియోగదారి ఏ "
+"setuid, networking, sudo, su లను కలిగివుండడు."
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "కనీస X విండోస్ వినియోగదారి పాత్ర"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"ఈ వినియోగాదారి మిషన్‌కు X లేదా టెర్మినల్ ద్వారా లాగిన్ కాగలడు.  అప్రమేయంగా ఈ వినియోగదారి ఏ setuid, "
+"networking, sudo, su లను కలిగివుండడు"
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "వినియోగదారి పాత్ర"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+"పూర్తి నెట్వర్కింగ్ తో, బదిలీకరణ లేకుండా setuid లేని అనువర్తనాలు, sudo కాని, su కాని వినియోగదారి."
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "నిర్వహణాధికారి వినియోగదారి పాత్ర"
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"పూర్తి నెట్వర్కింగ్ తో, బదిలీకరణ లేని ఏ setuid అనువర్తనాలు లేని, su కాని, వినియోగదారి రూట్ నిర్వహణా "
+"నియమాలను sudo చేయగలడు"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>రూట్ వినియోగదారులు</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "రూట్ నిర్వహణాదికారి వినియోగదారి పాత్ర"
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"ఈ వినియోగదారిని మిషన్ రూట్‌గా నడుస్తున్నప్పుడు నిర్వహణాధికారిగా ఉపయోగించాలంటే, రూట్ వినియోగదారి పాత్రను "
+"ఎంపికచేయి.  ఈ వినియోగదారి సిస్టమకు నేరుగా లాగిన్ కాలేడు."
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>అనువర్తన పేరు లేదా వాడుకరి పాత్ర ప్రవేశపెట్టుము:</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr "పరిమితంగా ఉండుటకు నిర్వర్తనంకు పూర్తి పాత్‌ను ప్రవేశపెట్టుము."
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "..."
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr "పరిమిత వినియోగదారి లేదా అనువర్తనం పాత్రకు ఏకైక నామమును ప్రవేశపెట్టుము."
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "నిర్వర్తించతగిన"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "Init లిపి"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr "పరిమిత అనువర్తనంను ప్రారంభించుటకు ఉపయోగించు init స్క్రిప్ట్‍ కు పూర్తి పాత్ ప్రవేశపెట్టుము."
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>సవరించుటకు వున్న పాత్రను యెంపికచేయి:</b>"
+
+#: ../polgen.ui:904
+#, fuzzy, python-format
+#| msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "%s డొమైన్‌కు బదిలీ అగు వాడుకరి పాత్రలను యెంపికచేయి."
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "పాత్ర టాబ్"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>%s బదిలీ అయ్యే పాత్రలను యెంపికచేయి:</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr "%s బదిలీ అయ్యే అనువర్తన డొమైన్లను యెంపికచేయి."
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"బదలాయింపు \n"
+"పాత్ర టాబ్"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>%s కు బదీలీ అయ్యే వాడుకరి-పాత్రలు యెంపికచేయి:</b>"
+
+#: ../polgen.ui:1007
+#, fuzzy
+#| msgid ""
+#| "Select the user roles that will transiton to this applications domains."
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr "ఈ అనువర్తనాల డొమైన్స్‍‌కు బదిలీకరించబోవు వినియోగదారి దస్త్రాలను ఎంపికచేయుము"
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>%s నిర్వహించబోవు డొమైన్లను యెంపికచేయి:</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "ఈ వినియోగదారి నిర్వహించుటకు మీరు ఇష్టపడు డొమైన్స్‍‌ను ఎంపికచేయుము."
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>%s కొరకు అదనపు పాత్రలను యెంపికచేయి:</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>%s బందనం అయ్యే నెట్వర్కు పోర్టులను ప్రవేశపెట్టు:</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP పోర్ట్స్‍</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "అన్ని"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "udp పోర్టును బందనం చేయుటకు %s ను అనుమతించును"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr ""
+"%s ను 0 తో bindresvport ను కాల్ చేయుటకు అనుమతించుము. పోర్టు 600-1024 కు బందంనం "
+"చేయుచున్నది"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "నిలువఉంచని పోర్ట్స్‍  (> 1024)"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"కామాతో వేరుచేసిన udp పోర్టుల జాబితాను ప్రవేశపెట్టుము లేదా %s బందనంచేయు పోర్టుల విస్తృతి. ఉదాహరణ: "
+"612, 650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "పోర్ట్స్‍ ఎంపికచేయి"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "udp పోర్ట్స్ > 1024 వాటిని బందనం చేయుటకు %s ను అనుమతించును"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP పోర్ట్స్‍</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"నెట్వర్కు\n"
+"బైండ్ టాబ్"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>%s అనుసంధానమగు నెట్వర్కు పోర్టులను యెంపికచేయి:</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "%s ను యేదేని tcp పోర్టునకు అనుసంధానమగుటకు అనుమతించును"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"కామాతో వేరుచేసిన tcp పోర్టుల జాబితాను ప్రవేశపెట్టుము లేదా %s అనుసంధానమగు పోర్టుల విస్తృతి. ఉదాహరణ: "
+"612, 650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "%s ను యేదేని udp పోర్టునకు అనుసంధానమగుటకు అనుమతించును"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"కామాతో వేరుచేసిన udp పోర్టుల జాబితాను ప్రవేశపెట్టుము లేదా %s అనుసంధానమగు పోర్టుల విస్తృతి. ఉదాహరణ: "
+"612, 650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>%s కొరకు వుమ్మడి అనువర్తన ట్రైట్స్ యెంపిచేయి:</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "సిస్‌లాగ్ సందేశాలను వ్రాస్తుంది\t"
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "/tmp నందు తాత్కాలిక దస్త్రాలను సృష్టించు/మార్చు"
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "దృవీకరణకు Pam ను ఉపయోగిస్తుంది"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "nsswitch లేదా getpw* కాల్స్‍‌ను ఉపయోగిస్తుంది"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "dbus ను ఉపయోగిస్తుంది"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "ఆడిట్ సందేశాలను పంపుతుంది"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "టెర్మినల్‌తో సంప్రదిస్తుంది"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "ఈమెయిల్ పంపుతుంది"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>%s నిర్వహించు ఫైళ్ళు/సంచయాలు జతచేయి</b>"
+
+#: ../polgen.ui:1978
+#, fuzzy
+#| msgid "Add File Context"
+msgid "Add File"
+msgstr "దస్త్ర సందర్భంను జతచేయుము"
+
+#: ../polgen.ui:2031
+#, fuzzy
+#| msgid "directory"
+msgid "Add Directory"
+msgstr "సంచయం"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr "%s \"నిర్వహించు\" ఫైళ్ళు/సంచయాలు. Pid ఫైళ్ళు, Log ఫైళ్ళు, /var/lib ఫైళ్ళు ..."
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>%s విధానం నుండి బూలియన్స్ జతచేయి:</b>"
+
+#: ../polgen.ui:2179
+#, fuzzy
+#| msgid "Boolean"
+msgid "Add Boolean"
+msgstr "బూలియన్"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "%s డొమైన్ ద్వారా వుపయోగించిన బూలియన్స్ జతచేయి/తీసివేయి"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>%s పాలసీ యే సంచయం జనియింపచేయును?</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "విధానం సచయం"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "నెట్వర్క్ పోర్టు"
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"SELinux పోర్ట్‍\n"
+"రకము"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "నియమం"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"స్థాయి"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "పోర్ట్‍"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "పోర్ట్‍ సంఖ్య \"%s\" చెల్లునది కాదు.  0 < PORT_NUMBER < 65536 "
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "జాబితా దర్శనం"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "సమూహం దర్శనం"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr ""
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "మీరు ఖచ్చితంగా %s '%s' ను తొలగించుదామని అనుకుంటున్నారా?"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "%s తోలగించుము"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "%s జతచేయుము"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "%s సవరించుము"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr ""
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr ""
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "బలవంతము"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "అచేతనమైన"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "స్థితి"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"విధానం రకమును మార్చుట అనునది తరువాతి బూట్ నందు మొత్తం దస్త్ర వ్యవస్థ యొక్క చెరికకు కారణమౌతుంది. "
+"చేర్చుట అనునది దస్త్ర వ్యవస్థ పరిమాణం పై ఆధారపడి ఎక్కువ సమయం తీసకోవచ్చు.  మీరు కొనసాగించాలని "
+"అనుకుంటున్నారా?"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"SELinux అచేతనంకు మారుటకు పునఃప్రారంభం అవసరము.  ఇది సిఫార్స్‍ చేయబడదు.  మీరు తర్వాత SELinux "
+"వెనుకకు ఉంచాలని అనుకుంటే, సిస్టమ్‌కు చేర్చవలిసి ఉంటుంది.  మీరు SELinux సిస్టమ్ నందు సమస్యకు "
+"కారణమౌతుందేమో చూడాలనుకుంటే, మీరు అనుమతిగల రీతి వెళ్ళవచ్చు ఏదైతే దోషాలను మరియు బలవంతంకాని SELinux "
+"విధానంను లాగ్ చేస్తుందో.  అనుమతిగల రీతికి పునఃప్రారంభం అవసరంలేదు    మీరు కొనసాగిద్దామని "
+"అనుకుంటున్నారా?"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"SELinux చేతనంకు మార్చుట అనునది తరువాతి బూట్ నందు మొత్తం దస్త్ర వ్యవస్థ యొక్క చెరికకు "
+"కారణమౌతుంది. చేర్చుట అనునది దస్త్ర వ్యవస్థ పరిమాణం పై ఆధారపడి ఎక్కువ సమయం తీసకోవచ్చు.  మీరు "
+"కొనసాగించాలని అనుకుంటున్నారా?"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr ""
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr ""
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"కాపీరైట్ (c)2006 Red Hat, Inc.\n"
+"కాపీరైట్ (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "SELinux లాగిన్ మాపింగ్‌ను జతచేయుము"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "లాగిన్ నామము"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "SELinux వినియోగదారి"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "MLS/MCS వ్యాప్తి"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "SELinux నెట్వర్కు పోర్ట్స్‍‌ను జతచేయుము"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "పోర్ట్‍ సంఖ్య"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "SELinux రకము"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "దస్త్రము విశదీకరణము"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "దస్త్రము రకము"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "SELinux నిర్వహణ"
+
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "ఫైలు (_F)"
+
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "జతచేయు(_A)"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "లక్షణములు(_P)"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "తొలగించు(_D)"
+
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "సహాయము (_H)"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "నిర్వహణ ఆబ్జక్ట్‍‌ను ఎంపికచేయుము"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>ఎంపికచేయి:</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "సిస్టమ్ అప్రమేయ బలవంతపు రీతి"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "ప్రస్తుత బలవంతపు రీతి"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "సిస్టమ్ అప్రమేయ విధాన రకము: "
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"తరువాతి పునఃప్రారంభంనందు మొత్తం దస్త్ర వ్యవస్థను చేర్చాలనుకుంటే ఎంపికచేయండి.  చేర్చుట అనునది చాలా "
+"ఎక్కువ సమయం తీసుకుంటుంది, సిస్టమ్ యొక్క పరిమాణం మీద ఆదారపడి.  మీరు ఈ విధమైన విధానాలను మార్చుతుంటే "
+"లేదా అచేతనంనుండి బలవంతపుకు వెళుతుంటే, చేరిక అవసరమౌతుంది."
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr "తరువాతి పునఃప్రారంభంనందు చేర్చుము."
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "బూలియన్ అమరికను సిస్టమ్ అప్రమేయంకు తిప్పివుంచుము"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "అన్ని బూలియన్స్‍ మరియు మలుచుకొనిన వాటిమాద్య మారుము"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "వడపోత"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "దస్త్ర సందర్భంను జతచేయుము"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "దస్త్రము సందర్భంను సవరించుము"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "దస్త్ర సందర్భంను తొలగించుము"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "అన్నిటి మరియు మలుచుకొనిన దస్త్ర సందర్బం మద్య మారుము"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "SELinux వినియోగదారి మాపింగ్‌ను జతచేయుము"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "SELinux వినియోగదారి మాపింగ్ సవరించుము"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "SELinux వినియోగదారి మాపింగ్ తొలగించుము"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "వినియోగదారి జతచేయుము"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "వినియోగదారి సవరించుము"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "వినియోగదారి తొలగించుము"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "నెట్వర్క్‍ పోర్ట్‍‌ను జతచేయుము"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "నెట్వర్క్‍ పోర్ట్‍ సరిచేయి"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "నెట్వర్క్‍ పోర్ట్‍ తొలగించుము"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "అన్ని పోర్ట్స్‍ మరియు మలుచుకొనిన వాటిమాద్య మారుము"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "కొత్త విధానం మాడ్యూల్‌ను ఉద్భవింపచేయుము"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "విధానం మాడ్యూల్‌ను నింపుము"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "నింపదగు విధానం మాడ్యూల్‌ను తీసివేయుము"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr "అదనపు ఆడిట్ నియమాలను అచేతనం/చేతనం చేయుము, సాదారణంగా లాగ్ దస్త్రములనందు నివేదించబడని."
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "కార్యక్రమము రీతిని అనుమతించదగునదిగా మార్చుము."
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "కార్యక్రమము రీతిని బలవంతపెట్టునదిగా మార్చుము"
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "SELinux వినియోగదారిని జతచేయుము"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "SELinux పాత్రలు"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "SELinux వినియోగదారి '%s' అవసరము"
+
+#, fuzzy
+#~| msgid "Configue SELinux"
+#~ msgid "Run System Config SELinux"
+#~ msgstr "SELinux ను ఆకృతీకరించుము"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "all files"
+#~ msgstr "అన్ని ఫైళ్ళు"
+
+#~ msgid "regular file"
+#~ msgstr "సాధారణ ఫైలు"
+
+#~ msgid "character device"
+#~ msgstr "కారెక్టర్ పరికరం"
+
+#~ msgid "block device"
+#~ msgstr "బ్లాక్ పరికరం"
+
+#~ msgid "socket file"
+#~ msgstr "సాకెట్ ఫైల్"
+
+#~ msgid "symbolic link"
+#~ msgstr "సింబాలిక్ లింక్"
+
+#~ msgid "named pipe"
+#~ msgstr "నేమ్‌డ్ పైప్"

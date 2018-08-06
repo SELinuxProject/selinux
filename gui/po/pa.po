@@ -1,0 +1,1030 @@
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+# Vit Mojzis <vmojzis@redhat.com>, 2017. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2021-01-24 16:38+0000\n"
+"Last-Translator: A S Alam <amanpreet.alam@gmail.com>\n"
+"Language-Team: Punjabi <https://translate.fedoraproject.org/projects/selinux/"
+"gui/pa/>\n"
+"Language: pa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 4.4.2\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "ਬੂਲੀਅਨ"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "ਸਭ"
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "ਸੋਧਿਆ"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "ਕਾਰਜ ਡੋਮੇਨ"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr "ਡੋਮੇਨ ਦਾ ਨਾਂ"
+
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr "ਮੋਡ"
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "ਚੇਤਾਵਨੀ"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "ਫਾਇਲ ਲੇਬਲਿੰਗ"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"ਫਾਇਲ\n"
+"ਨਿਰਧਾਰਨ"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"Selinux\n"
+"ਫਾਇਲ ਕਿਸਮ"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"ਫਾਇਲ\n"
+"ਕਿਸਮ"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "ਵਰਤੋਂਕਾਰ ਮੈਪਿੰਗ"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"ਲਾਗਇਨ\n"
+"ਨਾਂ"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux\n"
+"ਵਰਤੋਂਕਾਰ"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"MLS/\n"
+"MCS ਰੇਂਜ"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "ਲਾਗਇਨ '%s' ਦੀ ਲੋੜ ਹੈ"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "ਪਾਲਿਸੀ ਮੈਡਿਊਲ"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "ਮੈਡਿਊਲ ਨਾਂ"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr "ਤਰਜੀਹ"
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr "ਕਿਸਮ"
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "ਆਡਿਟ ਅਯੋਗ ਕਰੋ"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "ਆਡਿਟ ਯੋਗ ਕਰੋ"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "ਪਾਲਿਸੀ ਮੈਡਿਊਲ ਲੋਡ ਕਰੋ"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "ਨਾਂ"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "ਵੇਰਵਾ"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "ਰੋਲ"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "ਮੌਜੂਦਾ ਉਪਭੋਗੀ(_U)"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "ਐਪਲੀਕੇਸ਼ਨ"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s ਇੱਕ ਡਾਇਰੈਕਟਰੀ ਹੋਣੀ ਜਰੂਰੀ ਹੈ"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "ਤੁਹਾਨੂੰ ਇੱਕ ਉਪਭੋਗੀ ਚੁਣਨਾ ਜਰੂਰੀ ਹੈ"
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "ਪਾਬੰਦ ਕਰਨ ਲਈ ਐਗਜ਼ੀਕਿਊਟੇਬਲ ਫਾਇਲ ਚੁਣੋ।"
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "ਪਾਬੰਦੀ ਵਾਲੀ init ਸਕਰਿਪਟ ਚੁਣੋ।"
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr "ਫਾਇਲਾਂ ਚੁਣੋ ਜੋ ਪਾਬੰਦੀ ਵਾਲੇ ਕਾਰਜ ਨੇ ਬਣਾਈਆਂ ਜਾਂ ਲਿਖੀਆਂ ਹਨ"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr "ਡਾਇਰੈਕਟਰੀ ਚੁਣੋ ਜੋ ਪਾਬੰਦੀ ਵਾਲੇ ਕਾਰਜਾਂ ਦੇ ਅਧੀਨ ਹਨ ਅਤੇ ਲਿਖੀਆਂ ਹਨ"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "ਡਾਇਰੈਕਟਰੀ ਚੁਣੋ ਜਿਸ ਵਿੱਚ ਪਾਲਿਸੀ ਫਾਇਲਾਂ ਬਣਾਉਣੀਆਂ ਹਨ"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"ਕਿਸਮ %s_t ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦਾ ਪਾਲਿਸੀ ਵਿੱਚ ਪਰਿਭਾਸ਼ਿਤ ਕੀਤੀ ਸੀ।\n"
+"ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਰਹਿਣਾ ਚਾਹੁੰਦੇ ਹੈ?"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "ਨਾਂ ਦੀ ਜਾਂਚ ਕਰੋ"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"%s ਮੋਡੀਊਲ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦਾ ਪਾਲਸੀ ਵਿੱਚ ਲੋਡ ਹੈ।\n"
+"ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਰੱਖਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr "ਤੁਹਾਨੂੰ ਇੱਕ ਨਾਂ ਦੇਣਾ ਚਾਹੀਦਾ ਹੈ."
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "ਤੁਹਾਨੂੰ ਇੱਕ ਐਗਜ਼ੀਕਿਊਟੇਬਲ ਦੇਣਾ ਚਾਹੀਦਾ ਹੈ"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+#, fuzzy
+#| msgid "Configue SELinux"
+msgid "Configure SELinux"
+msgstr "SELinux ਸੰਰਚਨਾ"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr "ਜਸਵਿੰਦਰ ਸਿੰਘ <jsingh@redhat.com>"
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "ਬੂਲੀਅਨ ਵਾਰਤਾਲਾਪ ਜੋੜੋ"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "ਬੂਲੀਅਨ ਨਾਂ"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "SELinux ਪਾਲਿਸੀ ਨਿਰਮਾਣ ਜੰਤਰ"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr "<b>ਐਪਲੀਕੇਸ਼ਨ ਜਾਂ ਵਰਤੋਂਕਾਰ ਲਈ ਪਾਲਸੀ ਦੀ ਕਿਸਮ ਚੁਣੋ, ਜਿਨਾਂ ਉਤੇ ਪਾਬੰਦੀ ਲਾਉਣੀ ਹੈ:</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>ਐਪਲੀਕੇਸ਼ਨ</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "ਸਟੈਂਡਰਡ Init ਡੈਮਨ"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"ਸਟੈਂਡਰਡ Init ਡੈਮਨ ਉਹ ਡੈਮਨ ਹਨ ਜੋ ਬੂਟ ਹੋਣ ਤੇ init ਸਕਰਿਪਟਾਂ ਦੁਆਰਾ ਚੱਲਦੇ ਹਨ।  ਆਮ ਕਰਕੇ /etc/"
+"init.d ਵਿੱਚ ਇੱਕ ਸਕਰਿਪਟ ਹੋਣੀ ਜਰੂਰੀ ਹੈ"
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "DBUS ਸਿਸਟਮ ਡੈਮਨ"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "ਇੰਟਰਨੈੱਟ ਸਰਵਿਸ ਡੈਮਨ (inetd)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "ਇੰਟਰਨੈੱਟ ਸਰਵਿਸ ਡੈਮਨ ਉਹ ਡੈਮਨ ਹਨ ਜੋ xinetd ਦੁਆਰਾ ਚੱਲਦੇ ਹਨ"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "ਵੈੱਬ ਕਾਰਜ/ਸਕਰਿਪਟ (CGI)"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr "ਵੈੱਬ ਕਾਰਜ/ਸਕਰਿਪਟ (CGI) CGI ਸਕਰਿਪਟਾਂ ਵੈੱਬ ਸਰਵਰ (apache) ਦੁਆਰਾ ਚੱਲਦੀਆਂ ਹਨ"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "ਵਰਤੋਂਕਾਰ ਐਪਲੀਕੇਸ਼ਨ"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+"ਵਰਤੋਂਕਾਰ ਐਪਲੀਕੇਸ਼ਨ ਅਜਿਹੀ ਕੋਈ ਵੀ ਐਪਲੀਕੇਸ਼ਨ, ਜੋ ਕਿ ਵਰਤੋਂਕਾਰ ਵਲੋਂ ਸ਼ੁਰੂ ਕੀਤੇ ਜਾਣ ਉੱਤੇ ਤੁਸੀਂ ਰੋਕਣਾ "
+"ਲਾਉਣੀ ਚਾਹੁੰਦੇ ਹੋ।"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "ਸੈਂਡਬਕਸਾ"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>ਲਾਗਇਨ ਵਰਤੋਂਕਾਰ</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "ਮੌਜੂਦਾ ਵਰਤੋਂਕਾਰ ਰੋਲ"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "ਮੌਜੂਦਾ ਲਾਗਇਨ ਵਰਤੋਂਕਾਰ ਰਿਕਾਰਡ ਨੂੰ ਸੋਧੋ।"
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "ਘੱਟੋ-ਘੱਟ ਟਰਮੀਨਲ ਵਰਤੋਂਕਾਰ ਰੋਲ"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"ਇਹ ਵਰਤੋਂਕਾਰ ਮਸ਼ੀਨ ਉੱਪਰ ਸਿਰਫ ਟਰਮੀਨਲ ਜਾਂ ਰਿਮੋਟ ਲਾਗਇਨ ਰਾਹੀਂ ਲਾਗਇਨ ਕਰ ਸਕਦਾ ਹੈ।  ਮੂਲ ਰੂਪ "
+"ਵਿੱਚ ਇਸ ਵਰਤੋਂਕਾਰ ਦਾ ਕੋਈ setuid, ਨੈੱਟਵਰਕਿੰਗ, su, sudo ਨਹੀਂ ਹੈ।"
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "ਘੱਟੋ-ਘੱਟ X ਵਿੰਡੋ ਵਰਤੋਂਕਾਰ ਰੋਲ"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"ਇਹ ਵਰਤੋਂਕਾਰ ਮਸ਼ੀਨ ਉੱਪਰ X ਜਾਂ ਟਰਮੀਨਲ ਰਾਹੀਂ ਲਾਗਇਨ ਕਰ ਸਕਦਾ ਹੈ।  ਮੂਲ ਰੂਪ ਵਿੱਚ ਇਸ ਵਰਤੋਂਕਾਰ ਦਾ "
+"ਕੋਈ setuid, ਨੈੱਟਵਰਕਿੰਗ, sudo, su ਨਹੀਂ ਹੈ।"
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "ਵਰਤੋਂਕਾਰ ਰੋਲ"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+"ਪੂਰੀ ਨੈੱਟਵਰਕਿੰਗ ਵਾਲੇ ਵਰਤੋਂਕਾਰ, ਕੋਈ setuid ਕਾਰਜ ਬਿਨਾਂ ਤਬਦੀਲੀ, ਕੋਈ sudo, ਕੋਈ su ਨਹੀਂ।"
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "ਐਡਮਿਨ ਵਰਤੋਂਕਾਰ ਰੋਲ"
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"ਪੂਰੀ ਨੈੱਟਵਰਕਿੰਗ ਵਾਲੇ ਵਰਤੋਂਕਾਰ, ਕੋਈ setuid ਕਾਰਜ ਤਬਦੀਲੀ ਬਿਨਾਂ, ਕੋਈ su, ਰੂਟ ਪਰਸ਼ਾਸ਼ਕੀ ਰੋਲ ਲਈ "
+"sudo ਕਰ ਸਕਦਾ ਹੈ"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>ਰੂਟ ਵਰਤੋਂਕਾਰ</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "ਰੂਟ ਐਡਮਿਨ ਵਰਤੋਂਕਾਰ ਰੋਲ"
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"ਰੂਟ ਵਰਤੋਂਕਾਰ ਚੁਣੋ, ਜੇ ਇਹ ਵਰਤੋਂਕਾਰ ਮਸ਼ੀਨ ਲਈ ਪਰਸ਼ਾਸ਼ਕ ਵਜੋਂ ਕੰਮ ਕਰੇਗਾ, ਜਦੋਂ ਰੂਟ ਦੇ ਤੌਰ ਉੱਤੇ ਚੱਲਦੀ ਹੈ।  "
+"ਇਹ ਵਰਤੋਂਕਾਰ ਸਿਸਟਮ ਉੱਪਰ ਸਿੱਧੇ ਤੌਰ ਤੇ ਲਾਗਇਨ ਨਹੀਂ ਕਰ ਸਕਦਾ ਹੈ।"
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>ਐਪਲੀਕੇਸ਼ਨ ਜਾਂ ਵਰਤੋਂਕਾਰ ਰੋਲ ਦਾ ਨਾਂ ਦਿਓ:</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr "ਪਾਬੰਦੀ ਵਾਲੇ ਐਗਜ਼ੀਕਿਊਟੇਬਲ ਲਈ ਪੂਰਾ ਮਾਰਗ ਦਿਓ।"
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "..."
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr "ਪਾਬੰਦੀ ਵਾਲੇ ਐਪਲੀਕੇਸ਼ਨ ਜਾਂ ਵਰਤੋਂਕਾਰ ਰੋਲ ਲਈ ਵਿਲੱਖਣ ਨਾਂ ਦਿਓ।"
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "ਐਗਜ਼ੀਕਿਊਟੇਬਲ"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "Init ਸਕਰਿਪਟ"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr "ਪਾਬੰਦ ਕਾਰਜ ਚਲਾਉਣ ਵਾਲੀ init ਸਕਰਿਪਟ ਦਾ ਪੂਰਾ ਮਾਰਗ ਦਿਓ।"
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>ਤਬਦੀਲ ਕਰਨ ਲਈ ਮੌਜੀਦਾ ਰੋਲ ਚੁਣੋ:</b>"
+
+#: ../polgen.ui:904
+#, fuzzy, python-format
+#| msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "ਵਰਤੋਂਕਾਰ ਰੋਲ ਚੁਣੋ, ਜੋ %s ਡੋਮੇਨ ਵਿੱਚ ਤਬਦੀਲ ਹੋਵੇਗਾ।"
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "ਰੋਲ ਟੈਬ"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>ਰੋਲ ਚੁਣੋ ਜੋ %s ਵਿੱਚ ਤਬਦੀਲ ਹੋਵੇਗਾ:</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr "ਐਪਲੀਕੇਸ਼ਨ ਡੋਮੇਨ ਚੁਣੋ ਜੋ %s ਵਿੱਚ ਤਬਦੀਲ ਹੋਣਗੇ।"
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"ਤਬਦੀਲੀ \n"
+"ਰੋਲ ਟੈਬ"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>user_roles ਚੁਣੋ ਜੋ %s ਵਿੱਚ ਤਬਦੀਲ ਹੋਵੇਗਾ:</b>"
+
+#: ../polgen.ui:1007
+#, fuzzy
+#| msgid ""
+#| "Select the user roles that will transiton to this applications domains."
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr "ਵਰਤੋਂਕਾਰ ਰੋਲ ਚੁਣੋ, ਜੋ ਇਸ ਕਾਰਜ ਡੋਮੇਨਾਂ ਵਿੱਚ ਤਬਦੀਲ ਹੋਵੇਗਾ।"
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>ਡੋਮੇਨ ਚੁਣੋ ਜੋ %s ਦਾ ਪਰਬੰਧਨ ਕਰਨਗੇ:</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "ਡੋਮੇਨ ਚੁਣੋ, ਜਿਸ ਲਈ ਤੁਸੀਂ ਇਹ ਵਰਤੋਂਕਾਰ ਪਰਸ਼ਾਸ਼ਨ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ।"
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>%s ਲਈ ਵਾਧੂ ਰੋਲ ਚੁਣੋ:</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>ਨੈੱਟਵਰਕ ਪੋਰਟਾਂ ਦਿਓ ਜੋ %s ਨਾਲ ਬਾਈਂਡ ਹੁੰਦੀਆਂ ਹਨ:</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP ਪੋਰਟ</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "ਸਭ"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "ਹਮੇਸ਼ਾਂ %s ਨੂੰ ਕਿਸੇ udp ਪੋਰਟ ਨਾਲ ਜੁੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr ""
+"%s ਨੂੰ bindresvport ਨੂੰ 0 ਨਾਲ ਕਾਲ ਕਰਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ। ਪੋਰਟ 600-1024 ਨਾਲ ਬਾਈਂਡ ਹੋ ਰਿਹਾ "
+"ਹੈ"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "ਨਾ-ਰਾਖਵੇਂ ਪੋਰਟ (>1024)"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"ਕਾਮਿਆਂ ਨਾਲ ਵੱਖ ਕੀਤੀ udp ਪੋਰਟਾਂ ਦੀ ਸੂਚੀ ਦਿਓ ਜਿਨਾਂ ਨਾਲ %s ਜੁੜਦੇ ਹਨ। ਉਦਾਹਰਨ: 612, "
+"650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "ਪੋਰਟ ਚੁਣੋ"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "%s ਨੂੰ ਕਿਸੇ udp ਪੋਰਟ ਨਾਲ ਜੁੜਨ ਜੀ ਮਨਜੂਰੀ ਦਿਓ > 1024"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP ਪੋਰਟ</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"ਨੈੱਟਵਰਕ\n"
+"ਬਾਈਂਡ ਟੈਬ"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>ਨੈੱਟਵਰਕ ਪੋਰਟਾਂ ਚੁਣੋ ਜੋ %s ਨਾਲ ਜੁੜਦੀਆਂ ਹਨ:</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "%s ਨੂੰ ਕਿਸੇ tcp ਪੋਰਟ ਨਾਲ ਜੁੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"ਕਾਮਿਆਂ ਨਾਲ ਵੱਖ ਕੀਤੀ tcp ਪੋਰਟਾਂ ਦੀ ਸੂਚੀ ਦਿਓ ਜਿਨਾਂ ਨਾਲ %s ਜੁੜਦੇ ਹਨ। ਉਦਾਹਰਨ: 612, "
+"650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "%s ਨੂੰ ਕਿਸੇ udp ਪੋਰਟ ਨਾਲ ਜੁੜਨ ਦੀ ਮਨਜੂਰੀ ਦਿਓ"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"ਕਾਮਿਆਂ ਨਾਲ ਵੱਖ ਕੀਤੀ udp ਪੋਰਟਾਂ ਦੀ ਸੂਚੀ ਦਿਓ ਜਿਨਾਂ ਨਾਲ %s ਜੁੜਦੇ ਹਨ। ਉਦਾਹਰਨ: 612, "
+"650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>%s ਲਈ ਆਮ ਕਾਰਜ ਚੁਣੋ:</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "syslog ਸੁਨੇਹੇ ਲਿਖਦਾ ਹੈ\t"
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "/tmp ਵਿਚਲੀਆਂ ਫਾਇਲਾਂ ਬਣਾਓ/ਸੋਧੋ"
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਲਈ Pam ਨੂੰ ਵਰਤਦੇ ਹਨ"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "nsswitch ਜਾਂ getpw* ਕਾਲਾਂ ਵਰਤਦਾ ਹੈ"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "dbus ਵਰਤਦਾ ਹੈ"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "ਆਡਿਟ ਸੁਨੇਹੇ ਭੇਜਦਾ ਹੈ"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "ਟਰਮੀਨਲ ਨਾਲ ਸੰਪਰਕ ਕਰਦਾ ਹੈ"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "ਈ-ਮੇਲ ਭੇਜਦਾ ਹੈ"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>ਫਾਇਲਾਂ/ਡਾਇਰੈਕਟਰੀਆਂ ਜੋ %s ਪਰਬੰਧਿਤ ਕਰਦਾ ਹੈ</b>"
+
+#: ../polgen.ui:1978
+msgid "Add File"
+msgstr "ਫਾਇਲ ਜੋੜੋ"
+
+#: ../polgen.ui:2031
+msgid "Add Directory"
+msgstr "ਡਾਇਰੈਕਟਰੀ ਜੋੜੋ"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr ""
+"ਫਾਇਲਾਂ/ਡਾਇਰੈਕਟਰੀਆਂ ਜੋ %s \"manages\" ਕਰਦਾ ਹੈ। Pid ਫਾਇਲਾਂ, ਲਾਗ ਫਾਇਲਾਂ, /var/lib "
+"ਫਾਇਲਾਂ ..."
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>%s ਪਾਲਿਸੀ ਲਈ ਬੂਲੀਅਨ ਜੋੜੋ:</b>"
+
+#: ../polgen.ui:2179
+msgid "Add Boolean"
+msgstr "ਬੂਲੀਅਨ ਜੋੜੋ"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "ਬੂਲੀਅਨ ਜੋੜੋ/ਹਟਾਓ ਜੋ %s ਡੋਮੇਨ ਵਰਤਦਾ ਹੈ"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>ਤੁਸੀਂ ਕਿਸ ਡਾਇਰੈਕਟਰੀ ਵਿੱਚ %s ਪਾਲਿਸੀ ਜਨਰੇਟ ਕਰੋਗੇ?</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "ਪਾਲਿਸੀ ਡਾਇਰੈਕਟਰੀ"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "ਨੈੱਟਵਰਕ ਪੋਰਟ"
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"SELinux ਪੋਰਟ\n"
+"ਕਿਸਮ"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "ਪਰੋਟੋਕਾਲ"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"ਲੈਵਲ"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "ਪੋਰਟ"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "ਪੋਰਟ ਨੰਬਰ \"%s\" ਠੀਕ ਨਹੀਂ ਹੈ  0 < PORT_NUMBER < 65536 "
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "ਲਿਸਟ ਝਲਕ"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "ਗਰੁੱਪ ਝਲਕ"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr "SELinux ਪਾਲਸੀ ਮੋਡੀਊਲ ਤਿਆਰ ਕਰੋ"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "ਕੀ ਤੁਸੀਂ %s '%s' ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "%s ਹਟਾਓ"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "%s ਜੋੜੋ"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "%s ਸੋਧ"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr "SELinux ਪਾਲਸੀ ਇੰਤਜ਼ਾਮ ਟੂਲ"
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr "ਪਾਲਸੀ;ਸੁਰੱਖਿਆ;ਐਸਈਲੀਨਕਸ;ਏਵੀਸੀ;ਇਜਾਜ਼ਤ;ਮੈਕ;ਆਗਿਆ;"
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "ਮਜਬੂਰ"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "ਅਸਮਰੱਥ ਹੈ"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "ਹਾਲਤ"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"ਪਾਲਿਸੀ ਕਿਸਮ ਤਬਦੀਲ ਕਰਨ ਨਾਲ ਅਗਲੀ ਵਾਰ ਬੂਟ ਹੋਣ ਤੇ ਪੂਰਾ ਫਾਇਲ ਸਿਸਟਮ ਮੁੜ ਲੇਬਲ ਕੀਤਾ ਜਾਏਗਾ। "
+"ਮੁੜ-ਲੇਬਲ ਹੋਣ ਤੇ ਫਾਇਲ ਸਿਸਟਮ ਦੇ ਅਕਾਰ ਮੁਤਾਬਿਕ ਕੁਝ ਸਮਾਂ ਲੱਗਦਾ ਹੈ।  ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਕਰਨਾ ਹੈ?"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"SELinux ਅਯੋਗ ਕਰਨ ਲਈ ਮੁੜ-ਚਾਲੂ ਕਰਨਾ ਪਵੇਗਾ। ਇਸ ਦੀ ਸਿਫਾਰਸ਼ ਨਹੀਂ ਕੀਤੀ ਜਾਂਦੀ।  ਜੇ ਤੁਸੀਂ ਬਾਅਦ "
+"ਵਿੱਚ SELinux ਵੱਲ ਪਿੱਛੇ ਜਾਣਾ ਚਾਹੁੰਦੇ ਹੋ, ਤਾਂ ਸਿਸਟਮ ਮੁੜ-ਲੇਬਲ ਕਰੇਗਾ।  ਜਿਸ ਤੁਸੀਂ ਇਹ ਵੇਖਣਾ ਚਾਹੁੰਦੇ "
+"ਹੋ ਜੇ SELinux ਤੁਹਾਡੇ ਸਿਸਟਮ ਉੱਪਰ ਸਮੱਸਿਆ ਪੈਦਾ ਕਰ ਰਿਹਾ ਹੈ, ਤੁਸੀਂ permissive ਮੋਡ ਵਿੱਚ ਜਾ ਸਕਦੇ "
+"ਹੋ ਜੋ ਸਿਰਫ ਗਲਤੀਆਂ ਦਾ ਲਾਗ ਰੱਖਦਾ ਹੈ ਅਤੇ enforce SELinux ਪਾਲਿਸੀ ਨਹੀਂ।  Permissive ਮੋਡ "
+"ਲਈ ਮੁੜ-ਚਾਲੂ ਕਰਨ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ    ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"SELinux ਯੋਗ ਕਰਨ ਨਾਲ ਅਗਲੀ ਵਾਰ ਬੂਟ ਹੋਣ ਤੇ ਪੂਰਾ ਫਾਇਲ ਸਿਸਟਮ ਮੁੜ ਲੇਬਲ ਕੀਤਾ ਜਾਏਗਾ। ਮੁੜ-ਲੇਬਲ "
+"ਹੋਣ ਤੇ ਫਾਇਲ ਸਿਸਟਮ ਦੇ ਅਕਾਰ ਮੁਤਾਬਿਕ ਕੁਝ ਸਮਾਂ ਲੱਗਦਾ ਹੈ।  ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਕਰਨਾ ਹੈ?"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr "SELinux ਇੰਤਜ਼ਾਮ"
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr "SELinux ਨੂੰ ਗਰਾਫਿਕਲ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਸੰਰਚਿਤ ਕਰੋ"
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "SELinux ਲਾਗਿੰਗ ਮੈਪਿੰਗ ਜੋੜੋ"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "ਲਾਗਇਨ ਨਾਂ"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "SELinux ਵਰਤੋਂਕਾਰ"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "MLS/MCS ਰੇਂਜ"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "SELinux ਨੈੱਟਵਰਕ ਪੋਰਟਾਂ ਜੋੜੋ"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "ਪੋਰਟ ਨੰਬਰ"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "SELinux ਕਿਸਮ"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "ਫਾਇਲ ਨਿਰਧਾਰਨ"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "ਫਾਇਲ ਕਿਸਮ"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "SELinux ਪਰਸ਼ਾਸ਼ਨ"
+
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "ਫਾਇਲ(_F)"
+
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "ਜੋੜੋ(_A)"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "ਵਿਸ਼ੇਸ਼ਤਾ(_P)"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "ਹਟਾਓ(_D)"
+
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "ਮਦਦ(_H)"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "ਮੈਨੇਜਮੈਂਟ ਆਬਜੈਕਟ ਚੁਣੋ"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>ਚੁਣੋ:</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "ਸਿਸਟਮ ਮੂਲ ਮਜਬੂਰ ਮੋਡ"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "ਵਰਤਮਾਨ ਮਜਬੂਰ ਮੋਡ"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "ਸਿਸਟਮ ਮੂਲ ਪਾਲਿਸੀ ਕਿਸਮ: "
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"ਚੁਣੋ ਜੇ ਤੁਸੀਂ ਅਗਲੀ ਵਾਰ ਮੁੜ-ਚਾਲੂ ਹੋਣ ਤੇ ਪੂਰਾ ਫਾਇਲ ਸਿਸਟਮ ਮੁੜ-ਲੇਬਲ ਕਰਨਾ ਹੈ।  ਮੁੜ-ਲੇਬਲ ਹੋਣ ਤੇ "
+"ਸਿਸਟਮ ਦੇ ਅਕਾਰ ਮੁਤਾਬਿਕ ਕਾਫੀ ਸਮਾਂ ਲੱਗ ਲਕਦਾ ਹੈ। ਜੇ ਤੁਸੀਂ ਪਾਲਿਸੀ ਕਿਸਮ ਤਬਦੀਲ ਕਰ ਦਿੱਤੀ ਜਾਂ "
+"ਅਯੋਗ ਤੋਂ ਮਜਬੂਰ ਤਬਦੀਲ ਕਰ ਰਹੇ ਹੋ, ਤਾਂ ਮੁੜ-ਲੇਬਲ ਕਰਨ ਦੀ ਲੋੜ ਹੈ।"
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr "ਫਿਰ ਚਾਲੂ ਹੋਣ ਤੇ ਮੁੜ-ਲੇਬਲ ਕਰੋ।"
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "ਬੂਲੀਅਨ ਸੈਟਿੰਗ ਨੂੰ ਸਿਸਟਮ ਮੂਲ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "ਸੋਧੇ ਅਤੇ ਸਭ ਬੂਲੀਅਨਾਂ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "ਫਿਲਟਰ"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ ਸ਼ਾਮਿਲ ਕਰੋ"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ ਸੋਧੋ"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "ਫਾਇਲ ਪ੍ਰਸੰਗ ਹਟਾਓ"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "ਸਭ ਅਤੇ ਸੋਧੇ ਫਾਇਲ ਪ੍ਰਸੰਗ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "SELinux ਵਰਤੋਂਕਾਰ ਮੈਪਿੰਗ ਜੋੜੋ"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "SELinux ਵਰਤੋਂਕਾਰ ਮੇਲ ਸੋਧੋ"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "SELinux ਵਰਤੋਂਕਾਰ ਮੇਲ ਹਟਾਓ"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "ਵਰਤੋਂਕਾਰ ਜੋੜੋ"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "ਵਰਤੋਂਕਾਰ ਸੋਧੋ"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "ਵਰਤੋਂਕਾਰ ਹਟਾਓ"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "ਨੈੱਟਵਰਕ ਪੋਰਟ ਸ਼ਾਮਿਲ ਕਰੋ"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "ਨੈੱਟਵਰਕ ਪੋਰਟ ਸੋਧ ਕਰੋ"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "ਨੈੱਟਵਰਕ ਪੋਰਟ ਹਟਾਓ"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "ਸੋਧੇ ਅਤੇ ਸਭ ਪੋਰਟਾਂ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "ਨਵਾਂ ਪਾਲਿਸੀ ਮੈਡਿਊਲ ਬਣਾਓ"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "ਪਾਲਿਸੀ ਮੈਡਿਊਲ ਲੋਡ ਕਰੋ"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "ਲੋਡ ਹੋਣਯੋਗ ਪਾਲਿਸੀ ਮੈਡਿਊਲ ਹਟਾਓ"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr "ਵਾਧੂ ਆਡਿਟ ਨਿਯਮ ਯੋਗ/ਅਯੋਗ ਕਰੋ, ਜੋ ਆਮ ਤੌਰ ਤੇ ਲਾਗ ਫਾਇਲਾਂ ਵਿੱਚ ਨਹੀਂ ਦਿੱਤੇ ਗਏ ਹਨ।"
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "ਕਾਰਜ ਮੋਡ ਨੂੰ ਮਨਜੂਰ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ।"
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "ਕਾਰਜ ਮੋਡ ਨੂੰ ਮਜਬੂਰ ਵਿੱਚ ਤਬਦੀਲ ਕਰੋ।"
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "SELinux ਵਰਤੋਂਕਾਰ ਜੋੜੋ"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "SELinux ਰੋਲ"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "SELinux ਵਰਤੋਂਕਾਰ '%s' ਦੀ ਲੋੜ ਹੈ"
+
+#, fuzzy
+#~| msgid "Configue SELinux"
+#~ msgid "Run System Config SELinux"
+#~ msgstr "SELinux ਸੰਰਚਨਾ"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "sepolicy"
+#~ msgstr "sepolicy"
+
+#~ msgid "all files"
+#~ msgstr "ਸਾਰੀਆਂ ਫਾਈਲਾਂ"
+
+#~ msgid "regular file"
+#~ msgstr "ਨਿਯਮਿਤ ਫਾਈਲ"
+
+#~ msgid "directory"
+#~ msgstr "ਡਾਇਰੈਕਟਰੀ"
+
+#~ msgid "character device"
+#~ msgstr "ਅੱਖਰ ਯੰਤਰ"
+
+#~ msgid "block device"
+#~ msgstr "ਬਲਾਕ ਯੰਤਰ"
+
+#~ msgid "socket file"
+#~ msgstr "ਸਾਕੇਟ ਫਾਈਲ"
+
+#~ msgid "symbolic link"
+#~ msgstr "ਸੰਕੇਤਿਕ ਲਿੰਕ"
+
+#~ msgid "named pipe"
+#~ msgstr "ਨਾਮਕ ਪਾਈਪ"

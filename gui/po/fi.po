@@ -1,0 +1,1051 @@
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+# Jiri Grönroos <jiri.gronroos@iki.fi>, 2017. #zanata
+# Toni Rantala <trantalafilo@gmail.com>, 2017. #zanata
+# Jiri Grönroos <jiri.gronroos@iki.fi>, 2018. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2021-09-08 19:04+0000\n"
+"Last-Translator: Jan Kuparinen <copper_fin@hotmail.com>\n"
+"Language-Team: Finnish <https://translate.fedoraproject.org/projects/selinux/"
+"gui/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "Totuusarvo"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "kaikki"
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "Oma"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "Prosessin toimialue"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr "Toimialueen nimi"
+
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr "Tila"
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "Salliva"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "Tiedostonimiöinti"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"Tiedosto-\n"
+"määrittely"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"Selinux-\n"
+"tiedostotyyppi"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"Tiedosto-\n"
+"tyyppi"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "Käyttäjäassosiaatio"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"Kirjautumis-\n"
+"nimi"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux-\n"
+"käyttäjä"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"MLS/\n"
+"MCS-alue"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "Vaaditaan kirjautuminen ”%s”"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "Käytäntömoduuli"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "Moduulin nimi"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr "Prioriteetti"
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr "Millainen"
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "Poista Audit käytöstä"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "Ota Audit käyttöön"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "Lataa käytäntömoduuli"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "Nimi"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "Kuvaus"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "Rooli"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "Olemassa oleva käyttäjä"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "Sovellus"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s pitää olla hakemisto"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "Sinun pitää valita käyttäjä"
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "Valitse rajoitettava suoritettava tiedosto."
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "Valitse rajoitettava init-komentosarja."
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr ""
+"Valitse tiedostot, joita rajoitettava ohjelma luo tai joihin se kirjoittaa"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr ""
+"Valitse hakemistot, jotka rajoitettava ohjelma omistaa tai joihin se "
+"kirjoittaa"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "Valitse hakemisto, jonne käytäntötiedostot generoidaan"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"Tyyppi %s_t on jo määritelty nykyisessä käytännössä.\n"
+"Haluatko jatkaa?"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "Varmista nimi"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"Moduuli %s_t on jo määritelty nykyisessä käytännössä.\n"
+"Haluatko jatkaa?"
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr ""
+"Sinun pitää lisätä nimi jossa on kirjaimia ja numeroita ja jossa ei saa olla "
+"välilyöntejä."
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "Suoritettava tiedosto on annettava"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+msgid "Configure SELinux"
+msgstr "Tee SELinux-asetukset"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr "Juhani Numminen <juhaninumminen0@gmail.com>"
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "Totuusarvojen lisäysikkuna"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "totuusarvon nimi"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "SELinux-käytäntöjen generointityökalu"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr ""
+"<b>Valitse käytännön tyyppi sille sovellukselle tai käyttäjäroolille, jonka "
+"haluat eristyä</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>Sovellukset</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "Oletus-init-taustaprosessit"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"Oletus-init-taustaprosessit ovat init-komentosarjojen käynnistyksen "
+"yhteydessä käynnistämiä prosesseja. Ne yleensä tarvitsevat hakemistossa /etc/"
+"rc.d/init.d olevan komentosarjan"
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "DBUS-järjestelmätaustaprosessi"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "Internet-palvelut (intetd)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "Internet-palvelut ovat xinetd:n käynnistämiä taustaprosesseja"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "Web-sovellus/skripti (CGI)"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr ""
+"Web-sovellukset tai -komentosarjat ovat web-palvelimen (apache) käynnistämiä "
+"CGI-komentosarjoja"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "Käyttäjän ohjelmia"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+"Käyttäjän ohjelma on mikä tahansa käyttäjän käynnistämä ohjelma, jonka "
+"toimintaa halutaan rajoittaa"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "Hiekkalaatikko"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>Kirjautuvat käyttäjät</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "Olemassa olevat käyttäjäroolit"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "Muokkaa olemassa olevan kirjautuvan käyttäjän tietoja."
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "Minimaalisen päätekäyttäjän rooli"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"Tämä käyttäjä kirjautuu koneelle vain päätteen kautta tai etäkirjautumalla. "
+"Oletuksena tällä käyttäjällä ei ole setuid-oikeutta, verkkoa, su:ta tai "
+"sudoa."
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "Minimaalisen X Windows -käyttäjän rooli"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"Tämä käyttäjä voi kirjautua koneelle X:n tai päätteen kautta. Oletuksena "
+"tällä käyttäjällä ei ole setuid:ta, verkkoa, su:ta tai sudo:ta"
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "Käyttäjärooli"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+"Käyttäjä jolla on täysi verkonkäyttömahdollisuus, ei setuid-oikeuksia ilman "
+"siirtymistä, ei sudoa eikä su:ta."
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "Ylläpitokäyttäjän rooli"
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"Käyttäjät joilla on täysi verkonkäyttömahdollisuus, ei setuid-oikeuksia "
+"ilman siirtymistä, ei su:ta, voi siirtyä sudolla Pääkäyttäjän ylläpitorooliin"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>Pääkäyttäjät</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "Pääkäyttäjän ylläpitorooli"
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"Valitse pääkäyttäjän ylläpitorooli, jos tämä käyttäjä ylläpitää konetta "
+"pääkäyttäjänä (root). Tämä käyttäjä ei pysty kirjautumaan järjestelmään "
+"suoraan."
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>Anna sovelluksen tai käyttäjän roolin nimi:</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr "Syötä rajoitettavan suoritettavan tiedoston täysi polku."
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "..."
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr ""
+"Syötä ainutlaatuinen nimi rajoitetulle ohjelmalle tai käyttäjäroolille."
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "Suoritettava"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "Init-komentosarja"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr ""
+"Syötä rajoitetun ohjelman käynnistämiseen käytettävän komentosarjan täysi "
+"polku."
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>Valitse muokattava rooli:</b>"
+
+#: ../polgen.ui:904
+#, python-format
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "Valitse käyttäjäroolit, jotka siirtyvät toimialueelle %s."
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "rooli-välilehti"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>Valitse roolit, joihin tapahtuman %s tulee kohdistua:</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr ""
+"Valitse toimialueiden sovellukset, joihin tapahtuman %s tulee kohdistua."
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"siirtyminen\n"
+"rooli-välilehti"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>Valitse käyttäjän_roolit, jotka siirtyvät %s:</b>"
+
+#: ../polgen.ui:1007
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr "Valitse käyttäjäroolit, jotka siirtyvät tämän ohjelman toimialueelle."
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>Valitse toimialueet, joita %s hallinnoi:</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "Valitse toimialueet, joita haluat tämän käyttäjän ylläpitävän."
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>Valitse lisää rooleja %s:lle:</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>Anna verkkoportit, joihin %s sitoo:</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP-portit</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "Kaikki"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "Antaa %s:n sitoa mihin tahansa udp-porttiin"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr "Salli %s kutsua bindresvport arvolla 0. Sidos porttiin 600-1024"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "Varaamattomat portit (>1024)"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"Anna pilkuilla eroteltu luettelo udp-porteista tai porttialueista, joihin %s "
+"sitoutuu. Esimerkiksi: 612, 650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "Valitse portit"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "Salli %s sidos mihinkä tahansa udp porttiin > 1024"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP-portit</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"Verkko\n"
+"Sido-välilehti"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>Valitse verkkoportit, joihin %s yhdistyy:</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "Antaa %s:n muodostaa yhteyden mihin tahansa TCP-porttiin"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"Anna pilkuilla eroteltu luettelo tcp-porteista tai porttialueista, joihin %s "
+"sitoutuu. Esimerkiksi: 612, 650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "Antaa %s:n yhdistää mihin tahansa udp-porttiin"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"Anna pilkuilla eroteltu luettelo udp-porteista tai porttialueista, joihin %s "
+"yhdistyy. Esimerkiksi: 612, 650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>Valitse yhteiset sovellusominaisuudet kohteelle %s:</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "Kirjoittaa viestejä järjestelmälokiin"
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "Luo tai muuttaa väliaikaisia tiedostoja /tmp-hakemistossa"
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "Käyttää Pam-tunnistautumista"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "Käyttää nsswitchiä tai getpw*-kutsuja"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "Käyttää dbus:ia"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "Lähettää audit-viestejä"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "Toimii päätteen kanssa"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "Lähettää sähköpoistia"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>Lisää tiedostot/hakemistot joita %s hallitsee</b>"
+
+#: ../polgen.ui:1978
+msgid "Add File"
+msgstr "Lisää tiedosto"
+
+#: ../polgen.ui:2031
+msgid "Add Directory"
+msgstr "Lisää hakemisto"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr ""
+"Tiedostot/hakemistot joita %s \"hallitsee\". Pid tiedostot, Lokitiedostot, /"
+"var/lib tiedostot ..."
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>Lisää totuusarvo säännöstä: %s </b>"
+
+#: ../polgen.ui:2179
+msgid "Add Boolean"
+msgstr "Lisää totuusarvo"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "Lisää/poista %s -verkkotunnuksen käyttämät totuusarvot"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>Mihin hakemistoon luot säännön %s ?</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "Käytäntöhakemisto"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "Verkkoportti"
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"SELinux-portti\n"
+"Tyyppi"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "Protokolla"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"Taso"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "Portti"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "Porttinumero ”%s” on virheellinen. 0 < PORTTINUMERO < 65536 "
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "Luettelonäkymä"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "Ryhmä näkymä"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr "Luo SELinux-käytäntömoduulit"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "Oletko varma että haluat poistaa %s '%s'?"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "Poista %s"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "Lisää %s"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "Muokkaa %s"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr "SELinux-käytäntöjen hallintatyökalu"
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr "policy;security;selinux;avc;permission;mac;"
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "Pakottava"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "Ei käytössä"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "Tila"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"Käytäntötyypin vaihtaminen aiheuttaa seuraavan käynnistyksen yhteydessä koko "
+"tiedostojärjestelmän nimiöinnin uudelleen. Se saattaa viedä kauan aikaa "
+"riippuen tiedostojärjestelmän koosta. Haluatko jatkaa?"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"SELinuxin poistaminen käytöstä ei ole suositeltua ja vaatii järjestelmän "
+"käynnistämisen uudelleen. Jos kytket myöhemmin SELinuxin takaisin käyttöön, "
+"järjestelmä on nimiöitävä uudelleen. Jos haluat vain tarkistaa aiheuttaako "
+"SELinux ongelmia järjestelmässä, voit siirtyä sallivaan tilaan, joka vain "
+"kirjoittaa virheistä lokitietoja eikä toimeenpane SELinux-käytäntöä. "
+"Sallivaan tilaan siirtyminen ei vaadi järjestelmän käynnistämistä uudelleen. "
+"Haluatko jatkaa?"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"SELinuxin ottaminen käyttöön aiheuttaa seuraavan käynnistyksen yhteydessä "
+"koko tiedostojärjestelmän nimiöinnin uudelleen. Se saattaa viedä kauan aikaa "
+"riippuen tiedostojärjestelmän koosta. Haluatko jatkaa?"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr "SELinux-hallinta"
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr "Hallitse SELinuxia graafisesti"
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"Tekijänoikeudet (c) 2006 Red Hat, Inc.\n"
+"Tekijänoikeudet (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "Lisää SELinux-kirjautumisassosiaatio"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "Kirjautumisnimi"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "SELinux-käyttäjä"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "MLS/MCS-alue"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "Lisää SELinux-verkkoportteja"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "Porttinumero"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "SELinux-tyyppi"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "Tiedostomäärittely"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "Tiedostotyyppi"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "SELinux-ylläpito"
+
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "_Tiedosto"
+
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "_Lisää"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "_Ominaisuudet"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "_Poista"
+
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "_Ohje"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "Valitse hallintaobjekti"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>Valitse:</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "Järjestelmän toimeenpaneva tila oletuksena"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "Nykyinen toimeenpaneva tila"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "Järjestelmän oletuskäytännön tyyppi: "
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"Valitse haluatko nimiöidä koko tiedostojärjestelmän uudelleen seuraavan "
+"käynnistyksen yhteydessä. Se saattaa viedä kauan aikaa riippuen "
+"tiedostojärjestelmän koosta. Jos olet vaihtamassa käytäntötyyppiä tai "
+"ottamassa SELinuxia käyttöön toimeenpanevassa tilassa, uudelleennimiöinti on "
+"pakollista."
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr ""
+"Nimiöi tiedostojärjestelmä uudelleen seuraavan käynnistyksen yhteydessä."
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "Palauta totuusarvo järjestelmän oletusasetuksiin"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "Vaihda muokattujen ja kaikkien totuusarvojen välillä"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "Suodin"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "Lisää tiedostokonteksti"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "Muuta tiedostokontekstia"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "Poista tiedostokonteksti"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "Vaihda kaikkien ja muokattujen tiedostokontekstien välillä"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "Lisää SELinux-käyttäjäassosiaatio"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "Muokkaa SELinux-käyttäjäassosiaatiota"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "Poista SELinux-käyttäjäassosiaatio"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "Lisää käyttäjä"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "Muokkaa käyttäjää"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "Poista käyttäjä"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "Lisää verkkoportti"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "Muokkaa verkkoporttia"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "Poista verkkoportti"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "Vaihda muokattujen ja kaikkien porttien välillä"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "Luo uusi käytäntömoduuli"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "Lataa käytäntömoduuli"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "Poista ladattava käytäntömoduuli"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr ""
+"Ota käyttöön/poista käytöstä auditin lisäsäännöt, joita ei yleensä "
+"raportoida lokitiedostoissa."
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "Vaihda prosessin tila sallivaksi."
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "Vaihda prosessin tila toimeenpanevaksi"
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "Lisää SELinux-käyttäjä"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "SELinux-roolit"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "SELinux-käyttäjä '%s' vaaditaan"
+
+#~ msgid "Run System Config SELinux"
+#~ msgstr "Suorita System Config SELinux"
+
+#~ msgid "Authentication is required to run system-config-selinux"
+#~ msgstr "Tunnistautuminen vaaditaan system-config-selinux suorittamiseksi"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "sepolicy"
+#~ msgstr "sepolicy"
+
+#~ msgid "all files"
+#~ msgstr "kaikki tiedostot"
+
+#~ msgid "regular file"
+#~ msgstr "tavallinen tiedosto"
+
+#~ msgid "directory"
+#~ msgstr "hakemisto"
+
+#~ msgid "character device"
+#~ msgstr "merkkilaite"
+
+#~ msgid "block device"
+#~ msgstr "lohkolaite"
+
+#~ msgid "socket file"
+#~ msgstr "pistoketiedosto"
+
+#~ msgid "symbolic link"
+#~ msgstr "symbolinen linkki"
+
+#~ msgid "named pipe"
+#~ msgstr "nimetty putki"

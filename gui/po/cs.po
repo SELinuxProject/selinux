@@ -1,0 +1,1055 @@
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+# Zdenek <chmelarz@gmail.com>, 2016. #zanata
+# Zdenek <chmelarz@gmail.com>, 2017. #zanata
+# Michal Konečný <michalkonec666@gmail.com>, 2018. #zanata
+# Zdenek <chmelarz@gmail.com>, 2018. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2018-08-10 07:13-0400\n"
+"Last-Translator: Michal Konečný <michalkonec666@gmail.com>\n"
+"Language-Team: Czech\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
+"X-Generator: Zanata 4.6.2\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "Boolean"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "vše"
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "Upravený"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "Doména procesu"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr "Jméno domény"
+
+# auto translated by TM merge from project: anaconda, version: master, DocId:
+# anaconda
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr "Mód"
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "Benevolentní"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "Značení souborů"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"Specifikace \n"
+"souboru"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"SELinux\n"
+"Typ souboru"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"Typ\n"
+"souboru"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "Mapování uživatele"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"Přihloašovací\n"
+"jméno"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux\n"
+"uživatel"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"MLS/\n"
+"MCS rozsah"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "Je vyžadováno přihlášení '%s'"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "Modul politiky"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "Název modulu"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr "Priorita"
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr ""
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "Zakázat audit"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "Povolit audit"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "Nahrát modul politiky"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "Název"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "Popis"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "Role"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "Existující_uživatel"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "Aplikace"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s musí být adresář"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "Musíte vybrat uživatele."
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "Vybrat spustitelný soubor, který má být omezený."
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "Vybrat soubor init skriptu, který má být omezený."
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr "Vybrat soubor(y), který omezené aplikace vytváří nebo zapisují"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr ""
+"Vybrat adresář(e), který omezené aplikace vlastní nebo do nich zapisují"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "Vybrat adresář pro vytvoření souborů politik"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"Typ %s_t je již v současné politice definován.\n"
+"Přejete si pokračovat?"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "Ověřit jméno"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"Modul %s je již v současné politice nahrán.\n"
+"Přejete si pokračovat?"
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr ""
+"Je nutné přidat jméno složené z písmen a číslic a neobsahující žádné mezery."
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "Musíte zadat spustitelný soubor"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+#, fuzzy
+#| msgid "Configue SELinux"
+msgid "Configure SELinux"
+msgstr "Konfigurovat SELinux"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr "Kredit-překladatelům"
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "Přidat booleans dialog"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "Název boolean"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "Nástroj generování SELinux politiky"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr ""
+"<b>Zvolte typ politiky pro aplikaci nebo roli uživatele, kterou chcete "
+"omezit:</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>Aplikace</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "Standardní init démon"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"Standardní init démon jsou démoni spuštěni při startu systému pomocí init "
+"skriptů. Obvykle vyžaduje skript v /etc/rc.d/init.d"
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "Systémový démon DBUS"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "Démon internetových služeb (inetd)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "Démon internetových služeb jsou démoni spuštěni službou xinetd"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "Webová aplikace / skript (CGI)"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr ""
+"Webové aplikace / skript (CGI) jsou CGI skripty nastartované webovým "
+"serverem (apache)"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "Uživatelská aplikace"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+"Uživatelská aplikace je libovolná aplikace, kterou byste chtěli omezit a "
+"která je spuštěna uživatelem"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "Sandbox"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>Přihlášení uživatelé</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "Existující role uživatele"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "Upravit existující záznam o přihlášeném uživateli."
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "Minimální role uživatele terminálu"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"Tento uživatel se bude přihlašovat k počítači jen pomocí terminálu nebo "
+"vzdáleného přihlášení. Ve výchozím nastavení nebude mít tento uživatel žádné "
+"setuid, žádnou síť, žádné su, žádné sudo."
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "Minimální role uživatele X Windows"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"Tento uživatel se bude přihlašovat k počítači pomocí X nebo terminálu. Ve "
+"výchozím nastavení nebude mít tento uživatel žádné setuid, žádnou síť, žádné "
+"sudo, žádné su."
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "Role uživatele"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+"Uživatel s plnou sítí, žádné aplikace setuid bez přechodu, žádné sudo, žádné "
+"su."
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "Role administrátora"
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"Uživatel s plnou sítí, žádné aplikace setuid bez přechodu, žádné su, může "
+"spustit sudo na administrátorský účet root"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>Uživatelé Root</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "Role administrátora Root "
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"Vyberte roli administrátora root, pokud bude tento uživatel použit pro "
+"správu zařízení. Tento uživatel se nebude moci přihlásit do systému přímo."
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>Zadejte název aplikace nebo role uživatele:</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr ""
+"Zadejte úplnou cestu ke spustitelným programům, které mají být omezeny."
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "..."
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr "Zadejte jedinečný název pro omezenou aplikaci nebo roli uživatele."
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "Spustitelný program"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "Init skript"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr ""
+"Zadejte úplnou cestu k init skriptu použitého ke spuštění omezené aplikace."
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>Vybrat existující roli k úpravě:</b>"
+
+#: ../polgen.ui:904
+#, fuzzy, python-format
+#| msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "Vybrat role uživatele, které přejdou do domény %s."
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "Záložka role"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>Vybrat role, do kterých %s převede:</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr "Vybrat domény aplikací, do nichž %s převede."
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"záložka \n"
+"role přechodu"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>Vybrat uživatelské_role, které budou převedeny do %s:</b>"
+
+#: ../polgen.ui:1007
+#, fuzzy
+#| msgid ""
+#| "Select the user roles that will transiton to this applications domains."
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr "Vybrat role uživatele, které přejdou do této domény aplikaci."
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>Vybrat domény, které %s bude spravovat:</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "Vyberte domény, které byste chtěli tímto uživatelem spravovat."
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>Vybrat další role pro %s:</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>Zadat síťové porty, které %s váže na:</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP porty</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "Všechny"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "Umožňuje %s vytvořit vazbu s UDP portem"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr "Umožňuje %s volat bindresvport s 0. Vytvoří vazbu k portům 600-1024"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "Nerezervované porty (>1024)"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"Vložte čárkami oddělený seznam UDP portů nebo rozsah portů, k nimž se váže "
+"%s. Příklad: 612, 650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "Vybrat porty"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "Umožňuje %s vytvořit vazbu s UDP porty  > 1024"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP porty</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"záložka \n"
+"vazby sítě"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>Vybrat síťové porty, k nimž se %s připojuje:</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "Umožňuje %s připojit se k TCP portu"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"Vložte čárkami oddělený seznam TCP portů nebo rozsah portů, k nimž se "
+"připojuje %s. Příklad: 612, 650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "Umožňuje %s připojit se k UDP portu"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"Vložte čárkami oddělený seznam UDP portů nebo rozsah portů, k nimž se "
+"připojuje %s. Příklad: 612, 650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>Vybrat společné rysy aplikace pro %s:</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "Zapisuje zprávy ze syslog  "
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "Vytvořit / Manipulovat s dočasnými soubory v adresáři /tmp"
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "Používá Pam pro autentizaci"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "Používá nsswitch nebo getpw* volání"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "Používá dbus"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "Posílá zprávy auditu"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "Komunikuje s terminálem"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "Posílá email"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>Přidat soubory / adresáře, které %s spravuje</b>"
+
+#: ../polgen.ui:1978
+#, fuzzy
+#| msgid "Add File Context"
+msgid "Add File"
+msgstr "Přidat kontext souboru"
+
+#: ../polgen.ui:2031
+#, fuzzy
+#| msgid "directory"
+msgid "Add Directory"
+msgstr "adresář"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr ""
+"Soubory / adresáře, které %s spravuje. PID souborů, soubory logu, soubory /"
+"var/lib ..."
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>Přidat booleany z politiky %s:</b>"
+
+#: ../polgen.ui:2179
+#, fuzzy
+#| msgid "Boolean"
+msgid "Add Boolean"
+msgstr "Boolean"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "Přidat / odebrat booleany používané doménou %s"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>Který adresář bude vytvářet politiku %s?</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "Adresář politiky"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "Síťový port"
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"Typ SELinuxového\n"
+"portu"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "Protokol"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"úroveň"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "Port"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "Číslo portu \"%s\" není platné.  0 < ČÍSLO_PORTU < 65536 "
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "Zobrazení seznamu"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "Zobrazení skupiny"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr ""
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "Opravdu chcete smazat %s '%s'?"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "Smazat %s"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "Přidat %s"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "Upravit %s"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr ""
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr ""
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "Vynucovací"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "Zakázáno"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "Stav"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"Změna typu politiky způsobí kompletní přeznačení souborového systému v "
+"průběhu příštího startu systému. Přeznačení trvá dlouhou dobu v závislosti "
+"na velikosti souborového systému. Přejete si pokračovat?"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"Změna stavu SELinux na zakázán vyžaduje restart. To se nedoporučuje. Pokud "
+"se později rozhodnete pro opětovné zapnutí SELinuxu, bude zapotřebí, aby byl "
+"systém přeznačen. Pokud chcete pouze zjistit, zda-li je SELinux příčinou "
+"problémů v systému, můžete přejít na benevolentní režim, který bude pouze "
+"protokolovat chyby a nebude vynucovat politiku SELinuxu. Benevolentní režim "
+"nevyžaduje restart. Přejete si pokračovat?"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"Změna stavu SELinuxu na povolen způsobí kompletní přeznačení souborového "
+"systému v průběhu příštího startu systému. Přeznačení trvá dlouhou dobu v "
+"závislosti na velikosti souborového systému. Přejete si pokračovat?"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr ""
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr ""
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "Přidat mapování přihlašování SELinuxu"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "Přihlašovací jméno"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "Uživatel SELinuxu"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "Rozsah MLS/MCS"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "Přidat síťové porty SELinuxu"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "Číslo portu"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "Typ SELinuxu"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "Specifikace souboru"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "Typ souboru"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "Správa SELinuxu"
+
+# auto translated by TM merge from project: system-config-kdump, version:
+# master, DocId: system-config-kdump
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "_Soubor"
+
+# auto translated by TM merge from project: system-config-printer, version:
+# master, DocId: system-config-printer
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "Př_idat"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "_Vlastnosti"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "O_dstranit"
+
+# auto translated by TM merge from project: system-config-language, version:
+# f27, DocId: system-config-language
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "_Nápověda"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "Vybrat objekt správy"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>Vybrat:</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "Výchozí vynucovací režim"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "Současný mód vynucovací"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "Výchozí typ politiky:"
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"Vyberte, pokud si přejete kompletní přeznačení souborového systému v průběhu "
+"příštího startu systému. Přeznačení může trvat dlouhou dobu v závislosti na "
+"velikosti souborového systému. Pokud měníte typ politiky ze zakázaného na "
+"vynucovací, je přeznačení nutné."
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr "Přeznačit při příštím restartu."
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "Obnovit nastavení booleanu na výchozí"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "Přepínat mezi vlastním a všemi booleany"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "Filtr"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "Přidat kontext souboru"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "Upravit kontext souboru"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "Smazat kontext souboru"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "Přepínat mezi všemi a vlastním kontextem souboru"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "Přidat mapování uživatele SELinuxu"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "Upravit mapování uživatele SELinuxu"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "Smazat mapování uživatele SELinuxu"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "Přidat uživatele"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "Upravit uživatele"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "Smazat uživatele"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "Přidat síťový port"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "Editovat síťový port"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "Smazat síťový port"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "Přepínat mezi vlastními a všemi porty"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "Vytvořit nový modul politiky"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "Nahrát modul politiky"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "Odstranit zatížitelný modul politiky"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr ""
+"Povolit / zakázat další pravidla auditu, která normálně nejsou hlášena v "
+"souborech záznamu."
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "Změnit mód procesu na benevolentní."
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "Změnit mód procesu na vynucovací."
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "Přidat uživatele SELinuxu"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "Role SELinuxu"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "Je vyžadován uživatel SELinuxu '%s'"
+
+#, fuzzy
+#~| msgid "Configue SELinux"
+#~ msgid "Run System Config SELinux"
+#~ msgstr "Konfigurovat SELinux"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "all files"
+#~ msgstr "všechny soubory"
+
+#~ msgid "regular file"
+#~ msgstr "obyčejný soubor"
+
+#~ msgid "character device"
+#~ msgstr "znakové zařízení"
+
+#~ msgid "block device"
+#~ msgstr "blokové zařízení"
+
+#~ msgid "socket file"
+#~ msgstr "soket soubor"
+
+#~ msgid "symbolic link"
+#~ msgstr "symbolický link"
+
+#~ msgid "named pipe"
+#~ msgstr "pojmenovaná roura"

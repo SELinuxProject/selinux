@@ -1,0 +1,1034 @@
+# Niv Baehr <bloop93@gmail.com>, 2016. #zanata
+# Yaron Shahrabani <sh.yaron@gmail.com>, 2018. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2021-03-12 12:01+0000\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
+"Language-Team: Hebrew <https://translate.fedoraproject.org/projects/selinux/"
+"gui/he/>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n==2 ? 2 : 1;\n"
+"X-Generator: Weblate 4.5.1\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "בוליאני"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "הכול"
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "מותאם אישית"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "תחום תהליך"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr "שם תחום"
+
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr "מצב"
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "מתירני"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "תיוג קבצים"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"מפרט\n"
+"קבצים"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"סוג קובץ\n"
+"Selinux"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"סוג\n"
+"קובץ"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "מיפוי משתמשים"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"שם\n"
+"כניסה"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"משתמש\n"
+"SELinux"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"טווח MLS/‎\n"
+"MCS"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "נדרשת כניסה ‚%s’"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "מודול מדיניות"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "שם מודול"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr "עדיפות"
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr "סוג"
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "השבתת פיקוח"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "הפעלת פיקוח"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "טעינת מודול מדיניות"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "שם"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "תיאור"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "תפקיד"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "משתמש_קיים"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "יישום"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s חייבת להיות תיקייה"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "עליך לבחור משתמש"
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "נא לבחור קובץ הפעלה לריתוק."
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "נא לבחור סקריפט הפעלה (init) לריתוק."
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr "נא לבחור קבצים שיישומים מרותקים יוצרים או כותבים"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr "נא לבחור תיקיות שליישומים מרותקים יש בעלות עליהן והם כותבים אליהן"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "נא לבחור תיקייה לייצר בה קובצי מדיניות"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"הסוג %s_t כבר מוגדר במדיניות הנוכחית.\n"
+"להמשיך?"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "אימות השם"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"המודול %s כבר נטען במדיניות הנוכחית.\n"
+"להמשיך?"
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr "עליך להוסיף שם שמורכב מאותיות ומספרות ואינו מכיל רווחים."
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "עליך להכניס קובץ הפעלה"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+#, fuzzy
+#| msgid "Configue SELinux"
+msgid "Configure SELinux"
+msgstr "הגדרת SELinux"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "רד האט 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr ""
+"‏מארק קרפיבנר <mark125@gmail.com>‏\n"
+"אורון פלד <oron@actcom.co.il>\n"
+"אלעד אלפסה <elad@fedoraproject.org>"
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "הוספת דו־שיח בוליאנים"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "שם בוליאני"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "כלי ליצירת מדיניות של SELinux"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr ""
+"<b>נא לבחור את סוג המדיניות עבור היישום או תפקיד המשתמש אותו ברצונך לרתק:</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>יישומים</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "סוכן Init תקני"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"סוכן Init תקני הם סוכנים שמופעלים עם עליית המכונה דרך קובצי init.  בדרך כלל "
+"דורש סקריפט תחת ‎/etc/rc.d/init.d"
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "סוכן מערכת DBUS"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "סוכן שירותי אינטרנט (inetd)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "סוכן שירותי אינטרנט הם סוכנים שמופעלים על ידי xinetd"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "יישומון/סקריפט מקוון (CGI)"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr ""
+"יישומון/סקריפט מקוון (CGI) מסוג CGI מופעלים על ידי שרת האינטרנט (apache)"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "יישום משתמש"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr "יישום משתמש הוא כל יישום אותו ברצונך לרתק והוא מופעל על ידי המשתמש"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "ארגז חול"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>משתמשי כניסה</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "תפקידי משתמשים קיימים"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "שינוי רשומת משתמש כניסה קיימת."
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "תפקיד משתמש מסוף בסיסי"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"משתמש זה ייכנס למכונה רק דרך מסוף או מרחוק.  כבררת מחדל למשתמש הזה לא יהיה "
+"setuid, רשת, su או sudo."
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "תפקיד משתמש חלונות X בסיסי"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"משתמש זה יוכל להיכנס למכונה דרך X או מסוף.  כבררת מחדל למשתמש הזה לא יהיה "
+"setuid, רשת, sudo או su"
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "תפקיד משתמש"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+"משתמש עם שליטה מלאה ברשת, לא יהיו יישומוני setuid ללא החלפה, su או sudo."
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "תפקיד משתמש ניהולי"
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"משתמש עם שליטה מלאה ברשת, לא יהיו יישומי setuid ללא החלפה, אין su, אפשר "
+"לעשות sudo לתפקידי על ניהוליים"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>משתמשי על</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "תפקיד משתמש ניהול על"
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"יש לבחור בתפקיד המשתמש ניהול על, אם המשתמש הזה ישמש לניהול המכונה בעת הפעלה "
+"כמשתמש על. המשתמש הזה לא יוכל להיכנס למערכת ישירות."
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>נא למלא שם יישום או תפקיד משתמש:</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr "נא למלא את הנתיב המלא של קובץ ההפעלה לריתוק."
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "…"
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr "נא למלא שם ייחודי ליישום או לתפקיד המשתמש המרותקים."
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "קובץ הפעלה"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "סקריפט Init"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr "נא למלא את הנתיב המלא לסקריפט ה־init שישמש להפעלת היישום המרותק."
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>נא לבחור תפקיד קיים לשינוי:</b>"
+
+#: ../polgen.ui:904
+#, fuzzy, python-format
+#| msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "נא לבחור את תפקידי המשתמשים שיועברו לשם התחום %s."
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "לשונית תפקידים"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>נא לבחור תפקידים ש־%s יעביר אל:</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr "נא לבחור שמות תחום ליישומים ש־%s יעביר אליהם."
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"לשונית\n"
+"העברת תפקיד"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>לבחור את user_roles (תפקידי המשתמשים) שיועברו אל %s:</b>"
+
+#: ../polgen.ui:1007
+#, fuzzy
+#| msgid ""
+#| "Select the user roles that will transiton to this applications domains."
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr "נא לבחור את תפקידי המשתמשים שיועברו לשמות תחום היישומים האלו."
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>נא לבחור שמות תחום שינוהלו על ידי %s:</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "נא לבחור את שמו התחום שברצונך להוסיף לניהול המשתמש הזה."
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>נא לבחור תפקידים נוספים ל־%s:</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>נא לבחור פתחות רשת שמאוגדות לתוך %s:</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>פתחות TCP</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "הכול"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "מאפשר ל־%s להתאגד לכל פתחת udp"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr "לאפשר ל־%s לפנות אל bindresvport עם 0. מתאגד לפתחה 600-1024"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "פתחות בלתי־שמורות (>1024)"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"נא למלא רשימה מופרדת בפסיקים של פתחות udp או טווחים של פתחות שאליהם מתאגד "
+"%s. למשל: 612, 650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "נא לבחור פתחות"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "מאפשר ל־%s להתאגד לכל פתחה מעל 1024"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>פתחות UDP</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"לשונית\n"
+"איגוד רשת"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>נא לבחור פתחות רשת אליהן מתחבר %s:</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "מאפשר ל־%s להתחבר לכל פתחת tcp"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"נא למלא רשימה מופרדת בפסיקים של פתחות tcp או טווחים של פתחות שאליהם מתאגד "
+"%s. למשל: 612, 650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "מאפשר ל־%s להתאגד לכל פתחת udp"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"נא למלא רשימה מופרדת בפסיקים של פתחות udp או טווחים של פתחות שאליהם מתאגד "
+"%s. למשל: 612, 650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>בחירת תכונות יישומים משותפות עבור %s:</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "כותב הודעות syslog\t"
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "יצירת/עריכת קבצים זמניים ב־‎/tmp"
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "משתמש ב־Pam לאימות"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "משתמש בקריאות nsswitch או getpw*‎"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "משתמש ב־dbus"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "שולח הודעות פיקוח"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "מתפעל את המסוף"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "שולח דוא״ל"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>הוספת קבצים/תיקיות שבניהול %s</b>"
+
+#: ../polgen.ui:1978
+msgid "Add File"
+msgstr "הוספת קובץ"
+
+#: ../polgen.ui:2031
+msgid "Add Directory"
+msgstr "הוספת תיקייה"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr ""
+"קבצים/תיקיות שאותם „מנהל” %s. קובצי PID, קובצי יומנים, קבצים ב־‎/var/lib…"
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>להוסיף בוליאנים מהמדיניות %s:</b>"
+
+#: ../polgen.ui:2179
+#, fuzzy
+#| msgid "Boolean"
+msgid "Add Boolean"
+msgstr "בוליאני"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "הוספת/הסרת בוליאנים בהם נעשה שימוש בשם התחום %s"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>לאיזו תיקייה לייצר את המדיניות %s?</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "תיקיית מדיניות"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "פתחת רשת"
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"סוג פתחת\n"
+"SELinux"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "פרוטוקול"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"רמת\n"
+"MLS/MCS"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "פתחה"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "פתחה מספר „%s” אינה תקפה.  ‎0 < מס׳_פתחה < 65536 "
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "תצוגת רשימה"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "תצוגת קבוצה"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr "יצירת מודולי מדיניות של SELinux"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "למחוק את %s ‚%s’?"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "למחוק את %s"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "להוסיף את %s"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "לשנות את %s"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr "כלי לניהול מדיניות SELinux"
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr "מדיניות;אטחה;selinux;avc;הרשאה;mac;ברזל;רשות;רשת;תקשורת;"
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "נאכף"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "מושבת"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "מצב"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"החלפת סוג המדיניות תגרום לשינוי התווית של כל מערכת הקבצים עם ההפעלה הבאה "
+"מחדש. שינוי התווית אורך זמן רב בהתאם לגודל מערכת הקבצים. להמשיך בתהליך?"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"החלפת המצב של SELinux למושבת דורשת הפעלה מחדש. זה לא מומלץ. אם בחירתך בעתיד "
+"תהיה להפעיל את SELlinux בחזרה, על המערכת יהיה לעבור תהליך שינוי תווית. אם כל "
+"מה שמעניין אותך זה להבין האם SELinux גורם לבעיות במערכת שלך, ניתן להעביר "
+"למצב מתירני שרק מתעד שגיאות ולא אוכף מדיניות SELinux. מצב מתירני לא דורש "
+"הפעלה מחדש. להמשיך?"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"החלפת המצב של SELinux לפעיל עשויה לגרום להגדרת תווית מחדש של כל מערכת הקבצים "
+"בעת ההפעלה הבאה. הגדרת תווית מחדש אורכת זמן רב כתלות בגודל המערכת הקבצים. "
+"להמשיך בתהליך?"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr "ניהול SELinux"
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr "להגדיר את SELinux באופן חזותי"
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"כל הזכויות שמורות (c)2006 רד הט, בע״מ.\n"
+"כל הזכויות שמורות (c) 2006 דן וולש <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "להוסיף מיפוי משתמשים של SELinux"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "שם כניסה"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "משתמשי SELinux"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "טווח MLS/MCS"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "הוספת פתחות רשת SELinux"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "מספר פתחה"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "סוג SELinux"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "תיאור קובץ"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "סוג קובץ"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "ניהול SELinux"
+
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "_קובץ"
+
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "הו_ספה"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "מ_אפיינים"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "מ_חיקה"
+
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "ע_זרה"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "בחירת פריט ניהול"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>בחירה:</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "מצב אכיפת בררת מחדל של המערכת"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "מצב אכיפה נוכחי"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "סוג מדיניות בררת מחדל של המערכת: "
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"יש לבחור אם ברצונך להגדיר תווית מחדש לכל מערכת הקבצים עם ההפעלה הבאה.הגדרת "
+"תווית מחדש עשויה לארוך זמן רב כתלות בגודל מערכת הקבצים. אם השינוי שמתבצע הוא "
+"סוגי מדיניות או מעבר ממושבת לנאכף, נדרשת הגדרת תווית מחדש."
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr "שינוי תווית בהפעלה הבאה מחדש."
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "להחזיר את ההגדרה הבוליאנית לבררת המחדל של המערכת"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "להחליף בין התאמה אישית לכל הבוליאנים"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "מסנן"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "הוספת הקשר קובץ"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "שינוי הקשר קובץ"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "מחיקת הקשר קובץ"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "להחליף בין הכול לבין תוכן קובץ מותאם אישית"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "הוספת מיפוי משתמש SELinux"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "שינוי מיפוי משתמש SELinux"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "מחיקת מיפוי משתמש SELinux"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "הוספת משתמש"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "עריכת משתמש"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "מחיקת משתמש"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "הוספת פתחת רשת"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "עריכת פתחת רשת"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "מחיקת פתחת רשת"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "החלפה בין התאמה אישית לכל הפתחות"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "יצירת מודול מדיניות חדש"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "טעינת מודול מדיניות"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "הסרת מודול מדיניות שניתן לטעון"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr "להפעיל/להשבית כללי פיקוח נוספים שאינם מדווחים בדרך כלל לקובצי היומן."
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "החלפת מצב התהליך למתירני."
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "החלפת מצב התהליך לנאכף"
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "הוספת משתמש SELinux"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "תפקידי SELinux"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "נדרש משתמש SELinux‏ ‚%s’"
+
+#~ msgid "Run System Config SELinux"
+#~ msgstr "הפעלת הגדרת מערכת SELinux"
+
+#~ msgid "Authentication is required to run system-config-selinux"
+#~ msgstr "נדרש אימות כדי להריץ את system-config-selinux"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "sepolicy"
+#~ msgstr "sepolicy"
+
+#~ msgid "all files"
+#~ msgstr "כל הקבצים"
+
+#~ msgid "regular file"
+#~ msgstr "קובץ רגיל"
+
+#~ msgid "directory"
+#~ msgstr "תיקייה"
+
+#~ msgid "character device"
+#~ msgstr "התקן תווים"
+
+#~ msgid "block device"
+#~ msgstr "התקן בלוק"
+
+#~ msgid "socket file"
+#~ msgstr "קובץ שקע"
+
+#~ msgid "symbolic link"
+#~ msgstr "קישור סמלי"
+
+#~ msgid "named pipe"
+#~ msgstr "צינורית עם שם"

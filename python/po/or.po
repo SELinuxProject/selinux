@@ -1,0 +1,3523 @@
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+# Parag <pnemade@redhat.com>, 2017. #zanata
+# Vit Mojzis <vmojzis@redhat.com>, 2017. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-03 11:10+0100\n"
+"PO-Revision-Date: 2017-12-15 09:04-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Oriya\n"
+"Language: or\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Zanata 4.6.2\n"
+
+#: ../audit2allow/audit2allow:239
+msgid "******************** IMPORTANT ***********************\n"
+msgstr "******************** ଗୁରୁତ୍ବପୂର୍ଣ୍ଣ ***********************\n"
+
+#: ../audit2allow/audit2allow:240
+#, python-format
+msgid ""
+"To make this policy package active, execute:\n"
+"\n"
+"semodule -i %s\n"
+"\n"
+msgstr ""
+
+#: ../chcat/chcat:110 ../chcat/chcat:190
+msgid "Requires at least one category"
+msgstr "ଅତିକମ ରେ ଗୋଟିଏ ବିଭାଗ ଆବଶ୍ଯକ କରି ଥାଏ"
+
+#: ../chcat/chcat:123 ../chcat/chcat:204
+#, python-format
+msgid "Can not modify sensitivity levels using '+' on %s"
+msgstr "%s ରେ '+' ବ୍ଯବହାର କରି ସମ୍ବଦେନଶୀଳ ସ୍ତର ମାନଙ୍କୁ ରୂପାନ୍ତରିତ କରି ପାରିବ ନାହିଁ"
+
+#: ../chcat/chcat:127
+#, python-format
+msgid "%s is already in %s"
+msgstr "%s ଟି ପୂର୍ବରୁ %s ରେ ରହିଛି"
+
+#: ../chcat/chcat:209 ../chcat/chcat:219
+#, python-format
+msgid "%s is not in %s"
+msgstr "%s ଟି %s ରେ ନାହିଁ"
+
+#: ../chcat/chcat:290 ../chcat/chcat:295
+msgid "Can not combine +/- with other types of categories"
+msgstr "+/- କୁ ଅନ୍ଯାନ୍ଯ ବିଭାଗ ମାନଙ୍କ ସହିତ ମିଶ୍ରଣ କରି ପାରିବ ନାହିଁ"
+
+#: ../chcat/chcat:345
+msgid "Can not have multiple sensitivities"
+msgstr "ଏକାଧିକ ସମ୍ବେଦନଶୀଳ ଉପାଦାନ ରହି ପାରିବ ନାହିଁ"
+
+#: ../chcat/chcat:352
+#, python-format
+msgid "Usage %s CATEGORY File ..."
+msgstr "ବ୍ଯବହାର ବିଧି %s ବିଭାଗୀୟ ଫାଇଲ ..."
+
+#: ../chcat/chcat:353
+#, python-format
+msgid "Usage %s -l CATEGORY user ..."
+msgstr "ବ୍ଯବହାର ବିଧି %s -l ବିଭାଗୀୟ ଚାଳକ ..."
+
+#: ../chcat/chcat:354
+#, python-format
+msgid "Usage %s [[+|-]CATEGORY],...] File ..."
+msgstr ""
+
+#: ../chcat/chcat:355
+#, python-format
+msgid "Usage %s -l [[+|-]CATEGORY],...] user ..."
+msgstr ""
+
+#: ../chcat/chcat:356
+#, python-format
+msgid "Usage %s -d File ..."
+msgstr "ବ୍ଯବହାର ବିଧି %s -d ଫାଇଲ ..."
+
+#: ../chcat/chcat:357
+#, python-format
+msgid "Usage %s -l -d user ..."
+msgstr "ବ୍ଯବହାର ବିଧି %s -l -d ଚାଳକ ..."
+
+#: ../chcat/chcat:358
+#, python-format
+msgid "Usage %s -L"
+msgstr "ବ୍ଯବହାର ବିଧି %s -L"
+
+#: ../chcat/chcat:359
+#, python-format
+msgid "Usage %s -L -l user"
+msgstr "ବ୍ଯବହାର ବିଧି %s -L -l ଚାଳକ"
+
+#: ../chcat/chcat:360
+msgid "Use -- to end option list.  For example"
+msgstr "ପସନ୍ଦ ର ତାଲିକା କୁ ସମାପ୍ତ କରିବା ପାଇଁ -- କୁ ବ୍ଯବହାର କରନ୍ତୁ | ଉଦାହରଣ ସ୍ବରୂପ"
+
+#: ../chcat/chcat:361
+msgid "chcat -- -CompanyConfidential /docs/businessplan.odt"
+msgstr "chcat -- -CompanyConfidential /docs/businessplan.odt"
+
+#: ../chcat/chcat:362
+msgid "chcat -l +CompanyConfidential juser"
+msgstr "chcat -l +CompanyConfidential juser"
+
+#: ../chcat/chcat:432
+#, python-format
+msgid "Options Error %s "
+msgstr "ପସନ୍ଦ ତୃଟି %s "
+
+#: ../semanage/semanage:208
+msgid "Select an alternate SELinux Policy Store to manage"
+msgstr ""
+
+#: ../semanage/semanage:212
+msgid "Select a priority for module operations"
+msgstr ""
+
+#: ../semanage/semanage:216
+#, python-format
+msgid "Do not print heading when listing %s object types"
+msgstr ""
+
+#: ../semanage/semanage:220
+msgid "Do not reload policy after commit"
+msgstr ""
+
+#: ../semanage/semanage:224
+#, python-format
+msgid "List %s local customizations"
+msgstr ""
+
+#: ../semanage/semanage:228
+#, python-format
+msgid "Add a record of the %s object type"
+msgstr ""
+
+#: ../semanage/semanage:232
+msgid "SELinux Type for the object"
+msgstr ""
+
+#: ../semanage/semanage:236
+msgid ""
+"Default SELinux Level for SELinux user, s0 Default. (MLS/MCS Systems only)"
+msgstr ""
+
+#: ../semanage/semanage:241
+msgid ""
+"\n"
+"MLS/MCS Security Range (MLS/MCS Systems only)\n"
+"SELinux Range  for SELinux login mapping\n"
+"defaults to the SELinux user record range.\n"
+"SELinux Range for SELinux user defaults to s0.\n"
+msgstr ""
+
+#: ../semanage/semanage:250
+msgid ""
+"\n"
+"    Protocol  for  the specified port (tcp|udp|dccp|sctp) or internet "
+"protocol\n"
+"    version for the specified node (ipv4|ipv6).\n"
+msgstr ""
+
+#: ../semanage/semanage:256
+msgid ""
+"\n"
+"    Subnet prefix for  the specified infiniband ibpkey.\n"
+msgstr ""
+
+#: ../semanage/semanage:261
+msgid ""
+"\n"
+"    Name for the specified infiniband end port.\n"
+msgstr ""
+
+#: ../semanage/semanage:266
+#, python-format
+msgid "Modify a record of the %s object type"
+msgstr ""
+
+#: ../semanage/semanage:270
+#, python-format
+msgid "List records of the %s object type"
+msgstr ""
+
+#: ../semanage/semanage:274
+#, python-format
+msgid "Delete a record of the %s object type"
+msgstr ""
+
+#: ../semanage/semanage:278
+msgid "Extract customizable commands, for use within a transaction"
+msgstr ""
+
+#: ../semanage/semanage:282
+#, python-format
+msgid "Remove all %s objects local customizations"
+msgstr ""
+
+#: ../semanage/semanage:286
+msgid "SELinux user name"
+msgstr ""
+
+#: ../semanage/semanage:291
+msgid "Manage login mappings between linux users and SELinux confined users"
+msgstr ""
+
+#: ../semanage/semanage:308
+#, python-format
+msgid "login_name | %%groupname"
+msgstr ""
+
+#: ../semanage/semanage:360
+msgid "Manage file context mapping definitions"
+msgstr ""
+
+#: ../semanage/semanage:374
+msgid ""
+"Substitute  target  path with sourcepath when generating default\n"
+"                                                                  label.  "
+"This is used with fcontext. Requires source  and  target\n"
+"                                                                  path  "
+"arguments.  The context labeling for the target subtree is\n"
+"                                                                  made "
+"equivalent to that defined for the source."
+msgstr ""
+
+#: ../semanage/semanage:382
+msgid ""
+"Path to be labeled (may be in the form of a Perl compatible regular "
+"expression)"
+msgstr ""
+
+#: ../semanage/semanage:410
+msgid "Manage SELinux confined users (Roles and levels for an SELinux user)"
+msgstr ""
+
+#: ../semanage/semanage:428
+msgid ""
+"\n"
+"SELinux Roles.  You must enclose multiple roles within quotes, separate by "
+"spaces. Or specify -R multiple times.\n"
+msgstr ""
+
+#: ../semanage/semanage:432
+msgid "selinux_name"
+msgstr ""
+
+#: ../semanage/semanage:460
+msgid "Manage network port type definitions"
+msgstr ""
+
+#: ../semanage/semanage:476
+msgid "port | port_range"
+msgstr ""
+
+#: ../semanage/semanage:505
+msgid "Manage infiniband ibpkey type definitions"
+msgstr ""
+
+#: ../semanage/semanage:521
+msgid "pkey | pkey_range"
+msgstr ""
+
+#: ../semanage/semanage:548
+msgid "Manage infiniband end port type definitions"
+msgstr ""
+
+#: ../semanage/semanage:564
+msgid "ibendport"
+msgstr ""
+
+#: ../semanage/semanage:591
+msgid "Manage network interface type definitions"
+msgstr ""
+
+#: ../semanage/semanage:606
+msgid "interface_spec"
+msgstr ""
+
+#: ../semanage/semanage:630
+msgid "Manage SELinux policy modules"
+msgstr ""
+
+#: ../semanage/semanage:641
+msgid "Add a module"
+msgstr ""
+
+#: ../semanage/semanage:642
+msgid "Remove a module"
+msgstr ""
+
+#: ../semanage/semanage:643
+msgid "Disable a module"
+msgstr ""
+
+#: ../semanage/semanage:644
+msgid "Enable a module"
+msgstr ""
+
+#: ../semanage/semanage:671
+msgid "Manage network node type definitions"
+msgstr ""
+
+#: ../semanage/semanage:685
+msgid "Network Mask"
+msgstr ""
+
+#: ../semanage/semanage:689
+msgid "node"
+msgstr "ନୋଡ"
+
+#: ../semanage/semanage:714
+msgid "Manage booleans to selectively enable functionality"
+msgstr ""
+
+#: ../semanage/semanage:719
+msgid "boolean"
+msgstr ""
+
+#: ../semanage/semanage:729
+msgid "Enable the boolean"
+msgstr ""
+
+#: ../semanage/semanage:730
+msgid "Disable the boolean"
+msgstr ""
+
+#: ../semanage/semanage:751
+msgid "semanage permissive: error: the following argument is required: type\n"
+msgstr ""
+
+#: ../semanage/semanage:755
+msgid "Manage process type enforcement mode"
+msgstr ""
+
+#: ../semanage/semanage:767 ../semanage/seobject.py:2673
+msgid "type"
+msgstr "ପ୍ରକାର"
+
+#: ../semanage/semanage:778
+msgid "Disable/Enable dontaudit rules in policy"
+msgstr ""
+
+#: ../semanage/semanage:798
+msgid "Output local customizations"
+msgstr ""
+
+#: ../semanage/semanage:800
+msgid "Output file"
+msgstr "ଫଳାଫଳ ଫାଇଲ"
+
+#: ../semanage/semanage:876
+msgid "Import local customizations"
+msgstr ""
+
+#: ../semanage/semanage:879
+msgid "Input file"
+msgstr ""
+
+#: ../semanage/seobject.py:278
+msgid "Could not create semanage handle"
+msgstr "semanage ହ୍ୟାଣ୍ଡଲକୁ ସୃଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:286
+msgid "SELinux policy is not managed or store cannot be accessed."
+msgstr "SELinux ନୀତି ଟି ପରିଚାଳିତ ହେଉ ନାହିଁ କିମ୍ବା ଭଣ୍ଡାର କୁ ପ୍ରବେଶାନୁମତି ନାହିଁ"
+
+#: ../semanage/seobject.py:291
+msgid "Cannot read policy store."
+msgstr "ସଞ୍ଚୟ କରିବା ନୀତି କୁ ପଢି ପାରୁ ନାହିଁ"
+
+#: ../semanage/seobject.py:296
+msgid "Could not establish semanage connection"
+msgstr "semanage ସଂଯୋଗ କୁ ସ୍ଥାପିତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:301
+msgid "Could not test MLS enabled status"
+msgstr "MLS ସକ୍ରିୟ ସ୍ଥିତିକୁ ପରୀକ୍ଷା କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:307 ../semanage/seobject.py:323
+msgid "Not yet implemented"
+msgstr "ଏପର୍ଯ୍ୟନ୍ତ କାର୍ଯ୍ୟକାରୀ ହୋଇନାହିଁ"
+
+#: ../semanage/seobject.py:311
+msgid "Semanage transaction already in progress"
+msgstr "Semanage ବିନିମୟ ପୂର୍ବରୁ ଚାଲିଅଛି"
+
+#: ../semanage/seobject.py:320
+msgid "Could not start semanage transaction"
+msgstr "semanage ବିନିମୟ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:334
+msgid "Could not commit semanage transaction"
+msgstr "semanage ଅନୁବାଦକୁ ଦାଖଲ କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:339
+msgid "Semanage transaction not in progress"
+msgstr "Semanage ବିନିମୟ ଚାଲୁନାହିଁ"
+
+#: ../semanage/seobject.py:353 ../semanage/seobject.py:473
+msgid "Could not list SELinux modules"
+msgstr "SELinux ଏକକାଂଶକୁ ତାଲିକାଭୁକ୍ତ କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:360
+msgid "Could not get module name"
+msgstr ""
+
+#: ../semanage/seobject.py:364
+msgid "Could not get module enabled"
+msgstr ""
+
+#: ../semanage/seobject.py:368
+msgid "Could not get module priority"
+msgstr ""
+
+#: ../semanage/seobject.py:372
+msgid "Could not get module lang_ext"
+msgstr ""
+
+#: ../semanage/seobject.py:393
+msgid "Module Name"
+msgstr "ଏକକାଂଶ ନାମ"
+
+#: ../semanage/seobject.py:393
+msgid "Priority"
+msgstr ""
+
+#: ../semanage/seobject.py:393
+msgid "Language"
+msgstr "ଭାଷା"
+
+#: ../semanage/seobject.py:396 ../sepolicy/sepolicy/sepolicy.glade:3421
+msgid "Disabled"
+msgstr "ନିଷ୍କ୍ରିୟ"
+
+#: ../semanage/seobject.py:405
+#, python-format
+msgid "Module does not exist: %s "
+msgstr ""
+
+#: ../semanage/seobject.py:409 ../semanage/seobject.py:436
+#, python-format
+msgid "Invalid priority %d (needs to be between 1 and 999)"
+msgstr ""
+
+#: ../semanage/seobject.py:419
+msgid "Could not create module key"
+msgstr ""
+
+#: ../semanage/seobject.py:423
+msgid "Could not set module key name"
+msgstr ""
+
+#: ../semanage/seobject.py:428
+#, python-format
+msgid "Could not enable module %s"
+msgstr ""
+
+#: ../semanage/seobject.py:430
+#, python-format
+msgid "Could not disable module %s"
+msgstr ""
+
+#: ../semanage/seobject.py:441
+#, python-format
+msgid "Could not remove module %s (remove failed)"
+msgstr "ମଡ୍ୟୁଲ %s କୁ କାଢ଼ି ପାରିଲା ନାହିଁ (କାଢ଼ିବା ବିଫଳ)"
+
+#: ../semanage/seobject.py:458
+msgid "dontaudit requires either 'on' or 'off'"
+msgstr "dontaudit 'ଅନ' କିମ୍ବା 'ଅଫ' ଆବଶ୍ୟକ କରିଥାଏ"
+
+#: ../semanage/seobject.py:491
+msgid "Builtin Permissive Types"
+msgstr "ସୁନିର୍ମିତ ଅନୁମୋଦନକାରୀ ପ୍ରକାରଗୁଡିକ"
+
+#: ../semanage/seobject.py:501
+msgid "Customized Permissive Types"
+msgstr "ଇଚ୍ଛାରୂପଣ ଅନୁମୋଦନକାରୀ ପ୍ରକାରଗୁଡିକ"
+
+#: ../semanage/seobject.py:509
+msgid ""
+"The sepolgen python module is required to setup permissive domains.\n"
+"In some distributions it is included in the policycoreutils-devel package.\n"
+"# yum install policycoreutils-devel\n"
+"Or similar for your distro."
+msgstr ""
+
+#: ../semanage/seobject.py:519
+#, python-format
+msgid "Could not set permissive domain %s (module installation failed)"
+msgstr "ଅନୁମତି ପାଇବା ଯୋଗ୍ୟ ପରିସର %s କୁ ବିନ୍ୟାସ କରିପାରିଲା ନାହିଁ (ଏକକାଂଶ ସ୍ଥାପନ ବିଫଳ)"
+
+#: ../semanage/seobject.py:525
+#, python-format
+msgid "Could not remove permissive domain %s (remove failed)"
+msgstr "ଅନୁମତି ପାଇବା ଯୋଗ୍ୟ ପରିସର %s କୁ କାଢ଼ିପାରିଲା ନାହିଁ (କାଢ଼ିବା ବିଫଳ)"
+
+#: ../semanage/seobject.py:562 ../semanage/seobject.py:632
+#: ../semanage/seobject.py:677 ../semanage/seobject.py:796
+#: ../semanage/seobject.py:826 ../semanage/seobject.py:891
+#: ../semanage/seobject.py:947 ../semanage/seobject.py:1225
+#: ../semanage/seobject.py:1491 ../semanage/seobject.py:2501
+#: ../semanage/seobject.py:2571 ../semanage/seobject.py:2595
+#: ../semanage/seobject.py:2726 ../semanage/seobject.py:2777
+#, python-format
+msgid "Could not create a key for %s"
+msgstr "%s ପାଇଁ ଗୋଟିଏ ଚାବି ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:566 ../semanage/seobject.py:636
+#: ../semanage/seobject.py:681 ../semanage/seobject.py:687
+#, python-format
+msgid "Could not check if login mapping for %s is defined"
+msgstr "%s ପାଇଁ ଲଗଇନ୍ ପ୍ରତିଚିତ୍ରଣ ର ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି କି ନାହିଁ ତାହା ଯାଞ୍ଚ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:568
+#, python-format
+msgid "Login mapping for %s is already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:573
+#, python-format
+msgid "Linux Group %s does not exist"
+msgstr "Linux ଶ୍ରେଣୀ %s ଅବସ୍ଥିତ ନାହିଁ"
+
+#: ../semanage/seobject.py:578
+#, python-format
+msgid "Linux User %s does not exist"
+msgstr "Linux ଚାଳକ %s ଅବସ୍ଥିତ ନାହିଁ"
+
+#: ../semanage/seobject.py:582
+#, python-format
+msgid "Could not create login mapping for %s"
+msgstr "%s ପାଇଁ ଲଗଇନ୍ ପ୍ରତିଚିତ୍ରଣ ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:586 ../semanage/seobject.py:840
+#, python-format
+msgid "Could not set name for %s"
+msgstr "%s ପାଇଁ ନାମ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:591 ../semanage/seobject.py:850
+#, python-format
+msgid "Could not set MLS range for %s"
+msgstr "%s ପାଇଁ ଏମ୍.ଏଲ.ଏସ୍. ପରିସର କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:595
+#, python-format
+msgid "Could not set SELinux user for %s"
+msgstr "%s ପାଇଁ SELinux ଚାଳକ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:599
+#, python-format
+msgid "Could not add login mapping for %s"
+msgstr "%s ପାଇଁ ଲଗଇନ୍ ପ୍ରତିଚିତ୍ରଣ କୁ ଯୋଗ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:615
+msgid "Requires seuser or serange"
+msgstr "seuser କିମ୍ବା serange ଆବଶ୍ଯକ"
+
+#: ../semanage/seobject.py:638 ../semanage/seobject.py:683
+#, python-format
+msgid "Login mapping for %s is not defined"
+msgstr "%s ପାଇଁ ଲଗଇନ୍ ପ୍ରତିଚିତ୍ରଣ ର ବ୍ଯାଖ୍ଯା କରାଯାଇ ନାହିଁ"
+
+#: ../semanage/seobject.py:642
+#, python-format
+msgid "Could not query seuser for %s"
+msgstr "%s ପାଇଁ seuser କୁ ପ୍ରଶ୍ନ ପଚାରି ପାରିବ ନାହିଁ"
+
+#: ../semanage/seobject.py:657
+#, python-format
+msgid "Could not modify login mapping for %s"
+msgstr "%s ପାଇଁ ଲଗଇନ୍ ପ୍ରତିଚିତ୍ରଣ କୁ ରୂପାନ୍ତରିତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:689
+#, python-format
+msgid "Login mapping for %s is defined in policy, cannot be deleted"
+msgstr "%s ପାଇଁ ଲଗଇନ୍ ପ୍ରତିଚିତ୍ରଣ ଟି ନିୟମ ରେ ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି, ଏହାକୁ ଅପସାରଣ କରିହେବ ନାହିଁ"
+
+#: ../semanage/seobject.py:693
+#, python-format
+msgid "Could not delete login mapping for %s"
+msgstr "%s ପାଇଁ ଲଗଇନ୍ ପ୍ରତିଚିତ୍ରଣ କୁ ଅପସାରଣ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:712 ../semanage/seobject.py:744
+#: ../semanage/seobject.py:990
+msgid "Could not list login mappings"
+msgstr "ଲଗଇନ୍ ପ୍ରତିଚିତ୍ରଣ କୁ ତାଲିକା ରେ ଲେଖି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:771 ../semanage/seobject.py:783
+#: ../sepolicy/sepolicy/sepolicy.glade:1162
+#: ../sepolicy/sepolicy/sepolicy.glade:3146
+msgid "Login Name"
+msgstr "ଲଗଇନ ନାମ"
+
+#: ../semanage/seobject.py:771 ../semanage/seobject.py:783
+#: ../semanage/seobject.py:1040 ../semanage/seobject.py:1045
+#: ../sepolicy/sepolicy/sepolicy.glade:1188
+#: ../sepolicy/sepolicy/sepolicy.glade:3164
+#: ../sepolicy/sepolicy/sepolicy.glade:3250
+#: ../sepolicy/sepolicy/sepolicy.glade:4905
+msgid "SELinux User"
+msgstr "SELinux ଚାଳକ"
+
+#: ../semanage/seobject.py:771
+msgid "MLS/MCS Range"
+msgstr "MLS/MCS ପରିସର"
+
+#: ../semanage/seobject.py:771
+msgid "Service"
+msgstr "ସର୍ଭିସ"
+
+#: ../semanage/seobject.py:799 ../semanage/seobject.py:830
+#: ../semanage/seobject.py:895 ../semanage/seobject.py:951
+#: ../semanage/seobject.py:957
+#, python-format
+msgid "Could not check if SELinux user %s is defined"
+msgstr "%s SELinux ଚାଳକ ର ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି କି ନାହିଁ ତାହା ଯାଞ୍ଚ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:802 ../semanage/seobject.py:901
+#: ../semanage/seobject.py:963
+#, python-format
+msgid "Could not query user for %s"
+msgstr "%s ପାଇଁ ଚାଳକ କୁ ପ୍ରଶ୍ନ ପଚାରି ପାରିବ ନାହିଁ"
+
+#: ../semanage/seobject.py:822
+#, python-format
+msgid "You must add at least one role for %s"
+msgstr "%s ପାଇଁ ଅତିକମରେ ଗୋଟିଏ ଭୁମିକା ଯୋଗ କରିବା ଉଚିତ"
+
+#: ../semanage/seobject.py:832
+#, python-format
+msgid "SELinux user %s is already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:836
+#, python-format
+msgid "Could not create SELinux user for %s"
+msgstr "%s ପାଇଁ SELinux ଚାଳକ କୁ ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:845
+#, python-format
+msgid "Could not add role %s for %s"
+msgstr "%s ପାଇଁ %s ଦାୟିତ୍ବ କୁ ଯୋଗ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:854
+#, python-format
+msgid "Could not set MLS level for %s"
+msgstr "%s ପାଇଁ ଏମ୍.ଏଲ.ଏସ୍. ସ୍ତର କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:857
+#, python-format
+msgid "Could not add prefix %s for %s"
+msgstr "%s ପାଇଁ %s ଉପସର୍ଗ କୁ ଯୋଗ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:860
+#, python-format
+msgid "Could not extract key for %s"
+msgstr "%s ପାଇଁ ଚାବି କୁ ନିର୍ଯ୍ଯାସ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:864
+#, python-format
+msgid "Could not add SELinux user %s"
+msgstr "SELinux ଚାଳକ %s କୁ ଯୋଗ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:885
+msgid "Requires prefix, roles, level or range"
+msgstr "ଉପସର୍ଗ, ଦାୟିତ୍ବ, ସ୍ତର କିମ୍ବା ପରିସର ଆବଶ୍ଯକ"
+
+#: ../semanage/seobject.py:887
+msgid "Requires prefix or roles"
+msgstr "ଉପସର୍ଗ କିମ୍ବା ଦାୟିତ୍ବ ଆବଶ୍ଯକ"
+
+#: ../semanage/seobject.py:897 ../semanage/seobject.py:953
+#, python-format
+msgid "SELinux user %s is not defined"
+msgstr "SELinux ଚାଳକ %s କୁ ପୂର୍ବରୁ ବ୍ଯାଖ୍ଯା କରାଯାଇ ନାହିଁ"
+
+#: ../semanage/seobject.py:926
+#, python-format
+msgid "Could not modify SELinux user %s"
+msgstr "SELinux ଚାଳକ %s କୁ ରୂପାନ୍ତରିତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:959
+#, python-format
+msgid "SELinux user %s is defined in policy, cannot be deleted"
+msgstr "SELinux ଚାଳକ %s କୁ ନୀତି ରେ ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି, ଏହାକୁ ଅପସାରଣ କରି ପାରିବ ନାହିଁ"
+
+#: ../semanage/seobject.py:970
+#, python-format
+msgid "Could not delete SELinux user %s"
+msgstr "SELinux ଚାଳକ %s କୁ ଅପସାରଣ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1008
+msgid "Could not list SELinux users"
+msgstr "SELinux ଚାଳକ କୁ ଗୋଟିଏ ତାଲିକା ରେ ଲେଖି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1014
+#, python-format
+msgid "Could not list roles for user %s"
+msgstr " %s ଚାଳକ ର ଦାୟିତ୍ବ କୁ ତାଲିକା ରେ ଲେଖି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1039
+msgid "Labeling"
+msgstr "ନାମପଟିକରଣ"
+
+#: ../semanage/seobject.py:1039
+msgid "MLS/"
+msgstr "MLS/"
+
+#: ../semanage/seobject.py:1040
+msgid "Prefix"
+msgstr "ଉପସର୍ଗ"
+
+#: ../semanage/seobject.py:1040
+msgid "MCS Level"
+msgstr "MCS ସ୍ତର"
+
+#: ../semanage/seobject.py:1040
+msgid "MCS Range"
+msgstr "MCS ପରିସର"
+
+#: ../semanage/seobject.py:1040 ../semanage/seobject.py:1045
+#: ../sepolicy/sepolicy/sepolicy.glade:3270
+#: ../sepolicy/sepolicy/sepolicy.glade:5241
+#: ../sepolicy/sepolicy/sepolicy.glade:5390
+msgid "SELinux Roles"
+msgstr "SELinux ଭୂମିକାଗୁଡିକ"
+
+#: ../semanage/seobject.py:1070
+msgid "Protocol has to be one of udp, tcp, dccp or sctp"
+msgstr ""
+
+#: ../semanage/seobject.py:1072
+msgid "Port is required"
+msgstr "ସଂଯୋଗିକୀ ଆବଶ୍ଯକ"
+
+#: ../semanage/seobject.py:1086
+msgid "Invalid Port"
+msgstr "ଅବୈଧ ପୋର୍ଟ"
+
+#: ../semanage/seobject.py:1090 ../semanage/seobject.py:1364
+#, python-format
+msgid "Could not create a key for %s/%s"
+msgstr "%s/%s ପାଇଁ ଚାବି ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1101 ../semanage/seobject.py:1375
+#: ../semanage/seobject.py:1630
+msgid "Type is required"
+msgstr "ପ୍ରକାର ଆବଶ୍ଯକ"
+
+#: ../semanage/seobject.py:1106 ../semanage/seobject.py:1171
+#, python-format
+msgid "Type %s is invalid, must be a port type"
+msgstr "ପ୍ରକାର %s ଟି ଅବୈଧ ଅଟେ, ନିଶ୍ଚିତ ଭାବରେ ଏକ ପୋର୍ଟ ପ୍ରକାର ଅଟେ"
+
+#: ../semanage/seobject.py:1112 ../semanage/seobject.py:1177
+#: ../semanage/seobject.py:1243 ../semanage/seobject.py:1249
+#, python-format
+msgid "Could not check if port %s/%s is defined"
+msgstr "%s/%s ସଂଯୋଗିକୀ ର ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି କି ନାହିଁ ତାହା ଯାଞ୍ଚ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1114
+#, python-format
+msgid "Port %s/%s already defined"
+msgstr "%s/%s ସଂଯୋଗିକୀ କୁ ପୂର୍ବରୁ ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି"
+
+#: ../semanage/seobject.py:1118
+#, python-format
+msgid "Could not create port for %s/%s"
+msgstr "%s/%s ପାଇଁ ସଂଯୋଗିକୀ ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1124 ../semanage/seobject.py:1398
+#: ../semanage/seobject.py:1652
+#, python-format
+msgid "Could not create context for %s/%s"
+msgstr "%s/%s ପାଇଁ ପ୍ରସଙ୍ଗ ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1128
+#, python-format
+msgid "Could not set user in port context for %s/%s"
+msgstr "%s/%s ପାଇଁ ସଂଯୋଗିକୀ ପ୍ରସଙ୍ଗ ରେ ଚାଳକ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1132
+#, python-format
+msgid "Could not set role in port context for %s/%s"
+msgstr "%s/%s ପାଇଁ ସଂଯୋଗିକୀ ପ୍ରସଙ୍ଗ ରେ ଦାୟିତ୍ବ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1136
+#, python-format
+msgid "Could not set type in port context for %s/%s"
+msgstr "%s/%s ପାଇଁ ସଂଯୋଗିକୀ ପ୍ରସଙ୍ଗ ରେ କିଛି ଭିନ୍ନତା କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1141
+#, python-format
+msgid "Could not set mls fields in port context for %s/%s"
+msgstr "%s/%s ପାଇଁ ସଂଯୋଗିକୀ ପ୍ରସଙ୍ଗ ରେ ଏମ୍.ଏଲ.ଏସ୍. କ୍ଷେତ୍ର କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1145
+#, python-format
+msgid "Could not set port context for %s/%s"
+msgstr "%s/%s ପାଇଁ ସଂଯୋଗିକୀ ପ୍ରସଙ୍ଗ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1149
+#, python-format
+msgid "Could not add port %s/%s"
+msgstr "%s/%s ସଂଯୋଗିକୀ କୁ ଯୋଗ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1165 ../semanage/seobject.py:1437
+#: ../semanage/seobject.py:1691 ../semanage/seobject.py:1969
+#: ../semanage/seobject.py:2175
+msgid "Requires setype or serange"
+msgstr "setype କିମ୍ବା serange କୁ ଆବଶ୍ଯକ କରେ"
+
+#: ../semanage/seobject.py:1167 ../semanage/seobject.py:1439
+#: ../semanage/seobject.py:1693
+msgid "Requires setype"
+msgstr "setype କୁ ଆବଶ୍ଯକ କରେ"
+
+#: ../semanage/seobject.py:1179 ../semanage/seobject.py:1245
+#, python-format
+msgid "Port %s/%s is not defined"
+msgstr "%s/%s ସଂଯୋଗିକୀ କୁ ବ୍ଯାଖ୍ଯା କରା ଯାଇ ନାହିଁ"
+
+#: ../semanage/seobject.py:1183
+#, python-format
+msgid "Could not query port %s/%s"
+msgstr "%s/%s ସଂଯୋଗିକୀ କୁ ପ୍ରଶ୍ନ ପଚାରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1197
+#, python-format
+msgid "Could not modify port %s/%s"
+msgstr "%s/%s ସଂଯୋଗିକୀ କୁ ରୂପାନ୍ତରିତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1212
+msgid "Could not list the ports"
+msgstr "ସଂଯୋଗିକୀ ମାନଙ୍କୁ ତାଲିକାଭୁକ୍ତ କରିପାରିବେ ନାହିଁ"
+
+#: ../semanage/seobject.py:1229
+#, python-format
+msgid "Could not delete the port %s"
+msgstr "%s ସଂଯୋଗିକୀ କୁ ଅପସାରଣ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1251
+#, python-format
+msgid "Port %s/%s is defined in policy, cannot be deleted"
+msgstr "%s/%s ସଂଯୋଗିକୀ ଟି ନିୟମ ରେ ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି, ଏହାକୁ ଅପସାରଣ କରିହେବ ନାହିଁ"
+
+#: ../semanage/seobject.py:1255
+#, python-format
+msgid "Could not delete port %s/%s"
+msgstr "%s/%s ସଂଯୋଗିକୀ କୁ ଅପସାରଣ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1273 ../semanage/seobject.py:1293
+msgid "Could not list ports"
+msgstr "ସଂଯୋଗିକୀ ମାନଙ୍କୁ ତାଲିକା ରେ ଲେଖି ପାରିବ ନାହିଁ"
+
+#: ../semanage/seobject.py:1328 ../sepolicy/sepolicy/sepolicy.glade:2676
+#: ../sepolicy/sepolicy/sepolicy.glade:2774
+#: ../sepolicy/sepolicy/sepolicy.glade:4638
+msgid "SELinux Port Type"
+msgstr "SELinux ସଂଯୋଗିକୀ ପ୍ରକାର"
+
+#: ../semanage/seobject.py:1328
+msgid "Proto"
+msgstr "ପ୍ରଥମ"
+
+#: ../semanage/seobject.py:1328 ../semanage/seobject.py:1834
+#: ../sepolicy/sepolicy/sepolicy.glade:1413
+msgid "Port Number"
+msgstr "ସଂଯୋଗିକୀ ସଂଖ୍ୟା"
+
+#: ../semanage/seobject.py:1350
+msgid "Subnet Prefix is required"
+msgstr ""
+
+#: ../semanage/seobject.py:1360
+msgid "Invalid Pkey"
+msgstr ""
+
+#: ../semanage/seobject.py:1380 ../semanage/seobject.py:1444
+#, python-format
+msgid "Type %s is invalid, must be a ibpkey type"
+msgstr ""
+
+#: ../semanage/seobject.py:1386 ../semanage/seobject.py:1450
+#: ../semanage/seobject.py:1504 ../semanage/seobject.py:1510
+#, python-format
+msgid "Could not check if ibpkey %s/%s is defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1388
+#, python-format
+msgid "ibpkey %s/%s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1392
+#, python-format
+msgid "Could not create ibpkey for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1402
+#, python-format
+msgid "Could not set user in ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1406
+#, python-format
+msgid "Could not set role in ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1410
+#, python-format
+msgid "Could not set type in ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1415
+#, python-format
+msgid "Could not set mls fields in ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1419
+#, python-format
+msgid "Could not set ibpkey context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1423
+#, python-format
+msgid "Could not add ibpkey %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1452 ../semanage/seobject.py:1506
+#, python-format
+msgid "ibpkey %s/%s is not defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1456
+#, python-format
+msgid "Could not query ibpkey %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1467
+#, python-format
+msgid "Could not modify ibpkey %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1480
+msgid "Could not list the ibpkeys"
+msgstr ""
+
+#: ../semanage/seobject.py:1495
+#, python-format
+msgid "Could not delete the ibpkey %s"
+msgstr ""
+
+#: ../semanage/seobject.py:1512
+#, python-format
+msgid "ibpkey %s/%s is defined in policy, cannot be deleted"
+msgstr ""
+
+#: ../semanage/seobject.py:1516
+#, python-format
+msgid "Could not delete ibpkey %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1532 ../semanage/seobject.py:1553
+msgid "Could not list ibpkeys"
+msgstr ""
+
+#: ../semanage/seobject.py:1588
+msgid "SELinux IB Pkey Type"
+msgstr ""
+
+#: ../semanage/seobject.py:1588
+msgid "Subnet_Prefix"
+msgstr ""
+
+#: ../semanage/seobject.py:1588
+msgid "Pkey Number"
+msgstr ""
+
+#: ../semanage/seobject.py:1610
+msgid "IB device name is required"
+msgstr ""
+
+#: ../semanage/seobject.py:1615
+msgid "Invalid Port Number"
+msgstr ""
+
+#: ../semanage/seobject.py:1619
+#, python-format
+msgid "Could not create a key for ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1635 ../semanage/seobject.py:1698
+#, python-format
+msgid "Type %s is invalid, must be an ibendport type"
+msgstr ""
+
+#: ../semanage/seobject.py:1640 ../semanage/seobject.py:1704
+#: ../semanage/seobject.py:1756 ../semanage/seobject.py:1762
+#, python-format
+msgid "Could not check if ibendport %s/%s is defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1642
+#, python-format
+msgid "ibendport %s/%s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1646
+#, python-format
+msgid "Could not create ibendport for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1656
+#, python-format
+msgid "Could not set user in ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1660
+#, python-format
+msgid "Could not set role in ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1664
+#, python-format
+msgid "Could not set type in ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1669
+#, python-format
+msgid "Could not set mls fields in ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1673
+#, python-format
+msgid "Could not set ibendport context for %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1677
+#, python-format
+msgid "Could not add ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1706 ../semanage/seobject.py:1758
+#, python-format
+msgid "ibendport %s/%s is not defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1710
+#, python-format
+msgid "Could not query ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1721
+#, python-format
+msgid "Could not modify ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1734
+msgid "Could not list the ibendports"
+msgstr ""
+
+#: ../semanage/seobject.py:1743
+#, python-format
+msgid "Could not create a key for %s/%d"
+msgstr ""
+
+#: ../semanage/seobject.py:1747
+#, python-format
+msgid "Could not delete the ibendport %s/%d"
+msgstr ""
+
+#: ../semanage/seobject.py:1764
+#, python-format
+msgid "ibendport %s/%s is defined in policy, cannot be deleted"
+msgstr ""
+
+#: ../semanage/seobject.py:1768
+#, python-format
+msgid "Could not delete ibendport %s/%s"
+msgstr ""
+
+#: ../semanage/seobject.py:1784 ../semanage/seobject.py:1804
+msgid "Could not list ibendports"
+msgstr ""
+
+#: ../semanage/seobject.py:1834
+msgid "SELinux IB End Port Type"
+msgstr ""
+
+#: ../semanage/seobject.py:1834
+msgid "IB Device Name"
+msgstr ""
+
+#: ../semanage/seobject.py:1860
+msgid "Node Address is required"
+msgstr "ନୋଡ ଠିକଣା ଆବଶ୍ଯକ"
+
+#: ../semanage/seobject.py:1872 ../semanage/seobject.py:1884
+msgid "Unknown or missing protocol"
+msgstr "ଅଜଣା କିମ୍ବା ଅନୁପସ୍ଥିତ ପ୍ରୋଟୋକଲ"
+
+#: ../semanage/seobject.py:1898
+msgid "SELinux node type is required"
+msgstr "SELinux ନୋଡ ଆବଶ୍ୟକ"
+
+#: ../semanage/seobject.py:1903 ../semanage/seobject.py:1974
+#, python-format
+msgid "Type %s is invalid, must be a node type"
+msgstr "ପ୍ରକାର %s ଟି ଅବୈଧ ଅଟେ, ନିଶ୍ଚିତ ଭାବରେ ଏକ ନୋଡ ପ୍ରକାର ଅଟେ"
+
+#: ../semanage/seobject.py:1907 ../semanage/seobject.py:1978
+#: ../semanage/seobject.py:2015 ../semanage/seobject.py:2116
+#: ../semanage/seobject.py:2179 ../semanage/seobject.py:2215
+#: ../semanage/seobject.py:2434
+#, python-format
+msgid "Could not create key for %s"
+msgstr "%s ପାଇଁ ଚାବି ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1911 ../semanage/seobject.py:1982
+#: ../semanage/seobject.py:2019 ../semanage/seobject.py:2025
+#, python-format
+msgid "Could not check if addr %s is defined"
+msgstr "%s ଠିକଣା ବ୍ଯାଖ୍ଯା କରାଯାଇଛି କି ନାହିଁ ତାହା ଯାଞ୍ଚ କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1913
+#, python-format
+msgid "Addr %s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:1917
+#, python-format
+msgid "Could not create addr for %s"
+msgstr "%s ପାଇଁ ଠିକଣା ସୃଷ୍ଟି କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1923 ../semanage/seobject.py:2131
+#: ../semanage/seobject.py:2388
+#, python-format
+msgid "Could not create context for %s"
+msgstr "%s ପାଇଁ ପ୍ରସଙ୍ଗ ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1927
+#, python-format
+msgid "Could not set mask for %s"
+msgstr "%s ପାଇଁ ମାସ୍କ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1931
+#, python-format
+msgid "Could not set user in addr context for %s"
+msgstr "%s ପାଇଁ ଠିକଣା ପ୍ରସଙ୍ଗରେ ଚାଳକକୁ ବିନ୍ୟାସ କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1935
+#, python-format
+msgid "Could not set role in addr context for %s"
+msgstr "%s ପାଇଁ ଠିକଣା ପ୍ରସଙ୍ଗରେ ଭୁମିକାକୁ ବିନ୍ୟାସ କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1939
+#, python-format
+msgid "Could not set type in addr context for %s"
+msgstr "%s ପାଇଁ ଠିକଣା ପ୍ରସଙ୍ଗରେ ପ୍ରକାରକୁ ବିନ୍ୟାସ କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1944
+#, python-format
+msgid "Could not set mls fields in addr context for %s"
+msgstr "%s ପାଇଁ ଠିକଣା ପ୍ରସଙ୍ଗରେ mls କ୍ଷେତ୍ରକୁ ବିନ୍ୟାସ କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1948
+#, python-format
+msgid "Could not set addr context for %s"
+msgstr "%s ପାଇଁ ଠିକଣା ପ୍ରସଙ୍ଗକୁ ବିନ୍ୟାସ କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1952
+#, python-format
+msgid "Could not add addr %s"
+msgstr "ଠିକଣା %sକୁ ଯୋଗକରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1984 ../semanage/seobject.py:2021
+#, python-format
+msgid "Addr %s is not defined"
+msgstr "ଠିକଣା %sକୁ ବ୍ଯାଖ୍ଯା କରା ଯାଇ ନାହିଁ"
+
+#: ../semanage/seobject.py:1988
+#, python-format
+msgid "Could not query addr %s"
+msgstr "ଠିକଣା %s କୁ ପ୍ରଶ୍ନ ପଚାରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:1998
+#, python-format
+msgid "Could not modify addr %s"
+msgstr "ଠିକଣା %s କୁ ପରିବର୍ତ୍ତନ କରିପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2027
+#, python-format
+msgid "Addr %s is defined in policy, cannot be deleted"
+msgstr "ଠିକଣା %sଟି ନିୟମରେ ବ୍ଯାଖ୍ଯା କରାଯାଇଛି, ଏହାକୁ ଅପସାରଣ କରିହେବ ନାହିଁ"
+
+#: ../semanage/seobject.py:2031
+#, python-format
+msgid "Could not delete addr %s"
+msgstr "ଠିକଣା %sକୁ ଅପସାରଣ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2045
+msgid "Could not deleteall node mappings"
+msgstr "ସମସ୍ତ ନୋଡ ମେଳକଗୁଡ଼ିକୁ ଅପସାରଣ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2059
+msgid "Could not list addrs"
+msgstr "ଠିକଣାଗୁଡ଼ିକୁ ତାଲିକାଭୁକ୍ତ କରିପାରିବ ନାହିଁ"
+
+#: ../semanage/seobject.py:2112 ../semanage/seobject.py:2425
+msgid "SELinux Type is required"
+msgstr "SELinux ପ୍ରକାର ଆବଶ୍ଯକ"
+
+#: ../semanage/seobject.py:2120 ../semanage/seobject.py:2183
+#: ../semanage/seobject.py:2219 ../semanage/seobject.py:2225
+#, python-format
+msgid "Could not check if interface %s is defined"
+msgstr "%s ଅନ୍ତରାପ୍ରୁଷ୍ଠ ର ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି କି ନାହିଁ ତାହା ଯାଞ୍ଚ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2122
+#, python-format
+msgid "Interface %s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:2126
+#, python-format
+msgid "Could not create interface for %s"
+msgstr "%s ପାଇଁ ଅନ୍ତରାପ୍ରୁଷ୍ଠ ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2135
+#, python-format
+msgid "Could not set user in interface context for %s"
+msgstr "%s ପାଇଁ ଅନ୍ତରାପ୍ରୁଷ୍ଠ ପ୍ରସଙ୍ଗ ରେ ଚାଳକ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2139
+#, python-format
+msgid "Could not set role in interface context for %s"
+msgstr "%s ପାଇଁ ଅନ୍ତରାପ୍ରୁଷ୍ଠ ପ୍ରସଙ୍ଗ ରେ ଦାୟିତ୍ବ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2143
+#, python-format
+msgid "Could not set type in interface context for %s"
+msgstr "%s ପାଇଁ ଅନ୍ତରାପ୍ରୁଷ୍ଠ ପ୍ରସଙ୍ଗ ରେ ପ୍ରକାର ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2148
+#, python-format
+msgid "Could not set mls fields in interface context for %s"
+msgstr "%s ପାଇଁ ଅନ୍ତରାପ୍ରୁଷ୍ଠ ପ୍ରସଙ୍ଗ ରେ ଏମ୍.ଏଲ.ଏସ୍. କ୍ଷେତ୍ର ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2152
+#, python-format
+msgid "Could not set interface context for %s"
+msgstr "%s ପାଇଁ ଅନ୍ତରାପ୍ରୁଷ୍ଠ ପ୍ରସଙ୍ଗ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2156
+#, python-format
+msgid "Could not set message context for %s"
+msgstr "%s ପାଇଁ ସନ୍ଦେଶ ପ୍ରସଙ୍ଗ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2160
+#, python-format
+msgid "Could not add interface %s"
+msgstr "%s ଅନ୍ତରାପ୍ରୁଷ୍ଠ କୁ ଯୋଗ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2185 ../semanage/seobject.py:2221
+#, python-format
+msgid "Interface %s is not defined"
+msgstr "%s ଅନ୍ତରାପ୍ରୁଷ୍ଠ ର ବ୍ଯାଖ୍ଯା କରାଯାଇ ନାହିଁ"
+
+#: ../semanage/seobject.py:2189
+#, python-format
+msgid "Could not query interface %s"
+msgstr "%s ଅନ୍ତରାପ୍ରୁଷ୍ଠ କୁ ପ୍ରଶ୍ନ ପଚାରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2200
+#, python-format
+msgid "Could not modify interface %s"
+msgstr "%s ଅନ୍ତରାପ୍ରୁଷ୍ଠ କୁ ରୂପାନ୍ତରିତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2227
+#, python-format
+msgid "Interface %s is defined in policy, cannot be deleted"
+msgstr "%s ଅନ୍ତରାପ୍ରୁଷ୍ଠ ଟି ନିୟମ ରେ ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି, ଏହାକୁ ଅପସାରଣ କରି ପାରିବ ନାହିଁ"
+
+#: ../semanage/seobject.py:2231
+#, python-format
+msgid "Could not delete interface %s"
+msgstr "%s ଅନ୍ତରାପ୍ରୁଷ୍ଠ କୁ ଅପସାରଣ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2245
+msgid "Could not delete all interface  mappings"
+msgstr "ସମସ୍ତ ଅନ୍ତରାପୃଷ୍ଠ ମେଳକଗୁଡ଼ିକୁ ଅପସାରଣ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2259
+msgid "Could not list interfaces"
+msgstr "ଅନ୍ତରାପ୍ରୁଷ୍ଠ ମାନଙ୍କୁ ତାଲିକା ରେ ଲେଖି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2284
+msgid "SELinux Interface"
+msgstr "SELinux ଅନ୍ତରାପୃଷ୍ଠ"
+
+#: ../semanage/seobject.py:2284 ../semanage/seobject.py:2673
+msgid "Context"
+msgstr "ପ୍ରସଙ୍ଗ"
+
+#: ../semanage/seobject.py:2354
+#, python-format
+msgid "Target %s is not valid. Target is not allowed to end with '/'"
+msgstr "ଲକ୍ଷ୍ଯସ୍ଥଳ %s ଟି ବୈଧ ନୁହଁ। ଲକ୍ଷ୍ଯସ୍ଥଳଟି '/' ରେ ସମାପ୍ତ ହେବା ପାଇଁ ଅନୁମତି ପ୍ରାପ୍ତ ନୁହଁ"
+
+#: ../semanage/seobject.py:2357
+#, python-format
+msgid "Substitute %s is not valid. Substitute is not allowed to end with '/'"
+msgstr ""
+
+#: ../semanage/seobject.py:2360
+#, python-format
+msgid "Equivalence class for %s already exists"
+msgstr "%s ପାଇଁ  ସମାନ ଶ୍ରେଣୀ ପୂର୍ବରୁ ଅବସ୍ଥିତ"
+
+#: ../semanage/seobject.py:2366
+#, python-format
+msgid "File spec %s conflicts with equivalency rule '%s %s'"
+msgstr ""
+
+#: ../semanage/seobject.py:2377
+#, python-format
+msgid "Equivalence class for %s does not exist"
+msgstr ""
+
+#: ../semanage/seobject.py:2394
+#, python-format
+msgid "Could not set user in file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ ରେ ଚାଳକ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2398
+#, python-format
+msgid "Could not set role in file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ ର ଦାୟିତ୍ବ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2403 ../semanage/seobject.py:2463
+#, python-format
+msgid "Could not set mls fields in file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ ରେ ଏମ୍.ଏଲ.ଏସ୍. କ୍ଷେତ୍ର କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2409
+msgid "Invalid file specification"
+msgstr "ଅବୈଧ ଫାଇଲ ନିର୍ଦ୍ଦିଷ୍ଟକ ସୂଚନା"
+
+#: ../semanage/seobject.py:2411
+msgid "File specification can not include spaces"
+msgstr "ଫାଇଲ ଲକ୍ଷଣ ଖାଲି ସ୍ଥାନଗୁଡ଼ିକୁ ଅନ୍ତର୍ଭୁକ୍ତ କରିନଥାଏ"
+
+#: ../semanage/seobject.py:2416
+#, python-format
+msgid ""
+"File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead"
+msgstr ""
+
+#: ../semanage/seobject.py:2430 ../semanage/seobject.py:2495
+#, python-format
+msgid "Type %s is invalid, must be a file or device type"
+msgstr "ପ୍ରକାର %s ଟି ଅବୈଧ ଅଟେ, ନିଶ୍ଚିତ ଭାବରେ ଏକ ଫାଇଲ କିମ୍ବା ଉପକରଣ ପ୍ରକାର ଅଟେ"
+
+#: ../semanage/seobject.py:2438 ../semanage/seobject.py:2443
+#: ../semanage/seobject.py:2505 ../semanage/seobject.py:2599
+#: ../semanage/seobject.py:2603
+#, python-format
+msgid "Could not check if file context for %s is defined"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ ର ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି କି ନାହିଁ ତାହା ଯାଞ୍ଚ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2446
+#, python-format
+msgid "File context for %s already defined"
+msgstr ""
+
+#: ../semanage/seobject.py:2450
+#, python-format
+msgid "Could not create file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ କୁ ସ୍ରୁଷ୍ଟି କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2458
+#, python-format
+msgid "Could not set type in file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ ର ପ୍ରକାର କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2466 ../semanage/seobject.py:2535
+#: ../semanage/seobject.py:2539
+#, python-format
+msgid "Could not set file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ କୁ ସେଟ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2472
+#, python-format
+msgid "Could not add file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ କୁ ଯୋଗ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2491
+msgid "Requires setype, serange or seuser"
+msgstr "setype, serange କିମ୍ବା seuser କୁ ଆବଶ୍ଯକ କରିଥାଏ"
+
+#: ../semanage/seobject.py:2509 ../semanage/seobject.py:2607
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ ର ବ୍ଯାଖ୍ଯା କରାଯାଇ ନାହିଁ"
+
+#: ../semanage/seobject.py:2517
+#, python-format
+msgid "Could not query file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ କୁ ପ୍ରଶ୍ନ ପଚାରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2543
+#, python-format
+msgid "Could not modify file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ କୁ ରୂପାନ୍ତରିତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2561
+msgid "Could not list the file contexts"
+msgstr "ଫାଇଲ ପ୍ରସଙ୍ଗକୁ ତାଲିକାଭୁକ୍ତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2575
+#, python-format
+msgid "Could not delete the file context %s"
+msgstr "%s ଫାଇଲ ପ୍ରସଙ୍ଗକୁ ଅପସାରିତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2605
+#, python-format
+msgid "File context for %s is defined in policy, cannot be deleted"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ ଟି ନୀତି ରେ ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି, ଏହାକୁ ଅପସାରଣ କରି ପାରିବ ନାହିଁ"
+
+#: ../semanage/seobject.py:2611
+#, python-format
+msgid "Could not delete file context for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ପ୍ରସଙ୍ଗ କୁ ଅପସାରିତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2628
+msgid "Could not list file contexts"
+msgstr "ଫାଇଲ ପ୍ରସଙ୍ଗ କୁ ତାଲିକା ରେ ଲେଖି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2632
+msgid "Could not list file contexts for home directories"
+msgstr ""
+
+#: ../semanage/seobject.py:2636
+msgid "Could not list local file contexts"
+msgstr "ସ୍ଥାନୀୟ ଫାଇଲ ପ୍ରସଙ୍ଗକୁ ତାଲିକାରେ ଲେଖି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2673
+msgid "SELinux fcontext"
+msgstr "SELinux fପ୍ରସଙ୍ଗ"
+
+#: ../semanage/seobject.py:2686
+msgid ""
+"\n"
+"SELinux Distribution fcontext Equivalence \n"
+msgstr ""
+"\n"
+"SELinux ବଣ୍ଟନ fcontext ସମାନତା \n"
+
+#: ../semanage/seobject.py:2691
+msgid ""
+"\n"
+"SELinux Local fcontext Equivalence \n"
+msgstr ""
+"\n"
+"SELinux ସ୍ଥାନୀୟ fcontext ସମାନତା \n"
+
+#: ../semanage/seobject.py:2729 ../semanage/seobject.py:2780
+#: ../semanage/seobject.py:2786
+#, python-format
+msgid "Could not check if boolean %s is defined"
+msgstr "ବୁଲିଆନ %s ଟି ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି କି ନାହିଁ ତାହା ଯାଞ୍ଚ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2731 ../semanage/seobject.py:2782
+#, python-format
+msgid "Boolean %s is not defined"
+msgstr "ବୁଲିଆନ %s ଟି ବ୍ଯାଖ୍ଯା କରାଯାଇ ନାହିଁ"
+
+#: ../semanage/seobject.py:2735
+#, python-format
+msgid "Could not query file context %s"
+msgstr "ଫାଇଲ ପ୍ରସଙ୍ଗ କୁ %s କୁ ପ୍ରଶ୍ନ ପଚାରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2740
+#, python-format
+msgid "You must specify one of the following values: %s"
+msgstr "ଆପଣ ନିମ୍ନଲିଖିତ ମୂଲ୍ୟଗୁଡ଼ିକ ମଧ୍ଯରୁ ଗୋଟିଏ ଉଲ୍ଲେଖକରିବା ଉଚିତ: %s"
+
+#: ../semanage/seobject.py:2745
+#, python-format
+msgid "Could not set active value of boolean %s"
+msgstr "ବୁଲିଆନ %s ର ସକ୍ରିୟ ମୁଲ୍ୟ ସ୍ଥିର କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2748
+#, python-format
+msgid "Could not modify boolean %s"
+msgstr "ବୁଲିଆନ %s କୁ ରୂପାନ୍ତରିତ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2764
+#, python-format
+msgid "Bad format %s: Record %s"
+msgstr "ଖରାପ ଶୈଳୀ %s: ଅନୁଲିପି %s"
+
+#: ../semanage/seobject.py:2788
+#, python-format
+msgid "Boolean %s is defined in policy, cannot be deleted"
+msgstr "ବୁଲିଆନ %s ଟି ନିୟମ ରେ ବ୍ଯାଖ୍ଯା କରା ଯାଇଛି, ଏହାକୁ ଅପସାରଣ କରିହେବ ନାହିଁ"
+
+#: ../semanage/seobject.py:2792
+#, python-format
+msgid "Could not delete boolean %s"
+msgstr "ବୁଲିଆନ %s କୁ ଅପସାରଣ କରି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2804 ../semanage/seobject.py:2821
+msgid "Could not list booleans"
+msgstr "ବୁଲିଆନ ମାନଙ୍କୁ ତାଲିକା ରେ ଲେଖି ପାରିଲା ନାହିଁ"
+
+#: ../semanage/seobject.py:2854
+msgid "off"
+msgstr "ଅଫ"
+
+#: ../semanage/seobject.py:2854
+msgid "on"
+msgstr "ଅନ"
+
+#: ../semanage/seobject.py:2866
+msgid "SELinux boolean"
+msgstr "SELinux ବୁଲିଆନ"
+
+#: ../semanage/seobject.py:2866
+msgid "State"
+msgstr "ସ୍ଥିତି"
+
+#: ../semanage/seobject.py:2866
+msgid "Default"
+msgstr "ପୂର୍ବ ନିର୍ଦ୍ଧାରିତ"
+
+#: ../semanage/seobject.py:2866 ../sepolicy/sepolicy/sepolicy.glade:2148
+#: ../sepolicy/sepolicy/sepolicy.glade:2518
+#: ../sepolicy/sepolicy/sepolicy.glade:5107
+msgid "Description"
+msgstr "ବର୍ଣ୍ଣନା"
+
+#: ../sepolgen/src/sepolgen/interfaces.py:481
+msgid "Found circular interface class"
+msgstr ""
+
+#: ../sepolgen/src/sepolgen/interfaces.py:486
+#, python-format
+msgid "Missing interface definition for %s"
+msgstr ""
+
+#: ../sepolicy/sepolicy/generate.py:139
+msgid "Standard Init Daemon"
+msgstr "ମାନକ Init ଡେମନ"
+
+#: ../sepolicy/sepolicy/generate.py:140
+msgid "DBUS System Daemon"
+msgstr "DBUS ତନ୍ତ୍ର ଡେମନ"
+
+#: ../sepolicy/sepolicy/generate.py:141
+msgid "Internet Services Daemon"
+msgstr "ଇଣ୍ଟରନେଟ ସର୍ଭିସ ଡେମନ"
+
+#: ../sepolicy/sepolicy/generate.py:142
+msgid "Web Application/Script (CGI)"
+msgstr "ୱେବ ପ୍ରୟୋଗ/ସ୍କ୍ରିପ୍ଟ (CGI)"
+
+#: ../sepolicy/sepolicy/generate.py:143
+msgid "Sandbox"
+msgstr "ସେଣ୍ଡବକ୍ସ"
+
+#: ../sepolicy/sepolicy/generate.py:144
+msgid "User Application"
+msgstr "ଚାଳକ ପ୍ରୟୋଗ"
+
+#: ../sepolicy/sepolicy/generate.py:145
+msgid "Existing Domain Type"
+msgstr "ସ୍ଥିତବାନ ଡମେନ ପ୍ରକାର"
+
+#: ../sepolicy/sepolicy/generate.py:146
+msgid "Minimal Terminal Login User Role"
+msgstr "ସର୍ବନିମ୍ନ ଟର୍ମିନାଲ ଲଗଇନ ବ୍ୟବହାରକାରୀ ଭୂମିକା"
+
+#: ../sepolicy/sepolicy/generate.py:147
+msgid "Minimal X Windows Login User Role"
+msgstr "ସର୍ବନିମ୍ନ X ୱିଣ୍ଡୋ ଲଗଇନ ବ୍ୟବହାରକାରୀ ଭୂମିକା"
+
+#: ../sepolicy/sepolicy/generate.py:148
+msgid "Desktop Login User Role"
+msgstr "ଡେସ୍କଟପ ଲଗଇନ୍‌ ବ୍ୟବହାରକାରୀ ଭୂମିକା"
+
+#: ../sepolicy/sepolicy/generate.py:149
+msgid "Administrator Login User Role"
+msgstr "ପ୍ରଶାସକ ଲଗଇନ୍‌ ବ୍ୟବହାରକାରୀ ଭୂମିକା"
+
+#: ../sepolicy/sepolicy/generate.py:150
+msgid "Confined Root Administrator Role"
+msgstr "ସୀମିତ ରୁଟ ପ୍ରଶାସକ ଭୂମିକା"
+
+#: ../sepolicy/sepolicy/generate.py:151
+msgid "Module information for a new type"
+msgstr "ନୂତନ ପ୍ରକାର ପାଇଁ ମଡ୍ୟୁଲ ସୂଚନା"
+
+#: ../sepolicy/sepolicy/generate.py:157
+msgid "Valid Types:\n"
+msgstr "ବୈଧ ପ୍ରକାର:\n"
+
+#: ../sepolicy/sepolicy/generate.py:192
+#, python-format
+msgid "Ports must be numbers or ranges of numbers from 1 to %d "
+msgstr "ସଂଯୋଗିକୀଗୁଡିକ ନିଶ୍ଚିତ ରୂପେ ସଂଖ୍ୟା କିମ୍ବା 1 ରୁ %d ପର୍ଯ୍ୟନ୍ତ ସଂଖ୍ୟାର ପରିସର ହୋଇଥିବା ଉଚିତ"
+
+#: ../sepolicy/sepolicy/generate.py:204
+msgid "You must enter a valid policy type"
+msgstr "ଆପଣଙ୍କୁ ଏକ ବୈଧ ନିତୀ ପ୍ରକାର ଭରଣ କରିବାକୁ ହେବ"
+
+#: ../sepolicy/sepolicy/generate.py:207
+#, python-format
+msgid "You must enter a name for your policy module for your '%s'."
+msgstr "'%s' ପାଇଁ ଆପଣଙ୍କର ନିତୀ ମଡ୍ୟୁଲରେ ନିଶ୍ଚିତ ଭାବରେ ଏକ ନାମ ଭରଣ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/generate.py:345
+#, fuzzy
+#| msgid ""
+#| "Name must be alpha numberic with no spaces. Consider using option \"-n "
+#| "MODULENAME\""
+msgid ""
+"Name must be alphanumeric with no spaces. Consider using option \"-n "
+"MODULENAME\""
+msgstr ""
+"ନାମଟି ନିଶ୍ଚିତ ଭାବରେ ଖାଲିସ୍ଥାନ ନଥିବା ଏବଂ ସାଂକ୍ଷରିକ ହୋଇଥିବା ଉଚିତ।  \"-n MODULENAME\" "
+"ବିକଳ୍ପକୁ ବ୍ୟବହାର କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/generate.py:437
+msgid "User Role types can not be assigned executables."
+msgstr "ଚାଳକ ଭୂମିକା ପ୍ରକାରଗୁଡିକ ଅନୁମତିପ୍ରାପ୍ତ ନିଷ୍ପାଦ୍ୟ ହୋଇପାରିବେ ନାହିଁ।"
+
+#: ../sepolicy/sepolicy/generate.py:443
+#, fuzzy
+#| msgid "Only Daemon apps can use an init script.."
+msgid "Only Daemon apps can use an init script."
+msgstr "କେବଳ ଡେମନ ପ୍ରୟୋଗଗୁଡ଼ିକ init ସ୍କ୍ରିପ୍ଟ ବ୍ୟବହାର କରିପାରିବେ .."
+
+#: ../sepolicy/sepolicy/generate.py:461
+msgid "use_resolve must be a boolean value "
+msgstr "use_resolve ଟି ନିଶ୍ଚିତ ଭାବରେ ବୁଲିଆନ ମୂଲ୍ୟ ହୋଇଥିବା ଉଚିତ"
+
+#: ../sepolicy/sepolicy/generate.py:467
+msgid "use_syslog must be a boolean value "
+msgstr "use_syslog ଟି ଗୋଟିଏ ବୁଲିଆନ ମୂଲ୍ୟ ହୋଇଥିବା ଉଚିତ"
+
+#: ../sepolicy/sepolicy/generate.py:473
+msgid "use_kerberos must be a boolean value "
+msgstr "use_kerberos ନିଶ୍ଚିତ ଭାବରେ ଗୋଟିଏ ବୁଲିଆନ ମୂଲ୍ୟ ହୋଇଥିବା ଉଚିତ"
+
+#: ../sepolicy/sepolicy/generate.py:479
+msgid "manage_krb5_rcache must be a boolean value "
+msgstr "manage_krb5_rcache ଟି ନିଶ୍ଚିତ ଭାବରେ ଗୋଟିଏ ବୁଲିଆନ ମୂଲ୍ୟ ହୋଇଥିବା ଉଚିତ"
+
+#: ../sepolicy/sepolicy/generate.py:509
+msgid "USER Types automatically get a tmp type"
+msgstr "USER ପ୍ରକାରଗୁଡିକ ସ୍ୱୟଂଚାଳିତଭାବେ ଗୋଟିଏ tmp ପ୍ରକାର ପାଇଥାଏ"
+
+#: ../sepolicy/sepolicy/generate.py:846
+#, python-format
+msgid "'%s' policy modules require existing domains"
+msgstr "'%s' ନିତୀ ମଡ୍ୟୁଲଗୁଡ଼ିକ ସ୍ଥିତବାନ ଡମେନଗୁଡ଼ିକ ଆବଶ୍ୟକ କରିଥାଏ"
+
+#: ../sepolicy/sepolicy/generate.py:871
+msgid "Type field required"
+msgstr "ପ୍ରକାର ସ୍ଥାନ ଆବଶ୍ୟକ"
+
+#: ../sepolicy/sepolicy/generate.py:884
+#, python-format
+msgid ""
+"You need to define a new type which ends with: \n"
+" %s"
+msgstr ""
+"ଆପଣଙ୍କୁ ଏକ ନୂତନ ପ୍ରକାର ବ୍ୟାଖ୍ୟା କରିବାକୁ ହେବ ଯାହାକି ନିମ୍ନଲିଖିତ ସହିତ ସମାପ୍ତ ହୋଇଥାଏ: \n"
+" %s"
+
+#: ../sepolicy/sepolicy/generate.py:1112
+msgid "You must enter the executable path for your confined process"
+msgstr "ଆପଣଙ୍କର ପରିସୀମିତ ପ୍ରଣାଳୀ ପାଇଁ ଗୋଟିଏ ନିଷ୍ପାଦ୍ୟ ପଥ ଭରଣ କରିବା ଉଚିତ"
+
+#: ../sepolicy/sepolicy/generate.py:1378
+msgid "Type Enforcement file"
+msgstr "ପ୍ରବର୍ତ୍ତନ ଫାଇଲକୁ ଟାଇପ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/generate.py:1379
+msgid "Interface file"
+msgstr "ଅନ୍ତରାପ୍ରୁଷ୍ଠ ଫାଇଲ"
+
+#: ../sepolicy/sepolicy/generate.py:1380
+msgid "File Contexts file"
+msgstr "ଫାଇଲ ପ୍ରସଙ୍ଗ ଫାଇଲ"
+
+#: ../sepolicy/sepolicy/generate.py:1382
+msgid "Spec file"
+msgstr "ସ୍ପେକ୍‌ ଫାଇଲ"
+
+#: ../sepolicy/sepolicy/generate.py:1383
+msgid "Setup Script"
+msgstr "ସ୍କ୍ରିପ୍ଟ ବ୍ୟବସ୍ଥା"
+
+#: ../sepolicy/sepolicy/gui.py:66 ../sepolicy/sepolicy/sepolicy.glade:3732
+#: ../sepolicy/sepolicy/sepolicy.glade:3834
+#: ../sepolicy/sepolicy/sepolicy.glade:3897
+#: ../sepolicy/sepolicy/sepolicy.glade:3960
+msgid "No"
+msgstr "ନାଁ"
+
+#: ../sepolicy/sepolicy/gui.py:66 ../sepolicy/sepolicy/sepolicy.glade:3715
+#: ../sepolicy/sepolicy/sepolicy.glade:3816
+#: ../sepolicy/sepolicy/sepolicy.glade:3880
+#: ../sepolicy/sepolicy/sepolicy.glade:3943
+msgid "Yes"
+msgstr "ହଁ"
+
+#: ../sepolicy/sepolicy/gui.py:67
+msgid "Disable"
+msgstr "ନିଷ୍କ୍ରିୟ"
+
+#: ../sepolicy/sepolicy/gui.py:67
+msgid "Enable"
+msgstr "ସକ୍ରିୟ"
+
+#: ../sepolicy/sepolicy/gui.py:80 ../sepolicy/sepolicy/sepolicy.glade:726
+#: ../sepolicy/sepolicy/sepolicy.glade:1467
+#: ../sepolicy/sepolicy/sepolicy.glade:3501
+msgid "Advanced >>"
+msgstr "ଉନ୍ନତ >>"
+
+#: ../sepolicy/sepolicy/gui.py:80
+msgid "Advanced <<"
+msgstr "ଉନ୍ନତ <<"
+
+#: ../sepolicy/sepolicy/gui.py:81 ../sepolicy/sepolicy/sepolicy.glade:80
+msgid "Advanced Search >>"
+msgstr "ଉନ୍ନତ ସନ୍ଧାନ >>"
+
+#: ../sepolicy/sepolicy/gui.py:81
+msgid "Advanced Search <<"
+msgstr "ଉନ୍ନତ ସନ୍ଧାନ <<"
+
+#: ../sepolicy/sepolicy/gui.py:106
+msgid ""
+"<small>\n"
+"To change from Disabled to Enforcing mode\n"
+"- Change the system mode from Disabled to Permissive\n"
+"- Reboot, so that the system can relabel\n"
+"- Once the system is working as planned\n"
+"  * Change the system mode to Enforcing</small>\n"
+msgstr ""
+"<small>\n"
+"Disabled ରୁ Enforcing ଧାରାକୁ ପରିବର୍ତ୍ତନ କରିବାକୁ\n"
+"- ତନ୍ତ୍ର ଧାରାକୁ Disabled ରୁ Permissive ଧାରାକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ\n"
+"- ପୁନଃଚାଳନ କରନ୍ତୁ, ଯାହା ଫଳରେ ତନ୍ତ୍ର ସେହି ପରିବର୍ତ୍ତନକୁ ସଜାଡ଼ିବ\n"
+"- ତନ୍ତ୍ର ଯୋଜନା ଅନୁସାରେ କାର୍ଯ୍ୟ କରିବା ଆରମ୍ଭ କଲାମାତ୍ରେ\n"
+"  * ତନ୍ତ୍ର ଧାରାକୁ Enforcing କୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ</small>\n"
+
+#: ../sepolicy/sepolicy/gui.py:502
+#, python-format
+msgid "%s is not a valid domain"
+msgstr "%s ଗୋଟିଏ ବୈଧ ଡମେନ ନୁହଁ"
+
+#: ../sepolicy/sepolicy/gui.py:651
+msgid "System Status: Disabled"
+msgstr "ତନ୍ତ୍ର ସ୍ଥିତି: Disabled"
+
+#: ../sepolicy/sepolicy/gui.py:749
+msgid "Help: Start Page"
+msgstr "ସହାୟତା: ଆରମ୍ଭ ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:753
+msgid "Help: Booleans Page"
+msgstr "ସହାୟତା: ବୁଲିଆନ ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:759
+msgid "Help: Executable Files Page"
+msgstr "ସହାୟତା: ନିଷ୍ପାଦନଯୋଗ୍ୟ ଫାଇଲ ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:762
+msgid "Help: Writable Files Page"
+msgstr "ସହାୟତା: ଲିଖନଯୋଗ୍ୟ ଫାଇଲ ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:765
+msgid "Help: Application Types Page"
+msgstr "ସହାୟତା: ପ୍ରୟୋଗ ପ୍ରକାର ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:770
+msgid "Help: Outbound Network Connections Page"
+msgstr "ସହାୟତା: ଯାଉଥିବା ନେଟୱର୍କ ସଂଯୋଗ ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:773
+msgid "Help: Inbound Network Connections Page"
+msgstr "ସହାୟତା: ଆସୁଥିବା ନେଟୱର୍କ ସଂଯୋଗ ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:779
+msgid "Help: Transition from application Page"
+msgstr "ସହାୟତା: ପ୍ରୟୋଗ ପୃଷ୍ଠାରୁ ସ୍ଥାନାନ୍ତରଣ"
+
+#: ../sepolicy/sepolicy/gui.py:782
+msgid "Help: Transition into application Page"
+msgstr "ସହାୟତା: ପ୍ରୟୋଗ ପୃଷ୍ଠାକୁ ସ୍ଥାନାନ୍ତରଣ"
+
+#: ../sepolicy/sepolicy/gui.py:785
+msgid "Help: Transition application file Page"
+msgstr "ସହାୟତା: ପ୍ରୟୋଗ ଫାଇଲ ପୃଷ୍ଠାକୁ ସ୍ଥାନାନ୍ତରଣ"
+
+#: ../sepolicy/sepolicy/gui.py:789
+msgid "Help: Systems Page"
+msgstr "ସହାୟତା: ତନ୍ତ୍ର ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:793
+msgid "Help: Lockdown Page"
+msgstr "ସହାୟତା: ଲକଡାଉନ ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:797
+msgid "Help: Login Page"
+msgstr "ସହାୟତା: ଲଗଇନ ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:801
+msgid "Help: SELinux User Page"
+msgstr "ସହାୟତା: SELinux ବ୍ୟବହାରକାରୀ ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:805
+msgid "Help: File Equivalence Page"
+msgstr "ସହାୟତା: ଫାଇଲ ସମାନତା ପୃଷ୍ଠା"
+
+#: ../sepolicy/sepolicy/gui.py:950 ../sepolicy/sepolicy/gui.py:1241
+#: ../sepolicy/sepolicy/gui.py:1681 ../sepolicy/sepolicy/gui.py:1928
+#: ../sepolicy/sepolicy/gui.py:2716
+msgid "More..."
+msgstr "ଅଧିକ..."
+
+#: ../sepolicy/sepolicy/gui.py:1058
+#, python-format
+msgid "File path used to enter the '%s' domain."
+msgstr "'%s' ଡମେନରେ ପ୍ରବେଶ ପାଇଁ ବ୍ୟବହୃତ ଫାଇଲ ପଥ।"
+
+#: ../sepolicy/sepolicy/gui.py:1059
+#, python-format
+msgid "Files to which the '%s' domain can write."
+msgstr "ଯେଉଁ ଫାଇଲଗୁଡ଼ିକରେ '%s' ଡମେନ ଲେଖିପାରିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1060
+#, python-format
+msgid "Network Ports to which the '%s' is allowed to connect."
+msgstr "ଯେଉଁ ନେଟୱର୍କ ପୋର୍ଟଗୁଡ଼ିକରେ '%s' ସଂଯୋଗ ହେବା ପାଇଁ ଅନୁମତି ପ୍ରାପ୍ତ।"
+
+#: ../sepolicy/sepolicy/gui.py:1061
+#, python-format
+msgid "Network Ports to which the '%s' is allowed to listen."
+msgstr "ଯେଉଁ ନେଟୱର୍କ ପୋର୍ଟଗୁଡ଼ିକରେ '%s' ଉତ୍ତର ପାଇବା ପାଇଁ ଅନୁମତି ପ୍ରାପ୍ତ।"
+
+#: ../sepolicy/sepolicy/gui.py:1062
+#, python-format
+msgid "File Types defined for the '%s'."
+msgstr "'%s' ପାଇଁ ବ୍ୟାଖ୍ୟା ହୋଇଥିବା ଫାଇଲ ପ୍ରକାର।"
+
+#: ../sepolicy/sepolicy/gui.py:1063
+#, python-format
+msgid ""
+"Display boolean information that can be used to modify the policy for the "
+"'%s'."
+msgstr "ବୁଲିଆନ ସୂଚନା ଦର୍ଶାନ୍ତୁ ଯାହାକୁ '%s' ପାଇଁ ନିତୀ ପରିବର୍ତ୍ତନ କରିବାରେ ବ୍ୟବହାର କରାଯାଇପାରିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1064
+#, python-format
+msgid "Display file type information that can be used by the '%s'."
+msgstr "ଫାଇଲ ପ୍ରକାର ସୂଚନାକୁ ଦର୍ଶାନ୍ତୁ ଯାହାକୁ '%s' ଦ୍ୱାରା ବ୍ୟବହାର କରାଯାଇପାରିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1065
+#, python-format
+msgid "Display network ports to which the '%s' can connect or listen to."
+msgstr ""
+"ଯେଉଁ ନେଟୱର୍କ ପୋର୍ଟଗୁଡ଼ିକରେ '%s' ସଂଯୋଗ ହୋଇପାରିବ କିମ୍ବା ଉତ୍ତର ପାଇ ପାରିବ ତାହାକୁ ଦର୍ଶାନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1066
+#, python-format
+msgid "Application Transitions Into '%s'"
+msgstr "'%s' ରେ ପ୍ରୟୋଗ ପରିବର୍ତ୍ତନ"
+
+#: ../sepolicy/sepolicy/gui.py:1067
+#, python-format
+msgid "Application Transitions From '%s'"
+msgstr "'%s' ରୁ ପ୍ରୟୋଗ ପରିବର୍ତ୍ତନ"
+
+#: ../sepolicy/sepolicy/gui.py:1068
+#, python-format
+msgid "File Transitions From '%s'"
+msgstr "'%s' ରୁ ଫାଇଲ ପରିବର୍ତ୍ତନ"
+
+#: ../sepolicy/sepolicy/gui.py:1069
+#, python-format
+msgid ""
+"Executables which will transition to '%s', when executing selected domains "
+"entrypoint."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1070
+#, python-format
+msgid ""
+"Executables which will transition to a different domain, when '%s' executes "
+"them."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1071
+#, python-format
+msgid "Files by '%s' with transitions to a different label."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1072
+#, python-format
+msgid "Display applications that can transition into or out of the '%s'."
+msgstr "ପ୍ରୟୋଗଗୁଡ଼ିକୁ ଦର୍ଶାଇଥାଏ ଯାହାକି '%s' କୁ କିମ୍ବା ସେଥିରୁ ପରିବର୍ତ୍ତନ ହୋଇପାରୁଥିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1166 ../sepolicy/sepolicy/__init__.py:82
+msgid "all files"
+msgstr "ସମସ୍ତ ଫାଇଲଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/gui.py:1180
+msgid "MISSING FILE PATH"
+msgstr "MISSING FILE PATH"
+
+#: ../sepolicy/sepolicy/gui.py:1295
+#, python-format
+msgid "To disable this transition, go to the %sBoolean section%s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1297
+#, python-format
+msgid "To enable this transition, go to the %sBoolean section%s."
+msgstr ""
+
+#: ../sepolicy/sepolicy/gui.py:1354
+msgid "executable"
+msgstr "ନିଷ୍ପାଦନଯୋଗ୍ୟ"
+
+#: ../sepolicy/sepolicy/gui.py:1357
+msgid "writable"
+msgstr "ଲେଖାଯୋଗ୍ୟ"
+
+#: ../sepolicy/sepolicy/gui.py:1360
+msgid "application"
+msgstr "ପ୍ରୟୋଗ"
+
+#: ../sepolicy/sepolicy/gui.py:1361
+#, python-format
+msgid "Add new %(TYPE)s file path for '%(DOMAIN)s' domains."
+msgstr "ନୂତନ %(TYPE)s ଫାଇଲ ପଥକୁ '%(DOMAIN)s' ଡମେନଗୁଡ଼ିକ ପାଇଁ ଯୋଗ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1362
+#, python-format
+msgid "Delete %(TYPE)s file paths for '%(DOMAIN)s' domain."
+msgstr "%(TYPE)s ଫାଇଲପଥଗୁଡ଼ିକୁ '%(DOMAIN)s' ଡମେନ ପାଇଁ ଅପସାରଣ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1363
+#, python-format
+msgid ""
+"Modify %(TYPE)s file path for '%(DOMAIN)s' domain. Only bolded items in the "
+"list can be selected, this indicates they were modified previously."
+msgstr ""
+"%(TYPE)s ଫାଇଲ ପଥକୁ '%(DOMAIN)s' ଡମେନ ପାଇଁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ। କେବଳ ତାଲିକାରେ ଥିବା ଗାଢ଼ "
+"ବସ୍ତୁଗୁଡ଼ିକୁ ବଛାଯାଇପାରିବ, ଏହା ସୂଚାଇଥାଏ ଯେ ସେଗୁଡ଼ିକ ପୂର୍ବରୁ ପରିବର୍ତ୍ତିତ ହୋଇଛି।"
+
+#: ../sepolicy/sepolicy/gui.py:1375
+msgid "connect"
+msgstr "ସଂଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1378
+msgid "listen for inbound connections"
+msgstr "ଆସୁଥିବା ସଂଯୋଗଗୁଡ଼ିକୁ ଲକ୍ଷ୍ଯ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1380
+#, python-format
+msgid ""
+"Add new port definition to which the '%(APP)s' domain is allowed to %(PERM)s."
+msgstr ""
+"ପୋର୍ଟ ସଂଜ୍ଞାକୁ ଯୋଗ କରନ୍ତୁ ଯେଉଁଥିରେ '%(APP)s' ଡମେନ %(PERM)s କରିବା ପାଇଁ ଅନୁମତି ପ୍ରାପ୍ତ।"
+
+#: ../sepolicy/sepolicy/gui.py:1381
+#, python-format
+msgid ""
+"Delete modified port definitions to which the '%(APP)s' domain is allowed to "
+"%(PERM)s."
+msgstr ""
+"ପରିବର୍ତ୍ତିତ ପୋର୍ଟ ସଂଜ୍ଞାକୁ ଅପସାରଣ କରନ୍ତୁ ଯେଉଁଥିରେ '%(APP)s' ଡମେନ %(PERM)s କରିବା ପାଇଁ ଅନୁମତି "
+"ପ୍ରାପ୍ତ।"
+
+#: ../sepolicy/sepolicy/gui.py:1382
+#, python-format
+msgid ""
+"Modify port definitions to which the '%(APP)s' domain is allowed to %(PERM)s."
+msgstr ""
+"ପୋର୍ଟ ସଂଜ୍ଞାକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ ଯେଉଁଥିରେ '%(APP)s' ଡମେନ %(PERM)s କରିବା ପାଇଁ ଅନୁମତି ପ୍ରାପ୍ତ।"
+
+#: ../sepolicy/sepolicy/gui.py:1411
+msgid "Add new SELinux User/Role definition."
+msgstr "ନୂତନ SELinux ବ୍ୟବହାରକାରୀ/ଭୂମିକା ସଂଜ୍ଞାକୁ ଯୋଗ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1412
+msgid "Delete modified SELinux User/Role definitions."
+msgstr "ପରିବର୍ତ୍ତିତ SELinux ବ୍ୟବହାରକାରୀ/ଭୂମିକା ସଂଜ୍ଞାକୁ ଅପସାରଣ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1413
+msgid "Modify selected modified SELinux User/Role definitions."
+msgstr "ବଚ୍ଛିତ ପରିବର୍ତ୍ତିତ SELinux ବ୍ୟବହାରକାରୀ/ଭୂମିକା ସଂଜ୍ଞାଗୁଡ଼ିକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1420
+msgid "Add new Login Mapping definition."
+msgstr "ନୂତନ ଲଗଇନ ମେଳକ ସଂଜ୍ଞାକୁ ଯୋଗ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1421
+msgid "Delete modified Login Mapping definitions."
+msgstr "ପରିବର୍ତ୍ତିତ ଲଗଇନ ମେଳକ ସଂଜ୍ଞାକୁ ଅପସାରଣ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1422
+msgid "Modify selected modified Login Mapping definitions."
+msgstr "ବଚ୍ଛିତ ପରିବର୍ତ୍ତିତ ଲଗଇନ ମେଳକ ସଂଜ୍ଞାକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1429
+msgid "Add new File Equivalence definition."
+msgstr "ନୂତନ ଫାଇଲ ସମାନତା ସଂଜ୍ଞାକୁ ଯୋଗ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1430
+msgid "Delete modified File Equivalence definitions."
+msgstr "ପରିବର୍ତ୍ତିତ ଫାଇଲ ସମାନତା ସଂଜ୍ଞାକୁ ଅପସାରଣ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:1431
+msgid ""
+"Modify selected modified File Equivalence definitions. Only bolded items in "
+"the list can be selected, this indicates they were modified previously."
+msgstr ""
+"ବଚ୍ଛିତ ପରିବର୍ତ୍ତିତ ଫାଇଲ ସମାନତା ସଂଜ୍ଞାଗୁଡ଼ିକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ। ତାଲିକାରେ ଥିବା କେବଳ ଗାଢ଼ ବସ୍ତୁଗୁଡ଼ିକୁ "
+"ବଛା ହୋଇପାରିବ, ଏହା ସୂଚାଇଥାଏ ଯେ ସେଗୁଡ଼ିକ ପୂର୍ବରୁ ପରିବର୍ତ୍ତିତ ହୋଇଛି।"
+
+#: ../sepolicy/sepolicy/gui.py:1459
+#, python-format
+msgid "Boolean %s Allow Rules"
+msgstr "ବୁଲିଆନ %s ଅନୁମୋଦିତ ନିୟମାବଳୀ"
+
+#: ../sepolicy/sepolicy/gui.py:1472
+#, python-format
+msgid "Add Network Port for %s.  Ports will be created when update is applied."
+msgstr ""
+"%s ପାଇଁ ନେଟୱର୍କ ପୋର୍ଟକୁ ଯୋଗ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ପୋର୍ଟଗୁଡ଼ିକ ନିର୍ମାଣ ହୋଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/gui.py:1473
+#, python-format
+msgid "Add Network Port for %s"
+msgstr "%s ପାଇଁ ନେଟୱର୍କ ପୋର୍ଟ ଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1478
+#, python-format
+msgid ""
+"Add File Labeling for %s. File labels will be created when update is applied."
+msgstr ""
+"%s ପାଇଁ ଫାଇଲ ନାମକରଣକୁ ଯୋଗ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ଫାଇଲ ନାମକରଣ ନିର୍ମାଣ ହେବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1479 ../sepolicy/sepolicy/gui.py:1532
+#, python-format
+msgid "Add File Labeling for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ନାମକରଣ ଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1489
+msgid "Add Login Mapping. User Mapping will be created when Update is applied."
+msgstr ""
+"ଲଗଇନ ମେଳକକୁ ଯୋଗ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ବ୍ୟବହାରକାରୀ ମେଳକ ନିର୍ମାଣ ହେବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1490
+msgid "Add Login Mapping"
+msgstr "ଲଗଇନ ମେଳକ ଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1495
+msgid ""
+"Add SELinux User Role. SELinux user roles will be created when update is "
+"applied."
+msgstr ""
+"SELinux ବ୍ୟବହାରକାରୀ ଭୂମିକା ଯୋଗ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ SELinux ବ୍ୟବହାରକାରୀ "
+"ଭୂମିକାଗୁଡ଼ିକ ନିର୍ମାଣ ହେବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1496
+msgid "Add SELinux Users"
+msgstr "SELinux ବ୍ୟବହାରକାରୀମାନଙ୍କୁ ଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1503
+msgid ""
+"Add File Equivalency Mapping. Mapping will be created when update is applied."
+msgstr "ଫାଇଲ ସମାନତା ମେଳକ ଯୋଗ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ମେଳକ ନିର୍ମାଣ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1504
+msgid "Add SELinux File Equivalency"
+msgstr "SELinux ଫାଇଲ ସମାନତାକୁ ଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1531
+#, python-format
+msgid ""
+"Modify File Labeling for %s. File labels will be created when update is "
+"applied."
+msgstr "%s ପାଇଁ ଫାଇଲ ନାମକରଣକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ। ଅଦ୍ୟତନ କରିବା ସମୟରେ ଫାଇଲ ନାମକରଣ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1587
+msgid ""
+"Modify SELinux User Role. SELinux user roles will be modified when update is "
+"applied."
+msgstr ""
+"SELinux ବ୍ୟବହାରକାରୀ ଭୂମିକାକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ SELinux "
+"ବ୍ୟବହାରକାରୀ ଭୂମିକାକୁ ପରିବର୍ତ୍ତନ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1588
+msgid "Modify SELinux Users"
+msgstr "SELinux ବ୍ୟବହାରକାରୀମାନଙ୍କୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1596
+msgid ""
+"Modify Login Mapping. Login Mapping will be modified when Update is applied."
+msgstr ""
+"ଲଗଇନ ମେଳକକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ଲଗଇନ ମେଳକକୁ ପରିବର୍ତ୍ତନ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1597
+msgid "Modify Login Mapping"
+msgstr "ଲଗଇନ ମେଳକକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1603
+msgid ""
+"Modify File Equivalency Mapping. Mapping will be created when update is "
+"applied."
+msgstr ""
+"ଫାଇଲ ସମାନତା ମେଳକକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ମେଳକକୁ ନିର୍ମାଣ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1604
+msgid "Modify SELinux File Equivalency"
+msgstr "SELinux ଫାଇଲ ସମାନତାକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1689
+#, python-format
+msgid ""
+"Modify Network Port for %s.  Ports will be created when update is applied."
+msgstr ""
+"%s ପାଇଁ ନେଟୱର୍କ ପୋର୍ଟକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ।  ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ପୋର୍ଟଗୁଡ଼ିକ ନିର୍ମାଣ ହେବ।"
+
+#: ../sepolicy/sepolicy/gui.py:1690
+#, python-format
+msgid "Modify Network Port for %s"
+msgstr "%s ପାଇଁ ନେଟୱର୍କ ପୋର୍ଟକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:1909
+#, python-format
+msgid "The entry '%s' is not a valid path.  Paths must begin with a '/'."
+msgstr "ନିବେଶ '%s' ଟି ଗୋଟିଏ ବୈଧ ପଥ ନୁହଁ।  ପଥଗୁଡ଼ିକ ନିଶ୍ଚିତ ଭାବରେ '/' ସହିତ ଆରମ୍ଭ ହେବା ଉଚିତ।"
+
+#: ../sepolicy/sepolicy/gui.py:1922
+msgid "Port number must be between 1 and 65536"
+msgstr "ପୋର୍ଟ କ୍ରମ ସଂଖ୍ୟା ନିଶ୍ଚିତ ଭାବରେ 1 ଏବଂ 65536 ମଧ୍ଯରେ ହେବା ଉଚିତ"
+
+#: ../sepolicy/sepolicy/gui.py:2202
+#, python-format
+msgid "SELinux name: %s"
+msgstr "SELinux ନାମ: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2213
+#, python-format
+msgid "Add file labeling for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ନାମକରଣକୁ ଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2215
+#, python-format
+msgid "Delete file labeling for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ନାମକରଣକୁ ଅପସାରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2217
+#, python-format
+msgid "Modify file labeling for %s"
+msgstr "%s ପାଇଁ ଫାଇଲ ନାମକରଣକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2221
+#, python-format
+msgid "File path: %s"
+msgstr "ଫାଇଲ ପଥ: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2224
+#, python-format
+msgid "File class: %s"
+msgstr "ଫାଇଲ ଶ୍ରେଣୀ: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2227 ../sepolicy/sepolicy/gui.py:2251
+#, python-format
+msgid "SELinux file type: %s"
+msgstr "SELinux ଫାଇଲ ପ୍ରକାର: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2236
+#, python-format
+msgid "Add ports for %s"
+msgstr "%s ପାଇଁ ପୋର୍ଟ ଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2238
+#, python-format
+msgid "Delete ports for %s"
+msgstr "%s ପାଇଁ ପୋର୍ଟ ଅପସାରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2240
+#, python-format
+msgid "Modify ports for %s"
+msgstr "%s ପାଇଁ ପୋର୍ଟଗୁଡ଼ିକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2243
+#, python-format
+msgid "Network ports: %s"
+msgstr "ନେଟୱର୍କ ପୋର୍ଟଗୁଡ଼ିକ: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2246
+#, python-format
+msgid "Network protocol: %s"
+msgstr "ନେଟୱର୍କ ପ୍ରୋଟୋକଲ: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2260
+msgid "Add user"
+msgstr "ବ୍ୟବହାରକାରୀ ଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2262
+msgid "Delete user"
+msgstr "ବ୍ୟବହାରକାରୀ ଅପସାରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2264
+msgid "Modify user"
+msgstr "ବ୍ୟବହାରକାରୀଙ୍କୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2267
+#, python-format
+msgid "SELinux User : %s"
+msgstr "SELinux ବ୍ୟବହାରକାରୀ : %s"
+
+#: ../sepolicy/sepolicy/gui.py:2272
+#, python-format
+msgid "Roles: %s"
+msgstr "ଭୂମିକା: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2276 ../sepolicy/sepolicy/gui.py:2301
+#, python-format
+msgid "MLS/MCS Range: %s"
+msgstr "MLS/MCS ପରିସର: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2285
+msgid "Add login mapping"
+msgstr "ଲଗଇନ ମେଳକ ଯୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2287
+msgid "Delete login mapping"
+msgstr "ଲଗଇନ ମେଳକ ଅପସାରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2289
+msgid "Modify login mapping"
+msgstr "ଲଗଇନ ମେଳକକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2293
+#, python-format
+msgid "Login Name : %s"
+msgstr "ଲଗଇନ ନାମ : %s"
+
+#: ../sepolicy/sepolicy/gui.py:2297
+#, python-format
+msgid "SELinux User: %s"
+msgstr "SELinux ବ୍ୟବହାରକାରୀ: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2310
+msgid "Add file equiv labeling."
+msgstr "ଫାଇଲ ସମାନତା ନାମକରଣକୁ ଯୋଗ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:2312
+msgid "Delete file equiv labeling."
+msgstr "ଫାଇଲ ସମାନତା ନାମକରଣକୁ ଅପସାରଣ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:2314
+msgid "Modify file equiv labeling."
+msgstr "ଫାଇଲ ସମାନତା ନାମକରଣକୁ ପରିବର୍ତ୍ତନ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/gui.py:2318
+#, python-format
+msgid "File path : %s"
+msgstr "ଫାଇଲ ପଥ : %s"
+
+#: ../sepolicy/sepolicy/gui.py:2322
+#, python-format
+msgid "Equivalence: %s"
+msgstr "ସମାନତା: %s"
+
+#: ../sepolicy/sepolicy/gui.py:2353 ../sepolicy/sepolicy/sepolicy.glade:129
+#: ../sepolicy/sepolicy/sepolicy.glade:1898
+#: ../sepolicy/sepolicy/sepolicy.glade:3793
+msgid "System"
+msgstr "ତନ୍ତ୍ର"
+
+#: ../sepolicy/sepolicy/gui.py:2362 ../sepolicy/sepolicy/sepolicy.glade:95
+msgid "File Equivalence"
+msgstr "ଫାଇଲ ସମାନତା"
+
+#: ../sepolicy/sepolicy/gui.py:2372 ../sepolicy/sepolicy/sepolicy.glade:112
+msgid "Users"
+msgstr "ବ୍ୟବହାରକାରୀମାନେ"
+
+#: ../sepolicy/sepolicy/gui.py:2425
+#, python-format
+msgid ""
+"Run restorecon on %(PATH)s to change its type from %(CUR_CONTEXT)s to the "
+"default %(DEF_CONTEXT)s?"
+msgstr ""
+"ଏହାର ପ୍ରକାରକୁ %(CUR_CONTEXT)s ରୁ ପୂର୍ବନିର୍ଦ୍ଧାରିତ %(DEF_CONTEXT)s କୁ ପରିବର୍ତ୍ତନ କରିବା ପାଇଁ "
+"%(PATH)s  ଉପରେ restorecon ଚଲାଇବେ କି?"
+
+#: ../sepolicy/sepolicy/gui.py:2435 ../sepolicy/sepolicy/sepolicy.glade:4216
+msgid "Update"
+msgstr "ଅଦ୍ୟତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2437
+msgid "Update Changes"
+msgstr "ପରିବର୍ତ୍ତନଗୁଡ଼ିକୁ ଅଦ୍ୟତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2439
+msgid "Revert Changes"
+msgstr "ପରିବର୍ତ୍ତନଗୁଡ଼ିକୁ ପ୍ରତ୍ଯାବୃତ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/gui.py:2570
+msgid "System Status: Enforcing"
+msgstr "ତନ୍ତ୍ର ସ୍ଥିତି: Enforcing"
+
+#: ../sepolicy/sepolicy/gui.py:2573
+msgid "System Status: Permissive"
+msgstr "ତନ୍ତ୍ର ସ୍ଥିତି: Permissive"
+
+#: ../sepolicy/sepolicy/gui.py:2637
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"ନୀତି ପ୍ରକାରକୁ ପରିବର୍ତ୍ତନ କରିବା ସମଗ୍ର ଫାଇଲତନ୍ତ୍ରକୁ ପରବର୍ତ୍ତି ବୁଟରେ ପୁନଃ ଚିହ୍ନଟ କରିବ. ଫାଇଲତନ୍ତ୍ରର "
+"ଆକାର ଉପରେ ନିର୍ଭର କରି ପୁନଃ ଚିହ୍ନଟ ଅଧିକ ସମୟ ନେଇଥାଏ.  ଆପଣ ଆଗକୁ ବଢ଼ିବାକୁ ଚାହୁଁଛନ୍ତି କି?"
+
+#: ../sepolicy/sepolicy/gui.py:2767
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot.  Do you "
+"wish to continue?"
+msgstr ""
+"SELinux କୁ disabled ସ୍ଥିତିକୁ ପରିବର୍ତ୍ତନ କରିବା ପାଇଁ ପୁନଃଚାଳନ ଆବଶ୍ୟକ।  ଏହା ପରାମର୍ଶିତ ନୁହଁ। ଯଦି "
+"ଆପଣ ପରେ SELinux କୁ ଅନ କରିବାକୁ ଚାହିଁବେ, ସେତେବେଳେ ତନ୍ତ୍ରକୁ ପୁଣି ସଜାଡ଼ିବା ଆବଶ୍ୟକ ହେବ। ଯଦି ଆପଣ "
+"SELinux  ଆପଣଙ୍କ ତନ୍ତ୍ରରେ ସମସ୍ୟା ସୃଷ୍ଟି କରୁଛି କି ନାହିଁ ତାହା କେବଳ ଦେଖିବାକୁ ଚାହୁଁଛନ୍ତି, ତେବେ ଆପଣ "
+"permissive  ଧାରାକୁ ଯାଇପାରିବେ ଯାହାକି କେବଳ ତୃଟିଗୁଡ଼ିକୁ ଲେଖିବ ଏବଂSELinux ନିତୀକୁ enforce କରିବ "
+"ନାହିଁ।  Permissive ଧାରା ପୁନଃଚାଳନ ଆବଶ୍ୟକ କରିନଥାଏ। ଆପଣଆଗକୁ ବଢ଼ିବାକୁ ଚାହୁଁଛନ୍ତି କି?"
+
+#: ../sepolicy/sepolicy/gui.py:2771
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"SELinux ସକ୍ରିୟ ଅବସ୍ଥାକୁ ପରିବର୍ତ୍ତନ କରିବା ଦ୍ୱାରା ସମଗ୍ର ଫାଇଲତନ୍ତ୍ରକୁ ପରବର୍ତ୍ତି ବୁଟରେ ପୁନଃ "
+"ନାମପଟିକରଣ କରିବାକୁ ପଡ଼ିବ. ତନ୍ତ୍ରର ଆକାର ଉପରେ ନିର୍ଭର କରି, ପୁନଃ ନାମପଟିକରଣ କରିବାକୁ ବହୁତ ଅଧିକ ସମୟ "
+"ଲାଗିବ.  ଆପଣ ଆଗେଇବାକୁ ଚାହୁଁଛନ୍ତି କି?"
+
+#: ../sepolicy/sepolicy/gui.py:2801
+msgid ""
+"You are attempting to close the application without applying your changes.\n"
+"    *    To apply changes you have made during this session, click No and "
+"click Update.\n"
+"    *    To leave the application without applying your changes, click Yes.  "
+"All changes that you have made during this session will be lost."
+msgstr ""
+"ଆପଣଙ୍କର ପରିବର୍ତ୍ତନଗୁଡ଼ିକୁ ପ୍ରୟୋଗ ନକରି ଆପଣ ସେହି ପ୍ରୟୋଗକୁ ବନ୍ଦ କରିବାକୁ ଚାହୁଁଛନ୍ତି।\n"
+"    *    ଏହି ଅଧିବେଶନରେ ହୋଇଥିବା ପରିବର୍ତ୍ତନଗୁଡ଼ିକୁ ପ୍ରୟୋଗ କରିବା ପାଇଁ, ନାଁ କୁ କ୍ଲିକ କରନ୍ତୁ ଏବଂ "
+"ଅଦ୍ୟତନକୁ କ୍ଲିକ କରନ୍ତୁ।\n"
+"    *    ଆପଣଙ୍କର ପରିବର୍ତ୍ତନଗୁଡ଼ିକୁ ପ୍ରୟୋଗ ନକରି ସେହି ପ୍ରୟୋଗରୁ ବିଦାୟ ନେବା ପାଇଁ, ହଁ କ୍ଲିକ କରନ୍ତୁ। "
+"ଏହି ଅଧିବେଶନରେ ଆପଣ କରିଥିବା ସମସ୍ତ ପରିବର୍ତ୍ତନଗୁଡ଼ିକ ନଷ୍ଟ ହୋଇଯିବ।"
+
+#: ../sepolicy/sepolicy/gui.py:2801
+msgid "Loss of data Dialog"
+msgstr "ତଥ୍ୟ ନଷ୍ଟ ସଂଳାପ"
+
+#: ../sepolicy/sepolicy/__init__.py:83
+msgid "regular file"
+msgstr "ନିୟମିତ ଫାଇଲ"
+
+#: ../sepolicy/sepolicy/__init__.py:84
+msgid "directory"
+msgstr "ଡିରେକ୍ଟୋରି"
+
+#: ../sepolicy/sepolicy/__init__.py:85
+msgid "character device"
+msgstr "ବର୍ଣ୍ଣ ଉପକରଣ"
+
+#: ../sepolicy/sepolicy/__init__.py:86
+msgid "block device"
+msgstr "ବ୍ଲକ ଉପକରଣ"
+
+#: ../sepolicy/sepolicy/__init__.py:87
+msgid "socket file"
+msgstr "ସକେଟ ଫାଇଲ"
+
+#: ../sepolicy/sepolicy/__init__.py:88
+msgid "symbolic link"
+msgstr "ସାଙ୍କେତିକ ଲିଙ୍କ"
+
+#: ../sepolicy/sepolicy/__init__.py:89
+msgid "named pipe"
+msgstr "ନାମକରଣ ହୋଇଥିବା ପାଇପ"
+
+#: ../sepolicy/sepolicy/__init__.py:147
+msgid "No SELinux Policy installed"
+msgstr "କୌଣସି SELinux ନିତୀ ସ୍ଥାପିତ ହୋଇନାହିଁ"
+
+#: ../sepolicy/sepolicy/__init__.py:183
+#, python-format
+msgid "Failed to read %s policy file"
+msgstr "%s ନିତୀ ଫାଇଲକୁ ପଢ଼ିବାରେ ବିଫଳ"
+
+#: ../sepolicy/sepolicy/__init__.py:464
+#, python-format
+msgid "-- Allowed %s [ %s ]"
+msgstr "-- Allowed %s [ %s ]"
+
+#: ../sepolicy/sepolicy/__init__.py:890
+msgid "You must regenerate interface info by running /usr/bin/sepolgen-ifgen"
+msgstr ""
+"/usr/bin/sepolgen-ifgen କୁ ଚଲାଇ ଆପଣଙ୍କୁ ନିଶ୍ଚିତ ଭାବରେ ଅନ୍ତରାପୃଷ୍ଠ ସୂଚନାକୁ ପୁଣି ଦର୍ଶାଇବାକୁ "
+"ହେବ"
+
+#: ../sepolicy/sepolicy/__init__.py:1215
+msgid "unknown"
+msgstr "ଅଜଣା"
+
+#: ../sepolicy/sepolicy/interface.py:221
+#, python-format
+msgid "Compiling %s interface"
+msgstr ""
+
+#: ../sepolicy/sepolicy/interface.py:229
+#, python-format
+msgid ""
+"\n"
+"Compile test for %s failed.\n"
+msgstr ""
+
+#: ../sepolicy/sepolicy/interface.py:232
+#, python-format
+msgid ""
+"\n"
+"Compile test for %s has not run. %s\n"
+msgstr ""
+
+#: ../sepolicy/sepolicy/interface.py:238
+#, python-format
+msgid ""
+"\n"
+"Compiling of %s interface is not supported."
+msgstr ""
+
+#: ../sepolicy/sepolicy.py:219
+#, python-format
+msgid "Interface %s does not exist."
+msgstr "ଅନ୍ତରାପୃଷ୍ଠ %s ଅବସ୍ଥିତ ନାହିଁ।"
+
+#: ../sepolicy/sepolicy.py:316
+msgid "You need to install policycoreutils-gui package to use the gui option"
+msgstr ""
+"ଆପଣଙ୍କୁ  gui ବିକଳ୍ପ ପାଇଁ policycoreutils-gui ପ୍ୟାକେଜକୁ ସ୍ଥାପନ କରିବା ଆବଶ୍ୟକ ହୋଇଥାଏ"
+
+#: ../sepolicy/sepolicy.py:321
+msgid "Graphical User Interface for SELinux Policy"
+msgstr "SELinux ନିତୀ ପାଇଁ ଆଲେଖୀକ ଚାଳକ ଅନ୍ତରାପୃଷ୍ଠ"
+
+#: ../sepolicy/sepolicy.py:324 ../sepolicy/sepolicy.py:379
+msgid "Domain name(s) of man pages to be created"
+msgstr "ନିର୍ମାଣ କରିବାକୁ ଥିବା man ପୃଷ୍ଠାଗୁଡ଼ିକର ଡମେନ ନାମ(ଗୁଡ଼ିକ)"
+
+#: ../sepolicy/sepolicy.py:342
+msgid "Alternative root needs to be setup"
+msgstr "ବୈକଳ୍ପିକ ରୁଟକୁ ବ୍ୟବସ୍ଥା କରିବା ଆବଶ୍ୟକ"
+
+#: ../sepolicy/sepolicy.py:361
+msgid "Generate SELinux man pages"
+msgstr "SELinux man ପୃଷ୍ଠାଗୁଡ଼ିକୁ ପ୍ରସ୍ତୁତ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:364
+msgid "path in which the generated SELinux man pages will be stored"
+msgstr "ପ୍ରସ୍ତୁତ SELinux man ପୃଷ୍ଠାଗୁଡ଼ିକୁ ସଂରକ୍ଷଣ କରୁଥିବା ସ୍ଥାନର ପଥ"
+
+#: ../sepolicy/sepolicy.py:366
+msgid "name of the OS for man pages"
+msgstr "man ପୃଷ୍ଠାଗୁଡ଼ିକ ପାଇଁ OS ର ନାମ"
+
+#: ../sepolicy/sepolicy.py:368
+msgid "Generate HTML man pages structure for selected SELinux man page"
+msgstr "ବଚ୍ଛିତ SELinux man ପୃଷ୍ଠା ପାଇଁ HTML man ପୃଷ୍ଠାଗୁଡ଼ିକ ନିର୍ମାଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:370
+msgid "Alternate root directory, defaults to /"
+msgstr "ବୈକଳ୍ପିକ ରୁଟ ଡିରେକ୍ଟୋରୀ,  / ପାଇଁ ପୂର୍ବନିର୍ଦ୍ଧାରିତ"
+
+#: ../sepolicy/sepolicy.py:372
+msgid ""
+"With this flag, alternative root path needs to include file context files "
+"and policy.xml file"
+msgstr ""
+"ଏହି ସୂଚକ ସହିତ, ବୈକଳ୍ପିକ ରୁଟ ପଥକୁ ଫାଇଲ ପ୍ରସଙ୍ଗ ଫାଇଲ ଏବଂ policy.xml ଫାଇଲଗୁଡ଼ିକୁ ଅନ୍ତର୍ଭୁକ୍ତ "
+"କରିବା ଆବଶ୍ୟକ"
+
+#: ../sepolicy/sepolicy.py:376
+msgid "All domains"
+msgstr "ସମସ୍ତ ଡମେନଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy.py:385
+msgid "Query SELinux policy network information"
+msgstr "SELinux ନିତୀ ନେଟୱର୍କ ସୂଚନା ପ୍ରଶ୍ନ"
+
+#: ../sepolicy/sepolicy.py:390
+msgid "list all SELinux port types"
+msgstr "ସମସ୍ତ SELinux ପୋର୍ଟ ପ୍ରକାରଗୁଡ଼ିକୁ ତାଲିକାଭୁକ୍ତ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:393
+msgid "show SELinux type related to the port"
+msgstr "ପୋର୍ଟ ସହିତ ସମ୍ପୃକ୍ତ SELinux ପ୍ରକାରକୁ ଦର୍ଶାନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:396
+msgid "Show ports defined for this SELinux type"
+msgstr "ଏହି  SELinux ପ୍ରକାର ପାଇଁ ନିର୍ଦ୍ଦିଷ୍ଟ ପୋର୍ଟଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:399
+msgid "show ports to which this domain can bind and/or connect"
+msgstr "ଏହି ଡମେନ କେଉଁ ପୋର୍ଟ ସହିତ ବାନ୍ଧି ହୋଇପାରିବ ଏବଂ/ଅଥବା ସଂଯୁକ୍ତ ହୋଇପାରିବ ତାହା ଦର୍ଶାନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:402
+msgid "show ports to which this application can bind and/or connect"
+msgstr "କେଉଁ ପ୍ରୟୋଗ ସହିତ ଏହି ପୋର୍ଟଗୁଡ଼ିକୁ ବନ୍ଧା ହେବ ଏବଂ/ଅଥବା ସଂଯୁକ୍ତ ହେବ ତାହା ଦର୍ଶାନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:419
+msgid "query SELinux policy to see if domains can communicate with each other"
+msgstr ""
+"ଡମେନଗୁଡ଼ିକ ନିଜ ମଧ୍ଯରେ ଯୋଗାଯୋଗ କରିପାରୁଛନ୍ତି କି ନାହିଁ ତାହା ଜାଣିବା ପାଇଁ SELinux ନିତୀକୁ ପଚାରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:422
+msgid "Source Domain"
+msgstr "ଉତ୍ସ ଡମେନ"
+
+#: ../sepolicy/sepolicy.py:425
+msgid "Target Domain"
+msgstr "ଲକ୍ଷ୍ଯସ୍ଥଳ ଡମେନ"
+
+#: ../sepolicy/sepolicy.py:446
+msgid "query SELinux Policy to see description of booleans"
+msgstr "ବୁଲିଆନଗୁଡ଼ିକର ବର୍ଣ୍ଣନାକୁ ଦେଖିବା ପାଇଁ SELinux ନିତୀକୁ ପଚାରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:450
+msgid "get all booleans descriptions"
+msgstr "ସମସ୍ତ ବୁଲିଆନ ବର୍ଣ୍ଣନାକୁ ଗ୍ରହଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:453
+msgid "boolean to get description"
+msgstr "ବର୍ଣ୍ଣନା ପାଇବା ପାଇଁ ବୁଲିଆନ"
+
+#: ../sepolicy/sepolicy.py:465
+msgid ""
+"query SELinux Policy to see how a source process domain can transition to "
+"the target process domain"
+msgstr ""
+"ଉତ୍ସ ପଦ୍ଧତି ଡମେନ ଲକ୍ଷ୍ଯସ୍ଥଳ ପଦ୍ଧତି ଡମେନ ସହିତ କିପରି ସ୍ଥାନାନ୍ତରିତ ହୋଇଥାଏ ତାହା ଜାଣିବା ପାଇଁ "
+"SELinux ନିତୀକୁ ପଚାରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:468
+msgid "source process domain"
+msgstr "ଉତ୍ସ ପଦ୍ଧତି ଡମେନ"
+
+#: ../sepolicy/sepolicy.py:471
+msgid "target process domain"
+msgstr "ଲକ୍ଷ୍ଯସ୍ଥଳ ପଦ୍ଧତି ଡମେନ"
+
+#: ../sepolicy/sepolicy.py:516
+#, python-format
+msgid "sepolicy generate: error: one of the arguments %s is required"
+msgstr "sepolicy ସୃଷ୍ଟି କରିଥାଏ: ତ୍ରୁଟି: %s ମଧ୍ଯରୁ ଗୋଟିଏ ସ୍ୱତନ୍ତ୍ରଚର ଆବଶ୍ୟକ"
+
+#: ../sepolicy/sepolicy.py:521
+msgid "Command required for this type of policy"
+msgstr "ଏହି ପ୍ରକାରର ନିତୀ ପାଇଁ ନିର୍ଦ୍ଦେଶ ଆବଶ୍ୟକ"
+
+#: ../sepolicy/sepolicy.py:532
+#, python-format
+msgid ""
+"-t option can not be used with '%s' domains. Read usage for more details."
+msgstr ""
+"-t ବିକଳ୍ପକୁ '%s' ଡମେନ ସହିତ ବ୍ୟବହାର କରାଯାଇପାରିବ ନାହିଁ। ଅଧିକ ବିବରଣୀ ପାଇଁ ଉପଯୋଗିତାକୁ ପଢ଼ନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy.py:537
+#, python-format
+msgid ""
+"-d option can not be used with '%s' domains. Read usage for more details."
+msgstr ""
+"-d ବିକଳ୍ପକୁ '%s' ଡମେନଗୁଡ଼ିକ ସହିତ ବ୍ୟବହାର କରାଯାଇପାରିବ ନାହିଁ। ଅଧିକ ବିବରଣୀ ପାଇଁ ଉପଯୋଗିତାକୁ ପଢ଼ନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy.py:541
+#, python-format
+msgid ""
+"-a option can not be used with '%s' domains. Read usage for more details."
+msgstr ""
+"-a ବିକଳ୍ପକୁ '%s' ଡମେନଗୁଡ଼ିକ ସହିତ ବ୍ୟବହାର କରାଯାଇପାରିବ ନାହିଁ। ଅଧିକ ବିବରଣୀ ପାଇଁ ଉପଯୋଗିତାକୁ ପଢ଼ନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy.py:545
+msgid "-w option can not be used with the --newtype option"
+msgstr "-w ବିକଳ୍ପକୁ  --newtype ବିକଳ୍ପ ସହିତ ବ୍ୟବହାର କରାଯାଇପାରିବ ନାହିଁ"
+
+#: ../sepolicy/sepolicy.py:566
+msgid "List SELinux Policy interfaces"
+msgstr "SELinux ନିତୀ ଅନ୍ତରାପୃଷ୍ଠଗୁଡ଼ିକୁ ତାଲିକାଭୁକ୍ତ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:586
+msgid "Enter interface names, you wish to query"
+msgstr "ଆପଣ ପଚାରିବାକୁ ଚାହୁଁଥିବା ଅନ୍ତରାପୃଷ୍ଠ ନାମଗୁଡ଼ିକୁ ଭରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:596
+msgid "Generate SELinux Policy module template"
+msgstr "SELinux ନିତୀ ମଡ୍ୟୁଲ ନମୁନା ପ୍ରସ୍ତୁତ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:599
+msgid "Enter domain type which you will be extending"
+msgstr "ଆପଣ ବିସ୍ତାର କରୁଥିବା ଡମେନ ପ୍ରକାର ଭରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:602
+msgid "Enter SELinux user(s) which will transition to this domain"
+msgstr "SELinux ବ୍ୟବହାରକାରୀ(ମାନଙ୍କୁ) ଭରଣ କରନ୍ତୁ ଯାହାକି ଏହି ଡମେନକୁ ପରିବର୍ତ୍ତନ ହେବ"
+
+#: ../sepolicy/sepolicy.py:605
+msgid "Enter SELinux role(s) to which the administror domain will transition"
+msgstr "SELinux ନିୟମାବଳୀ(ଗୁଡ଼ିକୁ) ଭରଣ କରନ୍ତୁ ଯେଉଁଥିରେ ପ୍ରଶାସକ ଡମେନ ପରିବର୍ତ୍ତିତ ହେବ"
+
+#: ../sepolicy/sepolicy.py:608
+msgid "Enter domain(s) which this confined admin will administrate"
+msgstr "ଯେଉଁ ଡମେନ(ଗୁଡ଼ିକୁ) ଏହି ନିର୍ଦ୍ଦିଷ୍ଟ ପ୍ରଶାସକ ଚଲାଇବ ତାହାକୁ ଭରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:611
+msgid "name of policy to generate"
+msgstr "ପ୍ରସ୍ତୁତ କରିବାକୁ ଥିବା ନିତୀର ନାମ"
+
+#: ../sepolicy/sepolicy.py:618
+msgid "path in which the generated policy files will be stored"
+msgstr "ଯେଉଁ ପଥରେ ସୃଷ୍ଟି ହୋଇଥିବା ନିତୀ ଫାଇଲଗୁଡ଼ିକୁ ସଂରକ୍ଷଣ କରାଯିବ"
+
+#: ../sepolicy/sepolicy.py:620
+msgid "path to which the confined processes will need to write"
+msgstr "ଯେଉଁ ପଥରେ ସିମୀତ ପଦ୍ଧତିଗୁଡ଼ିକୁ ଲେଖିବା ଆବଶ୍ଯକ"
+
+#: ../sepolicy/sepolicy.py:621
+msgid "Policy types which require a command"
+msgstr "ନିର୍ଦ୍ଦେଶ ଆବଶ୍ୟକ କରୁଥିବା ନିତୀ ପ୍ରକାର"
+
+#: ../sepolicy/sepolicy.py:625 ../sepolicy/sepolicy.py:628
+#: ../sepolicy/sepolicy.py:631 ../sepolicy/sepolicy.py:634
+#: ../sepolicy/sepolicy.py:637 ../sepolicy/sepolicy.py:643
+#: ../sepolicy/sepolicy.py:646 ../sepolicy/sepolicy.py:649
+#: ../sepolicy/sepolicy.py:655 ../sepolicy/sepolicy.py:658
+#: ../sepolicy/sepolicy.py:661 ../sepolicy/sepolicy.py:664
+#, python-format
+msgid "Generate '%s' policy"
+msgstr "'%s' ନିତୀ ନିର୍ମାଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:652
+#, python-format
+msgid "Generate '%s' policy "
+msgstr "'%s' ନିତୀ ନିର୍ମାଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy.py:666
+msgid "executable to confine"
+msgstr "ସୀମିତ ରଖିବା ପାଇଁ ନିଷ୍ପାଦନଯୋଗ୍ୟ"
+
+#: ../sepolicy/sepolicy.py:671
+msgid "commands"
+msgstr "ନିର୍ଦ୍ଦେଶଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy.py:674
+msgid "Alternate SELinux policy, defaults to /sys/fs/selinux/policy"
+msgstr "ବୈକଳ୍ପିକ SELinux ନିତୀ,  /sys/fs/selinux/policy ରେ ପୂର୍ବନିର୍ଦ୍ଧାରିତ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:25
+#: ../sepolicy/sepolicy/sepolicy.glade:4320
+msgid "Applications"
+msgstr "ପ୍ରୟୋଗଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:52
+msgid "Select domain"
+msgstr "ଡମେନ ବାଛନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:189
+#: ../sepolicy/sepolicy/sepolicy.glade:4357
+#: ../sepolicy/sepolicy/sepolicy.glade:4450
+#: ../sepolicy/sepolicy/sepolicy.glade:4596
+#: ../sepolicy/sepolicy/sepolicy.glade:4745
+#: ../sepolicy/sepolicy/sepolicy.glade:4879
+#: ../sepolicy/sepolicy/sepolicy.glade:5020
+#: ../sepolicy/sepolicy/sepolicy.glade:5093
+#: ../sepolicy/sepolicy/sepolicy.glade:5228
+msgid "Select"
+msgstr "ବାଛନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:204
+#: ../sepolicy/sepolicy/sepolicy.glade:539
+#: ../sepolicy/sepolicy/sepolicy.glade:684
+#: ../sepolicy/sepolicy/sepolicy.glade:1239
+#: ../sepolicy/sepolicy/sepolicy.glade:1535
+#: ../sepolicy/sepolicy/sepolicy.glade:4530
+#: ../sepolicy/sepolicy/sepolicy.glade:4680
+#: ../sepolicy/sepolicy/sepolicy.glade:4811
+#: ../sepolicy/sepolicy/sepolicy.glade:4945
+#: ../sepolicy/sepolicy/sepolicy.glade:5163
+#: ../sepolicy/sepolicy/sepolicy.glade:5294
+#: ../sepolicy/sepolicy/sepolicy.glade:5454
+msgid "Cancel"
+msgstr "ବାତିଲ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:332
+msgid ""
+"The entry that was entered is incorrect.  Please try again in the "
+"ex:/.../... format."
+msgstr "ନିବେଶ କରାଯାଇଥିବା ଭରଣଟି ଭୁଲ ଅଛି।  ଦୟାକରି ex:/.../... ଶୈଳୀରେ ପୁଣିଥରେ ଚେଷ୍ଟା କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:358
+msgid "Retry"
+msgstr "ପୁନଃପ୍ରଚେଷ୍ଟା"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:442
+#: ../sepolicy/sepolicy/sepolicy.glade:1120
+#: ../sepolicy/sepolicy/sepolicy.glade:1368
+#: ../sepolicy/sepolicy/sepolicy.glade:5322
+msgid "Network Port Definitions"
+msgstr "ନେଟୱର୍କ ପୋର୍ଟ ସଂଜ୍ଞା"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:458
+msgid ""
+"Add file Equivalence Mapping.  Mapping will be created when Update is "
+"applied."
+msgstr "ଫାଇଲ ସମାନତା ମେଳକ ଯୋଗ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ମେଳକ ନିର୍ମାଣ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:483
+#: ../sepolicy/sepolicy/sepolicy.glade:4036
+msgid "Path"
+msgstr "ପଥ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:493
+#: ../sepolicy/sepolicy/sepolicy.glade:5374
+msgid ""
+"Specify a new SELinux user name.  By convention SELinux User names usually "
+"end in an _u."
+msgstr ""
+"ନୂତନ ଏକ SELinux ବ୍ୟବହାରକାରୀ ନାମ ଉଲ୍ଲେଖ କରନ୍ତୁ। ନାମ ଅନୁସାରେ SELinux ବ୍ୟବହାରକାରୀ ନାମ "
+"ସାଧାରଣତଃ an _u ରେ ସମାପ୍ତ ହୋଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:497
+msgid "Enter the path to which you want to setup an equivalence label."
+msgstr "ଆପଣ ସମାନତା ନାମପଟିକୁ ବ୍ୟବସ୍ଥା କରିବା ପାଇଁ ଚାହୁଁଥିବା ପଥ ସେଟ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:510
+#: ../sepolicy/sepolicy/sepolicy.glade:4053
+#: ../sepolicy/sepolicy/sepolicy.glade:4771
+msgid "Equivalence Path"
+msgstr "ସମାନତା ପଥ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:524
+#: ../sepolicy/sepolicy/sepolicy.glade:669
+#: ../sepolicy/sepolicy/sepolicy.glade:1224
+#: ../sepolicy/sepolicy/sepolicy.glade:1520
+#: ../sepolicy/sepolicy/sepolicy.glade:5439
+msgid "Save to update"
+msgstr "ଅଦ୍ୟତନ କରିବା ପାଇଁ ସଂରକ୍ଷଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:564
+msgid ""
+"Specify the mapping between the new path and the equivalence path.  "
+"Everything under this new path will be labeled as if they were under the "
+"equivalence path."
+msgstr ""
+"ନୂତନ ପଥ ଏବଂ ସମାନତା ପଥ ମଧ୍ଯରେ ମେଳକକୁ ଉଲ୍ଲେଖ କରନ୍ତୁ। ଏହି ନୂତନ ପଥ ଅନ୍ତର୍ଗତରେ ସମସ୍ତଙ୍କୁ "
+"ନାମକରଣ କରାଯାଇଥାଏ ଯେପରିକି ସେଗୁଡ଼ିକ ସମାନ ଅଟେ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:621
+msgid "Add a file"
+msgstr "ଗୋଟିଏ ଫାଇଲ ଯୋଗକରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:638
+msgid ""
+"<operation> File Labeling for <selected domain>. File labels will be created "
+"when update is applied."
+msgstr ""
+"<operation> <selected domain> ପାଇଁ ଫାଇଲ ନାମକରଣ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ଫାଇଲ "
+"ନାମକରଣ ନିର୍ମାଣ ହୋଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:711
+#: ../sepolicy/sepolicy/sepolicy.glade:1485
+msgid "MLS"
+msgstr "MLS"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:747
+#: ../sepolicy/sepolicy/sepolicy.glade:2306
+#: ../sepolicy/sepolicy/sepolicy.glade:2418
+#: ../sepolicy/sepolicy/sepolicy.glade:2540
+#: ../sepolicy/sepolicy/sepolicy.glade:4490
+msgid "Class"
+msgstr "ଶ୍ରେଣୀ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:763
+msgid "Type"
+msgstr "ପ୍ରକାର"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:777
+msgid ""
+"Select the file class to which this label will be applied.  Defaults to all "
+"classes."
+msgstr ""
+"ଫାଇଲ ଶ୍ରେଣୀକୁ ବାଛନ୍ତୁ ଯେଉଁଥିରେ ନାମକରଣକୁ ପ୍ରୟୋଗ କରାଯାଇଥାଏ।  ସମସ୍ତ ଶ୍ରେଣୀଗୁଡ଼ିକ ପାଇଁ "
+"ପୂର୍ବନିର୍ଦ୍ଧାରିତ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:804
+msgid "Make Path Recursive"
+msgstr "ପୁନଃପୌନିକ ଭାବରେ ପଥ ନିର୍ମାଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:808
+msgid ""
+"Select Make Path Recursive if you want to apply this label to all children "
+"of the specified directory path. objects under the directory to have this "
+"label."
+msgstr ""
+"ଯଦି ଆପଣ ଏହି ନାମକୁ ନିର୍ଦ୍ଦିଷ୍ଟ ଡିରେକ୍ଟୋରୀ ପଥର ସମସ୍ତ ଅନୁଗାମୀରେ ପ୍ରୟୋଗ କରିବା ପାଇଁ ଇଚ୍ଛାକରୁଛନ୍ତି "
+"ତେବେ ପଥକୁ ପୁନରାବର୍ରତ୍ତୀ କରନ୍ତୁକୁ ବାଛନ୍ତୁ। ସେହି ଡିରେକ୍ଟୋରୀ ଅନ୍ତର୍ଗତରେ ଥିବା ବସ୍ତୁଗୁଡ଼ିକ ଏହିପରି "
+"ନାମକରଣ ହୋଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:821
+msgid "Browse"
+msgstr "ବ୍ରାଉଜ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:825
+msgid "Browse to select the file/directory for labeling."
+msgstr "ନାମକରଣ ପାଇଁ ଫାଇଲ/ଡିରେକ୍ଟୋରୀକୁ ବାଛିବା ପାଇଁ ବ୍ରାଉଜ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:869
+msgid "Path  "
+msgstr "ପଥ  "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:880
+msgid ""
+"Specify the path using regular expressions that you would like to modify the "
+"labeling."
+msgstr ""
+"ନିୟମିତ ଅଭିବ୍ୟକ୍ତିଗୁଡ଼ିକୁ ବ୍ୟବହାର କରି ପଥ ଉଲ୍ଲେଖ କରନ୍ତୁ ଯାହାକୁ ଆପଣ ନାମପଟିକୁ ପରିବର୍ତ୍ତନ କରିବା ପାଇଁ "
+"ବ୍ୟବହାର କରନ୍ତି।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:902
+msgid "Select the SELinux file type to assign to this path."
+msgstr "ଏହି ପଥରେ ନ୍ୟସ୍ତ କରିବା ପାଇଁ SELinux ଫାଇଲ ପ୍ରକାରକୁ ବାଛନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:929
+msgid "Enter the MLS Label to assign to this file path."
+msgstr "ଏହି ଫାଇଲ ପଥରେ ନ୍ୟସ୍ତ କରିବା ପାଇଁ MLS ନାମପଟିକୁ ଭରଣ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:933
+msgid "SELinux MLS Label you wish to assign to this path."
+msgstr "ଏହି ପଥରେ ନ୍ୟସ୍ତ କରିବା ପାଇଁ ଚାହୁଁଥିବା SELinux MLS ନାମପଟି।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1070
+msgid "Analyzing Policy..."
+msgstr "ନିତୀକୁ ବିଶ୍ଳେଷଣ କରୁଅଛି ..."
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1137
+msgid ""
+"Add Login Mapping. Login Mapping will be created when update is applied."
+msgstr ""
+"ଲଗଇନ ମ୍ୟାପିଙ୍ଗକୁ ଯୋଗ କରନ୍ତୁ। ଲଗଇନ ମ୍ୟାପିଙ୍ଗକୁ ନିର୍ମାଣ କରାଯିବ ଯେତେବେଳେ ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ "
+"କରାଯାଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1172
+msgid ""
+"Enter the login user name of the user to which you wish to add SELinux User "
+"confinement."
+msgstr ""
+"ବ୍ୟବହାରକାରୀର ଲଗଇନ ବ୍ୟବହାରକାରୀ ନାମ ଭରଣ କରନ୍ତୁ ଯେଉଁଥିରେ ଆପଣ SELinux ବ୍ୟବହାରକାରୀବନ୍ଧନକୁ "
+"ଯୋଗ କରିବାକୁ ଚାହୁଁଛନ୍ତି।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1201
+msgid ""
+"Select the SELinux User to assign to this login user.  Login users by "
+"default get assigned by the __default__ user."
+msgstr ""
+"ଏହି ଲଗଇନ ବ୍ୟବହାରକାରୀକୁ ନ୍ୟସ୍ତ କରିବା ପାଇଁ SELinux ବ୍ୟବହାରକାରୀଙ୍କୁ ବାଛନ୍ତୁ। ଲଗଇନ "
+"ବ୍ୟବହାରାକାରୀମାନେ ପୂର୍ବନିର୍ଦ୍ଧାରିତ ଭାବରେ __default__ user ଦ୍ୱାରା ନ୍ୟସ୍ତ ହୋଇଥାନ୍ତି।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1264
+msgid ""
+"Enter MLS/MCS Range for this login User.  Defaults to the range for the "
+"Selected SELinux User."
+msgstr ""
+"ଏହି ଲଗଇନ ବ୍ୟବହାରକାରୀ ପାଇଁ MLS/MCS ପରିସରକୁ ଭରଣ କରନ୍ତୁ।  ବଚ୍ଛିତ SELinux ବ୍ୟବହାରକାରୀଙ୍କ "
+"ପାଇଁ ପୂର୍ବନିର୍ଦ୍ଧାରିତ ପରିସର।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1267
+#: ../sepolicy/sepolicy/sepolicy.glade:3182
+#: ../sepolicy/sepolicy/sepolicy.glade:3303
+#: ../sepolicy/sepolicy/sepolicy.glade:5404
+msgid "MLS Range"
+msgstr "MLS ପରିସୀମା"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1279
+msgid ""
+"Specify the MLS Range for this user to login in with.  Defaults to the "
+"selected SELinux Users MLS Range."
+msgstr ""
+"ଏହି ଲଗଇନ କରିବା ପାଇଁ MLS ପରିସରକୁ ଉଲ୍ଲେଖ କରନ୍ତୁ।  ବଚ୍ଛିତ SELinux ବ୍ୟବହାରକାରୀପରିସର ପାଇଁ "
+"ପୂର୍ବନିର୍ଦ୍ଧାରିତ ପରିସର।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1385
+msgid ""
+"<operation> Network Port for <selected domain>.  Ports will be created when "
+"update is applied."
+msgstr ""
+"<operation> <selected domain> ପାଇଁ ନେଟୱର୍କ ପୋର୍ଟ।  ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ "
+"ପୋର୍ଟଗୁଡ଼ିକୁ ନିର୍ମାଣ କରାଯାଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1423
+msgid "Enter the port number or range to which you want to add a port type."
+msgstr ""
+"ପୋର୍ଟ କ୍ରମ ସଂଖ୍ୟା ଅଥବା ପରିସରକୁ ଭରଣ କରନ୍ତୁ ଯେଉଁଥିରେ ଆପଣ ଏକ ପୋର୍ଟ ପ୍ରକାରକୁ ଯୋଗ କରିବାକୁ "
+"ଚାହୁଁଛନ୍ତି।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1439
+#: ../sepolicy/sepolicy/sepolicy.glade:2658
+#: ../sepolicy/sepolicy/sepolicy.glade:2756
+#: ../sepolicy/sepolicy/sepolicy.glade:4623
+msgid "Protocol"
+msgstr "ପ୍ରଟୋକଲ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1453
+msgid "Port Type"
+msgstr "ପୋର୍ଟ ପ୍ରକାର"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1498
+msgid "Select the port type you want to assign to the specified port number."
+msgstr "ଉଲ୍ଲିଖିତ ପୋର୍ଟ କ୍ରମ ସଂଖ୍ୟାରେ ଆପଣ ନ୍ୟସ୍ତ କରିବାକୁ ଚାହୁଁଥିବା ପୋର୍ଟ ପ୍ରକାରକୁ ବାଛନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1562
+msgid "tcp"
+msgstr "tcp"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1566
+msgid ""
+"Select <b>tcp</b> if the port type should be assigned to tcp port numbers."
+msgstr ""
+"<b>tcp</b> କୁ ବାଛନ୍ତୁ ଯଦି ପୋର୍ଟ ପ୍ରକାରକୁ tcp ପୋର୍ଟ କ୍ରମ ସଂଖ୍ୟାକୁ ନ୍ୟସ୍ତ କରିବା ଉଚିତ ହୋଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1579
+msgid "udp"
+msgstr "udp"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1583
+msgid ""
+"Select <b>udp</b> if the port type should be assigned to udp port numbers."
+msgstr "<b>udp</b> କୁ ବାଛନ୍ତୁ ଯଦି ପୋର୍ଟ ପ୍ରକାରକୁ udp ପୋର୍ଟ କ୍ରମ ସଂଖ୍ୟାରେ ନ୍ୟସ୍ତ କରିବା ଉଚିତ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1605
+msgid "Enter the MLS Label to assign to this port."
+msgstr "ଏହି ପୋର୍ଟରେ ନ୍ୟସ୍ତ କରିବା ପାଇଁ MLS ନାମପଟିକୁ ଭରଣ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1707
+msgid "SELinux Configuration"
+msgstr "SELinux ବିନ୍ଯାସ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1743
+msgid "Select..."
+msgstr "ଚୟନ କରନ୍ତୁ..."
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1792
+#: ../sepolicy/sepolicy/sepolicy.glade:2212
+msgid "Booleans"
+msgstr "ବୁଲିଆନଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1796
+msgid ""
+"Display boolean information that can be used to modify the policy for the "
+"'selected domain'."
+msgstr ""
+"ବୁଲିଆନ ସୂଚନା ଦର୍ଶାନ୍ତୁ ଯାହାକୁ 'ବଚ୍ଛିତ ଡମେନ' ପାଇଁ ନିତୀ ପରିବର୍ତ୍ତନ କରିବାକୁ ବ୍ୟବହାର କରାଯାଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1810
+#: ../sepolicy/sepolicy/sepolicy.glade:2597
+msgid "Files"
+msgstr "ଫାଇଲଗୁଡିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1814
+msgid ""
+"Display file type information that can be used by the 'selected domain'."
+msgstr "ଫାଇଲ ପ୍ରକାର ସୂଚନା ଦର୍ଶାନ୍ତୁ ଯାହାକୁ 'ବଚ୍ଛିତ ଡମେନ' ଦ୍ୱାରା ବ୍ୟବହାର କରାଯାଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1828
+#: ../sepolicy/sepolicy/sepolicy.glade:2830
+msgid "Network"
+msgstr "ନେଟୱର୍କ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1832
+msgid ""
+"Display network ports to which the 'selected domain' can connect or listen "
+"to."
+msgstr ""
+"ନେଟୱର୍କ ପୋର୍ଟଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ ଯାହା ସହିତ 'ବଚ୍ଛିତ ଡମେନ' ସଂଯୋଗ ହୋଇପାରିବ କିମ୍ବା ଉତ୍ତର ପାଇ ପାରିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1846
+#: ../sepolicy/sepolicy/sepolicy.glade:3111
+msgid "Transitions"
+msgstr "ପରିବର୍ତ୍ତନଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1850
+msgid ""
+"Display applications that can transition into or out of the 'selected "
+"domain'."
+msgstr "ପ୍ରୟୋଗଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ ଯାହାକି 'ବଚ୍ଛିତ ଡମେନ'ଭିତରକୁ କିମ୍ବା ବାହାରକୁ ପରିବର୍ତ୍ତିତ ହୋଇପାରିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1864
+#: ../sepolicy/sepolicy/sepolicy.glade:3212
+msgid "Login Mapping"
+msgstr "ଲଗଇନ ମେଳକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1867
+#: ../sepolicy/sepolicy/sepolicy.glade:1884
+#: ../sepolicy/sepolicy/sepolicy.glade:1901
+msgid "Manage the SELinux configuration"
+msgstr "SELinux ବିନ୍ଯାସକୁ ପରିଚାଳନା କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1881
+#: ../sepolicy/sepolicy/sepolicy.glade:3334
+msgid "SELinux Users"
+msgstr "SELinux ବ୍ୟବହାରକାରୀମାନେ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1915
+#: ../sepolicy/sepolicy/sepolicy.glade:4006
+msgid "Lockdown"
+msgstr "ଲକଡାଉନ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1918
+msgid ""
+"Lockdown the SELinux System.\n"
+"This screen can be used to turn up the SELinux Protections."
+msgstr ""
+"SELinux ତନ୍ତ୍ରକୁ ଲକଡାଉନ କରନ୍ତୁ।\n"
+"ଏହି ପରଦାକୁ SELinux ସୁରକ୍ଷାକୁ ଅନ କରିବା ପାଇଁ ବ୍ୟବହାର କରାଯାଇପାରିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1933
+msgid "radiobutton"
+msgstr "ରେଡିଓ ବଟନ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:1993
+msgid "Filter"
+msgstr "ଛାଣନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2021
+msgid "Show Modified Only"
+msgstr "କେବଳ ପରିବର୍ତ୍ତିତଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2060
+msgid "Mislabeled files exist"
+msgstr "ନାମହୀନ ଫାଇଲଗୁଡ଼ିକ ଅବସ୍ଥିତ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2080
+msgid "Show mislabeled files only"
+msgstr "କେବଳ ନାମହୀନ ଫାଇଲଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2120
+#: ../sepolicy/sepolicy/sepolicy.glade:3234
+msgid ""
+"If-Then-Else rules written in policy that can\n"
+"allow alternative access control."
+msgstr ""
+"If-Then-Else ନିୟମଗୁଡ଼ିକ ନିତୀରେ ଲେଖା ହୋଇଛି ଯାହାକି \n"
+"ବୈକଳ୍ପିକ ଅଭିଗମ୍ୟତା ନିୟନ୍ତ୍ରଣକୁ ଅନୁମତି ଦେଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2132
+msgid "Enabled"
+msgstr "ସକ୍ରିୟ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2183
+msgid "Name"
+msgstr "ନାମ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2252
+#: ../sepolicy/sepolicy/sepolicy.glade:2364
+#: ../sepolicy/sepolicy/sepolicy.glade:2482
+#: ../sepolicy/sepolicy/sepolicy.glade:4463
+#: ../sepolicy/sepolicy/sepolicy.glade:4758
+msgid "File Path"
+msgstr "ଫାଇଲ ପଥ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2288
+#: ../sepolicy/sepolicy/sepolicy.glade:2399
+msgid "SELinux File Type"
+msgstr "SELinux ଫାଇଲ ପ୍ରକାର"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2332
+msgid "File path used to enter the 'selected domain'."
+msgstr "'ବଚ୍ଛିତ ଡମେନ' କୁ ଭରଣ କରିବା ପାଇଁ ବ୍ୟବହୃତ ଫାଇଲ ପଥ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2333
+msgid "Executable Files"
+msgstr "ନିଷ୍ପାଦନଯୋଗ୍ୟ ଫାଇଲଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2448
+msgid "Files to which the 'selected domain' can write."
+msgstr "'ବଚ୍ଛିତ ଡମେନ' ଲେଖି ପାରୁଥିବା ଫାଇଲଗୁଡ଼ିକ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2449
+msgid "Writable files"
+msgstr "ଲେଖିବା ଯୋଗ୍ୟ ଫାଇଲଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2571
+msgid "File Types defined for the 'selected domain'."
+msgstr "'ବଚ୍ଛିତ ଡମେନ' ପାଇଁ ବ୍ଯାଖ୍ୟା କରାଯାଇଥିବା ଫାଇଲ ପ୍ରକାର।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2572
+msgid "Application File Types"
+msgstr "ପ୍ରୟୋଗ ଫାଇଲ ପ୍ରକାରଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2639
+#: ../sepolicy/sepolicy/sepolicy.glade:2738
+#: ../sepolicy/sepolicy/sepolicy.glade:4609
+msgid "Port"
+msgstr "ସଂଯୋଗିକୀ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2704
+msgid "Network Ports to which the 'selected domain' is allowed to connect."
+msgstr "ଯେଉଁ ନେଟୱର୍କ ପୋର୍ଟଗୁଡ଼ିକ ସହିତ 'ବଚ୍ଛିତ ଡମେନ' ସଂଯୋଗ ହେବା ପାଇଁ ଅନୁମତି ପ୍ରାପ୍ତ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2705
+msgid "Outbound"
+msgstr "ଯାଉଥିବା"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2804
+msgid "Network Ports to which the 'selected domain' is allowed to listen."
+msgstr "ଯେଉଁ ନେଟୱର୍କ ପୋର୍ଟଗୁଡ଼ିକ ସହିତ 'ବଚ୍ଛିତ ଡମେନ' ଉତ୍ତର ପାଇବା ପାଇଁ ଅନୁମତି ପ୍ରାପ୍ତ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2805
+msgid "Inbound"
+msgstr "ଆସୁଥିବା"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2866
+#: ../sepolicy/sepolicy/sepolicy.glade:2946
+msgid ""
+"Boolean\n"
+"Enabled"
+msgstr ""
+"ବୁଲିଆନ \n"
+"ସକ୍ରିୟ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2882
+#: ../sepolicy/sepolicy/sepolicy.glade:2978
+msgid "Executable File"
+msgstr "ନିଷ୍ପାଦନଯୋଗ୍ୟ ଫାଇଲ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2899
+msgid "SELinux Application Type"
+msgstr "SELinux ପ୍ରୟୋଗ ପ୍ରକାର"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2920
+msgid ""
+"Executables which will transition to a different domain, when the 'selected "
+"domain' executes them."
+msgstr ""
+"ଭିନ୍ନ ଏକ ଡମେନକୁ ପରିବର୍ତ୍ତିତ ହେଉଥିବା ନିଷ୍ପାଦନଗୁଡ଼ିକ, ଯେତେବେଳେ ଏକ ବଚ୍ଛିତ ଡମେନଗୁଡ଼ିକତାହାକୁ ନିଷ୍ପାଦନ "
+"କରିଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2923
+msgid "Application Transitions From 'select domain'"
+msgstr "'ଡମେନ ବାଛନ୍ତୁ' ରୁ ପ୍ରୟୋଗ ପରିବର୍ତ୍ତନ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:2962
+msgid "Calling Process Domain"
+msgstr "ପଦ୍ଧତି ଡମେନକୁ ଡ଼ାକୁଅଛି"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3002
+msgid ""
+"Executables which will transition to the 'selected domain', when executing a "
+"selected domains entrypoint."
+msgstr ""
+"'ବଚ୍ଛିତ ଡମେନ' କୁ ପରିବର୍ତ୍ତିତ ହେଉଥିବା ନିଷ୍ପାଦନଗୁଡ଼ିକ, ଯେତେବେଳେ ଏକ ବଚ୍ଛିତ ଡମେନଗୁଡ଼ିକର ପ୍ରବେଶ "
+"ସ୍ଥାନରେ ନିଷ୍ପାଦନ କରିଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3003
+msgid "Application Transitions Into 'select domain'"
+msgstr "'ଡମେନ ବାଛନ୍ତୁ' ରୁ ପ୍ରୟୋଗ ପରିବର୍ତ୍ତନ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3018
+msgid ""
+"File Transitions define what happens when the current domain creates the "
+"content of a particular class in a directory of the destination type. "
+"Optionally a file name could be specified for the transition."
+msgstr ""
+"ଲକ୍ଷ୍ଯସ୍ଥଳ ପ୍ରକାରର ଡିରେକ୍ଟୋରୀରେ ପ୍ରଚଳିତ ଡମେନ ଏକ ନିର୍ଦ୍ଦିଷ୍ଟ ଶ୍ରେଣୀର ବିଷୟବସ୍ତୁ ନିର୍ମାଣ କରିବା "
+"ସମୟରେ ଯାହା ହୋଇଥାଏ ତାହାକୁ ଫାଇଲ ସ୍ଥାନାନ୍ତରଣ ବ୍ୟାଖ୍ୟା କରିଥାଏ।ବୈକଳ୍ପିକ ଭାବରେ ଏକ ଫାଇଲ "
+"ନାମକୁ ସେହି ସ୍ଥାନାନ୍ତରଣ ପାଇଁ ଉଲ୍ଲେଖ କରାଯାଇ ପାରିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3026
+msgid "SELinux Directory Type"
+msgstr "SELinux ଡିରେକ୍ଟୋରୀ ପ୍ରକାର"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3039
+msgid "Destination Class"
+msgstr "ଲକ୍ଷସ୍ଥଳ ଶ୍ରେଣୀ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3053
+msgid "SELinux Destination Type"
+msgstr "SELinux ଲକ୍ଷ୍ଯସ୍ଥଳ ପ୍ରକାର"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3066
+msgid "File Name"
+msgstr "ଫାଇଲ ନାମ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3088
+msgid "File Transitions From 'select domain'"
+msgstr "'ଡମେନ ବାଛନ୍ତୁ' ରୁ ଫାଇଲ ସ୍ଥାନାନ୍ତରଣ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3287
+#: ../sepolicy/sepolicy/sepolicy.glade:5498
+msgid "Default Level"
+msgstr "ପୂର୍ବନିର୍ଦ୍ଧାରିତ ସ୍ତର"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3373
+msgid "Select the system mode when the system first boots up"
+msgstr "ତନ୍ତ୍ର ଧାରାକୁ ବାଛନ୍ତୁ ଯେତେବେଳେ ତନ୍ତ୍ର first boots ଅପ ଥାଏ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3385
+#: ../sepolicy/sepolicy/sepolicy.glade:3459
+msgid "Enforcing"
+msgstr "କାର୍ଯ୍ୟକାରୀ କରୁଅଛି"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3404
+#: ../sepolicy/sepolicy/sepolicy.glade:3477
+msgid "Permissive"
+msgstr "ଅନୁମୋଦନକାରୀ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3446
+msgid "Select the system mode for the current session"
+msgstr "ପ୍ରଚଳିତ ଅଧିବେଶନ ପାଇଁ ତନ୍ତ୍ର ଧାରାକୁ ବାଛନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3523
+msgid "System Policy Type:"
+msgstr "ତନ୍ତ୍ର ନୀତିର ପ୍ରକାର: "
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3584
+msgid "<b>System Mode</b>"
+msgstr "<b>ତନ୍ତ୍ର ଧାରା:</b>"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3622
+msgid "Import system settings from another machine"
+msgstr "ଅନ୍ୟ ଏକ ତନ୍ତ୍ରରୁ ତନ୍ତ୍ର ସଂରଚନାକୁ ଆମଦାନୀ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3630
+msgid "Import"
+msgstr "ଆମଦାନୀ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3649
+msgid "Export system settings to a file"
+msgstr "ତନ୍ତ୍ର ସଂରଚନାକୁ ଏକ ଫାଇଲରେ ରପ୍ତାନୀ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3659
+msgid "Export"
+msgstr "ରତ୍ପାନୀ କର"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3678
+msgid "Relabel all files back to system defaults on reboot"
+msgstr "ପୁନଃଚାଳନ ସମୟରେ ତନ୍ତ୍ର ପୂର୍ବନିର୍ଦ୍ଧାରିତ ଭାବରେ ସମସ୍ତ ଫାଇଲଗୁଡ଼ିକର ପୁନଃ ନାମକରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3773
+msgid "<b>System Configuration</b>"
+msgstr "<b> ତନ୍ତ୍ର ସଂରଚନା</b>"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3820
+#: ../sepolicy/sepolicy/sepolicy.glade:3838
+msgid ""
+"An unconfined domain is a process label that allows the process to do what "
+"it wants, without SELinux interfering.  Applications started at boot by the "
+"init system that SELinux do not have defined SELinux policy will run as "
+"unconfined if this module is enabled.  Disabling it means all daemons will "
+"now be confined.  To disable the unconfined_t user you must first remove "
+"unconfined_t from the users/login screens."
+msgstr ""
+"ଏକ ଅସିମୀତ ଡମେନ ହେଉଛି ଏକ ପଦ୍ଧତି ସ୍ତର ଯାହାକି ସେହି ପଦ୍ଧତିକୁ ମନଇଚ୍ଛା କାମ କରିବା ପାଇଁ ଅନୁମତି "
+"ଦେଇଥାଏ, SELinux ହସ୍ତକ୍ଷେପ ବିନା। init ତନ୍ତ୍ର ଦ୍ୱାରା ବୁଟ ସମୟରେ ଆରମ୍ଭ ହୋଇଥିବା ପ୍ରୟୋଗଗୁଡ଼ିକ "
+"ଯାହା ପାଇଁ SELinux ଟି SELinux ନିୟମାବଳୀ ଲାଗୁ କରିନଥାଏ ତାହା ଅସିମୀତ ଭାବରେ ଚାଲିଥାଏ ଯଦିସେହି "
+"ମଡ୍ୟୁଲ ସକ୍ରିୟ ଥାଏ।  ଏହାକୁ ନିଷ୍କ୍ରିୟ କରିବା ଅର୍ଥ ହେଉଛି ସମସ୍ତ ଡେମନଗୁଡ଼ିକୁ ବର୍ତ୍ତମାନ ସିମୀତ କରାଯିବ।  "
+"unconfined_tବ୍ୟବହାରକାରୀଙ୍କୁ ନିଷ୍କ୍ରିୟ କରିବା ପାଇଁ ଆପଣଙ୍କୁ ପ୍ରଥମେ unconfined_t କୁ "
+"ବ୍ୟବହାରକାରୀ/ଲଗଇନ ପରଦାଗୁଡ଼ିକରୁ ବାହାର କରିବାକୁ ହେବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3856
+msgid "<b>Disable ability to run unconfined system processes?</b>"
+msgstr "<b>ସିମୀତ ତନ୍ତ୍ର ପଦ୍ଧତିଗୁଡ଼ିକୁ ଚଲାଇବା ପାଇଁ କ୍ଷମତାକୁ ନିଷ୍କ୍ରିୟ କରିବେ କି?</b>"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3884
+#: ../sepolicy/sepolicy/sepolicy.glade:3901
+#: ../sepolicy/sepolicy/sepolicy.glade:3947
+#: ../sepolicy/sepolicy/sepolicy.glade:3964
+msgid ""
+"A permissive domain is a process label that allows the process to do what it "
+"wants, with SELinux only logging the denials, but not enforcing them.  "
+"Usually permissive domains indicate experimental policy, disabling the "
+"module could cause SELinux to deny access to a domain, that should be "
+"allowed."
+msgstr ""
+"permissive ଡମେନ ହେଉଛି ଏକ ପ୍ରକ୍ରିୟା ସ୍ତର ଯାହାକି ସେହି ପ୍ରକ୍ରିୟାକୁ ମନଇଚ୍ଛା କାମ କରିବା ପାଇଁ "
+"ଅନୁମତି ଦେଇଥାଏ, SELinux କେବଳ ଲଗଇନକୁ ବାରଣ କରିଥାଏ, କିନ୍ତୁ ସେଗୁଡ଼ିକୁ enforcing କରିନଥାଏ।"
+"ସାଧାରଣତଃ permissive ଡମେନଗୁଡ଼ିକ ପରୀକ୍ଷାମୂଳକ ନିତୀକୁ ସୂଚାଇଥାଏ, ମଡ୍ୟୁଲକୁ ନିଷ୍କ୍ରିୟ କରିବା "
+"ଫଳରେତାହା SELinux କୁ ଡମେନରେ ପ୍ରବେଶାନୁମତିକୁ ବାରଣ କରିଥାଏ, ଯାହା ଅନୁମତିପ୍ରାପ୍ତ ହେବା ଉଚିତ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3919
+msgid "<b>Disable all permissive processes?</b>"
+msgstr "<b>ସମସ୍ତ permissive ପଦ୍ଧତିଗୁଡ଼ିକୁ ନିଷ୍କ୍ରିୟ କରିବେ କି?</b>"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:3985
+msgid "<b>Deny all processes from ptracing or debugging other processes?</b>"
+msgstr "<b>ଅନ୍ୟ କୌଣସି ପଦ୍ଧତିକୁ ptracing କିମ୍ବା ତ୍ରୁଟି ନିବାରଣ କରିବାରୁ ବାରଣ କରିବେ କି?</b>"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4022
+msgid ""
+"File equivalence cause the system to label content under the new path as if "
+"it were under the equivalence path."
+msgstr ""
+"ଫାଇଲ ସମାନତା ତନ୍ତ୍ରକୁ ନୂତନ ପଥ ଅନ୍ତର୍ଗତରେ ସମାନ କରିଥାଏ ଯେପରିକି ତାହା ସମାନତା ପଥରେ ଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4078
+msgid "Files Equivalence"
+msgstr "ଫାଇଲ ସମାନତା"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4091
+msgid "<b>...SELECT TO VIEW DATA...</b>"
+msgstr "<b>...ତଥ୍ୟ ଦେଖିବା ପାଇଁ ବାଛନ୍ତୁ ...</b>"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4122
+msgid "Delete"
+msgstr "ଅପସାରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4138
+msgid "Modify"
+msgstr "ପରିବର୍ତ୍ତନ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4153
+msgid "Add"
+msgstr "ଯୋଗକରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4199
+msgid "Revert"
+msgstr "ପ୍ରତ୍ୟାବୃତ କରିବା"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4204
+msgid ""
+"Revert button will launch a dialog window which allows you to revert changes "
+"within the current transaction."
+msgstr ""
+"ପ୍ରତ୍ୟାବୃତ ବଟନ ସଂଳାପ ୱିଣ୍ଡୋକୁ ଆରମ୍ଭ କରିଥାଏ ଯାହା ଆପଣଙ୍କୁ ପ୍ରଚଳିତ କାରବାର ମଧ୍ଯରେ ପରିବର୍ତ୍ତନଗୁଡ଼ିକୁ "
+"ପ୍ରତ୍ୟାବୃତ କରିବା ପାଇଁ ଅନୁମତି ଦେଇଥାଏ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4221
+msgid "Commit all changes in your current transaction to the server."
+msgstr "ପ୍ରଚଳିତ କାରବାରରେ ହୋଇଥିବା ସମସ୍ତ ପରିବର୍ତ୍ତନଗୁଡ଼ିକୁ ସର୍ଭରରେ ଦାଖଲ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4269
+msgid "Applications - Advanced Search"
+msgstr "ପ୍ରୟୋଗ - ଉନ୍ନତ ସନ୍ଧାନ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4334
+msgid "Process Types"
+msgstr "ପଦ୍ଧତି ପ୍ରକାରଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4375
+msgid "More Details"
+msgstr "ଅଧିକ ବିବରଣୀ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4411
+#: ../sepolicy/sepolicy/sepolicy.glade:4705
+msgid "Delete Modified File Labeling"
+msgstr "ପରିବର୍ତ୍ତିତ ଫାଇଲ ନାମକରଣକୁ ଅପସାରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4429
+msgid ""
+"Select file labeling to delete. File labeling will be deleted when update is "
+"applied."
+msgstr ""
+"ଅପସାରଣ କରିବା ପାଇଁ ଫାଇଲ ନାମକରଣକୁ ବାଛନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ଫାଇଲ ନାମକରଣକୁ "
+"ଅପସାରଣ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4476
+msgid "SELinux File Label"
+msgstr "SELinux ଫାଇଲ ନାମପଟି"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4515
+#: ../sepolicy/sepolicy/sepolicy.glade:4665
+#: ../sepolicy/sepolicy/sepolicy.glade:4796
+#: ../sepolicy/sepolicy/sepolicy.glade:4930
+#: ../sepolicy/sepolicy/sepolicy.glade:5279
+msgid "Save to Update"
+msgstr "ଅଦ୍ୟତନ କରିବା ପାଇଁ ସଂରକ୍ଷଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4555
+msgid "Delete Modified Ports"
+msgstr "ପରିବର୍ତ୍ତିତ ପୋର୍ଟଗୁଡ଼ିକୁ ଅପସାରଣ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4573
+msgid "Select ports to delete. Ports will be deleted when update is applied."
+msgstr ""
+"ଅପସାରଣ କରିବାକୁ ଥିବା ପୋର୍ଟଗୁଡ଼ିକୁ ବାଛନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ପୋର୍ଟଗୁଡ଼ିକ ଅପସାରିତ ହେବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4723
+msgid ""
+"Select file equivalence labeling to delete. File equivalence labeling will "
+"be deleted when update is applied."
+msgstr ""
+"ଅପସାରଣ କରିବା ପାଇଁ ଫାଇଲ ନାମକରଣକୁ ବାଛନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ଫାଇଲ ନାମକରଣକୁ "
+"ଅପସାରଣ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4839
+#: ../sepolicy/sepolicy/sepolicy.glade:5188
+msgid "Delete Modified Users Mapping."
+msgstr "ପରିବର୍ତ୍ତିତ ବ୍ୟବହାରକାରୀ ମେଳକକୁ ଅପସାରଣ କରନ୍ତୁ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4857
+msgid ""
+"Select login user mapping to delete. Login user mapping will be deleted when "
+"update is applied."
+msgstr ""
+"ଅପସାରଣ କରିବା ପାଇଁ ଲଗଇନ ବ୍ୟବହାରକାରୀ ମେଳକକୁ ବାଛନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ଲଗଇନ "
+"ବ୍ୟବହାରକାରୀ ମେଳକକୁ ଅପସାରଣ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4892
+msgid "Login name"
+msgstr "ଲଗଇନ ନାମ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:4973
+msgid "More Types"
+msgstr "ଅଧିକ ପ୍ରକାରଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5000
+msgid "Types"
+msgstr "ପ୍ରକାରଗୁଡ଼ିକ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5059
+msgid ""
+"Review the updates you have made before committing them to the system.  To "
+"reset an item, uncheck the checkbox.  All items checked will be updated in "
+"the system when you select update."
+msgstr ""
+"ତନ୍ତ୍ରରେ ଦାଖଲ କରିବା ପୂର୍ବରୁ ଆପଣ କରିଥିବା ଅଦ୍ୟତନଗୁଡ଼ିକୁ ସମୀକ୍ଷା କରନ୍ତୁ। ଏକ ବସ୍ତୁକୁ ପୁନଃସ୍ଥାପନ କରିବା "
+"ପୂର୍ବରୁ, ଯାଞ୍ଚବାକ୍ସକୁ ଅବଛା କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ବାଛିଲେ ବଛାହୋଇଥିବା ସମସ୍ତ ବସ୍ତୁଗୁଡ଼ିକ ତନ୍ତ୍ରରେ ଅଦ୍ୟତିତ "
+"ହେବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5122
+msgid "Action"
+msgstr "କାର୍ଯ୍ଯ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5148
+msgid "Apply"
+msgstr "ପ୍ରୟୋଗ କରନ୍ତୁ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5206
+msgid ""
+"Select users mapping to delete.Users mapping will be deleted when update is "
+"applied."
+msgstr ""
+"ଅପସାରଣ କରିବା ପାଇଁ ବ୍ୟବହାରକାରୀ ମେଳକକୁ ବାଛନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ ବ୍ୟବହାରକାରୀ "
+"ମେଳକକୁ ଅପସାରଣ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5254
+msgid "SELinux Username"
+msgstr "SELinux ବ୍ୟବହାରକାରୀ ନାମ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5339
+msgid ""
+"Add User Roles. SELinux User Roles will be created when Update is applied."
+msgstr ""
+"ବ୍ୟବହାରକାରୀ ଭୂମିକାଗୁଡ଼ିକୁ ଯୋଗ କରନ୍ତୁ। ଅଦ୍ୟତନକୁ ପ୍ରୟୋଗ କରିବା ସମୟରେ SELinux ବ୍ୟବହାରାକରୀ "
+"ଭୂମିକାଗୁଡ଼ିକୁ ନିର୍ମାଣ କରାଯିବ।"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5364
+msgid "SELinux User Name"
+msgstr "SELinux ବ୍ୟବହାରକାରୀ ନାମ"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5479
+msgid ""
+"Enter MLS/MCS Range for this SELinux User.\n"
+"s0-s0:c1023"
+msgstr ""
+"ଏହି SELinux ବ୍ୟବହାରାକରୀଙ୍କ ପାଇଁ MLS/MCS ପରିସରକୁ ଭରଣ କରନ୍ତୁ।\n"
+"s0-s0:c1023"
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5510
+msgid ""
+"Specify the default level that you would like this SELinux user to login "
+"with.  Defaults to s0."
+msgstr ""
+"ଏହି SELinux ବ୍ୟବହାରକାରୀ ଲଗଇନ କରିବାକୁ ଥିବା ଆପଣ ପସନ୍ଦ କରୁଥିବା ପୂର୍ବନିର୍ଦ୍ଧାରିତ ସ୍ତରକୁ ଉଲ୍ଲେଖ "
+"କରନ୍ତୁ। ପୂର୍ବନିର୍ଦ୍ଧାରିତଟି ହେଉଛି s0."
+
+#: ../sepolicy/sepolicy/sepolicy.glade:5514
+msgid "Enter Default Level for SELinux User to login with. Default s0"
+msgstr ""
+"ଲଗଇନ କରିବାକୁ ଥିବା SELinux ବ୍ୟବହାରକାରୀ ପାଇଁ ପୂର୍ବନିର୍ଦ୍ଧାରିତ ସ୍ତର ଭରଣ କରନ୍ତୁ। ପୂର୍ବନିର୍ଦ୍ଧାରିତଟି "
+"ହେଉଛି s0"
+
+#~ msgid "Boolean name"
+#~ msgstr "ବୁଲିଆନ ନାମ"
+
+#~ msgid "Protocol udp or tcp is required"
+#~ msgstr "ୟୁ.ଡି.ପି. କିମ୍ବା ଟି.ସି.ପି. ପ୍ରୋଟୋକଲ ଆବଶ୍ଯକ"

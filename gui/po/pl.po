@@ -1,0 +1,1043 @@
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+# Piotr Drąg <piotrdrag@gmail.com>, 2016. #zanata
+# Parag <pnemade@redhat.com>, 2017. #zanata
+# Piotr Drąg <piotrdrag@gmail.com>, 2017. #zanata
+# Piotr Drąg <piotrdrag@gmail.com>, 2018. #zanata
+# Piotr Drąg <piotrdrag@gmail.com>, 2019. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2021-09-07 16:04+0000\n"
+"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
+"Language-Team: Polish <https://translate.fedoraproject.org/projects/selinux/"
+"gui/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.8\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "Zmienna logiczna"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "wszystko"
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "Dostosowane"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "Domena procesu"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr "Nazwa domeny"
+
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr "Tryb"
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "Zezwalanie"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "Etykiety plików"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"Określenie\n"
+"pliku"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"Typ pliku\n"
+"SELinuksa"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"Typ\n"
+"pliku"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "Mapowanie użytkownika"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr "Login"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"Użytkownik\n"
+"SELinuksa"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"Zakres MLS/\n"
+"MCS"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "Login „%s” jest wymagany"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "Moduł polityki"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "Nazwa modułu"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr "Priorytet"
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr "Rodzaj"
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "Wyłącz audyt"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "Włącz audyt"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "Wczytaj moduł polityki"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "Nazwa"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "Opis"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "Rola"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "Istniejący_użytkownik"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "Aplikacja"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s musi być katalogiem"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "Należy wybrać użytkownika"
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "Wybór ograniczanego pliku wykonywalnego."
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "Wybór ograniczanego pliku skryptu inicjowania."
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr "Wybór plików, które ograniczana aplikacja tworzy lub zapisuje"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr "Wybór katalogów, które ograniczana aplikacja ma lub do nich zapisuje"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "Wybór katalogu, w którym utworzyć pliki polityki"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"Typ %s_t został już określony w bieżącej polityce.\n"
+"Kontynuować?"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "Sprawdź nazwę"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"Moduł %s został już wczytany w bieżącej polityce.\n"
+"Kontynuować?"
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr "Należy dodać nazwę składającą się z liter i liczb, bez spacji."
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "Należy podać plik wykonywalny"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+msgid "Configure SELinux"
+msgstr "Skonfiguruj SELinuksa"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr "Piotr Drąg <piotrdrag@gmail.com>, 2006-2021"
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "Okno dialogowe dodania zmiennej logicznej"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "Nazwa zmiennej logicznej"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "Narzędzie tworzenia polityki SELinuksa"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr "<b>Wybór typu roli aplikacji lub użytkownika do ograniczenia:</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>Aplikacje</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "Standardowa usługa inicjowania"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"Standardowe usługi inicjowania to usługi włączane podczas uruchamiania przez "
+"skrypty inicjacyjne. Zwykle wymagają skryptu w /etc/rc.d/init.d"
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "Systemowa usługa D-Bus"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "Usługa serwisów internetowych (inetd)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "Usługi serwisów internetowych to usługi uruchamiane przez xinetd"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "Aplikacje/skrypty WWW (CGI)"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr ""
+"Skrypty CGI aplikacji/skryptów WWW (CGI) uruchamiane przez serwer WWW "
+"(Apache)"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "Aplikacja użytkownika"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+"Aplikacje użytkownika to wszystkie ograniczane aplikacje, które są "
+"uruchamiane przez użytkowników"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "Piaskownica"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>Logowani użytkownicy</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "Istniejące role użytkowników"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "Zmodyfikuj istniejący wpis logowania użytkownika."
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "Minimalna rola użytkownika terminala"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"Ten użytkownik będzie logował się do komputera tylko przez terminal lub "
+"zdalne logowanie. Domyślnie ten użytkownik nie będzie miał setuid, sieci, su "
+"ani sudo."
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "Minimalna rola użytkownika X Window"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"Ten użytkownik może logować się do komputera przez X Window lub terminal. "
+"Domyślnie ten użytkownik nie będzie miał setuid, sieci, sudo ani su"
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "Rola użytkownika"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+"Użytkownik z pełną siecią, brakiem aplikacji setuid bez przemiany, sudo i su."
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "Rola użytkownika administratora"
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"Użytkownik z pełną siecią, brakiem aplikacji setuid bez przemiany i su, może "
+"używać sudo dla ról administratorów root"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>Użytkownicy root</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "Rola użytkownika administratora root"
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"Należy wybrać rolę użytkownika administratora root, jeśli ten użytkownik "
+"będzie używany do administrowania komputerem podczas uruchamiania jako root. "
+"Ten użytkownik nie będzie mógł zalogować się bezpośrednio do systemu."
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>Nazwa roli aplikacji lub użytkownika do ograniczenia:</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr "Pełna ścieżka do ograniczanego pliku wykonywalnego."
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "…"
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr "Unikalna nazwa dla roli ograniczanego aplikacji lub użytkownika."
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "Plik wykonywalny"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "Skrypt inicjowania"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr ""
+"Pełna ścieżka do skryptu inicjowania używanego do uruchamiania ograniczanej "
+"aplikacji."
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>Wybór istniejącej roli do zmodyfikowania:</b>"
+
+#: ../polgen.ui:904
+#, python-format
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "Wybór ról użytkownika, które przemienić do domeny %s."
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "karta roli"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>Wybór ról, do których przemienić %s:</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr "Wybór domen aplikacji, do których przemienić %s."
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"przejście \n"
+"karta roli"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>Wybór ról użytkownika, do których przemienić %s:</b>"
+
+#: ../polgen.ui:1007
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr "Wybór ról użytkownika, które przemienić do tych domen aplikacji."
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>Wybór domen, którymi %s będzie administrował:</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "Wybór domen, które ten użytkownik ma administrować."
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>Wybór dodatkowych ról dla %s:</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>Porty sieciowe, do których %s dowiązuje:</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>Porty TCP</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "Wszystko"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "Umożliwia %s dowiązywanie do dowolnego portu UDP"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr ""
+"Umożliwia %s wywoływanie bindresvport z wartością 0. Dowiązywanie do portów "
+"600-1024"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "Niezastrzeżone porty (powyżej 1024)"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"Lista portów lub zakresów portów UDP oddzielonych przecinkami, do których %s "
+"może dowiązywać. Przykład: 612, 650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "Wybór portów"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "Umożliwia %s dowiązywanie do dowolnego portu UDP > 1024"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>Porty UDP</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"Sieć\n"
+"Karta dowiązywania"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>Wybór portów sieciowych, do których %s może się łączyć:</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "Umożliwia %s łączenie z dowolnym portem TCP"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"Lista portów lub zakresów portów TCP oddzielonych przecinkami, z którymi %s "
+"może się łączyć. Przykład: 612, 650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "Umożliwia %s łączenie z dowolnym portem UDP"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"Lista portów lub zakresów portów UDP oddzielonych przecinkami, z którymi %s "
+"może się łączyć. Przykład: 612, 650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>Wybór wspólnych cech aplikacji dla %s:</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "Zapisuje komunikaty syslog\t"
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "Tworzy/manipuluje plikami tymczasowymi w /tmp"
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "Używa PAM do uwierzytelniania"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "Używa wywołań nsswitch lub getpw*"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "Używa D-Bus"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "Wysyła komunikaty audytu"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "Używa terminala"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "Wysyła e-maile"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>Dodanie plików/katalogów, którymi %s zarządza</b>"
+
+#: ../polgen.ui:1978
+msgid "Add File"
+msgstr "Dodaj plik"
+
+#: ../polgen.ui:2031
+msgid "Add Directory"
+msgstr "Dodaj katalog"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr ""
+"Dodanie plików/katalogów, którymi %s „zarządza”. Pliki PID, pliki dziennika, "
+"pliki /var/lib…"
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>Dodanie zmiennych logicznych z polityki %s:</b>"
+
+#: ../polgen.ui:2179
+msgid "Add Boolean"
+msgstr "Dodaj zmienną logiczną"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "Dodanie/usunięcie zmiennych logicznych używanych przez domenę %s"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>Który katalog utworzyć dla polityki %s?</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "Katalog polityki"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "Port sieciowy"
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"Typ portu\n"
+"SELinuksa"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "Protokół"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"Poziom\n"
+"MLS/MCS"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "Port"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "Numer portu „%s” jest nieprawidłowy. 0 < NUMER_PORTU < 65536 "
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "Widok listy"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "Widok grupy"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr "Tworzenie modułów polityki SELinuksa"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "Na pewno usunąć %s „%s”?"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "Usuń %s"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "Dodaj %s"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "Modyfikuj %s"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr "Narzędzie zarządzania polityką SELinuksa"
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr ""
+"polityka;zasady;policy;bezpieczeństwo;zabezpieczenia;security;selinux;avc;"
+"uprawnienia;permission;mac;"
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "Wymuszanie"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "Wyłączony"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "Stan"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"Zmienianie typu polityki spowoduje ponowne nadanie etykiet całemu systemowy "
+"plików podczas następnego uruchamiania. Ponowne nadawanie etykiet zajmuje "
+"dużo czasu, w zależności od rozmiaru systemu plików. Kontynuować?"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"Zmienianie SELinuksa na wyłączony wymaga ponownego uruchomienia. Nie jest to "
+"zalecane. Jeśli później SELinux zostanie ponownie włączony, to system będzie "
+"wymagał ponownego nadania etykiet. można przejść do trybu zezwalania, który "
+"będzie tylko zapisywał błędy do dziennika i nie wymuszał polityki SELinuksa, "
+"by zobaczyć, czy SELinux powoduje problem z systemem. Tryb zezwalania nie "
+"wymaga ponownego uruchomienia. Kontynuować?"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"Zmienianie SELinuksa na włączony spowoduje ponowne nadanie etykiet całemu "
+"systemowy plików podczas następnego uruchamiania. Ponowne nadawanie etykiet "
+"zajmuje dużo czasu, w zależności od rozmiaru systemu plików. Kontynuować?"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr "Zarządzanie SELinuksem"
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr "Konfiguracja SELinuksa w środowisku graficznym"
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"Copyright © 2006 Red Hat, Inc.\n"
+"Copyright © 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "Dodanie mapowania loginu SELinuksa"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "Login"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "Użytkownik SELinuksa"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "Zakres MLS/MCS"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "Dodanie portów sieciowych SELinuksa"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "Numer portu"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "Typ SELinuksa"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "Określenie pliku"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "Typ pliku"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "Administracja SELinuksem"
+
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "_Plik"
+
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "_Dodaj"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "_Właściwości"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "_Usuń"
+
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "Pomo_c"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "Wybór obiektu zarządzania"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>Wybór:</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "Domyślny systemowy tryb wymuszania"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "Obecny tryb wymuszania"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "Domyślny systemowy typ polityki: "
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"Proszę wybrać, czy ponownie nadać etykiety całemu systemowi plików podczas "
+"następnego ponownego uruchomienia. Ponowne nadanie etykiet może zająć dużo "
+"czasu, w zależności od rozmiaru systemu. Jeśli zmieniany jest typ polityki "
+"lub przechodzi z trybu wyłączonego do wymuszania, ponowne nadanie etykiet "
+"jest wymagane."
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr "Ponownie nadanie etykiet podczas następnego ponownego uruchomienia."
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "Przywrócenie ustawienia zmiennych logicznych do domyślnych systemu"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "Przełączenie między dostosowanymi i wszystkimi zmiennymi logicznymi"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "Filtr"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "Dodanie kontekstu pliku"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "Modyfikacja kontekstu pliku"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "Usunięcie kontekstu pliku"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "Przełączenie między wszystkimi i dostosowanymi kontekstami plików"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "Dodanie mapowania użytkownika SELinuksa"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "Modyfikacja mapowania użytkownika SELinuksa"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "Usunięcie mapowania użytkownika SELinuksa"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "Dodanie użytkownika"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "Modyfikacja użytkownika"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "Usunięcie użytkownika"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "Dodanie portu sieciowego"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "Modyfikacja portu sieciowego"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "Usunięcie portu sieciowego"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "Przełączenie między dostosowanymi i wszystkimi portami"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "Utworzenie nowego modułu polityki"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "Wczytanie modułu polityki"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "Usunięcie wczytywalnego modułu polityki"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr ""
+"Włączenie/wyłączenie dodatkowych reguł audytu, które zwykle nie są "
+"raportowane do plików dziennika."
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "Zmiana trybu procesu na zezwalanie."
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "Zmiana trybu procesu na wymuszanie"
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "Dodanie użytkownika SELinuksa"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "Role SELinuksa"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "Użytkownik SELinuksa „%s” jest wymagany"
+
+#~ msgid "Run System Config SELinux"
+#~ msgstr "Uruchomienie system-config-selinux"
+
+#~ msgid "Authentication is required to run system-config-selinux"
+#~ msgstr "Wymagane jest uwierzytelnienie, aby uruchomić system-config-selinux"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "sepolicy"
+#~ msgstr "sepolicy"
+
+#~ msgid "all files"
+#~ msgstr "wszystkie pliki"
+
+#~ msgid "regular file"
+#~ msgstr "zwykły plik"
+
+#~ msgid "directory"
+#~ msgstr "katalog"
+
+#~ msgid "character device"
+#~ msgstr "urządzenie znakowe"
+
+#~ msgid "block device"
+#~ msgstr "urządzenie blokowe"
+
+#~ msgid "socket file"
+#~ msgstr "plik gniazda"
+
+#~ msgid "symbolic link"
+#~ msgstr "dowiązanie symboliczne"
+
+#~ msgid "named pipe"
+#~ msgstr "nazwany potok"

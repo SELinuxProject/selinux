@@ -1,0 +1,1036 @@
+# MinWoo Joh <igtzhsou@naver.com>, 2015. #zanata
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+# Parag <pnemade@redhat.com>, 2017. #zanata
+# Vit Mojzis <vmojzis@redhat.com>, 2017. #zanata
+# Ludek Janda <ljanda@redhat.com>, 2018. #zanata
+# Eun-Ju Kim <eukim@redhat.com>, 2019. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2021-09-08 19:04+0000\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
+"Language-Team: Korean <https://translate.fedoraproject.org/projects/selinux/"
+"gui/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.8\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "부울"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "전체"
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "사용자 정의"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "프로세스 도메인"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr "도메인 이름"
+
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr "모드"
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "허용"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "파일 이름표 설정"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"파일\n"
+"사양"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"Selinux\n"
+"파일 유형"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"파일\n"
+"유형"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "사용자 맵핑"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"로그인\n"
+"이름"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux\n"
+"사용자"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"MLS/\n"
+"MCS 범위"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "로그인 '%s'이 필요합니다"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "정책 모듈"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "모듈 이름"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr "우선 순위"
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr "종류"
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "감사 비활성화"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "감사 활성화"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "정책 모듈 로드"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "이름"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "설명"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "역할"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "기존 사용자(_U)"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "응용프로그램"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s은 디렉토리여야 합니다"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "사용자를 선택 해야 합니다"
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "제한된 실행 파일을 선택합니다."
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "제한된 init 스크립트 파일을 선택합니다."
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr "제한된 응용프로그램을 생성하거나 작성 할 파일을 선택합니다"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr "제한된 응용프로그램을 소유하고 작성할 디렉토리를 선택합니다"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "정책 파일을 생성할 디렉토리를 선택합니다"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"현재 정책에서 이미 정의된 %s_t를 입력합니다.\n"
+"계속 진행하시겠습니까?"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "이름 확인"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"모듈 %s은/는 현재 정책에 이미 로딩되어 있습니다.\n"
+"계속 진행하시겠습니까?"
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr "공백이 없는 문자와 숫자로 구성된 이름을 추가해야 합니다."
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "실행 파일을 입력해야 합니다"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+msgid "Configure SELinux"
+msgstr "SELinux 구성"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr "simmon <simmon@nplob.com>"
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "부울 대화상자 추가"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "부울 이름"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "SELinux 정책 생성 도구"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr ""
+"<b>정의하려는 응용프로그램이나 사용자 역할에 대한 정책 유형을 선택합니다:</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>응용프로그램</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "표준 Init 데몬"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"표준 Init 데몬은 시작할 때 init 스크립트를 통해 시작되는 데몬입니다. 일반적으"
+"로 /etc/rc.d/init.d에 스크립트가 필요합니다"
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "DBUS 시스템 데몬"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "인터넷 시스템 데몬 (inetd)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "인터넷 서비스 데몬은 xinetd에 의해 시작되는 데몬입니다"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "웹 응용프로그램/스크립트 (CGI)"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr ""
+"웹 응용프로그램/스크립트 (CGI) CGI 스크립트는 웹 서버에 의해 시작됩니다 (아파"
+"치)"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "사용자 응용프로그램"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+"사용자 응용프로그램은 사용자에 의해 시작되는 한정하고자 하는 모든 응용프로그"
+"램입니다"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "샌드박스"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>로그인 사용자</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "기존 사용자 역할"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "기존의 로그인 사용자 기록을 수정합니다."
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "터미널에서 최소 사용자 역할"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"이 사용자는 터미널이나 원격 로그인을 통해서만 시스템에 로그인합니다. 기본값으"
+"로 이 사용자는 setuid, 네트워크 운용, su, sudo를 가지지 않습니다."
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "X 창에서 최소한의 사용자 역할"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"이 사용자는 X 또는 터미널을 통해 시스템에 로그인할 수 있습니다. 기본값으로 "
+"이 사용자는 setuid, 네트워크 운용, su, sudo를 가지지 않습니다"
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "사용자 역할"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+"사용자는 전체 네트워크 운영을 갖지만 전환 없이 setuid 응용프로그램 , sudo, su"
+"도 갖지 않습니다."
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "사용자 역할 관리"
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"사용자는 전체 네트워크 운영을 갖지만 전환 없이 setuid 응용프로그램 su도 갖지 "
+"않으며, Root 관리 역할로 sudo를 사용 할 수 있습니다"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>Root 사용자</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "사용자 역할 Root 관리"
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"root로 실행하는 동안 사용자를 시스템 관리를 위해 사용하는 경우 Root 관리 사용"
+"자 역할을 선택합니다. 이 사용자는 시스템에 직접 로그인할 수 없습니다."
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>응용프로그램 이름이나 사용자 역할을 입력합니다:</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr "제한된 실행 파일의 전체 경로를 입력합니다."
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "..."
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr "제한된 응용프로그램이나 사용자 역할에 대한 고유한 이름을 입력합니다."
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "실행 가능"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "Init 스크립트"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr ""
+"제한된 응용프로그램을 시작하기 위해 사용하는 init 스크립트로의 전체 경로를 입"
+"력합니다."
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>수정할 기존 역할 선택:</b>"
+
+#: ../polgen.ui:904
+#, python-format
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "%s 도메인으로 전환 할 사용자 역할을 선택합니다."
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "역할 탭"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>%s의 전환 대상이 될 역할을 선택:</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr "%s의 전환 대상이 될 응용프로그램 도메인을 선택합니다."
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"전환 \n"
+"역할 탭"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>%s로 전환할 사용자 역할을 선택(_R):</b>"
+
+#: ../polgen.ui:1007
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr "이와 같은 응용프로그램 도메인으로 전환할 사용자 역할을 선택합니다."
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>%s가 관리하는 도메인 선택:</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "이 사용자가 관리하려는 도메인을 선택합니다."
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>%s의 추가 역할을 선택:</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>%s이 바인딩할 네트워크 포트 입력:</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP 포트</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "전체"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "%s이 모든 udp 포트에 바인딩하는 것을 허용"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr ""
+"%s이 0로 bindresvport를 호출하는 것을 허용합니다. 포트 600-1024로 바인딩"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "예약되지 않은 포트 (>1024)"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"%s이 바인딩할 포트 범위 또는 udp 포트의 쉼표로 분리된 목록을 입력합니다. 예: "
+"612, 650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "포트 선택"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "%s이 1024 이상의 모든 udp 포트에 바인딩하는 것을 허용"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP 포트</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"네트워크\n"
+"바인딩 탭"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>%s이 연결된 네트워크 포트 선택:</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "%s이 모든 tcp 포트에 연결하는 것을 허용"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"tcp 포트 또는 %s이 연결되는 포트 범위의 쉼표로 분리된 목록을 입력합니다. 예: "
+"612, 650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "udp 포트에 연결하기 위해 %s 허용"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"udp 포트 또는 %s이 연결되는 포트 범위의 쉼표로 분리된 목록을 입력합니다. 예: "
+"612, 650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>%s를 위한 일반적인 응용프로그램 특성 선택:</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "syslog 메세지 작성\\\t"
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "/tmp에 임시 파일을 생성/조작"
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "인증을 위해 Pam 사용"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "nsswitch 또는 getpw* 호출 사용"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "dbus 사용"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "감사 메세지를 보냅니다"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "터미널과 상호 대화합니다"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "전자우편 보내기"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>%s이 관리하는 파일/디렉토리 추가</b>"
+
+#: ../polgen.ui:1978
+msgid "Add File"
+msgstr "파일 추가"
+
+#: ../polgen.ui:2031
+msgid "Add Directory"
+msgstr "디렉토리 추가"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr ""
+"%s이 \"관리\"하는 파일/디렉토리. Pid 파일, 로그 파일, /var/lib 파일 등 ..."
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>%s 정책에서 부울 추가:</b>"
+
+#: ../polgen.ui:2179
+msgid "Add Boolean"
+msgstr "부울 추가"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "%s 도메인이 사용하는 부울 추가/제거"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>어떤 디렉토리가 %s 정책을 생성합니까?</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "정책 디렉토리"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "네트워크 포트"
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"SELinux 포트\n"
+"유형"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "통신규격"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"레벨"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "포트"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "포트 번호 \"%s\"가 유효하지 않습니다. 0 < PORT_NUMBER < 65536 "
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "목록 보기"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "그룹 보기"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr "SELinux 정책 모듈 생성"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "정말로 %s '%s'를 삭제하시겠습니까?"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "%s 삭제"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "%s 추가"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "%s 수정"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr "SELinux 정책 관리 도구"
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr "policy;security;selinux;avc;permission;mac;"
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "강제"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "비활성화"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "상태"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"정책 유형을 변경하면 다음 부팅 시 전체 파일 시스템의 레이블 변경의 원인이 됩"
+"니다. 레이블 변경은 파일 시스템의 크기에 따라 시간이 오래 소요됩니다. 계속 진"
+"행하시겠습니까?"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"SELinux 비활성화로 변경하려면 재시작해야 합니다. 이는 권장되는 방법이 아닙니"
+"다. 나중에 SELinux를 다시 활성화하고자 할 경우 시스템 이름표 변경이 필요합니"
+"다. 단순히 SELinux가 시스템에서 문제의 원인인지 여부를 확인하고 싶은 경우 허"
+"용 선택을 전환하면 오류를 로그하고 SELinux 정책을 강제하지 않을 수 있습니다. "
+"또한 허용 선택을 변경하기 위해 재시작 할 필요가 없습니다. 계속 진행하시겠습니"
+"까?"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"SELinux 활성화로 변경하면 다음 부팅시 전체 파일 시스템의 레이블 변경의 원인"
+"이 됩니다. 레이블 변경은 파일 시스템의 크기에 따라 시간이 오래 소요됩니다. 계"
+"속 진행하시겠습니까?"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr "SELinux 관리"
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr "그래픽 설정에서 SELinux 구성"
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "SELinux 로그인 맵핑 추가"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "로그인 이름"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "SELinux 사용자"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "MLS/MCS 범위"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "SELinux 네트워크 포트 추가"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "포트 번호"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "SELinux 유형"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "파일 사양"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "파일 유형"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "SELinux 관리"
+
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "_파일"
+
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "추가(_A)"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "속성(_P)"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "삭제(_D)"
+
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "도움말(_H)"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "관리 객체 선택"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>선택:</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "시스템 디폴트 강제 모드"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "현재 강제 모드"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "시스템 기본 정책 유형: "
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"다음번 부팅시 전체 파일 시스템의 레이블을 변경할지 여부를 선택합니다. 레이블 "
+"변경은 시스템의 크기에 따라 시간이 오래 소요됩니다. 정책 유형을 변경하거나 비"
+"활성화에서 강제로 이동하는 경우 레이블 변경이 필요합니다."
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr "다음 재시작에서 이름표를 변경합니다."
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "부울 설정을 시스템 기본값으로 복원"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "사용자 정의 부울과 모든 부울을 전환"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "제거"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "파일 문맥 추가"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "파일 문맥 수정"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "파일 문맥 삭제"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "모든 파일 문맥과 사용자 정의 파일 문맥을 전환"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "SELinux 사용자 맵핑 추가"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "SELinux 사용자 맵핑 편집"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "SELinux 사용자 맵핑 삭제"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "사용자 추가"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "사용자 편집"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "사용자 삭제"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "네트워크 포트 추가"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "네트워크 포트 편집"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "네트워크 포트 삭제"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "사용자 정의된 포트와 모든 포트를 전환"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "새로운 정책 모듈 생성"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "정책 모듈 로드"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "로딩 할 수 있는 정책 모듈 제거"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr "일반적으로 로그 파일에 보고되지 않는 추가 감사 규칙을 활성화/비활성화."
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "프로세스 방식를 허용으로 변경."
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "프로세스 방법을 강제로 변경"
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "SELinux 사용자 추가"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "SELinux 기능"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "SELinux 사용자 '%s'가 필요합니다"
+
+#~ msgid "Run System Config SELinux"
+#~ msgstr "시스템 설정 SELinux 실행"
+
+#~ msgid "Authentication is required to run system-config-selinux"
+#~ msgstr "system-config-selinux를 실행하려면 인증이 필요합니다"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "sepolicy"
+#~ msgstr "세 폴리 실리콘"
+
+#~ msgid "all files"
+#~ msgstr "모든 파일"
+
+#~ msgid "regular file"
+#~ msgstr "일반 파일"
+
+#~ msgid "directory"
+#~ msgstr "디렉토리"
+
+#~ msgid "character device"
+#~ msgstr "문자 장치"
+
+#~ msgid "block device"
+#~ msgstr "블럭 장치"
+
+#~ msgid "socket file"
+#~ msgstr "소켓 파일"
+
+#~ msgid "symbolic link"
+#~ msgstr "심볼릭 링크"
+
+#~ msgid "named pipe"
+#~ msgstr "이름이 지정된 파이프"

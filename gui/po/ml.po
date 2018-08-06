@@ -1,0 +1,1036 @@
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2016-01-06 07:02-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Malayalam\n"
+"Language: ml\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Zanata 4.6.2\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "ബൂളിയന്‍"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "എല്ലാം "
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "യഥേഷ്ടമാക്കിയിരിക്കുന്നു"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "പ്രൊസസ്സ് ഡൊമെയിന്‍"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr ""
+
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr ""
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "പെര്‍മിസ്സീവ്"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "ഫയലിന് പേരിടല്‍"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"ഫയലിനുള്ള\n"
+"പ്രത്യേകതകള്‍"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"Selinux\n"
+"രീതിയിലുള്ള ഫയല്‍"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"ഏത് തരത്തിലുള്ള\n"
+"ഫയല്‍"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "യൂസര്‍ മാപ്പിങ്"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"പ്രവേശന\n"
+"നാമം"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux\n"
+"ഉപയോക്താവ്"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"MLS/\n"
+"MCS പരിധി"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "'%s' ലോഗിന്‍ ആവശ്യമുണ്ട്"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "പോളിസി ഘടകം"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "ഘടകത്തിന്റെ പേര്"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr ""
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr ""
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "ഓഡിറ്റ് പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "ഓഡിറ്റ് പ്രവര്‍ത്തന സജ്ജമാക്കുക"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "പോളിസി ഘടകം ലഭ്യമാക്കുക"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "പേര്"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "വിവരണം"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "നിയമനം"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "നിലവിലുള്ള _ഉപയോക്താവ്"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "പ്രയോഗം"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s ഒരു ഡയറക്ടറി ആയിരിക്കണം"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "നിങ്ങള്‍ ഒരു ഉപയോക്താവ് ആയിരിക്കണം"
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "പരിമിതി ആവശ്യമുള്ള നിഷ്കര്‍ഷിക്കേണ്ട ഫയല്‍ തിരഞ്ഞെടുക്കുക."
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "പരിമിതി ആവശ്യമുള്ള ഇനിറ്റ് സ്ക്രിപ്റ്റ് ഫയല്‍ തിരഞ്ഞെടുക്കുക."
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr "പ്രയോഗം ഉണ്ടാക്കുകയോ അതിലേക്ക് എഴുതുകയോ ചെയ്യുന്നതിന് പരിമിതിയുള്ള ഫയല്‍ തിരഞ്ഞെടുക്കുക"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr ""
+"പ്രയോഗത്തിന്റെ ഉടമസ്ഥതയിലുള്ളതും അതിലേക്ക് എഴുതുകയും ചെയ്യുന്നതിന് പരിമിതിയുള്ള ഡയറക്ടറി "
+"തിരഞ്ഞെടുക്കുക"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "പോളിസി ഫയലുകള്‍ ഉണ്ടാക്കുന്നതിനുള്ള ഡയറക്ടറി തിരഞ്ഞെടുക്കുക"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"നിലവിലുള്ള പോളിസിയില്‍ %s_t എന്ന രീതി നിഷ്കര്‍ഷിച്ചിരിക്കുന്നു.\n"
+"നിങ്ങള്‍ക്ക് മുമ്പോട്ട് പോകണമോ?"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "പേര് ഉറപ്പാക്കുക"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr "ഇടയ്ക്കു് സ്ഥലങ്ങളില്ലാതെ അക്ഷരങ്ങളും അക്കങ്ങളുമുള്ളൊരു നാമം നല്‍കണം."
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "പ്രവര്‍ത്തനത്തിലുള്ളത് പറഞ്ഞിരിക്കണം"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+#, fuzzy
+#| msgid "Configue SELinux"
+msgid "Configure SELinux"
+msgstr "SELinux ക്രമികരിക്കുക"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr "അനി പീറ്റര്‍ <apeter@redhat.com>"
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "ബൂളിയന്‍സ് ഡയലോഗ് ചേര്‍ക്കുക"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "ബൂളിയന്‍ പേര്"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "SELinux പോളിസി ഉത്പാദന പ്രയോഗം"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr ""
+"<b>നിങ്ങള്‍ക്കാവശ്യമുള്ള പ്രയോഗം അല്ലെങ്കില്‍ ഉപയോക്താവിനുള്ള പോളിസി രീതി തെരഞ്ഞെടുക്കുക:</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>പ്രയോഗങ്ങള്‍</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "സ്റ്റാന്‍ഡേര്‍ഡ് Init ഡെമണ്‍"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"init സ്ക്രിപ്റ്റുകള്‍ വഴി ബൂട്ട് ചെയ്യുമ്പോള്‍ ആരംഭിക്കുന്ന ഡെമണുകളാണ് സ്റ്റാന്‍ഡേര്‍ഡ് Init ഡെമണ്‍.  "
+"ഇതിന് സാധാരണയായി, /etc/rc.d/init.d-ല്‍ ഒരു സ്ക്രിപ്റ്റ് ആവശ്യമുണ്ട്."
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "DBUS സിസ്റ്റം ഡെമണ്‍"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "ഇന്റര്‍നെറ്റ് സര്‍വീസസ് ഡെമണ്‍ (inetd)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "xinetd ആരംഭിക്കുന്ന ഡെമണുകള്‍ ആണ് ഇന്റര്‍നെറ്റ് സര്‍വീസുകളുടെ ഡെമണ്‍"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "വെബ് ആപ്ളിക്കേഷന്‍/സ്ക്രിപ്റ്റ് (CGI)"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr "വെബ് സര്‍വര്‍ (അപ്പാച്ചെ) ആരംഭിച്ച വെബ് പ്രയോഗങ്ങള്‍/സ്ക്രിപ്റ്റ് (CGI) CGI സ്ക്രിപ്റ്റുകള്‍"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "ഉപയോക്താവിനുള്ള പ്രയോഗം"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr ""
+"ഉപയോക്താവ് ആരംഭിക്കുന്നതിനുള്ള പ്രയോഗം ഏതാണോ അതാകുന്നു ഉപയോക്താവിനുള്ള പ്രയോഗം (യൂസര്‍ "
+"ആപ്ലിക്കേഷന്‍)"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "സാന്‍ഡ്ബോക്സ്"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>ലോഗിന്‍ ചെയ്ത ഉപയോക്താക്കള്‍</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "ഉപയോക്തവാന് നിലവിലുള്ള നിയമനങ്ങള്‍"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "നിലവിലുള്ള ഒരു ലോഗിന്‍ യൂസര്‍ റിക്കോര്‍ഡില്‍ മാറ്റം വരുത്തുന്നു."
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "ഏറ്റവും കുറഞ്ഞ ടെര്‍മിനല്‍ യൂസര്‍ റോള്‍"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"ടെര്‍മിനല്‍ അല്ലെങ്കില്‍ റിമോട്ട് ലോഗിന്‍ വഴി മാത്രമേ സിസ്റ്റമിലേക്ക് ഈ ഉപയോക്താവിന് "
+"പ്രവേശിക്കുവാന്‍ സാധിക്കുന്നു.  സ്വതവേ, ഈ ഉപയോക്താവിന്, setuid, നെറ്റ്‌വര്‍ക്കിങ്, sudo, su "
+"എന്നിവ ലഭ്യമല്ല."
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "ഏറ്റവും കൂടിയ ടെര്‍മിനല്‍ യൂസര്‍ റോള്‍"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"എക്സ് അല്ലെങ്കില്‍ ടെര്‍മിനല്‍ വഴി സിസ്റ്റമിലേക്ക് ഈ ഉപയോക്താവിന് പ്രവേശിക്കുവാന്‍ സാധിക്കുന്നു.  "
+"സ്വതവേ, ഈ ഉപയോക്താവിന്, setuid, നെറ്റ്‌വര്‍ക്കിങ്, sudo, su എന്നിവ ലഭ്യമല്ല."
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "ഉപയോക്താവിന്റെ ജോലി"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr ""
+"പൂര്‍ണ്ണ നെറ്റ്‌വര്‍ക്കിങുള്ള, മാറ്റം സാധ്യമല്ലാത്ത setuid പ്രയോഗങ്ങള്‍, su, sudo എന്നിവ ഇല്ലാത്ത "
+"ഉപയോക്താവ്."
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "അഡ്മിന്‍ ഉപയോക്താവിന്റെ നിയമനം "
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"പൂര്‍ണ്ണ നെറ്റ്‌വര്‍ക്കിങുള്ള, മാറ്റം സാധ്യമല്ലാത്ത setuid പ്രയോഗങ്ങള്‍, su എന്നിവ ഇല്ലാത്ത "
+"ഉപയോക്താവിന് റൂട്ട് അഡ്മിനിസ്ട്രേഷന്‍ ജോലികളിലേക്ക് sudo ചെയ്യുവാന്‍ സാധിക്കുന്നു"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>റൂട്ട് ഉപയോക്താക്കള്‍</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "റൂട്ട് അഡ്മിന്‍ യൂസര്‍ റോള്‍"
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"റൂട്ട് ആയി പ്രവര്‍ത്തിക്കുമ്പോള്‍, ഈ ഉപയോക്താവാണ് സിസ്റ്റം നിരീക്ഷിക്കുന്നത് എങ്കില്‍, റൂട്ട് "
+"അഡ്മിനിസ്ട്രേറ്റര്‍ യൂസര്‍ റോള്‍ തിരഞ്ഞെടുക്കുക.  ഈ ഉപയോക്താവിന് സിസ്റ്റമിലേക്ക് നേരിട്ട് "
+"പ്രവേശിക്കുവാന്‍ സാധ്യമല്ല."
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>പ്രയോഗം അല്ലെങ്കില്‍ ഉപയോക്താവിന്റെ ഉപയോഗം നല്‍കുക:</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr "നിഷ്കര്‍ഷിക്കുന്നതിനായുള്ള പൂര്‍ണ്ണ പാഥ് നല്‍കുക."
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "..."
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr "പ്രയോഗത്തിന് അല്ലെങ്കില്‍ ഉപയോക്താവിന്റെ നിയമനത്തിന് ഒരു പേര് നല്‍കുക."
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "പ്രവര്‍ത്തിപ്പിക്കുവാന്‍ സാധിക്കുന്ന"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "Init script"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr "പ്രയോഗം തുടങ്ങുന്നതിനുള്ള init സ്ക്രിപ്റ്റിനുള്ള പൂര്‍ണ്ണ പാഥ് നല്‍കുക."
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>മാറ്റം വരുത്തുന്നതിനായി നിലവിലുള്ളൊരു നിയമനം തെരഞ്ഞെടുക്കുക:</b>"
+
+#: ../polgen.ui:904
+#, fuzzy, python-format
+#| msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "%s ഡൊമെയിനിലേക്ക് ഉപയോക്താവിന്റെ ഏതെല്ലാം ജോലികള്‍ മാറുന്നു എന്നു് തെരഞ്ഞെടുക്കുക."
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "നിയമനത്തിനുള്ള റ്റാബ്"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>ഇതിലേക്കു് ഏതെല്ലാം നിയമനങ്ങള്‍ %s മാറ്റുന്നു:</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr "%s മാറുന്ന പ്രയോഗങ്ങളുടെ ഡൊമെയിനുകള്‍ തെരഞ്ഞെടുക്കുക."
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"മാറ്റം \n"
+"നിയമനത്തിനുള്ള റ്റാബ്"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>%s മാറുന്ന ഉപയോക്താവിന്റെ നിയമനങ്ങള്‍ തെരഞ്ഞെടുക്കുക.:</b>"
+
+#: ../polgen.ui:1007
+#, fuzzy
+#| msgid ""
+#| "Select the user roles that will transiton to this applications domains."
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr ""
+"ഉപയോക്താവ് ഏത് ജോലികളില്‍ നിന്നും ഈ പ്രയോഗങ്ങളുടെ ഡൊമെയിനുകളിലേക്ക് മാറുന്നു എന്ന് തിരഞ്ഞെടുക്കുക"
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>%s കൈകാര്യം ചെയ്യുന്നതിനുള്ള ഡൊമെയിനുകള്‍ തെരഞ്ഞെടുക്കുക:</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "ഈ ഉപയോക്താവ് നിരീക്ഷിക്കുന്നതിനുള്ള ഡൊമെയിനുകള്‍ തിരഞ്ഞെടുക്കുക."
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>%s-നുള്ള അധികമായ നിയമനങ്ങള്‍ തെരഞ്ഞെടുക്കുക:</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>%s ബൈന്‍ഡ് ചെയ്യുന്ന നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍ നല്‍കുക:</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP പോര്‍ട്ടുകള്‍</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "എല്ലാം"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "ഏതു് udp പോര്‍ട്ടിലേക്കും ബൈന്‍ഡ് ചെയ്യുന്നതിനായി %s-നെ അനുവദിയ്ക്കുന്നു"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr ""
+"0 ഉപയോഗിച്ചു് bindresvport ലഭ്യമാക്കുവാന്‍ %s-നെ അനുവദിയ്ക്കുന്നു. 600-1024-ലേക്കു് ബൈന്‍ഡ് "
+"ചെയ്യുന്നു"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "മറ്റൊന്നിനും കരുതിട്ടില്ലാത്ത പോര്‍ട്ടുകള്‍ (>1024)"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"%s ബൈന്‍ഡ് ചെയ്യുന്ന യുഡിപി പോര്‍ട്ടുകള്‍ അല്ലെങ്കില്‍ ടിസിപി പോര്‍ട്ടുകള്‍ കോമാ ഉപയോഗിച്ച് വേര്‍തിരിച്ച് "
+"നല്‍കുക. ഉദാ: 612, 650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "പോര്‍ട്ടുകള്‍ തിരഞ്ഞെടുക്കുക"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "1024-നേക്കാള്‍ വലിയ യുഡിപി പോര്‍ട്ടുകളിലേക്കു് ബൈന്‍ഡ് ചെയ്യുവാന്‍ %s-നെ അനുവദിയ്ക്കുന്നു"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP പോര്‍ട്ടുകള്‍</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"നെറ്റ്‌വര്‍ക്ക്\n"
+"ബൈന്‍ഡ് റ്റാബ്"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>%s കണക്ട് ചെയ്യുന്ന നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍ തെരഞ്ഞെടുക്കുക:</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "ഏതെങ്കിലും ടിസിപി പോര്‍ട്ടിലേക്കു് കണക്ട് ചെയ്യുവാന്‍ %s-നെ അനുവദിയ്ക്കുന്നു"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"%s-നു് കണക്ട് ചെയ്യുന്നതിനായി ടിസിപി പോര്‍ട്ടുകളോ അവയുടെ പരിധിയില്‍പ്പെടുന്ന മറ്റ് പോര്‍ട്ടുകളോ "
+"കോമാ ഉപയോഗിച്ച് വേര്‍തിരിച്ച് നല്‍കുക. ഉദാ: 612, 650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "ഏതെങ്കിലും udp പോര്‍ട്ടിലേക്കു് കണക്ട് ചെയ്യുവാന്‍ %s-നെ അനുവദിയ്ക്കുന്നു"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"%s-നു് കണക്ട് ചെയ്യുന്നതിനായി യുഡിപി പോര്‍ട്ടുകളോ അവയുടെ പരിധിയില്‍പ്പെടുന്ന മറ്റ് പോര്‍ട്ടുകളോ കോമാ "
+"ഉപയോഗിച്ച് വേര്‍തിരിച്ച് നല്‍കുക. ഉദാ: 612, 650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>%s-നുള്ള സാധാരണ പ്രയോഗ വിശേഷതകള്‍ തെരഞ്ഞെടുക്കുക:</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "syslog സന്ദേശങ്ങള്‍ എഴുതുന്നു\t"
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "/tmp-ലുള്ള താല്‍ക്കാലിക ഫയലകുള്‍ ഉണ്ടാക്കുക/കൈകാര്യം ചെയ്യുക."
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "അധികാരം ഉറപ്പാക്കുന്നതിനായി പാം ഉപയോഗിക്കുക"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "nsswitch അല്ലെങ്കില്‍ getpw* കോളുകള്‍ ഉപയോഗിക്കുന്നു"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "dbus ഉപയോഗിക്കുന്നു"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "ഓഡിറ്റ് സന്ദേശങ്ങള്‍ അയയ്ക്കുന്നു"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "ടെര്‍മിനലുമായി ബന്ധപ്പെടുന്നു"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "ഈമെയില്‍ അയയ്ക്കുന്നു"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>%s കൈകാര്യം ചെയ്യുന്ന ഫയലുകള്‍/ഡയറക്ടറികള്‍ ചേര്‍ക്കുക</b>"
+
+#: ../polgen.ui:1978
+#, fuzzy
+#| msgid "Add File Context"
+msgid "Add File"
+msgstr "ഫയല്‍ കോണ്‍ടെക്സ്റ്റ് ചേര്‍ക്കുക"
+
+#: ../polgen.ui:2031
+#, fuzzy
+#| msgid "directory"
+msgid "Add Directory"
+msgstr "ഡയറക്ടറി"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr "%s \"കൈകാര്യം ചെയ്യുന്ന\" ഫയലുകള്‍/ഡയറക്ടറികള്‍. Pid, ലോഗ്, /var/lib എന്നീഫയലുകള്‍..."
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>%s പോളിസിയില്‍ നിന്നും ബൂളിയനുകള്‍ ചേര്‍ക്കുക:</b>"
+
+#: ../polgen.ui:2179
+#, fuzzy
+#| msgid "Boolean"
+msgid "Add Boolean"
+msgstr "ബൂളിയന്‍"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "%s ഡൊമെയിന്‍ ഉപയോഗിയ്ക്കുന്ന ബൂളിയനുകള്‍ ചേര്‍ക്കുക/നീക്കം ചെയ്യുക"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr " <b>ഏതു് ഡയറക്ടറി %s പോളിസി ഉണ്ടാക്കുന്നു</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "പോളിസി ഡയറക്ടറി"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ട് "
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"SELinux തരത്തിലുള്ള\n"
+"പോര്‍ട്ട്"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "സമ്പ്രദായം"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"ലവല്‍"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "പോര്‍ട്ട്"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "\"%s\" എന്ന പോര്‍ട്ട് നംബര്‍ തെറ്റാണ്.  0 < PORT_NUMBER < 65536 "
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "പട്ടികയില്‍ കാണുക"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "ഗ്രൂപ്പായുള്ള കാഴ്ച"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr ""
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "നിങ്ങള്‍ക്ക് %s '%s' നീക്കം ചെയ്യണമെന്നുറപ്പാണോ?"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "%s നീക്കം ചെയ്യുക"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "%s ചേര്‍ക്കുക"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "%s-ല്‍ മാറ്റം വരുത്തുക"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr ""
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr ""
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "എന്‍ഫോര്‍സിങ്"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "പ്രവര്‍ത്തന രഹിതം"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "അവസ്ഥ"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"പോളിസി മാറ്റിയാല്‍ അടുത്ത തവണ ബൂട്ട് ചെയ്യുമ്പോള്‍ ഫയല്‍ സിസ്റ്റം പൂര്‍ണ്ണമായും റീലേബല്‍ "
+"ചെയ്യണ്ടതാകുന്നു.  സിസ്റ്റമിന്റെ വ്യാപ്തി അനുസരിച്ച് റീലേബലിങിന് സമയമെടുക്കുന്നു.നിങ്ങള്‍ക്ക് മുമ്പോട്ട് "
+"പോകണമെന്നുറപ്പാണോ?"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"SELinux നിര്‍ജ്ജീവാമാക്കുന്നു എങ്കില്‍ റീബൂട്ട് ചെയ്യേണ്ടതുണ്ട്.  ഇത് ഉത്തമമല്ല. കാരണം, നിങ്ങള്‍ക്ക് "
+"പിന്നീട് SELinux ആവശ്യമാണ് എങ്കില്‍, ഓണ്‍ ചെയ്യുന്നതിനായി, സിസ്റ്റം വീണ്ടും റീലേബല്‍ "
+"ചെയ്യണ്ടതുണ്ട്. SELinux നിങ്ങളുടെ സിസ്റ്റമില്‍ എന്തെങ്കിലും തകരാറുകള്‍ ഉണ്ടാക്കുന്നുണ്ടോ എന്ന് "
+"അറിയണമെങ്കില്‍ നിങ്ങള്‍ക്ക് പെര്‍മ്മിസ്സീവ് മോഡിലേക്ക് മാറ്റാം. ഇത് പിശകുകള്‍ മാത്രം ലോഗ് ചെയ്യുന്നു, "
+"കൂടാതെ SELinux പോളിസി എന്‍ഫോഴ്സ് ചെയ്യുന്നുമില്ല. പെര്‍മ്മിസ്സീവ് മോഡുകള്‍ക്ക് റീബൂട്ട് "
+"ചെയ്യേണ്ടതില്ല.    നിങ്ങള്‍ക്ക് മുമ്പോട്ട് തുടരണമോ?"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"SELinux സജ്ജമാക്കിയാല്‍ അടുത്ത തവണ ബൂട്ട് ചെയ്യുമ്പോള്‍ ഫയല്‍ സിസ്റ്റം പൂര്‍ണ്ണമായും റീലേബല്‍ "
+"ചെയ്യണ്ടതാകുന്നു.  സിസ്റ്റമിന്റെ വ്യാപ്തി അനുസരിച്ച് റീലേബലിങിന് സമയമെടുക്കുന്നു.നിങ്ങള്‍ക്ക് മുമ്പോട്ട് "
+"പോകണമെന്നുറപ്പാണോ?"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr ""
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr ""
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"പകര്‍പ്പവകാശം (c)2006 Red Hat, Inc.\n"
+"പകര്‍പ്പവകാശം (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "SELinux ലോഗിന്‍ മാപ്പിങ് ചേര്‍ക്കുക"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "പ്രവേശന നാമം"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "SELinux ഉപയോക്താവ്"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "MLS/MCS പരിധി"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "SELinux നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍ ചേര്‍ക്കുക"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "പോര്‍ട്ട് നംബര്‍"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "SELinux തരത്തിലുള്ള"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "ഫയലിനുള്ള പ്രത്യേകതകള്‍"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "ഏത് തരം ഫയല്‍"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "SELinux അഡ്മിനിസ്ട്രേഷന്‍"
+
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "_ഫയല്‍"
+
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "കൂട്ടുക (_A)"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "ഗുണഗണങ്ങള്‍ (_P)"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "നീക്കം ചെയ്യുക (_D)"
+
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "_സഹായം"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "മാനേജ്മെന്റ് ഒബ്ജക്ട് തിരഞ്ഞെടുക്കുക"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>തിരഞ്ഞെടുക്കുക:</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "സിസ്റ്റമില്‍ സ്വതവേയുള്ള എന്‍ഫോര്‍സിങ് മോഡ്"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "നിലവിലുള്ള എന്‍ഫോര്‍സിങ് മോഡ്"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "സിസ്റ്റത്തിന്റെ സ്വതവേയുള്ള പോളിസി തരത്തിലുള്ളവ: "
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"അടുത്ത തവണ റീബൂട്ട് ചെയ്യുമ്പോള്‍ ഫയല്‍ സിസ്റ്റം പൂര്‍ണ്ണമായും റീലേബല്‍ ചെയ്യണമെങ്കില്‍ തിരഞ്ഞെടുക്കുക.  "
+"സിസ്റ്റമിന്റെ വ്യാപ്തി അനുസരിച്ച് റീലേബലിങിന് സമയമെടുക്കുന്നു.നിങ്ങള്‍ പോളിസി മാറ്റുകയോ, നിര്‍"
+"ജ്ജീവം എന്നതില്‍ നിന്നും എന്‍ഫോഴ്സിങ് ആകുകയോ ചെയ്യുന്നു എങ്കില്‍ റീലേബല്‍ ആവശ്യമുണ്ട്."
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr "അടുത്ത തവണ റീബൂട്ട് ചെയ്യുമ്പോള്‍ ലേബല്‍ മാറ്റുക."
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "ബൂളിയന്‍ ക്രമികരണത്തിനെ സിസ്റ്റമിന്റെ സ്വതവേയുള്ളതാക്കി മാറ്റുക"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "യഥേഷ്ടം തയ്യാറാക്കിയവയും മറ്റെല്ലാ ബൂളിയനുകളും തമ്മില്‍ മാറ്റുക"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "ഫില്‍‌റ്റര്‍"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "ഫയല്‍ കോണ്‍ടെക്സ്റ്റ് ചേര്‍ക്കുക"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "ഫയല്‍ കോണ്‍ടെക്സ്റ്റില്‍ മാറ്റം വരുത്തുക"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "ഫയല്‍ കോണ്‍ടെക്സ്റ്റ് നീക്കം ചെയ്യുക"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "യഥേഷ്ടം തയ്യാറാക്കിയ ഫയലിന്റെ കോണ്‍ടെക്സ്റ്റും മറ്റെല്ലാം തമ്മില്‍ മാറ്റുക"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "SELinux യൂസര്‍ മാപ്പിങ് ചേര്‍ക്കുക"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "SELinux യൂസര്‍ മാപ്പിങില്‍ മാറ്റം വരുത്തുക"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "SELinux യൂസര്‍ മാപ്പിങ് നീക്കം ചെയ്യുക"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "ഉപയോക്താവിനെ ചേര്‍ക്കുക"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "ഉപയോക്താവില്‍ മാറ്റം വരുത്തുക"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "ഉപയോക്താവിനെ നീക്കം ചെയ്യുക"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ട് ചേര്‍ക്കുക"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടില്‍ മാറ്റം വരുത്തുക"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ട് നീക്കം ചെയ്യുക"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "യഥേഷ്ടം തയ്യാറാക്കിയവയും മറ്റെല്ലാ പോര്‍ട്ടുകളും തമ്മില്‍ മാറ്റുക"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "പുതിയ പോളിസി ഘടകം ഉണ്ടാക്കുക"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "പോളിസി ഘടകം ലഭ്യമാക്കുക"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "ലഭ്യമാകുന്ന പോളിസി ഘടകം നീക്കം ചെയ്യുക"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr ""
+"കൂടുതലുള്ള ഓഡിറ്റ് നിയമങ്ങള്‍ പ്രവര്‍ത്തന രഹിതമാക്കുക, അവ സാധാരണ ലോഗ് ഫയലുകളില്‍ റിപ്പോര്‍ട്ട് "
+"ചെയ്യപ്പെടുന്നില്ല."
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "പ്രക്രിയ പെര്‍മിസ്സീവ് മോഡിലേക്കു് മാറ്റുന്നു"
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "പ്രക്രിയ എന്‍ഫോഴ്സിങ് മോഡിലേക്കു് മാറ്റുന്നു"
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "SELinux ഉപയോക്താവിനെ ചേര്‍ക്കുക"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "SELinux റോളുകള്‍"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "'%s' എന്ന SELinux ഉപയോക്താവ് ആവശ്യമുണ്ട്"
+
+#, fuzzy
+#~| msgid "Configue SELinux"
+#~ msgid "Run System Config SELinux"
+#~ msgstr "SELinux ക്രമികരിക്കുക"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "all files"
+#~ msgstr "എല്ലാ ഫയലുകളും"
+
+#~ msgid "regular file"
+#~ msgstr "സാധാരണ ഫയല്‍"
+
+#~ msgid "character device"
+#~ msgstr "ക്യാരക്ടര്‍ ഡിവൈസ്"
+
+#~ msgid "block device"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസ്"
+
+#~ msgid "socket file"
+#~ msgstr "സോക്കറ്റ് ഫയല്‍"
+
+#~ msgid "symbolic link"
+#~ msgstr "സിംബോളിക്ക് ലിങ്ക്"
+
+#~ msgid "named pipe"
+#~ msgstr "നെയിമ്ഡ് പൈപ്പ്"

@@ -1,0 +1,354 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2015-03-23 02:59-0400\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: German (Switzerland)\n"
+"Language: de_CH\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Zanata 4.6.2\n"
+
+#: ../run_init/run_init.c:67
+msgid ""
+"USAGE: run_init <script> <args ...>\n"
+"  where: <script> is the name of the init script to run,\n"
+"         <args ...> are the arguments to that script."
+msgstr ""
+
+#: ../run_init/run_init.c:126 ../newrole/newrole.c:1149
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr ""
+
+#: ../run_init/run_init.c:139
+#, c-format
+msgid "failed to get account information\n"
+msgstr ""
+
+#: ../run_init/run_init.c:170 ../newrole/newrole.c:336
+msgid "Password:"
+msgstr "Passwort:"
+
+#: ../run_init/run_init.c:205 ../newrole/newrole.c:361
+#, c-format
+msgid "Cannot find your entry in the shadow passwd file.\n"
+msgstr ""
+
+#: ../run_init/run_init.c:211 ../newrole/newrole.c:368
+#, c-format
+msgid "getpass cannot open /dev/tty\n"
+msgstr ""
+
+#: ../run_init/run_init.c:283
+#, c-format
+msgid "run_init: incorrect password for %s\n"
+msgstr ""
+
+#: ../run_init/run_init.c:317
+#, c-format
+msgid "Could not open file %s\n"
+msgstr ""
+
+#: ../run_init/run_init.c:344
+#, c-format
+msgid "No context in file %s\n"
+msgstr ""
+
+#: ../run_init/run_init.c:369
+#, c-format
+msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
+msgstr ""
+
+#: ../run_init/run_init.c:388
+#, c-format
+msgid "authentication failed.\n"
+msgstr ""
+
+#: ../run_init/run_init.c:414 ../newrole/newrole.c:1292
+#, c-format
+msgid "Could not set exec context to %s.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:200
+#, c-format
+msgid "failed to set PAM_TTY\n"
+msgstr ""
+
+#: ../newrole/newrole.c:285
+#, c-format
+msgid "newrole: service name configuration hashtable overflow\n"
+msgstr ""
+
+#: ../newrole/newrole.c:295
+#, c-format
+msgid "newrole:  %s:  error on line %lu.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:434
+#, c-format
+msgid "cannot find valid entry in the passwd file.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:445
+#, c-format
+msgid "Out of memory!\n"
+msgstr ""
+
+#: ../newrole/newrole.c:450
+#, c-format
+msgid "Error!  Shell is not valid.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:510
+#, c-format
+msgid "Unable to clear environment\n"
+msgstr ""
+
+#: ../newrole/newrole.c:551 ../newrole/newrole.c:562 ../newrole/newrole.c:593
+#: ../newrole/newrole.c:604 ../newrole/newrole.c:631
+#, c-format
+msgid "Error resetting KEEPCAPS, aborting\n"
+msgstr ""
+
+#: ../newrole/newrole.c:557 ../newrole/newrole.c:599 ../newrole/newrole.c:636
+#, c-format
+msgid "Error changing uid, aborting.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:654
+#, c-format
+msgid "Error connecting to audit system.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:660
+#, c-format
+msgid "Error allocating memory.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:667
+#, c-format
+msgid "Error sending audit message.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:711 ../newrole/newrole.c:1083
+#, c-format
+msgid "Could not determine enforcing mode.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:718
+#, c-format
+msgid "Error!  Could not open %s.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:724
+#, c-format
+msgid "Error!  Could not clear O_NONBLOCK on %s\n"
+msgstr ""
+
+#: ../newrole/newrole.c:730
+#, c-format
+msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:740
+#, c-format
+msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:750
+#, c-format
+msgid "%s!  Could not set new context for %s\n"
+msgstr ""
+
+#: ../newrole/newrole.c:797
+#, c-format
+msgid "%s changed labels.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:803
+#, c-format
+msgid "Warning! Could not restore context for %s\n"
+msgstr ""
+
+#: ../newrole/newrole.c:860
+#, c-format
+msgid "Error: multiple roles specified\n"
+msgstr ""
+
+#: ../newrole/newrole.c:868
+#, c-format
+msgid "Error: multiple types specified\n"
+msgstr ""
+
+#: ../newrole/newrole.c:875
+#, c-format
+msgid "Sorry, -l may be used with SELinux MLS support.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:880
+#, c-format
+msgid "Error: multiple levels specified\n"
+msgstr ""
+
+#: ../newrole/newrole.c:890
+#, c-format
+msgid "Error: you are not allowed to change levels on a non secure terminal \n"
+msgstr ""
+
+#: ../newrole/newrole.c:916
+#, c-format
+msgid "Couldn't get default type.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:926
+#, c-format
+msgid "failed to get new context.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:933
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr ""
+
+#: ../newrole/newrole.c:940
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr ""
+
+#: ../newrole/newrole.c:950
+#, c-format
+msgid "failed to build new range with level %s\n"
+msgstr ""
+
+#: ../newrole/newrole.c:955
+#, c-format
+msgid "failed to set new range %s\n"
+msgstr ""
+
+#: ../newrole/newrole.c:963
+#, c-format
+msgid "failed to convert new context to string\n"
+msgstr ""
+
+#: ../newrole/newrole.c:968
+#, c-format
+msgid "%s is not a valid context\n"
+msgstr ""
+
+#: ../newrole/newrole.c:975
+#, c-format
+msgid "Unable to allocate memory for new_context"
+msgstr ""
+
+#: ../newrole/newrole.c:1001
+#, c-format
+msgid "Unable to obtain empty signal set\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1009
+#, c-format
+msgid "Unable to set SIGHUP handler\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1061
+msgid "Sorry, newrole failed to drop capabilities\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1077
+#, c-format
+msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1094
+#, c-format
+msgid "failed to get old_context.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1101
+#, c-format
+msgid "Warning!  Could not retrieve tty information.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1123
+#, c-format
+msgid "error on reading PAM service configuration.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1158
+#, c-format
+msgid "newrole: incorrect password for %s\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1185
+#, c-format
+msgid "newrole: failure forking: %s"
+msgstr ""
+
+#: ../newrole/newrole.c:1188 ../newrole/newrole.c:1211
+#, c-format
+msgid "Unable to restore tty label...\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1190 ../newrole/newrole.c:1217
+#, c-format
+msgid "Failed to close tty properly\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1250
+#, c-format
+msgid "Could not close descriptors.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1285
+#, c-format
+msgid "Error allocating shell's argv0.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1307
+#, c-format
+msgid "Failed to send audit message"
+msgstr ""
+
+#: ../newrole/newrole.c:1315
+#, c-format
+msgid "Failed to transition to namespace\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1321
+#, c-format
+msgid "Failed to drop capabilities %m\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1326
+#, c-format
+msgid "Unable to restore the environment, aborting\n"
+msgstr ""
+
+#: ../newrole/newrole.c:1337
+msgid "failed to exec shell\n"
+msgstr ""
+
+#: ../load_policy/load_policy.c:22
+#, c-format
+msgid "usage:  %s [-qi]\n"
+msgstr ""
+
+#: ../load_policy/load_policy.c:73
+#, c-format
+msgid "%s:  Can't load policy and enforcing mode requested:  %s\n"
+msgstr ""
+
+#: ../load_policy/load_policy.c:83
+#, c-format
+msgid "%s:  Can't load policy:  %s\n"
+msgstr ""

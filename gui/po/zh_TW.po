@@ -1,0 +1,1035 @@
+# Chester Cheng <snowlet.cheng@gmail.com>, 2016. #zanata
+# Petr Lautrbach <plautrba@fedoraproject.org>, 2016. #zanata
+# Zdenek Dohnal <zdohnal@redhat.com>, 2016. #zanata
+# Cheng-Chia Tseng <pswo10680@gmail.com>, 2017. #zanata
+# Parag <pnemade@redhat.com>, 2017. #zanata
+# Vit Mojzis <vmojzis@redhat.com>, 2017. #zanata
+# Ludek Janda <ljanda@redhat.com>, 2018. #zanata
+# Peter Pan <pan93412@gmail.com>, 2018. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2018-11-20 10:24-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Chinese (Taiwan)\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: Zanata 4.6.2\n"
+
+#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+msgid "Boolean"
+msgstr "布林值"
+
+#: ../booleansPage.py:248 ../semanagePage.py:166
+msgid "all"
+msgstr "全部"
+
+#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
+#: ../system-config-selinux.ui:1480
+msgid "Customized"
+msgstr "自訂"
+
+#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+msgid "Process Domain"
+msgstr "處理區域"
+
+#: ../domainsPage.py:63
+msgid "Domain Name"
+msgstr "網域名稱"
+
+#: ../domainsPage.py:68
+msgid "Mode"
+msgstr "模式"
+
+#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
+#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../system-config-selinux.ui:1729
+msgid "Permissive"
+msgstr "寬容"
+
+#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+msgid "File Labeling"
+msgstr "檔案標籤"
+
+#: ../fcontextPage.py:82
+msgid ""
+"File\n"
+"Specification"
+msgstr ""
+"檔案\n"
+"規格"
+
+#: ../fcontextPage.py:89
+msgid ""
+"Selinux\n"
+"File Type"
+msgstr ""
+"Selinux\n"
+"檔案類型"
+
+#: ../fcontextPage.py:96
+msgid ""
+"File\n"
+"Type"
+msgstr ""
+"檔案\n"
+"類型"
+
+#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+msgid "User Mapping"
+msgstr "使用者對映"
+
+#: ../loginsPage.py:59
+msgid ""
+"Login\n"
+"Name"
+msgstr ""
+"登入\n"
+"名稱"
+
+#: ../loginsPage.py:63 ../usersPage.py:60
+msgid ""
+"SELinux\n"
+"User"
+msgstr ""
+"SELinux\n"
+"使用者"
+
+#: ../loginsPage.py:66 ../usersPage.py:65
+msgid ""
+"MLS/\n"
+"MCS Range"
+msgstr ""
+"MLS/\n"
+"MCS 範圍"
+
+#: ../loginsPage.py:135
+#, python-format
+msgid "Login '%s' is required"
+msgstr "需要登入「%s」"
+
+#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+msgid "Policy Module"
+msgstr "方針模組"
+
+#: ../modulesPage.py:65
+msgid "Module Name"
+msgstr "模組名稱"
+
+#: ../modulesPage.py:70
+msgid "Priority"
+msgstr "優先順序"
+
+#: ../modulesPage.py:79
+msgid "Kind"
+msgstr "類型"
+
+#: ../modulesPage.py:148
+msgid "Disable Audit"
+msgstr "停用稽核"
+
+#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+msgid "Enable Audit"
+msgstr "啟用稽核"
+
+#: ../modulesPage.py:176
+msgid "Load Policy Module"
+msgstr "載入政策模組"
+
+#: ../polgengui.py:288 ../polgen.ui:728
+msgid "Name"
+msgstr "名稱"
+
+#: ../polgengui.py:290 ../polgen.ui:111
+msgid "Description"
+msgstr "描述"
+
+#: ../polgengui.py:298
+msgid "Role"
+msgstr "角色"
+
+#: ../polgengui.py:305
+msgid "Existing_User"
+msgstr "既有使用者(_U)"
+
+#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+msgid "Application"
+msgstr "應用程式"
+
+#: ../polgengui.py:386
+#, python-format
+msgid "%s must be a directory"
+msgstr "%s 必須是個目錄"
+
+#: ../polgengui.py:446 ../polgengui.py:727
+msgid "You must select a user"
+msgstr "您必須選擇一位使用者"
+
+#: ../polgengui.py:576
+msgid "Select executable file to be confined."
+msgstr "選擇欲限制的可執行檔。"
+
+#: ../polgengui.py:587
+msgid "Select init script file to be confined."
+msgstr "選擇欲限制的 init 指令稿檔案。"
+
+#: ../polgengui.py:597
+msgid "Select file(s) that confined application creates or writes"
+msgstr "選擇限制應用程式建立或寫入的檔案"
+
+#: ../polgengui.py:604
+msgid "Select directory(s) that the confined application owns and writes into"
+msgstr "選擇受限之應用程式擁有並寫入其中的目錄"
+
+#: ../polgengui.py:666
+msgid "Select directory to generate policy files in"
+msgstr "選擇欲在其中產生方針檔案的目錄"
+
+#: ../polgengui.py:683
+#, python-format
+msgid ""
+"Type %s_t already defined in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"類型 %s_t 已定義於目前的方針中。\n"
+"您是否希望繼續？"
+
+#: ../polgengui.py:683 ../polgengui.py:687
+msgid "Verify Name"
+msgstr "驗證名稱"
+
+#: ../polgengui.py:687
+#, python-format
+msgid ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
+msgstr ""
+"模組 %s 已載入目前的政策中。\n"
+"您是否希望繼續？"
+
+#: ../polgengui.py:733
+msgid ""
+"You must add a name made up of letters and numbers and containing no spaces."
+msgstr "您必須新增一組以字母和數字組成，並且不包含空格的名稱。"
+
+#: ../polgengui.py:747
+msgid "You must enter a executable"
+msgstr "您必須輸入一個可執行檔"
+
+#: ../polgengui.py:772 ../system-config-selinux.py:184
+#, fuzzy
+#| msgid "Configue SELinux"
+msgid "Configure SELinux"
+msgstr "配置 SELinux"
+
+#: ../polgen.ui:9
+msgid "Red Hat 2007"
+msgstr "Red Hat 2007"
+
+#: ../polgen.ui:11
+msgid "GPL"
+msgstr "GPL"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../polgen.ui:13 ../system-config-selinux.ui:15
+msgid "translator-credits"
+msgstr ""
+"莊佳儒 <tchuang@redhat.com>.\n"
+"Cheng-Chia Tseng <pswo10680@gmail.com>, 2017."
+
+#: ../polgen.ui:34
+msgid "Add Booleans Dialog"
+msgstr "新增布林值對話盒"
+
+#: ../polgen.ui:99
+msgid "Boolean Name"
+msgstr "布林值名稱"
+
+#: ../polgen.ui:234 ../selinux-polgengui.desktop:3
+msgid "SELinux Policy Generation Tool"
+msgstr "SELinux 方針產生工具"
+
+#: ../polgen.ui:255
+msgid ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
+msgstr "<b>為您希望限制的應用程式或使用者角色選擇方針類型：</b>"
+
+#: ../polgen.ui:288
+msgid "<b>Applications</b>"
+msgstr "<b>應用程式</b>"
+
+#: ../polgen.ui:320
+msgid "Standard Init Daemon"
+msgstr "標準的 Init 幕後程式"
+
+#: ../polgen.ui:324 ../polgen.ui:340
+msgid ""
+"Standard Init Daemon are daemons started on boot via init scripts.  Usually "
+"requires a script in /etc/rc.d/init.d"
+msgstr ""
+"標準的 Init 幕後程式 乃透過 init 指令稿在開機時啟用的幕後程式。 一般在 /etc/"
+"rc.d/init.d 中需要有個指令稿"
+
+#: ../polgen.ui:336
+msgid "DBUS System Daemon"
+msgstr "DBUS 系統幕後程式"
+
+#: ../polgen.ui:353
+msgid "Internet Services Daemon (inetd)"
+msgstr "網際網路服務幕後程式 (inetd)"
+
+#: ../polgen.ui:357
+msgid "Internet Services Daemon are daemons started by xinetd"
+msgstr "網際網路服務幕後程式乃 xinetd 所啟用的幕後程式"
+
+#: ../polgen.ui:370
+msgid "Web Application/Script (CGI)"
+msgstr "網站應用程式/指令稿 (CGI)"
+
+#: ../polgen.ui:374
+msgid ""
+"Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
+msgstr "網站應用程式/指令稿 (CGI) CGI 指令稿是由網站伺服器 (apache) 啟動。"
+
+#: ../polgen.ui:387
+msgid "User Application"
+msgstr "使用者應用程式"
+
+#: ../polgen.ui:391 ../polgen.ui:408
+msgid ""
+"User Application are any application that you would like to confine that is "
+"started by a user"
+msgstr "使用者應用程式乃任何您所希望限制、由使用者所啟用的任何應用程式"
+
+#: ../polgen.ui:404
+msgid "Sandbox"
+msgstr "沙盒"
+
+#: ../polgen.ui:450
+msgid "<b>Login Users</b>"
+msgstr "<b>登入使用者</b>"
+
+#: ../polgen.ui:482
+msgid "Existing User Roles"
+msgstr "既有的使用者角色"
+
+#: ../polgen.ui:486
+msgid "Modify an existing login user record."
+msgstr "修改既有的登入使用者紀錄。"
+
+#: ../polgen.ui:499
+msgid "Minimal Terminal User Role"
+msgstr "最少終端機使用者角色"
+
+#: ../polgen.ui:503
+msgid ""
+"This user will login to a machine only via a terminal or remote login.  By "
+"default this user will have  no setuid, no networking, no su, no sudo."
+msgstr ""
+"這位使用者只能透過終端機或是遠端登入來登入機器。 就預設值，這位使用者將沒有 "
+"setuid、無網路、無 su、無 sudo。"
+
+#: ../polgen.ui:516
+msgid "Minimal X Windows User Role"
+msgstr "最少 X Windows 使用者角色"
+
+#: ../polgen.ui:520
+msgid ""
+"This user can login to a machine via X or terminal.  By default this user "
+"will have no setuid, no networking, no sudo, no su"
+msgstr ""
+"這位使用者能透過 X 或是終端機來登入機器。 就預設值，這位使用者將沒有 setuid、"
+"無網路、無 sudo，並無 su"
+
+#: ../polgen.ui:533
+msgid "User Role"
+msgstr "使用者角色"
+
+#: ../polgen.ui:537
+msgid ""
+"User with full networking, no setuid applications without transition, no "
+"sudo, no su."
+msgstr "使用者擁有完整網路、沒有無轉移的 setuid 應用程式、無 sudo，無 su。"
+
+#: ../polgen.ui:550
+msgid "Admin User Role"
+msgstr "管理使用者角色"
+
+#: ../polgen.ui:554
+msgid ""
+"User with full networking, no setuid applications without transition, no su, "
+"can sudo to Root Administration Roles"
+msgstr ""
+"使用者擁有完整網路、沒有無轉移的 setuid 應用程式、無 su，可 sudo 至 Root 管理"
+"角色"
+
+#: ../polgen.ui:596
+msgid "<b>Root Users</b>"
+msgstr "<b>Root 使用者</b>"
+
+#: ../polgen.ui:627
+msgid "Root Admin User Role"
+msgstr "Root 管理使用者角色"
+
+#: ../polgen.ui:631
+msgid ""
+"Select Root Administrator User Role, if this user will be used to administer "
+"the machine while running as root.  This user will not be able to login to "
+"the system directly."
+msgstr ""
+"若使用者將會以 root 身份管理機器，請選擇 Root 管理使用者角色。 該使用者將無法"
+"直接登入系統。"
+
+#: ../polgen.ui:705
+msgid "<b>Enter name of application or user role:</b>"
+msgstr "<b>輸入應用程式或使用者角色的名稱：</b>"
+
+#: ../polgen.ui:739
+msgid "Enter complete path for executable to be confined."
+msgstr "輸入欲限制之可執行檔的完整路徑。"
+
+#: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
+msgid "..."
+msgstr "..."
+
+#: ../polgen.ui:776
+msgid "Enter unique name for the confined application or user role."
+msgstr "輸入受限制的應用程式或使用者角色的獨特名稱。"
+
+#: ../polgen.ui:794
+msgid "Executable"
+msgstr "可執行檔"
+
+#: ../polgen.ui:808
+msgid "Init script"
+msgstr "Init 指令稿"
+
+#: ../polgen.ui:821
+msgid ""
+"Enter complete path to init script used to start the confined application."
+msgstr "輸入用來啟用受限制之應用程式的 init 指令稿完整路徑。"
+
+#: ../polgen.ui:883
+msgid "<b>Select existing role to modify:</b>"
+msgstr "<b>選擇欲修改的既有角色：</b>"
+
+#: ../polgen.ui:904
+#, fuzzy, python-format
+#| msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
+msgstr "選擇將會轉換至 %s 區域的使用者角色。"
+
+#: ../polgen.ui:921
+msgid "role tab"
+msgstr "角色分頁"
+
+#: ../polgen.ui:937
+#, python-format
+msgid "<b>Select roles that %s will transition to:</b>"
+msgstr "<b>選擇 %s 將會轉移成的角色：</b>"
+
+#: ../polgen.ui:955
+#, python-format
+msgid "Select applications domains that %s will transition to."
+msgstr "選擇 %s 將會轉移至的應用程式區域。"
+
+#: ../polgen.ui:972
+msgid ""
+"transition \n"
+"role tab"
+msgstr ""
+"轉移\n"
+"角色分頁"
+
+#: ../polgen.ui:989
+#, python-format
+msgid "<b>Select the user_roles that will transition to %s:</b>"
+msgstr "<b>選擇將會轉移至 %s 的 user_roles：</b>"
+
+#: ../polgen.ui:1007
+#, fuzzy
+#| msgid ""
+#| "Select the user roles that will transiton to this applications domains."
+msgid ""
+"Select the user roles that will transition to this applications domains."
+msgstr "選擇將會轉換至此應用程式區域的使用者角色。"
+
+#: ../polgen.ui:1040
+#, python-format
+msgid "<b>Select domains that %s will administer:</b>"
+msgstr "<b>選擇 %s 將會管理的區域：</b>"
+
+#: ../polgen.ui:1058 ../polgen.ui:1109
+msgid "Select the domains that you would like this user administer."
+msgstr "選擇您希望該使用者管理的區域。"
+
+#: ../polgen.ui:1091
+#, python-format
+msgid "<b>Select additional roles for %s:</b>"
+msgstr "<b>為 %s 選擇額外的角色：</b>"
+
+#: ../polgen.ui:1142
+#, python-format
+msgid "<b>Enter network ports that %s binds on:</b>"
+msgstr "<b>輸入 %s 綁定的網路連接埠：</b>"
+
+#: ../polgen.ui:1162 ../polgen.ui:1529
+msgid "<b>TCP Ports</b>"
+msgstr "<b>TCP 連接埠</b>"
+
+#: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
+msgid "All"
+msgstr "全部"
+
+#: ../polgen.ui:1203 ../polgen.ui:1370
+#, python-format
+msgid "Allows %s to bind to any udp port"
+msgstr "允許 %s 綁定至任何 udp 連接埠"
+
+#: ../polgen.ui:1216 ../polgen.ui:1383
+msgid "600-1024"
+msgstr "600-1024"
+
+#: ../polgen.ui:1220 ../polgen.ui:1387
+#, python-format
+msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
+msgstr "允許 %s 以 0 來呼叫 bindresvport。綁定至連接埠 600-1024"
+
+#: ../polgen.ui:1233 ../polgen.ui:1400
+msgid "Unreserved Ports (>1024)"
+msgstr "未預留的連接埠（>1024）"
+
+#: ../polgen.ui:1237 ../polgen.ui:1404
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
+msgstr ""
+"輸入一列以逗號區隔開的 udp 連接埠，或是 %s 綁定至的連接埠範圍之清單。例如："
+"612, 650-660"
+
+#: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
+msgid "Select Ports"
+msgstr "選擇連接埠"
+
+#: ../polgen.ui:1278 ../polgen.ui:1445
+#, python-format
+msgid "Allows %s to bind to any udp ports > 1024"
+msgstr "允許 %s 綁定至任何 udp 連接埠 > 1024"
+
+#: ../polgen.ui:1329 ../polgen.ui:1638
+msgid "<b>UDP Ports</b>"
+msgstr "<b>UDP 連接埠</b>"
+
+#: ../polgen.ui:1492
+msgid ""
+"Network\n"
+"Bind tab"
+msgstr ""
+"網路\n"
+"綁定分頁"
+
+#: ../polgen.ui:1509
+#, python-format
+msgid "<b>Select network ports that %s connects to:</b>"
+msgstr "<b>選擇 %s 連至的網路連接埠：</b>"
+
+#: ../polgen.ui:1565
+#, python-format
+msgid "Allows %s to connect to any tcp port"
+msgstr "允許 %s 連至任何 tcp 連接埠"
+
+#: ../polgen.ui:1594
+#, python-format
+msgid ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"輸入一列以逗號區隔開、%s 連至的 tcp 連接埠或連接埠範圍。例如：612, 650-660"
+
+#: ../polgen.ui:1674
+#, python-format
+msgid "Allows %s to connect to any udp port"
+msgstr "允許 %s 連至任何 udp 連接埠"
+
+#: ../polgen.ui:1703
+#, python-format
+msgid ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
+msgstr ""
+"輸入一列以逗號區隔開、%s 連至的 udp 連接埠或連接埠範圍。例如：612, 650-660"
+
+#: ../polgen.ui:1760
+#, python-format
+msgid "<b>Select common application traits for %s:</b>"
+msgstr "<b>為 %s 選擇一般應用程式特性：</b>"
+
+#: ../polgen.ui:1777
+msgid "Writes syslog messages\t"
+msgstr "寫入 syslog 訊息\\t"
+
+#: ../polgen.ui:1792
+msgid "Create/Manipulate temporary files in /tmp"
+msgstr "建立/操作 /tmp 中的暫時性檔案"
+
+#: ../polgen.ui:1807
+msgid "Uses Pam for authentication"
+msgstr "使用 Pam 來進行認證"
+
+#: ../polgen.ui:1822
+msgid "Uses nsswitch or getpw* calls"
+msgstr "使用 nsswitch 或是 getpw* 呼叫"
+
+#: ../polgen.ui:1837
+msgid "Uses dbus"
+msgstr "使用 dbus"
+
+#: ../polgen.ui:1852
+msgid "Sends audit messages"
+msgstr "傳送稽核訊息"
+
+#: ../polgen.ui:1867
+msgid "Interacts with the terminal"
+msgstr "與終端機進行互動"
+
+#: ../polgen.ui:1882
+msgid "Sends email"
+msgstr "傳送電子郵件"
+
+#: ../polgen.ui:1925
+#, python-format
+msgid "<b>Add files/directories that %s manages</b>"
+msgstr "<b>新增 %s 所管理的檔案/目錄</b>"
+
+#: ../polgen.ui:1978
+#, fuzzy
+#| msgid "Add File Context"
+msgid "Add File"
+msgstr "新增檔案情境"
+
+#: ../polgen.ui:2031
+#, fuzzy
+#| msgid "directory"
+msgid "Add Directory"
+msgstr "目錄"
+
+#: ../polgen.ui:2086
+#, python-format
+msgid ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
+msgstr "%s「管理」的檔案/目錄。Pid 檔案、日誌檔案、/var/lib 檔案 ..."
+
+#: ../polgen.ui:2126
+#, python-format
+msgid "<b>Add booleans from the %s policy:</b>"
+msgstr "<b>由 %s 方針新增布林值：</b>"
+
+#: ../polgen.ui:2179
+#, fuzzy
+#| msgid "Boolean"
+msgid "Add Boolean"
+msgstr "布林值"
+
+#: ../polgen.ui:2234
+#, python-format
+msgid "Add/Remove booleans used by the %s domain"
+msgstr "新增/移除 %s 區域所使用的布林值"
+
+#: ../polgen.ui:2272
+#, python-format
+msgid "<b>Which directory you will generate the %s policy?</b>"
+msgstr "<b>您會為那個目錄產生 %s 方針？</b>"
+
+#: ../polgen.ui:2290
+msgid "Policy Directory"
+msgstr "方針目錄"
+
+#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+msgid "Network Port"
+msgstr "網路連接埠"
+
+#: ../portsPage.py:95
+msgid ""
+"SELinux Port\n"
+"Type"
+msgstr ""
+"SELinux 連接埠\n"
+"類型"
+
+#: ../portsPage.py:101 ../system-config-selinux.ui:294
+msgid "Protocol"
+msgstr "通訊協定"
+
+#: ../portsPage.py:106 ../system-config-selinux.ui:355
+msgid ""
+"MLS/MCS\n"
+"Level"
+msgstr ""
+"MLS/MCS\n"
+"等級"
+
+#: ../portsPage.py:111
+msgid "Port"
+msgstr "連接埠"
+
+#: ../portsPage.py:213
+#, python-format
+msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
+msgstr "連接埠號「%s」不正確。  0 < 連接埠號 < 65536 "
+
+#: ../portsPage.py:258
+msgid "List View"
+msgstr "檢視清單"
+
+#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+msgid "Group View"
+msgstr "檢視群組"
+
+#: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
+msgid "Generate SELinux policy modules"
+msgstr "產生 SELinux 方針模組"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Are you sure you want to delete %s '%s'?"
+msgstr "確定要刪除 %s「%s」？"
+
+#: ../semanagePage.py:130
+#, python-format
+msgid "Delete %s"
+msgstr "刪除 %s"
+
+#: ../semanagePage.py:138
+#, python-format
+msgid "Add %s"
+msgstr "新增 %s"
+
+#: ../semanagePage.py:152
+#, python-format
+msgid "Modify %s"
+msgstr "修改 %s"
+
+#: ../sepolicy.desktop:3
+msgid "SELinux Policy Management Tool"
+msgstr "SELinux 方針管理工具"
+
+#: ../sepolicy.desktop:11
+msgid "policy;security;selinux;avc;permission;mac;"
+msgstr "policy;security;selinux;avc;permission;mac;"
+
+#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../system-config-selinux.ui:1744
+msgid "Enforcing"
+msgstr "強制"
+
+#: ../statusPage.py:79 ../system-config-selinux.ui:593
+msgid "Disabled"
+msgstr "已停用"
+
+#: ../statusPage.py:98
+msgid "Status"
+msgstr "狀態"
+
+#: ../statusPage.py:137
+msgid ""
+"Changing the policy type will cause a relabel of the entire file system on "
+"the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"變更方針類型會在下次開機時，重新標記整個檔案系統。根據檔案系統的大小，重新標"
+"記會花上不少時間。\n"
+"確定要繼續？"
+
+#: ../statusPage.py:151
+msgid ""
+"Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
+"you later decide to turn SELinux back on, the system will be required to "
+"relabel.  If you just want to see if SELinux is causing a problem on your "
+"system, you can go to permissive mode which will only log errors and not "
+"enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
+"wish to continue?"
+msgstr ""
+"停用 SELinux 後需要重新開機。\n"
+"不建議這麼做。\n"
+"如果您之後決定再度啟用 SELinux，系統會需要重新標記。\n"
+"如果您只是想知道 SELinux 是否導致系統發生問題，您可以切換到寬容模式，只記錄錯"
+"誤但不使用 SELinux 方針。\n"
+"切換到寬容模式並不需要重新開機。\n"
+"確定要繼續？"
+
+#: ../statusPage.py:156
+msgid ""
+"Changing to SELinux enabled will cause a relabel of the entire file system "
+"on the next boot. Relabeling takes a long time depending on the size of the "
+"file system.  Do you wish to continue?"
+msgstr ""
+"啟用 SELinux 會在下次開機時，重新標記整個檔案系統。根據檔案系統的大小，重新標"
+"記會花上不少時間。\n"
+"確定要繼續？"
+
+#: ../system-config-selinux.desktop:3
+msgid "SELinux Management"
+msgstr "SELinux 管理"
+
+#: ../system-config-selinux.desktop:32
+msgid "Configure SELinux in a graphical setting"
+msgstr "以圖形設定配置 SELinux"
+
+#: ../system-config-selinux.ui:11
+msgid ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+msgstr ""
+"Copyright (c)2006 Red Hat, Inc.\n"
+"Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
+
+#: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
+msgid "Add SELinux Login Mapping"
+msgstr "新增 SELinux 登入對映"
+
+#: ../system-config-selinux.ui:117
+msgid "Login Name"
+msgstr "登入名稱"
+
+#: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
+#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+msgid "SELinux User"
+msgstr "SELinux 使用者"
+
+#: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
+msgid "MLS/MCS Range"
+msgstr "MLS/MCS 範圍"
+
+#: ../system-config-selinux.ui:219
+msgid "Add SELinux Network Ports"
+msgstr "新增 SELinux 網路連接埠"
+
+#: ../system-config-selinux.ui:283
+msgid "Port Number"
+msgstr "埠號"
+
+#: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
+msgid "SELinux Type"
+msgstr "SELinux 類型"
+
+#: ../system-config-selinux.ui:471
+msgid "File Specification"
+msgstr "檔案規格"
+
+#: ../system-config-selinux.ui:482
+msgid "File Type"
+msgstr "檔案類型"
+
+#: ../system-config-selinux.ui:543
+msgid "MLS"
+msgstr "MLS"
+
+#: ../system-config-selinux.ui:605
+msgid "SELinux Administration"
+msgstr "管理 SELinux"
+
+#: ../system-config-selinux.ui:622
+msgid "_File"
+msgstr "檔案(_F)"
+
+#: ../system-config-selinux.ui:630
+msgid "_Add"
+msgstr "加入(_A)"
+
+#: ../system-config-selinux.ui:642
+msgid "_Properties"
+msgstr "屬性(_P)"
+
+#: ../system-config-selinux.ui:654
+msgid "_Delete"
+msgstr "刪除(_D)"
+
+#: ../system-config-selinux.ui:681
+msgid "_Help"
+msgstr "求助 (_H)"
+
+#: ../system-config-selinux.ui:728
+msgid "Select Management Object"
+msgstr "選擇管理物件"
+
+#: ../system-config-selinux.ui:741
+msgid "<b>Select:</b>"
+msgstr "<b>選擇：</b>"
+
+#: ../system-config-selinux.ui:771
+msgid "System Default Enforcing Mode"
+msgstr "系統的預設使用模式"
+
+#: ../system-config-selinux.ui:800
+msgid "Current Enforcing Mode"
+msgstr "現有的使用模式"
+
+#: ../system-config-selinux.ui:822
+msgid "System Default Policy Type: "
+msgstr "系統的預設方針類型："
+
+#: ../system-config-selinux.ui:845
+msgid ""
+"Select if you wish to relabel then entire file system on next reboot.  "
+"Relabeling can take a very long time, depending on the size of the system.  "
+"If you are changing policy types or going from disabled to enforcing, a "
+"relabel is required."
+msgstr ""
+"如果您想要在下次開機時，重新標記整個作業系統，請選擇此項。\n"
+"根據檔案系統大小，重新標記可能會花上非常長的時間。\n"
+"如果您要改變方針類型，或從停用模式變為強制模式，那麼就需要重新標記。"
+
+#: ../system-config-selinux.ui:877
+msgid "Relabel on next reboot."
+msgstr "下次開機時重新標記。"
+
+#: ../system-config-selinux.ui:921
+msgid "Revert boolean setting to system default"
+msgstr "將布林值設定改回系統預設值"
+
+#: ../system-config-selinux.ui:934
+msgid "Toggle between Customized and All Booleans"
+msgstr "在自訂布林值與所有布林值之間切換"
+
+#: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
+#: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
+#: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
+#: ../system-config-selinux.ui:1769
+msgid "Filter"
+msgstr "篩選"
+
+#: ../system-config-selinux.ui:1031
+msgid "Add File Context"
+msgstr "新增檔案情境"
+
+#: ../system-config-selinux.ui:1044
+msgid "Modify File Context"
+msgstr "修改檔案情境"
+
+#: ../system-config-selinux.ui:1057
+msgid "Delete File Context"
+msgstr "刪除檔案情境"
+
+#: ../system-config-selinux.ui:1070
+msgid "Toggle between all and customized file context"
+msgstr "在所有檔案情境與自訂檔案情境之間切換"
+
+#: ../system-config-selinux.ui:1166
+msgid "Add SELinux User Mapping"
+msgstr "新增 SELinux 使用者對映"
+
+#: ../system-config-selinux.ui:1179
+msgid "Modify SELinux User Mapping"
+msgstr "修改 SELinux 使用者對映"
+
+#: ../system-config-selinux.ui:1192
+msgid "Delete SELinux User Mapping"
+msgstr "刪除 SELinux 使用者對映"
+
+#: ../system-config-selinux.ui:1287
+msgid "Add User"
+msgstr "新增使用者"
+
+#: ../system-config-selinux.ui:1300
+msgid "Modify User"
+msgstr "修改使用者"
+
+#: ../system-config-selinux.ui:1313
+msgid "Delete User"
+msgstr "刪除使用者"
+
+#: ../system-config-selinux.ui:1408
+msgid "Add Network Port"
+msgstr "新增網路連接埠"
+
+#: ../system-config-selinux.ui:1421
+msgid "Edit Network Port"
+msgstr "編輯網路連接埠"
+
+#: ../system-config-selinux.ui:1434
+msgid "Delete Network Port"
+msgstr "刪除網路連接埠"
+
+#: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
+msgid "Toggle between Customized and All Ports"
+msgstr "在自訂連接埠與所有連接埠之間切換"
+
+#: ../system-config-selinux.ui:1576
+msgid "Generate new policy module"
+msgstr "產生新的方針模組"
+
+#: ../system-config-selinux.ui:1588
+msgid "Load policy module"
+msgstr "載入方針模組"
+
+#: ../system-config-selinux.ui:1601
+msgid "Remove loadable policy module"
+msgstr "移除可載入方針模組"
+
+#: ../system-config-selinux.ui:1632
+msgid ""
+"Enable/Disable additional audit rules, that are normally not reported in the "
+"log files."
+msgstr "啟用/停用額外的稽核規則，這些規則通常不會回報在紀錄檔中。"
+
+#: ../system-config-selinux.ui:1728
+msgid "Change process mode to permissive."
+msgstr "將處理模式改變為寬容。"
+
+#: ../system-config-selinux.ui:1743
+msgid "Change process mode to enforcing"
+msgstr "將處理模式改變為強制"
+
+#: ../system-config-selinux.ui:1847
+msgid "Add SELinux User"
+msgstr "新增 SELinux 使用者"
+
+#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+msgid "SELinux Roles"
+msgstr "SELinux 角色"
+
+#: ../usersPage.py:142
+#, python-format
+msgid "SELinux user '%s' is required"
+msgstr "需要 SELinux 使用者「%s」"
+
+#, fuzzy
+#~| msgid "Configue SELinux"
+#~ msgid "Run System Config SELinux"
+#~ msgstr "配置 SELinux"
+
+#~ msgid "system-config-selinux"
+#~ msgstr "system-config-selinux"
+
+#~ msgid "sepolicy"
+#~ msgstr "sepolicy"
+
+#~ msgid "all files"
+#~ msgstr "所有檔案"
+
+#~ msgid "regular file"
+#~ msgstr "正規檔案"
+
+#~ msgid "character device"
+#~ msgstr "字元裝置"
+
+#~ msgid "block device"
+#~ msgstr "區塊裝置"
+
+#~ msgid "socket file"
+#~ msgstr "socket 檔案"
+
+#~ msgid "symbolic link"
+#~ msgstr "符號連結"
+
+#~ msgid "named pipe"
+#~ msgstr "named pipe"

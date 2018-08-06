@@ -1,0 +1,157 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-06 14:22+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../sandbox:119
+#, python-format
+msgid "Do you want to save changes to '%s' (Y/N): "
+msgstr ""
+
+#: ../sandbox:120
+msgid "Sandbox Message"
+msgstr ""
+
+#: ../sandbox:132
+#, python-format
+msgid "Do you want to save changes to '%s' (y/N): "
+msgstr ""
+
+#: ../sandbox:133
+msgid "[yY]"
+msgstr ""
+
+#: ../sandbox:156
+msgid "User account must be setup with an MCS Range"
+msgstr ""
+
+#: ../sandbox:184
+msgid ""
+"Failed to find any unused category sets.  Consider a larger MCS range for "
+"this user."
+msgstr ""
+
+#: ../sandbox:215
+msgid "Homedir and tempdir required for level mounts"
+msgstr ""
+
+#: ../sandbox:218 ../sandbox:229 ../sandbox:234
+#, python-format
+msgid ""
+"\n"
+"%s is required for the action you want to perform.\n"
+msgstr ""
+
+#: ../sandbox:305
+#, python-format
+msgid ""
+"\n"
+"Policy defines the following types for use with the -t:\n"
+"\t%s\n"
+msgstr ""
+
+#: ../sandbox:312
+#, python-format
+msgid ""
+"\n"
+"sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I "
+"includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t "
+"type ] command\n"
+"\n"
+"sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I "
+"includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t "
+"type ] -S\n"
+"%s\n"
+msgstr ""
+
+#: ../sandbox:324
+msgid "include file in sandbox"
+msgstr ""
+
+#: ../sandbox:327
+msgid "read list of files to include in sandbox from INCLUDEFILE"
+msgstr ""
+
+#: ../sandbox:329
+msgid "run sandbox with SELinux type"
+msgstr ""
+
+#: ../sandbox:332
+msgid "mount new home and/or tmp directory"
+msgstr ""
+
+#: ../sandbox:336
+msgid "dots per inch for X display"
+msgstr ""
+
+#: ../sandbox:339
+msgid "run complete desktop session within sandbox"
+msgstr ""
+
+#: ../sandbox:342
+msgid "Shred content before tempory directories are removed"
+msgstr ""
+
+#: ../sandbox:346
+msgid "run X application within a sandbox"
+msgstr ""
+
+#: ../sandbox:352
+msgid "alternate home directory to use for mounting"
+msgstr ""
+
+#: ../sandbox:357
+msgid "alternate /tmp directory to use for mounting"
+msgstr ""
+
+#: ../sandbox:366
+msgid "alternate window manager"
+msgstr ""
+
+#: ../sandbox:369
+msgid "MCS/MLS level for the sandbox"
+msgstr ""
+
+#: ../sandbox:385
+msgid ""
+"Sandbox Policy is not currently installed.\n"
+"You need to install the selinux-policy-sandbox package in order to run this "
+"command"
+msgstr ""
+
+#: ../sandbox:397
+msgid ""
+"You must specify a Homedir and tempdir when setting up a session sandbox"
+msgstr ""
+
+#: ../sandbox:399
+msgid "Commands are not allowed in a session sandbox"
+msgstr ""
+
+#: ../sandbox:409
+msgid "Command required"
+msgstr ""
+
+#: ../sandbox:412
+#, python-format
+msgid "%s is not an executable"
+msgstr ""
+
+#: ../sandbox:535
+#, python-format
+msgid "Invalid value %s"
+msgstr ""
