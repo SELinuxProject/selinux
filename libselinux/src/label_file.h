@@ -351,8 +351,14 @@ static inline int compile_regex(struct saved_data *data, struct spec *spec,
 	 * init_routine does not take a parameter, it's not possible
 	 * to use, so we generate the same effect with atomics and a
 	 * mutex */
+#ifdef __ATOMIC_RELAXED
 	regex_compiled =
 		__atomic_load_n(&spec->regex_compiled, __ATOMIC_ACQUIRE);
+#else
+	/* GCC <4.7 */
+	__sync_synchronize();
+	regex_compiled = spec->regex_compiled;
+#endif
 	if (regex_compiled) {
 		return 0; /* already done */
 	}
@@ -360,8 +366,14 @@ static inline int compile_regex(struct saved_data *data, struct spec *spec,
 	__pthread_mutex_lock(&spec->regex_lock);
 	/* Check if another thread compiled the regex while we waited
 	 * on the mutex */
+#ifdef __ATOMIC_RELAXED
 	regex_compiled =
 		__atomic_load_n(&spec->regex_compiled, __ATOMIC_ACQUIRE);
+#else
+	/* GCC <4.7 */
+	__sync_synchronize();
+	regex_compiled = spec->regex_compiled;
+#endif
 	if (regex_compiled) {
 		__pthread_mutex_unlock(&spec->regex_lock);
 		return 0;
@@ -404,7 +416,13 @@ static inline int compile_regex(struct saved_data *data, struct spec *spec,
 	}
 
 	/* Done. */
+#ifdef __ATOMIC_RELAXED
 	__atomic_store_n(&spec->regex_compiled, true, __ATOMIC_RELEASE);
+#else
+	/* GCC <4.7 */
+	spec->regex_compiled = true;
+	__sync_synchronize();
+#endif
 	__pthread_mutex_unlock(&spec->regex_lock);
 	return 0;
 }
