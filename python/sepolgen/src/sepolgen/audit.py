@@ -258,7 +258,7 @@ class AVCMessage(AuditMessage):
         if (scontext, tcontext, self.tclass, access_tuple) in avcdict.keys():
             self.type, self.data = avcdict[(scontext, tcontext, self.tclass, access_tuple)]
         else:
-            self.type, self.data = audit2why.analyze(scontext, tcontext, self.tclass, self.accesses);
+            self.type, self.data = audit2why.analyze(scontext, tcontext, self.tclass, self.accesses)
             if self.type == audit2why.NOPOLICY:
                 self.type = audit2why.TERULE
             if self.type == audit2why.BADTCON:

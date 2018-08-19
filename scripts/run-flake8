@@ -14,7 +14,6 @@ IGNORE_LIST=''
 IGNORE_LIST="$IGNORE_LIST,W191" # indentation contains tabs
 
 IGNORE_LIST="$IGNORE_LIST,E101" # indentation contains mixed spaces and tabs
-IGNORE_LIST="$IGNORE_LIST,E703" # statement ends with a semicolon
 IGNORE_LIST="$IGNORE_LIST,E711" # comparison to None should be 'if cond is not None:'
 IGNORE_LIST="$IGNORE_LIST,E712" # comparison to False should be 'if cond is False:' or 'if not cond:'
 IGNORE_LIST="$IGNORE_LIST,E722" # do not use bare 'except'

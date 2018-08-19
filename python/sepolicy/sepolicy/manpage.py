@@ -539,7 +539,7 @@ class ManPage:
                     self.fd = fd
                     self.man_page_path = man_page_path
             except KeyError:
-                continue;
+                continue
             self.attributes[domain_type] = next(sepolicy.info(sepolicy.TYPE, ("%s") % domain_type))["attributes"]
 
         self._header()

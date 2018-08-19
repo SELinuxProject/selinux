@@ -1864,10 +1864,10 @@ del _lr_action_items
 """)
             
         else:
-            f.write("\n_lr_action = { ");
+            f.write("\n_lr_action = { ")
             for k,v in _lr_action.items():
                 f.write("(%r,%r):%r," % (k[0],k[1],v))
-            f.write("}\n");
+            f.write("}\n")
 
         if smaller:
             # Factor out names to try and make smaller
@@ -1901,10 +1901,10 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 """)
         else:
-            f.write("\n_lr_goto = { ");
+            f.write("\n_lr_goto = { ")
             for k,v in _lr_goto.items():
                 f.write("(%r,%r):%r," % (k[0],k[1],v))                    
-            f.write("}\n");
+            f.write("}\n")
 
         # Write production table
         f.write("_lr_productions = [\n")
