@@ -11,34 +11,35 @@ compiler:
 env:
   matrix:
     # Test the last version of Python and Ruby together, with some linkers
-    - PYVER=python3.6 RUBYLIBVER=2.5.1
-    - PYVER=python3.6 RUBYLIBVER=2.5.1 TEST_FLAGS_OVERRIDE=1
-    - PYVER=python3.6 RUBYLIBVER=2.5.1 LINKER=gold
-    - PYVER=python3.6 RUBYLIBVER=2.5.1 LINKER=bfd
+    - PYVER=python3.7 RUBYLIBVER=2.5.1
+    - PYVER=python3.7 RUBYLIBVER=2.5.1 TEST_FLAGS_OVERRIDE=1
+    - PYVER=python3.7 RUBYLIBVER=2.5.1 LINKER=gold
+    - PYVER=python3.7 RUBYLIBVER=2.5.1 LINKER=bfd
 
     # Test several Python versions
     - PYVER=python2.7 RUBYLIBVER=2.5.1
-    - PYVER=python3.3 RUBYLIBVER=2.5.1
-    - PYVER=python3.4 RUBYLIBVER=2.5.1
     - PYVER=python3.5 RUBYLIBVER=2.5.1
-    - PYVER=pypy RUBYLIBVER=2.5.1
-    - PYVER=pypy3 RUBYLIBVER=2.5.1
+    - PYVER=python3.6 RUBYLIBVER=2.5.1
+    # pypy2.7 seems not to be available in Travis-CI Xenial template yet.
+    # https://github.com/travis-ci/travis-ci/issues/9542
+    #- PYVER=pypy RUBYLIBVER=2.5.1
+    - PYVER=pypy3.5 RUBYLIBVER=2.5.1
 
     # Test several Ruby versions
-    - PYVER=python3.6 RUBYLIBVER=2.4
-    - PYVER=python3.6 RUBYLIBVER=2.3
-    - PYVER=python3.6 RUBYLIBVER=2.2
+    - PYVER=python3.7 RUBYLIBVER=2.4
+    - PYVER=python3.7 RUBYLIBVER=2.3
+    - PYVER=python3.7 RUBYLIBVER=2.2
 
 matrix:
   exclude:
     - compiler: clang
-      env: PYVER=python3.6 RUBYLIBVER=2.5.1 LINKER=gold
+      env: PYVER=python3.7 RUBYLIBVER=2.5.1 LINKER=gold
     - compiler: clang
-      env: PYVER=python3.6 RUBYLIBVER=2.5.1 LINKER=bfd
+      env: PYVER=python3.7 RUBYLIBVER=2.5.1 LINKER=bfd
 
-# Use Travis-CI Ubuntu 14.04 Trusty infrastructure, "full image" variant
+# Use Travis-CI Ubuntu 16.04 Xenial Xerus infrastructure, "full image" variant
 sudo: required
-dist: trusty
+dist: xenial
 
 # Install SELinux userspace utilities dependencies
 addons:
@@ -78,7 +79,7 @@ install:
   # Download the required python version if it is not installed
   - VIRTUAL_ENV="$HOME/virtualenv/$PYVER"
   - if ! [ -d "$VIRTUAL_ENV" ] ; then
-        curl --retry 10 -o python.tar.bz2 "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/14.04/x86_64/${PYVER/python/python-}.tar.bz2" &&
+        curl --retry 10 -o python.tar.bz2 "https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/16.04/x86_64/${PYVER/python/python-}.tar.bz2" &&
         sudo tar xjf python.tar.bz2 --directory / &&
         rm python.tar.bz2 ;
     fi
@@ -87,9 +88,6 @@ install:
   - $VIRTUAL_ENV/bin/pip install flake8
 
 before_script:
-  # clang on Travis-CI 14.04 environment is too old to support -Wdouble-promotion
-  - if "$CC" --version |grep -q clang; then sed 's/ -Wdouble-promotion / /' -i libselinux/src/Makefile libselinux/utils/Makefile ; fi
-
   # Build and install in a temporary directory to run tests
   - export DESTDIR="$TRAVIS_BUILD_DIR/installdir"
 
