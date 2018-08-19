@@ -354,7 +354,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	/* iterate over items of the list, grabbing strings, and parsing
 	   for numbers */
 	for (i=0; i<numlines; i++){
-		char *permstr;
+		const char *permstr;
 
 		/* grab the string object from the next element of the list */
 		strObj = PyList_GetItem(listObj, i); /* Can't fail */
