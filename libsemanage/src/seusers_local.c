@@ -71,16 +71,17 @@ static int semanage_seuser_audit(semanage_handle_t * handle,
 	const char *sep = "-";
 	int rc = -1;
 	strcpy(msg, "login");
+	if (previous) {
+		name = semanage_seuser_get_name(seuser);
+		psename = semanage_seuser_get_sename(previous);
+		pmls = semanage_seuser_get_mlsrange(previous);
+		proles = semanage_user_roles(handle, psename);
+	}
 	if (seuser) {
 		name = semanage_seuser_get_name(seuser);
 		sename = semanage_seuser_get_sename(seuser);
 		mls = semanage_seuser_get_mlsrange(seuser);
 		roles = semanage_user_roles(handle, sename);
-	}
-	if (previous) {
-		psename = semanage_seuser_get_sename(previous);
-		pmls = semanage_seuser_get_mlsrange(previous);
-		proles = semanage_user_roles(handle, psename);
 	}
 	if (audit_type != AUDIT_ROLE_REMOVE) {
 		if (sename && (!psename || strcmp(psename, sename) != 0)) {
