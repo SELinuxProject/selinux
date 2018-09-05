@@ -72,7 +72,7 @@ static int semanage_seuser_audit(semanage_handle_t * handle,
 	int rc = -1;
 	strcpy(msg, "login");
 	if (previous) {
-		name = semanage_seuser_get_name(seuser);
+		name = semanage_seuser_get_name(previous);
 		psename = semanage_seuser_get_sename(previous);
 		pmls = semanage_seuser_get_mlsrange(previous);
 		proles = semanage_user_roles(handle, psename);
