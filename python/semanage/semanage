@@ -62,7 +62,7 @@ usage_ibpkey = "semanage ibpkey [-h] [-n] [-N] [-s STORE] ["
 usage_ibpkey_dict = {' --add': ('-t TYPE', '-x SUBNET_PREFIX', '-r RANGE', '(', 'ibpkey_name', '|', 'pkey_range', ')'), ' --modify': ('-t TYPE', '-x SUBNET_PREFIX', '-r RANGE', '(', 'ibpkey_name', '|', 'pkey_range', ')'), ' --delete': ('-x SUBNET_PREFIX', '(', 'ibpkey_name', '|', 'pkey_range', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_ibendport = "semanage ibendport [-h] [-n] [-N] [-s STORE] ["
-usage_ibendport_dict = {' --add': ('-t TYPE', '-z IBDEV_NAME', '-r RANGE', '(', 'port', ')'), ' --modify': ('-t TYPE', '-z IBDEV_NAME', '-r RANGE', '(', 'port', ')'), ' --delete': ('-z IBDEV_NAME', '-r RANGE''(', 'port', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
+usage_ibendport_dict = {' --add': ('-t TYPE', '-z IBDEV_NAME', '-r RANGE', '(', 'port', ')'), ' --modify': ('-t TYPE', '-z IBDEV_NAME', '-r RANGE', '(', 'port', ')'), ' --delete': ('-z IBDEV_NAME', '-r RANGE', '(', 'port', ')'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
 
 usage_node = "semanage node [-h] [-n] [-N] [-S STORE] ["
 usage_node_dict = {' --add': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --modify': ('-M NETMASK', '-p PROTOCOL', '-t TYPE', '-r RANGE', 'node'), ' --delete': ('-M NETMASK', '-p PROTOCOL', 'node'), ' --list': ('-C',), ' --extract': ('',), ' --deleteall': ('',)}
