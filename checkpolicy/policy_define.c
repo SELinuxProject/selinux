@@ -1107,6 +1107,11 @@ int define_level(void)
 			    (cat_datum_t *) hashtab_search(policydbp->p_cats.
 							   table,
 							   (hashtab_key_t) id);
+			if (!cdatum) {
+				yyerror2("unknown category %s", id);
+				free(id);
+				return -1;
+			}
 			range_start = range_end = cdatum->s.value - 1;
 		}
 
