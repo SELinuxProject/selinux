@@ -344,6 +344,8 @@ def search(types, seinfo=None):
         tertypes.append(NEVERALLOW)
     if AUDITALLOW in types:
         tertypes.append(AUDITALLOW)
+    if DONTAUDIT in types:
+        tertypes.append(DONTAUDIT)
 
     if len(tertypes) > 0:
         q = setools.TERuleQuery(_pol,
