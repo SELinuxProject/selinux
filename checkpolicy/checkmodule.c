@@ -228,7 +228,6 @@ int main(int argc, char **argv)
 		if (optind != argc)
 			usage(argv[0]);
 	}
-	printf("%s:  loading policy configuration from %s\n", argv[0], file);
 
 	/* Set policydb and sidtab used by libsepol service functions
 	   to my structures, so that I can directly populate and
@@ -302,8 +301,6 @@ int main(int argc, char **argv)
 
 	sepol_sidtab_destroy(&sidtab);
 
-	printf("%s:  policy configuration loaded\n", argv[0]);
-
 	if (outfile) {
 		FILE *outfp = fopen(outfile, "w");
 
@@ -313,16 +310,11 @@ int main(int argc, char **argv)
 		}
 
 		if (!cil) {
-			printf("%s:  writing binary representation (version %d) to %s\n",
-				   argv[0], policyvers, outfile);
-
 			if (write_binary_policy(&modpolicydb, outfp) != 0) {
 				fprintf(stderr, "%s:  error writing %s\n", argv[0], outfile);
 				exit(1);
 			}
 		} else {
-			printf("%s:  writing CIL to %s\n",argv[0], outfile);
-
 			if (sepol_module_policydb_to_cil(outfp, &modpolicydb, 0) != 0) {
 				fprintf(stderr, "%s:  error writing %s\n", argv[0], outfile);
 				exit(1);
