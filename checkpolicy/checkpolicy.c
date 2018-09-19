@@ -512,8 +512,6 @@ int main(int argc, char **argv)
 		if (optind != argc)
 			usage(argv[0]);
 	}
-	printf("%s:  loading policy configuration from %s\n", argv[0], file);
-
 	/* Set policydb and sidtab used by libsepol service functions
 	   to my structures, so that I can directly populate and
 	   manipulate them. */
@@ -623,8 +621,6 @@ int main(int argc, char **argv)
 	if (policydb_load_isids(&policydb, &sidtab))
 		exit(1);
 
-	printf("%s:  policy configuration loaded\n", argv[0]);
-
 	if (outfile) {
 		outfp = fopen(outfile, "w");
 		if (!outfp) {
@@ -636,8 +632,6 @@ int main(int argc, char **argv)
 
 		if (!cil) {
 			if (!conf) {
-				printf("%s:  writing binary representation (version %d) to %s\n", argv[0], policyvers, outfile);
-
 				policydb.policy_type = POLICY_KERN;
 
 				policy_file_init(&pf);
@@ -645,8 +639,6 @@ int main(int argc, char **argv)
 				pf.fp = outfp;
 				ret = policydb_write(&policydb, &pf);
 			} else {
-				printf("%s:  writing policy.conf to %s\n",
-				       argv[0], outfile);
 				ret = sepol_kernel_policydb_to_conf(outfp, policydbp);
 			}
 			if (ret) {
@@ -655,7 +647,6 @@ int main(int argc, char **argv)
 				exit(1);
 			}
 		} else {
-			printf("%s:  writing CIL to %s\n",argv[0], outfile);
 			if (binary) {
 				ret = sepol_kernel_policydb_to_cil(outfp, policydbp);
 			} else {
@@ -894,8 +885,6 @@ int main(int argc, char **argv)
 			FGETS(ans, sizeof(ans), stdin);
 			pathlen = strlen(ans);
 			ans[pathlen - 1] = 0;
-			printf("%s:  loading policy configuration from %s\n",
-			       argv[0], ans);
 			fd = open(ans, O_RDONLY);
 			if (fd < 0) {
 				fprintf(stderr, "Can't open '%s':  %s\n",
