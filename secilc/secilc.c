@@ -257,6 +257,7 @@ int main(int argc, char *argv[])
 		rc = stat(argv[i], &filedata);
 		if (rc == -1) {
 			fprintf(stderr, "Could not stat file: %s\n", argv[i]);
+			rc = SEPOL_ERR;
 			goto exit;
 		}
 		file_size = filedata.st_size;
@@ -265,6 +266,7 @@ int main(int argc, char *argv[])
 		rc = fread(buffer, file_size, 1, file);
 		if (rc != 1) {
 			fprintf(stderr, "Failure reading file: %s\n", argv[i]);
+			rc = SEPOL_ERR;
 			goto exit;
 		}
 		fclose(file);
@@ -345,11 +347,13 @@ int main(int argc, char *argv[])
 
 	if (file_contexts == NULL) {
 		fprintf(stderr, "Failed to open file_contexts file\n");
+		rc = SEPOL_ERR;
 		goto exit;
 	}
 
 	if (fwrite(fc_buf, sizeof(char), fc_size, file_contexts) != fc_size) {
 		fprintf(stderr, "Failed to write file_contexts file\n");
+		rc = SEPOL_ERR;
 		goto exit;
 	}
 
