@@ -272,34 +272,38 @@ def _setools_rule_to_dict(rule):
         'class': str(rule.tclass),
     }
 
+    # Evaluate boolean expression associated with given rule (if there is any)
     try:
-        enabled = bool(rule.qpol_symbol.is_enabled(rule.policy))
+        # Get state of all booleans in the conditional expression
+        boolstate = {}
+        for boolean in rule.conditional.booleans:
+            boolstate[str(boolean)] = boolean.state
+        # evaluate if the rule is enabled
+        enabled = rule.conditional.evaluate(**boolstate) == rule.conditional_block
     except AttributeError:
+        # non-conditional rules are always enabled
         enabled = True
 
-    if isinstance(rule, setools.policyrep.terule.AVRule):
-        d['enabled'] = enabled
+    d['enabled'] = enabled
 
     try:
         d['permlist'] = list(map(str, rule.perms))
-    except setools.policyrep.exception.RuleUseError:
+    except AttributeError:
         pass
 
     try:
         d['transtype'] = str(rule.default)
-    except setools.policyrep.exception.RuleUseError:
+    except AttributeError:
         pass
 
     try:
         d['boolean'] = [(str(rule.conditional), enabled)]
-    except (AttributeError, setools.policyrep.exception.RuleNotConditional):
+    except AttributeError:
         pass
 
     try:
         d['filename'] = rule.filename
-    except (AttributeError,
-            setools.policyrep.exception.RuleNotConditional,
-            setools.policyrep.exception.TERuleNoFilename):
+    except AttributeError:
         pass
 
     return d
