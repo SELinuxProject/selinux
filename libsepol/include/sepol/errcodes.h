@@ -12,7 +12,7 @@ extern "C" {
 #define SEPOL_OK             0
 
 /* These first error codes are defined for compatibility with
- * previous version of libsepol. In the future, custome error
+ * previous version of libsepol. In the future, custom error
  * codes that don't map to system error codes should be defined
  * outside of the range of system error codes.
  */
