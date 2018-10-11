@@ -15,7 +15,7 @@ sepol = ctypes.cdll.LoadLibrary('libsepol.so.1')
 try:
 	import selinux
 	import semanage
-except:
+except ImportError:
 	print("You must install libselinux-python and libsemanage-python before running this tool", file=sys.stderr)
 	exit(1)
 
