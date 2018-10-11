@@ -111,9 +111,9 @@ unsigned int policyvers = POLICYDB_VERSION_MAX;
 static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	printf
-	    ("usage:  %s [-b[F]] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M]"
-	     "[-c policyvers (%d-%d)] [-o output_file] [-t target_platform (selinux,xen)]"
-	     "[input_file]\n",
+	    ("usage:  %s [-b[F]] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M] "
+	     "[-c policyvers (%d-%d)] [-o output_file] [-S] "
+	     "[-t target_platform (selinux,xen)] [input_file]\n",
 	     progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
 	exit(1);
 }
@@ -394,7 +394,7 @@ int main(int argc, char **argv)
 	size_t scontext_len, pathlen;
 	unsigned int i;
 	unsigned int protocol, port;
-	unsigned int binary = 0, debug = 0, cil = 0, conf = 0;
+	unsigned int binary = 0, debug = 0, sort = 0, cil = 0, conf = 0;
 	struct val_to_name v;
 	int ret, ch, fd, target = SEPOL_TARGET_SELINUX;
 	unsigned int nel, uret;
@@ -418,11 +418,12 @@ int main(int argc, char **argv)
 		{"mls", no_argument, NULL, 'M'},
 		{"cil", no_argument, NULL, 'C'},
 		{"conf",no_argument, NULL, 'F'},
+		{"sort", no_argument, NULL, 'S'},
 		{"help", no_argument, NULL, 'h'},
 		{NULL, 0, NULL, 0}
 	};
 
-	while ((ch = getopt_long(argc, argv, "o:t:dbU:MCFVc:h", long_options, NULL)) != -1) {
+	while ((ch = getopt_long(argc, argv, "o:t:dbU:MCFSVc:h", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'o':
 			outfile = optarg;
@@ -462,6 +463,9 @@ int main(int argc, char **argv)
 				break;
 			}
 			usage(argv[0]);
+		case 'S':
+			sort = 1;
+			break;
 		case 'M':
 			mlspol = 1;
 			break;
@@ -637,6 +641,14 @@ int main(int argc, char **argv)
 				policy_file_init(&pf);
 				pf.type = PF_USE_STDIO;
 				pf.fp = outfp;
+				if (sort) {
+					ret = policydb_sort_ocontexts(&policydb);
+					if (ret) {
+						fprintf(stderr, "%s:  error sorting ocontexts\n",
+						argv[0]);
+						exit(1);
+					}
+				}
 				ret = policydb_write(&policydb, &pf);
 			} else {
 				ret = sepol_kernel_policydb_to_conf(outfp, policydbp);
