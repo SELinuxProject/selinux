@@ -57,6 +57,8 @@ static const char * const xen_sid_to_str[] = {
 	"iomem",
 	"irq",
 	"device",
+	"domU",
+	"domDM",
 };
 
 #define XEN_SID_SZ (sizeof(xen_sid_to_str)/sizeof(xen_sid_to_str[0]))
