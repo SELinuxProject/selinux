@@ -51,6 +51,7 @@
 #include <sepol/policydb/util.h>
 #include <sepol/policydb/flask.h>
 
+#include "kernel_to_common.h"
 #include "private.h"
 #include "debug.h"
 #include "mls.h"
@@ -4301,3 +4302,7 @@ int policydb_set_target_platform(policydb_t *p, int platform)
 	return 0;
 }
 
+int policydb_sort_ocontexts(policydb_t *p)
+{
+	return sort_ocontexts(p);
+}
