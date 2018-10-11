@@ -52,6 +52,7 @@
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/util.h>
 
+#include "kernel_to_common.h"
 #include "private.h"
 
 #ifdef __GNUC__
@@ -2546,7 +2547,8 @@ static int context_to_cil(struct policydb *pdb, struct context_struct *con)
 	return 0;
 }
 
-static int ocontext_isid_to_cil(struct policydb *pdb, const char **sid_to_string, struct ocontext *isids)
+static int ocontext_isid_to_cil(struct policydb *pdb, const char *const *sid_to_string,
+				struct ocontext *isids)
 {
 	int rc = -1;
 
@@ -2602,41 +2604,7 @@ static int ocontext_selinux_isid_to_cil(struct policydb *pdb, struct ocontext *i
 {
 	int rc = -1;
 
-	// initial sid names aren't actually stored in the pp files, need to a have
-	// a mapping, taken from the linux kernel
-	static const char *selinux_sid_to_string[] = {
-		"null",
-		"kernel",
-		"security",
-		"unlabeled",
-		"fs",
-		"file",
-		"file_labels",
-		"init",
-		"any_socket",
-		"port",
-		"netif",
-		"netmsg",
-		"node",
-		"igmp_packet",
-		"icmp_socket",
-		"tcp_socket",
-		"sysctl_modprobe",
-		"sysctl",
-		"sysctl_fs",
-		"sysctl_kernel",
-		"sysctl_net",
-		"sysctl_net_unix",
-		"sysctl_vm",
-		"sysctl_dev",
-		"kmod",
-		"policy",
-		"scmp_packet",
-		"devnull",
-		NULL
-	};
-
-	rc = ocontext_isid_to_cil(pdb, selinux_sid_to_string, isids);
+	rc = ocontext_isid_to_cil(pdb, selinux_sid_to_str, isids);
 	if (rc != 0) {
 		goto exit;
 	}
@@ -2865,24 +2833,7 @@ static int ocontext_xen_isid_to_cil(struct policydb *pdb, struct ocontext *isids
 {
 	int rc = -1;
 
-	// initial sid names aren't actually stored in the pp files, need to a have
-	// a mapping, taken from the xen kernel
-	static const char *xen_sid_to_string[] = {
-		"null",
-		"xen",
-		"dom0",
-		"domio",
-		"domxen",
-		"unlabeled",
-		"security",
-		"ioport",
-		"iomem",
-		"irq",
-		"device",
-		NULL,
-	};
-
-	rc = ocontext_isid_to_cil(pdb, xen_sid_to_string, isids);
+	rc = ocontext_isid_to_cil(pdb, xen_sid_to_str, isids);
 	if (rc != 0) {
 		goto exit;
 	}
