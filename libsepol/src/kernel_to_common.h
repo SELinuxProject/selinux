@@ -105,10 +105,10 @@ int hashtab_ordered_to_strs(char *key, void *data, void *args);
 int ebitmap_to_strs(struct ebitmap *map, struct strs *strs, char **val_to_name);
 char *ebitmap_to_str(struct ebitmap *map, char **val_to_name, int sort);
 
-int stack_init(struct strs **stack);
-void stack_destroy(struct strs **stack);
-int stack_push(struct strs *stack, char *s);
-char *stack_pop(struct strs *stack);
-int stack_empty(struct strs *stack);
+int strs_stack_init(struct strs **stack);
+void strs_stack_destroy(struct strs **stack);
+int strs_stack_push(struct strs *stack, char *s);
+char *strs_stack_pop(struct strs *stack);
+int strs_stack_empty(struct strs *stack);
 
 int sort_ocontexts(struct policydb *pdb);

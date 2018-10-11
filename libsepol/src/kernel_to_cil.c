@@ -36,7 +36,7 @@ static char *cond_expr_to_str(struct policydb *pdb, struct cond_expr *expr)
 	char *str = NULL;
 	int rc;
 
-	rc = stack_init(&stack);
+	rc = strs_stack_init(&stack);
 	if (rc != 0) {
 		goto exit;
 	}
@@ -65,13 +65,13 @@ static char *cond_expr_to_str(struct policydb *pdb, struct cond_expr *expr)
 			}
 
 			if (num_params == 2) {
-				val2 = stack_pop(stack);
+				val2 = strs_stack_pop(stack);
 				if (!val2) {
 					sepol_log_err("Invalid conditional expression");
 					goto exit;
 				}
 			}
-			val1 = stack_pop(stack);
+			val1 = strs_stack_pop(stack);
 			if (!val1) {
 				sepol_log_err("Invalid conditional expression");
 				free(val2);
@@ -89,29 +89,29 @@ static char *cond_expr_to_str(struct policydb *pdb, struct cond_expr *expr)
 			sepol_log_err("Invalid conditional expression");
 			goto exit;
 		}
-		rc = stack_push(stack, new_val);
+		rc = strs_stack_push(stack, new_val);
 		if (rc != 0) {
 			sepol_log_err("Out of memory");
 			goto exit;
 		}
 	}
 
-	new_val = stack_pop(stack);
-	if (!new_val || !stack_empty(stack)) {
+	new_val = strs_stack_pop(stack);
+	if (!new_val || !strs_stack_empty(stack)) {
 		sepol_log_err("Invalid conditional expression");
 		goto exit;
 	}
 
 	str = new_val;
 
-	stack_destroy(&stack);
+	strs_stack_destroy(&stack);
 	return str;
 
 exit:
-	while ((new_val = stack_pop(stack)) != NULL) {
+	while ((new_val = strs_stack_pop(stack)) != NULL) {
 		free(new_val);
 	}
-	stack_destroy(&stack);
+	strs_stack_destroy(&stack);
 
 	return NULL;
 }
@@ -127,7 +127,7 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 
 	*use_mls = 0;
 
-	rc = stack_init(&stack);
+	rc = strs_stack_init(&stack);
 	if (rc != 0) {
 		goto exit;
 	}
@@ -208,13 +208,13 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 			}
 
 			if (num_params == 2) {
-				val2 = stack_pop(stack);
+				val2 = strs_stack_pop(stack);
 				if (!val2) {
 					sepol_log_err("Invalid constraint expression");
 					goto exit;
 				}
 			}
-			val1 = stack_pop(stack);
+			val1 = strs_stack_pop(stack);
 			if (!val1) {
 				sepol_log_err("Invalid constraint expression");
 				goto exit;
@@ -231,30 +231,30 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 		if (!new_val) {
 			goto exit;
 		}
-		rc = stack_push(stack, new_val);
+		rc = strs_stack_push(stack, new_val);
 		if (rc != 0) {
 			sepol_log_err("Out of memory");
 			goto exit;
 		}
 	}
 
-	new_val = stack_pop(stack);
-	if (!new_val || !stack_empty(stack)) {
+	new_val = strs_stack_pop(stack);
+	if (!new_val || !strs_stack_empty(stack)) {
 		sepol_log_err("Invalid constraint expression");
 		goto exit;
 	}
 
 	str = new_val;
 
-	stack_destroy(&stack);
+	strs_stack_destroy(&stack);
 
 	return str;
 
 exit:
-	while ((new_val = stack_pop(stack)) != NULL) {
+	while ((new_val = strs_stack_pop(stack)) != NULL) {
 		free(new_val);
 	}
-	stack_destroy(&stack);
+	strs_stack_destroy(&stack);
 
 	return NULL;
 }
