@@ -43,6 +43,8 @@ static const char * const selinux_sid_to_str[] = {
 	"devnull",
 };
 
+#define SELINUX_SID_SZ (sizeof(selinux_sid_to_str)/sizeof(selinux_sid_to_str[0]))
+
 static const char * const xen_sid_to_str[] = {
 	"null",
 	"xen",
@@ -56,6 +58,8 @@ static const char * const xen_sid_to_str[] = {
 	"irq",
 	"device",
 };
+
+#define XEN_SID_SZ (sizeof(xen_sid_to_str)/sizeof(xen_sid_to_str[0]))
 
 static const uint32_t avtab_flavors[] = {
 	AVTAB_ALLOWED,

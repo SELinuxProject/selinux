@@ -2548,23 +2548,33 @@ static int context_to_cil(struct policydb *pdb, struct context_struct *con)
 }
 
 static int ocontext_isid_to_cil(struct policydb *pdb, const char *const *sid_to_string,
-				struct ocontext *isids)
+				unsigned num_sids, struct ocontext *isids)
 {
 	int rc = -1;
 
 	struct ocontext *isid;
 
 	struct sid_item {
-		const char *sid_key;
+		char *sid_key;
 		struct sid_item *next;
 	};
 
 	struct sid_item *head = NULL;
 	struct sid_item *item = NULL;
+	char *sid;
+	char unknown[17];
+	unsigned i;
 
 	for (isid = isids; isid != NULL; isid = isid->next) {
-		cil_println(0, "(sid %s)", sid_to_string[isid->sid[0]]);
-		cil_printf("(sidcontext %s ", sid_to_string[isid->sid[0]]);
+		i = isid->sid[0];
+		if (i < num_sids) {
+			sid = (char*)sid_to_string[i];
+		} else {
+			snprintf(unknown, 17, "%s%u", "UNKNOWN", i);
+			sid = unknown;
+		}
+		cil_println(0, "(sid %s)", sid);
+		cil_printf("(sidcontext %s ", sid);
 		context_to_cil(pdb, &isid->context[0]);
 		cil_printf(")\n");
 
@@ -2576,7 +2586,7 @@ static int ocontext_isid_to_cil(struct policydb *pdb, const char *const *sid_to_
 			rc = -1;
 			goto exit;
 		}
-		item->sid_key = sid_to_string[isid->sid[0]];
+		item->sid_key = strdup(sid);
 		item->next = head;
 		head = item;
 	}
@@ -2595,6 +2605,7 @@ exit:
 	while(head) {
 		item = head;
 		head = item->next;
+		free(item->sid_key);
 		free(item);
 	}
 	return rc;
@@ -2604,7 +2615,7 @@ static int ocontext_selinux_isid_to_cil(struct policydb *pdb, struct ocontext *i
 {
 	int rc = -1;
 
-	rc = ocontext_isid_to_cil(pdb, selinux_sid_to_str, isids);
+	rc = ocontext_isid_to_cil(pdb, selinux_sid_to_str, SELINUX_SID_SZ, isids);
 	if (rc != 0) {
 		goto exit;
 	}
@@ -2833,7 +2844,7 @@ static int ocontext_xen_isid_to_cil(struct policydb *pdb, struct ocontext *isids
 {
 	int rc = -1;
 
-	rc = ocontext_isid_to_cil(pdb, xen_sid_to_str, isids);
+	rc = ocontext_isid_to_cil(pdb, xen_sid_to_str, XEN_SID_SZ, isids);
 	if (rc != 0) {
 		goto exit;
 	}
