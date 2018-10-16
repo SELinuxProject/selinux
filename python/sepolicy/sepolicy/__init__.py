@@ -168,15 +168,21 @@ except ValueError as e:
 def info(setype, name=None):
     if setype == TYPE:
         q = setools.TypeQuery(_pol)
-        if name:
-            q.name = name
+        q.name = name
+        results = list(q.results())
+
+        if name and len(results) < 1:
+            # type not found, try alias
+            q.name = None
+            q.alias = name
+            results = list(q.results())
 
         return ({
             'aliases': list(map(str, x.aliases())),
             'name': str(x),
             'permissive': bool(x.ispermissive),
             'attributes': list(map(str, x.attributes()))
-        } for x in q.results())
+        } for x in results)
 
     elif setype == ROLE:
         q = setools.RoleQuery(_pol)
