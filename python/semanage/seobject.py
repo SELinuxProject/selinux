@@ -1081,7 +1081,7 @@ class portRecords(semanageRecords):
         if type == "":
             raise ValueError(_("Type is required"))
 
-        if type not in self.valid_types:
+        if sepolicy.get_real_type_name(type) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be a port type") % type)
 
         (k, proto_d, low, high) = self.__genkey(port, proto)
@@ -1145,7 +1145,7 @@ class portRecords(semanageRecords):
             else:
                 raise ValueError(_("Requires setype"))
 
-        if setype and setype not in self.valid_types:
+        if setype and sepolicy.get_real_type_name(setype) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be a port type") % setype)
 
         (k, proto_d, low, high) = self.__genkey(port, proto)
@@ -1349,7 +1349,7 @@ class ibpkeyRecords(semanageRecords):
         if type == "":
             raise ValueError(_("Type is required"))
 
-        if type not in self.valid_types:
+        if sepolicy.get_real_type_name(type) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be a ibpkey type") % type)
 
         (k, subnet_prefix, low, high) = self.__genkey(pkey, subnet_prefix)
@@ -1411,7 +1411,7 @@ class ibpkeyRecords(semanageRecords):
             else:
                 raise ValueError(_("Requires setype"))
 
-        if setype and setype not in self.valid_types:
+        if setype and sepolicy.get_real_type_name(setype) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be a ibpkey type") % setype)
 
         (k, subnet_prefix, low, high) = self.__genkey(pkey, subnet_prefix)
@@ -1597,7 +1597,7 @@ class ibendportRecords(semanageRecords):
         if type == "":
             raise ValueError(_("Type is required"))
 
-        if type not in self.valid_types:
+        if sepolicy.get_real_type_name(type) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be an ibendport type") % type)
         (k, ibendport, port) = self.__genkey(ibendport, ibdev_name)
 
@@ -1658,7 +1658,7 @@ class ibendportRecords(semanageRecords):
             else:
                 raise ValueError(_("Requires setype"))
 
-        if setype and setype not in self.valid_types:
+        if setype and sepolicy.get_real_type_name(setype) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be an ibendport type") % setype)
 
         (k, ibdev_name, port) = self.__genkey(ibendport, ibdev_name)
@@ -1847,7 +1847,7 @@ class nodeRecords(semanageRecords):
         if ctype == "":
             raise ValueError(_("SELinux node type is required"))
 
-        if ctype not in self.valid_types:
+        if sepolicy.get_real_type_name(ctype) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be a node type") % ctype)
 
         (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
@@ -1916,7 +1916,7 @@ class nodeRecords(semanageRecords):
         if serange == "" and setype == "":
             raise ValueError(_("Requires setype or serange"))
 
-        if setype and setype not in self.valid_types:
+        if setype and sepolicy.get_real_type_name(setype) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be a node type") % setype)
 
         (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
@@ -2235,7 +2235,6 @@ class fcontextRecords(semanageRecords):
     try:
         valid_types = list(list(sepolicy.info(sepolicy.ATTRIBUTE, "file_type"))[0]["types"])
         valid_types += list(list(sepolicy.info(sepolicy.ATTRIBUTE, "device_node"))[0]["types"])
-        valid_types.append("<<none>>")
     except RuntimeError:
         valid_types = []
 
@@ -2363,7 +2362,7 @@ class fcontextRecords(semanageRecords):
         if type == "":
             raise ValueError(_("SELinux Type is required"))
 
-        if type not in self.valid_types:
+        if type != "<<none>>" and sepolicy.get_real_type_name(type) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be a file or device type") % type)
 
         (rc, k) = semanage_fcontext_key_create(self.sh, target, file_types[ftype])
@@ -2426,7 +2425,7 @@ class fcontextRecords(semanageRecords):
     def __modify(self, target, setype, ftype, serange, seuser):
         if serange == "" and setype == "" and seuser == "":
             raise ValueError(_("Requires setype, serange or seuser"))
-        if setype and setype not in self.valid_types:
+        if setype not in ["",  "<<none>>"] and sepolicy.get_real_type_name(setype) not in self.valid_types:
             raise ValueError(_("Type %s is invalid, must be a file or device type") % setype)
 
         self.validate(target)
