@@ -2828,21 +2828,32 @@ static int ocontext_read_selinux(struct policydb_compat_info *info,
 				    (&c->context[1], p, fp))
 					return -1;
 				break;
-			case OCON_IBPKEY:
+			case OCON_IBPKEY: {
+				uint32_t pkey_lo, pkey_hi;
+
 				rc = next_entry(buf, fp, sizeof(uint32_t) * 4);
-				if (rc < 0 || buf[2] > 0xffff || buf[3] > 0xffff)
+				if (rc < 0)
 					return -1;
 
+				pkey_lo = le32_to_cpu(buf[2]);
+				pkey_hi = le32_to_cpu(buf[3]);
+
+				if (pkey_lo > UINT16_MAX || pkey_hi > UINT16_MAX)
+					return -1;
+
+				c->u.ibpkey.low_pkey  = pkey_lo;
+				c->u.ibpkey.high_pkey = pkey_hi;
+
+				/* we want c->u.ibpkey.subnet_prefix in network
+				 * (big-endian) order, just memcpy it */
 				memcpy(&c->u.ibpkey.subnet_prefix, buf,
 				       sizeof(c->u.ibpkey.subnet_prefix));
-
-				c->u.ibpkey.low_pkey = le32_to_cpu(buf[2]);
-				c->u.ibpkey.high_pkey = le32_to_cpu(buf[3]);
 
 				if (context_read_and_validate
 				    (&c->context[0], p, fp))
 					return -1;
 				break;
+			}
 			case OCON_IBENDPORT:
 				rc = next_entry(buf, fp, sizeof(uint32_t) * 2);
 				if (rc < 0)
