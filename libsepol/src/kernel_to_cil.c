@@ -536,7 +536,7 @@ static int write_sids_to_cil(FILE *out, const char *const *sid_to_str,
 	struct strs *strs;
 	char *sid;
 	char *prev;
-	char unknown[17];
+	char unknown[18];
 	unsigned i;
 	int rc;
 
@@ -550,7 +550,7 @@ static int write_sids_to_cil(FILE *out, const char *const *sid_to_str,
 		if (i < num_sids) {
 			sid = (char *)sid_to_str[i];
 		} else {
-			snprintf(unknown, 17, "%s%u", "UNKNOWN", i);
+			snprintf(unknown, 18, "%s%u", "UNKNOWN", i);
 			sid = strdup(unknown);
 		}
 		rc = strs_add_at_index(strs, sid, i);
@@ -2498,7 +2498,7 @@ static int write_sid_context_rules_to_cil(FILE *out, struct policydb *pdb, const
 	struct ocontext *isid;
 	struct strs *strs;
 	char *sid;
-	char unknown[17];
+	char unknown[18];
 	char *ctx, *rule;
 	unsigned i;
 	int rc = -1;
@@ -2513,7 +2513,7 @@ static int write_sid_context_rules_to_cil(FILE *out, struct policydb *pdb, const
 		if (i < num_sids) {
 			sid = (char *)sid_to_str[i];
 		} else {
-			snprintf(unknown, 17, "%s%u", "UNKNOWN", i);
+			snprintf(unknown, 18, "%s%u", "UNKNOWN", i);
 			sid = unknown;
 		}
 

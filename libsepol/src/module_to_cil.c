@@ -2562,7 +2562,7 @@ static int ocontext_isid_to_cil(struct policydb *pdb, const char *const *sid_to_
 	struct sid_item *head = NULL;
 	struct sid_item *item = NULL;
 	char *sid;
-	char unknown[17];
+	char unknown[18];
 	unsigned i;
 
 	for (isid = isids; isid != NULL; isid = isid->next) {
@@ -2570,7 +2570,7 @@ static int ocontext_isid_to_cil(struct policydb *pdb, const char *const *sid_to_
 		if (i < num_sids) {
 			sid = (char*)sid_to_string[i];
 		} else {
-			snprintf(unknown, 17, "%s%u", "UNKNOWN", i);
+			snprintf(unknown, 18, "%s%u", "UNKNOWN", i);
 			sid = unknown;
 		}
 		cil_println(0, "(sid %s)", sid);
