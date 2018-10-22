@@ -60,8 +60,6 @@ class CheckPath(argparse.Action):
 class CheckType(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
-        domains = sepolicy.get_all_domains()
-
         if isinstance(values, str):
             setattr(namespace, self.dest, values)
         else:
@@ -103,7 +101,7 @@ class CheckDomain(argparse.Action):
         domains = sepolicy.get_all_domains()
 
         if isinstance(values, str):
-            if values not in domains:
+            if sepolicy.get_real_type_name(values) not in domains:
                 raise ValueError("%s must be an SELinux process domain:\nValid domains: %s" % (values, ", ".join(domains)))
             setattr(namespace, self.dest, values)
         else:
@@ -112,7 +110,7 @@ class CheckDomain(argparse.Action):
                 newval = []
 
             for v in values:
-                if v not in domains:
+                if sepolicy.get_real_type_name(v) not in domains:
                     raise ValueError("%s must be an SELinux process domain:\nValid domains: %s" % (v, ", ".join(domains)))
                 newval.append(v)
             setattr(namespace, self.dest, newval)
@@ -167,7 +165,7 @@ class CheckPortType(argparse.Action):
         if not newval:
             newval = []
         for v in values:
-            if v not in port_types:
+            if sepolicy.get_real_type_name(v) not in port_types:
                 raise ValueError("%s must be an SELinux port type:\nValid port types: %s" % (v, ", ".join(port_types)))
             newval.append(v)
         setattr(namespace, self.dest, values)

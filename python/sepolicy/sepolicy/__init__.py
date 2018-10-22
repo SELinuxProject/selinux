@@ -447,6 +447,22 @@ def get_file_types(setype):
     return mpaths
 
 
+def get_real_type_name(name):
+    """Return the real name of a type
+
+    * If 'name' refers to a type, return the same name.
+    * If 'name' refers to a type alias, return the corresponding type name.
+    * Otherwise return None.
+    """
+    if not name:
+        return None
+
+    try:
+        return next(info(TYPE, name))["name"]
+    except (RuntimeError, StopIteration):
+        return None
+
+
 def get_writable_files(setype):
     file_types = get_all_file_types()
     all_writes = []
@@ -1061,7 +1077,7 @@ def gen_short_name(setype):
         domainname = setype[:-2]
     else:
         domainname = setype
-    if domainname + "_t" not in all_domains:
+    if get_real_type_name(domainname + "_t") not in all_domains:
         raise ValueError("domain %s_t does not exist" % domainname)
     if domainname[-1] == 'd':
         short_name = domainname[:-1] + "_"
