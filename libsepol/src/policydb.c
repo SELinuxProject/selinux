@@ -2854,12 +2854,18 @@ static int ocontext_read_selinux(struct policydb_compat_info *info,
 					return -1;
 				break;
 			}
-			case OCON_IBENDPORT:
+			case OCON_IBENDPORT: {
+				uint32_t port;
+
 				rc = next_entry(buf, fp, sizeof(uint32_t) * 2);
 				if (rc < 0)
 					return -1;
 				len = le32_to_cpu(buf[0]);
 				if (len == 0 || len > IB_DEVICE_NAME_MAX - 1)
+					return -1;
+
+				port = le32_to_cpu(buf[1]);
+				if (port > UINT8_MAX || port == 0)
 					return -1;
 
 				c->u.ibendport.dev_name = malloc(len + 1);
@@ -2869,11 +2875,12 @@ static int ocontext_read_selinux(struct policydb_compat_info *info,
 				if (rc < 0)
 					return -1;
 				c->u.ibendport.dev_name[len] = 0;
-				c->u.ibendport.port = le32_to_cpu(buf[1]);
+				c->u.ibendport.port = port;
 				if (context_read_and_validate
 				    (&c->context[0], p, fp))
 					return -1;
 				break;
+			}
 			case OCON_PORT:
 				rc = next_entry(buf, fp, sizeof(uint32_t) * 3);
 				if (rc < 0)
