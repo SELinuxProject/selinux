@@ -142,17 +142,8 @@ process_request(int fd, uint32_t function, char *data1, char *UNUSED(data2))
 {
 	int32_t result;
 	char *out = NULL;
-	char *peercon = NULL;
 	int ret;
 
-	ret = getpeercon_raw(fd, &peercon);
-	if (ret < 0)
-		return ret;
-
-	/* TODO: Check if MLS clearance (in peercon) dominates the MLS label
-	 * (in the request input).
-	 */
-  
 	switch (function) {
 	case SETRANS_INIT:
 		result = 0;
@@ -184,7 +175,6 @@ process_request(int fd, uint32_t function, char *data1, char *UNUSED(data2))
 	}
 
 	free(out);
-	freecon(peercon);
 
 	return ret;
 }
