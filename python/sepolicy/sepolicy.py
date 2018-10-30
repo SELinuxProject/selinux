@@ -101,7 +101,8 @@ class CheckDomain(argparse.Action):
         domains = sepolicy.get_all_domains()
 
         if isinstance(values, str):
-            if sepolicy.get_real_type_name(values) not in domains:
+            values = sepolicy.get_real_type_name(values)
+            if values not in domains:
                 raise ValueError("%s must be an SELinux process domain:\nValid domains: %s" % (values, ", ".join(domains)))
             setattr(namespace, self.dest, values)
         else:
@@ -110,7 +111,8 @@ class CheckDomain(argparse.Action):
                 newval = []
 
             for v in values:
-                if sepolicy.get_real_type_name(v) not in domains:
+                v = sepolicy.get_real_type_name(v)
+                if v not in domains:
                     raise ValueError("%s must be an SELinux process domain:\nValid domains: %s" % (v, ", ".join(domains)))
                 newval.append(v)
             setattr(namespace, self.dest, newval)
@@ -165,10 +167,11 @@ class CheckPortType(argparse.Action):
         if not newval:
             newval = []
         for v in values:
-            if sepolicy.get_real_type_name(v) not in port_types:
+            v = sepolicy.get_real_type_name(v)
+            if v not in port_types:
                 raise ValueError("%s must be an SELinux port type:\nValid port types: %s" % (v, ", ".join(port_types)))
             newval.append(v)
-        setattr(namespace, self.dest, values)
+        setattr(namespace, self.dest, newval)
 
 
 class LoadPolicy(argparse.Action):
