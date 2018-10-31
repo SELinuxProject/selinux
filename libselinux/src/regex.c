@@ -348,7 +348,7 @@ int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
 		goto err;
 
 	rc = next_entry(&entry_len, mmap_area, sizeof(uint32_t));
-	if (rc < 0 || !entry_len)
+	if (rc < 0)
 		goto err;
 
 	if (entry_len) {
