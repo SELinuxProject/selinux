@@ -232,7 +232,7 @@ end_arch_check:
 
 	/* allocate the stems_data array */
 	rc = next_entry(&stem_map_len, mmap_area, sizeof(uint32_t));
-	if (rc < 0 || !stem_map_len)
+	if (rc < 0)
 		return -1;
 
 	/*
