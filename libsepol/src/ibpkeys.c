@@ -1,5 +1,6 @@
 #include <netinet/in.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
 #include "debug.h"
 #include "context.h"
@@ -176,7 +177,7 @@ int sepol_ibpkey_query(sepol_handle_t *handle,
 	return STATUS_SUCCESS;
 
 err:
-	ERR(handle, "could not query ibpkey subnet prefix: %#lx range %u - %u exists",
+	ERR(handle, "could not query ibpkey subnet prefix: %#" PRIx64 " range %u - %u exists",
 	    subnet_prefix, low, high);
 	return STATUS_ERR;
 }
@@ -203,7 +204,7 @@ int sepol_ibpkey_modify(sepol_handle_t *handle,
 	return STATUS_SUCCESS;
 
 err:
-	ERR(handle, "could not load ibpkey subnet prefix: %#lx range %u - %u exists",
+	ERR(handle, "could not load ibpkey subnet prefix: %#" PRIx64 " range %u - %u exists",
 	    subnet_prefix, low, high);
 	if (ibpkey) {
 		context_destroy(&ibpkey->context[0]);
