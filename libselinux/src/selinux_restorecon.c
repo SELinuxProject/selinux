@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <fts.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <stdint.h>
 #include <sys/types.h>
@@ -630,7 +631,7 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 					     fc_count / efile_count) : 100;
 				fprintf(stdout, "\r%-.1f%%", (double)pc);
 			} else {
-				fprintf(stdout, "\r%luk", fc_count / STAR_COUNT);
+				fprintf(stdout, "\r%" PRIu64 "k", fc_count / STAR_COUNT);
 			}
 			fflush(stdout);
 		}
