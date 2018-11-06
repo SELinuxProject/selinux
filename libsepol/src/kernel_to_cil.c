@@ -1534,9 +1534,9 @@ exit:
 
 static int write_type_permissive_rules_to_cil(FILE *out, struct policydb *pdb)
 {
-	type_datum_t *type;
 	struct strs *strs;
 	char *name;
+	struct ebitmap_node *node;
 	unsigned i, num;
 	int rc = 0;
 
@@ -1545,13 +1545,11 @@ static int write_type_permissive_rules_to_cil(FILE *out, struct policydb *pdb)
 		goto exit;
 	}
 
-	for (i=0; i < pdb->p_types.nprim; i++) {
-		type = pdb->type_val_to_struct[i];
-		if (type->flavor == TYPE_TYPE && (type->flags & TYPE_FLAGS_PERMISSIVE)) {
-			rc = strs_add(strs, pdb->p_type_val_to_name[i]);
-			if (rc != 0) {
-				goto exit;
-			}
+	ebitmap_for_each_bit(&pdb->permissive_map, node, i) {
+		if (!ebitmap_get_bit(&pdb->permissive_map, i)) continue;
+		rc = strs_add(strs, pdb->p_type_val_to_name[i-1]);
+		if (rc != 0) {
+			goto exit;
 		}
 	}
 
