@@ -6,7 +6,9 @@
  * Implements: record_key_t (Database Record Key)
  */
 
+#include <string.h>
 #include <sepol/boolean_record.h>
+#include "handle_internal.h"
 
 typedef sepol_bool_t semanage_bool_t;
 typedef sepol_bool_key_t semanage_bool_key_t;
@@ -84,10 +86,58 @@ hidden_def(semanage_bool_get_name)
 int semanage_bool_set_name(semanage_handle_t * handle,
 			   semanage_bool_t * boolean, const char *name)
 {
-	int rc;
-	char *subname = selinux_boolean_sub(name);
+	int rc = -1;
+	const char *prefix = semanage_root();
+	const char *storename = handle->conf->store_path;
+	const char *selinux_root = selinux_policy_root();
+	char *oldroot;
+	char *olddir;
+	char *subname = NULL;
+	char *newroot = NULL;
+	char *end;
+
+	if (!selinux_root)
+		return -1;
+
+	oldroot = strdup(selinux_root);
+	if (!oldroot)
+		return -1;
+	olddir = strdup(oldroot);
+	if (!olddir)
+		goto out;
+	end = strrchr(olddir, '/');
+	if (!end)
+		goto out;
+	end++;
+	*end = '\0';
+	rc = asprintf(&newroot, "%s%s%s", prefix, olddir, storename);
+	if (rc < 0)
+		goto out;
+
+	if (strcmp(oldroot, newroot)) {
+		rc = selinux_set_policy_root(newroot);
+		if (rc)
+			goto out;
+	}
+
+	subname = selinux_boolean_sub(name);
+	if (!subname) {
+		rc = -1;
+		goto out;
+	}
+
+	if (strcmp(oldroot, newroot)) {
+		rc = selinux_set_policy_root(oldroot);
+		if (rc)
+			goto out;
+	}
+
 	rc = sepol_bool_set_name(handle->sepolh, boolean, subname);
+out:
 	free(subname);
+	free(oldroot);
+	free(olddir);
+	free(newroot);
 	return rc;
 }
 
