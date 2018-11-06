@@ -43,8 +43,21 @@ static char *private_semanage_root = NULL;
 
 int semanage_set_root(const char *root)
 {
+	char *new_selinux_root = NULL;
+
+	asprintf(&new_selinux_root, "%s%s", root, selinux_policy_root());
+	if (!new_selinux_root)
+		return -1;
+	if (selinux_set_policy_root(new_selinux_root) < 0) {
+		free(new_selinux_root);
+		return -1;
+	}
+	free(new_selinux_root);
+
 	free(private_semanage_root);
 	private_semanage_root = strdup(root);
+	if (!private_semanage_root)
+		return -1;
 	return 0;
 }
 
@@ -273,8 +286,22 @@ int semanage_is_connected(semanage_handle_t * sh)
 void semanage_select_store(semanage_handle_t * sh, char *storename,
 			   enum semanage_connect_type storetype)
 {
-
 	assert(sh != NULL);
+
+	char *root = strdup(selinux_policy_root());
+	assert(root);
+	char *end = strrchr(root, '/');
+	assert(end);
+	end++;
+	*end = '\0';
+
+	char *newroot = NULL;
+	asprintf(&newroot, "%s%s", root, storename);
+	assert(newroot);
+	free(root);
+	int rc = selinux_set_policy_root(newroot);
+	assert(rc == 0);
+	free(newroot);
 
 	/* This just sets the storename to what the user requests, no 
 	   verification of existance will be done until connect */
