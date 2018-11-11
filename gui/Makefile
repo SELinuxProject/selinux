@@ -9,7 +9,6 @@ TARGETS= \
 booleansPage.py \
 domainsPage.py \
 fcontextPage.py \
-html_util.py \
 loginsPage.py \
 modulesPage.py \
 polgen.ui \
