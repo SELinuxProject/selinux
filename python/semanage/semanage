@@ -776,7 +776,7 @@ def setupDontauditParser(subparsers):
 
 
 def handleExport(args):
-    manageditems = ["boolean", "login", "interface", "user", "port", "node", "fcontext", "module"]
+    manageditems = ["boolean", "login", "interface", "user", "port", "node", "fcontext", "module", "ibendport", "ibpkey"]
     for i in manageditems:
         print("%s -D" % i)
     for i in manageditems:
