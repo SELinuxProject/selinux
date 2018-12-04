@@ -22,10 +22,7 @@
 #                                        02111-1307  USA
 #
 #
-try:
-    from subprocess import getstatusoutput
-except ImportError:
-    from commands import getstatusoutput
+import subprocess
 import sys
 import os
 import pwd
@@ -99,12 +96,12 @@ def chcat_user_add(newcat, users):
             new_serange = "%s-%s" % (serange[0], top[0])
 
         if add_ind:
-            cmd = "semanage login -a -r %s -s %s %s" % (new_serange, user[0], u)
+            cmd = ["semanage", "login", "-a", "-r", new_serange, "-s", user[0], u]
         else:
-            cmd = "semanage login -m -r %s -s %s %s" % (new_serange, user[0], u)
-        rc = getstatusoutput(cmd)
-        if rc[0] != 0:
-            print(rc[1])
+            cmd = ["semanage", "login", "-m", "-r", new_serange, "-s", user[0], u]
+        try:
+            subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
+        except subprocess.CalledProcessError as e:
             errors += 1
 
     return errors
@@ -140,10 +137,11 @@ def chcat_add(orig, newcat, objects, login_ind):
                 cat_string = "%s,%s" % (cat_string, c)
         else:
             cat_string = cat
-        cmd = 'chcon -l %s:%s %s' % (sensitivity, cat_string, f)
-        rc = getstatusoutput(cmd)
-        if rc[0] != 0:
-            print(rc[1])
+
+        cmd = ["chcon", "-l", "%s:%s" % (sensitivity, cat_string), f]
+        try:
+            subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
+        except subprocess.CalledProcessError as e:
             errors += 1
     return errors
 
@@ -179,13 +177,15 @@ def chcat_user_remove(newcat, users):
             new_serange = "%s-%s" % (serange[0], top[0])
 
         if add_ind:
-            cmd = "semanage login -a -r %s -s %s %s" % (new_serange, user[0], u)
+            cmd = ["semanage", "login", "-a", "-r", new_serange, "-s", user[0], u]
         else:
-            cmd = "semanage login -m -r %s -s %s %s" % (new_serange, user[0], u)
-        rc = getstatusoutput(cmd)
-        if rc[0] != 0:
-            print(rc[1])
+            cmd = ["semanage", "login", "-m", "-r", new_serange, "-s", user[0], u]
+
+        try:
+            subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
+        except subprocess.CalledProcessError as e:
             errors += 1
+
     return errors
 
 
@@ -224,12 +224,14 @@ def chcat_remove(orig, newcat, objects, login_ind):
             continue
 
         if len(cat) == 0:
-            cmd = 'chcon -l %s %s' % (sensitivity, f)
+            new_serange = sensitivity
         else:
-            cmd = 'chcon -l %s:%s %s' % (sensitivity, cat, f)
-        rc = getstatusoutput(cmd)
-        if rc[0] != 0:
-            print(rc[1])
+            new_serange = '%s:%s' % (sensitivity, cat)
+
+        cmd = ["chcon", "-l", new_serange, f]
+        try:
+            subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
+        except subprocess.CalledProcessError as e:
             errors += 1
     return errors
 
@@ -247,17 +249,17 @@ def chcat_user_replace(newcat, users):
             add_ind = 1
             user = seusers["__default__"]
         serange = user[1].split("-")
-        new_serange = "%s-%s:%s" % (serange[0], newcat[0], string.join(newcat[1:], ","))
+        new_serange = "%s-%s:%s" % (serange[0], newcat[0], ",".join(newcat[1:]))
         if new_serange[-1:] == ":":
             new_serange = new_serange[:-1]
 
         if add_ind:
-            cmd = "semanage login -a -r %s -s %s %s" % (new_serange, user[0], u)
+            cmd = ["semanage", "login", "-a", "-r", new_serange, "-s", user[0], u]
         else:
-            cmd = "semanage login -m -r %s -s %s %s" % (new_serange, user[0], u)
-        rc = getstatusoutput(cmd)
-        if rc[0] != 0:
-            print(rc[1])
+            cmd = ["semanage", "login", "-m", "-r", new_serange, "-s", user[0], u]
+        try:
+            subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
+        except subprocess.CalledProcessError as e:
             errors += 1
     return errors
 
@@ -267,20 +269,16 @@ def chcat_replace(newcat, objects, login_ind):
         return chcat_user_replace(newcat, objects)
     errors = 0
     if len(newcat) == 1:
-        sensitivity = newcat[0]
-        cmd = 'chcon -l %s ' % newcat[0]
+        new_serange = newcat[0]
     else:
-        sensitivity = newcat[0]
-        cmd = 'chcon -l %s:%s' % (sensitivity, newcat[1])
+        new_serange = "%s:%s" % (newcat[0], newcat[1])
         for cat in newcat[2:]:
-            cmd = '%s,%s' % (cmd, cat)
+            new_serange = '%s,%s' % (new_serange, cat)
 
-    for f in objects:
-        cmd = "%s %s" % (cmd, f)
-
-    rc = getstatusoutput(cmd)
-    if rc[0] != 0:
-        print(rc[1])
+    cmd = ["chcon", "-l", new_serange] + objects
+    try:
+        subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
+    except subprocess.CalledProcessError as e:
         errors += 1
 
     return errors
