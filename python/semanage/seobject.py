@@ -1293,9 +1293,9 @@ class portRecords(semanageRecords):
         ddict = self.get_all(True)
         for k in sorted(ddict.keys()):
             if k[0] == k[1]:
-                l.append("-a -t %s -p %s %s" % (ddict[k][0], k[2], k[0]))
+                l.append("-a -t %s -r '%s' -p %s %s" % (ddict[k][0], ddict[k][1], k[2], k[0]))
             else:
-                l.append("-a -t %s -p %s %s-%s" % (ddict[k][0], k[2], k[0], k[1]))
+                l.append("-a -t %s -r '%s' -p %s %s-%s" % (ddict[k][0], ddict[k][1], k[2], k[0], k[1]))
         return l
 
     def list(self, heading=1, locallist=0):
@@ -1550,9 +1550,9 @@ class ibpkeyRecords(semanageRecords):
 
         for k in sorted(ddict.keys()):
             if k[0] == k[1]:
-                l.append("-a -t %s -x %s %s" % (ddict[k][0], k[2], k[0]))
+                l.append("-a -t %s -r '%s' -x %s %s" % (ddict[k][0], ddict[k][1], k[2], k[0]))
             else:
-                l.append("-a -t %s -x %s %s-%s" % (ddict[k][0], k[2], k[0], k[1]))
+                l.append("-a -t %s -r '%s' -x %s %s-%s" % (ddict[k][0], ddict[k][1], k[2], k[0], k[1]))
         return l
 
     def list(self, heading=1, locallist=0):
@@ -1793,7 +1793,7 @@ class ibendportRecords(semanageRecords):
         ddict = self.get_all(True)
 
         for k in sorted(ddict.keys()):
-            l.append("-a -t %s -r %s -z %s %s" % (ddict[k][0], ddict[k][1], k[1], k[0]))
+            l.append("-a -t %s -r '%s' -z %s %s" % (ddict[k][0], ddict[k][1], k[1], k[0]))
         return l
 
     def list(self, heading=1, locallist=0):
@@ -2033,7 +2033,7 @@ class nodeRecords(semanageRecords):
         l = []
         ddict = self.get_all(True)
         for k in sorted(ddict.keys()):
-            l.append("-a -M %s -p %s -t %s %s" % (k[1], k[2], ddict[k][2], k[0]))
+            l.append("-a -M %s -p %s -t %s -r '%s' %s" % (k[1], k[2], ddict[k][2], ddict[k][3], k[0]))
         return l
 
     def list(self, heading=1, locallist=0):
@@ -2227,7 +2227,7 @@ class interfaceRecords(semanageRecords):
         l = []
         ddict = self.get_all(True)
         for k in sorted(ddict.keys()):
-            l.append("-a -t %s %s" % (ddict[k][2], k))
+            l.append("-a -t %s -r '%s' %s" % (ddict[k][2], ddict[k][3], k))
         return l
 
     def list(self, heading=1, locallist=0):
@@ -2609,7 +2609,7 @@ class fcontextRecords(semanageRecords):
         fcon_dict = self.get_all(True)
         for k in sorted(fcon_dict.keys()):
             if fcon_dict[k]:
-                l.append("-a -f %s -t %s '%s'" % (file_type_str_to_option[k[1]], fcon_dict[k][2], k[0]))
+                l.append("-a -f %s -t %s -r '%s' '%s'" % (file_type_str_to_option[k[1]], fcon_dict[k][2], fcon_dict[k][3], k[0]))
 
         if len(self.equiv):
             for target in self.equiv.keys():
