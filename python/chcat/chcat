@@ -4,7 +4,7 @@
 #
 #    chcat is a script that allows you modify the Security label on a file
 #
-#`   Author: Daniel Walsh <dwalsh@redhat.com>
+#    Author: Daniel Walsh <dwalsh@redhat.com>
 #
 #    This program is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU General Public License as
@@ -26,7 +26,6 @@ import subprocess
 import sys
 import os
 import pwd
-import string
 import getopt
 import selinux
 import seobject
@@ -41,7 +40,7 @@ try:
                     localedir="/usr/share/locale",
                     codeset='utf-8',
                     **kwargs)
-except:
+except ImportError:
     try:
         import builtins
         builtins.__dict__['_'] = str
@@ -101,7 +100,7 @@ def chcat_user_add(newcat, users):
             cmd = ["semanage", "login", "-m", "-r", new_serange, "-s", user[0], u]
         try:
             subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             errors += 1
 
     return errors
@@ -141,7 +140,7 @@ def chcat_add(orig, newcat, objects, login_ind):
         cmd = ["chcon", "-l", "%s:%s" % (sensitivity, cat_string), f]
         try:
             subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             errors += 1
     return errors
 
@@ -183,7 +182,7 @@ def chcat_user_remove(newcat, users):
 
         try:
             subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             errors += 1
 
     return errors
@@ -231,7 +230,7 @@ def chcat_remove(orig, newcat, objects, login_ind):
         cmd = ["chcon", "-l", new_serange, f]
         try:
             subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             errors += 1
     return errors
 
@@ -259,7 +258,7 @@ def chcat_user_replace(newcat, users):
             cmd = ["semanage", "login", "-m", "-r", new_serange, "-s", user[0], u]
         try:
             subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             errors += 1
     return errors
 
@@ -268,6 +267,7 @@ def chcat_replace(newcat, objects, login_ind):
     if login_ind == 1:
         return chcat_user_replace(newcat, objects)
     errors = 0
+    # newcat[0] is the sensitivity level, newcat[1:] are the categories
     if len(newcat) == 1:
         new_serange = newcat[0]
     else:
@@ -278,7 +278,7 @@ def chcat_replace(newcat, objects, login_ind):
     cmd = ["chcon", "-l", new_serange] + objects
     try:
         subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=False)
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         errors += 1
 
     return errors
@@ -382,7 +382,7 @@ def listusercats(users):
     if len(users) == 0:
         try:
             users.append(os.getlogin())
-        except:
+        except OSError:
             users.append(pwd.getpwuid(os.getuid()).pw_name)
 
     verify_users(users)
@@ -398,6 +398,7 @@ def listusercats(users):
 def error(msg):
     print("%s: %s" % (sys.argv[0], msg))
     sys.exit(1)
+
 
 if __name__ == '__main__':
     if selinux.is_selinux_mls_enabled() != 1:
@@ -433,7 +434,7 @@ if __name__ == '__main__':
     except getopt.error as error:
         errorExit(_("Options Error %s ") % error.msg)
 
-    except ValueError as e:
+    except ValueError:
         usage()
 
     if delete_ind:
