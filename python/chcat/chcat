@@ -82,8 +82,7 @@ def chcat_user_add(newcat, users):
         if len(serange) > 1:
             top = serange[1].split(":")
             if len(top) > 1:
-                cats.append(top[1])
-                cats = expandCats(cats)
+                cats = expandCats(top[1].split(','))
 
         for i in newcat[1:]:
             if i not in cats:
@@ -163,8 +162,7 @@ def chcat_user_remove(newcat, users):
         if len(serange) > 1:
             top = serange[1].split(":")
             if len(top) > 1:
-                cats.append(top[1])
-                cats = expandCats(cats)
+                cats = expandCats(top[1].split(','))
 
         for i in newcat[1:]:
             if i in cats:
