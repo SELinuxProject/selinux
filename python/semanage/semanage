@@ -73,7 +73,7 @@ usage_interface_dict = {' --add': ('-t TYPE', '-r RANGE', 'interface'), ' --modi
 usage_boolean = "semanage boolean [-h] [-n] [-N] [-S STORE] ["
 usage_boolean_dict = {' --modify': ('(', '--on', '|', '--off', ')', 'boolean'), ' --list': ('-C',), '  --extract': ('',), ' --deleteall': ('',)}
 
-import sepolicy
+
 
 
 class CheckRole(argparse.Action):
@@ -82,7 +82,11 @@ class CheckRole(argparse.Action):
         newval = getattr(namespace, self.dest)
         if not newval:
             newval = []
-        roles = sepolicy.get_all_roles()
+        try:
+            import sepolicy
+            roles = sepolicy.get_all_roles()
+        except ValueError:
+            roles = []
         for v in value.split():
             if v not in roles:
                 raise ValueError("%s must be an SELinux role:\nValid roles: %s" % (v, ", ".join(roles)))
