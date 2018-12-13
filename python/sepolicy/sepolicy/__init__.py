@@ -129,6 +129,13 @@ def get_installed_policy(root="/"):
         pass
     raise ValueError(_("No SELinux Policy installed"))
 
+def get_store_policy(store, root="/"):
+    try:
+        policies = glob.glob("%s%s/policy/policy.*" % (selinux.selinux_path(), store))
+        policies.sort()
+        return policies[-1]
+    except:
+        return None
 
 def policy(policy_file):
     global all_domains
@@ -156,6 +163,11 @@ def policy(policy_file):
     except:
         raise ValueError(_("Failed to read %s policy file") % policy_file)
 
+def load_store_policy(store):
+    policy_file = get_store_policy(store)
+    if not policy_file:
+        return None
+    policy(policy_file)
 
 try:
     policy_file = get_installed_policy()
