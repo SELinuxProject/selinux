@@ -1,7 +1,8 @@
 #!/usr/bin/python -E
 import sys
-import re
-from selinux import *
+import selinux
+
+
 verbose = 0
 errors = 0
 
@@ -18,12 +19,12 @@ for arg in sys.argv[1:]:
         line = line.rstrip('\n')
 #       print line
         context, expected = line.split("=")
-        rc, raw = selinux_trans_to_raw_context(context)
+        rc, raw = selinux.selinux_trans_to_raw_context(context)
         if rc < 0:
             print("Unable to get raw context of '%s'" % (context))
             errors += 1
             continue
-        rc, colors = selinux_raw_context_to_color(raw)
+        rc, colors = selinux.selinux_raw_context_to_color(raw)
         if rc < 0:
             print("Unable to get colors for '%s'" % (context))
             errors += 1
