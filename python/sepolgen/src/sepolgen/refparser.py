@@ -757,9 +757,9 @@ def p_attribute_def(p):
     p[0] = a
 
 def p_attribute_role_def(p):
-	'attribute_role_def : ATTRIBUTE_ROLE IDENTIFIER SEMI'
-	a = refpolicy.Attribute_Role(p[2])
-	p[0] = a
+    'attribute_role_def : ATTRIBUTE_ROLE IDENTIFIER SEMI'
+    a = refpolicy.Attribute_Role(p[2])
+    p[0] = a
 
 def p_typealias_def(p):
     'typealias_def : TYPEALIAS IDENTIFIER ALIAS names SEMI'
