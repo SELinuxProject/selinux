@@ -17,10 +17,8 @@ IGNORE_LIST="$IGNORE_LIST,E101" # indentation contains mixed spaces and tabs
 IGNORE_LIST="$IGNORE_LIST,E711" # comparison to None should be 'if cond is not None:'
 IGNORE_LIST="$IGNORE_LIST,E712" # comparison to False should be 'if cond is False:' or 'if not cond:'
 IGNORE_LIST="$IGNORE_LIST,E722" # do not use bare 'except'
-IGNORE_LIST="$IGNORE_LIST,E999" # TabError: inconsistent use of tabs and spaces in indentation
 
 IGNORE_LIST="$IGNORE_LIST,F401" # module imported but unused
-IGNORE_LIST="$IGNORE_LIST,F812" # list comprehension redefines 'f', in lex.py and yacc.py
 IGNORE_LIST="$IGNORE_LIST,F841" # local variable '...' is assigned to but never used
 
 
@@ -75,4 +73,4 @@ IGNORE_LIST="$IGNORE_LIST,F405" # '...' may be undefined, or defined from star i
 IGNORE_LIST="$IGNORE_LIST,F811" # redefinition of unused ...
 
 
-exec flake8 --max-line-length=120 --builtins='_,unicode,lextab,parsetab' --ignore=",$IGNORE_LIST" "$@"
+exec flake8 --max-line-length=120 --builtins='_,basestring,unicode' --ignore=",$IGNORE_LIST" "$@"
