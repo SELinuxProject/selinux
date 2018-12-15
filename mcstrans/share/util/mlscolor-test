@@ -20,17 +20,17 @@ for arg in sys.argv[1:]:
         context, expected = line.split("=")
         rc, raw = selinux_trans_to_raw_context(context)
         if rc < 0:
-            print "Unable to get raw context of '%s'" % (context)
+            print("Unable to get raw context of '%s'" % (context))
             errors += 1
             continue
         rc, colors = selinux_raw_context_to_color(raw)
         if rc < 0:
-            print "Unable to get colors for '%s'" % (context)
+            print("Unable to get colors for '%s'" % (context))
             errors += 1
             continue
         colors = colors.rstrip()
         if colors != expected:
-            print "For '%s' got\n\t'%s' expected\n\t'%s'" % (context, colors, expected)
+            print("For '%s' got\n\t'%s' expected\n\t'%s'" % (context, colors, expected))
             errors += 1
             continue
     f.close()
@@ -38,6 +38,6 @@ for arg in sys.argv[1:]:
 s = "s"
 if errors == 1:
     s = ""
-print "mlscolor-test done with %d error%s" % (errors, s)
+print("mlscolor-test done with %d error%s" % (errors, s))
 
 sys.exit(errors)
