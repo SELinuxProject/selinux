@@ -1,6 +1,7 @@
 import unittest
 import os
-import shutil
+import os.path
+import sys
 from tempfile import mkdtemp
 from subprocess import Popen, PIPE
 
@@ -25,15 +26,19 @@ class Audit2allowTests(unittest.TestCase):
 
     def test_sepolgen_ifgen(self):
         "Verify sepolgen-ifgen works"
-        p = Popen(['sudo', 'sepolgen-ifgen'], stdout=PIPE)
+        temp_directory = mkdtemp(suffix='audit2allow_test')
+        output_file = os.path.join(temp_directory, 'interface_info')
+        p = Popen([sys.executable, './sepolgen-ifgen', '-p', 'test_dummy_policy', '-o', output_file], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)
         self.assertSuccess("sepolgen-ifgen", p.returncode, err)
+        os.unlink(output_file)
+        os.rmdir(temp_directory)
 
     def test_audit2allow(self):
         "Verify audit2allow works"
-        p = Popen(['python', './audit2allow', "-i", "test.log"], stdout=PIPE)
+        p = Popen([sys.executable, './audit2allow', '-p', 'test_dummy_policy', '-i', 'test.log'], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)
@@ -41,7 +46,7 @@ class Audit2allowTests(unittest.TestCase):
 
     def test_audit2why(self):
         "Verify audit2why works"
-        p = Popen(['python', './audit2why', "-i", "test.log"], stdout=PIPE)
+        p = Popen([sys.executable, './audit2why', '-p', 'test_dummy_policy', '-i', 'test.log'], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)
@@ -49,12 +54,13 @@ class Audit2allowTests(unittest.TestCase):
 
     def test_xperms(self):
         "Verify that xperms generation works"
-        p = Popen(['python', './audit2allow', "-x", "-i", "test.log"], stdout=PIPE)
+        p = Popen([sys.executable, './audit2allow', '-x', '-p', 'test_dummy_policy', '-i', 'test.log'], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)
         self.assertTrue(b"allowxperm" in out)
         self.assertSuccess("xperms", p.returncode, err)
+
 
 if __name__ == "__main__":
     unittest.main()
