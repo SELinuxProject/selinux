@@ -28,7 +28,10 @@ class Audit2allowTests(unittest.TestCase):
         "Verify sepolgen-ifgen works"
         temp_directory = mkdtemp(suffix='audit2allow_test')
         output_file = os.path.join(temp_directory, 'interface_info')
-        p = Popen([sys.executable, './sepolgen-ifgen', '-p', 'test_dummy_policy', '-o', output_file], stdout=PIPE)
+        p = Popen([
+            sys.executable, './sepolgen-ifgen', '-p', 'test_dummy_policy', '-o', output_file,
+            '--attr-helper', './sepolgen-ifgen-attr-helper'
+            ], stdout=PIPE)
         out, err = p.communicate()
         if err:
             print(out, err)
