@@ -8,9 +8,6 @@ import shutil
 import sys
 from optparse import OptionParser
 
-import ctypes
-
-sepol = ctypes.cdll.LoadLibrary('libsepol.so.1')
 
 try:
 	import selinux
