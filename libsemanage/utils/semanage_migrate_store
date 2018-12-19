@@ -27,12 +27,13 @@ def copy_file(src, dst):
 		shutil.copy(src, dst)
 	except OSError as the_err:
 		(err, strerr) = the_err.args
-		print("Could not copy %s to %s, %s" %(src, dst, strerr), file=sys.stderr)
+		print("Could not copy %s to %s, %s" % (src, dst, strerr), file=sys.stderr)
 		exit(1)
 
 
 def create_dir(dst, mode):
-	if DEBUG: print("Making directory %s" % dst)
+	if DEBUG:
+		print("Making directory %s" % dst)
 	try:
 		os.makedirs(dst, mode)
 	except OSError as the_err:
@@ -45,7 +46,8 @@ def create_dir(dst, mode):
 
 
 def create_file(dst):
-	if DEBUG: print("Making file %s" % dst)
+	if DEBUG:
+		print("Making file %s" % dst)
 	try:
 		open(dst, 'a').close()
 	except OSError as the_err:
@@ -55,7 +57,8 @@ def create_file(dst):
 
 
 def copy_module(store, name, base):
-	if DEBUG: print("Install module %s" % name)
+	if DEBUG:
+		print("Install module %s" % name)
 	(file, ext) = os.path.splitext(name)
 	if ext != ".pp":
 		# Stray non-pp file in modules directory, skip
@@ -78,24 +81,25 @@ def copy_module(store, name, base):
 		efile.write("pp")
 		efile.close()
 
-	except:
+	except (IOError, OSError):
 		print("Error installing module %s" % name, file=sys.stderr)
 		exit(1)
 
 
 def disable_module(file, name, disabledmodules):
-	if DEBUG: print("Disabling %s" % name)
+	if DEBUG:
+		print("Disabling %s" % name)
 	(disabledname, disabledext) = os.path.splitext(file)
 	create_file("%s/%s" % (disabledmodules, disabledname))
 
-def migrate_store(store):
 
-	oldstore = oldstore_path(store);
-	oldmodules = oldmodules_path(store);
-	disabledmodules = disabledmodules_path(store);
-	newstore = newstore_path(store);
-	newmodules = newmodules_path(store);
-	bottomdir = bottomdir_path(store);
+def migrate_store(store):
+	oldstore = oldstore_path(store)
+	oldmodules = oldmodules_path(store)
+	disabledmodules = disabledmodules_path(store)
+	newstore = newstore_path(store)
+	newmodules = newmodules_path(store)
+	bottomdir = bottomdir_path(store)
 
 	print("Migrating from %s to %s" % (oldstore, newstore))
 
@@ -133,6 +137,7 @@ def migrate_store(store):
 					disable_module(file, name, disabledmodules)
 				else:
 					copy_module(store, name, 0)
+
 
 def rebuild_policy():
 	# Ok, the modules are loaded, lets try to rebuild the policy
@@ -182,23 +187,30 @@ def rebuild_policy():
 def oldroot_path():
 	return "%s/etc/selinux" % ROOT
 
+
 def oldstore_path(store):
 	return "%s/%s/modules/active" % (oldroot_path(), store)
+
 
 def oldmodules_path(store):
 	return "%s/modules" % oldstore_path(store)
 
+
 def disabledmodules_path(store):
 	return "%s/disabled" % newmodules_path(store)
+
 
 def newroot_path():
 	return "%s%s" % (ROOT, PATH)
 
+
 def newstore_path(store):
 	return "%s/%s/active" % (newroot_path(), store)
 
+
 def newmodules_path(store):
 	return "%s/modules" % newstore_path(store)
+
 
 def bottomdir_path(store):
 	return "%s/%s" % (newmodules_path(store), PRIORITY)
@@ -257,7 +269,6 @@ if __name__ == "__main__":
 		"pkeys.local",
 		"ibendports.local"]
 
-
 	create_dir(newroot_path(), 0o755)
 
 	stores = None
@@ -286,4 +297,3 @@ if __name__ == "__main__":
 
 	if NOREBUILD is False:
 		rebuild_policy()
-
