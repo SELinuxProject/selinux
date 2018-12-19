@@ -96,7 +96,7 @@ def get_attrs(policy_path):
     ret = subprocess.Popen([ATTR_HELPER, policy_path, outfile.name], stdout=fd).wait()
     fd.close()
     if ret != 0:
-        sys.stderr.write("could not run attribute helper")
+        sys.stderr.write("could not run attribute helper\n")
         return None
 
     attrs = interfaces.AttributeSet()
