@@ -32,12 +32,13 @@ class PathChooser(object):
         self.config_pathname = pathname
         ignore = re.compile(r"^\s*(?:#.+)?$")
         consider = re.compile(r"^\s*(\w+)\s*=\s*(.+?)\s*$")
-        for lineno, line in enumerate(open(pathname)):
-            if ignore.match(line): continue
-            mo = consider.match(line)
-            if not mo:
-                raise ValueError("%s:%d: line is not in key = value format" % (pathname, lineno+1))
-            self.config[mo.group(1)] = mo.group(2)
+        with open(pathname, "r") as fd:
+            for lineno, line in enumerate(fd):
+                if ignore.match(line): continue
+                mo = consider.match(line)
+                if not mo:
+                    raise ValueError("%s:%d: line is not in key = value format" % (pathname, lineno+1))
+                self.config[mo.group(1)] = mo.group(2)
 
     # We're only exporting one useful function, so why not be a function
     def __call__(self, testfilename, pathset="SELINUX_DEVEL_PATH"):
