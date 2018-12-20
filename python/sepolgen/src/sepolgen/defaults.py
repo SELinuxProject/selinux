@@ -70,7 +70,10 @@ def attribute_info():
 
 def refpolicy_makefile():
     chooser = PathChooser("/etc/selinux/sepolgen.conf")
-    return chooser("Makefile")
+    result = chooser("Makefile")
+    if not os.path.exists(result):
+        result = chooser("include/Makefile")
+    return result
 
 def headers():
     chooser = PathChooser("/etc/selinux/sepolgen.conf")
