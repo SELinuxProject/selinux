@@ -83,6 +83,7 @@ class CheckRole(argparse.Action):
         if not newval:
             newval = []
         try:
+            # sepolicy tries to load the SELinux policy and raises ValueError if it fails.
             import sepolicy
             roles = sepolicy.get_all_roles()
         except ValueError:
