@@ -135,8 +135,7 @@ def main():
     try:
         headers = refparser.parse_headers(options.headers, output=log, debug=options.debug)
     except ValueError as e:
-        print("error parsing headers")
-        print(str(e))
+        sys.stderr.write("error parsing headers: %s\n" % e)
         return 1
 
     if_set = interfaces.InterfaceSet(output=log)
