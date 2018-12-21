@@ -242,7 +242,10 @@ class AuditToPolicy:
 
     def __output_audit2why(self):
         import selinux
-        import sepolicy
+        try:
+            import sepolicy
+        except (ImportError, ValueError):
+            sepolicy = None
         for i in self.__parser.avc_msgs:
             rc = i.type
             data = i.data
@@ -262,11 +265,13 @@ class AuditToPolicy:
                 if len(data) > 1:
                     print("\tOne of the following booleans was set incorrectly.")
                     for b in data:
-                        print("\tDescription:\n\t%s\n" % sepolicy.boolean_desc(b[0]))
+                        if sepolicy is not None:
+                            print("\tDescription:\n\t%s\n" % sepolicy.boolean_desc(b[0]))
                         print("\tAllow access by executing:\n\t# setsebool -P %s %d" % (b[0], b[1]))
                 else:
                     print("\tThe boolean %s was set incorrectly. " % (data[0][0]))
-                    print("\tDescription:\n\t%s\n" % sepolicy.boolean_desc(data[0][0]))
+                    if sepolicy is not None:
+                        print("\tDescription:\n\t%s\n" % sepolicy.boolean_desc(data[0][0]))
                     print("\tAllow access by executing:\n\t# setsebool -P %s %d" % (data[0][0], data[0][1]))
                 continue
 
