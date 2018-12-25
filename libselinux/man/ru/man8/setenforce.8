@@ -1,0 +1,32 @@
+.TH "setenforce" "8" "7 апреля 2004" "dwalsh@redhat.com" "Документация по командной строке SELinux"
+.SH "ИМЯ"
+setenforce \- изменить режим, в котором выполняется SELinux
+.
+.SH "ОБЗОР"
+.B setenforce
+.RB [ Enforcing | Permissive | 1 | 0 ]
+.
+.SH "ОПИСАНИЕ"
+Используйте
+.B Enforcing
+или
+.B 1
+для установки SELinux в принудительный режим.
+.br
+Используйте
+.B Permissive
+или
+.B 0
+для установки SELinux в разрешительный режим.
+
+Если SELinux отключён и требуется его включить (или если SELinux включён и требуется его отключить), обратитесь к странице руководства 
+.BR selinux (8).
+.
+.SH "СМОТРИТЕ ТАКЖЕ"
+.BR selinux (8),
+.BR getenforce (8),
+.BR selinuxenabled (8)
+.
+.SH АВТОРЫ
+Dan Walsh, <dwalsh@redhat.com>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

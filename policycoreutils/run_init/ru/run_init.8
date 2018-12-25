@@ -1,0 +1,26 @@
+.TH RUN_INIT "8" "Май 2003" "Security Enhanced Linux" NSA
+.SH ИМЯ
+run_init \- запустить сценарий init в правильном контексте SELinux
+.SH ОБЗОР
+.B run_init 
+\fISCRIPT\fR [[\fIARGS\fR]...] 
+.br
+.SH ОПИСАНИЕ
+.PP
+Запуск сценария init в правильном контексте, который указан в 
+/etc/selinux/POLICYTYPE/contexts/initrc_context.
+Обычно эта возможность используется интерактивно, так как она требует аутентификации shadow или пользователя PAM (в зависимости от параметров при компиляции). PAM можно настроить таким образом, что интерактивный ввод не потребуется. Обратитесь к документации по PAM.
+.SH ФАЙЛЫ
+/etc/passwd - информация об учётных записях пользователей
+.br
+/etc/shadow - зашифрованные пароли и информация об устаревании паролей
+.br
+/etc/selinux/POLICYTYPE/contexts/initrc_context - содержит контекст для запуска сценариев init
+.SH СМОТРИТЕ ТАКЖЕ
+.BR newrole (1),
+.BR runcon (1)
+.SH АВТОРЫ
+.nf
+Wayne Salamon (wsalamon@tislabs.com) 
+Dan Walsh (dwalsh@redhat.com) 
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>

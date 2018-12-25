@@ -1,0 +1,43 @@
+.TH "default_type" "5" "28 ноября 2011" "Security Enhanced Linux" "Конфигурация SELinux"
+.SH "ИМЯ"
+default_type \- файл конфигурации типов SELinux по умолчанию
+.
+.SH "ОПИСАНИЕ"
+Файл \fIdefault_type\fR содержит записи, которые позволяют поддерживающим SELinux приложениям, таким как \fBnewrole\fR(1), выбирать для роли тип по умолчанию, если не предоставлен другой тип.
+.sp
+\fBselinux_default_type_path\fR(3) возвращает путь активной политики к этому файлу. По умолчанию файл типов по умолчанию:
+.RS
+.I /etc/selinux/{SELINUXTYPE}/contexts/default_type
+.RE
+.sp
+Где \fI{SELINUXTYPE}\fR - запись из файла конфигурации selinux \fIconfig\fR (см. \fBselinux_config\fR(5)).
+.sp
+\fBget_default_type\fR(3) выполняет чтение этого файла, чтобы определить тип для активной политики.
+.
+.SH "ФОРМАТ ФАЙЛА"
+Каждая строка внутри файла \fIdefault_type\fR форматируется записями \fIrole\fB:\fItype\fR, где:
+.RS
+.I role
+.RS
+Роль SELinux.
+.RE
+.I type
+.RS
+Тип домена, который возвращается для этой роли.
+.RE
+.
+.SH "ПРИМЕР"
+# ./contexts/default_type
+.br
+auditadm_r:auditadm_t
+.br
+user_r:user_t
+.
+.SH "СМОТРИТЕ ТАКЖЕ"
+.ad l
+.nh
+.BR selinux "(8), " get_default_type "(3), " newrole "(1), " selinux_default_type_path "(3), " selinux_config "(5) "
+
+
+.SH АВТОРЫ
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

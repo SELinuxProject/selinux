@@ -1,0 +1,210 @@
+.\" Hey, Emacs! This is an -*- nroff -*- source file.
+.\" Copyright (c) 2005 Manoj Srivastava <srivasta@debian.org>
+.\" Copyright (c) 2010 Dan Walsh <dwalsh@redhat.com>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.\"
+.TH AUDIT2ALLOW "1" "Октябрь 2010" "Security Enhanced Linux" NSA
+.SH ИМЯ
+.BR audit2allow
+\- создаёт правила политики SELinux allow/dontaudit из журналов отклонённых операций
+
+.BR audit2why  
+\- преобразовывает сообщения аудита SELinux в описание причины отказа в доступе (audit2allow \-w)
+
+.SH ОБЗОР
+.B audit2allow
+.RI [ options "] "
+.SH ПАРАМЕТРЫ
+.TP
+.B "\-a" | "\-\-all"
+Прочитать ввод из журнала аудита и сообщений, конфликтует с \-i
+.TP
+.B "\-b" | "\-\-boot"
+Прочитать ввод из сообщений аудита с момента последней загрузки, конфликтует с \-i
+.TP
+.B "\-d" | "\-\-dmesg"
+Прочитать ввод из вывода 
+.I /bin/dmesg.
+Обратите внимание, что с помощью dmesg будут доступны не все сообщения аудита, когда выполняется auditd; в этом случае используйте "ausearch \-m avc | audit2allow" или "\-a".
+.TP
+.B "\-D" | "\-\-dontaudit"
+Создать правила dontaudit (по умолчанию: allow)
+.TP
+.B "\-h" | "\-\-help"
+Вывести краткое сообщение об использовании
+.TP
+.B "\-i  <inputfile>" | "\-\-input <inputfile>"
+Прочитать ввод из 
+.I <inputfile>
+.TP
+.B "\-l" | "\-\-lastreload"
+Прочитать ввод только после последней перезагрузки политики
+.TP
+.B "\-m <modulename>" | "\-\-module <modulename>"
+Создать модуль / запросить вывод <modulename>
+.TP
+.B "\-M <modulename>" 
+Создать загружаемый пакет модуля, конфликтует с \-o
+.TP
+.B "\-p <policyfile>"  | "\-\-policy <policyfile>"
+Файл политики, который следует использовать для анализа
+.TP
+.B "\-o <outputfile>"  | "\-\-output <outputfile>"
+Добавить вывод в конец 
+.I <outputfile>
+.TP
+.B "\-r" | "\-\-requires"
+Создать вывод в синтаксисе загружаемого модуля
+.TP
+.B "\-N" | "\-\-noreference"
+Не создавать эталонную политику, традиционные разрешительные правила.
+Это поведение по умолчанию.
+.TP
+.B "\-R" | "\-\-reference"
+Создать эталонную политику с помощью установленных макросов.
+Будет предпринята попытка сопоставить отказы в доступе с интерфейсами, это сопоставление может быть неправильным.
+.TP
+.B "\-x" | "\-\-xperms"
+Создать расширенные правила вектора доступа для разрешения
+.TP
+.B "\-w" | "\-\-why"
+Преобразовать сообщения аудита SELinux в описание причин отказа в доступе
+
+.TP
+.B "\-v" | "\-\-verbose"
+Включить подробный вывод
+
+.SH ОПИСАНИЕ
+.PP
+Эта утилита ищет в журналах сообщения, которые появляются, когда система не даёт разрешения на операции, и создаёт фрагмент кода правил политики, который (если бы был загружен в политику) мог бы позволить этим операциям успешно завершиться. Однако эта утилита создаёт только разрешительные (allow) правила принудительного присвоения типов. При работе с некоторыми отказами в разрешениях может потребоваться изменить политику как-то иначе, например, добавить атрибут в объявление типа для удовлетворения существующему ограничению, добавить разрешительное правило для роли или изменить ограничение. Утилиту
+.BR audit2why (8) 
+можно использовать для диагностики неясных причин отказов в разрешениях.
+.PP
+Использовать вывод этой утилиты необходимо с осторожностью; убедитесь, что разрешаемые операции не представляют угрозы безопасности. Часто лучше определить новые домены и/или типы или выполнить другие структурные изменения, чтобы разрешить успешное выполнение только оптимальному набору операций, а не вслепую применять иногда слишком обширные изменения, которые рекомендуются утилитой. Некоторые запреты на использование разрешений не вызывают критических ошибок в приложении; в этом случае предпочтительным может быть простое подавление журналирования отказов с помощью правила 'dontaudit', а не использование разрешительного правила 'allow'.
+.PP
+.SH ПРИМЕР
+.nf
+.B ПРИМЕЧАНИЕ: эти примеры относятся к системам, использующим пакет аудита. Если вы 
+.B не используете пакет аудита, сообщения кэша вектора доступа (AVC) будут находиться в каталоге /var/log/messages.
+.B Замените в примерах /var/log/messages на /var/log/audit/audit.log  
+.PP
+.B Использование audit2allow для создания модульной политики
+
+$ cat /var/log/audit/audit.log | audit2allow \-m local > local.te
+$ cat local.te
+module local 1.0;
+
+require {
+        class file {  getattr open read };
+
+
+        type myapp_t;
+        type etc_t;
+ };
+
+
+allow myapp_t etc_t:file { getattr open read };
+<просмотреть local.te и настроить требуемым образом>
+
+.B Использование audit2allow для создания модульной политики с помощью эталонной политики
+
+$ cat /var/log/audit/audit.log | audit2allow \-R \-m local > local.te
+$ cat local.te
+policy_module(local, 1.0)
+
+gen_require(`
+        type myapp_t;
+        type etc_t;
+ };
+
+files_read_etc_files(myapp_t)
+<просмотреть local.te и настроить требуемым образом>
+
+.B Сборка модульной политики с помощью Makefile
+
+# SELinux предоставляет среду разработки политики в
+# /usr/share/selinux/devel, включая все поставляемые
+# файлы интерфейса.
+# Можно создать файл .te и скомпилировать его, выполнив
+
+$ make \-f /usr/share/selinux/devel/Makefile local.pp
+
+
+# Эта команда make скомпилирует файл local.te в текущем
+# каталоге. Если не был указан файл "pp", будут скомпилированы
+# все файлы "te" в текущем каталоге. После компиляции файла
+# .te в файл "pp" его потребуется установить с помощью
+# команды semodule.
+
+$ semodule \-i local.pp
+
+.B Сборка модульной политики вручную
+
+# Скомпилировать модуль
+$ checkmodule \-M \-m \-o local.mod local.te
+
+# Создать пакет 
+$ semodule_package \-o local.pp \-m local.mod
+
+# Загрузить модуль в ядро
+$ semodule \-i local.pp
+
+.B Использование audit2allow для создания и сборки модульной политики
+
+$ cat /var/log/audit/audit.log | audit2allow \-M local
+Создание файла принудительного присвоения типов: local.te
+
+Компиляция политики: checkmodule \-M \-m \-o local.mod local.te
+Сборка пакета: semodule_package \-o local.pp \-m local.mod
+
+******************** ВАЖНО ***********************
+
+Чтобы загрузить созданный пакет политики в ядро, необходимо выполнить
+
+semodule \-i local.pp
+
+.B Использование audit2allow для создания монолитной (не модульной) политики
+
+$ cd /etc/selinux/$SELINUXTYPE/src/policy
+$ cat /var/log/audit/audit.log | audit2allow >> domains/misc/local.te
+$ cat domains/misc/local.te
+allow cupsd_config_t unconfined_t:fifo_file { getattr ioctl };
+<просмотреть domains/misc/local.te и настроить требуемым образом>
+$ make load
+
+.fi
+.PP
+.SH АВТОРЫ
+Эта страница руководства была написана 
+.I Manoj Srivastava <srivasta@debian.org>
+для системы Debian GNU/Linux. Она была обновлена Dan Walsh <dwalsh@redhat.com>.
+.PP
+В разработке утилиты 
+.B audit2allow
+участвовало несколько человек, в том числе 
+.I Justin R. Smith, 
+.I Yuichi Nakamura
+и 
+.I Dan Walsh.
+Перевод на русский язык выполнила
+.I Герасименко Олеся <gammaray@basealt.ru>.

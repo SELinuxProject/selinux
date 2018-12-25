@@ -1,0 +1,32 @@
+.TH SEMODULE_LINK "8" "Ноябрь 2005" "Security Enhanced Linux" NSA
+.SH ИМЯ 
+semodule_link \- связать вместе пакеты модулей политики SELinux
+
+.SH ОБЗОР
+.B semodule_link [-Vv] [-o outfile] basemodpkg modpkg1 [modpkg2]...
+.br
+.SH ОПИСАНИЕ
+.PP
+semodule_link - утилита разработки для ручного связывания набора пакетов модулей политики SELinux в один пакет модулей политики. 
+Это средство не является необходимым для нормальной работы SELinux. Обычно такое связывание выполняется libsemanage внутренним образом в ответ на команды semodule. Пакеты модулей создаются с помощью semodule_package.
+
+.SH "ПАРАМЕТРЫ"
+.TP
+.B \-V
+Показать версию
+.TP
+.B \-v
+Подробный режим
+.TP
+.B \-o <output file> 
+Связанный пакет модулей политики, созданный с помощью этого средства
+
+
+.SH СМОТРИТЕ ТАКЖЕ
+.B checkmodule(8), semodule_package(8), semodule(8), semodule_expand(8)
+(8),
+.SH АВТОРЫ
+.nf
+Эта страница руководства была написана Dan Walsh <dwalsh@redhat.com>.
+Программа была написана Karl MacMillan <kmacmillan@tresys.com>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

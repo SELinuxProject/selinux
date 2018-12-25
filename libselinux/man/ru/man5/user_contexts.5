@@ -1,0 +1,85 @@
+.TH "user_contexts" "5" "28 ноября 2011" "Security Enhanced Linux" "Конфигурация SELinux"
+.SH "ИМЯ"
+user_contexts \- файлы конфигурации SELinux-контекстов пользователей SELinux
+.
+.SH "ОПИСАНИЕ"
+Эти необязательные файлы конфигурации контекстов пользователей содержат записи, которые позволяют поддерживающим SELinux приложениям для входа, например,
+.BR PAM (8)
+(запущенным в своих собственных контекстах процессов), определять контекст, в котором должен запускаться сеанс пользователя.
+.sp
+Обычно поддерживающие SELinux приложения для входа используют одну или несколько следующих функций libselinux, которые выполняют чтение этих файлов по пути активной политики:
+.RS
+.BR get_default_context (3)
+.br
+.BR get_ordered_context_list (3)
+.br
+.BR get_ordered_context_list_with_level (3)
+.br
+.BR get_default_context_with_level (3)
+.br
+.BR get_default_context_with_role (3)
+.br
+.BR get_default_context_with_rolelevel (3)
+.br
+.BR query_user_context (3)
+.br
+.BR manual_user_enter_context (3)
+.RE
+.sp
+Для каждого пользователя SELinux можно настроить только один файл. Путь к файлу формируется с помощью пути, возвращённого
+.BR \%selinux_user_contexts_path (3)
+для активной политики, с добавлением в конце имени пользователя SELinux, например:
+.RS
+.I /etc/selinux/{SELINUXTYPE}/contexts/users/unconfined_u
+.br
+.I /etc/selinux/{SELINUXTYPE}/contexts/users/xguest_u
+.RE
+.sp
+Где \fI{SELINUXTYPE}\fR - запись файла конфигурации selinux \fIconfig\fR (см. \fBselinux_config\fR(5)).
+.sp
+Эти файлы содержат информацию о контексте в соответствии с описанием в разделе
+.B ФОРМАТ ФАЙЛА.
+.
+.SH "ФОРМАТ ФАЙЛА"
+Каждая строка в файле конфигурации контекста пользователя состоит из следующих компонентов:
+.RS
+.I login_process user_login_process
+.RE
+.sp
+Где:
+.RS
+.I login_process
+.RS
+Состоит из записи \fIrole\fB:\fItype\fR[\fB:\fIrange\fR], которая представляет собой контекст процесса входа.
+.RE
+.I user_login_process
+.RS
+Состоит из записи \fIrole\fB:\fItype\fR[\fB:\fIrange\fR], которая представляет собой контекст процесса входа пользователя.
+.RE
+.RE
+.
+.SH "ПРИМЕР"
+# Пример для xguest_u в /etc/selinux/targeted/contexts/users/xguest_u
+.br
+system_r:crond_t:s0			xguest_r:xguest_t:s0
+.br
+system_r:initrc_t:s0		xguest_r:xguest_t:s0
+.br
+system_r:local_login_t:s0	xguest_r:xguest_t:s0
+.br
+system_r:remote_login_t:s0	xguest_r:xguest_t:s0
+.br
+system_r:sshd_t:s0			xguest_r:xguest_t:s0
+.br
+system_r:xdm_t:s0			xguest_r:xguest_t:s0
+.br
+xguest_r:xguest_t:s0		xguest_r:xguest_t:s0
+.
+.SH "СМОТРИТЕ ТАКЖЕ"
+.ad l
+.nh
+.BR selinux "(8), " selinux_user_contexts_path "(3), " PAM "(8), "  get_ordered_context_list "(3), " get_ordered_context_list_with_level "(3), " get_default_context_with_level "(3), " get_default_context_with_role "(3), " get_default_context_with_rolelevel "(3), " query_user_context "(3), " manual_user_enter_context "(3), " selinux_config "(5) "
+
+
+.SH АВТОРЫ
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

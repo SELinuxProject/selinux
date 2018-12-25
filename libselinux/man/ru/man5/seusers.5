@@ -1,0 +1,67 @@
+.TH "seusers" "5" "28 ноября 2011" "Security Enhanced Linux" "Конфигурация SELinux"
+.SH "ИМЯ"
+seusers \- файл конфигурации сопоставления пользователей GNU/Linux с пользователями SELinux
+.
+.SH "ОПИСАНИЕ"
+Файл
+.I seusers
+содержит список сопоставления пользователей GNU/Linux с пользователями SELinux, который используется поддерживающими SELinux приложениями для входа, например, \fBPAM\fR(8).
+.sp
+.BR selinux_usersconf_path "(3) "
+вернёт путь активной политики к этому файлу. Файл сопоставления пользователей SELinux по умолчанию находится по следующему адресу:
+.RS
+.I /etc/selinux/{SELINUXTYPE}/seusers
+.RE
+.sp
+Где \fI{SELINUXTYPE}\fR - запись из файла конфигурации selinux \fIconfig\fR (см. \fBselinux_config\fR(5)).
+.sp
+.BR getseuserbyname "(3) выполняет чтение этого файла для сопоставления пользователя или группы GNU/Linux с пользователем SELinux. "
+.
+.SH "ФОРМАТ ФАЙЛА"
+Каждая строка файла конфигурации
+.I seusers
+состоит из следующих компонентов:
+.sp
+.RS
+\fR[\fB%\fIgroup_id\fR]|[\fIuser_id\fR]\fB:\fIseuser_id\fR[\fB:\fIrange\fR]
+.RE
+.sp
+Где:
+.RS
+\fIgroup_id\fR|\fIuser_id
+.RS
+\fRИдентификатор пользователя GNU/Linux или (если предваряется символом процентного значения (\fB%\fR)) идентификатор группы GNU/Linux.
+.br
+При необходимости в качестве резервной записи можно предоставить необязательную запись, установленную в \fB__default__\fR.
+.RE
+.I seuser_id
+.RS
+Идентификатор пользователя SELinux.
+.RE
+.I range
+.RS
+Необязательный уровень или диапазон для политики MLS/MCS.
+.RE
+.RE
+.
+.SH "ПРИМЕР"
+# ./seusers
+.br
+system_u:system_u:s0\-s15:c0.c255
+.br
+root:root:s0\-s15:c0.c255
+.br
+fred:user_u:s0
+.br
+__default__:user_u:s0
+.br
+%user_group:user_u:s0
+.
+.SH "СМОТРИТЕ ТАКЖЕ"
+.ad l
+.nh
+.BR selinux "(8), " PAM "(8), " selinux_usersconf_path "(3), " getseuserbyname "(3), " selinux_config "(5) "
+
+
+.SH АВТОРЫ
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

@@ -1,0 +1,39 @@
+.TH "removable_context" "5" "28 ноября 2011" "Security Enhanced Linux" "Конфигурация SELinux"
+.SH "ИМЯ"
+removable_context \- файл конфигурации SELinux-контекста съёмных устройств
+.
+.SH "ОПИСАНИЕ"
+Этот файл содержит метку по умолчанию, которую следует использовать для съёмных устройств.
+.sp
+.BR selinux_removable_context_path "(3) "
+вернёт путь активной политики к этому файлу. Файл контекста съёмных устройств по умолчанию:
+.RS
+.I /etc/selinux/{SELINUXTYPE}/contexts/removable_context
+.RE
+.sp
+Где \fI{SELINUXTYPE}\fR - запись из файла конфигурации selinux \fIconfig\fR (см. \fBselinux_config\fR(5)).
+.
+.SH "ФОРМАТ ФАЙЛА"
+Файл состоит из следующей однострочной записи:
+.RS
+.IB user : role : type \fR[\fB:\fIrange\fR]
+.RE
+.sp
+Где:
+.RS
+.I user role type range
+.RS
+Пользователь, роль, тип и необязательный диапазон (для MCS/MLS), разделённые двоеточиями (:), которые будут применены к съёмным устройствам.
+.RE
+.RE
+.
+.SH "ПРИМЕР"
+# ./contexts/removable_contexts
+.br
+system_u:object_r:removable_t:s0
+.
+.SH "СМОТРИТЕ ТАКЖЕ"
+.BR selinux "(8), " selinux_removable_context_path "(3), " selinux_config "(5) "
+
+.SH АВТОРЫ
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

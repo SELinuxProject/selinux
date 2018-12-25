@@ -1,0 +1,70 @@
+.TH "sefcontext_compile" "8" "12 августа 2015" "dwalsh@redhat.com" "Документация по командной строке SELinux"
+.SH "ИМЯ"
+sefcontext_compile \- скомпилировать файлы регулярных выражений контекстов файлов
+.
+.SH "ОБЗОР"
+.B sefcontext_compile
+.RB [ \-o
+.IR outputfile ]
+.RB [ \-p
+.IR policyfile ]
+.I inputfile
+.
+.SH "ОПИСАНИЕ"
+.B sefcontext_compile
+используется для компиляции регулярных выражений контекстов файлов в формат
+.BR pcre (3).
+.sp
+Скомпилированный файл используется функциями проставления меток файлов libselinux.
+.sp
+По умолчанию
+.B sefcontext_compile
+записывает скомпилированный файл pcre с суффиксом
+.B .bin
+в конце (например, \fIinputfile\fB.bin\fR).
+.SH ПАРАМЕТРЫ
+.TP
+.B \-o
+Указать
+.I outputfile
+- должно быть полным именем файла, так как суффикс
+.B .bin
+не добавляется автоматически.
+.TP
+.B \-p
+Указать двоичный
+.I policyfile
+для использования при проверке записей контекста в
+.I inputfile
+.br
+Если найден недействительный контекст, запись файла в формате pcre не будет выполнена и появится сообщение об ошибке.
+
+.SH "ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ"
+При ошибке возвращается -1. При успешном завершении возвращается 0.
+
+.SH "ПРИМЕРЫ"
+.B Пример 1:
+.br
+sefcontext_compile /etc/selinux/targeted/contexts/files/file_contexts
+.sp
+В результате создаётся следующий файл:
+.RS
+/etc/selinux/targeted/contexts/files/file_contexts.bin
+.RE
+.sp
+.B Пример 2:
+.br
+sefcontext_compile -o new_fc.bin /etc/selinux/targeted/contexts/files/file_contexts
+.sp
+В результате в текущем рабочем каталоге создаётся следующий файл:
+.RS
+new_fc.bin
+.RE
+.
+.SH "СМОТРИТЕ ТАКЖЕ"
+.BR selinux (8),
+.BR semanage (8)
+.
+.SH АВТОРЫ
+Dan Walsh, <dwalsh@redhat.com>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

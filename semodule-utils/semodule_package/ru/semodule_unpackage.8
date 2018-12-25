@@ -1,0 +1,24 @@
+.TH SEMODULE_PACKAGE "8" "Ноябрь 2005" "Security Enhanced Linux" NSA
+.SH ИМЯ
+semodule_unpackage \- извлечь модуль политики и файл контекстов файлов из пакета модуля политики SELinux
+
+.SH ОБЗОР
+.B semodule_unpackage ppfile modfile [fcfile]
+.br
+.SH ОПИСАНИЕ
+.PP
+semodule_unpackage - утилита, которая используется для извлечения файла модуля политики SELinux и файла контекстов файлов из пакета политики SELinux.
+
+.SH ПРИМЕР
+.nf
+# Извлечь файл модуля httpd из пакета политики httpd.
+$ semodule_unpackage httpd.pp httpd.mod httpd.fc
+.fi
+
+.SH СМОТРИТЕ ТАКЖЕ
+.B semodule_package(8)
+.SH АВТОРЫ
+.nf
+Эта страница руководства была написана Dan Walsh <dwalsh@redhat.com>.
+Программа была написана Stephen Smalley <sds@tycho.nsa.gov>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

@@ -1,0 +1,42 @@
+.\" Hey, Emacs! This is an -*- nroff -*- source file.
+.\" Copyright (c) 2005 Manoj Srivastava <srivasta@debian.org>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.\"
+.TH OPEN_INIT_PTY "8" "Январь 2005" "Security Enhanced Linux" NSA
+.SH ИМЯ
+open_init_pty \- запустить программу под псевдотерминалом
+.SH ОБЗОР
+.B open_init_pty
+\fISCRIPT\fR [[\fIARGS\fR]...] 
+.br
+.SH ОПИСАНИЕ
+.PP
+Запуск программы под псевдотерминалом. Эта возможность используется 
+.B run_init
+для фактического запуска программы после настройки подходящего контекста. Эта программа получает новый псевдотерминал, ответвляет дочерний процесс, который привязывается к псевдотерминалу, а затем соединяет физический терминал, на котором она была вызвана, с псевдотерминалом, передавая ввод клавиатуры в дочерний процесс и передавая вывод дочернего процесса физическому терминалу.
+.PP
+Она надлежащим образом настраивает псевдотерминал на основе атрибутов физического терминала, а затем устанавливает терминал пользователя в режим RAW (при выходе этот режим сбрасывается).
+.SH АВТОРЫ
+Эта страница руководства была написана Manoj Srivastava <srivasta@debian.org>
+для системы Debian GNU/Linux.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.
