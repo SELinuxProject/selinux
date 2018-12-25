@@ -1,5 +1,6 @@
 
 # Installation directories.
+LINGUAS ?= ru
 PREFIX ?= /usr
 SBINDIR ?= $(PREFIX)/sbin
 MANDIR ?= $(PREFIX)/share/man
@@ -38,6 +39,12 @@ install: all
 	install -m 755 open_init_pty $(DESTDIR)$(SBINDIR)
 	install -m 644 run_init.8 $(DESTDIR)$(MANDIR)/man8/
 	install -m 644 open_init_pty.8 $(DESTDIR)$(MANDIR)/man8/
+	for lang in $(LINGUAS) ; do \
+		if [ -e $${lang} ] ; then \
+			test -d $(DESTDIR)$(MANDIR)/$${lang}/man8 || install -m 755 -d $(DESTDIR)$(MANDIR)/$${lang}/man8 ; \
+			install -m 644 $${lang}/*.8 $(DESTDIR)$(MANDIR)/$${lang}/man8/ ; \
+		fi ; \
+	done
 ifeq ($(PAMH), y)
 	install -m 644 run_init.pamd $(DESTDIR)$(ETCDIR)/pam.d/run_init
 endif

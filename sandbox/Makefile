@@ -1,6 +1,7 @@
 PYTHON ?= python
 
 # Installation directories.
+LINGUAS ?= ru
 PREFIX ?= /usr
 SYSCONFDIR ?= /etc/sysconfig
 BINDIR ?= $(PREFIX)/bin
@@ -23,6 +24,14 @@ install: all
 	install -m 644 seunshare.8 $(DESTDIR)$(MANDIR)/man8/
 	-mkdir -p $(DESTDIR)$(MANDIR)/man5
 	install -m 644 sandbox.5 $(DESTDIR)$(MANDIR)/man5/
+	for lang in $(LINGUAS) ; do \
+		if [ -e $${lang} ] ; then \
+			mkdir -p $(DESTDIR)$(MANDIR)/$${lang}/man5 ; \
+			mkdir -p $(DESTDIR)$(MANDIR)/$${lang}/man8 ; \
+			install -m 644 $${lang}/*.5 $(DESTDIR)$(MANDIR)/$${lang}/man5/ ; \
+			install -m 644 $${lang}/*.8 $(DESTDIR)$(MANDIR)/$${lang}/man8/ ; \
+		fi ; \
+	done
 	-mkdir -p $(DESTDIR)$(SBINDIR)
 	install -m 4755 seunshare $(DESTDIR)$(SBINDIR)/
 	-mkdir -p $(DESTDIR)$(SHAREDIR)

@@ -1,6 +1,7 @@
 #
 # Makefile for building the checkpolicy program
 #
+LINGUAS ?= ru
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/share/man
@@ -55,6 +56,12 @@ install: all
 	install -m 755 $(TARGETS) $(DESTDIR)$(BINDIR)	
 	install -m 644 checkpolicy.8 $(DESTDIR)$(MANDIR)/man8
 	install -m 644 checkmodule.8 $(DESTDIR)$(MANDIR)/man8
+	for lang in $(LINGUAS) ; do \
+		if [ -e $${lang} ] ; then \
+			mkdir -p $(DESTDIR)$(MANDIR)/$${lang}/man8 ; \
+			install -m 644 $${lang}/*.8 $(DESTDIR)$(MANDIR)/$${lang}/man8 ; \
+		fi ; \
+	done
 
 relabel: install
 	/sbin/restorecon $(DESTDIR)$(BINDIR)/checkpolicy

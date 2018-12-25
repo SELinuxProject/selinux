@@ -1,4 +1,5 @@
 # Installation directories.
+LINGUAS ?= ru
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 SHAREDIR ?= $(PREFIX)/share/system-config-selinux
@@ -34,6 +35,12 @@ install: all
 	install -m 644 $(TARGETS) $(DESTDIR)$(SHAREDIR)
 	install -m 644 system-config-selinux.8 $(DESTDIR)$(MANDIR)/man8
 	install -m 644 selinux-polgengui.8 $(DESTDIR)$(MANDIR)/man8
+	for lang in $(LINGUAS) ; do \
+		if [ -e $${lang} ] ; then \
+			mkdir -p $(DESTDIR)$(MANDIR)/$${lang}/man8 ; \
+			install -m 644 $${lang}/*.8 $(DESTDIR)$(MANDIR)/$${lang}/man8/ ; \
+		fi ; \
+	done
 	install -m 644 system-config-selinux.png $(DESTDIR)$(DATADIR)/pixmaps
 	install -m 644 system-config-selinux.png $(DESTDIR)$(DATADIR)/icons/hicolor/24x24/apps
 	install -m 644 system-config-selinux.png $(DESTDIR)$(DATADIR)/system-config-selinux
