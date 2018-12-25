@@ -1,0 +1,109 @@
+.TH NEWROLE "1" "Октябрь 2000" "Security Enhanced Linux" NSA
+.SH ИМЯ
+newrole \- запустить оболочку с новой ролью SELinux
+.SH ОБЗОР
+.B newrole
+[\fB-r\fR|\fB--role\fR]
+\fIROLE\fR
+[\fB-t\fR|\fB--type\fR]
+\fITYPE\fR
+[\fB-l\fR|\fB--level\fR]
+[\fB-p\fR|\fB--preserve-environment\fR]
+\fILEVEL\fR [-- [\fIARGS\fR]...]
+.SH ОПИСАНИЕ
+.PP
+Запустить новую оболочку в новом контексте. Новый контекст берётся из старого контекста, в котором изначально исполнялась
+.B newrole.
+Если указан параметр
+.B -r
+или
+.B --role
+, новый контекст будет иметь роль, заданную 
+\fIROLE\fR.
+Если указан параметр 
+.B -t
+или
+.B --type
+, новый контекст будет иметь тип (домен), заданный
+\fITYPE\fR.
+Если указана роль, но не указан тип, тип по умолчанию берётся из указанной роли. Если указан параметр
+.B -l
+или
+.B --level
+, новый контекст будет иметь уровень конфиденциальности, заданный 
+\fILEVEL\fR.
+Если
+\fILEVEL\fR
+является диапазоном, новый контекст будет иметь уровень конфиденциальности и допуск, заданные этим диапазоном. Если указан параметр
+.B -p
+или
+.B --preserve-environment
+, оболочка с новым контекстом SELinux сохранит переменные среды, в ином случае будет создана новая минимальная среда.
+.PP
+Дополнительные аргументы
+.I ARGS
+могут присутствовать после параметра --,
+в этом случае они передаются в новую оболочку.
+В частности, при использовании аргумента \-\- \-c следующий аргумент будет обрабатываться как команда большинством интерпретаторов команд.
+.PP
+Если для newrole указан аргумент команды и имя команды найдено в /etc/selinux/newrole_pam.conf, будет использована служба pam, указанная в этом файле для команды, а не обычная конфигурация pam для newrole. Это позволяет устанавливать конфигурацию pam для каждой команды при вызове через newrole, например, чтобы пропустить этап интерактивной повторной аутентификации.
+.PP
+Новой оболочкой будет оболочка, указанная в записи пользователя в файле
+.I /etc/passwd.
+.PP
+.B -V
+или 
+.B --version
+показывает текущую версию newrole
+.PP
+.SH ПРИМЕР
+.br
+Смена роли:
+   # id \-Z
+   staff_u:staff_r:staff_t:SystemLow-SystemHigh
+   # newrole \-r sysadm_r
+   # id \-Z
+   staff_u:sysadm_r:sysadm_t:SystemLow-SystemHigh
+
+Смена только уровня конфиденциальности:
+   # id \-Z
+   staff_u:sysadm_r:sysadm_t:Unclassified-SystemHigh
+   # newrole \-l Secret
+   # id \-Z
+   staff_u:sysadm_r:sysadm_t:Secret-SystemHigh
+
+.PP
+Смена уровня конфиденциальности и допуска:
+   # id \-Z
+   staff_u:sysadm_r:sysadm_t:Unclassified-SystemHigh
+   # newrole \-l Secret-Secret
+   # id \-Z
+   staff_u:sysadm_r:sysadm_t:Secret
+
+.PP
+Запуск программы с указанной ролью или уровнем:
+   # newrole \-r sysadm_r \-\- \-c "/path/to/app arg1 arg2..."
+   # newrole \-l Secret \-\- \-c "/path/to/app arg1 arg2..."
+
+.SH ФАЙЛЫ
+/etc/passwd - информация об учётных записях пользователей
+.br
+/etc/shadow - зашифрованные пароли и информация об устаревании паролей
+.br
+/etc/selinux/<policy>/contexts/default_type - типы по умолчанию для ролей
+.br
+/etc/selinux/<policy>/contexts/securetty_types - типы securetty для изменений уровня
+.br
+/etc/selinux/newrole_pam.conf - необязательное сопоставление команд с отдельными службами pam 
+.br
+.SH СМОТРИТЕ ТАКЖЕ
+.BR runcon (1)
+.SH АВТОРЫ
+.nf
+Anthony Colatrella
+Tim Fraser
+Steve Grubb <sgrubb@redhat.com>
+Darrel Goeddel <DGoeddel@trustedcs.com>
+Michael Thompson <mcthomps@us.ibm.com>
+Dan Walsh <dwalsh@redhat.com>
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>

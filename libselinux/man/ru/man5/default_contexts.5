@@ -1,0 +1,75 @@
+.TH "default_contexts" "5" "28 ноября 2011" "Security Enhanced Linux" "Конфигурация SELinux"
+.SH "ИМЯ"
+default_contexts \- файл конфигурации контекстов SELinux по умолчанию
+.
+.SH "ОПИСАНИЕ"
+Файл конфигурации контекстов по умолчанию \fIdefault_contexts\fR содержит записи, которые позволяют поддерживающим SELinux приложениям для входа, например,
+.BR PAM "(8), настроить контекст пользователя. "
+.sp
+Поддерживающие SELinux приложения для входа обычно используют одну или несколько из следующих функций libselinux, которые выполняют чтение этих файлов по пути активной политики:
+.RS
+.BR get_default_context "(3) "
+.br
+.BR get_ordered_context_list "(3) "
+.br
+.BR get_ordered_context_list_with_level "(3) "
+.br
+.BR get_default_context_with_level "(3) "
+.br
+.BR get_default_context_with_role "(3) "
+.br
+.BR get_default_context_with_rolelevel "(3) "
+.br
+.BR query_user_context "(3) "
+.br
+.BR manual_user_enter_context "(3) "
+.RE
+.sp
+Путь к файлу конфигурации контекстов по умолчанию для активной политики возвращает \fBselinux_default_contexts_path\fR(3). По умолчанию файл контекстов по умолчанию находится по адресу:
+.RS
+.I /etc/selinux/{SELINUXTYPE}/contexts/default_contexts
+.RE
+.sp
+Где \fI{SELINUXTYPE}\fR - запись из файла конфигурации selinux \fIconfig\fR (см. \fBselinux_config\fR(5)).
+.
+.SH "ФОРМАТ ФАЙЛА"
+Каждая строка в файле конфигурации по умолчанию состоит из следующих компонентов:
+.RS
+.I login_process user_login_process [user_login_process] ...
+.RE
+.sp
+Где:
+.RS
+.I login_process
+.RS
+Состоит из записи \fIrole\fB:\fItype\fR[\fB:\fIrange\fR], которая представляет собой контекст процесса входа, определённый в политике.
+.RE
+.I user_login_process
+.RS
+Состоит из одной или нескольких записей \fIrole\fB:\fItype\fR[\fB:\fIrange\fR], которые представляют собой контекст процесса входа пользователя, определённый в политике.
+.RE
+.RE
+.
+.SH "ПРИМЕР"
+# ./contexts/default_contexts
+.br
+system_r:crond_t:s0			 system_r:system_crond_t:s0
+.br
+system_r:local_login_t:s0	 user_r:user_t:s0 staff_r:staff_t:s0
+.br
+system_r:remote_login_t:s0	 user_r:user_t:s0
+.br
+system_r:sshd_t:s0			 user_r:user_t:s0
+.br
+system_r:sulogin_t:s0		 sysadm_r:sysadm_t:s0
+.br
+system_r:xdm_t:s0			 user_r:user_t:s0
+.
+.SH "СМОТРИТЕ ТАКЖЕ"
+.ad l
+.nh
+.BR selinux "(8), " selinux_default_contexts_path "(3), " PAM "(8), " selinux_default_type_path "(3), " get_default_context "(3), " get_ordered_context_list "(3), " get_ordered_context_list_with_level "(3), " get_default_context_with_level "(3), " get_default_context_with_role "(3), " get_default_context_with_rolelevel "(3), " query_user_context "(3), " manual_user_enter_context "(3), " selinux_config "(5) "
+
+
+.SH АВТОРЫ
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

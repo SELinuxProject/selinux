@@ -1,0 +1,28 @@
+.TH "selinuxexeccon" "8" "14 мая 2011" "dwalsh@redhat.com" "Документация по командной строке SELinux"
+.SH "ИМЯ"
+selinuxexeccon \- сообщить контекст SELinux, который используется для этого исполняемого файла
+.
+.SH "ОБЗОР"
+.B selinuxexeccon
+.I command
+.RI [ fromcon ]
+.
+.SH "ОПИСАНИЕ"
+.B selinuxexeccon
+сообщает контекст SELinux для указанной команды из указанного контекста или текущего контекста.
+.
+.SH ПРИМЕР
+.nf
+# selinuxexeccon /usr/bin/passwd 
+staff_u:staff_r:passwd_t:s0-s0:c0.c1023
+
+# selinuxexeccon /usr/sbin/sendmail system_u:system_r:httpd_t:s0
+system_u:system_r:system_mail_t:s0
+.fi
+.
+.SH "СМОТРИТЕ ТАКЖЕ"
+.BR secon (8)
+.
+.SH АВТОРЫ
+Эта страница руководства была написана Dan Walsh <dwalsh@redhat.com>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

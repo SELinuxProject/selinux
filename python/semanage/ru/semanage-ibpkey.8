@@ -1,0 +1,67 @@
+.TH "semanage-ibpkey" "8" "20170508" "" ""
+.SH "ИМЯ"
+.B semanage\-ibpkey \- утилита для управления политикой SELinux, предназначенная для сопоставления ключей разделов infiniband
+.SH "ОБЗОР"
+.B semanage ibpkey [\-h] [\-n] [\-N] [\-S STORE] [ \-\-add \-t TYPE \-x SUBNET_PREFIX \-r RANGE ibpkey_name | ibpkey_range | \-\-delete \-x SUBNET_PREFIX ibpkey_name | ibpkey_range | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-t TYPE \-x SUBNET_PREFIX \-r RANGE ibpkey_name | ibpkey_range ]
+
+.SH "ОПИСАНИЕ"
+semanage используется для настройки определённых элементов политики SELinux без необходимости изменения или перекомпиляции исходного текста политики. Команда semanage ibpkey управляет определениями типов ibpkey для номеров ibpkey.
+
+.SH "ПАРАМЕТРЫ"
+.TP
+.I  \-h, \-\-help
+показать это справочное сообщение и выйти
+.TP
+.I   \-n, \-\-noheading
+не показывать заголовок при выводе указанного типа объекта
+.TP
+.I   \-N, \-\-noreload
+не перезагружать политику после фиксации
+.TP
+.I   \-S STORE, \-\-store STORE
+выбрать для управления альтернативное хранилище политики SELinux
+.TP
+.I   \-C, \-\-locallist
+вывести список локальных настроек
+.TP
+.I   \-a, \-\-add
+добавить запись указанного типа объекта
+.TP
+.I   \-d, \-\-delete
+удалить запись указанного типа объекта
+.TP
+.I   \-m, \-\-modify
+изменить запись указанного типа объекта
+.TP
+.I   \-l, \-\-list
+вывести список записей указанного типа объекта
+.TP
+.I   \-E, \-\-extract
+извлечь настраиваемые команды для использования в транзакции
+.TP
+.I   \-D, \-\-deleteall
+удалить все локальные настройки
+.TP
+.I   \-t TYPE, \-\-type TYPE
+SELinux-тип для объекта
+.TP
+.I   \-r RANGE, \-\-range RANGE
+диапазон безопасности MLS/MCS (только для систем с поддержкой MLS/MCS). По умолчанию SELinux-диапазон для сопоставления имени входа SELinux принимает значение диапазона записи пользователя SELinux. По умолчанию SELinux-диапазон для пользователя SELinux принимает значение s0.
+.TP
+.I \-x SUBNET_PREFIX, \-\-subnet_prefix SUBNET_PREFIX
+Префикс подсети для указанного ключа раздела (pkey) или диапазона ключей раздела.
+
+.SH ПРИМЕР
+.nf
+Вывести список всех определений ibpkey
+# semanage ibpkey \-l
+Отметить pkey 0x8FFF (pkey ограниченного участия по умолчанию) как тип pkey по умолчанию
+# semanage ibpkey \-a \-t default_ibpkey_t \-x fe80:: 0x8FFF
+
+.SH "СМОТРИТЕ ТАКЖЕ"
+.BR selinux (8),
+.BR semanage (8)
+
+.SH "АВТОРЫ"
+Эта man-страница была написана Daniel Jurgens <danielj@mellanox.com>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

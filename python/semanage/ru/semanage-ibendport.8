@@ -1,0 +1,67 @@
+.TH "semanage-ibendport" "8" "20170508" "" ""
+.SH "ИМЯ"
+.B semanage\-ibendport \- утилита для управления политикой SELinux, предназначенная для сопоставления конечных портов infiniband
+.SH "ОБЗОР"
+.B semanage ibendport [\-h] [\-n] [\-N] [\-S STORE] [ \-\-add \-t TYPE \-z IBDEV_NAME \-r RANGE port | \-\-delete \-z IBDEV_NAME port | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-t TYPE \-z IBDEV_NAME \-r RANGE port ]
+
+.SH "ОПИСАНИЕ"
+semanage используется для настройки определённых элементов политики SELinux без необходимости изменения или перекомпиляции исходного текста политики. semanage ibendport управляет определениями типов ibendport для номеров ibendport.
+
+.SH "ПАРАМЕТРЫ"
+.TP
+.I  \-h, \-\-help
+показать это справочное сообщение и выйти
+.TP
+.I   \-n, \-\-noheading
+не показывать заголовок при выводе указанного типа объекта
+.TP
+.I   \-N, \-\-noreload
+не перезагружать политику после фиксации
+.TP
+.I   \-S STORE, \-\-store STORE
+выбрать для управления альтернативное хранилище политики SELinux
+.TP
+.I   \-C, \-\-locallist
+вывести список локальных настроек
+.TP
+.I   \-a, \-\-add
+добавить запись указанного типа объекта
+.TP
+.I   \-d, \-\-delete
+удалить запись указанного типа объекта
+.TP
+.I   \-m, \-\-modify
+изменить запись указанного типа объекта
+.TP
+.I   \-l, \-\-list
+вывести список записей указанного типа объекта
+.TP
+.I   \-E, \-\-extract
+извлечь настраиваемые команды для использования в транзакции
+.TP
+.I   \-D, \-\-deleteall
+удалить все локальные настройки
+.TP
+.I   \-t TYPE, \-\-type TYPE
+SELinux-тип для объекта
+.TP
+.I   \-r RANGE, \-\-range RANGE
+диапазон безопасности MLS/MCS (только для систем с поддержкой MLS/MCS). По умолчанию SELinux-диапазон для сопоставления имени входа SELinux принимает значение диапазона записи пользователя SELinux. По умолчанию SELinux-диапазон для пользователя SELinux принимает значение s0.
+.TP
+.I \-z IBDEV_NAME, \-\-ibdev_name IBDEV_NAME
+Имя устройства infiniband для порта, для которого следует проставить метку.  (например, mlx5_0)
+
+.SH ПРИМЕР
+.nf
+Вывести список всех определений ibendport
+# semanage ibendport \-l
+Проставить метку 'устройство mlx4_0 порт 2'
+# semanage ibendport \-a \-t allowed_ibendport_t \-z mlx4_0 2
+
+.SH "СМОТРИТЕ ТАКЖЕ"
+.BR selinux (8),
+.BR semanage (8)
+
+.SH "АВТОРЫ"
+Эта man-страница была написана Daniel Jurgens <danielj@mellanox.com>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

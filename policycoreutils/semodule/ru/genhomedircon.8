@@ -1,0 +1,25 @@
+.TH GENHOMEDIRCON "8" "Сентябрь 2011" "Security Enhanced Linux" "SELinux"
+.SH ИМЯ
+genhomedircon \- создать записи конфигурации контекста файлов SELinux для домашних каталогов пользователей
+.SH ОПИСАНИЕ
+.B genhomedircon
+- сценарий, который исполняет
+.B semodule
+для пересборки текущей активной политики SELinux (без её перезагрузки) и создания меток для домашних каталогов пользователей на основе путей к каталогам, возвращённых вызовами функции getpwent().
+
+Последняя возможность будет работать, если для параметра "usepasswd" установлено значение "true" (по умолчанию)
+в /etc/selinux/semanage.conf.
+
+Этот сценарий обычно исполняется
+.B semanage,
+хотя это поведение по умолчанию можно изменить, установив для "disable-genhomedircon" значение "true"
+в /etc/selinux/semanage.conf.
+
+.SH "СМОТРИТЕ ТАКЖЕ"
+semanage.conf(5), semodule(8), semanage(8), getpwent(3), getpwent_r(3)
+
+.SH АВТОРЫ
+Эта страница руководства была написана 
+.I Dan Walsh <dwalsh@redhat.com>.
+Перевод на русский язык выполнила
+.I Герасименко Олеся <gammaray@basealt.ru>.

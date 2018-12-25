@@ -1,0 +1,31 @@
+.TH SEMODULE_EXPAND "8" "ноябрь 2005" "Security Enhanced Linux" NSA
+.SH ИМЯ 
+semodule_expand \- расширить пакет модуля политики SELinux
+
+.SH ОБЗОР
+.B semodule_expand [-V ] [ -a ] [ -c [version]] basemodpkg outputfile
+.br
+.SH ОПИСАНИЕ
+.PP
+semodule_expand - утилита разработки для ручного расширения пакета базового модуля политики в двоичный файл политики ядра.
+Это средство не является необходимым для нормальной работы SELinux. Обычно такое расширение выполняется libsemanage внутренним образом в ответ на команды semodule. Пакеты базовых модулей политики можно создавать непосредственно с помощью semodule_package или semodule_link (при связывании набора пакетов в один пакет).
+
+.SH "ПАРАМЕТРЫ"
+.TP
+.B \-V
+Показать версию
+.TP
+.B \-c [version]
+Версия политики, которую следует создать
+.TP
+.B \-a
+Не проверять утверждения. При использовании этого параметра политика не будет проверять запрещающие правила (neverallow).
+
+.SH СМОТРИТЕ ТАКЖЕ
+.B checkmodule(8), semodule_package(8), semodule(8), semodule_link(8)
+(8),
+.SH АВТОРЫ
+.nf
+Эта страница руководства была написана Dan Walsh <dwalsh@redhat.com>.
+Программа была написана Karl MacMillan <kmacmillan@tresys.com>, Joshua Brindle <jbrindle@tresys.com>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

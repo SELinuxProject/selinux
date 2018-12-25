@@ -1,0 +1,71 @@
+.TH "service_seusers" "5" "28 ноября 2011" "Security Enhanced Linux" "Конфигурация SELinux"
+.SH "ИМЯ"
+service_seusers \- файлы конфигурации сопоставления пользователей и служб GNU/Linux с пользователями SELinux
+.
+.SH "ОПИСАНИЕ"
+Это необязательные файлы, которые позволяют службам определять пользователя SELinux при аутентификации через поддерживающие SELinux приложения для входа, например,
+.BR PAM "(8). "
+.sp
+Для каждого имени пользователя GNU/Linux имеется один файл, который потребуется для запуска службы с определённым именем пользователя SELinux.
+.sp
+Путь к каждому файлу конфигурации формируется путём, который был возвращён
+.BR selinux_policy_root "(3), с добавлением  "
+.IR /logins/username
+в конце (где \fIusername\fR - это файл, представляющий имя пользователя GNU/Linux). Каталог служб по умолчанию расположен по следующему адресу:
+.RS
+.I /etc/selinux/{SELINUXTYPE}/logins
+.RE
+.sp
+Где \fI{SELINUXTYPE}\fR - запись из файла конфигурации selinux \fIconfig\fR (см. \fBselinux_config\fR(5)).
+.sp
+.BR getseuser "(3) выполняет чтение этого файла для сопоставления служб с пользователем SELinux. "
+.
+.SH "ФОРМАТ ФАЙЛА"
+Каждая строка внутри файла \fIusername\fR имеет следующий формат, каждый компонент отделяется двоеточием:
+.RS
+.IB service : seuser \fR[\fB:\fIrange\fR]
+.RE
+.sp
+Где:
+.RS
+.I service
+.RS
+Имя службы, которая используется приложением.
+.RE
+.I seuser
+.RS
+Имя пользователя SELinux.
+.RE
+.I range
+.RS
+Диапазон для политики MCS/MLS.
+.RE
+.RE
+.
+.SH "ПРИМЕРЫ"
+Пример 1 - для пользователя 'root':
+.RS
+# ./logins/root
+.br
+ipa:user_u:s0
+.br
+this_service:unconfined_u:s0
+.RE
+.sp
+Пример 2 - для пользователя GNU/Linux 'rch':
+.RS
+# ./logins/rch
+.br
+ipa:unconfined_u:s0
+.br
+that_service:unconfined_u:s0
+.RE
+.
+.SH "СМОТРИТЕ ТАКЖЕ"
+.ad l
+.nh
+.BR selinux "(8), " PAM "(8), " selinux_policy_root "(3), " getseuser "(3), " selinux_config "(5) "
+
+
+.SH АВТОРЫ
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

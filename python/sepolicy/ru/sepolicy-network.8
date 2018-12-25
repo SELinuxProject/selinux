@@ -1,0 +1,90 @@
+.TH "sepolicy-network" "8" "20121005" "" ""
+.SH "ИМЯ"
+sepolicy-network \- проанализировать политику SELinux и создать отчёт о сети
+
+.SH "ОБЗОР"
+
+.br
+.B sepolicy network [\-h] (\-l | \-a application [application ...] | \-p PORT [PORT ...] | \-t TYPE [TYPE ...] | \-d DOMAIN [DOMAIN ...])
+
+.SH "ОПИСАНИЕ"
+Используйте команду sepolicy network для анализа политики SELinux и создания отчётов о сети.
+
+.SH "ПАРАМЕТРЫ"
+.TP
+.I                \-a, \-\-application
+Создать отчёт с перечнем портов, к которым разрешено подключение и/или привязка указанного приложения инициализации.
+.TP
+.I                \-d, \-\-domain     
+Создать отчёт с перечнем портов, к которым разрешено подключение и/или привязка указанного домена.
+.TP
+.I                \-l, \-\-list        
+Вывести список всех типов сетевых портов, определённых в политике SELinux
+.TP
+.I                \-h, \-\-help       
+Показать справочное сообщение
+.TP
+.I                \-t, \-\-type
+Создать отчёт с перечнем номеров портов, связанных с указанным типом портов SELinux.
+.TP
+.I                \-p, \-\-port
+Создать отчёт с перечнем типов портов SELinux, связанных с указанным номером порта.
+
+.SH "ПРИМЕРЫ"
+
+.B sepolicy network -p 22
+.br
+22: tcp ssh_port_t 22
+.br
+22: udp reserved_port_t 1-511
+.br
+22: tcp reserved_port_t 1-511
+
+.B sepolicy network -a /usr/sbin/sshd
+.br
+sshd_t: tcp name_connect
+.br
+	111 (portmap_port_t)
+.br
+	53 (dns_port_t)
+.br
+	88, 750, 4444 (kerberos_port_t)
+.br
+	9080 (ocsp_port_t)
+.br
+	9180, 9701, 9443-9447 (pki_ca_port_t)
+.br
+	32768-61000 (ephemeral_port_t)
+.br
+	all ports < 1024 (reserved_port_type)
+.br
+	all ports with out defined types (port_t)
+.br
+sshd_t: tcp name_bind
+.br
+	22 (ssh_port_t)
+.br
+	5900-5983, 5985-5999 (vnc_port_t)
+.br
+	6000-6020 (xserver_port_t)
+.br
+	32768-61000 (ephemeral_port_t)
+.br
+	all ports > 500 and  < 1024 (rpc_port_type)
+.br
+	all ports with out defined types (port_t)
+.br
+sshd_t: udp name_bind
+.br
+	32768-61000 (ephemeral_port_t)
+.br
+	all ports > 500 and  < 1024 (rpc_port_type)
+.br
+	all ports with out defined types (port_t)
+
+.SH "СМОТРИТЕ ТАКЖЕ"
+sepolicy(8), selinux(8), semanage(8)
+
+.SH "АВТОРЫ"
+Эта man-страница была написана Daniel Walsh <dwalsh@redhat.com>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.

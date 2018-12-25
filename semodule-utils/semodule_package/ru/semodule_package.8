@@ -1,0 +1,48 @@
+.TH SEMODULE_PACKAGE "8" "Ноябрь 2005" "Security Enhanced Linux" NSA
+.SH ИМЯ 
+semodule_package \- создать пакет модуля политики SELinux
+
+.SH ОБЗОР
+.B semodule_package \-o <output file> \-m <module> [\-f <file contexts>]
+.br
+.SH ОПИСАНИЕ
+.PP
+semodule_package - утилита, которая используется для создания пакета модуля политики SELinux из двоичного модуля политики и (необязательно) других данных, таких как контексты файлов. Команда semodule_package упаковывает двоичные модули политики, созданные с помощью checkmodule. Пакет политики, созданный с помощью semodule_package, затем можно установить через semodule. 
+
+.SH ПРИМЕР
+.nf
+# Собрать пакет политики для базового модуля.
+$ semodule_package \-o base.pp \-m base.mod \-f file_contexts
+# Собрать пакет политики для модуля httpd.
+$ semodule_package \-o httpd.pp \-m httpd.mod \-f httpd.fc
+# Собрать пакет политики для локальных правил принудительного присвоения типов, не включая контексты файлов.
+$ semodule_package \-o local.pp \-m local.mod
+.fi
+
+.SH "ПАРАМЕТРЫ"
+.TP
+.B \-o \-\-outfile <output file> 
+Файл пакета модуля политики, созданный этим средством.
+.TP
+.B  \-s \-\-seuser <seuser file>
+Файл seuser, который следует включить в пакет.
+.TP
+.B  \-u \-\-user_extra <user extra file>
+Файл user_extra, который следует включить в пакет.
+.TP
+.B  \-m \-\-module <Module file>
+Файл модуля политики, который следует включить в пакет.
+.TP
+.B  \-f \-\-fc <File context file>
+Файл контекстов файлов для модуля (необязательно).
+.TP
+.B  \-n \-\-nc <netfilter context file>
+Файл контекста netfilter, который следует включить в пакет.
+
+.SH СМОТРИТЕ ТАКЖЕ
+.B checkmodule(8), semodule(8), semodule_unpackage(8)
+.SH АВТОРЫ
+.nf
+Эта страница руководства была написана Dan Walsh <dwalsh@redhat.com>.
+Программа была написана Karl MacMillan <kmacmillan@tresys.com>.
+Перевод на русский язык выполнила Герасименко Олеся <gammaray@basealt.ru>.
