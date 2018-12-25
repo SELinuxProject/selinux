@@ -1,4 +1,5 @@
 # Installation directories.
+LINGUAS ?= ru
 PREFIX ?= /usr
 SBINDIR ?= $(PREFIX)/sbin
 MANDIR = $(PREFIX)/share/man
@@ -21,6 +22,12 @@ install: all
 	test -d $(DESTDIR)$(MANDIR)/man8 || install -m 755 -d $(DESTDIR)$(MANDIR)/man8
 	install -m 644 semodule.8 $(DESTDIR)$(MANDIR)/man8/
 	install -m 644 genhomedircon.8 $(DESTDIR)$(MANDIR)/man8/
+	for lang in $(LINGUAS) ; do \
+		if [ -e $${lang} ] ; then \
+			test -d $(DESTDIR)$(MANDIR)/$${lang}/man8 || install -m 755 -d $(DESTDIR)$(MANDIR)/$${lang}/man8 ; \
+			install -m 644 $${lang}/*.8 $(DESTDIR)$(MANDIR)/$${lang}/man8/ ; \
+		fi ; \
+	done
 
 relabel:
 

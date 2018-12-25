@@ -1,6 +1,7 @@
 PYTHON ?= python
 
 # Installation directories.
+LINGUAS ?= ru
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/share/man
@@ -32,6 +33,12 @@ install:
 	(cd $(DESTDIR)$(BINDIR); ln -sf sepolicy sepolgen)
 	-mkdir -p $(DESTDIR)$(MANDIR)/man8
 	install -m 644 *.8 $(DESTDIR)$(MANDIR)/man8
+	for lang in $(LINGUAS) ; do \
+		if [ -e $${lang} ] ; then \
+			mkdir -p $(DESTDIR)$(MANDIR)/$${lang}/man8 ; \
+			install -m 644 $${lang}/*.8 $(DESTDIR)$(MANDIR)/$${lang}/man8/ ; \
+		fi ; \
+	done
 	-mkdir -p $(DESTDIR)$(BASHCOMPLETIONDIR)
 	install -m 644 $(BASHCOMPLETIONS) $(DESTDIR)$(BASHCOMPLETIONDIR)/sepolicy
 

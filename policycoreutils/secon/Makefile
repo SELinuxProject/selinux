@@ -1,4 +1,5 @@
 # secon tool - command-line context
+LINGUAS ?= ru
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/share/man
@@ -20,6 +21,12 @@ install: all
 
 	test -d $(DESTDIR)$(MANDIR)/man1 || install -m 755 -d $(DESTDIR)$(MANDIR)/man1
 	install -m 644 secon.1 $(DESTDIR)$(MANDIR)/man1
+	for lang in $(LINGUAS) ; do \
+		if [ -e $${lang} ] ; then \
+			test -d $(DESTDIR)$(MANDIR)/$${lang}/man1 || install -m 755 -d $(DESTDIR)$(MANDIR)/$${lang}/man1 ; \
+			install -m 644 $${lang}/*.1 $(DESTDIR)$(MANDIR)/$${lang}/man1/ ; \
+		fi ; \
+	done
 
 relabel:
 	/sbin/restorecon $(DESTDIR)$(BINDIR)/secon

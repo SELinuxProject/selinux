@@ -1,6 +1,7 @@
 PYTHON ?= python
 
 # Installation directories.
+LINGUAS ?= ru
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/share/man
@@ -34,6 +35,12 @@ install: all
 	-mkdir -p $(DESTDIR)$(MANDIR)/man1
 	install -m 644 audit2allow.1 $(DESTDIR)$(MANDIR)/man1/
 	install -m 644 audit2why.1 $(DESTDIR)$(MANDIR)/man1/
+	for lang in $(LINGUAS) ; do \
+		if [ -e $${lang} ] ; then \
+			mkdir -p $(DESTDIR)$(MANDIR)/$${lang}/man1 ; \
+			install -m 644 $${lang}/*.1 $(DESTDIR)$(MANDIR)/$${lang}/man1/ ; \
+		fi ; \
+	done
 
 clean:
 	rm -f *~ *.o sepolgen-ifgen-attr-helper
