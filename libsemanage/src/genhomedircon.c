@@ -361,7 +361,11 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 
 	errno = 0;
 	setpwent();
-	while ((pwbuf = getpwent()) != NULL) {
+	while (1) {
+		errno = 0;
+		pwbuf = getpwent();
+		if (pwbuf == NULL)
+			break;
 		if (pwbuf->pw_uid < minuid || pwbuf->pw_uid > maxuid)
 			continue;
 		if (!semanage_list_find(shells, pwbuf->pw_shell))
@@ -403,7 +407,6 @@ static semanage_list_t *get_home_dirs(genhomedircon_settings_t * s)
 		}
 		free(path);
 		path = NULL;
-		errno = 0;
 	}
 
 	if (errno) {
@@ -1101,7 +1104,11 @@ static int get_group_users(genhomedircon_settings_t * s,
 	}
 
 	setpwent();
-	while ((pw = getpwent()) != NULL) {
+	while (1) {
+		errno = 0;
+		pw = getpwent();
+		if (pw == NULL)
+			break;
 		// skip users who also have this group as their
 		// primary group
 		if (lfind(pw->pw_name, group->gr_mem, &nmembers,
