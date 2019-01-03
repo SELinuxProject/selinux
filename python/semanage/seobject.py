@@ -260,6 +260,8 @@ class semanageRecords:
         if self.store == "" or self.store == localstore:
             self.mylog = logger()
         else:
+            sepolicy.load_store_policy(self.store)
+            selinux.selinux_set_policy_root("%s%s" % (selinux.selinux_path(), self.store))
             self.mylog = nulllogger()
 
     def set_reload(self, load):
@@ -1329,7 +1331,7 @@ class ibpkeyRecords(semanageRecords):
     def __init__(self, args = None):
         semanageRecords.__init__(self, args)
         try:
-            q = setools.TypeQuery(setools.SELinuxPolicy(sepolicy.get_installed_policy()), attrs=["ibpkey_type"])
+            q = setools.TypeQuery(setools.SELinuxPolicy(sepolicy.get_store_policy(self.store)), attrs=["ibpkey_type"])
             self.valid_types = sorted(str(t) for t in q.results())
         except:
             pass
@@ -1589,7 +1591,7 @@ class ibendportRecords(semanageRecords):
     def __init__(self, args = None):
         semanageRecords.__init__(self, args)
         try:
-            q = setools.TypeQuery(setools.SELinuxPolicy(sepolicy.get_installed_policy()), attrs=["ibendport_type"])
+            q = setools.TypeQuery(setools.SELinuxPolicy(sepolicy.get_store_policy(self.store)), attrs=["ibendport_type"])
             self.valid_types = set(str(t) for t in q.results())
         except:
             pass
