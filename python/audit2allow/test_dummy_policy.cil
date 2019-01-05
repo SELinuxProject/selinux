@@ -1,0 +1,75 @@
+; This is a dummy policy which main aim is to be compatible with test.log
+
+; Define one category and one sensitivity in order to make things work
+(mls true)
+(category c0)
+(categoryorder (c0))
+(sensitivity s0)
+(sensitivityorder (s0))
+(sensitivitycategory s0 (c0))
+
+; Define some users and roles
+(user system_u)
+(user root)
+(user unconfined_u)
+(role system_r)
+(role unconfined_r)
+(userrole root system_r)
+(userrole system_u system_r)
+(userrole unconfined_u unconfined_r)
+(userlevel system_u (s0))
+(userlevel root (s0))
+(userlevel unconfined_u (s0))
+(userrange system_u ((s0)(s0 (c0))))
+(userrange root ((s0)(s0 (c0))))
+(userrange unconfined_u ((s0)(s0 (c0))))
+
+; Define domain types
+(type automount_t)
+(type ftpd_t)
+(type httpd_t)
+(type kernel_t)
+(type nsplugin_t)
+(type postfix_local_t)
+(type qemu_t)
+(type smbd_t)
+
+(roletype system_r automount_t)
+(roletype system_r ftpd_t)
+(roletype system_r httpd_t)
+(roletype system_r kernel_t)
+(roletype system_r postfix_local_t)
+(roletype system_r qemu_t)
+(roletype system_r smbd_t)
+(roletype unconfined_r nsplugin_t)
+
+; Define file types
+(type automount_lock_t)
+(type default_t)
+(type fixed_disk_device_t)
+(type home_root_t)
+(type httpd_sys_content_t)
+(type httpd_sys_script_exec_t)
+(type mail_spool_t)
+(type ssh_home_t)
+(type usr_t)
+(type var_t)
+
+; Define port types
+(type mysqld_port_t)
+(type reserved_port_t)
+
+; Define initial SID
+(sid kernel)
+(sidorder (kernel))
+(sidcontext kernel (system_u system_r kernel_t ((s0) (s0))))
+
+; Define classes
+(class blk_file (getattr open read write))
+(class dir (append open search))
+(class file (execute execute_no_trans getattr open read write))
+(class tcp_socket (ioctl name_bind name_connect))
+(classorder (blk_file file dir tcp_socket))
+
+; The policy compiler requires at least one rule
+(allow kernel_t default_t (file (open read write)))

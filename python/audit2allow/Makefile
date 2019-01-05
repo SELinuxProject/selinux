@@ -1,4 +1,5 @@
 PYTHON ?= python
+SECILC ?= secilc
 
 # Installation directories.
 PREFIX ?= /usr
@@ -22,8 +23,11 @@ sepolgen-ifgen-attr-helper: sepolgen-ifgen-attr-helper.o $(LIBSEPOLA)
 audit2why:
 	ln -sf audit2allow audit2why
 
-test: all
+test: all test_dummy_policy
 	@$(PYTHON) test_audit2allow.py -v
+
+test_dummy_policy: test_dummy_policy.cil
+	$(SECILC) -o $@ -f /dev/null $<
 
 install: all
 	-mkdir -p $(DESTDIR)$(BINDIR)
@@ -36,7 +40,7 @@ install: all
 	install -m 644 audit2why.1 $(DESTDIR)$(MANDIR)/man1/
 
 clean:
-	rm -f *~ *.o sepolgen-ifgen-attr-helper
+	rm -f *~ *.o sepolgen-ifgen-attr-helper test_dummy_policy
 
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])
