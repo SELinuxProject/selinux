@@ -17,3 +17,5 @@ clean:
 indent:
 
 relabel:
+
+test:
