@@ -4,6 +4,11 @@
 # Run on the base directory if no argument has been given
 if [ $# -eq 0 ] ; then
     cd "$(dirname -- "$0")/.." || exit $?
+
+    # Run on both files ending with .py and Python files without extension
+    # shellcheck disable=SC2046
+    set -- $( (find . -name '*.py' ; grep --exclude-dir=.git -l -e '^#!\s*/usr/bin/python' -e '^#!/usr/bin/env python' -r .) | sort -u )
+    echo "Analyzing $# Python scripts"
 fi
 
 # Assign each ignore warning on a line, in order to ease testing enabling the warning again
