@@ -58,6 +58,8 @@ const char * semanage_root(void)
 	return private_semanage_root;
 }
 
+hidden_def(semanage_root);
+
 semanage_handle_t *semanage_handle_create(void)
 {
 	semanage_handle_t *sh = NULL;
