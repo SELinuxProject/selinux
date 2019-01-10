@@ -18,7 +18,7 @@
 #include <errno.h>
 
 int permanent = 0;
-int reload = 1;
+int no_reload = 0;
 int verbose = 0;
 
 int setbool(char **list, size_t start, size_t end);
@@ -38,11 +38,6 @@ int main(int argc, char **argv)
 	if (argc < 2)
 		usage();
 
-	if (is_selinux_enabled() <= 0) {
-		fputs("setsebool:  SELinux is disabled.\n", stderr);
-		return 1;
-	}
-
 	while (1) {
 		clflag = getopt(argc, argv, "PNV");
 		if (clflag == -1)
@@ -53,7 +48,7 @@ int main(int argc, char **argv)
 			permanent = 1;
 			break;
 		case 'N':
-			reload = 0;
+			no_reload = 1;
 			break;
 		case 'V':
 			verbose = 1;
@@ -130,6 +125,7 @@ static int semanage_set_boolean_list(size_t boolcnt,
 	semanage_bool_key_t *bool_key = NULL;
 	int managed;
 	int result;
+	int enabled = is_selinux_enabled();
 
 	handle = semanage_handle_create();
 	if (handle == NULL) {
@@ -191,7 +187,7 @@ static int semanage_set_boolean_list(size_t boolcnt,
 						  boolean) < 0)
 			goto err;
 
-		if (semanage_bool_set_active(handle, bool_key, boolean) < 0) {
+		if (enabled && semanage_bool_set_active(handle, bool_key, boolean) < 0) {
 			fprintf(stderr, "Failed to change boolean %s: %m\n",
 				boollist[j].name);
 			goto err;
@@ -202,7 +198,8 @@ static int semanage_set_boolean_list(size_t boolcnt,
 		boolean = NULL;
 	}
 
-	semanage_set_reload(handle, reload);
+	if (no_reload)
+		semanage_set_reload(handle, 0);
 	if (semanage_commit(handle) < 0)
 		goto err;
 
