@@ -149,6 +149,7 @@ class SELinuxGui():
         self.clear_entry = True
         self.files_add = False
         self.network_add = False
+        self.mislabeled_files = False
 
         self.all_domains = []
         self.installed_list = []
