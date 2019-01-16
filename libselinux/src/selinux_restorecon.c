@@ -881,7 +881,7 @@ int selinux_restorecon(const char *pathname_orig,
 		setrestoreconlast = false;
 
 	/* Ignore restoreconlast on in-memory filesystems */
-	if (statfs(pathname, &sfsb) == 0) {
+	if (setrestoreconlast && statfs(pathname, &sfsb) == 0) {
 		if (sfsb.f_type == RAMFS_MAGIC || sfsb.f_type == TMPFS_MAGIC)
 			setrestoreconlast = false;
 	}
