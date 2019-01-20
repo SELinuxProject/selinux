@@ -1,0 +1,36 @@
+#!/bin/sh
+# Set-up environment variables to run programs which are built in DESTDIR folder
+#
+# Usage example to use variables in the current shell:
+#   $ export DESTDIR=$HOME/selinux-destdir
+#   $ make install install-pywrap install-rubywrap
+#   $ . ./scripts/env_use_destdir
+#   $ make test
+#
+# Or to use variables in a subcommand, for example to run tests:
+#   $ export DESTDIR=$HOME/selinux-destdir
+#   $ make install install-pywrap install-rubywrap
+#   $ ./scripts/env_use_destdir secilc ...
+#   $ ./scripts/env_use_destdir make test
+
+if [ -z "${DESTDIR:-}" ] ; then
+    echo >&2 "Error: variable DESTDIR needs to be defined in order to use this script."
+    echo >&2 "Example:"
+    # shellcheck disable=SC2164
+    echo >&2 "    DESTDIR=$(cd "$(dirname -- "$0")/.." ; pwd)/DESTDIR . $0"
+    exit 1
+fi
+
+export LD_LIBRARY_PATH="$DESTDIR/usr/lib:$DESTDIR/lib"
+export PATH="$DESTDIR/usr/sbin:$DESTDIR/usr/bin:$DESTDIR/sbin:$DESTDIR/bin:$PATH"
+
+# shellcheck disable=SC2155
+export PYTHONPATH="$DESTDIR$(${PYTHON:-python} -c "from distutils.sysconfig import *;print(get_python_lib(prefix='/usr'))")"
+
+# shellcheck disable=SC2155
+export RUBYLIB="$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
+
+# Run the command given on the command line
+if [ $# -gt 0 ] ; then
+    exec "$@"
+fi
