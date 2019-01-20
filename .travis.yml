@@ -129,10 +129,7 @@ script:
   - make all $EXPLICIT_MAKE_VARS -k
 
   # Set up environment variables for the tests
-  - export LD_LIBRARY_PATH="$DESTDIR/usr/lib:$DESTDIR/lib"
-  - export PATH="$DESTDIR/usr/sbin:$DESTDIR/usr/bin:$DESTDIR/sbin:$DESTDIR/bin:$PATH"
-  - export PYTHONPATH="$DESTDIR$($PYTHON -c "from distutils.sysconfig import *;print(get_python_lib(prefix='/usr'))")"
-  - export RUBYLIB="$DESTDIR/$($RUBY -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$($RUBY -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
+  - . ./scripts/env_use_destdir
 
   # Show variables (to help debugging issues)
   - echo "$LD_LIBRARY_PATH"
