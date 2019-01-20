@@ -20,10 +20,8 @@ env:
     - PYVER=python2.7 RUBYLIBVER=2.5.1
     - PYVER=python3.5 RUBYLIBVER=2.5.1
     - PYVER=python3.6 RUBYLIBVER=2.5.1
-    # pypy2.7 seems not to be available in Travis-CI Xenial template yet.
-    # https://github.com/travis-ci/travis-ci/issues/9542
-    #- PYVER=pypy RUBYLIBVER=2.5.1
-    - PYVER=pypy3.5 RUBYLIBVER=2.5.1
+    - PYVER=pypy2.7-6.0 RUBYLIBVER=2.5.1
+    - PYVER=pypy3.5-6.0 RUBYLIBVER=2.5.1
 
     # Test several Ruby versions
     - PYVER=python3.7 RUBYLIBVER=2.4
@@ -98,8 +96,12 @@ before_script:
   - export PYTHON="$VIRTUAL_ENV/bin/python"
   # Use the header files in /opt/python/... for Python because the virtualenvs do not provide Python.h
   - export PKG_CONFIG_PATH="/opt/python/$($PYTHON -c 'import sys;print("%d.%d.%d" % sys.version_info[:3])')/lib/pkgconfig"
-  # PyPy does not provide a config file for pkg-config nor a pypy-c.so
-  - if echo "$PYVER" | grep -q pypy ; then export PYINC=-I$($PYTHON -c 'import sys;print(sys.prefix)')/include PYLIBS= ; fi
+  # PyPy does not provide a config file for pkg-config
+  # libpypy-c.so is provided in bin/libpypy-c.so for PyPy and bin/libpypy3-c.so for PyPy3
+  - if echo "$PYVER" | grep -q pypy ; then
+        export PYINC=-I$($PYTHON -c 'import sys;print(sys.prefix)')/include ;
+        export PYLIBS="$($PYTHON -c 'import sys;print("-L%s/bin -l%s" % (sys.prefix, "pypy-c" if sys.version_info < (3,) else "pypy3-c"))')" ;
+    fi
 
   # Find the Ruby executable with version $RUBYLIBVER
   - rvm reinstall ruby-$RUBYLIBVER --binary
