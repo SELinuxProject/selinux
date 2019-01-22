@@ -50,7 +50,7 @@ install: all
 	-mkdir -p $(DESTDIR)$(AUTOSTARTDIR)
 	install -m 644 restorecond.desktop $(DESTDIR)$(AUTOSTARTDIR)/restorecond.desktop
 	-mkdir -p $(DESTDIR)$(DBUSSERVICEDIR)
-	install -m 600 org.selinux.Restorecond.service  $(DESTDIR)$(DBUSSERVICEDIR)/org.selinux.Restorecond.service
+	install -m 644 org.selinux.Restorecond.service  $(DESTDIR)$(DBUSSERVICEDIR)/org.selinux.Restorecond.service
 	-mkdir -p $(DESTDIR)$(SYSTEMDDIR)/system
 	install -m 644 restorecond.service $(DESTDIR)$(SYSTEMDDIR)/system/
 relabel: install
