@@ -7,11 +7,12 @@ if [ \! -d $WIKIDIR ]; then
     git clone git@github.com:SELinuxProject/selinux.wiki.git $WIKIDIR
 fi
 
-DEST=$WIKIDIR/files/releases/$(date '+%Y%m%d')
+RELEASE_TAG=$(date '+%Y%m%d')
+DEST=releases/$RELEASE_TAG
 DIRS="libsepol libselinux libsemanage checkpolicy secilc policycoreutils mcstrans restorecond semodule-utils"
 DIRS_NEED_PREFIX="dbus gui python sandbox"
 
-git tag -a $(date '+%Y%m%d') -m "Release $(date '+%Y%m%d')"
+git tag -a $RELEASE_TAG -m "Release $RELEASE_TAG"
 
 rm -rf $DEST
 mkdir -p $DEST
@@ -44,19 +45,34 @@ echo ""
 
 echo "## Release $(date '+%Y-%m-%d')"
 
+echo ""
+
+echo "[Release Notes](https://github.com/SELinuxProject/selinux/releases/download/$RELEASE_TAG/RELEASE-$RELEASE_TAG.txt)"
+echo ""
+echo "[full log](https://github.com/SELinuxProject/selinux/releases/download/$RELEASE_TAG/log-$RELEASE_TAG.txt)"
+echo ""
+echo "[short log](https://github.com/SELinuxProject/selinux/releases/download/$RELEASE_TAG/shortlog-$RELEASE_TAG.txt)"
+echo ""
+
 for i in *.tar.gz; do
 
-	echo -n "[$i](https://raw.githubusercontent.com/wiki/SELinuxProject/selinux/files/releases/$(date '+%Y%m%d')/$i) "
+	echo -n "[$i](https://github.com/SELinuxProject/selinux/releases/download/$RELEASE_TAG/$i) "
 	sha256sum $i | cut -d " " -f 1
 	echo ""
 done
 
 echo "And then run:"
 echo "  cd $WIKIDIR"
-echo "  git commit  -m \"Release $(date '+%Y%m%d')\" -a -s"
+echo "  git commit  -m \"Release $RELEASE_TAG\" -a -s"
 echo "  git push"
 
 echo ""
 echo "Push the release and its tags to git via:"
 echo "  git push"
 echo "  git push --tags"
+
+echo ""
+echo "Create a new release from the latest tag on https://github.com/SELinuxProject/selinux/tags"
+
+echo ""
+echo "Add files from releases/$RELEASE_TAG as assets to the new github release"
