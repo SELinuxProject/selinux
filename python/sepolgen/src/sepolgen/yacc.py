@@ -2566,118 +2566,118 @@ class LRGeneratedTable(LRTable):
             log.info('')
 
             for p in I:
-                    if p.len == p.lr_index + 1:
-                        if p.name == "S'":
-                            # Start symbol. Accept!
-                            st_action['$end'] = 0
-                            st_actionp['$end'] = p
-                        else:
-                            # We are at the end of a production.  Reduce!
-                            if self.lr_method == 'LALR':
-                                laheads = p.lookaheads[st]
-                            else:
-                                laheads = self.grammar.Follow[p.name]
-                            for a in laheads:
-                                actlist.append((a, p, 'reduce using rule %d (%s)' % (p.number, p)))
-                                r = st_action.get(a)
-                                if r is not None:
-                                    # Whoa. Have a shift/reduce or reduce/reduce conflict
-                                    if r > 0:
-                                        # Need to decide on shift or reduce here
-                                        # By default we favor shifting. Need to add
-                                        # some precedence rules here.
-
-                                        # Shift precedence comes from the token
-                                        sprec, slevel = Precedence.get(a, ('right', 0))
-
-                                        # Reduce precedence comes from rule being reduced (p)
-                                        rprec, rlevel = Productions[p.number].prec
-
-                                        if (slevel < rlevel) or ((slevel == rlevel) and (rprec == 'left')):
-                                            # We really need to reduce here.
-                                            st_action[a] = -p.number
-                                            st_actionp[a] = p
-                                            if not slevel and not rlevel:
-                                                log.info('  ! shift/reduce conflict for %s resolved as reduce', a)
-                                                self.sr_conflicts.append((st, a, 'reduce'))
-                                            Productions[p.number].reduced += 1
-                                        elif (slevel == rlevel) and (rprec == 'nonassoc'):
-                                            st_action[a] = None
-                                        else:
-                                            # Hmmm. Guess we'll keep the shift
-                                            if not rlevel:
-                                                log.info('  ! shift/reduce conflict for %s resolved as shift', a)
-                                                self.sr_conflicts.append((st, a, 'shift'))
-                                    elif r < 0:
-                                        # Reduce/reduce conflict.   In this case, we favor the rule
-                                        # that was defined first in the grammar file
-                                        oldp = Productions[-r]
-                                        pp = Productions[p.number]
-                                        if oldp.line > pp.line:
-                                            st_action[a] = -p.number
-                                            st_actionp[a] = p
-                                            chosenp, rejectp = pp, oldp
-                                            Productions[p.number].reduced += 1
-                                            Productions[oldp.number].reduced -= 1
-                                        else:
-                                            chosenp, rejectp = oldp, pp
-                                        self.rr_conflicts.append((st, chosenp, rejectp))
-                                        log.info('  ! reduce/reduce conflict for %s resolved using rule %d (%s)',
-                                                 a, st_actionp[a].number, st_actionp[a])
-                                    else:
-                                        raise LALRError('Unknown conflict in state %d' % st)
-                                else:
-                                    st_action[a] = -p.number
-                                    st_actionp[a] = p
-                                    Productions[p.number].reduced += 1
+                if p.len == p.lr_index + 1:
+                    if p.name == "S'":
+                        # Start symbol. Accept!
+                        st_action['$end'] = 0
+                        st_actionp['$end'] = p
                     else:
-                        i = p.lr_index
-                        a = p.prod[i+1]       # Get symbol right after the "."
-                        if a in self.grammar.Terminals:
-                            g = self.lr0_goto(I, a)
-                            j = self.lr0_cidhash.get(id(g), -1)
-                            if j >= 0:
-                                # We are in a shift state
-                                actlist.append((a, p, 'shift and go to state %d' % j))
-                                r = st_action.get(a)
-                                if r is not None:
-                                    # Whoa have a shift/reduce or shift/shift conflict
-                                    if r > 0:
-                                        if r != j:
-                                            raise LALRError('Shift/shift conflict in state %d' % st)
-                                    elif r < 0:
-                                        # Do a precedence check.
-                                        #   -  if precedence of reduce rule is higher, we reduce.
-                                        #   -  if precedence of reduce is same and left assoc, we reduce.
-                                        #   -  otherwise we shift
+                        # We are at the end of a production.  Reduce!
+                        if self.lr_method == 'LALR':
+                            laheads = p.lookaheads[st]
+                        else:
+                            laheads = self.grammar.Follow[p.name]
+                        for a in laheads:
+                            actlist.append((a, p, 'reduce using rule %d (%s)' % (p.number, p)))
+                            r = st_action.get(a)
+                            if r is not None:
+                                # Whoa. Have a shift/reduce or reduce/reduce conflict
+                                if r > 0:
+                                    # Need to decide on shift or reduce here
+                                    # By default we favor shifting. Need to add
+                                    # some precedence rules here.
 
-                                        # Shift precedence comes from the token
-                                        sprec, slevel = Precedence.get(a, ('right', 0))
+                                    # Shift precedence comes from the token
+                                    sprec, slevel = Precedence.get(a, ('right', 0))
 
-                                        # Reduce precedence comes from the rule that could have been reduced
-                                        rprec, rlevel = Productions[st_actionp[a].number].prec
+                                    # Reduce precedence comes from rule being reduced (p)
+                                    rprec, rlevel = Productions[p.number].prec
 
-                                        if (slevel > rlevel) or ((slevel == rlevel) and (rprec == 'right')):
-                                            # We decide to shift here... highest precedence to shift
-                                            Productions[st_actionp[a].number].reduced -= 1
-                                            st_action[a] = j
-                                            st_actionp[a] = p
-                                            if not rlevel:
-                                                log.info('  ! shift/reduce conflict for %s resolved as shift', a)
-                                                self.sr_conflicts.append((st, a, 'shift'))
-                                        elif (slevel == rlevel) and (rprec == 'nonassoc'):
-                                            st_action[a] = None
-                                        else:
-                                            # Hmmm. Guess we'll keep the reduce
-                                            if not slevel and not rlevel:
-                                                log.info('  ! shift/reduce conflict for %s resolved as reduce', a)
-                                                self.sr_conflicts.append((st, a, 'reduce'))
-
+                                    if (slevel < rlevel) or ((slevel == rlevel) and (rprec == 'left')):
+                                        # We really need to reduce here.
+                                        st_action[a] = -p.number
+                                        st_actionp[a] = p
+                                        if not slevel and not rlevel:
+                                            log.info('  ! shift/reduce conflict for %s resolved as reduce', a)
+                                            self.sr_conflicts.append((st, a, 'reduce'))
+                                        Productions[p.number].reduced += 1
+                                    elif (slevel == rlevel) and (rprec == 'nonassoc'):
+                                        st_action[a] = None
                                     else:
-                                        raise LALRError('Unknown conflict in state %d' % st)
+                                        # Hmmm. Guess we'll keep the shift
+                                        if not rlevel:
+                                            log.info('  ! shift/reduce conflict for %s resolved as shift', a)
+                                            self.sr_conflicts.append((st, a, 'shift'))
+                                elif r < 0:
+                                    # Reduce/reduce conflict.   In this case, we favor the rule
+                                    # that was defined first in the grammar file
+                                    oldp = Productions[-r]
+                                    pp = Productions[p.number]
+                                    if oldp.line > pp.line:
+                                        st_action[a] = -p.number
+                                        st_actionp[a] = p
+                                        chosenp, rejectp = pp, oldp
+                                        Productions[p.number].reduced += 1
+                                        Productions[oldp.number].reduced -= 1
+                                    else:
+                                        chosenp, rejectp = oldp, pp
+                                    self.rr_conflicts.append((st, chosenp, rejectp))
+                                    log.info('  ! reduce/reduce conflict for %s resolved using rule %d (%s)',
+                                             a, st_actionp[a].number, st_actionp[a])
                                 else:
-                                    st_action[a] = j
-                                    st_actionp[a] = p
+                                    raise LALRError('Unknown conflict in state %d' % st)
+                            else:
+                                st_action[a] = -p.number
+                                st_actionp[a] = p
+                                Productions[p.number].reduced += 1
+                else:
+                    i = p.lr_index
+                    a = p.prod[i+1]       # Get symbol right after the "."
+                    if a in self.grammar.Terminals:
+                        g = self.lr0_goto(I, a)
+                        j = self.lr0_cidhash.get(id(g), -1)
+                        if j >= 0:
+                            # We are in a shift state
+                            actlist.append((a, p, 'shift and go to state %d' % j))
+                            r = st_action.get(a)
+                            if r is not None:
+                                # Whoa have a shift/reduce or shift/shift conflict
+                                if r > 0:
+                                    if r != j:
+                                        raise LALRError('Shift/shift conflict in state %d' % st)
+                                elif r < 0:
+                                    # Do a precedence check.
+                                    #   -  if precedence of reduce rule is higher, we reduce.
+                                    #   -  if precedence of reduce is same and left assoc, we reduce.
+                                    #   -  otherwise we shift
+
+                                    # Shift precedence comes from the token
+                                    sprec, slevel = Precedence.get(a, ('right', 0))
+
+                                    # Reduce precedence comes from the rule that could have been reduced
+                                    rprec, rlevel = Productions[st_actionp[a].number].prec
+
+                                    if (slevel > rlevel) or ((slevel == rlevel) and (rprec == 'right')):
+                                        # We decide to shift here... highest precedence to shift
+                                        Productions[st_actionp[a].number].reduced -= 1
+                                        st_action[a] = j
+                                        st_actionp[a] = p
+                                        if not rlevel:
+                                            log.info('  ! shift/reduce conflict for %s resolved as shift', a)
+                                            self.sr_conflicts.append((st, a, 'shift'))
+                                    elif (slevel == rlevel) and (rprec == 'nonassoc'):
+                                        st_action[a] = None
+                                    else:
+                                        # Hmmm. Guess we'll keep the reduce
+                                        if not slevel and not rlevel:
+                                            log.info('  ! shift/reduce conflict for %s resolved as reduce', a)
+                                            self.sr_conflicts.append((st, a, 'reduce'))
+
+                                else:
+                                    raise LALRError('Unknown conflict in state %d' % st)
+                            else:
+                                st_action[a] = j
+                                st_actionp[a] = p
 
             # Print the actions associated with each terminal
             _actprint = {}

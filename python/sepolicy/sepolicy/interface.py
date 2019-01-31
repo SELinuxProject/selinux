@@ -193,9 +193,9 @@ def get_xml_file(if_file):
     """ Returns xml format of interfaces for given .if policy file"""
     import os
     try:
-            from commands import getstatusoutput
+        from commands import getstatusoutput
     except ImportError:
-            from subprocess import getstatusoutput
+        from subprocess import getstatusoutput
     basedir = os.path.dirname(if_file) + "/"
     filename = os.path.basename(if_file).split(".")[0]
     rc, output = getstatusoutput("python /usr/share/selinux/devel/include/support/segenxml.py -w -m %s" % basedir + filename)
@@ -212,9 +212,9 @@ def interface_compile_test(interface, path="/usr/share/selinux/devel/policy.xml"
     exclude_interface_type = ["template"]
 
     try:
-            from commands import getstatusoutput
+        from commands import getstatusoutput
     except ImportError:
-            from subprocess import getstatusoutput
+        from subprocess import getstatusoutput
     import os
     policy_files = {'pp': "compiletest.pp", 'te': "compiletest.te", 'fc': "compiletest.fc", 'if': "compiletest.if"}
     idict = get_interface_dict(path)

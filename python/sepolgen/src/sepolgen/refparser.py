@@ -1044,7 +1044,7 @@ def list_headers(root):
                 if name == "obj_perm_sets.spt":
                     support_macros = filename
                 elif len(re.findall("patterns", modname[0])):
-                         modules.append((modname[0], filename))
+                    modules.append((modname[0], filename))
             elif modname[1] == '.if':
                 modules.append((modname[0], filename))
 
