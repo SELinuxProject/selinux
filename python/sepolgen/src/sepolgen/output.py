@@ -74,13 +74,13 @@ def id_set_cmp(x, y):
 # Compare two avrules
 def avrule_cmp(a, b):
     ret = id_set_cmp(a.src_types, b.src_types)
-    if ret is not 0:
+    if ret != 0:
         return ret
     ret = id_set_cmp(a.tgt_types, b.tgt_types)
-    if ret is not 0:
+    if ret != 0:
         return ret
     ret = id_set_cmp(a.obj_classes, b.obj_classes)
-    if ret is not 0:
+    if ret != 0:
         return ret
 
     # At this point, who cares - just return something

@@ -643,7 +643,7 @@ allow %s_t %s_t:%s_socket name_%s;
 
     def __find_path(self, file):
         for d in self.DEFAULT_DIRS:
-            if file.find(d) is 0:
+            if file.find(d) == 0:
                 self.DEFAULT_DIRS[d][1].append(file)
                 return self.DEFAULT_DIRS[d]
         self.DEFAULT_DIRS["rw"][1].append(file)
@@ -1346,7 +1346,7 @@ allow %s_t %s_t:%s_socket name_%s;
                 else:
                     continue
 
-            if len(temp_dirs) is not 0:
+            if len(temp_dirs) != 0:
                 for i in temp_dirs:
                     if i in self.dirs.keys():
                         del(self.dirs[i])

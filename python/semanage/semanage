@@ -109,7 +109,7 @@ class SetExportFile(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         if values:
-            if values is not "-":
+            if values != "-":
                 try:
                     sys.stdout = open(values, 'w')
                 except:
@@ -121,7 +121,7 @@ class SetExportFile(argparse.Action):
 class SetImportFile(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
-        if values and values is not "-":
+        if values and values != "-":
             try:
                 sys.stdin = open(values, 'r')
             except IOError as e:
@@ -189,17 +189,17 @@ def handleLogin(args):
 
     OBJECT = object_dict['login'](args)
 
-    if args.action is "add":
+    if args.action == "add":
         OBJECT.add(args.login, args.seuser, args.range)
-    if args.action is "modify":
+    if args.action == "modify":
         OBJECT.modify(args.login, args.seuser, args.range)
-    if args.action is "delete":
+    if args.action == "delete":
         OBJECT.delete(args.login)
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("login %s" % (str(i)))
 
@@ -322,26 +322,26 @@ def handleFcontext(args):
 
     OBJECT = object_dict['fcontext'](args)
 
-    if args.action is "add":
+    if args.action == "add":
         if args.equal:
             OBJECT.add_equal(args.file_spec, args.equal)
         else:
             OBJECT.add(args.file_spec, args.type, args.ftype, args.range, args.seuser)
-    if args.action is "modify":
+    if args.action == "modify":
         if args.equal:
             OBJECT.add_equal(args.file_spec, args.equal)
         else:
             OBJECT.modify(args.file_spec, args.type, args.ftype, args.range, args.seuser)
-    if args.action is "delete":
+    if args.action == "delete":
         if args.equal:
             OBJECT.delete(args.file_spec, args.equal)
         else:
             OBJECT.delete(args.file_spec, args.ftype)
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("fcontext %s" % str(i))
 
@@ -390,17 +390,17 @@ def handleUser(args):
 
     OBJECT = object_dict['user'](args)
 
-    if args.action is "add":
+    if args.action == "add":
         OBJECT.add(args.selinux_name, args.roles, args.level, args.range, args.prefix)
-    if args.action is "modify":
+    if args.action == "modify":
         OBJECT.modify(args.selinux_name, args.roles, args.level, args.range, args.prefix)
-    if args.action is "delete":
+    if args.action == "delete":
         OBJECT.delete(args.selinux_name)
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("user %s" % str(i))
 
@@ -440,17 +440,17 @@ def handlePort(args):
 
     OBJECT = object_dict['port'](args)
 
-    if args.action is "add":
+    if args.action == "add":
         OBJECT.add(args.port, args.proto, args.range, args.type)
-    if args.action is "modify":
+    if args.action == "modify":
         OBJECT.modify(args.port, args.proto, args.range, args.type)
-    if args.action is "delete":
+    if args.action == "delete":
         OBJECT.delete(args.port, args.proto)
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("port %s" % str(i))
 
@@ -485,17 +485,17 @@ def handlePkey(args):
 
     OBJECT = object_dict['ibpkey'](args)
 
-    if args.action is "add":
+    if args.action == "add":
         OBJECT.add(args.ibpkey, args.subnet_prefix, args.range, args.type)
-    if args.action is "modify":
+    if args.action == "modify":
         OBJECT.modify(args.ibpkey, args.subnet_prefix, args.range, args.type)
-    if args.action is "delete":
+    if args.action == "delete":
         OBJECT.delete(args.ibpkey, args.subnet_prefix)
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("ibpkey %s" % str(i))
 
@@ -528,17 +528,17 @@ def handleIbendport(args):
 
     OBJECT = object_dict['ibendport'](args)
 
-    if args.action is "add":
+    if args.action == "add":
         OBJECT.add(args.ibendport, args.ibdev_name, args.range, args.type)
-    if args.action is "modify":
+    if args.action == "modify":
         OBJECT.modify(args.ibendport, args.ibdev_name, args.range, args.type)
-    if args.action is "delete":
+    if args.action == "delete":
         OBJECT.delete(args.ibendport, args.ibdev_name)
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("ibendport %s" % str(i))
 
@@ -571,17 +571,17 @@ def handleInterface(args):
 
     OBJECT = object_dict['interface'](args)
 
-    if args.action is "add":
+    if args.action == "add":
         OBJECT.add(args.interface, args.range, args.type)
-    if args.action is "modify":
+    if args.action == "modify":
         OBJECT.modify(args.interface, args.range, args.type)
-    if args.action is "delete":
+    if args.action == "delete":
         OBJECT.delete(args.interface)
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("interface %s" % str(i))
 
@@ -617,11 +617,11 @@ def handleModule(args):
         OBJECT.set_enabled(args.module_name, False)
     if args.action == "remove":
         OBJECT.delete(args.module_name, args.priority)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
     if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("module %s" % str(i))
 
@@ -652,17 +652,17 @@ def handleNode(args):
 
     OBJECT = object_dict['node'](args)
 
-    if args.action is "add":
+    if args.action == "add":
         OBJECT.add(args.node, args.netmask, args.proto, args.range, args.type)
-    if args.action is "modify":
+    if args.action == "modify":
         OBJECT.modify(args.node, args.netmask, args.proto, args.range, args.type)
-    if args.action is "delete":
+    if args.action == "delete":
         OBJECT.delete(args.node, args.netmask, args.proto)
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("node %s" % str(i))
 
@@ -698,14 +698,14 @@ def handleBoolean(args):
 
     OBJECT = object_dict['boolean'](args)
 
-    if args.action is "modify":
+    if args.action == "modify":
         if args.boolean:
             OBJECT.modify(args.boolean, args.state, False)
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading, args.locallist)
-    if args.action is "deleteall":
+    if args.action == "deleteall":
         OBJECT.deleteall()
-    if args.action is "extract":
+    if args.action == "extract":
         for i in OBJECT.customized():
             print("boolean %s" % str(i))
 
@@ -736,12 +736,12 @@ def setupBooleanParser(subparsers):
 def handlePermissive(args):
     OBJECT = object_dict['permissive'](args)
 
-    if args.action is "list":
+    if args.action == "list":
         OBJECT.list(args.noheading)
     elif args.type is not None:
-        if args.action is "add":
+        if args.action == "add":
             OBJECT.add(args.type)
-        if args.action is "delete":
+        if args.action == "delete":
             OBJECT.delete(args.type)
     else:
         args.parser.print_usage(sys.stderr)
