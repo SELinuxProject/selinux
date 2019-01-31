@@ -1545,7 +1545,7 @@ class SELinuxGui():
                 path = self.executable_files_liststore.get_value(iter, 0)
                 self.files_path_entry.set_text(path)
                 ftype = self.executable_files_liststore.get_value(iter, 1)
-                if type != None:
+                if ftype != None:
                     self.combo_set_active_text(self.files_type_combobox, ftype)
                 tclass = self.executable_files_liststore.get_value(iter, 2)
                 if tclass != None:
