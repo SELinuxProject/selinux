@@ -1999,6 +1999,8 @@ static int write_cond_av_list_to_conf(FILE *out, struct policydb *pdb, cond_av_l
 	return 0;
 
 exit:
+	strs_free_all(strs);
+	strs_destroy(&strs);
 	return rc;
 }
 

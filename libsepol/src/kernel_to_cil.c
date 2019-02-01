@@ -2031,6 +2031,8 @@ static int write_cond_av_list_to_cil(FILE *out, struct policydb *pdb, cond_av_li
 	return 0;
 
 exit:
+	strs_free_all(strs);
+	strs_destroy(&strs);
 	return rc;
 }
 

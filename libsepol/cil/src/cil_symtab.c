@@ -185,6 +185,7 @@ int cil_complex_symtab_insert(struct cil_complex_symtab *symtab,
 			ckey->key2 == curr->ckey->key2 &&
 			ckey->key3 == curr->ckey->key3 &&
 			ckey->key4 == curr->ckey->key4) {
+			free(node);
 			return SEPOL_EEXIST;
 		}
 

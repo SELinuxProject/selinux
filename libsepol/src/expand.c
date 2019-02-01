@@ -1451,6 +1451,7 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 				new_trans->name = strdup(cur_rule->name);
 				if (!new_trans->name) {
 					ERR(state->handle, "Out of memory!");
+					free(new_trans);
 					return -1;
 				}
 				new_trans->stype = i + 1;
@@ -1460,6 +1461,8 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 				otype = calloc(1, sizeof(*otype));
 				if (!otype) {
 					ERR(state->handle, "Out of memory!");
+					free(new_trans->name);
+					free(new_trans);
 					return -1;
 				}
 				otype->otype = mapped_otype;
@@ -1469,6 +1472,9 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 						    otype);
 				if (rc) {
 					ERR(state->handle, "Out of memory!");
+					free(otype);
+					free(new_trans->name);
+					free(new_trans);
 					return -1;
 				}
 			}
