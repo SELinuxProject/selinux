@@ -2807,7 +2807,7 @@ class booleanRecords(semanageRecords):
             value = []
             name = semanage_bool_get_name(boolean)
             value.append(semanage_bool_get_value(boolean))
-            if self.modify_local and boolean in self.current_booleans:
+            if self.modify_local and name in self.current_booleans:
                 value.append(selinux.security_get_boolean_pending(name))
                 value.append(selinux.security_get_boolean_active(name))
             else:
@@ -2849,4 +2849,4 @@ class booleanRecords(semanageRecords):
             print("%-30s %s  %s %s\n" % (_("SELinux boolean"), _("State"), _("Default"), _("Description")))
         for k in sorted(ddict.keys()):
             if ddict[k]:
-                print("%-30s (%-5s,%5s)  %s" % (k, on_off[selinux.security_get_boolean_active(k)], on_off[ddict[k][2]], self.get_desc(k)))
+                print("%-30s (%-5s,%5s)  %s" % (k, on_off[ddict[k][2]], on_off[ddict[k][0]], self.get_desc(k)))
