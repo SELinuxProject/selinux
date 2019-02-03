@@ -1614,8 +1614,8 @@ static char *xperms_to_str(avtab_extended_perms_t *xperms)
 
 		if (xperms->specified & AVTAB_XPERMS_IOCTLFUNCTION) {
 			value = xperms->driver<<8 | bit;
-			low_value = xperms->driver<<8 | low_bit;
 			if (in_range) {
+				low_value = xperms->driver<<8 | low_bit;
 				len = snprintf(p, remaining, " (range 0x%hx 0x%hx)", low_value, value);
 				in_range = 0;
 			} else {
@@ -1623,8 +1623,8 @@ static char *xperms_to_str(avtab_extended_perms_t *xperms)
 			}
 		} else if (xperms->specified & AVTAB_XPERMS_IOCTLDRIVER) {
 			value = bit << 8;
-			low_value = low_bit << 8;
 			if (in_range) {
+				low_value = low_bit << 8;
 				len = snprintf(p, remaining, " (range 0x%hx 0x%hx)", low_value, (uint16_t) (value|0xff));
 				in_range = 0;
 			} else {
