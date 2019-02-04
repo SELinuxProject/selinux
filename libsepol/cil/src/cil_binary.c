@@ -2075,6 +2075,7 @@ static void __cil_expr_to_string(struct cil_list *expr, enum cil_flavor flavor, 
 		char *c2 = NULL;
 		__cil_expr_to_string_helper(curr, flavor, &c1);
 		for (curr = curr->next; curr; curr = curr->next) {
+			s1 = NULL;
 			__cil_expr_to_string_helper(curr, flavor, &s1);
 			cil_asprintf(&c2, "%s %s", c1, s1);
 			free(c1);
