@@ -283,10 +283,12 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 	}
 	if (fstat(fileno(filp), &sb) < 0) {
 		free(catalog);
+		fclose(filp);
 		return NULL;
 	}
 	if (!S_ISREG(sb.st_mode)) {
 		free(catalog);
+		fclose(filp);
 		errno = EINVAL;
 		return NULL;
 	}
@@ -340,6 +342,7 @@ out_error:
 		free(spec->lr.ctx_trans);
 	}
 	free(catalog);
+	fclose(filp);
 
 	return NULL;
 }

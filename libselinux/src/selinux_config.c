@@ -177,8 +177,7 @@ static void init_selinux_config(void)
 
 			if (!strncasecmp(buf_p, SELINUXTYPETAG,
 					 sizeof(SELINUXTYPETAG) - 1)) {
-				selinux_policytype = type =
-				    strdup(buf_p + sizeof(SELINUXTYPETAG) - 1);
+				type = strdup(buf_p + sizeof(SELINUXTYPETAG) - 1);
 				if (!type)
 					return;
 				end = type + strlen(type) - 1;
@@ -187,6 +186,11 @@ static void init_selinux_config(void)
 					*end = 0;
 					end--;
 				}
+				if (setpolicytype(type) != 0) {
+					free(type);
+					return;
+				}
+				free(type);
 				continue;
 			} else if (!strncmp(buf_p, SETLOCALDEFS,
 					    sizeof(SETLOCALDEFS) - 1)) {
@@ -212,13 +216,10 @@ static void init_selinux_config(void)
 		fclose(fp);
 	}
 
-	if (!type) {
-		selinux_policytype = type = strdup(SELINUXDEFAULT);
-		if (!type)
-			return;
-	}
+	if (!selinux_policytype && setpolicytype(SELINUXDEFAULT) != 0)
+		return;
 
-	if (asprintf(&selinux_policyroot, "%s%s", SELINUXDIR, type) == -1)
+	if (asprintf(&selinux_policyroot, "%s%s", SELINUXDIR, selinux_policytype) == -1)
 		return;
 
 	for (i = 0; i < NEL; i++)

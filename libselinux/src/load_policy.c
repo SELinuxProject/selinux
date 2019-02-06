@@ -262,8 +262,10 @@ checkbool:
 			rc = security_get_boolean_names(&names, &len);
 			if (!rc) {
 				values = malloc(sizeof(int) * len);
-				if (!values)
+				if (!values) {
+					free(names);
 					goto unmap;
+				}
 				for (i = 0; i < len; i++)
 					values[i] =
 						security_get_boolean_active(names[i]);

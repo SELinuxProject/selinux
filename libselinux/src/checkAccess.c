@@ -89,8 +89,10 @@ int selinux_check_passwd_access(access_vector_t requested)
 		int retval;
 
 		passwd_class = string_to_security_class("passwd");
-		if (passwd_class == 0)
+		if (passwd_class == 0) {
+			freecon(user_context);
 			return 0;
+		}
 
 		retval = security_compute_av_raw(user_context,
 						     user_context,
