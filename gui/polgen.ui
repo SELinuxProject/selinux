@@ -1975,7 +1975,7 @@ Tab</property>
                                       <object class="GtkLabel" id="label17">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label">Add File</property>
+                                        <property name="label" translatable="yes">Add File</property>
                                         <property name="use_underline">True</property>
                                       </object>
                                       <packing>
@@ -2028,7 +2028,7 @@ Tab</property>
                                       <object class="GtkLabel" id="label16">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label">Add Directory</property>
+                                        <property name="label" translatable="yes">Add Directory</property>
                                         <property name="use_underline">True</property>
                                       </object>
                                       <packing>
@@ -2176,7 +2176,7 @@ Tab</property>
                                       <object class="GtkLabel" id="label3">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label">Add Boolean</property>
+                                        <property name="label" translatable="yes">Add Boolean</property>
                                         <property name="use_underline">True</property>
                                       </object>
                                       <packing>
