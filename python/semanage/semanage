@@ -744,9 +744,7 @@ def handlePermissive(args):
         if args.action == "delete":
             OBJECT.delete(args.type)
     else:
-        args.parser.print_usage(sys.stderr)
-        sys.stderr.write(_('semanage permissive: error: the following argument is required: type\n'))
-        sys.exit(1)
+        args.parser.error(message=_('semanage permissive: error: the following argument is required: type\n'))
 
 
 def setupPermissiveParser(subparsers):
