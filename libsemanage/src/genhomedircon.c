@@ -1077,10 +1077,24 @@ static int get_group_users(genhomedircon_settings_t * s,
 
 	const char *grname = selogin + 1;
 
-	if (getgrnam_r(grname, &grstorage, grbuf,
-			(size_t) grbuflen, &group) != 0) {
-		goto cleanup;
+	errno = 0;
+	while (
+		(retval = getgrnam_r(grname, &grstorage, grbuf, (size_t) grbuflen, &group)) != 0 &&
+		errno == ERANGE
+	) {
+		char *new_grbuf;
+		grbuflen *= 2;
+		if (grbuflen < 0)
+			/* the member list could exceed 2Gb on a system with a 32-bit CPU (where
+			 * sizeof(long) = 4) - if this ever happened, the loop would become infinite. */
+			goto cleanup;
+		new_grbuf = realloc(grbuf, grbuflen);
+		if (new_grbuf == NULL)
+			goto cleanup;
+		grbuf = new_grbuf;
 	}
+	if (retval != 0)
+		goto cleanup;
 
 	if (group == NULL) {
 		ERR(s->h_semanage, "Can't find group named %s\n", grname);
