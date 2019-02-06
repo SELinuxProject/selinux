@@ -672,8 +672,8 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 				selinux_log(SELINUX_INFO,
 				 "%s not reset as customized by admin to %s\n",
 							    pathname, curcon);
-				goto out;
 			}
+			goto out;
 		}
 
 		if (!flags->set_specctx && curcon) {
