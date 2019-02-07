@@ -3,7 +3,7 @@
 checkpolicy \- SELinux policy compiler
 .SH SYNOPSIS
 .B checkpolicy
-.I "[\-b[F]] [\-C] [\-d] [\-M] [\-c policyvers] [\-o output_file] [input_file]"
+.I "[\-b[F]] [\-C] [\-d] [\-U handle_unknown (allow,deny,reject)] [\-M] [\-c policyvers] [\-o output_file] [\-S] [\-t target_platform (selinux,xen)] [\-V] [input_file]"
 .br
 .SH "DESCRIPTION"
 This manual page describes the
@@ -21,29 +21,32 @@ policy.conf or policy, depending on whether the \-b flag is specified.
 .B \-b,\-\-binary
 Read an existing binary policy file rather than a source policy.conf file.
 .TP
+.B \-F,\-\-conf
+Write policy.conf file rather than binary policy file. Can only be used with binary policy file.
+.TP
 .B \-C,\-\-cil
 Write CIL policy file rather than binary policy file.
 .TP
 .B \-d,\-\-debug
 Enter debug mode after loading the policy.
 .TP
-.B \-F,\-\-conf
-Write policy.conf file rather than binary policy file. Can only be used with binary policy file.
+.B \-U,\-\-handle-unknown <action>
+Specify how the kernel should handle unknown classes or permissions (deny, allow or reject).
 .TP
 .B \-M,\-\-mls
 Enable the MLS policy when checking and compiling the policy.
 .TP
-.B \-o,\-\-output filename
-Write a binary policy file to the specified filename.
-.TP
 .B \-c policyvers
 Specify the policy version, defaults to the latest.
 .TP
+.B \-o,\-\-output filename
+Write a binary policy file to the specified filename.
+.TP
+.B \-S,\-\-sort
+Sort ocontexts before writing out the binary policy. This option makes output of checkpolicy consistent with binary policies created by semanage and secilc.
+.TP
 .B \-t,\-\-target
 Specify the target platform (selinux or xen).
-.TP
-.B \-U,\-\-handle-unknown <action>
-Specify how the kernel should handle unknown classes or permissions (deny, allow or reject).
 .TP
 .B \-V,\-\-version
 Show version information.
