@@ -70,9 +70,9 @@
 	  <allow_active>auth_admin_keep</allow_active>
         </defaults>
     </action>
-    <action id="org.selinux.change_policy_type">
-        <description>SELinux write access</description>
-        <message>System policy prevents change_policy_type access to SELinux</message>
+    <action id="org.selinux.change_default_mode">
+        <description>Change SELinux default enforcing mode</description>
+        <message>System policy prevents change_default_policy access to SELinux</message>
         <defaults>
           <allow_any>no</allow_any>
           <allow_inactive>no</allow_inactive>
