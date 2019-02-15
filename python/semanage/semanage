@@ -609,14 +609,14 @@ def setupInterfaceParser(subparsers):
 
 def handleModule(args):
     OBJECT = seobject.moduleRecords(args)
-    if args.action == "add":
-        OBJECT.add(args.module_name, args.priority)
-    if args.action == "enable":
-        OBJECT.set_enabled(args.module_name, True)
-    if args.action == "disable":
-        OBJECT.set_enabled(args.module_name, False)
-    if args.action == "remove":
-        OBJECT.delete(args.module_name, args.priority)
+    if args.action_add:
+        OBJECT.add(args.action_add[0], args.priority)
+    if args.action_enable:
+        OBJECT.set_enabled(" ".join(args.action_enable), True)
+    if args.action_disable:
+        OBJECT.set_enabled(" ".join(args.action_disable), False)
+    if args.action_remove:
+        OBJECT.delete(" ".join(args.action_remove), args.priority)
     if args.action == "deleteall":
         OBJECT.deleteall()
     if args.action == "list":
@@ -635,14 +635,13 @@ def setupModuleParser(subparsers):
     parser_add_priority(moduleParser, "module")
 
     mgroup = moduleParser.add_mutually_exclusive_group(required=True)
-    parser_add_add(mgroup, "module")
     parser_add_list(mgroup, "module")
     parser_add_extract(mgroup, "module")
     parser_add_deleteall(mgroup, "module")
-    mgroup.add_argument('-r', '--remove', dest='action', action='store_const', const='remove', help=_("Remove a module"))
-    mgroup.add_argument('-d', '--disable', dest='action', action='store_const', const='disable', help=_("Disable a module"))
-    mgroup.add_argument('-e', '--enable', dest='action', action='store_const', const='enable', help=_("Enable a module"))
-    moduleParser.add_argument('module_name', nargs='?', default=None, help=_('Name of the module to act on'))
+    mgroup.add_argument('-a', '--add', dest='action_add', action='store', nargs=1, metavar='module_name', help=_("Add a module"))
+    mgroup.add_argument('-r', '--remove', dest='action_remove', action='store', nargs='+', metavar='module_name', help=_("Remove a module"))
+    mgroup.add_argument('-d', '--disable', dest='action_disable', action='store', nargs='+', metavar='module_name', help=_("Disable a module"))
+    mgroup.add_argument('-e', '--enable', dest='action_enable', action='store', nargs='+', metavar='module_name', help=_("Enable a module"))
     moduleParser.set_defaults(func=handleModule)
 
 
