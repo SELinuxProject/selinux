@@ -27,7 +27,7 @@ install: all
 		fi ; \
 	done
 	test -d $(DESTDIR)/$(PACKAGEDIR) || install -m 755 -d $(DESTDIR)/$(PACKAGEDIR)
-	install -m 755 seobject.py $(DESTDIR)/$(PACKAGEDIR)
+	install -m 644 seobject.py $(DESTDIR)/$(PACKAGEDIR)
 	-mkdir -p $(DESTDIR)$(BASHCOMPLETIONDIR)
 	install -m 644 $(BASHCOMPLETIONS) $(DESTDIR)$(BASHCOMPLETIONDIR)/semanage
 
