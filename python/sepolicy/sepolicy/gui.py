@@ -1,5 +1,3 @@
-#!/usr/bin/python -Es
-#
 # Copyright (C) 2013 Red Hat
 # see file 'COPYING' for use and warranty information
 #

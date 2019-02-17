@@ -1,4 +1,3 @@
-#! /usr/bin/python -Es
 # Copyright (C) 2012-2013 Red Hat
 # AUTHOR: Dan Walsh <dwalsh@redhat.com>
 # AUTHOR: Miroslav Grepl <mgrepl@redhat.com>
