@@ -1,4 +1,4 @@
-#!/usr/bin/python -Es
+#!/usr/bin/python3 -Es
 #
 # polgengui.py - GUI for SELinux Config tool in system-config-selinux
 #

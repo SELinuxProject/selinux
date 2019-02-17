@@ -1,4 +1,4 @@
-#! /usr/bin/python -Es
+#!/usr/bin/python3 -Es
 # Copyright (C) 2005 Red Hat
 # see file 'COPYING' for use and warranty information
 #

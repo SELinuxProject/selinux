@@ -1,4 +1,4 @@
-#! /usr/bin/python -Es
+#!/usr/bin/python3 -Es
 # Authors: Karl MacMillan <kmacmillan@mentalrootkit.com>
 # Authors: Dan Walsh <dwalsh@redhat.com>
 #

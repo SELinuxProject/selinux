@@ -1,4 +1,4 @@
-#!/usr/bin/python -Es
+#!/usr/bin/python3 -Es
 #
 # system-config-selinux.py - GUI for SELinux Config tool in system-config-selinux
 #

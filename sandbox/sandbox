@@ -1,4 +1,4 @@
-#! /usr/bin/python -Es
+#!/usr/bin/python3 -Es
 # Authors: Dan Walsh <dwalsh@redhat.com>
 # Authors: Thomas Liu <tliu@fedoraproject.org>
 # Authors: Josh Cogliati
