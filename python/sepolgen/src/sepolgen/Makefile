@@ -1,5 +1,5 @@
 PREFIX ?= /usr
-PYTHON ?= python
+PYTHON ?= python3
 PYTHONLIBDIR ?= $(shell $(PYTHON) -c "from distutils.sysconfig import *; print(get_python_lib(prefix='$(PREFIX)'))")
 PACKAGEDIR ?= /$(PYTHONLIBDIR)/sepolgen
 

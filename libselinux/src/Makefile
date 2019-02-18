@@ -1,7 +1,7 @@
 # Support building the Python bindings multiple times, against various Python
 # runtimes (e.g. Python 2 vs Python 3) by optionally prefixing the build
 # targets with "PYPREFIX":
-PYTHON ?= python
+PYTHON ?= python3
 PYPREFIX ?= $(shell $(PYTHON) -c 'import sys;print("python-%d.%d" % sys.version_info[:2])')
 RUBY ?= ruby
 RUBYPREFIX ?= $(notdir $(RUBY))
