@@ -1,4 +1,4 @@
-#!/usr/bin/python -E
+#!/usr/bin/python3 -E
 import sys
 import selinux
 
