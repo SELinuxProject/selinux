@@ -3,7 +3,7 @@ Subscribe by sending "subscribe selinux" in the body of an email
 to majordomo@vger.kernel.org.
 
 Build dependencies on Fedora:
-yum install audit-libs-devel bison bzip2-devel dbus-devel dbus-glib-devel flex flex-devel flex-static glib2-devel libcap-devel libcap-ng-devel pam-devel pcre-devel python-devel setools-devel swig xmlto redhat-rpm-config
+yum install audit-libs-devel bison bzip2-devel dbus-devel dbus-glib-devel flex flex-devel flex-static glib2-devel libcap-devel libcap-ng-devel pam-devel pcre-devel python3-devel python3-setools swig xmlto redhat-rpm-config
 
 To build and install everything under a private directory, run:
 make DESTDIR=~/obj install install-pywrap
