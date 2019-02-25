@@ -20,6 +20,7 @@ int security_compute_av_flags_raw(const char * scon,
 	char *buf;
 	size_t len;
 	int fd, ret;
+	security_class_t kclass;
 
 	if (!selinux_mnt) {
 		errno = ENOENT;
@@ -38,8 +39,9 @@ int security_compute_av_flags_raw(const char * scon,
 		goto out;
 	}
 
+	kclass = unmap_class(tclass);
 	snprintf(buf, len, "%s %s %hu %x", scon, tcon,
-		 unmap_class(tclass), unmap_perm(tclass, requested));
+		 kclass, unmap_perm(tclass, requested));
 
 	ret = write(fd, buf, strlen(buf));
 	if (ret < 0)
@@ -60,8 +62,14 @@ int security_compute_av_flags_raw(const char * scon,
 	} else if (ret < 6)
 		avd->flags = 0;
 
-	/* If tclass invalid, kernel sets avd according to deny_unknown flag */
-	if (tclass != 0)
+	/*
+	 * If the tclass could not be mapped to a kernel class at all, the
+	 * kernel will have already set avd according to the
+	 * handle_unknown flag and we do not need to do anything further.
+	 * Otherwise, we must map the permissions within the returned
+	 * avd to the userspace permission values.
+	 */
+	if (kclass != 0)
 		map_decision(tclass, avd);
 
 	ret = 0;

@@ -328,7 +328,10 @@ extern int security_getenforce(void);
 /* Set the enforce flag value. */
 extern int security_setenforce(int value);
 
-/* Get the behavior for undefined classes/permissions */
+/* Get the load-time behavior for undefined classes/permissions */
+extern int security_reject_unknown(void);
+
+/* Get the runtime behavior for undefined classes/permissions */
 extern int security_deny_unknown(void);
 
 /* Get the checkreqprot value */
