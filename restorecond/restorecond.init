@@ -9,7 +9,7 @@
 #
 # processname: /usr/sbin/restorecond
 # config: /etc/selinux/restorecond.conf 
-# pidfile: /var/run/restorecond.pid
+# pidfile: /run/restorecond.pid
 #
 # Return values according to LSB for all commands but status:
 # 0 - success

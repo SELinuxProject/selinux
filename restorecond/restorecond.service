@@ -6,7 +6,7 @@ ConditionSecurity=selinux
 [Service]
 Type=forking
 ExecStart=/usr/sbin/restorecond
-PIDFile=/var/run/restorecond.pid
+PIDFile=/run/restorecond.pid
 
 [Install]
 WantedBy=multi-user.target

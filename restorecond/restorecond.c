@@ -84,7 +84,7 @@ static void done(void) {
 	selabel_close(r_opts.hnd);
 }
 
-static const char *pidfile = "/var/run/restorecond.pid";
+static const char *pidfile = "/run/restorecond.pid";
 
 static int write_pid_file(void)
 {
@@ -217,7 +217,7 @@ int main(int argc, char **argv)
 	write_pid_file();
 
 	while (watch(master_fd, watch_file) == 0) {
-	};
+	}
 
 	watch_list_free(master_fd);
 	close(master_fd);

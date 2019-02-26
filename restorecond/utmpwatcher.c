@@ -49,7 +49,7 @@ unsigned int utmpwatcher_handle(int inotify_fd, int wd)
 {
 	int changed = 0;
 	struct utmp u;
-	const char *utmp_path = "/var/run/utmp";
+	const char *utmp_path = "/run/utmp";
 	struct stringsList *prev_utmp_ptr = utmp_ptr;
 	if (wd != utmp_wd)
 		return -1;
