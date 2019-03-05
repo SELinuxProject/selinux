@@ -118,7 +118,7 @@ class modulesPage(semanagePage):
 
     def new_module(self, args):
         try:
-            Popen(["/usr/share/system-config-selinux/polgengui.py"])
+            Popen(["selinux-polgengui"])
         except ValueError as e:
             self.error(e.args[0])
 

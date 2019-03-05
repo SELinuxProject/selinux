@@ -31,7 +31,7 @@ install: all
 	-mkdir -p $(DESTDIR)$(DATADIR)/polkit-1/actions/
 	install -m 755 system-config-selinux.py $(DESTDIR)$(SHAREDIR)
 	install -m 755 system-config-selinux $(DESTDIR)$(BINDIR)
-	install -m 755 polgengui.py $(DESTDIR)$(SHAREDIR)
+	install -m 755 polgengui.py $(DESTDIR)$(BINDIR)/selinux-polgengui
 	install -m 644 $(TARGETS) $(DESTDIR)$(SHAREDIR)
 	install -m 644 system-config-selinux.8 $(DESTDIR)$(MANDIR)/man8
 	install -m 644 selinux-polgengui.8 $(DESTDIR)$(MANDIR)/man8
