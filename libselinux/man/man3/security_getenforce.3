@@ -1,6 +1,7 @@
 .TH "security_getenforce" "3" "1 January 2004" "russell@coker.com.au" "SELinux API documentation"
 .SH "NAME"
-security_getenforce, security_setenforce, security_deny_unknown, security_get_checkreqprot\- get or set the enforcing state of SELinux
+security_getenforce, security_setenforce, security_deny_unknown, security_reject_unknown,
+security_get_checkreqprot \- get or set the enforcing state of SELinux
 .
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
@@ -10,6 +11,8 @@ security_getenforce, security_setenforce, security_deny_unknown, security_get_ch
 .BI "int security_setenforce(int "value );
 .sp
 .B int security_deny_unknown(void);
+.sp
+.B int security_reject_unknown(void);
 .sp
 .B int security_get_checkreqprot(void);
 .
@@ -26,6 +29,21 @@ returned.
 .BR security_deny_unknown ()
 returns 0 if SELinux treats policy queries on undefined object classes or
 permissions as being allowed, 1 if such queries are denied, and \-1 on error.
+
+.BR security_reject_unknown ()
+returns 1 if the current policy was built with handle-unknown=reject and SELinux
+would reject loading it, if it did not define all kernel object classes and
+permissions. In this state, when
+.BR selinux_set_mapping()
+and
+.BR selinux_check_access()
+are used with an undefined userspace class or permission, an error is returned
+and errno is set to EINVAL.
+
+It returns 0 if the current policy was built with handle-unknown=allow or
+handle-unknown=deny. In this state, policy queries are treated according to
+.BR security_deny_unknown().
+\-1 is returned on error.
 
 .BR security_get_checkreqprot ()
 can be used to determine whether SELinux is configured to check the
