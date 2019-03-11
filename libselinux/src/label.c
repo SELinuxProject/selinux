@@ -274,6 +274,15 @@ bool selabel_partial_match(struct selabel_handle *rec, const char *key)
 	return rec->func_partial_match(rec, key);
 }
 
+bool selabel_hash_all_partial_matches(struct selabel_handle *rec,
+                                      const char *key, uint8_t *digest) {
+	if (!rec->func_hash_all_partial_matches) {
+		return false;
+	}
+
+	return rec->func_hash_all_partial_matches(rec, key, digest);
+}
+
 int selabel_lookup_best_match(struct selabel_handle *rec, char **con,
 			      const char *key, const char **aliases, int type)
 {
