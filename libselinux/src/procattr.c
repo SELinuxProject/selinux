@@ -22,8 +22,19 @@ static pthread_key_t destructor_key;
 static int destructor_key_initialized = 0;
 static __thread char destructor_initialized;
 
-#ifndef __BIONIC__
-/* Bionic declares this in unistd.h and has a definition for it */
+/* Bionic and glibc >= 2.30 declare gettid() system call wrapper in unistd.h and
+ * has a definition for it */
+#ifdef __BIONIC__
+  #define OVERRIDE_GETTID 0
+#elif !defined(__GLIBC_PREREQ)
+  #define OVERRIDE_GETTID 1
+#elif !__GLIBC_PREREQ(2,30)
+  #define OVERRIDE_GETTID 1
+#else
+  #define OVERRIDE_GETTID 0
+#endif
+
+#if OVERRIDE_GETTID
 static pid_t gettid(void)
 {
 	return syscall(__NR_gettid);
