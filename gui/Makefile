@@ -5,6 +5,7 @@ BINDIR ?= $(PREFIX)/bin
 SHAREDIR ?= $(PREFIX)/share/system-config-selinux
 DATADIR ?= $(PREFIX)/share
 MANDIR ?= $(PREFIX)/share/man
+DESKTOPDIR ?= $(PREFIX)/share/applications
 
 TARGETS= \
 booleansPage.py \
@@ -29,6 +30,7 @@ install: all
 	-mkdir -p $(DESTDIR)$(DATADIR)/pixmaps
 	-mkdir -p $(DESTDIR)$(DATADIR)/icons/hicolor/24x24/apps
 	-mkdir -p $(DESTDIR)$(DATADIR)/polkit-1/actions/
+	-mkdir -p $(DESTDIR)$(DESKTOPDIR)
 	install -m 755 system-config-selinux.py $(DESTDIR)$(SHAREDIR)
 	install -m 755 system-config-selinux $(DESTDIR)$(BINDIR)
 	install -m 755 polgengui.py $(DESTDIR)$(BINDIR)/selinux-polgengui
@@ -44,7 +46,7 @@ install: all
 	install -m 644 system-config-selinux.png $(DESTDIR)$(DATADIR)/pixmaps
 	install -m 644 system-config-selinux.png $(DESTDIR)$(DATADIR)/icons/hicolor/24x24/apps
 	install -m 644 system-config-selinux.png $(DESTDIR)$(DATADIR)/system-config-selinux
-	install -m 644 *.desktop $(DESTDIR)$(DATADIR)/system-config-selinux
+	install -m 644 *.desktop $(DESTDIR)$(DESKTOPDIR)
 	-mkdir -p $(DESTDIR)$(DATADIR)/pixmaps
 	install -m 644 sepolicy_256.png $(DESTDIR)$(DATADIR)/pixmaps/sepolicy.png
 	for i in 16 22 32 48 256; do \
