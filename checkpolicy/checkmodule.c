@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 		{NULL, 0, NULL, 0}
 	};
 
-	while ((ch = getopt_long(argc, argv, "ho:bVU:mMC", long_options, NULL)) != -1) {
+	while ((ch = getopt_long(argc, argv, "ho:bVU:mMCc:", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'h':
 			usage(argv[0]);
@@ -194,7 +194,6 @@ int main(int argc, char **argv)
 			usage(argv[0]);
 		case 'm':
 			policy_type = POLICY_MOD;
-			policyvers = MOD_POLICYDB_VERSION_MAX;
 			break;
 		case 'M':
 			mlspol = 1;
@@ -202,6 +201,30 @@ int main(int argc, char **argv)
 		case 'C':
 			cil = 1;
 			break;
+		case 'c': {
+			long int n;
+			errno = 0;
+			n = strtol(optarg, NULL, 10);
+
+			if (errno) {
+				fprintf(stderr,
+					"Invalid policyvers specified: %s\n",
+					optarg);
+				usage(argv[0]);
+			}
+
+			if (n < MOD_POLICYDB_VERSION_MIN
+			    || n > MOD_POLICYDB_VERSION_MAX) {
+				fprintf(stderr,
+					"policyvers value %ld not in range %d-%d\n",
+					n, MOD_POLICYDB_VERSION_MIN,
+					MOD_POLICYDB_VERSION_MAX);
+				usage(argv[0]);
+			}
+
+			policyvers = n;
+			break;
+		}
 		default:
 			usage(argv[0]);
 		}

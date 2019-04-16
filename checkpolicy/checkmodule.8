@@ -38,7 +38,7 @@ Generate a non-base policy module.
 Enable the MLS/MCS support when checking and compiling the policy module.
 .TP
 .B \-V,\-\-version
- Show policy versions created by this program.  Note that you cannot currently build older versions.
+Show policy versions created by this program.
 .TP
 .B \-o,\-\-output filename
 Write a binary policy module file to the specified filename.
@@ -47,6 +47,9 @@ and will not generate a binary module at all.
 .TP
 .B \-U,\-\-handle-unknown <action>
 Specify how the kernel should handle unknown classes or permissions (deny, allow or reject).
+.TP
+.B \-c policyvers
+Specify the policy version, defaults to the latest.
 
 .SH EXAMPLE
 .nf
