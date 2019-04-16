@@ -142,6 +142,8 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	printf("  -m         build a policy module instead of a base module\n");
 	printf("  -M         enable MLS policy\n");
 	printf("  -o FILE    write module to FILE (else just check syntax)\n");
+	printf("  -c VERSION build a policy module targeting a modular policy version (%d-%d)\n",
+		MOD_POLICYDB_VERSION_MIN, MOD_POLICYDB_VERSION_MAX);
 	exit(1);
 }
 
