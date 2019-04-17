@@ -39,18 +39,17 @@ static int get_stem_from_file_name(const char *const buf)
 
 /* find the stem of a file name, returns the index into stem_arr (or -1 if
  * there is no match - IE for a file in the root directory or a regex that is
- * too complex for us).  Makes buf point to the text AFTER the stem. */
-static int find_stem_from_file(struct saved_data *data, const char **buf)
+ * too complex for us). */
+static int find_stem_from_file(struct saved_data *data, const char *key)
 {
 	int i;
-	int stem_len = get_stem_from_file_name(*buf);
+	int stem_len = get_stem_from_file_name(key);
 
 	if (!stem_len)
 		return -1;
 	for (i = 0; i < data->num_stems; i++) {
 		if (stem_len == data->stem_arr[i].len
-		    && !strncmp(*buf, data->stem_arr[i].buf, stem_len)) {
-			*buf += stem_len;
+		    && !strncmp(key, data->stem_arr[i].buf, stem_len)) {
 			return i;
 		}
 	}
@@ -856,7 +855,6 @@ static const struct spec **lookup_all(struct selabel_handle *rec,
 	struct spec *spec_arr = data->spec_arr;
 	int i, rc, file_stem;
 	mode_t mode = (mode_t)type;
-	const char *buf;
 	char *clean_key = NULL;
 	const char *prev_slash, *next_slash;
 	unsigned int sofar = 0;
@@ -900,8 +898,7 @@ static const struct spec **lookup_all(struct selabel_handle *rec,
 	if (sub)
 		key = sub;
 
-	buf = key;
-	file_stem = find_stem_from_file(data, &buf);
+	file_stem = find_stem_from_file(data, key);
 	mode &= S_IFMT;
 
 	/*
@@ -914,15 +911,15 @@ static const struct spec **lookup_all(struct selabel_handle *rec,
 		 * stem as the file AND if the spec in question has no mode
 		 * specified or if the mode matches the file mode then we do
 		 * a regex check        */
-		if ((spec->stem_id == -1 || spec->stem_id == file_stem) &&
+		bool stem_matches = spec->stem_id == -1 || spec->stem_id == file_stem;
+		// Don't check the stem if we want to find partial matches.
+                // Otherwise the case "/abc/efg/(/.*)?" will be considered
+                //a miss for "/abc".
+		if ((partial || stem_matches) &&
 				(!mode || !spec->mode || mode == spec->mode)) {
-			if (compile_regex(data, spec, NULL) < 0)
+			if (compile_regex(spec, NULL) < 0)
 				goto finish;
-			if (spec->stem_id == -1)
-				rc = regex_match(spec->regex, key, partial);
-			else
-				rc = regex_match(spec->regex, buf, partial);
-
+			rc = regex_match(spec->regex, key, partial);
 			if (rc == REGEX_MATCH || (partial && rc == REGEX_MATCH_PARTIAL)) {
 				if (rc == REGEX_MATCH) {
 					spec->matches++;
