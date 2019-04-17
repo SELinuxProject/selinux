@@ -903,14 +903,14 @@ int main(int argc, char **argv)
 	}
 
 	if (policydb.policy_type == POLICY_BASE) {
-		printf("Binary base policy file loaded.\n\n");
+		printf("Binary base policy file loaded.\n");
 	} else {
 		printf("Binary policy module file loaded.\n");
 		printf("Module name: %s\n", policydb.name);
 		printf("Module version: %s\n", policydb.version);
-		printf("\n");
 	}
 
+	printf("Policy version: %d\n\n", policydb.policyvers);
 	menu();
 	for (;;) {
 		printf("\nCommand (\'m\' for menu):  ");
