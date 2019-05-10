@@ -125,10 +125,10 @@ char *selinux_boolean_sub(const char *name)
 			dst++;
 		if (!*dst)
 			continue;
-		ptr=dst;
+		ptr = dst;
 		while (*ptr && !isspace(*ptr))
 			ptr++;
-		*ptr='\0';
+		*ptr = '\0';
 
 		sub = strdup(dst);
 

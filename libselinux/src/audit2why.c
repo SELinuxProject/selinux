@@ -291,7 +291,7 @@ static int __policy_init(const char *init_path)
 
 static PyObject *init(PyObject *self __attribute__((unused)), PyObject *args) {
   int result;
-  char *init_path=NULL;
+  char *init_path = NULL;
   if (avc) {
 	  PyErr_SetString( PyExc_RuntimeError, "init called multiple times");
 	  return NULL;
@@ -322,7 +322,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 	sepol_access_vector_t perm, av;
 	struct sepol_av_decision avd;
 	int rc;
-	int i=0;
+	int i = 0;
 
 	if (!PyArg_ParseTuple(args,(char *)"sssO!:audit2why",&scon,&tcon,&tclassstr,&PyList_Type, &listObj)) 
 		return NULL;
@@ -353,7 +353,7 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 
 	/* iterate over items of the list, grabbing strings, and parsing
 	   for numbers */
-	for (i=0; i<numlines; i++){
+	for (i = 0; i < numlines; i++){
 		const char *permstr;
 
 		/* grab the string object from the next element of the list */
@@ -395,13 +395,13 @@ static PyObject *analyze(PyObject *self __attribute__((unused)) , PyObject *args
 		} else {
 			PyObject *outboollist;
 			struct boolean_t *b = bools;
-			int len=0;
+			int len = 0;
 			while (b->name) {
 				len++; b++;
 			}
 			b = bools;
 			outboollist = PyList_New(len);
-			len=0;
+			len = 0;
 			while(b->name) {
 				PyObject *bool_ = Py_BuildValue("(si)", b->name, b->active);
 				PyList_SetItem(outboollist, len++, bool_);

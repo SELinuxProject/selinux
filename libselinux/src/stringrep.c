@@ -147,7 +147,7 @@ static struct discover_class_node * discover_class(const char *s)
 
 err4:
 	closedir(dir);
-	for (i=0; i<MAXVECTORS; i++)
+	for (i = 0; i < MAXVECTORS; i++)
 		free(node->perms[i]);
 err3:
 	free(node->name);
@@ -214,7 +214,7 @@ security_class_t mode_to_security_class(mode_t m) {
 	if (S_ISSOCK(m))
 		return string_to_security_class("sock_file");
 
-	errno=EINVAL;
+	errno = EINVAL;
 	return 0;
 }
 
@@ -226,7 +226,7 @@ access_vector_t string_to_av_perm(security_class_t tclass, const char *s)
 	node = get_class_cache_entry_value(kclass);
 	if (node != NULL) {
 		size_t i;
-		for (i=0; i<MAXVECTORS && node->perms[i] != NULL; i++)
+		for (i = 0; i < MAXVECTORS && node->perms[i] != NULL; i++)
 			if (strcmp(node->perms[i],s) == 0)
 				return map_perm(tclass, 1<<i);
 	}

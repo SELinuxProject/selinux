@@ -143,7 +143,7 @@ unmap_perm(security_class_t tclass, access_vector_t tperm)
 		unsigned i;
 		access_vector_t kperm = 0;
 
-		for (i=0; i<current_mapping[tclass].num_perms; i++)
+		for (i = 0; i < current_mapping[tclass].num_perms; i++)
 			if (tperm & (1<<i)) {
 				kperm |= current_mapping[tclass].perms[i];
 				tperm &= ~(1<<i);
@@ -169,7 +169,7 @@ map_class(security_class_t kclass)
 {
 	security_class_t i;
 
-	for (i=0; i<current_mapping_size; i++)
+	for (i = 0; i < current_mapping_size; i++)
 		if (current_mapping[i].value == kclass)
 			return i;
 
@@ -189,7 +189,7 @@ map_perm(security_class_t tclass, access_vector_t kperm)
 		unsigned i;
 		access_vector_t tperm = 0;
 
-		for (i=0; i<current_mapping[tclass].num_perms; i++)
+		for (i = 0; i < current_mapping[tclass].num_perms; i++)
 			if (kperm & current_mapping[tclass].perms[i]) {
 				tperm |= 1<<i;
 				kperm &= ~current_mapping[tclass].perms[i];
