@@ -133,7 +133,7 @@ int semanage_seuser_modify_local(semanage_handle_t * handle,
 	semanage_seuser_t *new = NULL;
 
 	if (!sename) {
-		errno=EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 	rc = semanage_seuser_clone(handle, data, &new);

@@ -517,7 +517,7 @@ ssize_t bunzip(semanage_handle_t *sh, FILE *f, char **data)
 	size_t  size = 1<<18;
 	size_t  bufsize = size;
 	int     bzerror;
-	size_t  total=0;
+	size_t  total = 0;
 	char*   uncompress = NULL;
 	char*   tmpalloc = NULL;
 	int     ret = -1;
