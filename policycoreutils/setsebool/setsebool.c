@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 		/* Add 1 for the '=' */
 		len = strlen(argv[optind]) + strlen(argv[optind + 1]) + 2;
 		bool_list[0] = (char *)malloc(len);
-		if (bool_list[0] == 0) {
+		if (bool_list[0] == NULL) {
 			fputs("Out of memory - aborting\n", stderr);
 			return 1;
 		}
@@ -133,8 +133,8 @@ static int semanage_set_boolean_list(size_t boolcnt,
 		goto err;
 	}
 
-	if (! verbose) {
-		semanage_msg_set_callback(handle,NULL, NULL);
+	if (!verbose) {
+		semanage_msg_set_callback(handle, NULL, NULL);
 	}
 
 	managed = semanage_is_managed(handle);
@@ -175,9 +175,9 @@ static int semanage_set_boolean_list(size_t boolcnt,
 			goto err;
 
 		semanage_bool_exists(handle, bool_key, &result);
-		if ( !result ) {
+		if (!result) {
 			semanage_bool_exists_local(handle, bool_key, &result);
-			if ( !result ) {
+			if (!result) {
 				fprintf(stderr, "Boolean %s is not defined\n", boollist[j].name);
 				goto err;
 			}
@@ -230,13 +230,13 @@ int setbool(char **list, size_t start, size_t end)
 	while (i < end) {
 		name = list[i];
 		value_ptr = strchr(list[i], '=');
-		if (value_ptr == 0) {
+		if (value_ptr == NULL) {
 			fprintf(stderr,
 				"setsebool: '=' not found in boolean expression %s\n",
 				list[i]);
 			goto err;
 		}
-		*value_ptr = 0;
+		*value_ptr = '\0';
 		value_ptr++;
 		if (strcmp(value_ptr, "1") == 0 ||
 		    strcasecmp(value_ptr, "true") == 0 ||
@@ -278,7 +278,7 @@ int setbool(char **list, size_t start, size_t end)
 	while (i < end) {
 		name = list[i];
 		value_ptr = strchr(name, '=');
-		*value_ptr = 0;
+		*value_ptr = '\0';
 		value_ptr++;
 		if (pwd && pwd->pw_name)
 			syslog(LOG_NOTICE,
