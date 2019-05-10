@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 		case 'h':
 		case '-':
 			usage();
-			exit(0);
+			exit(EXIT_SUCCESS);
 		default:
 			usage();
 			die("unrecognized parameter '%c'", i);
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
 		}
 		if (n == 0) {
 			usage();
-			exit(0);
+			exit(EXIT_SUCCESS);
 		}
 		interval = n;
 	}
