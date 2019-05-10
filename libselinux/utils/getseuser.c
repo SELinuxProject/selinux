@@ -36,5 +36,5 @@ int main(int argc, char **argv)
 	for (i = 0; i < n; i++)
 		printf("Context %d\t%s\n", i, contextlist[i]);
 	freeconary(contextlist);
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
