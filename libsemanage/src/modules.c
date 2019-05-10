@@ -1130,7 +1130,7 @@ int semanage_module_install_info(semanage_handle_t *sh,
 int semanage_module_remove_key(semanage_handle_t *sh,
 			       const semanage_module_key_t *modkey)
 {
-	if (sh->funcs->remove_key== NULL) {
+	if (sh->funcs->remove_key == NULL) {
 		ERR(sh,
 		    "No remove key function defined for this connection type.");
 		return -1;

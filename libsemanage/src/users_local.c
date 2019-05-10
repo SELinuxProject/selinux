@@ -38,7 +38,7 @@ static int lookup_seuser(semanage_handle_t * handle, const semanage_user_key_t *
 	semanage_seuser_list_local(handle,
 				   &records,
 				   &count);
-	for(i=0; i<count; i++) {
+	for(i = 0; i < count; i++) {
 		sename = semanage_seuser_get_sename(records[i]);
 		if (strcmp(name, sename) == 0) {
 			errno = EINVAL;
@@ -47,7 +47,7 @@ static int lookup_seuser(semanage_handle_t * handle, const semanage_user_key_t *
 			rc = -1;
 		}
 	}
-	for(i=0; i<count; i++)
+	for(i = 0; i < count; i++)
 		semanage_seuser_free(records[i]);
 	free(records);
 	semanage_user_free(user);
