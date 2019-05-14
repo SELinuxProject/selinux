@@ -360,9 +360,7 @@ int ebitmap_to_strs(struct ebitmap *map, struct strs *strs, char **val_to_name)
 	uint32_t i;
 	int rc;
 
-	ebitmap_for_each_bit(map, node, i) {
-		if (!ebitmap_get_bit(map, i)) continue;
-
+	ebitmap_for_each_positive_bit(map, node, i) {
 		rc = strs_add(strs, val_to_name[i]);
 		if (rc != 0) {
 			return -1;

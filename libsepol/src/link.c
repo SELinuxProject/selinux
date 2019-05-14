@@ -962,22 +962,18 @@ static int type_set_convert(type_set_t * types, type_set_t * dst,
 {
 	unsigned int i;
 	ebitmap_node_t *tnode;
-	ebitmap_for_each_bit(&types->types, tnode, i) {
-		if (ebitmap_node_get_bit(tnode, i)) {
-			assert(mod->map[SYM_TYPES][i]);
-			if (ebitmap_set_bit
-			    (&dst->types, mod->map[SYM_TYPES][i] - 1, 1)) {
-				goto cleanup;
-			}
+	ebitmap_for_each_positive_bit(&types->types, tnode, i) {
+		assert(mod->map[SYM_TYPES][i]);
+		if (ebitmap_set_bit
+		    (&dst->types, mod->map[SYM_TYPES][i] - 1, 1)) {
+			goto cleanup;
 		}
 	}
-	ebitmap_for_each_bit(&types->negset, tnode, i) {
-		if (ebitmap_node_get_bit(tnode, i)) {
-			assert(mod->map[SYM_TYPES][i]);
-			if (ebitmap_set_bit
-			    (&dst->negset, mod->map[SYM_TYPES][i] - 1, 1)) {
-				goto cleanup;
-			}
+	ebitmap_for_each_positive_bit(&types->negset, tnode, i) {
+		assert(mod->map[SYM_TYPES][i]);
+		if (ebitmap_set_bit
+		    (&dst->negset, mod->map[SYM_TYPES][i] - 1, 1)) {
+			goto cleanup;
 		}
 	}
 	dst->flags = types->flags;
@@ -1019,13 +1015,11 @@ static int role_set_or_convert(role_set_t * roles, role_set_t * dst,
 	ebitmap_node_t *rnode;
 
 	ebitmap_init(&tmp);
-	ebitmap_for_each_bit(&roles->roles, rnode, i) {
-		if (ebitmap_node_get_bit(rnode, i)) {
-			assert(mod->map[SYM_ROLES][i]);
-			if (ebitmap_set_bit
-			    (&tmp, mod->map[SYM_ROLES][i] - 1, 1)) {
-				goto cleanup;
-			}
+	ebitmap_for_each_positive_bit(&roles->roles, rnode, i) {
+		assert(mod->map[SYM_ROLES][i]);
+		if (ebitmap_set_bit
+		    (&tmp, mod->map[SYM_ROLES][i] - 1, 1)) {
+			goto cleanup;
 		}
 	}
 	if (ebitmap_union(&dst->roles, &tmp)) {
@@ -1115,13 +1109,11 @@ static int role_fix_callback(hashtab_key_t key, hashtab_datum_t datum,
 	}
 
 	ebitmap_init(&e_tmp);
-	ebitmap_for_each_bit(&role->dominates, rnode, i) {
-		if (ebitmap_node_get_bit(rnode, i)) {
-			assert(mod->map[SYM_ROLES][i]);
-			if (ebitmap_set_bit
-			    (&e_tmp, mod->map[SYM_ROLES][i] - 1, 1)) {
-				goto cleanup;
-			}
+	ebitmap_for_each_positive_bit(&role->dominates, rnode, i) {
+		assert(mod->map[SYM_ROLES][i]);
+		if (ebitmap_set_bit
+		    (&e_tmp, mod->map[SYM_ROLES][i] - 1, 1)) {
+			goto cleanup;
 		}
 	}
 	if (ebitmap_union(&dest_role->dominates, &e_tmp)) {
@@ -1134,13 +1126,11 @@ static int role_fix_callback(hashtab_key_t key, hashtab_datum_t datum,
 	
 	if (role->flavor == ROLE_ATTRIB) {
 		ebitmap_init(&e_tmp);
-		ebitmap_for_each_bit(&role->roles, rnode, i) {
-			if (ebitmap_node_get_bit(rnode, i)) {
-				assert(mod->map[SYM_ROLES][i]);
-				if (ebitmap_set_bit
-				    (&e_tmp, mod->map[SYM_ROLES][i] - 1, 1)) {
-					goto cleanup;
-				}
+		ebitmap_for_each_positive_bit(&role->roles, rnode, i) {
+			assert(mod->map[SYM_ROLES][i]);
+			if (ebitmap_set_bit
+			    (&e_tmp, mod->map[SYM_ROLES][i] - 1, 1)) {
+				goto cleanup;
 			}
 		}
 		if (ebitmap_union(&dest_role->roles, &e_tmp)) {
@@ -1189,13 +1179,11 @@ static int type_fix_callback(hashtab_key_t key, hashtab_datum_t datum,
 	}
 
 	ebitmap_init(&e_tmp);
-	ebitmap_for_each_bit(&type->types, tnode, i) {
-		if (ebitmap_node_get_bit(tnode, i)) {
-			assert(mod->map[SYM_TYPES][i]);
-			if (ebitmap_set_bit
-			    (&e_tmp, mod->map[SYM_TYPES][i] - 1, 1)) {
-				goto cleanup;
-			}
+	ebitmap_for_each_positive_bit(&type->types, tnode, i) {
+		assert(mod->map[SYM_TYPES][i]);
+		if (ebitmap_set_bit
+		    (&e_tmp, mod->map[SYM_TYPES][i] - 1, 1)) {
+			goto cleanup;
 		}
 	}
 	if (ebitmap_union(&new_type->types, &e_tmp)) {
@@ -1388,15 +1376,13 @@ static int copy_role_trans_list(role_trans_rule_t * list,
 			goto cleanup;
 		}
 
-		ebitmap_for_each_bit(&cur->classes, cnode, i) {
-			if (ebitmap_node_get_bit(cnode, i)) {
-				assert(module->map[SYM_CLASSES][i]);
-				if (ebitmap_set_bit(&new_rule->classes,
-						    module->
-						    map[SYM_CLASSES][i] - 1,
-						    1)) {
-					goto cleanup;
-				}
+		ebitmap_for_each_positive_bit(&cur->classes, cnode, i) {
+			assert(module->map[SYM_CLASSES][i]);
+			if (ebitmap_set_bit(&new_rule->classes,
+					    module->
+					    map[SYM_CLASSES][i] - 1,
+					    1)) {
+				goto cleanup;
 			}
 		}
 
@@ -1530,14 +1516,12 @@ static int copy_range_trans_list(range_trans_rule_t * rules,
 				     mod, state))
 			goto cleanup;
 
-		ebitmap_for_each_bit(&rule->tclasses, cnode, i) {
-			if (ebitmap_node_get_bit(cnode, i)) {
-				assert(mod->map[SYM_CLASSES][i]);
-				if (ebitmap_set_bit
-				    (&new_rule->tclasses,
-				     mod->map[SYM_CLASSES][i] - 1, 1)) {
-					goto cleanup;
-				}
+		ebitmap_for_each_positive_bit(&rule->tclasses, cnode, i) {
+			assert(mod->map[SYM_CLASSES][i]);
+			if (ebitmap_set_bit
+			    (&new_rule->tclasses,
+			     mod->map[SYM_CLASSES][i] - 1, 1)) {
+				goto cleanup;
 			}
 		}
 
@@ -1678,20 +1662,18 @@ static int copy_scope_index(scope_index_t * src, scope_index_t * dest,
 		if (copy_callback_f[i] == NULL) {
 			continue;
 		}
-		ebitmap_for_each_bit(srcmap, node, j) {
-			if (ebitmap_node_get_bit(node, j)) {
-				assert(module->map[i][j] != 0);
-				if (ebitmap_set_bit
-				    (destmap, module->map[i][j] - 1, 1) != 0) {
+		ebitmap_for_each_positive_bit(srcmap, node, j) {
+			assert(module->map[i][j] != 0);
+			if (ebitmap_set_bit
+			    (destmap, module->map[i][j] - 1, 1) != 0) {
 
-					goto cleanup;
-				}
-				if (i == SYM_CLASSES &&
-				    largest_mapped_class_value <
-				    module->map[SYM_CLASSES][j]) {
-					largest_mapped_class_value =
-					    module->map[SYM_CLASSES][j];
-				}
+				goto cleanup;
+			}
+			if (i == SYM_CLASSES &&
+			    largest_mapped_class_value <
+			    module->map[SYM_CLASSES][j]) {
+				largest_mapped_class_value =
+				    module->map[SYM_CLASSES][j];
 			}
 		}
 	}
@@ -1710,9 +1692,8 @@ static int copy_scope_index(scope_index_t * src, scope_index_t * dest,
 		ebitmap_t *srcmap = src->class_perms_map + i;
 		ebitmap_t *destmap =
 		    dest->class_perms_map + module->map[SYM_CLASSES][i] - 1;
-		ebitmap_for_each_bit(srcmap, node, j) {
-			if (ebitmap_node_get_bit(node, j) &&
-			    ebitmap_set_bit(destmap, module->perm_map[i][j] - 1,
+		ebitmap_for_each_positive_bit(srcmap, node, j) {
+			if (ebitmap_set_bit(destmap, module->perm_map[i][j] - 1,
 					    1)) {
 				goto cleanup;
 			}
@@ -2012,11 +1993,7 @@ static int is_decl_requires_met(link_state_t * state,
 			continue;
 		}
 		bitmap = &decl->required.scope[i];
-		ebitmap_for_each_bit(bitmap, node, j) {
-			if (!ebitmap_node_get_bit(node, j)) {
-				continue;
-			}
-
+		ebitmap_for_each_positive_bit(bitmap, node, j) {
 			/* check base's scope table */
 			id = pol->sym_val_to_name[i][j];
 			if (!is_id_enabled(id, state->base, i)) {
@@ -2033,16 +2010,13 @@ static int is_decl_requires_met(link_state_t * state,
 	for (i = 0; i < decl->required.class_perms_len; i++) {
 
 		bitmap = decl->required.class_perms_map + i;
-		ebitmap_for_each_bit(bitmap, node, j) {
+		ebitmap_for_each_positive_bit(bitmap, node, j) {
 			struct find_perm_arg fparg;
 			class_datum_t *cladatum;
 			uint32_t perm_value = j + 1;
 			int rc;
 			scope_datum_t *scope;
 
-			if (!ebitmap_node_get_bit(node, j)) {
-				continue;
-			}
 			id = pol->p_class_val_to_name[i];
 			cladatum = pol->class_val_to_struct[i];
 
@@ -2439,32 +2413,30 @@ static int expand_role_attributes(hashtab_key_t key, hashtab_datum_t datum,
 		INFO(state->handle, "expanding role attribute %s", id);
 
 restart:
-	ebitmap_for_each_bit(&role->roles, rnode, i) {
-		if (ebitmap_node_get_bit(rnode, i)) {
-			sub_attr = state->base->role_val_to_struct[i];
-			if (sub_attr->flavor != ROLE_ATTRIB)
-				continue;
-			
-			/* remove the sub role attribute from the parent
-			 * role attribute's roles ebitmap */
-			if (ebitmap_set_bit(&role->roles, i, 0))
-				return -1;
+	ebitmap_for_each_positive_bit(&role->roles, rnode, i) {
+		sub_attr = state->base->role_val_to_struct[i];
+		if (sub_attr->flavor != ROLE_ATTRIB)
+			continue;
 
-			/* loop dependency of role attributes */
-			if (sub_attr->s.value == role->s.value)
-				continue;
+		/* remove the sub role attribute from the parent
+		 * role attribute's roles ebitmap */
+		if (ebitmap_set_bit(&role->roles, i, 0))
+			return -1;
 
-			/* now go on to expand a sub role attribute
-			 * by escalating its roles ebitmap */
-			if (ebitmap_union(&role->roles, &sub_attr->roles)) {
-				ERR(state->handle, "Out of memory!");
-				return -1;
-			}
-			
-			/* sub_attr->roles may contain other role attributes,
-			 * re-scan the parent role attribute's roles ebitmap */
-			goto restart;
+		/* loop dependency of role attributes */
+		if (sub_attr->s.value == role->s.value)
+			continue;
+
+		/* now go on to expand a sub role attribute
+		 * by escalating its roles ebitmap */
+		if (ebitmap_union(&role->roles, &sub_attr->roles)) {
+			ERR(state->handle, "Out of memory!");
+			return -1;
 		}
+
+		/* sub_attr->roles may contain other role attributes,
+		 * re-scan the parent role attribute's roles ebitmap */
+		goto restart;
 	}
 
 	return 0;
