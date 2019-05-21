@@ -221,8 +221,8 @@ int cil_verify_constraint_leaf_expr_syntax(enum cil_flavor l_flavor, enum cil_fl
 			cil_log(CIL_ERR, "l1, l2, h1, and h2 cannot be used on the left side with a string or list on the right side\n");
 			goto exit;
 		} else if (l_flavor == CIL_CONS_U3 || l_flavor == CIL_CONS_R3 || l_flavor == CIL_CONS_T3) {
-			if (expr_flavor != CIL_MLSVALIDATETRANS) {
-				cil_log(CIL_ERR, "u3, r3, and t3 can only be used with mlsvalidatetrans rules\n");
+			if (expr_flavor != CIL_VALIDATETRANS && expr_flavor != CIL_MLSVALIDATETRANS) {
+				cil_log(CIL_ERR, "u3, r3, and t3 can only be used with (mls)validatetrans rules\n");
 				goto exit;
 			}
 		}
