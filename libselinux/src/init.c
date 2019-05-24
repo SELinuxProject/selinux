@@ -83,8 +83,8 @@ hidden_def(selinuxfs_exists)
 
 static void init_selinuxmnt(void)
 {
-	char *buf=NULL, *p;
-	FILE *fp=NULL;
+	char *buf = NULL, *p;
+	FILE *fp = NULL;
 	size_t len;
 	ssize_t num;
 

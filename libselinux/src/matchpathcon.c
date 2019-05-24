@@ -414,7 +414,7 @@ int realpath_not_final(const char *name, char *resolved_path)
 	if (len + strlen(last_component) + 2 > PATH_MAX) {
 		myprintf("symlink_realpath(%s) failed: Filename too long \n",
 			name);
-		errno=ENAMETOOLONG;
+		errno = ENAMETOOLONG;
 		rc = -1;
 		goto out;
 	}

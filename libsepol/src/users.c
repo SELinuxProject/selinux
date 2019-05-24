@@ -37,12 +37,10 @@ static int user_to_record(sepol_handle_t * handle,
 		goto err;
 
 	/* Extract roles */
-	ebitmap_for_each_bit(roles, rnode, bit) {
-		if (ebitmap_node_get_bit(rnode, bit)) {
-			char *role = policydb->p_role_val_to_name[bit];
-			if (sepol_user_add_role(handle, tmp_record, role) < 0)
-				goto err;
-		}
+	ebitmap_for_each_positive_bit(roles, rnode, bit) {
+		char *role = policydb->p_role_val_to_name[bit];
+		if (sepol_user_add_role(handle, tmp_record, role) < 0)
+			goto err;
 	}
 
 	/* Extract MLS info */
@@ -170,12 +168,9 @@ int sepol_user_modify(sepol_handle_t * handle,
 		}
 
 		/* Set the role and every role it dominates */
-		ebitmap_for_each_bit(&roldatum->dominates, rnode, bit) {
-			if (ebitmap_node_get_bit(rnode, bit)) {
-				if (ebitmap_set_bit
-				    (&(usrdatum->roles.roles), bit, 1))
-					goto omem;
-			}
+		ebitmap_for_each_positive_bit(&roldatum->dominates, rnode, bit) {
+			if (ebitmap_set_bit(&(usrdatum->roles.roles), bit, 1))
+				goto omem;
 		}
 	}
 

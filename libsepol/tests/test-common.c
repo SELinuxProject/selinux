@@ -197,20 +197,19 @@ role_datum_t *test_role_type_set(policydb_t * p, const char *id, avrule_decl_t *
 
 	CU_ASSERT_FATAL(role != NULL);
 
-	ebitmap_for_each_bit(&role->types.types, tnode, i) {
-		if (ebitmap_node_get_bit(tnode, i)) {
-			new = 0;
-			for (j = 0; j < len; j++) {
-				if (strcmp(p->sym_val_to_name[SYM_TYPES][i], types[j]) == 0) {
-					found++;
-					new = 1;
-				}
+	ebitmap_for_each_positive_bit(&role->types.types, tnode, i) {
+		new = 0;
+		for (j = 0; j < len; j++) {
+			if (strcmp(p->sym_val_to_name[SYM_TYPES][i], types[j]) == 0) {
+				found++;
+				new = 1;
 			}
-			if (new == 0) {
-				printf("\nRole %s had type %s not in types array\n", id, p->sym_val_to_name[SYM_TYPES][i]);
-			}
-			CU_ASSERT(new == 1);
 		}
+		if (new == 0) {
+			printf("\nRole %s had type %s not in types array\n",
+			       id, p->sym_val_to_name[SYM_TYPES][i]);
+		}
+		CU_ASSERT(new == 1);
 	}
 	CU_ASSERT(found == len);
 	if (found != len)
@@ -240,20 +239,19 @@ void test_attr_types(policydb_t * p, const char *id, avrule_decl_t * decl, const
 	CU_ASSERT(attr->flavor == TYPE_ATTRIB);
 	CU_ASSERT(attr->primary == 1);
 
-	ebitmap_for_each_bit(&attr->types, tnode, i) {
-		if (ebitmap_node_get_bit(tnode, i)) {
-			new = 0;
-			for (j = 0; j < len; j++) {
-				if (strcmp(p->sym_val_to_name[SYM_TYPES][i], types[j]) == 0) {
-					found++;
-					new = 1;
-				}
+	ebitmap_for_each_positive_bit(&attr->types, tnode, i) {
+		new = 0;
+		for (j = 0; j < len; j++) {
+			if (strcmp(p->sym_val_to_name[SYM_TYPES][i], types[j]) == 0) {
+				found++;
+				new = 1;
 			}
-			if (new == 0) {
-				printf("\nattr %s had type %s not in types array\n", id, p->sym_val_to_name[SYM_TYPES][i]);
-			}
-			CU_ASSERT(new == 1);
 		}
+		if (new == 0) {
+			printf("\nattr %s had type %s not in types array\n",
+			       id, p->sym_val_to_name[SYM_TYPES][i]);
+		}
+		CU_ASSERT(new == 1);
 	}
 	CU_ASSERT(found == len);
 	if (found != len)

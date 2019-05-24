@@ -635,10 +635,10 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 		dst = ptr;
 		while (*dst && isspace(*dst))
 			dst++;
-		ptr=dst;
+		ptr = dst;
 		while (*ptr && ! isspace(*ptr))
 			ptr++;
-		*ptr='\0';
+		*ptr = '\0';
 		if (! *dst)
 			continue;
 
@@ -647,11 +647,11 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 			goto err;
 		memset(sub, 0, sizeof(*sub));
 
-		sub->src=strdup(src);
+		sub->src = strdup(src);
 		if (! sub->src)
 			goto err;
 
-		sub->dst=strdup(dst);
+		sub->dst = strdup(dst);
 		if (! sub->dst)
 			goto err;
 

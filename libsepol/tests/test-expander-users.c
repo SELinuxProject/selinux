@@ -45,15 +45,13 @@ static void check_user_roles(policydb_t * p, const char *user_name, const char *
 	}
 	found = calloc(num_roles, sizeof(unsigned char));
 	CU_ASSERT_FATAL(found != NULL);
-	ebitmap_for_each_bit(&user->roles.roles, tnode, i) {
-		if (ebitmap_node_get_bit(tnode, i)) {
-			extra++;
-			for (j = 0; j < num_roles; j++) {
-				if (strcmp(role_names[j], p->p_role_val_to_name[i]) == 0) {
-					extra--;
-					found[j] += 1;
-					break;
-				}
+	ebitmap_for_each_positive_bit(&user->roles.roles, tnode, i) {
+		extra++;
+		for (j = 0; j < num_roles; j++) {
+			if (strcmp(role_names[j], p->p_role_val_to_name[i]) == 0) {
+				extra--;
+				found[j] += 1;
+				break;
 			}
 		}
 	}

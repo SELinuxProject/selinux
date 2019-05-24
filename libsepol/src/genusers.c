@@ -169,15 +169,14 @@ static int load_users(struct policydb *policydb, const char *path)
 				continue;
 			}
 			/* Set the role and every role it dominates */
-			ebitmap_for_each_bit(&roldatum->dominates, rnode, bit) {
-				if (ebitmap_node_get_bit(rnode, bit))
-					if (ebitmap_set_bit
-					    (&usrdatum->roles.roles, bit, 1)) {
-						ERR(NULL, "out of memory");
-						free(buffer);
-						fclose(fp);
-						return -1;
-					}
+			ebitmap_for_each_positive_bit(&roldatum->dominates, rnode, bit) {
+				if (ebitmap_set_bit
+				    (&usrdatum->roles.roles, bit, 1)) {
+					ERR(NULL, "out of memory");
+					free(buffer);
+					fclose(fp);
+					return -1;
+				}
 			}
 		} while (islist);
 		if (oldc == 0)

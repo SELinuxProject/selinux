@@ -1210,10 +1210,7 @@ int expand_attrib(void)
 		flags = TYPE_FLAGS_EXPAND_ATTR_FALSE;
 	}
 
-	ebitmap_for_each_bit(&attrs, node, i) {
-		if (!ebitmap_node_get_bit(node, i)){
-			continue;
-		}
+	ebitmap_for_each_positive_bit(&attrs, node, i) {
 		attr = hashtab_search(policydbp->p_types.table,
 				policydbp->sym_val_to_name[SYM_TYPES][i]);
 		attr->flags |= flags;
@@ -1673,19 +1670,17 @@ int define_compute_type_helper(int which, avrule_t ** rule)
 	}
 	free(id);
 
-	ebitmap_for_each_bit(&tclasses, node, i) {
-		if (ebitmap_node_get_bit(node, i)) {
-			perm = malloc(sizeof(class_perm_node_t));
-			if (!perm) {
-				yyerror("out of memory");
-				goto bad;
-			}
-			class_perm_node_init(perm);
-			perm->tclass = i + 1;
-			perm->data = datum->s.value;
-			perm->next = avrule->perms;
-			avrule->perms = perm;
+	ebitmap_for_each_positive_bit(&tclasses, node, i) {
+		perm = malloc(sizeof(class_perm_node_t));
+		if (!perm) {
+			yyerror("out of memory");
+			goto bad;
 		}
+		class_perm_node_init(perm);
+		perm->tclass = i + 1;
+		perm->data = datum->s.value;
+		perm->next = avrule->perms;
+		avrule->perms = perm;
 	}
 	ebitmap_destroy(&tclasses);
 
@@ -2101,9 +2096,7 @@ int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 
 	perms = NULL;
 	id = queue_head(id_queue);
-	ebitmap_for_each_bit(&tclasses, node, i) {
-		if (!ebitmap_node_get_bit(node, i))
-			continue;
+	ebitmap_for_each_positive_bit(&tclasses, node, i) {
 		cur_perms =
 		    (class_perm_node_t *) malloc(sizeof(class_perm_node_t));
 		if (!cur_perms) {
@@ -2565,9 +2558,7 @@ int define_te_avtab_helper(int which, avrule_t ** rule)
 		goto out;
 
 	perms = NULL;
-	ebitmap_for_each_bit(&tclasses, node, i) {
-		if (!ebitmap_node_get_bit(node, i))
-			continue;
+	ebitmap_for_each_positive_bit(&tclasses, node, i) {
 		cur_perms =
 		    (class_perm_node_t *) malloc(sizeof(class_perm_node_t));
 		if (!cur_perms) {
@@ -2586,9 +2577,7 @@ int define_te_avtab_helper(int which, avrule_t ** rule)
 
 	while ((id = queue_remove(id_queue))) {
 		cur_perms = perms;
-		ebitmap_for_each_bit(&tclasses, node, i) {
-			if (!ebitmap_node_get_bit(node, i))
-				continue;
+		ebitmap_for_each_positive_bit(&tclasses, node, i) {
 			cladatum = policydbp->class_val_to_struct[i];
 
 			if (strcmp(id, "*") == 0) {
@@ -2930,17 +2919,13 @@ static int dominate_role_recheck(hashtab_key_t key __attribute__ ((unused)),
 			return -1;
 		}
 		/* raise types and dominates from dominated role */
-		ebitmap_for_each_bit(&rdp->dominates, node, i) {
-			if (ebitmap_node_get_bit(node, i))
-				if (ebitmap_set_bit
-				    (&rdatum->dominates, i, TRUE))
-					goto oom;
+		ebitmap_for_each_positive_bit(&rdp->dominates, node, i) {
+			if (ebitmap_set_bit(&rdatum->dominates, i, TRUE))
+				goto oom;
 		}
-		ebitmap_for_each_bit(&types, node, i) {
-			if (ebitmap_node_get_bit(node, i))
-				if (ebitmap_set_bit
-				    (&rdatum->types.types, i, TRUE))
-					goto oom;
+		ebitmap_for_each_positive_bit(&types, node, i) {
+			if (ebitmap_set_bit(&rdatum->types.types, i, TRUE))
+				goto oom;
 		}
 		ebitmap_destroy(&types);
 	}
@@ -3018,20 +3003,17 @@ role_datum_t *define_role_dom(role_datum_t * r)
 	if (r) {
 		ebitmap_t types;
 		ebitmap_init(&types);
-		ebitmap_for_each_bit(&r->dominates, node, i) {
-			if (ebitmap_node_get_bit(node, i))
-				if (ebitmap_set_bit(&role->dominates, i, TRUE))
-					goto oom;
+		ebitmap_for_each_positive_bit(&r->dominates, node, i) {
+			if (ebitmap_set_bit(&role->dominates, i, TRUE))
+				goto oom;
 		}
 		if (type_set_expand(&r->types, &types, policydbp, 1)) {
 			ebitmap_destroy(&types);
 			return NULL;
 		}
-		ebitmap_for_each_bit(&types, node, i) {
-			if (ebitmap_node_get_bit(node, i))
-				if (ebitmap_set_bit
-				    (&role->types.types, i, TRUE))
-					goto oom;
+		ebitmap_for_each_positive_bit(&types, node, i) {
+			if (ebitmap_set_bit(&role->types.types, i, TRUE))
+				goto oom;
 		}
 		ebitmap_destroy(&types);
 		if (!r->s.value) {
@@ -3214,15 +3196,9 @@ int define_role_trans(int class_specified)
 	if (type_set_expand(&types, &e_types, policydbp, 1))
 		goto bad;
 
-	ebitmap_for_each_bit(&e_roles, rnode, i) {
-		if (!ebitmap_node_get_bit(rnode, i))
-			continue;
-		ebitmap_for_each_bit(&e_types, tnode, j) {
-			if (!ebitmap_node_get_bit(tnode, j))
-				continue;
-			ebitmap_for_each_bit(&e_classes, cnode, k) {
-				if (!ebitmap_node_get_bit(cnode, k))
-					continue;
+	ebitmap_for_each_positive_bit(&e_roles, rnode, i) {
+		ebitmap_for_each_positive_bit(&e_types, tnode, j) {
+			ebitmap_for_each_positive_bit(&e_classes, cnode, k) {
 				for (tr = policydbp->role_tr; tr;
 				     tr = tr->next) {
 					if (tr->role == (i + 1) &&
@@ -3410,16 +3386,9 @@ int define_filename_trans(void)
 	if (type_set_expand(&ttypes, &e_ttypes, policydbp, 1))
 		goto bad;
 
-	ebitmap_for_each_bit(&e_tclasses, cnode, c) {
-		if (!ebitmap_node_get_bit(cnode, c))
-			continue;
-		ebitmap_for_each_bit(&e_stypes, snode, s) {
-			if (!ebitmap_node_get_bit(snode, s))
-				continue;
-			ebitmap_for_each_bit(&e_ttypes, tnode, t) {
-				if (!ebitmap_node_get_bit(tnode, t))
-					continue;
-
+	ebitmap_for_each_positive_bit(&e_tclasses, cnode, c) {
+		ebitmap_for_each_positive_bit(&e_stypes, snode, s) {
+			ebitmap_for_each_positive_bit(&e_ttypes, tnode, t) {
 				ft = calloc(1, sizeof(*ft));
 				if (!ft) {
 					yyerror("out of memory");
@@ -3652,39 +3621,36 @@ int define_constraint(constraint_expr_t * expr)
 	}
 
 	while ((id = queue_remove(id_queue))) {
-		ebitmap_for_each_bit(&classmap, enode, i) {
-			if (ebitmap_node_get_bit(enode, i)) {
-				cladatum = policydbp->class_val_to_struct[i];
-				node = cladatum->constraints;
+		ebitmap_for_each_positive_bit(&classmap, enode, i) {
+			cladatum = policydbp->class_val_to_struct[i];
+			node = cladatum->constraints;
 
-				perdatum =
-				    (perm_datum_t *) hashtab_search(cladatum->
-								    permissions.
-								    table,
-								    (hashtab_key_t)
-								    id);
-				if (!perdatum) {
-					if (cladatum->comdatum) {
-						perdatum =
-						    (perm_datum_t *)
-						    hashtab_search(cladatum->
-								   comdatum->
-								   permissions.
-								   table,
-								   (hashtab_key_t)
-								   id);
-					}
-					if (!perdatum) {
-						yyerror2("permission %s is not"
-							 " defined", id);
-						free(id);
-						ebitmap_destroy(&classmap);
-						return -1;
-					}
+			perdatum =
+			    (perm_datum_t *) hashtab_search(cladatum->
+							    permissions.
+							    table,
+							    (hashtab_key_t)
+							    id);
+			if (!perdatum) {
+				if (cladatum->comdatum) {
+					perdatum =
+					    (perm_datum_t *)
+					    hashtab_search(cladatum->
+							   comdatum->
+							   permissions.
+							   table,
+							   (hashtab_key_t)
+							   id);
 				}
-				node->permissions |=
-				    (1 << (perdatum->s.value - 1));
+				if (!perdatum) {
+					yyerror2("permission %s is not"
+						 " defined", id);
+					free(id);
+					ebitmap_destroy(&classmap);
+					return -1;
+				}
 			}
+			node->permissions |= (1 << (perdatum->s.value - 1));
 		}
 		free(id);
 	}
@@ -4179,10 +4145,9 @@ static int set_user_roles(role_set_t * set, char *id)
 	}
 
 	/* set the role and every role it dominates */
-	ebitmap_for_each_bit(&r->dominates, node, i) {
-		if (ebitmap_node_get_bit(node, i))
-			if (ebitmap_set_bit(&set->roles, i, TRUE))
-				goto oom;
+	ebitmap_for_each_positive_bit(&r->dominates, node, i) {
+		if (ebitmap_set_bit(&set->roles, i, TRUE))
+			goto oom;
 	}
 	free(id);
 	return 0;

@@ -4245,10 +4245,9 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 			if (r_policyvers >= POLICYDB_VERSION_AVTAB) {
 				if (ebitmap_read(&p->type_attr_map[i], fp))
 					goto bad;
-				ebitmap_for_each_bit(&p->type_attr_map[i],
-						     tnode, j) {
-					if (!ebitmap_node_get_bit(tnode, j)
-					    || i == j)
+				ebitmap_for_each_positive_bit(&p->type_attr_map[i],
+							 tnode, j) {
+					if (i == j)
 						continue;
 
 					if (j >= p->p_types.nprim)

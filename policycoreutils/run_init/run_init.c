@@ -159,6 +159,14 @@ int authenticate_via_pam(const struct passwd *p_passwd_line)
 #include <shadow.h>		/* for shadow passwd functions */
 #include <string.h>		/* for strlen(), memset() */
 
+/*
+ * crypt() may not be defined in unistd.h; see:
+ *   http://man7.org/linux/man-pages/man3/crypt.3.html#NOTES
+ */
+#if !defined(_XOPEN_CRYPT) || _XOPEN_CRYPT == -1
+#include <crypt.h>
+#endif
+
 #define PASSWORD_PROMPT _("Password:")	/* prompt for getpass() */
 
 int authenticate_via_shadow_passwd(const struct passwd *);

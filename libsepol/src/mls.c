@@ -289,17 +289,15 @@ int mls_context_isvalid(const policydb_t * p, const context_struct_t * c)
 		if (!levdatum)
 			return 0;
 
-		ebitmap_for_each_bit(&c->range.level[l].cat, cnode, i) {
-			if (ebitmap_node_get_bit(cnode, i)) {
-				if (i > p->p_cats.nprim)
-					return 0;
-				if (!ebitmap_get_bit(&levdatum->level->cat, i))
-					/*
-					 * Category may not be associated with
-					 * sensitivity in low level.
-					 */
-					return 0;
-			}
+		ebitmap_for_each_positive_bit(&c->range.level[l].cat, cnode, i) {
+			if (i > p->p_cats.nprim)
+				return 0;
+			if (!ebitmap_get_bit(&levdatum->level->cat, i))
+				/*
+				 * Category may not be associated with
+				 * sensitivity in low level.
+				 */
+				return 0;
 		}
 	}
 
@@ -579,23 +577,21 @@ int mls_convert_context(policydb_t * oldp,
 		c->range.level[l].sens = levdatum->level->sens;
 
 		ebitmap_init(&bitmap);
-		ebitmap_for_each_bit(&c->range.level[l].cat, cnode, i) {
-			if (ebitmap_node_get_bit(cnode, i)) {
-				int rc;
+		ebitmap_for_each_positive_bit(&c->range.level[l].cat, cnode, i) {
+			int rc;
 
-				catdatum =
-				    (cat_datum_t *) hashtab_search(newp->p_cats.
-								   table,
-								   oldp->
-								   p_cat_val_to_name
-								   [i]);
-				if (!catdatum)
-					return -EINVAL;
-				rc = ebitmap_set_bit(&bitmap,
-						     catdatum->s.value - 1, 1);
-				if (rc)
-					return rc;
-			}
+			catdatum =
+			    (cat_datum_t *) hashtab_search(newp->p_cats.
+							   table,
+							   oldp->
+							   p_cat_val_to_name
+							   [i]);
+			if (!catdatum)
+				return -EINVAL;
+			rc = ebitmap_set_bit(&bitmap,
+					     catdatum->s.value - 1, 1);
+			if (rc)
+				return rc;
 		}
 		ebitmap_destroy(&c->range.level[l].cat);
 		c->range.level[l].cat = bitmap;

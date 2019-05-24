@@ -25,7 +25,7 @@ static int printmatchpathcon(const char *path, int header, int mode)
 	int rc = matchpathcon(path, mode, &buf);
 	if (rc < 0) {
 		if (errno == ENOENT) {
-			buf=strdup("<<none>>");
+			buf = strdup("<<none>>");
 		} else {
 			fprintf(stderr, "matchpathcon(%s) failed: %s\n", path,
 				strerror(errno));

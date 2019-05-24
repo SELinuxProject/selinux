@@ -825,15 +825,13 @@ static void display_policycaps(policydb_t * p, FILE * fp)
 	unsigned int i;
 
 	fprintf(fp, "policy capabilities:\n");
-	ebitmap_for_each_bit(&p->policycaps, node, i) {
-		if (ebitmap_node_get_bit(node, i)) {
-			capname = sepol_polcap_getname(i);
-			if (capname == NULL) {
-				snprintf(buf, sizeof(buf), "unknown (%d)", i);
-				capname = buf;
-			}
-			fprintf(fp, "\t%s\n", capname);
+	ebitmap_for_each_positive_bit(&p->policycaps, node, i) {
+		capname = sepol_polcap_getname(i);
+		if (capname == NULL) {
+			snprintf(buf, sizeof(buf), "unknown (%d)", i);
+			capname = buf;
 		}
+		fprintf(fp, "\t%s\n", capname);
 	}
 }
 

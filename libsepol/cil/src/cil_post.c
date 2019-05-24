@@ -1654,12 +1654,8 @@ static int __cil_post_db_roletype_helper(struct cil_tree_node *node, uint32_t *f
 			ebitmap_node_t *rnode;
 			unsigned int i;
 	
-			ebitmap_for_each_bit(attr->roles, rnode, i) {
+			ebitmap_for_each_positive_bit(attr->roles, rnode, i) {
 				struct cil_role *role = NULL;
-
-				if (!ebitmap_get_bit(attr->roles, i)) {
-					continue;
-				}
 
 				role = db->val_to_role[i];
 
@@ -1751,11 +1747,7 @@ static int __cil_post_db_userrole_helper(struct cil_tree_node *node, uint32_t *f
 		if (user_node->flavor == CIL_USERATTRIBUTE) {
 			u_attr = userrole->user;
 
-			ebitmap_for_each_bit(u_attr->users, unode, i) {
-				if (!ebitmap_get_bit(u_attr->users, i)) {
-					continue;
-				}
-
+			ebitmap_for_each_positive_bit(u_attr->users, unode, i) {
 				user = db->val_to_user[i];
 
 				rc = __cil_user_assign_roles(user, role_datum);

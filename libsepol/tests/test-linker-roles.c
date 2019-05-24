@@ -58,11 +58,9 @@ static void only_dominates_self(policydb_t * p, role_datum_t * role)
 	unsigned int i;
 	int found = 0;
 
-	ebitmap_for_each_bit(&role->dominates, tnode, i) {
-		if (ebitmap_node_get_bit(tnode, i)) {
-			found++;
-			CU_ASSERT(i == role->s.value - 1);
-		}
+	ebitmap_for_each_positive_bit(&role->dominates, tnode, i) {
+		found++;
+		CU_ASSERT(i == role->s.value - 1);
 	}
 	CU_ASSERT(found == 1);
 }
