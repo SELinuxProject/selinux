@@ -36,17 +36,13 @@
 
 #include "callbacks.h"
 #include "selinux_internal.h"
-
-#define RESTORECON_LAST "security.restorecon_last"
-
-#define SYS_PATH "/sys"
-#define SYS_PREFIX SYS_PATH "/"
+#include "label_file.h"
+#include "sha1.h"
 
 #define STAR_COUNT 1024
 
 static struct selabel_handle *fc_sehandle = NULL;
-static unsigned char *fc_digest = NULL;
-static size_t fc_digest_len = 0;
+static bool selabel_no_digest;
 static char *rootpath = NULL;
 static int rootpathlen;
 
@@ -77,7 +73,6 @@ struct rest_flags {
 	bool mass_relabel;
 	bool set_specctx;
 	bool add_assoc;
-	bool ignore_digest;
 	bool recurse;
 	bool userealpath;
 	bool set_xdev;
@@ -299,57 +294,60 @@ static int add_xattr_entry(const char *directory, bool delete_nonmatch,
 			   bool delete_all)
 {
 	char *sha1_buf = NULL;
-	unsigned char *xattr_value = NULL;
-	ssize_t xattr_size;
-	size_t i;
+	size_t i, digest_len = 0;
 	int rc, digest_result;
 	struct dir_xattr *new_entry;
+	uint8_t *xattr_digest = NULL;
+	uint8_t *calculated_digest = NULL;
 
 	if (!directory) {
 		errno = EINVAL;
 		return -1;
 	}
 
-	xattr_value = malloc(fc_digest_len);
-	if (!xattr_value)
-		goto oom;
+	selabel_get_digests_all_partial_matches(fc_sehandle, directory,
+						&calculated_digest,
+						&xattr_digest, &digest_len);
 
-	xattr_size = getxattr(directory, RESTORECON_LAST, xattr_value,
-			      fc_digest_len);
-	if (xattr_size < 0) {
-		free(xattr_value);
+	if (!xattr_digest) {
+		free(calculated_digest);
 		return 1;
 	}
 
 	/* Convert entry to a hex encoded string. */
-	sha1_buf = malloc(xattr_size * 2 + 1);
+	sha1_buf = malloc(digest_len * 2 + 1);
 	if (!sha1_buf) {
-		free(xattr_value);
+		free(xattr_digest);
+		free(calculated_digest);
 		goto oom;
 	}
 
-	for (i = 0; i < (size_t)xattr_size; i++)
-		sprintf((&sha1_buf[i * 2]), "%02x", xattr_value[i]);
+	for (i = 0; i < digest_len; i++)
+		sprintf((&sha1_buf[i * 2]), "%02x", xattr_digest[i]);
 
-	rc = memcmp(fc_digest, xattr_value, fc_digest_len);
+	rc = memcmp(calculated_digest, xattr_digest, digest_len);
 	digest_result = rc ? NOMATCH : MATCH;
 
 	if ((delete_nonmatch && rc != 0) || delete_all) {
 		digest_result = rc ? DELETED_NOMATCH : DELETED_MATCH;
-		rc = removexattr(directory, RESTORECON_LAST);
+		rc = removexattr(directory, RESTORECON_PARTIAL_MATCH_DIGEST);
 		if (rc) {
 			selinux_log(SELINUX_ERROR,
 				  "Error: %s removing xattr \"%s\" from: %s\n",
-				  strerror(errno), RESTORECON_LAST, directory);
+				  strerror(errno),
+				  RESTORECON_PARTIAL_MATCH_DIGEST, directory);
 			digest_result = ERROR;
 		}
 	}
-	free(xattr_value);
+	free(xattr_digest);
+	free(calculated_digest);
 
 	/* Now add entries to link list. */
 	new_entry = malloc(sizeof(struct dir_xattr));
-	if (!new_entry)
+	if (!new_entry) {
+		free(sha1_buf);
 		goto oom;
+	}
 	new_entry->next = NULL;
 
 	new_entry->directory = strdup(directory);
@@ -736,18 +734,78 @@ err:
 	goto out1;
 }
 
+struct dir_hash_node {
+	char *path;
+	uint8_t digest[SHA1_HASH_SIZE];
+	struct dir_hash_node *next;
+};
+/*
+ * Returns true if the digest of all partial matched contexts is the same as
+ * the one saved by setxattr. Otherwise returns false and constructs a
+ * dir_hash_node with the newly calculated digest.
+ */
+static bool check_context_match_for_dir(const char *pathname,
+					struct dir_hash_node **new_node,
+					int error)
+{
+	bool status;
+	size_t digest_len = 0;
+	uint8_t *read_digest = NULL;
+	uint8_t *calculated_digest = NULL;
+
+	if (!new_node)
+		return false;
+
+	*new_node = NULL;
+
+	/* status = true if digests match, false otherwise. */
+	status = selabel_get_digests_all_partial_matches(fc_sehandle, pathname,
+							 &calculated_digest,
+							 &read_digest,
+							 &digest_len);
+
+	if (status)
+		goto free;
+
+	/* Save digest of all matched contexts for the current directory. */
+	if (!error && calculated_digest) {
+		*new_node = calloc(1, sizeof(struct dir_hash_node));
+
+		if (!*new_node)
+			goto oom;
+
+		(*new_node)->path = strdup(pathname);
+
+		if (!(*new_node)->path) {
+			free(*new_node);
+			*new_node = NULL;
+			goto oom;
+		}
+		memcpy((*new_node)->digest, calculated_digest, digest_len);
+		(*new_node)->next = NULL;
+	}
+
+free:
+	free(calculated_digest);
+	free(read_digest);
+	return status;
+
+oom:
+	selinux_log(SELINUX_ERROR, "%s: Out of memory\n", __func__);
+	goto free;
+}
+
+
 /*
  * Public API
  */
 
 /* selinux_restorecon(3) - Main function that is responsible for labeling */
 int selinux_restorecon(const char *pathname_orig,
-				    unsigned int restorecon_flags)
+		       unsigned int restorecon_flags)
 {
 	struct rest_flags flags;
 
-	flags.ignore_digest = (restorecon_flags &
-		    SELINUX_RESTORECON_IGNORE_DIGEST) ? true : false;
 	flags.nochange = (restorecon_flags &
 		    SELINUX_RESTORECON_NOCHANGE) ? true : false;
 	flags.verbose = (restorecon_flags &
@@ -777,10 +835,10 @@ int selinux_restorecon(const char *pathname_orig,
 	flags.warnonnomatch = true;
 	ignore_mounts = (restorecon_flags &
 		   SELINUX_RESTORECON_IGNORE_MOUNTS) ? true : false;
+	bool ignore_digest = (restorecon_flags &
+		    SELINUX_RESTORECON_IGNORE_DIGEST) ? true : false;
+	bool setrestorecondigest = true;
 
-	bool issys;
-	bool setrestoreconlast = true; /* TRUE = set xattr RESTORECON_LAST
-					* FALSE = don't use xattr */
 	struct stat sb;
 	struct statfs sfsb;
 	FTS *fts;
@@ -788,9 +846,9 @@ int selinux_restorecon(const char *pathname_orig,
 	char *pathname = NULL, *pathdnamer = NULL, *pathdname, *pathbname;
 	char *paths[2] = { NULL, NULL };
 	int fts_flags, error, sverrno;
-	char *xattr_value = NULL;
-	ssize_t size;
 	dev_t dev_num = 0;
+	struct dir_hash_node *current = NULL;
+	struct dir_hash_node *head = NULL;
 
 	if (flags.verbose && flags.progress)
 		flags.verbose = false;
@@ -800,11 +858,13 @@ int selinux_restorecon(const char *pathname_orig,
 	if (!fc_sehandle)
 		return -1;
 
-	if (fc_digest_len) {
-		xattr_value = malloc(fc_digest_len);
-		if (!xattr_value)
-			return -1;
-	}
+	/*
+	 * If selabel_no_digest = true then no digest has been requested by
+	 * an external selabel_open(3) call.
+	 */
+	if (selabel_no_digest ||
+	    (restorecon_flags & SELINUX_RESTORECON_SKIP_DIGEST))
+		setrestorecondigest = false;
 
 	/*
 	 * Convert passed-in pathname to canonical pathname by resolving
@@ -853,13 +913,9 @@ int selinux_restorecon(const char *pathname_orig,
 	}
 
 	paths[0] = pathname;
-	issys = (!strcmp(pathname, SYS_PATH) ||
-			    !strncmp(pathname, SYS_PREFIX,
-			    sizeof(SYS_PREFIX) - 1)) ? true : false;
 
 	if (lstat(pathname, &sb) < 0) {
 		if (flags.ignore_noent && errno == ENOENT) {
-			free(xattr_value);
 			free(pathdnamer);
 			free(pathname);
 			return 0;
@@ -872,9 +928,9 @@ int selinux_restorecon(const char *pathname_orig,
 		}
 	}
 
-	/* Ignore restoreconlast if not a directory */
+	/* Skip digest if not a directory */
 	if ((sb.st_mode & S_IFDIR) != S_IFDIR)
-		setrestoreconlast = false;
+		setrestorecondigest = false;
 
 	if (!flags.recurse) {
 		if (check_excluded(pathname)) {
@@ -886,30 +942,19 @@ int selinux_restorecon(const char *pathname_orig,
 		goto cleanup;
 	}
 
-	/* Ignore restoreconlast on /sys */
-	if (issys)
-		setrestoreconlast = false;
-
-	/* Ignore restoreconlast on in-memory filesystems */
-	if (setrestoreconlast && statfs(pathname, &sfsb) == 0) {
-		if (sfsb.f_type == RAMFS_MAGIC || sfsb.f_type == TMPFS_MAGIC)
-			setrestoreconlast = false;
+	/* Obtain fs type */
+	if (statfs(pathname, &sfsb) < 0) {
+		selinux_log(SELINUX_ERROR,
+			    "statfs(%s) failed: %s\n",
+			    pathname, strerror(errno));
+		error = -1;
+		goto cleanup;
 	}
 
-	if (setrestoreconlast) {
-		size = getxattr(pathname, RESTORECON_LAST, xattr_value,
-							    fc_digest_len);
-
-		if (!flags.ignore_digest && (size_t)size == fc_digest_len &&
-			    memcmp(fc_digest, xattr_value, fc_digest_len)
-								    == 0) {
-			selinux_log(SELINUX_INFO,
-			    "Skipping restorecon as matching digest on: %s\n",
-				    pathname);
-			error = 0;
-			goto cleanup;
-		}
-	}
+	/* Skip digest on in-memory filesystems and /sys */
+	if (sfsb.f_type == RAMFS_MAGIC || sfsb.f_type == TMPFS_MAGIC ||
+	    sfsb.f_type == SYSFS_MAGIC)
+		setrestorecondigest = false;
 
 	if (flags.set_xdev)
 		fts_flags = FTS_PHYSICAL | FTS_NOCHDIR | FTS_XDEV;
@@ -973,8 +1018,9 @@ int selinux_restorecon(const char *pathname_orig,
 			fts_set(fts, ftsent, FTS_SKIP);
 			continue;
 		case FTS_D:
-			if (issys && !selabel_partial_match(fc_sehandle,
-					    ftsent->fts_path)) {
+			if (sfsb.f_type == SYSFS_MAGIC &&
+			    !selabel_partial_match(fc_sehandle,
+			    ftsent->fts_path)) {
 				fts_set(fts, ftsent, FTS_SKIP);
 				continue;
 			}
@@ -982,6 +1028,31 @@ int selinux_restorecon(const char *pathname_orig,
 			if (check_excluded(ftsent->fts_path)) {
 				fts_set(fts, ftsent, FTS_SKIP);
 				continue;
+			}
+
+			if (setrestorecondigest) {
+				struct dir_hash_node *new_node = NULL;
+
+				if (check_context_match_for_dir(ftsent->fts_path,
+								&new_node,
+								error) &&
+								!ignore_digest) {
+					selinux_log(SELINUX_INFO,
+						    "Skipping restorecon on directory(%s)\n",
+						    ftsent->fts_path);
+					fts_set(fts, ftsent, FTS_SKIP);
+					continue;
+				}
+
+				if (new_node && !error) {
+					if (!current) {
+						current = new_node;
+						head = current;
+					} else {
+						current->next = new_node;
+						current = current->next;
+					}
+				}
 			}
 			/* fall through */
 		default:
@@ -995,13 +1066,24 @@ int selinux_restorecon(const char *pathname_orig,
 		}
 	} while ((ftsent = fts_read(fts)) != NULL);
 
-	/* Labeling successful. Mark the top level directory as completed. */
-	if (setrestoreconlast && !flags.nochange && !error && fc_digest) {
-		error = setxattr(pathname, RESTORECON_LAST, fc_digest,
-						    fc_digest_len, 0);
-		if (!error && flags.verbose)
-			selinux_log(SELINUX_INFO,
-				   "Updated digest for: %s\n", pathname);
+	/*
+	 * Labeling successful. Write partial match digests for subdirectories.
+	 * TODO: Write digest upon FTS_DP if no error occurs in its descents.
+	 */
+	if (setrestorecondigest && !flags.nochange && !error) {
+		current = head;
+		while (current != NULL) {
+			if (setxattr(current->path,
+			    RESTORECON_PARTIAL_MATCH_DIGEST,
+			    current->digest,
+			    SHA1_HASH_SIZE, 0) < 0) {
+				selinux_log(SELINUX_ERROR,
+					    "setxattr failed: %s: %s\n",
+					    current->path,
+					    strerror(errno));
+			}
+			current = current->next;
+		}
 	}
 
 out:
@@ -1019,7 +1101,15 @@ cleanup:
 	}
 	free(pathdnamer);
 	free(pathname);
-	free(xattr_value);
+
+	current = head;
+	while (current != NULL) {
+		struct dir_hash_node *next = current->next;
+
+		free(current->path);
+		free(current);
+		current = next;
+	}
 	return error;
 
 oom:
@@ -1050,19 +1140,19 @@ fts_err:
 void selinux_restorecon_set_sehandle(struct selabel_handle *hndl)
 {
 	char **specfiles;
-	size_t num_specfiles;
+	unsigned char *fc_digest;
+	size_t num_specfiles, fc_digest_len;
 
 	fc_sehandle = (struct selabel_handle *) hndl;
 
-	/*
-	 * Read digest if requested in selabel_open(3) and set global params.
-	 */
+	/* Check if digest requested in selabel_open(3), if so use it. */
 	if (selabel_digest(fc_sehandle, &fc_digest, &fc_digest_len,
-				   &specfiles, &num_specfiles) < 0) {
-		fc_digest = NULL;
-		fc_digest_len = 0;
-	}
+				   &specfiles, &num_specfiles) < 0)
+		selabel_no_digest = true;
+	else
+		selabel_no_digest = false;
 }
+
 
 /*
  * selinux_restorecon_default_handle(3) is called to set the global restorecon
@@ -1085,6 +1175,7 @@ struct selabel_handle *selinux_restorecon_default_handle(void)
 		return NULL;
 	}
 
+	selabel_no_digest = false;
 	return sehandle;
 }
 
@@ -1134,9 +1225,11 @@ int selinux_restorecon_set_alt_rootpath(const char *alt_rootpath)
 	return 0;
 }
 
-/* selinux_restorecon_xattr(3) - Find RESTORECON_LAST entries. */
+/* selinux_restorecon_xattr(3)
+ * Find RESTORECON_PARTIAL_MATCH_DIGEST entries.
+ */
 int selinux_restorecon_xattr(const char *pathname, unsigned int xattr_flags,
-					    struct dir_xattr ***xattr_list)
+			     struct dir_xattr ***xattr_list)
 {
 	bool recurse = (xattr_flags &
 	    SELINUX_RESTORECON_XATTR_RECURSE) ? true : false;
@@ -1157,7 +1250,7 @@ int selinux_restorecon_xattr(const char *pathname, unsigned int xattr_flags,
 
 	__selinux_once(fc_once, restorecon_init);
 
-	if (!fc_sehandle || !fc_digest_len)
+	if (!fc_sehandle)
 		return -1;
 
 	if (lstat(pathname, &sb) < 0) {
