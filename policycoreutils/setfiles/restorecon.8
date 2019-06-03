@@ -100,7 +100,7 @@ section for further details.
 .B \-D
 Set or update any directory SHA1 digests. Use this option to
 enable usage of the
-.IR security.restorecon_last
+.IR security.sehash
 extended attribute.
 .TP
 .B \-m
@@ -184,10 +184,10 @@ option to
 .B restorecon
 will cause it to store a SHA1 digest of the default specfiles set in an extended
 attribute named
-.IR security.restorecon_last
-on the directory specified in each
+.IR security.sehash
+on each directory specified in
 .IR pathname \ ...
-once the relabeling has been completed successfully. This digest will be
+once the relabeling has been completed successfully. These digests will be
 checked should
 .B restorecon
 .B \-D
@@ -204,7 +204,7 @@ option will ignore the SHA1 digest from each directory specified in
 and provided the
 .B \-n
 option is NOT set and recursive mode is set, files will be relabeled as
-required with the digest then being updated provided there are no errors.
+required with the digests then being updated provided there are no errors.
 
 .SH "AUTHOR"
 This man page was written by Dan Walsh <dwalsh@redhat.com>.
