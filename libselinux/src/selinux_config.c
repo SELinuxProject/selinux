@@ -16,7 +16,6 @@
 #define SELINUXDEFAULT "targeted"
 #define SELINUXTYPETAG "SELINUXTYPE="
 #define SELINUXTAG "SELINUX="
-#define SETLOCALDEFS "SETLOCALDEFS="
 #define REQUIRESEUSERS "REQUIRESEUSERS="
 
 /* Indices for file paths arrays. */
@@ -28,31 +27,29 @@
 #define USER_CONTEXTS     5
 #define FAILSAFE_CONTEXT  6
 #define DEFAULT_TYPE      7
-#define BOOLEANS          8
-#define MEDIA_CONTEXTS    9
-#define REMOVABLE_CONTEXT 10
-#define CUSTOMIZABLE_TYPES    11
-#define USERS_DIR         12
-#define SEUSERS           13
-#define TRANSLATIONS      14
-#define NETFILTER_CONTEXTS    15
-#define FILE_CONTEXTS_HOMEDIR 16
-#define FILE_CONTEXTS_LOCAL 17
-#define SECURETTY_TYPES   18
-#define X_CONTEXTS        19
-#define COLORS            20
-#define VIRTUAL_DOMAIN    21
-#define VIRTUAL_IMAGE     22
-#define FILE_CONTEXT_SUBS 23
-#define SEPGSQL_CONTEXTS  24
-#define FILE_CONTEXT_SUBS_DIST 25
-#define LXC_CONTEXTS      26
-#define BOOLEAN_SUBS      27
-#define OPENSSH_CONTEXTS  28
-#define SYSTEMD_CONTEXTS  29
-#define SNAPPERD_CONTEXTS 30
-#define OPENRC_CONTEXTS   31
-#define NEL               32
+#define MEDIA_CONTEXTS    8
+#define REMOVABLE_CONTEXT 9
+#define CUSTOMIZABLE_TYPES    10
+#define SEUSERS           11
+#define TRANSLATIONS      12
+#define NETFILTER_CONTEXTS    13
+#define FILE_CONTEXTS_HOMEDIR 14
+#define FILE_CONTEXTS_LOCAL 15
+#define SECURETTY_TYPES   16
+#define X_CONTEXTS        17
+#define COLORS            18
+#define VIRTUAL_DOMAIN    19
+#define VIRTUAL_IMAGE     20
+#define FILE_CONTEXT_SUBS 21
+#define SEPGSQL_CONTEXTS  22
+#define FILE_CONTEXT_SUBS_DIST 23
+#define LXC_CONTEXTS      24
+#define BOOLEAN_SUBS      25
+#define OPENSSH_CONTEXTS  26
+#define SYSTEMD_CONTEXTS  27
+#define SNAPPERD_CONTEXTS 28
+#define OPENRC_CONTEXTS   29
+#define NEL               30
 
 /* Part of one-time lazy init */
 static pthread_once_t once = PTHREAD_ONCE_INIT;
@@ -192,10 +189,6 @@ static void init_selinux_config(void)
 				}
 				free(type);
 				continue;
-			} else if (!strncmp(buf_p, SETLOCALDEFS,
-					    sizeof(SETLOCALDEFS) - 1)) {
-				value = buf_p + sizeof(SETLOCALDEFS) - 1;
-				intptr = &load_setlocaldefs;
 			} else if (!strncmp(buf_p, REQUIRESEUSERS,
 					    sizeof(REQUIRESEUSERS) - 1)) {
 				value = buf_p + sizeof(REQUIRESEUSERS) - 1;
@@ -410,16 +403,18 @@ const char *selinux_user_contexts_path(void)
 
 hidden_def(selinux_user_contexts_path)
 
+/* Deprecated as local policy booleans no longer supported. */
 const char *selinux_booleans_path(void)
 {
-	return get_path(BOOLEANS);
+	return NULL;
 }
 
 hidden_def(selinux_booleans_path)
 
+/* Deprecated as no longer supported. */
 const char *selinux_users_path(void)
 {
-	return get_path(USERS_DIR);
+	return NULL;
 }
 
 hidden_def(selinux_users_path)

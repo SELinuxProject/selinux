@@ -110,7 +110,6 @@ hidden_proto(selinux_reset_config);
 
 hidden void flush_class_cache(void);
 
-extern int load_setlocaldefs hidden;
 extern int require_seusers hidden;
 extern int selinux_page_size hidden;
 
