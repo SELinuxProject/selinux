@@ -43,7 +43,7 @@
 #include <unistd.h>
 #include <CUnit/Basic.h>
 
-semanage_handle_t *sh = NULL;
+extern semanage_handle_t *sh;
 const char *rootpath = "./test-policy";
 const char *polpath = "./test-policy/store/";
 const char *readlockpath = "./test-policy/store/semanage.read.LOCK";

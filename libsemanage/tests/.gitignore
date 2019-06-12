@@ -1,1 +1,2 @@
 libsemanage-tests
+*.policy
