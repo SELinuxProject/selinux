@@ -26,6 +26,7 @@
 #include "test_fcontext.h"
 #include "test_iface.h"
 #include "test_ibendport.h"
+#include "test_node.h"
 
 #include <CUnit/Basic.h>
 #include <CUnit/Console.h>
@@ -69,6 +70,7 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(fcontext);
 	DECLARE_SUITE(iface);
 	DECLARE_SUITE(ibendport);
+	DECLARE_SUITE(node);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);
