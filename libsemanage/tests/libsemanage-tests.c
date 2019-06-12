@@ -24,6 +24,7 @@
 #include "test_handle.h"
 #include "test_bool.h"
 #include "test_fcontext.h"
+#include "test_iface.h"
 
 #include <CUnit/Basic.h>
 #include <CUnit/Console.h>
@@ -65,6 +66,7 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(handle);
 	DECLARE_SUITE(bool);
 	DECLARE_SUITE(fcontext);
+	DECLARE_SUITE(iface);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);
