@@ -1134,13 +1134,13 @@ int hidden sepol_compute_av_reason(sepol_security_id_t ssid,
 
 	scontext = sepol_sidtab_search(sidtab, ssid);
 	if (!scontext) {
-		ERR(NULL, "unrecognized SID %d", ssid);
+		ERR(NULL, "unrecognized source SID %d", ssid);
 		rc = -EINVAL;
 		goto out;
 	}
 	tcontext = sepol_sidtab_search(sidtab, tsid);
 	if (!tcontext) {
-		ERR(NULL, "unrecognized SID %d", tsid);
+		ERR(NULL, "unrecognized target SID %d", tsid);
 		rc = -EINVAL;
 		goto out;
 	}
@@ -1170,13 +1170,13 @@ int hidden sepol_compute_av_reason_buffer(sepol_security_id_t ssid,
 
 	scontext = sepol_sidtab_search(sidtab, ssid);
 	if (!scontext) {
-		ERR(NULL, "unrecognized SID %d", ssid);
+		ERR(NULL, "unrecognized source SID %d", ssid);
 		rc = -EINVAL;
 		goto out;
 	}
 	tcontext = sepol_sidtab_search(sidtab, tsid);
 	if (!tcontext) {
-		ERR(NULL, "unrecognized SID %d", tsid);
+		ERR(NULL, "unrecognized target SID %d", tsid);
 		rc = -EINVAL;
 		goto out;
 	}
