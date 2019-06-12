@@ -28,6 +28,7 @@
 #include "test_ibendport.h"
 #include "test_node.h"
 #include "test_port.h"
+#include "test_user.h"
 
 #include <CUnit/Basic.h>
 #include <CUnit/Console.h>
@@ -73,6 +74,7 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(ibendport);
 	DECLARE_SUITE(node);
 	DECLARE_SUITE(port);
+	DECLARE_SUITE(user);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);
