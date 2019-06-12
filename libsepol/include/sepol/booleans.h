@@ -26,7 +26,7 @@ extern int sepol_genbools(void *data, size_t len, const char *boolpath);
    Returns 0 upon success or -1 otherwise. */
 extern int sepol_genbools_array(void *data, size_t len,
 				char **names, int *values, int nel);
-/*---------------end compatbility------------*/
+/*---------------end compatibility------------*/
 
 /* Set the specified boolean */
 extern int sepol_bool_set(sepol_handle_t * handle,
