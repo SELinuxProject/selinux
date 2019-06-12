@@ -24,6 +24,9 @@
 /* context_record.h */
 void test_semanage_context(void);
 
+/* debug.h */
+void test_debug(void);
+
 extern semanage_handle_t *sh;
 
 int other_test_init(void)
@@ -39,6 +42,7 @@ int other_test_cleanup(void)
 int other_add_tests(CU_pSuite suite)
 {
 	CU_add_test(suite, "semanage_context", test_semanage_context);
+	CU_add_test(suite, "debug", test_debug);
 
 	return 0;
 }
@@ -94,4 +98,23 @@ void test_semanage_context(void)
 	semanage_context_free(con);
 	semanage_context_free(con_clone);
 	cleanup_handle(SH_CONNECT);
+}
+
+/* Function semanage_msg_default_handler */
+void test_debug(void)
+{
+	semanage_module_info_t *modinfo = NULL;
+
+	/* setup */
+	sh = semanage_handle_create();
+	CU_ASSERT_PTR_NOT_NULL(sh);
+	CU_ASSERT(semanage_connect(sh) >= 0);
+	CU_ASSERT(semanage_module_info_create(sh, &modinfo) >= 0);
+
+	/* test */
+	CU_ASSERT(semanage_module_info_set_priority(sh, modinfo, -42) < 0);
+
+	/* cleanup */
+	CU_ASSERT(semanage_disconnect(sh) >= 0);
+	semanage_handle_destroy(sh);
 }
