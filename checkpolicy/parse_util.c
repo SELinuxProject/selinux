@@ -69,9 +69,6 @@ int read_source_policy(policydb_t * p, const char *file, const char *progname)
 	}
 	queue_destroy(id_queue);
 
-	if (policydb_errors)
-		return -1;
-
 	fclose(yyin);
 
 	return 0;
