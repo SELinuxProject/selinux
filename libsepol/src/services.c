@@ -325,8 +325,8 @@ static char *get_class_info(sepol_security_class_t tclass,
 	while (1) {
 		new_class_buf_len = class_buf_len + EXPR_BUF_SIZE;
 		new_class_buf = realloc(class_buf, new_class_buf_len);
-			if (!new_class_buf)
-				return NULL;
+		if (!new_class_buf)
+			return NULL;
 		class_buf_len = new_class_buf_len;
 		class_buf = new_class_buf;
 		buf_used = 0;
