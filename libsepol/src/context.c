@@ -38,7 +38,6 @@ int context_is_valid(const policydb_t * p, const context_struct_t * c)
 	role_datum_t *role;
 	user_datum_t *usrdatum;
 	ebitmap_t types, roles;
-	int ret = 1;
 
 	ebitmap_init(&types);
 	ebitmap_init(&roles);
@@ -75,7 +74,7 @@ int context_is_valid(const policydb_t * p, const context_struct_t * c)
 	if (!mls_context_isvalid(p, c))
 		return 0;
 
-	return ret;
+	return 1;
 }
 
 /*
