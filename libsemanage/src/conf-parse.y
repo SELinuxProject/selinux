@@ -59,7 +59,7 @@ static int parse_errors;
         char *s;
 }
 
-%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT
+%token MODULE_STORE VERSION EXPAND_CHECK FILE_MODE SAVE_PREVIOUS SAVE_LINKED TARGET_PLATFORM COMPILER_DIR IGNORE_MODULE_CACHE STORE_ROOT OPTIMIZE_POLICY
 %token LOAD_POLICY_START SETFILES_START SEFCONTEXT_COMPILE_START DISABLE_GENHOMEDIRCON HANDLE_UNKNOWN USEPASSWD IGNOREDIRS
 %token BZIP_BLOCKSIZE BZIP_SMALL REMOVE_HLL
 %token VERIFY_MOD_START VERIFY_LINKED_START VERIFY_KERNEL_START BLOCK_END
@@ -95,6 +95,7 @@ single_opt:     module_store
 	|	bzip_blocksize
 	|	bzip_small
 	|	remove_hll
+	|	optimize_policy
         ;
 
 module_store:   MODULE_STORE '=' ARG {
@@ -268,6 +269,17 @@ remove_hll:  REMOVE_HLL'=' ARG {
 	free($3);
 }
 
+optimize_policy:  OPTIMIZE_POLICY '=' ARG {
+	if (strcasecmp($3, "false") == 0) {
+		current_conf->optimize_policy = 0;
+	} else if (strcasecmp($3, "true") == 0) {
+		current_conf->optimize_policy = 1;
+	} else {
+		yyerror("optimize-policy can only be 'true' or 'false'");
+	}
+	free($3);
+}
+
 command_block: 
                 command_start external_opts BLOCK_END  {
                         if (new_external->path == NULL) {
@@ -352,6 +364,7 @@ static int semanage_conf_init(semanage_conf_t * conf)
 	conf->bzip_small = 0;
 	conf->ignore_module_cache = 0;
 	conf->remove_hll = 0;
+	conf->optimize_policy = 0;
 
 	conf->save_previous = 0;
 	conf->save_linked = 0;
