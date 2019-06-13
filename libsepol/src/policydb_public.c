@@ -169,6 +169,11 @@ int sepol_policydb_set_target_platform(sepol_policydb_t * sp,
 	return 0;
 }
 
+int sepol_policydb_optimize(sepol_policydb_t * p)
+{
+	return policydb_optimize(&p->p);
+}
+
 int sepol_policydb_read(sepol_policydb_t * p, sepol_policy_file_t * pf)
 {
 	return policydb_read(&p->p, &pf->pf, 0);

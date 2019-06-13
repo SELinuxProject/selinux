@@ -100,6 +100,11 @@ extern int sepol_policydb_set_handle_unknown(sepol_policydb_t * p,
 extern int sepol_policydb_set_target_platform(sepol_policydb_t * p,
 					     int target_platform);
 
+/*
+ * Optimize the policy by removing redundant rules.
+ */
+extern int sepol_policydb_optimize(sepol_policydb_t * p);
+
 /* 
  * Read a policydb from a policy file.
  * This automatically sets the type and version based on the 

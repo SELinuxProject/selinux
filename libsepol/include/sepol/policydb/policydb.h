@@ -636,6 +636,8 @@ extern int policydb_user_cache(hashtab_key_t key,
 
 extern int policydb_reindex_users(policydb_t * p);
 
+extern int policydb_optimize(policydb_t * p);
+
 extern void policydb_destroy(policydb_t * p);
 
 extern int policydb_load_isids(policydb_t * p, sidtab_t * s);

@@ -59,3 +59,8 @@ LIBSEPOL_1.1 {
 	sepol_polcap_getnum;
 	sepol_polcap_getname;
 } LIBSEPOL_1.0;
+
+LIBSEPOL_1.2 {
+  global:
+	sepol_optimize_policy;
+} LIBSEPOL_1.1;
