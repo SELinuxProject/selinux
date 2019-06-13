@@ -68,6 +68,7 @@ static __attribute__((__noreturn__)) void usage(const char *prog)
 	printf("  -G, --expand-generated         Expand and remove auto-generated attributes\n");
 	printf("  -X, --expand-size <SIZE>       Expand type attributes with fewer than <SIZE>\n");
 	printf("                                 members.\n");
+	printf("  -O, --optimize                 optimize final policy\n");
 	printf("  -v, --verbose                  increment verbosity level\n");
 	printf("  -h, --help                     display usage information\n");
 	exit(1);
@@ -97,6 +98,7 @@ int main(int argc, char *argv[])
 	int policyvers = POLICYDB_VERSION_MAX;
 	int attrs_expand_generated = 0;
 	int attrs_expand_size = -1;
+	int optimize = 0;
 	int opt_char;
 	int opt_index = 0;
 	char *fc_buf = NULL;
@@ -117,12 +119,13 @@ int main(int argc, char *argv[])
 		{"filecontexts", required_argument, 0, 'f'},
 		{"expand-generated", no_argument, 0, 'G'},
 		{"expand-size", required_argument, 0, 'X'},
+		{"optimize", no_argument, 0, 'O'},
 		{0, 0, 0, 0}
 	};
 	int i;
 
 	while (1) {
-		opt_char = getopt_long(argc, argv, "o:f:U:hvt:M:PDmNc:GX:", long_opts, &opt_index);
+		opt_char = getopt_long(argc, argv, "o:f:U:hvt:M:PDmNOc:GX:n", long_opts, &opt_index);
 		if (opt_char == -1) {
 			break;
 		}
@@ -211,6 +214,9 @@ int main(int argc, char *argv[])
 				}
 				break;
 			}
+			case 'O':
+				optimize = 1;
+				break;
 			case 'h':
 				usage(argv[0]);
 			case '?':
@@ -292,6 +298,14 @@ int main(int argc, char *argv[])
 	if (rc != SEPOL_OK) {
 		fprintf(stderr, "Failed to build policydb\n");
 		goto exit;
+	}
+
+	if (optimize) {
+		rc = sepol_policydb_optimize(pdb);
+		if (rc != SEPOL_OK) {
+			fprintf(stderr, "Failed to optimize policydb\n");
+			goto exit;
+		}
 	}
 
 	if (output == NULL) {
