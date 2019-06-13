@@ -96,6 +96,11 @@
          </varlistentry>
 
          <varlistentry>
+            <term><option>-O, --optimize</option></term>
+            <listitem><para>Optimize final policy (remove redundant rules).</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
             <term><option>-v, --verbose</option></term>
             <listitem><para>Increment verbosity level.</para></listitem>
          </varlistentry>
