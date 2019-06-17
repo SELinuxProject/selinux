@@ -225,6 +225,9 @@ int cil_verify_constraint_leaf_expr_syntax(enum cil_flavor l_flavor, enum cil_fl
 				cil_log(CIL_ERR, "u3, r3, and t3 can only be used with (mls)validatetrans rules\n");
 				goto exit;
 			}
+		} else if (r_flavor == CIL_LIST) {
+			cil_log(CIL_ERR, "t1, t2, r1, r2, u1, u2 cannot be used on the left side with a list on the right side\n");
+			goto exit;
 		}
 	} else {
 		if (r_flavor == CIL_CONS_U2) {
