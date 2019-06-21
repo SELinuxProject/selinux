@@ -34,8 +34,6 @@ config \- файл конфигурации подсистемы SELinux.
 .br
 \fBSELINUXTYPE = \fIpolicy_name\fR
 .br
-\fBSETLOCALDEFS = \fI0\fR | \fI1\fR
-.br
 \fBREQUIREUSERS = \fI0\fR | \fI1\fR
 .br
 \fBAUTORELABEL = \fI0\fR | \fI1\fR
@@ -88,13 +86,6 @@ SELinux отключён, политика не загружена.
 .RE
 .RE
 .sp
-.B SETLOCALDEFS
-.RS
-Эта запись устарела. Следует её удалить или задать для неё значение \fI0\fR.
-.sp
-Если задано значение \fI1\fR, \fBselinux_mkload_policy\fR(3) выполнит чтение логических переключателей (см. \fBbooleans\fR(5)) и пользователей (см. \fBlocal.users\fR(5)) в локальной настройке.
-.RE
-.sp
 .B REQUIRESEUSERS
 .RS
 Эта необязательная запись позволяет сделать попытку входа неудачной, если в файле 
@@ -138,7 +129,7 @@ SELINUXTYPE = targeted
 .RE
 
 .SH "СМОТРИТЕ ТАКЖЕ"
-.BR selinux "(8), " sestatus "(8), " selinux_path "(3), " selinux_policy_root_path "(3), " selinux_binary_policy_path "(3), " getseuserbyname "(3), " PAM "(8), " fixfiles "(8), " selinux_mkload_policy "(3), " selinux_getpolicytype "(3), " security_policyvers "(3), " selinux_getenforcemode "(3), " seusers "(5), " booleans "(5), " local.users "(5) "
+.BR selinux "(8), " sestatus "(8), " selinux_path "(3), " selinux_policy_root_path "(3), " selinux_binary_policy_path "(3), " getseuserbyname "(3), " PAM "(8), " fixfiles "(8), " selinux_mkload_policy "(3), " selinux_getpolicytype "(3), " security_policyvers "(3), " selinux_getenforcemode "(3), " seusers "(5) "
 
 
 .SH АВТОРЫ

@@ -1,13 +1,11 @@
 .TH "security_get_boolean_names" "3" "15 November 2004" "dwalsh@redhat.com" "SELinux API Documentation"
 .SH "NAME"
-security_load_booleans, security_set_boolean, security_commit_booleans, 
+security_set_boolean, security_commit_booleans,
 security_get_boolean_names, security_get_boolean_active,
 security_get_boolean_pending \- routines for manipulating SELinux boolean values
 .
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
-.sp
-.BI "int security_load_booleans(char *" path ");"
 .sp 
 .BI "int security_get_boolean_names(char ***" names ", int *" len ");"
 .sp
@@ -30,10 +28,6 @@ policy without having to load a new policy.
 The SELinux API allows for a transaction based update. So you can
 set several boolean values and then commit them all at once.
 
-.BR security_load_booleans ()
-loads policy boolean settings. Path may be NULL, in which case the
-booleans are loaded from the active policy boolean configuration file.
-
 .BR security_get_boolean_names ()
 provides a list of boolean names, currently supported by the loaded policy.
 
@@ -47,7 +41,9 @@ returns the active value for boolean or \-1 on failure.
 sets the pending value for boolean 
 
 .BR security_set_boolean_list ()
-saves a list of booleans in a single transaction.
+saves a list of booleans in a single transaction. Note that the
+.BI int " permanent "
+flag is deprecated and should be set to zero.
 
 .BR security_commit_booleans ()
 commits all pending values for the booleans.

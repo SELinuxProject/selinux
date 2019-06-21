@@ -4,7 +4,7 @@ selinux_path, selinux_policy_root, selinux_binary_policy_path, selinux_current_p
 selinux_failsafe_context_path, selinux_removable_context_path,
 selinux_default_context_path, selinux_user_contexts_path,
 selinux_file_context_path, selinux_media_context_path,
-selinux_contexts_path, selinux_booleans_path \- These functions return the paths to the active SELinux policy configuration
+selinux_contexts_path \- These functions return the paths to the active SELinux policy configuration
 directories and files
 .
 .SH "SYNOPSIS"
@@ -40,8 +40,6 @@ directories and files
 .B const char *selinux_securetty_types_path(void);
 .sp
 .B const char *selinux_contexts_path(void);
-.sp
-.B const char *selinux_booleans_path(void);
 .
 .SH "DESCRIPTION"
 These functions return the paths to the active policy configuration
@@ -104,9 +102,6 @@ returns the directory containing all of the context configuration files.
 .sp
 .BR selinux_securetty_types_path ()
 returns the defines tty types for newrole securettys.
-.sp
-.BR selinux_booleans_path ()
-returns the initial policy boolean settings.
 .
 .SH AUTHOR
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
