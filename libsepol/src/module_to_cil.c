@@ -54,6 +54,7 @@
 
 #include "kernel_to_common.h"
 #include "private.h"
+#include "module_internal.h"
 
 #ifdef __GNUC__
 #  define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
