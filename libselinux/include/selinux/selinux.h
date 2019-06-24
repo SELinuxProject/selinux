@@ -286,11 +286,7 @@ extern int security_get_initial_context_raw(const char *name,
  * manipulating it as needed for current boolean settings and/or local 
  * definitions, and then calling security_load_policy to load it.
  *
- * 'preservebools' is a boolean flag indicating whether current 
- * policy boolean values should be preserved into the new policy (if 1) 
- * or reset to the saved policy settings (if 0).  The former case is the
- * default for policy reloads, while the latter case is an option for policy
- * reloads but is primarily for the initial policy load.
+ * 'preservebools' is no longer supported, set to 0.
  */
 extern int selinux_mkload_policy(int preservebools);
 
@@ -316,13 +312,15 @@ typedef struct {
 	char *name;
 	int value;
 } SELboolean;
-/* save a list of booleans in a single transaction.  */
+/* save a list of booleans in a single transaction. 'permanent' is no
+ * longer supported, set to 0.
+ */
 extern int security_set_boolean_list(size_t boolcnt,
 				     SELboolean * boollist, int permanent);
 
-/* Load policy boolean settings.
-   Path may be NULL, in which case the booleans are loaded from
-   the active policy boolean configuration file. */
+/* Load policy boolean settings. Deprecated as local policy booleans no
+ * longer supported. Will always return 0.
+ */
 extern int security_load_booleans(char *path);
 
 /* Check the validity of a security context. */
@@ -569,8 +567,10 @@ extern const char *selinux_systemd_contexts_path(void);
 extern const char *selinux_contexts_path(void);
 extern const char *selinux_securetty_types_path(void);
 extern const char *selinux_booleans_subs_path(void);
+/* Deprecated as local policy booleans no longer supported. */
 extern const char *selinux_booleans_path(void);
 extern const char *selinux_customizable_types_path(void);
+/* Deprecated as policy ./users no longer supported. */
 extern const char *selinux_users_path(void);
 extern const char *selinux_usersconf_path(void);
 extern const char *selinux_translations_path(void);

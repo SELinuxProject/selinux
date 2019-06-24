@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 		}
 	}
 	else {
-		ret = selinux_mkload_policy(1);
+		ret = selinux_mkload_policy(0);
 	}
 	if (ret < 0) {
 		fprintf(stderr, _("%s:  Can't load policy:  %s\n"),

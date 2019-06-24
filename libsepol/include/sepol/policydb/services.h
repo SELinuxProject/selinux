@@ -30,12 +30,6 @@ extern "C" {
 extern int sepol_set_policydb(policydb_t * p);
 extern int sepol_set_sidtab(sidtab_t * s);
 
-/* Modify a policydb for boolean settings. */
-int sepol_genbools_policydb(policydb_t * policydb, const char *booleans);
-
-/* Modify a policydb for user settings. */
-int sepol_genusers_policydb(policydb_t * policydb, const char *usersdir);
-
 /* Load the security policy. This initializes the policydb
    and sidtab based on the provided binary policy. */
 extern int sepol_load_policy(void *data, size_t len);

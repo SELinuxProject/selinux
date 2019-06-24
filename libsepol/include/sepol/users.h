@@ -10,22 +10,11 @@
 extern "C" {
 #endif
 
-/*---------compatibility------------*/
-
-/* Given an existing binary policy (starting at 'data with length 'len')
-   and user configurations living in 'usersdir', generate a new binary
-   policy for the new user configurations.  Sets '*newdata' and '*newlen'
-   to refer to the new binary policy image. */
+/* These two functions are deprecated. See src/deprecated_funcs.c */
 extern int sepol_genusers(void *data, size_t len,
 			  const char *usersdir,
 			  void **newdata, size_t * newlen);
-
-/* Enable or disable deletion of users by sepol_genusers(3) when
-   a user in original binary policy image is not defined by the
-   new user configurations.  Defaults to disabled. */
 extern void sepol_set_delusers(int on);
-
-/*--------end compatibility----------*/
 
 /* Modify the user, or add it, if the key is not found */
 extern int sepol_user_modify(sepol_handle_t * handle,

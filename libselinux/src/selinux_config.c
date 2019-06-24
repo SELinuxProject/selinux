@@ -16,7 +16,6 @@
 #define SELINUXDEFAULT "targeted"
 #define SELINUXTYPETAG "SELINUXTYPE="
 #define SELINUXTAG "SELINUX="
-#define SETLOCALDEFS "SETLOCALDEFS="
 #define REQUIRESEUSERS "REQUIRESEUSERS="
 
 /* Indices for file paths arrays. */
@@ -28,10 +27,12 @@
 #define USER_CONTEXTS     5
 #define FAILSAFE_CONTEXT  6
 #define DEFAULT_TYPE      7
+/* BOOLEANS is deprecated */
 #define BOOLEANS          8
 #define MEDIA_CONTEXTS    9
 #define REMOVABLE_CONTEXT 10
 #define CUSTOMIZABLE_TYPES    11
+/* USERS_DIR is deprecated */
 #define USERS_DIR         12
 #define SEUSERS           13
 #define TRANSLATIONS      14
@@ -192,10 +193,6 @@ static void init_selinux_config(void)
 				}
 				free(type);
 				continue;
-			} else if (!strncmp(buf_p, SETLOCALDEFS,
-					    sizeof(SETLOCALDEFS) - 1)) {
-				value = buf_p + sizeof(SETLOCALDEFS) - 1;
-				intptr = &load_setlocaldefs;
 			} else if (!strncmp(buf_p, REQUIRESEUSERS,
 					    sizeof(REQUIRESEUSERS) - 1)) {
 				value = buf_p + sizeof(REQUIRESEUSERS) - 1;
@@ -410,6 +407,7 @@ const char *selinux_user_contexts_path(void)
 
 hidden_def(selinux_user_contexts_path)
 
+/* Deprecated as local policy booleans no longer supported. */
 const char *selinux_booleans_path(void)
 {
 	return get_path(BOOLEANS);
@@ -417,6 +415,7 @@ const char *selinux_booleans_path(void)
 
 hidden_def(selinux_booleans_path)
 
+/* Deprecated as no longer supported. */
 const char *selinux_users_path(void)
 {
 	return get_path(USERS_DIR);

@@ -324,175 +324,6 @@ int security_commit_booleans(void)
 		return -1;
 }
 
-static char *strtrim(char *dest, char *source, int size)
-{
-	int i = 0;
-	char *ptr = source;
-	i = 0;
-	while (isspace(*ptr) && i < size) {
-		ptr++;
-		i++;
-	}
-	strncpy(dest, ptr, size);
-	for (i = strlen(dest) - 1; i > 0; i--) {
-		if (!isspace(dest[i]))
-			break;
-	}
-	dest[i + 1] = '\0';
-	return dest;
-}
-static int process_boolean(char *buffer, char *name, int namesize, int *val)
-{
-	char name1[BUFSIZ];
-	char *ptr = NULL;
-	char *tok;
-
-	/* Skip spaces */
-	while (isspace(buffer[0]))
-		buffer++;
-	/* Ignore comments */
-	if (buffer[0] == '#')
-		return 0;
-
-	tok = strtok_r(buffer, "=", &ptr);
-	if (!tok) {
-		errno = EINVAL;
-		return -1;
-	}
-	strncpy(name1, tok, BUFSIZ - 1);
-	strtrim(name, name1, namesize - 1);
-
-	tok = strtok_r(NULL, "\0", &ptr);
-	if (!tok) {
-		errno = EINVAL;
-		return -1;
-	}
-
-	while (isspace(*tok))
-		tok++;
-
-	*val = -1;
-	if (isdigit(tok[0]))
-		*val = atoi(tok);
-	else if (!strncasecmp(tok, "true", sizeof("true") - 1))
-		*val = 1;
-	else if (!strncasecmp(tok, "false", sizeof("false") - 1))
-		*val = 0;
-	if (*val != 0 && *val != 1) {
-		errno = EINVAL;
-		return -1;
-	}
-	return 1;
-}
-static int save_booleans(size_t boolcnt, SELboolean * boollist)
-{
-	ssize_t len;
-	size_t i;
-	char outbuf[BUFSIZ];
-	char *inbuf = NULL;
-
-	/* Open file */
-	const char *bool_file = selinux_booleans_path();
-	char local_bool_file[PATH_MAX];
-	char tmp_bool_file[PATH_MAX];
-	FILE *boolf;
-	int fd;
-	int *used = (int *)malloc(sizeof(int) * boolcnt);
-	if (!used) {
-		return -1;
-	}
-	/* zero out used field */
-	for (i = 0; i < boolcnt; i++)
-		used[i] = 0;
-
-	snprintf(tmp_bool_file, sizeof(tmp_bool_file), "%s.XXXXXX", bool_file);
-	fd = mkstemp(tmp_bool_file);
-	if (fd < 0) {
-		free(used);
-		return -1;
-	}
-
-	snprintf(local_bool_file, sizeof(local_bool_file), "%s.local",
-		 bool_file);
-	boolf = fopen(local_bool_file, "re");
-	if (boolf != NULL) {
-		ssize_t ret;
-		size_t size = 0;
-		int val;
-		char boolname[BUFSIZ-3];
-		char *buffer;
-		inbuf = NULL;
-		__fsetlocking(boolf, FSETLOCKING_BYCALLER);
-		while ((len = getline(&inbuf, &size, boolf)) > 0) {
-			buffer = strdup(inbuf);
-			if (!buffer)
-				goto close_remove_fail;
-			ret =
-			    process_boolean(inbuf, boolname, sizeof(boolname),
-					    &val);
-			if (ret != 1) {
-				ret = write(fd, buffer, len);
-				free(buffer);
-				if (ret != len)
-					goto close_remove_fail;
-			} else {
-				free(buffer);
-				for (i = 0; i < boolcnt; i++) {
-					if (strcmp(boollist[i].name, boolname)
-					    == 0) {
-						snprintf(outbuf, sizeof(outbuf),
-							 "%s=%d\n", boolname,
-							 boollist[i].value);
-						len = strlen(outbuf);
-						used[i] = 1;
-						if (write(fd, outbuf, len) !=
-						    len)
-							goto close_remove_fail;
-						else
-							break;
-					}
-				}
-				if (i == boolcnt) {
-					val = !!val;
-					snprintf(outbuf, sizeof(outbuf),
-						 "%s=%d\n", boolname, val);
-					len = strlen(outbuf);
-					if (write(fd, outbuf, len) != len)
-						goto close_remove_fail;
-				}
-			}
-			free(inbuf);
-			inbuf = NULL;
-		}
-		fclose(boolf);
-	}
-
-	for (i = 0; i < boolcnt; i++) {
-		if (used[i] == 0) {
-			snprintf(outbuf, sizeof(outbuf), "%s=%d\n",
-				 boollist[i].name, boollist[i].value);
-			len = strlen(outbuf);
-			if (write(fd, outbuf, len) != len) {
-			      close_remove_fail:
-				free(inbuf);
-				close(fd);
-			      remove_fail:
-				unlink(tmp_bool_file);
-				free(used);
-				return -1;
-			}
-		}
-
-	}
-	if (fchmod(fd, S_IRUSR | S_IWUSR) != 0)
-		goto close_remove_fail;
-	close(fd);
-	if (rename(tmp_bool_file, local_bool_file) != 0)
-		goto remove_fail;
-
-	free(used);
-	return 0;
-}
 static void rollback(SELboolean * boollist, int end)
 {
 	int i;
@@ -521,62 +352,18 @@ int security_set_boolean_list(size_t boolcnt, SELboolean * boollist,
 		return -1;
 	}
 
+	/* Return error as flag no longer used */
 	if (permanent)
-		return save_booleans(boolcnt, boollist);
+		return -1;
 
 	return 0;
 }
-int security_load_booleans(char *path)
+
+/* This function is deprecated */
+int security_load_booleans(char *path __attribute__((unused)))
 {
-	FILE *boolf;
-	char *inbuf;
-	char localbools[BUFSIZ];
-	size_t len = 0, errors = 0;
-	int val;
-	char name[BUFSIZ];
-
-	boolf = fopen(path ? path : selinux_booleans_path(), "re");
-	if (boolf == NULL)
-		goto localbool;
-
-	__fsetlocking(boolf, FSETLOCKING_BYCALLER);
-	while (getline(&inbuf, &len, boolf) > 0) {
-		int ret = process_boolean(inbuf, name, sizeof(name), &val);
-		if (ret == -1)
-			errors++;
-		if (ret == 1)
-			if (security_set_boolean(name, val) < 0) {
-				errors++;
-			}
-	}
-	fclose(boolf);
-      localbool:
-	snprintf(localbools, sizeof(localbools), "%s.local",
-		 (path ? path : selinux_booleans_path()));
-	boolf = fopen(localbools, "re");
-
-	if (boolf != NULL) {
-		int ret;
-		__fsetlocking(boolf, FSETLOCKING_BYCALLER);
-		while (getline(&inbuf, &len, boolf) > 0) {
-			ret = process_boolean(inbuf, name, sizeof(name), &val);
-			if (ret == -1)
-				errors++;
-			if (ret == 1)
-				if (security_set_boolean(name, val) < 0) {
-					errors++;
-				}
-		}
-		fclose(boolf);
-	}
-	if (security_commit_booleans() < 0)
-		return -1;
-
-	if (errors)
-		errno = EINVAL;
-	return errors ? -1 : 0;
+	return -1;
 }
-
 #else
 
 #include <stdlib.h>

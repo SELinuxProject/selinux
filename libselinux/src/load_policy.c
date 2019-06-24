@@ -48,22 +48,18 @@ int security_load_policy(void *data, size_t len)
 hidden_def(security_load_policy)
 
 #ifndef ANDROID
-int load_setlocaldefs hidden = 1;
-
 #undef max
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
-int selinux_mkload_policy(int preservebools)
+int selinux_mkload_policy(int preservebools __attribute__((unused)))
 {	
 	int kernvers = security_policyvers();
 	int maxvers = kernvers, minvers = DEFAULT_POLICY_VERSION, vers;
-	int setlocaldefs = load_setlocaldefs;
 	char path[PATH_MAX];
 	struct stat sb;
-	struct utsname uts;
 	size_t size;
 	void *map, *data;
-	int fd, rc = -1, prot;
+	int fd, rc = -1;
 	sepol_policydb_t *policydb;
 	sepol_policy_file_t *pf;
 	int usesepol = 0;
@@ -77,9 +73,6 @@ int selinux_mkload_policy(int preservebools)
 	int (*policydb_read)(sepol_policydb_t *, sepol_policy_file_t *) = NULL;
 	int (*policydb_set_vers)(sepol_policydb_t *, unsigned int) = NULL;
 	int (*policydb_to_image)(sepol_handle_t *, sepol_policydb_t *, void **, size_t *) = NULL;
-	int (*genbools_array)(void *data, size_t len, char **names, int *values, int nel) = NULL;
-	int (*genusers)(void *data, size_t len, const char *usersdir, void **newdata, size_t * newlen) = NULL;
-	int (*genbools)(void *data, size_t len, const char *boolpath) = NULL;
 
 #ifdef SHARED
 	char *errormsg = NULL;
@@ -110,13 +103,6 @@ int selinux_mkload_policy(int preservebools)
 		DLERR();
 		policydb_to_image = dlsym(libsepolh, "sepol_policydb_to_image");
 		DLERR();
-		genbools_array = dlsym(libsepolh, "sepol_genbools_array");
-		DLERR();
-		genusers = dlsym(libsepolh, "sepol_genusers");
-		DLERR();
-		genbools = dlsym(libsepolh, "sepol_genbools");
-		DLERR();
-
 #undef DLERR
 	}
 #else
@@ -131,42 +117,11 @@ int selinux_mkload_policy(int preservebools)
 	policydb_read = sepol_policydb_read;
 	policydb_set_vers = sepol_policydb_set_vers;
 	policydb_to_image = sepol_policydb_to_image;
-	genbools_array = sepol_genbools_array;
-	genusers = sepol_genusers;
-	genbools = sepol_genbools;
-
 #endif
 
-	/*
-	 * Check whether we need to support local boolean and user definitions.
-	 */
-	if (setlocaldefs) {
-		if (access(selinux_booleans_path(), F_OK) == 0)
-			goto checkbool;
-		snprintf(path, sizeof path, "%s.local", selinux_booleans_path());
-		if (access(path, F_OK) == 0)
-			goto checkbool;
-		snprintf(path, sizeof path, "%s/local.users", selinux_users_path());
-		if (access(path, F_OK) == 0)
-			goto checkbool;
-		/* No local definition files, so disable setlocaldefs. */
-		setlocaldefs = 0;
-	}
-
-checkbool:
-	/* 
-	 * As of Linux 2.6.22, the kernel preserves boolean
-	 * values across a reload, so we do not need to 
-	 * preserve them in userspace.
-	 */
-	if (preservebools && uname(&uts) == 0 && strverscmp(uts.release, "2.6.22") >= 0)
-		preservebools = 0;
-
 	if (usesepol) {
-		maxvers = vers_max();
+		maxvers = max(kernvers, vers_max());
 		minvers = vers_min();
-		if (!setlocaldefs && !preservebools)
-			maxvers = max(kernvers, maxvers);
 	}
 
 	vers = maxvers;
@@ -195,12 +150,8 @@ checkbool:
 		goto close;
 	}
 
-	prot = PROT_READ;
-	if (setlocaldefs || preservebools)
-		prot |= PROT_WRITE;
-
 	size = sb.st_size;
-	data = map = mmap(NULL, size, prot, MAP_PRIVATE, fd, 0);
+	data = map = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (map == MAP_FAILED) {
 		fprintf(stderr,
 			"SELinux:  Could not map policy file %s:  %s\n",
@@ -238,49 +189,6 @@ checkbool:
 		policy_file_free(pf);
 		policydb_free(policydb);
 	}
-
-	if (usesepol) {
-		if (setlocaldefs) {
-			void *olddata = data;
-			size_t oldsize = size;
-			rc = genusers(olddata, oldsize, selinux_users_path(),
-				      &data, &size);
-			if (rc < 0) {
-				/* Fall back to the prior image if genusers failed. */
-				data = olddata;
-				size = oldsize;
-				rc = 0;
-			} else {
-				if (olddata != map)
-					free(olddata);
-			}
-		}
-		
-		if (preservebools) {
-			int *values, len, i;
-			char **names;
-			rc = security_get_boolean_names(&names, &len);
-			if (!rc) {
-				values = malloc(sizeof(int) * len);
-				if (!values) {
-					free(names);
-					goto unmap;
-				}
-				for (i = 0; i < len; i++)
-					values[i] =
-						security_get_boolean_active(names[i]);
-				(void)genbools_array(data, size, names, values,
-						     len);
-				free(values);
-				for (i = 0; i < len; i++)
-					free(names[i]);
-				free(names);
-			}
-		} else if (setlocaldefs) {
-			(void)genbools(data, size, selinux_booleans_path());
-		}
-	}
-
 
 	rc = security_load_policy(data, size);
 	

@@ -8,10 +8,12 @@ S_(BINPOLICY, "/policy/policy")
     S_(FAILSAFE_CONTEXT, "/contexts/failsafe_context")
     S_(DEFAULT_TYPE, "/contexts/default_type")
     S_(SECURETTY_TYPES, "/contexts/securetty_types")
+	/* BOOLEANS is deprecated */
     S_(BOOLEANS, "/booleans")
     S_(MEDIA_CONTEXTS, "/contexts/files/media")
     S_(REMOVABLE_CONTEXT, "/contexts/removable_context")
     S_(CUSTOMIZABLE_TYPES, "/contexts/customizable_types")
+	/* USERS_DIR is deprecated */
     S_(USERS_DIR, "/users/")
     S_(SEUSERS, "/seusers")
     S_(TRANSLATIONS, "/setrans.conf")
