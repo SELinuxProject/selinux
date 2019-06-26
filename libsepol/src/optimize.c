@@ -247,7 +247,7 @@ static void optimize_cond_av_list(cond_av_list_t **cond, cond_av_list_t **del,
 {
 	cond_av_list_t **listp = cond;
 	cond_av_list_t *pcov = NULL;
-	cond_av_list_t **pcov_cur = &pcov;
+	cond_av_list_t **pcov_cur;
 
 	/*
 	 * Separate out all "potentially covering" rules (src or tgt is an attr)
