@@ -309,7 +309,7 @@ static int add_xattr_entry(const char *directory, bool delete_nonmatch,
 						&calculated_digest,
 						&xattr_digest, &digest_len);
 
-	if (!xattr_digest) {
+	if (!xattr_digest || !digest_len) {
 		free(calculated_digest);
 		return 1;
 	}
