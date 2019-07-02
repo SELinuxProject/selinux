@@ -134,12 +134,12 @@ static const secolor_t *find_color(int idx, const char *component,
 	}
 
 	while (ptr) {
-		if (fnmatch(ptr->pattern, component, 0) == 0) {
-			if (idx == COLOR_RANGE) {
-			    if (check_dominance(ptr->pattern, raw) == 0)
-					return &ptr->color;
-			} else 
-				return &ptr->color;
+		if (idx == COLOR_RANGE) {
+		    if (check_dominance(ptr->pattern, raw) == 0)
+			return &ptr->color;
+		} else {
+		    if (fnmatch(ptr->pattern, component, 0) == 0)
+			return &ptr->color;
 		}
 		ptr = ptr->next;
 	}
