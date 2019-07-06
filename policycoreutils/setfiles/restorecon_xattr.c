@@ -27,7 +27,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 		"-D  Delete all digest entries.\n\t"
 		"-e  Directory to exclude (repeat option for more than one directory).\n\t"
 		"-f  Optional specfile for calculating the digest.\n\t"
-		"pathname  Path to search for xattr \"security.restorecon_last\" entries.\n\n",
+		"pathname  Path to search for xattr \"security.sehash\" entries.\n\n",
 		progname);
 	exit(-1);
 }
