@@ -15,6 +15,7 @@ matchpathcon
 policyvers
 sefcontext_compile
 selabel_digest
+selabel_get_digests_all_partial_matches
 selabel_lookup
 selabel_lookup_best_match
 selabel_partial_match

@@ -87,6 +87,11 @@ struct selabel_handle {
 	void (*func_close) (struct selabel_handle *h);
 	void (*func_stats) (struct selabel_handle *h);
 	bool (*func_partial_match) (struct selabel_handle *h, const char *key);
+	bool (*func_get_digests_all_partial_matches) (struct selabel_handle *h,
+						      const char *key,
+						      uint8_t **calculated_digest,
+						      uint8_t **xattr_digest,
+						      size_t *digest_len);
 	bool (*func_hash_all_partial_matches) (struct selabel_handle *h,
 	                                       const char *key, uint8_t *digest);
 	struct selabel_lookup_rec *(*func_lookup_best_match)

@@ -972,6 +972,55 @@ static struct spec *lookup_common(struct selabel_handle *rec,
 	return result;
 }
 
+/*
+ * Returns true if the digest of all partial matched contexts is the same as
+ * the one saved by setxattr, otherwise returns false. The length of the SHA1
+ * digest will always be returned. The caller must free any returned digests.
+ */
+static bool get_digests_all_partial_matches(struct selabel_handle *rec,
+					    const char *pathname,
+					    uint8_t **calculated_digest,
+					    uint8_t **xattr_digest,
+					    size_t *digest_len)
+{
+	uint8_t read_digest[SHA1_HASH_SIZE];
+	ssize_t read_size = getxattr(pathname, RESTORECON_PARTIAL_MATCH_DIGEST,
+				     read_digest, SHA1_HASH_SIZE);
+	uint8_t hash_digest[SHA1_HASH_SIZE];
+	bool status = selabel_hash_all_partial_matches(rec, pathname,
+						       hash_digest);
+
+	*xattr_digest = NULL;
+	*calculated_digest = NULL;
+	*digest_len = SHA1_HASH_SIZE;
+
+	if (read_size == SHA1_HASH_SIZE) {
+		*xattr_digest = calloc(1, SHA1_HASH_SIZE + 1);
+		if (!*xattr_digest)
+			goto oom;
+
+		memcpy(*xattr_digest, read_digest, SHA1_HASH_SIZE);
+	}
+
+	if (status) {
+		*calculated_digest = calloc(1, SHA1_HASH_SIZE + 1);
+		if (!*calculated_digest)
+			goto oom;
+
+		memcpy(*calculated_digest, hash_digest, SHA1_HASH_SIZE);
+	}
+
+	if (status && read_size == SHA1_HASH_SIZE &&
+	    memcmp(read_digest, hash_digest, SHA1_HASH_SIZE) == 0)
+		return true;
+
+	return false;
+
+oom:
+	selinux_log(SELINUX_ERROR, "SELinux: %s: Out of memory\n", __func__);
+	return false;
+}
+
 static bool hash_all_partial_matches(struct selabel_handle *rec, const char *key, uint8_t *digest)
 {
 	assert(digest);
@@ -1200,6 +1249,8 @@ int selabel_file_init(struct selabel_handle *rec,
 	rec->func_stats = &stats;
 	rec->func_lookup = &lookup;
 	rec->func_partial_match = &partial_match;
+	rec->func_get_digests_all_partial_matches =
+					&get_digests_all_partial_matches;
 	rec->func_hash_all_partial_matches = &hash_all_partial_matches;
 	rec->func_lookup_best_match = &lookup_best_match;
 	rec->func_cmp = &cmp;

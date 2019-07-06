@@ -2,7 +2,7 @@
 
 .SH "NAME"
 selinux_restorecon_xattr \- manage default
-.I security.restorecon_last
+.I security.sehash
 extended attribute entries added by
 .BR selinux_restorecon (3),
 .BR setfiles (8)
@@ -29,7 +29,7 @@ structures containing information described below based on:
 .RS
 .IR pathname
 containing a directory tree to be searched for
-.I security.restorecon_last
+.I security.sehash
 extended attribute entries.
 .sp
 .IR xattr_flags
@@ -119,7 +119,7 @@ By default
 .BR selinux_restorecon_xattr (3)
 will use the default set of specfiles described in
 .BR files_contexts (5)
-to calculate the initial SHA1 digest to be used for comparison.
+to calculate the SHA1 digests to be used for comparison.
 To change this default behavior
 .BR selabel_open (3)
 must be called specifying the required
@@ -143,7 +143,7 @@ flag has been set.
 and
 .B TMPFS
 filesystems do not support the
-.IR security.restorecon_last
+.IR security.sehash
 extended attribute and are automatically excluded from searches.
 .IP "4." 4
 By default

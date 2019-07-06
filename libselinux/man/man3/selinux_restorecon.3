@@ -28,39 +28,53 @@ If this is a directory and the
 .B SELINUX_RESTORECON_RECURSE
 has been set (for descending through directories), then
 .BR selinux_restorecon ()
-will write an SHA1 digest of the combined specfiles (see the
+will write an SHA1 digest of specfile entries caculated by
+.BR selabel_get_digests_all_partial_matches (3)
+to an extended attribute of
+.IR security.sehash
+once the relabeling has been completed successfully (see the
 .B NOTES
-section for details) to an extended attribute of
-.IR security.restorecon_last
-once the relabeling has been completed successfully. This digest will be
-checked should
+section for details).
+.br
+These digests will be checked should
 .BR selinux_restorecon ()
-be rerun
-with the
+be rerun with the
 .IR restorecon_flags
 .B SELINUX_RESTORECON_RECURSE
-flag set. If any of the specfiles had been updated, the digest
+flag set. If any of the specfile entries had been updated, the digest
 will also be updated. However if the digest is the same, no relabeling checks
-will take place (unless the
+will take place.
+.br
+The
+.IR restorecon_flags
+that can be used to manage the usage of the SHA1 digest are:
+.RS
+.B SELINUX_RESTORECON_SKIP_DIGEST
+.br
 .B SELINUX_RESTORECON_IGNORE_DIGEST
-flag is set).
+.RE
 .sp
 .IR restorecon_flags
 contains the labeling option/rules as follows:
 .sp
 .RS
 .sp
+.B SELINUX_RESTORECON_SKIP_DIGEST
+Do not check or update any extended attribute
+.IR security.sehash
+entries.
+.sp
 .B SELINUX_RESTORECON_IGNORE_DIGEST
 force the checking of labels even if the stored SHA1 digest matches the
-specfiles SHA1 digest. The specfiles digest will be written to the
-.IR security.restorecon_last
+specfile entries SHA1 digest. The specfile entries digest will be written to the
+.IR security.sehash
 extended attribute once relabeling has been completed successfully provided the
 .B SELINUX_RESTORECON_NOCHANGE
 flag has not been set.
 .sp
 .B SELINUX_RESTORECON_NOCHANGE
 don't change any file labels (passive check) or update the digest in the
-.IR security.restorecon_last
+.IR security.sehash
 extended attribute.
 .sp
 .B SELINUX_RESTORECON_SET_SPECFILE_CTX
@@ -70,7 +84,7 @@ default specfile context.
 .sp
 .B SELINUX_RESTORECON_RECURSE
 change file and directory labels recursively (descend directories)
-and if successful write an SHA1 digest of the combined specfiles to an
+and if successful write an SHA1 digest of the specfile entries to an
 extended attribute as described in the
 .B NOTES
 section.
@@ -182,12 +196,13 @@ To improve performance when relabeling file systems recursively (e.g. the
 .B SELINUX_RESTORECON_RECURSE
 flag is set)
 .BR selinux_restorecon ()
-will write an SHA1 digest of the specfiles that are processed by
-.BR selabel_open (3)
+will write a caculated SHA1 digest of the specfile entries returned by
+.BR selabel_get_digests_all_partial_matches (3)
 to an extended attribute named
-.IR security.restorecon_last
-to the directory specified in the
-.IR pathname .
+.IR security.sehash
+for each directory in the
+.IR pathname
+path.
 .IP "2." 4
 To check the extended attribute entry use
 .BR getfattr (1) ,
@@ -195,40 +210,26 @@ for example:
 .sp
 .RS
 .RS
-getfattr -e hex -n security.restorecon_last /
+getfattr -e hex -n security.sehash /
 .RE
 .RE
 .IP "3." 4
-The SHA1 digest is calculated by
-.BR selabel_open (3)
-concatenating the specfiles it reads during initialisation with the
-resulting digest and list of specfiles being retrieved by
-.BR selabel_digest (3).
-.IP "4." 4
-The specfiles consist of the mandatory
-.I file_contexts
-file plus any subs, subs_dist, local and homedir entries (text or binary versions)
-as determined by any
-.BR selabel_open (3)
-options e.g.
-.BR SELABEL_OPT_BASEONLY .
-.sp
-Should any of the specfiles have changed, then when
+Should any of the specfile entries have changed, then when
 .BR selinux_restorecon ()
 is run again with the
 .B SELINUX_RESTORECON_RECURSE
-flag set, a new SHA1 digest will be calculated and all files will be automatically
+flag set, new SHA1 digests will be calculated and all files automatically
 relabeled depending on the settings of the
 .B SELINUX_RESTORECON_SET_SPECFILE_CTX
 flag (provided
 .B SELINUX_RESTORECON_NOCHANGE
 is not set).
-.IP "5." 4
+.IP "4." 4
 .B /sys
 and in-memory filesystems do not support the
-.IR security.restorecon_last
+.IR security.sehash
 extended attribute and are automatically excluded from any relabeling checks.
-.IP "6." 4
+.IP "5." 4
 By default
 .B stderr
 is used to log output messages and errors. This may be changed by calling
@@ -239,6 +240,8 @@ with the
 option.
 .
 .SH "SEE ALSO"
+.BR selabel_get_digests_all_partial_matches (3),
+.br
 .BR selinux_restorecon_set_sehandle (3),
 .br
 .BR selinux_restorecon_default_handle (3),

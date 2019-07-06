@@ -27,8 +27,8 @@ extern int selinux_restorecon(const char *pathname,
  * restorecon_flags options
  */
 /*
- * Force the checking of labels even if the stored SHA1
- * digest matches the specfiles SHA1 digest.
+ * Force the checking of labels even if the stored SHA1 digest
+ * matches the specfiles SHA1 digest (requires CAP_SYS_ADMIN).
  */
 #define SELINUX_RESTORECON_IGNORE_DIGEST		0x0001
 /*
@@ -96,12 +96,17 @@ extern int selinux_restorecon(const char *pathname,
  * See SELINUX_RESTORECON_PROGRESS flag for details.
  */
 #define SELINUX_RESTORECON_MASS_RELABEL			0x4000
+/*
+ * Set if no digest is to be read or written (as only processes
+ * running with CAP_SYS_ADMIN can read/write digests).
+ */
+#define SELINUX_RESTORECON_SKIP_DIGEST			0x8000
 
 /**
  * selinux_restorecon_set_sehandle - Set the global fc handle.
  * @hndl: specifies handle to set as the global fc handle.
  *
- * Called by a process that has already called selabel_open(3) with it's
+ * Called by a process that has already called selabel_open(3) with its
  * required parameters, or if selinux_restorecon_default_handle(3) has been
  * called to set the default selabel_open(3) parameters.
  */
@@ -110,7 +115,7 @@ extern void selinux_restorecon_set_sehandle(struct selabel_handle *hndl);
 /**
  * selinux_restorecon_default_handle - Sets default selabel_open(3) parameters
  *				       to use the currently loaded policy and
- *				       file_contexts, also requests the digest.
+ *				       file_contexts.
  *
  * Return value is the created handle on success or NULL with @errno set on
  * failure.
@@ -134,12 +139,12 @@ extern void selinux_restorecon_set_exclude_list(const char **exclude_list);
 extern int selinux_restorecon_set_alt_rootpath(const char *alt_rootpath);
 
 /**
- * selinux_restorecon_xattr - Read/remove RESTORECON_LAST xattr entries.
+ * selinux_restorecon_xattr - Read/remove security.sehash xattr entries.
  * @pathname: specifies directory path to check.
  * @xattr_flags: specifies the actions to be performed.
  * @xattr_list: a linked list of struct dir_xattr structures containing
  *              the directory, digest and result of the action on the
- *              RESTORECON_LAST entry.
+ *              security.sehash entry.
  *
  * selinux_restorecon_xattr(3) will automatically call
  * selinux_restorecon_default_handle(3) and selinux_restorecon_set_sehandle(3)
