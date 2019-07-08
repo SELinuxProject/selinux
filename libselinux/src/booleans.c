@@ -81,8 +81,10 @@ int security_get_boolean_names(char ***names, int *len)
 	free(namelist);
 	return rc;
       bad_freen:
-	for (--i; i >= 0; --i)
-		free(n[i]);
+	if (i > 0) {
+		while (i >= 1)
+			free(n[--i]);
+	}
 	free(n);
       bad:
 	goto out;
