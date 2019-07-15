@@ -1,5 +1,6 @@
 [Unit]
 Description=Restorecon maintaining path file context
+Documentation=man:restorecond(8)
 ConditionPathExists=/etc/selinux/restorecond.conf
 ConditionSecurity=selinux
 

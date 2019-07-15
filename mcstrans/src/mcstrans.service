@@ -1,5 +1,6 @@
 [Unit]
 Description=Translates SELinux MCS/MLS labels to human readable form
+Documentation=man:mcstransd(8)
 ConditionSecurity=selinux
 
 [Service]
