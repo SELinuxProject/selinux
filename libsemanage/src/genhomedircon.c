@@ -28,8 +28,10 @@
 #include <semanage/fcontexts_policy.h>
 #include <sepol/context.h>
 #include <sepol/context_record.h>
+#include "fcontext_internal.h"
 #include "semanage_store.h"
 #include "seuser_internal.h"
+#include "user_internal.h"
 #include "debug.h"
 
 #include "utilities.h"
