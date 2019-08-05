@@ -181,7 +181,7 @@ class childWindow:
         self.view.get_selection().select_path((0,))
 
     def stand_alone(self):
-        desktopName = _("Configue SELinux")
+        desktopName = _("Configure SELinux")
 
         self.setupScreen()
 

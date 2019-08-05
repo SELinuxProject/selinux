@@ -93,7 +93,7 @@ static struct discover_class_node * discover_class(const char *s)
 	if (sscanf(buf, "%hu", &node->value) != 1)
 		goto err3;
 
-	/* load up permission indicies */
+	/* load up permission indices */
 	snprintf(path, sizeof path, "%s/class/%s/perms",selinux_mnt,s);
 	dir = opendir(path);
 	if (dir == NULL)

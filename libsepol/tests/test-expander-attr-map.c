@@ -30,7 +30,7 @@ extern policydb_t base_expanded2;
 
 void test_expander_attr_mapping(void)
 {
-	/* note that many cases are ommitted because they don't make sense
+	/* note that many cases are omitted because they don't make sense
 	   (i.e. declaring in an optional and then using it in the base) or
 	   because declare in optional then require in a different optional
 	   logic still doesn't work */

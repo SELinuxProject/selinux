@@ -97,7 +97,7 @@ Allow policy capabilities to be enabled via policy. These should be declared in 
 </tr>
 <tr class="even">
 <td align="left"><p><code>policycap_id</code></p></td>
-<td align="left"><p>The <code>policycap</code> identifer (e.g. <code>open_perms</code>).</p></td>
+<td align="left"><p>The <code>policycap</code> identifier (e.g. <code>open_perms</code>).</p></td>
 </tr>
 </tbody>
 </table>

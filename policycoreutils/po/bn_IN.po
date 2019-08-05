@@ -1675,7 +1675,7 @@ msgid "<b>Select existing role to modify:</b>"
 msgstr "<b>পরিবর্তনের উদ্দেশ্যে কোনো উপস্থিত ভূমিকা নির্বাচন করুন:</b>"
 
 #: ../gui/polgen.glade:908
-msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
 msgstr "%s ডোমেইনে স্থানান্তরের জন্য ব্যবহারকারী ভূমিকা নির্বাচন করুন।"
 
 #: ../gui/polgen.glade:928
@@ -1701,7 +1701,7 @@ msgid "<b>Select the user_roles that will transition to %s:</b>"
 msgstr "<b>যে সমস্ত user_roles %s-এ রূপান্তরিত হবে সেগুলি নির্বাচন করুন:</b>"
 
 #: ../gui/polgen.glade:1019
-msgid "Select the user roles that will transiton to this applications domains."
+msgid "Select the user roles that will transition to this applications domains."
 msgstr ""
 "চিহ্নিত অ্যাপ্লিকেশন ডোমেইনের মধ্যে রূপান্তরযোগ্য ব্যবহারকারীর ভূমিকা নির্বাচন করুন"
 
@@ -1943,7 +1943,7 @@ msgid "You must enter a executable"
 msgstr "এক্সেকিউটেবল উল্লেখ করা আবশ্যক"
 
 #: ../gui/polgengui.py:756 ../gui/system-config-selinux.py:180
-msgid "Configue SELinux"
+msgid "Configure SELinux"
 msgstr "SELinux কনফিগার করুন"
 
 #: ../gui/portsPage.py:51 ../gui/system-config-selinux.glade:2528
@@ -3828,7 +3828,7 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:333
 msgid ""
-"Name must be alpha numberic with no spaces. Consider using option \"-n "
+"Name must be alpha numeric with no spaces. Consider using option \"-n "
 "MODULENAME\""
 msgstr ""
 "শূণ্যস্থান বিনা অক্ষর ও সংখ্যা বিশিষ্ট নাম হওয়া আবশ্যক। \"-n MODULENAME\" বিকল্পের "
@@ -4063,7 +4063,7 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/sepolicy.glade:826
 msgid ""
-"Select Make Path Recursive iff you want to apply this label to all children "
+"Select Make Path Recursive if you want to apply this label to all children "
 "of the specified directory path. objects under the directory to have this "
 "label."
 msgstr ""

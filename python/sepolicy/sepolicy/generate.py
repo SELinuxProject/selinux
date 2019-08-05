@@ -341,7 +341,7 @@ class policy:
             (self.generate_root_user_types, self.generate_root_user_rules),
             (self.generate_new_types, self.generate_new_rules))
         if not re.match(r"^[a-zA-Z0-9-_]+$", name):
-            raise ValueError(_("Name must be alpha numberic with no spaces. Consider using option \"-n MODULENAME\""))
+            raise ValueError(_("Name must be alpha numeric with no spaces. Consider using option \"-n MODULENAME\""))
 
         if type == CGI:
             self.name = "httpd_%s_script" % name

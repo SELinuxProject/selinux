@@ -3,7 +3,7 @@ Context Statement
 
 Contexts are formed using previously declared parameters and may be named or anonymous where:
 
--   Named - The context is declared with a context identifer that is used as a reference.
+-   Named - The context is declared with a context identifier that is used as a reference.
 
 -   Anonymous - They are defined within the CIL labeling statement using user, role etc. identifiers.
 
@@ -65,7 +65,7 @@ to resolve/build a `file_contexts` entry of (assuming MLS enabled policy):
 
     /system/bin/run-as  -- u:object_r:runas.exec:s0-s0
 
-This example uses an anonymous context where the previously declared `user role type levelrange` identifiers are used to specifiy two [`portcon`](cil_network_labeling_statements.md#portcon) statements:
+This example uses an anonymous context where the previously declared `user role type levelrange` identifiers are used to specify two [`portcon`](cil_network_labeling_statements.md#portcon) statements:
 
     (portcon udp 1024 (test.user object_r test.process ((s0) (s1))))
     (portcon tcp 1024 (test.user object_r test.process (system_low system_high)))

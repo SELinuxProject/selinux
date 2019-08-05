@@ -149,7 +149,7 @@ class AccessMatcher:
           prov - [AccessVector] The access provided. This is the potential
                  match that is being evaluated for req.
         Returns:
-          0   : Exact match between the acess vectors.
+          0   : Exact match between the access vectors.
 
           < 0 : The prov av does not provide all of the access in req.
                 A smaller value indicates that the access is further.

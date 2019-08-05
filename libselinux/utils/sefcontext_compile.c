@@ -88,7 +88,7 @@ out:
  *	u32  - spec has meta characters
  *	u32  - The specs prefix_len if >= SELINUX_COMPILED_FCONTEXT_PREFIX_LEN
  *	u32  - data length of the pcre regex
- *	char - a bufer holding the raw pcre regex info
+ *	char - a buffer holding the raw pcre regex info
  *	u32  - data length of the pcre regex study daya
  *	char - a buffer holding the raw pcre regex study data
  */

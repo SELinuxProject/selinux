@@ -47,7 +47,7 @@ implicitly_typed_objects = ["socket", "fd", "process", "file", "lnk_file", "fifo
 # All of the permissions in SELinux can be described in terms of
 # information flow. For example, a read of a file is a flow of
 # information from that file to the process reading. Viewing
-# permissions in these terms can be used to model a varity of
+# permissions in these terms can be used to model a variety of
 # security properties.
 #
 # Here we have some infrastructure for understanding permissions
@@ -70,7 +70,7 @@ FLOW_READ  = 1
 FLOW_WRITE = 2
 FLOW_BOTH  = FLOW_READ | FLOW_WRITE
 
-# These are used by the parser and for nice disply of the directions
+# These are used by the parser and for nice display of the directions
 str_to_dir = { "n" : FLOW_NONE, "r" : FLOW_READ, "w" : FLOW_WRITE, "b" : FLOW_BOTH }
 dir_to_str = { FLOW_NONE : "n", FLOW_READ : "r", FLOW_WRITE : "w", FLOW_BOTH : "b" }
 
@@ -106,7 +106,7 @@ class PermMappings:
         """Read the permission mappings from a file. This reads the format used
         by Apol in the setools suite.
         """
-        # This parsing is deliberitely picky and bails at the least error. It
+        # This parsing is deliberately picky and bails at the least error. It
         # is assumed that the permission map file will be shipped as part
         # of sepolgen and not user modified, so this is a reasonable design
         # choice. If user supplied permission mappings are needed the parser
@@ -124,7 +124,7 @@ class PermMappings:
                 cur = self.classes[c]
             else:
                 if len(fields) != 3:
-                    raise ValueError("error in object classs permissions")
+                    raise ValueError("error in object class permissions")
                 if cur is None:
                     raise ValueError("permission outside of class")
                 pm = PermMap(fields[0], str_to_dir[fields[1]], int(fields[2]))

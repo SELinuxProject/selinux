@@ -33,7 +33,7 @@ from .sepolgeni18n import _
 
 class Param:
     """
-    Object representing a paramater for an interface.
+    Object representing a parameter for an interface.
     """
     def __init__(self):
         self.__name = ""
@@ -66,7 +66,7 @@ def __param_insert(name, type, av, params):
         # The entries are identical - we're done
         if type == p.type:
             return
-        # Hanldle implicitly typed objects (like process)
+        # Handle implicitly typed objects (like process)
         if (type == refpolicy.SRC_TYPE or type == refpolicy.TGT_TYPE) and \
            (p.type == refpolicy.TGT_TYPE or p.type == refpolicy.SRC_TYPE):
             #print name, refpolicy.field_to_str[p.type]
@@ -104,9 +104,9 @@ def __param_insert(name, type, av, params):
 
 
 def av_extract_params(av, params):
-    """Extract the paramaters from an access vector.
+    """Extract the parameters from an access vector.
 
-    Extract the paramaters (in the form $N) from an access
+    Extract the parameters (in the form $N) from an access
     vector, storing them as Param objects in a dictionary.
     Some attempt is made at resolving conflicts with other
     entries in the dict, but if an unresolvable conflict is
@@ -132,7 +132,7 @@ def av_extract_params(av, params):
        allow fingerd_t $1:process sigchld;
     ')
 
-    Here the usage seems ambigious, but it is not. $1 is still domain
+    Here the usage seems ambiguous, but it is not. $1 is still domain
     and therefore should be returned as a SRC_TYPE.
 
     Returns:
@@ -245,7 +245,7 @@ class InterfaceVector:
         # this will include indirect access from typeattribute
         # statements.
         self.access = access.AccessVectorSet()
-        # Paramaters are stored in a dictionary (key: param name
+        # Parameters are stored in a dictionary (key: param name
         # value: Param object).
         self.params = { }
         if interface:
@@ -284,13 +284,13 @@ class InterfaceVector:
                         self.add_av(av)
 
 
-        # Extract paramaters from roles
+        # Extract parameters from roles
         for role in interface.roles():
             if role_extract_params(role, self.params):
                 pass
                 #print "found conflicting role param %s for interface %s" % \
                 #      (role.name, interface.name)
-        # Extract paramaters from type rules
+        # Extract parameters from type rules
         for rule in interface.typerules():
             if type_rule_extract_params(rule, self.params):
                 pass

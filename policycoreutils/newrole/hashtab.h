@@ -49,7 +49,7 @@ typedef hashtab_val_t *hashtab_t;
 /*
    Creates a new hash table with the specified characteristics.
 
-   Returns NULL if insufficent space is available or
+   Returns NULL if insufficient space is available or
    the new hash table otherwise.
  */
 extern hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,

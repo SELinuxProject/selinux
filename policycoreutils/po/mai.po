@@ -1627,7 +1627,7 @@ msgid "<b>Select existing role to modify:</b>"
 msgstr ""
 
 #: ../gui/polgen.glade:908
-msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
 msgstr ""
 
 #: ../gui/polgen.glade:928
@@ -1653,7 +1653,7 @@ msgid "<b>Select the user_roles that will transition to %s:</b>"
 msgstr ""
 
 #: ../gui/polgen.glade:1019
-msgid "Select the user roles that will transiton to this applications domains."
+msgid "Select the user roles that will transition to this applications domains."
 msgstr ""
 
 #: ../gui/polgen.glade:1056
@@ -1877,7 +1877,7 @@ msgid "You must enter a executable"
 msgstr ""
 
 #: ../gui/polgengui.py:756 ../gui/system-config-selinux.py:180
-msgid "Configue SELinux"
+msgid "Configure SELinux"
 msgstr ""
 
 #: ../gui/portsPage.py:51 ../gui/system-config-selinux.glade:2528
@@ -3726,7 +3726,7 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/generate.py:333
 msgid ""
-"Name must be alpha numberic with no spaces. Consider using option \"-n "
+"Name must be alpha numeric with no spaces. Consider using option \"-n "
 "MODULENAME\""
 msgstr ""
 
@@ -3952,7 +3952,7 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/sepolicy.glade:826
 msgid ""
-"Select Make Path Recursive iff you want to apply this label to all children "
+"Select Make Path Recursive if you want to apply this label to all children "
 "of the specified directory path. objects under the directory to have this "
 "label."
 msgstr ""

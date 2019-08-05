@@ -65,7 +65,7 @@ typedef struct link_state {
 	char *dest_class_name;
 	char dest_class_req;	/* flag indicating the class was not declared */
 	uint32_t symbol_num;
-	/* used to report the name of the module if dependancy error occurs */
+	/* used to report the name of the module if dependency error occurs */
 	policydb_t **decl_to_mod;
 
 	/* error reporting fields */
@@ -2172,7 +2172,7 @@ static void print_missing_requirements(link_state_t * state,
  *    decl. If the block has an else decl, enable.
  *
  * This will correctly handle all dependencies, including mutual and
- * cicular. The only downside is that it is slow.
+ * circular. The only downside is that it is slow.
  */
 static int enable_avrules(link_state_t * state, policydb_t * pol)
 {

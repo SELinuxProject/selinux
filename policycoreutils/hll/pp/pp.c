@@ -50,7 +50,7 @@ static __attribute__((__noreturn__)) void usage(int err)
 {
 	fprintf(stderr, "Usage: %s [OPTIONS] [IN_FILE [OUT_FILE]]\n", progname);
 	fprintf(stderr, "\n");
-	fprintf(stderr, "Read an SELinux policy package (.pp) and output the equivilent CIL.\n");
+	fprintf(stderr, "Read an SELinux policy package (.pp) and output the equivalent CIL.\n");
 	fprintf(stderr, "If IN_FILE is not provided or is -, read SELinux policy package from\n");
 	fprintf(stderr, "standard input. If OUT_FILE is not provided or is -, output CIL to\n");
 	fprintf(stderr, "standard output.\n");

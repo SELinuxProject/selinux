@@ -26,7 +26,7 @@ hidden_proto(semanage_fcontext_key_create)
     hidden_proto(semanage_fcontext_free)
     hidden_proto(semanage_fcontext_iterate_local)
 
-/* FCONTEXT RECORD: metod table */
+/* FCONTEXT RECORD: method table */
 extern record_table_t SEMANAGE_FCONTEXT_RTABLE;
 
 extern int fcontext_file_dbase_init(semanage_handle_t * handle,

@@ -455,7 +455,7 @@ int ebitmap_read(ebitmap_t * e, void *fp)
 	}
 	if (count && l->startbit + MAPSIZE != e->highbit) {
 		printf
-		    ("security: ebitmap: hight bit %u has not the expected value %zu\n",
+		    ("security: ebitmap: high bit %u has not the expected value %zu\n",
 		     e->highbit, l->startbit + MAPSIZE);
 		goto bad;
 	}

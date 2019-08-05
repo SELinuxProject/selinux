@@ -31,7 +31,7 @@ struct semanage_handle;
 struct semanage_policy_table {
 
 	/* Returns the current policy serial/commit number
-	 * A negative number is returned in case of failre */
+	 * A negative number is returned in case of failure */
 	int (*get_serial) (struct semanage_handle *);
 
 	/* Destroy a connection */

@@ -65,7 +65,7 @@ extern "C" {
 /* Given a list of authorized security contexts for the user, 
    query the user to select one and set *newcon to refer to it.
    Caller must free via freecon.
-   Returns 0 on sucess or -1 otherwise. */
+   Returns 0 on success or -1 otherwise. */
 	extern int query_user_context(char ** list,
 				      char ** newcon);
 

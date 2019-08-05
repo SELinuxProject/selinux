@@ -906,7 +906,7 @@ def createCommandParser():
 
 
 def make_io_args(args):
-    # import/export backward compability
+    # import/export backward compatibility
     args_origin = ["-S", "-o", "-i", "targeted", "minimum", "mls"]
     args_file = []
     args_ie = []

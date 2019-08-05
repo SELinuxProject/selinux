@@ -19,7 +19,7 @@ class selinux_server(slip.dbus.service.Object):
 
     #
     # The semanage method runs a transaction on a series of semanage commands,
-    # these commnds can take the output of customized
+    # these commands can take the output of customized
     #
     @slip.dbus.polkit.require_auth("org.selinux.semanage")
     @dbus.service.method("org.selinux", in_signature='s')

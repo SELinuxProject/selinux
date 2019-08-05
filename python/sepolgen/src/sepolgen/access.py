@@ -23,7 +23,7 @@ Classes representing basic access.
 SELinux - at the most basic level - represents access as
 the 4-tuple subject (type or context), target (type or context),
 object class, permission. The policy language elaborates this basic
-access to faciliate more concise rules (e.g., allow rules can have multiple
+access to facilitate more concise rules (e.g., allow rules can have multiple
 source or target types - see refpolicy for more information).
 
 This module has objects for representing the most basic access (AccessVector)
@@ -37,12 +37,12 @@ from . import util
 from selinux import audit2why
 
 def is_idparam(id):
-    """Determine if an id is a paramater in the form $N, where N is
+    """Determine if an id is a parameter in the form $N, where N is
     an integer.
 
     Returns:
-      True if the id is a paramater
-      False if the id is not a paramater
+      True if the id is a parameter
+      False if the id is not a parameter
     """
     if len(id) > 1 and id[0] == '$':
         try:
@@ -167,7 +167,7 @@ class AccessVector(util.Comparison):
 def avrule_to_access_vectors(avrule):
     """Convert an avrule into a list of access vectors.
 
-    AccessVectors and AVRules are similary, but differ in that
+    AccessVectors and AVRules are similarly, but differ in that
     an AVRule can more than one source type, target type, and
     object class. This function expands a single avrule into a
     list of one or more AccessVectors representing the access
@@ -223,7 +223,7 @@ class AccessVectorSet:
     def __len__(self):
         """Return the number of unique access vectors in the set.
 
-        Because of the inernal representation of the access vector set,
+        Because of the internal representation of the access vector set,
         __len__ is not a constant time operation. Worst case is O(N)
         where N is the number of unique access vectors, but the common
         case is probably better.
@@ -317,7 +317,7 @@ def avs_extract_obj_perms(avs):
 class RoleTypeSet:
     """A non-overlapping set of role type statements.
 
-    This clas allows the incremental addition of role type statements and
+    This class allows the incremental addition of role type statements and
     maintains a non-overlapping list of statements.
     """
     def __init__(self):

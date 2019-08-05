@@ -95,7 +95,7 @@ class ModuleCompiler:
     module compiler (checkmodule) and module packager (semodule_package).
     You are likely interested in the create_module_package method.
     
-    Several options are controlled via paramaters (only effects the 
+    Several options are controlled via parameters (only effects the
     non-refpol builds):
     
      .mls          [boolean] Generate an MLS module (by passed -M to

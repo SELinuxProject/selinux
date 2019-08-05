@@ -310,7 +310,7 @@ Notes:
 
 **Example:**
 
-In this example the role `test` cannot have greater priviledges than `unconfined.role`:
+In this example the role `test` cannot have greater privileges than `unconfined.role`:
 
     (role test)
 

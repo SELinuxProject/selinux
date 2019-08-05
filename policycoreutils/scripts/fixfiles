@@ -67,7 +67,7 @@ done
 }
 
 #
-# Get the default label returned from the kernel for a file with a lable the
+# Get the default label returned from the kernel for a file with a label the
 # kernel does not understand
 #
 get_undefined_type() {

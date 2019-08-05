@@ -2022,7 +2022,7 @@ int avrule_ioctl_ranges(struct av_ioctl_range_list **rangelist)
 		return -1;
 	if (avrule_merge_ioctls(&rangehead))
 		return -1;
-	/* flip ranges if these are ommited*/
+	/* flip ranges if these are omitted */
 	if (omit) {
 		if (avrule_omit_ioctls(&rangehead))
 			return -1;
@@ -2189,7 +2189,7 @@ int avrule_xperms_used(av_extended_perms_t *xperms)
 /*
  * using definitions found in kernel document ioctl-number.txt
  * The kernel components of an ioctl command are:
- * dir, size, driver, and fucntion. Only the driver and function fields
+ * dir, size, driver, and function. Only the driver and function fields
  * are considered here
  */
 #define IOC_DRIV(x) (x >> 8)
@@ -3377,9 +3377,9 @@ int define_filename_trans(void)
 		goto bad;
 	}
 
-	/* We expand the class set into seperate rules.  We expand the types
+	/* We expand the class set into separate rules.  We expand the types
 	 * just to make sure there are not duplicates.  They will get turned
-	 * into seperate rules later */
+	 * into separate rules later */
 	if (type_set_expand(&stypes, &e_stypes, policydbp, 1))
 		goto bad;
 

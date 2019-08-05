@@ -279,7 +279,7 @@ void semanage_select_store(semanage_handle_t * sh, char *storename,
 	assert(sh != NULL);
 
 	/* This just sets the storename to what the user requests, no 
-	   verification of existance will be done until connect */
+	   verification of existence will be done until connect */
 	free(sh->conf->store_path);
 	sh->conf->store_path = strdup(storename);
 	assert(sh->conf->store_path); /* no way to return failure */

@@ -1378,7 +1378,7 @@ static int insert_unordered(struct cil_list *merged, struct cil_list *unordered)
 
 		cil_list_for_each(item, unordered_list->list) {
 			if (cil_list_contains(merged, item->data)) {
-				/* item was declared in an ordered statement, which supercedes
+				/* item was declared in an ordered statement, which supersedes
 				 * all unordered statements */
 				if (item->flavor == CIL_CLASS) {
 					cil_log(CIL_WARN, "Ignoring '%s' as it has already been declared in classorder.\n", ((struct cil_class*)(item->data))->datum.name);
@@ -3984,7 +3984,7 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 		if (changed && (pass > CIL_PASS_CALL1)) {
 			/* Need to re-resolve because an optional was disabled that contained
 			 * one or more declarations. We only need to reset to the call1 pass 
-			 * because things done in the preceeding passes aren't allowed in 
+			 * because things done in the preceding passes aren't allowed in 
 			 * optionals, and thus can't be disabled.
 			 * Note: set pass to CIL_PASS_CALL1 because the pass++ will increment 
 			 * it to CIL_PASS_CALL2

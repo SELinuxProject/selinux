@@ -21,7 +21,7 @@ hidden_proto(semanage_bool_clone)
     hidden_proto(semanage_bool_set_name)
     hidden_proto(semanage_bool_set_value)
 
-/* BOOL RECORD: metod table */
+/* BOOL RECORD: method table */
 extern record_table_t SEMANAGE_BOOL_RTABLE;
 
 extern int bool_file_dbase_init(semanage_handle_t * handle,

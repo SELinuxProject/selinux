@@ -45,7 +45,7 @@ struct selabel_sub {
 /* A file security context specification. */
 struct spec {
 	struct selabel_lookup_rec lr;	/* holds contexts for lookup result */
-	char *regex_str;	/* regular expession string for diagnostics */
+	char *regex_str;	/* regular expression string for diagnostics */
 	char *type_str;		/* type string for diagnostic messages */
 	struct regex_data * regex; /* backend dependent regular expression data */
 	bool regex_compiled; /* bool to indicate if the regex is compiled */

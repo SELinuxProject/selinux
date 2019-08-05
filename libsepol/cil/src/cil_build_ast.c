@@ -6125,7 +6125,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		rc = SEPOL_OK;
 		goto exit;
 	} else if (parse_current->data == NULL) {
-		/* the only time parenthsis can immediately following parenthesis is if
+		/* the only time parenthesis can immediately following parenthesis is if
 		 * the parent is the root node */
 		if (parse_current->parent->parent == NULL) {
 			rc = SEPOL_OK;
@@ -6544,7 +6544,7 @@ int __cil_build_ast_last_child_helper(struct cil_tree_node *parse_current, void 
 	// At this point we no longer have any need for parse_current or any of its
 	// siblings; they have all been converted to the appropriate AST node. The
 	// full parse tree will get deleted elsewhere, but in an attempt to
-	// minimize memory useage (of which the parse tree uses alot), start
+	// minimize memory usage (of which the parse tree uses a lot), start
 	// deleting the parts we don't need now.
 	cil_tree_children_destroy(parse_current->parent);
 

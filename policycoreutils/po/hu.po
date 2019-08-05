@@ -1693,7 +1693,7 @@ msgid "<b>Select existing role to modify:</b>"
 msgstr "<b>Válasszon létező szerepkört a módosításhoz:</b>"
 
 #: ../gui/polgen.glade:908
-msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
 msgstr ""
 "Válassza ki a felhasználói szerepköröket amik átmenetet képeznek ehhez a "
 "területhez: %s."
@@ -1724,7 +1724,7 @@ msgstr ""
 "<b>Válasszon felhasználói sze_repeket amik átmenetet képeznek ehhez %s:</b>"
 
 #: ../gui/polgen.glade:1019
-msgid "Select the user roles that will transiton to this applications domains."
+msgid "Select the user roles that will transition to this applications domains."
 msgstr ""
 "Válasszon felhasználói szerepköröket amik átmenetet képeznek ehhez az "
 "alkalmazás területhez."
@@ -1974,7 +1974,7 @@ msgid "You must enter a executable"
 msgstr "Meg kell adnia egy végrehajtható állományt"
 
 #: ../gui/polgengui.py:756 ../gui/system-config-selinux.py:180
-msgid "Configue SELinux"
+msgid "Configure SELinux"
 msgstr "SELinux beállítása"
 
 #: ../gui/portsPage.py:51 ../gui/system-config-selinux.glade:2528
@@ -4240,7 +4240,7 @@ msgstr "Meg kell adnia egy nevet a szabályzat moduljának %s számára."
 
 #: ../sepolicy/sepolicy/generate.py:333
 msgid ""
-"Name must be alpha numberic with no spaces. Consider using option \"-n "
+"Name must be alpha numeric with no spaces. Consider using option \"-n "
 "MODULENAME\""
 msgstr ""
 "A névnek alfanumerikusnak kell lennie szóközök nélkül. Vagy alkalmazza az \"-"
@@ -4481,7 +4481,7 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/sepolicy.glade:826
 msgid ""
-"Select Make Path Recursive iff you want to apply this label to all children "
+"Select Make Path Recursive if you want to apply this label to all children "
 "of the specified directory path. objects under the directory to have this "
 "label."
 msgstr ""

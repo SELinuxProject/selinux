@@ -1644,7 +1644,7 @@ msgid "<b>Select existing role to modify:</b>"
 msgstr "<b>选择现有角色进行修改：</b>"
 
 #: ../gui/polgen.glade:908
-msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
 msgstr "选择要转换到 %s 域的用户角色。"
 
 #: ../gui/polgen.glade:928
@@ -1672,7 +1672,7 @@ msgid "<b>Select the user_roles that will transition to %s:</b>"
 msgstr "<b>选择要转换成 %s 的 user_roles：</b>"
 
 #: ../gui/polgen.glade:1019
-msgid "Select the user roles that will transiton to this applications domains."
+msgid "Select the user roles that will transition to this applications domains."
 msgstr "选择要转换成这个程序域的用户角色。"
 
 #: ../gui/polgen.glade:1056
@@ -1900,7 +1900,7 @@ msgid "You must enter a executable"
 msgstr "您必须输入 executable"
 
 #: ../gui/polgengui.py:756 ../gui/system-config-selinux.py:180
-msgid "Configue SELinux"
+msgid "Configure SELinux"
 msgstr "配置 SELinux"
 
 #: ../gui/portsPage.py:51 ../gui/system-config-selinux.glade:2528
@@ -3824,7 +3824,7 @@ msgstr "您必须为您 %s 的策略模块输入一个名字。"
 
 #: ../sepolicy/sepolicy/generate.py:333
 msgid ""
-"Name must be alpha numberic with no spaces. Consider using option \"-n "
+"Name must be alpha numeric with no spaces. Consider using option \"-n "
 "MODULENAME\""
 msgstr "名称必须是数字字母组合，且没有空格。请考虑使用选项 \"-n MODULENAME\"。"
 
@@ -4057,7 +4057,7 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/sepolicy.glade:826
 msgid ""
-"Select Make Path Recursive iff you want to apply this label to all children "
+"Select Make Path Recursive if you want to apply this label to all children "
 "of the specified directory path. objects under the directory to have this "
 "label."
 msgstr ""

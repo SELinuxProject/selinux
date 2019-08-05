@@ -901,7 +901,7 @@
                       <object class="GtkTreeView" id="existing_user_treeview">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip-text" translatable="yes">Select the user roles that will transiton to the %s domain.</property>
+                        <property name="tooltip-text" translatable="yes">Select the user roles that will transition to the %s domain.</property>
                         <property name="headers_visible">False</property>
                       </object>
                     </child>
@@ -1004,7 +1004,7 @@ role tab</property>
                       <object class="GtkTreeView" id="user_transition_treeview">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip-text" translatable="yes">Select the user roles that will transiton to this applications domains.</property>
+                        <property name="tooltip-text" translatable="yes">Select the user roles that will transition to this applications domains.</property>
                         <property name="headers_visible">False</property>
                       </object>
                     </child>

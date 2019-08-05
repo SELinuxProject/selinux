@@ -57,7 +57,7 @@ Declarations may be named or anonymous and have three different forms:
     ipaddr
     macro
     policycap
-2.  Explicit anonymous declarations - These are currently restricted to IP addesses where they can be declared directly in statements by enclosing them within parentheses e.g. `(127.0.0.1)` or `(::1)`. See the [Network Labeling Statements](#network_labeling) section for examples.
+2.  Explicit anonymous declarations - These are currently restricted to IP addresses where they can be declared directly in statements by enclosing them within parentheses e.g. `(127.0.0.1)` or `(::1)`. See the [Network Labeling Statements](#network_labeling) section for examples.
 
 3.  Anonymous declarations - These have been previously declared and the object already exists, therefore they may be referenced by their name or identifier within statements. For example the following declare all the components required to specify a context:
 
@@ -224,7 +224,7 @@ The number of `expr_set`'s in an `expr` is dependent on the statement type (ther
 
         (classpermissionset cps_1 (security (not (load_policy setenforce))))
 
-    This example includes all permissions in the associated [`classpermissionset`](cil_class_and_permission_statements.md#classpermissionset) identifer `security_all_perms`:
+    This example includes all permissions in the associated [`classpermissionset`](cil_class_and_permission_statements.md#classpermissionset) identifier `security_all_perms`:
 
         (class security (compute_av compute_create compute_member check_context load_policy
             compute_relabel compute_user setenforce setbool setsecparam setcheckreqprot

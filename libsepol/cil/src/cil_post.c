@@ -2309,7 +2309,7 @@ static int cil_post_db(struct cil_db *db)
 
 	rc = cil_tree_walk(db->ast->root, __cil_post_db_count_helper, NULL, NULL, db);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_INFO, "Failure during cil databse count helper\n");
+		cil_log(CIL_INFO, "Failure during cil database count helper\n");
 		goto exit;
 	}
 

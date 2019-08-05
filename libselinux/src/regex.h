@@ -159,8 +159,8 @@ int regex_cmp(struct regex_data *regex1, struct regex_data *regex2) hidden;
  * the buffer.
  *
  * @arg error_data Error data as returned by regex_prepare_data.
- * @arg buffer String buffer to hold the formated error string.
- * @arg buf_size Total size of the given bufer in bytes.
+ * @arg buffer String buffer to hold the formatted error string.
+ * @arg buf_size Total size of the given buffer in bytes.
  */
 void regex_format_error(struct regex_error_data const *error_data, char *buffer,
 			size_t buf_size) hidden;
