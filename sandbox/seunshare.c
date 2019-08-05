@@ -290,7 +290,7 @@ static int seunshare_mount(const char *src, const char *dst, struct stat *src_st
 }
 
 /*
-   If path is empy or ends with  "/." or "/.. return -1 else return 0;
+   If path is empty or ends with  "/." or "/.. return -1 else return 0;
  */
 static int bad_path(const char *path) {
 	const char *ptr;
@@ -410,7 +410,7 @@ static int cleanup_tmpdir(const char *tmpdir, const char *src,
 
 	/* remove runtime temporary directory */
 	if ((uid_t)setfsuid(0) != 0) {
-		/* setfsuid does not return errror, but this check makes code checkers happy */
+		/* setfsuid does not return error, but this check makes code checkers happy */
 		rc++;
 	}
 

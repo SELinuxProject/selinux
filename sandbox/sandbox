@@ -339,7 +339,7 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
                           default=False, help=_("run complete desktop session within sandbox"))
 
         parser.add_option("-s", "--shred", action="store_true", dest="shred",
-                          default=False, help=_("Shred content before tempory directories are removed"))
+                          default=False, help=_("Shred content before temporary directories are removed"))
 
         parser.add_option("-X", dest="X_ind",
                           action="callback", callback=self.__x_callback,

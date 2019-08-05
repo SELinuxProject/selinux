@@ -28,7 +28,7 @@ If this is a directory and the
 .B SELINUX_RESTORECON_RECURSE
 has been set (for descending through directories), then
 .BR selinux_restorecon ()
-will write an SHA1 digest of specfile entries caculated by
+will write an SHA1 digest of specfile entries calculated by
 .BR selabel_get_digests_all_partial_matches (3)
 to an extended attribute of
 .IR security.sehash
@@ -196,7 +196,7 @@ To improve performance when relabeling file systems recursively (e.g. the
 .B SELINUX_RESTORECON_RECURSE
 flag is set)
 .BR selinux_restorecon ()
-will write a caculated SHA1 digest of the specfile entries returned by
+will write a calculated SHA1 digest of the specfile entries returned by
 .BR selabel_get_digests_all_partial_matches (3)
 to an extended attribute named
 .IR security.sehash

@@ -54,7 +54,7 @@ class PolicyGenerator:
     permission access vector rules. By default only allow rules
     are generated. The methods .set_gen_refpol, .set_gen_requires
     and .set_gen_xperms turns on interface generation,
-    requires generation, and xperms rules genration respectively.
+    requires generation, and xperms rules generation respectively.
 
     PolicyGenerator can also optionally add comments explaining
     why a particular access was allowed based on the audit
@@ -70,7 +70,7 @@ class PolicyGenerator:
         """Initialize a PolicyGenerator with an optional
         existing module.
 
-        If the module paramater is not None then access
+        If the module parameter is not None then access
         will be added to the passed in module. Otherwise
         a new reference policy module will be created.
         """
@@ -339,7 +339,7 @@ class InterfaceGenerator:
 
     def hack_check_ifs(self, ifs):
         # FIXME: Disable interfaces we can't call - this is a hack.
-        # Because we don't handle roles, multiple paramaters, etc.,
+        # Because we don't handle roles, multiple parameters, etc.,
         # etc., we must make certain we can actually use a returned
         # interface.
         for x in ifs.interfaces.values():
@@ -347,7 +347,7 @@ class InterfaceGenerator:
             params.extend(x.params.values())
             params.sort(key=lambda param: param.num, reverse=True)
             for i in range(len(params)):
-                # Check that the paramater position matches
+                # Check that the parameter position matches
                 # the number (e.g., $1 is the first arg). This
                 # will fail if the parser missed something.
                 if (i + 1) != params[i].num:

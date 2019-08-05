@@ -244,7 +244,7 @@ char *semanage_str_replace(const char *search, const char *replace,
 	if (slen == 0)
 		return NULL;
 
-	/* Count the occurences of search in src and compute the new size */
+	/* Count the occurrences of search in src and compute the new size */
 	for (p = strstr(src, search); p != NULL; p = strstr(p + slen, search)) {
 		count++;
 		if (lim && count >= lim)

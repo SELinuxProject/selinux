@@ -177,7 +177,7 @@ def walktree(node, depthfirst=True, showdepth=False, type=None):
     The walktree function iterates over a tree containing Nodes and
     leaf objects. The iteration can perform a depth first or a breadth
     first traversal of the tree (controlled by the depthfirst
-    paramater. The passed in node will be returned.
+    parameter. The passed in node will be returned.
 
     This function will only work correctly for trees - arbitrary graphs
     will likely cause infinite looping.
@@ -242,7 +242,7 @@ def list_to_space_str(s, cont=('{', '}')):
 def list_to_comma_str(s):
     l = len(s)
     if l < 1:
-        raise ValueError("cannot conver 0 len set to comma string")
+        raise ValueError("cannot convert 0 len set to comma string")
 
     return ", ".join(s)
 

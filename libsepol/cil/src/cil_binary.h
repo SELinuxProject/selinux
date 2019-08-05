@@ -49,11 +49,11 @@ int cil_binary_create(const struct cil_db *db, sepol_policydb_t **pdb);
 /**
  * Create a pre allocated binary policydb from the cil db.
  *
- * It is assumed that pdb has been allocated and initialzed so that fields such
- * as policy type and version are set appropriately. It is reccomended that
+ * It is assumed that pdb has been allocated and initialized so that fields such
+ * as policy type and version are set appropriately. It is recommended that
  * instead of calling this, one instead calls cil_binary_create, which will
  * properly allocate and initialize the pdb and then calls this function. This
- * funcion is used to maintain binary backwards compatability.
+ * function is used to maintain binary backwards compatibility.
  *
  * @param[in] db The cil database.
  * @param[in] pdb The policy database.
@@ -126,7 +126,7 @@ int cil_typealias_to_policydb(policydb_t *pdb, struct cil_alias *cil_alias);
 
 /**
  * Insert cil typepermissive structure into sepol policydb.
- * The function looks up the perviously inserted type and flips the bit
+ * The function looks up the previously inserted type and flips the bit
  * in the permssive types bitmap that corresponds to that type's value.
  *
  * @param[in] pdb The policy database to insert the typepermissive into.

@@ -1849,7 +1849,7 @@ class nodeRecords(semanageRecords):
         if addr == "":
             raise ValueError(_("Node Address is required"))
 
-        # verify valid comination
+        # verify valid combination
         if len(mask) == 0 or mask[0] == "/":
             i = IP(addr + mask)
             newaddr = i.strNormal(0)

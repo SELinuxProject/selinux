@@ -60,7 +60,7 @@ extern int sepol_compute_av_reason(sepol_security_id_t ssid,
 /*
  * Same as above, but also returns the constraint expression calculations
  * whether allowed or denied in a buffer. This buffer is allocated by
- * this call and must be free'd by the caller using free(3). The contraint
+ * this call and must be free'd by the caller using free(3). The constraint
  * buffer will contain any constraints in infix notation.
  * If the SHOW_GRANTED flag is set it will show granted and denied
  * constraints. The default is to show only denied constraints.

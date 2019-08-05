@@ -258,7 +258,7 @@ extern int security_compute_user_raw(const char * scon,
 /* Validate a transition. This determines whether a transition from scon to newcon
    using tcon as the target for object class tclass is valid in the loaded policy.
    This checks against the mlsvalidatetrans and validatetrans constraints in the loaded policy.
-   Returns 0 if allowed and -1 if an error occured with errno set */
+   Returns 0 if allowed and -1 if an error occurred with errno set */
 extern int security_validatetrans(const char *scon,
 				  const char *tcon,
 				  security_class_t tclass,

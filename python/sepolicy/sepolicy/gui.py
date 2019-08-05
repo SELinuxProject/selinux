@@ -1023,7 +1023,7 @@ class SELinuxGui():
         self.delete_button.set_sensitive(True)
         # Clear the tree to prepare for a new selection otherwise
         self.executable_files_liststore.clear()
-        # data will pile up everytime the user selects a new item from the drop down menu
+        # data will pile up every time the user selects a new item from the drop down menu
         self.network_in_liststore.clear()
         self.network_out_liststore.clear()
         self.boolean_liststore.clear()
@@ -1894,7 +1894,7 @@ class SELinuxGui():
         tree.set_value(iter, 2, fclass)
 
     def restore_to_default(self, *args):
-        print("restore to defualt clicked...")
+        print("restore to default clicked...")
 
     def invalid_entry_retry(self, *args):
         self.closewindow(self.error_check_window)

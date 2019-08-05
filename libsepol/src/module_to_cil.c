@@ -1323,7 +1323,7 @@ static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *
 
 			// length = length of parameters +
 			//          length of operator +
-			//          1 space preceeding each parameter +
+			//          1 space preceding each parameter +
 			//          2 parens around the whole expression
 			//          + null terminator
 			len = strlen(val1) + strlen(val2) + strlen(op) + (num_params * 1) + 2 + 1;
@@ -1853,7 +1853,7 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 
 			// length = length of parameters +
 			//          length of operator +
-			//          1 space preceeding each parameter +
+			//          1 space preceding each parameter +
 			//          2 parens around the whole expression
 			//          + null terminator
 			len = strlen(val1) + strlen(val2) + strlen(op) + (num_params * 1) + 2 + 1;

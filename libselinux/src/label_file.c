@@ -247,7 +247,7 @@ end_arch_check:
 		uint32_t stem_len;
 		int newid;
 
-		/* the length does not inlude the nul */
+		/* the length does not include the nul */
 		rc = next_entry(&stem_len, mmap_area, sizeof(uint32_t));
 		if (rc < 0 || !stem_len) {
 			rc = -1;

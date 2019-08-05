@@ -1680,7 +1680,7 @@ msgid "<b>Select existing role to modify:</b>"
 msgstr "<b>ಮಾರ್ಪಡಿಸಲು ಈಗಿರುವ ಪಾತ್ರವನ್ನು ಆರಿಸಿ:</b>"
 
 #: ../gui/polgen.glade:908
-msgid "Select the user roles that will transiton to the %s domain."
+msgid "Select the user roles that will transition to the %s domain."
 msgstr "%s ಡೊಮೈನ್‌ಗೆ ಪರಿವರ್ತಿತಗೊಳ್ಳುವ ಬಳಕೆದಾರ ಪಾತ್ರಗಳನ್ನು ಆರಿಸಿ."
 
 #: ../gui/polgen.glade:928
@@ -1708,7 +1708,7 @@ msgid "<b>Select the user_roles that will transition to %s:</b>"
 msgstr "<b>%s ಗೆ ಪರಿವರ್ತಿತಗೊಳ್ಳುವ ಬಳಕೆದಾರ_ಪಾತ್ರಗಳನ್ನು ಆರಿಸಿ:</b>"
 
 #: ../gui/polgen.glade:1019
-msgid "Select the user roles that will transiton to this applications domains."
+msgid "Select the user roles that will transition to this applications domains."
 msgstr "ಈ ಅನ್ವಯ ಡೊಮೈನ್‌ಗಳಿಗೆ ಪರಿವರ್ತಿತಗೊಳ್ಳುವ ಬಳಕೆದಾರ ಪಾತ್ರಗಳನ್ನು ಆರಿಸಿ."
 
 #: ../gui/polgen.glade:1056
@@ -1951,7 +1951,7 @@ msgid "You must enter a executable"
 msgstr "ನೀವು ಒಂದು ಕಾರ್ಯಗೊಳಿಸಬಹುದಾದ್ದನ್ನು ನಮೂದಿಸಬೇಕು"
 
 #: ../gui/polgengui.py:756 ../gui/system-config-selinux.py:180
-msgid "Configue SELinux"
+msgid "Configure SELinux"
 msgstr "SELinux ಅನ್ನು ಸಂರಚಿಸು"
 
 #: ../gui/portsPage.py:51 ../gui/system-config-selinux.glade:2528
@@ -4060,7 +4060,7 @@ msgstr "ನಿಮ್ಮ %s ಗಾಗಿನ ಪಾಲಿಸಿ ಮಾಡ್ಯೂ
 
 #: ../sepolicy/sepolicy/generate.py:333
 msgid ""
-"Name must be alpha numberic with no spaces. Consider using option \"-n "
+"Name must be alpha numeric with no spaces. Consider using option \"-n "
 "MODULENAME\""
 msgstr ""
 "ಹೆಸರು ವರ್ಣಮಾಲೆ ಮತ್ತು ಅಂಕೆ ಎರಡನ್ನೂ ಹೊಂದಿರಬೇಕು ಹಾಗು ಖಾಲಿ ಜಾಗಗಳಿರಬಾರದು. \"-n "
@@ -4301,7 +4301,7 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/sepolicy.glade:826
 msgid ""
-"Select Make Path Recursive iff you want to apply this label to all children "
+"Select Make Path Recursive if you want to apply this label to all children "
 "of the specified directory path. objects under the directory to have this "
 "label."
 msgstr ""

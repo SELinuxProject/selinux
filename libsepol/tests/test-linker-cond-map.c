@@ -93,7 +93,7 @@ void base_cond_tests(policydb_t * base)
 	/* these tests look at booleans and conditionals in the base only
 	 * to ensure that they aren't altered or removed during the link process */
 
-	/* bool existance and state, global scope */
+	/* bool existence and state, global scope */
 	d = test_find_decl_by_sym(base, SYM_TYPES, "tag_g_b");
 	decls[0] = d->decl_id;
 	test_sym_presence(base, "g_b_bool_1", SYM_BOOLS, SCOPE_DECL, decls, 1);
@@ -103,7 +103,7 @@ void base_cond_tests(policydb_t * base)
 	bools[0].expr_type = COND_BOOL;
 	test_cond_expr_mapping(base, d, bools, 1);
 
-	/* bool existance and state, optional scope */
+	/* bool existence and state, optional scope */
 	d = test_find_decl_by_sym(base, SYM_TYPES, "tag_o1_b");
 	decls[0] = d->decl_id;
 	test_sym_presence(base, "o1_b_bool_1", SYM_BOOLS, SCOPE_DECL, decls, 1);
@@ -121,7 +121,7 @@ void module_cond_tests(policydb_t * base)
 	unsigned int decls[1];
 	test_cond_expr_t bools[3];
 
-	/* bool existance and state, module 1 global scope */
+	/* bool existence and state, module 1 global scope */
 	d = test_find_decl_by_sym(base, SYM_TYPES, "tag_g_m1");
 	decls[0] = d->decl_id;
 	test_sym_presence(base, "g_m1_bool_1", SYM_BOOLS, SCOPE_DECL, decls, 1);
@@ -131,7 +131,7 @@ void module_cond_tests(policydb_t * base)
 	bools[0].expr_type = COND_BOOL;
 	test_cond_expr_mapping(base, d, bools, 1);
 
-	/* bool existance and state, module 1 optional scope */
+	/* bool existence and state, module 1 optional scope */
 	d = test_find_decl_by_sym(base, SYM_TYPES, "tag_o1_m1");
 	decls[0] = d->decl_id;
 	test_sym_presence(base, "o1_m1_bool_1", SYM_BOOLS, SCOPE_DECL, decls, 1);
@@ -141,7 +141,7 @@ void module_cond_tests(policydb_t * base)
 	bools[0].expr_type = COND_BOOL;
 	test_cond_expr_mapping(base, d, bools, 1);
 
-	/* bool existance and state, module 2 global scope */
+	/* bool existence and state, module 2 global scope */
 	d = test_find_decl_by_sym(base, SYM_TYPES, "tag_g_m2");
 	decls[0] = d->decl_id;
 	test_sym_presence(base, "g_m2_bool_1", SYM_BOOLS, SCOPE_DECL, decls, 1);

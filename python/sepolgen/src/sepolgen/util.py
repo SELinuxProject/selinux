@@ -79,8 +79,8 @@ def first(s, sorted=False):
     Otherwise a random element will be returned (as sets are not ordered).
     """
     if not len(s):
-        raise IndexError("empty containter")
-    
+        raise IndexError("empty container")
+
     if sorted:
         l = set_to_list(s)
         l.sort()
@@ -119,7 +119,7 @@ class Comparison():
     """Class used when implementing rich comparison.
 
     Inherit from this class if you want to have a rich
-    comparison withing the class, afterwards implement
+    comparison within the class, afterwards implement
     _compare function within your class."""
 
     def _compare(self, other, method):

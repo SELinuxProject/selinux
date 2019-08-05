@@ -24,7 +24,7 @@ etc.).
 
 This representation can be used as output from the parser to represent
 the reference policy interfaces. It can also be used to generate
-policy by building up the relevent data structures and then outputting
+policy by building up the relevant data structures and then outputting
 them. See sepolgen.policygen and sepolgen.output for information on how
 this can be done.
 

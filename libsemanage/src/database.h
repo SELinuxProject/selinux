@@ -49,7 +49,7 @@ typedef struct record_table {
 	int (*clone) (struct semanage_handle * handle,
 		      const record_t * rec, record_t ** new_rec);
 
-	/* Deallocate record resources. Must sucessfully handle NULL. */
+	/* Deallocate record resources. Must successfully handle NULL. */
 	void (*free) (record_t * rec);
 
 } record_table_t;

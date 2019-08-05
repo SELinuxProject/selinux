@@ -22,7 +22,7 @@ hidden_proto(semanage_iface_create)
     hidden_proto(semanage_iface_set_msgcon)
     hidden_proto(semanage_iface_set_name)
 
-/* IFACE RECORD: metod table */
+/* IFACE RECORD: method table */
 extern record_table_t SEMANAGE_IFACE_RTABLE;
 
 extern int iface_policydb_dbase_init(semanage_handle_t * handle,

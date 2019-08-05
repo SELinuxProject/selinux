@@ -125,7 +125,7 @@ io_channel_callback
        &bytes_read, NULL);
 
     if (! bytes_read) {
-	    /* Sesssion/Terminal Ended */
+	    /* Session/Terminal Ended */
 	    exit(0);
     }
 

@@ -21,7 +21,7 @@
  */
 struct selinux_status_t
 {
-	uint32_t	version;	/* version number of thie structure */
+	uint32_t	version;	/* version number of this structure */
 	uint32_t	sequence;	/* sequence number of seqlock logic */
 	uint32_t	enforcing;	/* current setting of enforcing mode */
 	uint32_t	policyload;	/* times of policy reloaded */

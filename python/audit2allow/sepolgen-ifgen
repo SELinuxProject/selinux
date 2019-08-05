@@ -53,7 +53,7 @@ def parse_options():
     parser.add_option("-a", "--attribute_info", dest="attribute_info")
     parser.add_option("-p", "--policy", dest="policy_path")
     parser.add_option("-v", "--verbose", action="store_true", default=False,
-                      help="print debuging output")
+                      help="print debugging output")
     parser.add_option("-d", "--debug", action="store_true", default=False,
                       help="extra debugging output")
     parser.add_option("--attr-helper", default=ATTR_HELPER,
@@ -126,7 +126,7 @@ def main():
     else:
         log = None
 
-    # Get the attibutes from the binary
+    # Get the attributes from the binary
     attrs = None
     if not options.no_attrs:
         attrs = get_attrs(options.policy_path, options.attr_helper)

@@ -207,7 +207,7 @@ t_TICK      = r'\`'
 t_SQUOTE    = r'\''
 t_OBRACE    = r'\{'
 t_CBRACE    = r'\}'
-# This will handle spurios extra ';' via the +
+# This will handle spurious extra ';' via the +
 t_SEMI      = r'\;+'
 t_COLON     = r'\:'
 t_OPAREN    = r'\('

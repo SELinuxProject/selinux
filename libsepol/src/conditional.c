@@ -359,7 +359,7 @@ int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
 	ne = NULL;
 	e = cn->expr;
 
-	/* becuase it's RPN look at last element */
+	/* because it's RPN look at last element */
 	while (e->next != NULL) {
 		ne = e;
 		e = e->next;

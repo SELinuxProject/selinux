@@ -28,7 +28,7 @@ hidden_proto(semanage_user_add_role)
     hidden_proto(semanage_user_exists)
     hidden_proto(semanage_user_query)
 
-/* USER record: metod table */
+/* USER record: method table */
 extern record_table_t SEMANAGE_USER_RTABLE;
 
 /* USER BASE record: method table */

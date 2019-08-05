@@ -39,7 +39,7 @@ typedef struct dbase_policydb dbase_t;
 record_policydb_table_t SEMANAGE_BOOL_POLICYDB_RTABLE = {
 	.add = NULL,
 	.modify = NULL,
-/* FIXME: these casts depend on stucts in libsepol matching structs
+/* FIXME: these casts depend on structs in libsepol matching structs
  * in libsemanage. This is incredibly fragile - the casting gets
  * rid of warnings, but is not type safe.
  */

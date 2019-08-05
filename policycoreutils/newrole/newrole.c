@@ -621,7 +621,7 @@ static inline int drop_capabilities(__attribute__ ((__unused__)) int full)
 #ifdef NAMESPACE_PRIV
 /**
  * This function will set the uid values to be that of caller's uid, and
- * will drop any privilages which maybe have been raised.
+ * will drop any privilege which may have been raised.
  */
 static int transition_to_caller_uid()
 {
@@ -718,7 +718,7 @@ static int relabel_tty(const char *ttyn, security_context_t new_context,
 		fprintf(stderr, _("Error!  Could not open %s.\n"), ttyn);
 		return fd;
 	}
-	/* this craziness is to make sure we cann't block on open and deadlock */
+	/* this craziness is to make sure we can't block on open and deadlock */
 	rc = fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) & ~O_NONBLOCK);
 	if (rc) {
 		fprintf(stderr, _("Error!  Could not clear O_NONBLOCK on %s\n"), ttyn);
@@ -1053,7 +1053,7 @@ int main(int argc, char *argv[])
 	/*
 	 * Step 0: Setup
 	 *
-	 * Do some intial setup, including dropping capabilities, checking
+	 * Do some initial setup, including dropping capabilities, checking
 	 * if it makes sense to continue to run newrole, and setting up
 	 * a scrubbed environment.
 	 */

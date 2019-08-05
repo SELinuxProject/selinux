@@ -69,16 +69,16 @@ int semanage_is_prefix(const char *str, const char *val) WARN_UNUSED;
 
 /**
  * @param str   the string to semanage_split
- * @return     malloc'd string after the first run of charachters that aren't whitespace
+ * @return     malloc'd string after the first run of characters that aren't whitespace
  */
 char *semanage_split_on_space(const char *str) WARN_UNUSED;
 
 /**
  * @param	 str   the string to semanage_split
- * @param	 delim the string delimiter.  NOT a set of charachters that can be
+ * @param	 delim the string delimiter.  NOT a set of characters that can be
  *	       a delimiter.
  *	       if *delim == '\0' behaves as semanage_splitOnSpace()
- * @return   a ptr to the first charachter past the delimiter.
+ * @return   a ptr to the first character past the delimiter.
  *	    if delim doesn't appear in the string, returns a ptr to the
  *	    trailing null in the string
  */
@@ -102,15 +102,15 @@ int semanage_cmp_plist_t(const semanage_list_t ** x,
 			 const semanage_list_t ** y);
 /**
  * @param      data a target string
- * @param      what  a charachter
+ * @param      what  a character
  * @returns    the number of times the char appears in the string
  */
 int semanage_str_count(const char *data, char what);
 /**
  * @param      - a string
- * @param            the charachter to trim to
+ * @param            the character to trim to
  * @return   - mangles the string, converting the first
- *             occurrance of the charachter to a '\0' from
+ *             occurrence of the character to a '\0' from
  *             the end of the string.
  */
 void semanage_rtrim(char *str, char trim_to);
@@ -119,7 +119,7 @@ void semanage_rtrim(char *str, char trim_to);
  * @param      value being searched for
  * @param      replacement value that replaces found search values
  * @param      string being searched and replaced on
- * @param      maximum number of value occurences (zero for unlimited)
+ * @param      maximum number of value occurrences (zero for unlimited)
  * @return     newly-allocated string with the replaced values
  */
 char *semanage_str_replace(const char *search, const char *replace,

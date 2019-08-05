@@ -782,7 +782,7 @@ SELinux %(domainname)s policy is very flexible allowing users to setup their %(d
             for e in equiv:
                 self.fd.write(r"""
 .PP
-%(domainname)s policy stores data with multiple different file context types under the %(equiv)s directory.  If you would like to store the data in a different directory you can use the semanage command to create an equivalence mapping.  If you wanted to store this data under the /srv dirctory you would execute the following command:
+%(domainname)s policy stores data with multiple different file context types under the %(equiv)s directory.  If you would like to store the data in a different directory you can use the semanage command to create an equivalence mapping.  If you wanted to store this data under the /srv directory you would execute the following command:
 .PP
 .B semanage fcontext -a -e %(equiv)s /srv/%(alt)s
 .br
@@ -962,7 +962,7 @@ The default entrypoint paths for the %s_t domain are the following:
         if "bin_t" in entrypoints:
             entrypoints.remove("bin_t")
             self.fd.write("""
-All executeables with the default executable label, usually stored in /usr/bin and /usr/sbin.""")
+All executables with the default executable label, usually stored in /usr/bin and /usr/sbin.""")
 
         paths = []
         for entrypoint in entrypoints:

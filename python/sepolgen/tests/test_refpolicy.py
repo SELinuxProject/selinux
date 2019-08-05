@@ -36,7 +36,7 @@ class TestIdSet(unittest.TestCase):
 
 class TestXpermSet(unittest.TestCase):
     def test_init(self):
-        """ Test that all atttributes are correctly initialized. """
+        """ Test that all attributes are correctly initialized. """
         s1 = refpolicy.XpermSet()
         self.assertEqual(s1.complement, False)
         self.assertEqual(s1.ranges, [])

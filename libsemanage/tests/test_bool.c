@@ -528,7 +528,7 @@ void test_bool_query(void)
 	helper_bool_query(SH_TRANS, BOOL_NONEXISTENT, -1);
 }
 
-/* Functon bool_exists */
+/* Function bool_exists */
 void helper_bool_exists(level_t level, const char *bool_str, int exp_resp)
 {
 	semanage_bool_key_t *key;
@@ -884,7 +884,7 @@ void test_bool_iterate_local(void)
 	cleanup_handle(SH_TRANS);
 }
 
-/* Functtion bool_list_local */
+/* Function bool_list_local */
 void test_bool_list_local(void)
 {
 	semanage_bool_t **records;

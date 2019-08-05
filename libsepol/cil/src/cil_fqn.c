@@ -103,7 +103,7 @@ static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, has
 		case CIL_SYM_IPADDRS:
 		case CIL_SYM_NAMES:
 		case CIL_SYM_PERMX:
-			/* These do not show up in the kernal policy */
+			/* These do not show up in the kernel policy */
 			break;
 		case CIL_SYM_POLICYCAPS:
 			/* Valid policy capability names are defined in libsepol */

@@ -1608,7 +1608,7 @@ int __cil_permx_bitmap_to_sepol_xperms_list(ebitmap_t *xperms, struct cil_list *
 			continue;
 		}
 
-		// if we got here, i is the end of this range (either becuase the func
+		// if we got here, i is the end of this range (either because the func
 		// is 0xff or the next bit isn't set). The next time around we are
 		// going to need a start a new range
 		high = i;
@@ -1665,7 +1665,7 @@ int __cil_avrulex_ioctl_to_policydb(hashtab_key_t k, hashtab_datum_t datum, void
 
 	sepol_obj = pdb->class_val_to_struct[avtab_key->target_class - 1];
 
-	// setting the data for an extended avtab isn't really neccessary because
+	// setting the data for an extended avtab isn't really necessary because
 	// it is ignored by the kernel. However, neverallow checking requires that
 	// the data value be set, so set it for that to work.
 	rc = __perm_str_to_datum(CIL_KEY_IOCTL, sepol_obj, &data);
@@ -4152,7 +4152,7 @@ int __cil_policydb_init(policydb_t *pdb, const struct cil_db *db, struct cil_cla
 	int rc = SEPOL_ERR;
 
 	// these flags should get set in __cil_policydb_create. However, for
-	// backwards compatability, it is possible that __cil_policydb_create is
+	// backwards compatibility, it is possible that __cil_policydb_create is
 	// never called. So, they must also be set here.
 	pdb->handle_unknown = db->handle_unknown;
 	pdb->mls = db->mls;

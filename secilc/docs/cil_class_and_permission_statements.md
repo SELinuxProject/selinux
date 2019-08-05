@@ -113,7 +113,7 @@ Declares a class and zero or more permissions in the current namespace.
 
 **Examples:**
 
-This example defines a set of permissions for the `binder` class indentifier:
+This example defines a set of permissions for the `binder` class identifier:
 
     (class binder (impersonate call set_context_mgr transfer receive))
 
@@ -179,7 +179,7 @@ This will produce an ordered list of "`file dir process`"
 
 **Unordered Classorder Statement:**
 
-If users do not have knowledge of the existing [`classorder`](#classorder), the `unordered` keyword may be used in a [`classorder`](#classorder) statement. The [classes](#class) in an unordered statement are appended to the existing [`classorder`](#classorder). A class in an ordered statement always supercedes the class redeclaration in an unordered statement. The `unordered` keyword must be the first item in the [`classorder`](#classorder) listing.
+If users do not have knowledge of the existing [`classorder`](#classorder), the `unordered` keyword may be used in a [`classorder`](#classorder) statement. The [classes](#class) in an unordered statement are appended to the existing [`classorder`](#classorder). A class in an ordered statement always supersedes the class redeclaration in an unordered statement. The `unordered` keyword must be the first item in the [`classorder`](#classorder) listing.
 
 **Example:**
 

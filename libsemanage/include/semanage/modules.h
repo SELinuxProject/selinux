@@ -264,7 +264,7 @@ int semanage_module_install_info(semanage_handle_t *sh,
  *
  * Returns:
  * 	 0	success
- *	-1	failure, out of memeory
+ *	-1	failure, out of memory
  *	-2	failure, @module not found or couldn't be removed
  */
 int semanage_module_remove_key(semanage_handle_t *sh,

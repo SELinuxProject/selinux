@@ -769,7 +769,7 @@ class childWindow:
             self.syslog_checkbutton.set_active(policy.use_syslog)
 
     def stand_alone(self):
-        desktopName = _("Configue SELinux")
+        desktopName = _("Configure SELinux")
 
         self.setupScreen()
         self.mainWindow.connect("destroy", self.quit)

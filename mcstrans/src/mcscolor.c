@@ -211,7 +211,7 @@ static int add_mnemonic(const char *name, uint32_t color)
 
 
 /* Process line from color file.
-   May modify the data pointed to by the buffer paremeter */
+   May modify the data pointed to by the buffer parameter */
 static int process_color(char *buffer, int line) {
 	char rule[10], pat[256], f[256], b[256];
 	uint32_t i, fg, bg;

@@ -1,7 +1,7 @@
 # Copyright (C) 2011 Red Hat
 # see file 'COPYING' for use and warranty information
 #
-# setrans is a tool for analyzing process transistions in SELinux policy
+# setrans is a tool for analyzing process transitions in SELinux policy
 #
 #    This program is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU General Public License as

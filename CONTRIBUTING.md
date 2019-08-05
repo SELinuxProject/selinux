@@ -43,7 +43,7 @@ patches, please follow these guidelines:
 -   Must apply against HEAD of the master branch
 -   Separate large patches into logical patches
 -   Patch descriptions must end with your "Signed-off-by" line. This means your
-    code meets the Developer's certificate of origin, see bellow.
+    code meets the Developer's certificate of origin, see below.
 
 When adding new, large features or tools it is best to discuss the
 design on the mailing list prior to submitting the patch.

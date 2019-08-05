@@ -222,7 +222,7 @@ This example will associate `unconfined.user` with a named [`level`](cil_mls_lab
 userrange
 ---------
 
-Associates a previously declared [`user`](cil_user_statements.md#user) identifer with a previously declared [`levelrange`](cil_mls_labeling_statements.md#levelrange) identifier. The [`levelrange`](cil_mls_labeling_statements.md#levelrange) may be named or anonymous.
+Associates a previously declared [`user`](cil_user_statements.md#user) identifier with a previously declared [`levelrange`](cil_mls_labeling_statements.md#levelrange) identifier. The [`levelrange`](cil_mls_labeling_statements.md#levelrange) may be named or anonymous.
 
 **Statement definition:**
 
@@ -281,7 +281,7 @@ This example will associate `unconfined.user` with a named [`levelrange`](cil_ml
 userbounds
 ----------
 
-Defines a hierarchical relationship between users where the child user cannot have more priviledges than the parent.
+Defines a hierarchical relationship between users where the child user cannot have more privileges than the parent.
 
 Notes:
 
@@ -318,7 +318,7 @@ Notes:
 
 **Example:**
 
-The user `test` cannot have greater priviledges than `unconfined.user`:
+The user `test` cannot have greater privileges than `unconfined.user`:
 
     (user test)
 
