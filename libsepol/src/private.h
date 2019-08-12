@@ -2,8 +2,9 @@
 
 /* Endian conversion for reading and writing binary policies */
 
-#include <sepol/policydb/policydb.h>
+#include "dso.h"
 
+#include <sepol/policydb/policydb.h>
 
 #ifdef __APPLE__
 #include <sys/types.h>
@@ -14,7 +15,6 @@
 #endif
 
 #include <errno.h>
-#include <dso.h>
 
 #ifdef __APPLE__
 #define __BYTE_ORDER  BYTE_ORDER

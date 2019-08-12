@@ -18,6 +18,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include "dso.h"
+
 #include <assert.h>
 #include <ctype.h>
 #include <stdarg.h>
@@ -27,7 +29,6 @@
 #include <sepol/policydb/flask_types.h>
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/util.h>
-#include <dso.h>
 
 struct val_to_name {
 	unsigned int val;
