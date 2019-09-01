@@ -157,7 +157,7 @@ int is_id_enabled(char *id, policydb_t * p, int symbol_table)
 	scope_datum_t *scope =
 	    (scope_datum_t *) hashtab_search(p->scope[symbol_table].table, id);
 	avrule_decl_t *decl;
-	uint32_t len = scope->decl_ids_len;
+	uint32_t len;
 
 	if (scope == NULL) {
 		return 0;
@@ -166,6 +166,7 @@ int is_id_enabled(char *id, policydb_t * p, int symbol_table)
 		return 0;
 	}
 
+	len = scope->decl_ids_len;
 	if (len < 1) {
 		return 0;
 	}
