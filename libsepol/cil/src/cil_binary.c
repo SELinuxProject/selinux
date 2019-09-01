@@ -5043,11 +5043,13 @@ exit:
 	hashtab_destroy(avrulex_ioctl_table);
 	free(type_value_to_cil);
 	free(class_value_to_cil);
-	/* Range is because libsepol values start at 1. */
-	for (i=1; i < db->num_classes+1; i++) {
-		free(perm_value_to_cil[i]);
+	if (perm_value_to_cil != NULL) {
+		/* Range is because libsepol values start at 1. */
+		for (i=1; i < db->num_classes+1; i++) {
+			free(perm_value_to_cil[i]);
+		}
+		free(perm_value_to_cil);
 	}
-	free(perm_value_to_cil);
 	cil_list_destroy(&neverallows, CIL_FALSE);
 
 	return rc;
