@@ -124,8 +124,10 @@ int sepol_module_package_create(sepol_module_package_t ** p)
 		return -1;
 
 	rc = module_package_init(*p);
-	if (rc < 0)
+	if (rc < 0) {
 		free(*p);
+		*p = NULL;
+	}
 
 	return rc;
 }
