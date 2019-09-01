@@ -115,7 +115,6 @@ def chcat_add(orig, newcat, objects, login_ind):
     errors = 0
     sensitivity = newcat[0]
     cat = newcat[1]
-    cmd = 'chcon -l %s' % sensitivity
     for f in objects:
         (rc, c) = selinux.getfilecon(f)
         con = c.split(":")[3:]
