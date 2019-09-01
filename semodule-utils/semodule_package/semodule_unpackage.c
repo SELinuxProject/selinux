@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 
 	ppfile = argv[1];
 	modfile = argv[2];
-	if (argc >= 3)
+	if (argc >= 4)
 		fcfile = argv[3];
 
 	if (file_to_policy_file(ppfile, &in, "r"))
