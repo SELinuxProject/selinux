@@ -539,7 +539,6 @@ def find_file(reg):
             path += "/"
     except IndexError:
         print("try failed got an IndexError")
-        pass
 
     try:
         pat = re.compile(r"%s$" % reg)
