@@ -228,13 +228,16 @@ void test_attr_types(policydb_t * p, const char *id, avrule_decl_t * decl, const
 	unsigned int i;
 	type_datum_t *attr;
 
-	if (decl)
+	if (decl) {
 		attr = hashtab_search(decl->p_types.table, id);
-	else
+		if (attr == NULL)
+			printf("could not find attr %s in decl %d\n", id, decl->decl_id);
+	} else {
 		attr = hashtab_search(p->p_types.table, id);
+		if (attr == NULL)
+			printf("could not find attr %s in policy\n", id);
+	}
 
-	if (attr == NULL)
-		printf("could not find attr %s in decl %d\n", id, decl->decl_id);
 	CU_ASSERT_FATAL(attr != NULL);
 	CU_ASSERT(attr->flavor == TYPE_ATTRIB);
 	CU_ASSERT(attr->primary == 1);
