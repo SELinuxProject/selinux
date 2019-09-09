@@ -698,6 +698,9 @@ static int write_default_range_to_cil(FILE *out, char *class_name, class_datum_t
 	case DEFAULT_TARGET_LOW_HIGH:
 		dft = "target low-high";
 		break;
+	case DEFAULT_GLBLUB:
+		dft = "glblub";
+		break;
 	default:
 		sepol_log_err("Unknown default type value: %i", class->default_range);
 		return -1;

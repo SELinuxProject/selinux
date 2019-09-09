@@ -834,6 +834,9 @@ static void cil_default_ranges_to_policy(FILE *out, struct cil_list *defaults)
 		case CIL_DEFAULT_TARGET_LOW_HIGH:
 			fprintf(out," %s %s", CIL_KEY_TARGET, CIL_KEY_LOW_HIGH);
 			break;
+		case CIL_DEFAULT_GLBLUB:
+			fprintf(out," %s", CIL_KEY_GLBLUB);
+			break;
 		default:
 			break;
 		}

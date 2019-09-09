@@ -227,6 +227,7 @@ static void cil_init_keys(void)
 	CIL_KEY_LOW = cil_strpool_add("low");
 	CIL_KEY_HIGH = cil_strpool_add("high");
 	CIL_KEY_LOW_HIGH = cil_strpool_add("low-high");
+	CIL_KEY_GLBLUB = cil_strpool_add("glblub");
 	CIL_KEY_ROOT = cil_strpool_add("<root>");
 	CIL_KEY_NODE = cil_strpool_add("<node>");
 	CIL_KEY_PERM = cil_strpool_add("perm");

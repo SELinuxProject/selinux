@@ -5894,7 +5894,7 @@ int cil_gen_defaultrange(struct cil_tree_node *parse_current, struct cil_tree_no
 		CIL_SYN_STRING,
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_STRING,
-		CIL_SYN_STRING,
+		CIL_SYN_STRING | CIL_SYN_END,
 		CIL_SYN_END
 	};
 	int syntax_len = sizeof(syntax)/sizeof(*syntax);
@@ -5917,8 +5917,8 @@ int cil_gen_defaultrange(struct cil_tree_node *parse_current, struct cil_tree_no
 	}
 
 	object = parse_current->next->next->data;
-	range = parse_current->next->next->next->data;
 	if (object == CIL_KEY_SOURCE) {
+		range = parse_current->next->next->next->data;
 		if (range == CIL_KEY_LOW) {
 			def->object_range = CIL_DEFAULT_SOURCE_LOW;
 		} else if (range == CIL_KEY_HIGH) {
@@ -5930,7 +5930,8 @@ int cil_gen_defaultrange(struct cil_tree_node *parse_current, struct cil_tree_no
 			rc = SEPOL_ERR;
 			goto exit;
 		}
-	} else if (parse_current->next->next->data == CIL_KEY_TARGET) {
+	} else if (object == CIL_KEY_TARGET) {
+		range = parse_current->next->next->next->data;
 		if (range == CIL_KEY_LOW) {
 			def->object_range = CIL_DEFAULT_TARGET_LOW;
 		} else if (range == CIL_KEY_HIGH) {
@@ -5942,8 +5943,10 @@ int cil_gen_defaultrange(struct cil_tree_node *parse_current, struct cil_tree_no
 			rc = SEPOL_ERR;
 			goto exit;
 		}
+	} else if (object == CIL_KEY_GLBLUB) {
+		def->object_range = CIL_DEFAULT_GLBLUB;
 	} else {
-		cil_log(CIL_ERR,"Expected either \'source\' or \'target\'\n");
+		cil_log(CIL_ERR,"Expected \'source\', \'target\', or \'glblub\'\n");
 		rc = SEPOL_ERR;
 		goto exit;
 	}
