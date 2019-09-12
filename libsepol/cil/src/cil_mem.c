@@ -34,19 +34,6 @@
 
 #include "cil_log.h"
 
-__attribute__((noreturn)) void cil_default_mem_error_handler(void)
-{
-	cil_log(CIL_ERR, "Failed to allocate memory\n");
-	exit(1);
-}
-
-void (*cil_mem_error_handler)(void) = &cil_default_mem_error_handler;
-
-void cil_set_mem_error_handler(void (*handler)(void))
-{
-	cil_mem_error_handler = handler;
-}
-
 void *cil_malloc(size_t size)
 {
 	void *mem = malloc(size);
@@ -54,7 +41,8 @@ void *cil_malloc(size_t size)
 		if (size == 0) {
 			return NULL;
 		}
-		(*cil_mem_error_handler)();
+		cil_log(CIL_ERR, "Failed to allocate memory\n");
+		exit(1);
 	}
 
 	return mem;
@@ -64,7 +52,8 @@ void *cil_calloc(size_t num_elements, size_t element_size)
 {
 	void *mem = calloc(num_elements, element_size);
 	if (mem == NULL){
-		(*cil_mem_error_handler)();
+		cil_log(CIL_ERR, "Failed to allocate memory\n");
+		exit(1);
 	}
 
 	return mem;
@@ -77,7 +66,8 @@ void *cil_realloc(void *ptr, size_t size)
 		if (size == 0) {
 			return NULL;
 		}
-		(*cil_mem_error_handler)();
+		cil_log(CIL_ERR, "Failed to allocate memory\n");
+		exit(1);
 	}
 
 	return mem;
@@ -94,7 +84,8 @@ char *cil_strdup(const char *str)
 
 	mem = strdup(str);
 	if (mem == NULL) {
-		(*cil_mem_error_handler)();
+		cil_log(CIL_ERR, "Failed to allocate memory\n");
+		exit(1);
 	}
 
 	return mem;
@@ -110,7 +101,8 @@ __attribute__ ((format (printf, 2, 3))) int cil_asprintf(char **strp, const char
 	va_end(ap);
 
 	if (rc == -1) {
-		(*cil_mem_error_handler)();
+		cil_log(CIL_ERR, "Failed to allocate memory\n");
+		exit(1);
 	}
 
 	return rc;
