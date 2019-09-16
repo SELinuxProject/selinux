@@ -268,7 +268,7 @@ const char *security_av_perm_to_string(security_class_t tclass,
 
 int security_av_string(security_class_t tclass, access_vector_t av, char **res)
 {
-	unsigned int i = 0;
+	unsigned int i;
 	size_t len = 5;
 	access_vector_t tmp = av;
 	int rc = 0;
@@ -276,19 +276,12 @@ int security_av_string(security_class_t tclass, access_vector_t av, char **res)
 	char *ptr;
 
 	/* first pass computes the required length */
-	while (tmp) {
+	for (i = 0; tmp; tmp >>= 1, i++) {
 		if (tmp & 1) {
 			str = security_av_perm_to_string(tclass, av & (1<<i));
 			if (str)
 				len += strlen(str) + 1;
-			else {
-				rc = -1;
-				errno = EINVAL;
-				goto out;
-			}
 		}
-		tmp >>= 1;
-		i++;
 	}
 
 	*res = malloc(len);
@@ -298,7 +291,6 @@ int security_av_string(security_class_t tclass, access_vector_t av, char **res)
 	}
 
 	/* second pass constructs the string */
-	i = 0;
 	tmp = av;
 	ptr = *res;
 
@@ -308,12 +300,12 @@ int security_av_string(security_class_t tclass, access_vector_t av, char **res)
 	}
 
 	ptr += sprintf(ptr, "{ ");
-	while (tmp) {
-		if (tmp & 1)
-			ptr += sprintf(ptr, "%s ", security_av_perm_to_string(
-					       tclass, av & (1<<i)));
-		tmp >>= 1;
-		i++;
+	for (i = 0; tmp; tmp >>= 1, i++) {
+		if (tmp & 1) {
+			str = security_av_perm_to_string(tclass, av & (1<<i));
+			if (str)
+				ptr += sprintf(ptr, "%s ", str);
+		}
 	}
 	sprintf(ptr, "}");
 out:
