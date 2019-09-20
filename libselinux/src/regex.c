@@ -552,10 +552,10 @@ void regex_format_error(struct regex_error_data const *error_data, char *buffer,
 #endif
 		if (rc < 0)
 			abort();
+		pos += rc;
+		if (pos >= buf_size)
+			goto truncated;
 	}
-	pos += rc;
-	if (pos >= buf_size)
-		goto truncated;
 
 #ifdef USE_PCRE2
 	rc = pcre2_get_error_message(error_data->error_code,
