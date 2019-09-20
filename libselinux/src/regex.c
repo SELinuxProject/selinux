@@ -519,6 +519,29 @@ void regex_format_error(struct regex_error_data const *error_data, char *buffer,
 	if (pos >= buf_size)
 		goto truncated;
 
+	/* Return early if there is no error to format */
+#ifdef USE_PCRE2
+	if (!error_data->error_code) {
+		rc = snprintf(buffer + pos, buf_size - pos, "no error code");
+		if (rc < 0)
+			abort();
+		pos += rc;
+		if (pos >= buf_size)
+			goto truncated;
+		return;
+	}
+#else
+	if (!error_data->error_buffer) {
+		rc = snprintf(buffer + pos, buf_size - pos, "empty error");
+		if (rc < 0)
+			abort();
+		pos += rc;
+		if (pos >= buf_size)
+			goto truncated;
+		return;
+	}
+#endif
+
 	if (error_data->error_offset > 0) {
 #ifdef USE_PCRE2
 		rc = snprintf(buffer + pos, buf_size - pos, "At offset %zu: ",
