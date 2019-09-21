@@ -1,0 +1,40 @@
+# Configuration file for https://circleci.com/
+
+version: 2
+
+jobs:
+  build:
+    docker:
+      # Use a Python image from https://hub.docker.com/r/circleci/python/tags/
+      - image: circleci/python:3.6
+
+    steps:
+    - checkout
+
+    # Install dependencies
+    - run: sudo apt-get update -qq
+    - run: sudo apt-get install -qq bison clang clang-tools flex gawk gettext libaudit-dev libcap-dev libcap-ng-dev libcunit1-dev libdbus-glib-1-dev libpcre3-dev python3-dev python-dev ruby-dev swig xmlto
+
+    - run:
+        name: Setup environment variables
+        command: |
+          echo 'export DESTDIR=$HOME/destdir' >> "$BASH_ENV"
+
+    # Download and install refpolicy headers for sepolgen tests
+    - run:
+        name: Download refpolicy Makefile
+        command: |
+          curl --location --retry 10 -o refpolicy.tar.bz2 https://github.com/SELinuxProject/refpolicy/releases/download/RELEASE_2_20180701/refpolicy-2.20180701.tar.bz2
+          tar -xvjf refpolicy.tar.bz2
+          sed -e "s,^PREFIX :=.*,PREFIX := $DESTDIR/usr," -i refpolicy/support/Makefile.devel
+          sudo make -C refpolicy install-headers
+          sudo mkdir -p /etc/selinux
+          echo 'SELINUXTYPE=refpolicy' | sudo tee /etc/selinux/config
+          echo 'SELINUX_DEVEL_PATH = /usr/share/selinux/refpolicy' | sudo tee /etc/selinux/sepolgen.conf
+          sed -e "s,\"\(/usr/bin/[cs]\),\"$DESTDIR\1," -i python/sepolgen/src/sepolgen/module.py
+
+    # Run clang's scan-build and store the result as artifacts
+    - run: ./scripts/run-scan-build
+    - store_artifacts:
+        path: scripts/output-scan-build
+        destination: output-scan-build
