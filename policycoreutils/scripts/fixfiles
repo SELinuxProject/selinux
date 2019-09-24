@@ -302,7 +302,7 @@ process() {
 case "$1" in
     restore) restore Relabel;;
     check) VERBOSE="-v"; restore Check -n;;
-    verify) restore Verify -n;;
+    verify) VERBOSE="-v"; restore Verify -n;;
     relabel) relabel;;
     onboot)
 	if [ "$RESTORE_MODE" != DEFAULT ]; then
