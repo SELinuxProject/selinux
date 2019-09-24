@@ -313,8 +313,8 @@ case "$1" in
 	> /.autorelabel || exit $?
 	[ -z "$FORCEFLAG" ] || echo -n "$FORCEFLAG " >> /.autorelabel
 	[ -z "$BOOTTIME" ] || echo -N $BOOTTIME >> /.autorelabel
-	# Force full relabel if / does not have a label on it
-	getfilecon / > /dev/null 2>&1  || echo -F >/.autorelabel
+	# Force full relabel if SELinux is not enabled
+	selinuxenabled || echo -F > /.autorelabel
 	echo "System will relabel on next boot"
 	;;
     *)
