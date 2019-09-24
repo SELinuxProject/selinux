@@ -111,7 +111,7 @@ VERBOSE="-p"
 FORCEFLAG=""
 RPMFILES=""
 PREFC=""
-RESTORE_MODE="DEFAULT"
+RESTORE_MODE=""
 SETFILES=/sbin/setfiles
 RESTORECON=/sbin/restorecon
 FILESYSTEMSRW=`get_rw_labeled_mounts`
@@ -213,16 +213,17 @@ restore () {
 OPTION=$1
 shift
 
-case "$RESTORE_MODE" in
-    PREFC)
-	diff_filecontext $*
-	return
-    ;;
-    BOOTTIME)
+# [-B | -N time ]
+if [ -n "$BOOTTIME" ]; then
 	newer $BOOTTIME $*
 	return
-    ;;
-esac
+fi
+
+# -C PREVIOUS_FILECONTEXT
+if [ "$RESTORE_MODE" == PREFC ]; then
+	diff_filecontext $*
+	return
+fi
 
 [ -x /usr/sbin/genhomedircon ] && /usr/sbin/genhomedircon
 
@@ -238,7 +239,7 @@ case "$RESTORE_MODE" in
     FILEPATH)
 	${RESTORECON} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} $* -R -- "$FILEPATH"
     ;;
-    DEFAULT)
+    *)
 	if [ -n "${FILESYSTEMSRW}" ]; then
 	    LogReadOnly
 	    echo "${OPTION}ing `echo ${FILESYSTEMSRW}`"
@@ -271,7 +272,7 @@ fullrelabel() {
 
 
 relabel() {
-    if [ "$RESTORE_MODE" != DEFAULT ]; then
+    if [ -n "$RESTORE_MODE" -a "$RESTORE_MODE" != DEFAULT ]; then
 	usage
 	exit 1
     fi
@@ -305,7 +306,7 @@ case "$1" in
     verify) VERBOSE="-v"; restore Verify -n;;
     relabel) relabel;;
     onboot)
-	if [ "$RESTORE_MODE" != DEFAULT ]; then
+	if [ -n "$RESTORE_MODE" -a "$RESTORE_MODE" != DEFAULT ]; then
 	    usage
 	    exit 1
 	fi
@@ -343,7 +344,7 @@ if [ $# -eq 0 ]; then
 fi
 
 set_restore_mode() {
-	if [ "$RESTORE_MODE" != DEFAULT ]; then
+	if [ -n "$RESTORE_MODE" ]; then
 		# can't specify two different modes
 		usage
 		exit 1
@@ -356,7 +357,7 @@ while getopts "N:BC:FfR:l:v" i; do
     case "$i" in
 	B)
 		BOOTTIME=`/bin/who -b | awk '{print $3}'`
-		set_restore_mode BOOTTIME
+		set_restore_mode DEFAULT
 		;;
 	N)
 		BOOTTIME=$OPTARG
