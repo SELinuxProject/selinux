@@ -123,7 +123,7 @@ static int process_avtab_datum(uint16_t specified,
 
 /* checks if avtab contains a rule that covers the given rule */
 static int is_avrule_redundant(avtab_ptr_t entry, avtab_t *tab,
-			       const ebitmap_t *type_map)
+			       const ebitmap_t *type_map, unsigned char not_cond)
 {
 	unsigned int i, k, s_idx, t_idx;
 	ebitmap_node_t *snode, *tnode;
@@ -146,7 +146,7 @@ static int is_avrule_redundant(avtab_ptr_t entry, avtab_t *tab,
 		key.source_type = i + 1;
 
 		ebitmap_for_each_positive_bit(&type_map[t_idx], tnode, k) {
-			if (s_idx == i && t_idx == k)
+			if (not_cond && s_idx == i && t_idx == k)
 				continue;
 
 			key.target_type = k + 1;
@@ -223,7 +223,7 @@ static void optimize_avtab(policydb_t *p, const ebitmap_t *type_map)
 	for (i = 0; i < tab->nslot; i++) {
 		cur = &tab->htable[i];
 		while (*cur) {
-			if (is_avrule_redundant(*cur, tab, type_map)) {
+			if (is_avrule_redundant(*cur, tab, type_map, 1)) {
 				/* redundant rule -> remove it */
 				avtab_ptr_t tmp = *cur;
 
@@ -279,7 +279,7 @@ static void optimize_cond_av_list(cond_av_list_t **cond, cond_av_list_t **del,
 		 * First check if covered by an unconditional rule, then also
 		 * check if covered by another rule in the same list.
 		 */
-		if (is_avrule_redundant((*cond)->node, &p->te_avtab, type_map) ||
+		if (is_avrule_redundant((*cond)->node, &p->te_avtab, type_map, 0) ||
 		    is_cond_rule_redundant((*cond)->node, *pcov_cur, type_map)) {
 			cond_av_list_t *tmp = *cond;
 
