@@ -22,6 +22,7 @@
 
 #include "test-expander-roles.h"
 #include "test-common.h"
+#include "helpers.h"
 
 #include <sepol/policydb/policydb.h>
 #include <CUnit/Basic.h>

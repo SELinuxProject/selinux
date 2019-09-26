@@ -22,7 +22,11 @@ export RUBYLIB="$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorlibdir
 
 # Build and analyze
 make -C .. CC=clang clean distclean -j"$(nproc)"
-scan-build -analyze-headers -o "$OUTPUTDIR" make -C .. CC=clang DESTDIR="$DESTDIR" install install-pywrap install-rubywrap all test
+scan-build -analyze-headers -o "$OUTPUTDIR" make -C .. \
+    CC=clang \
+    DESTDIR="$DESTDIR" \
+    CFLAGS="-O2 -Wall -D__CHECKER__ -I$DESTDIR/usr/include" \
+    install install-pywrap install-rubywrap all test
 
 # Reduce the verbosity in order to keep the message from scan-build saying
 # "scan-build: Run 'scan-view /.../output-scan-build/2018-...' to examine bug reports.

@@ -41,6 +41,32 @@
 		CU_ASSERT_STRING_EQUAL(__str, __str2); \
 	} while (0)
 
+
+/* Override CU_*_FATAL() in order to help static analyzers by really asserting that an assertion holds */
+#ifdef __CHECKER__
+
+#undef CU_ASSERT_FATAL
+#define CU_ASSERT_FATAL(value) do { \
+		int _value = (value); \
+		CU_ASSERT(_value); \
+		assert(_value); \
+	} while (0)
+
+#undef CU_FAIL_FATAL
+#define CU_FAIL_FATAL(msg) do { \
+		CU_FAIL(msg); \
+		assert(0); \
+	} while (0)
+
+#undef CU_ASSERT_PTR_NOT_NULL_FATAL
+#define CU_ASSERT_PTR_NOT_NULL_FATAL(value) do { \
+		const void *_value = (value); \
+		CU_ASSERT_PTR_NOT_NULL(_value); \
+		assert(_value != NULL); \
+	} while (0)
+
+#endif /* __CHECKER__ */
+
 #define I_NULL  -1
 #define I_FIRST  0
 #define I_SECOND 1

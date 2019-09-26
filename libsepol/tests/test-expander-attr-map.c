@@ -21,6 +21,7 @@
 
 #include "test-expander-attr-map.h"
 #include "test-common.h"
+#include "helpers.h"
 
 #include <sepol/policydb/policydb.h>
 #include <CUnit/Basic.h>

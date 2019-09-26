@@ -66,6 +66,8 @@
 #include <sepol/debug.h>
 #include <sepol/handle.h>
 
+#include "helpers.h"
+
 #define BASE_MODREQ_TYPE_GLOBAL    0
 #define BASE_MODREQ_ATTR_GLOBAL    1
 #define BASE_MODREQ_OBJ_GLOBAL     2

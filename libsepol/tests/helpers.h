@@ -24,8 +24,37 @@
 
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/conditional.h>
+#include <CUnit/Basic.h>
 
 /* helper functions */
+
+/* Override CU_*_FATAL() in order to help static analyzers by really asserting that an assertion holds */
+#ifdef __CHECKER__
+
+#include <assert.h>
+
+#undef CU_ASSERT_FATAL
+#define CU_ASSERT_FATAL(value) do { \
+		int _value = (value); \
+		CU_ASSERT(_value); \
+		assert(_value); \
+	} while (0)
+
+#undef CU_FAIL_FATAL
+#define CU_FAIL_FATAL(msg) do { \
+		CU_FAIL(msg); \
+		assert(0); \
+	} while (0)
+
+#undef CU_ASSERT_PTR_NOT_NULL_FATAL
+#define CU_ASSERT_PTR_NOT_NULL_FATAL(value) do { \
+		const void *_value = (value); \
+		CU_ASSERT_PTR_NOT_NULL(_value); \
+		assert(_value != NULL); \
+	} while (0)
+
+#endif /* __CHECKER__ */
+
 
 /* Load a source policy into p. policydb_init will called within this function.
  * 

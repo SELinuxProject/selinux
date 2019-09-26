@@ -21,6 +21,7 @@
  */
 
 #include "test-expander-users.h"
+#include "helpers.h"
 
 #include <sepol/policydb/policydb.h>
 #include <CUnit/Basic.h>

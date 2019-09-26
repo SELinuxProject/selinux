@@ -34,6 +34,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "utilities.h"
+
 void test_semanage_is_prefix(void);
 void test_semanage_split_on_space(void);
 void test_semanage_split(void);
