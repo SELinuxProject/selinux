@@ -196,7 +196,7 @@ def get_xml_file(if_file):
         from subprocess import getstatusoutput
     basedir = os.path.dirname(if_file) + "/"
     filename = os.path.basename(if_file).split(".")[0]
-    rc, output = getstatusoutput("python /usr/share/selinux/devel/include/support/segenxml.py -w -m %s" % basedir + filename)
+    rc, output = getstatusoutput("/usr/bin/python3 /usr/share/selinux/devel/include/support/segenxml.py -w -m %s" % (basedir + filename))
     if rc != 0:
         sys.stderr.write("\n Could not proceed selected interface file.\n")
         sys.stderr.write("\n%s" % output)
