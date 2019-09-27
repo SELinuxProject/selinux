@@ -478,6 +478,9 @@ class permissiveRecords(semanageRecords):
                 l.append(name.split("permissive_")[1])
         return l
 
+    def customized(self):
+        return ["-a %s" % x for x in sorted(self.get_all())]
+
     def list(self, heading=1, locallist=0):
         all = [y["name"] for y in [x for x in sepolicy.info(sepolicy.TYPE) if x["permissive"]]]
         if len(all) == 0:

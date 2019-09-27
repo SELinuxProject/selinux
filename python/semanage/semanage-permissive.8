@@ -2,7 +2,7 @@
 .SH "NAME"
 .B semanage\-permissive \- SELinux Policy Management permissive mapping tool
 .SH "SYNOPSIS"
-.B semanage permissive [\-h] (\-a | \-d | \-l) [\-n] [\-N] [\-S STORE] [type]
+.B semanage permissive [\-h] [\-n] [\-N] [\-S STORE] (\-\-add TYPE | \-\-delete TYPE | \-\-deleteall | \-\-extract | \-\-list)
 
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage permissive adds or removes a SELinux Policy permissive module.
@@ -18,8 +18,14 @@ Add a record of the specified object type
 .I   \-d, \-\-delete
 Delete a record of the specified object type
 .TP
+.I   \-D, \-\-deleteall
+Remove all local customizations of permissive domains
+.TP
 .I   \-l, \-\-list
 List records of the specified object type
+.TP
+.I   \-E, \-\-extract
+Extract customizable commands, for use within a transaction
 .TP
 .I   \-n, \-\-noheading
 Do not print heading when listing the specified object type

@@ -737,6 +737,11 @@ def handlePermissive(args):
 
     if args.action == "list":
         OBJECT.list(args.noheading)
+    elif args.action == "deleteall":
+        OBJECT.deleteall()
+    elif args.action == "extract":
+        for i in OBJECT.customized():
+            print("permissive %s" % str(i))
     elif args.type is not None:
         if args.action == "add":
             OBJECT.add(args.type)
@@ -752,9 +757,9 @@ def setupPermissiveParser(subparsers):
     pgroup = permissiveParser.add_mutually_exclusive_group(required=True)
     parser_add_add(pgroup, "permissive")
     parser_add_delete(pgroup, "permissive")
+    parser_add_deleteall(pgroup, "permissive")
+    parser_add_extract(pgroup, "permissive")
     parser_add_list(pgroup, "permissive")
-    #TODO: probably should be also added => need to implement own option handling
-    #parser_add_deleteall(pgroup)
 
     parser_add_noheading(permissiveParser, "permissive")
     parser_add_noreload(permissiveParser, "permissive")
@@ -778,7 +783,7 @@ def setupDontauditParser(subparsers):
 
 
 def handleExport(args):
-    manageditems = ["boolean", "login", "interface", "user", "port", "node", "fcontext", "module", "ibendport", "ibpkey"]
+    manageditems = ["boolean", "login", "interface", "user", "port", "node", "fcontext", "module", "ibendport", "ibpkey", "permissive"]
     for i in manageditems:
         print("%s -D" % i)
     for i in manageditems:
