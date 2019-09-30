@@ -145,16 +145,19 @@ void test_semanage_split_on_space(void)
 		return;
 	}
 	temp = semanage_split_on_space(str);
+	CU_ASSERT_PTR_NOT_NULL_FATAL(temp);
 	CU_ASSERT_STRING_EQUAL(temp, "bar    baz");
 	free(str);
 	str = temp;
 
 	temp = semanage_split_on_space(str);
+	CU_ASSERT_PTR_NOT_NULL_FATAL(temp);
 	CU_ASSERT_STRING_EQUAL(temp, "baz");
 	free(str);
 	str = temp;
 
 	temp = semanage_split_on_space(str);
+	CU_ASSERT_PTR_NOT_NULL_FATAL(temp);
 	CU_ASSERT_STRING_EQUAL(temp, "");
 	free(str);
 	free(temp);
@@ -171,21 +174,25 @@ void test_semanage_split(void)
 		return;
 	}
 	temp = semanage_split(str, NULL);
+	CU_ASSERT_PTR_NOT_NULL_FATAL(temp);
 	CU_ASSERT_STRING_EQUAL(temp, "foo2   foo:bar:");
 	free(str);
 	str = temp;
 
 	temp = semanage_split(str, "");
+	CU_ASSERT_PTR_NOT_NULL_FATAL(temp);
 	CU_ASSERT_STRING_EQUAL(temp, "foo:bar:");
 	free(str);
 	str = temp;
 
 	temp = semanage_split(str, ":");
+	CU_ASSERT_PTR_NOT_NULL_FATAL(temp);
 	CU_ASSERT_STRING_EQUAL(temp, "bar:");
 	free(str);
 	str = temp;
 
 	temp = semanage_split(str, ":");
+	CU_ASSERT_PTR_NOT_NULL_FATAL(temp);
 	CU_ASSERT_STRING_EQUAL(temp, "");
 	free(str);
 	free(temp);
@@ -301,14 +308,17 @@ void test_semanage_findval(void)
 		CU_FAIL_FATAL("Temporary file was not created, aborting test.");
 	}
 	tok = semanage_findval(fname, "one", NULL);
+	CU_ASSERT_PTR_NOT_NULL_FATAL(tok);
 	CU_ASSERT_STRING_EQUAL(tok, "");
 	free(tok);
 	rewind(fptr);
 	tok = semanage_findval(fname, "one", "");
+	CU_ASSERT_PTR_NOT_NULL_FATAL(tok);
 	CU_ASSERT_STRING_EQUAL(tok, "");
 	free(tok);
 	rewind(fptr);
 	tok = semanage_findval(fname, "sigma", "=");
+	CU_ASSERT_PTR_NOT_NULL_FATAL(tok);
 	CU_ASSERT_STRING_EQUAL(tok, "foo");
 	free(tok);
 }
