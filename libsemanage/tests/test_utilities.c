@@ -142,6 +142,7 @@ void test_semanage_split_on_space(void)
 	if (!str) {
 		CU_FAIL
 		    ("semanage_split_on_space: unable to perform test, no memory");
+		return;
 	}
 	temp = semanage_split_on_space(str);
 	CU_ASSERT_STRING_EQUAL(temp, "bar    baz");
