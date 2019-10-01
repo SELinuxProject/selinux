@@ -4,7 +4,7 @@ from distutils.core import Extension, setup
 
 setup(
     name="selinux",
-    version="2.9",
+    version="3.0-rc1",
     description="SELinux python 3 bindings",
     author="SELinux Project",
     author_email="selinux@vger.kernel.org",
