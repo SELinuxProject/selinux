@@ -1058,13 +1058,15 @@ class portRecords(semanageRecords):
             pass
 
     def __genkey(self, port, proto):
-        if proto == "tcp":
-            proto_d = SEMANAGE_PROTO_TCP
+        protocols = {"tcp": SEMANAGE_PROTO_TCP,
+                     "udp": SEMANAGE_PROTO_UDP,
+                     "sctp": SEMANAGE_PROTO_SCTP,
+                     "dccp": SEMANAGE_PROTO_DCCP}
+
+        if proto in protocols.keys():
+            proto_d = protocols[proto]
         else:
-            if proto == "udp":
-                proto_d = SEMANAGE_PROTO_UDP
-            else:
-                raise ValueError(_("Protocol udp or tcp is required"))
+            raise ValueError(_("Protocol has to be one of udp, tcp, dccp or sctp"))
         if port == "":
             raise ValueError(_("Port is required"))
 
