@@ -16,6 +16,8 @@ typedef struct semanage_port_key semanage_port_key_t;
 
 #define SEMANAGE_PROTO_UDP 0
 #define SEMANAGE_PROTO_TCP 1
+#define SEMANAGE_PROTO_DCCP 2
+#define SEMANAGE_PROTO_SCTP 3
 
 /* Key */
 extern int semanage_port_compare(const semanage_port_t * port,
