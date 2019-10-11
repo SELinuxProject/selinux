@@ -60,7 +60,7 @@ LIBSEPOL_1.1 {
 	sepol_polcap_getname;
 } LIBSEPOL_1.0;
 
-LIBSEPOL_1.2 {
+LIBSEPOL_3.0 {
   global:
-	sepol_optimize_policy;
+	sepol_policydb_optimize;
 } LIBSEPOL_1.1;
