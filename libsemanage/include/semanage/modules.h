@@ -32,11 +32,11 @@ typedef struct semanage_module_key semanage_module_key_t;
  * a transaction  
  */
 
-int semanage_module_install(semanage_handle_t *,
-			    char *module_data, size_t data_len, char *name, char *ext_lang);
-int semanage_module_install_file(semanage_handle_t *,
-				 const char *module_name);
-int semanage_module_remove(semanage_handle_t *, char *module_name);
+extern int semanage_module_install(semanage_handle_t *,
+				   char *module_data, size_t data_len, char *name, char *ext_lang);
+extern int semanage_module_install_file(semanage_handle_t *,
+					const char *module_name);
+extern int semanage_module_remove(semanage_handle_t *, char *module_name);
 
 /* semanage_module_info is for getting information on installed
    modules, only name at this time */
@@ -52,18 +52,18 @@ typedef struct semanage_module_info semanage_module_info_t;
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_extract(semanage_handle_t *sh,
-				 semanage_module_key_t *modkey,
-				 int extract_cil,
-				 void **mapped_data,
-				 size_t *data_len,
-				 semanage_module_info_t **modinfo);
-int semanage_module_list(semanage_handle_t *,
-			 semanage_module_info_t **, int *num_modules);
-void semanage_module_info_datum_destroy(semanage_module_info_t *);
-semanage_module_info_t *semanage_module_list_nth(semanage_module_info_t * list,
-						 int n);
-const char *semanage_module_get_name(semanage_module_info_t *);
+extern int semanage_module_extract(semanage_handle_t *sh,
+				  semanage_module_key_t *modkey,
+				  int extract_cil,
+				  void **mapped_data,
+				  size_t *data_len,
+				  semanage_module_info_t **modinfo);
+extern int semanage_module_list(semanage_handle_t *,
+				semanage_module_info_t **, int *num_modules);
+extern void semanage_module_info_datum_destroy(semanage_module_info_t *);
+extern semanage_module_info_t *semanage_module_list_nth(semanage_module_info_t * list,
+							int n);
+extern const char *semanage_module_get_name(semanage_module_info_t *);
 
 /* Module Info */
 
@@ -74,8 +74,8 @@ const char *semanage_module_get_name(semanage_module_info_t *);
  * The @modinfo should be destroyed with semanage_module_info_destroy.
  * The caller should call free() on the struct.
  */
-int semanage_module_info_create(semanage_handle_t *sh,
-				semanage_module_info_t **modinfo);
+extern int semanage_module_info_create(semanage_handle_t *sh,
+				       semanage_module_info_t **modinfo);
 
 /* Frees the members of the module info struct.
  *
@@ -83,8 +83,8 @@ int semanage_module_info_create(semanage_handle_t *sh,
  *
  * The caller should call free() on the struct.
  */
-int semanage_module_info_destroy(semanage_handle_t *handle,
-				 semanage_module_info_t *modinfo);
+extern int semanage_module_info_destroy(semanage_handle_t *handle,
+					semanage_module_info_t *modinfo);
 
 /* Module Info Getters */
 
@@ -92,33 +92,33 @@ int semanage_module_info_destroy(semanage_handle_t *handle,
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_info_get_priority(semanage_handle_t *sh,
-				      semanage_module_info_t *modinfo,
-				      uint16_t *priority);
+extern int semanage_module_info_get_priority(semanage_handle_t *sh,
+					     semanage_module_info_t *modinfo,
+					     uint16_t *priority);
 
 /* Get @name from @modinfo. Caller should not free @name.
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_info_get_name(semanage_handle_t *sh,
-				  semanage_module_info_t *modinfo,
-				  const char **name);
+extern int semanage_module_info_get_name(semanage_handle_t *sh,
+					 semanage_module_info_t *modinfo,
+					 const char **name);
 
 /* Get @lang_ext from @modinfo. Caller should not free @lang_ext.
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_info_get_lang_ext(semanage_handle_t *sh,
-				      semanage_module_info_t *modinfo,
-				      const char **lang_ext);
+extern int semanage_module_info_get_lang_ext(semanage_handle_t *sh,
+					     semanage_module_info_t *modinfo,
+					     const char **lang_ext);
 
 /* Get @enabled from @modinfo.
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_info_get_enabled(semanage_handle_t *sh,
-				     semanage_module_info_t *modinfo,
-				     int *enabled);
+extern int semanage_module_info_get_enabled(semanage_handle_t *sh,
+					    semanage_module_info_t *modinfo,
+					    int *enabled);
 
 /* Module Info Setters */
 
@@ -126,33 +126,33 @@ int semanage_module_info_get_enabled(semanage_handle_t *sh,
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_info_set_priority(semanage_handle_t *sh,
-				      semanage_module_info_t *modinfo,
-				      uint16_t priority);
+extern int semanage_module_info_set_priority(semanage_handle_t *sh,
+					     semanage_module_info_t *modinfo,
+					     uint16_t priority);
 
 /* Set @name in @modinfo.
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_info_set_name(semanage_handle_t *sh,
-				  semanage_module_info_t *modinfo,
-				  const char *name);
+extern int semanage_module_info_set_name(semanage_handle_t *sh,
+					 semanage_module_info_t *modinfo,
+					 const char *name);
 
 /* Set @lang_ext in @modinfo.
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_info_set_lang_ext(semanage_handle_t *sh,
-				      semanage_module_info_t *modinfo,
-				      const char *lang_ext);
+extern int semanage_module_info_set_lang_ext(semanage_handle_t *sh,
+					     semanage_module_info_t *modinfo,
+					     const char *lang_ext);
 
 /* Set @enabled in @modinfo.
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_info_set_enabled(semanage_handle_t *sh,
-				     semanage_module_info_t *modinfo,
-				     int enabled);
+extern int semanage_module_info_set_enabled(semanage_handle_t *sh,
+					    semanage_module_info_t *modinfo,
+					    int enabled);
 
 /* Module Key */
 
@@ -163,16 +163,16 @@ int semanage_module_info_set_enabled(semanage_handle_t *sh,
  * The @modkey should be destroyed with semanage_module_key_destroy.
  * The caller should call free() on the struct.
  */
-int semanage_module_key_create(semanage_handle_t *sh,
-			       semanage_module_key_t **modkey);
+extern int semanage_module_key_create(semanage_handle_t *sh,
+				      semanage_module_key_t **modkey);
 
 /* Frees members of the @modkey, but not the struct. The caller should
  * call free() on struct.
  *
  * Returns 0 on success, and -1 on error.
  */
-int semanage_module_key_destroy(semanage_handle_t *sh,
-				semanage_module_key_t *modkey);
+extern int semanage_module_key_destroy(semanage_handle_t *sh,
+				       semanage_module_key_t *modkey);
 
 /* Module Key Getters */
 
@@ -180,17 +180,17 @@ int semanage_module_key_destroy(semanage_handle_t *sh,
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_key_get_name(semanage_handle_t *sh,
-				 semanage_module_key_t *modkey,
-				 const char **name);
+extern int semanage_module_key_get_name(semanage_handle_t *sh,
+					semanage_module_key_t *modkey,
+					const char **name);
 
 /* Get @name from @modkey.
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_key_get_priority(semanage_handle_t *sh,
-				     semanage_module_key_t *modkey,
-				     uint16_t *priority);
+extern int semanage_module_key_get_priority(semanage_handle_t *sh,
+					    semanage_module_key_t *modkey,
+					    uint16_t *priority);
 
 /* Module Key Setters */
 
@@ -198,17 +198,17 @@ int semanage_module_key_get_priority(semanage_handle_t *sh,
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_key_set_name(semanage_handle_t *sh,
-				 semanage_module_key_t *modkey,
-				 const char *name);
+extern int semanage_module_key_set_name(semanage_handle_t *sh,
+					semanage_module_key_t *modkey,
+					const char *name);
 
 /* Set @priority in @modkey.
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_key_set_priority(semanage_handle_t *sh,
-				     semanage_module_key_t *modkey,
-				     uint16_t priority);
+extern int semanage_module_key_set_priority(semanage_handle_t *sh,
+					    semanage_module_key_t *modkey,
+					    uint16_t priority);
 
 /* Set module @enabled status from @modkey. Modules are enabled on a per
  * module name basis (across all priorities). @modkey only needs to have
@@ -216,18 +216,18 @@ int semanage_module_key_set_priority(semanage_handle_t *sh,
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_set_enabled(semanage_handle_t *sh,
-				const semanage_module_key_t *modkey,
-				int enabled);
+extern int semanage_module_set_enabled(semanage_handle_t *sh,
+				       const semanage_module_key_t *modkey,
+				       int enabled);
 
 /* Lookup @modinfo by @modkey. Caller should use
  * semanage_module_info_destroy and free on @modinfo.
  * 
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_get_module_info(semanage_handle_t *sh,
-				    const semanage_module_key_t *modkey,
-				    semanage_module_info_t **modinfo);
+extern int semanage_module_get_module_info(semanage_handle_t *sh,
+					   const semanage_module_key_t *modkey,
+					   semanage_module_info_t **modinfo);
 
 /* Create a list of all modules in @modinfos of length @modinfos_len.
  * The list will be sorted from high priority to low and alphabetically
@@ -238,9 +238,9 @@ int semanage_module_get_module_info(semanage_handle_t *sh,
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_list_all(semanage_handle_t *sh,
-			     semanage_module_info_t **modinfos,
-			     int *modinfos_len);
+extern int semanage_module_list_all(semanage_handle_t *sh,
+				    semanage_module_info_t **modinfos,
+				    int *modinfos_len);
 
 /* Install the module indicated by @modinfo with input data from 
  * @module_data with length @data_len.
@@ -254,10 +254,10 @@ int semanage_module_list_all(semanage_handle_t *sh,
  *	-2	failure, invalid @modinfo
  *	-3	failure, error writing file
  */
-int semanage_module_install_info(semanage_handle_t *sh,
-				 const semanage_module_info_t *modinfo,
-				 char *data,
-				 size_t data_len);
+extern int semanage_module_install_info(semanage_handle_t *sh,
+					const semanage_module_info_t *modinfo,
+					char *data,
+					size_t data_len);
 
 /* Remove the module indicated by @modkey.
  * @modkey must have key values filled in.
@@ -267,8 +267,8 @@ int semanage_module_install_info(semanage_handle_t *sh,
  *	-1	failure, out of memory
  *	-2	failure, @module not found or couldn't be removed
  */
-int semanage_module_remove_key(semanage_handle_t *sh,
-			       const semanage_module_key_t *modkey);
+extern int semanage_module_remove_key(semanage_handle_t *sh,
+				      const semanage_module_key_t *modkey);
 
 /* Module Enabled */
 
@@ -278,8 +278,8 @@ int semanage_module_remove_key(semanage_handle_t *sh,
  *
  * Returns 0 on success and -1 on error.
  */
-int semanage_module_get_enabled(semanage_handle_t *sh,
-				const semanage_module_key_t *modkey,
-				int *enabled);
+extern int semanage_module_get_enabled(semanage_handle_t *sh,
+				       const semanage_module_key_t *modkey,
+				       int *enabled);
 
 #endif
