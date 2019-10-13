@@ -22,10 +22,10 @@ extern "C" {
 
 /* As above, but use the provided MLS level rather than the
    default level for the user. */
-	int get_ordered_context_list_with_level(const char *user,
-						const char *level,
-						char * fromcon,
-						char *** list);
+	extern int get_ordered_context_list_with_level(const char *user,
+						       const char *level,
+						       char * fromcon,
+						       char *** list);
 
 /* Get the default security context for a user session for 'user'
    spawned by 'fromcon' and set *newcon to refer to it.  The context
@@ -40,27 +40,27 @@ extern "C" {
 
 /* As above, but use the provided MLS level rather than the
    default level for the user. */
-	int get_default_context_with_level(const char *user,
-					   const char *level,
-					   char * fromcon,
-					   char ** newcon);
+	extern int get_default_context_with_level(const char *user,
+						  const char *level,
+						  char * fromcon,
+						  char ** newcon);
 
 /* Same as get_default_context, but only return a context
    that has the specified role.  If no reachable context exists
    for the user with that role, then return -1. */
-	int get_default_context_with_role(const char *user,
-					  const char *role,
-					  char * fromcon,
-					  char ** newcon);
+	extern int get_default_context_with_role(const char *user,
+						 const char *role,
+						 char * fromcon,
+						 char ** newcon);
 
 /* Same as get_default_context, but only return a context
    that has the specified role and level.  If no reachable context exists
    for the user with that role, then return -1. */
-	int get_default_context_with_rolelevel(const char *user,
-					       const char *role,
-					       const char *level,
-					       char * fromcon,
-					       char ** newcon);
+	extern int get_default_context_with_rolelevel(const char *user,
+						      const char *role,
+						      const char *level,
+						      char * fromcon,
+						      char ** newcon);
 
 /* Given a list of authorized security contexts for the user, 
    query the user to select one and set *newcon to refer to it.

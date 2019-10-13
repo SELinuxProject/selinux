@@ -10,12 +10,12 @@ extern "C" {
 #endif
 
 /* Return path to default type file. */
-	const char *selinux_default_type_path(void);
+	extern const char *selinux_default_type_path(void);
 
 /* Get the default type (domain) for 'role' and set 'type' to refer to it.
    Caller must free via free().
    Return 0 on success or -1 otherwise. */
-	int get_default_type(const char *role, char **type);
+	extern int get_default_type(const char *role, char **type);
 
 #ifdef __cplusplus
 }

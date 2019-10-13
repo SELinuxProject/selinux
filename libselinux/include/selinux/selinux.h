@@ -610,13 +610,13 @@ extern int selinux_check_securetty_context(const char * tty_context);
    Normally, this is determined automatically during libselinux 
    initialization, but this is not always possible, e.g. for /sbin/init
    which performs the initial mount of selinuxfs. */
-void set_selinuxmnt(const char *mnt);
+extern void set_selinuxmnt(const char *mnt);
 
 /* Check if selinuxfs exists as a kernel filesystem */
-int selinuxfs_exists(void);
+extern int selinuxfs_exists(void);
 
 /* clear selinuxmnt variable and free allocated memory */
-void fini_selinuxmnt(void);
+extern void fini_selinuxmnt(void);
 
 /* Set an appropriate security context based on the filename of a helper
  * program, falling back to a new context with the specified type. */

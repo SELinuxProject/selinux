@@ -73,9 +73,9 @@ struct selabel_handle;
  * backend.  Return value is the created handle on success or NULL with
  * @errno set on failure.
  */
-struct selabel_handle *selabel_open(unsigned int backend,
-				    const struct selinux_opt *opts,
-				    unsigned nopts);
+extern struct selabel_handle *selabel_open(unsigned int backend,
+					   const struct selinux_opt *opts,
+					   unsigned nopts);
 
 /**
  * selabel_close - Close a labeling handle.
@@ -84,7 +84,7 @@ struct selabel_handle *selabel_open(unsigned int backend,
  * Destroy the specified handle, closing files, freeing allocated memory,
  * etc.  The handle may not be further used after it has been closed.
  */
-void selabel_close(struct selabel_handle *handle);
+extern void selabel_close(struct selabel_handle *handle);
 
 /**
  * selabel_lookup - Perform labeling lookup operation.
@@ -99,25 +99,25 @@ void selabel_close(struct selabel_handle *handle);
  * The result is returned in the memory pointed to by @con and must be freed
  * by the user with freecon().
  */
-int selabel_lookup(struct selabel_handle *handle, char **con,
-		   const char *key, int type);
-int selabel_lookup_raw(struct selabel_handle *handle, char **con,
-		       const char *key, int type);
+extern int selabel_lookup(struct selabel_handle *handle, char **con,
+			  const char *key, int type);
+extern int selabel_lookup_raw(struct selabel_handle *handle, char **con,
+			      const char *key, int type);
 
-bool selabel_partial_match(struct selabel_handle *handle, const char *key);
+extern bool selabel_partial_match(struct selabel_handle *handle, const char *key);
 
-bool selabel_get_digests_all_partial_matches(struct selabel_handle *rec,
-					     const char *key,
-					     uint8_t **calculated_digest,
-					     uint8_t **xattr_digest,
-					     size_t *digest_len);
-bool selabel_hash_all_partial_matches(struct selabel_handle *rec,
-                                      const char *key, uint8_t* digest);
+extern bool selabel_get_digests_all_partial_matches(struct selabel_handle *rec,
+						    const char *key,
+						    uint8_t **calculated_digest,
+						    uint8_t **xattr_digest,
+						    size_t *digest_len);
+extern bool selabel_hash_all_partial_matches(struct selabel_handle *rec,
+					     const char *key, uint8_t* digest);
 
-int selabel_lookup_best_match(struct selabel_handle *rec, char **con,
-			      const char *key, const char **aliases, int type);
-int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
-			      const char *key, const char **aliases, int type);
+extern int selabel_lookup_best_match(struct selabel_handle *rec, char **con,
+				     const char *key, const char **aliases, int type);
+extern int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
+					 const char *key, const char **aliases, int type);
 
 /**
  * selabel_digest - Retrieve the SHA1 digest and the list of specfiles used to
@@ -132,9 +132,9 @@ int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
  *
  * Return %0 on success, -%1 with @errno set on failure.
  */
-int selabel_digest(struct selabel_handle *rec,
-			    unsigned char **digest, size_t *digest_len,
-			    char ***specfiles, size_t *num_specfiles);
+extern int selabel_digest(struct selabel_handle *rec,
+			  unsigned char **digest, size_t *digest_len,
+			  char ***specfiles, size_t *num_specfiles);
 
 enum selabel_cmp_result {
 	SELABEL_SUBSET,
@@ -153,8 +153,8 @@ enum selabel_cmp_result {
  * if @h1 is identical to @h2, %SELABEL_SUPERSET if @h1 is a superset
  * of @h2, and %SELABEL_INCOMPARABLE if @h1 and @h2 are incomparable.
  */
-enum selabel_cmp_result selabel_cmp(struct selabel_handle *h1,
-				    struct selabel_handle *h2);
+extern enum selabel_cmp_result selabel_cmp(struct selabel_handle *h1,
+					   struct selabel_handle *h2);
 
 /**
  * selabel_stats - log labeling operation statistics.
@@ -164,7 +164,7 @@ enum selabel_cmp_result selabel_cmp(struct selabel_handle *h1,
  * number of unused matching entries, or other operational statistics.
  * Message is backend-specific, some backends may not output a message.
  */
-void selabel_stats(struct selabel_handle *handle);
+extern void selabel_stats(struct selabel_handle *handle);
 
 /*
  * Type codes used by specific backends
