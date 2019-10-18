@@ -25,6 +25,7 @@ import os
 import sys
 import selinux
 import sepolicy
+from multiprocessing import Pool
 from sepolicy import get_os_version, get_conditionals, get_conditionals_format_text
 import argparse
 PROGNAME = "policycoreutils"
@@ -326,8 +327,13 @@ def gen_gui_args(parser):
     gui.set_defaults(func=gui_run)
 
 
+def manpage_work(domain, path, root, source_files, web):
+    from sepolicy.manpage import ManPage
+    m = ManPage(domain, path, root, source_files, web)
+    print(m.get_man_page_path())
+
 def manpage(args):
-    from sepolicy.manpage import ManPage, HTMLManPages, manpage_domains, manpage_roles, gen_domains
+    from sepolicy.manpage import HTMLManPages, manpage_domains, manpage_roles, gen_domains
 
     path = args.path
     if not args.policy and args.root != "/":
@@ -340,9 +346,11 @@ def manpage(args):
     else:
         test_domains = args.domain
 
+    p = Pool()
     for domain in test_domains:
-        m = ManPage(domain, path, args.root, args.source_files, args.web)
-        print(m.get_man_page_path())
+        p.apply_async(manpage_work, [domain, path, args.root, args.source_files, args.web])
+    p.close()
+    p.join()
 
     if args.web:
         HTMLManPages(manpage_roles, manpage_domains, path, args.os)
