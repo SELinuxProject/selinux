@@ -112,7 +112,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	printf
 	    ("usage:  %s [-b[F]] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M] "
-	     "[-c policyvers (%d-%d)] [-o output_file] [-S] "
+	     "[-c policyvers (%d-%d)] [-o output_file|-] [-S] "
 	     "[-t target_platform (selinux,xen)] [-V] [input_file]\n",
 	     progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
 	exit(1);
@@ -390,7 +390,8 @@ int main(int argc, char **argv)
 	struct sepol_av_decision avd;
 	class_datum_t *cladatum;
 	const char *file = txtfile;
-	char ans[80 + 1], *outfile = NULL, *path, *fstype;
+	char ans[80 + 1], *path, *fstype;
+	const char *outfile = NULL;
 	size_t scontext_len, pathlen;
 	unsigned int i;
 	unsigned int protocol, port;
@@ -638,10 +639,15 @@ int main(int argc, char **argv)
 	}
 
 	if (outfile) {
-		outfp = fopen(outfile, "w");
-		if (!outfp) {
-			perror(outfile);
-			exit(1);
+		if (!strcmp(outfile, "-")) {
+			outfp = stdout;
+			outfile = "<STDOUT>";
+		} else {
+			outfp = fopen(outfile, "w");
+			if (!outfp) {
+				perror(outfile);
+				exit(1);
+			}
 		}
 
 		policydb.policyvers = policyvers;
@@ -682,7 +688,9 @@ int main(int argc, char **argv)
 			}
 		}
 
-		fclose(outfp);
+		if (outfp != stdout) {
+			fclose(outfp);
+		}
 	} else if (cil) {
 		fprintf(stderr, "%s:  No file to write CIL was specified\n", argv[0]);
 		exit(1);
