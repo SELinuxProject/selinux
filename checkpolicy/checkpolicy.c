@@ -682,9 +682,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		if (outfile) {
-			fclose(outfp);
-		}
+		fclose(outfp);
 	} else if (cil) {
 		fprintf(stderr, "%s:  No file to write CIL was specified\n", argv[0]);
 		exit(1);
