@@ -22,6 +22,7 @@
 #include <libgen.h>
 #include <limits.h>
 
+#include <sepol/cil/cil.h>
 #include <semanage/modules.h>
 
 enum client_modes {
@@ -238,7 +239,7 @@ static void parse_command_line(int argc, char **argv)
 			set_mode(LIST_M, optarg);
 			break;
 		case 'v':
-			verbose = 1;
+			verbose++;
 			break;
 		case 'r':
 			set_mode(REMOVE_M, optarg);
@@ -349,6 +350,8 @@ int main(int argc, char *argv[])
 		argv = (char **)genhomedirconargv;
 	}
 	parse_command_line(argc, argv);
+
+	cil_set_log_level(CIL_ERR + verbose);
 
 	if (build)
 		commit = 1;
