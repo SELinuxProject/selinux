@@ -3761,14 +3761,16 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 		enum cil_log_level lvl = CIL_ERR;
 
 		if (optstack != NULL) {
-			lvl = CIL_WARN;
+			lvl = CIL_INFO;
 
 			struct cil_optional *opt = (struct cil_optional *)optstack->data;
 			struct cil_tree_node *opt_node = opt->datum.nodes->head->data;
-			cil_tree_log(opt_node, lvl, "Disabling optional '%s'", opt->datum.name);
 			/* disable an optional if something failed to resolve */
 			opt->enabled = CIL_FALSE;
+			cil_tree_log(node, lvl, "Failed to resolve %s statement", cil_node_to_string(node));
+			cil_tree_log(opt_node, lvl, "Disabling optional '%s'", opt->datum.name);
 			rc = SEPOL_OK;
+			goto exit;
 		}
 
 		cil_tree_log(node, lvl, "Failed to resolve %s statement", cil_node_to_string(node));
