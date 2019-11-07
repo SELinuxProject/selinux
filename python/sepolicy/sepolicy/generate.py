@@ -26,7 +26,6 @@ import re
 import sepolicy
 from sepolicy import get_all_types, get_all_attributes, get_all_roles
 import time
-import platform
 
 from .templates import executable
 from .templates import boolean
@@ -1178,8 +1177,7 @@ allow %s_t %s_t:%s_socket name_%s;
                 newsh += re.sub("TEMPLATETYPE", self.name, t1)
 
         newsh += self.generate_user_sh()
-        if (platform.linux_distribution(full_distribution_name=0)[0] in ("redhat", "centos", "SuSE", "fedora", "mandrake", "mandriva")):
-            newsh += re.sub("TEMPLATEFILE", self.file_name, script.rpm)
+        newsh += re.sub("TEMPLATEFILE", self.file_name, script.rpm)
 
         return newsh
 
@@ -1379,7 +1377,6 @@ Warning %s does not exist
         out += "%s # %s\n" % (self.write_if(out_dir), _("Interface file"))
         out += "%s # %s\n" % (self.write_fc(out_dir), _("File Contexts file"))
         if self.type != NEWTYPE:
-            if (platform.linux_distribution(full_distribution_name=0)[0] in ("redhat", "centos", "SuSE", "fedora", "mandrake", "mandriva")):
-                out += "%s # %s\n" % (self.write_spec(out_dir), _("Spec file"))
+            out += "%s # %s\n" % (self.write_spec(out_dir), _("Spec file"))
             out += "%s # %s\n" % (self.write_sh(out_dir), _("Setup Script"))
         return out
