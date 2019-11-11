@@ -5,7 +5,7 @@ case $1 in
     *)
 echo "
 %exception $1 {
-  \$action 
+  \$action
   if (result < 0) {
      PyErr_SetFromErrno(PyExc_OSError);
      SWIG_fail;
