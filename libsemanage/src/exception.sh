@@ -9,10 +9,10 @@ echo "
 }
 "
 }
-if ! ${CC:-gcc} -x c -c -I../include - -aux-info temp.aux < ../include/semanage/semanage.h
+if ! ${CC:-gcc} -x c -c -I../include -o temp.o - -aux-info temp.aux < ../include/semanage/semanage.h
 then
     # clang does not support -aux-info so fall back to gcc
-    gcc -x c -c -I../include - -aux-info temp.aux < ../include/semanage/semanage.h
+    gcc -x c -c -I../include -o temp.o - -aux-info temp.aux < ../include/semanage/semanage.h
 fi
 for i in `awk '/extern int/ { print $6 }' temp.aux`; do except $i ; done
-rm -f -- temp.aux -.o
+rm -f -- temp.aux temp.o
