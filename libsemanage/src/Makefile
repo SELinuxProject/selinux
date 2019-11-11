@@ -94,7 +94,7 @@ $(LIBSO): $(LOBJS)
 $(LIBPC): $(LIBPC).in ../VERSION
 	sed -e 's/@VERSION@/$(VERSION)/; s:@prefix@:$(PREFIX):; s:@libdir@:$(LIBDIR):; s:@includedir@:$(INCLUDEDIR):' < $< > $@
 
-semanageswig_python_exception.i: ../include/semanage/semanage.h
+semanageswig_python_exception.i: exception.sh $(wildcard ../include/semanage/*.h)
 	bash -e exception.sh > $@ || (rm -f $@ ; false)
 
 conf-scan.c: conf-scan.l conf-parse.h
