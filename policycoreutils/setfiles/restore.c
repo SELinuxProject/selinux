@@ -17,40 +17,37 @@
 char **exclude_list;
 int exclude_count;
 
-struct restore_opts *r_opts;
-
 void restore_init(struct restore_opts *opts)
 {
 	int rc;
 
-	r_opts = opts;
 	struct selinux_opt selinux_opts[] = {
-		{ SELABEL_OPT_VALIDATE, r_opts->selabel_opt_validate },
-		{ SELABEL_OPT_PATH, r_opts->selabel_opt_path },
-		{ SELABEL_OPT_DIGEST, r_opts->selabel_opt_digest }
+		{ SELABEL_OPT_VALIDATE, opts->selabel_opt_validate },
+		{ SELABEL_OPT_PATH, opts->selabel_opt_path },
+		{ SELABEL_OPT_DIGEST, opts->selabel_opt_digest }
 	};
 
-	r_opts->hnd = selabel_open(SELABEL_CTX_FILE, selinux_opts, 3);
-	if (!r_opts->hnd) {
-		perror(r_opts->selabel_opt_path);
+	opts->hnd = selabel_open(SELABEL_CTX_FILE, selinux_opts, 3);
+	if (!opts->hnd) {
+		perror(opts->selabel_opt_path);
 		exit(1);
 	}
 
-	r_opts->restorecon_flags = 0;
-	r_opts->restorecon_flags = r_opts->nochange | r_opts->verbose |
-			   r_opts->progress | r_opts->set_specctx  |
-			   r_opts->add_assoc | r_opts->ignore_digest |
-			   r_opts->recurse | r_opts->userealpath |
-			   r_opts->xdev | r_opts->abort_on_error |
-			   r_opts->syslog_changes | r_opts->log_matches |
-			   r_opts->ignore_noent | r_opts->ignore_mounts |
-			   r_opts->mass_relabel;
+	opts->restorecon_flags = 0;
+	opts->restorecon_flags = opts->nochange | opts->verbose |
+			   opts->progress | opts->set_specctx  |
+			   opts->add_assoc | opts->ignore_digest |
+			   opts->recurse | opts->userealpath |
+			   opts->xdev | opts->abort_on_error |
+			   opts->syslog_changes | opts->log_matches |
+			   opts->ignore_noent | opts->ignore_mounts |
+			   opts->mass_relabel;
 
 	/* Use setfiles, restorecon and restorecond own handles */
-	selinux_restorecon_set_sehandle(r_opts->hnd);
+	selinux_restorecon_set_sehandle(opts->hnd);
 
-	if (r_opts->rootpath) {
-		rc = selinux_restorecon_set_alt_rootpath(r_opts->rootpath);
+	if (opts->rootpath) {
+		rc = selinux_restorecon_set_alt_rootpath(opts->rootpath);
 		if (rc) {
 			fprintf(stderr,
 				"selinux_restorecon_set_alt_rootpath error: %s.\n",
@@ -81,7 +78,6 @@ int process_glob(char *name, struct restore_opts *opts)
 	size_t i = 0;
 	int len, rc, errors;
 
-	r_opts = opts;
 	memset(&globbuf, 0, sizeof(globbuf));
 
 	errors = glob(name, GLOB_TILDE | GLOB_PERIOD |
@@ -96,7 +92,7 @@ int process_glob(char *name, struct restore_opts *opts)
 		if (len > 0 && strcmp(&globbuf.gl_pathv[i][len], "/..") == 0)
 			continue;
 		rc = selinux_restorecon(globbuf.gl_pathv[i],
-					r_opts->restorecon_flags);
+					opts->restorecon_flags);
 		if (rc < 0)
 			errors = rc;
 	}
