@@ -17,10 +17,8 @@ env:
     - PYVER=python3.7 RUBYLIBVER=2.6 LINKER=bfd
 
     # Test several Python versions
-    - PYVER=python2.7 RUBYLIBVER=2.6
     - PYVER=python3.5 RUBYLIBVER=2.6
     - PYVER=python3.6 RUBYLIBVER=2.6
-    - PYVER=pypy2.7-6.0 RUBYLIBVER=2.6
     - PYVER=pypy3.5-6.0 RUBYLIBVER=2.6
 
     # Test several Ruby versions (http://rubies.travis-ci.org/)
