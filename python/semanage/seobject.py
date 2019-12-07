@@ -1070,7 +1070,11 @@ class portRecords(semanageRecords):
         if port == "":
             raise ValueError(_("Port is required"))
 
-        ports = port.split("-")
+        if isinstance(port, str):
+            ports = port.split('-', 1)
+        else:
+            ports = (port,)
+
         if len(ports) == 1:
             high = low = int(ports[0])
         else:
