@@ -2,6 +2,9 @@
 Description=Translates SELinux MCS/MLS labels to human readable form
 Documentation=man:mcstransd(8)
 ConditionSecurity=selinux
+DefaultDependencies=no
+Before=shutdown.target sysinit.target
+Conflicts=shutdown.target
 
 [Service]
 ExecStart=/sbin/mcstransd -f
