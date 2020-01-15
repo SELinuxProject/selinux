@@ -13,7 +13,7 @@ typedef struct te_assert {
 	struct te_assert *next;
 } te_assert_t;
 
-te_assert_t *te_assertions;
+extern te_assert_t *te_assertions;
 
 extern unsigned int policyvers;
 
