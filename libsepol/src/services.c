@@ -1,4 +1,3 @@
-
 /*
  * Author : Stephen Smalley, <sds@tycho.nsa.gov>
  */
@@ -59,15 +58,14 @@
 #include <sepol/policydb/sidtab.h>
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/conditional.h>
-#include <sepol/policydb/flask.h>
 #include <sepol/policydb/util.h>
 
 #include "debug.h"
 #include "private.h"
 #include "context.h"
-#include "av_permissions.h"
 #include "dso.h"
 #include "mls.h"
+#include "flask.h"
 
 #define BUG() do { ERR(NULL, "Badness at %s:%d", __FILE__, __LINE__); } while (0)
 #define BUG_ON(x) do { if (x) ERR(NULL, "Badness at %s:%d", __FILE__, __LINE__); } while (0)
@@ -989,8 +987,8 @@ static int context_struct_compute_av(context_struct_t * scontext,
 	 * role is changing, then check the (current_role, new_role) 
 	 * pair.
 	 */
-	if (tclass == SECCLASS_PROCESS &&
-	    (avd->allowed & (PROCESS__TRANSITION | PROCESS__DYNTRANSITION)) &&
+	if (tclass == policydb->process_class &&
+	    (avd->allowed & policydb->process_trans_dyntrans) &&
 	    scontext->role != tcontext->role) {
 		for (ra = policydb->role_allow; ra; ra = ra->next) {
 			if (scontext->role == ra->role &&
@@ -998,8 +996,7 @@ static int context_struct_compute_av(context_struct_t * scontext,
 				break;
 		}
 		if (!ra)
-			avd->allowed = (avd->allowed) & ~(PROCESS__TRANSITION |
-							  PROCESS__DYNTRANSITION);
+			avd->allowed &= ~policydb->process_trans_dyntrans;
 	}
 
 	if (requested & ~avd->allowed) {
@@ -1361,6 +1358,7 @@ static int sepol_compute_sid(sepol_security_id_t ssid,
 			     sepol_security_class_t tclass,
 			     uint32_t specified, sepol_security_id_t * out_sid)
 {
+	struct class_datum *cladatum = NULL;
 	context_struct_t *scontext = 0, *tcontext = 0, newcontext;
 	struct role_trans *roletr = 0;
 	avtab_key_t avkey;
@@ -1381,14 +1379,22 @@ static int sepol_compute_sid(sepol_security_id_t ssid,
 		goto out;
 	}
 
+	if (tclass && tclass <= policydb->p_classes.nprim)
+		cladatum = policydb->class_val_to_struct[tclass - 1];
+
 	context_init(&newcontext);
 
 	/* Set the user identity. */
 	switch (specified) {
 	case AVTAB_TRANSITION:
 	case AVTAB_CHANGE:
-		/* Use the process user identity. */
-		newcontext.user = scontext->user;
+		if (cladatum && cladatum->default_user == DEFAULT_TARGET) {
+			newcontext.user = tcontext->user;
+		} else {
+			/* notice this gets both DEFAULT_SOURCE and unset */
+			/* Use the process user identity. */
+			newcontext.user = scontext->user;
+		}
 		break;
 	case AVTAB_MEMBER:
 		/* Use the related object owner. */
@@ -1396,18 +1402,31 @@ static int sepol_compute_sid(sepol_security_id_t ssid,
 		break;
 	}
 
-	/* Set the role and type to default values. */
-	switch (tclass) {
-	case SECCLASS_PROCESS:
-		/* Use the current role and type of process. */
+	/* Set the role to default values. */
+	if (cladatum && cladatum->default_role == DEFAULT_SOURCE) {
 		newcontext.role = scontext->role;
+	} else if (cladatum && cladatum->default_role == DEFAULT_TARGET) {
+		newcontext.role = tcontext->role;
+	} else {
+		if (tclass == policydb->process_class)
+			newcontext.role = scontext->role;
+		else
+			newcontext.role = OBJECT_R_VAL;
+	}
+
+	/* Set the type to default values. */
+	if (cladatum && cladatum->default_type == DEFAULT_SOURCE) {
 		newcontext.type = scontext->type;
-		break;
-	default:
-		/* Use the well-defined object role. */
-		newcontext.role = OBJECT_R_VAL;
-		/* Use the type of the related object. */
+	} else if (cladatum && cladatum->default_type == DEFAULT_TARGET) {
 		newcontext.type = tcontext->type;
+	} else {
+		if (tclass == policydb->process_class) {
+			/* Use the type of process. */
+			newcontext.type = scontext->type;
+		} else {
+			/* Use the type of the related object. */
+			newcontext.type = tcontext->type;
+		}
 	}
 
 	/* Look for a type transition/member/change rule. */
@@ -1435,23 +1454,18 @@ static int sepol_compute_sid(sepol_security_id_t ssid,
 	}
 
 	/* Check for class-specific changes. */
-	switch (tclass) {
-	case SECCLASS_PROCESS:
-		if (specified & AVTAB_TRANSITION) {
-			/* Look for a role transition rule. */
-			for (roletr = policydb->role_tr; roletr;
-			     roletr = roletr->next) {
-				if (roletr->role == scontext->role &&
-				    roletr->type == tcontext->type) {
-					/* Use the role transition rule. */
-					newcontext.role = roletr->new_role;
-					break;
-				}
+	if (specified & AVTAB_TRANSITION) {
+		/* Look for a role transition rule. */
+		for (roletr = policydb->role_tr; roletr;
+		     roletr = roletr->next) {
+			if (roletr->role == scontext->role &&
+			    roletr->type == tcontext->type &&
+			    roletr->tclass == tclass) {
+				/* Use the role transition rule. */
+				newcontext.role = roletr->new_role;
+				break;
 			}
 		}
-		break;
-	default:
-		break;
 	}
 
 	/* Set the MLS attributes.
@@ -2203,10 +2217,10 @@ int hidden sepol_get_user_sids(sepol_security_id_t fromsid,
 				continue;
 
 			rc = context_struct_compute_av(fromcon, &usercon,
-						       SECCLASS_PROCESS,
-						       PROCESS__TRANSITION,
+						       policydb->process_class,
+						       policydb->process_trans,
 						       &avd, &reason, NULL, 0);
-			if (rc || !(avd.allowed & PROCESS__TRANSITION))
+			if (rc || !(avd.allowed & policydb->process_trans))
 				continue;
 			rc = sepol_sidtab_context_to_sid(sidtab, &usercon,
 							 &sid);
@@ -2321,7 +2335,7 @@ int hidden sepol_fs_use(const char *fstype,
 		}
 		*sid = c->sid[0];
 	} else {
-		rc = sepol_genfs_sid(fstype, "/", SECCLASS_DIR, sid);
+		rc = sepol_genfs_sid(fstype, "/", policydb->dir_class, sid);
 		if (rc) {
 			*behavior = SECURITY_FS_USE_NONE;
 			rc = 0;
