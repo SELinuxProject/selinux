@@ -50,6 +50,39 @@ the SELinux policy database in the kernel
 .BI "int checkPasswdAccess(access_vector_t " requested );
 .
 .SH "DESCRIPTION"
+
+This family of functions is used to obtain policy decisions from the
+SELinux kernel security server (policy engine).  In general, direct use of
+.BR security_compute_av ()
+and its variant interfaces is discouraged in favor of using
+.BR selinux_check_access ()
+since the latter automatically handles the dynamic mapping of class
+and permission names to their policy values, initialization and use of
+the Access Vector Cache (AVC), and proper handling of per-domain and
+global permissive mode and allow_unknown.
+
+When using any of the functions that take policy integer values for
+classes or permissions as inputs, use
+.BR string_to_security_class(3)
+and
+.BR string_to_av_perm(3)
+to map the class and permission names to their policy values.
+These values may change across a policy reload, so they should be
+re-acquired on every use or using a
+.B SELINUX_CB_POLICYLOAD
+callback set via
+.BR selinux_set_callback(3).
+
+An alternative approach is to use
+.BR selinux_set_mapping(3)
+to create a mapping from class and permission index values
+used by the application to the policy values,
+thereby allowing the application to pass its own
+fixed constants for the classes and permissions to
+these functions and internally mapping them on demand.
+However, this also requires setting up a callback as above
+to address policy reloads.
+
 .BR security_compute_av ()
 queries whether the policy permits the source context
 .I scon
@@ -102,7 +135,7 @@ instance.
 .BR security_compute_user ()
 is used to determine the set of user contexts that can be reached from a
 source context. It is mainly used by
-.BR get_ordered_context_list ().
+.BR get_ordered_context_list (3).
 
 .BR security_validatetrans ()
 is used to determine if a transition from scon to newcon using tcon as the object
@@ -135,7 +168,9 @@ is used to check for a permission in the
 .I passwd
 class.
 .BR selinux_check_passwd_access ()
-uses getprevcon() for the source and target security contexts.
+uses
+.BR getprevcon(3)
+for the source and target security contexts.
 
 .BR checkPasswdAccess ()
 is a deprecated alias of the
@@ -146,4 +181,10 @@ function.
 Returns zero on success or \-1 on error.
 .
 .SH "SEE ALSO"
-.BR selinux "(8), " getcon "(3), " getfilecon "(3), " get_ordered_context_list "(3)"
+.BR string_to_security_class (3),
+.BR string_to_av_perm (3),
+.BR selinux_set_callback (3),
+.BR selinux_set_mapping (3),
+.BR getprevcon (3),
+.BR get_ordered_context_list (3),
+.BR selinux (8)

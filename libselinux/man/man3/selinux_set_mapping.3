@@ -19,7 +19,19 @@ struct security_class_mapping {
 .
 .SH "DESCRIPTION"
 .BR selinux_set_mapping ()
-establishes a mapping from a user-provided ordering of object classes and permissions to the numbers actually used by the loaded system policy.  Use of this function is highly preferred over the generated constants in the libselinux header files, as this method allows the policy's class and permission values to change over time.
+establishes a mapping from a user-provided ordering of object classes and permissions to the numbers actually used by the loaded system policy. If using this function, applications should also set a
+.B SELINUX_CB_POLICYLOAD
+callback via
+.BR selinux_set_callback(3)
+that calls this function again upon a policy reload to re-create the mapping
+in case the class or permission values change in the new policy.
+Generally it is preferred to instead use
+.BR selinux_check_access(3)
+instead of
+.BR avc_has_perm(3)
+or
+.BR security_compute_av(3)
+and not use this function at all.
 
 After the mapping is established, all libselinux functions that operate on class and permission values take the user-provided numbers, which are determined as follows:
 
@@ -81,8 +93,10 @@ and
 class) will be identified by 1, 2, 4, and 8 respectively.  Classes and permissions not listed in the mapping cannot be used.
 .
 .SH "AUTHOR"
-Eamon Walsh <ewalsh@tycho.nsa.gov>
+Originally Eamon Walsh.  Updated by Stephen Smalley <sds@tycho.nsa.gov>
 .
 .SH "SEE ALSO"
-.BR avc_open (8),
+.BR selinux_check_access (3),
+.BR selinux_set_callback (3),
+.BR avc_has_perm (3),
 .BR selinux (8)

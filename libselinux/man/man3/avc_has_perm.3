@@ -34,6 +34,36 @@ avc_has_perm, avc_has_perm_noaudit, avc_audit, avc_entry_ref_init \- obtain and 
 .in
 .
 .SH "DESCRIPTION"
+
+Direct use of these functions is generally discouraged in favor of
+the higher level interface
+.BR selinux_check_access(3)
+since the latter automatically handles the dynamic mapping of class
+and permission names to their policy values and proper handling of
+allow_unknown.
+
+When using any of the functions that take policy integer values for
+classes or permissions as inputs, use
+.BR string_to_security_class(3)
+and
+.BR string_to_av_perm(3)
+to map the class and permission names to their policy values.
+These values may change across a policy reload, so they should be
+re-acquired on every use or using a
+.B SELINUX_CB_POLICYLOAD
+callback set via
+.BR selinux_set_callback(3).
+
+An alternative approach is to use
+.BR selinux_set_mapping(3)
+to create a mapping from class and permission index values
+used by the application to the policy values,
+thereby allowing the application to pass its own
+fixed constants for the classes and permissions to
+these functions and internally mapping them on demand.
+However, this also requires setting up a callback as above
+to address policy reloads.
+
 .BR avc_entry_ref_init ()
 initializes an
 .B avc_entry_ref
@@ -146,11 +176,16 @@ Make sure that userspace object managers are granted appropriate access to
 netlink by the policy.
 .
 .SH "AUTHOR"
-Eamon Walsh <ewalsh@tycho.nsa.gov>
+Originally Eamon Walsh.  Updated by Stephen Smalley <sds@tycho.nsa.gov>
 .
 .SH "SEE ALSO"
 .ad l
 .nh
+.BR selinux_check_access(3),
+.BR string_to_security_class(3),
+.BR string_to_av_perm(3),
+.BR selinux_set_callback(3),
+.BR selinux_set_mapping(3),
 .BR avc_init (3),
 .BR avc_context_to_sid (3),
 .BR avc_cache_stats (3),
