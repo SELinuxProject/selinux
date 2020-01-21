@@ -49,7 +49,6 @@
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/avrule_block.h>
 #include <sepol/policydb/util.h>
-#include <sepol/policydb/flask.h>
 
 #include "kernel_to_common.h"
 #include "private.h"
@@ -2558,7 +2557,7 @@ int role_trans_read(policydb_t *p, struct policy_file *fp)
 				return -1;
 			tr->tclass = le32_to_cpu(buf[0]);
 		} else
-			tr->tclass = SECCLASS_PROCESS;
+			tr->tclass = p->process_class;
 		ltr = tr;
 	}
 	return 0;
@@ -3453,7 +3452,7 @@ static int range_read(policydb_t * p, struct policy_file *fp)
 				goto err;
 			rt->target_class = le32_to_cpu(buf[0]);
 		} else
-			rt->target_class = SECCLASS_PROCESS;
+			rt->target_class = p->process_class;
 		r = calloc(1, sizeof(*r));
 		if (!r)
 			goto err;
@@ -3582,7 +3581,9 @@ static int role_trans_rule_read(policydb_t *p, role_trans_rule_t ** r,
 			if (ebitmap_read(&tr->classes, fp))
 				return -1;
 		} else {
-			if (ebitmap_set_bit(&tr->classes, SECCLASS_PROCESS - 1, 1))
+			if (!p->process_class)
+				return -1;
+			if (ebitmap_set_bit(&tr->classes, p->process_class - 1, 1))
 				return -1;
 		}
 
@@ -3959,6 +3960,51 @@ static int scope_read(policydb_t * p, int symnum, struct policy_file *fp)
 	return -1;
 }
 
+static sepol_security_class_t policydb_string_to_security_class(
+	struct policydb *policydb,
+	const char *class_name)
+{
+	class_datum_t *tclass_datum;
+
+	tclass_datum = hashtab_search(policydb->p_classes.table,
+				      (hashtab_key_t) class_name);
+	if (!tclass_datum)
+		return 0;
+	return tclass_datum->s.value;
+}
+
+static sepol_access_vector_t policydb_string_to_av_perm(
+	struct policydb *policydb,
+	sepol_security_class_t tclass,
+	const char *perm_name)
+{
+	class_datum_t *tclass_datum;
+	perm_datum_t *perm_datum;
+
+	if (!tclass || tclass > policydb->p_classes.nprim)
+		return 0;
+	tclass_datum = policydb->class_val_to_struct[tclass - 1];
+
+	perm_datum = (perm_datum_t *)
+			hashtab_search(tclass_datum->permissions.table,
+			(hashtab_key_t)perm_name);
+	if (perm_datum != NULL)
+		return 0x1U << (perm_datum->s.value - 1);
+
+	if (tclass_datum->comdatum == NULL)
+		return 0;
+
+	perm_datum = (perm_datum_t *)
+			hashtab_search(tclass_datum->comdatum->permissions.table,
+			(hashtab_key_t)perm_name);
+
+	if (perm_datum != NULL)
+		return 0x1U << (perm_datum->s.value - 1);
+
+	return 0;
+}
+
+
 /*
  * Read the configuration data from a policy database binary
  * representation file into a policy database structure.
@@ -4186,6 +4232,18 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		p->symtab[i].nprim = nprim;
 	}
 
+	switch (p->target_platform) {
+	case SEPOL_TARGET_SELINUX:
+		p->process_class = policydb_string_to_security_class(p, "process");
+		p->dir_class = policydb_string_to_security_class(p, "dir");
+		break;
+	case SEPOL_TARGET_XEN:
+		p->process_class = policydb_string_to_security_class(p, "domain");
+		break;
+	default:
+		break;
+	}
+
 	if (policy_type == POLICY_KERN) {
 		if (avtab_read(&p->te_avtab, fp, r_policyvers))
 			goto bad;
@@ -4228,6 +4286,20 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 
 	if (policydb_index_classes(p))
 		goto bad;
+
+	switch (p->target_platform) {
+	case SEPOL_TARGET_SELINUX:
+		/* fall through */
+	case SEPOL_TARGET_XEN:
+		p->process_trans = policydb_string_to_av_perm(p, p->process_class,
+							      "transition");
+		p->process_trans_dyntrans = p->process_trans |
+			policydb_string_to_av_perm(p, p->process_class,
+						   "dyntransition");
+		break;
+	default:
+		break;
+	}
 
 	if (policydb_index_others(fp->handle, p, verbose))
 		goto bad;

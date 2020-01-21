@@ -53,7 +53,6 @@
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/conditional.h>
-#include <sepol/policydb/flask.h>
 #include <sepol/policydb/hierarchy.h>
 #include <sepol/policydb/polcaps.h>
 #include "queue.h"
@@ -5509,7 +5508,9 @@ int define_genfs_context_helper(char *fstype, int has_type)
 {
 	struct genfs *genfs_p, *genfs, *newgenfs;
 	ocontext_t *newc, *c, *head, *p;
+	class_datum_t *cladatum;
 	char *type = NULL;
+	const char *sclass;
 	int len, len2;
 
 	if (policydbp->target_platform != SEPOL_TARGET_SELINUX) {
@@ -5571,30 +5572,39 @@ int define_genfs_context_helper(char *fstype, int has_type)
 		}
 		switch (type[0]) {
 		case 'b':
-			newc->v.sclass = SECCLASS_BLK_FILE;
+			sclass = "blk_file";
 			break;
 		case 'c':
-			newc->v.sclass = SECCLASS_CHR_FILE;
+			sclass = "chr_file";
 			break;
 		case 'd':
-			newc->v.sclass = SECCLASS_DIR;
+			sclass = "dir";
 			break;
 		case 'p':
-			newc->v.sclass = SECCLASS_FIFO_FILE;
+			sclass = "fifo_file";
 			break;
 		case 'l':
-			newc->v.sclass = SECCLASS_LNK_FILE;
+			sclass = "lnk_file";
 			break;
 		case 's':
-			newc->v.sclass = SECCLASS_SOCK_FILE;
+			sclass = "sock_file";
 			break;
 		case '-':
-			newc->v.sclass = SECCLASS_FILE;
+			sclass = "file";
 			break;
 		default:
 			yyerror2("invalid type %s", type);
 			goto fail;
 		}
+
+		cladatum = hashtab_search(policydbp->p_classes.table,
+					  sclass);
+		if (!cladatum) {
+			yyerror2("could not find class %s for "
+				 "genfscon statement", sclass);
+			goto fail;
+		}
+		newc->v.sclass = cladatum->s.value;
 	}
 	if (parse_security_context(&newc->context[0]))
 		goto fail;

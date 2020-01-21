@@ -42,7 +42,6 @@
 #include <sepol/policydb/polcaps.h>
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/constraint.h>
-#include <sepol/policydb/flask.h>
 #include <sepol/policydb/expand.h>
 #include <sepol/policydb/hierarchy.h>
 

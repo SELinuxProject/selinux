@@ -29,7 +29,6 @@
 
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/services.h>
-#include <sepol/policydb/flask.h>
 #include <sepol/policydb/context.h>
 
 #include <stdlib.h>
@@ -649,7 +648,7 @@ int mls_compute_sid(policydb_t * policydb,
 
 		/* Fallthrough */
 	case AVTAB_CHANGE:
-		if (tclass == SECCLASS_PROCESS)
+		if (tclass == policydb->process_class)
 			/* Use the process MLS attributes. */
 			return mls_copy_context(newcontext, scontext);
 		else

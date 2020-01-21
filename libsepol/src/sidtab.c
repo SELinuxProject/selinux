@@ -14,7 +14,7 @@
 
 #include <sepol/policydb/sidtab.h>
 
-#include <sepol/policydb/flask.h>
+#include "flask.h"
 
 #define SIDTAB_HASH(sid) \
 (sid & SIDTAB_HASH_MASK)
