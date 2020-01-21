@@ -418,6 +418,9 @@ extern int security_av_string(security_class_t tclass,
 /* Display an access vector in a string representation. */
 extern void print_access_vector(security_class_t tclass, access_vector_t av);
 
+/* Flush the SELinux class cache, e.g. upon a policy reload. */
+extern void selinux_flush_class_cache(void);
+
 /* Set the function used by matchpathcon_init when displaying
    errors about the file_contexts configuration.  If not set,
    then this defaults to fprintf(stderr, fmt, ...). */

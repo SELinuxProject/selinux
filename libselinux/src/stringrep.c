@@ -158,7 +158,7 @@ err1:
 	return NULL;
 }
 
-hidden void flush_class_cache(void)
+void selinux_flush_class_cache(void)
 {
 	struct discover_class_node *cur = discover_class_cache, *prev = NULL;
 	size_t i;
@@ -179,6 +179,8 @@ hidden void flush_class_cache(void)
 
 	discover_class_cache = NULL;
 }
+
+hidden_def(selinux_flush_class_cache)
 
 security_class_t string_to_security_class(const char *s)
 {
