@@ -2093,6 +2093,12 @@ static int ocontext_copy_xen(expand_state_t *state)
 	for (i = 0; i < OCON_NUM; i++) {
 		l = NULL;
 		for (c = state->base->ocontexts[i]; c; c = c->next) {
+			if (i == OCON_XEN_ISID && !c->context[0].user) {
+				INFO(state->handle,
+				     "No context assigned to SID %s, omitting from policy",
+				     c->u.name);
+				continue;
+			}
 			n = malloc(sizeof(ocontext_t));
 			if (!n) {
 				ERR(state->handle, "Out of memory!");
@@ -2106,12 +2112,6 @@ static int ocontext_copy_xen(expand_state_t *state)
 			l = n;
 			switch (i) {
 			case OCON_XEN_ISID:
-				if (c->context[0].user == 0) {
-					ERR(state->handle,
-					    "Missing context for %s initial sid",
-					    c->u.name);
-					return -1;
-				}
 				n->sid[0] = c->sid[0];
 				break;
 			case OCON_XEN_PIRQ:
@@ -2159,6 +2159,12 @@ static int ocontext_copy_selinux(expand_state_t *state)
 	for (i = 0; i < OCON_NUM; i++) {
 		l = NULL;
 		for (c = state->base->ocontexts[i]; c; c = c->next) {
+			if (i == OCON_ISID && !c->context[0].user) {
+				INFO(state->handle,
+				     "No context assigned to SID %s, omitting from policy",
+				     c->u.name);
+				continue;
+			}
 			n = malloc(sizeof(ocontext_t));
 			if (!n) {
 				ERR(state->handle, "Out of memory!");
@@ -2172,12 +2178,6 @@ static int ocontext_copy_selinux(expand_state_t *state)
 			l = n;
 			switch (i) {
 			case OCON_ISID:
-				if (c->context[0].user == 0) {
-					ERR(state->handle,
-					    "Missing context for %s initial sid",
-					    c->u.name);
-					return -1;
-				}
 				n->sid[0] = c->sid[0];
 				break;
 			case OCON_FS:	/* FALLTHROUGH */

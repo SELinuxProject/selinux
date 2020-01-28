@@ -439,8 +439,7 @@ int __cil_verify_initsids(struct cil_list *sids)
 		struct cil_sid *sid = i->data;
 		if (sid->context == NULL) {
 			struct cil_tree_node *node = sid->datum.nodes->head->data;
-			cil_tree_log(node, CIL_ERR, "No context assigned to SID %s declared",sid->datum.name);
-			rc = SEPOL_ERR;
+			cil_tree_log(node, CIL_INFO, "No context assigned to SID %s, omitting from policy",sid->datum.name);
 		}
 	}
 

@@ -1294,8 +1294,15 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 	ocontext_t *c;
 	for (i = 0; i < info->ocon_num; i++) {
 		nel = 0;
-		for (c = p->ocontexts[i]; c; c = c->next)
+		for (c = p->ocontexts[i]; c; c = c->next) {
+			if (i == OCON_XEN_ISID && !c->context[0].user) {
+				INFO(fp->handle,
+				     "No context assigned to SID %s, omitting from policy",
+				     c->u.name);
+				continue;
+			}
 			nel++;
+		}
 		buf[0] = cpu_to_le32(nel);
 		items = put_entry(buf, sizeof(uint32_t), 1, fp);
 		if (items != 1)
@@ -1303,6 +1310,8 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 		for (c = p->ocontexts[i]; c; c = c->next) {
 			switch (i) {
 			case OCON_XEN_ISID:
+				if (!c->context[0].user)
+					break;
 				buf[0] = cpu_to_le32(c->sid[0]);
 				items = put_entry(buf, sizeof(uint32_t), 1, fp);
 				if (items != 1)
@@ -1393,8 +1402,15 @@ static int ocontext_write_selinux(struct policydb_compat_info *info,
 	ocontext_t *c;
 	for (i = 0; i < info->ocon_num; i++) {
 		nel = 0;
-		for (c = p->ocontexts[i]; c; c = c->next)
+		for (c = p->ocontexts[i]; c; c = c->next) {
+			if (i == OCON_ISID && !c->context[0].user) {
+				INFO(fp->handle,
+				     "No context assigned to SID %s, omitting from policy",
+				     c->u.name);
+				continue;
+			}
 			nel++;
+		}
 		buf[0] = cpu_to_le32(nel);
 		items = put_entry(buf, sizeof(uint32_t), 1, fp);
 		if (items != 1)
@@ -1402,6 +1418,8 @@ static int ocontext_write_selinux(struct policydb_compat_info *info,
 		for (c = p->ocontexts[i]; c; c = c->next) {
 			switch (i) {
 			case OCON_ISID:
+				if (!c->context[0].user)
+					break;
 				buf[0] = cpu_to_le32(c->sid[0]);
 				items = put_entry(buf, sizeof(uint32_t), 1, fp);
 				if (items != 1)

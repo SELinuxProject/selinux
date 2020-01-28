@@ -445,8 +445,8 @@ void display_initial_sids(policydb_t * p, FILE * fp)
 		user = p->p_user_val_to_name[cur->context[0].user - 1];
 		role = p->p_role_val_to_name[cur->context[0].role - 1];
 		type = p->p_type_val_to_name[cur->context[0].type - 1];
-		fprintf(fp, "\t%s: sid %d, context %s:%s:%s\n",
-			cur->u.name, cur->sid[0], user, role, type);
+		fprintf(fp, "\tsid %d, context %s:%s:%s\n",
+			cur->sid[0], user, role, type);
 	}
 #if 0
 	fprintf(fp, "Policy Initial SIDs:\n");

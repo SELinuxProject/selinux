@@ -1611,10 +1611,6 @@ int policydb_load_isids(policydb_t * p, sidtab_t * s)
 
 	head = p->ocontexts[OCON_ISID];
 	for (c = head; c; c = c->next) {
-		if (!c->context[0].user) {
-			ERR(NULL, "SID %s was never defined", c->u.name);
-			return -1;
-		}
 		if (sepol_sidtab_insert(s, c->sid[0], &c->context[0])) {
 			ERR(NULL, "unable to load initial SID %s", c->u.name);
 			return -1;

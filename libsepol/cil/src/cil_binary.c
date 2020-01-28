@@ -3068,9 +3068,11 @@ int cil_sidorder_to_policydb(policydb_t *pdb, const struct cil_db *db)
 		struct cil_sid *cil_sid = (struct cil_sid*)curr->data;
 		struct cil_context *cil_context = cil_sid->context;
 
+		/* even if no context, we must preserve initial SID values */
+		count++;
+
 		if (cil_context != NULL) {
 			ocontext_t *new_ocon = cil_add_ocontext(&pdb->ocontexts[OCON_ISID], &tail);
-			count++;
 			new_ocon->sid[0] = count;
 			new_ocon->u.name = cil_strdup(cil_sid->datum.fqn);
 			rc = __cil_context_to_sepol_context(pdb, cil_context, &new_ocon->context[0]);
