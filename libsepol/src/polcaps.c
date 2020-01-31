@@ -12,6 +12,7 @@ static const char *polcap_names[] = {
 	"always_check_network",		/* POLICYDB_CAPABILITY_ALWAYSNETWORK */
 	"cgroup_seclabel",		/* POLICYDB_CAPABILITY_SECLABEL */
 	"nnp_nosuid_transition",	/* POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION */
+	"genfs_seclabel_symlinks",	/* POLICYDB_CAPABILITY_GENFS_SECLABEL_SYMLINKS */
 	NULL
 };
 
