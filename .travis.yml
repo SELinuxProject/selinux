@@ -13,6 +13,7 @@ env:
     # Test the last version of Python and Ruby together, with some linkers
     - PYVER=python3.7 RUBYLIBVER=2.6
     - PYVER=python3.7 RUBYLIBVER=2.6 TEST_FLAGS_OVERRIDE=1
+    - PYVER=python3.7 RUBYLIBVER=2.6 TEST_DEBUG=1
     - PYVER=python3.7 RUBYLIBVER=2.6 LINKER=gold
     - PYVER=python3.7 RUBYLIBVER=2.6 LINKER=bfd
 
@@ -116,6 +117,8 @@ before_script:
 
   # If TEST_FLAGS_OVERRIDE is defined, test that overriding CFLAGS, LDFLAGS and other variables works fine
   - if [ -n "$TEST_FLAGS_OVERRIDE" ]; then EXPLICIT_MAKE_VARS="CFLAGS=-I$DESTDIR/usr/include LDFLAGS=-L$DESTDIR/usr/lib LDLIBS= CPPFLAGS=" ; fi
+  # If TEST_DEBUG is defined, test that debug build works fine
+  - if [ -n "$TEST_DEBUG" ]; then EXPLICIT_MAKE_VARS="$EXPLICIT_MAKE_VARS DEBUG=1" ; fi
 
 script:
   # Start by installing everything into $DESTDIR
