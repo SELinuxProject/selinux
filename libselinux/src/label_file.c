@@ -985,7 +985,11 @@ static bool get_digests_all_partial_matches(struct selabel_handle *rec,
 {
 	uint8_t read_digest[SHA1_HASH_SIZE];
 	ssize_t read_size = getxattr(pathname, RESTORECON_PARTIAL_MATCH_DIGEST,
-				     read_digest, SHA1_HASH_SIZE);
+				     read_digest, SHA1_HASH_SIZE
+#ifdef __APPLE__
+				     , 0, 0
+#endif /* __APPLE __ */
+				    );
 	uint8_t hash_digest[SHA1_HASH_SIZE];
 	bool status = selabel_hash_all_partial_matches(rec, pathname,
 						       hash_digest);
