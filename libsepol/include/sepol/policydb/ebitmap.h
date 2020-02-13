@@ -37,6 +37,7 @@ typedef struct ebitmap_node {
 typedef struct ebitmap {
 	ebitmap_node_t *node;	/* first node in the bitmap */
 	uint32_t highbit;	/* highest position in the total bitmap */
+	unsigned int cardinality;	/* cached value of cardinality */
 } ebitmap_t;
 
 #define ebitmap_length(e) ((e)->highbit)

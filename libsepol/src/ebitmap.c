@@ -67,6 +67,7 @@ int ebitmap_union(ebitmap_t * dst, const ebitmap_t * e1)
 	ebitmap_destroy(dst);
 	dst->node = tmp.node;
 	dst->highbit = tmp.highbit;
+	dst->cardinality = 0;
 
 	return 0;
 }
@@ -128,9 +129,14 @@ int ebitmap_andnot(ebitmap_t *dst, ebitmap_t *e1, ebitmap_t *e2, unsigned int ma
 unsigned int ebitmap_cardinality(ebitmap_t *e1)
 {
 	unsigned int i, count = 0;
+
+	if (e1->cardinality || e1->highbit == 0)
+		return e1->cardinality;
+
 	for (i=ebitmap_startbit(e1); i < ebitmap_length(e1); i++)
 		if (ebitmap_get_bit(e1, i))
 			count++;
+	e1->cardinality = count;
 	return count;
 }
 
@@ -194,6 +200,7 @@ int ebitmap_cpy(ebitmap_t * dst, const ebitmap_t * src)
 	}
 
 	dst->highbit = src->highbit;
+	dst->cardinality = src->cardinality;
 	return 0;
 }
 
@@ -309,6 +316,7 @@ int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value)
 					free(n);
 				}
 			}
+			e->cardinality = 0; /* invalidate cached cardinality */
 			return 0;
 		}
 		prev = n;
@@ -339,6 +347,7 @@ int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value)
 		e->node = new;
 	}
 
+	e->cardinality = 0; /* invalidate cached cardinality */
 	return 0;
 }
 
@@ -358,6 +367,7 @@ void ebitmap_destroy(ebitmap_t * e)
 
 	e->highbit = 0;
 	e->node = 0;
+	e->cardinality = 0;
 	return;
 }
 
