@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdio_ext.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -114,64 +115,41 @@ int get_default_context(const char *user,
 	return 0;
 }
 
-static int find_partialcon(char ** list,
-			   unsigned int nreach, char *part)
+static int is_in_reachable(char **reachable, const char *usercon_str)
 {
-	const char *conrole, *contype;
-	char *partrole, *parttype, *ptr;
-	context_t con;
-	unsigned int i;
+	if (!reachable)
+		return 0;
 
-	partrole = part;
-	ptr = part;
-	while (*ptr && !isspace(*ptr) && *ptr != ':')
-		ptr++;
-	if (*ptr != ':')
-		return -1;
-	*ptr++ = 0;
-	parttype = ptr;
-	while (*ptr && !isspace(*ptr) && *ptr != ':')
-		ptr++;
-	*ptr = 0;
-
-	for (i = 0; i < nreach; i++) {
-		con = context_new(list[i]);
-		if (!con)
-			return -1;
-		conrole = context_role_get(con);
-		contype = context_type_get(con);
-		if (!conrole || !contype) {
-			context_free(con);
-			return -1;
+	for (; *reachable != NULL; reachable++) {
+		if (strcmp(*reachable, usercon_str) == 0) {
+			return 1;
 		}
-		if (!strcmp(conrole, partrole) && !strcmp(contype, parttype)) {
-			context_free(con);
-			return i;
-		}
-		context_free(con);
 	}
-
-	return -1;
+	return 0;
 }
 
-static int get_context_order(FILE * fp,
+static int get_context_user(FILE * fp,
 			     char * fromcon,
-			     char ** reachable,
-			     unsigned int nreach,
-			     unsigned int *ordering, unsigned int *nordered)
+			     const char * user,
+			     char ***reachable,
+			     unsigned int *nreachable)
 {
 	char *start, *end = NULL;
 	char *line = NULL;
-	size_t line_len = 0;
+	size_t line_len = 0, usercon_len;
+	size_t user_len = strlen(user);
 	ssize_t len;
 	int found = 0;
-	const char *fromrole, *fromtype;
+	const char *fromrole, *fromtype, *fromlevel;
 	char *linerole, *linetype;
-	unsigned int i;
+	char **new_reachable = NULL;
+	char *usercon_str;
 	context_t con;
+	context_t usercon;
+
 	int rc;
 
-	errno = -EINVAL;
+	errno = EINVAL;
 
 	/* Extract the role and type of the fromcon for matching.
 	   User identity and MLS range can be variable. */
@@ -180,6 +158,7 @@ static int get_context_order(FILE * fp,
 		return -1;
 	fromrole = context_role_get(con);
 	fromtype = context_type_get(con);
+	fromlevel = context_range_get(con);
 	if (!fromrole || !fromtype) {
 		context_free(con);
 		return -1;
@@ -243,23 +222,75 @@ static int get_context_order(FILE * fp,
 		if (*end)
 			*end++ = 0;
 
-		/* Check for a match in the reachable list. */
-		rc = find_partialcon(reachable, nreach, start);
-		if (rc < 0) {
-			/* No match, skip it. */
+		/* Check whether a new context is valid */
+		if (SIZE_MAX - user_len < strlen(start) + 2) {
+			fprintf(stderr, "%s: one of partial contexts is too big\n", __FUNCTION__);
+			errno = EINVAL;
+			rc = -1;
+			goto out;
+		}
+		usercon_len = user_len + strlen(start) + 2;
+		usercon_str = malloc(usercon_len);
+		if (!usercon_str) {
+			rc = -1;
+			goto out;
+		}
+
+		/* set range from fromcon in the new usercon */
+		snprintf(usercon_str, usercon_len, "%s:%s", user, start);
+		usercon = context_new(usercon_str);
+		if (!usercon) {
+			if (errno != EINVAL) {
+				free(usercon_str);
+				rc = -1;
+				goto out;
+			}
+			fprintf(stderr,
+				"%s: can't create a context from %s, skipping\n",
+				__FUNCTION__, usercon_str);
+			free(usercon_str);
 			start = end;
 			continue;
 		}
+		free(usercon_str);
+		if (context_range_set(usercon, fromlevel) != 0) {
+			context_free(usercon);
+			rc = -1;
+			goto out;
+		}
+		usercon_str = context_str(usercon);
+		if (!usercon_str) {
+			context_free(usercon);
+			rc = -1;
+			goto out;
+		}
 
-		/* If a match is found and the entry is not already ordered
-		   (e.g. due to prior match in prior config file), then set
-		   the ordering for it. */
-		i = rc;
-		if (ordering[i] == nreach)
-			ordering[i] = (*nordered)++;
+		/* check whether usercon is already in reachable */
+		if (is_in_reachable(*reachable, usercon_str)) {
+			context_free(usercon);
+			start = end;
+			continue;
+		}
+		if (security_check_context(usercon_str) == 0) {
+			new_reachable = realloc(*reachable, (*nreachable + 2) * sizeof(char *));
+			if (!new_reachable) {
+				context_free(usercon);
+				rc = -1;
+				goto out;
+			}
+			*reachable = new_reachable;
+			new_reachable[*nreachable] = strdup(usercon_str);
+			if (new_reachable[*nreachable] == NULL) {
+				context_free(usercon);
+				rc = -1;
+				goto out;
+			}
+			new_reachable[*nreachable + 1] = 0;
+			*nreachable += 1;
+		}
+		context_free(usercon);
 		start = end;
 	}
-
 	rc = 0;
 
       out:
@@ -311,21 +342,6 @@ static int get_failsafe_context(const char *user, char ** newcon)
 	}
 
 	return 0;
-}
-
-struct context_order {
-	char * con;
-	unsigned int order;
-};
-
-static int order_compare(const void *A, const void *B)
-{
-	const struct context_order *c1 = A, *c2 = B;
-	if (c1->order < c2->order)
-		return -1;
-	else if (c1->order > c2->order)
-		return 1;
-	return strcmp(c1->con, c2->con);
 }
 
 int get_ordered_context_list_with_level(const char *user,
@@ -395,11 +411,8 @@ int get_ordered_context_list(const char *user,
 			     char *** list)
 {
 	char **reachable = NULL;
-	unsigned int *ordering = NULL;
-	struct context_order *co = NULL;
-	char **ptr;
 	int rc = 0;
-	unsigned int nreach = 0, nordered = 0, freefrom = 0, i;
+	unsigned nreachable = 0, freefrom = 0;
 	FILE *fp;
 	char *fname = NULL;
 	size_t fname_len;
@@ -413,23 +426,6 @@ int get_ordered_context_list(const char *user,
 		freefrom = 1;
 	}
 
-	/* Determine the set of reachable contexts for the user. */
-	rc = security_compute_user(fromcon, user, &reachable);
-	if (rc < 0)
-		goto failsafe;
-	nreach = 0;
-	for (ptr = reachable; *ptr; ptr++)
-		nreach++;
-	if (!nreach)
-		goto failsafe;
-
-	/* Initialize ordering array. */
-	ordering = malloc(nreach * sizeof(unsigned int));
-	if (!ordering)
-		goto failsafe;
-	for (i = 0; i < nreach; i++)
-		ordering[i] = nreach;
-
 	/* Determine the ordering to apply from the optional per-user config
 	   and from the global config. */
 	fname_len = strlen(user_contexts_path) + strlen(user) + 2;
@@ -440,8 +436,8 @@ int get_ordered_context_list(const char *user,
 	fp = fopen(fname, "re");
 	if (fp) {
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
-		rc = get_context_order(fp, fromcon, reachable, nreach, ordering,
-				       &nordered);
+		rc = get_context_user(fp, fromcon, user, &reachable, &nreachable);
+
 		fclose(fp);
 		if (rc < 0 && errno != ENOENT) {
 			fprintf(stderr,
@@ -454,8 +450,7 @@ int get_ordered_context_list(const char *user,
 	fp = fopen(selinux_default_context_path(), "re");
 	if (fp) {
 		__fsetlocking(fp, FSETLOCKING_BYCALLER);
-		rc = get_context_order(fp, fromcon, reachable, nreach, ordering,
-				       &nordered);
+		rc = get_context_user(fp, fromcon, user, &reachable, &nreachable);
 		fclose(fp);
 		if (rc < 0 && errno != ENOENT) {
 			fprintf(stderr,
@@ -463,40 +458,19 @@ int get_ordered_context_list(const char *user,
 				__FUNCTION__, selinux_default_context_path());
 			/* Fall through */
 		}
-		rc = 0;
 	}
 
-	if (!nordered)
+	if (!nreachable)
 		goto failsafe;
-
-	/* Apply the ordering. */
-	co = malloc(nreach * sizeof(struct context_order));
-	if (!co)
-		goto failsafe;
-	for (i = 0; i < nreach; i++) {
-		co[i].con = reachable[i];
-		co[i].order = ordering[i];
-	}
-	qsort(co, nreach, sizeof(struct context_order), order_compare);
-	for (i = 0; i < nreach; i++)
-		reachable[i] = co[i].con;
-	free(co);
-
-	/* Only report the ordered entries to the caller. */
-	if (nordered <= nreach) {
-		for (i = nordered; i < nreach; i++)
-			free(reachable[i]);
-		reachable[nordered] = NULL;
-		rc = nordered;
-	}
 
       out:
-	if (rc > 0)
+	if (nreachable > 0) {
 		*list = reachable;
+		rc = nreachable;
+	}
 	else
 		freeconary(reachable);
 
-	free(ordering);
 	if (freefrom)
 		freecon(fromcon);
 
@@ -519,7 +493,7 @@ int get_ordered_context_list(const char *user,
 		reachable = NULL;
 		goto out;
 	}
-	rc = 1;			/* one context in the list */
+	nreachable = 1;			/* one context in the list */
 	goto out;
 }
 
