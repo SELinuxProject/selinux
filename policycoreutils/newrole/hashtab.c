@@ -112,48 +112,6 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 	return HASHTAB_SUCCESS;
 }
 
-int hashtab_replace(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum,
-		    void (*destroy) (hashtab_key_t k,
-				     hashtab_datum_t d, void *args), void *args)
-{
-	int hvalue;
-	hashtab_ptr_t prev, cur, newnode;
-
-	if (!h)
-		return HASHTAB_OVERFLOW;
-
-	hvalue = h->hash_value(h, key);
-	prev = NULL;
-	cur = h->htable[hvalue];
-	while (cur != NULL && h->keycmp(h, key, cur->key) > 0) {
-		prev = cur;
-		cur = cur->next;
-	}
-
-	if (cur && (h->keycmp(h, key, cur->key) == 0)) {
-		if (destroy)
-			destroy(cur->key, cur->datum, args);
-		cur->key = key;
-		cur->datum = datum;
-	} else {
-		newnode = (hashtab_ptr_t) malloc(sizeof(hashtab_node_t));
-		if (newnode == NULL)
-			return HASHTAB_OVERFLOW;
-		memset(newnode, 0, sizeof(struct hashtab_node));
-		newnode->key = key;
-		newnode->datum = datum;
-		if (prev) {
-			newnode->next = prev->next;
-			prev->next = newnode;
-		} else {
-			newnode->next = h->htable[hvalue];
-			h->htable[hvalue] = newnode;
-		}
-	}
-
-	return HASHTAB_SUCCESS;
-}
-
 hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t key)
 {
 
@@ -218,49 +176,6 @@ int hashtab_map(hashtab_t h,
 		}
 	}
 	return HASHTAB_SUCCESS;
-}
-
-void hashtab_map_remove_on_error(hashtab_t h,
-				 int (*apply) (hashtab_key_t k,
-					       hashtab_datum_t d,
-					       void *args),
-				 void (*destroy) (hashtab_key_t k,
-						  hashtab_datum_t d,
-						  void *args), void *args)
-{
-	unsigned int i;
-	int ret;
-	hashtab_ptr_t last, cur, temp;
-
-	if (!h)
-		return;
-
-	for (i = 0; i < h->size; i++) {
-		last = NULL;
-		cur = h->htable[i];
-		while (cur != NULL) {
-			ret = apply(cur->key, cur->datum, args);
-			if (ret) {
-				if (last) {
-					last->next = cur->next;
-				} else {
-					h->htable[i] = cur->next;
-				}
-
-				temp = cur;
-				cur = cur->next;
-				if (destroy)
-					destroy(temp->key, temp->datum, args);
-				free(temp);
-				h->nel--;
-			} else {
-				last = cur;
-				cur = cur->next;
-			}
-		}
-	}
-
-	return;
 }
 
 void hashtab_hash_eval(hashtab_t h, char *tag)
