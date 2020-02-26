@@ -1101,7 +1101,7 @@ static int write_sensitivitycategory_rules_to_cil(FILE *out, struct policydb *pd
 		}
 		if (level->isalias) continue;
 
-		if (ebitmap_cardinality(&level->level->cat) > 0) {
+		if (!ebitmap_is_empty(&level->level->cat)) {
 			cats = cats_ebitmap_to_str(&level->level->cat, pdb->p_cat_val_to_name);
 			sepol_printf(out, "(sensitivitycategory %s %s)\n", name, cats);
 			free(cats);
@@ -1502,7 +1502,7 @@ static int write_type_attribute_sets_to_cil(FILE *out, struct policydb *pdb)
 		if (attr->flavor != TYPE_ATTRIB) continue;
 		name = pdb->p_type_val_to_name[i];
 		typemap = &pdb->attr_type_map[i];
-		if (ebitmap_cardinality(typemap) == 0) continue;
+		if (ebitmap_is_empty(typemap)) continue;
 		types = ebitmap_to_str(typemap, pdb->p_type_val_to_name, 1);
 		if (!types) {
 			rc = -1;
@@ -1879,7 +1879,7 @@ static char *level_to_str(struct policydb *pdb, struct mls_level *level)
 	char *sens_str = pdb->p_sens_val_to_name[level->sens - 1];
 	char *cats_str;
 
-	if (ebitmap_cardinality(cats) > 0) {
+	if (!ebitmap_is_empty(cats)) {
 		cats_str = cats_ebitmap_to_str(cats, pdb->p_cat_val_to_name);
 		level_str = create_str("(%s %s)", 2, sens_str, cats_str);
 		free(cats_str);
@@ -2188,7 +2188,7 @@ static int write_role_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 			goto exit;
 		}
 		types = &role->types.types;
-		if (types && (ebitmap_cardinality(types) > 0)) {
+		if (types && !ebitmap_is_empty(types)) {
 			rc = strs_init(&type_strs, pdb->p_types.nprim);
 			if (rc != 0) {
 				goto exit;
@@ -2373,7 +2373,7 @@ static int write_user_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 		}
 
 		roles = &user->roles.roles;
-		if (roles && (ebitmap_cardinality(roles) > 0)) {
+		if (roles && !ebitmap_is_empty(roles)) {
 			rc = strs_init(&role_strs, pdb->p_roles.nprim);
 			if (rc != 0) {
 				goto exit;

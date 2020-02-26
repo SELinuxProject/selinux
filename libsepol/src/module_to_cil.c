@@ -829,8 +829,8 @@ static int cil_print_attr_strs(int indent, struct policydb *pdb, int is_type, vo
 		pos = &ts->types;
 		neg = &ts->negset;
 		flags = ts->flags;
-		has_positive = pos && (ebitmap_length(pos) > 0);
-		has_negative = neg && (ebitmap_length(neg) > 0);
+		has_positive = pos && !ebitmap_is_empty(pos);
+		has_negative = neg && !ebitmap_is_empty(neg);
 	} else {
 		kind = "role";
 		val_to_name = pdb->p_role_val_to_name;
@@ -838,7 +838,7 @@ static int cil_print_attr_strs(int indent, struct policydb *pdb, int is_type, vo
 		pos = &rs->roles;
 		neg = NULL;
 		flags = rs->flags;
-		has_positive = pos && (ebitmap_length(pos) > 0);
+		has_positive = pos && !ebitmap_is_empty(pos);
 		has_negative = 0;
 	}
 
@@ -1056,7 +1056,7 @@ static int process_typeset(struct policydb *pdb, struct type_set *ts, struct lis
 	*names = NULL;
 	*num_names = 0;
 
-	if (ebitmap_length(&ts->negset) > 0 || ts->flags != 0) {
+	if (!ebitmap_is_empty(&ts->negset) || ts->flags != 0) {
 		rc = set_to_names(pdb, 1, ts, attr_list, names, num_names);
 		if (rc != 0) {
 			goto exit;
@@ -2069,7 +2069,7 @@ static int class_order_to_cil(int indent, struct policydb *pdb, struct ebitmap o
 	struct ebitmap_node *node;
 	uint32_t i;
 
-	if (ebitmap_cardinality(&order) == 0) {
+	if (ebitmap_is_empty(&order)) {
 		return 0;
 	}
 
@@ -2175,7 +2175,7 @@ static int role_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 			cil_println(indent, "(roleattribute %s)", key);
 		}
 
-		if (ebitmap_cardinality(&role->roles) > 0) {
+		if (!ebitmap_is_empty(&role->roles)) {
 			cil_indent(indent);
 			cil_printf("(roleattributeset %s (", key);
 			ebitmap_for_each_positive_bit(&role->roles, node, i) {
@@ -2269,7 +2269,7 @@ static int type_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 			cil_printf(")\n");
 		}
 
-		if (ebitmap_cardinality(&type->types) > 0) {
+		if (!ebitmap_is_empty(&type->types)) {
 			cil_indent(indent);
 			cil_printf("(typeattributeset %s (", key);
 			ebitmap_to_cil(pdb, &type->types, SYM_TYPES);
@@ -2372,7 +2372,7 @@ static int sens_to_cil(int indent, struct policydb *pdb, struct avrule_block *UN
 		}
 	}
 
-	if (ebitmap_cardinality(&level->level->cat) > 0) {
+	if (!ebitmap_is_empty(&level->level->cat)) {
 		cil_indent(indent);
 		cil_printf("(sensitivitycategory %s (", key);
 		ebitmap_to_cil(pdb, &level->level->cat, SYM_CATS);
@@ -2387,7 +2387,7 @@ static int sens_order_to_cil(int indent, struct policydb *pdb, struct ebitmap or
 	struct ebitmap_node *node;
 	uint32_t i;
 
-	if (ebitmap_cardinality(&order) == 0) {
+	if (ebitmap_is_empty(&order)) {
 		return 0;
 	}
 
@@ -2427,7 +2427,7 @@ static int cat_order_to_cil(int indent, struct policydb *pdb, struct ebitmap ord
 	struct ebitmap_node *node;
 	uint32_t i;
 
-	if (ebitmap_cardinality(&order) == 0) {
+	if (ebitmap_is_empty(&order)) {
 		rc = 0;
 		goto exit;
 	}
@@ -2478,7 +2478,7 @@ static int level_to_cil(struct policydb *pdb, struct mls_level *level)
 
 	cil_printf("(%s", pdb->p_sens_val_to_name[level->sens - 1]);
 
-	if (ebitmap_cardinality(map) > 0) {
+	if (!ebitmap_is_empty(map)) {
 		cil_printf("(");
 		ebitmap_to_cil(pdb, map, SYM_CATS);
 		cil_printf(")");

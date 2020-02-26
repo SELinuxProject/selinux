@@ -234,7 +234,7 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	if (rc)
 		goto oom;
 
-	if (ebitmap_length(&src_matches) == 0)
+	if (ebitmap_is_empty(&src_matches))
 		goto exit;
 
 	rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types, &p->attr_type_map[k->target_type -1]);
@@ -249,14 +249,14 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 		if (rc)
 			goto oom;
 
-		if (ebitmap_length(&self_matches) > 0) {
+		if (!ebitmap_is_empty(&self_matches)) {
 			rc = ebitmap_union(&tgt_matches, &self_matches);
 			if (rc)
 				goto oom;
 		}
 	}
 
-	if (ebitmap_length(&tgt_matches) == 0)
+	if (ebitmap_is_empty(&tgt_matches))
 		goto exit;
 
 	for (cp = avrule->perms; cp; cp = cp->next) {
@@ -394,7 +394,7 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 	if (rc)
 		goto oom;
 
-	if (ebitmap_length(&src_matches) == 0)
+	if (ebitmap_is_empty(&src_matches))
 		goto exit;
 
 	rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types,
@@ -411,14 +411,14 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 		if (rc)
 			goto oom;
 
-		if (ebitmap_length(&self_matches) > 0) {
+		if (!ebitmap_is_empty(&self_matches)) {
 			rc = ebitmap_union(&tgt_matches, &self_matches);
 			if (rc)
 				goto oom;
 		}
 	}
 
-	if (ebitmap_length(&tgt_matches) == 0)
+	if (ebitmap_is_empty(&tgt_matches))
 		goto exit;
 
 	for (cp = avrule->perms; cp; cp = cp->next) {

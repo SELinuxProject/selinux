@@ -1090,7 +1090,7 @@ static int write_level_rules_to_conf(FILE *out, struct policydb *pdb)
 		}
 		if (level->isalias) continue;
 
-		if (ebitmap_cardinality(&level->level->cat) > 0) {
+		if (!ebitmap_is_empty(&level->level->cat)) {
 			cats = cats_ebitmap_to_str(&level->level->cat, pdb->p_cat_val_to_name);
 			sepol_printf(out, "level %s:%s;\n", name, cats);
 			free(cats);
@@ -1859,7 +1859,7 @@ static char *level_to_str(struct policydb *pdb, struct mls_level *level)
 	char *sens_str = pdb->p_sens_val_to_name[level->sens - 1];
 	char *cats_str;
 
-	if (ebitmap_cardinality(cats) > 0) {
+	if (!ebitmap_is_empty(cats)) {
 		cats_str = cats_ebitmap_to_str(cats, pdb->p_cat_val_to_name);
 		level_str = create_str("%s:%s", 2, sens_str, cats_str);
 		free(cats_str);
@@ -2145,7 +2145,7 @@ static int write_role_decl_rules_to_conf(FILE *out, struct policydb *pdb)
 			rc = -1;
 			goto exit;
 		}
-		if (ebitmap_cardinality(&role->types.types) == 0) continue;
+		if (ebitmap_is_empty(&role->types.types)) continue;
 		types = ebitmap_to_str(&role->types.types, pdb->p_type_val_to_name, 1);
 		if (!types) {
 			rc = -1;
@@ -2298,7 +2298,7 @@ static int write_user_decl_rules_to_conf(FILE *out, struct policydb *pdb)
 		}
 		sepol_printf(out, "user %s", name);
 
-		if (ebitmap_cardinality(&user->roles.roles) > 0) {
+		if (!ebitmap_is_empty(&user->roles.roles)) {
 			roles = ebitmap_to_str(&user->roles.roles,
 					       pdb->p_role_val_to_name, 1);
 			if (!roles) {

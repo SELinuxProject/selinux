@@ -2504,7 +2504,7 @@ int type_set_expand(type_set_t * set, ebitmap_t * t, policydb_t * p,
 	unsigned int i;
 	ebitmap_t types, neg_types;
 	ebitmap_node_t *tnode;
-	unsigned char expand = alwaysexpand || ebitmap_length(&set->negset) || set->flags;
+	unsigned char expand = alwaysexpand || !ebitmap_is_empty(&set->negset) || set->flags;
 	type_datum_t *type;
 	int rc =-1;
 
