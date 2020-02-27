@@ -50,6 +50,9 @@ static ebitmap_t *build_type_map(const policydb_t *p)
 			for (k = 0; k < p->p_types.nprim; k++) {
 				ebitmap_t *types_k = &p->attr_type_map[k];
 
+				if (p->type_val_to_struct[k]->flavor != TYPE_ATTRIB)
+					continue;
+
 				if (ebitmap_contains(types_k, types_i)) {
 					if (ebitmap_set_bit(&map[i], k, 1))
 						goto err;
