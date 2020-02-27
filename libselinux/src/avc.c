@@ -294,7 +294,6 @@ void avc_av_stats(void)
 		slots_used, AVC_CACHE_SLOTS, max_chain_len);
 }
 
-hidden_def(avc_av_stats)
 
 static inline struct avc_node *avc_reclaim_node(void)
 {
@@ -494,7 +493,6 @@ void avc_cleanup(void)
 {
 }
 
-hidden_def(avc_cleanup)
 
 int avc_reset(void)
 {
@@ -539,7 +537,6 @@ int avc_reset(void)
 	return rc;
 }
 
-hidden_def(avc_reset)
 
 void avc_destroy(void)
 {
@@ -733,7 +730,6 @@ void avc_audit(security_id_t ssid, security_id_t tsid,
 	avc_release_lock(avc_log_lock);
 }
 
-hidden_def(avc_audit)
 
 
 static void avd_init(struct av_decision *avd)
@@ -825,7 +821,6 @@ int avc_has_perm_noaudit(security_id_t ssid,
 	return rc;
 }
 
-hidden_def(avc_has_perm_noaudit)
 
 int avc_has_perm(security_id_t ssid, security_id_t tsid,
 		 security_class_t tclass, access_vector_t requested,

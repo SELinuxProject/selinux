@@ -14,24 +14,23 @@
 #include <string.h>
 #include <selinux/avc.h>
 #include "callbacks.h"
-#include "dso.h"
 
 /* callback pointers */
-extern void *(*avc_func_malloc) (size_t) hidden;
-extern void (*avc_func_free) (void *)hidden;
+extern void *(*avc_func_malloc) (size_t) ;
+extern void (*avc_func_free) (void *);
 
-extern void (*avc_func_log) (const char *, ...) __attribute__((__format__(printf,1,2))) hidden;
-extern void (*avc_func_audit) (void *, security_class_t, char *, size_t)hidden;
+extern void (*avc_func_log) (const char *, ...) __attribute__((__format__(printf,1,2))) ;
+extern void (*avc_func_audit) (void *, security_class_t, char *, size_t);
 
-extern int avc_using_threads hidden;
-extern int avc_app_main_loop hidden;
-extern void *(*avc_func_create_thread) (void (*)(void))hidden;
-extern void (*avc_func_stop_thread) (void *)hidden;
+extern int avc_using_threads ;
+extern int avc_app_main_loop ;
+extern void *(*avc_func_create_thread) (void (*)(void));
+extern void (*avc_func_stop_thread) (void *);
 
-extern void *(*avc_func_alloc_lock) (void)hidden;
-extern void (*avc_func_get_lock) (void *)hidden;
-extern void (*avc_func_release_lock) (void *)hidden;
-extern void (*avc_func_free_lock) (void *)hidden;
+extern void *(*avc_func_alloc_lock) (void);
+extern void (*avc_func_get_lock) (void *);
+extern void (*avc_func_release_lock) (void *);
+extern void (*avc_func_free_lock) (void *);
 
 static inline void set_callbacks(const struct avc_memory_callback *mem_cb,
 				 const struct avc_log_callback *log_cb,
@@ -61,10 +60,10 @@ static inline void set_callbacks(const struct avc_memory_callback *mem_cb,
 
 /* message prefix and enforcing mode*/
 #define AVC_PREFIX_SIZE 16
-extern char avc_prefix[AVC_PREFIX_SIZE] hidden;
-extern int avc_running hidden;
-extern int avc_enforcing hidden;
-extern int avc_setenforce hidden;
+extern char avc_prefix[AVC_PREFIX_SIZE] ;
+extern int avc_running ;
+extern int avc_enforcing ;
+extern int avc_setenforce ;
 
 /* user-supplied callback interface for avc */
 static inline void *avc_malloc(size_t size)
@@ -155,28 +154,23 @@ static inline void avc_free_lock(void *lock)
 /* internal callbacks */
 int avc_ss_grant(security_id_t ssid, security_id_t tsid,
 		 security_class_t tclass, access_vector_t perms,
-		 uint32_t seqno) hidden;
+		 uint32_t seqno) ;
 int avc_ss_try_revoke(security_id_t ssid, security_id_t tsid,
 		      security_class_t tclass,
 		      access_vector_t perms, uint32_t seqno,
-		      access_vector_t * out_retained) hidden;
+		      access_vector_t * out_retained) ;
 int avc_ss_revoke(security_id_t ssid, security_id_t tsid,
 		  security_class_t tclass, access_vector_t perms,
-		  uint32_t seqno) hidden;
-int avc_ss_reset(uint32_t seqno) hidden;
+		  uint32_t seqno) ;
+int avc_ss_reset(uint32_t seqno) ;
 int avc_ss_set_auditallow(security_id_t ssid, security_id_t tsid,
 			  security_class_t tclass, access_vector_t perms,
-			  uint32_t seqno, uint32_t enable) hidden;
+			  uint32_t seqno, uint32_t enable) ;
 int avc_ss_set_auditdeny(security_id_t ssid, security_id_t tsid,
 			 security_class_t tclass, access_vector_t perms,
-			 uint32_t seqno, uint32_t enable) hidden;
+			 uint32_t seqno, uint32_t enable) ;
 
 /* netlink kernel message code */
-extern int avc_netlink_trouble hidden;
+extern int avc_netlink_trouble ;
 
-hidden_proto(avc_av_stats)
-    hidden_proto(avc_cleanup)
-    hidden_proto(avc_reset)
-    hidden_proto(avc_audit)
-    hidden_proto(avc_has_perm_noaudit)
 #endif				/* _SELINUX_AVC_INTERNAL_H_ */

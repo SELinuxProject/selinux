@@ -45,7 +45,6 @@ int security_load_policy(void *data, size_t len)
 	return 0;
 }
 
-hidden_def(security_load_policy)
 
 #ifndef ANDROID
 #undef max
@@ -213,7 +212,6 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	return rc;
 }
 
-hidden_def(selinux_mkload_policy)
 
 /*
  * Mount point for selinuxfs. 
