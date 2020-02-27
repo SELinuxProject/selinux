@@ -40,8 +40,7 @@ static ebitmap_t *build_type_map(const policydb_t *p)
 		return NULL;
 
 	for (i = 0; i < p->p_types.nprim; i++) {
-		if (p->type_val_to_struct[i] &&
-		    p->type_val_to_struct[i]->flavor != TYPE_ATTRIB) {
+		if (p->type_val_to_struct[i]->flavor != TYPE_ATTRIB) {
 			if (ebitmap_cpy(&map[i], &p->type_attr_map[i]))
 				goto err;
 		} else {
