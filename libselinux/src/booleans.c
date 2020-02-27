@@ -414,8 +414,3 @@ char *selinux_boolean_sub(const char *name __attribute__((unused)))
 }
 #endif
 
-hidden_def(security_get_boolean_names)
-hidden_def(selinux_boolean_sub)
-hidden_def(security_get_boolean_active)
-hidden_def(security_set_boolean)
-hidden_def(security_commit_booleans)

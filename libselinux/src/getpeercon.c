@@ -43,7 +43,6 @@ int getpeercon_raw(int fd, char ** context)
 	return ret;
 }
 
-hidden_def(getpeercon_raw)
 
 int getpeercon(int fd, char ** context)
 {

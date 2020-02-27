@@ -23,7 +23,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "sha1.h"
-#include "dso.h"
 #include <memory.h>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +125,7 @@ void
 //
 //  Initialises an SHA1 Context. Use this to initialise/reset a context.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void hidden
+void 
     Sha1Initialise
     (
         Sha1Context*                Context
@@ -148,7 +147,7 @@ void hidden
 //  Adds data to the SHA1 context. This will process the data and update the internal state of the context. Keep on
 //  calling this function until all the data has been added. Then call Sha1Finalise to calculate the hash.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void hidden
+void 
     Sha1Update
     (
         Sha1Context*        Context,
@@ -191,7 +190,7 @@ void hidden
 //  Performs the final calculation of the hash and returns the digest (20 byte buffer containing 160bit hash). After
 //  calling this, Sha1Initialised must be used to reuse the context.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void hidden
+void 
     Sha1Finalise
     (
         Sha1Context*                Context,

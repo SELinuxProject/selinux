@@ -52,7 +52,6 @@ int get_default_context_with_role(const char *user,
 	return rc;
 }
 
-hidden_def(get_default_context_with_role)
 
 int get_default_context_with_rolelevel(const char *user,
 				       const char *role,
@@ -385,7 +384,6 @@ int get_ordered_context_list_with_level(const char *user,
 	return rc;
 }
 
-hidden_def(get_ordered_context_list_with_level)
 
 int get_default_context_with_level(const char *user,
 				   const char *level,
@@ -497,4 +495,3 @@ int get_ordered_context_list(const char *user,
 	goto out;
 }
 
-hidden_def(get_ordered_context_list)

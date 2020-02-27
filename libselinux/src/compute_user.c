@@ -80,7 +80,6 @@ int security_compute_user_raw(const char * scon,
 	return ret;
 }
 
-hidden_def(security_compute_user_raw)
 
 int security_compute_user(const char * scon,
 			  const char *user, char *** con)
@@ -110,4 +109,3 @@ int security_compute_user(const char * scon,
 	return ret;
 }
 
-hidden_def(security_compute_user)

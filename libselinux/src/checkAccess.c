@@ -99,7 +99,6 @@ int selinux_check_passwd_access(access_vector_t requested)
 	return status;
 }
 
-hidden_def(selinux_check_passwd_access)
 
 int checkPasswdAccess(access_vector_t requested)
 {

@@ -49,7 +49,6 @@ int fgetfilecon_raw(int fd, char ** context)
 	return ret;
 }
 
-hidden_def(fgetfilecon_raw)
 
 int fgetfilecon(int fd, char ** context)
 {

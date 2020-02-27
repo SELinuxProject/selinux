@@ -8,4 +8,3 @@ void freecon(char * con)
 	free(con);
 }
 
-hidden_def(freecon)
