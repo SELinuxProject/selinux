@@ -37,7 +37,6 @@ LIBSELINUX_1.0 {
     context_type_set;
     context_user_get;
     context_user_set;
-    dir_xattr_list;
     fgetfilecon;
     fgetfilecon_raw;
     fini_selinuxmnt;
@@ -80,9 +79,6 @@ LIBSELINUX_1.0 {
     lsetfilecon;
     lsetfilecon_raw;
     manual_user_enter_context;
-    map_class;
-    map_decision;
-    map_perm;
     matchmediacon;
     matchpathcon;
     matchpathcon_checkmatches;
@@ -94,7 +90,6 @@ LIBSELINUX_1.0 {
     matchpathcon_init;
     matchpathcon_init_prefix;
     mode_to_security_class;
-    myprintf_compat;
     print_access_vector;
     query_user_context;
     realpath_not_final;
@@ -242,8 +237,6 @@ LIBSELINUX_1.0 {
     sidput;
     string_to_av_perm;
     string_to_security_class;
-    unmap_class;
-    unmap_perm;
   local:
     *;
 };
