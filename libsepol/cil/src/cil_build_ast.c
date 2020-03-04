@@ -5304,11 +5304,9 @@ int cil_gen_macro(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		struct cil_list_item *curr_param;
 		cil_list_for_each(curr_param, macro->params) {
 			if (param->str == ((struct cil_param*)curr_param->data)->str) {
-				if (param->flavor == ((struct cil_param*)curr_param->data)->flavor) {
-					cil_log(CIL_ERR, "Duplicate parameter\n");
-					cil_destroy_param(param);
-					goto exit;
-				}
+				cil_log(CIL_ERR, "Duplicate parameter\n");
+				cil_destroy_param(param);
+				goto exit;
 			}
 		}
 
