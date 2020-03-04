@@ -76,14 +76,6 @@ static struct cil_name * __cil_insert_name(struct cil_db *db, hashtab_key_t key,
 	enum cil_sym_index sym_index;
 	struct cil_symtab_datum *datum = NULL;
 
-	cil_flavor_to_symtab_index(CIL_NAME, &sym_index);
-	symtab = &((struct cil_root *)db->ast->root->data)->symtab[sym_index];
-
-	cil_symtab_get_datum(symtab, key, &datum);
-	if (datum != NULL) {
-		return (struct cil_name *)datum;
-	}
-
 	if (parent->flavor == CIL_CALL) {
 		struct cil_call *call = parent->data;
 		macro = call->macro;	
@@ -97,6 +89,14 @@ static struct cil_name * __cil_insert_name(struct cil_db *db, hashtab_key_t key,
 				return NULL;
 			}
 		}
+	}
+
+	cil_flavor_to_symtab_index(CIL_NAME, &sym_index);
+	symtab = &((struct cil_root *)db->ast->root->data)->symtab[sym_index];
+
+	cil_symtab_get_datum(symtab, key, &datum);
+	if (datum != NULL) {
+		return (struct cil_name *)datum;
 	}
 
 	cil_name_init(&name);
