@@ -36,6 +36,7 @@ typedef int (* require_func_t)(void);
 
 static char linebuf[2][255];
 static unsigned int lno = 0;
+int werror = 0;
 int yywarn(const char *msg);
 
 void set_source_file(const char *name);
@@ -310,6 +311,9 @@ int yyerror(const char *msg)
 
 int yywarn(const char *msg)
 {
+	if (werror)
+		return yyerror(msg);
+
 	if (source_file[0])
 		fprintf(stderr, "%s:%ld:",
 			source_file, source_lineno);

@@ -101,6 +101,7 @@ static sidtab_t sidtab;
 
 extern policydb_t *policydbp;
 extern int mlspol;
+extern int werror;
 
 static int handle_unknown = SEPOL_DENY_UNKNOWN;
 static const char *txtfile = "policy.conf";
@@ -113,7 +114,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	printf
 	    ("usage:  %s [-b[F]] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M] "
 	     "[-c policyvers (%d-%d)] [-o output_file|-] [-S] "
-	     "[-t target_platform (selinux,xen)] [-V] [input_file]\n",
+	     "[-t target_platform (selinux,xen)] [-E] [-V] [input_file]\n",
 	     progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
 	exit(1);
 }
@@ -421,11 +422,12 @@ int main(int argc, char **argv)
 		{"conf",no_argument, NULL, 'F'},
 		{"sort", no_argument, NULL, 'S'},
 		{"optimize", no_argument, NULL, 'O'},
+		{"werror", no_argument, NULL, 'E'},
 		{"help", no_argument, NULL, 'h'},
 		{NULL, 0, NULL, 0}
 	};
 
-	while ((ch = getopt_long(argc, argv, "o:t:dbU:MCFSVc:Oh", long_options, NULL)) != -1) {
+	while ((ch = getopt_long(argc, argv, "o:t:dbU:MCFSVc:OEh", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'o':
 			outfile = optarg;
@@ -504,6 +506,9 @@ int main(int argc, char **argv)
 					policyvers = n;
 				break;
 			}
+		case 'E':
+			 werror = 1;
+			 break;
 		case 'h':
 		default:
 			usage(argv[0]);
