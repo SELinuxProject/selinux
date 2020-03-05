@@ -452,7 +452,8 @@ void cil_db_init(struct cil_db **db)
 	(*db)->disable_dontaudit = CIL_FALSE;
 	(*db)->disable_neverallow = CIL_FALSE;
 	(*db)->attrs_expand_generated = CIL_FALSE;
-	(*db)->attrs_expand_size = 1;
+	/* 2 == remove attributes that contain none or just 1 type */
+	(*db)->attrs_expand_size = 2;
 	(*db)->preserve_tunables = CIL_FALSE;
 	(*db)->handle_unknown = -1;
 	(*db)->mls = -1;
