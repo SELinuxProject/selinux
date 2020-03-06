@@ -27,7 +27,6 @@
 #include <sepol/policydb/flask_types.h>
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/util.h>
-#include <dso.h>
 
 struct val_to_name {
 	unsigned int val;
@@ -250,7 +249,7 @@ static inline int tokenize_str(char delim, char **str, char **ptr, size_t *len)
  * contain the remaining content of line_buf. If the delimiter is any whitespace
  * character, then all whitespace will be squashed.
  */
-int hidden tokenize(char *line_buf, char delim, int num_args, ...)
+int tokenize(char *line_buf, char delim, int num_args, ...)
 {
 	char **arg, *buf_p;
 	int rc, items;

@@ -128,7 +128,6 @@ err:
 	return STATUS_ERR;
 }
 
-hidden_def(sepol_ibpkey_key_create)
 
 void sepol_ibpkey_key_unpack(const sepol_ibpkey_key_t *key,
 			     uint64_t *subnet_prefix, int *low, int *high)
@@ -138,7 +137,6 @@ void sepol_ibpkey_key_unpack(const sepol_ibpkey_key_t *key,
 	*high = key->high;
 }
 
-hidden_def(sepol_ibpkey_key_unpack)
 
 int sepol_ibpkey_key_extract(sepol_handle_t *handle,
 			     const sepol_ibpkey_t *ibpkey,
@@ -213,14 +211,12 @@ int sepol_ibpkey_get_low(const sepol_ibpkey_t *ibpkey)
 	return ibpkey->low;
 }
 
-hidden_def(sepol_ibpkey_get_low)
 
 int sepol_ibpkey_get_high(const sepol_ibpkey_t *ibpkey)
 {
 	return ibpkey->high;
 }
 
-hidden_def(sepol_ibpkey_get_high)
 
 void sepol_ibpkey_set_pkey(sepol_ibpkey_t *ibpkey, int pkey_num)
 {
@@ -234,7 +230,6 @@ void sepol_ibpkey_set_range(sepol_ibpkey_t *ibpkey, int low, int high)
 	ibpkey->high = high;
 }
 
-hidden_def(sepol_ibpkey_set_range)
 
 int sepol_ibpkey_get_subnet_prefix(sepol_handle_t *handle,
 				   const sepol_ibpkey_t *ibpkey,
@@ -257,7 +252,6 @@ err:
 	return STATUS_ERR;
 }
 
-hidden_def(sepol_ibpkey_get_subnet_prefix)
 
 /* Subnet prefix */
 uint64_t sepol_ibpkey_get_subnet_prefix_bytes(const sepol_ibpkey_t *ibpkey)
@@ -265,7 +259,6 @@ uint64_t sepol_ibpkey_get_subnet_prefix_bytes(const sepol_ibpkey_t *ibpkey)
 	return ibpkey->subnet_prefix;
 }
 
-hidden_def(sepol_ibpkey_get_subnet_prefix_bytes)
 
 int sepol_ibpkey_set_subnet_prefix(sepol_handle_t *handle,
 				   sepol_ibpkey_t *ibpkey,
@@ -284,7 +277,6 @@ err:
 	return STATUS_ERR;
 }
 
-hidden_def(sepol_ibpkey_set_subnet_prefix)
 
 void sepol_ibpkey_set_subnet_prefix_bytes(sepol_ibpkey_t *ibpkey,
 					  uint64_t subnet_prefix)
@@ -292,7 +284,6 @@ void sepol_ibpkey_set_subnet_prefix_bytes(sepol_ibpkey_t *ibpkey,
 	ibpkey->subnet_prefix = subnet_prefix;
 }
 
-hidden_def(sepol_ibpkey_set_subnet_prefix_bytes)
 
 /* Create */
 int sepol_ibpkey_create(sepol_handle_t *handle, sepol_ibpkey_t **ibpkey)
@@ -313,7 +304,6 @@ int sepol_ibpkey_create(sepol_handle_t *handle, sepol_ibpkey_t **ibpkey)
 	return STATUS_SUCCESS;
 }
 
-hidden_def(sepol_ibpkey_create)
 
 /* Deep copy clone */
 int sepol_ibpkey_clone(sepol_handle_t *handle,
@@ -351,7 +341,6 @@ void sepol_ibpkey_free(sepol_ibpkey_t *ibpkey)
 	free(ibpkey);
 }
 
-hidden_def(sepol_ibpkey_free)
 
 /* Context */
 sepol_context_t *sepol_ibpkey_get_con(const sepol_ibpkey_t *ibpkey)
@@ -359,7 +348,6 @@ sepol_context_t *sepol_ibpkey_get_con(const sepol_ibpkey_t *ibpkey)
 	return ibpkey->con;
 }
 
-hidden_def(sepol_ibpkey_get_con)
 
 int sepol_ibpkey_set_con(sepol_handle_t *handle,
 			 sepol_ibpkey_t *ibpkey, sepol_context_t *con)
@@ -376,4 +364,3 @@ int sepol_ibpkey_set_con(sepol_handle_t *handle,
 	return STATUS_SUCCESS;
 }
 
-hidden_def(sepol_ibpkey_set_con)

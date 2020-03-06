@@ -63,7 +63,6 @@
 #include "debug.h"
 #include "private.h"
 #include "context.h"
-#include "dso.h"
 #include "mls.h"
 #include "flask.h"
 
@@ -119,13 +118,13 @@ static char *pop(void)
 }
 /* End Stack services */
 
-int hidden sepol_set_sidtab(sidtab_t * s)
+int sepol_set_sidtab(sidtab_t * s)
 {
 	sidtab = s;
 	return 0;
 }
 
-int hidden sepol_set_policydb(policydb_t * p)
+int sepol_set_policydb(policydb_t * p)
 {
 	policydb = p;
 	return 0;
@@ -1010,7 +1009,7 @@ static int context_struct_compute_av(context_struct_t * scontext,
 	return 0;
 }
 
-int hidden sepol_validate_transition(sepol_security_id_t oldsid,
+int sepol_validate_transition(sepol_security_id_t oldsid,
 				     sepol_security_id_t newsid,
 				     sepol_security_id_t tasksid,
 				     sepol_security_class_t tclass)
@@ -1061,7 +1060,7 @@ int hidden sepol_validate_transition(sepol_security_id_t oldsid,
  * sepol_validate_transition_reason_buffer - the reason buffer is realloc'd
  * in the constraint_expr_eval_reason() function.
  */
-int hidden sepol_validate_transition_reason_buffer(sepol_security_id_t oldsid,
+int sepol_validate_transition_reason_buffer(sepol_security_id_t oldsid,
 				     sepol_security_id_t newsid,
 				     sepol_security_id_t tasksid,
 				     sepol_security_class_t tclass,
@@ -1119,7 +1118,7 @@ int hidden sepol_validate_transition_reason_buffer(sepol_security_id_t oldsid,
 	return 0;
 }
 
-int hidden sepol_compute_av_reason(sepol_security_id_t ssid,
+int sepol_compute_av_reason(sepol_security_id_t ssid,
 				   sepol_security_id_t tsid,
 				   sepol_security_class_t tclass,
 				   sepol_access_vector_t requested,
@@ -1153,7 +1152,7 @@ int hidden sepol_compute_av_reason(sepol_security_id_t ssid,
  * REASON_BUF_SIZE. If the buffer size is exceeded, then it is realloc'd
  * in the constraint_expr_eval_reason() function.
  */
-int hidden sepol_compute_av_reason_buffer(sepol_security_id_t ssid,
+int sepol_compute_av_reason_buffer(sepol_security_id_t ssid,
 				   sepol_security_id_t tsid,
 				   sepol_security_class_t tclass,
 				   sepol_access_vector_t requested,
@@ -1195,7 +1194,7 @@ out:
 	return rc;
 }
 
-int hidden sepol_compute_av(sepol_security_id_t ssid,
+int sepol_compute_av(sepol_security_id_t ssid,
 			    sepol_security_id_t tsid,
 			    sepol_security_class_t tclass,
 			    sepol_access_vector_t requested,
@@ -1210,7 +1209,7 @@ int hidden sepol_compute_av(sepol_security_id_t ssid,
  * Return a class ID associated with the class string specified by
  * class_name.
  */
-int hidden sepol_string_to_security_class(const char *class_name,
+int sepol_string_to_security_class(const char *class_name,
 			sepol_security_class_t *tclass)
 {
 	class_datum_t *tclass_datum;
@@ -1229,7 +1228,7 @@ int hidden sepol_string_to_security_class(const char *class_name,
  * Return access vector bit associated with the class ID and permission
  * string.
  */
-int hidden sepol_string_to_av_perm(sepol_security_class_t tclass,
+int sepol_string_to_av_perm(sepol_security_class_t tclass,
 					const char *perm_name,
 					sepol_access_vector_t *av)
 {
@@ -1274,7 +1273,7 @@ out:
  * to point to this string and set `*scontext_len' to
  * the length of the string.
  */
-int hidden sepol_sid_to_context(sepol_security_id_t sid,
+int sepol_sid_to_context(sepol_security_id_t sid,
 				sepol_security_context_t * scontext,
 				size_t * scontext_len)
 {
@@ -1297,7 +1296,7 @@ int hidden sepol_sid_to_context(sepol_security_id_t sid,
  * Return a SID associated with the security context that
  * has the string representation specified by `scontext'.
  */
-int hidden sepol_context_to_sid(const sepol_security_context_t scontext,
+int sepol_context_to_sid(const sepol_security_context_t scontext,
 				size_t scontext_len, sepol_security_id_t * sid)
 {
 
@@ -1494,7 +1493,7 @@ static int sepol_compute_sid(sepol_security_id_t ssid,
  * Compute a SID to use for labeling a new object in the 
  * class `tclass' based on a SID pair.  
  */
-int hidden sepol_transition_sid(sepol_security_id_t ssid,
+int sepol_transition_sid(sepol_security_id_t ssid,
 				sepol_security_id_t tsid,
 				sepol_security_class_t tclass,
 				sepol_security_id_t * out_sid)
@@ -1507,7 +1506,7 @@ int hidden sepol_transition_sid(sepol_security_id_t ssid,
  * polyinstantiated object of class `tclass' based on 
  * a SID pair.
  */
-int hidden sepol_member_sid(sepol_security_id_t ssid,
+int sepol_member_sid(sepol_security_id_t ssid,
 			    sepol_security_id_t tsid,
 			    sepol_security_class_t tclass,
 			    sepol_security_id_t * out_sid)
@@ -1519,7 +1518,7 @@ int hidden sepol_member_sid(sepol_security_id_t ssid,
  * Compute a SID to use for relabeling an object in the 
  * class `tclass' based on a SID pair.  
  */
-int hidden sepol_change_sid(sepol_security_id_t ssid,
+int sepol_change_sid(sepol_security_id_t ssid,
 			    sepol_security_id_t tsid,
 			    sepol_security_class_t tclass,
 			    sepol_security_id_t * out_sid)
@@ -1705,7 +1704,7 @@ static int convert_context(sepol_security_id_t key __attribute__ ((unused)),
 }
 
 /* Reading from a policy "file". */
-int hidden next_entry(void *buf, struct policy_file *fp, size_t bytes)
+int next_entry(void *buf, struct policy_file *fp, size_t bytes)
 {
 	size_t nread;
 
@@ -1732,7 +1731,7 @@ int hidden next_entry(void *buf, struct policy_file *fp, size_t bytes)
 	return 0;
 }
 
-size_t hidden put_entry(const void *ptr, size_t size, size_t n,
+size_t put_entry(const void *ptr, size_t size, size_t n,
 			struct policy_file *fp)
 {
 	size_t bytes = size * n;
@@ -1767,7 +1766,7 @@ size_t hidden put_entry(const void *ptr, size_t size, size_t n,
  *   0 - Success
  *  -1 - Failure with errno set
  */
-int hidden str_read(char **strp, struct policy_file *fp, size_t len)
+int str_read(char **strp, struct policy_file *fp, size_t len)
 {
 	int rc;
 	char *str;
@@ -1810,7 +1809,7 @@ int hidden str_read(char **strp, struct policy_file *fp, size_t len)
  *
  * Reset the access vector cache.
  */
-int hidden sepol_load_policy(void *data, size_t len)
+int sepol_load_policy(void *data, size_t len)
 {
 	policydb_t oldpolicydb, newpolicydb;
 	sidtab_t oldsidtab, newsidtab;
@@ -1883,7 +1882,7 @@ int hidden sepol_load_policy(void *data, size_t len)
  * the file system and the `file_sid' SID is returned
  * for all files within that file system.
  */
-int hidden sepol_fs_sid(char *name,
+int sepol_fs_sid(char *name,
 			sepol_security_id_t * fs_sid,
 			sepol_security_id_t * file_sid)
 {
@@ -1925,7 +1924,7 @@ int hidden sepol_fs_sid(char *name,
  * Return the SID of the ibpkey specified by
  * `subnet prefix', and `pkey number'.
  */
-int hidden sepol_ibpkey_sid(uint64_t subnet_prefix,
+int sepol_ibpkey_sid(uint64_t subnet_prefix,
 			    uint16_t pkey, sepol_security_id_t *out_sid)
 {
 	ocontext_t *c;
@@ -1961,7 +1960,7 @@ out:
  * Return the SID of the subnet management interface specified by
  * `device name', and `port'.
  */
-int hidden sepol_ibendport_sid(char *dev_name,
+int sepol_ibendport_sid(char *dev_name,
 			       uint8_t port,
 			       sepol_security_id_t *out_sid)
 {
@@ -1998,7 +1997,7 @@ out:
  * Return the SID of the port specified by
  * `domain', `type', `protocol', and `port'.
  */
-int hidden sepol_port_sid(uint16_t domain __attribute__ ((unused)),
+int sepol_port_sid(uint16_t domain __attribute__ ((unused)),
 			  uint16_t type __attribute__ ((unused)),
 			  uint8_t protocol,
 			  uint16_t port, sepol_security_id_t * out_sid)
@@ -2038,7 +2037,7 @@ int hidden sepol_port_sid(uint16_t domain __attribute__ ((unused)),
  * the default SID for messages received on the
  * interface.
  */
-int hidden sepol_netif_sid(char *name,
+int sepol_netif_sid(char *name,
 			   sepol_security_id_t * if_sid,
 			   sepol_security_id_t * msg_sid)
 {
@@ -2096,7 +2095,7 @@ static int match_ipv6_addrmask(uint32_t * input, uint32_t * addr,
  * in bytes and `domain' is the communications domain or
  * address family in which the address should be interpreted.
  */
-int hidden sepol_node_sid(uint16_t domain,
+int sepol_node_sid(uint16_t domain,
 			  void *addrp,
 			  size_t addrlen, sepol_security_id_t * out_sid)
 {
@@ -2169,7 +2168,7 @@ int hidden sepol_node_sid(uint16_t domain,
  */
 #define SIDS_NEL 25
 
-int hidden sepol_get_user_sids(sepol_security_id_t fromsid,
+int sepol_get_user_sids(sepol_security_id_t fromsid,
 			       char *username,
 			       sepol_security_id_t ** sids, uint32_t * nel)
 {
@@ -2264,7 +2263,7 @@ int hidden sepol_get_user_sids(sepol_security_id_t fromsid,
  * that cannot support a persistent label mapping or use another
  * fixed labeling behavior like transition SIDs or task SIDs.
  */
-int hidden sepol_genfs_sid(const char *fstype,
+int sepol_genfs_sid(const char *fstype,
 			   const char *path,
 			   sepol_security_class_t sclass,
 			   sepol_security_id_t * sid)
@@ -2311,7 +2310,7 @@ int hidden sepol_genfs_sid(const char *fstype,
 	return rc;
 }
 
-int hidden sepol_fs_use(const char *fstype,
+int sepol_fs_use(const char *fstype,
 			unsigned int *behavior, sepol_security_id_t * sid)
 {
 	int rc = 0;
