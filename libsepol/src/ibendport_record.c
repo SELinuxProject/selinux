@@ -78,7 +78,6 @@ err:
 	return STATUS_ERR;
 }
 
-hidden_def(sepol_ibendport_key_create)
 
 void sepol_ibendport_key_unpack(const sepol_ibendport_key_t *key,
 				const char **ibdev_name, int *port)
@@ -87,7 +86,6 @@ void sepol_ibendport_key_unpack(const sepol_ibendport_key_t *key,
 	*port = key->port;
 }
 
-hidden_def(sepol_ibendport_key_unpack)
 
 int sepol_ibendport_key_extract(sepol_handle_t *handle,
 				const sepol_ibendport_t *ibendport,
@@ -152,14 +150,12 @@ int sepol_ibendport_get_port(const sepol_ibendport_t *ibendport)
 	return ibendport->port;
 }
 
-hidden_def(sepol_ibendport_get_port)
 
 void sepol_ibendport_set_port(sepol_ibendport_t *ibendport, int port)
 {
 	ibendport->port = port;
 }
 
-hidden_def(sepol_ibendport_set_port)
 
 int sepol_ibendport_get_ibdev_name(sepol_handle_t *handle,
 				   const sepol_ibendport_t *ibendport,
@@ -180,7 +176,6 @@ err:
 	return STATUS_ERR;
 }
 
-hidden_def(sepol_ibendport_get_ibdev_name)
 
 int sepol_ibendport_set_ibdev_name(sepol_handle_t *handle,
 				   sepol_ibendport_t *ibendport,
@@ -202,7 +197,6 @@ err:
 	return STATUS_ERR;
 }
 
-hidden_def(sepol_ibendport_set_ibdev_name)
 
 /* Create */
 int sepol_ibendport_create(sepol_handle_t *handle, sepol_ibendport_t **ibendport)
@@ -222,7 +216,6 @@ int sepol_ibendport_create(sepol_handle_t *handle, sepol_ibendport_t **ibendport
 	return STATUS_SUCCESS;
 }
 
-hidden_def(sepol_ibendport_create)
 
 /* Deep copy clone */
 int sepol_ibendport_clone(sepol_handle_t *handle,
@@ -267,7 +260,6 @@ void sepol_ibendport_free(sepol_ibendport_t *ibendport)
 	free(ibendport);
 }
 
-hidden_def(sepol_ibendport_free)
 
 /* Context */
 sepol_context_t *sepol_ibendport_get_con(const sepol_ibendport_t *ibendport)
@@ -275,7 +267,6 @@ sepol_context_t *sepol_ibendport_get_con(const sepol_ibendport_t *ibendport)
 	return ibendport->con;
 }
 
-hidden_def(sepol_ibendport_get_con)
 
 int sepol_ibendport_set_con(sepol_handle_t *handle,
 			    sepol_ibendport_t *ibendport, sepol_context_t *con)
@@ -292,4 +283,3 @@ int sepol_ibendport_set_con(sepol_handle_t *handle,
 	return STATUS_SUCCESS;
 }
 
-hidden_def(sepol_ibendport_set_con)

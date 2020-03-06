@@ -14,7 +14,6 @@
 #endif
 
 #include <errno.h>
-#include <dso.h>
 
 #ifdef __APPLE__
 #define __BYTE_ORDER  BYTE_ORDER
@@ -62,7 +61,7 @@ extern struct policydb_compat_info *policydb_lookup_compat(unsigned int version,
 						unsigned int target_platform);
 
 /* Reading from a policy "file". */
-extern int next_entry(void *buf, struct policy_file *fp, size_t bytes) hidden;
+extern int next_entry(void *buf, struct policy_file *fp, size_t bytes);
 extern size_t put_entry(const void *ptr, size_t size, size_t n,
-		        struct policy_file *fp) hidden;
-extern int str_read(char **strp, struct policy_file *fp, size_t len) hidden;
+		        struct policy_file *fp);
+extern int str_read(char **strp, struct policy_file *fp, size_t len);
