@@ -290,7 +290,7 @@ GLBLUB				{ return(GLBLUB); }
 "]" |
 "~" |
 "*"				{ return(yytext[0]); } 
-.                               { yywarn("unrecognized character");}
+.                               { yyerror("unrecognized character");}
 %%
 int yyerror(const char *msg)
 {
