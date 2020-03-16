@@ -7,3 +7,5 @@ file_contexts
 docs/html
 docs/pdf
 docs/tmp
+opt-actual.bin
+opt-actual.cil

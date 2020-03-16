@@ -13,6 +13,10 @@ SECIL2CONF_OBJS := $(patsubst %.c,%.o,$(SECIL2CONF_SRCS))
 SECILC_MANPAGE = secilc.8
 SECIL2CONF_MANPAGE = secil2conf.8
 XMLTO = xmlto
+DIFF = diff
+
+CHECKPOLICY = checkpolicy
+POL_VERS = $(shell $(CHECKPOLICY) -V | cut -f 1 -d ' ')
 
 CFLAGS ?= -Wall -Wshadow -Wextra -Wundef -Wmissing-format-attribute -Wcast-align -Wstrict-prototypes -Wpointer-arith -Wunused
 
@@ -26,6 +30,9 @@ $(SECILC): $(SECILC_OBJS)
 
 test: $(SECILC)
 	./$(SECILC) test/policy.cil
+	./$(SECILC) -c $(POL_VERS) -O -M 1 -f /dev/null -o opt-actual.bin test/opt-input.cil
+	$(CHECKPOLICY) -b -C -M -o opt-actual.cil opt-actual.bin >/dev/null
+	$(DIFF) test/opt-expected.cil opt-actual.cil
 
 $(SECIL2CONF): $(SECIL2CONF_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
@@ -58,6 +65,8 @@ clean:
 	rm -f file_contexts
 	rm -f $(SECILC_MANPAGE)
 	rm -f $(SECIL2CONF_MANPAGE)
+	rm -f opt-actual.cil
+	rm -f opt-actual.bin
 	$(MAKE) -C docs clean
 
 relabel:
