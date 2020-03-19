@@ -1745,7 +1745,7 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 			case CEXPR_ROLE:                 attr1 = "r1"; attr2 = "r2"; break;
 			case CEXPR_ROLE | CEXPR_TARGET:  attr1 = "r2"; attr2 = "";   break;
 			case CEXPR_ROLE | CEXPR_XTARGET: attr1 = "r3"; attr2 = "";   break;
-			case CEXPR_TYPE:                 attr1 = "t1"; attr2 = "";   break;
+			case CEXPR_TYPE:                 attr1 = "t1"; attr2 = "t2"; break;
 			case CEXPR_TYPE | CEXPR_TARGET:  attr1 = "t2"; attr2 = "";   break;
 			case CEXPR_TYPE | CEXPR_XTARGET: attr1 = "t3"; attr2 = "";   break;
 			case CEXPR_L1L2:                 attr1 = "l1"; attr2 = "l2"; break;
