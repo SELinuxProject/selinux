@@ -8,13 +8,20 @@
 extern "C" {
 #endif
 
+/* swig does not support GNU attributes */
+#ifdef __GNUC__
+#define _selinux_deprecated __attribute__ ((deprecated))
+#else
+#define _selinux_deprecated
+#endif
+
 /* Return 1 if we are running on a SELinux kernel, or 0 otherwise. */
 extern int is_selinux_enabled(void);
 /* Return 1 if we are running on a SELinux MLS kernel, or 0 otherwise. */
 extern int is_selinux_mls_enabled(void);
 
 /* No longer used; here for compatibility with legacy callers. */
-typedef char *security_context_t;
+typedef char *security_context_t _selinux_deprecated;
 
 /* Free the memory allocated for a context by any of the below get* calls. */
 extern void freecon(char * con);
