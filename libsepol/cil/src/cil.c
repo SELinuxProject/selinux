@@ -50,7 +50,6 @@
 #include "cil_binary.h"
 #include "cil_policy.h"
 #include "cil_strpool.h"
-#include "dso.h"
 
 #ifndef DISABLE_SYMVER
 asm(".symver cil_build_policydb_pdb,        cil_build_policydb@LIBSEPOL_1.0");
