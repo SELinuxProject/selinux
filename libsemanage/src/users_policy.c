@@ -19,7 +19,6 @@ int semanage_user_query(semanage_handle_t * handle,
 	return dbase_query(handle, dconfig, key, response);
 }
 
-hidden_def(semanage_user_query)
 
 int semanage_user_exists(semanage_handle_t * handle,
 			 const semanage_user_key_t * key, int *response)
@@ -29,7 +28,6 @@ int semanage_user_exists(semanage_handle_t * handle,
 	return dbase_exists(handle, dconfig, key, response);
 }
 
-hidden_def(semanage_user_exists)
 
 int semanage_user_count(semanage_handle_t * handle, unsigned int *response)
 {

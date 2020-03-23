@@ -24,7 +24,7 @@
 
 #include <stdint.h>
 
-#include "module_internal.h"
+#include "semanage/modules.h"
 
 int semanage_module_install_pp(semanage_handle_t * sh,
 			    char *module_data, size_t data_len);
