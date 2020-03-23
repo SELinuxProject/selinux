@@ -15,7 +15,6 @@ typedef struct dbase_file dbase_t;
 #include <strings.h>
 #include <semanage/handle.h>
 #include "ibpkey_internal.h"
-#include "context_internal.h"
 #include "database_file.h"
 #include "parse_utils.h"
 #include "debug.h"

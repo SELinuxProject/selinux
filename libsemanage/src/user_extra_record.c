@@ -76,14 +76,14 @@ static int semanage_user_extra_compare2_qsort(const semanage_user_extra_t **
 }
 
 /* Name */
-hidden const char *semanage_user_extra_get_name(const semanage_user_extra_t *
+ const char *semanage_user_extra_get_name(const semanage_user_extra_t *
 						user_extra)
 {
 
 	return user_extra->name;
 }
 
-hidden int semanage_user_extra_set_name(semanage_handle_t * handle,
+ int semanage_user_extra_set_name(semanage_handle_t * handle,
 					semanage_user_extra_t * user_extra,
 					const char *name)
 {
@@ -100,14 +100,14 @@ hidden int semanage_user_extra_set_name(semanage_handle_t * handle,
 }
 
 /* Labeling prefix */
-hidden const char *semanage_user_extra_get_prefix(const semanage_user_extra_t *
+ const char *semanage_user_extra_get_prefix(const semanage_user_extra_t *
 						  user_extra)
 {
 
 	return user_extra->prefix;
 }
 
-hidden int semanage_user_extra_set_prefix(semanage_handle_t * handle,
+ int semanage_user_extra_set_prefix(semanage_handle_t * handle,
 					  semanage_user_extra_t * user_extra,
 					  const char *prefix)
 {
@@ -124,7 +124,7 @@ hidden int semanage_user_extra_set_prefix(semanage_handle_t * handle,
 }
 
 /* Create */
-hidden int semanage_user_extra_create(semanage_handle_t * handle,
+ int semanage_user_extra_create(semanage_handle_t * handle,
 				      semanage_user_extra_t ** user_extra_ptr)
 {
 
@@ -145,7 +145,7 @@ hidden int semanage_user_extra_create(semanage_handle_t * handle,
 }
 
 /* Destroy */
-hidden void semanage_user_extra_free(semanage_user_extra_t * user_extra)
+ void semanage_user_extra_free(semanage_user_extra_t * user_extra)
 {
 
 	if (!user_extra)
@@ -157,7 +157,7 @@ hidden void semanage_user_extra_free(semanage_user_extra_t * user_extra)
 }
 
 /* Deep copy clone */
-hidden int semanage_user_extra_clone(semanage_handle_t * handle,
+ int semanage_user_extra_clone(semanage_handle_t * handle,
 				     const semanage_user_extra_t * user_extra,
 				     semanage_user_extra_t ** user_extra_ptr)
 {

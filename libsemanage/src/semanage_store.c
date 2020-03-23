@@ -1476,7 +1476,6 @@ int semanage_reload_policy(semanage_handle_t * sh)
 	return r;
 }
 
-hidden_def(semanage_reload_policy)
 
 /* This expands the file_context.tmpl file to file_context and homedirs.template */
 int semanage_split_fc(semanage_handle_t * sh)

@@ -218,7 +218,7 @@ int dbase_llist_modify(semanage_handle_t * handle,
 	return STATUS_ERR;
 }
 
-hidden int dbase_llist_count(semanage_handle_t * handle __attribute__ ((unused)),
+ int dbase_llist_count(semanage_handle_t * handle __attribute__ ((unused)),
 			     dbase_llist_t * dbase, unsigned int *response)
 {
 

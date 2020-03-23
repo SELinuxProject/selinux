@@ -71,9 +71,8 @@ int semanage_port_list_local(semanage_handle_t * handle,
 	return dbase_list(handle, dconfig, records, count);
 }
 
-hidden_def(semanage_port_list_local)
 
-int hidden semanage_port_validate_local(semanage_handle_t * handle)
+int semanage_port_validate_local(semanage_handle_t * handle)
 {
 
 	semanage_port_t **ports = NULL;

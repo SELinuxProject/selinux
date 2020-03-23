@@ -27,7 +27,6 @@
 #include <semanage/debug.h>
 #include <sepol/debug.h>
 #include "handle.h"
-#include "dso.h"
 
 #define STATUS_SUCCESS 0
 #define STATUS_ERR -1
@@ -62,18 +61,15 @@
 #ifdef __GNUC__
 __attribute__ ((format(printf, 3, 4)))
 #endif
-extern void hidden semanage_msg_default_handler(void *varg,
+extern void semanage_msg_default_handler(void *varg,
 						semanage_handle_t * handle,
 						const char *fmt, ...);
 
 #ifdef __GNUC__
 __attribute__ ((format(printf, 3, 4)))
 #endif
-extern void hidden semanage_msg_relay_handler(void *varg,
+extern void semanage_msg_relay_handler(void *varg,
 					      sepol_handle_t * handle,
 					      const char *fmt, ...);
 
-hidden_proto(semanage_msg_get_channel)
-    hidden_proto(semanage_msg_get_fname)
-    hidden_proto(semanage_msg_get_level)
 #endif

@@ -10,7 +10,6 @@ typedef struct semanage_fcontext record_t;
 #include <sepol/policydb.h>
 #include <sepol/context.h>
 #include "fcontext_internal.h"
-#include "context_internal.h"
 #include "debug.h"
 #include "handle.h"
 #include "database.h"
@@ -68,7 +67,6 @@ int semanage_fcontext_iterate_local(semanage_handle_t * handle,
 	return dbase_iterate(handle, dconfig, handler, handler_arg);
 }
 
-hidden_def(semanage_fcontext_iterate_local)
 
 int semanage_fcontext_list_local(semanage_handle_t * handle,
 				 semanage_fcontext_t *** records,
@@ -118,7 +116,7 @@ static int validate_handler(const semanage_fcontext_t * fcon, void *varg)
 	return -1;
 }
 
-int hidden semanage_fcontext_validate_local(semanage_handle_t * handle,
+int semanage_fcontext_validate_local(semanage_handle_t * handle,
 					    const sepol_policydb_t * policydb)
 {
 
