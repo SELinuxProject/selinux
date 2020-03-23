@@ -37,6 +37,7 @@ typedef int (* require_func_t)(void);
 static char linebuf[2][255];
 static unsigned int lno = 0;
 int werror = 0;
+int yyerror(const char *msg);
 int yywarn(const char *msg);
 
 void set_source_file(const char *name);
