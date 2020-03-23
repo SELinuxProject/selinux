@@ -7,8 +7,8 @@
 
  int init_translations(void);
  void finish_context_translations(void);
- int trans_context(const security_context_t, security_context_t *);
- int untrans_context(const security_context_t, security_context_t *);
+ int trans_context(const char *, char **);
+ int untrans_context(const char *, char **);
 
 */
 
@@ -888,7 +888,7 @@ init_translations(void) {
 }
 
 char *
-extract_range(const security_context_t incon) {
+extract_range(const char *incon) {
 	context_t con = context_new(incon);
 	if (!con) {
 		syslog(LOG_ERR, "extract_range context_new(%s) failed: %s", incon, strerror(errno));
@@ -911,7 +911,7 @@ extract_range(const security_context_t incon) {
 }
 
 char *
-new_context_str(const security_context_t incon, const char *range) {
+new_context_str(const char *incon, const char *range) {
 	char *rcon = NULL;
 	context_t con = context_new(incon);
 	if (!con) {
@@ -1489,7 +1489,7 @@ err:
 }
 
 int
-trans_context(const security_context_t incon, security_context_t *rcon) {
+trans_context(const char *incon, char **rcon) {
 	char *trans = NULL;
 	*rcon = NULL;
 
@@ -1612,7 +1612,7 @@ trans_context(const security_context_t incon, security_context_t *rcon) {
 }
 
 int
-untrans_context(const security_context_t incon, security_context_t *rcon) {
+untrans_context(const char *incon, char **rcon) {
 	char *raw = NULL;
 	*rcon = NULL;
 

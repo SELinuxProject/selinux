@@ -643,8 +643,8 @@ static int transition_to_caller_uid()
 #ifdef AUDIT_LOG_PRIV
 /* Send audit message */
 static
-int send_audit_message(int success, security_context_t old_context,
-		       security_context_t new_context, const char *ttyn)
+int send_audit_message(int success, const char *old_context,
+		       const char *new_context, const char *ttyn)
 {
 	char *msg = NULL;
 	int rc;
@@ -677,9 +677,9 @@ int send_audit_message(int success, security_context_t old_context,
 #else
 static inline
     int send_audit_message(int success __attribute__ ((unused)),
-			   security_context_t old_context
+			   const char *old_context
 			   __attribute__ ((unused)),
-			   security_context_t new_context
+			   const char *new_context
 			   __attribute__ ((unused)), const char *ttyn
 			   __attribute__ ((unused)))
 {
@@ -695,14 +695,14 @@ static inline
  * This function will not fail if it can not relabel the tty when selinux is
  * in permissive mode.
  */
-static int relabel_tty(const char *ttyn, security_context_t new_context,
-		       security_context_t * tty_context,
-		       security_context_t * new_tty_context)
+static int relabel_tty(const char *ttyn, const char *new_context,
+		       char **tty_context,
+		       char **new_tty_context)
 {
 	int fd, rc;
 	int enforcing = security_getenforce();
-	security_context_t tty_con = NULL;
-	security_context_t new_tty_con = NULL;
+	char *tty_con = NULL;
+	char *new_tty_con = NULL;
 
 	if (!ttyn)
 		return 0;
@@ -775,11 +775,11 @@ static int relabel_tty(const char *ttyn, security_context_t new_context,
  * Returns zero on success, non-zero otherwise
  */
 static int restore_tty_label(int fd, const char *ttyn,
-			     security_context_t tty_context,
-			     security_context_t new_tty_context)
+			     const char *tty_context,
+			     const char *new_tty_context)
 {
 	int rc = 0;
-	security_context_t chk_tty_context = NULL;
+	char *chk_tty_context = NULL;
 
 	if (!ttyn)
 		goto skip_relabel;
@@ -816,8 +816,8 @@ static int restore_tty_label(int fd, const char *ttyn,
  * Returns zero on success, non-zero otherwise.
  */
 static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
-					security_context_t old_context,
-					security_context_t * new_context,
+					const char *old_context,
+					char **new_context,
 					int *preserve_environment)
 {
 	int flag_index;		/* flag index in argv[] */
@@ -827,8 +827,8 @@ static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 	char *type_ptr = NULL;	/* stores malloc'd data from get_default_type */
 	char *level_s = NULL;	/* level spec'd by user in argv[] */
 	char *range_ptr = NULL;
-	security_context_t new_con = NULL;
-	security_context_t tty_con = NULL;
+	char *new_con = NULL;
+	char *tty_con = NULL;
 	context_t context = NULL;	/* manipulatable form of new_context */
 	const struct option long_options[] = {
 		{"role", 1, 0, 'r'},
@@ -1021,10 +1021,10 @@ static int set_signal_handles(void)
 
 int main(int argc, char *argv[])
 {
-	security_context_t new_context = NULL;	/* target security context */
-	security_context_t old_context = NULL;	/* original securiy context */
-	security_context_t tty_context = NULL;	/* current context of tty */
-	security_context_t new_tty_context = NULL;	/* new context of tty */
+	char *new_context = NULL;	/* target security context */
+	char *old_context = NULL;	/* original securiy context */
+	char *tty_context = NULL;	/* current context of tty */
+	char *new_tty_context = NULL;	/* new context of tty */
 
 	struct passwd pw;	/* struct derived from passwd file line */
 	char *ttyn = NULL;	/* tty path */

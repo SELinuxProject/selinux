@@ -13,7 +13,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	exit(1);
 }
 int main(int argc, char **argv) {
-	security_context_t scon;
+	char *scon;
 	if ( argc != 2 ) usage(argv[0]);
 	if (init_translations()==0) {
 		if(untrans_context(argv[1],&scon) == 0) {
