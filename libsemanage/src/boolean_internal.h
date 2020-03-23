@@ -7,19 +7,6 @@
 #include <semanage/booleans_active.h>
 #include "database.h"
 #include "handle.h"
-#include "dso.h"
-
-hidden_proto(semanage_bool_clone)
-    hidden_proto(semanage_bool_compare)
-    hidden_proto(semanage_bool_compare2)
-    hidden_proto(semanage_bool_create)
-    hidden_proto(semanage_bool_free)
-    hidden_proto(semanage_bool_get_name)
-    hidden_proto(semanage_bool_get_value)
-    hidden_proto(semanage_bool_key_extract)
-    hidden_proto(semanage_bool_key_free)
-    hidden_proto(semanage_bool_set_name)
-    hidden_proto(semanage_bool_set_value)
 
 /* BOOL RECORD: method table */
 extern record_table_t SEMANAGE_BOOL_RTABLE;

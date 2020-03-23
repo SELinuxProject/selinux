@@ -6,7 +6,6 @@
 typedef sepol_context_t semanage_context_t;
 
 #define _SEMANAGE_CONTEXT_DEFINED_
-#include "context_internal.h"
 
 /* User */
 const char *semanage_context_get_user(const semanage_context_t * con)
@@ -80,7 +79,6 @@ int semanage_context_clone(semanage_handle_t * handle,
 	return sepol_context_clone(handle->sepolh, con, con_ptr);
 }
 
-hidden_def(semanage_context_clone)
 
 void semanage_context_free(semanage_context_t * con)
 {
@@ -88,7 +86,6 @@ void semanage_context_free(semanage_context_t * con)
 	sepol_context_free(con);
 }
 
-hidden_def(semanage_context_free)
 
 /* Parse to/from string */
 int semanage_context_from_string(semanage_handle_t * handle,
@@ -98,7 +95,6 @@ int semanage_context_from_string(semanage_handle_t * handle,
 	return sepol_context_from_string(handle->sepolh, str, con);
 }
 
-hidden_def(semanage_context_from_string)
 
 int semanage_context_to_string(semanage_handle_t * handle,
 			       const semanage_context_t * con, char **str_ptr)
@@ -107,4 +103,3 @@ int semanage_context_to_string(semanage_handle_t * handle,
 	return sepol_context_to_string(handle->sepolh, con, str_ptr);
 }
 
-hidden_def(semanage_context_to_string)
