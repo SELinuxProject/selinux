@@ -51,6 +51,10 @@
 #include "cil_policy.h"
 #include "cil_strpool.h"
 
+#if !defined(SHARED) || defined(ANDROID) || defined(__APPLE__)
+    #define DISABLE_SYMVER 1
+#endif
+
 #ifndef DISABLE_SYMVER
 asm(".symver cil_build_policydb_pdb,        cil_build_policydb@LIBSEPOL_1.0");
 asm(".symver cil_build_policydb_create_pdb, cil_build_policydb@@LIBSEPOL_1.1");
