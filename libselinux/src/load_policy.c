@@ -279,7 +279,8 @@ int selinux_init_load_policy(int *enforce)
 	const char *mntpoint = NULL;
 	/* First make sure /sys is mounted */
 	if (mount("sysfs", "/sys", "sysfs", 0, 0) == 0 || errno == EBUSY) {
-		if (mount(SELINUXFS, SELINUXMNT, SELINUXFS, 0, 0) == 0 || errno == EBUSY) {
+		/* MS_NODEV can't be set because of /sys/fs/selinux/null device, used by Android */
+		if (mount(SELINUXFS, SELINUXMNT, SELINUXFS, MS_NOEXEC | MS_NOSUID, 0) == 0 || errno == EBUSY) {
 			mntpoint = SELINUXMNT;
 		} else {
 			/* check old mountpoint */
