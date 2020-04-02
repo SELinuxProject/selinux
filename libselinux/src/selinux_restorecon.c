@@ -81,6 +81,7 @@ struct rest_flags {
 	bool log_matches;
 	bool ignore_noent;
 	bool warnonnomatch;
+	bool conflicterror;
 };
 
 static void restorecon_init(void)
@@ -418,7 +419,8 @@ static file_spec_t *fl_head;
  * different context that matched the inode, then use the first context
  * that matched.
  */
-static int filespec_add(ino_t ino, const char *con, const char *file)
+static int filespec_add(ino_t ino, const char *con, const char *file,
+			struct rest_flags *flags)
 {
 	file_spec_t *prevfl, *fl;
 	int h, ret;
@@ -458,6 +460,11 @@ static int filespec_add(ino_t ino, const char *con, const char *file)
 			fl->file = strdup(file);
 			if (!fl->file)
 				goto oom;
+			if (flags->conflicterror) {
+				selinux_log(SELINUX_ERROR,
+				"treating conflicting specifications as an error.\n");
+				return -1;
+			}
 			return 1;
 		}
 
@@ -645,7 +652,7 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 	}
 
 	if (flags->add_assoc) {
-		rc = filespec_add(sb->st_ino, newcon, pathname);
+		rc = filespec_add(sb->st_ino, newcon, pathname, flags);
 
 		if (rc < 0) {
 			selinux_log(SELINUX_ERROR,
@@ -833,6 +840,8 @@ int selinux_restorecon(const char *pathname_orig,
 	flags.ignore_noent = (restorecon_flags &
 		   SELINUX_RESTORECON_IGNORE_NOENTRY) ? true : false;
 	flags.warnonnomatch = true;
+	flags.conflicterror = (restorecon_flags &
+		   SELINUX_RESTORECON_CONFLICT_ERROR) ? true : false;
 	ignore_mounts = (restorecon_flags &
 		   SELINUX_RESTORECON_IGNORE_MOUNTS) ? true : false;
 	bool ignore_digest = (restorecon_flags &

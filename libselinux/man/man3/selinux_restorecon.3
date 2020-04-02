@@ -152,6 +152,10 @@ Setting
 .B SELINUX_RESTORECON_IGNORE_MOUNTS
 is useful where there is a non-seclabel fs mounted with a seclabel fs mounted
 on a directory below this.
+.sp
+.B SELINUX_RESTORECON_CONFLICT_ERROR
+to treat conflicting specifications, such as where two hardlinks for the
+same inode have different contexts, as errors.
 .RE
 .sp
 The behavior regarding the checking and updating of the SHA1 digest described
