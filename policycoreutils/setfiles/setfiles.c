@@ -48,8 +48,8 @@ static __attribute__((__noreturn__)) void usage(const char *const name)
 			name, name);
 	} else {
 		fprintf(stderr,
-			"usage:  %s [-diIDlmnpqvFW] [-e excludedir] [-r alt_root_path] spec_file pathname...\n"
-			"usage:  %s [-diIDlmnpqvFW] [-e excludedir] [-r alt_root_path] spec_file -f filename\n"
+			"usage:  %s [-diIDlmnpqvEFW] [-e excludedir] [-r alt_root_path] spec_file pathname...\n"
+			"usage:  %s [-diIDlmnpqvEFW] [-e excludedir] [-r alt_root_path] spec_file -f filename\n"
 			"usage:  %s -s [-diIDlmnpqvFW] spec_file\n"
 			"usage:  %s -c policyfile spec_file\n",
 			name, name, name, name);
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
 	const char *base;
 	int errors = 0;
 	const char *ropts = "e:f:hiIDlmno:pqrsvFRW0";
-	const char *sopts = "c:de:f:hiIDlmno:pqr:svFR:W0";
+	const char *sopts = "c:de:f:hiIDlmno:pqr:svEFR:W0";
 	const char *opts;
 	union selinux_callback cb;
 
@@ -312,6 +312,10 @@ int main(int argc, char **argv)
 		case 'l':
 			r_opts.syslog_changes =
 					   SELINUX_RESTORECON_SYSLOG_CHANGES;
+			break;
+		case 'E':
+			r_opts.conflict_error =
+					   SELINUX_RESTORECON_CONFLICT_ERROR;
 			break;
 		case 'F':
 			r_opts.set_specctx =

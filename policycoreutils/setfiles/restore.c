@@ -41,7 +41,7 @@ void restore_init(struct restore_opts *opts)
 			   opts->xdev | opts->abort_on_error |
 			   opts->syslog_changes | opts->log_matches |
 			   opts->ignore_noent | opts->ignore_mounts |
-			   opts->mass_relabel;
+			   opts->mass_relabel | opts->conflict_error;
 
 	/* Use setfiles, restorecon and restorecond own handles */
 	selinux_restorecon_set_sehandle(opts->hnd);

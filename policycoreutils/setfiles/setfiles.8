@@ -12,6 +12,7 @@ setfiles \- set SELinux file security contexts.
 .RB [ \-n ]
 .RB [ \-e
 .IR directory ]
+.RB [ \-E ]
 .RB [ \-p ]
 .RB [ \-s ]
 .RB [ \-v ]
@@ -61,6 +62,10 @@ after ABORT_ON_ERRORS errors).
 .TP
 .BI \-e \ directory
 directory to exclude (repeat option for more than one directory).
+.TP
+.BI \-E
+treat conflicting specifications as errors, such as where two hardlinks for
+the same inode have different contexts.
 .TP
 .BI \-f \ infilename
 .I infilename

@@ -34,6 +34,7 @@ struct restore_opts {
 	unsigned int log_matches;
 	unsigned int ignore_noent;
 	unsigned int ignore_mounts;
+	unsigned int conflict_error;
 	/* restorecon_flags holds | of above for restore_init() */
 	unsigned int restorecon_flags;
 	char *rootpath;
