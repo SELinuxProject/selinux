@@ -32,7 +32,6 @@ int semanage_node_compare(const semanage_node_t * node,
 	return sepol_node_compare(node, key);
 }
 
-hidden_def(semanage_node_compare)
 
 int semanage_node_compare2(const semanage_node_t * node,
 			   const semanage_node_t * node2)
@@ -41,9 +40,8 @@ int semanage_node_compare2(const semanage_node_t * node,
 	return sepol_node_compare2(node, node2);
 }
 
-hidden_def(semanage_node_compare2)
 
-hidden int semanage_node_compare2_qsort(const semanage_node_t ** node,
+ int semanage_node_compare2_qsort(const semanage_node_t ** node,
 					const semanage_node_t ** node2)
 {
 
@@ -68,7 +66,6 @@ int semanage_node_key_extract(semanage_handle_t * handle,
 	return sepol_node_key_extract(handle->sepolh, node, key_ptr);
 }
 
-hidden_def(semanage_node_key_extract)
 
 void semanage_node_key_free(semanage_node_key_t * key)
 {
@@ -76,7 +73,6 @@ void semanage_node_key_free(semanage_node_key_t * key)
 	sepol_node_key_free(key);
 }
 
-hidden_def(semanage_node_key_free)
 
 /* Address */
 int semanage_node_get_addr(semanage_handle_t * handle,
@@ -86,7 +82,6 @@ int semanage_node_get_addr(semanage_handle_t * handle,
 	return sepol_node_get_addr(handle->sepolh, node, addr_ptr);
 }
 
-hidden_def(semanage_node_get_addr)
 
 int semanage_node_get_addr_bytes(semanage_handle_t * handle,
 				 const semanage_node_t * node,
@@ -96,7 +91,6 @@ int semanage_node_get_addr_bytes(semanage_handle_t * handle,
 	return sepol_node_get_addr_bytes(handle->sepolh, node, addr, addr_sz);
 }
 
-hidden_def(semanage_node_get_addr_bytes)
 
 int semanage_node_set_addr(semanage_handle_t * handle,
 			   semanage_node_t * node, int proto, const char *addr)
@@ -105,7 +99,6 @@ int semanage_node_set_addr(semanage_handle_t * handle,
 	return sepol_node_set_addr(handle->sepolh, node, proto, addr);
 }
 
-hidden_def(semanage_node_set_addr)
 
 int semanage_node_set_addr_bytes(semanage_handle_t * handle,
 				 semanage_node_t * node,
@@ -115,7 +108,6 @@ int semanage_node_set_addr_bytes(semanage_handle_t * handle,
 	return sepol_node_set_addr_bytes(handle->sepolh, node, addr, addr_sz);
 }
 
-hidden_def(semanage_node_set_addr_bytes)
 
 /* Netmask */
 int semanage_node_get_mask(semanage_handle_t * handle,
@@ -125,7 +117,6 @@ int semanage_node_get_mask(semanage_handle_t * handle,
 	return sepol_node_get_mask(handle->sepolh, node, mask_ptr);
 }
 
-hidden_def(semanage_node_get_mask)
 
 int semanage_node_get_mask_bytes(semanage_handle_t * handle,
 				 const semanage_node_t * node,
@@ -135,7 +126,6 @@ int semanage_node_get_mask_bytes(semanage_handle_t * handle,
 	return sepol_node_get_mask_bytes(handle->sepolh, node, mask, mask_sz);
 }
 
-hidden_def(semanage_node_get_mask_bytes)
 
 int semanage_node_set_mask(semanage_handle_t * handle,
 			   semanage_node_t * node, int proto, const char *mask)
@@ -144,7 +134,6 @@ int semanage_node_set_mask(semanage_handle_t * handle,
 	return sepol_node_set_mask(handle->sepolh, node, proto, mask);
 }
 
-hidden_def(semanage_node_set_mask)
 
 int semanage_node_set_mask_bytes(semanage_handle_t * handle,
 				 semanage_node_t * node,
@@ -154,7 +143,6 @@ int semanage_node_set_mask_bytes(semanage_handle_t * handle,
 	return sepol_node_set_mask_bytes(handle->sepolh, node, mask, mask_sz);
 }
 
-hidden_def(semanage_node_set_mask_bytes)
 
 /* Protocol */
 int semanage_node_get_proto(const semanage_node_t * node)
@@ -163,7 +151,6 @@ int semanage_node_get_proto(const semanage_node_t * node)
 	return sepol_node_get_proto(node);
 }
 
-hidden_def(semanage_node_get_proto)
 
 void semanage_node_set_proto(semanage_node_t * node, int proto)
 {
@@ -171,7 +158,6 @@ void semanage_node_set_proto(semanage_node_t * node, int proto)
 	sepol_node_set_proto(node, proto);
 }
 
-hidden_def(semanage_node_set_proto)
 
 const char *semanage_node_get_proto_str(int proto)
 {
@@ -179,7 +165,6 @@ const char *semanage_node_get_proto_str(int proto)
 	return sepol_node_get_proto_str(proto);
 }
 
-hidden_def(semanage_node_get_proto_str)
 
 /* Context */
 semanage_context_t *semanage_node_get_con(const semanage_node_t * node)
@@ -188,7 +173,6 @@ semanage_context_t *semanage_node_get_con(const semanage_node_t * node)
 	return sepol_node_get_con(node);
 }
 
-hidden_def(semanage_node_get_con)
 
 int semanage_node_set_con(semanage_handle_t * handle,
 			  semanage_node_t * node, semanage_context_t * con)
@@ -197,7 +181,6 @@ int semanage_node_set_con(semanage_handle_t * handle,
 	return sepol_node_set_con(handle->sepolh, node, con);
 }
 
-hidden_def(semanage_node_set_con)
 
 /* Create/Clone/Destroy */
 int semanage_node_create(semanage_handle_t * handle,
@@ -207,7 +190,6 @@ int semanage_node_create(semanage_handle_t * handle,
 	return sepol_node_create(handle->sepolh, node_ptr);
 }
 
-hidden_def(semanage_node_create)
 
 int semanage_node_clone(semanage_handle_t * handle,
 			const semanage_node_t * node,
@@ -217,7 +199,6 @@ int semanage_node_clone(semanage_handle_t * handle,
 	return sepol_node_clone(handle->sepolh, node, node_ptr);
 }
 
-hidden_def(semanage_node_clone)
 
 void semanage_node_free(semanage_node_t * node)
 {
@@ -225,7 +206,6 @@ void semanage_node_free(semanage_node_t * node)
 	sepol_node_free(node);
 }
 
-hidden_def(semanage_node_free)
 
 /* Port base functions */
 record_table_t SEMANAGE_NODE_RTABLE = {

@@ -88,7 +88,7 @@ static int process_seusers(const char *buffer,
 	return -2;		/* error */
 }
 
-int require_seusers hidden = 0;
+int require_seusers  = 0;
 
 #include <pwd.h>
 #include <grp.h>

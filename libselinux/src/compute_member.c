@@ -60,7 +60,6 @@ int security_compute_member_raw(const char * scon,
 	return ret;
 }
 
-hidden_def(security_compute_member_raw)
 
 int security_compute_member(const char * scon,
 			    const char * tcon,

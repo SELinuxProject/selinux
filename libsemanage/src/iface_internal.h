@@ -6,21 +6,6 @@
 #include <semanage/interfaces_policy.h>
 #include "database.h"
 #include "handle.h"
-#include "dso.h"
-
-hidden_proto(semanage_iface_create)
-    hidden_proto(semanage_iface_compare)
-    hidden_proto(semanage_iface_compare2)
-    hidden_proto(semanage_iface_clone)
-    hidden_proto(semanage_iface_free)
-    hidden_proto(semanage_iface_get_ifcon)
-    hidden_proto(semanage_iface_get_msgcon)
-    hidden_proto(semanage_iface_get_name)
-    hidden_proto(semanage_iface_key_extract)
-    hidden_proto(semanage_iface_key_free)
-    hidden_proto(semanage_iface_set_ifcon)
-    hidden_proto(semanage_iface_set_msgcon)
-    hidden_proto(semanage_iface_set_name)
 
 /* IFACE RECORD: method table */
 extern record_table_t SEMANAGE_IFACE_RTABLE;

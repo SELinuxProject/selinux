@@ -23,6 +23,7 @@
 #include "callbacks.h"
 #include "selinux_netlink.h"
 #include "avc_internal.h"
+#include "selinux_internal.h"
 
 #ifndef NETLINK_SELINUX
 #define NETLINK_SELINUX 7
@@ -207,6 +208,7 @@ static int avc_netlink_process(void *buf)
 				avc_prefix, rc, errno);
 			return rc;
 		}
+		selinux_flush_class_cache();
 		rc = selinux_netlink_policyload(msg->seqno);
 		if (rc < 0)
 			return rc;

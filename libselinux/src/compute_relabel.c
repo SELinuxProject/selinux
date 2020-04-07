@@ -60,7 +60,6 @@ int security_compute_relabel_raw(const char * scon,
 	return ret;
 }
 
-hidden_def(security_compute_relabel_raw)
 
 int security_compute_relabel(const char * scon,
 			     const char * tcon,

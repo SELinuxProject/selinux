@@ -14,7 +14,6 @@ typedef struct dbase_file dbase_t;
 #include <stdio.h>
 #include <semanage/handle.h>
 #include "iface_internal.h"
-#include "context_internal.h"
 #include "database_file.h"
 #include "parse_utils.h"
 #include "debug.h"

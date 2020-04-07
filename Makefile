@@ -16,7 +16,8 @@ else
 		-Wstrict-prototypes \
 		-Wundef \
 		-Wunused \
-		-Wwrite-strings
+		-Wwrite-strings \
+		-fno-common
 endif
 
 ifneq ($(DESTDIR),)

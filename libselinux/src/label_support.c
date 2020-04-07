@@ -63,7 +63,7 @@ static inline int read_spec_entry(char **entry, char **ptr, int *len, const char
  * This function calls read_spec_entry() to do the actual string processing.
  * As such, can return anything from that function as well.
  */
-int hidden read_spec_entries(char *line_buf, const char **errbuf, int num_args, ...)
+int  read_spec_entries(char *line_buf, const char **errbuf, int num_args, ...)
 {
 	char **spec_entry, *buf_p;
 	int len, rc, items, entry_len = 0;
@@ -113,7 +113,7 @@ int hidden read_spec_entries(char *line_buf, const char **errbuf, int num_args, 
 }
 
 /* Once all the specfiles are in the hash_buf, generate the hash. */
-void hidden digest_gen_hash(struct selabel_digest *digest)
+void  digest_gen_hash(struct selabel_digest *digest)
 {
 	Sha1Context context;
 
@@ -141,7 +141,7 @@ void hidden digest_gen_hash(struct selabel_digest *digest)
  *
  * Return %0 on success, -%1 with @errno set on failure.
  */
-int hidden digest_add_specfile(struct selabel_digest *digest, FILE *fp,
+int  digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 				    char *from_addr, size_t buf_len,
 				    const char *path)
 {

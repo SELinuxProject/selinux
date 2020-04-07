@@ -19,7 +19,7 @@ LIBMAP=libsepol.map
 LIBSO=$(TARGET).$(LIBVERSION)
 OBJS= $(patsubst %.c,%.o,$(sort $(wildcard *.c)))
 LOBJS= $(patsubst %.c,%.lo,$(sort $(wildcard *.c)))
-CFLAGS ?= -Werror -Wall -W -Wundef -Wshadow -Wmissing-format-attribute -O2
+CFLAGS ?= -Werror -Wall -W -Wundef -Wshadow -Wmissing-format-attribute -O2 -fno-semantic-interposition
 
 override CFLAGS += -I. -I../include -D_GNU_SOURCE
 

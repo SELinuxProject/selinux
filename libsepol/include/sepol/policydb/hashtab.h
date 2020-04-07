@@ -80,20 +80,6 @@ extern int hashtab_remove(hashtab_t h, hashtab_key_t k,
 					   void *args), void *args);
 
 /*
-   Insert or replace the specified (key, datum) pair in the specified
-   hash table.  If an entry for the specified key already exists,
-   then the specified destroy function is applied to (key,datum,args)
-   for the entry prior to replacing the entry's contents.
-
-   Returns SEPOL_ENOMEM if insufficient space is available or
-   SEPOL_OK otherwise.
- */
-extern int hashtab_replace(hashtab_t h, hashtab_key_t k, hashtab_datum_t d,
-			   void (*destroy) (hashtab_key_t k,
-					    hashtab_datum_t d,
-					    void *args), void *args);
-
-/*
    Searches for the entry with the specified key in the hash table.
 
    Returns NULL if no entry has the specified key or
@@ -121,20 +107,6 @@ extern int hashtab_map(hashtab_t h,
 		       int (*apply) (hashtab_key_t k,
 				     hashtab_datum_t d,
 				     void *args), void *args);
-
-/*
-   Same as hashtab_map, except that if apply returns a non-zero status,
-   then the (key,datum) pair will be removed from the hashtab and the
-   destroy function will be applied to (key,datum,args).
- */
-extern void hashtab_map_remove_on_error(hashtab_t h,
-					int (*apply) (hashtab_key_t k,
-						      hashtab_datum_t d,
-						      void *args),
-					void (*destroy) (hashtab_key_t k,
-							 hashtab_datum_t d,
-							 void *args),
-					void *args);
 
 extern void hashtab_hash_eval(hashtab_t h, char *tag);
 

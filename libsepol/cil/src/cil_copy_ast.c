@@ -827,7 +827,7 @@ int cil_copy_avrule(struct cil_db *db, void *data, void **copy, __attribute__((u
 	if (!new->is_extended) {
 		cil_copy_classperms_list(orig->perms.classperms, &new->perms.classperms);
 	} else {
-		if (new->perms.x.permx_str != NULL) {
+		if (orig->perms.x.permx_str != NULL) {
 			new->perms.x.permx_str = orig->perms.x.permx_str;
 		} else {
 			cil_permissionx_init(&new->perms.x.permx);

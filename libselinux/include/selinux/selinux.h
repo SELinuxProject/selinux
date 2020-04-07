@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-/* Return 1 if we are running on a SELinux kernel, or 0 if not or -1 if we get an error. */
+/* Return 1 if we are running on a SELinux kernel, or 0 otherwise. */
 extern int is_selinux_enabled(void);
 /* Return 1 if we are running on a SELinux MLS kernel, or 0 otherwise. */
 extern int is_selinux_mls_enabled(void);
@@ -246,8 +246,12 @@ extern int security_compute_member_raw(const char * scon,
 				       security_class_t tclass,
 				       char ** newcon);
 
-/* Compute the set of reachable user contexts and set *con to refer to 
-   the NULL-terminated array of contexts.  Caller must free via freeconary. */
+/*
+ * Compute the set of reachable user contexts and set *con to refer to
+ * the NULL-terminated array of contexts.  Caller must free via freeconary.
+ * These interfaces are deprecated.  Use get_ordered_context_list() or
+ * one of its variant interfaces instead.
+ */
 extern int security_compute_user(const char * scon,
 				 const char *username,
 				 char *** con);
@@ -417,6 +421,9 @@ extern int security_av_string(security_class_t tclass,
 
 /* Display an access vector in a string representation. */
 extern void print_access_vector(security_class_t tclass, access_vector_t av);
+
+/* Flush the SELinux class cache, e.g. upon a policy reload. */
+extern void selinux_flush_class_cache(void);
 
 /* Set the function used by matchpathcon_init when displaying
    errors about the file_contexts configuration.  If not set,

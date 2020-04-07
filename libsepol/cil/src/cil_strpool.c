@@ -80,8 +80,8 @@ char *cil_strpool_add(const char *str)
 		int rc = hashtab_insert(cil_strpool_tab, (hashtab_key_t)strpool_ref->str, strpool_ref);
 		if (rc != SEPOL_OK) {
 			pthread_mutex_unlock(&cil_strpool_mutex);
-			(*cil_mem_error_handler)();
-			pthread_mutex_lock(&cil_strpool_mutex);
+			cil_log(CIL_ERR, "Failed to allocate memory\n");
+			exit(1);
 		}
 	}
 
@@ -104,8 +104,8 @@ void cil_strpool_init(void)
 		cil_strpool_tab = hashtab_create(cil_strpool_hash, cil_strpool_compare, CIL_STRPOOL_TABLE_SIZE);
 		if (cil_strpool_tab == NULL) {
 			pthread_mutex_unlock(&cil_strpool_mutex);
-			(*cil_mem_error_handler)();
-			return;
+			cil_log(CIL_ERR, "Failed to allocate memory\n");
+			exit(1);
 		}
 	}
 	cil_strpool_readers++;

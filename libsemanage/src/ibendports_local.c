@@ -74,9 +74,8 @@ int semanage_ibendport_list_local(semanage_handle_t *handle,
 	return dbase_list(handle, dconfig, records, count);
 }
 
-hidden_def(semanage_ibendport_list_local)
 
-int hidden semanage_ibendport_validate_local(semanage_handle_t *handle)
+int semanage_ibendport_validate_local(semanage_handle_t *handle)
 {
 	semanage_ibendport_t **ibendports = NULL;
 	unsigned int nibendports = 0;

@@ -127,10 +127,12 @@ int ebitmap_andnot(ebitmap_t *dst, ebitmap_t *e1, ebitmap_t *e2, unsigned int ma
 
 unsigned int ebitmap_cardinality(ebitmap_t *e1)
 {
-	unsigned int i, count = 0;
-	for (i=ebitmap_startbit(e1); i < ebitmap_length(e1); i++)
-		if (ebitmap_get_bit(e1, i))
-			count++;
+	unsigned int count = 0;
+	ebitmap_node_t *n;
+
+	for (n = e1->node; n; n = n->next) {
+		count += __builtin_popcountll(n->map);
+	}
 	return count;
 }
 

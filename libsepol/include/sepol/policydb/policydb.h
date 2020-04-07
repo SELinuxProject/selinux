@@ -605,6 +605,11 @@ typedef struct policydb {
 	unsigned policyvers;
 
 	unsigned handle_unknown;
+
+	sepol_security_class_t process_class;
+	sepol_security_class_t dir_class;
+	sepol_access_vector_t process_trans;
+	sepol_access_vector_t process_trans_dyntrans;
 } policydb_t;
 
 struct sepol_policydb {

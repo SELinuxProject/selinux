@@ -20,7 +20,6 @@ int is_selinux_enabled(void)
 #endif
 }
 
-hidden_def(is_selinux_enabled)
 
 /*
  * Function: is_selinux_mls_enabled()
@@ -55,4 +54,3 @@ int is_selinux_mls_enabled(void)
 	return enabled;
 }
 
-hidden_def(is_selinux_mls_enabled)

@@ -8,6 +8,7 @@
 #include "selinux_internal.h"
 #include "policy.h"
 #include <limits.h>
+#include "callbacks.h"
 
 int security_compute_user_raw(const char * scon,
 			      const char *user, char *** con)
@@ -23,6 +24,8 @@ int security_compute_user_raw(const char * scon,
 		errno = ENOENT;
 		return -1;
 	}
+
+	selinux_log(SELINUX_WARNING, "Direct use of security_compute_user() is deprecated, switch to get_ordered_context_list()\n");
 
 	snprintf(path, sizeof path, "%s/user", selinux_mnt);
 	fd = open(path, O_RDWR | O_CLOEXEC);
@@ -77,7 +80,6 @@ int security_compute_user_raw(const char * scon,
 	return ret;
 }
 
-hidden_def(security_compute_user_raw)
 
 int security_compute_user(const char * scon,
 			  const char *user, char *** con)
@@ -107,4 +109,3 @@ int security_compute_user(const char * scon,
 	return ret;
 }
 
-hidden_def(security_compute_user)

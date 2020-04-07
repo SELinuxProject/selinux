@@ -74,9 +74,8 @@ int semanage_ibpkey_list_local(semanage_handle_t *handle,
 	return dbase_list(handle, dconfig, records, count);
 }
 
-hidden_def(semanage_ibpkey_list_local)
 
-int hidden semanage_ibpkey_validate_local(semanage_handle_t *handle)
+int semanage_ibpkey_validate_local(semanage_handle_t *handle)
 {
 	semanage_ibpkey_t **ibpkeys = NULL;
 	unsigned int nibpkeys = 0;

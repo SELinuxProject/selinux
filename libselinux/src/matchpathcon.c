@@ -322,7 +322,7 @@ static void matchpathcon_thread_destructor(void __attribute__((unused)) *ptr)
 
 void __attribute__((destructor)) matchpathcon_lib_destructor(void);
 
-void hidden __attribute__((destructor)) matchpathcon_lib_destructor(void)
+void  __attribute__((destructor)) matchpathcon_lib_destructor(void)
 {
 	if (destructor_key_initialized)
 		__selinux_key_delete(destructor_key);
@@ -351,7 +351,6 @@ int matchpathcon_init_prefix(const char *path, const char *subset)
 	return hnd ? 0 : -1;
 }
 
-hidden_def(matchpathcon_init_prefix)
 
 int matchpathcon_init(const char *path)
 {

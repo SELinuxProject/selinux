@@ -22,6 +22,7 @@
 /* This file implements only the publicly-visible module functions to libsemanage. */
 
 #include "direct_api.h"
+#include "modules.h"
 #include "semanage_conf.h"
 #include "semanage_store.h"
 
@@ -241,7 +242,6 @@ void semanage_module_info_datum_destroy(semanage_module_info_t * modinfo)
 	}
 }
 
-hidden_def(semanage_module_info_datum_destroy)
 
 semanage_module_info_t *semanage_module_list_nth(semanage_module_info_t * list,
 						 int n)
@@ -249,14 +249,12 @@ semanage_module_info_t *semanage_module_list_nth(semanage_module_info_t * list,
 	return list + n;
 }
 
-hidden_def(semanage_module_list_nth)
 
 const char *semanage_module_get_name(semanage_module_info_t * modinfo)
 {
 	return modinfo->name;
 }
 
-hidden_def(semanage_module_get_name)
 
 /* Legacy function that remains to preserve ABI
  * compatibility.
@@ -279,7 +277,6 @@ int semanage_module_info_create(semanage_handle_t *sh,
 	return semanage_module_info_init(sh, *modinfo);
 }
 
-hidden_def(semanage_module_info_create)
 
 int semanage_module_info_destroy(semanage_handle_t *sh,
 				 semanage_module_info_t *modinfo)
@@ -296,7 +293,6 @@ int semanage_module_info_destroy(semanage_handle_t *sh,
 	return semanage_module_info_init(sh, modinfo);
 }
 
-hidden_def(semanage_module_info_destroy)
 
 int semanage_module_info_init(semanage_handle_t *sh,
 			      semanage_module_info_t *modinfo)
@@ -371,7 +367,6 @@ int semanage_module_info_get_priority(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_info_get_priority)
 
 int semanage_module_info_get_name(semanage_handle_t *sh,
 				  semanage_module_info_t *modinfo,
@@ -386,7 +381,6 @@ int semanage_module_info_get_name(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_info_get_name)
 
 int semanage_module_info_get_lang_ext(semanage_handle_t *sh,
 				      semanage_module_info_t *modinfo,
@@ -401,7 +395,6 @@ int semanage_module_info_get_lang_ext(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_info_get_lang_ext)
 
 int semanage_module_info_get_enabled(semanage_handle_t *sh,
 				     semanage_module_info_t *modinfo,
@@ -416,7 +409,6 @@ int semanage_module_info_get_enabled(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_info_get_enabled)
 
 int semanage_module_info_set_priority(semanage_handle_t *sh,
 				      semanage_module_info_t *modinfo,
@@ -437,7 +429,6 @@ int semanage_module_info_set_priority(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_info_set_priority)
 
 int semanage_module_info_set_name(semanage_handle_t *sh,
 				  semanage_module_info_t *modinfo,
@@ -468,7 +459,6 @@ int semanage_module_info_set_name(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_info_set_name)
 
 int semanage_module_info_set_lang_ext(semanage_handle_t *sh,
 				      semanage_module_info_t *modinfo,
@@ -499,7 +489,6 @@ int semanage_module_info_set_lang_ext(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_info_set_lang_ext)
 
 int semanage_module_info_set_enabled(semanage_handle_t *sh,
 				     semanage_module_info_t *modinfo,
@@ -520,7 +509,6 @@ int semanage_module_info_set_enabled(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_info_set_enabled)
 
 int semanage_module_get_path(semanage_handle_t *sh,
 			     const semanage_module_info_t *modinfo,
@@ -685,7 +673,6 @@ int semanage_module_key_create(semanage_handle_t *sh,
 	return semanage_module_key_init(sh, *modkey);
 }
 
-hidden_def(semanage_module_key_create)
 
 int semanage_module_key_destroy(semanage_handle_t *sh,
 				semanage_module_key_t *modkey)
@@ -701,7 +688,6 @@ int semanage_module_key_destroy(semanage_handle_t *sh,
 	return semanage_module_key_init(sh, modkey);
 }
 
-hidden_def(semanage_module_key_destroy)
 
 int semanage_module_key_init(semanage_handle_t *sh,
 			     semanage_module_key_t *modkey)
@@ -728,7 +714,6 @@ int semanage_module_key_get_name(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_key_get_name)
 
 int semanage_module_key_get_priority(semanage_handle_t *sh,
 				     semanage_module_key_t *modkey,
@@ -743,7 +728,6 @@ int semanage_module_key_get_priority(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_key_get_priority)
 
 int semanage_module_key_set_name(semanage_handle_t *sh,
 				 semanage_module_key_t *modkey,
@@ -776,7 +760,6 @@ cleanup:
 	return status;
 }
 
-hidden_def(semanage_module_key_set_name)
 
 int semanage_module_key_set_priority(semanage_handle_t *sh,
 				     semanage_module_key_t *modkey,
@@ -796,7 +779,6 @@ int semanage_module_key_set_priority(semanage_handle_t *sh,
 	return 0;
 }
 
-hidden_def(semanage_module_key_set_priority)
 
 int semanage_module_get_enabled_1_1(semanage_handle_t *sh,
 				const semanage_module_key_t *modkey,
@@ -847,7 +829,6 @@ int semanage_module_set_enabled(semanage_handle_t *sh,
 	return sh->funcs->set_enabled(sh, modkey, enabled);
 }
 
-hidden_def(semanage_module_set_enabled)
 
 /* This function exists only for ABI compatibility. It has been deprecated and
  * should not be used. Instead, use semanage_module_set_enabled() */

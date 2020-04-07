@@ -31,7 +31,6 @@ int semanage_iface_compare(const semanage_iface_t * iface,
 	return sepol_iface_compare(iface, key);
 }
 
-hidden_def(semanage_iface_compare)
 
 int semanage_iface_compare2(const semanage_iface_t * iface,
 			    const semanage_iface_t * iface2)
@@ -40,7 +39,6 @@ int semanage_iface_compare2(const semanage_iface_t * iface,
 	return sepol_iface_compare2(iface, iface2);
 }
 
-hidden_def(semanage_iface_compare2)
 
 static int semanage_iface_compare2_qsort(const semanage_iface_t ** iface,
 					 const semanage_iface_t ** iface2)
@@ -64,7 +62,6 @@ int semanage_iface_key_extract(semanage_handle_t * handle,
 	return sepol_iface_key_extract(handle->sepolh, iface, key_ptr);
 }
 
-hidden_def(semanage_iface_key_extract)
 
 void semanage_iface_key_free(semanage_iface_key_t * key)
 {
@@ -72,7 +69,6 @@ void semanage_iface_key_free(semanage_iface_key_t * key)
 	sepol_iface_key_free(key);
 }
 
-hidden_def(semanage_iface_key_free)
 
 /* Name */
 const char *semanage_iface_get_name(const semanage_iface_t * iface)
@@ -81,7 +77,6 @@ const char *semanage_iface_get_name(const semanage_iface_t * iface)
 	return sepol_iface_get_name(iface);
 }
 
-hidden_def(semanage_iface_get_name)
 
 int semanage_iface_set_name(semanage_handle_t * handle,
 			    semanage_iface_t * iface, const char *name)
@@ -90,7 +85,6 @@ int semanage_iface_set_name(semanage_handle_t * handle,
 	return sepol_iface_set_name(handle->sepolh, iface, name);
 }
 
-hidden_def(semanage_iface_set_name)
 
 /* Context */
 semanage_context_t *semanage_iface_get_ifcon(const semanage_iface_t * iface)
@@ -99,7 +93,6 @@ semanage_context_t *semanage_iface_get_ifcon(const semanage_iface_t * iface)
 	return sepol_iface_get_ifcon(iface);
 }
 
-hidden_def(semanage_iface_get_ifcon)
 
 int semanage_iface_set_ifcon(semanage_handle_t * handle,
 			     semanage_iface_t * iface, semanage_context_t * con)
@@ -108,7 +101,6 @@ int semanage_iface_set_ifcon(semanage_handle_t * handle,
 	return sepol_iface_set_ifcon(handle->sepolh, iface, con);
 }
 
-hidden_def(semanage_iface_set_ifcon)
 
 semanage_context_t *semanage_iface_get_msgcon(const semanage_iface_t * iface)
 {
@@ -116,7 +108,6 @@ semanage_context_t *semanage_iface_get_msgcon(const semanage_iface_t * iface)
 	return sepol_iface_get_msgcon(iface);
 }
 
-hidden_def(semanage_iface_get_msgcon)
 
 int semanage_iface_set_msgcon(semanage_handle_t * handle,
 			      semanage_iface_t * iface,
@@ -126,7 +117,6 @@ int semanage_iface_set_msgcon(semanage_handle_t * handle,
 	return sepol_iface_set_msgcon(handle->sepolh, iface, con);
 }
 
-hidden_def(semanage_iface_set_msgcon)
 
 /* Create/Clone/Destroy */
 int semanage_iface_create(semanage_handle_t * handle,
@@ -136,7 +126,6 @@ int semanage_iface_create(semanage_handle_t * handle,
 	return sepol_iface_create(handle->sepolh, iface_ptr);
 }
 
-hidden_def(semanage_iface_create)
 
 int semanage_iface_clone(semanage_handle_t * handle,
 			 const semanage_iface_t * iface,
@@ -146,7 +135,6 @@ int semanage_iface_clone(semanage_handle_t * handle,
 	return sepol_iface_clone(handle->sepolh, iface, iface_ptr);
 }
 
-hidden_def(semanage_iface_clone)
 
 void semanage_iface_free(semanage_iface_t * iface)
 {
@@ -154,7 +142,6 @@ void semanage_iface_free(semanage_iface_t * iface)
 	sepol_iface_free(iface);
 }
 
-hidden_def(semanage_iface_free)
 
 /* Record base functions */
 record_table_t SEMANAGE_IFACE_RTABLE = {

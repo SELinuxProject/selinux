@@ -223,7 +223,6 @@ int semanage_seuser_iterate_local(semanage_handle_t * handle,
 	return dbase_iterate(handle, dconfig, handler, handler_arg);
 }
 
-hidden_def(semanage_seuser_iterate_local)
 
 int semanage_seuser_list_local(semanage_handle_t * handle,
 			       semanage_seuser_t *** records,
@@ -320,7 +319,7 @@ static int validate_handler(const semanage_seuser_t * seuser, void *varg)
  * it will (1) deadlock, because iterate is not reentrant outside
  * a transaction, and (2) be racy, because it makes multiple dbase calls */
 
-int hidden semanage_seuser_validate_local(semanage_handle_t * handle,
+int semanage_seuser_validate_local(semanage_handle_t * handle,
 					  const sepol_policydb_t * policydb)
 {
 

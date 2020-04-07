@@ -303,7 +303,7 @@ int authenticate_user(void)
  * out:		The CONTEXT associated with the context.
  * return:	0 on success, -1 on failure.
  */
-int get_init_context(security_context_t * context)
+int get_init_context(char **context)
 {
 
 	FILE *fp;
@@ -354,7 +354,7 @@ int main(int argc, char *argv[])
 
 	extern char *optarg;	/* used by getopt() for arg strings */
 	extern int opterr;	/* controls getopt() error messages */
-	security_context_t new_context;	/* context for the init script context  */
+	char *new_context;	/* context for the init script context  */
 
 #ifdef USE_NLS
 	setlocale(LC_ALL, "");

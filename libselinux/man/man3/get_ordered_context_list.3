@@ -26,14 +26,28 @@ get_ordered_context_list, get_ordered_context_list_with_level, get_default_conte
 .BI "int get_default_type(const char *" role ", char **" type );
 .
 .SH "DESCRIPTION"
+
+This family of functions can be used to obtain either a prioritized list of
+all reachable security contexts for a given SELinux user or a single default
+(highest priority) context for a given SELinux user for use by login-like
+programs.  These functions takes a SELinux user identity that must
+be defined in the SELinux policy as their input, not a Linux username.
+Most callers should typically first call
+.BR getseuserbyname(3)
+to look up the SELinux user identity and level for a given
+Linux username and then invoke one of
+.BR get_ordered_context_list_with_level ()
+or
+.BR get_default_context_with_level ()
+with the returned SELinux user and level as inputs.
+
 .BR get_ordered_context_list ()
-invokes the 
-.BR security_compute_user (3)
-function to obtain the list of contexts for the specified
+obtains the list of contexts for the specified
+SELinux
 .I user
-that are reachable from the specified
+identity that are reachable from the specified
 .I fromcon
-context.  The function then orders the resulting list based on the global
+context based on the global
 .I \%/etc/selinux/{SELINUXTYPE}/contexts/default_contexts
 file and the per-user
 .I \%/etc/selinux/{SELINUXTYPE}/contexts/users/<username>

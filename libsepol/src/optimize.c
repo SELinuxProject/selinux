@@ -31,28 +31,93 @@
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/conditional.h>
 
+#define TYPE_VEC_INIT_SIZE 16
+
+struct type_vec {
+	uint32_t *types;
+	unsigned int count, capacity;
+};
+
+static int type_vec_init(struct type_vec *v)
+{
+	v->capacity = TYPE_VEC_INIT_SIZE;
+	v->count = 0;
+	v->types = malloc(v->capacity * sizeof(*v->types));
+	if (!v->types)
+		return -1;
+	return 0;
+}
+
+static void type_vec_destroy(struct type_vec *v)
+{
+	free(v->types);
+}
+
+static int type_vec_append(struct type_vec *v, uint32_t type)
+{
+	if (v->capacity == v->count) {
+		unsigned int new_capacity = v->capacity * 2;
+		uint32_t *new_types = realloc(v->types,
+					      new_capacity * sizeof(*v->types));
+		if (!new_types)
+			return -1;
+
+		v->types = new_types;
+		v->capacity = new_capacity;
+	}
+
+	v->types[v->count++] = type;
+	return 0;
+}
+
+static int type_vec_contains(const struct type_vec *v, uint32_t type)
+{
+	unsigned int s = 0, e = v->count;
+
+	while (s != e) {
+		unsigned int mid = (s + e) / 2;
+
+		if (v->types[mid] == type)
+			return 1;
+
+		if (v->types[mid] < type)
+			s = mid + 1;
+		else
+			e = mid;
+	}
+	return 0;
+}
+
 /* builds map: type/attribute -> {all attributes that are a superset of it} */
-static ebitmap_t *build_type_map(const policydb_t *p)
+static struct type_vec *build_type_map(const policydb_t *p)
 {
 	unsigned int i, k;
-	ebitmap_t *map = malloc(p->p_types.nprim * sizeof(ebitmap_t));
+	ebitmap_node_t *n;
+	struct type_vec *map = malloc(p->p_types.nprim * sizeof(*map));
 	if (!map)
 		return NULL;
 
 	for (i = 0; i < p->p_types.nprim; i++) {
-		if (p->type_val_to_struct[i] &&
-		    p->type_val_to_struct[i]->flavor != TYPE_ATTRIB) {
-			if (ebitmap_cpy(&map[i], &p->type_attr_map[i]))
-				goto err;
+		if (type_vec_init(&map[i]))
+			goto err;
+
+		if (p->type_val_to_struct[i]->flavor != TYPE_ATTRIB) {
+			ebitmap_for_each_positive_bit(&p->type_attr_map[i],
+						      n, k) {
+				if (type_vec_append(&map[i], k))
+					goto err;
+			}
 		} else {
 			ebitmap_t *types_i = &p->attr_type_map[i];
 
-			ebitmap_init(&map[i]);
 			for (k = 0; k < p->p_types.nprim; k++) {
 				ebitmap_t *types_k = &p->attr_type_map[k];
 
+				if (p->type_val_to_struct[k]->flavor != TYPE_ATTRIB)
+					continue;
+
 				if (ebitmap_contains(types_k, types_i)) {
-					if (ebitmap_set_bit(&map[i], k, 1))
+					if (type_vec_append(&map[i], k))
 						goto err;
 				}
 			}
@@ -61,16 +126,16 @@ static ebitmap_t *build_type_map(const policydb_t *p)
 	return map;
 err:
 	for (k = 0; k <= i; k++)
-		ebitmap_destroy(&map[k]);
+		type_vec_destroy(&map[k]);
 	free(map);
 	return NULL;
 }
 
-static void destroy_type_map(const policydb_t *p, ebitmap_t *type_map)
+static void destroy_type_map(const policydb_t *p, struct type_vec *type_map)
 {
 	unsigned int i;
 	for (i = 0; i < p->p_types.nprim; i++)
-		ebitmap_destroy(&type_map[i]);
+		type_vec_destroy(&type_map[i]);
 	free(type_map);
 }
 
@@ -123,10 +188,11 @@ static int process_avtab_datum(uint16_t specified,
 
 /* checks if avtab contains a rule that covers the given rule */
 static int is_avrule_redundant(avtab_ptr_t entry, avtab_t *tab,
-			       const ebitmap_t *type_map, unsigned char not_cond)
+			       const struct type_vec *type_map,
+			       unsigned char not_cond)
 {
 	unsigned int i, k, s_idx, t_idx;
-	ebitmap_node_t *snode, *tnode;
+	uint32_t st, tt;
 	avtab_datum_t *d1, *d2;
 	avtab_key_t key;
 
@@ -142,14 +208,17 @@ static int is_avrule_redundant(avtab_ptr_t entry, avtab_t *tab,
 
 	d1 = &entry->datum;
 
-	ebitmap_for_each_positive_bit(&type_map[s_idx], snode, i) {
-		key.source_type = i + 1;
+	for (i = 0; i < type_map[s_idx].count; i++) {
+		st = type_map[s_idx].types[i];
+		key.source_type = st + 1;
 
-		ebitmap_for_each_positive_bit(&type_map[t_idx], tnode, k) {
-			if (not_cond && s_idx == i && t_idx == k)
+		for (k = 0; k < type_map[t_idx].count; k++) {
+			tt = type_map[t_idx].types[k];
+
+			if (not_cond && s_idx == st && t_idx == tt)
 				continue;
 
-			key.target_type = k + 1;
+			key.target_type = tt + 1;
 
 			d2 = avtab_search(tab, &key);
 			if (!d2)
@@ -177,7 +246,7 @@ static int is_avrule_with_attr(avtab_ptr_t entry, policydb_t *p)
 
 /* checks if conditional list contains a rule that covers the given rule */
 static int is_cond_rule_redundant(avtab_ptr_t e1, cond_av_list_t *list,
-				  const ebitmap_t *type_map)
+				  const struct type_vec *type_map)
 {
 	unsigned int s1, t1, c1, k1, s2, t2, c2, k2;
 
@@ -203,9 +272,9 @@ static int is_cond_rule_redundant(avtab_ptr_t e1, cond_av_list_t *list,
 
 		if (s1 == s2 && t1 == t2)
 			continue;
-		if (!ebitmap_get_bit(&type_map[s1], s2))
+		if (!type_vec_contains(&type_map[s1], s2))
 			continue;
-		if (!ebitmap_get_bit(&type_map[t1], t2))
+		if (!type_vec_contains(&type_map[t1], t2))
 			continue;
 
 		if (process_avtab_datum(k1, &e1->datum, &e2->datum))
@@ -214,7 +283,7 @@ static int is_cond_rule_redundant(avtab_ptr_t e1, cond_av_list_t *list,
 	return 0;
 }
 
-static void optimize_avtab(policydb_t *p, const ebitmap_t *type_map)
+static void optimize_avtab(policydb_t *p, const struct type_vec *type_map)
 {
 	avtab_t *tab = &p->te_avtab;
 	unsigned int i;
@@ -243,7 +312,7 @@ static void optimize_avtab(policydb_t *p, const ebitmap_t *type_map)
 
 /* find redundant rules in (*cond) and put them into (*del) */
 static void optimize_cond_av_list(cond_av_list_t **cond, cond_av_list_t **del,
-				  policydb_t *p, const ebitmap_t *type_map)
+				  policydb_t *p, const struct type_vec *type_map)
 {
 	cond_av_list_t **listp = cond;
 	cond_av_list_t *pcov = NULL;
@@ -292,7 +361,7 @@ static void optimize_cond_av_list(cond_av_list_t **cond, cond_av_list_t **del,
 	}
 }
 
-static void optimize_cond_avtab(policydb_t *p, const ebitmap_t *type_map)
+static void optimize_cond_avtab(policydb_t *p, const struct type_vec *type_map)
 {
 	avtab_t *tab = &p->te_cond_avtab;
 	unsigned int i;
@@ -361,7 +430,7 @@ static void optimize_cond_avtab(policydb_t *p, const ebitmap_t *type_map)
 
 int policydb_optimize(policydb_t *p)
 {
-	ebitmap_t *type_map;
+	struct type_vec *type_map;
 
 	if (p->policy_type != POLICY_KERN)
 		return -1;

@@ -53,7 +53,6 @@ int security_get_initial_context_raw(const char * name, char ** con)
 	return ret;
 }
 
-hidden_def(security_get_initial_context_raw)
 
 int security_get_initial_context(const char * name, char ** con)
 {
@@ -69,4 +68,3 @@ int security_get_initial_context(const char * name, char ** con)
 	return ret;
 }
 
-hidden_def(security_get_initial_context)

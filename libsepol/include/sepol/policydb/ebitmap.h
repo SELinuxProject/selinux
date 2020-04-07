@@ -39,6 +39,7 @@ typedef struct ebitmap {
 	uint32_t highbit;	/* highest position in the total bitmap */
 } ebitmap_t;
 
+#define ebitmap_is_empty(e) (((e)->highbit) == 0)
 #define ebitmap_length(e) ((e)->highbit)
 #define ebitmap_startbit(e) ((e)->node ? (e)->node->startbit : 0)
 #define ebitmap_startnode(e) ((e)->node)

@@ -46,7 +46,6 @@ int sepol_port_key_create(sepol_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-hidden_def(sepol_port_key_create)
 
 void sepol_port_key_unpack(const sepol_port_key_t * key,
 			   int *low, int *high, int *proto)
@@ -57,7 +56,6 @@ void sepol_port_key_unpack(const sepol_port_key_t * key,
 	*proto = key->proto;
 }
 
-hidden_def(sepol_port_key_unpack)
 
 int sepol_port_key_extract(sepol_handle_t * handle,
 			   const sepol_port_t * port,
@@ -141,7 +139,6 @@ int sepol_port_get_low(const sepol_port_t * port)
 	return port->low;
 }
 
-hidden_def(sepol_port_get_low)
 
 int sepol_port_get_high(const sepol_port_t * port)
 {
@@ -149,7 +146,6 @@ int sepol_port_get_high(const sepol_port_t * port)
 	return port->high;
 }
 
-hidden_def(sepol_port_get_high)
 
 void sepol_port_set_port(sepol_port_t * port, int port_num)
 {
@@ -165,7 +161,6 @@ void sepol_port_set_range(sepol_port_t * port, int low, int high)
 	port->high = high;
 }
 
-hidden_def(sepol_port_set_range)
 
 /* Protocol */
 int sepol_port_get_proto(const sepol_port_t * port)
@@ -174,7 +169,6 @@ int sepol_port_get_proto(const sepol_port_t * port)
 	return port->proto;
 }
 
-hidden_def(sepol_port_get_proto)
 
 const char *sepol_port_get_proto_str(int proto)
 {
@@ -193,7 +187,6 @@ const char *sepol_port_get_proto_str(int proto)
 	}
 }
 
-hidden_def(sepol_port_get_proto_str)
 
 void sepol_port_set_proto(sepol_port_t * port, int proto)
 {
@@ -201,7 +194,6 @@ void sepol_port_set_proto(sepol_port_t * port, int proto)
 	port->proto = proto;
 }
 
-hidden_def(sepol_port_set_proto)
 
 /* Create */
 int sepol_port_create(sepol_handle_t * handle, sepol_port_t ** port)
@@ -223,7 +215,6 @@ int sepol_port_create(sepol_handle_t * handle, sepol_port_t ** port)
 	return STATUS_SUCCESS;
 }
 
-hidden_def(sepol_port_create)
 
 /* Deep copy clone */
 int sepol_port_clone(sepol_handle_t * handle,
@@ -262,7 +253,6 @@ void sepol_port_free(sepol_port_t * port)
 	free(port);
 }
 
-hidden_def(sepol_port_free)
 
 /* Context */
 sepol_context_t *sepol_port_get_con(const sepol_port_t * port)
@@ -271,7 +261,6 @@ sepol_context_t *sepol_port_get_con(const sepol_port_t * port)
 	return port->con;
 }
 
-hidden_def(sepol_port_get_con)
 
 int sepol_port_set_con(sepol_handle_t * handle,
 		       sepol_port_t * port, sepol_context_t * con)
@@ -289,4 +278,3 @@ int sepol_port_set_con(sepol_handle_t * handle,
 	return STATUS_SUCCESS;
 }
 
-hidden_def(sepol_port_set_con)

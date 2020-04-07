@@ -44,7 +44,7 @@ static setab_t *clist[N_COLOR];
 static setab_t *cend[N_COLOR];
 static semnemonic_t *mnemonics;
 
-static security_context_t my_context;
+static char *my_context;
 
 void finish_context_colors(void) {
 	setab_t *cur, *next;
@@ -76,7 +76,7 @@ void finish_context_colors(void) {
 }
 
 static int check_dominance(const char *pattern, const char *raw) {
-	security_context_t ctx;
+	char *ctx;
 	context_t con;
 	struct av_decision avd;
 	int rc = -1;
@@ -109,7 +109,7 @@ static int check_dominance(const char *pattern, const char *raw) {
 	if (!raw)
 		goto out;
 
-	rc = security_compute_av_raw(ctx, (security_context_t)raw, context_class, context_contains_perm, &avd);
+	rc = security_compute_av_raw(ctx, raw, context_class, context_contains_perm, &avd);
 	if (rc)
 		goto out;
 
@@ -282,7 +282,7 @@ static int parse_components(context_t con, char **components) {
 
 /* Look up colors.
  */
-int raw_color(const security_context_t raw, char **color_str) {
+int raw_color(const char *raw, char **color_str) {
 #define CHARS_PER_COLOR 16
 	context_t con;
 	uint32_t i, j, mask = 0;

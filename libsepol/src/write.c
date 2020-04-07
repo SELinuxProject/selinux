@@ -40,7 +40,6 @@
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/expand.h>
-#include <sepol/policydb/flask.h>
 
 #include "debug.h"
 #include "private.h"
@@ -514,7 +513,7 @@ static int role_trans_write(policydb_t *p, struct policy_file *fp)
 
 	nel = 0;
 	for (tr = r; tr; tr = tr->next)
-		if(new_roletr || tr->tclass == SECCLASS_PROCESS)
+		if(new_roletr || tr->tclass == p->process_class)
 			nel++;
 
 	buf[0] = cpu_to_le32(nel);
@@ -522,7 +521,7 @@ static int role_trans_write(policydb_t *p, struct policy_file *fp)
 	if (items != 1)
 		return POLICYDB_ERROR;
 	for (tr = r; tr; tr = tr->next) {
-		if (!new_roletr && tr->tclass != SECCLASS_PROCESS) {
+		if (!new_roletr && tr->tclass != p->process_class) {
 			if (!warning_issued)
 				WARN(fp->handle, "Discarding role_transition "
 				     "rules for security classes other than "
@@ -1294,8 +1293,15 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 	ocontext_t *c;
 	for (i = 0; i < info->ocon_num; i++) {
 		nel = 0;
-		for (c = p->ocontexts[i]; c; c = c->next)
+		for (c = p->ocontexts[i]; c; c = c->next) {
+			if (i == OCON_XEN_ISID && !c->context[0].user) {
+				INFO(fp->handle,
+				     "No context assigned to SID %s, omitting from policy",
+				     c->u.name);
+				continue;
+			}
 			nel++;
+		}
 		buf[0] = cpu_to_le32(nel);
 		items = put_entry(buf, sizeof(uint32_t), 1, fp);
 		if (items != 1)
@@ -1303,6 +1309,8 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 		for (c = p->ocontexts[i]; c; c = c->next) {
 			switch (i) {
 			case OCON_XEN_ISID:
+				if (!c->context[0].user)
+					break;
 				buf[0] = cpu_to_le32(c->sid[0]);
 				items = put_entry(buf, sizeof(uint32_t), 1, fp);
 				if (items != 1)
@@ -1393,8 +1401,15 @@ static int ocontext_write_selinux(struct policydb_compat_info *info,
 	ocontext_t *c;
 	for (i = 0; i < info->ocon_num; i++) {
 		nel = 0;
-		for (c = p->ocontexts[i]; c; c = c->next)
+		for (c = p->ocontexts[i]; c; c = c->next) {
+			if (i == OCON_ISID && !c->context[0].user) {
+				INFO(fp->handle,
+				     "No context assigned to SID %s, omitting from policy",
+				     c->u.name);
+				continue;
+			}
 			nel++;
+		}
 		buf[0] = cpu_to_le32(nel);
 		items = put_entry(buf, sizeof(uint32_t), 1, fp);
 		if (items != 1)
@@ -1402,6 +1417,8 @@ static int ocontext_write_selinux(struct policydb_compat_info *info,
 		for (c = p->ocontexts[i]; c; c = c->next) {
 			switch (i) {
 			case OCON_ISID:
+				if (!c->context[0].user)
+					break;
 				buf[0] = cpu_to_le32(c->sid[0]);
 				items = put_entry(buf, sizeof(uint32_t), 1, fp);
 				if (items != 1)
@@ -1574,6 +1591,7 @@ struct rangetrans_write_args {
 	size_t nel;
 	int new_rangetr;
 	struct policy_file *fp;
+	struct policydb *p;
 };
 
 static int rangetrans_count(hashtab_key_t key,
@@ -1582,11 +1600,12 @@ static int rangetrans_count(hashtab_key_t key,
 {
 	struct range_trans *rt = (struct range_trans *)key;
 	struct rangetrans_write_args *args = ptr;
+	struct policydb *p = args->p;
 
 	/* all range_transitions are written for the new format, only
 	   process related range_transitions are written for the old
 	   format, so count accordingly */
-	if (args->new_rangetr || rt->target_class == SECCLASS_PROCESS)
+	if (args->new_rangetr || rt->target_class == p->process_class)
 		args->nel++;
 	return 0;
 }
@@ -1598,12 +1617,13 @@ static int range_write_helper(hashtab_key_t key, void *data, void *ptr)
 	struct mls_range *r = data;
 	struct rangetrans_write_args *args = ptr;
 	struct policy_file *fp = args->fp;
+	struct policydb *p = args->p;
 	int new_rangetr = args->new_rangetr;
 	size_t items;
 	static int warning_issued = 0;
 	int rc;
 
-	if (!new_rangetr && rt->target_class != SECCLASS_PROCESS) {
+	if (!new_rangetr && rt->target_class != p->process_class) {
 		if (!warning_issued)
 			WARN(fp->handle, "Discarding range_transition "
 			     "rules for security classes other than "
@@ -1642,6 +1662,7 @@ static int range_write(policydb_t * p, struct policy_file *fp)
 	args.nel = 0;
 	args.new_rangetr = new_rangetr;
 	args.fp = fp;
+	args.p = p;
 	rc = hashtab_map(p->range_tr, rangetrans_count, &args);
 	if (rc)
 		return rc;
@@ -1766,13 +1787,18 @@ static int avrule_write_list(policydb_t *p, avrule_t * avrules,
 	return POLICYDB_SUCCESS;
 }
 
-static int only_process(ebitmap_t *in)
+static int only_process(ebitmap_t *in, struct policydb *p)
 {
-	unsigned int i;
+	unsigned int i, value;
 	ebitmap_node_t *node;
 
+	if (!p->process_class)
+		return 0;
+
+	value = p->process_class - 1;
+
 	ebitmap_for_each_positive_bit(in, node, i) {
-		if (i != SECCLASS_PROCESS - 1)
+		if (i != value)
 			return 0;
 	}
 	return 1;
@@ -1789,7 +1815,7 @@ static int role_trans_rule_write(policydb_t *p, role_trans_rule_t * t,
 	int new_role = p->policyvers >= MOD_POLICYDB_VERSION_ROLETRANS;
 
 	for (tr = t; tr; tr = tr->next)
-		if (new_role || only_process(&tr->classes))
+		if (new_role || only_process(&tr->classes, p))
 			nel++;
 
 	buf[0] = cpu_to_le32(nel);
@@ -1797,7 +1823,7 @@ static int role_trans_rule_write(policydb_t *p, role_trans_rule_t * t,
 	if (items != 1)
 		return POLICYDB_ERROR;
 	for (tr = t; tr; tr = tr->next) {
-		if (!new_role && !only_process(&tr->classes)) {
+		if (!new_role && !only_process(&tr->classes, p)) {
 			if (!warned)
 				WARN(fp->handle, "Discarding role_transition "
 					"rules for security classes other than "

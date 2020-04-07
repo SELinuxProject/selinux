@@ -439,8 +439,7 @@ int __cil_verify_initsids(struct cil_list *sids)
 		struct cil_sid *sid = i->data;
 		if (sid->context == NULL) {
 			struct cil_tree_node *node = sid->datum.nodes->head->data;
-			cil_tree_log(node, CIL_ERR, "No context assigned to SID %s declared",sid->datum.name);
-			rc = SEPOL_ERR;
+			cil_tree_log(node, CIL_INFO, "No context assigned to SID %s, omitting from policy",sid->datum.name);
 		}
 	}
 
@@ -1545,25 +1544,49 @@ exit:
 	return rc;
 }
 
-static int __cil_verify_classperms(struct cil_list *classperms, struct cil_symtab_datum *orig)
+static int __cil_verify_classperms(struct cil_list *classperms,
+				   struct cil_symtab_datum *orig,
+				   struct cil_symtab_datum *parent,
+				   struct cil_symtab_datum *cur,
+				   enum cil_flavor flavor,
+				   unsigned steps, unsigned limit)
 {
 	int rc = SEPOL_ERR;
 	struct cil_list_item *curr;
 
+	if (classperms == NULL) {
+		if (flavor == CIL_MAP_PERM) {
+			cil_tree_log(NODE(cur), CIL_ERR, "Map class %s does not have a classmapping for %s", parent->name, cur->name);
+		} else {
+			cil_tree_log(NODE(cur), CIL_ERR, "Classpermission %s does not have a classpermissionset", cur->name);
+		}
+		goto exit;
+	}
+
+	if (steps > 0 && orig == cur) {
+		if (flavor == CIL_MAP_PERM) {
+			cil_tree_log(NODE(cur), CIL_ERR, "Found circular class permissions involving the map class %s and permission %s", parent->name, cur->name);
+		} else {
+			cil_tree_log(NODE(cur), CIL_ERR, "Found circular class permissions involving the set %s", cur->name);
+		}
+		goto exit;
+	} else {
+		steps++;
+		if (steps > limit) {
+			steps = 1;
+			limit *= 2;
+			orig = cur;
+		}
+	}
+
 	cil_list_for_each(curr, classperms) {
 		if (curr->flavor == CIL_CLASSPERMS) {
 			struct cil_classperms *cp = curr->data;
-			if (FLAVOR(cp->class) == CIL_CLASS) {
-				return SEPOL_OK;
-			} else { /* MAP */
+			if (FLAVOR(cp->class) != CIL_CLASS) { /* MAP */
 				struct cil_list_item *i = NULL;
 				cil_list_for_each(i, cp->perms) {
 					struct cil_perm *cmp = i->data;
-					if (&cmp->datum == orig) {
-						rc = SEPOL_ERR;
-						goto exit;
-					}
-					rc = __cil_verify_classperms(cmp->classperms, orig);
+					rc = __cil_verify_classperms(cmp->classperms, orig, &cp->class->datum, &cmp->datum, CIL_MAP_PERM, steps, limit);
 					if (rc != SEPOL_OK) {
 						goto exit;
 					}
@@ -1572,11 +1595,7 @@ static int __cil_verify_classperms(struct cil_list *classperms, struct cil_symta
 		} else { /* SET */
 			struct cil_classperms_set *cp_set = curr->data;
 			struct cil_classpermission *cp = cp_set->set;
-			if (&cp->datum == orig) {
-				rc = SEPOL_ERR;
-				goto exit;
-			}
-			rc = __cil_verify_classperms(cp->classperms, orig);
+			rc = __cil_verify_classperms(cp->classperms, orig, NULL, &cp->datum, CIL_CLASSPERMISSION, steps, limit);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
@@ -1586,30 +1605,14 @@ static int __cil_verify_classperms(struct cil_list *classperms, struct cil_symta
 	return SEPOL_OK;
 
 exit:
-	return rc;
+	return SEPOL_ERR;
 }
 
 static int __cil_verify_classpermission(struct cil_tree_node *node)
 {
-	int rc = SEPOL_ERR;
 	struct cil_classpermission *cp = node->data;
 
-	if (cp->classperms == NULL) {
-		cil_tree_log(node, CIL_ERR, "Classpermission %s does not have a classpermissionset", cp->datum.name);
-		rc = SEPOL_ERR;
-		goto exit;
-	}
-
-	rc = __cil_verify_classperms(cp->classperms, &cp->datum);
-	if (rc != SEPOL_OK) {
-		cil_tree_log(node, CIL_ERR, "Found circular class permissions involving the set %s",cp->datum.name);
-		goto exit;
-	}
-
-	rc = SEPOL_OK;
-
-exit:
-	return rc;
+	return __cil_verify_classperms(cp->classperms, &cp->datum, NULL, &cp->datum, CIL_CLASSPERMISSION, 0, 2);
 }
 
 struct cil_verify_map_args {
@@ -1620,24 +1623,11 @@ struct cil_verify_map_args {
 
 static int __verify_map_perm_classperms(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
 {
-	int rc = SEPOL_ERR;
 	struct cil_verify_map_args *map_args = args;
 	struct cil_perm *cmp = (struct cil_perm *)d;
 
-	if (cmp->classperms == NULL) {
-		cil_tree_log(map_args->node, CIL_ERR, "Map class %s does not have a classmapping for %s", map_args->class->datum.name, cmp->datum.name);
-		map_args->rc = SEPOL_ERR;
-		goto exit;
-	}
+	map_args->rc = __cil_verify_classperms(cmp->classperms, &cmp->datum, &map_args->class->datum, &cmp->datum, CIL_MAP_PERM, 0, 2);
 
-	rc = __cil_verify_classperms(cmp->classperms, &cmp->datum);
-	if (rc != SEPOL_OK) {
-		cil_tree_log(map_args->node, CIL_ERR, "Found circular class permissions involving the map class %s and permission %s", map_args->class->datum.name, cmp->datum.name);
-		map_args->rc = SEPOL_ERR;
-		goto exit;
-	}
-
-exit:
 	return SEPOL_OK;
 }
 
