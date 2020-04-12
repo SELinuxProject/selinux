@@ -250,7 +250,9 @@ static int fallback_cb_policyload(int policyload)
  * Since Linux 2.6.37 or later supports this feature, we may run
  * fallback routine using a netlink socket on older kernels, if
  * the supplied `fallback' is not zero.
- * It returns 0 on success, or -1 on error.
+ * It returns 0 on success, -1 on error or 1 when we are ready to
+ * use these interfaces, but netlink socket was opened as fallback
+ * instead of the kernel status page.
  */
 int selinux_status_open(int fallback)
 {
