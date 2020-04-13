@@ -50,6 +50,8 @@ install: all
 	install -m 644 org.selinux.Restorecond.service  $(DESTDIR)$(DBUSSERVICEDIR)/org.selinux.Restorecond.service
 	-mkdir -p $(DESTDIR)$(SYSTEMDDIR)/system
 	install -m 644 restorecond.service $(DESTDIR)$(SYSTEMDDIR)/system/
+	-mkdir -p $(DESTDIR)$(SYSTEMDDIR)/user
+	install -m 644 restorecond-user.service $(DESTDIR)$(SYSTEMDDIR)/user/
 relabel: install
 	/sbin/restorecon $(DESTDIR)$(SBINDIR)/restorecond 
 

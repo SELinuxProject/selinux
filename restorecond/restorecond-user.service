@@ -1,0 +1,10 @@
+[Unit]
+Description=Restorecon maintaining path file context (user service)
+Documentation=man:restorecond(8)
+ConditionPathExists=/etc/selinux/restorecond_user.conf
+ConditionSecurity=selinux
+
+[Service]
+Type=dbus
+BusName=org.selinux.Restorecond
+ExecStart=/usr/sbin/restorecond -u
