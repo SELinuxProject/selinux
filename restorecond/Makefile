@@ -13,13 +13,13 @@ autostart_DATA = sealertauto.desktop
 INITDIR ?= /etc/rc.d/init.d
 SELINUXDIR = /etc/selinux
 
-DBUSFLAGS = -DHAVE_DBUS $(shell $(PKG_CONFIG) --cflags dbus-glib-1)
-DBUSLIB = $(shell $(PKG_CONFIG) --libs dbus-glib-1)
+GIO_CFLAGS = -DHAVE_DBUS $(shell $(PKG_CONFIG) --cflags gio-2.0)
+GIO_LIBS = $(shell $(PKG_CONFIG) --libs gio-2.0)
 
 CFLAGS ?= -g -Werror -Wall -W
-override CFLAGS += $(DBUSFLAGS)
+override CFLAGS += $(GIO_CFLAGS)
 
-override LDLIBS += -lselinux $(DBUSLIB)
+override LDLIBS += -lselinux $(GIO_LIBS)
 
 all: restorecond
 

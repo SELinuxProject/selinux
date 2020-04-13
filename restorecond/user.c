@@ -2,6 +2,7 @@
  * restorecond
  *
  * Copyright (C) 2006-2009 Red Hat
+ * Copyright (C) 2020 Nicolas Iooss
  * see file 'COPYING' for use and warranty information
  *
  * This program is free software; you can redistribute it and/or
@@ -21,7 +22,7 @@
  *
  * Authors:
  *   Dan Walsh <dwalsh@redhat.com>
- *
+ *   Nicolas Iooss <nicolas.iooss@m4x.org>
 */
 
 #define _GNU_SOURCE
@@ -33,73 +34,75 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <sys/file.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <syslog.h>
 #include <limits.h>
 #include <fcntl.h>
 
+#include <selinux/selinux.h>
+
 #include "restorecond.h"
 #include "stringslist.h"
 #include <glib.h>
-#ifdef HAVE_DBUS
-#include <dbus/dbus.h>
-#include <dbus/dbus-glib.h>
-#include <dbus/dbus-glib-lowlevel.h>
-
-static DBusHandlerResult signal_filter (DBusConnection *connection, DBusMessage *message, void *user_data);
-
-static const char *PATH="/org/selinux/Restorecond";
-//static const char *BUSNAME="org.selinux.Restorecond";
-static const char *INTERFACE="org.selinux.RestorecondIface";
-static const char *RULE="type='signal',interface='org.selinux.RestorecondIface'";
 
 static int local_lock_fd = -1;
 
-static DBusHandlerResult
-signal_filter (DBusConnection *connection  __attribute__ ((__unused__)), DBusMessage *message, void *user_data)
+#ifdef HAVE_DBUS
+#include <gio/gio.h>
+
+static const char *DBUS_NAME = "org.selinux.Restorecond";
+
+static void on_name_acquired(GDBusConnection *connection G_GNUC_UNUSED,
+			     const gchar *name,
+			     gpointer user_data G_GNUC_UNUSED)
 {
-  /* User data is the event loop we are running in */
-  GMainLoop *loop = user_data;
-
-  /* A signal from the bus saying we are about to be disconnected */
-  if (dbus_message_is_signal
-        (message, INTERFACE, "Stop")) {
-
-      /* Tell the main loop to quit */
-      g_main_loop_quit (loop);
-      /* We have handled this message, don't pass it on */
-      return DBUS_HANDLER_RESULT_HANDLED;
-  }
-  /* A Ping signal on the com.burtonini.dbus.Signal interface */
-  else if (dbus_message_is_signal (message, INTERFACE, "Start")) {
-    DBusError error;
-    dbus_error_init (&error);
-    g_print("Start received\n");
-    return DBUS_HANDLER_RESULT_HANDLED;
-  }
-  return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	if (debug_mode)
+		g_print("D-Bus name acquired: %s\n", name);
 }
 
-static int dbus_server(GMainLoop *loop) {
-    DBusConnection *bus;
-    DBusError error;
-    dbus_error_init (&error);
-    bus = dbus_bus_get (DBUS_BUS_SESSION, &error);
-    if (bus) {
-	dbus_connection_setup_with_g_main (bus, NULL);
+static void on_name_lost(GDBusConnection *connection G_GNUC_UNUSED,
+			 const gchar *name,
+			 gpointer user_data)
+{
+	/* Exit when the D-Bus connection closes */
+	GMainLoop *loop = user_data;
 
-	/* listening to messages from all objects as no path is specified */
-	dbus_bus_add_match (bus, RULE, &error); // see signals from the given interfacey
-	dbus_connection_add_filter (bus, signal_filter, loop, NULL);
+	if (debug_mode)
+		g_print("D-Bus name lost (%s), exiting\n", name);
+	g_main_loop_quit(loop);
+}
+
+/**
+ * Try starting a D-Bus server on the session bus.
+ * Returns -1 if the connection failed, so that a local server can be launched
+ */
+static int dbus_server(GMainLoop *loop)
+{
+	GDBusConnection *bus;
+	guint client_id;
+
+	bus = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, NULL);
+	if (!bus)
+		return -1;
+
+	client_id = g_bus_own_name_on_connection(
+		bus,
+		DBUS_NAME,
+		G_BUS_NAME_OWNER_FLAGS_NONE,
+		on_name_acquired,
+		on_name_lost,
+		loop,
+		NULL);
+	g_object_unref(bus);
+	if (client_id == 0)
+		return -1;
+
 	return 0;
-    }
-    return -1;
 }
 
 #endif
-#include <selinux/selinux.h>
-#include <sys/file.h>
 
 /* size of the event structure, not counting name */
 #define EVENT_SIZE  (sizeof (struct inotify_event))
@@ -167,29 +170,42 @@ io_channel_callback
 
 int start() {
 #ifdef HAVE_DBUS
-	DBusConnection *bus;
-	DBusError error;
-	DBusMessage *message;
+	GDBusConnection *bus;
+	GError *err = NULL;
+	GVariant *result;
 
 	/* Get a connection to the session bus */
-	dbus_error_init (&error);
-	bus = dbus_bus_get (DBUS_BUS_SESSION, &error);
+	bus = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, &err);
 	if (!bus) {
 		if (debug_mode)
-			g_warning ("Failed to connect to the D-BUS daemon: %s", error.message);
-		dbus_error_free (&error);
+			g_warning("Failed to connect to the D-BUS daemon: %s", err->message);
+		g_error_free(err);
 		return 1;
 	}
 
-
-	/* Create a new signal "Start" on the interface,
-	 * from the object  */
-	message = dbus_message_new_signal (PATH,
-					   INTERFACE, "Start");
-	/* Send the signal */
-	dbus_connection_send (bus, message, NULL);
-	/* Free the signal now we have finished with it */
-	dbus_message_unref (message);
+	/* Start restorecond D-Bus service by pinging its bus name
+	 *
+	 * https://dbus.freedesktop.org/doc/dbus-specification.html#standard-interfaces-peer
+	 */
+	result = g_dbus_connection_call_sync(bus,
+					     DBUS_NAME, /* bus name */
+					     "/", /* object path */
+					     "org.freedesktop.DBus.Peer", /* interface */
+					     "Ping", /* method */
+					     NULL, /* parameters */
+					     NULL, /* reply_type */
+					     G_DBUS_CALL_FLAGS_NONE,
+					     -1, /* timeout_msec */
+					     NULL,
+					     &err);
+	if (!result) {
+		g_object_unref(bus);
+		if (debug_mode)
+			g_warning("Failed to start %s: %s", DBUS_NAME, err->message);
+		g_error_free(err);
+		return 1;
+	}
+	g_object_unref(bus);
 #endif /* HAVE_DBUS */
 	return 0;
 }
