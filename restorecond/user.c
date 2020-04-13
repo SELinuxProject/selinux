@@ -46,6 +46,7 @@
 #include "restorecond.h"
 #include "stringslist.h"
 #include <glib.h>
+#include <glib-unix.h>
 
 static int local_lock_fd = -1;
 
@@ -250,35 +251,54 @@ static void end_local_server(void) {
 	local_lock_fd = -1;
 }
 
-int server(int master_fd, const char *watch_file) {
-    GMainLoop *loop;
+static int sigterm_handler(gpointer user_data)
+{
+	GMainLoop *loop = user_data;
 
-    loop = g_main_loop_new (NULL, FALSE);
+	if (debug_mode)
+		g_print("Received SIGTERM, exiting\n");
+	g_main_loop_quit(loop);
+	return FALSE;
+}
+
+
+int server(int master_fd, const char *watch_file) {
+	GMainLoop *loop;
+
+	loop = g_main_loop_new (NULL, FALSE);
 
 #ifdef HAVE_DBUS
-    if (dbus_server(loop) != 0)
+	if (dbus_server(loop) != 0)
 #endif /* HAVE_DBUS */
-	    if (local_server())
-		    goto end;
+		if (local_server())
+			goto end;
 
-    read_config(master_fd, watch_file);
+	read_config(master_fd, watch_file);
 
-    if (watch_list_isempty()) goto end;
+	if (watch_list_isempty())
+		goto end;
 
-    set_matchpathcon_flags(MATCHPATHCON_NOTRANS);
+	set_matchpathcon_flags(MATCHPATHCON_NOTRANS);
 
-    GIOChannel *c = g_io_channel_unix_new(master_fd);
+	GIOChannel *c = g_io_channel_unix_new(master_fd);
 
-    g_io_add_watch_full( c,
-			 G_PRIORITY_HIGH,
-			 G_IO_IN|G_IO_ERR|G_IO_HUP,
-			 io_channel_callback, NULL, NULL);
+	g_io_add_watch_full(c,
+			    G_PRIORITY_HIGH,
+			    G_IO_IN|G_IO_ERR|G_IO_HUP,
+			    io_channel_callback, NULL, NULL);
 
-    g_main_loop_run (loop);
+	/* Handle SIGTERM */
+	g_unix_signal_add_full(G_PRIORITY_DEFAULT,
+			       SIGTERM,
+			       sigterm_handler,
+			       loop,
+			       NULL);
+
+	g_main_loop_run (loop);
 
 end:
-    end_local_server();
-    g_main_loop_unref (loop);
-    return 0;
+	end_local_server();
+	g_main_loop_unref (loop);
+	return 0;
 }
 
