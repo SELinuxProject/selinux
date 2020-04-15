@@ -619,7 +619,11 @@ extern int selinux_check_access(const char * scon, const char * tcon, const char
 /* Check a permission in the passwd class.
    Return 0 if granted or -1 otherwise. */
 extern int selinux_check_passwd_access(access_vector_t requested);
-extern int checkPasswdAccess(access_vector_t requested);
+extern int checkPasswdAccess(access_vector_t requested)
+#ifdef __GNUC__
+   __attribute__ ((deprecated("Use selinux_check_access")))
+#endif
+;
 
 /* Check if the tty_context is defined as a securetty
    Return 0 if secure, < 0 otherwise. */
