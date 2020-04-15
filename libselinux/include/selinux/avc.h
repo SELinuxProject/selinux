@@ -200,7 +200,11 @@ extern int avc_init(const char *msgprefix,
 		    const struct avc_memory_callback *mem_callbacks,
 		    const struct avc_log_callback *log_callbacks,
 		    const struct avc_thread_callback *thread_callbacks,
-		    const struct avc_lock_callback *lock_callbacks);
+		    const struct avc_lock_callback *lock_callbacks)
+#ifdef __GNUC__
+	__attribute__ ((deprecated("Use avc_open and selinux_set_callback")))
+#endif
+;
 
 /**
  * avc_open - Initialize the AVC.
