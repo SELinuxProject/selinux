@@ -645,7 +645,11 @@ extern int setexecfilecon(const char *filename, const char *fallback_type);
 /* Execute a helper for rpm in an appropriate security context. */
 extern int rpm_execcon(unsigned int verified,
 		       const char *filename,
-		       char *const argv[], char *const envp[]);
+		       char *const argv[], char *const envp[])
+#ifdef __GNUC__
+	__attribute__((deprecated("Use setexecfilecon and execve")))
+#endif
+;
 #endif
 
 /* Returns whether a file context is customizable, and should not 
