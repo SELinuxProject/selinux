@@ -80,7 +80,11 @@ __attribute__ ((deprecated))
  * zero, the SID is invalid, and avc_context_to_sid() must
  * be called to obtain a new SID for the security context.
  */
-extern int sidput(security_id_t sid);
+extern int sidput(security_id_t sid)
+#ifdef __GNUC__
+__attribute__ ((deprecated))
+#endif
+;
 
 /**
  * avc_get_initial_sid - get SID for an initial kernel security identifier
