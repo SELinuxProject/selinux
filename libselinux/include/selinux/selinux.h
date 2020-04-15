@@ -325,7 +325,11 @@ extern int security_set_boolean_list(size_t boolcnt,
 /* Load policy boolean settings. Deprecated as local policy booleans no
  * longer supported. Will always return -1.
  */
-extern int security_load_booleans(char *path);
+extern int security_load_booleans(char *path)
+#ifdef __GNUC__
+__attribute__ ((deprecated))
+#endif
+;
 
 /* Check the validity of a security context. */
 extern int security_check_context(const char * con);
