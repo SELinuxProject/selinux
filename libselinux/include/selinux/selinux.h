@@ -323,7 +323,7 @@ extern int security_set_boolean_list(size_t boolcnt,
 				     SELboolean * boollist, int permanent);
 
 /* Load policy boolean settings. Deprecated as local policy booleans no
- * longer supported. Will always return 0.
+ * longer supported. Will always return -1.
  */
 extern int security_load_booleans(char *path);
 
