@@ -579,7 +579,11 @@ extern const char *selinux_contexts_path(void);
 extern const char *selinux_securetty_types_path(void);
 extern const char *selinux_booleans_subs_path(void);
 /* Deprecated as local policy booleans no longer supported. */
-extern const char *selinux_booleans_path(void);
+extern const char *selinux_booleans_path(void)
+#ifdef __GNUC__
+__attribute__ ((deprecated))
+#endif
+;
 extern const char *selinux_customizable_types_path(void);
 /* Deprecated as policy ./users no longer supported. */
 extern const char *selinux_users_path(void);
