@@ -465,7 +465,11 @@ extern void set_matchpathcon_flags(unsigned int flags);
    function also checks for a 'path'.homedirs file and 
    a 'path'.local file and loads additional specifications 
    from them if present. */
-extern int matchpathcon_init(const char *path);
+extern int matchpathcon_init(const char *path)
+#ifdef __GNUC__
+   __attribute__ ((deprecated("Use selabel_open with backend SELABEL_CTX_FILE")))
+#endif
+;
 
 /* Same as matchpathcon_init, but only load entries with
    regexes that have stems that are prefixes of 'prefix'. */
