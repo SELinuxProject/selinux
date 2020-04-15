@@ -73,6 +73,9 @@ int main(int argc, char **argv)
 	int error = 0;
 	int quiet = 0;
 
+	fprintf(stderr,
+		"Deprecated, use selabel_lookup\n");
+
 	if (argc < 2)
 		usage(argv[0]);
 
