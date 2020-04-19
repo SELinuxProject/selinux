@@ -1895,10 +1895,10 @@ class nodeRecords(semanageRecords):
         (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
         if rc < 0:
             raise ValueError(_("Could not create key for %s") % addr)
-        if rc < 0:
-            raise ValueError(_("Could not check if addr %s is defined") % addr)
 
         (rc, exists) = semanage_node_exists(self.sh, k)
+        if rc < 0:
+            raise ValueError(_("Could not check if addr %s is defined") % addr)
         if exists:
             raise ValueError(_("Addr %s already defined") % addr)
 
