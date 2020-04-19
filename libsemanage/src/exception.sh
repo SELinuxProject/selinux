@@ -6,8 +6,7 @@ echo "
      PyErr_SetFromErrno(PyExc_OSError);
      SWIG_fail;
   }
-}
-"
+}"
 }
 if ! ${CC:-gcc} -x c -c -I../include -o temp.o - -aux-info temp.aux < ../include/semanage/semanage.h
 then

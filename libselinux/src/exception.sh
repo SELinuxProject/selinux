@@ -12,8 +12,7 @@ echo "
      PyErr_SetFromErrno(PyExc_OSError);
      SWIG_fail;
   }
-}
-"
+}"
 ;;
 esac
 }
