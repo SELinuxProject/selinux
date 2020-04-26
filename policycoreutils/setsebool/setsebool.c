@@ -200,8 +200,10 @@ static int semanage_set_boolean_list(size_t boolcnt,
 
 	if (no_reload)
 		semanage_set_reload(handle, 0);
-	if (semanage_commit(handle) < 0)
+	if (semanage_commit(handle) < 0) {
+		fprintf(stderr, "Failed to commit changes to booleans: %m\n");
 		goto err;
+	}
 
 	semanage_disconnect(handle);
 	semanage_handle_destroy(handle);
