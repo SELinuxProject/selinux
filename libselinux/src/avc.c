@@ -145,22 +145,7 @@ int avc_get_initial_sid(const char * name, security_id_t * sid)
 	return rc;
 }
 
-int avc_open(struct selinux_opt *opts, unsigned nopts)
-{
-	avc_setenforce = 0;
-
-	while (nopts--)
-		switch(opts[nopts].type) {
-		case AVC_OPT_SETENFORCE:
-			avc_setenforce = 1;
-			avc_enforcing = !!opts[nopts].value;
-			break;
-		}
-
-	return avc_init("avc", NULL, NULL, NULL, NULL);
-}
-
-int avc_init(const char *prefix,
+static int avc_init_internal(const char *prefix,
 	     const struct avc_memory_callback *mem_cb,
 	     const struct avc_log_callback *log_cb,
 	     const struct avc_thread_callback *thread_cb,
@@ -244,6 +229,30 @@ int avc_init(const char *prefix,
 	avc_running = 1;
       out:
 	return rc;
+}
+
+int avc_open(struct selinux_opt *opts, unsigned nopts)
+{
+	avc_setenforce = 0;
+
+	while (nopts--)
+		switch(opts[nopts].type) {
+		case AVC_OPT_SETENFORCE:
+			avc_setenforce = 1;
+			avc_enforcing = !!opts[nopts].value;
+			break;
+		}
+
+	return avc_init_internal("avc", NULL, NULL, NULL, NULL);
+}
+
+int avc_init(const char *prefix,
+	     const struct avc_memory_callback *mem_cb,
+	     const struct avc_log_callback *log_cb,
+	     const struct avc_thread_callback *thread_cb,
+	     const struct avc_lock_callback *lock_cb)
+{
+	return avc_init_internal(prefix, mem_cb, log_cb, thread_cb, lock_cb);
 }
 
 void avc_cache_stats(struct avc_cache_stats *p)
