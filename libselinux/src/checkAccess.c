@@ -64,7 +64,7 @@ int selinux_check_access(const char *scon, const char *tcon, const char *class, 
        return avc_has_perm (scon_id, tcon_id, sclass, av, NULL, aux);
 }
 
-int selinux_check_passwd_access(access_vector_t requested)
+static int selinux_check_passwd_access_internal(access_vector_t requested)
 {
 	int status = -1;
 	char *user_context;
@@ -99,8 +99,11 @@ int selinux_check_passwd_access(access_vector_t requested)
 	return status;
 }
 
+int selinux_check_passwd_access(access_vector_t requested) {
+	return selinux_check_passwd_access_internal(requested);
+}
 
 int checkPasswdAccess(access_vector_t requested)
 {
-	return selinux_check_passwd_access(requested);
+	return selinux_check_passwd_access_internal(requested);
 }
