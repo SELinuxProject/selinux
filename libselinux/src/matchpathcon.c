@@ -315,9 +315,19 @@ void matchpathcon_filespec_destroy(void)
 	fl_head = NULL;
 }
 
+static void matchpathcon_fini_internal(void)
+{
+	free_array_elts();
+
+	if (hnd) {
+		selabel_close(hnd);
+		hnd = NULL;
+	}
+}
+
 static void matchpathcon_thread_destructor(void __attribute__((unused)) *ptr)
 {
-	matchpathcon_fini();
+	matchpathcon_fini_internal();
 }
 
 void __attribute__((destructor)) matchpathcon_lib_destructor(void);
@@ -359,12 +369,7 @@ int matchpathcon_init(const char *path)
 
 void matchpathcon_fini(void)
 {
-	free_array_elts();
-
-	if (hnd) {
-		selabel_close(hnd);
-		hnd = NULL;
-	}
+	matchpathcon_fini_internal();
 }
 
 /*
@@ -427,7 +432,7 @@ out:
 	return rc;
 }
 
-int matchpathcon(const char *path, mode_t mode, char ** con)
+static int matchpathcon_internal(const char *path, mode_t mode, char ** con)
 {
 	char stackpath[PATH_MAX + 1];
 	char *p = NULL;
@@ -448,9 +453,13 @@ int matchpathcon(const char *path, mode_t mode, char ** con)
 		selabel_lookup(hnd, con, path, mode);
 }
 
+int matchpathcon(const char *path, mode_t mode, char ** con) {
+	return matchpathcon_internal(path, mode, con);
+}
+
 int matchpathcon_index(const char *name, mode_t mode, char ** con)
 {
-	int i = matchpathcon(name, mode, con);
+	int i = matchpathcon_internal(name, mode, con);
 
 	if (i < 0)
 		return -1;
