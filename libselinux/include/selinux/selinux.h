@@ -14,7 +14,11 @@ extern int is_selinux_enabled(void);
 extern int is_selinux_mls_enabled(void);
 
 /* No longer used; here for compatibility with legacy callers. */
-typedef char *security_context_t;
+typedef char *security_context_t
+#ifdef __GNUC__
+__attribute__ ((deprecated))
+#endif
+;
 
 /* Free the memory allocated for a context by any of the below get* calls. */
 extern void freecon(char * con);
