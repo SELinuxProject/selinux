@@ -7,7 +7,8 @@ SBINDIR ?= $(PREFIX)/sbin
 MANDIR = $(PREFIX)/share/man
 AUTOSTARTDIR = /etc/xdg/autostart
 DBUSSERVICEDIR = $(PREFIX)/share/dbus-1/services
-SYSTEMDDIR ?= $(PREFIX)/lib/systemd
+SYSTEMDSYSTEMUNITDIR ?= $(shell $(PKG_CONFIG) --variable=systemdsystemunitdir systemd)
+SYSTEMDUSERUNITDIR ?= $(shell $(PKG_CONFIG) --variable=systemduserunitdir systemd)
 
 autostart_DATA = sealertauto.desktop
 INITDIR ?= /etc/rc.d/init.d
@@ -48,10 +49,10 @@ install: all
 	install -m 644 restorecond.desktop $(DESTDIR)$(AUTOSTARTDIR)/restorecond.desktop
 	-mkdir -p $(DESTDIR)$(DBUSSERVICEDIR)
 	install -m 644 org.selinux.Restorecond.service  $(DESTDIR)$(DBUSSERVICEDIR)/org.selinux.Restorecond.service
-	-mkdir -p $(DESTDIR)$(SYSTEMDDIR)/system
-	install -m 644 restorecond.service $(DESTDIR)$(SYSTEMDDIR)/system/
-	-mkdir -p $(DESTDIR)$(SYSTEMDDIR)/user
-	install -m 644 restorecond_user.service $(DESTDIR)$(SYSTEMDDIR)/user/
+	-mkdir -p $(DESTDIR)$(SYSTEMDSYSTEMUNITDIR)
+	install -m 644 restorecond.service $(DESTDIR)$(SYSTEMDSYSTEMUNITDIR)
+	-mkdir -p $(DESTDIR)$(SYSTEMDUSERUNITDIR)
+	install -m 644 restorecond_user.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)
 relabel: install
 	/sbin/restorecon $(DESTDIR)$(SBINDIR)/restorecond 
 
