@@ -51,7 +51,7 @@ install: all
 	-mkdir -p $(DESTDIR)$(SYSTEMDDIR)/system
 	install -m 644 restorecond.service $(DESTDIR)$(SYSTEMDDIR)/system/
 	-mkdir -p $(DESTDIR)$(SYSTEMDDIR)/user
-	install -m 644 restorecond-user.service $(DESTDIR)$(SYSTEMDDIR)/user/
+	install -m 644 restorecond_user.service $(DESTDIR)$(SYSTEMDDIR)/user/
 relabel: install
 	/sbin/restorecon $(DESTDIR)$(SBINDIR)/restorecond 
 

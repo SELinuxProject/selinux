@@ -1,4 +1,4 @@
 [D-BUS Service]
 Name=org.selinux.Restorecond
 Exec=/usr/sbin/restorecond -u
-SystemdService=restorecond-user.service
+SystemdService=restorecond_user.service
