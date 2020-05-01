@@ -24,8 +24,14 @@ fi
 export LD_LIBRARY_PATH="$DESTDIR/usr/lib:$DESTDIR/lib"
 export PATH="$DESTDIR/usr/sbin:$DESTDIR/usr/bin:$DESTDIR/sbin:$DESTDIR/bin:$PATH"
 
-# shellcheck disable=SC2155
-export PYTHONPATH="$DESTDIR$(${PYTHON:-python3} -c "from distutils.sysconfig import *;print(get_python_lib(prefix='/usr'))")"
+NEW_PYTHONPATH="$DESTDIR$(${PYTHON:-python3} -c "from distutils.sysconfig import *;print(get_python_lib(plat_specific=1, prefix='/usr'))"):$DESTDIR$(${PYTHON:-python3} -c "from distutils.sysconfig import *;print(get_python_lib(prefix='/usr'))")"
+if [ -n "${PYTHONPATH:-}" ] ; then
+    # Prefix the PYTHONPATH with the new directories
+    export PYTHONPATH="$NEW_PYTHONPATH:$PYTHONPATH"
+else
+    # Define PYTHONPATH
+    export PYTHONPATH="$NEW_PYTHONPATH"
+fi
 
 # shellcheck disable=SC2155
 export RUBYLIB="$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
