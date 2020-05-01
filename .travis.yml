@@ -53,7 +53,6 @@ addons:
     - libcap-ng-dev # This package is not whitelisted for the container infrastructure (https://github.com/travis-ci/apt-package-whitelist/issues/1096)
     - libcunit1-dev
     - libdbus-glib-1-dev
-    - libncurses5-dev
     - libpcre3-dev
     - patch
     - python3-dev
