@@ -22,7 +22,26 @@ if [ -z "${DESTDIR:-}" ] ; then
 fi
 
 export LD_LIBRARY_PATH="$DESTDIR/usr/lib:$DESTDIR/lib"
+if [ -n "${PREFIX:-}" ] ; then
+    LD_LIBRARY_PATH="$DESTDIR$PREFIX/lib:$LD_LIBRARY_PATH"
+fi
+if [ -n "${LIBDIR:-}" ] ; then
+    LD_LIBRARY_PATH="$DESTDIR$LIBDIR:$LD_LIBRARY_PATH"
+fi
+if [ -n "${SHLIBDIR:-}" ] ; then
+    LD_LIBRARY_PATH="$DESTDIR$SHLIBDIR:$LD_LIBRARY_PATH"
+fi
+
 export PATH="$DESTDIR/usr/sbin:$DESTDIR/usr/bin:$DESTDIR/sbin:$DESTDIR/bin:$PATH"
+if [ -n "${PREFIX:-}" ] ; then
+    PATH="$DESTDIR$PREFIX/sbin:$DESTDIR$PREFIX/bin:$LD_LIBRARY_PATH"
+fi
+if [ -n "${BINDIR:-}" ] ; then
+    PATH="$DESTDIR$BINDIR:$PATH"
+fi
+if [ -n "${SBINDIR:-}" ] ; then
+    PATH="$DESTDIR$SBINDIR:$PATH"
+fi
 
 NEW_PYTHONPATH="$DESTDIR$(${PYTHON:-python3} -c "from distutils.sysconfig import *;print(get_python_lib(plat_specific=1, prefix='/usr'))"):$DESTDIR$(${PYTHON:-python3} -c "from distutils.sysconfig import *;print(get_python_lib(prefix='/usr'))")"
 if [ -n "${PYTHONPATH:-}" ] ; then
