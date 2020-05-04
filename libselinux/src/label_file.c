@@ -948,6 +948,8 @@ static const struct spec **lookup_all(struct selabel_handle *rec,
 			goto finish;
 		}
 	}
+	if (!result[0])
+		errno = ENOENT;
 
 finish:
 	free(clean_key);
