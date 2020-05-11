@@ -7,7 +7,7 @@ if [ $# -eq 0 ] ; then
 
     # Run on both files ending with .py and Python files without extension
     # shellcheck disable=SC2046
-    set -- $( (find . -name '*.py' ; grep --exclude-dir=.git -l -e '^#!\s*/usr/bin/python' -e '^#!/usr/bin/env python' -r .) | sort -u )
+    set -- $( (find . -name '*.py' ; grep -l -e '^#!\s*/usr/bin/python' -e '^#!/usr/bin/env python' -r .) | grep -v '^\./\.git/' | sort -u )
     echo "Analyzing $# Python scripts"
 fi
 
