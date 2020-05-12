@@ -919,6 +919,7 @@ new_context_str(const char *incon, const char *range) {
 	}
 	context_range_set(con, range);
 	rcon = strdup(context_str(con));
+	context_free(con);
 	if (!rcon) {
 		goto exit;
 	}
