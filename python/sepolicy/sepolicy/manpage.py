@@ -1074,7 +1074,7 @@ If you wanted to change the default user mapping to use the %(user)s_u user, you
 
 .B semanage login -m -s %(user)s_u __default__
 
-""" % {'desc': self.desc, 'type': self.type, 'user': self.domainname, 'range': self._get_users_range()})
+""" % {'desc': self.desc, 'user': self.domainname, 'range': self._get_users_range()})
 
         if "login_userdomain" in self.attributes and "login_userdomain" in self.all_attributes:
             self.fd.write("""
@@ -1245,7 +1245,7 @@ Execute the following to see the types that the SELinux user %(type)s can execut
 
 .B $ sesearch -A -s %(type)s -c process -p transition
 
-""" % {'user': self.domainname, 'type': self.type})
+""" % {'type': self.type})
 
     def _role_header(self):
         self.fd.write('.TH  "%(user)s_selinux"  "8"  "%(user)s" "mgrepl@redhat.com" "%(user)s SELinux Policy documentation"'
