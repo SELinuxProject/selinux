@@ -707,7 +707,8 @@ static int semanage_filename_select(const struct dirent *d)
 
 /* Copies a file from src to dst.  If dst already exists then
  * overwrite it.  Returns 0 on success, -1 on error. */
-int semanage_copy_file(const char *src, const char *dst, mode_t mode)
+int semanage_copy_file(const char *src, const char *dst, mode_t mode,
+		bool syncrequired)
 {
 	int in, out, retval = 0, amount_read, n, errsv = errno;
 	char tmp[PATH_MAX];
@@ -735,8 +736,11 @@ int semanage_copy_file(const char *src, const char *dst, mode_t mode)
 	}
 	umask(mask);
 	while (retval == 0 && (amount_read = read(in, buf, sizeof(buf))) > 0) {
-		if (write(out, buf, amount_read) < 0) {
-			errsv = errno;
+		if (write(out, buf, amount_read) != amount_read) {
+			if (errno)
+				errsv = errno;
+			else
+				errsv = EIO;
 			retval = -1;
 		}
 	}
@@ -745,6 +749,10 @@ int semanage_copy_file(const char *src, const char *dst, mode_t mode)
 		retval = -1;
 	}
 	close(in);
+	if (syncrequired && fsync(out) < 0) {
+		errsv = errno;
+		retval = -1;
+	}
 	if (close(out) < 0) {
 		errsv = errno;
 		retval = -1;
@@ -811,7 +819,8 @@ static int semanage_copy_dir_flags(const char *src, const char *dst, int flag)
 			umask(mask);
 		} else if (S_ISREG(sb.st_mode) && flag == 1) {
 			mask = umask(0077);
-			if (semanage_copy_file(path, path2, sb.st_mode) < 0) {
+			if (semanage_copy_file(path, path2, sb.st_mode,
+						false) < 0) {
 				umask(mask);
 				goto cleanup;
 			}
@@ -1639,7 +1648,8 @@ static int semanage_install_final_tmp(semanage_handle_t * sh)
 			goto cleanup;
 		}
 
-		ret = semanage_copy_file(src, dst, sh->conf->file_mode);
+		ret = semanage_copy_file(src, dst, sh->conf->file_mode,
+					true);
 		if (ret < 0) {
 			ERR(sh, "Could not copy %s to %s.", src, dst);
 			goto cleanup;

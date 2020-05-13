@@ -24,6 +24,7 @@
 #ifndef SEMANAGE_MODULE_STORE_H
 #define SEMANAGE_MODULE_STORE_H
 
+#include <stdbool.h>
 #include <sys/time.h>
 #include <sepol/module.h>
 #include <sepol/cil/cil.h>
@@ -162,6 +163,7 @@ int semanage_nc_sort(semanage_handle_t * sh,
 		     size_t buf_len,
 		     char **sorted_buf, size_t * sorted_buf_len);
 
-int semanage_copy_file(const char *src, const char *dst, mode_t mode);
+int semanage_copy_file(const char *src, const char *dst, mode_t mode,
+		bool syncrequired);
 
 #endif
