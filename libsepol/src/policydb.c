@@ -2655,15 +2655,8 @@ int filename_trans_read(policydb_t *p, struct policy_file *fp)
 			 * Some old policies were wrongly generated with
 			 * duplicate filename transition rules.  For backward
 			 * compatibility, do not reject such policies, just
-			 * issue a warning and ignore the duplicate.
+			 * ignore the duplicate.
 			 */
-			WARN(fp->handle,
-			     "Duplicate name-based type_transition %s %s:%s \"%s\":  %s, ignoring",
-			     p->p_type_val_to_name[ft->stype - 1],
-			     p->p_type_val_to_name[ft->ttype - 1],
-			     p->p_class_val_to_name[ft->tclass - 1],
-			     ft->name,
-			     p->p_type_val_to_name[otype->otype - 1]);
 			free(ft);
 			free(name);
 			free(otype);
