@@ -13,6 +13,7 @@ restorecon \- restore file(s) default SELinux security contexts.
 .RB [ \-F ]
 .RB [ \-W ]
 .RB [ \-I | \-D ]
+.RB [ \-x ]
 .RB [ \-e
 .IR directory ]
 .IR pathname \ ...
@@ -31,6 +32,7 @@ restorecon \- restore file(s) default SELinux security contexts.
 .RB [ \-F ]
 .RB [ \-W ]
 .RB [ \-I | \-D ]
+.RB [ \-x ]
 
 .SH "DESCRIPTION"
 This manual page describes the
@@ -152,6 +154,11 @@ quote marks or backslashes.  The
 option of GNU
 .B find
 produces input suitable for this mode.
+.TP
+.B \-x
+prevent
+.B restorecon
+from crossing file system boundaries.
 .TP
 .SH "ARGUMENTS"
 .IR pathname \ ...
