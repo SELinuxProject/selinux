@@ -1,8 +1,8 @@
-CWD ?= $(shell pwd)
-HTMLDIR ?= $(CWD)/html
-PDFDIR ?= $(CWD)/pdf
-TMPDIR ?= $(CWD)/tmp
-TESTDIR ?= $(CWD)/../test
+CWD = $(shell pwd)
+HTMLDIR = $(CWD)/html
+PDFDIR = $(CWD)/pdf
+TMPDIR = $(CWD)/tmp
+TESTDIR = $(CWD)/../test
 
 # All the markdown files that make up the guide:
 FILE_LIST ?= cil_introduction.md \
