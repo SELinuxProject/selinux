@@ -782,6 +782,17 @@ static void write_default_mls_level(FILE *out)
 	sepol_printf(out, "(level %s (s0))\n", DEFAULT_LEVEL);
 }
 
+static int map_count_sensitivity_aliases(__attribute__((unused)) char *key, void *data, void *args)
+{
+	level_datum_t *sens = data;
+	unsigned *count = args;
+
+	if (sens->isalias)
+		(*count)++;
+
+	return SEPOL_OK;
+}
+
 static int map_sensitivity_aliases_to_strs(char *key, void *data, void *args)
 {
 	level_datum_t *sens = data;
@@ -799,26 +810,13 @@ static int write_sensitivity_rules_to_cil(FILE *out, struct policydb *pdb)
 {
 	level_datum_t *level;
 	char *prev, *name, *actual;
-	struct strs *strs;
-	unsigned i, num;
+	struct strs *strs = NULL;
+	unsigned i, num = 0;
 	int rc = 0;
-
-	rc = strs_init(&strs, pdb->p_levels.nprim);
-	if (rc != 0) {
-		goto exit;
-	}
 
 	/* sensitivities */
 	for (i=0; i < pdb->p_levels.nprim; i++) {
 		name = pdb->p_sens_val_to_name[i];
-		if (!name) continue;
-		level = hashtab_search(pdb->p_levels.table, name);
-		if (!level) {
-			rc = -1;
-			goto exit;
-		}
-		if (level->isalias) continue;
-
 		sepol_printf(out, "(sensitivity %s)\n", name);
 	}
 
@@ -827,14 +825,6 @@ static int write_sensitivity_rules_to_cil(FILE *out, struct policydb *pdb)
 	prev = NULL;
 	for (i=0; i < pdb->p_levels.nprim; i++) {
 		name = pdb->p_sens_val_to_name[i];
-		if (!name) continue;
-		level = hashtab_search(pdb->p_levels.table, name);
-		if (!level) {
-			rc = -1;
-			goto exit;
-		}
-		if (level->isalias) continue;
-
 		if (prev) {
 			sepol_printf(out, "%s ", prev);
 		}
@@ -845,6 +835,22 @@ static int write_sensitivity_rules_to_cil(FILE *out, struct policydb *pdb)
 	}
 	sepol_printf(out, "))\n");
 
+	rc = hashtab_map(pdb->p_levels.table, map_count_sensitivity_aliases, &num);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	if (num == 0) {
+		/* No aliases, so skip sensitivity alias rules */
+		rc = 0;
+		goto exit;
+	}
+
+	rc = strs_init(&strs, num);
+	if (rc != 0) {
+		goto exit;
+	}
+
 	rc = hashtab_map(pdb->p_levels.table, map_sensitivity_aliases_to_strs, strs);
 	if (rc != 0) {
 		goto exit;
@@ -852,16 +858,9 @@ static int write_sensitivity_rules_to_cil(FILE *out, struct policydb *pdb)
 
 	strs_sort(strs);
 
-	num = strs_num_items(strs);
-
 	/* sensitivity aliases */
 	for (i=0; i < num; i++) {
 		name = strs_read_at_index(strs, i);
-		level = hashtab_search(pdb->p_levels.table, name);
-		if (!level) {
-			rc = -1;
-			goto exit;
-		}
 		sepol_printf(out, "(sensitivityalias %s)\n", name);
 	}
 
