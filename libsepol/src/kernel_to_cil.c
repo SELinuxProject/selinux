@@ -777,9 +777,9 @@ exit:
 
 static void write_default_mls_level(FILE *out)
 {
-	sepol_printf(out, "(sensitivity s0)");
-	sepol_printf(out, "(sensitivityorder (s0))");
-	sepol_printf(out, "(level %s (s0))", DEFAULT_LEVEL);
+	sepol_printf(out, "(sensitivity s0)\n");
+	sepol_printf(out, "(sensitivityorder (s0))\n");
+	sepol_printf(out, "(level %s (s0))\n", DEFAULT_LEVEL);
 }
 
 static int map_sensitivity_aliases_to_strs(char *key, void *data, void *args)
