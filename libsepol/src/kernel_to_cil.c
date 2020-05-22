@@ -886,6 +886,17 @@ exit:
 	return rc;
 }
 
+static int map_count_category_aliases(__attribute__((unused)) char *key, void *data, void *args)
+{
+	cat_datum_t *cat = data;
+	unsigned *count = args;
+
+	if (cat->isalias)
+		(*count)++;
+
+	return SEPOL_OK;
+}
+
 static int map_category_aliases_to_strs(char *key, void *data, void *args)
 {
 	cat_datum_t *cat = data;
@@ -903,26 +914,13 @@ static int write_category_rules_to_cil(FILE *out, struct policydb *pdb)
 {
 	cat_datum_t *cat;
 	char *prev, *name, *actual;
-	struct strs *strs;
-	unsigned i, num;
+	struct strs *strs = NULL;
+	unsigned i, num = 0;
 	int rc = 0;
-
-	rc = strs_init(&strs, pdb->p_levels.nprim);
-	if (rc != 0) {
-		goto exit;
-	}
 
 	/* categories */
 	for (i=0; i < pdb->p_cats.nprim; i++) {
 		name = pdb->p_cat_val_to_name[i];
-		if (!name) continue;
-		cat = hashtab_search(pdb->p_cats.table, name);
-		if (!cat) {
-			rc = -1;
-			goto exit;
-		}
-		if (cat->isalias) continue;
-
 		sepol_printf(out, "(category %s)\n", name);
 	}
 
@@ -931,14 +929,6 @@ static int write_category_rules_to_cil(FILE *out, struct policydb *pdb)
 	prev = NULL;
 	for (i=0; i < pdb->p_cats.nprim; i++) {
 		name = pdb->p_cat_val_to_name[i];
-		if (!name) continue;
-		cat = hashtab_search(pdb->p_cats.table, name);
-		if (!cat) {
-			rc = -1;
-			goto exit;
-		}
-		if (cat->isalias) continue;
-
 		if (prev) {
 			sepol_printf(out, "%s ", prev);
 		}
@@ -949,6 +939,22 @@ static int write_category_rules_to_cil(FILE *out, struct policydb *pdb)
 	}
 	sepol_printf(out, "))\n");
 
+	rc = hashtab_map(pdb->p_cats.table, map_count_category_aliases, &num);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	if (num == 0) {
+		/* No aliases, so skip category alias rules */
+		rc = 0;
+		goto exit;
+	}
+
+	rc = strs_init(&strs, num);
+	if (rc != 0) {
+		goto exit;
+	}
+
 	rc = hashtab_map(pdb->p_cats.table, map_category_aliases_to_strs, strs);
 	if (rc != 0) {
 		goto exit;
@@ -956,16 +962,9 @@ static int write_category_rules_to_cil(FILE *out, struct policydb *pdb)
 
 	strs_sort(strs);
 
-	num = strs_num_items(strs);
-
 	/* category aliases */
 	for (i=0; i < num; i++) {
 		name = strs_read_at_index(strs, i);
-		cat = hashtab_search(pdb->p_cats.table, name);
-		if (!cat) {
-			rc = -1;
-			goto exit;
-		}
 		sepol_printf(out, "(categoryalias %s)\n", name);
 	}
 
