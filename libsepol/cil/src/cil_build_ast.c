@@ -87,7 +87,7 @@ exit:
  * datum, given the new datum and the one already present in a given symtab.
  */
 int cil_is_datum_multiple_decl(__attribute__((unused)) struct cil_symtab_datum *cur,
-                               __attribute__((unused)) struct cil_symtab_datum *old,
+                               struct cil_symtab_datum *old,
                                enum cil_flavor f)
 {
 	int rc = CIL_FALSE;
@@ -95,8 +95,12 @@ int cil_is_datum_multiple_decl(__attribute__((unused)) struct cil_symtab_datum *
 	switch (f) {
 	case CIL_TYPE:
 	case CIL_TYPEATTRIBUTE:
-		/* type and typeattribute statements insert empty datums, ret true */
-		rc = CIL_TRUE;
+		if (!old || f != FLAVOR(old)) {
+			rc = CIL_FALSE;
+		} else {
+			/* type and typeattribute statements insert empty datums */
+			rc = CIL_TRUE;
+		}
 		break;
 	default:
 		break;
@@ -126,19 +130,20 @@ int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_s
 	if (symtab != NULL) {
 		rc = cil_symtab_insert(symtab, (hashtab_key_t)key, datum, ast_node);
 		if (rc == SEPOL_EEXIST) {
+			rc = cil_symtab_get_datum(symtab, (hashtab_key_t)key, &prev);
+			if (rc != SEPOL_OK) {
+				cil_log(CIL_ERR, "Re-declaration of %s %s, but previous declaration could not be found\n",cil_node_to_string(ast_node), key);
+				goto exit;
+			}
 			if (!db->multiple_decls ||
-			    cil_symtab_get_datum(symtab, (hashtab_key_t)key, &prev) != SEPOL_OK ||
 			    !cil_is_datum_multiple_decl(datum, prev, nflavor)) {
-
 				/* multiple_decls not ok, ret error */
+				struct cil_tree_node *node = NODE(prev);
 				cil_log(CIL_ERR, "Re-declaration of %s %s\n",
 					cil_node_to_string(ast_node), key);
-				if (cil_symtab_get_datum(symtab, key, &datum) == SEPOL_OK) {
-					if (sflavor == CIL_SYM_BLOCKS) {
-						struct cil_tree_node *node = datum->nodes->head->data;
-						cil_tree_log(node, CIL_ERR, "Previous declaration");
-					}
-				}
+				cil_tree_log(node, CIL_ERR, "Previous declaration of %s",
+					cil_node_to_string(node));
+				rc = SEPOL_ERR;
 				goto exit;
 			}
 			/* multiple_decls is enabled and works for this datum type, add node */
@@ -169,7 +174,6 @@ int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_s
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Failed to create node\n");
 	return rc;
 }
 
