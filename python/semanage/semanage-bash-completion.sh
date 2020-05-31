@@ -54,6 +54,9 @@ __get_all_roles () {
 __get_all_stores () {
     dir -1 -F /etc/selinux/ | grep '/' | cut -d'/' -f 1
 }
+__get_all_modules () {
+    semodule -l
+}
 __get_import_opts () { echo '$ALL_OPTS --f --input_file' ; }
 __get_export_opts () { echo '$ALL_OPTS --f --output_file' ; }
 __get_boolean_opts () { echo '$ALL_OPTS --on -off -1 -0' ; }
@@ -88,6 +91,13 @@ _semanage () {
 	if   [ "$prev" = "-a" -a "$command" = "permissive" ]; then
 	        COMPREPLY=( $(compgen -W "$( __get_all_domains ) " -- "$cur") )
 		return 0
+	elif [ "$command" = "module" ]; then
+		if [ "$prev" = "-d" ] || [ "$prev" = "--disable" ] \
+		    || [ "$prev" = "-e" ] || [ "$prev" = "--enable" ] \
+		    || [ "$prev" = "-r" ] || [ "$prev" = "--remove" ]; then
+	            COMPREPLY=( $(compgen -W "$( __get_all_modules ) " -- "$cur") )
+		    return 0
+		fi
 	fi
 	if   [ "$verb" = "" -a "$prev" = "semanage" ]; then
                 comps="${VERBS[*]}"
