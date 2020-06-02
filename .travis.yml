@@ -34,6 +34,14 @@ matrix:
       env: PYVER=python3.8 RUBYLIBVER=2.7 LINKER=gold
     - compiler: clang
       env: PYVER=python3.8 RUBYLIBVER=2.7 LINKER=bfd
+  include:
+    - compiler: gcc
+      env: TRAVIS_RUN_KVM=true TRAVIS_CLOUD_IMAGE_VERSION="32:1.6"
+      install:
+        - skip
+      before_script:
+        - skip
+      script: scripts/ci/travis-kvm-setup.sh
 
 # Use Travis-CI Ubuntu 18.04 Bionic Beaver, "full image" variant
 sudo: required
