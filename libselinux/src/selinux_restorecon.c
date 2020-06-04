@@ -938,7 +938,7 @@ int selinux_restorecon(const char *pathname_orig,
 	}
 
 	/* Skip digest if not a directory */
-	if ((sb.st_mode & S_IFDIR) != S_IFDIR)
+	if (!S_ISDIR(sb.st_mode))
 		setrestorecondigest = false;
 
 	if (!flags.recurse) {
@@ -952,7 +952,8 @@ int selinux_restorecon(const char *pathname_orig,
 	}
 
 	/* Obtain fs type */
-	if (statfs(pathname, &sfsb) < 0) {
+	memset(&sfsb, 0, sizeof sfsb);
+	if (!S_ISLNK(sb.st_mode) && statfs(pathname, &sfsb) < 0) {
 		selinux_log(SELINUX_ERROR,
 			    "statfs(%s) failed: %s\n",
 			    pathname, strerror(errno));
