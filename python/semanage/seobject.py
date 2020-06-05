@@ -1870,10 +1870,22 @@ class nodeRecords(semanageRecords):
         except:
             raise ValueError(_("Unknown or missing protocol"))
 
-        return newaddr, newmask, newprotocol
+        try:
+            audit_protocol = socket.getprotobyname(protocol)
+        except:
+            # Entry for "ipv4" not found in /etc/protocols on (at
+            # least) Debian? To ensure audit log compatibility, let's
+            # use the same numeric value as Fedora: 4, which is
+            # actually understood by kernel as IP over IP.
+            if (protocol == "ipv4"):
+                audit_protocol = socket.IPPROTO_IPIP
+            else:
+                raise ValueError(_("Unknown or missing protocol"))
+
+        return newaddr, newmask, newprotocol, audit_protocol
 
     def __add(self, addr, mask, proto, serange, ctype):
-        addr, mask, proto = self.validate(addr, mask, proto)
+        addr, mask, proto, audit_proto = self.validate(addr, mask, proto)
 
         if is_mls_enabled == 1:
             if serange == "":
@@ -1942,7 +1954,7 @@ class nodeRecords(semanageRecords):
         semanage_node_key_free(k)
         semanage_node_free(node)
 
-        self.mylog.log_change("resrc=node op=add laddr=%s netmask=%s proto=%s tcontext=%s:%s:%s:%s" % (addr, mask, socket.getprotobyname(self.protocol[proto]), "system_u", "object_r", ctype, serange))
+        self.mylog.log_change("resrc=node op=add laddr=%s netmask=%s proto=%s tcontext=%s:%s:%s:%s" % (addr, mask, audit_proto, "system_u", "object_r", ctype, serange))
 
     def add(self, addr, mask, proto, serange, ctype):
         self.begin()
@@ -1950,7 +1962,7 @@ class nodeRecords(semanageRecords):
         self.commit()
 
     def __modify(self, addr, mask, proto, serange, setype):
-        addr, mask, proto = self.validate(addr, mask, proto)
+        addr, mask, proto, audit_proto = self.validate(addr, mask, proto)
 
         if serange == "" and setype == "":
             raise ValueError(_("Requires setype or serange"))
@@ -1987,7 +1999,7 @@ class nodeRecords(semanageRecords):
         semanage_node_key_free(k)
         semanage_node_free(node)
 
-        self.mylog.log_change("resrc=node op=modify laddr=%s netmask=%s proto=%s tcontext=%s:%s:%s:%s" % (addr, mask, socket.getprotobyname(self.protocol[proto]), "system_u", "object_r", setype, serange))
+        self.mylog.log_change("resrc=node op=modify laddr=%s netmask=%s proto=%s tcontext=%s:%s:%s:%s" % (addr, mask, audit_proto, "system_u", "object_r", setype, serange))
 
     def modify(self, addr, mask, proto, serange, setype):
         self.begin()
@@ -1995,8 +2007,7 @@ class nodeRecords(semanageRecords):
         self.commit()
 
     def __delete(self, addr, mask, proto):
-
-        addr, mask, proto = self.validate(addr, mask, proto)
+        addr, mask, proto, audit_proto = self.validate(addr, mask, proto)
 
         (rc, k) = semanage_node_key_create(self.sh, addr, mask, proto)
         if rc < 0:
@@ -2020,7 +2031,7 @@ class nodeRecords(semanageRecords):
 
         semanage_node_key_free(k)
 
-        self.mylog.log_change("resrc=node op=delete laddr=%s netmask=%s proto=%s" % (addr, mask, socket.getprotobyname(self.protocol[proto])))
+        self.mylog.log_change("resrc=node op=delete laddr=%s netmask=%s proto=%s" % (addr, mask, audit_proto))
 
     def delete(self, addr, mask, proto):
         self.begin()
