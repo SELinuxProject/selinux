@@ -43,8 +43,8 @@ static __attribute__((__noreturn__)) void usage(const char *const name)
 {
 	if (iamrestorecon) {
 		fprintf(stderr,
-			"usage:  %s [-iIDFmnprRv0] [-e excludedir] pathname...\n"
-			"usage:  %s [-iIDFmnprRv0] [-e excludedir] -f filename\n",
+			"usage:  %s [-iIDFmnprRv0x] [-e excludedir] pathname...\n"
+			"usage:  %s [-iIDFmnprRv0x] [-e excludedir] -f filename\n",
 			name, name);
 	} else {
 		fprintf(stderr,
@@ -168,7 +168,7 @@ int main(int argc, char **argv)
 	size_t buf_len;
 	const char *base;
 	int errors = 0;
-	const char *ropts = "e:f:hiIDlmno:pqrsvFRW0";
+	const char *ropts = "e:f:hiIDlmno:pqrsvFRW0x";
 	const char *sopts = "c:de:f:hiIDlmno:pqr:svEFR:W0";
 	const char *opts;
 	union selinux_callback cb;
@@ -386,6 +386,13 @@ int main(int argc, char **argv)
 		case '0':
 			null_terminated = 1;
 			break;
+                case 'x':
+                        if (iamrestorecon) {
+				r_opts.xdev = SELINUX_RESTORECON_XDEV;
+                        } else {
+				usage(argv[0]);
+                        }
+                        break;
 		case 'h':
 		case '?':
 			usage(argv[0]);
