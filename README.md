@@ -120,6 +120,17 @@ lacks library functions or other dependencies relied upon by your
 distribution.  If it breaks, you get to keep both pieces.
 
 
+## Setting CFLAGS
+
+Setting CFLAGS during the make process will cause the omission of many defaults. While the project strives
+to provide a reasonable set of default flags, custom CFLAGS could break the build, or have other undesired
+changes on the build output. Thus, be very careful when setting CFLAGS. CFLAGS that are encouraged to be
+set when overriding are:
+
+- -fno-semantic-interposition for gcc or compilers that do not do this. clang does this by default. clang-10 and up
+   will support passing this flag, but ignore it. Previous clang versions fail.
+
+
 macOS
 -----
 
