@@ -1148,6 +1148,6 @@ def parse_headers(root, output=None, expand=True, debug=False):
             status.step()
 
     if len(failures):
-        o("failed to parse some headers: %s" % ", ".join(failures))
+        o("failed to parse some headers: %s\n" % ", ".join(failures))
 
     return headers
