@@ -2,6 +2,12 @@
 
 set -ev
 
+#
+# We expect this to be set in the environment, but if it's not, most selinux projects
+# just have the same name as upstream, so choose that.
+#
+export SELINUX_DIR="${SELINUX_DIR:-/root/selinux}"
+
 # CI Debug output if things go squirrely.
 getenforce
 id -Z
@@ -58,7 +64,7 @@ dnf install -y \
 #
 # Move to selinux code and build
 #
-cd "$HOME/selinux"
+cd "$SELINUX_DIR"
 
 # Show HEAD commit for sanity checking
 git log -1
@@ -71,7 +77,7 @@ make -j"$(nproc)" LIBDIR=/usr/lib64 SHLIBDIR=/lib64 install-pywrap
 make -j"$(nproc)" LIBDIR=/usr/lib64 SHLIBDIR=/lib64 relabel
 
 #
-# Get the selinux testsuite, but don't clone it in $HOME/selinux, move to $HOME
+# Get the selinux testsuite, but don't clone it in selinux git directory, move to $HOME
 # first.
 #
 cd "$HOME"

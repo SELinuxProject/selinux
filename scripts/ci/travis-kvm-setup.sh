@@ -118,8 +118,10 @@ fi
 #
 # Great we have a host running, ssh into it. We specify -o so
 # we don't get blocked on asking to add the servers key to
-# our known_hosts.
+# our known_hosts. Also, we need to forward the project directory
+# so forks know where to go.
 #
-ssh -tt -o StrictHostKeyChecking=no -o LogLevel=QUIET "root@$ipaddy" "/root/selinux/$TEST_RUNNER"
+project_dir="$(basename "$TRAVIS_BUILD_DIR")"
+ssh -tt -o StrictHostKeyChecking=no -o LogLevel=QUIET "root@$ipaddy" "SELINUX_DIR=/root/$project_dir /root/$project_dir/$TEST_RUNNER"
 
 exit 0
