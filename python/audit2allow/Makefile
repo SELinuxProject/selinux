@@ -19,7 +19,7 @@ endif
 all: audit2why sepolgen-ifgen-attr-helper
 
 sepolgen-ifgen-attr-helper: sepolgen-ifgen-attr-helper.o $(LIBSEPOLA)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS_LIBSEPOLA)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS_LIBSEPOLA) -lselinux
 
 audit2why:
 	ln -sf audit2allow audit2why

@@ -27,7 +27,6 @@
 
 
 import sys
-import os
 import tempfile
 import subprocess
 
@@ -65,37 +64,18 @@ def parse_options():
     return options
 
 
-def get_policy():
-    p = selinux.selinux_current_policy_path()
-    if p and os.path.exists(p):
-        return p
-    i = selinux.security_policyvers()
-    p = selinux.selinux_binary_policy_path() + "." + str(i)
-    while i > 0 and not os.path.exists(p):
-        i = i - 1
-        p = selinux.selinux_binary_policy_path() + "." + str(i)
-    if i > 0:
-        return p
-    return None
-
-
 def get_attrs(policy_path, attr_helper):
     try:
-        if not policy_path:
-            policy_path = get_policy()
-        if not policy_path:
-            sys.stderr.write("No installed policy to check\n")
-            return None
         outfile = tempfile.NamedTemporaryFile()
     except IOError as e:
         sys.stderr.write("could not open attribute output file\n")
         return None
-    except OSError:
-        # SELinux Disabled Machine
-        return None
 
     fd = open("/dev/null", "w")
-    ret = subprocess.Popen([attr_helper, policy_path, outfile.name], stdout=fd).wait()
+    if policy_path:
+        ret = subprocess.Popen([attr_helper, outfile.name, policy_path], stdout=fd).wait()
+    else:
+        ret = subprocess.Popen([attr_helper, outfile.name], stdout=fd).wait()
     fd.close()
     if ret != 0:
         sys.stderr.write("could not run attribute helper\n")
