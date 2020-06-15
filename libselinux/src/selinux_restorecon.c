@@ -1154,6 +1154,8 @@ void selinux_restorecon_set_sehandle(struct selabel_handle *hndl)
 	size_t num_specfiles, fc_digest_len;
 
 	fc_sehandle = (struct selabel_handle *) hndl;
+	if (!fc_sehandle)
+		return;
 
 	/* Check if digest requested in selabel_open(3), if so use it. */
 	if (selabel_digest(fc_sehandle, &fc_digest, &fc_digest_len,
