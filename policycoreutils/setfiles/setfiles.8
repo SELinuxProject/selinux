@@ -214,7 +214,8 @@ option is used.
 .SH "NOTES"
 .IP "1." 4
 .B setfiles
-follows symbolic links and operates recursively on directories.
+operates recursively on directories. Paths leading up the final
+component of the file(s) are not canonicalized before labeling.
 .IP "2." 4
 If the
 .I pathname

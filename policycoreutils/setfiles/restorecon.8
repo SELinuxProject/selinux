@@ -166,8 +166,10 @@ The pathname for the file(s) to be relabeled.
 .SH "NOTES"
 .IP "1." 4
 .B restorecon
-does not follow symbolic links and by default it does not
-operate recursively on directories.
+by default does not operate recursively on directories. Paths leading up the
+final component of the file(s) are canonicalized using
+.BR realpath (3)
+before labeling.
 .IP "2." 4
 If the
 .I pathname
