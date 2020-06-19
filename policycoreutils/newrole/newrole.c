@@ -466,7 +466,7 @@ static int extract_pw_data(struct passwd *pw_copy)
  * Either restore the original environment, or set up a minimal one.
  *
  * The minimal environment contains:
- * TERM, DISPLAY and XAUTHORITY - if they are set, preserve values
+ * TERM, DISPLAY, XAUTHORITY and XDG_RUNTIME_DIR - if they are set, preserve values
  * HOME, SHELL, USER and LOGNAME - set to contents of /etc/passwd
  * PATH - set to default value DEFAULT_PATH
  *
@@ -478,9 +478,11 @@ static int restore_environment(int preserve_environment,
 	char const *term_env;
 	char const *display_env;
 	char const *xauthority_env;
-	char *term = NULL;	/* temporary container */
-	char *display = NULL;	/* temporary container */
+	char const *xdg_runtime_dir_env;
+	char *term = NULL;		/* temporary container */
+	char *display = NULL;		/* temporary container */
 	char *xauthority = NULL;	/* temporary container */
+	char *xdg_runtime_dir = NULL;	/* temporary container */
 	int rc;
 
 	environ = old_environ;
@@ -491,6 +493,7 @@ static int restore_environment(int preserve_environment,
 	term_env = getenv("TERM");
 	display_env = getenv("DISPLAY");
 	xauthority_env = getenv("XAUTHORITY");
+	xdg_runtime_dir_env = getenv("XDG_RUNTIME_DIR");	/* needed for `systemd --user` operations */
 
 	/* Save the variable values we want */
 	if (term_env)
@@ -499,8 +502,12 @@ static int restore_environment(int preserve_environment,
 		display = strdup(display_env);
 	if (xauthority_env)
 		xauthority = strdup(xauthority_env);
-	if ((term_env && !term) || (display_env && !display) ||
-	    (xauthority_env && !xauthority)) {
+	if (xdg_runtime_dir_env)
+		xdg_runtime_dir = strdup(xdg_runtime_dir_env);
+	if ((term_env && !term) ||
+	    (display_env && !display) ||
+	    (xauthority_env && !xauthority) ||
+	    (xdg_runtime_dir_env && !xdg_runtime_dir)) {
 		rc = -1;
 		goto out;
 	}
@@ -518,6 +525,8 @@ static int restore_environment(int preserve_environment,
 		rc |= setenv("DISPLAY", display, 1);
 	if (xauthority)
 		rc |= setenv("XAUTHORITY", xauthority, 1);
+	if (xdg_runtime_dir)
+		rc |= setenv("XDG_RUNTIME_DIR", xdg_runtime_dir, 1);
 	rc |= setenv("HOME", pw->pw_dir, 1);
 	rc |= setenv("SHELL", pw->pw_shell, 1);
 	rc |= setenv("USER", pw->pw_name, 1);
@@ -527,6 +536,7 @@ static int restore_environment(int preserve_environment,
 	free(term);
 	free(display);
 	free(xauthority);
+	free(xdg_runtime_dir);
 	return rc;
 }
 
