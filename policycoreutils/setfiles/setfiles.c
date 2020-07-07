@@ -48,11 +48,10 @@ static __attribute__((__noreturn__)) void usage(const char *const name)
 			name, name);
 	} else {
 		fprintf(stderr,
-			"usage:  %s [-diIDlmnpqvEFW] [-e excludedir] [-r alt_root_path] spec_file pathname...\n"
-			"usage:  %s [-diIDlmnpqvEFW] [-e excludedir] [-r alt_root_path] spec_file -f filename\n"
-			"usage:  %s -s [-diIDlmnpqvFW] spec_file\n"
-			"usage:  %s -c policyfile spec_file\n",
-			name, name, name, name);
+			"usage:  %s [-diIDlmnpqvEFW] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file pathname...\n"
+			"usage:  %s [-diIDlmnpqvEFW] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file -f filename\n"
+			"usage:  %s -s [-diIDlmnpqvFW] spec_file\n",
+			name, name, name);
 	}
 	exit(-1);
 }
@@ -409,7 +408,7 @@ int main(int argc, char **argv)
 
 	if (!iamrestorecon) {
 		if (policyfile) {
-			if (optind != (argc - 1))
+			if (optind > (argc - 1))
 				usage(argv[0]);
 		} else if (use_input_file) {
 			if (optind != (argc - 1)) {
