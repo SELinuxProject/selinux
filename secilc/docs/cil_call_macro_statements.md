@@ -44,13 +44,15 @@ macro
 
 Declare a macro in the current namespace with its associated parameters. The macro identifier is used by the [`call`](cil_call_macro_statements.md#call) statement to instantiate the macro and resolve any parameters. The call statement may be within the body of a macro.
 
-Note that when resolving macros the callers namespace is not checked, only the following places:
+When resolving macros the following places are checked in this order:
 
 -   Items defined inside the macro
 
 -   Items passed into the macro as arguments
 
 -   Items defined in the same namespace of the macro
+
+-   Items defined in the callers namespace
 
 -   Items defined in the global namespace
 
@@ -80,7 +82,7 @@ Note that when resolving macros the callers namespace is not checked, only the f
 <tr class="odd">
 <td align="left"><p><code>param_type</code></p></td>
 <td align="left"><p>Zero or more parameters that are passed to the macro. The <code>param_type</code> is a keyword used to determine the declaration type (e.g. <code>type</code>, <code>class</code>, <code>categoryset</code>).</p>
-<p>The list of valid <code>param_type</code> entries are: <code>type</code>, <code>typealias</code>, <code>role</code>, <code>user</code>, <code>sensitivity</code>, <code>sensitivityalias</code>, <code>category</code>, <code>categoryalias</code>, <code>categoryset</code> (named or anonymous), <code>level</code> (named or anonymous), <code>levelrange</code> (named or anonymous), <code>class</code>, <code>classpermission</code> (named or anonymous), <code>ipaddr</code> (named or anonymous), <code>block</code>, <code>name</code> (a string), <code>classmap</code></p></td>
+<p>The list of valid <code>param_type</code> entries are: <code>type</code>, <code>typealias</code>, <code>role</code>, <code>user</code>, <code>sensitivity</code>, <code>sensitivityalias</code>, <code>category</code>, <code>categoryalias</code>, <code>categoryset</code> (named or anonymous), <code>level</code> (named or anonymous), <code>levelrange</code> (named or anonymous), <code>class</code>, <code>classpermission</code> (named or anonymous), <code>ipaddr</code> (named or anonymous), <code>name</code> (a string), <code>classmap</code></p></td>
 </tr>
 <tr class="even">
 <td align="left"><p><code>param_id</code></p></td>

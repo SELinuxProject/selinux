@@ -260,7 +260,7 @@ This example will associate `unconfined.user` with a named [`levelrange`](cil_ml
     (categoryorder (c0 c1))
     (sensitivity s0)
     (sensitivity s1)
-    (dominance (s0 s1))
+    (sensitivityorder (s0 s1))
     (sensitivitycategory s0 (c0 c1))
     (level systemLow (s0))
     (level systemHigh (s0 (c0 c1)))
