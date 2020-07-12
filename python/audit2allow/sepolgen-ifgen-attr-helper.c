@@ -28,6 +28,7 @@
 
 #include <selinux/selinux.h>
 
+#include <limits.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
