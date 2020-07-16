@@ -5,3 +5,4 @@ Comment=Fix file context in owned by the user
 Type=Application
 StartupNotify=false
 X-GNOME-Autostart-enabled=false
+X-GNOME-HiddenUnderSystemd=true
