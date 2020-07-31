@@ -1131,11 +1131,10 @@ int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *db, stru
 	class_datum_t *sepol_obj = NULL;
 	struct cil_list *class_list;
 	type_datum_t *sepol_result = NULL;
-	filename_trans_t *newkey = NULL;
-	filename_trans_datum_t *newdatum = NULL, *otype = NULL;
 	ebitmap_t src_bitmap, tgt_bitmap;
 	ebitmap_node_t *node1, *node2;
 	unsigned int i, j;
+	uint32_t otype;
 	struct cil_list_item *c;
 	char *name = DATUM(typetrans->name)->name;
 
@@ -1176,22 +1175,14 @@ int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *db, stru
 				rc = __cil_get_sepol_class_datum(pdb, DATUM(c->data), &sepol_obj);
 				if (rc != SEPOL_OK) goto exit;
 
-				newkey = cil_calloc(1, sizeof(*newkey));
-				newdatum = cil_calloc(1, sizeof(*newdatum));
-				newkey->stype = sepol_src->s.value;
-				newkey->ttype = sepol_tgt->s.value;
-				newkey->tclass = sepol_obj->s.value;
-				newkey->name = cil_strdup(name);
-				newdatum->otype = sepol_result->s.value;
-
-				rc = hashtab_insert(pdb->filename_trans,
-						    (hashtab_key_t)newkey,
-						    newdatum);
+				rc = policydb_filetrans_insert(
+					pdb, sepol_src->s.value, sepol_tgt->s.value,
+					sepol_obj->s.value, name, NULL,
+					sepol_result->s.value, &otype
+				);
 				if (rc != SEPOL_OK) {
 					if (rc == SEPOL_EEXIST) {
-						otype = hashtab_search(pdb->filename_trans,
-								(hashtab_key_t)newkey);
-						if (newdatum->otype != otype->otype) {
+						if (sepol_result->s.value!= otype) {
 							cil_log(CIL_ERR, "Conflicting name type transition rules\n");
 						} else {
 							rc = SEPOL_OK;
@@ -1199,9 +1190,6 @@ int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *db, stru
 					} else {
 						cil_log(CIL_ERR, "Out of memory\n");
 					}
-					free(newkey->name);
-					free(newkey);
-					free(newdatum);
 					if (rc != SEPOL_OK) {
 						goto exit;
 					}

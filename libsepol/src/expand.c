@@ -1371,8 +1371,6 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *rules)
 {
 	unsigned int i, j;
-	filename_trans_t key, *new_trans;
-	filename_trans_datum_t *otype;
 	filename_trans_rule_t *cur_rule;
 	ebitmap_t stypes, ttypes;
 	ebitmap_node_t *snode, *tnode;
@@ -1380,7 +1378,7 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 
 	cur_rule = rules;
 	while (cur_rule) {
-		uint32_t mapped_otype;
+		uint32_t mapped_otype, present_otype;
 
 		ebitmap_init(&stypes);
 		ebitmap_init(&ttypes);
@@ -1401,15 +1399,14 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 
 		ebitmap_for_each_positive_bit(&stypes, snode, i) {
 			ebitmap_for_each_positive_bit(&ttypes, tnode, j) {
-				key.stype = i + 1;
-				key.ttype = j + 1;
-				key.tclass = cur_rule->tclass;
-				key.name = cur_rule->name;
-				otype = hashtab_search(state->out->filename_trans,
-						       (hashtab_key_t) &key);
-				if (otype) {
+				rc = policydb_filetrans_insert(
+					state->out, i + 1, j + 1,
+					cur_rule->tclass, cur_rule->name,
+					NULL, mapped_otype, &present_otype
+				);
+				if (rc == SEPOL_EEXIST) {
 					/* duplicate rule, ignore */
-					if (otype->otype == mapped_otype)
+					if (present_otype == mapped_otype)
 						continue;
 
 					ERR(state->handle, "Conflicting name-based type_transition %s %s:%s \"%s\":  %s vs %s",
@@ -1417,44 +1414,11 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 					    state->out->p_type_val_to_name[j],
 					    state->out->p_class_val_to_name[cur_rule->tclass - 1],
 					    cur_rule->name,
-					    state->out->p_type_val_to_name[otype->otype - 1],
+					    state->out->p_type_val_to_name[present_otype - 1],
 					    state->out->p_type_val_to_name[mapped_otype - 1]);
 					return -1;
-				}
-
-				new_trans = calloc(1, sizeof(*new_trans));
-				if (!new_trans) {
+				} else if (rc < 0) {
 					ERR(state->handle, "Out of memory!");
-					return -1;
-				}
-
-				new_trans->name = strdup(cur_rule->name);
-				if (!new_trans->name) {
-					ERR(state->handle, "Out of memory!");
-					free(new_trans);
-					return -1;
-				}
-				new_trans->stype = i + 1;
-				new_trans->ttype = j + 1;
-				new_trans->tclass = cur_rule->tclass;
-
-				otype = calloc(1, sizeof(*otype));
-				if (!otype) {
-					ERR(state->handle, "Out of memory!");
-					free(new_trans->name);
-					free(new_trans);
-					return -1;
-				}
-				otype->otype = mapped_otype;
-
-				rc = hashtab_insert(state->out->filename_trans,
-						    (hashtab_key_t)new_trans,
-						    otype);
-				if (rc) {
-					ERR(state->handle, "Out of memory!");
-					free(otype);
-					free(new_trans->name);
-					free(new_trans);
 					return -1;
 				}
 			}

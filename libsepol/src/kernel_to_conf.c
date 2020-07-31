@@ -1822,21 +1822,35 @@ struct map_filename_trans_args {
 
 static int map_filename_trans_to_str(hashtab_key_t key, void *data, void *arg)
 {
-	filename_trans_t *ft = (filename_trans_t *)key;
+	filename_trans_key_t *ft = (filename_trans_key_t *)key;
 	filename_trans_datum_t *datum = data;
 	struct map_filename_trans_args *map_args = arg;
 	struct policydb *pdb = map_args->pdb;
 	struct strs *strs = map_args->strs;
 	char *src, *tgt, *class, *filename, *new;
+	struct ebitmap_node *node;
+	uint32_t bit;
+	int rc;
 
-	src = pdb->p_type_val_to_name[ft->stype - 1];
 	tgt = pdb->p_type_val_to_name[ft->ttype - 1];
 	class = pdb->p_class_val_to_name[ft->tclass - 1];
 	filename = ft->name;
-	new =  pdb->p_type_val_to_name[datum->otype - 1];
+	do {
+		new = pdb->p_type_val_to_name[datum->otype - 1];
 
-	return strs_create_and_add(strs, "type_transition %s %s:%s %s \"%s\";", 5,
-				   src, tgt, class, new, filename);
+		ebitmap_for_each_positive_bit(&datum->stypes, node, bit) {
+			src = pdb->p_type_val_to_name[bit];
+			rc = strs_create_and_add(strs,
+						 "type_transition %s %s:%s %s \"%s\";",
+						 5, src, tgt, class, new, filename);
+			if (rc)
+				return rc;
+		}
+
+		datum = datum->next;
+	} while (datum);
+
+	return 0;
 }
 
 static int write_filename_trans_rules_to_conf(FILE *out, struct policydb *pdb)

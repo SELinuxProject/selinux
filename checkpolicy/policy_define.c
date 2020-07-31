@@ -3303,8 +3303,6 @@ int define_filename_trans(void)
 	ebitmap_t e_stypes, e_ttypes;
 	ebitmap_t e_tclasses;
 	ebitmap_node_t *snode, *tnode, *cnode;
-	filename_trans_t *ft;
-	filename_trans_datum_t *ftdatum;
 	filename_trans_rule_t *ftr;
 	type_datum_t *typdatum;
 	uint32_t otype;
@@ -3388,40 +3386,19 @@ int define_filename_trans(void)
 	ebitmap_for_each_positive_bit(&e_tclasses, cnode, c) {
 		ebitmap_for_each_positive_bit(&e_stypes, snode, s) {
 			ebitmap_for_each_positive_bit(&e_ttypes, tnode, t) {
-				ft = calloc(1, sizeof(*ft));
-				if (!ft) {
-					yyerror("out of memory");
-					goto bad;
-				}
-				ft->stype = s+1;
-				ft->ttype = t+1;
-				ft->tclass = c+1;
-				ft->name = strdup(name);
-				if (!ft->name) {
-					yyerror("out of memory");
-					goto bad;
-				}
-
-				ftdatum = hashtab_search(policydbp->filename_trans,
-							 (hashtab_key_t)ft);
-				if (ftdatum) {
-					yyerror2("duplicate filename transition for: filename_trans %s %s %s:%s",
-						 name,
-						 policydbp->p_type_val_to_name[s],
-						 policydbp->p_type_val_to_name[t],
-						 policydbp->p_class_val_to_name[c]);
-					goto bad;
-				}
-
-				ftdatum = calloc(1, sizeof(*ftdatum));
-				if (!ftdatum) {
-					yyerror("out of memory");
-					goto bad;
-				}
-				rc = hashtab_insert(policydbp->filename_trans,
-						    (hashtab_key_t)ft,
-						    ftdatum);
-				if (rc) {
+				rc = policydb_filetrans_insert(
+					policydbp, s+1, t+1, c+1, name,
+					NULL, otype, NULL
+				);
+				if (rc != SEPOL_OK) {
+					if (rc == SEPOL_EEXIST) {
+						yyerror2("duplicate filename transition for: filename_trans %s %s %s:%s",
+							name,
+							policydbp->p_type_val_to_name[s],
+							policydbp->p_type_val_to_name[t],
+							policydbp->p_class_val_to_name[c]);
+						goto bad;
+					}
 					yyerror("out of memory");
 					goto bad;
 				}
