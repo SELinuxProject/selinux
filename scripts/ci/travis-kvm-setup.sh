@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# SPDX-License-Identifier: MIT
 set -ev
 
 TEST_RUNNER="scripts/ci/fedora-test-runner.sh"
