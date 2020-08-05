@@ -213,6 +213,57 @@ This example is equivalent to `{ domain -kernel.process -ueventd.process -init.p
         )
     )
 
+expandtypeattribute
+-------------------
+
+Overrides the compiler defaults for the expansion of one or more
+previously declared [`typeattribute`](cil_type_statements.md#typeattribute)
+identifiers.
+
+This rule gives more control over type attribute expansion and
+removal. When the value is true, all rules involving the type
+attribute will be expanded and the type attribute will be removed from
+the policy. When the value is false, the type attribute will not be
+removed from the policy, even if the default expand rules or "-X"
+option cause the rules involving the type attribute to be expanded.
+
+**Statement definition:**
+
+    (expandtypeattribute typeattribute_id expand_value)
+
+**Where:**
+
+<table>
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><p><code>expandtypeattribute</code></p></td>
+<td align="left"><p>The <code>expandtypeattribute</code> keyword.</p></td>
+</tr>
+<tr class="even">
+<td align="left"><p><code>typeattribute_id</code></p></td>
+<td align="left"><p>One or more previously declared <code>typeattribute</code> identifiers. Multiple entries consist of a space separated list enclosed in parentheses '()'.</p></td>
+</tr>
+<tr class="odd">
+<td align="left"><p><code>expand_value</code></p></td>
+<td align="left"><p>Either true or false.</p></td>
+</tr>
+</tbody>
+</table>
+
+**Examples:**
+
+This example uses the expandtypeattribute statement to forcibly expand a previously declared `domain` type attribute.
+
+    (expandtypeattribute domain true)
+
+This example uses the expandtypeattribute statement to not expand previously declared `file_type` and `port_type` type attributes regardless of compiler defaults.
+
+    (expandtypeattribute (file_type port_type) false)
+
 typebounds
 ----------
 
