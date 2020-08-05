@@ -39,10 +39,13 @@ struct selinux_status_t
 static struct selinux_status_t *selinux_status = NULL;
 static int			selinux_status_fd;
 static uint32_t			last_seqno;
+static uint32_t			last_policyload;
 
 static uint32_t			fallback_sequence;
 static int			fallback_enforcing;
 static int			fallback_policyload;
+
+static void			*fallback_netlink_thread = NULL;
 
 /*
  * read_sequence
@@ -116,6 +119,15 @@ int selinux_status_updated(void)
 
 	if (last_seqno != curr_seqno)
 	{
+		if (avc_enforcing != (int) selinux_status->enforcing) {
+			if (avc_process_setenforce(selinux_status->enforcing) < 0)
+				return -1;
+		}
+		if (last_policyload != selinux_status->policyload) {
+			if (avc_process_policyload(selinux_status->policyload) < 0)
+				return -1;
+			last_policyload = selinux_status->policyload;
+		}
 		last_seqno = curr_seqno;
 		result = 1;
 	}
@@ -282,6 +294,9 @@ int selinux_status_open(int fallback)
 	selinux_status_fd = fd;
 	last_seqno = (uint32_t)(-1);
 
+	/* No need to use avc threads if the kernel status page is available */
+	avc_using_threads = 0;
+
 	return 0;
 
 error:
@@ -304,6 +319,12 @@ error:
 		selinux_status = MAP_FAILED;
 		selinux_status_fd = avc_netlink_acquire_fd();
 		last_seqno = (uint32_t)(-1);
+
+		if (avc_using_threads)
+		{
+			fallback_netlink_thread = avc_create_thread(&avc_netlink_loop);
+			avc_netlink_trouble = 0;
+		}
 
 		fallback_sequence = 0;
 		fallback_enforcing = security_getenforce();
@@ -333,6 +354,9 @@ void selinux_status_close(void)
 	/* fallback-mode */
 	if (selinux_status == MAP_FAILED)
 	{
+		if (avc_using_threads)
+			avc_stop_thread(fallback_netlink_thread);
+
 		avc_netlink_release_fd();
 		avc_netlink_close();
 		selinux_status = NULL;

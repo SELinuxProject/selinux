@@ -117,6 +117,8 @@ argument, which does not return under normal conditions.  The
 callback should cancel the running thread referenced by 
 .IR thread .
 By default, threading is not used; see 
+.B KERNEL STATUS PAGE
+and
 .B NETLINK NOTIFICATION
 below.
 
@@ -153,14 +155,49 @@ callback should destroy
 .IR lock ,
 freeing any resources associated with it.  The default behavior is not to perform any locking.  Note that undefined behavior may result if threading is used without appropriate locking.
 .
-.SH "NETLINK NOTIFICATION"
-Beginning with version 2.6.4, the Linux kernel supports SELinux status change notification via netlink.  Two message types are currently implemented, indicating changes to the enforcing mode and to the loaded policy in the kernel, respectively.  The userspace AVC listens for these messages and takes the appropriate action, modifying the behavior of
-.BR avc_has_perm (3)
-to reflect the current enforcing mode and flushing the cache on receipt of a policy load notification.  Audit messages are produced when netlink notifications are processed.
+.SH "KERNEL STATUS PAGE"
+Linux kernel version 2.6.37 supports the SELinux kernel status page, enabling userspace applications to
+.BR mmap (2)
+SELinux status state in read-only mode to avoid system calls during the cache hit code path.
 
-In the default single-threaded mode, the userspace AVC checks for new netlink messages at the start of each permission query.  If threading and locking callbacks are passed to
 .BR avc_init ()
-however, a dedicated thread will be started to listen on the netlink socket.  This may increase performance and will ensure that log messages are generated immediately rather than at the time of the next permission query.
+calls
+.BR selinux_status_open (3)
+to initialize the selinux status state. If successfully initialized, the userspace AVC will default to single-threaded mode and ignore the
+.B func_create_thread
+and
+.B func_stop_thread
+callbacks. All callbacks set via
+.BR selinux_set_callback (3)
+will still be honored.
+
+.BR avc_has_perm (3)
+and
+.BR selinux_check_access (3)
+both check for status updates through calls to
+.BR selinux_status_updated (3)
+at the start of each permission query and take the appropriate action.
+
+Two status types are currently implemented.
+.B setenforce
+events will change the effective enforcing state used within the AVC, and
+.B policyload
+events will result in a cache flush.
+.
+.SH "NETLINK NOTIFICATION"
+In the event that the kernel status page is not successfully
+.BR mmap (2)'ed
+the AVC will default to the netlink fallback mechanism, which opens a netlink socket for receiving status updates.
+.B setenforce
+and
+.B policyload
+events will have the same results as for the status page implementation, but all status update checks will now require a system call.
+
+By default,
+.BR avc_open (3)
+does not set threading or locking callbacks. In the fallback case, the userspace AVC checks for new netlink messages at the start of each permission query. If threading and locking callbacks are passed to
+.BR avc_init (),
+a dedicated thread will be started to listen on the netlink socket.  This may increase performance in the absence of the status page and will ensure that log messages are generated immediately rather than at the time of the next permission query.
 .
 .SH "RETURN VALUE"
 Functions with a return value return zero on success.  On error, \-1 is returned and
@@ -192,5 +229,7 @@ Eamon Walsh <ewalsh@tycho.nsa.gov>
 .
 .SH "SEE ALSO"
 .BR avc_open (3),
+.BR selinux_status_open (3),
+.BR selinux_status_updated (3),
 .BR selinux_set_callback (3),
 .BR selinux (8)

@@ -48,7 +48,7 @@ Set 1 on the
 argument to handle a case of older kernels without kernel status page support.
 In this case, this function tries to open a netlink socket using
 .BR avc_netlink_open (3)
-and overwrite corresponding callbacks ( setenforce and policyload).
+and overwrite corresponding callbacks (setenforce and policyload).
 Thus, we need to pay attention to the interaction with these interfaces,
 when fallback mode is enabled.
 .sp
@@ -57,9 +57,14 @@ unmap the kernel status page and close its file descriptor, or close the
 netlink socket if fallbacked.
 .sp
 .BR selinux_status_updated ()
-informs us whether something has been updated since the last call.
-It returns 0 if nothing was happened, however, 1 if something has been
-updated in this duration, or \-1 on error.
+processes status update events. There are two kinds of status updates.
+.B setenforce
+events will change the effective enforcing state used within the AVC, and
+.B policyload
+events will result in a cache flush.
+
+This function returns 0 if there have been no updates since the last call,
+1 if there have been updates since the last call, or \-1 on error.
 .sp
 .BR selinux_status_getenforce ()
 returns 0 if SELinux is running in permissive mode, 1 if enforcing mode,
