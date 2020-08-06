@@ -112,6 +112,7 @@ FORCEFLAG=""
 RPMFILES=""
 PREFC=""
 RESTORE_MODE=""
+BIND_MOUNT_FILESYSTEMS=""
 SETFILES=/sbin/setfiles
 RESTORECON=/sbin/restorecon
 FILESYSTEMSRW=`get_rw_labeled_mounts`
@@ -243,7 +244,23 @@ case "$RESTORE_MODE" in
 	if [ -n "${FILESYSTEMSRW}" ]; then
 	    LogReadOnly
 	    echo "${OPTION}ing `echo ${FILESYSTEMSRW}`"
-	    ${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} $* -q ${FC} ${FILESYSTEMSRW}
+
+	    if [ -z "$BIND_MOUNT_FILESYSTEMS" ]; then
+	        ${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} $* -q ${FC} ${FILESYSTEMSRW}
+	    else
+	        # we bind mount so we can fix the labels of files that have already been
+	        # mounted over
+	        for m in `echo $FILESYSTEMSRW`; do
+	            TMP_MOUNT="$(mktemp -d)"
+	            test -z ${TMP_MOUNT+x} && echo "Unable to find temporary directory!" && exit 1
+
+	            mkdir -p "${TMP_MOUNT}${m}" || exit 1
+	            mount --bind "${m}" "${TMP_MOUNT}${m}" || exit 1
+	            ${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} $* -q ${FC} -r "${TMP_MOUNT}" "${TMP_MOUNT}${m}"
+	            umount "${TMP_MOUNT}${m}" || exit 1
+	            rm -rf "${TMP_MOUNT}" || echo "Error cleaning up."
+	        done;
+	    fi
 	else
 	    echo >&2 "fixfiles: No suitable file systems found"
 	fi
@@ -313,6 +330,7 @@ case "$1" in
 	> /.autorelabel || exit $?
 	[ -z "$FORCEFLAG" ] || echo -n "$FORCEFLAG " >> /.autorelabel
 	[ -z "$BOOTTIME" ] || echo -N $BOOTTIME >> /.autorelabel
+	[ -z "$BIND_MOUNT_FILESYSTEMS" ] || echo "-M" >> /.autorelabel
 	# Force full relabel if SELinux is not enabled
 	selinuxenabled || echo -F > /.autorelabel
 	echo "System will relabel on next boot"
@@ -324,7 +342,7 @@ esac
 }
 usage() {
 	echo $"""
-Usage: $0 [-v] [-F] [-f] relabel
+Usage: $0 [-v] [-F] [-M] [-f] relabel
 or
 Usage: $0 [-v] [-F] [-B | -N time ] { check | restore | verify }
 or
@@ -334,7 +352,7 @@ Usage: $0 [-v] [-F] -R rpmpackage[,rpmpackage...] { check | restore | verify }
 or
 Usage: $0 [-v] [-F] -C PREVIOUS_FILECONTEXT { check | restore | verify }
 or
-Usage: $0 [-F] [-B] onboot
+Usage: $0 [-F] [-M] [-B] onboot
 """
 }
 
@@ -353,7 +371,7 @@ set_restore_mode() {
 }
 
 # See how we were called.
-while getopts "N:BC:FfR:l:v" i; do
+while getopts "N:BC:FfR:l:vM" i; do
     case "$i" in
 	B)
 		BOOTTIME=`/bin/who -b | awk '{print $3}'`
@@ -378,6 +396,9 @@ while getopts "N:BC:FfR:l:v" i; do
 		# Old scripts use obsolete option `-l logfile`
 		echo "Redirecting output to $OPTARG"
 		exec >>"$OPTARG" 2>&1
+		;;
+	M)
+		BIND_MOUNT_FILESYSTEMS="-M"
 		;;
 	F)
 		FORCEFLAG="-F"

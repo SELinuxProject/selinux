@@ -6,7 +6,7 @@ fixfiles \- fix file SELinux security contexts.
 .na
 
 .B fixfiles
-.I [\-v] [\-F] [\-f] relabel
+.I [\-v] [\-F] [-M] [\-f] relabel
 
 .B fixfiles
 .I [\-v] [\-F] { check | restore | verify } dir/file ...
@@ -21,7 +21,7 @@ fixfiles \- fix file SELinux security contexts.
 .I [\-v] [\-F] \-C PREVIOUS_FILECONTEXT  { check | restore | verify }
 
 .B fixfiles
-.I [-F] [-B] onboot
+.I [-F] [-M] [-B] onboot
 
 .ad
 
@@ -67,6 +67,10 @@ Run a diff on  the PREVIOUS_FILECONTEXT file to the currently installed one, and
 .B \-N time
 Only act on files created after the specified date.  Date must be specified in
 "YYYY\-MM\-DD HH:MM" format.  Date field will be passed to find \-\-newermt command.
+
+.TP
+.B \-M
+Bind mount filesystems before relabeling them, this allows fixing the context of files or directories that have been mounted over.
 
 .TP
 .B -v
