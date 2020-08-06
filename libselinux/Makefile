@@ -1,4 +1,4 @@
-SUBDIRS = src include utils man
+SUBDIRS = include src utils man
 
 PKG_CONFIG ?= pkg-config
 DISABLE_SETRANS ?= n
