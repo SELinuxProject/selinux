@@ -67,7 +67,7 @@ dnf install -y \
 cd "$SELINUX_DIR"
 
 # Show HEAD commit for sanity checking
-git log -1
+git log --oneline -1
 
 #
 # Build and replace userspace components
