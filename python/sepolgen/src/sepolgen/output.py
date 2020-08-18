@@ -84,7 +84,7 @@ def avrule_cmp(a, b):
         return ret
 
     # At this point, who cares - just return something
-    return cmp(len(a.perms), len(b.perms))
+    return 0
 
 # Compare two interface calls
 def ifcall_cmp(a, b):
@@ -100,7 +100,7 @@ def rule_cmp(a, b):
         else:
             return id_set_cmp([a.args[0]], b.src_types)
     else:
-        if isinstance(b, refpolicy.AVRule):
+        if isinstance(b, refpolicy.AVRule) or isinstance(b, refpolicy.AVExtRule):
             return avrule_cmp(a,b)
         else:
             return id_set_cmp(a.src_types, [b.args[0]])
@@ -130,6 +130,7 @@ def sort_filter(module):
         # we assume is the first argument for interfaces).
         rules = []
         rules.extend(node.avrules())
+        rules.extend(node.avextrules())
         rules.extend(node.interface_calls())
         rules.sort(key=util.cmp_to_key(rule_cmp))
 
