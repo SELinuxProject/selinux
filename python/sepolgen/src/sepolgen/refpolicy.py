@@ -407,10 +407,9 @@ class XpermSet():
 
         # print single value without braces
         if len(self.ranges) == 1 and self.ranges[0][0] == self.ranges[0][1]:
-            return compl + str(self.ranges[0][0])
+            return compl + hex(self.ranges[0][0])
 
-        vals = map(lambda x: str(x[0]) if x[0] == x[1] else "%s-%s" % x,
-                   self.ranges)
+        vals = map(lambda x: hex(x[0]) if x[0] == x[1] else "%s-%s" % (hex(x[0]), hex(x[1]), ), self.ranges)
 
         return "%s{ %s }" % (compl, " ".join(vals))
 
