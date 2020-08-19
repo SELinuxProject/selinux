@@ -90,17 +90,17 @@ class TestXpermSet(unittest.TestCase):
         a.complement = True
         self.assertEqual(a.to_string(), "")
         a.add(1234)
-        self.assertEqual(a.to_string(), "~ 1234")
+        self.assertEqual(a.to_string(), "~ 0x4d2")
         a.complement = False
-        self.assertEqual(a.to_string(), "1234")
+        self.assertEqual(a.to_string(), "0x4d2")
         a.add(2345)
-        self.assertEqual(a.to_string(), "{ 1234 2345 }")
+        self.assertEqual(a.to_string(), "{ 0x4d2 0x929 }")
         a.complement = True
-        self.assertEqual(a.to_string(), "~ { 1234 2345 }")
+        self.assertEqual(a.to_string(), "~ { 0x4d2 0x929 }")
         a.add(42,64)
-        self.assertEqual(a.to_string(), "~ { 42-64 1234 2345 }")
+        self.assertEqual(a.to_string(), "~ { 0x2a-0x40 0x4d2 0x929 }")
         a.complement = False
-        self.assertEqual(a.to_string(), "{ 42-64 1234 2345 }")
+        self.assertEqual(a.to_string(), "{ 0x2a-0x40 0x4d2 0x929 }")
 
 class TestSecurityContext(unittest.TestCase):
     def test_init(self):

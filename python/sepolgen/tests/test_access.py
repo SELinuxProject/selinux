@@ -171,7 +171,7 @@ class TestAccessVector(unittest.TestCase):
         a.merge(b)
         self.assertEqual(sorted(list(a.perms)), ["append", "read", "write"])
         self.assertEqual(list(a.xperms.keys()), ["ioctl"])
-        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 42 12345 }")
+        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 0x2a 0x3039 }")
 
     def text_merge_xperm2(self):
         """Test merging AV that does not contain xperms with AV that does"""
@@ -185,7 +185,7 @@ class TestAccessVector(unittest.TestCase):
         a.merge(b)
         self.assertEqual(sorted(list(a.perms)), ["append", "read", "write"])
         self.assertEqual(list(a.xperms.keys()), ["ioctl"])
-        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 42 12345 }")
+        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 0x2a 0x3039 }")
 
     def test_merge_xperm_diff_op(self):
         """Test merging two AVs that contain xperms with different operation"""
@@ -203,8 +203,8 @@ class TestAccessVector(unittest.TestCase):
         a.merge(b)
         self.assertEqual(list(a.perms), ["read"])
         self.assertEqual(sorted(list(a.xperms.keys())), ["asdf", "ioctl"])
-        self.assertEqual(a.xperms["asdf"].to_string(), "23")
-        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 42 12345 }")
+        self.assertEqual(a.xperms["asdf"].to_string(), "0x17")
+        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 0x2a 0x3039 }")
                          
     def test_merge_xperm_same_op(self):
         """Test merging two AVs that contain xperms with same operation"""
@@ -222,7 +222,7 @@ class TestAccessVector(unittest.TestCase):
         a.merge(b)
         self.assertEqual(list(a.perms), ["read"])
         self.assertEqual(list(a.xperms.keys()), ["ioctl"])
-        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 23 42 12345 }")
+        self.assertEqual(a.xperms["ioctl"].to_string(), "{ 0x17 0x2a 0x3039 }")
 
 class TestUtilFunctions(unittest.TestCase):
     def test_is_idparam(self):
