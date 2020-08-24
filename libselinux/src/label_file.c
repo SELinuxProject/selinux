@@ -854,6 +854,7 @@ static const struct spec **lookup_all(struct selabel_handle *rec,
 	struct saved_data *data = (struct saved_data *)rec->data;
 	struct spec *spec_arr = data->spec_arr;
 	int i, rc, file_stem;
+	size_t len;
 	mode_t mode = (mode_t)type;
 	char *clean_key = NULL;
 	const char *prev_slash, *next_slash;
@@ -891,6 +892,27 @@ static const struct spec **lookup_all(struct selabel_handle *rec,
 			next_slash = strstr(prev_slash, "//");
 		}
 		strcpy(clean_key + sofar, prev_slash);
+		key = clean_key;
+	}
+
+	/* remove trailing slash */
+	len = strlen(key);
+	if (len == 0) {
+		errno = EINVAL;
+		goto finish;
+	}
+
+	if (key[len - 1] == '/') {
+		/* reuse clean_key from above if available */
+		if (!clean_key) {
+			clean_key = (char *) malloc(len);
+			if (!clean_key)
+				goto finish;
+
+			strncpy(clean_key, key, len - 1);
+		}
+
+		clean_key[len - 1] = '\0';
 		key = clean_key;
 	}
 
