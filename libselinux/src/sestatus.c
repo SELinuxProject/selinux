@@ -91,7 +91,9 @@ static inline uint32_t read_sequence(struct selinux_status_t *status)
 int selinux_status_updated(void)
 {
 	uint32_t	curr_seqno;
-	int		result = 0;
+	uint32_t	tmp_seqno;
+	uint32_t	enforcing;
+	uint32_t	policyload;
 
 	if (selinux_status == NULL) {
 		errno = EINVAL;
@@ -117,21 +119,29 @@ int selinux_status_updated(void)
 	if (last_seqno & 0x0001)
 		last_seqno = curr_seqno;
 
-	if (last_seqno != curr_seqno)
-	{
-		if (avc_enforcing != (int) selinux_status->enforcing) {
-			if (avc_process_setenforce(selinux_status->enforcing) < 0)
-				return -1;
-		}
-		if (last_policyload != selinux_status->policyload) {
-			if (avc_process_policyload(selinux_status->policyload) < 0)
-				return -1;
-			last_policyload = selinux_status->policyload;
-		}
-		last_seqno = curr_seqno;
-		result = 1;
+	if (last_seqno == curr_seqno)
+		return 0;
+
+	/* sequence must not be changed during references */
+	do {
+		enforcing = selinux_status->enforcing;
+		policyload = selinux_status->policyload;
+		tmp_seqno = curr_seqno;
+		curr_seqno = read_sequence(selinux_status);
+	} while (tmp_seqno != curr_seqno);
+
+	if (avc_enforcing != (int) enforcing) {
+		if (avc_process_setenforce(enforcing) < 0)
+			return -1;
 	}
-	return result;
+	if (last_policyload != policyload) {
+		if (avc_process_policyload(policyload) < 0)
+			return -1;
+		last_policyload = policyload;
+	}
+	last_seqno = curr_seqno;
+
+	return 1;
 }
 
 /*
