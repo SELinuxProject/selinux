@@ -278,9 +278,10 @@ static int fallback_cb_policyload(int policyload)
  */
 int selinux_status_open(int fallback)
 {
-	int	fd;
-	char	path[PATH_MAX];
-	long	pagesize;
+	int		fd;
+	char		path[PATH_MAX];
+	long		pagesize;
+	uint32_t	seqno;
 
 	if (!selinux_mnt) {
 		errno = ENOENT;
@@ -303,6 +304,14 @@ int selinux_status_open(int fallback)
 	}
 	selinux_status_fd = fd;
 	last_seqno = (uint32_t)(-1);
+
+	/* sequence must not be changed during references */
+	do {
+		seqno = read_sequence(selinux_status);
+
+		last_policyload = selinux_status->policyload;
+
+	} while (seqno != read_sequence(selinux_status));
 
 	/* No need to use avc threads if the kernel status page is available */
 	avc_using_threads = 0;
