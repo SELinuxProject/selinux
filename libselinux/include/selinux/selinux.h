@@ -182,6 +182,8 @@ extern void selinux_set_callback(int type, union selinux_callback cb);
 #define SELINUX_WARNING		1
 #define SELINUX_INFO		2
 #define SELINUX_AVC		3
+#define SELINUX_POLICYLOAD	4
+#define SELINUX_SETENFORCE	5
 #define SELINUX_TRANS_DIR	"/var/run/setrans"
 
 /* Compute an access decision. */
