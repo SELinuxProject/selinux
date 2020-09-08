@@ -145,12 +145,21 @@ These examples show named and anonymous [`nodecon`](cil_network_labeling_stateme
     (context context_1 (unconfined.user object_r unconfined.object low_low))
     (context context_2 (unconfined.user object_r unconfined.object (systemlow level_2)))
 
-    (ipaddr netmask_1 255.255.255.0)
-    (ipaddr ipv4_1 192.168.1.64)
+    (ipaddr netmask_1 255.255.255.255)
+    (ipaddr ipv4_1 192.0.2.64)
 
-    (nodecon netmask_1 ipv4_1 context_2)
-    (nodecon (255.255.255.0) (192.168.1.64) context_1)
-    (nodecon netmask_1 (192.168.1.64) (unconfined.user object_r unconfined.object ((s0) (s0 (c0)))))
+    (nodecon ipv4_1 netmask_1 context_2)
+    (nodecon (192.0.2.64) (255.255.255.255) context_1)
+    (nodecon (192.0.2.64) netmask_1 (unconfined.user object_r unconfined.object ((s0) (s0 (c0)))))
+
+    (context context_3 (sys.id sys.role my48prefix.node ((s0)(s0))))
+
+    (ipaddr netmask_2 ffff:ffff:ffff:0:0:0:0:0)
+    (ipaddr ipv6_2  2001:db8:1:0:0:0:0:0)
+
+    (nodecon ipv6_2 netmask_2 context_3)
+    (nodecon (2001:db8:1:0:0:0:0:0) (ffff:ffff:ffff:0:0:0:0:0) context_3)
+    (nodecon (2001:db8:1:0:0:0:0:0) netmask_2 (sys.id sys.role my48prefix.node ((s0)(s0))))
 
 portcon
 -------
