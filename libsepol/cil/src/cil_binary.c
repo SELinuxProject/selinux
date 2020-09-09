@@ -2176,6 +2176,51 @@ static int __cil_cond_expr_to_sepol_expr(policydb_t *pdb, struct cil_list *cil_e
 	return SEPOL_OK;
 }
 
+int __cil_validate_cond_expr(cond_expr_t *cond_expr)
+{
+	cond_expr_t *e;
+	int depth = -1;
+
+	for (e = cond_expr; e != NULL; e = e->next) {
+		switch (e->expr_type) {
+		case COND_BOOL:
+			if (depth == (COND_EXPR_MAXDEPTH - 1)) {
+				cil_log(CIL_ERR,"Conditional expression exceeded max allowable depth\n");
+				return SEPOL_ERR;
+			}
+			depth++;
+			break;
+		case COND_NOT:
+			if (depth < 0) {
+				cil_log(CIL_ERR,"Invalid conditional expression\n");
+				return SEPOL_ERR;
+			}
+			break;
+		case COND_OR:
+		case COND_AND:
+		case COND_XOR:
+		case COND_EQ:
+		case COND_NEQ:
+			if (depth < 1) {
+				cil_log(CIL_ERR,"Invalid conditional expression\n");
+				return SEPOL_ERR;
+			}
+			depth--;
+			break;
+		default:
+			cil_log(CIL_ERR,"Invalid conditional expression\n");
+			return SEPOL_ERR;
+		}
+	}
+
+	if (depth != 0) {
+		cil_log(CIL_ERR,"Invalid conditional expression\n");
+		return SEPOL_ERR;
+	}
+
+	return SEPOL_OK;
+}
+
 int cil_booleanif_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
@@ -2201,6 +2246,11 @@ int cil_booleanif_to_policydb(policydb_t *pdb, const struct cil_db *db, struct c
 	rc = __cil_cond_expr_to_sepol_expr(pdb, cil_boolif->datum_expr, &tmp_cond->expr);
 	if (rc != SEPOL_OK) {
 		cil_tree_log(node, CIL_INFO, "Failed to convert CIL conditional expression to sepol expression");
+		goto exit;
+	}
+
+	rc = __cil_validate_cond_expr(tmp_cond->expr);
+	if (rc != SEPOL_OK) {
 		goto exit;
 	}
 
