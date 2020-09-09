@@ -2713,6 +2713,49 @@ int __cil_constrain_expr_to_sepol_expr(policydb_t *pdb, const struct cil_db *db,
 	return SEPOL_OK;
 }
 
+int __cil_validate_constrain_expr(constraint_expr_t *sepol_expr)
+{
+	constraint_expr_t *e;
+	int depth = -1;
+
+	for (e = sepol_expr; e != NULL; e = e->next) {
+		switch (e->expr_type) {
+		case CEXPR_NOT:
+			if (depth < 0) {
+				cil_log(CIL_ERR,"Invalid constraint expression\n");
+				return SEPOL_ERR;
+			}
+			break;
+		case CEXPR_AND:
+		case CEXPR_OR:
+			if (depth < 1) {
+				cil_log(CIL_ERR,"Invalid constraint expression\n");
+				return SEPOL_ERR;
+			}
+			depth--;
+			break;
+		case CEXPR_ATTR:
+		case CEXPR_NAMES:
+			if (depth == (CEXPR_MAXDEPTH - 1)) {
+				cil_log(CIL_ERR,"Constraint expression exceeded max allowable depth\n");
+				return SEPOL_ERR;
+			}
+			depth++;
+			break;
+		default:
+			cil_log(CIL_ERR,"Invalid constraint expression\n");
+			return SEPOL_ERR;
+		}
+	}
+
+	if (depth != 0) {
+		cil_log(CIL_ERR,"Invalid constraint expression\n");
+		return SEPOL_ERR;
+	}
+
+	return SEPOL_OK;
+}
+
 int cil_constrain_to_policydb_helper(policydb_t *pdb, const struct cil_db *db, struct cil_symtab_datum *class, struct cil_list *perms, struct cil_list *expr)
 {
 	int rc = SEPOL_ERR;
@@ -2732,6 +2775,11 @@ int cil_constrain_to_policydb_helper(policydb_t *pdb, const struct cil_db *db, s
 	}
 
 	rc = __cil_constrain_expr_to_sepol_expr(pdb, db, expr, &sepol_expr);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	rc = __cil_validate_constrain_expr(sepol_expr);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}

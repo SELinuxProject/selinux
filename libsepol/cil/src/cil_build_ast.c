@@ -2738,7 +2738,7 @@ exit:
 	return SEPOL_ERR;
 }
 
-static int __cil_fill_constraint_expr(struct cil_tree_node *current, enum cil_flavor flavor, struct cil_list **expr, int *depth)
+static int __cil_fill_constraint_expr(struct cil_tree_node *current, enum cil_flavor flavor, struct cil_list **expr)
 {
 	int rc = SEPOL_ERR;
 	enum cil_flavor op;
@@ -2747,12 +2747,6 @@ static int __cil_fill_constraint_expr(struct cil_tree_node *current, enum cil_fl
 
 	if (current->data == NULL || current->cl_head != NULL) {
 		cil_log(CIL_ERR, "Expected a string at the start of the constraint expression\n");
-		goto exit;
-	}
-
-	if (*depth > CEXPR_MAXDEPTH) {
-		cil_log(CIL_ERR, "Max depth of %d exceeded for constraint expression\n", CEXPR_MAXDEPTH);
-		rc = SEPOL_ERR;
 		goto exit;
 	}
 
@@ -2769,14 +2763,13 @@ static int __cil_fill_constraint_expr(struct cil_tree_node *current, enum cil_fl
 	case CIL_CONS_DOM:
 	case CIL_CONS_DOMBY:
 	case CIL_CONS_INCOMP:
-		(*depth)++;
 		rc = __cil_fill_constraint_leaf_expr(current, flavor, op, expr);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
 		break;
 	case CIL_NOT:
-		rc = __cil_fill_constraint_expr(current->next->cl_head, flavor, &lexpr, depth);
+		rc = __cil_fill_constraint_expr(current->next->cl_head, flavor, &lexpr);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
@@ -2785,11 +2778,11 @@ static int __cil_fill_constraint_expr(struct cil_tree_node *current, enum cil_fl
 		cil_list_append(*expr, CIL_LIST, lexpr);
 		break;
 	default:
-		rc = __cil_fill_constraint_expr(current->next->cl_head, flavor, &lexpr, depth);
+		rc = __cil_fill_constraint_expr(current->next->cl_head, flavor, &lexpr);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
-		rc = __cil_fill_constraint_expr(current->next->next->cl_head, flavor, &rexpr, depth);
+		rc = __cil_fill_constraint_expr(current->next->next->cl_head, flavor, &rexpr);
 		if (rc != SEPOL_OK) {
 			cil_list_destroy(&lexpr, CIL_TRUE);
 			goto exit;
@@ -2801,8 +2794,6 @@ static int __cil_fill_constraint_expr(struct cil_tree_node *current, enum cil_fl
 		break;
 	}
 
-	(*depth)--;
-
 	return SEPOL_OK;
 exit:
 
@@ -2812,13 +2803,12 @@ exit:
 int cil_gen_constraint_expr(struct cil_tree_node *current, enum cil_flavor flavor, struct cil_list **expr)
 {
 	int rc = SEPOL_ERR;
-	int depth = 0;
 
 	if (current->cl_head == NULL) {
 		goto exit;
 	}
 
-	rc = __cil_fill_constraint_expr(current->cl_head, flavor, expr, &depth);
+	rc = __cil_fill_constraint_expr(current->cl_head, flavor, expr);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
