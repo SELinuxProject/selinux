@@ -902,7 +902,7 @@ static const struct spec **lookup_all(struct selabel_handle *rec,
 		goto finish;
 	}
 
-	if (key[len - 1] == '/') {
+	if (len > 1 && key[len - 1] == '/') {
 		/* reuse clean_key from above if available */
 		if (!clean_key) {
 			clean_key = (char *) malloc(len);
