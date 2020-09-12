@@ -238,6 +238,8 @@ allowx
 
 Specifies the access allowed between a source and target type using extended permissions. Unlike the [`allow`](cil_access_vector_rules.md#allow) statement, the statements [`validatetrans`](cil_constraint_statements.md#validatetrans), [`mlsvalidatetrans`](cil_constraint_statements.md#mlsvalidatetrans), [`constrain`](cil_constraint_statements.md#constrain), and [`mlsconstrain`](cil_constraint_statements.md#mlsconstrain) do not limit accesses granted by [`allowx`](cil_access_vector_rules.md#allowx).
 
+Note that for this to work there must *also* be valid equivalent [`allow`](cil_access_vector_rules.md#allow) rules present.
+
 **Rule definition:**
 
     (allowx source_id target_id|self permissionx_id)
@@ -274,17 +276,20 @@ Specifies the access allowed between a source and target type using extended per
 
 These examples show a selection of possible permutations of [`allowx`](cil_access_vector_rules.md#allowx) rules:
 
+    (allow type_1 type_2 (tcp_socket (ioctl))) ;; pre-requisite
     (allowx type_1 type_2 (ioctl tcp_socket (range 0x2000 0x20FF)))
 
     (permissionx ioctl_nodebug (ioctl udp_socket (not (range 0x4000 0x4010))))
+    (allow type_3 type_4 (udp_socket (ioctl))) ;; pre-requisite
     (allowx type_3 type_4 ioctl_nodebug)
-
 
 
 auditallowx
 -----------
 
 Audit the access rights defined if there is a valid [`allowx`](cil_access_vector_rules.md#allowx) rule. It does NOT allow access, it only audits the event.
+
+Note that for this to work there must *also* be valid equivalent [`auditallow`](cil_access_vector_rules.md#auditallow) rules present.
 
 **Rule definition:**
 
@@ -324,6 +329,7 @@ This example will log an audit event whenever the corresponding [`allowx`](cil_a
 
     (allowx type_1 type_2 (ioctl tcp_socket (range 0x2000 0x20FF)))
 
+    (auditallow type_1 type_2 (tcp_socket (ioctl))) ;; pre-requisite
     (auditallowx type_1 type_2 (ioctl tcp_socket (range 0x2005 0x2010)))
 
 
@@ -331,6 +337,8 @@ dontauditx
 ----------
 
 Do not audit the access rights defined when access denied. This stops excessive log entries for known events.
+
+Note that for this to work there must *also* be atleast one [`allowx`](cil_access_vector_rules.md#allowx) rule associated with the target type.
 
 Note that these rules can be omitted by the CIL compiler command line parameter `-D` or `--disable-dontaudit` flags.
 
@@ -370,6 +378,7 @@ Note that these rules can be omitted by the CIL compiler command line parameter 
 
 This example will not audit the denied access:
 
+    (allowx type_1 type_2 (ioctl tcp_socket (0x1))) ;; pre-requisite, just some irrelevant random ioctl
     (dontauditx type_1 type_2 (ioctl tcp_socket (range 0x3000 0x30FF)))
 
 
@@ -392,7 +401,7 @@ Note that these rules can be over-ridden by the CIL compiler command line parame
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><p><code>neverallows</code></p></td>
+<td align="left"><p><code>neverallowx</code></p></td>
 <td align="left"><p>The <code>neverallowx</code> keyword.</p></td>
 </tr>
 <tr class="even">
