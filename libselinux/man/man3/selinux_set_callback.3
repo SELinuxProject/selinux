@@ -51,6 +51,15 @@ argument indicates the type of message and will be set to one of the following:
 
 .B SELINUX_SETENFORCE
 
+SELINUX_ERROR, SELINUX_WARNING, and SELINUX_INFO indicate standard log severity
+levels and are not auditable messages.
+
+The SELINUX_AVC, SELINUX_POLICYLOAD, and SELINUX_SETENFORCE message types can be
+audited with AUDIT_USER_AVC, AUDIT_USER_MAC_POLICY_LOAD, and AUDIT_USER_MAC_STATUS
+values from libaudit, respectively.  If they are not audited, SELINUX_AVC should be
+considered equivalent to SELINUX_ERROR; similarly, SELINUX_POLICYLOAD and
+SELINUX_SETENFORCE should be considered equivalent to SELINUX_INFO.
+
 .
 .TP
 .B SELINUX_CB_AUDIT
