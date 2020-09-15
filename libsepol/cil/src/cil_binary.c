@@ -4363,15 +4363,13 @@ static int __cil_rule_to_sepol_class_perms(policydb_t *pdb, struct cil_list *cla
 
 				rc = __cil_perms_to_datum(cp->perms, sepol_class, &data);
 				if (rc != SEPOL_OK) goto exit;
-				if (data == 0) {
-					/* No permissions */
-					return SEPOL_OK;
+				if (data != 0) { /* Only add if there are permissions */
+					cpn = cil_malloc(sizeof(class_perm_node_t));
+					cpn->tclass = sepol_class->s.value;
+					cpn->data = data;
+					cpn->next = *sepol_class_perms;
+					*sepol_class_perms = cpn;
 				}
-				cpn = cil_malloc(sizeof(class_perm_node_t));
-				cpn->tclass = sepol_class->s.value;
-				cpn->data = data;
-				cpn->next = *sepol_class_perms;
-				*sepol_class_perms = cpn;
 			} else { /* MAP */
 				struct cil_list_item *j = NULL;
 				cil_list_for_each(j, cp->perms) {
