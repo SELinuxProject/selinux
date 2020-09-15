@@ -59,7 +59,7 @@ int avc_process_setenforce(int enforcing)
 	int rc = 0;
 
 	avc_log(SELINUX_SETENFORCE,
-		"%s:  received setenforce notice (enforcing=%d)\n",
+		"%s:  op=setenforce lsm=selinux enforcing=%d res=1",
 		avc_prefix, enforcing);
 	if (avc_setenforce)
 		goto out;
@@ -81,7 +81,7 @@ int avc_process_policyload(uint32_t seqno)
 	int rc = 0;
 
 	avc_log(SELINUX_POLICYLOAD,
-		"%s:  received policyload notice (seqno=%u)\n",
+		"%s:  op=load_policy lsm=selinux seqno=%u res=1",
 		avc_prefix, seqno);
 	rc = avc_ss_reset(seqno);
 	if (rc < 0) {
