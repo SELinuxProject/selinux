@@ -1570,17 +1570,22 @@ static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
 
 	/* AVTAB_XPERMS entries are not necessarily unique */
 	if (key->specified & AVTAB_XPERMS) {
-		node = avtab_search_node(avtab, key);
-		while (node) {
-			if ((node->datum.xperms->specified == xperms->specified) &&
-				(node->datum.xperms->driver == xperms->driver)) {
-				match = 1;
-				break;
-			}
-			node = avtab_search_node_next(node, key->specified);
-		}
-		if (!match)
+		if (xperms == NULL) {
+			ERR(handle, "searching xperms NULL");
 			node = NULL;
+		} else {
+			node = avtab_search_node(avtab, key);
+			while (node) {
+				if ((node->datum.xperms->specified == xperms->specified) &&
+					(node->datum.xperms->driver == xperms->driver)) {
+					match = 1;
+					break;
+				}
+				node = avtab_search_node_next(node, key->specified);
+			}
+			if (!match)
+				node = NULL;
+		}
 	} else {
 		node = avtab_search_node(avtab, key);
 	}
