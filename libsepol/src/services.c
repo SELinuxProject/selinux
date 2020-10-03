@@ -67,7 +67,6 @@
 #include "flask.h"
 
 #define BUG() do { ERR(NULL, "Badness at %s:%d", __FILE__, __LINE__); } while (0)
-#define BUG_ON(x) do { if (x) ERR(NULL, "Badness at %s:%d", __FILE__, __LINE__); } while (0)
 
 static int selinux_enforcing = 1;
 
@@ -469,18 +468,30 @@ static int constraint_expr_eval_reason(context_struct_t *scontext,
 		/* Now process each expression of the constraint */
 		switch (e->expr_type) {
 		case CEXPR_NOT:
-			BUG_ON(sp < 0);
+			if (sp < 0) {
+				BUG();
+				rc = -EINVAL;
+				goto out;
+			}
 			s[sp] = !s[sp];
 			cat_expr_buf(expr_list[expr_counter], "not");
 			break;
 		case CEXPR_AND:
-			BUG_ON(sp < 1);
+			if (sp < 1) {
+				BUG();
+				rc = -EINVAL;
+				goto out;
+			}
 			sp--;
 			s[sp] &= s[sp + 1];
 			cat_expr_buf(expr_list[expr_counter], "and");
 			break;
 		case CEXPR_OR:
-			BUG_ON(sp < 1);
+			if (sp < 1) {
+				BUG();
+				rc = -EINVAL;
+				goto out;
+			}
 			sp--;
 			s[sp] |= s[sp + 1];
 			cat_expr_buf(expr_list[expr_counter], "or");
