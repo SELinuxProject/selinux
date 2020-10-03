@@ -1526,7 +1526,7 @@ int cil_avrule_to_policydb(policydb_t *pdb, const struct cil_db *db, struct cil_
 /* index of the u32 containing the permission */
 #define XPERM_IDX(x) (x >> 5)
 /* set bits 0 through x-1 within the u32 */
-#define XPERM_SETBITS(x) ((1 << (x & 0x1f)) - 1)
+#define XPERM_SETBITS(x) ((1U << (x & 0x1f)) - 1)
 /* low value for this u32 */
 #define XPERM_LOW(x) (x << 5)
 /* high value for this u32 */
