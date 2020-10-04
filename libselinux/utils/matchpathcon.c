@@ -1,15 +1,14 @@
-#include <unistd.h>
+#include <errno.h>
+#include <getopt.h>
+#include <limits.h>
+#include <selinux/label.h>
+#include <selinux/selinux.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
-#include <errno.h>
 #include <string.h>
-#include <limits.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <selinux/selinux.h>
-#include <limits.h>
-#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 static __attribute__ ((__noreturn__)) void usage(const char *progname)
 {
@@ -19,15 +18,21 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 	exit(1);
 }
 
-static int printmatchpathcon(const char *path, int header, int mode)
+static int printmatchpathcon(struct selabel_handle *hnd, const char *path, int header, int mode, int notrans)
 {
-	char *buf;
-	int rc = matchpathcon(path, mode, &buf);
+	char *buf = NULL;
+	int rc;
+
+	if (notrans) {
+		rc = selabel_lookup_raw(hnd, &buf, path, mode);
+	} else {
+		rc = selabel_lookup(hnd, &buf, path, mode);
+	}
 	if (rc < 0) {
 		if (errno == ENOENT) {
 			buf = strdup("<<none>>");
 		} else {
-			fprintf(stderr, "matchpathcon(%s) failed: %s\n", path,
+			fprintf(stderr, "selabel_lookup(%s) failed: %s\n", path,
 				strerror(errno));
 			return 1;
 		}
@@ -66,15 +71,14 @@ static mode_t string_to_mode(char *s)
 
 int main(int argc, char **argv)
 {
-	int i, init = 0, force_mode = 0;
+	int i, force_mode = 0;
 	int header = 1, opt;
 	int verify = 0;
 	int notrans = 0;
 	int error = 0;
 	int quiet = 0;
-
-	fprintf(stderr,
-		"Deprecated, use selabel_lookup\n");
+	struct selabel_handle *hnd;
+	struct selinux_opt options[SELABEL_NOPT] = {};
 
 	if (argc < 2)
 		usage(argv[0]);
@@ -96,23 +100,10 @@ int main(int argc, char **argv)
 			break;
 		case 'N':
 			notrans = 1;
-			set_matchpathcon_flags(MATCHPATHCON_NOTRANS);
 			break;
 		case 'f':
-			if (init) {
-				fprintf(stderr,
-					"%s:  -f and -p are exclusive\n",
-					argv[0]);
-				exit(1);
-			}
-			init = 1;
-			if (matchpathcon_init(optarg)) {
-				fprintf(stderr,
-					"Error while processing %s:  %s\n",
-					optarg,
-					errno ? strerror(errno) : "invalid");
-				exit(1);
-			}
+			options[SELABEL_OPT_PATH].type = SELABEL_OPT_PATH;
+			options[SELABEL_OPT_PATH].value = optarg;
 			break;
 		case 'P':
 			if (selinux_set_policy_root(optarg) < 0 ) {
@@ -124,20 +115,11 @@ int main(int argc, char **argv)
 			}
 			break;
 		case 'p':
-			if (init) {
-				fprintf(stderr,
-					"%s:  -f and -p are exclusive\n",
-					argv[0]);
-				exit(1);
-			}
-			init = 1;
-			if (matchpathcon_init_prefix(NULL, optarg)) {
-				fprintf(stderr,
-					"Error while processing %s:  %s\n",
-					optarg,
-					errno ? strerror(errno) : "invalid");
-				exit(1);
-			}
+			// This option has been deprecated since libselinux 2.5 (2016):
+			// https://github.com/SELinuxProject/selinux/commit/26e05da0fc2d0a4bd274320968a88f8acbb3b6a6
+			fprintf(stderr, "Warning: using %s -p is deprecated\n", argv[0]);
+			options[SELABEL_OPT_SUBSET].type = SELABEL_OPT_SUBSET;
+			options[SELABEL_OPT_SUBSET].value = optarg;
 			break;
 		case 'q':
 			quiet = 1;
@@ -145,6 +127,13 @@ int main(int argc, char **argv)
 		default:
 			usage(argv[0]);
 		}
+	}
+	hnd = selabel_open(SELABEL_CTX_FILE, options, SELABEL_NOPT);
+	if (!hnd) {
+		fprintf(stderr,
+			"Error while opening file contexts database: %s\n",
+			strerror(errno));
+		return -1;
 	}
 	for (i = optind; i < argc; i++) {
 		int rc, mode = 0;
@@ -185,19 +174,19 @@ int main(int argc, char **argv)
 				if (rc >= 0) {
 					printf("%s has context %s, should be ",
 					       path, con);
-					printmatchpathcon(path, 0, mode);
+					printmatchpathcon(hnd, path, 0, mode, notrans);
 					freecon(con);
 				} else {
 					printf
 					    ("actual context unknown: %s, should be ",
 					     strerror(errno));
-					printmatchpathcon(path, 0, mode);
+					printmatchpathcon(hnd, path, 0, mode, notrans);
 				}
 			}
 		} else {
-			error |= printmatchpathcon(path, header, mode);
+			error |= printmatchpathcon(hnd, path, header, mode, notrans);
 		}
 	}
-	matchpathcon_fini();
+	selabel_close(hnd);
 	return error;
 }
