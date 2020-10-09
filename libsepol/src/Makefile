@@ -7,7 +7,7 @@ RANLIB ?= ranlib
 CILDIR ?= ../cil
 
 VERSION = $(shell cat ../VERSION)
-LIBVERSION = 1
+LIBVERSION = 2
 
 LEX = flex
 CIL_GENERATED = $(CILDIR)/src/cil_lexer.c
