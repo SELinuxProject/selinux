@@ -30,8 +30,6 @@
 %}
 
 %include "stdint.i"
-%ignore semanage_module_install_pp;
-%ignore semanage_module_install_hll;
 
 %wrapper %{
 

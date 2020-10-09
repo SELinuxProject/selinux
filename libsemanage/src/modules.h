@@ -26,16 +26,9 @@
 
 #include "semanage/modules.h"
 
-int semanage_module_install_pp(semanage_handle_t * sh,
-			    char *module_data, size_t data_len);
-int semanage_module_install_hll(semanage_handle_t * sh,
-			    char *module_data, size_t data_len, const char *name, const char *ext_lang);
-int semanage_module_upgrade(semanage_handle_t * sh,
-			    char *module_data, size_t data_len);
+
 int semanage_module_upgrade_file(semanage_handle_t * sh,
 				 const char *module_name);
-int semanage_module_install_base(semanage_handle_t * sh,
-				 char *module_data, size_t data_len);
 int semanage_module_install_base_file(semanage_handle_t * sh,
 				 const char *module_name);
 

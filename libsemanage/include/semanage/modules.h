@@ -33,7 +33,7 @@ typedef struct semanage_module_key semanage_module_key_t;
  */
 
 extern int semanage_module_install(semanage_handle_t *,
-				   char *module_data, size_t data_len, char *name, char *ext_lang);
+				   char *module_data, size_t data_len, const char *name, const char *ext_lang);
 extern int semanage_module_install_file(semanage_handle_t *,
 					const char *module_name);
 extern int semanage_module_remove(semanage_handle_t *, char *module_name);
