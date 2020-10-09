@@ -734,62 +734,6 @@ int semanage_module_set_enabled(semanage_handle_t *sh,
 }
 
 
-/* This function exists only for ABI compatibility. It has been deprecated and
- * should not be used. Instead, use semanage_module_set_enabled() */
-int semanage_module_enable(semanage_handle_t *sh, char *module_name)
-{
-	int rc = -1;
-	semanage_module_key_t *modkey = NULL;
-
-	rc = semanage_module_key_create(sh, &modkey);
-	if (rc != 0)
-		goto exit;
-
-	rc = semanage_module_key_set_name(sh, modkey, module_name);
-	if (rc != 0)
-		goto exit;
-
-	rc = semanage_module_set_enabled(sh, modkey, 1);
-	if (rc != 0)
-		goto exit;
-
-	rc = 0;
-
-exit:
-	semanage_module_key_destroy(sh, modkey);
-	free(modkey);
-
-	return rc;
-}
-
-/* This function exists only for ABI compatibility. It has been deprecated and
- * should not be used. Instead, use semanage_module_set_enabled() */
-int semanage_module_disable(semanage_handle_t *sh, char *module_name)
-{
-	int rc = -1;
-	semanage_module_key_t *modkey = NULL;
-
-	rc = semanage_module_key_create(sh, &modkey);
-	if (rc != 0)
-		goto exit;
-
-	rc = semanage_module_key_set_name(sh, modkey, module_name);
-	if (rc != 0)
-		goto exit;
-
-	rc = semanage_module_set_enabled(sh, modkey, 0);
-	if (rc != 0)
-		goto exit;
-
-	rc = 0;
-
-exit:
-	semanage_module_key_destroy(sh, modkey);
-	free(modkey);
-
-	return rc;
-}
-
 /* Converts a string to a priority
  *
  * returns -1 if str is not a valid priority.

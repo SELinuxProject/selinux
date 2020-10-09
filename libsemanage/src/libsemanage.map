@@ -165,8 +165,6 @@ LIBSEMANAGE_1.0 {
     semanage_is_connected;
     semanage_is_managed;
     semanage_mls_enabled;
-    semanage_module_disable;
-    semanage_module_enable;
     semanage_module_get_name;
     semanage_module_get_version;
     semanage_module_info_datum_destroy;
