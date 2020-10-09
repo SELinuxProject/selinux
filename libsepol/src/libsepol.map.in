@@ -1,19 +1,14 @@
 LIBSEPOL_1.0 {
   global:
 	cil_add_file;
-	cil_build_policydb;
-	cil_compile;
 	cil_db_destroy;
 	cil_db_init;
-	cil_filecons_to_string;
-	cil_selinuxusers_to_string;
 	cil_set_disable_dontaudit;
 	cil_set_disable_neverallow;
 	cil_set_handle_unknown;
 	cil_set_log_handler;
 	cil_set_log_level;
 	cil_set_preserve_tunables;
-	cil_userprefixes_to_string;
 	expand_module_avrules;
 	sepol_bool_clone;
 	sepol_bool_compare;

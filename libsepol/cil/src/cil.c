@@ -51,27 +51,6 @@
 #include "cil_policy.h"
 #include "cil_strpool.h"
 
-#if !defined(SHARED) || defined(ANDROID) || defined(__APPLE__)
-    #define DISABLE_SYMVER 1
-#endif
-
-#ifndef DISABLE_SYMVER
-asm(".symver cil_build_policydb_pdb,        cil_build_policydb@LIBSEPOL_1.0");
-asm(".symver cil_build_policydb_create_pdb, cil_build_policydb@@LIBSEPOL_1.1");
-
-asm(".symver cil_compile_pdb,   cil_compile@LIBSEPOL_1.0");
-asm(".symver cil_compile_nopdb, cil_compile@@LIBSEPOL_1.1");
-
-asm(".symver cil_userprefixes_to_string_pdb,   cil_userprefixes_to_string@LIBSEPOL_1.0");
-asm(".symver cil_userprefixes_to_string_nopdb, cil_userprefixes_to_string@@LIBSEPOL_1.1");
-
-asm(".symver cil_selinuxusers_to_string_pdb,   cil_selinuxusers_to_string@LIBSEPOL_1.0");
-asm(".symver cil_selinuxusers_to_string_nopdb, cil_selinuxusers_to_string@@LIBSEPOL_1.1");
-
-asm(".symver cil_filecons_to_string_pdb,   cil_filecons_to_string@LIBSEPOL_1.0");
-asm(".symver cil_filecons_to_string_nopdb, cil_filecons_to_string@@LIBSEPOL_1.1");
-#endif
-
 int cil_sym_sizes[CIL_SYM_ARRAY_NUM][CIL_SYM_NUM] = {
 	{64, 64, 64, 1 << 13, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64},
 	{64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64},
@@ -549,11 +528,7 @@ exit:
 	return rc;
 }
 
-#ifdef DISABLE_SYMVER
 int cil_compile(struct cil_db *db)
-#else
-int cil_compile_nopdb(struct cil_db *db)
-#endif
 {
 	int rc = SEPOL_ERR;
 
@@ -597,33 +572,7 @@ exit:
 	return rc;
 }
 
-#ifndef DISABLE_SYMVER
-int cil_compile_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db)
-{
-	return cil_compile_nopdb(db);
-}
-
-int cil_build_policydb_pdb(cil_db_t *db, sepol_policydb_t *sepol_db)
-{
-	int rc;
-
-	cil_log(CIL_INFO, "Building policy binary\n");
-	rc = cil_binary_create_allocated_pdb(db, sepol_db);
-	if (rc != SEPOL_OK) {
-		cil_log(CIL_ERR, "Failed to generate binary\n");
-		goto exit;
-	}
-
-exit:
-	return rc;
-}
-#endif
-
-#ifdef DISABLE_SYMVER
 int cil_build_policydb(cil_db_t *db, sepol_policydb_t **sepol_db)
-#else
-int cil_build_policydb_create_pdb(cil_db_t *db, sepol_policydb_t **sepol_db)
-#endif
 {
 	int rc;
 
@@ -1371,11 +1320,7 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 	return "<unknown>";
 }
 
-#ifdef DISABLE_SYMVER
 int cil_userprefixes_to_string(struct cil_db *db, char **out, size_t *size)
-#else
-int cil_userprefixes_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
-#endif
 {
 	int rc = SEPOL_ERR;
 	size_t str_len = 0;
@@ -1419,13 +1364,6 @@ exit:
 	return rc;
 
 }
-
-#ifndef DISABLE_SYMVER
-int cil_userprefixes_to_string_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
-{
-	return cil_userprefixes_to_string_nopdb(db, out, size);
-}
-#endif
 
 static int cil_cats_to_ebitmap(struct cil_cats *cats, struct ebitmap* cats_ebitmap)
 {
@@ -1614,11 +1552,7 @@ static int __cil_level_to_string(struct cil_level *lvl, char *out)
 	return str_tmp - out;
 }
 
-#ifdef DISABLE_SYMVER
 int cil_selinuxusers_to_string(struct cil_db *db, char **out, size_t *size)
-#else
-int cil_selinuxusers_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
-#endif
 {
 	size_t str_len = 0;
 	int buf_pos = 0;
@@ -1675,18 +1609,7 @@ int cil_selinuxusers_to_string_nopdb(struct cil_db *db, char **out, size_t *size
 	return SEPOL_OK;
 }
 
-#ifndef DISABLE_SYMVER
-int cil_selinuxusers_to_string_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
-{
-	return cil_selinuxusers_to_string_nopdb(db, out, size);
-}
-#endif
-
-#ifdef DISABLE_SYMVER
 int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size)
-#else
-int cil_filecons_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
-#endif
 {
 	uint32_t i = 0;
 	int buf_pos = 0;
@@ -1803,13 +1726,6 @@ int cil_filecons_to_string_nopdb(struct cil_db *db, char **out, size_t *size)
 
 	return SEPOL_OK;
 }
-
-#ifndef DISABLE_SYMVER
-int cil_filecons_to_string_pdb(struct cil_db *db, __attribute__((unused)) sepol_policydb_t *sepol_db, char **out, size_t *size)
-{
-	return cil_filecons_to_string_nopdb(db, out, size);
-}
-#endif
 
 void cil_set_disable_dontaudit(struct cil_db *db, int disable_dontaudit)
 {
