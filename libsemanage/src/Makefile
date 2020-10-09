@@ -32,7 +32,7 @@ YACC = bison
 YFLAGS = -d
 
 VERSION = $(shell cat ../VERSION)
-LIBVERSION = 1
+LIBVERSION = 2
 
 LIBA=libsemanage.a
 TARGET=libsemanage.so
