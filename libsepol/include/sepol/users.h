@@ -10,12 +10,6 @@
 extern "C" {
 #endif
 
-/* These two functions are deprecated. See src/deprecated_funcs.c */
-extern int sepol_genusers(void *data, size_t len,
-			  const char *usersdir,
-			  void **newdata, size_t * newlen);
-extern void sepol_set_delusers(int on);
-
 /* Modify the user, or add it, if the key is not found */
 extern int sepol_user_modify(sepol_handle_t * handle,
 			     sepol_policydb_t * policydb,

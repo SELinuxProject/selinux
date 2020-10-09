@@ -45,9 +45,6 @@ LIBSEPOL_1.0 {
 	sepol_context_to_string;
 	sepol_debug;
 	sepol_expand_module;
-	sepol_genbools;
-	sepol_genbools_array;
-	sepol_genusers;
 	sepol_get_disable_dontaudit;
 	sepol_get_preserve_tunables;
 	sepol_handle_create;
@@ -213,7 +210,6 @@ LIBSEPOL_1.0 {
 	sepol_port_set_port;
 	sepol_port_set_proto;
 	sepol_port_set_range;
-	sepol_set_delusers;
 	sepol_set_disable_dontaudit;
 	sepol_set_expand_consume_base;
 	sepol_set_policydb_from_file;

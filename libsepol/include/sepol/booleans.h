@@ -10,11 +10,6 @@
 extern "C" {
 #endif
 
-/* These two functions are deprecated. See src/deprecated_funcs.c */
-extern int sepol_genbools(void *data, size_t len, const char *boolpath);
-extern int sepol_genbools_array(void *data, size_t len,
-				char **names, int *values, int nel);
-
 /* Set the specified boolean */
 extern int sepol_bool_set(sepol_handle_t * handle,
 			  sepol_policydb_t * policydb,
