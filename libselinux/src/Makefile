@@ -122,8 +122,12 @@ SRCS= callbacks.c freecon.c label.c label_file.c \
 	label_backends_android.c regex.c label_support.c \
 	matchpathcon.c setrans_client.c sha1.c booleans.c
 else
-DISABLE_FLAGS+= -DNO_ANDROID_BACKEND
+LABEL_BACKEND_ANDROID=y
+endif
+
+ifneq ($(LABEL_BACKEND_ANDROIDT),y)
 SRCS:= $(filter-out label_backends_android.c, $(SRCS))
+DISABLE_FLAGS+= -DNO_ANDROID_BACKEND
 endif
 
 ifeq ($(DISABLE_X11),y)
