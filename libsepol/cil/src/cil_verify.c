@@ -324,6 +324,41 @@ exit:
 	return SEPOL_ERR;
 }
 
+int cil_verify_conditional_blocks(struct cil_tree_node *current)
+{
+	int found_true = CIL_FALSE;
+	int found_false = CIL_FALSE;
+
+	if (current->cl_head->data == CIL_KEY_CONDTRUE) {
+		found_true = CIL_TRUE;
+	} else if (current->cl_head->data == CIL_KEY_CONDFALSE) {
+		found_false = CIL_TRUE;
+	} else {
+		cil_tree_log(current, CIL_ERR, "Expected true or false block in conditional");
+		return SEPOL_ERR;
+	}
+
+	current = current->next;
+	if (current != NULL) {
+		if (current->cl_head->data == CIL_KEY_CONDTRUE) {
+			if (found_true) {
+				cil_tree_log(current, CIL_ERR, "More than one true block in conditional");
+				return SEPOL_ERR;
+			}
+		} else if (current->cl_head->data == CIL_KEY_CONDFALSE) {
+			if (found_false) {
+				cil_tree_log(current, CIL_ERR, "More than one false block in conditional");
+				return SEPOL_ERR;
+			}
+		} else {
+			cil_tree_log(current, CIL_ERR, "Expected true or false block in conditional");
+			return SEPOL_ERR;
+		}
+	}
+
+	return SEPOL_OK;
+}
+
 int cil_verify_no_self_reference(struct cil_symtab_datum *datum, struct cil_list *datum_list)
 {
 	struct cil_list_item *i;
