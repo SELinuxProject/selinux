@@ -126,6 +126,10 @@ DISABLE_FLAGS+= -DNO_ANDROID_BACKEND
 SRCS:= $(filter-out label_backends_android.c, $(SRCS))
 endif
 
+ifeq ($(DISABLE_X11),y)
+SRCS:= $(filter-out label_x.c, $(SRCS))
+endif
+
 SWIGRUBY = swig -Wall -ruby -o $(SWIGRUBYCOUT) -outdir ./ $(DISABLE_FLAGS)
 
 all: $(LIBA) $(LIBSO) $(LIBPC)
