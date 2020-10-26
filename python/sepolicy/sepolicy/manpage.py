@@ -39,6 +39,8 @@ typealias_types = {
 equiv_dict = {"smbd": ["samba"], "httpd": ["apache"], "virtd": ["virt", "libvirt"], "named": ["bind"], "fsdaemon": ["smartmon"], "mdadm": ["raid"]}
 
 equiv_dirs = ["/var"]
+man_date = time.strftime("%y-%m-%d", time.gmtime(
+        int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))))
 modules_dict = None
 
 
@@ -569,7 +571,7 @@ class ManPage:
 
     def _typealias(self,typealias):
         self.fd.write('.TH  "%(typealias)s_selinux"  "8"  "%(date)s" "%(typealias)s" "SELinux Policy %(typealias)s"'
-                 % {'typealias':typealias, 'date': time.strftime("%y-%m-%d")})
+                 % {'typealias':typealias, 'date': man_date})
         self.fd.write(r"""
 .SH "NAME"
 %(typealias)s_selinux \- Security Enhanced Linux Policy for the %(typealias)s processes
@@ -588,7 +590,7 @@ man page for more details.
 
     def _header(self):
         self.fd.write('.TH  "%(domainname)s_selinux"  "8"  "%(date)s" "%(domainname)s" "SELinux Policy %(domainname)s"'
-                      % {'domainname': self.domainname, 'date': time.strftime("%y-%m-%d")})
+                      % {'domainname': self.domainname, 'date': man_date})
         self.fd.write(r"""
 .SH "NAME"
 %(domainname)s_selinux \- Security Enhanced Linux Policy for the %(domainname)s processes
