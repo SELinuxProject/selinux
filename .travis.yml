@@ -74,7 +74,7 @@ install:
   - tar -C "$TRAVIS_BUILD_DIR" -xvjf "$TRAVIS_BUILD_DIR/refpolicy.tar.bz2"
   # Make refpolicy Makefile use the new toolchain when building modules
   - sed -e "s,^PREFIX :=.*,PREFIX := \$(DESTDIR)/usr," -i "$TRAVIS_BUILD_DIR/refpolicy/support/Makefile.devel"
-  - sudo make -C "$TRAVIS_BUILD_DIR/refpolicy" install-headers
+  - sudo make -j$(nproc) -C "$TRAVIS_BUILD_DIR/refpolicy" install-headers
   - sudo rm -rf "$TRAVIS_BUILD_DIR/refpolicy.tar.bz2" "$TRAVIS_BUILD_DIR/refpolicy"
   - sudo mkdir -p /etc/selinux
   - echo 'SELINUXTYPE=refpolicy' | sudo tee /etc/selinux/config
@@ -129,12 +129,12 @@ before_script:
 
 script:
   # Start by installing everything into $DESTDIR
-  - make install $EXPLICIT_MAKE_VARS -k
-  - make install-pywrap $EXPLICIT_MAKE_VARS -k
-  - make install-rubywrap $EXPLICIT_MAKE_VARS -k
+  - make -j$(nproc) install $EXPLICIT_MAKE_VARS -k
+  - make -j$(nproc) install-pywrap $EXPLICIT_MAKE_VARS -k
+  - make -j$(nproc) install-rubywrap $EXPLICIT_MAKE_VARS -k
 
   # Now that everything is installed, run "make all" to build everything which may have not been built
-  - make all $EXPLICIT_MAKE_VARS -k
+  - make -j$(nproc) all $EXPLICIT_MAKE_VARS -k
 
   # Set up environment variables for the tests
   - . ./scripts/env_use_destdir
