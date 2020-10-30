@@ -1332,7 +1332,7 @@ static int write_context_file(genhomedircon_settings_t * s, FILE * out)
 			s->fallback->home = NULL;
 		}
 	}
-	if (user_context_tpl || username_context_tpl) {
+	if ((s->usepasswd) && (user_context_tpl || username_context_tpl)) {
 		if (write_username_context(s, out, username_context_tpl,
 					   s->fallback) != STATUS_SUCCESS) {
 			retval = STATUS_ERR;
