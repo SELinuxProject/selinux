@@ -7,13 +7,15 @@ TEST_RUNNER="scripts/ci/fedora-test-runner.sh"
 #
 # Variables for controlling the Fedora Image version and download URLs.
 #
-MAJOR_VERSION="32"
-MINOR_VERSION="1.6"
+if [ -z "$FEDORA_MAJOR" ] || [ -z "$FEDORA_MINOR" ]; then
+    echo "$0: FEDORA_MAJOR and FEDORA_MINOR must be set!" 1>&2
+    exit 1
+fi
 
 BASE_URL="https://download.fedoraproject.org/pub/fedora/linux/releases"
-IMAGE_BASE_NAME="Fedora-Cloud-Base-$MAJOR_VERSION-$MINOR_VERSION.x86_64"
-IMAGE_URL="$BASE_URL/$MAJOR_VERSION/Cloud/x86_64/images/$IMAGE_BASE_NAME.raw.xz"
-CHECK_URL="$BASE_URL/$MAJOR_VERSION/Cloud/x86_64/images/Fedora-Cloud-$MAJOR_VERSION-$MINOR_VERSION-x86_64-CHECKSUM"
+IMAGE_BASE_NAME="Fedora-Cloud-Base-$FEDORA_MAJOR-$FEDORA_MINOR.x86_64"
+IMAGE_URL="$BASE_URL/$FEDORA_MAJOR/Cloud/x86_64/images/$IMAGE_BASE_NAME.raw.xz"
+CHECK_URL="$BASE_URL/$FEDORA_MAJOR/Cloud/x86_64/images/Fedora-Cloud-$FEDORA_MAJOR-$FEDORA_MINOR-x86_64-CHECKSUM"
 GPG_URL="https://getfedora.org/static/fedora.gpg"
 
 #

@@ -36,7 +36,7 @@ matrix:
       env: PYVER=python3.8 RUBYLIBVER=2.7 LINKER=bfd
   include:
     - compiler: gcc
-      env: TRAVIS_RUN_KVM=true TRAVIS_CLOUD_IMAGE_VERSION="32:1.6"
+      env: TRAVIS_RUN_KVM=true FEDORA_MAJOR=33 FEDORA_MINOR=1.2
       install:
         - skip
       before_script:
