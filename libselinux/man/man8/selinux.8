@@ -20,8 +20,8 @@ permissive mode or enforcing mode.  The
 .B SELINUX
 variable may be set to
 any one of \fIdisabled\fR, \fIpermissive\fR, or \fIenforcing\fR to
-select one of these options.  The \fIdisabled\fR option completely
-disables the SELinux kernel and application code, leaving the system
+select one of these options.  The \fIdisabled\fR disables most of the
+SELinux kernel and application code, leaving the system
 running without any SELinux protection.  The \fIpermissive\fR option
 enables the SELinux code, but causes it to operate in a mode where
 accesses that would be denied by policy are permitted but audited.  The
@@ -31,6 +31,24 @@ yield a different set of denials than enforcing mode, both because
 enforcing mode will prevent an operation from proceeding past the first
 denial and because some application code will fall back to a less
 privileged mode of operation if denied access.
+
+.B NOTE:
+Disabling SELinux by setting
+.B SELINUX=disabled
+in
+.I /etc/selinux/config
+is deprecated and depending on kernel version and configuration it might
+not lead to SELinux being completely disabled.  Specifically, the
+SELinux hooks will still be executed internally, but the SELinux policy
+will not be loaded and no operation will be denied.  In such state, the
+system will act as if SELinux was disabled, although some operations
+might behave slightly differently.  To properly disable SELinux, it is
+recommended to use the
+.B selinux=0
+kernel boot option instead.  In that case SELinux will be disabled
+regardless of what is set in the
+.I /etc/selinux/config
+file.
 
 The
 .I /etc/selinux/config
