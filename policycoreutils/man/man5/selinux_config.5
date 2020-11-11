@@ -48,7 +48,7 @@ SELinux security policy is enforced.
 .IP \fIpermissive\fR 4
 SELinux security policy is not enforced but logs the warnings (i.e. the action is allowed to proceed).
 .IP \fIdisabled\fR
-SELinux is disabled and no policy is loaded.
+No SELinux policy is loaded.  This option was used to disable SELinux completely, which is now deprecated.  Use the \fBselinux=0\fR kernel boot option instead (see \fBselinux\fR(8)).
 .RE
 .sp
 The entry can be determined using the \fBsestatus\fR(8) command or \fBselinux_getenforcemode\fR(3).
