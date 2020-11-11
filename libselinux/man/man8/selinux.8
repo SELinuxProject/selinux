@@ -19,18 +19,18 @@ enabled or disabled, and if enabled, whether SELinux operates in
 permissive mode or enforcing mode.  The
 .B SELINUX
 variable may be set to
-any one of disabled, permissive, or enforcing to select one of these
-options.  The disabled option completely disables the SELinux kernel
-and application code, leaving the system running without any SELinux
-protection.  The permissive option enables the SELinux code, but
-causes it to operate in a mode where accesses that would be denied by
-policy are permitted but audited.  The enforcing option enables the
-SELinux code and causes it to enforce access denials as well as
-auditing them.  Permissive mode may yield a different set of denials
-than enforcing mode, both because enforcing mode will prevent an
-operation from proceeding past the first denial and because some
-application code will fall back to a less privileged mode of operation
-if denied access.
+any one of \fIdisabled\fR, \fIpermissive\fR, or \fIenforcing\fR to
+select one of these options.  The \fIdisabled\fR option completely
+disables the SELinux kernel and application code, leaving the system
+running without any SELinux protection.  The \fIpermissive\fR option
+enables the SELinux code, but causes it to operate in a mode where
+accesses that would be denied by policy are permitted but audited.  The
+\fIenforcing\fR option enables the SELinux code and causes it to enforce
+access denials as well as auditing them.  \fIpermissive\fR mode may
+yield a different set of denials than enforcing mode, both because
+enforcing mode will prevent an operation from proceeding past the first
+denial and because some application code will fall back to a less
+privileged mode of operation if denied access.
 
 The
 .I /etc/selinux/config
