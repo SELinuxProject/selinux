@@ -312,17 +312,20 @@ static char *get_class_info(sepol_security_class_t tclass,
 	else
 		state_num = mls + 2;
 
-	int class_buf_len = 0;
-	int new_class_buf_len;
-	int len, buf_used;
+	size_t class_buf_len = 0;
+	size_t new_class_buf_len;
+	size_t buf_used;
+	int len;
 	char *class_buf = NULL, *p;
 	char *new_class_buf = NULL;
 
 	while (1) {
 		new_class_buf_len = class_buf_len + EXPR_BUF_SIZE;
 		new_class_buf = realloc(class_buf, new_class_buf_len);
-			if (!new_class_buf)
-				return NULL;
+		if (!new_class_buf) {
+			free(class_buf);
+			return NULL;
+		}
 		class_buf_len = new_class_buf_len;
 		class_buf = new_class_buf;
 		buf_used = 0;
@@ -330,7 +333,7 @@ static char *get_class_info(sepol_security_class_t tclass,
 
 		/* Add statement type */
 		len = snprintf(p, class_buf_len - buf_used, "%s", statements[state_num]);
-		if (len < 0 || len >= class_buf_len - buf_used)
+		if (len < 0 || (size_t)len >= class_buf_len - buf_used)
 			continue;
 
 		/* Add class entry */
@@ -338,7 +341,7 @@ static char *get_class_info(sepol_security_class_t tclass,
 		buf_used += len;
 		len = snprintf(p, class_buf_len - buf_used, "%s ",
 				policydb->p_class_val_to_name[tclass - 1]);
-		if (len < 0 || len >= class_buf_len - buf_used)
+		if (len < 0 || (size_t)len >= class_buf_len - buf_used)
 			continue;
 
 		/* Add permission entries (validatetrans does not have perms) */
@@ -351,7 +354,7 @@ static char *get_class_info(sepol_security_class_t tclass,
 		} else {
 			len = snprintf(p, class_buf_len - buf_used, "(");
 		}
-		if (len < 0 || len >= class_buf_len - buf_used)
+		if (len < 0 || (size_t)len >= class_buf_len - buf_used)
 			continue;
 		break;
 	}
