@@ -58,6 +58,9 @@ dnf install -y \
     quota \
     xfsprogs-devel \
     libuuid-devel \
+    e2fsprogs \
+    jfsutils \
+    dosfstools \
     kernel-devel-"$(uname -r)" \
     kernel-modules-"$(uname -r)"
 
