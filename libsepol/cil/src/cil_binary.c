@@ -147,7 +147,7 @@ static int __cil_get_sepol_level_datum(policydb_t *pdb, struct cil_symtab_datum 
 
 static int __cil_expand_user(struct cil_symtab_datum *datum, ebitmap_t *new)
 {
-	struct cil_tree_node *node = datum->nodes->head->data;
+	struct cil_tree_node *node = NODE(datum);
 	struct cil_user *user = NULL;
 	struct cil_userattribute *attr = NULL;
 
@@ -175,7 +175,7 @@ exit:
 
 static int __cil_expand_role(struct cil_symtab_datum *datum, ebitmap_t *new)
 {
-	struct cil_tree_node *node = datum->nodes->head->data;
+	struct cil_tree_node *node = NODE(datum);
 
 	if (node->flavor == CIL_ROLEATTRIBUTE) {
 		struct cil_roleattribute *attr = (struct cil_roleattribute *)datum;
@@ -201,7 +201,7 @@ exit:
 
 static int __cil_expand_type(struct cil_symtab_datum *datum, ebitmap_t *new)
 {
-	struct cil_tree_node *node = datum->nodes->head->data;
+	struct cil_tree_node *node = NODE(datum);
 
 	if (node->flavor == CIL_TYPEATTRIBUTE) {
 		struct cil_typeattribute *attr = (struct cil_typeattribute *)datum;
@@ -2943,7 +2943,7 @@ int __cil_cats_to_mls_level(policydb_t *pdb, struct cil_cats *cats, mls_level_t 
 	cat_datum_t *sepol_cat = NULL;
 
 	cil_list_for_each(i, cats->datum_expr) {
-		struct cil_tree_node *node = DATUM(i->data)->nodes->head->data;
+		struct cil_tree_node *node = NODE(i->data);
 		if (node->flavor == CIL_CATSET) {
 			struct cil_list_item *j;
 			struct cil_catset *cs = i->data;
@@ -3701,7 +3701,7 @@ int __cil_node_to_policydb(struct cil_tree_node *node, void *extra_args)
 	type_value_to_cil = args->type_value_to_cil;
 
 	if (node->flavor >= CIL_MIN_DECLARATIVE) {
-		if (node != DATUM(node->data)->nodes->head->data) {
+		if (node != NODE(node->data)) {
 			goto exit;
 		}
 	}
@@ -4450,7 +4450,7 @@ static void __cil_init_sepol_type_set(type_set_t *t)
 static int __cil_add_sepol_type(policydb_t *pdb, const struct cil_db *db, struct cil_symtab_datum *datum, ebitmap_t *map)
 {
 	int rc = SEPOL_ERR;
-	struct cil_tree_node *n = datum->nodes->head->data;
+	struct cil_tree_node *n = NODE(datum);
 	type_datum_t *sepol_datum = NULL;
 
 	if (n->flavor == CIL_TYPEATTRIBUTE) {

@@ -1688,7 +1688,7 @@ void cil_tree_print_node(struct cil_tree_node *node)
 					struct cil_symtab_datum *datum = ((struct cil_args*)item->data)->arg;
 					if (datum != NULL) {
 						if (datum->nodes != NULL && datum->nodes->head != NULL) {
-							cil_tree_print_node((struct cil_tree_node*)datum->nodes->head->data);
+							cil_tree_print_node(NODE(datum));
 						}
 					} else if (((struct cil_args*)item->data)->arg_str != NULL) {
 						switch (item->flavor) {

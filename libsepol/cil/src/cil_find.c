@@ -118,7 +118,7 @@ static int cil_type_matches(ebitmap_t *matches, struct cil_symtab_datum *d1, str
 static int cil_self_match_any(struct cil_symtab_datum *s1, struct cil_symtab_datum *s2, struct cil_symtab_datum *t2)
 {
 	int rc;
-	struct cil_tree_node *n1 = s1->nodes->head->data;
+	struct cil_tree_node *n1 = NODE(s1);
 	if (n1->flavor != CIL_TYPEATTRIBUTE) {
 		rc = cil_type_match_any(s1, t2);
 	} else {

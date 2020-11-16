@@ -1380,7 +1380,7 @@ static int cil_cats_to_ebitmap(struct cil_cats *cats, struct ebitmap* cats_ebitm
 	}
 
 	cil_list_for_each(i, cats->datum_expr) {
-		node = DATUM(i->data)->nodes->head->data;
+		node = NODE(i->data);
 		if (node->flavor == CIL_CATSET) {
 			cs = (struct cil_catset*)i->data;
 			cil_list_for_each(j, cs->cats->datum_expr) {

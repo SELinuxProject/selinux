@@ -393,7 +393,7 @@ int cil_resolve_type_rule(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	result_node = result_datum->nodes->head->data;
+	result_node = NODE(result_datum);
 
 	if (result_node->flavor != CIL_TYPE) {
 		cil_log(CIL_ERR, "Type rule result must be a type [%d]\n",result_node->flavor);
@@ -421,7 +421,7 @@ int cil_resolve_typeattributeset(struct cil_tree_node *current, void *extra_args
 		goto exit;
 	}
 
-	attr_node = attr_datum->nodes->head->data;
+	attr_node = NODE(attr_datum);
 
 	if (attr_node->flavor != CIL_TYPEATTRIBUTE) {
 		rc = SEPOL_ERR;
@@ -470,7 +470,7 @@ int cil_resolve_expandtypeattribute(struct cil_tree_node *current, void *extra_a
 			goto exit;
 		}
 
-		attr_node = attr_datum->nodes->head->data;
+		attr_node = NODE(attr_datum);
 
 		if (attr_node->flavor != CIL_TYPEATTRIBUTE) {
 			rc = SEPOL_ERR;
@@ -594,7 +594,7 @@ int cil_resolve_typepermissive(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	type_node = type_datum->nodes->head->data;
+	type_node = NODE(type_datum);
 
 	if (type_node->flavor != CIL_TYPE && type_node->flavor != CIL_TYPEALIAS) {
 		cil_log(CIL_ERR, "Typepermissive must be a type or type alias\n");
@@ -654,7 +654,7 @@ int cil_resolve_nametypetransition(struct cil_tree_node *current, void *extra_ar
 		goto exit;
 	}
 
-	result_node = result_datum->nodes->head->data;
+	result_node = NODE(result_datum);
 
 	if (result_node->flavor != CIL_TYPE && result_node->flavor != CIL_TYPEALIAS) {
 		cil_log(CIL_ERR, "typetransition result is not a type or type alias\n");
@@ -855,7 +855,7 @@ int cil_resolve_userlevel(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	user_node = user_datum->nodes->head->data;
+	user_node = NODE(user_datum);
 
 	if (user_node->flavor != CIL_USER) {
 		cil_log(CIL_ERR, "Userlevel must be a user\n");
@@ -908,7 +908,7 @@ int cil_resolve_userrange(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	user_node = user_datum->nodes->head->data;
+	user_node = NODE(user_datum);
 
 	if (user_node->flavor != CIL_USER) {
 		cil_log(CIL_ERR, "Userrange must be a user: %s\n", user_datum->fqn);
@@ -959,7 +959,7 @@ int cil_resolve_userprefix(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	user_node = user_datum->nodes->head->data;
+	user_node = NODE(user_datum);
 
 	if (user_node->flavor != CIL_USER) {
 		cil_log(CIL_ERR, "Userprefix must be a user: %s\n", user_datum->fqn);
@@ -986,7 +986,7 @@ int cil_resolve_selinuxuser(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	user_node = user_datum->nodes->head->data;
+	user_node = NODE(user_datum);
 
 	if (user_node->flavor != CIL_USER) {
 		cil_log(CIL_ERR, "Selinuxuser must be a user: %s\n", user_datum->fqn);
@@ -1079,7 +1079,7 @@ int cil_resolve_roletransition(struct cil_tree_node *current, void *extra_args)
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
-	node = result_datum->nodes->head->data;
+	node = NODE(result_datum);
 	if (node->flavor != CIL_ROLE) {
 		rc = SEPOL_ERR;
 		printf("%i\n", node->flavor);
@@ -1131,7 +1131,7 @@ int cil_resolve_roleattributeset(struct cil_tree_node *current, void *extra_args
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
-	attr_node = attr_datum->nodes->head->data;
+	attr_node = NODE(attr_datum);
 
 	if (attr_node->flavor != CIL_ROLEATTRIBUTE) {
 		rc = SEPOL_ERR;
@@ -1569,7 +1569,7 @@ int cil_resolve_catorder(struct cil_tree_node *current, void *extra_args)
 			cil_log(CIL_ERR, "Failed to resolve category %s in categoryorder\n", (char *)curr->data);
 			goto exit;
 		}
-		node = cat_datum->nodes->head->data;
+		node = NODE(cat_datum);
 		if (node->flavor != CIL_CAT) {
 			cil_log(CIL_ERR, "%s is not a category. Only categories are allowed in categoryorder statements\n", cat_datum->name);
 			rc = SEPOL_ERR;
@@ -1832,7 +1832,7 @@ int cil_resolve_context(struct cil_tree_node *current, struct cil_context *conte
 		goto exit;
 	}
 
-	node = user_datum->nodes->head->data;
+	node = NODE(user_datum);
 
 	if (node->flavor != CIL_USER) {
 		cil_log(CIL_ERR, "Context user must be a user: %s\n", user_datum->fqn);
@@ -1847,7 +1847,7 @@ int cil_resolve_context(struct cil_tree_node *current, struct cil_context *conte
 		goto exit;
 	}
 
-	node = role_datum->nodes->head->data;
+	node = NODE(role_datum);
 	if (node->flavor != CIL_ROLE) {
 		rc = SEPOL_ERR;
 		cil_log(CIL_ERR, "Context role not a role: %s\n", role_datum->fqn);
@@ -1861,7 +1861,7 @@ int cil_resolve_context(struct cil_tree_node *current, struct cil_context *conte
 		goto exit;
 	}
 
-	node = type_datum->nodes->head->data;
+	node = NODE(type_datum);
 
 	if (node->flavor != CIL_TYPE && node->flavor != CIL_TYPEALIAS) {
 		rc = SEPOL_ERR;
@@ -2311,7 +2311,7 @@ int cil_resolve_blockinherit_link(struct cil_tree_node *current, void *extra_arg
 		goto exit;
 	}
 
-	node = block_datum->nodes->head->data;
+	node = NODE(block_datum);
 
 	if (node->flavor != CIL_BLOCK) {
 		cil_log(CIL_ERR, "%s is not a block\n", cil_node_to_string(node));
@@ -2450,7 +2450,7 @@ int cil_resolve_blockabstract(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	block_node = block_datum->nodes->head->data;
+	block_node = NODE(block_datum);
 	if (block_node->flavor != CIL_BLOCK) {
 		cil_log(CIL_ERR, "Failed to resolve blockabstract to a block, rc: %d\n", rc);
 		goto exit;
@@ -2482,7 +2482,7 @@ int cil_resolve_in(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	block_node = block_datum->nodes->head->data;
+	block_node = NODE(block_datum);
 
 	rc = cil_copy_ast(db, current, block_node);
 	if (rc != SEPOL_OK) {
@@ -2774,7 +2774,7 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	macro_node = macro_datum->nodes->head->data;
+	macro_node = NODE(macro_datum);
 
 	if (macro_node->flavor != CIL_MACRO) {
 		printf("Failed to resolve %s to a macro\n", new_call->macro_str);
@@ -3367,7 +3367,7 @@ int cil_resolve_userattributeset(struct cil_tree_node *current, void *extra_args
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
-	attr_node = attr_datum->nodes->head->data;
+	attr_node = NODE(attr_datum);
 
 	if (attr_node->flavor != CIL_USERATTRIBUTE) {
 		rc = SEPOL_ERR;
