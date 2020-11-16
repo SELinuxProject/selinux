@@ -51,7 +51,6 @@ struct cil_args_resolve {
 	struct cil_db *db;
 	enum cil_pass pass;
 	uint32_t *changed;
-	char *last_resolved_name;
 	struct cil_tree_node *optstack;
 	struct cil_tree_node *boolif;
 	struct cil_tree_node *macro;
@@ -3905,7 +3904,6 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	extra_args.db = db;
 	extra_args.pass = pass;
 	extra_args.changed = &changed;
-	extra_args.last_resolved_name = NULL;
 	extra_args.optstack = NULL;
 	extra_args.boolif= NULL;
 	extra_args.macro = NULL;
@@ -4233,8 +4231,6 @@ exit:
 	if (rc != SEPOL_OK) {
 		*datum = NULL;
 	}
-
-	args->last_resolved_name = name;
 
 	return rc;
 }
