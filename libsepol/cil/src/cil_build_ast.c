@@ -154,7 +154,7 @@ int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_s
 		}
 	}
 
-	if (ast_node->flavor >= CIL_MIN_DECLARATIVE && ast_node->parent->flavor == CIL_MACRO) {
+	if (ast_node->parent->flavor == CIL_MACRO) {
 		struct cil_list_item *item;
 		struct cil_list *param_list = ((struct cil_macro*)ast_node->parent->data)->params;
 		if (param_list != NULL) {
