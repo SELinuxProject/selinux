@@ -44,8 +44,8 @@ struct cil_args_find {
 
 static int cil_type_match_any(struct cil_symtab_datum *d1, struct cil_symtab_datum *d2)
 {
-	enum cil_flavor f1 = ((struct cil_tree_node*)d1->nodes->head->data)->flavor;
-	enum cil_flavor f2 = ((struct cil_tree_node*)d2->nodes->head->data)->flavor;
+	enum cil_flavor f1 = FLAVOR(d1);
+	enum cil_flavor f2 = FLAVOR(d2);
 
 	if (f1 != CIL_TYPEATTRIBUTE && f2 != CIL_TYPEATTRIBUTE) {
 		struct cil_type *t1 = (struct cil_type *)d1;
@@ -81,8 +81,8 @@ static int cil_type_match_any(struct cil_symtab_datum *d1, struct cil_symtab_dat
 static int cil_type_matches(ebitmap_t *matches, struct cil_symtab_datum *d1, struct cil_symtab_datum *d2)
 {
 	int rc = SEPOL_OK;
-	enum cil_flavor f1 = ((struct cil_tree_node*)d1->nodes->head->data)->flavor;
-	enum cil_flavor f2 = ((struct cil_tree_node*)d2->nodes->head->data)->flavor;
+	enum cil_flavor f1 = FLAVOR(d1);
+	enum cil_flavor f2 = FLAVOR(d2);
 
 	if (f1 != CIL_TYPEATTRIBUTE && f2 != CIL_TYPEATTRIBUTE) {
 		struct cil_type *t1 = (struct cil_type *)d1;

@@ -1482,7 +1482,7 @@ static void __mark_neverallow_attrs(struct cil_list *expr_list)
 
 	cil_list_for_each(curr, expr_list) {
 		if (curr->flavor == CIL_DATUM) {
-			if (NODE(curr->data)->flavor == CIL_TYPEATTRIBUTE) {
+			if (FLAVOR(curr->data) == CIL_TYPEATTRIBUTE) {
 				struct cil_typeattribute *attr = curr->data;
 				if (strstr(DATUM(attr)->name, TYPEATTR_INFIX)) {
 					__mark_neverallow_attrs(attr->expr_list);

@@ -505,7 +505,7 @@ int cil_resolve_aliasactual(struct cil_tree_node *current, void *extra_args, enu
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
-	if (NODE(alias_datum)->flavor != alias_flavor) {
+	if (FLAVOR(alias_datum) != alias_flavor) {
 		cil_log(CIL_ERR, "%s is not an alias\n",alias_datum->name);
 		rc = SEPOL_ERR;
 		goto exit;
@@ -516,7 +516,7 @@ int cil_resolve_aliasactual(struct cil_tree_node *current, void *extra_args, enu
 		goto exit;
 	}
 
-	if (NODE(actual_datum)->flavor != flavor && NODE(actual_datum)->flavor != alias_flavor) {
+	if (FLAVOR(actual_datum) != flavor && FLAVOR(actual_datum) != alias_flavor) {
 		cil_log(CIL_ERR, "%s is a %s, but aliases a %s\n", alias_datum->name, cil_node_to_string(NODE(alias_datum)), cil_node_to_string(NODE(actual_datum)));
 		rc = SEPOL_ERR;
 		goto exit;
@@ -2573,7 +2573,7 @@ int cil_resolve_bounds(struct cil_tree_node *current, void *extra_args, enum cil
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
-	if (NODE(parent_datum)->flavor == attr_flavor) {
+	if (FLAVOR(parent_datum) == attr_flavor) {
 		cil_log(CIL_ERR, "Bounds parent %s is an attribute\n", bounds->parent_str);
 		rc = SEPOL_ERR;
 		goto exit;
@@ -2584,7 +2584,7 @@ int cil_resolve_bounds(struct cil_tree_node *current, void *extra_args, enum cil
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
-	if (NODE(child_datum)->flavor == attr_flavor) {
+	if (FLAVOR(child_datum) == attr_flavor) {
 		cil_log(CIL_ERR, "Bounds child %s is an attribute\n", bounds->child_str);
 		rc = SEPOL_ERR;
 		goto exit;
