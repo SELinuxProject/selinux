@@ -6387,10 +6387,10 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		rc = cil_gen_macro(db, parse_current, ast_node);
 	} else if (parse_current->data == CIL_KEY_CALL) {
 		rc = cil_gen_call(db, parse_current, ast_node);
-		*finished = 1;
+		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_POLICYCAP) {
 		rc = cil_gen_policycap(db, parse_current, ast_node);
-		*finished = 1;
+		*finished = CIL_TREE_SKIP_NEXT;
 	} else if (parse_current->data == CIL_KEY_OPTIONAL) {
 		rc = cil_gen_optional(db, parse_current, ast_node);
 	} else if (parse_current->data == CIL_KEY_IPADDR) {
