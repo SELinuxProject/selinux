@@ -4209,9 +4209,6 @@ int cil_resolve_name_keep_aliases(struct cil_tree_node *ast_node, char *name, en
 				if (node->flavor == CIL_MACRO) {
 					struct cil_macro *macro = node->data;
 					symtab = &macro->symtab[sym_index];
-				} else {
-					/* optional */
-					symtab = (*datum)->symtab;
 				}
 			}
 			current = next;
