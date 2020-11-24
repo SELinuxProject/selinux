@@ -1,0 +1,189 @@
+name: Run tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+        python-ruby-version:
+          - {python: 3.8, ruby: 2.7}
+          - {python: 3.8, ruby: 2.7, other: test-flags-override}
+          - {python: 3.8, ruby: 2.7, other: test-debug}
+          - {python: 3.8, ruby: 2.7, other: linker-bfd}
+          - {python: 3.8, ruby: 2.7, other: linker-gold}
+          # Test several Python versions with the latest Ruby version
+          - {python: 3.7, ruby: 2.7}
+          - {python: 3.6, ruby: 2.7}
+          - {python: 3.5, ruby: 2.7}
+          - {python: pypy3, ruby: 2.7}
+          # Test several Ruby versions with the latest Python version
+          - {python: 3.8, ruby: 2.6}
+          - {python: 3.8, ruby: 2.5}
+          - {python: 3.8, ruby: 2.4}
+        exclude:
+          - compiler: clang
+            python-ruby-version: {python: 3.8, ruby: 2.7, other: linker-bfd}
+          - compiler: clang
+            python-ruby-version: {python: 3.8, ruby: 2.7, other: linker-gold}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-ruby-version.python }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-ruby-version.python }}
+
+    - name: Set up Ruby ${{ matrix.python-ruby-version.ruby }}
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.python-ruby-version.ruby }}
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -qqy \
+            bison \
+            clang \
+            flex \
+            gawk \
+            gettext \
+            libaudit-dev \
+            libcap-dev \
+            libcap-ng-dev \
+            libcunit1-dev \
+            libdbus-glib-1-dev \
+            libpcre3-dev \
+            python3-dev \
+            python-dev \
+            ruby-dev \
+            swig \
+            xmlto
+
+        pip install flake8
+
+    - name: Configure the environment
+      run: |
+        DESTDIR=/tmp/destdir
+        echo "PYTHON=python" >> $GITHUB_ENV
+        echo "RUBY=ruby" >> $GITHUB_ENV
+        echo "DESTDIR=$DESTDIR" >> $GITHUB_ENV
+
+        CC=${{ matrix.compiler }}
+        if [ "${{ matrix.python-ruby-version.other }}" = "linker-bfd" ] ; then
+            CC="$CC -fuse-ld=bfd"
+        elif [ "${{ matrix.python-ruby-version.other }}" = "linker-gold" ] ; then
+            CC="$CC -fuse-ld=gold"
+        fi
+        echo "CC=$CC" >> $GITHUB_ENV
+
+        EXPLICIT_MAKE_VARS=
+        if [ "${{ matrix.python-ruby-version.other }}" = "test-flags-override" ] ; then
+            # Test that overriding CFLAGS, LDFLAGS and other variables works fine
+            EXPLICIT_MAKE_VARS="CFLAGS=-I$DESTDIR/usr/include LDFLAGS=-L$DESTDIR/usr/lib LDLIBS= CPPFLAGS="
+        elif [ "${{ matrix.python-ruby-version.other }}" = "test-debug" ] ; then
+            # Test hat debug build works fine
+            EXPLICIT_MAKE_VARS="DEBUG=1"
+        else
+            EXPLICIT_MAKE_VARS=
+        fi
+        echo "EXPLICIT_MAKE_VARS=${EXPLICIT_MAKE_VARS}" >> $GITHUB_ENV
+
+        # Find files in order of pkgconf to be able to find Python.h
+        # For example with Python 3.5:
+        # * python is located at /opt/hostedtoolcache/Python/3.5.10/x64/bin/python
+        # * sys.prefix is /opt/hostedtoolcache/Python/3.5.10/x64
+        # * Python.h is located at /opt/hostedtoolcache/Python/3.5.10/x64/include/python3.5m/Python.h
+        # * python-3.5.pc is located at /opt/hostedtoolcache/Python/3.5.10/x64/lib/pkgconfig/python-3.5.pc
+        PYTHON_SYS_PREFIX="$(python -c 'import sys;print(sys.prefix)')"
+        echo "PKG_CONFIG_PATH=${PYTHON_SYS_PREFIX}/lib/pkgconfig" >> $GITHUB_ENV
+
+        if [ "${{ matrix.python-ruby-version.python }}" = "pypy3" ] ; then
+            # PyPy does not provide a config file for pkg-config
+            # libpypy-c.so is provided in bin/libpypy-c.so for PyPy and bin/libpypy3-c.so for PyPy3
+            echo "PYINC=-I${PYTHON_SYS_PREFIX}/include" >> $GITHUB_ENV
+            echo "PYLIBS=-L${PYTHON_SYS_PREFIX}/bin -lpypy3-c" >> $GITHUB_ENV
+        fi
+
+        # Display the final environment file, for debugging purpose
+        cat $GITHUB_ENV
+
+    - name: Download and install refpolicy headers for sepolgen tests
+      run: |
+        curl --location --retry 10 -o refpolicy.tar.bz2 https://github.com/SELinuxProject/refpolicy/releases/download/RELEASE_2_20180701/refpolicy-2.20180701.tar.bz2
+        tar -xvjf refpolicy.tar.bz2
+        sed -e "s,^PREFIX :=.*,PREFIX := $DESTDIR/usr," -i refpolicy/support/Makefile.devel
+        sudo make -C refpolicy install-headers clean
+        sudo mkdir -p /etc/selinux
+        echo 'SELINUXTYPE=refpolicy' | sudo tee /etc/selinux/config
+        echo 'SELINUX_DEVEL_PATH = /usr/share/selinux/refpolicy' | sudo tee /etc/selinux/sepolgen.conf
+        sed -e "s,\"\(/usr/bin/[cs]\),\"$DESTDIR\1," -i python/sepolgen/src/sepolgen/module.py
+        rm -r refpolicy refpolicy.tar.bz2
+
+    - name: Display versions
+      run: |
+        echo "::group::Compiler ($CC):"
+        $CC --version
+        echo "::endgroup::"
+        echo "::group::Python ($(which "$PYTHON")):"
+        $PYTHON --version
+        echo "::endgroup::"
+        echo "::group::Ruby ($(which "$RUBY")):"
+        $RUBY --version
+        echo "::endgroup::"
+
+    - name: Run tests
+      run: |
+        echo "::group::make install"
+        make -j$(nproc) install $EXPLICIT_MAKE_VARS -k
+        echo "::endgroup::"
+        echo "::group::make install-pywrap"
+        make -j$(nproc) install-pywrap $EXPLICIT_MAKE_VARS -k
+        echo "::endgroup::"
+        echo "::group::make install-rubywrap"
+        make -j$(nproc) install-rubywrap $EXPLICIT_MAKE_VARS -k
+        echo "::endgroup::"
+
+        # Now that everything is installed, run "make all" to build everything which may have not been built
+        echo "::group::make all"
+        make -j$(nproc) all $EXPLICIT_MAKE_VARS -k
+        echo "::endgroup::"
+
+        # Set up environment variables for the tests and show variables (to help debugging issues)
+        echo "::group::Environment variables"
+        . ./scripts/env_use_destdir
+        echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+        echo "PATH=$PATH"
+        echo "PYTHONPATH=$PYTHONPATH"
+        echo "RUBYLIB=$RUBYLIB"
+        echo "::endgroup::"
+
+        # Run tests
+        echo "::group::make test"
+        make test $EXPLICIT_MAKE_VARS
+        echo "::endgroup::"
+
+        # Test Python and Ruby wrappers
+        echo "::group::Test Python and Ruby wrappers"
+        $PYTHON -c 'import selinux;import selinux.audit2why;import semanage;print(selinux.is_selinux_enabled())'
+        $RUBY -e 'require "selinux";require "semanage";puts Selinux::is_selinux_enabled()'
+        echo "::endgroup::"
+
+        # Run Python linter, but not on the downloaded refpolicy
+        echo "::group::scripts/run-flake8"
+        ./scripts/run-flake8
+        echo "::endgroup::"
+
+        echo "::group::Test .gitignore and make clean distclean"
+        # Remove every installed files
+        rm -rf "$DESTDIR"
+        # Test that "git status" looks clean, or print a clear error message
+        git status --short | sed -n 's/^??/error: missing .gitignore entry for/p' | (! grep '^')
+        # Clean up everything and show which file needs to be added to "make clean"
+        make clean distclean $EXPLICIT_MAKE_VARS
+        git ls-files --ignored --others --exclude-standard | sed 's/^/error: "make clean distclean" did not remove /' | (! grep '^')
+        echo "::endgroup::"
