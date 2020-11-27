@@ -7,7 +7,7 @@ if [ \! -d $WIKIDIR ]; then
     git clone git@github.com:SELinuxProject/selinux.wiki.git $WIKIDIR
 fi
 
-RELEASE_TAG=$(date '+%Y%m%d')
+RELEASE_TAG=`cat VERSION`
 DEST=releases/$RELEASE_TAG
 DIRS="libsepol libselinux libsemanage checkpolicy secilc policycoreutils mcstrans restorecond semodule-utils"
 DIRS_NEED_PREFIX="dbus gui python sandbox"
@@ -43,7 +43,7 @@ echo "Add the following to the $WIKIDIR/Releases.md wiki page:"
 
 echo ""
 
-echo "## Release $(date '+%Y-%m-%d')"
+echo "## Release $RELEASE_TAG"
 
 echo ""
 
