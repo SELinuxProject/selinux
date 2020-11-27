@@ -26,6 +26,7 @@ MEMORY=4096
 VCPUS="$(nproc)"
 
 # Install these here so other builds don't have to wait on these deps to download and install
+sudo apt-get update
 sudo apt-get install qemu-kvm libvirt-bin virtinst bridge-utils cpu-checker libguestfs-tools
 
 sudo usermod -a -G kvm,libvirt,libvirt-qemu "$USER"
