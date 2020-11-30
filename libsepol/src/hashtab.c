@@ -230,7 +230,7 @@ int hashtab_map(hashtab_t h,
 
 	for (i = 0; i < h->size; i++) {
 		cur = h->htable[i];
-		while (curi != NULL) {
+		while (cur != NULL) {
 			next = cur->next;
 			ret = apply(cur->key, cur->datum, args);
 			if (ret)

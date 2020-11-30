@@ -2170,7 +2170,7 @@ static void scope_write_destroy(hashtab_key_t key __attribute__ ((unused)),
     free(cur);
 }
 
-static void type_attr_filter(hashtab_key_t key,
+static int type_attr_filter(hashtab_key_t key,
                  hashtab_datum_t datum, void *args)
 {
     type_datum_t *typdatum = datum;
@@ -2186,9 +2186,11 @@ static void type_attr_filter(hashtab_key_t key,
         if (scope) 
             hashtab_remove(scopetbl, key, scope_write_destroy, scope);
     }
+
+	return 0;
 }
 
-static void role_attr_filter(hashtab_key_t key,
+static int role_attr_filter(hashtab_key_t key,
                  hashtab_datum_t datum, void *args)
 {
     role_datum_t *role = datum;
@@ -2204,6 +2206,8 @@ static void role_attr_filter(hashtab_key_t key,
         if (scope) 
             hashtab_remove(scopetbl, key, scope_write_destroy, scope);
     }
+
+	return 0;
 }
 
 /*
