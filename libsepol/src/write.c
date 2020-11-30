@@ -2341,36 +2341,36 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 		buf[0] = cpu_to_le32(p->symtab[i].nprim);
 		buf[1] = p->symtab[i].table->nel;
 
-        /*
-         * A special case when writing type/attribute symbol table.
-         * The kernel policy version less than 24 does not support
-         * to load entries of attribute, so we filter the entries
-         * from the table.
-         */
-        if (i == SYM_TYPES &&
-            p->policyvers < POLICYDB_VERSION_BOUNDARY &&
-            p->policy_type == POLICY_KERN) {
-            (void)hashtab_map(p->symtab[i].table, type_attr_filter, p);
-            if (buf[1] != p->symtab[i].table->nel)
+		/*
+		* A special case when writing type/attribute symbol table.
+		* The kernel policy version less than 24 does not support
+		* to load entries of attribute, so we filter the entries
+		* from the table.
+		*/
+		if (i == SYM_TYPES &&
+			p->policyvers < POLICYDB_VERSION_BOUNDARY &&
+			p->policy_type == POLICY_KERN) {
+			(void)hashtab_map(p->symtab[i].table, type_attr_filter, p);
+			if (buf[1] != p->symtab[i].table->nel)
                 WARN(fp->handle, "Discarding type attribute rules");
-            buf[1] = p->symtab[i].table->nel;
-        }
+			buf[1] = p->symtab[i].table->nel;
+		}
 
-        /*
-         * Another special case when writing role/attribute symbol
-         * table, role attributes are redundant for policy.X, or
-         * when the pp's version is not big enough. So filter the entries
-         * from the table.
-         */
-        if ((i == SYM_ROLES) &&
-            ((p->policy_type == POLICY_KERN) ||
-             (p->policy_type != POLICY_KERN &&
-              p->policyvers < MOD_POLICYDB_VERSION_ROLEATTRIB))) {
-            (void)hashtab_map(p->symtab[i].table, role_attr_filter, p);
+	/*
+		* Another special case when writing role/attribute symbol
+		* table, role attributes are redundant for policy.X, or
+		* when the pp's version is not big enough. So filter the entries
+		* from the table.
+		*/
+		if ((i == SYM_ROLES) &&
+			((p->policy_type == POLICY_KERN) ||
+			(p->policy_type != POLICY_KERN &&
+			p->policyvers < MOD_POLICYDB_VERSION_ROLEATTRIB))) {
+			(void)hashtab_map(p->symtab[i].table, role_attr_filter, p);
 			if (buf[1] != p->symtab[i].table->nel)
 				WARN(fp->handle, "Discarding role attribute rules");
-            buf[1] = p->symtab[i].table->nel;
-        }
+			buf[1] = p->symtab[i].table->nel;
+		}
 
 		buf[1] = cpu_to_le32(buf[1]);
 		items = put_entry(buf, sizeof(uint32_t), 2, fp);
