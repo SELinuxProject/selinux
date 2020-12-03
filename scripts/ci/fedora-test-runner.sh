@@ -75,6 +75,7 @@ git log --oneline -1
 #
 # Build and replace userspace components
 #
+make clean distclean
 make -j"$(nproc)" LIBDIR=/usr/lib64 SHLIBDIR=/lib64 install
 make -j"$(nproc)" LIBDIR=/usr/lib64 SHLIBDIR=/lib64 install-pywrap
 make -j"$(nproc)" LIBDIR=/usr/lib64 SHLIBDIR=/lib64 relabel
@@ -84,6 +85,7 @@ make -j"$(nproc)" LIBDIR=/usr/lib64 SHLIBDIR=/lib64 relabel
 # first.
 #
 cd "$HOME"
+rm -rf selinux-testsuite
 git clone --depth=1 https://github.com/SELinuxProject/selinux-testsuite.git
 cd selinux-testsuite
 

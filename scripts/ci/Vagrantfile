@@ -1,0 +1,48 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Vagrant configuration file which creates a virtual machine that can run the
+# test suite using fedora-test-runner.sh, in an environment similar to the one
+# used for automated continuous integration tests (Travis-CI)
+#
+# To create a new virtual machine:
+#
+#    vagrant up --provision
+#
+# To launch tests (for example after modifications to libsepol, libselinux... are made):
+#
+#    vagrant rsync && echo ./run-selinux-test.sh | vagrant ssh
+#
+# To destroy the virtual machine (for example to start again from a clean environment):
+#
+#    vagrant destroy
+
+# Create a helper script in the VM to run the testsuite as root from a clean environment
+$script = <<SCRIPT
+cat > /home/vagrant/run-selinux-test.sh << EOF
+#/bin/sh
+set -e -v
+
+# Run the tests
+sudo /root/selinux/scripts/ci/fedora-test-runner.sh
+echo 'All tests passed :)'
+EOF
+chmod +x /home/vagrant/run-selinux-test.sh
+SCRIPT
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.box = "fedora/33-cloud-base"
+  config.vm.synced_folder "../..", "/root/selinux"
+
+  config.vm.provider "virtualbox" do |v|
+     v.memory = 4096
+  end
+  config.vm.provider "libvirt" do |v|
+     v.memory = 4096
+  end
+
+  config.vm.provision :shell, inline: $script
+end
