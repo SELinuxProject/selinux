@@ -310,6 +310,7 @@ exit:
 	while (!cil_stack_is_empty(stack)) {
 		pop_hll_info(stack, &hll_lineno, &hll_expand);
 	}
+	cil_lexer_destroy();
 	cil_stack_destroy(&stack);
 
 	return SEPOL_ERR;
