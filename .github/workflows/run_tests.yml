@@ -24,7 +24,6 @@ jobs:
           # Test several Ruby versions with the latest Python version
           - {python: 3.9, ruby: 2.6}
           - {python: 3.9, ruby: 2.5}
-          - {python: 3.9, ruby: 2.4}
         exclude:
           - compiler: clang
             python-ruby-version: {python: 3.9, ruby: 2.7, other: linker-bfd}
