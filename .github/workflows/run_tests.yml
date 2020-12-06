@@ -10,25 +10,26 @@ jobs:
       matrix:
         compiler: [gcc, clang]
         python-ruby-version:
-          - {python: 3.8, ruby: 2.7}
-          - {python: 3.8, ruby: 2.7, other: test-flags-override}
-          - {python: 3.8, ruby: 2.7, other: test-debug}
-          - {python: 3.8, ruby: 2.7, other: linker-bfd}
-          - {python: 3.8, ruby: 2.7, other: linker-gold}
+          - {python: 3.9, ruby: 2.7}
+          - {python: 3.9, ruby: 2.7, other: test-flags-override}
+          - {python: 3.9, ruby: 2.7, other: test-debug}
+          - {python: 3.9, ruby: 2.7, other: linker-bfd}
+          - {python: 3.9, ruby: 2.7, other: linker-gold}
           # Test several Python versions with the latest Ruby version
+          - {python: 3.8, ruby: 2.7}
           - {python: 3.7, ruby: 2.7}
           - {python: 3.6, ruby: 2.7}
           - {python: 3.5, ruby: 2.7}
           - {python: pypy3, ruby: 2.7}
           # Test several Ruby versions with the latest Python version
-          - {python: 3.8, ruby: 2.6}
-          - {python: 3.8, ruby: 2.5}
-          - {python: 3.8, ruby: 2.4}
+          - {python: 3.9, ruby: 2.6}
+          - {python: 3.9, ruby: 2.5}
+          - {python: 3.9, ruby: 2.4}
         exclude:
           - compiler: clang
-            python-ruby-version: {python: 3.8, ruby: 2.7, other: linker-bfd}
+            python-ruby-version: {python: 3.9, ruby: 2.7, other: linker-bfd}
           - compiler: clang
-            python-ruby-version: {python: 3.8, ruby: 2.7, other: linker-gold}
+            python-ruby-version: {python: 3.9, ruby: 2.7, other: linker-gold}
 
     steps:
     - uses: actions/checkout@v2
