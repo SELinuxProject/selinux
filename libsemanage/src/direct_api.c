@@ -1951,6 +1951,7 @@ static int semanage_direct_remove(semanage_handle_t * sh, char *module_name)
 	status = semanage_direct_remove_key(sh, &modkey);
 
 cleanup:
+	semanage_module_key_destroy(sh, &modkey);
 	return status;
 }
 
