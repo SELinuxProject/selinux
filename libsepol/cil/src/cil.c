@@ -500,7 +500,7 @@ void cil_root_destroy(struct cil_root *root)
 	free(root);
 }
 
-int cil_add_file(cil_db_t *db, char *name, char *data, size_t size)
+int cil_add_file(cil_db_t *db, const char *name, const char *data, size_t size)
 {
 	char *buffer = NULL;
 	int rc;

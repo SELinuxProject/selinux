@@ -196,7 +196,7 @@ static void add_cil_path(struct cil_tree_node **current, char *path)
 	insert_node(node, *current);
 }
 
-int cil_parser(char *_path, char *buffer, uint32_t size, struct cil_tree **parse_tree)
+int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree **parse_tree)
 {
 
 	int paren_count = 0;

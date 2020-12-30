@@ -42,7 +42,7 @@ typedef struct cil_db cil_db_t;
 extern void cil_db_init(cil_db_t **db);
 extern void cil_db_destroy(cil_db_t **db);
 
-extern int cil_add_file(cil_db_t *db, char *name, char *data, size_t size);
+extern int cil_add_file(cil_db_t *db, const char *name, const char *data, size_t size);
 
 extern int cil_compile(cil_db_t *db);
 extern int cil_build_policydb(cil_db_t *db, sepol_policydb_t **sepol_db);
@@ -67,7 +67,7 @@ enum cil_log_level {
 	CIL_INFO
 };
 extern void cil_set_log_level(enum cil_log_level lvl);
-extern void cil_set_log_handler(void (*handler)(int lvl, char *msg));
+extern void cil_set_log_handler(void (*handler)(int lvl, const char *msg));
 
 #ifdef __GNUC__
 __attribute__ ((format(printf, 2, 3)))
