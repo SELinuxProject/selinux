@@ -146,6 +146,7 @@ static int __cil_resolve_perms(symtab_t *class_symtab, symtab_t *common_symtab, 
 	return SEPOL_OK;
 
 exit:
+	cil_list_destroy(perm_datums, CIL_FALSE);
 	return rc;
 }
 
