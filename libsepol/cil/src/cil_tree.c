@@ -710,7 +710,6 @@ void cil_tree_print_node(struct cil_tree_node *node)
 		case CIL_EXPANDTYPEATTRIBUTE: {
 			struct cil_expandtypeattribute *attr = node->data;
 
-			fprintf(stderr, "%s %u\n", __func__, __LINE__);
 			cil_log(CIL_INFO, "(EXPANDTYPEATTRIBUTE ");
 			cil_tree_print_expr(attr->attr_datums, attr->attr_strs);
 			cil_log(CIL_INFO, "%s)\n",attr->expand ?

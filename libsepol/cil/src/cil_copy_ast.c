@@ -653,7 +653,6 @@ int cil_copy_expandtypeattribute(__attribute__((unused)) struct cil_db *db, void
 	struct cil_expandtypeattribute *orig = data;
 	struct cil_expandtypeattribute *new = NULL;
 
-	fprintf(stderr, "%s %u\n", __func__, __LINE__);
 	cil_expandtypeattribute_init(&new);
 
 	if (orig->attr_strs != NULL) {
