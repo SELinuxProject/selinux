@@ -555,6 +555,10 @@ int cil_resolve_alias_to_actual(struct cil_tree_node *current, enum cil_flavor f
 	a1_node = a1->datum.nodes->head->data;
 
 	while (flavor != a1_node->flavor) {
+		if (a1->actual == NULL) {
+			cil_tree_log(current, CIL_ERR, "Alias %s references an unused alias %s", alias->datum.name, a1->datum.name);
+			return SEPOL_ERR;
+		}
 		a1 = a1->actual;
 		a1_node = a1->datum.nodes->head->data;
 		steps += 1;
