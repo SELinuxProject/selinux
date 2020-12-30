@@ -1,0 +1,22 @@
+name: Run SELinux testsuite in a virtual machine
+
+on: [push, pull_request]
+
+jobs:
+  vm_testsuite:
+
+    # Use VirtualBox+vagrant on macOS, as described in https://github.com/actions/virtual-environments/issues/433
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create Vagrant VM
+      run: |
+        cd scripts/ci
+        vagrant up
+
+    - name: Run SELinux testsuite in the VM
+      run: |
+        cd scripts/ci
+        vagrant ssh -- ./run-selinux-test.sh
