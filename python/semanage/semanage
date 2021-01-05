@@ -27,6 +27,7 @@ import traceback
 import argparse
 import seobject
 import sys
+import os
 PROGNAME = "policycoreutils"
 try:
     import gettext
@@ -945,6 +946,13 @@ def do_parser():
         args = commandParser.parse_args(make_args(sys.argv))
         args.func(args)
         sys.exit(0)
+    except BrokenPipeError as e:
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+        # Python flushes standard streams on exit; redirect remaining output
+        # to devnull to avoid another BrokenPipeError at shutdown
+        devnull = os.open(os.devnull, os.O_WRONLY)
+        os.dup2(devnull, sys.stdout.fileno())
+        sys.exit(1)
     except IOError as e:
         sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
         sys.exit(1)
