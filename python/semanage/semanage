@@ -23,11 +23,13 @@
 #
 #
 
-import traceback
 import argparse
+import os
+import re
 import seobject
 import sys
-import os
+import traceback
+
 PROGNAME = "policycoreutils"
 try:
     import gettext
@@ -797,8 +799,6 @@ def setupExportParser(subparsers):
     parser_add_store(exportParser, "export")
     exportParser.add_argument('-f', '--output_file', dest='output_file', action=SetExportFile, help=_('Output file'))
     exportParser.set_defaults(func=handleExport)
-
-import re
 
 
 def mkargv(line):
