@@ -92,6 +92,7 @@ int cil_symtab_insert(symtab_t *symtab, hashtab_key_t key, struct cil_symtab_dat
 		datum->name = key;
 		datum->fqn = key;
 		datum->symtab = symtab;
+		symtab->nprim++;
 		cil_list_append(datum->nodes, CIL_NODE, node);
 	} else if (rc == SEPOL_EEXIST) {
 		cil_list_append(datum->nodes, CIL_NODE, node);
@@ -111,6 +112,7 @@ void cil_symtab_remove_datum(struct cil_symtab_datum *datum)
 	}
 
 	hashtab_remove(symtab->table, datum->name, NULL, NULL);
+	symtab->nprim--;
 	datum->symtab = NULL;
 }
 
