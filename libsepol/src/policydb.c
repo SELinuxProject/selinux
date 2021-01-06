@@ -1413,12 +1413,16 @@ static int filenametr_destroy(hashtab_key_t key, hashtab_datum_t datum,
 			      void *p __attribute__ ((unused)))
 {
 	filename_trans_key_t *ft = (filename_trans_key_t *)key;
-	filename_trans_datum_t *fd = datum;
+	filename_trans_datum_t *fd = datum, *next;
 
 	free(ft->name);
 	free(key);
-	ebitmap_destroy(&fd->stypes);
-	free(datum);
+	do {
+		next = fd->next;
+		ebitmap_destroy(&fd->stypes);
+		free(fd);
+		fd = next;
+	} while (fd);
 	return 0;
 }
 
