@@ -17,14 +17,14 @@ extern "C" {
    If 'fromcon' is NULL, defaults to current context.
    Caller must free via freeconary. */
 	extern int get_ordered_context_list(const char *user,
-					    char * fromcon,
+					    const char *fromcon,
 					    char *** list);
 
 /* As above, but use the provided MLS level rather than the
    default level for the user. */
 	extern int get_ordered_context_list_with_level(const char *user,
 						       const char *level,
-						       char * fromcon,
+						       const char *fromcon,
 						       char *** list);
 
 /* Get the default security context for a user session for 'user'
@@ -35,14 +35,14 @@ extern "C" {
    Returns 0 on success or -1 otherwise.
    Caller must free via freecon. */
 	extern int get_default_context(const char *user,
-				       char * fromcon,
+				       const char *fromcon,
 				       char ** newcon);
 
 /* As above, but use the provided MLS level rather than the
    default level for the user. */
 	extern int get_default_context_with_level(const char *user,
 						  const char *level,
-						  char * fromcon,
+						  const char *fromcon,
 						  char ** newcon);
 
 /* Same as get_default_context, but only return a context
@@ -50,7 +50,7 @@ extern "C" {
    for the user with that role, then return -1. */
 	extern int get_default_context_with_role(const char *user,
 						 const char *role,
-						 char * fromcon,
+						 const char *fromcon,
 						 char ** newcon);
 
 /* Same as get_default_context, but only return a context
@@ -59,7 +59,7 @@ extern "C" {
 	extern int get_default_context_with_rolelevel(const char *user,
 						      const char *role,
 						      const char *level,
-						      char * fromcon,
+						      const char *fromcon,
 						      char ** newcon);
 
 /* Given a list of authorized security contexts for the user, 

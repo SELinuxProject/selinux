@@ -13,7 +13,7 @@
 
 int get_default_context_with_role(const char *user,
 				  const char *role,
-				  char * fromcon,
+				  const char *fromcon,
 				  char ** newcon)
 {
 	char **conary;
@@ -56,23 +56,24 @@ int get_default_context_with_role(const char *user,
 int get_default_context_with_rolelevel(const char *user,
 				       const char *role,
 				       const char *level,
-				       char * fromcon,
+				       const char *fromcon,
 				       char ** newcon)
 {
 
-	int rc = 0;
-	int freefrom = 0;
+	int rc;
+	char *backup_fromcon = NULL;
 	context_t con;
-	char *newfromcon;
+	const char *newfromcon;
+
 	if (!level)
 		return get_default_context_with_role(user, role, fromcon,
 						     newcon);
 
 	if (!fromcon) {
-		rc = getcon(&fromcon);
+		rc = getcon(&backup_fromcon);
 		if (rc < 0)
 			return rc;
-		freefrom = 1;
+		fromcon = backup_fromcon;
 	}
 
 	rc = -1;
@@ -91,14 +92,13 @@ int get_default_context_with_rolelevel(const char *user,
 
       out:
 	context_free(con);
-	if (freefrom)
-		freecon(fromcon);
+	freecon(backup_fromcon);
 	return rc;
 
 }
 
 int get_default_context(const char *user,
-			char * fromcon, char ** newcon)
+			const char *fromcon, char ** newcon)
 {
 	char **conary;
 	int rc;
@@ -128,7 +128,7 @@ static int is_in_reachable(char **reachable, const char *usercon_str)
 }
 
 static int get_context_user(FILE * fp,
-			     char * fromcon,
+			     const char * fromcon,
 			     const char * user,
 			     char ***reachable,
 			     unsigned int *nreachable)
@@ -345,22 +345,22 @@ static int get_failsafe_context(const char *user, char ** newcon)
 
 int get_ordered_context_list_with_level(const char *user,
 					const char *level,
-					char * fromcon,
+					const char *fromcon,
 					char *** list)
 {
 	int rc;
-	int freefrom = 0;
+	char *backup_fromcon = NULL;
 	context_t con;
-	char *newfromcon;
+	const char *newfromcon;
 
 	if (!level)
 		return get_ordered_context_list(user, fromcon, list);
 
 	if (!fromcon) {
-		rc = getcon(&fromcon);
+		rc = getcon(&backup_fromcon);
 		if (rc < 0)
 			return rc;
-		freefrom = 1;
+		fromcon = backup_fromcon;
 	}
 
 	rc = -1;
@@ -379,15 +379,14 @@ int get_ordered_context_list_with_level(const char *user,
 
       out:
 	context_free(con);
-	if (freefrom)
-		freecon(fromcon);
+	freecon(backup_fromcon);
 	return rc;
 }
 
 
 int get_default_context_with_level(const char *user,
 				   const char *level,
-				   char * fromcon,
+				   const char *fromcon,
 				   char ** newcon)
 {
 	char **conary;
@@ -405,12 +404,13 @@ int get_default_context_with_level(const char *user,
 }
 
 int get_ordered_context_list(const char *user,
-			     char * fromcon,
+			     const char *fromcon,
 			     char *** list)
 {
 	char **reachable = NULL;
 	int rc = 0;
-	unsigned nreachable = 0, freefrom = 0;
+	unsigned nreachable = 0;
+	char *backup_fromcon = NULL;
 	FILE *fp;
 	char *fname = NULL;
 	size_t fname_len;
@@ -418,10 +418,10 @@ int get_ordered_context_list(const char *user,
 
 	if (!fromcon) {
 		/* Get the current context and use it for the starting context */
-		rc = getcon(&fromcon);
+		rc = getcon(&backup_fromcon);
 		if (rc < 0)
 			return rc;
-		freefrom = 1;
+		fromcon = backup_fromcon;
 	}
 
 	/* Determine the ordering to apply from the optional per-user config
@@ -469,8 +469,7 @@ int get_ordered_context_list(const char *user,
 	else
 		freeconary(reachable);
 
-	if (freefrom)
-		freecon(fromcon);
+	freecon(backup_fromcon);
 
 	return rc;
 
