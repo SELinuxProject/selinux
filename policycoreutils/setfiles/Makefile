@@ -5,8 +5,6 @@ SBINDIR ?= /sbin
 MANDIR = $(PREFIX)/share/man
 AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
 
-ABORT_ON_ERRORS=$(shell grep "^\#define ABORT_ON_ERRORS" setfiles.c | awk -S '{ print $$3 }')
-
 CFLAGS ?= -g -Werror -Wall -W
 override LDLIBS += -lselinux -lsepol
 
@@ -26,7 +24,6 @@ restorecon_xattr: restorecon_xattr.o restore.o
 
 man:
 	@cp -af setfiles.8 setfiles.8.man
-	@sed -i "s/ABORT_ON_ERRORS/$(ABORT_ON_ERRORS)/g" setfiles.8.man
 
 install: all
 	[ -d $(DESTDIR)$(MANDIR)/man8 ] || mkdir -p $(DESTDIR)$(MANDIR)/man8

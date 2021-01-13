@@ -23,14 +23,6 @@ static int nerr;
 
 #define STAT_BLOCK_SIZE 1
 
-/* setfiles will abort its operation after reaching the
- * following number of errors (e.g. invalid contexts),
- * unless it is used in "debug" mode (-d option).
- */
-#ifndef ABORT_ON_ERRORS
-#define ABORT_ON_ERRORS	10
-#endif
-
 #define SETFILES "setfiles"
 #define RESTORECON "restorecon"
 static int iamrestorecon;
@@ -54,15 +46,6 @@ static __attribute__((__noreturn__)) void usage(const char *const name)
 			name, name, name);
 	}
 	exit(-1);
-}
-
-void inc_err(void)
-{
-	nerr++;
-	if (nerr > ABORT_ON_ERRORS - 1 && !r_opts.debug) {
-		fprintf(stderr, "Exiting after %d errors.\n", ABORT_ON_ERRORS);
-		exit(-1);
-	}
 }
 
 void set_rootpath(const char *arg)
@@ -97,7 +80,6 @@ int canoncon(char **contextp)
 		*contextp = tmpcon;
 	} else if (errno != ENOENT) {
 		rc = -1;
-		inc_err();
 	}
 
 	return rc;
