@@ -181,6 +181,7 @@ int main(int argc, char **argv)
 	policyfile = NULL;
 	nerr = 0;
 
+	r_opts.abort_on_error = 0;
 	r_opts.progname = strdup(argv[0]);
 	if (!r_opts.progname) {
 		fprintf(stderr, "%s:  Out of memory!\n", argv[0]);
@@ -193,7 +194,6 @@ int main(int argc, char **argv)
 		 * setfiles:
 		 * Recursive descent,
 		 * Does not expand paths via realpath,
-		 * Aborts on errors during the file tree walk,
 		 * Try to track inode associations for conflict detection,
 		 * Does not follow mounts (sets SELINUX_RESTORECON_XDEV),
 		 * Validates all file contexts at init time.
@@ -201,7 +201,6 @@ int main(int argc, char **argv)
 		iamrestorecon = 0;
 		r_opts.recurse = SELINUX_RESTORECON_RECURSE;
 		r_opts.userealpath = 0; /* SELINUX_RESTORECON_REALPATH */
-		r_opts.abort_on_error = SELINUX_RESTORECON_ABORT_ON_ERROR;
 		r_opts.add_assoc = SELINUX_RESTORECON_ADD_ASSOC;
 		/* FTS_PHYSICAL and FTS_NOCHDIR are always set by selinux_restorecon(3) */
 		r_opts.xdev = SELINUX_RESTORECON_XDEV;
@@ -225,7 +224,6 @@ int main(int argc, char **argv)
 		iamrestorecon = 1;
 		r_opts.recurse = 0;
 		r_opts.userealpath = SELINUX_RESTORECON_REALPATH;
-		r_opts.abort_on_error = 0;
 		r_opts.add_assoc = 0;
 		r_opts.xdev = 0;
 		r_opts.ignore_mounts = 0;
