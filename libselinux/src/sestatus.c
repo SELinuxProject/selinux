@@ -37,7 +37,6 @@ struct selinux_status_t
  * Valid Pointer : opened and mapped correctly
  */
 static struct selinux_status_t *selinux_status = NULL;
-static int			selinux_status_fd;
 static uint32_t			last_seqno;
 static uint32_t			last_policyload;
 
@@ -298,11 +297,10 @@ int selinux_status_open(int fallback)
 		goto error;
 
 	selinux_status = mmap(NULL, pagesize, PROT_READ, MAP_SHARED, fd, 0);
+	close(fd);
 	if (selinux_status == MAP_FAILED) {
-		close(fd);
 		goto error;
 	}
-	selinux_status_fd = fd;
 	last_seqno = (uint32_t)(-1);
 
 	/* sequence must not be changed during references */
@@ -336,7 +334,6 @@ error:
 
 		/* mark as fallback mode */
 		selinux_status = MAP_FAILED;
-		selinux_status_fd = avc_netlink_acquire_fd();
 		last_seqno = (uint32_t)(-1);
 
 		if (avc_using_threads)
@@ -388,7 +385,5 @@ void selinux_status_close(void)
 		munmap(selinux_status, pagesize);
 	selinux_status = NULL;
 
-	close(selinux_status_fd);
-	selinux_status_fd = -1;
 	last_seqno = (uint32_t)(-1);
 }
