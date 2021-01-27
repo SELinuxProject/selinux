@@ -1736,6 +1736,19 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 	}
 	close(fd);
 
+	/* sync changes in sandbox to filesystem */
+	fd = open(sandbox, O_DIRECTORY);
+	if (fd == -1) {
+		ERR(sh, "Error while opening %s for syncfs(): %d", sandbox, errno);
+		return -1;
+	}
+	if (syncfs(fd) == -1) {
+		ERR(sh, "Error while syncing %s to filesystem: %d", sandbox, errno);
+		close(fd);
+		return -1;
+	}
+	close(fd);
+
 	retval = commit_number;
 
 	if (semanage_get_active_lock(sh) < 0) {
