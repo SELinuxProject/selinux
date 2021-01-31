@@ -38,10 +38,14 @@ int constraint_expr_init(constraint_expr_t * expr)
 
 void constraint_expr_destroy(constraint_expr_t * expr)
 {
-	if (expr != NULL) {
+	constraint_expr_t *next;
+
+	while (expr != NULL) {
+		next = expr->next;
 		ebitmap_destroy(&expr->names);
 		type_set_destroy(expr->type_names);
 		free(expr->type_names);
 		free(expr);
+		expr = next;
 	}
 }

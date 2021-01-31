@@ -3479,12 +3479,7 @@ static constraint_expr_t *constraint_expr_clone(constraint_expr_t * expr)
 
 	return h;
       oom:
-	e = h;
-	while (e) {
-		l = e;
-		e = e->next;
-		constraint_expr_destroy(l);
-	}
+	constraint_expr_destroy(h);
 	return NULL;
 }
 

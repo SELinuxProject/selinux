@@ -1310,7 +1310,6 @@ static int class_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
 {
 	class_datum_t *cladatum;
 	constraint_node_t *constraint, *ctemp;
-	constraint_expr_t *e, *etmp;
 
 	if (key)
 		free(key);
@@ -1322,12 +1321,7 @@ static int class_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
 	hashtab_destroy(cladatum->permissions.table);
 	constraint = cladatum->constraints;
 	while (constraint) {
-		e = constraint->expr;
-		while (e) {
-			etmp = e;
-			e = e->next;
-			constraint_expr_destroy(etmp);
-		}
+		constraint_expr_destroy(constraint->expr);
 		ctemp = constraint;
 		constraint = constraint->next;
 		free(ctemp);
@@ -1335,12 +1329,7 @@ static int class_destroy(hashtab_key_t key, hashtab_datum_t datum, void *p
 
 	constraint = cladatum->validatetrans;
 	while (constraint) {
-		e = constraint->expr;
-		while (e) {
-			etmp = e;
-			e = e->next;
-			constraint_expr_destroy(etmp);
-		}
+		constraint_expr_destroy(constraint->expr);
 		ctemp = constraint;
 		constraint = constraint->next;
 		free(ctemp);

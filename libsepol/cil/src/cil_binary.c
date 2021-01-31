@@ -2841,6 +2841,7 @@ int cil_constrain_to_policydb_helper(policydb_t *pdb, const struct cil_db *db, s
 	return SEPOL_OK;
 
 exit:
+	constraint_expr_destroy(sepol_expr);
 	free(sepol_constrain);
 	return rc;
 }
