@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "cil_fqn.h"
 #include "cil_internal.h"
 #include "cil_log.h"
 #include "cil_strpool.h"

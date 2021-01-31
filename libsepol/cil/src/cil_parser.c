@@ -38,6 +38,7 @@
 #include "cil_mem.h"
 #include "cil_tree.h"
 #include "cil_lexer.h"
+#include "cil_parser.h"
 #include "cil_strpool.h"
 #include "cil_stack.h"
 

@@ -2,6 +2,7 @@
 #include "cil_internal.h"
 #include "cil_log.h"
 #include "cil_list.h"
+#include "cil_reset_ast.h"
 #include "cil_symtab.h"
 
 static inline void cil_reset_classperms_list(struct cil_list *cp_list);

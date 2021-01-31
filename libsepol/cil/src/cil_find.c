@@ -30,6 +30,7 @@
 #include <sepol/policydb/ebitmap.h>
 
 #include "cil_internal.h"
+#include "cil_find.h"
 #include "cil_flavor.h"
 #include "cil_list.h"
 #include "cil_log.h"

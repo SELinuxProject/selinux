@@ -59,6 +59,7 @@
 #include <sepol/policydb/services.h>
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/util.h>
+#include <sepol/sepol.h>
 
 #include "debug.h"
 #include "private.h"

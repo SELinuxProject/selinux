@@ -16,6 +16,7 @@
 #define IPPROTO_SCTP 132
 #endif
 
+#include <sepol/kernel_to_cil.h>
 #include <sepol/policydb/avtab.h>
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/hashtab.h>

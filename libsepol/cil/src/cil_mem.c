@@ -33,6 +33,7 @@
 #include <string.h>
 
 #include "cil_log.h"
+#include "cil_mem.h"
 
 void *cil_malloc(size_t size)
 {

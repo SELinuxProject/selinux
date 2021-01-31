@@ -41,6 +41,7 @@
 #include "cil_flavor.h"
 #include "cil_find.h"
 #include "cil_mem.h"
+#include "cil_policy.h"
 #include "cil_tree.h"
 #include "cil_list.h"
 #include "cil_symtab.h"
