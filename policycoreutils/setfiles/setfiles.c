@@ -19,7 +19,6 @@ static int warn_no_match;
 static int null_terminated;
 static int request_digest;
 static struct restore_opts r_opts;
-static int nerr;
 
 #define STAT_BLOCK_SIZE 1
 
@@ -161,7 +160,6 @@ int main(int argc, char **argv)
 	warn_no_match = 0;
 	request_digest = 0;
 	policyfile = NULL;
-	nerr = 0;
 
 	r_opts.abort_on_error = 0;
 	r_opts.progname = strdup(argv[0]);
@@ -426,9 +424,6 @@ int main(int argc, char **argv)
 	r_opts.selabel_opt_validate = (ctx_validate ? (char *)1 : NULL);
 	r_opts.selabel_opt_digest = (request_digest ? (char *)1 : NULL);
 	r_opts.selabel_opt_path = altpath;
-
-	if (nerr)
-		exit(-1);
 
 	restore_init(&r_opts);
 
