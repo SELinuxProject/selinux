@@ -231,13 +231,30 @@ exit:
 
 void cil_destroy_block(struct cil_block *block)
 {
+	struct cil_list_item *item;
+	struct cil_tree_node *bi_node;
+	struct cil_blockinherit *inherit;
+
 	if (block == NULL) {
 		return;
 	}
 
 	cil_symtab_datum_destroy(&block->datum);
 	cil_symtab_array_destroy(block->symtab);
-	cil_list_destroy(&block->bi_nodes, CIL_FALSE);
+	if (block->bi_nodes != NULL) {
+		/* unlink blockinherit->block */
+		cil_list_for_each(item, block->bi_nodes) {
+			bi_node = item->data;
+			/* the conditions should always be true, but better be sure */
+			if (bi_node->flavor == CIL_BLOCKINHERIT) {
+				inherit = bi_node->data;
+				if (inherit->block == block) {
+					inherit->block = NULL;
+				}
+			}
+		}
+		cil_list_destroy(&block->bi_nodes, CIL_FALSE);
+	}
 
 	free(block);
 }
