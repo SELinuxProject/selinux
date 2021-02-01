@@ -1,43 +1,57 @@
 #!/bin/bash
 
-PWD=`pwd`
+# Fail when a command fails
+set -e
+
+# Ensure the script is running from the top level directory
+cd "$(dirname -- "$0")/.."
+
 WIKIDIR=../selinux.wiki
 
-if [ \! -d $WIKIDIR ]; then
-    git clone git@github.com:SELinuxProject/selinux.wiki.git $WIKIDIR
+if ! [ -d "$WIKIDIR" ]; then
+	git clone git@github.com:SELinuxProject/selinux.wiki.git "$WIKIDIR"
 fi
 
-RELEASE_TAG=`cat VERSION`
-DEST=releases/$RELEASE_TAG
-DIRS="libsepol libselinux libsemanage checkpolicy secilc policycoreutils mcstrans restorecond semodule-utils"
-DIRS_NEED_PREFIX="dbus gui python sandbox"
+RELEASE_TAG="$(cat VERSION)"
+DEST="releases/$RELEASE_TAG"
+DIRS=(
+	checkpolicy
+	libselinux
+	libsemanage
+	libsepol
+	mcstrans
+	policycoreutils
+	restorecond
+	secilc
+	selinux-dbus
+	selinux-gui
+	selinux-python
+	selinux-sandbox
+	semodule-utils
+)
 
-git tag -a $RELEASE_TAG -m "Release $RELEASE_TAG"
+if git rev-parse "$RELEASE_TAG" &> /dev/null ; then
+	echo "Warning: tag $RELEASE_TAG already exists"
+else
+	git tag -a "$RELEASE_TAG" -m "Release $RELEASE_TAG"
+fi
 
-rm -rf $DEST
-mkdir -p $DEST
+rm -rf "$DEST"
+mkdir -p "$DEST"
 
-for i in $DIRS; do
-	cd $i
-	VERS=`cat VERSION`
-	ARCHIVE=$i-$VERS.tar.gz
-	git tag $i-$VERS > /dev/null 2>&1
-	git archive -o ../$DEST/$ARCHIVE --prefix=$i-$VERS/ $i-$VERS
-	cd ..
+for COMPONENT in "${DIRS[@]}"; do
+	DIR="${COMPONENT#selinux-}"
+	VERS="$(cat "$DIR/VERSION")"
+	TAG="$COMPONENT-$VERS"
+	if git rev-parse "$TAG" &> /dev/null ; then
+		echo "Warning: tag $TAG already exists"
+	else
+		git tag "$TAG" > /dev/null
+	fi
+	git -C "$DIR" archive -o "../$DEST/$TAG.tar.gz" --prefix="$TAG/" "$TAG"
 done
 
-for i in $DIRS_NEED_PREFIX; do
-	cd $i
-	VERS=`cat VERSION`
-	ARCHIVE=selinux-$i-$VERS.tar.gz
-	git tag selinux-$i-$VERS > /dev/null 2>&1
-	git archive -o ../$DEST/$ARCHIVE --prefix=selinux-$i-$VERS/ selinux-$i-$VERS
-	cd ..
-done
-
-cd $DEST
-
-git add .
+git archive -o "$DEST/selinux-${RELEASE_TAG}.tar.gz" --prefix="selinux-${RELEASE_TAG}/" "${RELEASE_TAG}"
 
 echo "Add the following to the $WIKIDIR/Releases.md wiki page:"
 
@@ -54,12 +68,23 @@ echo ""
 echo "[short log](https://github.com/SELinuxProject/selinux/releases/download/$RELEASE_TAG/shortlog-$RELEASE_TAG.txt)"
 echo ""
 
-for i in *.tar.gz; do
-
-	echo -n "[$i](https://github.com/SELinuxProject/selinux/releases/download/$RELEASE_TAG/$i) "
-	sha256sum $i | cut -d " " -f 1
+for COMPONENT in "${DIRS[@]}"; do
+	DIR="${COMPONENT#selinux-}"
+	VERS="$(cat "$DIR/VERSION")"
+	TAG="$COMPONENT-$VERS"
+	tarball="$TAG.tar.gz"
+	echo -n "[$tarball](https://github.com/SELinuxProject/selinux/releases/download/$RELEASE_TAG/$tarball) "
+	sha256sum "$DEST/$tarball" | cut -d " " -f 1
 	echo ""
 done
+
+echo "### Source repository snapshot"
+
+echo ""
+
+echo -n "[selinux-${RELEASE_TAG}.tar.gz](https://github.com/SELinuxProject/selinux/releases/download/$RELEASE_TAG/selinux-${RELEASE_TAG}.tar.gz) "
+sha256sum "$DEST/selinux-${RELEASE_TAG}.tar.gz" | cut -d " " -f 1
+echo ""
 
 echo "And then run:"
 echo "  cd $WIKIDIR"
