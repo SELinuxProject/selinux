@@ -35,8 +35,8 @@ database (extended attributes) on filesystems.
 .P
 It can also be run at any time to relabel when adding support for
 new policy, or  just check whether the file contexts are all
-as you expect.  By default it will relabel all mounted ext2, ext3, xfs and 
-jfs file systems as long as they do not have a security context mount 
+as you expect.  By default it will relabel all mounted ext2, ext3, ext4, gfs2, xfs,
+jfs and btrfs file systems as long as they do not have a security context mount
 option.  You can use the \-R flag to use rpmpackages as an alternative.
 The file /etc/selinux/fixfiles_exclude_dirs can contain a list of directories
 excluded from relabeling.
@@ -79,7 +79,7 @@ Modify verbosity from progress to verbose. (Run restorecon with \-v instead of \
 .SH "ARGUMENTS"
 One of:
 .TP 
-.B check
+.B check | verify
 print any incorrect file context labels, showing old and new context, but do not change them.
 .TP 
 .B restore
@@ -87,9 +87,6 @@ change any incorrect file context labels.
 .TP 
 .B relabel
 Prompt for removal of contents of /tmp directory and then change any incorrect file context labels to match the install file_contexts file.
-.TP 
-.B verify
-List out files with incorrect file context labels, but do not change them.
 .TP 
 .B [[dir/file] ... ] 
 List of files or directories trees that you wish to check file context on.
