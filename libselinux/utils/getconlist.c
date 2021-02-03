@@ -58,8 +58,14 @@ int main(int argc, char **argv)
 			free(level);
 			return 2;
 		}
-	} else
+	} else {
 		cur_context = argv[optind + 1];
+		if (security_check_context(cur_context) != 0) {
+			fprintf(stderr, "Given context '%s' is invalid.\n", cur_context);
+			free(level);
+			return 3;
+		}
+	}
 
 	/* Get the list and print it */
 	if (level)
@@ -72,6 +78,11 @@ int main(int argc, char **argv)
 		for (i = 0; list[i]; i++)
 			puts(list[i]);
 		freeconary(list);
+	} else {
+		fprintf(stderr, "get_ordered_context_list%s failure: %d(%s)\n",
+			level ? "_with_level" : "", errno, strerror(errno));
+		free(level);
+		return 4;
 	}
 
 	free(level);
