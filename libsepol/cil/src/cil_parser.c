@@ -47,11 +47,11 @@ char *CIL_KEY_HLL_LMX;
 char *CIL_KEY_HLL_LME;
 
 struct hll_info {
-	int hll_lineno;
-	int hll_expand;
+	uint32_t hll_lineno;
+	uint32_t hll_expand;
 };
 
-static void push_hll_info(struct cil_stack *stack, int hll_lineno, int hll_expand)
+static void push_hll_info(struct cil_stack *stack, uint32_t hll_lineno, uint32_t hll_expand)
 {
 	struct hll_info *new = cil_malloc(sizeof(*new));
 
@@ -61,7 +61,7 @@ static void push_hll_info(struct cil_stack *stack, int hll_lineno, int hll_expan
 	cil_stack_push(stack, CIL_NONE, new);
 }
 
-static void pop_hll_info(struct cil_stack *stack, int *hll_lineno, int *hll_expand)
+static void pop_hll_info(struct cil_stack *stack, uint32_t *hll_lineno, uint32_t *hll_expand)
 {
 	struct cil_stack_item *curr = cil_stack_pop(stack);
 	struct cil_stack_item *prev = cil_stack_peek(stack);
@@ -70,8 +70,8 @@ static void pop_hll_info(struct cil_stack *stack, int *hll_lineno, int *hll_expa
 	free(curr->data);
 
 	if (!prev) {
-		*hll_lineno = -1;
-		*hll_expand = -1;
+		*hll_lineno = 0;
+		*hll_expand = 0;
 	} else {
 		old = prev->data;
 		*hll_lineno = old->hll_lineno;
@@ -79,7 +79,7 @@ static void pop_hll_info(struct cil_stack *stack, int *hll_lineno, int *hll_expa
 	}
 }
 
-static void create_node(struct cil_tree_node **node, struct cil_tree_node *current, int line, int hll_line, void *value)
+static void create_node(struct cil_tree_node **node, struct cil_tree_node *current, uint32_t line, uint32_t hll_line, void *value)
 {
 	cil_tree_node_init(node);
 	(*node)->parent = current;
@@ -99,13 +99,14 @@ static void insert_node(struct cil_tree_node *node, struct cil_tree_node *curren
 	current->cl_tail = node;
 }
 
-static int add_hll_linemark(struct cil_tree_node **current, int *hll_lineno, int *hll_expand, struct cil_stack *stack, char *path)
+static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno, uint32_t *hll_expand, struct cil_stack *stack, char *path)
 {
 	char *hll_type;
 	struct cil_tree_node *node;
 	struct token tok;
 	char *hll_file;
 	char *end = NULL;
+	unsigned long val;
 
 	cil_lexer_next(&tok);
 	hll_type = cil_strpool_add(tok.value);
@@ -141,11 +142,19 @@ static int add_hll_linemark(struct cil_tree_node **current, int *hll_lineno, int
 			cil_log(CIL_ERR, "Invalid line mark syntax\n");
 			goto exit;
 		}
-		*hll_lineno = strtol(tok.value, &end, 10);
+
+		val = strtoul(tok.value, &end, 10);
 		if (errno == ERANGE || *end != '\0') {
 			cil_log(CIL_ERR, "Problem parsing line number for line mark\n");
 			goto exit;
 		}
+#if ULONG_MAX > UINT32_MAX
+		if (val > UINT32_MAX) {
+			cil_log(CIL_ERR, "Line mark line number > UINT32_MAX\n");
+			goto exit;
+		}
+#endif
+		*hll_lineno = val;
 
 		push_hll_info(stack, *hll_lineno, *hll_expand);
 
@@ -175,7 +184,7 @@ static int add_hll_linemark(struct cil_tree_node **current, int *hll_lineno, int
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Problem with high-level line mark at line %d of %s\n", tok.line, path);
+	cil_log(CIL_ERR, "Problem with high-level line mark at line %u of %s\n", tok.line, path);
 	return SEPOL_ERR;
 }
 
@@ -207,8 +216,8 @@ int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree *
 	struct cil_tree_node *current = NULL;
 	char *path = cil_strpool_add(_path);
 	struct cil_stack *stack;
-	int hll_lineno = -1;
-	int hll_expand = -1;
+	uint32_t hll_lineno = 0;
+	uint32_t hll_expand = 0;
 	struct token tok;
 	int rc = SEPOL_OK;
 
