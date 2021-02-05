@@ -285,7 +285,7 @@ static void cil_cond_expr_to_policy(FILE *out, struct cil_list *expr, int first)
 	struct cil_list_item *i1 = expr->head;
 
 	if (i1->flavor == CIL_OP) {
-		enum cil_flavor op = (enum cil_flavor)i1->data;
+		enum cil_flavor op = (enum cil_flavor)(uintptr_t)i1->data;
 		fprintf(out, "(");
 		switch (op) {
 		case CIL_NOT:
@@ -385,7 +385,7 @@ static size_t __cil_cons_leaf_operand_len(struct cil_db *db, struct cil_list_ite
 
 static size_t __cil_cons_leaf_op_len(struct cil_list_item *op)
 {
-	enum cil_flavor flavor = (enum cil_flavor)op->data;
+	enum cil_flavor flavor = (enum cil_flavor)(uintptr_t)op->data;
 	size_t len;
 
 	switch (flavor) {
@@ -420,7 +420,7 @@ static size_t cil_cons_expr_len(struct cil_db *db, struct cil_list *cons_expr)
 
 	i1 = cons_expr->head;
 
-	op = (enum cil_flavor)i1->data;
+	op = (enum cil_flavor)(uintptr_t)i1->data;
 	switch (op) {
 	case CIL_NOT:
 		len = 6; /* "(not )" */
@@ -472,7 +472,7 @@ static char *__cil_cons_leaf_operand_to_string(struct cil_db *db, struct cil_lis
 	size_t o_len;
 
 	if (flavor == CIL_CONS_OPERAND) {
-		enum cil_flavor o_flavor = (enum cil_flavor)operand->data;
+		enum cil_flavor o_flavor = (enum cil_flavor)(uintptr_t)operand->data;
 		switch (o_flavor) {
 		case CIL_CONS_U1:
 			o_str = "u1";
@@ -555,7 +555,7 @@ static char *__cil_cons_leaf_operand_to_string(struct cil_db *db, struct cil_lis
 
 static char *__cil_cons_leaf_op_to_string(struct cil_list_item *op, char *new)
 {
-	enum cil_flavor flavor = (enum cil_flavor)op->data;
+	enum cil_flavor flavor = (enum cil_flavor)(uintptr_t)op->data;
 	const char *op_str;
 	size_t len;
 
@@ -599,7 +599,7 @@ static char *__cil_cons_expr_to_string(struct cil_db *db, struct cil_list *cons_
 
 	i1 = cons_expr->head;
 
-	op = (enum cil_flavor)i1->data;
+	op = (enum cil_flavor)(uintptr_t)i1->data;
 	switch (op) {
 	case CIL_NOT:
 		*new++ = '(';

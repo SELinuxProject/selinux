@@ -3355,7 +3355,7 @@ static int __cil_evaluate_tunable_expr(struct cil_list_item *curr)
 		return CIL_FALSE;
 	} else if (curr->flavor == CIL_OP) {
 		uint16_t v1, v2;
-		enum cil_flavor op_flavor = (enum cil_flavor)curr->data;
+		enum cil_flavor op_flavor = (enum cil_flavor)(uintptr_t)curr->data;
 
 		v1 = __cil_evaluate_tunable_expr_helper(curr->next);
 

@@ -1977,7 +1977,7 @@ static void __cil_expr_to_string(struct cil_list *expr, enum cil_flavor flavor, 
 	curr = expr->head;
 
 	if (curr->flavor == CIL_OP) {
-		op = (enum cil_flavor)curr->data;
+		op = (enum cil_flavor)(uintptr_t)curr->data;
 
 		if (op == CIL_ALL) {
 			*out = cil_strdup(CIL_KEY_ALL);
@@ -2076,7 +2076,7 @@ static int __cil_cond_expr_to_sepol_expr_helper(policydb_t *pdb, struct cil_list
 	if (item == NULL) {
 		goto exit;
 	} else if (item->flavor == CIL_OP) {
-		enum cil_flavor cil_op = (enum cil_flavor)item->data;
+		enum cil_flavor cil_op = (enum cil_flavor)(uintptr_t)item->data;
 
 		op = cil_malloc(sizeof(*op));
 		op->bool = 0;
@@ -2562,7 +2562,7 @@ int __cil_constrain_expr_leaf_to_sepol_expr(policydb_t *pdb, const struct cil_db
 	struct cil_list_item *l_item = op_item->next;
 	struct cil_list_item *r_item = op_item->next->next;
 	
-	enum cil_flavor l_operand = (enum cil_flavor)l_item->data;
+	enum cil_flavor l_operand = (enum cil_flavor)(uintptr_t)l_item->data;
 
 	switch (l_operand) {
 	case CIL_CONS_U1:
@@ -2593,7 +2593,7 @@ int __cil_constrain_expr_leaf_to_sepol_expr(policydb_t *pdb, const struct cil_db
 		expr->attr = CEXPR_TYPE | CEXPR_XTARGET;
 		break;
 	case CIL_CONS_L1: {
-		enum cil_flavor r_operand = (enum cil_flavor)r_item->data;
+		enum cil_flavor r_operand = (enum cil_flavor)(uintptr_t)r_item->data;
 
 		if (r_operand == CIL_CONS_L2) {
 			expr->attr = CEXPR_L1L2;
@@ -2608,7 +2608,7 @@ int __cil_constrain_expr_leaf_to_sepol_expr(policydb_t *pdb, const struct cil_db
 		expr->attr = CEXPR_L2H2;
 		break;
 	case CIL_CONS_H1: {
-		enum cil_flavor r_operand = (enum cil_flavor)r_item->data;
+		enum cil_flavor r_operand = (enum cil_flavor)(uintptr_t)r_item->data;
 		if (r_operand == CIL_CONS_L2) {
 			expr->attr = CEXPR_H1L2;
 		} else {
@@ -2672,7 +2672,7 @@ int __cil_constrain_expr_to_sepol_expr_helper(policydb_t *pdb, const struct cil_
 		goto exit;
 	}
 
-	enum cil_flavor cil_op = (enum cil_flavor)item->data;
+	enum cil_flavor cil_op = (enum cil_flavor)(uintptr_t)item->data;
 	switch (cil_op) {
 	case CIL_NOT:
 		op->expr_type = CEXPR_NOT;
