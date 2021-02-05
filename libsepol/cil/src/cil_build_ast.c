@@ -6070,6 +6070,11 @@ int cil_gen_src_info(struct cil_tree_node *parse_current, struct cil_tree_node *
 	/* No need to check syntax, because this is auto generated */
 	struct cil_src_info *info = NULL;
 
+	if (parse_current->next == NULL || parse_current->next->next == NULL) {
+		cil_tree_log(parse_current, CIL_ERR, "Bad <src_info>");
+		return SEPOL_ERR;
+	}
+
 	cil_src_info_init(&info);
 
 	info->is_cil = (parse_current->next->data == CIL_KEY_SRC_CIL) ? CIL_TRUE : CIL_FALSE;
