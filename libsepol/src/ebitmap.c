@@ -344,6 +344,26 @@ int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value)
 	return 0;
 }
 
+unsigned int ebitmap_highest_set_bit(ebitmap_t * e)
+{
+	ebitmap_node_t *n;
+	MAPTYPE map;
+	unsigned int pos = 0;
+
+	n = e->node;
+	if (!n)
+		return 0;
+
+	while (n->next)
+		n = n->next;
+
+	map = n->map;
+	while (map >>= 1)
+		pos++;
+
+	return n->startbit + pos;
+}
+
 void ebitmap_destroy(ebitmap_t * e)
 {
 	ebitmap_node_t *n, *temp;
