@@ -54,6 +54,7 @@
 #include "private.h"
 #include "debug.h"
 #include "mls.h"
+#include "policydb_validate.h"
 
 #define POLICYDB_TARGET_SZ   ARRAY_SIZE(policydb_target_strings)
 const char *policydb_target_strings[] = { POLICYDB_STRING, POLICYDB_XEN_STRING };
@@ -993,7 +994,7 @@ static int common_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 
 	comdatum = (common_datum_t *) datum;
 	p = (policydb_t *) datap;
-	if (!comdatum->s.value || comdatum->s.value > p->p_commons.nprim)
+	if (!value_isvalid(comdatum->s.value, p->p_commons.nprim))
 		return -EINVAL;
 	if (p->p_common_val_to_name[comdatum->s.value - 1] != NULL)
 		return -EINVAL;
@@ -1009,7 +1010,7 @@ static int class_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 
 	cladatum = (class_datum_t *) datum;
 	p = (policydb_t *) datap;
-	if (!cladatum->s.value || cladatum->s.value > p->p_classes.nprim)
+	if (!value_isvalid(cladatum->s.value, p->p_classes.nprim))
 		return -EINVAL;
 	if (p->p_class_val_to_name[cladatum->s.value - 1] != NULL)
 		return -EINVAL;
@@ -1026,7 +1027,7 @@ static int role_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 
 	role = (role_datum_t *) datum;
 	p = (policydb_t *) datap;
-	if (!role->s.value || role->s.value > p->p_roles.nprim)
+	if (!value_isvalid(role->s.value, p->p_roles.nprim))
 		return -EINVAL;
 	if (p->p_role_val_to_name[role->s.value - 1] != NULL)
 		return -EINVAL;
@@ -1045,7 +1046,7 @@ static int type_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	p = (policydb_t *) datap;
 
 	if (typdatum->primary) {
-		if (!typdatum->s.value || typdatum->s.value > p->p_types.nprim)
+		if (!value_isvalid(typdatum->s.value, p->p_types.nprim))
 			return -EINVAL;
 		if (p->p_type_val_to_name[typdatum->s.value - 1] != NULL)
 			return -EINVAL;
@@ -1064,7 +1065,7 @@ static int user_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	usrdatum = (user_datum_t *) datum;
 	p = (policydb_t *) datap;
 
-	if (!usrdatum->s.value || usrdatum->s.value > p->p_users.nprim)
+	if (!value_isvalid(usrdatum->s.value, p->p_users.nprim))
 		return -EINVAL;
 	if (p->p_user_val_to_name[usrdatum->s.value - 1] != NULL)
 		return -EINVAL;
@@ -1083,8 +1084,7 @@ static int sens_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	p = (policydb_t *) datap;
 
 	if (!levdatum->isalias) {
-		if (!levdatum->level->sens ||
-		    levdatum->level->sens > p->p_levels.nprim)
+		if (!value_isvalid(levdatum->level->sens, p->p_levels.nprim))
 			return -EINVAL;
 		if (p->p_sens_val_to_name[levdatum->level->sens - 1] != NULL)
 			return -EINVAL;
@@ -1103,7 +1103,7 @@ static int cat_index(hashtab_key_t key, hashtab_datum_t datum, void *datap)
 	p = (policydb_t *) datap;
 
 	if (!catdatum->isalias) {
-		if (!catdatum->s.value || catdatum->s.value > p->p_cats.nprim)
+		if (!value_isvalid(catdatum->s.value, p->p_cats.nprim))
 			return -EINVAL;
 		if (p->p_cat_val_to_name[catdatum->s.value - 1] != NULL)
 			return -EINVAL;
@@ -1190,7 +1190,7 @@ int policydb_index_decls(sepol_handle_t * handle, policydb_t * p)
 	for (curblock = p->global; curblock != NULL; curblock = curblock->next) {
 		for (decl = curblock->branch_list; decl != NULL;
 		     decl = decl->next) {
-			if (decl->decl_id < 1 || decl->decl_id > num_decls) {
+			if (!value_isvalid(decl->decl_id, num_decls)) {
 				ERR(handle, "invalid decl ID %u", decl->decl_id);
 				return -1;
 			}
@@ -2060,7 +2060,7 @@ static int context_read_and_validate(context_struct_t * c,
 
 static int perm_read(policydb_t * p
 		     __attribute__ ((unused)), hashtab_t h,
-		     struct policy_file *fp)
+		     struct policy_file *fp, uint32_t nprim)
 {
 	char *key = 0;
 	perm_datum_t *perdatum;
@@ -2081,6 +2081,8 @@ static int perm_read(policydb_t * p
 		goto bad;
 
 	perdatum->s.value = le32_to_cpu(buf[1]);
+	if (!value_isvalid(perdatum->s.value, nprim))
+		goto bad;
 
 	if (hashtab_insert(h, key, perdatum))
 		goto bad;
@@ -2129,7 +2131,7 @@ static int common_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 	key[len] = 0;
 
 	for (i = 0; i < nel; i++) {
-		if (perm_read(p, comdatum->permissions.table, fp))
+		if (perm_read(p, comdatum->permissions.table, fp, comdatum->permissions.nprim))
 			goto bad;
 	}
 
@@ -2295,7 +2297,7 @@ static int class_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 		}
 	}
 	for (i = 0; i < nel; i++) {
-		if (perm_read(p, cladatum->permissions.table, fp))
+		if (perm_read(p, cladatum->permissions.table, fp, cladatum->permissions.nprim))
 			goto bad;
 	}
 
@@ -3631,12 +3633,18 @@ static int range_read(policydb_t * p, struct policy_file *fp)
 		if (rc < 0)
 			goto err;
 		rt->source_type = le32_to_cpu(buf[0]);
+		if (!value_isvalid(rt->source_type, p->p_types.nprim))
+			goto err;
 		rt->target_type = le32_to_cpu(buf[1]);
+		if (!value_isvalid(rt->target_type, p->p_types.nprim))
+			goto err;
 		if (new_rangetr) {
 			rc = next_entry(buf, fp, (sizeof(uint32_t)));
 			if (rc < 0)
 				goto err;
 			rt->target_class = le32_to_cpu(buf[0]);
+			if (!value_isvalid(rt->target_class, p->p_classes.nprim))
+				goto err;
 		} else
 			rt->target_class = p->process_class;
 		r = calloc(1, sizeof(*r));
@@ -4543,6 +4551,9 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 			}
 		}
 	}
+
+	if (validate_policydb(fp->handle, p))
+		goto bad;
 
 	return POLICYDB_SUCCESS;
       bad:
