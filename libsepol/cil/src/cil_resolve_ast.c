@@ -2828,6 +2828,12 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 			switch (flavor) {
 			case CIL_NAME: {
 				struct cil_name *name;
+				if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
 				name = __cil_insert_name(args->db, pc->data, current);
 				if (name != NULL) {
 					new_arg->arg = (struct cil_symtab_datum *)name;
@@ -2837,21 +2843,57 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 			}
 				break;
 			case CIL_TYPE:
+				if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
 				new_arg->arg_str = pc->data;
 				break;
 			case CIL_ROLE:
+				if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
 				new_arg->arg_str = pc->data;
 				break;
 			case CIL_USER:
+				if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
 				new_arg->arg_str = pc->data;
 				break;
 			case CIL_SENS:
+				if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
 				new_arg->arg_str = pc->data;
 				break;
 			case CIL_CAT:
+				if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
 				new_arg->arg_str = pc->data;
 				break;
 			case CIL_BOOL:
+				if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
 				new_arg->arg_str = pc->data;
 				break;
 			case CIL_CATSET: {
@@ -2871,6 +2913,11 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 					cil_list_append(((struct cil_symtab_datum*)catset)->nodes,
 									CIL_LIST_ITEM, cat_node);
 					new_arg->arg = (struct cil_symtab_datum*)catset;
+				} else if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
 				} else {
 					new_arg->arg_str = pc->data;
 				}
@@ -2896,6 +2943,11 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 					cil_list_append(((struct cil_symtab_datum*)level)->nodes, 
 									CIL_LIST_ITEM, lvl_node);
 					new_arg->arg = (struct cil_symtab_datum*)level;
+				} else if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
 				} else {
 					new_arg->arg_str = pc->data;
 				}
@@ -2921,6 +2973,11 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 					cil_list_append(((struct cil_symtab_datum*)range)->nodes, 
 									CIL_LIST_ITEM, range_node);
 					new_arg->arg = (struct cil_symtab_datum*)range;
+				} else if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
 				} else {
 					new_arg->arg_str = pc->data;
 				}
@@ -2946,6 +3003,11 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 					cil_list_append(((struct cil_symtab_datum*)ipaddr)->nodes,
 									CIL_LIST_ITEM, addr_node);
 					new_arg->arg = (struct cil_symtab_datum*)ipaddr;
+				} else if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
 				} else {
 					new_arg->arg_str = pc->data;
 				}
@@ -2953,9 +3015,21 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 				break;
 			}
 			case CIL_CLASS:
+				if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
 				new_arg->arg_str = pc->data;
 				break;
 			case CIL_MAP_CLASS:
+				if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
+				}
 				new_arg->arg_str = pc->data;
 				break;
 			case CIL_CLASSPERMISSION: {
@@ -2976,6 +3050,11 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 					cp_node->data = cp;
 					cil_list_append(cp->datum.nodes, CIL_LIST_ITEM, cp_node);
 					new_arg->arg = (struct cil_symtab_datum*)cp;
+				} else if (pc->data == NULL) {
+					cil_tree_log(current, CIL_ERR, "Invalid macro parameter");
+					cil_destroy_args(new_arg);
+					rc = SEPOL_ERR;
+					goto exit;
 				} else {
 					new_arg->arg_str = pc->data;
 				}
