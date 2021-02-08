@@ -51,6 +51,7 @@ struct cil_args_resolve {
 	struct cil_db *db;
 	enum cil_pass pass;
 	uint32_t *changed;
+	struct cil_list *disabled_optionals;
 	struct cil_tree_node *optstack;
 	struct cil_tree_node *boolif;
 	struct cil_tree_node *macro;
@@ -3942,7 +3943,7 @@ int __cil_resolve_ast_last_child_helper(struct cil_tree_node *current, void *ext
 
 		if (((struct cil_optional *)parent->data)->enabled == CIL_FALSE) {
 			*(args->changed) = CIL_TRUE;
-			cil_tree_children_destroy(parent);
+			cil_list_append(args->disabled_optionals, CIL_NODE, parent);
 		}
 
 		/* pop off the stack */
@@ -4005,6 +4006,7 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	extra_args.in_list = NULL;
 	extra_args.blockstack = NULL;
 
+	cil_list_init(&extra_args.disabled_optionals, CIL_NODE);
 	cil_list_init(&extra_args.sidorder_lists, CIL_LIST_ITEM);
 	cil_list_init(&extra_args.classorder_lists, CIL_LIST_ITEM);
 	cil_list_init(&extra_args.unordered_classorder_lists, CIL_LIST_ITEM);
@@ -4072,6 +4074,7 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 		}
 
 		if (changed && (pass > CIL_PASS_CALL1)) {
+			struct cil_list_item *item;
 			/* Need to re-resolve because an optional was disabled that contained
 			 * one or more declarations. We only need to reset to the call1 pass 
 			 * because things done in the preceding passes aren't allowed in 
@@ -4100,6 +4103,11 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 				cil_log(CIL_ERR, "Failed to reset declarations\n");
 				goto exit;
 			}
+			cil_list_for_each(item, extra_args.disabled_optionals) {
+				cil_tree_children_destroy(item->data);
+			}
+			cil_list_destroy(&extra_args.disabled_optionals, CIL_FALSE);
+			cil_list_init(&extra_args.disabled_optionals, CIL_NODE);
 		}
 
 		/* reset the arguments */
@@ -4128,6 +4136,7 @@ exit:
 	__cil_ordered_lists_destroy(&extra_args.catorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.sensitivityorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.unordered_classorder_lists);
+	cil_list_destroy(&extra_args.disabled_optionals, CIL_FALSE);
 	cil_list_destroy(&extra_args.in_list, CIL_FALSE);
 
 	return rc;
