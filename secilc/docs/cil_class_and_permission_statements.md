@@ -8,7 +8,9 @@ Declares a common identifier in the current namespace with a set of common permi
 
 **Statement definition:**
 
+```secil
     (common common_id (permission_id ...))
+```
 
 **Where:**
 
@@ -37,7 +39,9 @@ Declares a common identifier in the current namespace with a set of common permi
 
 This common statement will associate the [`common`](cil_class_and_permission_statements.md#common) identifier '`file`' with the list of permissions:
 
+```secil
     (common file (ioctl read write create getattr setattr lock relabelfrom relabelto append unlink link rename execute swapon quotaon mounton))
+```
 
 classcommon
 -----------
@@ -46,7 +50,9 @@ Associate a [`class`](cil_class_and_permission_statements.md#class) identifier t
 
 **Statement definition:**
 
+```secil
     (classcommon class_id common_id)
+```
 
 **Where:**
 
@@ -75,9 +81,11 @@ Associate a [`class`](cil_class_and_permission_statements.md#class) identifier t
 
 This associates the `dir` class with the list of permissions declared by the `file common` identifier:
 
+```secil
     (common file (ioctl read write create getattr setattr lock relabelfrom relabelto append unlink link rename execute swapon quotaon mounton))
 
     (classcommon dir file)
+```
 
 class
 -----
@@ -86,7 +94,9 @@ Declares a class and zero or more permissions in the current namespace.
 
 **Statement definition:**
 
+```secil
     (class class_id (permission_id ...))
+```
 
 **Where:**
 
@@ -115,29 +125,39 @@ Declares a class and zero or more permissions in the current namespace.
 
 This example defines a set of permissions for the `binder` class identifier:
 
+```secil
     (class binder (impersonate call set_context_mgr transfer receive))
+```
 
 This example defines a common set of permissions to be used by the `sem` class, the `(class sem ())` does not define any other permissions (i.e. an empty list):
 
+```secil
     (common ipc (create destroy getattr setattr read write associate unix_read unix_write))
 
     (classcommon sem ipc)
     (class sem ())
+```
 
 and will produce the following set of permissions for the `sem` class identifier of:
 
+```secil
     (class sem (create destroy getattr setattr read write associate unix_read unix_write))
+```
 
 This example, with the following combination of the [`common`](cil_class_and_permission_statements.md#common), [`classcommon`](cil_class_and_permission_statements.md#classcommon) and [`class`](cil_class_and_permission_statements.md#class) statements:
 
+```secil
     (common file (ioctl read write create getattr setattr lock relabelfrom relabelto append unlink link rename execute swapon quotaon mounton))
 
     (classcommon dir file)
     (class dir (add_name remove_name reparent search rmdir open audit_access execmod))
+```
 
 will produce a set of permissions for the `dir` class identifier of:
 
+```secil
     (class dir (add_name remove_name reparent search rmdir open audit_access execmod ioctl read write create getattr setattr lock relabelfrom relabelto append unlink link rename execute swapon quotaon mounton))
+```
 
 classorder
 ----------
@@ -146,7 +166,9 @@ Defines the order of [class](#class)'s. This is a mandatory statement. Multiple 
 
 **Statement definition:**
 
+```secil
     (classorder (class_id ...))
+```
 
 **Where:**
 
@@ -171,11 +193,13 @@ Defines the order of [class](#class)'s. This is a mandatory statement. Multiple 
 
 This will produce an ordered list of "`file dir process`"
 
+```secil
     (class process)
     (class file)
     (class dir)
     (classorder (file dir))
     (classorder (dir process))
+```
 
 **Unordered Classorder Statement:**
 
@@ -185,6 +209,7 @@ If users do not have knowledge of the existing [`classorder`](#classorder), the 
 
 This will produce an unordered list of "`file dir foo a bar baz`"
 
+```secil
 	(class file)
 	(class dir)
 	(class foo)
@@ -195,6 +220,7 @@ This will produce an unordered list of "`file dir foo a bar baz`"
 	(classorder (dir foo))
 	(classorder (unordered a))
 	(classorder (unordered bar foo baz))
+```
 
 classpermission
 ---------------
@@ -203,7 +229,9 @@ Declares a class permission set identifier in the current namespace that can be 
 
 **Statement definition:**
 
+```secil
     (classpermission classpermissionset_id)
+```
 
 **Where:**
 
@@ -235,7 +263,9 @@ Defines a class permission set identifier in the current namespace that associat
 
 **Statement definition:**
 
+```secil
     (classpermissionset classpermissionset_id (class_id (permission_id | expr ...)))
+```
 
 **Where:**
 
@@ -278,6 +308,7 @@ Defines a class permission set identifier in the current namespace that associat
 
 These class permission set statements will resolve to the permission sets shown in the kernel policy language [`allow`](cil_access_vector_rules.md#allow) rules:
 
+```secil
     (class zygote (specifyids specifyrlimits specifycapabilities specifyinvokewith specifyseinfo))
 
     (type test_1)
@@ -322,6 +353,7 @@ These class permission set statements will resolve to the permission sets shown 
     (classpermissionset zygote_all_perms (zygote (all)))
     (allow unconfined.process test_5 zygote_all_perms)
     ;; allow unconfined.process test_5 : zygote { specifyids specifyrlimits specifycapabilities specifyinvokewith specifyseinfo } ;
+```
 
 classmap
 --------
@@ -346,7 +378,9 @@ Declares a class map identifier in the current namespace and one or more class m
 
 **Statement definition:**
 
+```secil
     (classmap classmap_id (classmapping_id ...))
+```
 
 **Where:**
 
@@ -382,7 +416,9 @@ Define sets of [`classpermissionset`](cil_class_and_permission_statements.md#cla
 
 **Statement definition:**
 
+```secil
     (classmapping classmap_id classmapping_id classpermissionset_id)
+```
 
 **Where:**
 
@@ -415,6 +451,7 @@ Define sets of [`classpermissionset`](cil_class_and_permission_statements.md#cla
 
 These class mapping statements will resolve to the permission sets shown in the kernel policy language [`allow`](cil_access_vector_rules.md#allow) rules:
 
+```secil
     (class binder (impersonate call set_context_mgr transfer receive))
     (class property_service (set))
     (class zygote (specifyids specifyrlimits specifycapabilities specifyinvokewith specifyseinfo))
@@ -454,6 +491,7 @@ These class mapping statements will resolve to the permission sets shown in the 
 
     ;; allow map_example.type_3 map_example.type_3 : binder { impersonate call set_context_mgr } ;
     ;; allow map_example.type_3 map_example.type_3 : zygote { specifyrlimits specifycapabilities specifyinvokewith specifyseinfo } ;
+```
 
 permissionx
 -----------
@@ -462,7 +500,9 @@ Defines a named extended permission, which can be used in the [`allowx`](cil_acc
 
 **Statement definition:**
 
+```secil
     (permissionx permissionx_id (kind class_id (permission ... | expr ...)))
+```
 
 **Where:**
 
@@ -517,6 +557,8 @@ Defines a named extended permission, which can be used in the [`allowx`](cil_acc
 
 **Examples:**
 
+```secil
     (permissionx ioctl_1 (ioctl tcp_socket (0x2000 0x3000 0x4000)))
     (permissionx ioctl_2 (ioctl tcp_socket (range 0x6000 0x60FF)))
     (permissionx ioctl_3 (ioctl tcp_socket (and (range 0x8000 0x90FF) (not (range 0x8100 0x82FF)))))
+```

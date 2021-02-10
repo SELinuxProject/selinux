@@ -8,7 +8,9 @@ Declares a role identifier in the current namespace.
 
 **Statement definition:**
 
+```secil
     (role role_id)
+```
 
 **Where:**
 
@@ -33,11 +35,13 @@ Declares a role identifier in the current namespace.
 
 This example declares two roles: `object_r` in the global namespace and `unconfined.role`:
 
+```secil
     (role object_r)
 
     (block unconfined
         (role role)
     )
+```
 
 roletype
 --------
@@ -46,7 +50,9 @@ Authorises a [`role`](cil_role_statements.md#role) to access a [`type`](cil_type
 
 **Statement definition:**
 
+```secil
     (role role_id type_id)
+```
 
 **Where:**
 
@@ -75,11 +81,13 @@ Authorises a [`role`](cil_role_statements.md#role) to access a [`type`](cil_type
 
 This example will declare [`role`](cil_role_statements.md#role) and [`type`](cil_type_statements.md#type) identifiers, then associate them:
 
+```secil
     (block unconfined
         (role role)
         (type process)
         (roletype role process)
     )
+```
 
 roleattribute
 -------------
@@ -88,7 +96,9 @@ Declares a role attribute identifier in the current namespace. The identifier ma
 
 **Statement definition:**
 
+```secil
     (roleattribute roleattribute_id)
+```
 
 **Where:**
 
@@ -113,9 +123,11 @@ Declares a role attribute identifier in the current namespace. The identifier ma
 
 This example will declare a role attribute `roles.role_holder` that will have an empty set:
 
+```secil
     (block roles
         (roleattribute role_holder)
     )
+```
 
 roleattributeset
 ----------------
@@ -124,7 +136,9 @@ Allows the association of one or more previously declared [`role`](cil_role_stat
 
 **Statement definition:**
 
+```secil
     (roleattributeset roleattribute_id (role_id ... | expr ...))
+```
 
 **Where:**
 
@@ -163,6 +177,7 @@ Allows the association of one or more previously declared [`role`](cil_role_stat
 
 This example will declare three roles and two role attributes, then associate all the roles to them as shown:
 
+```secil
     (block roles
         (role role_1)
         (role role_2)
@@ -174,6 +189,7 @@ This example will declare three roles and two role attributes, then associate al
         (roleattribute role_holder_all)
         (roleattributeset role_holder_all (all))
     )
+```
 
 roleallow
 ---------
@@ -188,7 +204,9 @@ Notes:
 
 **Statement definition:**
 
+```secil
     (roleallow current_role_id new_role_id)
+```
 
 **Where:**
 
@@ -224,7 +242,9 @@ Specify a role transition from the current role to a new role when computing a c
 
 **Statement definition:**
 
+```secil
     (roletransition current_role_id target_type_id class_id new_role_id)
+```
 
 **Where:**
 
@@ -261,6 +281,7 @@ Specify a role transition from the current role to a new role when computing a c
 
 This example will authorise the `unconfined.role` to assume the `msg_filter.role` role, and then transition to that role:
 
+```secil
     (block ext_gateway
         (type process)
         (type exec)
@@ -269,6 +290,7 @@ This example will authorise the `unconfined.role` to assume the `msg_filter.role
         (roleallow unconfined.role msg_filter.role)
         (roletransition unconfined.role exec process msg_filter.role)
     )
+```
 
 rolebounds
 ----------
@@ -283,7 +305,9 @@ Notes:
 
 **Statement definition:**
 
+```secil
     (rolebounds parent_role_id child_role_id)
+```
 
 **Where:**
 
@@ -312,9 +336,11 @@ Notes:
 
 In this example the role `test` cannot have greater privileges than `unconfined.role`:
 
+```secil
     (role test)
 
     (unconfined
         (role role)
         (rolebounds role .test)
     )
+```

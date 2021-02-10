@@ -8,7 +8,9 @@ Specifies the access allowed between a source and target type. Note that access 
 
 **Rule definition:**
 
+```secil
     (allow source_id target_id|self classpermissionset_id ...)
+```
 
 **Where:**
 
@@ -42,6 +44,7 @@ Specifies the access allowed between a source and target type. Note that access 
 
 These examples show a selection of possible permutations of [`allow`](cil_access_vector_rules.md#allow) rules:
 
+```secil
     (class binder (impersonate call set_context_mgr transfer receive))
     (class property_service (set))
     (class zygote (specifyids specifyrlimits specifycapabilities specifyinvokewith specifyseinfo))
@@ -84,6 +87,7 @@ These examples show a selection of possible permutations of [`allow`](cil_access
         (allow type_5 type_5 (property_service (set)))
         (allow type_1 all_types (property_service (set)))
     )
+```
 
 auditallow
 ----------
@@ -92,7 +96,9 @@ Audit the access rights defined if there is a valid allow rule. Note: It does NO
 
 **Rule definition:**
 
+```secil
     (auditallow source_id target_id|self classpermissionset_id ...)
+```
 
 **Where:**
 
@@ -126,10 +132,11 @@ Audit the access rights defined if there is a valid allow rule. Note: It does NO
 
 This example will log an audit event whenever the corresponding [`allow`](cil_access_vector_rules.md#allow) rule grants access to the specified permissions:
 
+```secil
     (allow release_app.process secmark_demo.browser_packet (packet (send recv append bind)))
 
     (auditallow release_app.process secmark_demo.browser_packet (packet (send recv)))
-
+```
 
 dontaudit
 ---------
@@ -140,7 +147,9 @@ Note that these rules can be omitted by the CIL compiler command line parameter 
 
 **Rule definition:**
 
+```secil
     (dontaudit source_id target_id|self classpermissionset_id ...)
+```
 
 **Where:**
 
@@ -174,7 +183,9 @@ Note that these rules can be omitted by the CIL compiler command line parameter 
 
 This example will not audit the denied access:
 
+```secil
     (dontaudit zygote.process self (capability (fsetid)))
+```
 
 neverallow
 ----------
@@ -185,7 +196,9 @@ Note that these rules can be over-ridden by the CIL compiler command line parame
 
 **Rule definition:**
 
+```secil
     (neverallow source_id target_id|self classpermissionset_id ...)
+```
 
 **Where:**
 
@@ -219,6 +232,7 @@ Note that these rules can be over-ridden by the CIL compiler command line parame
 
 This example will not compile as `type_3` is not allowed to be a source type for the [`allow`](cil_access_vector_rules.md#allow) rule:
 
+```secil
     (class property_service (set))
 
     (block av_rules
@@ -232,6 +246,7 @@ This example will not compile as `type_3` is not allowed to be a source type for
         ; This rule will fail compilation:
         (allow type_3 self (property_service (set)))
     )
+```
 
 allowx
 ------
@@ -242,7 +257,9 @@ Note that for this to work there must *also* be valid equivalent [`allow`](cil_a
 
 **Rule definition:**
 
+```secil
     (allowx source_id target_id|self permissionx_id)
+```
 
 **Where:**
 
@@ -276,12 +293,14 @@ Note that for this to work there must *also* be valid equivalent [`allow`](cil_a
 
 These examples show a selection of possible permutations of [`allowx`](cil_access_vector_rules.md#allowx) rules:
 
+```secil
     (allow type_1 type_2 (tcp_socket (ioctl))) ;; pre-requisite
     (allowx type_1 type_2 (ioctl tcp_socket (range 0x2000 0x20FF)))
 
     (permissionx ioctl_nodebug (ioctl udp_socket (not (range 0x4000 0x4010))))
     (allow type_3 type_4 (udp_socket (ioctl))) ;; pre-requisite
     (allowx type_3 type_4 ioctl_nodebug)
+```
 
 
 auditallowx
@@ -293,7 +312,9 @@ Note that for this to work there must *also* be valid equivalent [`auditallow`](
 
 **Rule definition:**
 
+```secil
     (auditallowx source_id target_id|self permissionx_id)
+```
 
 **Where:**
 
@@ -327,11 +348,12 @@ Note that for this to work there must *also* be valid equivalent [`auditallow`](
 
 This example will log an audit event whenever the corresponding [`allowx`](cil_access_vector_rules.md#allowx) rule grants access to the specified extended permissions:
 
+```secil
     (allowx type_1 type_2 (ioctl tcp_socket (range 0x2000 0x20FF)))
 
     (auditallow type_1 type_2 (tcp_socket (ioctl))) ;; pre-requisite
     (auditallowx type_1 type_2 (ioctl tcp_socket (range 0x2005 0x2010)))
-
+```
 
 dontauditx
 ----------
@@ -344,7 +366,9 @@ Note that these rules can be omitted by the CIL compiler command line parameter 
 
 **Rule definition:**
 
+```secil
     (dontauditx source_id target_id|self permissionx_id)
+```
 
 **Where:**
 
@@ -378,9 +402,10 @@ Note that these rules can be omitted by the CIL compiler command line parameter 
 
 This example will not audit the denied access:
 
+```secil
     (allowx type_1 type_2 (ioctl tcp_socket (0x1))) ;; pre-requisite, just some irrelevant random ioctl
     (dontauditx type_1 type_2 (ioctl tcp_socket (range 0x3000 0x30FF)))
-
+```
 
 neverallowx
 ----------
@@ -390,7 +415,9 @@ Note that these rules can be over-ridden by the CIL compiler command line parame
 
 **Rule definition:**
 
+```secil
     (neverallowx source_id target_id|self permissionx_id)
+```
 
 **Where:**
 
@@ -424,6 +451,7 @@ Note that these rules can be over-ridden by the CIL compiler command line parame
 
 This example will not compile as `type_3` is not allowed to be a source type and ioctl range for the [`allowx`](cil_access_vector_rules.md#allowx) rule:
 
+```secil
 	(class property_service (ioctl))
 	(block av_rules
 		(type type_1)
@@ -435,3 +463,4 @@ This example will not compile as `type_3` is not allowed to be a source type and
 		; This rule will fail compilation:
 		(allowx type_3 self (ioctl property_service (0x20A0)))
 	)
+```

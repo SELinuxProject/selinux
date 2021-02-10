@@ -8,7 +8,9 @@ Declares a new SID identifier in the current namespace.
 
 **Statement definition:**
 
+```secil
     (sid sid_id)
+```
 
 **Where:**
 
@@ -33,9 +35,11 @@ Declares a new SID identifier in the current namespace.
 
 These examples show three [`sid`](cil_sid_statements.md#sid) declarations:
 
+```secil
     (sid kernel)
     (sid security)
     (sid igmp_packet)
+```
 
 sidorder
 --------
@@ -44,7 +48,9 @@ Defines the order of [sid](#sid)'s. This is a mandatory statement when SIDs are 
 
 **Statement definition:**
 
+```secil
     (sidorder (sid_id ...))
+```
 
 **Where:**
 
@@ -69,11 +75,13 @@ Defines the order of [sid](#sid)'s. This is a mandatory statement when SIDs are 
 
 This will produce an ordered list of "`kernel security unlabeled`"
 
+```secil
     (sid kernel)
     (sid security)
     (sid unlabeled)
     (sidorder (kernel security))
     (sidorder (security unlabeled))
+```
 
 sidcontext
 ----------
@@ -82,7 +90,9 @@ Associates an SELinux security [context](#context) to a previously declared [`si
 
 **Statement definition:**
 
+```secil
     (sidcontext sid_id context_id)
+```
 
 **Where:**
 
@@ -111,6 +121,7 @@ Associates an SELinux security [context](#context) to a previously declared [`si
 
 This shows two named security context examples plus an anonymous context:
 
+```secil
     ; Two named context:
     (sid kernel)
     (context kernel_context (u r process low_low))
@@ -123,3 +134,4 @@ This shows two named security context examples plus an anonymous context:
     ; An anonymous context:
     (sid unlabeled)
     (sidcontext unlabeled (u object_r ((s0) (s0))))
+```

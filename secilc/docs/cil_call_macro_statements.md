@@ -10,7 +10,9 @@ Each parameter passed contains an argument to be resolved by the [macro](#macro)
 
 **Statement definition:**
 
+```secil
     (call macro_id [(param ...)])
+```
 
 **Where:**
 
@@ -58,10 +60,12 @@ When resolving macros the following places are checked in this order:
 
 **Statement definition:**
 
+```secil
     (macro macro_id ([(param_type param_id) ...])
         cil_statements
         ...
     )
+```
 
 **Where:**
 
@@ -99,6 +103,7 @@ When resolving macros the following places are checked in this order:
 
 This example will instantiate the `binder_call` macro in the calling namespace (`my_domain`) and replace `ARG1` with `appdomain` and `ARG2` with `binderservicedomain`:
 
+```secil
     (block my_domain
         (call binder_call (appdomain binderservicedomain))
     )
@@ -108,9 +113,11 @@ This example will instantiate the `binder_call` macro in the calling namespace (
         (allow ARG2 ARG1 (binder (transfer)))
         (allow ARG1 ARG2 (fd (use)))
     )
+```
 
 This example does not pass any parameters to the macro but adds a [`type`](cil_type_statements.md#type) identifier to the current namespace:
 
+```secil
     (block unconfined
         (call add_type)
         ....
@@ -119,14 +126,17 @@ This example does not pass any parameters to the macro but adds a [`type`](cil_t
             (type exec)
         )
     )
+```
 
 This example passes an anonymous and named IP address to the macro:
 
+```secil
     (ipaddr netmask_1 255.255.255.0)
-    (context netlabel_1 (system.user object_r unconfined.object low_low)
+    (context netlabel_1 (system.user object_r unconfined.object low_low))
 
     (call build_nodecon ((192.168.1.64) netmask_1))
 
     (macro build_nodecon ((ipaddr ARG1) (ipaddr ARG2))
         (nodecon ARG1 ARG2  netlabel_1)
     )
+```

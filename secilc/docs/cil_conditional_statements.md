@@ -8,7 +8,9 @@ Declares a run time boolean as true or false in the current namespace. The [`boo
 
 **Statement definition:**
 
+```secil
     (boolean boolean_id true|false)
+```
 
 **Where:**
 
@@ -46,7 +48,8 @@ Contains the run time conditional statements that are instantiated in the binary
 
 **Statement definition:**
 
-    (booleanif boolean_id | expr ...)
+```secil
+    (booleanif boolean_id | expr ...
         (true
             cil_statements
             ...)
@@ -54,6 +57,7 @@ Contains the run time conditional statements that are instantiated in the binary
             cil_statements
             ...)
     )
+```
 
 **Where:**
 
@@ -96,6 +100,7 @@ Contains the run time conditional statements that are instantiated in the binary
 
 The second example also shows the kernel policy language equivalent:
 
+```secil
     (boolean disableAudio false)
 
     (booleanif disableAudio
@@ -112,6 +117,7 @@ The second example also shows the kernel policy language equivalent:
             (allow process mediaserver.audio_capture_device (chr_file_set (rw_file_perms)))
         )
     )
+```
 
 tunable
 -------
@@ -122,7 +128,9 @@ Note that tunables can be treated as booleans by the CIL compiler command line p
 
 **Statement definition:**
 
+```secil
     (tunable tunable_id true|false)
+```
 
 **Where:**
 
@@ -158,7 +166,8 @@ Compile time conditional statement that may or may not add CIL statements to be 
 
 **Statement definition:**
 
-    (tunableif tunable_id | expr ...)
+```secil
+    (tunableif tunable_id | expr ...
         (true
             cil_statements
             ...)
@@ -166,6 +175,7 @@ Compile time conditional statement that may or may not add CIL statements to be 
             cil_statements
             ...)
     )
+```
 
 **Where:**
 
@@ -208,6 +218,7 @@ Compile time conditional statement that may or may not add CIL statements to be 
 
 This example will not add the range transition rule to the binary policy:
 
+```secil
     (tunable range_trans_rule false)
 
     (block init
@@ -220,3 +231,4 @@ This example will not add the range transition rule to the binary policy:
             )
         ) ; End tunableif
     ) ; End block
+```

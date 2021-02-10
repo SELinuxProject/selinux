@@ -57,10 +57,12 @@ Declarations may be named or anonymous and have three different forms:
     ipaddr
     macro
     policycap
+
 2.  Explicit anonymous declarations - These are currently restricted to IP addresses where they can be declared directly in statements by enclosing them within parentheses e.g. `(127.0.0.1)` or `(::1)`. See the [Network Labeling Statements](#network_labeling) section for examples.
 
 3.  Anonymous declarations - These have been previously declared and the object already exists, therefore they may be referenced by their name or identifier within statements. For example the following declare all the components required to specify a context:
 
+    ```secil
         (sensitivity s0)
         (category c0)
         (role object_r)
@@ -69,10 +71,13 @@ Declarations may be named or anonymous and have three different forms:
             (user user)
             (type object)
         )
+    ```
 
     now a [`portcon`](cil_network_labeling_statements.md#portcon) statement can be defined that uses these individual components to build a context as follows:
 
+    ```secil
         (portcon udp 12345 (unconfined.user object_r unconfined.object ((s0) (s0(c0)))))
+    ```
 
 Definitions
 -----------
@@ -113,6 +118,7 @@ Namespaces
 
 CIL supports namespaces via containers such as the [`block`](cil_container_statements.md#block) statement. When a block is resolved to form the parent / child relationship a dot '`.`' is used, for example the following [`allow`](cil_access_vector_rules.md#allow) rule:
 
+```secil
     (block example_ns
         (type process)
         (type object)
@@ -120,16 +126,20 @@ CIL supports namespaces via containers such as the [`block`](cil_container_state
 
         (allow process object (file (open read getattr)))
     )
+```
 
 will resolve to the following kernel policy language statement:
 
+```
     allow example_ns.process example_ns.object : example_ns.file { open read getattr };
+```
 
 Global Namespace
 ----------------
 
 CIL has a global namespace that is always present. Any symbol that is declared outside a container is in the global namespace. To reference a symbol in global namespace, the symbol should be prefixed with a dot '`.`' as shown in the following example:
 
+```secil
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; This example has three namespace 'tmpfs' types declared:
     ;    1) Global .tmpfs
@@ -170,6 +180,7 @@ CIL has a global namespace that is always present. Any symbol that is declared o
     (block other_ns
         (type tmpfs)
     )
+```
 
 Should the symbol not be prefixed with a dot, the current namespace would be searched first and then the global namespace (provided there is not a symbol of that name in the current namespace).
 
@@ -180,9 +191,11 @@ Expressions may occur in the following CIL statements: [`booleanif`](cil_conditi
 
 CIL expressions use the [prefix](http://www.cs.man.ac.uk/~pjj/cs212/fix.html) or Polish notation and may be nested (note that the kernel policy language uses postfix or reverse Polish notation). The syntax is as follows, where the parenthesis are part of the syntax:
 
+```
     expr_set = (name ... | expr ...)
     expr = (expr_key expr_set ...)
     expr_key = and | or | xor | not | all | eq | neq | dom | domby | incomp | range
+```
 
 The number of `expr_set`'s in an `expr` is dependent on the statement type (there are four different classes as defined below) that also influence the valid `expr_key` entries (e.g. `dom`, `domby`, `incomp` are only allowed in constraint statements).
 
@@ -204,6 +217,7 @@ The number of `expr_set`'s in an `expr` is dependent on the statement type (ther
 
     This example includes all `fs_type type` entries except `file.usermodehelper` and `file.proc_security` in the associated [`typeattribute`](cil_type_statements.md#typeattribute) identifier `all_fs_type_except_usermodehelper_and_proc_security`:
 
+    ```secil
         (typeattribute all_fs_type_except_usermodehelper_and_proc_security)
 
         (typeattributeset all_fs_type_except_usermodehelper_and_proc_security
@@ -215,17 +229,21 @@ The number of `expr_set`'s in an `expr` is dependent on the statement type (ther
                 (not file.proc_security)
             )
         )
+    ```
 
     The `cps_1 classpermissionset` identifier includes all permissions except `load_policy` and `setenforce`:
 
+    ```secil
         (class security (compute_av compute_create compute_member check_context load_policy compute_relabel compute_user setenforce setbool setsecparam setcheckreqprot read_policy))
 
         (classpermission cps_1)
 
         (classpermissionset cps_1 (security (not (load_policy setenforce))))
+    ```
 
     This example includes all permissions in the associated [`classpermissionset`](cil_class_and_permission_statements.md#classpermissionset) identifier `security_all_perms`:
 
+    ```secil
         (class security (compute_av compute_create compute_member check_context load_policy
             compute_relabel compute_user setenforce setbool setsecparam setcheckreqprot
             read_policy)
@@ -234,6 +252,7 @@ The number of `expr_set`'s in an `expr` is dependent on the statement type (ther
         (classpermission security_all_perms)
 
         (classpermissionset security_all_perms (security (all)))
+    ```
 
 2.  The [`categoryset`](cil_mls_labeling_statements.md#categoryset) statement allows `expr_set` to mix names and `expr_key` values of: `and`, `or`, `not`, `xor`, `all`, `range` as shown in the examples.
 
@@ -241,6 +260,7 @@ The number of `expr_set`'s in an `expr` is dependent on the statement type (ther
 
 3.  The [`booleanif`](cil_conditional_statements.md#booleanif) and [`tunableif`](cil_conditional_statements.md#tunableif) statements only allow an `expr_set` to have one `name` or `expr` with `expr_key` values of `and`, `or`, `xor`, `not`, `eq`, `neq` as shown in the examples:
 
+    ```secil
         (booleanif disableAudio
             (false
                 (allow process device.audio_device (chr_file_set (rw_file_perms)))
@@ -252,9 +272,11 @@ The number of `expr_set`'s in an `expr` is dependent on the statement type (ther
                 (allow process device.audio_capture_device (chr_file_set (rw_file_perms)))
             )
         )
+    ```
 
 4.  The [`constrain`](cil_constraint_statements.md#constrain), [`mlsconstrain`](cil_constraint_statements.md#mlsconstrain), [`validatetrans`](cil_constraint_statements.md#validatetrans) and [`mlsvalidatetrans`](cil_constraint_statements.md#mlsvalidatetrans) statements only allow an `expr_set` to have one `name` or `expr` with `expr_key` values of `and`, `or`, `not`, `all`, `eq`, `neq`, `dom`, `domby`, `incomp`. When `expr_key` is `dom`, `domby` or `incomp`, it must be followed by a string (e.g. `h1`, `l2`) and another string or a set of `name`s. The following examples show CIL constraint statements and their policy language equivalents:
 
+    ```secil
         ; Process transition:  Require equivalence unless the subject is trusted.
         (mlsconstrain (process (transition dyntransition))
             (or (and (eq h1 h2) (eq l1 l2)) (eq t1 mlstrustedsubject)))
@@ -270,29 +292,36 @@ The number of `expr_set`'s in an `expr` is dependent on the statement type (ther
         ; The equivalent policy language mlsconstrain statememt is:
         ;mlsconstrain process { getsched getsession getpgid getcap getattr ptrace share }
         ;    (l1 dom l2 or t1 == mlstrustedsubject);
+    ```
 
 Name String
 -----------
 
 Used to define [`macro`](cil_call_macro_statements.md#macro) statement parameter string types:
 
+```secil
     (call macro1("__kmsg__"))
 
     (macro macro1 ((string ARG1))
         (typetransition audit.process device.device chr_file ARG1 device.klog_device)
     )
+```
 
 Alternatively:
 
+```secil
     (call macro1("__kmsg__"))
 
     (macro macro1 ((name ARG1))
         (typetransition audit.process device.device chr_file ARG1 device.klog_device)
     )
+```
 
 self
 ----
 
 The [`self`](cil_reference_guide.md#self) keyword may be used as the target in AVC rule statements, and means that the target is the same as the source as shown in the following example:.
 
+```secil
     (allow unconfined.process self (file (read write)))
+```

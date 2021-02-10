@@ -51,7 +51,7 @@ $(TMPDIR)/%.md: %.md | $(TMPDIR)
 $(TMPDIR)/policy.cil: $(TESTDIR)/policy.cil
 	cp -f $< $@
 	@# add a title for the TOC to policy.cil. This is needed to play nicely with the PDF conversion.
-	$(SED) -i '1i Example Policy\n=========\n```' $@
+	$(SED) -i '1i Example Policy\n=========\n```secil' $@
 	echo '```' >> $@
 
 html: $(PANDOC_FILE_LIST) $(TMPDIR)/policy.cil

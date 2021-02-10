@@ -10,7 +10,9 @@ Note that this can be over-ridden by the CIL compiler command line parameter `-M
 
 **Statement definition:**
 
+```secil
     (mls boolean)
+```
 
 **Where:**
 
@@ -33,7 +35,9 @@ Note that this can be over-ridden by the CIL compiler command line parameter `-M
 
 **Example:**
 
+```secil
     (mls true)
+```
 
 handleunknown
 -------------
@@ -44,7 +48,9 @@ Note that this can be over-ridden by the CIL compiler command line parameter `-U
 
 **Statement definition:**
 
+```secil
     (handleunknown action)
+```
 
 **Where:**
 
@@ -72,7 +78,9 @@ Note that this can be over-ridden by the CIL compiler command line parameter `-U
 
 This will allow unknown classes / permissions to be present in the policy:
 
+```secil
     (handleunknown allow)
+```
 
 policycap
 ---------
@@ -81,7 +89,9 @@ Allow policy capabilities to be enabled via policy. These should be declared in 
 
 **Statement definition:**
 
+```secil
     (policycap policycap_id)
+```
 
 **Where:**
 
@@ -106,8 +116,10 @@ Allow policy capabilities to be enabled via policy. These should be declared in 
 
 These set two valid policy capabilities:
 
+```secil
     ; Enable networking controls.
     (policycap network_peer_controls)
 
     ; Enable open permission check.
     (policycap open_perms)
+```

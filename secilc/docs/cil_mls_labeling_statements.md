@@ -10,7 +10,9 @@ Declare a sensitivity identifier in the current namespace. Multiple [`sensitivit
 
 **Statement definition:**
 
+```secil
     (sensitivity sensitivity_id)
+```
 
 **Where:**
 
@@ -35,9 +37,11 @@ Declare a sensitivity identifier in the current namespace. Multiple [`sensitivit
 
 This example declares three [`sensitivity`](cil_mls_labeling_statements.md#sensitivity) identifiers:
 
+```secil
     (sensitivity s0)
     (sensitivity s1)
     (sensitivity s2)
+```
 
 sensitivityalias
 ----------------
@@ -46,7 +50,9 @@ Declares a sensitivity alias identifier in the current namespace. See the [`sens
 
 **Statement definition:**
 
+```secil
     (sensitivityalias sensitivityalias_id)
+```
 
 **Where:**
 
@@ -78,7 +84,9 @@ Associates a previously declared [`sensitivityalias`](cil_mls_labeling_statement
 
 **Statement definition:**
 
+```secil
     (sensitivityaliasactual sensitivityalias_id sensitivity_id)
+```
 
 **Where:**
 
@@ -107,11 +115,13 @@ Associates a previously declared [`sensitivityalias`](cil_mls_labeling_statement
 
 This example will associate sensitivity `s0` with two sensitivity alias's:
 
+```secil
     (sensitivity s0)
     (sensitivityalias unclassified)
     (sensitivityalias SystemLow)
     (sensitivityaliasactual unclassified s0)
     (sensitivityaliasactual SystemLow s0)
+```
 
 sensitivityorder
 ----------------
@@ -120,7 +130,9 @@ Define the sensitivity order - lowest to highest. Multiple [`sensitivityorder`](
 
 **Statement definition:**
 
+```secil
     (sensitivityorder (sensitivity_id ...))
+```
 
 **Where:**
 
@@ -145,6 +157,7 @@ Define the sensitivity order - lowest to highest. Multiple [`sensitivityorder`](
 
 This example shows two [`sensitivityorder`](cil_mls_labeling_statements.md#sensitivityorder) statements that when compiled will form an ordered list. Note however that the second [`sensitivityorder`](cil_mls_labeling_statements.md#sensitivityorder) statement starts with `s2` so that the ordered list can be built.
 
+```secil
     (sensitivity s0)
     (sensitivityalias s0 SystemLow)
     (sensitivity s1)
@@ -155,6 +168,7 @@ This example shows two [`sensitivityorder`](cil_mls_labeling_statements.md#sensi
     (sensitivity s4)
     (sensitivityalias s4 SystemHigh)
     (sensitivityorder (s2 s3 SystemHigh))
+```
 
 category
 --------
@@ -163,7 +177,9 @@ Declare a category identifier in the current namespace. Multiple category statem
 
 **Statement definition:**
 
+```secil
     (category category_id)
+```
 
 **Where:**
 
@@ -188,9 +204,11 @@ Declare a category identifier in the current namespace. Multiple category statem
 
 This example declares a three [`category`](cil_mls_labeling_statements.md#category) identifiers:
 
+```secil
     (category c0)
     (category c1)
     (category c2)
+```
 
 categoryalias
 -------------
@@ -199,7 +217,9 @@ Declares a category alias identifier in the current namespace. See the [`categor
 
 **Statement definition:**
 
+```secil
     (categoryalias categoryalias_id)
+```
 
 **Where:**
 
@@ -227,7 +247,9 @@ Associates a previously declared [`categoryalias`](cil_mls_labeling_statements.m
 
 **Statement definition:**
 
+```secil
     (categoryaliasactual categoryalias_id category_id)
+```
 
 **Where:**
 
@@ -256,9 +278,11 @@ Associates a previously declared [`categoryalias`](cil_mls_labeling_statements.m
 
 Declares a category `c0`, a category alias of `documents`, and then associates them:
 
+```secil
     (category c0)
     (categoryalias documents)
     (categoryaliasactual documents c0)
+```
 
 categoryorder
 -------------
@@ -267,7 +291,9 @@ Define the category order. Multiple [`categoryorder`](cil_mls_labeling_statement
 
 **Statement definition:**
 
+```secil
     (categoryorder (category_id ...))
+```
 
 **Where:**
 
@@ -292,7 +318,9 @@ Define the category order. Multiple [`categoryorder`](cil_mls_labeling_statement
 
 This example orders one category alias and nine categories:
 
+```secil
     (categoryorder (documents c1 c2 c3 c4 c5 c6 c7 c8 c9)
+```
 
 categoryset
 -----------
@@ -307,7 +335,9 @@ Notes:
 
 **Statement definition:**
 
+```secil
     (categoryset categoryset_id (category_id ... | expr ...))
+```
 
 **Where:**
 
@@ -347,6 +377,7 @@ Notes:
 
 These examples show a selection of [`categoryset`](cil_mls_labeling_statements.md#categoryset) statements:
 
+```secil
     ; Declare categories with two alias's:
     (category c0)
     (categoryalias documents)
@@ -372,6 +403,7 @@ These examples show a selection of [`categoryset`](cil_mls_labeling_statements.m
     (categoryset catset_3 (c4))
 
     (categoryset just_c0 (xor (c1 c2) (documents c1 c2)))
+```
 
 sensitivitycategory
 -------------------
@@ -380,7 +412,9 @@ Associate a [`sensitivity`](cil_mls_labeling_statements.md#sensitivity) identifi
 
 **Statement definition:**
 
+```secil
     (sensitivitycategory sensitivity_id categoryset_id)
+```
 
 **Where:**
 
@@ -409,11 +443,13 @@ Associate a [`sensitivity`](cil_mls_labeling_statements.md#sensitivity) identifi
 
 These [`sensitivitycategory`](cil_mls_labeling_statements.md#sensitivitycategory) examples use a selection of [`category`](cil_mls_labeling_statements.md#category), [`categoryalias`](cil_mls_labeling_statements.md#categoryalias) and [`categoryset`](cil_mls_labeling_statements.md#categoryset)'s:
 
+```secil
     (sensitivitycategory s0 catrange_1)
     (sensitivitycategory s0 catset_1)
     (sensitivitycategory s0 catset_3)
     (sensitivitycategory s0 (all))
     (sensitivitycategory unclassified (range documents c2))
+```
 
 level
 -----
@@ -422,7 +458,9 @@ Declare a [`level`](cil_mls_labeling_statements.md#level) identifier in the curr
 
 **Statement definition:**
 
-    level level_id (sensitivity_id [categoryset_id])
+```secil
+    (level level_id (sensitivity_id [categoryset_id]))
+```
 
 **Where:**
 
@@ -455,11 +493,13 @@ Declare a [`level`](cil_mls_labeling_statements.md#level) identifier in the curr
 
 These [`level`](cil_mls_labeling_statements.md#level) examples use a selection of [`category`](cil_mls_labeling_statements.md#category), [`categoryalias`](cil_mls_labeling_statements.md#categoryalias) and [`categoryset`](cil_mls_labeling_statements.md#categoryset)'s:
 
+```secil
     (level systemLow (s0))
     (level level_1 (s0))
     (level level_2 (s0 (catrange_1)))
     (level level_3 (s0 (all_cats)))
     (level level_4 (unclassified (c2 c3 c4)))
+```
 
 levelrange
 ----------
@@ -468,7 +508,9 @@ Declare a level range identifier in the current namespace and associate a curren
 
 **Statement definition:**
 
+```secil
     (levelrange levelrange_id (low_level_id high_level_id))
+```
 
 **Where:**
 
@@ -501,6 +543,7 @@ Declare a level range identifier in the current namespace and associate a curren
 
 This example policy shows [`levelrange`](cil_mls_labeling_statements.md#levelrange) statement and all the other MLS labeling statements discussed in this section and will compile as a standalone policy:
 
+```secil
     (handleunknown allow)
     (mls true)
 
@@ -581,6 +624,7 @@ This example policy shows [`levelrange`](cil_mls_labeling_statements.md#levelran
 
         (context context_1 (user object_r object low_low))
     ) ; End unconfined namespace
+```
 
 rangetransition
 ---------------
@@ -589,7 +633,9 @@ Allows an objects level to transition to a different level. Generally used to en
 
 **Statement definition:**
 
+```secil
     (rangetransition source_id target_id class_id new_range_id)
+```
 
 **Where:**
 
@@ -626,13 +672,15 @@ Allows an objects level to transition to a different level. Generally used to en
 
 This rule will transition the range of `sshd.exec` to `s0 - s1:c0.c3` on execution from the `init.process`:
 
+```secil
     (sensitivity s0)
     (sensitivity s1)
     (sensitivityorder s0 s1)
     (category c0)
     ...
-    (level systemlow (s0)
+    (level systemlow (s0))
     (level systemhigh (s1 (c0 c1 c2)))
     (levelrange low_high (systemlow systemhigh))
 
     (rangetransition init.process sshd.exec process low_high)
+```

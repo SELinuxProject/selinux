@@ -8,10 +8,12 @@ Start a new namespace where any CIL statement is valid.
 
 **Statement definition:**
 
+```secil
     (block block_id
         cil_statement
         ...
     )
+```
 
 **Where:**
 
@@ -47,11 +49,13 @@ Declares the namespace as a 'template' and does not generate code until instanti
 
 **Statement definition:**
 
+```secil
     (block block_id
         (blockabstract template_id)
         cil_statement
         ...
     )
+```
 
 **Where:**
 
@@ -95,11 +99,13 @@ Used to add common policy rules to the current namespace via a template that has
 
 **Statement definition:**
 
+```secil
     (block block_id
         (blockinherit template_id)
         cil_statement
         ...
     )
+```
 
 **Where:**
 
@@ -136,6 +142,7 @@ Used to add common policy rules to the current namespace via a template that has
 
 This example contains a template `client_server` that is instantiated in two blocks (`netserver_app` and `netclient_app`):
 
+```secil
     ; This is the template block:
     (block client_server
         (blockabstract client_server)
@@ -187,6 +194,7 @@ This example contains a template `client_server` that is instantiated in two blo
     (block ab
         (blockinherit b)
         (blockinherit a))
+```
 
 optional
 --------
@@ -203,10 +211,12 @@ Declare an [`optional`](cil_container_statements.md#optional) namespace. All CIL
 
 **Statement definition:**
 
+```secil
     (optional optional_id
         cil_statement
         ...
     )
+```
 
 **Where:**
 
@@ -235,6 +245,7 @@ Declare an [`optional`](cil_container_statements.md#optional) namespace. All CIL
 
 This example will instantiate the optional block `ext_gateway.move_file` into policy providing all optional CIL statements can be resolved:
 
+```secil
     (block ext_gateway
         ......
         (optional move_file
@@ -250,6 +261,7 @@ This example will instantiate the optional block `ext_gateway.move_file` into po
 
         .....
     ) ; End block
+```
 
 in
 --
@@ -258,10 +270,12 @@ Allows the insertion of CIL statements into a named container ([`block`](cil_con
 
 **Statement definition:**
 
+```secil
     (in container_id
         cil_statement
         ...
     )
+```
 
 **Where:**
 
@@ -290,7 +304,9 @@ Allows the insertion of CIL statements into a named container ([`block`](cil_con
 
 This will add rules to the container named `system_server`:
 
+```secil
     (in system_server
         (dontaudit process secmark_demo.dns_packet (packet (send recv)))
         (allow process secmark_demo.dns_packet (packet (send recv)))
     )
+```

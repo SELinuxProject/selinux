@@ -16,7 +16,9 @@ Declare an SELinux security context identifier for labeling. The range (or curre
 
 **Statement definition:**
 
+```secil
     (context context_id (user_id role_id type_id levelrange_id)))
+```
 
 **Where:**
 
@@ -57,21 +59,29 @@ Declare an SELinux security context identifier for labeling. The range (or curre
 
 This example uses a named context definition:
 
+```secil
     (context runas_exec_context (u object_r exec low_low))
 
     (filecon "/system/bin/run-as" file runas_exec_context)
+```
 
 to resolve/build a `file_contexts` entry of (assuming MLS enabled policy):
 
+```
     /system/bin/run-as  -- u:object_r:runas.exec:s0-s0
+```
 
 This example uses an anonymous context where the previously declared `user role type levelrange` identifiers are used to specify two [`portcon`](cil_network_labeling_statements.md#portcon) statements:
 
+```secil
     (portcon udp 1024 (test.user object_r test.process ((s0) (s1))))
     (portcon tcp 1024 (test.user object_r test.process (system_low system_high)))
+```
 
 This example uses an anonymous context for the first and named context for the second in a [`netifcon`](cil_network_labeling_statements.md#netifcon) statement:
 
+```secil
     (context netif_context (test.user object_r test.process ((s0 (c0)) (s1 (c0)))))
 
     (netifcon eth04 (test.user object_r test.process ((s0 (c0)) (s1 (c0)))) netif_context)
+```

@@ -8,7 +8,9 @@ Define entries for labeling files. The compiler will produce these entries in a 
 
 **Statement definition:**
 
+```secil
     (filecon "path" file_type context_id)
+```
 
 **Where:**
 
@@ -89,17 +91,21 @@ Define entries for labeling files. The compiler will produce these entries in a 
 
 These examples use one named, one anonymous and one empty context definition:
 
+```secil
     (context runas_exec_context (u object_r exec low_low))
 
     (filecon "/system/bin/run-as" file runas_exec_context)
     (filecon "/dev/socket/wpa_wlan[0-9]" any u:object_r:wpa.socket:s0-s0)
     (filecon "/data/local/mine" dir ())
+```
 
 to resolve/build `file_contexts` entries of (assuming MLS enabled policy):
 
+```
     /system/bin/run-as  -- u:object_r:runas.exec:s0
     /dev/socket/wpa_wlan[0-9]   u:object_r:wpa.socket:s0
     /data/local/mine -d <<none>>
+```
 
 fsuse
 -----
@@ -108,7 +114,9 @@ Label filesystems that support SELinux security contexts.
 
 **Statement definition:**
 
+```secil
     (fsuse fstype fsname context_id)
+```
 
 **Where:**
 
@@ -147,6 +155,7 @@ Label filesystems that support SELinux security contexts.
 
 The [context](#context) identifiers are declared in the `file` namespace and the [`fsuse`](cil_file_labeling_statements.md#fsuse) statements in the global namespace:
 
+```secil
     (block file
         (type labeledfs)
         (roletype object_r labeledfs)
@@ -166,6 +175,7 @@ The [context](#context) identifiers are declared in the `file` namespace and the
 
     (fsuse trans devpts file.devpts_context)
     (fsuse trans tmpfs file.tmpfs_context)
+```
 
 genfscon
 --------
@@ -174,7 +184,9 @@ Used to allocate a security context to filesystems that cannot support any of th
 
 **Statement definition:**
 
+```secil
     (genfscon fsname path context_id)
+```
 
 **Where:**
 
@@ -207,6 +219,7 @@ Used to allocate a security context to filesystems that cannot support any of th
 
 The [context](#context) identifiers are declared in the `file` namespace and the [`genfscon`](cil_file_labeling_statements.md#genfscon) statements are then inserted using the [`in`](cil_container_statements.md#in) container statement:
 
+```secil
     (file
         (type rootfs)
         (roletype object_r rootfs)
@@ -226,3 +239,4 @@ The [context](#context) identifiers are declared in the `file` namespace and the
         (genfscon proc /sysrq-trigger sysrq_proc_context)
         (genfscon selinuxfs / selinuxfs_context)
     )
+```
