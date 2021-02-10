@@ -28,7 +28,7 @@ FILE_LIST ?= cil_introduction.md \
 
 PANDOC_FILE_LIST = $(addprefix $(TMPDIR)/,$(FILE_LIST))
 
-PANDOC_HIGHLIGHT_STYLE="pygments"
+PANDOC_HIGHLIGHT_STYLE="theme.theme"
 
 PDF_OUT=CIL_Reference_Guide.pdf
 HTML_OUT=CIL_Reference_Guide.html

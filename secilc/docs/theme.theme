@@ -1,0 +1,59 @@
+{
+    "text-color": null,
+    "background-color": null,
+    "line-number-color": null,
+    "line-number-background-color": null,
+    "text-styles": {
+        "String": {
+            "text-color": "#049b0a",
+            "background-color": null,
+            "bold": false,
+            "italic": false,
+            "underline": false
+        },
+        "SpecialChar": {
+            "text-color": "#049b0a",
+            "background-color": null,
+            "bold": false,
+            "italic": false,
+            "underline": false
+        },
+
+        "Function": {
+            "text-color": "#ff9358",
+            "background-color": null,
+            "bold": true,
+            "italic": false,
+            "underline": false
+        },
+
+        "Operator": {
+            "text-color": "#43a8ed",
+            "background-color": null,
+            "bold": true,
+            "italic": false,
+            "underline": false
+        },
+        "BuiltIn": {
+            "text-color": "#ff6dd3",
+            "background-color": null,
+            "bold": true,
+            "italic": false,
+            "underline": false
+        },
+        "Comment": {
+            "text-color": "#bc7a00",
+            "background-color": null,
+            "bold": false,
+            "italic": true,
+            "underline": false
+        },
+        "Keyword": {
+            "text-color": "#28648e",
+            "background-color": null,
+            "bold": true,
+            "italic": false,
+            "underline": false
+        }
+    }
+}
