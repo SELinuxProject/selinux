@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://docs.kde.org/trunk5/en/applications/katepart/highlight.html#katehighlight-xml-format -->
+<!DOCTYPE language SYSTEM "language.dtd">
+<language name="secil" section="Sources" extensions="*.cil" version="1" kateversion="2.4">
+    <!--
+        The keywords where extracted from libsepol/cil/src/cil.c sorted into the
+        right lists and sorted alphabetically
+    -->
+    <list name="keywords_blockstart">
+        <item>allow</item>
+        <item>allowx</item>
+        <item>auditallow</item>
+        <item>auditallowx</item>
+        <item>block</item>
+        <item>blockabstract</item>
+        <item>boolean</item>
+        <item>booleanif</item>
+        <item>category</item>
+        <item>categoryalias</item>
+        <item>categoryaliasactual</item>
+        <item>categoryorder</item>
+        <item>categoryset</item>
+        <item>class</item>
+        <item>classcommon</item>
+        <item>classmap</item>
+        <item>classmapping</item>
+        <item>classorder</item>
+        <item>classpermission</item>
+        <item>classpermissionset</item>
+        <item>common</item>
+        <item>constrain</item>
+        <item>context</item>
+        <item>defaultrange</item>
+        <item>defaultrole</item>
+        <item>defaulttype</item>
+        <item>defaultuser</item>
+        <item>devicetreecon</item>
+        <item>dontaudit</item>
+        <item>dontauditx</item>
+        <item>expandtypeattribute</item>
+        <item>false</item>
+        <item>filecon</item>
+        <item>fsuse</item>
+        <item>genfscon</item>
+        <item>handleunknown</item>
+        <item>ibendportcon</item>
+        <item>ibpkeycon</item>
+        <item>ioctl</item>
+        <item>iomemcon</item>
+        <item>ioportcon</item>
+        <item>ipaddr</item>
+        <item>level</item>
+        <item>levelrange</item>
+        <item>mls</item>
+        <item>mlsconstrain</item>
+        <item>mlsvalidatetrans</item>
+        <item>netifcon</item>
+        <item>neverallow</item>
+        <item>neverallowx</item>
+        <item>nodecon</item>
+        <item>optional</item>
+        <item>pcidevicecon</item>
+        <item>perm</item>
+        <item>permissionx</item>
+        <item>pirqcon</item>
+        <item>policycap</item>
+        <item>portcon</item>
+        <item>rangetransition</item>
+        <item>role</item>
+        <item>roleallow</item>
+        <item>roleattribute</item>
+        <item>roleattributeset</item>
+        <item>rolebounds</item>
+        <item>roletransition</item>
+        <item>roletype</item>
+        <item>selinuxuser</item>
+        <item>selinuxuserdefault</item>
+        <item>sensitivity</item>
+        <item>sensitivityalias</item>
+        <item>sensitivityaliasactual</item>
+        <item>sensitivitycategory</item>
+        <item>sensitivityorder</item>
+        <item>sid</item>
+        <item>sidcontext</item>
+        <item>sidorder</item>
+        <item>true</item>
+        <item>tunable</item>
+        <item>tunableif</item>
+        <item>type</item>
+        <item>typealias</item>
+        <item>typealiasactual</item>
+        <item>typeattribute</item>
+        <item>typeattributeset</item>
+        <item>typebounds</item>
+        <item>typechange</item>
+        <item>typemember</item>
+        <item>typepermissive</item>
+        <item>typetransition</item>
+        <item>unordered</item>
+        <item>user</item>
+        <item>userattribute</item>
+        <item>userattributeset</item>
+        <item>userbounds</item>
+        <item>userlevel</item>
+        <item>userprefix</item>
+        <item>userrange</item>
+        <item>userrole</item>
+        <item>validatetrans</item>
+    </list>
+
+    <list name="function">
+        <item>blockinherit</item>
+        <item>call</item>
+        <item>in</item>
+        <item>macro</item>
+    </list>
+
+    <list name="operators">
+        <item>and</item>
+        <item>dom</item>
+        <item>domby</item>
+        <item>eq</item>
+        <item>incomp</item>
+        <item>neq</item>
+        <item>not</item>
+        <item>or</item>
+        <item>range</item>
+        <item>xor</item>
+    </list>
+
+    <!-- list of "magic" functions or values -->
+    <list name="builtins">
+        <item>*</item>
+        <item>all</item>
+        <item>dccp</item>
+        <item>false</item>
+        <item>h1</item>
+        <item>h2</item>
+        <item>l1</item>
+        <item>l2</item>
+        <item>object_r</item>
+        <item>r1</item>
+        <item>r2</item>
+        <item>r3</item>
+        <item>sctp</item>
+        <item>self</item>
+        <item>t1</item>
+        <item>t2</item>
+        <item>t3</item>
+        <item>tcp</item>
+        <item>true</item>
+        <item>u1</item>
+        <item>u2</item>
+        <item>u3</item>
+        <item>udp</item>
+
+        <!--
+            Excluded because they lead to a lot of false-positives
+        <item>allow</item>
+        <item>any</item>
+        <item>char</item>
+        <item>deny</item>
+        <item>dir</item>
+        <item>file</item>
+        <item>glblub</item>
+        <item>high</item>
+        <item>low-high</item>
+        <item>low</item>
+        <item>pipe</item>
+        <item>reject</item>
+        <item>socket</item>
+        <item>source</item>
+        <item>symlink</item>
+        <item>target</item>
+        <item>task</item>
+        <item>trans</item>
+        <item>xattr</item>
+        -->
+    </list>
+    <highlighting>
+        <contexts>
+            <context name="Normal" attribute="Normal" lineEndContext="#stay">
+                <DetectChar attribute="Brackets" context="BlockStart" char="("/>
+
+                <DetectChar attribute="Comment" context="Comment" char=";"/>
+            </context>
+            <context name="BlockStart" attribute="Normal" lineEndContext="#stay">
+                <keyword attribute="Keyword" context="Block" String="keywords_blockstart"/>
+                <keyword attribute="Function" context="Block" String="function"/>
+                <keyword attribute="Operator" context="Block" String="operators"/>
+
+                <DetectChar attribute="Comment" context="Comment" char=";"/>
+            </context>
+            <context name="Block" attribute="Normal" lineEndContext="#stay">
+                <keyword attribute="Builtin" context="#stay" String="builtins"/>
+
+                <DetectChar attribute="Comment" context="Comment" char=";"/>
+                <DetectChar attribute="String" context="String" char="&quot;"/>
+
+                <DetectChar attribute="Brackets" context="BlockStart" char="("/>
+                <DetectChar attribute="Brackets" context="#pop" char=")"/>
+            </context>
+
+            <!-- single line comment -->
+            <context name="Comment" attribute="Comment" lineEndContext="#pop"></context>
+
+            <!-- string / name -->
+            <context name="String" attribute="String" lineEndContext="#stay">
+                <RegExpr attribute="Char" context="#stay" String="#\\."/>
+
+                <!-- allow escaping " or similiar -->
+                <HlCStringChar attribute="String Char" context="#stay"/>
+
+                <DetectChar attribute="String" context="#pop" char="&quot;"/>
+            </context>
+        </contexts>
+        <itemDatas>
+            <itemData name="Normal" defStyleNum="dsNormal" />
+            <itemData name="Keyword" defStyleNum="dsKeyword"/>
+            <itemData name="Function" defStyleNum="dsFunction"/>
+            <itemData name="Operator" defStyleNum="dsOperator"/>
+            <itemData name="Builtin" defStyleNum="dsBuiltIn"/>
+
+            <itemData name="Comment" defStyleNum="dsComment"/>
+
+            <itemData name="String" defStyleNum="dsString"/>
+            <itemData name="String Char" defStyleNum="dsSpecialChar"/>
+        </itemDatas>
+    </highlighting>
+    <general>
+        <comments>
+            <comment name="singleLine" start=";"/>
+        </comments>
+        <keywords casesensitive="1" weakDeliminator="."/>
+    </general>
+</language>
