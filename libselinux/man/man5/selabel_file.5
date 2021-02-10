@@ -125,7 +125,14 @@ Where:
 .RS
 .I pathname
 .RS
-An entry that defines the pathname that may be in the form of a regular expression.
+An entry that defines the path to be labeled.
+May contain either a fully qualified path,
+or a Perl compatible regular expression (PCRE),
+describing fully qualified path(s).
+The only PCRE flag in use is PCRE2_DOTALL,
+which causes a wildcard '.' to match anything, including a new line.
+Strings representing paths are processed as bytes (as opposed to Unicode),
+meaning that non-ASCII characters are not matched by a single wildcard.
 .RE
 .I file_type
 .RS

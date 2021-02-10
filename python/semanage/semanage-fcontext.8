@@ -11,6 +11,24 @@ SELinux policy without requiring modification to or recompilation
 from policy sources.  semanage fcontext is used to  manage the default
 file system labeling on an SELinux system.  This command maps file paths using regular expressions to SELinux labels.
 
+FILE_SPEC may contain either a fully qualified path,
+or a Perl compatible regular expression (PCRE),
+describing fully qualified path(s). The only PCRE flag in use is PCRE2_DOTALL,
+which causes a wildcard '.' to match anything, including a new line.
+Strings representing paths are processed as bytes (as opposed to Unicode),
+meaning that non-ASCII characters are not matched by a single wildcard.
+
+Note, that file context definitions specified using 'semanage fcontext'
+(i.e. local file context modifications stored in file_contexts.local)
+have higher priority than those specified in policy modules.
+This means that whenever a match for given file path is found in
+file_contexts.local, no other file context definitions are considered.
+Entries in file_contexts.local are processed from most recent one to the oldest,
+with first match being used (as opposed to the most specific match,
+which is used when matching other file context definitions).
+All regular expressions should therefore be as specific as possible,
+to avoid unintentionally impacting other parts of the filesystem.
+
 .SH "OPTIONS"
 .TP
 .I  \-h, \-\-help

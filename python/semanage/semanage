@@ -379,7 +379,7 @@ If you do not specify a file type, the file type will default to "all files".
     parser_add_seuser(fcontextParser, "fcontext")
     parser_add_type(fcontextParser, "fcontext")
     parser_add_range(fcontextParser, "fcontext")
-    fcontextParser.add_argument('file_spec', nargs='?', default=None, help=_('file_spec'))
+    fcontextParser.add_argument('file_spec', nargs='?', default=None, help=_('Path to be labeled (may be in the form of a Perl compatible regular expression)'))
     fcontextParser.set_defaults(func=handleFcontext)
 
 
