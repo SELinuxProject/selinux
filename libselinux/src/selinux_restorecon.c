@@ -297,6 +297,7 @@ static int add_xattr_entry(const char *directory, bool delete_nonmatch,
 	char *sha1_buf = NULL;
 	size_t i, digest_len = 0;
 	int rc, digest_result;
+	bool match;
 	struct dir_xattr *new_entry;
 	uint8_t *xattr_digest = NULL;
 	uint8_t *calculated_digest = NULL;
@@ -306,9 +307,9 @@ static int add_xattr_entry(const char *directory, bool delete_nonmatch,
 		return -1;
 	}
 
-	selabel_get_digests_all_partial_matches(fc_sehandle, directory,
-						&calculated_digest,
-						&xattr_digest, &digest_len);
+	match = selabel_get_digests_all_partial_matches(fc_sehandle, directory,
+								&calculated_digest, &xattr_digest,
+								&digest_len);
 
 	if (!xattr_digest || !digest_len) {
 		free(calculated_digest);
@@ -326,11 +327,10 @@ static int add_xattr_entry(const char *directory, bool delete_nonmatch,
 	for (i = 0; i < digest_len; i++)
 		sprintf((&sha1_buf[i * 2]), "%02x", xattr_digest[i]);
 
-	rc = memcmp(calculated_digest, xattr_digest, digest_len);
-	digest_result = rc ? NOMATCH : MATCH;
+	digest_result = match ? MATCH : NOMATCH;
 
-	if ((delete_nonmatch && rc != 0) || delete_all) {
-		digest_result = rc ? DELETED_NOMATCH : DELETED_MATCH;
+	if ((delete_nonmatch && !match) || delete_all) {
+		digest_result = match ? DELETED_MATCH : DELETED_NOMATCH;
 		rc = removexattr(directory, RESTORECON_PARTIAL_MATCH_DIGEST);
 		if (rc) {
 			selinux_log(SELINUX_ERROR,
