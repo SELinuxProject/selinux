@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 	unsigned int xattr_flags = 0, delete_digest = 0, recurse = 0;
 	unsigned int delete_all_digests = 0, ignore_mounts = 0;
 	bool display_digest = false;
-	char *sha1_buf, **specfiles, *fc_file = NULL;
+	char *sha1_buf, **specfiles, *fc_file = NULL, *pathname = NULL;
 	unsigned char *fc_digest = NULL;
 	size_t i, fc_digest_len = 0, num_specfiles;
 
@@ -163,7 +163,16 @@ int main(int argc, char **argv)
 	xattr_flags = delete_digest | delete_all_digests |
 		      ignore_mounts | recurse;
 
-	if (selinux_restorecon_xattr(argv[optind], xattr_flags, &xattr_list)) {
+	pathname = realpath(argv[optind], NULL);
+	if (!pathname) {
+		fprintf(stderr,
+			"restorecon_xattr: realpath(%s) failed: %s\n",
+			argv[optind], strerror(errno));
+		rc = -1;
+		goto out;
+	}
+
+	if (selinux_restorecon_xattr(pathname, xattr_flags, &xattr_list)) {
 		fprintf(stderr,
 			"Error selinux_restorecon_xattr: %s\n",
 			strerror(errno));
@@ -215,6 +224,7 @@ int main(int argc, char **argv)
 
 	rc = 0;
 out:
+	free(pathname);
 	selabel_close(hnd);
 	restore_finish();
 	return rc;
