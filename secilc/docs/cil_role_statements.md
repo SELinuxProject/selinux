@@ -339,7 +339,7 @@ In this example the role `test` cannot have greater privileges than `unconfined.
 ```secil
     (role test)
 
-    (unconfined
+    (block unconfined
         (role role)
         (rolebounds role .test)
     )
