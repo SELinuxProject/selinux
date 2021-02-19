@@ -401,32 +401,6 @@ Level</property>
       <!-- column-name gchararray -->
       <column type="gchararray"/>
     </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">all files</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">regular file</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">directory</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">character device</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">block device</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">socket file</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">symbolic link</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">named pipe</col>
-      </row>
-    </data>
   </object>
   <object class="GtkDialog" id="fcontextDialog">
     <property name="can_focus">False</property>

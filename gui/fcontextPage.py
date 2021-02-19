@@ -102,6 +102,13 @@ class fcontextPage(semanagePage):
         self.load()
         self.fcontextEntry = xml.get_object("fcontextEntry")
         self.fcontextFileTypeCombo = xml.get_object("fcontextFileTypeCombo")
+        # Populate file type combo_box
+        liststore = self.fcontextFileTypeCombo.get_model()
+        for ftype in seobject.file_type_str_to_option.keys():
+            iter = liststore.append()
+            liststore.set_value(iter, 0, ftype)
+        iter = liststore.get_iter_first()
+        self.fcontextFileTypeCombo.set_active_iter(iter)
         self.fcontextTypeEntry = xml.get_object("fcontextTypeEntry")
         self.fcontextMLSEntry = xml.get_object("fcontextMLSEntry")
 
