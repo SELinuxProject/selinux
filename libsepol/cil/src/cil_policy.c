@@ -1660,9 +1660,11 @@ static void cil_sid_contexts_to_policy(FILE *out, struct cil_list *sids, int mls
 
 	cil_list_for_each(i1, sids) {
 		sid = i1->data;
-		fprintf(out, "sid %s ", sid->datum.fqn);
-		cil_context_to_policy(out, sid->context, mls);
-		fprintf(out,"\n");
+		if (sid->context) {
+			fprintf(out, "sid %s ", sid->datum.fqn);
+			cil_context_to_policy(out, sid->context, mls);
+			fprintf(out,"\n");
+		}
 	}
 }
 
