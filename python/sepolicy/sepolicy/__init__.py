@@ -178,15 +178,15 @@ def load_store_policy(store):
         return None
     policy(policy_file)
 
-try:
+def init_policy():
     policy_file = get_installed_policy()
     policy(policy_file)
-except ValueError as e:
-    if selinux.is_selinux_enabled() == 1:
-        raise e
-
 
 def info(setype, name=None):
+    global _pol
+    if not _pol:
+        init_policy()
+
     if setype == TYPE:
         q = setools.TypeQuery(_pol)
         q.name = name
@@ -337,6 +337,9 @@ def _setools_rule_to_dict(rule):
 
 
 def search(types, seinfo=None):
+    global _pol
+    if not _pol:
+        init_policy()
     if not seinfo:
         seinfo = {}
     valid_types = set([ALLOW, AUDITALLOW, NEVERALLOW, DONTAUDIT, TRANSITION, ROLE_ALLOW])
@@ -915,6 +918,10 @@ def get_all_roles():
     global roles
     if roles:
         return roles
+
+    global _pol
+    if not _pol:
+        init_policy()
 
     q = setools.RoleQuery(_pol)
     roles = [str(x) for x in q.results() if str(x) != "object_r"]
