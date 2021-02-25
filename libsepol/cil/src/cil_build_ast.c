@@ -5660,7 +5660,7 @@ int cil_fill_ipaddr(struct cil_tree_node *addr_node, struct cil_ipaddr *addr)
 {
 	int rc = SEPOL_ERR;
 
-	if (addr_node == NULL || addr == NULL) {
+	if (addr_node == NULL || addr_node->data == NULL || addr == NULL) {
 		goto exit;
 	}
 
