@@ -68,6 +68,7 @@ int sepol_policydb_create(sepol_policydb_t ** sp)
 	p = &(*sp)->p;
 	if (policydb_init(p)) {
 		free(*sp);
+		*sp = NULL;
 		return -1;
 	}
 	return 0;
