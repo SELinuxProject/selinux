@@ -230,9 +230,10 @@ static int local_server(void) {
 		return -1;
 	}
 	if (flock(local_lock_fd, LOCK_EX | LOCK_NB) < 0) {
-		close(local_lock_fd);
 		if (debug_mode)
 			perror("flock");
+		close(local_lock_fd);
+		local_lock_fd = -1;
 		return -1;
 	}
 	/* watch for stdin/terminal going away */
