@@ -162,7 +162,7 @@ newer() {
 #
 diff_filecontext() {
 EXCLUDEDIRS="`exclude_dirs_from_relabelling`"
-for i in /sys /proc /dev /run /mnt /var/tmp /var/lib/BackupPC /home /tmp /dev; do
+for i in /sys /proc /mnt /var/tmp /var/lib/BackupPC /home /root /tmp; do
     [ -e $i ]  && EXCLUDEDIRS="${EXCLUDEDIRS} -e $i";
 done
 LogExcluded
@@ -175,7 +175,7 @@ if [ -f ${PREFC} -a -x /usr/bin/diff ]; then
 	sed -r -e 's,:s0, ,g' $FC | sort -u | \
 	/usr/bin/diff -b ${PREFCTEMPFILE} - | \
 	    grep '^[<>]'|cut -c3-| grep ^/ | \
-	    egrep -v '(^/home|^/root|^/tmp|^/dev)' |\
+	    egrep -v '(^/home|^/root|^/tmp)' |\
 	sed -r -e 's,[[:blank:]].*,,g' \
 	       -e 's|\(([/[:alnum:]]+)\)\?|{\1,}|g' \
 	       -e 's|([/[:alnum:]])\?|{\1,}|g' \
