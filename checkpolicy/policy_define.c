@@ -4088,8 +4088,6 @@ cond_expr_t *define_cond_expr(uint32_t expr_type, void *arg1, void *arg2)
 static int set_user_roles(role_set_t * set, char *id)
 {
 	role_datum_t *r;
-	unsigned int i;
-	ebitmap_node_t *node;
 
 	if (strcmp(id, "*") == 0) {
 		free(id);
@@ -4115,12 +4113,9 @@ static int set_user_roles(role_set_t * set, char *id)
 		return -1;
 	}
 
-	/* set the role and every role it dominates */
-	ebitmap_for_each_positive_bit(&r->dominates, node, i) {
-		if (ebitmap_set_bit(&set->roles, i, TRUE))
-			goto oom;
-	}
 	free(id);
+	if (ebitmap_set_bit(&set->roles, r->s.value - 1, TRUE))
+		goto oom;
 	return 0;
       oom:
 	yyerror("out of memory");
