@@ -3052,10 +3052,6 @@ int expand_module(sepol_handle_t * handle,
 	if (hashtab_map(state.base->p_roles.table,
 			role_bounds_copy_callback, &state))
 		goto cleanup;
-	/* escalate the type_set_t in a role attribute to all regular roles
-	 * that belongs to it. */
-	if (hashtab_map(state.base->p_roles.table, role_fix_callback, &state))
-		goto cleanup;
 
 	/* copy MLS's sensitivity level and categories - this needs to be done
 	 * before expanding users (they need to be indexed too) */
@@ -3120,6 +3116,11 @@ int expand_module(sepol_handle_t * handle,
 	 if (hashtab_map(state.out->p_roles.table, role_remap_dominates, &state)) {
 		goto cleanup;
 	}
+
+	/* escalate the type_set_t in a role attribute to all regular roles
+	 * that belongs to it. */
+	if (hashtab_map(state.base->p_roles.table, role_fix_callback, &state))
+		goto cleanup;
 
 	if (copy_and_expand_avrule_block(&state) < 0) {
 		ERR(handle, "Error during expand");
