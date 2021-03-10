@@ -71,6 +71,38 @@ static int map_ebitmap(ebitmap_t * src, ebitmap_t * dst, uint32_t * map)
 	return 0;
 }
 
+static int ebitmap_expand_roles(policydb_t *p, ebitmap_t *roles)
+{
+	ebitmap_node_t *node;
+	unsigned int bit;
+	role_datum_t *role;
+	ebitmap_t tmp;
+
+	ebitmap_init(&tmp);
+	ebitmap_for_each_positive_bit(roles, node, bit) {
+		role = p->role_val_to_struct[bit];
+		assert(role);
+		if (role->flavor != ROLE_ATTRIB) {
+			if (ebitmap_set_bit(&tmp, bit, 1)) {
+				ebitmap_destroy(&tmp);
+				return -1;
+			}
+		} else {
+			if (ebitmap_union(&tmp, &role->roles)) {
+				ebitmap_destroy(&tmp);
+				return -1;
+			}
+		}
+	}
+	ebitmap_destroy(roles);
+	if (ebitmap_cpy(roles, &tmp)) {
+		ebitmap_destroy(&tmp);
+		return -1;
+	}
+	ebitmap_destroy(&tmp);
+	return 0;
+}
+
 static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			      void *data)
 {
@@ -331,6 +363,9 @@ static int constraint_node_clone(constraint_node_t ** dst,
 					}
 				} else if (new_expr->attr & CEXPR_ROLE) {
 					if (map_ebitmap(&expr->names, &new_expr->names, state->rolemap)) {
+						goto out_of_mem;
+					}
+					if (ebitmap_expand_roles(state->out, &new_expr->names)) {
 						goto out_of_mem;
 					}
 				} else if (new_expr->attr & CEXPR_USER) {
