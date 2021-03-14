@@ -82,7 +82,7 @@ static struct cil_name * __cil_insert_name(struct cil_db *db, hashtab_key_t key,
 	} else if (parent->flavor == CIL_MACRO) {
 		macro = parent->data;
 	}
-	if (macro != NULL) {
+	if (macro != NULL && macro->params != NULL) {
 		struct cil_list_item *item;
 		cil_list_for_each(item, macro->params) {
 			if (((struct cil_param*)item->data)->str == key) {
