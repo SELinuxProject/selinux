@@ -1088,7 +1088,6 @@ int cil_resolve_roletransition(struct cil_tree_node *current, void *extra_args)
 	node = NODE(result_datum);
 	if (node->flavor != CIL_ROLE) {
 		rc = SEPOL_ERR;
-		printf("%i\n", node->flavor);
 		cil_log(CIL_ERR, "roletransition must result in a role, but %s is a %s\n", roletrans->result_str, cil_node_to_string(node));
 		goto exit;
 	}
