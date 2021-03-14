@@ -1668,14 +1668,6 @@ exit:
 		}
 		cil_list_destroy(&xperms_list, CIL_FALSE);
 	}
-
-	// hashtab_t does not have a way to free keys or datum since it doesn't
-	// know what they are. We won't need the keys/datum after this function, so
-	// clean them up here.
-	free(avtab_key);
-	ebitmap_destroy(datum);
-	free(datum);
-
 	return rc;
 }
 
@@ -1883,6 +1875,15 @@ int cil_avrulex_to_hashtable(policydb_t *pdb, const struct cil_db *db, struct ci
 
 exit:
 	return rc;
+}
+
+static int __cil_avrulex_ioctl_destroy(hashtab_key_t k, hashtab_datum_t datum, __attribute__((unused)) void *args)
+{
+	free(k);
+	ebitmap_destroy(datum);
+	free(datum);
+
+	return SEPOL_OK;
 }
 
 int __cil_cond_to_policydb_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, void *extra_args)
@@ -5037,6 +5038,7 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 
 exit:
 	hashtab_destroy(role_trans_table);
+	hashtab_map(avrulex_ioctl_table, __cil_avrulex_ioctl_destroy, NULL);
 	hashtab_destroy(avrulex_ioctl_table);
 	free(type_value_to_cil);
 	free(class_value_to_cil);
