@@ -27,6 +27,7 @@
  * either expressed or implied, of Tresys Technology, LLC.
  */
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -49,6 +50,12 @@
 
 #define GEN_REQUIRE_ATTR "cil_gen_require" /* Also in libsepol/src/module_to_cil.c */
 #define TYPEATTR_INFIX "_typeattr_"        /* Also in libsepol/src/module_to_cil.c */
+
+struct fc_data {
+	unsigned int meta;
+	size_t stem_len;
+	size_t str_len;
+};
 
 static int __cil_expr_to_bitmap(struct cil_list *expr, ebitmap_t *out, int max, struct cil_db *db);
 static int __cil_expr_list_to_bitmap(struct cil_list *expr_list, ebitmap_t *out, int max, struct cil_db *db);
@@ -156,9 +163,9 @@ static int cil_verify_is_list(struct cil_list *list, enum cil_flavor flavor)
 	return CIL_TRUE;
 }
 
-void cil_post_fc_fill_data(struct fc_data *fc, char *path)
+static void cil_post_fc_fill_data(struct fc_data *fc, const char *path)
 {
-	int c = 0;
+	size_t c = 0;
 	fc->meta = 0;
 	fc->stem_len = 0;
 	fc->str_len = 0;
