@@ -2497,7 +2497,7 @@ int cil_resolve_in(struct cil_tree_node *current, void *extra_args)
 
 	rc = cil_copy_ast(db, current, block_node);
 	if (rc != SEPOL_OK) {
-		printf("Failed to copy in, rc: %d\n", rc);
+		cil_tree_log(current, CIL_ERR, "Failed to copy in-statement");
 		goto exit;
 	}
 
@@ -2788,7 +2788,7 @@ int cil_resolve_call1(struct cil_tree_node *current, void *extra_args)
 	macro_node = NODE(macro_datum);
 
 	if (macro_node->flavor != CIL_MACRO) {
-		printf("Failed to resolve %s to a macro\n", new_call->macro_str);
+		cil_tree_log(current, CIL_ERR, "Failed to resolve %s to a macro", new_call->macro_str);
 		rc = SEPOL_ERR;
 		goto exit;
 	}
