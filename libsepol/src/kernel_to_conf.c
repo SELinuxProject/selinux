@@ -3041,6 +3041,18 @@ int sepol_kernel_policydb_to_conf(FILE *out, struct policydb *pdb)
 		goto exit;
 	}
 
+	if (pdb->policyvers >= POLICYDB_VERSION_AVTAB && pdb->policyvers <= POLICYDB_VERSION_PERMISSIVE) {
+		/*
+		 * For policy versions between 20 and 23, attributes exist in the policy,
+		 * but only in the type_attr_map. This means that there are gaps in both
+		 * the type_val_to_struct and p_type_val_to_name arrays and policy rules
+		 * can refer to those gaps.
+		 */
+		sepol_log_err("Writing policy versions between 20 and 23 as a policy.conf is not supported");
+		rc = -1;
+		goto exit;
+	}
+
 	rc = constraint_rules_to_strs(pdb, mls_constraints, non_mls_constraints);
 	if (rc != 0) {
 		goto exit;
