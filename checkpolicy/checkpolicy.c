@@ -106,7 +106,7 @@ static int handle_unknown = SEPOL_DENY_UNKNOWN;
 static const char *txtfile = "policy.conf";
 static const char *binfile = "policy";
 
-unsigned int policyvers = POLICYDB_VERSION_MAX;
+unsigned int policyvers = 0;
 
 static __attribute__((__noreturn__)) void usage(const char *progname)
 {
@@ -515,7 +515,8 @@ int main(int argc, char **argv)
 	}
 
 	if (show_version) {
-		printf("%d (compatibility range %d-%d)\n", policyvers,
+		printf("%d (compatibility range %d-%d)\n",
+			   policyvers ? policyvers : POLICYDB_VERSION_MAX ,
 		       POLICYDB_VERSION_MAX, POLICYDB_VERSION_MIN);
 		exit(0);
 	}
@@ -588,6 +589,16 @@ int main(int argc, char **argv)
 				exit(1);
 			}
 		}
+
+		if (policydbp->policyvers <= POLICYDB_VERSION_PERMISSIVE) {
+			if (policyvers > policydbp->policyvers) {
+				fprintf(stderr, "Binary policies with version <= %u cannot be upgraded\n", POLICYDB_VERSION_PERMISSIVE);
+			} else if (policyvers) {
+				policydbp->policyvers = policyvers;
+			}
+		} else {
+			policydbp->policyvers = policyvers ? policyvers : POLICYDB_VERSION_MAX;
+		}
 	} else {
 		if (conf) {
 			fprintf(stderr, "Can only generate policy.conf from binary policy\n");
@@ -629,6 +640,8 @@ int main(int argc, char **argv)
 			policydb_destroy(policydbp);
 			policydbp = &policydb;
 		}
+
+		policydbp->policyvers = policyvers ? policyvers : POLICYDB_VERSION_MAX;
 	}
 
 	if (policydb_load_isids(&policydb, &sidtab))
@@ -653,8 +666,6 @@ int main(int argc, char **argv)
 				exit(1);
 			}
 		}
-
-		policydb.policyvers = policyvers;
 
 		if (!cil) {
 			if (!conf) {
