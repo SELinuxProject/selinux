@@ -34,12 +34,12 @@ Enable constraints to be placed on the specified permissions of the object class
 <p><code>    (op u1 u2)</code></p>
 <p><code>    (role_op r1 r2)</code></p>
 <p><code>    (op t1 t2)</code></p>
-<p><code>    (op u1 user_id)</code></p>
-<p><code>    (op u2 user_id)</code></p>
-<p><code>    (op r1 role_id)</code></p>
-<p><code>    (op r2 role_id)</code></p>
-<p><code>    (op t1 type_id)</code></p>
-<p><code>    (op t2 type_id)</code></p>
+<p><code>    (op u1 user_id | (user_id ...))</code></p>
+<p><code>    (op u2 user_id | (user_id ...))</code></p>
+<p><code>    (op r1 role_id | (role_id ...))</code></p>
+<p><code>    (op r2 role_id | (role_id ...))</code></p>
+<p><code>    (op t1 type_id | (type_id ...))</code></p>
+<p><code>    (op t2 type_id | (type_id ...))</code></p>
 <p>where:</p>
 <p><code>  u1, r1, t1 = Source context: user, role or type</code></p>
 <p><code>  u2, r2, t2 = Target context: user, role or type</code></p>
