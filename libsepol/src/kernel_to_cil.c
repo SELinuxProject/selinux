@@ -191,7 +191,11 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 				if (!names) {
 					goto exit;
 				}
-				new_val = create_str("(%s %s %s)", 3, op, attr1, names);
+				if (strchr(names, ' ')) {
+					new_val = create_str("(%s %s (%s))", 3, op, attr1, names);
+				} else {
+					new_val = create_str("(%s %s %s)", 3, op, attr1, names);
+				}
 				free(names);
 			}
 		} else {

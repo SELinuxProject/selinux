@@ -1800,13 +1800,20 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 
 				// length of values/oper + 2 spaces + 2 parens + null terminator
 				len = strlen(op) + strlen(attr1) +  strlen(names) + 2 + 2 + 1;
+				if (num_names > 1) {
+					len += 2; // 2 more parens
+				}
 				new_val = malloc(len);
 				if (new_val == NULL) {
 					log_err("Out of memory");
 					rc = -1;
 					goto exit;
 				}
-				rlen = snprintf(new_val, len, "(%s %s %s)", op, attr1, names);
+				if (num_names > 1) {
+					rlen = snprintf(new_val, len, "(%s %s (%s))", op, attr1, names);
+				} else {
+					rlen = snprintf(new_val, len, "(%s %s %s)", op, attr1, names);
+				}
 				if (rlen < 0 || rlen >= len) {
 					log_err("Failed to generate constraint expression");
 					rc = -1;
