@@ -100,15 +100,16 @@ int cil_copy_block(__attribute__((unused)) struct cil_db *db, void *data, void *
 	struct cil_block *orig = data;
 	char *key = orig->datum.name;
 	struct cil_symtab_datum *datum = NULL;
+	struct cil_block *new;
 
 	cil_symtab_get_datum(symtab, key, &datum);
-	if (datum == NULL) {
-		struct cil_block *new;
-		cil_block_init(&new);
-		*copy = new;
-	} else {
-		*copy = datum;;
+	if (datum != NULL) {
+		cil_tree_log(NODE(datum), CIL_ERR, "Re-declaration of %s %s", cil_node_to_string(NODE(datum)), key);
+		return SEPOL_ERR;
 	}
+
+	cil_block_init(&new);
+	*copy = new;
 
 	return SEPOL_OK;
 }
@@ -1509,64 +1510,22 @@ int cil_copy_macro(__attribute__((unused)) struct cil_db *db, void *data, void *
 	struct cil_macro *orig = data;
 	char *key = orig->datum.name;
 	struct cil_symtab_datum *datum = NULL;
+	struct cil_macro *new;
 
 	cil_symtab_get_datum(symtab, key, &datum);
-	if (datum == NULL) {
-		struct cil_macro *new;
-		cil_macro_init(&new);
-		if (orig->params != NULL) {
-			cil_copy_list(orig->params, &new->params);
-		}
-
-		*copy = new;
-
-	} else {
-		struct cil_list_item *curr_orig = NULL;
-		struct cil_list_item *curr_new = NULL;
-		struct cil_param *param_orig = NULL;
-		struct cil_param *param_new = NULL;
-
-		if (((struct cil_macro*)datum)->params != NULL) {
-			curr_new = ((struct cil_macro*)datum)->params->head;
-		}
-
-		if (orig->params != NULL) {
-			curr_orig = orig->params->head;
-		}
-
-		if (curr_orig != NULL && curr_new != NULL) {
-			while (curr_orig != NULL) {
-				if (curr_new == NULL) {
-					goto exit;
-				}
-
-				param_orig = (struct cil_param*)curr_orig->data;
-				param_new = (struct cil_param*)curr_new->data;
-				if (param_orig->str != param_new->str) {
-					goto exit;
-				} else if (param_orig->flavor != param_new->flavor) {
-					goto exit;
-				}
-
-				curr_orig = curr_orig->next;
-				curr_new = curr_new->next;
-			}
-
-			if (curr_new != NULL) {
-				goto exit;
-			}
-		} else if (!(curr_orig == NULL && curr_new == NULL)) {
-			goto exit;
-		}
-
-		*copy = datum;
+	if (datum != NULL) {
+		cil_tree_log(NODE(datum), CIL_ERR, "Re-declaration of %s %s", cil_node_to_string(NODE(datum)), key);
+		return SEPOL_ERR;
 	}
 
-	return SEPOL_OK;
+	cil_macro_init(&new);
+	if (orig->params != NULL) {
+		cil_copy_list(orig->params, &new->params);
+	}
 
-exit:
-	cil_log(CIL_INFO, "cil_copy_macro: macro cannot be redefined\n");
-	return SEPOL_ERR;
+	*copy = new;
+
+	return SEPOL_OK;
 }
 
 int cil_copy_optional(__attribute__((unused)) struct cil_db *db, void *data, void **copy, symtab_t *symtab)
@@ -1574,15 +1533,16 @@ int cil_copy_optional(__attribute__((unused)) struct cil_db *db, void *data, voi
 	struct cil_optional *orig = data;
 	char *key = orig->datum.name;
 	struct cil_symtab_datum *datum = NULL;
+	struct cil_optional *new;
 
 	cil_symtab_get_datum(symtab, key, &datum);
-	if (datum == NULL) {
-		struct cil_optional *new;
-		cil_optional_init(&new);
-		*copy = new;
-	} else {
-		*copy = datum;
+	if (datum != NULL) {
+		cil_tree_log(NODE(datum), CIL_ERR, "Re-declaration of %s %s", cil_node_to_string(NODE(datum)), key);
+		return SEPOL_ERR;
 	}
+
+	cil_optional_init(&new);
+	*copy = new;
 
 	return SEPOL_OK;
 }
@@ -2122,6 +2082,7 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 			args->dest = new;
 		}
 	} else {
+		cil_tree_log(orig, CIL_ERR, "Problem copying %s node", cil_node_to_string(orig));
 		goto exit;
 	}
 
