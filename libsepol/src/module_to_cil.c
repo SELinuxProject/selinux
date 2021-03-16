@@ -1793,9 +1793,13 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 						goto exit;
 					}
 				}
-				rc = name_list_to_string(name_list, num_names, &names);
-				if (rc != 0) {
-					goto exit;
+				if (num_names == 0) {
+					names = strdup("NO_IDENTIFIER");
+				} else {
+					rc = name_list_to_string(name_list, num_names, &names);
+					if (rc != 0) {
+						goto exit;
+					}
 				}
 
 				// length of values/oper + 2 spaces + 2 parens + null terminator

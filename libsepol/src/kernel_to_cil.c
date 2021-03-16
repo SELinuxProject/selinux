@@ -189,7 +189,7 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 					names = ebitmap_to_str(&curr->names, pdb->p_role_val_to_name, 1);
 				}
 				if (!names) {
-					goto exit;
+					names = strdup("NO_IDENTIFIER");
 				}
 				if (strchr(names, ' ')) {
 					new_val = create_str("(%s %s (%s))", 3, op, attr1, names);
