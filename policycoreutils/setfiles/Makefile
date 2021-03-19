@@ -13,7 +13,7 @@ ifeq ($(AUDITH), y)
 	override LDLIBS += -laudit
 endif
 
-all: setfiles restorecon restorecon_xattr man
+all: setfiles restorecon restorecon_xattr
 
 setfiles: setfiles.o restore.o
 
@@ -22,16 +22,13 @@ restorecon: setfiles
 
 restorecon_xattr: restorecon_xattr.o restore.o
 
-man:
-	@cp -af setfiles.8 setfiles.8.man
-
 install: all
 	[ -d $(DESTDIR)$(MANDIR)/man8 ] || mkdir -p $(DESTDIR)$(MANDIR)/man8
 	-mkdir -p $(DESTDIR)$(SBINDIR)
 	install -m 755 setfiles $(DESTDIR)$(SBINDIR)
 	(cd $(DESTDIR)$(SBINDIR) && ln -sf setfiles restorecon)
 	install -m 755 restorecon_xattr $(DESTDIR)$(SBINDIR)
-	install -m 644 setfiles.8.man $(DESTDIR)$(MANDIR)/man8/setfiles.8
+	install -m 644 setfiles.8 $(DESTDIR)$(MANDIR)/man8/setfiles.8
 	install -m 644 restorecon.8 $(DESTDIR)$(MANDIR)/man8/restorecon.8
 	install -m 644 restorecon_xattr.8 $(DESTDIR)$(MANDIR)/man8/restorecon_xattr.8
 	for lang in $(LINGUAS) ; do \
@@ -42,7 +39,7 @@ install: all
 	done
 
 clean:
-	rm -f setfiles restorecon restorecon_xattr *.o setfiles.8.man
+	rm -f setfiles restorecon restorecon_xattr *.o
 
 indent:
 	../../scripts/Lindent $(wildcard *.[ch])
