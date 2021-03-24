@@ -78,12 +78,12 @@ Contains the run time conditional statements that are instantiated in the binary
 <tr class="odd">
 <td align="left"><p><code>expr</code></p></td>
 <td align="left"><p>Zero or more <code>expr</code>'s, the valid operators and syntax are:</p>
-<p><code>    (and (boolean_id boolean_id))</code></p>
-<p><code>    (or  (boolean_id boolean_id))</code></p>
-<p><code>    (xor (boolean_id boolean_id))</code></p>
-<p><code>    (eq  (boolean_id boolean_id))</code></p>
-<p><code>    (neq (boolean_id boolean_id))</code></p>
-<p><code>    (not (boolean_id))</code></p></td>
+<p><code>    (and boolean_id boolean_id)</code></p>
+<p><code>    (or  boolean_id boolean_id)</code></p>
+<p><code>    (xor boolean_id boolean_id)</code></p>
+<p><code>    (eq  boolean_id boolean_id)</code></p>
+<p><code>    (neq boolean_id boolean_id)</code></p>
+<p><code>    (not boolean_id)</code></p></td>
 </tr>
 <tr class="even">
 <td align="left"><p><code>true</code></p></td>
@@ -196,12 +196,12 @@ Compile time conditional statement that may or may not add CIL statements to be 
 <tr class="odd">
 <td align="left"><p><code>expr</code></p></td>
 <td align="left"><p>Zero or more <code>expr</code>'s, the valid operators and syntax are:</p>
-<p><code>    (and (tunable_id tunable_id))</code></p>
-<p><code>    (or  (tunable_id tunable_id))</code></p>
-<p><code>    (xor (tunable_id tunable_id))</code></p>
-<p><code>    (eq  (tunable_id tunable_id))</code></p>
-<p><code>    (neq (tunable_id tunable_id))</code></p>
-<p><code>    (not (tunable_id))</code></p></td>
+<p><code>    (and tunable_id tunable_id)</code></p>
+<p><code>    (or  tunable_id tunable_id)</code></p>
+<p><code>    (xor tunable_id tunable_id)</code></p>
+<p><code>    (eq  tunable_id tunable_id)</code></p>
+<p><code>    (neq tunable_id tunable_id)</code></p>
+<p><code>    (not tunable_id)</code></p></td>
 </tr>
 <tr class="even">
 <td align="left"><p><code>true</code></p></td>
