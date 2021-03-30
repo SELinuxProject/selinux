@@ -3796,7 +3796,9 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 	}
 
 	if (macro != NULL) {
-		if (node->flavor == CIL_BLOCK ||
+		if (node->flavor == CIL_TUNABLE ||
+			node->flavor == CIL_IN ||
+			node->flavor == CIL_BLOCK ||
 		    node->flavor == CIL_BLOCKINHERIT ||
 		    node->flavor == CIL_BLOCKABSTRACT ||
 		    node->flavor == CIL_MACRO) {
