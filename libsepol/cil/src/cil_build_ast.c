@@ -6095,8 +6095,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 	if (tunif != NULL) {
 		if (parse_current->data == CIL_KEY_TUNABLE) {
 			rc = SEPOL_ERR;
-			cil_tree_log(parse_current, CIL_ERR, "Found tunable");
-			cil_log(CIL_ERR, "Tunables cannot be defined within tunableif statement\n");
+			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in tunableif", (char *)parse_current->data);
 			goto exit;
 		}
 	}
@@ -6105,8 +6104,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		if (parse_current->data == CIL_KEY_TUNABLE ||
 			parse_current->data == CIL_KEY_IN) {
 			rc = SEPOL_ERR;
-			cil_tree_log(parse_current, CIL_ERR, "Found in-statement");
-			cil_log(CIL_ERR, "in-statements cannot be defined within in-statements\n");
+			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in in-statement", (char *)parse_current->data);
 			goto exit;
 		}
 	}
@@ -6119,7 +6117,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 			parse_current->data == CIL_KEY_BLOCKABSTRACT ||
 			parse_current->data == CIL_KEY_MACRO) {
 			rc = SEPOL_ERR;
-			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in macros", (char *)parse_current->data);
+			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in macro", (char *)parse_current->data);
 			goto exit;
 		}
 	}
@@ -6131,7 +6129,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 			parse_current->data == CIL_KEY_BLOCKABSTRACT ||
 			parse_current->data == CIL_KEY_MACRO) {
 			rc = SEPOL_ERR;
-			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in optionals", (char *)parse_current->data);
+			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in optional", (char *)parse_current->data);
 			goto exit;
 		}
 	}
@@ -6148,13 +6146,10 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 			parse_current->data != CIL_KEY_TYPECHANGE &&
 			parse_current->data != CIL_KEY_TYPEMEMBER) {
 			rc = SEPOL_ERR;
-			cil_tree_log(parse_current, CIL_ERR, "Found %s", (char*)parse_current->data);
 			if (((struct cil_booleanif*)boolif->data)->preserved_tunable) {
-				cil_log(CIL_ERR, "%s cannot be defined within tunableif statement (treated as a booleanif due to preserve-tunables)\n",
-						(char*)parse_current->data);
+				cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in tunableif being treated as a booleanif", (char *)parse_current->data);
 			} else {
-				cil_log(CIL_ERR, "%s cannot be defined within booleanif statement\n",
-						(char*)parse_current->data);
+				cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in booleanif", (char *)parse_current->data);
 			}
 			goto exit;
 		}

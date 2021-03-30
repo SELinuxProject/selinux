@@ -3789,7 +3789,7 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 	if (block != NULL) {
 		if (node->flavor == CIL_CAT ||
 		    node->flavor == CIL_SENS) {
-			cil_tree_log(node, CIL_ERR, "%s statement is not allowed in blocks", cil_node_to_string(node));
+			cil_tree_log(node, CIL_ERR, "%s is not allowed in block", cil_node_to_string(node));
 			rc = SEPOL_ERR;
 			goto exit;
 		}
@@ -3802,7 +3802,7 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 		    node->flavor == CIL_BLOCKINHERIT ||
 		    node->flavor == CIL_BLOCKABSTRACT ||
 		    node->flavor == CIL_MACRO) {
-			cil_tree_log(node, CIL_ERR, "%s statement is not allowed in macros", cil_node_to_string(node));
+			cil_tree_log(node, CIL_ERR, "%s is not allowed in macro", cil_node_to_string(node));
 			rc = SEPOL_ERR;
 			goto exit;
 		}
@@ -3814,7 +3814,7 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 			node->flavor == CIL_BLOCK ||
 			node->flavor == CIL_BLOCKABSTRACT ||
 		    node->flavor == CIL_MACRO) {
-			cil_tree_log(node, CIL_ERR, "%s statement is not allowed in optionals", cil_node_to_string(node));
+			cil_tree_log(node, CIL_ERR, "%s is not allowed in optional", cil_node_to_string(node));
 			rc = SEPOL_ERR;
 			goto exit;
 		}
@@ -3836,9 +3836,9 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 		}
 		if (rc == SEPOL_ERR) {
 			if (((struct cil_booleanif*)boolif->data)->preserved_tunable) {
-				cil_tree_log(node, CIL_ERR, "%s statement is not allowed in booleanifs (tunableif treated as a booleanif)", cil_node_to_string(node));
+				cil_tree_log(node, CIL_ERR, "%s is not allowed in tunableif being treated as a booleanif", cil_node_to_string(node));
 			} else {
-				cil_tree_log(node, CIL_ERR, "%s statement is not allowed in booleanifs", cil_node_to_string(node));
+				cil_tree_log(node, CIL_ERR, "%s is not allowed in booleanif", cil_node_to_string(node));
 			}
 			goto exit;
 		}
