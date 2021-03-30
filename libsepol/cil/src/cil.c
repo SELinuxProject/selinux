@@ -539,7 +539,7 @@ int cil_compile(struct cil_db *db)
 	cil_log(CIL_INFO, "Building AST from Parse Tree\n");
 	rc = cil_build_ast(db, db->parse->root, db->ast->root);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_INFO, "Failed to build ast\n");
+		cil_log(CIL_ERR, "Failed to build AST\n");
 		goto exit;
 	}
 
@@ -549,21 +549,21 @@ int cil_compile(struct cil_db *db)
 	cil_log(CIL_INFO, "Resolving AST\n");
 	rc = cil_resolve_ast(db, db->ast->root);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_INFO, "Failed to resolve ast\n");
+		cil_log(CIL_ERR, "Failed to resolve AST\n");
 		goto exit;
 	}
 
 	cil_log(CIL_INFO, "Qualifying Names\n");
 	rc = cil_fqn_qualify(db->ast->root);
 	if (rc != SEPOL_OK) {
-		cil_log(CIL_INFO, "Failed to qualify names\n");
+		cil_log(CIL_ERR, "Failed to qualify names\n");
 		goto exit;
 	}
 
 	cil_log(CIL_INFO, "Compile post process\n");
 	rc = cil_post_process(db);
 	if (rc != SEPOL_OK ) {
-		cil_log(CIL_INFO, "Post process failed\n");
+		cil_log(CIL_ERR, "Post process failed\n");
 		goto exit;
 	}
 
