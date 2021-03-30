@@ -6065,27 +6065,15 @@ void cil_destroy_src_info(struct cil_src_info *info)
 
 int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *finished, void *extra_args)
 {
-	struct cil_args_build *args = NULL;
-	struct cil_tree_node *ast_current = NULL;
-	struct cil_db *db = NULL;
+	struct cil_args_build *args = extra_args;
+	struct cil_db *db = args->db;
+	struct cil_tree_node *ast_current = args->ast;
+	struct cil_tree_node *tunif = args->tunif;
+	struct cil_tree_node *in = args->in;
+	struct cil_tree_node *macro = args->macro;
+	struct cil_tree_node *boolif = args->boolif;
 	struct cil_tree_node *ast_node = NULL;
-	struct cil_tree_node *tunif = NULL;
-	struct cil_tree_node *in = NULL;
-	struct cil_tree_node *macro = NULL;
-	struct cil_tree_node *boolif = NULL;
 	int rc = SEPOL_ERR;
-
-	if (parse_current == NULL || finished == NULL || extra_args == NULL) {
-		goto exit;
-	}
-
-	args = extra_args;
-	ast_current = args->ast;
-	db = args->db;
-	tunif = args->tunif;
-	in = args->in;
-	macro = args->macro;
-	boolif = args->boolif;
 
 	if (parse_current->parent->cl_head != parse_current) {
 		/* ignore anything that isn't following a parenthesis */
@@ -6474,20 +6462,11 @@ exit:
 
 int __cil_build_ast_last_child_helper(struct cil_tree_node *parse_current, void *extra_args)
 {
-	int rc = SEPOL_ERR;
-	struct cil_tree_node *ast = NULL;
-	struct cil_args_build *args = NULL;
-
-	if (extra_args == NULL) {
-		goto exit;
-	}
-
-	args = extra_args;
-	ast = args->ast;
+	struct cil_args_build *args = extra_args;
+	struct cil_tree_node *ast = args->ast;
 
 	if (ast->flavor == CIL_ROOT) {
-		rc = SEPOL_OK;
-		goto exit;
+		return SEPOL_OK;
 	}
 
 	args->ast = ast->parent;
@@ -6516,9 +6495,6 @@ int __cil_build_ast_last_child_helper(struct cil_tree_node *parse_current, void 
 	cil_tree_children_destroy(parse_current->parent);
 
 	return SEPOL_OK;
-
-exit:
-	return rc;
 }
 
 int cil_build_ast(struct cil_db *db, struct cil_tree_node *parse_tree, struct cil_tree_node *ast)
