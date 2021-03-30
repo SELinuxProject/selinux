@@ -6102,7 +6102,8 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 	}
 
 	if (in != NULL) {
-		if (parse_current->data == CIL_KEY_IN) {
+		if (parse_current->data == CIL_KEY_TUNABLE ||
+			parse_current->data == CIL_KEY_IN) {
 			rc = SEPOL_ERR;
 			cil_tree_log(parse_current, CIL_ERR, "Found in-statement");
 			cil_log(CIL_ERR, "in-statements cannot be defined within in-statements\n");
