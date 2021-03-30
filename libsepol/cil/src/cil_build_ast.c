@@ -52,6 +52,7 @@ struct cil_args_build {
 	struct cil_tree_node *tunif;
 	struct cil_tree_node *in;
 	struct cil_tree_node *macro;
+	struct cil_tree_node *optional;
 	struct cil_tree_node *boolif;
 };
 
@@ -6071,6 +6072,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 	struct cil_tree_node *tunif = args->tunif;
 	struct cil_tree_node *in = args->in;
 	struct cil_tree_node *macro = args->macro;
+	struct cil_tree_node *optional = args->optional;
 	struct cil_tree_node *boolif = args->boolif;
 	struct cil_tree_node *ast_node = NULL;
 	int rc = SEPOL_ERR;
@@ -6117,6 +6119,18 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 			parse_current->data == CIL_KEY_MACRO) {
 			rc = SEPOL_ERR;
 			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in macros", (char *)parse_current->data);
+			goto exit;
+		}
+	}
+
+	if (optional != NULL) {
+		if (parse_current->data == CIL_KEY_TUNABLE ||
+			parse_current->data == CIL_KEY_IN ||
+			parse_current->data == CIL_KEY_BLOCK ||
+			parse_current->data == CIL_KEY_BLOCKABSTRACT ||
+			parse_current->data == CIL_KEY_MACRO) {
+			rc = SEPOL_ERR;
+			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in optionals", (char *)parse_current->data);
 			goto exit;
 		}
 	}
@@ -6462,6 +6476,10 @@ int __cil_build_ast_first_child_helper(__attribute__((unused)) struct cil_tree_n
 		args->macro = ast;
 	}
 
+	if (ast->flavor == CIL_OPTIONAL) {
+		args->optional = ast;
+	}
+
 	if (ast->flavor == CIL_BOOLEANIF) {
 		args->boolif = ast;
 	}
@@ -6492,6 +6510,19 @@ int __cil_build_ast_last_child_helper(struct cil_tree_node *parse_current, void 
 		args->macro = NULL;
 	}
 
+	if (ast->flavor == CIL_OPTIONAL) {
+		struct cil_tree_node *n = ast->parent;
+		args->optional = NULL;
+		/* Optionals can be nested */
+		while (n && n->flavor != CIL_ROOT) {
+			if (n->flavor == CIL_OPTIONAL) {
+				args->optional = n;
+				break;
+			}
+			n = n->parent;
+		}
+	}
+
 	if (ast->flavor == CIL_BOOLEANIF) {
 		args->boolif = NULL;
 	}
@@ -6520,6 +6551,7 @@ int cil_build_ast(struct cil_db *db, struct cil_tree_node *parse_tree, struct ci
 	extra_args.tunif = NULL;
 	extra_args.in = NULL;
 	extra_args.macro = NULL;
+	extra_args.optional = NULL;
 	extra_args.boolif = NULL;
 
 	rc = cil_tree_walk(parse_tree, __cil_build_ast_node_helper, __cil_build_ast_first_child_helper, __cil_build_ast_last_child_helper, &extra_args);
