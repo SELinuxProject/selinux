@@ -6429,22 +6429,6 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 
 	if (rc == SEPOL_OK) {
 		if (ast_current->cl_head == NULL) {
-			if (ast_current->flavor == CIL_TUNABLEIF) {
-				args->tunif = ast_current;
-			}
-
-			if (ast_current->flavor == CIL_IN) {
-				args->in = ast_current;
-			}
-
-			if (ast_current->flavor == CIL_MACRO) {
-				args->macro = ast_current;
-			}
-
-			if (ast_current->flavor == CIL_BOOLEANIF) {
-				args->boolif = ast_current;
-			}
-
 			ast_current->cl_head = ast_node;
 		} else {
 			ast_current->cl_tail->next = ast_node;
@@ -6458,6 +6442,30 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 
 exit:
 	return rc;
+}
+
+int __cil_build_ast_first_child_helper(__attribute__((unused)) struct cil_tree_node *parse_current, void *extra_args)
+{
+	struct cil_args_build *args = extra_args;
+	struct cil_tree_node *ast = args->ast;
+
+	if (ast->flavor == CIL_TUNABLEIF) {
+		args->tunif = ast;
+	}
+
+	if (ast->flavor == CIL_IN) {
+		args->in = ast;
+	}
+
+	if (ast->flavor == CIL_MACRO) {
+		args->macro = ast;
+	}
+
+	if (ast->flavor == CIL_BOOLEANIF) {
+		args->boolif = ast;
+	}
+
+	return SEPOL_OK;
 }
 
 int __cil_build_ast_last_child_helper(struct cil_tree_node *parse_current, void *extra_args)
@@ -6513,7 +6521,7 @@ int cil_build_ast(struct cil_db *db, struct cil_tree_node *parse_tree, struct ci
 	extra_args.macro = NULL;
 	extra_args.boolif = NULL;
 
-	rc = cil_tree_walk(parse_tree, __cil_build_ast_node_helper, NULL, __cil_build_ast_last_child_helper, &extra_args);
+	rc = cil_tree_walk(parse_tree, __cil_build_ast_node_helper, __cil_build_ast_first_child_helper, __cil_build_ast_last_child_helper, &extra_args);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
