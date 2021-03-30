@@ -3774,7 +3774,7 @@ exit:
 
 int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
-	int rc = SEPOL_ERR;
+	int rc = SEPOL_OK;
 	struct cil_args_resolve *args = extra_args;
 	enum cil_pass pass = args->pass;
 	struct cil_tree_node *block = args->block;
@@ -3817,18 +3817,25 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 	}
 
 	if (boolif != NULL) {
-		if (!(node->flavor == CIL_TUNABLEIF ||
-		      node->flavor == CIL_CALL ||
-		      node->flavor == CIL_CONDBLOCK ||
-		      node->flavor == CIL_AVRULE ||
-		      node->flavor == CIL_TYPE_RULE ||
-		      node->flavor == CIL_NAMETYPETRANSITION)) {
+		if (node->flavor != CIL_TUNABLEIF &&
+			node->flavor != CIL_CALL &&
+			node->flavor != CIL_CONDBLOCK &&
+			node->flavor != CIL_AVRULE &&
+			node->flavor != CIL_TYPE_RULE &&
+			node->flavor != CIL_NAMETYPETRANSITION) {
+			rc = SEPOL_ERR;
+		} else if (node->flavor == CIL_AVRULE) {
+			struct cil_avrule *rule = node->data;
+			if (rule->rule_kind == CIL_AVRULE_NEVERALLOW) {
+				rc = SEPOL_ERR;
+			}
+		}
+		if (rc == SEPOL_ERR) {
 			if (((struct cil_booleanif*)boolif->data)->preserved_tunable) {
 				cil_tree_log(node, CIL_ERR, "%s statement is not allowed in booleanifs (tunableif treated as a booleanif)", cil_node_to_string(node));
 			} else {
 				cil_tree_log(node, CIL_ERR, "%s statement is not allowed in booleanifs", cil_node_to_string(node));
 			}
-			rc = SEPOL_ERR;
 			goto exit;
 		}
 	}

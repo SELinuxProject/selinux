@@ -6130,7 +6130,8 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 			parse_current->data != CIL_KEY_DONTAUDIT &&
 			parse_current->data != CIL_KEY_AUDITALLOW &&
 			parse_current->data != CIL_KEY_TYPETRANSITION &&
-			parse_current->data != CIL_KEY_TYPECHANGE) {
+			parse_current->data != CIL_KEY_TYPECHANGE &&
+			parse_current->data != CIL_KEY_TYPEMEMBER) {
 			rc = SEPOL_ERR;
 			cil_tree_log(parse_current, CIL_ERR, "Found %s", (char*)parse_current->data);
 			if (((struct cil_booleanif*)boolif->data)->preserved_tunable) {
