@@ -49,10 +49,10 @@
 struct cil_args_build {
 	struct cil_tree_node *ast;
 	struct cil_db *db;
-	struct cil_tree_node *macro;
-	struct cil_tree_node *boolif;
 	struct cil_tree_node *tunif;
 	struct cil_tree_node *in;
+	struct cil_tree_node *macro;
+	struct cil_tree_node *boolif;
 };
 
 int cil_fill_list(struct cil_tree_node *current, enum cil_flavor flavor, struct cil_list **list)
@@ -6069,10 +6069,10 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 	struct cil_tree_node *ast_current = NULL;
 	struct cil_db *db = NULL;
 	struct cil_tree_node *ast_node = NULL;
-	struct cil_tree_node *macro = NULL;
-	struct cil_tree_node *boolif = NULL;
 	struct cil_tree_node *tunif = NULL;
 	struct cil_tree_node *in = NULL;
+	struct cil_tree_node *macro = NULL;
+	struct cil_tree_node *boolif = NULL;
 	int rc = SEPOL_ERR;
 
 	if (parse_current == NULL || finished == NULL || extra_args == NULL) {
@@ -6082,10 +6082,10 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 	args = extra_args;
 	ast_current = args->ast;
 	db = args->db;
-	macro = args->macro;
-	boolif = args->boolif;
 	tunif = args->tunif;
 	in = args->in;
+	macro = args->macro;
+	boolif = args->boolif;
 
 	if (parse_current->parent->cl_head != parse_current) {
 		/* ignore anything that isn't following a parenthesis */
@@ -6102,42 +6102,6 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 		goto exit;
 	}
 
-	if (macro != NULL) {
-		if (parse_current->data == CIL_KEY_MACRO ||
-			parse_current->data == CIL_KEY_TUNABLE ||
-			parse_current->data == CIL_KEY_IN ||
-			parse_current->data == CIL_KEY_BLOCK ||
-			parse_current->data == CIL_KEY_BLOCKINHERIT ||
-			parse_current->data == CIL_KEY_BLOCKABSTRACT) {
-			rc = SEPOL_ERR;
-			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in macros", (char *)parse_current->data);
-			goto exit;
-		}
-	}
-
-	if (boolif != NULL) {
-		if (parse_current->data != CIL_KEY_CONDTRUE &&
-			parse_current->data != CIL_KEY_CONDFALSE &&
-			parse_current->data != CIL_KEY_AUDITALLOW &&
-			parse_current->data != CIL_KEY_TUNABLEIF &&
-			parse_current->data != CIL_KEY_ALLOW &&
-			parse_current->data != CIL_KEY_DONTAUDIT &&
-			parse_current->data != CIL_KEY_TYPETRANSITION &&
-			parse_current->data != CIL_KEY_TYPECHANGE &&
-			parse_current->data != CIL_KEY_CALL) {
-			rc = SEPOL_ERR;
-			cil_tree_log(parse_current, CIL_ERR, "Found %s", (char*)parse_current->data);
-			if (((struct cil_booleanif*)boolif->data)->preserved_tunable) {
-				cil_log(CIL_ERR, "%s cannot be defined within tunableif statement (treated as a booleanif due to preserve-tunables)\n",
-						(char*)parse_current->data);
-			} else {
-				cil_log(CIL_ERR, "%s cannot be defined within booleanif statement\n",
-						(char*)parse_current->data);
-			}
-			goto exit;
-		}
-	}
-
 	if (tunif != NULL) {
 		if (parse_current->data == CIL_KEY_TUNABLE) {
 			rc = SEPOL_ERR;
@@ -6152,6 +6116,42 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 			rc = SEPOL_ERR;
 			cil_tree_log(parse_current, CIL_ERR, "Found in-statement");
 			cil_log(CIL_ERR, "in-statements cannot be defined within in-statements\n");
+			goto exit;
+		}
+	}
+
+	if (macro != NULL) {
+		if (parse_current->data == CIL_KEY_TUNABLE ||
+			parse_current->data == CIL_KEY_IN ||
+			parse_current->data == CIL_KEY_BLOCK ||
+			parse_current->data == CIL_KEY_BLOCKINHERIT ||
+			parse_current->data == CIL_KEY_BLOCKABSTRACT ||
+			parse_current->data == CIL_KEY_MACRO) {
+			rc = SEPOL_ERR;
+			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in macros", (char *)parse_current->data);
+			goto exit;
+		}
+	}
+
+	if (boolif != NULL) {
+		if (parse_current->data != CIL_KEY_TUNABLEIF &&
+			parse_current->data != CIL_KEY_CALL &&
+			parse_current->data != CIL_KEY_CONDTRUE &&
+			parse_current->data != CIL_KEY_CONDFALSE &&
+			parse_current->data != CIL_KEY_ALLOW &&
+			parse_current->data != CIL_KEY_DONTAUDIT &&
+			parse_current->data != CIL_KEY_AUDITALLOW &&
+			parse_current->data != CIL_KEY_TYPETRANSITION &&
+			parse_current->data != CIL_KEY_TYPECHANGE) {
+			rc = SEPOL_ERR;
+			cil_tree_log(parse_current, CIL_ERR, "Found %s", (char*)parse_current->data);
+			if (((struct cil_booleanif*)boolif->data)->preserved_tunable) {
+				cil_log(CIL_ERR, "%s cannot be defined within tunableif statement (treated as a booleanif due to preserve-tunables)\n",
+						(char*)parse_current->data);
+			} else {
+				cil_log(CIL_ERR, "%s cannot be defined within booleanif statement\n",
+						(char*)parse_current->data);
+			}
 			goto exit;
 		}
 	}
@@ -6441,20 +6441,20 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 
 	if (rc == SEPOL_OK) {
 		if (ast_current->cl_head == NULL) {
-			if (ast_current->flavor == CIL_MACRO) {
-				args->macro = ast_current;
-			}
-
-			if (ast_current->flavor == CIL_BOOLEANIF) {
-				args->boolif = ast_current;
-			}
-
 			if (ast_current->flavor == CIL_TUNABLEIF) {
 				args->tunif = ast_current;
 			}
 
 			if (ast_current->flavor == CIL_IN) {
 				args->in = ast_current;
+			}
+
+			if (ast_current->flavor == CIL_MACRO) {
+				args->macro = ast_current;
+			}
+
+			if (ast_current->flavor == CIL_BOOLEANIF) {
+				args->boolif = ast_current;
 			}
 
 			ast_current->cl_head = ast_node;
@@ -6492,20 +6492,20 @@ int __cil_build_ast_last_child_helper(struct cil_tree_node *parse_current, void 
 
 	args->ast = ast->parent;
 
-	if (ast->flavor == CIL_MACRO) {
-		args->macro = NULL;
-	}
-
-	if (ast->flavor == CIL_BOOLEANIF) {
-		args->boolif = NULL;
-	}
-
 	if (ast->flavor == CIL_TUNABLEIF) {
 		args->tunif = NULL;
 	}
 
 	if (ast->flavor == CIL_IN) {
 		args->in = NULL;
+	}
+
+	if (ast->flavor == CIL_MACRO) {
+		args->macro = NULL;
+	}
+
+	if (ast->flavor == CIL_BOOLEANIF) {
+		args->boolif = NULL;
 	}
 
 	// At this point we no longer have any need for parse_current or any of its
@@ -6532,10 +6532,10 @@ int cil_build_ast(struct cil_db *db, struct cil_tree_node *parse_tree, struct ci
 
 	extra_args.ast = ast;
 	extra_args.db = db;
-	extra_args.macro = NULL;
-	extra_args.boolif = NULL;
 	extra_args.tunif = NULL;
 	extra_args.in = NULL;
+	extra_args.macro = NULL;
+	extra_args.boolif = NULL;
 
 	rc = cil_tree_walk(parse_tree, __cil_build_ast_node_helper, NULL, __cil_build_ast_last_child_helper, &extra_args);
 	if (rc != SEPOL_OK) {
