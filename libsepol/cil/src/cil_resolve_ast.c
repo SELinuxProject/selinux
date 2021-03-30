@@ -52,10 +52,10 @@ struct cil_args_resolve {
 	enum cil_pass pass;
 	uint32_t *changed;
 	struct cil_list *disabled_optionals;
+	struct cil_tree_node *block;
+	struct cil_tree_node *macro;
 	struct cil_tree_node *optional;
 	struct cil_tree_node *boolif;
-	struct cil_tree_node *macro;
-	struct cil_tree_node *block;
 	struct cil_list *sidorder_lists;
 	struct cil_list *classorder_lists;
 	struct cil_list *unordered_classorder_lists;
@@ -3777,26 +3777,18 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 	int rc = SEPOL_ERR;
 	struct cil_args_resolve *args = extra_args;
 	enum cil_pass pass = args->pass;
-	struct cil_tree_node *optional = args->optional;
-	struct cil_tree_node *boolif = args->boolif;
 	struct cil_tree_node *block = args->block;
 	struct cil_tree_node *macro = args->macro;
+	struct cil_tree_node *optional = args->optional;
+	struct cil_tree_node *boolif = args->boolif;
 
 	if (node == NULL) {
 		goto exit;
 	}
 
-	if (optional != NULL) {
-		if (node->flavor == CIL_TUNABLE || node->flavor == CIL_MACRO) {
-			/* tuanbles and macros are not allowed in optionals*/
-			cil_tree_log(node, CIL_ERR, "%s statement is not allowed in optionals", cil_node_to_string(node));
-			rc = SEPOL_ERR;
-			goto exit;
-		}
-	}
-
 	if (block != NULL) {
-		if (node->flavor == CIL_CAT || node->flavor == CIL_SENS) {
+		if (node->flavor == CIL_CAT ||
+		    node->flavor == CIL_SENS) {
 			cil_tree_log(node, CIL_ERR, "%s statement is not allowed in blocks", cil_node_to_string(node));
 			rc = SEPOL_ERR;
 			goto exit;
@@ -3804,23 +3796,33 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 	}
 
 	if (macro != NULL) {
-		if (node->flavor == CIL_BLOCKINHERIT ||
-			node->flavor == CIL_BLOCK ||
-			node->flavor == CIL_BLOCKABSTRACT ||
-			node->flavor == CIL_MACRO) {
+		if (node->flavor == CIL_BLOCK ||
+		    node->flavor == CIL_BLOCKINHERIT ||
+		    node->flavor == CIL_BLOCKABSTRACT ||
+		    node->flavor == CIL_MACRO) {
 			cil_tree_log(node, CIL_ERR, "%s statement is not allowed in macros", cil_node_to_string(node));
 			rc = SEPOL_ERR;
 			goto exit;
 		}
 	}
 
+	if (optional != NULL) {
+		if (node->flavor == CIL_TUNABLE ||
+		    node->flavor == CIL_MACRO) {
+			/* tuanbles and macros are not allowed in optionals*/
+			cil_tree_log(node, CIL_ERR, "%s statement is not allowed in optionals", cil_node_to_string(node));
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+	}
+
 	if (boolif != NULL) {
-		if (!(node->flavor == CIL_CONDBLOCK ||
-			node->flavor == CIL_AVRULE ||
-			node->flavor == CIL_TYPE_RULE ||
-			node->flavor == CIL_CALL ||
-			node->flavor == CIL_TUNABLEIF ||
-			node->flavor == CIL_NAMETYPETRANSITION)) {
+		if (!(node->flavor == CIL_TUNABLEIF ||
+		      node->flavor == CIL_CALL ||
+		      node->flavor == CIL_CONDBLOCK ||
+		      node->flavor == CIL_AVRULE ||
+		      node->flavor == CIL_TYPE_RULE ||
+		      node->flavor == CIL_NAMETYPETRANSITION)) {
 			if (((struct cil_booleanif*)boolif->data)->preserved_tunable) {
 				cil_tree_log(node, CIL_ERR, "%s statement is not allowed in booleanifs (tunableif treated as a booleanif)", cil_node_to_string(node));
 			} else {
@@ -3886,12 +3888,12 @@ int __cil_resolve_ast_first_child_helper(struct cil_tree_node *current, void *ex
 
 	if (parent->flavor == CIL_BLOCK) {
 		args->block = parent;
+	} else if (parent->flavor == CIL_MACRO) {
+		args->macro = parent;
 	} else if (parent->flavor == CIL_OPTIONAL) {
 		args->optional = parent;
 	} else if (parent->flavor == CIL_BOOLEANIF) {
 		args->boolif = parent;
-	} else if (parent->flavor == CIL_MACRO) {
-		args->macro = parent;
 	}
 
 	return SEPOL_OK;
@@ -3913,7 +3915,17 @@ int __cil_resolve_ast_last_child_helper(struct cil_tree_node *current, void *ext
 
 	parent = current->parent;
 
-	if (parent->flavor == CIL_MACRO) {
+	if (parent->flavor == CIL_BLOCK) {
+		struct cil_tree_node *n = parent->parent;
+		args->block = NULL;
+		while (n && n->flavor != CIL_ROOT) {
+			if (n->flavor == CIL_BLOCK) {
+				args->block = n;
+				break;
+			}
+			n = n->parent;
+		}
+	} else if (parent->flavor == CIL_MACRO) {
 		args->macro = NULL;
 	} else if (parent->flavor == CIL_OPTIONAL) {
 		struct cil_tree_node *n = parent->parent;
@@ -3931,16 +3943,6 @@ int __cil_resolve_ast_last_child_helper(struct cil_tree_node *current, void *ext
 		}
 	} else if (parent->flavor == CIL_BOOLEANIF) {
 		args->boolif = NULL;
-	} else if (parent->flavor == CIL_BLOCK) {
-		struct cil_tree_node *n = parent->parent;
-		args->block = NULL;
-		while (n && n->flavor != CIL_ROOT) {
-			if (n->flavor == CIL_BLOCK) {
-				args->block = n;
-				break;
-			}
-			n = n->parent;
-		}
 	}
 
 	return SEPOL_OK;
@@ -3964,9 +3966,9 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	extra_args.pass = pass;
 	extra_args.changed = &changed;
 	extra_args.block = NULL;
+	extra_args.macro = NULL;
 	extra_args.optional = NULL;
 	extra_args.boolif= NULL;
-	extra_args.macro = NULL;
 	extra_args.sidorder_lists = NULL;
 	extra_args.classorder_lists = NULL;
 	extra_args.unordered_classorder_lists = NULL;
