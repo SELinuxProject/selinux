@@ -82,30 +82,24 @@ exit:
 	return rc;
 }
 
-/*
- * Determine whether or not multiple declarations of the same key can share a
- * datum, given the new datum and the one already present in a given symtab.
- */
-int cil_is_datum_multiple_decl(__attribute__((unused)) struct cil_symtab_datum *cur,
-                               struct cil_symtab_datum *old,
-                               enum cil_flavor f)
+static int cil_allow_multiple_decls(struct cil_db *db, enum cil_flavor f_new, enum cil_flavor f_old)
 {
-	int rc = CIL_FALSE;
+	if (f_new != f_old) {
+		return CIL_FALSE;
+	}
 
-	switch (f) {
+	switch (f_new) {
 	case CIL_TYPE:
 	case CIL_TYPEATTRIBUTE:
-		if (!old || f != FLAVOR(old)) {
-			rc = CIL_FALSE;
-		} else {
-			/* type and typeattribute statements insert empty datums */
-			rc = CIL_TRUE;
+		if (db->multiple_decls) {
+			return CIL_TRUE;
 		}
 		break;
 	default:
 		break;
 	}
-	return rc;
+
+	return CIL_FALSE;
 }
 
 int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_symtab_datum *datum, hashtab_key_t key, enum cil_sym_index sflavor, enum cil_flavor nflavor)
@@ -135,8 +129,7 @@ int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_s
 				cil_log(CIL_ERR, "Re-declaration of %s %s, but previous declaration could not be found\n",cil_node_to_string(ast_node), key);
 				goto exit;
 			}
-			if (!db->multiple_decls ||
-			    !cil_is_datum_multiple_decl(datum, prev, nflavor)) {
+			if (!cil_allow_multiple_decls(db, nflavor, FLAVOR(prev))) {
 				/* multiple_decls not ok, ret error */
 				struct cil_tree_node *node = NODE(prev);
 				cil_log(CIL_ERR, "Re-declaration of %s %s\n",
