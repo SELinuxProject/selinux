@@ -161,19 +161,9 @@ int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_s
 	}
 
 	if (ast_node->parent->flavor == CIL_MACRO) {
-		struct cil_list_item *item;
-		struct cil_list *param_list = ((struct cil_macro*)ast_node->parent->data)->params;
-		if (param_list != NULL) {
-			cil_list_for_each(item, param_list) {
-				struct cil_param *param = item->data;
-				if (param->flavor == ast_node->flavor) {
-					if (param->str == key) {
-						cil_log(CIL_ERR, "%s %s shadows a macro parameter in macro declaration\n", cil_node_to_string(ast_node), key);
-						rc = SEPOL_ERR;
-						goto exit;
-					}
-				}
-			}
+		rc = cil_verify_decl_does_not_shadow_macro_parameter(ast_node->parent->data, ast_node, key);
+		if (rc != SEPOL_OK) {
+			goto exit;
 		}
 	}
 

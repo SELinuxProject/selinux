@@ -40,6 +40,7 @@
 #include "cil_copy_ast.h"
 #include "cil_build_ast.h"
 #include "cil_strpool.h"
+#include "cil_verify.h"
 
 struct cil_args_copy {
 	struct cil_tree_node *dest;
@@ -1716,7 +1717,6 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 	struct cil_db *db = NULL;
 	struct cil_args_copy *args = NULL;
 	struct cil_tree_node *namespace = NULL;
-	struct cil_param *param = NULL;
 	enum cil_sym_index sym_index = CIL_SYM_UNKNOWN;
 	symtab_t *symtab = NULL;
 	void *data = NULL;
@@ -2043,21 +2043,9 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, __attribute__((unused)) u
 			}
 
 			if (namespace->flavor == CIL_MACRO) {
-				struct cil_macro *macro = namespace->data;
-				struct cil_list *param_list = macro->params;
-				if (param_list != NULL) {
-					struct cil_list_item *item;
-					cil_list_for_each(item, param_list) {
-						param = item->data;
-						if (param->flavor == new->flavor) {
-							if (param->str == ((struct cil_symtab_datum*)new->data)->name) {
-								cil_tree_log(orig, CIL_ERR, "%s %s shadows a macro parameter", cil_node_to_string(new), ((struct cil_symtab_datum*)orig->data)->name);
-								cil_tree_log(namespace, CIL_ERR, "Note: macro declaration");
-								rc = SEPOL_ERR;
-								goto exit;
-							}
-						}
-					}
+				rc = cil_verify_decl_does_not_shadow_macro_parameter(namespace->data, orig, DATUM(orig->data)->name);
+				if (rc != SEPOL_OK) {
+					goto exit;
 				}
 			}
 		}

@@ -412,6 +412,24 @@ int cil_verify_conditional_blocks(struct cil_tree_node *current)
 	return SEPOL_OK;
 }
 
+int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro, struct cil_tree_node *node, const char *name)
+{
+	struct cil_list_item *item;
+	struct cil_list *param_list = macro->params;
+	if (param_list != NULL) {
+		cil_list_for_each(item, param_list) {
+			struct cil_param *param = item->data;
+			if (param->flavor == node->flavor) {
+				if (param->str == name) {
+					cil_log(CIL_ERR, "%s %s shadows a macro parameter in macro declaration\n", cil_node_to_string(node), name);
+					return SEPOL_ERR;
+				}
+			}
+		}
+	}
+	return SEPOL_OK;
+}
+
 int cil_verify_no_self_reference(struct cil_symtab_datum *datum, struct cil_list *datum_list)
 {
 	struct cil_list_item *i;
