@@ -2137,6 +2137,10 @@ static int __evaluate_classperms_list(struct cil_list *classperms, struct cil_db
 				}
 			} else { /* MAP */
 				struct cil_list_item *i = NULL;
+				rc = __evaluate_classperms(cp, db);
+				if (rc != SEPOL_OK) {
+					goto exit;
+				}
 				cil_list_for_each(i, cp->perms) {
 					struct cil_perm *cmp = i->data;
 					rc = __evaluate_classperms_list(cmp->classperms, db);
