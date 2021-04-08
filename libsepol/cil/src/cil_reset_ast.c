@@ -36,7 +36,7 @@ static void cil_reset_class(struct cil_class *class)
 
 static void cil_reset_perm(struct cil_perm *perm)
 {
-	cil_reset_classperms_list(perm->classperms);
+	cil_list_destroy(&perm->classperms, CIL_FALSE);
 }
 
 static inline void cil_reset_classperms(struct cil_classperms *cp)
