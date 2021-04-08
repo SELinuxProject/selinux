@@ -102,11 +102,45 @@ static int cil_allow_multiple_decls(struct cil_db *db, enum cil_flavor f_new, en
 	return CIL_FALSE;
 }
 
+int cil_add_decl_to_symtab(struct cil_db *db, symtab_t *symtab, hashtab_key_t key, struct cil_symtab_datum *datum, struct cil_tree_node *node)
+{
+	int rc;
+
+	if (symtab == NULL || datum == NULL || node == NULL) {
+		return SEPOL_ERR;
+	}
+
+	rc = cil_symtab_insert(symtab, key, datum, node);
+	if (rc == SEPOL_EEXIST) {
+		struct cil_symtab_datum *prev;
+		rc = cil_symtab_get_datum(symtab, key, &prev);
+		if (rc != SEPOL_OK) {
+			cil_log(CIL_ERR, "Re-declaration of %s %s, but previous declaration could not be found\n",cil_node_to_string(node), key);
+			return SEPOL_ERR;
+		}
+		if (!cil_allow_multiple_decls(db, node->flavor, FLAVOR(prev))) {
+			/* multiple_decls not ok, ret error */
+			struct cil_tree_node *n = NODE(prev);
+			cil_log(CIL_ERR, "Re-declaration of %s %s\n",
+				cil_node_to_string(node), key);
+			cil_tree_log(node, CIL_ERR, "Previous declaration of %s",
+				     cil_node_to_string(n));
+			return SEPOL_ERR;
+		}
+		/* multiple_decls is enabled and works for this datum type, add node */
+		cil_list_append(prev->nodes, CIL_NODE, node);
+		node->data = prev;
+		cil_symtab_datum_destroy(datum);
+		free(datum);
+	}
+
+	return SEPOL_OK;
+}
+
 int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_symtab_datum *datum, hashtab_key_t key, enum cil_sym_index sflavor, enum cil_flavor nflavor)
 {
 	int rc = SEPOL_ERR;
 	symtab_t *symtab = NULL;
-	struct cil_symtab_datum *prev;
 
 	rc = cil_verify_name((const char*)key, nflavor);
 	if (rc != SEPOL_OK) {
@@ -121,30 +155,9 @@ int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_s
 	ast_node->data = datum;
 	ast_node->flavor = nflavor;
 
-	if (symtab != NULL) {
-		rc = cil_symtab_insert(symtab, (hashtab_key_t)key, datum, ast_node);
-		if (rc == SEPOL_EEXIST) {
-			rc = cil_symtab_get_datum(symtab, (hashtab_key_t)key, &prev);
-			if (rc != SEPOL_OK) {
-				cil_log(CIL_ERR, "Re-declaration of %s %s, but previous declaration could not be found\n",cil_node_to_string(ast_node), key);
-				goto exit;
-			}
-			if (!cil_allow_multiple_decls(db, nflavor, FLAVOR(prev))) {
-				/* multiple_decls not ok, ret error */
-				struct cil_tree_node *node = NODE(prev);
-				cil_log(CIL_ERR, "Re-declaration of %s %s\n",
-					cil_node_to_string(ast_node), key);
-				cil_tree_log(node, CIL_ERR, "Previous declaration of %s",
-					cil_node_to_string(node));
-				rc = SEPOL_ERR;
-				goto exit;
-			}
-			/* multiple_decls is enabled and works for this datum type, add node */
-			cil_list_append(prev->nodes, CIL_NODE, ast_node);
-			ast_node->data = prev;
-			cil_symtab_datum_destroy(datum);
-			free(datum);
-		}
+	rc = cil_add_decl_to_symtab(db, symtab, key, datum, ast_node);
+	if (rc != SEPOL_OK) {
+		goto exit;
 	}
 
 	if (ast_node->parent->flavor == CIL_MACRO) {
