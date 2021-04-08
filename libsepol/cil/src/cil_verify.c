@@ -227,7 +227,13 @@ int cil_verify_constraint_leaf_expr_syntax(enum cil_flavor l_flavor, enum cil_fl
 			}
 		}
 	} else {
-		if (r_flavor == CIL_CONS_U2) {
+		if (r_flavor == CIL_CONS_U1 || r_flavor == CIL_CONS_R1 || r_flavor == CIL_CONS_T1) {
+			cil_log(CIL_ERR, "u1, r1, and t1 are not allowed on the right side\n");
+			goto exit;
+		} else if (r_flavor == CIL_CONS_U3 || r_flavor == CIL_CONS_R3 || r_flavor == CIL_CONS_T3) {
+			cil_log(CIL_ERR, "u3, r3, and t3 are not allowed on the right side\n");
+			goto exit;
+		} else if (r_flavor == CIL_CONS_U2) {
 			if (op != CIL_EQ && op != CIL_NEQ) {
 				cil_log(CIL_ERR, "u2 on the right side must be used with eq or neq as the operator\n");
 				goto exit;
