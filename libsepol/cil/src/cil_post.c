@@ -186,6 +186,13 @@ static void cil_post_fc_fill_data(struct fc_data *fc, const char *path)
 			break;
 		case '\\':
 			c++;
+			if (path[c] == '\0') {
+				if (!fc->meta) {
+					fc->stem_len++;
+				}
+				fc->str_len++;
+				return;
+			}
 			/* FALLTHRU */
 		default:
 			if (!fc->meta) {
