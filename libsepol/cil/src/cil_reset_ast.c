@@ -54,7 +54,7 @@ static void cil_reset_classpermission(struct cil_classpermission *cp)
 		return;
 	}
 
-	cil_reset_classperms_list(cp->classperms);
+	cil_list_destroy(&cp->classperms, CIL_FALSE);
 }
 
 static void cil_reset_classperms_set(struct cil_classperms_set *cp_set)
