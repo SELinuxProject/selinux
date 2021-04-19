@@ -58,6 +58,8 @@ When resolving macros the following places are checked in this order:
 
 -   Items defined in the global namespace
 
+[`tunable`](cil_conditional_statements.md#tunable), [`in`](cil_container_statements.md#in), [`block`](cil_container_statements.md#block), [`blockinherit`](cil_container_statements.md#blockinherit), [`blockabstract`](cil_container_statements.md#blockabstract), and other [`macro`](cil_call_macro_statements.md#macro) statements are not allowed in [`macro`](cil_call_macro_statements.md#macro) blocks.
+
 **Statement definition:**
 
 ```secil
