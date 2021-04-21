@@ -10,8 +10,13 @@ SECIL2CONF = secil2conf
 SECIL2CONF_SRCS := secil2conf.c
 SECIL2CONF_OBJS := $(patsubst %.c,%.o,$(SECIL2CONF_SRCS))
 
+SECIL2TREE = secil2tree
+SECIL2TREE_SRCS := secil2tree.c
+SECIL2TREE_OBJS := $(patsubst %.c,%.o,$(SECIL2TREE_SRCS))
+
 SECILC_MANPAGE = secilc.8
 SECIL2CONF_MANPAGE = secil2conf.8
+SECIL2TREE_MANPAGE = secil2tree.8
 XMLTO = xmlto
 DIFF = diff
 
@@ -23,7 +28,7 @@ CFLAGS ?= -Wall -Wshadow -Wextra -Wundef -Wmissing-format-attribute -Wcast-align
 override CFLAGS += -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64
 override LDLIBS += -lsepol
 
-all: $(SECILC) $(SECIL2CONF) man
+all: $(SECILC) $(SECIL2CONF) $(SECIL2TREE) man
 
 $(SECILC): $(SECILC_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
@@ -37,7 +42,10 @@ test: $(SECILC)
 $(SECIL2CONF): $(SECIL2CONF_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-man: $(SECILC_MANPAGE) $(SECIL2CONF_MANPAGE)
+$(SECIL2TREE): $(SECIL2TREE_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+man: $(SECILC_MANPAGE) $(SECIL2CONF_MANPAGE) $(SECIL2TREE_MANPAGE)
 
 $(SECILC_MANPAGE): $(SECILC_MANPAGE).xml
 	$(XMLTO) man $(SECILC_MANPAGE).xml
@@ -45,13 +53,18 @@ $(SECILC_MANPAGE): $(SECILC_MANPAGE).xml
 $(SECIL2CONF_MANPAGE): $(SECIL2CONF_MANPAGE).xml
 	$(XMLTO) man $(SECIL2CONF_MANPAGE).xml
 
+$(SECIL2TREE_MANPAGE): $(SECIL2TREE_MANPAGE).xml
+	$(XMLTO) man $(SECIL2TREE_MANPAGE).xml
+
 install: all man
 	-mkdir -p $(DESTDIR)$(BINDIR)
 	-mkdir -p $(DESTDIR)$(MANDIR)/man8
 	install -m 755 $(SECILC) $(DESTDIR)$(BINDIR)
 	install -m 755 $(SECIL2CONF) $(DESTDIR)$(BINDIR)
+	install -m 755 $(SECIL2TREE) $(DESTDIR)$(BINDIR)
 	install -m 644 $(SECILC_MANPAGE) $(DESTDIR)$(MANDIR)/man8
 	install -m 644 $(SECIL2CONF_MANPAGE) $(DESTDIR)$(MANDIR)/man8
+	install -m 644 $(SECIL2TREE_MANPAGE) $(DESTDIR)$(MANDIR)/man8
 
 doc:
 	$(MAKE) -C docs
@@ -61,10 +74,13 @@ clean:
 	rm -f $(SECILC_OBJS)
 	rm -f $(SECIL2CONF)
 	rm -f $(SECIL2CONF_OBJS)
+	rm -f $(SECIL2TREE)
+	rm -f $(SECIL2TREE_OBJS)
 	rm -f policy.*
 	rm -f file_contexts
 	rm -f $(SECILC_MANPAGE)
 	rm -f $(SECIL2CONF_MANPAGE)
+	rm -f $(SECIL2TREE_MANPAGE)
 	rm -f opt-actual.cil
 	rm -f opt-actual.bin
 	$(MAKE) -C docs clean
