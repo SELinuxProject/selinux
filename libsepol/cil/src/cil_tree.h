@@ -62,8 +62,6 @@ void cil_tree_children_destroy(struct cil_tree_node *node);
 void cil_tree_node_init(struct cil_tree_node **node);
 void cil_tree_node_destroy(struct cil_tree_node **node);
 
-void cil_tree_print(struct cil_tree_node *tree, uint32_t depth);
-
 //finished values
 #define CIL_TREE_SKIP_NOTHING	0
 #define CIL_TREE_SKIP_NEXT	1
