@@ -269,4 +269,7 @@ LIBSEPOL_1.1 {
 LIBSEPOL_3.0 {
   global:
 	sepol_policydb_optimize;
+	cil_write_parse_ast;
+	cil_write_build_ast;
+	cil_write_resolve_ast;
 } LIBSEPOL_1.1;

@@ -60,6 +60,9 @@ extern void cil_set_attrs_expand_size(struct cil_db *db, unsigned attrs_expand_s
 extern void cil_set_target_platform(cil_db_t *db, int target_platform);
 extern void cil_set_policy_version(cil_db_t *db, int policy_version);
 extern void cil_write_policy_conf(FILE *out, struct cil_db *db);
+extern int cil_write_parse_ast(FILE *out, cil_db_t *db);
+extern int cil_write_build_ast(FILE *out, cil_db_t *db);
+extern int cil_write_resolve_ast(FILE *out, cil_db_t *db);
 
 enum cil_log_level {
 	CIL_ERR = 1,
