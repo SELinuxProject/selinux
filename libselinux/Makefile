@@ -50,24 +50,24 @@ all install relabel clean distclean indent:
 	done
 
 swigify: all
-	$(MAKE) -C src swigify $@
+	$(MAKE) -C src $@
 
 pywrap: 
-	$(MAKE) -C src pywrap $@
+	$(MAKE) -C src $@
 
 rubywrap: 
-	$(MAKE) -C src rubywrap $@
+	$(MAKE) -C src $@
 
 install-pywrap: 
-	$(MAKE) -C src install-pywrap $@
+	$(MAKE) -C src $@
 
 install-rubywrap: 
-	$(MAKE) -C src install-rubywrap $@
+	$(MAKE) -C src $@
 
 clean-pywrap:
-	$(MAKE) -C src clean-pywrap $@
+	$(MAKE) -C src $@
 
 clean-rubywrap:
-	$(MAKE) -C src clean-rubywrap $@
+	$(MAKE) -C src $@
 
 test:
