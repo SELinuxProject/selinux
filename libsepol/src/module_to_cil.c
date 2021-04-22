@@ -1134,16 +1134,14 @@ static int name_list_to_string(char **names, unsigned int num_names, char **stri
 	char *strpos;
 
 	for (i = 0; i < num_names; i++) {
-		len += strlen(names[i]);
-		if (len < strlen(names[i])) {
+		if (__builtin_add_overflow(len, strlen(names[i]), &len)) {
 			log_err("Overflow");
 			return -1;
 		}
 	}
 
 	// add spaces + null terminator
-	len += num_names;
-	if (len < (size_t)num_names) {
+	if (__builtin_add_overflow(len, (size_t)num_names, &len)) {
 		log_err("Overflow");
 		return -1;
 	}
