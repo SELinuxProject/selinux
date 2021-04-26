@@ -60,8 +60,12 @@ static void cil_reset_classpermission(struct cil_classpermission *cp)
 
 static void cil_reset_classperms_set(struct cil_classperms_set *cp_set)
 {
-	if (cp_set == NULL) {
+	if (cp_set == NULL || cp_set->set == NULL) {
 		return;
+	}
+
+	if (cp_set->set->datum.name == NULL) {
+		cil_reset_classperms_list(cp_set->set->classperms);
 	}
 
 	cp_set->set = NULL;
