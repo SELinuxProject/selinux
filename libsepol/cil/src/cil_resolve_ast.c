@@ -1488,6 +1488,11 @@ int cil_resolve_classorder(struct cil_tree_node *current, void *extra_args)
 			rc = SEPOL_ERR;
 			goto exit;
 		}
+		if (FLAVOR(datum) != CIL_CLASS) {
+			cil_log(CIL_ERR, "%s is not a class. Only classes are allowed in classorder statements\n", datum->name);
+			rc = SEPOL_ERR;
+			goto exit;
+		}
 		cil_list_append(new, CIL_CLASS, datum);
 	}
 
@@ -1526,6 +1531,12 @@ int cil_resolve_sidorder(struct cil_tree_node *current, void *extra_args)
 			cil_log(CIL_ERR, "Failed to resolve sid %s in sidorder\n", (char *)curr->data);
 			goto exit;
 		}
+		if (FLAVOR(datum) != CIL_SID) {
+			cil_log(CIL_ERR, "%s is not a sid. Only sids are allowed in sidorder statements\n", datum->name);
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+
 		cil_list_append(new, CIL_SID, datum);
 	}
 
@@ -1615,6 +1626,11 @@ int cil_resolve_sensitivityorder(struct cil_tree_node *current, void *extra_args
 		rc = cil_resolve_name(current, (char *)curr->data, CIL_SYM_SENS, extra_args, &datum);
 		if (rc != SEPOL_OK) {
 			cil_log(CIL_ERR, "Failed to resolve sensitivty %s in sensitivityorder\n", (char *)curr->data);
+			goto exit;
+		}
+		if (FLAVOR(datum) != CIL_SENS) {
+			cil_log(CIL_ERR, "%s is not a sensitivity. Only sensitivities are allowed in sensitivityorder statements\n", datum->name);
+			rc = SEPOL_ERR;
 			goto exit;
 		}
 		cil_list_append(new, CIL_SENS, datum);
