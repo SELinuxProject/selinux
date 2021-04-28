@@ -444,6 +444,7 @@ int cil_gen_class(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		}
 		if (class->num_perms > CIL_PERMS_PER_CLASS) {
 			cil_tree_log(parse_current, CIL_ERR, "Too many permissions in class '%s'", class->datum.name);
+			rc = SEPOL_ERR;
 			goto exit;
 		}
 
@@ -1018,6 +1019,7 @@ int cil_gen_common(struct cil_db *db, struct cil_tree_node *parse_current, struc
 	}
 	if (common->num_perms > CIL_PERMS_PER_CLASS) {
 		cil_tree_log(parse_current, CIL_ERR, "Too many permissions in common '%s'", common->datum.name);
+		rc = SEPOL_ERR;
 		goto exit;
 	}
 
@@ -3209,6 +3211,7 @@ int cil_gen_expandtypeattribute(struct cil_db *db, struct cil_tree_node *parse_c
 		expandattr->expand = CIL_FALSE;
 	} else {
 		cil_log(CIL_ERR, "Value must be either \'true\' or \'false\'");
+		rc = SEPOL_ERR;
 		goto exit;
 	}
 

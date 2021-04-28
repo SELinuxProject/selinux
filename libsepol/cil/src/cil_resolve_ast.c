@@ -772,6 +772,7 @@ int cil_resolve_classcommon(struct cil_tree_node *current, void *extra_args)
 	class->num_perms += common->num_perms;
 	if (class->num_perms > CIL_PERMS_PER_CLASS) {
 		cil_tree_log(current, CIL_ERR, "Too many permissions in class '%s' when including common permissions", class->datum.name);
+		rc = SEPOL_ERR;
 		goto exit;
 	}
 
@@ -1484,6 +1485,7 @@ int cil_resolve_classorder(struct cil_tree_node *current, void *extra_args)
 		rc = cil_resolve_name(current, (char *)curr->data, CIL_SYM_CLASSES, extra_args, &datum);
 		if (rc != SEPOL_OK) {
 			cil_log(CIL_ERR, "Failed to resolve class %s in classorder\n", (char *)curr->data);
+			rc = SEPOL_ERR;
 			goto exit;
 		}
 		cil_list_append(new, CIL_CLASS, datum);
@@ -2464,6 +2466,7 @@ int cil_resolve_blockabstract(struct cil_tree_node *current, void *extra_args)
 	block_node = NODE(block_datum);
 	if (block_node->flavor != CIL_BLOCK) {
 		cil_log(CIL_ERR, "Failed to resolve blockabstract to a block, rc: %d\n", rc);
+		rc = SEPOL_ERR;
 		goto exit;
 	}
 
