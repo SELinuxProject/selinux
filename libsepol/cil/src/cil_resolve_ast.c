@@ -2410,6 +2410,55 @@ exit:
 	return rc;
 }
 
+/*
+ * Detect degenerate inheritance of the form:
+ * ...
+ * (blockinherit ba)
+ * (block ba
+ *    (block b1
+ *      (blockinherit bb)
+ *    )
+ *    (block bb
+ *      (block b2
+ *        (blockinherit bc)
+ *      )
+ *      (block bc
+ *      ...
+ */
+static int cil_check_for_degenerate_inheritance(struct cil_tree_node *current)
+{
+	struct cil_block *block = current->data;
+	struct cil_tree_node *node;
+	struct cil_list_item *item;
+	unsigned depth;
+	unsigned breadth = 0;
+
+	cil_list_for_each(item, block->bi_nodes) {
+		breadth++;
+	}
+
+	if (breadth >= CIL_DEGENERATE_INHERITANCE_BREADTH) {
+		node = current->parent;
+		depth = 0;
+		while (node && node->flavor != CIL_ROOT) {
+			if (node->flavor == CIL_BLOCK) {
+				block = node->data;
+				if (block->bi_nodes != NULL) {
+					depth++;
+				}
+			}
+			node = node->parent;
+		}
+
+		if (depth >= CIL_DEGENERATE_INHERITANCE_DEPTH) {
+			cil_tree_log(current, CIL_ERR, "Degenerate inheritance detected (depth=%u, breadth=%u)", depth, breadth);
+			return SEPOL_ERR;
+		}
+	}
+
+	return SEPOL_OK;
+}
+
 int cil_resolve_blockinherit_copy(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_block *block = current->data;
@@ -2425,6 +2474,11 @@ int cil_resolve_blockinherit_copy(struct cil_tree_node *current, void *extra_arg
 	}
 
 	db = args->db;
+
+	rc = cil_check_for_degenerate_inheritance(current);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
 
 	// Make sure this is the original block and not a merged block from a blockinherit
 	if (current != block->datum.nodes->head->data) {
