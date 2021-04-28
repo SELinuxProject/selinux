@@ -3277,6 +3277,7 @@ int cil_resolve_call2(struct cil_tree_node *current, void *extra_args)
 		if (sym_index != CIL_SYM_UNKNOWN) {
 			rc = cil_resolve_name(current, arg->arg_str, sym_index, extra_args, &(arg->arg));
 			if (rc != SEPOL_OK) {
+				cil_tree_log(current, CIL_ERR, "Failed to resolve %s in call argument list", arg->arg_str);
 				goto exit;
 			}
 		}
@@ -3308,7 +3309,7 @@ int cil_resolve_name_call_args(struct cil_call *call, char *name, enum cil_sym_i
 		if (param_index == sym_index) {
 			if (name == arg->param_str) {
 				*datum = arg->arg;
-				rc = SEPOL_OK;
+				rc = *datum ? SEPOL_OK : SEPOL_ERR;
 				goto exit;
 			}
 		}
