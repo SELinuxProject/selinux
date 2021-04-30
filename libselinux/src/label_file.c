@@ -909,7 +909,7 @@ static const struct spec **lookup_all(struct selabel_handle *rec,
 			if (!clean_key)
 				goto finish;
 
-			strncpy(clean_key, key, len - 1);
+			memcpy(clean_key, key, len - 1);
 		}
 
 		clean_key[len - 1] = '\0';
