@@ -37,7 +37,7 @@ context_t context_new(const char *str)
 	}
 	n->current_str = n->component[0] = n->component[1] = n->component[2] =
 	    n->component[3] = 0;
-	for (i = count = 0, p = str; *p; p++) {
+	for (count = 0, p = str; *p; p++) {
 		switch (*p) {
 		case ':':
 			count++;
