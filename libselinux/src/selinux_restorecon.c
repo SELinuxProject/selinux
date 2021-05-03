@@ -62,7 +62,7 @@ static uint64_t fc_count = 0;	/* Number of files processed so far */
 static uint64_t efile_count;	/* Estimated total number of files */
 
 /* Store information on directories with xattr's. */
-struct dir_xattr *dir_xattr_list;
+static struct dir_xattr *dir_xattr_list;
 static struct dir_xattr *dir_xattr_last;
 
 /* restorecon_flags for passing to restorecon_sb() */
