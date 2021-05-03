@@ -319,7 +319,7 @@ char const *regex_version(void)
 }
 
 int regex_load_mmap(struct mmap_area *mmap_area, struct regex_data **regex,
-		    int unused __attribute__((unused)), bool *regex_compiled)
+		    int do_load_precompregex __attribute__((unused)), bool *regex_compiled)
 {
 	int rc;
 	uint32_t entry_len;
@@ -387,7 +387,7 @@ static inline pcre_extra *get_pcre_extra(struct regex_data *regex)
 }
 
 int regex_writef(struct regex_data *regex, FILE *fp,
-		 int unused __attribute__((unused)))
+		 int do_write_precompregex __attribute__((unused)))
 {
 	int rc;
 	size_t len;
