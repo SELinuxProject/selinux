@@ -64,7 +64,7 @@ void
     Sha1Update
     (
         Sha1Context*        Context,
-        void*               Buffer,
+        const void*         Buffer,
         uint32_t            BufferSize
     );
 

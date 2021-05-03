@@ -151,7 +151,7 @@ void
     Sha1Update
     (
         Sha1Context*        Context,
-        void*               Buffer,
+        const void*         Buffer,
         uint32_t            BufferSize
     )
 {
@@ -172,7 +172,7 @@ void
         TransformFunction(Context->State, Context->Buffer);
         for (; i + 63 < BufferSize; i += 64)
         {
-            TransformFunction(Context->State, (uint8_t*)Buffer + i);
+            TransformFunction(Context->State, (const uint8_t*)Buffer + i);
         }
         j = 0;
     }
@@ -181,7 +181,7 @@ void
         i = 0;
     }
 
-    memcpy(&Context->Buffer[j], &((uint8_t*)Buffer)[i], BufferSize - i);
+    memcpy(&Context->Buffer[j], &((const uint8_t*)Buffer)[i], BufferSize - i);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,10 +205,10 @@ void
         finalcount[i] = (unsigned char)((Context->Count[(i >= 4 ? 0 : 1)]
          >> ((3-(i & 3)) * 8) ) & 255);  // Endian independent
     }
-    Sha1Update(Context, (uint8_t*)"\x80", 1);
+    Sha1Update(Context, (const uint8_t*)"\x80", 1);
     while ((Context->Count[0] & 504) != 448)
     {
-        Sha1Update(Context, (uint8_t*)"\0", 1);
+        Sha1Update(Context, (const uint8_t*)"\0", 1);
     }
 
     Sha1Update(Context, finalcount, 8);  // Should cause a Sha1TransformFunction()
