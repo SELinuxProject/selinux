@@ -28,12 +28,15 @@ int main(int argc, char **argv)
 	while ((opt = getopt(argc, argv, "l:r:s:v")) > 0) {
 		switch (opt) {
 		case 'l':
+			free(level);
 			level = strdup(optarg);
 			break;
 		case 'r':
+			free(role);
 			role = strdup(optarg);
 			break;
 		case 's':
+			free(service);
 			service = strdup(optarg);
 			break;
 		case 'v':
