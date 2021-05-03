@@ -277,7 +277,7 @@ db_init(const struct selinux_opt *opts, unsigned nopts,
 	if (!path)
 		path = selinux_sepgsql_context_path();
 
-	if ((filp = fopen(path, "rb")) == NULL) {
+	if ((filp = fopen(path, "re")) == NULL) {
 		free(catalog);
 		return NULL;
 	}
