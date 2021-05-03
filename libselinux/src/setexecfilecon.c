@@ -37,7 +37,6 @@ int setexecfilecon(const char *filename, const char *fallback_type)
 		newcon = strdup(context_str(con));
 		if (!newcon)
 			goto out;
-		rc = 0;
 	}
 
 	rc = setexeccon(newcon);
