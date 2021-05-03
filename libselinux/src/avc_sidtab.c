@@ -100,7 +100,7 @@ sidtab_context_to_sid(struct sidtab *s,
 	return rc;
 }
 
-void sidtab_sid_stats(struct sidtab *h, char *buf, int buflen)
+void sidtab_sid_stats(struct sidtab *s, char *buf, int buflen)
 {
 	int i, chain_len, slots_used, max_chain_len;
 	struct sidtab_node *cur;
@@ -108,7 +108,7 @@ void sidtab_sid_stats(struct sidtab *h, char *buf, int buflen)
 	slots_used = 0;
 	max_chain_len = 0;
 	for (i = 0; i < SIDTAB_SIZE; i++) {
-		cur = h->htable[i];
+		cur = s->htable[i];
 		if (cur) {
 			slots_used++;
 			chain_len = 0;
@@ -124,7 +124,7 @@ void sidtab_sid_stats(struct sidtab *h, char *buf, int buflen)
 
 	snprintf(buf, buflen,
 		 "%s:  %u SID entries and %d/%d buckets used, longest "
-		 "chain length %d\n", avc_prefix, h->nel, slots_used,
+		 "chain length %d\n", avc_prefix, s->nel, slots_used,
 		 SIDTAB_SIZE, max_chain_len);
 }
 
