@@ -845,7 +845,7 @@ static void closef(struct selabel_handle *rec)
 // Finds all the matches of |key| in the given context. Returns the result in
 // the allocated array and updates the match count. If match_count is NULL,
 // stops early once the 1st match is found.
-static const struct spec **lookup_all(struct selabel_handle *rec,
+static struct spec **lookup_all(struct selabel_handle *rec,
                                       const char *key,
                                       int type,
                                       bool partial,
@@ -861,7 +861,7 @@ static const struct spec **lookup_all(struct selabel_handle *rec,
 	unsigned int sofar = 0;
 	char *sub = NULL;
 
-	const struct spec **result = NULL;
+	struct spec **result = NULL;
 	if (match_count) {
 		*match_count = 0;
 		result = calloc(data->nspec, sizeof(struct spec*));
@@ -987,11 +987,11 @@ static struct spec *lookup_common(struct selabel_handle *rec,
                                   const char *key,
                                   int type,
                                   bool partial) {
-	const struct spec **matches = lookup_all(rec, key, type, partial, NULL);
+	struct spec **matches = lookup_all(rec, key, type, partial, NULL);
 	if (!matches) {
 		return NULL;
 	}
-	struct spec *result = (struct spec*)matches[0];
+	struct spec *result = matches[0];
 	free(matches);
 	return result;
 }
@@ -1054,7 +1054,7 @@ static bool hash_all_partial_matches(struct selabel_handle *rec, const char *key
 	assert(digest);
 
 	size_t total_matches;
-	const struct spec **matches = lookup_all(rec, key, 0, true, &total_matches);
+	struct spec **matches = lookup_all(rec, key, 0, true, &total_matches);
 	if (!matches) {
 		return false;
 	}
