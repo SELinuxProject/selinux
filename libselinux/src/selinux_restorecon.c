@@ -230,7 +230,6 @@ static int exclude_non_seclabel_mounts(void)
 	struct utsname uts;
 	FILE *fp;
 	size_t len;
-	ssize_t num;
 	int index = 0, found = 0, nfile = 0;
 	char *mount_info[4];
 	char *buf = NULL, *item;
@@ -245,7 +244,7 @@ static int exclude_non_seclabel_mounts(void)
 	if (!fp)
 		return 0;
 
-	while ((num = getline(&buf, &len, fp)) != -1) {
+	while (getline(&buf, &len, fp) != -1) {
 		found = 0;
 		index = 0;
 		item = strtok(buf, " ");
