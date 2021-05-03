@@ -15,14 +15,13 @@
 
 static inline unsigned sidtab_hash(const char * key)
 {
-	char *p, *keyp;
+	const char *p;
 	unsigned int size;
 	unsigned int val;
 
 	val = 0;
-	keyp = (char *)key;
-	size = strlen(keyp);
-	for (p = keyp; (unsigned int)(p - keyp) < size; p++)
+	size = strlen(key);
+	for (p = key; (unsigned int)(p - key) < size; p++)
 		val =
 		    (val << 4 | (val >> (8 * sizeof(unsigned int) - 4))) ^ (*p);
 	return val & (SIDTAB_SIZE - 1);
