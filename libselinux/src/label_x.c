@@ -146,7 +146,6 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 			if (process_line(path, line_buf, pass, ++lineno, rec))
 				goto finish;
 		}
-		lineno = 0;
 
 		if (pass == 0) {
 			if (data->nspec == 0) {
