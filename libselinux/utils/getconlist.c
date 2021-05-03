@@ -26,6 +26,7 @@ int main(int argc, char **argv)
 	while ((opt = getopt(argc, argv, "l:")) > 0) {
 		switch (opt) {
 		case 'l':
+			free(level);
 			level = strdup(optarg);
 			if (!level) {
 				fprintf(stderr, "memory allocation failure: %d(%s)\n",
