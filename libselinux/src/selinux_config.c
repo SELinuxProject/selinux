@@ -177,8 +177,11 @@ static void init_selinux_config(void)
 			if (!strncasecmp(buf_p, SELINUXTYPETAG,
 					 sizeof(SELINUXTYPETAG) - 1)) {
 				type = strdup(buf_p + sizeof(SELINUXTYPETAG) - 1);
-				if (!type)
+				if (!type) {
+					free(line_buf);
+					fclose(fp);
 					return;
+				}
 				end = type + strlen(type) - 1;
 				while ((end > type) &&
 				       (isspace(*end) || iscntrl(*end))) {
@@ -187,6 +190,8 @@ static void init_selinux_config(void)
 				}
 				if (setpolicytype(type) != 0) {
 					free(type);
+					free(line_buf);
+					fclose(fp);
 					return;
 				}
 				free(type);
