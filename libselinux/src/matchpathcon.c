@@ -477,15 +477,15 @@ void matchpathcon_checkmatches(char *str __attribute__((unused)))
 int selinux_file_context_cmp(const char * a,
 			     const char * b)
 {
-	char *rest_a, *rest_b;	/* Rest of the context after the user */
+	const char *rest_a, *rest_b;	/* Rest of the context after the user */
 	if (!a && !b)
 		return 0;
 	if (!a)
 		return -1;
 	if (!b)
 		return 1;
-	rest_a = strchr((char *)a, ':');
-	rest_b = strchr((char *)b, ':');
+	rest_a = strchr(a, ':');
+	rest_b = strchr(b, ':');
 	if (!rest_a && !rest_b)
 		return 0;
 	if (!rest_a)
