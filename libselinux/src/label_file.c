@@ -756,6 +756,10 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 	}
 
 #endif
+
+	if (!path)
+		goto finish;
+
 	rec->spec_file = strdup(path);
 
 	/*
