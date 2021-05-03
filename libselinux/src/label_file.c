@@ -371,7 +371,7 @@ end_arch_check:
 
 		if (stem_id < 0 || stem_id >= (int32_t)stem_map_len)
 			spec->stem_id = -1;
-		 else
+		else
 			spec->stem_id = stem_map[stem_id];
 
 		/* retrieve the hasMetaChars bit */
