@@ -22,6 +22,7 @@ int matchmediacon(const char *media, char ** con)
 		return -1;
 	while (!feof_unlocked(infile)) {
 		if (!fgets_unlocked(current_line, sizeof(current_line), infile)) {
+			fclose(infile);
 			return -1;
 		}
 		if (current_line[strlen(current_line) - 1])
