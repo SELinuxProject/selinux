@@ -38,7 +38,7 @@ static int get_customizable_type_list(char *** retlist)
 			while (fgets_unlocked(buf, selinux_page_size, fp)
 			       && i < ctr) {
 				buf[strlen(buf) - 1] = 0;
-				list[i] = (char *) strdup(buf);
+				list[i] = strdup(buf);
 				if (!list[i]) {
 					unsigned int j;
 					for (j = 0; j < i; j++)
