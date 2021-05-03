@@ -205,7 +205,7 @@ int main(int argc, char **argv)
 			die("unable to parse \'%s\': no data", avcstatfile);
 
 		if (cumulative || !i)
-			printf("%10Lu %10Lu %10Lu %10Lu %10Lu %10Lu\n",
+			printf("%10llu %10llu %10llu %10llu %10llu %10llu\n",
 			       tot.lookups, tot.hits, tot.misses,
 			       tot.allocations, tot.reclaims, tot.frees);
 		else {
@@ -215,7 +215,7 @@ int main(int argc, char **argv)
 			rel.allocations = tot.allocations - last.allocations;
 			rel.reclaims = tot.reclaims - last.reclaims;
 			rel.frees = tot.frees - last.frees;
-			printf("%10Lu %10Lu %10Lu %10Lu %10Lu %10Lu\n",
+			printf("%10llu %10llu %10llu %10llu %10llu %10llu\n",
 			       rel.lookups, rel.hits, rel.misses,
 			       rel.allocations, rel.reclaims, rel.frees);
 		}
