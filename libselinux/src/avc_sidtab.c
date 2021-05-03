@@ -56,7 +56,7 @@ int sidtab_insert(struct sidtab *s, const char * ctx)
 		rc = -1;
 		goto out;
 	}
-	newctx = (char *) strdup(ctx);
+	newctx = strdup(ctx);
 	if (!newctx) {
 		rc = -1;
 		avc_free(newnode);
