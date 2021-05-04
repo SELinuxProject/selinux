@@ -438,11 +438,6 @@ int cil_resolve_typeattributeset(struct cil_tree_node *current, void *extra_args
 		goto exit;
 	}
 
-	rc = cil_verify_no_self_reference(attr_datum, attrtypes->datum_expr);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
 	if (attr->expr_list == NULL) {
 		cil_list_init(&attr->expr_list, CIL_TYPEATTRIBUTE);
 	}
@@ -1151,11 +1146,6 @@ int cil_resolve_roleattributeset(struct cil_tree_node *current, void *extra_args
 		goto exit;
 	}
 
-	rc = cil_verify_no_self_reference(attr_datum, attrroles->datum_expr);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
 	if (attr->expr_list == NULL) {
 		cil_list_init(&attr->expr_list, CIL_ROLEATTRIBUTE);
 	}
@@ -1666,21 +1656,7 @@ exit:
 
 int cil_resolve_catset(struct cil_tree_node *current, struct cil_catset *catset, void *extra_args)
 {
-	int rc = SEPOL_ERR;
-
-	rc = cil_resolve_cats(current, catset->cats, extra_args);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
-	rc = cil_verify_no_self_reference((struct cil_symtab_datum *)catset, catset->cats->datum_expr);
-	if (rc != SEPOL_OK) {
-		cil_list_destroy(&catset->cats->datum_expr, CIL_FALSE);
-		goto exit;
-	}
-
-exit:
-	return rc;
+	return cil_resolve_cats(current, catset->cats, extra_args);
 }
 
 int cil_resolve_senscat(struct cil_tree_node *current, void *extra_args)
@@ -3541,11 +3517,6 @@ int cil_resolve_userattributeset(struct cil_tree_node *current, void *extra_args
 	attr = (struct cil_userattribute*)attr_datum;
 
 	rc = cil_resolve_expr(CIL_USERATTRIBUTESET, attrusers->str_expr, &attrusers->datum_expr, current, extra_args);
-	if (rc != SEPOL_OK) {
-		goto exit;
-	}
-
-	rc = cil_verify_no_self_reference(attr_datum, attrusers->datum_expr);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}

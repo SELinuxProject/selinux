@@ -430,26 +430,69 @@ int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro, str
 	return SEPOL_OK;
 }
 
-int cil_verify_no_self_reference(struct cil_symtab_datum *datum, struct cil_list *datum_list)
-{
-	struct cil_list_item *i;
+static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symtab_datum *datum, struct cil_symtab_datum *orig);
 
-	cil_list_for_each(i, datum_list) {
-		if (i->flavor == CIL_DATUM) {
-			struct cil_symtab_datum *d = i->data;
-			if (d == datum) {
-				cil_log(CIL_ERR,"Self-reference found for %s\n",datum->name);
-				return SEPOL_ERR;
-			}
-		} else if (i->flavor == CIL_LIST) {
-			int rc = cil_verify_no_self_reference(datum, i->data);
-			if (rc != SEPOL_OK) {
-				return SEPOL_ERR;
-			}
+static int __verify_no_self_reference_in_expr(struct cil_list *expr, struct cil_symtab_datum *orig)
+{
+	struct cil_list_item *item;
+	int rc = SEPOL_OK;
+
+	if (!expr) {
+		return SEPOL_OK;
+	}
+
+	cil_list_for_each(item, expr) {
+		if (item->flavor == CIL_DATUM) {
+			struct cil_symtab_datum* datum = item->data;
+			rc = cil_verify_no_self_reference(FLAVOR(datum), datum, orig);
+		} else if (item->flavor == CIL_LIST) {
+			rc = __verify_no_self_reference_in_expr(item->data, orig);
+		}
+		if (rc != SEPOL_OK) {
+			return SEPOL_ERR;
 		}
 	}
 
 	return SEPOL_OK;
+}
+
+static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symtab_datum *datum, struct cil_symtab_datum *orig)
+{
+	int rc = SEPOL_OK;
+
+	if (datum == orig) {
+		cil_tree_log(NODE(orig), CIL_ERR, "Self-reference found for %s", orig->name);
+		return SEPOL_ERR;
+	} else if (orig == NULL) {
+		orig = datum;
+	}
+
+	switch (flavor) {
+	case CIL_USERATTRIBUTE: {
+		struct cil_userattribute *attr = (struct cil_userattribute *)datum;
+		rc = __verify_no_self_reference_in_expr(attr->expr_list, orig);
+		break;
+	}
+	case CIL_ROLEATTRIBUTE: {
+		struct cil_roleattribute *attr = (struct cil_roleattribute *)datum;
+		rc = __verify_no_self_reference_in_expr(attr->expr_list, orig);
+		break;
+	}
+	case CIL_TYPEATTRIBUTE: {
+		struct cil_typeattribute *attr = (struct cil_typeattribute *)datum;
+		rc = __verify_no_self_reference_in_expr(attr->expr_list, orig);
+		break;
+	}
+	case CIL_CATSET: {
+		struct cil_catset *set = (struct cil_catset *)datum;
+		rc = __verify_no_self_reference_in_expr(set->cats->datum_expr, orig);
+		break;
+	}
+	default:
+		break;
+	}
+
+	return rc;
 }
 
 int __cil_verify_ranges(struct cil_list *list)
@@ -1757,27 +1800,22 @@ static int __cil_verify_map_class(struct cil_tree_node *node)
 
 int __cil_pre_verify_helper(struct cil_tree_node *node, uint32_t *finished, __attribute__((unused)) void *extra_args)
 {
-	int rc = SEPOL_ERR;
+	int rc = SEPOL_OK;
 
-	if (node->flavor == CIL_MACRO) {
+	switch (node->flavor) {
+	case CIL_MACRO: {
 		*finished = CIL_TREE_SKIP_HEAD;
-		rc = SEPOL_OK;
-		goto exit;
-	} else if (node->flavor == CIL_BLOCK) {
+		break;
+	}
+	case CIL_BLOCK: {
 		struct cil_block *blk = node->data;
 		if (blk->is_abstract == CIL_TRUE) {
 			*finished = CIL_TREE_SKIP_HEAD;
 		}
-		rc = SEPOL_OK;
-		goto exit;
+		break;
 	}
-
-	switch (node->flavor) {
 	case CIL_USER:
 		rc = __cil_verify_user_pre_eval(node);
-		if (rc != SEPOL_OK) {
-			goto exit;
-		}
 		break;
 	case CIL_MAP_CLASS:
 		rc = __cil_verify_map_class(node);
@@ -1785,11 +1823,16 @@ int __cil_pre_verify_helper(struct cil_tree_node *node, uint32_t *finished, __at
 	case CIL_CLASSPERMISSION:
 		rc = __cil_verify_classpermission(node);
 		break;
+	case CIL_USERATTRIBUTE:
+	case CIL_ROLEATTRIBUTE:
+	case CIL_TYPEATTRIBUTE:
+	case CIL_CATSET:
+		rc = cil_verify_no_self_reference(node->flavor, node->data, NULL);
+		break;
 	default:
 		rc = SEPOL_OK;
 		break;
 	}
 
-exit:
 	return rc;
 }
