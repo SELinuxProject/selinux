@@ -103,6 +103,14 @@ blockinherit
 
 Used to add common policy rules to the current namespace via a template that has been defined with the [`blockabstract`](cil_container_statements.md#blockabstract) statement. All [`blockinherit`](cil_container_statements.md#blockinherit) statements are resolved first and then the contents of the block are copied. This is so that inherited blocks will not be inherited. For a concrete example, please see the examples section.
 
+Inherited rules are resolved by searching namespaces in the following order:
+
+-  The parent namespaces (if any) where the [`blockinherit`](cil_container_statements.md#blockinherit) rule is located with the exception of the global namespace.
+
+-  The parent namespaces of the block being inherited (but not that block's namespace) with the exception of the global namespace.
+
+-  The global namespace.
+
 Not allowed in [`macro`](cil_call_macro_statements.md#macro) blocks.
 
 **Statement definition:**
