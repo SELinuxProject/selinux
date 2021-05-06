@@ -4182,7 +4182,7 @@ static int __cil_resolve_name_with_parents(struct cil_tree_node *node, char *nam
 			rc = __cil_resolve_name_with_parents(node->parent, name, sym_index, datum);
 			if (rc != SEPOL_OK) {
 				/* Continue search in original block's parent */
-				rc = __cil_resolve_name_with_parents(NODE(inherit->block), name, sym_index, datum);
+				rc = __cil_resolve_name_with_parents(NODE(inherit->block)->parent, name, sym_index, datum);
 				goto exit;
 			}
 		}
