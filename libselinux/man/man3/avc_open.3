@@ -26,6 +26,9 @@ initializes the userspace AVC and must be called before any other AVC operation 
 destroys the userspace AVC, freeing all internal memory structures.  After this call has been made, 
 .BR avc_open ()
 must be called again before any AVC operations can be performed.
+.BR avc_destroy ()
+also closes the SELinux status page, which might have been opened manually by
+.BR selinux_status_open (3).
 
 .BR avc_reset ()
 flushes the userspace AVC, causing it to forget any cached access decisions.  The userspace AVC normally calls this function automatically when needed, see
