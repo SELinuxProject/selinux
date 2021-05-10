@@ -214,7 +214,7 @@ static int avc_init_internal(const char *prefix,
 		avc_enforcing = rc;
 	}
 
-	rc = selinux_status_open(1);
+	rc = selinux_status_open(0);
 	if (rc < 0) {
 		avc_log(SELINUX_ERROR,
 			"%s: could not open selinux status page: %d (%s)\n",
