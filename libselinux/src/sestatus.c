@@ -282,6 +282,10 @@ int selinux_status_open(int fallback)
 	long		pagesize;
 	uint32_t	seqno;
 
+	if (selinux_status != NULL) {
+		return 0;
+	}
+
 	if (!selinux_mnt) {
 		errno = ENOENT;
 		return -1;
