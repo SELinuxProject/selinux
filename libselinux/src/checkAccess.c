@@ -78,7 +78,9 @@ static int selinux_check_passwd_access_internal(access_vector_t requested)
 		passwd_class = string_to_security_class("passwd");
 		if (passwd_class == 0) {
 			freecon(user_context);
-			return 0;
+			if (security_deny_unknown() == 0)
+				return 0;
+			return -1;
 		}
 
 		retval = security_compute_av_raw(user_context,
