@@ -93,10 +93,10 @@ int cil_symtab_insert(symtab_t *symtab, hashtab_key_t key, struct cil_symtab_dat
 		datum->fqn = key;
 		datum->symtab = symtab;
 		symtab->nprim++;
-		cil_list_append(datum->nodes, CIL_NODE, node);
-	} else if (rc == SEPOL_EEXIST) {
-		cil_list_append(datum->nodes, CIL_NODE, node);
-	} else {
+		if (node) {
+			cil_list_append(datum->nodes, CIL_NODE, node);
+		}
+	} else if (rc != SEPOL_EEXIST) {
 		cil_symtab_error("Failed to insert datum into hashtab\n");
 	}
 
