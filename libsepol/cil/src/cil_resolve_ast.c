@@ -4195,10 +4195,18 @@ static int __cil_resolve_name_with_parents(struct cil_tree_node *node, char *nam
 			break;
 		case CIL_CALL: {
 			struct cil_call *call = node->data;
-			rc = cil_resolve_name_call_args(call, name, sym_index, datum);
-			if (rc != SEPOL_OK) {
-				/* Continue search in macro's parent */
-				rc = __cil_resolve_name_with_parents(NODE(call->macro)->parent, name, sym_index, datum);
+			struct cil_macro *macro = call->macro;
+			symtab = &macro->symtab[sym_index];
+			rc = cil_symtab_get_datum(symtab, name, datum);
+			if (rc == SEPOL_OK) {
+				/* If the name was declared in the macro, just look on the call side */
+				rc = SEPOL_ERR;
+			} else {
+				rc = cil_resolve_name_call_args(call, name, sym_index, datum);
+				if (rc != SEPOL_OK) {
+					/* Continue search in macro's parent */
+					rc = __cil_resolve_name_with_parents(NODE(call->macro)->parent, name, sym_index, datum);
+				}
 			}
 		}
 			break;
