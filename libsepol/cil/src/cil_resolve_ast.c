@@ -3263,10 +3263,36 @@ int cil_resolve_call_args(struct cil_tree_node *current, void *extra_args)
 		}
 
 		if (sym_index != CIL_SYM_UNKNOWN) {
-			rc = cil_resolve_name(current, arg->arg_str, sym_index, extra_args, &(arg->arg));
+			struct cil_symtab_datum *datum;
+			struct cil_tree_node *n;
+			rc = cil_resolve_name(current, arg->arg_str, sym_index, extra_args, &datum);
 			if (rc != SEPOL_OK) {
 				cil_tree_log(current, CIL_ERR, "Failed to resolve %s in call argument list", arg->arg_str);
 				goto exit;
+			}
+			arg->arg = datum;
+			n = NODE(datum);
+			while (n && n->flavor != CIL_ROOT) {
+				if (n == current) {
+					symtab_t *s = datum->symtab;
+					/* Call arg should not resolve to declaration in the call
+					 * Need to remove datum temporarily to resolve to a datum outside
+					 * the call.
+					 */
+					cil_symtab_remove_datum(datum);
+					rc = cil_resolve_name(current, arg->arg_str, sym_index, extra_args, &(arg->arg));
+					if (rc != SEPOL_OK) {
+						cil_tree_log(current, CIL_ERR, "Failed to resolve %s in call argument list", arg->arg_str);
+						goto exit;
+					}
+					rc = cil_symtab_insert(s, datum->name, datum, NULL);
+					if (rc != SEPOL_OK) {
+						cil_tree_log(current, CIL_ERR, "Failed to re-insert datum while resolving %s in call argument list", arg->arg_str);
+						goto exit;
+					}
+					break;
+				}
+				n = n->parent;
 			}
 		}
 	}
