@@ -42,6 +42,8 @@
 #include "cil_strpool.h"
 #include "cil_stack.h"
 
+#define CIL_PARSER_MAX_EXPR_DEPTH (0x1 << 12)
+
 char *CIL_KEY_HLL_LMS;
 char *CIL_KEY_HLL_LMX;
 char *CIL_KEY_HLL_LME;
@@ -245,7 +247,10 @@ int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree *
 			break;
 		case OPAREN:
 			paren_count++;
-
+			if (paren_count > CIL_PARSER_MAX_EXPR_DEPTH) {
+				cil_log(CIL_ERR, "Number of open parenthesis exceeds limit of %d at line %d of %s\n", CIL_PARSER_MAX_EXPR_DEPTH, tok.line, path);
+				goto exit;
+			}
 			create_node(&node, current, tok.line, hll_lineno, NULL);
 			insert_node(node, current);
 			current = node;
