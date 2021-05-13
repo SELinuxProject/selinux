@@ -1700,6 +1700,10 @@ int cil_resolve_level(struct cil_tree_node *current, struct cil_level *level, vo
 	struct cil_symtab_datum *sens_datum = NULL;
 	int rc = SEPOL_ERR;
 
+	if (level->sens) {
+		return SEPOL_OK;
+	}
+
 	rc = cil_resolve_name(current, (char*)level->sens_str, CIL_SYM_SENS, extra_args, &sens_datum);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Failed to find sensitivity\n");
