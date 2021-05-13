@@ -158,6 +158,10 @@ int cil_resolve_classperms(struct cil_tree_node *current, struct cil_classperms 
 	symtab_t *common_symtab = NULL;
 	struct cil_class *class;
 
+	if (cp->class) {
+		return SEPOL_OK;
+	}
+
 	rc = cil_resolve_name(current, cp->class_str, CIL_SYM_CLASSES, extra_args, &datum);
 	if (rc != SEPOL_OK) {
 		goto exit;
