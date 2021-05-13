@@ -4132,35 +4132,37 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 			}
 		}
 
-		if (changed && (pass > CIL_PASS_CALL1)) {
+		if (changed) {
 			struct cil_list_item *item;
-			/* Need to re-resolve because an optional was disabled that contained
-			 * one or more declarations. We only need to reset to the call1 pass 
-			 * because things done in the preceding passes aren't allowed in 
-			 * optionals, and thus can't be disabled.
-			 * Note: set pass to CIL_PASS_CALL1 because the pass++ will increment 
-			 * it to CIL_PASS_CALL2
-			 */
-			cil_log(CIL_INFO, "Resetting declarations\n");
+			if (pass > CIL_PASS_CALL1) {
+				/* Need to re-resolve because an optional was disabled that contained
+				 * one or more declarations. We only need to reset to the call1 pass
+				 * because things done in the preceding passes aren't allowed in
+				 * optionals, and thus can't be disabled.
+				 * Note: set pass to CIL_PASS_CALL1 because the pass++ will increment
+				 * it to CIL_PASS_CALL2
+				 */
+				cil_log(CIL_INFO, "Resetting declarations\n");
 
-			if (pass >= CIL_PASS_MISC1) {
-				__cil_ordered_lists_reset(&extra_args.sidorder_lists);
-				__cil_ordered_lists_reset(&extra_args.classorder_lists);
-				__cil_ordered_lists_reset(&extra_args.unordered_classorder_lists);
-				__cil_ordered_lists_reset(&extra_args.catorder_lists);
-				__cil_ordered_lists_reset(&extra_args.sensitivityorder_lists);
-				cil_list_destroy(&db->sidorder, CIL_FALSE);
-				cil_list_destroy(&db->classorder, CIL_FALSE);
-				cil_list_destroy(&db->catorder, CIL_FALSE);
-				cil_list_destroy(&db->sensitivityorder, CIL_FALSE);
-			}
+				if (pass >= CIL_PASS_MISC1) {
+					__cil_ordered_lists_reset(&extra_args.sidorder_lists);
+					__cil_ordered_lists_reset(&extra_args.classorder_lists);
+					__cil_ordered_lists_reset(&extra_args.unordered_classorder_lists);
+					__cil_ordered_lists_reset(&extra_args.catorder_lists);
+					__cil_ordered_lists_reset(&extra_args.sensitivityorder_lists);
+					cil_list_destroy(&db->sidorder, CIL_FALSE);
+					cil_list_destroy(&db->classorder, CIL_FALSE);
+					cil_list_destroy(&db->catorder, CIL_FALSE);
+					cil_list_destroy(&db->sensitivityorder, CIL_FALSE);
+				}
 
-			pass = CIL_PASS_CALL1;
+				pass = CIL_PASS_CALL1;
 
-			rc = cil_reset_ast(current);
-			if (rc != SEPOL_OK) {
-				cil_log(CIL_ERR, "Failed to reset declarations\n");
-				goto exit;
+				rc = cil_reset_ast(current);
+				if (rc != SEPOL_OK) {
+					cil_log(CIL_ERR, "Failed to reset declarations\n");
+					goto exit;
+				}
 			}
 			cil_list_for_each(item, extra_args.disabled_optionals) {
 				cil_tree_children_destroy(item->data);
