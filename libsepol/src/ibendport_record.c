@@ -62,7 +62,7 @@ int sepol_ibendport_key_create(sepol_handle_t *handle,
 	if (sepol_ibendport_alloc_ibdev_name(handle, &tmp_key->ibdev_name) < 0)
 		goto err;
 
-	strncpy(tmp_key->ibdev_name, ibdev_name, IB_DEVICE_NAME_MAX);
+	strncpy(tmp_key->ibdev_name, ibdev_name, IB_DEVICE_NAME_MAX - 1);
 	tmp_key->port = port;
 
 	*key_ptr = tmp_key;
@@ -166,7 +166,7 @@ int sepol_ibendport_get_ibdev_name(sepol_handle_t *handle,
 	if (sepol_ibendport_alloc_ibdev_name(handle, &tmp_ibdev_name) < 0)
 		goto err;
 
-	strncpy(tmp_ibdev_name, ibendport->ibdev_name, IB_DEVICE_NAME_MAX);
+	strncpy(tmp_ibdev_name, ibendport->ibdev_name, IB_DEVICE_NAME_MAX - 1);
 	*ibdev_name = tmp_ibdev_name;
 	return STATUS_SUCCESS;
 
@@ -186,7 +186,7 @@ int sepol_ibendport_set_ibdev_name(sepol_handle_t *handle,
 	if (sepol_ibendport_alloc_ibdev_name(handle, &tmp) < 0)
 		goto err;
 
-	strncpy(tmp, ibdev_name, IB_DEVICE_NAME_MAX);
+	strncpy(tmp, ibdev_name, IB_DEVICE_NAME_MAX - 1);
 	free(ibendport->ibdev_name);
 	ibendport->ibdev_name = tmp;
 	return STATUS_SUCCESS;
@@ -230,7 +230,7 @@ int sepol_ibendport_clone(sepol_handle_t *handle,
 	if (sepol_ibendport_alloc_ibdev_name(handle, &new_ibendport->ibdev_name) < 0)
 		goto omem;
 
-	strncpy(new_ibendport->ibdev_name, ibendport->ibdev_name, IB_DEVICE_NAME_MAX);
+	strncpy(new_ibendport->ibdev_name, ibendport->ibdev_name, IB_DEVICE_NAME_MAX - 1);
 	new_ibendport->port = ibendport->port;
 
 	if (ibendport->con &&

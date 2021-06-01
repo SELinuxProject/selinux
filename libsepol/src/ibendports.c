@@ -34,7 +34,7 @@ static int ibendport_from_record(sepol_handle_t *handle,
 					   &ibdev_name) < 0)
 		goto err;
 
-	strncpy(tmp_ibendport->u.ibendport.dev_name, ibdev_name, IB_DEVICE_NAME_MAX);
+	strncpy(tmp_ibendport->u.ibendport.dev_name, ibdev_name, IB_DEVICE_NAME_MAX - 1);
 
 	free(ibdev_name);
 	ibdev_name = NULL;
