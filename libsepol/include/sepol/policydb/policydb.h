@@ -251,9 +251,9 @@ typedef struct class_perm_node {
 	struct class_perm_node *next;
 } class_perm_node_t;
 
-#define xperm_test(x, p) (1 & (p[x >> 5] >> (x & 0x1f)))
-#define xperm_set(x, p) (p[x >> 5] |= (1 << (x & 0x1f)))
-#define xperm_clear(x, p) (p[x >> 5] &= ~(1 << (x & 0x1f)))
+#define xperm_test(x, p) (UINT32_C(1) & (p[x >> 5] >> (x & 0x1f)))
+#define xperm_set(x, p) (p[x >> 5] |= (UINT32_C(1) << (x & 0x1f)))
+#define xperm_clear(x, p) (p[x >> 5] &= ~(UINT32_C(1) << (x & 0x1f)))
 #define EXTENDED_PERMS_LEN 8
 
 typedef struct av_extended_perms {
