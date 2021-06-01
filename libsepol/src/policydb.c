@@ -789,6 +789,7 @@ static int roles_init(policydb_t * p)
 	goto out;
 }
 
+ignore_unsigned_overflow_
 static inline unsigned long
 partial_name_hash(unsigned long c, unsigned long prevhash)
 {
