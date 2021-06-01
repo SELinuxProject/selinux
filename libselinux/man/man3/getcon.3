@@ -7,7 +7,7 @@ freecon, freeconary \- free memory associated with SELinux security contexts
 getpeercon \- get security context of a peer socket
 
 setcon \- set current security context of a process
-.
+
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
@@ -31,30 +31,39 @@ setcon \- set current security context of a process
 .sp
 .BI "void freeconary(char **" con );
 .sp
-.BI "int setcon(char *" context );
+.BI "int setcon(const char *" context );
 .sp
-.BI "int setcon_raw(char *" context );
-.
+.BI "int setcon_raw(const char *" context );
+
 .SH "DESCRIPTION"
+.TP
 .BR getcon ()
 retrieves the context of the current process, which must be free'd with
-freecon.
+.BR freecon ().
 
+.TP
 .BR getprevcon ()
 same as getcon but gets the context before the last exec.
 
+.TP
 .BR getpidcon ()
-returns the process context for the specified PID.
-
-.BR getpeercon ()
-retrieves context of peer socket, and set
-.BI * context
-to refer to it, which must be free'd with
+returns the process context for the specified PID, which must be free'd with
 .BR freecon ().
 
+.TP
+.BR getpeercon ()
+retrieves the context of the peer socket, which must be free'd with
+.BR freecon ().
+
+.TP
 .BR freecon ()
 frees the memory allocated for a security context.
 
+If
+.I con
+is NULL, no operation is performed.
+
+.TP
 .BR freeconary ()
 frees the memory allocated for a context array.
 
@@ -62,6 +71,7 @@ If
 .I con
 is NULL, no operation is performed.
 
+.TP
 .BR setcon ()
 sets the current security context of the process to a new value.  Note
 that use of this function requires that the entire application be
@@ -110,6 +120,8 @@ context and the
 .BR setcon ()
 will fail if it is not allowed by policy.
 
+.TP
+.BR *_raw()
 .BR getcon_raw (),
 .BR getprevcon_raw (),
 .BR getpidcon_raw (),
@@ -118,9 +130,14 @@ and
 .BR setcon_raw ()
 behave identically to their non-raw counterparts but do not perform context
 translation.
-.
+
 .SH "RETURN VALUE"
-On error \-1 is returned.  On success 0 is returned.
-.
+On error \-1 is returned with errno set.  On success 0 is returned.
+
+.SH "NOTES"
+The retrieval functions might return success and set
+.I *context
+to NULL if and only if SELinux is not enabled.
+
 .SH "SEE ALSO"
 .BR selinux "(8), " setexeccon "(3)"
