@@ -283,7 +283,7 @@ int selinux_status_open(int fallback)
 	uint32_t	seqno;
 
 	if (selinux_status != NULL) {
-		return 0;
+		return (selinux_status == MAP_FAILED) ? 1 : 0;
 	}
 
 	if (!selinux_mnt) {
