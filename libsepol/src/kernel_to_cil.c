@@ -1034,11 +1034,14 @@ static char *cats_ebitmap_to_str(struct ebitmap *cats, char **val_to_name)
 {
 	struct ebitmap_node *node;
 	uint32_t i, start, range;
-	char *catsbuf, *p;
+	char *catsbuf = NULL, *p;
 	const char *fmt;
 	int len, remaining;
 
 	remaining = (int)cats_ebitmap_len(cats, val_to_name);
+	if (remaining == 0) {
+		goto exit;
+	}
 	catsbuf = malloc(remaining);
 	if (!catsbuf) {
 		goto exit;
