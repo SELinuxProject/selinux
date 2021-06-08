@@ -86,7 +86,7 @@ static int next_stack_entry;
 static void push(char *expr_ptr)
 {
 	if (next_stack_entry >= stack_len) {
-		char **new_stack = stack;
+		char **new_stack;
 		int new_stack_len;
 
 		if (stack_len == 0)
@@ -441,7 +441,7 @@ static int constraint_expr_eval_reason(context_struct_t *scontext,
 	for (e = constraint->expr; e; e = e->next) {
 		/* Allocate a stack to hold expression buffer entries */
 		if (expr_counter >= expr_list_len) {
-			char **new_expr_list = expr_list;
+			char **new_expr_list;
 			int new_expr_list_len;
 
 			if (expr_list_len == 0)
