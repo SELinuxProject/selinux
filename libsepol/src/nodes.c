@@ -19,12 +19,12 @@ static int node_from_record(sepol_handle_t * handle,
 	ocontext_t *tmp_node = NULL;
 	context_struct_t *tmp_con = NULL;
 	char *addr_buf = NULL, *mask_buf = NULL;
+	size_t addr_bsize, mask_bsize;
+	int proto;
 
 	tmp_node = (ocontext_t *) calloc(1, sizeof(ocontext_t));
 	if (!tmp_node)
 		goto omem;
-
-	size_t addr_bsize, mask_bsize;
 
 	/* Address and netmask */
 	if (sepol_node_get_addr_bytes(handle, data, &addr_buf, &addr_bsize) < 0)
@@ -32,7 +32,7 @@ static int node_from_record(sepol_handle_t * handle,
 	if (sepol_node_get_mask_bytes(handle, data, &mask_buf, &mask_bsize) < 0)
 		goto err;
 
-	int proto = sepol_node_get_proto(data);
+	proto = sepol_node_get_proto(data);
 
 	switch (proto) {
 	case SEPOL_PROTO_IP4:

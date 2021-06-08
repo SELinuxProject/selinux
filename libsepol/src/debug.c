@@ -44,6 +44,7 @@ void sepol_msg_default_handler(void *varg __attribute__ ((unused)),
 {
 
 	FILE *stream = NULL;
+	va_list ap;
 
 	switch (sepol_msg_get_level(handle)) {
 
@@ -60,7 +61,6 @@ void sepol_msg_default_handler(void *varg __attribute__ ((unused)),
 	fprintf(stream, "%s.%s: ",
 		sepol_msg_get_channel(handle), sepol_msg_get_fname(handle));
 
-	va_list ap;
 	va_start(ap, fmt);
 	vfprintf(stream, fmt, ap);
 	va_end(ap);

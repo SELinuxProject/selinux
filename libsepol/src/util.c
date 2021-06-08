@@ -129,9 +129,9 @@ char *sepol_extended_perms_to_string(avtab_extended_perms_t *xperms)
 	unsigned int bit;
 	unsigned int in_range = 0;
 	static char xpermsbuf[2048];
-	xpermsbuf[0] = '\0';
 	char *p;
 	int len, xpermslen = 0;
+	xpermsbuf[0] = '\0';
 	p = xpermsbuf;
 
 	if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)

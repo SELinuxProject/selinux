@@ -290,6 +290,19 @@ static char *get_class_info(sepol_security_class_t tclass,
 {
 	constraint_expr_t *e;
 	int mls, state_num;
+	/* Determine statement type */
+	const char *statements[] = {
+		"constrain ",			/* 0 */
+		"mlsconstrain ",		/* 1 */
+		"validatetrans ",		/* 2 */
+		"mlsvalidatetrans ",	/* 3 */
+		0 };
+	size_t class_buf_len = 0;
+	size_t new_class_buf_len;
+	size_t buf_used;
+	int len;
+	char *class_buf = NULL, *p;
+	char *new_class_buf = NULL;
 
 	/* Find if MLS statement or not */
 	mls = 0;
@@ -300,25 +313,10 @@ static char *get_class_info(sepol_security_class_t tclass,
 		}
 	}
 
-	/* Determine statement type */
-	const char *statements[] = {
-		"constrain ",			/* 0 */
-		"mlsconstrain ",		/* 1 */
-		"validatetrans ",		/* 2 */
-		"mlsvalidatetrans ",	/* 3 */
-		0 };
-
 	if (xcontext == NULL)
 		state_num = mls + 0;
 	else
 		state_num = mls + 2;
-
-	size_t class_buf_len = 0;
-	size_t new_class_buf_len;
-	size_t buf_used;
-	int len;
-	char *class_buf = NULL, *p;
-	char *new_class_buf = NULL;
 
 	while (1) {
 		new_class_buf_len = class_buf_len + EXPR_BUF_SIZE;
@@ -417,12 +415,19 @@ static int constraint_expr_eval_reason(context_struct_t *scontext,
 	char *tgt = NULL;
 	int rc = 0, x;
 	char *class_buf = NULL;
+	int expr_list_len = 0;
+	int expr_count;
 
 	/*
 	 * The array of expression answer buffer pointers and counter.
 	 */
 	char **answer_list = NULL;
 	int answer_counter = 0;
+
+	/* The pop operands */
+	char *a;
+	char *b;
+	int a_len, b_len;
 
 	class_buf = get_class_info(tclass, constraint, xcontext);
 	if (!class_buf) {
@@ -431,7 +436,6 @@ static int constraint_expr_eval_reason(context_struct_t *scontext,
 	}
 
 	/* Original function but with buffer support */
-	int expr_list_len = 0;
 	expr_counter = 0;
 	expr_list = NULL;
 	for (e = constraint->expr; e; e = e->next) {
@@ -701,7 +705,7 @@ mls_ops:
 	 * expr_list malloc's. Normally they are released by the RPN to
 	 * infix code.
 	 */
-	int expr_count = expr_counter;
+	expr_count = expr_counter;
 	expr_counter = 0;
 
 	/*
@@ -714,11 +718,6 @@ mls_ops:
 		rc = -ENOMEM;
 		goto out;
 	}
-
-	/* The pop operands */
-	char *a;
-	char *b;
-	int a_len, b_len;
 
 	/* Convert constraint from RPN to infix notation. */
 	for (x = 0; x != expr_count; x++) {
@@ -778,14 +777,6 @@ mls_ops:
 			xcontext ? "Validatetrans" : "Constraint",
 			s[0] ? "GRANTED" : "DENIED");
 
-	int len, new_buf_len;
-	char *p, **new_buf = r_buf;
-	/*
-	 * These contain the constraint components that are added to the
-	 * callers reason buffer.
-	 */
-	const char *buffers[] = { class_buf, a, "); ", tmp_buf, 0 };
-
 	/*
 	 * This will add the constraints to the callers reason buffer (who is
 	 * responsible for freeing the memory). It will handle any realloc's
@@ -796,6 +787,14 @@ mls_ops:
 
 	if (r_buf && ((s[0] == 0) || ((s[0] == 1 &&
 				(flags & SHOW_GRANTED) == SHOW_GRANTED)))) {
+		int len, new_buf_len;
+		char *p, **new_buf = r_buf;
+		/*
+		* These contain the constraint components that are added to the
+		* callers reason buffer.
+		*/
+		const char *buffers[] = { class_buf, a, "); ", tmp_buf, 0 };
+
 		for (x = 0; buffers[x] != NULL; x++) {
 			while (1) {
 				p = *r_buf + reason_buf_used;

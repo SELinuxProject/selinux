@@ -113,9 +113,10 @@ int ebitmap_not(ebitmap_t *dst, ebitmap_t *e1, unsigned int maxbit)
 
 int ebitmap_andnot(ebitmap_t *dst, ebitmap_t *e1, ebitmap_t *e2, unsigned int maxbit)
 {
+	int rc;
 	ebitmap_t e3;
 	ebitmap_init(dst);
-	int rc = ebitmap_not(&e3, e2, maxbit);
+	rc = ebitmap_not(&e3, e2, maxbit);
 	if (rc < 0)
 		return rc;
 	rc = ebitmap_and(dst, e1, &e3);
@@ -138,13 +139,15 @@ unsigned int ebitmap_cardinality(ebitmap_t *e1)
 
 int ebitmap_hamming_distance(ebitmap_t * e1, ebitmap_t * e2)
 {
+	int rc;
+	ebitmap_t tmp;
+	int distance;
 	if (ebitmap_cmp(e1, e2))
 		return 0;
-	ebitmap_t tmp;
-	int rc = ebitmap_xor(&tmp, e1, e2);
+	rc = ebitmap_xor(&tmp, e1, e2);
 	if (rc < 0)
 		return -1;
-	int distance = ebitmap_cardinality(&tmp);
+	distance = ebitmap_cardinality(&tmp);
 	ebitmap_destroy(&tmp);
 	return distance;
 }

@@ -107,8 +107,8 @@ static void cil_printf(const char *fmt, ...) {
 __attribute__ ((format(printf, 2, 3)))
 static void cil_println(int indent, const char *fmt, ...)
 {
-	cil_indent(indent);
 	va_list argptr;
+	cil_indent(indent);
 	va_start(argptr, fmt);
 	if (vfprintf(out_file, fmt, argptr) < 0) {
 		log_err("Failed to write to output");
@@ -235,12 +235,14 @@ static void role_list_destroy(void)
 
 static void attr_list_destroy(struct list **attr_list)
 {
+	struct list_node *curr;
+	struct attr_list_node *attr;
+
 	if (attr_list == NULL || *attr_list == NULL) {
 		return;
 	}
 
-	struct list_node *curr = (*attr_list)->head;
-	struct attr_list_node *attr;
+	curr = (*attr_list)->head;
 
 	while (curr != NULL) {
 		attr = curr->data;
@@ -3525,12 +3527,12 @@ exit:
 static int additive_scopes_to_cil(int indent, struct policydb *pdb, struct avrule_block *block, struct stack *decl_stack)
 {
 	int rc = -1;
+	struct avrule_decl *decl = stack_peek(decl_stack);
 	struct map_args args;
 	args.pdb = pdb;
 	args.block = block;
 	args.decl_stack = decl_stack;
 	args.indent = indent;
-	struct avrule_decl *decl = stack_peek(decl_stack);
 
 	for (args.sym_index = 0; args.sym_index < SYM_NUM; args.sym_index++) {
 		if (func_to_cil[args.sym_index] == NULL) {

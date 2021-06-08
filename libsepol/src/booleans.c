@@ -19,6 +19,7 @@ static int bool_update(sepol_handle_t * handle,
 	const char *cname;
 	char *name;
 	int value;
+	cond_bool_datum_t *datum;
 
 	sepol_bool_key_unpack(key, &cname);
 	name = strdup(cname);
@@ -27,8 +28,7 @@ static int bool_update(sepol_handle_t * handle,
 	if (!name)
 		goto omem;
 
-	cond_bool_datum_t *datum =
-	    hashtab_search(policydb->p_bools.table, name);
+	datum = hashtab_search(policydb->p_bools.table, name);
 	if (!datum) {
 		ERR(handle, "boolean %s no longer in policy", name);
 		goto err;
@@ -84,10 +84,10 @@ int sepol_bool_set(sepol_handle_t * handle,
 		   const sepol_bool_key_t * key, const sepol_bool_t * data)
 {
 
+	policydb_t *policydb = &p->p;
 	const char *name;
 	sepol_bool_key_unpack(key, &name);
 
-	policydb_t *policydb = &p->p;
 	if (bool_update(handle, policydb, key, data) < 0)
 		goto err;
 
