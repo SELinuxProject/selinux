@@ -75,9 +75,10 @@ char *cil_strpool_add(const char *str)
 
 	strpool_ref = hashtab_search(cil_strpool_tab, (hashtab_key_t)str);
 	if (strpool_ref == NULL) {
+		int rc;
 		strpool_ref = cil_malloc(sizeof(*strpool_ref));
 		strpool_ref->str = cil_strdup(str);
-		int rc = hashtab_insert(cil_strpool_tab, (hashtab_key_t)strpool_ref->str, strpool_ref);
+		rc = hashtab_insert(cil_strpool_tab, (hashtab_key_t)strpool_ref->str, strpool_ref);
 		if (rc != SEPOL_OK) {
 			pthread_mutex_unlock(&cil_strpool_mutex);
 			cil_log(CIL_ERR, "Failed to allocate memory\n");

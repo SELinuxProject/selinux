@@ -78,12 +78,13 @@ static int __cil_fqn_qualify_blocks(__attribute__((unused)) hashtab_key_t k, has
 	struct cil_tree_node *node = NODE(datum);
 	int i;
 	int rc = SEPOL_OK;
+	int newlen;
 
 	if (node->flavor != CIL_BLOCK) {
 		goto exit;
 	}
 
-	int newlen = fqn_args->len + strlen(datum->name) + 1;
+	newlen = fqn_args->len + strlen(datum->name) + 1;
 	if (newlen >= CIL_MAX_NAME_LENGTH) {
 		cil_log(CIL_INFO, "Fully qualified name for block %s is too long\n", datum->name);
 		rc = SEPOL_ERR;

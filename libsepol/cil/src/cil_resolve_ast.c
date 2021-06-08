@@ -3956,10 +3956,10 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 		enum cil_log_level lvl = CIL_ERR;
 
 		if (optional != NULL) {
-			lvl = CIL_INFO;
-
 			struct cil_optional *opt = (struct cil_optional *)optional->data;
-			struct cil_tree_node *opt_node = NODE(opt);;
+			struct cil_tree_node *opt_node = NODE(opt);
+
+			lvl = CIL_INFO;
 			/* disable an optional if something failed to resolve */
 			opt->enabled = CIL_FALSE;
 			cil_tree_log(node, lvl, "Failed to resolve %s statement", cil_node_to_string(node));

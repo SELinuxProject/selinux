@@ -5173,6 +5173,7 @@ int cil_gen_macro(struct cil_db *db, struct cil_tree_node *parse_current, struct
 	char *key = NULL;
 	struct cil_macro *macro = NULL;
 	struct cil_tree_node *macro_content = NULL;
+	struct cil_tree_node *current_item;
 	enum cil_syntax syntax[] = {
 		CIL_SYN_STRING,
 		CIL_SYN_STRING,
@@ -5195,7 +5196,7 @@ int cil_gen_macro(struct cil_db *db, struct cil_tree_node *parse_current, struct
 
 	key = parse_current->next->data;
 
-	struct cil_tree_node *current_item = parse_current->next->next->cl_head;
+	current_item = parse_current->next->next->cl_head;
 	while (current_item != NULL) {
 		enum cil_syntax param_syntax[] = {
 			CIL_SYN_STRING,
@@ -5205,6 +5206,7 @@ int cil_gen_macro(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		int param_syntax_len = sizeof(param_syntax)/sizeof(*param_syntax);
 		char *kind = NULL;
 		struct cil_param *param = NULL;
+		struct cil_list_item *curr_param;
 
 		rc =__cil_verify_syntax(current_item->cl_head, param_syntax, param_syntax_len);
 		if (rc != SEPOL_OK) {
@@ -5263,7 +5265,6 @@ int cil_gen_macro(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		}
 
 		//walk current list and check for duplicate parameters
-		struct cil_list_item *curr_param;
 		cil_list_for_each(curr_param, macro->params) {
 			if (param->str == ((struct cil_param*)curr_param->data)->str) {
 				cil_log(CIL_ERR, "Duplicate parameter\n");

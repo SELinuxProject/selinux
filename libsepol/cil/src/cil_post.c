@@ -213,8 +213,8 @@ int cil_post_filecon_compare(const void *a, const void *b)
 	struct fc_data *a_data = cil_malloc(sizeof(*a_data));
 	struct fc_data *b_data = cil_malloc(sizeof(*b_data));
 	char *a_path = cil_malloc(strlen(a_filecon->path_str) + 1);
-	a_path[0] = '\0';
 	char *b_path = cil_malloc(strlen(b_filecon->path_str) + 1);
+	a_path[0] = '\0';
 	b_path[0] = '\0';
 	strcat(a_path, a_filecon->path_str);
 	strcat(b_path, b_filecon->path_str);
