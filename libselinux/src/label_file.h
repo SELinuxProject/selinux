@@ -445,9 +445,15 @@ static inline int process_line(struct selabel_handle *rec,
 	items = read_spec_entries(line_buf, &errbuf, 3, &regex, &type, &context);
 	if (items < 0) {
 		rc = errno;
-		selinux_log(SELINUX_ERROR,
-			"%s:  line %u error due to: %s\n", path,
-			lineno, errbuf ?: strerror(errno));
+		if (errbuf) {
+			selinux_log(SELINUX_ERROR,
+				    "%s:  line %u error due to: %s\n", path,
+				    lineno, errbuf);
+		} else {
+			selinux_log(SELINUX_ERROR,
+				    "%s:  line %u error due to: %m\n", path,
+				    lineno);
+		}
 		errno = rc;
 		return -1;
 	}

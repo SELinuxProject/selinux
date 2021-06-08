@@ -393,8 +393,8 @@ int realpath_not_final(const char *name, char *resolved_path)
 
 	tmp_path = strdup(name);
 	if (!tmp_path) {
-		myprintf("symlink_realpath(%s) strdup() failed: %s\n",
-			name, strerror(errno));
+		myprintf("symlink_realpath(%s) strdup() failed: %m\n",
+			name);
 		rc = -1;
 		goto out;
 	}
@@ -414,8 +414,8 @@ int realpath_not_final(const char *name, char *resolved_path)
 	}
 
 	if (!p) {
-		myprintf("symlink_realpath(%s) realpath() failed: %s\n",
-			name, strerror(errno));
+		myprintf("symlink_realpath(%s) realpath() failed: %m\n",
+			name);
 		rc = -1;
 		goto out;
 	}

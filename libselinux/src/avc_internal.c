@@ -308,8 +308,8 @@ int avc_netlink_acquire_fd(void)
 		rc = avc_netlink_open(0);
 		if (rc < 0) {
 			avc_log(SELINUX_ERROR,
-				"%s: could not open netlink socket: %d (%s)\n",
-				avc_prefix, errno, strerror(errno));
+				"%s: could not open netlink socket: %d (%m)\n",
+				avc_prefix, errno);
 			return rc;
 		}
 	}

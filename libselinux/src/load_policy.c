@@ -137,15 +137,15 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	}
 	if (fd < 0) {
 		fprintf(stderr,
-			"SELinux:  Could not open policy file <= %s.%d:  %s\n",
-			selinux_binary_policy_path(), maxvers, strerror(errno));
+			"SELinux:  Could not open policy file <= %s.%d:  %m\n",
+			selinux_binary_policy_path(), maxvers);
 		goto dlclose;
 	}
 
 	if (fstat(fd, &sb) < 0) {
 		fprintf(stderr,
-			"SELinux:  Could not stat policy file %s:  %s\n",
-			path, strerror(errno));
+			"SELinux:  Could not stat policy file %s:  %m\n",
+			path);
 		goto close;
 	}
 
@@ -153,8 +153,8 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	data = map = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (map == MAP_FAILED) {
 		fprintf(stderr,
-			"SELinux:  Could not map policy file %s:  %s\n",
-			path, strerror(errno));
+			"SELinux:  Could not map policy file %s:  %m\n",
+			path);
 		goto close;
 	}
 
@@ -193,8 +193,8 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	
 	if (rc)
 		fprintf(stderr,
-			"SELinux:  Could not load policy file %s:  %s\n",
-			path, strerror(errno));
+			"SELinux:  Could not load policy file %s:  %m\n",
+			path);
 
       unmap:
 	if (data != map)
@@ -306,7 +306,7 @@ int selinux_init_load_policy(int *enforce)
 			*enforce = 0;
 		} else {
 			/* Only emit this error if selinux was not disabled */
-			fprintf(stderr, "Mount failed for selinuxfs on %s:  %s\n", SELINUXMNT, strerror(errno));
+			fprintf(stderr, "Mount failed for selinuxfs on %s:  %m\n", SELINUXMNT);
 		}
 
 		if (rc == 0)
@@ -352,7 +352,7 @@ int selinux_init_load_policy(int *enforce)
 	if (orig_enforce != *enforce) {
 		rc = security_setenforce(*enforce);
 		if (rc < 0) {
-			fprintf(stderr, "SELinux:  Unable to switch to %s mode:  %s\n", (*enforce ? "enforcing" : "permissive"), strerror(errno));
+			fprintf(stderr, "SELinux:  Unable to switch to %s mode:  %m\n", (*enforce ? "enforcing" : "permissive"));
 			if (*enforce)
 				goto noload;
 		}
