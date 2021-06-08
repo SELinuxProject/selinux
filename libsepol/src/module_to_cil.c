@@ -62,7 +62,7 @@
 #  define UNUSED(x) UNUSED_ ## x
 #endif
 
-FILE *out_file;
+static FILE *out_file;
 
 #define STACK_SIZE 16
 #define DEFAULT_LEVEL "systemlow"
