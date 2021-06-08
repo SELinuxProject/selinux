@@ -1182,7 +1182,7 @@ int sepol_string_to_security_class(const char *class_name,
 	class_datum_t *tclass_datum;
 
 	tclass_datum = hashtab_search(policydb->p_classes.table,
-				      (hashtab_key_t) class_name);
+				      class_name);
 	if (!tclass_datum) {
 		ERR(NULL, "unrecognized class %s", class_name);
 		return STATUS_ERR;
@@ -1211,7 +1211,7 @@ int sepol_string_to_av_perm(sepol_security_class_t tclass,
 	/* Check for unique perms then the common ones (if any) */
 	perm_datum = (perm_datum_t *)
 			hashtab_search(tclass_datum->permissions.table,
-			(hashtab_key_t)perm_name);
+			perm_name);
 	if (perm_datum != NULL) {
 		*av = 0x1 << (perm_datum->s.value - 1);
 		return STATUS_SUCCESS;
@@ -1222,7 +1222,7 @@ int sepol_string_to_av_perm(sepol_security_class_t tclass,
 
 	perm_datum = (perm_datum_t *)
 			hashtab_search(tclass_datum->comdatum->permissions.table,
-			(hashtab_key_t)perm_name);
+			perm_name);
 
 	if (perm_datum != NULL) {
 		*av = 0x1 << (perm_datum->s.value - 1);
