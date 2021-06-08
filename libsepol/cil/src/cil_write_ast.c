@@ -83,7 +83,7 @@ static void write_expr(FILE *out, struct cil_list *expr)
 			break;
 		case CIL_OP: {
 			const char *op_str;
-			enum cil_flavor op_flavor = (enum cil_flavor)curr->data;
+			enum cil_flavor op_flavor = (enum cil_flavor)(uintptr_t)curr->data;
 			switch (op_flavor) {
 			case CIL_AND:
 				op_str = CIL_KEY_AND;
@@ -127,7 +127,7 @@ static void write_expr(FILE *out, struct cil_list *expr)
 		}
 		case CIL_CONS_OPERAND: {
 			const char *operand_str;
-			enum cil_flavor operand_flavor = (enum cil_flavor)curr->data;
+			enum cil_flavor operand_flavor = (enum cil_flavor)(uintptr_t)curr->data;
 			switch (operand_flavor) {
 			case CIL_CONS_U1:
 				operand_str = CIL_KEY_CONS_U1;
