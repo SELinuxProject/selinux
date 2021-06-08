@@ -1024,7 +1024,7 @@ static int context_struct_compute_av(context_struct_t * scontext,
 	return 0;
 }
 
-int sepol_validate_transition(sepol_security_id_t oldsid,
+static int sepol_validate_transition(sepol_security_id_t oldsid,
 				     sepol_security_id_t newsid,
 				     sepol_security_id_t tasksid,
 				     sepol_security_class_t tclass)

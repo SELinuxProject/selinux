@@ -291,7 +291,7 @@ exit:
 	return rc;
 }
 
-int report_assertion_failures(sepol_handle_t *handle, policydb_t *p, avrule_t *avrule)
+static int report_assertion_failures(sepol_handle_t *handle, policydb_t *p, avrule_t *avrule)
 {
 	int rc;
 	struct avtab_match_args args;

@@ -3374,9 +3374,9 @@ static int expand_cond_insert(cond_av_list_t ** l,
 	return 0;
 }
 
-int expand_cond_av_node(policydb_t * p,
-			avtab_ptr_t node,
-			cond_av_list_t ** newl, avtab_t * expa)
+static int expand_cond_av_node(policydb_t * p,
+			       avtab_ptr_t node,
+			       cond_av_list_t ** newl, avtab_t * expa)
 {
 	avtab_key_t *k = &node->key;
 	avtab_datum_t *d = &node->datum;

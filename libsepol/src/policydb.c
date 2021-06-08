@@ -635,7 +635,7 @@ void role_trans_rule_init(role_trans_rule_t * x)
 	ebitmap_init(&x->classes);
 }
 
-void role_trans_rule_destroy(role_trans_rule_t * x)
+static void role_trans_rule_destroy(role_trans_rule_t * x)
 {
 	if (x != NULL) {
 		role_set_destroy(&x->roles);
@@ -1166,7 +1166,7 @@ int policydb_index_bools(policydb_t * p)
 	return 0;
 }
 
-int policydb_index_decls(sepol_handle_t * handle, policydb_t * p)
+static int policydb_index_decls(sepol_handle_t * handle, policydb_t * p)
 {
 	avrule_block_t *curblock;
 	avrule_decl_t *decl;
@@ -1426,7 +1426,7 @@ static int range_tr_destroy(hashtab_key_t key, hashtab_datum_t datum,
 	return 0;
 }
 
-void ocontext_selinux_free(ocontext_t **ocontexts)
+static void ocontext_selinux_free(ocontext_t **ocontexts)
 {
 	ocontext_t *c, *ctmp;
 	int i;
@@ -1448,7 +1448,7 @@ void ocontext_selinux_free(ocontext_t **ocontexts)
 	}
 }
 
-void ocontext_xen_free(ocontext_t **ocontexts)
+static void ocontext_xen_free(ocontext_t **ocontexts)
 {
 	ocontext_t *c, *ctmp;
 	int i;
@@ -1747,7 +1747,7 @@ int symtab_insert(policydb_t * pol, uint32_t sym,
 	return retval;
 }
 
-int type_set_or(type_set_t * dst, type_set_t * a, type_set_t * b)
+static int type_set_or(type_set_t * dst, type_set_t * a, type_set_t * b)
 {
 	type_set_init(dst);
 
@@ -2521,7 +2521,7 @@ static int type_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 	return -1;
 }
 
-int role_trans_read(policydb_t *p, struct policy_file *fp)
+static int role_trans_read(policydb_t *p, struct policy_file *fp)
 {
 	role_trans_t **t = &p->role_tr;
 	unsigned int i;
@@ -2564,7 +2564,7 @@ int role_trans_read(policydb_t *p, struct policy_file *fp)
 	return 0;
 }
 
-int role_allow_read(role_allow_t ** r, struct policy_file *fp)
+static int role_allow_read(role_allow_t ** r, struct policy_file *fp)
 {
 	unsigned int i;
 	uint32_t buf[2], nel;
@@ -2839,7 +2839,7 @@ err:
 	return -1;
 }
 
-int filename_trans_read(policydb_t *p, struct policy_file *fp)
+static int filename_trans_read(policydb_t *p, struct policy_file *fp)
 {
 	unsigned int i;
 	uint32_t buf[1], nel;
