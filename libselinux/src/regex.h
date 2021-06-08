@@ -44,7 +44,7 @@ struct mmap_area;
 char const *regex_arch_string(void) ;
 
 /**
- * regex_verison returns the version string of the underlying regular
+ * regex_version returns the version string of the underlying regular
  * regular expressions library. In the case of PCRE it just returns the
  * result of pcre_version(). In the case of PCRE2, the very first time this
  * function is called it allocates a buffer large enough to hold the version
