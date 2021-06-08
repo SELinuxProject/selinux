@@ -78,7 +78,7 @@ typedef struct missing_requirement {
 	uint32_t perm_value;
 } missing_requirement_t;
 
-static const char *symtab_names[SYM_NUM] = {
+static const char * const symtab_names[SYM_NUM] = {
 	"common", "class", "role", "type/attribute", "user",
 	"bool", "level", "category"
 };

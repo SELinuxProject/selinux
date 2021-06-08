@@ -56,9 +56,9 @@ struct policydb_compat_info {
 	unsigned int target_platform;
 };
 
-extern struct policydb_compat_info *policydb_lookup_compat(unsigned int version,
-							   unsigned int type,
-						unsigned int target_platform);
+extern const struct policydb_compat_info *policydb_lookup_compat(unsigned int version,
+								 unsigned int type,
+								 unsigned int target_platform);
 
 /* Reading from a policy "file". */
 extern int next_entry(void *buf, struct policy_file *fp, size_t bytes);

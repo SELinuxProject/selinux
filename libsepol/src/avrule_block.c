@@ -30,7 +30,7 @@
 /* It is anticipated that there be less declarations within an avrule
  * block than the global policy.  Thus the symbol table sizes are
  * smaller than those listed in policydb.c */
-static unsigned int symtab_sizes[SYM_NUM] = {
+static const unsigned int symtab_sizes[SYM_NUM] = {
 	2,
 	4,
 	8,

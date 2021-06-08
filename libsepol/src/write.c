@@ -1345,7 +1345,7 @@ static int (*write_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
 common_write, class_write, role_write, type_write, user_write,
 	    cond_write_bool, sens_write, cat_write,};
 
-static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
+static int ocontext_write_xen(const struct policydb_compat_info *info, policydb_t *p,
 			  struct policy_file *fp)
 {
 	unsigned int i, j;
@@ -1453,7 +1453,7 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 	return POLICYDB_SUCCESS;
 }
 
-static int ocontext_write_selinux(struct policydb_compat_info *info,
+static int ocontext_write_selinux(const struct policydb_compat_info *info,
 	policydb_t *p, struct policy_file *fp)
 {
 	unsigned int i, j;
@@ -1583,7 +1583,7 @@ static int ocontext_write_selinux(struct policydb_compat_info *info,
 	return POLICYDB_SUCCESS;
 }
 
-static int ocontext_write(struct policydb_compat_info *info, policydb_t * p,
+static int ocontext_write(const struct policydb_compat_info *info, policydb_t * p,
 	struct policy_file *fp)
 {
 	int rc = POLICYDB_ERROR;
@@ -2179,7 +2179,7 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 	unsigned int i, num_syms;
 	uint32_t buf[32], config;
 	size_t items, items2, len;
-	struct policydb_compat_info *info;
+	const struct policydb_compat_info *info;
 	struct policy_data pd;
 	const char *policydb_str;
 

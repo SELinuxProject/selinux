@@ -3,5 +3,5 @@
 
 #include <sepol/policydb.h>
 
-extern const char *policydb_target_strings[];
+extern const char * const policydb_target_strings[];
 #endif

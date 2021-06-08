@@ -57,10 +57,10 @@
 #include "policydb_validate.h"
 
 #define POLICYDB_TARGET_SZ   ARRAY_SIZE(policydb_target_strings)
-const char *policydb_target_strings[] = { POLICYDB_STRING, POLICYDB_XEN_STRING };
+const char * const policydb_target_strings[] = { POLICYDB_STRING, POLICYDB_XEN_STRING };
 
 /* These need to be updated if SYM_NUM or OCON_NUM changes */
-static struct policydb_compat_info policydb_compat[] = {
+static const struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_KERN,
 	 .version = POLICYDB_VERSION_BOUNDARY,
@@ -460,7 +460,7 @@ static char *symtab_name[SYM_NUM] = {
 };
 #endif
 
-static unsigned int symtab_sizes[SYM_NUM] = {
+static const unsigned int symtab_sizes[SYM_NUM] = {
 	2,
 	32,
 	16,
@@ -471,12 +471,12 @@ static unsigned int symtab_sizes[SYM_NUM] = {
 	16,
 };
 
-struct policydb_compat_info *policydb_lookup_compat(unsigned int version,
-						    unsigned int type,
-						unsigned int target_platform)
+const struct policydb_compat_info *policydb_lookup_compat(unsigned int version,
+						          unsigned int type,
+						          unsigned int target_platform)
 {
 	unsigned int i;
-	struct policydb_compat_info *info = NULL;
+	const struct policydb_compat_info *info = NULL;
 
 	for (i = 0; i < sizeof(policydb_compat) / sizeof(*info); i++) {
 		if (policydb_compat[i].version == version &&
@@ -2848,7 +2848,7 @@ static int filename_trans_read(policydb_t *p, struct policy_file *fp)
 	return 0;
 }
 
-static int ocontext_read_xen(struct policydb_compat_info *info,
+static int ocontext_read_xen(const struct policydb_compat_info *info,
 	policydb_t *p, struct policy_file *fp)
 {
 	unsigned int i, j;
@@ -2957,7 +2957,7 @@ static int ocontext_read_xen(struct policydb_compat_info *info,
 	}
 	return 0;
 }
-static int ocontext_read_selinux(struct policydb_compat_info *info,
+static int ocontext_read_selinux(const struct policydb_compat_info *info,
 			 policydb_t * p, struct policy_file *fp)
 {
 	unsigned int i, j;
@@ -3135,7 +3135,7 @@ static int ocontext_read_selinux(struct policydb_compat_info *info,
 	return 0;
 }
 
-static int ocontext_read(struct policydb_compat_info *info,
+static int ocontext_read(const struct policydb_compat_info *info,
 	policydb_t *p, struct policy_file *fp)
 {
 	int rc = -1;
@@ -4192,7 +4192,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 	uint32_t buf[5];
 	size_t len, nprim, nel;
 	char *policydb_str;
-	struct policydb_compat_info *info;
+	const struct policydb_compat_info *info;
 	unsigned int policy_type, bufindex;
 	ebitmap_node_t *tnode;
 	int rc;

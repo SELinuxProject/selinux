@@ -5,7 +5,7 @@
 #include <string.h>
 #include <sepol/policydb/polcaps.h>
 
-static const char *polcap_names[] = {
+static const char * const polcap_names[] = {
 	"network_peer_controls",	/* POLICYDB_CAPABILITY_NETPEER */
 	"open_perms",			/* POLICYDB_CAPABILITY_OPENPERM */
 	"extended_socket_class",	/* POLICYDB_CAPABILITY_EXTSOCKCLASS */
