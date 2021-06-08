@@ -175,7 +175,7 @@ static int expr_buf_len;
 static void cat_expr_buf(char *e_buf, const char *string)
 {
 	int len, new_buf_len;
-	char *p, *new_buf = e_buf;
+	char *p, *new_buf;
 
 	while (1) {
 		p = e_buf + expr_buf_used;
@@ -406,7 +406,7 @@ static int constraint_expr_eval_reason(context_struct_t *scontext,
 #define TARGET  2
 #define XTARGET 3
 
-	int s_t_x_num = SOURCE;
+	int s_t_x_num;
 
 	/* Set 0 = fail, u = CEXPR_USER, r = CEXPR_ROLE, t = CEXPR_TYPE */
 	int u_r_t = 0;
