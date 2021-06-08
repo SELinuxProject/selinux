@@ -2963,7 +2963,7 @@ static int genfscon_to_cil(struct policydb *pdb)
 
 	for (genfs = pdb->genfs; genfs != NULL; genfs = genfs->next) {
 		for (ocon = genfs->head; ocon != NULL; ocon = ocon->next) {
-			cil_printf("(genfscon %s %s ", genfs->fstype, ocon->u.name);
+			cil_printf("(genfscon %s \"%s\" ", genfs->fstype, ocon->u.name);
 			context_to_cil(pdb, &ocon->context[0]);
 			cil_printf(")\n");
 		}
