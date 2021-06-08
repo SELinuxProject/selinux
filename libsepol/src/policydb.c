@@ -1791,24 +1791,6 @@ int type_set_or_eq(type_set_t * dst, type_set_t * other)
 	return ret;
 }
 
-int role_set_get_role(role_set_t * x, uint32_t role)
-{
-	if (x->flags & ROLE_STAR)
-		return 1;
-
-	if (ebitmap_get_bit(&x->roles, role - 1)) {
-		if (x->flags & ROLE_COMP)
-			return 0;
-		else
-			return 1;
-	} else {
-		if (x->flags & ROLE_COMP)
-			return 1;
-		else
-			return 0;
-	}
-}
-
 /***********************************************************************/
 /* everything below is for policy reads */
 

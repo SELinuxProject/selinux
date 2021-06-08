@@ -1024,53 +1024,6 @@ static int context_struct_compute_av(context_struct_t * scontext,
 	return 0;
 }
 
-static int sepol_validate_transition(sepol_security_id_t oldsid,
-				     sepol_security_id_t newsid,
-				     sepol_security_id_t tasksid,
-				     sepol_security_class_t tclass)
-{
-	context_struct_t *ocontext;
-	context_struct_t *ncontext;
-	context_struct_t *tcontext;
-	class_datum_t *tclass_datum;
-	constraint_node_t *constraint;
-
-	if (!tclass || tclass > policydb->p_classes.nprim) {
-		ERR(NULL, "unrecognized class %d", tclass);
-		return -EINVAL;
-	}
-	tclass_datum = policydb->class_val_to_struct[tclass - 1];
-
-	ocontext = sepol_sidtab_search(sidtab, oldsid);
-	if (!ocontext) {
-		ERR(NULL, "unrecognized SID %d", oldsid);
-		return -EINVAL;
-	}
-
-	ncontext = sepol_sidtab_search(sidtab, newsid);
-	if (!ncontext) {
-		ERR(NULL, "unrecognized SID %d", newsid);
-		return -EINVAL;
-	}
-
-	tcontext = sepol_sidtab_search(sidtab, tasksid);
-	if (!tcontext) {
-		ERR(NULL, "unrecognized SID %d", tasksid);
-		return -EINVAL;
-	}
-
-	constraint = tclass_datum->validatetrans;
-	while (constraint) {
-		if (!constraint_expr_eval_reason(ocontext, ncontext, tcontext,
-					  0, constraint, NULL, 0)) {
-			return -EPERM;
-		}
-		constraint = constraint->next;
-	}
-
-	return 0;
-}
-
 /*
  * sepol_validate_transition_reason_buffer - the reason buffer is realloc'd
  * in the constraint_expr_eval_reason() function.

@@ -84,37 +84,6 @@ int sepol_sidtab_insert(sidtab_t * s, sepol_security_id_t sid,
 	return 0;
 }
 
-int sepol_sidtab_remove(sidtab_t * s, sepol_security_id_t sid)
-{
-	int hvalue;
-	sidtab_node_t *cur, *last;
-
-	if (!s || !s->htable)
-		return -ENOENT;
-
-	hvalue = SIDTAB_HASH(sid);
-	last = NULL;
-	cur = s->htable[hvalue];
-	while (cur != NULL && sid > cur->sid) {
-		last = cur;
-		cur = cur->next;
-	}
-
-	if (cur == NULL || sid != cur->sid)
-		return -ENOENT;
-
-	if (last == NULL)
-		s->htable[hvalue] = cur->next;
-	else
-		last->next = cur->next;
-
-	context_destroy(&cur->context);
-
-	free(cur);
-	s->nel--;
-	return 0;
-}
-
 context_struct_t *sepol_sidtab_search(sidtab_t * s, sepol_security_id_t sid)
 {
 	int hvalue;
