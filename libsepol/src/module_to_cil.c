@@ -2668,8 +2668,7 @@ static int ocontext_selinux_ibpkey_to_cil(struct policydb *pdb,
 
 		if (inet_ntop(AF_INET6, &subnet_prefix.s6_addr,
 			      subnet_prefix_str, INET6_ADDRSTRLEN) == NULL) {
-			log_err("ibpkeycon subnet_prefix is invalid: %s",
-				strerror(errno));
+			log_err("ibpkeycon subnet_prefix is invalid: %m");
 			rc = -1;
 			goto exit;
 		}
@@ -2714,13 +2713,13 @@ static int ocontext_selinux_node_to_cil(struct policydb *pdb, struct ocontext *n
 
 	for (node = nodes; node != NULL; node = node->next) {
 		if (inet_ntop(AF_INET, &node->u.node.addr, addr, INET_ADDRSTRLEN) == NULL) {
-			log_err("Nodecon address is invalid: %s", strerror(errno));
+			log_err("Nodecon address is invalid: %m");
 			rc = -1;
 			goto exit;
 		}
 
 		if (inet_ntop(AF_INET, &node->u.node.mask, mask, INET_ADDRSTRLEN) == NULL) {
-			log_err("Nodecon mask is invalid: %s", strerror(errno));
+			log_err("Nodecon mask is invalid: %m");
 			rc = -1;
 			goto exit;
 		}
@@ -2746,13 +2745,13 @@ static int ocontext_selinux_node6_to_cil(struct policydb *pdb, struct ocontext *
 
 	for (node = nodes; node != NULL; node = node->next) {
 		if (inet_ntop(AF_INET6, &node->u.node6.addr, addr, INET6_ADDRSTRLEN) == NULL) {
-			log_err("Nodecon address is invalid: %s", strerror(errno));
+			log_err("Nodecon address is invalid: %m");
 			rc = -1;
 			goto exit;
 		}
 
 		if (inet_ntop(AF_INET6, &node->u.node6.mask, mask, INET6_ADDRSTRLEN) == NULL) {
-			log_err("Nodecon mask is invalid: %s", strerror(errno));
+			log_err("Nodecon mask is invalid: %m");
 			rc = -1;
 			goto exit;
 		}
