@@ -4153,7 +4153,7 @@ void cil_destroy_context(struct cil_context *context)
 		return;
 	}
 
-	cil_symtab_datum_destroy(&context->datum);;
+	cil_symtab_datum_destroy(&context->datum);
 
 	if (context->range_str == NULL && context->range != NULL) {
 		cil_destroy_levelrange(context->range);
