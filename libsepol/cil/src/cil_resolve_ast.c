@@ -1619,7 +1619,7 @@ int cil_resolve_sensitivityorder(struct cil_tree_node *current, void *extra_args
 	cil_list_for_each(curr, sensorder->sens_list_str) {
 		rc = cil_resolve_name(current, (char *)curr->data, CIL_SYM_SENS, extra_args, &datum);
 		if (rc != SEPOL_OK) {
-			cil_log(CIL_ERR, "Failed to resolve sensitivty %s in sensitivityorder\n", (char *)curr->data);
+			cil_log(CIL_ERR, "Failed to resolve sensitivity %s in sensitivityorder\n", (char *)curr->data);
 			goto exit;
 		}
 		if (FLAVOR(datum) != CIL_SENS) {

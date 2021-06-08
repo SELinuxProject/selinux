@@ -3972,7 +3972,7 @@ int sepol_module_policydb_to_cil(FILE *fp, struct policydb *pdb, int linked)
 
 	if (pdb->policy_type != SEPOL_POLICY_BASE &&
 		pdb->policy_type != SEPOL_POLICY_MOD) {
-		log_err("Policy pakcage is not a base or module");
+		log_err("Policy package is not a base or module");
 		rc = -1;
 		goto exit;
 	}

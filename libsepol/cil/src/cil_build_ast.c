@@ -3692,7 +3692,7 @@ int cil_gen_sensitivityorder(struct cil_db *db, struct cil_tree_node *parse_curr
 
 	cil_list_for_each(curr, sensorder->sens_list_str) {
 		if (curr->data == CIL_KEY_UNORDERED) {
-			cil_log(CIL_ERR, "Sensitivy order cannot be unordered.\n");
+			cil_log(CIL_ERR, "Sensitivity order cannot be unordered.\n");
 			rc = SEPOL_ERR;
 			goto exit;
 		}

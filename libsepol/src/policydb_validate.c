@@ -641,7 +641,7 @@ static int validate_scope_index(sepol_handle_t *handle, scope_index_t *scope_ind
 	return 0;
 
 bad:
-	ERR(handle, "Invalide scope");
+	ERR(handle, "Invalid scope");
 	return -1;
 }
 
