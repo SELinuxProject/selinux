@@ -1747,7 +1747,7 @@ int symtab_insert(policydb_t * pol, uint32_t sym,
 	return retval;
 }
 
-static int type_set_or(type_set_t * dst, type_set_t * a, type_set_t * b)
+static int type_set_or(type_set_t * dst, const type_set_t * a, const type_set_t * b)
 {
 	type_set_init(dst);
 
@@ -1764,7 +1764,7 @@ static int type_set_or(type_set_t * dst, type_set_t * a, type_set_t * b)
 	return 0;
 }
 
-int type_set_cpy(type_set_t * dst, type_set_t * src)
+int type_set_cpy(type_set_t * dst, const type_set_t * src)
 {
 	type_set_init(dst);
 
@@ -1777,7 +1777,7 @@ int type_set_cpy(type_set_t * dst, type_set_t * src)
 	return 0;
 }
 
-int type_set_or_eq(type_set_t * dst, type_set_t * other)
+int type_set_or_eq(type_set_t * dst, const type_set_t * other)
 {
 	int ret;
 	type_set_t tmp;
