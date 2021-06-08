@@ -1073,7 +1073,7 @@ int __cil_type_rule_to_avtab(policydb_t *pdb, const struct cil_db *db, struct ci
 	type_datum_t *sepol_src = NULL;
 	type_datum_t *sepol_tgt = NULL;
 	class_datum_t *sepol_obj = NULL;
-	struct cil_list *class_list;
+	struct cil_list *class_list = NULL;
 	type_datum_t *sepol_result = NULL;
 	ebitmap_t src_bitmap, tgt_bitmap;
 	ebitmap_node_t *node1, *node2;
@@ -1129,7 +1129,7 @@ int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *db, stru
 	type_datum_t *sepol_src = NULL;
 	type_datum_t *sepol_tgt = NULL;
 	class_datum_t *sepol_obj = NULL;
-	struct cil_list *class_list;
+	struct cil_list *class_list = NULL;
 	type_datum_t *sepol_result = NULL;
 	ebitmap_t src_bitmap, tgt_bitmap;
 	ebitmap_node_t *node1, *node2;
@@ -2338,7 +2338,7 @@ int cil_roletrans_to_policydb(policydb_t *pdb, const struct cil_db *db, struct c
 	role_datum_t *sepol_src = NULL;
 	type_datum_t *sepol_tgt = NULL;
 	class_datum_t *sepol_obj = NULL;
-	struct cil_list *class_list;
+	struct cil_list *class_list = NULL;
 	role_datum_t *sepol_result = NULL;
 	role_trans_t *new = NULL;
 	uint32_t *new_role = NULL;
@@ -3166,7 +3166,7 @@ int cil_rangetransition_to_policydb(policydb_t *pdb, const struct cil_db *db, st
 	type_datum_t *sepol_src = NULL;
 	type_datum_t *sepol_tgt = NULL;
 	class_datum_t *sepol_class = NULL;
-	struct cil_list *class_list;
+	struct cil_list *class_list = NULL;
 	range_trans_t *newkey = NULL;
 	struct mls_range *newdatum = NULL;
 	ebitmap_t src_bitmap, tgt_bitmap;
@@ -3603,7 +3603,7 @@ int cil_default_to_policydb(policydb_t *pdb, struct cil_default *def)
 {
 	struct cil_list_item *curr;
 	class_datum_t *sepol_class;
-	struct cil_list *class_list;
+	struct cil_list *class_list = NULL;
 
 	cil_list_for_each(curr, def->class_datums) {
 		struct cil_list_item *c;
@@ -3658,7 +3658,7 @@ int cil_defaultrange_to_policydb(policydb_t *pdb, struct cil_defaultrange *def)
 {
 	struct cil_list_item *curr;
 	class_datum_t *sepol_class;
-	struct cil_list *class_list;
+	struct cil_list *class_list = NULL;
 
 	cil_list_for_each(curr, def->class_datums) {
 		struct cil_list_item *c;
