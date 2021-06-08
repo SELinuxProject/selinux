@@ -817,11 +817,11 @@ static int filenametr_cmp(hashtab_t h __attribute__ ((unused)),
 	const filename_trans_key_t *ft2 = (const filename_trans_key_t *)k2;
 	int v;
 
-	v = ft1->ttype - ft2->ttype;
+	v = (ft1->ttype > ft2->ttype) - (ft1->ttype < ft2->ttype);
 	if (v)
 		return v;
 
-	v = ft1->tclass - ft2->tclass;
+	v = (ft1->tclass > ft2->tclass) - (ft1->tclass < ft2->tclass);
 	if (v)
 		return v;
 
