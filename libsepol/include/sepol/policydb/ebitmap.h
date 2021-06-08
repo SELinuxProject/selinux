@@ -67,7 +67,7 @@ static inline unsigned int ebitmap_next(ebitmap_node_t ** n, unsigned int bit)
 	return (bit + 1);
 }
 
-static inline int ebitmap_node_get_bit(ebitmap_node_t * n, unsigned int bit)
+static inline int ebitmap_node_get_bit(const ebitmap_node_t * n, unsigned int bit)
 {
 	if (n->map & (MAPBIT << (bit - n->startbit)))
 		return 1;
@@ -83,18 +83,18 @@ static inline int ebitmap_node_get_bit(ebitmap_node_t * n, unsigned int bit)
 extern int ebitmap_cmp(const ebitmap_t * e1, const ebitmap_t * e2);
 extern int ebitmap_or(ebitmap_t * dst, const ebitmap_t * e1, const ebitmap_t * e2);
 extern int ebitmap_union(ebitmap_t * dst, const ebitmap_t * e1);
-extern int ebitmap_and(ebitmap_t *dst, ebitmap_t *e1, ebitmap_t *e2);
-extern int ebitmap_xor(ebitmap_t *dst, ebitmap_t *e1, ebitmap_t *e2);
-extern int ebitmap_not(ebitmap_t *dst, ebitmap_t *e1, unsigned int maxbit);
-extern int ebitmap_andnot(ebitmap_t *dst, ebitmap_t *e1, ebitmap_t *e2, unsigned int maxbit);
-extern unsigned int ebitmap_cardinality(ebitmap_t *e1);
-extern int ebitmap_hamming_distance(ebitmap_t * e1, ebitmap_t * e2);
+extern int ebitmap_and(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2);
+extern int ebitmap_xor(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2);
+extern int ebitmap_not(ebitmap_t *dst, const ebitmap_t *e1, unsigned int maxbit);
+extern int ebitmap_andnot(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2, unsigned int maxbit);
+extern unsigned int ebitmap_cardinality(const ebitmap_t *e1);
+extern int ebitmap_hamming_distance(const ebitmap_t * e1, const ebitmap_t * e2);
 extern int ebitmap_cpy(ebitmap_t * dst, const ebitmap_t * src);
 extern int ebitmap_contains(const ebitmap_t * e1, const ebitmap_t * e2);
 extern int ebitmap_match_any(const ebitmap_t *e1, const ebitmap_t *e2);
 extern int ebitmap_get_bit(const ebitmap_t * e, unsigned int bit);
 extern int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value);
-extern unsigned int ebitmap_highest_set_bit(ebitmap_t * e);
+extern unsigned int ebitmap_highest_set_bit(const ebitmap_t * e);
 extern void ebitmap_destroy(ebitmap_t * e);
 extern int ebitmap_read(ebitmap_t * e, void *fp);
 
