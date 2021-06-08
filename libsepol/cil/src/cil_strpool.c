@@ -47,14 +47,13 @@ static hashtab_t cil_strpool_tab = NULL;
 
 static unsigned int cil_strpool_hash(hashtab_t h, const_hashtab_key_t key)
 {
-	const char *p, *keyp;
+	const char *p;
 	size_t size;
 	unsigned int val;
 
 	val = 0;
-	keyp = (const char*)key;
-	size = strlen(keyp);
-	for (p = keyp; ((size_t) (p - keyp)) < size; p++)
+	size = strlen(key);
+	for (p = key; ((size_t) (p - key)) < size; p++)
 		val =
 		    (val << 4 | (val >> (8 * sizeof(unsigned int) - 4))) ^ (*p);
 	return val & (h->size - 1);
@@ -62,9 +61,7 @@ static unsigned int cil_strpool_hash(hashtab_t h, const_hashtab_key_t key)
 
 static int cil_strpool_compare(hashtab_t h __attribute__ ((unused)), const_hashtab_key_t key1, const_hashtab_key_t key2)
 {
-	const char *keyp1 = (const char*)key1;
-	const char *keyp2 = (const char*)key2;
-	return strcmp(keyp1, keyp2);
+	return strcmp(key1, key2);
 }
 
 char *cil_strpool_add(const char *str)
@@ -73,12 +70,12 @@ char *cil_strpool_add(const char *str)
 
 	pthread_mutex_lock(&cil_strpool_mutex);
 
-	strpool_ref = hashtab_search(cil_strpool_tab, (hashtab_key_t)str);
+	strpool_ref = hashtab_search(cil_strpool_tab, str);
 	if (strpool_ref == NULL) {
 		int rc;
 		strpool_ref = cil_malloc(sizeof(*strpool_ref));
 		strpool_ref->str = cil_strdup(str);
-		rc = hashtab_insert(cil_strpool_tab, (hashtab_key_t)strpool_ref->str, strpool_ref);
+		rc = hashtab_insert(cil_strpool_tab, strpool_ref->str, strpool_ref);
 		if (rc != SEPOL_OK) {
 			pthread_mutex_unlock(&cil_strpool_mutex);
 			cil_log(CIL_ERR, "Failed to allocate memory\n");
