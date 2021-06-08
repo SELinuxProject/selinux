@@ -1050,7 +1050,7 @@ static char *cats_ebitmap_to_str(struct ebitmap *cats, char **val_to_name)
 	p = catsbuf;
 
 	*p++ = '(';
-	remaining--;;
+	remaining--;
 
 	range = 0;
 	ebitmap_for_each_positive_bit(cats, node, i) {

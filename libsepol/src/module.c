@@ -82,7 +82,7 @@ static int policy_file_length(struct policy_file *fp, size_t *out)
 		break;
 	case PF_USE_MEMORY:
 		*out = fp->size;
-		break;;
+		break;
 	default:
 		*out = 0;
 		break;
