@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 {
 	char *seuser = NULL, *level = NULL;
 	char **contextlist;
-	int rc, n;
+	int rc, n, i;
 
 	if (argc != 3) {
 		fprintf(stderr, "usage:  %s linuxuser fromcon\n", argv[0]);
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 	if (n == 0)
 		printf("no valid context found\n");
 
-	for (int i = 0; i < n; i++)
+	for (i = 0; i < n; i++)
 		printf("Context %d\t%s\n", i, contextlist[i]);
 
 	freeconary(contextlist);
