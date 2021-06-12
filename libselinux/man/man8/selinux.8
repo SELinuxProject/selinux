@@ -94,6 +94,13 @@ and reboot.
 also has this capability.  The
 .BR restorecon / fixfiles
 commands are also available for relabeling files.
+
+Please note that using mount flag
+.I nosuid
+also disables SELinux domain transitions, unless permission
+.I nosuid_transition
+is used in the policy to allow this, which in turn needs also policy capability
+.IR nnp_nosuid_transition .
 .
 .SH AUTHOR
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
