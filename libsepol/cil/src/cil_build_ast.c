@@ -5642,10 +5642,6 @@ int cil_fill_ipaddr(struct cil_tree_node *addr_node, struct cil_ipaddr *addr)
 		goto exit;
 	}
 
-	if (addr_node->cl_head != NULL ||  addr_node->next != NULL) {
-		goto exit;
-	}
-
 	if (strchr(addr_node->data, '.') != NULL) {
 		addr->family = AF_INET;
 	} else {

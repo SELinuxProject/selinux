@@ -3024,14 +3024,18 @@ static int cil_build_call_args(struct cil_tree_node *call_node, struct cil_call 
 			break;
 		}
 		case CIL_IPADDR: {
-			if (arg_node->cl_head != NULL) {
+			if (arg_node->data == NULL) {
+				cil_tree_log(call_node, CIL_ERR, "Invalid macro parameter");
+				cil_destroy_args(arg);
+				rc = SEPOL_ERR;
+				goto exit;
+			} else if (strchr(arg_node->data, '.') || strchr(arg_node->data, ':')) {
 				struct cil_ipaddr *ipaddr = NULL;
 				struct cil_tree_node *addr_node = NULL;
 				cil_ipaddr_init(&ipaddr);
-
-				rc = cil_fill_ipaddr(arg_node->cl_head, ipaddr);
+				rc = cil_fill_ipaddr(arg_node, ipaddr);
 				if (rc != SEPOL_OK) {
-					cil_log(CIL_ERR, "Failed to create anonymous ip address, rc: %d\n", rc);
+					cil_tree_log(call_node, CIL_ERR, "Failed to create anonymous ip address");
 					cil_destroy_ipaddr(ipaddr);
 					cil_destroy_args(arg);
 					goto exit;
@@ -3039,18 +3043,11 @@ static int cil_build_call_args(struct cil_tree_node *call_node, struct cil_call 
 				cil_tree_node_init(&addr_node);
 				addr_node->flavor = CIL_IPADDR;
 				addr_node->data = ipaddr;
-				cil_list_append(((struct cil_symtab_datum*)ipaddr)->nodes,
-								CIL_LIST_ITEM, addr_node);
-				arg->arg = (struct cil_symtab_datum*)ipaddr;
-			} else if (arg_node->data == NULL) {
-				cil_tree_log(call_node, CIL_ERR, "Invalid macro parameter");
-				cil_destroy_args(arg);
-				rc = SEPOL_ERR;
-				goto exit;
+				cil_list_append(DATUM(ipaddr)->nodes, CIL_LIST_ITEM, addr_node);
+				arg->arg = DATUM(ipaddr);
 			} else {
 				arg->arg_str = arg_node->data;
 			}
-
 			break;
 		}
 		case CIL_CLASS:
