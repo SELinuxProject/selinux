@@ -516,12 +516,12 @@ static int parse_module_store(char *arg)
 		char *s;
 		current_conf->store_type = SEMANAGE_CON_POLSERV_REMOTE;
 		if ((s = strchr(arg, ':')) == NULL) {
-			current_conf->store_path = arg;
+			current_conf->store_path = strdup(arg);
 			current_conf->server_port = 4242;
 		} else {
 			char *endptr;
 			*s = '\0';
-			current_conf->store_path = arg;
+			current_conf->store_path = strdup(arg);
 			current_conf->server_port = strtol(s + 1, &endptr, 10);
 			if (*(s + 1) == '\0' || *endptr != '\0') {
 				return -2;
