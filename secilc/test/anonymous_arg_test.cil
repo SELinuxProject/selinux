@@ -1,0 +1,106 @@
+;; Test anonymous args
+
+(mls true)
+(class CLASS (PERM))
+(classorder (CLASS))
+(sid SID)
+(sidorder (SID))
+(user USER)
+(role ROLE)
+(type TYPE)
+(category CAT)
+(categoryorder (CAT))
+(sensitivity SENS)
+(sensitivityorder (SENS))
+(sensitivitycategory SENS (CAT))
+(allow TYPE self (CLASS (PERM)))
+(roletype ROLE TYPE)
+(userrole USER ROLE)
+(userlevel USER (SENS))
+(userrange USER ((SENS)(SENS (CAT))))
+(sidcontext SID (USER ROLE TYPE ((SENS)(SENS))))
+
+(category c0)
+(category c1)
+(category c2)
+(category c3)
+(categoryorder (CAT c0 c1 c2 c3))
+(categoryset cs01 (c0 c1))
+(categoryset cs03 (range c0 c3))
+
+(sensitivity s0)
+(sensitivity s1)
+(sensitivity s2)
+(sensitivity s3)
+(sensitivityorder (SENS s0 s1 s2 s3))
+
+(sensitivitycategory s0 (cs01 c2 c3))
+(sensitivitycategory s1 (c0 c1 c2 c3))
+(sensitivitycategory s2 (c0 c1 c2 c3))
+(sensitivitycategory s3 (range c0 c3))
+
+(level lvl (s0 (c0)))
+(level lvl0 (s0))
+(level lvl3 (s3 (range c0 c3)))
+
+(levelrange rng ((s0) (s3 (c0 c1 c2 c3))))
+
+(user u1)
+(user u2)
+(user u3)
+(user u4)
+
+(userrole u1 ROLE)
+(userrole u2 ROLE)
+(userrole u3 ROLE)
+(userrole u4 ROLE)
+
+; Test categoryset
+(macro m1 ((user u)(sensitivity s)(categoryset cs))
+  (userlevel u (s (cs)))
+)
+(call m1 (u1 s1 (c0 c1)))
+(call m1 (u2 s2 cs01))
+
+; Test level
+(macro m2 ((user u)(level l))
+  (userlevel u l)
+)
+(call m2 (u3 (s3 (c2))))
+(call m2 (u4 lvl))
+
+; Test levelrange
+(macro m3 ((user u)(levelrange lr))
+  (userrange u lr)
+)
+(call m3 (u1 ((s0) (s3 (range c0 c3)))))
+(call m3 (u2 (lvl0 (s3 (cs03)))))
+(call m3 (u3 (lvl0 lvl3)))
+(call m3 (u4 rng))
+
+; Test ipaddr
+(macro m4 ((user u)(ipaddr nm)(ipaddr ip))
+  (nodecon ip nm (u ROLE TYPE ((s0) (s0))))
+)
+(ipaddr nm1 255.255.255.0)
+(ipaddr ip4 1.2.3.4)
+(call m4 (u1 nm1 192.25.35.200))
+(call m4 (u2 255.255.255.0 ip4))
+
+; Test classpermission
+(type t1)
+(type t2)
+(type t3)
+
+(classpermission cp1)
+(classpermissionset cp1 (CLASS (PERM)))
+
+(classmap cm1 (cm1p))
+(classmapping cm1 cm1p (CLASS (PERM)))
+
+(macro m5 ((type t)(classpermission cp))
+  (allow t self cp)
+)
+(call m5 (t1 (CLASS (PERM))))
+(call m5 (t2 cp1))
+(call m5 (t3 (cm1 (cm1p))))
