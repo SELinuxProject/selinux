@@ -3346,6 +3346,7 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 	struct cil_list_item *curr;
 	struct cil_symtab_datum *res_datum = NULL;
 	enum cil_sym_index sym_index =  CIL_SYM_UNKNOWN;
+	struct cil_list *datum_sub_expr;
 
 	switch (str_expr->flavor) {
 	case CIL_BOOL:
@@ -3379,18 +3380,26 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
-
-			if (sym_index == CIL_SYM_TYPES && (expr_type == CIL_CONSTRAIN || expr_type == CIL_VALIDATETRANS)) {
-				cil_type_used(res_datum, CIL_ATTR_CONSTRAINT);
+			if (sym_index == CIL_SYM_CATS && NODE(res_datum)->flavor == CIL_CATSET) {
+				struct cil_catset *catset = (struct cil_catset *)res_datum;
+				if (!catset->cats->datum_expr) {
+					rc = cil_resolve_expr(expr_type, catset->cats->str_expr, &catset->cats->datum_expr, parent, extra_args);
+					if (rc != SEPOL_OK) {
+						goto exit;
+					}
+				}
+				cil_copy_list(catset->cats->datum_expr, &datum_sub_expr);
+				cil_list_append(*datum_expr, CIL_LIST, datum_sub_expr);
+			} else {
+				if (sym_index == CIL_SYM_TYPES && (expr_type == CIL_CONSTRAIN || expr_type == CIL_VALIDATETRANS)) {
+					cil_type_used(res_datum, CIL_ATTR_CONSTRAINT);
+				}
+				cil_list_append(*datum_expr, CIL_DATUM, res_datum);
 			}
-
-			cil_list_append(*datum_expr, CIL_DATUM, res_datum);
 			break;
 		case CIL_LIST: {
-			struct cil_list *datum_sub_expr;
 			rc = cil_resolve_expr(expr_type, curr->data, &datum_sub_expr, parent, extra_args);
 			if (rc != SEPOL_OK) {
-				cil_list_destroy(&datum_sub_expr, CIL_TRUE);
 				goto exit;
 			}
 			cil_list_append(*datum_expr, CIL_LIST, datum_sub_expr);
@@ -3404,6 +3413,7 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 	return SEPOL_OK;
 
 exit:
+	cil_list_destroy(datum_expr, CIL_FALSE);
 	return rc;
 }
 
