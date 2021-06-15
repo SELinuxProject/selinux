@@ -2527,7 +2527,7 @@ static int write_genfscon_rules_to_conf(FILE *out, struct policydb *pdb)
 				goto exit;
 			}
 
-			rc = strs_create_and_add(strs, "genfscon %s %s %s", 3,
+			rc = strs_create_and_add(strs, "genfscon %s \"%s\" %s", 3,
 						 fstype, name, ctx);
 			free(ctx);
 			if (rc != 0) {
@@ -2992,7 +2992,7 @@ static int write_xen_devicetree_rules_to_conf(FILE *out, struct policydb *pdb)
 			goto exit;
 		}
 
-		sepol_printf(out, "devicetreecon %s %s\n", name, ctx);
+		sepol_printf(out, "devicetreecon \"%s\" %s\n", name, ctx);
 
 		free(ctx);
 	}
