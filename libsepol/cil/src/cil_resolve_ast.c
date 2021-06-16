@@ -46,12 +46,13 @@
 #include "cil_verify.h"
 #include "cil_strpool.h"
 #include "cil_symtab.h"
+#include "cil_stack.h"
 
 struct cil_args_resolve {
 	struct cil_db *db;
 	enum cil_pass pass;
 	uint32_t *changed;
-	struct cil_list *disabled_optionals;
+	struct cil_list *to_destroy;
 	struct cil_tree_node *block;
 	struct cil_tree_node *macro;
 	struct cil_tree_node *optional;
@@ -62,6 +63,7 @@ struct cil_args_resolve {
 	struct cil_list *catorder_lists;
 	struct cil_list *sensitivityorder_lists;
 	struct cil_list *in_list;
+	struct cil_stack *disabled_optionals;
 };
 
 static struct cil_name * __cil_insert_name(struct cil_db *db, hashtab_key_t key, struct cil_tree_node *ast_node)
@@ -2552,6 +2554,15 @@ int cil_resolve_in(struct cil_tree_node *current, void *extra_args)
 
 	block_node = NODE(block_datum);
 
+	if (block_node->flavor == CIL_OPTIONAL) {
+		if (block_datum->nodes && block_datum->nodes->head != block_datum->nodes->tail) {
+			cil_tree_log(current, CIL_ERR, "Multiple optional blocks referred to by in-statement");
+			cil_tree_log(block_node, CIL_ERR, "First optional block");
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+	}
+
 	rc = cil_copy_ast(db, current, block_node);
 	if (rc != SEPOL_OK) {
 		cil_tree_log(current, CIL_ERR, "Failed to copy in-statement");
@@ -3874,6 +3885,7 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 	struct cil_tree_node *macro = args->macro;
 	struct cil_tree_node *optional = args->optional;
 	struct cil_tree_node *boolif = args->boolif;
+	struct cil_stack *disabled_optionals = args->disabled_optionals;
 
 	if (node == NULL) {
 		goto exit;
@@ -3953,22 +3965,14 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 
 	rc = __cil_resolve_ast_node(node, extra_args);
 	if (rc == SEPOL_ENOENT) {
-		enum cil_log_level lvl = CIL_ERR;
-
-		if (optional != NULL) {
-			struct cil_optional *opt = (struct cil_optional *)optional->data;
-			struct cil_tree_node *opt_node = NODE(opt);
-
-			lvl = CIL_INFO;
-			/* disable an optional if something failed to resolve */
-			opt->enabled = CIL_FALSE;
-			cil_tree_log(node, lvl, "Failed to resolve %s statement", cil_node_to_string(node));
-			cil_tree_log(opt_node, lvl, "Disabling optional '%s'", opt->datum.name);
+		if (optional == NULL) {
+			cil_tree_log(node, CIL_ERR, "Failed to resolve %s statement", cil_node_to_string(node));
+		} else {
+			cil_stack_push(disabled_optionals, CIL_NODE, optional);
+			cil_tree_log(node, CIL_INFO, "Failed to resolve %s statement", cil_node_to_string(node));
+			cil_tree_log(optional, CIL_INFO, "Disabling optional '%s'", DATUM(optional->data)->name);
 			rc = SEPOL_OK;
-			goto exit;
 		}
-
-		cil_tree_log(node, lvl, "Failed to resolve %s statement", cil_node_to_string(node));
 		goto exit;
 	}
 
@@ -4011,6 +4015,7 @@ int __cil_resolve_ast_last_child_helper(struct cil_tree_node *current, void *ext
 {
 	int rc = SEPOL_ERR;
 	struct cil_args_resolve *args = extra_args;
+	struct cil_stack *disabled_optionals = args->disabled_optionals;
 	struct cil_tree_node *parent = NULL;
 
 	if (current == NULL ||  extra_args == NULL) {
@@ -4033,9 +4038,11 @@ int __cil_resolve_ast_last_child_helper(struct cil_tree_node *current, void *ext
 		args->macro = NULL;
 	} else if (parent->flavor == CIL_OPTIONAL) {
 		struct cil_tree_node *n = parent->parent;
-		if (((struct cil_optional *)parent->data)->enabled == CIL_FALSE) {
+		struct cil_stack_item *item = cil_stack_peek(disabled_optionals);
+		if (item && item->data == parent) {
+			cil_stack_pop(disabled_optionals);
 			*(args->changed) = CIL_TRUE;
-			cil_list_append(args->disabled_optionals, CIL_NODE, parent);
+			cil_list_append(args->to_destroy, CIL_NODE, parent);
 		}
 		args->optional = NULL;
 		while (n && n->flavor != CIL_ROOT) {
@@ -4079,14 +4086,17 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	extra_args.catorder_lists = NULL;
 	extra_args.sensitivityorder_lists = NULL;
 	extra_args.in_list = NULL;
+	extra_args.disabled_optionals = NULL;
 
-	cil_list_init(&extra_args.disabled_optionals, CIL_NODE);
+	cil_list_init(&extra_args.to_destroy, CIL_NODE);
 	cil_list_init(&extra_args.sidorder_lists, CIL_LIST_ITEM);
 	cil_list_init(&extra_args.classorder_lists, CIL_LIST_ITEM);
 	cil_list_init(&extra_args.unordered_classorder_lists, CIL_LIST_ITEM);
 	cil_list_init(&extra_args.catorder_lists, CIL_LIST_ITEM);
 	cil_list_init(&extra_args.sensitivityorder_lists, CIL_LIST_ITEM);
 	cil_list_init(&extra_args.in_list, CIL_IN);
+	cil_stack_init(&extra_args.disabled_optionals);
+
 	for (pass = CIL_PASS_TIF; pass < CIL_PASS_NUM; pass++) {
 		extra_args.pass = pass;
 		rc = cil_tree_walk(current, __cil_resolve_ast_node_helper, __cil_resolve_ast_first_child_helper, __cil_resolve_ast_last_child_helper, &extra_args);
@@ -4179,11 +4189,11 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 					goto exit;
 				}
 			}
-			cil_list_for_each(item, extra_args.disabled_optionals) {
+			cil_list_for_each(item, extra_args.to_destroy) {
 				cil_tree_children_destroy(item->data);
 			}
-			cil_list_destroy(&extra_args.disabled_optionals, CIL_FALSE);
-			cil_list_init(&extra_args.disabled_optionals, CIL_NODE);
+			cil_list_destroy(&extra_args.to_destroy, CIL_FALSE);
+			cil_list_init(&extra_args.to_destroy, CIL_NODE);
 			changed = 0;
 		}
 	}
@@ -4200,8 +4210,9 @@ exit:
 	__cil_ordered_lists_destroy(&extra_args.catorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.sensitivityorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.unordered_classorder_lists);
-	cil_list_destroy(&extra_args.disabled_optionals, CIL_FALSE);
+	cil_list_destroy(&extra_args.to_destroy, CIL_FALSE);
 	cil_list_destroy(&extra_args.in_list, CIL_FALSE);
+	cil_stack_destroy(&extra_args.disabled_optionals);
 
 	return rc;
 }

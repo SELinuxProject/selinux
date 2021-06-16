@@ -1529,18 +1529,9 @@ int cil_copy_macro(__attribute__((unused)) struct cil_db *db, void *data, void *
 	return SEPOL_OK;
 }
 
-int cil_copy_optional(__attribute__((unused)) struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+int cil_copy_optional(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
-	struct cil_optional *orig = data;
-	char *key = orig->datum.name;
-	struct cil_symtab_datum *datum = NULL;
 	struct cil_optional *new;
-
-	cil_symtab_get_datum(symtab, key, &datum);
-	if (datum != NULL) {
-		cil_tree_log(NODE(datum), CIL_ERR, "Re-declaration of %s %s", cil_node_to_string(NODE(datum)), key);
-		return SEPOL_ERR;
-	}
 
 	cil_optional_init(&new);
 	*copy = new;

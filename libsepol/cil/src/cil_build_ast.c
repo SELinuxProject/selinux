@@ -96,6 +96,9 @@ static int cil_allow_multiple_decls(struct cil_db *db, enum cil_flavor f_new, en
 			return CIL_TRUE;
 		}
 		break;
+	case CIL_OPTIONAL:
+		return CIL_TRUE;
+		break;
 	default:
 		break;
 	}
