@@ -1494,6 +1494,10 @@ static void __mark_neverallow_attrs(struct cil_list *expr_list)
 {
 	struct cil_list_item *curr;
 
+	if (!expr_list) {
+		return;
+	}
+
 	cil_list_for_each(curr, expr_list) {
 		if (curr->flavor == CIL_DATUM) {
 			if (FLAVOR(curr->data) == CIL_TYPEATTRIBUTE) {
