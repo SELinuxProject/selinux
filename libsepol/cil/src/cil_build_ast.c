@@ -5886,6 +5886,11 @@ int cil_gen_defaultrange(struct cil_tree_node *parse_current, struct cil_tree_no
 
 	object = parse_current->next->next->data;
 	if (object == CIL_KEY_SOURCE) {
+		if (!parse_current->next->next->next) {
+			cil_log(CIL_ERR, "Missing 'low', 'high', or 'low-high'\n");
+			rc = SEPOL_ERR;
+			goto exit;
+		}
 		range = parse_current->next->next->next->data;
 		if (range == CIL_KEY_LOW) {
 			def->object_range = CIL_DEFAULT_SOURCE_LOW;
@@ -5899,6 +5904,11 @@ int cil_gen_defaultrange(struct cil_tree_node *parse_current, struct cil_tree_no
 			goto exit;
 		}
 	} else if (object == CIL_KEY_TARGET) {
+		if (!parse_current->next->next->next) {
+			cil_log(CIL_ERR, "Missing 'low', 'high', or 'low-high'\n");
+			rc = SEPOL_ERR;
+			goto exit;
+		}
 		range = parse_current->next->next->next->data;
 		if (range == CIL_KEY_LOW) {
 			def->object_range = CIL_DEFAULT_TARGET_LOW;
