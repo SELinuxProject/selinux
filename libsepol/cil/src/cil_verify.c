@@ -44,6 +44,7 @@
 #include "cil_tree.h"
 #include "cil_list.h"
 #include "cil_find.h"
+#include "cil_stack.h"
 
 #include "cil_verify.h"
 
@@ -430,9 +431,9 @@ int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro, str
 	return SEPOL_OK;
 }
 
-static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symtab_datum *datum, struct cil_symtab_datum *orig);
+static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symtab_datum *datum, struct cil_stack *stack);
 
-static int __verify_no_self_reference_in_expr(struct cil_list *expr, struct cil_symtab_datum *orig)
+static int __verify_no_self_reference_in_expr(struct cil_list *expr, struct cil_stack *stack)
 {
 	struct cil_list_item *item;
 	int rc = SEPOL_OK;
@@ -444,9 +445,9 @@ static int __verify_no_self_reference_in_expr(struct cil_list *expr, struct cil_
 	cil_list_for_each(item, expr) {
 		if (item->flavor == CIL_DATUM) {
 			struct cil_symtab_datum* datum = item->data;
-			rc = cil_verify_no_self_reference(FLAVOR(datum), datum, orig);
+			rc = cil_verify_no_self_reference(FLAVOR(datum), datum, stack);
 		} else if (item->flavor == CIL_LIST) {
-			rc = __verify_no_self_reference_in_expr(item->data, orig);
+			rc = __verify_no_self_reference_in_expr(item->data, stack);
 		}
 		if (rc != SEPOL_OK) {
 			return SEPOL_ERR;
@@ -456,36 +457,47 @@ static int __verify_no_self_reference_in_expr(struct cil_list *expr, struct cil_
 	return SEPOL_OK;
 }
 
-static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symtab_datum *datum, struct cil_symtab_datum *orig)
+static int cil_verify_no_self_reference(enum cil_flavor flavor, struct cil_symtab_datum *datum, struct cil_stack *stack)
 {
+	struct cil_stack_item *item;
+	int i = 0;
 	int rc = SEPOL_OK;
 
-	if (datum == orig) {
-		cil_tree_log(NODE(orig), CIL_ERR, "Self-reference found for %s", orig->name);
-		return SEPOL_ERR;
-	} else if (orig == NULL) {
-		orig = datum;
+	cil_stack_for_each(stack, i, item) {
+		struct cil_symtab_datum *prev = item->data;
+		if (datum == prev) {
+			cil_tree_log(NODE(datum), CIL_ERR, "Self-reference found for %s", datum->name);
+			return SEPOL_ERR;
+		}
 	}
 
 	switch (flavor) {
 	case CIL_USERATTRIBUTE: {
 		struct cil_userattribute *attr = (struct cil_userattribute *)datum;
-		rc = __verify_no_self_reference_in_expr(attr->expr_list, orig);
+		cil_stack_push(stack, CIL_DATUM, datum);
+		rc = __verify_no_self_reference_in_expr(attr->expr_list, stack);
+		cil_stack_pop(stack);
 		break;
 	}
 	case CIL_ROLEATTRIBUTE: {
 		struct cil_roleattribute *attr = (struct cil_roleattribute *)datum;
-		rc = __verify_no_self_reference_in_expr(attr->expr_list, orig);
+		cil_stack_push(stack, CIL_DATUM, datum);
+		rc = __verify_no_self_reference_in_expr(attr->expr_list, stack);
+		cil_stack_pop(stack);
 		break;
 	}
 	case CIL_TYPEATTRIBUTE: {
 		struct cil_typeattribute *attr = (struct cil_typeattribute *)datum;
-		rc = __verify_no_self_reference_in_expr(attr->expr_list, orig);
+		cil_stack_push(stack, CIL_DATUM, datum);
+		rc = __verify_no_self_reference_in_expr(attr->expr_list, stack);
+		cil_stack_pop(stack);
 		break;
 	}
 	case CIL_CATSET: {
 		struct cil_catset *set = (struct cil_catset *)datum;
-		rc = __verify_no_self_reference_in_expr(set->cats->datum_expr, orig);
+		cil_stack_push(stack, CIL_DATUM, datum);
+		rc = __verify_no_self_reference_in_expr(set->cats->datum_expr, stack);
+		cil_stack_pop(stack);
 		break;
 	}
 	default:
@@ -1826,9 +1838,13 @@ int __cil_pre_verify_helper(struct cil_tree_node *node, uint32_t *finished, __at
 	case CIL_USERATTRIBUTE:
 	case CIL_ROLEATTRIBUTE:
 	case CIL_TYPEATTRIBUTE:
-	case CIL_CATSET:
-		rc = cil_verify_no_self_reference(node->flavor, node->data, NULL);
+	case CIL_CATSET: {
+		struct cil_stack *stack;
+		cil_stack_init(&stack);
+		rc = cil_verify_no_self_reference(node->flavor, node->data, stack);
+		cil_stack_destroy(&stack);
 		break;
+	}
 	default:
 		rc = SEPOL_OK;
 		break;
