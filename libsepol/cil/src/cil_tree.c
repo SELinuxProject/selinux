@@ -136,6 +136,22 @@ __attribute__((format (printf, 3, 4))) void cil_tree_log(struct cil_tree_node *n
 	cil_log(lvl,"\n");
 }
 
+int cil_tree_subtree_has_decl(struct cil_tree_node *node)
+{
+	while (node) {
+		if (node->flavor >= CIL_MIN_DECLARATIVE) {
+			return CIL_TRUE;
+		}
+		if (node->cl_head != NULL) {
+			if (cil_tree_subtree_has_decl(node->cl_head))
+				return CIL_TRUE;
+		}
+		node = node->next;
+	}
+
+	return CIL_FALSE;
+}
+
 int cil_tree_init(struct cil_tree **tree)
 {
 	struct cil_tree *new_tree = cil_malloc(sizeof(*new_tree));
