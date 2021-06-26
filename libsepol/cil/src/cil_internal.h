@@ -275,7 +275,7 @@ enum cil_sym_array {
 	CIL_SYM_ARRAY_NUM
 };
 
-extern int cil_sym_sizes[CIL_SYM_ARRAY_NUM][CIL_SYM_NUM];
+extern const int cil_sym_sizes[CIL_SYM_ARRAY_NUM][CIL_SYM_NUM];
 
 #define CIL_CLASS_SYM_SIZE	256
 #define CIL_PERMS_PER_CLASS (sizeof(sepol_access_vector_t) * 8)
@@ -981,7 +981,7 @@ int cil_userprefixes_to_string(struct cil_db *db, char **out, size_t *size);
 int cil_selinuxusers_to_string(struct cil_db *db, char **out, size_t *size);
 int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size);
 
-void cil_symtab_array_init(symtab_t symtab[], int symtab_sizes[CIL_SYM_NUM]);
+void cil_symtab_array_init(symtab_t symtab[], const int symtab_sizes[CIL_SYM_NUM]);
 void cil_symtab_array_destroy(symtab_t symtab[]);
 void cil_destroy_ast_symtabs(struct cil_tree_node *root);
 int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab, enum cil_sym_index sym_index);
