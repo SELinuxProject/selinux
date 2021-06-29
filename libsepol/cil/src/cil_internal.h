@@ -321,6 +321,7 @@ struct cil_db {
 	int handle_unknown;
 	int mls;
 	int multiple_decls;
+	int qualified_names;
 	int target_platform;
 	int policy_version;
 };

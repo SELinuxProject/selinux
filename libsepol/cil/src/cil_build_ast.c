@@ -146,7 +146,7 @@ int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_s
 	int rc = SEPOL_ERR;
 	symtab_t *symtab = NULL;
 
-	rc = cil_verify_name((const char*)key, nflavor);
+	rc = cil_verify_name(db, (const char*)key, nflavor);
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
@@ -201,6 +201,11 @@ int cil_gen_block(struct cil_db *db, struct cil_tree_node *parse_current, struct
 	int rc = SEPOL_ERR;
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	if (db->qualified_names) {
+		cil_log(CIL_ERR, "Blocks are not allowed when the option for qualified names is used\n");
 		goto exit;
 	}
 
@@ -274,6 +279,11 @@ int cil_gen_blockinherit(struct cil_db *db, struct cil_tree_node *parse_current,
 		goto exit;
 	}
 
+	if (db->qualified_names) {
+		cil_log(CIL_ERR, "Block inherit rules are not allowed when the option for qualified names is used\n");
+		goto exit;
+	}
+
 	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
 	if (rc != SEPOL_OK) {
 		goto exit;
@@ -331,6 +341,11 @@ int cil_gen_blockabstract(struct cil_db *db, struct cil_tree_node *parse_current
 		goto exit;
 	}
 
+	if (db->qualified_names) {
+		cil_log(CIL_ERR, "Block abstract rules are not allowed when the option for qualified names is used\n");
+		goto exit;
+	}
+
 	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
 	if (rc != SEPOL_OK) {
 		goto exit;
@@ -373,6 +388,11 @@ int cil_gen_in(struct cil_db *db, struct cil_tree_node *parse_current, struct ci
 	struct cil_in *in = NULL;
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	if (db->qualified_names) {
+		cil_log(CIL_ERR, "In-statements are not allowed when the option for qualified names is used\n");
 		goto exit;
 	}
 
@@ -5261,7 +5281,7 @@ int cil_gen_macro(struct cil_db *db, struct cil_tree_node *parse_current, struct
 
 		param->str =  current_item->cl_head->next->data;
 
-		rc = cil_verify_name(param->str, param->flavor);
+		rc = cil_verify_name(db, param->str, param->flavor);
 		if (rc != SEPOL_OK) {
 			cil_destroy_param(param);
 			goto exit;

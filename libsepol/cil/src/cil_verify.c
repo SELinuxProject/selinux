@@ -92,7 +92,7 @@ static int __cil_is_reserved_name(const char *name, enum cil_flavor flavor)
 	return CIL_FALSE;
 }
 
-int cil_verify_name(const char *name, enum cil_flavor flavor)
+int cil_verify_name(const struct cil_db *db, const char *name, enum cil_flavor flavor)
 {
 	int rc = SEPOL_ERR;
 	int len;
@@ -116,10 +116,19 @@ int cil_verify_name(const char *name, enum cil_flavor flavor)
 			goto exit;
 	}
 
-	for (i = 1; i < len; i++) {
-		if (!isalnum(name[i]) && name[i] != '_' && name[i] != '-') {
-			cil_log(CIL_ERR, "Invalid character \"%c\" in %s\n", name[i], name);
-			goto exit;
+	if (db->qualified_names == CIL_FALSE) {
+		for (i = 1; i < len; i++) {
+			if (!isalnum(name[i]) && name[i] != '_' && name[i] != '-') {
+				cil_log(CIL_ERR, "Invalid character \"%c\" in %s\n", name[i], name);
+				goto exit;
+			}
+		}
+	} else {
+		for (i = 1; i < len; i++) {
+			if (!isalnum(name[i]) && name[i] != '_' && name[i] != '-' && name[i] != '.') {
+				cil_log(CIL_ERR, "Invalid character \"%c\" in %s\n", name[i], name);
+				goto exit;
+			}
 		}
 	}
 

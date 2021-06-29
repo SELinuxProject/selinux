@@ -440,6 +440,7 @@ void cil_db_init(struct cil_db **db)
 	(*db)->handle_unknown = -1;
 	(*db)->mls = -1;
 	(*db)->multiple_decls = CIL_FALSE;
+	(*db)->qualified_names = CIL_FALSE;
 	(*db)->target_platform = SEPOL_TARGET_SELINUX;
 	(*db)->policy_version = POLICYDB_VERSION_MAX;
 }
@@ -1870,6 +1871,11 @@ void cil_set_mls(struct cil_db *db, int mls)
 void cil_set_multiple_decls(struct cil_db *db, int multiple_decls)
 {
 	db->multiple_decls = multiple_decls;
+}
+
+void cil_set_qualified_names(struct cil_db *db, int qualified_names)
+{
+	db->qualified_names = qualified_names;
 }
 
 void cil_set_target_platform(struct cil_db *db, int target_platform)

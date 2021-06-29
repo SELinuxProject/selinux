@@ -4419,8 +4419,8 @@ int cil_resolve_name_keep_aliases(struct cil_tree_node *ast_node, char *name, en
 
 	*datum = NULL;
 
-	if (strchr(name,'.') == NULL) {
-		/* No '.' in name */
+	if (db->qualified_names || strchr(name,'.') == NULL) {
+		/* Using qualified names or No '.' in name */
 		rc = __cil_resolve_name_helper(db, ast_node->parent, name, sym_index, datum);
 		if (rc != SEPOL_OK) {
 			goto exit;
