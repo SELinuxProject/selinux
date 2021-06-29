@@ -52,6 +52,9 @@ static __attribute__((__noreturn__)) void usage(const char *prog)
 	printf("                                 This will override the (mls boolean) statement\n");
 	printf("                                 if present in the policy\n");
 	printf("  -P, --preserve-tunables        treat tunables as booleans\n");
+	printf("  -Q, --qualified-names          Allow names containing dots (qualified names).\n");
+	printf("                                 Blocks, blockinherits, blockabstracts, and\n");
+	printf("                                 in-statements will not be allowed.\n");
 	printf("  -v, --verbose                  increment verbosity level\n");
 	printf("  -h, --help                     display usage information\n");
 	exit(1);
@@ -68,6 +71,7 @@ int main(int argc, char *argv[])
 	struct cil_db *db = NULL;
 	int mls = -1;
 	int preserve_tunables = 0;
+	int qualified_names = 0;
 	int opt_char;
 	int opt_index = 0;
 	enum cil_log_level log_level = CIL_ERR;
@@ -76,13 +80,14 @@ int main(int argc, char *argv[])
 		{"verbose", no_argument, 0, 'v'},
 		{"mls", required_argument, 0, 'M'},
 		{"preserve-tunables", no_argument, 0, 'P'},
+		{"qualified-names", no_argument, 0, 'Q'},
 		{"output", required_argument, 0, 'o'},
 		{0, 0, 0, 0}
 	};
 	int i;
 
 	while (1) {
-		opt_char = getopt_long(argc, argv, "o:hvM:P", long_opts, &opt_index);
+		opt_char = getopt_long(argc, argv, "o:hvM:PQ", long_opts, &opt_index);
 		if (opt_char == -1) {
 			break;
 		}
@@ -101,6 +106,9 @@ int main(int argc, char *argv[])
 				break;
 			case 'P':
 				preserve_tunables = 1;
+				break;
+			case 'Q':
+				qualified_names = 1;
 				break;
 			case 'o':
 				output = strdup(optarg);
@@ -123,6 +131,7 @@ int main(int argc, char *argv[])
 
 	cil_db_init(&db);
 	cil_set_preserve_tunables(db, preserve_tunables);
+	cil_set_qualified_names(db, qualified_names);
 	cil_set_mls(db, mls);
 	cil_set_attrs_expand_generated(db, 0);
 	cil_set_attrs_expand_size(db, 0);

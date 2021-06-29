@@ -51,6 +51,11 @@
          </varlistentry>
 
          <varlistentry>
+            <term><option>-Q, --qualified-names</option></term>
+            <listitem><para>Allow names containing dots (qualified names). Blocks, blockinherits, blockabstracts, and in-statements will not be allowed.</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
             <term><option>-v, --verbose</option></term>
             <listitem><para>Increment verbosity level.</para></listitem>
          </varlistentry>
