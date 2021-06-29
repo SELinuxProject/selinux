@@ -76,6 +76,11 @@
          </varlistentry>
 
          <varlistentry>
+            <term><option>-Q, --qualified-names</option></term>
+            <listitem><para>Allow names containing dots (qualified names). Blocks, blockinherits, blockabstracts, and in-statements will not be allowed.</para></listitem>
+         </varlistentry>
+
+         <varlistentry>
             <term><option>-m, --multiple-decls</option></term>
             <listitem><para>Allow some statements to be re-declared.</para></listitem>
          </varlistentry>
