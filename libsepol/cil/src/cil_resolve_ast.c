@@ -64,7 +64,6 @@ struct cil_args_resolve {
 	struct cil_list *sensitivityorder_lists;
 	struct cil_list *in_list;
 	struct cil_stack *disabled_optionals;
-	int *inheritance_check;
 };
 
 static struct cil_name * __cil_insert_name(struct cil_db *db, hashtab_key_t key, struct cil_tree_node *ast_node)
@@ -2309,100 +2308,8 @@ exit:
 	return rc;
 }
 
-static void cil_print_recursive_blockinherit(struct cil_tree_node *bi_node, struct cil_tree_node *terminating_node)
-{
-	struct cil_list *trace = NULL;
-	struct cil_list_item *item = NULL;
-	struct cil_tree_node *curr = NULL;
-
-	cil_list_init(&trace, CIL_NODE);
-
-	for (curr = bi_node; curr != terminating_node; curr = curr->parent) {
-		if (curr->flavor == CIL_BLOCK) {
-			cil_list_prepend(trace, CIL_NODE, curr);
-		} else if (curr->flavor == CIL_BLOCKINHERIT) {
-			if (curr != bi_node) {
-				cil_list_prepend(trace, CIL_NODE, NODE(((struct cil_blockinherit *)curr->data)->block));
-			}
-			cil_list_prepend(trace, CIL_NODE, curr);
-		} else {
-			cil_list_prepend(trace, CIL_NODE, curr);
-		}
-	}
-	cil_list_prepend(trace, CIL_NODE, terminating_node);
-
-	cil_list_for_each(item, trace) {
-		curr = item->data;
-		if (curr->flavor == CIL_BLOCK) {
-			cil_tree_log(curr, CIL_ERR, "block %s", DATUM(curr->data)->name);
-		} else if (curr->flavor == CIL_BLOCKINHERIT) {
-			cil_tree_log(curr, CIL_ERR, "blockinherit %s", ((struct cil_blockinherit *)curr->data)->block_str);
-		} else if (curr->flavor == CIL_OPTIONAL) {
-			cil_tree_log(curr, CIL_ERR, "optional %s", DATUM(curr->data)->name);
-		} else {
-			cil_tree_log(curr, CIL_ERR, "%s", cil_node_to_string(curr));
-		}
-	}
-
-	cil_list_destroy(&trace, CIL_FALSE);
-}
-
-static int cil_check_recursive_blockinherit(struct cil_tree_node *bi_node)
-{
-	struct cil_tree_node *curr = NULL;
-	struct cil_blockinherit *bi = NULL;
-	struct cil_block *block = NULL;
-	int rc = SEPOL_ERR;
-
-	bi = bi_node->data;
-
-	for (curr = bi_node->parent; curr != NULL; curr = curr->parent) {
-		if (curr->flavor != CIL_BLOCK) {
-			continue;
-		}
-
-		block = curr->data;
-
-		if (block != bi->block) {
-			continue;
-		}
-
-		cil_log(CIL_ERR, "Recursive blockinherit found:\n");
-		cil_print_recursive_blockinherit(bi_node, curr);
-
-		rc = SEPOL_ERR;
-		goto exit;
-	}
-
-	rc = SEPOL_OK;
-
-exit:
-	return rc;
-}
-
-static int cil_possible_degenerate_inheritance(struct cil_tree_node *node)
-{
-	unsigned depth = 1;
-
-	node = node->parent;
-	while (node && node->flavor != CIL_ROOT) {
-		if (node->flavor == CIL_BLOCK) {
-			if (((struct cil_block *)(node->data))->bi_nodes != NULL) {
-				depth++;
-				if (depth >= CIL_DEGENERATE_INHERITANCE_DEPTH) {
-					return CIL_TRUE;
-				}
-			}
-		}
-		node = node->parent;
-	}
-
-	return CIL_FALSE;
-}
-
 int cil_resolve_blockinherit_link(struct cil_tree_node *current, void *extra_args)
 {
-	struct cil_args_resolve *args = extra_args;
 	struct cil_blockinherit *inherit = current->data;
 	struct cil_symtab_datum *block_datum = NULL;
 	struct cil_tree_node *node = NULL;
@@ -2423,19 +2330,10 @@ int cil_resolve_blockinherit_link(struct cil_tree_node *current, void *extra_arg
 
 	inherit->block = (struct cil_block *)block_datum;
 
-	rc = cil_check_recursive_blockinherit(current);
-	if (rc != SEPOL_OK) {
-			goto exit;
-	}
-
 	if (inherit->block->bi_nodes == NULL) {
 		cil_list_init(&inherit->block->bi_nodes, CIL_NODE);
 	}
 	cil_list_append(inherit->block->bi_nodes, CIL_NODE, current);
-
-	if (*(args->inheritance_check) == CIL_FALSE) {
-		*(args->inheritance_check) = cil_possible_degenerate_inheritance(node);
-	}
 
 	return SEPOL_OK;
 
@@ -2466,11 +2364,6 @@ int cil_resolve_blockinherit_copy(struct cil_tree_node *current, void *extra_arg
 	}
 
 	cil_list_for_each(item, block->bi_nodes) {
-		rc = cil_check_recursive_blockinherit(item->data);
-		if (rc != SEPOL_OK) {
-			goto exit;
-		}
-
 		rc = cil_copy_ast(db, current, item->data);
 		if (rc != SEPOL_OK) {
 			cil_log(CIL_ERR, "Failed to copy block contents into blockinherit\n");
@@ -3611,34 +3504,58 @@ static unsigned cil_count_actual(struct cil_tree_node *node)
 	return count;
 }
 
-static unsigned cil_count_potential(struct cil_tree_node *node, unsigned max)
+static int cil_check_inheritances(struct cil_tree_node *node, unsigned max, unsigned *count, struct cil_stack *stack, unsigned *loop)
 {
-	unsigned count = 0;
+	int rc;
 
 	if (node->flavor == CIL_BLOCKINHERIT) {
 		struct cil_blockinherit *bi = node->data;
-		count += 1;
+		*count += 1;
+		if (*count > max) {
+			cil_tree_log(node, CIL_ERR, "Degenerate inheritance detected");
+			return SEPOL_ERR;
+		}
 		if (bi->block) {
-			count += cil_count_potential(NODE(bi->block), max);
-			if (count > max) {
-				return count;
+			struct cil_tree_node *block_node = NODE(bi->block);
+			struct cil_stack_item *item;
+			int i = 0;
+			cil_stack_for_each(stack, i, item) {
+				if (block_node == (struct cil_tree_node *)item->data) {
+					*loop = CIL_TRUE;
+					cil_tree_log(block_node, CIL_ERR, "Block inheritance loop found");
+					cil_tree_log(node, CIL_ERR, "  blockinherit");
+					return SEPOL_ERR;
+				}
+			}
+			cil_stack_push(stack, CIL_BLOCK, block_node);
+			rc = cil_check_inheritances(block_node, max, count, stack, loop);
+			cil_stack_pop(stack);
+			if (rc != SEPOL_OK) {
+				if (*loop == CIL_TRUE) {
+					cil_tree_log(node, CIL_ERR, "  blockinherit");
+				}
+				return SEPOL_ERR;
 			}
 		}
 	}
 
 	for (node = node->cl_head; node; node = node->next) {
-		count += cil_count_potential(node, max);
-		if (count > max) {
-			return count;
+		rc = cil_check_inheritances(node, max, count, stack, loop);
+		if (rc != SEPOL_OK) {
+			return SEPOL_ERR;
 		}
 	}
 
-	return count;
+	return SEPOL_OK;
 }
 
-static int cil_check_for_degenerate_inheritance(struct cil_tree_node *node)
+static int cil_check_for_bad_inheritance(struct cil_tree_node *node)
 {
-	uint64_t num_actual, num_potential, max;
+	unsigned num_actual, max;
+	unsigned num_potential = 0;
+	unsigned loop = CIL_FALSE;
+	struct cil_stack *stack;
+	int rc;
 
 	num_actual = cil_count_actual(node);
 
@@ -3647,13 +3564,11 @@ static int cil_check_for_degenerate_inheritance(struct cil_tree_node *node)
 		max = CIL_DEGENERATE_INHERITANCE_MINIMUM;
 	}
 
-	num_potential = cil_count_potential(node, max);
+	cil_stack_init(&stack);
+	rc = cil_check_inheritances(node, max, &num_potential, stack, &loop);
+	cil_stack_destroy(&stack);
 
-	if (num_potential > max) {
-		return SEPOL_ERR;
-	}
-
-	return SEPOL_OK;
+	return rc;
 }
 
 int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
@@ -4127,7 +4042,6 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	struct cil_args_resolve extra_args;
 	enum cil_pass pass = CIL_PASS_TIF;
 	uint32_t changed = 0;
-	int inheritance_check = 0;
 
 	if (db == NULL || current == NULL) {
 		return rc;
@@ -4147,7 +4061,6 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	extra_args.sensitivityorder_lists = NULL;
 	extra_args.in_list = NULL;
 	extra_args.disabled_optionals = NULL;
-	extra_args.inheritance_check = &inheritance_check;
 
 	cil_list_init(&extra_args.to_destroy, CIL_NODE);
 	cil_list_init(&extra_args.sidorder_lists, CIL_LIST_ITEM);
@@ -4174,10 +4087,9 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 			cil_list_destroy(&extra_args.in_list, CIL_FALSE);
 		}
 
-		if (pass == CIL_PASS_BLKIN_LINK && inheritance_check == CIL_TRUE) {
-			rc = cil_check_for_degenerate_inheritance(current);
+		if (pass == CIL_PASS_BLKIN_LINK) {
+			rc = cil_check_for_bad_inheritance(current);
 			if (rc != SEPOL_OK) {
-				cil_log(CIL_ERR, "Degenerate inheritance detected\n");
 				rc = SEPOL_ERR;
 				goto exit;
 			}
