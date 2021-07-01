@@ -49,6 +49,17 @@
 
 #define spaceship_cmp(a, b) (((a) > (b)) - ((a) < (b)))
 
+/* Use to ignore intentional unsigned under- and overflows while running under UBSAN. */
+#if defined(__clang__) && defined(__clang_major__) && (__clang_major__ >= 4)
+#if (__clang_major__ >= 12)
+#define ignore_unsigned_overflow_        __attribute__((no_sanitize("unsigned-integer-overflow", "unsigned-shift-base")))
+#else
+#define ignore_unsigned_overflow_        __attribute__((no_sanitize("unsigned-integer-overflow")))
+#endif
+#else
+#define ignore_unsigned_overflow_
+#endif
+
 /* Policy compatibility information. */
 struct policydb_compat_info {
 	unsigned int type;

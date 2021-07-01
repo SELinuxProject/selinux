@@ -8,9 +8,13 @@
  */
 
 #include <string.h>
+
+#include "private.h"
+
 #include <sepol/policydb/hashtab.h>
 #include <sepol/policydb/symtab.h>
 
+ignore_unsigned_overflow_
 static unsigned int symhash(hashtab_t h, const_hashtab_key_t key)
 {
 	const char *p, *keyp;
