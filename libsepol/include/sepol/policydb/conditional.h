@@ -90,7 +90,7 @@ typedef struct cond_node {
 	uint32_t expr_pre_comp;
 	struct cond_node *next;
 	/* a tunable conditional, calculated and used at expansion */
-#define	COND_NODE_FLAGS_TUNABLE	0x01
+#define	COND_NODE_FLAGS_TUNABLE	UINT32_C(0x01)
 	uint32_t flags;
 } cond_node_t;
 

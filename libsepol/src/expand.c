@@ -1641,7 +1641,7 @@ static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
 		 * AUDITDENY, aka DONTAUDIT, are &= assigned, versus |= for
 		 * others. Initialize the data accordingly.
 		 */
-		avdatum.data = key->specified == AVTAB_AUDITDENY ? ~0 : 0;
+		avdatum.data = key->specified == AVTAB_AUDITDENY ? ~UINT32_C(0) : UINT32_C(0);
 		/* this is used to get the node - insertion is actually unique */
 		node = avtab_insert_nonunique(avtab, key, &avdatum);
 		if (!node) {
