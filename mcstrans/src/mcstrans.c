@@ -43,7 +43,7 @@
 #ifdef DEBUG
 #define log_debug(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
 #else
-#define log_debug(fmt, ...) ;
+#define log_debug(fmt, ...) do {} while (0)
 #endif
 
 static unsigned int maxbit=0;

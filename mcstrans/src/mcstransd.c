@@ -40,7 +40,7 @@
 //#define log_debug(fmt, ...) syslog(LOG_DEBUG, fmt, __VA_ARGS__)
 #define log_debug(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
 #else
-#define log_debug(fmt, ...) ;
+#define log_debug(fmt, ...) do {} while (0)
 #endif
 
 extern int init_translations(void);
