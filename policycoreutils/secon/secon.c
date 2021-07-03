@@ -683,7 +683,7 @@ static void disp_con(const char *scon_raw)
 		color.range_bg = strtok(NULL, " ");
 
 		color.valid = 1;
-	};
+	}
 
 	if (!(con = context_new(scon)))
 		errx(EXIT_FAILURE, "Couldn't create context from: %s", scon);

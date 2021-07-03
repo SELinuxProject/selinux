@@ -96,7 +96,7 @@
 #define USAGE_STRING "USAGE: newrole [ -r role ] [ -t type ] [ -l level ] [ -p ] [ -V ] [ -- args ]"
 
 #ifdef USE_PAM
-#define PAM_SERVICE_CONFIG "/etc/selinux/newrole_pam.conf";
+#define PAM_SERVICE_CONFIG "/etc/selinux/newrole_pam.conf"
 #endif
 
 #define DEFAULT_PATH "/usr/bin:/bin"
