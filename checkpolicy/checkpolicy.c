@@ -119,11 +119,14 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 }
 
 #define FGETS(out, size, in) \
-if (fgets(out,size,in)==NULL) {	\
-		fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,\
-				strerror(errno)); \
-			exit(1);\
-}
+do { \
+	if (fgets(out,size,in)==NULL) {	\
+		fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__, \
+			strerror(errno)); \
+		exit(1);\
+	} \
+} while (0)
+
 static int print_sid(sepol_security_id_t sid,
 		     context_struct_t * context
 		     __attribute__ ((unused)), void *data
