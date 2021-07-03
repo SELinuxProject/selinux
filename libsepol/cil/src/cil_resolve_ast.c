@@ -2825,7 +2825,7 @@ static int cil_build_call_args(struct cil_tree_node *call_node, struct cil_call 
 			return SEPOL_OK;
 		} else {
 			cil_tree_log(call_node, CIL_ERR, "Unexpected arguments");
-			return SEPOL_ERR;;
+			return SEPOL_ERR;
 		}
 	}
 	if (call->args_tree == NULL) {

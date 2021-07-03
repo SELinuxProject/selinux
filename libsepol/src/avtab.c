@@ -63,7 +63,7 @@ static inline int avtab_hash(struct avtab_key *keyp, uint32_t mask)
 
 	uint32_t hash = 0;
 
-#define mix(input) { \
+#define mix(input) do { \
 	uint32_t v = input; \
 	v *= c1; \
 	v = (v << r1) | (v >> (32 - r1)); \
@@ -71,7 +71,7 @@ static inline int avtab_hash(struct avtab_key *keyp, uint32_t mask)
 	hash ^= v; \
 	hash = (hash << r2) | (hash >> (32 - r2)); \
 	hash = hash * m + n; \
-}
+} while (0)
 
 	mix(keyp->target_class);
 	mix(keyp->target_type);

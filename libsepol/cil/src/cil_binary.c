@@ -4277,7 +4277,7 @@ static unsigned int avrulex_hash(__attribute__((unused)) hashtab_t h, const_hash
 
 	uint32_t hash = 0;
 
-#define mix(input) { \
+#define mix(input) do { \
 	uint32_t v = input; \
 	v *= c1; \
 	v = (v << r1) | (v >> (32 - r1)); \
@@ -4285,7 +4285,7 @@ static unsigned int avrulex_hash(__attribute__((unused)) hashtab_t h, const_hash
 	hash ^= v; \
 	hash = (hash << r2) | (hash >> (32 - r2)); \
 	hash = hash * m + n; \
-}
+} while (0)
 
 	mix(k->target_class);
 	mix(k->target_type);

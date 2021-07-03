@@ -36,13 +36,17 @@
 int mls;
 
 #define DECLARE_SUITE(name) \
-	suite = CU_add_suite(#name, name##_test_init, name##_test_cleanup); \
-	if (NULL == suite) { \
-		CU_cleanup_registry(); \
-		return CU_get_error(); } \
-	if (name##_add_tests(suite)) { \
-		CU_cleanup_registry(); \
-		return CU_get_error(); }
+	do { \
+		suite = CU_add_suite(#name, name##_test_init, name##_test_cleanup); \
+		if (NULL == suite) { \
+			CU_cleanup_registry(); \
+			return CU_get_error(); \
+		} \
+		if (name##_add_tests(suite)) { \
+			CU_cleanup_registry(); \
+			return CU_get_error(); \
+		} \
+	} while (0)
 
 static void usage(char *progname)
 {
