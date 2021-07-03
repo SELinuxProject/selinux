@@ -128,10 +128,12 @@ extern int myprintf_compat;
 extern void __attribute__ ((format(printf, 1, 2)))
 (*myprintf) (const char *fmt, ...) ;
 
-#define COMPAT_LOG(type, fmt...) if (myprintf_compat)	  \
-		myprintf(fmt);				  \
-	else						  \
-		selinux_log(type, fmt);
+#define COMPAT_LOG(type, fmt...) do {			\
+	if (myprintf_compat)				\
+		myprintf(fmt);				\
+	else						\
+		selinux_log(type, fmt);			\
+	} while (0)
 
 extern int
 compat_validate(struct selabel_handle *rec,

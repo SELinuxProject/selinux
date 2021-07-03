@@ -85,10 +85,12 @@ static inline void avc_free(void *ptr)
 
 /* this is a macro in order to use the variadic capability. */
 #define avc_log(type, format...) \
-  if (avc_func_log) \
-    avc_func_log(format); \
-  else \
-    selinux_log(type, format);
+  do { \
+    if (avc_func_log) \
+      avc_func_log(format); \
+    else \
+      selinux_log(type, format); \
+  } while (0)
 
 static inline void avc_suppl_audit(void *ptr, security_class_t class,
 				   char *buf, size_t len)
@@ -137,14 +139,18 @@ static inline void avc_free_lock(void *lock)
 #ifdef AVC_CACHE_STATS
 
 #define avc_cache_stats_incr(field) \
-  cache_stats.field ++;
+  do { \
+    cache_stats.field ++; \
+  } while (0)
 #define avc_cache_stats_add(field, num) \
-  cache_stats.field += num;
+  do { \
+    cache_stats.field += num; \
+  } while (0)
 
 #else
 
-#define avc_cache_stats_incr(field)
-#define avc_cache_stats_add(field, num)
+#define avc_cache_stats_incr(field) do {} while (0)
+#define avc_cache_stats_add(field, num) do {} while (0)
 
 #endif
 

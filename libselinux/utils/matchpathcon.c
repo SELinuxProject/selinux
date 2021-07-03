@@ -65,7 +65,7 @@ static mode_t string_to_mode(char *s)
 		return S_IFREG;
 	default:
 		return -1;
-	};
+	}
 	return -1;
 }
 

@@ -80,7 +80,7 @@ int selinux_mkload_policy(int preservebools __attribute__((unused)))
 	if (libsepolh) {
 		usesepol = 1;
 		dlerror();
-#define DLERR() if ((errormsg = dlerror())) goto dlclose;
+#define DLERR() do { if ((errormsg = dlerror())) goto dlclose; } while (0)
 		vers_max = dlsym(libsepolh, "sepol_policy_kern_vers_max");
 		DLERR();
 		vers_min = dlsym(libsepolh, "sepol_policy_kern_vers_min");

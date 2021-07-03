@@ -146,7 +146,7 @@ static int getprocattrcon_raw(char ** context,
 		default:
 			errno = ENOENT;
 			return -1;
-	};
+	}
 
 	if (prev_context && prev_context != UNSET) {
 		*context = strdup(prev_context);
@@ -240,7 +240,7 @@ static int setprocattrcon_raw(const char * context,
 		default:
 			errno = ENOENT;
 			return -1;
-	};
+	}
 
 	if (!context && !*prev_context)
 		return 0;

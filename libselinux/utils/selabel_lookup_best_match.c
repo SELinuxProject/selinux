@@ -47,7 +47,7 @@ static mode_t string_to_mode(char *s)
 		return S_IFSOCK;
 	case 'f':
 		return S_IFREG;
-	};
+	}
 	return 0;
 }
 
