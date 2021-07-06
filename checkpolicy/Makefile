@@ -30,10 +30,10 @@ all:  $(TARGETS)
 	$(MAKE) -C test
 
 checkpolicy: $(CHECKPOLOBJS) $(LIBSEPOLA)
-	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS_LIBSEPOLA)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS_LIBSEPOLA)
 
 checkmodule: $(CHECKMODOBJS) $(LIBSEPOLA)
-	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS_LIBSEPOLA)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS_LIBSEPOLA)
 
 %.o: %.c 
 	$(CC) $(CFLAGS) -o $@ -c $<
