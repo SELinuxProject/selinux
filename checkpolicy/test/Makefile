@@ -13,10 +13,10 @@ endif
 all: dispol dismod
 
 dispol: dispol.o $(LIBSEPOLA)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS_LIBSEPOLA)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS_LIBSEPOLA)
 
 dismod: dismod.o $(LIBSEPOLA)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS_LIBSEPOLA)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS_LIBSEPOLA)
 
 clean:
 	-rm -f dispol dismod *.o 
