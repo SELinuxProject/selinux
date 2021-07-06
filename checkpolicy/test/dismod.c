@@ -697,8 +697,8 @@ int display_avblock(int field, policydb_t * policy,
 {
 	avrule_block_t *block = policydb.global;
 	while (block != NULL) {
-		fprintf(out_fp, "--- begin avrule block ---\n");
 		avrule_decl_t *decl = block->branch_list;
+		fprintf(out_fp, "--- begin avrule block ---\n");
 		while (decl != NULL) {
 			if (display_avdecl(decl, field, policy, out_fp)) {
 				return -1;
