@@ -504,8 +504,7 @@ int main(int argc, char **argv)
 					usage(argv[0]);
 					exit(1);
 				}
-				if (policyvers != n)
-					policyvers = n;
+				policyvers = n;
 				break;
 			}
 		case 'E':
