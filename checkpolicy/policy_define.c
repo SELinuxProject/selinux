@@ -1904,8 +1904,9 @@ int avrule_read_ioctls(struct av_ioctl_range_list **rangehead)
 {
 	char *id;
 	struct av_ioctl_range_list *rnew, *r = NULL;
-	*rangehead = NULL;
 	uint8_t omit = 0;
+	
+	*rangehead = NULL;	
 
 	/* read in all the ioctl commands */
 	while ((id = queue_remove(id_queue))) {

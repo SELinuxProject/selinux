@@ -288,14 +288,16 @@ int main(int argc, char **argv)
 	}
 
 	if (policy_type != POLICY_BASE && outfile) {
+		char *out_name;
+		char *separator;
 		char *mod_name = modpolicydb.name;
 		char *out_path = strdup(outfile);
 		if (out_path == NULL) {
 			fprintf(stderr, "%s:  out of memory\n", argv[0]);
 			exit(1);
 		}
-		char *out_name = basename(out_path);
-		char *separator = strrchr(out_name, '.');
+		out_name = basename(out_path);
+		separator = strrchr(out_name, '.');
 		if (separator) {
 			*separator = '\0';
 		}
