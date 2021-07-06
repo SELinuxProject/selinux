@@ -47,6 +47,8 @@
 #define is_saturated(x) (x == (typeof(x))-1)
 #define zero_or_saturated(x) ((x == 0) || is_saturated(x))
 
+#define spaceship_cmp(a, b) (((a) > (b)) - ((a) < (b)))
+
 /* Policy compatibility information. */
 struct policydb_compat_info {
 	unsigned int type;
