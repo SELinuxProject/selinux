@@ -1796,7 +1796,7 @@ int define_bool_tunable(int is_tunable)
 		return -1;
 	}
 
-	datum->state = (int)(bool_value[0] == 'T') ? 1 : 0;
+	datum->state = (bool_value[0] == 'T') ? 1 : 0;
 	free(bool_value);
 	return 0;
       cleanup:
