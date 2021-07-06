@@ -1943,7 +1943,9 @@ int avrule_read_ioctls(struct av_ioctl_range_list **rangehead)
 		}
 	}
 	r = *rangehead;
-	r->omit = omit;
+	if (r) {
+		r->omit = omit;
+	}
 	return 0;
 error:
 	yyerror("out of memory");
