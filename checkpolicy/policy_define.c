@@ -1168,11 +1168,6 @@ int expand_attrib(void)
 
 	ebitmap_init(&attrs);
 	while ((id = queue_remove(id_queue))) {
-		if (!id) {
-			yyerror("No attribute name for expandattribute statement?");
-			goto exit;
-		}
-
 		if (!is_id_in_scope(SYM_TYPES, id)) {
 			yyerror2("attribute %s is not within scope", id);
 			goto exit;
