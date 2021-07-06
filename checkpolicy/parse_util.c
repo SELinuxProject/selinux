@@ -28,7 +28,6 @@ extern int yyparse(void);
 extern void yyrestart(FILE *);
 extern queue_t id_queue;
 extern unsigned int policydb_errors;
-extern unsigned long policydb_lineno;
 extern policydb_t *policydbp;
 extern int mlspol;
 extern void set_source_file(const char *name);
