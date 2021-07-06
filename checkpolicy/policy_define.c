@@ -77,7 +77,7 @@ extern int yyerror(const char *msg);
 #define ERRORMSG_LEN 255
 static char errormsg[ERRORMSG_LEN + 1] = {0};
 
-static int id_has_dot(char *id);
+static int id_has_dot(const char *id);
 static int parse_security_context(context_struct_t *c);
 
 /* initialize all of the state variables for the scanner/parser */
@@ -141,7 +141,7 @@ int insert_id(const char *id, int push)
 
 /* If the identifier has a dot within it and that its first character
    is not a dot then return 1, else return 0. */
-static int id_has_dot(char *id)
+static int id_has_dot(const char *id)
 {
 	if (strchr(id, '.') >= id + 1) {
 		return 1;
@@ -2172,7 +2172,7 @@ void avrule_xperm_setrangebits(uint16_t low, uint16_t high,
 	}
 }
 
-int avrule_xperms_used(av_extended_perms_t *xperms)
+int avrule_xperms_used(const av_extended_perms_t *xperms)
 {
 	unsigned int i;
 
@@ -2347,7 +2347,7 @@ unsigned int xperms_for_each_bit(unsigned int *bit, av_extended_perms_t *xperms)
 	return 0;
 }
 
-int avrule_cpy(avrule_t *dest, avrule_t *src)
+int avrule_cpy(avrule_t *dest, const avrule_t *src)
 {
 	class_perm_node_t *src_perms;
 	class_perm_node_t *dest_perms, *dest_tail;
@@ -2395,7 +2395,7 @@ int avrule_cpy(avrule_t *dest, avrule_t *src)
 	return 0;
 }
 
-int define_te_avtab_ioctl(avrule_t *avrule_template)
+int define_te_avtab_ioctl(const avrule_t *avrule_template)
 {
 	avrule_t *avrule;
 	struct av_ioctl_range_list *rangelist;
@@ -3444,9 +3444,10 @@ bad:
 	return -1;
 }
 
-static constraint_expr_t *constraint_expr_clone(constraint_expr_t * expr)
+static constraint_expr_t *constraint_expr_clone(const constraint_expr_t * expr)
 {
-	constraint_expr_t *h = NULL, *l = NULL, *e, *newe;
+	constraint_expr_t *h = NULL, *l = NULL, *newe;
+	const constraint_expr_t *e;
 	for (e = expr; e; e = e->next) {
 		newe = malloc(sizeof(*newe));
 		if (!newe)
