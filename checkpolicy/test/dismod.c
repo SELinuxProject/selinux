@@ -827,7 +827,7 @@ static void display_policycaps(policydb_t * p, FILE * fp)
 	ebitmap_for_each_positive_bit(&p->policycaps, node, i) {
 		capname = sepol_polcap_getname(i);
 		if (capname == NULL) {
-			snprintf(buf, sizeof(buf), "unknown (%d)", i);
+			snprintf(buf, sizeof(buf), "unknown (%u)", i);
 			capname = buf;
 		}
 		fprintf(fp, "\t%s\n", capname);
