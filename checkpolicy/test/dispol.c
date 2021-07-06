@@ -42,7 +42,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	exit(1);
 }
 
-int render_access_mask(uint32_t mask, avtab_key_t * key, policydb_t * p,
+static int render_access_mask(uint32_t mask, avtab_key_t * key, policydb_t * p,
 		       FILE * fp)
 {
 	char *perm;
@@ -54,13 +54,13 @@ int render_access_mask(uint32_t mask, avtab_key_t * key, policydb_t * p,
 	return 0;
 }
 
-int render_type(uint32_t type, policydb_t * p, FILE * fp)
+static int render_type(uint32_t type, policydb_t * p, FILE * fp)
 {
 	fprintf(fp, "%s", p->p_type_val_to_name[type - 1]);
 	return 0;
 }
 
-int render_key(avtab_key_t * key, policydb_t * p, FILE * fp)
+static int render_key(avtab_key_t * key, policydb_t * p, FILE * fp)
 {
 	char *stype, *ttype, *tclass;
 	stype = p->p_type_val_to_name[key->source_type - 1];
@@ -84,7 +84,7 @@ int render_key(avtab_key_t * key, policydb_t * p, FILE * fp)
 #define RENDER_DISABLED		0x0004
 #define RENDER_CONDITIONAL	(RENDER_ENABLED|RENDER_DISABLED)
 
-int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t what,
+static int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t what,
 		   policydb_t * p, FILE * fp)
 {
 	if (!(what & RENDER_UNCONDITIONAL)) {
@@ -163,7 +163,7 @@ int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t what,
 	return 0;
 }
 
-int display_avtab(avtab_t * a, uint32_t what, policydb_t * p, FILE * fp)
+static int display_avtab(avtab_t * a, uint32_t what, policydb_t * p, FILE * fp)
 {
 	unsigned int i;
 	avtab_ptr_t cur;
@@ -178,7 +178,7 @@ int display_avtab(avtab_t * a, uint32_t what, policydb_t * p, FILE * fp)
 	return 0;
 }
 
-int display_bools(policydb_t * p, FILE * fp)
+static int display_bools(policydb_t * p, FILE * fp)
 {
 	unsigned int i;
 
@@ -189,7 +189,7 @@ int display_bools(policydb_t * p, FILE * fp)
 	return 0;
 }
 
-void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp)
+static void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp)
 {
 
 	cond_expr_t *cur;
@@ -224,7 +224,7 @@ void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp)
 	}
 }
 
-int display_cond_expressions(policydb_t * p, FILE * fp)
+static int display_cond_expressions(policydb_t * p, FILE * fp)
 {
 	cond_node_t *cur;
 	cond_av_list_t *av_cur;
@@ -249,7 +249,7 @@ int display_cond_expressions(policydb_t * p, FILE * fp)
 	return 0;
 }
 
-int display_handle_unknown(policydb_t * p, FILE * out_fp)
+static int display_handle_unknown(policydb_t * p, FILE * out_fp)
 {
 	if (p->handle_unknown == ALLOW_UNKNOWN)
 		fprintf(out_fp, "Allow unknown classes and permissions\n");
@@ -260,7 +260,7 @@ int display_handle_unknown(policydb_t * p, FILE * out_fp)
 	return 0;
 }
 
-int change_bool(char *name, int state, policydb_t * p, FILE * fp)
+static int change_bool(char *name, int state, policydb_t * p, FILE * fp)
 {
 	cond_bool_datum_t *bool;
 
@@ -368,7 +368,7 @@ static void display_filename_trans(policydb_t *p, FILE *fp)
 	hashtab_map(p->filename_trans, filenametr_display, &args);
 }
 
-int menu(void)
+static int menu(void)
 {
 	printf("\nSelect a command:\n");
 	printf("1)  display unconditional AVTAB\n");
