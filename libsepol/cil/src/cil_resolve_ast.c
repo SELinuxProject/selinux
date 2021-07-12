@@ -3228,6 +3228,7 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 	struct cil_symtab_datum *res_datum = NULL;
 	enum cil_sym_index sym_index =  CIL_SYM_UNKNOWN;
 	struct cil_list *datum_sub_expr;
+	enum cil_flavor op = CIL_NONE;
 
 	switch (str_expr->flavor) {
 	case CIL_BOOL:
@@ -3263,14 +3264,24 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 			}
 			if (sym_index == CIL_SYM_CATS && NODE(res_datum)->flavor == CIL_CATSET) {
 				struct cil_catset *catset = (struct cil_catset *)res_datum;
-				if (!catset->cats->datum_expr) {
-					rc = cil_resolve_expr(expr_type, catset->cats->str_expr, &catset->cats->datum_expr, parent, extra_args);
-					if (rc != SEPOL_OK) {
-						goto exit;
-					}
+				if (op == CIL_RANGE) {
+					cil_tree_log(parent, CIL_ERR, "Category set not allowed in category range");
+					rc = SEPOL_ERR;
+					goto exit;
 				}
-				cil_copy_list(catset->cats->datum_expr, &datum_sub_expr);
-				cil_list_append(*datum_expr, CIL_LIST, datum_sub_expr);
+				if (!res_datum->name) {
+					/* Anonymous category sets need to be resolved when encountered */
+					if (!catset->cats->datum_expr) {
+						rc = cil_resolve_expr(expr_type, catset->cats->str_expr, &catset->cats->datum_expr, parent, extra_args);
+						if (rc != SEPOL_OK) {
+							goto exit;
+						}
+					}
+					cil_copy_list(catset->cats->datum_expr, &datum_sub_expr);
+					cil_list_append(*datum_expr, CIL_LIST, datum_sub_expr);
+				} else {
+					cil_list_append(*datum_expr, CIL_DATUM, res_datum);
+				}
 			} else {
 				if (sym_index == CIL_SYM_TYPES && (expr_type == CIL_CONSTRAIN || expr_type == CIL_VALIDATETRANS)) {
 					cil_type_used(res_datum, CIL_ATTR_CONSTRAINT);
@@ -3287,9 +3298,12 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 			break;
 		}
 		default:
+			if (curr->flavor == CIL_OP) {
+				op = (enum cil_flavor)(uintptr_t)curr->data;
+			}
 			cil_list_append(*datum_expr, curr->flavor, curr->data);
 			break;
-		}				
+		}
 	}
 	return SEPOL_OK;
 
