@@ -13,15 +13,13 @@ export CFLAGS=${CFLAGS:-$flags}
 export CXX=${CXX:-clang++}
 export CXXFLAGS=${CXXFLAGS:-$flags}
 
-export LDFLAGS="${LDFLAGS:-} $CFLAGS"
-
 export OUT=${OUT:-$(pwd)/out}
 mkdir -p "$OUT"
 
 export LIB_FUZZING_ENGINE=${LIB_FUZZING_ENGINE:--fsanitize=fuzzer}
 
 find . -name Makefile -print0 | xargs -0 sed -i 's/,-z,defs//'
-make V=1 -j"$(nproc)" install
+make -C libsepol V=1 -j"$(nproc)" install
 
 # CFLAGS, CXXFLAGS and LIB_FUZZING_ENGINE have to be split to be accepted by
 # the compiler/linker so they shouldn't be quoted
