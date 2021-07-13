@@ -2,6 +2,8 @@
 
 set -eux
 
+cd "$(dirname -- "$0")/.."
+
 export DESTDIR=${DESTDIR:-$(pwd)/DESTDIR}
 
 SANITIZER=${SANITIZER:-address}
