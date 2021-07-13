@@ -19,6 +19,8 @@ mkdir -p "$OUT"
 export LIB_FUZZING_ENGINE=${LIB_FUZZING_ENGINE:--fsanitize=fuzzer}
 
 find . -name Makefile -print0 | xargs -0 sed -i 's/,-z,defs//'
+rm -rf "$DESTDIR"
+make -C libsepol clean
 make -C libsepol V=1 -j"$(nproc)" install
 
 # CFLAGS, CXXFLAGS and LIB_FUZZING_ENGINE have to be split to be accepted by
