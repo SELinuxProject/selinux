@@ -42,10 +42,12 @@ mkdir -p "$OUT"
 
 export LIB_FUZZING_ENGINE=${LIB_FUZZING_ENGINE:--fsanitize=fuzzer}
 
-find . -name Makefile -print0 | xargs -0 sed -i 's/,-z,defs//'
 rm -rf "$DESTDIR"
 make -C libsepol clean
-make -C libsepol V=1 -j"$(nproc)" install
+# LIBSO and LIBMAP shouldn't be expanded here because the values of LIBSO and LIBMAP are unknown
+# until Makefile has been interpreted
+# shellcheck disable=SC2016
+make -C libsepol V=1 LD_SONAME_FLAGS='-soname,$(LIBSO),--version-script=$(LIBMAP)' -j"$(nproc)" install
 
 # CFLAGS, CXXFLAGS and LIB_FUZZING_ENGINE have to be split to be accepted by
 # the compiler/linker so they shouldn't be quoted
