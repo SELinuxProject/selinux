@@ -1,5 +1,27 @@
 #!/bin/bash
 
+# The script is used to build the fuzz targets run on ClusterFuzz. It has to be
+# compatible with the "build.sh" script mentioned at
+# https://google.github.io/oss-fuzz/getting-started/new-project-guide/#buildsh
+# More precisely, it should use environment variables like OUT, LIB_FUZZING_ENGINE
+# and so on (https://google.github.io/oss-fuzz/getting-started/new-project-guide/#buildsh-script-environment),
+# and the fuzz targets have to be linked with $CXX even though the project is written
+# in C: https://google.github.io/oss-fuzz/getting-started/new-project-guide/#Requirements
+
+# To make it easier to build the fuzz targets locally, the script can also work in "local"
+# mode. To run secilc-fuzzer against a test case (named, say, CRASH) triggering an issue
+# the following commands should be run
+#
+# $ ./scripts/oss-fuzz.sh
+# $ ./out/secilc-fuzzer CRASH
+
+# To run the fuzzer against the corpus OSS-Fuzz has accumulated so far it should be
+# downloaded, unpacked and passed to the fuzzer:
+#
+# $ wget https://storage.googleapis.com/selinux-backup.clusterfuzz-external.appspot.com/corpus/libFuzzer/selinux_secilc-fuzzer/public.zip
+# $ unzip -d CORPUS public.zip
+# $./out/secilc-fuzzer CORPUS/
+
 set -eux
 
 cd "$(dirname -- "$0")/.."
