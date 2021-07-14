@@ -2143,29 +2143,70 @@ err:
 	return rc;
 }
 
-static int type_attr_uncount(hashtab_key_t key __attribute__ ((unused)),
-			     hashtab_datum_t datum, void *args)
+static void role_write_destroy(hashtab_key_t key __attribute__ ((unused)),
+            hashtab_datum_t datum,
+            void *p __attribute__ ((unused)))
 {
-	type_datum_t *typdatum = datum;
-	uint32_t *p_nel = args;
+    role_datum_destroy((role_datum_t *) datum);
+    free(datum);
+}
 
-	if (typdatum->flavor == TYPE_ATTRIB) {
-		/* uncount attribute from total number of types */
-		(*p_nel)--;
-	}
+static void type_write_destroy(hashtab_key_t key __attribute__ ((unused)),
+            hashtab_datum_t datum,
+            void *p __attribute__ ((unused)))
+{
+    type_datum_destroy((type_datum_t *) datum);
+    free(datum);
+}
+
+static void scope_write_destroy(hashtab_key_t key __attribute__ ((unused)),
+        hashtab_datum_t datum,
+        void *p __attribute__ ((unused)))
+{
+    scope_datum_t *cur = (scope_datum_t *) datum;
+    if (cur != NULL) {
+        free(cur->decl_ids);
+    }
+    free(cur);
+}
+
+static int type_attr_filter(hashtab_key_t key,
+                 hashtab_datum_t datum, void *args)
+{
+    type_datum_t *typdatum = datum;
+    scope_datum_t *scope = NULL;
+    policydb_t *p = (policydb_t *)args;
+    hashtab_t typetbl = p->symtab[SYM_TYPES].table;
+    hashtab_t scopetbl = p->scope[SYM_TYPES].table;
+
+    if (typdatum->flavor == TYPE_ATTRIB) {
+        /* Remove the entry from the hash table and scope table */
+        hashtab_remove(typetbl, key, type_write_destroy, typdatum);
+        scope = (scope_datum_t *)hashtab_search(scopetbl, key);
+        if (scope) 
+            hashtab_remove(scopetbl, key, scope_write_destroy, scope);
+    }
+
 	return 0;
 }
 
-static int role_attr_uncount(hashtab_key_t key __attribute__ ((unused)),
-			     hashtab_datum_t datum, void *args)
+static int role_attr_filter(hashtab_key_t key,
+                 hashtab_datum_t datum, void *args)
 {
-	role_datum_t *role = datum;
-	uint32_t *p_nel = args;
+    role_datum_t *role = datum;
+    scope_datum_t *scope = NULL;
+    policydb_t *p = (policydb_t *)args;
+    hashtab_t roletbl = p->symtab[SYM_ROLES].table;
+    hashtab_t scopetbl = p->scope[SYM_ROLES].table;
 
-	if (role->flavor == ROLE_ATTRIB) {
-		/* uncount attribute from total number of roles */
-		(*p_nel)--;
-	}
+    if (role->flavor == ROLE_ATTRIB) {
+        /* Remove the entry from the hash table and scope table */
+        hashtab_remove(roletbl, key, role_write_destroy, role);
+        scope = (scope_datum_t *)hashtab_search(scopetbl, key);
+        if (scope) 
+            hashtab_remove(scopetbl, key, scope_write_destroy, scope);
+    }
+
 	return 0;
 }
 
@@ -2301,28 +2342,35 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 		buf[1] = p->symtab[i].table->nel;
 
 		/*
-		 * A special case when writing type/attribute symbol table.
-		 * The kernel policy version less than 24 does not support
-		 * to load entries of attribute, so we have to re-calculate
-		 * the actual number of types except for attributes.
-		 */
+		* A special case when writing type/attribute symbol table.
+		* The kernel policy version less than 24 does not support
+		* to load entries of attribute, so we filter the entries
+		* from the table.
+		*/
 		if (i == SYM_TYPES &&
-		    p->policyvers < POLICYDB_VERSION_BOUNDARY &&
-		    p->policy_type == POLICY_KERN) {
-			hashtab_map(p->symtab[i].table, type_attr_uncount, &buf[1]);
+			p->policyvers < POLICYDB_VERSION_BOUNDARY &&
+			p->policy_type == POLICY_KERN) {
+			(void)hashtab_map(p->symtab[i].table, type_attr_filter, p);
+			if (buf[1] != p->symtab[i].table->nel)
+                WARN(fp->handle, "Discarding type attribute rules");
+			buf[1] = p->symtab[i].table->nel;
 		}
 
-		/*
-		 * Another special case when writing role/attribute symbol
-		 * table, role attributes are redundant for policy.X, or
-		 * when the pp's version is not big enough. So deduct
-		 * their numbers from p_roles.table->nel.
-		 */
+	/*
+		* Another special case when writing role/attribute symbol
+		* table, role attributes are redundant for policy.X, or
+		* when the pp's version is not big enough. So filter the entries
+		* from the table.
+		*/
 		if ((i == SYM_ROLES) &&
-		    ((p->policy_type == POLICY_KERN) ||
-		     (p->policy_type != POLICY_KERN &&
-		      p->policyvers < MOD_POLICYDB_VERSION_ROLEATTRIB)))
-			(void)hashtab_map(p->symtab[i].table, role_attr_uncount, &buf[1]);
+			((p->policy_type == POLICY_KERN) ||
+			(p->policy_type != POLICY_KERN &&
+			p->policyvers < MOD_POLICYDB_VERSION_ROLEATTRIB))) {
+			(void)hashtab_map(p->symtab[i].table, role_attr_filter, p);
+			if (buf[1] != p->symtab[i].table->nel)
+				WARN(fp->handle, "Discarding role attribute rules");
+			buf[1] = p->symtab[i].table->nel;
+		}
 
 		buf[1] = cpu_to_le32(buf[1]);
 		items = put_entry(buf, sizeof(uint32_t), 2, fp);
