@@ -111,6 +111,7 @@ int main(int argc, char *argv[])
 				qualified_names = 1;
 				break;
 			case 'o':
+				free(output);
 				output = strdup(optarg);
 				break;
 			case 'h':
