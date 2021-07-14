@@ -1239,6 +1239,7 @@ int main(int argc, char *argv[])
 		free(pw.pw_dir);
 		free(pw.pw_shell);
 		free(shell_argv0);
+		free(new_context);
 		return exit_code;
 	}
 
