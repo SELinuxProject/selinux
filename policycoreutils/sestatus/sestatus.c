@@ -461,6 +461,7 @@ int main(int argc, char **argv)
 				    ("%s (could not check link status (%s)!)\n",
 				     context, strerror(errno));
 				freecon(context);
+				free(fc[i]);
 				continue;
 			}
 			if (S_ISLNK(m.st_mode)) {
