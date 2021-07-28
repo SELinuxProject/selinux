@@ -1022,6 +1022,7 @@ static int semanage_direct_write_langext(semanage_handle_t *sh,
 
 	if (fclose(fp) != 0) {
 		ERR(sh, "Unable to close %s module ext file.", modinfo->name);
+		fp = NULL;
 		ret = -1;
 		goto cleanup;
 	}
