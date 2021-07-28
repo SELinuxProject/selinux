@@ -2,8 +2,9 @@
 
 import dbus
 import dbus.service
-import dbus.mainloop.glib
+from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GObject
+from gi.repository import GLib
 import os
 import selinux
 from subprocess import Popen, PIPE, STDOUT
@@ -145,9 +146,10 @@ class selinux_server(dbus.service.Object):
         raise ValueError("%s does not exist" % path)
 
 if __name__ == "__main__":
-    mainloop = GObject.MainLoop()
-    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+    DBusGMainLoop(set_as_default=True)
+    mainloop = GLib.MainLoop()
+
     system_bus = dbus.SystemBus()
     name = dbus.service.BusName("org.selinux", system_bus)
-    object = selinux_server(system_bus, "/org/selinux/object")
+    server = selinux_server(system_bus, "/org/selinux/object")
     mainloop.run()
