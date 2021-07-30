@@ -1039,7 +1039,7 @@ def get_description(f, markup=markup):
         return txt + "treat the files as %s key data." % prettyprint(f, "_key_t")
 
     if f.endswith("_secret_t"):
-        return txt + "treat the files as %s secret data." % prettyprint(f, "_key_t")
+        return txt + "treat the files as %s secret data." % prettyprint(f, "_secret_t")
 
     if f.endswith("_ra_t"):
         return txt + "treat the files as %s read/append content." % prettyprint(f, "_ra_t")
@@ -1071,7 +1071,7 @@ def get_description(f, markup=markup):
     if f.endswith("_tmp_t"):
         return txt + "store %s temporary files in the /tmp directories." % prettyprint(f, "_tmp_t")
     if f.endswith("_etc_t"):
-        return txt + "store %s files in the /etc directories." % prettyprint(f, "_tmp_t")
+        return txt + "store %s files in the /etc directories." % prettyprint(f, "_etc_t")
     if f.endswith("_home_t"):
         return txt + "store %s files in the users home directory." % prettyprint(f, "_home_t")
     if f.endswith("_tmpfs_t"):
