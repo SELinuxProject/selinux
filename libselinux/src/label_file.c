@@ -188,6 +188,9 @@ static int load_mmap(FILE *fp, size_t len, struct selabel_handle *rec,
 
 		str_buf[entry_len] = '\0';
 		if ((strcmp(str_buf, reg_version) != 0)) {
+			COMPAT_LOG(SELINUX_ERROR,
+				"Regex version mismatch, expected: %s actual: %s\n",
+				reg_version, str_buf);
 			free(str_buf);
 			return -1;
 		}
