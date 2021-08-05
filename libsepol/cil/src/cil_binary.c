@@ -55,9 +55,6 @@
 #include "cil_find.h"
 #include "cil_build_ast.h"
 
-/* There are 44000 filename_trans in current fedora policy. 1.33 times this is the recommended
- * size of a hashtable. The next power of 2 of this is 2 ** 16.
- */
 #define ROLE_TRANS_TABLE_SIZE (1 << 10)
 #define AVRULEX_TABLE_SIZE (1 <<  10)
 #define PERMS_PER_CLASS 32
