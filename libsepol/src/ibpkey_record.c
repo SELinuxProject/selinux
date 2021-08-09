@@ -38,8 +38,8 @@ static int ibpkey_parse_subnet_prefix(sepol_handle_t *handle,
 	struct in6_addr in_addr;
 
 	if (inet_pton(AF_INET6, subnet_prefix_str, &in_addr) <= 0) {
-		ERR(handle, "could not parse IPv6 address for ibpkey subnet prefix %s: %s",
-		    subnet_prefix_str, strerror(errno));
+		ERR(handle, "could not parse IPv6 address for ibpkey subnet prefix %s: %m",
+		    subnet_prefix_str);
 		return STATUS_ERR;
 	}
 
@@ -64,8 +64,7 @@ static int ibpkey_expand_subnet_prefix(sepol_handle_t *handle,
 	if (inet_ntop(AF_INET6, &addr, subnet_prefix_str,
 		      INET6_ADDRSTRLEN) == NULL) {
 		ERR(handle,
-		    "could not expand IPv6 address to string: %s",
-		    strerror(errno));
+		    "could not expand IPv6 address to string: %m");
 		return STATUS_ERR;
 	}
 

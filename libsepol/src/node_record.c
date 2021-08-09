@@ -53,7 +53,7 @@ static int node_parse_addr(sepol_handle_t * handle,
 
 			if (inet_pton(AF_INET, addr_str, &in_addr) <= 0) {
 				ERR(handle, "could not parse IPv4 address "
-				    "%s: %s", addr_str, strerror(errno));
+				    "%s: %m", addr_str);
 				return STATUS_ERR;
 			}
 
@@ -66,7 +66,7 @@ static int node_parse_addr(sepol_handle_t * handle,
 
 			if (inet_pton(AF_INET6, addr_str, &in_addr) <= 0) {
 				ERR(handle, "could not parse IPv6 address "
-				    "%s: %s", addr_str, strerror(errno));
+				    "%s: %m", addr_str);
 				return STATUS_ERR;
 			}
 
@@ -147,8 +147,7 @@ static int node_expand_addr(sepol_handle_t * handle,
 				      INET_ADDRSTRLEN) == NULL) {
 
 				ERR(handle,
-				    "could not expand IPv4 address to string: %s",
-				    strerror(errno));
+				    "could not expand IPv4 address to string: %m");
 				return STATUS_ERR;
 			}
 			break;
@@ -163,8 +162,7 @@ static int node_expand_addr(sepol_handle_t * handle,
 				      INET6_ADDRSTRLEN) == NULL) {
 
 				ERR(handle,
-				    "could not expand IPv6 address to string: %s",
-				    strerror(errno));
+				    "could not expand IPv6 address to string: %m");
 				return STATUS_ERR;
 			}
 			break;

@@ -145,7 +145,7 @@ int sepol_set_policydb_from_file(FILE * fp)
 	}
 	if (policydb_read(&mypolicydb, &pf, 0)) {
 		policydb_destroy(&mypolicydb);
-		ERR(NULL, "can't read binary policy: %s", strerror(errno));
+		ERR(NULL, "can't read binary policy: %m");
 		return -1;
 	}
 	policydb = &mypolicydb;
