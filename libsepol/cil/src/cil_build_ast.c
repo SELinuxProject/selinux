@@ -380,7 +380,8 @@ int cil_gen_in(struct cil_db *db, struct cil_tree_node *parse_current, struct ci
 	enum cil_syntax syntax[] = {
 		CIL_SYN_STRING,
 		CIL_SYN_STRING,
-		CIL_SYN_N_LISTS,
+		CIL_SYN_STRING | CIL_SYN_N_LISTS,
+		CIL_SYN_N_LISTS | CIL_SYN_END,
 		CIL_SYN_END
 	};
 	int syntax_len = sizeof(syntax)/sizeof(*syntax);
@@ -403,14 +404,29 @@ int cil_gen_in(struct cil_db *db, struct cil_tree_node *parse_current, struct ci
 
 	cil_in_init(&in);
 
-	in->block_str = parse_current->next->data;
+	if (parse_current->next->next->data) {
+		char *is_after_str = parse_current->next->data;
+		if (is_after_str == CIL_KEY_IN_BEFORE) {
+			in->is_after = CIL_FALSE;
+		} else if (is_after_str == CIL_KEY_IN_AFTER) {
+			in->is_after = CIL_TRUE;
+		} else {
+			cil_log(CIL_ERR, "Value must be either \'before\' or \'after\'\n");
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+		in->block_str = parse_current->next->next->data;
+	} else {
+		in->is_after = CIL_FALSE;
+		in->block_str = parse_current->next->data;
+	}
 
 	ast_node->data = in;
 	ast_node->flavor = CIL_IN;
 
 	return SEPOL_OK;
 exit:
-	cil_tree_log(parse_current, CIL_ERR, "Bad in statement");
+	cil_tree_log(parse_current, CIL_ERR, "Bad in-statement");
 	cil_destroy_in(in);
 	return rc;
 }
@@ -6118,10 +6134,18 @@ static int check_for_illegal_statement(struct cil_tree_node *parse_current, stru
 	}
 
 	if (args->in != NULL) {
+		struct cil_in *in_block = args->in->data;
 		if (parse_current->data == CIL_KEY_TUNABLE ||
 			parse_current->data == CIL_KEY_IN) {
 			cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in in-statement", (char *)parse_current->data);
 			return SEPOL_ERR;
+		}
+		if (in_block->is_after == CIL_TRUE) {
+			if (parse_current->data == CIL_KEY_BLOCKINHERIT ||
+				parse_current->data == CIL_KEY_BLOCKABSTRACT) {
+				cil_tree_log(parse_current, CIL_ERR, "%s is not allowed in an after in-statement", (char *)parse_current->data);
+				return SEPOL_ERR;
+			}
 		}
 	}
 

@@ -56,10 +56,11 @@ enum cil_pass {
 	CIL_PASS_INIT = 0,
 
 	CIL_PASS_TIF,
-	CIL_PASS_IN,
+	CIL_PASS_IN_BEFORE,
 	CIL_PASS_BLKIN_LINK,
 	CIL_PASS_BLKIN_COPY,
 	CIL_PASS_BLKABS,
+	CIL_PASS_IN_AFTER,
 	CIL_PASS_CALL1,
 	CIL_PASS_CALL2,
 	CIL_PASS_ALIAS1,
@@ -158,6 +159,8 @@ extern char *CIL_KEY_HANDLEUNKNOWN_DENY;
 extern char *CIL_KEY_HANDLEUNKNOWN_REJECT;
 extern char *CIL_KEY_MACRO;
 extern char *CIL_KEY_IN;
+extern char *CIL_KEY_IN_BEFORE;
+extern char *CIL_KEY_IN_AFTER;
 extern char *CIL_KEY_MLS;
 extern char *CIL_KEY_DEFAULTRANGE;
 extern char *CIL_KEY_BLOCKINHERIT;
@@ -357,6 +360,7 @@ struct cil_blockabstract {
 
 struct cil_in {
 	symtab_t symtab[CIL_SYM_NUM];
+	int is_after;
 	char *block_str;
 };
 

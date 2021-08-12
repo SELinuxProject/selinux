@@ -63,7 +63,8 @@ struct cil_args_resolve {
 	struct cil_list *unordered_classorder_lists;
 	struct cil_list *catorder_lists;
 	struct cil_list *sensitivityorder_lists;
-	struct cil_list *in_list;
+	struct cil_list *in_list_before;
+	struct cil_list *in_list_after;
 };
 
 static struct cil_name * __cil_insert_name(struct cil_db *db, hashtab_key_t key, struct cil_tree_node *ast_node)
@@ -2448,10 +2449,8 @@ exit:
 	return rc;
 }
 
-int cil_resolve_in_list(void *extra_args)
+int cil_resolve_in_list(struct cil_list *in_list, void *extra_args)
 {
-	struct cil_args_resolve *args = extra_args;
-	struct cil_list *ins = args->in_list;
 	struct cil_list_item *curr = NULL;
 	struct cil_tree_node *node = NULL;
 	struct cil_tree_node *last_failed_node = NULL;
@@ -2465,7 +2464,7 @@ int cil_resolve_in_list(void *extra_args)
 		resolved = 0;
 		unresolved = 0;
 
-		cil_list_for_each(curr, ins) {
+		cil_list_for_each(curr, in_list) {
 			if (curr->flavor != CIL_NODE) {
 				continue;
 			}
@@ -3589,12 +3588,10 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 	int rc = SEPOL_OK;
 	struct cil_args_resolve *args = extra_args;
 	enum cil_pass pass = 0;
-	struct cil_list *ins;
 
 	if (node == NULL || args == NULL) {
 		goto exit;
 	}
-	ins = args->in_list;
 
 	pass = args->pass;
 	switch (pass) {
@@ -3603,11 +3600,14 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 			rc = cil_resolve_tunif(node, args);
 		}
 		break;
-	case CIL_PASS_IN:
+	case CIL_PASS_IN_BEFORE:
 		if (node->flavor == CIL_IN) {
 			// due to ordering issues, in statements are just gathered here and
 			// resolved together in cil_resolve_in_list once all are found
-			cil_list_prepend(ins, CIL_NODE, node);
+			struct cil_in *in = node->data;
+			if (in->is_after == CIL_FALSE) {
+				cil_list_prepend(args->in_list_before, CIL_NODE, node);
+			}
 		}
 		break;
 	case CIL_PASS_BLKIN_LINK:
@@ -3623,6 +3623,16 @@ int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 	case CIL_PASS_BLKABS:
 		if (node->flavor == CIL_BLOCKABSTRACT) {
 			rc = cil_resolve_blockabstract(node, args);
+		}
+		break;
+	case CIL_PASS_IN_AFTER:
+		if (node->flavor == CIL_IN) {
+			// due to ordering issues, in statements are just gathered here and
+			// resolved together in cil_resolve_in_list once all are found
+			struct cil_in *in = node->data;
+			if (in->is_after == CIL_TRUE) {
+				cil_list_prepend(args->in_list_after, CIL_NODE, node);
+			}
 		}
 		break;
 	case CIL_PASS_CALL1:
@@ -4072,7 +4082,8 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	extra_args.unordered_classorder_lists = NULL;
 	extra_args.catorder_lists = NULL;
 	extra_args.sensitivityorder_lists = NULL;
-	extra_args.in_list = NULL;
+	extra_args.in_list_before = NULL;
+	extra_args.in_list_after = NULL;
 
 	cil_list_init(&extra_args.to_destroy, CIL_NODE);
 	cil_list_init(&extra_args.sidorder_lists, CIL_LIST_ITEM);
@@ -4080,7 +4091,8 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 	cil_list_init(&extra_args.unordered_classorder_lists, CIL_LIST_ITEM);
 	cil_list_init(&extra_args.catorder_lists, CIL_LIST_ITEM);
 	cil_list_init(&extra_args.sensitivityorder_lists, CIL_LIST_ITEM);
-	cil_list_init(&extra_args.in_list, CIL_IN);
+	cil_list_init(&extra_args.in_list_before, CIL_IN);
+	cil_list_init(&extra_args.in_list_after, CIL_IN);
 
 	for (pass = CIL_PASS_TIF; pass < CIL_PASS_NUM; pass++) {
 		extra_args.pass = pass;
@@ -4090,12 +4102,18 @@ int cil_resolve_ast(struct cil_db *db, struct cil_tree_node *current)
 			goto exit;
 		}
 
-		if (pass == CIL_PASS_IN) {
-			rc = cil_resolve_in_list(&extra_args);
+		if (pass == CIL_PASS_IN_BEFORE) {
+			rc = cil_resolve_in_list(extra_args.in_list_before, &extra_args);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
-			cil_list_destroy(&extra_args.in_list, CIL_FALSE);
+			cil_list_destroy(&extra_args.in_list_before, CIL_FALSE);
+		} else if (pass == CIL_PASS_IN_AFTER) {
+			rc = cil_resolve_in_list(extra_args.in_list_after, &extra_args);
+			if (rc != SEPOL_OK) {
+				goto exit;
+			}
+			cil_list_destroy(&extra_args.in_list_after, CIL_FALSE);
 		}
 
 		if (pass == CIL_PASS_BLKIN_LINK) {
@@ -4214,7 +4232,8 @@ exit:
 	__cil_ordered_lists_destroy(&extra_args.sensitivityorder_lists);
 	__cil_ordered_lists_destroy(&extra_args.unordered_classorder_lists);
 	cil_list_destroy(&extra_args.to_destroy, CIL_FALSE);
-	cil_list_destroy(&extra_args.in_list, CIL_FALSE);
+	cil_list_destroy(&extra_args.in_list_before, CIL_FALSE);
+	cil_list_destroy(&extra_args.in_list_after, CIL_FALSE);
 
 	return rc;
 }

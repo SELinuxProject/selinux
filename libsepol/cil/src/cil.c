@@ -142,6 +142,8 @@ char *CIL_KEY_HANDLEUNKNOWN_DENY;
 char *CIL_KEY_HANDLEUNKNOWN_REJECT;
 char *CIL_KEY_MACRO;
 char *CIL_KEY_IN;
+char *CIL_KEY_IN_BEFORE;
+char *CIL_KEY_IN_AFTER;
 char *CIL_KEY_MLS;
 char *CIL_KEY_DEFAULTRANGE;
 char *CIL_KEY_BLOCKINHERIT;
@@ -355,6 +357,8 @@ static void cil_init_keys(void)
 	CIL_KEY_DEFAULTTYPE = cil_strpool_add("defaulttype");
 	CIL_KEY_MACRO = cil_strpool_add("macro");
 	CIL_KEY_IN = cil_strpool_add("in");
+	CIL_KEY_IN_BEFORE = cil_strpool_add("before");
+	CIL_KEY_IN_AFTER = cil_strpool_add("after");
 	CIL_KEY_MLS = cil_strpool_add("mls");
 	CIL_KEY_DEFAULTRANGE = cil_strpool_add("defaultrange");
 	CIL_KEY_GLOB = cil_strpool_add("*");
@@ -2182,6 +2186,7 @@ void cil_in_init(struct cil_in **in)
 	*in = cil_malloc(sizeof(**in));
 
 	cil_symtab_array_init((*in)->symtab, cil_sym_sizes[CIL_SYM_ARRAY_IN]);
+	(*in)->is_after = CIL_FALSE;
 	(*in)->block_str = NULL;
 }
 
