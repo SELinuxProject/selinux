@@ -60,6 +60,8 @@ Declare a macro in the current namespace with its associated parameters. The mac
 
 [`tunable`](cil_conditional_statements.md#tunable), [`in`](cil_container_statements.md#in), [`block`](cil_container_statements.md#block), [`blockinherit`](cil_container_statements.md#blockinherit), [`blockabstract`](cil_container_statements.md#blockabstract), and other [`macro`](cil_call_macro_statements.md#macro) statements are not allowed in [`macro`](cil_call_macro_statements.md#macro) blocks.
 
+Duplicate [`macro`](cil_call_macro_statements.md#macro) declarations in the same namespace will normally cause an error, but inheriting a macro into a namespace (with [`blockinherit`](cil_container_statements.md#blockinherit)) that already has a macro with the same name will only result in a warning message and not cause an error. This behavior allows inherited macros to be overridden with local ones.
+
 **Statement definition:**
 
 ```secil

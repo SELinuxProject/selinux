@@ -10,6 +10,8 @@ Not allowed in [`macro`](cil_call_macro_statements.md#macro) and [`optional`](ci
 
 [`sensitivity`](cil_mls_labeling_statements.md#sensitivity) and [`category`](cil_mls_labeling_statements.md#category) statements are not allowed in [`block`](cil_container_statements.md#block) blocks.
 
+Duplicate declarations of a [`block`](cil_container_statements.md#block) in the same namespace will normally cause an error, but inheriting a block into a namespace (with [`blockinherit`](cil_container_statements.md#blockinherit)) that already has a block with the same name will only result in a warning message and not cause an error. The policy from both blocks will end up in the binary policy. This behavior was used in the past to allow a block to be declared so that an [`in-statement`](cil_container_statements.md#in) could be used on it, but now an [`in-statement`](cil_container_statements.md#in) can be specified to occur after inheritance, so this behavior is not necessary (but is still allowed).
+
 **Statement definition:**
 
 ```secil
@@ -278,7 +280,7 @@ This example will instantiate the optional block `ext_gateway.move_file` into po
 in
 --
 
-Allows the insertion of CIL statements into a named container ([`block`](cil_container_statements.md#block), [`optional`](cil_container_statements.md#optional) or [`macro`](cil_call_macro_statements.md#macro)).
+Allows the insertion of CIL statements into a named container ([`block`](cil_container_statements.md#block), [`optional`](cil_container_statements.md#optional) or [`macro`](cil_call_macro_statements.md#macro)). This insertion can be specified to occur either before or after block inheritance has been resolved.
 
 Not allowed in [`macro`](cil_call_macro_statements.md#macro), [`booleanif`](cil_conditional_statements.md#booleanif), and other [`in`](cil_container_statements.md#in) blocks.
 
@@ -287,7 +289,7 @@ Not allowed in [`macro`](cil_call_macro_statements.md#macro), [`booleanif`](cil_
 **Statement definition:**
 
 ```secil
-    (in container_id
+    (in [before|after] container_id
         cil_statement
         ...
     )
@@ -306,10 +308,14 @@ Not allowed in [`macro`](cil_call_macro_statements.md#macro), [`booleanif`](cil_
 <td align="left"><p>The <code>in</code> keyword.</p></td>
 </tr>
 <tr class="even">
+<td align="left"><p><code>before|after</code></p></td>
+<td align="left"><p>An optional value that specifies whether to process the [`in`](cil_container_statements.md#in) <code>before</code> or <code>after</code> block inheritance. If no value is specified, then the [`in`](cil_container_statements.md#in) will be processed before block inheritance.</p></td>
+</tr>
+<tr class="odd">
 <td align="left"><p><code>container_id</code></p></td>
 <td align="left"><p>A valid <code>block</code>, <code>optional</code> or <code>macro</code> namespace identifier.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><p><code>cil_statement</code></p></td>
 <td align="left"><p>Zero or more valid CIL statements.</p></td>
 </tr>
