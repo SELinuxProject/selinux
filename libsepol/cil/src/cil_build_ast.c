@@ -6075,12 +6075,24 @@ void cil_destroy_mls(struct cil_mls *mls)
 
 int cil_gen_src_info(struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
 {
-	/* No need to check syntax, because this is auto generated */
+	int rc = SEPOL_ERR;
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_STRING,
+		CIL_SYN_STRING,
+		CIL_SYN_N_LISTS | CIL_SYN_END,
+		CIL_SYN_END
+	};
+	int syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_src_info *info = NULL;
 
-	if (parse_current->next == NULL || parse_current->next->next == NULL) {
-		cil_tree_log(parse_current, CIL_ERR, "Bad <src_info>");
-		return SEPOL_ERR;
+	if (parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK) {
+		goto exit;
 	}
 
 	cil_src_info_init(&info);
@@ -6092,6 +6104,10 @@ int cil_gen_src_info(struct cil_tree_node *parse_current, struct cil_tree_node *
 	ast_node->flavor = CIL_SRC_INFO;
 
 	return SEPOL_OK;
+
+exit:
+	cil_tree_log(parse_current, CIL_ERR, "Bad src info");
+	return rc;
 }
 
 void cil_destroy_src_info(struct cil_src_info *info)
