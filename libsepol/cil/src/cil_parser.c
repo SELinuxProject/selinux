@@ -45,21 +45,21 @@
 #define CIL_PARSER_MAX_EXPR_DEPTH (0x1 << 12)
 
 struct hll_info {
-	uint32_t hll_lineno;
+	uint32_t hll_offset;
 	uint32_t hll_expand;
 };
 
-static void push_hll_info(struct cil_stack *stack, uint32_t hll_lineno, uint32_t hll_expand)
+static void push_hll_info(struct cil_stack *stack, uint32_t hll_offset, uint32_t hll_expand)
 {
 	struct hll_info *new = cil_malloc(sizeof(*new));
 
-	new->hll_lineno = hll_lineno;
+	new->hll_offset = hll_offset;
 	new->hll_expand = hll_expand;
 
 	cil_stack_push(stack, CIL_NONE, new);
 }
 
-static void pop_hll_info(struct cil_stack *stack, uint32_t *hll_lineno, uint32_t *hll_expand)
+static void pop_hll_info(struct cil_stack *stack, uint32_t *hll_offset, uint32_t *hll_expand)
 {
 	struct cil_stack_item *curr = cil_stack_pop(stack);
 	struct hll_info *info;
@@ -69,17 +69,17 @@ static void pop_hll_info(struct cil_stack *stack, uint32_t *hll_lineno, uint32_t
 	}
 	info = curr->data;
 	*hll_expand = info->hll_expand;
-	*hll_lineno = info->hll_lineno;
+	*hll_offset = info->hll_offset;
 	free(curr->data);
 }
 
-static void create_node(struct cil_tree_node **node, struct cil_tree_node *current, uint32_t line, uint32_t hll_line, void *value)
+static void create_node(struct cil_tree_node **node, struct cil_tree_node *current, uint32_t line, uint32_t hll_offset, void *value)
 {
 	cil_tree_node_init(node);
 	(*node)->parent = current;
 	(*node)->flavor = CIL_NODE;
 	(*node)->line = line;
-	(*node)->hll_line = hll_line;
+	(*node)->hll_offset = hll_offset;
 	(*node)->data = value;
 }
 
@@ -93,12 +93,12 @@ static void insert_node(struct cil_tree_node *node, struct cil_tree_node *curren
 	current->cl_tail = node;
 }
 
-static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno, uint32_t *hll_expand, struct cil_stack *stack, char *path)
+static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_offset, uint32_t *hll_expand, struct cil_stack *stack, char *path)
 {
 	char *hll_type;
 	struct cil_tree_node *node;
 	struct token tok;
-	int rc;
+	uint32_t prev_hll_expand, prev_hll_offset;
 
 	cil_lexer_next(&tok);
 	if (tok.type != SYMBOL) {
@@ -115,19 +115,31 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 			cil_log(CIL_ERR, "Line mark end without start\n");
 			goto exit;
 		}
-		pop_hll_info(stack, hll_lineno, hll_expand);
+		prev_hll_expand = *hll_expand;
+		prev_hll_offset = *hll_offset;
+		pop_hll_info(stack, hll_offset, hll_expand);
+		if (!*hll_expand) {
+			/* This is needed if not going back to an lmx section. */
+			*hll_offset = prev_hll_offset;
+		}
+		if (prev_hll_expand && !*hll_expand) {
+			/* This is needed to count the lme at the end of an lmx section
+			 * within an lms section (or within no hll section).
+			 */
+			(*hll_offset)++;
+		}
 		*current = (*current)->parent;
 	} else {
-		push_hll_info(stack, *hll_lineno, *hll_expand);
+		push_hll_info(stack, *hll_offset, *hll_expand);
 
-		create_node(&node, *current, tok.line, *hll_lineno, NULL);
+		create_node(&node, *current, tok.line, *hll_offset, NULL);
 		insert_node(node, *current);
 		*current = node;
 
-		create_node(&node, *current, tok.line, *hll_lineno, CIL_KEY_SRC_INFO);
+		create_node(&node, *current, tok.line, *hll_offset, CIL_KEY_SRC_INFO);
 		insert_node(node, *current);
 
-		create_node(&node, *current, tok.line, *hll_lineno, hll_type);
+		create_node(&node, *current, tok.line, *hll_offset, hll_type);
 		insert_node(node, *current);
 
 		cil_lexer_next(&tok);
@@ -136,15 +148,8 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 			goto exit;
 		}
 
-		create_node(&node, *current, tok.line, *hll_lineno, cil_strpool_add(tok.value));
+		create_node(&node, *current, tok.line, *hll_offset, cil_strpool_add(tok.value));
 		insert_node(node, *current);
-
-		rc = cil_string_to_uint32(tok.value, hll_lineno, 10);
-		if (rc != SEPOL_OK) {
-			goto exit;
-		}
-
-		*hll_expand = (hll_type == CIL_KEY_SRC_HLL_LMX) ? 1 : 0;
 
 		cil_lexer_next(&tok);
 		if (tok.type != SYMBOL && tok.type != QSTRING) {
@@ -157,14 +162,21 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 			tok.value = tok.value+1;
 		}
 
-		create_node(&node, *current, tok.line, *hll_lineno, cil_strpool_add(tok.value));
+		create_node(&node, *current, tok.line, *hll_offset, cil_strpool_add(tok.value));
 		insert_node(node, *current);
+
+		*hll_expand = (hll_type == CIL_KEY_SRC_HLL_LMX) ? 1 : 0;
 	}
 
 	cil_lexer_next(&tok);
 	if (tok.type != NEWLINE) {
 		cil_log(CIL_ERR, "Invalid line mark syntax\n");
 		goto exit;
+	}
+
+	if (!*hll_expand) {
+		/* Need to increment because of the NEWLINE */
+		(*hll_offset)++;
 	}
 
 	return SEPOL_OK;
@@ -205,7 +217,7 @@ int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree *
 	struct cil_tree_node *current = NULL;
 	char *path = cil_strpool_add(_path);
 	struct cil_stack *stack;
-	uint32_t hll_lineno = 0;
+	uint32_t hll_offset = 1;
 	uint32_t hll_expand = 0;
 	struct token tok;
 	int rc = SEPOL_OK;
@@ -223,7 +235,7 @@ int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree *
 		cil_lexer_next(&tok);
 		switch (tok.type) {
 		case HLL_LINEMARK:
-			rc = add_hll_linemark(&current, &hll_lineno, &hll_expand, stack, path);
+			rc = add_hll_linemark(&current, &hll_offset, &hll_expand, stack, path);
 			if (rc != SEPOL_OK) {
 				goto exit;
 			}
@@ -234,7 +246,7 @@ int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree *
 				cil_log(CIL_ERR, "Number of open parenthesis exceeds limit of %d at line %d of %s\n", CIL_PARSER_MAX_EXPR_DEPTH, tok.line, path);
 				goto exit;
 			}
-			create_node(&node, current, tok.line, hll_lineno, NULL);
+			create_node(&node, current, tok.line, hll_offset, NULL);
 			insert_node(node, current);
 			current = node;
 			break;
@@ -256,12 +268,12 @@ int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree *
 				goto exit;
 			}
 
-			create_node(&node, current, tok.line, hll_lineno, cil_strpool_add(tok.value));
+			create_node(&node, current, tok.line, hll_offset, cil_strpool_add(tok.value));
 			insert_node(node, current);
 			break;
 		case NEWLINE :
 			if (!hll_expand) {
-				hll_lineno++;
+				hll_offset++;
 			}
 			break;
 		case COMMENT:
@@ -269,7 +281,7 @@ int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree *
 				cil_lexer_next(&tok);
 			}
 			if (!hll_expand) {
-				hll_lineno++;
+				hll_offset++;
 			}
 			if (tok.type != END_OF_FILE) {
 				break;
@@ -306,7 +318,7 @@ int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree *
 
 exit:
 	while (!cil_stack_is_empty(stack)) {
-		pop_hll_info(stack, &hll_lineno, &hll_expand);
+		pop_hll_info(stack, &hll_offset, &hll_expand);
 	}
 	cil_lexer_destroy();
 	cil_stack_destroy(&stack);
