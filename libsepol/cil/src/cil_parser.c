@@ -111,6 +111,10 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 	unsigned long val;
 
 	cil_lexer_next(&tok);
+	if (tok.type != SYMBOL) {
+		cil_log(CIL_ERR, "Invalid line mark syntax\n");
+		goto exit;
+	}
 	hll_type = cil_strpool_add(tok.value);
 	if (hll_type == CIL_KEY_HLL_LME) {
 		if (cil_stack_is_empty(stack)) {
