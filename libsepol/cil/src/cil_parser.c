@@ -103,8 +103,7 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 	struct cil_tree_node *node;
 	struct token tok;
 	char *hll_file;
-	char *end = NULL;
-	unsigned long val;
+	int rc;
 
 	cil_lexer_next(&tok);
 	if (tok.type != SYMBOL) {
@@ -142,18 +141,11 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 			goto exit;
 		}
 
-		val = strtoul(tok.value, &end, 10);
-		if (errno == ERANGE || *end != '\0') {
-			cil_log(CIL_ERR, "Problem parsing line number for line mark\n");
+		rc = cil_string_to_uint32(tok.value, hll_lineno, 10);
+		if (rc != SEPOL_OK) {
 			goto exit;
 		}
-#if ULONG_MAX > UINT32_MAX
-		if (val > UINT32_MAX) {
-			cil_log(CIL_ERR, "Line mark line number > UINT32_MAX\n");
-			goto exit;
-		}
-#endif
-		*hll_lineno = val;
+
 		*hll_expand = (hll_type == CIL_KEY_HLL_LMX) ? 1 : 0;
 
 		cil_lexer_next(&tok);

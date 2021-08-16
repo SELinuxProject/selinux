@@ -1997,6 +1997,63 @@ exit:
 	return SEPOL_ERR;	
 }
 
+int cil_string_to_uint32(const char *string, uint32_t *value, int base)
+{
+	unsigned long val;
+	char *end = NULL;
+	int rc = SEPOL_ERR;
+
+	if (string == NULL || value  == NULL) {
+		goto exit;
+	}
+
+	errno = 0;
+	val = strtoul(string, &end, base);
+	if (errno != 0 || end == string || *end != '\0') {
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
+	/* Ensure that the value fits a 32-bit integer without triggering -Wtype-limits */
+#if ULONG_MAX > UINT32_MAX
+	if (val > UINT32_MAX) {
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+#endif
+
+	*value = val;
+
+	return SEPOL_OK;
+
+exit:
+	cil_log(CIL_ERR, "Failed to create uint32_t from string\n");
+	return rc;
+}
+
+int cil_string_to_uint64(const char *string, uint64_t *value, int base)
+{
+	char *end = NULL;
+	int rc = SEPOL_ERR;
+
+	if (string == NULL || value  == NULL) {
+		goto exit;
+	}
+
+	errno = 0;
+	*value = strtoull(string, &end, base);
+	if (errno != 0 || end == string || *end != '\0') {
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
+	return SEPOL_OK;
+
+exit:
+	cil_log(CIL_ERR, "Failed to create uint64_t from string\n");
+	return rc;
+}
+
 void cil_sort_init(struct cil_sort **sort)
 {
 	*sort = cil_malloc(sizeof(**sort));

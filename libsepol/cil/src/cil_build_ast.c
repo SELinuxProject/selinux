@@ -5601,60 +5601,40 @@ void cil_destroy_ipaddr(struct cil_ipaddr *ipaddr)
 int cil_fill_integer(struct cil_tree_node *int_node, uint32_t *integer, int base)
 {
 	int rc = SEPOL_ERR;
-	char *endptr = NULL;
-	unsigned long val;
 
 	if (int_node == NULL || int_node->data == NULL || integer == NULL) {
 		goto exit;
 	}
 
-	errno = 0;
-	val = strtoul(int_node->data, &endptr, base);
-	if (errno != 0 || endptr == int_node->data || *endptr != '\0') {
-		rc = SEPOL_ERR;
+	rc = cil_string_to_uint32(int_node->data, integer, base);
+	if (rc != SEPOL_OK) {
 		goto exit;
 	}
-
-	/* Ensure that the value fits a 32-bit integer without triggering -Wtype-limits */
-#if ULONG_MAX > UINT32_MAX
-	if (val > UINT32_MAX) {
-		rc = SEPOL_ERR;
-		goto exit;
-	}
-#endif
-
-	*integer = val;
 
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Failed to create integer from string\n");
+	cil_log(CIL_ERR, "Failed to fill 32-bit integer\n");
 	return rc;
 }
 
 int cil_fill_integer64(struct cil_tree_node *int_node, uint64_t *integer, int base)
 {
 	int rc = SEPOL_ERR;
-	char *endptr = NULL;
-	uint64_t val;
 
 	if (int_node == NULL || int_node->data == NULL || integer == NULL) {
 		goto exit;
 	}
 
-	errno = 0;
-	val = strtoull(int_node->data, &endptr, base);
-	if (errno != 0 || endptr == int_node->data || *endptr != '\0') {
-		rc = SEPOL_ERR;
+	rc = cil_string_to_uint64(int_node->data, integer, base);
+	if (rc != SEPOL_OK) {
 		goto exit;
 	}
-
-	*integer = val;
 
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Failed to create integer from string\n");
+	cil_log(CIL_ERR, "Failed to fill 64-bit integer\n");
 	return rc;
 }
 

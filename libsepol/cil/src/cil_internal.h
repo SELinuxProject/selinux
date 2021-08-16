@@ -986,6 +986,8 @@ void cil_symtab_array_init(symtab_t symtab[], const int symtab_sizes[CIL_SYM_NUM
 void cil_symtab_array_destroy(symtab_t symtab[]);
 void cil_destroy_ast_symtabs(struct cil_tree_node *root);
 int cil_get_symtab(struct cil_tree_node *ast_node, symtab_t **symtab, enum cil_sym_index sym_index);
+int cil_string_to_uint32(const char *string, uint32_t *value, int base);
+int cil_string_to_uint64(const char *string, uint64_t *value, int base);
 
 void cil_sort_init(struct cil_sort **sort);
 void cil_sort_destroy(struct cil_sort **sort);
