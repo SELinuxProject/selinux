@@ -220,7 +220,9 @@ char *CIL_KEY_IOCTL;
 char *CIL_KEY_UNORDERED;
 char *CIL_KEY_SRC_INFO;
 char *CIL_KEY_SRC_CIL;
-char *CIL_KEY_SRC_HLL;
+char *CIL_KEY_SRC_HLL_LMS;
+char *CIL_KEY_SRC_HLL_LMX;
+char *CIL_KEY_SRC_HLL_LME;
 
 static void cil_init_keys(void)
 {
@@ -384,8 +386,10 @@ static void cil_init_keys(void)
 	CIL_KEY_IOCTL = cil_strpool_add("ioctl");
 	CIL_KEY_UNORDERED = cil_strpool_add("unordered");
 	CIL_KEY_SRC_INFO = cil_strpool_add("<src_info>");
-	CIL_KEY_SRC_CIL = cil_strpool_add("<src_cil>");
-	CIL_KEY_SRC_HLL = cil_strpool_add("<src_hll>");
+	CIL_KEY_SRC_CIL = cil_strpool_add("cil");
+	CIL_KEY_SRC_HLL_LMS = cil_strpool_add("lms");
+	CIL_KEY_SRC_HLL_LMX = cil_strpool_add("lmx");
+	CIL_KEY_SRC_HLL_LME = cil_strpool_add("lme");
 }
 
 void cil_db_init(struct cil_db **db)
@@ -2881,6 +2885,7 @@ void cil_mls_init(struct cil_mls **mls)
 void cil_src_info_init(struct cil_src_info **info)
 {
 	*info = cil_malloc(sizeof(**info));
-	(*info)->is_cil = 0;
+	(*info)->kind = NULL;
+	(*info)->hll_line = 0;
 	(*info)->path = NULL;
 }

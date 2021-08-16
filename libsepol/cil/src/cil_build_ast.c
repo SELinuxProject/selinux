@@ -6060,6 +6060,7 @@ int cil_gen_src_info(struct cil_tree_node *parse_current, struct cil_tree_node *
 		CIL_SYN_STRING,
 		CIL_SYN_STRING,
 		CIL_SYN_STRING,
+		CIL_SYN_STRING,
 		CIL_SYN_N_LISTS | CIL_SYN_END,
 		CIL_SYN_END
 	};
@@ -6077,8 +6078,19 @@ int cil_gen_src_info(struct cil_tree_node *parse_current, struct cil_tree_node *
 
 	cil_src_info_init(&info);
 
-	info->is_cil = (parse_current->next->data == CIL_KEY_SRC_CIL) ? CIL_TRUE : CIL_FALSE;
-	info->path = parse_current->next->next->data;
+	info->kind = parse_current->next->data;
+	if (info->kind != CIL_KEY_SRC_CIL && info->kind != CIL_KEY_SRC_HLL_LMS && info->kind != CIL_KEY_SRC_HLL_LMX) {
+		cil_log(CIL_ERR, "Invalid src info kind\n");
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
+	rc = cil_string_to_uint32(parse_current->next->next->data, &info->hll_line, 10);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	info->path = parse_current->next->next->next->data;
 
 	ast_node->data = info;
 	ast_node->flavor = CIL_SRC_INFO;
@@ -6087,6 +6099,7 @@ int cil_gen_src_info(struct cil_tree_node *parse_current, struct cil_tree_node *
 
 exit:
 	cil_tree_log(parse_current, CIL_ERR, "Bad src info");
+	cil_destroy_src_info(info);
 	return rc;
 }
 

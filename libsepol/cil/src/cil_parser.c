@@ -44,10 +44,6 @@
 
 #define CIL_PARSER_MAX_EXPR_DEPTH (0x1 << 12)
 
-char *CIL_KEY_HLL_LMS;
-char *CIL_KEY_HLL_LMX;
-char *CIL_KEY_HLL_LME;
-
 struct hll_info {
 	uint32_t hll_lineno;
 	uint32_t hll_expand;
@@ -102,7 +98,6 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 	char *hll_type;
 	struct cil_tree_node *node;
 	struct token tok;
-	char *hll_file;
 	int rc;
 
 	cil_lexer_next(&tok);
@@ -111,11 +106,11 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 		goto exit;
 	}
 	hll_type = cil_strpool_add(tok.value);
-	if (hll_type != CIL_KEY_HLL_LME && hll_type != CIL_KEY_HLL_LMS && hll_type != CIL_KEY_HLL_LMX) {
+	if (hll_type != CIL_KEY_SRC_HLL_LME && hll_type != CIL_KEY_SRC_HLL_LMS && hll_type != CIL_KEY_SRC_HLL_LMX) {
 		cil_log(CIL_ERR, "Invalid line mark syntax\n");
 		goto exit;
 	}
-	if (hll_type == CIL_KEY_HLL_LME) {
+	if (hll_type == CIL_KEY_SRC_HLL_LME) {
 		if (cil_stack_is_empty(stack)) {
 			cil_log(CIL_ERR, "Line mark end without start\n");
 			goto exit;
@@ -132,7 +127,7 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 		create_node(&node, *current, tok.line, *hll_lineno, CIL_KEY_SRC_INFO);
 		insert_node(node, *current);
 
-		create_node(&node, *current, tok.line, *hll_lineno, CIL_KEY_SRC_HLL);
+		create_node(&node, *current, tok.line, *hll_lineno, hll_type);
 		insert_node(node, *current);
 
 		cil_lexer_next(&tok);
@@ -141,12 +136,15 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 			goto exit;
 		}
 
+		create_node(&node, *current, tok.line, *hll_lineno, cil_strpool_add(tok.value));
+		insert_node(node, *current);
+
 		rc = cil_string_to_uint32(tok.value, hll_lineno, 10);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
 
-		*hll_expand = (hll_type == CIL_KEY_HLL_LMX) ? 1 : 0;
+		*hll_expand = (hll_type == CIL_KEY_SRC_HLL_LMX) ? 1 : 0;
 
 		cil_lexer_next(&tok);
 		if (tok.type != SYMBOL && tok.type != QSTRING) {
@@ -159,9 +157,7 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 			tok.value = tok.value+1;
 		}
 
-		hll_file = cil_strpool_add(tok.value);
-
-		create_node(&node, *current, tok.line, *hll_lineno, hll_file);
+		create_node(&node, *current, tok.line, *hll_lineno, cil_strpool_add(tok.value));
 		insert_node(node, *current);
 	}
 
@@ -192,6 +188,9 @@ static void add_cil_path(struct cil_tree_node **current, char *path)
 	create_node(&node, *current, 0, 0, CIL_KEY_SRC_CIL);
 	insert_node(node, *current);
 
+	create_node(&node, *current, 0, 0, cil_strpool_add("1"));
+	insert_node(node, *current);
+
 	create_node(&node, *current, 0, 0, path);
 	insert_node(node, *current);
 }
@@ -210,10 +209,6 @@ int cil_parser(const char *_path, char *buffer, uint32_t size, struct cil_tree *
 	uint32_t hll_expand = 0;
 	struct token tok;
 	int rc = SEPOL_OK;
-
-	CIL_KEY_HLL_LMS = cil_strpool_add("lms");
-	CIL_KEY_HLL_LMX = cil_strpool_add("lmx");
-	CIL_KEY_HLL_LME = cil_strpool_add("lme");
 
 	cil_stack_init(&stack);
 

@@ -1692,7 +1692,8 @@ int cil_copy_src_info(__attribute__((unused)) struct cil_db *db, void *data, voi
 
 	cil_src_info_init(&new);
 
-	new->is_cil = orig->is_cil;
+	new->kind = orig->kind;
+	new->hll_line = orig->hll_line;
 	new->path = orig->path;
 
 	*copy = new;

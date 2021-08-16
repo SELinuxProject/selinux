@@ -71,7 +71,7 @@ struct cil_tree_node *cil_tree_get_next_path(struct cil_tree_node *node, char **
 				/* AST */
 				struct cil_src_info *info = node->data;
 				*path = info->path;
-				*is_cil = info->is_cil;
+				*is_cil = (info->kind == CIL_KEY_SRC_CIL);
 				return node;
 		} else {
 			if (node->flavor == CIL_CALL) {

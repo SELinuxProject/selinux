@@ -236,7 +236,9 @@ extern char *CIL_KEY_IOCTL;
 extern char *CIL_KEY_UNORDERED;
 extern char *CIL_KEY_SRC_INFO;
 extern char *CIL_KEY_SRC_CIL;
-extern char *CIL_KEY_SRC_HLL;
+extern char *CIL_KEY_SRC_HLL_LMS;
+extern char *CIL_KEY_SRC_HLL_LMX;
+extern char *CIL_KEY_SRC_HLL_LME;
 
 /*
 	Symbol Table Array Indices
@@ -963,7 +965,8 @@ struct cil_mls {
 };
 
 struct cil_src_info {
-	int is_cil;
+	char *kind;
+	uint32_t hll_line;
 	char *path;
 };
 
