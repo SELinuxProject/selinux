@@ -66,19 +66,15 @@ static void push_hll_info(struct cil_stack *stack, uint32_t hll_lineno, uint32_t
 static void pop_hll_info(struct cil_stack *stack, uint32_t *hll_lineno, uint32_t *hll_expand)
 {
 	struct cil_stack_item *curr = cil_stack_pop(stack);
-	struct cil_stack_item *prev = cil_stack_peek(stack);
-	struct hll_info *old;
+	struct hll_info *info;
 
-	free(curr->data);
-
-	if (!prev) {
-		*hll_lineno = 0;
-		*hll_expand = 0;
-	} else {
-		old = prev->data;
-		*hll_lineno = old->hll_lineno;
-		*hll_expand = old->hll_expand;
+	if (!curr) {
+		return;
 	}
+	info = curr->data;
+	*hll_expand = info->hll_expand;
+	*hll_lineno = info->hll_lineno;
+	free(curr->data);
 }
 
 static void create_node(struct cil_tree_node **node, struct cil_tree_node *current, uint32_t line, uint32_t hll_line, void *value)
@@ -128,6 +124,8 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 		pop_hll_info(stack, hll_lineno, hll_expand);
 		*current = (*current)->parent;
 	} else {
+		push_hll_info(stack, *hll_lineno, *hll_expand);
+
 		create_node(&node, *current, tok.line, *hll_lineno, NULL);
 		insert_node(node, *current);
 		*current = node;
@@ -157,8 +155,6 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_lineno
 #endif
 		*hll_lineno = val;
 		*hll_expand = (hll_type == CIL_KEY_HLL_LMX) ? 1 : 0;
-
-		push_hll_info(stack, *hll_lineno, *hll_expand);
 
 		cil_lexer_next(&tok);
 		if (tok.type != SYMBOL && tok.type != QSTRING) {
