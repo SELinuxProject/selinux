@@ -546,6 +546,18 @@ static const char *macro_param_flavor_to_string(enum cil_flavor flavor)
 	return str;
 }
 
+void cil_write_src_info_node(FILE *out, struct cil_tree_node *node)
+{
+	struct cil_src_info *info = node->data;
+	if (info->kind == CIL_KEY_SRC_CIL || info->kind == CIL_KEY_SRC_HLL_LMS) {
+		fprintf(out, ";;* lms %u %s\n", info->hll_line, info->path);
+	} else if (info->kind == CIL_KEY_SRC_HLL_LMX) {
+		fprintf(out, ";;* lmx %u %s\n", info->hll_line, info->path);
+	} else {
+		fprintf(out, ";;* <?SRC_INFO_KIND> %u %s\n", info->hll_line, info->path);
+	}
+}
+
 void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 {
 	if (!node->data) {
@@ -1508,8 +1520,10 @@ static int __write_cil_ast_node_helper(struct cil_tree_node *node, uint32_t *fin
 {
 	struct cil_write_ast_args *args = extra_args;
 
-	if (node->flavor == CIL_SRC_INFO)
+	if (node->flavor == CIL_SRC_INFO) {
+		cil_write_src_info_node(args->out, node);
 		return SEPOL_OK;
+	}
 
 	fprintf(args->out, "%*s", args->depth*4, "");
 
@@ -1539,7 +1553,10 @@ static int __write_cil_ast_last_child_helper(struct cil_tree_node *node, void *e
 	struct cil_write_ast_args *args = extra_args;
 	struct cil_tree_node *parent = node->parent;
 
-	if (parent->flavor == CIL_SRC_INFO || parent->flavor == CIL_ROOT) {
+	if (parent->flavor == CIL_ROOT) {
+		return SEPOL_OK;
+	} else if (parent->flavor == CIL_SRC_INFO) {
+		fprintf(args->out, ";;* lme\n");
 		return SEPOL_OK;
 	}
 
