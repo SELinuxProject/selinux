@@ -31,7 +31,8 @@ import socket
 from semanage import *
 PROGNAME = "policycoreutils"
 import sepolicy
-import setools
+from setools.policyrep import SELinuxPolicy
+from setools.typequery import TypeQuery
 import ipaddress
 
 try:
@@ -1339,7 +1340,7 @@ class ibpkeyRecords(semanageRecords):
     def __init__(self, args = None):
         semanageRecords.__init__(self, args)
         try:
-            q = setools.TypeQuery(setools.SELinuxPolicy(sepolicy.get_store_policy(self.store)), attrs=["ibpkey_type"])
+            q = TypeQuery(SELinuxPolicy(sepolicy.get_store_policy(self.store)), attrs=["ibpkey_type"])
             self.valid_types = sorted(str(t) for t in q.results())
         except:
             pass
@@ -1599,7 +1600,7 @@ class ibendportRecords(semanageRecords):
     def __init__(self, args = None):
         semanageRecords.__init__(self, args)
         try:
-            q = setools.TypeQuery(setools.SELinuxPolicy(sepolicy.get_store_policy(self.store)), attrs=["ibendport_type"])
+            q = TypeQuery(SELinuxPolicy(sepolicy.get_store_policy(self.store)), attrs=["ibendport_type"])
             self.valid_types = set(str(t) for t in q.results())
         except:
             pass
