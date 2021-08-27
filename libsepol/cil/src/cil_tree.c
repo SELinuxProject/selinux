@@ -62,7 +62,10 @@ struct cil_tree_node *cil_tree_get_next_path(struct cil_tree_node *node, char **
 
 	while (node) {
 		if (node->flavor == CIL_NODE && node->data == NULL) {
-			if (node->cl_head->data == CIL_KEY_SRC_INFO && node->cl_head->next != NULL && node->cl_head->next->next != NULL) {
+			if (node->cl_head && node->cl_head->data == CIL_KEY_SRC_INFO) {
+				if (!node->cl_head->next || !node->cl_head->next->next || !node->cl_head->next->next->next) {
+					goto exit;
+				}
 				/* Parse Tree */
 				*info_kind = node->cl_head->next->data;
 				rc = cil_string_to_uint32(node->cl_head->next->next->data, hll_line, 10);
