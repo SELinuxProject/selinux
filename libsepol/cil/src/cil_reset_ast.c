@@ -208,6 +208,11 @@ static void cil_reset_typeattributeset(struct cil_typeattributeset *tas)
 	cil_list_destroy(&tas->datum_expr, CIL_FALSE);
 }
 
+static void cil_reset_expandtypeattribute(struct cil_expandtypeattribute *expandattr)
+{
+	cil_list_destroy(&expandattr->attr_datums, CIL_FALSE);
+}
+
 static void cil_reset_avrule(struct cil_avrule *rule)
 {
 	cil_reset_classperms_list(rule->perms.classperms);
@@ -531,6 +536,9 @@ int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused)) uint32
 	case CIL_TYPEATTRIBUTESET:
 		cil_reset_typeattributeset(node->data);
 		break;
+	case CIL_EXPANDTYPEATTRIBUTE:
+		cil_reset_expandtypeattribute(node->data);
+		break;
 	case CIL_RANGETRANSITION:
 		cil_reset_rangetransition(node->data);
 		break;
@@ -630,7 +638,6 @@ int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused)) uint32
 	case CIL_CLASSORDER:
 	case CIL_CATORDER:
 	case CIL_SENSITIVITYORDER:
-	case CIL_EXPANDTYPEATTRIBUTE:
 		break; /* Nothing to reset */
 	default:
 		break;
