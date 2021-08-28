@@ -573,7 +573,7 @@ static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const 
 		rule = "auditallow";
 		break;
 	case AVRULE_AUDITDENY:
-		rule = "auditdenty";
+		rule = "auditdeny";
 		break;
 	case AVRULE_DONTAUDIT:
 		rule = "dontaudit";
