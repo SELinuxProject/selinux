@@ -64,7 +64,7 @@ int cil_fill_list(struct cil_tree_node *current, enum cil_flavor flavor, struct 
 		CIL_SYN_N_STRINGS,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
  
 	rc = __cil_verify_syntax(current, syntax, syntax_len);
 	if (rc != SEPOL_OK) {
@@ -195,7 +195,7 @@ int cil_gen_block(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		CIL_SYN_N_LISTS | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_block *block = NULL;
 	int rc = SEPOL_ERR;
@@ -271,7 +271,7 @@ int cil_gen_blockinherit(struct cil_db *db, struct cil_tree_node *parse_current,
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_blockinherit *inherit = NULL;
 	int rc = SEPOL_ERR;
 
@@ -333,7 +333,7 @@ int cil_gen_blockabstract(struct cil_db *db, struct cil_tree_node *parse_current
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_blockabstract *abstract = NULL;
 	int rc = SEPOL_ERR;
 
@@ -384,7 +384,7 @@ int cil_gen_in(struct cil_db *db, struct cil_tree_node *parse_current, struct ci
 		CIL_SYN_N_LISTS | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_in *in = NULL;
 
@@ -450,7 +450,7 @@ int cil_gen_class(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		CIL_SYN_LIST | CIL_SYN_EMPTY_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_class *class = NULL;
 	struct cil_tree_node *perms = NULL;
@@ -518,7 +518,7 @@ int cil_gen_classorder(struct cil_db *db, struct cil_tree_node *parse_current, s
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_classorder *classorder = NULL;
 	struct cil_list_item *curr = NULL;
 	struct cil_list_item *head = NULL;
@@ -669,7 +669,7 @@ int cil_fill_perms(struct cil_tree_node *start_perm, struct cil_list **perms)
 		CIL_SYN_N_STRINGS | CIL_SYN_N_LISTS,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 
 	rc = __cil_verify_syntax(start_perm->cl_head, syntax, syntax_len);
 	if (rc != SEPOL_OK) {
@@ -696,7 +696,7 @@ int cil_fill_classperms(struct cil_tree_node *parse_current, struct cil_classper
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 
 	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
 	if (rc != SEPOL_OK) {
@@ -817,7 +817,7 @@ int cil_gen_classpermission(struct cil_db *db, struct cil_tree_node *parse_curre
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
 		goto exit;
@@ -875,7 +875,7 @@ int cil_gen_classpermissionset(struct cil_db *db, struct cil_tree_node *parse_cu
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
 		goto exit;
@@ -925,7 +925,7 @@ int cil_gen_map_class(struct cil_db *db, struct cil_tree_node *parse_current, st
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_class *map = NULL;
 	int rc = SEPOL_ERR;
@@ -969,7 +969,7 @@ int cil_gen_classmapping(struct cil_db *db, struct cil_tree_node *parse_current,
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
 		goto exit;
@@ -1021,7 +1021,7 @@ int cil_gen_common(struct cil_db *db, struct cil_tree_node *parse_current, struc
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_class *common = NULL;
 	int rc = SEPOL_ERR;
@@ -1073,7 +1073,7 @@ int cil_gen_classcommon(struct cil_db *db, struct cil_tree_node *parse_current, 
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_classcommon *clscom = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1119,7 +1119,7 @@ int cil_gen_sid(struct cil_db *db, struct cil_tree_node *parse_current, struct c
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_sid *sid = NULL;
 	int rc = SEPOL_ERR;
@@ -1169,7 +1169,7 @@ int cil_gen_sidcontext(struct cil_db *db, struct cil_tree_node *parse_current, s
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_sidcontext *sidcon = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1228,7 +1228,7 @@ int cil_gen_sidorder(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_sidorder *sidorder = NULL;
 	struct cil_list_item *curr = NULL;
 	int rc = SEPOL_ERR;
@@ -1288,7 +1288,7 @@ int cil_gen_user(struct cil_db *db, struct cil_tree_node *parse_current, struct 
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_user *user = NULL;
 	int rc = SEPOL_ERR;
@@ -1339,7 +1339,7 @@ int cil_gen_userattribute(struct cil_db *db, struct cil_tree_node *parse_current
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_userattribute *attr = NULL;
 	int rc = SEPOL_ERR;
@@ -1406,7 +1406,7 @@ int cil_gen_userattributeset(struct cil_db *db, struct cil_tree_node *parse_curr
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_userattributeset *attrset = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1459,7 +1459,7 @@ int cil_gen_userlevel(struct cil_db *db, struct cil_tree_node *parse_current, st
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_userlevel *usrlvl = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1519,7 +1519,7 @@ int cil_gen_userrange(struct cil_db *db, struct cil_tree_node *parse_current, st
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_userrange *userrange = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1579,7 +1579,7 @@ int cil_gen_userprefix(struct cil_db *db, struct cil_tree_node *parse_current, s
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_userprefix *userprefix = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1625,7 +1625,7 @@ int cil_gen_selinuxuser(struct cil_db *db, struct cil_tree_node *parse_current, 
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_selinuxuser *selinuxuser = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1672,7 +1672,7 @@ int cil_gen_selinuxuserdefault(struct cil_db *db, struct cil_tree_node *parse_cu
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_selinuxuser *selinuxuser = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1731,7 +1731,7 @@ int cil_gen_role(struct cil_db *db, struct cil_tree_node *parse_current, struct 
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_role *role = NULL;
 	int rc = SEPOL_ERR;
@@ -1783,7 +1783,7 @@ int cil_gen_roletype(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_roletype *roletype = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1829,7 +1829,7 @@ int cil_gen_userrole(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_userrole *userrole = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1877,7 +1877,7 @@ int cil_gen_roletransition(struct cil_tree_node *parse_current, struct cil_tree_
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_roletransition *roletrans = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1925,7 +1925,7 @@ int cil_gen_roleallow(struct cil_db *db, struct cil_tree_node *parse_current, st
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_roleallow *roleallow = NULL;
 	int rc = SEPOL_ERR;
 
@@ -1970,7 +1970,7 @@ int cil_gen_roleattribute(struct cil_db *db, struct cil_tree_node *parse_current
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_roleattribute *attr = NULL;
 	int rc = SEPOL_ERR;
@@ -2034,7 +2034,7 @@ int cil_gen_roleattributeset(struct cil_db *db, struct cil_tree_node *parse_curr
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_roleattributeset *attrset = NULL;
 	int rc = SEPOL_ERR;
 
@@ -2088,7 +2088,7 @@ int cil_gen_avrule(struct cil_tree_node *parse_current, struct cil_tree_node *as
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_avrule *rule = NULL;
 	int rc = SEPOL_ERR;
 
@@ -2150,7 +2150,7 @@ int cil_fill_permissionx(struct cil_tree_node *parse_current, struct cil_permiss
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 
 	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
@@ -2188,7 +2188,7 @@ int cil_gen_permissionx(struct cil_db *db, struct cil_tree_node *parse_current, 
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_permissionx *permx = NULL;
 	int rc = SEPOL_ERR;
@@ -2248,7 +2248,7 @@ int cil_gen_avrulex(struct cil_tree_node *parse_current, struct cil_tree_node *a
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_avrule *rule = NULL;
 	int rc = SEPOL_ERR;
 
@@ -2300,7 +2300,7 @@ int cil_gen_type_rule(struct cil_tree_node *parse_current, struct cil_tree_node 
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_type_rule *rule = NULL;
 	int rc = SEPOL_ERR;
 
@@ -2348,7 +2348,7 @@ int cil_gen_type(struct cil_db *db, struct cil_tree_node *parse_current, struct 
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_type *type = NULL;
 	int rc = SEPOL_ERR;
@@ -2396,7 +2396,7 @@ int cil_gen_typeattribute(struct cil_db *db, struct cil_tree_node *parse_current
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_typeattribute *attr = NULL;
 	int rc = SEPOL_ERR;
@@ -2461,7 +2461,7 @@ int cil_gen_bool(struct cil_db *db, struct cil_tree_node *parse_current, struct 
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_bool *boolean = NULL;
 	int rc = SEPOL_ERR;
@@ -2525,7 +2525,7 @@ int cil_gen_tunable(struct cil_db *db, struct cil_tree_node *parse_current, stru
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_tunable *tunable = NULL;
 	int rc = SEPOL_ERR;
@@ -2865,7 +2865,7 @@ int cil_gen_boolif(struct cil_db *db, struct cil_tree_node *parse_current, struc
 		CIL_SYN_LIST | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_booleanif *bif = NULL;
 	struct cil_tree_node *next = NULL;
 	int rc = SEPOL_ERR;
@@ -2933,7 +2933,7 @@ int cil_gen_tunif(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		CIL_SYN_LIST | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_tunableif *tif = NULL;
 	struct cil_tree_node *next = NULL;
 	int rc = SEPOL_ERR;
@@ -2994,7 +2994,7 @@ int cil_gen_condblock(struct cil_db *db, struct cil_tree_node *parse_current, st
 		CIL_SYN_N_LISTS,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_condblock *cb = NULL;
 
@@ -3046,7 +3046,7 @@ int cil_gen_alias(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_alias *alias = NULL;
 	enum cil_sym_index sym_index;
@@ -3105,7 +3105,7 @@ int cil_gen_aliasactual(struct cil_db *db, struct cil_tree_node *parse_current, 
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_aliasactual *aliasactual = NULL;
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
@@ -3157,7 +3157,7 @@ int cil_gen_typeattributeset(struct cil_db *db, struct cil_tree_node *parse_curr
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_typeattributeset *attrset = NULL;
 	int rc = SEPOL_ERR;
 
@@ -3210,7 +3210,7 @@ int cil_gen_expandtypeattribute(struct cil_db *db, struct cil_tree_node *parse_c
 		CIL_SYN_END
 	};
 	char *expand_str;
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_expandtypeattribute *expandattr = NULL;
 	int rc = SEPOL_ERR;
 
@@ -3278,7 +3278,7 @@ int cil_gen_typepermissive(struct cil_db *db, struct cil_tree_node *parse_curren
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_typepermissive *typeperm = NULL;
 	int rc = SEPOL_ERR;
 
@@ -3327,7 +3327,7 @@ int cil_gen_typetransition(struct cil_db *db, struct cil_tree_node *parse_curren
 		CIL_SYN_STRING | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *s1, *s2, *s3, *s4, *s5;
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL ) {
@@ -3417,7 +3417,7 @@ int cil_gen_rangetransition(struct cil_db *db, struct cil_tree_node *parse_curre
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_rangetransition *rangetrans = NULL;
 	int rc = SEPOL_ERR;
 
@@ -3480,7 +3480,7 @@ int cil_gen_sensitivity(struct cil_db *db, struct cil_tree_node *parse_current, 
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_sens *sens = NULL;
 	int rc = SEPOL_ERR;
@@ -3532,7 +3532,7 @@ int cil_gen_category(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_cat *cat = NULL;
 	int rc = SEPOL_ERR;
@@ -3582,7 +3582,7 @@ int cil_gen_catset(struct cil_db *db, struct cil_tree_node *parse_current, struc
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_catset *catset = NULL;
 	int rc = SEPOL_ERR;
@@ -3639,7 +3639,7 @@ int cil_gen_catorder(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_catorder *catorder = NULL;
 	struct cil_list_item *curr = NULL;
 	int rc = SEPOL_ERR;
@@ -3699,7 +3699,7 @@ int cil_gen_sensitivityorder(struct cil_db *db, struct cil_tree_node *parse_curr
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_sensorder *sensorder = NULL;
 	struct cil_list_item *curr = NULL;
 	int rc = SEPOL_ERR;
@@ -3760,7 +3760,7 @@ int cil_gen_senscat(struct cil_db *db, struct cil_tree_node *parse_current, stru
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_senscat *senscat = NULL;
 	int rc = SEPOL_ERR;
 
@@ -3812,7 +3812,7 @@ int cil_gen_level(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_level *level = NULL;
 	int rc = SEPOL_ERR;
@@ -3870,7 +3870,7 @@ int cil_fill_levelrange(struct cil_tree_node *low, struct cil_levelrange *lvlran
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 
 	if (low == NULL || lvlrange == NULL) {
@@ -3918,7 +3918,7 @@ int cil_gen_levelrange(struct cil_db *db, struct cil_tree_node *parse_current, s
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_levelrange *lvlrange = NULL;
 	int rc = SEPOL_ERR;
@@ -3982,7 +3982,7 @@ int cil_gen_constrain(struct cil_db *db, struct cil_tree_node *parse_current, st
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_constrain *cons = NULL;
 	int rc = SEPOL_ERR;
 
@@ -4039,7 +4039,7 @@ int cil_gen_validatetrans(struct cil_db *db, struct cil_tree_node *parse_current
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_validatetrans *validtrans = NULL;
 	int rc = SEPOL_ERR;
 
@@ -4096,7 +4096,7 @@ int cil_fill_context(struct cil_tree_node *user_node, struct cil_context *contex
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 
 	if (user_node == NULL || context == NULL) {
@@ -4140,7 +4140,7 @@ int cil_gen_context(struct cil_db *db, struct cil_tree_node *parse_current, stru
 		CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_context *context = NULL;
 	int rc = SEPOL_ERR;
@@ -4201,7 +4201,7 @@ int cil_gen_filecon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 		CIL_SYN_STRING | CIL_SYN_LIST | CIL_SYN_EMPTY_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_filecon *filecon = NULL;
 	char *type = NULL;
@@ -4291,7 +4291,7 @@ int cil_gen_ibpkeycon(__attribute__((unused)) struct cil_db *db, struct cil_tree
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax) / sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax) / sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_ibpkeycon *ibpkeycon = NULL;
 
@@ -4374,7 +4374,7 @@ int cil_gen_portcon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_portcon *portcon = NULL;
 	char *proto;
@@ -4476,7 +4476,7 @@ int cil_gen_nodecon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_nodecon *nodecon = NULL;
 
@@ -4565,7 +4565,7 @@ int cil_gen_genfscon(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_genfscon *genfscon = NULL;
 
@@ -4628,7 +4628,7 @@ int cil_gen_netifcon(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_netifcon *netifcon = NULL;
 
@@ -4704,7 +4704,7 @@ int cil_gen_ibendportcon(__attribute__((unused)) struct cil_db *db, struct cil_t
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax) / sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax) / sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_ibendportcon *ibendportcon = NULL;
 
@@ -4765,7 +4765,7 @@ int cil_gen_pirqcon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_pirqcon *pirqcon = NULL;
 
@@ -4828,7 +4828,7 @@ int cil_gen_iomemcon(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_iomemcon *iomemcon = NULL;
 
@@ -4913,7 +4913,7 @@ int cil_gen_ioportcon(struct cil_db *db, struct cil_tree_node *parse_current, st
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_ioportcon *ioportcon = NULL;
 
@@ -4998,7 +4998,7 @@ int cil_gen_pcidevicecon(struct cil_db *db, struct cil_tree_node *parse_current,
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_pcidevicecon *pcidevicecon = NULL;
 
@@ -5061,7 +5061,7 @@ int cil_gen_devicetreecon(struct cil_db *db, struct cil_tree_node *parse_current
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	int rc = SEPOL_ERR;
 	struct cil_devicetreecon *devicetreecon = NULL;
 
@@ -5122,7 +5122,7 @@ int cil_gen_fsuse(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		CIL_SYN_STRING | CIL_SYN_LIST,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *type = NULL;
 	struct cil_fsuse *fsuse = NULL;
 	int rc = SEPOL_ERR;
@@ -5211,7 +5211,7 @@ int cil_gen_macro(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		CIL_SYN_N_LISTS | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/ sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/ sizeof(*syntax);
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL) {
 		goto exit;
@@ -5356,7 +5356,7 @@ int cil_gen_call(struct cil_db *db, struct cil_tree_node *parse_current, struct 
 		CIL_SYN_LIST | CIL_SYN_EMPTY_LIST | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_call *call = NULL;
 	int rc = SEPOL_ERR;
 
@@ -5461,7 +5461,7 @@ int cil_gen_optional(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_N_LISTS | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_optional *optional = NULL;
 	int rc = SEPOL_ERR;
@@ -5509,7 +5509,7 @@ int cil_gen_policycap(struct cil_db *db, struct cil_tree_node *parse_current, st
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_policycap *polcap = NULL;
 	int rc = SEPOL_ERR;
@@ -5558,7 +5558,7 @@ int cil_gen_ipaddr(struct cil_db *db, struct cil_tree_node *parse_current, struc
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	char *key = NULL;
 	struct cil_ipaddr *ipaddr = NULL;
 	int rc = SEPOL_ERR;
@@ -5680,7 +5680,7 @@ int cil_fill_level(struct cil_tree_node *curr, struct cil_level *level)
 		CIL_SYN_STRING | CIL_SYN_LIST | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 
 	if (curr == NULL) {
 		goto exit;
@@ -5741,7 +5741,7 @@ int cil_gen_bounds(struct cil_db *db, struct cil_tree_node *parse_current, struc
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_bounds *bounds = NULL;
 	int rc = SEPOL_ERR;
 
@@ -5803,7 +5803,7 @@ int cil_gen_default(struct cil_tree_node *parse_current, struct cil_tree_node *a
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 
 	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
 	if (rc != SEPOL_OK) {
@@ -5872,7 +5872,7 @@ int cil_gen_defaultrange(struct cil_tree_node *parse_current, struct cil_tree_no
 		CIL_SYN_STRING | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 
 	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
 	if (rc != SEPOL_OK) {
@@ -5968,7 +5968,7 @@ int cil_gen_handleunknown(struct cil_tree_node *parse_current, struct cil_tree_n
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_handleunknown *unknown = NULL;
 	char *unknown_key;
 
@@ -6020,7 +6020,7 @@ int cil_gen_mls(struct cil_tree_node *parse_current, struct cil_tree_node *ast_n
 		CIL_SYN_STRING,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_mls *mls = NULL;
 
 	if (parse_current == NULL || ast_node == NULL) {
@@ -6071,7 +6071,7 @@ int cil_gen_src_info(struct cil_tree_node *parse_current, struct cil_tree_node *
 		CIL_SYN_N_LISTS | CIL_SYN_END,
 		CIL_SYN_END
 	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
 	struct cil_src_info *info = NULL;
 
 	if (parse_current == NULL || ast_node == NULL) {

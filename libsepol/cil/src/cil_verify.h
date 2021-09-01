@@ -57,7 +57,7 @@ struct cil_args_verify {
 };
 
 int cil_verify_name(const struct cil_db *db, const char *name, enum cil_flavor flavor);
-int __cil_verify_syntax(struct cil_tree_node *parse_current, enum cil_syntax s[], int len);
+int __cil_verify_syntax(struct cil_tree_node *parse_current, enum cil_syntax s[], size_t len);
 int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, enum cil_flavor expr_flavor);
 int cil_verify_constraint_leaf_expr_syntax(enum cil_flavor l_flavor, enum cil_flavor r_flavor, enum cil_flavor op, enum cil_flavor expr_flavor);
 int cil_verify_constraint_expr_syntax(struct cil_tree_node *current, enum cil_flavor op);

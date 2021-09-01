@@ -144,12 +144,12 @@ exit:
 	return rc;
 }
 
-int __cil_verify_syntax(struct cil_tree_node *parse_current, enum cil_syntax s[], int len)
+int __cil_verify_syntax(struct cil_tree_node *parse_current, enum cil_syntax s[], size_t len)
 {
 	int rc = SEPOL_ERR;
 	int num_extras = 0;
 	struct cil_tree_node *c = parse_current;
-	int i = 0;
+	size_t i = 0;
 	while (i < len) {
 		if ((s[i] & CIL_SYN_END) && c == NULL) {
 			break;
