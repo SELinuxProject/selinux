@@ -146,68 +146,43 @@ exit:
 
 int __cil_verify_syntax(struct cil_tree_node *parse_current, enum cil_syntax s[], size_t len)
 {
-	int rc = SEPOL_ERR;
-	int num_extras = 0;
 	struct cil_tree_node *c = parse_current;
 	size_t i = 0;
-	while (i < len) {
-		if ((s[i] & CIL_SYN_END) && c == NULL) {
-			break;
-		}
 
-		if (s[i] & CIL_SYN_N_LISTS || s[i] & CIL_SYN_N_STRINGS) {
-			if (c == NULL) {
-				if (num_extras > 0) {
-					i++;
-					continue;
+	while (i < len && c != NULL) {
+		if ((s[i] & CIL_SYN_STRING) && c->data != NULL && c->cl_head == NULL) {
+			c = c->next;
+			i++;
+		} else if ((s[i] & CIL_SYN_LIST) && c->data == NULL && c->cl_head != NULL) {
+			c = c->next;
+			i++;
+		} else if ((s[i] & CIL_SYN_EMPTY_LIST) && c->data == NULL && c->cl_head == NULL) {
+			c = c->next;
+			i++;
+		} else if ((s[i] & CIL_SYN_N_LISTS) || (s[i] & CIL_SYN_N_STRINGS)) {
+			while (c != NULL) {
+				if ((s[i] & CIL_SYN_N_LISTS) && c->data == NULL && c->cl_head != NULL) {
+					c = c->next;
+				} else if ((s[i] & CIL_SYN_N_STRINGS) && c->data != NULL && c->cl_head == NULL) {
+					c = c->next;
 				} else {
 					goto exit;
 				}
-			} else if ((s[i] & CIL_SYN_N_LISTS) && (c->data == NULL && c->cl_head != NULL)) {
-				c = c->next;
-				num_extras++;
-				continue;
-			} else if ((s[i] & CIL_SYN_N_STRINGS) && (c->data != NULL && c->cl_head == NULL)) {
-				c = c->next;
-				num_extras++;
-				continue;
 			}
-		}
-
-		if (c == NULL) {
+			i++;
+			break; /* Only CIL_SYN_END allowed after these */
+		} else {
 			goto exit;
 		}
-
-		if (s[i] & CIL_SYN_STRING) {
-			if (c->data != NULL && c->cl_head == NULL) {
-				c = c->next;
-				i++;
-				continue;
-			}
-		}
-
-		if (s[i] & CIL_SYN_LIST) {
-			if (c->data == NULL && c->cl_head != NULL) {
-				c = c->next;
-				i++;
-				continue;
-			}
-		}
-
-		if (s[i] & CIL_SYN_EMPTY_LIST) {
-			if (c->data == NULL && c->cl_head == NULL) {
-				c = c->next;
-				i++;
-				continue;
-			}
-		}
-		goto exit;
 	}
-	return SEPOL_OK;
+
+	if (i < len && (s[i] & CIL_SYN_END) && c == NULL) {
+		return SEPOL_OK;
+	}
 
 exit:
 	cil_log(CIL_ERR, "Invalid syntax\n");
-	return rc;
+	return SEPOL_ERR;
 }
 
 int cil_verify_expr_syntax(struct cil_tree_node *current, enum cil_flavor op, enum cil_flavor expr_flavor)
