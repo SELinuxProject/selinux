@@ -752,17 +752,8 @@ int cil_fill_classperms_list(struct cil_tree_node *parse_current, struct cil_lis
 {
 	int rc = SEPOL_ERR;
 	struct cil_tree_node *curr;
-	enum cil_syntax syntax[] = {
-		CIL_SYN_STRING | CIL_SYN_LIST,
-	};
-	int syntax_len = sizeof(syntax)/sizeof(*syntax);
 
 	if (parse_current == NULL || cp_list == NULL) {
-		goto exit;
-	}
-
-	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
-	if (rc != SEPOL_OK) {
 		goto exit;
 	}
 
