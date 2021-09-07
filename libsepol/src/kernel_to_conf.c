@@ -2375,9 +2375,10 @@ static int write_user_decl_rules_to_conf(FILE *out, struct policydb *pdb)
 		sepol_printf(out, ";\n");
 	}
 
-	strs_destroy(&strs);
-
 exit:
+	if (strs)
+		strs_destroy(&strs);
+
 	if (rc != 0) {
 		sepol_log_err("Error writing user declarations to policy.conf\n");
 	}
