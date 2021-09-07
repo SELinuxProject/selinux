@@ -67,6 +67,11 @@ int cil_stack_is_empty(struct cil_stack *stack)
 	return (stack->pos == -1);
 }
 
+int cil_stack_number_of_items(struct cil_stack *stack)
+{
+	return stack->pos + 1;
+}
+
 void cil_stack_push(struct cil_stack *stack, enum cil_flavor flavor, void *data)
 {
 	stack->pos++;
