@@ -131,6 +131,10 @@ static int add_hll_linemark(struct cil_tree_node **current, uint32_t *hll_offset
 		*current = (*current)->parent;
 	} else {
 		push_hll_info(stack, *hll_offset, *hll_expand);
+		if (cil_stack_number_of_items(stack) > CIL_PARSER_MAX_EXPR_DEPTH) {
+			cil_log(CIL_ERR, "Number of active line marks exceeds limit of %d\n", CIL_PARSER_MAX_EXPR_DEPTH);
+			goto exit;
+		}
 
 		create_node(&node, *current, tok.line, *hll_offset, NULL);
 		insert_node(node, *current);
