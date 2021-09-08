@@ -60,6 +60,10 @@
 #include "module_compiler.h"
 #include "policy_define.h"
 
+extern void init_parser(int pass_number);
+__attribute__ ((format(printf, 1, 2)))
+extern void yyerror2(const char *fmt, ...);
+
 policydb_t *policydbp;
 queue_t id_queue = 0;
 unsigned int pass;
@@ -89,7 +93,6 @@ void init_parser(int pass_number)
 	pass = pass_number;
 }
 
-__attribute__ ((format(printf, 1, 2)))
 void yyerror2(const char *fmt, ...)
 {
 	va_list ap;
