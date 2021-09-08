@@ -722,12 +722,21 @@ bad:
 	return -1;
 }
 
+static void validate_array_destroy(validate_t flavors[])
+{
+	unsigned int i;
+
+	for (i = 0; i < SYM_NUM; i++) {
+		ebitmap_destroy(&flavors[i].gaps);
+	}
+}
+
 /*
  * Validate policydb
  */
 int validate_policydb(sepol_handle_t *handle, policydb_t *p)
 {
-	validate_t flavors[SYM_NUM];
+	validate_t flavors[SYM_NUM] = {};
 
 	if (validate_array_init(p, flavors))
 		goto bad;
@@ -756,9 +765,12 @@ int validate_policydb(sepol_handle_t *handle, policydb_t *p)
 	if (validate_datum_arrays(handle, p, flavors))
 		goto bad;
 
+	validate_array_destroy(flavors);
+
 	return 0;
 
 bad:
 	ERR(handle, "Invalid policydb");
+	validate_array_destroy(flavors);
 	return -1;
 }
