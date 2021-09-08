@@ -89,7 +89,7 @@ static void render_access_bitmap(ebitmap_t * map, uint32_t class,
 	fprintf(fp, "{");
 	for (i = ebitmap_startbit(map); i < ebitmap_length(map); i++) {
 		if (ebitmap_get_bit(map, i)) {
-			perm = sepol_av_to_string(p, class, 1 << i);
+			perm = sepol_av_to_string(p, class, UINT32_C(1) << i);
 			if (perm)
 				fprintf(fp, " %s", perm);
 		}
