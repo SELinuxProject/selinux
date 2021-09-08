@@ -92,7 +92,7 @@ char *sepol_av_to_string(policydb_t * policydbp, uint32_t tclass,
 	cladatum = policydbp->class_val_to_struct[tclass - 1];
 	p = avbuf;
 	for (i = 0; i < cladatum->permissions.nprim; i++) {
-		if (av & (1 << i)) {
+		if (av & (UINT32_C(1) << i)) {
 			v.val = i + 1;
 			rc = hashtab_map(cladatum->permissions.table,
 					 perm_name, &v);
