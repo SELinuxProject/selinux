@@ -1104,14 +1104,14 @@ int require_cat(int pass)
 	return 0;
 }
 
-static int is_scope_in_stack(scope_datum_t * scope, scope_stack_t * stack)
+static int is_scope_in_stack(const scope_datum_t * scope, const scope_stack_t * stack)
 {
 	uint32_t i;
 	if (stack == NULL) {
 		return 0;	/* no matching scope found */
 	}
 	if (stack->type == 1) {
-		avrule_decl_t *decl = stack->decl;
+		const avrule_decl_t *decl = stack->decl;
 		for (i = 0; i < scope->decl_ids_len; i++) {
 			if (scope->decl_ids[i] == decl->decl_id) {
 				return 1;
@@ -1126,9 +1126,9 @@ static int is_scope_in_stack(scope_datum_t * scope, scope_stack_t * stack)
 	return is_scope_in_stack(scope, stack->parent);
 }
 
-int is_id_in_scope(uint32_t symbol_type, hashtab_key_t id)
+int is_id_in_scope(uint32_t symbol_type, const_hashtab_key_t id)
 {
-	scope_datum_t *scope =
+	const scope_datum_t *scope =
 	    (scope_datum_t *) hashtab_search(policydbp->scope[symbol_type].
 					     table, id);
 	if (scope == NULL) {
@@ -1138,7 +1138,7 @@ int is_id_in_scope(uint32_t symbol_type, hashtab_key_t id)
 }
 
 static int is_perm_in_scope_index(uint32_t perm_value, uint32_t class_value,
-				  scope_index_t * scope)
+				  const scope_index_t * scope)
 {
 	if (class_value > scope->class_perms_len) {
 		return 1;
@@ -1151,7 +1151,7 @@ static int is_perm_in_scope_index(uint32_t perm_value, uint32_t class_value,
 }
 
 static int is_perm_in_stack(uint32_t perm_value, uint32_t class_value,
-			    scope_stack_t * stack)
+			    const scope_stack_t * stack)
 {
 	if (stack == NULL) {
 		return 0;	/* no matching scope found */
@@ -1173,12 +1173,12 @@ static int is_perm_in_stack(uint32_t perm_value, uint32_t class_value,
 	return is_perm_in_stack(perm_value, class_value, stack->parent);
 }
 
-int is_perm_in_scope(hashtab_key_t perm_id, hashtab_key_t class_id)
+int is_perm_in_scope(const_hashtab_key_t perm_id, const_hashtab_key_t class_id)
 {
-	class_datum_t *cladatum =
+	const class_datum_t *cladatum =
 	    (class_datum_t *) hashtab_search(policydbp->p_classes.table,
 					     class_id);
-	perm_datum_t *perdatum;
+	const perm_datum_t *perdatum;
 	if (cladatum == NULL) {
 		return 1;
 	}
@@ -1361,17 +1361,17 @@ int begin_optional_else(int pass)
 	return 0;
 }
 
-static int copy_requirements(avrule_decl_t * dest, scope_stack_t * stack)
+static int copy_requirements(avrule_decl_t * dest, const scope_stack_t * stack)
 {
 	uint32_t i;
 	if (stack == NULL) {
 		return 0;
 	}
 	if (stack->type == 1) {
-		scope_index_t *src_scope = &stack->decl->required;
+		const scope_index_t *src_scope = &stack->decl->required;
 		scope_index_t *dest_scope = &dest->required;
 		for (i = 0; i < SYM_NUM; i++) {
-			ebitmap_t *src_bitmap = &src_scope->scope[i];
+			const ebitmap_t *src_bitmap = &src_scope->scope[i];
 			ebitmap_t *dest_bitmap = &dest_scope->scope[i];
 			if (ebitmap_union(dest_bitmap, src_bitmap)) {
 				yyerror("Out of memory!");
@@ -1397,7 +1397,7 @@ static int copy_requirements(avrule_decl_t * dest, scope_stack_t * stack)
 			    src_scope->class_perms_len;
 		}
 		for (i = 0; i < src_scope->class_perms_len; i++) {
-			ebitmap_t *src_bitmap = &src_scope->class_perms_map[i];
+			const ebitmap_t *src_bitmap = &src_scope->class_perms_map[i];
 			ebitmap_t *dest_bitmap =
 			    &dest_scope->class_perms_map[i];
 			if (ebitmap_union(dest_bitmap, src_bitmap)) {

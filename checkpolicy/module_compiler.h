@@ -65,12 +65,12 @@ int require_cat(int pass);
 /* Check if an identifier is within the scope of the current
  * declaration or any of its parents.  Return 1 if it is, 0 if not.
  * If the identifier is not known at all then return 1 (truth).  */
-int is_id_in_scope(uint32_t symbol_type, hashtab_key_t id);
+int is_id_in_scope(uint32_t symbol_type, const_hashtab_key_t id);
 
 /* Check if a particular permission is within the scope of the current
  * declaration or any of its parents.  Return 1 if it is, 0 if not.
  * If the identifier is not known at all then return 1 (truth).  */
-int is_perm_in_scope(hashtab_key_t perm_id, hashtab_key_t class_id);
+int is_perm_in_scope(const_hashtab_key_t perm_id, const_hashtab_key_t class_id);
 
 /* Search the current avrules block for a conditional with the same
  * expression as 'cond'.  If the conditional does not exist then
