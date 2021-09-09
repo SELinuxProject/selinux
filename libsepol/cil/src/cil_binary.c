@@ -4842,6 +4842,7 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 				rc = cil_avrule_from_sepol(pdb, cur, &target, type_value_to_cil, class_value_to_cil, perm_value_to_cil);
 				if (rc != SEPOL_OK) {
 					cil_log(CIL_ERR, "Failed to convert sepol avrule to CIL\n");
+					bounds_destroy_bad(bad);
 					goto exit;
 				}
 				__cil_print_rule("  ", "allow", &target);
