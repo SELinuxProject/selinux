@@ -2056,7 +2056,14 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished, void 
 
 			rc = cil_add_decl_to_symtab(db, symtab, DATUM(orig->data)->name, DATUM(data), new);
 			if (rc != SEPOL_OK) {
-				goto exit;
+				if (rc == SEPOL_EEXIST) {
+					cil_symtab_datum_destroy(data);
+					free(data);
+					data = NULL;
+					rc = SEPOL_OK;
+				} else {
+					goto exit;
+				}
 			}
 
 			namespace = new;

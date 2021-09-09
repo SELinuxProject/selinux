@@ -134,8 +134,7 @@ int cil_add_decl_to_symtab(struct cil_db *db, symtab_t *symtab, hashtab_key_t ke
 		/* multiple_decls is enabled and works for this datum type, add node */
 		cil_list_append(prev->nodes, CIL_NODE, node);
 		node->data = prev;
-		cil_symtab_datum_destroy(datum);
-		free(datum);
+		return SEPOL_EEXIST;
 	}
 
 	return SEPOL_OK;
@@ -2367,7 +2366,12 @@ int cil_gen_type(struct cil_db *db, struct cil_tree_node *parse_current, struct 
 	key = parse_current->next->data;
 	rc = cil_gen_node(db, ast_node, (struct cil_symtab_datum*)type, (hashtab_key_t)key, CIL_SYM_TYPES, CIL_TYPE);
 	if (rc != SEPOL_OK) {
-		goto exit;
+		if (rc == SEPOL_EEXIST) {
+			cil_destroy_type(type);
+			type = NULL;
+		} else {
+			goto exit;
+		}
 	}
 
 	return SEPOL_OK;
@@ -2415,7 +2419,12 @@ int cil_gen_typeattribute(struct cil_db *db, struct cil_tree_node *parse_current
 	key = parse_current->next->data;
 	rc = cil_gen_node(db, ast_node, (struct cil_symtab_datum*)attr, (hashtab_key_t)key, CIL_SYM_TYPES, CIL_TYPEATTRIBUTE);
 	if (rc != SEPOL_OK) {
-		goto exit;
+		if (rc == SEPOL_EEXIST) {
+			cil_destroy_typeattribute(attr);
+			attr = NULL;
+		} else {
+			goto exit;
+		}
 	}
 
 	return SEPOL_OK;
@@ -5480,8 +5489,14 @@ int cil_gen_optional(struct cil_db *db, struct cil_tree_node *parse_current, str
 	key = parse_current->next->data;
 
 	rc = cil_gen_node(db, ast_node, (struct cil_symtab_datum*)optional, (hashtab_key_t)key, CIL_SYM_BLOCKS, CIL_OPTIONAL);
-	if (rc != SEPOL_OK)
-		goto exit;
+	if (rc != SEPOL_OK) {
+		if (rc == SEPOL_EEXIST) {
+			cil_destroy_optional(optional);
+			optional = NULL;
+		} else {
+			goto exit;
+		}
+	}
 
 	return SEPOL_OK;
 
