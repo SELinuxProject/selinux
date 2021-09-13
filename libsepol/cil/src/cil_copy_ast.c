@@ -590,20 +590,12 @@ int cil_copy_roleallow(__attribute__((unused)) struct cil_db *db, void *data, vo
 	return SEPOL_OK;
 }
 
-int cil_copy_type(__attribute__((unused)) struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+int cil_copy_type(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
-	struct cil_type *orig = data;
-	char *key = orig->datum.name;
-	struct cil_symtab_datum *datum = NULL;
+	struct cil_type *new;
 
-	cil_symtab_get_datum(symtab, key, &datum);
-	if (datum == NULL) {
-		struct cil_type *new;
-		cil_type_init(&new);
-		*copy = new;
-	} else {
-		*copy = datum;
-	}
+	cil_type_init(&new);
+	*copy = new;
 
 	return SEPOL_OK;
 }
@@ -622,20 +614,12 @@ int cil_copy_typepermissive(__attribute__((unused)) struct cil_db *db, void *dat
 	return SEPOL_OK;
 }
 
-int cil_copy_typeattribute(__attribute__((unused)) struct cil_db *db, void *data, void **copy, symtab_t *symtab)
+int cil_copy_typeattribute(__attribute__((unused)) struct cil_db *db, __attribute__((unused)) void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
-	struct cil_typeattribute *orig = data;
-	char *key = orig->datum.name;
-	struct cil_symtab_datum *datum = NULL;
+	struct cil_typeattribute *new;
 
-	cil_symtab_get_datum(symtab, key, &datum);
-	if (datum == NULL) {
-		struct cil_typeattribute *new;
-		cil_typeattribute_init(&new);
-		*copy = new;
-	} else {
-		*copy = datum;
-	}
+	cil_typeattribute_init(&new);
+	*copy = new;
 
 	return SEPOL_OK;
 }
