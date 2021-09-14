@@ -92,9 +92,6 @@
 #include "checkpolicy.h"
 #include "parse_util.h"
 
-extern char *optarg;
-extern int optind;
-
 static policydb_t policydb;
 static sidtab_t sidtab;
 
@@ -112,7 +109,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	printf
 	    ("usage:  %s [-b[F]] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M] "
-	     "[-c policyvers (%d-%d)] [-o output_file|-] [-S] "
+	     "[-c policyvers (%d-%d)] [-o output_file|-] [-S] [-O]"
 	     "[-t target_platform (selinux,xen)] [-E] [-V] [input_file]\n",
 	     progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
 	exit(1);
@@ -297,9 +294,7 @@ static int identify_equiv_types(void)
 }
 #endif
 
-extern char *av_to_string(uint32_t tclass, sepol_access_vector_t av);
-
-int display_bools(void)
+static int display_bools(void)
 {
 	uint32_t i;
 
@@ -310,10 +305,10 @@ int display_bools(void)
 	return 0;
 }
 
-void display_expr(cond_expr_t * exp)
+static void display_expr(const cond_expr_t * exp)
 {
 
-	cond_expr_t *cur;
+	const cond_expr_t *cur;
 	for (cur = exp; cur != NULL; cur = cur->next) {
 		switch (cur->expr_type) {
 		case COND_BOOL:
@@ -345,9 +340,9 @@ void display_expr(cond_expr_t * exp)
 	}
 }
 
-int display_cond_expressions(void)
+static int display_cond_expressions(void)
 {
-	cond_node_t *cur;
+	const cond_node_t *cur;
 
 	for (cur = policydbp->cond_list; cur != NULL; cur = cur->next) {
 		printf("expression: ");
@@ -357,7 +352,7 @@ int display_cond_expressions(void)
 	return 0;
 }
 
-int change_bool(char *name, int state)
+static int change_bool(const char *name, int state)
 {
 	cond_bool_datum_t *bool;
 
@@ -412,7 +407,7 @@ int main(int argc, char **argv)
 	unsigned int reason;
 	int flags;
 	struct policy_file pf;
-	struct option long_options[] = {
+	const struct option long_options[] = {
 		{"output", required_argument, NULL, 'o'},
 		{"target", required_argument, NULL, 't'},
 		{"binary", no_argument, NULL, 'b'},
@@ -706,7 +701,10 @@ int main(int argc, char **argv)
 		}
 
 		if (outfp != stdout) {
-			fclose(outfp);
+			if(fclose(outfp)) {
+				fprintf(stderr, "%s:  error closing %s:  %s\n", argv[0], outfile, strerror(errno));
+				exit(1);
+			}
 		}
 	} else if (cil) {
 		fprintf(stderr, "%s:  No file to write CIL was specified\n", argv[0]);
