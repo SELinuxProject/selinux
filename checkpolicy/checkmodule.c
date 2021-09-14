@@ -34,9 +34,6 @@
 #include "checkpolicy.h"
 #include "parse_util.h"
 
-extern char *optarg;
-extern int optind;
-
 static sidtab_t sidtab;
 
 extern int mlspol;
@@ -126,7 +123,7 @@ static int write_binary_policy(policydb_t * p, FILE *outfp)
 
 static __attribute__((__noreturn__)) void usage(const char *progname)
 {
-	printf("usage:  %s [-h] [-V] [-b] [-C] [-E] [-U handle_unknown] [-m] [-M] [-o FILE] [INPUT]\n", progname);
+	printf("usage:  %s [-h] [-V] [-b] [-C] [-E] [-U handle_unknown] [-m] [-M] [-o FILE] [-c VERSION] [INPUT]\n", progname);
 	printf("Build base and policy modules.\n");
 	printf("Options:\n");
 	printf("  INPUT      build module from INPUT (else read from \"%s\")\n",
@@ -155,7 +152,7 @@ int main(int argc, char **argv)
 	int ch;
 	int show_version = 0;
 	policydb_t modpolicydb;
-	struct option long_options[] = {
+	const struct option long_options[] = {
 		{"help", no_argument, NULL, 'h'},
 		{"output", required_argument, NULL, 'o'},
 		{"binary", no_argument, NULL, 'b'},
@@ -271,7 +268,7 @@ int main(int argc, char **argv)
 	} else {
 		if (policydb_init(&modpolicydb)) {
 			fprintf(stderr, "%s: out of memory!\n", argv[0]);
-			return -1;
+			exit(1);
 		}
 
 		modpolicydb.policy_type = policy_type;
@@ -283,7 +280,7 @@ int main(int argc, char **argv)
 		}
 
 		if (hierarchy_check_constraints(NULL, &modpolicydb)) {
-			return -1;
+			exit(1);
 		}
 	}
 
@@ -336,7 +333,7 @@ int main(int argc, char **argv)
 		FILE *outfp = fopen(outfile, "w");
 
 		if (!outfp) {
-			perror(outfile);
+			fprintf(stderr, "%s:  error opening %s:  %s\n", argv[0], outfile, strerror(errno));
 			exit(1);
 		}
 
@@ -352,7 +349,10 @@ int main(int argc, char **argv)
 			}
 		}
 
-		fclose(outfp);
+		if (fclose(outfp)) {
+			fprintf(stderr, "%s:  error closing %s:  %s\n", argv[0], outfile, strerror(errno));
+			exit(1);
+		}
 	} else if (cil) {
 		fprintf(stderr, "%s:  No file to write CIL was specified\n", argv[0]);
 		exit(1);
