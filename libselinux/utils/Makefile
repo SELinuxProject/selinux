@@ -52,9 +52,7 @@ else
 TARGETS=$(patsubst %.c,%,$(sort $(wildcard *.c)))
 endif
 
-sefcontext_compile: LDLIBS += $(PCRE_LDLIBS) ../src/libselinux.a -lsepol
-
-sefcontext_compile: sefcontext_compile.o ../src/regex.o
+sefcontext_compile: LDLIBS += ../src/libselinux.a $(PCRE_LDLIBS) -lsepol
 
 all: $(TARGETS)
 
