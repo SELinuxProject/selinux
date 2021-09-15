@@ -751,12 +751,14 @@ static int read_policy(char *filename, policydb_t * policy)
 			fprintf(stderr, "%s:  Out of memory!\n", __FUNCTION__);
 			exit(1);
 		}
+		sepol_policydb_free(package->policy);
 		package->policy = (sepol_policydb_t *) policy;
 		package->file_contexts = NULL;
 		retval =
 		    sepol_module_package_read(package,
 					      (sepol_policy_file_t *) & f, 1);
-		free(package->file_contexts);
+		package->policy = NULL;
+		sepol_module_package_free(package);
 	} else {
 		if (policydb_init(policy)) {
 			fprintf(stderr, "%s:  Out of memory!\n", __FUNCTION__);
