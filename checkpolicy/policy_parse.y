@@ -890,10 +890,26 @@ filename		: FILENAME
 			{ yytext[strlen(yytext) - 1] = '\0'; if (insert_id(yytext + 1,0)) return -1; }
 			;
 number			: NUMBER 
-			{ $$ = strtoul(yytext,NULL,0); }
+			{ unsigned long x;
+			  errno = 0;
+			  x = strtoul(yytext, NULL, 0);
+			  if (errno)
+			      return -1;
+#if ULONG_MAX > UINT_MAX
+			  if (x > UINT_MAX)
+			      return -1;
+#endif
+			  $$ = (unsigned int) x;
+			}
 			;
 number64		: NUMBER
-			{ $$ = strtoull(yytext,NULL,0); }
+			{ unsigned long long x;
+			  errno = 0;
+			  x = strtoull(yytext, NULL, 0);
+			  if (errno)
+			      return -1;
+			  $$ = (uint64_t) x;
+			}
 			;
 ipv6_addr		: IPV6_ADDR
 			{ if (insert_id(yytext,0)) return -1; }
