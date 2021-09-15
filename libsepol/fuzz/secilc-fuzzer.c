@@ -8,6 +8,7 @@
 #include <sepol/cil/cil.h>
 #include <sepol/policydb.h>
 
+
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 	enum cil_log_level log_level = CIL_ERR;
 	struct sepol_policy_file *pf = NULL;
