@@ -1689,6 +1689,15 @@ exit:
 	return rc;
 }
 
+static int __add_perm_to_list(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	struct cil_list *perm_list = (struct cil_list *)args;
+
+	cil_list_append(perm_list, CIL_DATUM, d);
+
+	return SEPOL_OK;
+}
+
 static int __cil_verify_classperms(struct cil_list *classperms,
 				   struct cil_symtab_datum *orig,
 				   struct cil_symtab_datum *parent,
@@ -1730,13 +1739,34 @@ static int __cil_verify_classperms(struct cil_list *classperms,
 			if (FLAVOR(cp->class) != CIL_CLASS) { /* MAP */
 				struct cil_list_item *i = NULL;
 				cil_list_for_each(i, cp->perms) {
-					struct cil_perm *cmp = i->data;
-					rc = __cil_verify_classperms(cmp->classperms, orig, &cp->class->datum, &cmp->datum, CIL_MAP_PERM, steps, limit);
-					if (rc != SEPOL_OK) {
-						goto exit;
+					if (i->flavor != CIL_OP) {
+						struct cil_perm *cmp = i->data;
+						rc = __cil_verify_classperms(cmp->classperms, orig, &cp->class->datum, &cmp->datum, CIL_MAP_PERM, steps, limit);
+						if (rc != SEPOL_OK) {
+							goto exit;
+						}
+					} else {
+						enum cil_flavor op = (enum cil_flavor)i->data;
+						if (op == CIL_ALL) {
+							struct cil_class *mc = cp->class;
+							struct cil_list *perm_list;
+							struct cil_list_item *j = NULL;
+
+							cil_list_init(&perm_list, CIL_MAP_PERM);
+							cil_symtab_map(&mc->perms, __add_perm_to_list, perm_list);
+							cil_list_for_each(j, perm_list) {
+								struct cil_perm *cmp = j->data;
+								rc = __cil_verify_classperms(cmp->classperms, orig, &cp->class->datum, &cmp->datum, CIL_MAP_PERM, steps, limit);
+								if (rc != SEPOL_OK) {
+									cil_list_destroy(&perm_list, CIL_FALSE);
+									goto exit;
+								}
+							}
+							cil_list_destroy(&perm_list, CIL_FALSE);
+						}
 					}
 				}
-			}	
+			}
 		} else { /* SET */
 			struct cil_classperms_set *cp_set = curr->data;
 			struct cil_classpermission *cp = cp_set->set;
