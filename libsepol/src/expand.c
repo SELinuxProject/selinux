@@ -243,7 +243,7 @@ static int perm_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	new_perm->s.value = perm->s.value;
 	s->nprim++;
 
-	ret = hashtab_insert(s->table, new_id, (hashtab_datum_t *) new_perm);
+	ret = hashtab_insert(s->table, new_id, (hashtab_datum_t) new_perm);
 	if (ret) {
 		free(new_id);
 		free(new_perm);
@@ -294,7 +294,7 @@ static int common_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 
 	ret =
 	    hashtab_insert(state->out->p_commons.table, new_id,
-			   (hashtab_datum_t *) new_common);
+			   (hashtab_datum_t) new_common);
 	if (ret) {
 		ERR(state->handle, "hashtab overflow");
 		free(new_common);
@@ -492,7 +492,7 @@ static int class_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 
 	ret =
 	    hashtab_insert(state->out->p_classes.table, new_id,
-			   (hashtab_datum_t *) new_class);
+			   (hashtab_datum_t) new_class);
 	if (ret) {
 		ERR(state->handle, "hashtab overflow");
 		free(new_class);
