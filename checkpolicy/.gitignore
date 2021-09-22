@@ -3,3 +3,5 @@ checkpolicy
 lex.yy.c
 y.tab.c
 y.tab.h
+testpol.bin
+testpol.conf
