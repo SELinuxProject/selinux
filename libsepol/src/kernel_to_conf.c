@@ -578,16 +578,21 @@ static int write_class_and_common_rules_to_conf(FILE *out, struct policydb *pdb)
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
 		name = pdb->p_class_val_to_name[i];
-		sepol_printf(out, "class %s", name);
-		if (class->comkey) {
-			sepol_printf(out, " inherits %s", class->comkey);
-		}
 		perms = class_or_common_perms_to_str(&class->permissions);
-		if (perms) {
-			sepol_printf(out, " { %s }", perms);
-			free(perms);
+		/* Do not write empty classes, their declaration was alreedy
+		 * printed in write_class_decl_rules_to_conf() */
+		if (perms || class->comkey) {
+			sepol_printf(out, "class %s", name);
+			if (class->comkey) {
+				sepol_printf(out, " inherits %s", class->comkey);
+			}
+
+			if (perms) {
+				sepol_printf(out, " { %s }", perms);
+				free(perms);
+			}
+			sepol_printf(out, "\n");
 		}
-		sepol_printf(out, "\n");
 	}
 
 exit:
