@@ -67,7 +67,6 @@ extern void yyerror2(const char *fmt, ...);
 policydb_t *policydbp;
 queue_t id_queue = 0;
 unsigned int pass;
-char *curfile = 0;
 int mlspol = 0;
 
 extern unsigned long policydb_lineno;
@@ -77,12 +76,6 @@ extern char source_file[PATH_MAX];
 
 extern int yywarn(const char *msg);
 extern int yyerror(const char *msg);
-
-#define ERRORMSG_LEN 255
-static char errormsg[ERRORMSG_LEN + 1] = {0};
-
-static int id_has_dot(const char *id);
-static int parse_security_context(context_struct_t *c);
 
 /* initialize all of the state variables for the scanner/parser */
 void init_parser(int pass_number)
@@ -95,9 +88,10 @@ void init_parser(int pass_number)
 
 void yyerror2(const char *fmt, ...)
 {
+	char errormsg[256];
 	va_list ap;
 	va_start(ap, fmt);
-	vsnprintf(errormsg, ERRORMSG_LEN, fmt, ap);
+	vsnprintf(errormsg, sizeof(errormsg), fmt, ap);
 	yyerror(errormsg);
 	va_end(ap);
 }
