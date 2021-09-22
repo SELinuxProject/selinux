@@ -208,7 +208,7 @@
             <context name="String" attribute="String" lineEndContext="#stay">
                 <RegExpr attribute="Char" context="#stay" String="#\\."/>
 
-                <!-- allow escaping " or similiar -->
+                <!-- allow escaping " or similar -->
                 <HlCStringChar attribute="String Char" context="#stay"/>
 
                 <DetectChar attribute="String" context="#pop" char="&quot;"/>
