@@ -3,7 +3,7 @@
 checkmodule \- SELinux policy module compiler
 .SH SYNOPSIS
 .B checkmodule
-.I "[\-h] [\-b] [\-C] [\-m] [\-M] [\-U handle_unknown ] [\-V] [\-o output_file] [input_file]"
+.I "[\-h] [\-b] [\-c policy_version] [\-C] [\-E] [\-m] [\-M] [\-U handle_unknown] [\-V] [\-o output_file] [input_file]"
 .SH "DESCRIPTION"
 This manual page describes the
 .BR checkmodule
@@ -15,9 +15,12 @@ into a binary representation.  It can generate either a base policy
 module (default) or a non-base policy module (\-m option); typically,
 you would build a non-base policy module to add to an existing module
 store that already has a base module provided by the base policy.  Use
-semodule_package to combine this module with its optional file
-contexts to create a policy package, and then use semodule to install
-the module package into the module store and load the resulting policy.
+.B semodule_package(8)
+to combine this module with its optional file
+contexts to create a policy package, and then use
+.B semodule(8)
+to install the module package into the module store and load the resulting
+policy.
 
 .SH OPTIONS
 .TP

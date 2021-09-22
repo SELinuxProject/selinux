@@ -3,7 +3,7 @@
 checkpolicy \- SELinux policy compiler
 .SH SYNOPSIS
 .B checkpolicy
-.I "[\-b[F]] [\-C] [\-d] [\-U handle_unknown (allow,deny,reject)] [\-M] [\-c policyvers] [\-o output_file|\-] [\-S] [\-t target_platform (selinux,xen)] [\-V] [input_file]"
+.I "[\-b[F]] [\-C] [\-d] [\-U handle_unknown (allow,deny,reject)] [\-M] [\-c policyvers] [\-o output_file|\-] [\-S] [\-t target_platform (selinux,xen)] [\-O] [\-E] [\-V] [input_file]"
 .br
 .SH "DESCRIPTION"
 This manual page describes the
@@ -13,8 +13,10 @@ command.
 .B checkpolicy
 is a program that checks and compiles a SELinux security policy configuration
 into a binary representation that can be loaded into the kernel.  If no 
-input file name is specified, checkpolicy will attempt to read from
-policy.conf or policy, depending on whether the \-b flag is specified.
+input file name is specified,
+.B checkpolicy
+will attempt to read from policy.conf or policy, depending on whether the \-b
+flag is specified.
 
 .SH OPTIONS
 .TP
