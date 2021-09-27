@@ -6,7 +6,8 @@ jobs:
   vm_testsuite:
 
     # Use VirtualBox+vagrant on macOS, as described in https://github.com/actions/virtual-environments/issues/433
-    runs-on: macos-latest
+    # Use an old version of macOS until https://github.com/actions/virtual-environments/pull/4010 is merged.
+    runs-on: macos-10.15
 
     steps:
     - uses: actions/checkout@v2
