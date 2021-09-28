@@ -1746,7 +1746,7 @@ static int __cil_verify_classperms(struct cil_list *classperms,
 							goto exit;
 						}
 					} else {
-						enum cil_flavor op = (enum cil_flavor)i->data;
+						enum cil_flavor op = (enum cil_flavor)(uintptr_t)i->data;
 						if (op == CIL_ALL) {
 							struct cil_class *mc = cp->class;
 							struct cil_list *perm_list;
