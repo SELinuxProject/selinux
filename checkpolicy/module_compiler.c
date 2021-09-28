@@ -999,7 +999,7 @@ static int require_bool_tunable(int pass, int is_tunable)
 	if (is_tunable)
 		booldatum->flags |= COND_BOOL_FLAGS_TUNABLE;
 	retval =
-	    require_symbol(SYM_BOOLS, id, (hashtab_datum_t *) booldatum,
+	    require_symbol(SYM_BOOLS, id, booldatum,
 			   &booldatum->s.value, &booldatum->s.value);
 	if (retval != 0) {
 		cond_destroy_bool(id, booldatum, NULL);
@@ -1051,7 +1051,7 @@ int require_sens(int pass)
 		return -1;
 	}
 	mls_level_init(level->level);
-	retval = require_symbol(SYM_LEVELS, id, (hashtab_datum_t *) level,
+	retval = require_symbol(SYM_LEVELS, id, level,
 				&level->level->sens, &level->level->sens);
 	if (retval != 0) {
 		free(id);
@@ -1089,7 +1089,7 @@ int require_cat(int pass)
 	}
 	cat_datum_init(cat);
 
-	retval = require_symbol(SYM_CATS, id, (hashtab_datum_t *) cat,
+	retval = require_symbol(SYM_CATS, id, cat,
 				&cat->s.value, &cat->s.value);
 	if (retval != 0) {
 		free(id);
