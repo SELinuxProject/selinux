@@ -165,7 +165,7 @@ static int create_symbol(uint32_t symbol_type, hashtab_key_t key, hashtab_datum_
 			    decl->decl_id, dest_value);
 
 	if (ret == 1 && dest_value) {
-		symtab_datum_t *s =
+		hashtab_datum_t s =
 			hashtab_search(policydbp->symtab[symbol_type].table,
 				       key);
 		assert(s != NULL);
@@ -173,7 +173,7 @@ static int create_symbol(uint32_t symbol_type, hashtab_key_t key, hashtab_datum_
 		if (symbol_type == SYM_LEVELS) {
 			*dest_value = ((level_datum_t *)s)->level->sens;
 		} else {
-			*dest_value = s->value;
+			*dest_value = ((symtab_datum_t *)s)->value;
 		}
 	} else if (ret == -2) {
 		return -2;
