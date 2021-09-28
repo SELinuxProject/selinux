@@ -4825,6 +4825,7 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 			avtab_ptr_t cur;
 			struct cil_avrule target;
 			struct cil_tree_node *n1 = NULL;
+			int count_bad = 0;
 
 			*violation = CIL_TRUE;
 
@@ -4838,6 +4839,8 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 			for (cur = bad; cur; cur = cur->next) {
 				struct cil_list_item *i2;
 				struct cil_list *matching;
+				int num_matching = 0;
+				int count_matching = 0;
 
 				rc = cil_avrule_from_sepol(pdb, cur, &target, type_value_to_cil, class_value_to_cil, perm_value_to_cil);
 				if (rc != SEPOL_OK) {
@@ -4856,6 +4859,9 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 					goto exit;
 				}
 				cil_list_for_each(i2, matching) {
+					num_matching++;
+				}
+				cil_list_for_each(i2, matching) {
 					struct cil_tree_node *n2 = i2->data;
 					struct cil_avrule *r2 = n2->data;
 					if (n1 == n2) {
@@ -4865,9 +4871,19 @@ static int cil_check_type_bounds(const struct cil_db *db, policydb_t *pdb, void 
 						__cil_print_parents("    ", n2);
 						__cil_print_rule("      ", "allow", r2);
 					}
+					count_matching++;
+					if (count_matching >= 2) {
+						cil_log(CIL_ERR, "    Only first 2 of %d matching rules shown\n", num_matching);
+						break;
+					}
 				}
 				cil_list_destroy(&matching, CIL_FALSE);
 				cil_list_destroy(&target.perms.classperms, CIL_TRUE);
+				count_bad++;
+				if (count_bad >= 2) {
+					cil_log(CIL_ERR, "  Only first 2 of %d bad rules shown\n", numbad);
+					break;
+				}
 			}
 			bounds_destroy_bad(bad);
 		}
