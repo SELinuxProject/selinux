@@ -17,7 +17,8 @@
 
 int ebitmap_or(ebitmap_t * dst, const ebitmap_t * e1, const ebitmap_t * e2)
 {
-	ebitmap_node_t *n1, *n2, *new, *prev;
+	const ebitmap_node_t *n1, *n2;
+	ebitmap_node_t *new, *prev;
 
 	ebitmap_init(dst);
 
@@ -154,7 +155,7 @@ int ebitmap_hamming_distance(const ebitmap_t * e1, const ebitmap_t * e2)
 
 int ebitmap_cmp(const ebitmap_t * e1, const ebitmap_t * e2)
 {
-	ebitmap_node_t *n1, *n2;
+	const ebitmap_node_t *n1, *n2;
 
 	if (e1->highbit != e2->highbit)
 		return 0;
@@ -175,7 +176,8 @@ int ebitmap_cmp(const ebitmap_t * e1, const ebitmap_t * e2)
 
 int ebitmap_cpy(ebitmap_t * dst, const ebitmap_t * src)
 {
-	ebitmap_node_t *n, *new, *prev;
+	const ebitmap_node_t *n;
+	ebitmap_node_t *new, *prev;
 
 	ebitmap_init(dst);
 	n = src->node;
@@ -204,7 +206,7 @@ int ebitmap_cpy(ebitmap_t * dst, const ebitmap_t * src)
 
 int ebitmap_contains(const ebitmap_t * e1, const ebitmap_t * e2)
 {
-	ebitmap_node_t *n1, *n2;
+	const ebitmap_node_t *n1, *n2;
 
 	if (e1->highbit < e2->highbit)
 		return 0;
@@ -231,8 +233,8 @@ int ebitmap_contains(const ebitmap_t * e1, const ebitmap_t * e2)
 
 int ebitmap_match_any(const ebitmap_t *e1, const ebitmap_t *e2)
 {
-	ebitmap_node_t *n1 = e1->node;
-	ebitmap_node_t *n2 = e2->node;
+	const ebitmap_node_t *n1 = e1->node;
+	const ebitmap_node_t *n2 = e2->node;
 
 	while (n1 && n2) {
 		if (n1->startbit < n2->startbit) {
@@ -253,7 +255,7 @@ int ebitmap_match_any(const ebitmap_t *e1, const ebitmap_t *e2)
 
 int ebitmap_get_bit(const ebitmap_t * e, unsigned int bit)
 {
-	ebitmap_node_t *n;
+	const ebitmap_node_t *n;
 
 	if (e->highbit < bit)
 		return 0;
