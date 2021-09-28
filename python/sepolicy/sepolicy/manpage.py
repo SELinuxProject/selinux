@@ -797,7 +797,7 @@ SELinux %(domainname)s policy is very flexible allowing users to setup their %(d
 .B STANDARD FILE CONTEXT
 
 SELinux defines the file context types for the %(domainname)s, if you wanted to
-store files with these types in a diffent paths, you need to execute the semanage command to sepecify alternate labeling and then use restorecon to put the labels on disk.
+store files with these types in a diffent paths, you need to execute the semanage command to specify alternate labeling and then use restorecon to put the labels on disk.
 
 .B semanage fcontext -a -t %(type)s '/srv/%(domainname)s/content(/.*)?'
 .br

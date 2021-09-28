@@ -129,7 +129,7 @@ class SetImportFile(argparse.Action):
                 sys.exit(1)
         setattr(namespace, self.dest, values)
 
-# define dictonary for seobject OBEJCTS
+# define dictionary for seobject OBEJCTS
 object_dict = {
     'login': seobject.loginRecords,
     'user': seobject.seluserRecords,
@@ -146,7 +146,7 @@ object_dict = {
 }
 
 def generate_custom_usage(usage_text, usage_dict):
-    # generate custom usage from given text and dictonary
+    # generate custom usage from given text and dictionary
     sorted_keys = []
     for i in usage_dict.keys():
         sorted_keys.append(i)
@@ -160,7 +160,7 @@ def generate_custom_usage(usage_text, usage_dict):
 
 
 def handle_opts(args, dict, target_key):
-    # handle conflict and required options for given dictonary
+    # handle conflict and required options for given dictionary
     # {action:[conflict_opts,require_opts]}
 
     # first we need to catch conflicts

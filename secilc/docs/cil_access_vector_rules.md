@@ -360,7 +360,7 @@ dontauditx
 
 Do not audit the access rights defined when access denied. This stops excessive log entries for known events.
 
-Note that for this to work there must *also* be atleast one [`allowx`](cil_access_vector_rules.md#allowx) rule associated with the target type.
+Note that for this to work there must *also* be at least one [`allowx`](cil_access_vector_rules.md#allowx) rule associated with the target type.
 
 Note that these rules can be omitted by the CIL compiler command line parameter `-D` or `--disable-dontaudit` flags.
 

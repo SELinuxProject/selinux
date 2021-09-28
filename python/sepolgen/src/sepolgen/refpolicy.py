@@ -42,7 +42,7 @@ PERMS     = 3
 ROLE      = 4
 DEST_TYPE = 5
 
-# String represenations of the above constants
+# String representations of the above constants
 field_to_str = ["source", "target", "object", "permission", "role", "destination" ]
 str_to_field = { "source" : SRC_TYPE, "target" : TGT_TYPE, "object" : OBJ_CLASS,
                 "permission" : PERMS, "role" : ROLE, "destination" : DEST_TYPE }

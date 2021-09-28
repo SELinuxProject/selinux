@@ -1022,7 +1022,7 @@ static int set_signal_handles(void)
 int main(int argc, char *argv[])
 {
 	char *new_context = NULL;	/* target security context */
-	char *old_context = NULL;	/* original securiy context */
+	char *old_context = NULL;	/* original security context */
 	char *tty_context = NULL;	/* current context of tty */
 	char *new_tty_context = NULL;	/* new context of tty */
 

@@ -12,7 +12,7 @@ AUDITH ?= $(shell test -f $(INCLUDEDIR)/libaudit.h && echo y)
 # This will make newrole a setuid root program.
 # The capabilities used are: CAP_AUDIT_WRITE.
 AUDIT_LOG_PRIV ?= n
-# Enable capabilities to permit newrole to utilitize the pam_namespace module.
+# Enable capabilities to permit newrole to utilize the pam_namespace module.
 # This will make newrole a setuid root program.
 # The capabilities used are: CAP_SYS_ADMIN, CAP_CHOWN, CAP_FOWNER and
 # CAP_DAC_OVERRIDE. 
