@@ -3946,7 +3946,7 @@ int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished
 	}
 
 	if (node->flavor == CIL_MACRO) {
-		if (pass != CIL_PASS_TIF) {
+		if (pass > CIL_PASS_IN_AFTER) {
 			*finished = CIL_TREE_SKIP_HEAD;
 			rc = SEPOL_OK;
 			goto exit;
