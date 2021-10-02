@@ -2,7 +2,7 @@ SELinux Userspace
 =================
 
 ![SELinux logo](https://github.com/SELinuxProject.png)
-[![Build Status](https://travis-ci.org/SELinuxProject/selinux.svg?branch=master)](https://travis-ci.org/SELinuxProject/selinux)
+[![Build Status](https://travis-ci.com/SELinuxProject/selinux.svg?branch=master)](https://travis-ci.com/SELinuxProject/selinux)
 [![OSS-Fuzz Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/selinux.svg)](https://oss-fuzz-build-logs.storage.googleapis.com/index.html#selinux)
 [![CIFuzz Status](https://github.com/SELinuxProject/selinux/actions/workflows/cifuzz.yml/badge.svg)](https://github.com/SELinuxProject/selinux/actions/workflows/cifuzz.yml)
 
