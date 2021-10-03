@@ -308,11 +308,11 @@ GLBLUB				{ return(GLBLUB); }
 int yyerror(const char *msg)
 {
 	if (source_file[0])
-		fprintf(stderr, "%s:%ld:",
+		fprintf(stderr, "%s:%lu:",
 			source_file, source_lineno);
 	else
 		fprintf(stderr, "(unknown source)::");
-	fprintf(stderr, "ERROR '%s' at token '%s' on line %ld:\n%s\n%s\n",
+	fprintf(stderr, "ERROR '%s' at token '%s' on line %lu:\n%s\n%s\n",
 			msg,
 			yytext,
 			policydb_lineno,
@@ -327,11 +327,11 @@ int yywarn(const char *msg)
 		return yyerror(msg);
 
 	if (source_file[0])
-		fprintf(stderr, "%s:%ld:",
+		fprintf(stderr, "%s:%lu:",
 			source_file, source_lineno);
 	else
 		fprintf(stderr, "(unknown source)::");
-	fprintf(stderr, "WARNING '%s' at token '%s' on line %ld:\n%s\n%s\n",
+	fprintf(stderr, "WARNING '%s' at token '%s' on line %lu:\n%s\n%s\n",
 			msg,
 			yytext,
 			policydb_lineno,
