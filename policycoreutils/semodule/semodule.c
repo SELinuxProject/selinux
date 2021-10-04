@@ -452,8 +452,7 @@ int main(int argc, char *argv[])
 					}
 
 					semanage_module_info_get_priority(sh, extract_info, &curr_priority);
-					printf("Module '%s' does not exist at the default priority '%d'. "
-							"Extracting at highest existing priority '%d'.\n", mode_arg, priority, curr_priority);
+					printf("Extracting at highest existing priority '%d'.\n", curr_priority);
 					priority = curr_priority;
 				}
 
