@@ -724,8 +724,10 @@ static int cond_read_av_list(policydb_t * p, void *fp,
 	for (i = 0; i < len; i++) {
 		rc = avtab_read_item(fp, p->policyvers, &p->te_cond_avtab,
 				     cond_insertf, &data);
-		if (rc)
+		if (rc) {
+			cond_av_list_destroy(data.head);
 			return rc;
+		}
 
 	}
 
