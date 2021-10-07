@@ -161,7 +161,7 @@ int strs_add(struct strs *strs, char *s)
 		char **new;
 		unsigned i = strs->size;
 		strs->size *= 2;
-		new = realloc(strs->list, sizeof(char *)*strs->size);
+		new = reallocarray(strs->list, strs->size, sizeof(char *));
 		if (!new) {
 			sepol_log_err("Out of memory");
 			return -1;
@@ -220,7 +220,7 @@ int strs_add_at_index(struct strs *strs, char *s, unsigned index)
 		while (index >= strs->size) {
 			strs->size *= 2;
 		}
-		new = realloc(strs->list, sizeof(char *)*strs->size);
+		new = reallocarray(strs->list, strs->size, sizeof(char *));
 		if (!new) {
 			sepol_log_err("Out of memory");
 			return -1;

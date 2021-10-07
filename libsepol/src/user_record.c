@@ -183,8 +183,9 @@ int sepol_user_add_role(sepol_handle_t * handle,
 	if (!role_cp)
 		goto omem;
 
-	roles_realloc = realloc(user->roles,
-				sizeof(char *) * (user->num_roles + 1));
+	roles_realloc = reallocarray(user->roles,
+				     user->num_roles + 1,
+				     sizeof(char *));
 	if (!roles_realloc)
 		goto omem;
 
