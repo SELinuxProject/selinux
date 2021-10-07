@@ -4,6 +4,7 @@
 
 #include "user_internal.h"
 #include "debug.h"
+#include "private.h"
 
 struct sepol_user {
 	/* This user's name */
@@ -265,7 +266,7 @@ int sepol_user_get_roles(sepol_handle_t * handle,
 
 	unsigned int i;
 	const char **tmp_roles =
-	    (const char **)malloc(sizeof(char *) * user->num_roles);
+	    (const char **)mallocarray(user->num_roles, sizeof(char *));
 	if (!tmp_roles)
 		goto omem;
 

@@ -3146,9 +3146,9 @@ int expand_module(sepol_handle_t * handle,
 		goto cleanup;
 
 	/* Build the type<->attribute maps and remove attributes. */
-	state.out->attr_type_map = malloc(state.out->p_types.nprim *
+	state.out->attr_type_map = mallocarray(state.out->p_types.nprim,
 					  sizeof(ebitmap_t));
-	state.out->type_attr_map = malloc(state.out->p_types.nprim *
+	state.out->type_attr_map = mallocarray(state.out->p_types.nprim,
 					  sizeof(ebitmap_t));
 	if (!state.out->attr_type_map || !state.out->type_attr_map) {
 		ERR(handle, "Out of memory!");

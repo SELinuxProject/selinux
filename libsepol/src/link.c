@@ -34,6 +34,7 @@
 #include <assert.h>
 
 #include "debug.h"
+#include "private.h"
 
 #undef min
 #define min(a,b) (((a) < (b)) ? (a) : (b))
@@ -1680,7 +1681,7 @@ static int copy_scope_index(scope_index_t * src, scope_index_t * dest,
 	}
 
 	/* next copy the enabled permissions data  */
-	if ((dest->class_perms_map = malloc(largest_mapped_class_value *
+	if ((dest->class_perms_map = mallocarray(largest_mapped_class_value,
 					    sizeof(*dest->class_perms_map))) ==
 	    NULL) {
 		goto cleanup;
