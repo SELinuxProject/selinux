@@ -503,6 +503,12 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 
 		for (i = 0; i < ARRAY_SIZE(spec_order); i++) {
 			if (val & spec_order[i]) {
+				if (items > items2) {
+					ERR(fp->handle,
+					    "entry has too many items (%d/%d)",
+					    items, items2);
+					return -1;
+				}
 				key.specified = spec_order[i] | enabled;
 				datum.data = le32_to_cpu(buf32[items++]);
 				rc = insertf(a, &key, &datum, p);
