@@ -8,6 +8,10 @@
 #include <sepol/cil/cil.h>
 #include <sepol/policydb.h>
 
+static void log_handler(__attribute__((unused)) int lvl, __attribute__((unused)) const char *msg) {
+	/* be quiet */
+}
+
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 	enum cil_log_level log_level = CIL_ERR;
 	struct sepol_policy_file *pf = NULL;
@@ -24,6 +28,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 	sepol_policydb_t *pdb = NULL;
 
 	cil_set_log_level(log_level);
+	cil_set_log_handler(log_handler);
 
 	cil_db_init(&db);
 	cil_set_disable_dontaudit(db, disable_dontaudit);
