@@ -94,7 +94,7 @@ static void push(char *expr_ptr)
 		else
 			new_stack_len = stack_len * 2;
 
-		new_stack = realloc(stack, new_stack_len * sizeof(*stack));
+		new_stack = reallocarray(stack, new_stack_len, sizeof(*stack));
 		if (!new_stack) {
 			ERR(NULL, "unable to allocate stack space");
 			return;
@@ -449,8 +449,8 @@ static int constraint_expr_eval_reason(context_struct_t *scontext,
 			else
 				new_expr_list_len = expr_list_len * 2;
 
-			new_expr_list = realloc(expr_list,
-					new_expr_list_len * sizeof(*expr_list));
+			new_expr_list = reallocarray(expr_list,
+					new_expr_list_len, sizeof(*expr_list));
 			if (!new_expr_list) {
 				ERR(NULL, "failed to allocate expr buffer stack");
 				rc = -ENOMEM;

@@ -226,17 +226,17 @@ int sepol_user_modify(sepol_handle_t * handle,
 		void *tmp_ptr;
 
 		/* Ensure reverse lookup array has enough space */
-		tmp_ptr = realloc(policydb->user_val_to_struct,
-				  (policydb->p_users.nprim +
-				   1) * sizeof(user_datum_t *));
+		tmp_ptr = reallocarray(policydb->user_val_to_struct,
+				  policydb->p_users.nprim + 1,
+				  sizeof(user_datum_t *));
 		if (!tmp_ptr)
 			goto omem;
 		policydb->user_val_to_struct = tmp_ptr;
 		policydb->user_val_to_struct[policydb->p_users.nprim] = NULL;
 
-		tmp_ptr = realloc(policydb->sym_val_to_name[SYM_USERS],
-				  (policydb->p_users.nprim +
-				   1) * sizeof(char *));
+		tmp_ptr = reallocarray(policydb->sym_val_to_name[SYM_USERS],
+				  policydb->p_users.nprim + 1,
+				  sizeof(char *));
 		if (!tmp_ptr)
 			goto omem;
 		policydb->sym_val_to_name[SYM_USERS] = tmp_ptr;

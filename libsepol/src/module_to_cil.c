@@ -453,7 +453,7 @@ static int stack_push(struct stack *stack, void *ptr)
 	void *new_stack;
 
 	if (stack->pos + 1 == stack->size) {
-		new_stack = realloc(stack->stack, sizeof(*stack->stack) * (stack->size * 2));
+		new_stack = reallocarray(stack->stack, stack->size * 2, sizeof(*stack->stack));
 		if (new_stack == NULL) {
 			goto exit;
 		}
@@ -4123,7 +4123,7 @@ exit:
 static int fp_to_buffer(FILE *fp, char **data, size_t *data_len)
 {
 	int rc = -1;
-	char *d = NULL;
+	char *d = NULL, *d_tmp;
 	size_t d_len = 0;
 	size_t read_len = 0;
 	size_t max_len = 1 << 17; // start at 128KB, this is enough to hold about half of all the existing pp files
@@ -4139,12 +4139,13 @@ static int fp_to_buffer(FILE *fp, char **data, size_t *data_len)
 		d_len += read_len;
 		if (d_len == max_len) {
 			max_len *= 2;
-			d = realloc(d, max_len);
-			if (d == NULL) {
+			d_tmp = realloc(d, max_len);
+			if (d_tmp == NULL) {
 				log_err("Out of memory");
 				rc = -1;
 				goto exit;
 			}
+			d = d_tmp;
 		}
 	}
 
