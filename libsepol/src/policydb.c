@@ -2103,6 +2103,8 @@ static int common_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 	if (symtab_init(&comdatum->permissions, PERM_SYMTAB_SIZE))
 		goto bad;
 	comdatum->permissions.nprim = le32_to_cpu(buf[2]);
+	if (comdatum->permissions.nprim > PERM_SYMTAB_SIZE)
+		goto bad;
 	nel = le32_to_cpu(buf[3]);
 
 	key = malloc(len + 1);
@@ -2251,6 +2253,8 @@ static int class_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 	if (symtab_init(&cladatum->permissions, PERM_SYMTAB_SIZE))
 		goto bad;
 	cladatum->permissions.nprim = le32_to_cpu(buf[3]);
+	if (cladatum->permissions.nprim > PERM_SYMTAB_SIZE)
+		goto bad;
 	nel = le32_to_cpu(buf[4]);
 
 	ncons = le32_to_cpu(buf[5]);
@@ -3980,6 +3984,8 @@ static int avrule_decl_read(policydb_t * p, avrule_decl_t * decl,
 		if (rc < 0) 
 			return -1;
 		nprim = le32_to_cpu(buf[0]);
+		if (is_saturated(nprim))
+			return -1;
 		nel = le32_to_cpu(buf[1]);
 		for (j = 0; j < nel; j++) {
 			if (read_f[i] (p, decl->symtab[i].table, fp)) {
@@ -4106,7 +4112,7 @@ static int scope_read(policydb_t * p, int symnum, struct policy_file *fp)
 		goto cleanup;
 	scope->scope = le32_to_cpu(buf[0]);
 	scope->decl_ids_len = le32_to_cpu(buf[1]);
-	if (scope->decl_ids_len == 0) {
+	if (zero_or_saturated(scope->decl_ids_len)) {
 		ERR(fp->handle, "invalid scope with no declaration");
 		goto cleanup;
 	}
@@ -4396,6 +4402,8 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		if (rc < 0)
 			goto bad;
 		nprim = le32_to_cpu(buf[0]);
+		if (is_saturated(nprim))
+			goto bad;
 		nel = le32_to_cpu(buf[1]);
 		if (nel && !nprim) {
 			ERR(fp->handle, "unexpected items in symbol table with no symbol");
