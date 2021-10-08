@@ -310,6 +310,29 @@ bad:
 	return -1;
 }
 
+static int validate_mls_level(mls_level_t *level, validate_t *sens, validate_t *cats)
+{
+	if (level->sens == 0)
+		return 0;
+	if (validate_value(level->sens, sens))
+		goto bad;
+	if (validate_ebitmap(&level->cat, cats))
+		goto bad;
+
+	return 0;
+
+	bad:
+	return -1;
+}
+
+static int validate_level(__attribute__ ((unused))hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	level_datum_t *level = d;
+	validate_t *flavors = args;
+
+	return validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]);
+}
+
 static int validate_datum_arrays(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
 {
 	unsigned int i;
@@ -367,6 +390,9 @@ static int validate_datum_arrays(sepol_handle_t *handle, policydb_t *p, validate
 				goto bad;
 		}
 	}
+
+	if (hashtab_map(p->p_levels.table, validate_level, flavors))
+		goto bad;
 
 	return 0;
 
