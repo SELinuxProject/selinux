@@ -1213,7 +1213,7 @@ int sepol_string_to_av_perm(sepol_security_class_t tclass,
 			hashtab_search(tclass_datum->permissions.table,
 			perm_name);
 	if (perm_datum != NULL) {
-		*av = 0x1 << (perm_datum->s.value - 1);
+		*av = UINT32_C(1) << (perm_datum->s.value - 1);
 		return STATUS_SUCCESS;
 	}
 
@@ -1225,7 +1225,7 @@ int sepol_string_to_av_perm(sepol_security_class_t tclass,
 			perm_name);
 
 	if (perm_datum != NULL) {
-		*av = 0x1 << (perm_datum->s.value - 1);
+		*av = UINT32_C(1) << (perm_datum->s.value - 1);
 		return STATUS_SUCCESS;
 	}
 out:

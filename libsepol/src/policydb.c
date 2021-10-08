@@ -4166,7 +4166,7 @@ static sepol_access_vector_t policydb_string_to_av_perm(
 			hashtab_search(tclass_datum->permissions.table,
 			(hashtab_key_t)perm_name);
 	if (perm_datum != NULL)
-		return 0x1U << (perm_datum->s.value - 1);
+		return UINT32_C(1) << (perm_datum->s.value - 1);
 
 	if (tclass_datum->comdatum == NULL)
 		return 0;
@@ -4176,7 +4176,7 @@ static sepol_access_vector_t policydb_string_to_av_perm(
 			(hashtab_key_t)perm_name);
 
 	if (perm_datum != NULL)
-		return 0x1U << (perm_datum->s.value - 1);
+		return UINT32_C(1) << (perm_datum->s.value - 1);
 
 	return 0;
 }

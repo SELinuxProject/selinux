@@ -1291,10 +1291,10 @@ static int copy_avrule_list(avrule_t * list, avrule_t ** dst,
 				     i <
 				     module->perm_map_len[cur_perm->tclass - 1];
 				     i++) {
-					if (!(cur_perm->data & (1U << i)))
+					if (!(cur_perm->data & (UINT32_C(1) << i)))
 						continue;
 					new_perm->data |=
-					    (1U <<
+					    (UINT32_C(1) <<
 					     (module->
 					      perm_map[cur_perm->tclass - 1][i] -
 					      1));
