@@ -30,7 +30,6 @@ jobs:
           oss-fuzz-project-name: 'selinux'
           fuzz-seconds: 600
           dry-run: false
-          report-unreproducible-crashes: true
           sanitizer: ${{ matrix.sanitizer }}
       - name: Upload Crash
         uses: actions/upload-artifact@v1
