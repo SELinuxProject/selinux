@@ -48,6 +48,7 @@
 #include <sepol/policydb/expand.h>
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/avrule_block.h>
+#include <sepol/policydb/services.h>
 #include <sepol/policydb/util.h>
 
 #include "kernel_to_common.h"
@@ -3099,6 +3100,14 @@ static int ocontext_read_selinux(const struct policydb_compat_info *info,
 				if (rc < 0)
 					return -1;
 				c->v.behavior = le32_to_cpu(buf[0]);
+				switch (c->v.behavior) {
+				case SECURITY_FS_USE_XATTR:
+				case SECURITY_FS_USE_TRANS:
+				case SECURITY_FS_USE_TASK:
+					break;
+				default:
+					return -1;
+				}
 				len = le32_to_cpu(buf[1]);
 				if (zero_or_saturated(len))
 					return -1;
