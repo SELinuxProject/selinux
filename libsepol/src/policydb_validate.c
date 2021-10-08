@@ -258,6 +258,47 @@ static int validate_class_datum(sepol_handle_t *handle, class_datum_t *class, va
 	if (class->permissions.nprim > PERM_SYMTAB_SIZE)
 		goto bad;
 
+	switch (class->default_user) {
+	case 0:
+	case DEFAULT_SOURCE:
+	case DEFAULT_TARGET:
+		break;
+	default:
+		goto bad;
+	}
+
+	switch (class->default_role) {
+	case 0:
+	case DEFAULT_SOURCE:
+	case DEFAULT_TARGET:
+		break;
+	default:
+		goto bad;
+	}
+
+	switch (class->default_type) {
+	case 0:
+	case DEFAULT_SOURCE:
+	case DEFAULT_TARGET:
+		break;
+	default:
+		goto bad;
+	}
+
+	switch (class->default_range) {
+	case 0:
+	case DEFAULT_SOURCE_LOW:
+	case DEFAULT_SOURCE_HIGH:
+	case DEFAULT_SOURCE_LOW_HIGH:
+	case DEFAULT_TARGET_LOW:
+	case DEFAULT_TARGET_HIGH:
+	case DEFAULT_TARGET_LOW_HIGH:
+	case DEFAULT_GLBLUB:
+		break;
+	default:
+		goto bad;
+	}
+
 	return 0;
 
 bad:
