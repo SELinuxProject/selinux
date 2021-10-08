@@ -70,3 +70,4 @@ $CC $CFLAGS -c -o binpolicy-fuzzer.o libsepol/fuzz/binpolicy-fuzzer.c
 $CXX $CXXFLAGS $LIB_FUZZING_ENGINE binpolicy-fuzzer.o "$DESTDIR/usr/lib/libsepol.a" -o "$OUT/binpolicy-fuzzer"
 
 zip -j "$OUT/secilc-fuzzer_seed_corpus.zip" libsepol/fuzz/policy.bin
+cp "$OUT/secilc-fuzzer_seed_corpus.zip" "$OUT/binpolicy-fuzzer_seed_corpus.zip"
