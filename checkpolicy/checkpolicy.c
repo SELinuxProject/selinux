@@ -794,7 +794,7 @@ int main(int argc, char **argv)
 			case 0:
 				printf("\nallowed {");
 				for (i = 1; i <= sizeof(avd.allowed) * 8; i++) {
-					if (avd.allowed & (1 << (i - 1))) {
+					if (avd.allowed & (UINT32_C(1) << (i - 1))) {
 						v.val = i;
 						ret =
 						    hashtab_map(cladatum->

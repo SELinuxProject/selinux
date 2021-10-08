@@ -2126,7 +2126,7 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 			     policydbp->p_class_val_to_name[i]);
 			continue;
 		} else {
-			cur_perms->data |= 1U << (perdatum->s.value - 1);
+			cur_perms->data |= UINT32_C(1) << (perdatum->s.value - 1);
 		}
 	}
 
@@ -2142,7 +2142,7 @@ out:
 /* index of the u32 containing the permission */
 #define XPERM_IDX(x) ((x) >> 5)
 /* set bits 0 through x-1 within the u32 */
-#define XPERM_SETBITS(x) ((1U << ((x) & 0x1f)) - 1)
+#define XPERM_SETBITS(x) ((UINT32_C(1) << ((x) & 0x1f)) - 1)
 /* low value for this u32 */
 #define XPERM_LOW(x) ((x) << 5)
 /* high value for this u32 */
@@ -2612,7 +2612,7 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 				}
 				continue;
 			} else {
-				cur_perms->data |= 1U << (perdatum->s.value - 1);
+				cur_perms->data |= UINT32_C(1) << (perdatum->s.value - 1);
 			}
 		      next:
 			cur_perms = cur_perms->next;
@@ -3615,7 +3615,7 @@ int define_constraint(constraint_expr_t * expr)
 					return -1;
 				}
 			}
-			node->permissions |= (1 << (perdatum->s.value - 1));
+			node->permissions |= (UINT32_C(1) << (perdatum->s.value - 1));
 		}
 		free(id);
 	}
