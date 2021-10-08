@@ -2313,8 +2313,37 @@ static int class_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 		if (rc < 0)
 			goto bad;
 		cladatum->default_user = le32_to_cpu(buf[0]);
+		switch (cladatum->default_user) {
+		case 0:
+		case DEFAULT_SOURCE:
+		case DEFAULT_TARGET:
+			break;
+		default:
+			goto bad;
+		}
 		cladatum->default_role = le32_to_cpu(buf[1]);
+		switch (cladatum->default_role) {
+		case 0:
+		case DEFAULT_SOURCE:
+		case DEFAULT_TARGET:
+			break;
+		default:
+			goto bad;
+		}
 		cladatum->default_range = le32_to_cpu(buf[2]);
+		switch (cladatum->default_range) {
+		case 0:
+		case DEFAULT_SOURCE_LOW:
+		case DEFAULT_SOURCE_HIGH:
+		case DEFAULT_SOURCE_LOW_HIGH:
+		case DEFAULT_TARGET_LOW:
+		case DEFAULT_TARGET_HIGH:
+		case DEFAULT_TARGET_LOW_HIGH:
+		case DEFAULT_GLBLUB:
+			break;
+		default:
+			goto bad;
+		}
 	}
 
 	if ((p->policy_type == POLICY_KERN &&
@@ -2325,6 +2354,14 @@ static int class_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 		if (rc < 0)
 			goto bad;
 		cladatum->default_type = le32_to_cpu(buf[0]);
+		switch (cladatum->default_type) {
+		case 0:
+		case DEFAULT_SOURCE:
+		case DEFAULT_TARGET:
+			break;
+		default:
+			goto bad;
+		}
 	}
 
 	if (hashtab_insert(h, key, cladatum))
