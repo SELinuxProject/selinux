@@ -99,8 +99,8 @@ int strs_add(struct strs *strs, char *s);
 __attribute__ ((format(printf, 2, 4)))
 int strs_create_and_add(struct strs *strs, const char *fmt, int num, ...);
 char *strs_remove_last(struct strs *strs);
-int strs_add_at_index(struct strs *strs, char *s, unsigned index);
-char *strs_read_at_index(struct strs *strs, unsigned index);
+int strs_add_at_index(struct strs *strs, char *s, size_t index);
+char *strs_read_at_index(struct strs *strs, size_t index);
 void strs_sort(struct strs *strs);
 unsigned strs_num_items(struct strs *strs);
 size_t strs_len_items(struct strs *strs);
