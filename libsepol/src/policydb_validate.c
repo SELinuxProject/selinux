@@ -193,6 +193,49 @@ static int validate_constraint_nodes(sepol_handle_t *handle, constraint_node_t *
 				if (validate_type_set(cexp->type_names, &flavors[SYM_TYPES]))
 					goto bad;
 			}
+
+			if (cexp->expr_type == CEXPR_ATTR || cexp->expr_type == CEXPR_NAMES) {
+				switch (cexp->op) {
+				case CEXPR_EQ:
+				case CEXPR_NEQ:
+				case CEXPR_DOM:
+				case CEXPR_DOMBY:
+				case CEXPR_INCOMP:
+					break;
+				default:
+					goto bad;
+				}
+
+				switch (cexp->attr) {
+				case CEXPR_USER:
+				case CEXPR_USER | CEXPR_TARGET:
+				case CEXPR_USER | CEXPR_XTARGET:
+				case CEXPR_ROLE:
+				case CEXPR_ROLE | CEXPR_TARGET:
+				case CEXPR_ROLE | CEXPR_XTARGET:
+				case CEXPR_TYPE:
+				case CEXPR_TYPE | CEXPR_TARGET:
+				case CEXPR_TYPE | CEXPR_XTARGET:
+				case CEXPR_L1L2:
+				case CEXPR_L1H2:
+				case CEXPR_H1L2:
+				case CEXPR_H1H2:
+				case CEXPR_L1H1:
+				case CEXPR_L2H2:
+					break;
+				default:
+					goto bad;
+				}
+			} else {
+				switch (cexp->expr_type) {
+				case CEXPR_NOT:
+				case CEXPR_AND:
+				case CEXPR_OR:
+					break;
+				default:
+					goto bad;
+				}
+			}
 		}
 	}
 
