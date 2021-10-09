@@ -779,6 +779,25 @@ bad:
 	return -1;
 }
 
+static int validate_genfs(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+{
+	genfs_t *genfs;
+	ocontext_t *octx;
+
+	for (genfs = p->genfs; genfs; genfs = genfs->next) {
+		for (octx = genfs->head; octx; octx = octx->next) {
+			if (validate_context(&octx->context[0], flavors, p->mls))
+				goto bad;
+		}
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid genfs");
+	return -1;
+}
+
 /*
  * Functions to validate a module policydb
  */
@@ -980,6 +999,9 @@ int validate_policydb(sepol_handle_t *handle, policydb_t *p)
 	}
 
 	if (validate_ocontexts(handle, p, flavors))
+		goto bad;
+
+	if (validate_genfs(handle, p, flavors))
 		goto bad;
 
 	if (validate_scopes(handle, p->scope, p->global))
