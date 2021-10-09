@@ -2883,6 +2883,8 @@ static int ocontext_read_xen(const struct policydb_compat_info *info,
 				if (rc < 0)
 					return -1;
 				c->sid[0] = le32_to_cpu(buf[0]);
+				if (is_saturated(c->sid[0]))
+					return -1;
 				if (context_read_and_validate
 				    (&c->context[0], p, fp))
 					return -1;
@@ -2994,6 +2996,8 @@ static int ocontext_read_selinux(const struct policydb_compat_info *info,
 				if (rc < 0)
 					return -1;
 				c->sid[0] = le32_to_cpu(buf[0]);
+				if (is_saturated(c->sid[0]))
+					return -1;
 				if (context_read_and_validate
 				    (&c->context[0], p, fp))
 					return -1;
