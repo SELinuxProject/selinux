@@ -263,7 +263,7 @@ static int validate_role_datum(sepol_handle_t *handle, role_datum_t *role, valid
 	return 0;
 
 bad:
-	ERR(handle, "Invalid class datum");
+	ERR(handle, "Invalid role datum");
 	return -1;
 }
 
