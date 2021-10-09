@@ -547,15 +547,22 @@ bad:
 	return -1;
 }
 
-static int validate_avtab_key_wrapper(avtab_key_t *k,  __attribute__ ((unused)) avtab_datum_t *d, void *args)
+static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *args)
 {
 	validate_t *flavors = (validate_t *)args;
-	return validate_avtab_key(k, flavors);
+
+	if (validate_avtab_key(k, flavors))
+		return -1;
+
+	if ((k->specified & AVTAB_TYPE) && validate_value(d->data, &flavors[SYM_TYPES]))
+		return -1;
+
+	return 0;
 }
 
 static int validate_avtab(sepol_handle_t *handle, avtab_t *avtab, validate_t flavors[])
 {
-	if (avtab_map(avtab, validate_avtab_key_wrapper, flavors)) {
+	if (avtab_map(avtab, validate_avtab_key_and_datum, flavors)) {
 		ERR(handle, "Invalid avtab");
 		return -1;
 	}
