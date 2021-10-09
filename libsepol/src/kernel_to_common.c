@@ -57,7 +57,7 @@ static char *create_str_helper(const char *fmt, int num, va_list vargs)
 	va_list vargs2;
 	char *str = NULL;
 	char *s;
-	size_t len;
+	size_t len, s_len;
 	int i, rc;
 
 	va_copy(vargs2, vargs);
@@ -66,7 +66,8 @@ static char *create_str_helper(const char *fmt, int num, va_list vargs)
 
 	for (i=0; i<num; i++) {
 		s = va_arg(vargs, char *);
-		len += strlen(s) - 2; /* -2 for each %s in fmt */
+		s_len = strlen(s);
+		len += s_len > 1 ? s_len - 2 : 0; /* -2 for each %s in fmt */
 	}
 
 	str = malloc(len);
