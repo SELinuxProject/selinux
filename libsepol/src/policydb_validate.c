@@ -736,6 +736,49 @@ static int validate_filename_trans_hashtab(sepol_handle_t *handle, hashtab_t fil
 	return 0;
 }
 
+static int validate_context(context_struct_t *con, validate_t flavors[], int mls)
+{
+	if (validate_value(con->user, &flavors[SYM_USERS]))
+		return -1;
+	if (validate_value(con->role, &flavors[SYM_ROLES]))
+		return -1;
+	if (validate_value(con->type, &flavors[SYM_TYPES]))
+		return -1;
+	if (mls && validate_mls_range(&con->range, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+		return -1;
+
+	return 0;
+}
+
+static int validate_ocontexts(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+{
+	ocontext_t *octx;
+	unsigned int i;
+
+	for (i = 0; i < OCON_NUM; i++) {
+		for (octx = p->ocontexts[i]; octx; octx = octx->next) {
+			if (validate_context(&octx->context[0], flavors, p->mls))
+				goto bad;
+
+			if (p->target_platform == SEPOL_TARGET_SELINUX) {
+				switch (i) {
+				case OCON_FS:
+				case OCON_NETIF:
+					if (validate_context(&octx->context[1], flavors, p->mls))
+						goto bad;
+					break;
+				}
+			}
+		}
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid ocontext");
+	return -1;
+}
+
 /*
  * Functions to validate a module policydb
  */
@@ -935,6 +978,9 @@ int validate_policydb(sepol_handle_t *handle, policydb_t *p)
 		if (validate_avrule_blocks(handle, p->global, flavors))
 			goto bad;
 	}
+
+	if (validate_ocontexts(handle, p, flavors))
+		goto bad;
 
 	if (validate_scopes(handle, p->scope, p->global))
 		goto bad;
