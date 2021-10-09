@@ -961,6 +961,23 @@ bad:
 	return -1;
 }
 
+static int validate_permissives(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+{
+	ebitmap_node_t *node;
+	unsigned i;
+
+	ebitmap_for_each_positive_bit(&p->permissive_map, node, i) {
+		if (validate_value(i, &flavors[SYM_TYPES]))
+			goto bad;
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid permissive type");
+	return -1;
+}
+
 static void validate_array_destroy(validate_t flavors[])
 {
 	unsigned int i;
@@ -1011,6 +1028,9 @@ int validate_policydb(sepol_handle_t *handle, policydb_t *p)
 		goto bad;
 
 	if (validate_datum_array_entries(handle, p, flavors))
+		goto bad;
+
+	if (validate_permissives(handle, p, flavors))
 		goto bad;
 
 	validate_array_destroy(flavors);
