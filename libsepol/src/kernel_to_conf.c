@@ -918,7 +918,7 @@ static int write_category_rules_to_conf(FILE *out, struct policydb *pdb)
 	unsigned i, j, num;
 	int rc = 0;
 
-	rc = strs_init(&strs, pdb->p_levels.nprim);
+	rc = strs_init(&strs, pdb->p_cats.nprim);
 	if (rc != 0) {
 		goto exit;
 	}
