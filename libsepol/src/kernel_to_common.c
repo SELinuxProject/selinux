@@ -107,6 +107,10 @@ int strs_init(struct strs **strs, size_t size)
 {
 	struct strs *new;
 
+	if (size == 0) {
+		size = 1;
+	}
+
 	*strs = NULL;
 
 	new = malloc(sizeof(struct strs));
@@ -115,7 +119,7 @@ int strs_init(struct strs **strs, size_t size)
 		return -1;
 	}
 
-	new->list = calloc(sizeof(char *), size);
+	new->list = calloc(size, sizeof(char *));
 	if (!new->list) {
 		sepol_log_err("Out of memory");
 		free(new);
