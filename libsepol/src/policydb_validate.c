@@ -485,6 +485,14 @@ bad:
 	return -1;
 }
 
+static int validate_datum(__attribute__ ((unused))hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	symtab_datum_t *s = d;
+	uint32_t *nprim = (uint32_t *)args;
+
+	return !value_isvalid(s->value, *nprim);
+}
+
 static int validate_datum_array_entries(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
 {
 	map_arg_t margs = { flavors, handle, p->mls };
@@ -505,6 +513,9 @@ static int validate_datum_array_entries(sepol_handle_t *handle, policydb_t *p, v
 		goto bad;
 
 	if (p->mls && hashtab_map(p->p_levels.table, validate_level_datum, flavors))
+		goto bad;
+
+	if (hashtab_map(p->p_cats.table, validate_datum, &flavors[SYM_CATS]))
 		goto bad;
 
 	return 0;
@@ -903,14 +914,6 @@ static int validate_filename_trans_rules(sepol_handle_t *handle, filename_trans_
 bad:
 	ERR(handle, "Invalid filename trans rule list");
 	return -1;
-}
-
-static int validate_datum(__attribute__ ((unused))hashtab_key_t k, hashtab_datum_t d, void *args)
-{
-	symtab_datum_t *s = d;
-	uint32_t *nprim = (uint32_t *)args;
-
-	return !value_isvalid(s->value, *nprim);
 }
 
 static int validate_symtabs(sepol_handle_t *handle, symtab_t symtabs[], validate_t flavors[])
