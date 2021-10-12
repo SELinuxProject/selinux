@@ -1,3 +1,4 @@
+ENV ?= env
 M4 ?= m4
 MKDIR ?= mkdir
 EXE ?= libsepol-tests
@@ -44,10 +45,15 @@ clean:
 	rm -f $(objs) $(EXE)
 	rm -f $(policies)
 	rm -f policies/test-downgrade/policy.hi policies/test-downgrade/policy.lo
-	
 
+# mkdir is run in a clean environment created by env -i to avoid failing under ASan with:
+#
+#   ASan runtime does not come first in initial library list;
+#   you should either link runtime to your application or manually preload it with LD_PRELOAD
+#
+# when the source code is built with ASan
 test: $(EXE) $(policies)
-	$(MKDIR) -p policies/test-downgrade
+	$(ENV) -i $(MKDIR) -p policies/test-downgrade
 	../../checkpolicy/checkpolicy -M policies/test-cond/refpolicy-base.conf -o policies/test-downgrade/policy.hi	
 	./$(EXE)
 

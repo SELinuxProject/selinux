@@ -29,6 +29,9 @@ jobs:
             python-ruby-version: {python: 3.9, ruby: 2.7, other: linker-bfd}
           - compiler: clang
             python-ruby-version: {python: 3.9, ruby: 2.7, other: linker-gold}
+        include:
+          - compiler: gcc
+            python-ruby-version: {python: 3.9, ruby: 2.7, other: sanitizers}
 
     steps:
     - uses: actions/checkout@v2
@@ -88,6 +91,11 @@ jobs:
         elif [ "${{ matrix.python-ruby-version.other }}" = "test-debug" ] ; then
             # Test hat debug build works fine
             EXPLICIT_MAKE_VARS="DEBUG=1"
+        elif [ "${{ matrix.python-ruby-version.other }}" = "sanitizers" ] ; then
+            sanitizers='-fsanitize=address,undefined'
+            EXPLICIT_MAKE_VARS="CFLAGS='-g -I$DESTDIR/usr/include $sanitizers' LDFLAGS='-L$DESTDIR/usr/lib $sanitizers' LDLIBS= CPPFLAGS= OPT_SUBDIRS="
+            echo "ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1" >> $GITHUB_ENV
+            echo "UBSAN_OPTIONS=print_stacktrace=1:print_summary=1:halt_on_error=1" >> $GITHUB_ENV
         else
             EXPLICIT_MAKE_VARS=
         fi
@@ -139,18 +147,18 @@ jobs:
     - name: Run tests
       run: |
         echo "::group::make install"
-        make -j$(nproc) install $EXPLICIT_MAKE_VARS -k
+        eval make -j$(nproc) install $EXPLICIT_MAKE_VARS -k
         echo "::endgroup::"
         echo "::group::make install-pywrap"
-        make -j$(nproc) install-pywrap $EXPLICIT_MAKE_VARS -k
+        eval make -j$(nproc) install-pywrap $EXPLICIT_MAKE_VARS -k
         echo "::endgroup::"
         echo "::group::make install-rubywrap"
-        make -j$(nproc) install-rubywrap $EXPLICIT_MAKE_VARS -k
+        eval make -j$(nproc) install-rubywrap $EXPLICIT_MAKE_VARS -k
         echo "::endgroup::"
 
         # Now that everything is installed, run "make all" to build everything which may have not been built
         echo "::group::make all"
-        make -j$(nproc) all $EXPLICIT_MAKE_VARS -k
+        eval make -j$(nproc) all $EXPLICIT_MAKE_VARS -k
         echo "::endgroup::"
 
         # Set up environment variables for the tests and show variables (to help debugging issues)
@@ -164,19 +172,21 @@ jobs:
 
         # Run tests
         echo "::group::make test"
-        make test $EXPLICIT_MAKE_VARS
+        eval make test $EXPLICIT_MAKE_VARS
         echo "::endgroup::"
 
-        # Test Python and Ruby wrappers
-        echo "::group::Test Python and Ruby wrappers"
-        $PYTHON -c 'import selinux;import selinux.audit2why;import semanage;print(selinux.is_selinux_enabled())'
-        $RUBY -e 'require "selinux";require "semanage";puts Selinux::is_selinux_enabled()'
-        echo "::endgroup::"
+        if [ "${{ matrix.python-ruby-version.other }}" != "sanitizers" ] ; then
+            # Test Python and Ruby wrappers
+            echo "::group::Test Python and Ruby wrappers"
+            $PYTHON -c 'import selinux;import selinux.audit2why;import semanage;print(selinux.is_selinux_enabled())'
+            $RUBY -e 'require "selinux";require "semanage";puts Selinux::is_selinux_enabled()'
+            echo "::endgroup::"
 
-        # Run Python linter, but not on the downloaded refpolicy
-        echo "::group::scripts/run-flake8"
-        ./scripts/run-flake8
-        echo "::endgroup::"
+            # Run Python linter, but not on the downloaded refpolicy
+            echo "::group::scripts/run-flake8"
+            ./scripts/run-flake8
+            echo "::endgroup::"
+        fi
 
         echo "::group::Test .gitignore and make clean distclean"
         # Remove every installed files
@@ -184,6 +194,6 @@ jobs:
         # Test that "git status" looks clean, or print a clear error message
         git status --short | sed -n 's/^??/error: missing .gitignore entry for/p' | (! grep '^')
         # Clean up everything and show which file needs to be added to "make clean"
-        make clean distclean $EXPLICIT_MAKE_VARS
+        eval make clean distclean $EXPLICIT_MAKE_VARS
         git ls-files --ignored --others --exclude-standard | sed 's/^/error: "make clean distclean" did not remove /' | (! grep '^')
         echo "::endgroup::"
