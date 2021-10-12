@@ -191,6 +191,9 @@ int dbase_file_init(semanage_handle_t * handle,
 void dbase_file_release(dbase_file_t * dbase)
 {
 
+	if (!dbase)
+		return;
+
 	dbase_llist_drop_cache(&dbase->llist);
 	free(dbase);
 }

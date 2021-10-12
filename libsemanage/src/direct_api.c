@@ -321,6 +321,7 @@ int semanage_direct_connect(semanage_handle_t * sh)
 
       err:
 	ERR(sh, "could not establish direct connection");
+	(void) semanage_direct_disconnect(sh);
 	return STATUS_ERR;
 }
 

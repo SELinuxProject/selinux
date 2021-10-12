@@ -271,6 +271,9 @@ int dbase_join_init(semanage_handle_t * handle,
 void dbase_join_release(dbase_join_t * dbase)
 {
 
+	if (!dbase)
+		return;
+
 	dbase_llist_drop_cache(&dbase->llist);
 	free(dbase);
 }
