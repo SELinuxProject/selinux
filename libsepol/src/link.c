@@ -190,8 +190,9 @@ static int permission_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
-		memcpy(newmap, mod->perm_map[sclassi],
-		       mod->perm_map_len[sclassi] * sizeof(*newmap));
+		if (mod->perm_map_len[sclassi] > 0) {
+			memcpy(newmap, mod->perm_map[sclassi], mod->perm_map_len[sclassi] * sizeof(*newmap));
+		}
 		free(mod->perm_map[sclassi]);
 		mod->perm_map[sclassi] = newmap;
 		mod->perm_map_len[sclassi] = perm->s.value;
