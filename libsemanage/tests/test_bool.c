@@ -132,6 +132,8 @@ semanage_bool_t *get_bool_nth(int idx)
 		if (i != (unsigned int) idx)
 			semanage_bool_free(records[i]);
 
+	free(records);
+
 	return boolean;
 }
 
@@ -162,6 +164,8 @@ semanage_bool_key_t *get_bool_key_nth(int idx)
 
 	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
+
+	semanage_bool_free(boolean);
 
 	return key;
 }
@@ -196,6 +200,9 @@ void add_local_bool(const char *name)
 	CU_ASSERT_PTR_NOT_NULL_FATAL(boolean);
 
 	CU_ASSERT_FATAL(semanage_bool_modify_local(sh, key, boolean) >= 0);
+
+	semanage_bool_key_free(key);
+	semanage_bool_free(boolean);
 }
 
 void delete_local_bool(const char *name)
@@ -208,6 +215,8 @@ void delete_local_bool(const char *name)
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	CU_ASSERT_FATAL(semanage_bool_del_local(sh, key) >= 0);
+
+	semanage_bool_key_free(key);
 }
 
 /* Function bool_key_create */
@@ -447,6 +456,8 @@ void helper_bool_create(level_t level)
 	CU_ASSERT_PTR_NULL(semanage_bool_get_name(boolean));
 	CU_ASSERT(semanage_bool_get_value(boolean) == 0);
 
+	semanage_bool_free(boolean);
+
 	cleanup_handle(level);
 }
 
@@ -483,6 +494,9 @@ void helper_bool_clone(level_t level, int bool_idx)
 
 	CU_ASSERT_EQUAL(val, val_clone);
 
+	semanage_bool_free(boolean_clone);
+	semanage_bool_free(boolean);
+
 	cleanup_handle(level);
 }
 
@@ -513,6 +527,9 @@ void helper_bool_query(level_t level, const char *bool_str, int exp_res)
 	} else {
 		CU_ASSERT_PTR_NULL(resp);
 	}
+
+	semanage_bool_free(resp);
+	semanage_bool_key_free(key);
 
 	cleanup_handle(level);
 }
@@ -647,6 +664,8 @@ void helper_bool_list(level_t level)
 	for (unsigned int i = 0; i < count; i++)
 		semanage_bool_free(records[i]);
 
+	free(records);
+
 	cleanup_handle(level);
 }
 
@@ -662,7 +681,7 @@ void helper_bool_modify_del_local(level_t level, const char *name,
 				  int old_val, int exp_res)
 {
 	semanage_bool_t *boolean;
-	semanage_bool_t *boolean_local;
+	semanage_bool_t *boolean_local = NULL;
 	semanage_bool_key_t *key = NULL;
 	int res;
 	int new_val;
@@ -696,6 +715,8 @@ void helper_bool_modify_del_local(level_t level, const char *name,
 		CU_ASSERT(semanage_bool_query_local(sh, key,
 					            &boolean_local) >= 0);
 		CU_ASSERT(semanage_bool_compare2(boolean_local, boolean) == 0);
+		semanage_bool_free(boolean_local);
+
 		CU_ASSERT(semanage_bool_del_local(sh, key) >= 0);
 		CU_ASSERT(semanage_bool_query_local(sh, key,
 						    &boolean_local) < 0);
@@ -734,15 +755,18 @@ void test_bool_query_local(void)
 
 	/* transaction */
 	setup_handle(SH_TRANS);
+	semanage_bool_key_free(key);
 	CU_ASSERT(semanage_bool_key_create(sh, BOOL1_NAME, &key) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(key);
 
 	CU_ASSERT(semanage_bool_query_local(sh, key, &resp) < 0);
 	CU_ASSERT_PTR_NULL(resp);
+	semanage_bool_free(resp);
 
 	add_local_bool(BOOL1_NAME);
 	CU_ASSERT(semanage_bool_query_local(sh, key, &resp) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(resp);
+	semanage_bool_free(resp);
 
 	semanage_bool_key_free(key);
 	CU_ASSERT(semanage_bool_key_create(sh, BOOL2_NAME, &key) >= 0);
@@ -751,8 +775,10 @@ void test_bool_query_local(void)
 	add_local_bool(BOOL2_NAME);
 	CU_ASSERT(semanage_bool_query_local(sh, key, &resp) >= 0);
 	CU_ASSERT_PTR_NOT_NULL(resp);
+	semanage_bool_free(resp);
 
 	/* cleanup */
+	semanage_bool_key_free(key);
 	delete_local_bool(BOOL1_NAME);
 	delete_local_bool(BOOL2_NAME);
 	cleanup_handle(SH_TRANS);
@@ -784,6 +810,7 @@ void test_bool_exists_local(void)
 	CU_ASSERT(resp == 0);
 
 	/* cleanup */
+	semanage_bool_key_free(key);
 	cleanup_handle(SH_TRANS);
 }
 
@@ -918,12 +945,17 @@ void test_bool_list_local(void)
 	CU_ASSERT(semanage_bool_list_local(sh, &records, &count) >= 0);
 	CU_ASSERT(count == init_count + 1);
 	CU_ASSERT_PTR_NOT_NULL(records[0]);
+	semanage_bool_free(records[0]);
+	free(records);
 
 	add_local_bool(BOOL2_NAME);
 	CU_ASSERT(semanage_bool_list_local(sh, &records, &count) >= 0);
 	CU_ASSERT(count == init_count + 2);
 	CU_ASSERT_PTR_NOT_NULL(records[0]);
 	CU_ASSERT_PTR_NOT_NULL(records[1]);
+	semanage_bool_free(records[0]);
+	semanage_bool_free(records[1]);
+	free(records);
 
 	/* cleanup */
 	delete_local_bool(BOOL1_NAME);

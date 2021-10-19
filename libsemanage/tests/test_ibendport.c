@@ -113,6 +113,8 @@ semanage_ibendport_t *get_ibendport_nth(int idx)
 		if (i != (unsigned int) idx)
 			semanage_ibendport_free(records[i]);
 
+	free(records);
+
 	return ibendport;
 }
 
@@ -132,6 +134,8 @@ semanage_ibendport_key_t *get_ibendport_key_nth(int idx)
 	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
+	semanage_ibendport_free(ibendport);
+
 	return key;
 }
 
@@ -148,6 +152,9 @@ void add_local_ibendport(int idx)
 
 	CU_ASSERT_FATAL(semanage_ibendport_modify_local(sh, key,
 							ibendport) >= 0);
+
+	semanage_ibendport_key_free(key);
+	semanage_ibendport_free(ibendport);
 }
 
 void delete_local_ibendport(int idx)
@@ -155,6 +162,8 @@ void delete_local_ibendport(int idx)
 	semanage_ibendport_key_t *key = NULL;
 	key = get_ibendport_key_nth(idx);
 	CU_ASSERT_FATAL(semanage_ibendport_del_local(sh, key) >= 0);
+
+	semanage_ibendport_key_free(key);
 }
 
 /* Function semanage_ibendport_query */
@@ -195,7 +204,9 @@ void test_ibendport_query(void)
 	CU_ASSERT_CONTEXT_EQUAL(con, con_exp);
 
 	/* cleanup */
+	free(name_exp);
 	free(name);
+	semanage_ibendport_key_free(key);
 	semanage_ibendport_free(ibendport);
 	semanage_ibendport_free(ibendport_exp);
 	cleanup_handle(SH_CONNECT);
@@ -356,12 +367,14 @@ void test_ibendport_modify_del_query_local(void)
 	CU_ASSERT(semanage_ibendport_query_local(sh, key,
 						 &ibendport_local) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(ibendport_local);
+	semanage_ibendport_free(ibendport_local);
 
 	CU_ASSERT(semanage_ibendport_del_local(sh, key) >= 0);
 	CU_ASSERT(semanage_ibendport_query_local(sh, key,
 						 &ibendport_local) < 0);
 
 	/* cleanup */
+	semanage_ibendport_key_free(key);
 	semanage_ibendport_free(ibendport);
 	cleanup_handle(SH_TRANS);
 }

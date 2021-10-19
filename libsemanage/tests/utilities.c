@@ -99,6 +99,7 @@ int write_test_policy_from_file(const char *filename) {
 	char *buf = NULL;
 	size_t len = 0;
 	FILE *fptr = fopen(filename, "rb");
+	int rc;
 
 	if (!fptr) {
 		perror("fopen");
@@ -120,7 +121,9 @@ int write_test_policy_from_file(const char *filename) {
 	fread(buf, len, 1, fptr);
 	fclose(fptr);
 
-	return write_test_policy(buf, len);
+	rc = write_test_policy(buf, len);
+	free(buf);
+	return rc;
 }
 
 int write_test_policy_src(unsigned char *data, unsigned int data_len) {

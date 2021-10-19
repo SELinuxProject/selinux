@@ -139,6 +139,8 @@ semanage_iface_t *get_iface_nth(int idx)
 		if (i != (unsigned int) idx)
 			semanage_iface_free(records[i]);
 
+	free(records);
+
 	return iface;
 }
 
@@ -157,6 +159,9 @@ semanage_iface_key_t *get_iface_key_nth(int idx)
 	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
+	/* cleanup */
+	semanage_iface_free(iface);
+
 	return key;
 }
 
@@ -171,6 +176,10 @@ void add_local_iface(int idx)
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	CU_ASSERT_FATAL(semanage_iface_modify_local(sh, key, iface) >= 0);
+
+	/* cleanup */
+	semanage_iface_key_free(key);
+	semanage_iface_free(iface);
 }
 
 void delete_local_iface(int idx)
@@ -178,6 +187,9 @@ void delete_local_iface(int idx)
 	semanage_iface_key_t *key = NULL;
 	key = get_iface_key_nth(idx);
 	CU_ASSERT_FATAL(semanage_iface_del_local(sh, key) >= 0);
+
+	/* cleanup */
+	semanage_iface_key_free(key);
 }
 
 /* Function semanage_iface_compare */
@@ -309,6 +321,7 @@ void test_iface_get_set_ifcon(void)
 	CU_ASSERT_CONTEXT_EQUAL(con1, con2);
 
 	/* cleanup */
+	semanage_context_free(con1);
 	semanage_iface_free(iface);
 	cleanup_handle(SH_CONNECT);
 }
@@ -332,6 +345,7 @@ void test_iface_get_set_msgcon(void)
 	CU_ASSERT_CONTEXT_EQUAL(con1, con2);
 
 	/* cleanup */
+	semanage_context_free(con1);
 	semanage_iface_free(iface);
 	cleanup_handle(SH_CONNECT);
 }
@@ -357,6 +371,8 @@ void test_iface_create(void)
 	CU_ASSERT(semanage_iface_set_msgcon(sh, iface, msgcon) >= 0);
 
 	/* cleanup */
+	semanage_context_free(msgcon);
+	semanage_context_free(ifcon);
 	semanage_iface_free(iface);
 	cleanup_handle(SH_CONNECT);
 }
@@ -393,6 +409,8 @@ void test_iface_clone(void)
 	CU_ASSERT_CONTEXT_EQUAL(msgcon, msgcon2);
 
 	/* cleanup */
+	semanage_context_free(msgcon);
+	semanage_context_free(ifcon);
 	semanage_iface_free(iface);
 	semanage_iface_free(iface_clone);
 	cleanup_handle(SH_CONNECT);
@@ -426,6 +444,7 @@ void test_iface_query(void)
 	CU_ASSERT_CONTEXT_EQUAL(con, con_exp);
 
 	/* cleanup */
+	semanage_iface_key_free(key);
 	semanage_iface_free(iface);
 	semanage_iface_free(iface_exp);
 	cleanup_handle(SH_CONNECT);
@@ -513,6 +532,8 @@ void test_iface_list(void)
 	for (unsigned int i = 0; i < count; i++)
 		semanage_iface_free(records[i]);
 
+	free(records);
+
 	/* cleanup */
 	cleanup_handle(SH_CONNECT);
 }
@@ -541,11 +562,13 @@ void test_iface_modify_del_query_local(void)
 
 	CU_ASSERT(semanage_iface_query_local(sh, key, &iface_local) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(iface_local);
+	semanage_iface_free(iface_local);
 
 	CU_ASSERT(semanage_iface_del_local(sh, key) >= 0);
 	CU_ASSERT(semanage_iface_query_local(sh, key, &iface_local) < 0);
 
 	/* cleanup */
+	semanage_iface_key_free(key);
 	semanage_iface_free(iface);
 	cleanup_handle(SH_TRANS);
 }
@@ -658,6 +681,7 @@ void test_iface_list_local(void)
 	/* cleanup */
 	for (unsigned int i = 0; i < count; i++)
 		semanage_iface_free(records[i]);
+	free(records);
 
 	delete_local_iface(I_FIRST);
 	delete_local_iface(I_SECOND);

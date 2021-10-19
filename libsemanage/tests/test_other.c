@@ -81,6 +81,9 @@ void test_semanage_context(void)
 	assert(str);
 	CU_ASSERT_STRING_EQUAL(str, "user_u:role_r:type_t:s0");
 
+	semanage_context_free(con);
+	con = NULL;
+
 	CU_ASSERT(semanage_context_from_string(sh, "my_u:my_r:my_t:s0",
 					       &con) >= 0);
 	CU_ASSERT_STRING_EQUAL(semanage_context_get_user(con), "my_u");
@@ -95,6 +98,7 @@ void test_semanage_context(void)
 	CU_ASSERT_STRING_EQUAL(semanage_context_get_mls(con_clone), "s0");
 
 	/* cleanup */
+	free(str);
 	semanage_context_free(con);
 	semanage_context_free(con_clone);
 	cleanup_handle(SH_CONNECT);
@@ -115,6 +119,8 @@ void test_debug(void)
 	CU_ASSERT(semanage_module_info_set_priority(sh, modinfo, -42) < 0);
 
 	/* cleanup */
+	semanage_module_info_destroy(sh, modinfo);
+	free(modinfo);
 	CU_ASSERT(semanage_disconnect(sh) >= 0);
 	semanage_handle_destroy(sh);
 }

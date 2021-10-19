@@ -146,6 +146,8 @@ semanage_port_t *get_port_nth(int idx)
 		if (i != (unsigned int) idx)
 			semanage_port_free(records[i]);
 
+	free(records);
+
 	return port;
 }
 
@@ -165,6 +167,9 @@ semanage_port_key_t *get_port_key_nth(int idx)
 	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
+	/* cleanup */
+	semanage_port_free(port);
+
 	return key;
 }
 
@@ -181,6 +186,10 @@ void add_local_port(int port_idx)
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	CU_ASSERT_FATAL(semanage_port_modify_local(sh, key, port) >= 0);
+
+	/* cleanup */
+	semanage_port_key_free(key);
+	semanage_port_free(port);
 }
 
 void delete_local_port(int port_idx)
@@ -192,6 +201,8 @@ void delete_local_port(int port_idx)
 	key = get_port_key_nth(port_idx);
 
 	CU_ASSERT_FATAL(semanage_port_del_local(sh, key) >= 0);
+
+	semanage_port_key_free(key);
 }
 
 /* Function semanage_port_compare */
@@ -447,6 +458,7 @@ void test_port_clone(void)
 	CU_ASSERT_CONTEXT_EQUAL(con, con2);
 
 	/* cleanup */
+	semanage_context_free(con);
 	semanage_port_free(port);
 	semanage_port_free(port_clone);
 	cleanup_handle(SH_CONNECT);
@@ -480,6 +492,7 @@ void test_port_query(void)
 	CU_ASSERT_CONTEXT_EQUAL(con, con_exp);
 
 	/* cleanup */
+	semanage_port_key_free(key);
 	semanage_port_free(port);
 	semanage_port_free(port_exp);
 	cleanup_handle(SH_CONNECT);
@@ -567,6 +580,8 @@ void test_port_list(void)
 	for (unsigned int i = 0; i < count; i++)
 		semanage_port_free(records[i]);
 
+	free(records);
+
 	cleanup_handle(SH_CONNECT);
 }
 
@@ -594,11 +609,14 @@ void test_port_modify_del_local(void)
 
 	con_local = semanage_port_get_con(port_local);
 	CU_ASSERT_CONTEXT_EQUAL(con, con_local);
+	semanage_port_free(port_local);
 
 	CU_ASSERT(semanage_port_del_local(sh, key) >= 0);
 	CU_ASSERT(semanage_port_query_local(sh, key, &port_local) < 0);
 
 	/* cleanup */
+	semanage_context_free(con);
+	semanage_port_key_free(key);
 	semanage_port_free(port);
 	cleanup_handle(SH_TRANS);
 }
@@ -633,6 +651,7 @@ void test_port_query_local(void)
 
 	/* cleanup */
 	delete_local_port(I_FIRST);
+	semanage_port_key_free(key);
 	semanage_port_free(port);
 	semanage_port_free(port_exp);
 	cleanup_handle(SH_TRANS);
@@ -747,6 +766,8 @@ void test_port_list_local(void)
 	for (unsigned int i = 0; i < count; i++)
 		semanage_port_free(records[i]);
 
+	free(records);
+
 	delete_local_port(I_FIRST);
 	delete_local_port(I_SECOND);
 	delete_local_port(I_THIRD);
@@ -773,6 +794,7 @@ void helper_port_validate_local_noport(void)
 	helper_commit();
 
 	/* cleanup */
+	semanage_port_key_free(key);
 	helper_begin_transaction();
 	delete_local_port(I_FIRST);
 	cleanup_handle(SH_TRANS);
@@ -832,6 +854,8 @@ void helper_port_validate_local_twoports(void)
 	helper_begin_transaction();
 	CU_ASSERT(semanage_port_del_local(sh, key1) >= 0);
 	CU_ASSERT(semanage_port_del_local(sh, key2) >= 0);
+	semanage_context_free(con2);
+	semanage_context_free(con1);
 	semanage_port_key_free(key1);
 	semanage_port_key_free(key2);
 	semanage_port_free(port1);

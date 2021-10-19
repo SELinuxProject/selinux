@@ -39,6 +39,8 @@
 		CU_ASSERT(semanage_context_to_string(sh, CON1, &__str) >= 0); \
 		CU_ASSERT(semanage_context_to_string(sh, CON2, &__str2) >= 0); \
 		CU_ASSERT_STRING_EQUAL(__str, __str2); \
+		free(__str2); \
+		free(__str); \
 	} while (0)
 
 

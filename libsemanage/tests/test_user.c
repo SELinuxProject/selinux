@@ -130,6 +130,8 @@ semanage_user_t *get_user_nth(int idx)
 		if (i != (unsigned int) idx)
 			semanage_user_free(records[i]);
 
+	free(records);
+
 	return user;
 }
 
@@ -149,6 +151,8 @@ semanage_user_key_t *get_user_key_nth(int idx)
 	CU_ASSERT_FATAL(res >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
+	semanage_user_free(user);
+
 	return key;
 }
 
@@ -165,6 +169,9 @@ void add_local_user(int user_idx)
 	CU_ASSERT_PTR_NOT_NULL_FATAL(key);
 
 	CU_ASSERT_FATAL(semanage_user_modify_local(sh, key, user) >= 0);
+
+	semanage_user_key_free(key);
+	semanage_user_free(user);
 }
 
 void delete_local_user(int user_idx)
@@ -176,6 +183,8 @@ void delete_local_user(int user_idx)
 	key = get_user_key_nth(user_idx);
 
 	CU_ASSERT_FATAL(semanage_user_del_local(sh, key) >= 0);
+
+	semanage_user_key_free(key);
 }
 
 /* Function semanage_user_compare */
@@ -391,6 +400,7 @@ void test_user_roles(void)
 	CU_ASSERT(semanage_user_get_num_roles(user) == 0);
 
 	/* cleanup */
+	free(roles_arr);
 	semanage_user_free(user);
 	cleanup_handle(SH_CONNECT);
 }
@@ -459,6 +469,7 @@ void test_user_query(void)
 	CU_ASSERT_PTR_NOT_NULL(user);
 
 	/* cleanup */
+	semanage_user_key_free(key);
 	semanage_user_free(user);
 	cleanup_handle(SH_CONNECT);
 }
@@ -546,6 +557,8 @@ void test_user_list(void)
 	for (unsigned int i = 0; i < count; i++)
 		semanage_user_free(records[i]);
 
+	free(records);
+
 	cleanup_handle(SH_CONNECT);
 }
 
@@ -573,10 +586,12 @@ void test_user_modify_del_query_local(void)
 
 	CU_ASSERT(semanage_user_query_local(sh, key, &user_local) >= 0);
 	CU_ASSERT_PTR_NOT_NULL_FATAL(user_local);
+	semanage_user_free(user_local);
 	CU_ASSERT(semanage_user_del_local(sh, key) >= 0);
 	CU_ASSERT(semanage_user_query_local(sh, key, &user_local) < 0);
 
 	/* cleanup */
+	semanage_user_key_free(key);
 	semanage_user_free(user);
 	cleanup_handle(SH_TRANS);
 }
@@ -682,6 +697,8 @@ void test_user_list_local(void)
 	/* cleanup */
 	for (unsigned int i = 0; i < count; i++)
 		semanage_user_free(records[i]);
+
+	free(records);
 
 	delete_local_user(I_FIRST);
 	delete_local_user(I_SECOND);
