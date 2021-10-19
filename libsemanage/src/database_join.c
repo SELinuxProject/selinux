@@ -77,10 +77,14 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 		goto err;
 
 	/* Sort for quicker merge later */
-	qsort(records1, rcount1, sizeof(record1_t *),
-	      (int (*)(const void *, const void *))rtable1->compare2_qsort);
-	qsort(records2, rcount2, sizeof(record2_t *),
-	      (int (*)(const void *, const void *))rtable2->compare2_qsort);
+	if (rcount1 > 0) {
+		qsort(records1, rcount1, sizeof(record1_t *),
+		      (int (*)(const void *, const void *))rtable1->compare2_qsort);
+	}
+	if (rcount2 > 0) {
+		qsort(records2, rcount2, sizeof(record2_t *),
+		      (int (*)(const void *, const void *))rtable2->compare2_qsort);
+	}
 
 	/* Now merge into this dbase */
 	while (i < rcount1 || j < rcount2) {
