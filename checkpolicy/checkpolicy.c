@@ -87,6 +87,7 @@
 #include <sepol/policydb/hierarchy.h>
 #include <sepol/policydb/expand.h>
 #include <sepol/policydb/link.h>
+#include <sepol/policydb/validate.h>
 
 #include "queue.h"
 #include "checkpolicy.h"
@@ -650,6 +651,11 @@ int main(int argc, char **argv)
 			fprintf(stderr, "%s:  error optimizing policy\n", argv[0]);
 			exit(1);
 		}
+	}
+
+	if (validate_policydb(NULL, policydbp)) {
+		fprintf(stderr, "%s:  validation of generated policy failed\n", argv[0]);
+		exit(1);
 	}
 
 	if (outfile) {
