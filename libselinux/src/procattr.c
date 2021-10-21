@@ -68,7 +68,7 @@ void  __attribute__((destructor)) procattr_destructor(void)
 static inline void init_thread_destructor(void)
 {
 	if (destructor_initialized == 0) {
-		__selinux_setspecific(destructor_key, (void *)1);
+		__selinux_setspecific(destructor_key, /* some valid address to please GCC */ &selinux_page_size);
 		destructor_initialized = 1;
 	}
 }
