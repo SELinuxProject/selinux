@@ -2683,7 +2683,10 @@ static int filename_trans_read_one_compat(policydb_t *p, struct policy_file *fp)
 	if (rc < 0)
 		goto err;
 
-	stype  = le32_to_cpu(buf[0]);
+	stype = le32_to_cpu(buf[0]);
+	if (stype == 0)
+		goto err;
+
 	ttype  = le32_to_cpu(buf[1]);
 	tclass = le32_to_cpu(buf[2]);
 	otype  = le32_to_cpu(buf[3]);
