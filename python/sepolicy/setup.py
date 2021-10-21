@@ -6,7 +6,7 @@ from distutils.core import setup
 
 setup(
     name="sepolicy",
-    version="3.3-rc3",
+    version="3.3",
     description="Python SELinux Policy Analyses bindings",
     author="Daniel Walsh",
     author_email="dwalsh@redhat.com",
