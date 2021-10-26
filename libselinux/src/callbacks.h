@@ -10,9 +10,11 @@
 #include <string.h>
 #include <selinux/selinux.h>
 
+#include "selinux_internal.h"
+
 /* callback pointers */
 extern int __attribute__ ((format(printf, 2, 3)))
-(*selinux_log) (int type, const char *, ...) ;
+(*selinux_log_direct) (int type, const char *, ...) ;
 
 extern int
 (*selinux_audit) (void *, security_class_t, char *, size_t) ;
@@ -25,5 +27,14 @@ extern int
 
 extern int
 (*selinux_netlink_policyload) (int seqno) ;
+
+/* Thread-safe selinux_log() function */
+extern pthread_mutex_t log_mutex;
+
+#define selinux_log(type, ...) do { \
+	__pthread_mutex_lock(&log_mutex); \
+	selinux_log_direct(type, __VA_ARGS__); \
+	__pthread_mutex_unlock(&log_mutex); \
+} while(0)
 
 #endif				/* _SELINUX_CALLBACKS_H_ */

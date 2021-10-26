@@ -10,6 +10,8 @@
 #include <selinux/selinux.h>
 #include "callbacks.h"
 
+pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 /* default implementations */
 static int __attribute__ ((format(printf, 2, 3)))
 default_selinux_log(int type __attribute__((unused)), const char *fmt, ...)
@@ -56,7 +58,7 @@ default_selinux_policyload(int seqno __attribute__((unused)))
 
 /* callback pointers */
 int __attribute__ ((format(printf, 2, 3)))
-(*selinux_log)(int, const char *, ...) =
+(*selinux_log_direct)(int, const char *, ...) =
 	default_selinux_log;
 
 int
@@ -81,7 +83,7 @@ selinux_set_callback(int type, union selinux_callback cb)
 {
 	switch (type) {
 	case SELINUX_CB_LOG:
-		selinux_log = cb.func_log;
+		selinux_log_direct = cb.func_log;
 		break;
 	case SELINUX_CB_AUDIT:
 		selinux_audit = cb.func_audit;
@@ -106,7 +108,7 @@ selinux_get_callback(int type)
 
 	switch (type) {
 	case SELINUX_CB_LOG:
-		cb.func_log = selinux_log;
+		cb.func_log = selinux_log_direct;
 		break;
 	case SELINUX_CB_AUDIT:
 		cb.func_audit = selinux_audit;
