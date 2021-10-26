@@ -411,6 +411,7 @@ typedef struct file_spec {
 } file_spec_t;
 
 static file_spec_t *fl_head;
+static pthread_mutex_t fl_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /*
  * Try to add an association between an inode and a context. If there is a
@@ -423,6 +424,8 @@ static int filespec_add(ino_t ino, const char *con, const char *file,
 	file_spec_t *prevfl, *fl;
 	int h, ret;
 	struct stat64 sb;
+
+	__pthread_mutex_lock(&fl_mutex);
 
 	if (!fl_head) {
 		fl_head = calloc(HASH_BUCKETS, sizeof(file_spec_t));
@@ -444,11 +447,11 @@ static int filespec_add(ino_t ino, const char *con, const char *file,
 				fl->con = strdup(con);
 				if (!fl->con)
 					goto oom;
-				return 1;
+				goto unlock_1;
 			}
 
 			if (strcmp(fl->con, con) == 0)
-				return 1;
+				goto unlock_1;
 
 			selinux_log(SELINUX_ERROR,
 				"conflicting specifications for %s and %s, using %s.\n",
@@ -457,6 +460,9 @@ static int filespec_add(ino_t ino, const char *con, const char *file,
 			fl->file = strdup(file);
 			if (!fl->file)
 				goto oom;
+
+			__pthread_mutex_unlock(&fl_mutex);
+
 			if (flags->conflicterror) {
 				selinux_log(SELINUX_ERROR,
 				"treating conflicting specifications as an error.\n");
@@ -481,13 +487,19 @@ static int filespec_add(ino_t ino, const char *con, const char *file,
 		goto oom_freefl;
 	fl->next = prevfl->next;
 	prevfl->next = fl;
+
+	__pthread_mutex_unlock(&fl_mutex);
 	return 0;
 
 oom_freefl:
 	free(fl);
 oom:
+	__pthread_mutex_unlock(&fl_mutex);
 	selinux_log(SELINUX_ERROR, "%s:  Out of memory\n", __func__);
 	return -1;
+unlock_1:
+	__pthread_mutex_unlock(&fl_mutex);
+	return 1;
 }
 
 /*
