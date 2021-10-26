@@ -51,7 +51,7 @@ struct spec {
 	bool regex_compiled; /* bool to indicate if the regex is compiled */
 	pthread_mutex_t regex_lock; /* lock for lazy compilation of regex */
 	mode_t mode;		/* mode format value */
-	int matches;		/* number of matching pathnames */
+	bool any_matches;	/* did any pathname match? */
 	int stem_id;		/* indicates which stem-compression item */
 	char hasMetaChars;	/* regular expression has meta-chars */
 	char from_mmap;		/* this spec is from an mmap of the data */

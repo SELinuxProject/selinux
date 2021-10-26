@@ -951,7 +951,12 @@ static struct spec **lookup_all(struct selabel_handle *rec,
 			rc = regex_match(spec->regex, key, partial);
 			if (rc == REGEX_MATCH || (partial && rc == REGEX_MATCH_PARTIAL)) {
 				if (rc == REGEX_MATCH) {
-					spec->matches++;
+#ifdef __ATOMIC_RELAXED
+					__atomic_store_n(&spec->any_matches,
+							 true, __ATOMIC_RELAXED);
+#else
+#error "Please use a compiler that supports __atomic builtins"
+#endif
 				}
 
 				if (strcmp(spec_arr[i].lr.ctx_raw, "<<none>>") == 0) {
@@ -1249,9 +1254,15 @@ static void stats(struct selabel_handle *rec)
 	struct saved_data *data = (struct saved_data *)rec->data;
 	unsigned int i, nspec = data->nspec;
 	struct spec *spec_arr = data->spec_arr;
+	bool any_matches;
 
 	for (i = 0; i < nspec; i++) {
-		if (spec_arr[i].matches == 0) {
+#ifdef __ATOMIC_RELAXED
+		any_matches = __atomic_load_n(&spec_arr[i].any_matches, __ATOMIC_RELAXED);
+#else
+#error "Please use a compiler that supports __atomic builtins"
+#endif
+		if (!any_matches) {
 			if (spec_arr[i].type_str) {
 				COMPAT_LOG(SELINUX_WARNING,
 				    "Warning!  No matches for (%s, %s, %s)\n",
