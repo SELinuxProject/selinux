@@ -69,6 +69,22 @@ extern int selinux_page_size ;
 			pthread_mutex_unlock(LOCK);		\
 	} while (0)
 
+#pragma weak pthread_create
+#pragma weak pthread_join
+#pragma weak pthread_cond_init
+#pragma weak pthread_cond_signal
+#pragma weak pthread_cond_destroy
+#pragma weak pthread_cond_wait
+
+/* check if all functions needed to do parallel operations are available */
+#define __pthread_supported (					\
+	pthread_create &&					\
+	pthread_join &&						\
+	pthread_cond_init &&					\
+	pthread_cond_destroy &&					\
+	pthread_cond_signal &&					\
+	pthread_cond_wait					\
+)
 
 #define SELINUXDIR "/etc/selinux/"
 #define SELINUXCONFIG SELINUXDIR "config"

@@ -2,6 +2,7 @@
 #define _RESTORECON_H_
 
 #include <sys/types.h>
+#include <stddef.h>
 #include <stdarg.h>
 
 #ifdef __cplusplus
@@ -23,6 +24,19 @@ extern "C" {
  */
 extern int selinux_restorecon(const char *pathname,
 				    unsigned int restorecon_flags);
+/**
+ * selinux_restorecon_parallel - Relabel files, optionally use more threads.
+ * @pathname: specifies file/directory to relabel.
+ * @restorecon_flags: specifies the actions to be performed when relabeling.
+ * @nthreads: specifies the number of threads to use (0 = use number of CPUs
+ *            currently online)
+ *
+ * Same as selinux_restorecon(3), but allows to use multiple threads to do
+ * the work.
+ */
+extern int selinux_restorecon_parallel(const char *pathname,
+				       unsigned int restorecon_flags,
+				       size_t nthreads);
 /*
  * restorecon_flags options
  */

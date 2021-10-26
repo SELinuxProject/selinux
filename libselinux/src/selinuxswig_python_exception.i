@@ -1183,6 +1183,14 @@
   }
 }
 
+%exception selinux_restorecon_parallel {
+  $action
+  if (result < 0) {
+     PyErr_SetFromErrno(PyExc_OSError);
+     SWIG_fail;
+  }
+}
+
 %exception selinux_restorecon_set_alt_rootpath {
   $action
   if (result < 0) {

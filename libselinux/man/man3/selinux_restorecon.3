@@ -11,6 +11,14 @@ selinux_restorecon \- restore file(s) default SELinux security contexts
 .br
 .BI "unsigned int " restorecon_flags ");"
 .in
+.sp
+.BI "int selinux_restorecon_parallel(const char *" pathname ,
+.in +\w'int selinux_restorecon_parallel('u
+.br
+.BI "unsigned int " restorecon_flags ","
+.br
+.BI "size_t " nthreads ");"
+.in
 .
 .SH "DESCRIPTION"
 .BR selinux_restorecon ()
@@ -187,6 +195,27 @@ unless the
 .B SELINUX_RESTORECON_IGNORE_MOUNTS
 flag has been set.
 .RE
+.sp
+.BR selinux_restorecon_parallel()
+is similar to
+.BR selinux_restorecon (3),
+but accepts another parameter that allows to run relabeling over multiple
+threads:
+.sp
+.RS
+.IR nthreads
+specifies the number of threads to use during relabeling. When set to 1,
+the behavior is the same as calling
+.BR selinux_restorecon (3).
+When set to 0, the function will try to use as many threads as there are
+online CPU cores. When set to any other number, the function will try to use
+the given number of threads.
+.sp
+Note that to use the parallel relabeling capability, the calling process
+must be linked with the
+.B libpthread
+library (either at compile time or dynamically at run time). Otherwise the
+function will print a warning and fall back to the single threaded mode.
 .
 .SH "RETURN VALUE"
 On success, zero is returned.  On error, \-1 is returned and

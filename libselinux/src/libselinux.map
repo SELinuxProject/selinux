@@ -240,3 +240,8 @@ LIBSELINUX_1.0 {
   local:
     *;
 };
+
+LIBSELINUX_3.3 {
+  global:
+    selinux_restorecon_parallel;
+} LIBSELINUX_1.0;
