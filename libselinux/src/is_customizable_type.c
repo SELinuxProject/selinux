@@ -9,7 +9,10 @@
 #include "selinux_internal.h"
 #include "context_internal.h"
 
-static int get_customizable_type_list(char *** retlist)
+static char **customizable_list = NULL;
+static pthread_once_t customizable_once = PTHREAD_ONCE_INIT;
+
+static void customizable_init(void)
 {
 	FILE *fp;
 	char *buf;
@@ -18,12 +21,12 @@ static int get_customizable_type_list(char *** retlist)
 
 	fp = fopen(selinux_customizable_types_path(), "re");
 	if (!fp)
-		return -1;
+		return;
 
 	buf = malloc(selinux_page_size);
 	if (!buf) {
 		fclose(fp);
-		return -1;
+		return;
 	}
 	while (fgets_unlocked(buf, selinux_page_size, fp) && ctr < UINT_MAX) {
 		ctr++;
@@ -54,12 +57,9 @@ static int get_customizable_type_list(char *** retlist)
 	fclose(fp);
 	free(buf);
 	if (!list)
-		return -1;
-	*retlist = list;
-	return 0;
+		return;
+	customizable_list = list;
 }
-
-static char **customizable_list = NULL;
 
 int is_context_customizable(const char * scontext)
 {
@@ -67,10 +67,9 @@ int is_context_customizable(const char * scontext)
 	const char *type;
 	context_t c;
 
-	if (!customizable_list) {
-		if (get_customizable_type_list(&customizable_list) != 0)
-			return -1;
-	}
+	__selinux_once(customizable_once, customizable_init);
+	if (!customizable_list)
+		return -1;
 
 	c = context_new(scontext);
 	if (!c)
