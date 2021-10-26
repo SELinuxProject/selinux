@@ -33,6 +33,8 @@ restorecon \- restore file(s) default SELinux security contexts.
 .RB [ \-W ]
 .RB [ \-I | \-D ]
 .RB [ \-x ]
+.RB [ \-T
+.IR nthreads ]
 
 .SH "DESCRIPTION"
 This manual page describes the
@@ -159,6 +161,13 @@ produces input suitable for this mode.
 prevent
 .B restorecon
 from crossing file system boundaries.
+.TP
+.BI \-T \ nthreads
+use up to
+.I nthreads
+threads.  Specify 0 to create as many threads as there are available
+CPU cores; 1 to use only a single thread (default); or any positive
+number to use the given number of threads (if possible).
 .TP
 .SH "ARGUMENTS"
 .IR pathname \ ...
