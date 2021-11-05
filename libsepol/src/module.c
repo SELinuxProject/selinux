@@ -293,11 +293,14 @@ static int link_netfilter_contexts(sepol_module_package_t * base,
 	}
 	base->netfilter_contexts = base_context;
 	for (i = 0; i < num_modules; i++) {
-		memcpy(base->netfilter_contexts + base->netfilter_contexts_len,
-		       modules[i]->netfilter_contexts,
-		       modules[i]->netfilter_contexts_len);
-		base->netfilter_contexts_len +=
-		    modules[i]->netfilter_contexts_len;
+		if (modules[i]->netfilter_contexts_len > 0) {
+			memcpy(base->netfilter_contexts + base->netfilter_contexts_len,
+			       modules[i]->netfilter_contexts,
+			       modules[i]->netfilter_contexts_len);
+			base->netfilter_contexts_len +=
+			    modules[i]->netfilter_contexts_len;
+		}
+
 	}
 	return 0;
 }
