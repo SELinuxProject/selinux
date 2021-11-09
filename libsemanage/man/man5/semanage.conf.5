@@ -23,7 +23,7 @@ Management library writes to the SELinux policy module store directly (this is t
 Otherwise a socket path or a server name can be used for the argument.
 If the argument begins with "/" (as in "/foo/bar"), it represents the path to a named socket that should be used to connect the policy management
 server.
-If the argument does not begin with a "/" (as in "foo.com:4242"), it should be interpreted as the name of a remote policy management server
+If the argument does not begin with a "/" (as in "example.com:4242"), it should be interpreted as the name of a remote policy management server
 to be used through a TCP connection (default port is 4242 unless a different one is specified after the server name using the colon to separate
 the two fields).
 
