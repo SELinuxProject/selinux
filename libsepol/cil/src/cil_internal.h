@@ -730,14 +730,14 @@ struct cil_context {
 };
 
 enum cil_filecon_types {
-	CIL_FILECON_FILE = 1,
+	CIL_FILECON_ANY = 0,
+	CIL_FILECON_FILE,
 	CIL_FILECON_DIR,
 	CIL_FILECON_CHAR,
 	CIL_FILECON_BLOCK,
 	CIL_FILECON_SOCKET,
 	CIL_FILECON_PIPE,
 	CIL_FILECON_SYMLINK,
-	CIL_FILECON_ANY
 };
 
 struct cil_filecon {

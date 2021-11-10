@@ -4229,7 +4229,9 @@ int cil_gen_filecon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 
 	filecon->path_str = parse_current->next->data;
 
-	if (type == CIL_KEY_FILE) {
+	if (type == CIL_KEY_ANY) {
+		filecon->type = CIL_FILECON_ANY;
+	} else if (type == CIL_KEY_FILE) {
 		filecon->type = CIL_FILECON_FILE;
 	} else if (type == CIL_KEY_DIR) {
 		filecon->type = CIL_FILECON_DIR;
@@ -4243,8 +4245,6 @@ int cil_gen_filecon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 		filecon->type = CIL_FILECON_PIPE;
 	} else if (type == CIL_KEY_SYMLINK) {
 		filecon->type = CIL_FILECON_SYMLINK;
-	} else if (type == CIL_KEY_ANY) {
-		filecon->type = CIL_FILECON_ANY;
 	} else {
 		cil_log(CIL_ERR, "Invalid file type\n");
 		rc = SEPOL_ERR;
