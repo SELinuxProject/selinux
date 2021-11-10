@@ -2577,6 +2577,7 @@ void cil_genfscon_init(struct cil_genfscon **genfscon)
 
 	(*genfscon)->fs_str = NULL;
 	(*genfscon)->path_str = NULL;
+	(*genfscon)->file_type = CIL_FILECON_ANY;
 	(*genfscon)->context_str = NULL;
 	(*genfscon)->context = NULL;
 }

@@ -3462,6 +3462,43 @@ int cil_genfscon_to_policydb(policydb_t *pdb, struct cil_sort *genfscons)
 
 		new_ocon->u.name = cil_strdup(cil_genfscon->path_str);
 
+		if (cil_genfscon->file_type != CIL_FILECON_ANY) {
+			class_datum_t *class_datum;
+			const char *class_name;
+			switch (cil_genfscon->file_type) {
+			case CIL_FILECON_FILE:
+				class_name = "file";
+				break;
+			case CIL_FILECON_DIR:
+				class_name = "dir";
+				break;
+			case CIL_FILECON_CHAR:
+				class_name = "chr_file";
+				break;
+			case CIL_FILECON_BLOCK:
+				class_name = "blk_file";
+				break;
+			case CIL_FILECON_SOCKET:
+				class_name = "sock_file";
+				break;
+			case CIL_FILECON_PIPE:
+				class_name = "fifo_file";
+				break;
+			case CIL_FILECON_SYMLINK:
+				class_name = "lnk_file";
+				break;
+			default:
+				rc = SEPOL_ERR;
+				goto exit;
+			}
+			class_datum = hashtab_search(pdb->p_classes.table, class_name);
+			if (!class_datum) {
+				rc = SEPOL_ERR;
+				goto exit;
+			}
+			new_ocon->v.sclass = class_datum->s.value;
+		}
+
 		rc = __cil_context_to_sepol_context(pdb, cil_genfscon->context, &new_ocon->context[0]);
 		if (rc != SEPOL_OK) {
 			goto exit;

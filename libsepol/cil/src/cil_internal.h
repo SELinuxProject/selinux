@@ -791,6 +791,7 @@ struct cil_ipaddr {
 struct cil_genfscon {
 	char *fs_str;
 	char *path_str;
+	enum cil_filecon_types file_type;
 	char *context_str;
 	struct cil_context *context;
 };

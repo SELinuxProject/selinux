@@ -1328,6 +1328,33 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		struct cil_genfscon *genfscon = node->data;
 		fprintf(out, "(genfscon ");
 		fprintf(out, "%s \"%s\" ", genfscon->fs_str, genfscon->path_str);
+		if (genfscon->file_type != CIL_FILECON_ANY) {
+			switch (genfscon->file_type) {
+			case CIL_FILECON_FILE:
+				fprintf(out, "%s ", CIL_KEY_FILE);
+				break;
+			case CIL_FILECON_DIR:
+				fprintf(out, "%s ", CIL_KEY_DIR);
+				break;
+			case CIL_FILECON_CHAR:
+				fprintf(out, "%s ", CIL_KEY_CHAR);
+				break;
+			case CIL_FILECON_BLOCK:
+				fprintf(out, "%s ", CIL_KEY_BLOCK);
+				break;
+			case CIL_FILECON_SOCKET:
+				fprintf(out, "%s ", CIL_KEY_SOCKET);
+				break;
+			case CIL_FILECON_PIPE:
+				fprintf(out, "%s ", CIL_KEY_PIPE);
+				break;
+			case CIL_FILECON_SYMLINK:
+				fprintf(out, "%s ", CIL_KEY_SYMLINK);
+				break;
+			default:
+				fprintf(out, "<?FILETYPE> ");
+			}
+		}
 		if (genfscon->context)
 			write_context(out, genfscon->context, CIL_TRUE);
 		else

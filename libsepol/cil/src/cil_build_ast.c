@@ -4572,9 +4572,11 @@ int cil_gen_genfscon(struct cil_db *db, struct cil_tree_node *parse_current, str
 		CIL_SYN_STRING,
 		CIL_SYN_STRING,
 		CIL_SYN_STRING | CIL_SYN_LIST,
+		CIL_SYN_STRING | CIL_SYN_LIST | CIL_SYN_END,
 		CIL_SYN_END
 	};
 	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
+	struct cil_tree_node *context_node;
 	int rc = SEPOL_ERR;
 	struct cil_genfscon *genfscon = NULL;
 
@@ -4592,15 +4594,48 @@ int cil_gen_genfscon(struct cil_db *db, struct cil_tree_node *parse_current, str
 	genfscon->fs_str = parse_current->next->data;
 	genfscon->path_str = parse_current->next->next->data;
 
-	if (parse_current->next->next->next->cl_head == NULL ) {
-		genfscon->context_str = parse_current->next->next->next->data;
+	if (parse_current->next->next->next->next) {
+		/* (genfscon <FS_STR> <PATH_STR> <FILE_TYPE> ... */
+		char *file_type = parse_current->next->next->next->data;
+		if (file_type == CIL_KEY_ANY) {
+			genfscon->file_type = CIL_FILECON_ANY;
+		} else if (file_type == CIL_KEY_FILE) {
+			genfscon->file_type = CIL_FILECON_FILE;
+		} else if (file_type == CIL_KEY_DIR) {
+			genfscon->file_type = CIL_FILECON_DIR;
+		} else if (file_type == CIL_KEY_CHAR) {
+			genfscon->file_type = CIL_FILECON_CHAR;
+		} else if (file_type == CIL_KEY_BLOCK) {
+			genfscon->file_type = CIL_FILECON_BLOCK;
+		} else if (file_type == CIL_KEY_SOCKET) {
+			genfscon->file_type = CIL_FILECON_SOCKET;
+		} else if (file_type == CIL_KEY_PIPE) {
+			genfscon->file_type = CIL_FILECON_PIPE;
+		} else if (file_type == CIL_KEY_SYMLINK) {
+			genfscon->file_type = CIL_FILECON_SYMLINK;
+		} else {
+			if (parse_current->next->next->next->cl_head) {
+				cil_log(CIL_ERR, "Expecting file type, but found a list\n");
+			} else {
+				cil_log(CIL_ERR, "Invalid file type \"%s\"\n", file_type);
+			}
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+		context_node = parse_current->next->next->next->next;
 	} else {
-		cil_context_init(&genfscon->context);
+		/* (genfscon <FS_STR> <PATH_STR> ... */
+		context_node = parse_current->next->next->next;
+	}
 
-		rc = cil_fill_context(parse_current->next->next->next->cl_head, genfscon->context);
+	if (context_node->cl_head) {
+		cil_context_init(&genfscon->context);
+		rc = cil_fill_context(context_node->cl_head, genfscon->context);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
+	} else {
+		genfscon->context_str = context_node->data;
 	}
 
 	ast_node->data = genfscon;
