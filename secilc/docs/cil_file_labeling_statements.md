@@ -36,11 +36,13 @@ Define entries for labeling files. The compiler will produce these entries in a 
 <col width="44%" />
 <col width="55%" />
 </colgroup>
-<tbody>
+<thead>
 <tr class="odd">
 <td align="left"><p><strong>keyword</strong></p></td>
 <td align="left"><p><strong>file_contexts entry</strong></p></td>
 </tr>
+</thead>
+<tbody>
 <tr class="even">
 <td align="left"><p><code>file</code></p></td>
 <td align="left"><p><code>--</code></p></td>
@@ -185,7 +187,7 @@ Used to allocate a security context to filesystems that cannot support any of th
 **Statement definition:**
 
 ```secil
-    (genfscon fsname path context_id)
+    (genfscon fsname path [file_type] context_id)
 ```
 
 **Where:**
@@ -209,6 +211,10 @@ Used to allocate a security context to filesystems that cannot support any of th
 <td align="left"><p>If <code>fsname</code> is <code>proc</code>, then the partial path (see examples). For all other types this must be ‘<code>/</code>’.</p></td>
 </tr>
 <tr class="even">
+<td align="left"><p><code>file_type</code></p></td>
+<td align="left"><p>Optional keyword representing a file type. Valid values are the same as in [`filecon`](cil_file_labeling_statements.md#filecon) rules.</p></td>
+</tr>
+<tr class="odd">
 <td align="left"><p><code>context_id</code></p></td>
 <td align="left"><p>A previously declared <code>context</code> identifier or an anonymous security context (<code>user role type levelrange</code>), the range MUST be defined whether the policy is MLS/MCS enabled or not.</p></td>
 </tr>
