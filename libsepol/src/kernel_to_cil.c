@@ -2645,6 +2645,8 @@ static int write_genfscon_rules_to_cil(FILE *out, struct policydb *pdb)
 	struct ocontext *ocon;
 	struct strs *strs;
 	char *fstype, *name, *ctx;
+	uint32_t sclass;
+	const char *file_type;
 	int rc;
 
 	rc = strs_init(&strs, 32);
@@ -2657,14 +2659,43 @@ static int write_genfscon_rules_to_cil(FILE *out, struct policydb *pdb)
 			fstype = genfs->fstype;
 			name = ocon->u.name;
 
+			sclass = ocon->v.sclass;
+			file_type = NULL;
+			if (sclass) {
+				const char *class_name = pdb->p_class_val_to_name[sclass-1];
+				if (strcmp(class_name, "file") == 0) {
+					file_type = "file";
+				} else if (strcmp(class_name, "dir") == 0) {
+					file_type = "dir";
+				} else if (strcmp(class_name, "chr_file") == 0) {
+					file_type = "char";
+				} else if (strcmp(class_name, "blk_file") == 0) {
+					file_type = "block";
+				} else if (strcmp(class_name, "sock_file") == 0) {
+					file_type = "socket";
+				} else if (strcmp(class_name, "fifo_file") == 0) {
+					file_type = "pipe";
+				} else if (strcmp(class_name, "lnk_file") == 0) {
+					file_type = "symlink";
+				} else {
+					rc = -1;
+					goto exit;
+				}
+			}
+
 			ctx = context_to_str(pdb, &ocon->context[0]);
 			if (!ctx) {
 				rc = -1;
 				goto exit;
 			}
 
-			rc = strs_create_and_add(strs, "(genfscon %s \"%s\" %s)", 3,
-						 fstype, name, ctx);
+			if (file_type) {
+				rc = strs_create_and_add(strs, "(genfscon %s \"%s\" %s %s)", 4,
+										 fstype, name, file_type, ctx);
+			} else {
+				rc = strs_create_and_add(strs, "(genfscon %s \"%s\" %s)", 3,
+										 fstype, name, ctx);
+			}
 			free(ctx);
 			if (rc != 0) {
 				goto exit;

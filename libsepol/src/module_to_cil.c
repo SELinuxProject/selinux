@@ -2955,10 +2955,35 @@ static int genfscon_to_cil(struct policydb *pdb)
 {
 	struct genfs *genfs;
 	struct ocontext *ocon;
+	uint32_t sclass;
 
 	for (genfs = pdb->genfs; genfs != NULL; genfs = genfs->next) {
 		for (ocon = genfs->head; ocon != NULL; ocon = ocon->next) {
-			cil_printf("(genfscon %s \"%s\" ", genfs->fstype, ocon->u.name);
+			sclass = ocon->v.sclass;
+			if (sclass) {
+				const char *file_type;
+				const char *class_name = pdb->p_class_val_to_name[sclass-1];
+				if (strcmp(class_name, "file") == 0) {
+					file_type = "file";
+				} else if (strcmp(class_name, "dir") == 0) {
+					file_type = "dir";
+				} else if (strcmp(class_name, "chr_file") == 0) {
+					file_type = "char";
+				} else if (strcmp(class_name, "blk_file") == 0) {
+					file_type = "block";
+				} else if (strcmp(class_name, "sock_file") == 0) {
+					file_type = "socket";
+				} else if (strcmp(class_name, "fifo_file") == 0) {
+					file_type = "pipe";
+				} else if (strcmp(class_name, "lnk_file") == 0) {
+					file_type = "symlink";
+				} else {
+					return -1;
+				}
+				cil_printf("(genfscon %s \"%s\" %s ", genfs->fstype, ocon->u.name, file_type);
+			} else {
+				cil_printf("(genfscon %s \"%s\" ", genfs->fstype, ocon->u.name);
+			}
 			context_to_cil(pdb, &ocon->context[0]);
 			cil_printf(")\n");
 		}
