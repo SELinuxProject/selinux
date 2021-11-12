@@ -11,6 +11,8 @@
 #include <syslog.h>
 #include <selinux/selinux.h>
 #include <selinux/context.h>
+
+#include "mcscolor.h"
 #include "mcstrans.h"
 
 /* Define data structures */
