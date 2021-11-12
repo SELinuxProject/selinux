@@ -7,6 +7,8 @@ typedef sepol_context_t semanage_context_t;
 
 #define _SEMANAGE_CONTEXT_DEFINED_
 
+#include <semanage/context_record.h>
+
 /* User */
 const char *semanage_context_get_user(const semanage_context_t * con)
 {
