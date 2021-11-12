@@ -16,6 +16,8 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <sys/un.h>
+
+#include "mcscolor.h"
 #include "mcstrans.h"
 
 #ifdef UNUSED
@@ -42,15 +44,6 @@
 #else
 #define log_debug(fmt, ...) do {} while (0)
 #endif
-
-extern int init_translations(void);
-extern void finish_context_translations(void);
-extern int trans_context(const char *, char **);
-extern int untrans_context(const char *, char **);
-
-extern int init_colors(void);
-extern void finish_context_colors(void);
-extern int raw_color(const char *, char **);
 
 #define SETRANSD_PATHNAME "/sbin/mcstransd"
 
@@ -514,7 +507,7 @@ initialize(void)
 
 }
 
-void dropprivs(void)
+static void dropprivs(void)
 {
 	cap_t new_caps;
 

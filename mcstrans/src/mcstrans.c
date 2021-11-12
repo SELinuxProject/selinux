@@ -136,7 +136,7 @@ typedef struct cat_constraint {
 
 static cat_constraint_t *cat_constraints;
 
-unsigned int
+static unsigned int
 hash(const char *str) {
 	unsigned int hash = 5381;
 	int c;
@@ -213,7 +213,7 @@ parse_category(ebitmap_t *e, const char *raw, int allowinverse)
 	return 0;
 }
 
-int
+static int
 parse_ebitmap(ebitmap_t *e, ebitmap_t *def, const char *raw) {
 	int rc = ebitmap_cpy(e, def);
 	if (rc < 0)
@@ -224,7 +224,7 @@ parse_ebitmap(ebitmap_t *e, ebitmap_t *def, const char *raw) {
 	return 0;
 }
 
-mls_level_t *
+static mls_level_t *
 parse_raw(const char *raw) {
 	mls_level_t *mls = calloc(1, sizeof(mls_level_t));
 	if (!mls)
@@ -248,7 +248,7 @@ err:
 	return NULL;
 }
 
-void
+static void
 destroy_word(word_t **list, word_t *word) {
 	if (!word) {
 		return;
@@ -267,7 +267,7 @@ destroy_word(word_t **list, word_t *word) {
 	free(word);
 }
 
-word_t *
+static word_t *
 create_word(word_t **list, const char *text) {
 	word_t *w = calloc(1, sizeof(word_t));
 	if (!w) {
@@ -291,7 +291,7 @@ err:
 	return NULL;
 }
 
-void
+static void
 destroy_group(word_group_t **list, word_group_t *group) {
 	for (; list && *list; list = &(*list)->next) {
 		if (*list == group) {
@@ -324,7 +324,7 @@ destroy_group(word_group_t **list, word_group_t *group) {
 	free(group);
 }
 
-word_group_t *
+static word_group_t *
 create_group(word_group_t **list, const char *name) {
 	word_group_t *group = calloc(1, sizeof(word_group_t));
 	if (!group)
@@ -357,7 +357,7 @@ err:
 	return NULL;
 }
 
-void
+static void
 destroy_domain(domain_t *domain) {
 	int i;
         unsigned int rt = 0, tr = 0;
@@ -401,7 +401,7 @@ destroy_domain(domain_t *domain) {
 	syslog(LOG_INFO, "cache sizes: tr = %u, rt = %u", tr, rt);
 }
 
-domain_t *
+static domain_t *
 create_domain(const char *name) {
 	domain_t *domain = calloc(1, sizeof(domain_t));
 	if (!domain) {
@@ -425,7 +425,7 @@ err:
 	return NULL;
 }
 
-int
+static int
 add_word(word_group_t *group, char *raw, char *trans) {
 	if (strchr(trans,'-')) {
 		log_error("'%s'is invalid because '-' is illegal in modifiers.\n", trans);
@@ -451,7 +451,7 @@ add_word(word_group_t *group, char *raw, char *trans) {
 	return 0;
 }
 
-int
+static int
 add_constraint(char op, char *raw, char *tok) {
 	log_debug("%s\n", "add_constraint");
 	ebitmap_t empty;
@@ -521,7 +521,7 @@ add_constraint(char op, char *raw, char *tok) {
 	return 0;
 }
 
-int
+static int
 violates_constraints(mls_level_t *l) {
 	int nbits;
 	sens_constraint_t *s;
@@ -563,7 +563,7 @@ violates_constraints(mls_level_t *l) {
 	return 0;
 }
 
-void
+static void
 destroy_sens_constraint(sens_constraint_t **list, sens_constraint_t *constraint) {
 	if (!constraint) {
 		return;
@@ -580,7 +580,7 @@ destroy_sens_constraint(sens_constraint_t **list, sens_constraint_t *constraint)
 	free(constraint);
 }
 
-void
+static void
 destroy_cat_constraint(cat_constraint_t **list, cat_constraint_t *constraint) {
 	if (!constraint) {
 		return;
@@ -663,7 +663,7 @@ find_in_table(context_map_node_t **table, const char *key) {
 	return NULL;
 }
 
-char *
+static char *
 trim(char *str, const char *whitespace) {
 	char *p = str + strlen(str);
 
@@ -672,7 +672,7 @@ trim(char *str, const char *whitespace) {
 	return str;
 }
 
-char *
+static char *
 triml(char *str, const char *whitespace) {
 	char *p = str;
 
@@ -681,7 +681,7 @@ triml(char *str, const char *whitespace) {
 	return p;
 }
 
-int
+static int
 update(char **p, char *const val) {
 	free (*p);
 	*p = strdup(val);
@@ -692,7 +692,7 @@ update(char **p, char *const val) {
 	return 0;
 }
 
-int
+static int
 append(affix_t **affixes, const char *val) {
 	affix_t *affix = calloc(1, sizeof(affix_t));
 	if (!affix) {
@@ -887,7 +887,7 @@ init_translations(void) {
 	return(read_translations(selinux_translations_path()));
 }
 
-char *
+static char *
 extract_range(const char *incon) {
 	context_t con = context_new(incon);
 	if (!con) {
@@ -910,7 +910,7 @@ extract_range(const char *incon) {
 	return r;
 }
 
-char *
+static char *
 new_context_str(const char *incon, const char *range) {
 	char *rcon = NULL;
 	context_t con = context_new(incon);
@@ -931,7 +931,7 @@ exit:
 	return NULL;
 }
 
-char *
+static char *
 find_in_hashtable(const char *range, domain_t *domain, context_map_node_t **table) {
 	char *trans = NULL;
 	context_map_t *map = find_in_table(table, range);
@@ -944,13 +944,6 @@ find_in_hashtable(const char *range, domain_t *domain, context_map_node_t **tabl
 		log_debug(" found %s in hashtable returning %s\n", range, trans);
 	}
 	return trans;
-}
-
-void
-emit_whitespace(char*buffer, char *whitespace) {
-	strcat(buffer, "[");
-	strcat(buffer, whitespace);
-	strcat(buffer, "]");
 }
 
 static int
@@ -969,7 +962,7 @@ word_size(const void *p1, const void *p2) {
 	return (w2_len - w1_len);
 }
 
-void
+static void
 build_regexp(pcre **r, char *buffer) {
 	const char *error;
 	int error_offset;
@@ -982,7 +975,7 @@ build_regexp(pcre **r, char *buffer) {
 	buffer[0] = '\0';
 }
 
-int
+static int
 build_regexps(domain_t *domain) {
 	char buffer[1024 * 128];
 	buffer[0] = '\0';
@@ -1086,7 +1079,7 @@ build_regexps(domain_t *domain) {
 	return 0;
 }
 
-char *
+static char *
 compute_raw_from_trans(const char *level, domain_t *domain) {
 
 #ifdef DEBUG
@@ -1278,7 +1271,7 @@ err:
 	return NULL;
 }
 
-char *
+static char *
 compute_trans_from_raw(const char *level, domain_t *domain) {
 
 #ifdef DEBUG
