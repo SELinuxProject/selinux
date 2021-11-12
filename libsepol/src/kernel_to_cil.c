@@ -278,7 +278,7 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 	char *expr = NULL;
 	int is_mls;
 	char *perms;
-	const char *format_str;
+	const char *key_word;
 	struct strs *strs;
 
 	for (curr = constraint_rules; curr != NULL; curr = curr->next) {
@@ -291,14 +291,14 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 		perms = sepol_av_to_string(pdb, class->s.value, curr->permissions);
 
 		if (is_mls) {
-			format_str = "(mlsconstrain (%s (%s)) %s)";
+			key_word = "mlsconstrain";
 			strs = mls_list;
 		} else {
-			format_str = "(constrain (%s (%s)) %s)";
+			key_word = "constrain";
 			strs = non_mls_list;
 		}
 
-		rc = strs_create_and_add(strs, format_str, 3, classkey, perms+1, expr);
+		rc = strs_create_and_add(strs, "(%s (%s (%s)) %s)", 4, key_word, classkey, perms+1, expr);
 		free(expr);
 		if (rc != 0) {
 			goto exit;
@@ -319,7 +319,7 @@ static int class_validatetrans_rules_to_strs(struct policydb *pdb, char *classke
 	struct constraint_node *curr;
 	char *expr = NULL;
 	int is_mls;
-	const char *format_str;
+	const char *key_word;
 	struct strs *strs;
 	int rc = 0;
 
@@ -331,14 +331,14 @@ static int class_validatetrans_rules_to_strs(struct policydb *pdb, char *classke
 		}
 
 		if (is_mls) {
-			format_str = "(mlsvalidatetrans %s %s)";
+			key_word = "mlsvalidatetrans";
 			strs = mls_list;
 		} else {
-			format_str = "(validatetrans %s %s)";
+			key_word = "validatetrans";
 			strs = non_mls_list;
 		}
 
-		rc = strs_create_and_add(strs, format_str, 2, classkey, expr);
+		rc = strs_create_and_add(strs, "(%s %s %s)", 3, key_word, classkey, expr);
 		free(expr);
 		if (rc != 0) {
 			goto exit;
@@ -1035,7 +1035,6 @@ static char *cats_ebitmap_to_str(struct ebitmap *cats, char **val_to_name)
 	struct ebitmap_node *node;
 	uint32_t i, start, range;
 	char *catsbuf = NULL, *p;
-	const char *fmt;
 	int len, remaining;
 
 	remaining = (int)cats_ebitmap_len(cats, val_to_name);
@@ -1063,9 +1062,15 @@ static char *cats_ebitmap_to_str(struct ebitmap *cats, char **val_to_name)
 			continue;
 
 		if (range > 1) {
-			fmt = (range == 2) ? "%s %s " : "(range %s %s) ";
-			len = snprintf(p, remaining, fmt,
-				       val_to_name[start], val_to_name[i]);
+			if (range == 2) {
+				len = snprintf(p, remaining, "%s %s ",
+					       val_to_name[start],
+					       val_to_name[i]);
+			} else {
+				len = snprintf(p, remaining, "(range %s %s) ",
+					       val_to_name[start],
+					       val_to_name[i]);
+			}
 		} else {
 			len = snprintf(p, remaining, "%s ", val_to_name[start]);
 		}
