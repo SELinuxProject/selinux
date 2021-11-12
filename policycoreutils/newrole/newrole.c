@@ -182,7 +182,7 @@ const char *service_name = "newrole";
  * program.  This is the only function in this program that makes PAM
  * calls.
  */
-int authenticate_via_pam(const char *ttyn, pam_handle_t * pam_handle)
+static int authenticate_via_pam(const char *ttyn, pam_handle_t * pam_handle)
 {
 
 	int result = 0;		/* set to 0 (not authenticated) by default */
@@ -348,7 +348,7 @@ static int read_pam_config(void)
  * This function uses the shadow passwd file to thenticate the user running
  * this program.
  */
-int authenticate_via_shadow_passwd(const char *uname)
+static int authenticate_via_shadow_passwd(const char *uname)
 {
 	struct spwd *p_shadow_line;
 	char *unencrypted_password_s;

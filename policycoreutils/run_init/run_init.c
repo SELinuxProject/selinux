@@ -86,8 +86,6 @@
 				  /* The file containing the context to run 
 				   * the scripts under.                     */
 
-int authenticate_via_pam(const struct passwd *);
-
 /* authenticate_via_pam()
  *
  * in:     p_passwd_line - struct containing data from our user's line in 
@@ -104,7 +102,7 @@ int authenticate_via_pam(const struct passwd *);
  *
  */
 
-int authenticate_via_pam(const struct passwd *p_passwd_line)
+static int authenticate_via_pam(const struct passwd *p_passwd_line)
 {
 
 	int result = 0;		/* our result, set to 0 (not authenticated) by default */
@@ -169,8 +167,6 @@ int authenticate_via_pam(const struct passwd *p_passwd_line)
 
 #define PASSWORD_PROMPT _("Password:")	/* prompt for getpass() */
 
-int authenticate_via_shadow_passwd(const struct passwd *);
-
 /* authenticate_via_shadow_passwd()
  *
  * in:     p_passwd_line - struct containing data from our user's line in 
@@ -187,7 +183,7 @@ int authenticate_via_shadow_passwd(const struct passwd *);
  *
  */
 
-int authenticate_via_shadow_passwd(const struct passwd *p_passwd_line)
+static int authenticate_via_shadow_passwd(const struct passwd *p_passwd_line)
 {
 
 	struct spwd *p_shadow_line;	/* struct derived from shadow passwd file line */
@@ -238,7 +234,7 @@ int authenticate_via_shadow_passwd(const struct passwd *p_passwd_line)
  * return:	0 When success
  *		-1 When failure
  */
-int authenticate_user(void)
+static int authenticate_user(void)
 {
 
 #define INITLEN 255
@@ -303,7 +299,7 @@ int authenticate_user(void)
  * out:		The CONTEXT associated with the context.
  * return:	0 on success, -1 on failure.
  */
-int get_init_context(char **context)
+static int get_init_context(char **context)
 {
 
 	FILE *fp;

@@ -47,7 +47,7 @@ static __attribute__((__noreturn__)) void usage(const char *const name)
 	exit(-1);
 }
 
-void set_rootpath(const char *arg)
+static void set_rootpath(const char *arg)
 {
 	if (strlen(arg) == 1 && strncmp(arg, "/", 1) == 0) {
 		fprintf(stderr, "%s:  invalid alt_rootpath: %s\n",
@@ -64,7 +64,7 @@ void set_rootpath(const char *arg)
 	}
 }
 
-int canoncon(char **contextp)
+static int canoncon(char **contextp)
 {
 	char *context = *contextp, *tmpcon;
 	int rc = 0;

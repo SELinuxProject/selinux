@@ -35,7 +35,7 @@ static unsigned int COL = 32;
 
 extern char *selinux_mnt;
 
-int cmp_cmdline(const char *command, int pid)
+static int cmp_cmdline(const char *command, int pid)
 {
 
 	char buf[BUFSIZE];
@@ -59,7 +59,7 @@ int cmp_cmdline(const char *command, int pid)
 		return 0;
 }
 
-int pidof(const char *command)
+static int pidof(const char *command)
 {
 /* inspired by killall5.c from psmisc */
 	char stackpath[PATH_MAX + 1], *p;
@@ -92,7 +92,7 @@ int pidof(const char *command)
 	return ret;
 }
 
-void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
+static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 {
 
 	FILE *fp = fopen(CONF, "r");
@@ -168,7 +168,7 @@ void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 	return;
 }
 
-void printf_tab(const char *outp)
+static void printf_tab(const char *outp)
 {
 	printf("%-*s", COL, outp);
 
