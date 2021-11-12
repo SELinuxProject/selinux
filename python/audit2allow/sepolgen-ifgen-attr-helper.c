@@ -56,7 +56,7 @@ static int perm_name(hashtab_key_t key, hashtab_datum_t datum, void *data)
 	return 0;
 }
 
-int render_access_mask(uint32_t av, avtab_key_t *key, policydb_t *policydbp,
+static int render_access_mask(uint32_t av, avtab_key_t *key, policydb_t *policydbp,
 		       FILE *fp)
 {
 	struct val_to_name v;
@@ -111,7 +111,7 @@ struct callback_data
 	FILE *fp;
 };
 
-int output_avrule(avtab_key_t *key, avtab_datum_t *datum, void *args)
+static int output_avrule(avtab_key_t *key, avtab_datum_t *datum, void *args)
 {
 	struct callback_data *cb_data = (struct callback_data *)args;
 
@@ -217,7 +217,7 @@ static policydb_t *load_policy(const char *filename)
 
 }
 
-void usage(char *progname)
+static void usage(char *progname)
 {
 	printf("usage: %s out_file [policy_file]\n", progname);
 }
