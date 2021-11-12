@@ -292,7 +292,7 @@ char *semanage_str_replace(const char *search, const char *replace,
  *
  * returns the newly created node or NULL on error
  */
-semanage_list_t *list_addafter_controlmem(semanage_list_t * item, char *data)
+static semanage_list_t *list_addafter_controlmem(semanage_list_t * item, char *data)
 {
 	semanage_list_t *temp = malloc(sizeof(semanage_list_t));
 
