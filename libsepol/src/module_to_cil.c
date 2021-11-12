@@ -1259,7 +1259,7 @@ static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *
 	char *val2 = NULL;
 	unsigned int num_params;
 	const char *op;
-	const char *fmt_str;
+	const char *sep;
 	const char *type;
 
 	rc = stack_init(&stack);
@@ -1308,11 +1308,11 @@ static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *
 					rc = -1;
 					goto exit;
 				}
-				fmt_str = "(%s %s)";
+				sep = "";
 			} else {
 				val2 = stack_pop(stack);
 				val1 = stack_pop(stack);
-				fmt_str = "(%s %s %s)";
+				sep = " ";
 			}
 
 			if (val1 == NULL || val2 == NULL) {
@@ -1334,10 +1334,7 @@ static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *
 				goto exit;
 			}
 
-			// although we always supply val2 and there isn't always a 2nd
-			// value, it should only be used when there are actually two values
-			// in the format strings
-			rlen = snprintf(new_val, len, fmt_str, op, val1, val2);
+			rlen = snprintf(new_val, len, "(%s %s%s%s)", op, val1, sep, val2);
 			if (rlen < 0 || rlen >= len) {
 				log_err("Failed to generate conditional expression");
 				rc = -1;
@@ -1711,7 +1708,7 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 	char *val2 = NULL;
 	uint32_t num_params;
 	const char *op;
-	const char *fmt_str;
+	const char *sep;
 	const char *attr1;
 	const char *attr2;
 	char *names = NULL;
@@ -1849,11 +1846,11 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 					rc = -1;
 					goto exit;
 				}
-				fmt_str = "(%s %s)";
+				sep = "";
 			} else {
 				val2 = stack_pop(stack);
 				val1 = stack_pop(stack);
-				fmt_str = "(%s %s %s)";
+				sep = " ";
 			}
 
 			if (val1 == NULL || val2 == NULL) {
@@ -1875,10 +1872,7 @@ static int constraint_expr_to_string(struct policydb *pdb, struct constraint_exp
 				goto exit;
 			}
 
-			// although we always supply val2 and there isn't always a 2nd
-			// value, it should only be used when there are actually two values
-			// in the format strings
-			rlen = snprintf(new_val, len, fmt_str, op, val1, val2);
+			rlen = snprintf(new_val, len, "(%s %s%s%s)", op, val1, sep, val2);
 			if (rlen < 0 || rlen >= len) {
 				log_err("Failed to generate constraint expression");
 				rc = -1;
