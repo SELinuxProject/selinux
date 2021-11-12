@@ -89,7 +89,7 @@ static int drop_privs(uid_t uid)
 /**
  * If the user sends a siginto to seunshare, kill the child's session
  */
-void handler(int sig) {
+static void handler(int sig) {
 	if (child > 0) kill(-child,sig);
 }
 
