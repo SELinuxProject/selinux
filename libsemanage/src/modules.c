@@ -168,6 +168,7 @@ const char *semanage_module_get_name(semanage_module_info_t * modinfo)
 /* Legacy function that remains to preserve ABI
  * compatibility.
  */
+extern const char *semanage_module_get_version(semanage_module_info_t *);
 const char *semanage_module_get_version(semanage_module_info_t * modinfo
 				__attribute__ ((unused)))
 {
