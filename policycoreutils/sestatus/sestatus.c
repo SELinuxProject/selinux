@@ -170,9 +170,7 @@ void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 
 void printf_tab(const char *outp)
 {
-	char buf[20];
-	snprintf(buf, sizeof(buf), "%%-%us", COL);
-	printf(buf, outp);
+	printf("%-*s", COL, outp);
 
 }
 
