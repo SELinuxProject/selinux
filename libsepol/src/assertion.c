@@ -216,6 +216,7 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	uint32_t perms;
 	ebitmap_t src_matches, tgt_matches, self_matches, matches;
 	ebitmap_node_t *snode, *tnode;
+	const int is_avrule_notself = (avrule->flags & RULE_NOTSELF) != 0;
 	unsigned int i, j;
 
 	if ((k->specified & AVTAB_ALLOWED) == 0)
@@ -241,7 +242,7 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	if (rc)
 		goto oom;
 
-	if (avrule->flags == RULE_SELF) {
+	if (avrule->flags & RULE_SELF) {
 		rc = ebitmap_and(&matches, &p->attr_type_map[k->source_type - 1], &p->attr_type_map[k->target_type - 1]);
 		if (rc)
 			goto oom;
@@ -268,6 +269,8 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 
 		ebitmap_for_each_positive_bit(&src_matches, snode, i) {
 			ebitmap_for_each_positive_bit(&tgt_matches, tnode, j) {
+				if (is_avrule_notself && i == j)
+					continue;
 				if (avrule->specified == AVRULE_XPERMS_NEVERALLOW) {
 					a->errors += report_assertion_extended_permissions(handle,p, avrule,
 											i, j, cp, perms, k, avtab);
@@ -381,6 +384,7 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 	unsigned int i, j;
 	ebitmap_node_t *snode, *tnode;
 	class_perm_node_t *cp;
+	const int is_avrule_notself = (avrule->flags & RULE_NOTSELF) != 0;
 	int rc;
 	int ret = 1;
 
@@ -402,7 +406,7 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 	if (rc)
 		goto oom;
 
-	if (avrule->flags == RULE_SELF) {
+	if (avrule->flags & RULE_SELF) {
 		rc = ebitmap_and(&matches, &p->attr_type_map[k->source_type - 1],
 				&p->attr_type_map[k->target_type - 1]);
 		if (rc)
@@ -418,6 +422,18 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 		}
 	}
 
+	if (is_avrule_notself) {
+		rc = ebitmap_and(&matches, &p->attr_type_map[k->source_type - 1], &p->attr_type_map[k->target_type - 1]);
+		if (rc)
+			goto oom;
+		rc = ebitmap_and(&self_matches, &avrule->ttypes.types, &matches);
+		if (rc)
+			goto oom;
+		rc = ebitmap_relative_complement(&tgt_matches, &self_matches);
+		if (rc)
+			goto oom;
+	}
+
 	if (ebitmap_is_empty(&tgt_matches))
 		goto exit;
 
@@ -426,6 +442,9 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 			continue;
 		ebitmap_for_each_positive_bit(&src_matches, snode, i) {
 			ebitmap_for_each_positive_bit(&tgt_matches, tnode, j) {
+				if (is_avrule_notself && i == j)
+					continue;
+
 				ret = check_assertion_extended_permissions_avtab(
 						avrule, avtab, i, j, k, p);
 				if (ret)
@@ -463,7 +482,7 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	if (rc == 0)
 		goto exit;
 
-	if (avrule->flags == RULE_SELF) {
+	if (avrule->flags & RULE_SELF) {
 		/* If the neverallow uses SELF, then it is not enough that the
 		 * neverallow's source matches the src and tgt of the rule being checked.
 		 * It must match the same thing in the src and tgt, so AND the source
@@ -476,6 +495,22 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 			goto oom;
 		}
 		rc2 = ebitmap_match_any(&avrule->stypes.types, &match);
+		ebitmap_destroy(&match);
+	}
+
+	if (avrule->flags & RULE_NOTSELF) {
+		ebitmap_t match;
+		rc = ebitmap_cpy(&match, &p->attr_type_map[k->source_type - 1]);
+		if (rc) {
+			ebitmap_destroy(&match);
+			goto oom;
+		}
+		rc = ebitmap_relative_complement(&match, &p->attr_type_map[k->target_type - 1]);
+		if (rc) {
+			ebitmap_destroy(&match);
+			goto oom;
+		}
+		rc2 = ebitmap_match_any(&avrule->ttypes.types, &match);
 		ebitmap_destroy(&match);
 	}
 
