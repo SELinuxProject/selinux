@@ -684,7 +684,7 @@ cleanup_extract:
 						if (result != 0) goto cleanup_list;
 
 						size = strlen(tmp);
-						if (size > column[3]) column[3] = size;
+						if (size > column[2]) column[2] = size;
 					}
 
 					/* print out each module */
