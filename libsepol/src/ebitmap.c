@@ -72,6 +72,24 @@ int ebitmap_union(ebitmap_t * dst, const ebitmap_t * e1)
 	return 0;
 }
 
+int ebitmap_relative_complement(ebitmap_t *dst, const ebitmap_t *e1)
+{
+	unsigned int i, length;
+
+	if (ebitmap_is_empty(dst) || ebitmap_is_empty(e1))
+		return 0;
+	
+	length = min(ebitmap_length(dst), ebitmap_length(e1));
+	for (i=0; i < length; i++) {
+		if (ebitmap_get_bit(e1, i)) {
+			int rc = ebitmap_set_bit(dst, i, 0);
+			if (rc < 0)
+				return rc;
+		}
+	}
+	return 0;
+}
+
 int ebitmap_and(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 {
 	unsigned int i, length = min(ebitmap_length(e1), ebitmap_length(e2));
