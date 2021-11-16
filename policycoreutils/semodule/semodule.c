@@ -25,6 +25,8 @@
 #include <sepol/cil/cil.h>
 #include <semanage/modules.h>
 
+#include "sha256.h"
+
 enum client_modes {
 	NO_MODE, INSTALL_M, REMOVE_M, EXTRACT_M, CIL_M, HLL_M,
 	LIST_M, RELOAD, PRIORITY_M, ENABLE_M, DISABLE_M
@@ -57,6 +59,7 @@ static semanage_handle_t *sh = NULL;
 static char *store;
 static char *store_root;
 int extract_cil = 0;
+static int checksum = 0;
 
 extern char *optarg;
 extern int optind;
@@ -147,6 +150,7 @@ static void usage(char *progname)
 	printf("  -S,--store-path  use an alternate path for the policy store root\n");
 	printf("  -c, --cil extract module as cil. This only affects module extraction.\n");
 	printf("  -H, --hll extract module as hll. This only affects module extraction.\n");
+	printf("  -m, --checksum   print module checksum (SHA256).\n");
 }
 
 /* Sets the global mode variable to new_mode, but only if no other
@@ -200,6 +204,7 @@ static void parse_command_line(int argc, char **argv)
 		{"disable", required_argument, NULL, 'd'},
 		{"path", required_argument, NULL, 'p'},
 		{"store-path", required_argument, NULL, 'S'},
+		{"checksum", 0, NULL, 'm'},
 		{NULL, 0, NULL, 0}
 	};
 	int extract_selected = 0;
@@ -210,7 +215,7 @@ static void parse_command_line(int argc, char **argv)
 	no_reload = 0;
 	priority = 400;
 	while ((i =
-		getopt_long(argc, argv, "s:b:hi:l::vr:u:RnNBDCPX:e:d:p:S:E:cH", opts,
+		getopt_long(argc, argv, "s:b:hi:l::vr:u:RnNBDCPX:e:d:p:S:E:cHm", opts,
 			    NULL)) != -1) {
 		switch (i) {
 		case 'b':
@@ -287,6 +292,9 @@ static void parse_command_line(int argc, char **argv)
 		case 'd':
 			set_mode(DISABLE_M, optarg);
 			break;
+		case 'm':
+			checksum = 1;
+			break;
 		case '?':
 		default:{
 				usage(argv[0]);
@@ -336,6 +344,61 @@ static void parse_command_line(int argc, char **argv)
 				exit(1);
 		}
 	}
+}
+
+/* Get module checksum */
+static char *hash_module_data(const char *module_name, const int prio) {
+	semanage_module_info_t *extract_info = NULL;
+	semanage_module_key_t *modkey = NULL;
+	Sha256Context context;
+	uint8_t sha256_hash[SHA256_HASH_SIZE];
+	char *sha256_buf = NULL;
+	void *data;
+	size_t data_len = 0, i;
+	int result;
+
+	result = semanage_module_key_create(sh, &modkey);
+	if (result != 0) {
+		goto cleanup_extract;
+	}
+
+	result = semanage_module_key_set_name(sh, modkey, module_name);
+	if (result != 0) {
+		goto cleanup_extract;
+	}
+
+	result = semanage_module_key_set_priority(sh, modkey, prio);
+	if (result != 0) {
+		goto cleanup_extract;
+	}
+
+	result = semanage_module_extract(sh, modkey, 1, &data, &data_len,
+									 &extract_info);
+	if (result != 0) {
+		goto cleanup_extract;
+	}
+
+	Sha256Initialise(&context);
+	Sha256Update(&context, data, data_len);
+
+	Sha256Finalise(&context, (SHA256_HASH *)sha256_hash);
+
+	sha256_buf = calloc(1, SHA256_HASH_SIZE * 2 + 1);
+
+	if (sha256_buf == NULL)
+		goto cleanup_extract;
+
+	for (i = 0; i < SHA256_HASH_SIZE; i++) {
+		sprintf((&sha256_buf[i * 2]), "%02x", sha256_hash[i]);
+	}
+	sha256_buf[i * 2] = 0;
+
+cleanup_extract:
+	semanage_module_info_destroy(sh, extract_info);
+	free(extract_info);
+	semanage_module_key_destroy(sh, modkey);
+	free(modkey);
+	return sha256_buf;
 }
 
 int main(int argc, char *argv[])
@@ -546,6 +609,8 @@ cleanup_extract:
 				int modinfos_len = 0;
 				semanage_module_info_t *m = NULL;
 				int j = 0;
+				char *module_checksum = NULL;
+				uint16_t pri = 0;
 
 				if (verbose) {
 					printf
@@ -570,7 +635,18 @@ cleanup_extract:
 						result = semanage_module_info_get_name(sh, m, &name);
 						if (result != 0) goto cleanup_list;
 
-						printf("%s\n", name);
+						result = semanage_module_info_get_priority(sh, m, &pri);
+						if (result != 0) goto cleanup_list;
+
+						printf("%s", name);
+						if (checksum) {
+							module_checksum = hash_module_data(name, pri);
+							if (module_checksum) {
+								printf(" %s", module_checksum);
+								free(module_checksum);
+							}
+						}
+						printf("\n");
 					}
 				}
 				else if (strcmp(mode_arg, "full") == 0) {
@@ -585,11 +661,12 @@ cleanup_extract:
 					}
 
 					/* calculate column widths */
-					size_t column[4] = { 0, 0, 0, 0 };
+					size_t column[5] = { 0, 0, 0, 0, 0 };
 
 					/* fixed width columns */
 					column[0] = sizeof("000") - 1;
 					column[3] = sizeof("disabled") - 1;
+					column[4] = 64; /* SHA256_HASH_SIZE * 2 */
 
 					/* variable width columns */
 					const char *tmp = NULL;
@@ -612,7 +689,6 @@ cleanup_extract:
 
 					/* print out each module */
 					for (j = 0; j < modinfos_len; j++) {
-						uint16_t pri = 0;
 						const char *name = NULL;
 						int enabled = 0;
 						const char *lang_ext = NULL;
@@ -631,11 +707,20 @@ cleanup_extract:
 						result = semanage_module_info_get_lang_ext(sh, m, &lang_ext);
 						if (result != 0) goto cleanup_list;
 
-						printf("%0*u %-*s %-*s %-*s\n",
+						printf("%0*u %-*s %-*s %-*s",
 							(int)column[0], pri,
 							(int)column[1], name,
 							(int)column[2], lang_ext,
 							(int)column[3], enabled ? "" : "disabled");
+						if (checksum) {
+							module_checksum = hash_module_data(name, pri);
+							if (module_checksum) {
+								printf(" %-*s", (int)column[4], module_checksum);
+								free(module_checksum);
+							}
+						}
+						printf("\n");
+
 					}
 				}
 				else {
