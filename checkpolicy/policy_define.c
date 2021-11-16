@@ -2067,12 +2067,17 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 	while ((id = queue_remove(id_queue))) {
 		if (strcmp(id, "self") == 0) {
 			free(id);
-			if (add == 0) {
-				yyerror("-self is not supported");
+			if (add == 0 && which != AVRULE_XPERMS_NEVERALLOW) {
+				yyerror("-self is only supported in neverallow and neverallowxperm rules");
 				ret = -1;
 				goto out;
 			}
-			avrule->flags |= RULE_SELF;
+			avrule->flags |= (add ? RULE_SELF : RULE_NOTSELF);
+			if ((avrule->flags & RULE_SELF) && (avrule->flags & RULE_NOTSELF)) {
+				yyerror("self and -self is not supported");
+				ret = -1;
+				goto out;
+			}
 			continue;
 		}
 		if (set_types
@@ -2080,6 +2085,18 @@ static int define_te_avtab_xperms_helper(int which, avrule_t ** rule)
 		     which == AVRULE_XPERMS_NEVERALLOW ? 1 : 0)) {
 			ret = -1;
 			goto out;
+		}
+	}
+
+	if ((avrule->ttypes.flags & TYPE_COMP)) {
+		if (avrule->flags & RULE_NOTSELF) {
+			yyerror("-self is not supported in complements");
+			ret = -1;
+			goto out;
+		}
+		if (avrule->flags & RULE_SELF) {
+			avrule->flags &= ~RULE_SELF;
+			avrule->flags |= RULE_NOTSELF;
 		}
 	}
 
@@ -2528,12 +2545,17 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 	while ((id = queue_remove(id_queue))) {
 		if (strcmp(id, "self") == 0) {
 			free(id);
-			if (add == 0) {
-				yyerror("-self is not supported");
+			if (add == 0 && which != AVRULE_NEVERALLOW) {
+				yyerror("-self is only supported in neverallow and neverallowxperm rules");
 				ret = -1;
 				goto out;
 			}
-			avrule->flags |= RULE_SELF;
+			avrule->flags |= (add ? RULE_SELF : RULE_NOTSELF);
+			if ((avrule->flags & RULE_SELF) && (avrule->flags & RULE_NOTSELF)) {
+				yyerror("self and -self is not supported");
+				ret = -1;
+				goto out;
+			}
 			continue;
 		}
 		if (set_types
@@ -2541,6 +2563,18 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 		     which == AVRULE_NEVERALLOW ? 1 : 0)) {
 			ret = -1;
 			goto out;
+		}
+	}
+
+	if ((avrule->ttypes.flags & TYPE_COMP)) {
+		if (avrule->flags & RULE_NOTSELF) {
+			yyerror("-self is not supported in complements");
+			ret = -1;
+			goto out;
+		}
+		if (avrule->flags & RULE_SELF) {
+			avrule->flags &= ~RULE_SELF;
+			avrule->flags |= RULE_NOTSELF;
 		}
 	}
 
