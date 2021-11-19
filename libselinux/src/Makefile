@@ -98,7 +98,6 @@ override LDFLAGS += -L/opt/local/lib -undefined dynamic_lookup
 LD_SONAME_FLAGS=-install_name,$(LIBSO)
 endif
 
-PCRE_LDLIBS ?= -lpcre
 # override with -lfts when building on Musl libc to use fts-standalone
 FTS_LDLIBS ?=
 
