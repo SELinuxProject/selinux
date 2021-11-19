@@ -57,7 +57,7 @@ jobs:
             libcap-ng-dev \
             libcunit1-dev \
             libdbus-glib-1-dev \
-            libpcre3-dev \
+            libpcre2-dev \
             python3-dev \
             python-dev \
             ruby-dev \
