@@ -44,7 +44,6 @@ endif
 override CFLAGS += -I../include -D_GNU_SOURCE $(DISABLE_FLAGS) $(PCRE_CFLAGS)
 override LDFLAGS += -L../src
 override LDLIBS += -lselinux $(FTS_LDLIBS)
-PCRE_LDLIBS ?= -lpcre
 
 ifeq ($(ANDROID_HOST),y)
 TARGETS=sefcontext_compile
