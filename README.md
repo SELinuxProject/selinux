@@ -51,7 +51,7 @@ dnf install \
     libcap-devel \
     libcap-ng-devel \
     pam-devel \
-    pcre-devel \
+    pcre2-devel \
     xmlto
 
 # For Python and Ruby bindings
@@ -78,7 +78,7 @@ apt-get install --no-install-recommends --no-install-suggests \
     libcap-ng-dev \
     libcunit1-dev \
     libglib2.0-dev \
-    libpcre3-dev \
+    libpcre2-dev \
     pkgconf \
     python3 \
     python3-distutils \

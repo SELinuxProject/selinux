@@ -36,7 +36,7 @@ dnf install -y \
     libcap-devel \
     libcap-ng-devel \
     pam-devel \
-    pcre-devel \
+    pcre2-devel \
     xmlto \
     python3-devel \
     ruby-devel \
