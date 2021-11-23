@@ -394,6 +394,9 @@ static char *hash_module_data(const char *module_name, const int prio) {
 	sha256_buf[i * 2] = 0;
 
 cleanup_extract:
+	if (data_len > 0) {
+		munmap(data, data_len);
+	}
 	semanage_module_info_destroy(sh, extract_info);
 	free(extract_info);
 	semanage_module_key_destroy(sh, modkey);
