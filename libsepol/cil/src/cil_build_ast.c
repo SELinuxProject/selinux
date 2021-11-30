@@ -5703,10 +5703,10 @@ int cil_fill_ipaddr(struct cil_tree_node *addr_node, struct cil_ipaddr *addr)
 		goto exit;
 	}
 
-	if (strchr(addr_node->data, '.') != NULL) {
-		addr->family = AF_INET;
-	} else {
+	if (strchr(addr_node->data, ':') != NULL) {
 		addr->family = AF_INET6;
+	} else {
+		addr->family = AF_INET;
 	}
 
 	rc = inet_pton(addr->family, addr_node->data, &addr->ip);
@@ -5718,7 +5718,7 @@ int cil_fill_ipaddr(struct cil_tree_node *addr_node, struct cil_ipaddr *addr)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Bad ip address or netmask\n"); 
+	cil_log(CIL_ERR, "Bad ip address or netmask: %s\n", (addr_node && addr_node->data) ? (const char *)addr_node->data : "n/a");
 	return rc;
 }
 
