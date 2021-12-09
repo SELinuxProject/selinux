@@ -6,11 +6,19 @@
 #include "debug.h"
 #include "policydb_validate.h"
 
+#define bool_xor(a, b) (!(a) != !(b))
+#define bool_xnor(a, b) !bool_xor(a, b)
+
 typedef struct validate {
 	uint32_t nprim;
 	ebitmap_t gaps;
 } validate_t;
 
+typedef struct map_arg {
+	validate_t *flavors;
+	sepol_handle_t *handle;
+	int mls;
+} map_arg_t;
 
 static int create_gap_ebitmap(char **val_to_name, uint32_t nprim, ebitmap_t *gaps)
 {
@@ -211,6 +219,13 @@ bad:
 	return -1;
 }
 
+static int validate_class_datum_wrapper(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	map_arg_t *margs = args;
+
+	return validate_class_datum(margs->handle, d, margs->flavors);
+}
+
 static int validate_role_datum(sepol_handle_t *handle, role_datum_t *role, validate_t flavors[])
 {
 	if (validate_value(role->s.value, &flavors[SYM_ROLES]))
@@ -231,6 +246,13 @@ bad:
 	return -1;
 }
 
+static int validate_role_datum_wrapper(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	map_arg_t *margs = args;
+
+	return validate_role_datum(margs->handle, d, margs->flavors);
+}
+
 static int validate_type_datum(sepol_handle_t *handle, type_datum_t *type, validate_t flavors[])
 {
 	if (validate_value(type->s.value, &flavors[SYM_TYPES]))
@@ -245,6 +267,13 @@ static int validate_type_datum(sepol_handle_t *handle, type_datum_t *type, valid
 bad:
 	ERR(handle, "Invalid type datum");
 	return -1;
+}
+
+static int validate_type_datum_wrapper(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	map_arg_t *margs = args;
+
+	return validate_type_datum(margs->handle, d, margs->flavors);
 }
 
 static int validate_mls_semantic_cat(mls_semantic_cat_t *cat, validate_t *cats)
@@ -310,32 +339,25 @@ bad:
 	return -1;
 }
 
-static int validate_datum_arrays(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+static int validate_user_datum_wrapper(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	map_arg_t *margs = args;
+
+	return validate_user_datum(margs->handle, d, margs->flavors);
+}
+
+static int validate_datum_array_gaps(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
 {
 	unsigned int i;
 
 	for (i = 0; i < p->p_classes.nprim; i++) {
-		if (p->class_val_to_struct[i]) {
-			if (ebitmap_get_bit(&flavors[SYM_CLASSES].gaps, i))
-				goto bad;
-			if (validate_class_datum(handle, p->class_val_to_struct[i], flavors))
-				goto bad;
-		} else {
-			if (!ebitmap_get_bit(&flavors[SYM_CLASSES].gaps, i))
-				goto bad;
-		}
+		if (bool_xnor(p->class_val_to_struct[i], ebitmap_get_bit(&flavors[SYM_CLASSES].gaps, i)))
+			goto bad;
 	}
 
 	for (i = 0; i < p->p_roles.nprim; i++) {
-		if (p->role_val_to_struct[i]) {
-			if (ebitmap_get_bit(&flavors[SYM_ROLES].gaps, i))
-				goto bad;
-			if (validate_role_datum(handle, p->role_val_to_struct[i], flavors))
-				goto bad;
-		} else {
-			if (!ebitmap_get_bit(&flavors[SYM_ROLES].gaps, i))
-				goto bad;
-		}
+		if (bool_xnor(p->role_val_to_struct[i], ebitmap_get_bit(&flavors[SYM_ROLES].gaps, i)))
+			goto bad;
 	}
 
 	/*
@@ -344,34 +366,43 @@ static int validate_datum_arrays(sepol_handle_t *handle, policydb_t *p, validate
 	 */
 	if (p->policyvers < POLICYDB_VERSION_AVTAB || p->policyvers > POLICYDB_VERSION_PERMISSIVE) {
 		for (i = 0; i < p->p_types.nprim; i++) {
-			if (p->type_val_to_struct[i]) {
-				if (ebitmap_get_bit(&flavors[SYM_TYPES].gaps, i))
-					goto bad;
-				if (validate_type_datum(handle, p->type_val_to_struct[i], flavors))
-					goto bad;
-			} else {
-				if (!ebitmap_get_bit(&flavors[SYM_TYPES].gaps, i))
-					goto bad;
-			}
+			if (bool_xnor(p->type_val_to_struct[i], ebitmap_get_bit(&flavors[SYM_TYPES].gaps, i)))
+				goto bad;
 		}
 	}
 
 	for (i = 0; i < p->p_users.nprim; i++) {
-		if (p->user_val_to_struct[i]) {
-			if (ebitmap_get_bit(&flavors[SYM_USERS].gaps, i))
-				goto bad;
-			if (validate_user_datum(handle, p->user_val_to_struct[i], flavors))
-				goto bad;
-		} else {
-			if (!ebitmap_get_bit(&flavors[SYM_USERS].gaps, i))
-				goto bad;
-		}
+		if (bool_xnor(p->user_val_to_struct[i], ebitmap_get_bit(&flavors[SYM_USERS].gaps, i)))
+			goto bad;
 	}
 
 	return 0;
 
 bad:
-	ERR(handle, "Invalid datum arrays");
+	ERR(handle, "Invalid datum array gaps");
+	return -1;
+}
+
+static int validate_datum_array_entries(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+{
+	map_arg_t margs = { flavors, handle, p->mls };
+
+	if (hashtab_map(p->p_classes.table, validate_class_datum_wrapper, &margs))
+		goto bad;
+
+	if (hashtab_map(p->p_roles.table, validate_role_datum_wrapper, &margs))
+		goto bad;
+
+	if (hashtab_map(p->p_types.table, validate_type_datum_wrapper, &margs))
+		goto bad;
+
+	if (hashtab_map(p->p_users.table, validate_user_datum_wrapper, &margs))
+		goto bad;
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid datum array entries");
 	return -1;
 }
 
@@ -762,7 +793,10 @@ int validate_policydb(sepol_handle_t *handle, policydb_t *p)
 	if (validate_scopes(handle, p->scope, p->global))
 		goto bad;
 
-	if (validate_datum_arrays(handle, p, flavors))
+	if (validate_datum_array_gaps(handle, p, flavors))
+		goto bad;
+
+	if (validate_datum_array_entries(handle, p, flavors))
 		goto bad;
 
 	validate_array_destroy(flavors);
