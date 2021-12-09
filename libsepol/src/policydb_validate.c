@@ -319,6 +319,27 @@ bad:
 	return -1;
 }
 
+static int validate_mls_level(mls_level_t *level, validate_t *sens, validate_t *cats)
+{
+	if (validate_value(level->sens, sens))
+		goto bad;
+	if (validate_ebitmap(&level->cat, cats))
+		goto bad;
+
+	return 0;
+
+	bad:
+	return -1;
+}
+
+static int validate_level_datum(__attribute__ ((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	level_datum_t *level = d;
+	validate_t *flavors = args;
+
+	return validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]);
+}
+
 static int validate_user_datum(sepol_handle_t *handle, user_datum_t *user, validate_t flavors[])
 {
 	if (validate_value(user->s.value, &flavors[SYM_USERS]))
@@ -397,6 +418,9 @@ static int validate_datum_array_entries(sepol_handle_t *handle, policydb_t *p, v
 		goto bad;
 
 	if (hashtab_map(p->p_users.table, validate_user_datum_wrapper, &margs))
+		goto bad;
+
+	if (p->mls && hashtab_map(p->p_levels.table, validate_level_datum, flavors))
 		goto bad;
 
 	return 0;
