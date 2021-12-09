@@ -978,6 +978,54 @@ bad:
 	return -1;
 }
 
+static int validate_properties(sepol_handle_t *handle, policydb_t *p)
+{
+	switch (p->policy_type) {
+	case POLICY_KERN:
+		if (p->policyvers < POLICYDB_VERSION_MIN || p->policyvers > POLICYDB_VERSION_MAX)
+			goto bad;
+		break;
+	case POLICY_BASE:
+	case POLICY_MOD:
+		if (p->policyvers < MOD_POLICYDB_VERSION_MIN || p->policyvers > MOD_POLICYDB_VERSION_MAX)
+			goto bad;
+		break;
+	default:
+		goto bad;
+	}
+
+	switch (p->target_platform) {
+	case SEPOL_TARGET_SELINUX:
+	case SEPOL_TARGET_XEN:
+		break;
+	default:
+		goto bad;
+	}
+
+	switch (p->mls) {
+	case 0:
+	case 1:
+		break;
+	default:
+		goto bad;
+	}
+
+	switch (p->handle_unknown) {
+	case SEPOL_DENY_UNKNOWN:
+	case SEPOL_REJECT_UNKNOWN:
+	case SEPOL_ALLOW_UNKNOWN:
+		break;
+	default:
+		goto bad;
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid policy property");
+	return -1;
+}
+
 static void validate_array_destroy(validate_t flavors[])
 {
 	unsigned int i;
@@ -995,6 +1043,9 @@ int validate_policydb(sepol_handle_t *handle, policydb_t *p)
 	validate_t flavors[SYM_NUM] = {};
 
 	if (validate_array_init(p, flavors))
+		goto bad;
+
+	if (validate_properties(handle, p))
 		goto bad;
 
 	if (p->policy_type == POLICY_KERN) {
