@@ -2780,6 +2780,7 @@ static int filename_trans_read_one(policydb_t *p, struct policy_file *fp)
 		if (!datum)
 			goto err;
 
+		datum->next = NULL;
 		*dst = datum;
 
 		/* ebitmap_read() will at least init the bitmap */
@@ -2797,7 +2798,6 @@ static int filename_trans_read_one(policydb_t *p, struct policy_file *fp)
 
 		dst = &datum->next;
 	}
-	*dst = NULL;
 
 	if (ndatum > 1 && filename_trans_check_datum(first))
 		goto err;
