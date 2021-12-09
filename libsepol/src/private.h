@@ -44,7 +44,12 @@
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof((x)[0]))
 
-#define is_saturated(x) (x == (typeof(x))-1)
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+# define is_saturated(x) (x == (typeof(x))-1 || (x) > (1U << 16))
+#else
+# define is_saturated(x) (x == (typeof(x))-1)
+#endif
+
 #define zero_or_saturated(x) ((x == 0) || is_saturated(x))
 
 #define spaceship_cmp(a, b) (((a) > (b)) - ((a) < (b)))
