@@ -28,7 +28,7 @@ jobs:
         uses: google/oss-fuzz/infra/cifuzz/actions/run_fuzzers@master
         with:
           oss-fuzz-project-name: 'selinux'
-          fuzz-seconds: 180
+          fuzz-seconds: 600
           dry-run: false
           report-unreproducible-crashes: true
           sanitizer: ${{ matrix.sanitizer }}
