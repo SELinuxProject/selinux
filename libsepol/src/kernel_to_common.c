@@ -159,7 +159,7 @@ int strs_add(struct strs *strs, char *s)
 {
 	if (strs->num + 1 > strs->size) {
 		char **new;
-		unsigned i = strs->size;
+		size_t i = strs->size;
 		strs->size *= 2;
 		new = reallocarray(strs->list, strs->size, sizeof(char *));
 		if (!new) {
@@ -212,11 +212,11 @@ char *strs_remove_last(struct strs *strs)
 	return strs->list[strs->num];
 }
 
-int strs_add_at_index(struct strs *strs, char *s, unsigned index)
+int strs_add_at_index(struct strs *strs, char *s, size_t index)
 {
 	if (index >= strs->size) {
 		char **new;
-		unsigned i = strs->size;
+		size_t i = strs->size;
 		while (index >= strs->size) {
 			strs->size *= 2;
 		}
@@ -237,7 +237,7 @@ int strs_add_at_index(struct strs *strs, char *s, unsigned index)
 	return 0;
 }
 
-char *strs_read_at_index(struct strs *strs, unsigned index)
+char *strs_read_at_index(struct strs *strs, size_t index)
 {
 	if (index >= strs->num) {
 		return NULL;
