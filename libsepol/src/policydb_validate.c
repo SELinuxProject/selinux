@@ -2,6 +2,7 @@
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/ebitmap.h>
 #include <sepol/policydb/policydb.h>
+#include <sepol/policydb/services.h>
 
 #include "debug.h"
 #include "policydb_validate.h"
@@ -778,6 +779,15 @@ static int validate_ocontexts(sepol_handle_t *handle, policydb_t *p, validate_t 
 					if (validate_context(&octx->context[1], flavors, p->mls))
 						goto bad;
 					break;
+				case OCON_FSUSE:
+					switch (octx->v.behavior) {
+					case SECURITY_FS_USE_XATTR:
+					case SECURITY_FS_USE_TRANS:
+					case SECURITY_FS_USE_TASK:
+						break;
+					default:
+						goto bad;
+					}
 				}
 			}
 		}
