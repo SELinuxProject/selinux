@@ -340,7 +340,20 @@ static int validate_level_datum(__attribute__ ((unused)) hashtab_key_t k, hashta
 	return validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]);
 }
 
-static int validate_user_datum(sepol_handle_t *handle, user_datum_t *user, validate_t flavors[])
+static int validate_mls_range(mls_range_t *range, validate_t *sens, validate_t *cats)
+{
+	if (validate_mls_level(&range->level[0], sens, cats))
+		goto bad;
+	if (validate_mls_level(&range->level[1], sens, cats))
+		goto bad;
+
+	return 0;
+
+	bad:
+	return -1;
+}
+
+static int validate_user_datum(sepol_handle_t *handle, user_datum_t *user, validate_t flavors[], int mls)
 {
 	if (validate_value(user->s.value, &flavors[SYM_USERS]))
 		goto bad;
@@ -349,6 +362,10 @@ static int validate_user_datum(sepol_handle_t *handle, user_datum_t *user, valid
 	if (validate_mls_semantic_range(&user->range, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
 		goto bad;
 	if (validate_mls_semantic_level(&user->dfltlevel, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+		goto bad;
+	if (mls && validate_mls_range(&user->exp_range, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+		goto bad;
+	if (mls && validate_mls_level(&user->exp_dfltlevel, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
 		goto bad;
 	if (user->bounds && validate_value(user->bounds, &flavors[SYM_USERS]))
 		goto bad;
@@ -364,7 +381,7 @@ static int validate_user_datum_wrapper(__attribute__((unused)) hashtab_key_t k, 
 {
 	map_arg_t *margs = args;
 
-	return validate_user_datum(margs->handle, d, margs->flavors);
+	return validate_user_datum(margs->handle, d, margs->flavors, margs->mls);
 }
 
 static int validate_datum_array_gaps(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
