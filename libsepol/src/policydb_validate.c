@@ -211,6 +211,8 @@ static int validate_class_datum(sepol_handle_t *handle, class_datum_t *class, va
 		goto bad;
 	if (validate_constraint_nodes(handle, class->validatetrans, flavors))
 		goto bad;
+	if (class->permissions.nprim > PERM_SYMTAB_SIZE)
+		goto bad;
 
 	return 0;
 
@@ -224,6 +226,25 @@ static int validate_class_datum_wrapper(__attribute__((unused)) hashtab_key_t k,
 	map_arg_t *margs = args;
 
 	return validate_class_datum(margs->handle, d, margs->flavors);
+}
+
+static int validate_common_datum(sepol_handle_t *handle, common_datum_t *common)
+{
+	if (common->permissions.nprim > PERM_SYMTAB_SIZE)
+		goto bad;
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid common class datum");
+	return -1;
+}
+
+static int validate_common_datum_wrapper(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	map_arg_t *margs = args;
+
+	return validate_common_datum(margs->handle, d);
 }
 
 static int validate_role_datum(sepol_handle_t *handle, role_datum_t *role, validate_t flavors[])
@@ -424,6 +445,9 @@ bad:
 static int validate_datum_array_entries(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
 {
 	map_arg_t margs = { flavors, handle, p->mls };
+
+	if (hashtab_map(p->p_commons.table, validate_common_datum_wrapper, &margs))
+		goto bad;
 
 	if (hashtab_map(p->p_classes.table, validate_class_datum_wrapper, &margs))
 		goto bad;
