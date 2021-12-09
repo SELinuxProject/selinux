@@ -634,7 +634,7 @@ static int cond_insertf(avtab_t * a
 	if (k->specified & AVTAB_TYPE) {
 		if (avtab_search(&p->te_avtab, k)) {
 			WARN(NULL, "security: type rule already exists outside of a conditional.");
-			goto err;
+			return -1;
 		}
 		/*
 		 * If we are reading the false list other will be a pointer to
@@ -650,7 +650,7 @@ static int cond_insertf(avtab_t * a
 				if (avtab_search_node_next
 				    (node_ptr, k->specified)) {
 					ERR(NULL, "security: too many conflicting type rules.");
-					goto err;
+					return -1;
 				}
 				found = 0;
 				for (cur = other; cur != NULL; cur = cur->next) {
@@ -661,13 +661,13 @@ static int cond_insertf(avtab_t * a
 				}
 				if (!found) {
 					ERR(NULL, "security: conflicting type rules.\n");
-					goto err;
+					return -1;
 				}
 			}
 		} else {
 			if (avtab_search(&p->te_cond_avtab, k)) {
 				ERR(NULL, "security: conflicting type rules when adding type rule for true.\n");
-				goto err;
+				return -1;
 			}
 		}
 	}
@@ -675,13 +675,13 @@ static int cond_insertf(avtab_t * a
 	node_ptr = avtab_insert_nonunique(&p->te_cond_avtab, k, d);
 	if (!node_ptr) {
 		ERR(NULL, "security: could not insert rule.");
-		goto err;
+		return -1;
 	}
 	node_ptr->parse_context = (void *)1;
 
 	list = malloc(sizeof(cond_av_list_t));
 	if (!list)
-		goto err;
+		return -1;
 	memset(list, 0, sizeof(cond_av_list_t));
 
 	list->node = node_ptr;
@@ -691,11 +691,6 @@ static int cond_insertf(avtab_t * a
 		data->tail->next = list;
 	data->tail = list;
 	return 0;
-
-      err:
-	cond_av_list_destroy(data->head);
-	data->head = NULL;
-	return -1;
 }
 
 static int cond_read_av_list(policydb_t * p, void *fp,
@@ -724,8 +719,10 @@ static int cond_read_av_list(policydb_t * p, void *fp,
 	for (i = 0; i < len; i++) {
 		rc = avtab_read_item(fp, p->policyvers, &p->te_cond_avtab,
 				     cond_insertf, &data);
-		if (rc)
+		if (rc) {
+			cond_av_list_destroy(data.head);
 			return rc;
+		}
 
 	}
 
