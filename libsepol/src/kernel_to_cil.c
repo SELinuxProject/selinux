@@ -358,6 +358,7 @@ static int constraint_rules_to_strs(struct policydb *pdb, struct strs *mls_strs,
 
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
+		if (!class) continue;
 		if (class->constraints) {
 			name = pdb->p_class_val_to_name[i];
 			rc = class_constraint_rules_to_strs(pdb, name, class, class->constraints, mls_strs, non_mls_strs);
@@ -383,6 +384,7 @@ static int validatetrans_rules_to_strs(struct policydb *pdb, struct strs *mls_st
 
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
+		if (!class) continue;
 		if (class->validatetrans) {
 			name = pdb->p_class_val_to_name[i];
 			rc = class_validatetrans_rules_to_strs(pdb, name, class->validatetrans, mls_strs, non_mls_strs);
@@ -461,6 +463,7 @@ static int write_class_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 	/* class */
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
+		if (!class) continue;
 		name = pdb->p_class_val_to_name[i];
 		perms = class_or_common_perms_to_str(&class->permissions);
 		if (perms) {
@@ -488,6 +491,7 @@ static int write_class_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 	/* classcommon */
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
+		if (!class) continue;
 		name = pdb->p_class_val_to_name[i];
 		if (class->comkey != NULL) {
 			sepol_printf(out, "(classcommon %s %s)\n", name, class->comkey);
@@ -503,6 +507,7 @@ static int write_class_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 	}
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
+		if (!class) continue;
 		name = class->comkey;
 		if (name != NULL) {
 			common = hashtab_search(pdb->p_commons.table, name);
@@ -727,6 +732,7 @@ static int write_default_rules_to_cil(FILE *out, struct policydb *pdb)
 	/* default_user */
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
+		if (!class) continue;
 		if (class->default_user != 0) {
 			rc = write_default_user_to_cil(out, pdb->p_class_val_to_name[i], class);
 			if (rc != 0) {
@@ -738,6 +744,7 @@ static int write_default_rules_to_cil(FILE *out, struct policydb *pdb)
 	/* default_role */
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
+		if (!class) continue;
 		if (class->default_role != 0) {
 			rc = write_default_role_to_cil(out, pdb->p_class_val_to_name[i], class);
 			if (rc != 0) {
@@ -749,6 +756,7 @@ static int write_default_rules_to_cil(FILE *out, struct policydb *pdb)
 	/* default_type */
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
+		if (!class) continue;
 		if (class->default_type != 0) {
 			rc = write_default_type_to_cil(out, pdb->p_class_val_to_name[i], class);
 			if (rc != 0) {
@@ -764,6 +772,7 @@ static int write_default_rules_to_cil(FILE *out, struct policydb *pdb)
 	/* default_range */
 	for (i=0; i < pdb->p_classes.nprim; i++) {
 		class = pdb->class_val_to_struct[i];
+		if (!class) continue;
 		if (class->default_range) {
 			rc = write_default_range_to_cil(out, pdb->p_class_val_to_name[i], class);
 			if (rc != 0) {
