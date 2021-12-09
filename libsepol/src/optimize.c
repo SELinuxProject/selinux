@@ -59,8 +59,9 @@ static int type_vec_append(struct type_vec *v, uint32_t type)
 {
 	if (v->capacity == v->count) {
 		unsigned int new_capacity = v->capacity * 2;
-		uint32_t *new_types = realloc(v->types,
-					      new_capacity * sizeof(*v->types));
+		uint32_t *new_types = reallocarray(v->types,
+						   new_capacity,
+						   sizeof(*v->types));
 		if (!new_types)
 			return -1;
 
