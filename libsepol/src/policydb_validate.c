@@ -483,6 +483,20 @@ static int validate_avtab_key(avtab_key_t *key, validate_t flavors[])
 		goto bad;
 	if (validate_value(key->target_class, &flavors[SYM_CLASSES]))
 		goto bad;
+	switch (0xFFF & key->specified) {
+	case AVTAB_ALLOWED:
+	case AVTAB_AUDITALLOW:
+	case AVTAB_AUDITDENY:
+	case AVTAB_XPERMS_ALLOWED:
+	case AVTAB_XPERMS_AUDITALLOW:
+	case AVTAB_XPERMS_DONTAUDIT:
+	case AVTAB_TRANSITION:
+	case AVTAB_MEMBER:
+	case AVTAB_CHANGE:
+		break;
+	default:
+		goto bad;
+	}
 
 	return 0;
 
@@ -535,6 +549,23 @@ static int validate_avrules(sepol_handle_t *handle, avrule_t *avrule, validate_t
 		for (; class; class = class->next) {
 			if (validate_value(class->tclass, &flavors[SYM_CLASSES]))
 				goto bad;
+		}
+		switch(avrule->specified) {
+		case AVRULE_ALLOWED:
+		case AVRULE_AUDITALLOW:
+		case AVRULE_AUDITDENY:
+		case AVRULE_DONTAUDIT:
+		case AVRULE_NEVERALLOW:
+		case AVRULE_TRANSITION:
+		case AVRULE_MEMBER:
+		case AVRULE_CHANGE:
+		case AVRULE_XPERMS_ALLOWED:
+		case AVRULE_XPERMS_AUDITALLOW:
+		case AVRULE_XPERMS_DONTAUDIT:
+		case AVRULE_XPERMS_NEVERALLOW:
+			break;
+		default:
+			goto bad;
 		}
 	}
 
