@@ -83,3 +83,12 @@ extern int next_entry(void *buf, struct policy_file *fp, size_t bytes);
 extern size_t put_entry(const void *ptr, size_t size, size_t n,
 		        struct policy_file *fp);
 extern int str_read(char **strp, struct policy_file *fp, size_t len);
+
+static inline void* mallocarray(size_t nmemb, size_t size) {
+	if (size && nmemb > (size_t)-1 / size) {
+		errno = ENOMEM;
+		return NULL;
+	}
+
+	return malloc(nmemb * size);
+}
