@@ -1456,6 +1456,12 @@ int cil_userprefixes_to_string(struct cil_db *db, char **out, size_t *size)
 
 		buf_pos = snprintf(str_tmp, str_len, "user %s prefix %s;\n", user->datum.fqn,
 									userprefix->prefix_str);
+		if (buf_pos < 0) {
+			free(str_tmp);
+			*size = 0;
+			*out = NULL;
+			goto exit;
+		}
 		str_len -= buf_pos;
 		str_tmp += buf_pos;
 	}
