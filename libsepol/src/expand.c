@@ -929,6 +929,10 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 	if (!sl->sens)
 		return 0;
 
+	/* Invalid sensitivity */
+	if (sl->sens > p->p_levels.nprim || !p->p_sens_val_to_name[sl->sens - 1])
+		return -1;
+
 	l->sens = sl->sens;
 	levdatum = (level_datum_t *) hashtab_search(p->p_levels.table,
 						    p->p_sens_val_to_name[l->sens - 1]);
