@@ -1725,6 +1725,12 @@ int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished, void 
 		copy_func = &cil_copy_block;
 		break;
 	case CIL_BLOCKABSTRACT:
+		if (args->orig_dest->flavor == CIL_BLOCKINHERIT) {
+			/* When inheriting a block, don't copy any blockabstract
+			 * statements. Inheriting a block from a block that was
+			 * just inherited never worked. */
+			return SEPOL_OK;
+		}
 		copy_func = &cil_copy_blockabstract;
 		break;
 	case CIL_BLOCKINHERIT:
