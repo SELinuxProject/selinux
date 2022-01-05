@@ -2379,6 +2379,19 @@ exit:
 	return rc;
 }
 
+static void cil_mark_subtree_abstract(struct cil_tree_node *node)
+{
+	struct cil_block *block = node->data;
+
+	block->is_abstract = CIL_TRUE;
+
+	for (node = node->cl_head; node; node = node->next) {
+		if (node->flavor == CIL_BLOCK) {
+			cil_mark_subtree_abstract(node);
+		}
+	}
+}
+
 int cil_resolve_blockabstract(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_blockabstract *abstract = current->data;
@@ -2398,7 +2411,7 @@ int cil_resolve_blockabstract(struct cil_tree_node *current, void *extra_args)
 		goto exit;
 	}
 
-	((struct cil_block*)block_datum)->is_abstract = CIL_TRUE;
+	cil_mark_subtree_abstract(block_node);
 
 	return SEPOL_OK;
 
