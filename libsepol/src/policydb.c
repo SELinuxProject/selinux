@@ -3937,7 +3937,7 @@ static int scope_index_read(scope_index_t * scope_index,
 	if (rc < 0)
 		return -1;
 	scope_index->class_perms_len = le32_to_cpu(buf[0]);
-	if (scope_index->class_perms_len == 0) {
+	if (zero_or_saturated(scope_index->class_perms_len)) {
 		scope_index->class_perms_map = NULL;
 		return 0;
 	}
