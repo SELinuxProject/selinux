@@ -29,7 +29,7 @@ void restore_init(struct restore_opts *opts)
 
 	opts->hnd = selabel_open(SELABEL_CTX_FILE, selinux_opts, 3);
 	if (!opts->hnd) {
-		perror(opts->selabel_opt_path);
+		perror(opts->selabel_opt_path ? opts->selabel_opt_path : selinux_file_context_path());
 		exit(1);
 	}
 
