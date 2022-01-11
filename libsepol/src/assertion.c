@@ -454,8 +454,7 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	if (!match_any_class_permissions(avrule->perms, k->target_class, d->data))
 		goto nomatch;
 
-	rc = ebitmap_match_any(&avrule->stypes.types, &p->attr_type_map[k->source_type - 1]);
-	if (rc == 0)
+	if (!ebitmap_match_any(&avrule->stypes.types, &p->attr_type_map[k->source_type - 1]))
 		goto nomatch;
 
 	if (avrule->flags == RULE_SELF) {
@@ -475,9 +474,10 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	}
 
 	/* neverallow may have tgts even if it uses SELF */
-	rc = ebitmap_match_any(&avrule->ttypes.types, &p->attr_type_map[k->target_type -1]);
-	if (rc == 0 && rc2 == 0)
-		goto nomatch;
+	if (!ebitmap_match_any(&avrule->ttypes.types, &p->attr_type_map[k->target_type -1])) {
+		if (rc2 == 0)
+			goto nomatch;
+	}
 
 	if (avrule->specified == AVRULE_XPERMS_NEVERALLOW) {
 		rc = check_assertion_extended_permissions(avrule, avtab, k, p);
