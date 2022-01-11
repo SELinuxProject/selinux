@@ -538,6 +538,10 @@ int check_assertions(sepol_handle_t * handle, policydb_t * p,
 		if (!(a->specified & (AVRULE_NEVERALLOW | AVRULE_XPERMS_NEVERALLOW)))
 			continue;
 		rc = check_assertion(p, a);
+		if (rc < 0) {
+			ERR(handle, "Error occurred while checking neverallows");
+			return -1;
+		}
 		if (rc) {
 			rc = report_assertion_failures(handle, p, a);
 			if (rc < 0) {
