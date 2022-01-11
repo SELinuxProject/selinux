@@ -278,11 +278,8 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 			}
 		}
 	}
-	goto exit;
 
 oom:
-	ERR(NULL, "Out of memory - unable to check neverallows");
-
 exit:
 	ebitmap_destroy(&src_matches);
 	ebitmap_destroy(&tgt_matches);
@@ -436,8 +433,6 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 	goto exit;
 
 oom:
-	ERR(NULL, "Out of memory - unable to check neverallows");
-
 exit:
 	ebitmap_destroy(&src_matches);
 	ebitmap_destroy(&tgt_matches);
@@ -495,7 +490,6 @@ nomatch:
 	return 0;
 
 oom:
-	ERR(NULL, "Out of memory - unable to check neverallows");
 	return rc;
 }
 
