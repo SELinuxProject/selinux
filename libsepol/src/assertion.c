@@ -148,8 +148,8 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 	ebitmap_t *tattr = &p->type_attr_map[ttype];
 	ebitmap_node_t *snode, *tnode;
 	unsigned int i, j;
-	int rc = 1;
-	int ret = 0;
+	int rc;
+	int errors = 0;
 
 	memcpy(&tmp_key, k, sizeof(avtab_key_t));
 	tmp_key.specified = AVTAB_XPERMS_ALLOWED;
@@ -178,15 +178,14 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 							p->p_class_val_to_name[curperm->tclass - 1],
 							sepol_extended_perms_to_string(&error));
 
-					rc = 0;
-					ret++;
+					errors++;
 				}
 			}
 		}
 	}
 
 	/* failure on the regular permissions */
-	if (rc) {
+	if (!errors) {
 		ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of policy.conf) violated by\n"
 				"allow %s %s:%s {%s };",
 				avrule->source_line, avrule->source_filename, avrule->line,
@@ -194,11 +193,11 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 				p->p_type_val_to_name[ttype],
 				p->p_class_val_to_name[curperm->tclass - 1],
 				sepol_av_to_string(p, curperm->tclass, perms));
-		ret++;
+		errors++;
 
 	}
 
-	return ret;
+	return errors;
 }
 
 static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void *args)
