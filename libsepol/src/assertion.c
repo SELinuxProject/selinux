@@ -149,6 +149,7 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 	ebitmap_node_t *snode, *tnode;
 	unsigned int i, j;
 	int rc;
+	int found_xperm = 0;
 	int errors = 0;
 
 	memcpy(&tmp_key, k, sizeof(avtab_key_t));
@@ -165,7 +166,7 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 				if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
 						&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER))
 					continue;
-
+				found_xperm = 1;
 				rc = check_extended_permissions(avrule->xperms, xperms);
 				/* failure on the extended permission check_extended_permissions */
 				if (rc) {
@@ -185,7 +186,7 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 	}
 
 	/* failure on the regular permissions */
-	if (!errors) {
+	if (!found_xperm) {
 		ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of policy.conf) violated by\n"
 				"allow %s %s:%s {%s };",
 				avrule->source_line, avrule->source_filename, avrule->line,
@@ -343,7 +344,7 @@ static int check_assertion_extended_permissions_avtab(avrule_t *avrule, avtab_t 
 					continue;
 				rc = check_extended_permissions(neverallow_xperms, xperms);
 				if (rc)
-					break;
+					return rc;
 			}
 		}
 	}
