@@ -457,26 +457,28 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	if (!ebitmap_match_any(&avrule->stypes.types, &p->attr_type_map[k->source_type - 1]))
 		goto nomatch;
 
-	if (avrule->flags == RULE_SELF) {
-		/* If the neverallow uses SELF, then it is not enough that the
-		 * neverallow's source matches the src and tgt of the rule being checked.
-		 * It must match the same thing in the src and tgt, so AND the source
-		 * and target together and check for a match on the result.
-		 */
-		ebitmap_t match;
-		rc = ebitmap_and(&match, &p->attr_type_map[k->source_type - 1], &p->attr_type_map[k->target_type - 1] );
-		if (rc) {
-			ebitmap_destroy(&match);
-			goto oom;
-		}
-		rc2 = ebitmap_match_any(&avrule->stypes.types, &match);
-		ebitmap_destroy(&match);
-	}
-
 	/* neverallow may have tgts even if it uses SELF */
 	if (!ebitmap_match_any(&avrule->ttypes.types, &p->attr_type_map[k->target_type -1])) {
-		if (rc2 == 0)
+		if (avrule->flags == RULE_SELF) {
+			/* If the neverallow uses SELF, then it is not enough that the
+			 * neverallow's source matches the src and tgt of the rule being checked.
+			 * It must match the same thing in the src and tgt, so AND the source
+			 * and target together and check for a match on the result.
+			 */
+			ebitmap_t match;
+			rc = ebitmap_and(&match, &p->attr_type_map[k->source_type - 1], &p->attr_type_map[k->target_type - 1] );
+			if (rc) {
+				ebitmap_destroy(&match);
+				goto oom;
+			}
+			if (!ebitmap_match_any(&avrule->stypes.types, &match)) {
+				ebitmap_destroy(&match);
+				goto nomatch;
+			}
+			ebitmap_destroy(&match);
+		} else {
 			goto nomatch;
+		}
 	}
 
 	if (avrule->specified == AVRULE_XPERMS_NEVERALLOW) {
