@@ -231,27 +231,27 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 
 	rc = ebitmap_and(&src_matches, &avrule->stypes.types,
 			 &p->attr_type_map[k->source_type - 1]);
-	if (rc)
+	if (rc < 0)
 		goto oom;
 
 	if (ebitmap_is_empty(&src_matches))
 		goto exit;
 
 	rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types, &p->attr_type_map[k->target_type -1]);
-	if (rc)
+	if (rc < 0)
 		goto oom;
 
 	if (avrule->flags == RULE_SELF) {
 		rc = ebitmap_and(&matches, &p->attr_type_map[k->source_type - 1], &p->attr_type_map[k->target_type - 1]);
-		if (rc)
+		if (rc < 0)
 			goto oom;
 		rc = ebitmap_and(&self_matches, &avrule->stypes.types, &matches);
-		if (rc)
+		if (rc < 0)
 			goto oom;
 
 		if (!ebitmap_is_empty(&self_matches)) {
 			rc = ebitmap_union(&tgt_matches, &self_matches);
-			if (rc)
+			if (rc < 0)
 				goto oom;
 		}
 	}
@@ -299,11 +299,11 @@ static int report_assertion_failures(sepol_handle_t *handle, policydb_t *p, avru
 	args.errors = 0;
 
 	rc = avtab_map(&p->te_avtab, report_assertion_avtab_matches, &args);
-	if (rc)
+	if (rc < 0)
 		goto oom;
 
 	rc = avtab_map(&p->te_cond_avtab, report_assertion_avtab_matches, &args);
-	if (rc)
+	if (rc < 0)
 		goto oom;
 
 	return args.errors;
@@ -379,7 +379,6 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 	ebitmap_node_t *snode, *tnode;
 	class_perm_node_t *cp;
 	int rc;
-	int ret = 1;
 
 	ebitmap_init(&src_matches);
 	ebitmap_init(&tgt_matches);
@@ -388,56 +387,61 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 
 	rc = ebitmap_and(&src_matches, &avrule->stypes.types,
 			 &p->attr_type_map[k->source_type - 1]);
-	if (rc)
+	if (rc < 0)
 		goto oom;
 
-	if (ebitmap_is_empty(&src_matches))
+	if (ebitmap_is_empty(&src_matches)) {
+		rc = 0;
 		goto exit;
+	}
 
 	rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types,
 			 &p->attr_type_map[k->target_type -1]);
-	if (rc)
+	if (rc < 0)
 		goto oom;
 
 	if (avrule->flags == RULE_SELF) {
 		rc = ebitmap_and(&matches, &p->attr_type_map[k->source_type - 1],
 				&p->attr_type_map[k->target_type - 1]);
-		if (rc)
+		if (rc < 0)
 			goto oom;
 		rc = ebitmap_and(&self_matches, &avrule->stypes.types, &matches);
-		if (rc)
+		if (rc < 0)
 			goto oom;
 
 		if (!ebitmap_is_empty(&self_matches)) {
 			rc = ebitmap_union(&tgt_matches, &self_matches);
-			if (rc)
+			if (rc < 0)
 				goto oom;
 		}
 	}
 
-	if (ebitmap_is_empty(&tgt_matches))
+	if (ebitmap_is_empty(&tgt_matches)) {
+		rc = 0;
 		goto exit;
+	}
 
 	for (cp = avrule->perms; cp; cp = cp->next) {
 		if (cp->tclass != k->target_class)
 			continue;
 		ebitmap_for_each_positive_bit(&src_matches, snode, i) {
 			ebitmap_for_each_positive_bit(&tgt_matches, tnode, j) {
-				ret = check_assertion_extended_permissions_avtab(
-						avrule, avtab, i, j, k, p);
-				if (ret)
+				if (check_assertion_extended_permissions_avtab(avrule, avtab, i, j, k, p)) {
+					rc = 1;
 					goto exit;
+				}
 			}
 		}
 	}
-	goto exit;
+
+	rc = 0;
 
 oom:
 exit:
 	ebitmap_destroy(&src_matches);
 	ebitmap_destroy(&tgt_matches);
 	ebitmap_destroy(&matches);
-	return ret;
+	return rc;
 }
 
 static int check_assertion_self_match(avtab_key_t *k, avrule_t *avrule, policydb_t *p)
