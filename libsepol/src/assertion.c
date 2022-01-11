@@ -377,7 +377,6 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 	ebitmap_t src_matches, tgt_matches, self_matches, matches;
 	unsigned int i, j;
 	ebitmap_node_t *snode, *tnode;
-	class_perm_node_t *cp;
 	int rc;
 
 	ebitmap_init(&src_matches);
@@ -421,15 +420,11 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 		goto exit;
 	}
 
-	for (cp = avrule->perms; cp; cp = cp->next) {
-		if (cp->tclass != k->target_class)
-			continue;
-		ebitmap_for_each_positive_bit(&src_matches, snode, i) {
-			ebitmap_for_each_positive_bit(&tgt_matches, tnode, j) {
-				if (check_assertion_extended_permissions_avtab(avrule, avtab, i, j, k, p)) {
-					rc = 1;
-					goto exit;
-				}
+	ebitmap_for_each_positive_bit(&src_matches, snode, i) {
+		ebitmap_for_each_positive_bit(&tgt_matches, tnode, j) {
+			if (check_assertion_extended_permissions_avtab(avrule, avtab, i, j, k, p)) {
+				rc = 1;
+				goto exit;
 			}
 		}
 	}
