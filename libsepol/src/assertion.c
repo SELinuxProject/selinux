@@ -292,10 +292,12 @@ static int report_assertion_failures(sepol_handle_t *handle, policydb_t *p, avru
 	args.avrule = avrule;
 	args.errors = 0;
 
+	args.avtab =  &p->te_avtab;
 	rc = avtab_map(&p->te_avtab, report_assertion_avtab_matches, &args);
 	if (rc < 0)
 		goto oom;
 
+	args.avtab =  &p->te_cond_avtab;
 	rc = avtab_map(&p->te_cond_avtab, report_assertion_avtab_matches, &args);
 	if (rc < 0)
 		goto oom;
