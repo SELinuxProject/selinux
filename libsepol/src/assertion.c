@@ -65,14 +65,11 @@ static void report_failure(sepol_handle_t *handle, policydb_t *p, const avrule_t
 static int match_any_class_permissions(class_perm_node_t *cp, uint32_t class, uint32_t data)
 {
 	for (; cp; cp = cp->next) {
-		if ((cp->tclass == class) && (cp->data & data)) {
-			break;
-		}
+		if ((cp->tclass == class) && (cp->data & data))
+			return 1;
 	}
-	if (!cp)
-		return 0;
 
-	return 1;
+	return 0;
 }
 
 static int extended_permissions_and(uint32_t *perms1, uint32_t *perms2) {
