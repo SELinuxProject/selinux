@@ -481,6 +481,8 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 
 	if (avrule->specified == AVRULE_XPERMS_NEVERALLOW) {
 		rc = check_assertion_extended_permissions(avrule, avtab, k, p);
+		if (rc < 0)
+			goto oom;
 		if (rc == 0)
 			goto nomatch;
 	}
