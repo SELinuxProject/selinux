@@ -158,8 +158,8 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 	tmp_key.specified = AVTAB_XPERMS_ALLOWED;
 
 	ebitmap_for_each_positive_bit(sattr, snode, i) {
+		tmp_key.source_type = i + 1;
 		ebitmap_for_each_positive_bit(tattr, tnode, j) {
-			tmp_key.source_type = i + 1;
 			tmp_key.target_type = j + 1;
 			for (node = avtab_search_node(avtab, &tmp_key);
 			     node;
@@ -334,8 +334,8 @@ static int check_assertion_extended_permissions_avtab(avrule_t *avrule, avtab_t 
 	tmp_key.specified = AVTAB_XPERMS_ALLOWED;
 
 	ebitmap_for_each_positive_bit(sattr, snode, i) {
+		tmp_key.source_type = i + 1;
 		ebitmap_for_each_positive_bit(tattr, tnode, j) {
-			tmp_key.source_type = i + 1;
 			tmp_key.target_type = j + 1;
 			for (node = avtab_search_node(avtab, &tmp_key);
 			     node;
