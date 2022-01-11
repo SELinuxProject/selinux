@@ -214,7 +214,7 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	avrule_t *avrule = a->avrule;
 	class_perm_node_t *cp;
 	uint32_t perms;
-	ebitmap_t src_matches, tgt_matches, self_matches, matches;
+	ebitmap_t src_matches, tgt_matches, self_matches;
 	ebitmap_node_t *snode, *tnode;
 	unsigned int i, j;
 
@@ -227,7 +227,6 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	ebitmap_init(&src_matches);
 	ebitmap_init(&tgt_matches);
 	ebitmap_init(&self_matches);
-	ebitmap_init(&matches);
 
 	rc = ebitmap_and(&src_matches, &avrule->stypes.types,
 			 &p->attr_type_map[k->source_type - 1]);
@@ -242,10 +241,7 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 		goto oom;
 
 	if (avrule->flags == RULE_SELF) {
-		rc = ebitmap_and(&matches, &p->attr_type_map[k->source_type - 1], &p->attr_type_map[k->target_type - 1]);
-		if (rc < 0)
-			goto oom;
-		rc = ebitmap_and(&self_matches, &avrule->stypes.types, &matches);
+		rc = ebitmap_and(&self_matches, &src_matches, &p->attr_type_map[k->target_type - 1]);
 		if (rc < 0)
 			goto oom;
 
@@ -284,7 +280,6 @@ exit:
 	ebitmap_destroy(&src_matches);
 	ebitmap_destroy(&tgt_matches);
 	ebitmap_destroy(&self_matches);
-	ebitmap_destroy(&matches);
 	return rc;
 }
 
@@ -374,7 +369,7 @@ static int check_assertion_extended_permissions_avtab(avrule_t *avrule, avtab_t 
 static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab,
 						avtab_key_t *k, policydb_t *p)
 {
-	ebitmap_t src_matches, tgt_matches, self_matches, matches;
+	ebitmap_t src_matches, tgt_matches, self_matches;
 	unsigned int i, j;
 	ebitmap_node_t *snode, *tnode;
 	int rc;
@@ -382,7 +377,6 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 	ebitmap_init(&src_matches);
 	ebitmap_init(&tgt_matches);
 	ebitmap_init(&self_matches);
-	ebitmap_init(&matches);
 
 	rc = ebitmap_and(&src_matches, &avrule->stypes.types,
 			 &p->attr_type_map[k->source_type - 1]);
@@ -400,11 +394,7 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 		goto oom;
 
 	if (avrule->flags == RULE_SELF) {
-		rc = ebitmap_and(&matches, &p->attr_type_map[k->source_type - 1],
-				&p->attr_type_map[k->target_type - 1]);
-		if (rc < 0)
-			goto oom;
-		rc = ebitmap_and(&self_matches, &avrule->stypes.types, &matches);
+		rc = ebitmap_and(&self_matches, &src_matches, &p->attr_type_map[k->target_type - 1]);
 		if (rc < 0)
 			goto oom;
 
@@ -435,7 +425,7 @@ oom:
 exit:
 	ebitmap_destroy(&src_matches);
 	ebitmap_destroy(&tgt_matches);
-	ebitmap_destroy(&matches);
+	ebitmap_destroy(&self_matches);
 	return rc;
 }
 
