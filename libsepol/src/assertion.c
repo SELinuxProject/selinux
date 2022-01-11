@@ -440,9 +440,35 @@ exit:
 	return ret;
 }
 
+static int check_assertion_self_match(avtab_key_t *k, avrule_t *avrule, policydb_t *p)
+{
+	ebitmap_t src_matches;
+	int rc;
+
+	/* The key's target must match something in the matches of the avrule's source
+	 * and the key's source.
+	 */
+
+	rc = ebitmap_and(&src_matches, &avrule->stypes.types, &p->attr_type_map[k->source_type - 1]);
+	if (rc < 0)
+		goto oom;
+
+	if (!ebitmap_match_any(&src_matches, &p->attr_type_map[k->target_type - 1])) {
+		rc = 0;
+		goto nomatch;
+	}
+
+	rc = 1;
+
+oom:
+nomatch:
+	ebitmap_destroy(&src_matches);
+	return rc;
+}
+
 static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *args)
 {
-	int rc, rc2 = 0;
+	int rc;
 	struct avtab_match_args *a = (struct avtab_match_args *)args;
 	policydb_t *p = a->p;
 	avrule_t *avrule = a->avrule;
@@ -460,22 +486,11 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	/* neverallow may have tgts even if it uses SELF */
 	if (!ebitmap_match_any(&avrule->ttypes.types, &p->attr_type_map[k->target_type -1])) {
 		if (avrule->flags == RULE_SELF) {
-			/* If the neverallow uses SELF, then it is not enough that the
-			 * neverallow's source matches the src and tgt of the rule being checked.
-			 * It must match the same thing in the src and tgt, so AND the source
-			 * and target together and check for a match on the result.
-			 */
-			ebitmap_t match;
-			rc = ebitmap_and(&match, &p->attr_type_map[k->source_type - 1], &p->attr_type_map[k->target_type - 1] );
-			if (rc) {
-				ebitmap_destroy(&match);
+			rc = check_assertion_self_match(k, avrule, p);
+			if (rc < 0)
 				goto oom;
-			}
-			if (!ebitmap_match_any(&avrule->stypes.types, &match)) {
-				ebitmap_destroy(&match);
+			if (rc == 0)
 				goto nomatch;
-			}
-			ebitmap_destroy(&match);
 		} else {
 			goto nomatch;
 		}
