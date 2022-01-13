@@ -755,6 +755,11 @@ int cil_resolve_classcommon(struct cil_tree_node *current, void *extra_args)
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+	if (NODE(class_datum)->flavor != CIL_CLASS) {
+		cil_log(CIL_ERR, "Class %s is not a kernel class and cannot be associated with common %s\n", clscom->class_str, clscom->common_str);
+		rc = SEPOL_ERR;
+		goto exit;
+	}
 
 	rc = cil_resolve_name(current, clscom->common_str, CIL_SYM_COMMONS, extra_args, &common_datum);
 	if (rc != SEPOL_OK) {
