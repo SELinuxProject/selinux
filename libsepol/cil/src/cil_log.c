@@ -70,3 +70,8 @@ void cil_set_log_level(enum cil_log_level lvl)
 {
 	cil_log_level = lvl;
 }
+
+enum cil_log_level cil_get_log_level(void)
+{
+	return cil_log_level;
+}

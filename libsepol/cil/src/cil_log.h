@@ -38,4 +38,6 @@
 __attribute__ ((format(printf, 2, 0))) void cil_vlog(enum cil_log_level lvl, const char *msg, va_list args);
 __attribute__ ((format(printf, 2, 3))) void cil_log(enum cil_log_level lvl, const char *msg, ...);
 
+enum cil_log_level cil_get_log_level(void);
+
 #endif // CIL_LOG_H_
