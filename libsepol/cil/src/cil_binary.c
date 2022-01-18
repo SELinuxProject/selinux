@@ -4640,6 +4640,9 @@ static int __cil_print_neverallow_failure(const struct cil_db *db, struct cil_tr
 	char *neverallow_str;
 	char *allow_str;
 	enum cil_flavor avrule_flavor;
+	int num_matching = 0;
+	int count_matching = 0;
+	enum cil_log_level log_level = cil_get_log_level();
 
 	target.rule_kind = CIL_AVRULE_ALLOWED;
 	target.is_extended = cil_rule->is_extended;
@@ -4667,10 +4670,18 @@ static int __cil_print_neverallow_failure(const struct cil_db *db, struct cil_tr
 	}
 
 	cil_list_for_each(i2, matching) {
+		num_matching++;
+	}
+	cil_list_for_each(i2, matching) {
 		n2 = i2->data;
 		r2 = n2->data;
 		__cil_print_parents("    ", n2);
 		__cil_print_rule("      ", allow_str, r2);
+		count_matching++;
+		if (count_matching >= 4 && num_matching > 4 && log_level == CIL_ERR) {
+			cil_log(CIL_ERR, "    Only first 4 of %d matching rules shown (use \"-v\" to show all)\n", num_matching);
+			break;
+		}
 	}
 	cil_log(CIL_ERR,"\n");
 	cil_list_destroy(&matching, CIL_FALSE);
