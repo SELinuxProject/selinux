@@ -2280,8 +2280,10 @@ static int __cil_post_report_conflict(struct cil_tree_node *node, uint32_t *fini
 static int __cil_post_process_context_rules(struct cil_sort *sort, int (*compar)(const void *, const void *), int (*concompar)(const void *, const void *), struct cil_db *db, enum cil_flavor flavor, const char *flavor_str)
 {
 	uint32_t count = sort->count;
-	uint32_t i, j = 0, removed = 0;
+	uint32_t i = 0, j, removed = 0;
+	int conflicting = 0;
 	int rc = SEPOL_OK;
+	enum cil_log_level log_level = cil_get_log_level();
 
 	if (count < 2) {
 		return SEPOL_OK;
@@ -2289,36 +2291,43 @@ static int __cil_post_process_context_rules(struct cil_sort *sort, int (*compar)
 
 	qsort(sort->array, sort->count, sizeof(sort->array), compar);
 
-	for (i=1; i<count; i++) {
+	for (j=1; j<count; j++) {
 		if (compar(&sort->array[i], &sort->array[j]) != 0) {
-			j++;
+			i++;
+			if (conflicting >= 4) {
+				/* 2 rules were written when conflicting == 1 */
+				cil_log(CIL_WARN, "  Only first 4 of %d conflicting rules shown\n", conflicting);
+			}
+			conflicting = 0;
 		} else {
 			removed++;
-			if (!db->multiple_decls ||
-			   concompar(&sort->array[i], &sort->array[j]) != 0) {
-				struct cil_list_item li;
-				int rc2;
-				cil_log(CIL_WARN, "Found conflicting %s rules\n",
-					flavor_str);
-				rc = SEPOL_ERR;
-				li.flavor = flavor;
-				li.data = sort->array[i];
-				rc2 = cil_tree_walk(db->ast->root,
-						    __cil_post_report_conflict,
-						    NULL, NULL, &li);
-				if (rc2 != SEPOL_OK) goto exit;
-				li.data = sort->array[j];
-				rc2 = cil_tree_walk(db->ast->root,
-						    __cil_post_report_conflict,
-						    NULL, NULL, &li);
-				if (rc2 != SEPOL_OK) goto exit;
+			if (!db->multiple_decls || concompar(&sort->array[i], &sort->array[j]) != 0) {
+				conflicting++;
+				if (log_level >= CIL_WARN) {
+					struct cil_list_item li;
+					int rc2;
+					li.flavor = flavor;
+					if (conflicting == 1) {
+						cil_log(CIL_WARN, "Found conflicting %s rules\n", flavor_str);
+						rc = SEPOL_ERR;
+						li.data = sort->array[i];
+						rc2 = cil_tree_walk(db->ast->root, __cil_post_report_conflict,
+											NULL, NULL, &li);
+						if (rc2 != SEPOL_OK) goto exit;
+					}
+					if (conflicting < 4 || log_level > CIL_WARN) {
+						li.data = sort->array[j];
+						rc2 = cil_tree_walk(db->ast->root, __cil_post_report_conflict,
+											NULL, NULL, &li);
+						if (rc2 != SEPOL_OK) goto exit;
+					}
+				}
 			}
 		}
-		if (i != j) {
-			sort->array[j] = sort->array[i];
+		if (i != j && !conflicting) {
+			sort->array[i] = sort->array[j];
 		}
 	}
-
 	sort->count = count - removed;
 
 exit:
