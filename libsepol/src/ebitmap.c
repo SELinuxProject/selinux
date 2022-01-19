@@ -406,7 +406,7 @@ int ebitmap_read(ebitmap_t * e, void *fp)
 	count = le32_to_cpu(buf[2]);
 
 	if (mapsize != MAPSIZE) {
-		ERR(NULL, "security: ebitmap: map size %d does not match my size %zu (high bit was %d)\n",
+		ERR(NULL, "security: ebitmap: map size %d does not match my size %zu (high bit was %d)",
 		     mapsize, MAPSIZE, e->highbit);
 		goto bad;
 	}
@@ -415,7 +415,7 @@ int ebitmap_read(ebitmap_t * e, void *fp)
 		goto ok;
 	}
 	if (e->highbit & (MAPSIZE - 1)) {
-		ERR(NULL, "security: ebitmap: high bit (%d) is not a multiple of the map size (%zu)\n",
+		ERR(NULL, "security: ebitmap: high bit (%d) is not a multiple of the map size (%zu)",
 		     e->highbit, MAPSIZE);
 		goto bad;
 	}
@@ -427,12 +427,12 @@ int ebitmap_read(ebitmap_t * e, void *fp)
 	for (i = 0; i < count; i++) {
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0) {
-			ERR(NULL, "security: ebitmap: truncated map\n");
+			ERR(NULL, "security: ebitmap: truncated map");
 			goto bad;
 		}
 		n = (ebitmap_node_t *) malloc(sizeof(ebitmap_node_t));
 		if (!n) {
-			ERR(NULL, "security: ebitmap: out of memory\n");
+			ERR(NULL, "security: ebitmap: out of memory");
 			rc = -ENOMEM;
 			goto bad;
 		}
@@ -441,30 +441,30 @@ int ebitmap_read(ebitmap_t * e, void *fp)
 		n->startbit = le32_to_cpu(buf[0]);
 
 		if (n->startbit & (MAPSIZE - 1)) {
-			ERR(NULL, "security: ebitmap start bit (%d) is not a multiple of the map size (%zu)\n",
+			ERR(NULL, "security: ebitmap start bit (%d) is not a multiple of the map size (%zu)",
 			     n->startbit, MAPSIZE);
 			goto bad_free;
 		}
 		if (n->startbit > (e->highbit - MAPSIZE)) {
-			ERR(NULL, "security: ebitmap start bit (%d) is beyond the end of the bitmap (%zu)\n",
+			ERR(NULL, "security: ebitmap start bit (%d) is beyond the end of the bitmap (%zu)",
 			     n->startbit, (e->highbit - MAPSIZE));
 			goto bad_free;
 		}
 		rc = next_entry(&map, fp, sizeof(uint64_t));
 		if (rc < 0) {
-			ERR(NULL, "security: ebitmap: truncated map\n");
+			ERR(NULL, "security: ebitmap: truncated map");
 			goto bad_free;
 		}
 		n->map = le64_to_cpu(map);
 
 		if (!n->map) {
-			ERR(NULL, "security: ebitmap: null map in ebitmap (startbit %d)\n",
+			ERR(NULL, "security: ebitmap: null map in ebitmap (startbit %d)",
 			     n->startbit);
 			goto bad_free;
 		}
 		if (l) {
 			if (n->startbit <= l->startbit) {
-				ERR(NULL, "security: ebitmap: start bit %d comes after start bit %d\n",
+				ERR(NULL, "security: ebitmap: start bit %d comes after start bit %d",
 				     n->startbit, l->startbit);
 				goto bad_free;
 			}
@@ -475,7 +475,7 @@ int ebitmap_read(ebitmap_t * e, void *fp)
 		l = n;
 	}
 	if (count && l->startbit + MAPSIZE != e->highbit) {
-		ERR(NULL, "security: ebitmap: high bit %u has not the expected value %zu\n",
+		ERR(NULL, "security: ebitmap: high bit %u has not the expected value %zu",
 		     e->highbit, l->startbit + MAPSIZE);
 		goto bad;
 	}

@@ -1553,7 +1553,7 @@ static int validate_class(hashtab_key_t key, hashtab_datum_t datum, void *p)
 		     cladatum2->comdatum->permissions.table)) {
 			ERR(NULL,
 			    " in the access vector definition "
-			    "for class %s\n", key);
+			    "for class %s", key);
 			return -1;
 		}
 	}

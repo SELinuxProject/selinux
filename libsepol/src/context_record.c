@@ -127,7 +127,7 @@ int sepol_context_create(sepol_handle_t * handle, sepol_context_t ** con_ptr)
 	    (sepol_context_t *) malloc(sizeof(sepol_context_t));
 
 	if (!con) {
-		ERR(handle, "out of memory, could not " "create context\n");
+		ERR(handle, "out of memory, could not create context");
 		return STATUS_ERR;
 	}
 

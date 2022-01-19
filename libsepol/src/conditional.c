@@ -315,7 +315,7 @@ static int evaluate_cond_node(policydb_t * p, cond_node_t * node)
 	if (new_state != node->cur_state) {
 		node->cur_state = new_state;
 		if (new_state == -1)
-			WARN(NULL, "expression result was undefined - disabling all rules.\n");
+			WARN(NULL, "expression result was undefined - disabling all rules.");
 		/* turn the rules on or off */
 		for (cur = node->true_list; cur != NULL; cur = cur->next) {
 			if (new_state <= 0) {
@@ -368,7 +368,7 @@ int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
 		if (ne) {
 			ne->next = NULL;
 		} else {	/* ne should never be NULL */
-			ERR(NULL, "Found expr with no bools and only a ! - this should never happen.\n");
+			ERR(NULL, "Found expr with no bools and only a ! - this should never happen.");
 			return -1;
 		}
 		/* swap the true and false lists */
@@ -421,7 +421,7 @@ int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
 			k = cond_evaluate_expr(p, cn->expr);
 			if (k == -1) {
 				ERR(NULL, "While testing expression, expression result "
-				     "was undefined - this should never happen.\n");
+				     "was undefined - this should never happen.");
 				return -1;
 			}
 			/* set the bit if expression evaluates true */
@@ -660,13 +660,13 @@ static int cond_insertf(avtab_t * a
 					}
 				}
 				if (!found) {
-					ERR(NULL, "security: conflicting type rules.\n");
+					ERR(NULL, "security: conflicting type rules.");
 					return -1;
 				}
 			}
 		} else {
 			if (avtab_search(&p->te_cond_avtab, k)) {
-				ERR(NULL, "security: conflicting type rules when adding type rule for true.\n");
+				ERR(NULL, "security: conflicting type rules when adding type rule for true.");
 				return -1;
 			}
 		}
@@ -733,12 +733,12 @@ static int cond_read_av_list(policydb_t * p, void *fp,
 static int expr_isvalid(policydb_t * p, cond_expr_t * expr)
 {
 	if (expr->expr_type <= 0 || expr->expr_type > COND_LAST) {
-		WARN(NULL, "security: conditional expressions uses unknown operator.\n");
+		WARN(NULL, "security: conditional expressions uses unknown operator.");
 		return 0;
 	}
 
 	if (expr->bool > p->p_bools.nprim) {
-		WARN(NULL, "security: conditional expressions uses unknown bool.\n");
+		WARN(NULL, "security: conditional expressions uses unknown bool.");
 		return 0;
 	}
 	return 1;

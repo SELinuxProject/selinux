@@ -166,7 +166,7 @@ static int type_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 
 	if (new_type->flags & TYPE_FLAGS_PERMISSIVE)
 		if (ebitmap_set_bit(&state->out->permissive_map, new_type->s.value, 1)) {
-			ERR(state->handle, "Out of memory!\n");
+			ERR(state->handle, "Out of memory!");
 			return -1;
 		}
 
@@ -937,7 +937,7 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 	levdatum = (level_datum_t *) hashtab_search(p->p_levels.table,
 						    p->p_sens_val_to_name[l->sens - 1]);
 	if (!levdatum) {
-		ERR(h, "%s: Impossible situation found, nothing in p_levels.table.\n",
+		ERR(h, "%s: Impossible situation found, nothing in p_levels.table.",
 		    __func__);
 		errno = ENOENT;
 		return -1;
@@ -1694,7 +1694,7 @@ static int expand_terule_helper(sepol_handle_t * handle,
 	uint32_t oldtype = 0;
 
 	if (!(specified & (AVRULE_TRANSITION|AVRULE_MEMBER|AVRULE_CHANGE))) {
-		ERR(handle, "Invalid specification: %"PRIu32"\n", specified);
+		ERR(handle, "Invalid specification: %"PRIu32, specified);
 		return EXPAND_RULE_ERROR;
 	}
 
@@ -1873,7 +1873,7 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 				return EXPAND_RULE_ERROR;
 			break;
 		default:
-			ERR(handle, "Unknown specification: %"PRIu32"\n", specified);
+			ERR(handle, "Unknown specification: %"PRIu32, specified);
 			return EXPAND_RULE_ERROR;
 		}
 

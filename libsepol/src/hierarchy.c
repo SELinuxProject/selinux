@@ -237,7 +237,7 @@ oom:
 	ERR(handle, "Insufficient memory");
 
 exit:
-	ERR(handle,"Failed to expand parent rules\n");
+	ERR(handle,"Failed to expand parent rules");
 	avtab_destroy(global_avtab);
 	bounds_destroy_cond_info(*cond_info);
 	*cond_info = NULL;

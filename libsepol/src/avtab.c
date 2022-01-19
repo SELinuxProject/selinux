@@ -548,7 +548,7 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 	if ((vers < POLICYDB_VERSION_XPERMS_IOCTL) &&
 			(key.specified & AVTAB_XPERMS)) {
 		ERR(fp->handle, "policy version %u does not support extended "
-				"permissions rules and one was specified\n", vers);
+				"permissions rules and one was specified", vers);
 		return -1;
 	} else if (key.specified & AVTAB_XPERMS) {
 		rc = next_entry(&buf8, fp, sizeof(uint8_t));
