@@ -2481,7 +2481,7 @@ int role_set_expand(role_set_t * x, ebitmap_t * r, policydb_t * out, policydb_t 
 
 	/* if role is to be complimented, invert the entire bitmap here */
 	if (x->flags & ROLE_COMP) {
-		for (i = 0; i < ebitmap_length(r); i++) {
+		for (i = 0; i < p->p_roles.nprim; i++) {
 			if (ebitmap_get_bit(r, i)) {
 				if (ebitmap_set_bit(r, i, 0))
 					return -1;
