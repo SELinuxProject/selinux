@@ -31,6 +31,7 @@
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/conditional.h>
 
+#include "debug.h"
 #include "private.h"
 
 #define TYPE_VEC_INIT_SIZE 16
@@ -104,6 +105,9 @@ static struct type_vec *build_type_map(const policydb_t *p)
 		if (type_vec_init(&map[i]))
 			goto err;
 
+		if (!p->type_val_to_struct[i])
+			continue;
+
 		if (p->type_val_to_struct[i]->flavor != TYPE_ATTRIB) {
 			ebitmap_for_each_positive_bit(&p->type_attr_map[i],
 						      n, k) {
@@ -114,10 +118,12 @@ static struct type_vec *build_type_map(const policydb_t *p)
 			ebitmap_t *types_i = &p->attr_type_map[i];
 
 			for (k = 0; k < p->p_types.nprim; k++) {
-				ebitmap_t *types_k = &p->attr_type_map[k];
+				const ebitmap_t *types_k;
 
-				if (p->type_val_to_struct[k]->flavor != TYPE_ATTRIB)
+				if (!p->type_val_to_struct[k] || p->type_val_to_struct[k]->flavor != TYPE_ATTRIB)
 					continue;
+
+				types_k = &p->attr_type_map[k];
 
 				if (ebitmap_contains(types_k, types_i)) {
 					if (type_vec_append(&map[i], k))
@@ -437,6 +443,17 @@ int policydb_optimize(policydb_t *p)
 
 	if (p->policy_type != POLICY_KERN)
 		return -1;
+
+	if (p->policyvers >= POLICYDB_VERSION_AVTAB && p->policyvers <= POLICYDB_VERSION_PERMISSIVE) {
+		/*
+		 * For policy versions between 20 and 23, attributes exist in the policy,
+		 * but only in the type_attr_map. This means that there are gaps in both
+		 * the type_val_to_struct and p_type_val_to_name arrays and policy rules
+		 * can refer to those gaps.
+		 */
+		ERR(NULL, "Optimizing policy versions between 20 and 23 is not supported");
+		return -1;
+	}
 
 	type_map = build_type_map(p);
 	if (!type_map)

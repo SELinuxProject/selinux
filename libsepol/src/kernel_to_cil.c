@@ -1227,7 +1227,7 @@ static int write_type_attributes_to_cil(FILE *out, struct policydb *pdb)
 
 	for (i=0; i < pdb->p_types.nprim; i++) {
 		type = pdb->type_val_to_struct[i];
-		if (type->flavor == TYPE_ATTRIB) {
+		if (type && type->flavor == TYPE_ATTRIB) {
 			rc = strs_add(strs, pdb->p_type_val_to_name[i]);
 			if (rc != 0) {
 				goto exit;
@@ -1357,7 +1357,7 @@ static int write_type_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 
 	for (i=0; i < pdb->p_types.nprim; i++) {
 		type = pdb->type_val_to_struct[i];
-		if (type->flavor == TYPE_TYPE && type->primary) {
+		if (type && type->flavor == TYPE_TYPE && type->primary) {
 			rc = strs_add(strs, pdb->p_type_val_to_name[i]);
 			if (rc != 0) {
 				goto exit;
@@ -1486,7 +1486,7 @@ static int write_type_bounds_rules_to_cil(FILE *out, struct policydb *pdb)
 
 	for (i=0; i < pdb->p_types.nprim; i++) {
 		type = pdb->type_val_to_struct[i];
-		if (type->flavor == TYPE_TYPE) {
+		if (type && type->flavor == TYPE_TYPE) {
 			if (type->bounds > 0) {
 				rc = strs_add(strs, pdb->p_type_val_to_name[i]);
 				if (rc != 0) {
@@ -1540,7 +1540,7 @@ static int write_type_attribute_sets_to_cil(FILE *out, struct policydb *pdb)
 
 	for (i=0; i < pdb->p_types.nprim; i++) {
 		attr = pdb->type_val_to_struct[i];
-		if (attr->flavor != TYPE_ATTRIB) continue;
+		if (!attr || attr->flavor != TYPE_ATTRIB) continue;
 		name = pdb->p_type_val_to_name[i];
 		typemap = &pdb->attr_type_map[i];
 		if (ebitmap_is_empty(typemap)) continue;
@@ -2273,7 +2273,7 @@ static int write_role_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 
 	for (i=0; i < pdb->p_types.nprim; i++) {
 		type_datum = pdb->type_val_to_struct[i];
-		if (type_datum->flavor == TYPE_TYPE && type_datum->primary) {
+		if (type_datum && type_datum->flavor == TYPE_TYPE && type_datum->primary) {
 			rc = strs_add(strs, pdb->p_type_val_to_name[i]);
 			if (rc != 0) {
 				goto exit;

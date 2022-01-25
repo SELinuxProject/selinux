@@ -1210,7 +1210,7 @@ static int write_type_attributes_to_conf(FILE *out, struct policydb *pdb)
 
 	for (i=0; i < pdb->p_types.nprim; i++) {
 		type = pdb->type_val_to_struct[i];
-		if (type->flavor == TYPE_ATTRIB) {
+		if (type && type->flavor == TYPE_ATTRIB) {
 			rc = strs_add(strs, pdb->p_type_val_to_name[i]);
 			if (rc != 0) {
 				goto exit;
@@ -1340,7 +1340,7 @@ static int write_type_decl_rules_to_conf(FILE *out, struct policydb *pdb)
 
 	for (i=0; i < pdb->p_types.nprim; i++) {
 		type = pdb->type_val_to_struct[i];
-		if (type->flavor == TYPE_TYPE && type->primary) {
+		if (type && type->flavor == TYPE_TYPE && type->primary) {
 			rc = strs_add(strs, pdb->p_type_val_to_name[i]);
 			if (rc != 0) {
 				goto exit;
@@ -1460,7 +1460,7 @@ static int write_type_bounds_rules_to_conf(FILE *out, struct policydb *pdb)
 
 	for (i=0; i < pdb->p_types.nprim; i++) {
 		type = pdb->type_val_to_struct[i];
-		if (type->flavor == TYPE_TYPE) {
+		if (type && type->flavor == TYPE_TYPE) {
 			if (type->bounds > 0) {
 				rc = strs_add(strs, pdb->p_type_val_to_name[i]);
 				if (rc != 0) {
@@ -1583,7 +1583,7 @@ static int write_type_attribute_sets_to_conf(FILE *out, struct policydb *pdb)
 
 	for (i=0; i < pdb->p_types.nprim; i++) {
 		type = pdb->type_val_to_struct[i];
-		if (type->flavor != TYPE_TYPE || !type->primary) continue;
+		if (!type || type->flavor != TYPE_TYPE || !type->primary) continue;
 		if (ebitmap_cardinality(&pdb->type_attr_map[i]) == 1) continue;
 
 		rc = ebitmap_cpy(&attrmap, &pdb->type_attr_map[i]);
