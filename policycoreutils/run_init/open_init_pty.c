@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
 	rb_init(&inbuf, inbuf_mem, sizeof(inbuf_mem));
 	rb_init(&outbuf, outbuf_mem, sizeof(outbuf_mem));
 
-	if (argc == 1) {
+	if (argc < 2) {
 		printf("usage: %s PROGRAM [ARGS]...\n", argv[0]);
 		exit(1);
 	}

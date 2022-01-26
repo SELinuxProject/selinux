@@ -163,6 +163,10 @@ int main(int argc, char **argv)
 	policyfile = NULL;
 
 	r_opts.abort_on_error = 0;
+	if (!argv[0]) {
+		fprintf(stderr, "Called without required program name!\n");
+		exit(-1);
+	}
 	r_opts.progname = strdup(argv[0]);
 	if (!r_opts.progname) {
 		fprintf(stderr, "%s:  Out of memory!\n", argv[0]);
@@ -423,7 +427,7 @@ int main(int argc, char **argv)
 
 		altpath = argv[optind];
 		optind++;
-	} else if (argc == 1)
+	} else if (argc < 2)
 		usage(argv[0]);
 
 	/* Set selabel_open options. */
