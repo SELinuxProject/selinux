@@ -225,7 +225,7 @@ int hashtab_map(hashtab_t h,
 			      hashtab_datum_t d, void *args), void *args)
 {
 	unsigned int i, ret;
-	hashtab_ptr_t cur;
+	hashtab_ptr_t cur, next;
 
 	if (!h)
 		return SEPOL_OK;
@@ -233,10 +233,11 @@ int hashtab_map(hashtab_t h,
 	for (i = 0; i < h->size; i++) {
 		cur = h->htable[i];
 		while (cur != NULL) {
+			next = cur->next;
 			ret = apply(cur->key, cur->datum, args);
 			if (ret)
 				return ret;
-			cur = cur->next;
+			cur = next;
 		}
 	}
 	return SEPOL_OK;
