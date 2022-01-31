@@ -366,6 +366,9 @@ int ebitmap_to_strs(struct ebitmap *map, struct strs *strs, char **val_to_name)
 	int rc;
 
 	ebitmap_for_each_positive_bit(map, node, i) {
+		if (!val_to_name[i])
+			continue;
+
 		rc = strs_add(strs, val_to_name[i]);
 		if (rc != 0) {
 			return -1;
