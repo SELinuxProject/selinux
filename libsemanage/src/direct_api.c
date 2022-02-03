@@ -994,6 +994,16 @@ cleanup:
 	return status;
 }
 
+/* Files that must exist in order to skip policy rebuild. */
+static const int semanage_computed_files[] = {
+	SEMANAGE_STORE_KERNEL,
+	SEMANAGE_STORE_FC,
+	SEMANAGE_STORE_SEUSERS,
+	SEMANAGE_LINKED,
+	SEMANAGE_SEUSERS_LINKED,
+	SEMANAGE_USERS_EXTRA_LINKED
+};
+
 /* Copies a file from src to dst. If dst already exists then
  * overwrite it. If source doesn't exist then return success.
  * Returns 0 on success, -1 on error. */
@@ -1052,6 +1062,14 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	ibendports_modified = ibendports->dtable->is_modified(ibendports->dbase);
 	seusers_modified = seusers->dtable->is_modified(seusers->dbase);
 	fcontexts_modified = fcontexts->dtable->is_modified(fcontexts->dbase);
+
+	/* Before we do anything else, flush the join to its component parts.
+	 * This *does not* flush to disk automatically */
+	if (users->dtable->is_modified(users->dbase)) {
+		retval = users->dtable->flush(sh, users->dbase);
+		if (retval < 0)
+			goto cleanup;
+	}
 
 	/* Rebuild if explicitly requested or any module changes occurred. */
 	do_rebuild = sh->do_rebuild | sh->modules_modified;
@@ -1119,14 +1137,6 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		}
 	}
 
-	/* Before we do anything else, flush the join to its component parts.
-	 * This *does not* flush to disk automatically */
-	if (users->dtable->is_modified(users->dbase)) {
-		retval = users->dtable->flush(sh, users->dbase);
-		if (retval < 0)
-			goto cleanup;
-	}
-
 	/*
 	 * This is for systems that have already migrated with an older version
 	 * of semanage_migrate_store. The older version did not copy
@@ -1135,47 +1145,19 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	 * in order to skip re-linking are present; otherwise, we force
 	 * a rebuild.
 	 */
-	if (!do_rebuild) {
-		int files[] = {SEMANAGE_STORE_KERNEL,
-					   SEMANAGE_STORE_FC,
-					   SEMANAGE_STORE_SEUSERS,
-					   SEMANAGE_LINKED,
-					   SEMANAGE_SEUSERS_LINKED,
-					   SEMANAGE_USERS_EXTRA_LINKED};
-
-		for (i = 0; i < (int) ARRAY_SIZE(files); i++) {
-			path = semanage_path(SEMANAGE_TMP, files[i]);
-			if (stat(path, &sb) != 0) {
-				if (errno != ENOENT) {
-					ERR(sh, "Unable to access %s: %s\n", path, strerror(errno));
-					retval = -1;
-					goto cleanup;
-				}
-
-				do_rebuild = 1;
-				goto rebuild;
+	for (i = 0; !do_rebuild && i < (int)ARRAY_SIZE(semanage_computed_files); i++) {
+		path = semanage_path(SEMANAGE_TMP, semanage_computed_files[i]);
+		if (stat(path, &sb) != 0) {
+			if (errno != ENOENT) {
+				ERR(sh, "Unable to access %s: %s\n", path, strerror(errno));
+				retval = -1;
+				goto cleanup;
 			}
+
+			do_rebuild = 1;
+			break;
 		}
 	}
-
-rebuild:
-	/*
-	 * Now that we know whether or not a rebuild is required,
-	 * we can determine what else needs to be done.
-	 * We need to write the kernel policy if we are rebuilding
-	 * or if any other policy component that lives in the kernel
-	 * policy has been modified.
-	 * We need to install the policy files if any of the managed files
-	 * that live under /etc/selinux (kernel policy, seusers, file contexts)
-	 * will be modified.
-	 */
-	do_write_kernel = do_rebuild | ports_modified | ibpkeys_modified |
-		ibendports_modified |
-		bools->dtable->is_modified(bools->dbase) |
-		ifaces->dtable->is_modified(ifaces->dbase) |
-		nodes->dtable->is_modified(nodes->dbase) |
-		users->dtable->is_modified(users_base->dbase);
-	do_install = do_write_kernel | seusers_modified | fcontexts_modified;
 
 	/*
 	 * If there were policy changes, or explicitly requested, or
@@ -1329,6 +1311,23 @@ rebuild:
 			goto cleanup;
 		}
 	}
+
+	/*
+	 * Determine what else needs to be done.
+	 * We need to write the kernel policy if we are rebuilding
+	 * or if any other policy component that lives in the kernel
+	 * policy has been modified.
+	 * We need to install the policy files if any of the managed files
+	 * that live under /etc/selinux (kernel policy, seusers, file contexts)
+	 * will be modified.
+	 */
+	do_write_kernel = do_rebuild | ports_modified | ibpkeys_modified |
+		ibendports_modified |
+		bools->dtable->is_modified(bools->dbase) |
+		ifaces->dtable->is_modified(ifaces->dbase) |
+		nodes->dtable->is_modified(nodes->dbase) |
+		users->dtable->is_modified(users_base->dbase);
+	do_install = do_write_kernel | seusers_modified | fcontexts_modified;
 
 	/* Attach our databases to the policydb we just created or loaded. */
 	dbase_policydb_attach((dbase_policydb_t *) pusers_base->dbase, out);
