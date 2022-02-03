@@ -116,20 +116,23 @@ semanage_handle_t *semanage_handle_create(void)
 
 void semanage_set_rebuild(semanage_handle_t * sh, int do_rebuild)
 {
-
 	assert(sh != NULL);
 
 	sh->do_rebuild = do_rebuild;
-	return;
 }
 
 void semanage_set_reload(semanage_handle_t * sh, int do_reload)
 {
-
 	assert(sh != NULL);
 
 	sh->do_reload = do_reload;
-	return;
+}
+
+void semanage_set_check_ext_changes(semanage_handle_t * sh, int do_check)
+{
+	assert(sh != NULL);
+
+	sh->check_ext_changes = do_check;
 }
 
 int semanage_get_hll_compiler_path(semanage_handle_t *sh,

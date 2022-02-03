@@ -102,4 +102,7 @@ int semanage_module_get_path(semanage_handle_t *sh,
 			     char *path,
 			     size_t len);
 
+extern const size_t CHECKSUM_CONTENT_SIZE;
+void semanage_hash_to_checksum_string(const uint8_t *hash, char *checksum);
+
 #endif

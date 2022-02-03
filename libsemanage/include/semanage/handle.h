@@ -66,6 +66,11 @@ extern void semanage_set_reload(semanage_handle_t * handle, int do_reload);
  * 1 for yes, 0 for no (default) */
 extern void semanage_set_rebuild(semanage_handle_t * handle, int do_rebuild);
 
+/* set whether to rebuild the policy on commit when potential changes
+ * to module files since last rebuild are detected,
+ * 1 for yes (default), 0 for no */
+extern void semanage_set_check_ext_changes(semanage_handle_t * handle, int do_check);
+
 /* Fills *compiler_path with the location of the hll compiler sh->conf->compiler_directory_path
  * corresponding to lang_ext.
  * Upon success returns 0, -1 on error. */

@@ -33,6 +33,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/mman.h>
+#include <sys/wait.h>
 #include <limits.h>
 #include <errno.h>
 #include <dirent.h>
@@ -56,8 +58,7 @@
 #include "semanage_store.h"
 #include "database_policydb.h"
 #include "policy.h"
-#include <sys/mman.h>
-#include <sys/wait.h>
+#include "sha256.h"
 
 #define PIPE_READ 0
 #define PIPE_WRITE 1
@@ -450,7 +451,7 @@ static int parse_module_headers(semanage_handle_t * sh, char *module_data,
 /* Writes a block of data to a file.  Returns 0 on success, -1 on
  * error. */
 static int write_file(semanage_handle_t * sh,
-		      const char *filename, char *data, size_t num_bytes)
+		      const char *filename, const char *data, size_t num_bytes)
 {
 	int out;
 
@@ -850,8 +851,21 @@ cleanup:
 	return ret;
 }
 
+static void update_checksum_with_len(Sha256Context *context, size_t s)
+{
+	int i;
+	uint8_t buffer[8];
+
+	for (i = 0; i < 8; i++) {
+		buffer[i] = s & 0xff;
+		s >>= 8;
+	}
+	Sha256Update(context, buffer, 8);
+}
+
 static int semanage_compile_module(semanage_handle_t *sh,
-				semanage_module_info_t *modinfo)
+				   semanage_module_info_t *modinfo,
+				   Sha256Context *context)
 {
 	char cil_path[PATH_MAX];
 	char hll_path[PATH_MAX];
@@ -922,6 +936,11 @@ static int semanage_compile_module(semanage_handle_t *sh,
 		goto cleanup;
 	}
 
+	if (context) {
+		update_checksum_with_len(context, cil_data_len);
+		Sha256Update(context, cil_data, cil_data_len);
+	}
+
 	status = write_compressed_file(sh, cil_path, cil_data, cil_data_len);
 	if (status == -1) {
 		ERR(sh, "Failed to write %s\n", cil_path);
@@ -950,18 +969,40 @@ cleanup:
 	return status;
 }
 
-static int semanage_compile_hll_modules(semanage_handle_t *sh,
-				semanage_module_info_t *modinfos,
-				int num_modinfos)
+static int modinfo_cmp(const void *a, const void *b)
 {
-	int status = 0;
-	int i;
+	const semanage_module_info_t *ma = a;
+	const semanage_module_info_t *mb = b;
+
+	return strcmp(ma->name, mb->name);
+}
+
+static int semanage_compile_hll_modules(semanage_handle_t *sh,
+					semanage_module_info_t *modinfos,
+					int num_modinfos,
+					char *cil_checksum)
+{
+	/* to be incremented when checksum input data format changes */
+	static const size_t CHECKSUM_EPOCH = 1;
+
+	int i, status = 0;
 	char cil_path[PATH_MAX];
 	struct stat sb;
+	Sha256Context context;
+	SHA256_HASH hash;
+	struct file_contents contents = {};
 
 	assert(sh);
 	assert(modinfos);
 
+	/* Sort modules by name to get consistent ordering. */
+	qsort(modinfos, num_modinfos, sizeof(*modinfos), &modinfo_cmp);
+
+	Sha256Initialise(&context);
+	update_checksum_with_len(&context, CHECKSUM_EPOCH);
+
+	/* prefix with module count to avoid collisions */
+	update_checksum_with_len(&context, num_modinfos);
 	for (i = 0; i < num_modinfos; i++) {
 		status = semanage_module_get_path(
 				sh,
@@ -969,29 +1010,91 @@ static int semanage_compile_hll_modules(semanage_handle_t *sh,
 				SEMANAGE_MODULE_PATH_CIL,
 				cil_path,
 				sizeof(cil_path));
-		if (status != 0) {
-			goto cleanup;
+		if (status != 0)
+			return -1;
+
+		if (!semanage_get_ignore_module_cache(sh)) {
+			status = stat(cil_path, &sb);
+			if (status == 0) {
+				status = map_compressed_file(sh, cil_path, &contents);
+				if (status < 0) {
+					ERR(sh, "Error mapping file: %s", cil_path);
+					return -1;
+				}
+
+				/* prefix with length to avoid collisions */
+				update_checksum_with_len(&context, contents.len);
+				Sha256Update(&context, contents.data, contents.len);
+
+				unmap_compressed_file(&contents);
+				continue;
+			} else if (errno != ENOENT) {
+				ERR(sh, "Unable to access %s: %s\n", cil_path,
+				    strerror(errno));
+				return -1; //an error in the "stat" call
+			}
 		}
 
-		if (semanage_get_ignore_module_cache(sh) == 0 &&
-				(status = stat(cil_path, &sb)) == 0) {
-			continue;
-		}
-		if (status != 0 && errno != ENOENT) {
-			ERR(sh, "Unable to access %s: %s\n", cil_path, strerror(errno));
-			goto cleanup; //an error in the "stat" call
-		}
+		status = semanage_compile_module(sh, &modinfos[i], &context);
+		if (status < 0)
+			return -1;
+	}
+	Sha256Finalise(&context, &hash);
 
-		status = semanage_compile_module(sh, &modinfos[i]);
-		if (status < 0) {
-			goto cleanup;
+	semanage_hash_to_checksum_string(hash.bytes, cil_checksum);
+	return 0;
+}
+
+static int semanage_compare_checksum(semanage_handle_t *sh, const char *reference)
+{
+	const char *path = semanage_path(SEMANAGE_TMP, SEMANAGE_MODULES_CHECKSUM);
+	struct stat sb;
+	int fd, retval;
+	char *data;
+
+	fd = open(path, O_RDONLY);
+	if (fd == -1) {
+		if (errno != ENOENT) {
+			ERR(sh, "Unable to open %s: %s\n", path, strerror(errno));
+			return -1;
 		}
+		/* Checksum file not present - force a rebuild. */
+		return 1;
 	}
 
-	status = 0;
+	if (fstat(fd, &sb) == -1) {
+		ERR(sh, "Unable to stat %s\n", path);
+		retval = -1;
+		goto out_close;
+	}
 
-cleanup:
-	return status;
+	if (sb.st_size != (off_t)CHECKSUM_CONTENT_SIZE) {
+		/* Incompatible/invalid hash type - just force a rebuild. */
+		WARN(sh, "Module checksum invalid - forcing a rebuild\n");
+		retval = 1;
+		goto out_close;
+	}
+
+	data = mmap(NULL, CHECKSUM_CONTENT_SIZE, PROT_READ, MAP_PRIVATE, fd, 0);
+	if (data == MAP_FAILED) {
+		ERR(sh, "Unable to mmap %s\n", path);
+		retval = -1;
+		goto out_close;
+	}
+
+	retval = memcmp(data, reference, CHECKSUM_CONTENT_SIZE) != 0;
+	munmap(data, sb.st_size);
+out_close:
+	close(fd);
+	return retval;
+}
+
+static int semanage_write_modules_checksum(semanage_handle_t *sh,
+					   const char *checksum)
+{
+	const char *path = semanage_path(SEMANAGE_TMP, SEMANAGE_MODULES_CHECKSUM);
+
+	return write_file(sh, path, checksum, CHECKSUM_CONTENT_SIZE);
 }
 
 /* Files that must exist in order to skip policy rebuild. */
@@ -1030,6 +1133,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	semanage_module_info_t *modinfos = NULL;
 	mode_t mask = umask(0077);
 	struct stat sb;
+	char modules_checksum[CHECKSUM_CONTENT_SIZE + 1 /* '\0' */];
 
 	int do_rebuild, do_write_kernel, do_install;
 	int fcontexts_modified, ports_modified, seusers_modified,
@@ -1159,27 +1263,44 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 		}
 	}
 
+	if (do_rebuild || sh->check_ext_changes) {
+		retval = semanage_get_active_modules(sh, &modinfos, &num_modinfos);
+		if (retval < 0) {
+			goto cleanup;
+		}
+
+		/* No modules - nothing to rebuild. */
+		if (num_modinfos == 0) {
+			goto cleanup;
+		}
+
+		retval = semanage_compile_hll_modules(sh, modinfos, num_modinfos,
+						      modules_checksum);
+		if (retval < 0) {
+			ERR(sh, "Failed to compile hll files into cil files.\n");
+			goto cleanup;
+		}
+
+		if (!do_rebuild && sh->check_ext_changes) {
+			retval = semanage_compare_checksum(sh, modules_checksum);
+			if (retval < 0)
+				goto cleanup;
+			do_rebuild = retval;
+		}
+
+		retval = semanage_write_modules_checksum(sh, modules_checksum);
+		if (retval < 0) {
+			ERR(sh, "Failed to write module checksum file.\n");
+			goto cleanup;
+		}
+	}
+
 	/*
 	 * If there were policy changes, or explicitly requested, or
 	 * any required files are missing, rebuild the policy.
 	 */
 	if (do_rebuild) {
 		/* =================== Module expansion =============== */
-
-		retval = semanage_get_active_modules(sh, &modinfos, &num_modinfos);
-		if (retval < 0) {
-			goto cleanup;
-		}
-
-		if (num_modinfos == 0) {
-			goto cleanup;
-		}
-
-		retval = semanage_compile_hll_modules(sh, modinfos, num_modinfos);
-		if (retval < 0) {
-			ERR(sh, "Failed to compile hll files into cil files.\n");
-			goto cleanup;
-		}
 
 		retval = semanage_get_cil_paths(sh, modinfos, num_modinfos, &mod_filenames);
 		if (retval < 0)
@@ -1703,7 +1824,7 @@ static int semanage_direct_extract(semanage_handle_t * sh,
 			goto cleanup;
 		}
 
-		rc = semanage_compile_module(sh, _modinfo);
+		rc = semanage_compile_module(sh, _modinfo, NULL);
 		if (rc < 0) {
 			goto cleanup;
 		}

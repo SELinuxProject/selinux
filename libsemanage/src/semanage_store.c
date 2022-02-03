@@ -115,6 +115,7 @@ static const char *semanage_sandbox_paths[SEMANAGE_STORE_NUM_PATHS] = {
 	"/disable_dontaudit",
 	"/preserve_tunables",
 	"/modules/disabled",
+	"/modules_checksum",
 	"/policy.kern",
 	"/file_contexts.local",
 	"/file_contexts.homedirs",

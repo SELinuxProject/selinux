@@ -979,9 +979,9 @@ int semanage_module_remove_key(semanage_handle_t *sh,
 }
 
 static const char CHECKSUM_TYPE[] = "sha256";
-static const size_t CHECKSUM_CONTENT_SIZE = sizeof(CHECKSUM_TYPE) + 1 + 2 * SHA256_HASH_SIZE;
+const size_t CHECKSUM_CONTENT_SIZE = sizeof(CHECKSUM_TYPE) + 1 + 2 * SHA256_HASH_SIZE;
 
-static void semanage_hash_to_checksum_string(const uint8_t *hash, char *checksum)
+void semanage_hash_to_checksum_string(const uint8_t *hash, char *checksum)
 {
 	size_t i;
 
