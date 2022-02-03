@@ -59,6 +59,7 @@ typedef struct dbase_policydb dbase_t;
 
 #include "debug.h"
 #include "utilities.h"
+#include "compressed_file.h"
 
 #define SEMANAGE_CONF_FILE "semanage.conf"
 /* relative path names to enum semanage_paths to special files and
@@ -2054,60 +2055,27 @@ int semanage_direct_get_serial(semanage_handle_t * sh)
 
 int semanage_load_files(semanage_handle_t * sh, cil_db_t *cildb, char **filenames, int numfiles)
 {
-	int retval = 0;
-	FILE *fp;
-	ssize_t size;
-	char *data = NULL;
+	int i, retval = 0;
 	char *filename;
-	int i;
+	struct file_contents contents = {};
 
 	for (i = 0; i < numfiles; i++) {
 		filename = filenames[i];
 
-		if ((fp = fopen(filename, "rb")) == NULL) {
-			ERR(sh, "Could not open module file %s for reading.", filename);
-			goto cleanup;
-		}
+		retval = map_compressed_file(sh, filename, &contents);
+		if (retval < 0)
+			return -1;
 
-		if ((size = bunzip(sh, fp, &data)) <= 0) {
-			rewind(fp);
-			__fsetlocking(fp, FSETLOCKING_BYCALLER);
+		retval = cil_add_file(cildb, filename, contents.data, contents.len);
+		unmap_compressed_file(&contents);
 
-			if (fseek(fp, 0, SEEK_END) != 0) {
-				ERR(sh, "Failed to determine size of file %s.", filename);
-				goto cleanup;
-			}
-			size = ftell(fp);
-			rewind(fp);
-
-			data = malloc(size);
-			if (fread(data, size, 1, fp) != 1) {
-				ERR(sh, "Failed to read file %s.", filename);
-				goto cleanup;
-			}
-		}
-
-		fclose(fp);
-		fp = NULL;
-
-		retval = cil_add_file(cildb, filename, data, size);
 		if (retval != SEPOL_OK) {
 			ERR(sh, "Error while reading from file %s.", filename);
-			goto cleanup;
+			return -1;
 		}
-	
-		free(data);
-		data = NULL;
 	}
 
-	return retval;
-
-      cleanup:
-	if (fp != NULL) {
-		fclose(fp);
-	}
-	free(data);
-	return -1;
+	return 0;
 }
 
 /* 
