@@ -47,6 +47,7 @@ static int verbose;
 static int reload;
 static int no_reload;
 static int build;
+static int check_ext_changes;
 static int disable_dontaudit;
 static int preserve_tunables;
 static int ignore_module_cache;
@@ -149,6 +150,9 @@ static void usage(char *progname)
 	printf("  -c, --cil extract module as cil. This only affects module extraction.\n");
 	printf("  -H, --hll extract module as hll. This only affects module extraction.\n");
 	printf("  -m, --checksum   print module checksum (SHA256).\n");
+	printf("      --rebuild-if-modules-changed\n"
+	       "                   force policy rebuild if module content changed since\n"
+	       "                   last rebuild (based on checksum)\n");
 }
 
 /* Sets the global mode variable to new_mode, but only if no other
@@ -180,6 +184,7 @@ static void set_mode(enum client_modes new_mode, char *arg)
 static void parse_command_line(int argc, char **argv)
 {
 	static struct option opts[] = {
+		{"rebuild-if-modules-changed", 0, NULL, '\0'},
 		{"store", required_argument, NULL, 's'},
 		{"base", required_argument, NULL, 'b'},
 		{"help", 0, NULL, 'h'},
@@ -207,15 +212,26 @@ static void parse_command_line(int argc, char **argv)
 	};
 	int extract_selected = 0;
 	int cil_hll_set = 0;
-	int i;
+	int i, longind;
 	verbose = 0;
 	reload = 0;
 	no_reload = 0;
+	check_ext_changes = 0;
 	priority = 400;
 	while ((i =
-		getopt_long(argc, argv, "s:b:hi:l::vr:u:RnNBDCPX:e:d:p:S:E:cHm", opts,
-			    NULL)) != -1) {
+		getopt_long(argc, argv, "s:b:hi:l::vr:u:RnNBDCPX:e:d:p:S:E:cHm",
+			    opts, &longind)) != -1) {
 		switch (i) {
+		case '\0':
+			switch(longind) {
+			case 0: /* --rebuild-if-modules-changed */
+				check_ext_changes = 1;
+				break;
+			default:
+				usage(argv[0]);
+				exit(1);
+			}
+			break;
 		case 'b':
 			fprintf(stderr, "The --base option is deprecated. Use --install instead.\n");
 			set_mode(INSTALL_M, optarg);
@@ -300,13 +316,13 @@ static void parse_command_line(int argc, char **argv)
 			}
 		}
 	}
-	if ((build || reload) && num_commands) {
+	if ((build || reload || check_ext_changes) && num_commands) {
 		fprintf(stderr,
 			"build or reload should not be used with other commands\n");
 		usage(argv[0]);
 		exit(1);
 	}
-	if (num_commands == 0 && reload == 0 && build == 0) {
+	if (num_commands == 0 && reload == 0 && build == 0 && check_ext_changes == 0) {
 		fprintf(stderr, "At least one mode must be specified.\n");
 		usage(argv[0]);
 		exit(1);
@@ -395,7 +411,7 @@ int main(int argc, char *argv[])
 
 	cil_set_log_level(CIL_ERR + verbose);
 
-	if (build)
+	if (build || check_ext_changes)
 		commit = 1;
 
 	sh = semanage_handle_create();
@@ -434,7 +450,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (build) {
+	if (build || check_ext_changes) {
 		if ((result = semanage_begin_transaction(sh)) < 0) {
 			fprintf(stderr, "%s:  Could not begin transaction:  %s\n",
 				argv[0], errno ? strerror(errno) : "");
@@ -807,6 +823,8 @@ cleanup_disable:
 			semanage_set_reload(sh, 0);
 		if (build)
 			semanage_set_rebuild(sh, 1);
+		if (check_ext_changes)
+			semanage_set_check_ext_changes(sh, 1);
 		if (disable_dontaudit)
 			semanage_set_disable_dontaudit(sh, 1);
 		else if (build)
