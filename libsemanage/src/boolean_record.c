@@ -7,6 +7,9 @@
  */
 
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <sepol/boolean_record.h>
 
 typedef sepol_bool_t semanage_bool_t;
@@ -20,7 +23,6 @@ typedef semanage_bool_key_t record_key_t;
 #include "boolean_internal.h"
 #include "handle.h"
 #include "database.h"
-#include <stdlib.h>
 #include <selinux/selinux.h>
 
 /* Key */
