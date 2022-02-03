@@ -25,8 +25,6 @@
 #include <sepol/cil/cil.h>
 #include <semanage/modules.h>
 
-#include "sha256.h"
-
 enum client_modes {
 	NO_MODE, INSTALL_M, REMOVE_M, EXTRACT_M, CIL_M, HLL_M,
 	LIST_M, RELOAD, PRIORITY_M, ENABLE_M, DISABLE_M
@@ -348,60 +346,38 @@ static void parse_command_line(int argc, char **argv)
 
 /* Get module checksum */
 static char *hash_module_data(const char *module_name, const int prio) {
-	semanage_module_info_t *extract_info = NULL;
 	semanage_module_key_t *modkey = NULL;
-	Sha256Context context;
-	uint8_t sha256_hash[SHA256_HASH_SIZE];
-	char *sha256_buf = NULL;
-	void *data;
-	size_t data_len = 0, i;
+	char *hash_str = NULL;
+	void *hash = NULL;
+	size_t hash_len = 0;
 	int result;
 
 	result = semanage_module_key_create(sh, &modkey);
 	if (result != 0) {
-		goto cleanup_extract;
+		goto cleanup;
 	}
 
 	result = semanage_module_key_set_name(sh, modkey, module_name);
 	if (result != 0) {
-		goto cleanup_extract;
+		goto cleanup;
 	}
 
 	result = semanage_module_key_set_priority(sh, modkey, prio);
 	if (result != 0) {
-		goto cleanup_extract;
+		goto cleanup;
 	}
 
-	result = semanage_module_extract(sh, modkey, 1, &data, &data_len,
-									 &extract_info);
+	result = semanage_module_compute_checksum(sh, modkey, 1, &hash_str,
+						  &hash_len);
 	if (result != 0) {
-		goto cleanup_extract;
+		goto cleanup;
 	}
 
-	Sha256Initialise(&context);
-	Sha256Update(&context, data, data_len);
-
-	Sha256Finalise(&context, (SHA256_HASH *)sha256_hash);
-
-	sha256_buf = calloc(1, SHA256_HASH_SIZE * 2 + 1);
-
-	if (sha256_buf == NULL)
-		goto cleanup_extract;
-
-	for (i = 0; i < SHA256_HASH_SIZE; i++) {
-		sprintf((&sha256_buf[i * 2]), "%02x", sha256_hash[i]);
-	}
-	sha256_buf[i * 2] = 0;
-
-cleanup_extract:
-	if (data_len > 0) {
-		munmap(data, data_len);
-	}
-	semanage_module_info_destroy(sh, extract_info);
-	free(extract_info);
+cleanup:
+	free(hash);
 	semanage_module_key_destroy(sh, modkey);
 	free(modkey);
-	return sha256_buf;
+	return hash_str;
 }
 
 int main(int argc, char *argv[])
@@ -669,7 +645,10 @@ cleanup_extract:
 					/* fixed width columns */
 					column[0] = sizeof("000") - 1;
 					column[3] = sizeof("disabled") - 1;
-					column[4] = 64; /* SHA256_HASH_SIZE * 2 */
+
+					result = semanage_module_compute_checksum(sh, NULL, 0, NULL,
+										  &column[4]);
+					if (result != 0) goto cleanup_list;
 
 					/* variable width columns */
 					const char *tmp = NULL;

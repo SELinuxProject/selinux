@@ -35,11 +35,13 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
 #include <errno.h>
 #include <ctype.h>
 
 #include "handle.h"
 #include "modules.h"
+#include "sha256.h"
 #include "debug.h"
 
 int semanage_module_install(semanage_handle_t * sh,
@@ -976,3 +978,60 @@ int semanage_module_remove_key(semanage_handle_t *sh,
 	return sh->funcs->remove_key(sh, modkey);
 }
 
+static const char CHECKSUM_TYPE[] = "sha256";
+static const size_t CHECKSUM_CONTENT_SIZE = sizeof(CHECKSUM_TYPE) + 1 + 2 * SHA256_HASH_SIZE;
+
+static void semanage_hash_to_checksum_string(const uint8_t *hash, char *checksum)
+{
+	size_t i;
+
+	checksum += sprintf(checksum, "%s:", CHECKSUM_TYPE);
+	for (i = 0; i < SHA256_HASH_SIZE; i++) {
+		checksum += sprintf(checksum, "%02x", (unsigned)hash[i]);
+	}
+}
+
+int semanage_module_compute_checksum(semanage_handle_t *sh,
+				     semanage_module_key_t *modkey,
+				     int cil, char **checksum,
+				     size_t *checksum_len)
+{
+	semanage_module_info_t *extract_info = NULL;
+	Sha256Context context;
+	SHA256_HASH sha256_hash;
+	char *checksum_str;
+	void *data;
+	size_t data_len = 0;
+	int result;
+
+	if (!checksum_len)
+		return -1;
+
+	if (!checksum) {
+		*checksum_len = CHECKSUM_CONTENT_SIZE;
+		return 0;
+	}
+
+	result = semanage_module_extract(sh, modkey, cil, &data, &data_len, &extract_info);
+	if (result != 0)
+		return -1;
+
+	semanage_module_info_destroy(sh, extract_info);
+	free(extract_info);
+
+	Sha256Initialise(&context);
+	Sha256Update(&context, data, data_len);
+	Sha256Finalise(&context, &sha256_hash);
+
+	munmap(data, data_len);
+
+	checksum_str = malloc(CHECKSUM_CONTENT_SIZE + 1 /* '\0' */);
+	if (!checksum_str)
+		return -1;
+
+	semanage_hash_to_checksum_string(sha256_hash.bytes, checksum_str);
+
+	*checksum = checksum_str;
+	*checksum_len = CHECKSUM_CONTENT_SIZE;
+	return 0;
+}

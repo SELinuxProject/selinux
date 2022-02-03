@@ -6,7 +6,7 @@ MANDIR = $(PREFIX)/share/man
 
 CFLAGS ?= -Werror -Wall -W
 override LDLIBS += -lsepol -lselinux -lsemanage
-SEMODULE_OBJS = semodule.o sha256.o
+SEMODULE_OBJS = semodule.o
 
 all: semodule genhomedircon
 

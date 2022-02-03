@@ -351,6 +351,14 @@
   }
 }
 
+%exception semanage_module_compute_checksum {
+  $action
+  if (result < 0) {
+     PyErr_SetFromErrno(PyExc_OSError);
+     SWIG_fail;
+  }
+}
+
 %exception semanage_msg_get_level {
   $action
   if (result < 0) {
