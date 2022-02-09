@@ -282,6 +282,9 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 	struct strs *strs;
 
 	for (curr = constraint_rules; curr != NULL; curr = curr->next) {
+		if (curr->permissions == 0) {
+			continue;
+		}
 		expr = constraint_expr_to_str(pdb, curr->expr, &is_mls);
 		if (!expr) {
 			rc = -1;
