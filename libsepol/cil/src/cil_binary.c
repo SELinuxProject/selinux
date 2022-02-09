@@ -2823,6 +2823,12 @@ int cil_constrain_to_policydb_helper(policydb_t *pdb, const struct cil_db *db, s
 		goto exit;
 	}
 
+	if (sepol_constrain->permissions == 0) {
+		/* No permissions, so don't insert rule. */
+		free(sepol_constrain);
+		return SEPOL_OK;
+	}
+
 	rc = __cil_constrain_expr_to_sepol_expr(pdb, db, expr, &sepol_expr);
 	if (rc != SEPOL_OK) {
 		goto exit;
