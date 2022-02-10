@@ -224,8 +224,9 @@ int hashtab_map(hashtab_t h,
 		int (*apply) (hashtab_key_t k,
 			      hashtab_datum_t d, void *args), void *args)
 {
-	unsigned int i, ret;
+	unsigned int i;
 	hashtab_ptr_t cur;
+	int ret;
 
 	if (!h)
 		return SEPOL_OK;
