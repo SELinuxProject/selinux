@@ -130,6 +130,21 @@ bad:
 	return -1;
 }
 
+static int validate_empty_type_set(type_set_t *type_set)
+{
+	if (!ebitmap_is_empty(&type_set->types))
+		goto bad;
+	if (!ebitmap_is_empty(&type_set->negset))
+		goto bad;
+	if (type_set->flags != 0)
+		goto bad;
+
+	return 0;
+
+bad:
+	return -1;
+}
+
 static int validate_role_set(role_set_t *role_set, validate_t *role)
 {
 	if (validate_ebitmap(&role_set->roles, role))
@@ -176,22 +191,36 @@ bad:
 	return -1;
 }
 
-static int validate_constraint_nodes(sepol_handle_t *handle, constraint_node_t *cons, validate_t flavors[])
+static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms, constraint_node_t *cons, validate_t flavors[])
 {
 	constraint_expr_t *cexp;
 
 	for (; cons; cons = cons->next) {
+		if (nperms > 0 && cons->permissions == 0)
+			goto bad;
+		if (nperms > 0 && nperms != PERM_SYMTAB_SIZE && cons->permissions >= (UINT32_C(1) << nperms))
+			goto bad;
+
 		for (cexp = cons->expr; cexp; cexp = cexp->next) {
 			if (cexp->attr & CEXPR_USER) {
 				if (validate_ebitmap(&cexp->names, &flavors[SYM_USERS]))
 					goto bad;
+				if (validate_empty_type_set(cexp->type_names))
+					goto bad;
 			} else if (cexp->attr & CEXPR_ROLE) {
 				if (validate_ebitmap(&cexp->names, &flavors[SYM_ROLES]))
+					goto bad;
+				if (validate_empty_type_set(cexp->type_names))
 					goto bad;
 			} else if (cexp->attr & CEXPR_TYPE) {
 				if (validate_ebitmap(&cexp->names, &flavors[SYM_TYPES]))
 					goto bad;
 				if (validate_type_set(cexp->type_names, &flavors[SYM_TYPES]))
+					goto bad;
+			} else {
+				if (!ebitmap_is_empty(&cexp->names))
+					goto bad;
+				if (validate_empty_type_set(cexp->type_names))
 					goto bad;
 			}
 
@@ -236,6 +265,12 @@ static int validate_constraint_nodes(sepol_handle_t *handle, constraint_node_t *
 				default:
 					goto bad;
 				}
+
+				if (cexp->op != 0)
+					goto bad;
+
+				if (cexp->attr != 0)
+					goto bad;
 			}
 		}
 	}
@@ -251,11 +286,11 @@ static int validate_class_datum(sepol_handle_t *handle, class_datum_t *class, va
 {
 	if (validate_value(class->s.value, &flavors[SYM_CLASSES]))
 		goto bad;
-	if (validate_constraint_nodes(handle, class->constraints, flavors))
-		goto bad;
-	if (validate_constraint_nodes(handle, class->validatetrans, flavors))
-		goto bad;
 	if (class->permissions.nprim > PERM_SYMTAB_SIZE)
+		goto bad;
+	if (validate_constraint_nodes(handle, class->permissions.nprim, class->constraints, flavors))
+		goto bad;
+	if (validate_constraint_nodes(handle, 0, class->validatetrans, flavors))
 		goto bad;
 
 	switch (class->default_user) {
