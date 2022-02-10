@@ -3477,6 +3477,8 @@ static constraint_expr_t *constraint_expr_clone(const constraint_expr_t * expr)
 	return NULL;
 }
 
+#define PERMISSION_MASK(nprim) ((nprim) == PERM_SYMTAB_SIZE ? (~UINT32_C(0)) : ((UINT32_C(1) << (nprim)) - 1))
+
 int define_constraint(constraint_expr_t * expr)
 {
 	struct constraint_node *node;
@@ -3589,6 +3591,22 @@ int define_constraint(constraint_expr_t * expr)
 		ebitmap_for_each_positive_bit(&classmap, enode, i) {
 			cladatum = policydbp->class_val_to_struct[i];
 			node = cladatum->constraints;
+
+			if (strcmp(id, "*") == 0) {
+				node->permissions = PERMISSION_MASK(cladatum->permissions.nprim);
+				continue;
+			}
+
+			if (strcmp(id, "~") == 0) {
+				node->permissions = ~node->permissions & PERMISSION_MASK(cladatum->permissions.nprim);
+				if (node->permissions == 0) {
+					yywarn("omitting constraint with no permission set");
+					cladatum->constraints = node->next;
+					constraint_expr_destroy(node->expr);
+					free(node);
+				}
+				continue;
+			}
 
 			perdatum =
 			    (perm_datum_t *) hashtab_search(cladatum->
