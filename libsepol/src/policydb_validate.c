@@ -124,6 +124,15 @@ static int validate_type_set(type_set_t *type_set, validate_t *type)
 	if (validate_ebitmap(&type_set->negset, type))
 		goto bad;
 
+	switch (type_set->flags) {
+	case 0:
+	case TYPE_STAR:
+	case TYPE_COMP:
+		break;
+	default:
+		goto bad;
+	}
+
 	return 0;
 
 bad:
@@ -148,9 +157,21 @@ bad:
 static int validate_role_set(role_set_t *role_set, validate_t *role)
 {
 	if (validate_ebitmap(&role_set->roles, role))
-		return -1;
+		goto bad;
+
+	switch (role_set->flags) {
+	case 0:
+	case ROLE_STAR:
+	case ROLE_COMP:
+		break;
+	default:
+		goto bad;
+	}
 
 	return 0;
+
+bad:
+	return -1;
 }
 
 static int validate_scope(__attribute__ ((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
@@ -159,12 +180,23 @@ static int validate_scope(__attribute__ ((unused)) hashtab_key_t k, hashtab_datu
 	uint32_t *nprim = (uint32_t *)args;
 	unsigned int i;
 
+	switch (scope_datum->scope) {
+	case SCOPE_REQ:
+	case SCOPE_DECL:
+		break;
+	default:
+		goto bad;
+	}
+
 	for (i = 0; i < scope_datum->decl_ids_len; i++) {
 		if (!value_isvalid(scope_datum->decl_ids[i], *nprim))
-			return -1;
+			goto bad;
 	}
 
 	return 0;
+
+bad:
+	return -1;
 }
 
 static int validate_scopes(sepol_handle_t *handle, symtab_t scopes[], avrule_block_t *block)
@@ -402,6 +434,26 @@ static int validate_type_datum(sepol_handle_t *handle, type_datum_t *type, valid
 		goto bad;
 	if (type->bounds && validate_value(type->bounds, &flavors[SYM_TYPES]))
 		goto bad;
+
+	switch (type->flavor) {
+	case TYPE_TYPE:
+	case TYPE_ATTRIB:
+	case TYPE_ALIAS:
+		break;
+	default:
+		goto bad;
+	}
+
+	switch (type->flags) {
+	case 0:
+	case TYPE_FLAGS_PERMISSIVE:
+	case TYPE_FLAGS_EXPAND_ATTR_TRUE:
+	case TYPE_FLAGS_EXPAND_ATTR_FALSE:
+	case TYPE_FLAGS_EXPAND_ATTR:
+		break;
+	default:
+		goto bad;
+	}
 
 	return 0;
 
@@ -688,6 +740,7 @@ static int validate_avrules(sepol_handle_t *handle, avrule_t *avrule, validate_t
 			if (validate_value(class->tclass, &flavors[SYM_CLASSES]))
 				goto bad;
 		}
+
 		switch(avrule->specified) {
 		case AVRULE_ALLOWED:
 		case AVRULE_AUDITALLOW:
@@ -701,6 +754,27 @@ static int validate_avrules(sepol_handle_t *handle, avrule_t *avrule, validate_t
 		case AVRULE_XPERMS_AUDITALLOW:
 		case AVRULE_XPERMS_DONTAUDIT:
 		case AVRULE_XPERMS_NEVERALLOW:
+			break;
+		default:
+			goto bad;
+		}
+
+		if (avrule->specified & AVRULE_XPERMS) {
+			if (!avrule->xperms)
+				goto bad;
+			switch (avrule->xperms->specified) {
+			case AVRULE_XPERMS_IOCTLFUNCTION:
+			case AVRULE_XPERMS_IOCTLDRIVER:
+				break;
+			default:
+				goto bad;
+			}
+		} else if (avrule->xperms)
+			goto bad;
+
+		switch(avrule->flags) {
+		case 0:
+		case RULE_SELF:
 			break;
 		default:
 			goto bad;
@@ -1040,6 +1114,14 @@ static int validate_avrule_blocks(sepol_handle_t *handle, avrule_block_t *avrule
 				goto bad;
 			if (validate_symtabs(handle, decl->symtab, flavors))
 				goto bad;
+		}
+
+		switch (avrule_block->flags) {
+		case 0:
+		case AVRULE_OPTIONAL:
+			break;
+		default:
+			goto bad;
 		}
 	}
 
