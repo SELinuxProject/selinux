@@ -261,7 +261,7 @@ def t_IDENTIFIER(t):
     return t
 
 def t_FILENAME(t):
-    r'\"[a-zA-Z0-9_\-\+\.\$\*~ :]+\"'
+    r'\"[a-zA-Z0-9_\-\+\.\$\*~ :\[\]]+\"'
     # Handle any keywords
     t.type = reserved.get(t.value,'FILENAME')
     return t
