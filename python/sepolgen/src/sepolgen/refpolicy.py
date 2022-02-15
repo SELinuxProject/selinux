@@ -413,6 +413,24 @@ class XpermSet():
 
         return "%s{ %s }" % (compl, " ".join(vals))
 
+class XpermIdentifierDict(dict):
+    """Extended permission set identifier mapping.
+
+    This singleton class holds the mappings between named
+    extended permission and their numberic value.
+    """
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(XpermIdentifierDict, cls).__new__(cls)
+        return cls.instance
+
+    def set(self, key, value):
+        # TODO: warn about redefiniition
+        self[key] = value
+
+    def get(self, key):
+        return self[key]
+
 # Basic statements
 
 class TypeAttribute(Leaf):

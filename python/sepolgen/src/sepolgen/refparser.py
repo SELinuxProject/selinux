@@ -349,6 +349,7 @@ def p_statement(p):
     '''statement : interface
                  | template
                  | obj_perm_set
+                 | obj_xperm_set
                  | policy
                  | policy_module_stmt
                  | module_stmt
@@ -502,7 +503,15 @@ def p_obj_perm_set(p):
     s = refpolicy.ObjPermSet(p[4])
     s.perms = p[8]
     p[0] = s
-    
+
+def p_obj_xperm_set(p):
+    'obj_xperm_set : DEFINE OPAREN TICK IDENTIFIER SQUOTE COMMA TICK xperm_set_base SQUOTE CPAREN'
+    ids = refpolicy.XpermIdentifierDict()
+    ids.set(p[4], p[8])
+
+    p[0] = refpolicy.ObjPermSet(p[4])
+    p[0].perms = set(p[8])
+
 #
 # Basic SELinux policy language
 #
@@ -1049,8 +1058,13 @@ def p_nested_xperm_list(p):
 def p_nested_xperm_element(p):
     '''nested_xperm_element : xperm_set_base
                             | nested_xperm_set
+                            | IDENTIFIER
     '''
-    p[0] = p[1]
+    if isinstance(p[1], refpolicy.XpermSet()):
+        p[0] = p[1]
+    else:
+        ids = refpolicy.XpermIdentifierDict()
+        p[0] = ids.get(p[1])
 
 def p_xperm_set_base(p):
     '''xperm_set_base : xperm_number
