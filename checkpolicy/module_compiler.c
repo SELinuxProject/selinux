@@ -99,6 +99,7 @@ int define_policy(int pass, int module_header_given)
 				yyerror("no module name");
 				return -1;
 			}
+			free(policydbp->name);
 			policydbp->name = id;
 			if ((policydbp->version =
 			     queue_remove(id_queue)) == NULL) {

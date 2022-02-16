@@ -2970,6 +2970,9 @@ int expand_module(sepol_handle_t * handle,
 
 	state.out->policy_type = POLICY_KERN;
 	state.out->policyvers = POLICYDB_VERSION_MAX;
+	if (state.base->name) {
+		state.out->name = strdup(state.base->name);
+	}
 
 	/* Copy mls state from base to out */
 	out->mls = base->mls;

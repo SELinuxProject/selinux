@@ -36,13 +36,21 @@ struct avtab_match_args {
 	unsigned long errors;
 };
 
+static const char* policy_name(policydb_t *p) {
+	const char *policy_file = "policy.conf";
+	if (p->name) {
+		policy_file = p->name;
+	}
+	return policy_file;
+}
+
 static void report_failure(sepol_handle_t *handle, policydb_t *p, const avrule_t *avrule,
 			   unsigned int stype, unsigned int ttype,
 			   const class_perm_node_t *curperm, uint32_t perms)
 {
 	if (avrule->source_filename) {
-		ERR(handle, "neverallow on line %lu of %s (or line %lu of policy.conf) violated by allow %s %s:%s {%s };",
-		    avrule->source_line, avrule->source_filename, avrule->line,
+		ERR(handle, "neverallow on line %lu of %s (or line %lu of %s) violated by allow %s %s:%s {%s };",
+		    avrule->source_line, avrule->source_filename, avrule->line, policy_name(p),
 		    p->p_type_val_to_name[stype],
 		    p->p_type_val_to_name[ttype],
 		    p->p_class_val_to_name[curperm->tclass - 1],
@@ -171,9 +179,9 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 				/* failure on the extended permission check_extended_permissions */
 				if (rc) {
 					extended_permissions_violated(&error, avrule->xperms, xperms);
-					ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of policy.conf) violated by\n"
+					ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
 							"allowxperm %s %s:%s %s;",
-							avrule->source_line, avrule->source_filename, avrule->line,
+							avrule->source_line, avrule->source_filename, avrule->line, policy_name(p),
 							p->p_type_val_to_name[i],
 							p->p_type_val_to_name[j],
 							p->p_class_val_to_name[curperm->tclass - 1],
@@ -187,9 +195,9 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 
 	/* failure on the regular permissions */
 	if (!found_xperm) {
-		ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of policy.conf) violated by\n"
+		ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
 				"allow %s %s:%s {%s };",
-				avrule->source_line, avrule->source_filename, avrule->line,
+				avrule->source_line, avrule->source_filename, avrule->line, policy_name(p),
 				p->p_type_val_to_name[stype],
 				p->p_type_val_to_name[ttype],
 				p->p_class_val_to_name[curperm->tclass - 1],

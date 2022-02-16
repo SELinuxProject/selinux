@@ -47,6 +47,7 @@ int read_source_policy(policydb_t * p, const char *file, const char *progname)
 	}
 
 	policydbp = p;
+	policydbp->name = strdup(file);
 	mlspol = p->mls;
 
 	init_parser(1);
