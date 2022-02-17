@@ -92,6 +92,7 @@ int selinux_getenforcemode(int *enforce)
 	FILE *cfg = fopen(SELINUXCONFIG, "re");
 	if (cfg) {
 		char *buf;
+		char *tag;
 		int len = sizeof(SELINUXTAG) - 1;
 		buf = malloc(selinux_page_size);
 		if (!buf) {
@@ -101,21 +102,24 @@ int selinux_getenforcemode(int *enforce)
 		while (fgets_unlocked(buf, selinux_page_size, cfg)) {
 			if (strncmp(buf, SELINUXTAG, len))
 				continue;
+			tag = buf+len;
+			while (isspace(*tag))
+				tag++;
 			if (!strncasecmp
-			    (buf + len, "enforcing", sizeof("enforcing") - 1)) {
+			    (tag, "enforcing", sizeof("enforcing") - 1)) {
 				*enforce = 1;
 				ret = 0;
 				break;
 			} else
 			    if (!strncasecmp
-				(buf + len, "permissive",
+				(tag, "permissive",
 				 sizeof("permissive") - 1)) {
 				*enforce = 0;
 				ret = 0;
 				break;
 			} else
 			    if (!strncasecmp
-				(buf + len, "disabled",
+				(tag, "disabled",
 				 sizeof("disabled") - 1)) {
 				*enforce = -1;
 				ret = 0;
@@ -176,7 +180,10 @@ static void init_selinux_config(void)
 
 			if (!strncasecmp(buf_p, SELINUXTYPETAG,
 					 sizeof(SELINUXTYPETAG) - 1)) {
-				type = strdup(buf_p + sizeof(SELINUXTYPETAG) - 1);
+				buf_p += sizeof(SELINUXTYPETAG) - 1;
+				while (isspace(*buf_p))
+					buf_p++;
+				type = strdup(buf_p);
 				if (!type) {
 					free(line_buf);
 					fclose(fp);
@@ -199,6 +206,8 @@ static void init_selinux_config(void)
 			} else if (!strncmp(buf_p, REQUIRESEUSERS,
 					    sizeof(REQUIRESEUSERS) - 1)) {
 				value = buf_p + sizeof(REQUIRESEUSERS) - 1;
+				while (isspace(*value))
+					value++;
 				intptr = &require_seusers;
 			} else {
 				continue;
