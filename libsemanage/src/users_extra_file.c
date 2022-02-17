@@ -57,7 +57,7 @@ static int user_extra_parse(semanage_handle_t * handle,
 		goto err;
 
 	/* Extract name */
-	if (parse_fetch_string(handle, info, &str, ' ') < 0)
+	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_user_extra_set_name(handle, user_extra, str) < 0)
 		goto err;
@@ -73,7 +73,7 @@ static int user_extra_parse(semanage_handle_t * handle,
 		goto err;
 
 	/* Extract prefix */
-	if (parse_fetch_string(handle, info, &str, ';') < 0)
+	if (parse_fetch_string(handle, info, &str, ';', 1) < 0)
 		goto err;
 	if (semanage_user_extra_set_prefix(handle, user_extra, str) < 0)
 		goto err;

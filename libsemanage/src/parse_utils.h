@@ -71,12 +71,11 @@ extern int parse_optional_str(parse_info_t * info, const char *str);
 int parse_fetch_int(semanage_handle_t * hgandle,
 		    parse_info_t * info, int *num, char delim);
 
-/* Extract the next string (delimited by 
- * whitespace), and move the read pointer past it.
- * Stop of the optional character delim is encountered,
- * or if whitespace/eof is encountered. Fail if the
- * string is of length 0. */
+/* Extract the next string and move the read pointer past it.
+ * Stop if the optional character delim (or eof) is encountered,
+ * or if whitespace is encountered and allow_spaces is 0.
+ * Fail if the string is of length 0. */
 extern int parse_fetch_string(semanage_handle_t * handle,
-			      parse_info_t * info, char **str_ptr, char delim);
+			      parse_info_t * info, char **str_ptr, char delim, int allow_spaces);
 
 #endif

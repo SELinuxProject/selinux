@@ -80,7 +80,7 @@ static int ibpkey_parse(semanage_handle_t *handle,
 		goto err;
 
 	/* Subnet Prefix */
-	if (parse_fetch_string(handle, info, &str, ' ') < 0)
+	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_ibpkey_set_subnet_prefix(handle, ibpkey, str) < 0)
 		goto err;
@@ -115,7 +115,7 @@ static int ibpkey_parse(semanage_handle_t *handle,
 		semanage_ibpkey_set_pkey(ibpkey, low);
 	}
 	/* Pkey context */
-	if (parse_fetch_string(handle, info, &str, ' ') < 0)
+	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_context_from_string(handle, str, &con) < 0) {
 		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s",

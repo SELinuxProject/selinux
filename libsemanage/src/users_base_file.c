@@ -83,7 +83,7 @@ static int user_base_parse(semanage_handle_t * handle,
 		goto err;
 
 	/* Parse user name */
-	if (parse_fetch_string(handle, info, &name_str, ' ') < 0)
+	if (parse_fetch_string(handle, info, &name_str, ' ', 0) < 0)
 		goto err;
 
 	if (semanage_user_base_set_name(handle, user, name_str) < 0) {
@@ -150,7 +150,7 @@ static int user_base_parse(semanage_handle_t * handle,
 		goto err;
 
 	/* NOTE: does not allow spaces/multiline */
-	if (parse_fetch_string(handle, info, &str, ' ') < 0)
+	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_user_base_set_mlslevel(handle, user, str) < 0)
 		goto err;
@@ -165,8 +165,7 @@ static int user_base_parse(semanage_handle_t * handle,
 	if (parse_assert_space(handle, info) < 0)
 		goto err;
 
-	/* NOTE: does not allow spaces/multiline */
-	if (parse_fetch_string(handle, info, &str, ';') < 0)
+	if (parse_fetch_string(handle, info, &str, ';', 1) < 0)
 		goto err;
 	if (semanage_user_base_set_mlsrange(handle, user, str) < 0)
 		goto err;

@@ -239,7 +239,7 @@ int parse_fetch_int(semanage_handle_t * handle,
 	char *test = NULL;
 	int value = 0;
 
-	if (parse_fetch_string(handle, info, &str, delim) < 0)
+	if (parse_fetch_string(handle, info, &str, delim, 0) < 0)
 		goto err;
 
 	if (!isdigit((int)*str)) {
@@ -267,7 +267,7 @@ int parse_fetch_int(semanage_handle_t * handle,
 }
 
 int parse_fetch_string(semanage_handle_t * handle,
-		       parse_info_t * info, char **str, char delim)
+		       parse_info_t * info, char **str, char delim, int allow_spaces)
 {
 
 	char *start = info->ptr;
@@ -277,7 +277,7 @@ int parse_fetch_string(semanage_handle_t * handle,
 	if (parse_assert_noeof(handle, info) < 0)
 		goto err;
 
-	while (*(info->ptr) && !isspace(*(info->ptr)) &&
+	while (*(info->ptr) && (allow_spaces || !isspace(*(info->ptr))) &&
 	       (*(info->ptr) != delim)) {
 		info->ptr++;
 		len++;

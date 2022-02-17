@@ -48,7 +48,7 @@ static int bool_parse(semanage_handle_t * handle,
 		goto last;
 
 	/* Extract name */
-	if (parse_fetch_string(handle, info, &str, '=') < 0)
+	if (parse_fetch_string(handle, info, &str, '=', 0) < 0)
 		goto err;
 
 	if (semanage_bool_set_name(handle, boolean, str) < 0)

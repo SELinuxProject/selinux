@@ -53,7 +53,7 @@ static int seuser_parse(semanage_handle_t * handle,
 		goto last;
 
 	/* Extract name */
-	if (parse_fetch_string(handle, info, &str, ':') < 0)
+	if (parse_fetch_string(handle, info, &str, ':', 1) < 0)
 		goto err;
 	if (semanage_seuser_set_name(handle, seuser, str) < 0)
 		goto err;
@@ -68,7 +68,7 @@ static int seuser_parse(semanage_handle_t * handle,
 		goto err;
 
 	/* Extract sename */
-	if (parse_fetch_string(handle, info, &str, ':') < 0)
+	if (parse_fetch_string(handle, info, &str, ':', 1) < 0)
 		goto err;
 	if (semanage_seuser_set_sename(handle, seuser, str) < 0)
 		goto err;
@@ -83,7 +83,7 @@ static int seuser_parse(semanage_handle_t * handle,
 		goto err;
 
 	/* NOTE: does not allow spaces/multiline */
-	if (parse_fetch_string(handle, info, &str, ' ') < 0)
+	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 
 	if (semanage_seuser_set_mlsrange(handle, seuser, str) < 0)

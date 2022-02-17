@@ -75,7 +75,7 @@ static int ibendport_parse(semanage_handle_t *handle,
 		goto err;
 
 	/* IB Device Name */
-	if (parse_fetch_string(handle, info, &str, ' ') < 0)
+	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_ibendport_set_ibdev_name(handle, ibendport, str) < 0)
 		goto err;
@@ -92,7 +92,7 @@ static int ibendport_parse(semanage_handle_t *handle,
 	/* context */
 	if (parse_assert_space(handle, info) < 0)
 		goto err;
-	if (parse_fetch_string(handle, info, &str, ' ') < 0)
+	if (parse_fetch_string(handle, info, &str, ' ', 0) < 0)
 		goto err;
 	if (semanage_context_from_string(handle, str, &con) < 0) {
 		ERR(handle, "invalid security context \"%s\" (%s: %u)\n%s",
