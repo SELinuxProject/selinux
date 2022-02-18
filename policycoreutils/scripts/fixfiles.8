@@ -6,22 +6,22 @@ fixfiles \- fix file SELinux security contexts.
 .na
 
 .B fixfiles
-.I [\-v] [\-F] [-M] [\-f] relabel
+.I [\-v] [\-F] [-M] [\-f] [\-T nthreads] relabel
 
 .B fixfiles
-.I [\-v] [\-F] { check | restore | verify } dir/file ...
+.I [\-v] [\-F] [\-T nthreads] { check | restore | verify } dir/file ...
 
 .B fixfiles
-.I [\-v] [\-F] [\-B | \-N time ] { check | restore | verify }
+.I [\-v] [\-F] [\-B | \-N time ] [\-T nthreads] { check | restore | verify }
 
 .B fixfiles 
-.I [\-v] [\-F] \-R rpmpackagename[,rpmpackagename...] { check | restore | verify }
+.I [\-v] [\-F] [\-T nthreads] \-R rpmpackagename[,rpmpackagename...] { check | restore | verify }
 
 .B fixfiles
-.I [\-v] [\-F] \-C PREVIOUS_FILECONTEXT  { check | restore | verify }
+.I [\-v] [\-F] [\-T nthreads] \-C PREVIOUS_FILECONTEXT  { check | restore | verify }
 
 .B fixfiles
-.I [-F] [-M] [-B] onboot
+.I [-F] [-M] [-B] [\-T nthreads] onboot
 
 .ad
 
@@ -75,6 +75,11 @@ Bind mount filesystems before relabeling them, this allows fixing the context of
 .TP
 .B -v
 Modify verbosity from progress to verbose. (Run restorecon with \-v instead of \-p)
+
+.TP
+.B \-T nthreads
+Use parallel relabeling, see
+.B setfiles(8)
 
 .SH "ARGUMENTS"
 One of:
