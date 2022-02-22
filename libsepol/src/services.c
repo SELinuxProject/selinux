@@ -1233,6 +1233,12 @@ out:
 	return STATUS_ERR;
 }
 
+ const char *sepol_av_perm_to_string(sepol_security_class_t tclass,
+					sepol_access_vector_t av)
+{
+	return sepol_av_to_string(policydb, tclass, av);
+}
+
 /*
  * Write the security context string representation of 
  * the context associated with `sid' into a dynamically
