@@ -797,7 +797,7 @@ mls_ops:
 
 		for (x = 0; buffers[x] != NULL; x++) {
 			while (1) {
-				p = *r_buf + reason_buf_used;
+				p = *r_buf ? (*r_buf + reason_buf_used) : NULL;
 				len = snprintf(p, reason_buf_len - reason_buf_used,
 						"%s", buffers[x]);
 				if (len < 0 || len >= reason_buf_len - reason_buf_used) {
