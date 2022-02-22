@@ -44,7 +44,7 @@ hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
 
 int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 {
-	int hvalue;
+	unsigned int hvalue;
 	hashtab_ptr_t prev, cur, newnode;
 
 	if (!h)
@@ -83,7 +83,7 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 		   void (*destroy) (hashtab_key_t k,
 				    hashtab_datum_t d, void *args), void *args)
 {
-	int hvalue;
+	unsigned int hvalue;
 	hashtab_ptr_t cur, last;
 
 	if (!h)
@@ -115,7 +115,7 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t key)
 {
 
-	int hvalue;
+	unsigned int hvalue;
 	hashtab_ptr_t cur;
 
 	if (!h)
@@ -160,8 +160,9 @@ int hashtab_map(hashtab_t h,
 		int (*apply) (hashtab_key_t k,
 			      hashtab_datum_t d, void *args), void *args)
 {
-	unsigned int i, ret;
+	unsigned int i;
 	hashtab_ptr_t cur;
+	int ret;
 
 	if (!h)
 		return HASHTAB_SUCCESS;

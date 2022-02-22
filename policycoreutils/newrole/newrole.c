@@ -100,7 +100,6 @@
 #endif
 
 #define DEFAULT_PATH "/usr/bin:/bin"
-#define DEFAULT_CONTEXT_SIZE 255	/* first guess at context size */
 
 extern char **environ;
 
@@ -115,7 +114,7 @@ extern char **environ;
  *
  * Returns malloc'd memory
  */
-static char *build_new_range(char *newlevel, const char *range)
+static char *build_new_range(const char *newlevel, const char *range)
 {
 	char *newrangep = NULL;
 	const char *tmpptr;
@@ -166,7 +165,7 @@ static char *build_new_range(char *newlevel, const char *range)
 #include <security/pam_appl.h>	/* for PAM functions */
 #include <security/pam_misc.h>	/* for misc_conv PAM utility function */
 
-const char *service_name = "newrole";
+static const char *service_name = "newrole";
 
 /* authenticate_via_pam()
  *
@@ -230,14 +229,13 @@ static int free_hashtab_entry(hashtab_key_t key, hashtab_datum_t d,
 
 static unsigned int reqsymhash(hashtab_t h, const_hashtab_key_t key)
 {
-	char *p, *keyp;
+	const char *p;
 	size_t size;
 	unsigned int val;
 
 	val = 0;
-	keyp = (char *)key;
-	size = strlen(keyp);
-	for (p = keyp; ((size_t) (p - keyp)) < size; p++)
+	size = strlen(key);
+	for (p = key; ((size_t) (p - key)) < size; p++)
 		val =
 		    (val << 4 | (val >> (8 * sizeof(unsigned int) - 4))) ^ (*p);
 	return val & (h->size - 1);
@@ -623,7 +621,7 @@ static inline int drop_capabilities(__attribute__ ((__unused__)) int full)
  * This function will set the uid values to be that of caller's uid, and
  * will drop any privilege which may have been raised.
  */
-static int transition_to_caller_uid()
+static int transition_to_caller_uid(void)
 {
 	uid_t uid = getuid();
 
@@ -850,7 +848,6 @@ static int parse_command_line_arguments(int argc, char **argv, char *ttyn,
 		case 'V':
 			printf("newrole: %s version %s\n", PACKAGE, VERSION);
 			exit(0);
-			break;
 		case 'p':
 			*preserve_environment = 1;
 			break;
