@@ -155,7 +155,7 @@ extern int sepol_sid_to_context(sepol_security_id_t sid,	/* IN */
  * Return a SID associated with the security context that
  * has the string representation specified by `scontext'.
  */
-extern int sepol_context_to_sid(const sepol_security_context_t scontext,	/* IN */
+extern int sepol_context_to_sid(sepol_const_security_context_t scontext,	/* IN */
 				size_t scontext_len,	/* IN */
 				sepol_security_id_t * out_sid);	/* OUT */
 

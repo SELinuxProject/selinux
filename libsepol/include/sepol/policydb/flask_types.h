@@ -27,6 +27,7 @@ extern "C" {
  * understanding of the security policy.
  */
 typedef char *sepol_security_context_t;
+typedef const char *sepol_const_security_context_t;
 
 /*
  * An access vector (AV) is a collection of related permissions

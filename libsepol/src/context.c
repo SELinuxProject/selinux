@@ -22,7 +22,7 @@ int policydb_context_isvalid(const policydb_t * p, const context_struct_t * c)
 int sepol_check_context(const char *context)
 {
 
-	return sepol_context_to_sid((const sepol_security_context_t)context,
+	return sepol_context_to_sid(context,
 				    strlen(context) + 1, NULL);
 }
 

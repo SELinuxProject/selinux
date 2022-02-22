@@ -1269,7 +1269,7 @@ int sepol_sid_to_context(sepol_security_id_t sid,
  * Return a SID associated with the security context that
  * has the string representation specified by `scontext'.
  */
-int sepol_context_to_sid(const sepol_security_context_t scontext,
+int sepol_context_to_sid(sepol_const_security_context_t scontext,
 				size_t scontext_len, sepol_security_id_t * sid)
 {
 
