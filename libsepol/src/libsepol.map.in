@@ -274,3 +274,18 @@ LIBSEPOL_3.0 {
 	cil_write_resolve_ast;
 	cil_set_qualified_names;
 } LIBSEPOL_1.1;
+
+LIBSEPOL_3.4 {
+  global:
+	sepol_av_perm_to_string;
+	sepol_change_sid;
+	sepol_compute_av;
+	sepol_compute_av_reason;
+	sepol_compute_av_reason_buffer;
+	sepol_context_to_sid;
+	sepol_member_sid;
+	sepol_sid_to_context;
+	sepol_string_to_av_perm;
+	sepol_string_to_security_class;
+	sepol_validate_transition_reason_buffer;
+} LIBSEPOL_3.0;
