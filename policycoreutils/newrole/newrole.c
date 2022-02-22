@@ -333,6 +333,14 @@ static int read_pam_config(void)
 
 #define PASSWORD_PROMPT _("Password:")	/* prompt for getpass() */
 
+static void memzero(void *ptr, size_t size)
+{
+	volatile unsigned char * volatile p = ptr;
+	while (size--) {
+		*p++ = '\0';
+	}
+}
+
 /* authenticate_via_shadow_passwd()
  *
  * in:     uname - the calling user's user name
@@ -351,6 +359,7 @@ static int authenticate_via_shadow_passwd(const char *uname)
 	struct spwd *p_shadow_line;
 	char *unencrypted_password_s;
 	char *encrypted_password_s;
+	int ret;
 
 	setspent();
 	p_shadow_line = getspnam(uname);
@@ -371,12 +380,15 @@ static int authenticate_via_shadow_passwd(const char *uname)
 	errno = 0;
 	encrypted_password_s = crypt(unencrypted_password_s,
 				     p_shadow_line->sp_pwdp);
-	memset(unencrypted_password_s, 0, strlen(unencrypted_password_s));
+	memzero(unencrypted_password_s, strlen(unencrypted_password_s));
 	if (errno || !encrypted_password_s) {
 		fprintf(stderr, _("Cannot encrypt password.\n"));
 		return 0;
 	}
-	return (!strcmp(encrypted_password_s, p_shadow_line->sp_pwdp));
+
+	ret = !strcmp(encrypted_password_s, p_shadow_line->sp_pwdp);
+	memzero(encrypted_password_s, strlen(encrypted_password_s));
+	return ret;
 }
 #endif				/* if/else USE_PAM */
 
