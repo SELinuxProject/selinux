@@ -91,3 +91,16 @@ indent:
 
 relabel: install
 	/sbin/restorecon $(DESTDIR)$(BINDIR)/newrole
+
+test-build-options:
+	$(MAKE) PAMH=y AUDITH=y AUDIT_LOG_PRIV=y NAMESPACE_PRIV=y clean newrole
+	$(MAKE) PAMH=y AUDITH=y AUDIT_LOG_PRIV=y NAMESPACE_PRIV=n clean newrole
+	$(MAKE) PAMH=y AUDITH=y AUDIT_LOG_PRIV=n NAMESPACE_PRIV=y clean newrole
+	$(MAKE) PAMH=y AUDITH=y AUDIT_LOG_PRIV=n NAMESPACE_PRIV=n clean newrole
+	$(MAKE) PAMH=y AUDITH=y AUDIT_LOG_PRIV=y NAMESPACE_PRIV=y clean newrole
+	$(MAKE) PAMH=y AUDITH=n AUDIT_LOG_PRIV=n NAMESPACE_PRIV=y clean newrole
+	$(MAKE) PAMH=y AUDITH=n AUDIT_LOG_PRIV=n NAMESPACE_PRIV=n clean newrole
+	$(MAKE) PAMH=n AUDITH=y AUDIT_LOG_PRIV=y NAMESPACE_PRIV=n clean newrole
+	$(MAKE) PAMH=n AUDITH=y AUDIT_LOG_PRIV=n NAMESPACE_PRIV=n clean newrole
+	$(MAKE) PAMH=n AUDITH=n AUDIT_LOG_PRIV=n NAMESPACE_PRIV=n clean newrole
+	$(MAKE) clean
