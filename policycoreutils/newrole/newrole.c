@@ -368,9 +368,14 @@ static int authenticate_via_shadow_passwd(const char *uname)
 	}
 
 	/* Use crypt() to encrypt user's input password. */
+	errno = 0;
 	encrypted_password_s = crypt(unencrypted_password_s,
 				     p_shadow_line->sp_pwdp);
 	memset(unencrypted_password_s, 0, strlen(unencrypted_password_s));
+	if (errno || !encrypted_password_s) {
+		fprintf(stderr, _("Cannot encrypt password.\n"));
+		return 0;
+	}
 	return (!strcmp(encrypted_password_s, p_shadow_line->sp_pwdp));
 }
 #endif				/* if/else USE_PAM */
