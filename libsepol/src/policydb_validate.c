@@ -228,41 +228,25 @@ static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms
 	constraint_expr_t *cexp;
 
 	for (; cons; cons = cons->next) {
+		if (nperms == 0 && cons->permissions != 0)
+			goto bad;
 		if (nperms > 0 && cons->permissions == 0)
 			goto bad;
 		if (nperms > 0 && nperms != PERM_SYMTAB_SIZE && cons->permissions >= (UINT32_C(1) << nperms))
 			goto bad;
 
 		for (cexp = cons->expr; cexp; cexp = cexp->next) {
-			if (cexp->attr & CEXPR_USER) {
-				if (validate_ebitmap(&cexp->names, &flavors[SYM_USERS]))
+			if (cexp->expr_type == CEXPR_NAMES) {
+				if (cexp->attr & CEXPR_XTARGET && nperms != 0)
 					goto bad;
-				if (validate_empty_type_set(cexp->type_names))
-					goto bad;
-			} else if (cexp->attr & CEXPR_ROLE) {
-				if (validate_ebitmap(&cexp->names, &flavors[SYM_ROLES]))
-					goto bad;
-				if (validate_empty_type_set(cexp->type_names))
-					goto bad;
-			} else if (cexp->attr & CEXPR_TYPE) {
-				if (validate_ebitmap(&cexp->names, &flavors[SYM_TYPES]))
-					goto bad;
-				if (validate_type_set(cexp->type_names, &flavors[SYM_TYPES]))
-					goto bad;
-			} else {
-				if (!ebitmap_is_empty(&cexp->names))
-					goto bad;
-				if (validate_empty_type_set(cexp->type_names))
-					goto bad;
-			}
+				if (!(cexp->attr & CEXPR_TYPE)) {
+					if (validate_empty_type_set(cexp->type_names))
+						goto bad;
+				}
 
-			if (cexp->expr_type == CEXPR_ATTR || cexp->expr_type == CEXPR_NAMES) {
 				switch (cexp->op) {
 				case CEXPR_EQ:
 				case CEXPR_NEQ:
-				case CEXPR_DOM:
-				case CEXPR_DOMBY:
-				case CEXPR_INCOMP:
 					break;
 				default:
 					goto bad;
@@ -272,12 +256,50 @@ static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms
 				case CEXPR_USER:
 				case CEXPR_USER | CEXPR_TARGET:
 				case CEXPR_USER | CEXPR_XTARGET:
+					if (validate_ebitmap(&cexp->names, &flavors[SYM_USERS]))
+						goto bad;
+					break;
 				case CEXPR_ROLE:
 				case CEXPR_ROLE | CEXPR_TARGET:
 				case CEXPR_ROLE | CEXPR_XTARGET:
+					if (validate_ebitmap(&cexp->names, &flavors[SYM_ROLES]))
+						goto bad;
+					break;
 				case CEXPR_TYPE:
 				case CEXPR_TYPE | CEXPR_TARGET:
 				case CEXPR_TYPE | CEXPR_XTARGET:
+					if (validate_ebitmap(&cexp->names, &flavors[SYM_TYPES]))
+						goto bad;
+					if (validate_type_set(cexp->type_names, &flavors[SYM_TYPES]))
+						goto bad;
+					break;
+				default:
+					goto bad;
+				}
+			} else if (cexp->expr_type == CEXPR_ATTR) {
+				if (!ebitmap_is_empty(&cexp->names))
+					goto bad;
+				if (validate_empty_type_set(cexp->type_names))
+					goto bad;
+
+				switch (cexp->op) {
+				case CEXPR_EQ:
+				case CEXPR_NEQ:
+					break;
+				case CEXPR_DOM:
+				case CEXPR_DOMBY:
+				case CEXPR_INCOMP:
+					if ((cexp->attr & CEXPR_USER) || (cexp->attr & CEXPR_TYPE))
+						goto bad;
+					break;
+				default:
+					goto bad;
+				}
+
+				switch (cexp->attr) {
+				case CEXPR_USER:
+				case CEXPR_ROLE:
+				case CEXPR_TYPE:
 				case CEXPR_L1L2:
 				case CEXPR_L1H2:
 				case CEXPR_H1L2:
@@ -300,8 +322,11 @@ static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms
 
 				if (cexp->op != 0)
 					goto bad;
-
 				if (cexp->attr != 0)
+					goto bad;
+				if (!ebitmap_is_empty(&cexp->names))
+					goto bad;
+				if (validate_empty_type_set(cexp->type_names))
 					goto bad;
 			}
 		}
