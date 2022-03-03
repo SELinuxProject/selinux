@@ -28,6 +28,8 @@
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/util.h>
 
+#include "private.h"
+
 struct val_to_name {
 	unsigned int val;
 	char *name;

@@ -18,6 +18,7 @@
 #include <sepol/policydb/hashtab.h>
 #include <sepol/policydb/symtab.h>
 
+#include "private.h"
 #include "kernel_to_common.h"
 
 
