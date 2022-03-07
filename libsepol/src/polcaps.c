@@ -6,14 +6,14 @@
 #include <sepol/policydb/polcaps.h>
 
 static const char * const polcap_names[] = {
-	"network_peer_controls",	/* POLICYDB_CAPABILITY_NETPEER */
-	"open_perms",			/* POLICYDB_CAPABILITY_OPENPERM */
-	"extended_socket_class",	/* POLICYDB_CAPABILITY_EXTSOCKCLASS */
-	"always_check_network",		/* POLICYDB_CAPABILITY_ALWAYSNETWORK */
-	"cgroup_seclabel",		/* POLICYDB_CAPABILITY_SECLABEL */
-	"nnp_nosuid_transition",	/* POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION */
-	"genfs_seclabel_symlinks",	/* POLICYDB_CAPABILITY_GENFS_SECLABEL_SYMLINKS */
-	"ioctl_skip_cloexec",		/* POLICYDB_CAPABILITY_IOCTL_SKIP_CLOEXEC */
+	"network_peer_controls",	/* POLICYDB_CAP_NETPEER */
+	"open_perms",			/* POLICYDB_CAP_OPENPERM */
+	"extended_socket_class",	/* POLICYDB_CAP_EXTSOCKCLASS */
+	"always_check_network",		/* POLICYDB_CAP_ALWAYSNETWORK */
+	"cgroup_seclabel",		/* POLICYDB_CAP_SECLABEL */
+	"nnp_nosuid_transition",	/* POLICYDB_CAP_NNP_NOSUID_TRANSITION */
+	"genfs_seclabel_symlinks",	/* POLICYDB_CAP_GENFS_SECLABEL_SYMLINKS */
+	"ioctl_skip_cloexec",		/* POLICYDB_CAP_IOCTL_SKIP_CLOEXEC */
 	NULL
 };
 
@@ -21,7 +21,7 @@ int sepol_polcap_getnum(const char *name)
 {
 	int capnum;
 
-	for (capnum = 0; capnum <= POLICYDB_CAPABILITY_MAX; capnum++) {
+	for (capnum = 0; capnum <= POLICYDB_CAP_MAX; capnum++) {
 		if (polcap_names[capnum] == NULL)
 			continue;
 		if (strcasecmp(polcap_names[capnum], name) == 0)
@@ -32,7 +32,7 @@ int sepol_polcap_getnum(const char *name)
 
 const char *sepol_polcap_getname(unsigned int capnum)
 {
-	if (capnum > POLICYDB_CAPABILITY_MAX)
+	if (capnum > POLICYDB_CAP_MAX)
 		return NULL;
 
 	return polcap_names[capnum];
