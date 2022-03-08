@@ -683,7 +683,7 @@ bad:
  * Functions to validate a kernel policydb
  */
 
-static int validate_avtab_key(avtab_key_t *key, validate_t flavors[])
+static int validate_avtab_key(avtab_key_t *key, int conditional, validate_t flavors[])
 {
 	if (validate_value(key->source_type, &flavors[SYM_TYPES]))
 		goto bad;
@@ -695,12 +695,15 @@ static int validate_avtab_key(avtab_key_t *key, validate_t flavors[])
 	case AVTAB_ALLOWED:
 	case AVTAB_AUDITALLOW:
 	case AVTAB_AUDITDENY:
-	case AVTAB_XPERMS_ALLOWED:
-	case AVTAB_XPERMS_AUDITALLOW:
-	case AVTAB_XPERMS_DONTAUDIT:
 	case AVTAB_TRANSITION:
 	case AVTAB_MEMBER:
 	case AVTAB_CHANGE:
+		break;
+	case AVTAB_XPERMS_ALLOWED:
+	case AVTAB_XPERMS_AUDITALLOW:
+	case AVTAB_XPERMS_DONTAUDIT:
+		if (conditional)
+			goto bad;
 		break;
 	default:
 		goto bad;
@@ -716,7 +719,7 @@ static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *
 {
 	validate_t *flavors = (validate_t *)args;
 
-	if (validate_avtab_key(k, flavors))
+	if (validate_avtab_key(k, 0, flavors))
 		return -1;
 
 	if ((k->specified & AVTAB_TYPE) && validate_value(d->data, &flavors[SYM_TYPES]))
@@ -741,7 +744,7 @@ static int validate_cond_av_list(sepol_handle_t *handle, cond_av_list_t *cond_av
 
 	for (; cond_av; cond_av = cond_av->next) {
 		for (avtab_ptr = cond_av->node; avtab_ptr; avtab_ptr = avtab_ptr->next) {
-			if (validate_avtab_key(&avtab_ptr->key, flavors)) {
+			if (validate_avtab_key(&avtab_ptr->key, 1, flavors)) {
 				ERR(handle, "Invalid cond av list");
 				return -1;
 			}
@@ -751,7 +754,7 @@ static int validate_cond_av_list(sepol_handle_t *handle, cond_av_list_t *cond_av
 	return 0;
 }
 
-static int validate_avrules(sepol_handle_t *handle, avrule_t *avrule, validate_t flavors[])
+static int validate_avrules(sepol_handle_t *handle, avrule_t *avrule, int conditional, validate_t flavors[])
 {
 	class_perm_node_t *class;
 
@@ -771,14 +774,17 @@ static int validate_avrules(sepol_handle_t *handle, avrule_t *avrule, validate_t
 		case AVRULE_AUDITALLOW:
 		case AVRULE_AUDITDENY:
 		case AVRULE_DONTAUDIT:
-		case AVRULE_NEVERALLOW:
 		case AVRULE_TRANSITION:
 		case AVRULE_MEMBER:
 		case AVRULE_CHANGE:
+			break;
+		case AVRULE_NEVERALLOW:
 		case AVRULE_XPERMS_ALLOWED:
 		case AVRULE_XPERMS_AUDITALLOW:
 		case AVRULE_XPERMS_DONTAUDIT:
 		case AVRULE_XPERMS_NEVERALLOW:
+			if (conditional)
+				goto bad;
 			break;
 		default:
 			goto bad;
@@ -839,9 +845,9 @@ static int validate_cond_list(sepol_handle_t *handle, cond_list_t *cond, validat
 			goto bad;
 		if (validate_cond_av_list(handle, cond->false_list, flavors))
 			goto bad;
-		if (validate_avrules(handle, cond->avtrue_list, flavors))
+		if (validate_avrules(handle, cond->avtrue_list, 1, flavors))
 			goto bad;
-		if (validate_avrules(handle, cond->avfalse_list, flavors))
+		if (validate_avrules(handle, cond->avfalse_list, 1, flavors))
 			goto bad;
 		if (validate_bool_id_array(handle, cond->bool_ids, cond->nbools, &flavors[SYM_BOOLS]))
 			goto bad;
@@ -1123,7 +1129,7 @@ static int validate_avrule_blocks(sepol_handle_t *handle, avrule_block_t *avrule
 		for (decl = avrule_block->branch_list; decl != NULL; decl = decl->next) {
 			if (validate_cond_list(handle, decl->cond_list, flavors))
 				goto bad;
-			if (validate_avrules(handle, decl->avrules, flavors))
+			if (validate_avrules(handle, decl->avrules, 0, flavors))
 				goto bad;
 			if (validate_role_trans_rules(handle, decl->role_tr_rules, flavors))
 				goto bad;
