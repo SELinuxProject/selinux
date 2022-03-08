@@ -602,6 +602,41 @@ static int validate_user_datum_wrapper(__attribute__((unused)) hashtab_key_t k, 
 	return validate_user_datum(margs->handle, d, margs->flavors, margs->mls);
 }
 
+static int validate_bool_datum(sepol_handle_t *handle, cond_bool_datum_t *boolean, validate_t flavors[])
+{
+	if (validate_value(boolean->s.value, &flavors[SYM_BOOLS]))
+		goto bad;
+
+	switch (boolean->state) {
+	case 0:
+	case 1:
+		break;
+	default:
+		goto bad;
+	}
+
+	switch (boolean->flags) {
+	case 0:
+	case COND_BOOL_FLAGS_TUNABLE:
+		break;
+	default:
+		goto bad;
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid bool datum");
+	return -1;
+}
+
+static int validate_bool_datum_wrapper(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+{
+	map_arg_t *margs = args;
+
+	return validate_bool_datum(margs->handle, d, margs->flavors);
+}
+
 static int validate_datum_array_gaps(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
 {
 	unsigned int i;
@@ -629,6 +664,11 @@ static int validate_datum_array_gaps(sepol_handle_t *handle, policydb_t *p, vali
 
 	for (i = 0; i < p->p_users.nprim; i++) {
 		if (bool_xnor(p->user_val_to_struct[i], ebitmap_get_bit(&flavors[SYM_USERS].gaps, i)))
+			goto bad;
+	}
+
+	for (i = 0; i < p->p_bools.nprim; i++) {
+		if (bool_xnor(p->bool_val_to_struct[i], ebitmap_get_bit(&flavors[SYM_BOOLS].gaps, i)))
 			goto bad;
 	}
 
@@ -670,6 +710,9 @@ static int validate_datum_array_entries(sepol_handle_t *handle, policydb_t *p, v
 		goto bad;
 
 	if (hashtab_map(p->p_cats.table, validate_datum, &flavors[SYM_CATS]))
+		goto bad;
+
+	if (hashtab_map(p->p_bools.table, validate_bool_datum_wrapper, &margs))
 		goto bad;
 
 	return 0;
