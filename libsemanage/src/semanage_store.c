@@ -707,6 +707,16 @@ static int semanage_filename_select(const struct dirent *d)
 	return 1;
 }
 
+/* Utility function to fork mv, this allows semanage to rename
+ * on overlayfs system like oci containers. Accepts source and
+ * destination. Returns status code. */
+int mv(const char *src, const char *dest)
+{
+    char *cmd = NULL;
+    asprintf (&cmd, "mv %s %s", src, dest);
+    return system(cmd);
+}
+
 /* Copies a file from src to dst.  If dst already exists then
  * overwrite it.  Returns 0 on success, -1 on error. */
 int semanage_copy_file(const char *src, const char *dst, mode_t mode,
@@ -760,7 +770,7 @@ int semanage_copy_file(const char *src, const char *dst, mode_t mode,
 		retval = -1;
 	}
 
-	if (!retval && rename(tmp, dst) == -1)
+	if (!retval && mv(tmp, dst) == -1)
 		return -1;
 
 out:
@@ -1770,7 +1780,7 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 		goto cleanup;
 	}
 
-	if (rename(active, backup) == -1) {
+	if (mv(active, backup) == -1) {
 		ERR(sh, "Error while renaming %s to %s.", active, backup);
 		retval = -1;
 		goto cleanup;
@@ -1779,12 +1789,12 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 	/* clean up some files from the sandbox before install */
 	/* remove homedir_template from sandbox */
 
-	if (rename(sandbox, active) == -1) {
+	if (mv(sandbox, active) == -1) {
 		ERR(sh, "Error while renaming %s to %s.", sandbox, active);
 		/* note that if an error occurs during the next
 		 * function then the store will be left in an
 		 * inconsistent state */
-		if (rename(backup, active) < 0)
+		if (mv(backup, active) < 0)
 			ERR(sh, "Error while renaming %s back to %s.", backup,
 			    active);
 		retval = -1;
@@ -1795,10 +1805,10 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 		 * function then the store will be left in an
 		 * inconsistent state */
 		int errsv = errno;
-		if (rename(active, sandbox) < 0)
+		if (mv(active, sandbox) < 0)
 			ERR(sh, "Error while renaming %s back to %s.", active,
 			    sandbox);
-		else if (rename(backup, active) < 0)
+		else if (mv(backup, active) < 0)
 			ERR(sh, "Error while renaming %s back to %s.", backup,
 			    active);
 		else
