@@ -53,8 +53,13 @@ __attribute__ ((format (printf, 2, 0))) void cil_vlog(enum cil_log_level lvl, co
 {
 	if (cil_log_level >= lvl) {
 		char buff[MAX_LOG_SIZE];
-		vsnprintf(buff, MAX_LOG_SIZE, msg, args);
-		(*cil_log_handler)(cil_log_level, buff);
+		int n = vsnprintf(buff, MAX_LOG_SIZE, msg, args);
+		if (n > 0) {
+			(*cil_log_handler)(cil_log_level, buff);
+			if (n >= MAX_LOG_SIZE) {
+				(*cil_log_handler)(cil_log_level, " <LOG MESSAGE TRUNCATED>");
+			}
+		}
 	}
 }
 
