@@ -18,6 +18,7 @@
 ## Author: Dan Walsh
 import os
 import sys
+import tempfile
 from gi.repository import Gtk
 import selinux
 
@@ -162,12 +163,20 @@ class statusPage:
         self.enabled = enabled
 
     def write_selinux_config(self, enforcing, type):
-        path = selinux.selinux_path() + "config"
-        backup_path = path + ".bck"
-        fd = open(path)
-        lines = fd.readlines()
-        fd.close()
-        fd = open(backup_path, "w")
+        selinux_path = selinux.selinux_path()
+        path = selinux_path + "config"
+        # Make a backup /etc/selinux/config.*.bck
+        backup_path = tempfile.mkstemp(prefix="config.", dir=selinux_path, suffix=".bck")[1]
+        fd1 = open(path, "r")
+        lines = fd1.readlines()
+        fd1.close()
+        fd2 = open(backup_path, "a")
+        for l in lines:
+            fd2.write(l)
+        fd2.close()
+        # Write to path, not backup_path, to guarantee that file metadata
+        # (permissions, xattrs, including SELinux labels etc.) is not lost.
+        fd = open(path, "w")
         for l in lines:
             if l.startswith("SELINUX="):
                 fd.write("SELINUX=%s\n" % enforcing)
@@ -177,7 +186,9 @@ class statusPage:
                 continue
             fd.write(l)
         fd.close()
-        os.rename(backup_path, path)
+        # Here we are sure that we are deleting our backup,
+        # not another file or directory
+        os.unlink(backup_path)
 
     def read_selinux_config(self):
         self.initialtype = selinux.selinux_getpolicytype()[1]
