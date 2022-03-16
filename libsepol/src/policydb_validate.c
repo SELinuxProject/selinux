@@ -881,9 +881,52 @@ bad:
 	return -1;
 }
 
+static int validate_cond_expr(sepol_handle_t *handle, struct cond_expr *expr, validate_t *bool)
+{
+	int depth = -1;
+
+	for (; expr; expr = expr->next) {
+		switch(expr->expr_type) {
+		case COND_BOOL:
+			if (validate_value(expr->bool, bool))
+				goto bad;
+			if (depth == (COND_EXPR_MAXDEPTH - 1))
+				goto bad;
+			depth++;
+			break;
+		case COND_NOT:
+			if (depth < 0)
+				goto bad;
+			break;
+		case COND_OR:
+		case COND_AND:
+		case COND_XOR:
+		case COND_EQ:
+		case COND_NEQ:
+			if (depth < 1)
+				goto bad;
+			depth--;
+			break;
+		default:
+			goto bad;
+		}
+	}
+
+	if (depth != 0)
+		goto bad;
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid cond expression");
+	return -1;
+}
+
 static int validate_cond_list(sepol_handle_t *handle, cond_list_t *cond, validate_t flavors[])
 {
 	for (; cond; cond = cond->next) {
+		if (validate_cond_expr(handle, cond->expr, &flavors[SYM_BOOLS]))
+			goto bad;
 		if (validate_cond_av_list(handle, cond->true_list, flavors))
 			goto bad;
 		if (validate_cond_av_list(handle, cond->false_list, flavors))
