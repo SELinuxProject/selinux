@@ -697,6 +697,10 @@ int semanage_store_access_check(void)
 
 /********************* other I/O functions *********************/
 
+static int semanage_rename(semanage_handle_t * sh, const char *tmp, const char *dst);
+int semanage_remove_directory(const char *path);
+static int semanage_copy_dir_flags(const char *src, const char *dst, int flag);
+
 /* Callback used by scandir() to select files. */
 static int semanage_filename_select(const struct dirent *d)
 {
@@ -768,7 +772,21 @@ out:
 	return retval;
 }
 
-static int semanage_copy_dir_flags(const char *src, const char *dst, int flag);
+static int semanage_rename(semanage_handle_t * sh, const char *src, const char *dst) {
+	int retval;
+
+	retval = rename(src, dst);
+	if (retval == 0 || errno != EXDEV)
+		return retval;
+
+	/* we can't use rename() due to filesystem limitation, lets try to copy files manually */
+	WARN(sh, "WARNING: rename(%s, %s) failed: %s, fall back to non-atomic semanage_copy_dir_flags()",
+		 src, dst, strerror(errno));
+	if (semanage_copy_dir_flags(src, dst, 1) == -1) {
+		return -1;
+	}
+	return semanage_remove_directory(src);
+}
 
 /* Copies all of the files from src to dst, recursing into
  * subdirectories.  Returns 0 on success, -1 on error. */
@@ -1770,7 +1788,7 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 		goto cleanup;
 	}
 
-	if (rename(active, backup) == -1) {
+	if (semanage_rename(sh, active, backup) == -1) {
 		ERR(sh, "Error while renaming %s to %s.", active, backup);
 		retval = -1;
 		goto cleanup;
@@ -1779,12 +1797,12 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 	/* clean up some files from the sandbox before install */
 	/* remove homedir_template from sandbox */
 
-	if (rename(sandbox, active) == -1) {
+	if (semanage_rename(sh, sandbox, active) == -1) {
 		ERR(sh, "Error while renaming %s to %s.", sandbox, active);
 		/* note that if an error occurs during the next
 		 * function then the store will be left in an
 		 * inconsistent state */
-		if (rename(backup, active) < 0)
+		if (semanage_rename(sh, backup, active) < 0)
 			ERR(sh, "Error while renaming %s back to %s.", backup,
 			    active);
 		retval = -1;
@@ -1795,10 +1813,10 @@ static int semanage_commit_sandbox(semanage_handle_t * sh)
 		 * function then the store will be left in an
 		 * inconsistent state */
 		int errsv = errno;
-		if (rename(active, sandbox) < 0)
+		if (semanage_rename(sh, active, sandbox) < 0)
 			ERR(sh, "Error while renaming %s back to %s.", active,
 			    sandbox);
-		else if (rename(backup, active) < 0)
+		else if (semanage_rename(sh, backup, active) < 0)
 			ERR(sh, "Error while renaming %s back to %s.", backup,
 			    active);
 		else
