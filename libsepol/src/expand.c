@@ -3153,17 +3153,15 @@ int expand_module(sepol_handle_t * handle,
 		goto cleanup;
 
 	/* Build the type<->attribute maps and remove attributes. */
-	state.out->attr_type_map = mallocarray(state.out->p_types.nprim,
+	state.out->attr_type_map = calloc(state.out->p_types.nprim,
 					  sizeof(ebitmap_t));
-	state.out->type_attr_map = mallocarray(state.out->p_types.nprim,
+	state.out->type_attr_map = calloc(state.out->p_types.nprim,
 					  sizeof(ebitmap_t));
 	if (!state.out->attr_type_map || !state.out->type_attr_map) {
 		ERR(handle, "Out of memory!");
 		goto cleanup;
 	}
 	for (i = 0; i < state.out->p_types.nprim; i++) {
-		ebitmap_init(&state.out->type_attr_map[i]);
-		ebitmap_init(&state.out->attr_type_map[i]);
 		/* add the type itself as the degenerate case */
 		if (ebitmap_set_bit(&state.out->type_attr_map[i], i, 1)) {
 			ERR(handle, "Out of memory!");

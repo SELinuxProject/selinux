@@ -409,14 +409,14 @@ static int module_package_read_offsets(sepol_module_package_t * mod,
 		goto err;
 	}
 
-	off = (size_t *) mallocarray(nsec + 1, sizeof(size_t));
+	off = (size_t *) calloc(nsec + 1, sizeof(size_t));
 	if (!off) {
 		ERR(file->handle, "out of memory");
 		goto err;
 	}
 
 	free(buf);
-	buf = mallocarray(nsec, sizeof(uint32_t));
+	buf = calloc(nsec, sizeof(uint32_t));
 	if (!buf) {
 		ERR(file->handle, "out of memory");
 		goto err;

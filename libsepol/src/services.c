@@ -712,7 +712,7 @@ mls_ops:
 	 * Generate the same number of answer buffer entries as expression
 	 * buffers (as there will never be more).
 	 */
-	answer_list = mallocarray(expr_count, sizeof(*answer_list));
+	answer_list = calloc(expr_count, sizeof(*answer_list));
 	if (!answer_list) {
 		ERR(NULL, "failed to allocate answer stack");
 		rc = -ENOMEM;
@@ -2169,12 +2169,11 @@ int sepol_get_user_sids(sepol_security_id_t fromsid,
 	}
 	usercon.user = user->s.value;
 
-	mysids = mallocarray(maxnel, sizeof(sepol_security_id_t));
+	mysids = calloc(maxnel, sizeof(sepol_security_id_t));
 	if (!mysids) {
 		rc = -ENOMEM;
 		goto out;
 	}
-	memset(mysids, 0, maxnel * sizeof(sepol_security_id_t));
 
 	ebitmap_for_each_positive_bit(&user->roles.roles, rnode, i) {
 		role = policydb->role_val_to_struct[i];
@@ -2204,17 +2203,12 @@ int sepol_get_user_sids(sepol_security_id_t fromsid,
 				mysids[mynel++] = sid;
 			} else {
 				maxnel += SIDS_NEL;
-				mysids2 =
-				    mallocarray(maxnel,
-					   sizeof(sepol_security_id_t));
-
+				mysids2 = calloc(maxnel, sizeof(sepol_security_id_t));
 				if (!mysids2) {
 					rc = -ENOMEM;
 					free(mysids);
 					goto out;
 				}
-				memset(mysids2, 0,
-				       maxnel * sizeof(sepol_security_id_t));
 				memcpy(mysids2, mysids,
 				       mynel * sizeof(sepol_security_id_t));
 				free(mysids);

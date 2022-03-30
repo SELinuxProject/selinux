@@ -26,13 +26,9 @@
 
 int sepol_sidtab_init(sidtab_t * s)
 {
-	int i;
-
-	s->htable = mallocarray(SIDTAB_SIZE, sizeof(sidtab_ptr_t));
+	s->htable = calloc(SIDTAB_SIZE, sizeof(sidtab_ptr_t));
 	if (!s->htable)
 		return -ENOMEM;
-	for (i = 0; i < SIDTAB_SIZE; i++)
-		s->htable[i] = (sidtab_ptr_t) NULL;
 	s->nel = 0;
 	s->next_sid = 1;
 	s->shutdown = 0;

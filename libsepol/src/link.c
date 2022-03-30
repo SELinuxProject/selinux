@@ -1681,13 +1681,9 @@ static int copy_scope_index(scope_index_t * src, scope_index_t * dest,
 	}
 
 	/* next copy the enabled permissions data  */
-	if ((dest->class_perms_map = mallocarray(largest_mapped_class_value,
-					    sizeof(*dest->class_perms_map))) ==
-	    NULL) {
+	if ((dest->class_perms_map = calloc(largest_mapped_class_value,
+					    sizeof(*dest->class_perms_map))) == NULL) {
 		goto cleanup;
-	}
-	for (i = 0; i < largest_mapped_class_value; i++) {
-		ebitmap_init(dest->class_perms_map + i);
 	}
 	dest->class_perms_len = largest_mapped_class_value;
 	for (i = 0; i < src->class_perms_len; i++) {

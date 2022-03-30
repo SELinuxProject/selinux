@@ -267,7 +267,7 @@ int sepol_user_get_roles(sepol_handle_t * handle,
 
 	unsigned int i;
 	const char **tmp_roles =
-	    (const char **)mallocarray(user->num_roles, sizeof(char *));
+	    (const char **)calloc(user->num_roles, sizeof(char *));
 	if (!tmp_roles)
 		goto omem;
 
