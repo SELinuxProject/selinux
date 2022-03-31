@@ -102,19 +102,19 @@ char *strs_remove_last(struct strs *strs);
 int strs_add_at_index(struct strs *strs, char *s, size_t index);
 char *strs_read_at_index(struct strs *strs, size_t index);
 void strs_sort(struct strs *strs);
-unsigned strs_num_items(struct strs *strs);
-size_t strs_len_items(struct strs *strs);
-char *strs_to_str(struct strs *strs);
-void strs_write_each(struct strs *strs, FILE *out);
-void strs_write_each_indented(struct strs *strs, FILE *out, int indent);
+unsigned strs_num_items(const struct strs *strs);
+size_t strs_len_items(const struct strs *strs);
+char *strs_to_str(const struct strs *strs);
+void strs_write_each(const struct strs *strs, FILE *out);
+void strs_write_each_indented(const struct strs *strs, FILE *out, int indent);
 int hashtab_ordered_to_strs(char *key, void *data, void *args);
-int ebitmap_to_strs(struct ebitmap *map, struct strs *strs, char **val_to_name);
-char *ebitmap_to_str(struct ebitmap *map, char **val_to_name, int sort);
+int ebitmap_to_strs(const struct ebitmap *map, struct strs *strs, char **val_to_name);
+char *ebitmap_to_str(const struct ebitmap *map, char **val_to_name, int sort);
 
 int strs_stack_init(struct strs **stack);
 void strs_stack_destroy(struct strs **stack);
 int strs_stack_push(struct strs *stack, char *s);
 char *strs_stack_pop(struct strs *stack);
-int strs_stack_empty(struct strs *stack);
+int strs_stack_empty(const struct strs *stack);
 
 int sort_ocontexts(struct policydb *pdb);

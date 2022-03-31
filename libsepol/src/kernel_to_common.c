@@ -267,12 +267,12 @@ void strs_sort(struct strs *strs)
 	qsort(strs->list, strs->num, sizeof(char *), strs_cmp);
 }
 
-unsigned strs_num_items(struct strs *strs)
+unsigned strs_num_items(const struct strs *strs)
 {
 	return strs->num;
 }
 
-size_t strs_len_items(struct strs *strs)
+size_t strs_len_items(const struct strs *strs)
 {
 	unsigned i;
 	size_t len = 0;
@@ -285,7 +285,7 @@ size_t strs_len_items(struct strs *strs)
 	return len;
 }
 
-char *strs_to_str(struct strs *strs)
+char *strs_to_str(const struct strs *strs)
 {
 	char *str = NULL;
 	size_t len = 0;
@@ -327,7 +327,7 @@ exit:
 	return str;
 }
 
-void strs_write_each(struct strs *strs, FILE *out)
+void strs_write_each(const struct strs *strs, FILE *out)
 {
 	unsigned i;
 
@@ -339,7 +339,7 @@ void strs_write_each(struct strs *strs, FILE *out)
 	}
 }
 
-void strs_write_each_indented(struct strs *strs, FILE *out, int indent)
+void strs_write_each_indented(const struct strs *strs, FILE *out, int indent)
 {
 	unsigned i;
 
@@ -360,7 +360,7 @@ int hashtab_ordered_to_strs(char *key, void *data, void *args)
 	return strs_add_at_index(strs, key, datum->value-1);
 }
 
-int ebitmap_to_strs(struct ebitmap *map, struct strs *strs, char **val_to_name)
+int ebitmap_to_strs(const struct ebitmap *map, struct strs *strs, char **val_to_name)
 {
 	struct ebitmap_node *node;
 	uint32_t i;
@@ -379,7 +379,7 @@ int ebitmap_to_strs(struct ebitmap *map, struct strs *strs, char **val_to_name)
 	return 0;
 }
 
-char *ebitmap_to_str(struct ebitmap *map, char **val_to_name, int sort)
+char *ebitmap_to_str(const struct ebitmap *map, char **val_to_name, int sort)
 {
 	struct strs *strs;
 	char *str = NULL;
@@ -427,7 +427,7 @@ char *strs_stack_pop(struct strs *stack)
 	return strs_remove_last(stack);
 }
 
-int strs_stack_empty(struct strs *stack)
+int strs_stack_empty(const struct strs *stack)
 {
 	return strs_num_items(stack) == 0;
 }
