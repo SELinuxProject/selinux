@@ -451,7 +451,7 @@ int mls_context_to_sid(const policydb_t * policydb,
  * Copies the MLS range from `src' into `dst'.
  */
 static inline int mls_copy_context(context_struct_t * dst,
-				   context_struct_t * src)
+				   const context_struct_t * src)
 {
 	int l, rc = 0;
 
@@ -471,7 +471,7 @@ static inline int mls_copy_context(context_struct_t * dst,
  * Copies the effective MLS range from `src' into `dst'.
  */
 static inline int mls_scopy_context(context_struct_t * dst,
-				    context_struct_t * src)
+				    const context_struct_t * src)
 {
 	int l, rc = 0;
 
@@ -490,7 +490,7 @@ static inline int mls_scopy_context(context_struct_t * dst,
 /*
  * Copies the MLS range `range' into `context'.
  */
-static inline int mls_range_set(context_struct_t * context, mls_range_t * range)
+static inline int mls_range_set(context_struct_t * context, const mls_range_t * range)
 {
 	int l, rc = 0;
 
@@ -601,8 +601,8 @@ int mls_convert_context(policydb_t * oldp,
 }
 
 int mls_compute_sid(policydb_t * policydb,
-		    context_struct_t * scontext,
-		    context_struct_t * tcontext,
+		    const context_struct_t * scontext,
+		    const context_struct_t * tcontext,
 		    sepol_security_class_t tclass,
 		    uint32_t specified, context_struct_t * newcontext)
 {
@@ -755,9 +755,10 @@ void mls_semantic_level_destroy(mls_semantic_level_t * l)
 }
 
 int mls_semantic_level_cpy(mls_semantic_level_t * dst,
-			   mls_semantic_level_t * src)
+			   const mls_semantic_level_t * src)
 {
-	mls_semantic_cat_t *cat, *newcat, *lnewcat = NULL;
+	const mls_semantic_cat_t *cat;
+	mls_semantic_cat_t *newcat, *lnewcat = NULL;
 
 	mls_semantic_level_init(dst);
 	dst->sens = src->sens;
@@ -800,7 +801,7 @@ void mls_semantic_range_destroy(mls_semantic_range_t * r)
 }
 
 int mls_semantic_range_cpy(mls_semantic_range_t * dst,
-			   mls_semantic_range_t * src)
+			   const mls_semantic_range_t * src)
 {
 	if (mls_semantic_level_cpy(&dst->level[0], &src->level[0]) < 0)
 		return -1;

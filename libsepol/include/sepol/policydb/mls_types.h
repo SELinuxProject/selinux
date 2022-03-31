@@ -50,7 +50,7 @@ typedef struct mls_range {
 	mls_level_t level[2];	/* low == level[0], high == level[1] */
 } mls_range_t;
 
-static inline int mls_range_glblub(struct mls_range *dst, struct mls_range *r1, struct mls_range *r2)
+static inline int mls_range_glblub(struct mls_range *dst, const struct mls_range *r1, const struct mls_range *r2)
 {
 	if (r1->level[1].sens < r2->level[0].sens || r2->level[1].sens < r1->level[0].sens) {
 		/* These ranges have no common sensitivities */
@@ -74,7 +74,7 @@ static inline int mls_range_glblub(struct mls_range *dst, struct mls_range *r1, 
 }
 
 
-static inline int mls_level_cpy(struct mls_level *dst, struct mls_level *src)
+static inline int mls_level_cpy(struct mls_level *dst, const struct mls_level *src)
 {
 
 	dst->sens = src->sens;
@@ -119,7 +119,7 @@ static inline int mls_level_dom(const struct mls_level *l1, const struct mls_lev
 (mls_level_dom(&(r2).level[0], &(r1).level[0]) && \
  mls_level_dom(&(r1).level[1], &(r2).level[1]))
 
-static inline int mls_range_cpy(mls_range_t * dst, mls_range_t * src)
+static inline int mls_range_cpy(mls_range_t * dst, const mls_range_t * src)
 {
 
 	if (mls_level_cpy(&dst->level[0], &src->level[0]) < 0)
@@ -149,7 +149,7 @@ static inline void mls_range_destroy(struct mls_range *r)
 	mls_level_destroy(&r->level[1]);
 }
 
-static inline int mls_range_eq(struct mls_range *r1, struct mls_range *r2)
+static inline int mls_range_eq(const struct mls_range *r1, const struct mls_range *r2)
 {
 	return (mls_level_eq(&r1->level[0], &r2->level[0]) &&
 	        mls_level_eq(&r1->level[1], &r2->level[1]));
@@ -174,10 +174,10 @@ extern void mls_semantic_cat_init(mls_semantic_cat_t *c);
 extern void mls_semantic_cat_destroy(mls_semantic_cat_t *c);
 extern void mls_semantic_level_init(mls_semantic_level_t *l);
 extern void mls_semantic_level_destroy(mls_semantic_level_t *l);
-extern int mls_semantic_level_cpy(mls_semantic_level_t *dst, mls_semantic_level_t *src);
+extern int mls_semantic_level_cpy(mls_semantic_level_t *dst, const mls_semantic_level_t *src);
 extern void mls_semantic_range_init(mls_semantic_range_t *r);
 extern void mls_semantic_range_destroy(mls_semantic_range_t *r);
-extern int mls_semantic_range_cpy(mls_semantic_range_t *dst, mls_semantic_range_t *src);
+extern int mls_semantic_range_cpy(mls_semantic_range_t *dst, const mls_semantic_range_t *src);
 
 #ifdef __cplusplus
 }
