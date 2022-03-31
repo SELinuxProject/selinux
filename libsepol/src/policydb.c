@@ -1252,7 +1252,8 @@ int policydb_index_others(sepol_handle_t * handle,
 	if (!p->type_val_to_struct)
 		return -1;
 
-	cond_init_bool_indexes(p);
+	if (cond_init_bool_indexes(p))
+		return -1;
 
 	for (i = SYM_ROLES; i < SYM_NUM; i++) {
 		free(p->sym_val_to_name[i]);

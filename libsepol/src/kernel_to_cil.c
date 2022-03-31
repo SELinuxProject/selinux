@@ -190,6 +190,10 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 				}
 				if (!names) {
 					names = strdup("NO_IDENTIFIER");
+					if (!names) {
+						sepol_log_err("Out of memory");
+						goto exit;
+					}
 				}
 				if (strchr(names, ' ')) {
 					new_val = create_str("(%s %s (%s))", 3, op, attr1, names);
@@ -568,6 +572,11 @@ static int write_sids_to_cil(FILE *out, const char *const *sid_to_str,
 		} else {
 			snprintf(unknown, 18, "%s%u", "UNKNOWN", i);
 			sid = strdup(unknown);
+			if (!sid) {
+				sepol_log_err("Out of memory");
+				rc = -1;
+				goto exit;
+			}
 		}
 		rc = strs_add_at_index(strs, sid, i);
 		if (rc != 0) {

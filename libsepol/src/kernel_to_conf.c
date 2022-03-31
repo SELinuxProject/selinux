@@ -187,6 +187,10 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 				}
 				if (!names) {
 					names = strdup("NO_IDENTIFIER");
+					if (!names) {
+						sepol_log_err("Out of memory");
+						goto exit;
+					}
 				}
 				if (strchr(names, ' ')) {
 					new_val = create_str("%s %s { %s }", 3, attr1, op, names);
