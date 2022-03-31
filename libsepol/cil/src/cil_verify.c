@@ -591,7 +591,7 @@ int __cil_verify_initsids(struct cil_list *sids)
 	return rc;
 }
 
-int __cil_is_cat_in_cats(struct cil_cat *cat, struct cil_cats *cats)
+static int __cil_is_cat_in_cats(struct cil_cat *cat, struct cil_cats *cats)
 {
 	struct cil_list_item *i;
 
@@ -606,7 +606,7 @@ int __cil_is_cat_in_cats(struct cil_cat *cat, struct cil_cats *cats)
 }
 
 
-int __cil_verify_cat_in_cats(struct cil_cat *cat, struct cil_cats *cats)
+static int __cil_verify_cat_in_cats(struct cil_cat *cat, struct cil_cats *cats)
 {
 	if (__cil_is_cat_in_cats(cat, cats) != CIL_TRUE) {
 		cil_log(CIL_ERR, "Failed to find category %s in category list\n", cat->datum.name);
@@ -616,7 +616,7 @@ int __cil_verify_cat_in_cats(struct cil_cat *cat, struct cil_cats *cats)
 	return SEPOL_OK;
 }
 
-int __cil_verify_cats_associated_with_sens(struct cil_sens *sens, struct cil_cats *cats)
+static int __cil_verify_cats_associated_with_sens(struct cil_sens *sens, struct cil_cats *cats)
 {
 	int rc = SEPOL_OK;
 	struct cil_list_item *i, *j;
@@ -650,7 +650,7 @@ int __cil_verify_cats_associated_with_sens(struct cil_sens *sens, struct cil_cat
 	return rc;
 }
 
-int __cil_verify_levelrange_sensitivity(struct cil_db *db, struct cil_sens *low, struct cil_sens *high)
+static int __cil_verify_levelrange_sensitivity(struct cil_db *db, struct cil_sens *low, struct cil_sens *high)
 {
 	struct cil_list_item *curr;
 	int found = CIL_FALSE;
@@ -679,7 +679,7 @@ exit:
 
 }
 
-int __cil_verify_levelrange_cats(struct cil_cats *low, struct cil_cats *high)
+static int __cil_verify_levelrange_cats(struct cil_cats *low, struct cil_cats *high)
 {
 	int rc = SEPOL_ERR;
 	struct cil_list_item *item;
@@ -707,7 +707,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_levelrange(struct cil_db *db, struct cil_levelrange *lr)
+static int __cil_verify_levelrange(struct cil_db *db, struct cil_levelrange *lr)
 {
 	int rc = SEPOL_ERR;
 
@@ -739,7 +739,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_named_levelrange(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_named_levelrange(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_levelrange *lr = node->data;
@@ -814,7 +814,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_role(struct cil_tree_node *node)
+static int __cil_verify_role(struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_role *role = node->data;
@@ -845,7 +845,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_type(struct cil_tree_node *node)
+static int __cil_verify_type(struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_type *type = node->data;
@@ -876,7 +876,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_context(struct cil_db *db, struct cil_context *ctx)
+static int __cil_verify_context(struct cil_db *db, struct cil_context *ctx)
 {
 	int rc = SEPOL_ERR;
 	struct cil_user *user = ctx->user;
@@ -954,7 +954,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_named_context(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_named_context(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_context *ctx = node->data;
@@ -1017,7 +1017,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, __attribute__((unused)) void *extra_args)
+static int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute__((unused)) uint32_t *finished, __attribute__((unused)) void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_tree_node *rule_node = node;
@@ -1105,7 +1105,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_booleanif(struct cil_tree_node *node, struct cil_complex_symtab *symtab)
+static int __cil_verify_booleanif(struct cil_tree_node *node, struct cil_complex_symtab *symtab)
 {
 	int rc = SEPOL_ERR;
 	struct cil_booleanif *bif = (struct cil_booleanif*)node->data;
@@ -1129,7 +1129,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_netifcon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_netifcon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_netifcon *netif = node->data;
@@ -1159,7 +1159,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_ibendportcon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_ibendportcon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_ibendportcon *ib_end_port = node->data;
@@ -1179,7 +1179,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_genfscon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_genfscon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_genfscon *genfs = node->data;
@@ -1200,7 +1200,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_filecon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_filecon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_filecon *file = node->data;
@@ -1226,7 +1226,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_nodecon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_nodecon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_nodecon *nodecon = node->data;
@@ -1247,7 +1247,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_ibpkeycon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_ibpkeycon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_ibpkeycon *pkey = node->data;
@@ -1267,7 +1267,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_portcon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_portcon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_portcon *port = node->data;
@@ -1288,7 +1288,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_pirqcon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_pirqcon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_pirqcon *pirq = node->data;
@@ -1309,7 +1309,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_iomemcon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_iomemcon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_iomemcon *iomem = node->data;
@@ -1330,7 +1330,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_ioportcon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_ioportcon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_ioportcon *ioport = node->data;
@@ -1351,7 +1351,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_pcidevicecon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_pcidevicecon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_pcidevicecon *pcidev = node->data;
@@ -1372,7 +1372,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_devicetreecon(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_devicetreecon(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_devicetreecon *dt = node->data;
@@ -1393,7 +1393,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_fsuse(struct cil_db *db, struct cil_tree_node *node)
+static int __cil_verify_fsuse(struct cil_db *db, struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_fsuse *fsuse = node->data;
@@ -1414,7 +1414,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_permissionx(struct cil_permissionx *permx, struct cil_tree_node *node)
+static int __cil_verify_permissionx(struct cil_permissionx *permx, struct cil_tree_node *node)
 {
 	int rc;
 	struct cil_list *classes = NULL;
@@ -1461,13 +1461,13 @@ exit:
 	return rc;
 }
 
-int __cil_verify_avrulex(struct cil_tree_node *node)
+static int __cil_verify_avrulex(struct cil_tree_node *node)
 {
 	struct cil_avrule *avrulex = node->data;
 	return __cil_verify_permissionx(avrulex->perms.x.permx, node);
 }
 
-int __cil_verify_class(struct cil_tree_node *node)
+static int __cil_verify_class(struct cil_tree_node *node)
 {
 	int rc = SEPOL_ERR;
 	struct cil_class *class = node->data;
@@ -1503,7 +1503,7 @@ exit:
 	return rc;
 }
 
-int __cil_verify_policycap(struct cil_tree_node *node)
+static int __cil_verify_policycap(struct cil_tree_node *node)
 {
 	int rc;
 	struct cil_policycap *polcap = node->data;

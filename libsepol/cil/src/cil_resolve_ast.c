@@ -191,7 +191,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_classperms_set(struct cil_tree_node *current, struct cil_classperms_set *cp_set, void *extra_args)
+static int cil_resolve_classperms_set(struct cil_tree_node *current, struct cil_classperms_set *cp_set, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_symtab_datum *datum = NULL;
@@ -275,7 +275,7 @@ exit:
 	return rc;
 }
 
-void cil_type_used(struct cil_symtab_datum *datum, int used)
+static void cil_type_used(struct cil_symtab_datum *datum, int used)
 {
 	struct cil_typeattribute *attr = NULL;
 
@@ -292,7 +292,7 @@ void cil_type_used(struct cil_symtab_datum *datum, int used)
 	}
 }
 
-int cil_resolve_permissionx(struct cil_tree_node *current, struct cil_permissionx *permx, void *extra_args)
+static int cil_resolve_permissionx(struct cil_tree_node *current, struct cil_permissionx *permx, void *extra_args)
 {
 	struct cil_symtab_datum *obj_datum = NULL;
 	int rc = SEPOL_ERR;
@@ -459,7 +459,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_expandtypeattribute(struct cil_tree_node *current, void *extra_args)
+static int cil_resolve_expandtypeattribute(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_expandtypeattribute *expandattr = current->data;
 	struct cil_symtab_datum *attr_datum = NULL;
@@ -493,7 +493,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_aliasactual(struct cil_tree_node *current, void *extra_args, enum cil_flavor flavor, enum cil_flavor alias_flavor)
+static int cil_resolve_aliasactual(struct cil_tree_node *current, void *extra_args, enum cil_flavor flavor, enum cil_flavor alias_flavor)
 {
 	int rc = SEPOL_ERR;
 	enum cil_sym_index sym_index;
@@ -544,7 +544,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_alias_to_actual(struct cil_tree_node *current, enum cil_flavor flavor)
+static int cil_resolve_alias_to_actual(struct cil_tree_node *current, enum cil_flavor flavor)
 {
 	struct cil_alias *alias = current->data;
 	struct cil_alias *a1 = current->data;
@@ -733,7 +733,7 @@ exit:
 	return rc;
 }
 
-int __class_update_perm_values(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
+static int __class_update_perm_values(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
 {
 	struct cil_perm *perm = (struct cil_perm *)d;
 
@@ -1178,7 +1178,7 @@ struct cil_ordered_list {
 	struct cil_tree_node *node;
 };
 
-void __cil_ordered_list_init(struct cil_ordered_list **ordered)
+static void __cil_ordered_list_init(struct cil_ordered_list **ordered)
 {
 	*ordered = cil_malloc(sizeof(**ordered));
 
@@ -1187,7 +1187,7 @@ void __cil_ordered_list_init(struct cil_ordered_list **ordered)
 	(*ordered)->node = NULL;
 }
 
-void __cil_ordered_list_destroy(struct cil_ordered_list **ordered)
+static void __cil_ordered_list_destroy(struct cil_ordered_list **ordered)
 {
 	cil_list_destroy(&(*ordered)->list, CIL_FALSE);
 	(*ordered)->node = NULL;
@@ -1195,7 +1195,7 @@ void __cil_ordered_list_destroy(struct cil_ordered_list **ordered)
 	*ordered = NULL;
 }
 
-void __cil_ordered_lists_destroy(struct cil_list **ordered_lists)
+static void __cil_ordered_lists_destroy(struct cil_list **ordered_lists)
 {
 	struct cil_list_item *item = NULL;
 
@@ -1215,13 +1215,13 @@ void __cil_ordered_lists_destroy(struct cil_list **ordered_lists)
 	*ordered_lists = NULL;
 }
 
-void __cil_ordered_lists_reset(struct cil_list **ordered_lists)
+static void __cil_ordered_lists_reset(struct cil_list **ordered_lists)
 {
 	__cil_ordered_lists_destroy(ordered_lists);
 	cil_list_init(ordered_lists, CIL_LIST_ITEM);
 }
 
-struct cil_list_item *__cil_ordered_item_insert(struct cil_list *old, struct cil_list_item *curr, struct cil_list_item *item)
+static struct cil_list_item *__cil_ordered_item_insert(struct cil_list *old, struct cil_list_item *curr, struct cil_list_item *item)
 {
 	if (item->flavor == CIL_SID) {
 		struct cil_sid *sid = item->data;
@@ -1256,7 +1256,7 @@ struct cil_list_item *__cil_ordered_item_insert(struct cil_list *old, struct cil
 	return cil_list_insert(old, curr, item->flavor, item->data);
 }
 
-int __cil_ordered_list_insert(struct cil_list *old, struct cil_list_item *ocurr, struct cil_list_item *nstart, struct cil_list_item *nstop)
+static int __cil_ordered_list_insert(struct cil_list *old, struct cil_list_item *ocurr, struct cil_list_item *nstart, struct cil_list_item *nstop)
 {
 	struct cil_list_item *ncurr = NULL;
 
@@ -1269,7 +1269,7 @@ int __cil_ordered_list_insert(struct cil_list *old, struct cil_list_item *ocurr,
 	return SEPOL_OK;
 }
 
-struct cil_list_item *__cil_ordered_find_match(struct cil_list_item *t, struct cil_list_item *i)
+static struct cil_list_item *__cil_ordered_find_match(struct cil_list_item *t, struct cil_list_item *i)
 {
 	while (i) {
 		if (i->data == t->data) {
@@ -1280,7 +1280,7 @@ struct cil_list_item *__cil_ordered_find_match(struct cil_list_item *t, struct c
 	return NULL;
 }
 
-int __cil_ordered_lists_merge(struct cil_list *old, struct cil_list *new)
+static int __cil_ordered_lists_merge(struct cil_list *old, struct cil_list *new)
 {
 	struct cil_list_item *omatch = NULL;
 	struct cil_list_item *ofirst = old->head;
@@ -1409,7 +1409,7 @@ exit:
 	return rc;
 }
 
-struct cil_list *__cil_ordered_lists_merge_all(struct cil_list **ordered_lists, struct cil_list **unordered_lists)
+static struct cil_list *__cil_ordered_lists_merge_all(struct cil_list **ordered_lists, struct cil_list **unordered_lists)
 {
 	struct cil_list *composite = NULL;
 	struct cil_list_item *curr = NULL;
@@ -1556,7 +1556,7 @@ exit:
 	return rc;
 }
 
-void cil_set_cat_values(struct cil_list *ordered_cats, struct cil_db *db)
+static void cil_set_cat_values(struct cil_list *ordered_cats, struct cil_db *db)
 {
 	struct cil_list_item *curr;
 	int v = 0;
@@ -1652,7 +1652,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_cats(struct cil_tree_node *current, struct cil_cats *cats, void *extra_args)
+static int cil_resolve_cats(struct cil_tree_node *current, struct cil_cats *cats, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 
@@ -2224,7 +2224,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_devicetreecon(struct cil_tree_node *current, void *extra_args)
+static int cil_resolve_devicetreecon(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_devicetreecon *devicetreecon = current->data;
 	struct cil_symtab_datum *context_datum = NULL;
@@ -2316,7 +2316,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_blockinherit_link(struct cil_tree_node *current, void *extra_args)
+static int cil_resolve_blockinherit_link(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_blockinherit *inherit = current->data;
 	struct cil_symtab_datum *block_datum = NULL;
@@ -2349,7 +2349,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_blockinherit_copy(struct cil_tree_node *current, void *extra_args)
+static int cil_resolve_blockinherit_copy(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_block *block = current->data;
 	struct cil_args_resolve *args = extra_args;
@@ -2398,7 +2398,7 @@ static void cil_mark_subtree_abstract(struct cil_tree_node *node)
 	}
 }
 
-int cil_resolve_blockabstract(struct cil_tree_node *current, void *extra_args)
+static int cil_resolve_blockabstract(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_blockabstract *abstract = current->data;
 	struct cil_symtab_datum *block_datum = NULL;
@@ -2469,7 +2469,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_in_list(struct cil_list *in_list, void *extra_args)
+static int cil_resolve_in_list(struct cil_list *in_list, void *extra_args)
 {
 	struct cil_list_item *curr = NULL;
 	struct cil_tree_node *node = NULL;
@@ -2523,7 +2523,7 @@ exit:
 }
 
 
-int cil_resolve_bounds(struct cil_tree_node *current, void *extra_args, enum cil_flavor flavor, enum cil_flavor attr_flavor)
+static int cil_resolve_bounds(struct cil_tree_node *current, void *extra_args, enum cil_flavor flavor, enum cil_flavor attr_flavor)
 {
 	int rc = SEPOL_ERR;
 	struct cil_bounds *bounds = current->data;
@@ -2605,7 +2605,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_default(struct cil_tree_node *current, void *extra_args)
+static int cil_resolve_default(struct cil_tree_node *current, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_default *def = current->data;
@@ -2628,7 +2628,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_defaultrange(struct cil_tree_node *current, void *extra_args)
+static int cil_resolve_defaultrange(struct cil_tree_node *current, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_defaultrange *def = current->data;
@@ -2651,7 +2651,7 @@ exit:
 	return rc;
 }
 
-void cil_print_recursive_call(struct cil_tree_node *call_node, struct cil_tree_node *terminating_node)
+static void cil_print_recursive_call(struct cil_tree_node *call_node, struct cil_tree_node *terminating_node)
 {
 	struct cil_list *trace = NULL;
 	struct cil_list_item * item = NULL;
@@ -2686,7 +2686,7 @@ void cil_print_recursive_call(struct cil_tree_node *call_node, struct cil_tree_n
 	cil_list_destroy(&trace, CIL_FALSE);
 }
 
-int cil_check_recursive_call(struct cil_tree_node *call_node, struct cil_tree_node *macro_node)
+static int cil_check_recursive_call(struct cil_tree_node *call_node, struct cil_tree_node *macro_node)
 {
 	struct cil_tree_node *curr = NULL;
 	struct cil_call * call = NULL;
@@ -3022,7 +3022,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_call(struct cil_tree_node *current, void *extra_args)
+static int cil_resolve_call(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_call *call = current->data;
 	struct cil_args_resolve *args = extra_args;
@@ -3072,7 +3072,7 @@ exit:
 	return rc;
 }
 
-int cil_resolve_call_args(struct cil_tree_node *current, void *extra_args)
+static int cil_resolve_call_args(struct cil_tree_node *current, void *extra_args)
 {
 	struct cil_call *call = current->data;
 	int rc = SEPOL_ERR;
@@ -3603,7 +3603,7 @@ static int cil_check_for_bad_inheritance(struct cil_tree_node *node)
 	return rc;
 }
 
-int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
+static int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 {
 	int rc = SEPOL_OK;
 	struct cil_args_resolve *args = extra_args;
@@ -3893,7 +3893,7 @@ exit:
 	return rc;
 }
 
-int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
+static int __cil_resolve_ast_node_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_OK;
 	struct cil_args_resolve *args = extra_args;
@@ -4000,7 +4000,7 @@ exit:
 	return rc;
 }
 
-int __cil_resolve_ast_first_child_helper(struct cil_tree_node *current, void *extra_args)
+static int __cil_resolve_ast_first_child_helper(struct cil_tree_node *current, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_args_resolve *args = extra_args;
@@ -4029,7 +4029,7 @@ exit:
 
 }
 
-int __cil_resolve_ast_last_child_helper(struct cil_tree_node *current, void *extra_args)
+static int __cil_resolve_ast_last_child_helper(struct cil_tree_node *current, void *extra_args)
 {
 	int rc = SEPOL_ERR;
 	struct cil_args_resolve *args = extra_args;

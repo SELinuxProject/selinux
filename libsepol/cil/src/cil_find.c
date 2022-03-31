@@ -292,7 +292,7 @@ exit:
 	return rc;
 }
 
-int cil_find_matching_avrule(struct cil_tree_node *node, struct cil_avrule *avrule, struct cil_avrule *target, struct cil_list *matching, int match_self)
+static int cil_find_matching_avrule(struct cil_tree_node *node, struct cil_avrule *avrule, struct cil_avrule *target, struct cil_list *matching, int match_self)
 {
 	int rc = SEPOL_OK;
 	struct cil_symtab_datum *s1 = avrule->src;

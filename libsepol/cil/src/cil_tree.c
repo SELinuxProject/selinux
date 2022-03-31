@@ -273,7 +273,7 @@ void cil_tree_node_destroy(struct cil_tree_node **node)
    extra_args:               any additional data to be passed to the helper functions
 */
 
-int cil_tree_walk_core(struct cil_tree_node *node,
+static int cil_tree_walk_core(struct cil_tree_node *node,
 					   int (*process_node)(struct cil_tree_node *node, uint32_t *finished, void *extra_args),
 					   int (*first_child)(struct cil_tree_node *node, void *extra_args), 
 					   int (*last_child)(struct cil_tree_node *node, void *extra_args), 

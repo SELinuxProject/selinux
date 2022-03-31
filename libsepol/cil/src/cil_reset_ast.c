@@ -475,7 +475,7 @@ static void cil_reset_booleanif(struct cil_booleanif *bif)
 	cil_list_destroy(&bif->datum_expr, CIL_FALSE);
 }
 
-int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused)) uint32_t *finished, __attribute__((unused)) void *extra_args)
+static int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused)) uint32_t *finished, __attribute__((unused)) void *extra_args)
 {
 	switch (node->flavor) {
 	case CIL_CLASS:

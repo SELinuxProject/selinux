@@ -56,7 +56,7 @@ struct cil_args_build {
 	struct cil_tree_node *boolif;
 };
 
-int cil_fill_list(struct cil_tree_node *current, enum cil_flavor flavor, struct cil_list **list)
+static int cil_fill_list(struct cil_tree_node *current, enum cil_flavor flavor, struct cil_list **list)
 {
 	int rc = SEPOL_ERR;
 	struct cil_tree_node *curr;
@@ -176,7 +176,7 @@ exit:
 	return rc;
 }
 
-void cil_clear_node(struct cil_tree_node *ast_node)
+static void cil_clear_node(struct cil_tree_node *ast_node)
 {
 	if (ast_node == NULL) {
 		return;
@@ -2141,7 +2141,7 @@ void cil_destroy_avrule(struct cil_avrule *rule)
 	free(rule);
 }
 
-int cil_fill_permissionx(struct cil_tree_node *parse_current, struct cil_permissionx *permx)
+static int cil_fill_permissionx(struct cil_tree_node *parse_current, struct cil_permissionx *permx)
 {
 	enum cil_syntax syntax[] = {
 		CIL_SYN_STRING,
@@ -2844,7 +2844,7 @@ exit:
 	return rc;
 }
 
-int cil_gen_constraint_expr(struct cil_tree_node *current, enum cil_flavor flavor, struct cil_list **expr)
+static int cil_gen_constraint_expr(struct cil_tree_node *current, enum cil_flavor flavor, struct cil_list **expr)
 {
 	int rc = SEPOL_ERR;
 
@@ -3583,7 +3583,7 @@ void cil_destroy_category(struct cil_cat *cat)
 	free(cat);
 }
 
-int cil_gen_catset(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+static int cil_gen_catset(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
 {
 	enum cil_syntax syntax[] = {
 		CIL_SYN_STRING,
@@ -6476,7 +6476,7 @@ static struct cil_tree_node * parse_statement(struct cil_db *db, struct cil_tree
 	return new_ast_node;
 }
 
-int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *finished, void *extra_args)
+static int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *finished, void *extra_args)
 {
 	struct cil_args_build *args = extra_args;
 	struct cil_tree_node *new_ast_node = NULL;
@@ -6524,7 +6524,7 @@ int __cil_build_ast_node_helper(struct cil_tree_node *parse_current, uint32_t *f
 	return SEPOL_OK;
 }
 
-int __cil_build_ast_first_child_helper(__attribute__((unused)) struct cil_tree_node *parse_current, void *extra_args)
+static int __cil_build_ast_first_child_helper(__attribute__((unused)) struct cil_tree_node *parse_current, void *extra_args)
 {
 	struct cil_args_build *args = extra_args;
 	struct cil_tree_node *ast = args->ast;
@@ -6544,7 +6544,7 @@ int __cil_build_ast_first_child_helper(__attribute__((unused)) struct cil_tree_n
 	return SEPOL_OK;
 }
 
-int __cil_build_ast_last_child_helper(struct cil_tree_node *parse_current, void *extra_args)
+static int __cil_build_ast_last_child_helper(struct cil_tree_node *parse_current, void *extra_args)
 {
 	struct cil_args_build *args = extra_args;
 	struct cil_tree_node *ast = args->ast;

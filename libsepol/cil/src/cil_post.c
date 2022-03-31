@@ -366,7 +366,7 @@ int cil_post_nodecon_compare(const void *a, const void *b)
 	}
 }
 
-int cil_post_pirqcon_compare(const void *a, const void *b)
+static int cil_post_pirqcon_compare(const void *a, const void *b)
 {
 	int rc = SEPOL_ERR;
 	struct cil_pirqcon *apirqcon = *(struct cil_pirqcon**)a;
@@ -383,7 +383,7 @@ int cil_post_pirqcon_compare(const void *a, const void *b)
 	return rc;
 }
 
-int cil_post_iomemcon_compare(const void *a, const void *b)
+static int cil_post_iomemcon_compare(const void *a, const void *b)
 {
 	int rc = SEPOL_ERR;
 	struct cil_iomemcon *aiomemcon = *(struct cil_iomemcon**)a;
@@ -402,7 +402,7 @@ int cil_post_iomemcon_compare(const void *a, const void *b)
 	return rc;
 }
 
-int cil_post_ioportcon_compare(const void *a, const void *b)
+static int cil_post_ioportcon_compare(const void *a, const void *b)
 {
 	int rc = SEPOL_ERR;
 	struct cil_ioportcon *aioportcon = *(struct cil_ioportcon**)a;
@@ -421,7 +421,7 @@ int cil_post_ioportcon_compare(const void *a, const void *b)
 	return rc;
 }
 
-int cil_post_pcidevicecon_compare(const void *a, const void *b)
+static int cil_post_pcidevicecon_compare(const void *a, const void *b)
 {
 	int rc = SEPOL_ERR;
 	struct cil_pcidevicecon *apcidevicecon = *(struct cil_pcidevicecon**)a;
@@ -438,7 +438,7 @@ int cil_post_pcidevicecon_compare(const void *a, const void *b)
 	return rc;
 }
 
-int cil_post_devicetreecon_compare(const void *a, const void *b)
+static int cil_post_devicetreecon_compare(const void *a, const void *b)
 {
 	int rc = SEPOL_ERR;
 	struct cil_devicetreecon *adevicetreecon = *(struct cil_devicetreecon**)a;
@@ -466,35 +466,35 @@ int cil_post_fsuse_compare(const void *a, const void *b)
 	return rc;
 }
 
-int cil_post_filecon_context_compare(const void *a, const void *b)
+static int cil_post_filecon_context_compare(const void *a, const void *b)
 {
 	struct cil_filecon *a_filecon = *(struct cil_filecon**)a;
 	struct cil_filecon *b_filecon = *(struct cil_filecon**)b;
 	return context_compare(a_filecon->context, b_filecon->context);
 }
 
-int cil_post_ibpkeycon_context_compare(const void *a, const void *b)
+static int cil_post_ibpkeycon_context_compare(const void *a, const void *b)
 {
 	struct cil_ibpkeycon *a_ibpkeycon = *(struct cil_ibpkeycon **)a;
 	struct cil_ibpkeycon *b_ibpkeycon = *(struct cil_ibpkeycon **)b;
 	return context_compare(a_ibpkeycon->context, b_ibpkeycon->context);
 }
 
-int cil_post_portcon_context_compare(const void *a, const void *b)
+static int cil_post_portcon_context_compare(const void *a, const void *b)
 {
 	struct cil_portcon *a_portcon = *(struct cil_portcon**)a;
 	struct cil_portcon *b_portcon = *(struct cil_portcon**)b;
 	return context_compare(a_portcon->context, b_portcon->context);
 }
 
-int cil_post_genfscon_context_compare(const void *a, const void *b)
+static int cil_post_genfscon_context_compare(const void *a, const void *b)
 {
 	struct cil_genfscon *a_genfscon = *(struct cil_genfscon**)a;
 	struct cil_genfscon *b_genfscon = *(struct cil_genfscon**)b;
 	return context_compare(a_genfscon->context, b_genfscon->context);
 }
 
-int cil_post_netifcon_context_compare(const void *a, const void *b)
+static int cil_post_netifcon_context_compare(const void *a, const void *b)
 {
 	int rc;
 	struct cil_netifcon *a_netifcon = *(struct cil_netifcon**)a;
@@ -506,56 +506,56 @@ int cil_post_netifcon_context_compare(const void *a, const void *b)
 	return context_compare(a_netifcon->packet_context, b_netifcon->packet_context);
 }
 
-int cil_post_ibendportcon_context_compare(const void *a, const void *b)
+static int cil_post_ibendportcon_context_compare(const void *a, const void *b)
 {
 	struct cil_ibendportcon *a_ibendportcon = *(struct cil_ibendportcon **)a;
 	struct cil_ibendportcon *b_ibendportcon = *(struct cil_ibendportcon **)b;
 	return context_compare(a_ibendportcon->context, b_ibendportcon->context);
 }
 
-int cil_post_nodecon_context_compare(const void *a, const void *b)
+static int cil_post_nodecon_context_compare(const void *a, const void *b)
 {
 	struct cil_nodecon *a_nodecon = *(struct cil_nodecon **)a;
 	struct cil_nodecon *b_nodecon = *(struct cil_nodecon **)b;
 	return context_compare(a_nodecon->context, b_nodecon->context);
 }
 
-int cil_post_pirqcon_context_compare(const void *a, const void *b)
+static int cil_post_pirqcon_context_compare(const void *a, const void *b)
 {
 	struct cil_pirqcon *a_pirqcon = *(struct cil_pirqcon**)a;
 	struct cil_pirqcon *b_pirqcon = *(struct cil_pirqcon**)b;
 	return context_compare(a_pirqcon->context, b_pirqcon->context);
 }
 
-int cil_post_iomemcon_context_compare(const void *a, const void *b)
+static int cil_post_iomemcon_context_compare(const void *a, const void *b)
 {
 	struct cil_iomemcon *a_iomemcon = *(struct cil_iomemcon**)a;
 	struct cil_iomemcon *b_iomemcon = *(struct cil_iomemcon**)b;
 	return context_compare(a_iomemcon->context, b_iomemcon->context);
 }
 
-int cil_post_ioportcon_context_compare(const void *a, const void *b)
+static int cil_post_ioportcon_context_compare(const void *a, const void *b)
 {
 	struct cil_ioportcon *a_ioportcon = *(struct cil_ioportcon**)a;
 	struct cil_ioportcon *b_ioportcon = *(struct cil_ioportcon**)b;
 	return context_compare(a_ioportcon->context, b_ioportcon->context);
 }
 
-int cil_post_pcidevicecon_context_compare(const void *a, const void *b)
+static int cil_post_pcidevicecon_context_compare(const void *a, const void *b)
 {
 	struct cil_pcidevicecon *a_pcidevicecon = *(struct cil_pcidevicecon**)a;
 	struct cil_pcidevicecon *b_pcidevicecon = *(struct cil_pcidevicecon**)b;
 	return context_compare(a_pcidevicecon->context, b_pcidevicecon->context);
 }
 
-int cil_post_devicetreecon_context_compare(const void *a, const void *b)
+static int cil_post_devicetreecon_context_compare(const void *a, const void *b)
 {
 	struct cil_devicetreecon *a_devicetreecon = *(struct cil_devicetreecon**)a;
 	struct cil_devicetreecon *b_devicetreecon = *(struct cil_devicetreecon**)b;
 	return context_compare(a_devicetreecon->context, b_devicetreecon->context);
 }
 
-int cil_post_fsuse_context_compare(const void *a, const void *b)
+static int cil_post_fsuse_context_compare(const void *a, const void *b)
 {
 	struct cil_fsuse *a_fsuse = *(struct cil_fsuse**)a;
 	struct cil_fsuse *b_fsuse = *(struct cil_fsuse**)b;

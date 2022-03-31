@@ -37,7 +37,7 @@
 
 static enum cil_log_level cil_log_level = CIL_ERR;
 
-void cil_default_log_handler(__attribute__((unused)) int lvl, const char *msg)
+static void cil_default_log_handler(__attribute__((unused)) int lvl, const char *msg)
 {
 	fprintf(stderr, "%s", msg);
 }

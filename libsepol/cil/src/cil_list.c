@@ -35,7 +35,7 @@
 #include "cil_log.h"
 #include "cil_mem.h"
 
-__attribute__((noreturn)) __attribute__((format (printf, 1, 2))) void cil_list_error(const char* msg, ...)
+__attribute__((noreturn)) __attribute__((format (printf, 1, 2))) static void cil_list_error(const char* msg, ...)
 {
 	va_list ap;
 	va_start(ap, msg);

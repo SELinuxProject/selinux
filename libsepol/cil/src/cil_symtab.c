@@ -42,7 +42,7 @@
 #include "cil_strpool.h"
 #include "cil_log.h"
 
-__attribute__((noreturn)) __attribute__((format (printf, 1, 2))) void cil_symtab_error(const char* msg, ...)
+__attribute__((noreturn)) __attribute__((format (printf, 1, 2))) static void cil_symtab_error(const char* msg, ...)
 {
 	va_list ap;
 	va_start(ap, msg);
@@ -149,7 +149,7 @@ void cil_symtab_destroy(symtab_t *symtab)
 	}
 }
 
-void cil_complex_symtab_hash(struct cil_complex_symtab_key *ckey, int mask, intptr_t *hash)
+static void cil_complex_symtab_hash(struct cil_complex_symtab_key *ckey, int mask, intptr_t *hash)
 {
 	intptr_t sum = ckey->key1 + ckey->key2 + ckey->key3 + ckey->key4;
 	*hash = (intptr_t)((sum >> 2) & mask);
