@@ -2434,6 +2434,12 @@ static int cil_post_db(struct cil_db *db)
 		goto exit;
 	}
 
+	rc = __cil_post_process_context_rules(db->pirqcon, cil_post_pirqcon_compare, cil_post_pirqcon_context_compare, db, CIL_PIRQCON, CIL_KEY_IOMEMCON);
+	if (rc != SEPOL_OK) {
+		cil_log(CIL_ERR, "Problems processing pirqcon rules\n");
+		goto exit;
+	}
+
 	rc = __cil_post_process_context_rules(db->iomemcon, cil_post_iomemcon_compare, cil_post_iomemcon_context_compare, db, CIL_IOMEMCON, CIL_KEY_IOMEMCON);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Problems processing iomemcon rules\n");
