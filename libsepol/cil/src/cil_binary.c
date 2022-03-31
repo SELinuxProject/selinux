@@ -3222,7 +3222,16 @@ int cil_rangetransition_to_policydb(policydb_t *pdb, const struct cil_db *db, st
 					} else {
 						cil_log(CIL_ERR, "Out of memory\n");
 					}
+// TODO: add upper version bound once fixed in upstream GCC
+#if defined(__GNUC__) && (__GNUC__ >= 12)
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Warray-bounds"
+# pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
 					mls_range_destroy(newdatum);
+#if defined(__GNUC__) && (__GNUC__ >= 12)
+# pragma GCC diagnostic pop
+#endif
 					free(newdatum);
 					free(newkey);
 					if (rc != SEPOL_OK) {
