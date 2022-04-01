@@ -73,6 +73,7 @@ static int file_to_data(const char *path, char **data, size_t * len)
 		goto err;
 	}
 	if (!sb.st_size) {
+		close(fd);
 		*len = 0;
 		return 0;
 	}
