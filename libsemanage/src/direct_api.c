@@ -2293,6 +2293,7 @@ static int semanage_direct_get_module_info(semanage_handle_t *sh,
 	tmp = NULL;
 
 	if (fclose(fp) != 0) {
+		fp = NULL;
 		ERR(sh,
 		    "Unable to close %s module lang ext file.",
 		    (*modinfo)->name);
