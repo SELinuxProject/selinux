@@ -328,6 +328,7 @@ process_events(struct pollfd **ufds, int *nfds)
 					/* Setup pollfd for deletion later. */
 					(*ufds)[ii].fd = -1;
 					close(connfd);
+					connfd = -1;
 					/* So we don't get bothered later */
 					revents = revents & ~(POLLHUP);
 				}
@@ -341,10 +342,11 @@ process_events(struct pollfd **ufds, int *nfds)
 			/* Set the pollfd up for deletion later. */
 			(*ufds)[ii].fd = -1;
 			close(connfd);
+			connfd = -1;
 
 			revents = revents & ~(POLLHUP);
 		}
-		if (revents) {
+		if (revents && connfd != -1) {
 			syslog(LOG_ERR, "Unknown/error events (%x) encountered"
 					" for fd (%d)\n", revents, connfd);
 

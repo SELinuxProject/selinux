@@ -632,16 +632,23 @@ add_cache(domain_t *domain, char *raw, char *trans) {
 
 	map->raw = strdup(raw);
 	if (!map->raw) {
+		free(map);
 		goto err;
 	}
 	map->trans = strdup(trans);
 	if (!map->trans) {
+		free(map->raw);
+		free(map);
 		goto err;
 	}
 
 	log_debug(" add_cache (%s,%s)\n", raw, trans);
-	if (add_to_hashtable(domain->raw_to_trans, map->raw, map) < 0)
+	if (add_to_hashtable(domain->raw_to_trans, map->raw, map) < 0) {
+		free(map->trans);
+		free(map->raw);
+		free(map);
 		goto err;
+	}
 
 	if (add_to_hashtable(domain->trans_to_raw, map->trans, map) < 0)
 		goto err;
@@ -1568,6 +1575,7 @@ trans_context(const char *incon, char **rcon) {
 			trans = compute_trans_from_raw(range, domain);
 			if (trans)
 				if (add_cache(domain, range, trans) < 0) {
+					free(trans);
 					free(range);
 					return -1;
 				}
@@ -1579,6 +1587,7 @@ trans_context(const char *incon, char **rcon) {
 				ltrans = compute_trans_from_raw(lrange, domain);
 				if (ltrans) {
 					if (add_cache(domain, lrange, ltrans) < 0) {
+						free(ltrans);
 						free(range);
 						return -1;
 					}
@@ -1597,6 +1606,7 @@ trans_context(const char *incon, char **rcon) {
 				utrans = compute_trans_from_raw(urange, domain);
 				if (utrans) {
 					if (add_cache(domain, urange, utrans) < 0) {
+						free(utrans);
 						free(ltrans);
 						free(range);
 						return -1;
@@ -1636,6 +1646,10 @@ trans_context(const char *incon, char **rcon) {
 		}
 		if (dashp)
 			*dashp = '-';
+		if (trans) {
+			free(trans);
+			trans = NULL;
+		}
 	}
 
 	if (trans) {
@@ -1696,7 +1710,9 @@ untrans_context(const char *incon, char **rcon) {
 					canonical = compute_trans_from_raw(raw, domain);
 					if (canonical && strcmp(canonical, range))
 						if (add_cache(domain, raw, canonical) < 0) {
+							free(canonical);
 							free(range);
+							free(raw);
 							return -1;
 						}
 				}
@@ -1704,6 +1720,7 @@ untrans_context(const char *incon, char **rcon) {
 					free(canonical);
 				if (add_cache(domain, raw, range) < 0) {
 					free(range);
+					free(raw);
 					return -1;
 				}
 			} else {
@@ -1721,6 +1738,7 @@ untrans_context(const char *incon, char **rcon) {
 						canonical = compute_trans_from_raw(lraw, domain);
 						if (canonical)
 							if (add_cache(domain, lraw, canonical) < 0) {
+								free(canonical);
 								free(lraw);
 								free(range);
 								return -1;
@@ -1752,6 +1770,7 @@ untrans_context(const char *incon, char **rcon) {
 						canonical = compute_trans_from_raw(uraw, domain);
 						if (canonical)
 							if (add_cache(domain, uraw, canonical) < 0) {
+								free(canonical);
 								free(uraw);
 								free(lraw);
 								free(range);
@@ -1802,6 +1821,10 @@ untrans_context(const char *incon, char **rcon) {
 		}
 		if (dashp)
 			*dashp = '-';
+		if (raw) {
+			free(raw);
+			raw = NULL;
+		}
 	}
 
 	if (raw) {
