@@ -5,7 +5,7 @@
 PREFIX ?= /usr
 
 # What is this package?
-NLSPACKAGE	= policycoreutils
+NLSPACKAGE	= python
 POTFILE		= $(NLSPACKAGE).pot
 INSTALL		= /usr/bin/install -c -p
 INSTALL_DATA	= $(INSTALL) -m 644
@@ -35,10 +35,11 @@ POTFILES  = $(shell cat POTFILES)
 
 #default:: clean
 
-all:: $(POTFILE) $(MOFILES)
+all::  $(MOFILES)
 
 $(POTFILE): $(POTFILES)
-	$(XGETTEXT) --keyword=_ --keyword=N_ $(POTFILES)
+	$(XGETTEXT) -L Python --keyword=_ --keyword=N_ $(POTFILES)
+	$(XGETTEXT) -j --keyword=_ --keyword=N_ ../sepolicy/sepolicy/sepolicy.glade
 	@if cmp -s $(NLSPACKAGE).po $(POTFILE); then \
 	    rm -f $(NLSPACKAGE).po; \
 	else \
@@ -66,7 +67,7 @@ install: $(MOFILES)
 	@for n in $(MOFILES); do \
 	    l=`basename $$n .mo`; \
 	    $(INSTALL_DIR) $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES; \
-	    $(INSTALL_DATA) --verbose $$n $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES/$(NLSPACKAGE).mo; \
+	    $(INSTALL_DATA) --verbose $$n $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES/selinux-$(NLSPACKAGE).mo; \
 	done
 
 %.mo: %.po

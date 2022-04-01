@@ -22,7 +22,7 @@ from gi.repository import Gdk, Gtk
 ##
 ## I18N
 ##
-PROGNAME = "policycoreutils"
+PROGNAME = "selinux-gui"
 try:
     import gettext
     kwargs = {}

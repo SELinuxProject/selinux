@@ -19,7 +19,7 @@
 
 try: 
     import gettext
-    t = gettext.translation( 'yumex' )
+    t = gettext.translation( 'selinux-python' )
     _ = t.gettext
 except:
     def _(str):

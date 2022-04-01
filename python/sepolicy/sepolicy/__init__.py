@@ -23,7 +23,7 @@ from setools.typeattrquery import TypeAttributeQuery
 from setools.typequery import TypeQuery
 from setools.userquery import UserQuery
 
-PROGNAME = "policycoreutils"
+PROGNAME = "selinux-python"
 try:
     import gettext
     kwargs = {}

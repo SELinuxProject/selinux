@@ -45,7 +45,7 @@ import selinux
 ##
 ## I18N
 ##
-PROGNAME = "policycoreutils"
+PROGNAME = "selinux-gui"
 try:
     import gettext
     kwargs = {}

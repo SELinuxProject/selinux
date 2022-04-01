@@ -5,7 +5,7 @@
 PREFIX ?= /usr
 
 # What is this package?
-NLSPACKAGE	= policycoreutils
+NLSPACKAGE	= gui
 POTFILE		= $(NLSPACKAGE).pot
 INSTALL		= /usr/bin/install -c -p
 INSTALL_DATA	= $(INSTALL) -m 644
@@ -35,7 +35,7 @@ POTFILES  = $(shell cat POTFILES)
 
 #default:: clean
 
-all:: $(POTFILE) $(MOFILES)
+all::  $(MOFILES)
 
 $(POTFILE): $(POTFILES)
 	$(XGETTEXT) --keyword=_ --keyword=N_ $(POTFILES)
@@ -66,7 +66,7 @@ install: $(MOFILES)
 	@for n in $(MOFILES); do \
 	    l=`basename $$n .mo`; \
 	    $(INSTALL_DIR) $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES; \
-	    $(INSTALL_DATA) --verbose $$n $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES/$(NLSPACKAGE).mo; \
+	    $(INSTALL_DATA) --verbose $$n $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES/selinux-$(NLSPACKAGE).mo; \
 	done
 
 %.mo: %.po

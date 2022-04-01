@@ -22,6 +22,7 @@ system-config-selinux.ui \
 usersPage.py
 
 all: $(TARGETS) system-config-selinux.py polgengui.py
+	(cd po && $(MAKE) $@)
 
 install: all
 	-mkdir -p $(DESTDIR)$(MANDIR)/man8
@@ -54,7 +55,10 @@ install: all
 		install -m 644 sepolicy_$${i}.png $(DESTDIR)$(DATADIR)/icons/hicolor/$${i}x$${i}/apps/sepolicy.png; \
 	done
 	install -m 644 org.selinux.config.policy $(DESTDIR)$(DATADIR)/polkit-1/actions/
+	(cd po && $(MAKE) $@)
+
 clean:
+	(cd po && $(MAKE) $@)
 
 indent:
 

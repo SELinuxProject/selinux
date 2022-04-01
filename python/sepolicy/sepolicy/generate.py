@@ -48,7 +48,7 @@ import sepolgen.defaults as defaults
 ##
 ## I18N
 ##
-PROGNAME = "policycoreutils"
+PROGNAME = "selinux-python"
 try:
     import gettext
     kwargs = {}

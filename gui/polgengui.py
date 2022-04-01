@@ -63,7 +63,7 @@ def get_all_modules():
 ##
 ## I18N
 ##
-PROGNAME = "policycoreutils"
+PROGNAME = "selinux-gui"
 try:
     import gettext
     kwargs = {}

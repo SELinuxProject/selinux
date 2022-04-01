@@ -30,7 +30,7 @@ import seobject
 import sys
 import traceback
 
-PROGNAME = "policycoreutils"
+PROGNAME = "selinux-python"
 try:
     import gettext
     kwargs = {}

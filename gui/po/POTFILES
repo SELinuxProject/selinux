@@ -1,0 +1,17 @@
+../booleansPage.py
+../domainsPage.py
+../fcontextPage.py
+../loginsPage.py
+../modulesPage.py
+../org.selinux.config.policy
+../polgengui.py
+../polgen.ui
+../portsPage.py
+../selinux-polgengui.desktop
+../semanagePage.py
+../sepolicy.desktop
+../statusPage.py
+../system-config-selinux.desktop
+../system-config-selinux.py
+../system-config-selinux.ui
+../usersPage.py

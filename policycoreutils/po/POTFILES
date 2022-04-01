@@ -1,0 +1,9 @@
+../run_init/open_init_pty.c
+../run_init/run_init.c
+../setsebool/setsebool.c
+../newrole/newrole.c
+../load_policy/load_policy.c
+../sestatus/sestatus.c
+../semodule/semodule.c
+../setfiles/setfiles.c
+../secon/secon.c

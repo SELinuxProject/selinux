@@ -29,7 +29,7 @@ import sys
 import stat
 import socket
 from semanage import *
-PROGNAME = "policycoreutils"
+PROGNAME = "selinux-python"
 import sepolicy
 from setools.policyrep import SELinuxPolicy
 from setools.typequery import TypeQuery

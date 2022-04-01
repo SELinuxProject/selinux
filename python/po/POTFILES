@@ -1,0 +1,10 @@
+../audit2allow/audit2allow
+../chcat/chcat
+../semanage/semanage
+../semanage/seobject.py
+../sepolgen/src/sepolgen/interfaces.py
+../sepolicy/sepolicy/generate.py
+../sepolicy/sepolicy/gui.py
+../sepolicy/sepolicy/__init__.py
+../sepolicy/sepolicy/interface.py
+../sepolicy/sepolicy.py

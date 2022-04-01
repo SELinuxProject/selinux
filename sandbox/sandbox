@@ -37,7 +37,7 @@ import sepolicy
 
 SEUNSHARE = "/usr/sbin/seunshare"
 SANDBOXSH = "/usr/share/sandbox/sandboxX.sh"
-PROGNAME = "policycoreutils"
+PROGNAME = "selinux-sandbox"
 try:
     import gettext
     kwargs = {}

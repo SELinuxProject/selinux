@@ -30,7 +30,7 @@ import getopt
 import selinux
 import seobject
 
-PROGNAME = "policycoreutils"
+PROGNAME = "selinux-python"
 try:
     import gettext
     kwargs = {}

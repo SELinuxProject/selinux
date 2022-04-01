@@ -5,7 +5,7 @@
 PREFIX ?= /usr
 
 # What is this package?
-NLSPACKAGE	= policycoreutils
+NLSPACKAGE	= sandbox
 POTFILE		= $(NLSPACKAGE).pot
 INSTALL		= /usr/bin/install -c -p
 INSTALL_DATA	= $(INSTALL) -m 644
@@ -17,7 +17,7 @@ INSTALL_NLS_DIR = $(PREFIX)/share/locale
 # PO catalog handling
 MSGMERGE	= msgmerge
 MSGMERGE_FLAGS	= -q
-XGETTEXT	= xgettext --default-domain=$(NLSPACKAGE)
+XGETTEXT	= xgettext -L Python --default-domain=$(NLSPACKAGE)
 MSGFMT		= msgfmt
 
 # All possible linguas
@@ -66,7 +66,7 @@ install: $(MOFILES)
 	@for n in $(MOFILES); do \
 	    l=`basename $$n .mo`; \
 	    $(INSTALL_DIR) $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES; \
-	    $(INSTALL_DATA) --verbose $$n $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES/$(NLSPACKAGE).mo; \
+	    $(INSTALL_DATA) --verbose $$n $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES/selinux-$(NLSPACKAGE).mo; \
 	done
 
 %.mo: %.po
