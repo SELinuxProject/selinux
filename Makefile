@@ -14,6 +14,7 @@ else
 		-Winit-self \
 		-Wmissing-format-attribute \
 		-Wmissing-noreturn \
+		-Wmissing-prototypes \
 		-Wnull-dereference \
 		-Wpointer-arith \
 		-Wshadow \
