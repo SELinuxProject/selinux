@@ -16,7 +16,7 @@ static __attribute__ ((__noreturn__)) void usage(const char *name, const char *d
 	exit(rc);
 }
 
-static char * get_selinux_proc_context(const char *command, char * execcon) {
+static char * get_selinux_proc_context(const char *command, const char * execcon) {
 	char * fcon = NULL, *newcon = NULL;
 
 	int ret = getfilecon(command, &fcon);
@@ -43,6 +43,10 @@ int main(int argc, char **argv)
 		}
 	} else {
 		con = strdup(argv[2]);
+		if (security_check_context(con)) {
+			fprintf(stderr, "%s:  invalid from context '%s'\n", argv[0], con);
+			return -1;
+		}
 	}
 
 	proccon = get_selinux_proc_context(argv[1], con);

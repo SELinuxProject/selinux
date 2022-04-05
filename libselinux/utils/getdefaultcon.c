@@ -68,6 +68,11 @@ int main(int argc, char **argv)
 	} else
 		cur_context = argv[optind + 1];
 
+	if (security_check_context(cur_context)) {
+		fprintf(stderr, "%s:  invalid from context '%s'\n", argv[0], cur_context);
+		return 3;
+	}
+
 	if ((ret = getseuser(user, service, &seuser, &dlevel)) == 0) {
 		if (! level) level=dlevel;
 		if (role != NULL && role[0]) 

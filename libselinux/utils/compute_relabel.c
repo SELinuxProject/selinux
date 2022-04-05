@@ -17,6 +17,16 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	if (security_check_context(argv[1])) {
+		fprintf(stderr, "%s:  invalid source context '%s'\n", argv[0], argv[1]);
+		exit(4);
+	}
+
+	if (security_check_context(argv[2])) {
+		fprintf(stderr, "%s:  invalid target context '%s'\n", argv[0], argv[2]);
+		exit(5);
+	}
+
 	tclass = string_to_security_class(argv[3]);
 	if (!tclass) {
 		fprintf(stderr, "%s:  invalid class '%s'\n", argv[0], argv[3]);
