@@ -803,7 +803,7 @@ mls_ops:
 				if (len < 0 || len >= reason_buf_len - reason_buf_used) {
 					new_buf_len = reason_buf_len + REASON_BUF_SIZE;
 					*new_buf = realloc(*r_buf, new_buf_len);
-					if (!new_buf) {
+					if (!*new_buf) {
 						ERR(NULL, "failed to realloc reason buffer");
 						goto out1;
 					}
