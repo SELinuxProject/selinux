@@ -34,7 +34,7 @@ import selinux
 # the data structures that we need for policy generation.
 #
 
-# Constans for referring to fields
+# Constants for referring to fields
 SRC_TYPE  = 0
 TGT_TYPE  = 1
 OBJ_CLASS = 2

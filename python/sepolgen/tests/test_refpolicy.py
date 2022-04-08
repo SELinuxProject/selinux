@@ -144,7 +144,7 @@ class TestSecurityContext(unittest.TestCase):
         self.assertNotEqual(sc1, sc3)
         self.assertNotEqual(sc1, sc4)
 
-class TestObjecClass(unittest.TestCase):
+class TestObjectClass(unittest.TestCase):
     def test_init(self):
         o = refpolicy.ObjectClass(name="file")
         self.assertEqual(o.name, "file")

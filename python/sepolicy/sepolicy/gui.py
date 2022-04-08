@@ -1309,9 +1309,9 @@ class SELinuxGui():
                 filename = i['filename']
             else:
                 filename = None
-            self.transitions_files_inital_data_insert(i['target'], i['class'], i['transtype'], filename)
+            self.transitions_files_initial_data_insert(i['target'], i['class'], i['transtype'], filename)
 
-    def transitions_files_inital_data_insert(self, path, tclass, dest, name):
+    def transitions_files_initial_data_insert(self, path, tclass, dest, name):
         iter = self.transitions_file_liststore.append()
         self.transitions_file_liststore.set_value(iter, 0, path)
         self.transitions_file_liststore.set_value(iter, 1, tclass)

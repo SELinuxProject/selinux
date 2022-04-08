@@ -36,10 +36,10 @@ __get_all_booleans () {
 __get_all_types () {
     seinfo -t 2> /dev/null | tail -n +3
 }
-__get_all_admin_interaces () {
+__get_all_admin_interfaces () {
     awk '/InterfaceVector.*_admin /{ print $2 }' /var/lib/sepolgen/interface_info | awk -F '_admin' '{ print $1 }'
 }
-__get_all_user_role_interaces () {
+__get_all_user_role_interfaces () {
     awk '/InterfaceVector.*_role /{ print $2 }' /var/lib/sepolgen/interface_info | awk -F '_role' '{ print $1 }'
 }
 __get_all_user_domains () {
@@ -139,7 +139,7 @@ _sepolicy () {
                 COMPREPLY=( $(compgen -W "-n --name -t --type" -- "$cur") )
                 return 0
             elif [ "$prev" = "--admin" -o "$prev" = "-a" ]; then
-                COMPREPLY=( $(compgen -W "$( __get_all_admin_interaces ) " -- "$cur") )
+                COMPREPLY=( $(compgen -W "$( __get_all_admin_interfaces ) " -- "$cur") )
                 return 0
             elif [ "$prev" = "--user" -o "$prev" = "-u" ]; then
                 COMPREPLY=( $(compgen -W "$( __get_all_users )" -- "$cur") )

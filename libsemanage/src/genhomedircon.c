@@ -490,7 +490,7 @@ static int STR_COMPARATOR(const void *a, const void *b)
 	return strcmp((const char *) a, (const char *) b);
 }
 
-/* make_tempate
+/* make_template
  * @param	s	  the settings holding the paths to various files
  * @param	pred	function pointer to function to use as filter for slurp
  * 					file filter

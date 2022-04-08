@@ -230,7 +230,7 @@ class TestGeneration(unittest.TestCase):
 
         self.assertEqual(len(avs), 1)
 
-    def test_genaration_granted(self):
+    def test_generation_granted(self):
         parser = sepolgen.audit.AuditParser()
         parser.parse_string(granted1)
         avs = parser.to_access()

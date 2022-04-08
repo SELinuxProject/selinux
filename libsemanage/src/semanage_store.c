@@ -1327,7 +1327,7 @@ static char **split_args(const char *arg0, char *arg_string,
 		goto cleanup;
 	s = arg_string;
 	/* parse the argument string one character at a time,
-	 * repsecting quotes and other special characters */
+	 * respecting quotes and other special characters */
 	while (s != NULL && *s != '\0') {
 		switch (*s) {
 		case '\\':{

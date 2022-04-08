@@ -47,7 +47,7 @@ void test_iface_get_set_msgcon(void);
 void test_iface_create(void);
 void test_iface_clone(void);
 
-/* iterfaces_policy.h */
+/* interfaces_policy.h */
 void test_iface_query(void);
 void test_iface_exists(void);
 void test_iface_count(void);

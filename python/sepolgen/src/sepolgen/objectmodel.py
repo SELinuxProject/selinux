@@ -95,7 +95,7 @@ class PermMappings:
     """The information flow properties of a set of object classes and permissions.
 
     PermMappings maps one or more classes and permissions to their PermMap objects
-    describing their information flow charecteristics.
+    describing their information flow characteristics.
     """
     def __init__(self):
         self.classes = { }
