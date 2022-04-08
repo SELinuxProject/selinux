@@ -42,7 +42,7 @@ static void cil_default_log_handler(__attribute__((unused)) int lvl, const char 
 	fprintf(stderr, "%s", msg);
 }
 
-void (*cil_log_handler)(int lvl, const char *msg) = &cil_default_log_handler;
+static void (*cil_log_handler)(int lvl, const char *msg) = &cil_default_log_handler;
 
 void cil_set_log_handler(void (*handler)(int lvl, const char *msg))
 {
