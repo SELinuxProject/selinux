@@ -2089,15 +2089,15 @@ static int semanage_direct_set_enabled(semanage_handle_t *sh,
 				goto cleanup;
 			}
 
-			if (fclose(fp) != 0) {
+			ret = fclose(fp);
+			fp = NULL;
+			if (ret != 0) {
 				ERR(sh,
 				    "Unable to close disabled file for module %s",
 				    modkey->name);
 				status = -1;
 				goto cleanup;
 			}
-
-			fp = NULL;
 
 			break;
 		case 1: /* enable the module */
