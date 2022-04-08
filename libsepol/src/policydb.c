@@ -4160,7 +4160,7 @@ static sepol_security_class_t policydb_string_to_security_class(
 	class_datum_t *tclass_datum;
 
 	tclass_datum = hashtab_search(policydb->p_classes.table,
-				      (hashtab_key_t) class_name);
+				      class_name);
 	if (!tclass_datum)
 		return 0;
 	return tclass_datum->s.value;
@@ -4180,7 +4180,7 @@ static sepol_access_vector_t policydb_string_to_av_perm(
 
 	perm_datum = (perm_datum_t *)
 			hashtab_search(tclass_datum->permissions.table,
-			(hashtab_key_t)perm_name);
+			perm_name);
 	if (perm_datum != NULL)
 		return UINT32_C(1) << (perm_datum->s.value - 1);
 
@@ -4189,7 +4189,7 @@ static sepol_access_vector_t policydb_string_to_av_perm(
 
 	perm_datum = (perm_datum_t *)
 			hashtab_search(tclass_datum->comdatum->permissions.table,
-			(hashtab_key_t)perm_name);
+			perm_name);
 
 	if (perm_datum != NULL)
 		return UINT32_C(1) << (perm_datum->s.value - 1);
