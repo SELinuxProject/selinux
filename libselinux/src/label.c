@@ -226,6 +226,8 @@ struct selabel_handle *selabel_open(unsigned int backend,
 	rec->digest = selabel_is_digest_set(opts, nopts, rec->digest);
 
 	if ((*initfuncs[backend])(rec, opts, nopts)) {
+		if (rec->digest)
+			selabel_digest_fini(rec->digest);
 		free(rec->spec_file);
 		free(rec);
 		rec = NULL;
