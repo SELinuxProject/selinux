@@ -26,6 +26,7 @@
 
 #include <CUnit/Basic.h>
 
+#include "test-common.h"
 #include "helpers.h"
 
 void test_sym_presence(policydb_t * p, const char *id, int sym_type, unsigned int scope_type, unsigned int *decls, unsigned int len)

@@ -18,6 +18,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include "test-linker-roles.h"
 #include "parse_util.h"
 #include "helpers.h"
 #include "test-common.h"
