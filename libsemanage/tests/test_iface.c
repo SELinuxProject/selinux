@@ -37,29 +37,29 @@
 
 
 /* iface_record.h */
-void test_iface_compare(void);
-void test_iface_compare2(void);
-void test_iface_key_create(void);
-void test_iface_key_extract(void);
-void test_iface_get_set_name(void);
-void test_iface_get_set_ifcon(void);
-void test_iface_get_set_msgcon(void);
-void test_iface_create(void);
-void test_iface_clone(void);
+static void test_iface_compare(void);
+static void test_iface_compare2(void);
+static void test_iface_key_create(void);
+static void test_iface_key_extract(void);
+static void test_iface_get_set_name(void);
+static void test_iface_get_set_ifcon(void);
+static void test_iface_get_set_msgcon(void);
+static void test_iface_create(void);
+static void test_iface_clone(void);
 
 /* interfaces_policy.h */
-void test_iface_query(void);
-void test_iface_exists(void);
-void test_iface_count(void);
-void test_iface_iterate(void);
-void test_iface_list(void);
+static void test_iface_query(void);
+static void test_iface_exists(void);
+static void test_iface_count(void);
+static void test_iface_iterate(void);
+static void test_iface_list(void);
 
 /* interfaces_local.h */
-void test_iface_modify_del_query_local(void);
-void test_iface_exists_local(void);
-void test_iface_count_local(void);
-void test_iface_iterate_local(void);
-void test_iface_list_local(void);
+static void test_iface_modify_del_query_local(void);
+static void test_iface_exists_local(void);
+static void test_iface_count_local(void);
+static void test_iface_iterate_local(void);
+static void test_iface_list_local(void);
 
 extern semanage_handle_t *sh;
 
@@ -118,7 +118,7 @@ int iface_add_tests(CU_pSuite suite)
 
 /* Helpers */
 
-semanage_iface_t *get_iface_nth(int idx)
+static semanage_iface_t *get_iface_nth(int idx)
 {
 	int res;
 	semanage_iface_t **records;
@@ -144,7 +144,7 @@ semanage_iface_t *get_iface_nth(int idx)
 	return iface;
 }
 
-semanage_iface_key_t *get_iface_key_nth(int idx)
+static semanage_iface_key_t *get_iface_key_nth(int idx)
 {
 	semanage_iface_key_t *key;
 	semanage_iface_t *iface;
@@ -165,7 +165,7 @@ semanage_iface_key_t *get_iface_key_nth(int idx)
 	return key;
 }
 
-void add_local_iface(int idx)
+static void add_local_iface(int idx)
 {
 	semanage_iface_t *iface;
 	semanage_iface_key_t *key = NULL;
@@ -182,7 +182,7 @@ void add_local_iface(int idx)
 	semanage_iface_free(iface);
 }
 
-void delete_local_iface(int idx)
+static void delete_local_iface(int idx)
 {
 	semanage_iface_key_t *key = NULL;
 	key = get_iface_key_nth(idx);
@@ -193,7 +193,7 @@ void delete_local_iface(int idx)
 }
 
 /* Function semanage_iface_compare */
-void test_iface_compare(void)
+static void test_iface_compare(void)
 {
 	semanage_iface_t *iface = NULL;
 	semanage_iface_key_t *key1 = NULL;
@@ -221,7 +221,7 @@ void test_iface_compare(void)
 }
 
 /* Function semanage_iface_compare2 */
-void test_iface_compare2(void)
+static void test_iface_compare2(void)
 {
 	semanage_iface_t *iface1 = NULL;
 	semanage_iface_t *iface2 = NULL;
@@ -248,7 +248,7 @@ void test_iface_compare2(void)
 }
 
 /* Function semanage_iface_create */
-void test_iface_key_create(void)
+static void test_iface_key_create(void)
 {
 	semanage_iface_key_t *key = NULL;
 
@@ -265,7 +265,7 @@ void test_iface_key_create(void)
 }
 
 /* Function semanage_iface_extract */
-void test_iface_key_extract(void)
+static void test_iface_key_extract(void)
 {
 	semanage_iface_t *iface = NULL;
 	semanage_iface_key_t *key = NULL;
@@ -285,7 +285,7 @@ void test_iface_key_extract(void)
 }
 
 /* Function semanage_iface_get_name, semanage_iface_set_name */
-void test_iface_get_set_name(void)
+static void test_iface_get_set_name(void)
 {
 	semanage_iface_t *iface = NULL;
 
@@ -303,7 +303,7 @@ void test_iface_get_set_name(void)
 }
 
 /* Function semanage_iface_get_ifcon, semanage_iface_set_ifcon */
-void test_iface_get_set_ifcon(void)
+static void test_iface_get_set_ifcon(void)
 {
 	semanage_iface_t *iface = NULL;
 	semanage_context_t *con1 = NULL;
@@ -327,7 +327,7 @@ void test_iface_get_set_ifcon(void)
 }
 
 /* Function semanage_iface_get_msgcon, semanage_iface_set_msgcon */
-void test_iface_get_set_msgcon(void)
+static void test_iface_get_set_msgcon(void)
 {
 	semanage_iface_t *iface = NULL;
 	semanage_context_t *con1 = NULL;
@@ -351,7 +351,7 @@ void test_iface_get_set_msgcon(void)
 }
 
 /* Function semanage_iface_create */
-void test_iface_create(void)
+static void test_iface_create(void)
 {
 	semanage_iface_t *iface = NULL;
 	semanage_context_t *ifcon = NULL;
@@ -378,7 +378,7 @@ void test_iface_create(void)
 }
 
 /* Function semanage_iface_clone */
-void test_iface_clone(void)
+static void test_iface_clone(void)
 {
 	semanage_iface_t *iface = NULL;
 	semanage_iface_t *iface_clone = NULL;
@@ -417,7 +417,7 @@ void test_iface_clone(void)
 }
 
 /* Function semanage_iface_query */
-void test_iface_query(void)
+static void test_iface_query(void)
 {
 	semanage_iface_t *iface = NULL;
 	semanage_iface_t *iface_exp = NULL;
@@ -451,7 +451,7 @@ void test_iface_query(void)
 }
 
 /* Function semanage_iface_exists */
-void test_iface_exists(void)
+static void test_iface_exists(void)
 {
 	semanage_iface_key_t *key1 = NULL;
 	semanage_iface_key_t *key2 = NULL;
@@ -475,7 +475,7 @@ void test_iface_exists(void)
 }
 
 /* Function semanage_iface_count */
-void test_iface_count(void)
+static void test_iface_count(void)
 {
 	unsigned int count = 42;
 
@@ -494,13 +494,13 @@ void test_iface_count(void)
 
 unsigned int counter_iface_iterate = 0;
 
-int handler_iface_iterate(const semanage_iface_t *record, void *varg)
+static int handler_iface_iterate(const semanage_iface_t *record, void *varg)
 {
 	counter_iface_iterate++;
 	return 0;
 }
 
-void test_iface_iterate(void)
+static void test_iface_iterate(void)
 {
 	/* setup */
 	setup_handle(SH_CONNECT);
@@ -514,7 +514,7 @@ void test_iface_iterate(void)
 }
 
 /* Function semanage_iface_list */
-void test_iface_list(void)
+static void test_iface_list(void)
 {
 	semanage_iface_t **records = NULL;
 	unsigned int count = 42;
@@ -541,7 +541,7 @@ void test_iface_list(void)
 /* Function semanage_iface_modify_local, semanage_iface_del_local,
  * semanage_iface_query_local
  */
-void test_iface_modify_del_query_local(void)
+static void test_iface_modify_del_query_local(void)
 {
 	semanage_iface_t *iface;
 	semanage_iface_t *iface_local;
@@ -574,7 +574,7 @@ void test_iface_modify_del_query_local(void)
 }
 
 /* Function semanage_iface_exists_local */
-void test_iface_exists_local(void)
+static void test_iface_exists_local(void)
 {
 	semanage_iface_key_t *key1 = NULL;
 	semanage_iface_key_t *key2 = NULL;
@@ -600,7 +600,7 @@ void test_iface_exists_local(void)
 }
 
 /* Function semanage_iface_count_local */
-void test_iface_count_local(void)
+static void test_iface_count_local(void)
 {
 	unsigned int count = 42;
 
@@ -634,13 +634,13 @@ void test_iface_count_local(void)
 /* Function semanage_iface_iterate_local */
 unsigned int counter_iface_iterate_local = 0;
 
-int handler_iface_iterate_local(const semanage_iface_t *record, void *varg)
+static int handler_iface_iterate_local(const semanage_iface_t *record, void *varg)
 {
 	counter_iface_iterate_local++;
 	return 0;
 }
 
-void test_iface_iterate_local(void)
+static void test_iface_iterate_local(void)
 {
 	/* setup */
 	setup_handle(SH_TRANS);
@@ -660,7 +660,7 @@ void test_iface_iterate_local(void)
 }
 
 /* Function semanage_iface_list_local */
-void test_iface_list_local(void)
+static void test_iface_list_local(void)
 {
 	semanage_iface_t **records = NULL;
 	unsigned int count = 42;

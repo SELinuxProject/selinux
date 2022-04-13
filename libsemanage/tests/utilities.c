@@ -76,7 +76,7 @@ void enable_test_store(void) {
 	test_store_enabled = 1;
 }
 
-int write_test_policy(char *data, size_t data_len) {
+static int write_test_policy(char *data, size_t data_len) {
 	FILE *fptr = fopen("test-policy/store/active/policy.kern", "wb+");
 
 	if (!fptr) {
