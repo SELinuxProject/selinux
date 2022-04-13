@@ -10,7 +10,7 @@ selabel_open, selabel_close \- userspace SELinux labeling interface
 .br
 .B #include <selinux/label.h>
 .sp
-.BI "struct selabel_handle *selabel_open(int " backend , 
+.BI "struct selabel_handle *selabel_open(unsigned int " backend ,
 .in +\w'struct selabel_handle *selabel_open('u
 .BI "const struct selinux_opt *" options ,
 .br
