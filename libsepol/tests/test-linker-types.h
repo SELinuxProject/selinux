@@ -21,6 +21,8 @@
 #ifndef __TEST_LINKER_TYPES_H__
 #define __TEST_LINKER_TYPES_H__
 
+#include <sepol/policydb/policydb.h>
+
 extern void base_type_tests(policydb_t * base);
 extern void module_type_tests(policydb_t * base);
 

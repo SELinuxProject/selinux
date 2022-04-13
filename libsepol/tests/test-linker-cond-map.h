@@ -21,6 +21,8 @@
 #ifndef __TEST_LINKER_COND_MAP_H__
 #define __TEST_LINKER_COND_MAP_H__
 
+#include <sepol/policydb/policydb.h>
+
 extern void base_cond_tests(policydb_t * base);
 extern void module_cond_tests(policydb_t * base);
 
