@@ -67,7 +67,7 @@ extern int mls;
 /* Takes base, some number of modules, links them, and expands them
    reads source from myfiles array, which has the base string followed by
    each module string */
-int expander_policy_init(policydb_t * mybase, int num_modules, policydb_t ** mymodules, policydb_t * myexpanded, const char *const *myfiles)
+static int expander_policy_init(policydb_t * mybase, int num_modules, policydb_t ** mymodules, policydb_t * myexpanded, const char *const *myfiles)
 {
 	char *filename[num_modules + 1];
 	int i;
