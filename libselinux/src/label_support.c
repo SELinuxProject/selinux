@@ -116,13 +116,25 @@ int  read_spec_entries(char *line_buf, const char **errbuf, int num_args, ...)
 void  digest_gen_hash(struct selabel_digest *digest)
 {
 	Sha1Context context;
+	size_t remaining_size;
+	const unsigned char *ptr;
 
 	/* If SELABEL_OPT_DIGEST not set then just return */
 	if (!digest)
 		return;
 
 	Sha1Initialise(&context);
-	Sha1Update(&context, digest->hashbuf, digest->hashbuf_size);
+
+	/* Process in blocks of UINT32_MAX bytes */
+	remaining_size = digest->hashbuf_size;
+	ptr = digest->hashbuf;
+	while (remaining_size > UINT32_MAX) {
+		Sha1Update(&context, ptr, UINT32_MAX);
+		remaining_size -= UINT32_MAX;
+		ptr += UINT32_MAX;
+	}
+	Sha1Update(&context, ptr, remaining_size);
+
 	Sha1Finalise(&context, (SHA1_HASH *)digest->digest);
 	free(digest->hashbuf);
 	digest->hashbuf = NULL;

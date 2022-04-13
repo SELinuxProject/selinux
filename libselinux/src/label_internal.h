@@ -57,7 +57,7 @@ int selabel_service_init(struct selabel_handle *rec,
 struct selabel_digest {
 	unsigned char *digest;	/* SHA1 digest of specfiles */
 	unsigned char *hashbuf;	/* buffer to hold specfiles */
-	uint32_t hashbuf_size;	/* buffer size */
+	size_t hashbuf_size;	/* buffer size */
 	size_t specfile_cnt;	/* how many specfiles processed */
 	char **specfile_list;	/* and their names */
 };
