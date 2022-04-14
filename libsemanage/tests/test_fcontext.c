@@ -73,28 +73,6 @@ static void test_fcontext_list_local(void);
 
 extern semanage_handle_t *sh;
 
-static int get_type(char *t)
-{
-	if (strcmp(t, "--") == 0)
-		return SEMANAGE_FCONTEXT_ALL;
-	else if (strcmp(t, "-f") == 0)
-		return SEMANAGE_FCONTEXT_REG;
-	else if (strcmp(t, "-d") == 0)
-		return SEMANAGE_FCONTEXT_DIR;
-	else if (strcmp(t, "-c") == 0)
-		return SEMANAGE_FCONTEXT_CHAR;
-	else if (strcmp(t, "-b") == 0)
-		return SEMANAGE_FCONTEXT_BLOCK;
-	else if (strcmp(t, "-s") == 0)
-		return SEMANAGE_FCONTEXT_SOCK;
-	else if (strcmp(t, "-l") == 0)
-		return SEMANAGE_FCONTEXT_LINK;
-	else if (strcmp(t, "-p") == 0)
-		return SEMANAGE_FCONTEXT_PIPE;
-	else
-		return -1;
-}
-
 static int write_file_contexts(const char *data, unsigned int data_len)
 {
 	FILE *fptr = fopen("test-policy/store/active/file_contexts", "w+");
@@ -186,15 +164,6 @@ int fcontext_add_tests(CU_pSuite suite)
 }
 
 /* Helpers */
-
-static semanage_fcontext_t *get_fcontext_new(void)
-{
-	semanage_fcontext_t *fcontext;
-
-	CU_ASSERT_FATAL(semanage_fcontext_create(sh, &fcontext) >= 0);
-
-	return fcontext;
-}
 
 static semanage_fcontext_t *get_fcontext_nth(int idx)
 {

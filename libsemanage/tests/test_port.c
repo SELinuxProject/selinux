@@ -863,68 +863,6 @@ static void helper_port_validate_local_twoports(void)
 	cleanup_handle(SH_TRANS);
 }
 
-static void helper_port_validate_local_proto(void)
-{
-	semanage_port_key_t *key1 = NULL;
-	semanage_port_key_t *key2 = NULL;
-	semanage_port_key_t *key3 = NULL;
-	semanage_port_t *port1 = NULL;
-	semanage_port_t *port2 = NULL;
-	semanage_port_t *port3 = NULL;
-	semanage_context_t *con1 = NULL;
-	semanage_context_t *con2 = NULL;
-	semanage_context_t *con3 = NULL;
-
-	/* setup */
-	setup_handle(SH_TRANS);
-
-	CU_ASSERT(semanage_port_key_create(sh, 101, 200, 0, &key1) >= 0);
-	CU_ASSERT(semanage_port_key_create(sh,  51, 250, 1, &key2) >= 0);
-	CU_ASSERT(semanage_port_key_create(sh, 201, 300, 0, &key3) >= 0);
-
-	CU_ASSERT(semanage_port_create(sh, &port1) >= 0);
-	CU_ASSERT(semanage_port_create(sh, &port2) >= 0);
-	CU_ASSERT(semanage_port_create(sh, &port3) >= 0);
-
-	semanage_port_set_range(port1, 101, 200);
-	semanage_port_set_range(port2,  51, 250);
-	semanage_port_set_range(port3, 201, 300);
-
-	semanage_port_set_proto(port1, 0);
-	semanage_port_set_proto(port2, 0);
-	semanage_port_set_proto(port3, 0);
-
-	CU_ASSERT(semanage_context_from_string(sh,
-			       "system_u:object_r:user_home_t:s0", &con1) >= 0);
-	CU_ASSERT(semanage_context_from_string(sh,
-			       "system_u:object_r:user_home_t:s0", &con2) >= 0);
-	CU_ASSERT(semanage_context_from_string(sh,
-				"system_u:object_r:user_tmp_t:s0", &con3) >= 0);
-
-	semanage_port_set_con(sh, port1, con1);
-	semanage_port_set_con(sh, port2, con2);
-	semanage_port_set_con(sh, port3, con3);
-
-	CU_ASSERT(semanage_port_modify_local(sh, key1, port1) >= 0);
-	CU_ASSERT(semanage_port_modify_local(sh, key2, port2) >= 0);
-	CU_ASSERT(semanage_port_modify_local(sh, key3, port3) >= 0);
-
-	/* test */
-	helper_commit();
-
-	/* cleanup */
-	CU_ASSERT(semanage_port_del_local(sh, key1) >= 0);
-	CU_ASSERT(semanage_port_del_local(sh, key2) >= 0);
-	CU_ASSERT(semanage_port_del_local(sh, key3) >= 0);
-	semanage_port_key_free(key1);
-	semanage_port_key_free(key2);
-	semanage_port_key_free(key3);
-	semanage_port_free(port1);
-	semanage_port_free(port2);
-	semanage_port_free(port3);
-	cleanup_handle(SH_TRANS);
-}
-
 static void test_port_validate_local(void)
 {
 	helper_port_validate_local_noport();
