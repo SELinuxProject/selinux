@@ -3627,7 +3627,7 @@ int define_constraint(constraint_expr_t * expr)
 				}
 				if (!perdatum) {
 					yyerror2("permission %s is not"
-						 " defined", id);
+						 " defined for class %s", id, policydbp->p_class_val_to_name[i]);
 					free(id);
 					ebitmap_destroy(&classmap);
 					return -1;
