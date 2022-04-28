@@ -1,53 +1,52 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# Geert Warrink <geert.warrink@onsnet.nu>, 2018. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2018-07-16 03:02-0400\n"
+"Last-Translator: Geert Warrink <geert.warrink@onsnet.nu>\n"
+"Language-Team: Dutch\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Zanata 4.6.2\n"
 
 #: ../sandbox:119
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
-msgstr ""
+msgstr "Wil je de veranderingen  opslaan naar '%s' (J/N): "
 
 #: ../sandbox:120
 msgid "Sandbox Message"
-msgstr ""
+msgstr "Sandbox boodschap"
 
 #: ../sandbox:132
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
-msgstr ""
+msgstr "Wil je de veranderingen  opslaan naar '%s' (j/N): "
 
 #: ../sandbox:133
 msgid "[yY]"
-msgstr ""
+msgstr "[jJ]"
 
 #: ../sandbox:156
 msgid "User account must be setup with an MCS Range"
-msgstr ""
+msgstr "Gebruikersaccount moet ingesteld worden met een MCS reeks"
 
 #: ../sandbox:184
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr ""
+"Het vinden van ongebruikte categoriereeksen is mislukt.  Overweeg een "
+"grotere MCS reeks voor deze gebruiker."
 
 #: ../sandbox:215
 msgid "Homedir and tempdir required for level mounts"
-msgstr ""
+msgstr "Homedir en tempdir zijn vereist voor level aankoppelingen"
 
 #: ../sandbox:218 ../sandbox:229 ../sandbox:234
 #, python-format
@@ -55,6 +54,8 @@ msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
+"\n"
+"%s is vereist voor de actie die je wilt uitvoeren.\n"
 
 #: ../sandbox:305
 #, python-format
@@ -63,6 +64,9 @@ msgid ""
 "Policy defines the following types for use with the -t:\n"
 "\t%s\n"
 msgstr ""
+"\n"
+"Taktiek definieert de volgende types voor het gebruik met -t:\n"
+"\t%s\n"
 
 #: ../sandbox:312
 #, python-format
@@ -77,54 +81,65 @@ msgid ""
 "type ] -S\n"
 "%s\n"
 msgstr ""
+"\n"
+"sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I "
+"includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t "
+"type ] command\n"
+"\n"
+"sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I "
+"includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t "
+"type ] -S\n"
+"%s\n"
 
 #: ../sandbox:324
 msgid "include file in sandbox"
-msgstr ""
+msgstr "bestand insluiten in sandbox"
 
 #: ../sandbox:327
 msgid "read list of files to include in sandbox from INCLUDEFILE"
-msgstr ""
+msgstr "lees lijst van bestanden om in te sluiten in sandbox uit INCLUDEFILE"
 
 #: ../sandbox:329
 msgid "run sandbox with SELinux type"
-msgstr ""
+msgstr "voer sandbox uit met SELinux type"
 
 #: ../sandbox:332
 msgid "mount new home and/or tmp directory"
-msgstr ""
+msgstr "koppel nieuwe home en/of tmp map aan"
 
 #: ../sandbox:336
 msgid "dots per inch for X display"
-msgstr ""
+msgstr "punten per inch voor X display"
 
 #: ../sandbox:339
 msgid "run complete desktop session within sandbox"
-msgstr ""
+msgstr "Voer complete desktopsessie uit binnen sandbox"
 
 #: ../sandbox:342
+#, fuzzy
+#| msgid "Shred content before tempory directories are removed"
 msgid "Shred content before temporary directories are removed"
-msgstr ""
+msgstr "Verwijder inhoud voordat tijdelijke mappen verwijderd worden"
 
 #: ../sandbox:346
 msgid "run X application within a sandbox"
-msgstr ""
+msgstr "voer X toepasing uit binnen een sandbox"
 
 #: ../sandbox:352
 msgid "alternate home directory to use for mounting"
-msgstr ""
+msgstr "alternatieve home map te gebruiken voor aankoppelen"
 
 #: ../sandbox:357
 msgid "alternate /tmp directory to use for mounting"
-msgstr ""
+msgstr "alternatieve /tmp map te gebruiken voor aankoppelen"
 
 #: ../sandbox:366
 msgid "alternate window manager"
-msgstr ""
+msgstr "alternatieve vensterbeheerder"
 
 #: ../sandbox:369
 msgid "MCS/MLS level for the sandbox"
-msgstr ""
+msgstr "MCS/MLS level voor de sandbox"
 
 #: ../sandbox:385
 msgid ""
@@ -132,26 +147,31 @@ msgid ""
 "You need to install the selinux-policy-sandbox package in order to run this "
 "command"
 msgstr ""
+"Sandbox beleid is op dit moment niet geïnstalleerd.\n"
+"Je moet het selinux-policy-sandbox pakket installeren om dit commando uit te "
+"voeren"
 
 #: ../sandbox:397
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
+"Jen moet een Homedir en tempdir specificeren bij het opzetten van een sessie "
+"sandbox"
 
 #: ../sandbox:399
 msgid "Commands are not allowed in a session sandbox"
-msgstr ""
+msgstr "Commando's zijn niet toegestaan in  een sessie sandbox"
 
 #: ../sandbox:409
 msgid "Command required"
-msgstr ""
+msgstr "Commando vereist"
 
 #: ../sandbox:412
 #, python-format
 msgid "%s is not an executable"
-msgstr ""
+msgstr "%s is geen uitvoerbaar bestand"
 
 #: ../sandbox:535
 #, python-format
 msgid "Invalid value %s"
-msgstr ""
+msgstr "Ongeldige waarde %s"

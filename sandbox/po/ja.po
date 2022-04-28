@@ -1,0 +1,178 @@
+# Ludek Janda <ljanda@redhat.com>, 2018. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"PO-Revision-Date: 2021-09-11 11:04+0000\n"
+"Last-Translator: Sundeep Anand <suanand@redhat.com>\n"
+"Language-Team: Japanese <https://translate.fedoraproject.org/projects/"
+"selinux/sandbox/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.8\n"
+
+#: ../sandbox:119
+#, python-format
+msgid "Do you want to save changes to '%s' (Y/N): "
+msgstr "変更を '%s' (Y/N) に保存しますか: "
+
+#: ../sandbox:120
+msgid "Sandbox Message"
+msgstr "Sandbox メッセージ"
+
+#: ../sandbox:132
+#, python-format
+msgid "Do you want to save changes to '%s' (y/N): "
+msgstr "変更を '%s' (y/N) に保存しますか: "
+
+#: ../sandbox:133
+msgid "[yY]"
+msgstr "[yY]"
+
+#: ../sandbox:156
+msgid "User account must be setup with an MCS Range"
+msgstr "ユーザーアカウントは MCS 範囲でセットアップする必要があります"
+
+#: ../sandbox:184
+msgid ""
+"Failed to find any unused category sets.  Consider a larger MCS range for "
+"this user."
+msgstr ""
+"未使用のカテゴリーセットの発見に失敗しました。  このユーザーには、より広い "
+"MCS 範囲を検討してください。"
+
+#: ../sandbox:215
+msgid "Homedir and tempdir required for level mounts"
+msgstr "レベルマウントに必要な Homedir および tempdir"
+
+#: ../sandbox:218 ../sandbox:229 ../sandbox:234
+#, python-format
+msgid ""
+"\n"
+"%s is required for the action you want to perform.\n"
+msgstr ""
+"\n"
+"%s は、実行したい動作に必要です。\n"
+
+#: ../sandbox:305
+#, python-format
+msgid ""
+"\n"
+"Policy defines the following types for use with the -t:\n"
+"\t%s\n"
+msgstr ""
+"\n"
+"ポリシーは、-t と使用する以下のタイプを定義します:\n"
+"\t%s\n"
+
+#: ../sandbox:312
+#, python-format
+msgid ""
+"\n"
+"sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I "
+"includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t "
+"type ] command\n"
+"\n"
+"sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I "
+"includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t "
+"type ] -S\n"
+"%s\n"
+msgstr ""
+"\n"
+"sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I "
+"includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t "
+"type ] command\n"
+"\n"
+"sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I "
+"includefile ] [-W windowmanager ] [ -w windowsize ] [[-i file ] ...] [ -t "
+"type ] -S\n"
+"%s\n"
+
+#: ../sandbox:324
+msgid "include file in sandbox"
+msgstr "Sandbox のファイルを含めます"
+
+#: ../sandbox:327
+msgid "read list of files to include in sandbox from INCLUDEFILE"
+msgstr "INCLUDEFILE から Sandbox に含めるファイルのリストを読み取ります"
+
+#: ../sandbox:329
+msgid "run sandbox with SELinux type"
+msgstr "SELinux タイプで Sandbox を実行します"
+
+#: ../sandbox:332
+msgid "mount new home and/or tmp directory"
+msgstr ""
+"新しいホームおよび tmp ディレクトリーをマウントするか、またはどちらか一方をマ"
+"ウントします"
+
+#: ../sandbox:336
+msgid "dots per inch for X display"
+msgstr "X ディスプレイ用のインチごとのドット"
+
+#: ../sandbox:339
+msgid "run complete desktop session within sandbox"
+msgstr "Sandbox 内で完全なデスクトップセッションを実行します"
+
+#: ../sandbox:342
+msgid "Shred content before temporary directories are removed"
+msgstr "一時ディレクトリーが削除される前にコンテンツをシュレッドします"
+
+#: ../sandbox:346
+msgid "run X application within a sandbox"
+msgstr "Sandbox 内で X アプリケーションを実行します"
+
+#: ../sandbox:352
+msgid "alternate home directory to use for mounting"
+msgstr "マウントに使用するホームディレクトリーを代替します"
+
+#: ../sandbox:357
+msgid "alternate /tmp directory to use for mounting"
+msgstr "マウントに使用する /tmp ディレクトリーを代替します"
+
+#: ../sandbox:366
+msgid "alternate window manager"
+msgstr "ウィンドウマネージャーを代替します"
+
+#: ../sandbox:369
+msgid "MCS/MLS level for the sandbox"
+msgstr "Sandbox の MCS/MLS レベル"
+
+#: ../sandbox:385
+msgid ""
+"Sandbox Policy is not currently installed.\n"
+"You need to install the selinux-policy-sandbox package in order to run this "
+"command"
+msgstr ""
+"Sandbox ポリシーは現在インストールされていません.\n"
+"このコマンドを実行するには、selinux-policy-sandbox パッケージをインストールす"
+"る必要があります"
+
+#: ../sandbox:397
+msgid ""
+"You must specify a Homedir and tempdir when setting up a session sandbox"
+msgstr ""
+"セッション Sandbox をセットアップする際に、Homedir および tempdir を指定する"
+"必要があります"
+
+#: ../sandbox:399
+msgid "Commands are not allowed in a session sandbox"
+msgstr "セッション Sandbox では、コマンドは許可されていません"
+
+#: ../sandbox:409
+msgid "Command required"
+msgstr "コマンドが必要"
+
+#: ../sandbox:412
+#, python-format
+msgid "%s is not an executable"
+msgstr "%s は実行可能ではありません"
+
+#: ../sandbox:535
+#, python-format
+msgid "Invalid value %s"
+msgstr "無効な値 %s"

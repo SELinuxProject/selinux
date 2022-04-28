@@ -1,49 +1,48 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# Meskó Balázs <meskobalazs@gmail.com>, 2019. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2019-03-21 12:07-0400\n"
+"Last-Translator: Meskó Balázs <meskobalazs@gmail.com>\n"
+"Language-Team: Hungarian\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Zanata 4.6.2\n"
 
 #: ../sandbox:119
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
-msgstr ""
+msgstr "Menti a változásokat ide: „%s” (Y/N): "
 
 #: ../sandbox:120
 msgid "Sandbox Message"
-msgstr ""
+msgstr "Homokozó üzenet"
 
 #: ../sandbox:132
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
-msgstr ""
+msgstr "Menti a változásokat ide: „%s” (y/N): "
 
 #: ../sandbox:133
 msgid "[yY]"
-msgstr ""
+msgstr "[yYiI]"
 
 #: ../sandbox:156
 msgid "User account must be setup with an MCS Range"
-msgstr ""
+msgstr "A felhasználó fiókot egy MCS hatáskörrel kell beállítani"
 
 #: ../sandbox:184
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr ""
+"Nem található nem használt kategóriakészlet. Fontoljon meg egy nagyobb MCS "
+"hatáskört ehhez a felhasználóhoz."
 
 #: ../sandbox:215
 msgid "Homedir and tempdir required for level mounts"
@@ -55,6 +54,8 @@ msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
+"\n"
+"%s szükséges a végrehajtandó művelethez.\n"
 
 #: ../sandbox:305
 #, python-format
@@ -88,19 +89,19 @@ msgstr ""
 
 #: ../sandbox:329
 msgid "run sandbox with SELinux type"
-msgstr ""
+msgstr "homokozó futtatása a SELinux típussal"
 
 #: ../sandbox:332
 msgid "mount new home and/or tmp directory"
-msgstr ""
+msgstr "új home és/vagy tmp mappa csatolása"
 
 #: ../sandbox:336
 msgid "dots per inch for X display"
-msgstr ""
+msgstr "képpont / hüvelyk az X képernyőhöz"
 
 #: ../sandbox:339
 msgid "run complete desktop session within sandbox"
-msgstr ""
+msgstr "teljes asztali munkamenet futtatása a homokozón belül"
 
 #: ../sandbox:342
 msgid "Shred content before temporary directories are removed"
@@ -108,23 +109,23 @@ msgstr ""
 
 #: ../sandbox:346
 msgid "run X application within a sandbox"
-msgstr ""
+msgstr "X alkalmazás futtatása a homokozón belül"
 
 #: ../sandbox:352
 msgid "alternate home directory to use for mounting"
-msgstr ""
+msgstr "a csatoláshoz használandó alternatív home könyvtár"
 
 #: ../sandbox:357
 msgid "alternate /tmp directory to use for mounting"
-msgstr ""
+msgstr "a csatoláshoz használandó alternatív /tmp könyvtár"
 
 #: ../sandbox:366
 msgid "alternate window manager"
-msgstr ""
+msgstr "alternatív ablakkezelő"
 
 #: ../sandbox:369
 msgid "MCS/MLS level for the sandbox"
-msgstr ""
+msgstr "A homokozó MCS/MLS szintje"
 
 #: ../sandbox:385
 msgid ""
@@ -144,14 +145,14 @@ msgstr ""
 
 #: ../sandbox:409
 msgid "Command required"
-msgstr ""
+msgstr "Parancs szükséges"
 
 #: ../sandbox:412
 #, python-format
 msgid "%s is not an executable"
-msgstr ""
+msgstr "A(z) %s nem végrehajtható"
 
 #: ../sandbox:535
 #, python-format
 msgid "Invalid value %s"
-msgstr ""
+msgstr "Érvénytelen érték: %s"

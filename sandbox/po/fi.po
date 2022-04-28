@@ -3,51 +3,55 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2021-09-08 19:04+0000\n"
+"Last-Translator: Jan Kuparinen <copper_fin@hotmail.com>\n"
+"Language-Team: Finnish <https://translate.fedoraproject.org/projects/selinux/"
+"sandbox/fi/>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
 
 #: ../sandbox:119
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
-msgstr ""
+msgstr "Haluatko tallentaa muutokset '%s':een (K/E): "
 
 #: ../sandbox:120
 msgid "Sandbox Message"
-msgstr ""
+msgstr "Hiekkalaatikkoviesti"
 
 #: ../sandbox:132
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
-msgstr ""
+msgstr "Haluatko tallentaa muutokset '%s' :een? (k E): "
 
 #: ../sandbox:133
 msgid "[yY]"
-msgstr ""
+msgstr "[kK]"
 
 #: ../sandbox:156
 msgid "User account must be setup with an MCS Range"
-msgstr ""
+msgstr "Käyttäjätili on määritettävä MCS-alueen kanssa"
 
 #: ../sandbox:184
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr ""
+"Käyttämättömien luokkaryhmien löytäminen epäonnistui. Harkitse suurempaa MCS-"
+"aluetta tälle käyttäjälle."
 
 #: ../sandbox:215
 msgid "Homedir and tempdir required for level mounts"
-msgstr ""
+msgstr "Kotihakemisto ja väliaikaishakemisto vaaditaan tasokiinnityksille"
 
 #: ../sandbox:218 ../sandbox:229 ../sandbox:234
 #, python-format
@@ -55,6 +59,8 @@ msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
+"\n"
+"%s vaaditaan suoritettavaan toimintoon.\n"
 
 #: ../sandbox:305
 #, python-format
@@ -63,6 +69,9 @@ msgid ""
 "Policy defines the following types for use with the -t:\n"
 "\t%s\n"
 msgstr ""
+"\n"
+"Käytäntö määrittää seuraavat -t kanssa käytettävät tyypit:\n"
+"%s\n"
 
 #: ../sandbox:312
 #, python-format
@@ -77,54 +86,64 @@ msgid ""
 "type ] -S\n"
 "%s\n"
 msgstr ""
+"\n"
+"sandbox [-h] [-l taso ] [-[X|M] [-H kotihakemisto] [-T väliaikaishakemisto]] "
+"[-I sisällytätiedosto ] [-W ikkunakäsittelijä ] [ -w ikkunakoko ] [[-i "
+"tiedosto ] ...] [ -t tyyppi] komento\n"
+"\n"
+"sandbox [-h] [-l taso ] [-[X|M] [-H kotihakemisto] [-T väliaikaishakemisto]] "
+"[-I sisällytätiedosto ] [ -w ikkunakoko ] [[-i tiedosto ] ...] [ -t tyyppi] -"
+"S\n"
+"%s\n"
 
 #: ../sandbox:324
 msgid "include file in sandbox"
-msgstr ""
+msgstr "sisällytä tiedosto hiekkalaatikkoon"
 
 #: ../sandbox:327
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr ""
+"lue luettelo tiedostoista, jotka sisällytetään hiekkalaatikkoon INCLUDEFILE"
 
 #: ../sandbox:329
 msgid "run sandbox with SELinux type"
-msgstr ""
+msgstr "Suorita hiekkalaatikko SELinux-tyypillä"
 
 #: ../sandbox:332
 msgid "mount new home and/or tmp directory"
-msgstr ""
+msgstr "asenna uusi koti- ja/tai tmp-hakemisto"
 
 #: ../sandbox:336
 msgid "dots per inch for X display"
-msgstr ""
+msgstr "X-displayn pisteitä tuumalla"
 
 #: ../sandbox:339
 msgid "run complete desktop session within sandbox"
-msgstr ""
+msgstr "Suorita täydellinen työpöytäistunto hiekkalaatikossa"
 
 #: ../sandbox:342
 msgid "Shred content before temporary directories are removed"
-msgstr ""
+msgstr "Silppua sisältö ennen tilapäishakemistojen poistamista"
 
 #: ../sandbox:346
 msgid "run X application within a sandbox"
-msgstr ""
+msgstr "Suorita X-sovellus hiekkalaatikossa"
 
 #: ../sandbox:352
 msgid "alternate home directory to use for mounting"
-msgstr ""
+msgstr "vaihtoehtoinen kotihakemisto, jota käytetään liitämisessä"
 
 #: ../sandbox:357
 msgid "alternate /tmp directory to use for mounting"
-msgstr ""
+msgstr "vaihtoehtoinen väliaikaishakemisto, jota käytetään liitämisessä"
 
 #: ../sandbox:366
 msgid "alternate window manager"
-msgstr ""
+msgstr "vaihtoehtoinen ikkunahallinnoija"
 
 #: ../sandbox:369
 msgid "MCS/MLS level for the sandbox"
-msgstr ""
+msgstr "MCS/MLS-taso hiekkalaatikolle"
 
 #: ../sandbox:385
 msgid ""
@@ -132,26 +151,31 @@ msgid ""
 "You need to install the selinux-policy-sandbox package in order to run this "
 "command"
 msgstr ""
+"Hiekkalaatikkokäytäntöä ei ole tällä hetkellä asennettu.\n"
+"Sinun on asennettava selinux-policy-sandbox-paketti tämän komennon "
+"suorittamiseksi"
 
 #: ../sandbox:397
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
+"Kotihakemisto ja väliaikaishakemisto vaaditaan määritettäessä "
+"istuntohiekkalaatikkoa"
 
 #: ../sandbox:399
 msgid "Commands are not allowed in a session sandbox"
-msgstr ""
+msgstr "Komennot eivät ole sallittuja istunnon hiekkalaatikossa"
 
 #: ../sandbox:409
 msgid "Command required"
-msgstr ""
+msgstr "Komento vaaditaan"
 
 #: ../sandbox:412
 #, python-format
 msgid "%s is not an executable"
-msgstr ""
+msgstr "%s ei pystytä suorittamaan"
 
 #: ../sandbox:535
 #, python-format
 msgid "Invalid value %s"
-msgstr ""
+msgstr "virheellinen arvo %s"

@@ -1,53 +1,51 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# Ludek Janda <ljanda@redhat.com>, 2018. #zanata
+# Peter Pan <pan93412@gmail.com>, 2018. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2018-11-20 10:27-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Chinese (Taiwan)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: Zanata 4.6.2\n"
 
 #: ../sandbox:119
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
-msgstr ""
+msgstr "確定儲存到「%s」(Y/N)："
 
 #: ../sandbox:120
 msgid "Sandbox Message"
-msgstr ""
+msgstr "沙盒訊息"
 
 #: ../sandbox:132
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
-msgstr ""
+msgstr "確定儲存變更到「%s」(y/N)："
 
 #: ../sandbox:133
 msgid "[yY]"
-msgstr ""
+msgstr "[yY]"
 
 #: ../sandbox:156
 msgid "User account must be setup with an MCS Range"
-msgstr ""
+msgstr "使用者帳號需要以 MCS 陣列設定"
 
 #: ../sandbox:184
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
-msgstr ""
+msgstr "無法找到任何未使用的類別集。考慮為此用戶提供更大的MCS範圍。"
 
 #: ../sandbox:215
 msgid "Homedir and tempdir required for level mounts"
-msgstr ""
+msgstr "水平坐騎需要Homedir和tempdir"
 
 #: ../sandbox:218 ../sandbox:229 ../sandbox:234
 #, python-format
@@ -55,6 +53,8 @@ msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
+"\n"
+"%s 是您要執行的操作所必需的。\n"
 
 #: ../sandbox:305
 #, python-format
@@ -63,6 +63,8 @@ msgid ""
 "Policy defines the following types for use with the -t:\n"
 "\t%s\n"
 msgstr ""
+"\n"
+"策略定義以下類型以與-t：\\ t一起使用%s\n"
 
 #: ../sandbox:312
 #, python-format
@@ -77,54 +79,63 @@ msgid ""
 "type ] -S\n"
 "%s\n"
 msgstr ""
+"\n"
+"sandbox [-h] [-l level] [ -  [X | M] [-H homedir] [-T tempdir]] [-I "
+"includefile] [-W windowmanager] [-w windowsize] [[-i file]。 ..] [-t type]命"
+"令sandbox [-h] [-l level] [ -  [X | M] [-H homedir] [-T tempdir]] [-I "
+"includefile] [-W windowmanager] [-w windowsize] [[-i file] ...] [-t type] -"
+"S\n"
+"%s\n"
 
 #: ../sandbox:324
 msgid "include file in sandbox"
-msgstr ""
+msgstr "在沙箱中包含文件"
 
 #: ../sandbox:327
 msgid "read list of files to include in sandbox from INCLUDEFILE"
-msgstr ""
+msgstr "從INCLUDEFILE中讀取要包含在沙箱中的文件列表"
 
 #: ../sandbox:329
 msgid "run sandbox with SELinux type"
-msgstr ""
+msgstr "使用SELinux類型運行沙箱"
 
 #: ../sandbox:332
 msgid "mount new home and/or tmp directory"
-msgstr ""
+msgstr "mount new home和/或tmp目錄"
 
 #: ../sandbox:336
 msgid "dots per inch for X display"
-msgstr ""
+msgstr "X顯示屏的每英寸點數"
 
 #: ../sandbox:339
 msgid "run complete desktop session within sandbox"
-msgstr ""
+msgstr "在沙箱中運行完整的桌面會話"
 
 #: ../sandbox:342
+#, fuzzy
+#| msgid "Shred content before tempory directories are removed"
 msgid "Shred content before temporary directories are removed"
-msgstr ""
+msgstr "刪除了臨時目錄之前的碎片內容"
 
 #: ../sandbox:346
 msgid "run X application within a sandbox"
-msgstr ""
+msgstr "在沙箱中運行X應用程序"
 
 #: ../sandbox:352
 msgid "alternate home directory to use for mounting"
-msgstr ""
+msgstr "備用主目錄用於安裝"
 
 #: ../sandbox:357
 msgid "alternate /tmp directory to use for mounting"
-msgstr ""
+msgstr "用於安裝的alternate / tmp目錄"
 
 #: ../sandbox:366
 msgid "alternate window manager"
-msgstr ""
+msgstr "備用窗口管理器"
 
 #: ../sandbox:369
 msgid "MCS/MLS level for the sandbox"
-msgstr ""
+msgstr "沙箱的MCS / MLS級別"
 
 #: ../sandbox:385
 msgid ""
@@ -132,26 +143,27 @@ msgid ""
 "You need to install the selinux-policy-sandbox package in order to run this "
 "command"
 msgstr ""
+"目前尚未安裝沙箱策略。您需要安裝selinux-policy-sandbox軟件包才能運行此命令"
 
 #: ../sandbox:397
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
-msgstr ""
+msgstr "設置會話沙箱時，必須指定Homedir和tempdir"
 
 #: ../sandbox:399
 msgid "Commands are not allowed in a session sandbox"
-msgstr ""
+msgstr "會話沙箱中不允許使用命令"
 
 #: ../sandbox:409
 msgid "Command required"
-msgstr ""
+msgstr "需要命令"
 
 #: ../sandbox:412
 #, python-format
 msgid "%s is not an executable"
-msgstr ""
+msgstr "%s 不是可執行文件"
 
 #: ../sandbox:535
 #, python-format
 msgid "Invalid value %s"
-msgstr ""
+msgstr "無效值 %s"

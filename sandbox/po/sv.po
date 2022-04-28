@@ -1,53 +1,53 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# Göran Uddeborg <goeran@uddeborg.se>, 2018. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2021-09-11 11:04+0000\n"
+"Last-Translator: Luna Jernberg <bittin@reimu.nl>\n"
+"Language-Team: Swedish <https://translate.fedoraproject.org/projects/selinux/"
+"sandbox/sv/>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
 
 #: ../sandbox:119
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
-msgstr ""
+msgstr "Vill du spara ändringar till ”%s” (J/N): "
 
 #: ../sandbox:120
 msgid "Sandbox Message"
-msgstr ""
+msgstr "Sandlådemeddelande"
 
 #: ../sandbox:132
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
-msgstr ""
+msgstr "Vill du spara ändringar till ”%s” (j/N): "
 
 #: ../sandbox:133
 msgid "[yY]"
-msgstr ""
+msgstr "[jJyY]"
 
 #: ../sandbox:156
 msgid "User account must be setup with an MCS Range"
-msgstr ""
+msgstr "Användarkontot måste vara uppsatt med ett MCS-intervall"
 
 #: ../sandbox:184
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr ""
+"Misslyckades att hitta några oanvända kategoriuppsättningar.  Överväg ett "
+"större MCS-intervall för denna användare."
 
 #: ../sandbox:215
 msgid "Homedir and tempdir required for level mounts"
-msgstr ""
+msgstr "Hemkatalog och tempkatalog krävs för nivåmonteringar"
 
 #: ../sandbox:218 ../sandbox:229 ../sandbox:234
 #, python-format
@@ -55,6 +55,8 @@ msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
+"\n"
+"%s krävs för åtgärden du vill utföra.\n"
 
 #: ../sandbox:305
 #, python-format
@@ -63,6 +65,9 @@ msgid ""
 "Policy defines the following types for use with the -t:\n"
 "\t%s\n"
 msgstr ""
+"\n"
+"Policyn definierar följande typer att användas med -t:\n"
+"\t%s\n"
 
 #: ../sandbox:312
 #, python-format
@@ -77,54 +82,63 @@ msgid ""
 "type ] -S\n"
 "%s\n"
 msgstr ""
+"\n"
+"sandbox [-h] [-l nivå ] [-[X|M] [-H hemkatalog] [-T tempkatalog]] [-I "
+"inkluderingsfil] [-W fönsterhanterare ] [ -w fönsterstorlek ] [[-i fil ] …] "
+"[ -t typ ] kommando\n"
+"\n"
+"sandbox [-h] [-l nivå ] [-[X|M] [-H hemkatalog] [-T tempkatalog]] [-I "
+"inkluderingsfil ] [-W fönsterhanterare ] [ -w fönsterstorlek ] [[-i fil ] …] "
+"[ -t typ ] -S\n"
+"%s\n"
 
 #: ../sandbox:324
 msgid "include file in sandbox"
-msgstr ""
+msgstr "inkludera en fil i sandlådan"
 
 #: ../sandbox:327
 msgid "read list of files to include in sandbox from INCLUDEFILE"
-msgstr ""
+msgstr "läs en lista av filer att inkludera i sandlådan från INKLUDERINGSFIL"
 
 #: ../sandbox:329
 msgid "run sandbox with SELinux type"
-msgstr ""
+msgstr "kör sandlådan med SELinux-typen"
 
 #: ../sandbox:332
 msgid "mount new home and/or tmp directory"
-msgstr ""
+msgstr "montera ny hem- och/eller temporärkatalog"
 
 #: ../sandbox:336
 msgid "dots per inch for X display"
-msgstr ""
+msgstr "punkter per tum för X-displayen"
 
 #: ../sandbox:339
 msgid "run complete desktop session within sandbox"
-msgstr ""
+msgstr "kör en fullständig skrivbordssession inuti en sandlåda"
 
 #: ../sandbox:342
 msgid "Shred content before temporary directories are removed"
-msgstr ""
+msgstr "Strimla innehållet före temporära kataloger tas bort"
 
 #: ../sandbox:346
 msgid "run X application within a sandbox"
-msgstr ""
+msgstr "kör X-program i en sandlåda"
 
 #: ../sandbox:352
 msgid "alternate home directory to use for mounting"
-msgstr ""
+msgstr "alternativ hemkatalog att användas för montering"
 
 #: ../sandbox:357
 msgid "alternate /tmp directory to use for mounting"
-msgstr ""
+msgstr "alternativ /tmp-katalog att användas för montering"
 
 #: ../sandbox:366
 msgid "alternate window manager"
-msgstr ""
+msgstr "alternativ fönsterhanterare"
 
 #: ../sandbox:369
 msgid "MCS/MLS level for the sandbox"
-msgstr ""
+msgstr "MCS/MLS-nivå för sandlådan"
 
 #: ../sandbox:385
 msgid ""
@@ -132,26 +146,31 @@ msgid ""
 "You need to install the selinux-policy-sandbox package in order to run this "
 "command"
 msgstr ""
+"Sandlådepolicyn är inte installerad för närvarande.\n"
+"Du behöver installera paketet selinux-policy-sandbox för att kunna köra "
+"detta kommando"
 
 #: ../sandbox:397
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
+"Du måste ange en hemkatalog och temporärkatalog när du sätter upp en "
+"sessionssandlåda"
 
 #: ../sandbox:399
 msgid "Commands are not allowed in a session sandbox"
-msgstr ""
+msgstr "Kommandon är inte tillåtna i en sessionssandlåda"
 
 #: ../sandbox:409
 msgid "Command required"
-msgstr ""
+msgstr "Ett kommando krävs"
 
 #: ../sandbox:412
 #, python-format
 msgid "%s is not an executable"
-msgstr ""
+msgstr "%s är inte körbar"
 
 #: ../sandbox:535
 #, python-format
 msgid "Invalid value %s"
-msgstr ""
+msgstr "Felaktigt värde %s"

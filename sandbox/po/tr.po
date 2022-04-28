@@ -3,51 +3,55 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2021-10-02 18:05+0000\n"
+"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
+"Language-Team: Turkish <https://translate.fedoraproject.org/projects/selinux/"
+"sandbox/tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
 
 #: ../sandbox:119
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
-msgstr ""
+msgstr "'%s' için değişiklikleri kaydetmek istiyor musunuz (E/H): "
 
 #: ../sandbox:120
 msgid "Sandbox Message"
-msgstr ""
+msgstr "Yalıtılmış Alan Mesajı"
 
 #: ../sandbox:132
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
-msgstr ""
+msgstr "'%s' için değişiklikleri kaydetmek istiyor musunuz (e/H): "
 
 #: ../sandbox:133
 msgid "[yY]"
-msgstr ""
+msgstr "[eE]"
 
 #: ../sandbox:156
 msgid "User account must be setup with an MCS Range"
-msgstr ""
+msgstr "Kullanıcı hesabı bir MCS aralığı ile kurulmalıdır"
 
 #: ../sandbox:184
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr ""
+"Kullanılmayan kategori kümeleri bulunamadı.  Bu kullanıcı için daha geniş "
+"bir MCS aralığı düşünün."
 
 #: ../sandbox:215
 msgid "Homedir and tempdir required for level mounts"
-msgstr ""
+msgstr "Seviye bağlamaları için ev_dizini ve geçici_dizin gereklidir"
 
 #: ../sandbox:218 ../sandbox:229 ../sandbox:234
 #, python-format
@@ -55,6 +59,8 @@ msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
+"\n"
+"Gerçekleştirmek istediğiniz eylem için %s gereklidir.\n"
 
 #: ../sandbox:305
 #, python-format
@@ -63,6 +69,9 @@ msgid ""
 "Policy defines the following types for use with the -t:\n"
 "\t%s\n"
 msgstr ""
+"\n"
+"Politika, -t ile kullanım için aşağıdaki türleri tanımlamaktadır:\n"
+"\t%s\n"
 
 #: ../sandbox:312
 #, python-format
@@ -77,54 +86,65 @@ msgid ""
 "type ] -S\n"
 "%s\n"
 msgstr ""
+"\n"
+"sandbox [-h] [-l seviye ] [-[X|M] [-H ev_dizini] [-T geçici_dizin]] [-I "
+"dahil_etme_dosyası ] [-W pencere_yöneticisi ] [ -w pencere_boyutu ] [[-i "
+"dosya ] ...] [ -t tür ] komut\n"
+"\n"
+"sandbox [-h] [-l seviye ] [-[X|M] [-H ev_dizini] [-T geçici_dizin]] [-I "
+"dahil_etme_dosyası ] [-W pencere_yöneticisi ] [ -w pencere_boyutu ] [[-i "
+"dosya ] ...] [ -t tür ] -S\n"
+"%s\n"
 
 #: ../sandbox:324
 msgid "include file in sandbox"
-msgstr ""
+msgstr "dosyayı yalıtılmış alana dahil et"
 
 #: ../sandbox:327
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr ""
+"yalıtılmış alana dahil edilecek dosyaların listesini DAHİL_ETME_DOSYASI'ndan "
+"oku"
 
 #: ../sandbox:329
 msgid "run sandbox with SELinux type"
-msgstr ""
+msgstr "yalıtılmış alanı SELinux türüyle çalıştır"
 
 #: ../sandbox:332
 msgid "mount new home and/or tmp directory"
-msgstr ""
+msgstr "yeni ev dizini ve/veya geçici dizin bağla"
 
 #: ../sandbox:336
 msgid "dots per inch for X display"
-msgstr ""
+msgstr "X ekranı için inç başına nokta sayısı"
 
 #: ../sandbox:339
 msgid "run complete desktop session within sandbox"
-msgstr ""
+msgstr "yalıtılmış alanda tam bir masaüstü oturumu çalıştır"
 
 #: ../sandbox:342
 msgid "Shred content before temporary directories are removed"
-msgstr ""
+msgstr "Geçici dizinler kaldırılmadan önce içeriği yok et"
 
 #: ../sandbox:346
 msgid "run X application within a sandbox"
-msgstr ""
+msgstr "yalıtılmış bir alanda X uygulaması çalıştır"
 
 #: ../sandbox:352
 msgid "alternate home directory to use for mounting"
-msgstr ""
+msgstr "bağlamak için kullanılacak alternatif ev dizini"
 
 #: ../sandbox:357
 msgid "alternate /tmp directory to use for mounting"
-msgstr ""
+msgstr "bağlamak için kullanılacak alternatif /tmp dizini"
 
 #: ../sandbox:366
 msgid "alternate window manager"
-msgstr ""
+msgstr "alternatif pencere yöneticisi"
 
 #: ../sandbox:369
 msgid "MCS/MLS level for the sandbox"
-msgstr ""
+msgstr "Yalıtılmış alan için MCS/MLS seviyesi"
 
 #: ../sandbox:385
 msgid ""
@@ -132,26 +152,31 @@ msgid ""
 "You need to install the selinux-policy-sandbox package in order to run this "
 "command"
 msgstr ""
+"Yalıtılmış Alan Politikası şu anda kurulu değil.\n"
+"Bu komutu çalıştırmak için selinux-policy-sandbox paketini kurmanız "
+"gerekmektedir"
 
 #: ../sandbox:397
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
+"Bir oturum yalıtılmış alanı kurarken bir ev_dizini ve geçici_dizin "
+"belirtmelisiniz"
 
 #: ../sandbox:399
 msgid "Commands are not allowed in a session sandbox"
-msgstr ""
+msgstr "Oturum yalıtılmış alanında komutlara izin verilmez"
 
 #: ../sandbox:409
 msgid "Command required"
-msgstr ""
+msgstr "Komut gerekli"
 
 #: ../sandbox:412
 #, python-format
 msgid "%s is not an executable"
-msgstr ""
+msgstr "%s çalıştırılabilir değil"
 
 #: ../sandbox:535
 #, python-format
 msgid "Invalid value %s"
-msgstr ""
+msgstr "Geçersiz değer %s"

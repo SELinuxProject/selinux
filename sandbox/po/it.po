@@ -1,53 +1,56 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# Ludek Janda <ljanda@redhat.com>, 2018. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2018-11-20 10:27-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: \n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Zanata 4.6.2\n"
 
 #: ../sandbox:119
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
-msgstr ""
+msgstr "Vuoi salvare le modifiche a '%s'(S / N): "
 
 #: ../sandbox:120
+#, fuzzy
 msgid "Sandbox Message"
-msgstr ""
+msgstr "Sandbox Message"
 
 #: ../sandbox:132
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
-msgstr ""
+msgstr "Vuoi salvare le modifiche a '%s'(y / N): "
 
 #: ../sandbox:133
 msgid "[yY]"
-msgstr ""
+msgstr "[yY]"
 
 #: ../sandbox:156
+#, fuzzy
 msgid "User account must be setup with an MCS Range"
-msgstr ""
+msgstr "L'account utente deve essere configurato con un intervallo MCS"
 
 #: ../sandbox:184
+#, fuzzy
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr ""
+"Impossibile trovare insiemi di categorie non utilizzati. Considerare un "
+"intervallo MCS più ampio per questo utente."
 
 #: ../sandbox:215
+#, fuzzy
 msgid "Homedir and tempdir required for level mounts"
-msgstr ""
+msgstr "Homedir e tempdir sono necessari per montare il livello"
 
 #: ../sandbox:218 ../sandbox:229 ../sandbox:234
 #, python-format
@@ -55,6 +58,8 @@ msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
+"\n"
+"%s è richiesto per l'azione che si desidera eseguire.\n"
 
 #: ../sandbox:305
 #, python-format
@@ -63,6 +68,8 @@ msgid ""
 "Policy defines the following types for use with the -t:\n"
 "\t%s\n"
 msgstr ""
+"\n"
+"La politica definisce i seguenti tipi per l'uso con -t: \\ t%s\n"
 
 #: ../sandbox:312
 #, python-format
@@ -77,81 +84,109 @@ msgid ""
 "type ] -S\n"
 "%s\n"
 msgstr ""
+"\n"
+"sandbox [-h] [-l livello] [- [X | M] [-H homedir] [-T tempdir]] [-I "
+"includefile] [-W windowmanager] [-w windowsize] [[-i file]. ..] [-t tipo] "
+"comando sandbox [-h] [-l livello] [- [X | M] [-H homedir] [-T tempdir]] [-I "
+"includefile] [-W windowmanager] [-w windowsize] [[-i file] ...] [-t tipo] -"
+"S\n"
+"%s\n"
 
 #: ../sandbox:324
+#, fuzzy
 msgid "include file in sandbox"
-msgstr ""
+msgstr "includere il file nella sandbox"
 
 #: ../sandbox:327
+#, fuzzy
 msgid "read list of files to include in sandbox from INCLUDEFILE"
-msgstr ""
+msgstr "leggere l'elenco dei file da includere in sandbox da INCLUDEFILE"
 
 #: ../sandbox:329
+#, fuzzy
 msgid "run sandbox with SELinux type"
-msgstr ""
+msgstr "eseguire sandbox con il tipo SELinux"
 
 #: ../sandbox:332
+#, fuzzy
 msgid "mount new home and/or tmp directory"
-msgstr ""
+msgstr "montare la nuova directory home e / o tmp"
 
 #: ../sandbox:336
+#, fuzzy
 msgid "dots per inch for X display"
-msgstr ""
+msgstr "punti per pollice per X display"
 
 #: ../sandbox:339
+#, fuzzy
 msgid "run complete desktop session within sandbox"
-msgstr ""
+msgstr "eseguire una sessione desktop completa all'interno di sandbox"
 
 #: ../sandbox:342
+#, fuzzy
 msgid "Shred content before temporary directories are removed"
 msgstr ""
+"Distruggi il contenuto prima che le directory temporanee vengano rimosse"
 
 #: ../sandbox:346
+#, fuzzy
 msgid "run X application within a sandbox"
-msgstr ""
+msgstr "eseguire l'applicazione X all'interno di una sandbox"
 
 #: ../sandbox:352
+#, fuzzy
 msgid "alternate home directory to use for mounting"
-msgstr ""
+msgstr "directory home alternativa da utilizzare per il montaggio"
 
 #: ../sandbox:357
+#, fuzzy
 msgid "alternate /tmp directory to use for mounting"
-msgstr ""
+msgstr "directory / tmp alternativa da utilizzare per il montaggio"
 
 #: ../sandbox:366
+#, fuzzy
 msgid "alternate window manager"
-msgstr ""
+msgstr "gestore di finestre alternativo"
 
 #: ../sandbox:369
+#, fuzzy
 msgid "MCS/MLS level for the sandbox"
-msgstr ""
+msgstr "Livello MCS / MLS per la sandbox"
 
 #: ../sandbox:385
+#, fuzzy
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
 "command"
 msgstr ""
+"Il criterio Sandbox non è attualmente installato. È necessario installare il "
+"pacchetto selinux-policy-sandbox per eseguire questo comando"
 
 #: ../sandbox:397
+#, fuzzy
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
+"È necessario specificare un Homedir e un tempdir quando si imposta una "
+"sandbox di sessione"
 
 #: ../sandbox:399
+#, fuzzy
 msgid "Commands are not allowed in a session sandbox"
-msgstr ""
+msgstr "I comandi non sono consentiti in una sandbox di sessione"
 
 #: ../sandbox:409
+#, fuzzy
 msgid "Command required"
-msgstr ""
+msgstr "Comando richiesto"
 
 #: ../sandbox:412
 #, python-format
 msgid "%s is not an executable"
-msgstr ""
+msgstr "%s non è un eseguibile"
 
 #: ../sandbox:535
 #, python-format
 msgid "Invalid value %s"
-msgstr ""
+msgstr "valore non valido %s"

@@ -1,53 +1,53 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# Ludek Janda <ljanda@redhat.com>, 2018. #zanata
+# Máximo Castañeda Riloba <mcrcctm@gmail.com>, 2018. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2018-11-20 10:27-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Zanata 4.6.2\n"
 
 #: ../sandbox:119
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
-msgstr ""
+msgstr "¿Quiere guardar los cambios de '%s' (S/N)?"
 
 #: ../sandbox:120
 msgid "Sandbox Message"
-msgstr ""
+msgstr "Mensaje del confinamiento"
 
 #: ../sandbox:132
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
-msgstr ""
+msgstr "¿Quiere guardar los cambios de '%s' (s/N)?"
 
 #: ../sandbox:133
 msgid "[yY]"
-msgstr ""
+msgstr "[sS]"
 
 #: ../sandbox:156
 msgid "User account must be setup with an MCS Range"
-msgstr ""
+msgstr "Debe configurarse la cuenta de usuario con un rango MCS"
 
 #: ../sandbox:184
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr ""
+"No se encontró ningún conjunto de categorías sin uso. Plantéese un rango MCS "
+"más amplio para este usuario."
 
 #: ../sandbox:215
 msgid "Homedir and tempdir required for level mounts"
-msgstr ""
+msgstr "Homedir y tempdir requeridos para montajes de nivel"
 
 #: ../sandbox:218 ../sandbox:229 ../sandbox:234
 #, python-format
@@ -55,6 +55,8 @@ msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
+"\n"
+"Se necesita %s para la acción que pretende llevar a cabo.\n"
 
 #: ../sandbox:305
 #, python-format
@@ -63,6 +65,9 @@ msgid ""
 "Policy defines the following types for use with the -t:\n"
 "\t%s\n"
 msgstr ""
+"\n"
+"La política define los siguientes tipos para usar con la opción -t:\n"
+"\\t%s\n"
 
 #: ../sandbox:312
 #, python-format
@@ -77,54 +82,66 @@ msgid ""
 "type ] -S\n"
 "%s\n"
 msgstr ""
+"\n"
+"sandbox [-h] [-l nivel ] [-[X|M] [-H dirinicio] [-T dirtemp]] [-I "
+"archivoinclusión ] [-W gestorventanas ] [ -w tamañoventana ] [[-i "
+"archivo ] ...] [ -t tipo ] comando\n"
+"\n"
+"sandbox [-h] [-l nivel ] [-[X|M] [-H dirinicio] [-T dirtemp]] [-I "
+"archivoinclusión ] [-W gestorventanas ] [ -w tamañoventana ] [[-i "
+"archivo ] ...] [ -t tipo ] -S\n"
+"%s\n"
 
 #: ../sandbox:324
 msgid "include file in sandbox"
-msgstr ""
+msgstr "incluir archivo en el confinamiento"
 
 #: ../sandbox:327
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr ""
+"leer de ARCHIVOINCLUSIÓN la lista de archivos a incluir en el confinamiento"
 
 #: ../sandbox:329
 msgid "run sandbox with SELinux type"
-msgstr ""
+msgstr "ejecutar confinamiento con tipo SELinux"
 
 #: ../sandbox:332
 msgid "mount new home and/or tmp directory"
-msgstr ""
+msgstr "montar un nuevo directorio de inicio o temporal"
 
 #: ../sandbox:336
 msgid "dots per inch for X display"
-msgstr ""
+msgstr "puntos por pulgada para la pantalla X"
 
 #: ../sandbox:339
 msgid "run complete desktop session within sandbox"
-msgstr ""
+msgstr "ejecutar una sesión completa de escritorio en el confinamiento"
 
 #: ../sandbox:342
+#, fuzzy
+#| msgid "Shred content before tempory directories are removed"
 msgid "Shred content before temporary directories are removed"
-msgstr ""
+msgstr "Sobreescribir el contenido antes de quitar los directorios temporales"
 
 #: ../sandbox:346
 msgid "run X application within a sandbox"
-msgstr ""
+msgstr "ejecutar la aplicación X en un confinamiento"
 
 #: ../sandbox:352
 msgid "alternate home directory to use for mounting"
-msgstr ""
+msgstr "directorio de inicio alternativo"
 
 #: ../sandbox:357
 msgid "alternate /tmp directory to use for mounting"
-msgstr ""
+msgstr "directorio /tmp alternativo"
 
 #: ../sandbox:366
 msgid "alternate window manager"
-msgstr ""
+msgstr "gestor de ventanas alternativo"
 
 #: ../sandbox:369
 msgid "MCS/MLS level for the sandbox"
-msgstr ""
+msgstr "Nivel MCS/MLS para el confinamiento"
 
 #: ../sandbox:385
 msgid ""
@@ -132,26 +149,30 @@ msgid ""
 "You need to install the selinux-policy-sandbox package in order to run this "
 "command"
 msgstr ""
+"No hay política de confinamiento.\n"
+"Debe instalar el paquete selinux-policy-sandbox para ejecutar este comando"
 
 #: ../sandbox:397
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
+"Debe indicar los directorios de inicio y temporal al configurar una sesión "
+"confinada"
 
 #: ../sandbox:399
 msgid "Commands are not allowed in a session sandbox"
-msgstr ""
+msgstr "No se permiten comandos en una sesión confinada"
 
 #: ../sandbox:409
 msgid "Command required"
-msgstr ""
+msgstr "Falta el comando"
 
 #: ../sandbox:412
 #, python-format
 msgid "%s is not an executable"
-msgstr ""
+msgstr "%s no es un ejecutable"
 
 #: ../sandbox:535
 #, python-format
 msgid "Invalid value %s"
-msgstr ""
+msgstr "Valor no válido: %s"
