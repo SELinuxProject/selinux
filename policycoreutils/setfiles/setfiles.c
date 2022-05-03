@@ -227,9 +227,6 @@ int main(int argc, char **argv)
 			{
 				FILE *policystream;
 
-				if (iamrestorecon)
-					usage(argv[0]);
-
 				policyfile = optarg;
 
 				policystream = fopen(policyfile, "r");
@@ -267,8 +264,6 @@ int main(int argc, char **argv)
 			input_filename = optarg;
 			break;
 		case 'd':
-			if (iamrestorecon)
-				usage(argv[0]);
 			r_opts.debug = 1;
 			r_opts.log_matches =
 					   SELINUX_RESTORECON_LOG_MATCHES;
@@ -367,11 +362,7 @@ int main(int argc, char **argv)
 			null_terminated = 1;
 			break;
 		case 'x':
-			if (iamrestorecon) {
-				r_opts.xdev = SELINUX_RESTORECON_XDEV;
-			} else {
-				usage(argv[0]);
-			}
+			r_opts.xdev = SELINUX_RESTORECON_XDEV;
 			break;
 		case 'T':
 			nthreads = strtoull(optarg, &endptr, 10);
