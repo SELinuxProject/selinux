@@ -162,7 +162,6 @@ int main(int argc, char **argv)
 	request_digest = 0;
 	policyfile = NULL;
 
-	r_opts.abort_on_error = 0;
 	if (!argv[0]) {
 		fprintf(stderr, "Called without required program name!\n");
 		exit(-1);
@@ -197,7 +196,6 @@ int main(int argc, char **argv)
 		 * restorecon:
 		 * No recursive descent unless -r/-R,
 		 * Expands paths via realpath,
-		 * Do not abort on errors during the file tree walk,
 		 * Do not try to track inode associations for conflict detection,
 		 * Follows mounts,
 		 * Does lazy validation of contexts upon use.
