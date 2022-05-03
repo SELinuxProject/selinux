@@ -40,8 +40,8 @@ static __attribute__((__noreturn__)) void usage(const char *const name)
 			name, name);
 	} else {
 		fprintf(stderr,
-			"usage:  %s [-diIDlmnpqvEFWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file pathname...\n"
-			"usage:  %s [-diIDlmnpqvEFWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file -f filename\n"
+			"usage:  %s [-diIDlmnpqvCEFWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file pathname...\n"
+			"usage:  %s [-diIDlmnpqvCEFWT] [-e excludedir] [-r alt_root_path] [-c policyfile] spec_file -f filename\n"
 			"usage:  %s -s [-diIDlmnpqvFWT] spec_file\n",
 			name, name, name);
 	}
@@ -150,9 +150,10 @@ int main(int argc, char **argv)
 	const char *base;
 	int errors = 0;
 	const char *ropts = "e:f:hiIDlmno:pqrsvFRW0xT:";
-	const char *sopts = "c:de:f:hiIDlmno:pqr:svEFR:W0T:";
+	const char *sopts = "c:de:f:hiIDlmno:pqr:svCEFR:W0T:";
 	const char *opts;
 	union selinux_callback cb;
+	long unsigned skipped_errors;
 
 	/* Initialize variables */
 	memset(&r_opts, 0, sizeof(r_opts));
@@ -161,6 +162,7 @@ int main(int argc, char **argv)
 	warn_no_match = 0;
 	request_digest = 0;
 	policyfile = NULL;
+	skipped_errors = 0;
 
 	if (!argv[0]) {
 		fprintf(stderr, "Called without required program name!\n");
@@ -287,6 +289,9 @@ int main(int argc, char **argv)
 		case 'l':
 			r_opts.syslog_changes =
 					   SELINUX_RESTORECON_SYSLOG_CHANGES;
+			break;
+		case 'C':
+			r_opts.count_errors = SELINUX_RESTORECON_COUNT_ERRORS;
 			break;
 		case 'E':
 			r_opts.conflict_error =
@@ -447,13 +452,15 @@ int main(int argc, char **argv)
 			buf[len - 1] = 0;
 			if (!strcmp(buf, "/"))
 				r_opts.mass_relabel = SELINUX_RESTORECON_MASS_RELABEL;
-			errors |= process_glob(buf, &r_opts, nthreads) < 0;
+			errors |= process_glob(buf, &r_opts, nthreads,
+					       &skipped_errors) < 0;
 		}
 		if (strcmp(input_filename, "-") != 0)
 			fclose(f);
 	} else {
 		for (i = optind; i < argc; i++)
-			errors |= process_glob(argv[i], &r_opts, nthreads) < 0;
+			errors |= process_glob(argv[i], &r_opts, nthreads,
+					       &skipped_errors) < 0;
 	}
 
 	maybe_audit_mass_relabel(r_opts.mass_relabel, errors);
@@ -467,5 +474,5 @@ int main(int argc, char **argv)
 	if (r_opts.progress)
 		fprintf(stdout, "\n");
 
-	exit(errors ? -1 : 0);
+	exit(errors ? -1 : skipped_errors ? 1 : 0);
 }

@@ -6,6 +6,7 @@ setfiles \- set SELinux file security contexts.
 .B setfiles
 .RB [ \-c
 .IR policy ]
+.RB [ \-C ]
 .RB [ \-d ]
 .RB [ \-l ]
 .RB [ \-m ]
@@ -57,6 +58,13 @@ option will force a replacement of the entire context.
 .TP
 .B \-c
 check the validity of the contexts against the specified binary policy.
+.TP
+.B \-C
+If only relabeling errors are encountered during the file tree walks,
+exit with status
+.B 1
+rather than
+.BR 255 .
 .TP
 .B \-d
 show what specification matched each file.
@@ -218,6 +226,20 @@ Not used if the
 or the
 .B \-s
 option is used.
+
+.SH "EXIT STATUS"
+.B setfiles
+exits with status
+.B 0
+if it encounters no errors. Fatal errors result in status
+.BR 255 .
+Labeling errors encountered during file tree walk(s) result in status
+.B 1
+if the
+.B -C
+option is specified and no other kind of error is encountered, and in status
+.B 255
+otherwise.
 
 .SH "NOTES"
 .IP "1." 4
