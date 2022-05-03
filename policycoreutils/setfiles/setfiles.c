@@ -368,13 +368,13 @@ int main(int argc, char **argv)
 		case '0':
 			null_terminated = 1;
 			break;
-                case 'x':
-                        if (iamrestorecon) {
+		case 'x':
+			if (iamrestorecon) {
 				r_opts.xdev = SELINUX_RESTORECON_XDEV;
-                        } else {
+			} else {
 				usage(argv[0]);
-                        }
-                        break;
+			}
+			break;
 		case 'T':
 			nthreads = strtoull(optarg, &endptr, 10);
 			if (*optarg == '\0' || *endptr != '\0')
