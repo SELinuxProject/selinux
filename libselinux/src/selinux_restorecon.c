@@ -66,6 +66,9 @@ static pthread_mutex_t progress_mutex = PTHREAD_MUTEX_INITIALIZER;
 static struct dir_xattr *dir_xattr_list;
 static struct dir_xattr *dir_xattr_last;
 
+/* Number of errors ignored during the file tree walk. */
+static long unsigned skipped_errors;
+
 /* restorecon_flags for passing to restorecon_sb() */
 struct rest_flags {
 	bool nochange;
@@ -83,6 +86,7 @@ struct rest_flags {
 	bool ignore_noent;
 	bool warnonnomatch;
 	bool conflicterror;
+	bool count_errors;
 };
 
 static void restorecon_init(void)
@@ -827,6 +831,7 @@ struct rest_state {
 	struct dir_hash_node *head, *current;
 	bool abort;
 	int error;
+	long unsigned skipped_errors;
 	int saved_errno;
 	pthread_mutex_t mutex;
 };
@@ -949,11 +954,17 @@ loop_body:
 					goto unlock;
 			}
 
-			state->error |= error;
 			first = false;
-			if (error && state->flags.abort_on_error) {
-				state->abort = true;
-				goto finish;
+			if (error) {
+				if (state->flags.abort_on_error) {
+					state->error = error;
+					state->abort = true;
+					goto finish;
+				}
+				if (state->flags.count_errors)
+					state->skipped_errors++;
+				else
+					state->error = error;
 			}
 			break;
 		}
@@ -1007,12 +1018,15 @@ static int selinux_restorecon_common(const char *pathname_orig,
 		   SELINUX_RESTORECON_IGNORE_MOUNTS) ? true : false;
 	state.ignore_digest = (restorecon_flags &
 		    SELINUX_RESTORECON_IGNORE_DIGEST) ? true : false;
+	state.flags.count_errors = (restorecon_flags &
+		    SELINUX_RESTORECON_COUNT_ERRORS) ? true : false;
 	state.setrestorecondigest = true;
 
 	state.head = NULL;
 	state.current = NULL;
 	state.abort = false;
 	state.error = 0;
+	state.skipped_errors = 0;
 	state.saved_errno = 0;
 
 	struct stat sb;
@@ -1225,8 +1239,11 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	/*
 	 * Labeling successful. Write partial match digests for subdirectories.
 	 * TODO: Write digest upon FTS_DP if no error occurs in its descents.
+	 * Note: we can't ignore errors here that we've masked due to
+	 * SELINUX_RESTORECON_COUNT_ERRORS.
 	 */
-	if (state.setrestorecondigest && !state.flags.nochange && !error) {
+	if (state.setrestorecondigest && !state.flags.nochange && !error &&
+	    state.skipped_errors == 0) {
 		current = state.head;
 		while (current != NULL) {
 			if (setxattr(current->path,
@@ -1240,6 +1257,8 @@ static int selinux_restorecon_common(const char *pathname_orig,
 			current = current->next;
 		}
 	}
+
+	skipped_errors = state.skipped_errors;
 
 out:
 	if (state.flags.progress && state.flags.mass_relabel)
@@ -1519,4 +1538,9 @@ cleanup:
 		}
 	}
 	return -1;
+}
+
+long unsigned selinux_restorecon_get_skipped_errors(void)
+{
+	return skipped_errors;
 }

@@ -243,5 +243,6 @@ LIBSELINUX_1.0 {
 
 LIBSELINUX_3.4 {
   global:
+    selinux_restorecon_get_skipped_errors;
     selinux_restorecon_parallel;
 } LIBSELINUX_1.0;
