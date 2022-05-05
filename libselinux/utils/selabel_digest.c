@@ -34,7 +34,7 @@ static int run_check_digest(char *cmd, char *selabel_digest)
 
 	fp = popen(cmd, "r");
 	if (!fp) {
-		printf("Failed to run command line\n");
+		fprintf(stderr, "Failed to run command '%s':  %s\n", cmd, strerror(errno));
 		return -1;
 	}
 

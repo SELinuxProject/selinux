@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 	/* If a context wasn't passed, use the current context. */
 	if (((argc - optind) < 2)) {
 		if (getcon(&cur_context) < 0) {
-			fprintf(stderr, "Couldn't get current context.\n");
+			fprintf(stderr, "Couldn't get current context:  %s\n", strerror(errno));
 			free(level);
 			return 2;
 		}

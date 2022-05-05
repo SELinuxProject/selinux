@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <selinux/selinux.h>
 
@@ -35,8 +36,8 @@ int main(int argc, char **argv)
 
 	ret = security_compute_relabel(argv[1], argv[2], tclass, &buf);
 	if (ret < 0) {
-		fprintf(stderr, "%s:  security_compute_relabel failed\n",
-			argv[0]);
+		fprintf(stderr, "%s:  security_compute_relabel failed:  %s\n",
+			argv[0], strerror(errno));
 		exit(3);
 	}
 

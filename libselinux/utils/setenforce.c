@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <strings.h>
+#include <errno.h>
 #include <selinux/selinux.h>
 
 static __attribute__ ((__noreturn__)) void usage(const char *progname)
@@ -35,7 +36,7 @@ int main(int argc, char **argv)
 			usage(argv[0]);
 	}
 	if (rc < 0) {
-		fprintf(stderr, "%s:  setenforce() failed\n", argv[0]);
+		fprintf(stderr, "%s:  security_setenforce() failed:  %s\n", argv[0], strerror(errno));
 		return 2;
 	}
 	return 0;

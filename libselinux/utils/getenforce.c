@@ -1,6 +1,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 #include <selinux/selinux.h>
 
 int main(int argc __attribute__ ((unused)),
@@ -16,7 +18,7 @@ int main(int argc __attribute__ ((unused)),
 	if (rc == 1) {
 		rc = security_getenforce();
 		if (rc < 0) {
-			fputs("getenforce:  getenforce() failed", stderr);
+			fprintf(stderr, "getenforce:  security_getenforce() failed:  %s\n", strerror(errno));
 			return 2;
 		}
 

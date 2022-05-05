@@ -61,7 +61,8 @@ int main(int argc, char **argv)
 	hnd = selabel_open(SELABEL_CTX_FILE, selabel_option, 2);
 	if (!hnd) {
 		fprintf(stderr, "ERROR: selabel_open - Could not obtain "
-							     "handle.\n");
+							     "handle:  %s\n",
+							     strerror(errno));
 		return -1;
 	}
 
