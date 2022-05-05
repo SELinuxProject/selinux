@@ -3,9 +3,31 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <stdio.h>
 #include <sys/xattr.h>
 #include "selinux_internal.h"
 #include "policy.h"
+
+static ssize_t fgetxattr_wrapper(int fd, const char *name, void *value, size_t size) {
+	char buf[40];
+	int fd_flag, saved_errno = errno;
+	ssize_t ret;
+
+	ret = fgetxattr(fd, name, value, size);
+	if (ret != -1 || errno != EBADF)
+		return ret;
+
+	/* Emulate O_PATH support */
+	fd_flag = fcntl(fd, F_GETFL);
+	if (fd_flag == -1 || (fd_flag & O_PATH) == 0) {
+		errno = EBADF;
+		return -1;
+	}
+
+	snprintf(buf, sizeof(buf), "/proc/self/fd/%d", fd);
+	errno = saved_errno;
+	return getxattr(buf, name, value, size);
+}
 
 int fgetfilecon_raw(int fd, char ** context)
 {
@@ -19,11 +41,11 @@ int fgetfilecon_raw(int fd, char ** context)
 		return -1;
 	memset(buf, 0, size);
 
-	ret = fgetxattr(fd, XATTR_NAME_SELINUX, buf, size - 1);
+	ret = fgetxattr_wrapper(fd, XATTR_NAME_SELINUX, buf, size - 1);
 	if (ret < 0 && errno == ERANGE) {
 		char *newbuf;
 
-		size = fgetxattr(fd, XATTR_NAME_SELINUX, NULL, 0);
+		size = fgetxattr_wrapper(fd, XATTR_NAME_SELINUX, NULL, 0);
 		if (size < 0)
 			goto out;
 
@@ -34,7 +56,7 @@ int fgetfilecon_raw(int fd, char ** context)
 
 		buf = newbuf;
 		memset(buf, 0, size);
-		ret = fgetxattr(fd, XATTR_NAME_SELINUX, buf, size - 1);
+		ret = fgetxattr_wrapper(fd, XATTR_NAME_SELINUX, buf, size - 1);
 	}
       out:
 	if (ret == 0) {

@@ -33,7 +33,9 @@ is identical to
 .BR getfilecon (),
 only the open file pointed to by filedes (as returned by
 .BR open (2))
-is interrogated in place of path.
+is interrogated in place of path.  Since libselinux 3.4 a file opened via
+.I O_PATH
+is supported.
 
 .BR getfilecon_raw (),
 .BR lgetfilecon_raw ()
