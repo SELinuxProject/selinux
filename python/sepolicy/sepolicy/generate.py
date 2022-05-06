@@ -54,10 +54,10 @@ try:
     kwargs = {}
     if sys.version_info < (3,):
         kwargs['unicode'] = True
-    gettext.install(PROGNAME,
+    t = gettext.translation(PROGNAME,
                     localedir="/usr/share/locale",
-                    codeset='utf-8',
                     **kwargs)
+    _ = t.gettext
 except:
     try:
         import builtins
@@ -1372,7 +1372,7 @@ Warning %s does not exist
         fd.close()
 
     def generate(self, out_dir=os.getcwd()):
-        out = "Created the following files:\n"
+        out = _("Created the following files:\n")
         out += "%s # %s\n" % (self.write_te(out_dir), _("Type Enforcement file"))
         out += "%s # %s\n" % (self.write_if(out_dir), _("Interface file"))
         out += "%s # %s\n" % (self.write_fc(out_dir), _("File Contexts file"))
