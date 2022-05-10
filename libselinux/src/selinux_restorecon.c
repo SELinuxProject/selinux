@@ -497,13 +497,15 @@ static int filespec_add(ino_t ino, const char *con, const char *file,
 		goto oom_freefl;
 	fl->file = strdup(file);
 	if (!fl->file)
-		goto oom_freefl;
+		goto oom_freeflcon;
 	fl->next = prevfl->next;
 	prevfl->next = fl;
 
 	__pthread_mutex_unlock(&fl_mutex);
 	return 0;
 
+oom_freeflcon:
+	free(fl->con);
 oom_freefl:
 	free(fl);
 oom:
