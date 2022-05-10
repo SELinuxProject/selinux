@@ -1,3 +1,6 @@
+#ifndef SELINUX_INTERNAL_H_
+#define SELINUX_INTERNAL_H_
+
 #include <selinux/selinux.h>
 #include <pthread.h>
 
@@ -90,3 +93,5 @@ extern int selinux_page_size ;
 #define SELINUXCONFIG SELINUXDIR "config"
 
 extern int has_selinux_config ;
+
+#endif /* SELINUX_INTERNAL_H_ */
