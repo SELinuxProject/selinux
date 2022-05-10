@@ -192,25 +192,16 @@ static PyObject *finish(PyObject *self __attribute__((unused)), PyObject *args) 
 static int __policy_init(const char *init_path)
 {
 	FILE *fp;
-	char path[PATH_MAX];
+	const char *curpolicy;
 	char errormsg[PATH_MAX+1024+20];
 	struct sepol_policy_file *pf = NULL;
 	int rc;
 	unsigned int cnt;
 
-	path[PATH_MAX-1] = '\0';
 	if (init_path) {
-		strncpy(path, init_path, PATH_MAX-1);
-		fp = fopen(path, "re");
-		if (!fp) {
-			snprintf(errormsg, sizeof(errormsg), 
-				 "unable to open %s:  %m\n",
-				 path);
-			PyErr_SetString( PyExc_ValueError, errormsg);
-			return 1;
-		}
+		curpolicy = init_path;
 	} else {
-		const char *curpolicy = selinux_current_policy_path();
+		curpolicy = selinux_current_policy_path();
 		if (!curpolicy) {
 			/* SELinux disabled, must use -p option. */
 			snprintf(errormsg, sizeof(errormsg),
@@ -218,14 +209,15 @@ static int __policy_init(const char *init_path)
 			PyErr_SetString( PyExc_ValueError, errormsg);
 			return 1;
 		}
-		fp = fopen(curpolicy, "re");
-		if (!fp) {
-			snprintf(errormsg, sizeof(errormsg), 
-				 "unable to open %s:  %m\n",
-				 curpolicy);
-			PyErr_SetString( PyExc_ValueError, errormsg);
-			return 1;
-		}
+	}
+
+	fp = fopen(curpolicy, "re");
+	if (!fp) {
+		snprintf(errormsg, sizeof(errormsg),
+			 "unable to open %s:  %m\n",
+			 curpolicy);
+		PyErr_SetString( PyExc_ValueError, errormsg);
+		return 1;
 	}
 
 	avc = calloc(sizeof(struct avc_t), 1);
@@ -249,7 +241,7 @@ static int __policy_init(const char *init_path)
 	sepol_policy_file_set_fp(pf, fp);	
 	if (sepol_policydb_read(avc->policydb, pf)) {
 		snprintf(errormsg, sizeof(errormsg), 
-			 "invalid binary policy %s\n", path);
+			 "invalid binary policy %s\n", curpolicy);
 		PyErr_SetString( PyExc_ValueError, errormsg);
 		fclose(fp);
 		return 1;
