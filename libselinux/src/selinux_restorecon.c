@@ -651,12 +651,16 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 						    sb->st_mode);
 
 	if (rc < 0) {
-		if (errno == ENOENT && flags->warnonnomatch && first)
-			selinux_log(SELINUX_INFO,
-				    "Warning no default label for %s\n",
-				    lookup_path);
+		if (errno == ENOENT) {
+			if (flags->warnonnomatch && first)
+				selinux_log(SELINUX_INFO,
+					    "Warning no default label for %s\n",
+					    lookup_path);
 
-		return 0; /* no match, but not an error */
+			return 0; /* no match, but not an error */
+		}
+
+		return -1;
 	}
 
 	if (flags->progress) {
