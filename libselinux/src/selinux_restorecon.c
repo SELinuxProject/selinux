@@ -44,7 +44,7 @@
 static struct selabel_handle *fc_sehandle = NULL;
 static bool selabel_no_digest;
 static char *rootpath = NULL;
-static int rootpathlen;
+static size_t rootpathlen;
 
 /* Information on excluded fs and directories. */
 struct edir {
@@ -55,7 +55,7 @@ struct edir {
 };
 #define CALLER_EXCLUDED true
 static bool ignore_mounts;
-static int exclude_non_seclabel_mounts(void);
+static uint64_t exclude_non_seclabel_mounts(void);
 static int exclude_count = 0;
 static struct edir *exclude_lst = NULL;
 static uint64_t fc_count = 0;	/* Number of files processed so far */
@@ -169,6 +169,12 @@ static int add_exclude(const char *directory, bool who)
 		return -1;
 	}
 
+	if (exclude_count >= INT_MAX - 1) {
+		selinux_log(SELINUX_ERROR, "Too many directory excludes: %d.\n", exclude_count);
+		errno = EOVERFLOW;
+		return -1;
+	}
+
 	tmp_list = realloc(exclude_lst,
 			   sizeof(struct edir) * (exclude_count + 1));
 	if (!tmp_list)
@@ -211,10 +217,10 @@ static int check_excluded(const char *file)
 	return 0;
 }
 
-static int file_system_count(char *name)
+static uint64_t file_system_count(const char *name)
 {
 	struct statvfs statvfs_buf;
-	int nfile = 0;
+	uint64_t nfile = 0;
 
 	memset(&statvfs_buf, 0, sizeof(statvfs_buf));
 	if (!statvfs(name, &statvfs_buf))
@@ -230,12 +236,13 @@ static int file_system_count(char *name)
  * that support security labels have the seclabel option, return
  * approximate total file count.
  */
-static int exclude_non_seclabel_mounts(void)
+static uint64_t exclude_non_seclabel_mounts(void)
 {
 	struct utsname uts;
 	FILE *fp;
 	size_t len;
-	int index = 0, found = 0, nfile = 0;
+	int index = 0, found = 0;
+	uint64_t nfile = 0;
 	char *mount_info[4];
 	char *buf = NULL, *item;
 
@@ -300,7 +307,8 @@ static int add_xattr_entry(const char *directory, bool delete_nonmatch,
 {
 	char *sha1_buf = NULL;
 	size_t i, digest_len = 0;
-	int rc, digest_result;
+	int rc;
+	enum digest_result digest_result;
 	bool match;
 	struct dir_xattr *new_entry;
 	uint8_t *xattr_digest = NULL;
@@ -573,7 +581,7 @@ static void filespec_destroy(void)
  * Called if SELINUX_RESTORECON_SET_SPECFILE_CTX is not set to check if
  * the type components differ, updating newtypecon if so.
  */
-static int compare_types(char *curcon, char *newcon, char **newtypecon)
+static int compare_types(const char *curcon, const char *newcon, char **newtypecon)
 {
 	int types_differ = 0;
 	context_t cona;
@@ -1398,7 +1406,7 @@ void selinux_restorecon_set_exclude_list(const char **exclude_list)
 /* selinux_restorecon_set_alt_rootpath(3) sets an alternate rootpath. */
 int selinux_restorecon_set_alt_rootpath(const char *alt_rootpath)
 {
-	int len;
+	size_t len;
 
 	/* This should be NULL on first use */
 	if (rootpath)
