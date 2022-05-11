@@ -1053,7 +1053,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 	struct stat sb;
 	char *pathname = NULL, *pathdnamer = NULL, *pathdname, *pathbname;
 	char *paths[2] = { NULL, NULL };
-	int fts_flags, error, sverrno;
+	int fts_flags, error;
 	struct dir_hash_node *current = NULL;
 
 	if (state.flags.verbose && state.flags.progress)
@@ -1307,18 +1307,14 @@ cleanup:
 	return error;
 
 oom:
-	sverrno = errno;
 	selinux_log(SELINUX_ERROR, "%s:  Out of memory\n", __func__);
-	errno = sverrno;
 	error = -1;
 	goto cleanup;
 
 realpatherr:
-	sverrno = errno;
 	selinux_log(SELINUX_ERROR,
 		    "SELinux: Could not get canonical path for %s restorecon: %m.\n",
 		    pathname_orig);
-	errno = sverrno;
 	error = -1;
 	goto cleanup;
 

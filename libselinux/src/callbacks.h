@@ -5,6 +5,7 @@
 #ifndef _SELINUX_CALLBACKS_H_
 #define _SELINUX_CALLBACKS_H_
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,9 +33,11 @@ extern int
 extern pthread_mutex_t log_mutex;
 
 #define selinux_log(type, ...) do { \
+	int saved_errno__ = errno; \
 	__pthread_mutex_lock(&log_mutex); \
 	selinux_log_direct(type, __VA_ARGS__); \
 	__pthread_mutex_unlock(&log_mutex); \
+	errno = saved_errno__; \
 } while(0)
 
 #endif				/* _SELINUX_CALLBACKS_H_ */
