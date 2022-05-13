@@ -1622,6 +1622,13 @@ static int filename_trans_to_cil(int indent, struct policydb *pdb, struct filena
 					    rule->name,
 					    pdb->p_type_val_to_name[rule->otype - 1]);
 			}
+			if (rule->flags & RULE_SELF) {
+				cil_println(indent, "(typetransition %s self %s \"%s\" %s)",
+					    stypes[stype],
+					    pdb->p_class_val_to_name[rule->tclass - 1],
+					    rule->name,
+					    pdb->p_type_val_to_name[rule->otype - 1]);
+			}
 		}
 
 		names_destroy(&stypes, &num_stypes);

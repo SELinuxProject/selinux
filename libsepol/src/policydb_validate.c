@@ -1184,6 +1184,10 @@ static int validate_filename_trans_rules(sepol_handle_t *handle, filename_trans_
 			goto bad;
 		if (validate_value(filename_trans->otype, &flavors[SYM_TYPES]))
 			goto bad;
+
+		/* currently only the RULE_SELF flag can be set */
+		if ((filename_trans->flags & ~RULE_SELF) != 0)
+			goto bad;
 	}
 
 	return 0;

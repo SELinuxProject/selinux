@@ -1482,6 +1482,7 @@ static int copy_filename_trans_list(filename_trans_rule_t * list,
 
 		new_rule->tclass = module->map[SYM_CLASSES][cur->tclass - 1];
 		new_rule->otype = module->map[SYM_TYPES][cur->otype - 1];
+		new_rule->flags = cur->flags;
 
 		cur = cur->next;
 	}
