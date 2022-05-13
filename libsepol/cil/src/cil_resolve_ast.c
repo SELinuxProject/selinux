@@ -373,6 +373,7 @@ exit:
 
 int cil_resolve_type_rule(struct cil_tree_node *current, void *extra_args)
 {
+	struct cil_args_resolve *args = extra_args;
 	struct cil_type_rule *rule = current->data;
 	struct cil_symtab_datum *src_datum = NULL;
 	struct cil_symtab_datum *tgt_datum = NULL;
@@ -387,11 +388,15 @@ int cil_resolve_type_rule(struct cil_tree_node *current, void *extra_args)
 	}
 	rule->src = src_datum;
 
-	rc = cil_resolve_name(current, rule->tgt_str, CIL_SYM_TYPES, extra_args, &tgt_datum);
-	if (rc != SEPOL_OK) {
-		goto exit;
+	if (rule->tgt_str == CIL_KEY_SELF) {
+		rule->tgt = args->db->selftype;
+	} else {
+		rc = cil_resolve_name(current, rule->tgt_str, CIL_SYM_TYPES, extra_args, &tgt_datum);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+		rule->tgt = tgt_datum;
 	}
-	rule->tgt = tgt_datum;
 
 	rc = cil_resolve_name(current, rule->obj_str, CIL_SYM_CLASSES, extra_args, &obj_datum);
 	if (rc != SEPOL_OK) {
@@ -638,11 +643,15 @@ int cil_resolve_nametypetransition(struct cil_tree_node *current, void *extra_ar
 	}
 	nametypetrans->src = src_datum;
 
-	rc = cil_resolve_name(current, nametypetrans->tgt_str, CIL_SYM_TYPES, extra_args, &tgt_datum);
-	if (rc != SEPOL_OK) {
-		goto exit;
+	if (nametypetrans->tgt_str == CIL_KEY_SELF) {
+		nametypetrans->tgt = args->db->selftype;
+	} else {
+		rc = cil_resolve_name(current, nametypetrans->tgt_str, CIL_SYM_TYPES, extra_args, &tgt_datum);
+		if (rc != SEPOL_OK) {
+			goto exit;
+		}
+		nametypetrans->tgt = tgt_datum;
 	}
-	nametypetrans->tgt = tgt_datum;
 
 	rc = cil_resolve_name(current, nametypetrans->obj_str, CIL_SYM_CLASSES, extra_args, &obj_datum);
 	if (rc != SEPOL_OK) {
