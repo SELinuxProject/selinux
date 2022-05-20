@@ -194,12 +194,14 @@ static policydb_t *load_policy(const char *filename)
 	policydb = malloc(sizeof(policydb_t));
 	if (policydb == NULL) {
 		fprintf(stderr, "Out of memory!\n");
+		fclose(fp);
 		return NULL;
 	}
 
 	if (policydb_init(policydb)) {
 		fprintf(stderr, "Out of memory!\n");
 		free(policydb);
+		fclose(fp);
 		return NULL;
 	}
 
@@ -208,6 +210,7 @@ static policydb_t *load_policy(const char *filename)
 		fprintf(stderr,
 			"error(s) encountered while parsing configuration\n");
 		free(policydb);
+		fclose(fp);
 		return NULL;
 	}
 
