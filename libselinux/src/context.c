@@ -116,7 +116,7 @@ void context_free(context_t context)
 /*
  * Return a pointer to the string value of the context.
  */
-char *context_str(context_t context)
+const char *context_str(context_t context)
 {
 	context_private_t *n = context->ptr;
 	int i;

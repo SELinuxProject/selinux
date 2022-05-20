@@ -25,7 +25,7 @@ extern "C" {
  * for the same context_t*
  */
 
-	extern char *context_str(context_t);
+	extern const char *context_str(context_t);
 
 /* Free the storage used by a context */
 	extern void context_free(context_t);

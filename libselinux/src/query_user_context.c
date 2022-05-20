@@ -115,7 +115,7 @@ int manual_user_enter_context(const char *user, char ** newcon)
 	int mls_enabled = is_selinux_mls_enabled();
 
 	context_t new_context;	/* The new context chosen by the user     */
-	char *user_context = NULL;	/* String value of the user's context     */
+	const char *user_context = NULL;	/* String value of the user's context     */
 	int done = 0;		/* true if a valid sid has been obtained  */
 
 	/* Initialize the context.  How this is done depends on whether
