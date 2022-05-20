@@ -24,7 +24,7 @@ struct security_id {
 };
 typedef struct security_id *security_id_t;
 
-#define SECSID_WILD (security_id_t)NULL	/* unspecified SID */
+#define SECSID_WILD ((security_id_t)NULL)	/* unspecified SID */
 
 /**
  * avc_sid_to_context - get copy of context corresponding to SID.
