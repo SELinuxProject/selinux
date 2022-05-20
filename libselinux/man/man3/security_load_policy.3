@@ -5,7 +5,7 @@ security_load_policy \- load a new SELinux policy
 .SH "SYNOPSIS"
 .B #include <selinux/selinux.h>
 .sp
-.BI "int security_load_policy(void *" data ", size_t "len );
+.BI "int security_load_policy(const void *" data ", size_t "len );
 .sp
 .BI "int selinux_mkload_policy(int " preservebools ");"
 .sp

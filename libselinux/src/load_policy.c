@@ -23,7 +23,7 @@
 #define MNT_DETACH 2
 #endif
 
-int security_load_policy(void *data, size_t len)
+int security_load_policy(const void *data, size_t len)
 {
 	char path[PATH_MAX];
 	int fd, ret;

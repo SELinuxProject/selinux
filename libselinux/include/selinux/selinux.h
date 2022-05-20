@@ -279,7 +279,7 @@ extern int security_validatetrans_raw(const char *scon,
 				      const char *newcon);
 
 /* Load a policy configuration. */
-extern int security_load_policy(void *data, size_t len);
+extern int security_load_policy(const void *data, size_t len);
 
 /* Get the context of an initial kernel security identifier by name.  
    Caller must free via freecon */
