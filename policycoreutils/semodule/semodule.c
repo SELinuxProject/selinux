@@ -550,15 +550,12 @@ int main(int argc, char *argv[])
 					goto cleanup_extract;
 				}
 
-				if (access(output_path, F_OK) == 0) {
-					fprintf(stderr, "%s: %s is already extracted with extension %s.\n", argv[0], mode_arg, lang_ext);
-					result = -1;
-					goto cleanup_extract;
-				}
-
-				output_fd = fopen(output_path, "w");
+				output_fd = fopen(output_path, "wx");
 				if (output_fd == NULL) {
-					fprintf(stderr, "%s: Unable to open %s\n", argv[0], output_path);
+					if (errno == EEXIST)
+						fprintf(stderr, "%s: %s is already extracted with extension %s.\n", argv[0], mode_arg, lang_ext);
+					else
+						fprintf(stderr, "%s: Unable to open %s:  %s\n", argv[0], output_path, strerror(errno));
 					result = -1;
 					goto cleanup_extract;
 				}
