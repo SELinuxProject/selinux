@@ -219,12 +219,11 @@ static int authenticate_via_pam(const char *ttyn, pam_handle_t * pam_handle)
 
 #include "hashtab.h"
 
-static int free_hashtab_entry(hashtab_key_t key, hashtab_datum_t d,
+static void free_hashtab_entry(hashtab_key_t key, hashtab_datum_t d,
 			      void *args __attribute__ ((unused)))
 {
 	free(key);
 	free(d);
-	return 0;
 }
 
 static unsigned int reqsymhash(hashtab_t h, const_hashtab_key_t key)
