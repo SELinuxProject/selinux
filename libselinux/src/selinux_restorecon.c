@@ -623,13 +623,13 @@ out:
 	return rc;
 }
 
-static int restorecon_sb(const char *pathname, struct rest_flags *flags, bool first)
+static int restorecon_sb(const char *pathname, const struct stat *sb,
+			    struct rest_flags *flags, bool first)
 {
 	char *newcon = NULL;
 	char *curcon = NULL;
 	char *newtypecon = NULL;
-	int fd = -1, rc;
-	struct stat stat_buf;
+	int rc;
 	bool updated = false;
 	const char *lookup_path = pathname;
 	float pc;
@@ -644,21 +644,13 @@ static int restorecon_sb(const char *pathname, struct rest_flags *flags, bool fi
 		lookup_path += rootpathlen;
 	}
 
-	fd = open(pathname, O_PATH | O_NOFOLLOW | O_EXCL);
-	if (fd < 0)
-		goto err;
-
-	rc = fstat(fd, &stat_buf);
-	if (rc < 0)
-		goto err;
-
 	if (rootpath != NULL && lookup_path[0] == '\0')
 		/* this is actually the root dir of the alt root. */
 		rc = selabel_lookup_raw(fc_sehandle, &newcon, "/",
-						    stat_buf.st_mode);
+						    sb->st_mode);
 	else
 		rc = selabel_lookup_raw(fc_sehandle, &newcon, lookup_path,
-						    stat_buf.st_mode);
+						    sb->st_mode);
 
 	if (rc < 0) {
 		if (errno == ENOENT) {
@@ -667,10 +659,10 @@ static int restorecon_sb(const char *pathname, struct rest_flags *flags, bool fi
 					    "Warning no default label for %s\n",
 					    lookup_path);
 
-			goto out; /* no match, but not an error */
+			return 0; /* no match, but not an error */
 		}
 
-		goto err;
+		return -1;
 	}
 
 	if (flags->progress) {
@@ -690,17 +682,19 @@ static int restorecon_sb(const char *pathname, struct rest_flags *flags, bool fi
 	}
 
 	if (flags->add_assoc) {
-		rc = filespec_add(stat_buf.st_ino, newcon, pathname, flags);
+		rc = filespec_add(sb->st_ino, newcon, pathname, flags);
 
 		if (rc < 0) {
 			selinux_log(SELINUX_ERROR,
 				    "filespec_add error: %s\n", pathname);
-			goto out1;
+			freecon(newcon);
+			return -1;
 		}
 
 		if (rc > 0) {
 			/* Already an association and it took precedence. */
-			goto out;
+			freecon(newcon);
+			return 0;
 		}
 	}
 
@@ -708,7 +702,7 @@ static int restorecon_sb(const char *pathname, struct rest_flags *flags, bool fi
 		selinux_log(SELINUX_INFO, "%s matched by %s\n",
 			    pathname, newcon);
 
-	if (fgetfilecon_raw(fd, &curcon) < 0) {
+	if (lgetfilecon_raw(pathname, &curcon) < 0) {
 		if (errno != ENODATA)
 			goto err;
 
@@ -741,7 +735,7 @@ static int restorecon_sb(const char *pathname, struct rest_flags *flags, bool fi
 		}
 
 		if (!flags->nochange) {
-			if (fsetfilecon(fd, newcon) < 0)
+			if (lsetfilecon(pathname, newcon) < 0)
 				goto err;
 			updated = true;
 		}
@@ -766,8 +760,6 @@ static int restorecon_sb(const char *pathname, struct rest_flags *flags, bool fi
 out:
 	rc = 0;
 out1:
-	if (fd >= 0)
-		close(fd);
 	freecon(curcon);
 	freecon(newcon);
 	return rc;
@@ -865,6 +857,7 @@ static void *selinux_restorecon_thread(void *arg)
 	FTSENT *ftsent;
 	int error;
 	char ent_path[PATH_MAX];
+	struct stat ent_st;
 	bool first = false;
 
 	if (state->parallel)
@@ -962,11 +955,11 @@ loop_body:
 			/* fall through */
 		default:
 			strcpy(ent_path, ftsent->fts_path);
-
+			ent_st = *ftsent->fts_statp;
 			if (state->parallel)
 				pthread_mutex_unlock(&state->mutex);
 
-			error = restorecon_sb(ent_path, &state->flags,
+			error = restorecon_sb(ent_path, &ent_st, &state->flags,
 					      first);
 
 			if (state->parallel) {
@@ -1162,7 +1155,7 @@ static int selinux_restorecon_common(const char *pathname_orig,
 			goto cleanup;
 		}
 
-		error = restorecon_sb(pathname, &state.flags, true);
+		error = restorecon_sb(pathname, &sb, &state.flags, true);
 		goto cleanup;
 	}
 
