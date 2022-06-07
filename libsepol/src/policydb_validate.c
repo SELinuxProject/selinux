@@ -18,7 +18,7 @@ typedef struct validate {
 typedef struct map_arg {
 	validate_t *flavors;
 	sepol_handle_t *handle;
-	int mls;
+	policydb_t *policy;
 } map_arg_t;
 
 static int create_gap_ebitmap(char **val_to_name, uint32_t nprim, ebitmap_t *gaps)
@@ -571,7 +571,7 @@ static int validate_mls_range(mls_range_t *range, validate_t *sens, validate_t *
 	return -1;
 }
 
-static int validate_user_datum(sepol_handle_t *handle, user_datum_t *user, validate_t flavors[], int mls)
+static int validate_user_datum(sepol_handle_t *handle, user_datum_t *user, validate_t flavors[], policydb_t *p)
 {
 	if (validate_value(user->s.value, &flavors[SYM_USERS]))
 		goto bad;
@@ -581,9 +581,9 @@ static int validate_user_datum(sepol_handle_t *handle, user_datum_t *user, valid
 		goto bad;
 	if (validate_mls_semantic_level(&user->dfltlevel, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
 		goto bad;
-	if (mls && validate_mls_range(&user->exp_range, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+	if (p->mls && p->policy_type != POLICY_MOD && validate_mls_range(&user->exp_range, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
 		goto bad;
-	if (mls && validate_mls_level(&user->exp_dfltlevel, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
+	if (p->mls && p->policy_type != POLICY_MOD && validate_mls_level(&user->exp_dfltlevel, &flavors[SYM_LEVELS], &flavors[SYM_CATS]))
 		goto bad;
 	if (user->bounds && validate_value(user->bounds, &flavors[SYM_USERS]))
 		goto bad;
@@ -599,7 +599,7 @@ static int validate_user_datum_wrapper(__attribute__((unused)) hashtab_key_t k, 
 {
 	map_arg_t *margs = args;
 
-	return validate_user_datum(margs->handle, d, margs->flavors, margs->mls);
+	return validate_user_datum(margs->handle, d, margs->flavors, margs->policy);
 }
 
 static int validate_bool_datum(sepol_handle_t *handle, cond_bool_datum_t *boolean, validate_t flavors[])
@@ -689,7 +689,7 @@ static int validate_datum(__attribute__ ((unused))hashtab_key_t k, hashtab_datum
 
 static int validate_datum_array_entries(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
 {
-	map_arg_t margs = { flavors, handle, p->mls };
+	map_arg_t margs = { flavors, handle, p };
 
 	if (hashtab_map(p->p_commons.table, validate_common_datum_wrapper, &margs))
 		goto bad;
