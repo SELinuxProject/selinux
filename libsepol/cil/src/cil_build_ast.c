@@ -4619,7 +4619,6 @@ int cil_gen_genfscon(struct cil_db *db, struct cil_tree_node *parse_current, str
 			} else {
 				cil_log(CIL_ERR, "Invalid file type \"%s\"\n", file_type);
 			}
-			rc = SEPOL_ERR;
 			goto exit;
 		}
 		context_node = parse_current->next->next->next->next;
