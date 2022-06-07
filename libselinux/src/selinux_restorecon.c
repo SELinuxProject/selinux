@@ -744,7 +744,9 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 			selinux_log(SELINUX_INFO,
 				    "%s %s from %s to %s\n",
 				    updated ? "Relabeled" : "Would relabel",
-				    pathname, curcon, newcon);
+				    pathname,
+				    curcon ? curcon : "<no context>",
+				    newcon);
 
 		if (flags->syslog_changes && !flags->nochange) {
 			if (curcon)
