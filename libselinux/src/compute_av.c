@@ -40,8 +40,14 @@ int security_compute_av_flags_raw(const char * scon,
 	}
 
 	kclass = unmap_class(tclass);
-	snprintf(buf, len, "%s %s %hu %x", scon, tcon,
+
+	ret = snprintf(buf, len, "%s %s %hu %x", scon, tcon,
 		 kclass, unmap_perm(tclass, requested));
+	if (ret < 0 || (size_t)ret >= len) {
+		errno = EOVERFLOW;
+		ret = -1;
+		goto out2;
+	}
 
 	ret = write(fd, buf, strlen(buf));
 	if (ret < 0)

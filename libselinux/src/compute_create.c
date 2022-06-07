@@ -75,8 +75,15 @@ int security_compute_create_name_raw(const char * scon,
 		ret = -1;
 		goto out;
 	}
+
 	len = snprintf(buf, size, "%s %s %hu",
 		       scon, tcon, unmap_class(tclass));
+	if (len < 0 || (size_t)len >= size) {
+		errno = EOVERFLOW;
+		ret = -1;
+		goto out2;
+	}
+
 	if (objname &&
 	    object_name_encode(objname, buf + len, size - len) < 0) {
 		errno = ENAMETOOLONG;

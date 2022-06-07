@@ -38,7 +38,13 @@ int security_compute_user_raw(const char * scon,
 		ret = -1;
 		goto out;
 	}
-	snprintf(buf, size, "%s %s", scon, user);
+
+	ret = snprintf(buf, size, "%s %s", scon, user);
+	if (ret < 0 || (size_t)ret >= size) {
+		errno = EOVERFLOW;
+		ret = -1;
+		goto out2;
+	}
 
 	ret = write(fd, buf, strlen(buf));
 	if (ret < 0)

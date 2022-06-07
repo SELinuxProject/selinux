@@ -33,7 +33,11 @@ int security_canonicalize_context_raw(const char * con,
 		ret = -1;
 		goto out;
 	}
-	strncpy(buf, con, size);
+	if (strlcpy(buf, con, size) >= size) {
+		errno = EOVERFLOW;
+		ret = -1;
+		goto out2;
+	}
 
 	ret = write(fd, buf, strlen(buf) + 1);
 	if (ret < 0)
