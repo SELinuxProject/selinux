@@ -23,12 +23,12 @@ force a reload of policy
 .B \-B, \-\-build
 force a rebuild of policy (also reloads unless \-n is used)
 .TP
-.B \-\-rebuild-if-modules-changed
-Force a rebuild of the policy if any changes to module content are detected
-(by comparing with checksum from the last transaction).  One can use this
-instead of \-B to ensure that any changes to the module store done by an
-external tool (e.g. a package manager) are applied, while automatically
-skipping the rebuild if there are no new changes.
+.B \-\-refresh
+Like \-\-build, but reuses existing linked policy if no changes to module
+files are detected (by comparing with checksum from the last transaction).
+One can use this instead of \-B to ensure that any changes to the module
+store done by an external tool (e.g. a package manager) are applied, while
+automatically skipping the module re-linking if there are no module changes.
 .TP
 .B \-D, \-\-disable_dontaudit
 Temporarily remove dontaudits from policy.  Reverts whenever policy is rebuilt

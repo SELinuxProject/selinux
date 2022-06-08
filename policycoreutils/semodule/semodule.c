@@ -150,9 +150,12 @@ static void usage(char *progname)
 	printf("  -c, --cil extract module as cil. This only affects module extraction.\n");
 	printf("  -H, --hll extract module as hll. This only affects module extraction.\n");
 	printf("  -m, --checksum   print module checksum (SHA256).\n");
-	printf("      --rebuild-if-modules-changed\n"
-	       "                   force policy rebuild if module content changed since\n"
-	       "                   last rebuild (based on checksum)\n");
+	printf("      --refresh    like --build, but reuses existing linked policy if no\n"
+	       "                   changes to module files are detected (via checksum)\n");
+	printf("Deprecated options:\n");
+	printf("  -b,--base	   same as --install\n");
+	printf("  --rebuild-if-modules-changed\n"
+	       "                   same as --refresh\n");
 }
 
 /* Sets the global mode variable to new_mode, but only if no other
@@ -185,6 +188,7 @@ static void parse_command_line(int argc, char **argv)
 {
 	static struct option opts[] = {
 		{"rebuild-if-modules-changed", 0, NULL, '\0'},
+		{"refresh", 0, NULL, '\0'},
 		{"store", required_argument, NULL, 's'},
 		{"base", required_argument, NULL, 'b'},
 		{"help", 0, NULL, 'h'},
@@ -225,6 +229,9 @@ static void parse_command_line(int argc, char **argv)
 		case '\0':
 			switch(longind) {
 			case 0: /* --rebuild-if-modules-changed */
+				fprintf(stderr, "The --rebuild-if-modules-changed option is deprecated. Use --refresh instead.\n");
+				/* fallthrough */
+			case 1: /* --refresh */
 				check_ext_changes = 1;
 				break;
 			default:
