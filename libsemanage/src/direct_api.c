@@ -1437,13 +1437,15 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	 * Determine what else needs to be done.
 	 * We need to write the kernel policy if we are rebuilding
 	 * or if any other policy component that lives in the kernel
-	 * policy has been modified.
+	 * policy has been modified. We also want to force it when
+	 * check_ext_changes was specified as the various dbases may have
+	 * changes as well.
 	 * We need to install the policy files if any of the managed files
 	 * that live under /etc/selinux (kernel policy, seusers, file contexts)
 	 * will be modified.
 	 */
-	do_write_kernel = do_rebuild | ports_modified | ibpkeys_modified |
-		ibendports_modified |
+	do_write_kernel = do_rebuild | sh->check_ext_changes |
+		ports_modified | ibpkeys_modified | ibendports_modified |
 		bools->dtable->is_modified(bools->dbase) |
 		ifaces->dtable->is_modified(ifaces->dbase) |
 		nodes->dtable->is_modified(nodes->dbase) |

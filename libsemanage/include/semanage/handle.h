@@ -67,7 +67,7 @@ extern void semanage_set_reload(semanage_handle_t * handle, int do_reload);
 extern void semanage_set_rebuild(semanage_handle_t * handle, int do_rebuild);
 
 /* set whether to rebuild the policy on commit when potential changes
- * to module files since last rebuild are detected,
+ * to store files since last rebuild are detected,
  * 1 for yes (default), 0 for no */
 extern void semanage_set_check_ext_changes(semanage_handle_t * handle, int do_check);
 
