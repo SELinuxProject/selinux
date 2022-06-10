@@ -894,7 +894,8 @@ static void type_attribute_bounds_av(context_struct_t *scontext,
 	/* mask violated permissions */
 	avd->allowed &= ~masked;
 
-	*reason |= SEPOL_COMPUTEAV_BOUNDS;
+	if (reason)
+		*reason |= SEPOL_COMPUTEAV_BOUNDS;
 }
 
 /*
