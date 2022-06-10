@@ -851,6 +851,14 @@ int require_class(int pass)
 				free(perm_id);
 				return -1;
 			}
+			if (datum->permissions.nprim >= PERM_SYMTAB_SIZE) {
+				yyerror2("Class %s would have too many permissions "
+					 "to fit in an access vector with permission %s",
+					 policydbp->p_class_val_to_name[datum->s.value - 1],
+					 perm_id);
+				free(perm_id);
+				return -1;
+			}
 			allocated = 1;
 			if ((perm = malloc(sizeof(*perm))) == NULL) {
 				yyerror("Out of memory!");
