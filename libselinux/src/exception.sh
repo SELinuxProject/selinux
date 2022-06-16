@@ -28,10 +28,10 @@ FILE_LIST=(
     ../include/selinux/label.h
     ../include/selinux/restorecon.h
 )
-if ! cat "${FILE_LIST[@]}" | ${CC:-gcc} -x c -c -I../include -o temp.o - -aux-info temp.aux
+if ! cat "${FILE_LIST[@]}" | ${CC:-gcc} -x c -c -I../include -DNO_INCLUDE_ERROR -o temp.o - -aux-info temp.aux
 then
     # clang does not support -aux-info so fall back to gcc
-    cat "${FILE_LIST[@]}" | gcc -x c -c -I../include -o temp.o - -aux-info temp.aux
+    cat "${FILE_LIST[@]}" | gcc -x c -c -I../include -DNO_INCLUDE_ERROR -o temp.o - -aux-info temp.aux
 fi
 for i in `awk '/<stdin>.*extern int/ { print $6 }' temp.aux`; do except $i ; done 
 rm -f -- temp.aux temp.o

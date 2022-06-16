@@ -37,8 +37,8 @@ typedef struct security_id *security_id_t;
  * failure, with @errno set to %ENOMEM if insufficient memory was
  * available to make the copy, or %EINVAL if the input SID is invalid.
  */
-extern int avc_sid_to_context(security_id_t sid, char ** ctx);
-extern int avc_sid_to_context_raw(security_id_t sid, char ** ctx);
+extern int avc_sid_to_context(security_id_t sid, char ** ctx) selinux_nonnull((1,2)) selinux_nodiscard;
+extern int avc_sid_to_context_raw(security_id_t sid, char ** ctx) selinux_nonnull((1,2)) selinux_nodiscard;
 
 /**
  * avc_context_to_sid - get SID for context.
@@ -51,8 +51,8 @@ extern int avc_sid_to_context_raw(security_id_t sid, char ** ctx);
  * to the SID structure into the memory referenced by @sid, 
  * returning %0 on success or -%1 on error with @errno set.  
  */
-extern int avc_context_to_sid(const char * ctx, security_id_t * sid);
-extern int avc_context_to_sid_raw(const char * ctx, security_id_t * sid);
+extern int avc_context_to_sid(const char * ctx, security_id_t * sid) selinux_nonnull((1,2)) selinux_nodiscard;
+extern int avc_context_to_sid_raw(const char * ctx, security_id_t * sid) selinux_nonnull((1,2)) selinux_nodiscard;
 
 /**
  * sidget - increment SID reference counter.
@@ -64,11 +64,7 @@ extern int avc_context_to_sid_raw(const char * ctx, security_id_t * sid);
  * reference count).  Note that avc_context_to_sid() also
  * increments reference counts.
  */
-extern int sidget(security_id_t sid)
-#ifdef __GNUC__
-__attribute__ ((deprecated))
-#endif
-;
+extern int sidget(security_id_t sid) selinux_deprecated("SID refcounting has been removed");
 
 /**
  * sidput - decrement SID reference counter.
@@ -80,11 +76,7 @@ __attribute__ ((deprecated))
  * zero, the SID is invalid, and avc_context_to_sid() must
  * be called to obtain a new SID for the security context.
  */
-extern int sidput(security_id_t sid)
-#ifdef __GNUC__
-__attribute__ ((deprecated))
-#endif
-;
+extern int sidput(security_id_t sid) selinux_deprecated("SID refcounting has been removed");
 
 /**
  * avc_get_initial_sid - get SID for an initial kernel security identifier
@@ -95,7 +87,7 @@ __attribute__ ((deprecated))
  * @name using security_get_initial_context() and then call 
  * avc_context_to_sid() to get the corresponding SID.
  */
-extern int avc_get_initial_sid(const char *name, security_id_t * sid);
+extern int avc_get_initial_sid(const char *name, security_id_t * sid) selinux_nonnull((1,2)) selinux_nodiscard;
 
 /*
  * AVC entry
@@ -139,9 +131,7 @@ struct avc_memory_callback {
 struct avc_log_callback {
 	/* log the printf-style format and arguments. */
 	void
-#ifdef __GNUC__
-__attribute__ ((format(printf, 1, 2)))
-#endif
+	selinux_format((printf, 1, 2))
 	(*func_log) (const char *fmt, ...);
 	/* store a string representation of auditdata (corresponding
 	   to the given security class) into msgbuf. */
@@ -200,11 +190,7 @@ extern int avc_init(const char *msgprefix,
 		    const struct avc_memory_callback *mem_callbacks,
 		    const struct avc_log_callback *log_callbacks,
 		    const struct avc_thread_callback *thread_callbacks,
-		    const struct avc_lock_callback *lock_callbacks)
-#ifdef __GNUC__
-	__attribute__ ((deprecated("Use avc_open and selinux_set_callback")))
-#endif
-;
+		    const struct avc_lock_callback *lock_callbacks) selinux_nodiscard selinux_deprecated("Use avc_open(3) and selinux_set_callback(3)");
 
 /**
  * avc_open - Initialize the AVC.
@@ -215,7 +201,7 @@ extern int avc_init(const char *msgprefix,
  * is set to "avc" and any callbacks desired should be specified via
  * selinux_set_callback().  Available options are listed above.
  */
-extern int avc_open(struct selinux_opt *opts, unsigned nopts);
+extern int avc_open(struct selinux_opt *opts, unsigned nopts) selinux_access((read_only, 1, 2)) selinux_nodiscard;
 
 /**
  * avc_cleanup - Remove unused SIDs and AVC entries.
@@ -235,7 +221,7 @@ extern void avc_cleanup(void);
  * The SID mapping is not affected.  Return %0 on success, 
  * -%1 with @errno set on error.
  */
-extern int avc_reset(void);
+extern int avc_reset(void) selinux_nodiscard;
 
 /**
  * avc_destroy - Free all AVC structures.
@@ -273,7 +259,7 @@ extern int avc_has_perm_noaudit(security_id_t ssid,
 				security_id_t tsid,
 				security_class_t tclass,
 				access_vector_t requested,
-				struct avc_entry_ref *aeref, struct av_decision *avd);
+				struct avc_entry_ref *aeref, struct av_decision *avd) selinux_nonnull((1,2)) selinux_nodiscard;
 
 /**
  * avc_has_perm - Check permissions and perform any appropriate auditing.
@@ -295,7 +281,7 @@ extern int avc_has_perm_noaudit(security_id_t ssid,
  */
 extern int avc_has_perm(security_id_t ssid, security_id_t tsid,
 			security_class_t tclass, access_vector_t requested,
-			struct avc_entry_ref *aeref, void *auditdata);
+			struct avc_entry_ref *aeref, void *auditdata) selinux_nonnull((1,2)) selinux_nodiscard;
 
 /**
  * avc_audit - Audit the granting or denial of permissions.
@@ -318,7 +304,7 @@ extern int avc_has_perm(security_id_t ssid, security_id_t tsid,
  */
 extern void avc_audit(security_id_t ssid, security_id_t tsid,
 		      security_class_t tclass, access_vector_t requested,
-		      struct av_decision *avd, int result, void *auditdata);
+		      struct av_decision *avd, int result, void *auditdata) selinux_nonnull((1,2,5));
 
 /**
  * avc_compute_create - Compute SID for labeling a new object.
@@ -336,7 +322,7 @@ extern void avc_audit(security_id_t ssid, security_id_t tsid,
  */
 extern int avc_compute_create(security_id_t ssid,
 			      security_id_t tsid,
-			      security_class_t tclass, security_id_t * newsid);
+			      security_class_t tclass, security_id_t * newsid) selinux_nonnull((1,2,4)) selinux_nodiscard;
 
 /**
  * avc_compute_member - Compute SID for polyinstantation.
@@ -354,7 +340,7 @@ extern int avc_compute_create(security_id_t ssid,
  */
 extern int avc_compute_member(security_id_t ssid,
 			      security_id_t tsid,
-			      security_class_t tclass, security_id_t * newsid);
+			      security_class_t tclass, security_id_t * newsid) selinux_nonnull((1,2,4)) selinux_nodiscard;
 
 /* 
  * security event callback facility
@@ -392,7 +378,7 @@ extern int avc_add_callback(int (*callback)
 			      access_vector_t * out_retained),
 			    uint32_t events, security_id_t ssid,
 			    security_id_t tsid, security_class_t tclass,
-			    access_vector_t perms);
+			    access_vector_t perms) selinux_nonnull((1,3,4)) selinux_nodiscard;
 
 /*
  * AVC statistics 
@@ -423,7 +409,7 @@ struct avc_cache_stats {
  * avc_reset().  See the structure definition for
  * details.
  */
-extern void avc_cache_stats(struct avc_cache_stats *stats);
+extern void avc_cache_stats(struct avc_cache_stats *stats) selinux_nonnull((1));
 
 /**
  * avc_av_stats - log av table statistics.
@@ -446,7 +432,7 @@ extern void avc_sid_stats(void);
 /**
  * avc_netlink_open - Create a netlink socket and connect to the kernel.
  */
-extern int avc_netlink_open(int blocking);
+extern int avc_netlink_open(int blocking) selinux_nodiscard;
 
 /**
  * avc_netlink_loop - Wait for netlink messages from the kernel
@@ -464,7 +450,7 @@ extern void avc_netlink_close(void);
  * Allows the application to manage messages from the netlink socket in
  * its own main loop.
  */
-extern int avc_netlink_acquire_fd(void);
+extern int avc_netlink_acquire_fd(void) selinux_nodiscard;
 
 /**
  * avc_netlink_release_fd - Release netlink socket fd.
@@ -479,13 +465,13 @@ extern void avc_netlink_release_fd(void);
  * Called by the application when using avc_netlink_acquire_fd() to
  * process kernel netlink events.
  */
-extern int avc_netlink_check_nb(void);
+extern int avc_netlink_check_nb(void) selinux_nodiscard;
 
 /**
  * selinux_status_open - Open and map SELinux kernel status page
  *
  */
-extern int selinux_status_open(int fallback);
+extern int selinux_status_open(int fallback) selinux_nodiscard;
 
 /**
  * selinux_status_close - Unmap and close SELinux kernel status page
@@ -497,25 +483,25 @@ extern void selinux_status_close(void);
  * selinux_status_updated - Inform us whether the kernel status has been updated
  *
  */
-extern int selinux_status_updated(void);
+extern int selinux_status_updated(void) selinux_nodiscard;
 
 /**
  * selinux_status_getenforce - Get the enforce flag value
  *
  */
-extern int selinux_status_getenforce(void);
+extern int selinux_status_getenforce(void) selinux_nodiscard;
 
 /**
  * selinux_status_policyload - Get the number of policy reloaded
  *
  */
-extern int selinux_status_policyload(void);
+extern int selinux_status_policyload(void) selinux_nodiscard;
 
 /**
  * selinux_status_deny_unknown - Get the  behavior for undefined classes/permissions
  *
  */
-extern int selinux_status_deny_unknown(void);
+extern int selinux_status_deny_unknown(void) selinux_nodiscard;
 
 #ifdef __cplusplus
 }

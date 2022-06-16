@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <stdarg.h>
 
+#include <selinux/_private.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,7 +25,7 @@ extern "C" {
  * selinux_restorecon_set_sehandle(3).
  */
 extern int selinux_restorecon(const char *pathname,
-				    unsigned int restorecon_flags);
+				    unsigned int restorecon_flags) selinux_nonnull((1)) selinux_nodiscard;
 /**
  * selinux_restorecon_parallel - Relabel files, optionally use more threads.
  * @pathname: specifies file/directory to relabel.
@@ -36,7 +38,7 @@ extern int selinux_restorecon(const char *pathname,
  */
 extern int selinux_restorecon_parallel(const char *pathname,
 				       unsigned int restorecon_flags,
-				       size_t nthreads);
+				       size_t nthreads) selinux_nonnull((1)) selinux_nodiscard;
 /*
  * restorecon_flags options
  */
@@ -144,7 +146,7 @@ extern void selinux_restorecon_set_sehandle(struct selabel_handle *hndl);
  * Return value is the created handle on success or NULL with @errno set on
  * failure.
  */
-extern struct selabel_handle *selinux_restorecon_default_handle(void);
+extern struct selabel_handle *selinux_restorecon_default_handle(void) selinux_nodiscard;
 
 /**
  * selinux_restorecon_set_exclude_list - Add a list of directories that are
@@ -152,7 +154,7 @@ extern struct selabel_handle *selinux_restorecon_default_handle(void);
  * @exclude_list: containing a NULL terminated list of one or more
  *		  directories not to be relabeled.
  */
-extern void selinux_restorecon_set_exclude_list(const char **exclude_list);
+extern void selinux_restorecon_set_exclude_list(const char **exclude_list) selinux_nonnull((1));
 
 /**
  * selinux_restorecon_set_alt_rootpath - Use alternate rootpath.
@@ -160,7 +162,7 @@ extern void selinux_restorecon_set_exclude_list(const char **exclude_list);
  *
  * Return %0 on success, -%1 with @errno set on failure.
  */
-extern int selinux_restorecon_set_alt_rootpath(const char *alt_rootpath);
+extern int selinux_restorecon_set_alt_rootpath(const char *alt_rootpath) selinux_nonnull((1)) selinux_nodiscard;
 
 /**
  * selinux_restorecon_xattr - Read/remove security.sehash xattr entries.
@@ -196,7 +198,7 @@ struct dir_xattr {
 
 extern int selinux_restorecon_xattr(const char *pathname,
 				    unsigned int xattr_flags,
-				    struct dir_xattr ***xattr_list);
+				    struct dir_xattr ***xattr_list) selinux_nonnull((1,3)) selinux_nodiscard;
 
 /*
  * xattr_flags options
@@ -218,7 +220,7 @@ extern int selinux_restorecon_xattr(const char *pathname,
  * (i.e., with a zero return value), then this function returns the number of
  * errors ignored during the file tree walk.
  */
-extern long unsigned selinux_restorecon_get_skipped_errors(void);
+extern long unsigned selinux_restorecon_get_skipped_errors(void) selinux_nodiscard;
 
 #ifdef __cplusplus
 }

@@ -32,7 +32,7 @@ fi
 make -C .. clean distclean -j"$(nproc)"
 $SCAN_BUILD -analyze-headers -o "$OUTPUTDIR" make -C .. \
     DESTDIR="$DESTDIR" \
-    CFLAGS="-O2 -Wall -Wextra -D_FORTIFY_SOURCE=2 -D__CHECKER__ -I$DESTDIR/usr/include" \
+    CFLAGS="-O2 -Wall -Wextra -D_FORTIFY_SOURCE=2 -D__CHECKER__ -DNO_INCLUDE_ERROR -I$DESTDIR/usr/include" \
     -j"$(nproc)" \
     install install-pywrap install-rubywrap all test
 
