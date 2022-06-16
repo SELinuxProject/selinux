@@ -201,7 +201,7 @@ extern int avc_init(const char *msgprefix,
  * is set to "avc" and any callbacks desired should be specified via
  * selinux_set_callback().  Available options are listed above.
  */
-extern int avc_open(struct selinux_opt *opts, unsigned nopts) selinux_access((read_only, 1, 2)) selinux_nodiscard;
+extern int avc_open(const struct selinux_opt *opts, unsigned nopts) selinux_access((read_only, 1, 2)) selinux_nodiscard;
 
 /**
  * avc_cleanup - Remove unused SIDs and AVC entries.

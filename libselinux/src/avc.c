@@ -225,7 +225,7 @@ static int avc_init_internal(const char *prefix,
 	return rc;
 }
 
-int avc_open(struct selinux_opt *opts, unsigned nopts)
+int avc_open(const struct selinux_opt *opts, unsigned nopts)
 {
 	avc_setenforce = 0;
 
