@@ -1857,6 +1857,45 @@ static int scope_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 	return -1;
 }
 
+static int copy_segregate_attributes(link_state_t * state, const policy_module_t *module)
+{
+	const segregate_attributes_rule_t *src_sattr;
+	segregate_attributes_rule_t *list = NULL;
+
+	for (src_sattr = module->policy->segregate_attributes; src_sattr; src_sattr = src_sattr->next) {
+		segregate_attributes_rule_t *new_sattr;
+
+		new_sattr = malloc(sizeof(segregate_attributes_rule_t));
+		if (!new_sattr) {
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
+		segregate_attributes_rule_init(new_sattr);
+
+		if (ebitmap_convert(&src_sattr->attrs, &new_sattr->attrs, module->map[SYM_TYPES])) {
+			ebitmap_destroy(&new_sattr->attrs);
+			free(new_sattr);
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
+		if (list)
+			list->next = new_sattr;
+		else {
+			if (state->base->segregate_attributes) {
+				segregate_attributes_rule_t *s;
+				for (s = state->base->segregate_attributes; s->next; s = s->next) {}
+				s->next = new_sattr;
+			} else
+				state->base->segregate_attributes = new_sattr;
+		}
+		list = new_sattr;
+	}
+
+	return 0;
+}
+
 /* Copy a module over to a base, remapping all values within.  After
  * all identifiers and rules are done, copy the scoping information.
  * This is when it checks for duplicate declarations. */
@@ -1889,6 +1928,11 @@ static int copy_module(link_state_t * state, policy_module_t * module)
 		     state)) {
 			return -1;
 		}
+	}
+
+	ret = copy_segregate_attributes(state, module);
+	if (ret) {
+		return ret;
 	}
 
 	return 0;

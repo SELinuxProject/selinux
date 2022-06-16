@@ -192,6 +192,12 @@ typedef struct type_datum {
 	uint32_t bounds;	/* bounds type, if exist */
 } type_datum_t;
 
+/* Mutual exclusive attributes */
+typedef struct segregate_attributes_rule {
+	ebitmap_t attrs;	/* mutual exclusive attributes */
+	struct segregate_attributes_rule *next;
+} segregate_attributes_rule_t;
+
 /*
  * Properties of type_datum
  * available on the policy version >= (MOD_)POLICYDB_VERSION_BOUNDARY
@@ -605,6 +611,10 @@ typedef struct policydb {
 	   bitmaps.  Someday the 0 bit may be used for global permissive */
 	ebitmap_t permissive_map;
 
+	/* mutual exclusive attributes (not preserved in kernel policy).
+	   stored as linked list */
+	segregate_attributes_rule_t *segregate_attributes;
+
 	unsigned policyvers;
 
 	unsigned handle_unknown;
@@ -696,6 +706,8 @@ extern void level_datum_init(level_datum_t * x);
 extern void level_datum_destroy(level_datum_t * x);
 extern void cat_datum_init(cat_datum_t * x);
 extern void cat_datum_destroy(cat_datum_t * x);
+extern void segregate_attributes_rule_init(segregate_attributes_rule_t * x);
+extern void segregate_attributes_rule_destroy(segregate_attributes_rule_t * x);
 extern int check_assertion(policydb_t *p, avrule_t *avrule);
 extern int check_assertions(sepol_handle_t * handle,
 			    policydb_t * p, avrule_t * avrules);
@@ -783,9 +795,10 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_INFINIBAND		19
 #define MOD_POLICYDB_VERSION_GLBLUB		20
 #define MOD_POLICYDB_VERSION_SELF_TYPETRANS	21
+#define MOD_POLICYDB_VERSION_SEGREGATE_ATTRIBUTES	22
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_SELF_TYPETRANS
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_SEGREGATE_ATTRIBUTES
 
 #define POLICYDB_CONFIG_MLS    1
 
