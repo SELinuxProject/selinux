@@ -279,8 +279,6 @@ int server(int master_fd, const char *watch_file) {
 	if (watch_list_isempty())
 		goto end;
 
-	set_matchpathcon_flags(MATCHPATHCON_NOTRANS);
-
 	GIOChannel *c = g_io_channel_unix_new(master_fd);
 
 	g_io_add_watch_full(c,
