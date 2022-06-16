@@ -15,7 +15,7 @@ static __attribute__ ((__noreturn__)) void rollback(int argc, char **argv)
 	int i;
 
 	for (i = 1; i < argc; i++)
-		security_set_boolean(argv[i],
+		(void)! security_set_boolean(argv[i],
 				     security_get_boolean_active(argv[i]));
 	exit(1);
 }

@@ -757,7 +757,7 @@ int avc_has_perm_noaudit(security_id_t ssid,
 		avd_init(avd);
 
 	if (!avc_using_threads && !avc_app_main_loop) {
-		(void) selinux_status_updated();
+		(void)! selinux_status_updated();
 	}
 
 	if (!aeref) {
