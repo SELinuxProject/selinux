@@ -534,8 +534,6 @@ if __name__ == '__main__':
         error_exit(error.args[0])
     except KeyError as error:
         error_exit(_("Invalid value %s") % error.args[0])
-    except IOError as error:
-        error_exit(error)
     except KeyboardInterrupt:
         rc = 0
 

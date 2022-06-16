@@ -971,8 +971,8 @@ def do_parser():
         devnull = os.open(os.devnull, os.O_WRONLY)
         os.dup2(devnull, sys.stdout.fileno())
         sys.exit(1)
-    except IOError as e:
-        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, str(e)))
+    except OSError as e:
+        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, e.args[1]))
         sys.exit(1)
     except KeyboardInterrupt:
         sys.exit(0)
@@ -981,9 +981,6 @@ def do_parser():
         sys.exit(1)
     except KeyError as e:
         sys.stderr.write("%s: %s\n" % (e.__class__.__name__, e.args[0]))
-        sys.exit(1)
-    except OSError as e:
-        sys.stderr.write("%s: %s\n" % (e.__class__.__name__, e.args[1]))
         sys.exit(1)
     except RuntimeError as e:
         sys.stderr.write("%s: %s\n" % (e.__class__.__name__, e.args[0]))
