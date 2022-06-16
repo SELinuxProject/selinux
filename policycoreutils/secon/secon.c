@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-
+#include <errno.h>
 #include <string.h>
 
 #define xstreq(x, y) !strcmp(x, y)
@@ -631,7 +631,10 @@ static void disp_con(const char *scon_raw)
 	char *color_str = NULL;
 	struct context_color_t color = { .valid = 0 };
 
-	selinux_raw_to_trans_context(scon_raw, &scon_trans);
+	if (selinux_raw_to_trans_context(scon_raw, &scon_trans) < 0)
+		errx(EXIT_FAILURE, "Couldn't convert context %s:  %s",
+		     scon_raw, strerror(errno));
+
 	if (opts->disp_raw)
 		scon = scon_raw;
 	else
