@@ -1219,6 +1219,72 @@ exit:
 	return rc;
 }
 
+int define_segregate_attributes(void)
+{
+	char *id = NULL;
+	segregate_attributes_rule_t *sattr = NULL;
+	int rc = -1;
+
+	if (pass == 1) {
+		while ((id = queue_remove(id_queue)))
+			free(id);
+		return 0;
+	}
+
+	sattr = malloc(sizeof(segregate_attributes_rule_t));
+	if (!sattr) {
+		yyerror("Out of memory!");
+		goto exit;
+	}
+
+	ebitmap_init(&sattr->attrs);
+
+	while ((id = queue_remove(id_queue))) {
+		const type_datum_t *attr;
+
+		if (!is_id_in_scope(SYM_TYPES, id)) {
+			yyerror2("attribute %s is not within scope", id);
+			goto exit;
+		}
+
+		attr = hashtab_search(policydbp->p_types.table, id);
+		if (!attr) {
+			yyerror2("attribute %s is not declared", id);
+			goto exit;
+		}
+
+		if (attr->flavor != TYPE_ATTRIB) {
+			yyerror2("%s is a type, not an attribute", id);
+			goto exit;
+		}
+
+		if (ebitmap_get_bit(&sattr->attrs, attr->s.value - 1)) {
+			yyerror2("attribute %s used multiple times", id);
+			goto exit;
+		}
+
+		if (ebitmap_set_bit(&sattr->attrs, attr->s.value - 1, TRUE)) {
+			yyerror("Out of memory!");
+			goto exit;
+		}
+
+		free(id);
+	}
+
+	sattr->next = policydbp->segregate_attributes;
+	policydbp->segregate_attributes = sattr;
+
+	sattr = NULL;
+	rc = 0;
+exit:
+	if (sattr) {
+		ebitmap_destroy(&sattr->attrs);
+		free(sattr);
+	}
+	free(id);
+	return rc;
+}
+
 static int add_aliases_to_type(type_datum_t * type)
 {
 	char *id;
