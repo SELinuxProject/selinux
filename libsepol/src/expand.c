@@ -56,7 +56,7 @@ static void expand_state_init(expand_state_t * state)
 	memset(state, 0, sizeof(expand_state_t));
 }
 
-static int map_ebitmap(ebitmap_t * src, ebitmap_t * dst, uint32_t * map)
+static int map_ebitmap(const ebitmap_t * src, ebitmap_t * dst, const uint32_t * map)
 {
 	unsigned int i;
 	ebitmap_node_t *tnode;
@@ -2341,6 +2341,45 @@ static int genfs_copy(expand_state_t * state)
 	return 0;
 }
 
+static int disjoint_attributes_copy(expand_state_t *state)
+{
+	const disjoint_attributes_rule_t *old;
+	disjoint_attributes_rule_t *list = NULL;
+
+	for (old = state->base->disjoint_attributes; old; old = old->next) {
+		disjoint_attributes_rule_t *new;
+
+		new = malloc(sizeof(disjoint_attributes_rule_t));
+		if (!new) {
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
+		disjoint_attributes_rule_init(new);
+
+		if (map_ebitmap(&old->attrs, &new->attrs, state->typemap)) {
+			ERR(state->handle, "out of memory");
+			ebitmap_destroy(&new->attrs);
+			free(new);
+			return -1;
+		}
+
+		if (list)
+			list->next = new;
+		else {
+			if (state->out->disjoint_attributes) {
+				disjoint_attributes_rule_t *d;
+				for (d = state->out->disjoint_attributes; d->next; d = d->next) {}
+				d->next = new;
+			} else
+				state->out->disjoint_attributes = new;
+		}
+		list = new;
+	}
+
+	return 0;
+}
+
 static int type_attr_map(hashtab_key_t key
 			 __attribute__ ((unused)), hashtab_datum_t datum,
 			 void *ptr)
@@ -3175,6 +3214,10 @@ int expand_module(sepol_handle_t * handle,
 
 	/* copy genfs */
 	if (genfs_copy(&state))
+		goto cleanup;
+
+	/* copy disjoint attributes rules */
+	if (disjoint_attributes_copy(&state))
 		goto cleanup;
 
 	/* Build the type<->attribute maps and remove attributes. */

@@ -58,9 +58,9 @@ struct policy_data {
 static int avrule_write_list(policydb_t *p,
 			     avrule_t * avrules, struct policy_file *fp);
 
-static int ebitmap_write(ebitmap_t * e, struct policy_file *fp)
+static int ebitmap_write(const ebitmap_t * e, struct policy_file *fp)
 {
-	ebitmap_node_t *n;
+	const ebitmap_node_t *n;
 	uint32_t buf[32], bit, count;
 	uint64_t map;
 	size_t items;
@@ -2191,6 +2191,30 @@ static int role_attr_uncount(hashtab_key_t key __attribute__ ((unused)),
 	return 0;
 }
 
+static int disjoint_attributes_write(const policydb_t *p, struct policy_file *fp)
+{
+	const disjoint_attributes_rule_t *dattr;
+	size_t items;
+	uint32_t buf, count = 0;
+
+	for (dattr = p->disjoint_attributes; dattr; dattr = dattr->next) {
+		if (__builtin_add_overflow(count, 1, &count))
+			return POLICYDB_ERROR;
+	}
+
+	buf = cpu_to_le32(count);
+	items = put_entry(&buf, sizeof(uint32_t), 1, fp);
+	if (items != 1)
+		return POLICYDB_ERROR;
+
+	for (dattr = p->disjoint_attributes; dattr; dattr = dattr->next) {
+		if (ebitmap_write(&dattr->attrs, fp))
+			return POLICYDB_ERROR;
+	}
+
+	return POLICYDB_SUCCESS;
+}
+
 /*
  * Write the configuration data in a policy database
  * structure to a policy database binary representation
@@ -2411,6 +2435,12 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 			if (ebitmap_write(&p->type_attr_map[i], fp) == -1)
 				return POLICYDB_ERROR;
 		}
+	}
+
+	if (p->policy_type != POLICY_KERN &&
+	    p->policyvers >= MOD_POLICYDB_VERSION_DISJOINT_ATTRIBUTES) {
+		if (disjoint_attributes_write(p, fp))
+			return POLICYDB_ERROR;
 	}
 
 	return POLICYDB_SUCCESS;

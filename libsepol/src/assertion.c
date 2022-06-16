@@ -36,7 +36,7 @@ struct avtab_match_args {
 	unsigned long errors;
 };
 
-static const char* policy_name(policydb_t *p) {
+static const char* policy_name(const policydb_t *p) {
 	const char *policy_file = "policy.conf";
 	if (p->name) {
 		policy_file = p->name;
@@ -146,7 +146,7 @@ static void extended_permissions_violated(avtab_extended_perms_t *result,
 }
 
 /* Same scenarios of interest as check_assertion_extended_permissions */
-static int report_assertion_extended_permissions(sepol_handle_t *handle,
+static unsigned long report_assertion_extended_permissions(sepol_handle_t *handle,
 				policydb_t *p, const avrule_t *avrule,
 				unsigned int stype, unsigned int ttype,
 				const class_perm_node_t *curperm, uint32_t perms,
@@ -162,7 +162,7 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 	unsigned int i, j;
 	int rc;
 	int found_xperm = 0;
-	int errors = 0;
+	unsigned long errors = 0;
 
 	memcpy(&tmp_key, k, sizeof(avtab_key_t));
 	tmp_key.specified = AVTAB_XPERMS_ALLOWED;
@@ -319,7 +319,7 @@ exit:
 	return rc;
 }
 
-static int report_assertion_failures(sepol_handle_t *handle, policydb_t *p, avrule_t *avrule)
+static long int report_assertion_failures(sepol_handle_t *handle, policydb_t *p, avrule_t *avrule)
 {
 	int rc;
 	struct avtab_match_args args;
@@ -640,19 +640,51 @@ int check_assertion(policydb_t *p, avrule_t *avrule)
 	return rc;
 }
 
+static long int check_disjoint_attributes(sepol_handle_t *handle, const policydb_t *p)
+{
+	const disjoint_attributes_rule_t *dattr;
+	unsigned long errors = 0;
+
+	for (dattr = p->disjoint_attributes; dattr; dattr = dattr->next) {
+		ebitmap_node_t *first_node;
+		unsigned int first_bit;
+
+		ebitmap_for_each_positive_bit(&dattr->attrs, first_node, first_bit) {
+			ebitmap_node_t *second_node;
+			unsigned int second_bit;
+
+			ebitmap_for_each_positive_bit_after(&dattr->attrs, second_node, second_bit, first_node, first_bit) {
+				ebitmap_t attr_union;
+				ebitmap_node_t *type_node;
+				unsigned int type_bit;
+				int rc;
+
+				rc = ebitmap_and(&attr_union, &p->attr_type_map[first_bit], &p->attr_type_map[second_bit]);
+				if (rc < 0)
+					return rc;
+
+				ebitmap_for_each_positive_bit(&attr_union, type_node, type_bit) {
+					ERR(handle, "Disjoint Attributes Rule violation, type %s associated with attributes %s and %s",
+					            p->p_type_val_to_name[type_bit],
+					            p->p_type_val_to_name[first_bit],
+					            p->p_type_val_to_name[second_bit]);
+					errors++;
+				}
+
+				ebitmap_destroy(&attr_union);
+			}
+		}
+	}
+
+	return errors;
+}
+
 int check_assertions(sepol_handle_t * handle, policydb_t * p,
 		     avrule_t * avrules)
 {
-	int rc;
+	long int rc;
 	avrule_t *a;
 	unsigned long errors = 0;
-
-	if (!avrules) {
-		/* Since assertions are stored in avrules, if it is NULL
-		   there won't be any to check. This also prevents an invalid
-		   free if the avtabs are never initialized */
-		return 0;
-	}
 
 	for (a = avrules; a != NULL; a = a->next) {
 		if (!(a->specified & (AVRULE_NEVERALLOW | AVRULE_XPERMS_NEVERALLOW)))
@@ -674,6 +706,16 @@ int check_assertions(sepol_handle_t * handle, policydb_t * p,
 
 	if (errors)
 		ERR(handle, "%lu neverallow failures occurred", errors);
+
+	rc = check_disjoint_attributes(handle, p);
+	if (rc < 0) {
+		ERR(handle, "Error occurred while checking Disjoint Attributes Rules");
+		return -1;
+	}
+	if (rc) {
+		ERR(handle, "%ld Disjoint Attributes Rule failures occurred", rc);
+		errors += rc;
+	}
 
 	return errors ? -1 : 0;
 }
