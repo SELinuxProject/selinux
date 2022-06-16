@@ -249,7 +249,8 @@ int init_colors(void) {
 	char *buffer = NULL;
 	int line = 0;
 
-	getcon(&my_context);
+	if (getcon(&my_context) < 0)
+		return 1;
 
 	cfg = fopen(selinux_colors_path(), "r");
 	if (!cfg) return 1;
