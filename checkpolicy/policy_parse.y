@@ -102,6 +102,7 @@ typedef int (* require_func_t)(int pass);
 %token ALIAS
 %token ATTRIBUTE
 %token EXPANDATTRIBUTE
+%token DISJOINTATTRIBUTES
 %token BOOL
 %token TUNABLE
 %token IF
@@ -318,6 +319,7 @@ rbac_decl		: attribute_role_def
 			;
 te_decl			: attribute_def
                         | expandattribute_def
+                        | disjointattributes_def
                         | type_def
                         | typealias_def
                         | typeattribute_def
@@ -334,6 +336,9 @@ attribute_def           : ATTRIBUTE identifier ';'
                         ;
 expandattribute_def     : EXPANDATTRIBUTE names bool_val ';'
                         { if (expand_attrib()) YYABORT;}
+                        ;
+disjointattributes_def : DISJOINTATTRIBUTES identifier ',' id_comma_list ';'
+                        { if (define_disjoint_attributes()) return -1;}
                         ;
 type_def		: TYPE identifier alias_def opt_attr_list ';'
                         {if (define_type(1)) YYABORT;}
