@@ -38,9 +38,10 @@ try:
         kwargs['unicode'] = True
     t = gettext.translation(PROGNAME,
                     localedir="/usr/share/locale",
-                    **kwargs)
+                    **kwargs,
+                    fallback=True)
     _ = t.gettext
-except ImportError:
+except:
     try:
         import builtins
         builtins.__dict__['_'] = str

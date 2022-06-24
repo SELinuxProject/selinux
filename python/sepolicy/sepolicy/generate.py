@@ -56,7 +56,8 @@ try:
         kwargs['unicode'] = True
     t = gettext.translation(PROGNAME,
                     localedir="/usr/share/locale",
-                    **kwargs)
+                    **kwargs,
+                    fallback=True)
     _ = t.gettext
 except:
     try:

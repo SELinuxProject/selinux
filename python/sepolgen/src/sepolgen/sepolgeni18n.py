@@ -19,7 +19,9 @@
 
 try: 
     import gettext
-    t = gettext.translation( 'selinux-python' )
+    t = gettext.translation("selinux-python",
+                        localedir="/usr/share/locale",
+                        fallback=True)
     _ = t.gettext
 except:
     def _(str):
