@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 	if (reason & SEPOL_COMPUTEAV_RBAC) {
 		if (i > 0)
 			printf(", ");
-		printf("transition-constraint");
+		printf("role-transition");
 		i++;
 	}
 	if (reason & SEPOL_COMPUTEAV_BOUNDS) {
