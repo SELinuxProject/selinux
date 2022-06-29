@@ -394,7 +394,7 @@ static int constraint_expr_eval_reason(context_struct_t *scontext,
 	role_datum_t *r1, *r2;
 	mls_level_t *l1, *l2;
 	constraint_expr_t *e;
-	int s[CEXPR_MAXDEPTH];
+	int s[CEXPR_MAXDEPTH] = {};
 	int sp = -1;
 	char tmp_buf[128];
 
