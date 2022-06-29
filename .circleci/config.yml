@@ -19,6 +19,7 @@ jobs:
         name: Setup environment variables
         command: |
           echo 'export DESTDIR=$HOME/destdir' >> "$BASH_ENV"
+          echo 'export IS_CIRCLE_CI=1' >> "$BASH_ENV"
 
     # Download and install refpolicy headers for sepolgen tests
     - run:

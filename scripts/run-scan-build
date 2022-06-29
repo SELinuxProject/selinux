@@ -24,7 +24,7 @@ export PATH="$DESTDIR/usr/sbin:$DESTDIR/usr/bin:$DESTDIR/sbin:$DESTDIR/bin:$PATH
 export PYTHONPATH="$DESTDIR$(${PYTHON:-python3} -c "from distutils.sysconfig import *;print(get_python_lib(prefix='/usr'))")"
 export RUBYLIB="$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
 
-if [ -f /etc/debian_version ]; then
+if [ -f /etc/debian_version ] && [ -z "${IS_CIRCLE_CI:-}" ] ; then
     export PYTHON_SETUP_ARGS='--install-layout=deb'
 fi
 
