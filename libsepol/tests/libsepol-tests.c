@@ -25,6 +25,7 @@
 #include "test-deps.h"
 #include "test-downgrade.h"
 #include "test-neverallow.h"
+#include "test-segregateattributes.h"
 
 #include <CUnit/Basic.h>
 #include <CUnit/Console.h>
@@ -73,6 +74,7 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(deps);
 	DECLARE_SUITE(downgrade);
 	DECLARE_SUITE(neverallow);
+	DECLARE_SUITE(sattrs);
 
 	if (verbose)
 		CU_basic_set_mode(CU_BRM_VERBOSE);
