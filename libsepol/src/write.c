@@ -1097,16 +1097,18 @@ static int class_write(hashtab_key_t key, hashtab_datum_t datum, void *ptr)
 	     p->policyvers >= POLICYDB_VERSION_NEW_OBJECT_DEFAULTS) ||
 	    (p->policy_type == POLICY_BASE &&
 	     p->policyvers >= MOD_POLICYDB_VERSION_NEW_OBJECT_DEFAULTS)) {
+		char default_range = cladatum->default_range;
+
 		buf[0] = cpu_to_le32(cladatum->default_user);
 		buf[1] = cpu_to_le32(cladatum->default_role);
-		if (!glblub_version && cladatum->default_range == DEFAULT_GLBLUB) {
+		if (!glblub_version && default_range == DEFAULT_GLBLUB) {
 			WARN(fp->handle,
-                             "class %s default_range set to GLBLUB but policy version is %d (%d required), discarding",
-                             p->p_class_val_to_name[cladatum->s.value - 1], p->policyvers,
-                             p->policy_type == POLICY_KERN? POLICYDB_VERSION_GLBLUB:MOD_POLICYDB_VERSION_GLBLUB);
-                        cladatum->default_range = 0;
-                }
-		buf[2] = cpu_to_le32(cladatum->default_range);
+			     "class %s default_range set to GLBLUB but policy version is %d (%d required), discarding",
+			     p->p_class_val_to_name[cladatum->s.value - 1], p->policyvers,
+			     p->policy_type == POLICY_KERN? POLICYDB_VERSION_GLBLUB:MOD_POLICYDB_VERSION_GLBLUB);
+			default_range = 0;
+		}
+		buf[2] = cpu_to_le32(default_range);
 		items = put_entry(buf, sizeof(uint32_t), 3, fp);
 		if (items != 3)
 			return POLICYDB_ERROR;
