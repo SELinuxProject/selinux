@@ -320,7 +320,7 @@ static int display_type_callback(hashtab_key_t key, hashtab_datum_t datum, void 
 	unsigned int i, first_attrib = 1;
 
 	type = (type_datum_t *) datum;
-	fp = (FILE *) data;
+	fp = data;
 
 	if (type->primary) {
 		display_id(&policydb, fp, SYM_TYPES, type->s.value - 1, "");
