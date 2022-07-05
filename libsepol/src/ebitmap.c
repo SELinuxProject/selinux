@@ -101,14 +101,50 @@ int ebitmap_xor(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 
 int ebitmap_not(ebitmap_t *dst, const ebitmap_t *e1, unsigned int maxbit)
 {
-	unsigned int i;
+	const ebitmap_node_t *n;
+	ebitmap_node_t *new, *prev = NULL;
+	uint32_t startbit, cur_startbit;
+	MAPTYPE map;
+
 	ebitmap_init(dst);
-	for (i=0; i < maxbit; i++) {
-		int val = ebitmap_get_bit(e1, i);
-		int rc = ebitmap_set_bit(dst, i, !val);
-		if (rc < 0)
-			return rc;
+
+	n = e1->node;
+	for (cur_startbit = 0; cur_startbit < maxbit; cur_startbit += MAPSIZE) {
+		if (n && n->startbit == cur_startbit) {
+			startbit = n->startbit;
+			map = ~n->map;
+
+			n = n->next;
+		} else {
+			startbit = cur_startbit;
+			map = ~((MAPTYPE) 0);
+		}
+
+		if (maxbit - cur_startbit < MAPSIZE)
+			map &= (((MAPTYPE)1) << (maxbit - cur_startbit)) - 1;
+
+		if (map != 0) {
+			new = malloc(sizeof(ebitmap_node_t));
+			if (!new) {
+				ebitmap_destroy(dst);
+				return -ENOMEM;
+			}
+
+			new->startbit = startbit;
+			new->map = map;
+			new->next = NULL;
+
+			if (prev)
+				prev->next = new;
+			else
+				dst->node = new;
+			prev = new;
+		}
 	}
+
+	if (prev)
+		dst->highbit = prev->startbit + MAPSIZE;
+
 	return 0;
 }
 
