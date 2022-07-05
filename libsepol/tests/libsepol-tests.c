@@ -19,6 +19,7 @@
  */
 
 #include "test-cond.h"
+#include "test-ebitmap.h"
 #include "test-linker.h"
 #include "test-expander.h"
 #include "test-deps.h"
@@ -64,6 +65,7 @@ static bool do_tests(int interactive, int verbose)
 	if (CUE_SUCCESS != CU_initialize_registry())
 		return CU_get_error();
 
+	DECLARE_SUITE(ebitmap);
 	DECLARE_SUITE(cond);
 	DECLARE_SUITE(linker);
 	DECLARE_SUITE(expander);
