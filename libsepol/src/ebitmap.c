@@ -74,15 +74,44 @@ int ebitmap_union(ebitmap_t * dst, const ebitmap_t * e1)
 
 int ebitmap_and(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 {
-	unsigned int i, length = min(ebitmap_length(e1), ebitmap_length(e2));
+	const ebitmap_node_t *n1, *n2;
+	ebitmap_node_t *new, *prev = NULL;
+
 	ebitmap_init(dst);
-	for (i=0; i < length; i++) {
-		if (ebitmap_get_bit(e1, i) && ebitmap_get_bit(e2, i)) {
-			int rc = ebitmap_set_bit(dst, i, 1);
-			if (rc < 0)
-				return rc;
+
+	n1 = e1->node;
+	n2 = e2->node;
+	while (n1 && n2) {
+		if (n1->startbit == n2->startbit) {
+			if (n1->map & n2->map) {
+				new = malloc(sizeof(ebitmap_node_t));
+				if (!new) {
+					ebitmap_destroy(dst);
+					return -ENOMEM;
+				}
+				new->startbit = n1->startbit;
+				new->map = n1->map & n2->map;
+				new->next = NULL;
+
+				if (prev)
+					prev->next = new;
+				else
+					dst->node = new;
+				prev = new;
+			}
+
+			n1 = n1->next;
+			n2 = n2->next;
+		} else if (n1->startbit > n2->startbit) {
+			n2 = n2->next;
+		} else {
+			n1 = n1->next;
 		}
 	}
+
+	if (prev)
+		dst->highbit = prev->startbit + MAPSIZE;
+
 	return 0;
 }
 
