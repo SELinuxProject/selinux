@@ -117,14 +117,51 @@ int ebitmap_and(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 
 int ebitmap_xor(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 {
-	unsigned int i, length = max(ebitmap_length(e1), ebitmap_length(e2));
+	const ebitmap_node_t *n1, *n2;
+	ebitmap_node_t *new, *prev = NULL;
+	uint32_t startbit;
+	MAPTYPE map;
+
 	ebitmap_init(dst);
-	for (i=0; i < length; i++) {
-		int val = ebitmap_get_bit(e1, i) ^ ebitmap_get_bit(e2, i);
-		int rc = ebitmap_set_bit(dst, i, val);
-		if (rc < 0)
-			return rc;
+
+	n1 = e1->node;
+	n2 = e2->node;
+	while (n1 || n2) {
+		if (n1 && n2 && n1->startbit == n2->startbit) {
+			startbit = n1->startbit;
+			map = n1->map ^ n2->map;
+			n1 = n1->next;
+			n2 = n2->next;
+		} else if (!n2 || (n1 && n1->startbit < n2->startbit)) {
+			startbit = n1->startbit;
+			map = n1->map;
+			n1 = n1->next;
+		} else {
+			startbit = n2->startbit;
+			map = n2->map;
+			n2 = n2->next;
+		}
+
+		if (map != 0) {
+			new = malloc(sizeof(ebitmap_node_t));
+			if (!new) {
+				ebitmap_destroy(dst);
+				return -ENOMEM;
+			}
+			new->startbit = startbit;
+			new->map = map;
+			new->next = NULL;
+			if (prev)
+				prev->next = new;
+			else
+				dst->node = new;
+			prev = new;
+		}
 	}
+
+	if (prev)
+		dst->highbit = prev->startbit + MAPSIZE;
+
 	return 0;
 }
 
