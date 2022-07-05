@@ -253,6 +253,37 @@ static void test_ebitmap_set_and_get(void)
 	ebitmap_destroy(&e);
 }
 
+static void test_ebitmap_init_range(void)
+{
+	ebitmap_t e1, e2, e3, e4, e5, e6;
+
+	CU_ASSERT_EQUAL(ebitmap_init_range(&e1, 0, 0), 0);
+	CU_ASSERT_EQUAL(ebitmap_highest_set_bit(&e1), 0);
+	CU_ASSERT_EQUAL(ebitmap_cardinality(&e1), 1);
+
+	CU_ASSERT_EQUAL(ebitmap_init_range(&e2, 0, 5), 0);
+	CU_ASSERT_EQUAL(ebitmap_highest_set_bit(&e2), 5);
+	CU_ASSERT_EQUAL(ebitmap_cardinality(&e2), 6);
+
+	CU_ASSERT_EQUAL(ebitmap_init_range(&e3, 20, 100), 0);
+	CU_ASSERT_EQUAL(ebitmap_highest_set_bit(&e3), 100);
+	CU_ASSERT_EQUAL(ebitmap_cardinality(&e3), 81);
+
+	CU_ASSERT_EQUAL(ebitmap_init_range(&e4, 100, 400), 0);
+	CU_ASSERT_EQUAL(ebitmap_highest_set_bit(&e4), 400);
+	CU_ASSERT_EQUAL(ebitmap_cardinality(&e4), 301);
+
+	CU_ASSERT_EQUAL(ebitmap_init_range(&e5, 10, 5), -EINVAL);
+	CU_ASSERT_EQUAL(ebitmap_init_range(&e6, 0, UINT32_MAX), -EOVERFLOW);
+
+	ebitmap_destroy(&e6);
+	ebitmap_destroy(&e5);
+	ebitmap_destroy(&e4);
+	ebitmap_destroy(&e3);
+	ebitmap_destroy(&e2);
+	ebitmap_destroy(&e1);
+}
+
 static void test_ebitmap_or(void)
 {
 	ebitmap_t e1, e2, e3, e4;
@@ -1038,6 +1069,7 @@ int ebitmap_add_tests(CU_pSuite suite)
 	ADD_TEST(ebitmap_init_destroy);
 	ADD_TEST(ebitmap_cmp);
 	ADD_TEST(ebitmap_set_and_get);
+	ADD_TEST(ebitmap_init_range);
 	ADD_TEST(ebitmap_or);
 	ADD_TEST(ebitmap_and);
 	ADD_TEST(ebitmap_xor);
