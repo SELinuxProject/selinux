@@ -26,7 +26,10 @@ static ssize_t fgetxattr_wrapper(int fd, const char *name, void *value, size_t s
 
 	snprintf(buf, sizeof(buf), "/proc/self/fd/%d", fd);
 	errno = saved_errno;
-	return getxattr(buf, name, value, size);
+	ret = getxattr(buf, name, value, size);
+	if (ret < 0 && errno == ENOENT)
+		errno = EBADF;
+	return ret;
 }
 
 int fgetfilecon_raw(int fd, char ** context)

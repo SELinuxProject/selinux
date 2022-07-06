@@ -25,7 +25,10 @@ static int fsetxattr_wrapper(int fd, const char* name, const void* value, size_t
 
 	snprintf(buf, sizeof(buf), "/proc/self/fd/%d", fd);
 	errno = saved_errno;
-	return setxattr(buf, name, value, size, flags);
+	rc = setxattr(buf, name, value, size, flags);
+	if (rc < 0 && errno == ENOENT)
+		errno = EBADF;
+	return rc;
 }
 
 int fsetfilecon_raw(int fd, const char * context)
