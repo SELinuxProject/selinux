@@ -1,0 +1,60 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ matrix.language }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      actions: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp', 'python' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -qqy --no-install-recommends \
+            bison \
+            flex \
+            gawk \
+            gettext \
+            libaudit-dev \
+            libcap-dev \
+            libcap-ng-dev \
+            libcunit1-dev \
+            libdbus-glib-1-dev \
+            libpcre2-dev \
+            python3-dev \
+            swig \
+            xmlto
+
+    - run: make -j$(nproc) DESTDIR="$(pwd)/destdir" install
+    - if: ${{ matrix.language == 'python' }}
+      run: make -j$(nproc) DESTDIR="$(pwd)/destdir" install-pywrap
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
