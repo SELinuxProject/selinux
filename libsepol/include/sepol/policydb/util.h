@@ -23,6 +23,8 @@
 #ifndef __SEPOL_UTIL_H__
 #define __SEPOL_UTIL_H__
 
+#include <sepol/policydb/policydb.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
