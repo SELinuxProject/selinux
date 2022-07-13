@@ -18,7 +18,6 @@
 #ifndef _SEPOL_POLICYDB_CONSTRAINT_H_
 #define _SEPOL_POLICYDB_CONSTRAINT_H_
 
-#include <sepol/policydb/policydb.h>
 #include <sepol/policydb/ebitmap.h>
 #include <sepol/policydb/flask_types.h>
 
@@ -69,8 +68,6 @@ typedef struct constraint_node {
 	constraint_expr_t *expr;	/* constraint on permissions */
 	struct constraint_node *next;	/* next constraint */
 } constraint_node_t;
-
-struct policydb;
 
 extern int constraint_expr_init(constraint_expr_t * expr);
 extern void constraint_expr_destroy(constraint_expr_t * expr);
