@@ -16,15 +16,14 @@ extern "C" {
  * codes that don't map to system error codes should be defined
  * outside of the range of system error codes.
  */
-#define SEPOL_ERR            -1
-#define SEPOL_ENOTSUP        -2  /* feature not supported in module language */
-#define SEPOL_EREQ           -3  /* requirements not met */
+#define SEPOL_ERR            (-1)
+#define SEPOL_ENOTSUP        (-2)  /* feature not supported in module language */
+#define SEPOL_EREQ           (-3)  /* requirements not met */
 
 /* Error codes that map to system error codes */
-#define SEPOL_ENOMEM         -ENOMEM
-#define SEPOL_ERANGE         -ERANGE
-#define SEPOL_EEXIST         -EEXIST
-#define SEPOL_ENOENT         -ENOENT
+#define SEPOL_ENOMEM         (-ENOMEM)
+#define SEPOL_EEXIST         (-EEXIST)
+#define SEPOL_ENOENT         (-ENOENT)
 
 #ifdef __cplusplus
 }

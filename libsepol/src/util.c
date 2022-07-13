@@ -124,7 +124,7 @@ char *sepol_av_to_string(policydb_t * policydbp, uint32_t tclass,
 	return avbuf;
 }
 
-#define next_bit_in_range(i, p) ((i + 1 < sizeof(p)*8) && xperm_test((i + 1), p))
+#define next_bit_in_range(i, p) (((i) + 1 < sizeof(p)*8) && xperm_test(((i) + 1), p))
 
 char *sepol_extended_perms_to_string(avtab_extended_perms_t *xperms)
 {
