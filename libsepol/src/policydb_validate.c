@@ -862,7 +862,7 @@ bad:
 	return -1;
 }
 
-static int validate_bool_id_array(sepol_handle_t *handle, const uint32_t bool_ids[], unsigned int nbools, const validate_t *bool)
+static int validate_bool_id_array(sepol_handle_t *handle, const uint32_t bool_ids[], unsigned int nbools, const validate_t *boolean)
 {
 	unsigned int i;
 
@@ -870,7 +870,7 @@ static int validate_bool_id_array(sepol_handle_t *handle, const uint32_t bool_id
 		goto bad;
 
 	for (i=0; i < nbools; i++) {
-		if (validate_value(bool_ids[i], bool))
+		if (validate_value(bool_ids[i], boolean))
 			goto bad;
 	}
 
@@ -881,14 +881,14 @@ bad:
 	return -1;
 }
 
-static int validate_cond_expr(sepol_handle_t *handle, const struct cond_expr *expr, const validate_t *bool)
+static int validate_cond_expr(sepol_handle_t *handle, const struct cond_expr *expr, const validate_t *boolean)
 {
 	int depth = -1;
 
 	for (; expr; expr = expr->next) {
 		switch(expr->expr_type) {
 		case COND_BOOL:
-			if (validate_value(expr->bool, bool))
+			if (validate_value(expr->bool, boolean))
 				goto bad;
 			if (depth == (COND_EXPR_MAXDEPTH - 1))
 				goto bad;
