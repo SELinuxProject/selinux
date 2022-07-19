@@ -31,7 +31,6 @@ int ebitmap_or(ebitmap_t * dst, const ebitmap_t * e1, const ebitmap_t * e2)
 			ebitmap_destroy(dst);
 			return -ENOMEM;
 		}
-		memset(new, 0, sizeof(ebitmap_node_t));
 		if (n1 && n2 && n1->startbit == n2->startbit) {
 			new->startbit = n1->startbit;
 			new->map = n1->map | n2->map;
@@ -290,7 +289,6 @@ int ebitmap_cpy(ebitmap_t * dst, const ebitmap_t * src)
 			ebitmap_destroy(dst);
 			return -ENOMEM;
 		}
-		memset(new, 0, sizeof(ebitmap_node_t));
 		new->startbit = n->startbit;
 		new->map = n->map;
 		new->next = 0;
@@ -430,7 +428,6 @@ int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value)
 	new = (ebitmap_node_t *) malloc(sizeof(ebitmap_node_t));
 	if (!new)
 		return -ENOMEM;
-	memset(new, 0, sizeof(ebitmap_node_t));
 
 	new->startbit = startbit;
 	new->map = (MAPBIT << (bit - new->startbit));
