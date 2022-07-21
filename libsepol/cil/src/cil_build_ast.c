@@ -6108,6 +6108,62 @@ void cil_destroy_src_info(struct cil_src_info *info)
 	free(info);
 }
 
+int cil_gen_disjointattributes(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_LIST,
+		CIL_SYN_END
+	};
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
+	struct cil_disjointattributes *dattrs = NULL;
+	int rc = SEPOL_ERR;
+
+	if (db == NULL || parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_disjointattributes_init(&dattrs);
+
+	rc = cil_gen_expr(parse_current->next, CIL_TYPEATTRIBUTE, &dattrs->str_expr);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	/* require at least two attributes */
+	if (dattrs->str_expr->head == dattrs->str_expr->tail) {
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
+	ast_node->data = dattrs;
+	ast_node->flavor = CIL_DISJOINTATTRIBUTES;
+
+	return SEPOL_OK;
+
+exit:
+	cil_tree_log(parse_current, CIL_ERR, "Bad disjoint attributes rule declaration");
+	cil_destroy_disjointattributes(dattrs);
+	return rc;
+}
+
+void cil_destroy_disjointattributes(struct cil_disjointattributes *dattrs)
+{
+	if (dattrs == NULL) {
+		return;
+	}
+
+	cil_list_destroy(&dattrs->str_expr, CIL_TRUE);
+	cil_list_destroy(&dattrs->datum_expr, CIL_FALSE);
+
+	free(dattrs);
+}
+
 static int check_for_illegal_statement(struct cil_tree_node *parse_current, struct cil_args_build *args)
 {
 	if (args->tunif != NULL) {
@@ -6401,6 +6457,8 @@ static struct cil_tree_node * parse_statement(struct cil_db *db, struct cil_tree
 		rc = cil_gen_mls(parse_current, new_ast_node);
 	} else if (parse_current->data == CIL_KEY_SRC_INFO) {
 		rc = cil_gen_src_info(parse_current, new_ast_node);
+	} else if (parse_current->data == CIL_KEY_DISJOINTATTRIBUTES) {
+		rc = cil_gen_disjointattributes(db, parse_current, new_ast_node);
 	} else {
 		cil_log(CIL_ERR, "Error: Unknown keyword %s\n", (char *)parse_current->data);
 		rc = SEPOL_ERR;

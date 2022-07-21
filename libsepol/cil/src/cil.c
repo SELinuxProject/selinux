@@ -228,6 +228,7 @@ char *CIL_KEY_SRC_HLL_LMS;
 char *CIL_KEY_SRC_HLL_LMX;
 char *CIL_KEY_SRC_HLL_LME;
 char *CIL_KEY_DENY_RULE;
+char *CIL_KEY_DISJOINTATTRIBUTES;
 
 static void cil_init_keys(void)
 {
@@ -400,6 +401,7 @@ static void cil_init_keys(void)
 	CIL_KEY_SRC_HLL_LMX = cil_strpool_add("lmx");
 	CIL_KEY_SRC_HLL_LME = cil_strpool_add("lme");
 	CIL_KEY_DENY_RULE = cil_strpool_add("deny");
+	CIL_KEY_DISJOINTATTRIBUTES = cil_strpool_add("disjointattributes");
 }
 
 void cil_db_init(struct cil_db **db)
@@ -432,6 +434,7 @@ void cil_db_init(struct cil_db **db)
 	cil_list_init(&(*db)->userprefixes, CIL_LIST_ITEM);
 	cil_list_init(&(*db)->selinuxusers, CIL_LIST_ITEM);
 	cil_list_init(&(*db)->declared_strings, CIL_LIST_ITEM);
+	cil_list_init(&(*db)->disjointattributes, CIL_LIST_ITEM);
 
 	cil_type_init(&(*db)->selftype);
 	(*db)->selftype->datum.name = CIL_KEY_SELF;
@@ -504,6 +507,7 @@ void cil_db_destroy(struct cil_db **db)
 	cil_sort_destroy(&(*db)->fsuse);
 	cil_list_destroy(&(*db)->userprefixes, CIL_FALSE);
 	cil_list_destroy(&(*db)->selinuxusers, CIL_FALSE);
+	cil_list_destroy(&(*db)->disjointattributes, CIL_FALSE);
 
 	cil_declared_strings_list_destroy(&(*db)->declared_strings);
 
@@ -1084,6 +1088,9 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	case CIL_SRC_INFO:
 		cil_destroy_src_info(*data);
 		break;
+	case CIL_DISJOINTATTRIBUTES:
+		cil_destroy_disjointattributes(*data);
+		break;
 	case CIL_OP:
 	case CIL_CONS_OPERAND:
 		break;
@@ -1492,6 +1499,8 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		return CIL_KEY_CONS_H1;
 	case CIL_CONS_H2:
 		return CIL_KEY_CONS_H2;
+	case CIL_DISJOINTATTRIBUTES:
+		return CIL_KEY_DISJOINTATTRIBUTES;
 
 	default:
 		break;
@@ -2983,4 +2992,12 @@ void cil_src_info_init(struct cil_src_info **info)
 	(*info)->kind = NULL;
 	(*info)->hll_line = 0;
 	(*info)->path = NULL;
+}
+
+void cil_disjointattributes_init(struct cil_disjointattributes **dattrs)
+{
+	*dattrs = cil_malloc(sizeof(**dattrs));
+
+	(*dattrs)->str_expr = NULL;
+	(*dattrs)->datum_expr = NULL;
 }

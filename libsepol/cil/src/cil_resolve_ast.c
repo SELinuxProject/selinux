@@ -3166,6 +3166,7 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 		sym_index = CIL_SYM_TUNABLES;
 		break;
 	case CIL_TYPE:
+	case CIL_TYPEATTRIBUTE:
 		sym_index = CIL_SYM_TYPES;
 		break;
 	case CIL_ROLE:
@@ -3213,6 +3214,13 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 			} else {
 				if (sym_index == CIL_SYM_TYPES && (expr_type == CIL_CONSTRAIN || expr_type == CIL_VALIDATETRANS)) {
 					cil_type_used(res_datum, CIL_ATTR_CONSTRAINT);
+				} else if (expr_type == CIL_DISJOINTATTRIBUTES) {
+					if (FLAVOR(res_datum) != CIL_TYPEATTRIBUTE) {
+						cil_tree_log(parent, CIL_ERR, "Type or type alias not supported in disjoint attributes rule declaration");
+						rc = SEPOL_ERR;
+						goto exit;
+					}
+					cil_type_used(res_datum, CIL_ATTR_NEVERALLOW);
 				}
 				cil_list_append(*datum_expr, CIL_DATUM, res_datum);
 			}
@@ -3397,6 +3405,33 @@ int cil_resolve_userattributeset(struct cil_tree_node *current, struct cil_db *d
 	}
 
 	cil_list_append(attr->expr_list, CIL_LIST, attrusers->datum_expr);
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
+int cil_resolve_disjointattributes(struct cil_tree_node *current, struct cil_db *db)
+{
+	struct cil_disjointattributes *dattrs = current->data;
+	struct cil_list_item *first, *second;
+	int rc;
+
+	rc = cil_resolve_expr(CIL_DISJOINTATTRIBUTES, dattrs->str_expr, &dattrs->datum_expr, current, db);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_list_for_each(first, dattrs->datum_expr) {
+		for (second = first->next; second; second = second->next) {
+			if (first->data == second->data) {
+				cil_tree_log(current, CIL_ERR, "Repeated attribute in disjoint attributes rule declaration");
+				rc = SEPOL_ERR;
+				goto exit;
+			}
+		}
+	}
 
 	return SEPOL_OK;
 
@@ -3782,6 +3817,9 @@ static int __cil_resolve_ast_node(struct cil_tree_node *node, struct cil_args_re
 			break;
 		case CIL_USERATTRIBUTESET:
 			rc = cil_resolve_userattributeset(node, db);
+			break;
+		case CIL_DISJOINTATTRIBUTES:
+			rc = cil_resolve_disjointattributes(node, db);
 			break;
 		default:
 			break;

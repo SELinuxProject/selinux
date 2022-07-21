@@ -601,3 +601,53 @@ This example will allow SELinux to run the `healthd.process` domain in permissiv
         (allow ...)
     )
 ```
+
+disjointattributes
+------------------
+
+Libsepol and secilc version 3.7 introduced the disjointattributes statement
+to mark two or more type attributes mutual exclusive. This is a compiler
+enforced action that will stop compilation until the offending associations
+are modified.
+
+Note that these constraints can be over-ridden by the CIL compiler command
+line parameter `-N` or `--disable-neverallow` flags.
+
+**Statement definition:**
+
+```secil
+    (disjointattributes (typeattribute_id typeattribute_id ...))
+```
+
+**Where:**
+
+<table>
+<colgroup>
+<col width="27%" />
+<col width="72%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><p><code>disjointattributes</code></p></td>
+<td align="left"><p>The <code>disjointattributes</code> keyword.</p></td>
+</tr>
+<tr class="even">
+<td align="left"><p><code>typeattribute_id</code></p></td>
+<td align="left"><p>A previously declared <code>typeattribute</code> identifier.</p>
+<p>Note that the same <code>typeattribute</code> identifier must not be repeated.</p></td>
+</tr>
+</tbody>
+</table>
+
+**Example:**
+
+This example will not compile as `type_1` is associated with type attributes `attr_1` and `attr_2`:
+
+```secil
+    (type type_1)
+    (typeattribute attr_1)
+    (typeattribute attr_2)
+    (typeattributeset attr_1 (type_1))
+    (typeattributeset attr_2 (type_1))
+    (disjointattributes (attr_1 attr_2))
+```

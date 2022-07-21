@@ -3896,6 +3896,38 @@ exit:
 	return SEPOL_ERR;
 }
 
+static int cil_disjointattributes_to_policydb(policydb_t *pdb, const struct cil_disjointattributes *dattrs)
+{
+	disjoint_attributes_rule_t *dattr;
+	struct cil_list_item *curr;
+	type_datum_t *sepol_type;
+	int rc = SEPOL_ERR;
+
+	dattr = cil_malloc(sizeof(disjoint_attributes_rule_t));
+	ebitmap_init(&dattr->attrs);
+
+	cil_list_for_each(curr, dattrs->datum_expr) {
+		rc = __cil_get_sepol_type_datum(pdb, DATUM(curr->data), &sepol_type);
+		if (rc != SEPOL_OK) goto exit;
+
+		if (ebitmap_set_bit(&dattr->attrs, sepol_type->s.value - 1, 1)) {
+			goto exit;
+		}
+	}
+
+	dattr->next = pdb->disjoint_attributes;
+	pdb->disjoint_attributes = dattr;
+
+	return SEPOL_OK;
+
+exit:
+	if (dattr) {
+		ebitmap_destroy(&dattr->attrs);
+		free(dattr);
+	}
+	return rc;
+}
+
 static int __cil_node_to_policydb(struct cil_tree_node *node, void *extra_args)
 {
 	int rc = SEPOL_OK;
@@ -4037,6 +4069,9 @@ static int __cil_node_to_policydb(struct cil_tree_node *node, void *extra_args)
 			break;
 		case CIL_DEFAULTRANGE:
 			rc = cil_defaultrange_to_policydb(pdb, node->data);
+			break;
+		case CIL_DISJOINTATTRIBUTES:
+			rc = cil_disjointattributes_to_policydb(pdb, node->data);
 			break;
 		default:
 			break;
@@ -4976,6 +5011,42 @@ exit:
 	return rc;
 }
 
+static int cil_check_disjointattributes(const policydb_t *pdb, int *violation)
+{
+	const disjoint_attributes_rule_t *dattr;
+
+	for (dattr = pdb->disjoint_attributes; dattr; dattr = dattr->next) {
+		ebitmap_node_t *first_node;
+		unsigned int first_bit;
+
+		ebitmap_for_each_positive_bit(&dattr->attrs, first_node, first_bit) {
+			ebitmap_node_t *second_node;
+			unsigned int second_bit;
+
+			ebitmap_for_each_positive_bit_after(&dattr->attrs, second_node, second_bit, first_node, first_bit) {
+				ebitmap_t attr_union;
+				ebitmap_node_t *type_node;
+				unsigned int type_bit;
+
+				if (ebitmap_and(&attr_union, &pdb->attr_type_map[first_bit], &pdb->attr_type_map[second_bit]))
+					return SEPOL_ERR;
+
+				ebitmap_for_each_positive_bit(&attr_union, type_node, type_bit) {
+					cil_log(CIL_ERR, "Disjoint Attributes Rule violation, type %s associated with attributes %s and %s\n",
+					                 pdb->p_type_val_to_name[type_bit],
+					                 pdb->p_type_val_to_name[first_bit],
+					                 pdb->p_type_val_to_name[second_bit]);
+					*violation = CIL_TRUE;
+				}
+
+				ebitmap_destroy(&attr_union);
+			}
+		}
+	}
+
+	return SEPOL_OK;
+}
+
 static struct cil_list *cil_classperms_from_sepol(policydb_t *pdb, uint16_t class, uint32_t data, struct cil_class *class_value_to_cil[], struct cil_perm **perm_value_to_cil[])
 {
 	struct cil_classperms *cp;
@@ -5244,6 +5315,10 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 		int violation = CIL_FALSE;
 		cil_log(CIL_INFO, "Checking Neverallows\n");
 		rc = cil_check_neverallows(db, pdb, neverallows, &violation);
+		if (rc != SEPOL_OK) goto exit;
+
+		cil_log(CIL_INFO, "Checking Disjoint Attributes Rules\n");
+		rc = cil_check_disjointattributes(pdb, &violation);
 		if (rc != SEPOL_OK) goto exit;
 
 		cil_log(CIL_INFO, "Checking User Bounds\n");

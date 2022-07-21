@@ -1527,7 +1527,18 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		fprintf(out, "(ipaddr %s %s)\n", datum_to_str(&ipaddr->datum), buf);
 		break;
 	}
+	case CIL_DISJOINTATTRIBUTES: {
+		struct cil_disjointattributes *dattrs = node->data;
+		fprintf(out, "(disjointattributes ");
+		if (dattrs->datum_expr)
+			write_expr(out, dattrs->datum_expr);
+		else
+			write_expr(out, dattrs->str_expr);
+		fprintf(out, ")\n");
+		break;
+	}
 	default :
+		cil_log(CIL_ERR, "Unsupported flavor: %d\n", node->flavor);
 		fprintf(out, "(<?RULE:%s>)\n", cil_node_to_string(node));
 		break;
 	}
