@@ -6164,6 +6164,62 @@ void cil_destroy_src_info(struct cil_src_info *info)
 	free(info);
 }
 
+int cil_gen_segregateattributes(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+{
+	enum cil_syntax syntax[] = {
+		CIL_SYN_STRING,
+		CIL_SYN_LIST,
+		CIL_SYN_END
+	};
+	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
+	struct cil_segregateattributes *sattrs = NULL;
+	int rc = SEPOL_ERR;
+
+	if (db == NULL || parse_current == NULL || ast_node == NULL) {
+		goto exit;
+	}
+
+	rc = __cil_verify_syntax(parse_current, syntax, syntax_len);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_segregateattributes_init(&sattrs);
+
+	rc = cil_gen_expr(parse_current->next, CIL_TYPEATTRIBUTE, &sattrs->str_expr);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	/* require at least two attributes */
+	if (sattrs->str_expr->head == sattrs->str_expr->tail) {
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
+	ast_node->data = sattrs;
+	ast_node->flavor = CIL_SEGREGATEATTRIBUTES;
+
+	return SEPOL_OK;
+
+exit:
+	cil_tree_log(parse_current, CIL_ERR, "Bad segregate attributes declaration");
+	cil_destroy_segregateattributes(sattrs);
+	return rc;
+}
+
+void cil_destroy_segregateattributes(struct cil_segregateattributes *sattrs)
+{
+	if (sattrs == NULL) {
+		return;
+	}
+
+	cil_list_destroy(&sattrs->str_expr, CIL_TRUE);
+	cil_list_destroy(&sattrs->datum_expr, CIL_FALSE);
+
+	free(sattrs);
+}
+
 static int check_for_illegal_statement(struct cil_tree_node *parse_current, struct cil_args_build *args)
 {
 	if (args->tunif != NULL) {
@@ -6455,6 +6511,8 @@ static struct cil_tree_node * parse_statement(struct cil_db *db, struct cil_tree
 		rc = cil_gen_mls(parse_current, new_ast_node);
 	} else if (parse_current->data == CIL_KEY_SRC_INFO) {
 		rc = cil_gen_src_info(parse_current, new_ast_node);
+	} else if (parse_current->data == CIL_KEY_SEGREGATEATTRIBUTES) {
+		rc = cil_gen_segregateattributes(db, parse_current, new_ast_node);
 	} else {
 		cil_log(CIL_ERR, "Error: Unknown keyword %s\n", (char *)parse_current->data);
 		rc = SEPOL_ERR;

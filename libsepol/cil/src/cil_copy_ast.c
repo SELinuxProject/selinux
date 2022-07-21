@@ -1697,6 +1697,21 @@ static int cil_copy_src_info(__attribute__((unused)) struct cil_db *db, void *da
 	return SEPOL_OK;
 }
 
+static int cil_copy_segregateattributes(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+{
+	struct cil_segregateattributes *orig = data;
+	struct cil_segregateattributes *new = NULL;
+
+	cil_segregateattributes_init(&new);
+
+	cil_copy_expr(db, orig->str_expr, &new->str_expr);
+	cil_copy_expr(db, orig->datum_expr, &new->datum_expr);
+
+	*copy = new;
+
+	return SEPOL_OK;
+}
+
 static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished, void *extra_args)
 {
 	int rc = SEPOL_ERR;
@@ -1989,6 +2004,9 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 		break;
 	case CIL_SRC_INFO:
 		copy_func = &cil_copy_src_info;
+		break;
+	case CIL_SEGREGATEATTRIBUTES:
+		copy_func = &cil_copy_segregateattributes;
 		break;
 	default:
 		goto exit;

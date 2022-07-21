@@ -3818,6 +3818,38 @@ exit:
 	return SEPOL_ERR;
 }
 
+static int cil_segregateattributes_to_policydb(policydb_t *pdb, const struct cil_segregateattributes *sattrs)
+{
+	segregate_attributes_rule_t *sattr;
+	struct cil_list_item *curr;
+	type_datum_t *sepol_type;
+	int rc = SEPOL_ERR;
+
+	sattr = cil_malloc(sizeof(segregate_attributes_rule_t));
+	ebitmap_init(&sattr->attrs);
+
+	cil_list_for_each(curr, sattrs->datum_expr) {
+		rc = __cil_get_sepol_type_datum(pdb, DATUM(curr->data), &sepol_type);
+		if (rc != SEPOL_OK) goto exit;
+
+		if (ebitmap_set_bit(&sattr->attrs, sepol_type->s.value - 1, 1)) {
+			goto exit;
+		}
+	}
+
+	sattr->next = pdb->segregate_attributes;
+	pdb->segregate_attributes = sattr;
+
+	return SEPOL_OK;
+
+exit:
+	if (sattr) {
+		ebitmap_destroy(&sattr->attrs);
+		free(sattr);
+	}
+	return rc;
+}
+
 static int __cil_node_to_policydb(struct cil_tree_node *node, void *extra_args)
 {
 	int rc = SEPOL_OK;
@@ -3959,6 +3991,9 @@ static int __cil_node_to_policydb(struct cil_tree_node *node, void *extra_args)
 			break;
 		case CIL_DEFAULTRANGE:
 			rc = cil_defaultrange_to_policydb(pdb, node->data);
+			break;
+		case CIL_SEGREGATEATTRIBUTES:
+			rc = cil_segregateattributes_to_policydb(pdb, node->data);
 			break;
 		default:
 			break;
@@ -4890,6 +4925,42 @@ exit:
 	return rc;
 }
 
+static int cil_check_segregateattributes(const policydb_t *pdb, int *violation)
+{
+	const segregate_attributes_rule_t *sattr;
+
+	for (sattr = pdb->segregate_attributes; sattr; sattr = sattr->next) {
+		ebitmap_node_t *first_node;
+		unsigned int first_bit;
+
+		ebitmap_for_each_positive_bit(&sattr->attrs, first_node, first_bit) {
+			ebitmap_node_t *second_node;
+			unsigned int second_bit;
+
+			ebitmap_for_each_positive_bit_after(&sattr->attrs, second_node, second_bit, first_node, first_bit) {
+				ebitmap_t attr_union;
+				ebitmap_node_t *type_node;
+				unsigned int type_bit;
+
+				if (ebitmap_and(&attr_union, &pdb->attr_type_map[first_bit], &pdb->attr_type_map[second_bit]))
+					return SEPOL_ERR;
+
+				ebitmap_for_each_positive_bit(&attr_union, type_node, type_bit) {
+					cil_log(CIL_ERR, "Segregate Attributes violation, type %s associated with attributes %s and %s\n",
+					                 pdb->p_type_val_to_name[type_bit],
+					                 pdb->p_type_val_to_name[first_bit],
+					                 pdb->p_type_val_to_name[second_bit]);
+					*violation = CIL_TRUE;
+				}
+
+				ebitmap_destroy(&attr_union);
+			}
+		}
+	}
+
+	return SEPOL_OK;
+}
+
 static struct cil_list *cil_classperms_from_sepol(policydb_t *pdb, uint16_t class, uint32_t data, struct cil_class *class_value_to_cil[], struct cil_perm **perm_value_to_cil[])
 {
 	struct cil_classperms *cp;
@@ -5158,6 +5229,10 @@ int cil_binary_create_allocated_pdb(const struct cil_db *db, sepol_policydb_t *p
 		int violation = CIL_FALSE;
 		cil_log(CIL_INFO, "Checking Neverallows\n");
 		rc = cil_check_neverallows(db, pdb, neverallows, &violation);
+		if (rc != SEPOL_OK) goto exit;
+
+		cil_log(CIL_INFO, "Checking Segregate Attributes\n");
+		rc = cil_check_segregateattributes(pdb, &violation);
 		if (rc != SEPOL_OK) goto exit;
 
 		cil_log(CIL_INFO, "Checking User Bounds\n");
