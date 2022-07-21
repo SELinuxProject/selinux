@@ -330,7 +330,7 @@ void avtab_destroy(avtab_t * h)
 	h->mask = 0;
 }
 
-int avtab_map(avtab_t * h,
+int avtab_map(const avtab_t * h,
 	      int (*apply) (avtab_key_t * k,
 			    avtab_datum_t * d, void *args), void *args)
 {

@@ -112,7 +112,7 @@ extern avtab_datum_t *avtab_search(avtab_t * h, avtab_key_t * k);
 
 extern void avtab_destroy(avtab_t * h);
 
-extern int avtab_map(avtab_t * h,
+extern int avtab_map(const avtab_t * h,
 		     int (*apply) (avtab_key_t * k,
 				   avtab_datum_t * d, void *args), void *args);
 
