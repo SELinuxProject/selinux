@@ -1330,7 +1330,7 @@ static void validate_array_destroy(validate_t flavors[])
 /*
  * Validate policydb
  */
-int validate_policydb(sepol_handle_t *handle, policydb_t *p)
+int policydb_validate(sepol_handle_t *handle, policydb_t *p)
 {
 	validate_t flavors[SYM_NUM] = {};
 
