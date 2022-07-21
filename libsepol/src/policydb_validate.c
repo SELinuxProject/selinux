@@ -8,7 +8,7 @@
 #include "policydb_validate.h"
 
 #define bool_xor(a, b) (!(a) != !(b))
-#define bool_xnor(a, b) !bool_xor(a, b)
+#define bool_xnor(a, b) (!bool_xor(a, b))
 
 typedef struct validate {
 	uint32_t nprim;
@@ -18,7 +18,7 @@ typedef struct validate {
 typedef struct map_arg {
 	validate_t *flavors;
 	sepol_handle_t *handle;
-	policydb_t *policy;
+	const policydb_t *policy;
 } map_arg_t;
 
 static int create_gap_ebitmap(char **val_to_name, uint32_t nprim, ebitmap_t *gaps)
@@ -46,7 +46,7 @@ static int validate_init(validate_t *flavor, char **val_to_name, uint32_t nprim)
 	return 0;
 }
 
-static int validate_array_init(policydb_t *p, validate_t flavors[])
+static int validate_array_init(const policydb_t *p, validate_t flavors[])
 {
 	if (validate_init(&flavors[SYM_CLASSES], p->p_class_val_to_name, p->p_classes.nprim))
 		goto bad;
@@ -91,7 +91,7 @@ int value_isvalid(uint32_t value, uint32_t nprim)
 	return 1;
 }
 
-static int validate_value(uint32_t value, validate_t *flavor)
+static int validate_value(uint32_t value, const validate_t *flavor)
 {
 	if (!value || value > flavor->nprim)
 		goto bad;
@@ -104,7 +104,7 @@ bad:
 	return -1;
 }
 
-static int validate_ebitmap(ebitmap_t *map, validate_t *flavor)
+static int validate_ebitmap(const ebitmap_t *map, const validate_t *flavor)
 {
 	if (ebitmap_length(map) > 0 && ebitmap_highest_set_bit(map) >= flavor->nprim)
 		goto bad;
@@ -117,7 +117,7 @@ bad:
 	return -1;
 }
 
-static int validate_type_set(type_set_t *type_set, validate_t *type)
+static int validate_type_set(const type_set_t *type_set, const validate_t *type)
 {
 	if (validate_ebitmap(&type_set->types, type))
 		goto bad;
@@ -139,7 +139,7 @@ bad:
 	return -1;
 }
 
-static int validate_empty_type_set(type_set_t *type_set)
+static int validate_empty_type_set(const type_set_t *type_set)
 {
 	if (!ebitmap_is_empty(&type_set->types))
 		goto bad;
@@ -154,7 +154,7 @@ bad:
 	return -1;
 }
 
-static int validate_role_set(role_set_t *role_set, validate_t *role)
+static int validate_role_set(const role_set_t *role_set, const validate_t *role)
 {
 	if (validate_ebitmap(&role_set->roles, role))
 		goto bad;
@@ -176,8 +176,8 @@ bad:
 
 static int validate_scope(__attribute__ ((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
 {
-	scope_datum_t *scope_datum = (scope_datum_t *)d;
-	uint32_t *nprim = (uint32_t *)args;
+	const scope_datum_t *scope_datum = (scope_datum_t *)d;
+	const uint32_t *nprim = (uint32_t *)args;
 	unsigned int i;
 
 	switch (scope_datum->scope) {
@@ -199,9 +199,9 @@ bad:
 	return -1;
 }
 
-static int validate_scopes(sepol_handle_t *handle, symtab_t scopes[], avrule_block_t *block)
+static int validate_scopes(sepol_handle_t *handle, const symtab_t scopes[], const avrule_block_t *block)
 {
-	avrule_decl_t *decl;
+	const avrule_decl_t *decl;
 	unsigned int i;
 	unsigned int num_decls = 0;
 
@@ -223,9 +223,9 @@ bad:
 	return -1;
 }
 
-static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms, constraint_node_t *cons, validate_t flavors[])
+static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms, const constraint_node_t *cons, validate_t flavors[])
 {
-	constraint_expr_t *cexp;
+	const constraint_expr_t *cexp;
 
 	for (; cons; cons = cons->next) {
 		if (nperms == 0 && cons->permissions != 0)
@@ -339,7 +339,7 @@ bad:
 	return -1;
 }
 
-static int validate_class_datum(sepol_handle_t *handle, class_datum_t *class, validate_t flavors[])
+static int validate_class_datum(sepol_handle_t *handle, const class_datum_t *class, validate_t flavors[])
 {
 	if (validate_value(class->s.value, &flavors[SYM_CLASSES]))
 		goto bad;
@@ -405,7 +405,7 @@ static int validate_class_datum_wrapper(__attribute__((unused)) hashtab_key_t k,
 	return validate_class_datum(margs->handle, d, margs->flavors);
 }
 
-static int validate_common_datum(sepol_handle_t *handle, common_datum_t *common)
+static int validate_common_datum(sepol_handle_t *handle, const common_datum_t *common)
 {
 	if (common->permissions.nprim > PERM_SYMTAB_SIZE)
 		goto bad;
@@ -424,7 +424,7 @@ static int validate_common_datum_wrapper(__attribute__((unused)) hashtab_key_t k
 	return validate_common_datum(margs->handle, d);
 }
 
-static int validate_role_datum(sepol_handle_t *handle, role_datum_t *role, validate_t flavors[])
+static int validate_role_datum(sepol_handle_t *handle, const role_datum_t *role, validate_t flavors[])
 {
 	if (validate_value(role->s.value, &flavors[SYM_ROLES]))
 		goto bad;
@@ -451,7 +451,7 @@ static int validate_role_datum_wrapper(__attribute__((unused)) hashtab_key_t k, 
 	return validate_role_datum(margs->handle, d, margs->flavors);
 }
 
-static int validate_type_datum(sepol_handle_t *handle, type_datum_t *type, validate_t flavors[])
+static int validate_type_datum(sepol_handle_t *handle, const type_datum_t *type, validate_t flavors[])
 {
 	if (validate_value(type->s.value, &flavors[SYM_TYPES]))
 		goto bad;
@@ -494,7 +494,7 @@ static int validate_type_datum_wrapper(__attribute__((unused)) hashtab_key_t k, 
 	return validate_type_datum(margs->handle, d, margs->flavors);
 }
 
-static int validate_mls_semantic_cat(mls_semantic_cat_t *cat, validate_t *cats)
+static int validate_mls_semantic_cat(const mls_semantic_cat_t *cat, const validate_t *cats)
 {
 	for (; cat; cat = cat->next) {
 		if (validate_value(cat->low, cats))
@@ -509,7 +509,7 @@ bad:
 	return -1;
 }
 
-static int validate_mls_semantic_level(mls_semantic_level_t *level, validate_t *sens, validate_t *cats)
+static int validate_mls_semantic_level(const mls_semantic_level_t *level, const validate_t *sens, const validate_t *cats)
 {
 	if (level->sens == 0)
 		return 0;
@@ -524,7 +524,7 @@ bad:
 	return -1;
 }
 
-static int validate_mls_semantic_range(mls_semantic_range_t *range, validate_t *sens, validate_t *cats)
+static int validate_mls_semantic_range(const mls_semantic_range_t *range, const validate_t *sens, const validate_t *cats)
 {
 	if (validate_mls_semantic_level(&range->level[0], sens, cats))
 		goto bad;
@@ -537,7 +537,7 @@ bad:
 	return -1;
 }
 
-static int validate_mls_level(mls_level_t *level, validate_t *sens, validate_t *cats)
+static int validate_mls_level(const mls_level_t *level, const validate_t *sens, const validate_t *cats)
 {
 	if (validate_value(level->sens, sens))
 		goto bad;
@@ -558,7 +558,7 @@ static int validate_level_datum(__attribute__ ((unused)) hashtab_key_t k, hashta
 	return validate_mls_level(level->level, &flavors[SYM_LEVELS], &flavors[SYM_CATS]);
 }
 
-static int validate_mls_range(mls_range_t *range, validate_t *sens, validate_t *cats)
+static int validate_mls_range(const mls_range_t *range, const validate_t *sens, const validate_t *cats)
 {
 	if (validate_mls_level(&range->level[0], sens, cats))
 		goto bad;
@@ -571,7 +571,7 @@ static int validate_mls_range(mls_range_t *range, validate_t *sens, validate_t *
 	return -1;
 }
 
-static int validate_user_datum(sepol_handle_t *handle, user_datum_t *user, validate_t flavors[], policydb_t *p)
+static int validate_user_datum(sepol_handle_t *handle, const user_datum_t *user, validate_t flavors[], const policydb_t *p)
 {
 	if (validate_value(user->s.value, &flavors[SYM_USERS]))
 		goto bad;
@@ -602,7 +602,7 @@ static int validate_user_datum_wrapper(__attribute__((unused)) hashtab_key_t k, 
 	return validate_user_datum(margs->handle, d, margs->flavors, margs->policy);
 }
 
-static int validate_bool_datum(sepol_handle_t *handle, cond_bool_datum_t *boolean, validate_t flavors[])
+static int validate_bool_datum(sepol_handle_t *handle, const cond_bool_datum_t *boolean, validate_t flavors[])
 {
 	if (validate_value(boolean->s.value, &flavors[SYM_BOOLS]))
 		goto bad;
@@ -637,7 +637,7 @@ static int validate_bool_datum_wrapper(__attribute__((unused)) hashtab_key_t k, 
 	return validate_bool_datum(margs->handle, d, margs->flavors);
 }
 
-static int validate_datum_array_gaps(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+static int validate_datum_array_gaps(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
 	unsigned int i;
 
@@ -687,7 +687,7 @@ static int validate_datum(__attribute__ ((unused))hashtab_key_t k, hashtab_datum
 	return !value_isvalid(s->value, *nprim);
 }
 
-static int validate_datum_array_entries(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+static int validate_datum_array_entries(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
 	map_arg_t margs = { flavors, handle, p };
 
@@ -726,7 +726,7 @@ bad:
  * Functions to validate a kernel policydb
  */
 
-static int validate_avtab_key(avtab_key_t *key, int conditional, validate_t flavors[])
+static int validate_avtab_key(const avtab_key_t *key, int conditional, validate_t flavors[])
 {
 	if (validate_value(key->source_type, &flavors[SYM_TYPES]))
 		goto bad;
@@ -771,7 +771,7 @@ static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *
 	return 0;
 }
 
-static int validate_avtab(sepol_handle_t *handle, avtab_t *avtab, validate_t flavors[])
+static int validate_avtab(sepol_handle_t *handle, const avtab_t *avtab, validate_t flavors[])
 {
 	if (avtab_map(avtab, validate_avtab_key_and_datum, flavors)) {
 		ERR(handle, "Invalid avtab");
@@ -781,9 +781,9 @@ static int validate_avtab(sepol_handle_t *handle, avtab_t *avtab, validate_t fla
 	return 0;
 }
 
-static int validate_cond_av_list(sepol_handle_t *handle, cond_av_list_t *cond_av, validate_t flavors[])
+static int validate_cond_av_list(sepol_handle_t *handle, const cond_av_list_t *cond_av, validate_t flavors[])
 {
-	avtab_ptr_t avtab_ptr;
+	const struct avtab_node *avtab_ptr;
 
 	for (; cond_av; cond_av = cond_av->next) {
 		for (avtab_ptr = cond_av->node; avtab_ptr; avtab_ptr = avtab_ptr->next) {
@@ -797,9 +797,9 @@ static int validate_cond_av_list(sepol_handle_t *handle, cond_av_list_t *cond_av
 	return 0;
 }
 
-static int validate_avrules(sepol_handle_t *handle, avrule_t *avrule, int conditional, validate_t flavors[])
+static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int conditional, validate_t flavors[])
 {
-	class_perm_node_t *class;
+	const class_perm_node_t *class;
 
 	for (; avrule; avrule = avrule->next) {
 		if (validate_type_set(&avrule->stypes, &flavors[SYM_TYPES]))
@@ -862,7 +862,7 @@ bad:
 	return -1;
 }
 
-static int validate_bool_id_array(sepol_handle_t *handle, uint32_t bool_ids[], unsigned int nbools, validate_t *bool)
+static int validate_bool_id_array(sepol_handle_t *handle, const uint32_t bool_ids[], unsigned int nbools, const validate_t *bool)
 {
 	unsigned int i;
 
@@ -881,7 +881,7 @@ bad:
 	return -1;
 }
 
-static int validate_cond_expr(sepol_handle_t *handle, struct cond_expr *expr, validate_t *bool)
+static int validate_cond_expr(sepol_handle_t *handle, const struct cond_expr *expr, const validate_t *bool)
 {
 	int depth = -1;
 
@@ -922,7 +922,7 @@ bad:
 	return -1;
 }
 
-static int validate_cond_list(sepol_handle_t *handle, cond_list_t *cond, validate_t flavors[])
+static int validate_cond_list(sepol_handle_t *handle, const cond_list_t *cond, validate_t flavors[])
 {
 	for (; cond; cond = cond->next) {
 		if (validate_cond_expr(handle, cond->expr, &flavors[SYM_BOOLS]))
@@ -946,7 +946,7 @@ bad:
 	return -1;
 }
 
-static int validate_role_transes(sepol_handle_t *handle, role_trans_t *role_trans, validate_t flavors[])
+static int validate_role_transes(sepol_handle_t *handle, const role_trans_t *role_trans, validate_t flavors[])
 {
 	for (; role_trans; role_trans = role_trans->next) {
 		if (validate_value(role_trans->role, &flavors[SYM_ROLES]))
@@ -966,7 +966,7 @@ bad:
 	return -1;
 }
 
-static int validate_role_allows(sepol_handle_t *handle, role_allow_t *role_allow, validate_t flavors[])
+static int validate_role_allows(sepol_handle_t *handle, const role_allow_t *role_allow, validate_t flavors[])
 {
 	for (; role_allow; role_allow = role_allow->next) {
 		if (validate_value(role_allow->role, &flavors[SYM_ROLES]))
@@ -984,8 +984,8 @@ bad:
 
 static int validate_filename_trans(hashtab_key_t k, hashtab_datum_t d, void *args)
 {
-	filename_trans_key_t *ftk = (filename_trans_key_t *)k;
-	filename_trans_datum_t *ftd = d;
+	const filename_trans_key_t *ftk = (filename_trans_key_t *)k;
+	const filename_trans_datum_t *ftd = d;
 	validate_t *flavors = (validate_t *)args;
 
 	if (validate_value(ftk->ttype, &flavors[SYM_TYPES]))
@@ -1015,7 +1015,7 @@ static int validate_filename_trans_hashtab(sepol_handle_t *handle, hashtab_t fil
 	return 0;
 }
 
-static int validate_context(context_struct_t *con, validate_t flavors[], int mls)
+static int validate_context(const context_struct_t *con, validate_t flavors[], int mls)
 {
 	if (validate_value(con->user, &flavors[SYM_USERS]))
 		return -1;
@@ -1029,9 +1029,9 @@ static int validate_context(context_struct_t *con, validate_t flavors[], int mls
 	return 0;
 }
 
-static int validate_ocontexts(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	ocontext_t *octx;
+	const ocontext_t *octx;
 	unsigned int i;
 
 	for (i = 0; i < OCON_NUM; i++) {
@@ -1067,10 +1067,10 @@ bad:
 	return -1;
 }
 
-static int validate_genfs(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+static int validate_genfs(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	genfs_t *genfs;
-	ocontext_t *octx;
+	const genfs_t *genfs;
+	const ocontext_t *octx;
 
 	for (genfs = p->genfs; genfs; genfs = genfs->next) {
 		for (octx = genfs->head; octx; octx = octx->next) {
@@ -1090,7 +1090,7 @@ bad:
  * Functions to validate a module policydb
  */
 
-static int validate_role_trans_rules(sepol_handle_t *handle, role_trans_rule_t *role_trans, validate_t flavors[])
+static int validate_role_trans_rules(sepol_handle_t *handle, const role_trans_rule_t *role_trans, validate_t flavors[])
 {
 	for (; role_trans; role_trans = role_trans->next) {
 		if (validate_role_set(&role_trans->roles, &flavors[SYM_ROLES]))
@@ -1110,7 +1110,7 @@ bad:
 	return -1;
 }
 
-static int validate_role_allow_rules(sepol_handle_t *handle, role_allow_rule_t *role_allow, validate_t flavors[])
+static int validate_role_allow_rules(sepol_handle_t *handle, const role_allow_rule_t *role_allow, validate_t flavors[])
 {
 	for (; role_allow; role_allow = role_allow->next) {
 		if (validate_role_set(&role_allow->roles, &flavors[SYM_ROLES]))
@@ -1126,7 +1126,7 @@ bad:
 	return -1;
 }
 
-static int validate_range_trans_rules(sepol_handle_t *handle, range_trans_rule_t *range_trans, validate_t flavors[])
+static int validate_range_trans_rules(sepol_handle_t *handle, const range_trans_rule_t *range_trans, validate_t flavors[])
 {
 	for (; range_trans; range_trans = range_trans->next) {
 		if (validate_type_set(&range_trans->stypes, &flavors[SYM_TYPES]))
@@ -1146,7 +1146,7 @@ bad:
 	return -1;
 }
 
-static int validate_scope_index(sepol_handle_t *handle, scope_index_t *scope_index, validate_t flavors[])
+static int validate_scope_index(sepol_handle_t *handle, const scope_index_t *scope_index, validate_t flavors[])
 {
 	if (validate_ebitmap(&scope_index->p_classes_scope, &flavors[SYM_CLASSES]))
 		goto bad;
@@ -1173,7 +1173,7 @@ bad:
 }
 
 
-static int validate_filename_trans_rules(sepol_handle_t *handle, filename_trans_rule_t *filename_trans, validate_t flavors[])
+static int validate_filename_trans_rules(sepol_handle_t *handle, const filename_trans_rule_t *filename_trans, validate_t flavors[])
 {
 	for (; filename_trans; filename_trans = filename_trans->next) {
 		if (validate_type_set(&filename_trans->stypes, &flavors[SYM_TYPES]))
@@ -1197,7 +1197,7 @@ bad:
 	return -1;
 }
 
-static int validate_symtabs(sepol_handle_t *handle, symtab_t symtabs[], validate_t flavors[])
+static int validate_symtabs(sepol_handle_t *handle, const symtab_t symtabs[], validate_t flavors[])
 {
 	unsigned int i;
 
@@ -1211,9 +1211,9 @@ static int validate_symtabs(sepol_handle_t *handle, symtab_t symtabs[], validate
 	return 0;
 }
 
-static int validate_avrule_blocks(sepol_handle_t *handle, avrule_block_t *avrule_block, validate_t flavors[])
+static int validate_avrule_blocks(sepol_handle_t *handle, const avrule_block_t *avrule_block, validate_t flavors[])
 {
-	avrule_decl_t *decl;
+	const avrule_decl_t *decl;
 
 	for (; avrule_block; avrule_block = avrule_block->next) {
 		for (decl = avrule_block->branch_list; decl != NULL; decl = decl->next) {
@@ -1253,7 +1253,7 @@ bad:
 	return -1;
 }
 
-static int validate_permissives(sepol_handle_t *handle, policydb_t *p, validate_t flavors[])
+static int validate_permissives(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
 	ebitmap_node_t *node;
 	unsigned i;
@@ -1270,7 +1270,7 @@ bad:
 	return -1;
 }
 
-static int validate_properties(sepol_handle_t *handle, policydb_t *p)
+static int validate_properties(sepol_handle_t *handle, const policydb_t *p)
 {
 	switch (p->policy_type) {
 	case POLICY_KERN:
@@ -1330,7 +1330,7 @@ static void validate_array_destroy(validate_t flavors[])
 /*
  * Validate policydb
  */
-int policydb_validate(sepol_handle_t *handle, policydb_t *p)
+int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 {
 	validate_t flavors[SYM_NUM] = {};
 
