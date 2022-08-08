@@ -58,6 +58,7 @@ IGNORE_LIST="$IGNORE_LIST,E261" # at least two spaces before inline comment
 IGNORE_LIST="$IGNORE_LIST,E265" # block comment should start with '# '
 IGNORE_LIST="$IGNORE_LIST,E266" # too many leading '#' for block comment
 IGNORE_LIST="$IGNORE_LIST,E272" # multiple spaces before keyword
+IGNORE_LIST="$IGNORE_LIST,E275" # missing whitespace after keyword
 IGNORE_LIST="$IGNORE_LIST,E301" # expected 1 blank line, found 0
 IGNORE_LIST="$IGNORE_LIST,E302" # expected 2 blank lines, found 1
 IGNORE_LIST="$IGNORE_LIST,E303" # too many blank lines
