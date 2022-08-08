@@ -169,7 +169,7 @@ io_channel_callback
   return TRUE;
 }
 
-int start() {
+int start(void) {
 #ifdef HAVE_DBUS
 	GDBusConnection *bus;
 	GError *err = NULL;
