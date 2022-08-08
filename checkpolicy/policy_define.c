@@ -4904,7 +4904,7 @@ bad:
 	return -1;
 }
 
-int define_devicetree_context()
+int define_devicetree_context(void)
 {
 	ocontext_t *newc, *c, *l, *head;
 
@@ -5295,7 +5295,7 @@ int define_netif_context(void)
 	return 0;
 }
 
-int define_ipv4_node_context()
+int define_ipv4_node_context(void)
 {	
 	char *id;
 	int rc = 0;
