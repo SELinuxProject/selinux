@@ -18,7 +18,7 @@ python-build:
 
 clean:
 	$(PYTHON) setup.py clean
-	-rm -rf build *~ \#* *pyc .#*
+	-rm -rf build *~ \#* *pyc .#* sepolicy.egg-info/
 
 sepolgen:
 	ln -sf sepolicy sepolgen
