@@ -725,7 +725,6 @@ void avc_audit(security_id_t ssid, security_id_t tsid,
 	if (denied)
 		log_append(avc_audit_buf, " permissive=%u", result ? 0 : 1);
 
-	log_append(avc_audit_buf, "\n");
 	avc_log(SELINUX_AVC, "%s", avc_audit_buf);
 
 	avc_release_lock(avc_log_lock);
