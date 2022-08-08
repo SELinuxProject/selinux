@@ -10,48 +10,51 @@ jobs:
       matrix:
         compiler: [gcc, clang]
         python-ruby-version:
-          - {python: 3.9, ruby: 2.7}
-          - {python: 3.9, ruby: 2.7, other: test-flags-override}
-          - {python: 3.9, ruby: 2.7, other: test-debug}
-          - {python: 3.9, ruby: 2.7, other: linker-bfd}
-          - {python: 3.9, ruby: 2.7, other: linker-gold}
+          - {python: '3.10', ruby: '3.1'}
+          - {python: '3.10', ruby: '3.1', other: test-flags-override}
+          - {python: '3.10', ruby: '3.1', other: test-debug}
+          - {python: '3.10', ruby: '3.1', other: linker-bfd}
+          - {python: '3.10', ruby: '3.1', other: linker-gold}
           # Test several Python versions with the latest Ruby version
-          - {python: 3.8, ruby: 2.7}
-          - {python: 3.7, ruby: 2.7}
-          - {python: 3.6, ruby: 2.7}
-          - {python: 3.5, ruby: 2.7}
-          - {python: pypy3, ruby: 2.7}
+          - {python: '3.9', ruby: '3.1'}
+          - {python: '3.8', ruby: '3.1'}
+          - {python: '3.7', ruby: '3.1'}
+          - {python: '3.6', ruby: '3.1'}
+          - {python: '3.5', ruby: '3.1'}
+          - {python: 'pypy3.7', ruby: '3.1'}
           # Test several Ruby versions with the latest Python version
-          - {python: 3.9, ruby: 2.6}
-          - {python: 3.9, ruby: 2.5}
+          - {python: '3.10', ruby: '3.0'}
+          - {python: '3.10', ruby: '2.7'}
+          - {python: '3.10', ruby: '2.6'}
+          - {python: '3.10', ruby: '2.5'}
         exclude:
           - compiler: clang
-            python-ruby-version: {python: 3.9, ruby: 2.7, other: linker-bfd}
+            python-ruby-version: {python: '3.10', ruby: '3.1', other: linker-bfd}
           - compiler: clang
-            python-ruby-version: {python: 3.9, ruby: 2.7, other: linker-gold}
+            python-ruby-version: {python: '3.10', ruby: '3.1', other: linker-gold}
         include:
           - compiler: gcc
-            python-ruby-version: {python: 3.9, ruby: 2.7, other: sanitizers}
+            python-ruby-version: {python: '3.10', ruby: '3.1', other: sanitizers}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Set up Python ${{ matrix.python-ruby-version.python }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-ruby-version.python }}
 
     - name: Set up Ruby ${{ matrix.python-ruby-version.ruby }}
-      uses: actions/setup-ruby@v1
+      uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.python-ruby-version.ruby }}
+        bundler-cache: true
 
     - name: Install dependencies
       run: |
-        sudo apt-get update -qq
-        sudo apt-get install -qqy \
+        sudo apt-get update -q
+        sudo apt-get install -qy --no-install-recommends \
             bison \
-            clang \
             flex \
             gawk \
             gettext \
@@ -61,13 +64,15 @@ jobs:
             libcunit1-dev \
             libdbus-glib-1-dev \
             libpcre2-dev \
-            python3-dev \
-            python-dev \
             ruby-dev \
             swig \
             xmlto
 
         pip install flake8
+
+    - name: Install Clang
+      if: ${{ matrix.compiler == 'clang' }}
+      run: sudo apt-get install -qqy clang
 
     - name: Configure the environment
       run: |
@@ -81,6 +86,11 @@ jobs:
             CC="$CC -fuse-ld=bfd"
         elif [ "${{ matrix.python-ruby-version.other }}" = "linker-gold" ] ; then
             CC="$CC -fuse-ld=gold"
+        fi
+        # https://bugs.ruby-lang.org/issues/18616
+        # https://github.com/llvm/llvm-project/issues/49958
+        if [ "${{ matrix.compiler }}" = "clang" ] && [[ "${{ matrix.python-ruby-version.ruby }}" = 3* ]] ; then
+            CC="$CC -fdeclspec"
         fi
         echo "CC=$CC" >> $GITHUB_ENV
 
@@ -110,7 +120,7 @@ jobs:
         PYTHON_SYS_PREFIX="$(python -c 'import sys;print(sys.prefix)')"
         echo "PKG_CONFIG_PATH=${PYTHON_SYS_PREFIX}/lib/pkgconfig" >> $GITHUB_ENV
 
-        if [ "${{ matrix.python-ruby-version.python }}" = "pypy3" ] ; then
+        if [[ "${{ matrix.python-ruby-version.python }}" = pypy* ]] ; then
             # PyPy does not provide a config file for pkg-config
             # libpypy-c.so is provided in bin/libpypy-c.so for PyPy and bin/libpypy3-c.so for PyPy3
             echo "PYINC=-I${PYTHON_SYS_PREFIX}/include" >> $GITHUB_ENV
@@ -122,10 +132,10 @@ jobs:
 
     - name: Download and install refpolicy headers for sepolgen tests
       run: |
-        curl --location --retry 10 -o refpolicy.tar.bz2 https://github.com/SELinuxProject/refpolicy/releases/download/RELEASE_2_20180701/refpolicy-2.20180701.tar.bz2
+        curl --location --retry 10 -o refpolicy.tar.bz2 https://github.com/SELinuxProject/refpolicy/releases/download/RELEASE_2_20220520/refpolicy-2.20220520.tar.bz2
         tar -xvjf refpolicy.tar.bz2
         sed -e "s,^PREFIX :=.*,PREFIX := $DESTDIR/usr," -i refpolicy/support/Makefile.devel
-        sudo make -C refpolicy install-headers clean
+        sudo make -C refpolicy install-headers bare
         sudo mkdir -p /etc/selinux
         echo 'SELINUXTYPE=refpolicy' | sudo tee /etc/selinux/config
         echo 'SELINUX_DEVEL_PATH = /usr/share/selinux/refpolicy' | sudo tee /etc/selinux/sepolgen.conf
