@@ -1894,7 +1894,7 @@ static int map_filename_trans_to_str(hashtab_key_t key, void *data, void *arg)
 		ebitmap_for_each_positive_bit(&datum->stypes, node, bit) {
 			src = pdb->p_type_val_to_name[bit];
 			rc = strs_create_and_add(strs,
-						 "(typetransition %s %s %s %s %s)",
+						 "(typetransition %s %s %s \"%s\" %s)",
 						 5, src, tgt, class, filename, new);
 			if (rc)
 				return rc;
