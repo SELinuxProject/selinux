@@ -2371,11 +2371,12 @@ static int avrule_cpy(avrule_t *dest, const avrule_t *src)
 	src_perms = src->perms;
 	while (src_perms) {
 		dest_perms = (class_perm_node_t *) calloc(1, sizeof(class_perm_node_t));
-		class_perm_node_init(dest_perms);
 		if (!dest_perms) {
 			yyerror("out of memory");
 			return -1;
 		}
+		class_perm_node_init(dest_perms);
+
 		if (!dest->perms)
 			dest->perms = dest_perms;
 		else
