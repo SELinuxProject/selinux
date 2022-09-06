@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: 2021-01-24 08:38+0000\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"PO-Revision-Date: 2022-09-06 18:19+0000\n"
 "Last-Translator: Jan Kuparinen <copper_fin@hotmail.com>\n"
 "Language-Team: Finnish <https://translate.fedoraproject.org/projects/selinux/"
 "policycoreutils/fi/>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4.2\n"
+"X-Generator: Weblate 4.14\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -25,318 +25,323 @@ msgstr ""
 "  missä: <komentosarja> on suoritettavan käynnistyskomentosarjan nimi,\n"
 "         <argumentit ...> ovat sen argumentit."
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1149
+#: ../run_init/run_init.c:124 ../newrole/newrole.c:1163
 #, c-format
 msgid "failed to initialize PAM\n"
 msgstr "PAMin alustaminen epäonnistui\n"
 
-#: ../run_init/run_init.c:139
+#: ../run_init/run_init.c:137
 #, c-format
 msgid "failed to get account information\n"
 msgstr "kirjautumistietoja ei saatu\n"
 
-#: ../run_init/run_init.c:170 ../newrole/newrole.c:336
+#: ../run_init/run_init.c:168 ../newrole/newrole.c:334
 msgid "Password:"
 msgstr "Salasana:"
 
-#: ../run_init/run_init.c:205 ../newrole/newrole.c:361
+#: ../run_init/run_init.c:201 ../newrole/newrole.c:368
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
 msgstr "Varjosalasanatiedostosta ei löydy tämän käyttäjän tietoja.\n"
 
-#: ../run_init/run_init.c:211 ../newrole/newrole.c:368
+#: ../run_init/run_init.c:207 ../newrole/newrole.c:375
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
 msgstr "getpass ei voi avata laitetta /dev/tty\n"
 
-#: ../run_init/run_init.c:283
+#: ../run_init/run_init.c:279
 #, c-format
 msgid "run_init: incorrect password for %s\n"
 msgstr "run_init: väärä salasana käyttäjälle %s\n"
 
-#: ../run_init/run_init.c:317
+#: ../run_init/run_init.c:313
 #, c-format
 msgid "Could not open file %s\n"
 msgstr "Tiedostoa %s ei voitu avata\n"
 
-#: ../run_init/run_init.c:344
+#: ../run_init/run_init.c:340
 #, c-format
 msgid "No context in file %s\n"
 msgstr "Tiedostolla %s ei ole kontekstia\n"
 
-#: ../run_init/run_init.c:369
+#: ../run_init/run_init.c:365
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
 msgstr "run_initiä voi käyttää vain SELinux-kernelillä.\n"
 
-#: ../run_init/run_init.c:388
+#: ../run_init/run_init.c:384
 #, c-format
 msgid "authentication failed.\n"
 msgstr "tunnistautuminen epäonnistui.\n"
 
-#: ../run_init/run_init.c:414 ../newrole/newrole.c:1292
+#: ../run_init/run_init.c:410 ../newrole/newrole.c:1306
 #, c-format
 msgid "Could not set exec context to %s.\n"
 msgstr "Ei voitu asettaa suorituskontekstia kontekstiksi %s.\n"
 
-#: ../newrole/newrole.c:200
+#: ../newrole/newrole.c:199
 #, c-format
 msgid "failed to set PAM_TTY\n"
 msgstr "PAM_TTY:n asettaminen epäonnistui\n"
 
-#: ../newrole/newrole.c:285
+#: ../newrole/newrole.c:283
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
 msgstr "newrole: palveluiden nimiasetusten hajautustaulun ylivuoto\n"
 
-#: ../newrole/newrole.c:295
+#: ../newrole/newrole.c:293
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
 msgstr "newrole: %s: virhe rivillä %lu.\n"
 
-#: ../newrole/newrole.c:434
+#: ../newrole/newrole.c:385
+#, c-format
+msgid "Cannot encrypt password.\n"
+msgstr "Salasanaa ei voi salata.\n"
+
+#: ../newrole/newrole.c:449
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
 msgstr "passwd-tiedostosta ei löydy kelvollista kohtaa.\n"
 
-#: ../newrole/newrole.c:445
+#: ../newrole/newrole.c:460
 #, c-format
 msgid "Out of memory!\n"
 msgstr "Muisti loppui!\n"
 
-#: ../newrole/newrole.c:450
+#: ../newrole/newrole.c:465
 #, c-format
 msgid "Error!  Shell is not valid.\n"
 msgstr "Virhe! Komentotulkki on virheellinen.\n"
 
-#: ../newrole/newrole.c:510
+#: ../newrole/newrole.c:525
 #, c-format
 msgid "Unable to clear environment\n"
 msgstr "Ympäristöä ei voida siivota\n"
 
-#: ../newrole/newrole.c:551 ../newrole/newrole.c:562 ../newrole/newrole.c:593
-#: ../newrole/newrole.c:604 ../newrole/newrole.c:631
+#: ../newrole/newrole.c:566 ../newrole/newrole.c:577 ../newrole/newrole.c:608
+#: ../newrole/newrole.c:619 ../newrole/newrole.c:646
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
 msgstr "Virhe KEEPCAPSin uudelleenasetuksessa, lopetetaan.\n"
 
-#: ../newrole/newrole.c:557 ../newrole/newrole.c:599 ../newrole/newrole.c:636
+#: ../newrole/newrole.c:572 ../newrole/newrole.c:614 ../newrole/newrole.c:651
 #, c-format
 msgid "Error changing uid, aborting.\n"
 msgstr "Virhe käyttäjätunnuksen vaihdossa, lopetetaan.\n"
 
-#: ../newrole/newrole.c:654
+#: ../newrole/newrole.c:669
 #, c-format
 msgid "Error connecting to audit system.\n"
 msgstr "Virhe audit-järjestelmään yhdistämisessä.\n"
 
-#: ../newrole/newrole.c:660
+#: ../newrole/newrole.c:675
 #, c-format
 msgid "Error allocating memory.\n"
 msgstr "Virhe muistivarauksessa.\n"
 
-#: ../newrole/newrole.c:667
+#: ../newrole/newrole.c:682
 #, c-format
 msgid "Error sending audit message.\n"
 msgstr "Virhe audit-viestin lähettämisessä.\n"
 
-#: ../newrole/newrole.c:711 ../newrole/newrole.c:1083
+#: ../newrole/newrole.c:726 ../newrole/newrole.c:1097
 #, c-format
 msgid "Could not determine enforcing mode.\n"
 msgstr "Ei voitu selvittää toimeenpanevaa tilaa.\n"
 
-#: ../newrole/newrole.c:718
+#: ../newrole/newrole.c:733
 #, c-format
 msgid "Error!  Could not open %s.\n"
 msgstr "Virhe! Ei voitu avata tty:tä %s.\n"
 
-#: ../newrole/newrole.c:724
+#: ../newrole/newrole.c:739
 #, c-format
 msgid "Error!  Could not clear O_NONBLOCK on %s\n"
 msgstr "Virhe!  O_NONBLOCK  nollaus epäonnistui  %s:ssa\n"
 
-#: ../newrole/newrole.c:730
+#: ../newrole/newrole.c:745
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
 msgstr ""
 "%s! Ei saatu nykyistä kontekstia tty:lle %s, ei nimiöidä sitä uudelleen.\n"
 
-#: ../newrole/newrole.c:740
+#: ../newrole/newrole.c:755
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
 msgstr ""
 "%s! Ei saatu uutta kontekstia tty:lle %s, ei nimiöidä sitä uudelleen.\n"
 
-#: ../newrole/newrole.c:750
+#: ../newrole/newrole.c:765
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
 msgstr "%s! Ei voitu asettaa uutta kontekstia tty:lle %s\n"
 
-#: ../newrole/newrole.c:797
+#: ../newrole/newrole.c:812
 #, c-format
 msgid "%s changed labels.\n"
 msgstr "tty %s vaihtoi nimiötä.\n"
 
-#: ../newrole/newrole.c:803
+#: ../newrole/newrole.c:818
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
 msgstr "Varoitus! Ei voitu palauttaa tty:n %s kontekstia\n"
 
-#: ../newrole/newrole.c:860
+#: ../newrole/newrole.c:874
 #, c-format
 msgid "Error: multiple roles specified\n"
 msgstr "Virhe: annettiin useita rooleja\n"
 
-#: ../newrole/newrole.c:868
+#: ../newrole/newrole.c:882
 #, c-format
 msgid "Error: multiple types specified\n"
 msgstr "Virhe: annettiin useita tyyppejä\n"
 
-#: ../newrole/newrole.c:875
+#: ../newrole/newrole.c:889
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
 msgstr "Valitsinta -l voi käyttää vain SELinuxin MLS-tuen kanssa.\n"
 
-#: ../newrole/newrole.c:880
+#: ../newrole/newrole.c:894
 #, c-format
 msgid "Error: multiple levels specified\n"
 msgstr "Virhe: annettiin useita tasoja\n"
 
-#: ../newrole/newrole.c:890
+#: ../newrole/newrole.c:904
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
 msgstr "Virhe: tasoa ei voi vaihtaa turvattomassa päätteessä\n"
 
-#: ../newrole/newrole.c:916
+#: ../newrole/newrole.c:930
 #, c-format
 msgid "Couldn't get default type.\n"
 msgstr "Ei voitu hakea oletustyyppiä.\n"
 
-#: ../newrole/newrole.c:926
+#: ../newrole/newrole.c:940
 #, c-format
 msgid "failed to get new context.\n"
 msgstr "uuden kontekstin hakeminen epäonnistui.\n"
 
-#: ../newrole/newrole.c:933
+#: ../newrole/newrole.c:947
 #, c-format
 msgid "failed to set new role %s\n"
 msgstr "uuden roolin %s asettaminen epäonnistui\n"
 
-#: ../newrole/newrole.c:940
+#: ../newrole/newrole.c:954
 #, c-format
 msgid "failed to set new type %s\n"
 msgstr "uuden tyypin %s asettaminen epäonnistui\n"
 
-#: ../newrole/newrole.c:950
+#: ../newrole/newrole.c:964
 #, c-format
 msgid "failed to build new range with level %s\n"
 msgstr "uuden alueen tekeminen tasolle %s epäonnistui\n"
 
-#: ../newrole/newrole.c:955
+#: ../newrole/newrole.c:969
 #, c-format
 msgid "failed to set new range %s\n"
 msgstr "uuden alueen %s asettaminen epäonnistui\n"
 
-#: ../newrole/newrole.c:963
+#: ../newrole/newrole.c:977
 #, c-format
 msgid "failed to convert new context to string\n"
 msgstr "uuden kontekstin muuntaminen merkkijonoksi epäonnistui\n"
 
-#: ../newrole/newrole.c:968
+#: ../newrole/newrole.c:982
 #, c-format
 msgid "%s is not a valid context\n"
 msgstr "%s ei ole kelvollinen konteksti\n"
 
-#: ../newrole/newrole.c:975
+#: ../newrole/newrole.c:989
 #, c-format
 msgid "Unable to allocate memory for new_context"
 msgstr "new_contextille ei voida varata muistia"
 
-#: ../newrole/newrole.c:1001
+#: ../newrole/newrole.c:1015
 #, c-format
 msgid "Unable to obtain empty signal set\n"
 msgstr "Tyhjän signaalijoukon hankkiminen epäonnistui\n"
 
-#: ../newrole/newrole.c:1009
+#: ../newrole/newrole.c:1023
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
 msgstr "SIGHUP-käsittelimen asetus epäonnistui\n"
 
-#: ../newrole/newrole.c:1061
+#: ../newrole/newrole.c:1075
 msgid "Sorry, newrole failed to drop capabilities\n"
 msgstr "Newrole ei pystynyt poistamaan ominaisuuksia\n"
 
-#: ../newrole/newrole.c:1077
+#: ../newrole/newrole.c:1091
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr "newrolea voi käyttää vain SELinux-kernelillä.\n"
 
-#: ../newrole/newrole.c:1094
+#: ../newrole/newrole.c:1108
 #, c-format
 msgid "failed to get old_context.\n"
 msgstr "old_contextin hakeminen epäonnistui.\n"
 
-#: ../newrole/newrole.c:1101
+#: ../newrole/newrole.c:1115
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
 msgstr "Varoitus! Ei voitu hakea tty-tietoja.\n"
 
-#: ../newrole/newrole.c:1123
+#: ../newrole/newrole.c:1137
 #, c-format
 msgid "error on reading PAM service configuration.\n"
 msgstr "virhe luettaessa PAM-palveluasetuksia.\n"
 
-#: ../newrole/newrole.c:1158
+#: ../newrole/newrole.c:1172
 #, c-format
 msgid "newrole: incorrect password for %s\n"
 msgstr "newrole: virheellinen salasana käyttäjälle %s\n"
 
-#: ../newrole/newrole.c:1185
+#: ../newrole/newrole.c:1199
 #, c-format
 msgid "newrole: failure forking: %s"
 msgstr "newrole: haarautuminen epäonnistui: %s"
 
-#: ../newrole/newrole.c:1188 ../newrole/newrole.c:1211
+#: ../newrole/newrole.c:1202 ../newrole/newrole.c:1225
 #, c-format
 msgid "Unable to restore tty label...\n"
 msgstr "Tty:n nimiötä ei voitu palauttaa…\n"
 
-#: ../newrole/newrole.c:1190 ../newrole/newrole.c:1217
+#: ../newrole/newrole.c:1204 ../newrole/newrole.c:1231
 #, c-format
 msgid "Failed to close tty properly\n"
 msgstr "Tty:n sulkeminen kunnolla epäonnistui\n"
 
-#: ../newrole/newrole.c:1250
+#: ../newrole/newrole.c:1264
 #, c-format
 msgid "Could not close descriptors.\n"
 msgstr "Kuvaajia ei voitu sulkea.\n"
 
-#: ../newrole/newrole.c:1285
+#: ../newrole/newrole.c:1299
 #, c-format
 msgid "Error allocating shell's argv0.\n"
 msgstr "Komentotulkin argv0:n varaamisessa tapahtui virhe.\n"
 
-#: ../newrole/newrole.c:1307
+#: ../newrole/newrole.c:1321
 #, c-format
 msgid "Failed to send audit message"
 msgstr "Tarkastusviestin lähetys epäonnistui"
 
-#: ../newrole/newrole.c:1315
+#: ../newrole/newrole.c:1329
 #, c-format
 msgid "Failed to transition to namespace\n"
 msgstr "Nimiavaruuteen siirtyminen epäonnistui\n"
 
-#: ../newrole/newrole.c:1321
+#: ../newrole/newrole.c:1335
 #, c-format
 msgid "Failed to drop capabilities %m\n"
 msgstr "Ominaisuuksien %m poisto epäonnistui\n"
 
-#: ../newrole/newrole.c:1326
+#: ../newrole/newrole.c:1340
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
 msgstr "Ei voitu palauttaa ympäristöä, lopetetaan\n"
 
-#: ../newrole/newrole.c:1337
+#: ../newrole/newrole.c:1351
 msgid "failed to exec shell\n"
 msgstr "komentotulkin suorittaminen epäonnistui\n"
 

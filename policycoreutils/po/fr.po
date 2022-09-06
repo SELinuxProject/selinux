@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
 "PO-Revision-Date: 2020-08-28 03:29+0000\n"
 "Last-Translator: Julien Humbert <julroy67@gmail.com>\n"
 "Language-Team: French <https://translate.fedoraproject.org/projects/selinux/"
@@ -26,327 +26,332 @@ msgstr ""
 "  où : <script> est le nom du script d’initialisation à exécuter,\n"
 "       <args ...> sont les arguments à passer au script."
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1149
+#: ../run_init/run_init.c:124 ../newrole/newrole.c:1163
 #, c-format
 msgid "failed to initialize PAM\n"
 msgstr "échec de l’initialisation de PAM\n"
 
-#: ../run_init/run_init.c:139
+#: ../run_init/run_init.c:137
 #, c-format
 msgid "failed to get account information\n"
 msgstr "impossible d’obtenir les informations du compte.\n"
 
-#: ../run_init/run_init.c:170 ../newrole/newrole.c:336
+#: ../run_init/run_init.c:168 ../newrole/newrole.c:334
 msgid "Password:"
 msgstr "Mot de passe :"
 
-#: ../run_init/run_init.c:205 ../newrole/newrole.c:361
+#: ../run_init/run_init.c:201 ../newrole/newrole.c:368
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
 msgstr ""
 "Impossible de trouver votre entrée dans le fichier des mots de passe "
 "cachés.\n"
 
-#: ../run_init/run_init.c:211 ../newrole/newrole.c:368
+#: ../run_init/run_init.c:207 ../newrole/newrole.c:375
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
 msgstr "getpass ne peut accéder à /dev/tty\n"
 
-#: ../run_init/run_init.c:283
+#: ../run_init/run_init.c:279
 #, c-format
 msgid "run_init: incorrect password for %s\n"
 msgstr "run_init : mot de passe incorrect pour %s\n"
 
-#: ../run_init/run_init.c:317
+#: ../run_init/run_init.c:313
 #, c-format
 msgid "Could not open file %s\n"
 msgstr "Impossible d’ouvrir le fichier %s\n"
 
-#: ../run_init/run_init.c:344
+#: ../run_init/run_init.c:340
 #, c-format
 msgid "No context in file %s\n"
 msgstr "Pas de contexte dans le fichier %s\n"
 
-#: ../run_init/run_init.c:369
+#: ../run_init/run_init.c:365
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
 msgstr "Désolé, run_init doit être utilisé uniquement sur un noyau SELinux.\n"
 
-#: ../run_init/run_init.c:388
+#: ../run_init/run_init.c:384
 #, c-format
 msgid "authentication failed.\n"
 msgstr "échec lors de l’authentification.\n"
 
-#: ../run_init/run_init.c:414 ../newrole/newrole.c:1292
+#: ../run_init/run_init.c:410 ../newrole/newrole.c:1306
 #, c-format
 msgid "Could not set exec context to %s.\n"
 msgstr "Impossible de régler le contexte d’exécution vers %s.\n"
 
-#: ../newrole/newrole.c:200
+#: ../newrole/newrole.c:199
 #, c-format
 msgid "failed to set PAM_TTY\n"
 msgstr "impossible de définir PAM_TTY\n"
 
-#: ../newrole/newrole.c:285
+#: ../newrole/newrole.c:283
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
 msgstr ""
 "nouveau rôle : débordement de table de hachage pour la configuration du nom "
 "de service\n"
 
-#: ../newrole/newrole.c:295
+#: ../newrole/newrole.c:293
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
 msgstr "nouveau rôle :  %s :  erreur à la ligne %lu.\n"
 
-#: ../newrole/newrole.c:434
+#: ../newrole/newrole.c:385
+#, c-format
+msgid "Cannot encrypt password.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:449
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
 msgstr "impossible de trouver une entrée valide dans le fichier passwd.\n"
 
-#: ../newrole/newrole.c:445
+#: ../newrole/newrole.c:460
 #, c-format
 msgid "Out of memory!\n"
 msgstr "Plus de mémoire disponible !\n"
 
-#: ../newrole/newrole.c:450
+#: ../newrole/newrole.c:465
 #, c-format
 msgid "Error!  Shell is not valid.\n"
 msgstr "Erreur ! Shell non valide.\n"
 
-#: ../newrole/newrole.c:510
+#: ../newrole/newrole.c:525
 #, c-format
 msgid "Unable to clear environment\n"
 msgstr "Impossible de nettoyer l’environnement\n"
 
-#: ../newrole/newrole.c:551 ../newrole/newrole.c:562 ../newrole/newrole.c:593
-#: ../newrole/newrole.c:604 ../newrole/newrole.c:631
+#: ../newrole/newrole.c:566 ../newrole/newrole.c:577 ../newrole/newrole.c:608
+#: ../newrole/newrole.c:619 ../newrole/newrole.c:646
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
 msgstr "Erreur de ré-initialisation de KEEPCAPS, abandon\n"
 
-#: ../newrole/newrole.c:557 ../newrole/newrole.c:599 ../newrole/newrole.c:636
+#: ../newrole/newrole.c:572 ../newrole/newrole.c:614 ../newrole/newrole.c:651
 #, c-format
 msgid "Error changing uid, aborting.\n"
 msgstr "Erreur lors de la modification de l’UID, abandon.\n"
 
-#: ../newrole/newrole.c:654
+#: ../newrole/newrole.c:669
 #, c-format
 msgid "Error connecting to audit system.\n"
 msgstr "Erreur de connexion au système d’audit.\n"
 
-#: ../newrole/newrole.c:660
+#: ../newrole/newrole.c:675
 #, c-format
 msgid "Error allocating memory.\n"
 msgstr "Erreur d’allocation de mémoire.\n"
 
-#: ../newrole/newrole.c:667
+#: ../newrole/newrole.c:682
 #, c-format
 msgid "Error sending audit message.\n"
 msgstr "Erreur lors de l’envoi du message d’audit.\n"
 
-#: ../newrole/newrole.c:711 ../newrole/newrole.c:1083
+#: ../newrole/newrole.c:726 ../newrole/newrole.c:1097
 #, c-format
 msgid "Could not determine enforcing mode.\n"
 msgstr "Ne peut définir le mode autoritaire.\n"
 
-#: ../newrole/newrole.c:718
+#: ../newrole/newrole.c:733
 #, c-format
 msgid "Error!  Could not open %s.\n"
 msgstr "Erreur ! Impossible d’ouvrir %s.\n"
 
-#: ../newrole/newrole.c:724
+#: ../newrole/newrole.c:739
 #, c-format
 msgid "Error!  Could not clear O_NONBLOCK on %s\n"
 msgstr "Erreur ! Impossible d’effacer O_NONBLOCK sur %s\n"
 
-#: ../newrole/newrole.c:730
+#: ../newrole/newrole.c:745
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
 msgstr ""
 "%s ! Impossible de récupérer le contexte actuel pour %s, le terminal ne sera "
 "pas renommé.\n"
 
-#: ../newrole/newrole.c:740
+#: ../newrole/newrole.c:755
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
 msgstr ""
 "%s ! Impossible de récupérer le nouveau contexte pour %s, le terminal ne "
 "sera pas renommé.\n"
 
-#: ../newrole/newrole.c:750
+#: ../newrole/newrole.c:765
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
 msgstr "%s ! Impossible de paramétrer le nouveau contexte pour %s\n"
 
-#: ../newrole/newrole.c:797
+#: ../newrole/newrole.c:812
 #, c-format
 msgid "%s changed labels.\n"
 msgstr "%s a modifié les étiquettes.\n"
 
-#: ../newrole/newrole.c:803
+#: ../newrole/newrole.c:818
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
 msgstr "Attention ! Impossible de restaurer le contexte pour %s\n"
 
-#: ../newrole/newrole.c:860
+#: ../newrole/newrole.c:874
 #, c-format
 msgid "Error: multiple roles specified\n"
 msgstr "Erreur : des rôles multiples ont été spécifiés\n"
 
-#: ../newrole/newrole.c:868
+#: ../newrole/newrole.c:882
 #, c-format
 msgid "Error: multiple types specified\n"
 msgstr "Erreur : des types multiples ont été spécifiés\n"
 
-#: ../newrole/newrole.c:875
+#: ../newrole/newrole.c:889
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
 msgstr "Désolé, l’option -l doit être utilisée avec le support SELinux MLS.\n"
 
-#: ../newrole/newrole.c:880
+#: ../newrole/newrole.c:894
 #, c-format
 msgid "Error: multiple levels specified\n"
 msgstr "Erreur : niveaux multiples spécifiés\n"
 
-#: ../newrole/newrole.c:890
+#: ../newrole/newrole.c:904
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
 msgstr ""
 "Erreur : vous n’êtes pas autorisé à changer de niveau sur un terminal non "
 "sûr\n"
 
-#: ../newrole/newrole.c:916
+#: ../newrole/newrole.c:930
 #, c-format
 msgid "Couldn't get default type.\n"
 msgstr "Impossible de trouver le type par défaut.\n"
 
-#: ../newrole/newrole.c:926
+#: ../newrole/newrole.c:940
 #, c-format
 msgid "failed to get new context.\n"
 msgstr "impossible d’obtenir le nouveau contexte.\n"
 
-#: ../newrole/newrole.c:933
+#: ../newrole/newrole.c:947
 #, c-format
 msgid "failed to set new role %s\n"
 msgstr "échec de l’affectation du nouveau rôle %s\n"
 
-#: ../newrole/newrole.c:940
+#: ../newrole/newrole.c:954
 #, c-format
 msgid "failed to set new type %s\n"
 msgstr "échec de l’affectation du nouveau type %s\n"
 
-#: ../newrole/newrole.c:950
+#: ../newrole/newrole.c:964
 #, c-format
 msgid "failed to build new range with level %s\n"
 msgstr "échec de construction de la nouvelle plage avec le niveau %s\n"
 
-#: ../newrole/newrole.c:955
+#: ../newrole/newrole.c:969
 #, c-format
 msgid "failed to set new range %s\n"
 msgstr "échec de la création de la plage %s\n"
 
-#: ../newrole/newrole.c:963
+#: ../newrole/newrole.c:977
 #, c-format
 msgid "failed to convert new context to string\n"
 msgstr "échec de conversion du contexte en chaîne\n"
 
-#: ../newrole/newrole.c:968
+#: ../newrole/newrole.c:982
 #, c-format
 msgid "%s is not a valid context\n"
 msgstr "%s n’est pas un contexte valide\n"
 
-#: ../newrole/newrole.c:975
+#: ../newrole/newrole.c:989
 #, c-format
 msgid "Unable to allocate memory for new_context"
 msgstr "Impossible d’allouer de l’espace mémoire pour new_context"
 
-#: ../newrole/newrole.c:1001
+#: ../newrole/newrole.c:1015
 #, c-format
 msgid "Unable to obtain empty signal set\n"
 msgstr "Impossible d’obtenir un ensemble vide de signaux\n"
 
-#: ../newrole/newrole.c:1009
+#: ../newrole/newrole.c:1023
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
 msgstr "Impossible de configurer le gestionnaire SIGHUP\n"
 
-#: ../newrole/newrole.c:1061
+#: ../newrole/newrole.c:1075
 msgid "Sorry, newrole failed to drop capabilities\n"
 msgstr "Désolé, newrole n’a pas réussi à se débarrasser de ses capacités\n"
 
-#: ../newrole/newrole.c:1077
+#: ../newrole/newrole.c:1091
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr "Désolé, newrole ne peut être utilisé que sur un noyau SELinux.\n"
 
-#: ../newrole/newrole.c:1094
+#: ../newrole/newrole.c:1108
 #, c-format
 msgid "failed to get old_context.\n"
 msgstr "impossible de trouver old_context.\n"
 
-#: ../newrole/newrole.c:1101
+#: ../newrole/newrole.c:1115
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
 msgstr ""
 "Attention ! Impossible de récupérer les informations liées au terminal.\n"
 
-#: ../newrole/newrole.c:1123
+#: ../newrole/newrole.c:1137
 #, c-format
 msgid "error on reading PAM service configuration.\n"
 msgstr "erreur de lecture de la configuration du service PAM.\n"
 
-#: ../newrole/newrole.c:1158
+#: ../newrole/newrole.c:1172
 #, c-format
 msgid "newrole: incorrect password for %s\n"
 msgstr "newrole : mot de passe incorrect pour %s\n"
 
-#: ../newrole/newrole.c:1185
+#: ../newrole/newrole.c:1199
 #, c-format
 msgid "newrole: failure forking: %s"
 msgstr "newrole : échec de duplication : %s"
 
-#: ../newrole/newrole.c:1188 ../newrole/newrole.c:1211
+#: ../newrole/newrole.c:1202 ../newrole/newrole.c:1225
 #, c-format
 msgid "Unable to restore tty label...\n"
 msgstr "Impossible de restaurer l’étiquette du terminal...\n"
 
-#: ../newrole/newrole.c:1190 ../newrole/newrole.c:1217
+#: ../newrole/newrole.c:1204 ../newrole/newrole.c:1231
 #, c-format
 msgid "Failed to close tty properly\n"
 msgstr "Impossible de fermer correctement le terminal\n"
 
-#: ../newrole/newrole.c:1250
+#: ../newrole/newrole.c:1264
 #, c-format
 msgid "Could not close descriptors.\n"
 msgstr "Impossible de fermer les descripteurs.\n"
 
-#: ../newrole/newrole.c:1285
+#: ../newrole/newrole.c:1299
 #, c-format
 msgid "Error allocating shell's argv0.\n"
 msgstr "Erreur d’allocation pour argv0 du shell.\n"
 
-#: ../newrole/newrole.c:1307
+#: ../newrole/newrole.c:1321
 #, c-format
 msgid "Failed to send audit message"
 msgstr "Échec lors de l’envoi du message d’audit"
 
-#: ../newrole/newrole.c:1315
+#: ../newrole/newrole.c:1329
 #, c-format
 msgid "Failed to transition to namespace\n"
 msgstr "Échec lors de la transition vers l’espace de nommage\n"
 
-#: ../newrole/newrole.c:1321
+#: ../newrole/newrole.c:1335
 #, c-format
 msgid "Failed to drop capabilities %m\n"
 msgstr "Impossible de se débarrasser des capacités %m\n"
 
-#: ../newrole/newrole.c:1326
+#: ../newrole/newrole.c:1340
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
 msgstr "Impossible de restaurer l’environnement, abandon\n"
 
-#: ../newrole/newrole.c:1337
+#: ../newrole/newrole.c:1351
 msgid "failed to exec shell\n"
 msgstr "échec de l’exécution du shell\n"
 

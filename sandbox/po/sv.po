@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
 "PO-Revision-Date: 2021-09-11 11:04+0000\n"
 "Last-Translator: Luna Jernberg <bittin@reimu.nl>\n"
 "Language-Team: Swedish <https://translate.fedoraproject.org/projects/selinux/"
@@ -15,29 +15,29 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.8\n"
 
-#: ../sandbox:119
+#: ../sandbox:120
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
 msgstr "Vill du spara ändringar till ”%s” (J/N): "
 
-#: ../sandbox:120
+#: ../sandbox:121
 msgid "Sandbox Message"
 msgstr "Sandlådemeddelande"
 
-#: ../sandbox:132
+#: ../sandbox:133
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
 msgstr "Vill du spara ändringar till ”%s” (j/N): "
 
-#: ../sandbox:133
+#: ../sandbox:134
 msgid "[yY]"
 msgstr "[jJyY]"
 
-#: ../sandbox:156
+#: ../sandbox:157
 msgid "User account must be setup with an MCS Range"
 msgstr "Användarkontot måste vara uppsatt med ett MCS-intervall"
 
-#: ../sandbox:184
+#: ../sandbox:185
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
@@ -45,11 +45,11 @@ msgstr ""
 "Misslyckades att hitta några oanvända kategoriuppsättningar.  Överväg ett "
 "större MCS-intervall för denna användare."
 
-#: ../sandbox:215
+#: ../sandbox:216
 msgid "Homedir and tempdir required for level mounts"
 msgstr "Hemkatalog och tempkatalog krävs för nivåmonteringar"
 
-#: ../sandbox:218 ../sandbox:229 ../sandbox:234
+#: ../sandbox:219 ../sandbox:230 ../sandbox:235
 #, python-format
 msgid ""
 "\n"
@@ -58,7 +58,7 @@ msgstr ""
 "\n"
 "%s krävs för åtgärden du vill utföra.\n"
 
-#: ../sandbox:305
+#: ../sandbox:306
 #, python-format
 msgid ""
 "\n"
@@ -69,7 +69,7 @@ msgstr ""
 "Policyn definierar följande typer att användas med -t:\n"
 "\t%s\n"
 
-#: ../sandbox:312
+#: ../sandbox:313
 #, python-format
 msgid ""
 "\n"
@@ -92,55 +92,55 @@ msgstr ""
 "[ -t typ ] -S\n"
 "%s\n"
 
-#: ../sandbox:324
+#: ../sandbox:325
 msgid "include file in sandbox"
 msgstr "inkludera en fil i sandlådan"
 
-#: ../sandbox:327
+#: ../sandbox:328
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr "läs en lista av filer att inkludera i sandlådan från INKLUDERINGSFIL"
 
-#: ../sandbox:329
+#: ../sandbox:330
 msgid "run sandbox with SELinux type"
 msgstr "kör sandlådan med SELinux-typen"
 
-#: ../sandbox:332
+#: ../sandbox:333
 msgid "mount new home and/or tmp directory"
 msgstr "montera ny hem- och/eller temporärkatalog"
 
-#: ../sandbox:336
+#: ../sandbox:337
 msgid "dots per inch for X display"
 msgstr "punkter per tum för X-displayen"
 
-#: ../sandbox:339
+#: ../sandbox:340
 msgid "run complete desktop session within sandbox"
 msgstr "kör en fullständig skrivbordssession inuti en sandlåda"
 
-#: ../sandbox:342
+#: ../sandbox:343
 msgid "Shred content before temporary directories are removed"
 msgstr "Strimla innehållet före temporära kataloger tas bort"
 
-#: ../sandbox:346
+#: ../sandbox:347
 msgid "run X application within a sandbox"
 msgstr "kör X-program i en sandlåda"
 
-#: ../sandbox:352
+#: ../sandbox:353
 msgid "alternate home directory to use for mounting"
 msgstr "alternativ hemkatalog att användas för montering"
 
-#: ../sandbox:357
+#: ../sandbox:358
 msgid "alternate /tmp directory to use for mounting"
 msgstr "alternativ /tmp-katalog att användas för montering"
 
-#: ../sandbox:366
+#: ../sandbox:367
 msgid "alternate window manager"
 msgstr "alternativ fönsterhanterare"
 
-#: ../sandbox:369
+#: ../sandbox:370
 msgid "MCS/MLS level for the sandbox"
 msgstr "MCS/MLS-nivå för sandlådan"
 
-#: ../sandbox:385
+#: ../sandbox:386
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -150,27 +150,27 @@ msgstr ""
 "Du behöver installera paketet selinux-policy-sandbox för att kunna köra "
 "detta kommando"
 
-#: ../sandbox:397
+#: ../sandbox:398
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
 "Du måste ange en hemkatalog och temporärkatalog när du sätter upp en "
 "sessionssandlåda"
 
-#: ../sandbox:399
+#: ../sandbox:400
 msgid "Commands are not allowed in a session sandbox"
 msgstr "Kommandon är inte tillåtna i en sessionssandlåda"
 
-#: ../sandbox:409
+#: ../sandbox:410
 msgid "Command required"
 msgstr "Ett kommando krävs"
 
-#: ../sandbox:412
+#: ../sandbox:413
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s är inte körbar"
 
-#: ../sandbox:535
+#: ../sandbox:536
 #, python-format
 msgid "Invalid value %s"
 msgstr "Felaktigt värde %s"

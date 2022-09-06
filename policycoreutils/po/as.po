@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
 "PO-Revision-Date: 2016-01-06 06:54-0500\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Assamese\n"
@@ -24,320 +24,325 @@ msgstr ""
 "  এই ক্ষেত্ৰত: <script> দ্বাৰা সঞ্চালনৰ বাবে init স্ক্ৰিপ্ট চিহ্নিত কৰা হয়,\n"
 "         <args ...> উপৰোক্ত স্ক্ৰিপ্টৰ তৰ্ক উল্লিখিত হয়।"
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1149
+#: ../run_init/run_init.c:124 ../newrole/newrole.c:1163
 #, c-format
 msgid "failed to initialize PAM\n"
 msgstr "PAM আৰম্ভ কৰোঁতে ব্যৰ্থ\n"
 
-#: ../run_init/run_init.c:139
+#: ../run_init/run_init.c:137
 #, c-format
 msgid "failed to get account information\n"
 msgstr "একাওন্ট সংক্ৰান্ত তথ্য প্ৰাপ্ত কৰোঁতে ব্যৰ্থ।\n"
 
-#: ../run_init/run_init.c:170 ../newrole/newrole.c:336
+#: ../run_init/run_init.c:168 ../newrole/newrole.c:334
 msgid "Password:"
 msgstr "পাছৱাৰ্ড: "
 
-#: ../run_init/run_init.c:205 ../newrole/newrole.c:361
+#: ../run_init/run_init.c:201 ../newrole/newrole.c:368
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
 msgstr "shadow passwd ফাইলত আপোনাৰ তথ্য পোৱা নাযায়।\n"
 
-#: ../run_init/run_init.c:211 ../newrole/newrole.c:368
+#: ../run_init/run_init.c:207 ../newrole/newrole.c:375
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
 msgstr "getpass'ৰ দ্বাৰা /dev/tty খোলা সম্ভৱ নহয়\n"
 
-#: ../run_init/run_init.c:283
+#: ../run_init/run_init.c:279
 #, c-format
 msgid "run_init: incorrect password for %s\n"
 msgstr "run_init: %s'ৰ পাছৱাৰ্ড সঠিক নহয়\n"
 
-#: ../run_init/run_init.c:317
+#: ../run_init/run_init.c:313
 #, c-format
 msgid "Could not open file %s\n"
 msgstr "%s ফাইল খোলোঁতে ব্যৰ্থ\n"
 
-#: ../run_init/run_init.c:344
+#: ../run_init/run_init.c:340
 #, c-format
 msgid "No context in file %s\n"
 msgstr "%s ফাইলত কোনো context উপস্থিত নাই\n"
 
-#: ../run_init/run_init.c:369
+#: ../run_init/run_init.c:365
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
 msgstr "দুঃক্ষিত, run_init অকল SELinux কাৰ্ণেলৰ সৈতে ব্যৱহাৰযোগ্য।\n"
 
-#: ../run_init/run_init.c:388
+#: ../run_init/run_init.c:384
 #, c-format
 msgid "authentication failed.\n"
 msgstr "অনুমোদন কৰোঁতে ব্যৰ্থ।\n"
 
-#: ../run_init/run_init.c:414 ../newrole/newrole.c:1292
+#: ../run_init/run_init.c:410 ../newrole/newrole.c:1306
 #, c-format
 msgid "Could not set exec context to %s.\n"
 msgstr "exec context %s লৈ স্থাপন কৰা নাযায়।\n"
 
-#: ../newrole/newrole.c:200
+#: ../newrole/newrole.c:199
 #, c-format
 msgid "failed to set PAM_TTY\n"
 msgstr "PAM_TTY নিৰ্ধাৰণ কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:285
+#: ../newrole/newrole.c:283
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
 msgstr "newrole: সেৱাৰ নাম বিন্যাসৰ hashtable অভাৰফ্লো\n"
 
-#: ../newrole/newrole.c:295
+#: ../newrole/newrole.c:293
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
 msgstr "newrole:  %s:  %lu পংক্তিতে সমস্যা।\n"
 
-#: ../newrole/newrole.c:434
+#: ../newrole/newrole.c:385
+#, c-format
+msgid "Cannot encrypt password.\n"
+msgstr ""
+
+#: ../newrole/newrole.c:449
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
 msgstr "passwd ফাইলত বৈধ প্ৰবিষ্টি পোৱা নাযায়।\n"
 
-#: ../newrole/newrole.c:445
+#: ../newrole/newrole.c:460
 #, c-format
 msgid "Out of memory!\n"
 msgstr "মেমৰি অবশিষ্ট নাই!\n"
 
-#: ../newrole/newrole.c:450
+#: ../newrole/newrole.c:465
 #, c-format
 msgid "Error!  Shell is not valid.\n"
 msgstr "ত্ৰুটি!  বৈধ শ্বেল ব্যৱহাৰ কৰা নহয়।\n"
 
-#: ../newrole/newrole.c:510
+#: ../newrole/newrole.c:525
 #, c-format
 msgid "Unable to clear environment\n"
 msgstr "পৰিবেশ পৰিশ্ৰুত কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:551 ../newrole/newrole.c:562 ../newrole/newrole.c:593
-#: ../newrole/newrole.c:604 ../newrole/newrole.c:631
+#: ../newrole/newrole.c:566 ../newrole/newrole.c:577 ../newrole/newrole.c:608
+#: ../newrole/newrole.c:619 ../newrole/newrole.c:646
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
 msgstr "KEEPCAPS'ৰ মান পুনৰ নিৰ্ধাৰণ কৰোঁতে ব্যৰ্থ, পৰিত্যাগ কৰা হৈছে\n"
 
-#: ../newrole/newrole.c:557 ../newrole/newrole.c:599 ../newrole/newrole.c:636
+#: ../newrole/newrole.c:572 ../newrole/newrole.c:614 ../newrole/newrole.c:651
 #, c-format
 msgid "Error changing uid, aborting.\n"
 msgstr "uid পৰিবৰ্তন কৰোঁতে ব্যৰ্থ, পৰিত্যাগ কৰা হৈছে।\n"
 
-#: ../newrole/newrole.c:654
+#: ../newrole/newrole.c:669
 #, c-format
 msgid "Error connecting to audit system.\n"
 msgstr "অডিট চিস্টেমতৰ সৈতে সংযোগ কৰোঁতে ব্যৰ্থ।\n"
 
-#: ../newrole/newrole.c:660
+#: ../newrole/newrole.c:675
 #, c-format
 msgid "Error allocating memory.\n"
 msgstr "মেমৰি নিৰ্ধাৰণ কৰোঁতে ব্যৰ্থ।\n"
 
-#: ../newrole/newrole.c:667
+#: ../newrole/newrole.c:682
 #, c-format
 msgid "Error sending audit message.\n"
 msgstr "অডিট সংক্ৰান্ত বাৰ্তা পাঠাতে ব্যৰ্থ।\n"
 
-#: ../newrole/newrole.c:711 ../newrole/newrole.c:1083
+#: ../newrole/newrole.c:726 ../newrole/newrole.c:1097
 #, c-format
 msgid "Could not determine enforcing mode.\n"
 msgstr "enforcing অৱস্থা নিৰ্ধাৰণ কৰা নাযায়।\n"
 
-#: ../newrole/newrole.c:718
+#: ../newrole/newrole.c:733
 #, c-format
 msgid "Error!  Could not open %s.\n"
 msgstr "ত্ৰুটি!  %s খোলোঁতে ব্যৰ্থ।\n"
 
-#: ../newrole/newrole.c:724
+#: ../newrole/newrole.c:739
 #, c-format
 msgid "Error!  Could not clear O_NONBLOCK on %s\n"
 msgstr "ত্ৰুটি! %s ত O_NONBLOCK পৰিষ্কাৰ কৰিব নোৱাৰি\n"
 
-#: ../newrole/newrole.c:730
+#: ../newrole/newrole.c:745
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
 msgstr ""
 "%s!  %s'ৰ ক্ষেত্ৰত বৰ্তমান context প্ৰাপ্ত কৰা নাযায়, tty'ৰ লেবেল পৰিবৰ্তন কৰা হ'ব "
 "না।\n"
 
-#: ../newrole/newrole.c:740
+#: ../newrole/newrole.c:755
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
 msgstr ""
 "%s!  %s'ৰ ক্ষেত্ৰত নতুন context প্ৰাপ্ত কৰা নাযায়, tty'ৰ লেবেল পৰিবৰ্তন কৰা ন'হ'ব  "
 "।\n"
 
-#: ../newrole/newrole.c:750
+#: ../newrole/newrole.c:765
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
 msgstr "%s!  %s'ৰ ক্ষেত্ৰত নতুন context স্থাপন কৰা নাযায়\n"
 
-#: ../newrole/newrole.c:797
+#: ../newrole/newrole.c:812
 #, c-format
 msgid "%s changed labels.\n"
 msgstr "%s'ৰ লেবেল পৰিবৰ্তিত হৈছে।\n"
 
-#: ../newrole/newrole.c:803
+#: ../newrole/newrole.c:818
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
 msgstr "সতৰ্কবাৰ্তা!  %s'ৰ context পুনৰুদ্ধাৰ কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:860
+#: ../newrole/newrole.c:874
 #, c-format
 msgid "Error: multiple roles specified\n"
 msgstr "ত্ৰুটি: একাধিক ভূমিকা উল্লিখিত হৈছে\n"
 
-#: ../newrole/newrole.c:868
+#: ../newrole/newrole.c:882
 #, c-format
 msgid "Error: multiple types specified\n"
 msgstr "ত্ৰুটি: একাধিক ধৰণৰ ফাইল নিৰ্ধাৰিত হৈছে\n"
 
-#: ../newrole/newrole.c:875
+#: ../newrole/newrole.c:889
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
 msgstr "দূঃক্ষিত, -l অকল SELinux MLS সমৰ্থনৰ সৈতে ব্যৱহাৰ কৰা যাব\n"
 
-#: ../newrole/newrole.c:880
+#: ../newrole/newrole.c:894
 #, c-format
 msgid "Error: multiple levels specified\n"
 msgstr "ত্ৰুটি: একাধিক স্তৰ নিৰ্ধাৰিত হৈছে\n"
 
-#: ../newrole/newrole.c:890
+#: ../newrole/newrole.c:904
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
 msgstr "ত্ৰুটি: নিম্ন সুৰক্ষাসম্পন্ন টাৰ্মিনেলত মাত্ৰা পৰিবৰ্তনৰ অনুমতি উপলব্ধ নহয় \n"
 
-#: ../newrole/newrole.c:916
+#: ../newrole/newrole.c:930
 #, c-format
 msgid "Couldn't get default type.\n"
 msgstr "অবিকল্পিত প্ৰকৃতি সনাক্ত কৰা নাযায়।\n"
 
-#: ../newrole/newrole.c:926
+#: ../newrole/newrole.c:940
 #, c-format
 msgid "failed to get new context.\n"
 msgstr "new context প্ৰাপ্ত কৰোঁতে ব্যৰ্থ।\n"
 
-#: ../newrole/newrole.c:933
+#: ../newrole/newrole.c:947
 #, c-format
 msgid "failed to set new role %s\n"
 msgstr "নতুন ভূমিকা %s স্থাপন কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:940
+#: ../newrole/newrole.c:954
 #, c-format
 msgid "failed to set new type %s\n"
 msgstr "নতুন ধৰণ %s স্থাপন কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:950
+#: ../newrole/newrole.c:964
 #, c-format
 msgid "failed to build new range with level %s\n"
 msgstr "%s স্তৰ সহ নতুন বিস্তাৰ নিৰ্মাণ কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:955
+#: ../newrole/newrole.c:969
 #, c-format
 msgid "failed to set new range %s\n"
 msgstr "নতুন বিস্তাৰ %s স্থাপন কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:963
+#: ../newrole/newrole.c:977
 #, c-format
 msgid "failed to convert new context to string\n"
 msgstr "নতুন context'কে string হিচাপে ৰূপান্তৰ কৰা নাযায়\n"
 
-#: ../newrole/newrole.c:968
+#: ../newrole/newrole.c:982
 #, c-format
 msgid "%s is not a valid context\n"
 msgstr "%s বৈধ context নহয়\n"
 
-#: ../newrole/newrole.c:975
+#: ../newrole/newrole.c:989
 #, c-format
 msgid "Unable to allocate memory for new_context"
 msgstr "new_context'ৰ বাবে মেমৰি আবন্টন কৰোঁতে ব্যৰ্থ"
 
-#: ../newrole/newrole.c:1001
+#: ../newrole/newrole.c:1015
 #, c-format
 msgid "Unable to obtain empty signal set\n"
 msgstr "খালি সংকেত সংকলন প্ৰাপ্ত কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:1009
+#: ../newrole/newrole.c:1023
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
 msgstr "SIGHUP হেন্ডলাৰ নিৰ্ধাৰণ কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:1061
+#: ../newrole/newrole.c:1075
 msgid "Sorry, newrole failed to drop capabilities\n"
 msgstr "ক্ষমা কৰিব, newrole এ ক্ষমতাসমূহ বাদ দিবলে ব্যৰ্থ হল\n"
 
-#: ../newrole/newrole.c:1077
+#: ../newrole/newrole.c:1091
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr "দুঃক্ষিত, newrole অকল এটা SELinux কাৰ্ণেলে ব্যৱহাৰ কৰা যাব।\n"
 
-#: ../newrole/newrole.c:1094
+#: ../newrole/newrole.c:1108
 #, c-format
 msgid "failed to get old_context.\n"
 msgstr "old_context প্ৰাপ্ত কৰোঁতে ব্যৰ্থ।\n"
 
-#: ../newrole/newrole.c:1101
+#: ../newrole/newrole.c:1115
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
 msgstr "ত্ৰুটি!  tty সংক্ৰান্ত তথ্য প্ৰাপ্ত কৰা নাযায়।\n"
 
-#: ../newrole/newrole.c:1123
+#: ../newrole/newrole.c:1137
 #, c-format
 msgid "error on reading PAM service configuration.\n"
 msgstr "PAM সেৱাৰ বিন্যাস পঢ়োতে ত্ৰুটি।\n"
 
-#: ../newrole/newrole.c:1158
+#: ../newrole/newrole.c:1172
 #, c-format
 msgid "newrole: incorrect password for %s\n"
 msgstr "newrole: %s'ৰ পাছৱাৰ্ড সঠিক নহয়\n"
 
-#: ../newrole/newrole.c:1185
+#: ../newrole/newrole.c:1199
 #, c-format
 msgid "newrole: failure forking: %s"
 msgstr "newrole: fork কৰোঁতে ব্যৰ্থ: %s"
 
-#: ../newrole/newrole.c:1188 ../newrole/newrole.c:1211
+#: ../newrole/newrole.c:1202 ../newrole/newrole.c:1225
 #, c-format
 msgid "Unable to restore tty label...\n"
 msgstr "tty লেবেল পুনৰ স্থাপন কৰোঁতে ব্যৰ্থ...\n"
 
-#: ../newrole/newrole.c:1190 ../newrole/newrole.c:1217
+#: ../newrole/newrole.c:1204 ../newrole/newrole.c:1231
 #, c-format
 msgid "Failed to close tty properly\n"
 msgstr "tty সঠিকৰূপে বন্ধ কৰোঁতে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:1250
+#: ../newrole/newrole.c:1264
 #, c-format
 msgid "Could not close descriptors.\n"
 msgstr "বিৱৰণ প্ৰদৰ্শন বন্ধ কৰা নাযায়।\n"
 
-#: ../newrole/newrole.c:1285
+#: ../newrole/newrole.c:1299
 #, c-format
 msgid "Error allocating shell's argv0.\n"
 msgstr "শ্বেল'ৰ argv0 আবন্টন কৰোঁতে ব্যৰ্থ।\n"
 
-#: ../newrole/newrole.c:1307
+#: ../newrole/newrole.c:1321
 #, c-format
 msgid "Failed to send audit message"
 msgstr "অডিট বাৰ্তা পঠাবলে ব্যৰ্থ"
 
-#: ../newrole/newrole.c:1315
+#: ../newrole/newrole.c:1329
 #, c-format
 msgid "Failed to transition to namespace\n"
 msgstr "নেইমস্পেইচলে পৰিবৰ্তন কৰিবলে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:1321
+#: ../newrole/newrole.c:1335
 #, c-format
 msgid "Failed to drop capabilities %m\n"
 msgstr "ক্ষমতা %m ড্ৰপ কৰিবলে ব্যৰ্থ\n"
 
-#: ../newrole/newrole.c:1326
+#: ../newrole/newrole.c:1340
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
 msgstr "পৰিবেশ পুনৰুদ্ধাৰ কৰোঁতে ব্যৰ্থ, পৰিত্যাগ কৰা হৈছে\n"
 
-#: ../newrole/newrole.c:1337
+#: ../newrole/newrole.c:1351
 msgid "failed to exec shell\n"
 msgstr "শ্বেল exec কৰোঁতে ব্যৰ্থ\n"
 

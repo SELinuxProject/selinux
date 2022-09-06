@@ -1,48 +1,51 @@
-# Meskó Balázs <meskobalazs@gmail.com>, 2019. #zanata
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2019-03-21 12:07-0400\n"
-"Last-Translator: Meskó Balázs <meskobalazs@gmail.com>\n"
-"Language-Team: Hungarian\n"
-"Language: hu\n"
+"PO-Revision-Date: 2022-07-21 11:19+0000\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <https://translate.fedoraproject.org/projects/"
+"selinux/sandbox/ka/>\n"
+"Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13\n"
 
 #: ../sandbox:120
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
-msgstr "Menti a változásokat ide: „%s” (Y/N): "
+msgstr "გნებავთ'%s' -ის ცვლილებების შენახვა? (Y/N): "
 
 #: ../sandbox:121
 msgid "Sandbox Message"
-msgstr "Homokozó üzenet"
+msgstr "Sandbox შეტყობინება"
 
 #: ../sandbox:133
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
-msgstr "Menti a változásokat ide: „%s” (y/N): "
+msgstr "გნებავთ'%s' -ის ცვლილებების შენახვა? (Y/N): "
 
 #: ../sandbox:134
 msgid "[yY]"
-msgstr "[yYiI]"
+msgstr "[yY]"
 
 #: ../sandbox:157
 msgid "User account must be setup with an MCS Range"
-msgstr "A felhasználó fiókot egy MCS hatáskörrel kell beállítani"
+msgstr ""
 
 #: ../sandbox:185
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr ""
-"Nem található nem használt kategóriakészlet. Fontoljon meg egy nagyobb MCS "
-"hatáskört ehhez a felhasználóhoz."
 
 #: ../sandbox:216
 msgid "Homedir and tempdir required for level mounts"
@@ -54,8 +57,6 @@ msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
-"\n"
-"%s szükséges a végrehajtandó művelethez.\n"
 
 #: ../sandbox:306
 #, python-format
@@ -78,10 +79,19 @@ msgid ""
 "type ] -S\n"
 "%s\n"
 msgstr ""
+"\n"
+"sandbox [-h] [-l დონე ] [-[X|M] [-H საწყ.საქ.] [-T დრ.საქ.]] [-I "
+"ჩასასმელიფაილი ] [-W ფანჯრებისმმართველი ] [ -w ფანჯრისზომა ] [[-i "
+"ფაილი ] ...] [ -t ტიპი ] ბრძანება\n"
+"\n"
+"sandbox [-h] [-l დონე ] [-[X|M] [-H საწყ.საქ.] [-T დრ.საქ.]] [-I "
+"ჩასასმელიფაილი ] [-W ფანჯრებისმმართველი ] [ -w ფანჯრისზომა ] [[-i "
+"ფაილი ] ...] [ -t ტიპი ] -S\n"
+"%s\n"
 
 #: ../sandbox:325
 msgid "include file in sandbox"
-msgstr ""
+msgstr "sandbox-ში ფაილების ჩასმა"
 
 #: ../sandbox:328
 msgid "read list of files to include in sandbox from INCLUDEFILE"
@@ -89,19 +99,19 @@ msgstr ""
 
 #: ../sandbox:330
 msgid "run sandbox with SELinux type"
-msgstr "homokozó futtatása a SELinux típussal"
+msgstr "sandbox-ის SELinux-ის ტიპით გაშვება"
 
 #: ../sandbox:333
 msgid "mount new home and/or tmp directory"
-msgstr "új home és/vagy tmp mappa csatolása"
+msgstr "ახალი საწყისი ან/და /tmp საქაღალდის მიმაგრება"
 
 #: ../sandbox:337
 msgid "dots per inch for X display"
-msgstr "képpont / hüvelyk az X képernyőhöz"
+msgstr "წერტილი დუიმში X-სთვის"
 
 #: ../sandbox:340
 msgid "run complete desktop session within sandbox"
-msgstr "teljes asztali munkamenet futtatása a homokozón belül"
+msgstr ""
 
 #: ../sandbox:343
 msgid "Shred content before temporary directories are removed"
@@ -109,23 +119,23 @@ msgstr ""
 
 #: ../sandbox:347
 msgid "run X application within a sandbox"
-msgstr "X alkalmazás futtatása a homokozón belül"
+msgstr ""
 
 #: ../sandbox:353
 msgid "alternate home directory to use for mounting"
-msgstr "a csatoláshoz használandó alternatív home könyvtár"
+msgstr ""
 
 #: ../sandbox:358
 msgid "alternate /tmp directory to use for mounting"
-msgstr "a csatoláshoz használandó alternatív /tmp könyvtár"
+msgstr ""
 
 #: ../sandbox:367
 msgid "alternate window manager"
-msgstr "alternatív ablakkezelő"
+msgstr "ფანჯრების სხვა მმართველი"
 
 #: ../sandbox:370
 msgid "MCS/MLS level for the sandbox"
-msgstr "A homokozó MCS/MLS szintje"
+msgstr "sandbox-ის MCS/MLS დონე"
 
 #: ../sandbox:386
 msgid ""
@@ -145,14 +155,14 @@ msgstr ""
 
 #: ../sandbox:410
 msgid "Command required"
-msgstr "Parancs szükséges"
+msgstr "ბრძანება აუცილებელია"
 
 #: ../sandbox:413
 #, python-format
 msgid "%s is not an executable"
-msgstr "A(z) %s nem végrehajtható"
+msgstr "%s: გაშვებადი ფაილი არაა"
 
 #: ../sandbox:536
 #, python-format
 msgid "Invalid value %s"
-msgstr "Érvénytelen érték: %s"
+msgstr "არასწორი მნიშვნელობა \"%s\""
