@@ -3,17 +3,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: 2016-01-06 07:14-0500\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Ukrainian\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"PO-Revision-Date: 2022-09-01 09:19+0000\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <https://translate.fedoraproject.org/projects/"
+"selinux/policycoreutils/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.14\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -25,320 +26,325 @@ msgstr ""
 "  де <сценарій> — назва сценарію ініціалізації для запуску,\n"
 "         <аргументи ...> — аргументи для цього сценарію."
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1149
+#: ../run_init/run_init.c:124 ../newrole/newrole.c:1163
 #, c-format
 msgid "failed to initialize PAM\n"
 msgstr "не вдалося ініціалізувати PAM\n"
 
-#: ../run_init/run_init.c:139
+#: ../run_init/run_init.c:137
 #, c-format
 msgid "failed to get account information\n"
 msgstr "не вдалося отримати інформацію щодо облікового запису\n"
 
-#: ../run_init/run_init.c:170 ../newrole/newrole.c:336
+#: ../run_init/run_init.c:168 ../newrole/newrole.c:334
 msgid "Password:"
 msgstr "Пароль:"
 
-#: ../run_init/run_init.c:205 ../newrole/newrole.c:361
+#: ../run_init/run_init.c:201 ../newrole/newrole.c:368
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
 msgstr "Не вдалося знайти ваш запис у тіньовому файлі паролів.\n"
 
-#: ../run_init/run_init.c:211 ../newrole/newrole.c:368
+#: ../run_init/run_init.c:207 ../newrole/newrole.c:375
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
 msgstr "getpass не вдалося відкрити /dev/tty\n"
 
-#: ../run_init/run_init.c:283
+#: ../run_init/run_init.c:279
 #, c-format
 msgid "run_init: incorrect password for %s\n"
 msgstr "run_init: неправильний пароль для %s\n"
 
-#: ../run_init/run_init.c:317
+#: ../run_init/run_init.c:313
 #, c-format
 msgid "Could not open file %s\n"
 msgstr "Не вдалося відкрити файл %s\n"
 
-#: ../run_init/run_init.c:344
+#: ../run_init/run_init.c:340
 #, c-format
 msgid "No context in file %s\n"
 msgstr "У файлі %s немає контекстів\n"
 
-#: ../run_init/run_init.c:369
+#: ../run_init/run_init.c:365
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
 msgstr "run_init може використовуватись лише для ядра з підтримкою SELinux.\n"
 
-#: ../run_init/run_init.c:388
+#: ../run_init/run_init.c:384
 #, c-format
 msgid "authentication failed.\n"
 msgstr "помилка розпізнавання.\n"
 
-#: ../run_init/run_init.c:414 ../newrole/newrole.c:1292
+#: ../run_init/run_init.c:410 ../newrole/newrole.c:1306
 #, c-format
 msgid "Could not set exec context to %s.\n"
 msgstr "Не вдалося вказати контекст виконання у %s.\n"
 
-#: ../newrole/newrole.c:200
+#: ../newrole/newrole.c:199
 #, c-format
 msgid "failed to set PAM_TTY\n"
 msgstr "помилка встановлення PAM_TTY\n"
 
-#: ../newrole/newrole.c:285
+#: ../newrole/newrole.c:283
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
 msgstr "newrole: переповнення хеш-таблиці параметрів назв служб\n"
 
-#: ../newrole/newrole.c:295
+#: ../newrole/newrole.c:293
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
 msgstr "newrole:  %s:  помилка у рядку %lu.\n"
 
-#: ../newrole/newrole.c:434
+#: ../newrole/newrole.c:385
+#, c-format
+msgid "Cannot encrypt password.\n"
+msgstr "Не вдалося зашифрувати пароль.\n"
+
+#: ../newrole/newrole.c:449
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
 msgstr "не вдалося знайти правильний запис у файлі passwd.\n"
 
-#: ../newrole/newrole.c:445
+#: ../newrole/newrole.c:460
 #, c-format
 msgid "Out of memory!\n"
 msgstr "Недостатньо пам'яті!\n"
 
-#: ../newrole/newrole.c:450
+#: ../newrole/newrole.c:465
 #, c-format
 msgid "Error!  Shell is not valid.\n"
 msgstr "Помилка! Неправильна оболонка.\n"
 
-#: ../newrole/newrole.c:510
+#: ../newrole/newrole.c:525
 #, c-format
 msgid "Unable to clear environment\n"
 msgstr "Не вдалося спорожнити змінні середовища\n"
 
-#: ../newrole/newrole.c:551 ../newrole/newrole.c:562 ../newrole/newrole.c:593
-#: ../newrole/newrole.c:604 ../newrole/newrole.c:631
+#: ../newrole/newrole.c:566 ../newrole/newrole.c:577 ../newrole/newrole.c:608
+#: ../newrole/newrole.c:619 ../newrole/newrole.c:646
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
 msgstr "Помилка скидання KEEPCAPS, виконання перервано\n"
 
-#: ../newrole/newrole.c:557 ../newrole/newrole.c:599 ../newrole/newrole.c:636
+#: ../newrole/newrole.c:572 ../newrole/newrole.c:614 ../newrole/newrole.c:651
 #, c-format
 msgid "Error changing uid, aborting.\n"
 msgstr "Помилка зміни uid, виконання перервано.\n"
 
-#: ../newrole/newrole.c:654
+#: ../newrole/newrole.c:669
 #, c-format
 msgid "Error connecting to audit system.\n"
 msgstr "Помилка з'єднання з системою аудиту.\n"
 
-#: ../newrole/newrole.c:660
+#: ../newrole/newrole.c:675
 #, c-format
 msgid "Error allocating memory.\n"
 msgstr "Помилка при розподілі пам'яті.\n"
 
-#: ../newrole/newrole.c:667
+#: ../newrole/newrole.c:682
 #, c-format
 msgid "Error sending audit message.\n"
 msgstr "Помилка надсилання повідомлення аудиту.\n"
 
-#: ../newrole/newrole.c:711 ../newrole/newrole.c:1083
+#: ../newrole/newrole.c:726 ../newrole/newrole.c:1097
 #, c-format
 msgid "Could not determine enforcing mode.\n"
 msgstr "Не вдалося визначити режим блокування (enforcing).\n"
 
-#: ../newrole/newrole.c:718
+#: ../newrole/newrole.c:733
 #, c-format
 msgid "Error!  Could not open %s.\n"
 msgstr "Помилка! Не вдалося відкрити %s.\n"
 
-#: ../newrole/newrole.c:724
+#: ../newrole/newrole.c:739
 #, c-format
 msgid "Error!  Could not clear O_NONBLOCK on %s\n"
 msgstr "Помилка! Не вдалося спорожнити O_NONBLOCK для %s\n"
 
-#: ../newrole/newrole.c:730
+#: ../newrole/newrole.c:745
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
 msgstr ""
 "%s! Не вдалося отримати контекст для %s, перепризначення позначок tty не "
 "відбулось.\n"
 
-#: ../newrole/newrole.c:740
+#: ../newrole/newrole.c:755
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
 msgstr ""
 "%s!  Не вдалося отримати новий контекст для %s, перепризначення позначок tty "
 "не відбулось.\n"
 
-#: ../newrole/newrole.c:750
+#: ../newrole/newrole.c:765
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
 msgstr "%s! Не вдалося вказати новий контекст для %s\n"
 
-#: ../newrole/newrole.c:797
+#: ../newrole/newrole.c:812
 #, c-format
 msgid "%s changed labels.\n"
 msgstr "змінено %s позначок.\n"
 
-#: ../newrole/newrole.c:803
+#: ../newrole/newrole.c:818
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
 msgstr "Попередження! Не вдалося відновити контекст для %s\n"
 
-#: ../newrole/newrole.c:860
+#: ../newrole/newrole.c:874
 #, c-format
 msgid "Error: multiple roles specified\n"
 msgstr "Помилка: вказано декілька ролей\n"
 
-#: ../newrole/newrole.c:868
+#: ../newrole/newrole.c:882
 #, c-format
 msgid "Error: multiple types specified\n"
 msgstr "Помилка: вказано декілька типів\n"
 
-#: ../newrole/newrole.c:875
+#: ../newrole/newrole.c:889
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
 msgstr "Ключ -l може використовуватись з підтримкою SELinux MLS.\n"
 
-#: ../newrole/newrole.c:880
+#: ../newrole/newrole.c:894
 #, c-format
 msgid "Error: multiple levels specified\n"
 msgstr "Помилка: вказано декілька рівнів\n"
 
-#: ../newrole/newrole.c:890
+#: ../newrole/newrole.c:904
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
 msgstr "Помилка: ви не зможете змінювати рівень у небезпечному терміналі\n"
 
-#: ../newrole/newrole.c:916
+#: ../newrole/newrole.c:930
 #, c-format
 msgid "Couldn't get default type.\n"
 msgstr "Не вдалося отримати типовий тип.\n"
 
-#: ../newrole/newrole.c:926
+#: ../newrole/newrole.c:940
 #, c-format
 msgid "failed to get new context.\n"
 msgstr "не вдалося отримати новий контекст.\n"
 
-#: ../newrole/newrole.c:933
+#: ../newrole/newrole.c:947
 #, c-format
 msgid "failed to set new role %s\n"
 msgstr "помилка встановлення нової ролі %s\n"
 
-#: ../newrole/newrole.c:940
+#: ../newrole/newrole.c:954
 #, c-format
 msgid "failed to set new type %s\n"
 msgstr "помилка встановлення нового типу %s\n"
 
-#: ../newrole/newrole.c:950
+#: ../newrole/newrole.c:964
 #, c-format
 msgid "failed to build new range with level %s\n"
 msgstr "не вдалося побудувати новий діапазон з рівнем %s\n"
 
-#: ../newrole/newrole.c:955
+#: ../newrole/newrole.c:969
 #, c-format
 msgid "failed to set new range %s\n"
 msgstr "помилка встановлення нової діапазону %s\n"
 
-#: ../newrole/newrole.c:963
+#: ../newrole/newrole.c:977
 #, c-format
 msgid "failed to convert new context to string\n"
 msgstr "не вдалося перетворити новий контекст у рядок\n"
 
-#: ../newrole/newrole.c:968
+#: ../newrole/newrole.c:982
 #, c-format
 msgid "%s is not a valid context\n"
 msgstr "%s не є правильним контекстом\n"
 
-#: ../newrole/newrole.c:975
+#: ../newrole/newrole.c:989
 #, c-format
 msgid "Unable to allocate memory for new_context"
 msgstr "Не вдалося виділити пам'ять для new_context"
 
-#: ../newrole/newrole.c:1001
+#: ../newrole/newrole.c:1015
 #, c-format
 msgid "Unable to obtain empty signal set\n"
 msgstr "Не вдалося отримати порожній сигнал від\n"
 
-#: ../newrole/newrole.c:1009
+#: ../newrole/newrole.c:1023
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
 msgstr "Не вдалося встановити обробник SIGHUP\n"
 
-#: ../newrole/newrole.c:1061
+#: ../newrole/newrole.c:1075
 msgid "Sorry, newrole failed to drop capabilities\n"
 msgstr "Вибачте, newrole не вдалося скинути можливості\n"
 
-#: ../newrole/newrole.c:1077
+#: ../newrole/newrole.c:1091
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr "newrole може використовуватись лише для ядра з підтримкою SELinux.\n"
 
-#: ../newrole/newrole.c:1094
+#: ../newrole/newrole.c:1108
 #, c-format
 msgid "failed to get old_context.\n"
 msgstr "не вдалося отримати old_context.\n"
 
-#: ../newrole/newrole.c:1101
+#: ../newrole/newrole.c:1115
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
 msgstr "Попередження!  Не вдалося отримати інформацію про tty.\n"
 
-#: ../newrole/newrole.c:1123
+#: ../newrole/newrole.c:1137
 #, c-format
 msgid "error on reading PAM service configuration.\n"
 msgstr "помилка при читанні конфігурації служби PAM.\n"
 
-#: ../newrole/newrole.c:1158
+#: ../newrole/newrole.c:1172
 #, c-format
 msgid "newrole: incorrect password for %s\n"
 msgstr "newrole: неправильний пароль для %s\n"
 
-#: ../newrole/newrole.c:1185
+#: ../newrole/newrole.c:1199
 #, c-format
 msgid "newrole: failure forking: %s"
 msgstr "newrole: помилка створення дочірнього процесу: %s"
 
-#: ../newrole/newrole.c:1188 ../newrole/newrole.c:1211
+#: ../newrole/newrole.c:1202 ../newrole/newrole.c:1225
 #, c-format
 msgid "Unable to restore tty label...\n"
 msgstr "Не вдалося відновити позначку tty...\n"
 
-#: ../newrole/newrole.c:1190 ../newrole/newrole.c:1217
+#: ../newrole/newrole.c:1204 ../newrole/newrole.c:1231
 #, c-format
 msgid "Failed to close tty properly\n"
 msgstr "Не вдалося правильно закрити tty\n"
 
-#: ../newrole/newrole.c:1250
+#: ../newrole/newrole.c:1264
 #, c-format
 msgid "Could not close descriptors.\n"
 msgstr "Не вдалося закрити дескриптор.\n"
 
-#: ../newrole/newrole.c:1285
+#: ../newrole/newrole.c:1299
 #, c-format
 msgid "Error allocating shell's argv0.\n"
 msgstr "Помилка виділення argv0 у оболонці.\n"
 
-#: ../newrole/newrole.c:1307
+#: ../newrole/newrole.c:1321
 #, c-format
 msgid "Failed to send audit message"
 msgstr "Не вдалося надіслати повідомлення аудита"
 
-#: ../newrole/newrole.c:1315
+#: ../newrole/newrole.c:1329
 #, c-format
 msgid "Failed to transition to namespace\n"
 msgstr "Не вдалося перенести до простору назв\n"
 
-#: ../newrole/newrole.c:1321
+#: ../newrole/newrole.c:1335
 #, c-format
 msgid "Failed to drop capabilities %m\n"
 msgstr "Не вдалося скинути можливості %m\n"
 
-#: ../newrole/newrole.c:1326
+#: ../newrole/newrole.c:1340
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
 msgstr "Не вдалося відновити оточення, виконання перервано\n"
 
-#: ../newrole/newrole.c:1337
+#: ../newrole/newrole.c:1351
 msgid "failed to exec shell\n"
 msgstr "не вдалося виконати оболонку\n"
 

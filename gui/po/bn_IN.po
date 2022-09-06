@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
 "PO-Revision-Date: 2016-01-06 06:55-0500\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Bengali (India)\n"
@@ -14,43 +14,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "X-Generator: Zanata 4.6.2\n"
 
-#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+#: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
 msgstr "বুলিয়ান"
 
-#: ../booleansPage.py:248 ../semanagePage.py:166
+#: ../booleansPage.py:249 ../semanagePage.py:167
 msgid "all"
 msgstr "সকল"
 
-#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../booleansPage.py:251 ../semanagePage.py:169
 #: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
 #: ../system-config-selinux.ui:1480
 msgid "Customized"
 msgstr "স্বনির্ধারিত"
 
-#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+#: ../domainsPage.py:56 ../system-config-selinux.ui:1808
 msgid "Process Domain"
 msgstr "প্রসেসের ডোমেইন"
 
-#: ../domainsPage.py:63
+#: ../domainsPage.py:64
 msgid "Domain Name"
 msgstr ""
 
-#: ../domainsPage.py:68
+#: ../domainsPage.py:69
 msgid "Mode"
 msgstr ""
 
-#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
-#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../domainsPage.py:102 ../domainsPage.py:113 ../domainsPage.py:157
+#: ../statusPage.py:74 ../system-config-selinux.ui:596
 #: ../system-config-selinux.ui:1729
 msgid "Permissive"
 msgstr "Permissive (সতর্কতামূলক)"
 
-#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+#: ../fcontextPage.py:73 ../system-config-selinux.ui:1134
 msgid "File Labeling"
 msgstr "ফাইল লেবেল ব্যবস্থা"
 
-#: ../fcontextPage.py:82
+#: ../fcontextPage.py:83
 msgid ""
 "File\n"
 "Specification"
@@ -58,7 +58,7 @@ msgstr ""
 "ফাইলের\n"
 "বৈশিষ্ট্য"
 
-#: ../fcontextPage.py:89
+#: ../fcontextPage.py:90
 msgid ""
 "Selinux\n"
 "File Type"
@@ -66,7 +66,7 @@ msgstr ""
 "Selinux\n"
 "ফাইলের ধরন"
 
-#: ../fcontextPage.py:96
+#: ../fcontextPage.py:97
 msgid ""
 "File\n"
 "Type"
@@ -74,11 +74,11 @@ msgstr ""
 "ফাইল\n"
 "ধরন"
 
-#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+#: ../loginsPage.py:56 ../system-config-selinux.ui:1255
 msgid "User Mapping"
 msgstr "ব্যবহারকারী ম্যাপিং"
 
-#: ../loginsPage.py:59
+#: ../loginsPage.py:60
 msgid ""
 "Login\n"
 "Name"
@@ -86,7 +86,7 @@ msgstr ""
 "লগ-ইন\n"
 "নাম"
 
-#: ../loginsPage.py:63 ../usersPage.py:60
+#: ../loginsPage.py:64 ../usersPage.py:61
 msgid ""
 "SELinux\n"
 "User"
@@ -94,7 +94,7 @@ msgstr ""
 "SELinux\n"
 "ব্যবহারকারী"
 
-#: ../loginsPage.py:66 ../usersPage.py:65
+#: ../loginsPage.py:67 ../usersPage.py:66
 msgid ""
 "MLS/\n"
 "MCS Range"
@@ -102,91 +102,91 @@ msgstr ""
 "MLS/\n"
 "MCS সীমা"
 
-#: ../loginsPage.py:135
+#: ../loginsPage.py:136
 #, python-format
 msgid "Login '%s' is required"
 msgstr "লগ-ইন '%s' আবশ্যক"
 
-#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+#: ../modulesPage.py:56 ../system-config-selinux.ui:1696
 msgid "Policy Module"
 msgstr "পলিসি মডিউল"
 
-#: ../modulesPage.py:65
+#: ../modulesPage.py:66
 msgid "Module Name"
 msgstr "মডিউলের নাম"
 
-#: ../modulesPage.py:70
+#: ../modulesPage.py:71
 msgid "Priority"
 msgstr ""
 
-#: ../modulesPage.py:79
+#: ../modulesPage.py:80
 msgid "Kind"
 msgstr ""
 
-#: ../modulesPage.py:148
+#: ../modulesPage.py:149
 msgid "Disable Audit"
 msgstr "অডিট নিষ্ক্রিয় করা হবে"
 
-#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+#: ../modulesPage.py:152 ../system-config-selinux.ui:1633
 msgid "Enable Audit"
 msgstr "অডিট সক্রিয় করা হবে"
 
-#: ../modulesPage.py:176
+#: ../modulesPage.py:177
 msgid "Load Policy Module"
 msgstr "পলিসি মডিউল লোড করুন"
 
-#: ../polgengui.py:288 ../polgen.ui:728
+#: ../polgengui.py:289 ../polgen.ui:728
 msgid "Name"
 msgstr "নাম"
 
-#: ../polgengui.py:290 ../polgen.ui:111
+#: ../polgengui.py:291 ../polgen.ui:111
 msgid "Description"
 msgstr "বিবরণ"
 
-#: ../polgengui.py:298
+#: ../polgengui.py:299
 msgid "Role"
 msgstr "Role"
 
-#: ../polgengui.py:305
+#: ../polgengui.py:306
 msgid "Existing_User"
 msgstr "উপস্থিত_ব্যবহারকারী"
 
-#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+#: ../polgengui.py:320 ../polgengui.py:328 ../polgengui.py:342
 msgid "Application"
 msgstr "অ্যাপ্লিকেশন"
 
-#: ../polgengui.py:386
+#: ../polgengui.py:387
 #, python-format
 msgid "%s must be a directory"
 msgstr "%s ডিরেক্টরি হওয়া আবশ্যক"
 
-#: ../polgengui.py:446 ../polgengui.py:727
+#: ../polgengui.py:447 ../polgengui.py:728
 msgid "You must select a user"
 msgstr "একটি ব্যবহারকারী নির্বাচন করা আবশ্যক"
 
-#: ../polgengui.py:576
+#: ../polgengui.py:577
 msgid "Select executable file to be confined."
 msgstr "confine করার উদ্দেশ্যে এক্সিকিউটেবিল ফাইল নির্বাচন করুন"
 
-#: ../polgengui.py:587
+#: ../polgengui.py:588
 msgid "Select init script file to be confined."
 msgstr "confine করার উদ্দেশ্যে init script ফাইল নির্বাচন করুন।"
 
-#: ../polgengui.py:597
+#: ../polgengui.py:598
 msgid "Select file(s) that confined application creates or writes"
 msgstr "কনফাইন করা অ্যাপ্লিকেশন দ্বারা নির্মিত অথবা লেখা ফাইল নির্বাচন করুন"
 
-#: ../polgengui.py:604
+#: ../polgengui.py:605
 msgid "Select directory(s) that the confined application owns and writes into"
 msgstr ""
 "কনফাইন করা অ্যাপ্লিকেশনের মালিকানাধীন অথবা অ্যাপ্লিকেশন দ্বারা লিখনযোগ্য ডিরেক্টরি "
 "নির্বাচন করুন"
 
-#: ../polgengui.py:666
+#: ../polgengui.py:667
 msgid "Select directory to generate policy files in"
 msgstr "নিয়মনীতি সংক্রান্ত ফাইল নির্মাণের জন্য ডিরেক্টরি নির্বাচন করুন"
 
-#: ../polgengui.py:683
+#: ../polgengui.py:684
 #, python-format
 msgid ""
 "Type %s_t already defined in current policy.\n"
@@ -195,27 +195,27 @@ msgstr ""
 "বর্তমান নিয়মনীতির মধ্যে %s_t ধরন বর্তমানে ব্যাখ্যা করা হয়েছে।\n"
 "এগিয়ে যেতে ইচ্ছুক কি?"
 
-#: ../polgengui.py:683 ../polgengui.py:687
+#: ../polgengui.py:684 ../polgengui.py:688
 msgid "Verify Name"
 msgstr "নাম পরীক্ষণ"
 
-#: ../polgengui.py:687
+#: ../polgengui.py:688
 #, python-format
 msgid ""
 "Module %s already loaded in current policy.\n"
 "Do you want to continue?"
 msgstr ""
 
-#: ../polgengui.py:733
+#: ../polgengui.py:734
 msgid ""
 "You must add a name made up of letters and numbers and containing no spaces."
 msgstr "শূণ্যস্থান বিনা, অক্ষর ও সংখ্যা সহযোগে একটি নাম প্রস্তুত করে যোগ করতে হবে।"
 
-#: ../polgengui.py:747
+#: ../polgengui.py:748
 msgid "You must enter a executable"
 msgstr "এক্সেকিউটেবল উল্লেখ করা আবশ্যক"
 
-#: ../polgengui.py:772 ../system-config-selinux.py:184
+#: ../polgengui.py:773 ../system-config-selinux.py:185
 #, fuzzy
 #| msgid "Configue SELinux"
 msgid "Configure SELinux"
@@ -661,11 +661,11 @@ msgstr "<b>%s নিয়মনীতি কোন ডিরেক্টরি দ
 msgid "Policy Directory"
 msgstr "নিয়মনীতির ডিরেক্টরি"
 
-#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+#: ../portsPage.py:61 ../system-config-selinux.ui:1544
 msgid "Network Port"
 msgstr "নেটওয়ার্ক পোর্ট"
 
-#: ../portsPage.py:95
+#: ../portsPage.py:96
 msgid ""
 "SELinux Port\n"
 "Type"
@@ -673,11 +673,11 @@ msgstr ""
 "SELinux পোর্ট\n"
 "ধরন"
 
-#: ../portsPage.py:101 ../system-config-selinux.ui:294
+#: ../portsPage.py:102 ../system-config-selinux.ui:294
 msgid "Protocol"
 msgstr "প্রোটোকল"
 
-#: ../portsPage.py:106 ../system-config-selinux.ui:355
+#: ../portsPage.py:107 ../system-config-selinux.ui:355
 msgid ""
 "MLS/MCS\n"
 "Level"
@@ -685,20 +685,20 @@ msgstr ""
 "MLS/MCS\n"
 "স্তর"
 
-#: ../portsPage.py:111
+#: ../portsPage.py:112
 msgid "Port"
 msgstr "পোর্ট"
 
-#: ../portsPage.py:213
+#: ../portsPage.py:214
 #, python-format
 msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
 msgstr "\"%s\" পোর্ট সংখ্যা বৈধ নয়।  0 < পোর্ট_সংখ্যা < 65536 "
 
-#: ../portsPage.py:258
+#: ../portsPage.py:259
 msgid "List View"
 msgstr "তালিকা অনুসারে প্রদর্শন"
 
-#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+#: ../portsPage.py:262 ../system-config-selinux.ui:1466
 msgid "Group View"
 msgstr "সংকলন অনুযায়ী প্রদর্শন"
 
@@ -706,22 +706,22 @@ msgstr "সংকলন অনুযায়ী প্রদর্শন"
 msgid "Generate SELinux policy modules"
 msgstr ""
 
-#: ../semanagePage.py:130
+#: ../semanagePage.py:131
 #, python-format
 msgid "Are you sure you want to delete %s '%s'?"
 msgstr "আপনি কি নিশ্চিতরূপে %s '%s' মুছে ফেলতে ইচ্ছুক?"
 
-#: ../semanagePage.py:130
+#: ../semanagePage.py:131
 #, python-format
 msgid "Delete %s"
 msgstr "%s মুছে ফেলুন"
 
-#: ../semanagePage.py:138
+#: ../semanagePage.py:139
 #, python-format
 msgid "Add %s"
 msgstr "%s যোগ করুন"
 
-#: ../semanagePage.py:152
+#: ../semanagePage.py:153
 #, python-format
 msgid "Modify %s"
 msgstr "%s পরিবর্তন করুন"
@@ -734,20 +734,20 @@ msgstr ""
 msgid "policy;security;selinux;avc;permission;mac;"
 msgstr ""
 
-#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../statusPage.py:75 ../system-config-selinux.ui:599
 #: ../system-config-selinux.ui:1744
 msgid "Enforcing"
 msgstr "Enforcing (সক্রিয়)"
 
-#: ../statusPage.py:79 ../system-config-selinux.ui:593
+#: ../statusPage.py:80 ../system-config-selinux.ui:593
 msgid "Disabled"
 msgstr "Disabled (নিষ্ক্রিয়)"
 
-#: ../statusPage.py:98
+#: ../statusPage.py:99
 msgid "Status"
 msgstr "অবস্থা"
 
-#: ../statusPage.py:137
+#: ../statusPage.py:138
 msgid ""
 "Changing the policy type will cause a relabel of the entire file system on "
 "the next boot. Relabeling takes a long time depending on the size of the "
@@ -757,7 +757,7 @@ msgstr ""
 "লেবেল নতুন করে লেখা হবে। ফাইল-সিস্টেমের মাপের ভিত্তিতে, লেবেল পরিবর্তন করতে অনেক "
 "সময় ব্যয় হওয়ার সম্ভাবনা রয়েছে।  আপনি কি এগিয়ে যেতে ইচ্ছুক?"
 
-#: ../statusPage.py:151
+#: ../statusPage.py:152
 msgid ""
 "Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
 "you later decide to turn SELinux back on, the system will be required to "
@@ -774,7 +774,7 @@ msgstr ""
 "করা হবে। Permissive (সতর্কতামূলক) মোড নির্ধারণের জন্য পুনরায় বুট করা আবশ্যক নয়    "
 "এগিয়ে যেতে ইচ্ছুক কি?"
 
-#: ../statusPage.py:156
+#: ../statusPage.py:157
 msgid ""
 "Changing to SELinux enabled will cause a relabel of the entire file system "
 "on the next boot. Relabeling takes a long time depending on the size of the "
@@ -809,7 +809,7 @@ msgid "Login Name"
 msgstr "লগ-ইন নাম"
 
 #: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
-#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+#: ../system-config-selinux.ui:1911 ../usersPage.py:55
 msgid "SELinux User"
 msgstr "SELinux ব্যবহারকারী"
 
@@ -1003,11 +1003,11 @@ msgstr "প্রসেসটি enforcing (সক্রিয়) মোডে প
 msgid "Add SELinux User"
 msgstr "SELinux ব্যবহারকারী যোগ করুন"
 
-#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+#: ../system-config-selinux.ui:1944 ../usersPage.py:70
 msgid "SELinux Roles"
 msgstr "SELinux রোল"
 
-#: ../usersPage.py:142
+#: ../usersPage.py:143
 #, python-format
 msgid "SELinux user '%s' is required"
 msgstr "SELinux ব্যবহারকারী '%s'-র উপস্থিত আবশ্যক"

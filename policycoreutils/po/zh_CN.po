@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: 2020-09-24 04:29+0000\n"
-"Last-Translator: Charles Lee <lchopn@gmail.com>\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"PO-Revision-Date: 2022-09-06 18:19+0000\n"
+"Last-Translator: Transtats <suanand@redhat.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.fedoraproject.org/"
 "projects/selinux/policycoreutils/zh_CN/>\n"
 "Language: zh_CN\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.2.2\n"
+"X-Generator: Weblate 4.14\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -27,316 +27,321 @@ msgstr ""
 "  其中：<script> 是要运行的初始脚本名，\n"
 "         <args ...> 是这个脚本的参数。"
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1149
+#: ../run_init/run_init.c:124 ../newrole/newrole.c:1163
 #, c-format
 msgid "failed to initialize PAM\n"
 msgstr "初始化 PAM 失败\n"
 
-#: ../run_init/run_init.c:139
+#: ../run_init/run_init.c:137
 #, c-format
 msgid "failed to get account information\n"
 msgstr "获取帐户信息失败\n"
 
-#: ../run_init/run_init.c:170 ../newrole/newrole.c:336
+#: ../run_init/run_init.c:168 ../newrole/newrole.c:334
 msgid "Password:"
 msgstr "密码："
 
-#: ../run_init/run_init.c:205 ../newrole/newrole.c:361
+#: ../run_init/run_init.c:201 ../newrole/newrole.c:368
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
 msgstr "无法在 shadow passwd 文件中找到您的条目。\n"
 
-#: ../run_init/run_init.c:211 ../newrole/newrole.c:368
+#: ../run_init/run_init.c:207 ../newrole/newrole.c:375
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
 msgstr "getpass 不能打开 /dev/tty\n"
 
-#: ../run_init/run_init.c:283
+#: ../run_init/run_init.c:279
 #, c-format
 msgid "run_init: incorrect password for %s\n"
 msgstr "run_init: %s 的密码不正确\n"
 
-#: ../run_init/run_init.c:317
+#: ../run_init/run_init.c:313
 #, c-format
 msgid "Could not open file %s\n"
 msgstr "无法打开文件 %s\n"
 
-#: ../run_init/run_init.c:344
+#: ../run_init/run_init.c:340
 #, c-format
 msgid "No context in file %s\n"
 msgstr "在文件 %s 中无上下文\n"
 
-#: ../run_init/run_init.c:369
+#: ../run_init/run_init.c:365
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
 msgstr "抱歉，run_init 可能只能用于 SELinux 内核。\n"
 
-#: ../run_init/run_init.c:388
+#: ../run_init/run_init.c:384
 #, c-format
 msgid "authentication failed.\n"
 msgstr "验证失败。\n"
 
-#: ../run_init/run_init.c:414 ../newrole/newrole.c:1292
+#: ../run_init/run_init.c:410 ../newrole/newrole.c:1306
 #, c-format
 msgid "Could not set exec context to %s.\n"
 msgstr "无法将 exec context 设定为 %s。\n"
 
-#: ../newrole/newrole.c:200
+#: ../newrole/newrole.c:199
 #, c-format
 msgid "failed to set PAM_TTY\n"
 msgstr "设置 PAM_TTY 失败\n"
 
-#: ../newrole/newrole.c:285
+#: ../newrole/newrole.c:283
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
 msgstr "newrole: 服务名配置散列表溢出\n"
 
-#: ../newrole/newrole.c:295
+#: ../newrole/newrole.c:293
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
 msgstr "newrole:  %s: 错误发生在第 %lu 行。\n"
 
-#: ../newrole/newrole.c:434
+#: ../newrole/newrole.c:385
+#, c-format
+msgid "Cannot encrypt password.\n"
+msgstr "无法加密密码。\n"
+
+#: ../newrole/newrole.c:449
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
 msgstr "无法在 passwd 文件中找到有效条目。\n"
 
-#: ../newrole/newrole.c:445
+#: ../newrole/newrole.c:460
 #, c-format
 msgid "Out of memory!\n"
 msgstr "无可用的内存！\n"
 
-#: ../newrole/newrole.c:450
+#: ../newrole/newrole.c:465
 #, c-format
 msgid "Error!  Shell is not valid.\n"
 msgstr "错误！Shell 无效。\n"
 
-#: ../newrole/newrole.c:510
+#: ../newrole/newrole.c:525
 #, c-format
 msgid "Unable to clear environment\n"
 msgstr "无法清除系统环境\n"
 
-#: ../newrole/newrole.c:551 ../newrole/newrole.c:562 ../newrole/newrole.c:593
-#: ../newrole/newrole.c:604 ../newrole/newrole.c:631
+#: ../newrole/newrole.c:566 ../newrole/newrole.c:577 ../newrole/newrole.c:608
+#: ../newrole/newrole.c:619 ../newrole/newrole.c:646
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
 msgstr "重新设置 KEEPCAPS 出错，正在中止\n"
 
-#: ../newrole/newrole.c:557 ../newrole/newrole.c:599 ../newrole/newrole.c:636
+#: ../newrole/newrole.c:572 ../newrole/newrole.c:614 ../newrole/newrole.c:651
 #, c-format
 msgid "Error changing uid, aborting.\n"
 msgstr "更改 uid 出错，正在中止。\n"
 
-#: ../newrole/newrole.c:654
+#: ../newrole/newrole.c:669
 #, c-format
 msgid "Error connecting to audit system.\n"
 msgstr "连接到审计系统出错。\n"
 
-#: ../newrole/newrole.c:660
+#: ../newrole/newrole.c:675
 #, c-format
 msgid "Error allocating memory.\n"
 msgstr "分配内存时出错。\n"
 
-#: ../newrole/newrole.c:667
+#: ../newrole/newrole.c:682
 #, c-format
 msgid "Error sending audit message.\n"
 msgstr "发送审计信息时出错。\n"
 
-#: ../newrole/newrole.c:711 ../newrole/newrole.c:1083
+#: ../newrole/newrole.c:726 ../newrole/newrole.c:1097
 #, c-format
 msgid "Could not determine enforcing mode.\n"
 msgstr "不能决定 enforcing 模式。\n"
 
-#: ../newrole/newrole.c:718
+#: ../newrole/newrole.c:733
 #, c-format
 msgid "Error!  Could not open %s.\n"
 msgstr "错误！无法打开 %s。\n"
 
-#: ../newrole/newrole.c:724
+#: ../newrole/newrole.c:739
 #, c-format
 msgid "Error!  Could not clear O_NONBLOCK on %s\n"
 msgstr "错误！无法清除 %s 中的 O_NONBLOCK\n"
 
-#: ../newrole/newrole.c:730
+#: ../newrole/newrole.c:745
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
 msgstr "%s!  无法为 %s 获得当前的 上下文，没有重新标记（relabel）tty。\n"
 
-#: ../newrole/newrole.c:740
+#: ../newrole/newrole.c:755
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
 msgstr "%s! 无法为 %s 获得新上下文，不能重新标记 tty。\n"
 
-#: ../newrole/newrole.c:750
+#: ../newrole/newrole.c:765
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
 msgstr "%s!  无法为 %s 设置新上下文\n"
 
-#: ../newrole/newrole.c:797
+#: ../newrole/newrole.c:812
 #, c-format
 msgid "%s changed labels.\n"
 msgstr "%s 更改的标签。\n"
 
-#: ../newrole/newrole.c:803
+#: ../newrole/newrole.c:818
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
 msgstr "警告！无法为 %s 恢复上下文\n"
 
-#: ../newrole/newrole.c:860
+#: ../newrole/newrole.c:874
 #, c-format
 msgid "Error: multiple roles specified\n"
 msgstr "错误：指定了多个角色\n"
 
-#: ../newrole/newrole.c:868
+#: ../newrole/newrole.c:882
 #, c-format
 msgid "Error: multiple types specified\n"
 msgstr "错误：指定了多个类型\n"
 
-#: ../newrole/newrole.c:875
+#: ../newrole/newrole.c:889
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
 msgstr "抱歉， -l 可能需要在 SELinux MLS 支持下使用。\n"
 
-#: ../newrole/newrole.c:880
+#: ../newrole/newrole.c:894
 #, c-format
 msgid "Error: multiple levels specified\n"
 msgstr "错误：指定了多个级别\n"
 
-#: ../newrole/newrole.c:890
+#: ../newrole/newrole.c:904
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
 msgstr "错误：不允许在不安全的终端更改级别\n"
 
-#: ../newrole/newrole.c:916
+#: ../newrole/newrole.c:930
 #, c-format
 msgid "Couldn't get default type.\n"
 msgstr "无法获得默认类型。\n"
 
-#: ../newrole/newrole.c:926
+#: ../newrole/newrole.c:940
 #, c-format
 msgid "failed to get new context.\n"
 msgstr "获得新上下文失败。\n"
 
-#: ../newrole/newrole.c:933
+#: ../newrole/newrole.c:947
 #, c-format
 msgid "failed to set new role %s\n"
 msgstr "设置新角色 %s 失败\n"
 
-#: ../newrole/newrole.c:940
+#: ../newrole/newrole.c:954
 #, c-format
 msgid "failed to set new type %s\n"
 msgstr "设置新类型 %s 失败\n"
 
-#: ../newrole/newrole.c:950
+#: ../newrole/newrole.c:964
 #, c-format
 msgid "failed to build new range with level %s\n"
 msgstr "使用级别 %s 构建新范围失败\n"
 
-#: ../newrole/newrole.c:955
+#: ../newrole/newrole.c:969
 #, c-format
 msgid "failed to set new range %s\n"
 msgstr "设定新范围 %s 失败\n"
 
-#: ../newrole/newrole.c:963
+#: ../newrole/newrole.c:977
 #, c-format
 msgid "failed to convert new context to string\n"
 msgstr "将新上下文转换为字符串失败\n"
 
-#: ../newrole/newrole.c:968
+#: ../newrole/newrole.c:982
 #, c-format
 msgid "%s is not a valid context\n"
 msgstr "%s 不是一个有效的上下文\n"
 
-#: ../newrole/newrole.c:975
+#: ../newrole/newrole.c:989
 #, c-format
 msgid "Unable to allocate memory for new_context"
 msgstr "无法为 new_context 分配内存"
 
-#: ../newrole/newrole.c:1001
+#: ../newrole/newrole.c:1015
 #, c-format
 msgid "Unable to obtain empty signal set\n"
 msgstr "无法获得空信号\n"
 
-#: ../newrole/newrole.c:1009
+#: ../newrole/newrole.c:1023
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
 msgstr "无法设置 SIGHUP handler\n"
 
-#: ../newrole/newrole.c:1061
+#: ../newrole/newrole.c:1075
 msgid "Sorry, newrole failed to drop capabilities\n"
 msgstr "对不起，newrole 无法取消功能\n"
 
-#: ../newrole/newrole.c:1077
+#: ../newrole/newrole.c:1091
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr "newrole 只可以在一个 SELinux 内核中使用。\n"
 
-#: ../newrole/newrole.c:1094
+#: ../newrole/newrole.c:1108
 #, c-format
 msgid "failed to get old_context.\n"
 msgstr "获得 old_context 失败。\n"
 
-#: ../newrole/newrole.c:1101
+#: ../newrole/newrole.c:1115
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
 msgstr "错误！不能检索 tty 信息。\n"
 
-#: ../newrole/newrole.c:1123
+#: ../newrole/newrole.c:1137
 #, c-format
 msgid "error on reading PAM service configuration.\n"
 msgstr "读取 PAM 服务配置时出错。\n"
 
-#: ../newrole/newrole.c:1158
+#: ../newrole/newrole.c:1172
 #, c-format
 msgid "newrole: incorrect password for %s\n"
 msgstr "newrole：%s 的密码不正确\n"
 
-#: ../newrole/newrole.c:1185
+#: ../newrole/newrole.c:1199
 #, c-format
 msgid "newrole: failure forking: %s"
 msgstr "newrole：fork 失败：%s"
 
-#: ../newrole/newrole.c:1188 ../newrole/newrole.c:1211
+#: ../newrole/newrole.c:1202 ../newrole/newrole.c:1225
 #, c-format
 msgid "Unable to restore tty label...\n"
 msgstr "无法恢复 tty label...\n"
 
-#: ../newrole/newrole.c:1190 ../newrole/newrole.c:1217
+#: ../newrole/newrole.c:1204 ../newrole/newrole.c:1231
 #, c-format
 msgid "Failed to close tty properly\n"
 msgstr "关闭 tty 失败\n"
 
-#: ../newrole/newrole.c:1250
+#: ../newrole/newrole.c:1264
 #, c-format
 msgid "Could not close descriptors.\n"
 msgstr "无法关闭 descriptors。\n"
 
-#: ../newrole/newrole.c:1285
+#: ../newrole/newrole.c:1299
 #, c-format
 msgid "Error allocating shell's argv0.\n"
 msgstr "分配 shell 的 argv0 时出错。\n"
 
-#: ../newrole/newrole.c:1307
+#: ../newrole/newrole.c:1321
 #, c-format
 msgid "Failed to send audit message"
 msgstr "发送审核信息失败"
 
-#: ../newrole/newrole.c:1315
+#: ../newrole/newrole.c:1329
 #, c-format
 msgid "Failed to transition to namespace\n"
 msgstr "向名称空间传送失败\n"
 
-#: ../newrole/newrole.c:1321
+#: ../newrole/newrole.c:1335
 #, c-format
 msgid "Failed to drop capabilities %m\n"
 msgstr "减少容量 %m 失败\n"
 
-#: ../newrole/newrole.c:1326
+#: ../newrole/newrole.c:1340
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
 msgstr "无法恢复系统环境，中止\n"
 
-#: ../newrole/newrole.c:1337
+#: ../newrole/newrole.c:1351
 msgid "failed to exec shell\n"
 msgstr "执行 shell 失败\n"
 

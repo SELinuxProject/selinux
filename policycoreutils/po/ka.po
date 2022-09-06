@@ -3,16 +3,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
-"PO-Revision-Date: 2016-06-17 06:00-0400\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Georgian\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"PO-Revision-Date: 2022-05-14 08:18+0000\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <https://translate.fedoraproject.org/projects/"
+"selinux/policycoreutils/ka/>\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.12.2\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -20,331 +21,344 @@ msgid ""
 "  where: <script> is the name of the init script to run,\n"
 "         <args ...> are the arguments to that script."
 msgstr ""
+"გამოყენება:  run_init <სკრიპტი> <არგუმენტები ...>\n"
+"  სადაც: <სკრიპტი> საწყისი გასაშვები სკრიპტის სახელია.\n"
+"           <არგუმენტების ...> სკრიპტის არგუმენტები."
 
-#: ../run_init/run_init.c:126 ../newrole/newrole.c:1149
+#: ../run_init/run_init.c:124 ../newrole/newrole.c:1163
 #, c-format
 msgid "failed to initialize PAM\n"
-msgstr ""
+msgstr "pam-ის ინიციალიზაციის შეცდომა\n"
 
-#: ../run_init/run_init.c:139
+#: ../run_init/run_init.c:137
 #, c-format
 msgid "failed to get account information\n"
-msgstr ""
+msgstr "ანგარიშის ინფორმაციის მიღების შეცდომა\n"
 
-#: ../run_init/run_init.c:170 ../newrole/newrole.c:336
+#: ../run_init/run_init.c:168 ../newrole/newrole.c:334
 msgid "Password:"
 msgstr "პაროლი:"
 
-#: ../run_init/run_init.c:205 ../newrole/newrole.c:361
+#: ../run_init/run_init.c:201 ../newrole/newrole.c:368
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
-msgstr ""
+msgstr "თქვენი ჩანაწერი shadow/passwd ფაილში არ არსებობს.\n"
 
-#: ../run_init/run_init.c:211 ../newrole/newrole.c:368
+#: ../run_init/run_init.c:207 ../newrole/newrole.c:375
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
-msgstr ""
+msgstr "getpass-მა /dev/tty ვერ გახსნა\n"
 
-#: ../run_init/run_init.c:283
+#: ../run_init/run_init.c:279
 #, c-format
 msgid "run_init: incorrect password for %s\n"
-msgstr ""
+msgstr "run_init: %s-ის არასწორი პაროლი\n"
 
-#: ../run_init/run_init.c:317
+#: ../run_init/run_init.c:313
 #, c-format
 msgid "Could not open file %s\n"
-msgstr ""
+msgstr "ფაილის გახსნის შეცდომა: %s\n"
 
-#: ../run_init/run_init.c:344
+#: ../run_init/run_init.c:340
 #, c-format
 msgid "No context in file %s\n"
-msgstr ""
+msgstr "ფაილში კონტექსტი არ არსებობს: %s\n"
 
-#: ../run_init/run_init.c:369
+#: ../run_init/run_init.c:365
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
-msgstr ""
+msgstr "Run_init მხოლოდ SELinux-ის ბირთვზე ეშვება.\n"
 
-#: ../run_init/run_init.c:388
+#: ../run_init/run_init.c:384
 #, c-format
 msgid "authentication failed.\n"
-msgstr ""
+msgstr "ავთენტიკაციის შეცდომა.\n"
 
-#: ../run_init/run_init.c:414 ../newrole/newrole.c:1292
+#: ../run_init/run_init.c:410 ../newrole/newrole.c:1306
 #, c-format
 msgid "Could not set exec context to %s.\n"
-msgstr ""
+msgstr "%s-ზე გაშვების კონტექსტის დაყენების შეცდომა.\n"
 
-#: ../newrole/newrole.c:200
+#: ../newrole/newrole.c:199
 #, c-format
 msgid "failed to set PAM_TTY\n"
-msgstr ""
+msgstr "pam_tty-ის დაყენების შეცდომა\n"
 
-#: ../newrole/newrole.c:285
+#: ../newrole/newrole.c:283
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
-msgstr ""
+msgstr "ახალი როლი: სერვისის სახელის კონფიგურაციის ცხრილი გადავსებულია\n"
 
-#: ../newrole/newrole.c:295
+#: ../newrole/newrole.c:293
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
+msgstr "ახალი როლი:  %s  შეცდომა ხაზზე %lu.\n"
+
+#: ../newrole/newrole.c:385
+#, c-format
+msgid "Cannot encrypt password.\n"
 msgstr ""
 
-#: ../newrole/newrole.c:434
+#: ../newrole/newrole.c:449
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
-msgstr ""
+msgstr "passwd ფაილის ჩანაწერი არ არსებობს.\n"
 
-#: ../newrole/newrole.c:445
+#: ../newrole/newrole.c:460
 #, c-format
 msgid "Out of memory!\n"
-msgstr ""
+msgstr "არასაკმარისი მეხსიერება!\n"
 
-#: ../newrole/newrole.c:450
+#: ../newrole/newrole.c:465
 #, c-format
 msgid "Error!  Shell is not valid.\n"
-msgstr ""
+msgstr "შეცდომა!   არასწორი გარსი.\n"
 
-#: ../newrole/newrole.c:510
+#: ../newrole/newrole.c:525
 #, c-format
 msgid "Unable to clear environment\n"
-msgstr ""
+msgstr "გარემოს გასუფთავების შეცდომა\n"
 
-#: ../newrole/newrole.c:551 ../newrole/newrole.c:562 ../newrole/newrole.c:593
-#: ../newrole/newrole.c:604 ../newrole/newrole.c:631
+#: ../newrole/newrole.c:566 ../newrole/newrole.c:577 ../newrole/newrole.c:608
+#: ../newrole/newrole.c:619 ../newrole/newrole.c:646
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
-msgstr ""
+msgstr "KEEPCAPS-ის მნიშვნელობის დაბრუნების შეცდომა. დასასრული\n"
 
-#: ../newrole/newrole.c:557 ../newrole/newrole.c:599 ../newrole/newrole.c:636
+#: ../newrole/newrole.c:572 ../newrole/newrole.c:614 ../newrole/newrole.c:651
 #, c-format
 msgid "Error changing uid, aborting.\n"
-msgstr ""
+msgstr "UID-ის შეცვლის შეცდომა. დასასრული.\n"
 
-#: ../newrole/newrole.c:654
+#: ../newrole/newrole.c:669
 #, c-format
 msgid "Error connecting to audit system.\n"
-msgstr ""
+msgstr "აუდიტის სისტემასთან მიერთებს შეცდომა.\n"
 
-#: ../newrole/newrole.c:660
+#: ../newrole/newrole.c:675
 #, c-format
 msgid "Error allocating memory.\n"
-msgstr ""
+msgstr "მეხსიერების გამოყოფის შეცდომა.\n"
 
-#: ../newrole/newrole.c:667
+#: ../newrole/newrole.c:682
 #, c-format
 msgid "Error sending audit message.\n"
-msgstr ""
+msgstr "აუდიტის შეტყობინების გაგზავნის შეცდომა.\n"
 
-#: ../newrole/newrole.c:711 ../newrole/newrole.c:1083
+#: ../newrole/newrole.c:726 ../newrole/newrole.c:1097
 #, c-format
 msgid "Could not determine enforcing mode.\n"
-msgstr ""
+msgstr "SELinux-ის რეჟიმის დადგენის შეცდომა.\n"
 
-#: ../newrole/newrole.c:718
+#: ../newrole/newrole.c:733
 #, c-format
 msgid "Error!  Could not open %s.\n"
-msgstr ""
+msgstr "შეცდომა ფაილის გახსნისას!: %s\n"
 
-#: ../newrole/newrole.c:724
+#: ../newrole/newrole.c:739
 #, c-format
 msgid "Error!  Could not clear O_NONBLOCK on %s\n"
-msgstr ""
+msgstr "შეცდომა!  %s-დან O_NONBLOCK-ის მოცილება შეუძლებელია\n"
 
-#: ../newrole/newrole.c:730
+#: ../newrole/newrole.c:745
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
 msgstr ""
+"%s!  %s-ის მიმდინარე კონტექსტის მიღება შეუძლებელია. tty-ზე ჭდე არ "
+"შეიცვლება.\n"
 
-#: ../newrole/newrole.c:740
+#: ../newrole/newrole.c:755
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
 msgstr ""
+"%s!  %s-ის ახალი კონტექსტის მიღება შეუძლებელია. tty-ზე ჭდე არ შეიცვლება.\n"
 
-#: ../newrole/newrole.c:750
+#: ../newrole/newrole.c:765
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
-msgstr ""
+msgstr "%s!  %s-ზე კონტექსტის დაყენების შეცდომა\n"
 
-#: ../newrole/newrole.c:797
+#: ../newrole/newrole.c:812
 #, c-format
 msgid "%s changed labels.\n"
-msgstr ""
+msgstr "%s-ის ჭდეები შეცვლილია.\n"
 
-#: ../newrole/newrole.c:803
+#: ../newrole/newrole.c:818
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
-msgstr ""
+msgstr "%s-ის კონტექსტის აღდგენა შეუძლებელია\n"
 
-#: ../newrole/newrole.c:860
+#: ../newrole/newrole.c:874
 #, c-format
 msgid "Error: multiple roles specified\n"
-msgstr ""
+msgstr "შეცდომა: მითითებულია ერთზე მეტი როლი\n"
 
-#: ../newrole/newrole.c:868
+#: ../newrole/newrole.c:882
 #, c-format
 msgid "Error: multiple types specified\n"
-msgstr ""
+msgstr "შეცდომა: მითითებულია ერთზე მეტი ტიპი\n"
 
-#: ../newrole/newrole.c:875
+#: ../newrole/newrole.c:889
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
-msgstr ""
+msgstr "ბოდიში, -l მხოლოდ SELinux-ის MLS მხარდაჭერისთვისაა საჭირო.\n"
 
-#: ../newrole/newrole.c:880
+#: ../newrole/newrole.c:894
 #, c-format
 msgid "Error: multiple levels specified\n"
-msgstr ""
+msgstr "შეცდომა: მითითებულია ერთზე მეტი დონე\n"
 
-#: ../newrole/newrole.c:890
+#: ../newrole/newrole.c:904
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
-msgstr ""
+msgstr "შეცდომა: დაუცველ ტერმინალზე დონეების შეცვლის უფლება არ გაქვთ \n"
 
-#: ../newrole/newrole.c:916
+#: ../newrole/newrole.c:930
 #, c-format
 msgid "Couldn't get default type.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:926
-#, c-format
-msgid "failed to get new context.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:933
-#, c-format
-msgid "failed to set new role %s\n"
-msgstr ""
+msgstr "ნაგულისხმები ტიპის მიღების შეცდომა.\n"
 
 #: ../newrole/newrole.c:940
 #, c-format
-msgid "failed to set new type %s\n"
-msgstr ""
+msgid "failed to get new context.\n"
+msgstr "ახალი კონტექსტის მიღების შეცდომა.\n"
 
-#: ../newrole/newrole.c:950
+#: ../newrole/newrole.c:947
+#, c-format
+msgid "failed to set new role %s\n"
+msgstr "ახალი როლის (%s) დაყენების შეცდომა\n"
+
+#: ../newrole/newrole.c:954
+#, c-format
+msgid "failed to set new type %s\n"
+msgstr "ახალი ტიპის (%s) დაყენების შეცდომა\n"
+
+#: ../newrole/newrole.c:964
 #, c-format
 msgid "failed to build new range with level %s\n"
-msgstr ""
+msgstr "%s დონით ახალი დიაპაზონის აგების შეცდომა\n"
 
-#: ../newrole/newrole.c:955
+#: ../newrole/newrole.c:969
 #, c-format
 msgid "failed to set new range %s\n"
-msgstr ""
+msgstr "ახალი დიაპაზონის (%s) დაყენების შეცდომა\n"
 
-#: ../newrole/newrole.c:963
+#: ../newrole/newrole.c:977
 #, c-format
 msgid "failed to convert new context to string\n"
-msgstr ""
+msgstr "ახალი კონტექსტის სტრიქონად გარდაქმნის შეცდომა\n"
 
-#: ../newrole/newrole.c:968
+#: ../newrole/newrole.c:982
 #, c-format
 msgid "%s is not a valid context\n"
-msgstr ""
+msgstr "არასწორი კონტექსტი: %s\n"
 
-#: ../newrole/newrole.c:975
+#: ../newrole/newrole.c:989
 #, c-format
 msgid "Unable to allocate memory for new_context"
-msgstr ""
+msgstr "ახალი კონტექსტისთვის მეხსიერების გამოყოფის შეცდომა"
 
-#: ../newrole/newrole.c:1001
+#: ../newrole/newrole.c:1015
 #, c-format
 msgid "Unable to obtain empty signal set\n"
-msgstr ""
+msgstr "ცარიელი სიგნალების ნაკრების მიღების შეცდომა\n"
 
-#: ../newrole/newrole.c:1009
+#: ../newrole/newrole.c:1023
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
-msgstr ""
+msgstr "SIGHUP-ის სახელურის დაყენების შეცდომა\n"
 
-#: ../newrole/newrole.c:1061
+#: ../newrole/newrole.c:1075
 msgid "Sorry, newrole failed to drop capabilities\n"
-msgstr ""
+msgstr "ბოდიში, ახალი როლის მიერ შესაძლებლობების მოცილების შეცდომა\n"
 
-#: ../newrole/newrole.c:1077
+#: ../newrole/newrole.c:1091
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
 msgstr ""
+"უკაცრავად, ახალი როლის გამოყენება მხოლოდ SELinux-იან ბირთვზე შეიძლება.\n"
 
-#: ../newrole/newrole.c:1094
+#: ../newrole/newrole.c:1108
 #, c-format
 msgid "failed to get old_context.\n"
-msgstr ""
+msgstr "ძველი კონტექსტის მიღების შეცდომა.\n"
 
-#: ../newrole/newrole.c:1101
+#: ../newrole/newrole.c:1115
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
-msgstr ""
+msgstr "გაფრთხილება!  tty-ის ინფორმაციის მიღების შეცდომა.\n"
 
-#: ../newrole/newrole.c:1123
+#: ../newrole/newrole.c:1137
 #, c-format
 msgid "error on reading PAM service configuration.\n"
-msgstr ""
+msgstr "pam სერვისის კონფიგურაციის კითხვის შეცდომა.\n"
 
-#: ../newrole/newrole.c:1158
+#: ../newrole/newrole.c:1172
 #, c-format
 msgid "newrole: incorrect password for %s\n"
-msgstr ""
+msgstr "ახალი როლი: %s-ის არასწორი პაროლი\n"
 
-#: ../newrole/newrole.c:1185
+#: ../newrole/newrole.c:1199
 #, c-format
 msgid "newrole: failure forking: %s"
-msgstr ""
+msgstr "ახალი როლი: %s-ის განტოტვის შეცდომა"
 
-#: ../newrole/newrole.c:1188 ../newrole/newrole.c:1211
+#: ../newrole/newrole.c:1202 ../newrole/newrole.c:1225
 #, c-format
 msgid "Unable to restore tty label...\n"
-msgstr ""
+msgstr "TTY-ის ჭდის აღდგენის შეცდომა…\n"
 
-#: ../newrole/newrole.c:1190 ../newrole/newrole.c:1217
+#: ../newrole/newrole.c:1204 ../newrole/newrole.c:1231
 #, c-format
 msgid "Failed to close tty properly\n"
-msgstr ""
+msgstr "TTY-ის სწორად დახურვის შეცდომა\n"
 
-#: ../newrole/newrole.c:1250
+#: ../newrole/newrole.c:1264
 #, c-format
 msgid "Could not close descriptors.\n"
-msgstr ""
+msgstr "დესკრიპტორების დახურვა შეუძლებელია.\n"
 
-#: ../newrole/newrole.c:1285
+#: ../newrole/newrole.c:1299
 #, c-format
 msgid "Error allocating shell's argv0.\n"
-msgstr ""
-
-#: ../newrole/newrole.c:1307
-#, c-format
-msgid "Failed to send audit message"
-msgstr ""
-
-#: ../newrole/newrole.c:1315
-#, c-format
-msgid "Failed to transition to namespace\n"
-msgstr ""
+msgstr "გარსის argv0-ის გამოყოფის შეცდომა.\n"
 
 #: ../newrole/newrole.c:1321
 #, c-format
-msgid "Failed to drop capabilities %m\n"
-msgstr ""
+msgid "Failed to send audit message"
+msgstr "აუდიტის შეტყობინების გაგზავნის შეცდომა"
 
-#: ../newrole/newrole.c:1326
+#: ../newrole/newrole.c:1329
+#, c-format
+msgid "Failed to transition to namespace\n"
+msgstr "სახელების სივრცეში გარდაქმნის შეცდომა\n"
+
+#: ../newrole/newrole.c:1335
+#, c-format
+msgid "Failed to drop capabilities %m\n"
+msgstr "ბოდიში, ახალი როლის მიერ შესაძლებლობების (%m) მოცილების შეცდომა\n"
+
+#: ../newrole/newrole.c:1340
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
-msgstr ""
+msgstr "გარემოს აღდგენის შეცდომა. დასასრული\n"
 
-#: ../newrole/newrole.c:1337
+#: ../newrole/newrole.c:1351
 msgid "failed to exec shell\n"
-msgstr ""
+msgstr "გარსის გაშვების შეცდომა\n"
 
 #: ../load_policy/load_policy.c:22
 #, c-format
 msgid "usage:  %s [-qi]\n"
-msgstr ""
+msgstr "გამოყენება:  %s [-qi]\n"
 
 #: ../load_policy/load_policy.c:73
 #, c-format
 msgid "%s:  Can't load policy and enforcing mode requested:  %s\n"
 msgstr ""
+"%s:  მოთხოვნილი წესებისა და მისი განხორციელების ჩატვირთვა შეუძლებელია:  %s\n"
 
 #: ../load_policy/load_policy.c:83
 #, c-format
 msgid "%s:  Can't load policy:  %s\n"
-msgstr ""
+msgstr "%s:  წესების ჩატვირთვის შეცდომა: %s\n"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
 "PO-Revision-Date: 2021-09-08 19:04+0000\n"
 "Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://translate.fedoraproject.org/projects/selinux/"
@@ -20,43 +20,43 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.8\n"
 
-#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+#: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
 msgstr "부울"
 
-#: ../booleansPage.py:248 ../semanagePage.py:166
+#: ../booleansPage.py:249 ../semanagePage.py:167
 msgid "all"
 msgstr "전체"
 
-#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../booleansPage.py:251 ../semanagePage.py:169
 #: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
 #: ../system-config-selinux.ui:1480
 msgid "Customized"
 msgstr "사용자 정의"
 
-#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+#: ../domainsPage.py:56 ../system-config-selinux.ui:1808
 msgid "Process Domain"
 msgstr "프로세스 도메인"
 
-#: ../domainsPage.py:63
+#: ../domainsPage.py:64
 msgid "Domain Name"
 msgstr "도메인 이름"
 
-#: ../domainsPage.py:68
+#: ../domainsPage.py:69
 msgid "Mode"
 msgstr "모드"
 
-#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
-#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../domainsPage.py:102 ../domainsPage.py:113 ../domainsPage.py:157
+#: ../statusPage.py:74 ../system-config-selinux.ui:596
 #: ../system-config-selinux.ui:1729
 msgid "Permissive"
 msgstr "허용"
 
-#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+#: ../fcontextPage.py:73 ../system-config-selinux.ui:1134
 msgid "File Labeling"
 msgstr "파일 이름표 설정"
 
-#: ../fcontextPage.py:82
+#: ../fcontextPage.py:83
 msgid ""
 "File\n"
 "Specification"
@@ -64,7 +64,7 @@ msgstr ""
 "파일\n"
 "사양"
 
-#: ../fcontextPage.py:89
+#: ../fcontextPage.py:90
 msgid ""
 "Selinux\n"
 "File Type"
@@ -72,7 +72,7 @@ msgstr ""
 "Selinux\n"
 "파일 유형"
 
-#: ../fcontextPage.py:96
+#: ../fcontextPage.py:97
 msgid ""
 "File\n"
 "Type"
@@ -80,11 +80,11 @@ msgstr ""
 "파일\n"
 "유형"
 
-#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+#: ../loginsPage.py:56 ../system-config-selinux.ui:1255
 msgid "User Mapping"
 msgstr "사용자 맵핑"
 
-#: ../loginsPage.py:59
+#: ../loginsPage.py:60
 msgid ""
 "Login\n"
 "Name"
@@ -92,7 +92,7 @@ msgstr ""
 "로그인\n"
 "이름"
 
-#: ../loginsPage.py:63 ../usersPage.py:60
+#: ../loginsPage.py:64 ../usersPage.py:61
 msgid ""
 "SELinux\n"
 "User"
@@ -100,7 +100,7 @@ msgstr ""
 "SELinux\n"
 "사용자"
 
-#: ../loginsPage.py:66 ../usersPage.py:65
+#: ../loginsPage.py:67 ../usersPage.py:66
 msgid ""
 "MLS/\n"
 "MCS Range"
@@ -108,89 +108,89 @@ msgstr ""
 "MLS/\n"
 "MCS 범위"
 
-#: ../loginsPage.py:135
+#: ../loginsPage.py:136
 #, python-format
 msgid "Login '%s' is required"
 msgstr "로그인 '%s'이 필요합니다"
 
-#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+#: ../modulesPage.py:56 ../system-config-selinux.ui:1696
 msgid "Policy Module"
 msgstr "정책 모듈"
 
-#: ../modulesPage.py:65
+#: ../modulesPage.py:66
 msgid "Module Name"
 msgstr "모듈 이름"
 
-#: ../modulesPage.py:70
+#: ../modulesPage.py:71
 msgid "Priority"
 msgstr "우선 순위"
 
-#: ../modulesPage.py:79
+#: ../modulesPage.py:80
 msgid "Kind"
 msgstr "종류"
 
-#: ../modulesPage.py:148
+#: ../modulesPage.py:149
 msgid "Disable Audit"
 msgstr "감사 비활성화"
 
-#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+#: ../modulesPage.py:152 ../system-config-selinux.ui:1633
 msgid "Enable Audit"
 msgstr "감사 활성화"
 
-#: ../modulesPage.py:176
+#: ../modulesPage.py:177
 msgid "Load Policy Module"
 msgstr "정책 모듈 로드"
 
-#: ../polgengui.py:288 ../polgen.ui:728
+#: ../polgengui.py:289 ../polgen.ui:728
 msgid "Name"
 msgstr "이름"
 
-#: ../polgengui.py:290 ../polgen.ui:111
+#: ../polgengui.py:291 ../polgen.ui:111
 msgid "Description"
 msgstr "설명"
 
-#: ../polgengui.py:298
+#: ../polgengui.py:299
 msgid "Role"
 msgstr "역할"
 
-#: ../polgengui.py:305
+#: ../polgengui.py:306
 msgid "Existing_User"
 msgstr "기존 사용자(_U)"
 
-#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+#: ../polgengui.py:320 ../polgengui.py:328 ../polgengui.py:342
 msgid "Application"
 msgstr "응용프로그램"
 
-#: ../polgengui.py:386
+#: ../polgengui.py:387
 #, python-format
 msgid "%s must be a directory"
 msgstr "%s은 디렉토리여야 합니다"
 
-#: ../polgengui.py:446 ../polgengui.py:727
+#: ../polgengui.py:447 ../polgengui.py:728
 msgid "You must select a user"
 msgstr "사용자를 선택 해야 합니다"
 
-#: ../polgengui.py:576
+#: ../polgengui.py:577
 msgid "Select executable file to be confined."
 msgstr "제한된 실행 파일을 선택합니다."
 
-#: ../polgengui.py:587
+#: ../polgengui.py:588
 msgid "Select init script file to be confined."
 msgstr "제한된 init 스크립트 파일을 선택합니다."
 
-#: ../polgengui.py:597
+#: ../polgengui.py:598
 msgid "Select file(s) that confined application creates or writes"
 msgstr "제한된 응용프로그램을 생성하거나 작성 할 파일을 선택합니다"
 
-#: ../polgengui.py:604
+#: ../polgengui.py:605
 msgid "Select directory(s) that the confined application owns and writes into"
 msgstr "제한된 응용프로그램을 소유하고 작성할 디렉토리를 선택합니다"
 
-#: ../polgengui.py:666
+#: ../polgengui.py:667
 msgid "Select directory to generate policy files in"
 msgstr "정책 파일을 생성할 디렉토리를 선택합니다"
 
-#: ../polgengui.py:683
+#: ../polgengui.py:684
 #, python-format
 msgid ""
 "Type %s_t already defined in current policy.\n"
@@ -199,11 +199,11 @@ msgstr ""
 "현재 정책에서 이미 정의된 %s_t를 입력합니다.\n"
 "계속 진행하시겠습니까?"
 
-#: ../polgengui.py:683 ../polgengui.py:687
+#: ../polgengui.py:684 ../polgengui.py:688
 msgid "Verify Name"
 msgstr "이름 확인"
 
-#: ../polgengui.py:687
+#: ../polgengui.py:688
 #, python-format
 msgid ""
 "Module %s already loaded in current policy.\n"
@@ -212,16 +212,16 @@ msgstr ""
 "모듈 %s은/는 현재 정책에 이미 로딩되어 있습니다.\n"
 "계속 진행하시겠습니까?"
 
-#: ../polgengui.py:733
+#: ../polgengui.py:734
 msgid ""
 "You must add a name made up of letters and numbers and containing no spaces."
 msgstr "공백이 없는 문자와 숫자로 구성된 이름을 추가해야 합니다."
 
-#: ../polgengui.py:747
+#: ../polgengui.py:748
 msgid "You must enter a executable"
 msgstr "실행 파일을 입력해야 합니다"
 
-#: ../polgengui.py:772 ../system-config-selinux.py:184
+#: ../polgengui.py:773 ../system-config-selinux.py:185
 msgid "Configure SELinux"
 msgstr "SELinux 구성"
 
@@ -651,11 +651,11 @@ msgstr "<b>어떤 디렉토리가 %s 정책을 생성합니까?</b>"
 msgid "Policy Directory"
 msgstr "정책 디렉토리"
 
-#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+#: ../portsPage.py:61 ../system-config-selinux.ui:1544
 msgid "Network Port"
 msgstr "네트워크 포트"
 
-#: ../portsPage.py:95
+#: ../portsPage.py:96
 msgid ""
 "SELinux Port\n"
 "Type"
@@ -663,11 +663,11 @@ msgstr ""
 "SELinux 포트\n"
 "유형"
 
-#: ../portsPage.py:101 ../system-config-selinux.ui:294
+#: ../portsPage.py:102 ../system-config-selinux.ui:294
 msgid "Protocol"
 msgstr "통신규격"
 
-#: ../portsPage.py:106 ../system-config-selinux.ui:355
+#: ../portsPage.py:107 ../system-config-selinux.ui:355
 msgid ""
 "MLS/MCS\n"
 "Level"
@@ -675,20 +675,20 @@ msgstr ""
 "MLS/MCS\n"
 "레벨"
 
-#: ../portsPage.py:111
+#: ../portsPage.py:112
 msgid "Port"
 msgstr "포트"
 
-#: ../portsPage.py:213
+#: ../portsPage.py:214
 #, python-format
 msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
 msgstr "포트 번호 \"%s\"가 유효하지 않습니다. 0 < PORT_NUMBER < 65536 "
 
-#: ../portsPage.py:258
+#: ../portsPage.py:259
 msgid "List View"
 msgstr "목록 보기"
 
-#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+#: ../portsPage.py:262 ../system-config-selinux.ui:1466
 msgid "Group View"
 msgstr "그룹 보기"
 
@@ -696,22 +696,22 @@ msgstr "그룹 보기"
 msgid "Generate SELinux policy modules"
 msgstr "SELinux 정책 모듈 생성"
 
-#: ../semanagePage.py:130
+#: ../semanagePage.py:131
 #, python-format
 msgid "Are you sure you want to delete %s '%s'?"
 msgstr "정말로 %s '%s'를 삭제하시겠습니까?"
 
-#: ../semanagePage.py:130
+#: ../semanagePage.py:131
 #, python-format
 msgid "Delete %s"
 msgstr "%s 삭제"
 
-#: ../semanagePage.py:138
+#: ../semanagePage.py:139
 #, python-format
 msgid "Add %s"
 msgstr "%s 추가"
 
-#: ../semanagePage.py:152
+#: ../semanagePage.py:153
 #, python-format
 msgid "Modify %s"
 msgstr "%s 수정"
@@ -724,20 +724,20 @@ msgstr "SELinux 정책 관리 도구"
 msgid "policy;security;selinux;avc;permission;mac;"
 msgstr "policy;security;selinux;avc;permission;mac;"
 
-#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../statusPage.py:75 ../system-config-selinux.ui:599
 #: ../system-config-selinux.ui:1744
 msgid "Enforcing"
 msgstr "강제"
 
-#: ../statusPage.py:79 ../system-config-selinux.ui:593
+#: ../statusPage.py:80 ../system-config-selinux.ui:593
 msgid "Disabled"
 msgstr "비활성화"
 
-#: ../statusPage.py:98
+#: ../statusPage.py:99
 msgid "Status"
 msgstr "상태"
 
-#: ../statusPage.py:137
+#: ../statusPage.py:138
 msgid ""
 "Changing the policy type will cause a relabel of the entire file system on "
 "the next boot. Relabeling takes a long time depending on the size of the "
@@ -747,7 +747,7 @@ msgstr ""
 "니다. 레이블 변경은 파일 시스템의 크기에 따라 시간이 오래 소요됩니다. 계속 진"
 "행하시겠습니까?"
 
-#: ../statusPage.py:151
+#: ../statusPage.py:152
 msgid ""
 "Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
 "you later decide to turn SELinux back on, the system will be required to "
@@ -763,7 +763,7 @@ msgstr ""
 "또한 허용 선택을 변경하기 위해 재시작 할 필요가 없습니다. 계속 진행하시겠습니"
 "까?"
 
-#: ../statusPage.py:156
+#: ../statusPage.py:157
 msgid ""
 "Changing to SELinux enabled will cause a relabel of the entire file system "
 "on the next boot. Relabeling takes a long time depending on the size of the "
@@ -798,7 +798,7 @@ msgid "Login Name"
 msgstr "로그인 이름"
 
 #: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
-#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+#: ../system-config-selinux.ui:1911 ../usersPage.py:55
 msgid "SELinux User"
 msgstr "SELinux 사용자"
 
@@ -990,11 +990,11 @@ msgstr "프로세스 방법을 강제로 변경"
 msgid "Add SELinux User"
 msgstr "SELinux 사용자 추가"
 
-#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+#: ../system-config-selinux.ui:1944 ../usersPage.py:70
 msgid "SELinux Roles"
 msgstr "SELinux 기능"
 
-#: ../usersPage.py:142
+#: ../usersPage.py:143
 #, python-format
 msgid "SELinux user '%s' is required"
 msgstr "SELinux 사용자 '%s'가 필요합니다"

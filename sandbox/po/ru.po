@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
 "PO-Revision-Date: 2018-11-20 10:27-0500\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: \n"
@@ -15,31 +15,31 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Zanata 4.6.2\n"
 
-#: ../sandbox:119
+#: ../sandbox:120
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
 msgstr "Вы хотите сохранить изменения в '%s'(Y / N): "
 
-#: ../sandbox:120
+#: ../sandbox:121
 msgid "Sandbox Message"
 msgstr "Сообщение о песочнице"
 
-#: ../sandbox:132
+#: ../sandbox:133
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
 msgstr "Вы хотите сохранить изменения в '%s'(y / N): "
 
-#: ../sandbox:133
+#: ../sandbox:134
 msgid "[yY]"
 msgstr "[YY]"
 
-#: ../sandbox:156
+#: ../sandbox:157
 msgid "User account must be setup with an MCS Range"
 msgstr ""
 "Учетная запись пользователя должна быть настроена с использованием диапазона "
 "MCS"
 
-#: ../sandbox:184
+#: ../sandbox:185
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
@@ -47,11 +47,11 @@ msgstr ""
 "Не удалось найти неиспользуемые категории. Рассмотрим большой диапазон MCS "
 "для этого пользователя."
 
-#: ../sandbox:215
+#: ../sandbox:216
 msgid "Homedir and tempdir required for level mounts"
 msgstr "Homedir и tempdir, необходимые для крепления уровня"
 
-#: ../sandbox:218 ../sandbox:229 ../sandbox:234
+#: ../sandbox:219 ../sandbox:230 ../sandbox:235
 #, python-format
 msgid ""
 "\n"
@@ -60,7 +60,7 @@ msgstr ""
 "\n"
 "%s требуется для действия, которое вы хотите выполнить.\n"
 
-#: ../sandbox:305
+#: ../sandbox:306
 #, python-format
 msgid ""
 "\n"
@@ -70,7 +70,7 @@ msgstr ""
 "\n"
 "Политика определяет следующие типы для использования с -t: \\ t%s\n"
 
-#: ../sandbox:312
+#: ../sandbox:313
 #, python-format
 msgid ""
 "\n"
@@ -91,57 +91,57 @@ msgstr ""
 "S\n"
 "%s\n"
 
-#: ../sandbox:324
+#: ../sandbox:325
 msgid "include file in sandbox"
 msgstr "включить файл в песочницу"
 
-#: ../sandbox:327
+#: ../sandbox:328
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr "читать список файлов для включения в песочницу из INCLUDEFILE"
 
-#: ../sandbox:329
+#: ../sandbox:330
 msgid "run sandbox with SELinux type"
 msgstr "беговая песочница с типом SELinux"
 
-#: ../sandbox:332
+#: ../sandbox:333
 msgid "mount new home and/or tmp directory"
 msgstr "монтировать новый домашний каталог и / или tmp"
 
-#: ../sandbox:336
+#: ../sandbox:337
 msgid "dots per inch for X display"
 msgstr "точек на дюйм для отображения X"
 
-#: ../sandbox:339
+#: ../sandbox:340
 msgid "run complete desktop session within sandbox"
 msgstr "запустить полный рабочий стол в песочнице"
 
-#: ../sandbox:342
+#: ../sandbox:343
 #, fuzzy
 #| msgid "Shred content before tempory directories are removed"
 msgid "Shred content before temporary directories are removed"
 msgstr "Содержимое Shred до удаления каталогов tempory"
 
-#: ../sandbox:346
+#: ../sandbox:347
 msgid "run X application within a sandbox"
 msgstr "запустить приложение X в изолированной программной среде"
 
-#: ../sandbox:352
+#: ../sandbox:353
 msgid "alternate home directory to use for mounting"
 msgstr "альтернативный домашний каталог для монтажа"
 
-#: ../sandbox:357
+#: ../sandbox:358
 msgid "alternate /tmp directory to use for mounting"
 msgstr "альтернативный / tmp каталог для монтажа"
 
-#: ../sandbox:366
+#: ../sandbox:367
 msgid "alternate window manager"
 msgstr "альтернативный оконный менеджер"
 
-#: ../sandbox:369
+#: ../sandbox:370
 msgid "MCS/MLS level for the sandbox"
 msgstr "Уровень MCS / MLS для песочницы"
 
-#: ../sandbox:385
+#: ../sandbox:386
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -150,27 +150,27 @@ msgstr ""
 "Политика Sandbox в настоящее время не установлена. Вам нужно установить "
 "пакет selinux-policy-sandbox для запуска этой команды"
 
-#: ../sandbox:397
+#: ../sandbox:398
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
 "Вы должны указать Homedir и tempdir при настройке изолированной программной "
 "среды сеанса"
 
-#: ../sandbox:399
+#: ../sandbox:400
 msgid "Commands are not allowed in a session sandbox"
 msgstr "Команды не разрешены в изолированной программной среде сеанса"
 
-#: ../sandbox:409
+#: ../sandbox:410
 msgid "Command required"
 msgstr "Требуется команда"
 
-#: ../sandbox:412
+#: ../sandbox:413
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s не является исполняемым"
 
-#: ../sandbox:535
+#: ../sandbox:536
 #, python-format
 msgid "Invalid value %s"
 msgstr "Неверное значение %s"

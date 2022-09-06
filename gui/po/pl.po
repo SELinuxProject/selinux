@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
 "PO-Revision-Date: 2021-09-07 16:04+0000\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <https://translate.fedoraproject.org/projects/selinux/"
@@ -21,43 +21,43 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.8\n"
 
-#: ../booleansPage.py:198 ../system-config-selinux.ui:999
+#: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
 msgstr "Zmienna logiczna"
 
-#: ../booleansPage.py:248 ../semanagePage.py:166
+#: ../booleansPage.py:249 ../semanagePage.py:167
 msgid "all"
 msgstr "wszystko"
 
-#: ../booleansPage.py:250 ../semanagePage.py:168
+#: ../booleansPage.py:251 ../semanagePage.py:169
 #: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
 #: ../system-config-selinux.ui:1480
 msgid "Customized"
 msgstr "Dostosowane"
 
-#: ../domainsPage.py:55 ../system-config-selinux.ui:1808
+#: ../domainsPage.py:56 ../system-config-selinux.ui:1808
 msgid "Process Domain"
 msgstr "Domena procesu"
 
-#: ../domainsPage.py:63
+#: ../domainsPage.py:64
 msgid "Domain Name"
 msgstr "Nazwa domeny"
 
-#: ../domainsPage.py:68
+#: ../domainsPage.py:69
 msgid "Mode"
 msgstr "Tryb"
 
-#: ../domainsPage.py:101 ../domainsPage.py:112 ../domainsPage.py:156
-#: ../statusPage.py:73 ../system-config-selinux.ui:596
+#: ../domainsPage.py:102 ../domainsPage.py:113 ../domainsPage.py:157
+#: ../statusPage.py:74 ../system-config-selinux.ui:596
 #: ../system-config-selinux.ui:1729
 msgid "Permissive"
 msgstr "Zezwalanie"
 
-#: ../fcontextPage.py:72 ../system-config-selinux.ui:1134
+#: ../fcontextPage.py:73 ../system-config-selinux.ui:1134
 msgid "File Labeling"
 msgstr "Etykiety plików"
 
-#: ../fcontextPage.py:82
+#: ../fcontextPage.py:83
 msgid ""
 "File\n"
 "Specification"
@@ -65,7 +65,7 @@ msgstr ""
 "Określenie\n"
 "pliku"
 
-#: ../fcontextPage.py:89
+#: ../fcontextPage.py:90
 msgid ""
 "Selinux\n"
 "File Type"
@@ -73,7 +73,7 @@ msgstr ""
 "Typ pliku\n"
 "SELinuksa"
 
-#: ../fcontextPage.py:96
+#: ../fcontextPage.py:97
 msgid ""
 "File\n"
 "Type"
@@ -81,17 +81,17 @@ msgstr ""
 "Typ\n"
 "pliku"
 
-#: ../loginsPage.py:55 ../system-config-selinux.ui:1255
+#: ../loginsPage.py:56 ../system-config-selinux.ui:1255
 msgid "User Mapping"
 msgstr "Mapowanie użytkownika"
 
-#: ../loginsPage.py:59
+#: ../loginsPage.py:60
 msgid ""
 "Login\n"
 "Name"
 msgstr "Login"
 
-#: ../loginsPage.py:63 ../usersPage.py:60
+#: ../loginsPage.py:64 ../usersPage.py:61
 msgid ""
 "SELinux\n"
 "User"
@@ -99,7 +99,7 @@ msgstr ""
 "Użytkownik\n"
 "SELinuksa"
 
-#: ../loginsPage.py:66 ../usersPage.py:65
+#: ../loginsPage.py:67 ../usersPage.py:66
 msgid ""
 "MLS/\n"
 "MCS Range"
@@ -107,89 +107,89 @@ msgstr ""
 "Zakres MLS/\n"
 "MCS"
 
-#: ../loginsPage.py:135
+#: ../loginsPage.py:136
 #, python-format
 msgid "Login '%s' is required"
 msgstr "Login „%s” jest wymagany"
 
-#: ../modulesPage.py:55 ../system-config-selinux.ui:1696
+#: ../modulesPage.py:56 ../system-config-selinux.ui:1696
 msgid "Policy Module"
 msgstr "Moduł polityki"
 
-#: ../modulesPage.py:65
+#: ../modulesPage.py:66
 msgid "Module Name"
 msgstr "Nazwa modułu"
 
-#: ../modulesPage.py:70
+#: ../modulesPage.py:71
 msgid "Priority"
 msgstr "Priorytet"
 
-#: ../modulesPage.py:79
+#: ../modulesPage.py:80
 msgid "Kind"
 msgstr "Rodzaj"
 
-#: ../modulesPage.py:148
+#: ../modulesPage.py:149
 msgid "Disable Audit"
 msgstr "Wyłącz audyt"
 
-#: ../modulesPage.py:151 ../system-config-selinux.ui:1633
+#: ../modulesPage.py:152 ../system-config-selinux.ui:1633
 msgid "Enable Audit"
 msgstr "Włącz audyt"
 
-#: ../modulesPage.py:176
+#: ../modulesPage.py:177
 msgid "Load Policy Module"
 msgstr "Wczytaj moduł polityki"
 
-#: ../polgengui.py:288 ../polgen.ui:728
+#: ../polgengui.py:289 ../polgen.ui:728
 msgid "Name"
 msgstr "Nazwa"
 
-#: ../polgengui.py:290 ../polgen.ui:111
+#: ../polgengui.py:291 ../polgen.ui:111
 msgid "Description"
 msgstr "Opis"
 
-#: ../polgengui.py:298
+#: ../polgengui.py:299
 msgid "Role"
 msgstr "Rola"
 
-#: ../polgengui.py:305
+#: ../polgengui.py:306
 msgid "Existing_User"
 msgstr "Istniejący_użytkownik"
 
-#: ../polgengui.py:319 ../polgengui.py:327 ../polgengui.py:341
+#: ../polgengui.py:320 ../polgengui.py:328 ../polgengui.py:342
 msgid "Application"
 msgstr "Aplikacja"
 
-#: ../polgengui.py:386
+#: ../polgengui.py:387
 #, python-format
 msgid "%s must be a directory"
 msgstr "%s musi być katalogiem"
 
-#: ../polgengui.py:446 ../polgengui.py:727
+#: ../polgengui.py:447 ../polgengui.py:728
 msgid "You must select a user"
 msgstr "Należy wybrać użytkownika"
 
-#: ../polgengui.py:576
+#: ../polgengui.py:577
 msgid "Select executable file to be confined."
 msgstr "Wybór ograniczanego pliku wykonywalnego."
 
-#: ../polgengui.py:587
+#: ../polgengui.py:588
 msgid "Select init script file to be confined."
 msgstr "Wybór ograniczanego pliku skryptu inicjowania."
 
-#: ../polgengui.py:597
+#: ../polgengui.py:598
 msgid "Select file(s) that confined application creates or writes"
 msgstr "Wybór plików, które ograniczana aplikacja tworzy lub zapisuje"
 
-#: ../polgengui.py:604
+#: ../polgengui.py:605
 msgid "Select directory(s) that the confined application owns and writes into"
 msgstr "Wybór katalogów, które ograniczana aplikacja ma lub do nich zapisuje"
 
-#: ../polgengui.py:666
+#: ../polgengui.py:667
 msgid "Select directory to generate policy files in"
 msgstr "Wybór katalogu, w którym utworzyć pliki polityki"
 
-#: ../polgengui.py:683
+#: ../polgengui.py:684
 #, python-format
 msgid ""
 "Type %s_t already defined in current policy.\n"
@@ -198,11 +198,11 @@ msgstr ""
 "Typ %s_t został już określony w bieżącej polityce.\n"
 "Kontynuować?"
 
-#: ../polgengui.py:683 ../polgengui.py:687
+#: ../polgengui.py:684 ../polgengui.py:688
 msgid "Verify Name"
 msgstr "Sprawdź nazwę"
 
-#: ../polgengui.py:687
+#: ../polgengui.py:688
 #, python-format
 msgid ""
 "Module %s already loaded in current policy.\n"
@@ -211,16 +211,16 @@ msgstr ""
 "Moduł %s został już wczytany w bieżącej polityce.\n"
 "Kontynuować?"
 
-#: ../polgengui.py:733
+#: ../polgengui.py:734
 msgid ""
 "You must add a name made up of letters and numbers and containing no spaces."
 msgstr "Należy dodać nazwę składającą się z liter i liczb, bez spacji."
 
-#: ../polgengui.py:747
+#: ../polgengui.py:748
 msgid "You must enter a executable"
 msgstr "Należy podać plik wykonywalny"
 
-#: ../polgengui.py:772 ../system-config-selinux.py:184
+#: ../polgengui.py:773 ../system-config-selinux.py:185
 msgid "Configure SELinux"
 msgstr "Skonfiguruj SELinuksa"
 
@@ -652,11 +652,11 @@ msgstr "<b>Który katalog utworzyć dla polityki %s?</b>"
 msgid "Policy Directory"
 msgstr "Katalog polityki"
 
-#: ../portsPage.py:60 ../system-config-selinux.ui:1544
+#: ../portsPage.py:61 ../system-config-selinux.ui:1544
 msgid "Network Port"
 msgstr "Port sieciowy"
 
-#: ../portsPage.py:95
+#: ../portsPage.py:96
 msgid ""
 "SELinux Port\n"
 "Type"
@@ -664,11 +664,11 @@ msgstr ""
 "Typ portu\n"
 "SELinuksa"
 
-#: ../portsPage.py:101 ../system-config-selinux.ui:294
+#: ../portsPage.py:102 ../system-config-selinux.ui:294
 msgid "Protocol"
 msgstr "Protokół"
 
-#: ../portsPage.py:106 ../system-config-selinux.ui:355
+#: ../portsPage.py:107 ../system-config-selinux.ui:355
 msgid ""
 "MLS/MCS\n"
 "Level"
@@ -676,20 +676,20 @@ msgstr ""
 "Poziom\n"
 "MLS/MCS"
 
-#: ../portsPage.py:111
+#: ../portsPage.py:112
 msgid "Port"
 msgstr "Port"
 
-#: ../portsPage.py:213
+#: ../portsPage.py:214
 #, python-format
 msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
 msgstr "Numer portu „%s” jest nieprawidłowy. 0 < NUMER_PORTU < 65536 "
 
-#: ../portsPage.py:258
+#: ../portsPage.py:259
 msgid "List View"
 msgstr "Widok listy"
 
-#: ../portsPage.py:261 ../system-config-selinux.ui:1466
+#: ../portsPage.py:262 ../system-config-selinux.ui:1466
 msgid "Group View"
 msgstr "Widok grupy"
 
@@ -697,22 +697,22 @@ msgstr "Widok grupy"
 msgid "Generate SELinux policy modules"
 msgstr "Tworzenie modułów polityki SELinuksa"
 
-#: ../semanagePage.py:130
+#: ../semanagePage.py:131
 #, python-format
 msgid "Are you sure you want to delete %s '%s'?"
 msgstr "Na pewno usunąć %s „%s”?"
 
-#: ../semanagePage.py:130
+#: ../semanagePage.py:131
 #, python-format
 msgid "Delete %s"
 msgstr "Usuń %s"
 
-#: ../semanagePage.py:138
+#: ../semanagePage.py:139
 #, python-format
 msgid "Add %s"
 msgstr "Dodaj %s"
 
-#: ../semanagePage.py:152
+#: ../semanagePage.py:153
 #, python-format
 msgid "Modify %s"
 msgstr "Modyfikuj %s"
@@ -727,20 +727,20 @@ msgstr ""
 "polityka;zasady;policy;bezpieczeństwo;zabezpieczenia;security;selinux;avc;"
 "uprawnienia;permission;mac;"
 
-#: ../statusPage.py:74 ../system-config-selinux.ui:599
+#: ../statusPage.py:75 ../system-config-selinux.ui:599
 #: ../system-config-selinux.ui:1744
 msgid "Enforcing"
 msgstr "Wymuszanie"
 
-#: ../statusPage.py:79 ../system-config-selinux.ui:593
+#: ../statusPage.py:80 ../system-config-selinux.ui:593
 msgid "Disabled"
 msgstr "Wyłączony"
 
-#: ../statusPage.py:98
+#: ../statusPage.py:99
 msgid "Status"
 msgstr "Stan"
 
-#: ../statusPage.py:137
+#: ../statusPage.py:138
 msgid ""
 "Changing the policy type will cause a relabel of the entire file system on "
 "the next boot. Relabeling takes a long time depending on the size of the "
@@ -750,7 +750,7 @@ msgstr ""
 "plików podczas następnego uruchamiania. Ponowne nadawanie etykiet zajmuje "
 "dużo czasu, w zależności od rozmiaru systemu plików. Kontynuować?"
 
-#: ../statusPage.py:151
+#: ../statusPage.py:152
 msgid ""
 "Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
 "you later decide to turn SELinux back on, the system will be required to "
@@ -766,7 +766,7 @@ msgstr ""
 "by zobaczyć, czy SELinux powoduje problem z systemem. Tryb zezwalania nie "
 "wymaga ponownego uruchomienia. Kontynuować?"
 
-#: ../statusPage.py:156
+#: ../statusPage.py:157
 msgid ""
 "Changing to SELinux enabled will cause a relabel of the entire file system "
 "on the next boot. Relabeling takes a long time depending on the size of the "
@@ -801,7 +801,7 @@ msgid "Login Name"
 msgstr "Login"
 
 #: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
-#: ../system-config-selinux.ui:1911 ../usersPage.py:54
+#: ../system-config-selinux.ui:1911 ../usersPage.py:55
 msgid "SELinux User"
 msgstr "Użytkownik SELinuksa"
 
@@ -997,11 +997,11 @@ msgstr "Zmiana trybu procesu na wymuszanie"
 msgid "Add SELinux User"
 msgstr "Dodanie użytkownika SELinuksa"
 
-#: ../system-config-selinux.ui:1944 ../usersPage.py:69
+#: ../system-config-selinux.ui:1944 ../usersPage.py:70
 msgid "SELinux Roles"
 msgstr "Role SELinuksa"
 
-#: ../usersPage.py:142
+#: ../usersPage.py:143
 #, python-format
 msgid "SELinux user '%s' is required"
 msgstr "Użytkownik SELinuksa „%s” jest wymagany"

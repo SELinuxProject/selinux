@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-07 16:48+0200\n"
+"POT-Creation-Date: 2022-08-30 22:52+0200\n"
 "PO-Revision-Date: 2021-09-11 11:04+0000\n"
 "Last-Translator: Sundeep Anand <suanand@redhat.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.fedoraproject.org/"
@@ -15,39 +15,39 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.8\n"
 
-#: ../sandbox:119
+#: ../sandbox:120
 #, python-format
 msgid "Do you want to save changes to '%s' (Y/N): "
 msgstr "是否要保存对 '%s' 的改变 (Y/N): "
 
-#: ../sandbox:120
+#: ../sandbox:121
 msgid "Sandbox Message"
 msgstr "沙盒信息"
 
-#: ../sandbox:132
+#: ../sandbox:133
 #, python-format
 msgid "Do you want to save changes to '%s' (y/N): "
 msgstr "是否要保存对 '%s' 的改变 (y/N): "
 
-#: ../sandbox:133
+#: ../sandbox:134
 msgid "[yY]"
 msgstr "[yY]"
 
-#: ../sandbox:156
+#: ../sandbox:157
 msgid "User account must be setup with an MCS Range"
 msgstr "用户帐户需要设置一个 MCS 范围"
 
-#: ../sandbox:184
+#: ../sandbox:185
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr "无法找到任何未使用的类别集。考虑为这个用户设置一个更大的 MCS 范围。"
 
-#: ../sandbox:215
+#: ../sandbox:216
 msgid "Homedir and tempdir required for level mounts"
 msgstr "设置 level 的挂载需要 Homedir 和 tempdir"
 
-#: ../sandbox:218 ../sandbox:229 ../sandbox:234
+#: ../sandbox:219 ../sandbox:230 ../sandbox:235
 #, python-format
 msgid ""
 "\n"
@@ -56,7 +56,7 @@ msgstr ""
 "\n"
 "您需要进行的操作需要 %s。\n"
 
-#: ../sandbox:305
+#: ../sandbox:306
 #, python-format
 msgid ""
 "\n"
@@ -67,7 +67,7 @@ msgstr ""
 "政策定义了与 -t 一起使用的以下几种类型：\n"
 "\\ t%s\n"
 
-#: ../sandbox:312
+#: ../sandbox:313
 #, python-format
 msgid ""
 "\n"
@@ -90,55 +90,55 @@ msgstr ""
 "type ] -S\n"
 "%s\n"
 
-#: ../sandbox:324
+#: ../sandbox:325
 msgid "include file in sandbox"
 msgstr "包括在沙箱中的文件"
 
-#: ../sandbox:327
+#: ../sandbox:328
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr "从 INCLUDEFILE 中读取包括在沙箱中的文件列表"
 
-#: ../sandbox:329
+#: ../sandbox:330
 msgid "run sandbox with SELinux type"
 msgstr "使用 SELinux 类型运行沙箱"
 
-#: ../sandbox:332
+#: ../sandbox:333
 msgid "mount new home and/or tmp directory"
 msgstr "挂载新的 home 和（或）tmp 目录"
 
-#: ../sandbox:336
+#: ../sandbox:337
 msgid "dots per inch for X display"
 msgstr "X 显示的每英寸的点数"
 
-#: ../sandbox:339
+#: ../sandbox:340
 msgid "run complete desktop session within sandbox"
 msgstr "在沙箱内运行完整的桌面会话"
 
-#: ../sandbox:342
+#: ../sandbox:343
 msgid "Shred content before temporary directories are removed"
 msgstr "在临时目标被删除前，销毁其中的内容"
 
-#: ../sandbox:346
+#: ../sandbox:347
 msgid "run X application within a sandbox"
 msgstr "在沙箱中运行 X 应用程序"
 
-#: ../sandbox:352
+#: ../sandbox:353
 msgid "alternate home directory to use for mounting"
 msgstr "挂载时使用不同的 home 目录"
 
-#: ../sandbox:357
+#: ../sandbox:358
 msgid "alternate /tmp directory to use for mounting"
 msgstr "挂载时使用不同的 /tmp目录"
 
-#: ../sandbox:366
+#: ../sandbox:367
 msgid "alternate window manager"
 msgstr "使用不同的 window manager"
 
-#: ../sandbox:369
+#: ../sandbox:370
 msgid "MCS/MLS level for the sandbox"
 msgstr "沙箱的 MCS/MLS 级别"
 
-#: ../sandbox:385
+#: ../sandbox:386
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -147,25 +147,25 @@ msgstr ""
 "沙箱策略目前尚未安装。\n"
 "您需要安装 selinux-policy-sandbox 软件包后才能运行此命令"
 
-#: ../sandbox:397
+#: ../sandbox:398
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr "建立会话沙箱时，必须指定主目录和 tempdir"
 
-#: ../sandbox:399
+#: ../sandbox:400
 msgid "Commands are not allowed in a session sandbox"
 msgstr "会话沙箱中不允许的命令"
 
-#: ../sandbox:409
+#: ../sandbox:410
 msgid "Command required"
 msgstr "所需的命令"
 
-#: ../sandbox:412
+#: ../sandbox:413
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s 不可执行"
 
-#: ../sandbox:535
+#: ../sandbox:536
 #, python-format
 msgid "Invalid value %s"
 msgstr "无效值 %s"
