@@ -536,7 +536,7 @@ Defines a named extended permission, which can be used in the [`allowx`](cil_acc
 </tr>
 <tr class="odd">
 <td align="left"><p><code>class_id</code></p></td>
-<td align="left"><p>A single previously declared <code>class</code> identifier.</p></td>
+<td align="left"><p>A single previously declared <code>class</code> or <code>classmap</code> identifier.</p></td>
 </tr>
 <tr class="even">
 <td align="left"><p><code>permission</code></p></td>
