@@ -30,6 +30,7 @@ the issue as quickly as possible and shorten the disclosure window.
 * Joshua Brindle, brindle@gmail.com
 * James Carter, jwcart2@gmail.com
 * Paul Moore, paul@paul-moore.com
+  *  (GPG fingerprint) 7100 AADF AE6E 6E94 0D2E  0AD6 55E4 5A5A E8CA 7C8A
 * Jason Zaman, perfinion@gentoo.org
 * Steve Lawrence, slawrence@tresys.com
 * William Roberts, bill.c.roberts@gmail.com
