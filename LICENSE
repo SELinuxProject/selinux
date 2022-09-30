@@ -1,0 +1,5 @@
+The SELinux userspace tool and library repository contains a number of
+different tools and libraries which each carry their own licensing
+information.  In each tool and library subdirectory look for a LICENSE
+file which contains the license information for that portion of the
+repository.
