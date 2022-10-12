@@ -2290,6 +2290,7 @@ static int __cil_post_process_context_rules(struct cil_sort *sort, int (*compar)
 		} else {
 			removed++;
 			if (!db->multiple_decls || concompar(&sort->array[i], &sort->array[j]) != 0) {
+				rc = SEPOL_ERR;
 				conflicting++;
 				if (log_level >= CIL_WARN) {
 					struct cil_list_item li;
@@ -2297,7 +2298,6 @@ static int __cil_post_process_context_rules(struct cil_sort *sort, int (*compar)
 					li.flavor = flavor;
 					if (conflicting == 1) {
 						cil_log(CIL_WARN, "Found conflicting %s rules\n", flavor_str);
-						rc = SEPOL_ERR;
 						li.data = sort->array[i];
 						rc2 = cil_tree_walk(db->ast->root, __cil_post_report_conflict,
 											NULL, NULL, &li);
