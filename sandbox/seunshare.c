@@ -414,7 +414,7 @@ static int cleanup_tmpdir(const char *tmpdir, const char *src,
 		rc++;
 	}
 
-	if (rmdir(tmpdir) == -1)
+	if (pwd->pw_uid != 0 && rmdir(tmpdir) == -1)
 		fprintf(stderr, _("Failed to remove directory %s: %s\n"), tmpdir, strerror(errno));
 	if ((uid_t)setfsuid(pwd->pw_uid) != 0) {
 		fprintf(stderr, _("unable to switch back to user after clearing tmp dir\n"));
