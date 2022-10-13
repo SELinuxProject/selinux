@@ -18,6 +18,9 @@ Alternate homedir to be used by the application.  Homedir must be owned by the u
 \fB\-t\ tmpdir
 Use alternate temporary directory to mount on /tmp.  tmpdir must be owned by the user.
 .TP
+\fB\-r\ runuserdir
+Use alternate temporary directory to mount on XDG_RUNTIME_DIR (/run/user/$UID). runuserdir must be owned by the user.
+.TP
 \fB\-C --capabilities\fR
 Allow apps executed within the namespace to use capabilities.  Default is no capabilities.
 .TP

@@ -209,6 +209,7 @@ class Sandbox:
         self.__level = None
         self.__homedir = None
         self.__tmpdir = None
+        self.__runuserdir = None
 
     def __validate_mount(self):
         if self.__options.level:
@@ -357,6 +358,11 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
                           action="callback", callback=self.__validdir,
                           help=_("alternate /tmp directory to use for mounting"))
 
+        parser.add_option("-R", "--runuserdir", dest="runuserdir",
+                          type="string",
+                          action="callback", callback=self.__validdir,
+                          help=_("alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"))
+
         parser.add_option("-w", "--windowsize", dest="windowsize",
                           type="string", default=DEFAULT_WINDOWSIZE,
                           help="size of the sandbox window")
@@ -401,10 +407,12 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
             self.__options.X_ind = True
             self.__homedir = self.__options.homedir
             self.__tmpdir = self.__options.tmpdir
+            self.__runuserdir = self.__options.runuserdir
         else:
             if self.__options.level:
                 self.__homedir = self.__options.homedir
                 self.__tmpdir = self.__options.tmpdir
+                self.__runuserdir = self.__options.runuserdir
 
             if len(cmds) == 0:
                 self.usage(_("Command required"))
@@ -442,9 +450,14 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
             self.__tmpdir = self.__options.tmpdir
         else:
             self.__tmpdir = mkdtemp(dir="/tmp", prefix=".sandbox_tmp_")
+        if self.__options.runuserdir:
+            self.__runuserdir = self.__options.runuserdir
+        else:
+            self.__runuserdir = mkdtemp(dir="/tmp", prefix=".sandbox_runuser_")
         self.__copyfiles()
         selinux.chcon(self.__homedir, self.__filecon, recursive=True)
         selinux.chcon(self.__tmpdir, self.__filecon, recursive=True)
+        selinux.chcon(self.__runuserdir, self.__filecon, recursive=True)
         selinux.setfscreatecon(None)
 
     def __execute(self):
@@ -453,7 +466,7 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
             if self.__options.usecaps:
                 cmds.append('-C')
             if self.__mount:
-                cmds += ["-t", self.__tmpdir, "-h", self.__homedir]
+                cmds += ["-t", self.__tmpdir, "-h", self.__homedir, "-r", self.__runuserdir]
 
                 if self.__options.X_ind:
                     if self.__options.dpi:

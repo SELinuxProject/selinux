@@ -52,7 +52,7 @@
 
 #define BUF_SIZE 1024
 #define DEFAULT_PATH "/usr/bin:/bin"
-#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -C ] [ -k ] [ -t tmpdir ] [ -h homedir ] [ -Z CONTEXT ] -- executable [args] ")
+#define USAGE_STRING _("USAGE: seunshare [ -v ] [ -C ] [ -k ] [ -t tmpdir ] [ -h homedir ] [ -r runuserdir ] [ -Z CONTEXT ] -- executable [args] ")
 
 static int verbose = 0;
 static int child = 0;
@@ -623,15 +623,20 @@ int main(int argc, char **argv) {
 	char *homedir_s = NULL;	/* homedir spec'd by user in argv[] */
 	char *tmpdir_s = NULL;	/* tmpdir spec'd by user in argv[] */
 	char *tmpdir_r = NULL;	/* tmpdir created by seunshare */
+	char *runuserdir_s = NULL;	/* /var/run/user/UID spec'd by user in argv[] */
+	char *runuserdir_r = NULL;	/* /var/run/user/UID created by seunshare */
 
 	struct stat st_curhomedir;
 	struct stat st_homedir;
 	struct stat st_tmpdir_s;
 	struct stat st_tmpdir_r;
+	struct stat st_runuserdir_s;
+	struct stat st_runuserdir_r;
 
 	const struct option long_options[] = {
 		{"homedir", 1, 0, 'h'},
 		{"tmpdir", 1, 0, 't'},
+		{"runuserdir", 1, 0, 'r'},
 		{"kill", 1, 0, 'k'},
 		{"verbose", 1, 0, 'v'},
 		{"context", 1, 0, 'Z'},
@@ -665,7 +670,7 @@ int main(int argc, char **argv) {
 	}
 
 	while (1) {
-		clflag = getopt_long(argc, argv, "Ccvh:t:Z:", long_options, NULL);
+		clflag = getopt_long(argc, argv, "Ccvh:r:t:Z:", long_options, NULL);
 		if (clflag == -1)
 			break;
 
@@ -678,6 +683,9 @@ int main(int argc, char **argv) {
 			break;
 		case 'h':
 			homedir_s = optarg;
+			break;
+		case 'r':
+			runuserdir_s = optarg;
 			break;
 		case 'v':
 			verbose++;
@@ -729,12 +737,22 @@ int main(int argc, char **argv) {
 	if (tmpdir_s && (
 		verify_directory(tmpdir_s, NULL, &st_tmpdir_s) < 0 ||
 		check_owner_uid(uid, tmpdir_s, &st_tmpdir_s))) return -1;
+	if (runuserdir_s && (
+		verify_directory(runuserdir_s, NULL, &st_runuserdir_s) < 0 ||
+		check_owner_uid(uid, runuserdir_s, &st_runuserdir_s))) return -1;
+
 	if ((uid_t)setfsuid(0) != uid) return -1;
 
 	/* create runtime tmpdir */
 	if (tmpdir_s && (tmpdir_r = create_tmpdir(tmpdir_s, &st_tmpdir_s,
 						  &st_tmpdir_r, pwd, execcon)) == NULL) {
 		fprintf(stderr, _("Failed to create runtime temporary directory\n"));
+		return -1;
+	}
+	/* create runtime runuserdir */
+	if (runuserdir_s && (runuserdir_r = create_tmpdir(runuserdir_s, &st_runuserdir_s,
+						  &st_runuserdir_r, pwd, execcon)) == NULL) {
+		fprintf(stderr, _("Failed to create runtime $XDG_RUNTIME_DIR directory\n"));
 		return -1;
 	}
 
@@ -775,7 +793,21 @@ int main(int argc, char **argv) {
 		if (check_owner_uid(uid, resolved_path, &st_curhomedir) < 0)
 			goto childerr;
 
-		/* mount homedir and tmpdir, in this order */
+		if ((RUNTIME_DIR = getenv("XDG_RUNTIME_DIR")) != NULL) {
+			if ((RUNTIME_DIR = strdup(RUNTIME_DIR)) == NULL) {
+				perror(_("Out of memory"));
+				goto childerr;
+			}
+		} else {
+			if (asprintf(&RUNTIME_DIR, "/run/user/%d", uid) == -1) {
+				perror(_("Out of memory\n"));
+				goto childerr;
+			}
+		}
+
+		/* mount homedir, runuserdir and tmpdir, in this order */
+		if (runuserdir_s &&	seunshare_mount(runuserdir_s, RUNTIME_DIR,
+			&st_runuserdir_s) != 0) goto childerr;
 		if (homedir_s && seunshare_mount(homedir_s, resolved_path,
 			&st_homedir) != 0) goto childerr;
 		if (tmpdir_s &&	seunshare_mount(tmpdir_r, "/tmp",
@@ -794,13 +826,6 @@ int main(int argc, char **argv) {
 		/* construct a new environment */
 		if ((LANG = getenv("LANG")) != NULL) {
 			if ((LANG = strdup(LANG)) == NULL) {
-				perror(_("Out of memory"));
-				goto childerr;
-			}
-		}
-
-		if ((RUNTIME_DIR = getenv("XDG_RUNTIME_DIR")) != NULL) {
-			if ((RUNTIME_DIR = strdup(RUNTIME_DIR)) == NULL) {
 				perror(_("Out of memory"));
 				goto childerr;
 			}

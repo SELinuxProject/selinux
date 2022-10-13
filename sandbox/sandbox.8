@@ -3,11 +3,11 @@
 sandbox \- Run cmd under an SELinux sandbox
 .SH SYNOPSIS
 .B sandbox
-[\-C] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] cmd
+[\-C] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [ \-R runuserdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] cmd
 
 .br
 .B sandbox
-[\-C] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] \-S
+[\-C] [\-s] [ \-d DPI ] [\-l level ] [[\-M | \-X]  \-H homedir \-T tempdir ] [ \-R runuserdir ] [\-I includefile ] [ \-W windowmanager ] [ \-w windowsize ] [[\-i file ]...] [ \-t type ] \-S
 .br
 .SH DESCRIPTION
 .PP
@@ -66,6 +66,9 @@ sandbox_net_client_t	\-	All network ports
 .TP
 \fB\-T\fR \fB\-\-tmpdir\fR
 Use alternate temporary directory to mount on /tmp.  Defaults to tmpfs. Requires \-X or \-M.
+.TP
+\fB\-R\fR \fB\-\-runuserdir\fR
+Use alternate temporary directory to mount on XDG_RUNTIME_DIR (/run/user/$UID).
 .TP
 \fB\-S\fR \fB\-\-session\fR
 Run a full desktop session, Requires level, and home and tmpdir.
