@@ -26,12 +26,15 @@ the issue as quickly as possible and shorten the disclosure window.
 
 * Petr Lautrbach, plautrba@redhat.com
 * Nicolas Iooss, nicolas.iooss@m4x.org
+  *  (GPG fingerprint) E25E 254C 8EE4 D303 554B  F5AF EC70 1A1D A494 C5EB
 * Jeffrey Vander Stoep, jeffv@google.com
 * Joshua Brindle, brindle@gmail.com
 * James Carter, jwcart2@gmail.com
+  *  (GPG fingerprint) 4568 1128 449B 65F8 80C6  1797 3A84 A946 B4BA 62AE
 * Paul Moore, paul@paul-moore.com
   *  (GPG fingerprint) 7100 AADF AE6E 6E94 0D2E  0AD6 55E4 5A5A E8CA 7C8A
 * Jason Zaman, perfinion@gentoo.org
+  *  (GPG fingerprint) 6319 1CE9 4183 0986 89CA  B8DB 7EF1 37EC 935B 0EAF
 * Steve Lawrence, slawrence@tresys.com
 * William Roberts, bill.c.roberts@gmail.com
 * Ondrej Mosnacek, omosnace@redhat.com
