@@ -63,6 +63,9 @@ static struct discover_class_node * discover_class(const char *s)
 		return NULL;
 	}
 
+	if (strchr(s, '/') != NULL)
+		return NULL;
+
 	/* allocate a node */
 	node = malloc(sizeof(struct discover_class_node));
 	if (node == NULL)
