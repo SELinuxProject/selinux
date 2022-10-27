@@ -2208,7 +2208,7 @@ static int avrule_ioctl_partialdriver(struct av_ioctl_range_list *rangelist,
 	xperms = calloc(1, sizeof(av_extended_perms_t));
 	if (!xperms) {
 		yyerror("out of memory");
-		return - 1;
+		return -1;
 	}
 
 	r = rangelist;
@@ -2245,7 +2245,7 @@ static int avrule_ioctl_completedriver(struct av_ioctl_range_list *rangelist,
 	xperms = calloc(1, sizeof(av_extended_perms_t));
 	if (!xperms) {
 		yyerror("out of memory");
-		return - 1;
+		return -1;
 	}
 
 	r = rangelist;
@@ -2289,7 +2289,7 @@ static int avrule_ioctl_func(struct av_ioctl_range_list *rangelist,
 	xperms = calloc(1, sizeof(av_extended_perms_t));
 	if (!xperms) {
 		yyerror("out of memory");
-		return - 1;
+		return -1;
 	}
 
 	r = rangelist;
@@ -2352,11 +2352,11 @@ static int avrule_cpy(avrule_t *dest, const avrule_t *src)
 	dest->flags = src->flags;
 	if (type_set_cpy(&dest->stypes, &src->stypes)) {
 		yyerror("out of memory");
-		return - 1;
+		return -1;
 	}
 	if (type_set_cpy(&dest->ttypes, &src->ttypes)) {
 		yyerror("out of memory");
-		return - 1;
+		return -1;
 	}
 	dest->line = src->line;
 	dest->source_filename = strdup(source_file);
