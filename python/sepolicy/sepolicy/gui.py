@@ -77,7 +77,7 @@ def cmp(a, b):
         return 1
     return (a > b) - (a < b)
 
-import distutils.sysconfig
+import sysconfig
 ADVANCED_LABEL = (_("Advanced >>"), _("Advanced <<"))
 ADVANCED_SEARCH_LABEL = (_("Advanced Search >>"), _("Advanced Search <<"))
 OUTBOUND_PAGE = 0
@@ -130,7 +130,7 @@ class SELinuxGui():
         self.application = app
         self.filter_txt = ""
         builder = Gtk.Builder()  # BUILDER OBJ
-        self.code_path = distutils.sysconfig.get_python_lib(plat_specific=False) + "/sepolicy/"
+        self.code_path = sysconfig.get_python_lib(plat_specific=False) + "/sepolicy/"
         glade_file = self.code_path + "sepolicy.glade"
         builder.add_from_file(glade_file)
         self.outer_notebook = builder.get_object("outer_notebook")

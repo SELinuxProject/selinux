@@ -2,7 +2,7 @@
 
 # Author: Thomas Liu <tliu@redhat.com>
 # Author: Dan Walsh <dwalsh@redhat.com>
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name="sepolicy",

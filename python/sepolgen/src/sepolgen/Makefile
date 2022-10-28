@@ -1,6 +1,6 @@
 PREFIX ?= /usr
 PYTHON ?= python3
-PYTHONLIBDIR ?= $(shell $(PYTHON) -c "from distutils.sysconfig import *; print(get_python_lib(prefix='$(PREFIX)'))")
+PYTHONLIBDIR ?= $(shell $(PYTHON) -c "import sysconfig; print(sysconfig.get_path('purelib', vars={'platbase': '$(PREFIX)', 'base': '$(PREFIX)'}))")
 PACKAGEDIR ?= /$(PYTHONLIBDIR)/sepolgen
 
 all:
