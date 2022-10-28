@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from distutils.core import Extension, setup
+from setuptools import Extension, setup
 
 setup(
     name="selinux",
