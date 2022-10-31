@@ -1108,6 +1108,10 @@ static int selinux_restorecon_common(const char *pathname_orig,
 			pathname = realpath(pathname_orig, NULL);
 			if (!pathname) {
 				free(basename_cpy);
+				/* missing parent directory */
+				if (state.flags.ignore_noent && errno == ENOENT) {
+					return 0;
+				}
 				goto realpatherr;
 			}
 		} else {
@@ -1121,6 +1125,9 @@ static int selinux_restorecon_common(const char *pathname_orig,
 			free(dirname_cpy);
 			if (!pathdnamer) {
 				free(basename_cpy);
+				if (state.flags.ignore_noent && errno == ENOENT) {
+					return 0;
+				}
 				goto realpatherr;
 			}
 			if (!strcmp(pathdnamer, "/"))
