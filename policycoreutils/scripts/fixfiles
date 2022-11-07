@@ -207,6 +207,25 @@ rpm -q --qf '[%{FILESTATES} %{FILENAMES}\n]' "$1" | grep '^0 ' | cut -f2- -d ' '
 [ ${PIPESTATUS[0]} != 0 ] && echo "$1 not found" >/dev/stderr
 }
 
+# unmount tmp bind mount before exit
+umount_TMP_MOUNT() {
+	if [ -n "$TMP_MOUNT" ]; then
+	     umount "${TMP_MOUNT}${m}" || exit 130
+	     rm -rf "${TMP_MOUNT}" || echo "Error cleaning up."
+	fi
+	exit 130
+}
+
+fix_labels_on_mountpoint() {
+	test -z ${TMP_MOUNT+x} && echo "Unable to find temporary directory!" && exit 1
+	mkdir -p "${TMP_MOUNT}${m}" || exit 1
+	mount --bind "${m}" "${TMP_MOUNT}${m}" || exit 1
+	${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} ${THREADS} $* -q ${FC} -r "${TMP_MOUNT}" "${TMP_MOUNT}${m}"
+	umount "${TMP_MOUNT}${m}" || exit 1
+	rm -rf "${TMP_MOUNT}" || echo "Error cleaning up."
+}
+export -f fix_labels_on_mountpoint
+
 #
 # restore
 # if called with -n will only check file context
@@ -252,14 +271,15 @@ case "$RESTORE_MODE" in
 	        # we bind mount so we can fix the labels of files that have already been
 	        # mounted over
 	        for m in `echo $FILESYSTEMSRW`; do
-	            TMP_MOUNT="$(mktemp -d)"
-	            test -z ${TMP_MOUNT+x} && echo "Unable to find temporary directory!" && exit 1
-
-	            mkdir -p "${TMP_MOUNT}${m}" || exit 1
-	            mount --bind "${m}" "${TMP_MOUNT}${m}" || exit 1
-	            ${SETFILES} ${VERBOSE} ${EXCLUDEDIRS} ${FORCEFLAG} ${THREADS} $* -q ${FC} -r "${TMP_MOUNT}" "${TMP_MOUNT}${m}"
-	            umount "${TMP_MOUNT}${m}" || exit 1
-	            rm -rf "${TMP_MOUNT}" || echo "Error cleaning up."
+	            TMP_MOUNT="$(mktemp -p /run -d fixfiles.XXXXXXXXXX)"
+	            export SETFILES VERBOSE EXCLUDEDIRS FORCEFLAG THREADS FC TMP_MOUNT m
+	            if type unshare &> /dev/null; then
+	                unshare -m bash -c "fix_labels_on_mountpoint $*" || exit $?
+	            else
+	                trap umount_TMP_MOUNT EXIT
+	                fix_labels_on_mountpoint $*
+	                trap EXIT
+	            fi
 	        done;
 	    fi
 	else
