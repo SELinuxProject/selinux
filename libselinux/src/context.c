@@ -68,11 +68,9 @@ context_t context_new(const char *str)
 			for (p = tok; *p; p++) {	/* empty */
 			}
 		}
-		n->component[i] = (char *)malloc(p - tok + 1);
+		n->component[i] = strndup(tok, p - tok);
 		if (n->component[i] == 0)
 			goto err;
-		strncpy(n->component[i], tok, p - tok);
-		n->component[i][p - tok] = '\0';
 		tok = *p ? p + 1 : p;
 	}
 	return result;
