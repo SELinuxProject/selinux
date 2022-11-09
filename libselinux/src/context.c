@@ -149,19 +149,18 @@ static int set_comp(context_private_t * n, int idx, const char *str)
 	char *t = NULL;
 	const char *p;
 	if (str) {
-		t = (char *)malloc(strlen(str) + 1);
-		if (!t) {
-			return -1;
-		}
 		for (p = str; *p; p++) {
 			if (*p == '\t' || *p == '\n' || *p == '\r' ||
 			    ((*p == ':' || *p == ' ') && idx != COMP_RANGE)) {
-				free(t);
 				errno = EINVAL;
 				return -1;
 			}
 		}
-		strcpy(t, str);
+
+		t = strdup(str);
+		if (!t) {
+			return -1;
+		}
 	}
 	conditional_free(&n->component[idx]);
 	n->component[idx] = t;

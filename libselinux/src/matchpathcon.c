@@ -215,10 +215,9 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
 			if (ret < 0 || sb.st_ino != ino) {
 				fl->specind = specind;
 				free(fl->file);
-				fl->file = malloc(strlen(file) + 1);
+				fl->file = strdup(file);
 				if (!fl->file)
 					goto oom;
-				strcpy(fl->file, file);
 				return fl->specind;
 
 			}
@@ -232,10 +231,9 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
 			     __FUNCTION__, file, fl->file,
 			     con_array[fl->specind]);
 			free(fl->file);
-			fl->file = malloc(strlen(file) + 1);
+			fl->file = strdup(file);
 			if (!fl->file)
 				goto oom;
-			strcpy(fl->file, file);
 			return fl->specind;
 		}
 
@@ -248,10 +246,9 @@ int matchpathcon_filespec_add(ino_t ino, int specind, const char *file)
 		goto oom;
 	fl->ino = ino;
 	fl->specind = specind;
-	fl->file = malloc(strlen(file) + 1);
+	fl->file = strdup(file);
 	if (!fl->file)
 		goto oom_freefl;
-	strcpy(fl->file, file);
 	fl->next = prevfl->next;
 	prevfl->next = fl;
 	return fl->specind;
