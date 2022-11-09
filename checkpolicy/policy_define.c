@@ -117,12 +117,11 @@ int insert_id(const char *id, int push)
 	char *newid = 0;
 	int error;
 
-	newid = (char *)malloc(strlen(id) + 1);
+	newid = strdup(id);
 	if (!newid) {
 		yyerror("out of memory");
 		return -1;
 	}
-	strcpy(newid, id);
 	if (push)
 		error = queue_push(id_queue, (queue_element_t) newid);
 	else

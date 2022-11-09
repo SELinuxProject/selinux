@@ -1148,12 +1148,11 @@ int main(int argc, char **argv)
 			FGETS(ans, sizeof(ans), stdin);
 			ans[strlen(ans) - 1] = 0;
 
-			name = malloc((strlen(ans) + 1) * sizeof(char));
+			name = strdup(ans);
 			if (name == NULL) {
-				fprintf(stderr, "couldn't malloc string.\n");
+				fprintf(stderr, "couldn't strdup string.\n");
 				break;
 			}
-			strcpy(name, ans);
 
 			printf("state? ");
 			FGETS(ans, sizeof(ans), stdin);
@@ -1296,12 +1295,11 @@ int main(int argc, char **argv)
 			FGETS(ans, sizeof(ans), stdin);
 			ans[strlen(ans) - 1] = 0;
 
-			name = malloc((strlen(ans) + 1) * sizeof(char));
+			name = strdup(ans);
 			if (!name) {
-				fprintf(stderr, "couldn't malloc string.\n");
+				fprintf(stderr, "couldn't strdup string.\n");
 				break;
 			}
-			strcpy(name, ans);
 
 			printf("port? ");
 			FGETS(ans, sizeof(ans), stdin);
