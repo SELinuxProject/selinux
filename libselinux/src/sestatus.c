@@ -343,7 +343,6 @@ error:
 		if (avc_using_threads)
 		{
 			fallback_netlink_thread = avc_create_thread(&avc_netlink_loop);
-			avc_netlink_trouble = 0;
 		}
 
 		fallback_sequence = 0;

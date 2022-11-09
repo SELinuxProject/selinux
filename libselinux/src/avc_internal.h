@@ -180,7 +180,4 @@ int avc_ss_set_auditdeny(security_id_t ssid, security_id_t tsid,
 			 security_class_t tclass, access_vector_t perms,
 			 uint32_t seqno, uint32_t enable) ;
 
-/* netlink kernel message code */
-extern int avc_netlink_trouble ;
-
 #endif				/* _SELINUX_AVC_INTERNAL_H_ */
