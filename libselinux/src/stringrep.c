@@ -82,7 +82,10 @@ static struct discover_class_node * discover_class(const char *s)
 		goto err2;
 
 	/* load up class index */
-	snprintf(path, sizeof path, "%s/class/%s/index", selinux_mnt,s);
+	ret = snprintf(path, sizeof path, "%s/class/%s/index", selinux_mnt,s);
+	if (ret < 0 || (size_t)ret >= sizeof path)
+		goto err3;
+
 	fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd < 0)
 		goto err3;
@@ -97,7 +100,10 @@ static struct discover_class_node * discover_class(const char *s)
 		goto err3;
 
 	/* load up permission indices */
-	snprintf(path, sizeof path, "%s/class/%s/perms",selinux_mnt,s);
+	ret = snprintf(path, sizeof path, "%s/class/%s/perms",selinux_mnt,s);
+	if (ret < 0 || (size_t)ret >= sizeof path)
+		goto err3;
+
 	dir = opendir(path);
 	if (dir == NULL)
 		goto err3;
@@ -107,7 +113,10 @@ static struct discover_class_node * discover_class(const char *s)
 		unsigned int value;
 		struct stat m;
 
-		snprintf(path, sizeof path, "%s/class/%s/perms/%s", selinux_mnt,s,dentry->d_name);
+		ret = snprintf(path, sizeof path, "%s/class/%s/perms/%s", selinux_mnt,s,dentry->d_name);
+		if (ret < 0 || (size_t)ret >= sizeof path)
+			goto err4;
+
 		fd = open(path, O_RDONLY | O_CLOEXEC);
 		if (fd < 0)
 			goto err4;

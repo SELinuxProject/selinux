@@ -7,7 +7,6 @@
 
 #ifndef DISABLE_BOOL
 
-#include <assert.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -147,7 +146,7 @@ out:
 static int bool_open(const char *name, int flag) {
 	char *fname = NULL;
 	char *alt_name = NULL;
-	int len;
+	size_t len;
 	int fd = -1;
 	int ret;
 	char *ptr;
@@ -164,9 +163,8 @@ static int bool_open(const char *name, int flag) {
 		return -1;
 
 	ret = snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR, name);
-	if (ret < 0)
+	if (ret < 0 || (size_t)ret >= len)
 		goto out;
-	assert(ret < len);
 
 	fd = open(fname, flag);
 	if (fd >= 0 || errno != ENOENT)
@@ -184,9 +182,8 @@ static int bool_open(const char *name, int flag) {
 	fname = ptr;
 
 	ret = snprintf(fname, len, "%s%s%s", selinux_mnt, SELINUX_BOOL_DIR, alt_name);
-	if (ret < 0)
+	if (ret < 0 || (size_t)ret >= len)
 		goto out;
-	assert(ret < len);
 
 	fd = open(fname, flag);
 out:
