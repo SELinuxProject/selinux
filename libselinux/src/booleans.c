@@ -131,7 +131,8 @@ char *selinux_boolean_sub(const char *name)
 			ptr++;
 		*ptr = '\0';
 
-		sub = strdup(dst);
+		if (!strchr(dst, '/'))
+			sub = strdup(dst);
 
 		break;
 	}
@@ -151,7 +152,7 @@ static int bool_open(const char *name, int flag) {
 	int ret;
 	char *ptr;
 
-	if (!name) {
+	if (!name || strchr(name, '/')) {
 		errno = EINVAL;
 		return -1;
 	}
