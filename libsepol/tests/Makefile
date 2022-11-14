@@ -1,9 +1,24 @@
 ENV ?= env
-M4 ?= m4
+M4 ?= m4 -E -E
 MKDIR ?= mkdir
 EXE ?= libsepol-tests
 
-CFLAGS += -g3 -gdwarf-2 -O0 -Wall -W -Wundef -Wmissing-noreturn -Wmissing-format-attribute -Wno-unused-parameter -Werror
+CFLAGS += -g3 -gdwarf-2 -O0 \
+	-Werror -Wall -Wextra \
+	-Wfloat-equal \
+	-Wformat=2 \
+	-Winit-self \
+	-Wmissing-format-attribute \
+	-Wmissing-noreturn \
+	-Wmissing-prototypes \
+	-Wnull-dereference \
+	-Wpointer-arith \
+	-Wshadow \
+	-Wstrict-prototypes \
+	-Wundef \
+	-Wunused \
+	-Wwrite-strings \
+	-fno-common
 
 # Statically link libsepol on the assumption that we are going to
 # be testing internal functions.
