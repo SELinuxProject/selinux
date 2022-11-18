@@ -332,9 +332,10 @@ def manpage_work(domain, path, root, source_files, web):
     from sepolicy.manpage import ManPage
     m = ManPage(domain, path, root, source_files, web)
     print(m.get_man_page_path())
+    return (m.manpage_domains, m.manpage_roles)
 
 def manpage(args):
-    from sepolicy.manpage import HTMLManPages, manpage_domains, manpage_roles, gen_domains
+    from sepolicy.manpage import HTMLManPages, gen_domains
 
     path = args.path
     if not args.policy and args.root != "/":
@@ -347,9 +348,17 @@ def manpage(args):
     else:
         test_domains = args.domain
 
+    manpage_domains = set()
+    manpage_roles = set()
     p = Pool()
+    async_results = []
     for domain in test_domains:
-        p.apply_async(manpage_work, [domain, path, args.root, args.source_files, args.web])
+        async_results.append(p.apply_async(manpage_work, [domain, path, args.root, args.source_files, args.web]))
+    for result in async_results:
+        domains, roles = result.get()
+        manpage_domains.update(domains)
+        manpage_roles.update(roles)
+
     p.close()
     p.join()
 

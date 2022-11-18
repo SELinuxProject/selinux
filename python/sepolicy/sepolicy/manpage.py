@@ -21,7 +21,7 @@
 #                                        02111-1307  USA
 #
 #
-__all__ = ['ManPage', 'HTMLManPages', 'manpage_domains', 'manpage_roles', 'gen_domains']
+__all__ = ['ManPage', 'HTMLManPages', 'gen_domains']
 
 import string
 import selinux
@@ -146,10 +146,6 @@ def _gen_types():
 
 def prettyprint(f, trim):
     return " ".join(f[:-len(trim)].split("_"))
-
-# for HTML man pages
-manpage_domains = []
-manpage_roles = []
 
 fedora_releases = ["Fedora17", "Fedora18"]
 rhel_releases = ["RHEL6", "RHEL7"]
@@ -408,6 +404,8 @@ class ManPage:
     """
     modules_dict = None
     enabled_str = ["Disabled", "Enabled"]
+    manpage_domains = []
+    manpage_roles = []
 
     def __init__(self, domainname, path="/tmp", root="/", source_files=False, html=False):
         self.html = html
@@ -453,10 +451,10 @@ class ManPage:
         if self.domainname + "_r" in self.all_roles:
             self.__gen_user_man_page()
             if self.html:
-                manpage_roles.append(self.man_page_path)
+                self.manpage_roles.append(self.man_page_path)
         else:
             if self.html:
-                manpage_domains.append(self.man_page_path)
+                self.manpage_domains.append(self.man_page_path)
             self.__gen_man_page()
         self.fd.close()
 
