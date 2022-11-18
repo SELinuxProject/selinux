@@ -1226,27 +1226,14 @@ def boolean_desc(boolean):
 
 
 def get_os_version():
-    os_version = ""
-    pkg_name = "selinux-policy"
+    system_release = ""
     try:
-        try:
-            from commands import getstatusoutput
-        except ImportError:
-            from subprocess import getstatusoutput
-        rc, output = getstatusoutput("rpm -q '%s'" % pkg_name)
-        if rc == 0:
-            os_version = output.split(".")[-2]
-    except:
-        os_version = ""
+        import distro
+        system_release = distro.name(pretty=True)
+    except IOError:
+        system_release = "Misc"
 
-    if os_version[0:2] == "fc":
-        os_version = "Fedora" + os_version[2:]
-    elif os_version[0:2] == "el":
-        os_version = "RHEL" + os_version[2:]
-    else:
-        os_version = ""
-
-    return os_version
+    return system_release
 
 
 def reinit():
