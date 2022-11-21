@@ -1346,9 +1346,9 @@ allow %s_t %s_t:%s_socket name_%s;
             if len(temp_dirs) != 0:
                 for i in temp_dirs:
                     if i in self.dirs.keys():
-                        del(self.dirs[i])
+                        del self.dirs[i]
                     elif i in self.files.keys():
-                        del(self.files[i])
+                        del self.files[i]
                     else:
                         continue
 

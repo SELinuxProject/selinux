@@ -324,9 +324,9 @@ def call_interface(interface, av):
             ifcall.args.append(av.obj_class)
         else:
             print(params[i].type)
-            assert(0)
+            assert 0
 
-    assert(len(ifcall.args) > 0)
+    assert len(ifcall.args) > 0
 
     return ifcall
 

@@ -635,7 +635,7 @@ class SELinuxGui():
         for k in self.cur_dict:
             for j in self.cur_dict[k]:
                 if i == ctr:
-                    del(self.cur_dict[k][j])
+                    del self.cur_dict[k][j]
                     return
                 i += 1
 
@@ -860,7 +860,7 @@ class SELinuxGui():
                     if val is True or val is False or val is None:
                         continue
                     # Returns true if filter_txt exists within the val
-                    if(val.find(self.filter_txt) != -1 or val.lower().find(self.filter_txt) != -1):
+                    if val.find(self.filter_txt) != -1 or val.lower().find(self.filter_txt) != -1:
                         return True
                 except (AttributeError, TypeError):
                     pass
@@ -2174,7 +2174,7 @@ class SELinuxGui():
         model.set_value(iter, 0, not model.get_value(iter, 0))
         active = model.get_value(iter, 0)
         if name in self.cur_dict["boolean"]:
-            del(self.cur_dict["boolean"][name])
+            del self.cur_dict["boolean"][name]
         else:
             self.cur_dict["boolean"][name] = {"active": active}
         self.new_updates()

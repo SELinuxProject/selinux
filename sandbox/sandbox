@@ -111,7 +111,7 @@ def copyfile(file, srcdir, dest):
 
 def savefile(new, orig, X_ind):
     copy = False
-    if(X_ind):
+    if X_ind:
         import gi
         gi.require_version('Gtk', '3.0')
         from gi.repository import Gtk
@@ -131,9 +131,9 @@ def savefile(new, orig, X_ind):
         except NameError:
             pass
         ans = input(_("Do you want to save changes to '%s' (y/N): ") % orig)
-        if(re.match(_("[yY]"), ans)):
+        if re.match(_("[yY]"), ans):
             copy = True
-    if(copy):
+    if copy:
         shutil.copy2(new, orig)
 
 

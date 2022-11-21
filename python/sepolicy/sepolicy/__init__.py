@@ -450,9 +450,9 @@ def get_conditionals(src, dest, tclass, perm):
                 tlist.append(tdict)
                 tdict = {}
     except KeyError:
-        return(tlist)
+        return tlist
 
-    return (tlist)
+    return tlist
 
 
 def get_conditionals_format_text(cond):
