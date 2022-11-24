@@ -1416,7 +1416,7 @@ static int define_typebounds_helper(char *bounds_id, char *type_id)
 	if (!type->bounds)
 		type->bounds = bounds->s.value;
 	else if (type->bounds != bounds->s.value) {
-		yyerror2("type %s has inconsistent master {%s,%s}",
+		yyerror2("type %s has inconsistent bounds %s/%s",
 			 type_id,
 			 policydbp->p_type_val_to_name[type->bounds - 1],
 			 policydbp->p_type_val_to_name[bounds->s.value - 1]);
