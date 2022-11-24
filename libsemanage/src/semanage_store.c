@@ -2400,7 +2400,7 @@ static semanage_file_context_node_t
 
 /* Sorts file contexts from least specific to most specific.
  * A bucket linked list is passed in.  Upon completion,
- * there is only one bucket (pointed to by master) that 
+ * there is only one bucket (pointed to by "main") that
  * contains a linked list of all the file contexts in sorted order.
  * Explanation of the algorithm:
  *  This is a stable implementation of an iterative merge sort.
@@ -2411,15 +2411,15 @@ static semanage_file_context_node_t
  *  Buckets are merged until there is only one bucket left, 
  *   containing the list of file contexts, sorted.
  */
-static void semanage_fc_merge_sort(semanage_file_context_bucket_t * master)
+static void semanage_fc_merge_sort(semanage_file_context_bucket_t * main)
 {
 	semanage_file_context_bucket_t *current;
 	semanage_file_context_bucket_t *temp;
 
-	/* Loop until master is the only bucket left.
-	 * When we stop master contains the sorted list. */
-	while (master->next) {
-		current = master;
+	/* Loop until "main" is the only bucket left.
+	 * When we stop "main" contains the sorted list. */
+	while (main->next) {
+		current = main;
 
 		/* Merge buckets two-by-two. 
 		 * If there is an odd number of buckets, the last 
@@ -2547,7 +2547,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 	semanage_file_context_node_t *temp;
 	semanage_file_context_node_t *head;
 	semanage_file_context_node_t *current;
-	semanage_file_context_bucket_t *master;
+	semanage_file_context_bucket_t *main;
 	semanage_file_context_bucket_t *bcurrent;
 
 	i = 0;
@@ -2746,9 +2746,9 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 
 	/* Create the bucket linked list from the node linked list. */
 	current = head->next;
-	bcurrent = master = (semanage_file_context_bucket_t *)
+	bcurrent = main = (semanage_file_context_bucket_t *)
 	    calloc(1, sizeof(semanage_file_context_bucket_t));
-	if (!master) {
+	if (!main) {
 		ERR(sh, "Failure allocating memory.");
 		semanage_fc_node_list_destroy(head);
 		return -1;
@@ -2772,7 +2772,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 			    calloc(1, sizeof(semanage_file_context_bucket_t));
 			if (!(bcurrent->next)) {
 				ERR(sh, "Failure allocating memory.");
-				semanage_fc_bucket_list_destroy(master);
+				semanage_fc_bucket_list_destroy(main);
 				return -1;
 			}
 
@@ -2781,14 +2781,14 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 	}
 
 	/* Sort the bucket list. */
-	semanage_fc_merge_sort(master);
+	semanage_fc_merge_sort(main);
 
 	/* First, calculate how much space we'll need for 
 	 * the newly sorted block of data.  (We don't just
 	 * use buf_len for this because we have extracted
 	 * comments and whitespace.) */
 	i = 0;
-	current = master->data;
+	current = main->data;
 	while (current) {
 		i += current->path_len + 1;	/* +1 for a tab */
 		if (current->file_type) {
@@ -2803,14 +2803,14 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 	*sorted_buf = calloc(i, sizeof(char));
 	if (!*sorted_buf) {
 		ERR(sh, "Failure allocating memory.");
-		semanage_fc_bucket_list_destroy(master);
+		semanage_fc_bucket_list_destroy(main);
 		return -1;
 	}
 	*sorted_buf_len = i;
 
 	/* Output the sorted semanage_file_context linked list to the char buffer. */
 	sorted_buf_pos = *sorted_buf;
-	current = master->data;
+	current = main->data;
 	while (current) {
 		/* Output the path. */
 		i = current->path_len + 1;	/* +1 for tab */
@@ -2834,7 +2834,7 @@ int semanage_fc_sort(semanage_handle_t * sh, const char *buf, size_t buf_len,
 	}
 
 	/* Clean up. */
-	semanage_fc_bucket_list_destroy(master);
+	semanage_fc_bucket_list_destroy(main);
 
 	/* Sanity check. */
 	sorted_buf_pos++;
