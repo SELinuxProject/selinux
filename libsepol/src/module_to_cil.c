@@ -1188,10 +1188,23 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 			goto exit;
 		}
 
-		ts = &avrule->ttypes;
-		rc = process_typeset(pdb, ts, attr_list, &tnames, &num_tnames);
-		if (rc != 0) {
-			goto exit;
+		if (avrule->flags & RULE_NOTSELF) {
+			if (!ebitmap_is_empty(&avrule->ttypes.types) || !ebitmap_is_empty(&avrule->ttypes.negset)) {
+				if (avrule->source_filename) {
+					log_err("%s:%lu: Non-trivial neverallow rules with targets containing not or minus self not yet supported",
+						avrule->source_filename, avrule->source_line);
+				} else {
+					log_err("Non-trivial neverallow rules with targets containing not or minus self not yet supported");
+				}
+				rc = -1;
+				goto exit;
+			}
+		} else {
+			ts = &avrule->ttypes;
+			rc = process_typeset(pdb, ts, attr_list, &tnames, &num_tnames);
+			if (rc != 0) {
+				goto exit;
+			}
 		}
 
 		for (s = 0; s < num_snames; s++) {
@@ -1211,6 +1224,15 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 					rc = avrulex_to_cil(indent, pdb, avrule->specified, snames[s], "self", avrule->perms, avrule->xperms);
 				} else {
 					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], "self", avrule->perms);
+				}
+				if (rc != 0) {
+					goto exit;
+				}
+			} else if (avrule->flags & RULE_NOTSELF) {
+				if (avrule->specified & AVRULE_XPERMS) {
+					rc = avrulex_to_cil(indent, pdb, avrule->specified, snames[s], "notself", avrule->perms, avrule->xperms);
+				} else {
+					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], "notself", avrule->perms);
 				}
 				if (rc != 0) {
 					goto exit;
