@@ -924,6 +924,15 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int 
 		case 0:
 		case RULE_SELF:
 			break;
+		case RULE_NOTSELF:
+			switch(avrule->specified) {
+			case AVRULE_NEVERALLOW:
+			case AVRULE_XPERMS_NEVERALLOW:
+				break;
+			default:
+				goto bad;
+			}
+			break;
 		default:
 			goto bad;
 		}

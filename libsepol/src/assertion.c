@@ -223,6 +223,7 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	ebitmap_node_t *snode, *tnode;
 	unsigned int i, j;
 	const int is_avrule_self = (avrule->flags & RULE_SELF) != 0;
+	const int is_avrule_notself = (avrule->flags & RULE_NOTSELF) != 0;
 
 	if ((k->specified & AVTAB_ALLOWED) == 0)
 		return 0;
@@ -242,19 +243,31 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 	if (ebitmap_is_empty(&src_matches))
 		goto exit;
 
-	rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types, &p->attr_type_map[k->target_type -1]);
-	if (rc < 0)
-		goto oom;
-
-	if (is_avrule_self) {
-		rc = ebitmap_and(&self_matches, &src_matches, &p->attr_type_map[k->target_type - 1]);
+	if (is_avrule_notself) {
+		if (ebitmap_is_empty(&avrule->ttypes.types)) {
+			/* avrule tgt is of the form ~self */
+			rc = ebitmap_cpy(&tgt_matches, &p->attr_type_map[k->target_type -1]);
+		} else {
+			/* avrule tgt is of the form {ATTR -self} */
+			rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types, &p->attr_type_map[k->target_type - 1]);
+		}
+		if (rc)
+			goto oom;
+	} else {
+		rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types, &p->attr_type_map[k->target_type -1]);
 		if (rc < 0)
 			goto oom;
 
-		if (!ebitmap_is_empty(&self_matches)) {
-			rc = ebitmap_union(&tgt_matches, &self_matches);
+		if (is_avrule_self) {
+			rc = ebitmap_and(&self_matches, &src_matches, &p->attr_type_map[k->target_type - 1]);
 			if (rc < 0)
 				goto oom;
+
+			if (!ebitmap_is_empty(&self_matches)) {
+				rc = ebitmap_union(&tgt_matches, &self_matches);
+				if (rc < 0)
+					goto oom;
+			}
 		}
 	}
 
@@ -271,6 +284,8 @@ static int report_assertion_avtab_matches(avtab_key_t *k, avtab_datum_t *d, void
 		ebitmap_for_each_positive_bit(&src_matches, snode, i) {
 			ebitmap_for_each_positive_bit(&tgt_matches, tnode, j) {
 				if (is_avrule_self && i != j)
+					continue;
+				if (is_avrule_notself && i == j)
 					continue;
 				if (avrule->specified == AVRULE_XPERMS_NEVERALLOW) {
 					a->errors += report_assertion_extended_permissions(handle,p, avrule,
@@ -383,6 +398,7 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 	unsigned int i, j;
 	ebitmap_node_t *snode, *tnode;
 	const int is_avrule_self = (avrule->flags & RULE_SELF) != 0;
+	const int is_avrule_notself = (avrule->flags & RULE_NOTSELF) != 0;
 	int rc;
 
 	ebitmap_init(&src_matches);
@@ -399,20 +415,31 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 		goto exit;
 	}
 
-	rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types,
-			 &p->attr_type_map[k->target_type -1]);
-	if (rc < 0)
-		goto oom;
-
-	if (is_avrule_self) {
-		rc = ebitmap_and(&self_matches, &src_matches, &p->attr_type_map[k->target_type - 1]);
+	if (is_avrule_notself) {
+		if (ebitmap_is_empty(&avrule->ttypes.types)) {
+			/* avrule tgt is of the form ~self */
+			rc = ebitmap_cpy(&tgt_matches, &p->attr_type_map[k->target_type -1]);
+		} else {
+			/* avrule tgt is of the form {ATTR -self} */
+			rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types, &p->attr_type_map[k->target_type - 1]);
+		}
+		if (rc < 0)
+			goto oom;
+	} else {
+		rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types, &p->attr_type_map[k->target_type -1]);
 		if (rc < 0)
 			goto oom;
 
-		if (!ebitmap_is_empty(&self_matches)) {
-			rc = ebitmap_union(&tgt_matches, &self_matches);
+		if (is_avrule_self) {
+			rc = ebitmap_and(&self_matches, &src_matches, &p->attr_type_map[k->target_type - 1]);
 			if (rc < 0)
 				goto oom;
+
+			if (!ebitmap_is_empty(&self_matches)) {
+				rc = ebitmap_union(&tgt_matches, &self_matches);
+				if (rc < 0)
+					goto oom;
+			}
 		}
 	}
 
@@ -424,6 +451,8 @@ static int check_assertion_extended_permissions(avrule_t *avrule, avtab_t *avtab
 	ebitmap_for_each_positive_bit(&src_matches, snode, i) {
 		ebitmap_for_each_positive_bit(&tgt_matches, tnode, j) {
 			if (is_avrule_self && i != j)
+				continue;
+			if (is_avrule_notself && i == j)
 				continue;
 			if (check_assertion_extended_permissions_avtab(avrule, avtab, i, j, k, p)) {
 				rc = 1;
@@ -439,6 +468,61 @@ exit:
 	ebitmap_destroy(&src_matches);
 	ebitmap_destroy(&tgt_matches);
 	ebitmap_destroy(&self_matches);
+	return rc;
+}
+
+static int check_assertion_notself_match(avtab_key_t *k, avrule_t *avrule, policydb_t *p)
+{
+	ebitmap_t src_matches, tgt_matches;
+	unsigned int num_src_matches, num_tgt_matches;
+	int rc;
+
+	ebitmap_init(&src_matches);
+	ebitmap_init(&tgt_matches);
+
+	rc = ebitmap_and(&src_matches, &avrule->stypes.types, &p->attr_type_map[k->source_type - 1]);
+	if (rc < 0)
+		goto oom;
+
+	if (ebitmap_is_empty(&avrule->ttypes.types)) {
+		/* avrule tgt is of the form ~self */
+		rc = ebitmap_cpy(&tgt_matches, &p->attr_type_map[k->target_type - 1]);
+	} else {
+		/* avrule tgt is of the form {ATTR -self} */
+		rc = ebitmap_and(&tgt_matches, &avrule->ttypes.types, &p->attr_type_map[k->target_type - 1]);
+	}
+	if (rc < 0)
+		goto oom;
+
+	num_src_matches = ebitmap_cardinality(&src_matches);
+	num_tgt_matches = ebitmap_cardinality(&tgt_matches);
+	if (num_src_matches == 0 || num_tgt_matches == 0) {
+		rc = 0;
+		goto nomatch;
+	}
+	if (num_src_matches == 1 && num_tgt_matches == 1) {
+		ebitmap_t matches;
+		unsigned int num_matches;
+		rc = ebitmap_and(&matches, &src_matches, &tgt_matches);
+		if (rc < 0) {
+			ebitmap_destroy(&matches);
+			goto oom;
+		}
+		num_matches = ebitmap_cardinality(&matches);
+		ebitmap_destroy(&matches);
+		if (num_matches == 1) {
+			/* The only non-match is of the form TYPE TYPE */
+			rc = 0;
+			goto nomatch;
+		}
+	}
+
+	rc = 1;
+
+oom:
+nomatch:
+	ebitmap_destroy(&src_matches);
+	ebitmap_destroy(&tgt_matches);
 	return rc;
 }
 
@@ -485,16 +569,24 @@ static int check_assertion_avtab_match(avtab_key_t *k, avtab_datum_t *d, void *a
 	if (!ebitmap_match_any(&avrule->stypes.types, &p->attr_type_map[k->source_type - 1]))
 		goto nomatch;
 
-	/* neverallow may have tgts even if it uses SELF */
-	if (!ebitmap_match_any(&avrule->ttypes.types, &p->attr_type_map[k->target_type -1])) {
-		if (avrule->flags == RULE_SELF) {
-			rc = check_assertion_self_match(k, avrule, p);
-			if (rc < 0)
-				goto oom;
-			if (rc == 0)
-				goto nomatch;
-		} else {
+	if (avrule->flags & RULE_NOTSELF) {
+		rc = check_assertion_notself_match(k, avrule, p);
+		if (rc < 0)
+			goto oom;
+		if (rc == 0)
 			goto nomatch;
+	} else {
+		/* neverallow may have tgts even if it uses SELF */
+		if (!ebitmap_match_any(&avrule->ttypes.types, &p->attr_type_map[k->target_type -1])) {
+			if (avrule->flags == RULE_SELF) {
+				rc = check_assertion_self_match(k, avrule, p);
+				if (rc < 0)
+					goto oom;
+				if (rc == 0)
+					goto nomatch;
+			} else {
+				goto nomatch;
+			}
 		}
 	}
 
