@@ -124,7 +124,7 @@ static int display_type_set(type_set_t * set, uint32_t flags, policydb_t * polic
 	}
 
 	num_types = 0;
-	if (flags & RULE_SELF) {
+	if (flags & (RULE_SELF | RULE_NOTSELF)) {
 		num_types++;
 	}
 
@@ -167,6 +167,10 @@ static int display_type_set(type_set_t * set, uint32_t flags, policydb_t * polic
 
 	if (flags & RULE_SELF) {
 		fprintf(fp, " self");
+	}
+
+	if (flags & RULE_NOTSELF) {
+		fprintf(fp, " -self");
 	}
 
 	if (num_types > 1)
