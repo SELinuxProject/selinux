@@ -257,6 +257,9 @@ struct regex_data *regex_data_create(void)
 {
 	struct regex_data *regex_data =
 		(struct regex_data *)calloc(1, sizeof(struct regex_data));
+	if (!regex_data)
+		return NULL;
+
 	__pthread_mutex_init(&regex_data->match_mutex, NULL);
 	return regex_data;
 }
