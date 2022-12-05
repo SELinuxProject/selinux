@@ -140,6 +140,8 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 					pc[*npc] =
 					    (char *)malloc((buf_len) *
 							   sizeof(char));
+					if (!pc[*npc])
+						break;
 					memcpy(pc[*npc], bufp, buf_len);
 					(*npc)++;
 					bufp = NULL;
@@ -150,6 +152,8 @@ static void load_checks(char *pc[], int *npc, char *fc[], int *nfc)
 					fc[*nfc] =
 					    (char *)malloc((buf_len) *
 							   sizeof(char));
+					if (!fc[*nfc])
+						break;
 					memcpy(fc[*nfc], bufp, buf_len);
 					(*nfc)++;
 					bufp = NULL;
