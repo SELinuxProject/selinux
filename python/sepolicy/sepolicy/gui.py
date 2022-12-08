@@ -130,7 +130,7 @@ class SELinuxGui():
         self.application = app
         self.filter_txt = ""
         builder = Gtk.Builder()  # BUILDER OBJ
-        self.code_path = sysconfig.get_python_lib(plat_specific=False) + "/sepolicy/"
+        self.code_path = sysconfig.get_path('purelib', vars={'base': "/usr"}) + "/sepolicy/"
         glade_file = self.code_path + "sepolicy.glade"
         builder.add_from_file(glade_file)
         self.outer_notebook = builder.get_object("outer_notebook")
