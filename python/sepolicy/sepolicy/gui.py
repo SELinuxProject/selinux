@@ -135,9 +135,8 @@ class SELinuxGui():
         builder.add_from_file(glade_file)
         self.outer_notebook = builder.get_object("outer_notebook")
         self.window = builder.get_object("SELinux_window")
-        self.main_selection_window = builder.get_object("Main_selection_menu")
+        self.main_selection_popover = builder.get_object("Main_selection_menu")
         self.main_advanced_label = builder.get_object("main_advanced_label")
-        self.popup = 0
         self.applications_selection_button = builder.get_object("applications_selection_button")
         self.revert_button = builder.get_object("Revert_button")
         self.busy_cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
@@ -531,7 +530,6 @@ class SELinuxGui():
         dic = {
             "on_combo_button_clicked": self.open_combo_menu,
             "on_disable_ptrace_toggled": self.on_disable_ptrace,
-            "on_SELinux_window_configure_event": self.hide_combo_menu,
             "on_entrycompletion_obj_match_selected": self.set_application_label,
             "on_filter_changed": self.get_filter_data,
             "on_save_changes_file_equiv_clicked": self.update_to_file_equiv,
@@ -808,18 +806,8 @@ class SELinuxGui():
         return self.help_show_page()
 
     def open_combo_menu(self, *args):
-        if self.popup == 0:
-            self.popup = 1
-            location = self.window.get_position()
-            self.main_selection_window.move(location[0] + 2, location[1] + 65)
-            self.main_selection_window.show()
-        else:
-            self.main_selection_window.hide()
-            self.popup = 0
-
-    def hide_combo_menu(self, *args):
-        self.main_selection_window.hide()
-        self.popup = 0
+        self.main_selection_popover.set_relative_to(self.applications_selection_button)
+        self.main_selection_popover.popup()
 
     def set_application_label(self, *args):
         self.set_application_label = True
@@ -2335,7 +2323,7 @@ class SELinuxGui():
             self.active_button = self.network_radio_button
 
     def clearbuttons(self, clear=True):
-        self.main_selection_window.hide()
+        self.main_selection_popover.hide()
         self.boolean_radio_button.set_visible(False)
         self.files_radio_button.set_visible(False)
         self.network_radio_button.set_visible(False)

@@ -10,11 +10,8 @@
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkWindow" id="Main_selection_menu">
+  <object class="GtkPopover" id="Main_selection_menu">
     <property name="can_focus">False</property>
-    <property name="default_width">265</property>
-    <property name="default_height">100</property>
-    <property name="decorated">False</property>
     <child>
       <object class="GtkBox" id="vbox2">
         <property name="visible">True</property>
@@ -53,7 +50,6 @@
                 <property name="primary_icon_stock">gtk-find</property>
                 <property name="primary_icon_activatable">False</property>
                 <property name="secondary_icon_activatable">False</property>
-                <signal name="activate" handler="on_SELinux_window_configure_event" swapped="no"/>
                 <signal name="changed" handler="on_completion_entry_changed" swapped="no"/>
               </object>
               <packing>
@@ -306,7 +302,6 @@
     </columns>
   </object>
   <object class="GtkEntryCompletion" id="entrycompletion_obj">
-    <signal name="match-selected" handler="on_SELinux_window_configure_event" swapped="no"/>
     <signal name="match-selected" handler="on_completion_entry_changed" swapped="no"/>
     <signal name="match-selected" handler="on_entrycompletion_obj_match_selected" swapped="no"/>
   </object>
@@ -1707,9 +1702,7 @@
     <property name="window_position">center-always</property>
     <property name="default_width">650</property>
     <property name="default_height">420</property>
-    <signal name="configure-event" handler="on_SELinux_window_configure_event" swapped="no"/>
     <signal name="delete-event" handler="on_confirmation_close" swapped="no"/>
-    <signal name="focus-in-event" handler="on_SELinux_window_configure_event" swapped="no"/>
     <child>
       <object class="GtkBox" id="vbox1">
         <property name="visible">True</property>
