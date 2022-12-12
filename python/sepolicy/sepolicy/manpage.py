@@ -376,8 +376,7 @@ class ManPage:
 
         self.fcdict = sepolicy.get_fcdict(self.fcpath)
 
-        if not os.path.exists(path):
-            os.makedirs(path)
+        os.makedirs(path, exist_ok=True)
 
         self.path = path
 
