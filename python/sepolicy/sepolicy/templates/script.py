@@ -75,7 +75,7 @@ rpmbuild --define "_sourcedir ${pwd}" --define "_specdir ${pwd}" --define "_buil
 """
 
 manpage="""\
-# Generate a man page off the installed module
+# Generate a man page of the installed module
 sepolicy manpage -p . -d DOMAINTYPE_t
 """
 
