@@ -770,12 +770,20 @@ bad:
  * Functions to validate a kernel policydb
  */
 
-static int validate_avtab_key(const avtab_key_t *key, int conditional, validate_t flavors[])
+static int validate_avtab_key(const avtab_key_t *key, int conditional, const policydb_t *p, validate_t flavors[])
 {
-	if (validate_value(key->source_type, &flavors[SYM_TYPES]))
-		goto bad;
-	if (validate_value(key->target_type, &flavors[SYM_TYPES]))
-		goto bad;
+	if (p->policy_type == POLICY_KERN && key->specified & AVTAB_TYPE) {
+		if (validate_simpletype(key->source_type, p, flavors))
+			goto bad;
+		if (validate_simpletype(key->target_type, p, flavors))
+			goto bad;
+	} else {
+		if (validate_value(key->source_type, &flavors[SYM_TYPES]))
+			goto bad;
+		if (validate_value(key->target_type, &flavors[SYM_TYPES]))
+			goto bad;
+	}
+
 	if (validate_value(key->target_class, &flavors[SYM_CLASSES]))
 		goto bad;
 	switch (0xFFF & key->specified) {
@@ -821,7 +829,7 @@ static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *
 {
 	map_arg_t *margs = args;
 
-	if (validate_avtab_key(k, 0, margs->flavors))
+	if (validate_avtab_key(k, 0, margs->policy, margs->flavors))
 		return -1;
 
 	if ((k->specified & AVTAB_TYPE) && validate_simpletype(d->data, margs->policy, margs->flavors))
@@ -845,13 +853,13 @@ static int validate_avtab(sepol_handle_t *handle, const avtab_t *avtab, const po
 	return 0;
 }
 
-static int validate_cond_av_list(sepol_handle_t *handle, const cond_av_list_t *cond_av, validate_t flavors[])
+static int validate_cond_av_list(sepol_handle_t *handle, const cond_av_list_t *cond_av, const policydb_t *p, validate_t flavors[])
 {
 	const struct avtab_node *avtab_ptr;
 
 	for (; cond_av; cond_av = cond_av->next) {
 		for (avtab_ptr = cond_av->node; avtab_ptr; avtab_ptr = avtab_ptr->next) {
-			if (validate_avtab_key(&avtab_ptr->key, 1, flavors)) {
+			if (validate_avtab_key(&avtab_ptr->key, 1, p, flavors)) {
 				ERR(handle, "Invalid cond av list");
 				return -1;
 			}
@@ -996,9 +1004,9 @@ static int validate_cond_list(sepol_handle_t *handle, const cond_list_t *cond, c
 	for (; cond; cond = cond->next) {
 		if (validate_cond_expr(handle, cond->expr, &flavors[SYM_BOOLS]))
 			goto bad;
-		if (validate_cond_av_list(handle, cond->true_list, flavors))
+		if (validate_cond_av_list(handle, cond->true_list, p, flavors))
 			goto bad;
-		if (validate_cond_av_list(handle, cond->false_list, flavors))
+		if (validate_cond_av_list(handle, cond->false_list, p, flavors))
 			goto bad;
 		if (validate_avrules(handle, cond->avtrue_list, 1, p, flavors))
 			goto bad;
