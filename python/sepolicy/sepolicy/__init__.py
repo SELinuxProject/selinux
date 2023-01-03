@@ -1222,7 +1222,7 @@ def boolean_desc(boolean):
         return _(booleans_dict[boolean][2])
     else:
         desc = boolean.split("_")
-        return "Allow %s to %s" % (desc[0], " ".join(desc[1:]))
+        return _("Allow {subject} to {rest}").format(subject=desc[0], rest=" ".join(desc[1:]))
 
 
 def get_os_version():
