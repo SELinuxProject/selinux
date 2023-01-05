@@ -1193,7 +1193,7 @@ static int __cil_cat_expr_range_to_bitmap_helper(struct cil_list_item *i1, struc
 	struct cil_cat *c2 = (struct cil_cat *)d2;
 
 	if (n1->flavor == CIL_CATSET || n2->flavor == CIL_CATSET) {
-		cil_log(CIL_ERR, "Category sets cannont be used in a category range\n");
+		cil_log(CIL_ERR, "Category sets cannot be used in a category range\n");
 		goto exit;
 	}
 

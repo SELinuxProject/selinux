@@ -778,7 +778,7 @@ int cil_resolve_classcommon(struct cil_tree_node *current, void *extra_args)
 	class = (struct cil_class *)class_datum;
 	common = (struct cil_class *)common_datum;
 	if (class->common != NULL) {
-		cil_log(CIL_ERR, "class cannot be associeated with more than one common\n");
+		cil_log(CIL_ERR, "class cannot be associated with more than one common\n");
 		rc = SEPOL_ERR;
 		goto exit;
 	}

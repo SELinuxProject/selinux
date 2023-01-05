@@ -2330,7 +2330,7 @@ static int user_to_cil(int indent, struct policydb *pdb, struct avrule_block *bl
 	}
 
 	if (block->flags & AVRULE_OPTIONAL) {
-		// sensitivites in user statements in optionals do not have the
+		// sensitivities in user statements in optionals do not have the
 		// standard -1 offset
 		sens_offset = 0;
 	}

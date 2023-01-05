@@ -130,7 +130,7 @@ class SetImportFile(argparse.Action):
                 sys.exit(1)
         setattr(namespace, self.dest, values)
 
-# define dictionary for seobject OBEJCTS
+# define dictionary for seobject OBJECTS
 object_dict = {
     'login': seobject.loginRecords,
     'user': seobject.seluserRecords,

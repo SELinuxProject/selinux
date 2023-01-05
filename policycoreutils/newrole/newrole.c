@@ -1289,7 +1289,7 @@ int main(int argc, char *argv[])
 	/*
 	 * Step 5:  Execute a new shell with the new context in `new_context'. 
 	 *
-	 * Establish context, namesapce and any options for the new shell
+	 * Establish context, namespace and any options for the new shell
 	 */
 	if (optind < 1)
 		optind = 1;

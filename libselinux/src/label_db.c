@@ -31,7 +31,7 @@
  * For example:
  * ----------------------------------------
  * #
- * # It is an example specfile for database obejcts
+ * # It is an example specfile for database objects
  * #
  * db_database  template1           system_u:object_r:sepgsql_db_t:s0
  *
