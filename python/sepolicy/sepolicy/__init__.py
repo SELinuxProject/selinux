@@ -335,7 +335,12 @@ def _setools_rule_to_dict(rule):
         pass
 
     try:
-        d['boolean'] = [(str(rule.conditional), enabled)]
+        d['booleans'] = [(str(b), b.state) for b in rule.conditional.booleans]
+    except AttributeError:
+        pass
+
+    try:
+        d['conditional'] = str(rule.conditional)
     except AttributeError:
         pass
 
@@ -440,12 +445,12 @@ def get_conditionals(src, dest, tclass, perm):
                 x['source'] in src_list and
                 x['target'] in dest_list and
                 set(perm).issubset(x[PERMS]) and
-                'boolean' in x,
+                'conditional' in x,
                 get_all_allow_rules()))
 
     try:
         for i in allows:
-            tdict.update({'source': i['source'], 'boolean': i['boolean']})
+            tdict.update({'source': i['source'], 'conditional': (i['conditional'], i['enabled'])})
             if tdict not in tlist:
                 tlist.append(tdict)
                 tdict = {}
@@ -459,10 +464,10 @@ def get_conditionals_format_text(cond):
 
     enabled = False
     for x in cond:
-        if x['boolean'][0][1]:
+        if x['conditional'][1]:
             enabled = True
             break
-    return _("-- Allowed %s [ %s ]") % (enabled, " || ".join(set(map(lambda x: "%s=%d" % (x['boolean'][0][0], x['boolean'][0][1]), cond))))
+    return _("-- Allowed %s [ %s ]") % (enabled, " || ".join(set(map(lambda x: "%s=%d" % (x['conditional'][0], x['conditional'][1]), cond))))
 
 
 def get_types_from_attribute(attribute):
@@ -716,9 +721,9 @@ def get_boolean_rules(setype, boolean):
     boollist = []
     permlist = search([ALLOW], {'source': setype})
     for p in permlist:
-        if "boolean" in p:
+        if "booleans" in p:
             try:
-                for b in p["boolean"]:
+                for b in p["booleans"]:
                     if boolean in b:
                         boollist.append(p)
             except:
@@ -1141,7 +1146,7 @@ def get_bools(setype):
     bools = []
     domainbools = []
     domainname, short_name = gen_short_name(setype)
-    for i in map(lambda x: x['boolean'], filter(lambda x: 'boolean' in x and x['source'] == setype, get_all_allow_rules())):
+    for i in map(lambda x: x['booleans'], filter(lambda x: 'booleans' in x and x['source'] == setype, search([ALLOW, DONTAUDIT]))):
         for b in i:
             if not isinstance(b, tuple):
                 continue
