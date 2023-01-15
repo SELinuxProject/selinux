@@ -10,31 +10,30 @@ jobs:
       matrix:
         compiler: [gcc, clang]
         python-ruby-version:
-          - {python: '3.10', ruby: '3.1'}
-          - {python: '3.10', ruby: '3.1', other: test-flags-override}
-          - {python: '3.10', ruby: '3.1', other: test-debug}
-          - {python: '3.10', ruby: '3.1', other: linker-bfd}
-          - {python: '3.10', ruby: '3.1', other: linker-gold}
+          - {python: '3.11', ruby: '3.1'}
+          - {python: '3.11', ruby: '3.1', other: 'test-flags-override'}
+          - {python: '3.11', ruby: '3.1', other: 'test-debug'}
+          - {python: '3.11', ruby: '3.1', other: 'linker-bfd'}
+          - {python: '3.11', ruby: '3.1', other: 'linker-gold'}
           # Test several Python versions with the latest Ruby version
+          - {python: '3.10', ruby: '3.1'}
           - {python: '3.9', ruby: '3.1'}
           - {python: '3.8', ruby: '3.1'}
           - {python: '3.7', ruby: '3.1'}
-          - {python: '3.6', ruby: '3.1'}
-          - {python: '3.5', ruby: '3.1'}
           - {python: 'pypy3.7', ruby: '3.1'}
           # Test several Ruby versions with the latest Python version
-          - {python: '3.10', ruby: '3.0'}
-          - {python: '3.10', ruby: '2.7'}
-          - {python: '3.10', ruby: '2.6'}
-          - {python: '3.10', ruby: '2.5'}
+          - {python: '3.11', ruby: '3.0'}
+          - {python: '3.11', ruby: '2.7'}
+          - {python: '3.11', ruby: '2.6'}
+          - {python: '3.11', ruby: '2.5'}
         exclude:
           - compiler: clang
-            python-ruby-version: {python: '3.10', ruby: '3.1', other: linker-bfd}
+            python-ruby-version: {python: '3.11', ruby: '3.1', other: 'linker-bfd'}
           - compiler: clang
-            python-ruby-version: {python: '3.10', ruby: '3.1', other: linker-gold}
+            python-ruby-version: {python: '3.11', ruby: '3.1', other: 'linker-gold'}
         include:
           - compiler: gcc
-            python-ruby-version: {python: '3.10', ruby: '3.1', other: sanitizers}
+            python-ruby-version: {python: '3.11', ruby: '3.1', other: 'sanitizers'}
 
     steps:
     - uses: actions/checkout@v3
