@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name="sepolicy",
-    version="3.5-rc1",
+    version="3.5-rc2",
     description="Python SELinux Policy Analyses bindings",
     author="Daniel Walsh",
     author_email="dwalsh@redhat.com",
