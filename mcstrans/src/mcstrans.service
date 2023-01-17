@@ -9,6 +9,7 @@ Conflicts=shutdown.target
 [Service]
 ExecStart=/sbin/mcstransd -f
 RuntimeDirectory=setrans
+RuntimeDirectoryPreserve=true
 
 [Install]
 WantedBy=multi-user.target
