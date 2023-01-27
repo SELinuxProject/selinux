@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2022-07-21 11:19+0000\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2023-01-22 16:20+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://translate.fedoraproject.org/projects/"
 "selinux/sandbox/ka/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13\n"
+"X-Generator: Weblate 4.15.1\n"
 
 #: ../sandbox:120
 #, python-format
@@ -39,34 +39,41 @@ msgstr "[yY]"
 
 #: ../sandbox:157
 msgid "User account must be setup with an MCS Range"
-msgstr ""
+msgstr "მომხმარებლის ანგარიშისთვის MCS დიაპაზონის მითითება აუცილებელია"
 
 #: ../sandbox:185
 msgid ""
 "Failed to find any unused category sets.  Consider a larger MCS range for "
 "this user."
 msgstr ""
+"გამოუყენებელი კატეგორიის ნაკრებები ვერ ვიპოვე.   ამ მომხმარებელს ალბათ უფრო "
+"დიდი MCS დიაპაზონი ესაჭიროება."
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
-msgstr ""
+msgstr "დონის მიმაგრებისთვის Homedr და tempdir აუცილებელია"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
 "%s is required for the action you want to perform.\n"
 msgstr ""
+"\n"
+"ქმედებისთვის, რომლის შესრულებაც გნებავთ, %s აუცილებელია.\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
 "Policy defines the following types for use with the -t:\n"
 "\t%s\n"
 msgstr ""
+"\n"
+"პოლიტიკაში აღწერილია -t -სთან ერთად გამოყენებადი შემდეგი ტიპები:\n"
+"\t%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -89,80 +96,88 @@ msgstr ""
 "ფაილი ] ...] [ -t ტიპი ] -S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "sandbox-ში ფაილების ჩასმა"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
-msgstr ""
+msgstr "Sandbox-ში ჩასასმელი ფაილების სიის INCLUDEFILE-დან წაკითხვა"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "sandbox-ის SELinux-ის ტიპით გაშვება"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr "ახალი საწყისი ან/და /tmp საქაღალდის მიმაგრება"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "წერტილი დუიმში X-სთვის"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
-msgstr ""
+msgstr "სრული სამუშაო მაგიდის სესიის sandbox-ში გაშვება"
 
-#: ../sandbox:343
+#: ../sandbox:344
 msgid "Shred content before temporary directories are removed"
-msgstr ""
+msgstr "დროებითი საქაღალდეების წაშლამდე მათი შემცველობის საგულდაგულოდ წაშლა"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
-msgstr ""
+msgstr "X აპლიკაციის sandbox-ში გაშვება"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
-msgstr ""
+msgstr "ალტერნატიული საწყისი საქაღალდე მისამაგრებლად"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
-msgstr ""
+msgstr "ალტერნატიული /tmp საქაღალდე მისამაგრებლად"
 
-#: ../sandbox:367
+#: ../sandbox:364
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr "ალტერნატიული XDG_RUNTIME_DIR - /run/user/$UID - საქაღალდე მისამაგრებლად"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "ფანჯრების სხვა მმართველი"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "sandbox-ის MCS/MLS დონე"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
 "command"
 msgstr ""
+"Sandbox-ის პოლიტიკა ამჟამად დაყენებული არაა.\n"
+"ამ ბრძანების გასაშვებად selinux-policy-sandbox პაკეტის დაყენებაა საჭირო"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
+"სესიის sandbox-ის მორგებისას Homedir-ის და tempdir-ის მითითება აუცილებელია"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
-msgstr ""
+msgstr "სესიის sandbox-ში ბრძანებები დაუშვებელია"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "ბრძანება აუცილებელია"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s: გაშვებადი ფაილი არაა"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "არასწორი მნიშვნელობა \"%s\""

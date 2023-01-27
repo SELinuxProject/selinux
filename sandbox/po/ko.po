@@ -3,9 +3,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-09-08 19:04+0000\n"
-"Last-Translator: simmon <simmon@nplob.com>\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2023-01-19 09:31+0000\n"
+"Last-Translator: 김인수 <simmon@nplob.com>\n"
 "Language-Team: Korean <https://translate.fedoraproject.org/projects/selinux/"
 "sandbox/ko/>\n"
 "Language: ko\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.15.1\n"
 
 #: ../sandbox:120
 #, python-format
@@ -45,11 +45,11 @@ msgstr ""
 "사용되지 않은 카테고리 세트를 찾지 못했습니다. 이 사용자에 대해 더 큰 MCS 범"
 "위를 고려하십시오."
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
 msgstr "Homedir 및 tempdir는 수평 장착에 필요합니다"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
@@ -58,7 +58,7 @@ msgstr ""
 "\n"
 "%s 수행하려는 조치에 필수입니다.\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
@@ -69,7 +69,7 @@ msgstr ""
 "정책은 -t와 함께 사용할 다음 유형을 정의합니다:\n"
 "%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -90,55 +90,60 @@ msgstr ""
 "W windowmanager] [-w windowsize] [[-i file] ...] [-t type] -S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "샌드박스에 파일 포함"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr "INCLUDEFILE에서 샌드 박스에 포함 할 파일 목록 읽기"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "SELinux 유형의 샌드 박스 실행"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr "신규 홈 및/또는 tmp 디렉토리 적재"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "X 디스플레이의 인치당 도트 수"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
 msgstr "샌드 박스 내에서 완전한 데스크톱 세션 실행"
 
-#: ../sandbox:343
+#: ../sandbox:344
 msgid "Shred content before temporary directories are removed"
 msgstr "임시 디렉토리가 제거되기 전에 내용을 파쇄합니다"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
 msgstr "샌드 박스 내에서 X 응용 프로그램 실행"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
 msgstr "적재에 사용 할 대체 홈 디렉토리"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
 msgstr "적재에 사용 할 대체 /tmp 디렉토리"
 
-#: ../sandbox:367
+#: ../sandbox:364
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr "적재에 사용 할 대체 XDG_RUNTIME_DIR - /run/user/$UID - 디렉토리"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "대체 창 관리자"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "샌드박스의 MCS / MLS 레벨"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -147,25 +152,25 @@ msgstr ""
 "샌드박스 정책이 현재 설치되지 않았습니다.\n"
 "이 명령을 실행하려면 selinux-policy-sandbox 꾸러미를 설치해야 합니다"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr "세션 샌드박스를 설정 할 때 Homedir 및 tempdir을 지정해야 합니다"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
 msgstr "세션 샌드박스에서 명령을 사용 할 수 없습니다"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "필요한 명령"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s 실행 파일이 아닙니다"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "잘못된 값 %s"

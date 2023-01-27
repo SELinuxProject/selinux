@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-12-28 22:16+0000\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2022-10-17 13:19+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://translate.fedoraproject.org/projects/selinux/"
 "gui/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
@@ -657,10 +657,8 @@ msgid "<b>Add booleans from the %s policy:</b>"
 msgstr "<b>Fügen Sie boolesche Variablen von der %s Richtlinie hinzu:</b>"
 
 #: ../polgen.ui:2179
-#, fuzzy
-#| msgid "Boolean"
 msgid "Add Boolean"
-msgstr "Boolean"
+msgstr "Booleschen Wert hinzufügen"
 
 #: ../polgen.ui:2234
 #, python-format

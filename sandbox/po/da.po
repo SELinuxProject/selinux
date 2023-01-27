@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
 "PO-Revision-Date: 2018-09-21 10:30-0400\n"
 "Last-Translator: scootergrisen <scootergrisen@gmail.com>\n"
 "Language-Team: Danish\n"
@@ -44,11 +44,11 @@ msgstr ""
 "Kunne ikke finde nogen ubrugte kategorisæt. Overvej et større MCS-område til "
 "brugeren."
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
 msgstr "Hjemmemappe og midlertidig mappe kræves til niveaumonteringer"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
@@ -57,7 +57,7 @@ msgstr ""
 "\n"
 "%s kræves til handlingen du vil udføre.\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
@@ -68,7 +68,7 @@ msgstr ""
 "Regelsættet definerer følgende typer til brug med -t:\n"
 "\t%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -91,57 +91,64 @@ msgstr ""
 "fil ] ...] [ -t type ] -S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "inkluderingsfil i sandkasse"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr "læs liste over filer som skal inkluderes i sandkasse fra INCLUDEFILE"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "kør sandkasse med SELinux-type"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr "monter ny hjemme- og/eller midlertidig mappe"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "punkter pr. tomme for X-monitor"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
 msgstr "kør komplet skrivebordssession i sandkasse"
 
-#: ../sandbox:343
+#: ../sandbox:344
 #, fuzzy
 #| msgid "Shred content before tempory directories are removed"
 msgid "Shred content before temporary directories are removed"
 msgstr "Fjern indholdet inden midlertidige mapper fjernes"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
 msgstr "kør X-program i en sandkasse"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
 msgstr "brug anden hjemmemappe til brug ved montering"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
 msgstr "brug anden /tmp-mappe til brug ved montering"
 
-#: ../sandbox:367
+#: ../sandbox:364
+#, fuzzy
+#| msgid "alternate home directory to use for mounting"
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr "brug anden hjemmemappe til brug ved montering"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "brug anden vindueshåndtering"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "MCS-/MLS-niveau til sandkassen"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -150,27 +157,27 @@ msgstr ""
 "Der er ikke installeret sandkasse-regelsæt på nuværende tidspunkt.\n"
 "Du skal installere selinux-policy-sandbox-pakken for at køre kommandoen"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
 "Du skal angive en hjemmemappe og midlertidig mappe når en sessions-sandkasse "
 "sættes op"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
 msgstr "Kommandoer er ikke tilladt i en sessions-sandkasse"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "Kommando kræves"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s er ikke en eksekverbar"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "Ugyldig værdi %s"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
 "PO-Revision-Date: 2021-11-18 23:16+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://translate.fedoraproject.org/projects/selinux/"
@@ -45,11 +45,11 @@ msgstr ""
 "Nicht verwendete Kategoriensätze konnten nicht gefunden werden. Betrachten "
 "Sie einen größeren MCS-Bereich für diesen Benutzer."
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
 msgstr "Homedir und tempdir für Level-Mounts erforderlich"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
@@ -58,7 +58,7 @@ msgstr ""
 "\n"
 "%s ist für die Aktion erforderlich, die Sie ausführen möchten.\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
@@ -69,7 +69,7 @@ msgstr ""
 "Die Richtlinie definiert die folgenden Typen für die Verwendung mit -t: \\ t"
 "%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -90,57 +90,64 @@ msgstr ""
 "S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "Datei in Sandbox einschließen"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr ""
 "Liste der Dateien lesen, die in INCLUDEFILE in die Sandbox aufgenommen "
 "werden sollen"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "Sandbox mit SELinux-Typ ausführen"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr "Mounten Sie das neue Home- und / oder tmp-Verzeichnis"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "Punkte pro Zoll für X-Anzeige"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
 msgstr "Führen Sie die vollständige Desktopsitzung in der Sandbox aus"
 
-#: ../sandbox:343
+#: ../sandbox:344
 msgid "Shred content before temporary directories are removed"
 msgstr "Inhalt schreddern, bevor temporäre Verzeichnisse entfernt werden"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
 msgstr "Führen Sie die X-Anwendung in einer Sandbox aus"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
 msgstr "Alternatives Ausgangsverzeichnis für das Mounten"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
 msgstr "Alternate / tmp-Verzeichnis für das Mounten"
 
-#: ../sandbox:367
+#: ../sandbox:364
+#, fuzzy
+#| msgid "alternate home directory to use for mounting"
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr "Alternatives Ausgangsverzeichnis für das Mounten"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "alternativer Fenstermanager"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "MCS / MLS-Ebene für die Sandbox"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -149,27 +156,27 @@ msgstr ""
 "Sandbox-Richtlinie ist derzeit nicht installiert. Sie müssen das Paket "
 "selinux-policy-sandbox installieren, um diesen Befehl ausführen zu können"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
 "Sie müssen ein Homedir und ein Tempdir angeben, wenn Sie eine Session-"
 "Sandbox einrichten"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
 msgstr "Befehle sind in einer Session-Sandbox nicht zulässig"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "Befehl erforderlich"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s ist keine ausführbare Datei"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "Ungültiger Wert %s"

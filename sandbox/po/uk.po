@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-09-08 19:04+0000\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2023-01-19 09:31+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://translate.fedoraproject.org/projects/"
 "selinux/sandbox/uk/>\n"
@@ -12,9 +12,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.8\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.15.1\n"
 
 #: ../sandbox:120
 #, python-format
@@ -46,13 +46,13 @@ msgstr ""
 "Не вдалося знайти жодного невикористаного набору категорій. Вам варто "
 "встановити ширший діапазон MCS для цього користувача."
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
 msgstr ""
 "Для монтування з рівнями потрібно вказати домашній каталог і каталог "
 "тимчасових даних"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
@@ -61,7 +61,7 @@ msgstr ""
 "\n"
 "Для виконання бажаної для вас дії потрібен %s.\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
@@ -72,7 +72,7 @@ msgstr ""
 "Правила визначають такі типи для використання з -t:\n"
 "\t%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -95,55 +95,62 @@ msgstr ""
 "розмір_вікна ] [[-i файл ] ...] [ -t тип ] -S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "файл включень до пісочниці"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr "прочитати список файлів для включення до пісочниці з INCLUDEFILE"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "запустити пісочницю із вказаним типом SELinux"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr "змонтувати новий домашній каталог і/або каталог tmp"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "кількість точок на дюйм на графічному дисплеї"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
 msgstr "запустити увесь стільничний сеанс у пісочниці"
 
-#: ../sandbox:343
+#: ../sandbox:344
 msgid "Shred content before temporary directories are removed"
 msgstr "Перезаписувати дані до вилучення каталогів із тимчасовими даними"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
 msgstr "запустити програму із графічним інтерфейсом у пісочниці"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
 msgstr "змінити домашній каталог, який використовується для монтування"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
 msgstr "змінити каталог /tmp, який використовується для монтування"
 
-#: ../sandbox:367
+#: ../sandbox:364
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr ""
+"змінити XDG_RUNTIME_DIR - /run/user/$UID — каталог, який використовується "
+"для монтування"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "змінити засіб керування вікнами"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "Рівень MCS/MLS для пісочниці"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -152,27 +159,27 @@ msgstr ""
 "Зараз правила пісочниці не встановлено.\n"
 "Вам слід встановити пакунок selinux-policy-sandbox, щоб запускати цю команду"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
 "Вам слід вказати домашній каталог і каталог тимчасових даних при "
 "налаштуванні пісочниці сеансу"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
 msgstr "У пісочниці сенсу команди заборонено"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "Потрібна команда"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s не є виконуваним файлом"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "Некоректне значення %s"

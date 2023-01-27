@@ -4,9 +4,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2020-08-28 03:29+0000\n"
-"Last-Translator: Julien Humbert <julroy67@gmail.com>\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2022-10-06 08:19+0000\n"
+"Last-Translator: Ludek Janda <ljanda@redhat.com>\n"
 "Language-Team: French <https://translate.fedoraproject.org/projects/selinux/"
 "policycoreutils/fr/>\n"
 "Language: fr\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.2.1\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -102,7 +102,7 @@ msgstr "nouveau rôle :  %s :  erreur à la ligne %lu.\n"
 #: ../newrole/newrole.c:385
 #, c-format
 msgid "Cannot encrypt password.\n"
-msgstr ""
+msgstr "Impossible de crypter le mot de passe.\n"
 
 #: ../newrole/newrole.c:449
 #, c-format

@@ -3,9 +3,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-09-11 11:04+0000\n"
-"Last-Translator: Sundeep Anand <suanand@redhat.com>\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2023-01-26 08:20+0000\n"
+"Last-Translator: Ludek Janda <ljanda@redhat.com>\n"
 "Language-Team: Japanese <https://translate.fedoraproject.org/projects/"
 "selinux/sandbox/ja/>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../sandbox:120
 #, python-format
@@ -45,11 +45,11 @@ msgstr ""
 "未使用のカテゴリーセットの発見に失敗しました。  このユーザーには、より広い "
 "MCS 範囲を検討してください。"
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
 msgstr "レベルマウントに必要な Homedir および tempdir"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
@@ -58,7 +58,7 @@ msgstr ""
 "\n"
 "%s は、実行したい動作に必要です。\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
@@ -69,7 +69,7 @@ msgstr ""
 "ポリシーは、-t と使用する以下のタイプを定義します:\n"
 "\t%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -92,57 +92,62 @@ msgstr ""
 "type ] -S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "Sandbox のファイルを含めます"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr "INCLUDEFILE から Sandbox に含めるファイルのリストを読み取ります"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "SELinux タイプで Sandbox を実行します"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr ""
 "新しいホームおよび tmp ディレクトリーをマウントするか、またはどちらか一方をマ"
 "ウントします"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "X ディスプレイ用のインチごとのドット"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
 msgstr "Sandbox 内で完全なデスクトップセッションを実行します"
 
-#: ../sandbox:343
+#: ../sandbox:344
 msgid "Shred content before temporary directories are removed"
 msgstr "一時ディレクトリーが削除される前にコンテンツをシュレッドします"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
 msgstr "Sandbox 内で X アプリケーションを実行します"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
 msgstr "マウントに使用するホームディレクトリーを代替します"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
 msgstr "マウントに使用する /tmp ディレクトリーを代替します"
 
-#: ../sandbox:367
+#: ../sandbox:364
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr "別の XDG_RUNTIME_DIR - /run/user/$UID - マウントに使用するディレクトリー"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "ウィンドウマネージャーを代替します"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "Sandbox の MCS/MLS レベル"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -152,27 +157,27 @@ msgstr ""
 "このコマンドを実行するには、selinux-policy-sandbox パッケージをインストールす"
 "る必要があります"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
 "セッション Sandbox をセットアップする際に、Homedir および tempdir を指定する"
 "必要があります"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
 msgstr "セッション Sandbox では、コマンドは許可されていません"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "コマンドが必要"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s は実行可能ではありません"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "無効な値 %s"

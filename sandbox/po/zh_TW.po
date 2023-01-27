@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
 "PO-Revision-Date: 2018-11-20 10:27-0500\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Chinese (Taiwan)\n"
@@ -43,11 +43,11 @@ msgid ""
 "this user."
 msgstr "無法找到任何未使用的類別集。考慮為此用戶提供更大的MCS範圍。"
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
 msgstr "水平坐騎需要Homedir和tempdir"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
@@ -56,7 +56,7 @@ msgstr ""
 "\n"
 "%s 是您要執行的操作所必需的。\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
@@ -66,7 +66,7 @@ msgstr ""
 "\n"
 "策略定義以下類型以與-t：\\ t一起使用%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -87,57 +87,64 @@ msgstr ""
 "S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "在沙箱中包含文件"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr "從INCLUDEFILE中讀取要包含在沙箱中的文件列表"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "使用SELinux類型運行沙箱"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr "mount new home和/或tmp目錄"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "X顯示屏的每英寸點數"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
 msgstr "在沙箱中運行完整的桌面會話"
 
-#: ../sandbox:343
+#: ../sandbox:344
 #, fuzzy
 #| msgid "Shred content before tempory directories are removed"
 msgid "Shred content before temporary directories are removed"
 msgstr "刪除了臨時目錄之前的碎片內容"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
 msgstr "在沙箱中運行X應用程序"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
 msgstr "備用主目錄用於安裝"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
 msgstr "用於安裝的alternate / tmp目錄"
 
-#: ../sandbox:367
+#: ../sandbox:364
+#, fuzzy
+#| msgid "alternate home directory to use for mounting"
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr "備用主目錄用於安裝"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "備用窗口管理器"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "沙箱的MCS / MLS級別"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -145,25 +152,25 @@ msgid ""
 msgstr ""
 "目前尚未安裝沙箱策略。您需要安裝selinux-policy-sandbox軟件包才能運行此命令"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr "設置會話沙箱時，必須指定Homedir和tempdir"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
 msgstr "會話沙箱中不允許使用命令"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "需要命令"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s 不是可執行文件"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "無效值 %s"

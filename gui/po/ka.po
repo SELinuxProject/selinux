@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2022-07-21 11:19+0000\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2022-11-23 17:19+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://translate.fedoraproject.org/projects/"
 "selinux/gui/ka/>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.13\n"
+"X-Generator: Weblate 4.14.2\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
@@ -284,7 +284,7 @@ msgstr ""
 
 #: ../polgen.ui:387
 msgid "User Application"
-msgstr ""
+msgstr "მომხმარებლის აპლიკაცია"
 
 #: ../polgen.ui:391 ../polgen.ui:408
 msgid ""
@@ -659,7 +659,7 @@ msgstr ""
 #: ../semanagePage.py:131
 #, python-format
 msgid "Are you sure you want to delete %s '%s'?"
-msgstr ""
+msgstr "დარწმუნებული ბრძანდებით, რომ გნებავთ, წაშალოთ %s '%s'?"
 
 #: ../semanagePage.py:131
 #, python-format
@@ -691,7 +691,7 @@ msgstr "ძალით"
 
 #: ../statusPage.py:80 ../system-config-selinux.ui:593
 msgid "Disabled"
-msgstr "გამორთულია"
+msgstr "გათიშულია"
 
 #: ../statusPage.py:99
 msgid "Status"
@@ -741,7 +741,7 @@ msgstr ""
 
 #: ../system-config-selinux.ui:117
 msgid "Login Name"
-msgstr ""
+msgstr "მომხმარებლის სახელი"
 
 #: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
 #: ../system-config-selinux.ui:1911 ../usersPage.py:55
@@ -806,7 +806,7 @@ msgstr ""
 
 #: ../system-config-selinux.ui:741
 msgid "<b>Select:</b>"
-msgstr ""
+msgstr "<b>აირჩიეთ:</b>"
 
 #: ../system-config-selinux.ui:771
 msgid "System Default Enforcing Mode"

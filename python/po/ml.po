@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
 "PO-Revision-Date: 2017-12-15 09:04-0500\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Malayalam\n"
@@ -339,7 +339,7 @@ msgstr ""
 msgid "Manage process type enforcement mode"
 msgstr ""
 
-#: ../semanage/semanage:768 ../semanage/seobject.py:2674
+#: ../semanage/semanage:768 ../semanage/seobject.py:2677
 msgid "type"
 msgstr "ഏത് തരം"
 
@@ -435,7 +435,7 @@ msgstr ""
 msgid "Language"
 msgstr "ഭാഷ"
 
-#: ../semanage/seobject.py:397 ../sepolicy/sepolicy/sepolicy.glade:3421
+#: ../semanage/seobject.py:397 ../sepolicy/sepolicy/sepolicy.glade:3413
 msgid "Disabled"
 msgstr "പ്രവര്‍ത്തന രഹിതം"
 
@@ -507,8 +507,8 @@ msgstr "പെര്‍മ്മിസ്സീവ് ഘടകം %s നീക�
 #: ../semanage/seobject.py:827 ../semanage/seobject.py:892
 #: ../semanage/seobject.py:948 ../semanage/seobject.py:1226
 #: ../semanage/seobject.py:1492 ../semanage/seobject.py:2502
-#: ../semanage/seobject.py:2572 ../semanage/seobject.py:2596
-#: ../semanage/seobject.py:2727 ../semanage/seobject.py:2778
+#: ../semanage/seobject.py:2575 ../semanage/seobject.py:2599
+#: ../semanage/seobject.py:2730 ../semanage/seobject.py:2781
 #, python-format
 msgid "Could not create a key for %s"
 msgstr "%sയ്ക്ക് ഒരു കീ ഉണ്ടാക്കുവാന്‍ സാധിച്ചില്ല"
@@ -594,17 +594,17 @@ msgid "Could not list login mappings"
 msgstr "ലോഗിന്‍ മാപ്പിംങുകള്‍ ലിസ്റ്റ് ചെയ്യുവാന്‍ സാധിച്ചില്ല"
 
 #: ../semanage/seobject.py:772 ../semanage/seobject.py:784
-#: ../sepolicy/sepolicy/sepolicy.glade:1162
-#: ../sepolicy/sepolicy/sepolicy.glade:3146
+#: ../sepolicy/sepolicy/sepolicy.glade:1156
+#: ../sepolicy/sepolicy/sepolicy.glade:3138
 msgid "Login Name"
 msgstr "പ്രവേശന നാമം"
 
 #: ../semanage/seobject.py:772 ../semanage/seobject.py:784
 #: ../semanage/seobject.py:1041 ../semanage/seobject.py:1046
-#: ../sepolicy/sepolicy/sepolicy.glade:1188
-#: ../sepolicy/sepolicy/sepolicy.glade:3164
-#: ../sepolicy/sepolicy/sepolicy.glade:3250
-#: ../sepolicy/sepolicy/sepolicy.glade:4905
+#: ../sepolicy/sepolicy/sepolicy.glade:1182
+#: ../sepolicy/sepolicy/sepolicy.glade:3156
+#: ../sepolicy/sepolicy/sepolicy.glade:3242
+#: ../sepolicy/sepolicy/sepolicy.glade:4897
 msgid "SELinux User"
 msgstr "SELinux ഉപയോക്താവ്"
 
@@ -727,9 +727,9 @@ msgid "MCS Range"
 msgstr "MCS പരിധി"
 
 #: ../semanage/seobject.py:1041 ../semanage/seobject.py:1046
-#: ../sepolicy/sepolicy/sepolicy.glade:3270
-#: ../sepolicy/sepolicy/sepolicy.glade:5241
-#: ../sepolicy/sepolicy/sepolicy.glade:5390
+#: ../sepolicy/sepolicy/sepolicy.glade:3262
+#: ../sepolicy/sepolicy/sepolicy.glade:5233
+#: ../sepolicy/sepolicy/sepolicy.glade:5382
 msgid "SELinux Roles"
 msgstr "SELinux റോളുകള്‍"
 
@@ -861,9 +861,9 @@ msgstr "പോര്‍ട്ട് %s/%s നീക്കം ചെയ്യു�
 msgid "Could not list ports"
 msgstr "പോര്‍ട്ടുകള്‍ ലിസ്റ്റ് ചെയ്യുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:1329 ../sepolicy/sepolicy/sepolicy.glade:2676
-#: ../sepolicy/sepolicy/sepolicy.glade:2774
-#: ../sepolicy/sepolicy/sepolicy.glade:4638
+#: ../semanage/seobject.py:1329 ../sepolicy/sepolicy/sepolicy.glade:2668
+#: ../sepolicy/sepolicy/sepolicy.glade:2766
+#: ../sepolicy/sepolicy/sepolicy.glade:4630
 msgid "SELinux Port Type"
 msgstr "SELinux രീതിയിലുള്ള പോര്‍ട്ട്"
 
@@ -872,7 +872,7 @@ msgid "Proto"
 msgstr "Proto"
 
 #: ../semanage/seobject.py:1329 ../semanage/seobject.py:1835
-#: ../sepolicy/sepolicy/sepolicy.glade:1413
+#: ../sepolicy/sepolicy/sepolicy.glade:1407
 msgid "Port Number"
 msgstr "പോര്‍ട്ട് നംബര്‍"
 
@@ -1307,7 +1307,7 @@ msgstr "ഇന്റര്‍ഫെയിസുകള്‍‍ ലിസ്റ�
 msgid "SELinux Interface"
 msgstr "SELinux സംയോജകഘടകം"
 
-#: ../semanage/seobject.py:2285 ../semanage/seobject.py:2674
+#: ../semanage/seobject.py:2285 ../semanage/seobject.py:2677
 msgid "Context"
 msgstr "കോണ്‍ടെക്സ്റ്റ്"
 
@@ -1371,8 +1371,8 @@ msgid "Type %s is invalid, must be a file or device type"
 msgstr "%s തരം അസാധുവാണു്, ഒരു ഫയല്‍ അല്ലെങ്കില്‍ ഡിവൈസ് രീതിയിലായിരിയ്ക്കണം"
 
 #: ../semanage/seobject.py:2439 ../semanage/seobject.py:2444
-#: ../semanage/seobject.py:2506 ../semanage/seobject.py:2600
-#: ../semanage/seobject.py:2604
+#: ../semanage/seobject.py:2506 ../semanage/seobject.py:2515
+#: ../semanage/seobject.py:2603 ../semanage/seobject.py:2607
 #, python-format
 msgid "Could not check if file context for %s is defined"
 msgstr "%sനുളള ഫൈല്‍ context define ചെയ്തിട്ടുണ്ടോ എന്ന് പരിശോധിക്കുവാന്‍ സാധിച്ചില്ല"
@@ -1392,8 +1392,8 @@ msgstr "%sനുളള ഫൈല്‍ context ഉണ്ടാക്കുവാ
 msgid "Could not set type in file context for %s"
 msgstr "%sനുളള ഫൈല്‍ contextല്‍ ടൈപ്പ് സജ്ജമാക്കുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2467 ../semanage/seobject.py:2536
-#: ../semanage/seobject.py:2540
+#: ../semanage/seobject.py:2467 ../semanage/seobject.py:2539
+#: ../semanage/seobject.py:2543
 #, python-format
 msgid "Could not set file context for %s"
 msgstr "%sന് ഫൈല്‍ കോണ്‍ടെക്സ്റ്റ് സജ്ജമാക്കുവാന്‍ സാധിച്ചില്ല"
@@ -1407,57 +1407,57 @@ msgstr "%sനുളള ഫൈല്‍ കോണ്‍ടെക്സ്റ്�
 msgid "Requires setype, serange or seuser"
 msgstr "setype, serange അല്ലന്കില്‍ seuser ആവശ്യമുണ്ട്"
 
-#: ../semanage/seobject.py:2510 ../semanage/seobject.py:2608
-#, python-format
-msgid "File context for %s is not defined"
-msgstr "%sനുളള ഫൈല്‍ context define ചെയ്തിട്ടില്ല"
-
-#: ../semanage/seobject.py:2518
+#: ../semanage/seobject.py:2511 ../semanage/seobject.py:2521
 #, python-format
 msgid "Could not query file context for %s"
 msgstr "%sനുളള ഫൈല്‍ context ചോദ്യം ചെയ്യുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2544
+#: ../semanage/seobject.py:2517 ../semanage/seobject.py:2611
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "%sനുളള ഫൈല്‍ context define ചെയ്തിട്ടില്ല"
+
+#: ../semanage/seobject.py:2547
 #, python-format
 msgid "Could not modify file context for %s"
 msgstr "%sനുളള ഫൈല്‍ context പരിഷ്ക്കരിക്കുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2562
+#: ../semanage/seobject.py:2565
 msgid "Could not list the file contexts"
 msgstr "ഫൈല്‍ കോണ്‍ടെക്സ്റ്റുകള്‍ ലിസ്റ്റ് ചെയ്യുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2576
+#: ../semanage/seobject.py:2579
 #, python-format
 msgid "Could not delete the file context %s"
 msgstr "%sനുളള ഫൈല്‍ കോണ്‍ടെക്സ്റ്റ് നീക്കം ചെയ്യുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2606
+#: ../semanage/seobject.py:2609
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
 msgstr "%sനുളള ഫൈല്‍ context പോളിസിയില്‍ define ചെയ്തിട്ടുണ്ട്, നീക്കം ചെയ്യുവാന്‍ സാധിക്കില്ല"
 
-#: ../semanage/seobject.py:2612
+#: ../semanage/seobject.py:2615
 #, python-format
 msgid "Could not delete file context for %s"
 msgstr "%sനുളള ഫൈല്‍ context നീക്കം ചെയ്യുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2629
+#: ../semanage/seobject.py:2632
 msgid "Could not list file contexts"
 msgstr "ഫൈല്‍ കോണ്‍ടെക്സ്റ്റുകള്‍ ലിസ്റ്റ് ചെയ്യുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2633
+#: ../semanage/seobject.py:2636
 msgid "Could not list file contexts for home directories"
 msgstr ""
 
-#: ../semanage/seobject.py:2637
+#: ../semanage/seobject.py:2640
 msgid "Could not list local file contexts"
 msgstr "ലോക്കല്‍ ഫൈല്‍ കോണ്‍ടെക്സ്റ്റുകള്‍ ലിസ്റ്റ് ചെയ്യുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2674
+#: ../semanage/seobject.py:2677
 msgid "SELinux fcontext"
 msgstr "SELinux fcontext"
 
-#: ../semanage/seobject.py:2687
+#: ../semanage/seobject.py:2690
 msgid ""
 "\n"
 "SELinux Distribution fcontext Equivalence \n"
@@ -1465,7 +1465,7 @@ msgstr ""
 "\n"
 "SELinux ഡിസ്ട്രിബ്യൂഷന്‍ fcontext ഇക്ക്വിവാലന്‍സ് \n"
 
-#: ../semanage/seobject.py:2692
+#: ../semanage/seobject.py:2695
 msgid ""
 "\n"
 "SELinux Local fcontext Equivalence \n"
@@ -1473,79 +1473,79 @@ msgstr ""
 "\n"
 "SELinux ലോക്കല്‍ fcontext ഇക്ക്വിവാലന്‍സ് \n"
 
-#: ../semanage/seobject.py:2730 ../semanage/seobject.py:2781
-#: ../semanage/seobject.py:2787
+#: ../semanage/seobject.py:2733 ../semanage/seobject.py:2784
+#: ../semanage/seobject.py:2790
 #, python-format
 msgid "Could not check if boolean %s is defined"
 msgstr "ബൂള്യന്‍ ആകുന്ന %s define ചെയ്തിട്ടുണ്ടോ എന്ന് പരിശോധിക്കുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2732 ../semanage/seobject.py:2783
+#: ../semanage/seobject.py:2735 ../semanage/seobject.py:2786
 #, python-format
 msgid "Boolean %s is not defined"
 msgstr "ബൂള്യന്‍ %s define ചെയ്തിട്ടില്ല"
 
-#: ../semanage/seobject.py:2736
+#: ../semanage/seobject.py:2739
 #, python-format
 msgid "Could not query file context %s"
 msgstr "context ചോദ്യം ചെയ്യുവാന്‍ സാധിക്കാഞ്ഞ ഫൈല്‍ ആണ് %s"
 
-#: ../semanage/seobject.py:2741
+#: ../semanage/seobject.py:2744
 #, python-format
 msgid "You must specify one of the following values: %s"
 msgstr "താഴെ പറഞ്ഞിരിക്കുന്നതില്‍ ഒരു മൂല്ല്യം പറഞ്ഞിരിക്കണം: %s"
 
-#: ../semanage/seobject.py:2746
+#: ../semanage/seobject.py:2749
 #, python-format
 msgid "Could not set active value of boolean %s"
 msgstr "ബൂള്യന്‍ %s-നു് സജീവമായ ഒരു മൂല്ല്യം ക്രമികരിക്കുവാനായില്ല"
 
-#: ../semanage/seobject.py:2749
+#: ../semanage/seobject.py:2752
 #, python-format
 msgid "Could not modify boolean %s"
 msgstr "ബൂ്ബള്യന്‍ %s പരിഷ്കരിക്കുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2765
+#: ../semanage/seobject.py:2768
 #, python-format
 msgid "Bad format %s: Record %s"
 msgstr "തെറ്റായ രീതി %s: റിക്കോര്‍ഡ് %s"
 
-#: ../semanage/seobject.py:2789
+#: ../semanage/seobject.py:2792
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
 msgstr "%s ബൂള്യന്‍ പോളിസിയില്‍ define ചെയ്തിട്ടുണ്ട്, നീക്കം ചെയ്യുവാന്‍ സാധിക്കില്ല"
 
-#: ../semanage/seobject.py:2793
+#: ../semanage/seobject.py:2796
 #, python-format
 msgid "Could not delete boolean %s"
 msgstr "ബൂള്യന്‍ %s നീക്കം ചെയ്യുവാന്‍ സാധിച്ചില്ല"
 
-#: ../semanage/seobject.py:2805 ../semanage/seobject.py:2822
+#: ../semanage/seobject.py:2808 ../semanage/seobject.py:2825
 msgid "Could not list booleans"
 msgstr "ബൂള്യനുകള്‍ ലിസ്റ്റ് ചെയ്യുവാന്‍ അസാധ്യം"
 
-#: ../semanage/seobject.py:2855
+#: ../semanage/seobject.py:2858
 msgid "off"
 msgstr "ഓഫ് ചെയ്യുക"
 
-#: ../semanage/seobject.py:2855
+#: ../semanage/seobject.py:2858
 msgid "on"
 msgstr "ഓണ്‍ ചെയ്യുക"
 
-#: ../semanage/seobject.py:2867
+#: ../semanage/seobject.py:2870
 msgid "SELinux boolean"
 msgstr "SELinux ബൂളിയന്‍"
 
-#: ../semanage/seobject.py:2867
+#: ../semanage/seobject.py:2870
 msgid "State"
 msgstr "അവസ്ഥ"
 
-#: ../semanage/seobject.py:2867
+#: ../semanage/seobject.py:2870
 msgid "Default"
 msgstr "സ്വതവേ"
 
-#: ../semanage/seobject.py:2867 ../sepolicy/sepolicy/sepolicy.glade:2148
-#: ../sepolicy/sepolicy/sepolicy.glade:2518
-#: ../sepolicy/sepolicy/sepolicy.glade:5107
+#: ../semanage/seobject.py:2870 ../sepolicy/sepolicy/sepolicy.glade:2140
+#: ../sepolicy/sepolicy/sepolicy.glade:2510
+#: ../sepolicy/sepolicy/sepolicy.glade:5099
 msgid "Description"
 msgstr "വിവരണം"
 
@@ -1716,17 +1716,17 @@ msgstr "സ്പെക്ക് ഫയല്‍"
 msgid "Setup Script"
 msgstr "സ്ക്രിപ്റ്റ് ക്രമികരിക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:67 ../sepolicy/sepolicy/sepolicy.glade:3732
-#: ../sepolicy/sepolicy/sepolicy.glade:3834
-#: ../sepolicy/sepolicy/sepolicy.glade:3897
-#: ../sepolicy/sepolicy/sepolicy.glade:3960
+#: ../sepolicy/sepolicy/gui.py:67 ../sepolicy/sepolicy/sepolicy.glade:3724
+#: ../sepolicy/sepolicy/sepolicy.glade:3826
+#: ../sepolicy/sepolicy/sepolicy.glade:3889
+#: ../sepolicy/sepolicy/sepolicy.glade:3952
 msgid "No"
 msgstr "ഇല്ല"
 
-#: ../sepolicy/sepolicy/gui.py:67 ../sepolicy/sepolicy/sepolicy.glade:3715
-#: ../sepolicy/sepolicy/sepolicy.glade:3816
-#: ../sepolicy/sepolicy/sepolicy.glade:3880
-#: ../sepolicy/sepolicy/sepolicy.glade:3943
+#: ../sepolicy/sepolicy/gui.py:67 ../sepolicy/sepolicy/sepolicy.glade:3707
+#: ../sepolicy/sepolicy/sepolicy.glade:3808
+#: ../sepolicy/sepolicy/sepolicy.glade:3872
+#: ../sepolicy/sepolicy/sepolicy.glade:3935
 msgid "Yes"
 msgstr "ഉവ്വു്"
 
@@ -1738,9 +1738,9 @@ msgstr "പ്രവര്‍ത്തന രഹിതമാക്കുക"
 msgid "Enable"
 msgstr "പ്രവര്‍ത്തന സജ്ജമാക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:81 ../sepolicy/sepolicy/sepolicy.glade:726
-#: ../sepolicy/sepolicy/sepolicy.glade:1467
-#: ../sepolicy/sepolicy/sepolicy.glade:3501
+#: ../sepolicy/sepolicy/gui.py:81 ../sepolicy/sepolicy/sepolicy.glade:720
+#: ../sepolicy/sepolicy/sepolicy.glade:1461
+#: ../sepolicy/sepolicy/sepolicy.glade:3493
 msgid "Advanced >>"
 msgstr "അധികമായ >>"
 
@@ -1748,7 +1748,7 @@ msgstr "അധികമായ >>"
 msgid "Advanced <<"
 msgstr "അധികമായ <<"
 
-#: ../sepolicy/sepolicy/gui.py:82 ../sepolicy/sepolicy/sepolicy.glade:80
+#: ../sepolicy/sepolicy/gui.py:82 ../sepolicy/sepolicy/sepolicy.glade:76
 msgid "Advanced Search >>"
 msgstr "അധികമായ തെരച്ചില്‍ >>"
 
@@ -1772,203 +1772,203 @@ msgstr ""
 "- സിസ്റ്റം ഉദ്ദേശിച്ചപോലെ പ്രവര്‍ത്തിച്ചു് തുടങ്ങിയാല്‍\n"
 "  * സിസ്റ്റത്തിന്റെ മോഡ് എന്‍ഫോഴ്സിങിലേക്കു് മാറ്റുക</small>\n"
 
-#: ../sepolicy/sepolicy/gui.py:503
+#: ../sepolicy/sepolicy/gui.py:502
 #, python-format
 msgid "%s is not a valid domain"
 msgstr "%s ഒരു ശരിയായ ഡൊമെയിനല്ല"
 
-#: ../sepolicy/sepolicy/gui.py:652
+#: ../sepolicy/sepolicy/gui.py:650
 msgid "System Status: Disabled"
 msgstr "സിസ്റ്റം അവസ്ഥ: പ്രവര്‍ത്തന രഹിതം"
 
-#: ../sepolicy/sepolicy/gui.py:750
+#: ../sepolicy/sepolicy/gui.py:748
 msgid "Help: Start Page"
 msgstr "സഹായം: പ്രാരംഭ താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:754
+#: ../sepolicy/sepolicy/gui.py:752
 msgid "Help: Booleans Page"
 msgstr "സഹായം: ബൂളിയന്‍സ് താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:760
+#: ../sepolicy/sepolicy/gui.py:758
 msgid "Help: Executable Files Page"
 msgstr "സഹായം: എക്സിക്യൂട്ടബിള്‍ ഫയല്‍ താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:763
+#: ../sepolicy/sepolicy/gui.py:761
 msgid "Help: Writable Files Page"
 msgstr "സഹായം: റൈറ്റബിള്‍ ഫയല്‍ താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:766
+#: ../sepolicy/sepolicy/gui.py:764
 msgid "Help: Application Types Page"
 msgstr "സഹായം: പ്രയോഗ തരത്തിനുള്ള താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:771
+#: ../sepolicy/sepolicy/gui.py:769
 msgid "Help: Outbound Network Connections Page"
 msgstr "സഹായം: ഔട്ട്ബൌണ്ട് നെറ്റ്‌വര്‍ക്ക് കണക്ഷന്‍ താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:774
+#: ../sepolicy/sepolicy/gui.py:772
 msgid "Help: Inbound Network Connections Page"
 msgstr "സഹായം: ഇന്‍ബൌണ്ട് നെറ്റ്‌വര്‍ക്ക് കണക്ഷന്‍ താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:780
+#: ../sepolicy/sepolicy/gui.py:778
 msgid "Help: Transition from application Page"
 msgstr "സഹായം: പ്രയോഗ താളില്‍ നിന്നുള്ള മാറ്റം"
 
-#: ../sepolicy/sepolicy/gui.py:783
+#: ../sepolicy/sepolicy/gui.py:781
 msgid "Help: Transition into application Page"
 msgstr "സഹായം: പ്രയോഗ താളിലേക്കുള്ള മാറ്റം"
 
-#: ../sepolicy/sepolicy/gui.py:786
+#: ../sepolicy/sepolicy/gui.py:784
 msgid "Help: Transition application file Page"
 msgstr "സഹായം: മാറ്റത്തിനുള്ള ഫയല്‍ താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:790
+#: ../sepolicy/sepolicy/gui.py:788
 msgid "Help: Systems Page"
 msgstr "സഹായം: സിസ്റ്റത്തിന്റെ താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:794
+#: ../sepolicy/sepolicy/gui.py:792
 msgid "Help: Lockdown Page"
 msgstr "സഹായം: ലോക്ക്ഡൌണ്‍ താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:798
+#: ../sepolicy/sepolicy/gui.py:796
 msgid "Help: Login Page"
 msgstr "സഹായം: പ്രവേശന താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:802
+#: ../sepolicy/sepolicy/gui.py:800
 msgid "Help: SELinux User Page"
 msgstr "സഹായം: SELinux ഉപയോക്തൃ താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:806
+#: ../sepolicy/sepolicy/gui.py:804
 msgid "Help: File Equivalence Page"
 msgstr "സഹായം: ഫയല്‍ ഇക്വിവലന്‍സ് താള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:951 ../sepolicy/sepolicy/gui.py:1242
-#: ../sepolicy/sepolicy/gui.py:1682 ../sepolicy/sepolicy/gui.py:1929
-#: ../sepolicy/sepolicy/gui.py:2717
+#: ../sepolicy/sepolicy/gui.py:939 ../sepolicy/sepolicy/gui.py:1230
+#: ../sepolicy/sepolicy/gui.py:1670 ../sepolicy/sepolicy/gui.py:1917
+#: ../sepolicy/sepolicy/gui.py:2705
 msgid "More..."
 msgstr "കൂടുതല്‍..."
 
-#: ../sepolicy/sepolicy/gui.py:1059
+#: ../sepolicy/sepolicy/gui.py:1047
 #, python-format
 msgid "File path used to enter the '%s' domain."
 msgstr "'%s' ഡൊമെയിന്‍ നല്‍കുന്നതിനുള്ള ഫയല്‍ പാഥ്."
 
-#: ../sepolicy/sepolicy/gui.py:1060
+#: ../sepolicy/sepolicy/gui.py:1048
 #, python-format
 msgid "Files to which the '%s' domain can write."
 msgstr "'%s' ഡൊമെയിന്‍ സൂക്ഷിയ്ക്കുവാന്‍ സാധ്യമായ ഫയലുകള്‍."
 
-#: ../sepolicy/sepolicy/gui.py:1061
+#: ../sepolicy/sepolicy/gui.py:1049
 #, python-format
 msgid "Network Ports to which the '%s' is allowed to connect."
 msgstr "കണക്ട് ചെയ്യുവാന്‍ അനുവദിയ്ക്കുന്ന '%s'-നുള്ള നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍."
 
-#: ../sepolicy/sepolicy/gui.py:1062
+#: ../sepolicy/sepolicy/gui.py:1050
 #, python-format
 msgid "Network Ports to which the '%s' is allowed to listen."
 msgstr "ശ്രദ്ധിയ്ക്കുവാന്‍ അനുവദിയ്ക്കുന്ന '%s'-നുള്ള നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍."
 
-#: ../sepolicy/sepolicy/gui.py:1063
+#: ../sepolicy/sepolicy/gui.py:1051
 #, python-format
 msgid "File Types defined for the '%s'."
 msgstr "'%s'-നു് നിഷ്കര്‍ഷിച്ചിട്ടുള്ള ഫയല്‍ തരങ്ങള്‍."
 
-#: ../sepolicy/sepolicy/gui.py:1064
+#: ../sepolicy/sepolicy/gui.py:1052
 #, python-format
 msgid ""
 "Display boolean information that can be used to modify the policy for the "
 "'%s'."
 msgstr "'%s'-നുള്ള പോളിസി മാറ്റുന്നതിനുള്ള ബൂളിയന്‍ വിവരം കാണിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1065
+#: ../sepolicy/sepolicy/gui.py:1053
 #, python-format
 msgid "Display file type information that can be used by the '%s'."
 msgstr "'%s'-നു് ഉപയോഗിയ്ക്കുവാന്‍ സാധ്യമായ ഫയല്‍ രിതിയിലുള്ള വിവരങ്ങള്‍ കാണിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1066
+#: ../sepolicy/sepolicy/gui.py:1054
 #, python-format
 msgid "Display network ports to which the '%s' can connect or listen to."
 msgstr "'%s'-നു് കണക്ട് ചെയ്യുവാന്‍ അല്ലെങ്കില്‍ ശ്രദ്ധിയ്ക്കുവാനുള്ള നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍ കാണിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1067
+#: ../sepolicy/sepolicy/gui.py:1055
 #, python-format
 msgid "Application Transitions Into '%s'"
 msgstr "'%s'-ലേക്കുള്ള പ്രയോഗ മാറ്റങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:1068
+#: ../sepolicy/sepolicy/gui.py:1056
 #, python-format
 msgid "Application Transitions From '%s'"
 msgstr "'%s'-ല്‍ നിന്നുള്ള പ്രയോഗ മാറ്റങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:1069
+#: ../sepolicy/sepolicy/gui.py:1057
 #, python-format
 msgid "File Transitions From '%s'"
 msgstr "'%s'-ല്‍ നിന്നുള്ള ഫയല്‍ മാറ്റങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:1070
+#: ../sepolicy/sepolicy/gui.py:1058
 #, python-format
 msgid ""
 "Executables which will transition to '%s', when executing selected domains "
 "entrypoint."
 msgstr ""
 
-#: ../sepolicy/sepolicy/gui.py:1071
+#: ../sepolicy/sepolicy/gui.py:1059
 #, python-format
 msgid ""
 "Executables which will transition to a different domain, when '%s' executes "
 "them."
 msgstr ""
 
-#: ../sepolicy/sepolicy/gui.py:1072
+#: ../sepolicy/sepolicy/gui.py:1060
 #, python-format
 msgid "Files by '%s' with transitions to a different label."
 msgstr ""
 
-#: ../sepolicy/sepolicy/gui.py:1073
+#: ../sepolicy/sepolicy/gui.py:1061
 #, python-format
 msgid "Display applications that can transition into or out of the '%s'."
 msgstr "'%s'-ല്‍ നിന്നോ അല്ലെങ്കില്‍ അതിലേക്കുള്ള പ്രയോഗങ്ങള്‍ കാണിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:1167 ../sepolicy/sepolicy/__init__.py:83
+#: ../sepolicy/sepolicy/gui.py:1155 ../sepolicy/sepolicy/__init__.py:83
 msgid "all files"
 msgstr "എല്ലാ ഫയലുകളും"
 
-#: ../sepolicy/sepolicy/gui.py:1181
+#: ../sepolicy/sepolicy/gui.py:1169
 msgid "MISSING FILE PATH"
 msgstr "ലഭ്യമല്ലാത്ത ഫയല്‍ പാഥ്"
 
-#: ../sepolicy/sepolicy/gui.py:1296
+#: ../sepolicy/sepolicy/gui.py:1284
 #, python-format
 msgid "To disable this transition, go to the %sBoolean section%s."
 msgstr ""
 
-#: ../sepolicy/sepolicy/gui.py:1298
+#: ../sepolicy/sepolicy/gui.py:1286
 #, python-format
 msgid "To enable this transition, go to the %sBoolean section%s."
 msgstr ""
 
-#: ../sepolicy/sepolicy/gui.py:1355
+#: ../sepolicy/sepolicy/gui.py:1343
 msgid "executable"
 msgstr "എക്സിക്യൂട്ടബിള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:1358
+#: ../sepolicy/sepolicy/gui.py:1346
 msgid "writable"
 msgstr "റൈറ്റബിള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:1361
+#: ../sepolicy/sepolicy/gui.py:1349
 msgid "application"
 msgstr "പ്രയോഗം"
 
-#: ../sepolicy/sepolicy/gui.py:1362
+#: ../sepolicy/sepolicy/gui.py:1350
 #, python-format
 msgid "Add new %(TYPE)s file path for '%(DOMAIN)s' domains."
 msgstr "'%(DOMAIN)s' ഡൊമെയിനുള്ള പുതിയ %(TYPE)s പാഥ് ചേര്‍ക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1363
+#: ../sepolicy/sepolicy/gui.py:1351
 #, python-format
 msgid "Delete %(TYPE)s file paths for '%(DOMAIN)s' domain."
 msgstr "'%(DOMAIN)s' ഡൊമെയിനുള്ള %(TYPE)s ഫയല്‍ പാഥുകള്‍ വെട്ടി നീക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1364
+#: ../sepolicy/sepolicy/gui.py:1352
 #, python-format
 msgid ""
 "Modify %(TYPE)s file path for '%(DOMAIN)s' domain. Only bolded items in the "
@@ -1977,22 +1977,22 @@ msgstr ""
 "'%(DOMAIN)s' ഡൊമെയിനുള്ള %(TYPE)s പാഥില്‍ മാറ്റം വരുത്തുക. തടിച്ച വസ്തുക്കള്‍ മാത്രമേ "
 "തെരഞ്ഞെടുക്കാന്‍ സാധ്യമാകുള്ളൂ. ഇതിനര്‍ത്ഥം ഇതു് മുമ്പു് മാറ്റം വരുത്തിയിട്ടില്ലെന്നാണു്."
 
-#: ../sepolicy/sepolicy/gui.py:1376
+#: ../sepolicy/sepolicy/gui.py:1364
 msgid "connect"
 msgstr "കണക്ട് ചെയ്യുക"
 
-#: ../sepolicy/sepolicy/gui.py:1379
+#: ../sepolicy/sepolicy/gui.py:1367
 msgid "listen for inbound connections"
 msgstr "അകത്തേക്കുള്ള കണക്ഷനുകള്‍ ശ്രദ്ധിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:1381
+#: ../sepolicy/sepolicy/gui.py:1369
 #, python-format
 msgid ""
 "Add new port definition to which the '%(APP)s' domain is allowed to %(PERM)s."
 msgstr ""
 "'%(APP)s' ഡൊമെയിന്‍ %(PERM)s-ലേക്കു് അനുവദിയ്ക്കുന്നതിനുള്ള പുതിയ പോര്‍ട്ട് വിവരണം ചേര്‍ക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1382
+#: ../sepolicy/sepolicy/gui.py:1370
 #, python-format
 msgid ""
 "Delete modified port definitions to which the '%(APP)s' domain is allowed to "
@@ -2000,46 +2000,46 @@ msgid ""
 msgstr ""
 "'%(APP)s' ഡൊമെയിന്‍ %(PERM)s-ലേക്കു് അനുവദിയ്ക്കുന്നതിനുള്ള പോര്‍ട്ട് വിവരണങ്ങള്‍ വെട്ടി നീക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1383
+#: ../sepolicy/sepolicy/gui.py:1371
 #, python-format
 msgid ""
 "Modify port definitions to which the '%(APP)s' domain is allowed to %(PERM)s."
 msgstr ""
 "'%(APP)s' ഡൊമെയിന്‍ %(PERM)s-ലേക്കു് അനുവദിയ്ക്കുന്നതിനുള്ള പോര്‍ട്ട് വിവരണങ്ങളില്‍ മാറ്റം വരുത്തുക."
 
-#: ../sepolicy/sepolicy/gui.py:1412
+#: ../sepolicy/sepolicy/gui.py:1400
 msgid "Add new SELinux User/Role definition."
 msgstr "പുതിയ SELinux ഉപയോക്താവു്/നിയമനം ചേര്‍ക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1413
+#: ../sepolicy/sepolicy/gui.py:1401
 msgid "Delete modified SELinux User/Role definitions."
 msgstr "മാറ്റം വരുത്തിയ SELinux ഉപയോക്താവു്/നിയമനം വെട്ടി നീക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1414
+#: ../sepolicy/sepolicy/gui.py:1402
 msgid "Modify selected modified SELinux User/Role definitions."
 msgstr "തെരഞ്ഞെടുത്ത മാറ്റം വരുത്തിയ SELinux ഉപയോക്താവു്/നിയമനത്തില്‍ മാറ്റം വരുത്തുക."
 
-#: ../sepolicy/sepolicy/gui.py:1421
+#: ../sepolicy/sepolicy/gui.py:1409
 msgid "Add new Login Mapping definition."
 msgstr "പുതിയ ലോഗിന്‍ മാപ്പിങ് വിവരണം ചേര്‍ക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1422
+#: ../sepolicy/sepolicy/gui.py:1410
 msgid "Delete modified Login Mapping definitions."
 msgstr "മാറ്റം വരുത്തിയ ലോഗിന്‍ മാപ്പിങ് വിവരണം വെട്ടി നീക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1423
+#: ../sepolicy/sepolicy/gui.py:1411
 msgid "Modify selected modified Login Mapping definitions."
 msgstr "തെരഞ്ഞെടുത്ത മാറ്റം വരുത്തിയ ലോഗിന്‍ മാപ്പിങ് വിവരണത്തില്‍ മാറ്റം വരുത്തുക."
 
-#: ../sepolicy/sepolicy/gui.py:1430
+#: ../sepolicy/sepolicy/gui.py:1418
 msgid "Add new File Equivalence definition."
 msgstr "പുതിയ ഫയല്‍ ഇക്വിവലന്‍സ് വിവരണം ചേര്‍ക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:1431
+#: ../sepolicy/sepolicy/gui.py:1419
 msgid "Delete modified File Equivalence definitions."
 msgstr "മാറ്റം വരുത്തിയ ഫയല്‍ ഇക്വിവലന്‍സ് വിവരണങ്ങള്‍ വെട്ടി നീക്കക."
 
-#: ../sepolicy/sepolicy/gui.py:1432
+#: ../sepolicy/sepolicy/gui.py:1420
 msgid ""
 "Modify selected modified File Equivalence definitions. Only bolded items in "
 "the list can be selected, this indicates they were modified previously."
@@ -2047,43 +2047,43 @@ msgstr ""
 "മാറ്റം വരുത്തിയ ഫയല്‍ ഇക്വിവലന്‍സ് വിവരണങ്ങളില്‍ മാറ്റം വരുത്തുക. തടിച്ച വസ്തുക്കള്‍ മാത്രമേ "
 "തെരഞ്ഞെടുക്കാന്‍ സാധ്യമാകുള്ളൂ. ഇതിനര്‍ത്ഥം ഇതു് മുമ്പു് മാറ്റം വരുത്തിയിട്ടില്ലെന്നാണു്."
 
-#: ../sepolicy/sepolicy/gui.py:1460
+#: ../sepolicy/sepolicy/gui.py:1448
 #, python-format
 msgid "Boolean %s Allow Rules"
 msgstr "ബൂളിയന്‍ %s നിയമങ്ങള്‍ അനുവദിയ്ക്കുന്നു"
 
-#: ../sepolicy/sepolicy/gui.py:1473
+#: ../sepolicy/sepolicy/gui.py:1461
 #, python-format
 msgid "Add Network Port for %s.  Ports will be created when update is applied."
 msgstr ""
 "%s-നുള്ള നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ട് ചേര്‍ക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ പോര്‍ട്ടുകള്‍ തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1474
+#: ../sepolicy/sepolicy/gui.py:1462
 #, python-format
 msgid "Add Network Port for %s"
 msgstr "%s-നുള്ള നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ട് ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:1479
+#: ../sepolicy/sepolicy/gui.py:1467
 #, python-format
 msgid ""
 "Add File Labeling for %s. File labels will be created when update is applied."
 msgstr ""
 "%s-നുള്ള ഫയല്‍ ലേബലിങ് ചേര്‍ക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ ഫയല്‍ ലേബലുകള്‍ തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1480 ../sepolicy/sepolicy/gui.py:1533
+#: ../sepolicy/sepolicy/gui.py:1468 ../sepolicy/sepolicy/gui.py:1521
 #, python-format
 msgid "Add File Labeling for %s"
 msgstr "%s-നുള്ള ഫയല്‍ പേരിടല്‍ ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:1490
+#: ../sepolicy/sepolicy/gui.py:1478
 msgid "Add Login Mapping. User Mapping will be created when Update is applied."
 msgstr "ലോഗിന്‍ മാപ്പിങ് ചേര്‍ക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ മാപ്പിങ് തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1491
+#: ../sepolicy/sepolicy/gui.py:1479
 msgid "Add Login Mapping"
 msgstr "ലോഗിന്‍ മാപ്പിങ് ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:1496
+#: ../sepolicy/sepolicy/gui.py:1484
 msgid ""
 "Add SELinux User Role. SELinux user roles will be created when update is "
 "applied."
@@ -2091,21 +2091,21 @@ msgstr ""
 "SELinux ഉപയോക്തൃ നിയമനം ചേര്‍ക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ SELinux ഉപയോക്തൃ നിയമനങ്ങള്‍ "
 "തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1497
+#: ../sepolicy/sepolicy/gui.py:1485
 msgid "Add SELinux Users"
 msgstr "SELinux ഉപയോക്താക്കള്‍ ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:1504
+#: ../sepolicy/sepolicy/gui.py:1492
 msgid ""
 "Add File Equivalency Mapping. Mapping will be created when update is applied."
 msgstr ""
 "ഫയല്‍ ഇക്വിവലന്‍സി മാപ്പിങ് ചേര്‍ക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ മാപ്പിങ് തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1505
+#: ../sepolicy/sepolicy/gui.py:1493
 msgid "Add SELinux File Equivalency"
 msgstr "SELinux ഫയല്‍ ഇക്വിവലന്‍സി ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:1532
+#: ../sepolicy/sepolicy/gui.py:1520
 #, python-format
 msgid ""
 "Modify File Labeling for %s. File labels will be created when update is "
@@ -2114,7 +2114,7 @@ msgstr ""
 "%s-നുള്ള ഫയല്‍ ലേബലിങില്‍ മാറ്റം വരുത്തുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ ഫയല്‍ ലേബലുകള്‍ "
 "തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1588
+#: ../sepolicy/sepolicy/gui.py:1576
 msgid ""
 "Modify SELinux User Role. SELinux user roles will be modified when update is "
 "applied."
@@ -2122,21 +2122,21 @@ msgstr ""
 "SELinux ഉപയോക്തൃ നിയമനത്തില്‍ മാറ്റം വരുത്തുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ SELinux ഉപയോക്തൃ "
 "നിയമനങ്ങളില്‍ മാറ്റം വരുത്തുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1589
+#: ../sepolicy/sepolicy/gui.py:1577
 msgid "Modify SELinux Users"
 msgstr "SELinux ഉപയോക്താക്കളെ മാറ്റം വരുത്തുക"
 
-#: ../sepolicy/sepolicy/gui.py:1597
+#: ../sepolicy/sepolicy/gui.py:1585
 msgid ""
 "Modify Login Mapping. Login Mapping will be modified when Update is applied."
 msgstr ""
 "ലോഗിന്‍ മാപ്പിങില്‍ മാറ്റം വരുത്തുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ ലോഗിന്‍ മാപ്പിങില്‍ മാറ്റം വരുത്തുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1598
+#: ../sepolicy/sepolicy/gui.py:1586
 msgid "Modify Login Mapping"
 msgstr "ലോഗിന്‍ മാപ്പിങില്‍ മാറ്റം വരുത്തുക"
 
-#: ../sepolicy/sepolicy/gui.py:1604
+#: ../sepolicy/sepolicy/gui.py:1592
 msgid ""
 "Modify File Equivalency Mapping. Mapping will be created when update is "
 "applied."
@@ -2144,11 +2144,11 @@ msgstr ""
 "ഫയല്‍ ഇക്വിവലന്‍സി മാപ്പിങില്‍ മാറ്റം വരുത്തുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ മാപ്പിങ് "
 "തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1605
+#: ../sepolicy/sepolicy/gui.py:1593
 msgid "Modify SELinux File Equivalency"
 msgstr "SELinux ഫയല്‍ ഇക്വിവലന്‍സില്‍ മാറ്റം വരുത്തുക"
 
-#: ../sepolicy/sepolicy/gui.py:1690
+#: ../sepolicy/sepolicy/gui.py:1678
 #, python-format
 msgid ""
 "Modify Network Port for %s.  Ports will be created when update is applied."
@@ -2156,166 +2156,166 @@ msgstr ""
 "%s-നുള്ള നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടില്‍ മാറ്റം വരുത്തുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ പോര്‍ട്ടുകള്‍ "
 "തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:1691
+#: ../sepolicy/sepolicy/gui.py:1679
 #, python-format
 msgid "Modify Network Port for %s"
 msgstr "%s-നുള്ള നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടില്‍ മാറ്റം വരുത്തുക"
 
-#: ../sepolicy/sepolicy/gui.py:1910
+#: ../sepolicy/sepolicy/gui.py:1898
 #, python-format
 msgid "The entry '%s' is not a valid path.  Paths must begin with a '/'."
 msgstr "'%s' എന്‍ട്രി ശരിയായൊരു പാഥല്ല. പാഥ് '/'-ല്‍ ആരംഭിയ്ക്കണം."
 
-#: ../sepolicy/sepolicy/gui.py:1923
+#: ../sepolicy/sepolicy/gui.py:1911
 msgid "Port number must be between 1 and 65536"
 msgstr "പോര്‍ട്ട് 1-നും 65536-നും മദ്ധ്യത്തിലായിരിയ്ക്കണം."
 
-#: ../sepolicy/sepolicy/gui.py:2203
+#: ../sepolicy/sepolicy/gui.py:2191
 #, python-format
 msgid "SELinux name: %s"
 msgstr "SELinux നാമം: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2214
+#: ../sepolicy/sepolicy/gui.py:2202
 #, python-format
 msgid "Add file labeling for %s"
 msgstr "%s-നുള്ള ഫയല്‍ ലേബലിങ് ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2216
+#: ../sepolicy/sepolicy/gui.py:2204
 #, python-format
 msgid "Delete file labeling for %s"
 msgstr "%s-നുള്ള ഫയല്‍ ലേബലിങ് വെട്ടി നീക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2218
+#: ../sepolicy/sepolicy/gui.py:2206
 #, python-format
 msgid "Modify file labeling for %s"
 msgstr "%s-നുള്ള ഫയല്‍ ലേബലിങില്‍ മാറ്റം വരുത്തുക"
 
-#: ../sepolicy/sepolicy/gui.py:2222
+#: ../sepolicy/sepolicy/gui.py:2210
 #, python-format
 msgid "File path: %s"
 msgstr "ഫയല്‍ പാഥ്: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2225
+#: ../sepolicy/sepolicy/gui.py:2213
 #, python-format
 msgid "File class: %s"
 msgstr "ഫയല്‍ ക്ലാസ്സ്: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2228 ../sepolicy/sepolicy/gui.py:2252
+#: ../sepolicy/sepolicy/gui.py:2216 ../sepolicy/sepolicy/gui.py:2240
 #, python-format
 msgid "SELinux file type: %s"
 msgstr "SELinux ഫയല്‍ തരം: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2237
+#: ../sepolicy/sepolicy/gui.py:2225
 #, python-format
 msgid "Add ports for %s"
 msgstr "%s-നുള്ള പോര്‍ട്ടുകള്‍ ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2239
+#: ../sepolicy/sepolicy/gui.py:2227
 #, python-format
 msgid "Delete ports for %s"
 msgstr "%s-നുള്ള പോര്‍ട്ടുകള്‍ വെട്ടി നീക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2241
+#: ../sepolicy/sepolicy/gui.py:2229
 #, python-format
 msgid "Modify ports for %s"
 msgstr "%s-നുള്ള പോര്‍ട്ടുകളില്‍ മാറ്റം വരുത്തുക"
 
-#: ../sepolicy/sepolicy/gui.py:2244
+#: ../sepolicy/sepolicy/gui.py:2232
 #, python-format
 msgid "Network ports: %s"
 msgstr "നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2247
+#: ../sepolicy/sepolicy/gui.py:2235
 #, python-format
 msgid "Network protocol: %s"
 msgstr "നെറ്റ്‌വര്‍ക്ക് സമ്പ്രദായം: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2261
+#: ../sepolicy/sepolicy/gui.py:2249
 msgid "Add user"
 msgstr "ഉപയോക്താവിനെ ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2263
+#: ../sepolicy/sepolicy/gui.py:2251
 msgid "Delete user"
 msgstr "ഉപയോക്താവിനെ വെട്ടി നീക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2265
+#: ../sepolicy/sepolicy/gui.py:2253
 msgid "Modify user"
 msgstr "ഉപയോക്താവില്‍ മാറ്റം വരുത്തുക"
 
-#: ../sepolicy/sepolicy/gui.py:2268
+#: ../sepolicy/sepolicy/gui.py:2256
 #, python-format
 msgid "SELinux User : %s"
 msgstr "SELinux ഉപയോക്താവു് : %s"
 
-#: ../sepolicy/sepolicy/gui.py:2273
+#: ../sepolicy/sepolicy/gui.py:2261
 #, python-format
 msgid "Roles: %s"
 msgstr "നിയമനങ്ങള്‍: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2277 ../sepolicy/sepolicy/gui.py:2302
+#: ../sepolicy/sepolicy/gui.py:2265 ../sepolicy/sepolicy/gui.py:2290
 #, python-format
 msgid "MLS/MCS Range: %s"
 msgstr "എംഎല്‍എസ്/എംസിഎസ് പരിധി: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2286
+#: ../sepolicy/sepolicy/gui.py:2274
 msgid "Add login mapping"
 msgstr "ലോഗിന്‍ മാപ്പിങ് ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2288
+#: ../sepolicy/sepolicy/gui.py:2276
 msgid "Delete login mapping"
 msgstr "ലോഗിന്‍ മാപ്പിങ് വെട്ടി നീക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2290
+#: ../sepolicy/sepolicy/gui.py:2278
 msgid "Modify login mapping"
 msgstr "ലോഗിന്‍ മാപ്പിങില്‍ മാറ്റം വരുത്തുക"
 
-#: ../sepolicy/sepolicy/gui.py:2294
+#: ../sepolicy/sepolicy/gui.py:2282
 #, python-format
 msgid "Login Name : %s"
 msgstr "പ്രവേശന നാമം : %s"
 
-#: ../sepolicy/sepolicy/gui.py:2298
+#: ../sepolicy/sepolicy/gui.py:2286
 #, python-format
 msgid "SELinux User: %s"
 msgstr "SELinux ഉപയോക്താവു്: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2311
+#: ../sepolicy/sepolicy/gui.py:2299
 msgid "Add file equiv labeling."
 msgstr "ഫയല്‍ ഇക്വിവ് ലേബലിങില്‍ ചേര്‍ക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:2313
+#: ../sepolicy/sepolicy/gui.py:2301
 msgid "Delete file equiv labeling."
 msgstr "ഫയല്‍ ഇക്വിവ് ലേബലിങ് വെട്ടി നീക്കുക."
 
-#: ../sepolicy/sepolicy/gui.py:2315
+#: ../sepolicy/sepolicy/gui.py:2303
 msgid "Modify file equiv labeling."
 msgstr "ഫയല്‍ ഇക്വിവ് ലേബലിങില്‍ മാറ്റം വരുത്തുക."
 
-#: ../sepolicy/sepolicy/gui.py:2319
+#: ../sepolicy/sepolicy/gui.py:2307
 #, python-format
 msgid "File path : %s"
 msgstr "ഫയല്‍ പാഥ് : %s"
 
-#: ../sepolicy/sepolicy/gui.py:2323
+#: ../sepolicy/sepolicy/gui.py:2311
 #, python-format
 msgid "Equivalence: %s"
 msgstr "ഇക്വിവലന്‍സ്: %s"
 
-#: ../sepolicy/sepolicy/gui.py:2354 ../sepolicy/sepolicy/sepolicy.glade:129
-#: ../sepolicy/sepolicy/sepolicy.glade:1898
-#: ../sepolicy/sepolicy/sepolicy.glade:3793
+#: ../sepolicy/sepolicy/gui.py:2342 ../sepolicy/sepolicy/sepolicy.glade:125
+#: ../sepolicy/sepolicy/sepolicy.glade:1890
+#: ../sepolicy/sepolicy/sepolicy.glade:3785
 msgid "System"
 msgstr "സിസ്റ്റം"
 
-#: ../sepolicy/sepolicy/gui.py:2363 ../sepolicy/sepolicy/sepolicy.glade:95
+#: ../sepolicy/sepolicy/gui.py:2351 ../sepolicy/sepolicy/sepolicy.glade:91
 msgid "File Equivalence"
 msgstr "ഫയല്‍ ഈക്വിലന്‍സ്"
 
-#: ../sepolicy/sepolicy/gui.py:2373 ../sepolicy/sepolicy/sepolicy.glade:112
+#: ../sepolicy/sepolicy/gui.py:2361 ../sepolicy/sepolicy/sepolicy.glade:108
 msgid "Users"
 msgstr "ഉപയോക്താക്കള്‍"
 
-#: ../sepolicy/sepolicy/gui.py:2426
+#: ../sepolicy/sepolicy/gui.py:2414
 #, python-format
 msgid ""
 "Run restorecon on %(PATH)s to change its type from %(CUR_CONTEXT)s to the "
@@ -2324,27 +2324,27 @@ msgstr ""
 "%(CUR_CONTEXT)s-ല്‍ നിന്നും സ്വതവേയുള്ള %(DEF_CONTEXT)s-ലേക്കു് തരം മാറ്റുന്നതിനു് %(PATH)s-"
 "ല്‍ restorecon നടപ്പിലാക്കണമോ?"
 
-#: ../sepolicy/sepolicy/gui.py:2436 ../sepolicy/sepolicy/sepolicy.glade:4216
+#: ../sepolicy/sepolicy/gui.py:2424 ../sepolicy/sepolicy/sepolicy.glade:4208
 msgid "Update"
 msgstr "പരിഷ്കരിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2438
+#: ../sepolicy/sepolicy/gui.py:2426
 msgid "Update Changes"
 msgstr "മാറ്റങ്ങള്‍ പരിഷ്കരിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy/gui.py:2440
+#: ../sepolicy/sepolicy/gui.py:2428
 msgid "Revert Changes"
 msgstr "മാറ്റങ്ങള്‍ വേണ്ട"
 
-#: ../sepolicy/sepolicy/gui.py:2571
+#: ../sepolicy/sepolicy/gui.py:2559
 msgid "System Status: Enforcing"
 msgstr "സിസ്റ്റം അവസ്ഥ: എന്‍ഫോഴ്സിങ്"
 
-#: ../sepolicy/sepolicy/gui.py:2574
+#: ../sepolicy/sepolicy/gui.py:2562
 msgid "System Status: Permissive"
 msgstr "സിസ്റ്റം അവസ്ഥ: പെര്‍മ്മിസ്സീവ്"
 
-#: ../sepolicy/sepolicy/gui.py:2638
+#: ../sepolicy/sepolicy/gui.py:2626
 msgid ""
 "Changing the policy type will cause a relabel of the entire file system on "
 "the next boot. Relabeling takes a long time depending on the size of the "
@@ -2354,7 +2354,7 @@ msgstr ""
 "ചെയ്യണ്ടതാകുന്നു.  സിസ്റ്റമിന്റെ വ്യാപ്തി അനുസരിച്ച് റീലേബലിങിന് സമയമെടുക്കുന്നു.നിങ്ങള്‍ക്ക് മുമ്പോട്ട് "
 "പോകണമെന്നുറപ്പാണോ?"
 
-#: ../sepolicy/sepolicy/gui.py:2768
+#: ../sepolicy/sepolicy/gui.py:2756
 msgid ""
 "Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
 "you later decide to turn SELinux back on, the system will be required to "
@@ -2369,7 +2369,7 @@ msgstr ""
 "പോകാം. ഇതു് പക്ഷേ പിശകുകള്‍ ലോഗ് ചെയ്യുന്നു, SELinux പോളിസി എന്‍ഫോഴ്സ് ചെയ്യുന്നില്ല. പെര്‍"
 "മ്മിസ്സീവ് മോഡിനു് റീബൂട്ട് ആവശ്യമില്ല. നിങ്ങള്‍ക്കു് തുടരണമോ?"
 
-#: ../sepolicy/sepolicy/gui.py:2772
+#: ../sepolicy/sepolicy/gui.py:2760
 msgid ""
 "Changing to SELinux enabled will cause a relabel of the entire file system "
 "on the next boot. Relabeling takes a long time depending on the size of the "
@@ -2379,7 +2379,7 @@ msgstr ""
 "ചെയ്യണ്ടതാകുന്നു.  സിസ്റ്റമിന്റെ വ്യാപ്തി അനുസരിച്ച് റീലേബലിങിന് സമയമെടുക്കുന്നു.നിങ്ങള്‍ക്ക് മുമ്പോട്ട് "
 "പോകണമെന്നുറപ്പാണോ?"
 
-#: ../sepolicy/sepolicy/gui.py:2802
+#: ../sepolicy/sepolicy/gui.py:2790
 msgid ""
 "You are attempting to close the application without applying your changes.\n"
 "    *    To apply changes you have made during this session, click No and "
@@ -2393,7 +2393,7 @@ msgstr ""
 "    *    മാറ്റങ്ങള്‍ ഇല്ലാതെ പ്രയോഗം ഉപേക്ഷിയ്ക്കുന്നതിനു്, ശരി ക്ലിക്ക് ചെയ്യുക. ഈ സെഷനില്‍ "
 "വരുത്തിയ എല്ലാ മാറ്റങ്ങളും നഷ്ടമാകുന്നു."
 
-#: ../sepolicy/sepolicy/gui.py:2802
+#: ../sepolicy/sepolicy/gui.py:2790
 msgid "Loss of data Dialog"
 msgstr "ഡേറ്റാ ഡയലോഗിന്റെ നഷ്ടം"
 
@@ -2434,18 +2434,23 @@ msgstr "SELinux പോളിസി ഇന്‍സ്റ്റോള്‍ ച�
 msgid "Failed to read %s policy file"
 msgstr "%s പോളിസി ഫയല്‍ ലഭ്യമാക്കുന്നതില്‍ പരാജയപ്പെട്ടു"
 
-#: ../sepolicy/sepolicy/__init__.py:465
+#: ../sepolicy/sepolicy/__init__.py:470
 #, python-format
 msgid "-- Allowed %s [ %s ]"
 msgstr "-- അനുവദിച്ച %s [ %s ]"
 
-#: ../sepolicy/sepolicy/__init__.py:891
+#: ../sepolicy/sepolicy/__init__.py:896
 msgid "You must regenerate interface info by running /usr/bin/sepolgen-ifgen"
 msgstr "/usr/bin/sepolgen-ifgen നടപ്പിലാക്കി ഇന്റര്‍ഫെയിസ് വിവരം വീണ്ടും ലഭ്യമാക്കണം"
 
-#: ../sepolicy/sepolicy/__init__.py:1216
+#: ../sepolicy/sepolicy/__init__.py:1221
 msgid "unknown"
 msgstr "അപരിചിതം"
+
+#: ../sepolicy/sepolicy/__init__.py:1230
+#, python-brace-format
+msgid "Allow {subject} to {rest}"
+msgstr ""
 
 #: ../sepolicy/sepolicy/interface.py:222
 #, python-format
@@ -2486,96 +2491,96 @@ msgstr "gui ഐച്ഛികം ഉപയോഗിയ്ക്കുന്ന�
 msgid "Graphical User Interface for SELinux Policy"
 msgstr "SELinux പോളിസിയ്ക്കുള്ള ഗ്രാഫിക്കല്‍ യൂസര്‍ ഇന്റര്‍ഫെയിസ്"
 
-#: ../sepolicy/sepolicy.py:325 ../sepolicy/sepolicy.py:380
+#: ../sepolicy/sepolicy.py:325 ../sepolicy/sepolicy.py:389
 msgid "Domain name(s) of man pages to be created"
 msgstr "തയ്യാറാക്കുവാനുള്ള മാന്‍ താളുകളുടെ ഡൊമെയിന്‍"
 
-#: ../sepolicy/sepolicy.py:343
+#: ../sepolicy/sepolicy.py:344
 msgid "Alternative root needs to be setup"
 msgstr "മറ്റൊരു റൂട്ട് സജ്ജമാക്കണം"
 
-#: ../sepolicy/sepolicy.py:362
+#: ../sepolicy/sepolicy.py:371
 msgid "Generate SELinux man pages"
 msgstr "SELinux മാന്‍ താളുകള്‍ ലഭ്യമാക്കുക"
 
-#: ../sepolicy/sepolicy.py:365
+#: ../sepolicy/sepolicy.py:374
 msgid "path in which the generated SELinux man pages will be stored"
 msgstr "ലഭ്യമാക്കിയ SELinux മാന്‍ താളുകള്‍ സൂക്ഷിയ്ക്കുന്ന പാഥ്"
 
-#: ../sepolicy/sepolicy.py:367
+#: ../sepolicy/sepolicy.py:376
 msgid "name of the OS for man pages"
 msgstr "മാന്‍ താളുകള്‍ക്കുള്ള ഒഎസിന്റെ പേരു്"
 
-#: ../sepolicy/sepolicy.py:369
+#: ../sepolicy/sepolicy.py:378
 msgid "Generate HTML man pages structure for selected SELinux man page"
 msgstr "തെരഞ്ഞെടുത്ത SELinux മാന്‍ താളിനുള്ള എച്‌ടിഎംഎല്‍ മാന്‍ താള്‍ ശൈലി ലഭ്യമാക്കുക"
 
-#: ../sepolicy/sepolicy.py:371
+#: ../sepolicy/sepolicy.py:380
 msgid "Alternate root directory, defaults to /"
 msgstr "മറ്റൊരു root ഡയറക്ടറി, / എന്ന സ്വതവേയുള്ളതിലേക്കു്"
 
-#: ../sepolicy/sepolicy.py:373
+#: ../sepolicy/sepolicy.py:382
 msgid ""
 "With this flag, alternative root path needs to include file context files "
 "and policy.xml file"
 msgstr ""
 "ഈ ഫ്ലാഗിനൊപ്പം, കോണ്ടെക്സ്റ്റ് ഫയലുകള്‍ക്കും policy.xml ഫയലിനും മറ്റൊരു റൂട്ട് പാഥ് ആവശ്യമുണ്ടു്"
 
-#: ../sepolicy/sepolicy.py:377
+#: ../sepolicy/sepolicy.py:386
 msgid "All domains"
 msgstr "എല്ലാ ഡൊമെയിനുകളും"
 
-#: ../sepolicy/sepolicy.py:386
+#: ../sepolicy/sepolicy.py:395
 msgid "Query SELinux policy network information"
 msgstr "SELinux പോളിസി നെറ്റ്‌വര്‍ക്ക് വിവരം ചോദ്യം ചെയ്യുക"
 
-#: ../sepolicy/sepolicy.py:391
+#: ../sepolicy/sepolicy.py:400
 msgid "list all SELinux port types"
 msgstr "എല്ലാ SELinux പോര്‍ട്ട് തരങ്ങളും ലഭ്യമാക്കുക"
 
-#: ../sepolicy/sepolicy.py:394
+#: ../sepolicy/sepolicy.py:403
 msgid "show SELinux type related to the port"
 msgstr "പോര്‍ട്ട് അനുസരിച്ചുള്ള SELinux തരം കാണിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy.py:397
+#: ../sepolicy/sepolicy.py:406
 msgid "Show ports defined for this SELinux type"
 msgstr "ഈ SELinux തരത്തിനു് നിഷ്കര്‍ഷിച്ചിട്ടുള്ള പോര്‍ട്ടുകള്‍ കാണിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy.py:400
+#: ../sepolicy/sepolicy.py:409
 msgid "show ports to which this domain can bind and/or connect"
 msgstr "ഈ ഡൊമെയിന്‍ ഏതു് പോര്‍ട്ടുകളിലേക്കു് ബൈന്‍ഡ് അല്ലെങ്കില്‍ കണക്ട് ചെയ്യാം എന്നു് കാണിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy.py:403
+#: ../sepolicy/sepolicy.py:412
 msgid "show ports to which this application can bind and/or connect"
 msgstr "ഈ പ്രയോഗത്തിനു് ബൈന്‍ഡ് അല്ലെങ്കില്‍ കണക്ട് ചെയ്യുന്നതിനുള്ള പോര്‍ട്ടുകള്‍ കാണിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy.py:420
+#: ../sepolicy/sepolicy.py:429
 msgid "query SELinux policy to see if domains can communicate with each other"
 msgstr ""
 "ഡൊമെയിനുകള്‍ക്കു് തമ്മില്‍ ആശയവിനിയമയം സാധ്യമോ എന്നറിയുന്നതിനായി SELinux പോളിസി ചോദ്യം "
 "ചെയ്യുക"
 
-#: ../sepolicy/sepolicy.py:423
+#: ../sepolicy/sepolicy.py:432
 msgid "Source Domain"
 msgstr "ശ്രോതസ്സ് ഡൊമെയിന്‍"
 
-#: ../sepolicy/sepolicy.py:426
+#: ../sepolicy/sepolicy.py:435
 msgid "Target Domain"
 msgstr "ടാര്‍ഗറ്റ് ഡൊമെയിന്‍"
 
-#: ../sepolicy/sepolicy.py:447
+#: ../sepolicy/sepolicy.py:456
 msgid "query SELinux Policy to see description of booleans"
 msgstr "ബൂളിയനുകളുടെ വിവരണം കാണുന്നതിനായി SELinux പോളിസി ചോദ്യം ചെയ്യുക"
 
-#: ../sepolicy/sepolicy.py:451
+#: ../sepolicy/sepolicy.py:460
 msgid "get all booleans descriptions"
 msgstr "എല്ലാ ബൂളിയന്‍ വിവരണങ്ങളും ലഭ്യമാക്കുക"
 
-#: ../sepolicy/sepolicy.py:454
+#: ../sepolicy/sepolicy.py:463
 msgid "boolean to get description"
 msgstr "വിവരം ലഭ്യമാകുന്നതിനുള്ള ബൂളിയന്‍"
 
-#: ../sepolicy/sepolicy.py:466
+#: ../sepolicy/sepolicy.py:475
 msgid ""
 "query SELinux Policy to see how a source process domain can transition to "
 "the target process domain"
@@ -2583,24 +2588,24 @@ msgstr ""
 "ഒരു സോഴ്സ് പ്രക്രിയ ഡൊമെയിന്‍ എങ്ങനെ ലക്ഷ്യ പ്രക്രിയ ഡൊമെയിനിലേക്കു് മാറുന്നു എന്നു് കാണുന്നതിനായി "
 "SELinux പോളിസി ചോദ്യം ചെയ്യുക"
 
-#: ../sepolicy/sepolicy.py:469
+#: ../sepolicy/sepolicy.py:478
 msgid "source process domain"
 msgstr "സോഴ്സ് പ്രൊസസ്സ് ഡൊമെയിന്‍"
 
-#: ../sepolicy/sepolicy.py:472
+#: ../sepolicy/sepolicy.py:481
 msgid "target process domain"
 msgstr "ടാര്‍ഗറ്റ് പ്രൊസസ്സ് ഡൊമെയിന്‍"
 
-#: ../sepolicy/sepolicy.py:517
+#: ../sepolicy/sepolicy.py:526
 #, python-format
 msgid "sepolicy generate: error: one of the arguments %s is required"
 msgstr "sepolicy തയ്യാറാക്കല്‍: പിശക്: ആര്‍ഗ്യുമെന്റുകളിലൊന്നായ %s ആവശ്യമുണ്ടു്"
 
-#: ../sepolicy/sepolicy.py:522
+#: ../sepolicy/sepolicy.py:531
 msgid "Command required for this type of policy"
 msgstr "ഈ തരത്തിലുള്ള പോളിസിയ്ക്കു് കമാന്‍ഡ് ആവശ്യമുണ്ടു്"
 
-#: ../sepolicy/sepolicy.py:533
+#: ../sepolicy/sepolicy.py:542
 #, python-format
 msgid ""
 "-t option can not be used with '%s' domains. Read usage for more details."
@@ -2608,7 +2613,7 @@ msgstr ""
 "-t ഐച്ഛികം '%s' ഡൊമെയിനുകള്‍ക്കു് ഉപയോഗിയ്ക്കുവാന്‍ സാധ്യമല്ല. കൂടുതല്‍ വിവരങ്ങള്‍ക്കായി "
 "ഉപയോഗിയ്ക്കേണ്ട വിധം വായിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy.py:538
+#: ../sepolicy/sepolicy.py:547
 #, python-format
 msgid ""
 "-d option can not be used with '%s' domains. Read usage for more details."
@@ -2616,7 +2621,7 @@ msgstr ""
 "-d ഐച്ഛികം '%s' ഡൊമെയിനുകള്‍ക്കു് ഉപയോഗിയ്ക്കുവാന്‍ സാധ്യമല്ല. കൂടുതല്‍ വിവരങ്ങള്‍ക്കായി "
 "ഉപയോഗിയ്ക്കേണ്ട വിധം വായിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy.py:542
+#: ../sepolicy/sepolicy.py:551
 #, python-format
 msgid ""
 "-a option can not be used with '%s' domains. Read usage for more details."
@@ -2624,148 +2629,148 @@ msgstr ""
 "-a ഐച്ഛികം '%s' ഡൊമെയിനുകള്‍ക്കു് ഉപയോഗിയ്ക്കുവാന്‍ സാധ്യമല്ല. കൂടുതല്‍ വിവരങ്ങള്‍ക്കായി "
 "ഉപയോഗിയ്ക്കേണ്ട വിധം വായിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy.py:546
+#: ../sepolicy/sepolicy.py:555
 msgid "-w option can not be used with the --newtype option"
 msgstr "-w ഐച്ഛികം --newtype ഐച്ഛികത്തിനൊപ്പം ഉപയോഗിയ്ക്കുവാന്‍ സാധ്യമല്ല"
 
-#: ../sepolicy/sepolicy.py:567
+#: ../sepolicy/sepolicy.py:576
 msgid "List SELinux Policy interfaces"
 msgstr "SELinux പോളിസി ഇന്റര്‍ഫെയിസുകള്‍ ലഭ്യമാക്കുക"
 
-#: ../sepolicy/sepolicy.py:587
+#: ../sepolicy/sepolicy.py:596
 msgid "Enter interface names, you wish to query"
 msgstr "നിങ്ങള്‍ക്കു് ചോദ്യം ചെയ്യുവാനുള്ള ഇന്റര്‍ഫെയിസ് നാമങ്ങള്‍ നല്‍കുക"
 
-#: ../sepolicy/sepolicy.py:597
+#: ../sepolicy/sepolicy.py:606
 msgid "Generate SELinux Policy module template"
 msgstr "SELinux പോളിസി ഘടക മാതൃക ലഭ്യമാക്കുക"
 
-#: ../sepolicy/sepolicy.py:600
+#: ../sepolicy/sepolicy.py:609
 msgid "Enter domain type which you will be extending"
 msgstr "നിങ്ങള്‍ വികസിപ്പിയ്ക്കുവാന്‍ ഉദ്ദേശിയ്ക്കുന്ന ഡൊമെയിന്‍ തരം നല്‍കുക"
 
-#: ../sepolicy/sepolicy.py:603
+#: ../sepolicy/sepolicy.py:612
 msgid "Enter SELinux user(s) which will transition to this domain"
 msgstr "ഈ ഡൊമെയിനിലേക്കു് വേര്‍തിരിയ്ക്കപ്പെടുന്ന SELinux ഉപയോക്താക്കളെ നല്‍കുക"
 
-#: ../sepolicy/sepolicy.py:606
+#: ../sepolicy/sepolicy.py:615
 msgid "Enter SELinux role(s) to which the administror domain will transition"
 msgstr "അഡ്മിനിസ്ട്രേറ്റര്‍ ഡൊമെയിന്‍ മാറ്റുന്നതിനുള്ള SELinux നിയമനം നല്‍കുക"
 
-#: ../sepolicy/sepolicy.py:609
+#: ../sepolicy/sepolicy.py:618
 msgid "Enter domain(s) which this confined admin will administrate"
 msgstr "ഈ അഡ്മിന്‍ നിരീക്ഷിയ്ക്കുന്ന ഡൊമെയിന്‍ നല്‍കുക"
 
-#: ../sepolicy/sepolicy.py:612
+#: ../sepolicy/sepolicy.py:621
 msgid "name of policy to generate"
 msgstr "ലഭ്യമാക്കേണ്ട പോളിസിയുടെ പേരു്"
 
-#: ../sepolicy/sepolicy.py:619
+#: ../sepolicy/sepolicy.py:628
 msgid "path in which the generated policy files will be stored"
 msgstr "തയ്യാറാക്കിയ പോളിസി ഫയലുകള്‍ സൂക്ഷിയ്ക്കുന്ന പാഥ്"
 
-#: ../sepolicy/sepolicy.py:621
+#: ../sepolicy/sepolicy.py:630
 msgid "path to which the confined processes will need to write"
 msgstr "പരിധിയുള്ള പ്രക്രിയകള്‍ സൂക്ഷിയ്ക്കുവാനുള്ള പാഥ്"
 
-#: ../sepolicy/sepolicy.py:622
+#: ../sepolicy/sepolicy.py:631
 msgid "Policy types which require a command"
 msgstr "കമാന്‍ഡ് ആവശ്യമായ പോളിസി തരങ്ങള്‍"
 
-#: ../sepolicy/sepolicy.py:626 ../sepolicy/sepolicy.py:629
-#: ../sepolicy/sepolicy.py:632 ../sepolicy/sepolicy.py:635
-#: ../sepolicy/sepolicy.py:638 ../sepolicy/sepolicy.py:644
-#: ../sepolicy/sepolicy.py:647 ../sepolicy/sepolicy.py:650
+#: ../sepolicy/sepolicy.py:635 ../sepolicy/sepolicy.py:638
+#: ../sepolicy/sepolicy.py:641 ../sepolicy/sepolicy.py:644
+#: ../sepolicy/sepolicy.py:647 ../sepolicy/sepolicy.py:653
 #: ../sepolicy/sepolicy.py:656 ../sepolicy/sepolicy.py:659
-#: ../sepolicy/sepolicy.py:662 ../sepolicy/sepolicy.py:665
+#: ../sepolicy/sepolicy.py:665 ../sepolicy/sepolicy.py:668
+#: ../sepolicy/sepolicy.py:671 ../sepolicy/sepolicy.py:674
 #, python-format
 msgid "Generate '%s' policy"
 msgstr "'%s' പോളിസി തയ്യാറാക്കുക"
 
-#: ../sepolicy/sepolicy.py:653
+#: ../sepolicy/sepolicy.py:662
 #, python-format
 msgid "Generate '%s' policy "
 msgstr "'%s' പോളിസി തയ്യാറാക്കുക"
 
-#: ../sepolicy/sepolicy.py:667
+#: ../sepolicy/sepolicy.py:676
 msgid "executable to confine"
 msgstr "പ്രവര്‍ത്തിപ്പിയ്ക്കുവാന്‍ സാധ്യം"
 
-#: ../sepolicy/sepolicy.py:672
+#: ../sepolicy/sepolicy.py:681
 msgid "commands"
 msgstr "കമാന്‍ഡുകള്‍"
 
-#: ../sepolicy/sepolicy.py:675
+#: ../sepolicy/sepolicy.py:684
 msgid "Alternate SELinux policy, defaults to /sys/fs/selinux/policy"
 msgstr "മറ്റൊരു SELinux പോളിസി, സ്വതവേയുള്ളതു് /sys/fs/selinux/policy"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:25
-#: ../sepolicy/sepolicy/sepolicy.glade:4320
+#: ../sepolicy/sepolicy/sepolicy.glade:22
+#: ../sepolicy/sepolicy/sepolicy.glade:4312
 msgid "Applications"
 msgstr "പ്രയോഗങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:52
+#: ../sepolicy/sepolicy/sepolicy.glade:49
 msgid "Select domain"
 msgstr "ഡൊമെയിന്‍ തെരഞ്ഞെടുക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:189
-#: ../sepolicy/sepolicy/sepolicy.glade:4357
-#: ../sepolicy/sepolicy/sepolicy.glade:4450
-#: ../sepolicy/sepolicy/sepolicy.glade:4596
-#: ../sepolicy/sepolicy/sepolicy.glade:4745
-#: ../sepolicy/sepolicy/sepolicy.glade:4879
-#: ../sepolicy/sepolicy/sepolicy.glade:5020
-#: ../sepolicy/sepolicy/sepolicy.glade:5093
-#: ../sepolicy/sepolicy/sepolicy.glade:5228
+#: ../sepolicy/sepolicy/sepolicy.glade:184
+#: ../sepolicy/sepolicy/sepolicy.glade:4349
+#: ../sepolicy/sepolicy/sepolicy.glade:4442
+#: ../sepolicy/sepolicy/sepolicy.glade:4588
+#: ../sepolicy/sepolicy/sepolicy.glade:4737
+#: ../sepolicy/sepolicy/sepolicy.glade:4871
+#: ../sepolicy/sepolicy/sepolicy.glade:5012
+#: ../sepolicy/sepolicy/sepolicy.glade:5085
+#: ../sepolicy/sepolicy/sepolicy.glade:5220
 msgid "Select"
 msgstr "തെരഞ്ഞെടുക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:204
-#: ../sepolicy/sepolicy/sepolicy.glade:539
-#: ../sepolicy/sepolicy/sepolicy.glade:684
-#: ../sepolicy/sepolicy/sepolicy.glade:1239
-#: ../sepolicy/sepolicy/sepolicy.glade:1535
-#: ../sepolicy/sepolicy/sepolicy.glade:4530
-#: ../sepolicy/sepolicy/sepolicy.glade:4680
-#: ../sepolicy/sepolicy/sepolicy.glade:4811
-#: ../sepolicy/sepolicy/sepolicy.glade:4945
-#: ../sepolicy/sepolicy/sepolicy.glade:5163
-#: ../sepolicy/sepolicy/sepolicy.glade:5294
-#: ../sepolicy/sepolicy/sepolicy.glade:5454
+#: ../sepolicy/sepolicy/sepolicy.glade:199
+#: ../sepolicy/sepolicy/sepolicy.glade:533
+#: ../sepolicy/sepolicy/sepolicy.glade:678
+#: ../sepolicy/sepolicy/sepolicy.glade:1233
+#: ../sepolicy/sepolicy/sepolicy.glade:1529
+#: ../sepolicy/sepolicy/sepolicy.glade:4522
+#: ../sepolicy/sepolicy/sepolicy.glade:4672
+#: ../sepolicy/sepolicy/sepolicy.glade:4803
+#: ../sepolicy/sepolicy/sepolicy.glade:4937
+#: ../sepolicy/sepolicy/sepolicy.glade:5155
+#: ../sepolicy/sepolicy/sepolicy.glade:5286
+#: ../sepolicy/sepolicy/sepolicy.glade:5446
 msgid "Cancel"
 msgstr "റദ്ദാക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:332
+#: ../sepolicy/sepolicy/sepolicy.glade:326
 msgid ""
 "The entry that was entered is incorrect.  Please try again in the "
 "ex:/.../... format."
 msgstr "നല്‍കിയ എന്‍ട്രി തെറ്റാണു്.  ex:/.../... ശൈലിയില്‍ ദയവായി വീണ്ടും ശ്രമിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:358
+#: ../sepolicy/sepolicy/sepolicy.glade:352
 msgid "Retry"
 msgstr "വീണ്ടും ശ്രമിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:442
-#: ../sepolicy/sepolicy/sepolicy.glade:1120
-#: ../sepolicy/sepolicy/sepolicy.glade:1368
-#: ../sepolicy/sepolicy/sepolicy.glade:5322
+#: ../sepolicy/sepolicy/sepolicy.glade:436
+#: ../sepolicy/sepolicy/sepolicy.glade:1114
+#: ../sepolicy/sepolicy/sepolicy.glade:1362
+#: ../sepolicy/sepolicy/sepolicy.glade:5314
 msgid "Network Port Definitions"
 msgstr "നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ട് വിവരണങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:458
+#: ../sepolicy/sepolicy/sepolicy.glade:452
 msgid ""
 "Add file Equivalence Mapping.  Mapping will be created when Update is "
 "applied."
 msgstr ""
 "ഫയല്‍ ഈക്വിവലന്‍സ് മാപ്പിങ് ചേര്‍ക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ മാപ്പിങ് തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:483
-#: ../sepolicy/sepolicy/sepolicy.glade:4036
+#: ../sepolicy/sepolicy/sepolicy.glade:477
+#: ../sepolicy/sepolicy/sepolicy.glade:4028
 msgid "Path"
 msgstr "പാഥ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:493
-#: ../sepolicy/sepolicy/sepolicy.glade:5374
+#: ../sepolicy/sepolicy/sepolicy.glade:487
+#: ../sepolicy/sepolicy/sepolicy.glade:5366
 msgid ""
 "Specify a new SELinux user name.  By convention SELinux User names usually "
 "end in an _u."
@@ -2773,25 +2778,25 @@ msgstr ""
 "ഒരു പുതിയ SELinux ഉപയോക്തൃ നാമം നല്‍കുക. SELinux ഉപോക്തൃ നാമങ്ങള്‍ സാധാരണ _u-ല്‍ "
 "അവസാനിയ്ക്കുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:497
+#: ../sepolicy/sepolicy/sepolicy.glade:491
 msgid "Enter the path to which you want to setup an equivalence label."
 msgstr "ഒരു ഇക്വിവലന്‍സ് ലേബല്‍ സജ്ജമാക്കുന്നതിനു് പാഥ് നല്‍കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:510
-#: ../sepolicy/sepolicy/sepolicy.glade:4053
-#: ../sepolicy/sepolicy/sepolicy.glade:4771
+#: ../sepolicy/sepolicy/sepolicy.glade:504
+#: ../sepolicy/sepolicy/sepolicy.glade:4045
+#: ../sepolicy/sepolicy/sepolicy.glade:4763
 msgid "Equivalence Path"
 msgstr "സമമായ പാഥ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:524
-#: ../sepolicy/sepolicy/sepolicy.glade:669
-#: ../sepolicy/sepolicy/sepolicy.glade:1224
-#: ../sepolicy/sepolicy/sepolicy.glade:1520
-#: ../sepolicy/sepolicy/sepolicy.glade:5439
+#: ../sepolicy/sepolicy/sepolicy.glade:518
+#: ../sepolicy/sepolicy/sepolicy.glade:663
+#: ../sepolicy/sepolicy/sepolicy.glade:1218
+#: ../sepolicy/sepolicy/sepolicy.glade:1514
+#: ../sepolicy/sepolicy/sepolicy.glade:5431
 msgid "Save to update"
 msgstr "പരിഷ്കരിയ്ക്കുന്നതിനു് സൂക്ഷിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:564
+#: ../sepolicy/sepolicy/sepolicy.glade:558
 msgid ""
 "Specify the mapping between the new path and the equivalence path.  "
 "Everything under this new path will be labeled as if they were under the "
@@ -2800,11 +2805,11 @@ msgstr ""
 "പുതിയ പാഥിനും ഇക്വിവലന്‍സ് പാഥിനുമിടയിലുള്ള മാപ്പിങ് വ്യക്തമാക്കുക. ഈ പുതിയ പാഥിനും കീഴിലുള്ള "
 "എല്ലാം അവ ഇക്വിവലന്‍സ് പാഥിലുള്ളതു് പോലെ ലേബല്‍ ചെയ്യുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:621
+#: ../sepolicy/sepolicy/sepolicy.glade:615
 msgid "Add a file"
 msgstr "ഒരു ഫയല്‍ ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:638
+#: ../sepolicy/sepolicy/sepolicy.glade:632
 msgid ""
 "<operation> File Labeling for <selected domain>. File labels will be created "
 "when update is applied."
@@ -2812,34 +2817,34 @@ msgstr ""
 "<operation> <selected domain>-നുള്ള ഫയല്‍ ലേബലിങ്. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ ഫയല്‍ "
 "ലേബലുകള്‍ തയ്യാറാക്കുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:711
-#: ../sepolicy/sepolicy/sepolicy.glade:1485
+#: ../sepolicy/sepolicy/sepolicy.glade:705
+#: ../sepolicy/sepolicy/sepolicy.glade:1479
 msgid "MLS"
 msgstr "MLS"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:747
-#: ../sepolicy/sepolicy/sepolicy.glade:2306
-#: ../sepolicy/sepolicy/sepolicy.glade:2418
-#: ../sepolicy/sepolicy/sepolicy.glade:2540
-#: ../sepolicy/sepolicy/sepolicy.glade:4490
+#: ../sepolicy/sepolicy/sepolicy.glade:741
+#: ../sepolicy/sepolicy/sepolicy.glade:2298
+#: ../sepolicy/sepolicy/sepolicy.glade:2410
+#: ../sepolicy/sepolicy/sepolicy.glade:2532
+#: ../sepolicy/sepolicy/sepolicy.glade:4482
 msgid "Class"
 msgstr "ക്ലാസ്സ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:763
+#: ../sepolicy/sepolicy/sepolicy.glade:757
 msgid "Type"
 msgstr "തരം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:777
+#: ../sepolicy/sepolicy/sepolicy.glade:771
 msgid ""
 "Select the file class to which this label will be applied.  Defaults to all "
 "classes."
 msgstr "ഈ ലേബല്‍ ലഭ്യമാക്കുന്നതിനുള്ള ഫയല്‍ ക്ലാസ്സ് തെരഞ്ഞെടുക്കുക. എല്ലാ ക്ലാസ്സുകള്‍ക്കും സ്വതവേ."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:804
+#: ../sepolicy/sepolicy/sepolicy.glade:798
 msgid "Make Path Recursive"
 msgstr "പാഥ് ആവര്‍ത്തനമാക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:808
+#: ../sepolicy/sepolicy/sepolicy.glade:802
 msgid ""
 "Select Make Path Recursive if you want to apply this label to all children "
 "of the specified directory path. objects under the directory to have this "
@@ -2848,52 +2853,52 @@ msgstr ""
 "പറഞ്ഞിരിയ്ക്കുന്ന ഡയറക്ടറി പാഥിലുള്ള എല്ലാ ചിള്‍‍ഡ്രനും ഈ ലേബല്‍ നല്‍കുന്നതിനായി പാഥ് ആവര്‍"
 "ത്തിച്ചുള്ളതാക്കുക തെരഞ്ഞെടുക്കുക. ഈ ഡയറക്ടറയിലുള്ള വസ്തുക്കള്‍ക്കു് ഈ ലേബല്‍ ലഭ്യമാകുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:821
+#: ../sepolicy/sepolicy/sepolicy.glade:815
 msgid "Browse"
 msgstr "പരതുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:825
+#: ../sepolicy/sepolicy/sepolicy.glade:819
 msgid "Browse to select the file/directory for labeling."
 msgstr "ലേബല്‍ ചെയ്യുന്നതിനു്തെരഞ്ഞെടുക്കേണ്ട ഫയല്‍/ഡയറക്ടറി പരതുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:869
+#: ../sepolicy/sepolicy/sepolicy.glade:863
 msgid "Path  "
 msgstr "പാഥ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:880
+#: ../sepolicy/sepolicy/sepolicy.glade:874
 msgid ""
 "Specify the path using regular expressions that you would like to modify the "
 "labeling."
 msgstr "നിങ്ങള്‍ക്കു് ലേബലിങില്‍ മാറ്റം വരുത്തുന്നതിനു് റെഗുലര്‍ എക്സ്പ്രഷനുകള്‍ ഉപയോഗിച്ചു് പാഥ് നല്‍കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:902
+#: ../sepolicy/sepolicy/sepolicy.glade:896
 msgid "Select the SELinux file type to assign to this path."
 msgstr "ഈ പാഥ് ലഭ്യമാക്കുന്നതിനു് SELinux ഫയല്‍ തരം തെരഞ്ഞെടുക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:929
+#: ../sepolicy/sepolicy/sepolicy.glade:923
 msgid "Enter the MLS Label to assign to this file path."
 msgstr "ഈ ഫയല്‍ പാഥിലേക്കുള്ള എംഎല്‍എസ് ലേബല്‍ നല്‍കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:933
+#: ../sepolicy/sepolicy/sepolicy.glade:927
 msgid "SELinux MLS Label you wish to assign to this path."
 msgstr "ഈ പാഥിനുള്ള SELinux എംഎല്‍എസ് ലേബല്‍."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1070
+#: ../sepolicy/sepolicy/sepolicy.glade:1064
 msgid "Analyzing Policy..."
 msgstr "പോളിസി നിരീക്ഷിയ്ക്കുന്നു..."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1137
+#: ../sepolicy/sepolicy/sepolicy.glade:1131
 msgid ""
 "Add Login Mapping. Login Mapping will be created when update is applied."
 msgstr "ലോഗിന്‍ മാപ്പിങ് ചേര്‍ക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ ലോഗിന്‍ മാപ്പിങ് തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1172
+#: ../sepolicy/sepolicy/sepolicy.glade:1166
 msgid ""
 "Enter the login user name of the user to which you wish to add SELinux User "
 "confinement."
 msgstr "SELinux ഉപയോക്തൃ കണ്‍ഫൈന്‍മെന്റ് ചേര്‍ക്കുന്നതിനു് ഉപയോക്താവിന്റെ പ്രവേശന നാമം നല്‍കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1201
+#: ../sepolicy/sepolicy/sepolicy.glade:1195
 msgid ""
 "Select the SELinux User to assign to this login user.  Login users by "
 "default get assigned by the __default__ user."
@@ -2901,7 +2906,7 @@ msgstr ""
 "ഈ പ്രവേശ ഉപയോക്താവിനുള്ള SELinux ഉപയോക്താവു്. സ്വതവേയുള്ള പ്രവേശന ഉപയോക്താക്കള്‍ "
 "__default__ user ലഭ്യമാക്കുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1264
+#: ../sepolicy/sepolicy/sepolicy.glade:1258
 msgid ""
 "Enter MLS/MCS Range for this login User.  Defaults to the range for the "
 "Selected SELinux User."
@@ -2909,14 +2914,14 @@ msgstr ""
 "ഈ പ്രവേശന ഉപയോക്താവിനുള്ള എസഎല്‍എസ്/എംസിഎസ് പരിധി നല്‍കുക. തെരഞ്ഞെടുത്ത SELinux "
 "ഉപയോക്താവിനുള്ള പരിധി സ്വതവേയാക്കുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1267
-#: ../sepolicy/sepolicy/sepolicy.glade:3182
-#: ../sepolicy/sepolicy/sepolicy.glade:3303
-#: ../sepolicy/sepolicy/sepolicy.glade:5404
+#: ../sepolicy/sepolicy/sepolicy.glade:1261
+#: ../sepolicy/sepolicy/sepolicy.glade:3174
+#: ../sepolicy/sepolicy/sepolicy.glade:3295
+#: ../sepolicy/sepolicy/sepolicy.glade:5396
 msgid "MLS Range"
 msgstr "എംഎല്‍എസ് പരിധി"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1279
+#: ../sepolicy/sepolicy/sepolicy.glade:1273
 msgid ""
 "Specify the MLS Range for this user to login in with.  Defaults to the "
 "selected SELinux Users MLS Range."
@@ -2924,7 +2929,7 @@ msgstr ""
 "പ്രവേശിയ്ക്കുവാന്‍ ഈ ഉപയോക്താവിനുള്ള എംഎല്‍എസ് പരിധി നല്‍കുക. തെരഞ്ഞെടുത്ത SELinux\n"
 "ഉപയോക്താക്കളുടെ എംഎല്‍എസ് പരിധിയായി സ്വതവേയാകുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1385
+#: ../sepolicy/sepolicy/sepolicy.glade:1379
 msgid ""
 "<operation> Network Port for <selected domain>.  Ports will be created when "
 "update is applied."
@@ -2932,84 +2937,84 @@ msgstr ""
 "<operation> <selected domain>-നുള്ള നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ട്. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ പോര്‍"
 "ട്ടുകള്‍ തയ്യാറാക്കുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1423
+#: ../sepolicy/sepolicy/sepolicy.glade:1417
 msgid "Enter the port number or range to which you want to add a port type."
 msgstr "പോര്‍ട്ട് തരം ചേര്‍ക്കുന്നതിനുള്ള പോര്‍ട്ട് നംബര്‍ അല്ലെങ്കില്‍ പരിധി ചേര്‍ക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1439
-#: ../sepolicy/sepolicy/sepolicy.glade:2658
-#: ../sepolicy/sepolicy/sepolicy.glade:2756
-#: ../sepolicy/sepolicy/sepolicy.glade:4623
+#: ../sepolicy/sepolicy/sepolicy.glade:1433
+#: ../sepolicy/sepolicy/sepolicy.glade:2650
+#: ../sepolicy/sepolicy/sepolicy.glade:2748
+#: ../sepolicy/sepolicy/sepolicy.glade:4615
 msgid "Protocol"
 msgstr "സമ്പ്രദായം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1453
+#: ../sepolicy/sepolicy/sepolicy.glade:1447
 msgid "Port Type"
 msgstr "പോര്‍ട്ട് തരം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1498
+#: ../sepolicy/sepolicy/sepolicy.glade:1492
 msgid "Select the port type you want to assign to the specified port number."
 msgstr "നല്‍കിയിട്ടുള്ള പോര്‍ട്ട് നംബറിനുള്ള പോര്‍ട്ട് തരം തെരഞ്ഞെടുക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1562
+#: ../sepolicy/sepolicy/sepolicy.glade:1556
 msgid "tcp"
 msgstr "tcp"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1566
+#: ../sepolicy/sepolicy/sepolicy.glade:1560
 msgid ""
 "Select <b>tcp</b> if the port type should be assigned to tcp port numbers."
 msgstr "പോര്‍ട്ട് തരം tcp പോര്‍ട്ട് നംബറുകള്‍ക്കു് നല്‍കുന്നതിനു് <b>tcp</b> തെരഞ്ഞെടുക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1579
+#: ../sepolicy/sepolicy/sepolicy.glade:1573
 msgid "udp"
 msgstr "udp"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1583
+#: ../sepolicy/sepolicy/sepolicy.glade:1577
 msgid ""
 "Select <b>udp</b> if the port type should be assigned to udp port numbers."
 msgstr "പോര്‍ട്ട് തരം udp പോര്‍ട്ട് നംബറുകള്‍ക്കു് നല്‍കുന്നതിനു് <b>udp</b> തെരഞ്ഞെടുക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1605
+#: ../sepolicy/sepolicy/sepolicy.glade:1599
 msgid "Enter the MLS Label to assign to this port."
 msgstr "ഈ പോര്‍ട്ടിനുള്ള എംഎല്‍എസ് ലേബല്‍ നല്‍കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1707
+#: ../sepolicy/sepolicy/sepolicy.glade:1701
 msgid "SELinux Configuration"
 msgstr "SELinux ക്രമീകരണം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1743
+#: ../sepolicy/sepolicy/sepolicy.glade:1735
 msgid "Select..."
 msgstr "തെരഞ്ഞെടുക്കുക..."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1792
-#: ../sepolicy/sepolicy/sepolicy.glade:2212
+#: ../sepolicy/sepolicy/sepolicy.glade:1784
+#: ../sepolicy/sepolicy/sepolicy.glade:2204
 msgid "Booleans"
 msgstr "ബൂളിയനുകള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1796
+#: ../sepolicy/sepolicy/sepolicy.glade:1788
 msgid ""
 "Display boolean information that can be used to modify the policy for the "
 "'selected domain'."
 msgstr ""
 "'തെരഞ്ഞെടുത്ത ഡൊമെയിനുള്ള' പോളിസിയില്‍ മാറ്റം വരുത്തുന്നതിനുള്ള ബൂളിയന്‍ വിവരം കാണിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1810
-#: ../sepolicy/sepolicy/sepolicy.glade:2597
+#: ../sepolicy/sepolicy/sepolicy.glade:1802
+#: ../sepolicy/sepolicy/sepolicy.glade:2589
 msgid "Files"
 msgstr "ഫയലുകള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1814
+#: ../sepolicy/sepolicy/sepolicy.glade:1806
 msgid ""
 "Display file type information that can be used by the 'selected domain'."
 msgstr ""
 "'തെരഞ്ഞെടുത്ത ഡൊമെയിന്‍' ഉപയോഗിയ്ക്കുവാന്‍ സാധ്യമാകുന്ന ഫയല്‍ തരത്തിലുള്ള വിവരം കാണിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1828
-#: ../sepolicy/sepolicy/sepolicy.glade:2830
+#: ../sepolicy/sepolicy/sepolicy.glade:1820
+#: ../sepolicy/sepolicy/sepolicy.glade:2822
 msgid "Network"
 msgstr "നെറ്റ്‌വര്‍ക്ക്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1832
+#: ../sepolicy/sepolicy/sepolicy.glade:1824
 msgid ""
 "Display network ports to which the 'selected domain' can connect or listen "
 "to."
@@ -3017,12 +3022,12 @@ msgstr ""
 "'തെരഞ്ഞെടുത്ത ഡൊമെയിനു്' കണക്ട് ചെയ്യുവാന്‍ സാധിയ്ക്കുന്ന അല്ലെങ്കില്‍ ശ്രദ്ധിയ്ക്കുവാന്‍ സാധിയ്ക്കുന്ന "
 "നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍ കാണിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1846
-#: ../sepolicy/sepolicy/sepolicy.glade:3111
+#: ../sepolicy/sepolicy/sepolicy.glade:1838
+#: ../sepolicy/sepolicy/sepolicy.glade:3103
 msgid "Transitions"
 msgstr "മാറ്റങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1850
+#: ../sepolicy/sepolicy/sepolicy.glade:1842
 msgid ""
 "Display applications that can transition into or out of the 'selected "
 "domain'."
@@ -3030,28 +3035,28 @@ msgstr ""
 "'തെരഞ്ഞെടുത്ത ഡൊമെയിനിലേക്കുള്ള' അല്ലെങ്കില്‍ പുറത്തേക്കുള്ള മാറ്റങ്ങള്‍ക്കുള്ള പ്രയോഗങ്ങള്‍ പ്രദര്‍"
 "ശിപ്പിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1864
-#: ../sepolicy/sepolicy/sepolicy.glade:3212
+#: ../sepolicy/sepolicy/sepolicy.glade:1856
+#: ../sepolicy/sepolicy/sepolicy.glade:3204
 msgid "Login Mapping"
 msgstr "പ്രവേശന മാപ്പിങ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1867
-#: ../sepolicy/sepolicy/sepolicy.glade:1884
-#: ../sepolicy/sepolicy/sepolicy.glade:1901
+#: ../sepolicy/sepolicy/sepolicy.glade:1859
+#: ../sepolicy/sepolicy/sepolicy.glade:1876
+#: ../sepolicy/sepolicy/sepolicy.glade:1893
 msgid "Manage the SELinux configuration"
 msgstr "SELinux ക്രമീകരണം കൈകാര്യം ചെയ്യുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1881
-#: ../sepolicy/sepolicy/sepolicy.glade:3334
+#: ../sepolicy/sepolicy/sepolicy.glade:1873
+#: ../sepolicy/sepolicy/sepolicy.glade:3326
 msgid "SELinux Users"
 msgstr "SELinux ഉപയോക്താക്കള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1915
-#: ../sepolicy/sepolicy/sepolicy.glade:4006
+#: ../sepolicy/sepolicy/sepolicy.glade:1907
+#: ../sepolicy/sepolicy/sepolicy.glade:3998
 msgid "Lockdown"
 msgstr "ലോക്ക്ഡൌണ്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1918
+#: ../sepolicy/sepolicy/sepolicy.glade:1910
 msgid ""
 "Lockdown the SELinux System.\n"
 "This screen can be used to turn up the SELinux Protections."
@@ -3059,28 +3064,28 @@ msgstr ""
 "SELinux സിസ്റ്റം പൂട്ടുക.\n"
 "SELinux സുരക്ഷിതകള്‍ ഓണ്‍ ചെയ്യുന്നതിനു് ഈ സ്ക്രീന്‍ ഉപയോഗിയ്ക്കാം."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1933
+#: ../sepolicy/sepolicy/sepolicy.glade:1925
 msgid "radiobutton"
 msgstr "radiobutton"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1993
+#: ../sepolicy/sepolicy/sepolicy.glade:1985
 msgid "Filter"
 msgstr "ഫില്‍‌റ്റര്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2021
+#: ../sepolicy/sepolicy/sepolicy.glade:2013
 msgid "Show Modified Only"
 msgstr "മാറ്റം വരുത്തിയവ മാത്രം കാണിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2060
+#: ../sepolicy/sepolicy/sepolicy.glade:2052
 msgid "Mislabeled files exist"
 msgstr "പേരു് മാറ്റിയ ലേബലുകള്‍ നിലവിലുണ്ടു്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2080
+#: ../sepolicy/sepolicy/sepolicy.glade:2072
 msgid "Show mislabeled files only"
 msgstr "പേരു് തെറ്റിയ ഫയലുകള്‍ മാത്രം കാണിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2120
-#: ../sepolicy/sepolicy/sepolicy.glade:3234
+#: ../sepolicy/sepolicy/sepolicy.glade:2112
+#: ../sepolicy/sepolicy/sepolicy.glade:3226
 msgid ""
 "If-Then-Else rules written in policy that can\n"
 "allow alternative access control."
@@ -3088,75 +3093,75 @@ msgstr ""
 "മറ്റു് ആക്സസ്സ് കണ്ട്രോള്‍ അനുവദിയ്ക്കുന്നതിനുള്ള പോളിസിയിലുള്ള\n"
 "If-Then-Else നിയമങ്ങള്‍."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2132
+#: ../sepolicy/sepolicy/sepolicy.glade:2124
 msgid "Enabled"
 msgstr "പ്രവര്‍ത്തന സജ്ജം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2183
+#: ../sepolicy/sepolicy/sepolicy.glade:2175
 msgid "Name"
 msgstr "പേര്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2252
-#: ../sepolicy/sepolicy/sepolicy.glade:2364
-#: ../sepolicy/sepolicy/sepolicy.glade:2482
-#: ../sepolicy/sepolicy/sepolicy.glade:4463
-#: ../sepolicy/sepolicy/sepolicy.glade:4758
+#: ../sepolicy/sepolicy/sepolicy.glade:2244
+#: ../sepolicy/sepolicy/sepolicy.glade:2356
+#: ../sepolicy/sepolicy/sepolicy.glade:2474
+#: ../sepolicy/sepolicy/sepolicy.glade:4455
+#: ../sepolicy/sepolicy/sepolicy.glade:4750
 msgid "File Path"
 msgstr "ഫയല്‍ പാഥ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2288
-#: ../sepolicy/sepolicy/sepolicy.glade:2399
+#: ../sepolicy/sepolicy/sepolicy.glade:2280
+#: ../sepolicy/sepolicy/sepolicy.glade:2391
 msgid "SELinux File Type"
 msgstr "SELinux ഫയല്‍ തരം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2332
+#: ../sepolicy/sepolicy/sepolicy.glade:2324
 msgid "File path used to enter the 'selected domain'."
 msgstr "'തെരഞ്ഞെടുത്ത ഡൊമെയിന്‍' നല്‍കുവാനുള്ള ഫയല്‍ പാഥ്."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2333
+#: ../sepolicy/sepolicy/sepolicy.glade:2325
 msgid "Executable Files"
 msgstr "നടപ്പിലാക്കുവാന്‍ സാധ്യമാകുന്ന ഫയലുകള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2448
+#: ../sepolicy/sepolicy/sepolicy.glade:2440
 msgid "Files to which the 'selected domain' can write."
 msgstr "'തെരഞ്ഞെടുത്ത ഡൊമെയിനിലേക്കു്' സൂക്ഷിയ്ക്കുവാന്‍ സാധ്യമായ ഫയലുകള്‍."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2449
+#: ../sepolicy/sepolicy/sepolicy.glade:2441
 msgid "Writable files"
 msgstr "റൈറ്റബിള്‍ ഫയലുകള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2571
+#: ../sepolicy/sepolicy/sepolicy.glade:2563
 msgid "File Types defined for the 'selected domain'."
 msgstr "'തെരഞ്ഞെടുത്ത ഡൊമെയിനുള്ള' ഫയല്‍ തരങ്ങള്‍."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2572
+#: ../sepolicy/sepolicy/sepolicy.glade:2564
 msgid "Application File Types"
 msgstr "പ്രയോഗത്തിനുള്ള ഫയല്‍ തരങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2639
-#: ../sepolicy/sepolicy/sepolicy.glade:2738
-#: ../sepolicy/sepolicy/sepolicy.glade:4609
+#: ../sepolicy/sepolicy/sepolicy.glade:2631
+#: ../sepolicy/sepolicy/sepolicy.glade:2730
+#: ../sepolicy/sepolicy/sepolicy.glade:4601
 msgid "Port"
 msgstr "പോര്‍ട്ട്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2704
+#: ../sepolicy/sepolicy/sepolicy.glade:2696
 msgid "Network Ports to which the 'selected domain' is allowed to connect."
 msgstr "കണക്ട് ചെയ്യുവാന്‍ അനുവദിയ്ക്കുന്ന 'തെരഞ്ഞെടുത്ത ഡൊമെയിനിലേക്കുള്ള' നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2705
+#: ../sepolicy/sepolicy/sepolicy.glade:2697
 msgid "Outbound"
 msgstr "ഔട്ട്ബൌണ്ട്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2804
+#: ../sepolicy/sepolicy/sepolicy.glade:2796
 msgid "Network Ports to which the 'selected domain' is allowed to listen."
 msgstr "ശ്രദ്ധിയ്ക്കുവാന്‍ അനുവദിയ്ക്കുന്ന 'തെരഞ്ഞെടുത്ത ഡൊമെയിനിലേക്കുള്ള' നെറ്റ്‌വര്‍ക്ക് പോര്‍ട്ടുകള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2805
+#: ../sepolicy/sepolicy/sepolicy.glade:2797
 msgid "Inbound"
 msgstr "ഇന്‍ബൌണ്ട്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2866
-#: ../sepolicy/sepolicy/sepolicy.glade:2946
+#: ../sepolicy/sepolicy/sepolicy.glade:2858
+#: ../sepolicy/sepolicy/sepolicy.glade:2938
 msgid ""
 "Boolean\n"
 "Enabled"
@@ -3164,16 +3169,16 @@ msgstr ""
 "ബൂളിയന്‍\n"
 "സജ്ജം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2882
-#: ../sepolicy/sepolicy/sepolicy.glade:2978
+#: ../sepolicy/sepolicy/sepolicy.glade:2874
+#: ../sepolicy/sepolicy/sepolicy.glade:2970
 msgid "Executable File"
 msgstr "നടപ്പിലാക്കുവാന്‍ സാധ്യമാകുന്ന ഫയല്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2899
+#: ../sepolicy/sepolicy/sepolicy.glade:2891
 msgid "SELinux Application Type"
 msgstr "SELinux പ്രയോഗ തരം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2920
+#: ../sepolicy/sepolicy/sepolicy.glade:2912
 msgid ""
 "Executables which will transition to a different domain, when the 'selected "
 "domain' executes them."
@@ -3181,15 +3186,15 @@ msgstr ""
 "'തെരഞ്ഞെടുത്ത ഡൊമെയിന്‍' എക്സിക്യൂട്ടബിളുകളെ നടപ്പിലാക്കുമ്പോള്‍, അവ മറ്റൊരു ഡൊമെയിനിലേക്കു് "
 "മാറുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2923
+#: ../sepolicy/sepolicy/sepolicy.glade:2915
 msgid "Application Transitions From 'select domain'"
 msgstr "'select domain'-ല്‍ നിന്നുള്ള പ്രയോഗത്തിന്റെ മാറ്റങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2962
+#: ../sepolicy/sepolicy/sepolicy.glade:2954
 msgid "Calling Process Domain"
 msgstr "പ്രക്രിയ ഡൊമെയിന്‍ ലഭ്യമാക്കുന്നു"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3002
+#: ../sepolicy/sepolicy/sepolicy.glade:2994
 msgid ""
 "Executables which will transition to the 'selected domain', when executing a "
 "selected domains entrypoint."
@@ -3197,11 +3202,11 @@ msgstr ""
 "തെരഞ്ഞെടുത്ത ഡൊമെയിന്‍ എന്‍ട്രിപോയിന്റ് നടപ്പിലാക്കുമ്പോള്‍, നടപ്പിലാക്കുന്നവ 'തെരഞ്ഞെടുത്ത "
 "ഡൊമെയിനിലേക്കു്' മാറുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3003
+#: ../sepolicy/sepolicy/sepolicy.glade:2995
 msgid "Application Transitions Into 'select domain'"
 msgstr "'select domain'-ലേക്കു് പ്രയോഗങ്ങള്‍ മാറുന്നു"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3018
+#: ../sepolicy/sepolicy/sepolicy.glade:3010
 msgid ""
 "File Transitions define what happens when the current domain creates the "
 "content of a particular class in a directory of the destination type. "
@@ -3210,83 +3215,83 @@ msgstr ""
 "നിലവിലുള്ള ഡൊമെയിന്ഡ ലക്ഷ്യത്തിലുള്ള ഡയറക്ടറിയിലുള്ളൊരു ക്ലാസ്സിന്റെ വിവരം തയ്യാറാക്കുമ്പോള്‍ എന്തു് "
 "സംഭവിയ്ക്കുന്നു എന്നു് ഫയല്‍ മാറ്റങ്ങള്‍ നിഷ്കര്‍ഷിയ്ക്കുന്നു. കൂടാതെ, മാറ്റുന്നതിനു് ഒരു ഫയല്‍ നാമം നല്‍കണം."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3026
+#: ../sepolicy/sepolicy/sepolicy.glade:3018
 msgid "SELinux Directory Type"
 msgstr "SELinux ഡയറക്ടറി തരം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3039
+#: ../sepolicy/sepolicy/sepolicy.glade:3031
 msgid "Destination Class"
 msgstr "ലക്ഷ്യ ക്ലാസ്സ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3053
+#: ../sepolicy/sepolicy/sepolicy.glade:3045
 msgid "SELinux Destination Type"
 msgstr "SELinux ലക്ഷ്യ തരം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3066
+#: ../sepolicy/sepolicy/sepolicy.glade:3058
 msgid "File Name"
 msgstr "ഫയല്‍ നാമം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3088
+#: ../sepolicy/sepolicy/sepolicy.glade:3080
 msgid "File Transitions From 'select domain'"
 msgstr "'select domain'-ല്‍ നിന്നും ഫയല്‍ മാറ്റങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3287
-#: ../sepolicy/sepolicy/sepolicy.glade:5498
+#: ../sepolicy/sepolicy/sepolicy.glade:3279
+#: ../sepolicy/sepolicy/sepolicy.glade:5490
 msgid "Default Level"
 msgstr "സ്വതവേയുള്ള ലവല്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3373
+#: ../sepolicy/sepolicy/sepolicy.glade:3365
 msgid "Select the system mode when the system first boots up"
 msgstr "സിസ്റ്റം ആദ്യം ബൂട്ട് ചെയ്യുമ്പോള്‍ സിസ്റ്റം മോഡ് തെരഞ്ഞെടുക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3385
-#: ../sepolicy/sepolicy/sepolicy.glade:3459
+#: ../sepolicy/sepolicy/sepolicy.glade:3377
+#: ../sepolicy/sepolicy/sepolicy.glade:3451
 msgid "Enforcing"
 msgstr "എന്‍ഫോര്‍സിങ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3404
-#: ../sepolicy/sepolicy/sepolicy.glade:3477
+#: ../sepolicy/sepolicy/sepolicy.glade:3396
+#: ../sepolicy/sepolicy/sepolicy.glade:3469
 msgid "Permissive"
 msgstr "പെര്‍മിസ്സീവ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3446
+#: ../sepolicy/sepolicy/sepolicy.glade:3438
 msgid "Select the system mode for the current session"
 msgstr "നിലവിലുള്ള സെഷനുള്ള സിസ്റ്റം മോഡ് തെരഞ്ഞെടുക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3523
+#: ../sepolicy/sepolicy/sepolicy.glade:3515
 msgid "System Policy Type:"
 msgstr "സിസ്റ്റം പോളിസി തരം:"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3584
+#: ../sepolicy/sepolicy/sepolicy.glade:3576
 msgid "<b>System Mode</b>"
 msgstr "<b>സിസ്റ്റം മോഡ്</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3622
+#: ../sepolicy/sepolicy/sepolicy.glade:3614
 msgid "Import system settings from another machine"
 msgstr "മറ്റൊരു സിസ്റ്റത്തില്‍ നിന്നും സിസ്റ്റം സജ്ജീകരണങ്ങള്‍ ഇംപോര്‍ട്ട് ചെയ്യുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3630
+#: ../sepolicy/sepolicy/sepolicy.glade:3622
 msgid "Import"
 msgstr "ഇംപോര്‍ട്ട് ചെയ്യുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3649
+#: ../sepolicy/sepolicy/sepolicy.glade:3641
 msgid "Export system settings to a file"
 msgstr "ഒരു ഫയലിലേക്കു് സിസ്റ്റം സജ്ജീകരണങ്ങള്‍ കയറ്റുമതി ചെയ്യുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3659
+#: ../sepolicy/sepolicy/sepolicy.glade:3651
 msgid "Export"
 msgstr "കയറ്റുമതി"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3678
+#: ../sepolicy/sepolicy/sepolicy.glade:3670
 msgid "Relabel all files back to system defaults on reboot"
 msgstr "റീബൂട്ട് ചെയ്യുമ്പോള്‍ സിസ്റ്റത്തിന്റെ സഹജമായി എല്ലാ ഫയലുകളും വീണ്ടും ലേബല്‍ ചെയ്യുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3773
+#: ../sepolicy/sepolicy/sepolicy.glade:3765
 msgid "<b>System Configuration</b>"
 msgstr "<b>സിസ്റ്റം ക്രമീകരണം</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3820
-#: ../sepolicy/sepolicy/sepolicy.glade:3838
+#: ../sepolicy/sepolicy/sepolicy.glade:3812
+#: ../sepolicy/sepolicy/sepolicy.glade:3830
 msgid ""
 "An unconfined domain is a process label that allows the process to do what "
 "it wants, without SELinux interfering.  Applications started at boot by the "
@@ -3301,14 +3306,14 @@ msgstr ""
 "പ്രവര്‍ത്തന രഹിതമാക്കിയാല്‍, എല്ലാ ഡെമണുകളും കണ്‍ഫൈന്‍ഡ് ആകുന്നു. unconfined_t user പ്രവര്‍ത്തന "
 "രഹിതമാക്കുന്നതിനു്, ആദ്യം ഉപയോക്താക്കള്‍/പ്രവേശന സ്ക്രീനില്‍ നിന്നും unconfined_t നീക്കം ചെയ്യുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3856
+#: ../sepolicy/sepolicy/sepolicy.glade:3848
 msgid "<b>Disable ability to run unconfined system processes?</b>"
 msgstr "<b>അണ്‍കണ്‍ഫൈന്‍‍ഡ് സിസ്റ്റം പ്രക്രിയകള്‍ നടപ്പിലാക്കുന്നതു് പ്രവര്‍ത്തന രഹിതമാക്കണമോ?</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3884
-#: ../sepolicy/sepolicy/sepolicy.glade:3901
-#: ../sepolicy/sepolicy/sepolicy.glade:3947
-#: ../sepolicy/sepolicy/sepolicy.glade:3964
+#: ../sepolicy/sepolicy/sepolicy.glade:3876
+#: ../sepolicy/sepolicy/sepolicy.glade:3893
+#: ../sepolicy/sepolicy/sepolicy.glade:3939
+#: ../sepolicy/sepolicy/sepolicy.glade:3956
 msgid ""
 "A permissive domain is a process label that allows the process to do what it "
 "wants, with SELinux only logging the denials, but not enforcing them.  "
@@ -3321,17 +3326,17 @@ msgstr ""
 "പോളിസി സൂചിപ്പിയ്ക്കുന്നു. SELinux-നു് ഡൊമെയിനിലേക്കുള്ള പ്രവേശനം നിഷേധിയ്ക്കുന്ന ഘടകം ഇതു് പ്രവര്‍"
 "ത്തന രഹിതമാക്കുന്നു, ഇതു് അനുവദിയ്ക്കേണ്ടതാണു്."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3919
+#: ../sepolicy/sepolicy/sepolicy.glade:3911
 msgid "<b>Disable all permissive processes?</b>"
 msgstr "<b>എല്ലാ പെര്‍മ്മിസ്സീവ് പ്രക്രിയകളും പ്രവര്‍ത്തന രഹിതമാക്കണമോ?</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3985
+#: ../sepolicy/sepolicy/sepolicy.glade:3977
 msgid "<b>Deny all processes from ptracing or debugging other processes?</b>"
 msgstr ""
 "<b>എല്ലാ പ്രക്രിയകളേയും മറ്റു് പ്രക്രിയകള്‍ ptracing അല്ലെങ്കില്‍ ഡീബഗ്ഗ് ചെയ്യുന്നതില്‍ നിന്നും "
 "നിഷേധിയ്ക്കണമോ?</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4022
+#: ../sepolicy/sepolicy/sepolicy.glade:4014
 msgid ""
 "File equivalence cause the system to label content under the new path as if "
 "it were under the equivalence path."
@@ -3339,31 +3344,31 @@ msgstr ""
 "ഫയല്‍ ഇക്വിവലന്‍സ് ഉള്ളടക്കത്തിനു് ലേബല്‍ നല്‍കുന്നു. ഇക്വിവലന്‍സ് പാഥിലെന്നപോലെ ഇതു് പുതിയ പാഥില്‍ "
 "നടപ്പിലാകുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4078
+#: ../sepolicy/sepolicy/sepolicy.glade:4070
 msgid "Files Equivalence"
 msgstr "ഫയല്‍സ് ഇക്വിവലന്‍സ്"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4091
+#: ../sepolicy/sepolicy/sepolicy.glade:4083
 msgid "<b>...SELECT TO VIEW DATA...</b>"
 msgstr "<b>...ഡേറ്റാ കാണുന്നതിനു് തെരഞ്ഞെടുക്കുക...</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4122
+#: ../sepolicy/sepolicy/sepolicy.glade:4114
 msgid "Delete"
 msgstr "വെട്ടി നീക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4138
+#: ../sepolicy/sepolicy/sepolicy.glade:4130
 msgid "Modify"
 msgstr "മാറ്റം വരുത്തുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4153
+#: ../sepolicy/sepolicy/sepolicy.glade:4145
 msgid "Add"
 msgstr "ചേര്‍ക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4199
+#: ../sepolicy/sepolicy/sepolicy.glade:4191
 msgid "Revert"
 msgstr "തിരികെ"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4204
+#: ../sepolicy/sepolicy/sepolicy.glade:4196
 msgid ""
 "Revert button will launch a dialog window which allows you to revert changes "
 "within the current transaction."
@@ -3371,28 +3376,28 @@ msgstr ""
 "തിരികെ ബട്ടണ്‍ നിങ്ങള്‍ക്കു് ഒരു ഡയലോഗ് ജാലകം ലഭ്യമാക്കുന്നു. നിലവിലുള്ള ഇടപടലിലുള്ള മാറ്റങ്ങള്‍ "
 "തിരികെ ലഭിയ്ക്കുന്നതിനു് ഇതു് അനുവദിയ്ക്കുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4221
+#: ../sepolicy/sepolicy/sepolicy.glade:4213
 msgid "Commit all changes in your current transaction to the server."
 msgstr "സര്‍വറിലേക്കു് നിങ്ങളുടെ നിലവിലുള്ള ഇടപാടിലുള്ള എല്ലാ മാറ്റങ്ങളും സമര്‍പ്പിയ്ക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4269
+#: ../sepolicy/sepolicy/sepolicy.glade:4261
 msgid "Applications - Advanced Search"
 msgstr "പ്രയോഗങ്ങള്‍ - അധികമായ തെരച്ചില്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4334
+#: ../sepolicy/sepolicy/sepolicy.glade:4326
 msgid "Process Types"
 msgstr "പ്രക്രിയ രീതികള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4375
+#: ../sepolicy/sepolicy/sepolicy.glade:4367
 msgid "More Details"
 msgstr "കൂടുതല്‍ വിവരങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4411
-#: ../sepolicy/sepolicy/sepolicy.glade:4705
+#: ../sepolicy/sepolicy/sepolicy.glade:4403
+#: ../sepolicy/sepolicy/sepolicy.glade:4697
 msgid "Delete Modified File Labeling"
 msgstr "മാറ്റം വരുത്തിയ ഫയല്‍ ലേബലിങ് വെട്ടി നീക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4429
+#: ../sepolicy/sepolicy/sepolicy.glade:4421
 msgid ""
 "Select file labeling to delete. File labeling will be deleted when update is "
 "applied."
@@ -3400,28 +3405,28 @@ msgstr ""
 "വെട്ടി നീക്കുന്നതിനുള്ള ഫയല്‍ ലേബലിങ് തെരഞ്ഞെടുക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ ഫയല്‍ ലേബലിങ് "
 "വെട്ടി നീക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4476
+#: ../sepolicy/sepolicy/sepolicy.glade:4468
 msgid "SELinux File Label"
 msgstr "SELinux ഫയല്‍ ലേബല്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4515
-#: ../sepolicy/sepolicy/sepolicy.glade:4665
-#: ../sepolicy/sepolicy/sepolicy.glade:4796
-#: ../sepolicy/sepolicy/sepolicy.glade:4930
-#: ../sepolicy/sepolicy/sepolicy.glade:5279
+#: ../sepolicy/sepolicy/sepolicy.glade:4507
+#: ../sepolicy/sepolicy/sepolicy.glade:4657
+#: ../sepolicy/sepolicy/sepolicy.glade:4788
+#: ../sepolicy/sepolicy/sepolicy.glade:4922
+#: ../sepolicy/sepolicy/sepolicy.glade:5271
 msgid "Save to Update"
 msgstr "പരിഷ്കരിയ്ക്കുന്നതിനു് സൂക്ഷിയ്ക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4555
+#: ../sepolicy/sepolicy/sepolicy.glade:4547
 msgid "Delete Modified Ports"
 msgstr "മാറ്റം വരുത്തിയ പോര്‍ട്ടുകള്‍ വെട്ടി നീക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4573
+#: ../sepolicy/sepolicy/sepolicy.glade:4565
 msgid "Select ports to delete. Ports will be deleted when update is applied."
 msgstr ""
 "വെട്ടി നീക്കുന്നതിനുള്ള പോര്‍ട്ടുകള്‍ തെഞ്ഞെടുക്കുക. പരിഷ്കരണം നല്‍കുമ്പോള്‍ പോര്‍ട്ടുകള്‍ വെട്ടി നീക്കുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4723
+#: ../sepolicy/sepolicy/sepolicy.glade:4715
 msgid ""
 "Select file equivalence labeling to delete. File equivalence labeling will "
 "be deleted when update is applied."
@@ -3429,12 +3434,12 @@ msgstr ""
 "വെട്ടി നീക്കുന്നതിനായി ഫയല്‍ ഇക്വിവലന്‍സ് ലേബലിങ് തെരഞ്ഞെടുക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍, ഫയല്‍ "
 "ഇക്വിവലന്‍സ് ലേബലിങ് വെട്ടി നീക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4839
-#: ../sepolicy/sepolicy/sepolicy.glade:5188
+#: ../sepolicy/sepolicy/sepolicy.glade:4831
+#: ../sepolicy/sepolicy/sepolicy.glade:5180
 msgid "Delete Modified Users Mapping."
 msgstr "മാറ്റം വരുത്തിയ ഉപയോക്താക്കളുടെ മാപ്പിങ് വെട്ടി നീക്കുക."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4857
+#: ../sepolicy/sepolicy/sepolicy.glade:4849
 msgid ""
 "Select login user mapping to delete. Login user mapping will be deleted when "
 "update is applied."
@@ -3442,19 +3447,19 @@ msgstr ""
 "വെട്ടി നീക്കുന്നതിനുള്ള പ്രവേശന യൂസര്‍ മാപ്പിങ് തെരഞ്ഞെടുക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ ലോഗിന്‍ "
 "യൂസര്‍ മാപ്പിങ് വെട്ടി നീക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4892
+#: ../sepolicy/sepolicy/sepolicy.glade:4884
 msgid "Login name"
 msgstr "പ്രവേശന നാമം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4973
+#: ../sepolicy/sepolicy/sepolicy.glade:4965
 msgid "More Types"
 msgstr "കൂടുതല്‍ തരങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5000
+#: ../sepolicy/sepolicy/sepolicy.glade:4992
 msgid "Types"
 msgstr "തരങ്ങള്‍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5059
+#: ../sepolicy/sepolicy/sepolicy.glade:5051
 msgid ""
 "Review the updates you have made before committing them to the system.  To "
 "reset an item, uncheck the checkbox.  All items checked will be updated in "
@@ -3464,15 +3469,15 @@ msgstr ""
 "സജ്ജമാക്കുന്നതിനു് മുമ്പു്, ചെക്ക്ബോക്സ് ഉപേക്ഷിയ്ക്കുക. നിങ്ങള്‍ പരിഷ്കരിയ്ക്കുക തെരഞ്ഞെടുക്കുമ്പോള്‍, "
 "തെരഞ്ഞെടുത്ത എല്ലാ വസ്തുക്കളും സിസ്റ്റത്തില്‍ പരിഷ്കരിയ്ക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5122
+#: ../sepolicy/sepolicy/sepolicy.glade:5114
 msgid "Action"
 msgstr "പ്രവര്‍ത്തി"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5148
+#: ../sepolicy/sepolicy/sepolicy.glade:5140
 msgid "Apply"
 msgstr "ലഭ്യമാക്കുക"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5206
+#: ../sepolicy/sepolicy/sepolicy.glade:5198
 msgid ""
 "Select users mapping to delete.Users mapping will be deleted when update is "
 "applied."
@@ -3480,22 +3485,22 @@ msgstr ""
 "വെട്ടി നീക്കുന്നതിനു് ഉപയോക്താക്കള്‍ക്കുള്ള മാപ്പിങ് തെരഞ്ഞെടുക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ "
 "ഉപയോക്താക്കള്‍ക്കുള്ള മാപ്പിങ് വെട്ടി നീക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5254
+#: ../sepolicy/sepolicy/sepolicy.glade:5246
 msgid "SELinux Username"
 msgstr "SELinux ഉയോക്തൃനാമം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5339
+#: ../sepolicy/sepolicy/sepolicy.glade:5331
 msgid ""
 "Add User Roles. SELinux User Roles will be created when Update is applied."
 msgstr ""
 "ഉപയോക്തൃ നിയമനങ്ങള്‍ ചേര്‍ക്കുക. പരിഷ്കരണം ലഭ്യമാക്കുമ്പോള്‍ SELinux ഉപയോക്തൃ നിയമനങ്ങള്‍ "
 "തയ്യാറാക്കപ്പെടുന്നു."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5364
+#: ../sepolicy/sepolicy/sepolicy.glade:5356
 msgid "SELinux User Name"
 msgstr "SELinux ഉപയോക്തൃനാമം"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5479
+#: ../sepolicy/sepolicy/sepolicy.glade:5471
 msgid ""
 "Enter MLS/MCS Range for this SELinux User.\n"
 "s0-s0:c1023"
@@ -3503,14 +3508,14 @@ msgstr ""
 "ഈ SELinux ഉപയോക്താവിനുള്ള എംഎല്‍എസ്/എംസിഎസ് നല്‍കുക.\n"
 "s0-s0:c1023"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5510
+#: ../sepolicy/sepolicy/sepolicy.glade:5502
 msgid ""
 "Specify the default level that you would like this SELinux user to login "
 "with.  Defaults to s0."
 msgstr ""
 "ഈ SELinux ഉപയോക്താവു് ഉപയോഗിച്ചു് പ്രവേശിയ്ക്കുന്നതിനു്, സ്വതവേയുള്ള ലവല്‍ നല്‍കുക. സ്വതവേ s0."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5514
+#: ../sepolicy/sepolicy/sepolicy.glade:5506
 msgid "Enter Default Level for SELinux User to login with. Default s0"
 msgstr "പ്രവേശിയ്ക്കുന്നതിനു് SELinux ഉപയോക്താവിനു് സ്വതവേയുള്ള ലവല്‍ നല്‍കുക. സ്വതവേ s0"
 

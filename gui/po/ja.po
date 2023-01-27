@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-09-11 11:04+0000\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2022-10-27 13:20+0000\n"
 "Last-Translator: Ludek Janda <ljanda@redhat.com>\n"
 "Language-Team: Japanese <https://translate.fedoraproject.org/projects/"
 "selinux/gui/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
@@ -396,7 +396,7 @@ msgstr ""
 
 #: ../polgen.ui:705
 msgid "<b>Enter name of application or user role:</b>"
-msgstr "<b>アプリケーションかユーザーロールの名前を記入:</b>"
+msgstr "<b>アプリケーションかユーザーロールの名前を入力:</b>"
 
 #: ../polgen.ui:739
 msgid "Enter complete path for executable to be confined."

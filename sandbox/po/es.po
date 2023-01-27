@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
 "PO-Revision-Date: 2018-11-20 10:27-0500\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Spanish\n"
@@ -45,11 +45,11 @@ msgstr ""
 "No se encontró ningún conjunto de categorías sin uso. Plantéese un rango MCS "
 "más amplio para este usuario."
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
 msgstr "Homedir y tempdir requeridos para montajes de nivel"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
@@ -58,7 +58,7 @@ msgstr ""
 "\n"
 "Se necesita %s para la acción que pretende llevar a cabo.\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
@@ -69,7 +69,7 @@ msgstr ""
 "La política define los siguientes tipos para usar con la opción -t:\n"
 "\\t%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -92,58 +92,65 @@ msgstr ""
 "archivo ] ...] [ -t tipo ] -S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "incluir archivo en el confinamiento"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr ""
 "leer de ARCHIVOINCLUSIÓN la lista de archivos a incluir en el confinamiento"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "ejecutar confinamiento con tipo SELinux"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr "montar un nuevo directorio de inicio o temporal"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "puntos por pulgada para la pantalla X"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
 msgstr "ejecutar una sesión completa de escritorio en el confinamiento"
 
-#: ../sandbox:343
+#: ../sandbox:344
 #, fuzzy
 #| msgid "Shred content before tempory directories are removed"
 msgid "Shred content before temporary directories are removed"
 msgstr "Sobreescribir el contenido antes de quitar los directorios temporales"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
 msgstr "ejecutar la aplicación X en un confinamiento"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
 msgstr "directorio de inicio alternativo"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
 msgstr "directorio /tmp alternativo"
 
-#: ../sandbox:367
+#: ../sandbox:364
+#, fuzzy
+#| msgid "alternate home directory to use for mounting"
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr "directorio de inicio alternativo"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "gestor de ventanas alternativo"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "Nivel MCS/MLS para el confinamiento"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -152,27 +159,27 @@ msgstr ""
 "No hay política de confinamiento.\n"
 "Debe instalar el paquete selinux-policy-sandbox para ejecutar este comando"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
 "Debe indicar los directorios de inicio y temporal al configurar una sesión "
 "confinada"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
 msgstr "No se permiten comandos en una sesión confinada"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "Falta el comando"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s no es un ejecutable"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "Valor no válido: %s"

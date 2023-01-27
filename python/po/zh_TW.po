@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
 "PO-Revision-Date: 2018-11-20 10:25-0500\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Chinese (Taiwan)\n"
@@ -360,7 +360,7 @@ msgstr "semanage permissive：error：需要以下參數：type\n"
 msgid "Manage process type enforcement mode"
 msgstr "管理流程類型執行模式"
 
-#: ../semanage/semanage:768 ../semanage/seobject.py:2674
+#: ../semanage/semanage:768 ../semanage/seobject.py:2677
 msgid "type"
 msgstr "類型"
 
@@ -456,7 +456,7 @@ msgstr "優先順序"
 msgid "Language"
 msgstr "語言"
 
-#: ../semanage/seobject.py:397 ../sepolicy/sepolicy/sepolicy.glade:3421
+#: ../semanage/seobject.py:397 ../sepolicy/sepolicy/sepolicy.glade:3413
 msgid "Disabled"
 msgstr "已停用"
 
@@ -530,8 +530,8 @@ msgstr "無法移除寬容區域 %s（移除失敗）"
 #: ../semanage/seobject.py:827 ../semanage/seobject.py:892
 #: ../semanage/seobject.py:948 ../semanage/seobject.py:1226
 #: ../semanage/seobject.py:1492 ../semanage/seobject.py:2502
-#: ../semanage/seobject.py:2572 ../semanage/seobject.py:2596
-#: ../semanage/seobject.py:2727 ../semanage/seobject.py:2778
+#: ../semanage/seobject.py:2575 ../semanage/seobject.py:2599
+#: ../semanage/seobject.py:2730 ../semanage/seobject.py:2781
 #, python-format
 msgid "Could not create a key for %s"
 msgstr "無法為 %s 建立金鑰"
@@ -617,17 +617,17 @@ msgid "Could not list login mappings"
 msgstr "無法列出登入對映"
 
 #: ../semanage/seobject.py:772 ../semanage/seobject.py:784
-#: ../sepolicy/sepolicy/sepolicy.glade:1162
-#: ../sepolicy/sepolicy/sepolicy.glade:3146
+#: ../sepolicy/sepolicy/sepolicy.glade:1156
+#: ../sepolicy/sepolicy/sepolicy.glade:3138
 msgid "Login Name"
 msgstr "登入名稱"
 
 #: ../semanage/seobject.py:772 ../semanage/seobject.py:784
 #: ../semanage/seobject.py:1041 ../semanage/seobject.py:1046
-#: ../sepolicy/sepolicy/sepolicy.glade:1188
-#: ../sepolicy/sepolicy/sepolicy.glade:3164
-#: ../sepolicy/sepolicy/sepolicy.glade:3250
-#: ../sepolicy/sepolicy/sepolicy.glade:4905
+#: ../sepolicy/sepolicy/sepolicy.glade:1182
+#: ../sepolicy/sepolicy/sepolicy.glade:3156
+#: ../sepolicy/sepolicy/sepolicy.glade:3242
+#: ../sepolicy/sepolicy/sepolicy.glade:4897
 msgid "SELinux User"
 msgstr "SELinux 使用者"
 
@@ -750,9 +750,9 @@ msgid "MCS Range"
 msgstr "MCS 範圍"
 
 #: ../semanage/seobject.py:1041 ../semanage/seobject.py:1046
-#: ../sepolicy/sepolicy/sepolicy.glade:3270
-#: ../sepolicy/sepolicy/sepolicy.glade:5241
-#: ../sepolicy/sepolicy/sepolicy.glade:5390
+#: ../sepolicy/sepolicy/sepolicy.glade:3262
+#: ../sepolicy/sepolicy/sepolicy.glade:5233
+#: ../sepolicy/sepolicy/sepolicy.glade:5382
 msgid "SELinux Roles"
 msgstr "SELinux 角色"
 
@@ -884,9 +884,9 @@ msgstr "無法刪除連接埠 %s/%s"
 msgid "Could not list ports"
 msgstr "無法列出連接埠"
 
-#: ../semanage/seobject.py:1329 ../sepolicy/sepolicy/sepolicy.glade:2676
-#: ../sepolicy/sepolicy/sepolicy.glade:2774
-#: ../sepolicy/sepolicy/sepolicy.glade:4638
+#: ../semanage/seobject.py:1329 ../sepolicy/sepolicy/sepolicy.glade:2668
+#: ../sepolicy/sepolicy/sepolicy.glade:2766
+#: ../sepolicy/sepolicy/sepolicy.glade:4630
 msgid "SELinux Port Type"
 msgstr "SELinux 連接埠類型"
 
@@ -895,7 +895,7 @@ msgid "Proto"
 msgstr "Proto"
 
 #: ../semanage/seobject.py:1329 ../semanage/seobject.py:1835
-#: ../sepolicy/sepolicy/sepolicy.glade:1413
+#: ../sepolicy/sepolicy/sepolicy.glade:1407
 msgid "Port Number"
 msgstr "埠號"
 
@@ -1330,7 +1330,7 @@ msgstr "無法列出介面"
 msgid "SELinux Interface"
 msgstr "SELinux 介面"
 
-#: ../semanage/seobject.py:2285 ../semanage/seobject.py:2674
+#: ../semanage/seobject.py:2285 ../semanage/seobject.py:2677
 msgid "Context"
 msgstr "情境"
 
@@ -1394,8 +1394,8 @@ msgid "Type %s is invalid, must be a file or device type"
 msgstr "類型 %s 無效，類型必須是個檔案或是裝置"
 
 #: ../semanage/seobject.py:2439 ../semanage/seobject.py:2444
-#: ../semanage/seobject.py:2506 ../semanage/seobject.py:2600
-#: ../semanage/seobject.py:2604
+#: ../semanage/seobject.py:2506 ../semanage/seobject.py:2515
+#: ../semanage/seobject.py:2603 ../semanage/seobject.py:2607
 #, python-format
 msgid "Could not check if file context for %s is defined"
 msgstr "無法檢查 %s 的檔案情境是否已經定義"
@@ -1415,8 +1415,8 @@ msgstr "無法為 %s 建立檔案情境"
 msgid "Could not set type in file context for %s"
 msgstr "無法為 %s 的檔案情境設定類型"
 
-#: ../semanage/seobject.py:2467 ../semanage/seobject.py:2536
-#: ../semanage/seobject.py:2540
+#: ../semanage/seobject.py:2467 ../semanage/seobject.py:2539
+#: ../semanage/seobject.py:2543
 #, python-format
 msgid "Could not set file context for %s"
 msgstr "無法為 %s 設定檔案情境"
@@ -1430,57 +1430,57 @@ msgstr "無法為 %s 新增檔案情境"
 msgid "Requires setype, serange or seuser"
 msgstr "需要 setype、serange 或 seuser"
 
-#: ../semanage/seobject.py:2510 ../semanage/seobject.py:2608
-#, python-format
-msgid "File context for %s is not defined"
-msgstr "%s 的檔案情境未定義"
-
-#: ../semanage/seobject.py:2518
+#: ../semanage/seobject.py:2511 ../semanage/seobject.py:2521
 #, python-format
 msgid "Could not query file context for %s"
 msgstr "無法為 %s 查詢檔案情境"
 
-#: ../semanage/seobject.py:2544
+#: ../semanage/seobject.py:2517 ../semanage/seobject.py:2611
+#, python-format
+msgid "File context for %s is not defined"
+msgstr "%s 的檔案情境未定義"
+
+#: ../semanage/seobject.py:2547
 #, python-format
 msgid "Could not modify file context for %s"
 msgstr "無法為 %s 修改檔案情境"
 
-#: ../semanage/seobject.py:2562
+#: ../semanage/seobject.py:2565
 msgid "Could not list the file contexts"
 msgstr "無法列出檔案情境"
 
-#: ../semanage/seobject.py:2576
+#: ../semanage/seobject.py:2579
 #, python-format
 msgid "Could not delete the file context %s"
 msgstr "無法刪除檔案情境 %s"
 
-#: ../semanage/seobject.py:2606
+#: ../semanage/seobject.py:2609
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
 msgstr "%s 的檔案情境已經定義在方針中，無法刪除"
 
-#: ../semanage/seobject.py:2612
+#: ../semanage/seobject.py:2615
 #, python-format
 msgid "Could not delete file context for %s"
 msgstr "無法為 %s 刪除檔案情境"
 
-#: ../semanage/seobject.py:2629
+#: ../semanage/seobject.py:2632
 msgid "Could not list file contexts"
 msgstr "無法列出檔案情境"
 
-#: ../semanage/seobject.py:2633
+#: ../semanage/seobject.py:2636
 msgid "Could not list file contexts for home directories"
 msgstr "無法列出主目錄的文件上下文"
 
-#: ../semanage/seobject.py:2637
+#: ../semanage/seobject.py:2640
 msgid "Could not list local file contexts"
 msgstr "無法列出本地的檔案情境"
 
-#: ../semanage/seobject.py:2674
+#: ../semanage/seobject.py:2677
 msgid "SELinux fcontext"
 msgstr "SELinux fcontext"
 
-#: ../semanage/seobject.py:2687
+#: ../semanage/seobject.py:2690
 msgid ""
 "\n"
 "SELinux Distribution fcontext Equivalence \n"
@@ -1488,7 +1488,7 @@ msgstr ""
 "\n"
 "SELinux 散布版 fcontext 相等 \n"
 
-#: ../semanage/seobject.py:2692
+#: ../semanage/seobject.py:2695
 msgid ""
 "\n"
 "SELinux Local fcontext Equivalence \n"
@@ -1496,79 +1496,79 @@ msgstr ""
 "\n"
 "SELinux 本地端 fcontext 相等 \n"
 
-#: ../semanage/seobject.py:2730 ../semanage/seobject.py:2781
-#: ../semanage/seobject.py:2787
+#: ../semanage/seobject.py:2733 ../semanage/seobject.py:2784
+#: ../semanage/seobject.py:2790
 #, python-format
 msgid "Could not check if boolean %s is defined"
 msgstr "無法檢查布林值 %s 是否已經定義"
 
-#: ../semanage/seobject.py:2732 ../semanage/seobject.py:2783
+#: ../semanage/seobject.py:2735 ../semanage/seobject.py:2786
 #, python-format
 msgid "Boolean %s is not defined"
 msgstr "布林值 %s 未定義"
 
-#: ../semanage/seobject.py:2736
+#: ../semanage/seobject.py:2739
 #, python-format
 msgid "Could not query file context %s"
 msgstr "無法查詢檔案情境%s"
 
-#: ../semanage/seobject.py:2741
+#: ../semanage/seobject.py:2744
 #, python-format
 msgid "You must specify one of the following values: %s"
 msgstr "您必須指定下列其中一個值：%s"
 
-#: ../semanage/seobject.py:2746
+#: ../semanage/seobject.py:2749
 #, python-format
 msgid "Could not set active value of boolean %s"
 msgstr "無法設置布林值 %s"
 
-#: ../semanage/seobject.py:2749
+#: ../semanage/seobject.py:2752
 #, python-format
 msgid "Could not modify boolean %s"
 msgstr "無法修改布林值 %s"
 
-#: ../semanage/seobject.py:2765
+#: ../semanage/seobject.py:2768
 #, python-format
 msgid "Bad format %s: Record %s"
 msgstr "格式錯誤 %s：紀錄 %s"
 
-#: ../semanage/seobject.py:2789
+#: ../semanage/seobject.py:2792
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
 msgstr "布林值 %s 已經定義在方針中，無法刪除"
 
-#: ../semanage/seobject.py:2793
+#: ../semanage/seobject.py:2796
 #, python-format
 msgid "Could not delete boolean %s"
 msgstr "無法刪除布林值 %s"
 
-#: ../semanage/seobject.py:2805 ../semanage/seobject.py:2822
+#: ../semanage/seobject.py:2808 ../semanage/seobject.py:2825
 msgid "Could not list booleans"
 msgstr "無法列出布林值"
 
-#: ../semanage/seobject.py:2855
+#: ../semanage/seobject.py:2858
 msgid "off"
 msgstr "關閉"
 
-#: ../semanage/seobject.py:2855
+#: ../semanage/seobject.py:2858
 msgid "on"
 msgstr "開啟"
 
-#: ../semanage/seobject.py:2867
+#: ../semanage/seobject.py:2870
 msgid "SELinux boolean"
 msgstr "SELinux 布林值"
 
-#: ../semanage/seobject.py:2867
+#: ../semanage/seobject.py:2870
 msgid "State"
 msgstr "狀態"
 
-#: ../semanage/seobject.py:2867
+#: ../semanage/seobject.py:2870
 msgid "Default"
 msgstr "預設值"
 
-#: ../semanage/seobject.py:2867 ../sepolicy/sepolicy/sepolicy.glade:2148
-#: ../sepolicy/sepolicy/sepolicy.glade:2518
-#: ../sepolicy/sepolicy/sepolicy.glade:5107
+#: ../semanage/seobject.py:2870 ../sepolicy/sepolicy/sepolicy.glade:2140
+#: ../sepolicy/sepolicy/sepolicy.glade:2510
+#: ../sepolicy/sepolicy/sepolicy.glade:5099
 msgid "Description"
 msgstr "描述"
 
@@ -1737,17 +1737,17 @@ msgstr "規格檔案"
 msgid "Setup Script"
 msgstr "設置指令稿"
 
-#: ../sepolicy/sepolicy/gui.py:67 ../sepolicy/sepolicy/sepolicy.glade:3732
-#: ../sepolicy/sepolicy/sepolicy.glade:3834
-#: ../sepolicy/sepolicy/sepolicy.glade:3897
-#: ../sepolicy/sepolicy/sepolicy.glade:3960
+#: ../sepolicy/sepolicy/gui.py:67 ../sepolicy/sepolicy/sepolicy.glade:3724
+#: ../sepolicy/sepolicy/sepolicy.glade:3826
+#: ../sepolicy/sepolicy/sepolicy.glade:3889
+#: ../sepolicy/sepolicy/sepolicy.glade:3952
 msgid "No"
 msgstr "否"
 
-#: ../sepolicy/sepolicy/gui.py:67 ../sepolicy/sepolicy/sepolicy.glade:3715
-#: ../sepolicy/sepolicy/sepolicy.glade:3816
-#: ../sepolicy/sepolicy/sepolicy.glade:3880
-#: ../sepolicy/sepolicy/sepolicy.glade:3943
+#: ../sepolicy/sepolicy/gui.py:67 ../sepolicy/sepolicy/sepolicy.glade:3707
+#: ../sepolicy/sepolicy/sepolicy.glade:3808
+#: ../sepolicy/sepolicy/sepolicy.glade:3872
+#: ../sepolicy/sepolicy/sepolicy.glade:3935
 msgid "Yes"
 msgstr "是"
 
@@ -1759,9 +1759,9 @@ msgstr "停用"
 msgid "Enable"
 msgstr "啟用"
 
-#: ../sepolicy/sepolicy/gui.py:81 ../sepolicy/sepolicy/sepolicy.glade:726
-#: ../sepolicy/sepolicy/sepolicy.glade:1467
-#: ../sepolicy/sepolicy/sepolicy.glade:3501
+#: ../sepolicy/sepolicy/gui.py:81 ../sepolicy/sepolicy/sepolicy.glade:720
+#: ../sepolicy/sepolicy/sepolicy.glade:1461
+#: ../sepolicy/sepolicy/sepolicy.glade:3493
 msgid "Advanced >>"
 msgstr "進階 >>"
 
@@ -1769,7 +1769,7 @@ msgstr "進階 >>"
 msgid "Advanced <<"
 msgstr "進階 <<"
 
-#: ../sepolicy/sepolicy/gui.py:82 ../sepolicy/sepolicy/sepolicy.glade:80
+#: ../sepolicy/sepolicy/gui.py:82 ../sepolicy/sepolicy/sepolicy.glade:76
 msgid "Advanced Search >>"
 msgstr "進階搜尋 >>"
 
@@ -1793,203 +1793,203 @@ msgstr ""
 "- 一旦系統如預期運作\n"
 "  * 將系統模式改為強制</small>\n"
 
-#: ../sepolicy/sepolicy/gui.py:503
+#: ../sepolicy/sepolicy/gui.py:502
 #, python-format
 msgid "%s is not a valid domain"
 msgstr "%s 不是合於規定的區域"
 
-#: ../sepolicy/sepolicy/gui.py:652
+#: ../sepolicy/sepolicy/gui.py:650
 msgid "System Status: Disabled"
 msgstr "系統狀態：已停用"
 
-#: ../sepolicy/sepolicy/gui.py:750
+#: ../sepolicy/sepolicy/gui.py:748
 msgid "Help: Start Page"
 msgstr "求助：起始頁"
 
-#: ../sepolicy/sepolicy/gui.py:754
+#: ../sepolicy/sepolicy/gui.py:752
 msgid "Help: Booleans Page"
 msgstr "求助：布林值頁"
 
-#: ../sepolicy/sepolicy/gui.py:760
+#: ../sepolicy/sepolicy/gui.py:758
 msgid "Help: Executable Files Page"
 msgstr "求助：可執行檔頁"
 
-#: ../sepolicy/sepolicy/gui.py:763
+#: ../sepolicy/sepolicy/gui.py:761
 msgid "Help: Writable Files Page"
 msgstr "求助：可寫入檔案頁"
 
-#: ../sepolicy/sepolicy/gui.py:766
+#: ../sepolicy/sepolicy/gui.py:764
 msgid "Help: Application Types Page"
 msgstr "求助：應用程式類型頁"
 
-#: ../sepolicy/sepolicy/gui.py:771
+#: ../sepolicy/sepolicy/gui.py:769
 msgid "Help: Outbound Network Connections Page"
 msgstr "求助：傳出網路連線頁"
 
-#: ../sepolicy/sepolicy/gui.py:774
+#: ../sepolicy/sepolicy/gui.py:772
 msgid "Help: Inbound Network Connections Page"
 msgstr "求助：傳入網路連線頁"
 
-#: ../sepolicy/sepolicy/gui.py:780
+#: ../sepolicy/sepolicy/gui.py:778
 msgid "Help: Transition from application Page"
 msgstr "求助：從應用程式轉移頁"
 
-#: ../sepolicy/sepolicy/gui.py:783
+#: ../sepolicy/sepolicy/gui.py:781
 msgid "Help: Transition into application Page"
 msgstr "求助：轉移至應用程式頁"
 
-#: ../sepolicy/sepolicy/gui.py:786
+#: ../sepolicy/sepolicy/gui.py:784
 msgid "Help: Transition application file Page"
 msgstr "求助：轉移應用程式檔案頁"
 
-#: ../sepolicy/sepolicy/gui.py:790
+#: ../sepolicy/sepolicy/gui.py:788
 msgid "Help: Systems Page"
 msgstr "求助：系統頁"
 
-#: ../sepolicy/sepolicy/gui.py:794
+#: ../sepolicy/sepolicy/gui.py:792
 msgid "Help: Lockdown Page"
 msgstr "求助：封鎖頁"
 
-#: ../sepolicy/sepolicy/gui.py:798
+#: ../sepolicy/sepolicy/gui.py:796
 msgid "Help: Login Page"
 msgstr "求助：登入頁"
 
-#: ../sepolicy/sepolicy/gui.py:802
+#: ../sepolicy/sepolicy/gui.py:800
 msgid "Help: SELinux User Page"
 msgstr "求助：SELinux 使用者頁"
 
-#: ../sepolicy/sepolicy/gui.py:806
+#: ../sepolicy/sepolicy/gui.py:804
 msgid "Help: File Equivalence Page"
 msgstr "求助：檔案相等頁"
 
-#: ../sepolicy/sepolicy/gui.py:951 ../sepolicy/sepolicy/gui.py:1242
-#: ../sepolicy/sepolicy/gui.py:1682 ../sepolicy/sepolicy/gui.py:1929
-#: ../sepolicy/sepolicy/gui.py:2717
+#: ../sepolicy/sepolicy/gui.py:939 ../sepolicy/sepolicy/gui.py:1230
+#: ../sepolicy/sepolicy/gui.py:1670 ../sepolicy/sepolicy/gui.py:1917
+#: ../sepolicy/sepolicy/gui.py:2705
 msgid "More..."
 msgstr "更多..."
 
-#: ../sepolicy/sepolicy/gui.py:1059
+#: ../sepolicy/sepolicy/gui.py:1047
 #, python-format
 msgid "File path used to enter the '%s' domain."
 msgstr "用來輸入「%s」區域的檔案路徑。"
 
-#: ../sepolicy/sepolicy/gui.py:1060
+#: ../sepolicy/sepolicy/gui.py:1048
 #, python-format
 msgid "Files to which the '%s' domain can write."
 msgstr "「%s」區域可寫入的檔案。"
 
-#: ../sepolicy/sepolicy/gui.py:1061
+#: ../sepolicy/sepolicy/gui.py:1049
 #, python-format
 msgid "Network Ports to which the '%s' is allowed to connect."
 msgstr "「%s」允許連上的網路連接埠。"
 
-#: ../sepolicy/sepolicy/gui.py:1062
+#: ../sepolicy/sepolicy/gui.py:1050
 #, python-format
 msgid "Network Ports to which the '%s' is allowed to listen."
 msgstr "「%s」允許聆聽的網路連接埠。"
 
-#: ../sepolicy/sepolicy/gui.py:1063
+#: ../sepolicy/sepolicy/gui.py:1051
 #, python-format
 msgid "File Types defined for the '%s'."
 msgstr "為「%s」定義的檔案類型。"
 
-#: ../sepolicy/sepolicy/gui.py:1064
+#: ../sepolicy/sepolicy/gui.py:1052
 #, python-format
 msgid ""
 "Display boolean information that can be used to modify the policy for the "
 "'%s'."
 msgstr "顯示可以用來為「%s」修改方針的布林值資訊。"
 
-#: ../sepolicy/sepolicy/gui.py:1065
+#: ../sepolicy/sepolicy/gui.py:1053
 #, python-format
 msgid "Display file type information that can be used by the '%s'."
 msgstr "顯示可以給「%s」所用的檔案類型資訊。"
 
-#: ../sepolicy/sepolicy/gui.py:1066
+#: ../sepolicy/sepolicy/gui.py:1054
 #, python-format
 msgid "Display network ports to which the '%s' can connect or listen to."
 msgstr "顯示「%s」可以連接或聆聽的網路連接埠。"
 
-#: ../sepolicy/sepolicy/gui.py:1067
+#: ../sepolicy/sepolicy/gui.py:1055
 #, python-format
 msgid "Application Transitions Into '%s'"
 msgstr "應用程式轉移至「%s」"
 
-#: ../sepolicy/sepolicy/gui.py:1068
+#: ../sepolicy/sepolicy/gui.py:1056
 #, python-format
 msgid "Application Transitions From '%s'"
 msgstr "應用程式轉移自「%s」"
 
-#: ../sepolicy/sepolicy/gui.py:1069
+#: ../sepolicy/sepolicy/gui.py:1057
 #, python-format
 msgid "File Transitions From '%s'"
 msgstr "檔案轉移自「%s」"
 
-#: ../sepolicy/sepolicy/gui.py:1070
+#: ../sepolicy/sepolicy/gui.py:1058
 #, python-format
 msgid ""
 "Executables which will transition to '%s', when executing selected domains "
 "entrypoint."
 msgstr "可轉換為'的可執行文件%s'，執行選定的域入口點時。"
 
-#: ../sepolicy/sepolicy/gui.py:1071
+#: ../sepolicy/sepolicy/gui.py:1059
 #, python-format
 msgid ""
 "Executables which will transition to a different domain, when '%s' executes "
 "them."
 msgstr "可執行文件將轉換到不同的域，當'%s'執行它們。"
 
-#: ../sepolicy/sepolicy/gui.py:1072
+#: ../sepolicy/sepolicy/gui.py:1060
 #, python-format
 msgid "Files by '%s' with transitions to a different label."
 msgstr "文件'%s'轉換到不同的標籤。"
 
-#: ../sepolicy/sepolicy/gui.py:1073
+#: ../sepolicy/sepolicy/gui.py:1061
 #, python-format
 msgid "Display applications that can transition into or out of the '%s'."
 msgstr "顯示可以轉移自或轉移至「%s」的應用程式。"
 
-#: ../sepolicy/sepolicy/gui.py:1167 ../sepolicy/sepolicy/__init__.py:83
+#: ../sepolicy/sepolicy/gui.py:1155 ../sepolicy/sepolicy/__init__.py:83
 msgid "all files"
 msgstr "所有檔案"
 
-#: ../sepolicy/sepolicy/gui.py:1181
+#: ../sepolicy/sepolicy/gui.py:1169
 msgid "MISSING FILE PATH"
 msgstr "缺少檔案路徑"
 
-#: ../sepolicy/sepolicy/gui.py:1296
+#: ../sepolicy/sepolicy/gui.py:1284
 #, python-format
 msgid "To disable this transition, go to the %sBoolean section%s."
 msgstr "要禁用此轉換，請轉到 %sBoolean 部分%s。"
 
-#: ../sepolicy/sepolicy/gui.py:1298
+#: ../sepolicy/sepolicy/gui.py:1286
 #, python-format
 msgid "To enable this transition, go to the %sBoolean section%s."
 msgstr "要啟用此轉換，請轉到 %sBoolean 部分%s。"
 
-#: ../sepolicy/sepolicy/gui.py:1355
+#: ../sepolicy/sepolicy/gui.py:1343
 msgid "executable"
 msgstr "可執行"
 
-#: ../sepolicy/sepolicy/gui.py:1358
+#: ../sepolicy/sepolicy/gui.py:1346
 msgid "writable"
 msgstr "可寫入"
 
-#: ../sepolicy/sepolicy/gui.py:1361
+#: ../sepolicy/sepolicy/gui.py:1349
 msgid "application"
 msgstr "應用程式"
 
-#: ../sepolicy/sepolicy/gui.py:1362
+#: ../sepolicy/sepolicy/gui.py:1350
 #, python-format
 msgid "Add new %(TYPE)s file path for '%(DOMAIN)s' domains."
 msgstr "新增 %(TYPE)s 檔案路徑給「%(DOMAIN)s」區域。"
 
-#: ../sepolicy/sepolicy/gui.py:1363
+#: ../sepolicy/sepolicy/gui.py:1351
 #, python-format
 msgid "Delete %(TYPE)s file paths for '%(DOMAIN)s' domain."
 msgstr "刪除 %(TYPE)s 檔案路徑給「%(DOMAIN)s」區域。"
 
-#: ../sepolicy/sepolicy/gui.py:1364
+#: ../sepolicy/sepolicy/gui.py:1352
 #, python-format
 msgid ""
 "Modify %(TYPE)s file path for '%(DOMAIN)s' domain. Only bolded items in the "
@@ -1998,66 +1998,66 @@ msgstr ""
 "修改 %(TYPE)s 檔案路徑給「%(DOMAIN)s」區域使用。只有清單中加粗體的項目才可以"
 "被選擇，這表示這些項目之前被修改過。"
 
-#: ../sepolicy/sepolicy/gui.py:1376
+#: ../sepolicy/sepolicy/gui.py:1364
 msgid "connect"
 msgstr "連接"
 
-#: ../sepolicy/sepolicy/gui.py:1379
+#: ../sepolicy/sepolicy/gui.py:1367
 msgid "listen for inbound connections"
 msgstr "聆聽傳入的連線"
 
-#: ../sepolicy/sepolicy/gui.py:1381
+#: ../sepolicy/sepolicy/gui.py:1369
 #, python-format
 msgid ""
 "Add new port definition to which the '%(APP)s' domain is allowed to %(PERM)s."
 msgstr "新增「%(APP)s」區域允許 %(PERM)s 的連接埠定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1382
+#: ../sepolicy/sepolicy/gui.py:1370
 #, python-format
 msgid ""
 "Delete modified port definitions to which the '%(APP)s' domain is allowed to "
 "%(PERM)s."
 msgstr "刪除 「%(APP)s」區域允許 %(PERM)s 的已修改連接埠定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1383
+#: ../sepolicy/sepolicy/gui.py:1371
 #, python-format
 msgid ""
 "Modify port definitions to which the '%(APP)s' domain is allowed to %(PERM)s."
 msgstr "修改「%(APP)s」區域允許 %(PERM)s 的連接埠定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1412
+#: ../sepolicy/sepolicy/gui.py:1400
 msgid "Add new SELinux User/Role definition."
 msgstr "新增 SELinux 使用者/角色定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1413
+#: ../sepolicy/sepolicy/gui.py:1401
 msgid "Delete modified SELinux User/Role definitions."
 msgstr "刪除修改過的 SELinux 使用者/角色定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1414
+#: ../sepolicy/sepolicy/gui.py:1402
 msgid "Modify selected modified SELinux User/Role definitions."
 msgstr "刪除所選擇修改過的 SELinux 使用者/角色定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1421
+#: ../sepolicy/sepolicy/gui.py:1409
 msgid "Add new Login Mapping definition."
 msgstr "新增登入對映的定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1422
+#: ../sepolicy/sepolicy/gui.py:1410
 msgid "Delete modified Login Mapping definitions."
 msgstr "刪除修改過的「登入對映」定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1423
+#: ../sepolicy/sepolicy/gui.py:1411
 msgid "Modify selected modified Login Mapping definitions."
 msgstr "修改所選擇修改過的「登入對映」定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1430
+#: ../sepolicy/sepolicy/gui.py:1418
 msgid "Add new File Equivalence definition."
 msgstr "新增「檔案相等」定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1431
+#: ../sepolicy/sepolicy/gui.py:1419
 msgid "Delete modified File Equivalence definitions."
 msgstr "刪除修改過的「檔案相等」定義。"
 
-#: ../sepolicy/sepolicy/gui.py:1432
+#: ../sepolicy/sepolicy/gui.py:1420
 msgid ""
 "Modify selected modified File Equivalence definitions. Only bolded items in "
 "the list can be selected, this indicates they were modified previously."
@@ -2065,261 +2065,261 @@ msgstr ""
 "修改所選擇修改過的「檔案相等」定義。只有清單中的粗體字項目可以選擇，粗體字表"
 "示這些項目之前被修改過。"
 
-#: ../sepolicy/sepolicy/gui.py:1460
+#: ../sepolicy/sepolicy/gui.py:1448
 #, python-format
 msgid "Boolean %s Allow Rules"
 msgstr "布林值 %s 允許規則"
 
-#: ../sepolicy/sepolicy/gui.py:1473
+#: ../sepolicy/sepolicy/gui.py:1461
 #, python-format
 msgid "Add Network Port for %s.  Ports will be created when update is applied."
 msgstr "新增 %s 的網路連接埠。當套用了更新之後，連接埠將會被建立。"
 
-#: ../sepolicy/sepolicy/gui.py:1474
+#: ../sepolicy/sepolicy/gui.py:1462
 #, python-format
 msgid "Add Network Port for %s"
 msgstr "為 %s 新增網路連接埠"
 
-#: ../sepolicy/sepolicy/gui.py:1479
+#: ../sepolicy/sepolicy/gui.py:1467
 #, python-format
 msgid ""
 "Add File Labeling for %s. File labels will be created when update is applied."
 msgstr "為 %s 新增檔案標籤。套用更新後，會建立新的檔案標籤。"
 
-#: ../sepolicy/sepolicy/gui.py:1480 ../sepolicy/sepolicy/gui.py:1533
+#: ../sepolicy/sepolicy/gui.py:1468 ../sepolicy/sepolicy/gui.py:1521
 #, python-format
 msgid "Add File Labeling for %s"
 msgstr "為 %s 新增檔案標籤"
 
-#: ../sepolicy/sepolicy/gui.py:1490
+#: ../sepolicy/sepolicy/gui.py:1478
 msgid "Add Login Mapping. User Mapping will be created when Update is applied."
 msgstr "新增登入對映。套用更新後會建立使用者對映。"
 
-#: ../sepolicy/sepolicy/gui.py:1491
+#: ../sepolicy/sepolicy/gui.py:1479
 msgid "Add Login Mapping"
 msgstr "新增登入對映"
 
-#: ../sepolicy/sepolicy/gui.py:1496
+#: ../sepolicy/sepolicy/gui.py:1484
 msgid ""
 "Add SELinux User Role. SELinux user roles will be created when update is "
 "applied."
 msgstr "新增 SELinux 使用者角色。套用更新後會建立 SELinux 使用者角色。"
 
-#: ../sepolicy/sepolicy/gui.py:1497
+#: ../sepolicy/sepolicy/gui.py:1485
 msgid "Add SELinux Users"
 msgstr "新增 SELinux 使用者"
 
-#: ../sepolicy/sepolicy/gui.py:1504
+#: ../sepolicy/sepolicy/gui.py:1492
 msgid ""
 "Add File Equivalency Mapping. Mapping will be created when update is applied."
 msgstr "新增「檔案相等」對映。當更新套用後，對映便會被建立。"
 
-#: ../sepolicy/sepolicy/gui.py:1505
+#: ../sepolicy/sepolicy/gui.py:1493
 msgid "Add SELinux File Equivalency"
 msgstr "新增 SELinux 檔案相等"
 
-#: ../sepolicy/sepolicy/gui.py:1532
+#: ../sepolicy/sepolicy/gui.py:1520
 #, python-format
 msgid ""
 "Modify File Labeling for %s. File labels will be created when update is "
 "applied."
 msgstr "為 %s 修改檔案標籤。套用更新後，會建立新的檔案標籤。"
 
-#: ../sepolicy/sepolicy/gui.py:1588
+#: ../sepolicy/sepolicy/gui.py:1576
 msgid ""
 "Modify SELinux User Role. SELinux user roles will be modified when update is "
 "applied."
 msgstr "修改 SELinux 使用者角色。套用更新後會修改 SELinux 使用者角色。"
 
-#: ../sepolicy/sepolicy/gui.py:1589
+#: ../sepolicy/sepolicy/gui.py:1577
 msgid "Modify SELinux Users"
 msgstr "修改 SELinux 使用者"
 
-#: ../sepolicy/sepolicy/gui.py:1597
+#: ../sepolicy/sepolicy/gui.py:1585
 msgid ""
 "Modify Login Mapping. Login Mapping will be modified when Update is applied."
 msgstr "修改登入對映。套用更新後會修改登入對映。"
 
-#: ../sepolicy/sepolicy/gui.py:1598
+#: ../sepolicy/sepolicy/gui.py:1586
 msgid "Modify Login Mapping"
 msgstr "修改登入對映"
 
-#: ../sepolicy/sepolicy/gui.py:1604
+#: ../sepolicy/sepolicy/gui.py:1592
 msgid ""
 "Modify File Equivalency Mapping. Mapping will be created when update is "
 "applied."
 msgstr "修改「檔案相等對映」。當套用了更新之後，對映將會被建立。"
 
-#: ../sepolicy/sepolicy/gui.py:1605
+#: ../sepolicy/sepolicy/gui.py:1593
 msgid "Modify SELinux File Equivalency"
 msgstr "修改 SELinux 檔案相等"
 
-#: ../sepolicy/sepolicy/gui.py:1690
+#: ../sepolicy/sepolicy/gui.py:1678
 #, python-format
 msgid ""
 "Modify Network Port for %s.  Ports will be created when update is applied."
 msgstr "修改 %s 的網路連接埠。當套用了更新之後，連接埠將會被建立。"
 
-#: ../sepolicy/sepolicy/gui.py:1691
+#: ../sepolicy/sepolicy/gui.py:1679
 #, python-format
 msgid "Modify Network Port for %s"
 msgstr "修改 %s 的網路連接埠"
 
-#: ../sepolicy/sepolicy/gui.py:1910
+#: ../sepolicy/sepolicy/gui.py:1898
 #, python-format
 msgid "The entry '%s' is not a valid path.  Paths must begin with a '/'."
 msgstr "「%s」項目不是個有效的路徑。路徑必須以「/」作為起始。"
 
-#: ../sepolicy/sepolicy/gui.py:1923
+#: ../sepolicy/sepolicy/gui.py:1911
 msgid "Port number must be between 1 and 65536"
 msgstr "連接埠號必須介於 1 和 65536 之間"
 
-#: ../sepolicy/sepolicy/gui.py:2203
+#: ../sepolicy/sepolicy/gui.py:2191
 #, python-format
 msgid "SELinux name: %s"
 msgstr "SELinux 名稱：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2214
+#: ../sepolicy/sepolicy/gui.py:2202
 #, python-format
 msgid "Add file labeling for %s"
 msgstr "爲 %s 新增檔案標籤"
 
-#: ../sepolicy/sepolicy/gui.py:2216
+#: ../sepolicy/sepolicy/gui.py:2204
 #, python-format
 msgid "Delete file labeling for %s"
 msgstr "刪除 %s 的檔案標籤"
 
-#: ../sepolicy/sepolicy/gui.py:2218
+#: ../sepolicy/sepolicy/gui.py:2206
 #, python-format
 msgid "Modify file labeling for %s"
 msgstr "修改 %s 的檔案標籤"
 
-#: ../sepolicy/sepolicy/gui.py:2222
+#: ../sepolicy/sepolicy/gui.py:2210
 #, python-format
 msgid "File path: %s"
 msgstr "檔案路徑：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2225
+#: ../sepolicy/sepolicy/gui.py:2213
 #, python-format
 msgid "File class: %s"
 msgstr "檔案類別：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2228 ../sepolicy/sepolicy/gui.py:2252
+#: ../sepolicy/sepolicy/gui.py:2216 ../sepolicy/sepolicy/gui.py:2240
 #, python-format
 msgid "SELinux file type: %s"
 msgstr "SELinux 檔案類型：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2237
+#: ../sepolicy/sepolicy/gui.py:2225
 #, python-format
 msgid "Add ports for %s"
 msgstr "為 %s 新增連接埠"
 
-#: ../sepolicy/sepolicy/gui.py:2239
+#: ../sepolicy/sepolicy/gui.py:2227
 #, python-format
 msgid "Delete ports for %s"
 msgstr "刪除 %s 的連接埠"
 
-#: ../sepolicy/sepolicy/gui.py:2241
+#: ../sepolicy/sepolicy/gui.py:2229
 #, python-format
 msgid "Modify ports for %s"
 msgstr "修改 %s 的連接埠"
 
-#: ../sepolicy/sepolicy/gui.py:2244
+#: ../sepolicy/sepolicy/gui.py:2232
 #, python-format
 msgid "Network ports: %s"
 msgstr "網路連接埠：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2247
+#: ../sepolicy/sepolicy/gui.py:2235
 #, python-format
 msgid "Network protocol: %s"
 msgstr "網路協定：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2261
+#: ../sepolicy/sepolicy/gui.py:2249
 msgid "Add user"
 msgstr "新增使用者"
 
-#: ../sepolicy/sepolicy/gui.py:2263
+#: ../sepolicy/sepolicy/gui.py:2251
 msgid "Delete user"
 msgstr "刪除使用者"
 
-#: ../sepolicy/sepolicy/gui.py:2265
+#: ../sepolicy/sepolicy/gui.py:2253
 msgid "Modify user"
 msgstr "修改使用者"
 
-#: ../sepolicy/sepolicy/gui.py:2268
+#: ../sepolicy/sepolicy/gui.py:2256
 #, python-format
 msgid "SELinux User : %s"
 msgstr "SELinux 使用者：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2273
+#: ../sepolicy/sepolicy/gui.py:2261
 #, python-format
 msgid "Roles: %s"
 msgstr "角色：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2277 ../sepolicy/sepolicy/gui.py:2302
+#: ../sepolicy/sepolicy/gui.py:2265 ../sepolicy/sepolicy/gui.py:2290
 #, python-format
 msgid "MLS/MCS Range: %s"
 msgstr "MLS/MCS 範圍：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2286
+#: ../sepolicy/sepolicy/gui.py:2274
 msgid "Add login mapping"
 msgstr "新增登入對映"
 
-#: ../sepolicy/sepolicy/gui.py:2288
+#: ../sepolicy/sepolicy/gui.py:2276
 msgid "Delete login mapping"
 msgstr "刪除登入對映"
 
-#: ../sepolicy/sepolicy/gui.py:2290
+#: ../sepolicy/sepolicy/gui.py:2278
 msgid "Modify login mapping"
 msgstr "修改登入對映"
 
-#: ../sepolicy/sepolicy/gui.py:2294
+#: ../sepolicy/sepolicy/gui.py:2282
 #, python-format
 msgid "Login Name : %s"
 msgstr "登入名稱：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2298
+#: ../sepolicy/sepolicy/gui.py:2286
 #, python-format
 msgid "SELinux User: %s"
 msgstr "SELinux 使用者：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2311
+#: ../sepolicy/sepolicy/gui.py:2299
 msgid "Add file equiv labeling."
 msgstr "新增檔案 equiv 相等標籤。"
 
-#: ../sepolicy/sepolicy/gui.py:2313
+#: ../sepolicy/sepolicy/gui.py:2301
 msgid "Delete file equiv labeling."
 msgstr "刪除檔案 equiv 相等標籤。"
 
-#: ../sepolicy/sepolicy/gui.py:2315
+#: ../sepolicy/sepolicy/gui.py:2303
 msgid "Modify file equiv labeling."
 msgstr "修改檔案 equiv 相等標籤。"
 
-#: ../sepolicy/sepolicy/gui.py:2319
+#: ../sepolicy/sepolicy/gui.py:2307
 #, python-format
 msgid "File path : %s"
 msgstr "檔案路徑：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2323
+#: ../sepolicy/sepolicy/gui.py:2311
 #, python-format
 msgid "Equivalence: %s"
 msgstr "相等：%s"
 
-#: ../sepolicy/sepolicy/gui.py:2354 ../sepolicy/sepolicy/sepolicy.glade:129
-#: ../sepolicy/sepolicy/sepolicy.glade:1898
-#: ../sepolicy/sepolicy/sepolicy.glade:3793
+#: ../sepolicy/sepolicy/gui.py:2342 ../sepolicy/sepolicy/sepolicy.glade:125
+#: ../sepolicy/sepolicy/sepolicy.glade:1890
+#: ../sepolicy/sepolicy/sepolicy.glade:3785
 msgid "System"
 msgstr "系統"
 
-#: ../sepolicy/sepolicy/gui.py:2363 ../sepolicy/sepolicy/sepolicy.glade:95
+#: ../sepolicy/sepolicy/gui.py:2351 ../sepolicy/sepolicy/sepolicy.glade:91
 msgid "File Equivalence"
 msgstr "檔案相等"
 
-#: ../sepolicy/sepolicy/gui.py:2373 ../sepolicy/sepolicy/sepolicy.glade:112
+#: ../sepolicy/sepolicy/gui.py:2361 ../sepolicy/sepolicy/sepolicy.glade:108
 msgid "Users"
 msgstr "使用者"
 
-#: ../sepolicy/sepolicy/gui.py:2426
+#: ../sepolicy/sepolicy/gui.py:2414
 #, python-format
 msgid ""
 "Run restorecon on %(PATH)s to change its type from %(CUR_CONTEXT)s to the "
@@ -2328,27 +2328,27 @@ msgstr ""
 "在 %(PATH)s 上執行 restorecon 以將其類型由 %(CUR_CONTEXT)s 修改為預設的 "
 "%(DEF_CONTEXT)s？"
 
-#: ../sepolicy/sepolicy/gui.py:2436 ../sepolicy/sepolicy/sepolicy.glade:4216
+#: ../sepolicy/sepolicy/gui.py:2424 ../sepolicy/sepolicy/sepolicy.glade:4208
 msgid "Update"
 msgstr "更新"
 
-#: ../sepolicy/sepolicy/gui.py:2438
+#: ../sepolicy/sepolicy/gui.py:2426
 msgid "Update Changes"
 msgstr "更新變更"
 
-#: ../sepolicy/sepolicy/gui.py:2440
+#: ../sepolicy/sepolicy/gui.py:2428
 msgid "Revert Changes"
 msgstr "復原變更"
 
-#: ../sepolicy/sepolicy/gui.py:2571
+#: ../sepolicy/sepolicy/gui.py:2559
 msgid "System Status: Enforcing"
 msgstr "系統狀態：強制"
 
-#: ../sepolicy/sepolicy/gui.py:2574
+#: ../sepolicy/sepolicy/gui.py:2562
 msgid "System Status: Permissive"
 msgstr "系統狀態：寬容"
 
-#: ../sepolicy/sepolicy/gui.py:2638
+#: ../sepolicy/sepolicy/gui.py:2626
 msgid ""
 "Changing the policy type will cause a relabel of the entire file system on "
 "the next boot. Relabeling takes a long time depending on the size of the "
@@ -2358,7 +2358,7 @@ msgstr ""
 "記會花上不少時間。\n"
 "確定要繼續？"
 
-#: ../sepolicy/sepolicy/gui.py:2768
+#: ../sepolicy/sepolicy/gui.py:2756
 msgid ""
 "Changing to SELinux disabled requires a reboot.  It is not recommended.  If "
 "you later decide to turn SELinux back on, the system will be required to "
@@ -2372,7 +2372,7 @@ msgstr ""
 "切換到寬容模式，只記錄錯誤但不使用 SELinux 方針。切換到寬容模式無須重新開機。"
 "確定要繼續？"
 
-#: ../sepolicy/sepolicy/gui.py:2772
+#: ../sepolicy/sepolicy/gui.py:2760
 msgid ""
 "Changing to SELinux enabled will cause a relabel of the entire file system "
 "on the next boot. Relabeling takes a long time depending on the size of the "
@@ -2382,7 +2382,7 @@ msgstr ""
 "記會花上不少時間。\n"
 "確定要繼續？"
 
-#: ../sepolicy/sepolicy/gui.py:2802
+#: ../sepolicy/sepolicy/gui.py:2790
 msgid ""
 "You are attempting to close the application without applying your changes.\n"
 "    *    To apply changes you have made during this session, click No and "
@@ -2395,7 +2395,7 @@ msgstr ""
 "    *    若要在不套用變更的情況下退出應用程式，請點選「是」。您將會失去在此工"
 "作階段中所進行的所有變更。"
 
-#: ../sepolicy/sepolicy/gui.py:2802
+#: ../sepolicy/sepolicy/gui.py:2790
 msgid "Loss of data Dialog"
 msgstr "資料遺失對話盒"
 
@@ -2436,18 +2436,23 @@ msgstr "尚未安裝 SELinux 方針"
 msgid "Failed to read %s policy file"
 msgstr "無法讀取 %s 方針檔案"
 
-#: ../sepolicy/sepolicy/__init__.py:465
+#: ../sepolicy/sepolicy/__init__.py:470
 #, python-format
 msgid "-- Allowed %s [ %s ]"
 msgstr "-- 允許 %s [ %s ]"
 
-#: ../sepolicy/sepolicy/__init__.py:891
+#: ../sepolicy/sepolicy/__init__.py:896
 msgid "You must regenerate interface info by running /usr/bin/sepolgen-ifgen"
 msgstr "您必須透過執行 /usr/bin/sepolgen-ifgen 來重新產生介面卡資訊"
 
-#: ../sepolicy/sepolicy/__init__.py:1216
+#: ../sepolicy/sepolicy/__init__.py:1221
 msgid "unknown"
 msgstr "不明"
+
+#: ../sepolicy/sepolicy/__init__.py:1230
+#, python-brace-format
+msgid "Allow {subject} to {rest}"
+msgstr ""
 
 #: ../sepolicy/sepolicy/interface.py:222
 #, python-format
@@ -2494,299 +2499,299 @@ msgstr "您需要安裝 policycoreutils-gui 軟體包才能使用 gui 選項"
 msgid "Graphical User Interface for SELinux Policy"
 msgstr "SELinux 方針的圖形化使用者介面"
 
-#: ../sepolicy/sepolicy.py:325 ../sepolicy/sepolicy.py:380
+#: ../sepolicy/sepolicy.py:325 ../sepolicy/sepolicy.py:389
 msgid "Domain name(s) of man pages to be created"
 msgstr "欲建立之 man page 的區域名稱"
 
-#: ../sepolicy/sepolicy.py:343
+#: ../sepolicy/sepolicy.py:344
 msgid "Alternative root needs to be setup"
 msgstr "需要設置額外的 root"
 
-#: ../sepolicy/sepolicy.py:362
+#: ../sepolicy/sepolicy.py:371
 msgid "Generate SELinux man pages"
 msgstr "產生 SELinux man page"
 
-#: ../sepolicy/sepolicy.py:365
+#: ../sepolicy/sepolicy.py:374
 msgid "path in which the generated SELinux man pages will be stored"
 msgstr "產生 SELinux man page 的路徑會被儲存"
 
-#: ../sepolicy/sepolicy.py:367
+#: ../sepolicy/sepolicy.py:376
 msgid "name of the OS for man pages"
 msgstr "man page 的 OS名稱"
 
-#: ../sepolicy/sepolicy.py:369
+#: ../sepolicy/sepolicy.py:378
 msgid "Generate HTML man pages structure for selected SELinux man page"
 msgstr "為所選擇的 SELinux man page 產生 HTML man page 結構"
 
-#: ../sepolicy/sepolicy.py:371
+#: ../sepolicy/sepolicy.py:380
 msgid "Alternate root directory, defaults to /"
 msgstr "其它 root 目錄，預設值為 /"
 
-#: ../sepolicy/sepolicy.py:373
+#: ../sepolicy/sepolicy.py:382
 msgid ""
 "With this flag, alternative root path needs to include file context files "
 "and policy.xml file"
 msgstr "因為此旗標，額外的 root 路徑需要包含檔案的情境檔和 policy.xml 檔"
 
-#: ../sepolicy/sepolicy.py:377
+#: ../sepolicy/sepolicy.py:386
 msgid "All domains"
 msgstr "所有區域"
 
-#: ../sepolicy/sepolicy.py:386
+#: ../sepolicy/sepolicy.py:395
 msgid "Query SELinux policy network information"
 msgstr "查詢 SELinux 方針網路資訊"
 
-#: ../sepolicy/sepolicy.py:391
+#: ../sepolicy/sepolicy.py:400
 msgid "list all SELinux port types"
 msgstr "列出所有 SELinux 連接埠類型"
 
-#: ../sepolicy/sepolicy.py:394
+#: ../sepolicy/sepolicy.py:403
 msgid "show SELinux type related to the port"
 msgstr "顯示與此連接埠相關的 SELinux 類型"
 
-#: ../sepolicy/sepolicy.py:397
+#: ../sepolicy/sepolicy.py:406
 msgid "Show ports defined for this SELinux type"
 msgstr "顯示為此 SELinux 類型定義的連接埠"
 
-#: ../sepolicy/sepolicy.py:400
+#: ../sepolicy/sepolicy.py:409
 msgid "show ports to which this domain can bind and/or connect"
 msgstr "顯示此區域可以綁定且/或可以連接的連接埠"
 
-#: ../sepolicy/sepolicy.py:403
+#: ../sepolicy/sepolicy.py:412
 msgid "show ports to which this application can bind and/or connect"
 msgstr "顯示此應用程式可綁定至與/或連上的連接埠"
 
-#: ../sepolicy/sepolicy.py:420
+#: ../sepolicy/sepolicy.py:429
 msgid "query SELinux policy to see if domains can communicate with each other"
 msgstr "查詢 SELinux 方針，以查看區域間是否可以互相進行通訊"
 
-#: ../sepolicy/sepolicy.py:423
+#: ../sepolicy/sepolicy.py:432
 msgid "Source Domain"
 msgstr "來源區域"
 
-#: ../sepolicy/sepolicy.py:426
+#: ../sepolicy/sepolicy.py:435
 msgid "Target Domain"
 msgstr "目標區域"
 
-#: ../sepolicy/sepolicy.py:447
+#: ../sepolicy/sepolicy.py:456
 msgid "query SELinux Policy to see description of booleans"
 msgstr "查詢 SELinux 方針，以檢視布林值的描述"
 
-#: ../sepolicy/sepolicy.py:451
+#: ../sepolicy/sepolicy.py:460
 msgid "get all booleans descriptions"
 msgstr "取得所有布林值的詳述"
 
-#: ../sepolicy/sepolicy.py:454
+#: ../sepolicy/sepolicy.py:463
 msgid "boolean to get description"
 msgstr "取得描述的布林值"
 
-#: ../sepolicy/sepolicy.py:466
+#: ../sepolicy/sepolicy.py:475
 msgid ""
 "query SELinux Policy to see how a source process domain can transition to "
 "the target process domain"
 msgstr "查詢 SELinux 政策，看看來源程序區域如何翻譯至目標程序區域"
 
-#: ../sepolicy/sepolicy.py:469
+#: ../sepolicy/sepolicy.py:478
 msgid "source process domain"
 msgstr "來源程序區域"
 
-#: ../sepolicy/sepolicy.py:472
+#: ../sepolicy/sepolicy.py:481
 msgid "target process domain"
 msgstr "目標程序區域"
 
-#: ../sepolicy/sepolicy.py:517
+#: ../sepolicy/sepolicy.py:526
 #, python-format
 msgid "sepolicy generate: error: one of the arguments %s is required"
 msgstr "sepolicy 生成：錯誤：缺少了其中一項引數 %s"
 
-#: ../sepolicy/sepolicy.py:522
+#: ../sepolicy/sepolicy.py:531
 msgid "Command required for this type of policy"
 msgstr "此類型方針所需要的指令"
 
-#: ../sepolicy/sepolicy.py:533
+#: ../sepolicy/sepolicy.py:542
 #, python-format
 msgid ""
 "-t option can not be used with '%s' domains. Read usage for more details."
 msgstr "-t 選項不可與「%s」區域搭配使用。詳情請參閱「用法」。"
 
-#: ../sepolicy/sepolicy.py:538
+#: ../sepolicy/sepolicy.py:547
 #, python-format
 msgid ""
 "-d option can not be used with '%s' domains. Read usage for more details."
 msgstr "-d 選項不可與「%s」區域搭配使用。請詳請參閱「用法」。"
 
-#: ../sepolicy/sepolicy.py:542
+#: ../sepolicy/sepolicy.py:551
 #, python-format
 msgid ""
 "-a option can not be used with '%s' domains. Read usage for more details."
 msgstr "-a 選項不可與「%s」區域搭配使用。詳情請參閱「用法」。"
 
-#: ../sepolicy/sepolicy.py:546
+#: ../sepolicy/sepolicy.py:555
 msgid "-w option can not be used with the --newtype option"
 msgstr "-w 選項不可與 --newtype 選項搭配使用"
 
-#: ../sepolicy/sepolicy.py:567
+#: ../sepolicy/sepolicy.py:576
 msgid "List SELinux Policy interfaces"
 msgstr "列出 SELinux 方針介面"
 
-#: ../sepolicy/sepolicy.py:587
+#: ../sepolicy/sepolicy.py:596
 msgid "Enter interface names, you wish to query"
 msgstr "請輸入您想查詢的介面名稱。"
 
-#: ../sepolicy/sepolicy.py:597
+#: ../sepolicy/sepolicy.py:606
 msgid "Generate SELinux Policy module template"
 msgstr "產生 SELinux 方針的模組範本"
 
-#: ../sepolicy/sepolicy.py:600
+#: ../sepolicy/sepolicy.py:609
 msgid "Enter domain type which you will be extending"
 msgstr "輸入您將會延伸的區域類型"
 
-#: ../sepolicy/sepolicy.py:603
+#: ../sepolicy/sepolicy.py:612
 msgid "Enter SELinux user(s) which will transition to this domain"
 msgstr "輸入將會轉移此區域的 SELinux 使用者"
 
-#: ../sepolicy/sepolicy.py:606
+#: ../sepolicy/sepolicy.py:615
 msgid "Enter SELinux role(s) to which the administror domain will transition"
 msgstr "輸入管理區域將會轉移成的 SELinux 角色"
 
-#: ../sepolicy/sepolicy.py:609
+#: ../sepolicy/sepolicy.py:618
 msgid "Enter domain(s) which this confined admin will administrate"
 msgstr "輸入此受限的管理員將管理的區域"
 
-#: ../sepolicy/sepolicy.py:612
+#: ../sepolicy/sepolicy.py:621
 msgid "name of policy to generate"
 msgstr "欲產生的方針名稱"
 
-#: ../sepolicy/sepolicy.py:619
+#: ../sepolicy/sepolicy.py:628
 msgid "path in which the generated policy files will be stored"
 msgstr "所產生的方針檔案將會被存放在此路徑"
 
-#: ../sepolicy/sepolicy.py:621
+#: ../sepolicy/sepolicy.py:630
 msgid "path to which the confined processes will need to write"
 msgstr "受限的程序需寫入的路徑"
 
-#: ../sepolicy/sepolicy.py:622
+#: ../sepolicy/sepolicy.py:631
 msgid "Policy types which require a command"
 msgstr "需要輸入一項指令的方針類型"
 
-#: ../sepolicy/sepolicy.py:626 ../sepolicy/sepolicy.py:629
-#: ../sepolicy/sepolicy.py:632 ../sepolicy/sepolicy.py:635
-#: ../sepolicy/sepolicy.py:638 ../sepolicy/sepolicy.py:644
-#: ../sepolicy/sepolicy.py:647 ../sepolicy/sepolicy.py:650
+#: ../sepolicy/sepolicy.py:635 ../sepolicy/sepolicy.py:638
+#: ../sepolicy/sepolicy.py:641 ../sepolicy/sepolicy.py:644
+#: ../sepolicy/sepolicy.py:647 ../sepolicy/sepolicy.py:653
 #: ../sepolicy/sepolicy.py:656 ../sepolicy/sepolicy.py:659
-#: ../sepolicy/sepolicy.py:662 ../sepolicy/sepolicy.py:665
+#: ../sepolicy/sepolicy.py:665 ../sepolicy/sepolicy.py:668
+#: ../sepolicy/sepolicy.py:671 ../sepolicy/sepolicy.py:674
 #, python-format
 msgid "Generate '%s' policy"
 msgstr "生成「%s」方針"
 
-#: ../sepolicy/sepolicy.py:653
+#: ../sepolicy/sepolicy.py:662
 #, python-format
 msgid "Generate '%s' policy "
 msgstr "生成「%s」方針"
 
-#: ../sepolicy/sepolicy.py:667
+#: ../sepolicy/sepolicy.py:676
 msgid "executable to confine"
 msgstr "欲限制的可執行檔"
 
-#: ../sepolicy/sepolicy.py:672
+#: ../sepolicy/sepolicy.py:681
 msgid "commands"
 msgstr "指令"
 
-#: ../sepolicy/sepolicy.py:675
+#: ../sepolicy/sepolicy.py:684
 msgid "Alternate SELinux policy, defaults to /sys/fs/selinux/policy"
 msgstr "替代用 SELinux 方針，預設值為 /sys/fs/selinux/policy"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:25
-#: ../sepolicy/sepolicy/sepolicy.glade:4320
+#: ../sepolicy/sepolicy/sepolicy.glade:22
+#: ../sepolicy/sepolicy/sepolicy.glade:4312
 msgid "Applications"
 msgstr "應用程式"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:52
+#: ../sepolicy/sepolicy/sepolicy.glade:49
 msgid "Select domain"
 msgstr "選擇區域"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:189
-#: ../sepolicy/sepolicy/sepolicy.glade:4357
-#: ../sepolicy/sepolicy/sepolicy.glade:4450
-#: ../sepolicy/sepolicy/sepolicy.glade:4596
-#: ../sepolicy/sepolicy/sepolicy.glade:4745
-#: ../sepolicy/sepolicy/sepolicy.glade:4879
-#: ../sepolicy/sepolicy/sepolicy.glade:5020
-#: ../sepolicy/sepolicy/sepolicy.glade:5093
-#: ../sepolicy/sepolicy/sepolicy.glade:5228
+#: ../sepolicy/sepolicy/sepolicy.glade:184
+#: ../sepolicy/sepolicy/sepolicy.glade:4349
+#: ../sepolicy/sepolicy/sepolicy.glade:4442
+#: ../sepolicy/sepolicy/sepolicy.glade:4588
+#: ../sepolicy/sepolicy/sepolicy.glade:4737
+#: ../sepolicy/sepolicy/sepolicy.glade:4871
+#: ../sepolicy/sepolicy/sepolicy.glade:5012
+#: ../sepolicy/sepolicy/sepolicy.glade:5085
+#: ../sepolicy/sepolicy/sepolicy.glade:5220
 msgid "Select"
 msgstr "選擇"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:204
-#: ../sepolicy/sepolicy/sepolicy.glade:539
-#: ../sepolicy/sepolicy/sepolicy.glade:684
-#: ../sepolicy/sepolicy/sepolicy.glade:1239
-#: ../sepolicy/sepolicy/sepolicy.glade:1535
-#: ../sepolicy/sepolicy/sepolicy.glade:4530
-#: ../sepolicy/sepolicy/sepolicy.glade:4680
-#: ../sepolicy/sepolicy/sepolicy.glade:4811
-#: ../sepolicy/sepolicy/sepolicy.glade:4945
-#: ../sepolicy/sepolicy/sepolicy.glade:5163
-#: ../sepolicy/sepolicy/sepolicy.glade:5294
-#: ../sepolicy/sepolicy/sepolicy.glade:5454
+#: ../sepolicy/sepolicy/sepolicy.glade:199
+#: ../sepolicy/sepolicy/sepolicy.glade:533
+#: ../sepolicy/sepolicy/sepolicy.glade:678
+#: ../sepolicy/sepolicy/sepolicy.glade:1233
+#: ../sepolicy/sepolicy/sepolicy.glade:1529
+#: ../sepolicy/sepolicy/sepolicy.glade:4522
+#: ../sepolicy/sepolicy/sepolicy.glade:4672
+#: ../sepolicy/sepolicy/sepolicy.glade:4803
+#: ../sepolicy/sepolicy/sepolicy.glade:4937
+#: ../sepolicy/sepolicy/sepolicy.glade:5155
+#: ../sepolicy/sepolicy/sepolicy.glade:5286
+#: ../sepolicy/sepolicy/sepolicy.glade:5446
 msgid "Cancel"
 msgstr "取消"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:332
+#: ../sepolicy/sepolicy/sepolicy.glade:326
 msgid ""
 "The entry that was entered is incorrect.  Please try again in the "
 "ex:/.../... format."
 msgstr "輸入的項目錯誤。請以 ex:/.../... 格式再試一次。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:358
+#: ../sepolicy/sepolicy/sepolicy.glade:352
 msgid "Retry"
 msgstr "重試"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:442
-#: ../sepolicy/sepolicy/sepolicy.glade:1120
-#: ../sepolicy/sepolicy/sepolicy.glade:1368
-#: ../sepolicy/sepolicy/sepolicy.glade:5322
+#: ../sepolicy/sepolicy/sepolicy.glade:436
+#: ../sepolicy/sepolicy/sepolicy.glade:1114
+#: ../sepolicy/sepolicy/sepolicy.glade:1362
+#: ../sepolicy/sepolicy/sepolicy.glade:5314
 msgid "Network Port Definitions"
 msgstr "網路連接埠定義"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:458
+#: ../sepolicy/sepolicy/sepolicy.glade:452
 msgid ""
 "Add file Equivalence Mapping.  Mapping will be created when Update is "
 "applied."
 msgstr "新增檔案相等對映。當更新套用後，對映便會被建立。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:483
-#: ../sepolicy/sepolicy/sepolicy.glade:4036
+#: ../sepolicy/sepolicy/sepolicy.glade:477
+#: ../sepolicy/sepolicy/sepolicy.glade:4028
 msgid "Path"
 msgstr "路徑"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:493
-#: ../sepolicy/sepolicy/sepolicy.glade:5374
+#: ../sepolicy/sepolicy/sepolicy.glade:487
+#: ../sepolicy/sepolicy/sepolicy.glade:5366
 msgid ""
 "Specify a new SELinux user name.  By convention SELinux User names usually "
 "end in an _u."
 msgstr ""
 "指定一組新的 SELinux 使用者名稱。一般 SELinux 使用者名稱會以 an _u 作為結尾。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:497
+#: ../sepolicy/sepolicy/sepolicy.glade:491
 msgid "Enter the path to which you want to setup an equivalence label."
 msgstr "輸入您希望為其設置相等標籤的路徑。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:510
-#: ../sepolicy/sepolicy/sepolicy.glade:4053
-#: ../sepolicy/sepolicy/sepolicy.glade:4771
+#: ../sepolicy/sepolicy/sepolicy.glade:504
+#: ../sepolicy/sepolicy/sepolicy.glade:4045
+#: ../sepolicy/sepolicy/sepolicy.glade:4763
 msgid "Equivalence Path"
 msgstr "相等路徑"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:524
-#: ../sepolicy/sepolicy/sepolicy.glade:669
-#: ../sepolicy/sepolicy/sepolicy.glade:1224
-#: ../sepolicy/sepolicy/sepolicy.glade:1520
-#: ../sepolicy/sepolicy/sepolicy.glade:5439
+#: ../sepolicy/sepolicy/sepolicy.glade:518
+#: ../sepolicy/sepolicy/sepolicy.glade:663
+#: ../sepolicy/sepolicy/sepolicy.glade:1218
+#: ../sepolicy/sepolicy/sepolicy.glade:1514
+#: ../sepolicy/sepolicy/sepolicy.glade:5431
 msgid "Save to update"
 msgstr "儲存至更新"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:564
+#: ../sepolicy/sepolicy/sepolicy.glade:558
 msgid ""
 "Specify the mapping between the new path and the equivalence path.  "
 "Everything under this new path will be labeled as if they were under the "
@@ -2795,11 +2800,11 @@ msgstr ""
 "指定新路徑和相等路徑之間的對映。所有在此新路徑下的項目皆會被標記，如同在相等"
 "路徑下一般。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:621
+#: ../sepolicy/sepolicy/sepolicy.glade:615
 msgid "Add a file"
 msgstr "新增檔案"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:638
+#: ../sepolicy/sepolicy/sepolicy.glade:632
 msgid ""
 "<operation> File Labeling for <selected domain>. File labels will be created "
 "when update is applied."
@@ -2807,34 +2812,34 @@ msgstr ""
 "<operation> <selected domain> 的檔案標籤。當更新套用之後，檔案標籤便會被建"
 "立。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:711
-#: ../sepolicy/sepolicy/sepolicy.glade:1485
+#: ../sepolicy/sepolicy/sepolicy.glade:705
+#: ../sepolicy/sepolicy/sepolicy.glade:1479
 msgid "MLS"
 msgstr "MLS"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:747
-#: ../sepolicy/sepolicy/sepolicy.glade:2306
-#: ../sepolicy/sepolicy/sepolicy.glade:2418
-#: ../sepolicy/sepolicy/sepolicy.glade:2540
-#: ../sepolicy/sepolicy/sepolicy.glade:4490
+#: ../sepolicy/sepolicy/sepolicy.glade:741
+#: ../sepolicy/sepolicy/sepolicy.glade:2298
+#: ../sepolicy/sepolicy/sepolicy.glade:2410
+#: ../sepolicy/sepolicy/sepolicy.glade:2532
+#: ../sepolicy/sepolicy/sepolicy.glade:4482
 msgid "Class"
 msgstr "類別"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:763
+#: ../sepolicy/sepolicy/sepolicy.glade:757
 msgid "Type"
 msgstr "類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:777
+#: ../sepolicy/sepolicy/sepolicy.glade:771
 msgid ""
 "Select the file class to which this label will be applied.  Defaults to all "
 "classes."
 msgstr "選擇此標籤將會被套用至的檔案類別。預設值為所有類別。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:804
+#: ../sepolicy/sepolicy/sepolicy.glade:798
 msgid "Make Path Recursive"
 msgstr "讓路徑遞迴"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:808
+#: ../sepolicy/sepolicy/sepolicy.glade:802
 msgid ""
 "Select Make Path Recursive if you want to apply this label to all children "
 "of the specified directory path. objects under the directory to have this "
@@ -2843,52 +2848,52 @@ msgstr ""
 "若您希望將此標籤套用至所有指定目錄路徑的子路徑上，請選擇「使路徑遞迴」。此目"
 "錄下的物件將會擁有此標籤。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:821
+#: ../sepolicy/sepolicy/sepolicy.glade:815
 msgid "Browse"
 msgstr "瀏覽"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:825
+#: ../sepolicy/sepolicy/sepolicy.glade:819
 msgid "Browse to select the file/directory for labeling."
 msgstr "瀏覽以選擇欲標記的檔案/目錄。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:869
+#: ../sepolicy/sepolicy/sepolicy.glade:863
 msgid "Path  "
 msgstr "路徑"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:880
+#: ../sepolicy/sepolicy/sepolicy.glade:874
 msgid ""
 "Specify the path using regular expressions that you would like to modify the "
 "labeling."
 msgstr "使用正規表示式來指定您希望為其修改標籤的路徑。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:902
+#: ../sepolicy/sepolicy/sepolicy.glade:896
 msgid "Select the SELinux file type to assign to this path."
 msgstr "選擇欲指派給此路徑的檔案類型。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:929
+#: ../sepolicy/sepolicy/sepolicy.glade:923
 msgid "Enter the MLS Label to assign to this file path."
 msgstr "輸入 MLS 標籤以將它指派給此檔案路徑。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:933
+#: ../sepolicy/sepolicy/sepolicy.glade:927
 msgid "SELinux MLS Label you wish to assign to this path."
 msgstr "想要指派至此路徑的 SELinux MLS 標籤。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1070
+#: ../sepolicy/sepolicy/sepolicy.glade:1064
 msgid "Analyzing Policy..."
 msgstr "正在分析方針..."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1137
+#: ../sepolicy/sepolicy/sepolicy.glade:1131
 msgid ""
 "Add Login Mapping. Login Mapping will be created when update is applied."
 msgstr "新增登入對應。套用更新後會建立登入對應。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1172
+#: ../sepolicy/sepolicy/sepolicy.glade:1166
 msgid ""
 "Enter the login user name of the user to which you wish to add SELinux User "
 "confinement."
 msgstr "輸入您想要新增 SELinux 受限使用者之使用者登入名稱。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1201
+#: ../sepolicy/sepolicy/sepolicy.glade:1195
 msgid ""
 "Select the SELinux User to assign to this login user.  Login users by "
 "default get assigned by the __default__ user."
@@ -2896,21 +2901,21 @@ msgstr ""
 "選擇要指定至此登入使用者的 SELinux 使用者。預設上，登入使用者會由 "
 "__default__ 使用者所指定。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1264
+#: ../sepolicy/sepolicy/sepolicy.glade:1258
 msgid ""
 "Enter MLS/MCS Range for this login User.  Defaults to the range for the "
 "Selected SELinux User."
 msgstr ""
 "輸入此登入使用者的 MLS/MCS 範圍。預設值是所選擇的 SELinux 使用者之範圍。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1267
-#: ../sepolicy/sepolicy/sepolicy.glade:3182
-#: ../sepolicy/sepolicy/sepolicy.glade:3303
-#: ../sepolicy/sepolicy/sepolicy.glade:5404
+#: ../sepolicy/sepolicy/sepolicy.glade:1261
+#: ../sepolicy/sepolicy/sepolicy.glade:3174
+#: ../sepolicy/sepolicy/sepolicy.glade:3295
+#: ../sepolicy/sepolicy/sepolicy.glade:5396
 msgid "MLS Range"
 msgstr "MLS 範圍"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1279
+#: ../sepolicy/sepolicy/sepolicy.glade:1273
 msgid ""
 "Specify the MLS Range for this user to login in with.  Defaults to the "
 "selected SELinux Users MLS Range."
@@ -2918,127 +2923,127 @@ msgstr ""
 "指定此使用者登入時使用的 MLS 範圍。預設值是所選擇的 SELinux 使用者之 MLS 範"
 "圍。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1385
+#: ../sepolicy/sepolicy/sepolicy.glade:1379
 msgid ""
 "<operation> Network Port for <selected domain>.  Ports will be created when "
 "update is applied."
 msgstr ""
 "<operation> 給 <selected domain> 所使用的網路連接埠。套用更新時會建立連接埠。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1423
+#: ../sepolicy/sepolicy/sepolicy.glade:1417
 msgid "Enter the port number or range to which you want to add a port type."
 msgstr "輸入要新增至連接埠類型的連接埠號碼或範圍。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1439
-#: ../sepolicy/sepolicy/sepolicy.glade:2658
-#: ../sepolicy/sepolicy/sepolicy.glade:2756
-#: ../sepolicy/sepolicy/sepolicy.glade:4623
+#: ../sepolicy/sepolicy/sepolicy.glade:1433
+#: ../sepolicy/sepolicy/sepolicy.glade:2650
+#: ../sepolicy/sepolicy/sepolicy.glade:2748
+#: ../sepolicy/sepolicy/sepolicy.glade:4615
 msgid "Protocol"
 msgstr "通訊協定"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1453
+#: ../sepolicy/sepolicy/sepolicy.glade:1447
 msgid "Port Type"
 msgstr "連接埠類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1498
+#: ../sepolicy/sepolicy/sepolicy.glade:1492
 msgid "Select the port type you want to assign to the specified port number."
 msgstr "選擇要指定到特定連接埠號的連接埠類型。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1562
+#: ../sepolicy/sepolicy/sepolicy.glade:1556
 msgid "tcp"
 msgstr "tcp"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1566
+#: ../sepolicy/sepolicy/sepolicy.glade:1560
 msgid ""
 "Select <b>tcp</b> if the port type should be assigned to tcp port numbers."
 msgstr "如果連接埠類型該指定到 TCP 埠號的話，請選擇 <b>tcp</b>。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1579
+#: ../sepolicy/sepolicy/sepolicy.glade:1573
 msgid "udp"
 msgstr "udp"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1583
+#: ../sepolicy/sepolicy/sepolicy.glade:1577
 msgid ""
 "Select <b>udp</b> if the port type should be assigned to udp port numbers."
 msgstr "如果連接埠類型該指定到 UDP 埠號的話，請選擇 <b>udp</b>。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1605
+#: ../sepolicy/sepolicy/sepolicy.glade:1599
 msgid "Enter the MLS Label to assign to this port."
 msgstr "輸入要指定至此連接埠的 MLS 標籤。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1707
+#: ../sepolicy/sepolicy/sepolicy.glade:1701
 msgid "SELinux Configuration"
 msgstr "SELinux 組態"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1743
+#: ../sepolicy/sepolicy/sepolicy.glade:1735
 msgid "Select..."
 msgstr "選擇..."
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1792
-#: ../sepolicy/sepolicy/sepolicy.glade:2212
+#: ../sepolicy/sepolicy/sepolicy.glade:1784
+#: ../sepolicy/sepolicy/sepolicy.glade:2204
 msgid "Booleans"
 msgstr "布林值"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1796
+#: ../sepolicy/sepolicy/sepolicy.glade:1788
 msgid ""
 "Display boolean information that can be used to modify the policy for the "
 "'selected domain'."
 msgstr "顯示可以用來修改「選擇區域」的方針之布林值資訊。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1810
-#: ../sepolicy/sepolicy/sepolicy.glade:2597
+#: ../sepolicy/sepolicy/sepolicy.glade:1802
+#: ../sepolicy/sepolicy/sepolicy.glade:2589
 msgid "Files"
 msgstr "檔案"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1814
+#: ../sepolicy/sepolicy/sepolicy.glade:1806
 msgid ""
 "Display file type information that can be used by the 'selected domain'."
 msgstr "顯示可以用於「選擇區域」的檔案類型資訊。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1828
-#: ../sepolicy/sepolicy/sepolicy.glade:2830
+#: ../sepolicy/sepolicy/sepolicy.glade:1820
+#: ../sepolicy/sepolicy/sepolicy.glade:2822
 msgid "Network"
 msgstr "網路"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1832
+#: ../sepolicy/sepolicy/sepolicy.glade:1824
 msgid ""
 "Display network ports to which the 'selected domain' can connect or listen "
 "to."
 msgstr "顯示「選擇區域」可以連接或聆聽的網路連接埠。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1846
-#: ../sepolicy/sepolicy/sepolicy.glade:3111
+#: ../sepolicy/sepolicy/sepolicy.glade:1838
+#: ../sepolicy/sepolicy/sepolicy.glade:3103
 msgid "Transitions"
 msgstr "轉移"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1850
+#: ../sepolicy/sepolicy/sepolicy.glade:1842
 msgid ""
 "Display applications that can transition into or out of the 'selected "
 "domain'."
 msgstr "顯示可以轉移進、出「選擇區域」的應用程式。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1864
-#: ../sepolicy/sepolicy/sepolicy.glade:3212
+#: ../sepolicy/sepolicy/sepolicy.glade:1856
+#: ../sepolicy/sepolicy/sepolicy.glade:3204
 msgid "Login Mapping"
 msgstr "登入對映"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1867
-#: ../sepolicy/sepolicy/sepolicy.glade:1884
-#: ../sepolicy/sepolicy/sepolicy.glade:1901
+#: ../sepolicy/sepolicy/sepolicy.glade:1859
+#: ../sepolicy/sepolicy/sepolicy.glade:1876
+#: ../sepolicy/sepolicy/sepolicy.glade:1893
 msgid "Manage the SELinux configuration"
 msgstr "管理 SELinux 組態"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1881
-#: ../sepolicy/sepolicy/sepolicy.glade:3334
+#: ../sepolicy/sepolicy/sepolicy.glade:1873
+#: ../sepolicy/sepolicy/sepolicy.glade:3326
 msgid "SELinux Users"
 msgstr "SELinux 使用者"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1915
-#: ../sepolicy/sepolicy/sepolicy.glade:4006
+#: ../sepolicy/sepolicy/sepolicy.glade:1907
+#: ../sepolicy/sepolicy/sepolicy.glade:3998
 msgid "Lockdown"
 msgstr "封鎖"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1918
+#: ../sepolicy/sepolicy/sepolicy.glade:1910
 msgid ""
 "Lockdown the SELinux System.\n"
 "This screen can be used to turn up the SELinux Protections."
@@ -3046,28 +3051,28 @@ msgstr ""
 "封鎖 SELinux 系統。\n"
 "這畫面可以用來帶起 SELinux 防護。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1933
+#: ../sepolicy/sepolicy/sepolicy.glade:1925
 msgid "radiobutton"
 msgstr "多選按鈕"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:1993
+#: ../sepolicy/sepolicy/sepolicy.glade:1985
 msgid "Filter"
 msgstr "篩選"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2021
+#: ../sepolicy/sepolicy/sepolicy.glade:2013
 msgid "Show Modified Only"
 msgstr "僅顯示修改過的"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2060
+#: ../sepolicy/sepolicy/sepolicy.glade:2052
 msgid "Mislabeled files exist"
 msgstr "有標示錯誤的檔案"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2080
+#: ../sepolicy/sepolicy/sepolicy.glade:2072
 msgid "Show mislabeled files only"
 msgstr "僅顯示標示錯誤的檔案"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2120
-#: ../sepolicy/sepolicy/sepolicy.glade:3234
+#: ../sepolicy/sepolicy/sepolicy.glade:2112
+#: ../sepolicy/sepolicy/sepolicy.glade:3226
 msgid ""
 "If-Then-Else rules written in policy that can\n"
 "allow alternative access control."
@@ -3075,75 +3080,75 @@ msgstr ""
 "方針中撰寫的 If-Then-Else 規則\n"
 "允許替代的存取控制。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2132
+#: ../sepolicy/sepolicy/sepolicy.glade:2124
 msgid "Enabled"
 msgstr "已啟用"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2183
+#: ../sepolicy/sepolicy/sepolicy.glade:2175
 msgid "Name"
 msgstr "名稱"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2252
-#: ../sepolicy/sepolicy/sepolicy.glade:2364
-#: ../sepolicy/sepolicy/sepolicy.glade:2482
-#: ../sepolicy/sepolicy/sepolicy.glade:4463
-#: ../sepolicy/sepolicy/sepolicy.glade:4758
+#: ../sepolicy/sepolicy/sepolicy.glade:2244
+#: ../sepolicy/sepolicy/sepolicy.glade:2356
+#: ../sepolicy/sepolicy/sepolicy.glade:2474
+#: ../sepolicy/sepolicy/sepolicy.glade:4455
+#: ../sepolicy/sepolicy/sepolicy.glade:4750
 msgid "File Path"
 msgstr "檔案路徑"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2288
-#: ../sepolicy/sepolicy/sepolicy.glade:2399
+#: ../sepolicy/sepolicy/sepolicy.glade:2280
+#: ../sepolicy/sepolicy/sepolicy.glade:2391
 msgid "SELinux File Type"
 msgstr "SELinux 檔案類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2332
+#: ../sepolicy/sepolicy/sepolicy.glade:2324
 msgid "File path used to enter the 'selected domain'."
 msgstr "用於輸入「選擇區域」的檔案路徑。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2333
+#: ../sepolicy/sepolicy/sepolicy.glade:2325
 msgid "Executable Files"
 msgstr "可執行檔"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2448
+#: ../sepolicy/sepolicy/sepolicy.glade:2440
 msgid "Files to which the 'selected domain' can write."
 msgstr "「選擇區域」可以寫入的檔案。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2449
+#: ../sepolicy/sepolicy/sepolicy.glade:2441
 msgid "Writable files"
 msgstr "可寫入檔"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2571
+#: ../sepolicy/sepolicy/sepolicy.glade:2563
 msgid "File Types defined for the 'selected domain'."
 msgstr "為「選擇區域」所定義的檔案類型。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2572
+#: ../sepolicy/sepolicy/sepolicy.glade:2564
 msgid "Application File Types"
 msgstr "應用程式檔案類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2639
-#: ../sepolicy/sepolicy/sepolicy.glade:2738
-#: ../sepolicy/sepolicy/sepolicy.glade:4609
+#: ../sepolicy/sepolicy/sepolicy.glade:2631
+#: ../sepolicy/sepolicy/sepolicy.glade:2730
+#: ../sepolicy/sepolicy/sepolicy.glade:4601
 msgid "Port"
 msgstr "連接埠"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2704
+#: ../sepolicy/sepolicy/sepolicy.glade:2696
 msgid "Network Ports to which the 'selected domain' is allowed to connect."
 msgstr "「選擇區域」所允許連接至的網路連接埠。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2705
+#: ../sepolicy/sepolicy/sepolicy.glade:2697
 msgid "Outbound"
 msgstr "傳出"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2804
+#: ../sepolicy/sepolicy/sepolicy.glade:2796
 msgid "Network Ports to which the 'selected domain' is allowed to listen."
 msgstr "「選擇區域」所允許監聽的網路連接埠。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2805
+#: ../sepolicy/sepolicy/sepolicy.glade:2797
 msgid "Inbound"
 msgstr "傳入"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2866
-#: ../sepolicy/sepolicy/sepolicy.glade:2946
+#: ../sepolicy/sepolicy/sepolicy.glade:2858
+#: ../sepolicy/sepolicy/sepolicy.glade:2938
 msgid ""
 "Boolean\n"
 "Enabled"
@@ -3151,40 +3156,40 @@ msgstr ""
 "布林值 \n"
 "已啟用"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2882
-#: ../sepolicy/sepolicy/sepolicy.glade:2978
+#: ../sepolicy/sepolicy/sepolicy.glade:2874
+#: ../sepolicy/sepolicy/sepolicy.glade:2970
 msgid "Executable File"
 msgstr "可執行檔"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2899
+#: ../sepolicy/sepolicy/sepolicy.glade:2891
 msgid "SELinux Application Type"
 msgstr "SELinux 應用程式類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2920
+#: ../sepolicy/sepolicy/sepolicy.glade:2912
 msgid ""
 "Executables which will transition to a different domain, when the 'selected "
 "domain' executes them."
 msgstr "在「選擇區域」執行時，會轉移到不同區域的可執行檔。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2923
+#: ../sepolicy/sepolicy/sepolicy.glade:2915
 msgid "Application Transitions From 'select domain'"
 msgstr "由「選擇區域」進行應用程式轉移"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:2962
+#: ../sepolicy/sepolicy/sepolicy.glade:2954
 msgid "Calling Process Domain"
 msgstr "呼叫程序區域"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3002
+#: ../sepolicy/sepolicy/sepolicy.glade:2994
 msgid ""
 "Executables which will transition to the 'selected domain', when executing a "
 "selected domains entrypoint."
 msgstr "在執行選擇區域的進入點時，會轉移到「選擇區域」的可執行檔。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3003
+#: ../sepolicy/sepolicy/sepolicy.glade:2995
 msgid "Application Transitions Into 'select domain'"
 msgstr "轉移至「選擇區域」的應用程式"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3018
+#: ../sepolicy/sepolicy/sepolicy.glade:3010
 msgid ""
 "File Transitions define what happens when the current domain creates the "
 "content of a particular class in a directory of the destination type. "
@@ -3193,83 +3198,83 @@ msgstr ""
 "「檔案轉移」定義了當現有區域在目的類型的目錄中，建立特定類別的內容時會發生什"
 "麼事。使用者也可指定要轉移的檔名。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3026
+#: ../sepolicy/sepolicy/sepolicy.glade:3018
 msgid "SELinux Directory Type"
 msgstr "SELinux 目錄類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3039
+#: ../sepolicy/sepolicy/sepolicy.glade:3031
 msgid "Destination Class"
 msgstr "目的地類別"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3053
+#: ../sepolicy/sepolicy/sepolicy.glade:3045
 msgid "SELinux Destination Type"
 msgstr "SELinux 目的地類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3066
+#: ../sepolicy/sepolicy/sepolicy.glade:3058
 msgid "File Name"
 msgstr "檔名"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3088
+#: ../sepolicy/sepolicy/sepolicy.glade:3080
 msgid "File Transitions From 'select domain'"
 msgstr "來自「選擇區域」的檔案轉移"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3287
-#: ../sepolicy/sepolicy/sepolicy.glade:5498
+#: ../sepolicy/sepolicy/sepolicy.glade:3279
+#: ../sepolicy/sepolicy/sepolicy.glade:5490
 msgid "Default Level"
 msgstr "預設等級"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3373
+#: ../sepolicy/sepolicy/sepolicy.glade:3365
 msgid "Select the system mode when the system first boots up"
 msgstr "選擇系統第一次啟動時的系統模式"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3385
-#: ../sepolicy/sepolicy/sepolicy.glade:3459
+#: ../sepolicy/sepolicy/sepolicy.glade:3377
+#: ../sepolicy/sepolicy/sepolicy.glade:3451
 msgid "Enforcing"
 msgstr "強制"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3404
-#: ../sepolicy/sepolicy/sepolicy.glade:3477
+#: ../sepolicy/sepolicy/sepolicy.glade:3396
+#: ../sepolicy/sepolicy/sepolicy.glade:3469
 msgid "Permissive"
 msgstr "寬容"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3446
+#: ../sepolicy/sepolicy/sepolicy.glade:3438
 msgid "Select the system mode for the current session"
 msgstr "為目前的工作階段選擇系統模式"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3523
+#: ../sepolicy/sepolicy/sepolicy.glade:3515
 msgid "System Policy Type:"
 msgstr "系統方針類型："
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3584
+#: ../sepolicy/sepolicy/sepolicy.glade:3576
 msgid "<b>System Mode</b>"
 msgstr "<b>系統模式</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3622
+#: ../sepolicy/sepolicy/sepolicy.glade:3614
 msgid "Import system settings from another machine"
 msgstr "從另一台機器匯入系統設定"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3630
+#: ../sepolicy/sepolicy/sepolicy.glade:3622
 msgid "Import"
 msgstr "匯入"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3649
+#: ../sepolicy/sepolicy/sepolicy.glade:3641
 msgid "Export system settings to a file"
 msgstr "將系統設定匯出為檔案"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3659
+#: ../sepolicy/sepolicy/sepolicy.glade:3651
 msgid "Export"
 msgstr "匯出"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3678
+#: ../sepolicy/sepolicy/sepolicy.glade:3670
 msgid "Relabel all files back to system defaults on reboot"
 msgstr "將所有檔案重新標示為預設值，供重新開機後使用"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3773
+#: ../sepolicy/sepolicy/sepolicy.glade:3765
 msgid "<b>System Configuration</b>"
 msgstr "<b>系統組態</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3820
-#: ../sepolicy/sepolicy/sepolicy.glade:3838
+#: ../sepolicy/sepolicy/sepolicy.glade:3812
+#: ../sepolicy/sepolicy/sepolicy.glade:3830
 msgid ""
 "An unconfined domain is a process label that allows the process to do what "
 "it wants, without SELinux interfering.  Applications started at boot by the "
@@ -3283,14 +3288,14 @@ msgstr ""
 "提是已啟用此模組。停用這模組表示所有幕後程式都會受限。要停用 unconfined_t 使"
 "用者，您必須先從使用者 / 登入畫面移除 unconfined_t。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3856
+#: ../sepolicy/sepolicy/sepolicy.glade:3848
 msgid "<b>Disable ability to run unconfined system processes?</b>"
 msgstr "<b>停用執行未受限系統程序的能力？</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3884
-#: ../sepolicy/sepolicy/sepolicy.glade:3901
-#: ../sepolicy/sepolicy/sepolicy.glade:3947
-#: ../sepolicy/sepolicy/sepolicy.glade:3964
+#: ../sepolicy/sepolicy/sepolicy.glade:3876
+#: ../sepolicy/sepolicy/sepolicy.glade:3893
+#: ../sepolicy/sepolicy/sepolicy.glade:3939
+#: ../sepolicy/sepolicy/sepolicy.glade:3956
 msgid ""
 "A permissive domain is a process label that allows the process to do what it "
 "wants, with SELinux only logging the denials, but not enforcing them.  "
@@ -3302,127 +3307,127 @@ msgstr ""
 "強制。通常寬容區域意味著實驗性方針，停用模組會導致 SELinux 阻絕存取區域，但這"
 "應該是被允許的。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3919
+#: ../sepolicy/sepolicy/sepolicy.glade:3911
 msgid "<b>Disable all permissive processes?</b>"
 msgstr "<b>停用所有寬容程序？</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:3985
+#: ../sepolicy/sepolicy/sepolicy.glade:3977
 msgid "<b>Deny all processes from ptracing or debugging other processes?</b>"
 msgstr "<b>拒絕所有程序 ptrace 或 debug 其它程序？</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4022
+#: ../sepolicy/sepolicy/sepolicy.glade:4014
 msgid ""
 "File equivalence cause the system to label content under the new path as if "
 "it were under the equivalence path."
 msgstr "檔案相等會導致系統標誌新路徑下的內容，一如在相等路徑下一樣。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4078
+#: ../sepolicy/sepolicy/sepolicy.glade:4070
 msgid "Files Equivalence"
 msgstr "檔案相等"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4091
+#: ../sepolicy/sepolicy/sepolicy.glade:4083
 msgid "<b>...SELECT TO VIEW DATA...</b>"
 msgstr "<b>...選擇以檢視資料...</b>"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4122
+#: ../sepolicy/sepolicy/sepolicy.glade:4114
 msgid "Delete"
 msgstr "刪除"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4138
+#: ../sepolicy/sepolicy/sepolicy.glade:4130
 msgid "Modify"
 msgstr "修改"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4153
+#: ../sepolicy/sepolicy/sepolicy.glade:4145
 msgid "Add"
 msgstr "新增"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4199
+#: ../sepolicy/sepolicy/sepolicy.glade:4191
 msgid "Revert"
 msgstr "復原"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4204
+#: ../sepolicy/sepolicy/sepolicy.glade:4196
 msgid ""
 "Revert button will launch a dialog window which allows you to revert changes "
 "within the current transaction."
 msgstr "按下復原按鈕會顯示對話視窗，允許使用者復原現有處理事項裡的變更。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4221
+#: ../sepolicy/sepolicy/sepolicy.glade:4213
 msgid "Commit all changes in your current transaction to the server."
 msgstr "將現有處理事項中的所有變更提交至伺服器。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4269
+#: ../sepolicy/sepolicy/sepolicy.glade:4261
 msgid "Applications - Advanced Search"
 msgstr "應用程式 - 進階搜尋"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4334
+#: ../sepolicy/sepolicy/sepolicy.glade:4326
 msgid "Process Types"
 msgstr "程序類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4375
+#: ../sepolicy/sepolicy/sepolicy.glade:4367
 msgid "More Details"
 msgstr "更多詳細資料"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4411
-#: ../sepolicy/sepolicy/sepolicy.glade:4705
+#: ../sepolicy/sepolicy/sepolicy.glade:4403
+#: ../sepolicy/sepolicy/sepolicy.glade:4697
 msgid "Delete Modified File Labeling"
 msgstr "刪除已修改的檔案標籤"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4429
+#: ../sepolicy/sepolicy/sepolicy.glade:4421
 msgid ""
 "Select file labeling to delete. File labeling will be deleted when update is "
 "applied."
 msgstr "選擇要刪除的檔案標籤。套用更新時會刪除檔案標籤。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4476
+#: ../sepolicy/sepolicy/sepolicy.glade:4468
 msgid "SELinux File Label"
 msgstr "SELinux 檔案標籤"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4515
-#: ../sepolicy/sepolicy/sepolicy.glade:4665
-#: ../sepolicy/sepolicy/sepolicy.glade:4796
-#: ../sepolicy/sepolicy/sepolicy.glade:4930
-#: ../sepolicy/sepolicy/sepolicy.glade:5279
+#: ../sepolicy/sepolicy/sepolicy.glade:4507
+#: ../sepolicy/sepolicy/sepolicy.glade:4657
+#: ../sepolicy/sepolicy/sepolicy.glade:4788
+#: ../sepolicy/sepolicy/sepolicy.glade:4922
+#: ../sepolicy/sepolicy/sepolicy.glade:5271
 msgid "Save to Update"
 msgstr "儲存以更新"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4555
+#: ../sepolicy/sepolicy/sepolicy.glade:4547
 msgid "Delete Modified Ports"
 msgstr "刪除修改過的連接埠"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4573
+#: ../sepolicy/sepolicy/sepolicy.glade:4565
 msgid "Select ports to delete. Ports will be deleted when update is applied."
 msgstr "選擇要刪除的連接埠。套用更新時會刪除連接埠。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4723
+#: ../sepolicy/sepolicy/sepolicy.glade:4715
 msgid ""
 "Select file equivalence labeling to delete. File equivalence labeling will "
 "be deleted when update is applied."
 msgstr "選擇欲刪除的檔案相等標籤。當更新套用之後，檔案相等標籤便會被刪除。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4839
-#: ../sepolicy/sepolicy/sepolicy.glade:5188
+#: ../sepolicy/sepolicy/sepolicy.glade:4831
+#: ../sepolicy/sepolicy/sepolicy.glade:5180
 msgid "Delete Modified Users Mapping."
 msgstr "刪除已修改的使用者對應。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4857
+#: ../sepolicy/sepolicy/sepolicy.glade:4849
 msgid ""
 "Select login user mapping to delete. Login user mapping will be deleted when "
 "update is applied."
 msgstr "選擇要刪除的登入使用者對映。套用更新時會刪除登入使用者對映。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4892
+#: ../sepolicy/sepolicy/sepolicy.glade:4884
 msgid "Login name"
 msgstr "登入名稱"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:4973
+#: ../sepolicy/sepolicy/sepolicy.glade:4965
 msgid "More Types"
 msgstr "更多類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5000
+#: ../sepolicy/sepolicy/sepolicy.glade:4992
 msgid "Types"
 msgstr "類型"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5059
+#: ../sepolicy/sepolicy/sepolicy.glade:5051
 msgid ""
 "Review the updates you have made before committing them to the system.  To "
 "reset an item, uncheck the checkbox.  All items checked will be updated in "
@@ -3431,34 +3436,34 @@ msgstr ""
 "將更新發送至系統前，先予以檢視。要重新設定項目，先取消勾選。所有勾選的項目會"
 "在您選擇更新時於系統內部更新。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5122
+#: ../sepolicy/sepolicy/sepolicy.glade:5114
 msgid "Action"
 msgstr "動作"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5148
+#: ../sepolicy/sepolicy/sepolicy.glade:5140
 msgid "Apply"
 msgstr "套用"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5206
+#: ../sepolicy/sepolicy/sepolicy.glade:5198
 msgid ""
 "Select users mapping to delete.Users mapping will be deleted when update is "
 "applied."
 msgstr "選擇要刪除的使用者對映。套用更新時會刪除使用者對映。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5254
+#: ../sepolicy/sepolicy/sepolicy.glade:5246
 msgid "SELinux Username"
 msgstr "SELinux 使用者名稱"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5339
+#: ../sepolicy/sepolicy/sepolicy.glade:5331
 msgid ""
 "Add User Roles. SELinux User Roles will be created when Update is applied."
 msgstr "新增使用者角色。套用更新時會建立 SELinux 使用者角色。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5364
+#: ../sepolicy/sepolicy/sepolicy.glade:5356
 msgid "SELinux User Name"
 msgstr "SELinux 使用者名稱"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5479
+#: ../sepolicy/sepolicy/sepolicy.glade:5471
 msgid ""
 "Enter MLS/MCS Range for this SELinux User.\n"
 "s0-s0:c1023"
@@ -3466,13 +3471,13 @@ msgstr ""
 "為此 SELinux 使用者輸入 MLS/MCS 範圍。\n"
 "s0-s0:c1023"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5510
+#: ../sepolicy/sepolicy/sepolicy.glade:5502
 msgid ""
 "Specify the default level that you would like this SELinux user to login "
 "with.  Defaults to s0."
 msgstr "指定此 SELinux 使用者登入時所使用的預設等級。預設值為 s0。"
 
-#: ../sepolicy/sepolicy/sepolicy.glade:5514
+#: ../sepolicy/sepolicy/sepolicy.glade:5506
 msgid "Enter Default Level for SELinux User to login with. Default s0"
 msgstr "輸入欲登入的 SELinux 之預設等級。預設值為 s0。"
 

@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-09-07 16:05+0000\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2023-01-19 12:57+0000\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <https://translate.fedoraproject.org/projects/selinux/"
 "sandbox/pl/>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.15.1\n"
 
 #: ../sandbox:120
 #, python-format
@@ -46,13 +46,13 @@ msgstr ""
 "Odnalezienie nieużywanych zestawów kategorii się nie powiodło. Proszę "
 "rozważyć większy zakres MCS dla tego użytkownika."
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
 msgstr ""
 "Katalog domowy i katalog tymczasowy są wymagane dla punktów montowania "
 "poziomów"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
@@ -61,7 +61,7 @@ msgstr ""
 "\n"
 "%s jest wymagane do działania, które ma zostać wykonane.\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
@@ -72,7 +72,7 @@ msgstr ""
 "Polityka określa te typy do użytku za pomocą opcji -t:\n"
 "\t%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -95,55 +95,62 @@ msgstr ""
 "[[-i plik ] …] [ -t typ ] -S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "dołącza plik do piaskownicy"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr "odczytuje listę plików do dołączenia do piaskownicy z DOŁĄCZENIA-PLIKU"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "uruchamia piaskownicę za pomocą typu SELinuksa"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr "montuje nowy katalog domowy lub tymczasowy"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "punkty na cal dla ekranu X"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
 msgstr "uruchamia pełną sesję pulpitu w piaskownicy"
 
-#: ../sandbox:343
+#: ../sandbox:344
 msgid "Shred content before temporary directories are removed"
 msgstr "Niszczy zawartość przed usunięciem katalogów tymczasowych"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
 msgstr "uruchamia program X w piaskownicy"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
 msgstr "alternatywny katalog domowy do użycia do montowania"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
 msgstr "alternatywny katalog /tmp do użycia do montowania"
 
-#: ../sandbox:367
+#: ../sandbox:364
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr ""
+"alternatywny katalog XDG_RUNTIME_DIR — /run/user/$UID — do użycia do "
+"montowania"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "alternatywny menedżer okien"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "poziom MCS/MLS dla piaskownicy"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -152,27 +159,27 @@ msgstr ""
 "Polityka piaskownicy obecnie nie jest zainstalowana.\n"
 "Należy zainstalować pakiet selinux-policy-sandbox, aby wykonać to polecenie"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
 "Należy podać katalog domowy i katalog tymczasowy podczas ustawiania sesji "
 "piaskownicy"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
 msgstr "Polecenia nie są dozwolone w piaskownicy sesji"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "Wymagane jest polecenie"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s nie jest plikiem wykonywalnym"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "Nieprawidłowa wartość %s"

@@ -3,17 +3,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2016-01-06 06:54-0500\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Arabic\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2023-01-14 17:20+0000\n"
+"Last-Translator: Amro Hatem <amro_hatem_1@outlook.com>\n"
+"Language-Team: Arabic <https://translate.fedoraproject.org/projects/selinux/"
+"policycoreutils/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural= n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Zanata 4.6.2\n"
+"X-Generator: Weblate 4.15\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -243,7 +244,7 @@ msgstr "فشل في ضبط مدى جديد %s\n"
 #: ../newrole/newrole.c:977
 #, c-format
 msgid "failed to convert new context to string\n"
-msgstr "فشل في في تحويل السياق الجديد إلى نص\n"
+msgstr "فشل في تحويل السياق الجديد إلى نص\n"
 
 #: ../newrole/newrole.c:982
 #, c-format

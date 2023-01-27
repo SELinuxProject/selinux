@@ -3,9 +3,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-09-16 04:04+0000\n"
-"Last-Translator: Sundeep Anand <suanand@redhat.com>\n"
+"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"PO-Revision-Date: 2023-01-26 08:20+0000\n"
+"Last-Translator: Ludek Janda <ljanda@redhat.com>\n"
 "Language-Team: French <https://translate.fedoraproject.org/projects/selinux/"
 "sandbox/fr/>\n"
 "Language: fr\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../sandbox:120
 #, python-format
@@ -45,13 +45,13 @@ msgstr ""
 "Le système n'a trouvé aucun ensemble de catégories non-utilisé. Veuillez "
 "considérer  une plage MCS plus large pour cet utilisateur."
 
-#: ../sandbox:216
+#: ../sandbox:217
 msgid "Homedir and tempdir required for level mounts"
 msgstr ""
 "Le répertoire personnel (Homedir) et le dossier temporaire (tempdir) sont "
 "nécessaires pour le montage par niveau"
 
-#: ../sandbox:219 ../sandbox:230 ../sandbox:235
+#: ../sandbox:220 ../sandbox:231 ../sandbox:236
 #, python-format
 msgid ""
 "\n"
@@ -60,7 +60,7 @@ msgstr ""
 "\n"
 "%s est requis afin d'effectuer cette opération.\n"
 
-#: ../sandbox:306
+#: ../sandbox:307
 #, python-format
 msgid ""
 "\n"
@@ -71,7 +71,7 @@ msgstr ""
 "La politique définit les types suivants à utiliser avec l’option -t :\n"
 "\t%s\n"
 
-#: ../sandbox:313
+#: ../sandbox:314
 #, python-format
 msgid ""
 "\n"
@@ -94,60 +94,67 @@ msgstr ""
 "fichier ] ...] [ -t type ] -S\n"
 "%s\n"
 
-#: ../sandbox:325
+#: ../sandbox:326
 msgid "include file in sandbox"
 msgstr "Inclut le fichier dans le bac à sable"
 
-#: ../sandbox:328
+#: ../sandbox:329
 msgid "read list of files to include in sandbox from INCLUDEFILE"
 msgstr ""
 "Lit la liste de fichier disponible dans INCLUDEFILE à inclure dans le bac à "
 "sable"
 
-#: ../sandbox:330
+#: ../sandbox:331
 msgid "run sandbox with SELinux type"
 msgstr "Exécute le bac à sable avec les SELinux type"
 
-#: ../sandbox:333
+#: ../sandbox:334
 msgid "mount new home and/or tmp directory"
 msgstr ""
 "Monte le nouveau répertoire personnel et/ou le nouveau dossier temporaire"
 
-#: ../sandbox:337
+#: ../sandbox:338
 msgid "dots per inch for X display"
 msgstr "points par pouces pour l'affichage X"
 
-#: ../sandbox:340
+#: ../sandbox:341
 msgid "run complete desktop session within sandbox"
 msgstr "Exécute l’environnement de bureau complet au sein d’un bac à sable"
 
-#: ../sandbox:343
+#: ../sandbox:344
 msgid "Shred content before temporary directories are removed"
 msgstr ""
 "Détruisez le contenu avant que les répertoires temporaires ne soient "
 "supprimés"
 
-#: ../sandbox:347
+#: ../sandbox:348
 msgid "run X application within a sandbox"
 msgstr "Exécuter X applications au sein du bac à sable"
 
-#: ../sandbox:353
+#: ../sandbox:354
 msgid "alternate home directory to use for mounting"
 msgstr "Répertoire personnel alternatif à utiliser lors du montage"
 
-#: ../sandbox:358
+#: ../sandbox:359
 msgid "alternate /tmp directory to use for mounting"
 msgstr "Dossier /tmp alternatif à utiliser lors du montage"
 
-#: ../sandbox:367
+#: ../sandbox:364
+msgid ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
+msgstr ""
+"alternate XDG_RUNTIME_DIR - /run/user/$UID - répertoire à utiliser pour le "
+"montage"
+
+#: ../sandbox:373
 msgid "alternate window manager"
 msgstr "Gestionnaire de fenêtres alternatif"
 
-#: ../sandbox:370
+#: ../sandbox:376
 msgid "MCS/MLS level for the sandbox"
 msgstr "Niveau MCS/MLS pour le bac à sable"
 
-#: ../sandbox:386
+#: ../sandbox:392
 msgid ""
 "Sandbox Policy is not currently installed.\n"
 "You need to install the selinux-policy-sandbox package in order to run this "
@@ -157,27 +164,27 @@ msgstr ""
 "Vous devez installer le paquet selinux-policy-sandbox pour pouvoir exécuter "
 "cette commande"
 
-#: ../sandbox:398
+#: ../sandbox:404
 msgid ""
 "You must specify a Homedir and tempdir when setting up a session sandbox"
 msgstr ""
 "Vous devez définir un répertoire personnel (homedir) et un répertoire "
 "temporaire (tempdir) quand vous paramétrez une session Bac à sable"
 
-#: ../sandbox:400
+#: ../sandbox:406
 msgid "Commands are not allowed in a session sandbox"
 msgstr "Ces commandes ne sont pas autorisées dans l’environnement Bac à sable"
 
-#: ../sandbox:410
+#: ../sandbox:418
 msgid "Command required"
 msgstr "Commande requise"
 
-#: ../sandbox:413
+#: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
 msgstr "%s n'est pas un fichier exécutable"
 
-#: ../sandbox:536
+#: ../sandbox:549
 #, python-format
 msgid "Invalid value %s"
 msgstr "Valeur %s invalide"
