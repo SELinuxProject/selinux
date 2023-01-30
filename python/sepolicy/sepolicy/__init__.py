@@ -125,6 +125,7 @@ all_attributes = None
 booleans = None
 booleans_dict = None
 all_allow_rules = None
+all_bool_rules = None
 all_transitions = None
 
 
@@ -1136,6 +1137,14 @@ def get_all_allow_rules():
         all_allow_rules = search([ALLOW])
     return all_allow_rules
 
+def get_all_bool_rules():
+    global all_bool_rules
+    if not all_bool_rules:
+        q = TERuleQuery(_pol, boolean=".*", boolean_regex=True,
+                                ruletype=[ALLOW, DONTAUDIT])
+        all_bool_rules = [_setools_rule_to_dict(x) for x in q.results()]
+    return all_bool_rules
+
 def get_all_transitions():
     global all_transitions
     if not all_transitions:
@@ -1146,7 +1155,7 @@ def get_bools(setype):
     bools = []
     domainbools = []
     domainname, short_name = gen_short_name(setype)
-    for i in map(lambda x: x['booleans'], filter(lambda x: 'booleans' in x and x['source'] == setype, search([ALLOW, DONTAUDIT]))):
+    for i in map(lambda x: x['booleans'], filter(lambda x: 'booleans' in x and x['source'] == setype, get_all_bool_rules())):
         for b in i:
             if not isinstance(b, tuple):
                 continue
