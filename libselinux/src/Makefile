@@ -86,7 +86,7 @@ CFLAGS ?= -O -Wall -W -Wundef -Wformat-y2k -Wformat-security -Winit-self -Wmissi
           -Wno-missing-field-initializers -Wno-sign-compare \
           -Wno-format-nonliteral -Wframe-larger-than=$(MAX_STACK_SIZE) \
           -fstack-protector-all --param=ssp-buffer-size=4 -fexceptions \
-          -fasynchronous-unwind-tables -fdiagnostics-show-option -funit-at-a-time \
+          -fasynchronous-unwind-tables -fdiagnostics-show-option \
           -Werror -Wno-aggregate-return -Wno-redundant-decls \
           $(EXTRA_CFLAGS)
 
