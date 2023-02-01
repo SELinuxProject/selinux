@@ -300,3 +300,21 @@ int getpidcon(pid_t pid, char **c)
 	}
 	return getprocattrcon(c, pid, "current", NULL);
 }
+
+int getpidprevcon_raw(pid_t pid, char **c)
+{
+        if (pid <= 0) {
+                errno = EINVAL;
+                return -1;
+        }
+        return getprocattrcon_raw(c, pid, "prev", NULL);
+}
+
+int getpidprevcon(pid_t pid, char **c)
+{
+        if (pid <= 0) {
+                errno = EINVAL;
+                return -1;
+        }
+        return getprocattrcon(c, pid, "prev", NULL);
+}

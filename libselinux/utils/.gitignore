@@ -9,6 +9,7 @@ getdefaultcon
 getenforce
 getfilecon
 getpidcon
+getpidprevcon
 getsebool
 getseuser
 matchpathcon

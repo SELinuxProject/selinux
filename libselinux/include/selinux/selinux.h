@@ -54,6 +54,11 @@ extern int getpidcon_raw(pid_t pid, char ** con);
 extern int getprevcon(char ** con);
 extern int getprevcon_raw(char ** con);
 
+/* Get previous context (prior to last exec) of process identified by pid, and
+   set *con to refer to it.  Caller must free via freecon. */
+extern int getpidprevcon(pid_t pid, char ** con);
+extern int getpidprevcon_raw(pid_t pid, char ** con);
+
 /* Get exec context, and set *con to refer to it.
    Sets *con to NULL if no exec context has been set, i.e. using default.
    If non-NULL, caller must free via freecon. */

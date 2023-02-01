@@ -23,6 +23,10 @@ setcon \- set current security context of a process
 .sp
 .BI "int getpidcon_raw(pid_t " pid ", char **" context );
 .sp
+.BI "int getpidprevcon(pid_t " pid ", char **" context );
+.sp
+.BI "int getpidprevcon_raw(pid_t " pid ", char **" context );
+.sp
 .BI "int getpeercon(int " fd ", char **" context );
 .sp
 .BI "int getpeercon_raw(int " fd ", char **" context );
@@ -48,6 +52,11 @@ same as getcon but gets the context before the last exec.
 .TP
 .BR getpidcon ()
 returns the process context for the specified PID, which must be free'd with
+.BR freecon ().
+
+.TP
+.BR getpidprevcon ()
+returns the process context before the last exec for the specified PID, which must be free'd with
 .BR freecon ().
 
 .TP
@@ -125,6 +134,7 @@ will fail if it is not allowed by policy.
 .BR getcon_raw (),
 .BR getprevcon_raw (),
 .BR getpidcon_raw (),
+.BR getpidprevcon_raw (),
 .BR getpeercon_raw ()
 and
 .BR setcon_raw ()
