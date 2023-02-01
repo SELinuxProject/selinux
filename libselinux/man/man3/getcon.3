@@ -149,5 +149,9 @@ The retrieval functions might return success and set
 .I *context
 to NULL if and only if SELinux is not enabled.
 
+Querying a foreign process via its PID, e.g. \fBgetpidcon\fR() or
+\fBgetpidprevcon\fR(), is inherently racy and therefore should never be relied
+upon for security purposes.
+
 .SH "SEE ALSO"
 .BR selinux "(8), " setexeccon "(3)"
