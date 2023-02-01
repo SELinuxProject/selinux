@@ -435,7 +435,8 @@ static int filespec_add(ino_t ino, const char *con, const char *file,
 			const struct rest_flags *flags)
 {
 	file_spec_t *prevfl, *fl;
-	int h, ret;
+	uint32_t h;
+	int ret;
 	struct stat64 sb;
 
 	__pthread_mutex_lock(&fl_mutex);
@@ -524,7 +525,8 @@ unlock_1:
 static void filespec_eval(void)
 {
 	file_spec_t *fl;
-	int h, used, nel, len, longest;
+	uint32_t h;
+	size_t used, nel, len, longest;
 
 	if (!fl_head)
 		return;
@@ -544,7 +546,7 @@ static void filespec_eval(void)
 	}
 
 	selinux_log(SELINUX_INFO,
-		     "filespec hash table stats: %d elements, %d/%d buckets used, longest chain length %d\n",
+		     "filespec hash table stats: %zu elements, %zu/%zu buckets used, longest chain length %zu\n",
 		     nel, used, HASH_BUCKETS, longest);
 }
 #else
@@ -559,7 +561,7 @@ static void filespec_eval(void)
 static void filespec_destroy(void)
 {
 	file_spec_t *fl, *tmp;
-	int h;
+	uint32_t h;
 
 	if (!fl_head)
 		return;
