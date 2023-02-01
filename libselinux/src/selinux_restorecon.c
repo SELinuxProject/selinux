@@ -432,7 +432,7 @@ static pthread_mutex_t fl_mutex = PTHREAD_MUTEX_INITIALIZER;
  * that matched.
  */
 static int filespec_add(ino_t ino, const char *con, const char *file,
-			struct rest_flags *flags)
+			const struct rest_flags *flags)
 {
 	file_spec_t *prevfl, *fl;
 	int h, ret;
@@ -624,15 +624,13 @@ out:
 }
 
 static int restorecon_sb(const char *pathname, const struct stat *sb,
-			    struct rest_flags *flags, bool first)
+			    const struct rest_flags *flags, bool first)
 {
 	char *newcon = NULL;
 	char *curcon = NULL;
 	char *newtypecon = NULL;
 	int rc;
-	bool updated = false;
 	const char *lookup_path = pathname;
-	float pc;
 
 	if (rootpath) {
 		if (strncmp(rootpath, lookup_path, rootpathlen) != 0) {
@@ -647,10 +645,10 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 	if (rootpath != NULL && lookup_path[0] == '\0')
 		/* this is actually the root dir of the alt root. */
 		rc = selabel_lookup_raw(fc_sehandle, &newcon, "/",
-						    sb->st_mode);
+						    sb->st_mode & S_IFMT);
 	else
 		rc = selabel_lookup_raw(fc_sehandle, &newcon, lookup_path,
-						    sb->st_mode);
+						    sb->st_mode & S_IFMT);
 
 	if (rc < 0) {
 		if (errno == ENOENT) {
@@ -670,7 +668,7 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 		fc_count++;
 		if (fc_count % STAR_COUNT == 0) {
 			if (flags->mass_relabel && efile_count > 0) {
-				pc = (fc_count < efile_count) ? (100.0 *
+				float pc = (fc_count < efile_count) ? (100.0 *
 					     fc_count / efile_count) : 100;
 				fprintf(stdout, "\r%-.1f%%", (double)pc);
 			} else {
@@ -710,6 +708,8 @@ static int restorecon_sb(const char *pathname, const struct stat *sb,
 	}
 
 	if (curcon == NULL || strcmp(curcon, newcon) != 0) {
+		bool updated = false;
+
 		if (!flags->set_specctx && curcon &&
 				    (is_context_customizable(curcon) > 0)) {
 			if (flags->verbose) {
