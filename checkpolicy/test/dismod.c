@@ -917,6 +917,8 @@ int main(int argc, char **argv)
 	for (;;) {
 		printf("\nCommand (\'m\' for menu):  ");
 		if (fgets(ans, sizeof(ans), stdin) == NULL) {
+			if (feof(stdin))
+				break;
 			fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
 					strerror(errno));
 			continue;
