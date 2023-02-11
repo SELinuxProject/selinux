@@ -63,13 +63,57 @@ static const char *symbol_labels[9] = {
 	"levels ", "cats   ", "attribs"
 };
 
+static struct command {
+	enum {
+		EOL    = 0,
+		HEADER = 1,
+		CMD    = 1 << 1,
+		NOOPT  = 1 << 2,
+	} meta;
+	char cmd;
+	const char *desc;
+} commands[] = {
+	{HEADER, 0, "\nSelect a command:"},
+	{CMD,       '1', "display unconditional AVTAB" },
+	{CMD,       '2', "display conditional AVTAB" },
+	{CMD,       '3', "display users" },
+	{CMD,       '4', "display bools" },
+	{CMD,       '5', "display roles" },
+	{CMD,       '6', "display types, attributes, and aliases" },
+	{CMD,       '7', "display role transitions" },
+	{CMD,       '8', "display role allows" },
+	{CMD,       '9', "Display policycon" },
+	{CMD,       '0', "Display initial SIDs" },
+	{HEADER, 0, ""},
+	{CMD,       'a', "Display avrule requirements"},
+	{CMD,       'b', "Display avrule declarations"},
+	{CMD,       'c', "Display policy capabilities"},
+	{CMD|NOOPT, 'l', "Link in a module"},
+	{CMD,       'u', "Display the unknown handling setting"},
+	{CMD,       'F', "Display filename_trans rules"},
+	{HEADER, 0, ""},
+	{CMD|NOOPT, 'f',  "set output file"},
+	{CMD|NOOPT, 'm',  "display menu"},
+	{CMD|NOOPT, 'q',  "quit"},
+	{EOL,   0, "" },
+};
+
 static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	puts("Usage:");
 	printf(" %s [OPTIONS] binary_pol_file\n\n", progname);
 	puts("Options:");
-	puts(" -h, --help	print this help message");
-	puts("\n");
+	puts(" -h, --help              print this help message");
+	puts(" -a, --actions ACTIONS   run non-interactively");
+	puts("");
+	puts("Actions:");
+	for (unsigned int i = 0; commands[i].meta != EOL; i++) {
+		if (commands[i].meta == HEADER
+		    || commands[i].meta & NOOPT)
+			continue;
+		printf("  %c    %s\n", commands[i].cmd, commands[i].desc);
+	}
+	puts("");
 	exit(1);
 }
 
@@ -841,38 +885,38 @@ static void display_policycaps(policydb_t * p, FILE * fp)
 
 static int menu(void)
 {
-	printf("\nSelect a command:\n");
-	printf("1)  display unconditional AVTAB\n");
-	printf("2)  display conditional AVTAB\n");
-	printf("3)  display users\n");
-	printf("4)  display bools\n");
-	printf("5)  display roles\n");
-	printf("6)  display types, attributes, and aliases\n");
-	printf("7)  display role transitions\n");
-	printf("8)  display role allows\n");
-	printf("9)  Display policycon\n");
-	printf("0)  Display initial SIDs\n");
-	printf("\n");
-	printf("a)  Display avrule requirements\n");
-	printf("b)  Display avrule declarations\n");
-	printf("c)  Display policy capabilities\n");
-	printf("l)  Link in a module\n");
-	printf("u)  Display the unknown handling setting\n");
-	printf("F)  Display filename_trans rules\n");
-	printf("\n");
-	printf("f)  set output file\n");
-	printf("m)  display menu\n");
-	printf("q)  quit\n");
+	unsigned int i;
+	for (i = 0; commands[i].meta != EOL; i++) {
+		if (commands[i].meta == HEADER)
+			printf("%s\n", commands[i].desc);
+		else if (commands[i].meta & CMD)
+			printf("%c) %s\n", commands[i].cmd, commands[i].desc);
+	}
 	return 0;
 }
 
 int main(int argc, char **argv)
 {
+	char *ops = NULL;
+	char *mod;
 	FILE *out_fp = stdout;
 	char ans[81], OutfileName[121];
 
 	if (argc < 2 || strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)
 		usage(argv[0]);
+
+	mod = argv[1];
+	if (strcmp (mod, "--actions") == 0 || strcmp (mod, "-a") == 0) {
+		if (argc != 4) {
+			fprintf(stderr, "%s: unexpected number of arguments\n", argv[0]);
+			usage(argv[0]);
+		}
+		ops = argv[2];
+		mod = argv[3];
+	} else if (mod[0] == '-') {
+		fprintf(stderr, "%s: unknown option: %s\n", argv[0], mod);
+		usage(argv[0]);
+	}
 
 	/* read the binary policy */
 	fprintf(out_fp, "Reading policy...\n");
@@ -880,7 +924,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "%s:  Out of memory!\n", __FUNCTION__);
 		exit(1);
 	}
-	if (read_policy(argv[1], &policydb)) {
+	if (read_policy(mod, &policydb)) {
 		fprintf(stderr,
 			"%s:  error(s) encountered while loading policy\n",
 			argv[0]);
@@ -913,15 +957,22 @@ int main(int argc, char **argv)
 	}
 
 	printf("Policy version: %d\n\n", policydb.policyvers);
-	menu();
+	if (!ops)
+		menu();
 	for (;;) {
-		printf("\nCommand (\'m\' for menu):  ");
-		if (fgets(ans, sizeof(ans), stdin) == NULL) {
-			if (feof(stdin))
-				break;
-			fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
+		if (ops) {
+			puts("");
+			ans[0] = *ops? *ops++: 'q';
+			ans[1] = '\0';
+		} else {
+			printf("\nCommand (\'m\' for menu):  ");
+			if (fgets(ans, sizeof(ans), stdin) == NULL) {
+				if (feof(stdin))
+					break;
+				fprintf(stderr, "fgets failed at line %d: %s\n", __LINE__,
 					strerror(errno));
-			continue;
+				continue;
+			}
 		}
 
 		switch (ans[0]) {
