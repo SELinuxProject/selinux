@@ -178,6 +178,10 @@ use up to
 threads.  Specify 0 to create as many threads as there are available
 CPU cores; 1 to use only a single thread (default); or any positive
 number to use the given number of threads (if possible).
+.TP
+.BI \-y
+run in a mode that resembles restorecon. Useful to relabel a complete system
+in initrd when no policy is loaded
 
 .SH "ARGUMENTS"
 .TP
