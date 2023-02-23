@@ -4,7 +4,7 @@ from setuptools import Extension, setup
 
 setup(
     name="selinux",
-    version="3.5-rc3",
+    version="3.5",
     description="SELinux python 3 bindings",
     author="SELinux Project",
     author_email="selinux@vger.kernel.org",
