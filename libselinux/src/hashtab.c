@@ -156,6 +156,32 @@ void hashtab_destroy(hashtab_t h)
 	free(h);
 }
 
+void hashtab_destroy_key(hashtab_t h,
+		int (*destroy_key) (hashtab_key_t k))
+{
+	unsigned int i;
+	hashtab_ptr_t cur, temp;
+
+	if (!h)
+		return;
+
+	for (i = 0; i < h->size; i++) {
+		cur = h->htable[i];
+		while (cur != NULL) {
+			temp = cur;
+			cur = cur->next;
+			destroy_key(temp->key);
+			free(temp);
+		}
+		h->htable[i] = NULL;
+	}
+
+	free(h->htable);
+	h->htable = NULL;
+
+	free(h);
+}
+
 int hashtab_map(hashtab_t h,
 		int (*apply) (hashtab_key_t k,
 			      hashtab_datum_t d, void *args), void *args)

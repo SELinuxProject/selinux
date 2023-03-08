@@ -11,8 +11,8 @@
  * provided by the creator of the table.
  */
 
-#ifndef _NEWROLE_HASHTAB_H_
-#define _NEWROLE_HASHTAB_H_
+#ifndef _SELINUX_HASHTAB_H_
+#define _SELINUX_HASHTAB_H_
 
 #include <stdint.h>
 #include <errno.h>
@@ -93,6 +93,8 @@ extern hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t k);
    Destroys the specified hash table.
  */
 extern void hashtab_destroy(hashtab_t h);
+extern void hashtab_destroy_key(hashtab_t h,
+			int (*destroy_key) (hashtab_key_t k));
 
 /*
    Applies the specified apply function to (key,datum,args)
