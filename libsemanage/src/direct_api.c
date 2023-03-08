@@ -863,6 +863,14 @@ static void update_checksum_with_len(Sha256Context *context, size_t s)
 	Sha256Update(context, buffer, 8);
 }
 
+static void update_checksum_with_bool(Sha256Context *context, bool b)
+{
+	uint8_t byte;
+
+	byte = b ? UINT8_C(1) : UINT8_C(0);
+	Sha256Update(context, &byte, 1);
+}
+
 static int semanage_compile_module(semanage_handle_t *sh,
 				   semanage_module_info_t *modinfo,
 				   Sha256Context *context)
@@ -977,13 +985,21 @@ static int modinfo_cmp(const void *a, const void *b)
 	return strcmp(ma->name, mb->name);
 }
 
+struct extra_checksum_params {
+	int disable_dontaudit;
+	int preserve_tunables;
+	int target_platform;
+	int policyvers;
+};
+
 static int semanage_compile_hll_modules(semanage_handle_t *sh,
 					semanage_module_info_t *modinfos,
 					int num_modinfos,
+					const struct extra_checksum_params *extra,
 					char *cil_checksum)
 {
 	/* to be incremented when checksum input data format changes */
-	static const size_t CHECKSUM_EPOCH = 1;
+	static const size_t CHECKSUM_EPOCH = 2;
 
 	int i, status = 0;
 	char cil_path[PATH_MAX];
@@ -1000,6 +1016,10 @@ static int semanage_compile_hll_modules(semanage_handle_t *sh,
 
 	Sha256Initialise(&context);
 	update_checksum_with_len(&context, CHECKSUM_EPOCH);
+	update_checksum_with_bool(&context, !!extra->disable_dontaudit);
+	update_checksum_with_bool(&context, !!extra->preserve_tunables);
+	update_checksum_with_len(&context, (size_t)extra->target_platform);
+	update_checksum_with_len(&context, (size_t)extra->policyvers);
 
 	/* prefix with module count to avoid collisions */
 	update_checksum_with_len(&context, num_modinfos);
@@ -1134,6 +1154,7 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 	mode_t mask = umask(0077);
 	struct stat sb;
 	char modules_checksum[CHECKSUM_CONTENT_SIZE + 1 /* '\0' */];
+	struct extra_checksum_params extra;
 
 	int do_rebuild, do_write_kernel, do_install;
 	int fcontexts_modified, ports_modified, seusers_modified,
@@ -1274,8 +1295,14 @@ static int semanage_direct_commit(semanage_handle_t * sh)
 			goto cleanup;
 		}
 
+		extra = (struct extra_checksum_params){
+			.disable_dontaudit = sepol_get_disable_dontaudit(sh->sepolh),
+			.preserve_tunables = sepol_get_preserve_tunables(sh->sepolh),
+			.target_platform = sh->conf->target_platform,
+			.policyvers = sh->conf->policyvers,
+		};
 		retval = semanage_compile_hll_modules(sh, modinfos, num_modinfos,
-						      modules_checksum);
+						      &extra, modules_checksum);
 		if (retval < 0) {
 			ERR(sh, "Failed to compile hll files into cil files.\n");
 			goto cleanup;
