@@ -19,9 +19,18 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include "hashtab.h"
 #include "callbacks.h"
 #include "label_internal.h"
 #include "label_file.h"
+
+/* controls the shrink multiple of the hashtab length */
+#define SHRINK_MULTIS 1
+
+struct chkdups_key {
+	char *regex;
+	unsigned int mode;
+};
 
 /*
  * Internals, mostly moved over from matchpathcon.c
@@ -57,40 +66,103 @@ static int find_stem_from_file(struct saved_data *data, const char *key)
 }
 
 /*
+ * hash calculation and key comparison of hash table
+ */
+
+static unsigned int symhash(hashtab_t h, const_hashtab_key_t key)
+{
+	const struct chkdups_key *k = (const struct chkdups_key *)key;
+	const char *p = NULL;
+	size_t size;
+	unsigned int val = 0;
+
+	size = strlen(k->regex);
+	for (p = k->regex; ((size_t) (p - k->regex)) < size; p++)
+		val =
+			((val << 4) | (val >> (8 * sizeof(unsigned int) - 4))) ^ (*p);
+	return val % h->size;
+}
+
+static int symcmp(hashtab_t h
+		  __attribute__ ((unused)), const_hashtab_key_t key1,
+		  const_hashtab_key_t key2)
+{
+	const struct chkdups_key *a = (const struct chkdups_key *)key1;
+	const struct chkdups_key *b = (const struct chkdups_key *)key2;
+
+	return strcmp(a->regex, b->regex) || (a->mode && b->mode && a->mode != b->mode);
+}
+
+static int destroy_chkdups_key(hashtab_key_t key)
+{
+	free(key);
+
+	return 0;
+}
+
+/*
  * Warn about duplicate specifications.
  */
 static int nodups_specs(struct saved_data *data, const char *path)
 {
-	int rc = 0;
-	unsigned int ii, jj;
+	int rc = 0, ret = 0;
+	unsigned int ii;
 	struct spec *curr_spec, *spec_arr = data->spec_arr;
+	struct chkdups_key *new = NULL;
+	unsigned int hashtab_len = (data->nspec / SHRINK_MULTIS) ? data->nspec / SHRINK_MULTIS : 1;
 
+	hashtab_t hash_table = hashtab_create(symhash, symcmp, hashtab_len);
+	if (!hash_table) {
+		rc = -1;
+		COMPAT_LOG(SELINUX_ERROR, "%s: hashtab create failed.\n", path);
+		return rc;
+	}
 	for (ii = 0; ii < data->nspec; ii++) {
-		curr_spec = &spec_arr[ii];
-		for (jj = ii + 1; jj < data->nspec; jj++) {
-			if ((!strcmp(spec_arr[jj].regex_str,
-				curr_spec->regex_str))
-			    && (!spec_arr[jj].mode || !curr_spec->mode
-				|| spec_arr[jj].mode == curr_spec->mode)) {
-				rc = -1;
-				errno = EINVAL;
-				if (strcmp(spec_arr[jj].lr.ctx_raw,
-					    curr_spec->lr.ctx_raw)) {
-					COMPAT_LOG
-						(SELINUX_ERROR,
-						 "%s: Multiple different specifications for %s  (%s and %s).\n",
-						 path, curr_spec->regex_str,
-						 spec_arr[jj].lr.ctx_raw,
-						 curr_spec->lr.ctx_raw);
-				} else {
-					COMPAT_LOG
-						(SELINUX_ERROR,
-						 "%s: Multiple same specifications for %s.\n",
-						 path, curr_spec->regex_str);
-				}
+		new = (struct chkdups_key *)malloc(sizeof(struct chkdups_key));
+		if (!new) {
+			rc = -1;
+			hashtab_destroy_key(hash_table, destroy_chkdups_key);
+			COMPAT_LOG(SELINUX_ERROR, "%s: hashtab key create failed.\n", path);
+			return rc;
+		}
+		new->regex = spec_arr[ii].regex_str;
+		new->mode = spec_arr[ii].mode;
+		ret = hashtab_insert(hash_table, (hashtab_key_t)new, &spec_arr[ii]);
+		if (ret == HASHTAB_SUCCESS)
+			continue;
+		if (ret == HASHTAB_PRESENT) {
+			curr_spec =
+				(struct spec *)hashtab_search(hash_table, (hashtab_key_t)new);
+			rc = -1;
+			errno = EINVAL;
+			free(new);
+			if (strcmp(spec_arr[ii].lr.ctx_raw, curr_spec->lr.ctx_raw)) {
+				COMPAT_LOG
+					(SELINUX_ERROR,
+					 "%s: Multiple different specifications for %s  (%s and %s).\n",
+					 path, curr_spec->regex_str,
+					 spec_arr[ii].lr.ctx_raw,
+					 curr_spec->lr.ctx_raw);
+			} else {
+				COMPAT_LOG
+					(SELINUX_ERROR,
+					 "%s: Multiple same specifications for %s.\n",
+					 path, curr_spec->regex_str);
 			}
 		}
+		if (ret == HASHTAB_OVERFLOW) {
+			rc = -1;
+			free(new);
+			COMPAT_LOG
+				(SELINUX_ERROR,
+				"%s: hashtab happen memory error.\n",
+				path);
+			break;
+		}
 	}
+
+	hashtab_destroy_key(hash_table, destroy_chkdups_key);
+
 	return rc;
 }
 
