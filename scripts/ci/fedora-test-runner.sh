@@ -61,6 +61,7 @@ dnf install -y \
     e2fsprogs \
     jfsutils \
     dosfstools \
+    rdma-core-devel \
     kernel-devel-"$(uname -r)" \
     kernel-modules-"$(uname -r)"
 
