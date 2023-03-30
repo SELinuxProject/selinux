@@ -711,7 +711,7 @@ void avc_audit(security_id_t ssid, security_id_t tsid,
 	/* prevent overlapping buffer writes */
 	avc_get_lock(avc_log_lock);
 	snprintf(avc_audit_buf, AVC_AUDIT_BUFSIZE,
-		 "%s:  %s ", avc_prefix, (denied || !requested) ? "denied" : "granted");
+		 "%s: %s ", avc_prefix, (denied || !requested) ? "denied" : "granted");
 	avc_dump_av(tclass, audited);
 	log_append(avc_audit_buf, " for ");
 
