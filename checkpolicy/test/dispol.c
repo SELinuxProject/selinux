@@ -274,6 +274,18 @@ static int change_bool(char *name, int state, policydb_t * p, FILE * fp)
 	return 0;
 }
 
+static int display_booleans(policydb_t * p, FILE *fp)
+{
+	uint32_t i;
+
+	fprintf(fp, "booleans:\n");
+	for (i = 0; i < p->p_bools.nprim; i++) {
+		fprintf(fp, "\t%s : %d\n", p->p_bool_val_to_name[i],
+			p->bool_val_to_struct[i]->state);
+	}
+	return 0;
+}
+
 static void display_policycaps(policydb_t * p, FILE * fp)
 {
 	ebitmap_node_t *node;
@@ -290,6 +302,20 @@ static void display_policycaps(policydb_t * p, FILE * fp)
 		}
 		fprintf(fp, "\t%s\n", capname);
 	}
+}
+
+static int display_classes(policydb_t * p, FILE *fp)
+{
+	uint32_t i;
+
+	fprintf(fp, "classes:\n");
+	for (i = 0; i < p->p_classes.nprim; i++) {
+		if (!p->p_class_val_to_name[i])
+			continue;
+
+		fprintf(fp, "\t%s\n", p->p_class_val_to_name[i]);
+	}
+	return 0;
 }
 
 static void display_id(policydb_t *p, FILE *fp, uint32_t symbol_type,
@@ -310,6 +336,54 @@ static void display_permissive(policydb_t *p, FILE *fp)
 		display_id(p, fp, SYM_TYPES, i - 1, "");
 		fprintf(fp, "\n");
 	}
+}
+
+static int display_roles(policydb_t * p, FILE *fp)
+{
+	uint32_t i;
+
+	fprintf(fp, "roles:\n");
+	for (i = 0; i < p->p_roles.nprim; i++) {
+		if (!p->p_role_val_to_name[i])
+			continue;
+
+		fprintf(fp, "\t%s\n", p->p_role_val_to_name[i]);
+	}
+	return 0;
+}
+
+static int display_types(policydb_t * p, FILE *fp)
+{
+	uint32_t i;
+
+	fprintf(fp, "types:\n");
+	for (i = 0; i < p->p_types.nprim; i++) {
+		if (!p->p_type_val_to_name[i])
+			continue;
+
+		if (p->type_val_to_struct[i]->flavor == TYPE_ATTRIB)
+			continue;
+
+		fprintf(fp, "\t%s\n", p->p_type_val_to_name[i]);
+	}
+	return 0;
+}
+
+static int display_attributes(policydb_t * p, FILE *fp)
+{
+	uint32_t i;
+
+	fprintf(fp, "attributes:\n");
+	for (i = 0; i < p->p_types.nprim; i++) {
+		if (!p->p_type_val_to_name[i])
+			continue;
+
+		if (p->type_val_to_struct[i]->flavor != TYPE_ATTRIB)
+			continue;
+
+		fprintf(fp, "\t%s\n", p->p_type_val_to_name[i]);
+	}
+	return 0;
 }
 
 static void display_role_trans(policydb_t *p, FILE *fp)
@@ -381,6 +455,11 @@ static int menu(void)
 	printf("8)  display role transitions\n");
 	printf("\n");
 	printf("c)  display policy capabilities\n");
+	printf("b)  display booleans\n");
+	printf("C)  display classes\n");
+	printf("r)  display roles\n");
+	printf("t)  display types\n");
+	printf("a)  display type attributes\n");
 	printf("p)  display the list of permissive types\n");
 	printf("u)  display unknown handling setting\n");
 	printf("F)  display filename_trans rules\n");
@@ -511,11 +590,26 @@ int main(int argc, char **argv)
 		case '8':
 			display_role_trans(&policydb, out_fp);
 			break;
+		case 'a':
+			display_attributes(&policydb, out_fp);
+			break;
+		case 'b':
+			display_booleans(&policydb, out_fp);
+			break;
 		case 'c':
 			display_policycaps(&policydb, out_fp);
 			break;
+		case 'C':
+			display_classes(&policydb, out_fp);
+			break;
 		case 'p':
 			display_permissive(&policydb, out_fp);
+			break;
+		case 'r':
+			display_roles(&policydb, out_fp);
+			break;
+		case 't':
+			display_types(&policydb, out_fp);
 			break;
 		case 'u':
 		case 'U':
