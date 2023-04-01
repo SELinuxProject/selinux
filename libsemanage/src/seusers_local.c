@@ -47,6 +47,7 @@ static char *semanage_user_roles(semanage_handle_t * handle, const char *sename)
 						}
 					}
 				}
+				free(roles_arr);
 			}
 			semanage_user_free(user);
 		}
