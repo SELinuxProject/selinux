@@ -85,29 +85,34 @@ static int cil_type_matches(ebitmap_t *matches, struct cil_symtab_datum *d1, str
 	enum cil_flavor f1 = FLAVOR(d1);
 	enum cil_flavor f2 = FLAVOR(d2);
 
-	if (f1 != CIL_TYPEATTRIBUTE && f2 != CIL_TYPEATTRIBUTE) {
-		struct cil_type *t1 = (struct cil_type *)d1;
-		struct cil_type *t2 = (struct cil_type *)d2;
-		if (t1->value == t2->value) {
-			ebitmap_set_bit(matches, t1->value, 1);
-		}
-	} else if (f1 == CIL_TYPEATTRIBUTE && f2 != CIL_TYPEATTRIBUTE) {
-		struct cil_typeattribute *a = (struct cil_typeattribute *)d1;
-		struct cil_type *t = (struct cil_type *)d2;
-		if (ebitmap_get_bit(a->types, t->value)) {
-			ebitmap_set_bit(matches, t->value, 1);
-		}
-	} else if (f1 != CIL_TYPEATTRIBUTE && f2 == CIL_TYPEATTRIBUTE) {
-		struct cil_type *t = (struct cil_type *)d1;
-		struct cil_typeattribute *a = (struct cil_typeattribute *)d2;
-		if (ebitmap_get_bit(a->types, t->value)) {
-			ebitmap_set_bit(matches, t->value, 1);
-		}
-	} else {
-		/* Both are attributes */
+	if (f1 == CIL_TYPEATTRIBUTE && f2 == CIL_TYPEATTRIBUTE) {
 		struct cil_typeattribute *a1 = (struct cil_typeattribute *)d1;
 		struct cil_typeattribute *a2 = (struct cil_typeattribute *)d2;
 		rc = ebitmap_and(matches, a1->types, a2->types);
+	} else {
+		ebitmap_init(matches);
+		if (f1 != CIL_TYPEATTRIBUTE && f2 != CIL_TYPEATTRIBUTE) {
+			struct cil_type *t1 = (struct cil_type *)d1;
+			struct cil_type *t2 = (struct cil_type *)d2;
+			if (t1->value == t2->value) {
+				rc = ebitmap_set_bit(matches, t1->value, 1);
+			}
+		} else if (f1 == CIL_TYPEATTRIBUTE && f2 != CIL_TYPEATTRIBUTE) {
+			struct cil_typeattribute *a = (struct cil_typeattribute *)d1;
+			struct cil_type *t = (struct cil_type *)d2;
+			if (ebitmap_get_bit(a->types, t->value)) {
+				rc = ebitmap_set_bit(matches, t->value, 1);
+			}
+		} else { // f1 != CIL_TYPEATTRIBUTE && f2 == CIL_TYPEATTRIBUTE
+			struct cil_type *t = (struct cil_type *)d1;
+			struct cil_typeattribute *a = (struct cil_typeattribute *)d2;
+			if (ebitmap_get_bit(a->types, t->value)) {
+				rc = ebitmap_set_bit(matches, t->value, 1);
+			}
+		}
+		if (rc != SEPOL_OK) {
+			ebitmap_destroy(matches);
+		}
 	}
 
 	return rc;
@@ -115,31 +120,28 @@ static int cil_type_matches(ebitmap_t *matches, struct cil_symtab_datum *d1, str
 
 /* s1 is the src type that is matched with a self
  * s2, and t2 are the source and type of the other rule
+ * Assumes there is a match between s1 and s2
  */
 static int cil_self_match_any(struct cil_symtab_datum *s1, struct cil_symtab_datum *s2, struct cil_symtab_datum *t2)
 {
 	int rc;
-	struct cil_tree_node *n1 = NODE(s1);
-	if (n1->flavor != CIL_TYPEATTRIBUTE) {
+
+	if (FLAVOR(s1) != CIL_TYPEATTRIBUTE) {
 		rc = cil_type_match_any(s1, t2);
 	} else {
 		struct cil_typeattribute *a = (struct cil_typeattribute *)s1;
 		ebitmap_t map;
-		ebitmap_init(&map);
 		rc = cil_type_matches(&map, s2, t2);
 		if (rc < 0) {
-			ebitmap_destroy(&map);
-			goto exit;
+			return rc;
 		}
-		if (map.node == NULL) {
-			rc = CIL_FALSE;
-			goto exit;
+		if (ebitmap_is_empty(&map)) {
+			return CIL_FALSE;
 		}
 		rc = ebitmap_match_any(&map, a->types);
 		ebitmap_destroy(&map);
 	}
 
-exit:
 	return rc;
 }
 
