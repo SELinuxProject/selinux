@@ -316,12 +316,3 @@ Alternatively:
         (typetransition audit.process device.device chr_file ARG1 device.klog_device)
     )
 ```
-
-self
-----
-
-The [`self`](cil_reference_guide.md#self) keyword may be used as the target in AVC rule statements, and means that the target is the same as the source as shown in the following example:.
-
-```secil
-    (allow unconfined.process self (file (read write)))
-```

@@ -145,6 +145,8 @@
             <item>r3</item>
             <item>sctp</item>
             <item>self</item>
+            <item>notself</item>
+            <item>other</item>
             <item>t1</item>
             <item>t2</item>
             <item>t3</item>

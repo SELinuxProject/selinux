@@ -17,7 +17,6 @@ CIL (Common Intermediate Language)
   * [Global Namespace](cil_reference_guide.md#global-namespace)
   * [Expressions](cil_reference_guide.md#expressions)
   * [Name String](cil_reference_guide.md#name-string)
-  * [self](cil_reference_guide.md#self)
   * [Example CIL Policy](../test/policy.cil)
 
 * [Access Vector Rules](cil_access_vector_rules.md#access-vector-rules)
