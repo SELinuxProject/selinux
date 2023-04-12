@@ -1,0 +1,65 @@
+(class CLASS (PERM))
+(class C1 (p1a p1b p1c p1d p1e))
+(classorder (CLASS C1))
+(sid SID)
+(sidorder (SID))
+(user USER)
+(role ROLE)
+(type TYPE)
+(category CAT)
+(categoryorder (CAT))
+(sensitivity SENS)
+(sensitivityorder (SENS))
+(sensitivitycategory SENS (CAT))
+(allow TYPE self (CLASS (PERM)))
+(roletype ROLE TYPE)
+(userrole USER ROLE)
+(userlevel USER (SENS))
+(userrange USER ((SENS)(SENS (CAT))))
+(sidcontext SID (USER ROLE TYPE ((SENS)(SENS))))
+
+(type ta)
+(type tb)
+(type tc)
+(type td)
+
+(typeattribute aab)
+(typeattributeset aab (ta tb))
+
+(typeattribute aac)
+(typeattributeset aac (ta tc))
+
+(typeattribute abc)
+(typeattributeset abc (tb tc))
+
+(typeattribute aabc)
+(typeattributeset aabc (ta tb tc))
+
+(typeattribute a_all_not_ta)
+(typeattributeset a_all_not_ta (and (all) (not ta)))
+
+(typeattribute a_all_not_aab)
+(typeattributeset a_all_not_aab (and (all) (not aab)))
+
+; Test 01
+(allow ta notself (C1 (p1a)))
+; (neverallow ta a_all_not_ta (C1 (p1a))) ; This check should fail
+
+; Test 02
+(allow aab notself (C1 (p1b)))
+; (neverallow aab a_all_not_aab (C1 (p1b))) ; This check should fail
+
+; Test 03
+(allow aab other (C1 (p1c)))
+; (neverallow ta tb (C1 (p1c))) ; This check should fail
+; (neverallow tb ta (C1 (p1c))) ; This check should fail
+
+; Test 04
+(allow aabc other (C1 (p1d)))
+; (neverallow ta abc (C1 (p1d))) ; This check should fail
+; (neverallow tb aac (C1 (p1d))) ; This check should fail
+; (neverallow tc aab (C1 (p1d))) ; This check should fail
+
+; Test 05
+(allow ta other (C1 (p1e))) ; other used with a single type results in no rule
+(neverallow ta a_all_not_ta (C1 (p1e)))
