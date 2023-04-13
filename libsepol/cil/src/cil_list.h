@@ -44,6 +44,9 @@ struct cil_list_item {
 	void *data;
 };
 
+#define cil_list_is_empty(list) \
+	((list) == NULL || (list)->head == NULL)
+
 #define cil_list_for_each(item, list) \
 	for (item = (list)->head; item != NULL; item = item->next)
 
