@@ -1,0 +1,418 @@
+(class CLASS (PERM))
+(class ca (pa1 pa2 pa3 pa4 pa5 pa6 pa7 pa8 pa9))
+(class cb (pb1 pb2 pb3 pb4 pb5 pb6 pb7 pb8 pb9))
+(class cc (pc1 pc2 pc3 pc4 pc5 pc6 pc7 pc8 pc9))
+(class cd (pd1 pd2 pd3 pd4 pd5 pd6 pd7 pd8 pd9))
+(class ce (pe1 pe2 pe3 pe4 pe5 pe6 pe7 pe8 pe9))
+(class cf (pf1 pf2 pf3 pf4 pf5 pf6 pf7 pf8 pf9))
+(class cg (pg1 pg2 pg3 pg4 pg5 pg6 pg7 pg8 pg9))
+(class ch (ph1 ph2 ph3 ph4 ph5 ph6 ph7 ph8 ph9))
+(class ci (pi1 pi2 pi3 pi4 pi5 pi6 pi7 pi8 pi9))
+(class cj (pj1 pj2 pj3 pj4 pj5 pj6 pj7 pj8 pj9))
+(classorder (CLASS ca cb cc cd ce cf cg ch ci cj))
+(sid SID)
+(sidorder (SID))
+(user USER)
+(role ROLE)
+(type TYPE)
+(category CAT)
+(categoryorder (CAT))
+(sensitivity SENS)
+(sensitivityorder (SENS))
+(sensitivitycategory SENS (CAT))
+(allow TYPE self (CLASS (PERM)))
+(roletype ROLE TYPE)
+(userrole USER ROLE)
+(userlevel USER (SENS))
+(userrange USER ((SENS)(SENS (CAT))))
+(sidcontext SID (USER ROLE TYPE ((SENS)(SENS))))
+
+(type ta)
+(type tb)
+(type tc)
+(type td)
+(type te)
+(type tf)
+(type tg)
+(type th)
+(type ti)
+(type tj)
+(type tk)
+(type tl)
+(type tm)
+(type tn)
+(type to)
+(type tp)
+(type tq)
+(type tr)
+(type ts)
+(type tt)
+(type tu)
+(type tv)
+(type tw)
+(type tx)
+(type ty)
+(type tz)
+
+(typeattribute a_s1)
+(typeattributeset a_s1 (ta tb tc td te tf tg th tk tl tm tn ts tt))
+(typeattribute a_t1)
+(typeattributeset a_t1 (ta tb tc td te tf ti tj tk tl to tp tu tv))
+(typeattribute a_s2)
+(typeattributeset a_s2 (ta tb tc td tg th ti tj tm tn tq tr tw tx))
+(typeattribute a_t2)
+(typeattributeset a_t2 (ta tb te tf tg th ti tj to tp tq tr ty tz))
+(typeattribute a_s3)
+(typeattributeset a_s3 (and a_s1 (not a_s2)))
+(typeattribute a_s4)
+(typeattributeset a_s4 (and a_s1 a_s2))
+
+
+(typeattribute aab)
+(typeattributeset aab (ta tb))
+
+(typeattribute aNab)
+(typeattributeset aNab (and (all) (not (ta tb))))
+
+(typeattribute aNac)
+(typeattributeset aNac (and (all) (not (ta tc))))
+
+(typeattribute aNbc)
+(typeattributeset aNbc (and (all) (not (tb tc))))
+
+(typeattribute acd)
+(typeattributeset aab (tc td))
+
+(typeattribute aNacd)
+(typeattributeset aNacd (and (all) (not (ta tc td))))
+
+(typeattribute aabc)
+(typeattributeset aabc (ta tb tc))
+
+
+; Test 01
+(allow ta notself (ca (pa1)))
+(deny ta notself (ca (pa1)))
+(neverallow ta notself (ca (pa1)))
+
+; Test 02
+(allow aab notself (ca (pa2)))
+(deny aab notself (ca (pa2)))
+(neverallow aab notself (ca (pa2)))
+
+; Test 03
+(allow ta notself (ca (pa3)))
+(deny aab notself (ca (pa3)))
+(neverallow aab notself (ca (pa3)))
+
+; Test 04
+(allow aab notself (ca (pa4)))
+(deny ta notself (ca (pa4)))
+(neverallow ta notself (ca (pa4)))
+; (neverallow tb notself (ca (pa4))) ; This check should fail
+
+; Test 11
+(allow ta notself (cb (pb1)))
+(deny ta tb (cb (pb1)))
+(neverallow ta tb (cb (pb1)))
+; (neverallow ta aNab (cb (pb1))) ; This check should fail
+
+; Test 12
+(allow ta tb (cb (pb2)))
+(deny ta notself (cb (pb2)))
+(neverallow ta notself (cb (pb2)))
+
+; Test 13
+(allow aab notself (cb (pb3)))
+(deny ta tb (cb (pb3)))
+(neverallow ta tb (cb (pb3)))
+; (neverallow ta aNab (cb (pb3)))    ; This check should fail
+; (neverallow tb notself (cb (pb3))) ; This check should fail
+
+; Test 14
+(allow ta tb (cb (pb4)))
+(deny aab notself (cb (pb4)))
+(neverallow aab notself (cb (pb4)))
+
+; Test 15
+(allow aab notself (cb (pb5)))
+(deny aab tc (cb (pb5)))
+(neverallow aab tc (cb (pb5)))
+; (neverallow ta aNac (cb (pb5)))    ; This check should fail
+; (neverallow tb aNbc (cb (pb5)))    ; This check should fail
+
+; Test 16
+(allow aab tc (cb (pb6)))
+(deny aab notself (cb (pb6)))
+(neverallow aab notself (cb (pb6)))
+
+; Test 17
+(allow aab notself (cb (pb7)))
+(deny aab acd (cb (pb7)))
+(neverallow aab acd (cb (pb7)))
+; (neverallow aab aNacd (cb (pb7)))    ; This check should fail
+
+; Test 18
+(allow aab acd (cb (pb7)))
+(deny aab notself (cb (pb7)))
+(neverallow aab notself (cb (pb7)))
+
+; Test 21
+(allow aab other (cc (pc1)))
+(deny aab other (cc (pc1)))
+(neverallow aab other (cc (pc1)))
+
+; Test 22
+(allow aabc other (cc (pc2)))
+(deny aab other (cc (pc2)))
+(neverallow aab other (cc (pc2)))
+; (neverallow tc aab (cc (pc2))) ; This check should fail
+
+; Test 23
+(allow aab other (cc (pc3)))
+(deny aabc other (cc (pc3)))
+(neverallow aabc other (cc (pc3)))
+
+; Test 31
+(allow aab other (cd (pd1)))
+(deny aab aab (cd (pd1)))
+(neverallow aab aab (cd (pd1)))
+
+; Test 32
+(allow aab aab (cd (pd2)))
+(deny aab other (cd (pd2)))
+(neverallow aab other (cd (pd2)))
+; (neverallow aab self (cd (pd2))) ; This check should fail
+
+; Test 33
+(allow ta tb (cd (pd3)))
+(deny aab other (cd (pd3)))
+(neverallow aab other (cd (pd3)))
+
+; Test 34
+(allow aab other (cd (pd4)))
+(deny ta tb (cd (pd4)))
+(neverallow ta tb (cd (pd4)))
+; (neverallow tb ta (cd (pd4))) ; This check should fail
+
+
+; Test 61
+(allow a_s1 notself (ce (pe1)))
+(deny a_s2 a_t2 (ce (pe1)))
+(neverallow a_s2 a_t2 (ce (pe1)))
+; Below should fail
+(typeattribute a61a)
+(typeattributeset a61a (and a_s4 (not a_t2)))
+(typeattribute a61b)
+(typeattributeset a61b (and a_s4 a_t2))
+(typeattribute a61c)
+(typeattributeset a61c (and (all) (not a_t2)))
+(typeattribute a61d)
+(typeattributeset a61d (and a61c (not a_s4)))
+; (neverallow a_s3 notself (ce (pe1))) ; This check should fail
+; (neverallow a61a other (ce (pe1)))   ; This check should fail
+; (neverallow a61a a61d (ce (pe1)))    ; This check should fail
+; (neverallow a61b a61c (ce (pe1)))    ; This check should fail
+
+; Test 62
+(allow tg notself (ce (pe2)))
+(deny a_s2 a_t2 (ce (pe2)))
+(neverallow a_s2 a_t2 (ce (pe2)))
+
+; Test 63
+(allow tm notself (ce (pe3)))
+(deny a_s2 a_t2 (ce (pe3)))
+(neverallow a_s2 a_t2 (ce (pe3)))
+
+; Test 64
+(allow a_s1 notself (ce (pe4)))
+(deny tg a_t2 (ce (pe4)))
+(neverallow tg a_t2 (ce (pe4)))
+
+; Test 65
+(allow a_s1 notself (ce (pe5)))
+(deny tm a_t2 (ce (pe5)))
+(neverallow tm a_t2 (ce (pe5)))
+
+; Test 66
+(allow a_s1 notself (ce (pe6)))
+(deny a_s2 tg (ce (pe6)))
+(neverallow a_s2 tg (ce (pe6)))
+; (neverallow a_s3 notself (ce (pe6))) ; This check should fail
+
+; Test 67
+(allow a_s1 notself (ce (pe7)))
+(deny a_s2 ty (ce (pe7)))
+(neverallow a_s2 ty (ce (pe7)))
+; (neverallow a_s3 notself (ce (pe7))) ; This check should fail
+
+; Test 68
+(typeattribute a68)
+(typeattributeset a68 (tg tm))
+(allow a68 notself (ce (pe8)))
+(deny a_s2 a_t2 (ce (pe8)))
+(neverallow a_s2 a_t2 (ce (pe8)))
+
+; Test 71
+(allow a_s1 a_t1 (cf (pf1)))
+(deny a_s2 notself (cf (pf1)))
+(neverallow a_s2 notself (cf (pf1)))
+; Below should fail
+(typeattribute a71a)
+(typeattributeset a71a (and a_s4 a_t1))
+; (neverallow a_s3 a_t1 (cf (pf1))) ; This check should fail
+; (neverallow a71a self (cf (pf1))) ; This check should fail
+
+; Test 72
+(allow tc a_t1 (cf (pf2)))
+(deny a_s2 notself (cf (pf2)))
+(neverallow a_s2 notself (cf (pf2)))
+
+; Test 73
+(allow tm a_t1 (cf (pf3)))
+(deny a_s2 notself (cf (pf3)))
+(neverallow a_s2 notself (cf (pf3)))
+
+; Test 74
+(allow a_s1 a_t1 (cf (pf4)))
+(deny tc notself (cf (pf4)))
+(neverallow tc notself (cf (pf4)))
+
+; Test 75
+(allow a_s1 a_t1 (cf (pf5)))
+(deny tm notself (cf (pf5)))
+(neverallow tm notself (cf (pf5)))
+
+; Test 76
+(allow a_s1 tc (cf (pf6)))
+(deny a_s2 notself (cf (pf6)))
+(neverallow a_s2 notself (cf (pf6)))
+; (neverallow a_s3 tc (cf (pf6))) ; This check should fail
+
+; Test 77
+(allow a_s1 tu (cf (pf7)))
+(deny a_s2 notself (cf (pf7)))
+(neverallow a_s2 notself (cf (pf7)))
+; (neverallow a_s3 tu (cf (pf7))) ; This check should fail
+
+; Test 78
+(typeattribute a78)
+(typeattributeset a78 (tc tm))
+(allow a_s1 a_t1 (cf (pf8)))
+(deny a78 notself (cf (pf8)))
+(neverallow a78 notself (cf (pf8)))
+
+; Test 81
+(allow a_s1 other (cg (pg1)))
+(deny a_s2 a_t2 (cg (pg1)))
+(neverallow a_s2 a_t2 (cg (pg1)))
+; Below should fail
+(typeattribute a81a)
+(typeattributeset a81a (and a_s4 (not a_t2)))
+(typeattribute a81b)
+(typeattributeset a81b (and a_s4 a_t2))
+(typeattribute a81c)
+(typeattributeset a81c (and a_s1 (not a_t2)))
+(typeattribute a81d)
+(typeattributeset a81d (and a_s3 (not a_t2)))
+; (neverallow a_s3 other (cg (pg1))) ; This check should fail
+; (neverallow a81a other (cg (pg1))) ; This check should fail
+; (neverallow a81a a81d (cg (pg1)))  ; This check should fail
+; (neverallow a81b a81c (cg (pg1)))  ; This check should fail
+
+; Test 82
+(allow a_s1 other (cg (pg2)))
+(deny tg a_t2 (cg (pg2)))
+(neverallow tg a_t2 (cg (pg2)))
+
+; Test 83
+(allow a_s1 other (cg (pg3)))
+(deny tm a_t2 (cg (pg3)))
+(neverallow tm a_t2 (cg (pg3)))
+
+; Test 84
+(allow a_s1 other (cg (pg4)))
+(deny a_s2 tg (cg (pg4)))
+(neverallow a_s2 tg (cg (pg4)))
+; (neverallow a_s3 other (cg (pg4))) ; This check should fail
+
+; Test 85
+(allow a_s1 other (cg (pg5)))
+(deny a_s2 ty (cg (pg5)))
+(neverallow a_s2 ty (cg (pg5)))
+; (neverallow a_s3 other (cg (pg5))) ; This check should fail
+
+; Test 86
+(typeattribute a86)
+(typeattributeset a86 (tg tm ts))
+(allow a86 other (cg (pg6)))
+(deny a_s2 a_t2 (cg (pg6)))
+(neverallow a_s2 a_t2 (cg (pg6)))
+
+; Test 91
+(allow a_s1 a_t1 (ch (ph1)))
+(deny a_s2 other (ch (ph1)))
+(neverallow a_s2 other (ch (ph1)))
+; Below should fail
+(typeattribute a91a)
+(typeattributeset a91a (and a_s4 a_t1))
+(typeattribute a91b)
+(typeattributeset a91b (and a_t1 a_s2))
+; (neverallow a_s3 a_t1 (ch (ph1))) ; This check should fail
+; (neverallow a_s4 a91b (ch (ph1))) ; This check should fail
+; (neverallow a91a self (ch (ph1))) ; This check should fail
+
+; Test 92
+(allow tc a_t1 (ch (ph2)))
+(deny a_s2 other (ch (ph2)))
+(neverallow a_s2 other (ch (ph2)))
+
+; Test 93
+(allow tm a_t1 (ch (ph3)))
+(deny a_s2 other (ch (ph3)))
+(neverallow a_s2 other (ch (ph3)))
+
+; Test 94
+(allow a_s1 tc (ch (ph4)))
+(deny a_s2 other (ch (ph4)))
+(neverallow a_s2 other (ch (ph4)))
+; (neverallow a_s3 tc (ch (ph4))) ; This check should fail
+
+; Test 95
+(allow a_s1 tu (ch (ph5)))
+(deny a_s2 other (ch (ph5)))
+(neverallow a_s2 other (ch (ph5)))
+; (neverallow a_s3 tu (ch (ph5))) ; This check should fail
+
+; Test 96
+(typeattribute a96)
+(typeattributeset a96 (tc tm tw))
+(allow a_s1 a_t1 (ch (ph6)))
+(deny a96 other (ch (ph6)))
+(neverallow a96 other (ch (ph6)))
+
+; Test 101
+(allow a_s1 other (ci (pi1)))
+(deny a_s2 other (ci (pi1)))
+(neverallow a_s2 other (ci (pi1)))
+; (neverallow a_s3 other (ci (pi1))) ; This check should fail
+; (neverallow a_s4 a_s3 (ci (pi1)))  ; This check should fail
+
+; Test 102
+(allow a_s1 notself (ci (pi2)))
+(deny a_s2 other (ci (pi2)))
+(neverallow a_s2 other (ci (pi2)))
+; (neverallow a_s3 notself (ci (pi2))) ; This check should fail
+; (neverallow a_s4 a_s3 (ci (pi2)))    ; This check should fail
+
+; Test 103
+(allow a_s1 other (ci (pi3)))
+(deny a_s2 notself (ci (pi3)))
+(neverallow a_s2 notself (ci (pi3)))
+; (neverallow a_s3 other (ci (pi3))) ; This check should fail
+
+; Test 104
+(allow a_s1 notself (ci (pi4)))
+(deny a_s2 notself (ci (pi4)))
+(neverallow a_s2 notself (ci (pi4)))
+; (neverallow a_s3 notself (ci (pi4))) ; This check should fail
