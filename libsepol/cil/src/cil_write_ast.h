@@ -38,6 +38,7 @@ enum cil_write_ast_phase {
 	CIL_WRITE_AST_PHASE_PARSE = 0,
 	CIL_WRITE_AST_PHASE_BUILD,
 	CIL_WRITE_AST_PHASE_RESOLVE,
+	CIL_WRITE_AST_PHASE_POST,
 };
 
 void cil_write_ast_node(FILE *out, struct cil_tree_node *node);
