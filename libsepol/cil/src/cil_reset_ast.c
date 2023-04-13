@@ -218,6 +218,11 @@ static void cil_reset_avrule(struct cil_avrule *rule)
 	cil_reset_classperms_list(rule->perms.classperms);
 }
 
+static void cil_reset_deny_rule(struct cil_deny_rule *rule)
+{
+	cil_reset_classperms_list(rule->classperms);
+}
+
 static void cil_reset_rangetransition(struct cil_rangetransition *rangetrans)
 {
 	if (rangetrans->range_str == NULL) {
@@ -544,6 +549,9 @@ static int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused))
 		break;
 	case CIL_AVRULE:
 		cil_reset_avrule(node->data);
+		break;
+	case CIL_DENY_RULE:
+		cil_reset_deny_rule(node->data);
 		break;
 	case CIL_SENS:
 		cil_reset_sens(node->data);

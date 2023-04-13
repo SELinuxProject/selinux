@@ -80,6 +80,7 @@ int cil_copy_nametypetransition(struct cil_db *db, void *data, void **copy, symt
 int cil_copy_rangetransition(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_bool(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_avrule(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
+int cil_copy_deny_rule(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab);
 int cil_copy_type_rule(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_sens(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_sensalias(struct cil_db *db, void *data, void **copy, symtab_t *symtab);

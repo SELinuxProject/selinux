@@ -1041,6 +1041,15 @@ static int __cil_verify_booleanif_helper(struct cil_tree_node *node, __attribute
 		}
 		break;
 	}
+	case CIL_DENY_RULE:
+		if (bif->preserved_tunable) {
+			cil_tree_log(node, CIL_ERR, "Not allowed to have a deny rule in a tunableif block (treated as a booleanif due to preserve-tunables)");
+		} else {
+			cil_tree_log(node, CIL_ERR, "Not allowed to have deny rule in a booleanif block");
+		}
+		rc = SEPOL_ERR;
+		goto exit;
+		break;
 	case CIL_TYPE_RULE: /*
 	struct cil_type_rule *typerule = NULL;
 	struct cil_tree_node *temp_node = NULL;

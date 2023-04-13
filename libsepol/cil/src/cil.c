@@ -227,6 +227,7 @@ char *CIL_KEY_SRC_CIL;
 char *CIL_KEY_SRC_HLL_LMS;
 char *CIL_KEY_SRC_HLL_LMX;
 char *CIL_KEY_SRC_HLL_LME;
+char *CIL_KEY_DENY_RULE;
 
 static void cil_init_keys(void)
 {
@@ -398,6 +399,7 @@ static void cil_init_keys(void)
 	CIL_KEY_SRC_HLL_LMS = cil_strpool_add("lms");
 	CIL_KEY_SRC_HLL_LMX = cil_strpool_add("lmx");
 	CIL_KEY_SRC_HLL_LME = cil_strpool_add("lme");
+	CIL_KEY_DENY_RULE = cil_strpool_add("deny");
 }
 
 void cil_db_init(struct cil_db **db)
@@ -927,6 +929,9 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	case CIL_PERMISSIONX:
 		cil_destroy_permissionx(*data);
 		break;
+	case CIL_DENY_RULE:
+		cil_destroy_deny_rule(*data);
+		break;
 	case CIL_ROLETRANSITION:
 		cil_destroy_roletransition(*data);
 		break;
@@ -1303,6 +1308,8 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		break;
 	case CIL_PERMISSIONX:
 		return CIL_KEY_PERMISSIONX;
+	case CIL_DENY_RULE:
+		return CIL_KEY_DENY_RULE;
 	case CIL_ROLETRANSITION:
 		return CIL_KEY_ROLETRANSITION;
 	case CIL_TYPE_RULE:
@@ -2480,6 +2487,17 @@ void cil_permissionx_init(struct cil_permissionx **permx)
 	(*permx)->obj = NULL;
 	(*permx)->expr_str = NULL;
 	(*permx)->perms = NULL;
+}
+
+void cil_deny_rule_init(struct cil_deny_rule **rule)
+{
+	*rule = cil_malloc(sizeof(**rule));
+
+	(*rule)->src_str = NULL;
+	(*rule)->src = NULL;
+	(*rule)->tgt_str = NULL;
+	(*rule)->tgt = NULL;
+	(*rule)->classperms = NULL;
 }
 
 void cil_type_rule_init(struct cil_type_rule **type_rule)

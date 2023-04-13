@@ -854,6 +854,22 @@ static int cil_copy_permissionx(struct cil_db *db, void *data, void **copy, symt
 	return SEPOL_OK;
 }
 
+int cil_copy_deny_rule(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
+{
+	struct cil_deny_rule *orig = data;
+	struct cil_deny_rule *new = NULL;
+
+	cil_deny_rule_init(&new);
+
+	new->src_str = orig->src_str;
+	new->tgt_str = orig->tgt_str;
+	cil_copy_classperms_list(orig->classperms, &new->classperms);
+
+	*copy = new;
+
+	return SEPOL_OK;
+}
+
 int cil_copy_type_rule(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab)
 {
 	struct cil_type_rule  *orig = data;
@@ -1859,6 +1875,9 @@ static int __cil_copy_node_helper(struct cil_tree_node *orig, uint32_t *finished
 		break;
 	case CIL_PERMISSIONX:
 		copy_func = &cil_copy_permissionx;
+		break;
+	case CIL_DENY_RULE:
+		copy_func = &cil_copy_deny_rule;
 		break;
 	case CIL_TYPE_RULE:
 		copy_func = &cil_copy_type_rule;

@@ -244,6 +244,7 @@ extern char *CIL_KEY_SRC_CIL;
 extern char *CIL_KEY_SRC_HLL_LMS;
 extern char *CIL_KEY_SRC_HLL_LMX;
 extern char *CIL_KEY_SRC_HLL_LME;
+extern char *CIL_KEY_DENY_RULE;
 
 /*
 	Symbol Table Array Indices
@@ -634,6 +635,14 @@ struct cil_permissionx {
 	struct cil_class *obj;
 	struct cil_list *expr_str;
 	ebitmap_t *perms;
+};
+
+struct cil_deny_rule {
+	char *src_str;
+	void *src; /* type, alias, or attribute */
+	char *tgt_str;
+	void *tgt; /* type, alias, or attribute */
+	struct cil_list *classperms;
 };
 
 #define CIL_TYPE_TRANSITION 16
@@ -1041,6 +1050,7 @@ void cil_tunable_init(struct cil_tunable **ciltun);
 void cil_tunif_init(struct cil_tunableif **tif);
 void cil_avrule_init(struct cil_avrule **avrule);
 void cil_permissionx_init(struct cil_permissionx **permx);
+void cil_deny_rule_init(struct cil_deny_rule **rule);
 void cil_type_rule_init(struct cil_type_rule **type_rule);
 void cil_roletransition_init(struct cil_roletransition **roletrans);
 void cil_roleallow_init(struct cil_roleallow **role_allow);

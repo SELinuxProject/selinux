@@ -1144,6 +1144,16 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		fprintf(out, ")\n");
 		break;
 	}
+	case CIL_DENY_RULE: {
+		struct cil_deny_rule *rule = node->data;
+		fprintf(out, "(deny ");
+
+		fprintf(out, "%s ", datum_or_str(DATUM(rule->src), rule->src_str));
+		fprintf(out, "%s ", datum_or_str(DATUM(rule->tgt), rule->tgt_str));
+		write_classperms_list(out, rule->classperms);
+		fprintf(out, ")\n");
+		break;
+	}
 	case CIL_TYPE_RULE: {
 		struct cil_type_rule *rule = node->data;
 		if (rule->rule_kind == AVRULE_TRANSITION)
