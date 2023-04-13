@@ -45,6 +45,7 @@ enum write_ast_phase {
 	WRITE_AST_PHASE_PARSE = 0,
 	WRITE_AST_PHASE_BUILD,
 	WRITE_AST_PHASE_RESOLVE,
+	WRITE_AST_PHASE_POST,
 };
 
 static __attribute__((__noreturn__)) void usage(const char *prog)
@@ -58,7 +59,7 @@ static __attribute__((__noreturn__)) void usage(const char *prog)
 	printf("                           Blocks, blockinherits, blockabstracts, and\n");
 	printf("                           in-statements will not be allowed.\n");
 	printf("  -A, --ast-phase=<phase>  write AST of phase <phase>. Phase must be parse, \n");
-	printf("                           build, or resolve. (default: resolve)\n");
+	printf("                           build, resolve, or post. (default: resolve)\n");
 	printf("  -v, --verbose            increment verbosity level\n");
 	printf("  -h, --help               display usage information\n");
 	exit(1);
@@ -115,6 +116,8 @@ int main(int argc, char *argv[])
 					write_ast = WRITE_AST_PHASE_BUILD;
 				} else if (!strcasecmp(optarg, "resolve")) {
 					write_ast = WRITE_AST_PHASE_RESOLVE;
+				} else if (!strcasecmp(optarg, "post")) {
+					write_ast = WRITE_AST_PHASE_POST;
 				} else {
 					fprintf(stderr, "Invalid AST phase: %s\n", optarg);
 					usage(argv[0]);
@@ -202,6 +205,9 @@ int main(int argc, char *argv[])
 		break;
 	case WRITE_AST_PHASE_RESOLVE:
 		rc = cil_write_resolve_ast(file, db);
+		break;
+	case WRITE_AST_PHASE_POST:
+		rc = cil_write_post_ast(file, db);
 		break;
 	}
 
