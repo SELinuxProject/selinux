@@ -248,6 +248,41 @@ void cil_tree_node_destroy(struct cil_tree_node **node)
 	*node = NULL;
 }
 
+void cil_tree_node_remove(struct cil_tree_node *node)
+{
+	struct cil_tree_node *parent, *curr;
+
+	if (node == NULL || node->parent == NULL) {
+		return;
+	}
+
+	parent = node->parent;
+
+	if (parent->cl_head == node) {
+		if (parent->cl_tail == node) {
+			parent->cl_tail = NULL;
+		}
+		parent->cl_head = node->next;
+		cil_tree_node_destroy(&node);
+		return;
+	}
+
+	curr = parent->cl_head;
+	while (curr && curr->next != node) {
+		curr = curr->next;
+	}
+
+	if (curr == NULL) {
+		return;
+	}
+
+	if (parent->cl_tail == node) {
+		parent->cl_tail = curr;
+	}
+	curr->next = node->next;
+	cil_tree_node_destroy(&node);
+}
+
 /* Perform depth-first walk of the tree
    Parameters:
    start_node:          root node to start walking from

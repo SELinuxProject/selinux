@@ -63,6 +63,7 @@ void cil_tree_children_destroy(struct cil_tree_node *node);
 
 void cil_tree_node_init(struct cil_tree_node **node);
 void cil_tree_node_destroy(struct cil_tree_node **node);
+void cil_tree_node_remove(struct cil_tree_node *node);
 
 //finished values
 #define CIL_TREE_SKIP_NOTHING	0
