@@ -47,6 +47,7 @@
 #include "cil_policy.h"
 #include "cil_verify.h"
 #include "cil_symtab.h"
+#include "cil_deny.h"
 
 #define GEN_REQUIRE_ATTR "cil_gen_require" /* Also in libsepol/src/module_to_cil.c */
 #define TYPEATTR_INFIX "_typeattr_"        /* Also in libsepol/src/module_to_cil.c */
@@ -2548,6 +2549,12 @@ int cil_post_process(struct cil_db *db)
 	rc = cil_post_db(db);
 	if (rc != SEPOL_OK) {
 		cil_log(CIL_ERR, "Failed post db handling\n");
+		goto exit;
+	}
+
+	rc = cil_process_deny_rules_in_ast(db);
+	if (rc != SEPOL_OK) {
+		cil_log(CIL_ERR, "Failed to process deny rules\n");
 		goto exit;
 	}
 
