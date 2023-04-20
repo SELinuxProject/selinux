@@ -1106,11 +1106,11 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 {
 	int ret;
 	expand_state_t *state;
-	cond_bool_datum_t *bool, *new_bool;
+	cond_bool_datum_t *boolean, *new_bool;
 	char *id, *new_id;
 
 	id = key;
-	bool = (cond_bool_datum_t *) datum;
+	boolean = (cond_bool_datum_t *) datum;
 	state = (expand_state_t *) data;
 
 	if (!is_id_enabled(id, state->base, SYM_BOOLS)) {
@@ -1118,7 +1118,7 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return 0;
 	}
 
-	if (bool->flags & COND_BOOL_FLAGS_TUNABLE) {
+	if (boolean->flags & COND_BOOL_FLAGS_TUNABLE) {
 		/* Skip tunables */
 		return 0;
 	}
@@ -1152,10 +1152,10 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		return -1;
 	}
 
-	state->boolmap[bool->s.value - 1] = new_bool->s.value;
+	state->boolmap[boolean->s.value - 1] = new_bool->s.value;
 
-	new_bool->state = bool->state;
-	new_bool->flags = bool->flags;
+	new_bool->state = boolean->state;
+	new_bool->flags = boolean->flags;
 
 	return 0;
 }

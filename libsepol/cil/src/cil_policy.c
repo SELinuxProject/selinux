@@ -1008,13 +1008,13 @@ static void cil_validatetrans_to_policy(FILE *out, struct cil_db *db, struct cil
 static void cil_bools_to_policy(FILE *out, struct cil_list *bools)
 {
 	struct cil_list_item *i1;
-	struct cil_bool *bool;
+	struct cil_bool *boolean;
 	const char *value;
 
 	cil_list_for_each(i1, bools) {
-		bool = i1->data;
-		value = bool->value ? "true" : "false";
-		fprintf(out, "bool %s %s;\n", bool->datum.fqn, value);
+		boolean = i1->data;
+		value = boolean->value ? "true" : "false";
+		fprintf(out, "bool %s %s;\n", boolean->datum.fqn, value);
 	}
 }
 
@@ -1437,12 +1437,12 @@ static int __cil_te_rules_to_policy_helper(struct cil_tree_node *node, uint32_t 
 		*finished = CIL_TREE_SKIP_HEAD;
 		break;
 	case CIL_BOOLEANIF: {
-		struct cil_booleanif *bool = node->data;
+		struct cil_booleanif *boolean = node->data;
 		struct cil_tree_node *n;
 		struct cil_condblock *cb;
 
 		fprintf(args->out, "if ");
-		cil_cond_expr_to_policy(args->out, bool->datum_expr, CIL_TRUE);
+		cil_cond_expr_to_policy(args->out, boolean->datum_expr, CIL_TRUE);
 		fprintf(args->out," {\n");
 		n = node->cl_head;
 		cb = n != NULL ? n->data : NULL;

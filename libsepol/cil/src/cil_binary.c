@@ -4170,13 +4170,13 @@ static int __cil_user_val_array_insert(hashtab_key_t key, hashtab_datum_t datum,
 static int __cil_bool_val_array_insert(hashtab_key_t key, hashtab_datum_t datum, void *data)
 {
 	policydb_t *pdb = data;
-	cond_bool_datum_t *bool = (cond_bool_datum_t *)datum;
+	cond_bool_datum_t *boolean = (cond_bool_datum_t *)datum;
 
-	if (bool->s.value < 1 || bool->s.value > pdb->p_bools.nprim) {
+	if (boolean->s.value < 1 || boolean->s.value > pdb->p_bools.nprim) {
 		return -EINVAL;
 	}
-	pdb->p_bool_val_to_name[bool->s.value - 1] = (char *)key;
-	pdb->bool_val_to_struct[bool->s.value - 1] = bool;
+	pdb->p_bool_val_to_name[boolean->s.value - 1] = (char *)key;
+	pdb->bool_val_to_struct[boolean->s.value - 1] = boolean;
 
 	return 0;
 }
