@@ -262,14 +262,14 @@ static int display_handle_unknown(policydb_t * p, FILE * out_fp)
 
 static int change_bool(char *name, int state, policydb_t * p, FILE * fp)
 {
-	cond_bool_datum_t *bool;
+	cond_bool_datum_t *boolean;
 
-	bool = hashtab_search(p->p_bools.table, name);
-	if (bool == NULL) {
+	boolean = hashtab_search(p->p_bools.table, name);
+	if (boolean == NULL) {
 		fprintf(fp, "Could not find bool %s\n", name);
 		return -1;
 	}
-	bool->state = state;
+	boolean->state = state;
 	evaluate_conds(p);
 	return 0;
 }
