@@ -57,7 +57,7 @@ static void test_bool_list_local(void);
 
 extern semanage_handle_t *sh;
 
-int bool_test_init(void)
+int boolean_test_init(void)
 {
 	if (create_test_store() < 0) {
 		fprintf(stderr, "Could not create test store\n");
@@ -72,7 +72,7 @@ int bool_test_init(void)
 	return 0;
 }
 
-int bool_test_cleanup(void)
+int boolean_test_cleanup(void)
 {
 	if (destroy_test_store() < 0) {
 		fprintf(stderr, "Could not destroy test store\n");
@@ -82,7 +82,7 @@ int bool_test_cleanup(void)
 	return 0;
 }
 
-int bool_add_tests(CU_pSuite suite)
+int boolean_add_tests(CU_pSuite suite)
 {
 	CU_add_test(suite, "bool_key_create", test_bool_key_create);
 	CU_add_test(suite, "bool_key_extract", test_bool_key_extract);

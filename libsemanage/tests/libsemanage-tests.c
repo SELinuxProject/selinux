@@ -73,7 +73,7 @@ static bool do_tests(int interactive, int verbose)
 	DECLARE_SUITE(semanage_store);
 	DECLARE_SUITE(semanage_utilities);
 	DECLARE_SUITE(handle);
-	DECLARE_SUITE(bool);
+	DECLARE_SUITE(boolean);
 	DECLARE_SUITE(fcontext);
 	DECLARE_SUITE(iface);
 	DECLARE_SUITE(ibendport);

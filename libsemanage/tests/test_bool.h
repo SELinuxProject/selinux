@@ -24,8 +24,8 @@
 #include <CUnit/Basic.h>
 #include "semanage/semanage.h"
 
-int bool_test_init(void);
-int bool_test_cleanup(void);
-int bool_add_tests(CU_pSuite suite);
+int boolean_test_init(void);
+int boolean_test_cleanup(void);
+int boolean_add_tests(CU_pSuite suite);
 
 #endif
