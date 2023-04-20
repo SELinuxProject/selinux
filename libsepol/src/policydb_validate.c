@@ -974,7 +974,7 @@ static int validate_cond_expr(sepol_handle_t *handle, const struct cond_expr *ex
 	for (; expr; expr = expr->next) {
 		switch(expr->expr_type) {
 		case COND_BOOL:
-			if (validate_value(expr->bool, boolean))
+			if (validate_value(expr->boolean, boolean))
 				goto bad;
 			if (depth == (COND_EXPR_MAXDEPTH - 1))
 				goto bad;

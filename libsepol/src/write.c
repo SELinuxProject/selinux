@@ -834,7 +834,7 @@ static int cond_write_node(policydb_t * p,
 	for (cur_expr = node->expr; cur_expr != NULL; cur_expr = cur_expr->next) {
 		items = 0;
 		buf[items++] = cpu_to_le32(cur_expr->expr_type);
-		buf[items++] = cpu_to_le32(cur_expr->bool);
+		buf[items++] = cpu_to_le32(cur_expr->boolean);
 		items2 = put_entry(buf, sizeof(uint32_t), items, fp);
 		if (items2 != items)
 			return POLICYDB_ERROR;

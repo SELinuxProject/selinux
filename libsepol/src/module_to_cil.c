@@ -1272,7 +1272,7 @@ static int cond_expr_to_cil(int indent, struct policydb *pdb, struct cond_expr *
 
 	for (curr = cond_expr; curr != NULL; curr = curr->next) {
 		if (curr->expr_type == COND_BOOL) {
-			val1 = pdb->p_bool_val_to_name[curr->bool - 1];
+			val1 = pdb->p_bool_val_to_name[curr->boolean - 1];
 			// length of boolean + 2 parens + null terminator
 			len = strlen(val1) + 2 + 1;
 			new_val = malloc(len);

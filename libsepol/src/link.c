@@ -1524,9 +1524,9 @@ static int copy_cond_list(cond_node_t * list, cond_node_t ** dst,
 			/* expression nodes don't have a bool value of 0 - don't map them */
 			if (cur_expr->expr_type != COND_BOOL)
 				continue;
-			assert(module->map[SYM_BOOLS][cur_expr->bool - 1] != 0);
-			cur_expr->bool =
-			    module->map[SYM_BOOLS][cur_expr->bool - 1];
+			assert(module->map[SYM_BOOLS][cur_expr->boolean - 1] != 0);
+			cur_expr->boolean =
+			    module->map[SYM_BOOLS][cur_expr->boolean - 1];
 		}
 		new_node->nbools = cur->nbools;
 		/* FIXME should COND_MAX_BOOLS be used here? */

@@ -2025,8 +2025,8 @@ static int cond_node_map_bools(expand_state_t * state, cond_node_t * cn)
 
 	cur = cn->expr;
 	while (cur) {
-		if (cur->bool)
-			cur->bool = state->boolmap[cur->bool - 1];
+		if (cur->boolean)
+			cur->boolean = state->boolmap[cur->boolean - 1];
 		cur = cur->next;
 	}
 
@@ -2899,7 +2899,7 @@ static void discard_tunables(sepol_handle_t *sh, policydb_t *pol)
 			     cur_expr = cur_expr->next) {
 				if (cur_expr->expr_type != COND_BOOL)
 					continue;
-				booldatum = pol->bool_val_to_struct[cur_expr->bool - 1];
+				booldatum = pol->bool_val_to_struct[cur_expr->boolean - 1];
 				if (booldatum->flags & COND_BOOL_FLAGS_TUNABLE)
 					tmp[tunables++] = booldatum;
 				else

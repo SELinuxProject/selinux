@@ -2123,7 +2123,7 @@ static int __cil_cond_item_to_sepol_expr(policydb_t *pdb, struct cil_list_item *
 		*head = cil_malloc(sizeof(cond_expr_t));
 		(*head)->next = NULL;
 		(*head)->expr_type = COND_BOOL;
-		(*head)->bool = sepol_bool->s.value;
+		(*head)->boolean = sepol_bool->s.value;
 		*tail = *head;
 	} else if (item->flavor == CIL_LIST) {
 		struct cil_list *l = item->data;
@@ -2159,7 +2159,7 @@ static int __cil_cond_expr_to_sepol_expr_helper(policydb_t *pdb, struct cil_list
 		enum cil_flavor cil_op = (enum cil_flavor)(uintptr_t)item->data;
 
 		op = cil_malloc(sizeof(*op));
-		op->bool = 0;
+		op->boolean = 0;
 		op->next = NULL;
 
 		switch (cil_op) {
@@ -2226,7 +2226,7 @@ static int __cil_cond_expr_to_sepol_expr_helper(policydb_t *pdb, struct cil_list
 				goto exit;
 			}
 			op = cil_malloc(sizeof(*op));
-			op->bool = 0;
+			op->boolean = 0;
 			op->next = NULL;
 			op->expr_type = COND_OR;
 			t1->next = h2;

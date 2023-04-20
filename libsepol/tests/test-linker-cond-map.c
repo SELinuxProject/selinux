@@ -70,7 +70,7 @@ static void test_cond_expr_mapping(policydb_t * p, avrule_decl_t * d, test_cond_
 
 		CU_ASSERT(expr->expr_type == bools[i].expr_type);
 		if (bools[i].bool) {
-			CU_ASSERT(strcmp(p->sym_val_to_name[SYM_BOOLS][expr->bool - 1], bools[i].bool) == 0);
+			CU_ASSERT(strcmp(p->sym_val_to_name[SYM_BOOLS][expr->boolean - 1], bools[i].bool) == 0);
 		}
 		expr = expr->next;
 	}

@@ -42,7 +42,7 @@ static char *cond_expr_to_str(struct policydb *pdb, struct cond_expr *expr)
 
 	for (curr = expr; curr != NULL; curr = curr->next) {
 		if (curr->expr_type == COND_BOOL) {
-			char *val1 = pdb->p_bool_val_to_name[curr->bool - 1];
+			char *val1 = pdb->p_bool_val_to_name[curr->boolean - 1];
 			new_val = create_str("%s", 1, val1);
 		} else {
 			const char *op;

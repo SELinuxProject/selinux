@@ -125,7 +125,7 @@ int cond_expr_equal(cond_node_t * a, cond_node_t * b)
 		if (cur_a->expr_type != cur_b->expr_type)
 			return 0;
 		if (cur_a->expr_type == COND_BOOL) {
-			if (cur_a->bool != cur_b->bool)
+			if (cur_a->boolean != cur_b->boolean)
 				return 0;
 		}
 		cur_a = cur_a->next;
@@ -223,7 +223,7 @@ int cond_evaluate_expr(policydb_t * p, cond_expr_t * expr)
 			if (sp == (COND_EXPR_MAXDEPTH - 1))
 				return -1;
 			sp++;
-			s[sp] = p->bool_val_to_struct[cur->bool - 1]->state;
+			s[sp] = p->bool_val_to_struct[cur->boolean - 1]->state;
 			break;
 		case COND_NOT:
 			if (sp < 0)
@@ -279,7 +279,7 @@ cond_expr_t *cond_copy_expr(cond_expr_t * expr)
 		memset(new_expr, 0, sizeof(cond_expr_t));
 
 		new_expr->expr_type = cur->expr_type;
-		new_expr->bool = cur->bool;
+		new_expr->boolean = cur->boolean;
 
 		if (!head)
 			head = new_expr;
@@ -388,10 +388,10 @@ int cond_normalize_expr(policydb_t * p, cond_node_t * cn)
 		switch (e->expr_type) {
 		case COND_BOOL:
 			/* see if we've already seen this bool */
-			if (!bool_present(e->bool, cn->bool_ids, cn->nbools)) {
+			if (!bool_present(e->boolean, cn->bool_ids, cn->nbools)) {
 				/* count em all but only record up to COND_MAX_BOOLS */
 				if (cn->nbools < COND_MAX_BOOLS)
-					cn->bool_ids[cn->nbools++] = e->bool;
+					cn->bool_ids[cn->nbools++] = e->boolean;
 				else
 					cn->nbools++;
 			}
@@ -737,7 +737,7 @@ static int expr_isvalid(policydb_t * p, cond_expr_t * expr)
 		return 0;
 	}
 
-	if (expr->bool > p->p_bools.nprim) {
+	if (expr->boolean > p->p_bools.nprim) {
 		WARN(NULL, "security: conditional expressions uses unknown bool.");
 		return 0;
 	}
@@ -775,7 +775,7 @@ static int cond_read_node(policydb_t * p, cond_node_t * node, void *fp)
 		memset(expr, 0, sizeof(cond_expr_t));
 
 		expr->expr_type = le32_to_cpu(buf[0]);
-		expr->bool = le32_to_cpu(buf[1]);
+		expr->boolean = le32_to_cpu(buf[1]);
 
 		if (!expr_isvalid(p, expr)) {
 			free(expr);
