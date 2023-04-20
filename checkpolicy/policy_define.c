@@ -4159,7 +4159,7 @@ cond_expr_t *define_cond_expr(uint32_t expr_type, void *arg1, void *arg2)
 			free(id);
 			return NULL;
 		}
-		expr->bool = bool_var->s.value;
+		expr->boolean = bool_var->s.value;
 		free(id);
 		return expr;
 	default:

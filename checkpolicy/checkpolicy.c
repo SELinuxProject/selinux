@@ -313,7 +313,7 @@ static void display_expr(const cond_expr_t * exp)
 		switch (cur->expr_type) {
 		case COND_BOOL:
 			printf("%s ",
-			       policydbp->p_bool_val_to_name[cur->bool - 1]);
+			       policydbp->p_bool_val_to_name[cur->boolean - 1]);
 			break;
 		case COND_NOT:
 			printf("! ");

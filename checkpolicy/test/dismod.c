@@ -404,7 +404,7 @@ static void display_expr(policydb_t * p, cond_expr_t * exp, FILE * fp)
 		switch (cur->expr_type) {
 		case COND_BOOL:
 			fprintf(fp, "%s ",
-				p->p_bool_val_to_name[cur->bool - 1]);
+				p->p_bool_val_to_name[cur->boolean - 1]);
 			break;
 		case COND_NOT:
 			fprintf(fp, "! ");
