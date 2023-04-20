@@ -1149,6 +1149,8 @@ static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p, valid
 				case OCON_NETIF:
 					if (validate_context(&octx->context[1], flavors, p->mls))
 						goto bad;
+					if (!octx->u.name)
+						goto bad;
 					break;
 				case OCON_PORT:
 					if (octx->u.port.low_port > octx->u.port.high_port)
@@ -1163,6 +1165,34 @@ static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p, valid
 					default:
 						goto bad;
 					}
+					if (!octx->u.name)
+						goto bad;
+					break;
+				case OCON_IBPKEY:
+					if (octx->u.ibpkey.low_pkey > octx->u.ibpkey.high_pkey)
+						goto bad;
+					break;
+				case OCON_IBENDPORT:
+					if (!octx->u.ibendport.dev_name)
+						goto bad;
+					break;
+				}
+			} else if (p->target_platform == SEPOL_TARGET_XEN) {
+				switch(i) {
+				case OCON_XEN_IOPORT:
+					if (octx->u.ioport.low_ioport > octx->u.ioport.high_ioport)
+						goto bad;
+					break;
+				case OCON_XEN_IOMEM:
+					if (octx->u.iomem.low_iomem > octx->u.iomem.high_iomem)
+						goto bad;
+					if (p->policyvers < POLICYDB_VERSION_XEN_DEVICETREE && octx->u.iomem.high_iomem > 0xFFFFFFFFULL)
+						goto bad;
+					break;
+				case OCON_XEN_DEVICETREE:
+					if (!octx->u.name)
+						goto bad;
+					break;
 				}
 			}
 		}
