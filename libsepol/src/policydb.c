@@ -3650,10 +3650,10 @@ static int range_read(policydb_t * p, struct policy_file *fp)
 			if (rc < 0)
 				goto err;
 			rt->target_class = le32_to_cpu(buf[0]);
-			if (!value_isvalid(rt->target_class, p->p_classes.nprim))
-				goto err;
 		} else
 			rt->target_class = p->process_class;
+		if (!value_isvalid(rt->target_class, p->p_classes.nprim))
+			goto err;
 		r = calloc(1, sizeof(*r));
 		if (!r)
 			goto err;
