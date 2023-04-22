@@ -314,7 +314,7 @@ static int class_constraint_rules_to_strs(struct policydb *pdb, char *classkey,
 
 	return 0;
 exit:
-	sepol_log_err("Error gathering constraint rules\n");
+	sepol_log_err("Error gathering constraint rules");
 	return rc;
 }
 
@@ -543,7 +543,7 @@ static int write_class_decl_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing class rules to CIL\n");
+		sepol_log_err("Error writing class rules to CIL");
 	}
 
 	return rc;
@@ -616,7 +616,7 @@ exit:
 	}
 	strs_destroy(&strs);
 	if (rc != 0) {
-		sepol_log_err("Error writing sid rules to CIL\n");
+		sepol_log_err("Error writing sid rules to CIL");
 	}
 
 	return rc;
@@ -795,7 +795,7 @@ static int write_default_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing default rules to CIL\n");
+		sepol_log_err("Error writing default rules to CIL");
 	}
 
 	return rc;
@@ -906,7 +906,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing sensitivity rules to CIL\n");
+		sepol_log_err("Error writing sensitivity rules to CIL");
 	}
 
 	return rc;
@@ -1010,7 +1010,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing category rules to CIL\n");
+		sepol_log_err("Error writing category rules to CIL");
 	}
 
 	return rc;
@@ -1141,7 +1141,7 @@ static int write_sensitivitycategory_rules_to_cil(FILE *out, struct policydb *pd
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing sensitivitycategory rules to CIL\n");
+		sepol_log_err("Error writing sensitivitycategory rules to CIL");
 	}
 
 	return rc;
@@ -1177,7 +1177,7 @@ static int write_mls_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing mls rules to CIL\n");
+		sepol_log_err("Error writing mls rules to CIL");
 	}
 
 	return rc;
@@ -1218,7 +1218,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing polcap rules to CIL\n");
+		sepol_log_err("Error writing polcap rules to CIL");
 	}
 
 	return rc;
@@ -1263,7 +1263,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing typeattribute rules to CIL\n");
+		sepol_log_err("Error writing typeattribute rules to CIL");
 	}
 
 	return rc;
@@ -1308,7 +1308,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing roleattribute rules to CIL\n");
+		sepol_log_err("Error writing roleattribute rules to CIL");
 	}
 
 	return rc;
@@ -1348,7 +1348,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing boolean declarations to CIL\n");
+		sepol_log_err("Error writing boolean declarations to CIL");
 	}
 
 	return rc;
@@ -1393,7 +1393,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing type declarations to CIL\n");
+		sepol_log_err("Error writing type declarations to CIL");
 	}
 
 	return rc;
@@ -1476,7 +1476,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing type alias rules to CIL\n");
+		sepol_log_err("Error writing type alias rules to CIL");
 	}
 
 	return rc;
@@ -1530,7 +1530,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing type bounds rules to CIL\n");
+		sepol_log_err("Error writing type bounds rules to CIL");
 	}
 
 	return rc;
@@ -1578,7 +1578,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing typeattributeset rules to CIL\n");
+		sepol_log_err("Error writing typeattributeset rules to CIL");
 	}
 
 	return rc;
@@ -1620,7 +1620,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing typepermissive rules to CIL\n");
+		sepol_log_err("Error writing typepermissive rules to CIL");
 	}
 
 	return rc;
@@ -1862,7 +1862,7 @@ static int write_avtab_to_cil(FILE *out, struct policydb *pdb, int indent)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing avtab rules to CIL\n");
+		sepol_log_err("Error writing avtab rules to CIL");
 	}
 
 	return rc;
@@ -1933,7 +1933,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing filename typetransition rules to CIL\n");
+		sepol_log_err("Error writing filename typetransition rules to CIL");
 	}
 
 	return rc;
@@ -2044,7 +2044,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing range transition rules to CIL\n");
+		sepol_log_err("Error writing range transition rules to CIL");
 	}
 
 	return rc;
@@ -2184,7 +2184,7 @@ exit:
 	}
 
 	if (rc != 0) {
-		sepol_log_err("Error writing conditional rules to CIL\n");
+		sepol_log_err("Error writing conditional rules to CIL");
 	}
 
 	return rc;
@@ -2309,7 +2309,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing role declarations to CIL\n");
+		sepol_log_err("Error writing role declarations to CIL");
 	}
 
 	return rc;
@@ -2350,7 +2350,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing role transition rules to CIL\n");
+		sepol_log_err("Error writing role transition rules to CIL");
 	}
 
 	return rc;
@@ -2388,7 +2388,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing role allow rules to CIL\n");
+		sepol_log_err("Error writing role allow rules to CIL");
 	}
 
 	return rc;
@@ -2529,7 +2529,7 @@ exit:
 		strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing user declarations to CIL\n");
+		sepol_log_err("Error writing user declarations to CIL");
 	}
 
 	return rc;
@@ -2611,7 +2611,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing sidcontext rules to CIL\n");
+		sepol_log_err("Error writing sidcontext rules to CIL");
 	}
 
 	return rc;
@@ -2655,7 +2655,7 @@ static int write_selinux_fsuse_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing fsuse rules to CIL\n");
+		sepol_log_err("Error writing fsuse rules to CIL");
 	}
 
 	return rc;
@@ -2733,7 +2733,7 @@ exit:
 	strs_destroy(&strs);
 
 	if (rc != 0) {
-		sepol_log_err("Error writing genfscon rules to CIL\n");
+		sepol_log_err("Error writing genfscon rules to CIL");
 	}
 
 	return rc;
@@ -2788,7 +2788,7 @@ static int write_selinux_port_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing portcon rules to CIL\n");
+		sepol_log_err("Error writing portcon rules to CIL");
 	}
 
 	return rc;
@@ -2822,7 +2822,7 @@ static int write_selinux_netif_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing netifcon rules to CIL\n");
+		sepol_log_err("Error writing netifcon rules to CIL");
 	}
 
 	return rc;
@@ -2862,7 +2862,7 @@ static int write_selinux_node_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing nodecon rules to CIL\n");
+		sepol_log_err("Error writing nodecon rules to CIL");
 	}
 
 	return rc;
@@ -2902,7 +2902,7 @@ static int write_selinux_node6_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing nodecon rules to CIL\n");
+		sepol_log_err("Error writing nodecon rules to CIL");
 	}
 
 	return rc;
@@ -2958,7 +2958,7 @@ static int write_selinux_ibpkey_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing ibpkeycon rules to CIL\n");
+		sepol_log_err("Error writing ibpkeycon rules to CIL");
 	}
 
 	return rc;
@@ -2995,7 +2995,7 @@ static int write_selinux_ibendport_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing ibendportcon rules to CIL\n");
+		sepol_log_err("Error writing ibendportcon rules to CIL");
 	}
 
 	return rc;
@@ -3035,7 +3035,7 @@ static int write_xen_pirq_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing pirqcon rules to CIL\n");
+		sepol_log_err("Error writing pirqcon rules to CIL");
 	}
 
 	return rc;
@@ -3078,7 +3078,7 @@ static int write_xen_ioport_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing ioportcon rules to CIL\n");
+		sepol_log_err("Error writing ioportcon rules to CIL");
 	}
 
 	return rc;
@@ -3121,7 +3121,7 @@ static int write_xen_iomem_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing iomemcon rules to CIL\n");
+		sepol_log_err("Error writing iomemcon rules to CIL");
 	}
 
 	return rc;
@@ -3156,7 +3156,7 @@ static int write_xen_pcidevice_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing pcidevicecon rules to CIL\n");
+		sepol_log_err("Error writing pcidevicecon rules to CIL");
 	}
 
 	return rc;
@@ -3183,7 +3183,7 @@ static int write_xen_devicetree_rules_to_cil(FILE *out, struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error writing devicetreecon rules to CIL\n");
+		sepol_log_err("Error writing devicetreecon rules to CIL");
 	}
 
 	return rc;
