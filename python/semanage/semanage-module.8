@@ -5,12 +5,14 @@
 .B semanage module [\-h] [\-n] [\-N] [\-S STORE] (\-a | \-r | \-e | \-d | \-\-extract | \-\-list [\-C] | \-\-deleteall) [module_name]
 
 .SH "DESCRIPTION"
-semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage module installs, removes, disables SELinux Policy modules.
+semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.
+.B semanage module
+installs, removes, disables, or enables SELinux Policy modules.
 
 .SH "OPTIONS"
 .TP
 .I  \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I   \-n, \-\-noheading
 Do not print heading when listing the specified object type
@@ -22,10 +24,13 @@ Do not reload policy after commit
 Select an alternate SELinux Policy Store to manage
 .TP
 .I   \-a, \-\-add
-Install specified module
+Install specified module. Accepts both binary policy files (.pp) and CIL source files
 .TP
 .I   \-r, \-\-remove
 Remove specified module
+.TP
+.I   \-D, \-\-deleteall
+Remove all local customizations related to modules
 .TP
 .I   \-d \-\-disable
 Disable specified module
@@ -48,8 +53,8 @@ List all modules
 # semanage module \-l
 Disable unconfined module
 # semanage module \-\-disable unconfined
-Install custom apache policy module
-# semanage module \-a myapache
+Install custom apache policy module (same as #semodule -i myapache.pp)
+# semanage module \-a myapache.pp
 
 .SH "SEE ALSO"
 .BR selinux (8),

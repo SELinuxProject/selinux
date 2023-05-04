@@ -7,7 +7,15 @@
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
 SELinux policy without requiring modification to or recompilation
-from policy sources.  semanage import and export can be used to extract the SELinux modifications from one machine and apply them to another. You can put a whole group of semanage commands within a file and apply them to a machine in a single transaction.
+from policy sources.
+.B semanage import
+and
+.B export
+can be used to extract the SELinux modifications from one machine and apply them to another. Please note that this will remove all current semanage customizations on the second machine as the command list generated using
+.B semanage export
+start with
+.I <command> -D
+for all semanage sub-commands. You can put a whole group of semanage commands within a file and apply them to a machine in a single transaction.
 
 .SH "OPTIONS"
 .TP

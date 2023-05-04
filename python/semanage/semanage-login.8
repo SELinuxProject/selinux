@@ -7,12 +7,14 @@
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
 SELinux policy without requiring modification to or recompilation
-from policy sources.  semanage login controls the mapping between a Linux User and the SELinux User.  It can be used to turn  on confined users.  For example you could define that a particular user or group of users will login to a system as the user_u user.  Prefix the group name with a '%' sign to indicate a group name.
+from policy sources.
+.B semanage login
+controls the mapping between a Linux User and the SELinux User. It can be used to turn on confined users. For example you could define that a particular user or group of users will login to a system as the user_u user. Prefix the group name with a '%' sign to indicate a group name.
 
 .SH "OPTIONS"
 .TP
 .I  \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I  \-n, \-\-noheading
 Do not print heading when listing the specified object type
@@ -52,11 +54,11 @@ MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login ma
 
 .SH EXAMPLE
 .nf
-Modify the default user on the system to the guest_u user
+Set the default SELinux user on the system to guest_u
 # semanage login \-m \-s guest_u __default__
-Assign gijoe user on an MLS machine  a range and to the staff_u user
-# semanage login \-a \-s staff_u \-rSystemLow-Secret gijoe
-Assign all users in the engineering group to the staff_u user
+Map user gijoe to SELinux user staff_u and assign MLS range SystemLow\-Secret
+# semanage login \-a \-s staff_u \-rSystemLow\-Secret gijoe
+Map all users in the engineering group to SELinux user staff_u
 # semanage login \-a \-s staff_u %engineering
 
 .SH "SEE ALSO"

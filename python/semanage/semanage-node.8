@@ -7,12 +7,14 @@
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
 SELinux policy without requiring modification to or recompilation
-from policy sources.  semanage controls the ipaddress to node type definitions.
+from policy sources.
+.B semanage node
+controls the IP address to node type definitions.
 
 .SH "OPTIONS"
 .TP
 .I \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I   \-n, \-\-noheading
 Do not print heading when listing the specified object type
@@ -54,5 +56,13 @@ SELinux type for the object
 MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login mapping defaults to the SELinux user record range. SELinux Range for SELinux user defaults to s0.
 .TP
 .I   \-p PROTO, \-\-proto PROTO
-
 Protocol for the specified port (tcp|udp) or internet protocol version for the specified node (ipv4|ipv6).
+
+.SH "EXAMPLE"
+.nf
+Apply type node_t to ipv4 node 127.0.0.2
+# semanage node \-a \-t node_t \-p ipv4 \-M 255.255.255.255 127.0.0.2
+
+.SH "SEE ALSO"
+.BR selinux (8),
+.BR semanage (8)

@@ -8,8 +8,10 @@ semanage\-fcontext \- SELinux Policy Management file context tool
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
 SELinux policy without requiring modification to or recompilation
-from policy sources.  semanage fcontext is used to  manage the default
-file system labeling on an SELinux system.  This command maps file paths using regular expressions to SELinux labels.
+from policy sources.
+.B semanage fcontext
+is used to manage the default file system labeling on an SELinux system.
+This command maps file paths using regular expressions to SELinux labels.
 
 FILE_SPEC may contain either a fully qualified path,
 or a Perl compatible regular expression (PCRE),
@@ -32,7 +34,7 @@ to avoid unintentionally impacting other parts of the filesystem.
 .SH "OPTIONS"
 .TP
 .I  \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I   \-n, \-\-noheading
 Do not print heading when listing the specified object type
@@ -82,12 +84,13 @@ MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login ma
 
 .SH EXAMPLE
 .nf
-.I remember to run restorecon after you set the file context
-Add file-context for everything under /web
+.I Remember to run restorecon after you set the file context
+Add file-context httpd_sys_content_t for everything under /web
 # semanage fcontext \-a \-t httpd_sys_content_t "/web(/.*)?"
 # restorecon \-R \-v /web
 
 Substitute /home1 with /home when setting file context
+i.e. label everything under /home1 the same way /home is labeled
 # semanage fcontext \-a \-e /home /home1
 # restorecon \-R \-v /home1
 
@@ -99,7 +102,9 @@ execute the following commands.
 
 .SH "SEE ALSO"
 .BR selinux (8),
-.BR semanage (8)
+.BR semanage (8),
+.BR restorecon (8),
+.BR selabel_file (5)
 
 .SH "AUTHOR"
 This man page was written by Daniel Walsh <dwalsh@redhat.com>

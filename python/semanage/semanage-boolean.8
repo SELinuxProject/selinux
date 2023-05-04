@@ -7,11 +7,14 @@ semanage\-boolean \- SELinux Policy Management boolean tool
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
 SELinux policy without requiring modification to or recompilation
-from policy sources.  semanage boolean command controls the settings of booleans in SELinux policy.  booleans are if\-then\-else rules written in SELinux Policy.  They can be used to customize the way that SELinux Policy rules effect a confined domain.
+from policy sources.
+.B semanage boolean
+command controls the settings of booleans in SELinux policy. Booleans are if\-then\-else rules written in SELinux Policy. They can be used to customize the way that SELinux Policy rules effect a confined domain.
+
 .SH "OPTIONS"
 .TP
 .I  \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I \-n, \-\-noheading
 Do not print heading when listing the specified object type
@@ -45,7 +48,7 @@ Disable the boolean
 
 .SH EXAMPLE
 .nf
-Turn on the apache can send mail boolean
+Turn on the "apache can send mail" boolean (persistent version of #setsebool httpd_can_sendmail on)
 # semanage boolean \-m \-\-on httpd_can_sendmail
 
 List customized booleans

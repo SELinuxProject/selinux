@@ -7,12 +7,14 @@
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
 SELinux policy without requiring modification to or recompilation
-from policy sources.  semanage user controls the mapping between an SELinux User and the roles and MLS/MCS levels.
+from policy sources.
+.B semanage user
+controls the mapping between an SELinux User and the roles and MLS/MCS levels.
 
 .SH "OPTIONS"
 .TP
 .I   \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I   \-n, \-\-noheading
 Do not print heading when listing the specified object type
@@ -59,7 +61,7 @@ List SELinux users
 # semanage user \-l
 Modify groups for staff_u user
 # semanage user \-m \-R "system_r unconfined_r staff_r" staff_u
-Add level for TopSecret Users
+Assign user topsecret_u role staff_r and range s0\-TopSecret
 # semanage user \-a \-R "staff_r" \-rs0\-TopSecret topsecret_u
 
 .SH "SEE ALSO"

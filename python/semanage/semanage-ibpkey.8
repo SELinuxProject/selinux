@@ -5,12 +5,14 @@
 .B semanage ibpkey [\-h] [\-n] [\-N] [\-S STORE] [ \-\-add \-t TYPE \-x SUBNET_PREFIX \-r RANGE ibpkey_name | ibpkey_range | \-\-delete \-x SUBNET_PREFIX ibpkey_name | ibpkey_range | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-t TYPE \-x SUBNET_PREFIX \-r RANGE ibpkey_name | ibpkey_range ]
 
 .SH "DESCRIPTION"
-semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage ibpkey controls the ibpkey number to ibpkey type definitions.
+semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.
+.B semanage ibpkey
+controls the ibpkey number to ibpkey type definitions.
 
 .SH "OPTIONS"
 .TP
 .I  \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I   \-n, \-\-noheading
 Do not print heading when listing the specified object type

@@ -5,12 +5,14 @@
 .B semanage permissive [\-h] [\-n] [\-N] [\-S STORE] (\-\-add TYPE | \-\-delete TYPE | \-\-deleteall | \-\-extract | \-\-list)
 
 .SH "DESCRIPTION"
-semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage permissive adds or removes a SELinux Policy permissive module.
+semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.
+.B semanage permissive
+adds or removes a SELinux Policy permissive module. Please note that this command can make any domain permissive, but can only remove the permissive property from domains where it was added by semanage permissive ("semanage permissive -d" can only be used on types listed as "Customized Permissive Types" by "semanage permissive -l").
 
 .SH "OPTIONS"
 .TP
 .I  \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I   \-a, \-\-add
 Add a record of the specified object type
@@ -38,7 +40,7 @@ Select an alternate SELinux Policy Store to manage
 
 .SH EXAMPLE
 .nf
-List all permissive modules
+List all permissive domains ("Builtin Permissive Types" where set by the system policy, or a custom policy module)
 # semanage permissive \-l
 Make httpd_t (Web Server) a permissive domain
 # semanage permissive \-a httpd_t

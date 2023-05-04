@@ -7,12 +7,14 @@
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
 SELinux policy without requiring modification to or recompilation
-from policy sources.  semanage interface controls the labels assigned to network interfaces.
+from policy sources.
+.B semanage interface
+controls the labels assigned to network interfaces.
 
 .SH "OPTIONS"
 .TP
 .I \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I  \-n, \-\-noheading
 Do not print heading when listing the specified object type
@@ -54,6 +56,8 @@ MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux login ma
 .nf
 list all interface definitions
 # semanage interface \-l
+Assign type netif_t and MLS/MCS range s0:c0.c1023 to interface eth0
+# semanage interface \-a \-t netif_t \-r s0:c0.c1023 eth0
 
 .SH "SEE ALSO"
 .BR selinux (8),

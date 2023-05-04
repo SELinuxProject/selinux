@@ -5,12 +5,14 @@
 .B semanage port [\-h] [\-n] [\-N] [\-S STORE] [ \-\-add \-t TYPE \-p PROTOCOL \-r RANGE port_name | port_range | \-\-delete \-p PROTOCOL port_name | port_range | \-\-deleteall  | \-\-extract  | \-\-list [\-C] | \-\-modify \-t TYPE \-p PROTOCOL \-r RANGE port_name | port_range ]
 
 .SH "DESCRIPTION"
-semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.  semanage port controls the port number to port type definitions.
+semanage is used to configure certain elements of SELinux policy without requiring modification to or recompilation from policy sources.
+.B semanage port
+controls the port number to port type definitions.
 
 .SH "OPTIONS"
 .TP
 .I  \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I   \-n, \-\-noheading
 Do not print heading when listing the specified object type
@@ -55,9 +57,9 @@ Protocol for the specified port (tcp|udp|dccp|sctp) or internet protocol version
 .nf
 List all port definitions
 # semanage port \-l
-Allow Apache to listen on tcp port 81
+Allow Apache to listen on tcp port 81 (i.e. assign tcp port 81 label http_port_t, which apache is allowed to listen on)
 # semanage port \-a \-t http_port_t \-p tcp 81
-Allow sshd to listen on tcp port 8991
+Allow sshd to listen on tcp port 8991 (i.e. assign tcp port 8991 label ssh_port_t, which sshd is allowed to listen on)
 # semanage port \-a \-t ssh_port_t \-p tcp 8991
 
 .SH "SEE ALSO"

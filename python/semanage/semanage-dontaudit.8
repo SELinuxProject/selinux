@@ -7,13 +7,15 @@
 .SH "DESCRIPTION"
 semanage is used to configure certain elements of
 SELinux policy without requiring modification to or recompilation
-from policy sources.  semanage dontaudit toggles whether or not dontaudit rules will be in the policy.  Policy writers use dontaudit rules to cause
-confined applications to use alternative paths.  Dontaudit rules are denied but not reported in the logs.  Some times dontaudit rules can cause bugs in applications but policy writers will not realize it since the AVC is not audited.  Turning off dontaudit rules with this command to see if the kernel is blocking an access.
+from policy sources.
+.B semanage dontaudit
+toggles whether or not dontaudit rules will be in the policy. Policy writers use dontaudit rules to cause
+confined applications to use alternative paths. Dontaudit rules are denied but not reported in the logs. Sometimes dontaudit rules can cause bugs in applications but policy writers will not realize it since the AVC is not audited. Turn off dontaudit rules with this command to see if the kernel is blocking an access.
 
 .SH "OPTIONS"
 .TP
 .I   \-h, \-\-help
-show this help message and exit
+Show this help message and exit
 .TP
 .I   \-S STORE, \-\-store STORE
 Select an alternate SELinux Policy Store to manage
