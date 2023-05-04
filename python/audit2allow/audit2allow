@@ -88,8 +88,6 @@ class AuditToPolicy:
         parser.add_option("--interface-info", dest="interface_info", help="file name of interface information")
         parser.add_option("-x", "--xperms", action="store_true", dest="xperms",
                           default=False, help="generate extended permission rules")
-        parser.add_option("--debug", dest="debug", action="store_true", default=False,
-                          help="leave generated modules for -M")
         parser.add_option("-w", "--why", dest="audit2why", action="store_true", default=(os.path.basename(sys.argv[0]) == "audit2why"),
                           help="Translates SELinux audit messages into a description of why the access was denied")
 
