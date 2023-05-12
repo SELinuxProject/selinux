@@ -169,7 +169,7 @@ static char *constraint_expr_to_str(struct policydb *pdb, struct constraint_expr
 				goto exit;
 			}
 
-			if (curr->attr >= CEXPR_XTARGET) {
+			if (curr->attr >= CEXPR_L1L2) {
 				*use_mls = 1;
 			}
 
