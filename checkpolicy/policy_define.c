@@ -2511,6 +2511,8 @@ int define_te_avtab_extended_perms(int which)
 	return rc;
 }
 
+#define PERMISSION_MASK(nprim) ((nprim) == PERM_SYMTAB_SIZE ? (~UINT32_C(0)) : ((UINT32_C(1) << (nprim)) - 1))
+
 static int define_te_avtab_helper(int which, avrule_t ** rule)
 {
 	char *id;
@@ -2616,8 +2618,8 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 			cladatum = policydbp->class_val_to_struct[i];
 
 			if (strcmp(id, "*") == 0) {
-				/* set all permissions in the class */
-				cur_perms->data = ~0U;
+				/* set all declared permissions in the class */
+				cur_perms->data = PERMISSION_MASK(cladatum->permissions.nprim);
 				goto next;
 			}
 
@@ -2625,7 +2627,16 @@ static int define_te_avtab_helper(int which, avrule_t ** rule)
 				/* complement the set */
 				if (which == AVRULE_DONTAUDIT)
 					yywarn("dontaudit rule with a ~?");
-				cur_perms->data = ~cur_perms->data;
+				cur_perms->data = ~cur_perms->data & PERMISSION_MASK(cladatum->permissions.nprim);
+				if (cur_perms->data == 0) {
+					class_perm_node_t *tmp = cur_perms;
+					yywarn("omitting avrule with no permission set");
+					if (perms == cur_perms)
+						perms = cur_perms->next;
+					cur_perms = cur_perms->next;
+					free(tmp);
+					continue;
+				}
 				goto next;
 			}
 
@@ -3548,8 +3559,6 @@ static constraint_expr_t *constraint_expr_clone(const constraint_expr_t * expr)
 	constraint_expr_destroy(h);
 	return NULL;
 }
-
-#define PERMISSION_MASK(nprim) ((nprim) == PERM_SYMTAB_SIZE ? (~UINT32_C(0)) : ((UINT32_C(1) << (nprim)) - 1))
 
 int define_constraint(constraint_expr_t * expr)
 {
