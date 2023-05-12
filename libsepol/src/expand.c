@@ -943,7 +943,7 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 		return -1;
 	}
 	for (cat = sl->cat; cat; cat = cat->next) {
-		if (cat->low > cat->high) {
+		if (!cat->low || cat->low > cat->high) {
 			ERR(h, "Category range is not valid %s.%s",
 			    p->p_cat_val_to_name[cat->low - 1],
 			    p->p_cat_val_to_name[cat->high - 1]);
