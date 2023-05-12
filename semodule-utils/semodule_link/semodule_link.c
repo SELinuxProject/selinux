@@ -21,18 +21,13 @@
 
 #define LINKPOLICY_VERSION "1.0"
 
-char *progname;
-extern char *optarg;
-extern int optind;
-
-static __attribute__((__noreturn__)) void usage(const char *program_name)
+static void usage(const char *program_name)
 {
-	printf("usage: %s [-Vv] [-o outfile] basemodpkg modpkg1 [modpkg2]...\n",
+	printf("usage: %s [-hVv] [-o outfile] basemodpkg modpkg1 [modpkg2]...\n",
 	       program_name);
-	exit(1);
 }
 
-static sepol_module_package_t *load_module(char *filename)
+static sepol_module_package_t *load_module(const char *filename, const char *progname)
 {
 	int ret;
 	FILE *fp = NULL;
@@ -47,9 +42,9 @@ static sepol_module_package_t *load_module(char *filename)
 		fprintf(stderr, "%s:  Out of memory\n", progname);
 		goto bad;
 	}
-	fp = fopen(filename, "r");
+	fp = fopen(filename, "re");
 	if (!fp) {
-		fprintf(stderr, "%s:  Could not open package %s:  %s", progname,
+		fprintf(stderr, "%s:  Could not open package %s:  %s\n", progname,
 			filename, strerror(errno));
 		goto bad;
 	}
@@ -76,16 +71,16 @@ static sepol_module_package_t *load_module(char *filename)
 
 int main(int argc, char **argv)
 {
-	int ch, i, show_version = 0, verbose = 0, num_mods;
-	char *basename, *outname = NULL;
-	sepol_module_package_t *base, **mods;
-	FILE *outfile;
-	struct sepol_policy_file *pf;
+	int ch, i, ret, show_version = 0, verbose = 0, num_mods = 0;
+	const char *basename, *outname = NULL;
+	sepol_module_package_t *base = NULL, **mods = NULL;
+	struct sepol_policy_file *pf = NULL;
 
-	progname = argv[0];
-
-	while ((ch = getopt(argc, argv, "o:Vv")) != EOF) {
+	while ((ch = getopt(argc, argv, "ho:Vv")) != EOF) {
 		switch (ch) {
+		case 'h':
+			usage(argv[0]);
+			return EXIT_SUCCESS;
 		case 'V':
 			show_version = 1;
 			break;
@@ -97,80 +92,96 @@ int main(int argc, char **argv)
 			break;
 		default:
 			usage(argv[0]);
+			return EXIT_FAILURE;
 		}
 	}
 
 	if (show_version) {
 		printf("%s\n", LINKPOLICY_VERSION);
-		exit(0);
+		return EXIT_SUCCESS;
 	}
 
 	/* check args */
-	if (argc < 3 || !(optind != (argc - 1))) {
+	if (argc < 3 || optind + 2 > argc) {
 		fprintf(stderr,
 			"%s:  You must provide the base module package and at least one other module package\n",
 			argv[0]);
 		usage(argv[0]);
+		return EXIT_FAILURE;
 	}
 
 	basename = argv[optind++];
-	base = load_module(basename);
+	base = load_module(basename, argv[0]);
 	if (!base) {
 		fprintf(stderr,
 			"%s:  Could not load base module from file %s\n",
 			argv[0], basename);
-		exit(1);
+		goto failure;
 	}
 
 	num_mods = argc - optind;
-	mods =
-	    (sepol_module_package_t **) malloc(sizeof(sepol_module_package_t *)
-					       * num_mods);
+	mods = calloc(num_mods, sizeof(sepol_module_package_t *));
 	if (!mods) {
 		fprintf(stderr, "%s:  Out of memory\n", argv[0]);
-		exit(1);
+		goto failure;
 	}
-	memset(mods, 0, sizeof(sepol_module_package_t *) * num_mods);
 
 	for (i = 0; optind < argc; optind++, i++) {
-		mods[i] = load_module(argv[optind]);
+		mods[i] = load_module(argv[optind], argv[0]);
 		if (!mods[i]) {
 			fprintf(stderr,
 				"%s:  Could not load module from file %s\n",
 				argv[0], argv[optind]);
-			exit(1);
+			goto failure;
 		}
 	}
 
 	if (sepol_link_packages(NULL, base, mods, num_mods, verbose)) {
 		fprintf(stderr, "%s:  Error while linking packages\n", argv[0]);
-		exit(1);
+		goto failure;
 	}
 
 	if (outname) {
-		outfile = fopen(outname, "w");
+		FILE *outfile = fopen(outname, "we");
 		if (!outfile) {
-			perror(outname);
-			exit(1);
+			fprintf(stderr, "%s:  Could not open output file %s:  %s\n",
+				argv[0], outname, strerror(errno));
+			goto failure;
 		}
 
 		if (sepol_policy_file_create(&pf)) {
 			fprintf(stderr, "%s:  Out of memory\n", argv[0]);
-			exit(1);
+			fclose(outfile);
+			goto failure;
 		}
 		sepol_policy_file_set_fp(pf, outfile);
 		if (sepol_module_package_write(base, pf)) {
 			fprintf(stderr, "%s:  Error writing linked package.\n",
 				argv[0]);
-			exit(1);
+			sepol_policy_file_free(pf);
+			fclose(outfile);
+			goto failure;
 		}
 		sepol_policy_file_free(pf);
-		fclose(outfile);
+
+		if (fclose(outfile)) {
+			fprintf(stderr, "%s:  Error closing linked package:  %s\n",
+				argv[0], strerror(errno));
+			goto failure;
+		}
 	}
 
-	sepol_module_package_free(base);
+	ret = EXIT_SUCCESS;
+	goto cleanup;
+
+failure:
+	ret = EXIT_FAILURE;
+
+cleanup:
 	for (i = 0; i < num_mods; i++)
 		sepol_module_package_free(mods[i]);
 	free(mods);
-	exit(0);
+	sepol_module_package_free(base);
+
+	return ret;
 }

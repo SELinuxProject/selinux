@@ -3,7 +3,7 @@
 semodule_link \- Link SELinux policy module packages together
 
 .SH SYNOPSIS
-.B semodule_link [-Vv] [-o outfile] basemodpkg modpkg1 [modpkg2]...
+.B semodule_link [-hVv] [-o outfile] basemodpkg modpkg1 [modpkg2]...
 .br
 .SH DESCRIPTION
 .PP
@@ -15,6 +15,9 @@ response to semodule commands.  Module packages are created by
 semodule_package.
 
 .SH "OPTIONS"
+.TP
+.B \-h
+show help
 .TP
 .B \-V
 show version
