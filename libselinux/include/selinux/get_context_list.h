@@ -18,14 +18,14 @@ extern "C" {
    Caller must free via freeconary. */
 	extern int get_ordered_context_list(const char *user,
 					    const char *fromcon,
-					    char *** list);
+					    char *** list) selinux_nonnull((1,3)) selinux_nodiscard;
 
 /* As above, but use the provided MLS level rather than the
    default level for the user. */
 	extern int get_ordered_context_list_with_level(const char *user,
 						       const char *level,
 						       const char *fromcon,
-						       char *** list);
+						       char *** list) selinux_nonnull((1,4)) selinux_nodiscard;
 
 /* Get the default security context for a user session for 'user'
    spawned by 'fromcon' and set *newcon to refer to it.  The context
@@ -36,14 +36,14 @@ extern "C" {
    Caller must free via freecon. */
 	extern int get_default_context(const char *user,
 				       const char *fromcon,
-				       char ** newcon);
+				       char ** newcon) selinux_nonnull((1,3)) selinux_nodiscard;
 
 /* As above, but use the provided MLS level rather than the
    default level for the user. */
 	extern int get_default_context_with_level(const char *user,
 						  const char *level,
 						  const char *fromcon,
-						  char ** newcon);
+						  char ** newcon) selinux_nonnull((1,4)) selinux_nodiscard;
 
 /* Same as get_default_context, but only return a context
    that has the specified role.  If no reachable context exists
@@ -51,7 +51,7 @@ extern "C" {
 	extern int get_default_context_with_role(const char *user,
 						 const char *role,
 						 const char *fromcon,
-						 char ** newcon);
+						 char ** newcon) selinux_nonnull((1,2,4)) selinux_nodiscard;
 
 /* Same as get_default_context, but only return a context
    that has the specified role and level.  If no reachable context exists
@@ -60,21 +60,21 @@ extern "C" {
 						      const char *role,
 						      const char *level,
 						      const char *fromcon,
-						      char ** newcon);
+						      char ** newcon) selinux_nonnull((1,2,5)) selinux_nodiscard;
 
 /* Given a list of authorized security contexts for the user, 
    query the user to select one and set *newcon to refer to it.
    Caller must free via freecon.
    Returns 0 on success or -1 otherwise. */
 	extern int query_user_context(char ** list,
-				      char ** newcon);
+				      char ** newcon) selinux_nonnull((1,2)) selinux_nodiscard;
 
 /* Allow the user to manually enter a context as a fallback
    if a list of authorized contexts could not be obtained. 
    Caller must free via freecon.
    Returns 0 on success or -1 otherwise. */
 	extern int manual_user_enter_context(const char *user,
-					     char ** newcon);
+					     char ** newcon) selinux_nonnull((2)) selinux_nodiscard;
 
 #ifdef __cplusplus
 }

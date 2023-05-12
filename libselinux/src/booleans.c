@@ -327,7 +327,7 @@ static void rollback(SELboolean * boollist, int end)
 	int i;
 
 	for (i = 0; i < end; i++)
-		security_set_boolean(boollist[i].name,
+		(void)! security_set_boolean(boollist[i].name,
 				     security_get_boolean_active(boollist[i].
 								 name));
 }

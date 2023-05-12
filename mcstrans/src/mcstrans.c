@@ -923,7 +923,10 @@ new_context_str(const char *incon, const char *range) {
 	if (!con) {
 		goto exit;
 	}
-	context_range_set(con, range);
+	if (context_range_set(con, range) < 0) {
+		context_free(con);
+		goto exit;
+	}
 	rcon = strdup(context_str(con));
 	context_free(con);
 	if (!rcon) {

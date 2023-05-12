@@ -94,6 +94,20 @@ extern int selinux_page_size ;
 
 extern int has_selinux_config ;
 
+#ifdef __GNUC__
+# define IGNORE_DEPRECATED_BEGIN						\
+	_Pragma("GCC diagnostic push")					\
+	_Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
+#else
+# define IGNORE_DEPRECATED_BEGIN
+#endif
+
+#ifdef __GNUC__
+# define IGNORE_DEPRECATED_END	_Pragma("GCC diagnostic pop")
+#else
+# define IGNORE_DEPRECATED_END
+#endif
+
 #ifndef HAVE_STRLCPY
 size_t strlcpy(char *dest, const char *src, size_t size);
 #endif

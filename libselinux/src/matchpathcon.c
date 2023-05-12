@@ -367,7 +367,9 @@ int matchpathcon_init_prefix(const char *path, const char *subset)
 
 int matchpathcon_init(const char *path)
 {
+IGNORE_DEPRECATED_BEGIN
 	return matchpathcon_init_prefix(path, NULL);
+IGNORE_DEPRECATED_END
 }
 
 void matchpathcon_fini(void)
@@ -439,6 +441,8 @@ static int matchpathcon_internal(const char *path, mode_t mode, char ** con)
 {
 	char stackpath[PATH_MAX + 1];
 	char *p = NULL;
+
+IGNORE_DEPRECATED_BEGIN
 	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0))
 			return -1;
 
@@ -450,6 +454,7 @@ static int matchpathcon_internal(const char *path, mode_t mode, char ** con)
 		if (p)
 			path = p;
 	}
+IGNORE_DEPRECATED_END
 
 	return notrans ?
 		selabel_lookup_raw(hnd, con, path, mode) :
@@ -507,8 +512,10 @@ int selinux_file_context_verify(const char *path, mode_t mode)
 	char *p = NULL;
 
 	if (S_ISLNK(mode)) {
+IGNORE_DEPRECATED_BEGIN
 		if (!realpath_not_final(path, stackpath))
 			path = stackpath;
+IGNORE_DEPRECATED_END
 	} else {
 		p = realpath(path, stackpath);
 		if (p)
@@ -523,8 +530,10 @@ int selinux_file_context_verify(const char *path, mode_t mode)
 			return 0;
 	}
 	
+IGNORE_DEPRECATED_BEGIN
 	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0))
 			return -1;
+IGNORE_DEPRECATED_END
 
 	if (selabel_lookup_raw(hnd, &fcontext, path, mode) != 0) {
 		if (errno != ENOENT)
@@ -554,8 +563,10 @@ int selinux_lsetfilecon_default(const char *path)
 	if (lstat(path, &st) != 0)
 		return rc;
 
+IGNORE_DEPRECATED_BEGIN
 	if (!hnd && (matchpathcon_init_prefix(NULL, NULL) < 0))
 			return -1;
+IGNORE_DEPRECATED_END
 
 	/* If there's an error determining the context, or it has none, 
 	   return to allow default context */

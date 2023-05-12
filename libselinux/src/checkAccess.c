@@ -39,7 +39,7 @@ int selinux_check_access(const char *scon, const char *tcon, const char *class, 
 	if (rc < 0)
 		return rc;
 
-	(void) selinux_status_updated();
+	(void)! selinux_status_updated();
 
        sclass = string_to_security_class(class);
        if (sclass == 0) {

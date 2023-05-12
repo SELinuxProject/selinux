@@ -71,8 +71,12 @@ void watch_list_add(int fd, const char *path)
 			if (len > 0 &&
 			    strcmp(&globbuf.gl_pathv[i][len], "/..") == 0)
 				continue;
-			selinux_restorecon(globbuf.gl_pathv[i],
-					   r_opts.restorecon_flags);
+
+			if (selinux_restorecon(globbuf.gl_pathv[i], r_opts.restorecon_flags) < 0) {
+				if (errno != ENOENT)
+					syslog(LOG_ERR, "Unable to relabel %s:  %s\n",
+					       globbuf.gl_pathv[i], strerror(errno));
+			}
 		}
 		globfree(&globbuf);
 	}
@@ -138,8 +142,12 @@ int watch_list_find(int wd, const char *file)
 				    0)
 					exitApp("Error allocating memory.");
 
-				selinux_restorecon(path,
-						   r_opts.restorecon_flags);
+				if (selinux_restorecon(path, r_opts.restorecon_flags) < 0) {
+					if (errno != ENOENT)
+						syslog(LOG_ERR, "Unable to relabel %s:  %s\n",
+						       path, strerror(errno));
+				}
+
 				free(path);
 				return 0;
 			}

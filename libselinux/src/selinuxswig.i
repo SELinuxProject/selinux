@@ -57,6 +57,7 @@
 %ignore avc_netlink_release_fd;
 %ignore avc_netlink_check_nb;
 
+%include "../include/selinux/_private.h"
 %include "../include/selinux/avc.h"
 %include "../include/selinux/context.h"
 %include "../include/selinux/get_context_list.h"

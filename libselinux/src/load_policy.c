@@ -238,7 +238,7 @@ int selinux_init_load_policy(int *enforce)
 	 * Get desired mode (disabled, permissive, enforcing) from 
 	 * /etc/selinux/config. 
 	 */
-	selinux_getenforcemode(&seconfig);
+	(void)! selinux_getenforcemode(&seconfig);
 
 	/* Check for an override of the mode via the kernel command line. */
 	rc = mount("proc", "/proc", "proc", 0, 0);

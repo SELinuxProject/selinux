@@ -75,7 +75,7 @@ struct selabel_handle;
  */
 extern struct selabel_handle *selabel_open(unsigned int backend,
 					   const struct selinux_opt *opts,
-					   unsigned nopts);
+					   unsigned nopts) selinux_access((read_only, 2, 3)) selinux_nodiscard;
 
 /**
  * selabel_close - Close a labeling handle.
@@ -84,7 +84,7 @@ extern struct selabel_handle *selabel_open(unsigned int backend,
  * Destroy the specified handle, closing files, freeing allocated memory,
  * etc.  The handle may not be further used after it has been closed.
  */
-extern void selabel_close(struct selabel_handle *handle);
+extern void selabel_close(struct selabel_handle *handle) selinux_nonnull((1));
 
 /**
  * selabel_lookup - Perform labeling lookup operation.
@@ -100,24 +100,24 @@ extern void selabel_close(struct selabel_handle *handle);
  * by the user with freecon().
  */
 extern int selabel_lookup(struct selabel_handle *handle, char **con,
-			  const char *key, int type);
+			  const char *key, int type) selinux_nonnull((1,2)) selinux_nodiscard;
 extern int selabel_lookup_raw(struct selabel_handle *handle, char **con,
-			      const char *key, int type);
+			      const char *key, int type) selinux_nonnull((1,2)) selinux_nodiscard;
 
-extern bool selabel_partial_match(struct selabel_handle *handle, const char *key);
+extern bool selabel_partial_match(struct selabel_handle *handle, const char *key) selinux_nonnull((1,2)) selinux_nodiscard;
 
 extern bool selabel_get_digests_all_partial_matches(struct selabel_handle *rec,
 						    const char *key,
 						    uint8_t **calculated_digest,
 						    uint8_t **xattr_digest,
-						    size_t *digest_len);
+						    size_t *digest_len) selinux_nonnull((1,2,3,4,5)) selinux_nodiscard;
 extern bool selabel_hash_all_partial_matches(struct selabel_handle *rec,
-					     const char *key, uint8_t* digest);
+					     const char *key, uint8_t* digest) selinux_nonnull((1,2,3)) selinux_nodiscard;
 
 extern int selabel_lookup_best_match(struct selabel_handle *rec, char **con,
-				     const char *key, const char **aliases, int type);
+				     const char *key, const char **aliases, int type) selinux_nonnull((1,2,3)) selinux_nodiscard;
 extern int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
-					 const char *key, const char **aliases, int type);
+					 const char *key, const char **aliases, int type) selinux_nonnull((1,2,3)) selinux_nodiscard;
 
 /**
  * selabel_digest - Retrieve the SHA1 digest and the list of specfiles used to
@@ -134,7 +134,7 @@ extern int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
  */
 extern int selabel_digest(struct selabel_handle *rec,
 			  unsigned char **digest, size_t *digest_len,
-			  char ***specfiles, size_t *num_specfiles);
+			  char ***specfiles, size_t *num_specfiles) selinux_nonnull((1,2,3,4,5)) selinux_nodiscard;
 
 enum selabel_cmp_result {
 	SELABEL_SUBSET,
@@ -154,7 +154,7 @@ enum selabel_cmp_result {
  * of @h2, and %SELABEL_INCOMPARABLE if @h1 and @h2 are incomparable.
  */
 extern enum selabel_cmp_result selabel_cmp(struct selabel_handle *h1,
-					   struct selabel_handle *h2);
+					   struct selabel_handle *h2) selinux_nonnull((1,2)) selinux_nodiscard;
 
 /**
  * selabel_stats - log labeling operation statistics.
@@ -164,7 +164,7 @@ extern enum selabel_cmp_result selabel_cmp(struct selabel_handle *h1,
  * number of unused matching entries, or other operational statistics.
  * Message is backend-specific, some backends may not output a message.
  */
-extern void selabel_stats(struct selabel_handle *handle);
+extern void selabel_stats(struct selabel_handle *handle) selinux_nonnull((1));
 
 /*
  * Type codes used by specific backends
