@@ -85,7 +85,6 @@ typedef int (* require_func_t)(int pass);
 %token PATH
 %token QPATH
 %token FILENAME
-%token CLONE
 %token COMMON
 %token CLASS
 %token CONSTRAIN

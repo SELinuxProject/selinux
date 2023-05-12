@@ -77,8 +77,6 @@ hexval	[0-9A-Fa-f]
 				      source_lineno++;
 				  yyless(1);
 				}
-CLONE |
-clone				{ return(CLONE); }
 COMMON |
 common				{ return(COMMON); }
 CLASS |
