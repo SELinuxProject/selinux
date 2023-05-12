@@ -1,1000 +1,2297 @@
 # This is a permission map file for use in policy analysis.  This
-# file maps object permissions (read, getattr, setattr, ..., etc.) 
-# for an object class, to exactly one of the following: read, write, 
-# both, or none.  This file may be edited as long as the specific 
+# file maps object permissions (read, getattr, setattr, ..., etc.)
+# for an object class, to exactly one of the following: read, write,
+# both, or none.  This file may be edited as long as the specific
 # syntax rules are obeyed.
 #
-# For each object class, there is a set of object permissions that are 
+# For each object class, there is a set of object permissions that are
 # individually mapped to read, write, both, or none.  If a new object
 # class is added, make sure that the current number of object classes
 # is increased.
 #
 # The syntax for an object class definition is:
 # class <class_name> <num_permissions>
-# 
-# This is followed by each permission and its individual mapping to one 
+#
+# This is followed by each permission and its individual mapping to one
 # of the following:
 #
-# 	r   =	Read
+#	r   =	Read
 #	w   =	Write
 #	n   =	None
 #	b   =	Both
 #
-# Additionally, you can choose to follow the mapping with an optional  
-# permission weight value from 1 (less importance) to 10 (higher importance). 
+# Additionally, you can choose to follow the mapping with an optional
+# permission weight value from 1 (less importance) to 10 (higher importance).
 # 10 is the default weight value if one is not provided.
 #
 # Look to the examples below for further clarification.
 #
 # Number of object classes.
-58
-
-class security 11
-        compute_av     n           1
-    compute_create     n           1
-    compute_member     n           1
-     check_context     n           1
-       load_policy     n           1
-   compute_relabel     n           1
-      compute_user     n           1
-        setenforce     n           1
-           setbool     n           1
-       setsecparam     n           1
-   setcheckreqprot     n           1
-
-class process 29
-              fork     n           1
-        transition     w           5
-           sigchld     w           1
-           sigkill     w           1
-           sigstop     w           1
-           signull     n           1
-            signal     w           5
-            ptrace     b          10
-          getsched     r           1
-          setsched     w           1
-        getsession     r           1
-           getpgid     r           1
-           setpgid     w           5
-            getcap     r           3
-            setcap     w           1
-             share     b           1
-           getattr     r           1
-           setexec     w           1
-       setfscreate     w           1
-        noatsecure     n           1
-            siginh     n           1
-         setrlimit     n           1
-         rlimitinh     n           1
-     dyntransition     w          10
-        setcurrent     w           1
-           execmem     n           1
-         execstack     n           1
-          execheap     n           1
-      setkeycreate     w           1
-
-class system 4
-          ipc_info     n           1
-       syslog_read     n           1
-        syslog_mod     n           1
-    syslog_console     n           1
-
-class capability 31
-             chown     n           3
-      dac_override     n           1
-   dac_read_search     n           1
-            fowner     n           1
-            fsetid     n           1
-              kill     n           1
-            setgid     n           3
-            setuid     n           1
-           setpcap     n           3
-   linux_immutable     n           1
-  net_bind_service     n           1
-     net_broadcast     n           1
-         net_admin     n           1
-           net_raw     n           1
-          ipc_lock     n           1
-         ipc_owner     n           1
-        sys_module     n           1
-         sys_rawio     n           1
-        sys_chroot     n           1
-        sys_ptrace     n           1
-         sys_pacct     n           1
-         sys_admin     n           3
-          sys_boot     n           1
-          sys_nice     n           1
-      sys_resource     n           1
-          sys_time     n           1
-    sys_tty_config     n           1
-             mknod     n           1
-             lease     n           1
-       audit_write     n           3
-     audit_control     n           1
-
-class filesystem 10
-             mount     w           1
-           remount     w           1
-           unmount     w           1
-           getattr     r           1
-       relabelfrom     r           10
-         relabelto     w           10
-        transition     w           1
-         associate     n           1
-          quotamod     w           1
-          quotaget     r           1
-
-class file 21
-  execute_no_trans     r           1
-        entrypoint     r           1
-           execmod     n           1
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           10
-            unlink     w           1
-              link     w           1
-            rename     w           5
-           execute     r           10
-            swapon     b           1
-           quotaon     b           1
-           mounton     b           1
-	      open     r	   1
-
-class dir 23
-          add_name     w           1
-       remove_name     w           1
-          reparent     w           1
-            search     r           1
-             rmdir     b           1
-             ioctl     n           1
-              read     r           1
-             write     w           1
-            create     w           1
-           getattr     r           1
-           setattr     w           1
-              lock     n           1
-       relabelfrom     r           1
-         relabelto     w           1
-            append     w           1
-            unlink     w           1
-              link     w           1
-            rename     w           1
-           execute     r           1
-            swapon     b           1
-           quotaon     b           1
-           mounton     b           1
-	      open     r	   1
-
-class fd 1
-               use     b           1
-
-class lnk_file 18
-             ioctl     n           1
-              read     r           1
-             write     w           1
-            create     w           1
-           getattr     r           1
-           setattr     w           1
-              lock     n           1
-       relabelfrom     r           1
-         relabelto     w           1
-            append     w           1
-            unlink     w           1
-              link     w           1
-            rename     w           1
-           execute     r           1
-            swapon     b           1
-           quotaon     b           1
-           mounton     b           1
-	      open     r	   1
-
-class chr_file 21
-  execute_no_trans     r           1
-        entrypoint     r           1
-           execmod     n           1
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-            unlink     w           1
-              link     w           1
-            rename     w           5
-           execute     r           1
-            swapon     b           1
-           quotaon     b           1
-           mounton     b           1
-	      open     r	   1
-
-class blk_file 18
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-            unlink     w           1
-              link     w           1
-            rename     w           5
-           execute     r           1
-            swapon     b           1
-           quotaon     b           1
-           mounton     b           1
-	      open     r	   1
-
-class sock_file 18
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-            unlink     w           1
-              link     w           1
-            rename     w           1
-           execute     r           1
-            swapon     b           1
-           quotaon     b           1
-           mounton     b           1
-	      open     r	   1
-
-class fifo_file 18
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-            unlink     w           1
-              link     w           1
-            rename     w           5
-           execute     r           1
-            swapon     b           1
-           quotaon     b           1
-           mounton     b           1
-	      open     r	   1
-
-class socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class tcp_socket 27
-         connectto     w           1
-           newconn     w           1
-        acceptfrom     r           1
-         node_bind     n           1
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-      name_connect     w           1
-
-class udp_socket 23
-         node_bind     n           1
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class rawip_socket 23
-         node_bind     n           1
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           1
-           setattr     w           1
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class node 7
-          tcp_recv     r          10
-          tcp_send     w          10
-          udp_recv     r          10
-          udp_send     w          10
-        rawip_recv     r          10
-        rawip_send     w          10
-      enforce_dest     n           1
-
-class netif 6
-          tcp_recv     r          10
-          tcp_send     w          10
-          udp_recv     r          10
-          udp_send     w          10
-        rawip_recv     r          10
-        rawip_send     w          10
-
-class netlink_socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class packet_socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class key_socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class unix_stream_socket 25
-         connectto     w           1
-           newconn     w           1
-        acceptfrom     r           1
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class unix_dgram_socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class sem 9
-            create     w           1
-           destroy     w           1
-           getattr     r           1
-           setattr     w           1
-              read     r          10
-             write     w          10
-         associate     n           1
-         unix_read     r           3
-        unix_write     w           3
-
-class msg 2
-              send     w          10
-           receive     r          10
-
-class msgq 10
-           enqueue     w           1
-            create     w           1
-           destroy     w           1
-           getattr     r           1
-           setattr     w           1
-              read     r          10
-             write     w          10
-         associate     n           1
-         unix_read     r           3
-        unix_write     w           3
-
-class shm 10
-              lock     w           1
-            create     w           1
-           destroy     w           1
-           getattr     r           1
-           setattr     w           1
-              read     r          10
-             write     w          10
-         associate     n           1
-         unix_read     r           3
-        unix_write     w           3
-
-class ipc 9
-            create     w           1
-           destroy     w           1
-           getattr     r           1
-           setattr     w           1
-              read     r          10
-             write     w          10
-         associate     n           1
-         unix_read     r           3
-        unix_write     w           3
-
-class passwd 5
-            passwd     w           1
-              chfn     w           5
-              chsh     w           5
-            rootok     n           1
-           crontab     w           5
-
-class drawable 5
-            create     w           1
-           destroy     w           1
-              draw     w          10
-              copy     r          10
-           getattr     r           7
-
-class window 26
-          addchild     w           1
-            create     w           1
-           destroy     w           1
-               map     w           1
-             unmap     w           1
-           chstack     w          10
-        chproplist     w           7
-            chprop     w          10
-          listprop     r           5
-           getattr     r           5
-           setattr     w           5
-          setfocus     w           1
-              move     w          10
-       chselection     w          10
-          chparent     w           5
-          ctrllife     w           5
-         enumerate     w           1
-       transparent     w           1
-       mousemotion     w          10
-    clientcomevent     w           5
-        inputevent     w           5
-         drawevent     w           5
- windowchangeevent     w           5
-windowchangerequest    w           5
- serverchangeevent     w           5
-    extensionevent     w           5
-
-class gc 4
-            create     w           1
-              free     w           1
-           getattr     r           5
-           setattr     w           5
-
-class font 4
-              load     r           1
-              free     w           1
-           getattr     r           5
-               use     r           1
-
-class colormap 9
-            create     w           1
-              free     w           1
-           install     w          10
-         uninstall     w           1
-              list     r           5
-              read     r          10
-             store     w          10
-           getattr     r           5
-           setattr     w           5
-
-class property 4
-            create     w           1
-              free     w           1
-              read     r          10
-             write     w          10
-
-class cursor 5
-            create     w           1
-       createglyph     w          10
-              free     w           1
-            assign     w          10
-           setattr     w           5
-
-class xclient 1
-              kill     w           1
-
-class xinput 11
-            lookup     r          10
-           getattr     r           5
-           setattr     w           5
-          setfocus     w          10
-       warppointer     w          10
-        activegrab     w           1
-       passivegrab     w           1
-            ungrab     w           1
-              bell     w           3
-       mousemotion     w          10
-      relabelinput     b           3
-
-class xserver 8
-       screensaver     w          10
-       gethostlist     r           7
-       sethostlist     w           7
-       getfontpath     r           7
-       setfontpath     w           7
-           getattr     r           7
-              grab     w          10
-            ungrab     w           1
-
-class xextension 2
-             query     r          10
-               use     b           1
-
-class pax 6
-          pageexec     n           1
-          emutramp     n           1
-          mprotect     n           1
-          randmmap     n           1
-          randexec     n           1
-          segmexec     n           1
-
-class netlink_route_socket 24
-        nlmsg_read     r          10
-       nlmsg_write     w          10
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     r          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class netlink_firewall_socket 24
-        nlmsg_read     r          10
-       nlmsg_write     w          10
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     r          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class netlink_tcpdiag_socket 24
-        nlmsg_read     r          10
-       nlmsg_write     w          10
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     r          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class netlink_nflog_socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     r          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class netlink_xfrm_socket 24
-        nlmsg_read     r          10
-       nlmsg_write     w          10
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     r          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-
-class netlink_selinux_socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     r          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
+133
 
 class netlink_audit_socket 26
-        nlmsg_read     r          10
-       nlmsg_write     w          10
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     r          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
-       nlmsg_relay     w          10
-    nlmsg_readpriv     r          10
+         nlmsg_relay         w        10
+     nlmsg_tty_audit         w        10
+      nlmsg_readpriv         r        10
+         nlmsg_write         w        10
+          nlmsg_read         r        10
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
 
-class netlink_ip6fw_socket 24
-        nlmsg_read     r          10
-       nlmsg_write     w          10
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     r          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
+class tcp_socket 23
+           node_bind         n         1
+        name_connect         w         1
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
 
-class netlink_dnrt_socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     r          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
+class msgq 10
+             enqueue         w         1
+           associate         n         1
+              create         w         1
+               write         w        10
+           unix_read         r         3
+             destroy         w         1
+             getattr         r         1
+             setattr         w         1
+                read         r        10
+          unix_write         w         3
 
-class netlink_kobject_uevent_socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           7
-           setattr     w           7
-              lock     n           1
-       relabelfrom     r           10
-         relabelto     w           10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
+class x_property 7
+              append         w        10
+              create         w         1
+               write         w        10
+             destroy         w         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+
+class db_procedure 9
+             execute         r         1
+             install         w        10
+          entrypoint         r         1
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         7
+             setattr         w         7
+           relabelto         w         1
+
+class dir 30
+               rmdir         b         1
+        audit_access         r         1
+         remove_name         w         1
+            add_name         w         5
+            reparent         w         1
+             execmod         n         1
+              search         r         1
+                open         n         1
+              append         w        10
+              create         w         1
+             execute         r         1
+               write         w        10
+         relabelfrom         r        10
+                link         w         1
+              unlink         w         1
+               ioctl         n         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+              rename         w         5
+                lock         n         1
+           relabelto         w        10
+             mounton         b         1
+             quotaon         b         1
+                 map         n         1
+               watch         r         3
+         watch_mount         r         3
+            watch_sb         r         3
+     watch_with_perm         r         3
+         watch_reads         r         3
+
+class peer 1
+                recv         r        10
+
+class blk_file 25
+        audit_access         r         1
+             execmod         n         1
+                open         n         1
+              append         w        10
+              create         w         1
+             execute         r         1
+               write         w        10
+         relabelfrom         r        10
+                link         w         1
+              unlink         w         1
+               ioctl         n         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+              rename         w         5
+                lock         n         1
+           relabelto         w        10
+             mounton         b         1
+             quotaon         b         1
+                 map         n         1
+               watch         r         3
+         watch_mount         r         3
+            watch_sb         r         3
+     watch_with_perm         r         3
+         watch_reads         r         3
+
+class chr_file 25
+        audit_access         r         1
+             execmod         n         1
+                open         n         1
+              append         w        10
+              create         w         1
+             execute         r         1
+               write         w        10
+         relabelfrom         r        10
+                link         w         1
+              unlink         w         1
+               ioctl         n         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+              rename         w         5
+                lock         n         1
+           relabelto         w        10
+             mounton         b         1
+             quotaon         b         1
+                 map         n         1
+               watch         r         3
+         watch_mount         r         3
+            watch_sb         r         3
+     watch_with_perm         r         3
+         watch_reads         r         3
+
+class db_table 11
+              select         n         1
+              delete         w         1
+              update         w        10
+              insert         w        10
+                lock         n         1
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         7
+             setattr         w         7
+           relabelto         w         1
+
+class db_tuple 7
+              select         n         1
+              delete         w         1
+              update         w        10
+         relabelfrom         r         1
+              insert         w        10
+                 use         r        10
+           relabelto         w         1
 
 class dbus 2
-       acquire_svc     b           1
-          send_msg     w          10
+         acquire_svc         b         1
+            send_msg         w        10
 
-class nscd 8
-            getpwd     r           7
-            getgrp     r           7
-           gethost     r           7
-           getstat     r           7
-             admin     w           5
-          shmempwd     r           7
-          shmemgrp     r           7
-         shmemhost     r           7
+class ipc 9
+           associate         n         1
+              create         w         1
+               write         w        10
+           unix_read         r         3
+             destroy         w         1
+             getattr         r         1
+             setattr         w         1
+                read         r        10
+          unix_write         w         3
 
-class association 4
-            sendto     w          10
-          recvfrom     r          10
-        setcontext     w           3
-          polmatch     r           1
+class lnk_file 25
+        audit_access         r         1
+             execmod         n         1
+                open         n         1
+              append         w        10
+              create         w         1
+             execute         r         1
+               write         w        10
+         relabelfrom         r        10
+                link         w         1
+              unlink         w         1
+               ioctl         n         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+              rename         w         1
+                lock         n         1
+           relabelto         w        10
+             mounton         b         1
+             quotaon         b         1
+                 map         n         1
+               watch         r         3
+         watch_mount         r         3
+            watch_sb         r         3
+     watch_with_perm         r         3
+         watch_reads         r         3
 
-class appletalk_socket 22
-             ioctl     n           1
-              read     r          10
-             write     w          10
-            create     w           1
-           getattr     r           1
-           setattr     w           1
-              lock     n           1
-       relabelfrom     r          10
-         relabelto     w          10
-            append     w           1
-              bind     w           1
-           connect     w           1
-            listen     r           1
-            accept     r           1
-            getopt     r           1
-            setopt     w           1
-          shutdown     w           1
-          recvfrom     r          10
-            sendto     w          10
-          recv_msg     r          10
-          send_msg     w          10
-         name_bind     n           1
+class process 31
+              getcap         r         3
+              setcap         w         1
+             sigstop         w         1
+             sigchld         w         1
+               share         b         1
+            execheap         n         1
+          setcurrent         w         1
+         setfscreate         w         1
+        setkeycreate         w         1
+              siginh         n         1
+       dyntransition         w        10
+          transition         w         5
+                fork         n         1
+          getsession         r         1
+          noatsecure         n         1
+             sigkill         w         1
+             signull         n         1
+           setrlimit         n         1
+             getattr         r         1
+            getsched         r         1
+             setexec         w         1
+            setsched         w         1
+             getpgid         r         1
+             setpgid         w         5
+              ptrace         b        10
+           execstack         n         1
+           rlimitinh         n         1
+       setsockcreate         w         1
+              signal         w         5
+             execmem         n         1
+           getrlimit         r         1
+
+class capability2 6
+        mac_override         n         1
+           mac_admin         n         1
+              syslog         n         1
+       block_suspend         n         1
+          wake_alarm         n         1
+          audit_read         n         1
+
+class fd 1
+                 use         b         1
+
+class packet 7
+         forward_out         w        10
+            flow_out         w        10
+                send         w        10
+                recv         r        10
+          forward_in         r        10
+           relabelto         w         3
+             flow_in         r        10
+
+class socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class fifo_file 25
+        audit_access         r         1
+             execmod         n         1
+                open         n         1
+              append         w        10
+              create         w         1
+             execute         r         1
+               write         w        10
+         relabelfrom         r        10
+                link         w         1
+              unlink         w         1
+               ioctl         n         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+              rename         w         5
+                lock         n         1
+           relabelto         w        10
+             mounton         b         1
+             quotaon         b         1
+                 map         n         1
+               watch         r         3
+         watch_mount         r         3
+            watch_sb         r         3
+     watch_with_perm         r         3
+         watch_reads         r         3
+
+class file 27
+        audit_access         r         1
+          entrypoint         r         1
+             execmod         n         1
+    execute_no_trans         r         1
+                open         n         1
+              append         w        10
+              create         w         1
+             execute         r         1
+               write         w        10
+         relabelfrom         r        10
+                link         w         1
+              unlink         w         1
+               ioctl         n         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+              rename         w         5
+                lock         n         1
+           relabelto         w        10
+             mounton         b         1
+             quotaon         b         1
+                 map         n         1
+               watch         r         3
+         watch_mount         r         3
+            watch_sb         r         3
+     watch_with_perm         r         3
+         watch_reads         r         3
+
+class node 2
+              sendto         w        10
+            recvfrom         r        10
+
+class x_cursor 7
+              create         w         1
+               write         w        10
+             destroy         w         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+                 use         r         1
+
+class x_server 6
+              record         r        10
+             getattr         r         7
+                grab         w         1
+             setattr         w         7
+              manage         w        10
+               debug         b        10
+
+class db_view 7
+              expand         w         1
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         5
+             setattr         w         5
+           relabelto         w         1
+
+class netlink_nflog_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
 
 class key 7
-              view     r           7
-              read     r          10
-             write     w          10
-            search     r           5
-              link     w           7
-           setattr     w           7
-            create     w          10
+              create         w        10
+               write         w        10
+                view         r         7
+                link         w         7
+             setattr         w         7
+                read         r        10
+              search         r         5
 
-class packet 3
-              send     w          10
-              recv     r          10
-         relabelto     w           3
+class netlink_tcpdiag_socket 23
+         nlmsg_write         w        10
+          nlmsg_read         r        10
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class unix_stream_socket 22
+           connectto         w         1
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class x_synthetic_event 2
+                send         w        10
+             receive         r        10
+
+class db_database 11
+              access         b        10
+           set_param         w         7
+         load_module         r        10
+           get_param         r         7
+      install_module         r        10
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         7
+             setattr         w         7
+           relabelto         w         1
+
+class db_language 8
+             execute         w         1
+           implement         w         1
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         5
+             setattr         w         5
+           relabelto         w         1
+
+class kernel_service 2
+     create_files_as         n         1
+     use_as_override         n         1
+
+class netlink_route_socket 23
+         nlmsg_write         w        10
+          nlmsg_read         r        10
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class x_extension 2
+                 use         r         1
+               query         r         5
+
+class db_sequence 9
+           set_value         w        10
+           get_value         r        10
+          next_value         w         1
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         5
+             setattr         r         5
+           relabelto         w         1
+
+class shm 10
+                lock         w         1
+           associate         n         1
+              create         w         1
+               write         w        10
+           unix_read         r         3
+             destroy         w         1
+             getattr         r         1
+             setattr         w         1
+                read         r        10
+          unix_write         w         3
+
+class x_resource 2
+               write         w        10
+                read         r        10
+
+class netlink_selinux_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class capability 32
+             setfcap         n         1
+             setpcap         n         1
+              fowner         n         1
+            sys_boot         n         1
+      sys_tty_config         n         1
+             net_raw         n         1
+           sys_admin         n         1
+          sys_chroot         n         1
+          sys_module         n         1
+           sys_rawio         n         1
+        dac_override         n         1
+           ipc_owner         n         1
+                kill         n         1
+     dac_read_search         n         1
+           sys_pacct         n         1
+       net_broadcast         n         1
+    net_bind_service         n         1
+            sys_nice         n         1
+            sys_time         n         1
+              fsetid         n         1
+               mknod         n         1
+              setgid         n         1
+              setuid         n         1
+               lease         n         1
+           net_admin         n         1
+         audit_write         n         1
+     linux_immutable         n         1
+          sys_ptrace         n         1
+       audit_control         n         1
+            ipc_lock         n         1
+        sys_resource         n         1
+               chown         n         1
+
+class netlink_ip6fw_socket 23
+         nlmsg_write         w        10
+          nlmsg_read         r        10
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class dccp_socket 23
+           node_bind         n         1
+        name_connect         w        10
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class netlink_firewall_socket 23
+         nlmsg_write         w        10
+          nlmsg_read         r        10
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class sock_file 25
+        audit_access         r         1
+             execmod         n         1
+                open         n         1
+              append         w        10
+              create         w         1
+             execute         r         1
+               write         w        10
+         relabelfrom         r        10
+                link         w         1
+              unlink         w         1
+               ioctl         n         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+              rename         w         1
+                lock         n         1
+           relabelto         w        10
+             mounton         b         1
+             quotaon         b         1
+                 map         n         1
+               watch         r         3
+         watch_mount         r         3
+            watch_sb         r         3
+     watch_with_perm         r         3
+         watch_reads         r         3
+
+class unix_dgram_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class netlink_kobject_uevent_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class db_blob 10
+               write         w        10
+              export         r        10
+              import         w        10
+                read         r        10
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         7
+             setattr         w         7
+           relabelto         w         1
+
+class filesystem 10
+           associate         n         1
+            quotaget         r         1
+         relabelfrom         r        10
+             getattr         r         1
+            quotamod         w         1
+               mount         w         1
+             remount         w         1
+             unmount         w         1
+           relabelto         w        10
+               watch         r         3
+
+class netlink_xfrm_socket 23
+         nlmsg_write         w        10
+          nlmsg_read         r        10
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class x_device 19
+        get_property         r         7
+       list_property         r         7
+        set_property         w         7
+                 add         w         1
+            setfocus         w         1
+              create         w         1
+              freeze         w         1
+            getfocus         r         1
+              remove         w         1
+               write         w        10
+        force_cursor         w         1
+             destroy         w         1
+                bell         w         1
+             getattr         r         7
+                grab         w         1
+             setattr         w         7
+                read         r        10
+              manage         w        10
+                 use         r         1
+
+class db_schema 9
+         remove_name         w         1
+            add_name         w         5
+              search         r         5
+                drop         w         1
+              create         w         1
+         relabelfrom         w         1
+             getattr         r         5
+             setattr         w         5
+           relabelto         r         1
+
+class netlink_dnrt_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class x_client 4
+             destroy         w         1
+             getattr         r         7
+             setattr         w         7
+              manage         w        10
+
+class x_gc 5
+              create         w         1
+             destroy         w         1
+             getattr         r         7
+             setattr         w         7
+                 use         r         1
+
+class context 2
+            contains         n         1
+           translate         n         1
+
+class nscd 10
+           shmemserv         r         7
+             gethost         r         7
+             getstat         r         7
+              getgrp         r         7
+           shmemhost         r         7
+            shmempwd         r         7
+              getpwd         r         7
+             getserv         r         7
+            shmemgrp         r         7
+               admin         w         5
+
+class passwd 5
+                chfn         w         5
+             crontab         w         5
+              passwd         w         1
+                chsh         w         5
+              rootok         n         1
+
+class x_event 2
+                send         w        10
+             receive         r        10
+
+class x_font 6
+              create         w         1
+             destroy         w         1
+           add_glyph         w         1
+        remove_glyph         w         1
+             getattr         r         7
+                 use         r         1
+
+class key_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class netif 2
+              egress         w        10
+             ingress         r        10
+
+class packet_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class memprotect 1
+           mmap_zero         n         1
+
+class msg 2
+                send         w        10
+             receive         r        10
+
+class tun_socket 22
+        attach_queue         w         5
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class udp_socket 22
+           node_bind         n         1
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class appletalk_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         1
+             setattr         w         1
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class x_colormap 10
+           add_color         w        10
+              create         w         1
+               write         w        10
+             destroy         w         1
+             install         w         1
+             getattr         r         7
+                read         r        10
+                 use         r         1
+        remove_color         w        10
+           uninstall         w         1
+
+class x_screen 8
+         show_cursor         w         1
+         hide_cursor         w         1
+          saver_show         w         1
+             getattr         r         7
+             setattr         w         7
+          saver_hide         w         1
+       saver_getattr         r         7
+       saver_setattr         w         7
+
+class rawip_socket 22
+           node_bind         n         1
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         1
+             setattr         w         1
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class x_application_data 3
+               paste         w        10
+ paste_after_confirm         w        10
+                copy         r        10
+
+class association 4
+          setcontext         w         3
+              sendto         w        10
+            recvfrom         r        10
+            polmatch         r         1
+
+class x_selection 4
+               write         w        10
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+
+class db_column 9
+              select         r        10
+              update         w        10
+              insert         w         1
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         7
+             setattr         w         7
+           relabelto         w         1
+
+class netlink_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class x_drawable 19
+        get_property         r         7
+       list_property         r         7
+        set_property         w         7
+           add_child         w         1
+            override         n         1
+               blend         w         1
+                send         w        10
+              create         w         1
+                hide         w         1
+             receive         r        10
+               write         w        10
+                show         w         1
+             destroy         w         1
+          list_child         r         7
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+              manage         w        10
+        remove_child         w         1
+
+class sem 9
+           associate         n         1
+              create         w         1
+               write         w        10
+           unix_read         r         3
+             destroy         w         1
+             getattr         r         1
+             setattr         w         1
+                read         r        10
+          unix_write         w         3
+
+class system 14
+      module_request         n         1
+            ipc_info         n         1
+         syslog_read         n         1
+      syslog_console         n         1
+          syslog_mod         n         1
+              reload         w         1
+                halt         n         1
+              reboot         n         1
+              status         r         5
+              enable         n         1
+             disable         n         1
+               start         w         5
+                stop         w         5
+         module_load         w        10
+
+class x_keyboard 19
+        get_property         r         7
+       list_property         r         7
+        set_property         w         7
+                 add         w         1
+            setfocus         w         1
+              create         w         1
+              freeze         w         1
+            getfocus         w         1
+              remove         w         1
+               write         w        10
+        force_cursor         w         1
+             destroy         w         1
+                bell         w         1
+             getattr         r         7
+                grab         w         1
+             setattr         w         7
+                read         r        10
+              manage         w        10
+                 use         r         1
+
+class security 13
+      compute_member         n         1
+        compute_user         n         1
+      compute_create         n         1
+          setenforce         n         1
+       check_context         n         1
+     setcheckreqprot         n         1
+     compute_relabel         n         1
+             setbool         n         1
+         load_policy         n         1
+         read_policy         n         1
+         setsecparam         n         1
+          compute_av         n         1
+      validate_trans         n         1
+
+class x_pointer 19
+        get_property         r         7
+       list_property         r         7
+        set_property         w         7
+                 add         w         1
+            setfocus         w         1
+              create         w         1
+              freeze         w         1
+            getfocus         w         1
+              remove         w         1
+               write         w        10
+        force_cursor         w         1
+             destroy         w         1
+                bell         w         1
+             getattr         r         7
+                grab         w         1
+             setattr         w         7
+                read         r        10
+              manage         w        10
+                 use         r         1
+
+class binder 4
+            transfer         w         3
+                call         w        10
+     set_context_mgr         w         1
+         impersonate         n         1
+
+class netlink_connector_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class netlink_netfilter_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class netlink_iscsi_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class db_exception 7
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         7
+             setattr         w         7
+           relabelto         w         1
+                 use         r         1
+
+class netlink_rdma_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class netlink_generic_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class netlink_scsitransport_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class service 6
+              status         r         1
+               start         w         1
+             disable         n         1
+              enable         n         1
+              reload         w         1
+                stop         w         1
+
+class netlink_crypto_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class db_datatype 7
+                drop         w         1
+              create         w         1
+         relabelfrom         r         1
+             getattr         r         7
+             setattr         w         7
+           relabelto         w         1
+                 use         r         1
+
+class netlink_fib_lookup_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class cap_userns 32
+             setfcap         n         1
+             setpcap         n         1
+              fowner         n         1
+            sys_boot         n         1
+      sys_tty_config         n         1
+             net_raw         n         1
+           sys_admin         n         1
+          sys_chroot         n         1
+          sys_module         n         1
+           sys_rawio         n         1
+        dac_override         n         1
+           ipc_owner         n         1
+                kill         n         1
+     dac_read_search         n         1
+           sys_pacct         n         1
+       net_broadcast         n         1
+    net_bind_service         n         1
+            sys_nice         n         1
+            sys_time         n         1
+              fsetid         n         1
+               mknod         n         1
+              setgid         n         1
+              setuid         n         1
+               lease         n         1
+           net_admin         n         1
+         audit_write         n         1
+     linux_immutable         n         1
+          sys_ptrace         n         1
+       audit_control         n         1
+            ipc_lock         n         1
+        sys_resource         n         1
+               chown         n         1
+
+class cap2_userns 6
+        mac_override         n         1
+           mac_admin         n         1
+              syslog         n         1
+       block_suspend         n         1
+          wake_alarm         n         1
+          audit_read         n         1
+
+class ax25_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class ipx_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class netrom_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class x25_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class rose_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class decnet_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class atmsvc_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class rds_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class irda_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class pppox_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class llc_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class can_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class tipc_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class bluetooth_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class iucv_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class rxrpc_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class isdn_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class phonet_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class ieee802154_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class caif_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class alg_socket 21
+              append         w        10
+                bind         w         1
+             connect         n         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class nfc_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class vsock_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class kcm_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class qipcrtr_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class smc_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class sctp_socket 24
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+           node_bind         n         1
+         association         w         1
+        name_connect         w        10
+
+class atmpvc_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class icmp_socket 22
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+           node_bind         n         1
+
+class process2 2
+      nnp_transition         w         1
+   nosuid_transition         w         1
+
+class bpf 5
+            prog_run         w        10
+            map_read         r        10
+           map_write         w        10
+           prog_load         w        10
+          map_create         w        10
+
+class infiniband_endport 1
+       manage_subnet         w        10
+
+class infiniband_pkey 1
+              access         b        10
+
+class xdp_socket 21
+              append         w        10
+                bind         w         1
+             connect         w         1
+              create         w         1
+               write         w        10
+         relabelfrom         r        10
+               ioctl         n         1
+           name_bind         n         1
+              sendto         w        10
+             getattr         r         7
+             setattr         w         7
+              accept         r         1
+              getopt         r         1
+                read         r        10
+              setopt         w         1
+            shutdown         w         1
+            recvfrom         r        10
+                lock         n         1
+           relabelto         w        10
+              listen         r         1
+                 map         n         1
+
+class lockdown 2
+           integrity         b         1
+     confidentiality         r         1
+
+class perf_event 6
+                open         r         1
+                 cpu         r         5
+              kernel         r         5
+          tracepoint         r         5
+                read         r         1
+               write         w         1
+
+class anon_inode 25
+        audit_access         r         1
+             execmod         n         1
+                open         n         1
+              append         w        10
+              create         w         1
+             execute         r         1
+               write         w        10
+         relabelfrom         r        10
+                link         w         1
+              unlink         w         1
+               ioctl         n         1
+             getattr         r         7
+             setattr         w         7
+                read         r        10
+              rename         w         5
+                lock         n         1
+           relabelto         w        10
+             mounton         b         1
+             quotaon         b         1
+                 map         n         1
+               watch         r         3
+         watch_mount         r         3
+            watch_sb         r         3
+     watch_with_perm         r         3
+         watch_reads         r         3
+
+class io_uring 2
+      override_creds         w        10
+              sqpoll         w        10
