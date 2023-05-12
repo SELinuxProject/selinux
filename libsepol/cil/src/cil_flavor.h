@@ -115,6 +115,7 @@ enum cil_flavor {
 	CIL_SRC_INFO,
 	CIL_IBPKEYCON,
 	CIL_IBENDPORTCON,
+	CIL_SEGREGATEATTRIBUTES,
 
 /*
  *          boolean  constraint  set  catset

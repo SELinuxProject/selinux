@@ -242,6 +242,7 @@ extern char *CIL_KEY_SRC_CIL;
 extern char *CIL_KEY_SRC_HLL_LMS;
 extern char *CIL_KEY_SRC_HLL_LMX;
 extern char *CIL_KEY_SRC_HLL_LME;
+extern char *CIL_KEY_SEGREGATEATTRIBUTES;
 
 /*
 	Symbol Table Array Indices
@@ -309,6 +310,7 @@ struct cil_db {
 	struct cil_list *userprefixes;
 	struct cil_list *selinuxusers;
 	struct cil_list *names;
+	struct cil_list *segregateattributes;
 	int num_types_and_attrs;
 	int num_classes;
 	int num_cats;
@@ -975,6 +977,11 @@ struct cil_src_info {
 	char *path;
 };
 
+struct cil_segregateattributes {
+	struct cil_list *str_expr;
+	struct cil_list *datum_expr;
+};
+
 void cil_db_init(struct cil_db **db);
 void cil_db_destroy(struct cil_db **db);
 
@@ -1085,5 +1092,6 @@ void cil_mls_init(struct cil_mls **mls);
 void cil_src_info_init(struct cil_src_info **info);
 void cil_userattribute_init(struct cil_userattribute **attribute);
 void cil_userattributeset_init(struct cil_userattributeset **attrset);
+void cil_segregateattributes_init(struct cil_segregateattributes **sattrs);
 
 #endif

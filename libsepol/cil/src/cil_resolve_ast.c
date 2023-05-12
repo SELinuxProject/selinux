@@ -3265,6 +3265,7 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 		sym_index = CIL_SYM_TUNABLES;
 		break;
 	case CIL_TYPE:
+	case CIL_TYPEATTRIBUTE:
 		sym_index = CIL_SYM_TYPES;
 		break;
 	case CIL_ROLE:
@@ -3312,6 +3313,13 @@ int cil_resolve_expr(enum cil_flavor expr_type, struct cil_list *str_expr, struc
 			} else {
 				if (sym_index == CIL_SYM_TYPES && (expr_type == CIL_CONSTRAIN || expr_type == CIL_VALIDATETRANS)) {
 					cil_type_used(res_datum, CIL_ATTR_CONSTRAINT);
+				} else if (expr_type == CIL_SEGREGATEATTRIBUTES) {
+					if (FLAVOR(res_datum) != CIL_TYPEATTRIBUTE) {
+						cil_tree_log(parent, CIL_ERR, "Type or type alias not supported in segregate attributes declaration");
+						rc = SEPOL_ERR;
+						goto exit;
+					}
+					cil_type_used(res_datum, CIL_ATTR_NEVERALLOW);
 				}
 				cil_list_append(*datum_expr, CIL_DATUM, res_datum);
 			}
@@ -3501,6 +3509,33 @@ int cil_resolve_userattributeset(struct cil_tree_node *current, void *extra_args
 	}
 
 	cil_list_append(attr->expr_list, CIL_LIST, attrusers->datum_expr);
+
+	return SEPOL_OK;
+
+exit:
+	return rc;
+}
+
+int cil_resolve_segregateattributes(struct cil_tree_node *current, void *extra_args)
+{
+	struct cil_segregateattributes *sattrs = current->data;
+	struct cil_list_item *first, *second;
+	int rc;
+
+	rc = cil_resolve_expr(CIL_SEGREGATEATTRIBUTES, sattrs->str_expr, &sattrs->datum_expr, current, extra_args);
+	if (rc != SEPOL_OK) {
+		goto exit;
+	}
+
+	cil_list_for_each(first, sattrs->datum_expr) {
+		for (second = first->next; second; second = second->next) {
+			if (first->data == second->data) {
+				cil_tree_log(current, CIL_ERR, "Repeated attribute in segregate attributes declaration");
+				rc = SEPOL_ERR;
+				goto exit;
+			}
+		}
+	}
 
 	return SEPOL_OK;
 
@@ -3887,6 +3922,9 @@ static int __cil_resolve_ast_node(struct cil_tree_node *node, void *extra_args)
 			break;
 		case CIL_USERATTRIBUTESET:
 			rc = cil_resolve_userattributeset(node, args);
+			break;
+		case CIL_SEGREGATEATTRIBUTES:
+			rc = cil_resolve_segregateattributes(node, args);
 			break;
 		default:
 			break;

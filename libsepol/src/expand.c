@@ -56,7 +56,7 @@ static void expand_state_init(expand_state_t * state)
 	memset(state, 0, sizeof(expand_state_t));
 }
 
-static int map_ebitmap(ebitmap_t * src, ebitmap_t * dst, uint32_t * map)
+static int map_ebitmap(const ebitmap_t * src, ebitmap_t * dst, const uint32_t * map)
 {
 	unsigned int i;
 	ebitmap_node_t *tnode;
@@ -2341,6 +2341,45 @@ static int genfs_copy(expand_state_t * state)
 	return 0;
 }
 
+static int segregate_attributes_copy(expand_state_t *state)
+{
+	const segregate_attributes_rule_t *old;
+	segregate_attributes_rule_t *list = NULL;
+
+	for (old = state->base->segregate_attributes; old; old = old->next) {
+		segregate_attributes_rule_t *new;
+
+		new = malloc(sizeof(segregate_attributes_rule_t));
+		if (!new) {
+			ERR(state->handle, "Out of memory!");
+			return -1;
+		}
+
+		segregate_attributes_rule_init(new);
+
+		if (map_ebitmap(&old->attrs, &new->attrs, state->typemap)) {
+			ERR(state->handle, "out of memory");
+			ebitmap_destroy(&new->attrs);
+			free(new);
+			return -1;
+		}
+
+		if (list)
+			list->next = new;
+		else {
+			if (state->out->segregate_attributes) {
+				segregate_attributes_rule_t *s;
+				for (s = state->out->segregate_attributes; s->next; s = s->next) {}
+				s->next = new;
+			} else
+				state->out->segregate_attributes = new;
+		}
+		list = new;
+	}
+
+	return 0;
+}
+
 static int type_attr_map(hashtab_key_t key
 			 __attribute__ ((unused)), hashtab_datum_t datum,
 			 void *ptr)
@@ -3171,6 +3210,10 @@ int expand_module(sepol_handle_t * handle,
 
 	/* copy genfs */
 	if (genfs_copy(&state))
+		goto cleanup;
+
+	/* copy segregate attributes */
+	if (segregate_attributes_copy(&state))
 		goto cleanup;
 
 	/* Build the type<->attribute maps and remove attributes. */

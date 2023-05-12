@@ -69,6 +69,7 @@ enum cil_statement_list {
 	CIL_LIST_USER,
 	CIL_LIST_CONSTRAINT,
 	CIL_LIST_VALIDATETRANS,
+	CIL_LIST_SEGREGATEATTRIBUTES,
 	CIL_LIST_NUM_LISTS
 };
 
@@ -167,6 +168,9 @@ static int __cil_gather_statements_helper(struct cil_tree_node *node, uint32_t *
 		break;
 	case CIL_VALIDATETRANS:
 		kind = CIL_LIST_VALIDATETRANS;
+		break;
+	case CIL_SEGREGATEATTRIBUTES:
+		kind = CIL_LIST_SEGREGATEATTRIBUTES;
 		break;
 	default:
 		break;
@@ -1911,6 +1915,27 @@ static void cil_devicetreecons_to_policy(FILE *out, struct cil_sort *devicetreec
 	}
 }
 
+static void cil_segregateattributes_to_policy(FILE *out, struct cil_list *sattrs_list)
+{
+	struct cil_list_item *curr_sattrs, *curr_attr;
+	struct cil_segregateattributes *sattrs;
+	int first = 1;
+
+	cil_list_for_each(curr_sattrs, sattrs_list) {
+		sattrs = curr_sattrs->data;
+		fprintf(out, "segregate_attriutes ");
+		cil_list_for_each(curr_attr, sattrs->datum_expr) {
+			if (!first) {
+				first = 0;
+			} else {
+				fprintf(out, ", ");
+			}
+			fprintf(out, "%s", DATUM(curr_attr->data)->fqn);
+		}
+		fprintf(out, ";\n");
+	}
+}
+
 void cil_gen_policy(FILE *out, struct cil_db *db)
 {
 	unsigned i;
@@ -1956,6 +1981,7 @@ void cil_gen_policy(FILE *out, struct cil_db *db)
 	cil_typebounds_to_policy(out, lists[CIL_LIST_TYPE]);
 	cil_typeattributes_to_policy(out, lists[CIL_LIST_TYPE], lists[CIL_LIST_TYPEATTRIBUTE]);
 	cil_te_rules_to_policy(out, head, db->mls);
+	cil_segregateattributes_to_policy(out, db->segregateattributes);
 
 	cil_roles_to_policy(out, lists[CIL_LIST_ROLE]);
 	cil_role_types_to_policy(out, lists[CIL_LIST_ROLE], lists[CIL_LIST_TYPE]);

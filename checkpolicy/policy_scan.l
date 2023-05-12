@@ -123,6 +123,8 @@ ATTRIBUTE |
 attribute			{ return(ATTRIBUTE); }
 EXPANDATTRIBUTE |
 expandattribute                 { return(EXPANDATTRIBUTE); }
+SEGREGATE_ATTRIBUTES |
+segregate_attributes		{ return(SEGREGATEATTRIBUTES); }
 TYPE_TRANSITION |
 type_transition			{ return(TYPE_TRANSITION); }
 TYPE_MEMBER |

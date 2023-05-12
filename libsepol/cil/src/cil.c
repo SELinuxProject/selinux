@@ -225,6 +225,7 @@ char *CIL_KEY_SRC_CIL;
 char *CIL_KEY_SRC_HLL_LMS;
 char *CIL_KEY_SRC_HLL_LMX;
 char *CIL_KEY_SRC_HLL_LME;
+char *CIL_KEY_SEGREGATEATTRIBUTES;
 
 static void cil_init_keys(void)
 {
@@ -394,6 +395,7 @@ static void cil_init_keys(void)
 	CIL_KEY_SRC_HLL_LMS = cil_strpool_add("lms");
 	CIL_KEY_SRC_HLL_LMX = cil_strpool_add("lmx");
 	CIL_KEY_SRC_HLL_LME = cil_strpool_add("lme");
+	CIL_KEY_SEGREGATEATTRIBUTES = cil_strpool_add("segregateattributes");
 }
 
 void cil_db_init(struct cil_db **db)
@@ -426,6 +428,7 @@ void cil_db_init(struct cil_db **db)
 	cil_list_init(&(*db)->userprefixes, CIL_LIST_ITEM);
 	cil_list_init(&(*db)->selinuxusers, CIL_LIST_ITEM);
 	cil_list_init(&(*db)->names, CIL_LIST_ITEM);
+	cil_list_init(&(*db)->segregateattributes, CIL_LIST_ITEM);
 
 	cil_type_init(&(*db)->selftype);
 	(*db)->selftype->datum.name = CIL_KEY_SELF;
@@ -481,6 +484,7 @@ void cil_db_destroy(struct cil_db **db)
 	cil_list_destroy(&(*db)->userprefixes, CIL_FALSE);
 	cil_list_destroy(&(*db)->selinuxusers, CIL_FALSE);
 	cil_list_destroy(&(*db)->names, CIL_TRUE);
+	cil_list_destroy(&(*db)->segregateattributes, CIL_FALSE);
 
 	cil_destroy_type((*db)->selftype);
 
@@ -1005,6 +1009,9 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	case CIL_SRC_INFO:
 		cil_destroy_src_info(*data);
 		break;
+	case CIL_SEGREGATEATTRIBUTES:
+		cil_destroy_segregateattributes(*data);
+		break;
 	case CIL_OP:
 	case CIL_CONS_OPERAND:
 		break;
@@ -1413,6 +1420,8 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		return CIL_KEY_CONS_H1;
 	case CIL_CONS_H2:
 		return CIL_KEY_CONS_H2;
+	case CIL_SEGREGATEATTRIBUTES:
+		return CIL_KEY_SEGREGATEATTRIBUTES;
 
 	default:
 		break;
@@ -2903,4 +2912,12 @@ void cil_src_info_init(struct cil_src_info **info)
 	(*info)->kind = NULL;
 	(*info)->hll_line = 0;
 	(*info)->path = NULL;
+}
+
+void cil_segregateattributes_init(struct cil_segregateattributes **sattrs)
+{
+	*sattrs = cil_malloc(sizeof(**sattrs));
+
+	(*sattrs)->str_expr = NULL;
+	(*sattrs)->datum_expr = NULL;
 }
