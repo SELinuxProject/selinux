@@ -3964,8 +3964,9 @@ uintptr_t define_cexpr(uint32_t expr_type, uintptr_t arg1, uintptr_t arg2)
 int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
 {
 	cond_expr_t *e;
-	int depth;
+	int depth, booleans, tunables;
 	cond_node_t cn, *cn_old;
+	const cond_bool_datum_t *bool_var;
 
 	/* expression cannot be NULL */
 	if (!expr) {
@@ -3990,6 +3991,8 @@ int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
 
 	/* verify expression */
 	depth = -1;
+	booleans = 0;
+	tunables = 0;
 	for (e = expr; e; e = e->next) {
 		switch (e->expr_type) {
 		case COND_NOT:
@@ -4018,6 +4021,14 @@ int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
 				return -1;
 			}
 			depth++;
+
+			bool_var = policydbp->bool_val_to_struct[e->boolean - 1];
+			if (bool_var->flags & COND_BOOL_FLAGS_TUNABLE) {
+				tunables = 1;
+			} else {
+				booleans = 1;
+			}
+
 			break;
 		default:
 			yyerror("illegal conditional expression");
@@ -4026,6 +4037,10 @@ int define_conditional(cond_expr_t * expr, avrule_t * t, avrule_t * f)
 	}
 	if (depth != 0) {
 		yyerror("illegal conditional expression");
+		return -1;
+	}
+	if (booleans && tunables) {
+		yyerror("illegal conditional expression; Contains boolean and tunable");
 		return -1;
 	}
 
