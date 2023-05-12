@@ -3,7 +3,7 @@
 checkpolicy \- SELinux policy compiler
 .SH SYNOPSIS
 .B checkpolicy
-.I "[\-b[F]] [\-C] [\-d] [\-U handle_unknown (allow,deny,reject)] [\-M] [\-c policyvers] [\-o output_file|\-] [\-S] [\-t target_platform (selinux,xen)] [\-O] [\-E] [\-V] [input_file]"
+.I "[\-b[F]] [\-C] [\-d] [\-U handle_unknown (allow,deny,reject)] [\-M] [\-N] [\-c policyvers] [\-o output_file|\-] [\-S] [\-t target_platform (selinux,xen)] [\-O] [\-E] [\-V] [input_file]"
 .br
 .SH "DESCRIPTION"
 This manual page describes the
@@ -37,6 +37,9 @@ Specify how the kernel should handle unknown classes or permissions (deny, allow
 .TP
 .B \-M,\-\-mls
 Enable the MLS policy when checking and compiling the policy.
+.TP
+.B \-N,\-\-disable-neverallow
+Do not check neverallow rules.
 .TP
 .B \-c policyvers
 Specify the policy version, defaults to the latest.

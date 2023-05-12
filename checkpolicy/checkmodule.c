@@ -123,7 +123,7 @@ static int write_binary_policy(policydb_t * p, FILE *outfp)
 
 static __attribute__((__noreturn__)) void usage(const char *progname)
 {
-	printf("usage:  %s [-h] [-V] [-b] [-C] [-E] [-U handle_unknown] [-m] [-M] [-o FILE] [-c VERSION] [INPUT]\n", progname);
+	printf("usage:  %s [-h] [-V] [-b] [-C] [-E] [-U handle_unknown] [-m] [-M] [-N] [-o FILE] [-c VERSION] [INPUT]\n", progname);
 	printf("Build base and policy modules.\n");
 	printf("Options:\n");
 	printf("  INPUT      build module from INPUT (else read from \"%s\")\n",
@@ -139,6 +139,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 	printf("               allow: Allow unknown kernel checks\n");
 	printf("  -m         build a policy module instead of a base module\n");
 	printf("  -M         enable MLS policy\n");
+	printf("  -N         do not check neverallow rules\n");
 	printf("  -o FILE    write module to FILE (else just check syntax)\n");
 	printf("  -c VERSION build a policy module targeting a modular policy version (%d-%d)\n",
 	       MOD_POLICYDB_VERSION_MIN, MOD_POLICYDB_VERSION_MAX);
@@ -148,7 +149,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 int main(int argc, char **argv)
 {
 	const char *file = txtfile, *outfile = NULL;
-	unsigned int binary = 0, cil = 0;
+	unsigned int binary = 0, cil = 0, disable_neverallow = 0;
 	int ch;
 	int show_version = 0;
 	policydb_t modpolicydb;
@@ -159,12 +160,13 @@ int main(int argc, char **argv)
 		{"version", no_argument, NULL, 'V'},
 		{"handle-unknown", required_argument, NULL, 'U'},
 		{"mls", no_argument, NULL, 'M'},
+		{"disable-neverallow", no_argument, NULL, 'N'},
 		{"cil", no_argument, NULL, 'C'},
 		{"werror", no_argument, NULL, 'E'},
 		{NULL, 0, NULL, 0}
 	};
 
-	while ((ch = getopt_long(argc, argv, "ho:bVEU:mMCc:", long_options, NULL)) != -1) {
+	while ((ch = getopt_long(argc, argv, "ho:bVEU:mMNCc:", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'h':
 			usage(argv[0]);
@@ -201,6 +203,9 @@ int main(int argc, char **argv)
 			break;
 		case 'M':
 			mlspol = 1;
+			break;
+		case 'N':
+			disable_neverallow = 1;
 			break;
 		case 'C':
 			cil = 1;
@@ -317,7 +322,7 @@ int main(int argc, char **argv)
 			fprintf(stderr, "%s:  link modules failed\n", argv[0]);
 			exit(1);
 		}
-		if (expand_module(NULL, &modpolicydb, &kernpolicydb, 0, 1)) {
+		if (expand_module(NULL, &modpolicydb, &kernpolicydb, /*verbose=*/0, !disable_neverallow)) {
 			fprintf(stderr, "%s:  expand module failed\n", argv[0]);
 			exit(1);
 		}

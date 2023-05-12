@@ -109,7 +109,7 @@ static __attribute__((__noreturn__)) void usage(const char *progname)
 {
 	printf
 	    ("usage:  %s [-b[F]] [-C] [-d] [-U handle_unknown (allow,deny,reject)] [-M] "
-	     "[-c policyvers (%d-%d)] [-o output_file|-] [-S] [-O] "
+	     "[-N] [-c policyvers (%d-%d)] [-o output_file|-] [-S] [-O] "
 	     "[-t target_platform (selinux,xen)] [-E] [-V] [input_file]\n",
 	     progname, POLICYDB_VERSION_MIN, POLICYDB_VERSION_MAX);
 	exit(1);
@@ -393,7 +393,7 @@ int main(int argc, char **argv)
 	size_t scontext_len, pathlen;
 	unsigned int i;
 	unsigned int protocol, port;
-	unsigned int binary = 0, debug = 0, sort = 0, cil = 0, conf = 0, optimize = 0;
+	unsigned int binary = 0, debug = 0, sort = 0, cil = 0, conf = 0, optimize = 0, disable_neverallow = 0;
 	struct val_to_name v;
 	int ret, ch, fd, target = SEPOL_TARGET_SELINUX;
 	unsigned int nel, uret;
@@ -415,6 +415,7 @@ int main(int argc, char **argv)
 		{"version", no_argument, NULL, 'V'},
 		{"handle-unknown", required_argument, NULL, 'U'},
 		{"mls", no_argument, NULL, 'M'},
+		{"disable-neverallow", no_argument, NULL, 'N'},
 		{"cil", no_argument, NULL, 'C'},
 		{"conf",no_argument, NULL, 'F'},
 		{"sort", no_argument, NULL, 'S'},
@@ -424,7 +425,7 @@ int main(int argc, char **argv)
 		{NULL, 0, NULL, 0}
 	};
 
-	while ((ch = getopt_long(argc, argv, "o:t:dbU:MCFSVc:OEh", long_options, NULL)) != -1) {
+	while ((ch = getopt_long(argc, argv, "o:t:dbU:MNCFSVc:OEh", long_options, NULL)) != -1) {
 		switch (ch) {
 		case 'o':
 			outfile = optarg;
@@ -472,6 +473,9 @@ int main(int argc, char **argv)
 			break;
 		case 'M':
 			mlspol = 1;
+			break;
+		case 'N':
+			disable_neverallow = 1;
 			break;
 		case 'C':
 			cil = 1;
@@ -630,7 +634,7 @@ int main(int argc, char **argv)
 				fprintf(stderr, "%s:  policydb_init failed\n", argv[0]);
 				exit(1);
 			}
-			if (expand_module(NULL, policydbp, &policydb, 0, 1)) {
+			if (expand_module(NULL, policydbp, &policydb, /*verbose=*/0, !disable_neverallow)) {
 				fprintf(stderr, "Error while expanding policy\n");
 				exit(1);
 			}
