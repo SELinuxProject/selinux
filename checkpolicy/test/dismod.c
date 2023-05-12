@@ -53,11 +53,8 @@
 #define DISPLAY_AVBLOCK_FILENAME_TRANS	7
 
 static policydb_t policydb;
-extern unsigned int ss_initialized;
 
-int policyvers = MOD_POLICYDB_VERSION_BASE;
-
-static const char *symbol_labels[9] = {
+static const char *const symbol_labels[9] = {
 	"commons",
 	"classes", "roles  ", "types  ", "users  ", "bools  ",
 	"levels ", "cats   ", "attribs"
@@ -133,12 +130,12 @@ static void render_access_bitmap(ebitmap_t * map, uint32_t class,
 {
 	unsigned int i;
 	char *perm;
-	fprintf(fp, "{");
+	fprintf(fp, " {");
 	for (i = ebitmap_startbit(map); i < ebitmap_length(map); i++) {
 		if (ebitmap_get_bit(map, i)) {
 			perm = sepol_av_to_string(p, class, UINT32_C(1) << i);
 			if (perm)
-				fprintf(fp, " %s", perm);
+				fprintf(fp, "%s", perm);
 		}
 	}
 	fprintf(fp, " }");
@@ -164,10 +161,12 @@ static int display_type_set(type_set_t * set, uint32_t flags, policydb_t * polic
 	unsigned int i, num_types;
 
 	if (set->flags & TYPE_STAR) {
-		fprintf(fp, " * ");
+		fprintf(fp, " *");
 		return 0;
 	} else if (set->flags & TYPE_COMP) {
 		fprintf(fp, " ~");
+	} else {
+		fprintf(fp, " ");
 	}
 
 	num_types = 0;
@@ -217,7 +216,10 @@ static int display_type_set(type_set_t * set, uint32_t flags, policydb_t * polic
 	}
 
 	if (flags & RULE_NOTSELF) {
-		fprintf(fp, " -self");
+		if (set->flags & TYPE_COMP)
+			fprintf(fp, " self");
+		else
+			fprintf(fp, " -self");
 	}
 
 	if (num_types > 1)
@@ -281,6 +283,9 @@ static int display_avrule(avrule_t * avrule, policydb_t * policy,
 		if (avrule->specified & AVRULE_DONTAUDIT) {
 			fprintf(fp, "  dontaudit");
 		}
+		if (avrule->specified & AVRULE_NEVERALLOW) {
+			fprintf(fp, "  neverallow");
+		}
 	} else if (avrule->specified & AVRULE_TYPE) {
 		if (avrule->specified & AVRULE_TRANSITION) {
 			fprintf(fp, "  type_transition");
@@ -291,15 +296,15 @@ static int display_avrule(avrule_t * avrule, policydb_t * policy,
 		if (avrule->specified & AVRULE_CHANGE) {
 			fprintf(fp, "  type_change");
 		}
-	} else if (avrule->specified & AVRULE_NEVERALLOW) {
-		fprintf(fp, "  neverallow");
 	} else if (avrule->specified & AVRULE_XPERMS) {
 		if (avrule->specified & AVRULE_XPERMS_ALLOWED)
-			fprintf(fp, "allowxperm ");
+			fprintf(fp, "  allowxperm");
 		else if (avrule->specified & AVRULE_XPERMS_AUDITALLOW)
-			fprintf(fp, "auditallowxperm ");
+			fprintf(fp, "  auditallowxperm");
 		else if (avrule->specified & AVRULE_XPERMS_DONTAUDIT)
-			fprintf(fp, "dontauditxperm ");
+			fprintf(fp, "  dontauditxperm");
+		else if (avrule->specified & AVRULE_XPERMS_NEVERALLOW)
+			fprintf(fp, "  neverallowxperm");
 	} else {
 		fprintf(fp, "     ERROR: no valid rule type specified\n");
 		return -1;
@@ -607,7 +612,7 @@ static int display_scope_index(scope_index_t * indices, policydb_t * p,
 								     p, out_fp);
 					} else {
 						fprintf(out_fp,
-							"<no perms known>");
+							" <no perms known>");
 					}
 				}
 			}
