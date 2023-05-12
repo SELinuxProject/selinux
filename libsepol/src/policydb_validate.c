@@ -545,6 +545,8 @@ static int validate_mls_semantic_cat(const mls_semantic_cat_t *cat, const valida
 			goto bad;
 		if (validate_value(cat->high, cats))
 			goto bad;
+		if (cat->low > cat->high)
+			goto bad;
 	}
 
 	return 0;
