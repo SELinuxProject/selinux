@@ -67,6 +67,7 @@ tokens = (
     'FILENAME',
     'IDENTIFIER',
     'NUMBER',
+    'XNUMBER',
     'PATH',
     'IPV6_ADDR',
     # reserved words
@@ -112,6 +113,10 @@ tokens = (
     'DONTAUDIT',
     'AUDITALLOW',
     'NEVERALLOW',
+    'ALLOWXPERM',
+    'DONTAUDITXPERM',
+    'AUDITALLOWXPERM',
+    'NEVERALLOWXPERM',
     'PERMISSIVE',
     'TYPEBOUNDS',
     'TYPE_TRANSITION',
@@ -179,6 +184,10 @@ reserved = {
     'dontaudit' : 'DONTAUDIT',
     'auditallow' : 'AUDITALLOW',
     'neverallow' : 'NEVERALLOW',
+    'allowxperm' : 'ALLOWXPERM',
+    'dontauditxperm' : 'DONTAUDITXPERM',
+    'auditallowxperm' : 'AUDITALLOWXPERM',
+    'neverallowxperm' : 'NEVERALLOWXPERM',
     'permissive' : 'PERMISSIVE',
     'typebounds' : 'TYPEBOUNDS',
     'type_transition' : 'TYPE_TRANSITION',
@@ -231,6 +240,12 @@ t_PATH      = r'/[a-zA-Z0-9)_\.\*/\$]*'
 t_ignore    = " \t"
 
 # More complex tokens
+def t_XNUMBER(t):
+    r'0x[0-9A-Fa-f]+'
+    # Turn hexadecimal into integer
+    t.value = int(t.value, 16)
+    return t
+
 def t_IPV6_ADDR(t):
     r'[a-fA-F0-9]{0,4}:[a-fA-F0-9]{0,4}:([a-fA-F0-9]|:)*'
     # This is a function simply to force it sooner into
@@ -334,6 +349,7 @@ def p_statement(p):
     '''statement : interface
                  | template
                  | obj_perm_set
+                 | obj_xperm_set
                  | policy
                  | policy_module_stmt
                  | module_stmt
@@ -487,7 +503,15 @@ def p_obj_perm_set(p):
     s = refpolicy.ObjPermSet(p[4])
     s.perms = p[8]
     p[0] = s
-    
+
+def p_obj_xperm_set(p):
+    'obj_xperm_set : DEFINE OPAREN TICK IDENTIFIER SQUOTE COMMA TICK xperm_set_base SQUOTE CPAREN'
+    ids = refpolicy.XpermIdentifierDict()
+    ids.set(p[4], p[8])
+
+    p[0] = refpolicy.ObjPermSet(p[4])
+    p[0].perms = set(p[8])
+
 #
 # Basic SELinux policy language
 #
@@ -505,6 +529,7 @@ def p_policy(p):
 def p_policy_stmt(p):
     '''policy_stmt : gen_require
                    | avrule_def
+                   | avextrule_def
                    | typerule_def
                    | typebound_def
                    | typeattribute_def
@@ -810,6 +835,26 @@ def p_avrule_def(p):
     a.perms = p[6]
     p[0] = a
 
+def p_avextrule_def(p):
+    '''avextrule_def : ALLOWXPERM names names COLON names identifier xperm_set SEMI
+                     | DONTAUDITXPERM names names COLON names identifier xperm_set SEMI
+                     | AUDITALLOWXPERM names names COLON names identifier xperm_set SEMI
+                     | NEVERALLOWXPERM names names COLON names identifier xperm_set SEMI
+    '''
+    a = refpolicy.AVExtRule()
+    if p[1] == 'dontauditxperm':
+        a.rule_type = refpolicy.AVExtRule.DONTAUDITXPERM
+    elif p[1] == 'auditallowxperm':
+        a.rule_type = refpolicy.AVExtRule.AUDITALLOWXPERM
+    elif p[1] == 'neverallowxperm':
+        a.rule_type = refpolicy.AVExtRule.NEVERALLOWXPERM
+    a.src_types = p[2]
+    a.tgt_types = p[3]
+    a.obj_classes = p[5]
+    a.operation = p[6]
+    a.xperms = p[7]
+    p[0] = a
+
 def p_typerule_def(p):
     '''typerule_def : TYPE_TRANSITION names names COLON names IDENTIFIER SEMI
                     | TYPE_TRANSITION names names COLON names IDENTIFIER FILENAME SEMI
@@ -987,6 +1032,55 @@ def p_optional_semi(p):
                    | empty'''
     pass
 
+def p_xperm_set(p):
+    '''xperm_set : nested_xperm_set
+                 | TILDE nested_xperm_set
+                 | xperm_set_base
+                 | TILDE xperm_set_base
+    '''
+    p[0] = p[-1]
+    if len(p) == 3:
+        p[0].compliment = True
+
+def p_nested_xperm_set(p):
+    '''nested_xperm_set : OBRACE nested_xperm_list CBRACE
+    '''
+    p[0] = p[2]
+
+def p_nested_xperm_list(p):
+    '''nested_xperm_list : nested_xperm_element
+                         | nested_xperm_list nested_xperm_element
+    '''
+    p[0] = p[1]
+    if len(p) == 3:
+        p[0].extend(p[2])
+
+def p_nested_xperm_element(p):
+    '''nested_xperm_element : xperm_set_base
+                            | nested_xperm_set
+                            | IDENTIFIER
+    '''
+    if isinstance(p[1], refpolicy.XpermSet()):
+        p[0] = p[1]
+    else:
+        ids = refpolicy.XpermIdentifierDict()
+        p[0] = ids.get(p[1])
+
+def p_xperm_set_base(p):
+    '''xperm_set_base : xperm_number
+                      | xperm_number MINUS xperm_number
+    '''
+    p[0] = refpolicy.XpermSet()
+    if len(p) == 2:
+        p[0].add(p[1])
+    else:
+        p[0].add(p[1], p[3])
+
+def p_xperm_number(p):
+    '''xperm_number : NUMBER
+                    | XNUMBER
+    '''
+    p[0] = int(p[1])
 
 #
 # Interface to the parser
