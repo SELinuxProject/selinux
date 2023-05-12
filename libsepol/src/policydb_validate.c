@@ -799,6 +799,8 @@ static int validate_avtab_key(const avtab_key_t *key, int conditional, const pol
 	case AVTAB_XPERMS_ALLOWED:
 	case AVTAB_XPERMS_AUDITALLOW:
 	case AVTAB_XPERMS_DONTAUDIT:
+		if (p->target_platform != SEPOL_TARGET_SELINUX)
+			goto bad;
 		if (conditional)
 			goto bad;
 		break;
@@ -910,6 +912,8 @@ static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int 
 		}
 
 		if (avrule->specified & AVRULE_XPERMS) {
+			if (p->target_platform != SEPOL_TARGET_SELINUX)
+				goto bad;
 			if (!avrule->xperms)
 				goto bad;
 			switch (avrule->xperms->specified) {
