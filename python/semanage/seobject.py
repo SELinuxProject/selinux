@@ -1055,7 +1055,7 @@ class portRecords(semanageRecords):
     def __init__(self, args = None):
         semanageRecords.__init__(self, args)
         try:
-            self.valid_types = list(list(sepolicy.info(sepolicy.ATTRIBUTE, "port_type"))[0]["types"])
+            self.valid_types = [x["type"] for x in [*sepolicy.info(sepolicy.ATTRIBUTE, "port_type"), *sepolicy.info(sepolicy.PORT)]]
         except RuntimeError:
             pass
 
