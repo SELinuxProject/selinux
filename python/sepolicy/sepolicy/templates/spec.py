@@ -43,20 +43,23 @@ install -m 644 %{SOURCE3} %{buildroot}/etc/selinux/targeted/contexts/users/DOMAI
 
 %post
 semodule -n -i %{_datadir}/selinux/packages/MODULENAME.pp
+# Add the new user defined in DOMAINNAME_u only when the package is installed (not during updates)
+if [ $1 -eq 1 ]; then
+    /usr/sbin/semanage user -a -R DOMAINNAME_r DOMAINNAME_u
+fi
 if /usr/sbin/selinuxenabled ; then
     /usr/sbin/load_policy
     %relabel_files
-    /usr/sbin/semanage user -a -R DOMAINNAME_r DOMAINNAME_u
 fi;
 exit 0
 
 %postun
 if [ $1 -eq 0 ]; then
+    /usr/sbin/semanage user -d DOMAINNAME_u
     semodule -n -r MODULENAME
     if /usr/sbin/selinuxenabled ; then
        /usr/sbin/load_policy
        %relabel_files
-       /usr/sbin/semanage user -d DOMAINNAME_u
     fi;
 fi;
 exit 0
