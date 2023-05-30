@@ -34,8 +34,9 @@ fi
 
 if [ $# -eq 1 ]; then
 	if [ "$1" = "--update" ] ; then
-		time=`ls -l --time-style="+%x %X" TEMPLATEFILE.te | awk '{ printf "%s %s", $6, $7 }'`
-		rules=`ausearch --start $time -m avc --raw -se TEMPLATETYPE`
+		time=`date -r TEMPLATETYPE.te "+%x"`
+                date=`date -r TEMPLATETYPE.te "+%X"`
+                rules=`ausearch --start "$time" "$date" -m avc --raw -se TEMPLATETYPE`
 		if [ x"$rules" != "x" ] ; then
 			echo "Found avc's to update policy with"
 			echo -e "$rules" | audit2allow -R
