@@ -12,8 +12,8 @@ command.
 .PP
 .B checkpolicy
 is a program that checks and compiles a SELinux security policy configuration
-into a binary representation that can be loaded into the kernel.  If no 
-input file name is specified,
+into a binary representation that can be loaded into the kernel.
+If no input file name is specified,
 .B checkpolicy
 will attempt to read from policy.conf or policy, depending on whether the \-b
 flag is specified.
@@ -63,6 +63,17 @@ Show version information.
 .TP
 .B \-h,\-\-help
 Show usage information.
+
+.SH EXAMPLE
+.nf
+Generate policy.conf based on the system policy
+# checkpolicy -b -M -F /etc/selinux/targeted/policy/policy.33 -o policy.conf
+Recompile system policy so that unknown permissions are denied (uses policy.conf from ^^).
+Note that binary policy extension represents its version, which is subject to change
+# checkpolicy -M -U deny -o /etc/selinux/targeted/policy/policy.33 policy.conf
+# load_policy
+Generate CIL representation of current system policy
+# checkpolicy -b -M -C /etc/selinux/targeted/policy/policy.33 -o policy.out
 
 .SH "SEE ALSO"
 SELinux Reference Policy documentation at https://github.com/SELinuxProject/refpolicy/wiki
