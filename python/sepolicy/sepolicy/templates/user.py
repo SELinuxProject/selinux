@@ -28,6 +28,8 @@ policy_module(TEMPLATETYPE, 1.0.0)
 #
 # Declarations
 #
+role TEMPLATETYPE_r;
+
 userdom_unpriv_user_template(TEMPLATETYPE)
 """
 
@@ -38,6 +40,8 @@ policy_module(TEMPLATETYPE, 1.0.0)
 #
 # Declarations
 #
+role TEMPLATETYPE_r;
+
 userdom_admin_user_template(TEMPLATETYPE)
 """
 
@@ -48,6 +52,7 @@ policy_module(TEMPLATETYPE, 1.0.0)
 #
 # Declarations
 #
+role TEMPLATETYPE_r;
 
 userdom_restricted_user_template(TEMPLATETYPE)
 """
@@ -59,6 +64,7 @@ policy_module(TEMPLATETYPE, 1.0.0)
 #
 # Declarations
 #
+role TEMPLATETYPE_r;
 
 userdom_restricted_xwindows_user_template(TEMPLATETYPE)
 """
@@ -89,6 +95,7 @@ gen_tunable(TEMPLATETYPE_manage_user_files, false)
 #
 # Declarations
 #
+role TEMPLATETYPE_r;
 
 userdom_base_user_template(TEMPLATETYPE)
 """
