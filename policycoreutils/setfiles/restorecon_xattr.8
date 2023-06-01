@@ -112,6 +112,13 @@ If the option is not specified, then the default file_contexts will be used.
 .br
 the pathname of the directory tree to be searched.
 
+.SH EXAMPLE
+.nf
+List all paths that where assigned a checksum by "restorecon/setfiles -D"
+# restorecon_xattr -r /
+Remove all non-matching checksums
+# restorecon_xattr -rd /
+
 .SH "SEE ALSO"
 .BR restorecon (8),
 .BR setfiles (8)

@@ -224,6 +224,15 @@ and provided the
 option is NOT set and recursive mode is set, files will be relabeled as
 required with the digests then being updated provided there are no errors.
 
+.SH EXAMPLE
+.nf
+Fix labeling of /var/www/ including all sub-directories and list all context changes
+# restorecon -rv /var/www/
+List mislabeled files in user home directory and what the correct label should be
+# restorecon -nvr ~
+Fix labeling of files listed in file_list file, ignoring any that do not exist
+# restorecon -vif file_list
+
 .SH "AUTHOR"
 This man page was written by Dan Walsh <dwalsh@redhat.com>.
 Some of the content of this man page was taken from the setfiles

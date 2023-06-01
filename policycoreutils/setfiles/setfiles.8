@@ -289,6 +289,15 @@ and provided the
 option is NOT set, files will be relabeled as required with the digests then
 being updated provided there are no errors.
 
+.SH EXAMPLE
+.nf
+Fix labeling of /var/www/ including all sub-directories, using targeted policy file context definitions and list all context changes
+# setfiles -v /etc/selinux/targeted/contexts/files/file_contexts /var/www/
+List mislabeled files in user home directory and what the label should be based on targeted policy file context definitions
+# setfiles -nv /etc/selinux/targeted/contexts/files/file_contexts ~
+Fix labeling of files listed in file_list file, ignoring any that do not exist
+# setfiles -vif file_list /etc/selinux/targeted/contexts/files/file_contexts
+
 .SH "AUTHOR"
 This man page was written by Russell Coker <russell@coker.com.au>.
 The program was written by Stephen Smalley <sds@tycho.nsa.gov>

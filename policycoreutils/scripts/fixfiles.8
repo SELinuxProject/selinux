@@ -14,7 +14,7 @@ fixfiles \- fix file SELinux security contexts.
 .B fixfiles
 .I [\-v] [\-F] [\-B | \-N time ] [\-T nthreads] { check | restore | verify }
 
-.B fixfiles 
+.B fixfiles
 .I [\-v] [\-F] [\-T nthreads] \-R rpmpackagename[,rpmpackagename...] { check | restore | verify }
 
 .B fixfiles
@@ -31,7 +31,7 @@ This manual page describes the
 script.
 .P
 This script is primarily used to correct the security context
-database (extended attributes) on filesystems.  
+database (extended attributes) on filesystems.
 .P
 It can also be run at any time to relabel when adding support for
 new policy, or  just check whether the file contexts are all
@@ -41,29 +41,29 @@ option.  You can use the \-R flag to use rpmpackages as an alternative.
 The file /etc/selinux/fixfiles_exclude_dirs can contain a list of directories
 excluded from relabeling.
 .P
-.B fixfiles onboot 
+.B fixfiles onboot
 will setup the machine to relabel on the next reboot.
 
 .SH "OPTIONS"
-.TP 
+.TP
 .B \-B
 If specified with onboot, this fixfiles will record the current date in the /.autorelabel file, so that it can be used later to speed up labeling. If used with restore, the restore will only affect files that were modified today.
 .TP
 .B \-F
 Force reset of context to match file_context for customizable files
 
-.TP 
+.TP
 .B \-f
 Clear /tmp directory with out prompt for removal.
 
-.TP 
+.TP
 .B \-R rpmpackagename[,rpmpackagename...]
 Use the rpm database to discover all files within the specified packages and restore the file contexts.
 .TP
 .B \-C PREVIOUS_FILECONTEXT
 Run a diff on  the PREVIOUS_FILECONTEXT file to the currently installed one, and restore the context of all affected files.
 
-.TP 
+.TP
 .B \-N time
 Only act on files created after the specified date.  Date must be specified in
 "YYYY\-MM\-DD HH:MM" format.  Date field will be passed to find \-\-newermt command.
@@ -83,18 +83,27 @@ Use parallel relabeling, see
 
 .SH "ARGUMENTS"
 One of:
-.TP 
+.TP
 .B check | verify
 print any incorrect file context labels, showing old and new context, but do not change them.
-.TP 
+.TP
 .B restore
 change any incorrect file context labels.
-.TP 
+.TP
 .B relabel
 Prompt for removal of contents of /tmp directory and then change any incorrect file context labels to match the install file_contexts file.
-.TP 
-.B [[dir/file] ... ] 
+.TP
+.B [[dir/file] ... ]
 List of files or directories trees that you wish to check file context on.
+
+.SH EXAMPLE
+.nf
+Relabel the whole filesystem, except paths listed in /etc/selinux/fixfiles_exclude_dirs
+# fixfiles relabel
+Schedule the machine to relabel on the next boot and force relabeling of customizable types
+# fixfiles -F onboot
+Check labeling of all files from the samba package (while not changing any labels)
+# fixfiles -R samba check
 
 .SH "AUTHOR"
 This man page was written by Richard Hally <rhally@mindspring.com>.
@@ -103,4 +112,3 @@ The script  was written by Dan Walsh <dwalsh@redhat.com>
 .SH "SEE ALSO"
 .BR setfiles (8),
 .BR restorecon (8)
-

@@ -7,13 +7,13 @@ setsebool \- set SELinux boolean value
 .I "[ \-PNV ] boolean value | bool1=val1 bool2=val2 ..."
 
 .SH "DESCRIPTION"
-.B setsebool 
-sets the current state of a particular SELinux boolean or a list of booleans 
-to a given value. The value may be 1 or true or on to enable the boolean, or 0 or false or off to disable it. 
+.B setsebool
+sets the current state of a particular SELinux boolean or a list of booleans
+to a given value. The value may be 1 or true or on to enable the boolean, or 0 or false or off to disable it.
 
 Without the \-P option, only the current boolean value is
-affected; the boot-time default settings 
-are not changed. 
+affected; the boot-time default settings
+are not changed.
 
 If the \-P option is given, all pending values are written to
 the policy file on disk. So they will be persistent across reboots.
@@ -22,6 +22,12 @@ If the \-N option is given, the policy on disk is not reloaded into the kernel.
 
 If the \-V option is given, verbose error messages will be printed from semanage libraries.
 
+.SH EXAMPLE
+.nf
+Enable container_use_devices boolean (will return to persistent value after reboot)
+# setsebool container_use_devices 1
+Persistently enable samba_create_home_dirs and samba_enable_home_dirs booleans
+# setsebool -P samba_create_home_dirs=on samba_enable_home_dirs=on
 
 .SH AUTHOR
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.

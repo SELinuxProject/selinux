@@ -107,16 +107,24 @@ then the context will be read from stdin.
 .br
 If there is no argument,
 .B secon
-will try reading a context from stdin, if that is not a tty, otherwise 
+will try reading a context from stdin, if that is not a tty, otherwise
 .B secon
 will act as though \fB\-\-self\fR had been passed.
 .PP
 If none of \fB\-\-user\fR, \fB\-\-role\fR, \fB\-\-type\fR, \fB\-\-level\fR or
 \fB\-\-mls\-range\fR is passed.
 Then all of them will be output.
+
+.SH EXAMPLE
+.nf
+Show SElinux context of the init process
+# secon --pid 1
+Parse the type portion of given security context
+# secon -t system_u:object_r:httpd_sys_rw_content_t:s0
+
 .PP
 .SH SEE ALSO
 .BR chcon (1)
 .SH AUTHORS
 .nf
-James Antill (james.antill@redhat.com) 
+James Antill (james.antill@redhat.com)
