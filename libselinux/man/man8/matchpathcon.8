@@ -25,8 +25,8 @@ queries the system policy and outputs the default security context associated wi
 Identical paths can have different security contexts, depending on the file
 type (regular file, directory, link file, char file ...).
 
-.B matchpathcon 
-will also take the file type into consideration in determining the default security context if the file exists.  If the file does not exist, no file type matching will occur.
+.B matchpathcon
+will also take the file type into consideration in determining the default security context if the file exists. If the file does not exist, no file type matching will occur.
 .
 .SH OPTIONS
 .TP
@@ -34,25 +34,32 @@ will also take the file type into consideration in determining the default secur
 Force file type for the lookup.
 Valid types are
 .BR file ", " dir ", "pipe ", " chr_file ", " blk_file ", "
-.BR lnk_file ", " sock_file .
+.BR lnk_file ", " sock_file
 .TP
 .B \-n
-Do not display path.
+Do not display path
 .TP
 .B \-N
-Do not use translations.
+Do not use translations
 .TP
 .BI \-f " file_context_file"
 Use alternate file_context file
 .TP
 .BI \-p " prefix"
-Use prefix to speed translations
+Use prefix to speed up translations
 .TP
 .BI \-P " policy_root_path"
 Use alternate policy root path
 .TP
 .B \-V
 Verify file context on disk matches defaults
+.
+.SH EXAMPLE
+.nf
+Show the default label of sock_file cups.sock
+# matchpathcon -m sock_file /var/run/cups/cups.sock
+Verify that /var/www/html directory is labeled correctly (the content of the folder is not checked)
+# matchpathcon -V /var/www/html
 .
 .SH AUTHOR
 This manual page was written by Dan Walsh <dwalsh@redhat.com>.
