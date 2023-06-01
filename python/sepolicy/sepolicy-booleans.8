@@ -8,12 +8,16 @@ sepolicy-booleans \- Query SELinux Policy to see description of booleans
 .B sepolicy booleans [\-h] [ \-a | \-b booleanname ... ]
 
 .SH "DESCRIPTION"
-sepolicy booleans will show all booleans and their descriptions, or you can 
-choose individual booleans to display
+.B sepolicy booleans
+will show all booleans and their descriptions, or you can
+choose individual booleans to display.
+Please make sure that selinux-policy-devel is present in your system since it contains boolean descriptions extracted from the policy source code. Otherwise
+.B sepolicy booleans
+will only show descriptions generated based on boolean names.
 
 .SH "OPTIONS"
 .TP
-.I                \-h, \-\-help       
+.I                \-h, \-\-help
 Display help message
 .TP
 .I                \-a, \-\-all
@@ -21,6 +25,11 @@ Display all boolean descriptions
 .TP
 .I                \-b, \-\-boolean
 boolean to get description
+
+.SH EXAMPLE
+.nf
+List descriptions of samba_create_home_dirs and samba_enable_home_dirs booleans
+# sepolicy booleans -b samba_create_home_dirs samba_enable_home_dirs
 
 .SH "AUTHOR"
 This man page was written by Daniel Walsh <dwalsh@redhat.com>

@@ -8,27 +8,27 @@ sepolicy-network \- Examine the SELinux Policy and generate a network report
 .B sepolicy network [\-h] (\-l | \-a application [application ...] | \-p PORT [PORT ...] | \-t TYPE [TYPE ...] | \-d DOMAIN [DOMAIN ...])
 
 .SH "DESCRIPTION"
-Use sepolicy network to examine SELinux Policy and generate network reports.
+Use \fBsepolicy network\fP to examine SELinux Policy and generate network reports.
 
 .SH "OPTIONS"
 .TP
 .I                \-a, \-\-application
-Generate a report listing the ports to which the specified init application is allowed to connect and or bind.
+Generate a report listing the ports to which the specified init application is allowed to connect and or bind
 .TP
-.I                \-d, \-\-domain     
-Generate a report listing the ports to which the specified domain is allowed to connect and or bind.
+.I                \-d, \-\-domain
+Generate a report listing the ports to which the specified domain is allowed to connect and or bind
 .TP
-.I                \-l, \-\-list        
+.I                \-l, \-\-list
 List all Network Port Types defined in SELinux Policy
 .TP
-.I                \-h, \-\-help       
+.I                \-h, \-\-help
 Display help message
 .TP
 .I                \-t, \-\-type
-Generate a report listing the port numbers associate with the specified SELinux port type.
+Generate a report listing the port numbers associate with the specified SELinux port type
 .TP
 .I                \-p, \-\-port
-Generate a report listing the SELinux port types associate with the specified port number.
+Generate a report listing the SELinux port types associate with the specified port number
 
 .SH "EXAMPLES"
 
@@ -88,4 +88,3 @@ This man page was written by Daniel Walsh <dwalsh@redhat.com>
 
 .SH "SEE ALSO"
 sepolicy(8), selinux(8), semanage(8)
-

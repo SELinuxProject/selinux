@@ -5,10 +5,10 @@ sepolicy-interface \- Print interface information based on the installed SELinux
 .SH "SYNOPSIS"
 
 .br
-.B sepolicy interface  [\-h] [\-c] [\-v] [\-a | \-u | \-l | \-i INTERFACE [INTERFACE ... ]]
+.B sepolicy interface  [\-h] [\-c] [\-v] [\-f FILE] [\-a | \-u | \-l | \-i INTERFACE [INTERFACE ... ]]
 
 .SH "DESCRIPTION"
-Use sepolicy interface to print interfaces information based on SELinux Policy.
+Use \fBsepolicy interface\fP to print interface information based on SELinux Policy.
 
 .SH "OPTIONS"
 .TP
@@ -18,7 +18,7 @@ List all domains with admin interface
 .I                \-c, \-\-compile
 Test compile of interfaces
 .TP
-.I                \-h, \-\-help       
+.I                \-h, \-\-help
 Display help message
 .TP
 .I                \-i, \-\-interface
@@ -32,6 +32,18 @@ List all domains with SELinux user role interface
 .TP
 .I                \-v, \-\-verbose
 Display extended information about the interface including parameters and description if available.
+.TP
+.I                \-f, \-\-file
+Interface file to be explored
+
+.SH EXAMPLE
+.nf
+Show description of given interface
+# sepolicy interface -vi samba_rw_config
+List interfaces in given interface file and show their description
+# sepolicy interface -f my_policy.if -lv
+Run compile test for all interfaces in given file
+# sepolicy interface -f my_policy.if -lc
 
 .SH "AUTHOR"
 This man page was written by Daniel Walsh <dwalsh@redhat.com>

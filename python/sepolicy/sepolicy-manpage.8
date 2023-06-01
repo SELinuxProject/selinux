@@ -8,27 +8,40 @@ sepolicy-manpage \- Generate a man page based on the installed SELinux Policy
 .B sepolicy manpage [\-w] [\-h] [\-p PATH ] [\-r ROOTDIR ] [\-a | \-d ]
 
 .SH "DESCRIPTION"
-Use sepolicy manpage to generate manpages based on SELinux Policy.
+Use \fBsepolicy manpage\fP to generate manpages based on SELinux Policy.
 
 .SH "OPTIONS"
 .TP
-.I                \-a, \-\-all        
+.I                \-a, \-\-all
 Generate Man Pages for All Domains
 .TP
-.I                \-d, \-\-domain     
+.I                \-d, \-\-domain
 Generate a Man Page for the specified domain. (Supports multiple commands)
 .TP
-.I                \-h, \-\-help       
+.I                \-h, \-\-help
 Display help message
+.TP
+.I                \-o, \-\-os
+Specify the name of the OS to be used in the man page (only affects HTML man pages)
 .TP
 .I                \-p, \-\-path
 Specify the directory to store the created man pages. (Default to /tmp)
 .TP
 .I                \-r, \-\-root
-Specify alternate root directory to generate man pages from. (Default to /)
+Specify alternative root directory to generate man pages from. (Default to /)
+.TP
+.I                \-\-source_files
+Use file_contexts and policy.xml files from the specified root directory (the alternative root needs to include both files)
 .TP
 .I                \-w, \-\-web
-Generate an additional HTML man pages for the specified domain(s).
+Generate an additional HTML man pages for the specified domain(s)
+
+.SH EXAMPLE
+.nf
+Generate man pages for all available domains
+# sepolicy manpage -a
+Generate an HTML man page for domain alsa_t, setting the OS name to "My_distro"
+# sepolicy manpage -o My_distro -d alsa_t -w
 
 .SH "AUTHOR"
 This man page was written by Daniel Walsh <dwalsh@redhat.com>

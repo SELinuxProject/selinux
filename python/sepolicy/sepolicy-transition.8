@@ -11,21 +11,28 @@ sepolicy-transition \- Examine the SELinux Policy and generate a process transit
 .B sepolicy transition [\-h] \-s SOURCE \-t TARGET
 
 .SH "DESCRIPTION"
-sepolicy transition will show all domains that a give SELinux source domain can transition to, including the entrypoint.
+\fBsepolicy transition\fP will show all domains that a given SELinux source domain can transition to, including the entrypoint.
 
-If a target domain is given, sepolicy transition will examine policy for all transition paths from the source domain to the target domain, and will list the 
-paths.  If a transition is possible, this tool will print out all transition paths from the source domain to the target domain
+If a target domain is given, sepolicy transition will examine policy for all transition paths from the source domain to the target domain, and will list the
+paths.
 
 .SH "OPTIONS"
 .TP
-.I                \-h, \-\-help       
+.I                \-h, \-\-help
 Display help message
 .TP
 .I                \-s, \-\-source
-Specify the source SELinux domain type.
+Specify the source SELinux domain type
 .TP
 .I                \-t, \-\-target
-Specify the target SELinux domain type.
+Specify the target SELinux domain type
+
+.SH EXAMPLE
+.nf
+List all domain transition paths from init_t to httpd_t
+# sepolicy transition -s init_t -t httpd_t
+List all transitions available from samba domain, including entry points and booleans controlling each transition
+# sepolicy transition -s smbd_t
 
 .SH "AUTHOR"
 This man page was written by Daniel Walsh <dwalsh@redhat.com>
