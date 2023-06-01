@@ -11,12 +11,12 @@ sandbox \- Run cmd under an SELinux sandbox
 .br
 .SH DESCRIPTION
 .PP
-Run the 
-.I cmd 
+Run the
+.I cmd
 application within a tightly confined SELinux domain.  The default sandbox domain only allows applications the ability to read and write stdin, stdout and any other file descriptors handed to it. It is not allowed to open any other files.  The \-M option will mount an alternate homedir and tmpdir to be used by the sandbox.
 
-If you have the 
-.I policycoreutils-sandbox 
+If you have the
+.I policycoreutils-sandbox
 package installed, you can use the \-X option and the \-M option.
 .B sandbox \-X
 allows you to run X applications within a sandbox.  These applications will start up their own X Server and create a temporary home directory and /tmp.  The default SELinux policy does not allow any capabilities or network access.  It also prevents all access to the users other processes and files.  Files specified on the command that are in the home directory or /tmp will be copied into the sandbox directories.
@@ -78,26 +78,34 @@ Run a full desktop session, Requires level, and home and tmpdir.
 Specifies the windowsize when creating an X based Sandbox. The default windowsize is 1000x700.
 .TP
 \fB\-W\fR \fB\-\-windowmanager\fR
-Select alternative window manager to run within 
+Select alternative window manager to run within
 .B sandbox \-X.
 Default to /usr/bin/openbox.
 .TP
-\fB\-X\fR 
+\fB\-X\fR
 Create an X based Sandbox for gui apps, temporary files for
 $HOME and /tmp, secondary Xserver, defaults to sandbox_x_t
 .TP
 \fB\-d\fR \fB\-\-dpi\fR
 Set the DPI value for the sandbox X Server. Defaults to the current X Sever DPI.
 .TP
-\fB\-C\fR \fB\-\-capabilities\fR Use capabilities within the
-sandbox. By default applications executed within the sandbox will not
-be allowed to use capabilities (setuid apps), with the \-C flag, you
-can use programs requiring capabilities.
+\fB\-C\fR \fB\-\-capabilities\fR
+Use capabilities within the sandbox. By default applications executed within the sandbox will not be allowed to use capabilities (setuid apps), with the \-C flag, you can use programs requiring capabilities.
 .PP
 .SH "SEE ALSO"
 .TP
 runcon(1), seunshare(8), selinux(8)
 .PP
+
+.SH EXAMPLE
+.nf
+Run a graphical application inside the sandbox
+# sandbox -X evince
+Run a graphical application that requires the use of network
+# sandbox ‑X ‑t sandbox_web_t firefox
+Preserve data from one session to the next
+# mkdir -p ~/sandbox/home ~/sandbox/tmp
+# sandbox -H ~/sandbox/home -T ~/sandbox/tmp -X libreoffice --writer
 
 .SH AUTHOR
 This manual page was written by

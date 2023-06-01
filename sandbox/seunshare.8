@@ -9,29 +9,36 @@ seunshare \- Run cmd with alternate homedir, tmpdir and/or SELinux context
 .PP
 Run the
 .I executable
-within the specified context, using the alternate home directory and /tmp directory.  The seunshare command unshares from the default namespace, then mounts the specified homedir and tmpdir over the default homedir and /tmp. Finally it tells the kernel to execute the application under the specified SELinux context.
+within the specified context, using custom home directory and /tmp directory. The seunshare command unshares from the default namespace, then mounts the specified homedir and tmpdir over the default homedir and /tmp. Finally it tells the kernel to execute the application under the specified SELinux context.
 
 .TP
 \fB\-h homedir\fR
-Alternate homedir to be used by the application.  Homedir must be owned by the user.
+Alternate homedir to be used by the application. Homedir must be owned by the user
 .TP
 \fB\-t\ tmpdir
-Use alternate temporary directory to mount on /tmp.  tmpdir must be owned by the user.
+Use alternate temporary directory to mount on /tmp. tmpdir must be owned by the user
 .TP
 \fB\-r\ runuserdir
-Use alternate temporary directory to mount on XDG_RUNTIME_DIR (/run/user/$UID). runuserdir must be owned by the user.
+Use alternate temporary directory to mount on XDG_RUNTIME_DIR (/run/user/$UID). runuserdir must be owned by the user
 .TP
 \fB\-C --capabilities\fR
-Allow apps executed within the namespace to use capabilities.  Default is no capabilities.
+Allow apps executed within the namespace to use capabilities. Default is no capabilities
 .TP
 \fB\-k --kill\fR
-Kill all processes with matching MCS level.
+Kill all processes with matching MCS level
 .TP
 \fB\-Z\ context
-Use alternate SELinux context while running the executable.
+Use alternate SELinux context while running the executable
 .TP
 \fB\-v\fR
 Verbose output
+
+.SH EXAMPLE
+.nf
+Run bash with temporary /home and /tmp directory
+# USERHOMEDIR=`mktemp -d /tmp/home.XXXXXX`; USERTEMPDIR=`mktemp -d /tmp/temp.XXXXXX`
+# seunshare -v -h ${USERHOMEDIR} -t ${USERTEMPDIR} -- /bin/bash
+
 .SH "SEE ALSO"
 .TP
 runcon(1), sandbox(8), selinux(8)
