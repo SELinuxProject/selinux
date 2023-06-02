@@ -2886,7 +2886,6 @@ static int write_xen_pirq_rules_to_conf(FILE *out, struct policydb *pdb)
 	for (pirq = pdb->ocontexts[1]; pirq != NULL; pirq = pirq->next) {
 		rc = snprintf(pirq_str, 21, "%i", pirq->u.pirq);
 		if (rc < 0 || rc >= 21) {
-			fprintf(stderr,"error1\n");
 			rc = -1;
 			goto exit;
 		}
@@ -2894,7 +2893,6 @@ static int write_xen_pirq_rules_to_conf(FILE *out, struct policydb *pdb)
 		ctx = context_to_str(pdb, &pirq->context[0]);
 		if (!ctx) {
 			rc = -1;
-			fprintf(stderr,"error2\n");
 			goto exit;
 		}
 
