@@ -627,7 +627,7 @@ static int sort_ocontext_data(struct ocontext **ocons, int (*cmp)(const void *, 
 
 	data = calloc(sizeof(*data), num);
 	if (!data) {
-		sepol_log_err("Out of memory\n");
+		sepol_log_err("Out of memory");
 		return -1;
 	}
 
@@ -718,7 +718,7 @@ int sort_ocontexts(struct policydb *pdb)
 
 exit:
 	if (rc != 0) {
-		sepol_log_err("Error sorting ocontexts\n");
+		sepol_log_err("Error sorting ocontexts");
 	}
 
 	return rc;
