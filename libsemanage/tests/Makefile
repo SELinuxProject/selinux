@@ -18,11 +18,11 @@ $(EXECUTABLE): $(OBJECTS) ../src/libsemanage.a
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 %.policy: %.cil
-	../../secilc/secilc $*.cil -o $*.policy -f /dev/null
+	../../scripts/env_use_destdir ../../secilc/secilc $*.cil -o $*.policy -f /dev/null
 
 clean distclean: 
 	rm -rf $(OBJECTS) $(POLICIES) $(EXECUTABLE)
 
 test: all 
-	./$(EXECUTABLE)
+	../../scripts/env_use_destdir ./$(EXECUTABLE)
 
