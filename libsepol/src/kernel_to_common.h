@@ -83,8 +83,6 @@ struct strs {
 	size_t size;
 };
 
-__attribute__ ((format(printf, 1, 2)))
-void sepol_log_err(const char *fmt, ...);
 void sepol_indent(FILE *out, int indent);
 __attribute__ ((format(printf, 2, 3)))
 void sepol_printf(FILE *out, const char *fmt, ...);
