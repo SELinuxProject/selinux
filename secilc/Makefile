@@ -34,9 +34,9 @@ $(SECILC): $(SECILC_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 test: $(SECILC)
-	./$(SECILC) test/policy.cil
-	./$(SECILC) -c $(POL_VERS) -O -M 1 -f /dev/null -o opt-actual.bin test/opt-input.cil
-	$(CHECKPOLICY) -b -C -M -o opt-actual.cil opt-actual.bin >/dev/null
+	../scripts/env_use_destdir ./$(SECILC) test/policy.cil
+	../scripts/env_use_destdir ./$(SECILC) -c $(POL_VERS) -O -M 1 -f /dev/null -o opt-actual.bin test/opt-input.cil
+	../scripts/env_use_destdir $(CHECKPOLICY) -b -C -M -o opt-actual.cil opt-actual.bin >/dev/null
 	$(DIFF) test/opt-expected.cil opt-actual.cil
 
 $(SECIL2CONF): $(SECIL2CONF_OBJS)
