@@ -8,7 +8,11 @@ sepolicy-interface \- Print interface information based on the installed SELinux
 .B sepolicy interface  [\-h] [\-c] [\-v] [\-f FILE] [\-a | \-u | \-l | \-i INTERFACE [INTERFACE ... ]]
 
 .SH "DESCRIPTION"
-Use \fBsepolicy interface\fP to print interface information based on SELinux Policy.
+Use sepolicy interface to print information of interface macros
+between domains in SELinux policy modules, as used in Reference
+Policy. The information is based on installed on-disk representation
+of the SELinux Policy and it may be different from the policy which is
+currently loaded.
 
 .SH "OPTIONS"
 .TP
