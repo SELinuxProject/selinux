@@ -38,7 +38,11 @@ static policydb_t policydb;
 
 static __attribute__((__noreturn__)) void usage(const char *progname)
 {
-	printf("usage:  %s binary_pol_file\n\n", progname);
+	puts("Usage:");
+	printf(" %s [OPTIONS] binary_pol_file\n\n", progname);
+	puts("Options:");
+	puts(" -h, --help   print this help message");
+	puts("\n");
 	exit(1);
 }
 
@@ -481,7 +485,7 @@ int main(int argc, char **argv)
 	int state;
 	struct policy_file pf;
 
-	if (argc != 2)
+	if (argc < 2 || strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)
 		usage(argv[0]);
 
 	fd = open(argv[1], O_RDONLY);
