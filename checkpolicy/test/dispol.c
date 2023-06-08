@@ -1,4 +1,3 @@
-
 /* Authors: Frank Mayer <mayerf@tresys.com> and Karl MacMillan <kmacmillan@tresys.com>
  *
  * Copyright (C) 2003 Tresys Technology, LLC
