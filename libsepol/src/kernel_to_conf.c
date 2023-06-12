@@ -465,7 +465,7 @@ static int write_sids_to_conf(FILE *out, const char *const *sid_to_str,
 
 	for (isid = isids; isid != NULL; isid = isid->next) {
 		i = isid->sid[0];
-		if (i < num_sids) {
+		if (i < num_sids && sid_to_str[i]) {
 			sid = (char *)sid_to_str[i];
 		} else {
 			snprintf(unknown, sizeof(unknown), "%s%u", "UNKNOWN", i);
@@ -2446,7 +2446,7 @@ static int write_sid_context_rules_to_conf(FILE *out, struct policydb *pdb, cons
 
 	for (isid = pdb->ocontexts[0]; isid != NULL; isid = isid->next) {
 		i = isid->sid[0];
-		if (i < num_sids) {
+		if (i < num_sids && sid_to_str[i]) {
 			sid = (char *)sid_to_str[i];
 		} else {
 			snprintf(unknown, sizeof(unknown), "%s%u", "UNKNOWN", i);

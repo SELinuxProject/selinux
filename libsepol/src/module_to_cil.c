@@ -2536,7 +2536,7 @@ static int ocontext_isid_to_cil(struct policydb *pdb, const char *const *sid_to_
 
 	for (isid = isids; isid != NULL; isid = isid->next) {
 		i = isid->sid[0];
-		if (i < num_sids) {
+		if (i < num_sids && sid_to_string[i]) {
 			sid = (char*)sid_to_string[i];
 		} else {
 			snprintf(unknown, 18, "%s%u", "UNKNOWN", i);
