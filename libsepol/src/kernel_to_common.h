@@ -20,7 +20,7 @@ static const char * const selinux_sid_to_str[] = {
 	NULL,
 	"file",
 	NULL,
-	NULL,
+	"init",
 	"any_socket",
 	"port",
 	"netif",

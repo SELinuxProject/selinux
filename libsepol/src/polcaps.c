@@ -14,6 +14,7 @@ static const char * const polcap_names[] = {
 	"nnp_nosuid_transition",	/* POLICYDB_CAP_NNP_NOSUID_TRANSITION */
 	"genfs_seclabel_symlinks",	/* POLICYDB_CAP_GENFS_SECLABEL_SYMLINKS */
 	"ioctl_skip_cloexec",		/* POLICYDB_CAP_IOCTL_SKIP_CLOEXEC */
+	"userspace_initial_context",	/* POLICYDB_CAP_USERSPACE_INITIAL_CONTEXT */
 	NULL
 };
 
