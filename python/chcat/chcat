@@ -125,7 +125,7 @@ def chcat_add(orig, newcat, objects, login_ind):
 
         if len(clist) > 1:
             if cat in clist[1:]:
-                print(_("%s is already in %s") % (f, orig))
+                print(_("{target} is already in {category}").format(target=f, category=orig))
                 continue
             clist.append(cat)
             cats = clist[1:]
@@ -207,7 +207,7 @@ def chcat_remove(orig, newcat, objects, login_ind):
 
         if len(clist) > 1:
             if cat not in clist[1:]:
-                print(_("%s is not in %s") % (f, orig))
+                print(_("{target} is not in {category}").format(target=f, category=orig))
                 continue
             clist.remove(cat)
             if len(clist) > 1:
@@ -217,7 +217,7 @@ def chcat_remove(orig, newcat, objects, login_ind):
             else:
                 cat = ""
         else:
-            print(_("%s is not in %s") % (f, orig))
+            print(_("{target} is not in {category}").format(target=f, category=orig))
             continue
 
         if len(cat) == 0:
