@@ -234,9 +234,17 @@ class AuditToPolicy:
             print(e)
             sys.exit(1)
 
-        sys.stdout.write(_("******************** IMPORTANT ***********************\n"))
-        sys.stdout.write((_("To make this policy package active, execute:" +
-                            "\n\nsemodule -i %s\n\n") % packagename))
+        sys.stdout.write(
+"""******************** {important} ***********************
+{text}
+
+semodule -i {packagename}
+
+""".format(
+    important=_("IMPORTANT"),
+    text=_("To make this policy package active, execute:"),
+    packagename=packagename
+))
 
     def __output_audit2why(self):
         import selinux
