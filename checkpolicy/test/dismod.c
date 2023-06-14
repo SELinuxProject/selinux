@@ -88,6 +88,7 @@ static struct command {
 	{CMD|NOOPT, 'l', "Link in a module"},
 	{CMD,       'u', "Display the unknown handling setting"},
 	{CMD,       'F', "Display filename_trans rules"},
+	{CMD,       'v', "display the version of policy and/or module"},
 	{HEADER, 0, ""},
 	{CMD|NOOPT, 'f',  "set output file"},
 	{CMD|NOOPT, 'm',  "display menu"},
@@ -904,6 +905,19 @@ static int menu(void)
 	return 0;
 }
 
+static void print_version_info(policydb_t * p, FILE * fp)
+{
+	if (p->policy_type == POLICY_BASE) {
+		fprintf(fp, "Binary base policy file loaded.\n");
+	} else {
+		fprintf(fp, "Binary policy module file loaded.\n");
+		fprintf(fp, "Module name: %s\n", p->name);
+		fprintf(fp, "Module version: %s\n", p->version);
+	}
+
+	fprintf(fp, "Policy version: %d\n\n", p->policyvers);
+}
+
 int main(int argc, char **argv)
 {
 	char *ops = NULL;
@@ -957,17 +971,10 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	if (policydb.policy_type == POLICY_BASE) {
-		printf("Binary base policy file loaded.\n");
-	} else {
-		printf("Binary policy module file loaded.\n");
-		printf("Module name: %s\n", policydb.name);
-		printf("Module version: %s\n", policydb.version);
-	}
-
-	printf("Policy version: %d\n\n", policydb.policyvers);
-	if (!ops)
+	if (!ops) {
+		print_version_info(&policydb, stdout);
 		menu();
+	}
 	for (;;) {
 		if (ops) {
 			puts("");
@@ -1073,6 +1080,9 @@ int main(int argc, char **argv)
 			break;
 		case 'l':
 			link_module(&policydb, out_fp);
+			break;
+		case 'v':
+			print_version_info(&policydb, out_fp);
 			break;
 		case 'q':
 			policydb_destroy(&policydb);
