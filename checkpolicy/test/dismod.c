@@ -778,7 +778,7 @@ static int display_handle_unknown(policydb_t * p, FILE * out_fp)
 	return 0;
 }
 
-static int read_policy(char *filename, policydb_t * policy)
+static int read_policy(char *filename, policydb_t * policy, int verbose)
 {
 	FILE *in_fp;
 	struct policy_file f;
@@ -813,7 +813,7 @@ static int read_policy(char *filename, policydb_t * policy)
 		package->file_contexts = NULL;
 		retval =
 		    sepol_module_package_read(package,
-					      (sepol_policy_file_t *) & f, 1);
+					      (sepol_policy_file_t *) & f, verbose);
 		package->policy = NULL;
 		sepol_module_package_free(package);
 	} else {
@@ -821,13 +821,13 @@ static int read_policy(char *filename, policydb_t * policy)
 			fprintf(stderr, "%s:  Out of memory!\n", __FUNCTION__);
 			exit(1);
 		}
-		retval = policydb_read(policy, &f, 1);
+		retval = policydb_read(policy, &f, verbose);
 	}
 	fclose(in_fp);
 	return retval;
 }
 
-static void link_module(policydb_t * base, FILE * out_fp)
+static void link_module(policydb_t * base, FILE * out_fp, int verbose)
 {
 	char module_name[80] = { 0 };
 	int ret;
@@ -850,8 +850,9 @@ static void link_module(policydb_t * base, FILE * out_fp)
 	}
 
 	/* read the binary policy */
-	fprintf(out_fp, "Reading module...\n");
-	if (read_policy(module_name, mods)) {
+	if (verbose)
+		fprintf(out_fp, "Reading module...\n");
+	if (read_policy(module_name, mods, verbose)) {
 		fprintf(stderr,
 			"%s:  error(s) encountered while loading policy\n",
 			module_name);
@@ -942,12 +943,13 @@ int main(int argc, char **argv)
 	}
 
 	/* read the binary policy */
-	fprintf(out_fp, "Reading policy...\n");
+	if (!ops)
+		fprintf(out_fp, "Reading policy...\n");
 	if (policydb_init(&policydb)) {
 		fprintf(stderr, "%s:  Out of memory!\n", __FUNCTION__);
 		exit(1);
 	}
-	if (read_policy(mod, &policydb)) {
+	if (read_policy(mod, &policydb, ops? 0: 1)) {
 		fprintf(stderr,
 			"%s:  error(s) encountered while loading policy\n",
 			argv[0]);
@@ -966,7 +968,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	if (policydb_index_others(NULL, &policydb, 1)) {
+	if (policydb_index_others(NULL, &policydb, ops? 0: 1)) {
 		fprintf(stderr, "Error indexing others\n");
 		exit(1);
 	}
@@ -1079,7 +1081,7 @@ int main(int argc, char **argv)
 					&policydb, out_fp);
 			break;
 		case 'l':
-			link_module(&policydb, out_fp);
+			link_module(&policydb, out_fp, ops? 0: 1);
 			break;
 		case 'v':
 			print_version_info(&policydb, out_fp);

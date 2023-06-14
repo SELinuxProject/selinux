@@ -551,7 +551,8 @@ int main(int argc, char **argv)
 	}
 
 	/* read the binary policy */
-	fprintf(out_fp, "Reading policy...\n");
+	if (!ops)
+		fprintf(out_fp, "Reading policy...\n");
 	policy_file_init(&pf);
 	pf.type = PF_USE_MEMORY;
 	pf.data = map;
@@ -560,7 +561,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "%s:  Out of memory!\n", argv[0]);
 		exit(1);
 	}
-	ret = policydb_read(&policydb, &pf, 1);
+	ret = policydb_read(&policydb, &pf, ops? 0: 1);
 	if (ret) {
 		fprintf(stderr,
 			"%s:  error(s) encountered while parsing configuration\n",
@@ -568,7 +569,8 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	fprintf(stdout, "binary policy file loaded\n\n");
+	if (!ops)
+		fprintf(stdout, "binary policy file loaded\n\n");
 	close(fd);
 
 	if (!ops)
