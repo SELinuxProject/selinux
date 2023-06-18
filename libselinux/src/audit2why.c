@@ -149,6 +149,12 @@ static int check_booleans(struct boolean_t **bools)
 
 	if (fcnt > 0) {
 		*bools = calloc(sizeof(struct boolean_t), fcnt + 1);
+		if (!*bools) {
+			PyErr_SetString( PyExc_MemoryError, "Out of memory\n");
+			free(foundlist);
+			return 0;
+		}
+
 		struct boolean_t *b = *bools;
 		for (i = 0; i < fcnt; i++) {
 			int ctr = foundlist[i];
