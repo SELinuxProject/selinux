@@ -1240,11 +1240,12 @@ def boolean_desc(boolean):
 
 
 def get_os_version():
+    import subprocess
     system_release = ""
     try:
         import distro
         system_release = distro.name(pretty=True)
-    except IOError:
+    except (ModuleNotFoundError, OSError, IOError, UnicodeError, subprocess.CalledProcessError):
         system_release = "Misc"
 
     return system_release
