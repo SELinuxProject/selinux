@@ -1193,7 +1193,7 @@ static int __cil_typetransition_to_avtab_helper(policydb_t *pdb,
 						type_datum_t *sepol_src,
 						type_datum_t *sepol_tgt,
 						struct cil_list *class_list,
-						char *name,
+						char *name, uint8_t name_match,
 						type_datum_t *sepol_result)
 {
 	int rc;
@@ -1211,7 +1211,7 @@ static int __cil_typetransition_to_avtab_helper(policydb_t *pdb,
 		avt_key.target_type = sepol_tgt->s.value;
 		avt_key.target_class = sepol_obj->s.value;
 		rc = avtab_insert_filename_trans(&pdb->te_avtab, &avt_key,
-			sepol_result->s.value, name, NAME_TRANS_MATCH_EXACT,
+			sepol_result->s.value, name, name_match,
 			&otype);
 		if (rc != SEPOL_OK) {
 			if (rc == SEPOL_EEXIST) {
@@ -1280,7 +1280,7 @@ static int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *d
 
 			rc = __cil_typetransition_to_avtab_helper(
 				pdb, sepol_src, sepol_src, class_list,
-				name, sepol_result
+				name, typetrans->name_match, sepol_result
 			);
 			if (rc != SEPOL_OK) goto exit;
 		}
@@ -1298,7 +1298,7 @@ static int __cil_typetransition_to_avtab(policydb_t *pdb, const struct cil_db *d
 
 				rc = __cil_typetransition_to_avtab_helper(
 					pdb, sepol_src, sepol_tgt, class_list,
-					name, sepol_result
+					name, typetrans->name_match, sepol_result
 				);
 				if (rc != SEPOL_OK) goto exit;
 			}
