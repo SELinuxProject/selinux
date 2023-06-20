@@ -342,6 +342,13 @@ static const struct policydb_compat_info policydb_compat[] = {
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
+	 .type = POLICY_BASE,
+	 .version = MOD_POLICYDB_VERSION_AVRULE_FTRANS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_IBENDPORT + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -463,6 +470,13 @@ static const struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_MOD,
 	 .version = MOD_POLICYDB_VERSION_SELF_TYPETRANS,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = 0,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_MOD,
+	 .version = MOD_POLICYDB_VERSION_AVRULE_FTRANS,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = 0,
 	 .target_platform = SEPOL_TARGET_SELINUX,
@@ -3202,6 +3216,19 @@ static avrule_t *avrule_read(policydb_t * p, struct policy_file *fp)
 		tail = cur;
 	}
 
+	if (p->policyvers >= MOD_POLICYDB_VERSION_AVRULE_FTRANS &&
+	    avrule->specified & AVRULE_TRANSITION) {
+		rc = next_entry(buf, fp, sizeof(uint32_t));
+		if (rc < 0)
+			goto bad;
+		len = le32_to_cpu(*buf);
+		if (len) {
+			rc = str_read(&avrule->object_name, fp, len);
+			if (rc < 0)
+				goto bad;
+		}
+	}
+
 	if (avrule->specified & AVRULE_XPERMS) {
 		uint8_t buf8;
 		size_t nel = ARRAY_SIZE(avrule->xperms->perms);
@@ -3633,6 +3660,7 @@ static int avrule_decl_read(policydb_t * p, avrule_decl_t * decl,
 	}
 
 	if (p->policyvers >= MOD_POLICYDB_VERSION_FILENAME_TRANS &&
+	    p->policyvers < MOD_POLICYDB_VERSION_AVRULE_FTRANS &&
 	    filename_trans_rule_read(p, &decl->avrules, fp))
 		return -1;
 
