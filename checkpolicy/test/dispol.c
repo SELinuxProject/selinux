@@ -180,7 +180,7 @@ static int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t wha
 		if (key->specified & AVTAB_TRANSITION) {
 			fprintf(fp, "type_transition ");
 			render_key(key, p, fp);
-			render_type(datum->data, p, fp);
+			render_type(datum->trans->otype, p, fp);
 			fprintf(fp, ";\n");
 		}
 		if (key->specified & AVTAB_MEMBER) {

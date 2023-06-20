@@ -94,6 +94,7 @@ avtab_insert_node(avtab_t * h, int hvalue, avtab_ptr_t prev, avtab_key_t * key,
 		  avtab_datum_t * datum)
 {
 	avtab_ptr_t newnode;
+	avtab_trans_t *trans;
 	avtab_extended_perms_t *xperms;
 
 	newnode = (avtab_ptr_t) malloc(sizeof(struct avtab_node));
@@ -117,6 +118,16 @@ avtab_insert_node(avtab_t * h, int hvalue, avtab_ptr_t prev, avtab_key_t * key,
 		 * So copy data so it is set in the avtab
 		 */
 		newnode->datum.data = datum->data;
+	} else if (key->specified & AVTAB_TRANSITION) {
+		trans = calloc(1, sizeof(*trans));
+		if (trans == NULL) {
+			free(newnode);
+			return NULL;
+		}
+		if (datum->trans) /* else caller populates transition */
+			*trans = *(datum->trans);
+
+		newnode->datum.trans = trans;
 	} else {
 		newnode->datum = *datum;
 	}
@@ -317,6 +328,8 @@ void avtab_destroy(avtab_t * h)
 		while (cur != NULL) {
 			if (cur->key.specified & AVTAB_XPERMS) {
 				free(cur->datum.xperms);
+			} else if (cur->key.specified & AVTAB_TRANSITION) {
+				free(cur->datum.trans);
 			}
 			temp = cur;
 			cur = cur->next;
@@ -440,6 +453,7 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 	uint32_t buf32[8], items, items2, val;
 	avtab_key_t key;
 	avtab_datum_t datum;
+	avtab_trans_t trans;
 	avtab_extended_perms_t xperms;
 	unsigned set;
 	unsigned int i;
@@ -447,6 +461,7 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 
 	memset(&key, 0, sizeof(avtab_key_t));
 	memset(&datum, 0, sizeof(avtab_datum_t));
+	memset(&trans, 0, sizeof(avtab_trans_t));
 	memset(&xperms, 0, sizeof(avtab_extended_perms_t));
 
 	if (vers < POLICYDB_VERSION_AVTAB) {
@@ -509,7 +524,14 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 					return -1;
 				}
 				key.specified = spec_order[i] | enabled;
-				datum.data = le32_to_cpu(buf32[items++]);
+				if (key.specified & AVTAB_TRANSITION) {
+					trans.otype =
+						le32_to_cpu(buf32[items++]);
+					datum.trans = &trans;
+				} else {
+					datum.data =
+						le32_to_cpu(buf32[items++]);
+				}
 				rc = insertf(a, &key, &datum, p);
 				if (rc)
 					return rc;
@@ -571,6 +593,14 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 		for (i = 0; i < ARRAY_SIZE(xperms.perms); i++)
 			xperms.perms[i] = le32_to_cpu(buf32[i]);
 		datum.xperms = &xperms;
+	} else if (key.specified & AVTAB_TRANSITION) {
+		rc = next_entry(buf32, fp, sizeof(uint32_t));
+		if (rc < 0) {
+			ERR(fp->handle, "truncated entry");
+			return -1;
+		}
+		trans.otype = le32_to_cpu(*buf32);
+		datum.trans = &trans;
 	} else {
 		rc = next_entry(buf32, fp, sizeof(uint32_t));
 		if (rc < 0) {

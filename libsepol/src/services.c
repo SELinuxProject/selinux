@@ -1423,7 +1423,10 @@ static int sepol_compute_sid(sepol_security_id_t ssid,
 
 	if (avdatum) {
 		/* Use the type from the type transition/member/change rule. */
-		newcontext.type = avdatum->data;
+		if (specified & AVTAB_TRANSITION)
+			newcontext.type = avdatum->trans->otype;
+		else
+			newcontext.type = avdatum->data;
 	}
 
 	/* Check for class-specific changes. */

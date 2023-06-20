@@ -975,28 +975,34 @@ static int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, 
 	int rc = SEPOL_OK;
 	avtab_key_t avtab_key;
 	avtab_datum_t avtab_datum;
+	avtab_trans_t trans;
 	avtab_ptr_t existing;	
 
 	avtab_key.source_type = src;
 	avtab_key.target_type = tgt;
 	avtab_key.target_class = obj;
 
+	memset(&avtab_datum, 0, sizeof(avtab_datum_t));
+	memset(&trans, 0, sizeof(avtab_trans_t));
+
 	switch (kind) {
 	case CIL_TYPE_TRANSITION:
 		avtab_key.specified = AVTAB_TRANSITION;
+		trans.otype = res;
+		avtab_datum.trans = &trans;
 		break;
 	case CIL_TYPE_CHANGE:
 		avtab_key.specified = AVTAB_CHANGE;
+		avtab_datum.data = res;
 		break;
 	case CIL_TYPE_MEMBER:
 		avtab_key.specified = AVTAB_MEMBER;
+		avtab_datum.data = res;
 		break;
 	default:
 		rc = SEPOL_ERR;
 		goto exit;
 	}
-
-	avtab_datum.data = res;
 	
 	existing = avtab_search_node(&pdb->te_avtab, &avtab_key);
 	if (existing) {
@@ -1004,13 +1010,17 @@ static int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, 
 		 * A warning should have been previously given if there is a
 		 * non-duplicate rule using the same key.
 		 */
-		if (existing->datum.data != res) {
+		uint32_t existing_otype =
+			existing->key.specified & AVTAB_TRANSITION
+			? existing->datum.trans->otype
+			: existing->datum.data;
+		if (existing_otype != res) {
 			cil_log(CIL_ERR, "Conflicting type rules (scontext=%s tcontext=%s tclass=%s result=%s), existing=%s\n",
 				pdb->p_type_val_to_name[src - 1],
 				pdb->p_type_val_to_name[tgt - 1],
 				pdb->p_class_val_to_name[obj - 1],
 				pdb->p_type_val_to_name[res - 1],
-				pdb->p_type_val_to_name[existing->datum.data - 1]);
+				pdb->p_type_val_to_name[existing_otype - 1]);
 			cil_log(CIL_ERR, "Expanded from type rule (scontext=%s tcontext=%s tclass=%s result=%s)\n",
 				cil_rule->src_str, cil_rule->tgt_str, cil_rule->obj_str, cil_rule->result_str);
 			rc = SEPOL_ERR;
@@ -1037,13 +1047,17 @@ static int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, 
 
 			search_datum = cil_cond_av_list_search(&avtab_key, other_list);
 			if (search_datum == NULL) {
-				if (existing->datum.data != res) {
+				uint32_t existing_otype =
+					existing->key.specified & AVTAB_TRANSITION
+					? existing->datum.trans->otype
+					: existing->datum.data;
+				if (existing_otype != res) {
 					cil_log(CIL_ERR, "Conflicting type rules (scontext=%s tcontext=%s tclass=%s result=%s), existing=%s\n",
 						pdb->p_type_val_to_name[src - 1],
 						pdb->p_type_val_to_name[tgt - 1],
 						pdb->p_class_val_to_name[obj - 1],
 						pdb->p_type_val_to_name[res - 1],
-						pdb->p_type_val_to_name[existing->datum.data - 1]);
+						pdb->p_type_val_to_name[existing_otype - 1]);
 					cil_log(CIL_ERR, "Expanded from type rule (scontext=%s tcontext=%s tclass=%s result=%s)\n",
 						cil_rule->src_str, cil_rule->tgt_str, cil_rule->obj_str, cil_rule->result_str);
 					rc = SEPOL_ERR;

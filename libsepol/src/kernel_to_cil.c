@@ -1704,7 +1704,8 @@ static char *xperms_to_str(avtab_extended_perms_t *xperms)
 
 static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_datum_t *datum)
 {
-	uint32_t data = datum->data;
+	uint32_t data = key->specified & AVTAB_TRANSITION
+		? datum->trans->otype : datum->data;
 	type_datum_t *type;
 	const char *flavor, *tgt;
 	char *src, *class, *perms, *new;

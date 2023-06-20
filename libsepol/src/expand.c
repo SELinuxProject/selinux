@@ -1746,7 +1746,7 @@ static int expand_terule_helper(sepol_handle_t * handle,
 		if (conflict) {
 			avdatump = &node->datum;
 			if (specified & AVRULE_TRANSITION) {
-				oldtype = avdatump->data;
+				oldtype = avdatump->trans->otype;
 			} else if (specified & AVRULE_MEMBER) {
 				oldtype = avdatump->data;
 			} else if (specified & AVRULE_CHANGE) {
@@ -1789,7 +1789,11 @@ static int expand_terule_helper(sepol_handle_t * handle,
 		}
 
 		avdatump = &node->datum;
-		avdatump->data = remapped_data;
+		if (specified & AVRULE_TRANSITION) {
+			avdatump->trans->otype = remapped_data;
+		} else {
+			avdatump->data = remapped_data;
+		}
 
 		cur = cur->next;
 	}

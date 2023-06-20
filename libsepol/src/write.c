@@ -190,14 +190,20 @@ static int avtab_write_item(policydb_t * p,
 						ERR(fp->handle, "missing node");
 						return POLICYDB_ERROR;
 					}
-					buf32[items++] =
-					    cpu_to_le32(node->datum.data);
+					uint32_t data =
+						node->key.specified & AVTAB_TRANSITION
+						? node->datum.trans->otype
+						: node->datum.data;
+					buf32[items++] = cpu_to_le32(data);
 					set--;
 					node->merged = 1;
 				}
 			}
 		} else {
-			buf32[items++] = cpu_to_le32(cur->datum.data);
+			uint32_t data = cur->key.specified & AVTAB_TRANSITION
+				? cur->datum.trans->otype
+				: cur->datum.data;
+			buf32[items++] = cpu_to_le32(data);
 			cur->merged = 1;
 			set--;
 		}
@@ -255,6 +261,11 @@ static int avtab_write_item(policydb_t * p,
 			buf32[i] = cpu_to_le32(cur->datum.xperms->perms[i]);
 		items = put_entry(buf32, sizeof(uint32_t),8,fp);
 		if (items != 8)
+			return POLICYDB_ERROR;
+	} else if (cur->key.specified & AVTAB_TRANSITION) {
+		buf32[0] = cpu_to_le32(cur->datum.trans->otype);
+		items = put_entry(buf32, sizeof(uint32_t), 1, fp);
+		if (items != 1)
 			return POLICYDB_ERROR;
 	} else {
 		buf32[0] = cpu_to_le32(cur->datum.data);
