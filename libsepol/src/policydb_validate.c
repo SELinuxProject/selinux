@@ -855,11 +855,18 @@ static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *
 
 		/* also each transition must be non empty */
 		if (!d->trans->otype &&
-		    !hashtab_nel(d->trans->name_trans.table))
+		    !hashtab_nel(d->trans->name_trans.table) &&
+		    !hashtab_nel(d->trans->name_trans.table) &&
+		    !hashtab_nel(d->trans->prefix_trans.table) &&
+		    !hashtab_nel(d->trans->suffix_trans.table))
 			return -1;
 
-		/* and each filename transition must be also valid */
+		/* and each name transition must be also valid */
 		if (hashtab_map(d->trans->name_trans.table,
+				validate_name_trans_helper, margs) ||
+		    hashtab_map(d->trans->prefix_trans.table,
+				validate_name_trans_helper, margs) ||
+		    hashtab_map(d->trans->suffix_trans.table,
 				validate_name_trans_helper, margs))
 			return -1;
 	} else if ((k->specified & AVTAB_TYPE) && validate_simpletype(d->data, margs->policy, margs->flavors)) {

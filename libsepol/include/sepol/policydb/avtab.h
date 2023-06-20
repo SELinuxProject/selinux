@@ -74,6 +74,8 @@ typedef struct avtab_key {
 typedef struct avtab_trans {
 	uint32_t otype;		/* resulting type of the new object */
 	symtab_t name_trans;	/* filename transitions */
+	symtab_t prefix_trans;	/* prefix filename transitions */
+	symtab_t suffix_trans;	/* prefix filename transitions */
 } avtab_trans_t;
 
 typedef struct avtab_extended_perms {

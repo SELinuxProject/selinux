@@ -327,6 +327,10 @@ void avtab_trans_destroy(avtab_trans_t *trans)
 {
 	hashtab_map(trans->name_trans.table, avtab_trans_destroy_helper, NULL);
 	symtab_destroy(&trans->name_trans);
+	hashtab_map(trans->prefix_trans.table, avtab_trans_destroy_helper, NULL);
+	symtab_destroy(&trans->prefix_trans);
+	hashtab_map(trans->suffix_trans.table, avtab_trans_destroy_helper, NULL);
+	symtab_destroy(&trans->suffix_trans);
 }
 
 void avtab_destroy(avtab_t * h)
@@ -519,6 +523,15 @@ static int avtab_trans_read(policy_file_t *fp, uint32_t vers,
 	rc = avtab_read_name_trans(fp, &trans->name_trans);
 	if (rc < 0)
 		goto bad;
+
+	if (vers >= POLICYDB_VERSION_PREFIX_SUFFIX) {
+		rc = avtab_read_name_trans(fp, &trans->prefix_trans);
+		if (rc < 0)
+			goto bad;
+		rc = avtab_read_name_trans(fp, &trans->suffix_trans);
+		if (rc < 0)
+			goto bad;
+	}
 
 	return SEPOL_OK;
 

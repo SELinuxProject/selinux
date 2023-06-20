@@ -129,6 +129,7 @@ typedef struct {
 	avtab_key_t *key;
 	policydb_t *p;
 	FILE *fp;
+	name_trans_match_t match;
 } render_name_trans_args_t;
 
 static int render_name_trans_helper(hashtab_key_t k, hashtab_datum_t d, void *a)
@@ -140,7 +141,22 @@ static int render_name_trans_helper(hashtab_key_t k, hashtab_datum_t d, void *a)
 	fprintf(args->fp, "type_transition ");
 	render_key(args->key, args->p, args->fp);
 	render_type(*otype, args->p, args->fp);
-	fprintf(args->fp, " \"%s\";\n", name);
+	const char *match_str = "";
+	switch (args->match) {
+	case NAME_TRANS_MATCH_EXACT:
+		match_str = "";
+		break;
+	case NAME_TRANS_MATCH_PREFIX:
+		match_str = " PREFIX";
+		break;
+	case NAME_TRANS_MATCH_SUFFIX:
+		match_str = " SUFFIX";
+		break;
+	default:
+		fprintf(args->fp, "     ERROR: no valid name match type specified\n");
+		return -1;
+	}
+	fprintf(args->fp, " \"%s\"%s;\n", name, match_str);
 
 	return 0;
 }
@@ -207,8 +223,15 @@ static int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t wha
 				.key = key,
 				.p = p,
 				.fp = fp,
+				.match = NAME_TRANS_MATCH_EXACT,
 			};
 			hashtab_map(datum->trans->name_trans.table,
+				    render_name_trans_helper, &args);
+			args.match = NAME_TRANS_MATCH_PREFIX;
+			hashtab_map(datum->trans->prefix_trans.table,
+				    render_name_trans_helper, &args);
+			args.match = NAME_TRANS_MATCH_SUFFIX;
+			hashtab_map(datum->trans->suffix_trans.table,
 				    render_name_trans_helper, &args);
 		}
 		if (key->specified & AVTAB_MEMBER) {

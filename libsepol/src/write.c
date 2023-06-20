@@ -133,16 +133,43 @@ static int avtab_trans_write(policydb_t *p, const avtab_trans_t *cur,
 	uint32_t buf32[2];
 
 	if (p->policyvers >= POLICYDB_VERSION_AVTAB_FTRANS) {
-		/* write otype and number of filename transitions */
+		/* write otype and number of name transitions */
 		buf32[0] = cpu_to_le32(cur->otype);
 		buf32[1] = cpu_to_le32(hashtab_nel(cur->name_trans.table));
 		items = put_entry(buf32, sizeof(uint32_t), 2, fp);
 		if (items != 2)
 			return -1;
 
-		/* write filename transitions */
-		return hashtab_map(cur->name_trans.table,
-				   avtab_trans_write_helper, fp);
+		/* write name transitions */
+		if (hashtab_map(cur->name_trans.table,
+				avtab_trans_write_helper, fp))
+			return -1;
+
+		if (p->policyvers >= POLICYDB_VERSION_PREFIX_SUFFIX) {
+			/* write number of prefix transitions */
+			buf32[0] = cpu_to_le32(hashtab_nel(
+					cur->prefix_trans.table));
+			items = put_entry(buf32, sizeof(uint32_t), 1, fp);
+			if (items != 1)
+				return -1;
+
+			/* write prefix transitions */
+			if (hashtab_map(cur->prefix_trans.table,
+					avtab_trans_write_helper, fp))
+				return -1;
+
+			/* write number of suffix transitions */
+			buf32[0] = cpu_to_le32(hashtab_nel(
+					cur->suffix_trans.table));
+			items = put_entry(buf32, sizeof(uint32_t), 1, fp);
+			if (items != 1)
+				return -1;
+
+			/* write suffix transitions */
+			if (hashtab_map(cur->suffix_trans.table,
+					avtab_trans_write_helper, fp))
+				return -1;
+		}
 	} else if (cur->otype) {
 		buf32[0] = cpu_to_le32(cur->otype);
 		items = put_entry(buf32, sizeof(uint32_t), 1, fp);
@@ -168,14 +195,26 @@ static int avtab_write_item(policydb_t * p,
 
 	/*
 	 * skip entries which only contain filename transitions in versions
-	 * before filename transitions were moved to avtab
+	 * before filename transitions were moved to avtab,
+	 * skip entries which only contain prefix/suffix transitions in versions
+	 * before prefix/suffix filename transitions
 	 */
-	if (p->policyvers < POLICYDB_VERSION_AVTAB_FTRANS &&
-	    cur->key.specified & AVTAB_TRANSITION && !cur->datum.trans->otype) {
-		/* if oldvers, reduce nel, because this node will be skipped */
-		if (oldvers && nel)
-			(*nel)--;
-		return 0;
+	if (cur->key.specified & AVTAB_TRANSITION) {
+		if (p->policyvers < POLICYDB_VERSION_AVTAB_FTRANS &&
+		    cur->key.specified & AVTAB_TRANSITION &&
+		    !cur->datum.trans->otype) {
+                        /*
+                         * if oldvers, reduce nel, because this node will be
+                         * skipped
+			 */
+                        if (oldvers && nel)
+				(*nel)--;
+			return 0;
+		}
+		if (p->policyvers < POLICYDB_VERSION_PREFIX_SUFFIX &&
+		    !cur->datum.trans->otype &&
+		    !hashtab_nel(cur->datum.trans->name_trans.table))
+			return 0;
 	}
 
 	if (oldvers) {
@@ -378,17 +417,27 @@ static int avtab_write(struct policydb *p, avtab_t * a, struct policy_file *fp)
 		 * filename transitions.
 		 */
 		nel = a->nel;
-		if (p->policyvers < POLICYDB_VERSION_AVTAB_FTRANS) {
-			/*
-			 * entries containing only filename transitions are
-			 * skipped and written out later
-			 */
-			for (i = 0; i < a->nslot; i++) {
-				for (cur = a->htable[i]; cur; cur = cur->next) {
-					if ((cur->key.specified
-					     & AVTAB_TRANSITION) &&
-					    !cur->datum.trans->otype)
-						nel--;
+		for (i = 0; i < a->nslot; i++) {
+			for (cur = a->htable[i]; cur; cur = cur->next) {
+				if (!(cur->key.specified & AVTAB_TRANSITION))
+					continue;
+                                if (p->policyvers < POLICYDB_VERSION_AVTAB_FTRANS &&
+				    !cur->datum.trans->otype) {
+                                        /*
+                                         * entries containing only filename
+                                         * transitions are skipped and written
+                                         * out later
+                                         */
+                                        nel--;
+				} else if (p->policyvers < POLICYDB_VERSION_PREFIX_SUFFIX &&
+					   !cur->datum.trans->otype &&
+					   !hashtab_nel(cur->datum.trans->name_trans.table)) {
+					/*
+					 * entries containing only prefix/suffix
+					 * transitions are not supported in
+					 * previous versions
+					 */
+					nel--;
 				}
 			}
 		}
@@ -2520,6 +2569,22 @@ static int avtab_has_filename_transitions(avtab_t *a)
 	return 0;
 }
 
+static int avtab_has_prefix_suffix_filename_transitions(avtab_t *a)
+{
+	uint32_t i;
+	struct avtab_node *cur;
+	for (i = 0; i < a->nslot; i++) {
+		for (cur = a->htable[i]; cur; cur = cur->next) {
+			if (cur->key.specified & AVTAB_TRANSITION) {
+				if (hashtab_nel(cur->datum.trans->prefix_trans.table)
+				    || hashtab_nel(cur->datum.trans->suffix_trans.table))
+					return 1;
+			}
+		}
+	}
+	return 0;
+}
+
 /*
  * Write the configuration data in a policy database
  * structure to a policy database binary representation
@@ -2686,6 +2751,10 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 	if (p->policy_type == POLICY_KERN) {
 		if (avtab_write(p, &p->te_avtab, fp))
 			return POLICYDB_ERROR;
+		if (avtab_has_prefix_suffix_filename_transitions(&p->te_avtab)) {
+			WARN(fp->handle,
+			     "Discarding filename prefix/suffix type transition rules");
+		}
 		if (p->policyvers < POLICYDB_VERSION_BOOL) {
 			if (p->p_bools.nprim)
 				WARN(fp->handle, "Discarding "
