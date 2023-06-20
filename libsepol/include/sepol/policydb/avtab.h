@@ -156,6 +156,7 @@ extern avtab_ptr_t avtab_search_node_next(avtab_ptr_t node, int specified);
 
 extern int avtab_insert_filename_trans(avtab_t *a, avtab_key_t *key,
 				       uint32_t otype, const char *name,
+				       uint8_t name_match,
 				       uint32_t *present_otype);
 extern int avtab_filename_trans_read(void *fp, uint32_t vers, avtab_t *a);
 

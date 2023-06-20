@@ -1601,7 +1601,8 @@ static int set_types(type_set_t * set, char *id, int *add, char starallowed)
 	return -1;
 }
 
-static int define_compute_type_helper(int which, avrule_t ** rule, int has_filename)
+static int define_compute_type_helper(int which, avrule_t ** rule,
+				      int has_filename, uint8_t name_match)
 {
 	char *id;
 	type_datum_t *datum;
@@ -1676,6 +1677,7 @@ static int define_compute_type_helper(int which, avrule_t ** rule, int has_filen
 			goto bad;
 		}
 	}
+	avrule->name_match = name_match;
 
 	ebitmap_for_each_positive_bit(&tclasses, node, i) {
 		perm = malloc(sizeof(class_perm_node_t));
@@ -1700,7 +1702,7 @@ static int define_compute_type_helper(int which, avrule_t ** rule, int has_filen
 	return -1;
 }
 
-int define_compute_type(int which, int has_filename)
+int define_compute_type(int which, int has_filename, uint8_t name_match)
 {
 	char *id;
 	avrule_t *avrule;
@@ -1721,7 +1723,8 @@ int define_compute_type(int which, int has_filename)
 		return 0;
 	}
 
-	if (define_compute_type_helper(which, &avrule, has_filename))
+	if (define_compute_type_helper(which, &avrule, has_filename,
+				       name_match))
 		return -1;
 
 	append_avrule(avrule);
@@ -1745,7 +1748,8 @@ avrule_t *define_cond_compute_type(int which)
 		return (avrule_t *) 1;
 	}
 
-	if (define_compute_type_helper(which, &avrule, 0))
+	if (define_compute_type_helper(which, &avrule, 0,
+				       NAME_TRANS_MATCH_EXACT))
 		return COND_ERR;
 
 	return avrule;
@@ -2394,6 +2398,7 @@ static int avrule_cpy(avrule_t *dest, const avrule_t *src)
 			return -1;
 		}
 	}
+	dest->name_match = src->name_match;
 	dest->line = src->line;
 	dest->source_filename = strdup(source_file);
 	if (!dest->source_filename) {

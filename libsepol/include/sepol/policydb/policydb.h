@@ -252,12 +252,6 @@ typedef struct av_extended_perms {
 	uint32_t perms[EXTENDED_PERMS_LEN];
 } av_extended_perms_t;
 
-typedef enum name_trans_match {
-	NAME_TRANS_MATCH_EXACT,
-	NAME_TRANS_MATCH_PREFIX,
-	NAME_TRANS_MATCH_SUFFIX,
-} name_trans_match_t;
-
 typedef struct avrule {
 /* these typedefs are almost exactly the same as those in avtab.h - they are
  * here because of the need to include neverallow and dontaudit messages */
@@ -285,6 +279,10 @@ typedef struct avrule {
 	type_set_t ttypes;
 	class_perm_node_t *perms;
 	char *object_name;	/* optional object name */
+#define NAME_TRANS_MATCH_EXACT 0
+#define NAME_TRANS_MATCH_PREFIX 1
+#define NAME_TRANS_MATCH_SUFFIX 2
+	uint8_t name_match;
 	av_extended_perms_t *xperms;
 	unsigned long line;	/* line number from policy.conf where
 				 * this rule originated  */
@@ -757,9 +755,10 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define MOD_POLICYDB_VERSION_GLBLUB		20
 #define MOD_POLICYDB_VERSION_SELF_TYPETRANS	21
 #define MOD_POLICYDB_VERSION_AVRULE_FTRANS	22
+#define MOD_POLICYDB_VERSION_PREFIX_SUFFIX	23 /* preffix/suffix support for filename transitions */
 
 #define MOD_POLICYDB_VERSION_MIN MOD_POLICYDB_VERSION_BASE
-#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_AVRULE_FTRANS
+#define MOD_POLICYDB_VERSION_MAX MOD_POLICYDB_VERSION_PREFIX_SUFFIX
 
 #define POLICYDB_CONFIG_MLS    1
 

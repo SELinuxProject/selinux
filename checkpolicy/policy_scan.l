@@ -123,6 +123,10 @@ EXPANDATTRIBUTE |
 expandattribute                 { return(EXPANDATTRIBUTE); }
 TYPE_TRANSITION |
 type_transition			{ return(TYPE_TRANSITION); }
+PREFIX |
+prefix				{ return(PREFIX); }
+SUFFIX |
+suffix				{ return(SUFFIX); }
 TYPE_MEMBER |
 type_member			{ return(TYPE_MEMBER); }
 TYPE_CHANGE |

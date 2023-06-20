@@ -108,6 +108,7 @@ typedef int (* require_func_t)(int pass);
 %token IF
 %token ELSE
 %token TYPE_TRANSITION
+%token PREFIX SUFFIX
 %token TYPE_MEMBER
 %token TYPE_CHANGE
 %token ROLE_TRANSITION
@@ -451,13 +452,17 @@ cond_dontaudit_def	: DONTAUDIT names names ':' names names ';'
 		        ;
 			;
 transition_def		: TYPE_TRANSITION  names names ':' names identifier filename ';'
-			{if (define_compute_type(AVRULE_TRANSITION, 1)) return -1; }
+			{if (define_compute_type(AVRULE_TRANSITION, 1, NAME_TRANS_MATCH_EXACT)) return -1;}
+            | TYPE_TRANSITION names names ':' names identifier filename PREFIX ';'
+            {if (define_compute_type(AVRULE_TRANSITION, 1, NAME_TRANS_MATCH_PREFIX)) return -1;}
+            | TYPE_TRANSITION names names ':' names identifier filename SUFFIX ';'
+            {if (define_compute_type(AVRULE_TRANSITION, 1, NAME_TRANS_MATCH_SUFFIX)) return -1;}
 			| TYPE_TRANSITION names names ':' names identifier ';'
-                        {if (define_compute_type(AVRULE_TRANSITION, 0)) return -1;}
+                        {if (define_compute_type(AVRULE_TRANSITION, 0, NAME_TRANS_MATCH_EXACT)) return -1;}
                         | TYPE_MEMBER names names ':' names identifier ';'
-                        {if (define_compute_type(AVRULE_MEMBER, 0)) return -1;}
+                        {if (define_compute_type(AVRULE_MEMBER, 0, NAME_TRANS_MATCH_EXACT)) return -1;}
                         | TYPE_CHANGE names names ':' names identifier ';'
-                        {if (define_compute_type(AVRULE_CHANGE, 0)) return -1;}
+                        {if (define_compute_type(AVRULE_CHANGE, 0, NAME_TRANS_MATCH_EXACT)) return -1;}
     			;
 range_trans_def		: RANGE_TRANSITION names names mls_range_def ';'
 			{ if (define_range_trans(0)) return -1; }

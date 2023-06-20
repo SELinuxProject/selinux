@@ -1211,7 +1211,8 @@ static int __cil_typetransition_to_avtab_helper(policydb_t *pdb,
 		avt_key.target_type = sepol_tgt->s.value;
 		avt_key.target_class = sepol_obj->s.value;
 		rc = avtab_insert_filename_trans(&pdb->te_avtab, &avt_key,
-			sepol_result->s.value, name, &otype);
+			sepol_result->s.value, name, NAME_TRANS_MATCH_EXACT,
+			&otype);
 		if (rc != SEPOL_OK) {
 			if (rc == SEPOL_EEXIST) {
 				if (sepol_result->s.value!= otype) {
@@ -4651,6 +4652,7 @@ static avrule_t *__cil_init_sepol_avrule(uint32_t kind, struct cil_tree_node *no
 	__cil_init_sepol_type_set(&avrule->ttypes);
 	avrule->perms = NULL;
 	avrule->object_name = NULL;
+	avrule->name_match = NAME_TRANS_MATCH_EXACT;
 	avrule->line = node->line;
 
 	avrule->source_filename = NULL;

@@ -2071,12 +2071,18 @@ static int avrule_write(policydb_t *p, avrule_t * avrule,
 			struct policy_file *fp)
 {
 	size_t items, items2;
+	uint8_t buf8;
 	uint32_t buf[32], len;
 	class_perm_node_t *cur;
 
 	/* skip filename transitions if writing older version without name */
 	if (p->policyvers < MOD_POLICYDB_VERSION_AVRULE_FTRANS &&
 	    avrule->specified & AVRULE_TRANSITION && avrule->object_name)
+		return POLICYDB_SUCCESS;
+	/* skip prefix/suffix name transition if writing older version */
+	if (p->policyvers < MOD_POLICYDB_VERSION_PREFIX_SUFFIX &&
+	    avrule->specified & AVRULE_TRANSITION &&
+	    avrule->object_name && avrule->name_match != NAME_TRANS_MATCH_EXACT)
 		return POLICYDB_SUCCESS;
 
 	if (p->policyvers < MOD_POLICYDB_VERSION_SELF_TYPETRANS &&
@@ -2136,12 +2142,17 @@ static int avrule_write(policydb_t *p, avrule_t * avrule,
 			if (items != len)
 				return POLICYDB_ERROR;
 		}
+		if (p->policyvers >= MOD_POLICYDB_VERSION_PREFIX_SUFFIX) {
+			buf8 = avrule->name_match;
+			items = put_entry(&buf8, sizeof(uint8_t), 1, fp);
+			if (items != 1)
+				return POLICYDB_ERROR;
+		}
 	}
 
 	if (avrule->specified & AVRULE_XPERMS) {
 		size_t nel = ARRAY_SIZE(avrule->xperms->perms);
 		uint32_t buf32[nel];
-		uint8_t buf8;
 		unsigned int i;
 
 		if (p->policyvers < MOD_POLICYDB_VERSION_XPERMS_IOCTL) {
@@ -2186,12 +2197,17 @@ static int avrule_write_list(policydb_t *p, avrule_t * avrules,
 
 	avrule = avrules;
 	len = 0;
-	while (avrule) {
-		if (p->policyvers >= MOD_POLICYDB_VERSION_AVRULE_FTRANS ||
-		    !(avrule->specified & AVRULE_TRANSITION &&
-		      avrule->object_name))
-			len++;
-		avrule = avrule->next;
+	for (avrule = avrules; avrule; avrule = avrule->next) {
+		if (p->policyvers < MOD_POLICYDB_VERSION_AVRULE_FTRANS &&
+		    (avrule->specified & AVTAB_TRANSITION) &&
+		    avrule->object_name)
+			continue;
+		if (p->policyvers < MOD_POLICYDB_VERSION_PREFIX_SUFFIX &&
+		    (avrule->specified & AVTAB_TRANSITION) &&
+		    avrule->object_name &&
+		    avrule->name_match != NAME_TRANS_MATCH_EXACT)
+			continue;
+		len++;
 	}
 
 	buf[0] = cpu_to_le32(len);
@@ -2299,7 +2315,8 @@ static int filename_trans_rule_write(policydb_t *p, avrule_t *rules,
 	class_perm_node_t *perm;
 
 	for (rule = rules; rule; rule = rule->next) {
-		if (rule->specified & AVRULE_TRANSITION && rule->object_name) {
+		if (rule->specified & AVRULE_TRANSITION && rule->object_name &&
+		    rule->name_match == NAME_TRANS_MATCH_EXACT) {
 			for (perm = rule->perms; perm; perm = perm->next) {
 				nel++;
 			}
@@ -2312,7 +2329,9 @@ static int filename_trans_rule_write(policydb_t *p, avrule_t *rules,
 		return POLICYDB_ERROR;
 
 	for (rule = rules; rule; rule = rule->next) {
-		if (!(rule->specified & AVRULE_TRANSITION && rule->object_name))
+		if (!(rule->specified & AVRULE_TRANSITION &&
+		      rule->object_name &&
+		      rule->name_match == NAME_TRANS_MATCH_EXACT))
 			continue;
 		len = strlen(rule->object_name);
 		for (perm = rule->perms; perm; perm = perm->next) {
@@ -2751,7 +2770,8 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 	if (p->policy_type == POLICY_KERN) {
 		if (avtab_write(p, &p->te_avtab, fp))
 			return POLICYDB_ERROR;
-		if (avtab_has_prefix_suffix_filename_transitions(&p->te_avtab)) {
+		if (p->policyvers < POLICYDB_VERSION_PREFIX_SUFFIX &&
+		    avtab_has_prefix_suffix_filename_transitions(&p->te_avtab)) {
 			WARN(fp->handle,
 			     "Discarding filename prefix/suffix type transition rules");
 		}

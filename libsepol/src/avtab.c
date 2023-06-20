@@ -771,7 +771,7 @@ int avtab_read(avtab_t * a, struct policy_file *fp, uint32_t vers)
 
 int avtab_insert_filename_trans(avtab_t *a, avtab_key_t *key,
 				uint32_t otype, const char *name,
-				uint32_t *present_otype)
+				uint8_t name_match, uint32_t *present_otype)
 {
 	int rc = SEPOL_ENOMEM;
 	avtab_trans_t new_trans = {0};
@@ -780,6 +780,7 @@ int avtab_insert_filename_trans(avtab_t *a, avtab_key_t *key,
 	avtab_ptr_t node;
 	char *name_key = NULL;
 	uint32_t *otype_datum = NULL;
+	symtab_t *target_symtab;
 
 	datum = avtab_search(a, key);
 	if (!datum) {
@@ -793,8 +794,22 @@ int avtab_insert_filename_trans(avtab_t *a, avtab_key_t *key,
 		datum = &node->datum;
 	}
 
-	if (!datum->trans->name_trans.table) {
-		rc = symtab_init(&datum->trans->name_trans, 1 << 8);
+	switch (name_match) {
+	case NAME_TRANS_MATCH_EXACT:
+		target_symtab = &datum->trans->name_trans;
+		break;
+	case NAME_TRANS_MATCH_PREFIX:
+		target_symtab = &datum->trans->prefix_trans;
+		break;
+	case NAME_TRANS_MATCH_SUFFIX:
+		target_symtab = &datum->trans->suffix_trans;
+		break;
+	default:
+		return SEPOL_ERR;
+	}
+
+	if (!target_symtab->table) {
+		rc = symtab_init(target_symtab, 1 << 8);
 		if (rc < 0)
 			return rc;
 	}
@@ -810,8 +825,7 @@ int avtab_insert_filename_trans(avtab_t *a, avtab_key_t *key,
 		goto bad;
 	*otype_datum = otype;
 
-	rc = hashtab_insert(datum->trans->name_trans.table, name_key,
-			    otype_datum);
+	rc = hashtab_insert(target_symtab->table, name_key, otype_datum);
 	if (rc < 0)
 		goto bad;
 
@@ -856,7 +870,8 @@ static int filename_trans_read_one(avtab_t *a, void *fp)
 	key.target_class = le32_to_cpu(buf[2]);
 	otype = le32_to_cpu(buf[3]);
 
-	rc = avtab_insert_filename_trans(a, &key, otype, name, NULL);
+	rc = avtab_insert_filename_trans(a, &key, otype, name,
+					 NAME_TRANS_MATCH_EXACT, NULL);
 	if (rc)
 		goto err;
 
@@ -909,7 +924,8 @@ static int filename_trans_comp_read_one(avtab_t *a, void *fp)
 			key.source_type = bit + 1;
 
 			rc = avtab_insert_filename_trans(a, &key, otype, name,
-				NULL);
+							 NAME_TRANS_MATCH_EXACT,
+							 NULL);
 			if (rc < 0)
 				goto err_ebitmap;
 		}
