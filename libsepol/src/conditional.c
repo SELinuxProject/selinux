@@ -624,6 +624,7 @@ static int cond_insertf(avtab_t * a
 	struct policydb *p = data->p;
 	cond_av_list_t *other = data->other, *list, *cur;
 	avtab_ptr_t node_ptr;
+	avtab_datum_t *existing;
 	uint8_t found;
 
 	/*
@@ -632,7 +633,10 @@ static int cond_insertf(avtab_t * a
 	 * cond_te_avtab.
 	 */
 	if (k->specified & AVTAB_TYPE) {
-		if (avtab_search(&p->te_avtab, k)) {
+		existing = avtab_search(&p->te_avtab, k);
+		/* empty transition rule is not a conflict */
+		if (existing && !(k->specified & AVTAB_TRANSITION
+		    && !existing->trans->otype)) {
 			WARN(NULL, "security: type rule already exists outside of a conditional.");
 			return -1;
 		}

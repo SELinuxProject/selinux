@@ -63,7 +63,6 @@ static struct command {
 	{CMD,       'a',  "display type attributes"},
 	{CMD,       'p',  "display the list of permissive types"},
 	{CMD,       'u',  "display unknown handling setting"},
-	{CMD,       'F',  "display filename_trans rules"},
 	{HEADER, 0, ""},
 	{CMD|NOOPT, 'f',  "set output file"},
 	{CMD|NOOPT, 'm',  "display menu"},
@@ -126,6 +125,26 @@ static int render_key(avtab_key_t * key, policydb_t * p, FILE * fp)
 	return 0;
 }
 
+typedef struct {
+	avtab_key_t *key;
+	policydb_t *p;
+	FILE *fp;
+} render_name_trans_args_t;
+
+static int render_name_trans_helper(hashtab_key_t k, hashtab_datum_t d, void *a)
+{
+	char *name = k;
+	uint32_t *otype = d;
+	render_name_trans_args_t *args = a;
+
+	fprintf(args->fp, "type_transition ");
+	render_key(args->key, args->p, args->fp);
+	render_type(*otype, args->p, args->fp);
+	fprintf(args->fp, " \"%s\";\n", name);
+
+	return 0;
+}
+
 /* 'what' values for this function */
 #define	RENDER_UNCONDITIONAL	0x0001	/* render all regardless of enabled state */
 #define RENDER_ENABLED		0x0002
@@ -178,10 +197,19 @@ static int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t wha
 		}
 	} else if (key->specified & AVTAB_TYPE) {
 		if (key->specified & AVTAB_TRANSITION) {
-			fprintf(fp, "type_transition ");
-			render_key(key, p, fp);
-			render_type(datum->trans->otype, p, fp);
-			fprintf(fp, ";\n");
+			if (datum->trans->otype) {
+				fprintf(fp, "type_transition ");
+				render_key(key, p, fp);
+				render_type(datum->trans->otype, p, fp);
+				fprintf(fp, ";\n");
+			}
+			render_name_trans_args_t args = {
+				.key = key,
+				.p = p,
+				.fp = fp,
+			};
+			hashtab_map(datum->trans->name_trans.table,
+				    render_name_trans_helper, &args);
 		}
 		if (key->specified & AVTAB_MEMBER) {
 			fprintf(fp, "type_member ");
@@ -448,48 +476,6 @@ static void display_role_trans(policydb_t *p, FILE *fp)
 	}
 }
 
-struct filenametr_display_args {
-	policydb_t *p;
-	FILE *fp;
-};
-
-static int filenametr_display(hashtab_key_t key,
-			      hashtab_datum_t datum,
-			      void *ptr)
-{
-	struct filename_trans_key *ft = (struct filename_trans_key *)key;
-	struct filename_trans_datum *ftdatum = datum;
-	struct filenametr_display_args *args = ptr;
-	policydb_t *p = args->p;
-	FILE *fp = args->fp;
-	ebitmap_node_t *node;
-	uint32_t bit;
-
-	do {
-		ebitmap_for_each_positive_bit(&ftdatum->stypes, node, bit) {
-			display_id(p, fp, SYM_TYPES, bit, "");
-			display_id(p, fp, SYM_TYPES, ft->ttype - 1, "");
-			display_id(p, fp, SYM_CLASSES, ft->tclass - 1, ":");
-			display_id(p, fp, SYM_TYPES, ftdatum->otype - 1, "");
-			fprintf(fp, " %s\n", ft->name);
-		}
-		ftdatum = ftdatum->next;
-	} while (ftdatum);
-
-	return 0;
-}
-
-
-static void display_filename_trans(policydb_t *p, FILE *fp)
-{
-	struct filenametr_display_args args;
-
-	fprintf(fp, "filename_trans rules:\n");
-	args.p = p;
-	args.fp = fp;
-	hashtab_map(p->filename_trans, filenametr_display, &args);
-}
-
 static int menu(void)
 {
 	unsigned int i;
@@ -691,9 +677,6 @@ int main(int argc, char **argv)
 			}
 			if (out_fp != stdout)
 				printf("\nOutput to file: %s\n", OutfileName);
-			break;
-		case 'F':
-			display_filename_trans(&policydb, out_fp);
 			break;
 		case 'q':
 			policydb_destroy(&policydb);

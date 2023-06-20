@@ -308,8 +308,10 @@ static void optimize_avtab(policydb_t *p, const struct type_vec *type_map)
 				*cur = tmp->next;
 				if (tmp->key.specified & AVTAB_XPERMS)
 					free(tmp->datum.xperms);
-				if (tmp->key.specified & AVTAB_TRANSITION)
+				if (tmp->key.specified & AVTAB_TRANSITION) {
+					avtab_trans_destroy(tmp->datum.trans);
 					free(tmp->datum.trans);
+				}
 				free(tmp);
 
 				tab->nel--;
@@ -429,8 +431,10 @@ static void optimize_cond_avtab(policydb_t *p, const struct type_vec *type_map)
 				*cur = tmp->next;
 				if (tmp->key.specified & AVTAB_XPERMS)
 					free(tmp->datum.xperms);
-				if (tmp->key.specified & AVTAB_TRANSITION)
+				if (tmp->key.specified & AVTAB_TRANSITION) {
+					avtab_trans_destroy(tmp->datum.trans);
 					free(tmp->datum.trans);
+				}
 				free(tmp);
 
 				tab->nel--;

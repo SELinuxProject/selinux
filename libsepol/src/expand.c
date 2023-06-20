@@ -1413,14 +1413,17 @@ static int expand_filename_trans_helper(expand_state_t *state,
 {
 	uint32_t mapped_otype, present_otype;
 	int rc;
+	avtab_key_t avt_key;
 
 	mapped_otype = state->typemap[rule->otype - 1];
 
-	rc = policydb_filetrans_insert(
-		state->out, s + 1, t + 1,
-		rule->tclass, rule->name,
-		NULL, mapped_otype, &present_otype
-	);
+	avt_key.specified = AVTAB_TRANSITION;
+	avt_key.source_type = s + 1;
+	avt_key.target_type = t + 1;
+	avt_key.target_class = rule->tclass;
+
+	rc = avtab_insert_filename_trans(&state->out->te_avtab, &avt_key,
+		mapped_otype, rule->name, &present_otype);
 	if (rc == SEPOL_EEXIST) {
 		/* duplicate rule, ignore */
 		if (present_otype == mapped_otype)
@@ -1734,6 +1737,16 @@ static int expand_terule_helper(sepol_handle_t * handle,
 		 * either in the global scope or in another
 		 * conditional AV tab */
 		node = avtab_search_node(&p->te_avtab, &avkey);
+
+		/*
+		 * if node does not already contain transition, it is not a
+		 * conflict and transition otype will be set to node found by
+		 * find_avtab_node()
+		 */
+		if (specified & AVRULE_TRANSITION && node &&
+		    !node->datum.trans->otype)
+			node = NULL;
+
 		if (node) {
 			conflict = 1;
 		} else {
@@ -1741,6 +1754,10 @@ static int expand_terule_helper(sepol_handle_t * handle,
 			if (node && node->parse_context != other) {
 				conflict = 2;
 			}
+			/*
+			 * conditional avtab does not contain filename
+			 * transitions, no need to check for otype == 0
+			 */
 		}
 
 		if (conflict) {

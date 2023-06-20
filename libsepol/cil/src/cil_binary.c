@@ -1005,7 +1005,12 @@ static int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, 
 	}
 	
 	existing = avtab_search_node(&pdb->te_avtab, &avtab_key);
-	if (existing) {
+	/*
+	 * There might be empty transition node containing filename transitions
+	 * only. That is okay, we can merge them later.
+	 */
+	if (existing && !(existing->key.specified & AVTAB_TRANSITION &&
+	    !existing->datum.trans->otype)) {
 		/* Don't add duplicate type rule and warn if they conflict.
 		 * A warning should have been previously given if there is a
 		 * non-duplicate rule using the same key.
@@ -1029,7 +1034,13 @@ static int __cil_insert_type_rule(policydb_t *pdb, uint32_t kind, uint32_t src, 
 	}
 
 	if (!cond_node) {
-		rc = avtab_insert(&pdb->te_avtab, &avtab_key, &avtab_datum);
+		/* If we have node from empty filename transition, use it */
+		if (existing && existing->key.specified & AVTAB_TRANSITION &&
+		    !existing->datum.trans->otype)
+			existing->datum.trans->otype = avtab_datum.trans->otype;
+		else
+			rc = avtab_insert(&pdb->te_avtab, &avtab_key,
+					  &avtab_datum);
 	} else {
 		existing = avtab_search_node(&pdb->te_cond_avtab, &avtab_key);
 		if (existing) {
@@ -1189,16 +1200,18 @@ static int __cil_typetransition_to_avtab_helper(policydb_t *pdb,
 	class_datum_t *sepol_obj = NULL;
 	uint32_t otype;
 	struct cil_list_item *c;
+	avtab_key_t avt_key;
 
 	cil_list_for_each(c, class_list) {
 		rc = __cil_get_sepol_class_datum(pdb, DATUM(c->data), &sepol_obj);
 		if (rc != SEPOL_OK) return rc;
 
-		rc = policydb_filetrans_insert(
-			pdb, sepol_src->s.value, sepol_tgt->s.value,
-			sepol_obj->s.value, name, NULL,
-			sepol_result->s.value, &otype
-		);
+		avt_key.specified = AVTAB_TRANSITION;
+		avt_key.source_type = sepol_src->s.value;
+		avt_key.target_type = sepol_tgt->s.value;
+		avt_key.target_class = sepol_obj->s.value;
+		rc = avtab_insert_filename_trans(&pdb->te_avtab, &avt_key,
+			sepol_result->s.value, name, &otype);
 		if (rc != SEPOL_OK) {
 			if (rc == SEPOL_EEXIST) {
 				if (sepol_result->s.value!= otype) {

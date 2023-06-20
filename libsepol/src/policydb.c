@@ -801,47 +801,6 @@ static int roles_init(policydb_t * p)
 	goto out;
 }
 
-ignore_unsigned_overflow_
-static inline unsigned long
-partial_name_hash(unsigned long c, unsigned long prevhash)
-{
-	return (prevhash + (c << 4) + (c >> 4)) * 11;
-}
-
-static unsigned int filenametr_hash(hashtab_t h, const_hashtab_key_t k)
-{
-	const filename_trans_key_t *ft = (const filename_trans_key_t *)k;
-	unsigned long hash;
-	unsigned int byte_num;
-	unsigned char focus;
-
-	hash = ft->ttype ^ ft->tclass;
-
-	byte_num = 0;
-	while ((focus = ft->name[byte_num++]))
-		hash = partial_name_hash(focus, hash);
-	return hash & (h->size - 1);
-}
-
-static int filenametr_cmp(hashtab_t h __attribute__ ((unused)),
-			  const_hashtab_key_t k1, const_hashtab_key_t k2)
-{
-	const filename_trans_key_t *ft1 = (const filename_trans_key_t *)k1;
-	const filename_trans_key_t *ft2 = (const filename_trans_key_t *)k2;
-	int v;
-
-	v = spaceship_cmp(ft1->ttype, ft2->ttype);
-	if (v)
-		return v;
-
-	v = spaceship_cmp(ft1->tclass, ft2->tclass);
-	if (v)
-		return v;
-
-	return strcmp(ft1->name, ft2->name);
-
-}
-
 static unsigned int rangetr_hash(hashtab_t h, const_hashtab_key_t k)
 {
 	const struct range_trans *key = (const struct range_trans *)k;
@@ -909,12 +868,6 @@ int policydb_init(policydb_t * p)
 	if (rc)
 		goto err;
 
-	p->filename_trans = hashtab_create(filenametr_hash, filenametr_cmp, (1 << 10));
-	if (!p->filename_trans) {
-		rc = -ENOMEM;
-		goto err;
-	}
-
 	p->range_tr = hashtab_create(rangetr_hash, rangetr_cmp, 256);
 	if (!p->range_tr) {
 		rc = -ENOMEM;
@@ -926,7 +879,6 @@ int policydb_init(policydb_t * p)
 
 	return 0;
 err:
-	hashtab_destroy(p->filename_trans);
 	hashtab_destroy(p->range_tr);
 	for (i = 0; i < SYM_NUM; i++) {
 		hashtab_destroy(p->symtab[i].table);
@@ -1412,23 +1364,6 @@ static int (*destroy_f[SYM_NUM]) (hashtab_key_t key, hashtab_datum_t datum,
 common_destroy, class_destroy, role_destroy, type_destroy, user_destroy,
 	    cond_destroy_bool, sens_destroy, cat_destroy,};
 
-static int filenametr_destroy(hashtab_key_t key, hashtab_datum_t datum,
-			      void *p __attribute__ ((unused)))
-{
-	filename_trans_key_t *ft = (filename_trans_key_t *)key;
-	filename_trans_datum_t *fd = datum, *next;
-
-	free(ft->name);
-	free(key);
-	do {
-		next = fd->next;
-		ebitmap_destroy(&fd->stypes);
-		free(fd);
-		fd = next;
-	} while (fd);
-	return 0;
-}
-
 static int range_tr_destroy(hashtab_key_t key, hashtab_datum_t datum,
 			    void *p __attribute__ ((unused)))
 {
@@ -1563,9 +1498,6 @@ void policydb_destroy(policydb_t * p)
 	}
 	if (lra)
 		free(lra);
-
-	hashtab_map(p->filename_trans, filenametr_destroy, NULL);
-	hashtab_destroy(p->filename_trans);
 
 	hashtab_map(p->range_tr, range_tr_destroy, NULL);
 	hashtab_destroy(p->range_tr);
@@ -2592,279 +2524,6 @@ static int role_allow_read(role_allow_t ** r, struct policy_file *fp)
 		ra->role = le32_to_cpu(buf[0]);
 		ra->new_role = le32_to_cpu(buf[1]);
 		lra = ra;
-	}
-	return 0;
-}
-
-int policydb_filetrans_insert(policydb_t *p, uint32_t stype, uint32_t ttype,
-			      uint32_t tclass, const char *name,
-			      char **name_alloc, uint32_t otype,
-			      uint32_t *present_otype)
-{
-	filename_trans_key_t *ft, key;
-	filename_trans_datum_t *datum, *last;
-
-	key.ttype = ttype;
-	key.tclass = tclass;
-	key.name = (char *)name;
-
-	last = NULL;
-	datum = hashtab_search(p->filename_trans, (hashtab_key_t)&key);
-	while (datum) {
-		if (ebitmap_get_bit(&datum->stypes, stype - 1)) {
-			if (present_otype)
-				*present_otype = datum->otype;
-			return SEPOL_EEXIST;
-		}
-		if (datum->otype == otype)
-			break;
-		last = datum;
-		datum = datum->next;
-	}
-	if (!datum) {
-		datum = malloc(sizeof(*datum));
-		if (!datum)
-			return SEPOL_ENOMEM;
-
-		ebitmap_init(&datum->stypes);
-		datum->otype = otype;
-		datum->next = NULL;
-
-		if (last) {
-			last->next = datum;
-		} else {
-			char *name_dup;
-
-			if (name_alloc) {
-				name_dup = *name_alloc;
-				*name_alloc = NULL;
-			} else {
-				name_dup = strdup(name);
-				if (!name_dup) {
-					free(datum);
-					return SEPOL_ENOMEM;
-				}
-			}
-
-			ft = malloc(sizeof(*ft));
-			if (!ft) {
-				free(name_dup);
-				free(datum);
-				return SEPOL_ENOMEM;
-			}
-
-			ft->ttype = ttype;
-			ft->tclass = tclass;
-			ft->name = name_dup;
-
-			if (hashtab_insert(p->filename_trans, (hashtab_key_t)ft,
-					   (hashtab_datum_t)datum)) {
-				free(name_dup);
-				free(datum);
-				free(ft);
-				return SEPOL_ENOMEM;
-			}
-		}
-	}
-
-	p->filename_trans_count++;
-	return ebitmap_set_bit(&datum->stypes, stype - 1, 1);
-}
-
-static int filename_trans_read_one_compat(policydb_t *p, struct policy_file *fp)
-{
-	uint32_t buf[4], len, stype, ttype, tclass, otype;
-	char *name = NULL;
-	int rc;
-
-	rc = next_entry(buf, fp, sizeof(uint32_t));
-	if (rc < 0)
-		return -1;
-	len = le32_to_cpu(buf[0]);
-	if (zero_or_saturated(len))
-		return -1;
-
-	name = calloc(len + 1, sizeof(*name));
-	if (!name)
-		return -1;
-
-	rc = next_entry(name, fp, len);
-	if (rc < 0)
-		goto err;
-
-	rc = next_entry(buf, fp, sizeof(uint32_t) * 4);
-	if (rc < 0)
-		goto err;
-
-	stype = le32_to_cpu(buf[0]);
-	if (stype == 0)
-		goto err;
-
-	ttype  = le32_to_cpu(buf[1]);
-	tclass = le32_to_cpu(buf[2]);
-	otype  = le32_to_cpu(buf[3]);
-
-	rc = policydb_filetrans_insert(p, stype, ttype, tclass, name, &name,
-				       otype, NULL);
-	if (rc) {
-		if (rc != SEPOL_EEXIST)
-			goto err;
-		/*
-		 * Some old policies were wrongly generated with
-		 * duplicate filename transition rules.  For backward
-		 * compatibility, do not reject such policies, just
-		 * ignore the duplicate.
-		 */
-	}
-	free(name);
-	return 0;
-err:
-	free(name);
-	return -1;
-}
-
-static int filename_trans_check_datum(filename_trans_datum_t *datum)
-{
-	ebitmap_t stypes, otypes;
-	int rc = -1;
-
-	ebitmap_init(&stypes);
-	ebitmap_init(&otypes);
-
-	while (datum) {
-		if (ebitmap_get_bit(&otypes, datum->otype))
-			goto out;
-
-		if (ebitmap_set_bit(&otypes, datum->otype, 1))
-			goto out;
-
-		if (ebitmap_match_any(&stypes, &datum->stypes))
-			goto out;
-
-		if (ebitmap_union(&stypes, &datum->stypes))
-			goto out;
-
-		datum = datum->next;
-	}
-	rc = 0;
-out:
-	ebitmap_destroy(&stypes);
-	ebitmap_destroy(&otypes);
-	return rc;
-}
-
-static int filename_trans_read_one(policydb_t *p, struct policy_file *fp)
-{
-	filename_trans_key_t *ft = NULL;
-	filename_trans_datum_t **dst, *datum, *first = NULL;
-	unsigned int i;
-	uint32_t buf[3], len, ttype, tclass, ndatum;
-	char *name = NULL;
-	int rc;
-
-	rc = next_entry(buf, fp, sizeof(uint32_t));
-	if (rc < 0)
-		return -1;
-	len = le32_to_cpu(buf[0]);
-	if (zero_or_saturated(len))
-		return -1;
-
-	name = calloc(len + 1, sizeof(*name));
-	if (!name)
-		return -1;
-
-	rc = next_entry(name, fp, len);
-	if (rc < 0)
-		goto err;
-
-	rc = next_entry(buf, fp, sizeof(uint32_t) * 3);
-	if (rc < 0)
-		goto err;
-
-	ttype = le32_to_cpu(buf[0]);
-	tclass = le32_to_cpu(buf[1]);
-	ndatum = le32_to_cpu(buf[2]);
-	if (ndatum == 0)
-		goto err;
-
-	dst = &first;
-	for (i = 0; i < ndatum; i++) {
-		datum = malloc(sizeof(*datum));
-		if (!datum)
-			goto err;
-
-		datum->next = NULL;
-		*dst = datum;
-
-		/* ebitmap_read() will at least init the bitmap */
-		rc = ebitmap_read(&datum->stypes, fp);
-		if (rc < 0)
-			goto err;
-
-		rc = next_entry(buf, fp, sizeof(uint32_t));
-		if (rc < 0)
-			goto err;
-
-		datum->otype = le32_to_cpu(buf[0]);
-
-		p->filename_trans_count += ebitmap_cardinality(&datum->stypes);
-
-		dst = &datum->next;
-	}
-
-	if (ndatum > 1 && filename_trans_check_datum(first))
-		goto err;
-
-	ft = malloc(sizeof(*ft));
-	if (!ft)
-		goto err;
-
-	ft->ttype = ttype;
-	ft->tclass = tclass;
-	ft->name = name;
-
-	rc = hashtab_insert(p->filename_trans, (hashtab_key_t)ft,
-			    (hashtab_datum_t)first);
-	if (rc)
-		goto err;
-
-	return 0;
-err:
-	free(ft);
-	free(name);
-	while (first) {
-		datum = first;
-		first = first->next;
-
-		ebitmap_destroy(&datum->stypes);
-		free(datum);
-	}
-	return -1;
-}
-
-static int filename_trans_read(policydb_t *p, struct policy_file *fp)
-{
-	unsigned int i;
-	uint32_t buf[1], nel;
-	int rc;
-
-	rc = next_entry(buf, fp, sizeof(uint32_t));
-	if (rc < 0)
-		return -1;
-	nel = le32_to_cpu(buf[0]);
-
-	if (p->policyvers < POLICYDB_VERSION_COMP_FTRANS) {
-		for (i = 0; i < nel; i++) {
-			rc = filename_trans_read_one_compat(p, fp);
-			if (rc < 0)
-				return -1;
-		}
-	} else {
-		for (i = 0; i < nel; i++) {
-			rc = filename_trans_read_one(p, fp);
-			if (rc < 0)
-				return -1;
-		}
 	}
 	return 0;
 }
@@ -4470,7 +4129,7 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		if (role_allow_read(&p->role_allow, fp))
 			goto bad;
 		if (r_policyvers >= POLICYDB_VERSION_FILENAME_TRANS &&
-		    filename_trans_read(p, fp))
+		    avtab_filename_trans_read(fp, r_policyvers, &p->te_avtab))
 			goto bad;
 	} else {
 		/* first read the AV rule blocks, then the scope tables */
