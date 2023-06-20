@@ -278,6 +278,7 @@ typedef struct avrule {
 	type_set_t stypes;
 	type_set_t ttypes;
 	class_perm_node_t *perms;
+	char *object_name;	/* optional object name */
 	av_extended_perms_t *xperms;
 	unsigned long line;	/* line number from policy.conf where
 				 * this rule originated  */
@@ -300,16 +301,6 @@ typedef struct role_allow_rule {
 	role_set_t new_roles;	/* new roles */
 	struct role_allow_rule *next;
 } role_allow_rule_t;
-
-typedef struct filename_trans_rule {
-	uint32_t flags; /* may have RULE_SELF set */
-	type_set_t stypes;
-	type_set_t ttypes;
-	uint32_t tclass;
-	char *name;
-	uint32_t otype;	/* new type */
-	struct filename_trans_rule *next;
-} filename_trans_rule_t;
 
 typedef struct range_trans_rule {
 	type_set_t stypes;
@@ -450,9 +441,6 @@ typedef struct avrule_decl {
 	range_trans_rule_t *range_tr_rules;
 	scope_index_t required;	/* symbols needed to activate this block */
 	scope_index_t declared;	/* symbols declared within this block */
-
-	/* type transition rules with a 'name' component */
-	filename_trans_rule_t *filename_trans_rules;
 
 	/* for additive statements (type attribute, roles, and users) */
 	symtab_t symtab[SYM_NUM];
@@ -656,8 +644,6 @@ extern void avrule_destroy(avrule_t * x);
 extern void avrule_list_destroy(avrule_t * x);
 extern void role_trans_rule_init(role_trans_rule_t * x);
 extern void role_trans_rule_list_destroy(role_trans_rule_t * x);
-extern void filename_trans_rule_init(filename_trans_rule_t * x);
-extern void filename_trans_rule_list_destroy(filename_trans_rule_t * x);
 
 extern void role_datum_init(role_datum_t * x);
 extern void role_datum_destroy(role_datum_t * x);

@@ -1601,7 +1601,7 @@ static int set_types(type_set_t * set, char *id, int *add, char starallowed)
 	return -1;
 }
 
-static int define_compute_type_helper(int which, avrule_t ** rule)
+static int define_compute_type_helper(int which, avrule_t ** rule, int has_filename)
 {
 	char *id;
 	type_datum_t *datum;
@@ -1669,6 +1669,14 @@ static int define_compute_type_helper(int which, avrule_t ** rule)
 	}
 	free(id);
 
+	if (has_filename) {
+		avrule->object_name = queue_remove(id_queue);
+		if (!avrule->object_name) {
+			yyerror("no object_name?");
+			goto bad;
+		}
+	}
+
 	ebitmap_for_each_positive_bit(&tclasses, node, i) {
 		perm = malloc(sizeof(class_perm_node_t));
 		if (!perm) {
@@ -1692,7 +1700,7 @@ static int define_compute_type_helper(int which, avrule_t ** rule)
 	return -1;
 }
 
-int define_compute_type(int which)
+int define_compute_type(int which, int has_filename)
 {
 	char *id;
 	avrule_t *avrule;
@@ -1706,10 +1714,14 @@ int define_compute_type(int which)
 			free(id);
 		id = queue_remove(id_queue);
 		free(id);
+		if (has_filename) {
+			id = queue_remove(id_queue);
+			free(id);
+		}
 		return 0;
 	}
 
-	if (define_compute_type_helper(which, &avrule))
+	if (define_compute_type_helper(which, &avrule, has_filename))
 		return -1;
 
 	append_avrule(avrule);
@@ -1733,7 +1745,7 @@ avrule_t *define_cond_compute_type(int which)
 		return (avrule_t *) 1;
 	}
 
-	if (define_compute_type_helper(which, &avrule))
+	if (define_compute_type_helper(which, &avrule, 0))
 		return COND_ERR;
 
 	return avrule;
@@ -2374,6 +2386,13 @@ static int avrule_cpy(avrule_t *dest, const avrule_t *src)
 	if (type_set_cpy(&dest->ttypes, &src->ttypes)) {
 		yyerror("out of memory");
 		return -1;
+	}
+	if (src->object_name) {
+		dest->object_name = strdup(src->object_name);
+		if (!dest->object_name) {
+			yyerror("out of memory");
+			return -1;
+		}
 	}
 	dest->line = src->line;
 	dest->source_filename = strdup(source_file);
@@ -3341,194 +3360,6 @@ avrule_t *define_cond_filename_trans(void)
 	yyerror("type transitions with a filename not allowed inside "
 		"conditionals\n");
 	return COND_ERR;
-}
-
-int define_filename_trans(void)
-{
-	char *id, *name = NULL;
-	type_set_t stypes, ttypes;
-	ebitmap_t e_stypes, e_ttypes;
-	ebitmap_t e_tclasses;
-	ebitmap_node_t *snode, *tnode, *cnode;
-	filename_trans_rule_t *ftr;
-	type_datum_t *typdatum;
-	avtab_key_t avt_key;
-	uint32_t otype;
-	unsigned int c, s, t;
-	int add, self, rc;
-
-	if (pass == 1) {
-		/* stype */
-		while ((id = queue_remove(id_queue)))
-			free(id);
-		/* ttype */
-		while ((id = queue_remove(id_queue)))
-			free(id);
-		/* tclass */
-		while ((id = queue_remove(id_queue)))
-			free(id);
-		/* otype */
-		id = queue_remove(id_queue);
-		free(id);
-		/* name */
-		id = queue_remove(id_queue);
-		free(id);
-		return 0;
-	}
-
-	type_set_init(&stypes);
-	type_set_init(&ttypes);
-	ebitmap_init(&e_stypes);
-	ebitmap_init(&e_ttypes);
-	ebitmap_init(&e_tclasses);
-
-	add = 1;
-	while ((id = queue_remove(id_queue))) {
-		if (set_types(&stypes, id, &add, 0))
-			goto bad;
-	}
-
-	self = 0;
-	add = 1;
-	while ((id = queue_remove(id_queue))) {
-		if (strcmp(id, "self") == 0) {
-			free(id);
-			if (add == 0) {
-				yyerror("-self is not supported");
-				goto bad;
-			}
-			self = 1;
-			continue;
-		}
-		if (set_types(&ttypes, id, &add, 0))
-			goto bad;
-	}
-
-	if (read_classes(&e_tclasses))
-		goto bad;
-
-	id = (char *)queue_remove(id_queue);
-	if (!id) {
-		yyerror("no otype in transition definition?");
-		goto bad;
-	}
-	if (!is_id_in_scope(SYM_TYPES, id)) {
-		yyerror2("type %s is not within scope", id);
-		free(id);
-		goto bad;
-	}
-	typdatum = hashtab_search(policydbp->p_types.table, id);
-	if (!typdatum) {
-		yyerror2("unknown type %s used in transition definition", id);
-		free(id);
-		goto bad;
-	}
-	free(id);
-	otype = typdatum->s.value;
-
-	name = queue_remove(id_queue);
-	if (!name) {
-		yyerror("no pathname specified in filename_trans definition?");
-		goto bad;
-	}
-
-	/* We expand the class set into separate rules.  We expand the types
-	 * just to make sure there are not duplicates.  They will get turned
-	 * into separate rules later */
-	if (type_set_expand(&stypes, &e_stypes, policydbp, 1))
-		goto bad;
-
-	if (type_set_expand(&ttypes, &e_ttypes, policydbp, 1))
-		goto bad;
-
-	ebitmap_for_each_positive_bit(&e_tclasses, cnode, c) {
-		ebitmap_for_each_positive_bit(&e_stypes, snode, s) {
-			ebitmap_for_each_positive_bit(&e_ttypes, tnode, t) {
-				avt_key.specified = AVTAB_TRANSITION;
-				avt_key.source_type = s + 1;
-				avt_key.target_type = t + 1;
-				avt_key.target_class = c + 1;
-				rc = avtab_insert_filename_trans(
-					&policydbp->te_avtab, &avt_key, otype,
-					name, NULL
-				);
-				if (rc != SEPOL_OK) {
-					if (rc == SEPOL_EEXIST) {
-						yyerror2("duplicate filename transition for: filename_trans %s %s %s:%s",
-							name,
-							policydbp->p_type_val_to_name[s],
-							policydbp->p_type_val_to_name[t],
-							policydbp->p_class_val_to_name[c]);
-						goto bad;
-					}
-					yyerror("out of memory");
-					goto bad;
-				}
-			}
-			if (self) {
-				avt_key.specified = AVTAB_TRANSITION;
-				avt_key.source_type = s + 1;
-				avt_key.target_type = t + 1;
-				avt_key.target_class = c + 1;
-				rc = avtab_insert_filename_trans(
-					&policydbp->te_avtab, &avt_key, otype,
-					name, NULL
-				);
-				if (rc != SEPOL_OK) {
-					if (rc == SEPOL_EEXIST) {
-						yyerror2("duplicate filename transition for: filename_trans %s %s %s:%s",
-							name,
-							policydbp->p_type_val_to_name[s],
-							policydbp->p_type_val_to_name[s],
-							policydbp->p_class_val_to_name[c]);
-						goto bad;
-					}
-					yyerror("out of memory");
-					goto bad;
-				}
-			}
-		}
-	
-		/* Now add the real rule since we didn't find any duplicates */
-		ftr = malloc(sizeof(*ftr));
-		if (!ftr) {
-			yyerror("out of memory");
-			goto bad;
-		}
-		filename_trans_rule_init(ftr);
-		append_filename_trans(ftr);
-
-		ftr->name = strdup(name);
-		if (type_set_cpy(&ftr->stypes, &stypes)) {
-			yyerror("out of memory");
-			goto bad;
-		}
-		if (type_set_cpy(&ftr->ttypes, &ttypes)) {
-			yyerror("out of memory");
-			goto bad;
-		}
-		ftr->tclass = c + 1;
-		ftr->otype = otype;
-		ftr->flags = self ? RULE_SELF : 0;
-	}
-
-	free(name);
-	ebitmap_destroy(&e_stypes);
-	ebitmap_destroy(&e_ttypes);
-	ebitmap_destroy(&e_tclasses);
-	type_set_destroy(&stypes);
-	type_set_destroy(&ttypes);
-
-	return 0;
-
-bad:
-	free(name);
-	ebitmap_destroy(&e_stypes);
-	ebitmap_destroy(&e_ttypes);
-	ebitmap_destroy(&e_tclasses);
-	type_set_destroy(&stypes);
-	type_set_destroy(&ttypes);
-	return -1;
 }
 
 static constraint_expr_t *constraint_expr_clone(const constraint_expr_t * expr)

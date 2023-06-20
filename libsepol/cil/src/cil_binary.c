@@ -4650,6 +4650,7 @@ static avrule_t *__cil_init_sepol_avrule(uint32_t kind, struct cil_tree_node *no
 	__cil_init_sepol_type_set(&avrule->stypes);
 	__cil_init_sepol_type_set(&avrule->ttypes);
 	avrule->perms = NULL;
+	avrule->object_name = NULL;
 	avrule->line = node->line;
 
 	avrule->source_filename = NULL;
@@ -4676,6 +4677,7 @@ static void __cil_destroy_sepol_avrules(avrule_t *curr)
 		ebitmap_destroy(&curr->stypes.negset);
 		ebitmap_destroy(&curr->ttypes.types);
 		ebitmap_destroy(&curr->ttypes.negset);
+		free(curr->object_name);
 		__cil_destroy_sepol_class_perms(curr->perms);
 		free(curr);
 		curr = next;

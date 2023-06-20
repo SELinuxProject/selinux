@@ -547,7 +547,7 @@ static int semantic_level_to_cil(struct policydb *pdb, int sens_offset, struct m
 	return 0;
 }
 
-static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const char *src, const char *tgt, const struct class_perm_node *classperms)
+static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const char *src, const char *tgt, const char *object_name, const struct class_perm_node *classperms)
 {
 	int rc = -1;
 	const char *rule;
@@ -597,6 +597,12 @@ static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const 
 					rule, src, tgt,
 					pdb->p_class_val_to_name[classperm->tclass - 1],
 					perms + 1);
+		} else if (object_name) {
+			cil_println(indent, "(%s %s %s %s \"%s\" %s)",
+					rule, src, tgt,
+					pdb->p_class_val_to_name[classperm->tclass - 1],
+					object_name,
+					pdb->p_type_val_to_name[classperm->data - 1]);
 		} else {
 			cil_println(indent, "(%s %s %s %s %s)",
 					rule, src, tgt,
@@ -1199,7 +1205,7 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 				if (avrule->specified & AVRULE_XPERMS) {
 					rc = avrulex_to_cil(indent, pdb, avrule->specified, snames[s], tnames[t], avrule->perms, avrule->xperms);
 				} else {
-					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], tnames[t], avrule->perms);
+					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], tnames[t], avrule->object_name, avrule->perms);
 				}
 				if (rc != 0) {
 					goto exit;
@@ -1210,7 +1216,7 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 				if (avrule->specified & AVRULE_XPERMS) {
 					rc = avrulex_to_cil(indent, pdb, avrule->specified, snames[s], "self", avrule->perms, avrule->xperms);
 				} else {
-					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], "self", avrule->perms);
+					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], "self", avrule->object_name, avrule->perms);
 				}
 				if (rc != 0) {
 					goto exit;
@@ -1569,60 +1575,6 @@ static int range_trans_to_cil(int indent, struct policydb *pdb, struct range_tra
 
 	rc = 0;
 
-exit:
-	names_destroy(&stypes, &num_stypes);
-	names_destroy(&ttypes, &num_ttypes);
-
-	return rc;
-}
-
-static int filename_trans_to_cil(int indent, struct policydb *pdb, struct filename_trans_rule *rules, struct list *attr_list)
-{
-	int rc = -1;
-	char **stypes = NULL;
-	unsigned int num_stypes = 0;
-	unsigned int stype;
-	char **ttypes = NULL;
-	unsigned int num_ttypes = 0;
-	unsigned int ttype;
-	struct type_set *ts;
-	struct filename_trans_rule *rule;
-
-	for (rule = rules; rule != NULL; rule = rule->next) {
-		ts = &rule->stypes;
-		rc = process_typeset(pdb, ts, attr_list, &stypes, &num_stypes);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		ts = &rule->ttypes;
-		rc = process_typeset(pdb, ts, attr_list, &ttypes, &num_ttypes);
-		if (rc != 0) {
-			goto exit;
-		}
-
-		for (stype = 0; stype < num_stypes; stype++) {
-			for (ttype = 0; ttype < num_ttypes; ttype++) {
-				cil_println(indent, "(typetransition %s %s %s \"%s\" %s)",
-					    stypes[stype], ttypes[ttype],
-					    pdb->p_class_val_to_name[rule->tclass - 1],
-					    rule->name,
-					    pdb->p_type_val_to_name[rule->otype - 1]);
-			}
-			if (rule->flags & RULE_SELF) {
-				cil_println(indent, "(typetransition %s self %s \"%s\" %s)",
-					    stypes[stype],
-					    pdb->p_class_val_to_name[rule->tclass - 1],
-					    rule->name,
-					    pdb->p_type_val_to_name[rule->otype - 1]);
-			}
-		}
-
-		names_destroy(&stypes, &num_stypes);
-		names_destroy(&ttypes, &num_ttypes);
-	}
-
-	rc = 0;
 exit:
 	names_destroy(&stypes, &num_stypes);
 	names_destroy(&ttypes, &num_ttypes);
@@ -3679,11 +3631,6 @@ static int block_to_cil(struct policydb *pdb, struct avrule_block *block, struct
 	}
 
 	rc = range_trans_to_cil(indent, pdb, decl->range_tr_rules, type_attr_list);
-	if (rc != 0) {
-		goto exit;
-	}
-
-	rc = filename_trans_to_cil(indent, pdb, decl->filename_trans_rules, type_attr_list);
 	if (rc != 0) {
 		goto exit;
 	}

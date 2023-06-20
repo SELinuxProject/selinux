@@ -638,6 +638,7 @@ void avrule_destroy(avrule_t * x)
 	}
 
 	free(x->xperms);
+	free(x->object_name);
 }
 
 void role_trans_rule_init(role_trans_rule_t * x)
@@ -662,33 +663,6 @@ void role_trans_rule_list_destroy(role_trans_rule_t * x)
 	while (x != NULL) {
 		role_trans_rule_t *next = x->next;
 		role_trans_rule_destroy(x);
-		free(x);
-		x = next;
-	}
-}
-
-void filename_trans_rule_init(filename_trans_rule_t * x)
-{
-	memset(x, 0, sizeof(*x));
-	type_set_init(&x->stypes);
-	type_set_init(&x->ttypes);
-}
-
-static void filename_trans_rule_destroy(filename_trans_rule_t * x)
-{
-	if (!x)
-		return;
-	type_set_destroy(&x->stypes);
-	type_set_destroy(&x->ttypes);
-	free(x->name);
-}
-
-void filename_trans_rule_list_destroy(filename_trans_rule_t * x)
-{
-	filename_trans_rule_t *next;
-	while (x) {
-		next = x->next;
-		filename_trans_rule_destroy(x);
 		free(x);
 		x = next;
 	}
@@ -3493,31 +3467,32 @@ static int role_allow_rule_read(role_allow_rule_t ** r, struct policy_file *fp)
 	return 0;
 }
 
-static int filename_trans_rule_read(policydb_t *p, filename_trans_rule_t **r,
+static int filename_trans_rule_read(policydb_t *p, avrule_t **r,
 				    struct policy_file *fp)
 {
 	uint32_t buf[3], nel, i, len;
 	unsigned int entries;
-	filename_trans_rule_t *ftr, *lftr;
+	avrule_t *cur;
 	int rc;
 
 	rc = next_entry(buf, fp, sizeof(uint32_t));
 	if (rc < 0)
 		return -1;
 	nel = le32_to_cpu(buf[0]);
-	lftr = NULL;
 	for (i = 0; i < nel; i++) {
-		ftr = malloc(sizeof(*ftr));
-		if (!ftr)
+		cur = malloc(sizeof(avrule_t));
+		if (!cur)
 			return -1;
+		avrule_init(cur);
 
-		filename_trans_rule_init(ftr);
+		cur->next = *r;
+		*r = cur;
 
-		if (lftr)
-			lftr->next = ftr;
-		else
-			*r = ftr;
-		lftr = ftr;
+		cur->specified = AVRULE_TRANSITION;
+		cur->perms = malloc(sizeof(class_perm_node_t));
+		if (!cur->perms)
+			return -1;
+		class_perm_node_init(cur->perms);
 
 		rc = next_entry(buf, fp, sizeof(uint32_t));
 		if (rc < 0)
@@ -3527,19 +3502,14 @@ static int filename_trans_rule_read(policydb_t *p, filename_trans_rule_t **r,
 		if (zero_or_saturated(len))
 			return -1;
 
-		ftr->name = malloc(len + 1);
-		if (!ftr->name)
-			return -1;
-
-		rc = next_entry(ftr->name, fp, len);
+		rc = str_read(&cur->object_name, fp, len);
 		if (rc)
 			return -1;
-		ftr->name[len] = 0;
 
-		if (type_set_read(&ftr->stypes, fp))
+		if (type_set_read(&cur->stypes, fp))
 			return -1;
 
-		if (type_set_read(&ftr->ttypes, fp))
+		if (type_set_read(&cur->ttypes, fp))
 			return -1;
 
 		if (p->policyvers >= MOD_POLICYDB_VERSION_SELF_TYPETRANS)
@@ -3550,10 +3520,10 @@ static int filename_trans_rule_read(policydb_t *p, filename_trans_rule_t **r,
 		rc = next_entry(buf, fp, sizeof(uint32_t) * entries);
 		if (rc < 0)
 			return -1;
-		ftr->tclass = le32_to_cpu(buf[0]);
-		ftr->otype = le32_to_cpu(buf[1]);
+		cur->perms->tclass = le32_to_cpu(buf[0]);
+		cur->perms->data = le32_to_cpu(buf[1]);
 		if (p->policyvers >= MOD_POLICYDB_VERSION_SELF_TYPETRANS)
-			ftr->flags = le32_to_cpu(buf[2]);
+			cur->flags = le32_to_cpu(buf[2]);
 	}
 
 	return 0;
@@ -3656,7 +3626,7 @@ static int avrule_decl_read(policydb_t * p, avrule_decl_t * decl,
 	}
 
 	if (p->policyvers >= MOD_POLICYDB_VERSION_FILENAME_TRANS &&
-	    filename_trans_rule_read(p, &decl->filename_trans_rules, fp))
+	    filename_trans_rule_read(p, &decl->avrules, fp))
 		return -1;
 
 	if (p->policyvers >= MOD_POLICYDB_VERSION_RANGETRANS &&

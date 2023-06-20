@@ -1970,6 +1970,10 @@ static int avrule_write(policydb_t *p, avrule_t * avrule,
 	uint32_t buf[32], len;
 	class_perm_node_t *cur;
 
+	/* skip filename transitions for now */
+	if (avrule->specified & AVRULE_TRANSITION && avrule->object_name)
+		return POLICYDB_SUCCESS;
+
 	if (p->policyvers < MOD_POLICYDB_VERSION_SELF_TYPETRANS &&
 	    (avrule->specified & AVRULE_TYPE) &&
 	    (avrule->flags & RULE_SELF)) {
@@ -2063,7 +2067,9 @@ static int avrule_write_list(policydb_t *p, avrule_t * avrules,
 	avrule = avrules;
 	len = 0;
 	while (avrule) {
-		len++;
+		if (!(avrule->specified & AVRULE_TRANSITION &&
+		      avrule->object_name))
+			len++;
 		avrule = avrule->next;
 	}
 
@@ -2162,55 +2168,67 @@ static int role_allow_rule_write(role_allow_rule_t * r, struct policy_file *fp)
 	return POLICYDB_SUCCESS;
 }
 
-static int filename_trans_rule_write(policydb_t *p, filename_trans_rule_t *t,
+static int filename_trans_rule_write(policydb_t *p, avrule_t *rules,
 				     struct policy_file *fp)
 {
 	int nel = 0;
 	size_t items, entries;
 	uint32_t buf[3], len;
-	filename_trans_rule_t *ftr;
+	avrule_t *rule;
+	class_perm_node_t *perm;
 
-	for (ftr = t; ftr; ftr = ftr->next)
-		nel++;
+	for (rule = rules; rule; rule = rule->next) {
+		if (rule->specified & AVRULE_TRANSITION && rule->object_name) {
+			for (perm = rule->perms; perm; perm = perm->next) {
+				nel++;
+			}
+		}
+	}
 
 	buf[0] = cpu_to_le32(nel);
 	items = put_entry(buf, sizeof(uint32_t), 1, fp);
 	if (items != 1)
 		return POLICYDB_ERROR;
 
-	for (ftr = t; ftr; ftr = ftr->next) {
-		len = strlen(ftr->name);
-		buf[0] = cpu_to_le32(len);
-		items = put_entry(buf, sizeof(uint32_t), 1, fp);
-		if (items != 1)
-			return POLICYDB_ERROR;
+	for (rule = rules; rule; rule = rule->next) {
+		if (!(rule->specified & AVRULE_TRANSITION && rule->object_name))
+			continue;
+		len = strlen(rule->object_name);
+		for (perm = rule->perms; perm; perm = perm->next) {
+			buf[0] = cpu_to_le32(len);
+			items = put_entry(buf, sizeof(uint32_t), 1, fp);
+			if (items != 1)
+				return POLICYDB_ERROR;
 
-		items = put_entry(ftr->name, sizeof(char), len, fp);
-		if (items != len)
-			return POLICYDB_ERROR;
+			items = put_entry(rule->object_name, sizeof(char), len,
+					  fp);
+			if (items != len)
+				return POLICYDB_ERROR;
 
-		if (type_set_write(&ftr->stypes, fp))
-			return POLICYDB_ERROR;
-		if (type_set_write(&ftr->ttypes, fp))
-			return POLICYDB_ERROR;
+			if (type_set_write(&rule->stypes, fp))
+				return POLICYDB_ERROR;
+			if (type_set_write(&rule->ttypes, fp))
+				return POLICYDB_ERROR;
 
-		buf[0] = cpu_to_le32(ftr->tclass);
-		buf[1] = cpu_to_le32(ftr->otype);
-		buf[2] = cpu_to_le32(ftr->flags);
+			buf[0] = cpu_to_le32(perm->tclass);
+			buf[1] = cpu_to_le32(perm->data);
+			buf[2] = cpu_to_le32(rule->flags);
 
-		if (p->policyvers >= MOD_POLICYDB_VERSION_SELF_TYPETRANS) {
-			entries = 3;
-		} else if (!(ftr->flags & RULE_SELF)) {
-			entries = 2;
-		} else {
-			ERR(fp->handle,
-			    "Module contains a self rule not supported by the target module policy version");
-			return POLICYDB_ERROR;
+			if (p->policyvers >=
+			    MOD_POLICYDB_VERSION_SELF_TYPETRANS) {
+				entries = 3;
+			} else if (!(rule->flags & RULE_SELF)) {
+				entries = 2;
+			} else {
+				ERR(fp->handle,
+				    "Module contains a self rule not supported by the target module policy version");
+				return POLICYDB_ERROR;
+			}
+
+			items = put_entry(buf, sizeof(uint32_t), entries, fp);
+			if (items != entries)
+				return POLICYDB_ERROR;
 		}
-
-		items = put_entry(buf, sizeof(uint32_t), entries, fp);
-		if (items != entries)
-			return POLICYDB_ERROR;
 	}
 	return POLICYDB_SUCCESS;
 }
@@ -2284,7 +2302,7 @@ static int avrule_decl_write(avrule_decl_t * decl, int num_scope_syms,
 	}
 
 	if (p->policyvers >= MOD_POLICYDB_VERSION_FILENAME_TRANS &&
-	    filename_trans_rule_write(p, decl->filename_trans_rules, fp))
+	    filename_trans_rule_write(p, decl->avrules, fp))
 		return POLICYDB_ERROR;
 
 	if (p->policyvers >= MOD_POLICYDB_VERSION_RANGETRANS &&
