@@ -19,10 +19,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-char *progname = NULL;
-extern char *optarg;
-
-static __attribute__((__noreturn__)) void usage(const char *prog)
+static void usage(const char *prog)
 {
 	printf("usage: %s -o <output file> -m <module> [-f <file contexts>]\n",
 	       prog);
@@ -34,34 +31,14 @@ static __attribute__((__noreturn__)) void usage(const char *prog)
 	printf
 	    ("  -u --user_extra	user_extra file (only valid in base)\n");
 	printf("  -n --nc		Netfilter contexts file\n");
-	exit(1);
+	printf("  -h --help		Show this help message\n");
 }
 
-static int file_to_policy_file(const char *filename, struct sepol_policy_file **pf,
-			       const char *mode)
-{
-	FILE *f;
-
-	if (sepol_policy_file_create(pf)) {
-		fprintf(stderr, "%s:  Out of memory\n", progname);
-		return -1;
-	}
-
-	f = fopen(filename, mode);
-	if (!f) {
-		fprintf(stderr, "%s:  Could not open file %s:  %s\n", progname,
-			strerror(errno), filename);
-		return -1;
-	}
-	sepol_policy_file_set_fp(*pf, f);
-	return 0;
-}
-
-static int file_to_data(const char *path, char **data, size_t * len)
+static int file_to_data(const char *path, char **data, size_t * len, const char *progname)
 {
 	int fd;
 	struct stat sb;
-	fd = open(path, O_RDONLY);
+	fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd < 0) {
 		fprintf(stderr, "%s:  Failed to open %s:  %s\n", progname, path,
 			strerror(errno));
@@ -94,17 +71,18 @@ static int file_to_data(const char *path, char **data, size_t * len)
 
 int main(int argc, char **argv)
 {
-	struct sepol_module_package *pkg;
-	struct sepol_policy_file *mod, *out;
+	struct sepol_module_package *pkg = NULL;
+	struct sepol_policy_file *mod = NULL, *out = NULL;
+	FILE *fp = NULL;
 	char *module = NULL, *file_contexts = NULL, *seusers =
 	    NULL, *user_extra = NULL;
 	char *fcdata = NULL, *outfile = NULL, *seusersdata =
 	    NULL, *user_extradata = NULL;
 	char *netfilter_contexts = NULL, *ncdata = NULL;
 	size_t fclen = 0, seuserslen = 0, user_extralen = 0, nclen = 0;
-	int i;
+	int i, ret;
 
-	static struct option opts[] = {
+	const struct option opts[] = {
 		{"module", required_argument, NULL, 'm'},
 		{"fc", required_argument, NULL, 'f'},
 		{"seuser", required_argument, NULL, 's'},
@@ -119,146 +97,213 @@ int main(int argc, char **argv)
 		switch (i) {
 		case 'h':
 			usage(argv[0]);
-			exit(0);
+			return EXIT_SUCCESS;
 		case 'm':
 			if (module) {
 				fprintf(stderr,
 					"May not specify more than one module\n");
-				exit(1);
+				return EXIT_FAILURE;
 			}
 			module = strdup(optarg);
-			if (!module)
-				exit(1);
+			if (!module) {
+				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				return EXIT_FAILURE;
+			}
 			break;
 		case 'f':
 			if (file_contexts) {
 				fprintf(stderr,
 					"May not specify more than one file context file\n");
-				exit(1);
+				return EXIT_FAILURE;
 			}
 			file_contexts = strdup(optarg);
-			if (!file_contexts)
-				exit(1);
+			if (!file_contexts) {
+				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				return EXIT_FAILURE;
+			}
 			break;
 		case 'o':
 			if (outfile) {
 				fprintf(stderr,
 					"May not specify more than one output file\n");
-				exit(1);
+				return EXIT_FAILURE;
 			}
 			outfile = strdup(optarg);
-			if (!outfile)
-				exit(1);
+			if (!outfile) {
+				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				return EXIT_FAILURE;
+			}
 			break;
 		case 's':
 			if (seusers) {
 				fprintf(stderr,
 					"May not specify more than one seuser file\n");
-				exit(1);
+				return EXIT_FAILURE;
 			}
 			seusers = strdup(optarg);
-			if (!seusers)
-				exit(1);
+			if (!seusers) {
+				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				return EXIT_FAILURE;
+			}
 			break;
 		case 'u':
 			if (user_extra) {
 				fprintf(stderr,
 					"May not specify more than one user_extra file\n");
-				exit(1);
+				return EXIT_FAILURE;
 			}
 			user_extra = strdup(optarg);
-			if (!user_extra)
-				exit(1);
+			if (!user_extra) {
+				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				return EXIT_FAILURE;
+			}
 			break;
 		case 'n':
 			if (netfilter_contexts) {
 				fprintf(stderr,
 					"May not specify more than one netfilter contexts file\n");
-				exit(1);
+				return EXIT_FAILURE;
 			}
 			netfilter_contexts = strdup(optarg);
-			if (!netfilter_contexts)
-				exit(1);
+			if (!netfilter_contexts) {
+				fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+				return EXIT_FAILURE;
+			}
 			break;
+		default:
+			usage(argv[0]);
+			return EXIT_FAILURE;
 		}
 	}
 
-	progname = argv[0];
+	if (optind < argc) {
+		fprintf(stderr, "%s:  Superfluous command line arguments: ", argv[0]);
+		while (optind < argc)
+			 fprintf(stderr, "%s ", argv[optind++]);
+		fprintf(stderr, "\n");
+		usage(argv[0]);
+		return EXIT_FAILURE;
+	}
 
 	if (!module || !outfile) {
 		usage(argv[0]);
-		exit(0);
+		return EXIT_FAILURE;
 	}
 
-	if (file_contexts) {
-		if (file_to_data(file_contexts, &fcdata, &fclen))
-			exit(1);
+	if (file_contexts && file_to_data(file_contexts, &fcdata, &fclen, argv[0]))
+		goto failure;
+
+	if (seusers && file_to_data(seusers, &seusersdata, &seuserslen, argv[0]))
+		goto failure;
+
+	if (user_extra && file_to_data(user_extra, &user_extradata, &user_extralen, argv[0]))
+		goto failure;
+
+	if (netfilter_contexts && file_to_data(netfilter_contexts, &ncdata, &nclen, argv[0]))
+		goto failure;
+
+	if (sepol_policy_file_create(&mod)) {
+		fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+		goto failure;
 	}
 
-	if (seusers) {
-		if (file_to_data(seusers, &seusersdata, &seuserslen))
-			exit(1);
+	fp = fopen(module, "re");
+	if (!fp) {
+		fprintf(stderr, "%s:  Could not open file %s:  %s\n", argv[0],
+			module, strerror(errno));
+		goto failure;
 	}
-
-	if (user_extra) {
-		if (file_to_data(user_extra, &user_extradata, &user_extralen))
-			exit(1);
-	}
-
-	if (netfilter_contexts) {
-		if (file_to_data(netfilter_contexts, &ncdata, &nclen))
-			exit(1);
-	}
-
-	if (file_to_policy_file(module, &mod, "r"))
-		exit(1);
+	sepol_policy_file_set_fp(mod, fp);
 
 	if (sepol_module_package_create(&pkg)) {
 		fprintf(stderr, "%s:  Out of memory\n", argv[0]);
-		exit(1);
+		goto failure;
 	}
 
 	if (sepol_policydb_read(sepol_module_package_get_policy(pkg), mod)) {
 		fprintf(stderr,
 			"%s:  Error while reading policy module from %s\n",
 			argv[0], module);
-		exit(1);
+		goto failure;
 	}
 
-	if (fclen)
-		sepol_module_package_set_file_contexts(pkg, fcdata, fclen);
+	fclose(fp);
+	fp = NULL;
 
-	if (seuserslen)
-		sepol_module_package_set_seusers(pkg, seusersdata, seuserslen);
+	if (fclen && sepol_module_package_set_file_contexts(pkg, fcdata, fclen)) {
+		fprintf(stderr, "%s:  Error while setting file contexts\n", argv[0]);
+		goto failure;
+	}
 
-	if (user_extra)
-		sepol_module_package_set_user_extra(pkg, user_extradata,
-						    user_extralen);
+	if (seuserslen && sepol_module_package_set_seusers(pkg, seusersdata, seuserslen)) {
+		fprintf(stderr, "%s:  Error while setting seusers\n", argv[0]);
+		goto failure;
+	}
 
-	if (nclen)
-		sepol_module_package_set_netfilter_contexts(pkg, ncdata, nclen);
+	if (user_extra && sepol_module_package_set_user_extra(pkg, user_extradata, user_extralen)) {
+		fprintf(stderr, "%s:  Error while setting extra users\n", argv[0]);
+		goto failure;
+	}
 
-	if (file_to_policy_file(outfile, &out, "w"))
-		exit(1);
+	if (nclen && sepol_module_package_set_netfilter_contexts(pkg, ncdata, nclen)) {
+		fprintf(stderr, "%s:  Error while setting netfilter contexts\n", argv[0]);
+		goto failure;
+	}
+
+	if (sepol_policy_file_create(&out)) {
+		fprintf(stderr, "%s:  Out of memory\n", argv[0]);
+		goto failure;
+	}
+
+	fp = fopen(outfile, "we");
+	if (!fp) {
+		fprintf(stderr, "%s:  Could not open file %s:  %s\n", argv[0],
+			outfile, strerror(errno));
+		goto failure;
+	}
+	sepol_policy_file_set_fp(out, fp);
 
 	if (sepol_module_package_write(pkg, out)) {
 		fprintf(stderr,
 			"%s:  Error while writing module package to %s\n",
 			argv[0], argv[1]);
-		exit(1);
+		goto failure;
 	}
 
-	if (fclen)
-		munmap(fcdata, fclen);
+	ret = fclose(fp);
+	fp = NULL;
+	if (ret) {
+		fprintf(stderr, "%s:  Could not close file %s:  %s\n", argv[0],
+			outfile, strerror(errno));
+		goto failure;
+	}
+
+	ret = EXIT_SUCCESS;
+	goto cleanup;
+
+failure:
+	ret = EXIT_FAILURE;
+
+cleanup:
+	if (fp)
+		fclose(fp);
+	sepol_policy_file_free(out);
 	if (nclen)
 		munmap(ncdata, nclen);
-	sepol_policy_file_free(mod);
-	sepol_policy_file_free(out);
+	if (user_extradata)
+		munmap(user_extradata, user_extralen);
+	if (seuserslen)
+		munmap(seusersdata, seuserslen);
+	if (fclen)
+		munmap(fcdata, fclen);
 	sepol_module_package_free(pkg);
-	free(file_contexts);
-	free(outfile);
-	free(module);
-	free(seusers);
+	sepol_policy_file_free(mod);
+	free(netfilter_contexts);
 	free(user_extra);
-	exit(0);
+	free(seusers);
+	free(outfile);
+	free(file_contexts);
+	free(module);
+
+	return ret;
 }
