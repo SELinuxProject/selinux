@@ -3,7 +3,7 @@
 semodule_expand \- Expand a SELinux policy module package.
 
 .SH SYNOPSIS
-.B semodule_expand [-V ] [ -a ] [ -c [version]] basemodpkg outputfile
+.B semodule_expand [-ahV] [ -c [version]] basemodpkg outputfile
 .br
 .SH DESCRIPTION
 .PP
@@ -16,6 +16,9 @@ created directly by semodule_package or by semodule_link (when linking
 together a set of packages into a single package).
 
 .SH "OPTIONS"
+.TP
+.B \-h
+show help
 .TP
 .B \-V
 show version
