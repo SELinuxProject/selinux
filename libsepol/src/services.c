@@ -1711,7 +1711,10 @@ int next_entry(void *buf, struct policy_file *fp, size_t bytes)
 size_t put_entry(const void *ptr, size_t size, size_t n,
 			struct policy_file *fp)
 {
-	size_t bytes = size * n;
+	size_t bytes;
+
+	if (__builtin_mul_overflow(size, n, &bytes))
+		return 0;
 
 	switch (fp->type) {
 	case PF_USE_STDIO:
