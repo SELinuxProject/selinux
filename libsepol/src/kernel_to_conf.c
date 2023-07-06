@@ -466,17 +466,18 @@ static int write_sids_to_conf(FILE *out, const char *const *sid_to_str,
 	for (isid = isids; isid != NULL; isid = isid->next) {
 		i = isid->sid[0];
 		if (i < num_sids && sid_to_str[i]) {
-			sid = (char *)sid_to_str[i];
+			sid = strdup(sid_to_str[i]);
 		} else {
 			snprintf(unknown, sizeof(unknown), "%s%u", "UNKNOWN", i);
 			sid = strdup(unknown);
-			if (!sid) {
-				rc = -1;
-				goto exit;
-			}
+		}
+		if (!sid) {
+			rc = -1;
+			goto exit;
 		}
 		rc = strs_add_at_index(strs, sid, i);
 		if (rc != 0) {
+			free(sid);
 			goto exit;
 		}
 	}
@@ -490,10 +491,7 @@ static int write_sids_to_conf(FILE *out, const char *const *sid_to_str,
 	}
 
 exit:
-	for (i=num_sids; i<strs_num_items(strs); i++) {
-		sid = strs_read_at_index(strs, i);
-		free(sid);
-	}
+	strs_free_all(strs);
 	strs_destroy(&strs);
 	if (rc != 0) {
 		ERR(NULL, "Error writing sid rules to policy.conf");
