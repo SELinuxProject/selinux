@@ -6,7 +6,7 @@ MANDIR = $(PREFIX)/share/man
 BASHCOMPLETIONDIR ?= $(PREFIX)/share/bash-completion/completions
 
 CFLAGS ?= -Werror -Wall -W
-override LDLIBS += -lsepol -lselinux -lsemanage
+override LDLIBS += -lselinux -lsemanage
 SETSEBOOL_OBJS = setsebool.o
 
 BASHCOMPLETIONS=setsebool-bash-completion.sh 
