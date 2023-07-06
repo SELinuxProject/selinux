@@ -3,6 +3,8 @@
 #include <sepol/kernel_to_conf.h>
 #include <sepol/policydb/policydb.h>
 
+extern int policydb_validate(sepol_handle_t *handle, const policydb_t *p);
+
 extern int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size);
 
 static int write_binary_policy(policydb_t *p, FILE *outfp)
@@ -38,18 +40,27 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	if (policydb_load_isids(&policydb, &sidtab))
 		goto exit;
 
-	if (policydb.policy_type == POLICY_KERN)
+	if (policydb.policy_type == POLICY_KERN) {
 		(void) policydb_optimize(&policydb);
 
-	devnull = fopen("/dev/null", "w");
+		if (policydb_validate(NULL, &policydb) == -1)
+			abort();
+	}
+
+	(void) check_assertions(NULL, &policydb, policydb.global->branch_list->avrules);
+
+	devnull = fopen("/dev/null", "we");
 	if (!devnull)
 		goto exit;
 
-	(void) write_binary_policy(&policydb, devnull);
+	if (write_binary_policy(&policydb, devnull))
+		abort();
 
-	(void) sepol_kernel_policydb_to_conf(devnull, &policydb);
+	if (sepol_kernel_policydb_to_conf(devnull, &policydb))
+		abort();
 
-	(void) sepol_kernel_policydb_to_cil(devnull, &policydb);
+	if (sepol_kernel_policydb_to_cil(devnull, &policydb))
+		abort();
 
 exit:
 	if (devnull != NULL)
