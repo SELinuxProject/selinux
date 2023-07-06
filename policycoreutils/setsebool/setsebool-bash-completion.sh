@@ -15,26 +15,56 @@
 # You should have received a copy of the GNU General Public License
 # along with systemd; If not, see <http://www.gnu.org/licenses/>.
 
-__contains_word () {
-        local word=$1; shift
-        for w in $*; do [[ $w = $word ]] && return 0; done
-        return 1
-}
-
 __get_all_booleans () {
     getsebool -a | cut -f1 -d' '
 }
 
 _setsebool () {
-        local command=${COMP_WORDS[1]}
         local cur=${COMP_WORDS[COMP_CWORD]} prev=${COMP_WORDS[COMP_CWORD-1]}
-        local verb comps
 
-	if   [ "$verb" = "" -a "$prev" = "setsebool" -o "$prev" = "-P" ]; then
-	        COMPREPLY=( $(compgen -W "-P $( __get_all_booleans ) " -- "$cur") )
-		return 0
+        if [ "$prev" = '=' ]; then
+                COMPREPLY=( $(compgen -W "on off" -- "$cur") )
+                return 0
         fi
-        COMPREPLY=( $(compgen -W "0 1 -P" -- "$cur") )
+
+        case "$cur" in
+        '0')
+                COMPREPLY=( $(compgen -W "0 1" -- "$cur") )
+                return 0
+        ;;
+        '1')
+                COMPREPLY=( $(compgen -W "0 1" -- "$cur") )
+                return 0
+        ;;
+        =)
+                COMPREPLY=( $(compgen -W "on off" -- "") )
+                return 0
+        ;;
+        -*)
+                COMPREPLY=( $(compgen -W "-N -P -V" -- "$cur") )
+                return 0
+        ;;
+        '')
+                if [ "$prev" = '0' ] || [ "$prev" = '1' ]; then
+                        COMPREPLY=( $(compgen -W "-N -P -V" -- "$cur") )
+                        return 0
+                fi
+                if getsebool "$prev" > /dev/null 2>&1; then
+                        COMPREPLY=( $(compgen -W "0 1" -- "$cur") )
+                        return 0
+                fi
+        ;;
+        *)
+                if getsebool "$cur" > /dev/null 2>&1; then
+                        COMPREPLY=( $(compgen -W '$( __get_all_booleans ) "$cur=on " "$cur=off "' -- "$cur") )
+                        compopt -o nospace
+                        return 0
+                fi
+        ;;
+        esac
+
+        COMPREPLY=( $(compgen -W '"-N " "-P " "-V " $( __get_all_booleans ) ' -- "$cur") )
+        compopt -o nospace
         return 0
 }
 
