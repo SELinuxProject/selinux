@@ -3,7 +3,7 @@ LINGUAS ?= ru
 PREFIX ?= /usr
 SBINDIR ?= /sbin
 MANDIR = $(PREFIX)/share/man
-AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y)
+AUDITH ?= $(shell test -f /usr/include/libaudit.h && echo y || test -f /usr/local/include/libaudit.h && echo y)
 
 CFLAGS ?= -g -Werror -Wall -W
 override LDLIBS += -lselinux -lsepol -lpthread
