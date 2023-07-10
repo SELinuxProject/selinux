@@ -48,6 +48,8 @@ void strings_list_add(struct stringsList **list, const char *string)
 	if (!newptr)
 		exitApp("Out of Memory");
 	newptr->string = strdup(string);
+	if (!newptr->string)
+		exitApp("Out of Memory");
 	newptr->next = ptr;
 	if (prev)
 		prev->next = newptr;
