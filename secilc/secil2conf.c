@@ -152,6 +152,12 @@ int main(int argc, char *argv[])
 		file_size = filedata.st_size;
 
 		buffer = malloc(file_size);
+		if (!buffer) {
+			fprintf(stderr, "Out of memory\n");
+			rc = SEPOL_ERR;
+			goto exit;
+		}
+
 		rc = fread(buffer, file_size, 1, file);
 		if (rc != 1) {
 			fprintf(stderr, "Failure reading file: %s\n", argv[i]);
