@@ -103,10 +103,10 @@ static void hashtab_check_resize(hashtab_t h)
 
 int hashtab_insert(hashtab_t h, hashtab_key_t key, hashtab_datum_t datum)
 {
-	int hvalue;
+	unsigned int hvalue;
 	hashtab_ptr_t prev, cur, newnode;
 
-	if (!h)
+	if (!h || h->nel == UINT32_MAX)
 		return SEPOL_ENOMEM;
 
 	hashtab_check_resize(h);
@@ -144,7 +144,7 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 		   void (*destroy) (hashtab_key_t k,
 				    hashtab_datum_t d, void *args), void *args)
 {
-	int hvalue;
+	unsigned int hvalue;
 	hashtab_ptr_t cur, last;
 
 	if (!h)
@@ -176,7 +176,7 @@ int hashtab_remove(hashtab_t h, hashtab_key_t key,
 hashtab_datum_t hashtab_search(hashtab_t h, const_hashtab_key_t key)
 {
 
-	int hvalue;
+	unsigned int hvalue;
 	hashtab_ptr_t cur;
 
 	if (!h)
@@ -240,10 +240,10 @@ int hashtab_map(hashtab_t h,
 	return SEPOL_OK;
 }
 
-void hashtab_hash_eval(hashtab_t h, char *tag)
+void hashtab_hash_eval(hashtab_t h, const char *tag)
 {
 	unsigned int i;
-	int chain_len, slots_used, max_chain_len;
+	size_t chain_len, slots_used, max_chain_len;
 	hashtab_ptr_t cur;
 
 	slots_used = 0;
@@ -264,6 +264,6 @@ void hashtab_hash_eval(hashtab_t h, char *tag)
 	}
 
 	printf
-	    ("%s:  %d entries and %d/%d buckets used, longest chain length %d\n",
+	    ("%s:  %d entries and %zu/%d buckets used, longest chain length %zu\n",
 	     tag, h->nel, slots_used, h->size, max_chain_len);
 }
