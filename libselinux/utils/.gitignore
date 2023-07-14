@@ -10,6 +10,7 @@ getenforce
 getfilecon
 getpidcon
 getpidprevcon
+getpolicyload
 getsebool
 getseuser
 matchpathcon
