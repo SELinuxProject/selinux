@@ -2993,6 +2993,10 @@ int expand_module(sepol_handle_t * handle,
 	state.out->policyvers = POLICYDB_VERSION_MAX;
 	if (state.base->name) {
 		state.out->name = strdup(state.base->name);
+		if (!state.out->name) {
+			ERR(handle, "Out of memory!");
+			goto cleanup;
+		}
 	}
 
 	/* Copy mls state from base to out */
