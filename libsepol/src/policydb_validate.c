@@ -23,7 +23,7 @@ typedef struct map_arg {
 
 static int create_gap_ebitmap(char **val_to_name, uint32_t nprim, ebitmap_t *gaps)
 {
-	unsigned int i;
+	uint32_t i;
 
 	ebitmap_init(gaps);
 
@@ -180,7 +180,7 @@ static int validate_scope(__attribute__ ((unused)) hashtab_key_t k, hashtab_datu
 {
 	const scope_datum_t *scope_datum = (scope_datum_t *)d;
 	const uint32_t *nprim = (uint32_t *)args;
-	unsigned int i;
+	uint32_t i;
 
 	switch (scope_datum->scope) {
 	case SCOPE_REQ:
@@ -205,7 +205,7 @@ static int validate_scopes(sepol_handle_t *handle, const symtab_t scopes[], cons
 {
 	const avrule_decl_t *decl;
 	unsigned int i;
-	unsigned int num_decls = 0;
+	uint32_t num_decls = 0;
 
 	for (; block != NULL; block = block->next) {
 		for (decl = block->branch_list; decl; decl = decl->next) {
@@ -685,7 +685,7 @@ static int validate_bool_datum_wrapper(__attribute__((unused)) hashtab_key_t k, 
 
 static int validate_datum_array_gaps(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	unsigned int i;
+	uint32_t i;
 
 	for (i = 0; i < p->p_classes.nprim; i++) {
 		if (bool_xnor(p->class_val_to_struct[i], ebitmap_get_bit(&flavors[SYM_CLASSES].gaps, i)))
@@ -1405,7 +1405,7 @@ bad:
 static int validate_permissives(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
 	ebitmap_node_t *node;
-	unsigned i;
+	uint32_t i;
 
 	ebitmap_for_each_positive_bit(&p->permissive_map, node, i) {
 		if (validate_simpletype(i, p, flavors))
@@ -1457,7 +1457,7 @@ static int validate_range_transitions(sepol_handle_t *handle, const policydb_t *
 static int validate_typeattr_map(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
 	const ebitmap_t *maps = p->type_attr_map;
-	unsigned int i;
+	uint32_t i;
 
 	if (p->policy_type == POLICY_KERN) {
 		for (i = 0; i < p->p_types.nprim; i++) {
