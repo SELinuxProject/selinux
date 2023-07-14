@@ -2350,7 +2350,7 @@ static int type_attr_map(hashtab_key_t key
 	policydb_t *p = state->out;
 	unsigned int i;
 	ebitmap_node_t *tnode;
-	int value;
+	uint32_t value;
 
 	type = (type_datum_t *) datum;
 	value = type->s.value;
