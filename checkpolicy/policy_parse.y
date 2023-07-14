@@ -76,7 +76,6 @@ typedef int (* require_func_t)(int pass);
 %type <ptr> cond_expr cond_expr_prim cond_pol_list cond_else
 %type <ptr> cond_allow_def cond_auditallow_def cond_auditdeny_def cond_dontaudit_def
 %type <ptr> cond_transition_def cond_te_avtab_def cond_rule_def
-%type <ptr> role_def roles
 %type <valptr> cexpr cexpr_prim op role_mls_op
 %type <val> ipv4_addr_def number
 %type <val64> number64
@@ -311,7 +310,6 @@ te_rbac_decl		: te_decl
                         ;
 rbac_decl		: attribute_role_def
 			| role_type_def
-                        | role_dominance
                         | role_trans_def
  			| role_allow_def
 			| roleattribute_def
@@ -510,8 +508,6 @@ role_type_def		: ROLE identifier TYPES names ';'
 role_attr_def		: ROLE identifier opt_attr_list ';'
  			{if (define_role_attr()) return -1;}
                         ;
-role_dominance		: DOMINANCE '{' roles '}'
-			;
 role_trans_def		: ROLE_TRANSITION names names identifier ';'
 			{if (define_role_trans(0)) return -1; }
 			| ROLE_TRANSITION names names ':' names identifier ';'
@@ -519,16 +515,6 @@ role_trans_def		: ROLE_TRANSITION names names identifier ';'
 			;
 role_allow_def		: ALLOW names names ';'
 			{if (define_role_allow()) return -1; }
-			;
-roles			: role_def
-			{ $$ = $1; }
-			| roles role_def
-			{ $$ = merge_roles_dom((role_datum_t*)$1, (role_datum_t*)$2); if ($$ == 0) return -1;}
-			;
-role_def		: ROLE identifier_push ';'
-                        {$$ = define_role_dom(NULL); if ($$ == 0) return -1;}
-			| ROLE identifier_push '{' roles '}'
-                        {$$ = define_role_dom((role_datum_t*)$4); if ($$ == 0) return -1;}
 			;
 roleattribute_def	: ROLEATTRIBUTE identifier id_comma_list ';'
 			{if (define_roleattribute()) return -1;}
