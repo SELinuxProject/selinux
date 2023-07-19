@@ -2,7 +2,7 @@
  * File contexts backend for labeling system
  *
  * Author : Eamon Walsh <ewalsh@tycho.nsa.gov>
- * Author : Stephen Smalley <sds@tycho.nsa.gov>
+ * Author : Stephen Smalley <stephen.smalley.work@gmail.com>
  */
 
 #include <assert.h>

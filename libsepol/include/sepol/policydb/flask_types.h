@@ -1,7 +1,7 @@
 /* -*- linux-c -*- */
 
 /*
- * Author : Stephen Smalley, <sds@tycho.nsa.gov>
+ * Author : Stephen Smalley, <stephen.smalley.work@gmail.com>
  */
 
 #ifndef _SEPOL_POLICYDB_FLASK_TYPES_H_

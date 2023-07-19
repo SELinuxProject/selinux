@@ -1,7 +1,7 @@
 /* Authors: Joshua Brindle <jbrindle@tresys.com>
  *
  * Assertion checker for avtab entries, taken from
- * checkpolicy.c by Stephen Smalley <sds@tycho.nsa.gov>
+ * checkpolicy.c by Stephen Smalley <stephen.smalley.work@gmail.com>
  *
  * Copyright (C) 2005 Tresys Technology, LLC
  *
