@@ -1260,7 +1260,6 @@ static void cil_nametypetransition_to_policy(FILE *out, struct cil_nametypetrans
 	struct cil_name *name;
 	struct cil_list *class_list;
 	struct cil_list_item *i1;
-	const char *name_match_str = "";
 
 	src = trans->src;
 	tgt = trans->tgt;
@@ -1269,21 +1268,7 @@ static void cil_nametypetransition_to_policy(FILE *out, struct cil_nametypetrans
 
 	class_list = cil_expand_class(trans->obj);
 	cil_list_for_each(i1, class_list) {
-		switch (trans->name_match) {
-		case NAME_TRANS_MATCH_EXACT:
-			name_match_str = "";
-			break;
-		case NAME_TRANS_MATCH_PREFIX:
-			name_match_str = " PREFIX";
-			break;
-		case NAME_TRANS_MATCH_SUFFIX:
-			name_match_str = " SUFFIX";
-			break;
-		default:
-			name_match_str = "???";
-			break;
-		}
-		fprintf(out, "type_transition %s %s : %s %s \"%s\"%s;\n", src->fqn, tgt->fqn, DATUM(i1->data)->fqn, res->fqn, name->datum.fqn, name_match_str);
+		fprintf(out, "type_transition %s %s : %s %s \"%s\";\n", src->fqn, tgt->fqn, DATUM(i1->data)->fqn, res->fqn, name->datum.fqn);
 	}
 	cil_list_destroy(&class_list, CIL_FALSE);
 }

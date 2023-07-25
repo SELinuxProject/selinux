@@ -668,16 +668,6 @@ int cil_resolve_nametypetransition(struct cil_tree_node *current, void *extra_ar
 		nametypetrans->name = (struct cil_name *)name_datum;
 	}
 
-	if (nametypetrans->name_match_str == NULL) {
-		nametypetrans->name_match = NAME_TRANS_MATCH_EXACT;
-	} else if (nametypetrans->name_match_str == CIL_KEY_PREFIX) {
-		nametypetrans->name_match = NAME_TRANS_MATCH_PREFIX;
-	} else if (nametypetrans->name_match_str == CIL_KEY_SUFFIX) {
-		nametypetrans->name_match = NAME_TRANS_MATCH_SUFFIX;
-	} else {
-		cil_tree_log(current, CIL_ERR, "Invalid name match type \"%s\"", nametypetrans->name_match_str);
-	}
-
 	rc = cil_resolve_name(current, nametypetrans->result_str, CIL_SYM_TYPES, extra_args, &result_datum);
 	if (rc != SEPOL_OK) {
 		goto exit;

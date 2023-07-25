@@ -3334,11 +3334,10 @@ int cil_gen_typetransition(struct cil_db *db, struct cil_tree_node *parse_curren
 		CIL_SYN_STRING,
 		CIL_SYN_STRING,
 		CIL_SYN_STRING | CIL_SYN_END,
-		CIL_SYN_STRING | CIL_SYN_END,
-		CIL_SYN_END,
+		CIL_SYN_END
 	};
 	size_t syntax_len = sizeof(syntax)/sizeof(*syntax);
-	char *s1, *s2, *s3, *s4, *s5, *s6;
+	char *s1, *s2, *s3, *s4, *s5;
 
 	if (db == NULL || parse_current == NULL || ast_node == NULL ) {
 		goto exit;
@@ -3354,22 +3353,12 @@ int cil_gen_typetransition(struct cil_db *db, struct cil_tree_node *parse_curren
 	s3 = parse_current->next->next->next->data;
 	s4 = parse_current->next->next->next->next->data;
 	s5 = NULL;
-	s6 = NULL;
 
 	if (parse_current->next->next->next->next->next) {
 		if (s4 == CIL_KEY_STAR) {
-			if (parse_current->next->next->next->next->next->next) {
-				s4 = parse_current->next->next->next->next->next->next->data;
-			} else {
-				s4 = parse_current->next->next->next->next->next->data;
-			}
+			s4 = parse_current->next->next->next->next->next->data;
 		} else {
-			if (parse_current->next->next->next->next->next->next) {
-				s5 = parse_current->next->next->next->next->next->data;
-				s6 = parse_current->next->next->next->next->next->next->data;
-			} else {
-				s5 = parse_current->next->next->next->next->next->data;
-			}
+			s5 = parse_current->next->next->next->next->next->data;
 		}
 	}
 
@@ -3381,13 +3370,8 @@ int cil_gen_typetransition(struct cil_db *db, struct cil_tree_node *parse_curren
 		nametypetrans->src_str = s1;
 		nametypetrans->tgt_str = s2;
 		nametypetrans->obj_str = s3;
+		nametypetrans->result_str = s5;
 		nametypetrans->name_str = s4;
-		if (s6) {
-			nametypetrans->name_match_str = s5;
-			nametypetrans->result_str = s6;
-		} else {
-			nametypetrans->result_str = s5;
-		}
 
 		ast_node->data = nametypetrans;
 		ast_node->flavor = CIL_NAMETYPETRANSITION;

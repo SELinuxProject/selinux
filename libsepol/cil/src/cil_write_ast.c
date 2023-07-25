@@ -1168,8 +1168,6 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		fprintf(out, "%s ", datum_or_str(DATUM(rule->tgt), rule->tgt_str));
 		fprintf(out, "%s ", datum_or_str(DATUM(rule->obj), rule->obj_str));
 		fprintf(out, "\"%s\" ", datum_or_str(DATUM(rule->name), rule->name_str));
-		if (rule->name_match != NAME_TRANS_MATCH_EXACT)
-			fprintf(out, "%s ", rule->name_match_str);
 		fprintf(out, "%s", datum_or_str(DATUM(rule->result), rule->result_str));
 		fprintf(out, ")\n");
 		break;
