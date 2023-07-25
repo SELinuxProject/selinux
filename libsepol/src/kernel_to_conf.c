@@ -1683,26 +1683,11 @@ static int name_trans_to_strs_helper(hashtab_key_t k, hashtab_datum_t d, void *a
 	char *name = k;
 	uint32_t *otype = d;
 	name_trans_to_strs_args_t *args = a;
-	const char *match_str = "";
-	switch (args->match) {
-	case NAME_TRANS_MATCH_EXACT:
-		match_str = "";
-		break;
-	case NAME_TRANS_MATCH_PREFIX:
-		match_str = " PREFIX";
-		break;
-	case NAME_TRANS_MATCH_SUFFIX:
-		match_str = " SUFFIX";
-		break;
-	default:
-		ERR(NULL, "Unknown name match type: %" PRIu8, args->match);
-		return SEPOL_ERR;
-	}
-	return strs_create_and_add(args->strs, "%s %s %s:%s %s \"%s\"%s;", 7,
+	return strs_create_and_add(args->strs, "%s %s %s:%s %s \"%s\";", 6,
 				   args->flavor, args->src, args->tgt,
 				   args->class,
 				   args->pdb->p_type_val_to_name[*otype - 1],
-				   name, match_str);
+				   name);
 }
 
 static int avtab_node_to_strs(struct policydb *pdb, avtab_key_t *key, avtab_datum_t *datum, struct strs *strs)
@@ -1786,19 +1771,8 @@ static int avtab_node_to_strs(struct policydb *pdb, avtab_key_t *key, avtab_datu
 			.src = src,
 			.tgt = tgt,
 			.class = class,
-			.match = NAME_TRANS_MATCH_EXACT,
 		};
 		rc = hashtab_map(datum->trans->name_trans.table,
-				 name_trans_to_strs_helper, &args);
-		if (rc < 0)
-			return rc;
-		args.match = NAME_TRANS_MATCH_PREFIX;
-		rc = hashtab_map(datum->trans->prefix_trans.table,
-				 name_trans_to_strs_helper, &args);
-		if (rc < 0)
-			return rc;
-		args.match = NAME_TRANS_MATCH_SUFFIX;
-		rc = hashtab_map(datum->trans->suffix_trans.table,
 				 name_trans_to_strs_helper, &args);
 	} else {
 		new = pdb->p_type_val_to_name[data - 1];
