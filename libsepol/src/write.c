@@ -2025,9 +2025,8 @@ static int avrule_write(policydb_t *p, avrule_t * avrule,
 	uint32_t buf[32], len;
 	class_perm_node_t *cur;
 
-	/* skip filename transitions if writing older version without name */
-	if (p->policyvers < MOD_POLICYDB_VERSION_AVRULE_FTRANS &&
-	    avrule->specified & AVRULE_TRANSITION && avrule->object_name)
+	/* skip filename transitions for now */
+	if (avrule->specified & AVRULE_TRANSITION && avrule->object_name)
 		return POLICYDB_SUCCESS;
 
 	if (p->policyvers < MOD_POLICYDB_VERSION_SELF_TYPETRANS &&
@@ -2072,21 +2071,6 @@ static int avrule_write(policydb_t *p, avrule_t * avrule,
 			return POLICYDB_ERROR;
 
 		cur = cur->next;
-	}
-
-	if (p->policyvers >= MOD_POLICYDB_VERSION_AVRULE_FTRANS &&
-	    avrule->specified & AVRULE_TRANSITION) {
-		len = avrule->object_name ? strlen(avrule->object_name) : 0;
-		*buf = cpu_to_le32(len);
-		items = put_entry(buf, sizeof(uint32_t), 1, fp);
-		if (items != 1)
-			return POLICYDB_ERROR;
-		if (avrule->object_name) {
-			items = put_entry(avrule->object_name, sizeof(char),
-					  len, fp);
-			if (items != len)
-				return POLICYDB_ERROR;
-		}
 	}
 
 	if (avrule->specified & AVRULE_XPERMS) {
@@ -2138,8 +2122,7 @@ static int avrule_write_list(policydb_t *p, avrule_t * avrules,
 	avrule = avrules;
 	len = 0;
 	while (avrule) {
-		if (p->policyvers >= MOD_POLICYDB_VERSION_AVRULE_FTRANS ||
-		    !(avrule->specified & AVRULE_TRANSITION &&
+		if (!(avrule->specified & AVRULE_TRANSITION &&
 		      avrule->object_name))
 			len++;
 		avrule = avrule->next;
@@ -2374,7 +2357,6 @@ static int avrule_decl_write(avrule_decl_t * decl, int num_scope_syms,
 	}
 
 	if (p->policyvers >= MOD_POLICYDB_VERSION_FILENAME_TRANS &&
-	    p->policyvers < MOD_POLICYDB_VERSION_AVRULE_FTRANS &&
 	    filename_trans_rule_write(p, decl->avrules, fp))
 		return POLICYDB_ERROR;
 
