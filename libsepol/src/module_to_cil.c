@@ -547,13 +547,12 @@ static int semantic_level_to_cil(struct policydb *pdb, int sens_offset, struct m
 	return 0;
 }
 
-static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const char *src, const char *tgt, const char *object_name, uint8_t name_match, const struct class_perm_node *classperms)
+static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const char *src, const char *tgt, const char *object_name, const struct class_perm_node *classperms)
 {
 	int rc = -1;
 	const char *rule;
 	const struct class_perm_node *classperm;
 	char *perms;
-	const char *match_str = "";
 
 	switch (type) {
 	case AVRULE_ALLOWED:
@@ -599,24 +598,10 @@ static int avrule_to_cil(int indent, struct policydb *pdb, uint32_t type, const 
 					pdb->p_class_val_to_name[classperm->tclass - 1],
 					perms + 1);
 		} else if (object_name) {
-			switch (name_match) {
-			case NAME_TRANS_MATCH_EXACT:
-				match_str = "";
-				break;
-			case NAME_TRANS_MATCH_PREFIX:
-				match_str = " prefix";
-				break;
-			case NAME_TRANS_MATCH_SUFFIX:
-				match_str = " suffix";
-				break;
-			default:
-				ERR(NULL, "Unknown name match type: %" PRIu8,
-						name_match);
-			}
-			cil_println(indent, "(%s %s %s %s \"%s\"%s %s)",
+			cil_println(indent, "(%s %s %s %s \"%s\" %s)",
 					rule, src, tgt,
 					pdb->p_class_val_to_name[classperm->tclass - 1],
-					object_name, match_str,
+					object_name,
 					pdb->p_type_val_to_name[classperm->data - 1]);
 		} else {
 			cil_println(indent, "(%s %s %s %s %s)",
@@ -1220,7 +1205,7 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 				if (avrule->specified & AVRULE_XPERMS) {
 					rc = avrulex_to_cil(indent, pdb, avrule->specified, snames[s], tnames[t], avrule->perms, avrule->xperms);
 				} else {
-					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], tnames[t], avrule->object_name, avrule->name_match, avrule->perms);
+					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], tnames[t], avrule->object_name, avrule->perms);
 				}
 				if (rc != 0) {
 					goto exit;
@@ -1231,7 +1216,7 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 				if (avrule->specified & AVRULE_XPERMS) {
 					rc = avrulex_to_cil(indent, pdb, avrule->specified, snames[s], "self", avrule->perms, avrule->xperms);
 				} else {
-					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], "self", avrule->object_name, avrule->name_match, avrule->perms);
+					rc = avrule_to_cil(indent, pdb, avrule->specified, snames[s], "self", avrule->object_name, avrule->perms);
 				}
 				if (rc != 0) {
 					goto exit;

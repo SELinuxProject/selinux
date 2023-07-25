@@ -1620,8 +1620,7 @@ static int expand_terule_helper(sepol_handle_t * handle,
 				uint32_t specified, cond_av_list_t ** cond,
 				cond_av_list_t ** other, uint32_t stype,
 				uint32_t ttype, class_perm_node_t * perms,
-				char *object_name, uint8_t name_match,
-				avtab_t * avtab, int enabled)
+				char *object_name, avtab_t * avtab, int enabled)
 {
 	avtab_key_t avkey;
 	avtab_datum_t *avdatump;
@@ -1653,7 +1652,6 @@ static int expand_terule_helper(sepol_handle_t * handle,
 			int rc = avtab_insert_filename_trans(avtab, &avkey,
 							     remapped_data,
 							     object_name,
-							     name_match,
 							     &oldtype);
 			if (rc == SEPOL_EEXIST) {
 				ERR(handle, "conflicting filename transition %s %s:%s \"%s\": %s vs %s",
@@ -1887,7 +1885,6 @@ static int expand_rule_helper(sepol_handle_t * handle,
 							      source_rule->specified, cond,
 							      other, i, i, source_rule->perms,
 							      source_rule->object_name,
-							      source_rule->name_match,
 							      dest_avtab, enabled);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
@@ -1905,7 +1902,6 @@ static int expand_rule_helper(sepol_handle_t * handle,
 							      source_rule->specified, cond,
 							      other, i, j, source_rule->perms,
 							      source_rule->object_name,
-							      source_rule->name_match,
 							      dest_avtab, enabled);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;

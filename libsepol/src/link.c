@@ -1254,7 +1254,6 @@ static int copy_avrule_list(avrule_t * list, avrule_t ** dst,
 			if (!new_rule->object_name)
 				goto cleanup;
 		}
-		new_rule->name_match = cur->name_match;
 
 		cur_perm = cur->perms;
 		tail_perm = NULL;

@@ -28,7 +28,7 @@ int define_default_role(int which);
 int define_default_type(int which);
 int define_default_range(int which);
 int define_common_perms(void);
-int define_compute_type(int which, int has_filename, uint8_t name_match);
+int define_compute_type(int which, int has_filename);
 int define_conditional(cond_expr_t *expr, avrule_t *t_list, avrule_t *f_list );
 int define_constraint(constraint_expr_t *expr);
 int define_dominance(void);

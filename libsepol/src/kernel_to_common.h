@@ -90,7 +90,7 @@ typedef struct {
 	const char *src;
 	const char *tgt;
 	const char *class;
-	uint8_t match;
+	name_trans_match_t match;
 } name_trans_to_strs_args_t;
 
 void sepol_indent(FILE *out, int indent);

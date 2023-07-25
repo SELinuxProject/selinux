@@ -345,20 +345,6 @@ static int display_avrule(avrule_t * avrule, policydb_t * policy,
 		display_id(policy, fp, SYM_TYPES, avrule->perms->data - 1, "");
 		if (avrule->object_name)
 			fprintf(fp, " \"%s\"", avrule->object_name);
-		switch (avrule->name_match) {
-		case NAME_TRANS_MATCH_EXACT:
-			/* do nothing */
-			break;
-		case NAME_TRANS_MATCH_PREFIX:
-			fprintf(fp, " PREFIX");
-			break;
-		case NAME_TRANS_MATCH_SUFFIX:
-			fprintf(fp, " SUFFIX");
-			break;
-		default:
-			fprintf(fp, "     ERROR: no valid name match type specified\n");
-			return -1;
-		}
 	} else if (avrule->specified & AVRULE_XPERMS) {
 		avtab_extended_perms_t xperms;
 		int i;
