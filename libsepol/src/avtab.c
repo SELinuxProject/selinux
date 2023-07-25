@@ -446,87 +446,6 @@ void avtab_hash_eval(avtab_t * h, char *tag)
 	     tag, h->nel, slots_used, h->nslot, max_chain_len);
 }
 
-static int avtab_read_name_trans(policy_file_t *fp, symtab_t *target)
-{
-	int rc;
-	uint32_t buf32[2], nel, i, len, *otype = NULL;
-	char *name = NULL;
-
-	/* read number of name transitions */
-	rc = next_entry(buf32, fp, sizeof(uint32_t) * 1);
-	if (rc < 0)
-		return rc;
-	nel = le32_to_cpu(buf32[0]);
-
-	rc = symtab_init(target, nel);
-	if (rc < 0)
-		return rc;
-
-	/* read name transitions */
-	for (i = 0; i < nel; i++) {
-		rc = SEPOL_ENOMEM;
-		otype = malloc(sizeof(uint32_t));
-		if (!otype)
-			goto exit;
-
-		/* read name transition otype and name length */
-		rc = next_entry(buf32, fp, sizeof(uint32_t) * 2);
-		if (rc < 0)
-			goto exit;
-		*otype = le32_to_cpu(buf32[0]);
-		len = le32_to_cpu(buf32[1]);
-
-		/* read the name */
-		rc = str_read(&name, fp, len);
-		if (rc < 0)
-			goto exit;
-
-		rc = hashtab_insert(target->table, name, otype);
-		if (rc < 0)
-			goto exit;
-		otype = NULL;
-		name = NULL;
-	}
-
-exit:
-	free(otype);
-	free(name);
-	return rc;
-}
-
-static int avtab_trans_read(policy_file_t *fp, uint32_t vers,
-			    avtab_trans_t *trans)
-{
-	int rc;
-	uint32_t buf32[1];
-
-	if (vers < POLICYDB_VERSION_AVTAB_FTRANS) {
-		rc = next_entry(buf32, fp, sizeof(uint32_t));
-		if (rc < 0) {
-			ERR(fp->handle, "truncated entry");
-			return SEPOL_ERR;
-		}
-		trans->otype = le32_to_cpu(*buf32);
-		return SEPOL_OK;
-	}
-
-	/* read otype */
-	rc = next_entry(buf32, fp, sizeof(uint32_t) * 1);
-	if (rc < 0)
-		return rc;
-	trans->otype = le32_to_cpu(buf32[0]);
-
-	rc = avtab_read_name_trans(fp, &trans->name_trans);
-	if (rc < 0)
-		goto bad;
-
-	return SEPOL_OK;
-
-bad:
-	avtab_trans_destroy(trans);
-	return rc;
-}
-
 /* Ordering of datums in the original avtab format in the policy file. */
 static const uint16_t spec_order[] = {
 	AVTAB_ALLOWED,
@@ -690,9 +609,12 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 			xperms.perms[i] = le32_to_cpu(buf32[i]);
 		datum.xperms = &xperms;
 	} else if (key.specified & AVTAB_TRANSITION) {
-		rc = avtab_trans_read(fp, vers, &trans);
-		if (rc < 0)
+		rc = next_entry(buf32, fp, sizeof(uint32_t));
+		if (rc < 0) {
+			ERR(fp->handle, "truncated entry");
 			return -1;
+		}
+		trans.otype = le32_to_cpu(*buf32);
 		datum.trans = &trans;
 	} else {
 		rc = next_entry(buf32, fp, sizeof(uint32_t));

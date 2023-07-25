@@ -102,56 +102,6 @@ static uint16_t spec_order[] = {
 	AVTAB_MEMBER
 };
 
-static int avtab_trans_write_helper(hashtab_key_t hkey, hashtab_datum_t hdatum,
-				    void *fp)
-{
-	char *name = hkey;
-	uint32_t *otype = hdatum;
-	uint32_t buf32[2], len;
-	size_t items;
-
-	/* write filename transition otype and name length */
-	len = strlen(name);
-	buf32[0] = cpu_to_le32(*otype);
-	buf32[1] = cpu_to_le32(len);
-	items = put_entry(buf32, sizeof(uint32_t), 2, fp);
-	if (items != 2)
-		return -1;
-
-	/* write filename transition name */
-	items = put_entry(name, sizeof(char), len, fp);
-	if (items != len)
-		return -1;
-
-	return 0;
-}
-
-static int avtab_trans_write(policydb_t *p, const avtab_trans_t *cur,
-			     policy_file_t *fp)
-{
-	size_t items;
-	uint32_t buf32[2];
-
-	if (p->policyvers >= POLICYDB_VERSION_AVTAB_FTRANS) {
-		/* write otype and number of filename transitions */
-		buf32[0] = cpu_to_le32(cur->otype);
-		buf32[1] = cpu_to_le32(hashtab_nel(cur->name_trans.table));
-		items = put_entry(buf32, sizeof(uint32_t), 2, fp);
-		if (items != 2)
-			return -1;
-
-		/* write filename transitions */
-		return hashtab_map(cur->name_trans.table,
-				   avtab_trans_write_helper, fp);
-	} else if (cur->otype) {
-		buf32[0] = cpu_to_le32(cur->otype);
-		items = put_entry(buf32, sizeof(uint32_t), 1, fp);
-		if (items != 1)
-			return -1;
-	}
-	return 0;
-}
-
 static int avtab_write_item(policydb_t * p,
 			    avtab_ptr_t cur, struct policy_file *fp,
 			    unsigned merge, unsigned commit, uint32_t * nel)
@@ -166,12 +116,8 @@ static int avtab_write_item(policydb_t * p,
 				&& p->policyvers < POLICYDB_VERSION_AVTAB);
 	unsigned int i;
 
-	/*
-	 * skip entries which only contain filename transitions in versions
-	 * before filename transitions were moved to avtab
-	 */
-	if (p->policyvers < POLICYDB_VERSION_AVTAB_FTRANS &&
-	    cur->key.specified & AVTAB_TRANSITION && !cur->datum.trans->otype) {
+	/* skip entries which only contain filename transitions */
+	if (cur->key.specified & AVTAB_TRANSITION && !cur->datum.trans->otype) {
 		/* if oldvers, reduce nel, because this node will be skipped */
 		if (oldvers && nel)
 			(*nel)--;
@@ -325,7 +271,9 @@ static int avtab_write_item(policydb_t * p,
 		if (items != 8)
 			return POLICYDB_ERROR;
 	} else if (cur->key.specified & AVTAB_TRANSITION) {
-		if (avtab_trans_write(p, cur->datum.trans, fp) < 0)
+		buf32[0] = cpu_to_le32(cur->datum.trans->otype);
+		items = put_entry(buf32, sizeof(uint32_t), 1, fp);
+		if (items != 1)
 			return POLICYDB_ERROR;
 	} else {
 		buf32[0] = cpu_to_le32(cur->datum.data);
@@ -378,18 +326,15 @@ static int avtab_write(struct policydb *p, avtab_t * a, struct policy_file *fp)
 		 * filename transitions.
 		 */
 		nel = a->nel;
-		if (p->policyvers < POLICYDB_VERSION_AVTAB_FTRANS) {
-			/*
-			 * entries containing only filename transitions are
-			 * skipped and written out later
-			 */
-			for (i = 0; i < a->nslot; i++) {
-				for (cur = a->htable[i]; cur; cur = cur->next) {
-					if ((cur->key.specified
-					     & AVTAB_TRANSITION) &&
-					    !cur->datum.trans->otype)
-						nel--;
-				}
+		/*
+		 * entries containing only filename transitions are skipped and
+		 * written out later
+		 */
+		for (i = 0; i < a->nslot; i++) {
+			for (cur = a->htable[i]; cur; cur = cur->next) {
+				if (cur->key.specified & AVTAB_TRANSITION &&
+				    !cur->datum.trans->otype)
+					nel--;
 			}
 		}
 		nel = cpu_to_le32(nel);
@@ -2681,8 +2626,7 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 		if (role_allow_write(p->role_allow, fp))
 			return POLICYDB_ERROR;
 		if (p->policyvers >= POLICYDB_VERSION_FILENAME_TRANS) {
-			if (p->policyvers < POLICYDB_VERSION_AVTAB_FTRANS &&
-			    avtab_filename_trans_write(p, &p->te_avtab, fp))
+			if (avtab_filename_trans_write(p, &p->te_avtab, fp))
 				return POLICYDB_ERROR;
 		} else if (avtab_has_filename_transitions(&p->te_avtab)) {
 			WARN(fp->handle,

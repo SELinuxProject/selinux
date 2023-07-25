@@ -209,13 +209,6 @@ static const struct policydb_compat_info policydb_compat[] = {
 	 .target_platform = SEPOL_TARGET_SELINUX,
 	},
 	{
-	 .type = POLICY_KERN,
-	 .version = POLICYDB_VERSION_AVTAB_FTRANS,
-	 .sym_num = SYM_NUM,
-	 .ocon_num = OCON_IBENDPORT + 1,
-	 .target_platform = SEPOL_TARGET_SELINUX,
-	},
-	{
 	 .type = POLICY_BASE,
 	 .version = MOD_POLICYDB_VERSION_BASE,
 	 .sym_num = SYM_NUM,
@@ -4106,7 +4099,6 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		if (role_allow_read(&p->role_allow, fp))
 			goto bad;
 		if (r_policyvers >= POLICYDB_VERSION_FILENAME_TRANS &&
-		    r_policyvers < POLICYDB_VERSION_AVTAB_FTRANS &&
 		    avtab_filename_trans_read(fp, r_policyvers, &p->te_avtab))
 			goto bad;
 	} else {
