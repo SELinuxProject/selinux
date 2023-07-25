@@ -1313,6 +1313,31 @@ bad:
 	return -1;
 }
 
+
+static int validate_filename_trans_rules(sepol_handle_t *handle, const filename_trans_rule_t *filename_trans, const policydb_t *p, validate_t flavors[])
+{
+	for (; filename_trans; filename_trans = filename_trans->next) {
+		if (validate_type_set(&filename_trans->stypes, &flavors[SYM_TYPES]))
+			goto bad;
+		if (validate_type_set(&filename_trans->ttypes, &flavors[SYM_TYPES]))
+			goto bad;
+		if (validate_value(filename_trans->tclass,&flavors[SYM_CLASSES] ))
+			goto bad;
+		if (validate_simpletype(filename_trans->otype, p, flavors))
+			goto bad;
+
+		/* currently only the RULE_SELF flag can be set */
+		if ((filename_trans->flags & ~RULE_SELF) != 0)
+			goto bad;
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid filename trans rule list");
+	return -1;
+}
+
 static int validate_symtabs(sepol_handle_t *handle, const symtab_t symtabs[], validate_t flavors[])
 {
 	unsigned int i;
@@ -1346,6 +1371,8 @@ static int validate_avrule_blocks(sepol_handle_t *handle, const avrule_block_t *
 			if (validate_scope_index(handle, &decl->required, flavors))
 				goto bad;
 			if (validate_scope_index(handle, &decl->declared, flavors))
+				goto bad;
+			if (validate_filename_trans_rules(handle, decl->filename_trans_rules, p, flavors))
 				goto bad;
 			if (validate_symtabs(handle, decl->symtab, flavors))
 				goto bad;

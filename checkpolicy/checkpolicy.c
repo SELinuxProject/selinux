@@ -615,6 +615,15 @@ int main(int argc, char **argv)
 		parse_policy.mls = mlspol;
 		parse_policy.handle_unknown = handle_unknown;
 
+		/*
+		 * Init and alloc te_avtab for filename transition duplicate
+		 * checking
+		 */
+		if (avtab_init(&parse_policy.te_avtab))
+			exit(1);
+		if (avtab_alloc(&parse_policy.te_avtab, 1 << 11))
+			exit(1);
+
 		policydbp = &parse_policy;
 
 		if (read_source_policy(policydbp, file, "checkpolicy") < 0)
