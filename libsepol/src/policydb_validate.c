@@ -836,9 +836,7 @@ static int validate_avtab_key_and_datum(avtab_key_t *k, avtab_datum_t *d, void *
 	if (validate_avtab_key(k, 0, margs->policy, margs->flavors))
 		return -1;
 
-	uint32_t otype = k->specified & AVTAB_TRANSITION
-		? d->trans->otype : d->data;
-	if ((k->specified & AVTAB_TYPE) && validate_simpletype(otype, margs->policy, margs->flavors))
+	if ((k->specified & AVTAB_TYPE) && validate_simpletype(d->data, margs->policy, margs->flavors))
 		return -1;
 
 	if ((k->specified & AVTAB_XPERMS) && validate_xperms(d->xperms))

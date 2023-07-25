@@ -70,10 +70,6 @@ typedef struct avtab_key {
 	uint16_t specified;	/* what fields are specified */
 } avtab_key_t;
 
-typedef struct avtab_trans {
-	uint32_t otype;		/* resulting type of the new object */
-} avtab_trans_t;
-
 typedef struct avtab_extended_perms {
 
 #define AVTAB_XPERMS_IOCTLFUNCTION	0x01
@@ -85,8 +81,7 @@ typedef struct avtab_extended_perms {
 } avtab_extended_perms_t;
 
 typedef struct avtab_datum {
-	uint32_t data;		/* access vector, member or change value */
-	avtab_trans_t *trans;	/* transition value */
+	uint32_t data;		/* access vector or type */
 	avtab_extended_perms_t *xperms;
 } avtab_datum_t;
 
