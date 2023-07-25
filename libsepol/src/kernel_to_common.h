@@ -83,15 +83,6 @@ struct strs {
 	size_t size;
 };
 
-typedef struct {
-	policydb_t *pdb;
-	struct strs *strs;
-	const char *flavor;
-	const char *src;
-	const char *tgt;
-	const char *class;
-} name_trans_to_strs_args_t;
-
 void sepol_indent(FILE *out, int indent);
 __attribute__ ((format(printf, 2, 3)))
 void sepol_printf(FILE *out, const char *fmt, ...);

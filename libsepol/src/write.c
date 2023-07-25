@@ -116,14 +116,6 @@ static int avtab_write_item(policydb_t * p,
 				&& p->policyvers < POLICYDB_VERSION_AVTAB);
 	unsigned int i;
 
-	/* skip entries which only contain filename transitions */
-	if (cur->key.specified & AVTAB_TRANSITION && !cur->datum.trans->otype) {
-		/* if oldvers, reduce nel, because this node will be skipped */
-		if (oldvers && nel)
-			(*nel)--;
-		return 0;
-	}
-
 	if (oldvers) {
 		/* Generate the old avtab format.
 		   Requires merging similar entries if uncond avtab. */
@@ -321,23 +313,8 @@ static int avtab_write(struct policydb *p, avtab_t * a, struct policy_file *fp)
 		avtab_reset_merged(a);
 		nel = a->nel;
 	} else {
-		/*
-		 * New avtab format.  nel is good to go unless we need to skip
-		 * filename transitions.
-		 */
-		nel = a->nel;
-		/*
-		 * entries containing only filename transitions are skipped and
-		 * written out later
-		 */
-		for (i = 0; i < a->nslot; i++) {
-			for (cur = a->htable[i]; cur; cur = cur->next) {
-				if (cur->key.specified & AVTAB_TRANSITION &&
-				    !cur->datum.trans->otype)
-					nel--;
-			}
-		}
-		nel = cpu_to_le32(nel);
+		/* New avtab format.  nel is good to go. */
+		nel = cpu_to_le32(a->nel);
 		items = put_entry(&nel, sizeof(uint32_t), 1, fp);
 		if (items != 1)
 			return POLICYDB_ERROR;
@@ -380,307 +357,6 @@ static int avtab_write(struct policydb *p, avtab_t * a, struct policy_file *fp)
 		avtab_destroy(&expa);
 	return rc;
 }
-
-/* policydb filename transition compatibility */
-
-typedef struct filenametr_key {
-	uint32_t ttype;
-	uint32_t tclass;
-	char *name;
-} filenametr_key_t;
-
-typedef struct filenametr_datum {
-	ebitmap_t stypes;
-	uint32_t otype;
-	struct filenametr_datum *next;
-} filenametr_datum_t;
-
-ignore_unsigned_overflow_
-static inline unsigned long
-partial_name_hash(unsigned long c, unsigned long prevhash)
-{
-	return (prevhash + (c << 4) + (c >> 4)) * 11;
-}
-
-static unsigned int filenametr_hash(hashtab_t h, const_hashtab_key_t k)
-{
-	const filenametr_key_t *ft = (const filenametr_key_t *)k;
-	unsigned long hash;
-	unsigned int byte_num;
-	unsigned char focus;
-
-	hash = ft->ttype ^ ft->tclass;
-
-	byte_num = 0;
-	while ((focus = ft->name[byte_num++]))
-		hash = partial_name_hash(focus, hash);
-	return hash & (h->size - 1);
-}
-
-static int filenametr_cmp(hashtab_t h __attribute__ ((unused)),
-			  const_hashtab_key_t k1, const_hashtab_key_t k2)
-{
-	const filenametr_key_t *ft1 = (const filenametr_key_t *)k1;
-	const filenametr_key_t *ft2 = (const filenametr_key_t *)k2;
-	int v;
-
-	v = spaceship_cmp(ft1->ttype, ft2->ttype);
-	if (v)
-		return v;
-
-	v = spaceship_cmp(ft1->tclass, ft2->tclass);
-	if (v)
-		return v;
-
-	return strcmp(ft1->name, ft2->name);
-}
-
-static int filenametr_destroy(hashtab_key_t key, hashtab_datum_t datum,
-			      void *p __attribute__ ((unused)))
-{
-	filenametr_key_t *ft = (filenametr_key_t *)key;
-	filenametr_datum_t *fd = datum, *next;
-
-	free(ft->name);
-	free(key);
-	do {
-		next = fd->next;
-		ebitmap_destroy(&fd->stypes);
-		free(fd);
-		fd = next;
-	} while (fd);
-	return 0;
-}
-
-typedef struct {
-	void *fp;
-	avtab_key_t *key;
-} name_trans_write_args_t;
-
-static int name_trans_write_helper(hashtab_key_t k, hashtab_datum_t d, void *a)
-{
-	char *name = k;
-	uint32_t *otype = d;
-	name_trans_write_args_t *args = a;
-	size_t items;
-	uint32_t len, buf[4];
-
-	len = strlen(name);
-	buf[0] = cpu_to_le32(len);
-	items = put_entry(buf, sizeof(uint32_t), 1, args->fp);
-	if (items != 1)
-		return -1;
-
-	items = put_entry(name, sizeof(char), len,args-> fp);
-	if (items != len)
-		return -1;
-
-	buf[0] = cpu_to_le32(args->key->source_type);
-	buf[1] = cpu_to_le32(args->key->target_type);
-	buf[2] = cpu_to_le32(args->key->target_class);
-	buf[3] = cpu_to_le32(*otype);
-
-	items = put_entry(buf, sizeof(uint32_t), 4, args->fp);
-	if (items != 4)
-		return -1;
-	return 0;
-}
-
-typedef struct {
-	hashtab_t fnts_tab;
-	avtab_key_t *av_key;
-} name_trans_insert_args_t;
-
-static int name_trans_insert_helper(hashtab_key_t k, hashtab_datum_t d, void *a)
-{
-	char *name = k;
-	uint32_t *otype = d;
-	name_trans_insert_args_t *args = a;
-	filenametr_key_t key, *ft = NULL;
-	filenametr_datum_t *last, *datum = NULL;
-	int rc;
-
-	key.ttype = args->av_key->target_type;
-	key.tclass = args->av_key->target_class;
-	key.name = name;
-
-	last = NULL;
-	datum = hashtab_search(args->fnts_tab, (hashtab_key_t)&key);
-	while (datum) {
-		if (ebitmap_get_bit(&datum->stypes, args->av_key->source_type - 1)) {
-			datum = NULL;
-			goto bad;
-		}
-		if (datum->otype == *otype)
-			break;
-		last = datum;
-		datum = datum->next;
-	}
-	if (!datum) {
-		datum = malloc(sizeof(filenametr_datum_t));
-		if (!datum)
-			goto bad;
-
-		ebitmap_init(&datum->stypes);
-		datum->otype = *otype;
-		datum->next = NULL;
-
-		if (last) {
-			last->next = datum;
-		} else {
-			ft = malloc(sizeof(filenametr_key_t));
-			if (!ft)
-				goto bad;
-
-			ft->ttype = args->av_key->target_type;
-			ft->tclass = args->av_key->target_class;
-			ft->name = strdup(name);
-			if (!ft->name)
-				goto bad;
-
-			rc = hashtab_insert(args->fnts_tab, (hashtab_key_t)ft, datum);
-			if (rc)
-				goto bad;
-		}
-	}
-
-	return ebitmap_set_bit(&datum->stypes, args->av_key->source_type - 1, 1);
-
-bad:
-	if (ft != NULL)
-		free(ft->name);
-	free(ft);
-	free(datum);
-	return -1;
-}
-
-static int filenametr_comp_write_one(hashtab_key_t key, void *data, void *ptr)
-{
-	uint32_t buf[3];
-	size_t items, len, ndatum;
-	filenametr_key_t *ft = (filenametr_key_t *)key;
-	filenametr_datum_t *datum;
-	void *fp = ptr;
-
-	len = strlen(ft->name);
-	buf[0] = cpu_to_le32(len);
-	items = put_entry(buf, sizeof(uint32_t), 1, fp);
-	if (items != 1)
-		return POLICYDB_ERROR;
-
-	items = put_entry(ft->name, sizeof(char), len, fp);
-	if (items != len)
-		return POLICYDB_ERROR;
-
-	ndatum = 0;
-	datum = data;
-	do {
-		ndatum++;
-		datum = datum->next;
-	} while (datum);
-
-	buf[0] = cpu_to_le32(ft->ttype);
-	buf[1] = cpu_to_le32(ft->tclass);
-	buf[2] = cpu_to_le32(ndatum);
-	items = put_entry(buf, sizeof(uint32_t), 3, fp);
-	if (items != 3)
-		return POLICYDB_ERROR;
-
-	datum = data;
-	do {
-		if (ebitmap_write(&datum->stypes, fp))
-			return POLICYDB_ERROR;
-
-		buf[0] = cpu_to_le32(datum->otype);
-		items = put_entry(buf, sizeof(uint32_t), 1, fp);
-		if (items != 1)
-			return POLICYDB_ERROR;
-
-		datum = datum->next;
-	} while (datum);
-
-	return 0;
-}
-
-static int avtab_filename_trans_write(policydb_t *pol, avtab_t *a,
-				      policy_file_t *fp)
-{
-	policydb_t *p = pol;
-	uint32_t buf[1];
-	int rc;
-	size_t items;
-	uint32_t i, nel = 0;
-	struct avtab_node *cur;
-	hashtab_t fnts_tab;
-	name_trans_write_args_t write_args = { .fp = fp };
-	name_trans_insert_args_t insert_args;
-
-	/* count number of filename transitions */
-	for (i = 0; i < a->nslot; i++) {
-		for (cur = a->htable[i]; cur; cur = cur->next) {
-			if (cur->key.specified & AVTAB_TRANSITION) {
-				nel += hashtab_nel(cur->datum.trans->name_trans.table);
-			}
-		}
-	}
-
-	if (p->policyvers < POLICYDB_VERSION_COMP_FTRANS) {
-		buf[0] = cpu_to_le32(nel);
-		items = put_entry(buf, sizeof(uint32_t), 1, fp);
-		if (items != 1)
-			return -1;
-
-		/* write filename transitions */
-		for (i = 0; i < a->nslot; i++) {
-			for (cur = a->htable[i]; cur; cur = cur->next) {
-				if (cur->key.specified & AVTAB_TRANSITION) {
-					write_args.key = &cur->key;
-					rc = hashtab_map(cur->datum.trans->name_trans.table,
-							 name_trans_write_helper,
-							 &write_args);
-					if (rc)
-						return -1;
-				}
-			}
-		}
-		return 0;
-	}
-
-	/* init filename transitions */
-	fnts_tab = hashtab_create(filenametr_hash, filenametr_cmp, nel);
-	if (!fnts_tab)
-		return -1;
-	insert_args.fnts_tab = fnts_tab;
-
-	for (i = 0; i < a->nslot; i++) {
-		for (cur = a->htable[i]; cur; cur = cur->next) {
-			if (cur->key.specified & AVTAB_TRANSITION) {
-				insert_args.av_key = &cur->key;
-				rc = hashtab_map(cur->datum.trans->name_trans.table,
-						 name_trans_insert_helper,
-						 &insert_args);
-			}
-		}
-	}
-
-	rc = -1;
-	/* write compressed filename transitions */
-	buf[0] = cpu_to_le32(fnts_tab->nel);
-	items = put_entry(buf, sizeof(uint32_t), 1, fp);
-	if (items != 1)
-		goto out;
-
-	rc = hashtab_map(fnts_tab, filenametr_comp_write_one, fp);
-
-out:
-	/* destroy temp filename transitions table */
-	hashtab_map(fnts_tab, filenametr_destroy, NULL);
-	hashtab_destroy(fnts_tab);
-
-	return rc ? -1 : 0;
-}
-
-/* end policydb filename transition compatibility */
 
 /*
  * Write a semantic MLS level structure to a policydb binary 
@@ -902,6 +578,118 @@ static int role_allow_write(role_allow_t * r, struct policy_file *fp)
 			return POLICYDB_ERROR;
 	}
 	return POLICYDB_SUCCESS;
+}
+
+static int filename_write_one_compat(hashtab_key_t key, void *data, void *ptr)
+{
+	uint32_t bit, buf[4];
+	size_t items, len;
+	filename_trans_key_t *ft = (filename_trans_key_t *)key;
+	filename_trans_datum_t *datum = data;
+	ebitmap_node_t *node;
+	void *fp = ptr;
+
+	len = strlen(ft->name);
+	do {
+		ebitmap_for_each_positive_bit(&datum->stypes, node, bit) {
+			buf[0] = cpu_to_le32(len);
+			items = put_entry(buf, sizeof(uint32_t), 1, fp);
+			if (items != 1)
+				return POLICYDB_ERROR;
+
+			items = put_entry(ft->name, sizeof(char), len, fp);
+			if (items != len)
+				return POLICYDB_ERROR;
+
+			buf[0] = cpu_to_le32(bit + 1);
+			buf[1] = cpu_to_le32(ft->ttype);
+			buf[2] = cpu_to_le32(ft->tclass);
+			buf[3] = cpu_to_le32(datum->otype);
+			items = put_entry(buf, sizeof(uint32_t), 4, fp);
+			if (items != 4)
+				return POLICYDB_ERROR;
+		}
+
+		datum = datum->next;
+	} while (datum);
+
+	return 0;
+}
+
+static int filename_write_one(hashtab_key_t key, void *data, void *ptr)
+{
+	uint32_t buf[3];
+	size_t items, len, ndatum;
+	filename_trans_key_t *ft = (filename_trans_key_t *)key;
+	filename_trans_datum_t *datum;
+	void *fp = ptr;
+
+	len = strlen(ft->name);
+	buf[0] = cpu_to_le32(len);
+	items = put_entry(buf, sizeof(uint32_t), 1, fp);
+	if (items != 1)
+		return POLICYDB_ERROR;
+
+	items = put_entry(ft->name, sizeof(char), len, fp);
+	if (items != len)
+		return POLICYDB_ERROR;
+
+	ndatum = 0;
+	datum = data;
+	do {
+		ndatum++;
+		datum = datum->next;
+	} while (datum);
+
+	buf[0] = cpu_to_le32(ft->ttype);
+	buf[1] = cpu_to_le32(ft->tclass);
+	buf[2] = cpu_to_le32(ndatum);
+	items = put_entry(buf, sizeof(uint32_t), 3, fp);
+	if (items != 3)
+		return POLICYDB_ERROR;
+
+	datum = data;
+	do {
+		if (ebitmap_write(&datum->stypes, fp))
+			return POLICYDB_ERROR;
+
+		buf[0] = cpu_to_le32(datum->otype);
+		items = put_entry(buf, sizeof(uint32_t), 1, fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+
+		datum = datum->next;
+	} while (datum);
+
+	return 0;
+}
+
+static int filename_trans_write(struct policydb *p, void *fp)
+{
+	size_t items;
+	uint32_t buf[1];
+	int rc;
+
+	if (p->policyvers < POLICYDB_VERSION_FILENAME_TRANS)
+		return 0;
+
+	if (p->policyvers < POLICYDB_VERSION_COMP_FTRANS) {
+		buf[0] = cpu_to_le32(p->filename_trans_count);
+		items = put_entry(buf, sizeof(uint32_t), 1, fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+
+		rc = hashtab_map(p->filename_trans, filename_write_one_compat,
+				 fp);
+	} else {
+		buf[0] = cpu_to_le32(p->filename_trans->nel);
+		items = put_entry(buf, sizeof(uint32_t), 1, fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+
+		rc = hashtab_map(p->filename_trans, filename_write_one, fp);
+	}
+	return rc;
 }
 
 static int role_set_write(role_set_t * x, struct policy_file *fp)
@@ -2414,21 +2202,6 @@ static int role_attr_uncount(hashtab_key_t key __attribute__ ((unused)),
 	return 0;
 }
 
-static int avtab_has_filename_transitions(avtab_t *a)
-{
-	uint32_t i;
-	struct avtab_node *cur;
-	for (i = 0; i < a->nslot; i++) {
-		for (cur = a->htable[i]; cur; cur = cur->next) {
-			if (cur->key.specified & AVTAB_TRANSITION) {
-				if (hashtab_nel(cur->datum.trans->name_trans.table))
-					return 1;
-			}
-		}
-	}
-	return 0;
-}
-
 /*
  * Write the configuration data in a policy database
  * structure to a policy database binary representation
@@ -2608,11 +2381,11 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 		if (role_allow_write(p->role_allow, fp))
 			return POLICYDB_ERROR;
 		if (p->policyvers >= POLICYDB_VERSION_FILENAME_TRANS) {
-			if (avtab_filename_trans_write(p, &p->te_avtab, fp))
+			if (filename_trans_write(p, fp))
 				return POLICYDB_ERROR;
-		} else if (avtab_has_filename_transitions(&p->te_avtab)) {
-			WARN(fp->handle,
-			     "Discarding filename type transition rules");
+		} else {
+			if (p->filename_trans)
+				WARN(fp->handle, "Discarding filename type transition rules");
 		}
 	} else {
 		if (avrule_block_write(p->global, num_syms, p, fp) == -1) {

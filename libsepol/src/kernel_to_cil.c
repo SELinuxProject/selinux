@@ -1700,24 +1700,14 @@ static char *xperms_to_str(avtab_extended_perms_t *xperms)
 	return xpermsbuf;
 }
 
-static int name_trans_to_strs_helper(hashtab_key_t k, hashtab_datum_t d, void *a)
+static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_datum_t *datum)
 {
-	char *name = k;
-	uint32_t *otype = d;
-	name_trans_to_strs_args_t *args = a;
-	return strs_create_and_add(args->strs, "(%s %s %s %s \"%s\" %s)", 6,
-				   args->flavor, args->src, args->tgt,
-				   args->class, name,
-				   args->pdb->p_type_val_to_name[*otype - 1]);
-}
-
-static int avtab_node_to_strs(struct policydb *pdb, avtab_key_t *key, avtab_datum_t *datum, struct strs *strs)
-{
-	int rc = SEPOL_OK;
-	uint32_t data = datum->data;
+	uint32_t data = key->specified & AVTAB_TRANSITION
+		? datum->trans->otype : datum->data;
 	type_datum_t *type;
 	const char *flavor, *tgt;
 	char *src, *class, *perms, *new;
+	char *rule = NULL;
 
 	switch (0xFFF & key->specified) {
 	case AVTAB_ALLOWED:
@@ -1750,7 +1740,7 @@ static int avtab_node_to_strs(struct policydb *pdb, avtab_key_t *key, avtab_datu
 		break;
 	default:
 		ERR(NULL, "Unknown avtab type: %i", key->specified);
-		return SEPOL_ERR;
+		goto exit;
 	}
 
 	src = pdb->p_type_val_to_name[key->source_type - 1];
@@ -1767,44 +1757,33 @@ static int avtab_node_to_strs(struct policydb *pdb, avtab_key_t *key, avtab_datu
 		perms = sepol_av_to_string(pdb, key->target_class, data);
 		if (perms == NULL) {
 			ERR(NULL, "Failed to generate permission string");
-			return SEPOL_ERR;
+			goto exit;
 		}
-		rc = strs_create_and_add(strs, "(%s %s %s (%s (%s)))", 5,
-					 flavor, src, tgt, class, perms + 1);
+		rule = create_str("(%s %s %s (%s (%s)))", 5,
+				  flavor, src, tgt, class, perms+1);
 	} else if (key->specified & AVTAB_XPERMS) {
 		perms = xperms_to_str(datum->xperms);
 		if (perms == NULL) {
 			ERR(NULL, "Failed to generate extended permission string");
-			return SEPOL_ERR;
+			goto exit;
 		}
 
-		rc = strs_create_and_add(strs, "(%s %s %s (%s %s (%s)))", 6,
-					 flavor, src, tgt, "ioctl", class, perms);
-	} else if (key->specified & AVTAB_TRANSITION) {
-		if (datum->trans->otype) {
-			rc = strs_create_and_add(strs, "(%s %s %s %s %s)", 5,
-						 flavor, src, tgt, class,
-						 pdb->p_type_val_to_name[datum->trans->otype - 1]);
-			if (rc < 0)
-				return rc;
-		}
-		name_trans_to_strs_args_t args = {
-			.pdb = pdb,
-			.strs = strs,
-			.flavor = flavor,
-			.src = src,
-			.tgt = tgt,
-			.class = class,
-		};
-		rc = hashtab_map(datum->trans->name_trans.table,
-				 name_trans_to_strs_helper, &args);
+		rule = create_str("(%s %s %s (%s %s (%s)))", 6,
+				  flavor, src, tgt, "ioctl", class, perms);
 	} else {
 		new = pdb->p_type_val_to_name[data - 1];
 
-		rc = strs_create_and_add(strs, "(%s %s %s %s %s)", 5, flavor, src, tgt, class, new);
+		rule = create_str("(%s %s %s %s %s)", 5, flavor, src, tgt, class, new);
 	}
 
-	return rc;
+	if (!rule) {
+		goto exit;
+	}
+
+	return rule;
+
+exit:
+	return NULL;
 }
 
 struct map_avtab_args {
@@ -1819,12 +1798,23 @@ static int map_avtab_write_helper(avtab_key_t *key, avtab_datum_t *datum, void *
 	uint32_t flavor = map_args->flavor;
 	struct policydb *pdb = map_args->pdb;
 	struct strs *strs = map_args->strs;
+	char *rule;
 	int rc = 0;
 
 	if (key->specified & flavor) {
-		rc = avtab_node_to_strs(pdb, key, datum, strs);
+		rule = avtab_node_to_str(pdb, key, datum);
+		if (!rule) {
+			rc = -1;
+			goto exit;
+		}
+		rc = strs_add(strs, rule);
+		if (rc != 0) {
+			free(rule);
+			goto exit;
+		}
 	}
 
+exit:
 	return rc;
 }
 
@@ -1873,6 +1863,77 @@ static int write_avtab_to_cil(FILE *out, struct policydb *pdb, int indent)
 exit:
 	if (rc != 0) {
 		ERR(NULL, "Error writing avtab rules to CIL");
+	}
+
+	return rc;
+}
+
+struct map_filename_trans_args {
+	struct policydb *pdb;
+	struct strs *strs;
+};
+
+static int map_filename_trans_to_str(hashtab_key_t key, void *data, void *arg)
+{
+	filename_trans_key_t *ft = (filename_trans_key_t *)key;
+	filename_trans_datum_t *datum = data;
+	struct map_filename_trans_args *map_args = arg;
+	struct policydb *pdb = map_args->pdb;
+	struct strs *strs = map_args->strs;
+	char *src, *tgt, *class, *filename, *new;
+	struct ebitmap_node *node;
+	uint32_t bit;
+	int rc;
+
+	tgt = pdb->p_type_val_to_name[ft->ttype - 1];
+	class = pdb->p_class_val_to_name[ft->tclass - 1];
+	filename = ft->name;
+	do {
+		new = pdb->p_type_val_to_name[datum->otype - 1];
+
+		ebitmap_for_each_positive_bit(&datum->stypes, node, bit) {
+			src = pdb->p_type_val_to_name[bit];
+			rc = strs_create_and_add(strs,
+						 "(typetransition %s %s %s \"%s\" %s)",
+						 5, src, tgt, class, filename, new);
+			if (rc)
+				return rc;
+		}
+
+		datum = datum->next;
+	} while (datum);
+
+	return 0;
+}
+
+static int write_filename_trans_rules_to_cil(FILE *out, struct policydb *pdb)
+{
+	struct map_filename_trans_args args;
+	struct strs *strs;
+	int rc = 0;
+
+	rc = strs_init(&strs, 100);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	args.pdb = pdb;
+	args.strs = strs;
+
+	rc = hashtab_map(pdb->filename_trans, map_filename_trans_to_str, &args);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	strs_sort(strs);
+	strs_write_each(strs, out);
+
+exit:
+	strs_free_all(strs);
+	strs_destroy(&strs);
+
+	if (rc != 0) {
+		ERR(NULL, "Error writing filename typetransition rules to CIL");
 	}
 
 	return rc;
@@ -1997,6 +2058,7 @@ static int write_cond_av_list_to_cil(FILE *out, struct policydb *pdb, cond_av_li
 	avtab_key_t *key;
 	avtab_datum_t *datum;
 	struct strs *strs;
+	char *rule;
 	unsigned i;
 	int rc;
 
@@ -2012,8 +2074,14 @@ static int write_cond_av_list_to_cil(FILE *out, struct policydb *pdb, cond_av_li
 			key = &node->key;
 			datum = &node->datum;
 			if (key->specified & flavor) {
-				rc = avtab_node_to_strs(pdb, key, datum, strs);
+				rule = avtab_node_to_str(pdb, key, datum);
+				if (!rule) {
+					rc = -1;
+					goto exit;
+				}
+				rc = strs_add(strs, rule);
 				if (rc != 0) {
+					free(rule);
 					goto exit;
 				}
 			}
@@ -3257,6 +3325,11 @@ int sepol_kernel_policydb_to_cil(FILE *out, struct policydb *pdb)
 	}
 
 	rc = write_avtab_to_cil(out, pdb, 0);
+	if (rc != 0) {
+		goto exit;
+	}
+
+	rc = write_filename_trans_rules_to_cil(out, pdb);
 	if (rc != 0) {
 		goto exit;
 	}

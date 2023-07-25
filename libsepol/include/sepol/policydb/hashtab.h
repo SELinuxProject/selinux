@@ -110,14 +110,6 @@ extern int hashtab_map(hashtab_t h,
 
 extern void hashtab_hash_eval(hashtab_t h, char *tag);
 
-/* Returns number of elements in the hashtab h or 0 is h is NULL */
-static inline uint32_t hashtab_nel(hashtab_t h)
-{
-	if (!h)
-		return 0;
-	return h->nel;
-}
-
 #ifdef __cplusplus
 }
 #endif

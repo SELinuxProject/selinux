@@ -280,15 +280,6 @@ int main(int argc, char **argv)
 		modpolicydb.mls = mlspol;
 		modpolicydb.handle_unknown = handle_unknown;
 
-		/*
-		 * Init and alloc te_avtab for filename transition duplicate
-		 * checking
-		 */
-		if (avtab_init(&modpolicydb.te_avtab))
-			exit(1);
-		if (avtab_alloc(&modpolicydb.te_avtab, 1 << 11))
-			exit(1);
-
 		if (read_source_policy(&modpolicydb, file, argv[0]) == -1) {
 			exit(1);
 		}

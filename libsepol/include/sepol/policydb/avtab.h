@@ -42,7 +42,6 @@
 
 #include <sys/types.h>
 #include <stdint.h>
-#include <sepol/policydb/symtab.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,7 +72,6 @@ typedef struct avtab_key {
 
 typedef struct avtab_trans {
 	uint32_t otype;		/* resulting type of the new object */
-	symtab_t name_trans;	/* filename transitions */
 } avtab_trans_t;
 
 typedef struct avtab_extended_perms {
@@ -117,8 +115,6 @@ extern int avtab_insert(avtab_t * h, avtab_key_t * k, avtab_datum_t * d);
 
 extern avtab_datum_t *avtab_search(avtab_t * h, avtab_key_t * k);
 
-extern void avtab_trans_destroy(avtab_trans_t *trans);
-
 extern void avtab_destroy(avtab_t * h);
 
 extern int avtab_map(const avtab_t * h,
@@ -151,11 +147,6 @@ extern avtab_ptr_t avtab_search_node_next(avtab_ptr_t node, int specified);
 #define MAX_AVTAB_HASH_MASK (MAX_AVTAB_HASH_BUCKETS-1)
 /* avtab_alloc uses one bucket per 2-4 elements, so adjust to get maximum buckets */
 #define MAX_AVTAB_SIZE (MAX_AVTAB_HASH_BUCKETS << 1)
-
-extern int avtab_insert_filename_trans(avtab_t *a, avtab_key_t *key,
-				       uint32_t otype, const char *name,
-				       uint32_t *present_otype);
-extern int avtab_filename_trans_read(void *fp, uint32_t vers, avtab_t *a);
 
 #ifdef __cplusplus
 }
