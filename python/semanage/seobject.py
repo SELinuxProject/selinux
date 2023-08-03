@@ -247,7 +247,7 @@ class semanageRecords:
         global handle
         if args:
             # legacy code - args was store originally
-            if type(args) == str:
+            if isinstance(args, str):
                 self.store = args
             else:
                 self.args = args
