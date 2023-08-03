@@ -18,13 +18,13 @@
 int ebitmap_or(ebitmap_t * dst, const ebitmap_t * e1, const ebitmap_t * e2)
 {
 	const ebitmap_node_t *n1, *n2;
-	ebitmap_node_t *new, *prev;
+	ebitmap_node_t *new = NULL, **prev;
 
 	ebitmap_init(dst);
 
+	prev = &dst->node;
 	n1 = e1->node;
 	n2 = e2->node;
-	prev = 0;
 	while (n1 || n2) {
 		new = (ebitmap_node_t *) malloc(sizeof(ebitmap_node_t));
 		if (!new) {
@@ -46,12 +46,10 @@ int ebitmap_or(ebitmap_t * dst, const ebitmap_t * e1, const ebitmap_t * e2)
 			n2 = n2->next;
 		}
 
-		new->next = 0;
-		if (prev)
-			prev->next = new;
-		else
-			dst->node = new;
-		prev = new;
+		new->next = NULL;
+
+		*prev = new;
+		prev = &new->next;
 	}
 
 	dst->highbit = (e1->highbit > e2->highbit) ? e1->highbit : e2->highbit;
@@ -74,10 +72,11 @@ int ebitmap_union(ebitmap_t * dst, const ebitmap_t * e1)
 int ebitmap_and(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 {
 	const ebitmap_node_t *n1, *n2;
-	ebitmap_node_t *new, *prev = NULL;
+	ebitmap_node_t *new = NULL, **prev;
 
 	ebitmap_init(dst);
 
+	prev = &dst->node;
 	n1 = e1->node;
 	n2 = e2->node;
 	while (n1 && n2) {
@@ -92,11 +91,8 @@ int ebitmap_and(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 				new->map = n1->map & n2->map;
 				new->next = NULL;
 
-				if (prev)
-					prev->next = new;
-				else
-					dst->node = new;
-				prev = new;
+				*prev = new;
+				prev = &new->next;
 			}
 
 			n1 = n1->next;
@@ -108,8 +104,8 @@ int ebitmap_and(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 		}
 	}
 
-	if (prev)
-		dst->highbit = prev->startbit + MAPSIZE;
+	if (new)
+		dst->highbit = new->startbit + MAPSIZE;
 
 	return 0;
 }
@@ -117,12 +113,13 @@ int ebitmap_and(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 int ebitmap_xor(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 {
 	const ebitmap_node_t *n1, *n2;
-	ebitmap_node_t *new, *prev = NULL;
+	ebitmap_node_t *new = NULL, **prev;
 	uint32_t startbit;
 	MAPTYPE map;
 
 	ebitmap_init(dst);
 
+	prev = &dst->node;
 	n1 = e1->node;
 	n2 = e2->node;
 	while (n1 || n2) {
@@ -150,16 +147,14 @@ int ebitmap_xor(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 			new->startbit = startbit;
 			new->map = map;
 			new->next = NULL;
-			if (prev)
-				prev->next = new;
-			else
-				dst->node = new;
-			prev = new;
+
+			*prev = new;
+			prev = &new->next;
 		}
 	}
 
-	if (prev)
-		dst->highbit = prev->startbit + MAPSIZE;
+	if (new)
+		dst->highbit = new->startbit + MAPSIZE;
 
 	return 0;
 }
@@ -167,12 +162,13 @@ int ebitmap_xor(ebitmap_t *dst, const ebitmap_t *e1, const ebitmap_t *e2)
 int ebitmap_not(ebitmap_t *dst, const ebitmap_t *e1, unsigned int maxbit)
 {
 	const ebitmap_node_t *n;
-	ebitmap_node_t *new, *prev = NULL;
+	ebitmap_node_t *new = NULL, **prev;
 	uint32_t startbit, cur_startbit;
 	MAPTYPE map;
 
 	ebitmap_init(dst);
 
+	prev = &dst->node;
 	n = e1->node;
 	for (cur_startbit = 0; cur_startbit < maxbit; cur_startbit += MAPSIZE) {
 		if (n && n->startbit == cur_startbit) {
@@ -199,16 +195,13 @@ int ebitmap_not(ebitmap_t *dst, const ebitmap_t *e1, unsigned int maxbit)
 			new->map = map;
 			new->next = NULL;
 
-			if (prev)
-				prev->next = new;
-			else
-				dst->node = new;
-			prev = new;
+			*prev = new;
+			prev = &new->next;
 		}
 	}
 
-	if (prev)
-		dst->highbit = prev->startbit + MAPSIZE;
+	if (new)
+		dst->highbit = new->startbit + MAPSIZE;
 
 	return 0;
 }
@@ -278,11 +271,11 @@ int ebitmap_cmp(const ebitmap_t * e1, const ebitmap_t * e2)
 int ebitmap_cpy(ebitmap_t * dst, const ebitmap_t * src)
 {
 	const ebitmap_node_t *n;
-	ebitmap_node_t *new, *prev;
+	ebitmap_node_t *new = NULL, **prev;
 
 	ebitmap_init(dst);
 	n = src->node;
-	prev = 0;
+	prev = &dst->node;
 	while (n) {
 		new = (ebitmap_node_t *) malloc(sizeof(ebitmap_node_t));
 		if (!new) {
@@ -291,12 +284,11 @@ int ebitmap_cpy(ebitmap_t * dst, const ebitmap_t * src)
 		}
 		new->startbit = n->startbit;
 		new->map = n->map;
-		new->next = 0;
-		if (prev)
-			prev->next = new;
-		else
-			dst->node = new;
-		prev = new;
+		new->next = NULL;
+
+		*prev = new;
+		prev = &new->next;
+
 		n = n->next;
 	}
 
@@ -450,7 +442,7 @@ int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value)
 
 int ebitmap_init_range(ebitmap_t * e, unsigned int minbit, unsigned int maxbit)
 {
-	ebitmap_node_t *new, *prev = NULL;
+	ebitmap_node_t *new = NULL, **prev;
 	uint32_t minstartbit = minbit & ~(MAPSIZE - 1);
 	uint32_t maxstartbit = maxbit & ~(MAPSIZE - 1);
 	uint32_t minhighbit = minstartbit + MAPSIZE;
@@ -465,6 +457,8 @@ int ebitmap_init_range(ebitmap_t * e, unsigned int minbit, unsigned int maxbit)
 
 	if (minhighbit == 0 || maxhighbit == 0)
 		return -EOVERFLOW;
+
+	prev = &e->node;
 
 	for (startbit = minstartbit; startbit <= maxstartbit; startbit += MAPSIZE) {
 		new = malloc(sizeof(ebitmap_node_t));
@@ -485,11 +479,8 @@ int ebitmap_init_range(ebitmap_t * e, unsigned int minbit, unsigned int maxbit)
 			new->map = (mask << (minbit - startbit));
 		}
 
-		if (prev)
-			prev->next = new;
-		else
-			e->node = new;
-		prev = new;
+		*prev = new;
+		prev = &new->next;
 	}
 
 	e->highbit = maxhighbit;
