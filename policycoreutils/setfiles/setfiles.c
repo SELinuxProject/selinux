@@ -86,23 +86,20 @@ static int canoncon(char **contextp)
 }
 
 #ifndef USE_AUDIT
-static void maybe_audit_mass_relabel(int mass_relabel __attribute__((unused)),
-				int mass_relabel_errs __attribute__((unused)))
+static void audit_mass_relabel(int mass_relabel_errs __attribute__((unused)))
 {
 #else
-static void maybe_audit_mass_relabel(int mass_relabel, int mass_relabel_errs)
+static void audit_mass_relabel(int mass_relabel_errs)
 {
 	int audit_fd = -1;
 	int rc = 0;
 
-	if (!mass_relabel)		/* only audit a forced full relabel */
-		return;
-
 	audit_fd = audit_open();
 
 	if (audit_fd < 0) {
-		fprintf(stderr, "Error connecting to audit system.\n");
-		exit(-1);
+		fprintf(stderr, "Error connecting to audit system: %s.\n",
+			strerror(errno));
+		return;
 	}
 
 	rc = audit_log_user_message(audit_fd, AUDIT_FS_RELABEL,
@@ -463,7 +460,8 @@ int main(int argc, char **argv)
 					       &skipped_errors) < 0;
 	}
 
-	maybe_audit_mass_relabel(r_opts.mass_relabel, errors);
+	if (r_opts.mass_relabel && !r_opts.nochange)
+		audit_mass_relabel(errors);
 
 	if (warn_no_match)
 		selabel_stats(r_opts.hnd);
