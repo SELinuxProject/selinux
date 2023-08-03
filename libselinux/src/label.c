@@ -45,7 +45,7 @@ typedef int (*selabel_initfunc)(struct selabel_handle *rec,
 				const struct selinux_opt *opts,
 				unsigned nopts);
 
-static selabel_initfunc initfuncs[] = {
+static const selabel_initfunc initfuncs[] = {
 	&selabel_file_init,
 	CONFIG_MEDIA_BACKEND(selabel_media_init),
 	CONFIG_X_BACKEND(selabel_x_init),
@@ -56,8 +56,7 @@ static selabel_initfunc initfuncs[] = {
 
 static inline struct selabel_digest *selabel_is_digest_set
 				    (const struct selinux_opt *opts,
-				    unsigned n,
-				    struct selabel_digest *entry)
+				    unsigned n)
 {
 	struct selabel_digest *digest = NULL;
 
@@ -77,8 +76,7 @@ static inline struct selabel_digest *selabel_is_digest_set
 			if (!digest->specfile_list)
 				goto err;
 
-			entry = digest;
-			return entry;
+			return digest;
 		}
 	}
 	return NULL;
@@ -121,7 +119,7 @@ static inline int selabel_is_validate_set(const struct selinux_opt *opts,
 	return 0;
 }
 
-int selabel_validate(struct selabel_handle *rec,
+int selabel_validate(const struct selabel_handle *rec,
 		     struct selabel_lookup_rec *contexts)
 {
 	int rc = 0;
@@ -133,7 +131,7 @@ int selabel_validate(struct selabel_handle *rec,
 	if (rc < 0)
 		goto out;
 
-	contexts->validated = 1;
+	contexts->validated = true;
 out:
 	return rc;
 }
@@ -215,15 +213,14 @@ struct selabel_handle *selabel_open(unsigned int backend,
 		goto out;
 	}
 
-	rec = (struct selabel_handle *)malloc(sizeof(*rec));
+	rec = (struct selabel_handle *)calloc(1, sizeof(*rec));
 	if (!rec)
 		goto out;
 
-	memset(rec, 0, sizeof(*rec));
 	rec->backend = backend;
 	rec->validating = selabel_is_validate_set(opts, nopts);
 
-	rec->digest = selabel_is_digest_set(opts, nopts, rec->digest);
+	rec->digest = selabel_is_digest_set(opts, nopts);
 
 	if ((*initfuncs[backend])(rec, opts, nopts)) {
 		if (rec->digest)

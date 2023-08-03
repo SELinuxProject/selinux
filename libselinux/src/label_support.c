@@ -10,7 +10,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
-#include <errno.h>
 #include "label_internal.h"
 
 /*
@@ -138,7 +137,6 @@ void  digest_gen_hash(struct selabel_digest *digest)
 	Sha1Finalise(&context, (SHA1_HASH *)digest->digest);
 	free(digest->hashbuf);
 	digest->hashbuf = NULL;
-	return;
 }
 
 /**
@@ -154,7 +152,7 @@ void  digest_gen_hash(struct selabel_digest *digest)
  * Return %0 on success, -%1 with @errno set on failure.
  */
 int  digest_add_specfile(struct selabel_digest *digest, FILE *fp,
-				    char *from_addr, size_t buf_len,
+				    const char *from_addr, size_t buf_len,
 				    const char *path)
 {
 	unsigned char *tmp_buf;

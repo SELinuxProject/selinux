@@ -35,7 +35,7 @@ void set_matchpathcon_printf(void (*f) (const char *fmt, ...))
 	myprintf_compat = 1;
 }
 
-int compat_validate(struct selabel_handle *rec,
+int compat_validate(const struct selabel_handle *rec,
 		    struct selabel_lookup_rec *contexts,
 		    const char *path, unsigned lineno)
 {
