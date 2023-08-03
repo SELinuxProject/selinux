@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 {
 	int opt;
 	bool partial_match;
-	char *validate = NULL, *path = NULL, *file = NULL;
+	const char *validate = NULL, *path = NULL, *file = NULL;
 
 	struct selabel_handle *hnd;
 	struct selinux_opt selabel_option[] = {
@@ -55,6 +55,9 @@ int main(int argc, char **argv)
 		}
 	}
 
+	if (!path || optind != argc)
+		usage(argv[0]);
+
 	selabel_option[0].value = file;
 	selabel_option[1].value = validate;
 
@@ -69,7 +72,7 @@ int main(int argc, char **argv)
 	partial_match = selabel_partial_match(hnd, path);
 
 	printf("Match or Partial match: %s\n",
-		    partial_match == 1 ? "TRUE" : "FALSE");
+		    partial_match ? "TRUE" : "FALSE");
 
 	selabel_close(hnd);
 	return partial_match;
