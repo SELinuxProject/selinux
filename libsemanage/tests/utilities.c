@@ -36,7 +36,7 @@ void test_msg_handler(void *varg, semanage_handle_t *handle, const char *fmt,
 {
 }
 
-int create_test_store() {
+int create_test_store(void) {
 	FILE *fptr;
 
 	if (mkdir("test-policy", 0700) < 0)
@@ -168,7 +168,7 @@ int write_test_policy_src(unsigned char *data, unsigned int data_len) {
 	return 0;
 }
 
-int destroy_test_store() {
+int destroy_test_store(void) {
 	FTS *ftsp = NULL;
 	FTSENT *curr = NULL;
 	int ret = 0;
