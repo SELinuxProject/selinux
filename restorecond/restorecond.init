@@ -29,7 +29,11 @@ PATH=/sbin:/bin:/usr/bin:/usr/sbin
 [ -x /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled || exit 7
 
 # Check that we are root ... so non-root users stop here
-test $EUID = 0  || exit 4
+if [ $EUID  ]; then
+	test $EUID = 0  || exit 4
+else
+	test `id -u` = 0  || exit 4
+fi
 
 test -x /usr/sbin/restorecond  || exit 5
 test -f /etc/selinux/restorecond.conf  || exit 6
