@@ -97,15 +97,10 @@ struct saved_data {
 	struct selabel_sub *subs;
 };
 
-static inline mode_t string_to_mode(char *mode)
+static inline mode_t string_to_mode(const char *mode)
 {
-	size_t len;
-
-	if (!mode)
-		return 0;
-	len = strlen(mode);
-	if (mode[0] != '-' || len != 2)
-		return -1;
+	if (mode[0] != '-' || mode[1] == '\0' || mode[2] != '\0')
+		return (mode_t)-1;
 	switch (mode[1]) {
 	case 'b':
 		return S_IFBLK;
@@ -122,10 +117,8 @@ static inline mode_t string_to_mode(char *mode)
 	case '-':
 		return S_IFREG;
 	default:
-		return -1;
+		return (mode_t)-1;
 	}
-	/* impossible to get here */
-	return 0;
 }
 
 static inline int grow_specs(struct saved_data *data)
