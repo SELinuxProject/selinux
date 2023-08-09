@@ -176,7 +176,7 @@ int regex_writef(struct regex_data *regex, FILE *fp, int do_write_precompregex)
 		/* encode the pattern for serialization */
 		rc = pcre2_serialize_encode((const pcre2_code **)&regex->regex,
 					    1, &bytes, &serialized_size, NULL);
-		if (rc != 1) {
+		if (rc != 1 || serialized_size >= UINT32_MAX) {
 			rc = -1;
 			goto out;
 		}
