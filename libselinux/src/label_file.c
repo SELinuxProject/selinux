@@ -519,12 +519,16 @@ static char *rolling_append(char *current, const char *suffix, size_t max)
 	return current;
 }
 
-static bool fcontext_is_binary(FILE *fp)
+static int fcontext_is_binary(FILE *fp)
 {
 	uint32_t magic;
+	int rc;
 
 	size_t len = fread(&magic, sizeof(magic), 1, fp);
-	rewind(fp);
+
+	rc = fseek(fp, 0L, SEEK_SET);
+	if (rc == -1)
+		return -1;
 
 	return (len && (magic == SELINUX_MAGIC_COMPILED_FCONTEXT));
 }
@@ -622,7 +626,13 @@ static int process_file(const char *path, const char *suffix,
 		if (fp == NULL)
 			return -1;
 
-		rc = fcontext_is_binary(fp) ?
+		rc = fcontext_is_binary(fp);
+		if (rc < 0) {
+			(void) fclose(fp);
+			return -1;
+		}
+
+		rc = rc ?
 				load_mmap(fp, sb.st_size, rec, found_path) :
 				process_text_file(fp, prefix, rec, found_path);
 		if (!rc)

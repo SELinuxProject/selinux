@@ -174,12 +174,13 @@ int  digest_add_specfile(struct selabel_digest *digest, FILE *fp,
 	digest->hashbuf = tmp_buf;
 
 	if (fp) {
-		rewind(fp);
+		if (fseek(fp, 0L, SEEK_SET) == -1)
+			return -1;
+
 		if (fread(digest->hashbuf + (digest->hashbuf_size - buf_len),
 					    1, buf_len, fp) != buf_len)
 			return -1;
 
-		rewind(fp);
 	} else if (from_addr) {
 		tmp_buf = memcpy(digest->hashbuf +
 				    (digest->hashbuf_size - buf_len),

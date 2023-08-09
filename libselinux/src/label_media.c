@@ -130,7 +130,10 @@ static int init(struct selabel_handle *rec, const struct selinux_opt *opts,
 				goto finish;
 			memset(data->spec_arr, 0, sizeof(spec_t)*data->nspec);
 			maxnspec = data->nspec;
-			rewind(fp);
+
+			status = fseek(fp, 0L, SEEK_SET);
+			if (status == -1)
+				goto finish;
 		}
 	}
 	free(line_buf);
