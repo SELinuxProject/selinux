@@ -333,8 +333,8 @@ int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
 	return *con ? 0 : -1;
 }
 
-enum selabel_cmp_result selabel_cmp(struct selabel_handle *h1,
-				    struct selabel_handle *h2)
+enum selabel_cmp_result selabel_cmp(const struct selabel_handle *h1,
+				    const struct selabel_handle *h2)
 {
 	if (!h1->func_cmp || h1->func_cmp != h2->func_cmp)
 		return SELABEL_INCOMPARABLE;

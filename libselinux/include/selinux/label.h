@@ -153,8 +153,8 @@ enum selabel_cmp_result {
  * if @h1 is identical to @h2, %SELABEL_SUPERSET if @h1 is a superset
  * of @h2, and %SELABEL_INCOMPARABLE if @h1 and @h2 are incomparable.
  */
-extern enum selabel_cmp_result selabel_cmp(struct selabel_handle *h1,
-					   struct selabel_handle *h2);
+extern enum selabel_cmp_result selabel_cmp(const struct selabel_handle *h1,
+					   const struct selabel_handle *h2);
 
 /**
  * selabel_stats - log labeling operation statistics.

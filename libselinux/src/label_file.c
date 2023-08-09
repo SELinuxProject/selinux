@@ -1237,7 +1237,7 @@ out:
 	return lr;
 }
 
-static enum selabel_cmp_result incomp(struct spec *spec1, struct spec *spec2, const char *reason, int i, int j)
+static enum selabel_cmp_result incomp(const struct spec *spec1, const struct spec *spec2, const char *reason, int i, int j)
 {
 	selinux_log(SELINUX_INFO,
 		    "selabel_cmp: mismatched %s on entry %d: (%s, %x, %s) vs entry %d: (%s, %x, %s)\n",
@@ -1247,21 +1247,21 @@ static enum selabel_cmp_result incomp(struct spec *spec1, struct spec *spec2, co
 	return SELABEL_INCOMPARABLE;
 }
 
-static enum selabel_cmp_result cmp(struct selabel_handle *h1,
-				   struct selabel_handle *h2)
+static enum selabel_cmp_result cmp(const struct selabel_handle *h1,
+				   const struct selabel_handle *h2)
 {
-	struct saved_data *data1 = (struct saved_data *)h1->data;
-	struct saved_data *data2 = (struct saved_data *)h2->data;
+	const struct saved_data *data1 = (const struct saved_data *)h1->data;
+	const struct saved_data *data2 = (const struct saved_data *)h2->data;
 	unsigned int i, nspec1 = data1->nspec, j, nspec2 = data2->nspec;
-	struct spec *spec_arr1 = data1->spec_arr, *spec_arr2 = data2->spec_arr;
-	struct stem *stem_arr1 = data1->stem_arr, *stem_arr2 = data2->stem_arr;
+	const struct spec *spec_arr1 = data1->spec_arr, *spec_arr2 = data2->spec_arr;
+	const struct stem *stem_arr1 = data1->stem_arr, *stem_arr2 = data2->stem_arr;
 	bool skipped1 = false, skipped2 = false;
 
 	i = 0;
 	j = 0;
 	while (i < nspec1 && j < nspec2) {
-		struct spec *spec1 = &spec_arr1[i];
-		struct spec *spec2 = &spec_arr2[j];
+		const struct spec *spec1 = &spec_arr1[i];
+		const struct spec *spec2 = &spec_arr2[j];
 
 		/*
 		 * Because sort_specs() moves exact pathnames to the
@@ -1297,8 +1297,8 @@ static enum selabel_cmp_result cmp(struct selabel_handle *h1,
 		if (spec2->stem_id == -1 && spec1->stem_id != -1)
 			return incomp(spec1, spec2, "stem_id", i, j);
 		if (spec1->stem_id != -1 && spec2->stem_id != -1) {
-			struct stem *stem1 = &stem_arr1[spec1->stem_id];
-			struct stem *stem2 = &stem_arr2[spec2->stem_id];
+			const struct stem *stem1 = &stem_arr1[spec1->stem_id];
+			const struct stem *stem2 = &stem_arr2[spec2->stem_id];
 			if (stem1->len != stem2->len ||
 			    strncmp(stem1->buf, stem2->buf, stem1->len))
 				return incomp(spec1, spec2, "stem", i, j);
