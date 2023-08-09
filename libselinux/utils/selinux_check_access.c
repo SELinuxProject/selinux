@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
 	if (audit_msg)
 		selinux_set_callback(SELINUX_CB_AUDIT,
-				     (union selinux_callback)cb_auditinfo);
+				     (union selinux_callback) { .func_audit = cb_auditinfo });
 
 	rc = selinux_check_access(argv[optind], argv[optind + 1],
 				  argv[optind + 2], argv[optind + 3],
