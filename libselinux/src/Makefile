@@ -125,11 +125,10 @@ DISABLE_FLAGS+= -DNO_MEDIA_BACKEND -DNO_DB_BACKEND -DNO_X_BACKEND \
 SRCS= callbacks.c freecon.c label.c label_file.c \
 	label_backends_android.c regex.c label_support.c \
 	matchpathcon.c setrans_client.c sha1.c booleans.c
-else
 LABEL_BACKEND_ANDROID=y
 endif
 
-ifneq ($(LABEL_BACKEND_ANDROIDT),y)
+ifneq ($(LABEL_BACKEND_ANDROID),y)
 SRCS:= $(filter-out label_backends_android.c, $(SRCS))
 DISABLE_FLAGS+= -DNO_ANDROID_BACKEND
 endif
