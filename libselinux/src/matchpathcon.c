@@ -46,8 +46,8 @@ int compat_validate(const struct selabel_handle *rec,
 		rc = myinvalidcon(path, lineno, *ctx);
 	else if (mycanoncon)
 		rc = mycanoncon(path, lineno, ctx);
-	else {
-		rc = selabel_validate(rec, contexts);
+	else if (rec->validating) {
+		rc = selabel_validate(contexts);
 		if (rc < 0) {
 			if (lineno) {
 				COMPAT_LOG(SELINUX_WARNING,
@@ -58,7 +58,8 @@ int compat_validate(const struct selabel_handle *rec,
 					    "%s: has invalid context %s\n", path, *ctx);
 			}
 		}
-	}
+	} else
+		rc = 0;
 
 	return rc ? -1 : 0;
 }

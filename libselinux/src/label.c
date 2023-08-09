@@ -119,12 +119,11 @@ static inline int selabel_is_validate_set(const struct selinux_opt *opts,
 	return 0;
 }
 
-int selabel_validate(const struct selabel_handle *rec,
-		     struct selabel_lookup_rec *contexts)
+int selabel_validate(struct selabel_lookup_rec *contexts)
 {
 	int rc = 0;
 
-	if (!rec->validating || contexts->validated)
+	if (contexts->validated)
 		goto out;
 
 	rc = selinux_validate(&contexts->ctx_raw);

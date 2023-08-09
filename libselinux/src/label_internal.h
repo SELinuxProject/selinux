@@ -118,8 +118,7 @@ struct selabel_handle {
  * Validation function
  */
 extern int
-selabel_validate(const struct selabel_handle *rec,
-		 struct selabel_lookup_rec *contexts) ;
+selabel_validate(struct selabel_lookup_rec *contexts);
 
 /*
  * Compatibility support
