@@ -716,10 +716,9 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 		if (! *dst)
 			continue;
 
-		sub = malloc(sizeof(*sub));
+		sub = calloc(1, sizeof(*sub));
 		if (! sub)
 			goto err;
-		memset(sub, 0, sizeof(*sub));
 
 		sub->src = strdup(src);
 		if (! sub->src)
@@ -1357,10 +1356,9 @@ int selabel_file_init(struct selabel_handle *rec,
 {
 	struct saved_data *data;
 
-	data = (struct saved_data *)malloc(sizeof(*data));
+	data = (struct saved_data *)calloc(1, sizeof(*data));
 	if (!data)
 		return -1;
-	memset(data, 0, sizeof(*data));
 
 	rec->data = data;
 	rec->func_close = &closef;
