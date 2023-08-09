@@ -1191,10 +1191,10 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 		if (avrule->flags & RULE_NOTSELF) {
 			if (!ebitmap_is_empty(&avrule->ttypes.types) || !ebitmap_is_empty(&avrule->ttypes.negset)) {
 				if (avrule->source_filename) {
-					log_err("%s:%lu: Non-trivial neverallow rules with targets containing not or minus self not yet supported",
+					ERR(NULL, "%s:%lu: Non-trivial neverallow rules with targets containing not or minus self not yet supported",
 						avrule->source_filename, avrule->source_line);
 				} else {
-					log_err("Non-trivial neverallow rules with targets containing not or minus self not yet supported");
+					ERR(NULL, "Non-trivial neverallow rules with targets containing not or minus self not yet supported");
 				}
 				rc = -1;
 				goto exit;
