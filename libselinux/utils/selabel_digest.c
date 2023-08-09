@@ -59,7 +59,8 @@ static int run_check_digest(char *cmd, char *selabel_digest)
 
 int main(int argc, char **argv)
 {
-	int backend = 0, rc, opt, validate = 0;
+	unsigned int backend = SELABEL_CTX_FILE;
+	int rc, opt, validate = 0;
 	char *baseonly = NULL, *file = NULL, *digest = (char *)1;
 	char **specfiles = NULL;
 	unsigned char *sha1_digest = NULL;

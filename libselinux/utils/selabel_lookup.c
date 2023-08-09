@@ -32,7 +32,8 @@ static __attribute__ ((__noreturn__)) void usage(const char *progname)
 
 int main(int argc, char **argv)
 {
-	int raw = 0, type = 0, backend = 0, rc, opt;
+	int raw = 0, type = 0, rc, opt;
+	unsigned int backend = SELABEL_CTX_FILE;
 	char *validate = NULL, *key = NULL, *context = NULL, *file = NULL;
 
 	struct selabel_handle *hnd;
