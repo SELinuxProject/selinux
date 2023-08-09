@@ -137,9 +137,9 @@ out:
 }
 
 /* Public API helpers */
-static int selabel_fini(struct selabel_handle *rec,
+static int selabel_fini(const struct selabel_handle *rec,
 			    struct selabel_lookup_rec *lr,
-			    int translating)
+			    bool translating)
 {
 	if (compat_validate(rec, lr, rec->spec_file, lr->lineno))
 		return -1;
@@ -152,7 +152,7 @@ static int selabel_fini(struct selabel_handle *rec,
 }
 
 static struct selabel_lookup_rec *
-selabel_lookup_common(struct selabel_handle *rec, int translating,
+selabel_lookup_common(struct selabel_handle *rec, bool translating,
 		      const char *key, int type)
 {
 	struct selabel_lookup_rec *lr;
@@ -173,7 +173,7 @@ selabel_lookup_common(struct selabel_handle *rec, int translating,
 }
 
 static struct selabel_lookup_rec *
-selabel_lookup_bm_common(struct selabel_handle *rec, int translating,
+selabel_lookup_bm_common(struct selabel_handle *rec, bool translating,
 		      const char *key, int type, const char **aliases)
 {
 	struct selabel_lookup_rec *lr;
@@ -239,7 +239,7 @@ int selabel_lookup(struct selabel_handle *rec, char **con,
 {
 	struct selabel_lookup_rec *lr;
 
-	lr = selabel_lookup_common(rec, 1, key, type);
+	lr = selabel_lookup_common(rec, true, key, type);
 	if (!lr)
 		return -1;
 
@@ -252,7 +252,7 @@ int selabel_lookup_raw(struct selabel_handle *rec, char **con,
 {
 	struct selabel_lookup_rec *lr;
 
-	lr = selabel_lookup_common(rec, 0, key, type);
+	lr = selabel_lookup_common(rec, false, key, type);
 	if (!lr)
 		return -1;
 
@@ -307,7 +307,7 @@ int selabel_lookup_best_match(struct selabel_handle *rec, char **con,
 		return -1;
 	}
 
-	lr = selabel_lookup_bm_common(rec, 1, key, type, aliases);
+	lr = selabel_lookup_bm_common(rec, true, key, type, aliases);
 	if (!lr)
 		return -1;
 
@@ -325,7 +325,7 @@ int selabel_lookup_best_match_raw(struct selabel_handle *rec, char **con,
 		return -1;
 	}
 
-	lr = selabel_lookup_bm_common(rec, 0, key, type, aliases);
+	lr = selabel_lookup_bm_common(rec, false, key, type, aliases);
 	if (!lr)
 		return -1;
 
