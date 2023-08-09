@@ -19,7 +19,7 @@ Rules involving a source type, a target type, and class permissions or extended 
 <tbody>
 <tr class="odd">
 <td align="left"><p><code>av_flavor</code></p></td>
-<td align="left"><p>The flavor of access vector rule. Possible flavors are <code>allow</code>, <code>auditallow</code>, <code>dontaudit</code>, <code>neverallow</code>, <code>allowx</code>, <code>auditallowx</code>, <code>dontauditx</code>, <code>neverallowx</code>.</p></td>
+<td align="left"><p>The flavor of access vector rule. Possible flavors are <code>allow</code>, <code>auditallow</code>, <code>dontaudit</code>, <code>neverallow</code>, <code>deny</code>, <code>allowx</code>, <code>auditallowx</code>, <code>dontauditx</code>, and <code>neverallowx</code>.</p></td>
 <tr class="even">
 <td align="left"><p><code>source_id</code></p></td>
 <td align="left"><p>A single previously defined source <code>type</code>, <code>typealias</code> or <code>typeattribute</code> identifier.</p></td>
@@ -174,6 +174,45 @@ This example will not compile as `type_3` is not allowed to be a source type for
         ; This rule will fail compilation:
         (allow type_3 self (property_service (set)))
     )
+```
+deny
+----------
+
+Remove the access rights defined from any matching allow rules. These rules are processed before [`neverallow`](cil_access_vector_rules.md#neverallow) checking.
+
+**Rule definition:**
+
+```secil
+    (deny source_id target_id|self classpermissionset_id ...)
+```
+
+**Example:**
+
+```secil
+    (class class1 (perm1 perm2))
+
+    (type type1)
+    (type type2)
+    (allow type1 type2 (class1 (perm1))) ; Allow-1
+    (deny type1 type2 (class1 (perm1)))  ; Deny-1
+    ; Allow-1 will be complete removed by Deny-1.
+
+    (type type3)
+    (type type4)
+    (allow type3 type4 (class1 (perm1 perm2))) ; Allow-2
+    (deny type3 type4 (class1 (perm1)))        ; Deny-2
+    ; Allow-2 will be removed and replaced with the following when Deny-2 is evaluated
+    ; (allow type3 type4 (class1 (perm2)))
+
+    (type type5)
+    (type type6)
+    (typeattribute attr1)
+    (typeattributeset attr1 (type5 type6))
+    (allow attr1 attr1 (class1 (perm1))) ; Allow-3
+    (deny type5 type6 (class1 (perm1)))  ; Deny-3
+    ; Allow-3 will be removed and replaced with the following when Deny-3 is evaluated
+    ; (allow type6 attr1 (class1 (perm1)))
+    ; (allow type5 type5 (class1 (perm1)))
 ```
 
 allowx
