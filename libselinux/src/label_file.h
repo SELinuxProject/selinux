@@ -446,6 +446,9 @@ static inline int process_line(struct selabel_handle *rec,
 				    "%s:  line %u error due to: %m\n", path,
 				    lineno);
 		}
+		free(regex);
+		free(type);
+		free(context);
 		return -1;
 	}
 
