@@ -1,5 +1,5 @@
 # Installation directories.
-LINGUAS ?= ru
+LINGUAS ?=
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin
 SBINDIR ?= $(PREFIX)/sbin

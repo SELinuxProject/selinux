@@ -1,7 +1,7 @@
 PYTHON ?= python3
 
 # Installation directories.
-LINGUAS ?= ru
+LINGUAS ?=
 PREFIX ?= /usr
 SYSCONFDIR ?= /etc/sysconfig
 BINDIR ?= $(PREFIX)/bin

@@ -1,5 +1,5 @@
 # Installation directories.
-LINGUAS ?= ru
+LINGUAS ?=
 PREFIX ?= /usr
 MANDIR ?=  $(PREFIX)/share/man
 MAN5SUBDIR ?= man5
