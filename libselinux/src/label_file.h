@@ -50,6 +50,23 @@
 #define LABEL_FILE_KIND_LNK		6
 #define LABEL_FILE_KIND_REG		7
 
+/* Only exported for fuzzing */
+struct lookup_result {
+	const char *regex_str;
+	struct selabel_lookup_rec *lr;
+	uint16_t prefix_len;
+	uint8_t file_kind;
+	bool has_meta_chars;
+	struct lookup_result *next;
+};
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+extern int load_mmap(FILE *fp, const size_t len, struct selabel_handle *rec, const char *path);
+extern int process_text_file(FILE *fp, const char *prefix, struct selabel_handle *rec, const char *path);
+extern void free_lookup_result(struct lookup_result *result);
+extern struct lookup_result *lookup_all(struct selabel_handle *rec, const char *key, int type, bool partial, bool find_all);
+extern enum selabel_cmp_result cmp(const struct selabel_handle *h1, const struct selabel_handle *h2);
+#endif  /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+
 struct selabel_sub {
 	char *src;
 	unsigned int slen;
