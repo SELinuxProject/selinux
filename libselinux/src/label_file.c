@@ -27,6 +27,13 @@
 #include "label_file.h"
 
 
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+# define FUZZ_EXTERN
+#else
+# define FUZZ_EXTERN static
+#endif  /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+
+
 /*
  * Warn about duplicate specifications.
  */
@@ -114,8 +121,8 @@ static int nodups_spec_node(const struct spec_node *node, const char *path)
 	return rc;
 }
 
-static int process_text_file(FILE *fp, const char *prefix,
-			     struct selabel_handle *rec, const char *path)
+FUZZ_EXTERN int process_text_file(FILE *fp, const char *prefix,
+				  struct selabel_handle *rec, const char *path)
 {
 	int rc;
 	size_t line_len;
@@ -720,8 +727,8 @@ static int load_mmap_spec_node(struct mmap_area *mmap_area, const char *path, bo
 	return 0;
 }
 
-static int load_mmap(FILE *fp, const size_t len, struct selabel_handle *rec,
-		     const char *path)
+FUZZ_EXTERN int load_mmap(FILE *fp, const size_t len, struct selabel_handle *rec,
+			  const char *path)
 {
 	struct saved_data *data = rec->data;
 	struct spec_node *root = NULL;
@@ -1449,16 +1456,7 @@ static uint32_t search_literal_spec(const struct literal_spec *array, uint32_t s
 	return (uint32_t)-1;
 }
 
-struct lookup_result {
-	const char *regex_str;
-	struct selabel_lookup_rec *lr;
-	uint16_t prefix_len;
-	uint8_t file_kind;
-	bool has_meta_chars;
-	struct lookup_result *next;
-};
-
-static void free_lookup_result(struct lookup_result *result)
+FUZZ_EXTERN void free_lookup_result(struct lookup_result *result)
 {
 	struct lookup_result *tmp;
 
@@ -1690,11 +1688,11 @@ static uint8_t mode_to_file_kind(int type) {
 // Finds all the matches of |key| in the given context. Returns the result in
 // the allocated array and updates the match count. If match_count is NULL,
 // stops early once the 1st match is found.
-static struct lookup_result *lookup_all(struct selabel_handle *rec,
-					const char *key,
-					int type,
-					bool partial,
-					bool find_all)
+FUZZ_EXTERN struct lookup_result *lookup_all(struct selabel_handle *rec,
+				 const char *key,
+				 int type,
+				 bool partial,
+				 bool find_all)
 {
 	struct saved_data *data = (struct saved_data *)rec->data;
 	struct lookup_result *result = NULL;
@@ -2283,7 +2281,7 @@ static enum selabel_cmp_result spec_node_cmp(const struct spec_node *node1, cons
 	return result;
 }
 
-static enum selabel_cmp_result cmp(const struct selabel_handle *h1, const struct selabel_handle *h2)
+FUZZ_EXTERN enum selabel_cmp_result cmp(const struct selabel_handle *h1, const struct selabel_handle *h2)
 {
 	const struct saved_data *data1, *data2;
 
