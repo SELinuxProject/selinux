@@ -407,6 +407,7 @@ static inline int compile_regex(struct spec *spec, const char **errbuf)
 			*errbuf = &regex_error_format_buffer[0];
 		}
 		__pthread_mutex_unlock(&spec->regex_lock);
+		errno = EINVAL;
 		return -1;
 	}
 
