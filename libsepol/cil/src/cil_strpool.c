@@ -47,16 +47,13 @@ static hashtab_t cil_strpool_tab = NULL;
 
 static unsigned int cil_strpool_hash(hashtab_t h, const_hashtab_key_t key)
 {
-	const char *p;
-	size_t size;
-	unsigned int val;
+	unsigned int hash = 5381;
+	unsigned char c;
 
-	val = 0;
-	size = strlen(key);
-	for (p = key; ((size_t) (p - key)) < size; p++)
-		val =
-		    (val << 4 | (val >> (8 * sizeof(unsigned int) - 4))) ^ (*p);
-	return val & (h->size - 1);
+	while ((c = *(unsigned const char *)key++))
+		hash = ((hash << 5) + hash) ^ c;
+
+	return hash & (h->size - 1);
 }
 
 static int cil_strpool_compare(hashtab_t h __attribute__ ((unused)), const_hashtab_key_t key1, const_hashtab_key_t key2)
