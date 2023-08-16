@@ -15,16 +15,13 @@
 
 static inline unsigned sidtab_hash(const char * key)
 {
-	const char *p;
-	unsigned int size;
-	unsigned int val;
+	unsigned int hash = 5381;
+	unsigned char c;
 
-	val = 0;
-	size = strlen(key);
-	for (p = key; (unsigned int)(p - key) < size; p++)
-		val =
-		    (val << 4 | (val >> (8 * sizeof(unsigned int) - 4))) ^ (*p);
-	return val & (SIDTAB_SIZE - 1);
+	while ((c = *(unsigned const char *)key++))
+		hash = ((hash << 5) + hash) ^ c;
+
+	return hash & (SIDTAB_SIZE - 1);
 }
 
 int sidtab_init(struct sidtab *s)
