@@ -17,17 +17,13 @@
 ignore_unsigned_overflow_
 static unsigned int symhash(hashtab_t h, const_hashtab_key_t key)
 {
-	const char *p, *keyp;
-	size_t size;
-	unsigned int val;
+	unsigned int hash = 5381;
+	unsigned char c;
 
-	val = 0;
-	keyp = (const char *)key;
-	size = strlen(keyp);
-	for (p = keyp; ((size_t) (p - keyp)) < size; p++)
-		val =
-		    (val << 4 | (val >> (8 * sizeof(unsigned int) - 4))) ^ (*p);
-	return val & (h->size - 1);
+	while ((c = *(unsigned const char *)key++))
+		hash = ((hash << 5) + hash) ^ c;
+
+	return hash & (h->size - 1);
 }
 
 static int symcmp(hashtab_t h
