@@ -290,7 +290,7 @@ LIBSEPOL_3.4 {
 	sepol_validate_transition_reason_buffer;
 } LIBSEPOL_3.0;
 
-LIBSEPOL_3.5 {
+LIBSEPOL_3.6 {
   global:
 	cil_write_post_ast;
 } LIBSEPOL_3.4;
