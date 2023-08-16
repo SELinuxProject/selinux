@@ -243,11 +243,12 @@ int hashtab_map(hashtab_t h,
 void hashtab_hash_eval(hashtab_t h, const char *tag)
 {
 	unsigned int i;
-	size_t chain_len, slots_used, max_chain_len;
+	size_t chain_len, slots_used, max_chain_len, chain2_len_sum;
 	hashtab_ptr_t cur;
 
 	slots_used = 0;
 	max_chain_len = 0;
+	chain2_len_sum = 0;
 	for (i = 0; i < h->size; i++) {
 		cur = h->htable[i];
 		if (cur) {
@@ -260,10 +261,12 @@ void hashtab_hash_eval(hashtab_t h, const char *tag)
 
 			if (chain_len > max_chain_len)
 				max_chain_len = chain_len;
+			chain2_len_sum += chain_len * chain_len;
 		}
 	}
 
 	printf
-	    ("%s:  %d entries and %zu/%d buckets used, longest chain length %zu\n",
-	     tag, h->nel, slots_used, h->size, max_chain_len);
+	    ("%s:  %d entries and %zu/%d buckets used, longest chain length %zu, chain length^2 %zu, normalized chain length^2 %.2f\n",
+	     tag, h->nel, slots_used, h->size, max_chain_len, chain2_len_sum,
+	     chain2_len_sum ? (float)chain2_len_sum / slots_used : 0);
 }
