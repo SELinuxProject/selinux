@@ -97,7 +97,7 @@ These examples use one named, one anonymous and one empty context definition:
     (context runas_exec_context (u object_r exec low_low))
 
     (filecon "/system/bin/run-as" file runas_exec_context)
-    (filecon "/dev/socket/wpa_wlan[0-9]" any u:object_r:wpa.socket:s0-s0)
+    (filecon "/dev/socket/wpa_wlan[0-9]" any (u object_r wpa.socket ((s0)(s0))))
     (filecon "/data/local/mine" dir ())
 ```
 
