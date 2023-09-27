@@ -90,7 +90,11 @@ Duplicate [`macro`](cil_call_macro_statements.md#macro) declarations in the same
 <tr class="odd">
 <td align="left"><p><code>param_type</code></p></td>
 <td align="left"><p>Zero or more parameters that are passed to the macro. The <code>param_type</code> is a keyword used to determine the declaration type (e.g. <code>type</code>, <code>class</code>, <code>categoryset</code>).</p>
-<p>The list of valid <code>param_type</code> entries are: <code>type</code>, <code>typealias</code>, <code>role</code>, <code>user</code>, <code>sensitivity</code>, <code>sensitivityalias</code>, <code>category</code>, <code>categoryalias</code>, <code>categoryset</code> (named or anonymous), <code>level</code> (named or anonymous), <code>levelrange</code> (named or anonymous), <code>class</code>, <code>classpermission</code> (named or anonymous), <code>ipaddr</code> (named or anonymous), <code>name</code> (a string), <code>classmap</code></p></td>
+<p>The list of valid <code>param_type</code> entries are: <code>string</code>, <code>name</code>, <code>type</code>, <code>role</code>, <code>user</code>, <code>sensitivity</code>, <code>category</code>, <code>bool</code>, <code>categoryset</code>, <code>level</code>, <code>levelrange</code>, <code>ipaddr</code>, <code>class</code>, <code>classmap</code>, and <code>classpermission</code>.
+<p>The <code>param_types</code> <code>categoryset</code>, <code>level</code>, <code>levelrange</code>, <code>classpermission</code>, and <code>ipaddr</code> can by named or anonymous.</p>
+<p>The <code>param_types</code> <code>type</code>, <code>role</code>, and <code>user</code> can be used for attributes.</p>
+<p>The <code>param_types</code> <code>type</code>, <code>sensitivity</code> and <code>category</code> can be used for aliases.</p>
+<p>The <code>param_types</code> <code>name</code> and <code>string</node> can be used interchangeably for an <code>object_name</code> in [`typetransition`](cil_type_statements.md#typetransition) and the <code>path</code> in [`filecon`](cil_file_labeling_statements.md#filecon) statements.</p></td>
 </tr>
 <tr class="even">
 <td align="left"><p><code>param_id</code></p></td>
