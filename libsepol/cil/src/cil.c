@@ -2275,6 +2275,7 @@ void cil_blockabstract_init(struct cil_blockabstract **abstract)
 {
 	*abstract = cil_malloc(sizeof(**abstract));
 	(*abstract)->block_str = NULL;
+	(*abstract)->block = NULL;
 }
 
 void cil_in_init(struct cil_in **in)
@@ -2284,6 +2285,7 @@ void cil_in_init(struct cil_in **in)
 	cil_symtab_array_init((*in)->symtab, cil_sym_sizes[CIL_SYM_ARRAY_IN]);
 	(*in)->is_after = CIL_FALSE;
 	(*in)->block_str = NULL;
+	(*in)->block = NULL;
 }
 
 void cil_class_init(struct cil_class **class)
@@ -2304,7 +2306,9 @@ void cil_classcommon_init(struct cil_classcommon **classcommon)
 	*classcommon = cil_malloc(sizeof(**classcommon));
 
 	(*classcommon)->class_str = NULL;
+	(*classcommon)->class = NULL;
 	(*classcommon)->common_str = NULL;
+	(*classcommon)->common = NULL;
 }
 
 void cil_sid_init(struct cil_sid **sid)
@@ -2322,6 +2326,7 @@ void cil_sidcontext_init(struct cil_sidcontext **sidcontext)
 	*sidcontext = cil_malloc(sizeof(**sidcontext));
 
 	(*sidcontext)->sid_str = NULL;
+	(*sidcontext)->sid = NULL;
 	(*sidcontext)->context_str = NULL;
 	(*sidcontext)->context = NULL;
 }
@@ -2381,6 +2386,7 @@ void cil_roleattributeset_init(struct cil_roleattributeset **attrset)
 	*attrset = cil_malloc(sizeof(**attrset));
 
 	(*attrset)->attr_str = NULL;
+	(*attrset)->attr = NULL;
 	(*attrset)->str_expr = NULL;
 	(*attrset)->datum_expr = NULL;
 }
@@ -2402,6 +2408,7 @@ void cil_typeattributeset_init(struct cil_typeattributeset **attrset)
 	*attrset = cil_malloc(sizeof(**attrset));
 
 	(*attrset)->attr_str = NULL;
+	(*attrset)->attr = NULL;
 	(*attrset)->str_expr = NULL;
 	(*attrset)->datum_expr = NULL;
 }
@@ -2429,7 +2436,9 @@ void cil_aliasactual_init(struct cil_aliasactual **aliasactual)
 	*aliasactual = cil_malloc(sizeof(**aliasactual));
 
 	(*aliasactual)->alias_str = NULL;
+	(*aliasactual)->alias = NULL;
 	(*aliasactual)->actual_str = NULL;
+	(*aliasactual)->actual = NULL;
 }
 
 void cil_typepermissive_init(struct cil_typepermissive **typeperm)
@@ -2598,6 +2607,7 @@ void cil_senscat_init(struct cil_senscat **senscat)
 	*senscat = cil_malloc(sizeof(**senscat));
 
 	(*senscat)->sens_str = NULL;
+	(*senscat)->sens = NULL;
 	(*senscat)->cats = NULL;
 }
 
@@ -2768,6 +2778,7 @@ void cil_classpermissionset_init(struct cil_classpermissionset **cps)
 	*cps = cil_malloc(sizeof(**cps));
 
 	(*cps)->set_str = NULL;
+	(*cps)->set = NULL;
 	(*cps)->classperms = NULL;
 }
 
@@ -2792,7 +2803,9 @@ void cil_classmapping_init(struct cil_classmapping **mapping)
 	*mapping = cil_malloc(sizeof(**mapping));
 
 	(*mapping)->map_class_str = NULL;
+	(*mapping)->map_class = NULL;
 	(*mapping)->map_perm_str = NULL;
+	(*mapping)->map_perm = NULL;
 	(*mapping)->classperms = NULL;
 }
 
@@ -2823,6 +2836,7 @@ void cil_userattributeset_init(struct cil_userattributeset **attrset)
 	*attrset = cil_malloc(sizeof(**attrset));
 
 	(*attrset)->attr_str = NULL;
+	(*attrset)->attr = NULL;
 	(*attrset)->str_expr = NULL;
 	(*attrset)->datum_expr = NULL;
 }
@@ -2832,6 +2846,7 @@ void cil_userlevel_init(struct cil_userlevel **usrlvl)
 	*usrlvl = cil_malloc(sizeof(**usrlvl));
 
 	(*usrlvl)->user_str = NULL;
+	(*usrlvl)->user = NULL;
 	(*usrlvl)->level_str = NULL;
 	(*usrlvl)->level = NULL;
 }
@@ -2841,6 +2856,7 @@ void cil_userrange_init(struct cil_userrange **userrange)
 	*userrange = cil_malloc(sizeof(**userrange));
 
 	(*userrange)->user_str = NULL;
+	(*userrange)->user = NULL;
 	(*userrange)->range_str = NULL;
 	(*userrange)->range = NULL;
 }
@@ -2928,7 +2944,9 @@ void cil_bounds_init(struct cil_bounds **bounds)
 	*bounds = cil_malloc(sizeof(**bounds));
 
 	(*bounds)->parent_str = NULL;
+	(*bounds)->parent = NULL;
 	(*bounds)->child_str = NULL;
+	(*bounds)->child = NULL;
 }
 
 void cil_default_init(struct cil_default **def)

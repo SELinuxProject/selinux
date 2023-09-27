@@ -216,6 +216,7 @@ int cil_resolve_classpermissionset(struct cil_tree_node *current, struct cil_cla
 	}
 
 	cp = (struct cil_classpermission *)datum;
+	cps->set = cp;
 
 	if (cp->classperms == NULL) {
 		cil_list_init(&cp->classperms, CIL_CLASSPERMS);
@@ -524,6 +525,7 @@ static int cil_resolve_aliasactual(struct cil_tree_node *current, struct cil_db 
 	}
 
 	alias = (struct cil_alias *)alias_datum;
+	aliasactual->alias = alias_datum;
 
 	if (alias->actual != NULL) {
 		cil_log(CIL_ERR, "%s %s cannot bind more than one value\n", cil_node_to_string(NODE(alias_datum)), alias_datum->name);
@@ -532,6 +534,7 @@ static int cil_resolve_aliasactual(struct cil_tree_node *current, struct cil_db 
 	}
 
 	alias->actual = actual_datum;
+	aliasactual->actual = actual_datum;
 
 	return SEPOL_OK;
 
@@ -773,6 +776,9 @@ int cil_resolve_classcommon(struct cil_tree_node *current, struct cil_db *db)
 
 	class->common = common;
 
+	clscom->class = class;
+	clscom->common = common;
+
 	cil_symtab_map(&class->perms, __class_update_perm_values, &common->num_perms);
 
 	class->num_perms += common->num_perms;
@@ -802,6 +808,7 @@ int cil_resolve_classmapping(struct cil_tree_node *current, struct cil_db *db)
 		goto exit;
 	}
 	map = (struct cil_class*)datum;
+	mapping->map_class = map;
 
 	rc = cil_symtab_get_datum(&map->perms, mapping->map_perm_str, &datum);
 	if (rc != SEPOL_OK) {
@@ -809,6 +816,7 @@ int cil_resolve_classmapping(struct cil_tree_node *current, struct cil_db *db)
 	}
 
 	mp = (struct cil_perm*)datum;
+	mapping->map_perm = mp;
 
 	rc = cil_resolve_classperms_list(current, mapping->classperms, db);
 	if (rc != SEPOL_OK) {
@@ -877,6 +885,7 @@ int cil_resolve_userlevel(struct cil_tree_node *current, struct cil_db *db)
 	}
 
 	user = (struct cil_user*)user_datum;
+	usrlvl->user = user;
 
 	if (usrlvl->level_str != NULL) {
 		rc = cil_resolve_name(current, usrlvl->level_str, CIL_SYM_LEVELS, db, &lvl_datum);
@@ -930,6 +939,7 @@ int cil_resolve_userrange(struct cil_tree_node *current, struct cil_db *db)
 	}
 
 	user = (struct cil_user*)user_datum;
+	userrange->user = user;
 
 	if (userrange->range_str != NULL) {
 		rc = cil_resolve_name(current, userrange->range_str, CIL_SYM_LEVELRANGES, db, &range_datum);
@@ -2190,6 +2200,7 @@ int cil_resolve_sidcontext(struct cil_tree_node *current, struct cil_db *db)
 		goto exit;
 	}
 	sid = (struct cil_sid*)sid_datum;
+	sidcon->sid = sid;
 
 	if (sidcon->context_str != NULL) {
 		rc = cil_resolve_name(current, sidcon->context_str, CIL_SYM_CONTEXTS, db, &context_datum);
@@ -2315,6 +2326,8 @@ static int cil_resolve_blockabstract(struct cil_tree_node *current, struct cil_d
 		goto exit;
 	}
 
+	abstract->block = (struct cil_block *)block_datum;
+
 	cil_list_append(abstract_blocks, CIL_NODE, block_node);
 
 	return SEPOL_OK;
@@ -2334,6 +2347,8 @@ int cil_resolve_in(struct cil_tree_node *current, struct cil_db *db)
 	if (rc != SEPOL_OK) {
 		goto exit;
 	}
+
+	in->block = (struct cil_block *)block_datum;
 
 	block_node = NODE(block_datum);
 
@@ -3364,6 +3379,7 @@ int cil_resolve_userattributeset(struct cil_tree_node *current, struct cil_db *d
 		goto exit;
 	}
 	attr = (struct cil_userattribute*)attr_datum;
+	attrusers->attr = attr;
 
 	rc = cil_resolve_expr(CIL_USERATTRIBUTESET, attrusers->str_expr, &attrusers->datum_expr, current, db);
 	if (rc != SEPOL_OK) {

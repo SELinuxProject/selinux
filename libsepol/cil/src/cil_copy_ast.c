@@ -148,6 +148,7 @@ int cil_copy_blockabstract(__attribute__((unused)) struct cil_db *db, void *data
 	cil_blockabstract_init(&new);
 
 	new->block_str = orig->block_str;
+	new->block = orig->block;
 
 	*copy = new;
 
@@ -248,7 +249,9 @@ int cil_copy_classmapping(__attribute__((unused)) struct cil_db *db, void *data,
 	cil_classmapping_init(&new);
 
 	new->map_class_str = orig->map_class_str;
+	new->map_class = orig->map_class;
 	new->map_perm_str = orig->map_perm_str;
+	new->map_perm = orig->map_perm;
 
 	cil_copy_classperms_list(orig->classperms, &new->classperms);
 
@@ -311,6 +314,7 @@ int cil_copy_classpermissionset(__attribute__((unused)) struct cil_db *db, void 
 	cil_classpermissionset_init(&new);
 
 	new->set_str = orig->set_str;
+	new->set = orig->set;
 
 	cil_copy_classperms_list(orig->classperms, &new->classperms);
 
@@ -327,7 +331,9 @@ int cil_copy_classcommon(__attribute__((unused)) struct cil_db *db, void *data, 
 	cil_classcommon_init(&new);
 
 	new->class_str = orig->class_str;
+	new->class = orig->class;
 	new->common_str = orig->common_str;
+	new->common = orig->common;
 
 	*copy = new;
 
@@ -679,7 +685,9 @@ static int cil_copy_aliasactual(__attribute__((unused)) struct cil_db *db, void 
 	cil_aliasactual_init(&new);
 
 	new->alias_str = orig->alias_str;
+	new->alias = orig->alias;
 	new->actual_str = orig->actual_str;
+	new->actual = orig->actual;
 
 	*copy = new;
 

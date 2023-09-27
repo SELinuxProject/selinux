@@ -588,7 +588,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_IN: {
 		struct cil_in *in = node->data;
-		fprintf(out, "(in %s", in->block_str);
+		fprintf(out, "(in %s", datum_or_str(DATUM(in->block), in->block_str));
 		if (!node->cl_head)
 			fprintf(out, ")");
 		fprintf(out, "\n");
@@ -667,7 +667,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_BLOCKABSTRACT: {
 		struct cil_blockabstract *abstract = node->data;
-		fprintf(out, "(blockabstract %s)\n", abstract->block_str);
+		fprintf(out, "(blockabstract %s)\n", datum_or_str(DATUM(abstract->block), abstract->block_str));
 		break;
 	}
 	case CIL_MLS: {
@@ -788,7 +788,9 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CLASSCOMMON: {
 		struct cil_classcommon *cc = node->data;
-		fprintf(out, "(classcommon %s %s)\n", cc->class_str, cc->common_str);
+		fprintf(out, "(classcommon %s ", datum_or_str(DATUM(cc->class), cc->class_str));
+		fprintf(out, "%s", datum_or_str(DATUM(cc->common), cc->common_str));
+		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_CLASSPERMISSION: {
@@ -798,7 +800,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CLASSPERMISSIONSET: {
 		struct cil_classpermissionset *cps = node->data;
-		fprintf(out, "(classpermissionset %s ", cps->set_str);
+		fprintf(out, "(classpermissionset %s ", datum_or_str(DATUM(cps->set), cps->set_str));
 		write_classperms_list(out, cps->classperms);
 		fprintf(out, ")\n");
 		break;
@@ -812,7 +814,8 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CLASSMAPPING: {
 		struct cil_classmapping *mapping = node->data;
-		fprintf(out, "(classmapping %s %s ", mapping->map_class_str, mapping->map_perm_str);
+		fprintf(out, "(classmapping %s ", datum_or_str(DATUM(mapping->map_class), mapping->map_class_str));
+		fprintf(out, "%s ", datum_or_str(DATUM(mapping->map_perm), mapping->map_perm_str));
 		write_classperms_list(out, mapping->classperms);
 		fprintf(out, ")\n");
 		break;
@@ -833,7 +836,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_SIDCONTEXT: {
 		struct cil_sidcontext *sidcon = node->data;
-		fprintf(out, "(sidcontext %s ", sidcon->sid_str);
+		fprintf(out, "(sidcontext %s ", datum_or_str(DATUM(sidcon->sid), sidcon->sid_str));
 		if (sidcon->context)
 			write_context(out, sidcon->context, CIL_TRUE);
 		else
@@ -874,7 +877,9 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_SENSALIASACTUAL: {
 		struct cil_aliasactual *aliasactual = node->data;
-		fprintf(out, "(sensitivityaliasactual %s %s)\n", aliasactual->alias_str, aliasactual->actual_str);
+		fprintf(out, "(sensitivityaliasactual %s ", datum_or_str(DATUM(aliasactual->alias), aliasactual->alias_str));
+		fprintf(out, "%s", datum_or_str(DATUM(aliasactual->actual), aliasactual->actual_str));
+		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_CAT: {
@@ -889,7 +894,9 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_CATALIASACTUAL: {
 		struct cil_aliasactual *aliasactual = node->data;
-		fprintf(out, "(categoryaliasactual %s %s)\n", aliasactual->alias_str, aliasactual->actual_str);
+		fprintf(out, "(categoryaliasactual %s ", datum_or_str(DATUM(aliasactual->alias), aliasactual->alias_str));
+		fprintf(out, "%s", datum_or_str(DATUM(aliasactual->actual), aliasactual->actual_str));
+		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_CATSET: {
@@ -913,7 +920,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_SENSCAT: {
 		struct cil_senscat *senscat = node->data;
 		fprintf(out, "(sensitivitycategory ");
-		fprintf(out, "%s ", senscat->sens_str);
+		fprintf(out, "%s ", datum_or_str(DATUM(senscat->sens), senscat->sens_str));
 		write_cats(out, senscat->cats);
 		fprintf(out, ")\n");
 		break;
@@ -955,7 +962,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_USERATTRIBUTESET: {
 		struct cil_userattributeset *attr = node->data;
-		fprintf(out, "(userattributeset %s ", attr->attr_str);
+		fprintf(out, "(userattributeset %s ", datum_or_str(DATUM(attr->attr), attr->attr_str));
 		if (attr->datum_expr)
 			write_expr(out, attr->datum_expr);
 		else
@@ -966,14 +973,14 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_USERROLE: {
 		struct cil_userrole *userrole = node->data;
 		fprintf(out, "(userrole ");
-		fprintf(out, "%s ", datum_or_str(userrole->user, userrole->user_str));
-		fprintf(out, "%s", datum_or_str(userrole->role, userrole->role_str));
+		fprintf(out, "%s ", datum_or_str(DATUM(userrole->user), userrole->user_str));
+		fprintf(out, "%s", datum_or_str(DATUM(userrole->role), userrole->role_str));
 		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_USERLEVEL: {
 		struct cil_userlevel *userlevel = node->data;
-		fprintf(out, "(userlevel %s ", userlevel->user_str);
+		fprintf(out, "(userlevel %s ", datum_or_str(DATUM(userlevel->user), userlevel->user_str));
 		if (userlevel->level)
 			write_level(out, userlevel->level, CIL_TRUE);
 		else
@@ -983,7 +990,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_USERRANGE: {
 		struct cil_userrange *userrange = node->data;
-		fprintf(out, "(userrange %s ", userrange->user_str);
+		fprintf(out, "(userrange %s ", datum_or_str(DATUM(userrange->user), userrange->user_str));
 		if (userrange->range)
 			write_range(out, userrange->range, CIL_TRUE);
 		else
@@ -993,7 +1000,9 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_USERBOUNDS: {
 		struct cil_bounds *bounds = node->data;
-		fprintf(out, "(userbounds %s %s)\n", bounds->parent_str, bounds->child_str);
+		fprintf(out, "(userbounds ");
+		fprintf(out, "%s ", datum_or_str(DATUM(bounds->parent), bounds->parent_str));
+		fprintf(out, "%s)\n", datum_or_str(DATUM(bounds->child), bounds->child_str));
 		break;
 	}
 	case CIL_USERPREFIX: {
@@ -1035,7 +1044,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_ROLEATTRIBUTESET: {
 		struct cil_roleattributeset *attr = node->data;
-		fprintf(out, "(roleattributeset %s ", attr->attr_str);
+		fprintf(out, "(roleattributeset %s ", datum_or_str(DATUM(attr->attr), attr->attr_str));
 		if (attr->datum_expr)
 			write_expr(out, attr->datum_expr);
 		else
@@ -1052,8 +1061,10 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		break;
 	}
 	case CIL_ROLEBOUNDS: {
-		struct cil_bounds *bnds = node->data;
-		fprintf(out, "(rolebounds %s %s)\n", bnds->parent_str, bnds->child_str);
+		struct cil_bounds *bounds = node->data;
+		fprintf(out, "(rolebounds ");
+		fprintf(out, "%s ", datum_or_str(DATUM(bounds->parent), bounds->parent_str));
+		fprintf(out, "%s)\n", datum_or_str(DATUM(bounds->child), bounds->child_str));
 		break;
 	}
 	case CIL_TYPE: {
@@ -1066,7 +1077,9 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_TYPEALIASACTUAL: {
 		struct cil_aliasactual *aliasactual = node->data;
-		fprintf(out, "(typealiasactual %s %s)\n", aliasactual->alias_str, aliasactual->actual_str);
+		fprintf(out, "(typealiasactual %s ", datum_or_str(DATUM(aliasactual->alias), aliasactual->alias_str));
+		fprintf(out, "%s", datum_or_str(DATUM(aliasactual->actual), aliasactual->actual_str));
+		fprintf(out, ")\n");
 		break;
 	}
 	case CIL_TYPEATTRIBUTE: {
@@ -1075,7 +1088,7 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_TYPEATTRIBUTESET: {
 		struct cil_typeattributeset *attr = node->data;
-		fprintf(out, "(typeattributeset %s ", attr->attr_str);
+		fprintf(out, "(typeattributeset %s ", datum_or_str(DATUM(attr->attr), attr->attr_str));
 		if (attr->datum_expr)
 			write_expr(out, attr->datum_expr);
 		else
@@ -1102,7 +1115,9 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	}
 	case CIL_TYPEBOUNDS: {
 		struct cil_bounds *bounds = node->data;
-		fprintf(out, "(typebounds %s %s)\n", bounds->parent_str, bounds->child_str);
+		fprintf(out, "(typebounds ");
+		fprintf(out, "%s ", datum_or_str(DATUM(bounds->parent), bounds->parent_str));
+		fprintf(out, "%s)\n", datum_or_str(DATUM(bounds->child), bounds->child_str));
 		break;
 	}
 	case CIL_ROLEALLOW: {

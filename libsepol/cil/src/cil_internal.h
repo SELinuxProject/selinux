@@ -367,12 +367,14 @@ struct cil_blockinherit {
 
 struct cil_blockabstract {
 	char *block_str;
+	struct cil_block *block;
 };
 
 struct cil_in {
 	symtab_t symtab[CIL_SYM_NUM];
 	int is_after;
 	char *block_str;
+	struct cil_block *block;
 };
 
 struct cil_optional {
@@ -412,18 +414,23 @@ struct cil_classpermission {
 
 struct cil_classpermissionset {
 	char *set_str;
+	struct cil_classpermission *set;
 	struct cil_list *classperms;
 };
 
 struct cil_classmapping {
 	char *map_class_str;
+	struct cil_class *map_class;
 	char *map_perm_str;
+	struct cil_perm *map_perm;
 	struct cil_list *classperms;
 };
 
 struct cil_classcommon {
 	char *class_str;
+	struct cil_class *class;
 	char *common_str;
+	struct cil_class *common;
 };
 
 struct cil_alias {
@@ -433,7 +440,9 @@ struct cil_alias {
 
 struct cil_aliasactual {
 	char *alias_str;
+	void *alias;
 	char *actual_str;
+	void *actual;
 };
 
 struct cil_sid {
@@ -444,6 +453,7 @@ struct cil_sid {
 
 struct cil_sidcontext {
 	char *sid_str;
+	struct cil_sid *sid;
 	char *context_str;
 	struct cil_context *context;
 };
@@ -465,6 +475,7 @@ struct cil_userattribute {
 
 struct cil_userattributeset {
 	char *attr_str;
+	struct cil_userattribute *attr;
 	struct cil_list *str_expr;
 	struct cil_list *datum_expr;
 };
@@ -478,12 +489,14 @@ struct cil_userrole {
 
 struct cil_userlevel {
 	char *user_str;
+	void *user;
 	char *level_str;
 	struct cil_level *level;
 };
 
 struct cil_userrange {
 	char *user_str;
+	void *user;
 	char *range_str;
 	struct cil_levelrange *range;
 };
@@ -517,6 +530,7 @@ struct cil_roleattribute {
 
 struct cil_roleattributeset {
 	char *attr_str;
+	struct cil_roleattribute *attr;
 	struct cil_list *str_expr;
 	struct cil_list *datum_expr;
 };
@@ -549,6 +563,7 @@ struct cil_typeattribute {
 
 struct cil_typeattributeset {
 	char *attr_str;
+	struct cil_typeattribute *attr;
 	struct cil_list *str_expr;
 	struct cil_list *datum_expr;
 };
@@ -697,6 +712,7 @@ struct cil_catset {
 
 struct cil_senscat {
 	char *sens_str;
+	struct cil_sens *sens;
 	struct cil_cats *cats;
 };
 
@@ -925,7 +941,9 @@ struct cil_policycap {
 
 struct cil_bounds {
 	char *parent_str;
+	void *parent;
 	char *child_str;
+	void *child;
 };
 
 /* Ensure that CIL uses the same values as sepol policydb.h */
