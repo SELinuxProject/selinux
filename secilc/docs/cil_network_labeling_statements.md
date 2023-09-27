@@ -10,7 +10,7 @@ Notes:
 
 -   CIL statements utilising an IP address may reference a named IP address or use an anonymous address, the examples will show each option.
 
--   IP Addresses may be declared without a previous declaration by enclosing within parentheses e.g. `(127.0.0.1)` or `(::1)`.
+-   IP Addresses may be declared without a previous declaration by either writing them directly e.g. `127.0.0.11 or `::1` or by enclosing within parentheses e.g. `(127.0.0.1)` or `(::1)`.
 
 **Statement definition:**
 
@@ -113,7 +113,7 @@ nodecon
 
 Label network address objects that represent IPv4 or IPv6 IP addresses and network masks.
 
-IP Addresses may be declared without a previous declaration by enclosing within parentheses e.g. `(127.0.0.1)` or `(::1)`.
+IP Addresses may be declared without a previous declaration by either writing them directly e.g. `127.0.0.11 or `::1` or by enclosing within parentheses e.g. `(127.0.0.1)` or `(::1)`.
 
 **Statement definition:**
 
@@ -160,7 +160,7 @@ These examples show named and anonymous [`nodecon`](cil_network_labeling_stateme
     (ipaddr ipv4_1 192.0.2.64)
 
     (nodecon ipv4_1 netmask_1 context_2)
-    (nodecon (192.0.2.64) (255.255.255.255) context_1)
+    (nodecon 192.0.2.64 255.255.255.255 context_1)
     (nodecon (192.0.2.64) netmask_1 (unconfined.user object_r unconfined.object ((s0) (s0 (c0)))))
 
     (context context_3 (sys.id sys.role my48prefix.node ((s0)(s0))))
