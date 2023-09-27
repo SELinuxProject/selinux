@@ -837,7 +837,7 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 		cil_destroy_class(*data);
 		break;
 	case CIL_CLASSORDER:
-		cil_destroy_classorder(*data);
+		cil_destroy_ordered(*data);
 		break;
 	case CIL_CLASSPERMISSION:
 		cil_destroy_classpermission(*data);
@@ -934,7 +934,7 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 		cil_destroy_aliasactual(*data);
 		break;
 	case CIL_SENSITIVITYORDER:
-		cil_destroy_sensitivityorder(*data);
+		cil_destroy_ordered(*data);
 		break;
 	case CIL_SENSCAT:
 		cil_destroy_senscat(*data);
@@ -952,7 +952,7 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 		cil_destroy_aliasactual(*data);
 		break;
 	case CIL_CATORDER:
-		cil_destroy_catorder(*data);
+		cil_destroy_ordered(*data);
 		break;
 	case CIL_LEVEL:
 		cil_destroy_level(*data);
@@ -964,7 +964,7 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 		cil_destroy_sid(*data);
 		break;
 	case CIL_SIDORDER:
-		cil_destroy_sidorder(*data);
+		cil_destroy_ordered(*data);
 		break;
 	case CIL_NAME:
 		cil_destroy_name(*data);
@@ -2164,6 +2164,14 @@ void cil_sort_destroy(struct cil_sort **sort)
 	*sort = NULL;
 }
 
+void cil_ordered_init(struct cil_ordered **ordered)
+{
+	*ordered = cil_malloc(sizeof(**ordered));
+	(*ordered)->merged = CIL_FALSE;
+	(*ordered)->strs = NULL;
+	(*ordered)->datums = NULL;
+}
+
 void cil_netifcon_init(struct cil_netifcon **netifcon)
 {
 	*netifcon = cil_malloc(sizeof(**netifcon));
@@ -2281,13 +2289,6 @@ void cil_class_init(struct cil_class **class)
 	(*class)->ordered = CIL_FALSE;
 }
 
-void cil_classorder_init(struct cil_classorder **classorder)
-{
-	*classorder = cil_malloc(sizeof(**classorder));
-
-	(*classorder)->class_list_str = NULL;
-}
-
 void cil_classcommon_init(struct cil_classcommon **classcommon)
 {
 	*classcommon = cil_malloc(sizeof(**classcommon));
@@ -2313,13 +2314,6 @@ void cil_sidcontext_init(struct cil_sidcontext **sidcontext)
 	(*sidcontext)->sid_str = NULL;
 	(*sidcontext)->context_str = NULL;
 	(*sidcontext)->context = NULL;
-}
-
-void cil_sidorder_init(struct cil_sidorder **sidorder)
-{
-	*sidorder = cil_malloc(sizeof(**sidorder));
-
-	(*sidorder)->sid_list_str = NULL;
 }
 
 void cil_userrole_init(struct cil_userrole **userrole)
@@ -2875,20 +2869,6 @@ void cil_cat_init(struct cil_cat **cat)
 	cil_symtab_datum_init(&(*cat)->datum);
 	(*cat)->ordered = CIL_FALSE;
 	(*cat)->value = 0;
-}
-
-void cil_catorder_init(struct cil_catorder **catorder)
-{
-	*catorder = cil_malloc(sizeof(**catorder));
-
-	(*catorder)->cat_list_str = NULL;
-}
-
-void cil_sensorder_init(struct cil_sensorder **sensorder)
-{
-	*sensorder = cil_malloc(sizeof(**sensorder));
-
-	(*sensorder)->sens_list_str = NULL;
 }
 
 void cil_args_init(struct cil_args **args)

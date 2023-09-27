@@ -347,6 +347,12 @@ struct cil_sort {
 	void **array;
 };
 
+struct cil_ordered {
+	int merged;
+	struct cil_list *strs;
+	struct cil_list *datums;
+};
+
 struct cil_block {
 	struct cil_symtab_datum datum;
 	symtab_t symtab[CIL_SYM_NUM];
@@ -385,10 +391,6 @@ struct cil_class {
 	unsigned int num_perms;
 	struct cil_class *common; /* Only used for kernel class */
 	uint32_t ordered; /* Only used for kernel class */
-};
-
-struct cil_classorder {
-	struct cil_list *class_list_str;
 };
 
 struct cil_classperms_set {
@@ -444,10 +446,6 @@ struct cil_sidcontext {
 	char *sid_str;
 	char *context_str;
 	struct cil_context *context;
-};
-
-struct cil_sidorder {
-	struct cil_list *sid_list_str;
 };
 
 struct cil_user {
@@ -685,10 +683,6 @@ struct cil_sens {
 	uint32_t ordered;
 };
 
-struct cil_sensorder {
-	struct cil_list *sens_list_str;
-};
-
 struct cil_cat {
 	struct cil_symtab_datum datum;
 	uint32_t ordered;
@@ -704,10 +698,6 @@ struct cil_cats {
 struct cil_catset {
 	struct cil_symtab_datum datum;
 	struct cil_cats *cats;
-};
-
-struct cil_catorder {
-	struct cil_list *cat_list_str;
 };
 
 struct cil_senscat {
@@ -1012,6 +1002,7 @@ int cil_string_to_uint64(const char *string, uint64_t *value, int base);
 
 void cil_sort_init(struct cil_sort **sort);
 void cil_sort_destroy(struct cil_sort **sort);
+void cil_ordered_init(struct cil_ordered **ordered);
 void cil_netifcon_init(struct cil_netifcon **netifcon);
 void cil_ibendportcon_init(struct cil_ibendportcon **ibendportcon);
 void cil_context_init(struct cil_context **context);
@@ -1023,11 +1014,9 @@ void cil_blockinherit_init(struct cil_blockinherit **inherit);
 void cil_blockabstract_init(struct cil_blockabstract **abstract);
 void cil_in_init(struct cil_in **in);
 void cil_class_init(struct cil_class **class);
-void cil_classorder_init(struct cil_classorder **classorder);
 void cil_classcommon_init(struct cil_classcommon **classcommon);
 void cil_sid_init(struct cil_sid **sid);
 void cil_sidcontext_init(struct cil_sidcontext **sidcontext);
-void cil_sidorder_init(struct cil_sidorder **sidorder);
 void cil_userrole_init(struct cil_userrole **userrole);
 void cil_userprefix_init(struct cil_userprefix **userprefix);
 void cil_selinuxuser_init(struct cil_selinuxuser **selinuxuser);
@@ -1083,8 +1072,6 @@ void cil_userrange_init(struct cil_userrange **userrange);
 void cil_role_init(struct cil_role **role);
 void cil_type_init(struct cil_type **type);
 void cil_cat_init(struct cil_cat **cat);
-void cil_catorder_init(struct cil_catorder **catorder);
-void cil_sensorder_init(struct cil_sensorder **sensorder);
 void cil_args_init(struct cil_args **args);
 void cil_call_init(struct cil_call **call);
 void cil_optional_init(struct cil_optional **optional);

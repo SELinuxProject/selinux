@@ -11,6 +11,12 @@ static inline void cil_reset_levelrange(struct cil_levelrange *levelrange);
 static inline void cil_reset_context(struct cil_context *context);
 
 
+static void cil_reset_ordered(struct cil_ordered *ordered)
+{
+	ordered->merged = CIL_FALSE;
+	cil_list_destroy(&ordered->datums, CIL_FALSE);
+}
+
 static int __class_reset_perm_values(__attribute__((unused)) hashtab_key_t k, hashtab_datum_t d, void *args)
 {
 	struct cil_perm *perm = (struct cil_perm *)d;
@@ -638,14 +644,16 @@ static int __cil_reset_node(struct cil_tree_node *node,  __attribute__((unused))
 	case CIL_BOOLEANIF:
 		cil_reset_booleanif(node->data);
 		break;
-	case CIL_TUNABLEIF:
-	case CIL_CALL:
-		break; /* Not effected by optional block disabling */
-	case CIL_MACRO:
 	case CIL_SIDORDER:
 	case CIL_CLASSORDER:
 	case CIL_CATORDER:
 	case CIL_SENSITIVITYORDER:
+		cil_reset_ordered(node->data);
+		break;
+	case CIL_TUNABLEIF:
+	case CIL_CALL:
+		break; /* Not effected by optional block disabling */
+	case CIL_MACRO:
 		break; /* Nothing to reset */
 	default:
 		break;

@@ -765,9 +765,13 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		break;
 	}
 	case CIL_CLASSORDER: {
-		struct cil_classorder *classorder = node->data;
+		struct cil_ordered *ordered = node->data;
 		fprintf(out, "(classorder ");
-		write_string_list(out, classorder->class_list_str);
+		if (ordered->datums) {
+			write_datum_list(out, ordered->datums);
+		} else {
+			write_string_list(out, ordered->strs);
+		}
 		fprintf(out, ")\n");
 		break;
 	}
@@ -834,9 +838,13 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		break;
 	}
 	case CIL_SIDORDER: {
-		struct cil_sidorder *sidorder = node->data;
+		struct cil_ordered *ordered = node->data;
 		fprintf(out, "(sidorder ");
-		write_string_list(out, sidorder->sid_list_str);
+		if (ordered->datums) {
+			write_datum_list(out, ordered->datums);
+		} else {
+			write_string_list(out, ordered->strs);
+		}
 		fprintf(out, ")\n");
 		break;
 	}
@@ -888,9 +896,13 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		break;
 	}
 	case CIL_CATORDER: {
-		struct cil_catorder *catorder = node->data;
+		struct cil_ordered *ordered = node->data;
 		fprintf(out, "(categoryorder ");
-		write_string_list(out, catorder->cat_list_str);
+		if (ordered->datums) {
+			write_datum_list(out, ordered->datums);
+		} else {
+			write_string_list(out, ordered->strs);
+		}
 		fprintf(out, ")\n");
 		break;
 	}
@@ -903,9 +915,13 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		break;
 	}
 	case CIL_SENSITIVITYORDER: {
-		struct cil_sensorder *sensorder = node->data;
+		struct cil_ordered *ordered = node->data;
 		fprintf(out, "(sensitivityorder ");
-		write_string_list(out, sensorder->sens_list_str);
+		if (ordered->datums) {
+			write_datum_list(out, ordered->datums);
+		} else {
+			write_string_list(out, ordered->strs);
+		}
 		fprintf(out, ")\n");
 		break;
 	}

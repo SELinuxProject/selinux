@@ -37,12 +37,12 @@
 void cil_copy_list(struct cil_list *orig, struct cil_list **copy);
 int cil_copy_expr(struct cil_db *db, struct cil_list *orig, struct cil_list **new);
 
+int cil_copy_ordered(__attribute__((unused)) struct cil_db *db, void *data, void **copy, __attribute__((unused)) symtab_t *symtab);
 int cil_copy_block(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_blockabstract(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_blockinherit(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_perm(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_class(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
-int cil_copy_classorder(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_classmapping(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_permset(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 
@@ -55,7 +55,6 @@ int cil_copy_common(struct cil_db *db, void *data, void **copy, symtab_t *symtab
 int cil_copy_classcommon(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_sid(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_sidcontext(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
-int cil_copy_sidorder(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_user(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_userattribute(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_userattributeset(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
@@ -88,8 +87,6 @@ int cil_copy_cat(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_catalias(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_catset(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 int cil_copy_senscat(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
-int cil_copy_catorder(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
-int cil_copy_sensitivityorder(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 void cil_copy_fill_level(struct cil_db *db, struct cil_level *orig, struct cil_level **new);
 int cil_copy_level(struct cil_db *db, void *data, void **copy, symtab_t *symtab);
 void cil_copy_fill_levelrange(struct cil_db *db, struct cil_levelrange *orig, struct cil_levelrange *new);

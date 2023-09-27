@@ -42,6 +42,8 @@ int cil_add_decl_to_symtab(struct cil_db *db, symtab_t *symtab, hashtab_key_t ke
 int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_symtab_datum *datum, hashtab_key_t key, enum cil_sym_index sflavor, enum cil_flavor nflavor);
 int cil_parse_to_list(struct cil_tree_node *parse_cl_head, struct cil_list *ast_cl, enum cil_flavor flavor);
 
+int cil_gen_ordered(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node, enum cil_flavor flavor);
+void cil_destroy_ordered(struct cil_ordered *ordered);
 int cil_gen_block(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node, uint16_t is_abstract);
 void cil_destroy_block(struct cil_block *block);
 int cil_gen_blockinherit(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
@@ -52,8 +54,6 @@ int cil_gen_in(struct cil_db *db, struct cil_tree_node *parse_current, struct ci
 void cil_destroy_in(struct cil_in *in);
 int cil_gen_class(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_class(struct cil_class *class);
-int cil_gen_classorder(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
-void cil_destroy_classorder(struct cil_classorder *classorder);
 int cil_gen_perm(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node, enum cil_flavor flavor, unsigned int *num_perms);
 void cil_destroy_perm(struct cil_perm *perm);
 int cil_gen_perm_nodes(struct cil_db *db, struct cil_tree_node *current_perm, struct cil_tree_node *ast_node, enum cil_flavor flavor, unsigned int *num_perms);
@@ -78,8 +78,6 @@ int cil_gen_sid(struct cil_db *db, struct cil_tree_node *parse_current, struct c
 void cil_destroy_sid(struct cil_sid *sid);
 int cil_gen_sidcontext(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_sidcontext(struct cil_sidcontext *sidcon);
-int cil_gen_sidorder(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
-void cil_destroy_sidorder(struct cil_sidorder *sidorder);
 int cil_gen_user(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_user(struct cil_user *user);
 int cil_gen_userattribute(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
@@ -158,10 +156,6 @@ int cil_gen_category(struct cil_db *db, struct cil_tree_node *parse_current, str
 void cil_destroy_category(struct cil_cat *cat);
 int cil_set_to_list(struct cil_tree_node *parse_current, struct cil_list *ast_cl);
 void cil_destroy_catset(struct cil_catset *catset);
-int cil_gen_catorder(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
-void cil_destroy_catorder(struct cil_catorder *catorder);
-int cil_gen_sensitivityorder(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
-void cil_destroy_sensitivityorder(struct cil_sensorder *sensorder);
 int cil_gen_senscat(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_senscat(struct cil_senscat *senscat);
 int cil_gen_level(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);

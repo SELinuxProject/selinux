@@ -64,6 +64,7 @@ int cil_verify_constraint_expr_syntax(struct cil_tree_node *current, enum cil_fl
 int cil_verify_conditional_blocks(struct cil_tree_node *current);
 int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro, struct cil_tree_node *node, const char *name);
 int __cil_verify_ranges(struct cil_list *list);
+int cil_verify_completed_ordered_list(struct cil_list *complete, struct cil_list *ordered_lists);
 int __cil_verify_ordered_node_helper(struct cil_tree_node *node, uint32_t *finished, void *extra_args);
 int __cil_verify_ordered(struct cil_tree_node *current, enum cil_flavor flavor);
 int __cil_verify_initsids(struct cil_list *sids);

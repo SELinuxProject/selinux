@@ -519,6 +519,78 @@ exit:
 	return rc;
 }
 
+int cil_verify_completed_ordered_list(struct cil_list *complete, struct cil_list *ordered_lists)
+{
+	struct cil_list_item *cprev, *ccurr, *cnext;
+	int found_prev, found_next;
+	int rc = SEPOL_OK;
+
+	found_prev = CIL_FALSE;
+	found_next = CIL_FALSE;
+	cprev = NULL;
+	ccurr = complete->head;
+	cnext = ccurr ? ccurr->next : NULL;
+	while (ccurr) {
+		struct cil_tree_node *node;
+		struct cil_ordered *ordered;
+		struct cil_list_item *curr_list, *oprev, *ocurr, *onext;
+		int change = CIL_FALSE;
+		cil_list_for_each(curr_list, ordered_lists) {
+			node = curr_list->data;
+			ordered = node->data;
+			oprev = NULL;
+			cil_list_for_each(ocurr, ordered->datums) {
+				onext = ocurr ? ocurr->next : NULL;
+				if (ccurr->data == ocurr->data) {
+					if (found_prev == CIL_FALSE && ((!cprev && !oprev) ||
+						(cprev && oprev && cprev->data == oprev->data))) {
+						found_prev = CIL_TRUE;
+						change = CIL_TRUE;
+					}
+					if (found_next == CIL_FALSE && ((!cnext && !onext) ||
+						(cnext && onext && cnext->data == onext->data))) {
+						found_next = CIL_TRUE;
+						change = CIL_TRUE;
+					}
+					if (found_prev && found_next) {
+						cprev = ccurr;
+						ccurr = cnext;
+						cnext = ccurr ? ccurr->next : NULL;
+						found_prev = CIL_FALSE;
+						found_next = CIL_FALSE;
+						if (!ccurr) {
+							/* Went through the whole list */
+							return rc;
+						}
+					}
+				}
+				oprev = ocurr;
+			}
+		}
+		if (!change) {
+			rc = SEPOL_ERR;
+			cil_log(CIL_ERR, "Unable to verify the order of %s\n", DATUM(ccurr->data)->fqn);
+			cil_log(CIL_ERR, "Found in the following ordering rules:\n");
+			cil_list_for_each(curr_list, ordered_lists) {
+				node = curr_list->data;
+				ordered = node->data;
+				cil_list_for_each(ocurr, ordered->datums) {
+					if (ccurr->data == ocurr->data) {
+						cil_tree_log(node, CIL_ERR, "    ");
+					}
+				}
+			}
+			cprev = ccurr;
+			ccurr = cnext;
+			cnext = ccurr ? ccurr->next : NULL;
+			found_prev = CIL_FALSE;
+			found_next = CIL_FALSE;
+		}
+	}
+
+	return rc;
+}
+
 struct cil_args_verify_order {
 	uint32_t *flavor;
 };
