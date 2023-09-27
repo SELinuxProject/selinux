@@ -68,49 +68,6 @@ struct cil_args_resolve {
 	struct cil_list *abstract_blocks;
 };
 
-static struct cil_name * __cil_insert_name(struct cil_db *db, hashtab_key_t key, struct cil_tree_node *ast_node)
-{
-	/* Currently only used for typetransition file names.
-	   But could be used for any string that is passed as a parameter.
-	*/
-	struct cil_tree_node *parent = ast_node->parent;
-	struct cil_macro *macro = NULL;
-	struct cil_name *name;
-	symtab_t *symtab;
-	enum cil_sym_index sym_index;
-	struct cil_symtab_datum *datum = NULL;
-
-	if (parent->flavor == CIL_CALL) {
-		struct cil_call *call = parent->data;
-		macro = call->macro;	
-	} else if (parent->flavor == CIL_MACRO) {
-		macro = parent->data;
-	}
-	if (macro != NULL && macro->params != NULL) {
-		struct cil_list_item *item;
-		cil_list_for_each(item, macro->params) {
-			struct cil_param *param = item->data;
-			if (param->flavor == CIL_NAME && param->str == key) {
-				return NULL;
-			}
-		}
-	}
-
-	cil_flavor_to_symtab_index(CIL_NAME, &sym_index);
-	symtab = &((struct cil_root *)db->ast->root->data)->symtab[sym_index];
-
-	cil_symtab_get_datum(symtab, key, &datum);
-	if (datum != NULL) {
-		return (struct cil_name *)datum;
-	}
-
-	cil_name_init(&name);
-	cil_symtab_insert(symtab, key, (struct cil_symtab_datum *)name, ast_node);
-	cil_list_append(db->names, CIL_NAME, name);
-
-	return name;
-}
-
 static int __cil_resolve_perms(symtab_t *class_symtab, symtab_t *common_symtab, struct cil_list *perm_strs, struct cil_list **perm_datums, enum cil_flavor class_flavor)
 {
 	int rc = SEPOL_ERR;
@@ -691,13 +648,12 @@ int cil_resolve_nametypetransition(struct cil_tree_node *current, struct cil_db 
 	}
 	nametypetrans->obj = (struct cil_class*)obj_datum;
 
-	nametypetrans->name = __cil_insert_name(db, nametypetrans->name_str, current);
-	if (nametypetrans->name == NULL) {
-		rc = cil_resolve_name(current, nametypetrans->name_str, CIL_SYM_NAMES, db, &name_datum);
+	if (!nametypetrans->name) {
+		rc = cil_resolve_name(current, nametypetrans->name_str, CIL_SYM_STRINGS, db, &name_datum);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
-		nametypetrans->name = (struct cil_name *)name_datum;
+		nametypetrans->name = name_datum;
 	}
 
 	rc = cil_resolve_name(current, nametypetrans->result_str, CIL_SYM_TYPES, db, &result_datum);
@@ -2689,17 +2645,17 @@ static int cil_build_call_args(struct cil_tree_node *call_node, struct cil_call 
 		cil_args_init(&arg);
 
 		switch (flavor) {
-		case CIL_NAME: {
-			struct cil_name *name;
+		case CIL_DECLARED_STRING: {
+			struct cil_symtab_datum *string;
 			if (arg_node->data == NULL) {
 				cil_tree_log(call_node, CIL_ERR, "Invalid macro parameter");
 				cil_destroy_args(arg);
 				rc = SEPOL_ERR;
 				goto exit;
 			}
-			name = __cil_insert_name(db, arg_node->data, call_node);
-			if (name != NULL) {
-				arg->arg = (struct cil_symtab_datum *)name;
+			string = cil_gen_declared_string(db, arg_node->data, call_node);
+			if (string) {
+				arg->arg = string;
 			} else {
 				arg->arg_str = arg_node->data;
 			}
@@ -3017,11 +2973,11 @@ static int cil_resolve_call_args(struct cil_tree_node *current, struct cil_db *d
 		}
 
 		switch (arg->flavor) {
-		case CIL_NAME:
+		case CIL_DECLARED_STRING:
 			if (arg->arg != NULL) {
 				continue; /* No need to resolve */
 			} else {
-				sym_index = CIL_SYM_NAMES;
+				sym_index = CIL_SYM_STRINGS;
 			}
 			break;
 		case CIL_LEVEL:

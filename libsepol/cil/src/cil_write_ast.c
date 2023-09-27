@@ -43,7 +43,7 @@
 
 static inline const char *datum_or_str(struct cil_symtab_datum *datum, const char *str)
 {
-	return datum ? datum->fqn : str;
+	return datum && datum->fqn ? datum->fqn : str;
 }
 
 static inline const char *datum_to_str(struct cil_symtab_datum *datum)
@@ -78,7 +78,7 @@ static void write_expr(FILE *out, struct cil_list *expr)
 		case CIL_BOOL:
 		case CIL_CLASS:
 		case CIL_MAP_CLASS:
-		case CIL_NAME:
+		case CIL_DECLARED_STRING:
 			fprintf(out, "%s", datum_to_str(curr->data));
 			break;
 		case CIL_OP: {
@@ -413,9 +413,16 @@ static void write_call_args(FILE *out, struct cil_list *args)
 		case CIL_CAT:
 		case CIL_BOOL:
 		case CIL_CLASS:
-		case CIL_MAP_CLASS:
-		case CIL_NAME: {
-			fprintf(out, "%s", datum_or_str(arg->arg, arg->arg_str));
+		case CIL_MAP_CLASS: {
+			fprintf(out, "%s", datum_or_str(DATUM(arg->arg), arg->arg_str));
+			break;
+		}
+		case CIL_DECLARED_STRING: {
+			if (arg->arg) {
+				fprintf(out, "\"%s\" ", DATUM(arg->arg)->fqn);
+			} else {
+				fprintf(out, "%s ", arg->arg_str);
+			}
 			break;
 		}
 		case CIL_CATSET: {
@@ -467,7 +474,7 @@ static void write_call_args(FILE *out, struct cil_list *args)
 			break;
 		}
 		default:
-			fprintf(out, "<?ARG:%s>", datum_or_str(arg->arg, arg->arg_str));
+			fprintf(out, "<?ARG:%s>", datum_or_str(DATUM(arg->arg), arg->arg_str));
 			break;
 		}
 	}
@@ -533,11 +540,8 @@ static const char *macro_param_flavor_to_string(enum cil_flavor flavor)
 	case CIL_BOOL:
 		str = CIL_KEY_BOOL;
 		break;
-	case CIL_STRING:
+	case CIL_DECLARED_STRING:
 		str = CIL_KEY_STRING;
-		break;
-	case CIL_NAME:
-		str = CIL_KEY_NAME;
 		break;
 	default:
 		str = "<?FLAVOR>";
@@ -1193,7 +1197,11 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 		fprintf(out, "%s ", datum_or_str(DATUM(rule->src), rule->src_str));
 		fprintf(out, "%s ", datum_or_str(DATUM(rule->tgt), rule->tgt_str));
 		fprintf(out, "%s ", datum_or_str(DATUM(rule->obj), rule->obj_str));
-		fprintf(out, "\"%s\" ", datum_or_str(DATUM(rule->name), rule->name_str));
+		if (rule->name) {
+			fprintf(out, "\"%s\" ", DATUM(rule->name)->fqn);
+		} else {
+			fprintf(out, "%s ", rule->name_str);
+		}
 		fprintf(out, "%s", datum_or_str(DATUM(rule->result), rule->result_str));
 		fprintf(out, ")\n");
 		break;

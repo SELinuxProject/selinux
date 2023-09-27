@@ -1256,8 +1256,7 @@ static void cil_type_rule_to_policy(FILE *out, struct cil_type_rule *rule)
 
 static void cil_nametypetransition_to_policy(FILE *out, struct cil_nametypetransition *trans)
 {
-	struct cil_symtab_datum *src, *tgt, *res;
-	struct cil_name *name;
+	struct cil_symtab_datum *src, *tgt, *name, *res;
 	struct cil_list *class_list;
 	struct cil_list_item *i1;
 
@@ -1268,7 +1267,7 @@ static void cil_nametypetransition_to_policy(FILE *out, struct cil_nametypetrans
 
 	class_list = cil_expand_class(trans->obj);
 	cil_list_for_each(i1, class_list) {
-		fprintf(out, "type_transition %s %s : %s %s \"%s\";\n", src->fqn, tgt->fqn, DATUM(i1->data)->fqn, res->fqn, name->datum.fqn);
+		fprintf(out, "type_transition %s %s : %s %s \"%s\";\n", src->fqn, tgt->fqn, DATUM(i1->data)->fqn, res->fqn, name->fqn);
 	}
 	cil_list_destroy(&class_list, CIL_FALSE);
 }

@@ -267,7 +267,7 @@ enum cil_sym_index {
 	CIL_SYM_LEVELRANGES,
 	CIL_SYM_POLICYCAPS,
 	CIL_SYM_IPADDRS,
-	CIL_SYM_NAMES,
+	CIL_SYM_STRINGS,
 	CIL_SYM_PERMX,
 	CIL_SYM_NUM,
 	CIL_SYM_UNKNOWN,
@@ -313,7 +313,7 @@ struct cil_db {
 	struct cil_sort *fsuse;
 	struct cil_list *userprefixes;
 	struct cil_list *selinuxusers;
-	struct cil_list *names;
+	struct cil_list *declared_strings;
 	int num_types_and_attrs;
 	int num_classes;
 	int num_cats;
@@ -564,11 +564,6 @@ struct cil_typepermissive {
 	void *type; /* type or alias */
 };
 
-struct cil_name {
-	struct cil_symtab_datum datum;
-	char *name_str;
-};
-
 struct cil_nametypetransition {
 	char *src_str;
 	void *src; /* type, alias, or attribute */
@@ -577,7 +572,7 @@ struct cil_nametypetransition {
 	char *obj_str;
 	struct cil_class *obj;
 	char *name_str;
-	struct cil_name *name;
+	struct cil_symtab_datum *name;
 	char *result_str;
 	void *result; /* type or alias */
 
@@ -1029,7 +1024,6 @@ void cil_expandtypeattribute_init(struct cil_expandtypeattribute **expandattr);
 void cil_alias_init(struct cil_alias **alias);
 void cil_aliasactual_init(struct cil_aliasactual **aliasactual);
 void cil_typepermissive_init(struct cil_typepermissive **typeperm);
-void cil_name_init(struct cil_name **name);
 void cil_nametypetransition_init(struct cil_nametypetransition **nametypetrans);
 void cil_rangetransition_init(struct cil_rangetransition **rangetrans);
 void cil_bool_init(struct cil_bool **cilbool);

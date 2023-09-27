@@ -431,7 +431,7 @@ void cil_db_init(struct cil_db **db)
 	cil_sort_init(&(*db)->fsuse);
 	cil_list_init(&(*db)->userprefixes, CIL_LIST_ITEM);
 	cil_list_init(&(*db)->selinuxusers, CIL_LIST_ITEM);
-	cil_list_init(&(*db)->names, CIL_LIST_ITEM);
+	cil_list_init(&(*db)->declared_strings, CIL_LIST_ITEM);
 
 	cil_type_init(&(*db)->selftype);
 	(*db)->selftype->datum.name = CIL_KEY_SELF;
@@ -465,6 +465,18 @@ void cil_db_init(struct cil_db **db)
 	(*db)->policy_version = POLICYDB_VERSION_MAX;
 }
 
+static void cil_declared_strings_list_destroy(struct cil_list **strings)
+{
+	struct cil_list_item *i;
+
+	cil_list_for_each(i, *strings) {
+		struct cil_symtab_datum *d = i->data;
+		cil_symtab_datum_destroy(d);
+		free(d);
+	}
+	cil_list_destroy(strings, CIL_FALSE);
+}
+
 void cil_db_destroy(struct cil_db **db)
 {
 	if (db == NULL || *db == NULL) {
@@ -492,7 +504,8 @@ void cil_db_destroy(struct cil_db **db)
 	cil_sort_destroy(&(*db)->fsuse);
 	cil_list_destroy(&(*db)->userprefixes, CIL_FALSE);
 	cil_list_destroy(&(*db)->selinuxusers, CIL_FALSE);
-	cil_list_destroy(&(*db)->names, CIL_TRUE);
+
+	cil_declared_strings_list_destroy(&(*db)->declared_strings);
 
 	cil_destroy_type((*db)->selftype);
 	cil_destroy_type((*db)->notselftype);
@@ -966,9 +979,6 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 	case CIL_SIDORDER:
 		cil_destroy_ordered(*data);
 		break;
-	case CIL_NAME:
-		cil_destroy_name(*data);
-		break;
 	case CIL_ROLEALLOW:
 		cil_destroy_roleallow(*data);
 		break;
@@ -1009,6 +1019,8 @@ void cil_destroy_data(void **data, enum cil_flavor flavor)
 		break;
 	case CIL_IPADDR:
 		cil_destroy_ipaddr(*data);
+		break;
+	case CIL_DECLARED_STRING:
 		break;
 	case CIL_SIDCONTEXT:
 		cil_destroy_sidcontext(*data);
@@ -1151,8 +1163,8 @@ int cil_flavor_to_symtab_index(enum cil_flavor flavor, enum cil_sym_index *sym_i
 	case CIL_SID:
 		*sym_index = CIL_SYM_SIDS;
 		break;
-	case CIL_NAME:
-		*sym_index = CIL_SYM_NAMES;
+	case CIL_DECLARED_STRING:
+		*sym_index = CIL_SYM_STRINGS;
 		break;
 	case CIL_CONTEXT:
 		*sym_index = CIL_SYM_CONTEXTS;
@@ -1185,7 +1197,7 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 	case CIL_NODE:
 		return CIL_KEY_NODE;
 	case CIL_STRING:
-		return "string";
+		return CIL_KEY_STRING;
 	case CIL_DATUM:
 		return "<datum>";
 	case CIL_LIST:
@@ -1324,8 +1336,6 @@ const char * cil_node_to_string(struct cil_tree_node *node)
 		return CIL_KEY_SID;
 	case CIL_SIDORDER:
 		return CIL_KEY_SIDORDER;
-	case CIL_NAME:
-		return CIL_KEY_NAME;
 	case CIL_ROLEALLOW:
 		return CIL_KEY_ROLEALLOW;
 	case CIL_AVRULE:
@@ -2428,14 +2438,6 @@ void cil_typepermissive_init(struct cil_typepermissive **typeperm)
 
 	(*typeperm)->type_str = NULL;
 	(*typeperm)->type = NULL;
-}
-
-void cil_name_init(struct cil_name **name)
-{
-	*name = cil_malloc(sizeof(**name));
-
-	cil_symtab_datum_init(&(*name)->datum);
-	(*name)->name_str = NULL;
 }
 
 void cil_nametypetransition_init(struct cil_nametypetransition **nametypetrans)

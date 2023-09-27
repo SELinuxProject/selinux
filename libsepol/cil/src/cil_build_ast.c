@@ -83,6 +83,51 @@ exit:
 	return rc;
 }
 
+struct cil_symtab_datum *cil_gen_declared_string(struct cil_db *db, hashtab_key_t key, struct cil_tree_node *ast_node)
+{
+	struct cil_tree_node *parent = ast_node->parent;
+	struct cil_macro *macro = NULL;
+	symtab_t *symtab;
+	struct cil_symtab_datum *datum;
+
+	while (parent) {
+		if (parent->flavor == CIL_MACRO) {
+			/* This condition is only reached in the build phase */
+			macro = parent->data;
+			break;
+		} else if (parent->flavor == CIL_CALL) {
+			/* This condition is only reached in the resolve phase */
+			struct cil_call *call = parent->data;
+			macro = call->macro;
+			break;
+		}
+		parent = parent->parent;
+	}
+
+	if (macro && macro->params) {
+		struct cil_list_item *item;
+		cil_list_for_each(item, macro->params) {
+			struct cil_param *param = item->data;
+			if (param->flavor == CIL_DECLARED_STRING && param->str == key) {
+				return NULL;
+			}
+		}
+	}
+
+	symtab = &((struct cil_root *)db->ast->root->data)->symtab[CIL_SYM_STRINGS];
+	cil_symtab_get_datum(symtab, key, &datum);
+	if (datum != NULL) {
+		return datum;
+	}
+
+	datum = cil_malloc(sizeof(*datum));
+	cil_symtab_datum_init(datum);
+	cil_symtab_insert(symtab, key, datum, ast_node);
+	cil_list_append(db->declared_strings, CIL_DATUM, datum);
+	return datum;
+}
+
+
 static int cil_allow_multiple_decls(struct cil_db *db, enum cil_flavor f_new, enum cil_flavor f_old)
 {
 	if (f_new != f_old) {
@@ -3371,30 +3416,29 @@ int cil_gen_typetransition(struct cil_db *db, struct cil_tree_node *parse_curren
 
 	if (s5) {
 		struct cil_nametypetransition *nametypetrans = NULL;
-
 		cil_nametypetransition_init(&nametypetrans);
+
+		ast_node->data = nametypetrans;
+		ast_node->flavor = CIL_NAMETYPETRANSITION;
 
 		nametypetrans->src_str = s1;
 		nametypetrans->tgt_str = s2;
 		nametypetrans->obj_str = s3;
-		nametypetrans->result_str = s5;
 		nametypetrans->name_str = s4;
-
-		ast_node->data = nametypetrans;
-		ast_node->flavor = CIL_NAMETYPETRANSITION;
+		nametypetrans->name = cil_gen_declared_string(db, s4, ast_node);
+		nametypetrans->result_str = s5;
 	} else {
 		struct cil_type_rule *rule = NULL;
-
 		cil_type_rule_init(&rule);
+
+		ast_node->data = rule;
+		ast_node->flavor = CIL_TYPE_RULE;
 
 		rule->rule_kind = CIL_TYPE_TRANSITION;
 		rule->src_str = s1;
 		rule->tgt_str = s2;
 		rule->obj_str = s3;
 		rule->result_str = s4;
-
-		ast_node->data = rule;
-		ast_node->flavor = CIL_TYPE_RULE;
 	}
 
 	return SEPOL_OK;
@@ -3402,16 +3446,6 @@ int cil_gen_typetransition(struct cil_db *db, struct cil_tree_node *parse_curren
 exit:
 	cil_tree_log(parse_current, CIL_ERR, "Bad typetransition declaration");
 	return rc;
-}
-
-void cil_destroy_name(struct cil_name *name)
-{
-	if (name == NULL) {
-		return;
-	}
-
-	cil_symtab_datum_destroy(&name->datum);
-	free(name);
 }
 
 void cil_destroy_typetransition(struct cil_nametypetransition *nametypetrans)
@@ -5223,9 +5257,9 @@ int cil_gen_macro(struct cil_db *db, struct cil_tree_node *parse_current, struct
 		} else if (kind == CIL_KEY_BOOL) {
 			param->flavor = CIL_BOOL;
 		} else if (kind == CIL_KEY_STRING) {
-			param->flavor = CIL_NAME;
+			param->flavor = CIL_DECLARED_STRING;
 		} else if (kind == CIL_KEY_NAME) {
-			param->flavor = CIL_NAME;
+			param->flavor = CIL_DECLARED_STRING;
 		} else {
 			cil_log(CIL_ERR, "The kind %s is not allowed as a parameter\n",kind);
 			cil_destroy_param(param);
@@ -5365,7 +5399,7 @@ void cil_destroy_args(struct cil_args *args)
 	} else if (args->arg != NULL) {
 		struct cil_tree_node *node = args->arg->nodes->head->data;
 		switch (args->flavor) {
-		case CIL_NAME:
+		case CIL_DECLARED_STRING:
 			break;
 		case CIL_CATSET:
 			cil_destroy_catset((struct cil_catset *)args->arg);

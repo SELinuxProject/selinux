@@ -34,11 +34,13 @@
 
 #include "cil_internal.h"
 #include "cil_flavor.h"
+#include "cil_symtab.h"
 #include "cil_tree.h"
 #include "cil_list.h"
 
 int cil_add_decl_to_symtab(struct cil_db *db, symtab_t *symtab, hashtab_key_t key, struct cil_symtab_datum *datum, struct cil_tree_node *node);
 
+struct cil_symtab_datum *cil_gen_declared_string(struct cil_db *db, hashtab_key_t key, struct cil_tree_node *ast_node);
 int cil_gen_node(struct cil_db *db, struct cil_tree_node *ast_node, struct cil_symtab_datum *datum, hashtab_key_t key, enum cil_sym_index sflavor, enum cil_flavor nflavor);
 int cil_parse_to_list(struct cil_tree_node *parse_cl_head, struct cil_list *ast_cl, enum cil_flavor flavor);
 
@@ -146,7 +148,6 @@ int cil_gen_typebounds(struct cil_db *db, struct cil_tree_node *parse_current, s
 int cil_gen_typepermissive(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_typepermissive(struct cil_typepermissive *typeperm);
 int cil_gen_typetransition(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
-void cil_destroy_name(struct cil_name *name);
 void cil_destroy_typetransition(struct cil_nametypetransition *nametypetrans);
 int cil_gen_rangetransition(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node);
 void cil_destroy_rangetransition(struct cil_rangetransition *rangetrans);
