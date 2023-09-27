@@ -405,10 +405,12 @@ int cil_verify_decl_does_not_shadow_macro_parameter(struct cil_macro *macro, str
 	if (param_list != NULL) {
 		cil_list_for_each(item, param_list) {
 			struct cil_param *param = item->data;
-			if (param->flavor == node->flavor) {
-				if (param->str == name) {
-					cil_log(CIL_ERR, "%s %s shadows a macro parameter in macro declaration\n", cil_node_to_string(node), name);
+			if (param->str == name) {
+				if (param->flavor == node->flavor) {
+					cil_log(CIL_ERR, "Declaration of %s %s shadows a macro parameter with the same flavor\n", cil_node_to_string(node), name);
 					return SEPOL_ERR;
+				} else {
+					cil_log(CIL_WARN, "Declaration of %s %s has same name as a macro parameter with a different flavor\n", cil_node_to_string(node), name);
 				}
 			}
 		}
