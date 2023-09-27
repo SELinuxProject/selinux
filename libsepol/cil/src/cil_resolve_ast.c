@@ -1811,7 +1811,16 @@ int cil_resolve_filecon(struct cil_tree_node *current, struct cil_db *db)
 {
 	struct cil_filecon *filecon = current->data;
 	struct cil_symtab_datum *context_datum = NULL;
+	struct cil_symtab_datum *path_datum = NULL;
 	int rc = SEPOL_ERR;
+
+	if (!filecon->path) {
+		rc = cil_resolve_name(current, filecon->path_str, CIL_SYM_STRINGS, db, &path_datum);
+		if (rc != SEPOL_OK) {
+			return rc;
+		}
+		filecon->path = path_datum;
+	}
 
 	if (filecon->context_str != NULL) {
 		rc = cil_resolve_name(current, filecon->context_str, CIL_SYM_CONTEXTS, db, &context_datum);

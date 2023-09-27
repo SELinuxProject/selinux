@@ -4148,7 +4148,12 @@ int cil_gen_filecon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 	type = parse_current->next->next->data;
 	cil_filecon_init(&filecon);
 
+	ast_node->data = filecon;
+	ast_node->flavor = CIL_FILECON;
+
 	filecon->path_str = parse_current->next->data;
+	/* filecon->path will be NULL if in a macro and the path is an argument */
+	filecon->path = cil_gen_declared_string(db, filecon->path_str, ast_node);
 
 	if (type == CIL_KEY_ANY) {
 		filecon->type = CIL_FILECON_ANY;
@@ -4186,9 +4191,6 @@ int cil_gen_filecon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 			}
 		}
 	}
-
-	ast_node->data = filecon;
-	ast_node->flavor = CIL_FILECON;
 
 	return SEPOL_OK;
 

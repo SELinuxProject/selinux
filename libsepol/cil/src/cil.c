@@ -1806,8 +1806,8 @@ int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size)
 	for (i = 0; i < filecons->count; i++) {
 		struct cil_filecon *filecon = filecons->array[i];
 		struct cil_context *ctx = filecon->context;
-
-		str_len += strlen(filecon->path_str);
+		char *path_str = filecon->path ? DATUM(filecon->path)->fqn : filecon->path_str;
+		str_len += strlen(path_str);
 
 		if (filecon->type != CIL_FILECON_ANY) {
 			/* If a type is specified,
@@ -1845,8 +1845,8 @@ int cil_filecons_to_string(struct cil_db *db, char **out, size_t *size)
 		struct cil_filecon *filecon = filecons->array[i];
 		struct cil_context *ctx = filecon->context;
 		const char *str_type = NULL;
-
-		buf_pos = sprintf(str_tmp, "%s", filecon->path_str);
+		char *path_str = filecon->path ? DATUM(filecon->path)->fqn : filecon->path_str;
+		buf_pos = sprintf(str_tmp, "%s", path_str);
 		str_tmp += buf_pos;
 
 		switch(filecon->type) {

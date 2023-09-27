@@ -740,6 +740,7 @@ enum cil_filecon_types {
 
 struct cil_filecon {
 	char *path_str;
+	struct cil_symtab_datum *path;
 	enum cil_filecon_types type;
 	char *context_str;
 	struct cil_context *context;

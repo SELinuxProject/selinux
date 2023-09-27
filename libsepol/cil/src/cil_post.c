@@ -213,12 +213,16 @@ int cil_post_filecon_compare(const void *a, const void *b)
 	struct cil_filecon *b_filecon = *(struct cil_filecon**)b;
 	struct fc_data *a_data = cil_malloc(sizeof(*a_data));
 	struct fc_data *b_data = cil_malloc(sizeof(*b_data));
-	char *a_path = cil_malloc(strlen(a_filecon->path_str) + 1);
-	char *b_path = cil_malloc(strlen(b_filecon->path_str) + 1);
+	char *a_path_str, *a_path, *b_path_str, *b_path;
+
+	a_path_str = a_filecon->path ? DATUM(a_filecon->path)->fqn : a_filecon->path_str;
+	b_path_str = b_filecon->path ? DATUM(b_filecon->path)->fqn : b_filecon->path_str;
+	a_path = cil_malloc(strlen(a_path_str) + 1);
+	b_path = cil_malloc(strlen(b_path_str) + 1);
 	a_path[0] = '\0';
 	b_path[0] = '\0';
-	strcat(a_path, a_filecon->path_str);
-	strcat(b_path, b_filecon->path_str);
+	strcat(a_path, a_path_str);
+	strcat(b_path, b_path_str);
 	cil_post_fc_fill_data(a_data, a_path);
 	cil_post_fc_fill_data(b_data, b_path);
 	if (a_data->meta && !b_data->meta) {
@@ -238,7 +242,7 @@ int cil_post_filecon_compare(const void *a, const void *b)
 	} else if (b_filecon->type < a_filecon->type) {
 		rc = 1;
 	} else {
-		rc = strcmp(a_filecon->path_str, b_filecon->path_str);
+		rc = strcmp(a_path_str, b_path_str);
 	}
 
 	free(a_path);

@@ -1265,7 +1265,11 @@ void cil_write_ast_node(FILE *out, struct cil_tree_node *node)
 	case CIL_FILECON: {
 		struct cil_filecon *filecon = node->data;
 		fprintf(out, "(filecon ");
-		fprintf(out, "\"%s\" ", filecon->path_str);
+		if (filecon->path) {
+			fprintf(out, "\"%s\" ", DATUM(filecon->path)->fqn);
+		} else {
+			fprintf(out, "%s ", filecon->path_str);
+		}
 		switch (filecon->type) {
 		case CIL_FILECON_ANY:
 			fprintf(out, "%s ", CIL_KEY_ANY);
