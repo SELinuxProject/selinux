@@ -4387,25 +4387,41 @@ int cil_gen_nodecon(struct cil_db *db, struct cil_tree_node *parse_current, stru
 
 	cil_nodecon_init(&nodecon);
 
-	if (parse_current->next->cl_head == NULL ) {
-		nodecon->addr_str = parse_current->next->data;
-	} else {
+	if (parse_current->next->cl_head) {
 		cil_ipaddr_init(&nodecon->addr);
-
 		rc = cil_fill_ipaddr(parse_current->next->cl_head, nodecon->addr);
 		if (rc != SEPOL_OK) {
 			goto exit;
 		}
+	} else {
+		char *addr = parse_current->next->data;
+		if (strchr(addr, ':') || (strchr(addr, '.') && isdigit(addr[0]))) {
+			cil_ipaddr_init(&nodecon->addr);
+			rc = cil_fill_ipaddr(parse_current->next, nodecon->addr);
+			if (rc != SEPOL_OK) {
+				goto exit;
+			}
+		} else {
+			nodecon->addr_str = addr;
+		}
 	}
 
-	if (parse_current->next->next->cl_head == NULL ) {
-		nodecon->mask_str = parse_current->next->next->data;
-	} else {
+	if (parse_current->next->next->cl_head) {
 		cil_ipaddr_init(&nodecon->mask);
-
 		rc = cil_fill_ipaddr(parse_current->next->next->cl_head, nodecon->mask);
 		if (rc != SEPOL_OK) {
 			goto exit;
+		}
+	} else {
+		char *mask = parse_current->next->next->data;
+		if (strchr(mask, ':') || (strchr(mask, '.') && isdigit(mask[0]))) {
+			cil_ipaddr_init(&nodecon->mask);
+			rc = cil_fill_ipaddr(parse_current->next->next, nodecon->mask);
+			if (rc != SEPOL_OK) {
+				goto exit;
+			}
+		} else {
+			nodecon->mask_str = mask;
 		}
 	}
 
@@ -5584,15 +5600,19 @@ exit:
 int cil_fill_ipaddr(struct cil_tree_node *addr_node, struct cil_ipaddr *addr)
 {
 	int rc = SEPOL_ERR;
+	char *addr_str;
 
 	if (addr_node == NULL || addr_node->data == NULL || addr == NULL) {
 		goto exit;
 	}
 
-	if (strchr(addr_node->data, ':') != NULL) {
+	addr_str = addr_node->data;
+	if (strchr(addr_str, ':')) {
 		addr->family = AF_INET6;
-	} else {
+	} else if (strchr(addr_str, '.') && isdigit(addr_str[0])) {
 		addr->family = AF_INET;
+	} else {
+		goto exit;
 	}
 
 	rc = inet_pton(addr->family, addr_node->data, &addr->ip);
@@ -5604,7 +5624,7 @@ int cil_fill_ipaddr(struct cil_tree_node *addr_node, struct cil_ipaddr *addr)
 	return SEPOL_OK;
 
 exit:
-	cil_log(CIL_ERR, "Bad ip address or netmask: %s\n", (addr_node && addr_node->data) ? (const char *)addr_node->data : "n/a");
+	cil_log(CIL_ERR, "Bad ip address or netmask: %s\n", (addr_node && addr_node->data) ? (const char *)addr_node->data : "NULL");
 	return rc;
 }
 
