@@ -210,6 +210,12 @@ int cil_resolve_classpermissionset(struct cil_tree_node *current, struct cil_cla
 		goto exit;
 	}
 
+	if (!datum->fqn) {
+		cil_tree_log(current, CIL_ERR, "Anonymous classpermission used in a classpermissionset");
+		rc = SEPOL_ERR;
+		goto exit;
+	}
+
 	rc = cil_resolve_classperms_list(current, cps->classperms, db);
 	if (rc != SEPOL_OK) {
 		goto exit;
