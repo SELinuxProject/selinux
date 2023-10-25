@@ -156,7 +156,7 @@ def get_alphabet_manpages(manpage_list):
             if j.split("/")[-1][0] == i:
                 temp.append(j.split("/")[-1])
 
-        alphabet_manpages[i] = temp
+        alphabet_manpages[i] = sorted(temp)
 
     return alphabet_manpages
 
