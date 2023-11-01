@@ -175,8 +175,7 @@ static int add_exclude(const char *directory, bool who)
 		return -1;
 	}
 
-	tmp_list = realloc(exclude_lst,
-			   sizeof(struct edir) * (exclude_count + 1));
+	tmp_list = reallocarray(exclude_lst, exclude_count + 1, sizeof(struct edir));
 	if (!tmp_list)
 		goto oom;
 

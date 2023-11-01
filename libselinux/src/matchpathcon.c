@@ -96,8 +96,8 @@ static int add_array_elt(char *con)
 	if (con_array_size) {
 		while (con_array_used >= con_array_size) {
 			con_array_size *= 2;
-			tmp = (char **)realloc(con_array, sizeof(char*) *
-						     con_array_size);
+			tmp = (char **)reallocarray(con_array, con_array_size,
+						    sizeof(char*));
 			if (!tmp) {
 				free_array_elts();
 				return -1;

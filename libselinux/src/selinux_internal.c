@@ -1,5 +1,7 @@
 #include "selinux_internal.h"
 
+#include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -16,3 +18,15 @@ size_t strlcpy(char *dest, const char *src, size_t size)
 	return ret;
 }
 #endif /* HAVE_STRLCPY */
+
+#ifndef HAVE_REALLOCARRAY
+void *reallocarray(void *ptr, size_t nmemb, size_t size)
+{
+	if (size && nmemb > SIZE_MAX / size) {
+		errno = ENOMEM;
+		return NULL;
+	}
+
+	return realloc(ptr, nmemb * size);
+}
+#endif /* HAVE_REALLOCARRAY */

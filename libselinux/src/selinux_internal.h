@@ -98,4 +98,8 @@ extern int has_selinux_config ;
 size_t strlcpy(char *dest, const char *src, size_t size);
 #endif
 
+#ifndef HAVE_REALLOCARRAY
+void *reallocarray(void *ptr, size_t nmemb, size_t size);
+#endif
+
 #endif /* SELINUX_INTERNAL_H_ */
