@@ -39,7 +39,7 @@ static int process_line(const char *path, char *line_buf, int pass,
 	char *key, *context;
 
 	buf_p = line_buf;
-	while (isspace(*buf_p))
+	while (isspace((unsigned char)*buf_p))
 		buf_p++;
 	/* Skip comment lines and empty lines. */
 	if (*buf_p == '#' || *buf_p == 0)

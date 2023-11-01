@@ -107,7 +107,7 @@ char *selinux_boolean_sub(const char *name)
 		char *ptr;
 		char *src = line_buf;
 		char *dst;
-		while (*src && isspace(*src))
+		while (*src && isspace((unsigned char)*src))
 			src++;
 		if (!*src)
 			continue;
@@ -115,19 +115,19 @@ char *selinux_boolean_sub(const char *name)
 			continue;
 
 		ptr = src;
-		while (*ptr && !isspace(*ptr))
+		while (*ptr && !isspace((unsigned char)*ptr))
 			ptr++;
 		*ptr++ = '\0';
 		if (strcmp(src, name) != 0)
 			continue;
 
 		dst = ptr;
-		while (*dst && isspace(*dst))
+		while (*dst && isspace((unsigned char)*dst))
 			dst++;
 		if (!*dst)
 			continue;
 		ptr = dst;
-		while (*ptr && !isspace(*ptr))
+		while (*ptr && !isspace((unsigned char)*ptr))
 			ptr++;
 		*ptr = '\0';
 

@@ -13,7 +13,7 @@
 
 static int object_name_encode(const char *objname, char *buffer, size_t buflen)
 {
-	int	code;
+	unsigned char code;
 	size_t	offset = 0;
 
 	if (buflen - offset < 1)

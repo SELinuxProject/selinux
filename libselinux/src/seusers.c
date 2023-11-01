@@ -25,7 +25,7 @@ static int process_seusers(const char *buffer,
 		goto err;
 
 	start = newbuf;
-	while (isspace(*start))
+	while (isspace((unsigned char)*start))
 		start++;
 	if (*start == '#' || *start == 0) {
 		free(newbuf);
@@ -46,7 +46,7 @@ static int process_seusers(const char *buffer,
 		mls_found = 0;
 
 		end = start;
-		while (*end && !isspace(*end))
+		while (*end && !isspace((unsigned char)*end))
 			end++;
 	}
 	*end = 0;
@@ -63,7 +63,7 @@ static int process_seusers(const char *buffer,
 		goto out;
 
 	start = ++end;
-	while (*end && !isspace(*end))
+	while (*end && !isspace((unsigned char)*end))
 		end++;
 	*end = 0;
 

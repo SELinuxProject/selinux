@@ -252,7 +252,7 @@ int selinux_init_load_policy(int *enforce)
 		}
 		if (fgets(buf, selinux_page_size, cfg) &&
 		    (tmp = strstr(buf, "enforcing="))) {
-			if (tmp == buf || isspace(*(tmp - 1))) {
+			if (tmp == buf || isspace((unsigned char)*(tmp - 1))) {
 				secmdline =
 				    atoi(tmp + sizeof("enforcing=") - 1);
 			}

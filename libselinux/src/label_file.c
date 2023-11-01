@@ -708,20 +708,20 @@ static int selabel_subs_init(const char *path, struct selabel_digest *digest,
 		char *src = buf;
 		char *dst = NULL;
 
-		while (*src && isspace(*src))
+		while (*src && isspace((unsigned char)*src))
 			src++;
 		if (src[0] == '#') continue;
 		ptr = src;
-		while (*ptr && ! isspace(*ptr))
+		while (*ptr && ! isspace((unsigned char)*ptr))
 			ptr++;
 		*ptr++ = '\0';
 		if (! *src) continue;
 
 		dst = ptr;
-		while (*dst && isspace(*dst))
+		while (*dst && isspace((unsigned char)*dst))
 			dst++;
 		ptr = dst;
-		while (*ptr && ! isspace(*ptr))
+		while (*ptr && ! isspace((unsigned char)*ptr))
 			ptr++;
 		*ptr = '\0';
 		if (! *dst)

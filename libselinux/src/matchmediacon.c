@@ -29,7 +29,7 @@ int matchmediacon(const char *media, char ** con)
 			current_line[strlen(current_line) - 1] = 0;
 		/* Skip leading whitespace before the partial context. */
 		ptr = current_line;
-		while (*ptr && isspace(*ptr))
+		while (*ptr && isspace((unsigned char)*ptr))
 			ptr++;
 
 		if (!(*ptr))
@@ -37,7 +37,7 @@ int matchmediacon(const char *media, char ** con)
 
 		/* Find the end of the media context. */
 		ptr2 = ptr;
-		while (*ptr2 && !isspace(*ptr2))
+		while (*ptr2 && !isspace((unsigned char)*ptr2))
 			ptr2++;
 		if (!(*ptr2))
 			continue;
@@ -53,7 +53,7 @@ int matchmediacon(const char *media, char ** con)
 		return -1;
 
 	/* Skip whitespace. */
-	while (*ptr2 && isspace(*ptr2))
+	while (*ptr2 && isspace((unsigned char)*ptr2))
 		ptr2++;
 	if (!(*ptr2)) {
 		return -1;

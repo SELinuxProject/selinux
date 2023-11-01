@@ -26,13 +26,13 @@ int selinux_check_securetty_context(const char * tty_context)
 
 				/* Skip leading whitespace. */
 				start = line;
-				while (*start && isspace(*start))
+				while (*start && isspace((unsigned char)*start))
 					start++;
 				if (!(*start))
 					continue;
 
 				end = start;
-				while (*end && !isspace(*end))
+				while (*end && !isspace((unsigned char)*end))
 					end++;
 				if (*end)
 					*end++ = 0;

@@ -103,7 +103,7 @@ int selinux_getenforcemode(int *enforce)
 			if (strncmp(buf, SELINUXTAG, len))
 				continue;
 			tag = buf+len;
-			while (isspace(*tag))
+			while (isspace((unsigned char)*tag))
 				tag++;
 			if (!strncasecmp
 			    (tag, "enforcing", sizeof("enforcing") - 1)) {
@@ -173,7 +173,7 @@ static void init_selinux_config(void)
 			if (line_buf[len - 1] == '\n')
 				line_buf[len - 1] = 0;
 			buf_p = line_buf;
-			while (isspace(*buf_p))
+			while (isspace((unsigned char)*buf_p))
 				buf_p++;
 			if (*buf_p == '#' || *buf_p == 0)
 				continue;
@@ -181,7 +181,7 @@ static void init_selinux_config(void)
 			if (!strncasecmp(buf_p, SELINUXTYPETAG,
 					 sizeof(SELINUXTYPETAG) - 1)) {
 				buf_p += sizeof(SELINUXTYPETAG) - 1;
-				while (isspace(*buf_p))
+				while (isspace((unsigned char)*buf_p))
 					buf_p++;
 				type = strdup(buf_p);
 				if (!type) {
@@ -191,7 +191,7 @@ static void init_selinux_config(void)
 				}
 				end = type + strlen(type) - 1;
 				while ((end > type) &&
-				       (isspace(*end) || iscntrl(*end))) {
+				       (isspace((unsigned char)*end) || iscntrl((unsigned char)*end))) {
 					*end = 0;
 					end--;
 				}
@@ -206,14 +206,14 @@ static void init_selinux_config(void)
 			} else if (!strncmp(buf_p, REQUIRESEUSERS,
 					    sizeof(REQUIRESEUSERS) - 1)) {
 				value = buf_p + sizeof(REQUIRESEUSERS) - 1;
-				while (isspace(*value))
+				while (isspace((unsigned char)*value))
 					value++;
 				intptr = &require_seusers;
 			} else {
 				continue;
 			}
 
-			if (isdigit(*value))
+			if (isdigit((unsigned char)*value))
 				*intptr = atoi(value);
 			else if (strncasecmp(value, "true", sizeof("true") - 1))
 				*intptr = 1;

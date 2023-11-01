@@ -42,7 +42,7 @@ static int find_default_type(FILE * fp, const char *role, char **type)
 			buf[strlen(buf) - 1] = 0;
 
 		ptr = buf;
-		while (*ptr && isspace(*ptr))
+		while (*ptr && isspace((unsigned char)*ptr))
 			ptr++;
 		if (!(*ptr))
 			continue;
