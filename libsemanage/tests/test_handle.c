@@ -236,8 +236,9 @@ static void test_mls_enabled(void)
 /* Function semanage_set_callback */
 int msg_set_callback_count = 0;
 
-static void helper_msg_set_callback(void *varg, semanage_handle_t *handle,
-			     const char *fmt, ...)
+static void helper_msg_set_callback(__attribute__((unused)) void *varg,
+				    __attribute__((unused)) semanage_handle_t *handle,
+				    __attribute__((unused)) const char *fmt, ...)
 {
 	msg_set_callback_count++;
 }

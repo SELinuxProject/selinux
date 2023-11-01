@@ -655,7 +655,8 @@ static void test_fcontext_count(void)
 /* Function semanage_fcontext_iterate */
 unsigned int counter_fcontext_iterate = 0;
 
-static int handler_fcontext_iterate(const semanage_fcontext_t *record, void *varg)
+static int handler_fcontext_iterate(const semanage_fcontext_t *record,
+				    __attribute__((unused)) void *varg)
 {
 	CU_ASSERT_PTR_NOT_NULL(record);
 	counter_fcontext_iterate++;
@@ -937,7 +938,7 @@ static void test_fcontext_count_local(void)
 unsigned int counter_fcontext_iterate_local = 0;
 
 static int handler_fcontext_iterate_local(const semanage_fcontext_t *record,
-				   void *varg)
+					  __attribute__((unused)) void *varg)
 {
 	CU_ASSERT_PTR_NOT_NULL(record);
 	counter_fcontext_iterate_local++;

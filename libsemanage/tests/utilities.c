@@ -31,7 +31,9 @@ semanage_handle_t *sh = NULL;
 /* Silence any error output caused by our tests
  * by using this dummy function to catch messages.
  */
-void test_msg_handler(void *varg, semanage_handle_t *handle, const char *fmt,
+void test_msg_handler(__attribute__((unused)) void *varg,
+		      __attribute__((unused)) semanage_handle_t *handle,
+		      __attribute__((unused)) const char *fmt,
 		      ...)
 {
 }
