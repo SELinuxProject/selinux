@@ -441,7 +441,6 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 	avtab_key_t key;
 	avtab_datum_t datum;
 	avtab_extended_perms_t xperms;
-	unsigned set;
 	unsigned int i;
 	int rc;
 
@@ -535,13 +534,13 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 	key.target_class = le16_to_cpu(buf16[items++]);
 	key.specified = le16_to_cpu(buf16[items++]);
 
-	set = 0;
-	for (i = 0; i < ARRAY_SIZE(spec_order); i++) {
-		if (key.specified & spec_order[i])
-			set++;
+	if (key.specified & ~(AVTAB_AV | AVTAB_TYPE | AVTAB_XPERMS | AVTAB_ENABLED)) {
+		ERR(fp->handle, "invalid specifier");
+		return -1;
 	}
-	if (!set || set > 1) {
-		ERR(fp->handle, "more than one specifier");
+
+	if (__builtin_popcount(key.specified & ~AVTAB_ENABLED) != 1) {
+		ERR(fp->handle, "not exactly one specifier");
 		return -1;
 	}
 
