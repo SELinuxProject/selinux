@@ -382,6 +382,7 @@ struct list_handler_arg {
 	int pos;
 };
 
+__attribute__((no_sanitize("function")))
 static int list_handler(const record_t * record, void *varg)
 {
 

@@ -37,6 +37,7 @@ struct dbase_file {
 	record_file_table_t *rftable;
 };
 
+__attribute__((no_sanitize("function")))
 static int dbase_file_cache(semanage_handle_t * handle, dbase_file_t * dbase)
 {
 
