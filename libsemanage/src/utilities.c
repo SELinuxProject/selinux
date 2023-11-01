@@ -254,7 +254,11 @@ char *semanage_str_replace(const char *search, const char *replace,
 		return strdup(src);
 
 	/* Allocate the result string */
-	newsize = strlen(src) + 1 + count * (rlen - slen);
+	newsize = strlen(src) + 1;
+	if (rlen >= slen)
+		newsize += count * (rlen - slen);
+	else
+		newsize -= count * (slen - rlen);
 	result = malloc(newsize);
 	if (!result)
 		return NULL;
