@@ -228,6 +228,7 @@ bad:
 static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms, const constraint_node_t *cons, validate_t flavors[])
 {
 	const constraint_expr_t *cexp;
+	int depth;
 
 	for (; cons; cons = cons->next) {
 		if (nperms == 0 && cons->permissions != 0)
@@ -240,8 +241,14 @@ static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms
 		if (!cons->expr)
 			goto bad;
 
+		depth = -1;
+
 		for (cexp = cons->expr; cexp; cexp = cexp->next) {
 			if (cexp->expr_type == CEXPR_NAMES) {
+				if (depth >= (CEXPR_MAXDEPTH - 1))
+					goto bad;
+				depth++;
+
 				if (cexp->attr & CEXPR_XTARGET && nperms != 0)
 					goto bad;
 				if (!(cexp->attr & CEXPR_TYPE)) {
@@ -282,6 +289,10 @@ static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms
 					goto bad;
 				}
 			} else if (cexp->expr_type == CEXPR_ATTR) {
+				if (depth >= (CEXPR_MAXDEPTH - 1))
+					goto bad;
+				depth++;
+
 				if (!ebitmap_is_empty(&cexp->names))
 					goto bad;
 				if (validate_empty_type_set(cexp->type_names))
@@ -318,8 +329,14 @@ static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms
 			} else {
 				switch (cexp->expr_type) {
 				case CEXPR_NOT:
+					if (depth < 0)
+						goto bad;
+					break;
 				case CEXPR_AND:
 				case CEXPR_OR:
+					if (depth < 1)
+						goto bad;
+					depth--;
 					break;
 				default:
 					goto bad;
@@ -335,6 +352,9 @@ static int validate_constraint_nodes(sepol_handle_t *handle, unsigned int nperms
 					goto bad;
 			}
 		}
+
+		if (depth != 0)
+			goto bad;
 	}
 
 	return 0;
