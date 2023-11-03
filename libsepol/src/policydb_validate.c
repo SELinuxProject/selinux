@@ -468,7 +468,7 @@ static int validate_role_datum_wrapper(__attribute__((unused)) hashtab_key_t k, 
 	return validate_role_datum(margs->handle, d, margs->flavors);
 }
 
-static int validate_simpletype(uint32_t value, const policydb_t *p, validate_t flavors[])
+static int validate_simpletype(uint32_t value, const policydb_t *p, const validate_t flavors[SYM_NUM])
 {
 	const type_datum_t *type;
 
@@ -1094,7 +1094,9 @@ static int validate_filename_trans(hashtab_key_t k, hashtab_datum_t d, void *arg
 {
 	const filename_trans_key_t *ftk = (filename_trans_key_t *)k;
 	const filename_trans_datum_t *ftd = d;
-	validate_t *flavors = (validate_t *)args;
+	const map_arg_t *margs = args;
+	const validate_t *flavors = margs->flavors;
+	const policydb_t *p = margs->policy;
 
 	if (validate_value(ftk->ttype, &flavors[SYM_TYPES]))
 		goto bad;
@@ -1105,7 +1107,7 @@ static int validate_filename_trans(hashtab_key_t k, hashtab_datum_t d, void *arg
 	for (; ftd; ftd = ftd->next) {
 		if (validate_ebitmap(&ftd->stypes, &flavors[SYM_TYPES]))
 			goto bad;
-		if (validate_value(ftd->otype, &flavors[SYM_TYPES]))
+		if (validate_simpletype(ftd->otype, p, flavors))
 			goto bad;
 	}
 
@@ -1115,9 +1117,11 @@ bad:
 	return -1;
 }
 
-static int validate_filename_trans_hashtab(sepol_handle_t *handle, hashtab_t filename_trans, validate_t flavors[])
+static int validate_filename_trans_hashtab(sepol_handle_t *handle, const policydb_t *p, validate_t flavors[])
 {
-	if (hashtab_map(filename_trans, validate_filename_trans, flavors)) {
+	map_arg_t margs = { flavors, handle, p };
+
+	if (hashtab_map(p->filename_trans, validate_filename_trans, &margs)) {
 		ERR(handle, "Invalid filename trans");
 		return -1;
 	}
@@ -1555,7 +1559,7 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 		if (validate_role_allows(handle, p->role_allow, flavors))
 			goto bad;
 		if (p->policyvers >= POLICYDB_VERSION_FILENAME_TRANS)
-			if (validate_filename_trans_hashtab(handle, p->filename_trans, flavors))
+			if (validate_filename_trans_hashtab(handle, p, flavors))
 				goto bad;
 	} else {
 		if (validate_avrule_blocks(handle, p->global, p, flavors))
