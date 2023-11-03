@@ -1002,12 +1002,14 @@ static int validate_cond_expr(sepol_handle_t *handle, const struct cond_expr *ex
 		case COND_BOOL:
 			if (validate_value(expr->boolean, boolean))
 				goto bad;
-			if (depth == (COND_EXPR_MAXDEPTH - 1))
+			if (depth >= (COND_EXPR_MAXDEPTH - 1))
 				goto bad;
 			depth++;
 			break;
 		case COND_NOT:
 			if (depth < 0)
+				goto bad;
+			if (expr->boolean != 0)
 				goto bad;
 			break;
 		case COND_OR:
@@ -1016,6 +1018,8 @@ static int validate_cond_expr(sepol_handle_t *handle, const struct cond_expr *ex
 		case COND_EQ:
 		case COND_NEQ:
 			if (depth < 1)
+				goto bad;
+			if (expr->boolean != 0)
 				goto bad;
 			depth--;
 			break;
@@ -1203,6 +1207,8 @@ static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p, valid
 						goto bad;
 					break;
 				case OCON_IBENDPORT:
+					if (octx->u.ibendport.port == 0)
+						goto bad;
 					if (!octx->u.ibendport.dev_name)
 						goto bad;
 					break;
