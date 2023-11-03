@@ -1,6 +1,7 @@
 
 #include <sepol/policydb/conditional.h>
 #include <sepol/policydb/ebitmap.h>
+#include <sepol/policydb/polcaps.h>
 #include <sepol/policydb/policydb.h>
 #include <sepol/policydb/services.h>
 
@@ -1552,6 +1553,23 @@ bad:
 	return -1;
 }
 
+static int validate_policycaps(sepol_handle_t *handle, const policydb_t *p)
+{
+	ebitmap_node_t *node;
+	uint32_t i;
+
+	ebitmap_for_each_positive_bit(&p->policycaps, node, i) {
+		if (!sepol_polcap_getname(i))
+			goto bad;
+	}
+
+	return 0;
+
+bad:
+	ERR(handle, "Invalid policy capability");
+	return -1;
+}
+
 static void validate_array_destroy(validate_t flavors[])
 {
 	unsigned int i;
@@ -1572,6 +1590,9 @@ int policydb_validate(sepol_handle_t *handle, const policydb_t *p)
 		goto bad;
 
 	if (validate_properties(handle, p))
+		goto bad;
+
+	if (validate_policycaps(handle, p))
 		goto bad;
 
 	if (p->policy_type == POLICY_KERN) {
