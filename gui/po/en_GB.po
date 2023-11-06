@@ -3,16 +3,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2016-01-06 06:56-0500\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: English (United Kingdom)\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-03-31 23:20+0000\n"
+"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"Language-Team: English (United Kingdom) <https://translate.fedoraproject.org/"
+"projects/selinux/gui/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
@@ -34,11 +35,11 @@ msgstr "Process Domain"
 
 #: ../domainsPage.py:64
 msgid "Domain Name"
-msgstr ""
+msgstr "Domain Name"
 
 #: ../domainsPage.py:69
 msgid "Mode"
-msgstr ""
+msgstr "Mode"
 
 #: ../domainsPage.py:102 ../domainsPage.py:113 ../domainsPage.py:157
 #: ../statusPage.py:74 ../system-config-selinux.ui:596
@@ -117,11 +118,11 @@ msgstr "Module Name"
 
 #: ../modulesPage.py:71
 msgid "Priority"
-msgstr ""
+msgstr "Priority"
 
 #: ../modulesPage.py:80
 msgid "Kind"
-msgstr ""
+msgstr "Kind"
 
 #: ../modulesPage.py:149
 msgid "Disable Audit"
@@ -203,21 +204,22 @@ msgid ""
 "Module %s already loaded in current policy.\n"
 "Do you want to continue?"
 msgstr ""
+"Module %s already loaded in current policy.\n"
+"Do you want to continue?"
 
 #: ../polgengui.py:734
 msgid ""
 "You must add a name made up of letters and numbers and containing no spaces."
 msgstr ""
+"You must add a name made up of letters and numbers and containing no spaces."
 
 #: ../polgengui.py:748
 msgid "You must enter a executable"
 msgstr "You must enter a executable"
 
 #: ../polgengui.py:773 ../system-config-selinux.py:185
-#, fuzzy
-#| msgid "Configue SELinux"
 msgid "Configure SELinux"
-msgstr "Configue SELinux"
+msgstr "Configure SELinux"
 
 #: ../polgen.ui:9
 msgid "Red Hat 2007"
@@ -232,6 +234,7 @@ msgstr "GPL"
 msgid "translator-credits"
 msgstr ""
 "Abigail Brady <morwen@evilmagic.org>\n"
+"Andi Chandler <andi@gowling.com>\n"
 "Bastien Nocera <hadess@hadess.net>\n"
 "Bruce Cowan <bruce@bcowan.me.uk>"
 
@@ -252,6 +255,8 @@ msgid ""
 "<b>Select the policy type for the application or user role you want to "
 "confine:</b>"
 msgstr ""
+"<b>Select the policy type for the application or user role you want to "
+"confine:</b>"
 
 #: ../polgen.ui:288
 msgid "<b>Applications</b>"
@@ -305,7 +310,7 @@ msgstr ""
 
 #: ../polgen.ui:404
 msgid "Sandbox"
-msgstr ""
+msgstr "Sandbox"
 
 #: ../polgen.ui:450
 msgid "<b>Login Users</b>"
@@ -387,7 +392,7 @@ msgstr ""
 
 #: ../polgen.ui:705
 msgid "<b>Enter name of application or user role:</b>"
-msgstr ""
+msgstr "<b>Enter name of application or user role:</b>"
 
 #: ../polgen.ui:739
 msgid "Enter complete path for executable to be confined."
@@ -417,45 +422,41 @@ msgstr ""
 
 #: ../polgen.ui:883
 msgid "<b>Select existing role to modify:</b>"
-msgstr ""
+msgstr "<b>Select existing role to modify:</b>"
 
 #: ../polgen.ui:904
-#, fuzzy, python-format
-#| msgid ""
-#| "Select the user roles that will transiton to this applications domains."
+#, python-format
 msgid "Select the user roles that will transition to the %s domain."
-msgstr ""
-"Select the user roles that will transition to this applications domains."
+msgstr "Select the user roles that will transition to the %s domain."
 
 #: ../polgen.ui:921
 msgid "role tab"
-msgstr ""
+msgstr "role tab"
 
 #: ../polgen.ui:937
 #, python-format
 msgid "<b>Select roles that %s will transition to:</b>"
-msgstr ""
+msgstr "<b>Select roles that %s will transition to:</b>"
 
 #: ../polgen.ui:955
 #, python-format
 msgid "Select applications domains that %s will transition to."
-msgstr ""
+msgstr "Select applications domains that %s will transition to."
 
 #: ../polgen.ui:972
 msgid ""
 "transition \n"
 "role tab"
 msgstr ""
+"transition \n"
+"role tab"
 
 #: ../polgen.ui:989
 #, python-format
 msgid "<b>Select the user_roles that will transition to %s:</b>"
-msgstr ""
+msgstr "<b>Select the user_roles that will transition to %s:</b>"
 
 #: ../polgen.ui:1007
-#, fuzzy
-#| msgid ""
-#| "Select the user roles that will transiton to this applications domains."
 msgid ""
 "Select the user roles that will transition to this applications domains."
 msgstr ""
@@ -464,7 +465,7 @@ msgstr ""
 #: ../polgen.ui:1040
 #, python-format
 msgid "<b>Select domains that %s will administer:</b>"
-msgstr ""
+msgstr "<b>Select domains that %s will administer:</b>"
 
 #: ../polgen.ui:1058 ../polgen.ui:1109
 msgid "Select the domains that you would like this user administer."
@@ -473,12 +474,12 @@ msgstr "Select the domains that you would like this user administer."
 #: ../polgen.ui:1091
 #, python-format
 msgid "<b>Select additional roles for %s:</b>"
-msgstr ""
+msgstr "<b>Select additional roles for %s:</b>"
 
 #: ../polgen.ui:1142
 #, python-format
 msgid "<b>Enter network ports that %s binds on:</b>"
-msgstr ""
+msgstr "<b>Enter network ports that %s binds on:</b>"
 
 #: ../polgen.ui:1162 ../polgen.ui:1529
 msgid "<b>TCP Ports</b>"
@@ -491,7 +492,7 @@ msgstr "All"
 #: ../polgen.ui:1203 ../polgen.ui:1370
 #, python-format
 msgid "Allows %s to bind to any udp port"
-msgstr ""
+msgstr "Allows %s to bind to any udp port"
 
 #: ../polgen.ui:1216 ../polgen.ui:1383
 msgid "600-1024"
@@ -500,7 +501,7 @@ msgstr "600-1024"
 #: ../polgen.ui:1220 ../polgen.ui:1387
 #, python-format
 msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
-msgstr ""
+msgstr "Allow %s to call bindresvport with 0. Binding to port 600-1024"
 
 #: ../polgen.ui:1233 ../polgen.ui:1400
 msgid "Unreserved Ports (>1024)"
@@ -512,6 +513,8 @@ msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s binds "
 "to. Example: 612, 650-660"
 msgstr ""
+"Enter a comma separated list of udp ports or ranges of ports that %s binds "
+"to. Example: 612, 650-660"
 
 #: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
 msgid "Select Ports"
@@ -520,7 +523,7 @@ msgstr "Select Ports"
 #: ../polgen.ui:1278 ../polgen.ui:1445
 #, python-format
 msgid "Allows %s to bind to any udp ports > 1024"
-msgstr ""
+msgstr "Allows %s to bind to any udp ports > 1024"
 
 #: ../polgen.ui:1329 ../polgen.ui:1638
 msgid "<b>UDP Ports</b>"
@@ -531,16 +534,18 @@ msgid ""
 "Network\n"
 "Bind tab"
 msgstr ""
+"Network\n"
+"Bind tab"
 
 #: ../polgen.ui:1509
 #, python-format
 msgid "<b>Select network ports that %s connects to:</b>"
-msgstr ""
+msgstr "<b>Select network ports that %s connects to:</b>"
 
 #: ../polgen.ui:1565
 #, python-format
 msgid "Allows %s to connect to any tcp port"
-msgstr ""
+msgstr "Allows %s to connect to any tcp port"
 
 #: ../polgen.ui:1594
 #, python-format
@@ -548,11 +553,13 @@ msgid ""
 "Enter a comma separated list of tcp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
 msgstr ""
+"Enter a comma separated list of tcp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
 
 #: ../polgen.ui:1674
 #, python-format
 msgid "Allows %s to connect to any udp port"
-msgstr ""
+msgstr "Allows %s to connect to any udp port"
 
 #: ../polgen.ui:1703
 #, python-format
@@ -560,11 +567,13 @@ msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
 msgstr ""
+"Enter a comma separated list of udp ports or ranges of ports that %s "
+"connects to. Example: 612, 650-660"
 
 #: ../polgen.ui:1760
 #, python-format
 msgid "<b>Select common application traits for %s:</b>"
-msgstr ""
+msgstr "<b>Select common application traits for %s:</b>"
 
 #: ../polgen.ui:1777
 msgid "Writes syslog messages\t"
@@ -601,19 +610,15 @@ msgstr "Sends e-mail"
 #: ../polgen.ui:1925
 #, python-format
 msgid "<b>Add files/directories that %s manages</b>"
-msgstr ""
+msgstr "<b>Add files/directories that %s manages</b>"
 
 #: ../polgen.ui:1978
-#, fuzzy
-#| msgid "Add File Context"
 msgid "Add File"
-msgstr "Add File Context"
+msgstr "Add File"
 
 #: ../polgen.ui:2031
-#, fuzzy
-#| msgid "directory"
 msgid "Add Directory"
-msgstr "directory"
+msgstr "Add Directory"
 
 #: ../polgen.ui:2086
 #, python-format
@@ -621,27 +626,27 @@ msgid ""
 "Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
 "Files ..."
 msgstr ""
+"Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
+"Files ..."
 
 #: ../polgen.ui:2126
 #, python-format
 msgid "<b>Add booleans from the %s policy:</b>"
-msgstr ""
+msgstr "<b>Add booleans from the %s policy:</b>"
 
 #: ../polgen.ui:2179
-#, fuzzy
-#| msgid "Boolean"
 msgid "Add Boolean"
-msgstr "Boolean"
+msgstr "Add Boolean"
 
 #: ../polgen.ui:2234
 #, python-format
 msgid "Add/Remove booleans used by the %s domain"
-msgstr ""
+msgstr "Add/Remove booleans used by the %s domain"
 
 #: ../polgen.ui:2272
 #, python-format
 msgid "<b>Which directory you will generate the %s policy?</b>"
-msgstr ""
+msgstr "<b>Which directory you will generate the %s policy?</b>"
 
 #: ../polgen.ui:2290
 msgid "Policy Directory"
@@ -690,7 +695,7 @@ msgstr "Group View"
 
 #: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
 msgid "Generate SELinux policy modules"
-msgstr ""
+msgstr "Generate SELinux policy modules"
 
 #: ../semanagePage.py:131
 #, python-format
@@ -714,11 +719,11 @@ msgstr "Modify %s"
 
 #: ../sepolicy.desktop:3
 msgid "SELinux Policy Management Tool"
-msgstr ""
+msgstr "SELinux Policy Management Tool"
 
 #: ../sepolicy.desktop:11
 msgid "policy;security;selinux;avc;permission;mac;"
-msgstr ""
+msgstr "policy;security;selinux;avc;permission;mac;"
 
 #: ../statusPage.py:75 ../system-config-selinux.ui:599
 #: ../system-config-selinux.ui:1744
@@ -771,11 +776,11 @@ msgstr ""
 
 #: ../system-config-selinux.desktop:3
 msgid "SELinux Management"
-msgstr ""
+msgstr "SELinux Management"
 
 #: ../system-config-selinux.desktop:32
 msgid "Configure SELinux in a graphical setting"
-msgstr ""
+msgstr "Configure SELinux in a graphical setting"
 
 #: ../system-config-selinux.ui:11
 msgid ""

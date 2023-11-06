@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-03-12 12:01+0000\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-02-17 14:20+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.fedoraproject.org/projects/selinux/"
 "gui/he/>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n==2 ? 2 : 1;\n"
-"X-Generator: Weblate 4.5.1\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
@@ -218,8 +218,6 @@ msgid "You must enter a executable"
 msgstr "עליך להכניס קובץ הפעלה"
 
 #: ../polgengui.py:773 ../system-config-selinux.py:185
-#, fuzzy
-#| msgid "Configue SELinux"
 msgid "Configure SELinux"
 msgstr "הגדרת SELinux"
 
@@ -420,8 +418,7 @@ msgid "<b>Select existing role to modify:</b>"
 msgstr "<b>נא לבחור תפקיד קיים לשינוי:</b>"
 
 #: ../polgen.ui:904
-#, fuzzy, python-format
-#| msgid "Select the user roles that will transiton to the %s domain."
+#, python-format
 msgid "Select the user roles that will transition to the %s domain."
 msgstr "נא לבחור את תפקידי המשתמשים שיועברו לשם התחום %s."
 
@@ -453,9 +450,6 @@ msgid "<b>Select the user_roles that will transition to %s:</b>"
 msgstr "<b>לבחור את user_roles (תפקידי המשתמשים) שיועברו אל %s:</b>"
 
 #: ../polgen.ui:1007
-#, fuzzy
-#| msgid ""
-#| "Select the user roles that will transiton to this applications domains."
 msgid ""
 "Select the user roles that will transition to this applications domains."
 msgstr "נא לבחור את תפקידי המשתמשים שיועברו לשמות תחום היישומים האלו."
@@ -632,10 +626,8 @@ msgid "<b>Add booleans from the %s policy:</b>"
 msgstr "<b>להוסיף בוליאנים מהמדיניות %s:</b>"
 
 #: ../polgen.ui:2179
-#, fuzzy
-#| msgid "Boolean"
 msgid "Add Boolean"
-msgstr "בוליאני"
+msgstr "הוספת בוליאני"
 
 #: ../polgen.ui:2234
 #, python-format

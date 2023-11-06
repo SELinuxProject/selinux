@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-09-08 19:04+0000\n"
-"Last-Translator: simmon <simmon@nplob.com>\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2022-11-04 11:19+0000\n"
+"Last-Translator: 김인수 <simmon@nplob.com>\n"
 "Language-Team: Korean <https://translate.fedoraproject.org/projects/selinux/"
 "gui/ko/>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
@@ -209,7 +209,7 @@ msgid ""
 "Module %s already loaded in current policy.\n"
 "Do you want to continue?"
 msgstr ""
-"모듈 %s은/는 현재 정책에 이미 로딩되어 있습니다.\n"
+"모듈 %s는 현재 정책에 이미 적재되어 있습니다.\n"
 "계속 진행하시겠습니까?"
 
 #: ../polgengui.py:734
@@ -970,7 +970,7 @@ msgstr "정책 모듈 로드"
 
 #: ../system-config-selinux.ui:1601
 msgid "Remove loadable policy module"
-msgstr "로딩 할 수 있는 정책 모듈 제거"
+msgstr "적재 할 수 있는 정책 모듈 제거"
 
 #: ../system-config-selinux.ui:1632
 msgid ""

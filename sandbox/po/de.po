@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
-"PO-Revision-Date: 2021-11-18 23:16+0000\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-03-10 21:20+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://translate.fedoraproject.org/projects/selinux/"
 "sandbox/de/>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../sandbox:120
 #, python-format
@@ -133,11 +133,11 @@ msgid "alternate /tmp directory to use for mounting"
 msgstr "Alternate / tmp-Verzeichnis für das Mounten"
 
 #: ../sandbox:364
-#, fuzzy
-#| msgid "alternate home directory to use for mounting"
 msgid ""
 "alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
-msgstr "Alternatives Ausgangsverzeichnis für das Mounten"
+msgstr ""
+"alternativ XDG_RUNTIME_DIR - /run/user/$UID - für die Einbindung zu "
+"verwendendes Verzeichnis"
 
 #: ../sandbox:373
 msgid "alternate window manager"

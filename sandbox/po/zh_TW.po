@@ -4,16 +4,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
-"PO-Revision-Date: 2018-11-20 10:27-0500\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Chinese (Taiwan)\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-02-03 01:20+0000\n"
+"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
+"projects/selinux/sandbox/zh_TW/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../sandbox:120
 #, python-format
@@ -130,11 +131,9 @@ msgid "alternate /tmp directory to use for mounting"
 msgstr "用於安裝的alternate / tmp目錄"
 
 #: ../sandbox:364
-#, fuzzy
-#| msgid "alternate home directory to use for mounting"
 msgid ""
 "alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
-msgstr "備用主目錄用於安裝"
+msgstr "備用 XDG_RUNTIME_DIR - /run/user/$UID - 用於掛載的目錄"
 
 #: ../sandbox:373
 msgid "alternate window manager"

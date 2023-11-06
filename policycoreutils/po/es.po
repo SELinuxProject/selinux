@@ -5,16 +5,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2018-08-21 10:26-0400\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Spanish\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-08-31 04:21+0000\n"
+"Last-Translator: Rudi Landmann <rlandman@redhat.com>\n"
+"Language-Team: Spanish <https://translate.fedoraproject.org/projects/selinux/"
+"policycoreutils/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.18.2\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -99,7 +100,7 @@ msgstr "newrole:  %s:  error en línea %lu.\n"
 #: ../newrole/newrole.c:385
 #, c-format
 msgid "Cannot encrypt password.\n"
-msgstr ""
+msgstr "No se puede encriptar la contraseña\n"
 
 #: ../newrole/newrole.c:449
 #, c-format
@@ -189,7 +190,7 @@ msgstr "%s etiquetas cambiadas.\n"
 #: ../newrole/newrole.c:818
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
-msgstr "¡Precaución!  No se pudo restablecer el contexto para %s\n"
+msgstr "¡Precaución! No se pudo restablecer el contexto para %s\n"
 
 #: ../newrole/newrole.c:874
 #, c-format

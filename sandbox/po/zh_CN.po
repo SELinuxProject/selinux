@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
-"PO-Revision-Date: 2023-01-26 08:20+0000\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-03-02 12:20+0000\n"
 "Last-Translator: Ludek Janda <ljanda@redhat.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.fedoraproject.org/"
 "projects/selinux/sandbox/zh_CN/>\n"
@@ -168,7 +168,7 @@ msgstr "所需的命令"
 #: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
-msgstr "%s 不可执行"
+msgstr "%s 不能执行"
 
 #: ../sandbox:549
 #, python-format

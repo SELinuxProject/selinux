@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2022-05-14 08:18+0000\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2022-11-03 07:19+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://translate.fedoraproject.org/projects/"
 "selinux/policycoreutils/ka/>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.12.2\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -28,7 +28,7 @@ msgstr ""
 #: ../run_init/run_init.c:124 ../newrole/newrole.c:1163
 #, c-format
 msgid "failed to initialize PAM\n"
-msgstr "pam-ის ინიციალიზაციის შეცდომა\n"
+msgstr "PAM-ის ინიციალიზაციის შეცდომა\n"
 
 #: ../run_init/run_init.c:137
 #, c-format
@@ -72,7 +72,7 @@ msgstr "Run_init მხოლოდ SELinux-ის ბირთვზე ეშ�
 #: ../run_init/run_init.c:384
 #, c-format
 msgid "authentication failed.\n"
-msgstr "ავთენტიკაციის შეცდომა.\n"
+msgstr "ავთენტიკაცია წარუმატებელია.\n"
 
 #: ../run_init/run_init.c:410 ../newrole/newrole.c:1306
 #, c-format
@@ -97,7 +97,7 @@ msgstr "ახალი როლი:  %s  შეცდომა ხაზზე
 #: ../newrole/newrole.c:385
 #, c-format
 msgid "Cannot encrypt password.\n"
-msgstr ""
+msgstr "პაროლის დაშიფვრა შეუძლებელია.\n"
 
 #: ../newrole/newrole.c:449
 #, c-format

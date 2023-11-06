@@ -3,9 +3,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2020-11-29 22:35+0000\n"
-"Last-Translator: Mințoi Petre Bogdan <bogdomania@yahoo.com>\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-04-11 18:20+0000\n"
+"Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://translate.fedoraproject.org/projects/"
 "selinux/policycoreutils/ro/>\n"
 "Language: ro\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 4.3.2\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../run_init/run_init.c:67
 msgid ""
@@ -22,116 +22,124 @@ msgid ""
 "  where: <script> is the name of the init script to run,\n"
 "         <args ...> are the arguments to that script."
 msgstr ""
+"UTILIZARE: run_init <script> <args ...>\n"
+"  unde: <script> este numele scriptului de pornire de rulat,\n"
+"         <args ...> sunt argumentele pentru acest script."
 
 #: ../run_init/run_init.c:124 ../newrole/newrole.c:1163
 #, c-format
 msgid "failed to initialize PAM\n"
-msgstr ""
+msgstr "nu s-a reușit inițializarea PAM\n"
 
 #: ../run_init/run_init.c:137
 #, c-format
 msgid "failed to get account information\n"
-msgstr ""
+msgstr "nu s-au putut obține informațiile despre cont\n"
 
 #: ../run_init/run_init.c:168 ../newrole/newrole.c:334
 msgid "Password:"
-msgstr "Parolă:"
+msgstr "Parola:"
 
 #: ../run_init/run_init.c:201 ../newrole/newrole.c:368
 #, c-format
 msgid "Cannot find your entry in the shadow passwd file.\n"
 msgstr ""
+"Nu se pot găsi datele dumneavoastră în fișierul de parole ocultate (shadow)."
+"\n"
 
 #: ../run_init/run_init.c:207 ../newrole/newrole.c:375
 #, c-format
 msgid "getpass cannot open /dev/tty\n"
-msgstr ""
+msgstr "«getpass» nu poate deschide „/dev/tty” (dispozitivul de terminal)\n"
 
 #: ../run_init/run_init.c:279
 #, c-format
 msgid "run_init: incorrect password for %s\n"
-msgstr ""
+msgstr "run_init: parolă incorectă pentru %s\n"
 
 #: ../run_init/run_init.c:313
 #, c-format
 msgid "Could not open file %s\n"
-msgstr ""
+msgstr "Nu s-a putut deschide fișierul %s\n"
 
 #: ../run_init/run_init.c:340
 #, c-format
 msgid "No context in file %s\n"
-msgstr ""
+msgstr "Nu există context în fișierul %s\n"
 
 #: ../run_init/run_init.c:365
 #, c-format
 msgid "Sorry, run_init may be used only on a SELinux kernel.\n"
-msgstr ""
+msgstr "Scuze, run_init poate fi folosit numai pe un nucleu SELinux.\n"
 
 #: ../run_init/run_init.c:384
 #, c-format
 msgid "authentication failed.\n"
-msgstr ""
+msgstr "autentificarea a eșuat.\n"
 
 #: ../run_init/run_init.c:410 ../newrole/newrole.c:1306
 #, c-format
 msgid "Could not set exec context to %s.\n"
-msgstr ""
+msgstr "Nu s-a putut stabili contextul de execuție la %s.\n"
 
 #: ../newrole/newrole.c:199
 #, c-format
 msgid "failed to set PAM_TTY\n"
-msgstr ""
+msgstr "nu s-a putut defini PAM_TTY\n"
 
 #: ../newrole/newrole.c:283
 #, c-format
 msgid "newrole: service name configuration hashtable overflow\n"
 msgstr ""
+"newrole: depășirea tabelului sumelor de control de configurare a numelui "
+"serviciului\n"
 
 #: ../newrole/newrole.c:293
 #, c-format
 msgid "newrole:  %s:  error on line %lu.\n"
-msgstr ""
+msgstr "newrole: %s: eroare în linia %lu.\n"
 
 #: ../newrole/newrole.c:385
 #, c-format
 msgid "Cannot encrypt password.\n"
-msgstr ""
+msgstr "Nu se poate cripta parola.\n"
 
 #: ../newrole/newrole.c:449
 #, c-format
 msgid "cannot find valid entry in the passwd file.\n"
-msgstr ""
+msgstr "nu se poate găsi o intrare validă în fișierul „passwd”.\n"
 
 #: ../newrole/newrole.c:460
 #, c-format
 msgid "Out of memory!\n"
-msgstr ""
+msgstr "Memorie epuizată!\n"
 
 #: ../newrole/newrole.c:465
 #, c-format
 msgid "Error!  Shell is not valid.\n"
-msgstr ""
+msgstr "Eroare! Shell nevalid.\n"
 
 #: ../newrole/newrole.c:525
 #, c-format
 msgid "Unable to clear environment\n"
-msgstr ""
+msgstr "Nu s-a putut curăța mediul\n"
 
 #: ../newrole/newrole.c:566 ../newrole/newrole.c:577 ../newrole/newrole.c:608
 #: ../newrole/newrole.c:619 ../newrole/newrole.c:646
 #, c-format
 msgid "Error resetting KEEPCAPS, aborting\n"
-msgstr ""
+msgstr "Eroare la reinițierea KEEPCAPS, se abandonează\n"
 
 #: ../newrole/newrole.c:572 ../newrole/newrole.c:614 ../newrole/newrole.c:651
 #, c-format
 msgid "Error changing uid, aborting.\n"
 msgstr ""
+"Eroare la schimbarea identificatorului de utilizator (uid), se abandonează.\n"
 
 #: ../newrole/newrole.c:669
 #, c-format
 msgid "Error connecting to audit system.\n"
-msgstr ""
+msgstr "Eroare la conectarea la sistemul de auditare.\n"
 
 #: ../newrole/newrole.c:675
 #, c-format
@@ -146,212 +154,220 @@ msgstr "Eroare la expedierea mesajului de audit.\n"
 #: ../newrole/newrole.c:726 ../newrole/newrole.c:1097
 #, c-format
 msgid "Could not determine enforcing mode.\n"
-msgstr ""
+msgstr "Nu s-a putut determina modul de întărire „enforcing”.\n"
 
 #: ../newrole/newrole.c:733
 #, c-format
 msgid "Error!  Could not open %s.\n"
-msgstr ""
+msgstr "Eroare! Nu s-a putut deschide %s.\n"
 
 #: ../newrole/newrole.c:739
 #, c-format
 msgid "Error!  Could not clear O_NONBLOCK on %s\n"
-msgstr ""
+msgstr "Eroare! Nu s-a putut șterge O_NONBLOCK pe %s\n"
 
 #: ../newrole/newrole.c:745
 #, c-format
 msgid "%s!  Could not get current context for %s, not relabeling tty.\n"
 msgstr ""
+"%s!  Nu s-a putut obține contextul actual pentru %s, nu se redenumește "
+"terminalul (tty).\n"
 
 #: ../newrole/newrole.c:755
 #, c-format
 msgid "%s!  Could not get new context for %s, not relabeling tty.\n"
 msgstr ""
+"%s!  Nu s-a putut obține un nou context pentru %s, nu se redenumește "
+"terminalul (tty).\n"
 
 #: ../newrole/newrole.c:765
 #, c-format
 msgid "%s!  Could not set new context for %s\n"
-msgstr ""
+msgstr "%s!  Nu s-a putut stabili noul context pentru %s\n"
 
 #: ../newrole/newrole.c:812
 #, c-format
 msgid "%s changed labels.\n"
-msgstr ""
+msgstr "%s a schimbat etichetele.\n"
 
 #: ../newrole/newrole.c:818
 #, c-format
 msgid "Warning! Could not restore context for %s\n"
-msgstr ""
+msgstr "Atenționare! Nu s-a putut restabili contextul pentru %s\n"
 
 #: ../newrole/newrole.c:874
 #, c-format
 msgid "Error: multiple roles specified\n"
-msgstr ""
+msgstr "Eroare: roluri multiple specificate\n"
 
 #: ../newrole/newrole.c:882
 #, c-format
 msgid "Error: multiple types specified\n"
-msgstr ""
+msgstr "Eroare: au fost specificate multiple tipuri\n"
 
 #: ../newrole/newrole.c:889
 #, c-format
 msgid "Sorry, -l may be used with SELinux MLS support.\n"
-msgstr ""
+msgstr "Scuze, opțiunea „-l” poate fi utilizată cu suportul SELinux MLS.\n"
 
 #: ../newrole/newrole.c:894
 #, c-format
 msgid "Error: multiple levels specified\n"
-msgstr ""
+msgstr "Eroare: niveluri multiple specificate\n"
 
 #: ../newrole/newrole.c:904
 #, c-format
 msgid "Error: you are not allowed to change levels on a non secure terminal \n"
 msgstr ""
+"Eroare: nu aveți permisiunea de a schimba nivelurile pe un terminal "
+"nesecurizat \n"
 
 #: ../newrole/newrole.c:930
 #, c-format
 msgid "Couldn't get default type.\n"
-msgstr ""
+msgstr "Nu s-a putut obține tipul implicit.\n"
 
 #: ../newrole/newrole.c:940
 #, c-format
 msgid "failed to get new context.\n"
-msgstr ""
+msgstr "nu s-a putut obține noul context.\n"
 
 #: ../newrole/newrole.c:947
 #, c-format
 msgid "failed to set new role %s\n"
-msgstr ""
+msgstr "nu s-a putut stabili noul rol %s\n"
 
 #: ../newrole/newrole.c:954
 #, c-format
 msgid "failed to set new type %s\n"
-msgstr ""
+msgstr "nu s-a putut defini noul tip %s\n"
 
 #: ../newrole/newrole.c:964
 #, c-format
 msgid "failed to build new range with level %s\n"
-msgstr ""
+msgstr "nu s-a putut construi un nou interval cu nivelul %s\n"
 
 #: ../newrole/newrole.c:969
 #, c-format
 msgid "failed to set new range %s\n"
-msgstr ""
+msgstr "nu s-a putut crea noul interval %s\n"
 
 #: ../newrole/newrole.c:977
 #, c-format
 msgid "failed to convert new context to string\n"
-msgstr ""
+msgstr "nu s-a putut converti noul context în șir\n"
 
 #: ../newrole/newrole.c:982
 #, c-format
 msgid "%s is not a valid context\n"
-msgstr ""
+msgstr "%s nu este un context valid\n"
 
 #: ../newrole/newrole.c:989
 #, c-format
 msgid "Unable to allocate memory for new_context"
-msgstr ""
+msgstr "Nu s-a putut aloca memorie pentru new_context"
 
 #: ../newrole/newrole.c:1015
 #, c-format
 msgid "Unable to obtain empty signal set\n"
-msgstr ""
+msgstr "Nu se poate obține un set de semnale gol\n"
 
 #: ../newrole/newrole.c:1023
 #, c-format
 msgid "Unable to set SIGHUP handler\n"
-msgstr ""
+msgstr "Nu se poate configura gestionarul SIGHUP\n"
 
 #: ../newrole/newrole.c:1075
 msgid "Sorry, newrole failed to drop capabilities\n"
-msgstr ""
+msgstr "Scuze, newrole nu a reușit să renunțe la capacități\n"
 
 #: ../newrole/newrole.c:1091
 #, c-format
 msgid "Sorry, newrole may be used only on a SELinux kernel.\n"
-msgstr ""
+msgstr "Scuze, newrole poate fi utilizat numai pe un nucleu SELinux.\n"
 
 #: ../newrole/newrole.c:1108
 #, c-format
 msgid "failed to get old_context.\n"
-msgstr ""
+msgstr "nu s-a putut obține old_context.\n"
 
 #: ../newrole/newrole.c:1115
 #, c-format
 msgid "Warning!  Could not retrieve tty information.\n"
-msgstr ""
+msgstr "Avertizare! Nu s-au putut prelua informațiile despre tty.\n"
 
 #: ../newrole/newrole.c:1137
 #, c-format
 msgid "error on reading PAM service configuration.\n"
-msgstr ""
+msgstr "eroare la citirea configurației serviciului PAM.\n"
 
 #: ../newrole/newrole.c:1172
 #, c-format
 msgid "newrole: incorrect password for %s\n"
-msgstr ""
+msgstr "newrole: parolă incorectă pentru %s\n"
 
 #: ../newrole/newrole.c:1199
 #, c-format
 msgid "newrole: failure forking: %s"
-msgstr ""
+msgstr "newrole: eșec la bifurcare: %s"
 
 #: ../newrole/newrole.c:1202 ../newrole/newrole.c:1225
 #, c-format
 msgid "Unable to restore tty label...\n"
-msgstr ""
+msgstr "Nu se poate restaura eticheta tty...\n"
 
 #: ../newrole/newrole.c:1204 ../newrole/newrole.c:1231
 #, c-format
 msgid "Failed to close tty properly\n"
-msgstr ""
+msgstr "Nu s-a putut închide în mod corespunzător terminalul (tty)\n"
 
 #: ../newrole/newrole.c:1264
 #, c-format
 msgid "Could not close descriptors.\n"
-msgstr ""
+msgstr "Nu s-au putut închide descriptorii.\n"
 
 #: ../newrole/newrole.c:1299
 #, c-format
 msgid "Error allocating shell's argv0.\n"
-msgstr ""
+msgstr "Eroare la alocarea argv0 al shell-ului.\n"
 
 #: ../newrole/newrole.c:1321
 #, c-format
 msgid "Failed to send audit message"
-msgstr ""
+msgstr "Trimiterea mesajului de auditare a eșuat"
 
 #: ../newrole/newrole.c:1329
 #, c-format
 msgid "Failed to transition to namespace\n"
-msgstr ""
+msgstr "A eșuat tranziția la spațiul de nume\n"
 
 #: ../newrole/newrole.c:1335
 #, c-format
 msgid "Failed to drop capabilities %m\n"
-msgstr ""
+msgstr "Nu s-a reușit să se renunțe la capacități %m\n"
 
 #: ../newrole/newrole.c:1340
 #, c-format
 msgid "Unable to restore the environment, aborting\n"
-msgstr ""
+msgstr "Nu se poate restaura mediul, se abandonează\n"
 
 #: ../newrole/newrole.c:1351
 msgid "failed to exec shell\n"
-msgstr ""
+msgstr "nu s-a putut executa shell-ul\n"
 
 #: ../load_policy/load_policy.c:22
 #, c-format
 msgid "usage:  %s [-qi]\n"
-msgstr ""
+msgstr "utilizare:  %s [-qi]\n"
 
 #: ../load_policy/load_policy.c:73
 #, c-format
 msgid "%s:  Can't load policy and enforcing mode requested:  %s\n"
 msgstr ""
+"%s: Nu se poate încărca politica și modul de întărire „enforcing” solicitat: "
+"%s\n"
 
 #: ../load_policy/load_policy.c:83
 #, c-format
 msgid "%s:  Can't load policy:  %s\n"
-msgstr ""
+msgstr "%s: Nu se poate încărca politica: %s\n"

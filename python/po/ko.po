@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
-"PO-Revision-Date: 2023-01-19 09:31+0000\n"
+"POT-Creation-Date: 2023-06-12 18:13+0200\n"
+"PO-Revision-Date: 2023-08-09 02:21+0000\n"
 "Last-Translator: 김인수 <simmon@nplob.com>\n"
 "Language-Team: Korean <https://translate.fedoraproject.org/projects/selinux/"
 "python/ko/>\n"
@@ -16,24 +16,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.15.1\n"
+"X-Generator: Weblate 4.18.2\n"
 
-#: ../audit2allow/audit2allow:239
-msgid "******************** IMPORTANT ***********************\n"
-msgstr "******************** 중요 ***********************\n"
+#: ../audit2allow/audit2allow:244
+msgid "IMPORTANT"
+msgstr "중대한"
 
-#: ../audit2allow/audit2allow:240
-#, python-format
-msgid ""
-"To make this policy package active, execute:\n"
-"\n"
-"semodule -i %s\n"
-"\n"
-msgstr ""
-"이 정책 꾸러미(package)를 활성화하려면 다음을 실행하십시오 :\n"
-"\n"
-"semodule -i %s\n"
-"\n"
+#: ../audit2allow/audit2allow:245
+msgid "To make this policy package active, execute:"
+msgstr "이 정책 꾸러미를 활성화하려면 다음을 실행하세요:"
 
 #: ../chcat/chcat:111 ../chcat/chcat:191
 msgid "Requires at least one category"
@@ -45,14 +36,14 @@ msgid "Can not modify sensitivity levels using '+' on %s"
 msgstr "%s에 '+'를 사용하여 민감도 수준을 수정할 수 없습니다"
 
 #: ../chcat/chcat:128
-#, python-format
-msgid "%s is already in %s"
-msgstr "%s는 이미 %s 안에 있습니다"
+#, python-brace-format
+msgid "{target} is already in {category}"
+msgstr "{target}은 이미 {category}에 있습니다"
 
 #: ../chcat/chcat:210 ../chcat/chcat:220
-#, python-format
-msgid "%s is not in %s"
-msgstr "%s는 %s 안에 없습니다"
+#, python-brace-format
+msgid "{target} is not in {category}"
+msgstr "{target}은 {category}에 없습니다"
 
 #: ../chcat/chcat:291 ../chcat/chcat:296
 msgid "Can not combine +/- with other types of categories"
@@ -139,12 +130,12 @@ msgstr "커밋 한 후 정책을 다시 적재하지 마십시오"
 #: ../semanage/semanage:225
 #, python-format
 msgid "List %s local customizations"
-msgstr "명부 %s 로컬 사용자 정의"
+msgstr "목록 %s 로컬 사용자 정의"
 
 #: ../semanage/semanage:229
 #, python-format
 msgid "Add a record of the %s object type"
-msgstr "기록을 추가하십시오. %s 객체 유형"
+msgstr "%s 객체 유형의 레코드를 추가"
 
 #: ../semanage/semanage:233
 msgid "SELinux Type for the object"
@@ -158,237 +149,238 @@ msgstr ""
 
 #: ../semanage/semanage:242
 msgid ""
-"\n"
-"MLS/MCS Security Range (MLS/MCS Systems only)\n"
-"SELinux Range  for SELinux login mapping\n"
-"defaults to the SELinux user record range.\n"
-"SELinux Range for SELinux user defaults to s0.\n"
+"MLS/MCS Security Range (MLS/MCS Systems only) SELinux Range for SELinux "
+"login mapping defaults to the SELinux user record range. SELinux Range for "
+"SELinux user defaults to s0."
 msgstr ""
-"\n"
-"MLS / MCS 보안 범위 (MLS / MCS 시스템 전용)\n"
-"SELinux 로그인 매핑의 SELinux\n"
-"범위는 기본적으로 SELinux 사용자 레코드 범위입니다.\n"
-"SELinux 사용자의 SELinux 범위 기본값은 s0입니다.\n"
+"MLS/MCS 보안 범위 (MLS/MCS 시스템 전용) SELinux 로그인 매핑의 SELinux 범위는 "
+"기본적으로 SELinux 사용자 레코드 범위입니다. SELinux 사용자의 SELinux 범위 "
+"기본값은 s0입니다."
 
-#: ../semanage/semanage:251
+#: ../semanage/semanage:249
 msgid ""
-"\n"
-"    Protocol  for  the specified port (tcp|udp|dccp|sctp) or internet "
-"protocol\n"
-"    version for the specified node (ipv4|ipv6).\n"
+"Protocol for the specified port (tcp|udp|dccp|sctp) or internet protocol "
+"version for the specified node (ipv4|ipv6)."
 msgstr ""
-"\n"
-"    지정된 포트 (tcp|udp|dccp|sctp)를 위한 통신규약 또는\n"
-"지정된 노드 (ipv4 | ipv6)를 위한 인터넷 통신규약 버전 .\n"
+"지정된 포트 (tcp|udp|dccp|sctp)를 위한 통신규약 또는 지정된 노드 (ipv4 | "
+"ipv6)를 위한 인터넷 통신규약 버전 ."
 
-#: ../semanage/semanage:257
-msgid ""
-"\n"
-"    Subnet prefix for  the specified infiniband ibpkey.\n"
-msgstr ""
-"\n"
-"    지정된 infiniband ibpkey를 위한 서브넷 프리픽스\n"
+#: ../semanage/semanage:253
+msgid "Subnet prefix for  the specified infiniband ibpkey."
+msgstr "지정된 infiniband ibpkey를 위한 서브넷 접두사."
 
-#: ../semanage/semanage:262
-msgid ""
-"\n"
-"    Name for the specified infiniband end port.\n"
-msgstr ""
-"\n"
-"    지정된 infiniband 끝 포트의 이름입니다.\n"
+#: ../semanage/semanage:256
+msgid "Name for the specified infiniband end port."
+msgstr "지정된 infiniband 종료 포트를 위한 이름."
 
-#: ../semanage/semanage:267
+#: ../semanage/semanage:259
 #, python-format
 msgid "Modify a record of the %s object type"
 msgstr "기록 수정 %s 객체 유형"
 
-#: ../semanage/semanage:271
+#: ../semanage/semanage:263
 #, python-format
 msgid "List records of the %s object type"
 msgstr "의 기록을 나열하십시오. %s 객체 유형"
 
-#: ../semanage/semanage:275
+#: ../semanage/semanage:267
 #, python-format
 msgid "Delete a record of the %s object type"
 msgstr "기록 삭제 %s 객체 유형"
 
-#: ../semanage/semanage:279
+#: ../semanage/semanage:271
 msgid "Extract customizable commands, for use within a transaction"
 msgstr "연결 내에서 사용하기 위해 사용자 정의 가능한 명령을 추출합니다"
 
-#: ../semanage/semanage:283
+#: ../semanage/semanage:275
 #, python-format
 msgid "Remove all %s objects local customizations"
 msgstr "모두 제거 %s 개체 로컬 사용자 지정"
 
-#: ../semanage/semanage:287
+#: ../semanage/semanage:279
 msgid "SELinux user name"
 msgstr "SELinux 사용자 이름"
 
-#: ../semanage/semanage:292
+#: ../semanage/semanage:284
 msgid "Manage login mappings between linux users and SELinux confined users"
 msgstr "리눅스 사용자와 SELinux에 제한된 사용자 간의 로그인 매핑 관리"
 
-#: ../semanage/semanage:309
+#: ../semanage/semanage:301
 #, python-format
 msgid "login_name | %%groupname"
 msgstr "로그인_이름 | %%groupname"
 
-#: ../semanage/semanage:361
+#: ../semanage/semanage:344
 msgid "Manage file context mapping definitions"
 msgstr "파일 컨텍스트 매핑 정의 관리"
 
-#: ../semanage/semanage:375
+#: ../semanage/semanage:359
 msgid ""
-"Substitute  target  path with sourcepath when generating default\n"
-"                                                                  label.  "
-"This is used with fcontext. Requires source  and  target\n"
-"                                                                  path  "
-"arguments.  The context labeling for the target subtree is\n"
-"                                                                  made "
-"equivalent to that defined for the source."
+"Substitute target path with sourcepath when generating default label. This "
+"is used with fcontext. Requires source and target path arguments. The "
+"context labeling for the target subtree is made equivalent to that defined "
+"for the source."
 msgstr ""
-"기본 레이블을 생성 할 때 대상 경로를 sourcepath로 대체하십시오.\n"
-" 이것은 fcontext와 함께 사용됩니다.\n"
-" 소스 및 대상 경로 인수가 필요합니다.\n"
-" 대상 하위 트리의 컨텍스트 레이블은 소스에 대해 정의 된 레이블과 동일하게 만"
-"들어집니다."
+"기본 레이블을 생성 할 때 대상 경로를 sourcepath로 대체하십시오. 이는 "
+"fcontext와 함께 사용됩니다. 원천 및 대상 경로 인수가 필요합니다. 대상 "
+"서브트리의 컨텍스트 레이블은 원천에 대해 정의 된 레이블과 동일하게 "
+"만들어집니다."
 
-#: ../semanage/semanage:383
+#: ../semanage/semanage:363
+msgid ""
+"File Type. This is used with fcontext. Requires a file type as shown in the "
+"mode field by ls, e.g. use d to match only directories or f to match only "
+"regular files. The following file type options can be passed: f (regular "
+"file), d (directory), c (character device), b (block device), s (socket), l "
+"(symbolic link), p (named pipe). If you do not specify a file type, the file "
+"type will default to \"all files\"."
+msgstr ""
+"파일 유형. 이는 fcontext와 함께 사용됩니다. 예를 들면, ls에 의해 모드 필드에 "
+"표시된 파일 유형이 필요합니다. d를 사용하여 디렉토리만 일치시키거나 f를 "
+"사용하여 일반 파일만 일치시킵니다. 다음 파일 유형 옵션은 전달 될 수 있습니다:"
+" f (일반 파일), d (디렉토리), c (문자 장치), b (블록 장치), s (소켓), l ("
+"심볼릭 링크), p (네임드 파이프). 만약 당신이 파일 유형을 지정하지 않으면, "
+"파일 유형은 기본값으로 \"모든 파일\"로 설정합니다."
+
+#: ../semanage/semanage:371
 msgid ""
 "Path to be labeled (may be in the form of a Perl compatible regular "
 "expression)"
 msgstr "이름표를 지정할 경로 (Perl 호환 정규식의 형식일 수 있음)"
 
-#: ../semanage/semanage:411
+#: ../semanage/semanage:399
 msgid "Manage SELinux confined users (Roles and levels for an SELinux user)"
 msgstr "SELinux 제한된 사용자 관리 (SELinux 사용자의 역할 및 수준)"
 
-#: ../semanage/semanage:429
+#: ../semanage/semanage:417
 msgid ""
-"\n"
-"SELinux Roles.  You must enclose multiple roles within quotes, separate by "
-"spaces. Or specify -R multiple times.\n"
-msgstr ""
-"\n"
-"SELinux 역할. 따옴표 안에 공백으로 구분하여 여러 역할을 묶어야합니다. 또는 -R"
-"을 여러 번 지정하십시오.\n"
+"SELinux Roles. You must enclose multiple roles within quotes, separate by "
+"spaces. Or specify -R multiple times."
+msgstr "SELinux 역할. 따옴표 안에 공백으로 구분하여 여러 역할을 묶어야합니다. 또는 -"
+"R을 여러 번 지정하세요."
 
-#: ../semanage/semanage:433
+#: ../semanage/semanage:419
 msgid "selinux_name"
 msgstr "selinux_name"
 
-#: ../semanage/semanage:461
+#: ../semanage/semanage:447
 msgid "Manage network port type definitions"
 msgstr "네트워크 포트 유형 정의 관리"
 
-#: ../semanage/semanage:477
+#: ../semanage/semanage:463
 msgid "port | port_range"
 msgstr "포트 | port_range"
 
-#: ../semanage/semanage:506
+#: ../semanage/semanage:492
 msgid "Manage infiniband ibpkey type definitions"
 msgstr "infiniband ibpkey 유형 정의 관리"
 
-#: ../semanage/semanage:522
+#: ../semanage/semanage:508
 msgid "pkey | pkey_range"
-msgstr "pkey | pkey_range"
+msgstr "pkey | pkey_범위"
 
-#: ../semanage/semanage:549
+#: ../semanage/semanage:535
 msgid "Manage infiniband end port type definitions"
 msgstr "infiniband 끝 포트 유형 정의 관리"
 
-#: ../semanage/semanage:565
+#: ../semanage/semanage:551
 msgid "ibendport"
 msgstr "ibendport"
 
-#: ../semanage/semanage:592
+#: ../semanage/semanage:578
 msgid "Manage network interface type definitions"
 msgstr "네트워크 인터페이스 유형 정의 관리"
 
-#: ../semanage/semanage:607
+#: ../semanage/semanage:593
 msgid "interface_spec"
 msgstr "연결장치_지정"
 
-#: ../semanage/semanage:631
+#: ../semanage/semanage:617
 msgid "Manage SELinux policy modules"
 msgstr "SELinux 정책 모듈 관리"
 
-#: ../semanage/semanage:642
+#: ../semanage/semanage:628
 msgid "Add a module"
 msgstr "모듈 추가"
 
-#: ../semanage/semanage:643
+#: ../semanage/semanage:629
 msgid "Remove a module"
 msgstr "모듈 제거"
 
-#: ../semanage/semanage:644
+#: ../semanage/semanage:630
 msgid "Disable a module"
 msgstr "모듈 사용 중지"
 
-#: ../semanage/semanage:645
+#: ../semanage/semanage:631
 msgid "Enable a module"
 msgstr "모듈 사용"
 
-#: ../semanage/semanage:672
+#: ../semanage/semanage:658
 msgid "Manage network node type definitions"
 msgstr "네트워크 노드 유형 정의 관리"
 
-#: ../semanage/semanage:686
+#: ../semanage/semanage:672
 msgid "Network Mask"
 msgstr "네트워크 마스크"
 
-#: ../semanage/semanage:690
+#: ../semanage/semanage:676
 msgid "node"
 msgstr "노드"
 
-#: ../semanage/semanage:715
+#: ../semanage/semanage:701
 msgid "Manage booleans to selectively enable functionality"
 msgstr "선택적으로 기능을 활성화하기 위해 부울 관리"
 
-#: ../semanage/semanage:720
+#: ../semanage/semanage:706
 msgid "boolean"
 msgstr "부울"
 
-#: ../semanage/semanage:730
+#: ../semanage/semanage:716
 msgid "Enable the boolean"
 msgstr "부울 사용"
 
-#: ../semanage/semanage:731
+#: ../semanage/semanage:717
 msgid "Disable the boolean"
 msgstr "부울 사용 안함"
 
-#: ../semanage/semanage:752
+#: ../semanage/semanage:738
 msgid "semanage permissive: error: the following argument is required: type\n"
 msgstr "semanage permissive : 오류 : 다음 인수가 필요합니다. type\n"
 
-#: ../semanage/semanage:756
+#: ../semanage/semanage:742
 msgid "Manage process type enforcement mode"
 msgstr "프로세스 유형 적용 모드 관리"
 
-#: ../semanage/semanage:768 ../semanage/seobject.py:2677
+#: ../semanage/semanage:754 ../semanage/seobject.py:2672
 msgid "type"
 msgstr "유형"
 
-#: ../semanage/semanage:779
+#: ../semanage/semanage:765
 msgid "Disable/Enable dontaudit rules in policy"
 msgstr "정책에서 dontaudit 규칙 사용/사용안함"
 
-#: ../semanage/semanage:799
+#: ../semanage/semanage:785
 msgid "Output local customizations"
 msgstr "로컬 사용자 정의 출력"
 
-#: ../semanage/semanage:801
+#: ../semanage/semanage:787
 msgid "Output file"
 msgstr "출력 결과 파일"
 
-#: ../semanage/semanage:894
+#: ../semanage/semanage:880
 msgid "Import local customizations"
 msgstr "로컬 사용자 정의 가져 오기"
 
-#: ../semanage/semanage:897
+#: ../semanage/semanage:883
 msgid "Input file"
 msgstr "입력 파일"
+
+#: ../semanage/semanage:891
+msgid ""
+"semanage is used to configure certain elements of SELinux policy with-out "
+"requiring modification or recompilation from policy source."
+msgstr "semanage는 정책 원천에서 수정하거나 재컴파일이 필요 없이 SELinux 정책의 특정 "
+"요소를 구성하는 데 사용됩니다."
 
 #: ../semanage/seobject.py:279
 msgid "Could not create semanage handle"
@@ -511,128 +503,115 @@ msgstr "내장 허용 형식"
 msgid "Customized Permissive Types"
 msgstr "사용자 정의 허용 형식"
 
-#: ../semanage/seobject.py:510
-msgid ""
-"The sepolgen python module is required to setup permissive domains.\n"
-"In some distributions it is included in the policycoreutils-devel package.\n"
-"# yum install policycoreutils-devel\n"
-"Or similar for your distro."
-msgstr ""
-"sepolgen python 모듈은 허용 도메인을 설정해야합니다.\n"
-"일부 배포판에서는 policycoreutils-devel 꾸러미(package)에 포함되어 있습니"
-"다.\n"
-"# yum install policycoreutils-devel\n"
-"또는 배포판과 비슷합니다."
-
-#: ../semanage/seobject.py:520
+#: ../semanage/seobject.py:515
 #, python-format
 msgid "Could not set permissive domain %s (module installation failed)"
 msgstr "%s 허용 도메인을 설정 할 수없습니다 (모듈 설치 실패)"
 
-#: ../semanage/seobject.py:526
+#: ../semanage/seobject.py:521
 #, python-format
 msgid "Could not remove permissive domain %s (remove failed)"
 msgstr "%s 허용 도메인을 제거하지 못했습니다 (제거 실패)"
 
-#: ../semanage/seobject.py:563 ../semanage/seobject.py:633
-#: ../semanage/seobject.py:678 ../semanage/seobject.py:797
-#: ../semanage/seobject.py:827 ../semanage/seobject.py:892
-#: ../semanage/seobject.py:948 ../semanage/seobject.py:1226
-#: ../semanage/seobject.py:1492 ../semanage/seobject.py:2502
-#: ../semanage/seobject.py:2575 ../semanage/seobject.py:2599
-#: ../semanage/seobject.py:2730 ../semanage/seobject.py:2781
+#: ../semanage/seobject.py:558 ../semanage/seobject.py:628
+#: ../semanage/seobject.py:673 ../semanage/seobject.py:792
+#: ../semanage/seobject.py:822 ../semanage/seobject.py:887
+#: ../semanage/seobject.py:943 ../semanage/seobject.py:1221
+#: ../semanage/seobject.py:1487 ../semanage/seobject.py:2497
+#: ../semanage/seobject.py:2570 ../semanage/seobject.py:2594
+#: ../semanage/seobject.py:2725 ../semanage/seobject.py:2776
 #, python-format
 msgid "Could not create a key for %s"
 msgstr "%s에 사용되는 키를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:567 ../semanage/seobject.py:637
-#: ../semanage/seobject.py:682 ../semanage/seobject.py:688
+#: ../semanage/seobject.py:562 ../semanage/seobject.py:632
+#: ../semanage/seobject.py:677 ../semanage/seobject.py:683
 #, python-format
 msgid "Could not check if login mapping for %s is defined"
 msgstr "%s에 대한 로그인 대응이 지정되었는지를 확인 할 수 없습니다"
 
-#: ../semanage/seobject.py:569
+#: ../semanage/seobject.py:564
 #, python-format
 msgid "Login mapping for %s is already defined"
 msgstr "%s 에 대한 로그인 대응이 이미 정의되어있다"
 
-#: ../semanage/seobject.py:574
+#: ../semanage/seobject.py:569
 #, python-format
 msgid "Linux Group %s does not exist"
 msgstr "%s Linux 그룹이 존재하지 않습니다"
 
-#: ../semanage/seobject.py:579
+#: ../semanage/seobject.py:574
 #, python-format
 msgid "Linux User %s does not exist"
 msgstr "Linux 사용자 %s 가 존재하지 않습니다"
 
-#: ../semanage/seobject.py:583
+#: ../semanage/seobject.py:578
 #, python-format
 msgid "Could not create login mapping for %s"
 msgstr "%s에 대한 로그인 맵핑을 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:587 ../semanage/seobject.py:841
+#: ../semanage/seobject.py:582 ../semanage/seobject.py:836
 #, python-format
 msgid "Could not set name for %s"
 msgstr "%s에 대한 이름을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:592 ../semanage/seobject.py:851
+#: ../semanage/seobject.py:587 ../semanage/seobject.py:846
 #, python-format
 msgid "Could not set MLS range for %s"
 msgstr "%s 에 대한 MLS 범위를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:596
+#: ../semanage/seobject.py:591
 #, python-format
 msgid "Could not set SELinux user for %s"
 msgstr "%s에 대한 SELinu 사용자를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:600
+#: ../semanage/seobject.py:595
 #, python-format
 msgid "Could not add login mapping for %s"
 msgstr "%s에 대한 로그인 맵핑을 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:616
+#: ../semanage/seobject.py:611
 msgid "Requires seuser or serange"
 msgstr "seuser 또는 serange 필요"
 
-#: ../semanage/seobject.py:639 ../semanage/seobject.py:684
+#: ../semanage/seobject.py:634 ../semanage/seobject.py:679
 #, python-format
 msgid "Login mapping for %s is not defined"
 msgstr "%s에 대한 로그인 맵핑이 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:643
+#: ../semanage/seobject.py:638
 #, python-format
 msgid "Could not query seuser for %s"
 msgstr "%s에 대한 seuser를 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:658
+#: ../semanage/seobject.py:653
 #, python-format
 msgid "Could not modify login mapping for %s"
 msgstr "%s에 대한 로그인 맵핑을 수정 할 수 없습니다"
 
-#: ../semanage/seobject.py:690
+#: ../semanage/seobject.py:685
 #, python-format
 msgid "Login mapping for %s is defined in policy, cannot be deleted"
 msgstr "%s에 대한 로그인 맵핑이 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:694
+#: ../semanage/seobject.py:689
 #, python-format
 msgid "Could not delete login mapping for %s"
 msgstr "%s에 대한 로그인 맵핑을 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:713 ../semanage/seobject.py:745
-#: ../semanage/seobject.py:991
+#: ../semanage/seobject.py:708 ../semanage/seobject.py:740
+#: ../semanage/seobject.py:986
 msgid "Could not list login mappings"
 msgstr "로그인 맵핑 목록을 만들 수 없습니다"
 
-#: ../semanage/seobject.py:772 ../semanage/seobject.py:784
+#: ../semanage/seobject.py:767 ../semanage/seobject.py:779
 #: ../sepolicy/sepolicy/sepolicy.glade:1156
 #: ../sepolicy/sepolicy/sepolicy.glade:3138
 msgid "Login Name"
 msgstr "로그인 이름"
 
-#: ../semanage/seobject.py:772 ../semanage/seobject.py:784
-#: ../semanage/seobject.py:1041 ../semanage/seobject.py:1046
+#: ../semanage/seobject.py:767 ../semanage/seobject.py:779
+#: ../semanage/seobject.py:1036 ../semanage/seobject.py:1041
 #: ../sepolicy/sepolicy/sepolicy.glade:1182
 #: ../sepolicy/sepolicy/sepolicy.glade:3156
 #: ../sepolicy/sepolicy/sepolicy.glade:3242
@@ -640,857 +619,878 @@ msgstr "로그인 이름"
 msgid "SELinux User"
 msgstr "SELinux 사용자"
 
-#: ../semanage/seobject.py:772
+#: ../semanage/seobject.py:767
 msgid "MLS/MCS Range"
 msgstr "MLS/MCS 범위"
 
-#: ../semanage/seobject.py:772
+#: ../semanage/seobject.py:767
 msgid "Service"
 msgstr "서비스"
 
-#: ../semanage/seobject.py:800 ../semanage/seobject.py:831
-#: ../semanage/seobject.py:896 ../semanage/seobject.py:952
-#: ../semanage/seobject.py:958
+#: ../semanage/seobject.py:795 ../semanage/seobject.py:826
+#: ../semanage/seobject.py:891 ../semanage/seobject.py:947
+#: ../semanage/seobject.py:953
 #, python-format
 msgid "Could not check if SELinux user %s is defined"
 msgstr "%s에 대한 SELinux 사용자가 지정되었는지 확인할 수 없습니다"
 
-#: ../semanage/seobject.py:803 ../semanage/seobject.py:902
-#: ../semanage/seobject.py:964
+#: ../semanage/seobject.py:798 ../semanage/seobject.py:897
+#: ../semanage/seobject.py:959
 #, python-format
 msgid "Could not query user for %s"
 msgstr "%s에 대한 사용자를 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:823
+#: ../semanage/seobject.py:818
 #, python-format
 msgid "You must add at least one role for %s"
 msgstr "%s에 대해 최소 하나의 역할을 추가해야 합니다"
 
-#: ../semanage/seobject.py:833
+#: ../semanage/seobject.py:828
 #, python-format
 msgid "SELinux user %s is already defined"
 msgstr "SELinux 사용자 %s가 이미 정의되어있다"
 
-#: ../semanage/seobject.py:837
+#: ../semanage/seobject.py:832
 #, python-format
 msgid "Could not create SELinux user for %s"
 msgstr "%s에 대한 SELinux 사용자를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:846
-#, python-format
-msgid "Could not add role %s for %s"
-msgstr "역할을 추가 할 수 없습니다. %s ...에 대한 %s"
+#: ../semanage/seobject.py:841
+#, python-brace-format
+msgid "Could not add role {role} for {name}"
+msgstr "역할 {role}을 추가 할 수 없습니다 ({name}에 대해)"
 
-#: ../semanage/seobject.py:855
+#: ../semanage/seobject.py:850
 #, python-format
 msgid "Could not set MLS level for %s"
 msgstr "%s에 대한 MLS 레벨을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:858
-#, python-format
-msgid "Could not add prefix %s for %s"
-msgstr "%s를 위해 프리픽스 %s를 추가 할 수 없습니다"
+#: ../semanage/seobject.py:853
+#, python-brace-format
+msgid "Could not add prefix {prefix} for {role}"
+msgstr "접두사 {prefix}를 추가 할 수 없습니다 ({role}에 대해)"
 
-#: ../semanage/seobject.py:861
+#: ../semanage/seobject.py:856
 #, python-format
 msgid "Could not extract key for %s"
 msgstr "%s에 대한 키를 추출할 수 없습니다"
 
-#: ../semanage/seobject.py:865
+#: ../semanage/seobject.py:860
 #, python-format
 msgid "Could not add SELinux user %s"
-msgstr "%s에 대한 SELinux 사용자를 추가할 수 없습니다"
+msgstr "SELinux 사용자 %s를 추가 할 수 없습니다"
 
-#: ../semanage/seobject.py:886
+#: ../semanage/seobject.py:881
 msgid "Requires prefix, roles, level or range"
-msgstr "접두어, 기능, 레벨 또는 범위 필요"
+msgstr "접두어, 역할, 수준 또는 범위가 필요합니다"
 
-#: ../semanage/seobject.py:888
+#: ../semanage/seobject.py:883
 msgid "Requires prefix or roles"
-msgstr "접두어 또는 기능 필요"
+msgstr "접두어 또는 역할이 필요합니다"
 
-#: ../semanage/seobject.py:898 ../semanage/seobject.py:954
+#: ../semanage/seobject.py:893 ../semanage/seobject.py:949
 #, python-format
 msgid "SELinux user %s is not defined"
 msgstr "%s에 대한 SELinux 사용자가 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:927
+#: ../semanage/seobject.py:922
 #, python-format
 msgid "Could not modify SELinux user %s"
 msgstr "%s에 대한 SELinux 사용자를 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:960
+#: ../semanage/seobject.py:955
 #, python-format
 msgid "SELinux user %s is defined in policy, cannot be deleted"
 msgstr ""
 "%s에 대한 SELinux 사용자가 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:971
+#: ../semanage/seobject.py:966
 #, python-format
 msgid "Could not delete SELinux user %s"
 msgstr "%s에 대한 SELinux 사용자를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:1009
+#: ../semanage/seobject.py:1004
 msgid "Could not list SELinux users"
 msgstr "SELinux 사용자 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:1015
+#: ../semanage/seobject.py:1010
 #, python-format
 msgid "Could not list roles for user %s"
 msgstr "%s 사용자에 대한 역할 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:1040
+#: ../semanage/seobject.py:1035
 msgid "Labeling"
 msgstr "레이블링"
 
-#: ../semanage/seobject.py:1040
+#: ../semanage/seobject.py:1035
 msgid "MLS/"
 msgstr "MLS/"
 
-#: ../semanage/seobject.py:1041
+#: ../semanage/seobject.py:1036
 msgid "Prefix"
 msgstr "접두부"
 
-#: ../semanage/seobject.py:1041
+#: ../semanage/seobject.py:1036
 msgid "MCS Level"
-msgstr "MCS 레벨"
+msgstr "MCS 수준"
 
-#: ../semanage/seobject.py:1041
+#: ../semanage/seobject.py:1036
 msgid "MCS Range"
 msgstr "MCS 범위"
 
-#: ../semanage/seobject.py:1041 ../semanage/seobject.py:1046
+#: ../semanage/seobject.py:1036 ../semanage/seobject.py:1041
 #: ../sepolicy/sepolicy/sepolicy.glade:3262
 #: ../sepolicy/sepolicy/sepolicy.glade:5233
 #: ../sepolicy/sepolicy/sepolicy.glade:5382
 msgid "SELinux Roles"
 msgstr "SELinux 기능"
 
-#: ../semanage/seobject.py:1071
+#: ../semanage/seobject.py:1066
 msgid "Protocol has to be one of udp, tcp, dccp or sctp"
 msgstr "프로토콜은 udp, tcp, dccp 또는 sctp 중 하나여야 합니다"
 
-#: ../semanage/seobject.py:1073
+#: ../semanage/seobject.py:1068
 msgid "Port is required"
 msgstr "포트 필요"
 
-#: ../semanage/seobject.py:1087
+#: ../semanage/seobject.py:1082
 msgid "Invalid Port"
 msgstr "잘못된 포트"
 
-#: ../semanage/seobject.py:1091 ../semanage/seobject.py:1365
-#, python-format
-msgid "Could not create a key for %s/%s"
-msgstr "에 대한 키를 만들 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1086
+#, python-brace-format
+msgid "Could not create a key for {proto}/{port}"
+msgstr "{proto}/{port}를 위해 키를 생성 할 수 없습니다"
 
-#: ../semanage/seobject.py:1102 ../semanage/seobject.py:1376
-#: ../semanage/seobject.py:1631
+#: ../semanage/seobject.py:1097 ../semanage/seobject.py:1371
+#: ../semanage/seobject.py:1626
 msgid "Type is required"
 msgstr "유형 필요"
 
-#: ../semanage/seobject.py:1107 ../semanage/seobject.py:1172
+#: ../semanage/seobject.py:1102 ../semanage/seobject.py:1167
 #, python-format
 msgid "Type %s is invalid, must be a port type"
 msgstr "유형 %s이 잘못되었습니다, 포트 유형이어야 합니다"
 
-#: ../semanage/seobject.py:1113 ../semanage/seobject.py:1178
-#: ../semanage/seobject.py:1244 ../semanage/seobject.py:1250
-#, python-format
-msgid "Could not check if port %s/%s is defined"
-msgstr "포트가 있는지 확인할 수 없습니다. %s/%s 정의 됨"
+#: ../semanage/seobject.py:1108 ../semanage/seobject.py:1173
+#: ../semanage/seobject.py:1239 ../semanage/seobject.py:1245
+#, python-brace-format
+msgid "Could not check if port {proto}/{port} is defined"
+msgstr "만약 포트 {proto}/{port}가 정의되었는지 점검 할 수 없습니다"
 
-#: ../semanage/seobject.py:1115
-#, python-format
-msgid "Port %s/%s already defined"
-msgstr "포트 %s/%s 이미 정의 된"
+#: ../semanage/seobject.py:1110
+#, python-brace-format
+msgid "Port {proto}/{port} already defined"
+msgstr "포트 {proto}/{port}가 이미 정의됨"
 
-#: ../semanage/seobject.py:1119
-#, python-format
-msgid "Could not create port for %s/%s"
-msgstr "포트를 만들 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1114
+#, python-brace-format
+msgid "Could not create port for {proto}/{port}"
+msgstr "{proto}/{port}를 위해 포트를 생성 할 수 없습니다"
 
-#: ../semanage/seobject.py:1125 ../semanage/seobject.py:1399
-#: ../semanage/seobject.py:1653
-#, python-format
-msgid "Could not create context for %s/%s"
-msgstr "에 대한 컨텍스트를 만들 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1120
+#, python-brace-format
+msgid "Could not create context for {proto}/{port}"
+msgstr "{proto}/{port}를 위해 문맥을 생성 할 수 없습니다"
 
-#: ../semanage/seobject.py:1129
-#, python-format
-msgid "Could not set user in port context for %s/%s"
-msgstr "포트 컨텍스트에서 사용자를 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1124
+#, python-brace-format
+msgid "Could not set user in port context for {proto}/{port}"
+msgstr "{proto}/{port}를 위해 포트 문맥에서 사용자를 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1133
-#, python-format
-msgid "Could not set role in port context for %s/%s"
-msgstr "포트 컨텍스트에서 역할을 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1128
+#, python-brace-format
+msgid "Could not set role in port context for {proto}/{port}"
+msgstr "{proto}/{port}를 위해 포트 문맥에서 역할을 설정 할 수 없습니다"
+
+#: ../semanage/seobject.py:1132
+#, python-brace-format
+msgid "Could not set type in port context for {proto}/{port}"
+msgstr "{proto}/{port}를 위해 포트 문맥에서 유형을 설정 할 수 없습니다"
 
 #: ../semanage/seobject.py:1137
-#, python-format
-msgid "Could not set type in port context for %s/%s"
-msgstr "포트 컨텍스트에서 유형을 설정할 수 없습니다. %s/%s"
+#, python-brace-format
+msgid "Could not set mls fields in port context for {proto}/{port}"
+msgstr "{proto}/{port}를 위해 포트 문맥에서 mls 부분을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1142
-#, python-format
-msgid "Could not set mls fields in port context for %s/%s"
-msgstr "포트 컨텍스트에서 mls 필드를 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1141
+#, python-brace-format
+msgid "Could not set port context for {proto}/{port}"
+msgstr "{proto}/{port}를 위해 포트 문맥을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1146
-#, python-format
-msgid "Could not set port context for %s/%s"
-msgstr "포트 컨텍스트를 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1145
+#, python-brace-format
+msgid "Could not add port {proto}/{port}"
+msgstr "포트 {proto}/{port}를 추가 할 수 없습니다"
 
-#: ../semanage/seobject.py:1150
-#, python-format
-msgid "Could not add port %s/%s"
-msgstr "포트를 추가 할 수 없습니다. %s/%s"
-
-#: ../semanage/seobject.py:1166 ../semanage/seobject.py:1438
-#: ../semanage/seobject.py:1692 ../semanage/seobject.py:1970
-#: ../semanage/seobject.py:2176
+#: ../semanage/seobject.py:1161 ../semanage/seobject.py:1433
+#: ../semanage/seobject.py:1687 ../semanage/seobject.py:1965
+#: ../semanage/seobject.py:2171
 msgid "Requires setype or serange"
 msgstr "setype 또는 serange 필요"
 
-#: ../semanage/seobject.py:1168 ../semanage/seobject.py:1440
-#: ../semanage/seobject.py:1694
+#: ../semanage/seobject.py:1163 ../semanage/seobject.py:1435
+#: ../semanage/seobject.py:1689
 msgid "Requires setype"
 msgstr "setype 필요"
 
-#: ../semanage/seobject.py:1180 ../semanage/seobject.py:1246
-#, python-format
-msgid "Port %s/%s is not defined"
-msgstr "포트 %s/%s 정의되지 않았습니다"
+#: ../semanage/seobject.py:1175 ../semanage/seobject.py:1241
+#, python-brace-format
+msgid "Port {proto}/{port} is not defined"
+msgstr "포트 {proto}/{port}는 정의되지 않았습니다"
 
-#: ../semanage/seobject.py:1184
-#, python-format
-msgid "Could not query port %s/%s"
-msgstr "포트를 쿼리 할 수 없습니다 %s/%s"
+#: ../semanage/seobject.py:1179
+#, python-brace-format
+msgid "Could not query port {proto}/{port}"
+msgstr "포트 {proto}/{port}를 질의 할 수 없습니다"
 
-#: ../semanage/seobject.py:1198
-#, python-format
-msgid "Could not modify port %s/%s"
-msgstr "포트를 수정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1193
+#, python-brace-format
+msgid "Could not modify port {proto}/{port}"
+msgstr "포트 {proto}/{port}를 수정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1213
+#: ../semanage/seobject.py:1208
 msgid "Could not list the ports"
 msgstr "포트 목록을 만들 수 없습니다"
 
-#: ../semanage/seobject.py:1230
+#: ../semanage/seobject.py:1225
 #, python-format
 msgid "Could not delete the port %s"
-msgstr "%s 포트를 삭제할 수 없습니다"
+msgstr "포트 %s를 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:1252
-#, python-format
-msgid "Port %s/%s is defined in policy, cannot be deleted"
-msgstr "포트 %s/%s 정책에 정의되어 있으며 삭제 할 수 없습니다"
+#: ../semanage/seobject.py:1247
+#, python-brace-format
+msgid "Port {proto}/{port} is defined in policy, cannot be deleted"
+msgstr "포트{proto}/{port}는 정책에 정의되어 있으며, 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:1256
-#, python-format
-msgid "Could not delete port %s/%s"
-msgstr "포트를 삭제할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1251
+#, python-brace-format
+msgid "Could not delete port {proto}/{port}"
+msgstr "포트 {proto}/{port}를 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:1274 ../semanage/seobject.py:1294
+#: ../semanage/seobject.py:1269 ../semanage/seobject.py:1289
 msgid "Could not list ports"
-msgstr "포트 목록을 만들수 없습니다"
+msgstr "포트를 목록화 할 수 없습니다"
 
-#: ../semanage/seobject.py:1329 ../sepolicy/sepolicy/sepolicy.glade:2668
+#: ../semanage/seobject.py:1324 ../sepolicy/sepolicy/sepolicy.glade:2668
 #: ../sepolicy/sepolicy/sepolicy.glade:2766
 #: ../sepolicy/sepolicy/sepolicy.glade:4630
 msgid "SELinux Port Type"
 msgstr "SELinux 포트 유형"
 
-#: ../semanage/seobject.py:1329
+#: ../semanage/seobject.py:1324
 msgid "Proto"
-msgstr "Proto"
+msgstr "프로토"
 
-#: ../semanage/seobject.py:1329 ../semanage/seobject.py:1835
+#: ../semanage/seobject.py:1324 ../semanage/seobject.py:1830
 #: ../sepolicy/sepolicy/sepolicy.glade:1407
 msgid "Port Number"
 msgstr "포트 번호"
 
-#: ../semanage/seobject.py:1351
+#: ../semanage/seobject.py:1346
 msgid "Subnet Prefix is required"
 msgstr "서브넷 프리픽스가 필요합니다"
 
-#: ../semanage/seobject.py:1361
+#: ../semanage/seobject.py:1356
 msgid "Invalid Pkey"
 msgstr "잘못된 Pkey"
 
-#: ../semanage/seobject.py:1381 ../semanage/seobject.py:1445
+#: ../semanage/seobject.py:1360
+#, python-brace-format
+msgid "Could not create a key for {subnet_prefix}/{pkey}"
+msgstr "{subnet_prefix}/{pkey}를 위해 키를 생성 할 수 없습니다"
+
+#: ../semanage/seobject.py:1376 ../semanage/seobject.py:1440
 #, python-format
 msgid "Type %s is invalid, must be a ibpkey type"
 msgstr "유형 %s가 유효하지 않습니다. ibpkey 유형이어야 합니다"
 
-#: ../semanage/seobject.py:1387 ../semanage/seobject.py:1451
-#: ../semanage/seobject.py:1505 ../semanage/seobject.py:1511
-#, python-format
-msgid "Could not check if ibpkey %s/%s is defined"
-msgstr "ibpkey를 확인할 수 없습니다. %s/%s 정의 됨"
+#: ../semanage/seobject.py:1382 ../semanage/seobject.py:1446
+#: ../semanage/seobject.py:1500 ../semanage/seobject.py:1506
+#, python-brace-format
+msgid "Could not check if ibpkey {subnet_prefix}/{pkey} is defined"
+msgstr "만약 ibpkey {subnet_prefix}/{pkey}가 정의되었는지 점검 할 수 없습니다"
 
-#: ../semanage/seobject.py:1389
-#, python-format
-msgid "ibpkey %s/%s already defined"
-msgstr "ibpkey %s/%s 이미 정의 된"
+#: ../semanage/seobject.py:1384
+#, python-brace-format
+msgid "ibpkey {subnet_prefix}/{pkey} already defined"
+msgstr "ibpkey {subnet_prefix}/{pkey}는 이미 정의되었습니다"
 
-#: ../semanage/seobject.py:1393
-#, python-format
-msgid "Could not create ibpkey for %s/%s"
-msgstr "에 대한 ibpkey를 만들지 못했습니다. %s/%s"
+#: ../semanage/seobject.py:1388
+#, python-brace-format
+msgid "Could not create ibpkey for {subnet_prefix}/{pkey}"
+msgstr "{subnet_prefix}/{pkey}를 위해 ibpkey를 생성 할 수 없습니다"
 
-#: ../semanage/seobject.py:1403
-#, python-format
-msgid "Could not set user in ibpkey context for %s/%s"
-msgstr "에 대한 ibpkey 컨텍스트에서 사용자를 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1394
+#, python-brace-format
+msgid "Could not create context for {subnet_prefix}/{pkey}"
+msgstr "{subnet_prefix}/{pkey}를 위해 문맥을 생성 할 수 없습니다"
 
-#: ../semanage/seobject.py:1407
-#, python-format
-msgid "Could not set role in ibpkey context for %s/%s"
-msgstr "에 대한 ibpkey 컨텍스트에서 역할을 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1398
+#, python-brace-format
+msgid "Could not set user in ibpkey context for {subnet_prefix}/{pkey}"
+msgstr "{subnet_prefix}/{pkey}를 위해 ibpkey 문맥에서 사용자를 설정 할 수 없습니다"
+
+#: ../semanage/seobject.py:1402
+#, python-brace-format
+msgid "Could not set role in ibpkey context for {subnet_prefix}/{pkey}"
+msgstr "{subnet_prefix}/{pkey}를 위해 ibpkey 문맥에서 역할을 설정 할 수 없습니다"
+
+#: ../semanage/seobject.py:1406
+#, python-brace-format
+msgid "Could not set type in ibpkey context for {subnet_prefix}/{pkey}"
+msgstr "{subnet_prefix}/{pkey}를 위해 ibpkey 문맥에서 유형을 설정 할 수 없습니다"
 
 #: ../semanage/seobject.py:1411
-#, python-format
-msgid "Could not set type in ibpkey context for %s/%s"
-msgstr "에 대한 ibpkey 컨텍스트에 유형을 설정할 수 없습니다. %s/%s"
+#, python-brace-format
+msgid "Could not set mls fields in ibpkey context for {subnet_prefix}/{pkey}"
+msgstr "{subnet_prefix}/{pkey}를 위해 ibpkey 문맥에서 mls 부분을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1416
-#, python-format
-msgid "Could not set mls fields in ibpkey context for %s/%s"
-msgstr "에 대한 ibpkey 컨텍스트에서 mls 필드를 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1415
+#, python-brace-format
+msgid "Could not set ibpkey context for {subnet_prefix}/{pkey}"
+msgstr "{subnet_prefix}/{pkey}를 위해 ibpkey 문맥을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1420
-#, python-format
-msgid "Could not set ibpkey context for %s/%s"
-msgstr "에 대한 ibpkey 컨텍스트를 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1419
+#, python-brace-format
+msgid "Could not add ibpkey {subnet_prefix}/{pkey}"
+msgstr "ibpkey {subnet_prefix}/{pkey}를 추가 할 수 없습니다"
 
-#: ../semanage/seobject.py:1424
-#, python-format
-msgid "Could not add ibpkey %s/%s"
-msgstr "ibpkey를 추가 할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1448 ../semanage/seobject.py:1502
+#, python-brace-format
+msgid "ibpkey {subnet_prefix}/{pkey} is not defined"
+msgstr "ibpkey {subnet_prefix}/{pkey}가 정의되지 않았습니다"
 
-#: ../semanage/seobject.py:1453 ../semanage/seobject.py:1507
-#, python-format
-msgid "ibpkey %s/%s is not defined"
-msgstr "ibpkey %s/%s 정의되지 않았습니다"
+#: ../semanage/seobject.py:1452
+#, python-brace-format
+msgid "Could not query ibpkey {subnet_prefix}/{pkey}"
+msgstr "ibpkey {subnet_prefix}/{pkey}를 질의 할 수 없습니다"
 
-#: ../semanage/seobject.py:1457
-#, python-format
-msgid "Could not query ibpkey %s/%s"
-msgstr "ibpkey를 쿼리 할 수 없습니다 %s/%s"
+#: ../semanage/seobject.py:1463
+#, python-brace-format
+msgid "Could not modify ibpkey {subnet_prefix}/{pkey}"
+msgstr "ibpkey {subnet_prefix}/{pkey}를 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:1468
-#, python-format
-msgid "Could not modify ibpkey %s/%s"
-msgstr "ibpkey를 수정할 수 없습니다. %s/%s"
-
-#: ../semanage/seobject.py:1481
+#: ../semanage/seobject.py:1476
 msgid "Could not list the ibpkeys"
 msgstr "ibpkeys를 나열 할 수 없습니다"
 
-#: ../semanage/seobject.py:1496
+#: ../semanage/seobject.py:1491
 #, python-format
 msgid "Could not delete the ibpkey %s"
 msgstr "ibpkey를 삭제할 수 없습니다. %s"
 
-#: ../semanage/seobject.py:1513
-#, python-format
-msgid "ibpkey %s/%s is defined in policy, cannot be deleted"
-msgstr "ibpkey %s/%s 정책에 정의되어 있으며 삭제 할 수 없습니다"
+#: ../semanage/seobject.py:1508
+#, python-brace-format
+msgid "ibpkey {subnet_prefix}/{pkey} is defined in policy, cannot be deleted"
+msgstr "ibpkey {subnet_prefix}/{pkey}가 정책에 정의되어 있으며, 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:1517
-#, python-format
-msgid "Could not delete ibpkey %s/%s"
-msgstr "ibpkey를 삭제할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1512
+#, python-brace-format
+msgid "Could not delete ibpkey {subnet_prefix}/{pkey}"
+msgstr "ibpkey {subnet_prefix}/{pkey}를 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:1533 ../semanage/seobject.py:1554
+#: ../semanage/seobject.py:1528 ../semanage/seobject.py:1549
 msgid "Could not list ibpkeys"
 msgstr "ibpkeys를 나열 할 수 없습니다"
 
-#: ../semanage/seobject.py:1589
+#: ../semanage/seobject.py:1584
 msgid "SELinux IB Pkey Type"
 msgstr "SELinux IB Pkey 유형"
 
-#: ../semanage/seobject.py:1589
+#: ../semanage/seobject.py:1584
 msgid "Subnet_Prefix"
-msgstr "Subnet_Prefix"
+msgstr "서브넷_접두사"
 
-#: ../semanage/seobject.py:1589
+#: ../semanage/seobject.py:1584
 msgid "Pkey Number"
 msgstr "Pkey 번호"
 
-#: ../semanage/seobject.py:1611
+#: ../semanage/seobject.py:1606
 msgid "IB device name is required"
 msgstr "IB 장치 이름이 필요합니다"
 
-#: ../semanage/seobject.py:1616
+#: ../semanage/seobject.py:1611
 msgid "Invalid Port Number"
 msgstr "잘못된 포트 번호"
 
-#: ../semanage/seobject.py:1620
-#, python-format
-msgid "Could not create a key for ibendport %s/%s"
-msgstr "ibendport에 대한 키를 만들지 못했습니다. %s/%s"
+#: ../semanage/seobject.py:1615
+#, python-brace-format
+msgid "Could not create a key for ibendport {ibdev_name}/{ibendport}"
+msgstr "ibendport {ibdev_name}/{ibendport}를 위한 키를 생성 할 수 없습니다"
 
-#: ../semanage/seobject.py:1636 ../semanage/seobject.py:1699
+#: ../semanage/seobject.py:1631 ../semanage/seobject.py:1694
 #, python-format
 msgid "Type %s is invalid, must be an ibendport type"
 msgstr "유형 %s 올바르지 않습니다. ibendport 유형이어야 합니다"
 
-#: ../semanage/seobject.py:1641 ../semanage/seobject.py:1705
-#: ../semanage/seobject.py:1757 ../semanage/seobject.py:1763
-#, python-format
-msgid "Could not check if ibendport %s/%s is defined"
-msgstr "ibendport를 확인할 수 없습니다. %s/%s 정의 됨"
+#: ../semanage/seobject.py:1636
+#, python-brace-format
+msgid "Could not check if ibendport {ibdev_name}/{port} is defined"
+msgstr "만약 ibendport {ibdev_name}/{port}가 정의되었는지 확인 할 수 없습니다"
 
-#: ../semanage/seobject.py:1643
-#, python-format
-msgid "ibendport %s/%s already defined"
-msgstr "ibendport %s/%s 이미 정의 된"
+#: ../semanage/seobject.py:1638
+#, python-brace-format
+msgid "ibendport {ibdev_name}/{port} already defined"
+msgstr "ibendport {ibdev_name}/{port}가 이미 정의되었습니다"
 
-#: ../semanage/seobject.py:1647
-#, python-format
-msgid "Could not create ibendport for %s/%s"
-msgstr "에 대한 ibendport를 만들 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1642
+#, python-brace-format
+msgid "Could not create ibendport for {ibdev_name}/{port}"
+msgstr "{ibdev_name}/{port}를 위해 ibendport를 생성 할 수 없습니다"
 
-#: ../semanage/seobject.py:1657
-#, python-format
-msgid "Could not set user in ibendport context for %s/%s"
-msgstr "에 대한 ibendport 컨텍스트에서 사용자를 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1648
+#, python-brace-format
+msgid "Could not create context for {ibendport}/{port}"
+msgstr "{ibendport}/{port}를 위해 문맥을 생성 할 수 없습니다"
 
-#: ../semanage/seobject.py:1661
-#, python-format
-msgid "Could not set role in ibendport context for %s/%s"
-msgstr "에 대한 ibendport 컨텍스트에서 역할을 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1652
+#, python-brace-format
+msgid "Could not set user in ibendport context for {ibdev_name}/{port}"
+msgstr "{ibdev_name}/{port}를 위해 ibendport 문맥에서 사용자를 설정 할 수 없습니다"
+
+#: ../semanage/seobject.py:1656
+#, python-brace-format
+msgid "Could not set role in ibendport context for {ibdev_name}/{port}"
+msgstr "{ibdev_name}/{port}를 위한 ibendport 문맥에서 역할을 설정 할 수 없습니다"
+
+#: ../semanage/seobject.py:1660
+#, python-brace-format
+msgid "Could not set type in ibendport context for {ibdev_name}/{port}"
+msgstr "{ibdev_name}/{port}를 위해 ibendport 문맥에서 유형을 설정 할 수 없습니다"
 
 #: ../semanage/seobject.py:1665
-#, python-format
-msgid "Could not set type in ibendport context for %s/%s"
-msgstr "에 대한 유형을 설정할 수 없습니다. %s/%s"
+#, python-brace-format
+msgid "Could not set mls fields in ibendport context for {ibdev_name}/{port}"
+msgstr "{ibdev_name}/{port}를 위해 ibendport 문맥에서 mls 부분을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1670
-#, python-format
-msgid "Could not set mls fields in ibendport context for %s/%s"
-msgstr "에 대한 ibendport 컨텍스트에서 mls 필드를 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1669
+#, python-brace-format
+msgid "Could not set ibendport context for {ibdev_name}/{port}"
+msgstr "{ibdev_name}/{port}를 위해 ibendport 문맥을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1674
-#, python-format
-msgid "Could not set ibendport context for %s/%s"
-msgstr "에 대한 ibendport 컨텍스트를 설정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1673
+#, python-brace-format
+msgid "Could not add ibendport {ibdev_name}/{port}"
+msgstr "ibendport {ibdev_name}/{port}를 추가 할 수 없습니다"
 
-#: ../semanage/seobject.py:1678
-#, python-format
-msgid "Could not add ibendport %s/%s"
-msgstr "ibendport를 추가 할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1700 ../semanage/seobject.py:1752
+#: ../semanage/seobject.py:1758
+#, python-brace-format
+msgid "Could not check if ibendport {ibdev_name}/{ibendport} is defined"
+msgstr "만약 ibendport {ibdev_name}/{ibendport}가 정의되었는지 점검 할 수 없습니다"
 
-#: ../semanage/seobject.py:1707 ../semanage/seobject.py:1759
-#, python-format
-msgid "ibendport %s/%s is not defined"
-msgstr "ibendport %s/%s 정의되지 않았습니다"
+#: ../semanage/seobject.py:1702 ../semanage/seobject.py:1754
+#, python-brace-format
+msgid "ibendport {ibdev_name}/{ibendport} is not defined"
+msgstr "ibendport {ibdev_name}/{ibendport}가 정의되지 않았습니다"
 
-#: ../semanage/seobject.py:1711
-#, python-format
-msgid "Could not query ibendport %s/%s"
-msgstr "ibendport를 쿼리 할 수 없습니다 %s/%s"
+#: ../semanage/seobject.py:1706
+#, python-brace-format
+msgid "Could not query ibendport {ibdev_name}/{ibendport}"
+msgstr "ibendport {ibdev_name}/{ibendport}를 질의 할 수 없습니다"
 
-#: ../semanage/seobject.py:1722
-#, python-format
-msgid "Could not modify ibendport %s/%s"
-msgstr "ibendport를 수정할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1717
+#, python-brace-format
+msgid "Could not modify ibendport {ibdev_name}/{ibendport}"
+msgstr "ibendport {ibdev_name}/{ibendport}를 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:1735
+#: ../semanage/seobject.py:1730
 msgid "Could not list the ibendports"
 msgstr "ibendports를 나열 할 수 없습니다"
 
-#: ../semanage/seobject.py:1744
-#, python-format
-msgid "Could not create a key for %s/%d"
-msgstr "에 대한 키를 만들 수 없습니다. %s/%d"
+#: ../semanage/seobject.py:1739
+#, python-brace-format
+msgid "Could not create a key for {ibdev_name}/{port}"
+msgstr "{ibdev_name}/{port}를 위해 키를 생성 할 수 없습니다"
 
-#: ../semanage/seobject.py:1748
-#, python-format
-msgid "Could not delete the ibendport %s/%d"
-msgstr "ibendport를 삭제할 수 없습니다. %s/%d"
+#: ../semanage/seobject.py:1743
+#, python-brace-format
+msgid "Could not delete the ibendport {ibdev_name}/{port}"
+msgstr "ibendport {ibdev_name}/{port}를 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:1765
-#, python-format
-msgid "ibendport %s/%s is defined in policy, cannot be deleted"
-msgstr "ibendport %s/%s 정책에 정의되어 있으며 삭제 할 수 없습니다"
+#: ../semanage/seobject.py:1760
+#, python-brace-format
+msgid ""
+"ibendport {ibdev_name}/{ibendport} is defined in policy, cannot be deleted"
+msgstr "ibendport {ibdev_name}/{ibendport}는 정책에 정의되어 있으며, 삭제 할 수 "
+"없습니다"
 
-#: ../semanage/seobject.py:1769
-#, python-format
-msgid "Could not delete ibendport %s/%s"
-msgstr "ibendport를 삭제할 수 없습니다. %s/%s"
+#: ../semanage/seobject.py:1764
+#, python-brace-format
+msgid "Could not delete ibendport {ibdev_name}/{ibendport}"
+msgstr "ibendport {ibdev_name}/{ibendport}를 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:1785 ../semanage/seobject.py:1805
+#: ../semanage/seobject.py:1780 ../semanage/seobject.py:1800
 msgid "Could not list ibendports"
 msgstr "ibendports를 나열 할 수 없습니다"
 
-#: ../semanage/seobject.py:1835
+#: ../semanage/seobject.py:1830
 msgid "SELinux IB End Port Type"
 msgstr "SELinux IB 끝 포트 유형"
 
-#: ../semanage/seobject.py:1835
+#: ../semanage/seobject.py:1830
 msgid "IB Device Name"
 msgstr "IB 장치 이름"
 
-#: ../semanage/seobject.py:1861
+#: ../semanage/seobject.py:1856
 msgid "Node Address is required"
 msgstr "노드 주소 필요"
 
-#: ../semanage/seobject.py:1873 ../semanage/seobject.py:1885
+#: ../semanage/seobject.py:1868 ../semanage/seobject.py:1880
 msgid "Unknown or missing protocol"
 msgstr "알려지지 않거나 또는 생략된 통신규약"
 
-#: ../semanage/seobject.py:1899
+#: ../semanage/seobject.py:1894
 msgid "SELinux node type is required"
 msgstr "SELinux 노드 유형이 필요합니다"
 
-#: ../semanage/seobject.py:1904 ../semanage/seobject.py:1975
+#: ../semanage/seobject.py:1899 ../semanage/seobject.py:1970
 #, python-format
 msgid "Type %s is invalid, must be a node type"
 msgstr "유형 %s이 잘못되었습니다, 노드 유형이어야 합니다"
 
-#: ../semanage/seobject.py:1908 ../semanage/seobject.py:1979
-#: ../semanage/seobject.py:2016 ../semanage/seobject.py:2117
-#: ../semanage/seobject.py:2180 ../semanage/seobject.py:2216
-#: ../semanage/seobject.py:2435
+#: ../semanage/seobject.py:1903 ../semanage/seobject.py:1974
+#: ../semanage/seobject.py:2011 ../semanage/seobject.py:2112
+#: ../semanage/seobject.py:2175 ../semanage/seobject.py:2211
+#: ../semanage/seobject.py:2430
 #, python-format
 msgid "Could not create key for %s"
 msgstr "%s에 대한 키를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:1912 ../semanage/seobject.py:1983
-#: ../semanage/seobject.py:2020 ../semanage/seobject.py:2026
+#: ../semanage/seobject.py:1907 ../semanage/seobject.py:1978
+#: ../semanage/seobject.py:2015 ../semanage/seobject.py:2021
 #, python-format
 msgid "Could not check if addr %s is defined"
 msgstr "%s 주소가 지정되었는지 확인할 수 없습니다"
 
-#: ../semanage/seobject.py:1914
+#: ../semanage/seobject.py:1909
 #, python-format
 msgid "Addr %s already defined"
 msgstr "주소 %s 이미 정의 된"
 
-#: ../semanage/seobject.py:1918
+#: ../semanage/seobject.py:1913
 #, python-format
 msgid "Could not create addr for %s"
 msgstr "%s에 대한 주소를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:1924 ../semanage/seobject.py:2132
-#: ../semanage/seobject.py:2389
+#: ../semanage/seobject.py:1919 ../semanage/seobject.py:2127
+#: ../semanage/seobject.py:2384
 #, python-format
 msgid "Could not create context for %s"
 msgstr "%s에 대한 문맥을 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:1928
+#: ../semanage/seobject.py:1923
 #, python-format
 msgid "Could not set mask for %s"
 msgstr "%s에 대한 마스크를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1932
+#: ../semanage/seobject.py:1927
 #, python-format
 msgid "Could not set user in addr context for %s"
 msgstr "%s에 대한 주소 문맥의 사용자를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1936
+#: ../semanage/seobject.py:1931
 #, python-format
 msgid "Could not set role in addr context for %s"
 msgstr "%s에 대한 주소 문맥의 역할을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:1940
+#: ../semanage/seobject.py:1935
 #, python-format
 msgid "Could not set type in addr context for %s"
 msgstr "%s에 대한 주소 문맥의 유형을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1945
+#: ../semanage/seobject.py:1940
 #, python-format
 msgid "Could not set mls fields in addr context for %s"
 msgstr "%s에 대한 주소 문맥의 mls 항목을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1949
+#: ../semanage/seobject.py:1944
 #, python-format
 msgid "Could not set addr context for %s"
 msgstr "%s에 대한 주소 문맥을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:1953
+#: ../semanage/seobject.py:1948
 #, python-format
 msgid "Could not add addr %s"
 msgstr "%s 주소를 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:1985 ../semanage/seobject.py:2022
+#: ../semanage/seobject.py:1980 ../semanage/seobject.py:2017
 #, python-format
 msgid "Addr %s is not defined"
 msgstr "%s 주소가 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:1989
+#: ../semanage/seobject.py:1984
 #, python-format
 msgid "Could not query addr %s"
 msgstr "%s 주소를 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:1999
+#: ../semanage/seobject.py:1994
 #, python-format
 msgid "Could not modify addr %s"
 msgstr "%s 주소를 수정 할 수 없습니다"
 
-#: ../semanage/seobject.py:2028
+#: ../semanage/seobject.py:2023
 #, python-format
 msgid "Addr %s is defined in policy, cannot be deleted"
 msgstr "%s 주소가 정책에 지정되어 있어 이를 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:2032
+#: ../semanage/seobject.py:2027
 #, python-format
 msgid "Could not delete addr %s"
 msgstr "%s 주소를 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:2046
+#: ../semanage/seobject.py:2041
 msgid "Could not deleteall node mappings"
 msgstr "모든 노드 맵핑을 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:2060
+#: ../semanage/seobject.py:2055
 msgid "Could not list addrs"
 msgstr "주소 목록을 만들 수 없습니다"
 
-#: ../semanage/seobject.py:2113 ../semanage/seobject.py:2426
+#: ../semanage/seobject.py:2108 ../semanage/seobject.py:2421
 msgid "SELinux Type is required"
 msgstr "SELinux 유형 필요"
 
-#: ../semanage/seobject.py:2121 ../semanage/seobject.py:2184
-#: ../semanage/seobject.py:2220 ../semanage/seobject.py:2226
+#: ../semanage/seobject.py:2116 ../semanage/seobject.py:2179
+#: ../semanage/seobject.py:2215 ../semanage/seobject.py:2221
 #, python-format
 msgid "Could not check if interface %s is defined"
 msgstr "%s에 대한 인터페이스가 지정되었는지 확인할 수 없습니다"
 
-#: ../semanage/seobject.py:2123
+#: ../semanage/seobject.py:2118
 #, python-format
 msgid "Interface %s already defined"
 msgstr "인터페이스 %s 이미 정의 된"
 
-#: ../semanage/seobject.py:2127
+#: ../semanage/seobject.py:2122
 #, python-format
 msgid "Could not create interface for %s"
 msgstr "%s에 대한 인터페이스를 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:2136
+#: ../semanage/seobject.py:2131
 #, python-format
 msgid "Could not set user in interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥의 사용자를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2140
+#: ../semanage/seobject.py:2135
 #, python-format
 msgid "Could not set role in interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥의 역할을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2144
+#: ../semanage/seobject.py:2139
 #, python-format
 msgid "Could not set type in interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥의 유형을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2149
+#: ../semanage/seobject.py:2144
 #, python-format
 msgid "Could not set mls fields in interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥의 mls 문맥을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2153
+#: ../semanage/seobject.py:2148
 #, python-format
 msgid "Could not set interface context for %s"
 msgstr "%s 에 대한 인터페이스 문맥을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2157
+#: ../semanage/seobject.py:2152
 #, python-format
 msgid "Could not set message context for %s"
 msgstr "%s에 대한 메세지 문맥을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2161
+#: ../semanage/seobject.py:2156
 #, python-format
 msgid "Could not add interface %s"
 msgstr "%s에 대한 인터페이스를 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:2186 ../semanage/seobject.py:2222
+#: ../semanage/seobject.py:2181 ../semanage/seobject.py:2217
 #, python-format
 msgid "Interface %s is not defined"
 msgstr "%s에 대한 인터페이스가 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:2190
+#: ../semanage/seobject.py:2185
 #, python-format
 msgid "Could not query interface %s"
 msgstr "%s에 대한 인터페이스를 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:2201
+#: ../semanage/seobject.py:2196
 #, python-format
 msgid "Could not modify interface %s"
 msgstr "%s에 대한 인터페이슬 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:2228
+#: ../semanage/seobject.py:2223
 #, python-format
 msgid "Interface %s is defined in policy, cannot be deleted"
 msgstr "%s에 대한 인터페이스가 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:2232
+#: ../semanage/seobject.py:2227
 #, python-format
 msgid "Could not delete interface %s"
 msgstr "%s에 대한 인터페이스를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:2246
+#: ../semanage/seobject.py:2241
 msgid "Could not delete all interface  mappings"
 msgstr "모든 인터페이스 맵핑을 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:2260
+#: ../semanage/seobject.py:2255
 msgid "Could not list interfaces"
 msgstr "인터페이스 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:2285
+#: ../semanage/seobject.py:2280
 msgid "SELinux Interface"
 msgstr "SELinux 인터페이스"
 
-#: ../semanage/seobject.py:2285 ../semanage/seobject.py:2677
+#: ../semanage/seobject.py:2280 ../semanage/seobject.py:2672
 msgid "Context"
 msgstr "문맥"
 
-#: ../semanage/seobject.py:2355
+#: ../semanage/seobject.py:2350
 #, python-format
 msgid "Target %s is not valid. Target is not allowed to end with '/'"
 msgstr "대상 %s가 올바르지 않습니다. 대상은 '/'로 종료 할 수 없습니다"
 
-#: ../semanage/seobject.py:2358
+#: ../semanage/seobject.py:2353
 #, python-format
 msgid "Substitute %s is not valid. Substitute is not allowed to end with '/'"
 msgstr "대체 값 %s이 잘못되었습니다. 대체 값의 끝에 '/'를 붙일 수 없습니다"
 
-#: ../semanage/seobject.py:2361
+#: ../semanage/seobject.py:2356
 #, python-format
 msgid "Equivalence class for %s already exists"
 msgstr "%s에 대해 동등한 등급이 이미 존재합니다"
 
-#: ../semanage/seobject.py:2367
+#: ../semanage/seobject.py:2362
 #, python-format
 msgid "File spec %s conflicts with equivalency rule '%s %s'"
 msgstr "파일 사양 %s 동등성 규칙과의 충돌 '%s %s'"
 
-#: ../semanage/seobject.py:2378
+#: ../semanage/seobject.py:2373
 #, python-format
 msgid "Equivalence class for %s does not exist"
 msgstr "%s를 위한 동등한 등급이 존재하지 않습니다"
 
-#: ../semanage/seobject.py:2395
+#: ../semanage/seobject.py:2390
 #, python-format
 msgid "Could not set user in file context for %s"
 msgstr "%s에 대한 파일 문맥의 사용자를 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2399
+#: ../semanage/seobject.py:2394
 #, python-format
 msgid "Could not set role in file context for %s"
 msgstr "%s에 대한 파일 문맥의 역할을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2404 ../semanage/seobject.py:2464
+#: ../semanage/seobject.py:2399 ../semanage/seobject.py:2459
 #, python-format
 msgid "Could not set mls fields in file context for %s"
 msgstr "%s에 대한 파일 문맥의 mls 항목을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2410
+#: ../semanage/seobject.py:2405
 msgid "Invalid file specification"
 msgstr "잘못된 파일 사양"
 
-#: ../semanage/seobject.py:2412
+#: ../semanage/seobject.py:2407
 msgid "File specification can not include spaces"
 msgstr "파일 사양에 공백이 포함되어 있어서는 안됩니다"
 
-#: ../semanage/seobject.py:2417
+#: ../semanage/seobject.py:2412
 #, python-format
 msgid ""
 "File spec %s conflicts with equivalency rule '%s %s'; Try adding '%s' instead"
 msgstr "파일 사양 %s 동등성 규칙과의 충돌 '%s %s'; '%s대신에"
 
-#: ../semanage/seobject.py:2431 ../semanage/seobject.py:2496
+#: ../semanage/seobject.py:2426 ../semanage/seobject.py:2491
 #, python-format
 msgid "Type %s is invalid, must be a file or device type"
 msgstr "유형 %s이 잘못되어 있습니다. 파일 또는 장치 유형이어야 합니다"
 
-#: ../semanage/seobject.py:2439 ../semanage/seobject.py:2444
-#: ../semanage/seobject.py:2506 ../semanage/seobject.py:2515
-#: ../semanage/seobject.py:2603 ../semanage/seobject.py:2607
+#: ../semanage/seobject.py:2434 ../semanage/seobject.py:2439
+#: ../semanage/seobject.py:2501 ../semanage/seobject.py:2510
+#: ../semanage/seobject.py:2598 ../semanage/seobject.py:2602
 #, python-format
 msgid "Could not check if file context for %s is defined"
 msgstr "%s에 대한 파일 문맥이 지정되었는지 확인할 수 없습니다"
 
-#: ../semanage/seobject.py:2447
+#: ../semanage/seobject.py:2442
 #, python-format
 msgid "File context for %s already defined"
 msgstr "에 대한 파일 컨텍스트 %s 이미 정의 된"
 
-#: ../semanage/seobject.py:2451
+#: ../semanage/seobject.py:2446
 #, python-format
 msgid "Could not create file context for %s"
 msgstr "%s에 대한 파일 문맥을 생성할 수 없습니다"
 
-#: ../semanage/seobject.py:2459
+#: ../semanage/seobject.py:2454
 #, python-format
 msgid "Could not set type in file context for %s"
 msgstr "%s에 대한 파일 문맥의 유형을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2467 ../semanage/seobject.py:2539
-#: ../semanage/seobject.py:2543
+#: ../semanage/seobject.py:2462 ../semanage/seobject.py:2534
+#: ../semanage/seobject.py:2538
 #, python-format
 msgid "Could not set file context for %s"
 msgstr "%s에 대한 파일 문맥을 설정할 수 없습니다"
 
-#: ../semanage/seobject.py:2473
+#: ../semanage/seobject.py:2468
 #, python-format
 msgid "Could not add file context for %s"
 msgstr "%s에 대한 파일 문맥을 추가할 수 없습니다"
 
-#: ../semanage/seobject.py:2492
+#: ../semanage/seobject.py:2487
 msgid "Requires setype, serange or seuser"
 msgstr "setype, serange 또는 seuser 필요"
 
-#: ../semanage/seobject.py:2511 ../semanage/seobject.py:2521
+#: ../semanage/seobject.py:2506 ../semanage/seobject.py:2516
 #, python-format
 msgid "Could not query file context for %s"
 msgstr "%s에 대한 파일 문맥을 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:2517 ../semanage/seobject.py:2611
+#: ../semanage/seobject.py:2512 ../semanage/seobject.py:2606
 #, python-format
 msgid "File context for %s is not defined"
 msgstr "%s에 대한 파일 문맥이 저정되지 않았습니다"
 
-#: ../semanage/seobject.py:2547
+#: ../semanage/seobject.py:2542
 #, python-format
 msgid "Could not modify file context for %s"
 msgstr "%s에 대한 파일 문맥을 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:2565
+#: ../semanage/seobject.py:2560
 msgid "Could not list the file contexts"
 msgstr "파일 문맥 목록을 만들 수 없습니다"
 
-#: ../semanage/seobject.py:2579
+#: ../semanage/seobject.py:2574
 #, python-format
 msgid "Could not delete the file context %s"
 msgstr "%s 파일 문맥을 삭제 할 수 없습니다"
 
-#: ../semanage/seobject.py:2609
+#: ../semanage/seobject.py:2604
 #, python-format
 msgid "File context for %s is defined in policy, cannot be deleted"
 msgstr "%s에 대한 파일 문맥이 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:2615
+#: ../semanage/seobject.py:2610
 #, python-format
 msgid "Could not delete file context for %s"
 msgstr "%s에 대한 파일 문맥을 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:2632
+#: ../semanage/seobject.py:2627
 msgid "Could not list file contexts"
 msgstr "파일 문맥 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:2636
+#: ../semanage/seobject.py:2631
 msgid "Could not list file contexts for home directories"
 msgstr "홈 디렉토리에 대한 파일 컨내용을 나열 할 수 없습니다"
 
-#: ../semanage/seobject.py:2640
+#: ../semanage/seobject.py:2635
 msgid "Could not list local file contexts"
 msgstr "로컬 파일 문맥 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:2677
+#: ../semanage/seobject.py:2672
 msgid "SELinux fcontext"
 msgstr "SELinux fcontext"
 
-#: ../semanage/seobject.py:2690
+#: ../semanage/seobject.py:2685
 msgid ""
 "\n"
 "SELinux Distribution fcontext Equivalence \n"
@@ -1498,7 +1498,7 @@ msgstr ""
 "\n"
 "SELinux 배포판 fcontext 해당 \n"
 
-#: ../semanage/seobject.py:2695
+#: ../semanage/seobject.py:2690
 msgid ""
 "\n"
 "SELinux Local fcontext Equivalence \n"
@@ -1506,77 +1506,77 @@ msgstr ""
 "\n"
 "SELinux 로컬 fcontext 해당 \n"
 
-#: ../semanage/seobject.py:2733 ../semanage/seobject.py:2784
-#: ../semanage/seobject.py:2790
+#: ../semanage/seobject.py:2728 ../semanage/seobject.py:2779
+#: ../semanage/seobject.py:2785
 #, python-format
 msgid "Could not check if boolean %s is defined"
 msgstr "%s에 대한 부울이 지정되었는지 확인할 수 없습니다"
 
-#: ../semanage/seobject.py:2735 ../semanage/seobject.py:2786
+#: ../semanage/seobject.py:2730 ../semanage/seobject.py:2781
 #, python-format
 msgid "Boolean %s is not defined"
 msgstr "%s에 대하 부울이 지정되지 않았습니다"
 
-#: ../semanage/seobject.py:2739
+#: ../semanage/seobject.py:2734
 #, python-format
 msgid "Could not query file context %s"
 msgstr "%s에 대한 파일 문맥을 질의할 수 없습니다"
 
-#: ../semanage/seobject.py:2744
+#: ../semanage/seobject.py:2739
 #, python-format
 msgid "You must specify one of the following values: %s"
 msgstr "다음의 값 중 하나를 반드시 지정해야 합니다: %s"
 
-#: ../semanage/seobject.py:2749
+#: ../semanage/seobject.py:2744
 #, python-format
 msgid "Could not set active value of boolean %s"
 msgstr "%s 부울의 활성화값을 설정 할 수 없습니다"
 
-#: ../semanage/seobject.py:2752
+#: ../semanage/seobject.py:2747
 #, python-format
 msgid "Could not modify boolean %s"
 msgstr "%s에 대한 부을을 수정할 수 없습니다"
 
-#: ../semanage/seobject.py:2768
-#, python-format
-msgid "Bad format %s: Record %s"
-msgstr "잘못된 형식 %s: 기록 %s"
+#: ../semanage/seobject.py:2763
+#, python-brace-format
+msgid "Bad format {filename}: Record {record}"
+msgstr "잘못된 형식 {filename}: 레코드 {record}"
 
-#: ../semanage/seobject.py:2792
+#: ../semanage/seobject.py:2787
 #, python-format
 msgid "Boolean %s is defined in policy, cannot be deleted"
 msgstr "%s에 대한 부울이 정책에 지정되어 있어 이를 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:2796
+#: ../semanage/seobject.py:2791
 #, python-format
 msgid "Could not delete boolean %s"
 msgstr "%s에 대한 부울을 삭제할 수 없습니다"
 
-#: ../semanage/seobject.py:2808 ../semanage/seobject.py:2825
+#: ../semanage/seobject.py:2803 ../semanage/seobject.py:2820
 msgid "Could not list booleans"
 msgstr "부울 목록을 만들수 없습니다"
 
-#: ../semanage/seobject.py:2858
+#: ../semanage/seobject.py:2853
 msgid "off"
 msgstr "비활성"
 
-#: ../semanage/seobject.py:2858
+#: ../semanage/seobject.py:2853
 msgid "on"
 msgstr "활성"
 
-#: ../semanage/seobject.py:2870
+#: ../semanage/seobject.py:2865
 msgid "SELinux boolean"
 msgstr "SELinux 부울"
 
-#: ../semanage/seobject.py:2870
+#: ../semanage/seobject.py:2865
 msgid "State"
 msgstr "상태"
 
-#: ../semanage/seobject.py:2870
+#: ../semanage/seobject.py:2865
 msgid "Default"
 msgstr "디폴트"
 
-#: ../semanage/seobject.py:2870 ../sepolicy/sepolicy/sepolicy.glade:2140
+#: ../semanage/seobject.py:2865 ../sepolicy/sepolicy/sepolicy.glade:2140
 #: ../sepolicy/sepolicy/sepolicy.glade:2510
 #: ../sepolicy/sepolicy/sepolicy.glade:5099
 msgid "Description"
@@ -1591,122 +1591,122 @@ msgstr "원형 연결장치 등급 찾았습니다"
 msgid "Missing interface definition for %s"
 msgstr "에 대한 누락 된 인터페이스 정의 %s"
 
-#: ../sepolicy/sepolicy/generate.py:140
+#: ../sepolicy/sepolicy/generate.py:138
 msgid "Standard Init Daemon"
 msgstr "표준 Init 데몬"
 
-#: ../sepolicy/sepolicy/generate.py:141
+#: ../sepolicy/sepolicy/generate.py:139
 msgid "DBUS System Daemon"
 msgstr "DBUS 시스템 데몬"
 
-#: ../sepolicy/sepolicy/generate.py:142
+#: ../sepolicy/sepolicy/generate.py:140
 msgid "Internet Services Daemon"
 msgstr "인터넷 서비스 데몬"
 
-#: ../sepolicy/sepolicy/generate.py:143
+#: ../sepolicy/sepolicy/generate.py:141
 msgid "Web Application/Script (CGI)"
 msgstr "웹 응용프로그램/스크립트 (CGI)"
 
-#: ../sepolicy/sepolicy/generate.py:144
+#: ../sepolicy/sepolicy/generate.py:142
 msgid "Sandbox"
 msgstr "샌드박스"
 
-#: ../sepolicy/sepolicy/generate.py:145
+#: ../sepolicy/sepolicy/generate.py:143
 msgid "User Application"
 msgstr "사용자 응용프로그램"
 
-#: ../sepolicy/sepolicy/generate.py:146
+#: ../sepolicy/sepolicy/generate.py:144
 msgid "Existing Domain Type"
 msgstr "기존 도메인 유형"
 
-#: ../sepolicy/sepolicy/generate.py:147
+#: ../sepolicy/sepolicy/generate.py:145
 msgid "Minimal Terminal Login User Role"
 msgstr "최소 터미널 로그인 사용자 역할"
 
-#: ../sepolicy/sepolicy/generate.py:148
+#: ../sepolicy/sepolicy/generate.py:146
 msgid "Minimal X Windows Login User Role"
 msgstr "최소 X Windows 로그인 사용자 역할"
 
-#: ../sepolicy/sepolicy/generate.py:149
+#: ../sepolicy/sepolicy/generate.py:147
 msgid "Desktop Login User Role"
 msgstr "데스크탑 로그인 사용자 역할"
 
-#: ../sepolicy/sepolicy/generate.py:150
+#: ../sepolicy/sepolicy/generate.py:148
 msgid "Administrator Login User Role"
 msgstr "관리자 로그인 사용자 역할"
 
-#: ../sepolicy/sepolicy/generate.py:151
+#: ../sepolicy/sepolicy/generate.py:149
 msgid "Confined Root Administrator Role"
 msgstr "제한된 Root 관리자 역할"
 
-#: ../sepolicy/sepolicy/generate.py:152
+#: ../sepolicy/sepolicy/generate.py:150
 msgid "Module information for a new type"
 msgstr "새 유형의 모듈 정보"
 
-#: ../sepolicy/sepolicy/generate.py:158
+#: ../sepolicy/sepolicy/generate.py:156
 msgid "Valid Types:\n"
 msgstr "유효한 유형:\n"
 
-#: ../sepolicy/sepolicy/generate.py:193
+#: ../sepolicy/sepolicy/generate.py:191
 #, python-format
 msgid "Ports must be numbers or ranges of numbers from 1 to %d "
 msgstr "포트는 숫자이거나 1에서 %d 까지의 숫자 범위에 있어야 합니다 "
 
-#: ../sepolicy/sepolicy/generate.py:205
+#: ../sepolicy/sepolicy/generate.py:203
 msgid "You must enter a valid policy type"
 msgstr "유효한 정책 유형을 입력해야 합니다"
 
-#: ../sepolicy/sepolicy/generate.py:208
+#: ../sepolicy/sepolicy/generate.py:206
 #, python-format
 msgid "You must enter a name for your policy module for your '%s'."
 msgstr "'%s'의 정책 모듈 이름을 입력하십시오."
 
-#: ../sepolicy/sepolicy/generate.py:346
+#: ../sepolicy/sepolicy/generate.py:344
 msgid ""
 "Name must be alphanumeric with no spaces. Consider using option \"-n "
 "MODULENAME\""
 msgstr ""
-"이름은 공백이 없는 영문 숫자로 구성되어야 합니다. 선택(옵션) \"-n MODULENAME"
-"\" 사용을 고려해 보세요"
+"이름은 공백이 없는 영문 숫자로 구성되어야 합니다. 선택(옵션) \"-n "
+"MODULENAME\" 사용을 고려해 보세요"
 
-#: ../sepolicy/sepolicy/generate.py:438
+#: ../sepolicy/sepolicy/generate.py:436
 msgid "User Role types can not be assigned executables."
 msgstr "사용자 역할 유형은 할당된 실행 파일이 될 수 없습니다."
 
-#: ../sepolicy/sepolicy/generate.py:444
+#: ../sepolicy/sepolicy/generate.py:442
 msgid "Only Daemon apps can use an init script."
 msgstr "단지 데몬 앱은 init 스크립트를 사용 할 수 있습니다."
 
-#: ../sepolicy/sepolicy/generate.py:462
+#: ../sepolicy/sepolicy/generate.py:460
 msgid "use_resolve must be a boolean value "
 msgstr "use_resolve는 부울 값이어야 합니다 "
 
-#: ../sepolicy/sepolicy/generate.py:468
+#: ../sepolicy/sepolicy/generate.py:466
 msgid "use_syslog must be a boolean value "
 msgstr "use_syslog는 부울 값이어야 합니다 "
 
-#: ../sepolicy/sepolicy/generate.py:474
+#: ../sepolicy/sepolicy/generate.py:472
 msgid "use_kerberos must be a boolean value "
 msgstr "use_kerberos는 부울 값이어야 합니다 "
 
-#: ../sepolicy/sepolicy/generate.py:480
+#: ../sepolicy/sepolicy/generate.py:478
 msgid "manage_krb5_rcache must be a boolean value "
 msgstr "manage_krb5_rcache는 부울 값이어야 합니다 "
 
-#: ../sepolicy/sepolicy/generate.py:510
+#: ../sepolicy/sepolicy/generate.py:508
 msgid "USER Types automatically get a tmp type"
 msgstr "USER 유형은 자동으로 tmp 유형을 갖습니다"
 
-#: ../sepolicy/sepolicy/generate.py:847
+#: ../sepolicy/sepolicy/generate.py:845
 #, python-format
 msgid "'%s' policy modules require existing domains"
 msgstr "'%s' 정책 모듈에는 기존 도메인이 필요합니다"
 
-#: ../sepolicy/sepolicy/generate.py:872
+#: ../sepolicy/sepolicy/generate.py:870
 msgid "Type field required"
 msgstr "필수 항목을 입력"
 
-#: ../sepolicy/sepolicy/generate.py:885
+#: ../sepolicy/sepolicy/generate.py:883
 #, python-format
 msgid ""
 "You need to define a new type which ends with: \n"
@@ -1715,31 +1715,31 @@ msgstr ""
 "다음과 같이 끝나는 새로운 유형을 정의해야 합니다: \n"
 " %s"
 
-#: ../sepolicy/sepolicy/generate.py:1113
+#: ../sepolicy/sepolicy/generate.py:1111
 msgid "You must enter the executable path for your confined process"
 msgstr "제한된 프로세스의 실행 파일 경로를 입력해야 합니다"
 
-#: ../sepolicy/sepolicy/generate.py:1378
+#: ../sepolicy/sepolicy/generate.py:1376
 msgid "Created the following files:\n"
 msgstr "다음 파일이 생성됨:\n"
 
-#: ../sepolicy/sepolicy/generate.py:1379
+#: ../sepolicy/sepolicy/generate.py:1377
 msgid "Type Enforcement file"
 msgstr "강제 파일 입력"
 
-#: ../sepolicy/sepolicy/generate.py:1380
+#: ../sepolicy/sepolicy/generate.py:1378
 msgid "Interface file"
 msgstr "인터페이스 파일"
 
-#: ../sepolicy/sepolicy/generate.py:1381
+#: ../sepolicy/sepolicy/generate.py:1379
 msgid "File Contexts file"
 msgstr "파일 문맥 파일"
 
-#: ../sepolicy/sepolicy/generate.py:1383
+#: ../sepolicy/sepolicy/generate.py:1381
 msgid "Spec file"
 msgstr "지정 파일"
 
-#: ../sepolicy/sepolicy/generate.py:1384
+#: ../sepolicy/sepolicy/generate.py:1382
 msgid "Setup Script"
 msgstr "스크립트 설정"
 
@@ -2085,7 +2085,7 @@ msgstr "부울 %s이 규칙을 허용합니다"
 #: ../sepolicy/sepolicy/gui.py:1461
 #, python-format
 msgid "Add Network Port for %s.  Ports will be created when update is applied."
-msgstr "%s의 네트워크 포트를 추가합니다. 업데이트 적용 시 포트가 생성됩니다."
+msgstr "%s의 네트워크 포트를 추가합니다. 최신화 적용 시 포트가 생성됩니다."
 
 #: ../sepolicy/sepolicy/gui.py:1462
 #, python-format
@@ -2105,7 +2105,7 @@ msgstr "%s의 파일 이름표 추가"
 
 #: ../sepolicy/sepolicy/gui.py:1478
 msgid "Add Login Mapping. User Mapping will be created when Update is applied."
-msgstr "로그인 맵핑을 추가합니다. 사용자 맵핑은 업데이트 적용 시 생성됩니다."
+msgstr "로그인 맵핑을 추가합니다. 사용자 맵핑은 최신화 적용 시 생성됩니다."
 
 #: ../sepolicy/sepolicy/gui.py:1479
 msgid "Add Login Mapping"
@@ -2115,9 +2115,8 @@ msgstr "로그인 일치 추가"
 msgid ""
 "Add SELinux User Role. SELinux user roles will be created when update is "
 "applied."
-msgstr ""
-"SELinux 사용자 역할을 추가합니다. SELinux 사용자 역할은 업데이트 적용 시 생성"
-"됩니다."
+msgstr "SELinux 사용자 역할을 추가합니다. SELinux 사용자 역할은 최신화 적용 시 "
+"생성됩니다."
 
 #: ../sepolicy/sepolicy/gui.py:1485
 msgid "Add SELinux Users"
@@ -2126,7 +2125,7 @@ msgstr "SELinux 사용자 추가"
 #: ../sepolicy/sepolicy/gui.py:1492
 msgid ""
 "Add File Equivalency Mapping. Mapping will be created when update is applied."
-msgstr "파일 등가 일치을 추가합니다. 업데이트 적용시 일치가 생성됩니다."
+msgstr "파일 등가 일치을 추가합니다. 최신화 적용시 일치가 생성됩니다."
 
 #: ../sepolicy/sepolicy/gui.py:1493
 msgid "Add SELinux File Equivalency"
@@ -2137,8 +2136,7 @@ msgstr "SELinux 파일 등가 추가"
 msgid ""
 "Modify File Labeling for %s. File labels will be created when update is "
 "applied."
-msgstr ""
-"%s의 파일 레이블을 수정합니다. 업데이트 적용시 파일 이름표가 생성됩니다."
+msgstr "%s의 파일 이름표를 수정합니다. 최신화 적용시 파일 이름표가 생성됩니다."
 
 #: ../sepolicy/sepolicy/gui.py:1576
 msgid ""
@@ -2175,7 +2173,7 @@ msgstr "SELinux 파일 등가 수정"
 #, python-format
 msgid ""
 "Modify Network Port for %s.  Ports will be created when update is applied."
-msgstr "%s의 네트워크 포트를 수정합니다. 업데이트 적용 시 포트가 생성됩니다."
+msgstr "%s의 네트워크 포트를 수정합니다. 최신화 적용 시 포트가 생성됩니다."
 
 #: ../sepolicy/sepolicy/gui.py:1679
 #, python-format
@@ -2347,7 +2345,7 @@ msgstr ""
 
 #: ../sepolicy/sepolicy/gui.py:2424 ../sepolicy/sepolicy/sepolicy.glade:4208
 msgid "Update"
-msgstr "업데이트"
+msgstr "최신화"
 
 #: ../sepolicy/sepolicy/gui.py:2426
 msgid "Update Changes"
@@ -2447,30 +2445,30 @@ msgstr "심볼릭 링크"
 msgid "named pipe"
 msgstr "이름이 지정된 파이프"
 
-#: ../sepolicy/sepolicy/__init__.py:148
+#: ../sepolicy/sepolicy/__init__.py:149
 msgid "No SELinux Policy installed"
 msgstr "SELinux 정책이 설치되지 않음"
 
-#: ../sepolicy/sepolicy/__init__.py:184
+#: ../sepolicy/sepolicy/__init__.py:185
 #, python-format
 msgid "Failed to read %s policy file"
 msgstr "%s 정책 파일 읽기 실패"
 
-#: ../sepolicy/sepolicy/__init__.py:470
+#: ../sepolicy/sepolicy/__init__.py:471
 #, python-format
 msgid "-- Allowed %s [ %s ]"
-msgstr "-- Allowed %s [ %s ]"
+msgstr "-- 허용됨 %s [ %s ]"
 
-#: ../sepolicy/sepolicy/__init__.py:896
+#: ../sepolicy/sepolicy/__init__.py:897
 msgid "You must regenerate interface info by running /usr/bin/sepolgen-ifgen"
 msgstr ""
 "/usr/bin/sepolgen-ifgen을 실행하여 연결장치 정보를 다시 생성해야 합니다"
 
-#: ../sepolicy/sepolicy/__init__.py:1221
-msgid "unknown"
-msgstr "알려지지 않음"
-
 #: ../sepolicy/sepolicy/__init__.py:1230
+msgid "unknown"
+msgstr "알 수 없음"
+
+#: ../sepolicy/sepolicy/__init__.py:1239
 #, python-brace-format
 msgid "Allow {subject} to {rest}"
 msgstr "{subject}에서 {rest}로 허용"
@@ -2478,7 +2476,7 @@ msgstr "{subject}에서 {rest}로 허용"
 #: ../sepolicy/sepolicy/interface.py:222
 #, python-format
 msgid "Compiling %s interface"
-msgstr "컴파일 %s 인터페이스"
+msgstr "%s 연결장치 컴파일 중"
 
 #: ../sepolicy/sepolicy/interface.py:230
 #, python-format
@@ -2841,9 +2839,8 @@ msgstr "파일 추가"
 msgid ""
 "<operation> File Labeling for <selected domain>. File labels will be created "
 "when update is applied."
-msgstr ""
-"<operation> 파일 레이블 <selected domain>. 파일 레이블은 업데이트 적용 시 생"
-"성됩니다."
+msgstr "<operation> 파일 레이블 <selected domain>. 파일 레이블은 최신화 적용 시 "
+"생성됩니다."
 
 #: ../sepolicy/sepolicy/sepolicy.glade:705
 #: ../sepolicy/sepolicy/sepolicy.glade:1479
@@ -3452,7 +3449,7 @@ msgstr "수정한 포트 삭제"
 
 #: ../sepolicy/sepolicy/sepolicy.glade:4565
 msgid "Select ports to delete. Ports will be deleted when update is applied."
-msgstr "삭제할 포트를 선택합니다. 업데이트 적용 시 포트가 삭제됩니다."
+msgstr "삭제 하려는 포트를 선택합니다. 최신화 적용 시 포트가 삭제됩니다."
 
 #: ../sepolicy/sepolicy/sepolicy.glade:4715
 msgid ""
@@ -3471,9 +3468,8 @@ msgstr "수정된 사용자 맵핑을 삭제합니다."
 msgid ""
 "Select login user mapping to delete. Login user mapping will be deleted when "
 "update is applied."
-msgstr ""
-"삭제할 로그인 사용자 맵핑을 선택합니다. 업데이트 적용 시 로그인 사용자 맵핑"
-"은 삭제됩니다."
+msgstr "삭제 하려는 로그인 사용자 맵핑을 선택합니다. 최신화 적용 시 로그인 사용자 "
+"맵핑은 삭제됩니다."
 
 #: ../sepolicy/sepolicy/sepolicy.glade:4884
 msgid "Login name"
@@ -3493,9 +3489,9 @@ msgid ""
 "reset an item, uncheck the checkbox.  All items checked will be updated in "
 "the system when you select update."
 msgstr ""
-"시스템에 최신화 사항을 커밋하기 전 이를 다시 확인합니다. 항목을 다시 설정하려"
-"면 확인란의 체크 표시를 선택 해제합니다. 선택된 모든 항목은 업데이트 선택시 "
-"시스템에 최신화 됩니다."
+"시스템에 최신화 사항을 커밋하기 전 이를 다시 확인합니다. 항목을 다시 "
+"설정하려면 확인란의 체크 표시를 선택 해제합니다. 선택된 모든 항목은 최신화 "
+"선택시 시스템에 최신화 됩니다."
 
 #: ../sepolicy/sepolicy/sepolicy.glade:5114
 msgid "Action"
@@ -3509,8 +3505,8 @@ msgstr "적용"
 msgid ""
 "Select users mapping to delete.Users mapping will be deleted when update is "
 "applied."
-msgstr ""
-"삭제할 사용자 맵핑을 선택합니다. 업데이트 적용 시 사용자 맵핑은 삭제됩니다."
+msgstr "삭제 하려믄 사용자 맵핑을 선택합니다. 최신화 적용 시 사용자 맵핑은 "
+"삭제됩니다."
 
 #: ../sepolicy/sepolicy/sepolicy.glade:5246
 msgid "SELinux Username"
@@ -3519,8 +3515,7 @@ msgstr "SELinux 사용자 이름"
 #: ../sepolicy/sepolicy/sepolicy.glade:5331
 msgid ""
 "Add User Roles. SELinux User Roles will be created when Update is applied."
-msgstr ""
-"사용자 역할을 추가합니다. 업데이트 적용시 SELinux 사용자 역할이 생성됩니다."
+msgstr "사용자 역할을 추가합니다. SELinux 사용자 역할은 최신화 적용시 생성됩니다."
 
 #: ../sepolicy/sepolicy/sepolicy.glade:5356
 msgid "SELinux User Name"
@@ -3547,6 +3542,42 @@ msgid "Enter Default Level for SELinux User to login with. Default s0"
 msgstr ""
 "SELinux 사용자가 로그인할 때 사용할 기본 수준을 입력합니다. 기본 값은 s0입니"
 "다"
+
+#~ msgid "******************** IMPORTANT ***********************\n"
+#~ msgstr "******************** 중요 ***********************\n"
+
+#, python-format
+#~ msgid "%s is already in %s"
+#~ msgstr "%s는 이미 %s 안에 있습니다"
+
+#, python-format
+#~ msgid "%s is not in %s"
+#~ msgstr "%s는 %s 안에 없습니다"
+
+#~ msgid ""
+#~ "The sepolgen python module is required to setup permissive domains.\n"
+#~ "In some distributions it is included in the policycoreutils-devel "
+#~ "package.\n"
+#~ "# yum install policycoreutils-devel\n"
+#~ "Or similar for your distro."
+#~ msgstr ""
+#~ "sepolgen python 모듈은 허용 도메인을 설정해야합니다.\n"
+#~ "일부 배포판에서는 policycoreutils-devel 꾸러미(package)에 포함되어 있습니"
+#~ "다.\n"
+#~ "# yum install policycoreutils-devel\n"
+#~ "또는 배포판과 비슷합니다."
+
+#, python-format
+#~ msgid "Could not create a key for %s/%s"
+#~ msgstr "에 대한 키를 만들 수 없습니다. %s/%s"
+
+#, python-format
+#~ msgid "Could not create context for %s/%s"
+#~ msgstr "에 대한 컨텍스트를 만들 수 없습니다. %s/%s"
+
+#, python-format
+#~ msgid "Could not create a key for %s/%d"
+#~ msgstr "에 대한 키를 만들 수 없습니다. %s/%d"
 
 #~ msgid "Boolean name"
 #~ msgstr "부울 이름"

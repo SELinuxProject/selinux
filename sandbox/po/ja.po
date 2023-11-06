@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
 "PO-Revision-Date: 2023-01-26 08:20+0000\n"
 "Last-Translator: Ludek Janda <ljanda@redhat.com>\n"
 "Language-Team: Japanese <https://translate.fedoraproject.org/projects/"
@@ -137,7 +137,8 @@ msgstr "マウントに使用する /tmp ディレクトリーを代替します
 #: ../sandbox:364
 msgid ""
 "alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
-msgstr "別の XDG_RUNTIME_DIR - /run/user/$UID - マウントに使用するディレクトリー"
+msgstr ""
+"別の XDG_RUNTIME_DIR - /run/user/$UID - マウントに使用するディレクトリー"
 
 #: ../sandbox:373
 msgid "alternate window manager"

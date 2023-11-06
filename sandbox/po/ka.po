@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
 "PO-Revision-Date: 2023-01-22 16:20+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://translate.fedoraproject.org/projects/"
@@ -139,7 +139,8 @@ msgstr "ალტერნატიული /tmp საქაღალდე �
 #: ../sandbox:364
 msgid ""
 "alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
-msgstr "ალტერნატიული XDG_RUNTIME_DIR - /run/user/$UID - საქაღალდე მისამაგრებლად"
+msgstr ""
+"ალტერნატიული XDG_RUNTIME_DIR - /run/user/$UID - საქაღალდე მისამაგრებლად"
 
 #: ../sandbox:373
 msgid "alternate window manager"
