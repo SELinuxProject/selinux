@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
-"PO-Revision-Date: 2021-10-02 18:05+0000\n"
-"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-01-31 19:20+0000\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://translate.fedoraproject.org/projects/selinux/"
 "sandbox/tr/>\n"
 "Language: tr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../sandbox:120
 #, python-format
@@ -139,11 +139,11 @@ msgid "alternate /tmp directory to use for mounting"
 msgstr "bağlamak için kullanılacak alternatif /tmp dizini"
 
 #: ../sandbox:364
-#, fuzzy
-#| msgid "alternate home directory to use for mounting"
 msgid ""
 "alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
-msgstr "bağlamak için kullanılacak alternatif ev dizini"
+msgstr ""
+"bağlamak için kullanılacak alternatif XDG_RUNTIME_DIR - /run/user/$UID - "
+"dizini"
 
 #: ../sandbox:373
 msgid "alternate window manager"

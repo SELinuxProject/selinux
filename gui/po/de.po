@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
-"PO-Revision-Date: 2022-10-17 13:19+0000\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-02-12 16:20+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German <https://translate.fedoraproject.org/projects/selinux/"
 "gui/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
@@ -441,10 +441,9 @@ msgid "<b>Select existing role to modify:</b>"
 msgstr "<b>Wählen Sie eine vorhandene Rolle zum Bearbeiten:</b>"
 
 #: ../polgen.ui:904
-#, fuzzy, python-format
-#| msgid "Select the user roles that will transiton to the %s domain."
+#, python-format
 msgid "Select the user roles that will transition to the %s domain."
-msgstr "Wählen Sie die Benutzerrollen, die in die %s-Domain wechseln werden."
+msgstr "Wählen Sie die Benutzerrollen, die in die Domäne %s wechseln werden."
 
 #: ../polgen.ui:921
 msgid "role tab"
@@ -474,9 +473,6 @@ msgid "<b>Select the user_roles that will transition to %s:</b>"
 msgstr "<b>Wählen Sie die Benutzer_rollen, die nach %s wechseln werden:</b>"
 
 #: ../polgen.ui:1007
-#, fuzzy
-#| msgid ""
-#| "Select the user roles that will transiton to this applications domains."
 msgid ""
 "Select the user roles that will transition to this applications domains."
 msgstr ""

@@ -3,9 +3,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
-"PO-Revision-Date: 2021-09-11 11:04+0000\n"
-"Last-Translator: Luna Jernberg <bittin@reimu.nl>\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-02-12 03:20+0000\n"
+"Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
 "Language-Team: Swedish <https://translate.fedoraproject.org/projects/selinux/"
 "sandbox/sv/>\n"
 "Language: sv\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../sandbox:120
 #, python-format
@@ -133,11 +133,11 @@ msgid "alternate /tmp directory to use for mounting"
 msgstr "alternativ /tmp-katalog att användas för montering"
 
 #: ../sandbox:364
-#, fuzzy
-#| msgid "alternate home directory to use for mounting"
 msgid ""
 "alternate XDG_RUNTIME_DIR - /run/user/$UID - directory to use for mounting"
-msgstr "alternativ hemkatalog att användas för montering"
+msgstr ""
+"alternativ XDG_RUNTIME_DIR - /run/user/$UID - katalog att användas för "
+"montering"
 
 #: ../sandbox:373
 msgid "alternate window manager"
@@ -175,7 +175,7 @@ msgstr "Ett kommando krävs"
 #: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
-msgstr "%s är inte körbar"
+msgstr "%s är inte en körbar"
 
 #: ../sandbox:549
 #, python-format

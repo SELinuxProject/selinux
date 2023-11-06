@@ -7,126 +7,137 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2015-03-23 08:11-0400\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Slovenian\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-09-17 14:35+0000\n"
+"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+"Language-Team: Slovenian <https://translate.fedoraproject.org/projects/"
+"selinux/gui/sl/>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0)\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
+"n%100==4 ? 3 : 0);\n"
+"X-Generator: Weblate 5.0.2\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
-msgstr ""
+msgstr "Boolovo"
 
 #: ../booleansPage.py:249 ../semanagePage.py:167
 msgid "all"
-msgstr ""
+msgstr "vse"
 
 #: ../booleansPage.py:251 ../semanagePage.py:169
 #: ../system-config-selinux.ui:935 ../system-config-selinux.ui:1071
 #: ../system-config-selinux.ui:1480
 msgid "Customized"
-msgstr ""
+msgstr "Prilagojeno"
 
 #: ../domainsPage.py:56 ../system-config-selinux.ui:1808
 msgid "Process Domain"
-msgstr ""
+msgstr "Domena procesa"
 
 #: ../domainsPage.py:64
 msgid "Domain Name"
-msgstr ""
+msgstr "Ime domene"
 
 #: ../domainsPage.py:69
 msgid "Mode"
-msgstr ""
+msgstr "Način"
 
 #: ../domainsPage.py:102 ../domainsPage.py:113 ../domainsPage.py:157
 #: ../statusPage.py:74 ../system-config-selinux.ui:596
 #: ../system-config-selinux.ui:1729
 msgid "Permissive"
-msgstr ""
+msgstr "Dopustno"
 
 #: ../fcontextPage.py:73 ../system-config-selinux.ui:1134
 msgid "File Labeling"
-msgstr ""
+msgstr "Označevanje datotek"
 
 #: ../fcontextPage.py:83
 msgid ""
 "File\n"
 "Specification"
 msgstr ""
+"Specifikacija\n"
+"datoteke"
 
 #: ../fcontextPage.py:90
 msgid ""
 "Selinux\n"
 "File Type"
-msgstr ""
+msgstr "Vrsta datoteke Selinux"
 
 #: ../fcontextPage.py:97
 msgid ""
 "File\n"
 "Type"
 msgstr ""
+"Vrsta\n"
+"datoteke"
 
 #: ../loginsPage.py:56 ../system-config-selinux.ui:1255
 msgid "User Mapping"
-msgstr ""
+msgstr "Preslikava uporabnikov"
 
 #: ../loginsPage.py:60
 msgid ""
 "Login\n"
 "Name"
 msgstr ""
+"Prijava\n"
+"Ime"
 
 #: ../loginsPage.py:64 ../usersPage.py:61
 msgid ""
 "SELinux\n"
 "User"
 msgstr ""
+"SELinux\n"
+"Uporabnik"
 
 #: ../loginsPage.py:67 ../usersPage.py:66
 msgid ""
 "MLS/\n"
 "MCS Range"
 msgstr ""
+"MLS/\n"
+"Obseg MCS"
 
 #: ../loginsPage.py:136
 #, python-format
 msgid "Login '%s' is required"
-msgstr ""
+msgstr "Zahtevana je prijava '%s'"
 
 #: ../modulesPage.py:56 ../system-config-selinux.ui:1696
 msgid "Policy Module"
-msgstr ""
+msgstr "Modul pravilnika"
 
 #: ../modulesPage.py:66
 msgid "Module Name"
-msgstr ""
+msgstr "Ime modula"
 
 #: ../modulesPage.py:71
 msgid "Priority"
-msgstr ""
+msgstr "Prednost"
 
 #: ../modulesPage.py:80
 msgid "Kind"
-msgstr ""
+msgstr "Prijazno"
 
 #: ../modulesPage.py:149
 msgid "Disable Audit"
-msgstr ""
+msgstr "Onemogoči revizijo"
 
 #: ../modulesPage.py:152 ../system-config-selinux.ui:1633
 msgid "Enable Audit"
-msgstr ""
+msgstr "Omogoči revizijo"
 
 #: ../modulesPage.py:177
 msgid "Load Policy Module"
-msgstr ""
+msgstr "Naloži modul pravilnika"
 
 # translation auto-copied from project libvirt, version master, document
 # libvirt
@@ -140,44 +151,44 @@ msgstr "Opis"
 
 #: ../polgengui.py:299
 msgid "Role"
-msgstr ""
+msgstr "Vloga"
 
 #: ../polgengui.py:306
 msgid "Existing_User"
-msgstr ""
+msgstr "Obstoječi_uporabnik"
 
 #: ../polgengui.py:320 ../polgengui.py:328 ../polgengui.py:342
 msgid "Application"
-msgstr ""
+msgstr "Aplikacija"
 
 #: ../polgengui.py:387
 #, python-format
 msgid "%s must be a directory"
-msgstr ""
+msgstr "%s mora biti imenik"
 
 #: ../polgengui.py:447 ../polgengui.py:728
 msgid "You must select a user"
-msgstr ""
+msgstr "Izbrati morate uporabnika"
 
 #: ../polgengui.py:577
 msgid "Select executable file to be confined."
-msgstr ""
+msgstr "Izberite izvršljivo datoteko, ki jo želite omejiti."
 
 #: ../polgengui.py:588
 msgid "Select init script file to be confined."
-msgstr ""
+msgstr "Izberite datoteko inicialnega skripta, ki jo želite omejiti."
 
 #: ../polgengui.py:598
 msgid "Select file(s) that confined application creates or writes"
-msgstr ""
+msgstr "Izberite datoteko(e), ki jih omejena aplikacija ustvari ali zapiše"
 
 #: ../polgengui.py:605
 msgid "Select directory(s) that the confined application owns and writes into"
-msgstr ""
+msgstr "Izberite imenike, ki jih ima omejena aplikacija in vanje piše"
 
 #: ../polgengui.py:667
 msgid "Select directory to generate policy files in"
-msgstr ""
+msgstr "Izberite imenik za ustvarjanje datotek pravilnika"
 
 #: ../polgengui.py:684
 #, python-format
@@ -185,10 +196,12 @@ msgid ""
 "Type %s_t already defined in current policy.\n"
 "Do you want to continue?"
 msgstr ""
+"Tip %s_t je že definiran v trenutnem pravilniku.\n"
+"Ali želite nadaljevati?"
 
 #: ../polgengui.py:684 ../polgengui.py:688
 msgid "Verify Name"
-msgstr ""
+msgstr "Preveri ime"
 
 #: ../polgengui.py:688
 #, python-format
@@ -196,33 +209,36 @@ msgid ""
 "Module %s already loaded in current policy.\n"
 "Do you want to continue?"
 msgstr ""
+"Modul %s je že naložen v trenutnem pravilniku.\n"
+"Ali želite nadaljevati?"
 
 #: ../polgengui.py:734
 msgid ""
 "You must add a name made up of letters and numbers and containing no spaces."
 msgstr ""
+"Dodati morate ime, sestavljeno iz črk in številk, ki ne vsebuje presledkov."
 
 #: ../polgengui.py:748
 msgid "You must enter a executable"
-msgstr ""
+msgstr "Vnesti morate izvršljivo datoteko"
 
 #: ../polgengui.py:773 ../system-config-selinux.py:185
 msgid "Configure SELinux"
-msgstr ""
+msgstr "Konfigurirajte SELinux"
 
 #: ../polgen.ui:9
 msgid "Red Hat 2007"
-msgstr ""
+msgstr "Rdeči klobuk 2007"
 
 #: ../polgen.ui:11
 msgid "GPL"
-msgstr ""
+msgstr "GPL"
 
 #. TRANSLATORS: Replace this string with your names, one name per line.
 #: ../polgen.ui:13 ../system-config-selinux.ui:15
 msgid "translator-credits"
 msgstr ""
-"Launchpad Contributions:\n"
+"zasluge prevajalcaLaunchpad Contributions:\n"
 "  Andrej Znidarsic https://launchpad.net/~andrej.znidarsic\n"
 "  Damir Jerovšek https://launchpad.net/~jierro\n"
 "  Grega P https://launchpad.net/~sajkec\n"
@@ -238,130 +254,144 @@ msgstr ""
 
 #: ../polgen.ui:34
 msgid "Add Booleans Dialog"
-msgstr ""
+msgstr "Pogovorno okno za dodajanje logičnih vrednosti"
 
 #: ../polgen.ui:99
 msgid "Boolean Name"
-msgstr ""
+msgstr "Boolovo ime"
 
 #: ../polgen.ui:234 ../selinux-polgengui.desktop:3
 msgid "SELinux Policy Generation Tool"
-msgstr ""
+msgstr "Orodje za generiranje pravilnika SELinux"
 
 #: ../polgen.ui:255
 msgid ""
 "<b>Select the policy type for the application or user role you want to "
 "confine:</b>"
 msgstr ""
+"<b>Izberite vrsto pravilnika za aplikacijo ali uporabniško vlogo, ki jo "
+"želite omejiti:</b>"
 
 #: ../polgen.ui:288
 msgid "<b>Applications</b>"
-msgstr ""
+msgstr "<b>Aplikacije</b>"
 
 #: ../polgen.ui:320
 msgid "Standard Init Daemon"
-msgstr ""
+msgstr "Standardni init demon"
 
 #: ../polgen.ui:324 ../polgen.ui:340
 msgid ""
 "Standard Init Daemon are daemons started on boot via init scripts.  Usually "
 "requires a script in /etc/rc.d/init.d"
 msgstr ""
+"Standardni init daemon so demoni, ki se zaženejo ob zagonu prek init "
+"skriptov."
 
 #: ../polgen.ui:336
 msgid "DBUS System Daemon"
-msgstr ""
+msgstr "Sistemski demon DBUS"
 
 #: ../polgen.ui:353
 msgid "Internet Services Daemon (inetd)"
-msgstr ""
+msgstr "Demon internetnih storitev (inetd)"
 
 #: ../polgen.ui:357
 msgid "Internet Services Daemon are daemons started by xinetd"
-msgstr ""
+msgstr "Internet Services Daemon so demoni, ki jih je zagnal xinetd"
 
 #: ../polgen.ui:370
 msgid "Web Application/Script (CGI)"
-msgstr ""
+msgstr "Spletna aplikacija/skript (CGI)"
 
 #: ../polgen.ui:374
 msgid ""
 "Web Applications/Script (CGI) CGI scripts started by the web server (apache)"
 msgstr ""
+"Spletne aplikacije/Skript (CGI) Skripti CGI, ki jih zažene spletni strežnik "
+"(apache)"
 
 #: ../polgen.ui:387
 msgid "User Application"
-msgstr ""
+msgstr "Uporabniška aplikacija"
 
 #: ../polgen.ui:391 ../polgen.ui:408
 msgid ""
 "User Application are any application that you would like to confine that is "
 "started by a user"
 msgstr ""
+"Uporabniška aplikacija je katera koli aplikacija, ki jo želite omejiti in jo "
+"zažene uporabnik"
 
 #: ../polgen.ui:404
 msgid "Sandbox"
-msgstr ""
+msgstr "Peskovnik"
 
 #: ../polgen.ui:450
 msgid "<b>Login Users</b>"
-msgstr ""
+msgstr "<b>Prijava uporabnikov</b>"
 
 #: ../polgen.ui:482
 msgid "Existing User Roles"
-msgstr ""
+msgstr "Obstoječe uporabniške vloge"
 
 #: ../polgen.ui:486
 msgid "Modify an existing login user record."
-msgstr ""
+msgstr "Spremenite obstoječi uporabniški zapis za prijavo."
 
 #: ../polgen.ui:499
 msgid "Minimal Terminal User Role"
-msgstr ""
+msgstr "Minimalna uporabniška vloga terminala"
 
 #: ../polgen.ui:503
 msgid ""
 "This user will login to a machine only via a terminal or remote login.  By "
 "default this user will have  no setuid, no networking, no su, no sudo."
 msgstr ""
+"Ta uporabnik se bo prijavil v stroj samo prek terminala ali oddaljene "
+"prijave."
 
 #: ../polgen.ui:516
 msgid "Minimal X Windows User Role"
-msgstr ""
+msgstr "Minimalna uporabniška vloga X Windows"
 
 #: ../polgen.ui:520
 msgid ""
 "This user can login to a machine via X or terminal.  By default this user "
 "will have no setuid, no networking, no sudo, no su"
-msgstr ""
+msgstr "Ta uporabnik se lahko prijavi v stroj prek X ali terminala."
 
 #: ../polgen.ui:533
 msgid "User Role"
-msgstr ""
+msgstr "Vloga uporabnika"
 
 #: ../polgen.ui:537
 msgid ""
 "User with full networking, no setuid applications without transition, no "
 "sudo, no su."
 msgstr ""
+"Uporabnik s popolnim povezovanjem v omrežje, brez aplikacij setuid brez "
+"prehoda, brez sudo, brez su."
 
 #: ../polgen.ui:550
 msgid "Admin User Role"
-msgstr ""
+msgstr "Vloga skrbniškega uporabnika"
 
 #: ../polgen.ui:554
 msgid ""
 "User with full networking, no setuid applications without transition, no su, "
 "can sudo to Root Administration Roles"
 msgstr ""
+"Uporabnik s polnim omrežnim povezovanjem, brez aplikacij setuid brez "
+"prehoda, brez su, lahko sudo v korenske skrbniške vloge"
 
 #: ../polgen.ui:596
 msgid "<b>Root Users</b>"
-msgstr ""
+msgstr "<b>Korenski uporabniki</b>"
 
 #: ../polgen.ui:627
 msgid "Root Admin User Role"
-msgstr ""
+msgstr "Vloga korenskega skrbniškega uporabnika"
 
 #: ../polgen.ui:631
 msgid ""
@@ -369,119 +399,125 @@ msgid ""
 "the machine while running as root.  This user will not be able to login to "
 "the system directly."
 msgstr ""
+"Izberite Root Administrator User Role, če bo ta uporabnik uporabljen za "
+"skrbništvo stroja, medtem ko deluje kot root."
 
 #: ../polgen.ui:705
 msgid "<b>Enter name of application or user role:</b>"
-msgstr ""
+msgstr "<b>Vnesite ime aplikacije ali uporabniško vlogo:</b>"
 
 #: ../polgen.ui:739
 msgid "Enter complete path for executable to be confined."
-msgstr ""
+msgstr "Vnesite celotno pot za izvršljivo datoteko, ki bo omejena."
 
 #: ../polgen.ui:756 ../polgen.ui:838 ../polgen.ui:2317
 msgid "..."
-msgstr ""
+msgstr ".."
 
 #: ../polgen.ui:776
 msgid "Enter unique name for the confined application or user role."
-msgstr ""
+msgstr "Vnesite edinstveno ime za omejeno aplikacijo ali uporabniško vlogo."
 
 #: ../polgen.ui:794
 msgid "Executable"
-msgstr ""
+msgstr "Izvedljivo"
 
 #: ../polgen.ui:808
 msgid "Init script"
-msgstr ""
+msgstr "Začetni skript"
 
 #: ../polgen.ui:821
 msgid ""
 "Enter complete path to init script used to start the confined application."
 msgstr ""
+"Vnesite celotno pot do inicialnega skripta, ki se uporablja za zagon omejene "
+"aplikacije."
 
 #: ../polgen.ui:883
 msgid "<b>Select existing role to modify:</b>"
-msgstr ""
+msgstr "<b>Izberite obstoječo vlogo za spremembo:</b>"
 
 #: ../polgen.ui:904
 #, python-format
 msgid "Select the user roles that will transition to the %s domain."
-msgstr ""
+msgstr "Izberite uporabniške vloge, ki bodo prešle na domeno %s."
 
 #: ../polgen.ui:921
 msgid "role tab"
-msgstr ""
+msgstr "zavihek vloge"
 
 #: ../polgen.ui:937
 #, python-format
 msgid "<b>Select roles that %s will transition to:</b>"
-msgstr ""
+msgstr "<b>Izberite vloge, v katere bo %s prešel:</b>"
 
 #: ../polgen.ui:955
 #, python-format
 msgid "Select applications domains that %s will transition to."
-msgstr ""
+msgstr "Izberite domene aplikacij, na katere bo %s prešel."
 
 #: ../polgen.ui:972
 msgid ""
 "transition \n"
 "role tab"
 msgstr ""
+"transition \n"
+"vloga zavihek"
 
 #: ../polgen.ui:989
 #, python-format
 msgid "<b>Select the user_roles that will transition to %s:</b>"
-msgstr ""
+msgstr "<b>Izberite uporabniške_vloge, ki bodo prešle na %s:</b>"
 
 #: ../polgen.ui:1007
 msgid ""
 "Select the user roles that will transition to this applications domains."
-msgstr ""
+msgstr "Izberite uporabniške vloge, ki bodo prešle v te domene aplikacij."
 
 #: ../polgen.ui:1040
 #, python-format
 msgid "<b>Select domains that %s will administer:</b>"
-msgstr ""
+msgstr "<b>Izberite domene, ki jih bo upravljal %s:</b>"
 
 #: ../polgen.ui:1058 ../polgen.ui:1109
 msgid "Select the domains that you would like this user administer."
-msgstr ""
+msgstr "Izberite domene, za katere želite, da jih upravlja ta uporabnik."
 
 #: ../polgen.ui:1091
 #, python-format
 msgid "<b>Select additional roles for %s:</b>"
-msgstr ""
+msgstr "<b>Izberite dodatne vloge za %s:</b>"
 
 #: ../polgen.ui:1142
 #, python-format
 msgid "<b>Enter network ports that %s binds on:</b>"
-msgstr ""
+msgstr "<b>Vnesite omrežna vrata, na katera se %s povezuje:</b>"
 
 #: ../polgen.ui:1162 ../polgen.ui:1529
 msgid "<b>TCP Ports</b>"
-msgstr ""
+msgstr "<b>Vrata TCP</b>"
 
 #: ../polgen.ui:1199 ../polgen.ui:1366 ../polgen.ui:1561 ../polgen.ui:1670
 msgid "All"
-msgstr ""
+msgstr "Vse"
 
 #: ../polgen.ui:1203 ../polgen.ui:1370
 #, python-format
 msgid "Allows %s to bind to any udp port"
-msgstr ""
+msgstr "Omogoča %s, da se veže na katera koli vrata udp"
 
 #: ../polgen.ui:1216 ../polgen.ui:1383
 msgid "600-1024"
-msgstr ""
+msgstr "600-1024"
 
 #: ../polgen.ui:1220 ../polgen.ui:1387
 #, python-format
 msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
-msgstr ""
+msgstr "Dovoli %s, da pokliče bindresvport z 0. Vezava na vrata 600-1024"
 
 #: ../polgen.ui:1233 ../polgen.ui:1400
 msgid "Unreserved Ports (>1024)"
-msgstr ""
+msgstr "Nerezervirana vrata (>1024)"
 
 #: ../polgen.ui:1237 ../polgen.ui:1404
 #, python-format
@@ -489,35 +525,39 @@ msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s binds "
 "to. Example: 612, 650-660"
 msgstr ""
+"Vnesite z vejicami ločen seznam vrat udp ali obsegov vrat, na katere se "
+"povezuje %s."
 
 #: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
 msgid "Select Ports"
-msgstr ""
+msgstr "Izberite vrata"
 
 #: ../polgen.ui:1278 ../polgen.ui:1445
 #, python-format
 msgid "Allows %s to bind to any udp ports > 1024"
-msgstr ""
+msgstr "Omogoča %s, da se veže na katera koli vrata udp > 1024"
 
 #: ../polgen.ui:1329 ../polgen.ui:1638
 msgid "<b>UDP Ports</b>"
-msgstr ""
+msgstr "<b>Vrata UDP</b>"
 
 #: ../polgen.ui:1492
 msgid ""
 "Network\n"
 "Bind tab"
 msgstr ""
+"Zavihek\n"
+"omrežna povezava"
 
 #: ../polgen.ui:1509
 #, python-format
 msgid "<b>Select network ports that %s connects to:</b>"
-msgstr ""
+msgstr "<b>Izberite omrežna vrata, na katera se %s povezuje:</b>"
 
 #: ../polgen.ui:1565
 #, python-format
 msgid "Allows %s to connect to any tcp port"
-msgstr ""
+msgstr "Omogoča %s, da se poveže na katera koli vrata tcp"
 
 #: ../polgen.ui:1594
 #, python-format
@@ -525,11 +565,13 @@ msgid ""
 "Enter a comma separated list of tcp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
 msgstr ""
+"Vnesite z vejicami ločen seznam vrat tcp ali obsegov vrat, s katerimi se "
+"povezuje %s."
 
 #: ../polgen.ui:1674
 #, python-format
 msgid "Allows %s to connect to any udp port"
-msgstr ""
+msgstr "Omogoča %s povezavo na katera koli vrata udp"
 
 #: ../polgen.ui:1703
 #, python-format
@@ -537,166 +579,170 @@ msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
 msgstr ""
+"Vnesite z vejicami ločen seznam vrat udp ali obsegov vrat, s katerimi se %s "
+"povezuje."
 
 #: ../polgen.ui:1760
 #, python-format
 msgid "<b>Select common application traits for %s:</b>"
-msgstr ""
+msgstr "<b>Izberite običajne lastnosti uporabe za %s:</b>"
 
 #: ../polgen.ui:1777
 msgid "Writes syslog messages\t"
-msgstr ""
+msgstr "Piše sporočila sistemskega dnevnika\t"
 
 #: ../polgen.ui:1792
 msgid "Create/Manipulate temporary files in /tmp"
-msgstr ""
+msgstr "Ustvarjanje/manipuliranje začasnih datotek v /tmp"
 
 #: ../polgen.ui:1807
 msgid "Uses Pam for authentication"
-msgstr ""
+msgstr "Uporablja Pam za preverjanje pristnosti"
 
 #: ../polgen.ui:1822
 msgid "Uses nsswitch or getpw* calls"
-msgstr ""
+msgstr "Uporablja klice nsswitch ali getpw*"
 
 #: ../polgen.ui:1837
 msgid "Uses dbus"
-msgstr ""
+msgstr "Uporablja dbus"
 
 #: ../polgen.ui:1852
 msgid "Sends audit messages"
-msgstr ""
+msgstr "Pošilja nadzorna sporočila"
 
 #: ../polgen.ui:1867
 msgid "Interacts with the terminal"
-msgstr ""
+msgstr "Interakcija s terminalom"
 
 #: ../polgen.ui:1882
 msgid "Sends email"
-msgstr ""
+msgstr "Pošlje e-pošto"
 
 #: ../polgen.ui:1925
 #, python-format
 msgid "<b>Add files/directories that %s manages</b>"
-msgstr ""
+msgstr "<b>Dodaj datoteke/imenike, ki jih upravlja %s</b>"
 
 #: ../polgen.ui:1978
-#, fuzzy
-#| msgid "_File"
 msgid "Add File"
-msgstr "_Datoteka"
+msgstr "_Dodaj datoteko"
 
 #: ../polgen.ui:2031
 msgid "Add Directory"
-msgstr ""
+msgstr "Dodaj imenik"
 
 #: ../polgen.ui:2086
 #, python-format
 msgid ""
 "Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
 "Files ..."
-msgstr ""
+msgstr "Datoteke/Imeniki, ki jih %s \"upravlja\"."
 
 #: ../polgen.ui:2126
 #, python-format
 msgid "<b>Add booleans from the %s policy:</b>"
-msgstr ""
+msgstr "<b>Dodaj logične vrednosti iz pravilnika %s:</b>"
 
 #: ../polgen.ui:2179
 msgid "Add Boolean"
-msgstr ""
+msgstr "Dodaj logično vrednost"
 
 #: ../polgen.ui:2234
 #, python-format
 msgid "Add/Remove booleans used by the %s domain"
-msgstr ""
+msgstr "Dodaj/Odstrani logične vrednosti, ki jih uporablja domena %s"
 
 #: ../polgen.ui:2272
 #, python-format
 msgid "<b>Which directory you will generate the %s policy?</b>"
-msgstr ""
+msgstr "<b>Kateri imenik boste ustvarili pravilnik %s?</b>"
 
 #: ../polgen.ui:2290
 msgid "Policy Directory"
-msgstr ""
+msgstr "Imenik pravilnika"
 
 #: ../portsPage.py:61 ../system-config-selinux.ui:1544
 msgid "Network Port"
-msgstr ""
+msgstr "Omrežna vrata"
 
 #: ../portsPage.py:96
 msgid ""
 "SELinux Port\n"
 "Type"
 msgstr ""
+"Vrata\n"
+"SELinux"
 
 #: ../portsPage.py:102 ../system-config-selinux.ui:294
 msgid "Protocol"
-msgstr ""
+msgstr "Protokol"
 
 #: ../portsPage.py:107 ../system-config-selinux.ui:355
 msgid ""
 "MLS/MCS\n"
 "Level"
 msgstr ""
+"Raven\n"
+"MLS/MCS"
 
 #: ../portsPage.py:112
 msgid "Port"
-msgstr ""
+msgstr "Pristanišče"
 
 #: ../portsPage.py:214
 #, python-format
 msgid "Port number \"%s\" is not valid.  0 < PORT_NUMBER < 65536 "
-msgstr ""
+msgstr "Številka vrat \"%s\" ni veljavna. "
 
 #: ../portsPage.py:259
 msgid "List View"
-msgstr ""
+msgstr "Pogled seznama"
 
 #: ../portsPage.py:262 ../system-config-selinux.ui:1466
 msgid "Group View"
-msgstr ""
+msgstr "Skupinski pogled"
 
 #: ../selinux-polgengui.desktop:32 ../sepolicy.desktop:4
 msgid "Generate SELinux policy modules"
-msgstr ""
+msgstr "Generiraj module pravilnika SELinux"
 
 #: ../semanagePage.py:131
 #, python-format
 msgid "Are you sure you want to delete %s '%s'?"
-msgstr ""
+msgstr "Ali ste prepričani, da želite izbrisati %s '%s'?"
 
 #: ../semanagePage.py:131
 #, python-format
 msgid "Delete %s"
-msgstr ""
+msgstr "Izbriši %s"
 
 #: ../semanagePage.py:139
 #, python-format
 msgid "Add %s"
-msgstr ""
+msgstr "Dodaj %s"
 
 #: ../semanagePage.py:153
 #, python-format
 msgid "Modify %s"
-msgstr ""
+msgstr "Spremeni %s"
 
 #: ../sepolicy.desktop:3
 msgid "SELinux Policy Management Tool"
-msgstr ""
+msgstr "Orodje za upravljanje pravilnikov SELinux"
 
 #: ../sepolicy.desktop:11
 msgid "policy;security;selinux;avc;permission;mac;"
-msgstr ""
+msgstr "politika;varnost;selinux;avc;dovoljenje;mac;"
 
 #: ../statusPage.py:75 ../system-config-selinux.ui:599
 #: ../system-config-selinux.ui:1744
 msgid "Enforcing"
-msgstr ""
+msgstr "Uveljavljanje"
 
 #: ../statusPage.py:80 ../system-config-selinux.ui:593
 msgid "Disabled"
-msgstr ""
+msgstr "Onemogočeno"
 
 #: ../statusPage.py:99
 msgid "Status"
@@ -708,6 +754,8 @@ msgid ""
 "the next boot. Relabeling takes a long time depending on the size of the "
 "file system.  Do you wish to continue?"
 msgstr ""
+"Spreminjanje vrste pravilnika bo povzročilo ponovno oznako celotnega "
+"datotečnega sistema ob naslednjem zagonu."
 
 #: ../statusPage.py:152
 msgid ""
@@ -717,7 +765,7 @@ msgid ""
 "system, you can go to permissive mode which will only log errors and not "
 "enforce SELinux policy.  Permissive mode does not require a reboot    Do you "
 "wish to continue?"
-msgstr ""
+msgstr "Spreminjanje na onemogočen SELinux zahteva ponovni zagon."
 
 #: ../statusPage.py:157
 msgid ""
@@ -725,65 +773,69 @@ msgid ""
 "on the next boot. Relabeling takes a long time depending on the size of the "
 "file system.  Do you wish to continue?"
 msgstr ""
+"Spreminjanje na omogočeno SELinux bo povzročilo ponovno oznako celotnega "
+"datotečnega sistema ob naslednjem zagonu."
 
 #: ../system-config-selinux.desktop:3
 msgid "SELinux Management"
-msgstr ""
+msgstr "Upravljanje SELinux"
 
 #: ../system-config-selinux.desktop:32
 msgid "Configure SELinux in a graphical setting"
-msgstr ""
+msgstr "Konfigurirajte SELinux v grafični nastavitvi"
 
 #: ../system-config-selinux.ui:11
 msgid ""
 "Copyright (c)2006 Red Hat, Inc.\n"
 "Copyright (c) 2006 Dan Walsh <dwalsh@redhat.com>"
 msgstr ""
+"Avtorske pravice (c) 2006 Red Hat, Inc.\n"
+"Avtorske pravice (c) 2006 Dan Walsh <dwalsh@redhat.com>"
 
 #: ../system-config-selinux.ui:53 ../system-config-selinux.ui:407
 msgid "Add SELinux Login Mapping"
-msgstr ""
+msgstr "Dodaj preslikavo prijave SELinux"
 
 #: ../system-config-selinux.ui:117
 msgid "Login Name"
-msgstr ""
+msgstr "Prijavno ime"
 
 #: ../system-config-selinux.ui:128 ../system-config-selinux.ui:1376
 #: ../system-config-selinux.ui:1911 ../usersPage.py:55
 msgid "SELinux User"
-msgstr ""
+msgstr "Uporabnik SELinux"
 
 #: ../system-config-selinux.ui:139 ../system-config-selinux.ui:1922
 msgid "MLS/MCS Range"
-msgstr ""
+msgstr "Razpon MLS/MCS"
 
 #: ../system-config-selinux.ui:219
 msgid "Add SELinux Network Ports"
-msgstr ""
+msgstr "Dodaj omrežna vrata SELinux"
 
 #: ../system-config-selinux.ui:283
 msgid "Port Number"
-msgstr ""
+msgstr "Številka vrat"
 
 #: ../system-config-selinux.ui:305 ../system-config-selinux.ui:493
 msgid "SELinux Type"
-msgstr ""
+msgstr "Vrsta SELinux"
 
 #: ../system-config-selinux.ui:471
 msgid "File Specification"
-msgstr ""
+msgstr "Specifikacija datoteke"
 
 #: ../system-config-selinux.ui:482
 msgid "File Type"
-msgstr ""
+msgstr "Vrsta datoteke"
 
 #: ../system-config-selinux.ui:543
 msgid "MLS"
-msgstr ""
+msgstr "MLS"
 
 #: ../system-config-selinux.ui:605
 msgid "SELinux Administration"
-msgstr ""
+msgstr "Upravljanje SELinux"
 
 #: ../system-config-selinux.ui:622
 msgid "_File"
@@ -795,7 +847,7 @@ msgstr "_Dodaj"
 
 #: ../system-config-selinux.ui:642
 msgid "_Properties"
-msgstr ""
+msgstr "_Lastnosti"
 
 #: ../system-config-selinux.ui:654
 msgid "_Delete"
@@ -807,23 +859,23 @@ msgstr "_Pomoč"
 
 #: ../system-config-selinux.ui:728
 msgid "Select Management Object"
-msgstr ""
+msgstr "Izberite predmet upravljanja"
 
 #: ../system-config-selinux.ui:741
 msgid "<b>Select:</b>"
-msgstr ""
+msgstr "<b>Izberite:</b>"
 
 #: ../system-config-selinux.ui:771
 msgid "System Default Enforcing Mode"
-msgstr ""
+msgstr "Sistemski privzeti način izvajanja"
 
 #: ../system-config-selinux.ui:800
 msgid "Current Enforcing Mode"
-msgstr ""
+msgstr "Trenutni način izvajanja"
 
 #: ../system-config-selinux.ui:822
 msgid "System Default Policy Type: "
-msgstr ""
+msgstr "Vrsta privzetega pravilnika sistema: "
 
 #: ../system-config-selinux.ui:845
 msgid ""
@@ -832,117 +884,121 @@ msgid ""
 "If you are changing policy types or going from disabled to enforcing, a "
 "relabel is required."
 msgstr ""
+"Izberite, če želite ob naslednjem ponovnem zagonu znova označiti celoten "
+"datotečni sistem."
 
 #: ../system-config-selinux.ui:877
 msgid "Relabel on next reboot."
-msgstr ""
+msgstr "Znova označi ob naslednjem ponovnem zagonu."
 
 #: ../system-config-selinux.ui:921
 msgid "Revert boolean setting to system default"
-msgstr ""
+msgstr "Povrni logično nastavitev na sistemsko privzeto"
 
 #: ../system-config-selinux.ui:934
 msgid "Toggle between Customized and All Booleans"
-msgstr ""
+msgstr "Preklapljanje med Customized in All Boolean"
 
 #: ../system-config-selinux.ui:960 ../system-config-selinux.ui:1096
 #: ../system-config-selinux.ui:1216 ../system-config-selinux.ui:1337
 #: ../system-config-selinux.ui:1505 ../system-config-selinux.ui:1657
 #: ../system-config-selinux.ui:1769
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
 #: ../system-config-selinux.ui:1031
 msgid "Add File Context"
-msgstr ""
+msgstr "Dodaj kontekst datoteke"
 
 #: ../system-config-selinux.ui:1044
 msgid "Modify File Context"
-msgstr ""
+msgstr "Spremeni kontekst datoteke"
 
 #: ../system-config-selinux.ui:1057
 msgid "Delete File Context"
-msgstr ""
+msgstr "Izbriši kontekst datoteke"
 
 #: ../system-config-selinux.ui:1070
 msgid "Toggle between all and customized file context"
-msgstr ""
+msgstr "Preklapljanje med vsem in prilagojenim kontekstom datoteke"
 
 #: ../system-config-selinux.ui:1166
 msgid "Add SELinux User Mapping"
-msgstr ""
+msgstr "Dodaj preslikavo uporabnika SELinux"
 
 #: ../system-config-selinux.ui:1179
 msgid "Modify SELinux User Mapping"
-msgstr ""
+msgstr "Spremeni preslikavo uporabnikov SELinux"
 
 #: ../system-config-selinux.ui:1192
 msgid "Delete SELinux User Mapping"
-msgstr ""
+msgstr "Izbriši preslikavo uporabnika SELinux"
 
 #: ../system-config-selinux.ui:1287
 msgid "Add User"
-msgstr ""
+msgstr "Dodaj uporabnika"
 
 #: ../system-config-selinux.ui:1300
 msgid "Modify User"
-msgstr ""
+msgstr "Spremeni uporabnika"
 
 #: ../system-config-selinux.ui:1313
 msgid "Delete User"
-msgstr ""
+msgstr "Izbriši uporabnika"
 
 #: ../system-config-selinux.ui:1408
 msgid "Add Network Port"
-msgstr ""
+msgstr "Dodaj omrežna vrata"
 
 #: ../system-config-selinux.ui:1421
 msgid "Edit Network Port"
-msgstr ""
+msgstr "Uredi omrežna vrata"
 
 #: ../system-config-selinux.ui:1434
 msgid "Delete Network Port"
-msgstr ""
+msgstr "Izbriši omrežna vrata"
 
 #: ../system-config-selinux.ui:1465 ../system-config-selinux.ui:1479
 msgid "Toggle between Customized and All Ports"
-msgstr ""
+msgstr "Preklapljanje med Po meri in Vsa vrata"
 
 #: ../system-config-selinux.ui:1576
 msgid "Generate new policy module"
-msgstr ""
+msgstr "Ustvari nov modul pravilnika"
 
 #: ../system-config-selinux.ui:1588
 msgid "Load policy module"
-msgstr ""
+msgstr "Naloži modul pravilnika"
 
 #: ../system-config-selinux.ui:1601
 msgid "Remove loadable policy module"
-msgstr ""
+msgstr "Odstrani modul pravilnika, ki ga je mogoče naložiti"
 
 #: ../system-config-selinux.ui:1632
 msgid ""
 "Enable/Disable additional audit rules, that are normally not reported in the "
 "log files."
 msgstr ""
+"Omogoči/onemogoči dodatna revizijska pravila, ki se običajno ne poročajo v "
+"dnevniških datotekah."
 
 #: ../system-config-selinux.ui:1728
 msgid "Change process mode to permissive."
-msgstr ""
+msgstr "Spremeni način procesa v permisivni."
 
 #: ../system-config-selinux.ui:1743
 msgid "Change process mode to enforcing"
-msgstr ""
+msgstr "Spremeni način postopka na uveljavitev"
 
 #: ../system-config-selinux.ui:1847
 msgid "Add SELinux User"
-msgstr ""
+msgstr "Dodaj uporabnika SELinux"
 
 #: ../system-config-selinux.ui:1944 ../usersPage.py:70
 msgid "SELinux Roles"
-msgstr ""
+msgstr "Vloge SELinux"
 
 #: ../usersPage.py:143
 #, python-format
 msgid "SELinux user '%s' is required"
-msgstr ""
+msgstr "Potreben je uporabnik SELinux '%s'"

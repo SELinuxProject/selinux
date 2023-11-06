@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
+"POT-Creation-Date: 2023-11-06 16:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,6 +124,14 @@ msgstr ""
 
 #: ../modulesPage.py:177
 msgid "Load Policy Module"
+msgstr ""
+
+#: ../org.selinux.config.policy:11
+msgid "Run System Config SELinux"
+msgstr ""
+
+#: ../org.selinux.config.policy:12
+msgid "Authentication is required to run system-config-selinux"
 msgstr ""
 
 #: ../polgengui.py:289 ../polgen.ui:728
@@ -387,7 +395,6 @@ msgid "<b>Select existing role to modify:</b>"
 msgstr ""
 
 #: ../polgen.ui:904
-#, python-format
 msgid "Select the user roles that will transition to the %s domain."
 msgstr ""
 
@@ -396,12 +403,10 @@ msgid "role tab"
 msgstr ""
 
 #: ../polgen.ui:937
-#, python-format
 msgid "<b>Select roles that %s will transition to:</b>"
 msgstr ""
 
 #: ../polgen.ui:955
-#, python-format
 msgid "Select applications domains that %s will transition to."
 msgstr ""
 
@@ -412,7 +417,6 @@ msgid ""
 msgstr ""
 
 #: ../polgen.ui:989
-#, python-format
 msgid "<b>Select the user_roles that will transition to %s:</b>"
 msgstr ""
 
@@ -422,7 +426,6 @@ msgid ""
 msgstr ""
 
 #: ../polgen.ui:1040
-#, python-format
 msgid "<b>Select domains that %s will administer:</b>"
 msgstr ""
 
@@ -431,12 +434,10 @@ msgid "Select the domains that you would like this user administer."
 msgstr ""
 
 #: ../polgen.ui:1091
-#, python-format
 msgid "<b>Select additional roles for %s:</b>"
 msgstr ""
 
 #: ../polgen.ui:1142
-#, python-format
 msgid "<b>Enter network ports that %s binds on:</b>"
 msgstr ""
 
@@ -449,7 +450,6 @@ msgid "All"
 msgstr ""
 
 #: ../polgen.ui:1203 ../polgen.ui:1370
-#, python-format
 msgid "Allows %s to bind to any udp port"
 msgstr ""
 
@@ -458,7 +458,6 @@ msgid "600-1024"
 msgstr ""
 
 #: ../polgen.ui:1220 ../polgen.ui:1387
-#, python-format
 msgid "Allow %s to call bindresvport with 0. Binding to port 600-1024"
 msgstr ""
 
@@ -467,7 +466,6 @@ msgid "Unreserved Ports (>1024)"
 msgstr ""
 
 #: ../polgen.ui:1237 ../polgen.ui:1404
-#, python-format
 msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s binds "
 "to. Example: 612, 650-660"
@@ -478,7 +476,6 @@ msgid "Select Ports"
 msgstr ""
 
 #: ../polgen.ui:1278 ../polgen.ui:1445
-#, python-format
 msgid "Allows %s to bind to any udp ports > 1024"
 msgstr ""
 
@@ -493,36 +490,30 @@ msgid ""
 msgstr ""
 
 #: ../polgen.ui:1509
-#, python-format
 msgid "<b>Select network ports that %s connects to:</b>"
 msgstr ""
 
 #: ../polgen.ui:1565
-#, python-format
 msgid "Allows %s to connect to any tcp port"
 msgstr ""
 
 #: ../polgen.ui:1594
-#, python-format
 msgid ""
 "Enter a comma separated list of tcp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
 msgstr ""
 
 #: ../polgen.ui:1674
-#, python-format
 msgid "Allows %s to connect to any udp port"
 msgstr ""
 
 #: ../polgen.ui:1703
-#, python-format
 msgid ""
 "Enter a comma separated list of udp ports or ranges of ports that %s "
 "connects to. Example: 612, 650-660"
 msgstr ""
 
 #: ../polgen.ui:1760
-#, python-format
 msgid "<b>Select common application traits for %s:</b>"
 msgstr ""
 
@@ -559,7 +550,6 @@ msgid "Sends email"
 msgstr ""
 
 #: ../polgen.ui:1925
-#, python-format
 msgid "<b>Add files/directories that %s manages</b>"
 msgstr ""
 
@@ -572,14 +562,12 @@ msgid "Add Directory"
 msgstr ""
 
 #: ../polgen.ui:2086
-#, python-format
 msgid ""
 "Files/Directories which the %s \"manages\". Pid Files, Log Files, /var/lib "
 "Files ..."
 msgstr ""
 
 #: ../polgen.ui:2126
-#, python-format
 msgid "<b>Add booleans from the %s policy:</b>"
 msgstr ""
 
@@ -588,12 +576,10 @@ msgid "Add Boolean"
 msgstr ""
 
 #: ../polgen.ui:2234
-#, python-format
 msgid "Add/Remove booleans used by the %s domain"
 msgstr ""
 
 #: ../polgen.ui:2272
-#, python-format
 msgid "<b>Which directory you will generate the %s policy?</b>"
 msgstr ""
 

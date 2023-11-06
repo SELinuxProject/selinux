@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2021-09-16 04:05+0000\n"
-"Last-Translator: Charles Lee <lchopn@gmail.com>\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-01-20 10:20+0000\n"
+"Last-Translator: Ludek Janda <ljanda@redhat.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.fedoraproject.org/"
 "projects/selinux/gui/zh_CN/>\n"
 "Language: zh_CN\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.15.1\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
@@ -52,7 +52,7 @@ msgstr "模式"
 #: ../statusPage.py:74 ../system-config-selinux.ui:596
 #: ../system-config-selinux.ui:1729
 msgid "Permissive"
-msgstr "Permissive"
+msgstr "允许的"
 
 #: ../fcontextPage.py:73 ../system-config-selinux.ui:1134
 msgid "File Labeling"
@@ -715,7 +715,7 @@ msgstr "policy;security;selinux;avc;permission;mac;"
 #: ../statusPage.py:75 ../system-config-selinux.ui:599
 #: ../system-config-selinux.ui:1744
 msgid "Enforcing"
-msgstr "Enforcing"
+msgstr "强制"
 
 #: ../statusPage.py:80 ../system-config-selinux.ui:593
 msgid "Disabled"

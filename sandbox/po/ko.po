@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-18 11:57+0100\n"
-"PO-Revision-Date: 2023-01-19 09:31+0000\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-02-12 03:20+0000\n"
 "Last-Translator: 김인수 <simmon@nplob.com>\n"
 "Language-Team: Korean <https://translate.fedoraproject.org/projects/selinux/"
 "sandbox/ko/>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.15.1\n"
+"X-Generator: Weblate 4.15.2\n"
 
 #: ../sandbox:120
 #, python-format
@@ -22,7 +22,7 @@ msgstr "변경 사항을 '%s'(Y / N) : "
 
 #: ../sandbox:121
 msgid "Sandbox Message"
-msgstr "샌드 박스 메시지"
+msgstr "샌드박스 메시지"
 
 #: ../sandbox:133
 #, python-format
@@ -168,7 +168,7 @@ msgstr "필요한 명령"
 #: ../sandbox:421
 #, python-format
 msgid "%s is not an executable"
-msgstr "%s 실행 파일이 아닙니다"
+msgstr "%s는 실행 할 수 없습니다"
 
 #: ../sandbox:549
 #, python-format

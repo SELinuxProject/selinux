@@ -10,16 +10,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-30 22:52+0200\n"
-"PO-Revision-Date: 2018-11-20 10:24-0500\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Chinese (Taiwan)\n"
+"POT-Creation-Date: 2023-02-28 18:54+0100\n"
+"PO-Revision-Date: 2023-09-23 17:35+0000\n"
+"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <https://translate.fedoraproject.org/"
+"projects/selinux/gui/zh_TW/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.0.2\n"
 
 #: ../booleansPage.py:199 ../system-config-selinux.ui:999
 msgid "Boolean"
@@ -37,7 +38,7 @@ msgstr "自訂"
 
 #: ../domainsPage.py:56 ../system-config-selinux.ui:1808
 msgid "Process Domain"
-msgstr "處理區域"
+msgstr "處理屬域"
 
 #: ../domainsPage.py:64
 msgid "Domain Name"
@@ -140,7 +141,7 @@ msgstr "啟用稽核"
 
 #: ../modulesPage.py:177
 msgid "Load Policy Module"
-msgstr "載入政策模組"
+msgstr "載入方針模組"
 
 #: ../polgengui.py:289 ../polgen.ui:728
 msgid "Name"
@@ -169,27 +170,27 @@ msgstr "%s 必須是個目錄"
 
 #: ../polgengui.py:447 ../polgengui.py:728
 msgid "You must select a user"
-msgstr "您必須選擇一位使用者"
+msgstr "您必須選取一位使用者"
 
 #: ../polgengui.py:577
 msgid "Select executable file to be confined."
-msgstr "選擇欲限制的可執行檔。"
+msgstr "選取欲限制的可執行檔。"
 
 #: ../polgengui.py:588
 msgid "Select init script file to be confined."
-msgstr "選擇欲限制的 init 指令稿檔案。"
+msgstr "選取欲限制的 init 指令稿檔案。"
 
 #: ../polgengui.py:598
 msgid "Select file(s) that confined application creates or writes"
-msgstr "選擇限制應用程式建立或寫入的檔案"
+msgstr "選取限制應用程式建立或寫入的檔案"
 
 #: ../polgengui.py:605
 msgid "Select directory(s) that the confined application owns and writes into"
-msgstr "選擇受限之應用程式擁有並寫入其中的目錄"
+msgstr "選取受限之應用程式擁有並寫入其中的目錄"
 
 #: ../polgengui.py:667
 msgid "Select directory to generate policy files in"
-msgstr "選擇欲在其中產生方針檔案的目錄"
+msgstr "選取欲在其中產生方針檔案的目錄"
 
 #: ../polgengui.py:684
 #, python-format
@@ -210,7 +211,7 @@ msgid ""
 "Module %s already loaded in current policy.\n"
 "Do you want to continue?"
 msgstr ""
-"模組 %s 已載入目前的政策中。\n"
+"模組 %s 已載入目前的方針中。\n"
 "您是否希望繼續？"
 
 #: ../polgengui.py:734
@@ -223,10 +224,8 @@ msgid "You must enter a executable"
 msgstr "您必須輸入一個可執行檔"
 
 #: ../polgengui.py:773 ../system-config-selinux.py:185
-#, fuzzy
-#| msgid "Configue SELinux"
 msgid "Configure SELinux"
-msgstr "配置 SELinux"
+msgstr "組態設定 SELinux"
 
 #: ../polgen.ui:9
 msgid "Red Hat 2007"
@@ -259,7 +258,7 @@ msgstr "SELinux 方針產生工具"
 msgid ""
 "<b>Select the policy type for the application or user role you want to "
 "confine:</b>"
-msgstr "<b>為您希望限制的應用程式或使用者角色選擇方針類型：</b>"
+msgstr "<b>為您希望限制的應用程式或使用者角色選取方針類型：</b>"
 
 #: ../polgen.ui:288
 msgid "<b>Applications</b>"
@@ -383,9 +382,8 @@ msgid ""
 "Select Root Administrator User Role, if this user will be used to administer "
 "the machine while running as root.  This user will not be able to login to "
 "the system directly."
-msgstr ""
-"若使用者將會以 root 身份管理機器，請選擇 Root 管理使用者角色。 該使用者將無法"
-"直接登入系統。"
+msgstr "若使用者將會以 root 身份管理機器，請選取 Root 管理使用者角色。 "
+"該使用者將無法直接登入系統。"
 
 #: ../polgen.ui:705
 msgid "<b>Enter name of application or user role:</b>"
@@ -418,13 +416,12 @@ msgstr "輸入用來啟用受限制之應用程式的 init 指令稿完整路徑
 
 #: ../polgen.ui:883
 msgid "<b>Select existing role to modify:</b>"
-msgstr "<b>選擇欲修改的既有角色：</b>"
+msgstr "<b>選取欲修改的既有角色：</b>"
 
 #: ../polgen.ui:904
-#, fuzzy, python-format
-#| msgid "Select the user roles that will transiton to the %s domain."
+#, python-format
 msgid "Select the user roles that will transition to the %s domain."
-msgstr "選擇將會轉換至 %s 區域的使用者角色。"
+msgstr "選取將會轉換至 %s 屬域的使用者角色。"
 
 #: ../polgen.ui:921
 msgid "role tab"
@@ -433,12 +430,12 @@ msgstr "角色分頁"
 #: ../polgen.ui:937
 #, python-format
 msgid "<b>Select roles that %s will transition to:</b>"
-msgstr "<b>選擇 %s 將會轉移成的角色：</b>"
+msgstr "<b>選取 %s 將會轉移成的角色：</b>"
 
 #: ../polgen.ui:955
 #, python-format
 msgid "Select applications domains that %s will transition to."
-msgstr "選擇 %s 將會轉移至的應用程式區域。"
+msgstr "選取 %s 將會轉移至的應用程式屬域。"
 
 #: ../polgen.ui:972
 msgid ""
@@ -451,29 +448,26 @@ msgstr ""
 #: ../polgen.ui:989
 #, python-format
 msgid "<b>Select the user_roles that will transition to %s:</b>"
-msgstr "<b>選擇將會轉移至 %s 的 user_roles：</b>"
+msgstr "<b>選取將會轉移至 %s 的 user_roles：</b>"
 
 #: ../polgen.ui:1007
-#, fuzzy
-#| msgid ""
-#| "Select the user roles that will transiton to this applications domains."
 msgid ""
 "Select the user roles that will transition to this applications domains."
-msgstr "選擇將會轉換至此應用程式區域的使用者角色。"
+msgstr "選取將會轉換至此應用程式屬域的使用者角色。"
 
 #: ../polgen.ui:1040
 #, python-format
 msgid "<b>Select domains that %s will administer:</b>"
-msgstr "<b>選擇 %s 將會管理的區域：</b>"
+msgstr "<b>選取 %s 將會管理的屬域：</b>"
 
 #: ../polgen.ui:1058 ../polgen.ui:1109
 msgid "Select the domains that you would like this user administer."
-msgstr "選擇您希望該使用者管理的區域。"
+msgstr "選取您希望該使用者管理的屬域。"
 
 #: ../polgen.ui:1091
 #, python-format
 msgid "<b>Select additional roles for %s:</b>"
-msgstr "<b>為 %s 選擇額外的角色：</b>"
+msgstr "<b>為 %s 選取額外的角色：</b>"
 
 #: ../polgen.ui:1142
 #, python-format
@@ -517,7 +511,7 @@ msgstr ""
 
 #: ../polgen.ui:1265 ../polgen.ui:1432 ../polgen.ui:1581 ../polgen.ui:1690
 msgid "Select Ports"
-msgstr "選擇連接埠"
+msgstr "選取連接埠"
 
 #: ../polgen.ui:1278 ../polgen.ui:1445
 #, python-format
@@ -539,7 +533,7 @@ msgstr ""
 #: ../polgen.ui:1509
 #, python-format
 msgid "<b>Select network ports that %s connects to:</b>"
-msgstr "<b>選擇 %s 連至的網路連接埠：</b>"
+msgstr "<b>選取 %s 連至的網路連接埠：</b>"
 
 #: ../polgen.ui:1565
 #, python-format
@@ -570,7 +564,7 @@ msgstr ""
 #: ../polgen.ui:1760
 #, python-format
 msgid "<b>Select common application traits for %s:</b>"
-msgstr "<b>為 %s 選擇一般應用程式特性：</b>"
+msgstr "<b>為 %s 選取一般應用程式特性：</b>"
 
 #: ../polgen.ui:1777
 msgid "Writes syslog messages\t"
@@ -610,16 +604,12 @@ msgid "<b>Add files/directories that %s manages</b>"
 msgstr "<b>新增 %s 所管理的檔案/目錄</b>"
 
 #: ../polgen.ui:1978
-#, fuzzy
-#| msgid "Add File Context"
 msgid "Add File"
-msgstr "新增檔案情境"
+msgstr "新增檔案"
 
 #: ../polgen.ui:2031
-#, fuzzy
-#| msgid "directory"
 msgid "Add Directory"
-msgstr "目錄"
+msgstr "新增目錄"
 
 #: ../polgen.ui:2086
 #, python-format
@@ -634,15 +624,13 @@ msgid "<b>Add booleans from the %s policy:</b>"
 msgstr "<b>由 %s 方針新增布林值：</b>"
 
 #: ../polgen.ui:2179
-#, fuzzy
-#| msgid "Boolean"
 msgid "Add Boolean"
-msgstr "布林值"
+msgstr "新增布林值"
 
 #: ../polgen.ui:2234
 #, python-format
 msgid "Add/Remove booleans used by the %s domain"
-msgstr "新增/移除 %s 區域所使用的布林值"
+msgstr "新增/移除 %s 屬域所使用的布林值"
 
 #: ../polgen.ui:2272
 #, python-format
@@ -782,7 +770,7 @@ msgstr "SELinux 管理"
 
 #: ../system-config-selinux.desktop:32
 msgid "Configure SELinux in a graphical setting"
-msgstr "以圖形設定配置 SELinux"
+msgstr "以圖形設定調整 SELinux 組態"
 
 #: ../system-config-selinux.ui:11
 msgid ""
@@ -859,11 +847,11 @@ msgstr "求助 (_H)"
 
 #: ../system-config-selinux.ui:728
 msgid "Select Management Object"
-msgstr "選擇管理物件"
+msgstr "選取管理物件"
 
 #: ../system-config-selinux.ui:741
 msgid "<b>Select:</b>"
-msgstr "<b>選擇：</b>"
+msgstr "<b>選取：</b>"
 
 #: ../system-config-selinux.ui:771
 msgid "System Default Enforcing Mode"
@@ -884,7 +872,7 @@ msgid ""
 "If you are changing policy types or going from disabled to enforcing, a "
 "relabel is required."
 msgstr ""
-"如果您想要在下次開機時，重新標記整個作業系統，請選擇此項。\n"
+"如果您想要在下次開機時，重新標記整個作業系統，請選取此項。\n"
 "根據檔案系統大小，重新標記可能會花上非常長的時間。\n"
 "如果您要改變方針類型，或從停用模式變為強制模式，那麼就需要重新標記。"
 
