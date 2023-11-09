@@ -25,7 +25,7 @@ export PYTHONPATH="$DESTDIR$(${PYTHON:-python3} -c "import sysconfig; print(sysc
 export RUBYLIB="$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
 
 if [ -f /etc/debian_version ] && [ -z "${IS_CIRCLE_CI:-}" ] ; then
-    export PYTHON_SETUP_ARGS='--install-layout=deb'
+    export DEB_PYTHON_INSTALL_LAYOUT='deb'
 fi
 
 # Build and analyze
