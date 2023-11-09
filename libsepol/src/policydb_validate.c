@@ -6,6 +6,7 @@
 #include <sepol/policydb/services.h>
 
 #include "debug.h"
+#include "kernel_to_common.h"
 #include "policydb_validate.h"
 
 #define bool_xor(a, b) (!(a) != !(b))
@@ -1180,6 +1181,10 @@ static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p, valid
 
 			if (p->target_platform == SEPOL_TARGET_SELINUX) {
 				switch (i) {
+				case OCON_ISID:
+					if (octx->sid[0] == SEPOL_SECSID_NULL || octx->sid[0] >= SELINUX_SID_SZ)
+						goto bad;
+					break;
 				case OCON_FS:
 				case OCON_NETIF:
 					if (validate_context(&octx->context[1], flavors, p->mls))
@@ -1216,6 +1221,10 @@ static int validate_ocontexts(sepol_handle_t *handle, const policydb_t *p, valid
 				}
 			} else if (p->target_platform == SEPOL_TARGET_XEN) {
 				switch(i) {
+				case OCON_XEN_ISID:
+					if (octx->sid[0] == SEPOL_SECSID_NULL || octx->sid[0] >= XEN_SID_SZ)
+						goto bad;
+					break;
 				case OCON_XEN_IOPORT:
 					if (octx->u.ioport.low_ioport > octx->u.ioport.high_ioport)
 						goto bad;
