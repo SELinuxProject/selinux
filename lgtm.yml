@@ -1,5 +1,0 @@
-extraction:
-  cpp:
-    index:
-      build_command:
-        - make DESTDIR="$LGTM_WORKSPACE/destdir" install
