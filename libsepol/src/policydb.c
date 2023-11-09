@@ -4120,8 +4120,8 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 {
 
 	unsigned int i, j, r_policyvers;
-	uint32_t buf[5];
-	size_t len, nprim, nel;
+	uint32_t buf[5], nprim;
+	size_t len, nel;
 	char *policydb_str;
 	const struct policydb_compat_info *info;
 	unsigned int policy_type, bufindex;
