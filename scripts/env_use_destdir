@@ -43,17 +43,21 @@ if [ -n "${SBINDIR:-}" ] ; then
     PATH="$DESTDIR$SBINDIR:$PATH"
 fi
 
-NEW_PYTHONPATH="$DESTDIR$(${PYTHON:-python3} -c "import sysconfig; print(sysconfig.get_path('platlib', vars={'platbase': '/usr', 'base': '/usr'}))"):$DESTDIR$(${PYTHON:-python3} -c "import sysconfig; print(sysconfig.get_path('purelib', vars={'platbase': '/usr', 'base': '/usr'}))")"
-if [ -n "${PYTHONPATH:-}" ] ; then
-    # Prefix the PYTHONPATH with the new directories
-    export PYTHONPATH="$NEW_PYTHONPATH:$PYTHONPATH"
-else
-    # Define PYTHONPATH
-    export PYTHONPATH="$NEW_PYTHONPATH"
+if command -v "${PYTHON:-python3}" > /dev/null ; then
+    NEW_PYTHONPATH="$DESTDIR$(${PYTHON:-python3} -c "import sysconfig; print(sysconfig.get_path('platlib', vars={'platbase': '/usr', 'base': '/usr'}))"):$DESTDIR$(${PYTHON:-python3} -c "import sysconfig; print(sysconfig.get_path('purelib', vars={'platbase': '/usr', 'base': '/usr'}))")"
+    if [ -n "${PYTHONPATH:-}" ] ; then
+        # Prefix the PYTHONPATH with the new directories
+        export PYTHONPATH="$NEW_PYTHONPATH:$PYTHONPATH"
+    else
+        # Define PYTHONPATH
+        export PYTHONPATH="$NEW_PYTHONPATH"
+    fi
 fi
 
 # shellcheck disable=SC2155
-export RUBYLIB="$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
+if command -v "${RUBY:-ruby}" > /dev/null ; then
+    export RUBYLIB="$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorlibdir"]'):$DESTDIR/$(${RUBY:-ruby} -e 'puts RbConfig::CONFIG["vendorarchdir"]')"
+fi
 
 # Run the command given on the command line
 if [ $# -gt 0 ] ; then
