@@ -116,7 +116,6 @@ This can be done using [./scripts/env_use_destdir](./scripts/env_use_destdir):
     DESTDIR=~/obj ./scripts/env_use_destdir make test
 
 Some tests require the reference policy to be installed (for example in `python/sepolgen`).
-In order to run these ones, instructions similar to the ones in section `install` of [./.travis.yml](./.travis.yml) can be executed.
 
 To install as the default system libraries and binaries
 (overwriting any previously installed ones - dangerous!),
