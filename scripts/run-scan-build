@@ -1,7 +1,7 @@
 #!/bin/sh
 # Run clang's static analyzer (scan-build) and record its output in output-scan-build/
 
-# Allow overriding binariy names, like clang-12
+# Allow overriding binary names, like clang-12
 export CC=${CC:-clang}
 SCAN_BUILD=${SCAN_BUILD:-scan-build}
 
@@ -32,15 +32,12 @@ fi
 make -C .. clean distclean -j"$(nproc)"
 $SCAN_BUILD -analyze-headers -o "$OUTPUTDIR" make -C .. \
     DESTDIR="$DESTDIR" \
-    CFLAGS="-O2 -Wall -Wextra -D_FORTIFY_SOURCE=2 -D__CHECKER__ -I$DESTDIR/usr/include" \
+    CFLAGS="-O2 -Wall -Wextra -D_FORTIFY_SOURCE=3 -D__CHECKER__ -I$DESTDIR/usr/include" \
     -j"$(nproc)" \
-    install install-pywrap install-rubywrap all test
+    install install-pywrap install-rubywrap all \
+    || { echo "++ Build failed!"; exit 1; }
 
-if [ $? -eq 0 ]; then
-    echo "++ Build succeeded"
-else
-    echo "++ Build failed"
-fi
+echo "++ Build succeeded"
 
 # Reduce the verbosity in order to keep the message from scan-build saying
 # "scan-build: Run 'scan-view /.../output-scan-build/2018-...' to examine bug reports.
