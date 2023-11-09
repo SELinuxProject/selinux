@@ -1199,6 +1199,8 @@ static int avrule_list_to_cil(int indent, struct policydb *pdb, struct avrule *a
 				rc = -1;
 				goto exit;
 			}
+
+			num_tnames = 0;
 		} else {
 			ts = &avrule->ttypes;
 			rc = process_typeset(pdb, ts, attr_list, &tnames, &num_tnames);
