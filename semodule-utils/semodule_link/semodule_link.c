@@ -178,9 +178,11 @@ failure:
 	ret = EXIT_FAILURE;
 
 cleanup:
-	for (i = 0; i < num_mods; i++)
-		sepol_module_package_free(mods[i]);
-	free(mods);
+	if (mods) {
+		for (i = 0; i < num_mods; i++)
+			sepol_module_package_free(mods[i]);
+		free(mods);
+	}
 	sepol_module_package_free(base);
 
 	return ret;
