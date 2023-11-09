@@ -2582,6 +2582,7 @@ static int ocontext_isid_to_cil(struct policydb *pdb, const char *const *sid_to_
 		item->sid_key = strdup(sid);
 		if (!item->sid_key) {
 			ERR(NULL, "Out of memory");
+			free(item);
 			rc = -1;
 			goto exit;
 		}
