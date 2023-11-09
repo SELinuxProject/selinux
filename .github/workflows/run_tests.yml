@@ -36,7 +36,7 @@ jobs:
             python-ruby-version: {python: '3.11', ruby: '3.1', other: 'sanitizers'}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-ruby-version.python }}
       uses: actions/setup-python@v4
