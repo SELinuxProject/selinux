@@ -3857,7 +3857,8 @@ static int scope_index_read(scope_index_t * scope_index,
 	if (rc < 0)
 		return -1;
 	scope_index->class_perms_len = le32_to_cpu(buf[0]);
-	if (is_saturated(scope_index->class_perms_len))
+	if (is_saturated(scope_index->class_perms_len) ||
+	    exceeds_available_bytes(fp, scope_index->class_perms_len, sizeof(uint32_t) * 3))
 		return -1;
 	if (scope_index->class_perms_len == 0) {
 		scope_index->class_perms_map = NULL;
@@ -4036,7 +4037,8 @@ static int scope_read(policydb_t * p, int symnum, struct policy_file *fp)
 		goto cleanup;
 	scope->scope = le32_to_cpu(buf[0]);
 	scope->decl_ids_len = le32_to_cpu(buf[1]);
-	if (zero_or_saturated(scope->decl_ids_len)) {
+	if (zero_or_saturated(scope->decl_ids_len) ||
+	    exceeds_available_bytes(fp, scope->decl_ids_len, sizeof(uint32_t))) {
 		ERR(fp->handle, "invalid scope with no declaration");
 		goto cleanup;
 	}
@@ -4315,7 +4317,8 @@ int policydb_read(policydb_t * p, struct policy_file *fp, unsigned verbose)
 		if (rc < 0)
 			goto bad;
 		nprim = le32_to_cpu(buf[0]);
-		if (is_saturated(nprim))
+		if (is_saturated(nprim) ||
+		    exceeds_available_bytes(fp, nprim, sizeof(uint32_t) * 3))
 			goto bad;
 		nel = le32_to_cpu(buf[1]);
 		if (nel && !nprim) {

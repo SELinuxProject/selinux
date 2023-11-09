@@ -1748,7 +1748,7 @@ int str_read(char **strp, struct policy_file *fp, size_t len)
 	int rc;
 	char *str;
 
-	if (zero_or_saturated(len)) {
+	if (zero_or_saturated(len) || exceeds_available_bytes(fp, len, sizeof(char))) {
 		errno = EINVAL;
 		return -1;
 	}

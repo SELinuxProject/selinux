@@ -600,7 +600,7 @@ int avtab_read(avtab_t * a, struct policy_file *fp, uint32_t vers)
 		goto bad;
 	}
 	nel = le32_to_cpu(buf[0]);
-	if (zero_or_saturated(nel)) {
+	if (zero_or_saturated(nel) || exceeds_available_bytes(fp, nel, sizeof(uint32_t) * 3)) {
 		ERR(fp->handle, "table is empty");
 		goto bad;
 	}

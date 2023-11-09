@@ -44,13 +44,23 @@
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof((x)[0]))
 
-#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-# define is_saturated(x) (x == (typeof(x))-1 || (x) > (1U << 16))
-#else
-# define is_saturated(x) (x == (typeof(x))-1)
-#endif
+static inline int exceeds_available_bytes(const struct policy_file *fp, size_t x, size_t req_elem_size)
+{
+	size_t req_size;
 
-#define zero_or_saturated(x) ((x == 0) || is_saturated(x))
+	/* Remaining input size is only available for mmap'ed memory */
+	if (fp->type != PF_USE_MEMORY)
+		return 0;
+
+	if (__builtin_mul_overflow(x, req_elem_size, &req_size))
+		return 1;
+
+	return req_size > fp->len;
+}
+
+#define is_saturated(x) ((x) == (typeof(x))-1)
+
+#define zero_or_saturated(x) (((x) == 0) || is_saturated(x))
 
 #define spaceship_cmp(a, b) (((a) > (b)) - ((a) < (b)))
 
