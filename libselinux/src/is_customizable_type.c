@@ -33,6 +33,7 @@ static void customizable_init(void)
 	}
 
 	if (fseek(fp, 0L, SEEK_SET) == -1) {
+		free(buf);
 		fclose(fp);
 		return;
 	}
