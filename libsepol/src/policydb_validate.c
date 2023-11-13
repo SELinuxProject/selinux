@@ -370,7 +370,7 @@ static int validate_common_datum(sepol_handle_t *handle, const common_datum_t *c
 {
 	if (validate_value(common->s.value, &flavors[SYM_COMMONS]))
 		goto bad;
-	if (common->permissions.nprim > PERM_SYMTAB_SIZE)
+	if (common->permissions.table->nel == 0 || common->permissions.nprim > PERM_SYMTAB_SIZE)
 		goto bad;
 
 	return 0;
