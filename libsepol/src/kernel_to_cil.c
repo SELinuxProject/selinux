@@ -1633,19 +1633,27 @@ static char *xperms_to_str(avtab_extended_perms_t *xperms)
 	uint16_t low_bit;
 	uint16_t low_value;
 	unsigned int bit;
-	unsigned int in_range = 0;
-	static char xpermsbuf[2048];
-	char *p;
-	int len, remaining;
-
-	p = xpermsbuf;
-	remaining = sizeof(xpermsbuf);
+	unsigned int in_range;
+	char *buffer = NULL, *p;
+	int len;
+	size_t remaining, size = 128;
 
 	if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
 		&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER)) {
 		return NULL;
 	}
 
+retry:
+	size *= 2;
+	if (size == 0)
+		goto err;
+	p = realloc(buffer, size);
+	if (!p)
+		goto err;
+	buffer = p;
+	remaining = size;
+
+	in_range = 0;
 	for (bit = 0; bit < sizeof(xperms->perms)*8; bit++) {
 		len = 0;
 
@@ -1682,22 +1690,26 @@ static char *xperms_to_str(avtab_extended_perms_t *xperms)
 			}
 
 		}
-		if (len < 0 || len >= remaining) {
-			return NULL;
-		}
+		if (len < 0)
+			goto err;
+		if ((size_t)len >= remaining)
+			goto retry;
 		p += len;
 		remaining -= len;
 	}
 
-	if (remaining < 2) {
-		return NULL;
-	}
+	if (remaining < 2)
+		goto retry;
 
-	xpermsbuf[0] = '(';
+	buffer[0] = '(';
 	*p++ = ')';
 	*p = '\0';
 
-	return xpermsbuf;
+	return buffer;
+
+err:
+	free(buffer);
+	return NULL;
 }
 
 static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_datum_t *datum)
@@ -1769,6 +1781,7 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 
 		rule = create_str("(%s %s %s (%s %s (%s)))", 6,
 				  flavor, src, tgt, "ioctl", class, perms);
+		free(perms);
 	} else {
 		new = pdb->p_type_val_to_name[data - 1];
 
