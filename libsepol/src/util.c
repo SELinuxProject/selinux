@@ -132,21 +132,32 @@ char *sepol_extended_perms_to_string(avtab_extended_perms_t *xperms)
 	uint16_t low_bit;
 	uint16_t low_value;
 	unsigned int bit;
-	unsigned int in_range = 0;
-	static char xpermsbuf[2048];
-	char *p;
-	int len, xpermslen = 0;
-	xpermsbuf[0] = '\0';
-	p = xpermsbuf;
+	unsigned int in_range;
+	char *buffer = NULL, *p;
+	int len;
+	size_t remaining, size = 128;
 
 	if ((xperms->specified != AVTAB_XPERMS_IOCTLFUNCTION)
 		&& (xperms->specified != AVTAB_XPERMS_IOCTLDRIVER))
 		return NULL;
 
-	len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "ioctl { ");
-	p += len;
-	xpermslen += len;
+retry:
+	size *= 2;
+	if (size == 0)
+		goto err;
+	p = realloc(buffer, size);
+	if (!p)
+		goto err;
+	buffer = p;
+	remaining = size;
 
+	len = snprintf(p, remaining, "ioctl { ");
+	if (len < 0 || (size_t)len >= remaining)
+		goto err;
+	p += len;
+	remaining -= len;
+
+	in_range = 0;
 	for (bit = 0; bit < sizeof(xperms->perms)*8; bit++) {
 		if (!xperm_test(bit, xperms->perms))
 			continue;
@@ -165,35 +176,43 @@ char *sepol_extended_perms_to_string(avtab_extended_perms_t *xperms)
 			value = xperms->driver<<8 | bit;
 			if (in_range) {
 				low_value = xperms->driver<<8 | low_bit;
-				len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "0x%hx-0x%hx ", low_value, value);
+				len = snprintf(p, remaining, "0x%hx-0x%hx ", low_value, value);
 			} else {
-				len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "0x%hx ", value);
+				len = snprintf(p, remaining, "0x%hx ", value);
 			}
 		} else if (xperms->specified & AVTAB_XPERMS_IOCTLDRIVER) {
 			value = bit << 8;
 			if (in_range) {
 				low_value = low_bit << 8;
-				len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "0x%hx-0x%hx ", low_value, (uint16_t) (value|0xff));
+				len = snprintf(p, remaining, "0x%hx-0x%hx ", low_value, (uint16_t) (value|0xff));
 			} else {
-				len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "0x%hx-0x%hx ", value, (uint16_t) (value|0xff));
+				len = snprintf(p, remaining, "0x%hx-0x%hx ", value, (uint16_t) (value|0xff));
 			}
 
 		}
 
-		if (len < 0 || (size_t) len >= (sizeof(xpermsbuf) - xpermslen))
-			return NULL;
+		if (len < 0)
+			goto err;
+		if ((size_t) len >= remaining)
+			goto retry;
 
 		p += len;
-		xpermslen += len;
+		remaining -= len;
 		if (in_range)
 			in_range = 0;
 	}
 
-	len = snprintf(p, sizeof(xpermsbuf) - xpermslen, "}");
-	if (len < 0 || (size_t) len >= (sizeof(xpermsbuf) - xpermslen))
-		return NULL;
+	len = snprintf(p, remaining, "}");
+	if (len < 0)
+		goto err;
+	if ((size_t) len >= remaining)
+		goto retry;
 
-	return xpermsbuf;
+	return buffer;
+
+err:
+	free(buffer);
+	return NULL;
 }
 
 /*

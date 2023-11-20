@@ -178,15 +178,20 @@ static int report_assertion_extended_permissions(sepol_handle_t *handle,
 				rc = check_extended_permissions(avrule->xperms, xperms);
 				/* failure on the extended permission check_extended_permissions */
 				if (rc) {
+					char *permstring;
+
 					extended_permissions_violated(&error, avrule->xperms, xperms);
+					permstring = sepol_extended_perms_to_string(&error);
+
 					ERR(handle, "neverallowxperm on line %lu of %s (or line %lu of %s) violated by\n"
 							"allowxperm %s %s:%s %s;",
 							avrule->source_line, avrule->source_filename, avrule->line, policy_name(p),
 							p->p_type_val_to_name[i],
 							p->p_type_val_to_name[j],
 							p->p_class_val_to_name[curperm->tclass - 1],
-							sepol_extended_perms_to_string(&error));
+							permstring ?: "<format-failure>");
 
+					free(permstring);
 					errors++;
 				}
 			}

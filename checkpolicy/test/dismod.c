@@ -347,6 +347,7 @@ static int display_avrule(avrule_t * avrule, policydb_t * policy,
 		display_id(policy, fp, SYM_TYPES, avrule->perms->data - 1, "");
 	} else if (avrule->specified & AVRULE_XPERMS) {
 		avtab_extended_perms_t xperms;
+		char *perms;
 		int i;
 
 		if (avrule->xperms->specified == AVRULE_XPERMS_IOCTLFUNCTION)
@@ -362,7 +363,13 @@ static int display_avrule(avrule_t * avrule, policydb_t * policy,
 		for (i = 0; i < EXTENDED_PERMS_LEN; i++)
 			xperms.perms[i] = avrule->xperms->perms[i];
 
-		fprintf(fp, "%s", sepol_extended_perms_to_string(&xperms));
+		perms = sepol_extended_perms_to_string(&xperms);
+		if (!perms) {
+			fprintf(fp, "     ERROR: failed to format xperms\n");
+			return -1;
+		}
+		fprintf(fp, "%s", perms);
+		free(perms);
 	}
 
 	fprintf(fp, ";\n");

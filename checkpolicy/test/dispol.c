@@ -196,6 +196,8 @@ static int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t wha
 			fprintf(fp, ";\n");
 		}
 	} else if (key->specified & AVTAB_XPERMS) {
+		char *perms;
+
 		if (key->specified & AVTAB_XPERMS_ALLOWED)
 			fprintf(fp, "allowxperm ");
 		else if (key->specified & AVTAB_XPERMS_AUDITALLOW)
@@ -203,7 +205,13 @@ static int render_av_rule(avtab_key_t * key, avtab_datum_t * datum, uint32_t wha
 		else if (key->specified & AVTAB_XPERMS_DONTAUDIT)
 			fprintf(fp, "dontauditxperm ");
 		render_key(key, p, fp);
-		fprintf(fp, "%s;\n", sepol_extended_perms_to_string(datum->xperms));
+		perms = sepol_extended_perms_to_string(datum->xperms);
+		if (!perms) {
+			fprintf(fp, "     ERROR: failed to format xperms\n");
+			return -1;
+		}
+		fprintf(fp, "%s;\n", perms);
+		free(perms);
 	} else {
 		fprintf(fp, "     ERROR: no valid rule type specified\n");
 		return -1;

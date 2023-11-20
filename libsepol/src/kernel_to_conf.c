@@ -1683,7 +1683,7 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 	uint32_t data = datum->data;
 	type_datum_t *type;
 	const char *flavor, *src, *tgt, *class, *perms, *new;
-	char *rule = NULL;
+	char *rule = NULL, *permstring;
 
 	switch (0xFFF & key->specified) {
 	case AVTAB_ALLOWED:
@@ -1738,13 +1738,14 @@ static char *avtab_node_to_str(struct policydb *pdb, avtab_key_t *key, avtab_dat
 		rule = create_str("%s %s %s:%s { %s };", 5,
 				  flavor, src, tgt, class, perms+1);
 	} else if (key->specified & AVTAB_XPERMS) {
-		perms = sepol_extended_perms_to_string(datum->xperms);
-		if (perms == NULL) {
+		permstring = sepol_extended_perms_to_string(datum->xperms);
+		if (permstring == NULL) {
 			ERR(NULL, "Failed to generate extended permission string");
 			goto exit;
 		}
 
-		rule = create_str("%s %s %s:%s %s;", 5, flavor, src, tgt, class, perms);
+		rule = create_str("%s %s %s:%s %s;", 5, flavor, src, tgt, class, permstring);
+		free(permstring);
 	} else {
 		new = pdb->p_type_val_to_name[data - 1];
 
