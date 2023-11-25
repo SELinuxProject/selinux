@@ -494,7 +494,8 @@ static void test_iface_count(void)
 
 unsigned int counter_iface_iterate = 0;
 
-static int handler_iface_iterate(const semanage_iface_t *record, void *varg)
+static int handler_iface_iterate(__attribute__((unused)) const semanage_iface_t *record,
+				 __attribute__((unused)) void *varg)
 {
 	counter_iface_iterate++;
 	return 0;
@@ -634,7 +635,8 @@ static void test_iface_count_local(void)
 /* Function semanage_iface_iterate_local */
 unsigned int counter_iface_iterate_local = 0;
 
-static int handler_iface_iterate_local(const semanage_iface_t *record, void *varg)
+static int handler_iface_iterate_local(__attribute__((unused)) const semanage_iface_t *record,
+				       __attribute__((unused)) void *varg)
 {
 	counter_iface_iterate_local++;
 	return 0;

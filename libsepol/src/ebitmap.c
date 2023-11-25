@@ -370,9 +370,9 @@ int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value)
 {
 	ebitmap_node_t *n, *prev, *new;
 	uint32_t startbit = bit & ~(MAPSIZE - 1);
-	uint32_t highbit = startbit + MAPSIZE;
+	uint32_t highbit;
 
-	if (highbit == 0) {
+	if (__builtin_add_overflow(startbit, MAPSIZE, &highbit)) {
 		ERR(NULL, "bitmap overflow, bit 0x%x", bit);
 		return -EINVAL;
 	}
@@ -440,13 +440,14 @@ int ebitmap_set_bit(ebitmap_t * e, unsigned int bit, int value)
 	return 0;
 }
 
+ignore_unsigned_overflow_
 int ebitmap_init_range(ebitmap_t * e, unsigned int minbit, unsigned int maxbit)
 {
 	ebitmap_node_t *new = NULL, **prev;
 	uint32_t minstartbit = minbit & ~(MAPSIZE - 1);
 	uint32_t maxstartbit = maxbit & ~(MAPSIZE - 1);
-	uint32_t minhighbit = minstartbit + MAPSIZE;
-	uint32_t maxhighbit = maxstartbit + MAPSIZE;
+	uint32_t minhighbit;
+	uint32_t maxhighbit;
 	uint32_t startbit;
 	MAPTYPE mask;
 
@@ -455,7 +456,8 @@ int ebitmap_init_range(ebitmap_t * e, unsigned int minbit, unsigned int maxbit)
 	if (minbit > maxbit)
 		return -EINVAL;
 
-	if (minhighbit == 0 || maxhighbit == 0)
+	if (__builtin_add_overflow(minstartbit, MAPSIZE, &minhighbit) ||
+	    __builtin_add_overflow(maxstartbit, MAPSIZE, &maxhighbit))
 		return -EOVERFLOW;
 
 	prev = &e->node;

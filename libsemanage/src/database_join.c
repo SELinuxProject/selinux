@@ -34,6 +34,7 @@ struct dbase_join {
 	record_join_table_t *rjtable;
 };
 
+__attribute__((no_sanitize("function")))
 static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 {
 
@@ -170,6 +171,7 @@ static int dbase_join_cache(semanage_handle_t * handle, dbase_join_t * dbase)
 }
 
 /* Flush database */
+__attribute__((no_sanitize("function")))
 static int dbase_join_flush(semanage_handle_t * handle, dbase_join_t * dbase)
 {
 
@@ -270,6 +272,9 @@ int dbase_join_init(semanage_handle_t * handle,
 /* Release dbase resources */
 void dbase_join_release(dbase_join_t * dbase)
 {
+
+	if (!dbase)
+		return;
 
 	dbase_llist_drop_cache(&dbase->llist);
 	free(dbase);

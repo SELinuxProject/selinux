@@ -321,6 +321,7 @@ int semanage_direct_connect(semanage_handle_t * sh)
 
       err:
 	ERR(sh, "could not establish direct connection");
+	(void) semanage_direct_disconnect(sh);
 	return STATUS_ERR;
 }
 
@@ -1140,6 +1141,7 @@ static int copy_file_if_exists(const char *src, const char *dst, mode_t mode){
 /* Commits all changes in sandbox to the actual kernel policy.
  * Returns commit number on success, -1 on error.
  */
+__attribute__((no_sanitize("function")))
 static int semanage_direct_commit(semanage_handle_t * sh)
 {
 	char **mod_filenames = NULL;

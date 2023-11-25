@@ -35,7 +35,7 @@ ifeq (yes,$(shell printf '${H}define _GNU_SOURCE\n${H}include <stdlib.h>\nint ma
 override CFLAGS += -DHAVE_REALLOCARRAY
 endif
 
-LD_SONAME_FLAGS=-soname,$(LIBSO),--version-script=$(LIBMAP),-z,defs
+LD_SONAME_FLAGS=-soname,$(LIBSO),--version-script=$(LIBMAP)
 
 LN=ln
 OS := $(shell uname)
