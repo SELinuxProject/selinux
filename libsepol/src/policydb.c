@@ -2255,6 +2255,8 @@ static int class_read(policydb_t * p, hashtab_t h, struct policy_file *fp)
 
 	len2 = le32_to_cpu(buf[1]);
 	cladatum->s.value = le32_to_cpu(buf[2]);
+	if (cladatum->s.value > UINT16_MAX)
+		goto bad;
 
 	if (symtab_init(&cladatum->permissions, PERM_SYMTAB_SIZE))
 		goto bad;

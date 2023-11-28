@@ -389,7 +389,7 @@ static int validate_common_datum_wrapper(__attribute__((unused)) hashtab_key_t k
 
 static int validate_class_datum(sepol_handle_t *handle, const class_datum_t *class, validate_t flavors[])
 {
-	if (validate_value(class->s.value, &flavors[SYM_CLASSES]))
+	if (class->s.value > UINT16_MAX || validate_value(class->s.value, &flavors[SYM_CLASSES]))
 		goto bad;
 	if (class->comdatum && validate_common_datum(handle, class->comdatum, flavors))
 		goto bad;
