@@ -885,14 +885,21 @@ static int validate_cond_av_list(sepol_handle_t *handle, const cond_av_list_t *c
 
 	for (; cond_av; cond_av = cond_av->next) {
 		for (avtab_ptr = cond_av->node; avtab_ptr; avtab_ptr = avtab_ptr->next) {
-			if (validate_avtab_key(&avtab_ptr->key, 1, p, flavors)) {
-				ERR(handle, "Invalid cond av list");
-				return -1;
-			}
+			const avtab_key_t *key = &avtab_ptr->key;
+			const avtab_datum_t *datum = &avtab_ptr->datum;
+
+			if (validate_avtab_key(key, 1, p, flavors))
+				goto bad;
+			if ((key->specified & AVTAB_TYPE) && validate_simpletype(datum->data, p, flavors))
+				goto bad;
 		}
 	}
 
 	return 0;
+
+bad:
+	ERR(handle, "Invalid cond av list");
+	return -1;
 }
 
 static int validate_avrules(sepol_handle_t *handle, const avrule_t *avrule, int conditional, const policydb_t *p, validate_t flavors[])
