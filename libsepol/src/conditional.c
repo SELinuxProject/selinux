@@ -746,8 +746,8 @@ static int expr_isvalid(policydb_t * p, cond_expr_t * expr)
 
 static int cond_read_node(policydb_t * p, cond_node_t * node, void *fp)
 {
-	uint32_t buf[2];
-	int len, i, rc;
+	uint32_t buf[2], i, len;
+	int rc;
 	cond_expr_t *expr = NULL, *last = NULL;
 
 	rc = next_entry(buf, fp, sizeof(uint32_t));
@@ -821,8 +821,8 @@ static int cond_read_node(policydb_t * p, cond_node_t * node, void *fp)
 int cond_read_list(policydb_t * p, cond_list_t ** list, void *fp)
 {
 	cond_node_t *node, *last = NULL;
-	uint32_t buf[1];
-	int i, len, rc;
+	uint32_t buf[1], i, len;
+	int rc;
 
 	rc = next_entry(buf, fp, sizeof(uint32_t));
 	if (rc < 0)
